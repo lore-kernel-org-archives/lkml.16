@@ -1,394 +1,106 @@
-Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20404253331
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 20:57:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F1CC1DA60F;
+	Tue,  8 Apr 2025 20:58:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744145859; cv=none; b=E6JY1XoyoyVzLNux+K/CE5vhYn0EoReWWesHQHnHOKZkiKFZool32Qyf46d7Wd2tEDU/tMoOiF36hi7QEK19I50nTxqj+THUsNKB5hi8QAdBX8XBbXl67MpIGZ5DNMASe9/JMnyaKSQeR14l0FOumpV2rEn7p2rKnMPq/7bOpvA=
+	t=1744145916; cv=none; b=jlex5tRoh3GCJUMJD/YwZjKaEGNYEnJJelkG4AVMlWrbhICQlO+ZnSMiRdRwd8FK9y7J4Tte7mAqvLNpTNR5eRM+5RLrDFQZi/o1sqHDmIGP08GoLsf7rvbGaoUnNnodio1AG0JxZjBc9brfmY9NrcWbl+mcj7c+EhXmm8zwa54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744145859; c=relaxed/simple;
-	bh=B0U8Vcv6k5qxhGHDsdzLC2/NIe+68/brTmvtgy4STLs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gJWVx/fhsZXxVCWYocGFu4QXrzWPKk29lF13yE8mP2/t8nyb2tq4NUngO758edGyLiDJfVfj6zKY+zLAWTMxPM1cCqnnG77wKBNKPLJ0os4IiTzUa1UuyS/BA+6cLjY+9LVqgFtBa99B5+85274wRzsilwGA+Vbjk9sRF4CN8eE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Sj/4cfnU; arc=none smtp.client-ip=209.85.160.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1744145916; c=relaxed/simple;
+	bh=bmD2laFYlLFaaNRCLWOZfiKH3pLHNfWxDOxL25EAenk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sYsDRkLOkRVyPF8uSDN74dzViKOdYJ78a+C0Uxwo3wpi7+aHIu0jd8fiFcGStK12OnO3RSwoUxJpbA3bEcFIRkPMDmId0yg/CszqfWnF+LGAHEwA1wO9+/LgZiSb41P+fZLla9rtWfHWCcs2BWS/IgU246Oh88wLxTKudkEUXrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sL0fMtAr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Sj/4cfnU"
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-2c1caacc1f7so3637572fac.3
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 13:57:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744145855; x=1744750655; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qaDwk/rTlVSzsAVLqKNpTmTzHrcmKNMZwL+bLzgU1Zk=;
-        b=Sj/4cfnULqihiPhTRrz3Nv+H/oDTZPtC+lrlNRZ5xKJXe7W/5rB0b7MuO5aih2GSD2
-         8Iczj9QWcdACZPWbDIubjlMgr8SuSSa8w3M2/VXt/TF+pVHe36TKaLlrPkJ1O98yeuLD
-         miYoC9Rps5SF3HZgdnjPl97ZQYazK+Sg2g3Ka+q8govKVNKNwHhadJplz2HbIid62cJ+
-         jabkTQ2BchZoo0899Xa8m45TeffJgilaJPtvHMjwS15VDcXCoFRySpDY/rwlOg+6tWFF
-         Gv0HDArYoO4Uv6e2kiRedEpZzGrNpOy/aBdzdEHC1K0cg69LIhPC+tct39jY8w6ym5Qz
-         dnyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744145855; x=1744750655;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qaDwk/rTlVSzsAVLqKNpTmTzHrcmKNMZwL+bLzgU1Zk=;
-        b=w749lwbGgpOrMUyQcLFEcm8GKqNEVs8PtT3vFU7j2R9mkx08voV4xq90FA6t0OddwZ
-         uGQ/WVILRXo95O39/6CTXVSwfsbPEXRQMm1lp2FwMOdv8yS9Dm+XXktwuOQ3t9p/TBEX
-         g3Egj1P5qZJCuI8FjNrisn0tS0/U2zw7xt+Ei3hhpfwNanfeBlcQroE22c+Oe4RXVy8C
-         X+5nlVDvoCx9d7aztmW5A6i4fAhEO+P1gMIYUM4FkWUNA7JoMivWvN6hOJjLwQAUc7cU
-         u7bYfhADsal5FBn728nllz9CIklcaNTwG0aHPHsT4KbGYxSqEdfq/7PbI/7n1yNvdzlB
-         0gkg==
-X-Forwarded-Encrypted: i=1; AJvYcCVsZBR8frPv8P421bnLhvePZYecwBvILZ8kzfNbQx+KHaEWDgc2o0F8jc5+sa/mlZ3UWllN3+JzRaszTRQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFNeRAdMN/1lYNFEFYidtbtUDhC67G4gSkXyQv6ITi3odZ0i7S
-	VkgDNeTrnhNpp0y0+yfz9M28NIRuOilqdtBa5gAudCy/V7wfwaDlcY+29oPmdgo=
-X-Gm-Gg: ASbGncs+YJQilRoXVsqswRyNHzjlKLzQhOsSTwF03E//wN3nrR99kIMEui65hdw1IoN
-	loXRpZVFzpspSYo/2RAXJZTyU7Ouh+34pzXGBkqdOXKVpBN4p3YzkIqVatPqtkn+y1GVzTYOBBa
-	Kj+Ng0ft5RslhtGNm6XawTPeX4aEY1Yvu7j2+4D8iyjNBguANibFQ1pmbMZUhn930Wyo2F68i5d
-	4gP8Qxv7EH7ddKQsZcPBzm/b69fB9Lo+m+gF5N2Eg2NagqdkV7rcokyLueXdUhoVD/FCBPqWt/t
-	t+F+dscyHjah0YMnubC57IintDXxTxkcxCx/IllJurN44DqNfJGF5FbLM+ZVPgmeYswLNDWepzx
-	iYhbkUg==
-X-Google-Smtp-Source: AGHT+IFjFgG+zdclxE9RrlgDOAhQBgIkljxsFYN0IeA14TkzF0YKGa8T/thY5EwoXPtKqouGqj5skw==
-X-Received: by 2002:a05:6870:9e8e:b0:2c2:2e8e:202b with SMTP id 586e51a60fabf-2d08dd8bb09mr368582fac.10.1744145855062;
-        Tue, 08 Apr 2025 13:57:35 -0700 (PDT)
-Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-72e6515c0b7sm582787a34.1.2025.04.08.13.57.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Apr 2025 13:57:34 -0700 (PDT)
-Message-ID: <25291cca-a456-4f6c-8aac-466cd6124683@baylibre.com>
-Date: Tue, 8 Apr 2025 15:57:32 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sL0fMtAr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6997C4CEE5;
+	Tue,  8 Apr 2025 20:58:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744145915;
+	bh=bmD2laFYlLFaaNRCLWOZfiKH3pLHNfWxDOxL25EAenk=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=sL0fMtArYUPodhKywizC6P5f3M6qwxRNqn1U1l0chFdGQ/JSNvvCbWGRmV4njm3Za
+	 l0qtfJOajINqVWXLCn1awpdDeTzXNE1PufLZkakEqO55pYhuuf4+IocihHLavuVKsn
+	 gi/sBpYU4fjpqGXW+w5Y83GAGUeUdhzMcjh0gQv1qUCzeXCwAxKIATIl9U2avcX9Da
+	 BYF7dI9o3RbcPwaITKzGqMnFYx8ejBov4WiHpQJuFEDIp3ZoDymhgBvWQHP84JlqlU
+	 2NNfC0AFm5FkoANE3b2Y6R/M1+T7eTPSWxCsEw+b/hgzLoHZeknWQFm1cdnKbo+SF/
+	 4RvtU5bwKp0Dw==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 62636CE0F64; Tue,  8 Apr 2025 13:58:35 -0700 (PDT)
+Date: Tue, 8 Apr 2025 13:58:35 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Joel Fernandes <joelagnelf@nvidia.com>
+Cc: rcu <rcu@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>,
+	kernel-team <kernel-team@meta.com>, rostedt <rostedt@goodmis.org>
+Subject: Re: [v2,05/12] rcutorture: Add tests for SRCU up/down reader
+ primitives
+Message-ID: <8ee04d0a-dc22-4eb1-8c22-1777f94fd9fb@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20250331210314.590622-5-paulmck@kernel.org>
+ <174414348524.117.7223153072511748144@patchwork.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] iio: adc: ti-adc128s052: Add lower resolution devices
- support
-To: Sukrut Bellary <sbellary@baylibre.com>,
- Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Angelo Compagnucci <angelo.compagnucci@gmail.com>
-Cc: Nishanth Menon <nm@ti.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250408132120.836461-1-sbellary@baylibre.com>
- <20250408132120.836461-3-sbellary@baylibre.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20250408132120.836461-3-sbellary@baylibre.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <174414348524.117.7223153072511748144@patchwork.local>
 
-On 4/8/25 8:21 AM, Sukrut Bellary wrote:
-> The adcxx4s communicates with a host processor via an SPI/Microwire Bus
-> interface. The device family responds with 12-bit data, of which the LSB
-> bits are transmitted by the lower resolution devices as 0.
-> The unavailable bits are 0 in LSB.
-> Shift is calculated per resolution and used in scaling and
-> raw data read.
-
-Could improve the line wrapping in the commit message if there is a v4.
-
+On Tue, Apr 08, 2025 at 08:18:05PM -0000, Joel Fernandes wrote:
+> Hello, Paul,
 > 
-> Lets reuse the driver to support the family of devices with name
-> ADC<bb><c>S<sss>, where
-> * bb is the resolution in number of bits (8, 10, 12)
-> * c is the number of channels (1, 2, 4, 8)
-> * sss is the maximum conversion speed (021 for 200 kSPS, 051 for 500 kSPS
-> and 101 for 1 MSPS)
+> On Tue, 8 Apr 2025 20:16:08 GMT, "Paul E. McKenney" wrote:
+> > This commit adds a new rcutorture.n_up_down kernel boot parameter
+> > that specifies the number of outstanding SRCU up/down readers, which
+> > begin in kthread context and end in an hrtimer handler.  There is a new
+> > kthread ("rcu_torture_updown") that scans an per-reader array looking
+> > for elements whose readers have ended.  This kthread sleeps between one
+> > and two milliseconds between consecutive scans.
+> > 
+> > [ paulmck: Apply kernel test robot feedback. ]
+> > [ paulmck: Apply Z qiang feedback. ]
+> > 
+> [...]
+> > +	for (i = 0; i < n_up_down; i++) {
+> > +		init_rcu_torture_one_read_state(&updownreaders[i].rtorsu_rtors, rand);
+> > +		hrtimer_init(&updownreaders[i].rtorsu_hrt, CLOCK_MONOTONIC,
+> > +			     HRTIMER_MODE_REL | HRTIMER_MODE_SOFT);
 > 
-> Complete datasheets are available at TI's website here:
-> https://www.ti.com/lit/gpn/adc<bb><c>s<sss>.pdf
+> This will now fail to build and needs the following: I will squash it into my
+> for-next branch into this patch, but let me know if you prefer to provide an
+> update.
+
+Please feel free to squash it in with your "[]" tag like shown above.
+
+As you say, you will be sending them all out soon enough anyway.  ;-)
+
+My plan is to rebase on your stack once you finish your first long-form
+round of testing.
+
+							Thanx, Paul
+
+>     Fix build error by converting hrtimer_init to hrtimer_setup, see:
+>     https://lore.kernel.org/all/174384280127.31282.2714486346304643188.tip-bot2@tip-bot2/
 > 
-> Tested only with ti-adc102s051 on BegalePlay SBC.
-> https://www.beagleboard.org/boards/beagleplay
+> diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
+> index 4f0a00a8bdee..14a22ef3b56f 100644
+> --- a/kernel/rcu/rcutorture.c
+> +++ b/kernel/rcu/rcutorture.c
+> @@ -2480,9 +2480,8 @@ static int rcu_torture_updown_init(void)
+>         }
+>         for (i = 0; i < n_up_down; i++) {
+>                 init_rcu_torture_one_read_state(&updownreaders[i].rtorsu_rtors, rand);
+> -               hrtimer_init(&updownreaders[i].rtorsu_hrt, CLOCK_MONOTONIC,
+> -                            HRTIMER_MODE_REL | HRTIMER_MODE_SOFT);
+> -               updownreaders[i].rtorsu_hrt.function = rcu_torture_updown_hrt;
+> +               hrtimer_setup(&updownreaders[i].rtorsu_hrt,
+> rcu_torture_updown_hrt, CLOCK_MONOTONIC,
+> +                             HRTIMER_MODE_REL | HRTIMER_MODE_SOFT);
+>                 torture_random_init(&updownreaders[i].rtorsu_trs);
+>                 init_rcu_torture_one_read_state(&updownreaders[i].rtorsu_rtors,
+>                                                 &updownreaders[i].rtorsu_trs);
 > 
-> Co-developed-by: Nishanth Menon <nm@ti.com>
-> Signed-off-by: Nishanth Menon <nm@ti.com>
-> Signed-off-by: Sukrut Bellary <sbellary@baylibre.com>
-> ---
-
-I didn't see any serious issues, just some room for more polish...
-
-> Changes in v3: 
->         - used be16_to_cpu() for the endian conversion.
->         - used config index enum while setting up the adc128_config[]
-> 
-> - Link to v2: 
->         https://lore.kernel.org/lkml/20231022031203.632153-1-sukrut.bellary@linux.com/
-> 
-> Changes in v2:
->         - Arranged of_device_id and spi_device_id in numeric order.
->         - Used enum to index into adc128_config.
->         - Reorder adc128_config in alphabetical.
->         - Include channel resolution information.
->         - Shift is calculated per resolution and used in scaling and 
->         raw data read.
-> 
-> - Link to v1: https://lore.kernel.org/all/20220701042919.18180-1-nm@ti.com/
-> ---
->  drivers/iio/adc/ti-adc128s052.c | 149 ++++++++++++++++++++++++--------
->  1 file changed, 112 insertions(+), 37 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/ti-adc128s052.c b/drivers/iio/adc/ti-adc128s052.c
-> index a456ea78462f..d4b76fd85abd 100644
-> --- a/drivers/iio/adc/ti-adc128s052.c
-> +++ b/drivers/iio/adc/ti-adc128s052.c
-> @@ -7,6 +7,22 @@
->   * https://www.ti.com/lit/ds/symlink/adc128s052.pdf
->   * https://www.ti.com/lit/ds/symlink/adc122s021.pdf
->   * https://www.ti.com/lit/ds/symlink/adc124s021.pdf
-> + *
-> + * The adcxx4s communicates with a host processor via an SPI/Microwire Bus
-> + * interface. This driver supports the whole family of devices with a name
-> + * ADC<bb><c>S<sss>, where
-> + * bb is the resolution in number of bits (8, 10, 12)
-> + * c is the number of channels (1, 2, 4, 8)
-> + * sss is the maximum conversion speed (021 for 200 kSPS, 051 for 500 kSPS
-> + * and 101 for 1 MSPS)
-
-Looks like odd line wrapping. I assume bullet points were meant here?
-
-* ... where:
-* - bb is ...
-* - c is ...
-* - sss is ...
-
-> + *
-> + * Complete datasheets are available at TI's website here:
-> + *   https://www.ti.com/lit/gpn/adc<bb><c>s<sss>.pdf
-> + *
-> + * 8, 10, and 12 bits converters send 12-bit data with
-> + * unavailable bits set to 0 in LSB.
-> + * Shift is calculated per resolution and used in scaling and
-> + * raw data read.
->   */
->  
->  #include <linux/err.h>
-> @@ -53,7 +69,7 @@ static int adc128_adc_conversion(struct adc128 *adc, u8 channel)
->  	if (ret < 0)
->  		return ret;
->  
-> -	return ((adc->buffer[0] << 8 | adc->buffer[1]) & 0xFFF);
-> +	return be16_to_cpu(*((__be16 *)adc->buffer));
->  }
->  
->  static int adc128_read_raw(struct iio_dev *indio_dev,
-> @@ -70,7 +86,8 @@ static int adc128_read_raw(struct iio_dev *indio_dev,
->  		if (ret < 0)
->  			return ret;
->  
-> -		*val = ret;
-> +		*val = (ret >> channel->scan_type.shift) &
-> +			GENMASK(channel->scan_type.realbits - 1, 0);
-
-It's a bit odd to do this here instead of in the helper function since
-the helper function is doing some rearranging of bits already.
-
-Could pass scan_type to the helper function and do it all in one
-place.
-
->  		return IIO_VAL_INT;
->  
->  	case IIO_CHAN_INFO_SCALE:
-> @@ -80,7 +97,7 @@ static int adc128_read_raw(struct iio_dev *indio_dev,
->  			return ret;
->  
->  		*val = ret / 1000;
-> -		*val2 = 12;
-> +		*val2 = channel->scan_type.realbits;
->  		return IIO_VAL_FRACTIONAL_LOG2;
->  
->  	default:
-> @@ -89,24 +106,34 @@ static int adc128_read_raw(struct iio_dev *indio_dev,
->  
->  }
->  
-> -#define ADC128_VOLTAGE_CHANNEL(num)	\
-> -	{ \
-> -		.type = IIO_VOLTAGE, \
-> -		.indexed = 1, \
-> -		.channel = (num), \
-> -		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW), \
-> -		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE) \
-> +#define _ADC128_VOLTAGE_CHANNEL(num, real_bits, store_bits)		\
-> +	{								\
-> +		.type = IIO_VOLTAGE,					\
-> +		.indexed = 1,						\
-> +		.channel = (num),					\
-> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
-> +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
-> +		.scan_index = (num),					\
-> +		.scan_type = {						\
-> +			.sign = 'u',					\
-> +			.realbits = (real_bits),			\
-> +			.storagebits = (store_bits),			\
-
-It looks like storagebits is always 16, so we could drop that parameter.
-
-> +			.shift = (12 - real_bits),			\
-> +		},							\
->  	}
->  
-> -static const struct iio_chan_spec adc128s052_channels[] = {
-> -	ADC128_VOLTAGE_CHANNEL(0),
-> -	ADC128_VOLTAGE_CHANNEL(1),
-> -	ADC128_VOLTAGE_CHANNEL(2),
-> -	ADC128_VOLTAGE_CHANNEL(3),
-> -	ADC128_VOLTAGE_CHANNEL(4),
-> -	ADC128_VOLTAGE_CHANNEL(5),
-> -	ADC128_VOLTAGE_CHANNEL(6),
-> -	ADC128_VOLTAGE_CHANNEL(7),
-> +#define ADC082_VOLTAGE_CHANNEL(num) _ADC128_VOLTAGE_CHANNEL(num, 8, 16)
-> +#define ADC102_VOLTAGE_CHANNEL(num) _ADC128_VOLTAGE_CHANNEL(num, 10, 16)
-> +#define ADC128_VOLTAGE_CHANNEL(num) _ADC128_VOLTAGE_CHANNEL(num, 12, 16)
-> +
-> +static const struct iio_chan_spec adc082s021_channels[] = {
-> +	ADC082_VOLTAGE_CHANNEL(0),
-> +	ADC082_VOLTAGE_CHANNEL(1),
-> +};
-> +
-> +static const struct iio_chan_spec adc102s021_channels[] = {
-> +	ADC102_VOLTAGE_CHANNEL(0),
-> +	ADC102_VOLTAGE_CHANNEL(1),
->  };
->  
->  static const struct iio_chan_spec adc122s021_channels[] = {
-> @@ -121,10 +148,46 @@ static const struct iio_chan_spec adc124s021_channels[] = {
->  	ADC128_VOLTAGE_CHANNEL(3),
->  };
->  
-> +static const struct iio_chan_spec adc128s052_channels[] = {
-> +	ADC128_VOLTAGE_CHANNEL(0),
-> +	ADC128_VOLTAGE_CHANNEL(1),
-> +	ADC128_VOLTAGE_CHANNEL(2),
-> +	ADC128_VOLTAGE_CHANNEL(3),
-> +	ADC128_VOLTAGE_CHANNEL(4),
-> +	ADC128_VOLTAGE_CHANNEL(5),
-> +	ADC128_VOLTAGE_CHANNEL(6),
-> +	ADC128_VOLTAGE_CHANNEL(7),
-> +};
-> +
-> +enum adc128_configuration_index {
-> +	ADC128_CONFIG_INDEX_082S,
-> +	ADC128_CONFIG_INDEX_102S,
-> +	ADC128_CONFIG_INDEX_122S,
-> +	ADC128_CONFIG_INDEX_124S,
-> +	ADC128_CONFIG_INDEX_128S,
-> +};
-> +
->  static const struct adc128_configuration adc128_config[] = {
-
-I would have rather removed the array here. Adding the enum just
-makes lots more code to read without any technical benefit.
-
-> -	{ adc128s052_channels, ARRAY_SIZE(adc128s052_channels) },
-> -	{ adc122s021_channels, ARRAY_SIZE(adc122s021_channels) },
-> -	{ adc124s021_channels, ARRAY_SIZE(adc124s021_channels) },
-> +	[ADC128_CONFIG_INDEX_082S] = {
-> +		.channels = adc082s021_channels,
-> +		.num_channels = ARRAY_SIZE(adc082s021_channels)
-> +	},
-> +	[ADC128_CONFIG_INDEX_102S] = {
-> +		.channels = adc102s021_channels,
-> +		.num_channels = ARRAY_SIZE(adc102s021_channels)
-> +	},
-> +	[ADC128_CONFIG_INDEX_122S] = {
-> +		.channels = adc122s021_channels,
-> +		.num_channels = ARRAY_SIZE(adc122s021_channels)
-> +	},
-> +	[ADC128_CONFIG_INDEX_124S] = {
-> +		.channels = adc124s021_channels,
-> +		.num_channels = ARRAY_SIZE(adc124s021_channels)
-> +	},
-> +	[ADC128_CONFIG_INDEX_128S] = {
-> +		.channels = adc128s052_channels,
-> +		.num_channels = ARRAY_SIZE(adc128s052_channels)
-> +	},
->  };
-
-I.e. instead:
-
-static const struct adc128_configuration adc08s021_config = {
-	.channels = adc082s021_channels,
-	.num_channels = ARRAY_SIZE(adc082s021_channels),
-};
-
-static const struct adc128_configuration adc10s021_config = {
-	.channels = adc102s021_channels,
-	.num_channels = ARRAY_SIZE(adc102s021_channels)
-};
-
-...
-
->  
->  static const struct iio_info adc128_info = {
-> @@ -177,31 +240,43 @@ static int adc128_probe(struct spi_device *spi)
->  }
->  
->  static const struct of_device_id adc128_of_match[] = {
-> -	{ .compatible = "ti,adc128s052", .data = &adc128_config[0] },
-> -	{ .compatible = "ti,adc122s021", .data = &adc128_config[1] },
-> -	{ .compatible = "ti,adc122s051", .data = &adc128_config[1] },
-> -	{ .compatible = "ti,adc122s101", .data = &adc128_config[1] },
-> -	{ .compatible = "ti,adc124s021", .data = &adc128_config[2] },
-> -	{ .compatible = "ti,adc124s051", .data = &adc128_config[2] },
-> -	{ .compatible = "ti,adc124s101", .data = &adc128_config[2] },
-> +	{ .compatible = "ti,adc082s021", .data = &adc128_config[ADC128_CONFIG_INDEX_082S] },
-> +	{ .compatible = "ti,adc082s051", .data = &adc128_config[ADC128_CONFIG_INDEX_082S] },
-> +	{ .compatible = "ti,adc082s101", .data = &adc128_config[ADC128_CONFIG_INDEX_082S] },
-> +	{ .compatible = "ti,adc102s021", .data = &adc128_config[ADC128_CONFIG_INDEX_102S] },
-> +	{ .compatible = "ti,adc102s051", .data = &adc128_config[ADC128_CONFIG_INDEX_102S] },
-> +	{ .compatible = "ti,adc102s101", .data = &adc128_config[ADC128_CONFIG_INDEX_102S] },
-> +	{ .compatible = "ti,adc122s021", .data = &adc128_config[ADC128_CONFIG_INDEX_122S] },
-> +	{ .compatible = "ti,adc122s051", .data = &adc128_config[ADC128_CONFIG_INDEX_122S] },
-> +	{ .compatible = "ti,adc122s101", .data = &adc128_config[ADC128_CONFIG_INDEX_122S] },
-> +	{ .compatible = "ti,adc124s021", .data = &adc128_config[ADC128_CONFIG_INDEX_124S] },
-> +	{ .compatible = "ti,adc124s051", .data = &adc128_config[ADC128_CONFIG_INDEX_124S] },
-> +	{ .compatible = "ti,adc124s101", .data = &adc128_config[ADC128_CONFIG_INDEX_124S] },
-> +	{ .compatible = "ti,adc128s052", .data = &adc128_config[ADC128_CONFIG_INDEX_128S] },
->  	{ /* sentinel */ },
->  };
->  MODULE_DEVICE_TABLE(of, adc128_of_match);
-
-It would be easier to see what is new and what is changed if we split out the
-"cleanup" to a separate patch.
-
->  
->  static const struct spi_device_id adc128_id[] = {
-> -	{ "adc128s052", (kernel_ulong_t)&adc128_config[0] },
-> -	{ "adc122s021",	(kernel_ulong_t)&adc128_config[1] },
-> -	{ "adc122s051",	(kernel_ulong_t)&adc128_config[1] },
-> -	{ "adc122s101",	(kernel_ulong_t)&adc128_config[1] },
-> -	{ "adc124s021", (kernel_ulong_t)&adc128_config[2] },
-> -	{ "adc124s051", (kernel_ulong_t)&adc128_config[2] },
-> -	{ "adc124s101", (kernel_ulong_t)&adc128_config[2] },
-> +	{ "adc082s021", (kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_082S] },
-> +	{ "adc082s051", (kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_082S] },
-> +	{ "adc082s101", (kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_082S] },
-> +	{ "adc102s021", (kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_102S] },
-> +	{ "adc102s051", (kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_102S] },
-> +	{ "adc102s101", (kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_102S] },
-> +	{ "adc122s021",	(kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_122S] },
-> +	{ "adc122s051",	(kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_122S] },
-> +	{ "adc122s101",	(kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_122S] },
-> +	{ "adc124s021", (kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_124S] },
-> +	{ "adc124s051", (kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_124S] },
-> +	{ "adc124s101", (kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_124S] },
-> +	{ "adc128s052", (kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_128S] },
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(spi, adc128_id);
->  
->  static const struct acpi_device_id adc128_acpi_match[] = {
-> -	{ "AANT1280", (kernel_ulong_t)&adc128_config[2] },
-> +	{ "AANT1280", (kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_124S] },
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(acpi, adc128_acpi_match);
-
+> Thanks.
