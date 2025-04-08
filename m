@@ -1,107 +1,128 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ADB523FC4B;
-	Tue,  8 Apr 2025 18:21:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF45A23E34D;
+	Tue,  8 Apr 2025 18:22:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744136503; cv=none; b=FA2um7Vg6TI65/Cry5Sl01zQh6kD487ewG72xboyulSS8pG4G1qEjRGFS8xvFdyfCO46i8aqM5lGeMxX5sD/K+gjfEZNywrXX2O/AcOKPiRN3bELrrWluFu71IgYqU/xbW2I463MYXZkXgM7PmXDImkqJP+XFs1whe+HXIvCEi4=
+	t=1744136537; cv=none; b=i6Dd62pqfZFA2P9q5qBvxDtgjl9gJlbN6/gUtDgqCRvVmbDEbEoPuyuOXuEaqggVJz98jsIcqcPntVP82vh81lxkwtkYTde1wvZSJWNiDU4FT5nNf6FWthcrN910EN+3Eem8pg76mRjoOcias1WhylcqZ+fPfhMnpP2O/qeW6KI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744136503; c=relaxed/simple;
-	bh=DyI97cbSCT90VDdKQskKPPcvkJAoF4pYUo/b7c/IU7M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=fVlDiSP/Nf1IGVK13ZnFADQLTWvh21LlOvz2RIcDXF6yUXGYFhP5XWtXEgVIABuALG8JNcAepeflfvakPVuaQBAIsxN1GrjyQMcUSXUSmcEjkORdZ6PNt1pcxShxmZ/fnK02Qf7CMGSvBHrmOhHsL++mvcebtmJe9oN//fKLMA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fW34edki; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1744136537; c=relaxed/simple;
+	bh=eHdcGx888xtlC48ZA5KqHMbjHiCFTZ5zjevtdOgk8Z4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ub67pslJThZe3Sj38IeFH14fQcvtJrU3Fyy1eUlG39gpjoNQP+0FG2T0sizxQWGl75YdIjhTYyLj4NoOa5v19apd/48ixshlH4H5ymq2QZFop3Fl5aesn3nzLIguDig3v0yDvSgiyaAAznXvCjwx5tkkZLLi/eNmBzaA49N5EZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BvFRBEcl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fW34edki"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 538BFqCO027667;
-	Tue, 8 Apr 2025 18:21:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	yawypgTDfQmeut2IdACsl8MD5B/MwSN9qyvRnPW0+3w=; b=fW34edkiLmHxqdvA
-	hdp4DF48388vpWiJco8svJxmUOIrT2jxt+nXbGm6GGCUgXi8ezbyhAjYqbaMZkGp
-	fdJ3a3KKxvKifgMDSbrnXuP551mW53vZNw67Fan6BVzcLVT5CtfBd9zHdiC/n3uB
-	yqwMxkKiSttMTxQAWUqjrlk/1gJLOYdtnevibnioA2DvNvKvRytsCt8Cs27cHh0M
-	4vl4VH7rbbsuhxbwZ2UQww314HmhsoE3d5zSQKzMuYWclSrZKs+9qgkYgsBFjcL6
-	wyB432R+iLBgyQV342x1N12Dsu+m1YGYhZtQUOl5IvPh6FJWY0nexzScx2CEXE5a
-	HnuwYg==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twd00v9d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 08 Apr 2025 18:21:33 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 538ILVCf015403
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 8 Apr 2025 18:21:32 GMT
-Received: from [10.134.71.247] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 8 Apr 2025
- 11:21:31 -0700
-Message-ID: <181a3138-fce2-47cb-8258-ff08a00c2b3a@quicinc.com>
-Date: Tue, 8 Apr 2025 11:21:31 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BvFRBEcl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29BB9C4CEE5;
+	Tue,  8 Apr 2025 18:22:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744136537;
+	bh=eHdcGx888xtlC48ZA5KqHMbjHiCFTZ5zjevtdOgk8Z4=;
+	h=From:Subject:Date:To:Cc:From;
+	b=BvFRBEcl5OsEQi7f/QftnXa7g9jZZyjRi+h36rRb9nVHmg7uJlE73TTQvQyRn5/lP
+	 CCz7CnVOGM7R1mJlPiucwR7aIBuRbyBA8yMv2ufrVMBRmykVP3EQ75eyC3F8NwhDMN
+	 LhW3o5eX67JkPQROJPeB7jNVqI0TVFzTFtevv1MLc1UoZiGRFLzeUWB+RSWJA38hsP
+	 oRVaxCgcVeA8c+hpq3bF0nDQqobZ8zTP8tsHJSbxOfXAKljc40pccb47pfcwGHJkE+
+	 hIqBBtuoDHgcpr2TKjvym4QlMTkjr9TVqr2QOdw8p78oFppsq2kOWzTVxcpWc03L4f
+	 MNBYQrymw3lHg==
+From: Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.15 v3 00/11] KVM: arm64: Backport of SVE fixes to v5.15
+Date: Tue, 08 Apr 2025 19:09:55 +0100
+Message-Id: <20250408-stable-sve-5-15-v3-0-ca9a6b850f55@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 RESEND] drm/msm/dpu: reorder pointer operations after
- sanity checks to avoid NULL deref
-To: Qasim Ijaz <qasdev00@gmail.com>, <robdclark@gmail.com>, <lumag@kernel.org>,
-        <sean@poorly.run>, <marijn.suijten@somainline.org>,
-        <airlied@gmail.com>, <simona@ffwll.ch>, <quic_jesszhan@quicinc.com>
-CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        "Dmitry
- Baryshkov" <dmitry.baryshkov@linaro.org>
-References: <20250408172223.10827-1-qasdev00@gmail.com>
-Content-Language: en-US
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-In-Reply-To: <20250408172223.10827-1-qasdev00@gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 6ZAnYeOiOeNZTdojBCkaKPDn5qGs5enQ
-X-Authority-Analysis: v=2.4 cv=Q4vS452a c=1 sm=1 tr=0 ts=67f5692d cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=pGLkceISAAAA:8 a=COk6AnOGAAAA:8
- a=Ss2e1SayUNo6jylPtukA:9 a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: 6ZAnYeOiOeNZTdojBCkaKPDn5qGs5enQ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-08_07,2025-04-08_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 lowpriorityscore=0 spamscore=0 clxscore=1011 phishscore=0
- bulkscore=0 adultscore=0 malwarescore=0 mlxscore=0 suspectscore=0
- mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504080126
+X-B4-Tracking: v=1; b=H4sIAHNm9WcC/2XNQQqDMBAF0KvIrBuZTIxKV71H6SLqRENFSyKhR
+ bx7Q1YtLv985v0dAnvHAa7FDp6jC25dUlCXAvrJLCMLN6QMhKRRUS3CZrqZRYgstJBadHZodNX
+ S0FsD6evl2bp3Fu+gS6nhka6TC9vqP3kmytxlsUI6iVEKFG01IGtrpUS6PdkvPJerHzMW6RdQZ
+ 4ASoNCo2jStITR/wHEcX6/bJTb2AAAA
+X-Change-ID: 20250326-stable-sve-5-15-bfd75482dcfa
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>, 
+ Suzuki K Poulose <suzuki.poulose@arm.com>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+ Oleg Nesterov <oleg@redhat.com>, Oliver Upton <oliver.upton@linux.dev>
+Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, 
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+ Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Eric Auger <eauger@redhat.com>, Wilco Dijkstra <wilco.dijkstra@arm.com>, 
+ Eric Auger <eric.auger@redhat.com>, Florian Weimer <fweimer@redhat.com>, 
+ Fuad Tabba <tabba@google.com>, Jeremy Linton <jeremy.linton@arm.com>, 
+ Paolo Bonzini <pbonzini@redhat.com>, James Clark <james.clark@linaro.org>
+X-Mailer: b4 0.15-dev-c25d1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2485; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=eHdcGx888xtlC48ZA5KqHMbjHiCFTZ5zjevtdOgk8Z4=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBn9WlLibYUDyzvWj6QR2m2X0cD8FPDQOXDzOCKdBw7
+ v4qG836JATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZ/VpSwAKCRAk1otyXVSH0OjfB/
+ 961xgT1ybYDeYy1GntLMrAWWGvOVY3Q6F5R1f8BgjIVQ+5KfSEriODye3WBRgqL9Cb1g6qC74LsMvn
+ Hb+y6f3wRTR+CFM9z3/i2ilTpyi/ffAa+H/9Vwt5vwNUyhldIN9VX1IcIVIk61ZbborgUYBYVBznK/
+ YJurG1b7TrVrQE6Ysipc3lmVl8wlGwJzO0UO95YPY4HVAKLFDvSSIYJ/95ClMxQrDGqFtcCM2hUgmu
+ ari3U0Mn0VvEcUtH6hSs4tPZB53iSaxYHbRL2GzCZHS3jPpgmUVRzQlBfJvBkILhtnxU/N1mISnDck
+ GPDKxyb+jQD7ob2iBuovmj2CMsmScy
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
+This series backports some recent fixes for SVE/KVM interactions from
+Mark Rutland to v5.15.
 
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+Changes in v3:
+- Explicitly include "KVM: arm64: Always start with clearing SVE flag on
+  load", it was included previously as part of a conflcit resolution.
+- Link to v2: https://lore.kernel.org/r/20250403-stable-sve-5-15-v2-0-30a36a78a20a@kernel.org
 
-On 4/8/2025 10:22 AM, Qasim Ijaz wrote:
-> _dpu_encoder_trigger_start dereferences "struct dpu_encoder_phys *phys"
-> before the sanity checks which can lead to a NULL pointer dereference if
-> phys is NULL.
->   
-> Fix this by reordering the dereference after the sanity checks.
->   
-> Fixes: 8144d17a81d9 ("drm/msm/dpu: Skip trigger flush and start for CWB")
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
-> ---
-> v2:
-> - Moved Signed-off tag below Fixes tag
-> - Moved dpu_enc declaration to the top and initialisation below sanity checks
-> 
->   drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
-> 
+Changes in v2:
+- Resend with Greg and the stable list added.
+- Link to v1: https://lore.kernel.org/r/20250402-stable-sve-5-15-v1-0-84d0e5ff1102@kernel.org
 
-Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+---
+Fuad Tabba (1):
+      KVM: arm64: Calculate cptr_el2 traps on activating traps
+
+Marc Zyngier (2):
+      KVM: arm64: Get rid of host SVE tracking/saving
+      KVM: arm64: Always start with clearing SVE flag on load
+
+Mark Brown (4):
+      KVM: arm64: Discard any SVE state when entering KVM guests
+      arm64/fpsimd: Track the saved FPSIMD state type separately to TIF_SVE
+      arm64/fpsimd: Have KVM explicitly say which FP registers to save
+      arm64/fpsimd: Stop using TIF_SVE to manage register saving in KVM
+
+Mark Rutland (4):
+      KVM: arm64: Unconditionally save+flush host FPSIMD/SVE/SME state
+      KVM: arm64: Remove host FPSIMD saving for non-protected KVM
+      KVM: arm64: Remove VHE host restore of CPACR_EL1.ZEN
+      KVM: arm64: Eagerly switch ZCR_EL{1,2}
+
+ arch/arm64/include/asm/fpsimd.h         |   4 +-
+ arch/arm64/include/asm/kvm_host.h       |  17 +++--
+ arch/arm64/include/asm/kvm_hyp.h        |   7 ++
+ arch/arm64/include/asm/processor.h      |   7 ++
+ arch/arm64/kernel/fpsimd.c              | 117 +++++++++++++++++++++++---------
+ arch/arm64/kernel/process.c             |   3 +
+ arch/arm64/kernel/ptrace.c              |   3 +
+ arch/arm64/kernel/signal.c              |   3 +
+ arch/arm64/kvm/arm.c                    |   1 -
+ arch/arm64/kvm/fpsimd.c                 |  72 +++++++++-----------
+ arch/arm64/kvm/hyp/entry.S              |   5 ++
+ arch/arm64/kvm/hyp/include/hyp/switch.h |  86 +++++++++++++++--------
+ arch/arm64/kvm/hyp/nvhe/hyp-main.c      |   9 ++-
+ arch/arm64/kvm/hyp/nvhe/switch.c        |  52 +++++++++-----
+ arch/arm64/kvm/hyp/vhe/switch.c         |   4 ++
+ arch/arm64/kvm/reset.c                  |   3 +
+ 16 files changed, 266 insertions(+), 127 deletions(-)
+---
+base-commit: 0c935c049b5c196b83b968c72d348ae6fff83ea2
+change-id: 20250326-stable-sve-5-15-bfd75482dcfa
+
+Best regards,
+-- 
+Mark Brown <broonie@kernel.org>
+
