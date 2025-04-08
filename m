@@ -1,44 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF0E7264A7F;
-	Tue,  8 Apr 2025 10:16:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2F97269B03
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 10:16:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744107406; cv=none; b=VS6cNcy8daL3mFRyO/YatyqgLOHsLBZgUhGTTAbflwO++oNMqE1CUi667Wl7mQzBNYsNL0g3LaKoFxtdduiq5gyYkBIw6Q/Q9+xTGULmkI40FJYXKJ5wtHPEqAbXhHtfzNRTuNmdmMPfgVpVSNQILYSeheYgmbm5V/20p9RYcLA=
+	t=1744107408; cv=none; b=DGFbDEEIYHeCZ1X9R6jYO+n98jHZlUMKQlciU122/1K+9lptlrR/6dLn34MBfT/HfmmTsP3lzXLN3bah+btXokbQajdr8nhoc1bMBG7tDgxBzZbQOzOS5vfhEbhUTFBtzkllMEiBeubRVF0z7POzmpdSEn6BhuiOUMHxBh/t/SU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744107406; c=relaxed/simple;
-	bh=GM94/DwbdeD/EixIRO4/7Qdl2Fn77Hgpz80fPy0XYZE=;
+	s=arc-20240116; t=1744107408; c=relaxed/simple;
+	bh=ZbiKMFf4PV/LUGL4+hit/DjgthcSwajlZipFOnsaKzM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gpBebmYPnitthvaGoW6HTQOSz1rORLEd5EV88qF643x1CLnu+dZWcCDFuSmJyFF14lAIu8mLpiOqLcmjIJo1OIgYDeMMv9KdMA8JSzrK62zUMJAkbeilgmY/hXktTqeq6fcYij7X4UbP+2VwVuJWLHrTel3vl5aYi5rHIUy9PKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E0WB7Vnn; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=rCPzcTt+z5WztsvdXv/zBDKngDF31I5+H7wBHBktMXzYNSXSJTnNu/HyOqn1VIPh6yyXANXiXZ7aREseMZ7Q/fLpN7Y/yYmKiOMr6KepjSWYqV6HSY7uhqMy8b4VTGUmfsYYWYv4R06rDhL2auzUBaJ3VI4EVWRVAputD3pZOZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=1MI2amgF; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=kqjvPZMD; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=1MI2amgF; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=kqjvPZMD; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E0WB7Vnn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B21B4C4CEE5;
-	Tue,  8 Apr 2025 10:16:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744107405;
-	bh=GM94/DwbdeD/EixIRO4/7Qdl2Fn77Hgpz80fPy0XYZE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=E0WB7Vnnprhfns88GDgxgpthJobuwLuqlaEkuGIFU4sbnXzucIzlv00Zh22CPiNnX
-	 izPgm+NK894+RgTEMf3jVH3dTZEsG9Ro5IX/yyFwm1LD3UBkuSkKTP3kOMspIywCzN
-	 /zTaBaeJzzp1waztcCE/LELFYzjYvmV8ckFH+lCv3sTjMbaXaqjcHptINT1QC/Ux/F
-	 uD1W3j7/PijrcpnziAwaiAoCJEUbiXvcsQrbdZ2poyJnQ52vOBZocVIFupxH8IR9C1
-	 e8X+H97OV9m1lPDNchMHJI994xq07R5/jCkAqKNN1aVzexr7J9wdGc+QyhkY89MeVA
-	 vU5fCuD9sC+1w==
-Date: Tue, 8 Apr 2025 11:16:40 +0100
-From: Simon Horman <horms@kernel.org>
-To: Wentao Liang <vulab@iscas.ac.cn>
-Cc: ecree.xilinx@gmail.com, habetsm.xilinx@gmail.com, andrew+netdev@lunn.ch,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, netdev@vger.kernel.org,
-	linux-staging@lists.linux.dev, linux-net-drivers@amd.com,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	"Lucero Palau, Alejandro" <alejandro.lucero-palau@amd.com>
-Subject: Re: [PATCH v2] sfc: Propagate the return value of
- devlink_info_serial_number_put()
-Message-ID: <20250408101640.GV395307@horms.kernel.org>
-References: <20250407131110.2394-1-vulab@iscas.ac.cn>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="1MI2amgF";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="kqjvPZMD";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="1MI2amgF";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="kqjvPZMD"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id ACCE11F388;
+	Tue,  8 Apr 2025 10:16:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744107404; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YoJPBfgQKwkrD5HYWj1muePrTJ1JAM2jotAdWxyuqs4=;
+	b=1MI2amgF95nu06Dllmx9DlZUZF4Ix7531c3CAe0uJ1nsn7CWvjhLL9P0pMcy3cHzpCYuG+
+	vNfE1w97YsSbI3v8ATSFs28zAWY98rSs9LuehEOV44T44lpHYru3aW8V67acFpL9CzYplQ
+	UhheKCQOUHhPYhk+a56XZoE3C3WbUG8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744107404;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YoJPBfgQKwkrD5HYWj1muePrTJ1JAM2jotAdWxyuqs4=;
+	b=kqjvPZMDq04oDLv7u7kLdby9hHcDRuRbFZjBQeA78akA/prESesWbNNqQQipIHnXjvaZBe
+	J4AdoNg9hRqWTICw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=1MI2amgF;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=kqjvPZMD
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744107404; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YoJPBfgQKwkrD5HYWj1muePrTJ1JAM2jotAdWxyuqs4=;
+	b=1MI2amgF95nu06Dllmx9DlZUZF4Ix7531c3CAe0uJ1nsn7CWvjhLL9P0pMcy3cHzpCYuG+
+	vNfE1w97YsSbI3v8ATSFs28zAWY98rSs9LuehEOV44T44lpHYru3aW8V67acFpL9CzYplQ
+	UhheKCQOUHhPYhk+a56XZoE3C3WbUG8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744107404;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YoJPBfgQKwkrD5HYWj1muePrTJ1JAM2jotAdWxyuqs4=;
+	b=kqjvPZMDq04oDLv7u7kLdby9hHcDRuRbFZjBQeA78akA/prESesWbNNqQQipIHnXjvaZBe
+	J4AdoNg9hRqWTICw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A206813A1E;
+	Tue,  8 Apr 2025 10:16:44 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id oYCKJ4z39GdRcwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Tue, 08 Apr 2025 10:16:44 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 6749CA098A; Tue,  8 Apr 2025 12:16:29 +0200 (CEST)
+Date: Tue, 8 Apr 2025 12:16:29 +0200
+From: Jan Kara <jack@suse.cz>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: brauner@kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 2/3] fs: predict not having to do anything in fdput()
+Message-ID: <ykqfesjfwvqvqfcrgn5cpuqdayxf3r4z235uajbd7dmcdcopqu@jaxky5vifgov>
+References: <20250406235806.1637000-1-mjguzik@gmail.com>
+ <20250406235806.1637000-2-mjguzik@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,39 +89,73 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250407131110.2394-1-vulab@iscas.ac.cn>
+In-Reply-To: <20250406235806.1637000-2-mjguzik@gmail.com>
+X-Rspamd-Queue-Id: ACCE11F388
+X-Spam-Score: -4.01
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	RCVD_COUNT_THREE(0.00)[3];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_TLS_LAST(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	MISSING_XM_UA(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.cz:email,suse.cz:dkim]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-+ Alejandro
-
-On Mon, Apr 07, 2025 at 09:11:10PM +0800, Wentao Liang wrote:
-> The function efx_devlink_info_board_cfg() calls the function
-> devlink_info_serial_number_put(), but does not check its return
-> value.
+On Mon 07-04-25 01:58:05, Mateusz Guzik wrote:
+> This matches the annotation in fdget().
 > 
-> Return the error code if either the devlink_info_serial_number_put()
-> or the efx_mcdi_get_board_cfg() fails.The control flow of the code is
-> changed a little bit to simplify the code. The functionality of the
-> code remain the same.
+> Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
+
+Looks good. Feel free to add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
+> ---
+>  include/linux/file.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Fixes: 14743ddd2495 ("sfc: add devlink info support for ef100")
-> Cc: stable@vger.kernel.org # v6.3+
-> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
-
-Hi Wentao,
-
-In his review of v1 Edward Cree said:
-
-  "Looking at the rest of the file, all the calls to
-    devlink_info_*_put() in this driver ignore the return value, not
-    just this one.  I think this may have been an intentional decision
-    to only report errors in getting the info from FW, which seems
-    reasonable to me.
-  "If not, then all the calls need fixing, not just this one.
-    CCing Alejandro, original author of this code, for his opinion.
-
-I have CCed Aljandro on this email to see if he can help.
-And in any case, I think we need to come to a consensus on
-Ed's point before moving forwards with this patch.
-
+> diff --git a/include/linux/file.h b/include/linux/file.h
+> index 302f11355b10..af1768d934a0 100644
+> --- a/include/linux/file.h
+> +++ b/include/linux/file.h
+> @@ -59,7 +59,7 @@ static inline struct fd CLONED_FD(struct file *f)
+>  
+>  static inline void fdput(struct fd fd)
+>  {
+> -	if (fd.word & FDPUT_FPUT)
+> +	if (unlikely(fd.word & FDPUT_FPUT))
+>  		fput(fd_file(fd));
+>  }
+>  
+> -- 
+> 2.43.0
+> 
 -- 
-pw-bot: changes-requested
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
