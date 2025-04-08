@@ -1,208 +1,138 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 175E7245012
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 19:54:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03ECA1A9B32
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 19:55:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744142074; cv=none; b=JnDQ6Y/PMBsbTAGEMe2dPt7MNw6BUnq0VpnSvwjzCI603JzCCWQfYG4wqdfGcdEIJXmRbWKJnj2iBfiQh+Gninbb2kFlcaSbuAxsiYm528koCS2cixotm+q19xt1KWAke3YftMbyrtnAGtOxq5BMfhJknLZw834AtFbPlYbdBtY=
+	t=1744142142; cv=none; b=eaadvnhR87UoTn4dnbPPnMdlHx1UIJ6eRrUqrpVTUdOvKYh7I1/P0B7nnmiuNXzC5lytQrR9ZOMbljCnSzQWOwiRhEM661busMBqKB2bcHrWINANxMduHz9ddaYdEYJLOVqGx/Yc+MW5XgtHPoEGQ2e4+g5sdsIu7vcSfhU4SWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744142074; c=relaxed/simple;
-	bh=+4iqyUTi0E7UltQIdQPFstwrYJASj34CNxi5y1rMv0Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KjNPPtQwvzqb2QSM9nA7fkeopRwC/ym7xPUm/++Fj1A4SHE63S4sCimiM/X8xOSLeTsD5E++WGUl/f25YrW7RwgXfhYI0XUarBzdkeC5MSHNcn892O9rumTkjrEy9sAyUYGv9NQ/vYY2k1oXLEHDtXpfhfreBME+oojHj9hyawY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vmZ9s3+S; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1744142142; c=relaxed/simple;
+	bh=Ep7SBzyi87s2EY9PMHTzt9VEUHp3qzNZnRx75O3khwI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KVN9al3W43YK+IqJwpzrEtH+zKnGng0Mk+HXeNvUje5E2g0i84MVoXnKFd8yJiwJwaaFs6OKv5DCXOfa7qrFCZeNnCKou41HcxgzYBeE04oNA4Bsl1o6/qCZfNXzYcFUsInoX4Hhb7Gj33QalfI2mRF9zb+62sXyt5XFJoGmr0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=j3m1zxoG; arc=none smtp.client-ip=209.85.219.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vmZ9s3+S"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7390d21bb1cso5869894b3a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 12:54:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="j3m1zxoG"
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6e8f43c1fa0so72017146d6.3
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 12:55:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744142071; x=1744746871; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KBGk/fKPNmRqrd1bCAlViX+nWV4o6WwNupDuItfdSOI=;
-        b=vmZ9s3+S7EREsPsSVrlOEBDS6ovxDIM8zv2M7+p5KvY852nXt6gFq+mHBnZ/tmwE03
-         NgtHB2y+8XQva5+aPDhsPp4ZbQbrkbShNBPDyvuPiCr0O7Pcq+QHWw9yYsfc95S1O+C0
-         r9uSZgpFJjYk/TEoQq2+yNLercrBz+EBTT6jl36PjcVWHhDkdpQyiLg30UZHR0OjO2d8
-         pQAruMWN+nRDtFoOSVMSRd2cMyn7fk/4T1GLp4h+KvKJdlkVAcEfI8/X+pn6GBow/pQX
-         OMlP2dwz0GhXkXeiNGzebKC6KcP2tlW/QkZVEcgQQeN2iOhejDVAVou+Z4WxoHdUuFBT
-         F1iA==
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1744142138; x=1744746938; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=AjMXD7eMjhWYUiwH80i0DmUWomvU04d23CxkIBTomHk=;
+        b=j3m1zxoGYThqPjc67LrppmRtZrGX/Ld83bF0dh8GROW4//wOiCclM355KaGsX0imJG
+         4VDA+yVzmdmV56cNLqkJlqAfsFOOlXdBgxOOG81zMyj2iFh4iojiyregVsAxm9Wiu9Wi
+         3Y75HIi7HlypDXEzpJMLAJBUBtnlGNn5jjDV++H7fYggSs4Uh+qo5eiR+A0ShGxq6don
+         yBVhdMvV7T4oZIviWTgalQoEtLV6HWJW0POyFcgAFz6jdXB2D1MmumSvrGoQqBbgmWD3
+         IAP6JOkn05YpXCL/Pxth02ZBz+oYbFlciInkFbvMeznz4uofkstLoBG11r47as8ab9n8
+         PKHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744142071; x=1744746871;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KBGk/fKPNmRqrd1bCAlViX+nWV4o6WwNupDuItfdSOI=;
-        b=DGBdXYSqV9Fp16m6r9sljpiFI3oQk06mS61fnpURvpEiAJE77b72KLxUF5rsSBtIxp
-         ogeIVTfWTV9Q3Lezaju/7LK+Aa/Hy336u90GxkhEFsQckN8OXAiynQhau8lzg/h+6Oy4
-         mCofGxIaL8wAX9V9lgZt7vWjr6G2RuNn+qffnqINKghqmqg/upgHJnJk2u9DzzeoZWuh
-         RB9s5a9qwCdhOfnSgJzV7THmWiccuGfb65TFcByU0k6FNkJQSArGTbjOX0yGvjKWhNTR
-         ltPqDRVfE3/5fEm5rzZgwR88UH3sn9s/gYxY+cEWE/zFgGxbXuEsMIPvvNdng8QuiSPc
-         Ju7A==
-X-Forwarded-Encrypted: i=1; AJvYcCWDwiL2zV03WPhi2j1/JP+ST6X6S762jZwZN1pyUr7W2msKGY1XM1N/Lkkaw9il723sQ6tNnFkzafb+0uE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5uoorqxpWOQWJ6GGaSBOCiksRy8R82IDzs0yGSDYsjAYOFmI6
-	8LqlcOuoRWU2BK2haBEMaK/Vu5IGzd6u2ID4KcCPewDDI9xbqkPqnwrBcDywRA==
-X-Gm-Gg: ASbGncuV9w2FI0IseHRVTPBv/qCaincOaNV77J7YkcMW/BvwUiuOp2aAC0232LSL9HP
-	kpC+8DdZsLBjQ/IX/aSFrYzdHFUQYblUoC/5EH04phrboTIhjByHm46VGZf7CTxgU3OUAqGpmDG
-	Vf+hAPKcUrQCC0Fh0zaB8nfZTX+GBBCJ7Kmxw5vDSoxGpihckqbqiLCBi7JOaybDheOMRcBVqbw
-	a86isTZblW4vuSozdbcD/cce9YQ4qmnbqc1gOlX5vI4dShkZXiZKNbYhL9GdUR9bGBPHekCnQEY
-	YZ5HDCxfE95KfGFbdh/x3GS6oYpc8fax/vkis5bJbtHgK9VaKkT41RqNVhWKv5/5lFtbQOT6Qr+
-	XVpV+p4uevZpyeYvC3tvO5dYLZB9HPu02dvG6/9s/kxE=
-X-Google-Smtp-Source: AGHT+IFpX171nkKO4/pkD9or/PTfHZTRPoVBCZggU+DSor2BZJYvT8pJQsh9q1mKL13bLo8q2/aXiQ==
-X-Received: by 2002:a05:6a00:4608:b0:736:b101:aed3 with SMTP id d2e1a72fcca58-73bae4957c5mr347163b3a.1.1744142071138;
-        Tue, 08 Apr 2025 12:54:31 -0700 (PDT)
-Received: from ?IPV6:2a00:79e0:2e14:7:4da8:81cb:274b:fff0? ([2a00:79e0:2e14:7:4da8:81cb:274b:fff0])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d97f3719sm11009549b3a.71.2025.04.08.12.54.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Apr 2025 12:54:30 -0700 (PDT)
-Message-ID: <4e96d3ba-043c-4707-9bb9-8987d8c53025@google.com>
-Date: Tue, 8 Apr 2025 12:54:29 -0700
+        d=1e100.net; s=20230601; t=1744142138; x=1744746938;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AjMXD7eMjhWYUiwH80i0DmUWomvU04d23CxkIBTomHk=;
+        b=o5xkAhP+kLv7+ILPHA3T9f4evX0PnkNz95Y+jQABEVyUERv+rtc088sNQ+kiUtSWAY
+         rM8txzylab9s7bVQibwOW4Nh7Z13aMvgeQY+xaAlaw14YpbtmOhGlEFrzCZ26aglCsvT
+         CnCbab4HB/qjPuT3pn3uBPhkbLgBdr076WUlbCMjMgqdu6TI7Ttck+pX5lKiMV7LQfIi
+         9/Np4VoSdbpKRombbh1MNNHkpc208b4lzlKQ4ZwBeAFQ18dgzBScgeOVmCNybV01ySyc
+         9xpEXoNrYj5u4Rz8TK3ixUNRj9DZhpoWmsICBV7UM+6xS8dCHXbmW1Fi1omGZhIQh8oB
+         dfTA==
+X-Forwarded-Encrypted: i=1; AJvYcCXQDYOTz9TZShKLF8At4pL8+D6tXKO7Rex7VqL7BNBWGoUsZvjjSmPH61P6zmxuFiMq7XeudwwN0/qAEtA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvS772/d5hU1qNVtY+thB3NdJXRntp1ay1OqtFNoAYZmG4E6vt
+	C8bgIxTM+UW2oBl+F/s20fkoJqIVlEYk/6sj0PlwMaKAyH3m7hwX2dEl1i7KvIY=
+X-Gm-Gg: ASbGncuFz3daZxqDLdXnEIuSGTqBfVde7Jj18uutcykG4CWZFci4Wm0cUR2FAFVFWhp
+	4sJrD2oqXykcrvATbcuabtLCHnM6pIQAfRD58FnlW9RUDrAZhu9lx7OpSuVQd4KDza+RqZMLwWK
+	u7hhHsDlEI9lLNOtkR4VB4p8NF5v+K1bBc20ZgrgLOjGFowojrfHhQVrt2cECAxewIhTgYmCJrx
+	6UUbbnYQPEoM+4mIR9R5lGkcmohMqySCtPuRaeeBfM7CvZgfEVQq+pvTroLe5iI0AHf5wnwImmK
+	T0RcmVG08dSZK81oVd1s6CFVQYJGZlh6LOcUBQAL8ak=
+X-Google-Smtp-Source: AGHT+IFXT6XjTsrwFY6nkkzwYOcWwoMzRGktgFlUchpbN+1L1qo0bP6hwFz8NH9p84XFI0PIdBp3EA==
+X-Received: by 2002:a05:6214:2404:b0:6d8:99cf:d2e3 with SMTP id 6a1803df08f44-6f0dbbb1c3fmr8925006d6.22.1744142137740;
+        Tue, 08 Apr 2025 12:55:37 -0700 (PDT)
+Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6ef0f137942sm77808716d6.83.2025.04.08.12.55.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 12:55:37 -0700 (PDT)
+Date: Tue, 8 Apr 2025 15:55:33 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Igor Belousov <igor.b@beldev.am>
+Cc: Nhat Pham <nphamcs@gmail.com>, vitaly.wool@konsulko.se,
+	linux-mm@kvack.org, akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org, Shakeel Butt <shakeel.butt@linux.dev>,
+	Yosry Ahmed <yosryahmed@google.com>
+Subject: Re: [PATCH v2] mm: add zblock allocator
+Message-ID: <20250408195533.GA99052@cmpxchg.org>
+References: <1743810988579.7.125720@webmail-backend-production-7b88b644bb-5mmj8>
+ <0dbbbe9d17ed489d4a7dbe12026fc6fd@beldev.am>
+ <f8063d3fa7e148fecdda82e40b36e10a@beldev.am>
+ <CAKEwX=NMjfC1bKTVsB+C7eq3y=O0x3v8MW7KxUfhpg6UUr23rw@mail.gmail.com>
+ <f023ba8341f9b44610cc4ac00cf0ee33@beldev.am>
+ <CAKEwX=MXD9EB242WkB50ZBmZgV-CwrAHp=_oE+e=7yHDfrMHtg@mail.gmail.com>
+ <3f013184c80e254585b56c5f16b7e778@beldev.am>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/5] power: supply: core: add function to get supplies
- from fwnode
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Badhri Jagan Sridharan <badhri@google.com>,
- Sebastian Reichel <sre@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Len Brown <len.brown@intel.com>, Pavel Machek <pavel@kernel.org>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-usb@vger.kernel.org, linux-pm@vger.kernel.org,
- RD Babiera <rdbabiera@google.com>, Kyle Tso <kyletso@google.com>
-References: <20250312-batt_ops-v1-0-88e0bb3129fd@google.com>
- <20250312-batt_ops-v1-2-88e0bb3129fd@google.com>
- <Z9rMiONSFDJInPYM@kuha.fi.intel.com>
-Content-Language: en-US
-From: Amit Sunil Dhamne <amitsd@google.com>
-In-Reply-To: <Z9rMiONSFDJInPYM@kuha.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3f013184c80e254585b56c5f16b7e778@beldev.am>
 
+On Tue, Apr 08, 2025 at 01:20:11PM +0400, Igor Belousov wrote:
+> >> >> Now what's funny is that when I tried to compare how 32 threaded build
+> >> >> would behave on a 8-core VM I couldn't do it because it OOMs with
+> >> >> zsmalloc as zswap backend. With zblock it doesn't, though, and the
+> >> >> results are:
+> >> >> real    12m14.012s
+> >> >> user    39m37.777s
+> >> >> sys     14m6.923s
+> >> >> Zswap:            440148 kB
+> >> >> Zswapped:         924452 kB
+> >> >> zswpin 594812
+> >> >> zswpout 2802454
+> >> >> zswpwb 10878
+> >>
+> >> It's LZ4 for all the test runs.
+> > 
+> > Can you try zstd and let me know how it goes :)
+> 
+> Sure. zstd/8 cores/make -j32:
+> 
+> zsmalloc:
+> real	7m36.413s
+> user	38m0.481s
+> sys	7m19.108s
+> Zswap:            211028 kB
+> Zswapped:         925904 kB
+> zswpin 397851
+> zswpout 1625707
+> zswpwb 5126
+> 
+> zblock:
+> real	7m55.009s
+> user	39m23.147s
+> sys	7m44.004s
+> Zswap:            253068 kB
+> Zswapped:         919956 kB
+> zswpin 456843
+> zswpout 2058963
+> zswpwb 3921
 
-On 3/19/25 6:54 AM, Heikki Krogerus wrote:
-> On Wed, Mar 12, 2025 at 04:42:02PM -0700, Amit Sunil Dhamne via B4 Relay wrote:
->> From: Amit Sunil Dhamne <amitsd@google.com>
->>
->> Add a new helper function power_supply_get_by_fwnode_reference_array()
->> to retrieve a list of power_supplies associated with the fwnode's
->> property. The property can contain multiple nodes where each node is
->> associated with a power_supply. The list of power_supply objects will be
->> stored in an array supplied by the caller and the return value will
->> indicate the size of the resulting array.
-> I don't think this API is necessary. If I've understood what you are
-> after here, the batteries should simply have the Type-C psy(s) listed
-> in the supplied_to and/or supplied_from.
->
-> So you just need to make sure your battery nodes have the USB Type-C
-> node(s) listed in the "power-supplies" property in your DT, no?
-Thanks Heikki! I will evaluate between this approach vs OF graph 
-approach (as suggested in previous review) and implement it in v2.
->
-> thanks,
->> Signed-off-by: Amit Sunil Dhamne <amitsd@google.com>
->> ---
->>   drivers/power/supply/power_supply_core.c | 60 ++++++++++++++++++++++++++++++++
->>   include/linux/power_supply.h             |  5 +++
->>   2 files changed, 65 insertions(+)
->>
->> diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
->> index 76c340b38015af0a67a0d91305e6242a8646bf53..df1a52f85125748c4fdcb10687aa7ed2f626ded1 100644
->> --- a/drivers/power/supply/power_supply_core.c
->> +++ b/drivers/power/supply/power_supply_core.c
->> @@ -593,6 +593,66 @@ struct power_supply *devm_power_supply_get_by_phandle(struct device *dev,
->>   EXPORT_SYMBOL_GPL(devm_power_supply_get_by_phandle);
->>   #endif /* CONFIG_OF */
->>   
->> +static int power_supply_match_fwnode(struct device *dev, const void *data)
->> +{
->> +	return dev && dev->parent && dev->parent->fwnode == data;
->> +}
->> +
->> +/**
->> + * power_supply_get_by_fwnode_reference_array() - Returns an array of power
->> + * supply objects associated with each fwnode reference present in the property
->> + * @fwnode: Pointer to fwnode to lookup property
->> + * @property: Name of property holding references
->> + * @psy: Resulting array of power_supply pointers. To be provided by the caller.
->> + * @size: size of power_supply pointer array.
->> + *
->> + * If power supply was found, it increases reference count for the
->> + * internal power supply's device. The user should power_supply_put()
->> + * after usage.
->> + *
->> + * Return: On success returns the number of power supply objects filled
->> + * in the @psy array.
->> + * -EOVERFLOW when size of @psy array is not suffice.
->> + * -EINVAL when @psy is NULL or @size is 0.
->> + * -ENODATA when fwnode does not contain the given property
->> + */
->> +int power_supply_get_by_fwnode_reference_array(struct fwnode_handle *fwnode,
->> +					       const char *property,
->> +					       struct power_supply **psy,
->> +					       ssize_t size)
->> +{
->> +	int ret, index, count = 0;
->> +	struct fwnode_reference_args args;
->> +	struct device *dev;
->> +
->> +	if (!psy || !size)
->> +		return -EINVAL;
->> +
->> +	for (index = 0; index < size &&
->> +	     !(ret = fwnode_property_get_reference_args(fwnode, property, NULL,
->> +							0, index, &args));
->> +	     ++index) {
->> +		dev = class_find_device(&power_supply_class, NULL, args.fwnode,
->> +					power_supply_match_fwnode);
->> +		fwnode_handle_put(args.fwnode);
->> +		if (!dev)
->> +			continue;
->> +
->> +		if (count > size)
->> +			return -EOVERFLOW;
->> +
->> +		psy[count] = dev_get_drvdata(dev);
->> +		atomic_inc(&psy[count]->use_cnt);
->> +		++count;
->> +	}
->> +
->> +	if (ret != -ENOENT)
->> +		return ret;
->> +
->> +	return index ? count : -ENODATA;
->> +}
->> +EXPORT_SYMBOL_GPL(power_supply_get_by_fwnode_reference_array);
->> +
->>   int power_supply_get_battery_info(struct power_supply *psy,
->>   				  struct power_supply_battery_info **info_out)
->>   {
->> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
->> index 6ed53b292162469d7b357734d5589bff18a201d0..3f062607e5cd7c7f04384e34128ae0953e25d981 100644
->> --- a/include/linux/power_supply.h
->> +++ b/include/linux/power_supply.h
->> @@ -820,6 +820,11 @@ devm_power_supply_get_by_phandle(struct device *dev, const char *property)
->>   { return NULL; }
->>   #endif /* CONFIG_OF */
->>   
->> +extern int
->> +power_supply_get_by_fwnode_reference_array(struct fwnode_handle *fwnode,
->> +					   const char *property,
->> +					   struct power_supply **psy,
->> +					   ssize_t size);
->>   extern const enum power_supply_property power_supply_battery_info_properties[];
->>   extern const size_t power_supply_battery_info_properties_size;
->>   extern int power_supply_get_battery_info(struct power_supply *psy,
->>
->> -- 
->> 2.49.0.rc0.332.g42c0ae87b1-goog
->>
+So zstd results in nearly double the compression ratio, which in turn
+cuts total execution time *almost in half*.
+
+The numbers speak for themselves. Compression efficiency >>> allocator
+speed, because compression efficiency ultimately drives the continuous
+*rate* at which allocations need to occur. You're trying to optimize a
+constant coefficient at the expense of a higher-order one, which is a
+losing proposition.
+
+This is a general NAK from me on any new allocators that cannot match
+or outdo zsmalloc storage density in common scenarios. I'm sorry, but
+I really don't see any reason to do this.
+
+We also should probably make zstd the zswap default.
