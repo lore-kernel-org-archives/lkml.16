@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AF142673BD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 700BB8488;
 	Tue,  8 Apr 2025 10:09:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744106996; cv=none; b=c6j+564gTXm7E4bL5UwgJfGocnjyGQ4sF99Q6bXUOlE6vUm42X+wAaABRlJH/V9JpPeLGOAyFyk+NyQ4Yq/M7BIjpPeu+pZjWZxIXWZ5myuQOIZGPWsEP4aTvVCQgaSEQg7owbZGCWCEfwIoIdmCrqeOTBvvPNoq35hcTkYKFeA=
+	t=1744106996; cv=none; b=M9icrKLcM7g90BkM7Dxdyj948QREmJV//9Y0dLpx6XviELa+C/hfdX+MRLrL47yd5xl8JjNDhKvUsXNGwojk70y/wXzfmj3UQjHMKXTDw8SYqWrKz2A2O71XQ0Yw4al/P+OHpefQY6z0EtGxBw6h/DPbmn6BfQX5ZipHPUzEFas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744106996; c=relaxed/simple;
-	bh=MVRuaiqzwNT41sqHa7MqwAn2eO+Z5qjUAPM1cDdmHsA=;
+	bh=jm1K5mJ5d8V7brXcbsIGHEwX3cLBPOTXA1hQuPqkDsM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nKLzf6ZYiuhTDi0+GLvsBlZbfPtVuriod9Y+fPjWTv9KrbARLXkK0/tTT2MYuskQHAu7obznHLbbt27o5XnW/KKRxzNyhgYDLrzSM9Oo4c0nUsmM663JFgjlKdnzlHE43Dcmc0pBCgggwTIZm+Zu5D6exVdKvRijv+fKud8wIMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AUz/Ozyf; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=bzPyeDP2vKzMKS79WipLjUcuHy5cZn2LvXE6XSIcQjCalEB1eyBpaCge8IaBJmwkxRFVCIikIk9BF8iAxT++StmEP+eav7Y7qU92iipvoh9zhQUo+BVUty4Zw+K9PGwR4C8R0sptXbBafkxWu1vlyCjTp5pQJZ7mo74Q+SHDZ8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N99jDxdh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AUz/Ozyf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7AD3C4CEF5;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N99jDxdh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8668CC4CEE8;
 	Tue,  8 Apr 2025 10:09:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1744106996;
-	bh=MVRuaiqzwNT41sqHa7MqwAn2eO+Z5qjUAPM1cDdmHsA=;
+	bh=jm1K5mJ5d8V7brXcbsIGHEwX3cLBPOTXA1hQuPqkDsM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AUz/OzyfgFxI4AJ3JQd72trrR1cJ+kLo7xlTZLaAgQTQZ+qmFvZxcCU7hhlw6SF4V
-	 39WoFttJMesOd5HRcIqijDrd4pHbl75n/UUo0XE3EVYGOGVM1TCHq8sF5lk+7RQV2p
-	 HQ2NwC1flRfxxcG17wuIMx2PgaIUpyWk8ipLlbFnYeg/JvwELncppfZoq0xRYtwqHd
-	 3c4MppF9oi1WZno/9Ynapzpj62bt7/pT6HBZPnHQscXWT28csOEossGphkq7edFdQm
-	 0IrbmcWQ7yyP9dDlJvSpnCfS+ebJlCd6NSpL8NrSjr51Htrpe9aoyqFClYjjNy0EIY
-	 MroabyA47rexw==
+	b=N99jDxdhmp5Jp09jRqlSEXoDu6pio6TYLfh2MPXQiOQqf5aZ4Qi4PcZRVkFvYuttI
+	 a9DnZm3uFR1LocXcbp72RwkB8scr7R3cmNzPGul9vKGiOUTPKFWwI2NebTDU4bp2tg
+	 rULKfyqW4QDPTS0Bz88nOaRZyba/bfzAMjB0u1kNBIeajYVokhcqZjjDko+Zgqz0tk
+	 BInIDNtE9EbyxTarLOeaTaATMQDFQD6lkdqdrAAUhYG7JtLegKWASgqDWOemUpfwlq
+	 LfhXBS/N89DipMhjKCj03o8Xn/cLhaCV3jrrYmbxqYlfKh4Uwko3wAKBtBrG7veczH
+	 0BRAGYOqDIpXA==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab@kernel.org>)
-	id 1u25tt-00000008RVg-0fct;
+	id 1u25tt-00000008RVa-0Neo;
 	Tue, 08 Apr 2025 18:09:49 +0800
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
 	Jonathan Corbet <corbet@lwn.net>
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 09/33] scripts/kernel-doc.py: move KernelFiles class to a separate file
-Date: Tue,  8 Apr 2025 18:09:12 +0800
-Message-ID: <80bc855e128a9ff0a11df5afe9ba71775dfc9a0f.1744106241.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v3 07/33] scripts/kernel-doc.py: move regex methods to a separate file
+Date: Tue,  8 Apr 2025 18:09:10 +0800
+Message-ID: <64f96b6744435b51894bb4ab7612851d9d054190.1744106241.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1744106241.git.mchehab+huawei@kernel.org>
 References: <cover.1744106241.git.mchehab+huawei@kernel.org>
@@ -50,534 +50,533 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
 
-The KernelFiles class is the main dispatcher which parses each
-source file.
-
 In preparation for letting kerneldoc Sphinx extension to import
 Python libraries, move regex ancillary classes to a separate
 file.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- scripts/kernel-doc.py          | 220 +--------------------------
- scripts/lib/kdoc/kdoc_files.py | 270 +++++++++++++++++++++++++++++++++
- 2 files changed, 271 insertions(+), 219 deletions(-)
- create mode 100755 scripts/lib/kdoc/kdoc_files.py
+ scripts/kernel-doc.py       | 223 +----------------------------
+ scripts/lib/kdoc/kdoc_re.py | 272 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 277 insertions(+), 218 deletions(-)
+ create mode 100755 scripts/lib/kdoc/kdoc_re.py
 
 diff --git a/scripts/kernel-doc.py b/scripts/kernel-doc.py
-index f030a36a165b..d09ada2d862a 100755
+index fb96d42d287c..7f00c8c86a78 100755
 --- a/scripts/kernel-doc.py
 +++ b/scripts/kernel-doc.py
-@@ -119,6 +119,7 @@ sys.path.insert(0, os.path.join(SRC_DIR, LIB_DIR))
+@@ -110,228 +110,15 @@ from pprint import pformat
  
- from kdoc_parser import KernelDoc, type_param
- from kdoc_re import Re
-+from kdoc_files import KernelFiles
+ from dateutil import tz
  
- function_pointer = Re(r"([^\(]*\(\*)\s*\)\s*\(([^\)]*)\)", cache=False)
+-# Local cache for regular expressions
+-re_cache = {}
++# Import Python modules
  
-@@ -143,225 +144,6 @@ type_member = Re(r"\&([_\w]+)(\.|->)([_\w]+)", cache=False)
- type_fallback = Re(r"\&([_\w]+)", cache=False)
- type_member_func = type_member + Re(r"\(\)", cache=False)
++LIB_DIR = "lib/kdoc"
++SRC_DIR = os.path.dirname(os.path.realpath(__file__))
  
--class GlobSourceFiles:
+-class Re:
 -    """
--    Parse C source code file names and directories via an Interactor.
--
+-    Helper class to simplify regex declaration and usage,
++sys.path.insert(0, os.path.join(SRC_DIR, LIB_DIR))
+ 
+-    It calls re.compile for a given pattern. It also allows adding
+-    regular expressions and define sub at class init time.
++from kdoc_re import Re, NestedMatch
+ 
+-    Regular expressions can be cached via an argument, helping to speedup
+-    searches.
 -    """
 -
--    def __init__(self, srctree=None, valid_extensions=None):
--        """
--        Initialize valid extensions with a tuple.
--
--        If not defined, assume default C extensions (.c and .h)
--
--        It would be possible to use python's glob function, but it is
--        very slow, and it is not interactive. So, it would wait to read all
--        directories before actually do something.
--
--        So, let's use our own implementation.
--        """
--
--        if not valid_extensions:
--            self.extensions = (".c", ".h")
+-    def _add_regex(self, string, flags):
+-        if string in re_cache:
+-            self.regex = re_cache[string]
 -        else:
--            self.extensions = valid_extensions
+-            self.regex = re.compile(string, flags=flags)
 -
--        self.srctree = srctree
+-            if self.cache:
+-                re_cache[string] = self.regex
 -
--    def _parse_dir(self, dirname):
--        """Internal function to parse files recursively"""
+-    def __init__(self, string, cache=True, flags=0):
+-        self.cache = cache
+-        self.last_match = None
 -
--        with os.scandir(dirname) as obj:
--            for entry in obj:
--                name = os.path.join(dirname, entry.name)
+-        self._add_regex(string, flags)
 -
--                if entry.is_dir():
--                    yield from self._parse_dir(name)
+-    def __str__(self):
+-        return self.regex.pattern
 -
--                if not entry.is_file():
--                    continue
+-    def __add__(self, other):
+-        return Re(str(self) + str(other), cache=self.cache or other.cache,
+-                  flags=self.regex.flags | other.regex.flags)
 -
--                basename = os.path.basename(name)
+-    def match(self, string):
+-        self.last_match = self.regex.match(string)
+-        return self.last_match
 -
--                if not basename.endswith(self.extensions):
--                    continue
+-    def search(self, string):
+-        self.last_match = self.regex.search(string)
+-        return self.last_match
 -
--                yield name
+-    def findall(self, string):
+-        return self.regex.findall(string)
 -
--    def parse_files(self, file_list, file_not_found_cb):
--        for fname in file_list:
--            if self.srctree:
--                f = os.path.join(self.srctree, fname)
--            else:
--                f = fname
+-    def split(self, string):
+-        return self.regex.split(string)
 -
--            if os.path.isdir(f):
--                yield from self._parse_dir(f)
--            elif os.path.isfile(f):
--                yield f
--            elif file_not_found_cb:
--                file_not_found_cb(fname)
+-    def sub(self, sub, string, count=0):
+-        return self.regex.sub(sub, string, count=count)
+-
+-    def group(self, num):
+-        return self.last_match.group(num)
+-
+-class NestedMatch:
+-    """
+-    Finding nested delimiters is hard with regular expressions. It is
+-    even harder on Python with its normal re module, as there are several
+-    advanced regular expressions that are missing.
+-
+-    This is the case of this pattern:
+-
+-            '\\bSTRUCT_GROUP(\\(((?:(?>[^)(]+)|(?1))*)\\))[^;]*;'
+-
+-    which is used to properly match open/close parenthesis of the
+-    string search STRUCT_GROUP(),
+-
+-    Add a class that counts pairs of delimiters, using it to match and
+-    replace nested expressions.
+-
+-    The original approach was suggested by:
+-        https://stackoverflow.com/questions/5454322/python-how-to-match-nested-parentheses-with-regex
+-
+-    Although I re-implemented it to make it more generic and match 3 types
+-    of delimiters. The logic checks if delimiters are paired. If not, it
+-    will ignore the search string.
+-    """
+-
+-    # TODO:
+-    # Right now, regular expressions to match it are defined only up to
+-    #       the start delimiter, e.g.:
+-    #
+-    #       \bSTRUCT_GROUP\(
+-    #
+-    # is similar to: STRUCT_GROUP\((.*)\)
+-    # except that the content inside the match group is delimiter's aligned.
+-    #
+-    # The content inside parenthesis are converted into a single replace
+-    # group (e.g. r`\1').
+-    #
+-    # It would be nice to change such definition to support multiple
+-    # match groups, allowing a regex equivalent to.
+-    #
+-    #   FOO\((.*), (.*), (.*)\)
+-    #
+-    # it is probably easier to define it not as a regular expression, but
+-    # with some lexical definition like:
+-    #
+-    #   FOO(arg1, arg2, arg3)
 -
 -
--class KernelFiles():
+-    DELIMITER_PAIRS = {
+-        '{': '}',
+-        '(': ')',
+-        '[': ']',
+-    }
 -
--    def parse_file(self, fname):
+-    RE_DELIM = re.compile(r'[\{\}\[\]\(\)]')
 -
--        doc = KernelDoc(self.config, fname)
--        doc.run()
--
--        return doc
--
--    def process_export_file(self, fname):
--        try:
--            with open(fname, "r", encoding="utf8",
--                      errors="backslashreplace") as fp:
--                for line in fp:
--                    KernelDoc.process_export(self.config.function_table, line)
--
--        except IOError:
--            print(f"Error: Cannot open fname {fname}", fname=sys.stderr)
--            self.config.errors += 1
--
--    def file_not_found_cb(self, fname):
--        self.config.log.error("Cannot find file %s", fname)
--        self.config.errors += 1
--
--    def __init__(self, files=None, verbose=False, out_style=None,
--                 werror=False, wreturn=False, wshort_desc=False,
--                 wcontents_before_sections=False,
--                 logger=None, modulename=None, export_file=None):
--        """Initialize startup variables and parse all files"""
--
--
--        if not verbose:
--            verbose = bool(os.environ.get("KBUILD_VERBOSE", 0))
--
--        if not modulename:
--            modulename = "Kernel API"
--
--        dt = datetime.now()
--        if os.environ.get("KBUILD_BUILD_TIMESTAMP", None):
--            # use UTC TZ
--            to_zone = tz.gettz('UTC')
--            dt = dt.astimezone(to_zone)
--
--        if not werror:
--            kcflags = os.environ.get("KCFLAGS", None)
--            if kcflags:
--                match = re.search(r"(\s|^)-Werror(\s|$)/", kcflags)
--                if match:
--                    werror = True
--
--            # reading this variable is for backwards compat just in case
--            # someone was calling it with the variable from outside the
--            # kernel's build system
--            kdoc_werror = os.environ.get("KDOC_WERROR", None)
--            if kdoc_werror:
--                werror = kdoc_werror
--
--        # Set global config data used on all files
--        self.config = argparse.Namespace
--
--        self.config.verbose = verbose
--        self.config.werror = werror
--        self.config.wreturn = wreturn
--        self.config.wshort_desc = wshort_desc
--        self.config.wcontents_before_sections = wcontents_before_sections
--        self.config.modulename = modulename
--
--        self.config.function_table = set()
--        self.config.source_map = {}
--
--        if not logger:
--            self.config.log = logging.getLogger("kernel-doc")
--        else:
--            self.config.log = logger
--
--        self.config.kernel_version = os.environ.get("KERNELVERSION",
--                                                    "unknown kernel version'")
--        self.config.src_tree = os.environ.get("SRCTREE", None)
--
--        self.out_style = out_style
--        self.export_file = export_file
--
--        # Initialize internal variables
--
--        self.config.errors = 0
--        self.results = []
--
--        self.file_list = files
--        self.files = set()
--
--    def parse(self):
+-    def _search(self, regex, line):
 -        """
--        Parse all files
+-        Finds paired blocks for a regex that ends with a delimiter.
+-
+-        The suggestion of using finditer to match pairs came from:
+-        https://stackoverflow.com/questions/5454322/python-how-to-match-nested-parentheses-with-regex
+-        but I ended using a different implementation to align all three types
+-        of delimiters and seek for an initial regular expression.
+-
+-        The algorithm seeks for open/close paired delimiters and place them
+-        into a stack, yielding a start/stop position of each match  when the
+-        stack is zeroed.
+-
+-        The algorithm shoud work fine for properly paired lines, but will
+-        silently ignore end delimiters that preceeds an start delimiter.
+-        This should be OK for kernel-doc parser, as unaligned delimiters
+-        would cause compilation errors. So, we don't need to rise exceptions
+-        to cover such issues.
 -        """
 -
--        glob = GlobSourceFiles(srctree=self.config.src_tree)
+-        stack = []
 -
--        # Let's use a set here to avoid duplicating files
+-        for match_re in regex.finditer(line):
+-            start = match_re.start()
+-            offset = match_re.end()
 -
--        for fname in glob.parse_files(self.file_list, self.file_not_found_cb):
--            if fname in self.files:
+-            d = line[offset -1]
+-            if d not in self.DELIMITER_PAIRS:
 -                continue
 -
--            self.files.add(fname)
+-            end = self.DELIMITER_PAIRS[d]
+-            stack.append(end)
 -
--            res = self.parse_file(fname)
--            self.results.append((res.fname, res.entries))
+-            for match in self.RE_DELIM.finditer(line[offset:]):
+-                pos = match.start() + offset
 -
--        if not self.files:
--            sys.exit(1)
+-                d = line[pos]
 -
--        # If a list of export files was provided, parse EXPORT_SYMBOL*
--        # from the ones not already parsed
+-                if d in self.DELIMITER_PAIRS:
+-                    end = self.DELIMITER_PAIRS[d]
 -
--        if self.export_file:
--            files = self.files
+-                    stack.append(end)
+-                    continue
 -
--            glob = GlobSourceFiles(srctree=self.config.src_tree)
+-                # Does the end delimiter match what it is expected?
+-                if stack and d == stack[-1]:
+-                    stack.pop()
 -
--            for fname in glob.parse_files(self.export_file,
--                                          self.file_not_found_cb):
--                if fname not in files:
--                    files.add(fname)
+-                    if not stack:
+-                        yield start, offset, pos + 1
+-                        break
 -
--                    self.process_export_file(fname)
+-    def search(self, regex, line):
+-        """
+-        This is similar to re.search:
 -
--    def out_msg(self, fname, name, arg):
--        # TODO: filter out unwanted parts
+-        It matches a regex that it is followed by a delimiter,
+-        returning occurrences only if all delimiters are paired.
+-        """
 -
--        return self.out_style.msg(fname, name, arg)
+-        for t in self._search(regex, line):
 -
--    def msg(self, enable_lineno=False, export=False, internal=False,
--            symbol=None, nosymbol=None):
+-            yield line[t[0]:t[2]]
 -
--        function_table = self.config.function_table
+-    def sub(self, regex, sub, line, count=0):
+-        """
+-        This is similar to re.sub:
 -
--        if symbol:
--            for s in symbol:
--                function_table.add(s)
+-        It matches a regex that it is followed by a delimiter,
+-        replacing occurrences only if all delimiters are paired.
 -
--        # Output none mode: only warnings will be shown
--        if not self.out_style:
--            return
+-        if r'\1' is used, it works just like re: it places there the
+-        matched paired data with the delimiter stripped.
 -
--        self.out_style.set_config(self.config)
+-        If count is different than zero, it will replace at most count
+-        items.
+-        """
+-        out = ""
 -
--        self.out_style.set_filter(export, internal, symbol, nosymbol,
--                                  function_table, enable_lineno)
+-        cur_pos = 0
+-        n = 0
 -
--        for fname, arg_tuple in self.results:
--            for name, arg in arg_tuple:
--                if self.out_msg(fname, name, arg):
--                    ln = arg.get("ln", 0)
--                    dtype = arg.get('type', "")
+-        found = False
+-        for start, end, pos in self._search(regex, line):
+-            out += line[cur_pos:start]
 -
--                    self.config.log.warning("%s:%d Can't handle %s",
--                                            fname, ln, dtype)
+-            # Value, ignoring start/end delimiters
+-            value = line[end:pos - 1]
 -
+-            # replaces \1 at the sub string, if \1 is used there
+-            new_sub = sub
+-            new_sub = new_sub.replace(r'\1', value)
+-
+-            out += new_sub
+-
+-            # Drop end ';' if any
+-            if line[pos] == ';':
+-                pos += 1
+-
+-            cur_pos = pos
+-            n += 1
+-
+-            if count and count >= n:
+-                break
+-
+-        # Append the remaining string
+-        l = len(line)
+-        out += line[cur_pos:l]
+-
+-        return out
  
- class OutputFormat:
-     # output mode.
-diff --git a/scripts/lib/kdoc/kdoc_files.py b/scripts/lib/kdoc/kdoc_files.py
+ #
+ # Regular expressions used to parse kernel-doc markups at KernelDoc class.
+diff --git a/scripts/lib/kdoc/kdoc_re.py b/scripts/lib/kdoc/kdoc_re.py
 new file mode 100755
-index 000000000000..8bcdc7ead984
+index 000000000000..512b6521e79d
 --- /dev/null
-+++ b/scripts/lib/kdoc/kdoc_files.py
-@@ -0,0 +1,270 @@
++++ b/scripts/lib/kdoc/kdoc_re.py
+@@ -0,0 +1,272 @@
 +#!/usr/bin/env python3
 +# SPDX-License-Identifier: GPL-2.0
 +# Copyright(c) 2025: Mauro Carvalho Chehab <mchehab@kernel.org>.
-+#
-+# pylint: disable=R0903,R0913,R0914,R0917
-+
-+# TODO: implement warning filtering
 +
 +"""
-+Parse lernel-doc tags on multiple kernel source files.
++Regular expression ancillary classes.
++
++Those help caching regular expressions and do matching for kernel-doc.
 +"""
 +
-+import argparse
-+import logging
-+import os
 +import re
-+import sys
-+from datetime import datetime
 +
-+from dateutil import tz
-+
-+from kdoc_parser import KernelDoc
++# Local cache for regular expressions
++re_cache = {}
 +
 +
-+class GlobSourceFiles:
++class Re:
 +    """
-+    Parse C source code file names and directories via an Interactor.
++    Helper class to simplify regex declaration and usage,
++
++    It calls re.compile for a given pattern. It also allows adding
++    regular expressions and define sub at class init time.
++
++    Regular expressions can be cached via an argument, helping to speedup
++    searches.
 +    """
 +
-+    def __init__(self, srctree=None, valid_extensions=None):
++    def _add_regex(self, string, flags):
 +        """
-+        Initialize valid extensions with a tuple.
-+
-+        If not defined, assume default C extensions (.c and .h)
-+
-+        It would be possible to use python's glob function, but it is
-+        very slow, and it is not interactive. So, it would wait to read all
-+        directories before actually do something.
-+
-+        So, let's use our own implementation.
++        Adds a new regex or re-use it from the cache.
 +        """
 +
-+        if not valid_extensions:
-+            self.extensions = (".c", ".h")
++        if string in re_cache:
++            self.regex = re_cache[string]
 +        else:
-+            self.extensions = valid_extensions
++            self.regex = re.compile(string, flags=flags)
 +
-+        self.srctree = srctree
++            if self.cache:
++                re_cache[string] = self.regex
 +
-+    def _parse_dir(self, dirname):
-+        """Internal function to parse files recursively"""
-+
-+        with os.scandir(dirname) as obj:
-+            for entry in obj:
-+                name = os.path.join(dirname, entry.name)
-+
-+                if entry.is_dir():
-+                    yield from self._parse_dir(name)
-+
-+                if not entry.is_file():
-+                    continue
-+
-+                basename = os.path.basename(name)
-+
-+                if not basename.endswith(self.extensions):
-+                    continue
-+
-+                yield name
-+
-+    def parse_files(self, file_list, file_not_found_cb):
++    def __init__(self, string, cache=True, flags=0):
 +        """
-+        Define an interator to parse all source files from file_list,
-+        handling directories if any
++        Compile a regular expression and initialize internal vars.
 +        """
 +
-+        for fname in file_list:
-+            if self.srctree:
-+                f = os.path.join(self.srctree, fname)
-+            else:
-+                f = fname
++        self.cache = cache
++        self.last_match = None
 +
-+            if os.path.isdir(f):
-+                yield from self._parse_dir(f)
-+            elif os.path.isfile(f):
-+                yield f
-+            elif file_not_found_cb:
-+                file_not_found_cb(fname)
++        self._add_regex(string, flags)
++
++    def __str__(self):
++        """
++        Return the regular expression pattern.
++        """
++        return self.regex.pattern
++
++    def __add__(self, other):
++        """
++        Allows adding two regular expressions into one.
++        """
++
++        return Re(str(self) + str(other), cache=self.cache or other.cache,
++                  flags=self.regex.flags | other.regex.flags)
++
++    def match(self, string):
++        """
++        Handles a re.match storing its results
++        """
++
++        self.last_match = self.regex.match(string)
++        return self.last_match
++
++    def search(self, string):
++        """
++        Handles a re.search storing its results
++        """
++
++        self.last_match = self.regex.search(string)
++        return self.last_match
++
++    def findall(self, string):
++        """
++        Alias to re.findall
++        """
++
++        return self.regex.findall(string)
++
++    def split(self, string):
++        """
++        Alias to re.split
++        """
++
++        return self.regex.split(string)
++
++    def sub(self, sub, string, count=0):
++        """
++        Alias to re.sub
++        """
++
++        return self.regex.sub(sub, string, count=count)
++
++    def group(self, num):
++        """
++        Returns the group results of the last match
++        """
++
++        return self.last_match.group(num)
 +
 +
-+class KernelFiles():
++class NestedMatch:
 +    """
-+    Parse lernel-doc tags on multiple kernel source files.
++    Finding nested delimiters is hard with regular expressions. It is
++    even harder on Python with its normal re module, as there are several
++    advanced regular expressions that are missing.
++
++    This is the case of this pattern:
++
++            '\\bSTRUCT_GROUP(\\(((?:(?>[^)(]+)|(?1))*)\\))[^;]*;'
++
++    which is used to properly match open/close parenthesis of the
++    string search STRUCT_GROUP(),
++
++    Add a class that counts pairs of delimiters, using it to match and
++    replace nested expressions.
++
++    The original approach was suggested by:
++        https://stackoverflow.com/questions/5454322/python-how-to-match-nested-parentheses-with-regex
++
++    Although I re-implemented it to make it more generic and match 3 types
++    of delimiters. The logic checks if delimiters are paired. If not, it
++    will ignore the search string.
 +    """
 +
-+    def parse_file(self, fname):
++    # TODO:
++    # Right now, regular expressions to match it are defined only up to
++    #       the start delimiter, e.g.:
++    #
++    #       \bSTRUCT_GROUP\(
++    #
++    # is similar to: STRUCT_GROUP\((.*)\)
++    # except that the content inside the match group is delimiter's aligned.
++    #
++    # The content inside parenthesis are converted into a single replace
++    # group (e.g. r`\1').
++    #
++    # It would be nice to change such definition to support multiple
++    # match groups, allowing a regex equivalent to.
++    #
++    #   FOO\((.*), (.*), (.*)\)
++    #
++    # it is probably easier to define it not as a regular expression, but
++    # with some lexical definition like:
++    #
++    #   FOO(arg1, arg2, arg3)
++
++    DELIMITER_PAIRS = {
++        '{': '}',
++        '(': ')',
++        '[': ']',
++    }
++
++    RE_DELIM = re.compile(r'[\{\}\[\]\(\)]')
++
++    def _search(self, regex, line):
 +        """
-+        Parse a single Kernel source.
-+        """
++        Finds paired blocks for a regex that ends with a delimiter.
 +
-+        doc = KernelDoc(self.config, fname)
-+        doc.run()
++        The suggestion of using finditer to match pairs came from:
++        https://stackoverflow.com/questions/5454322/python-how-to-match-nested-parentheses-with-regex
++        but I ended using a different implementation to align all three types
++        of delimiters and seek for an initial regular expression.
 +
-+        return doc
++        The algorithm seeks for open/close paired delimiters and place them
++        into a stack, yielding a start/stop position of each match  when the
++        stack is zeroed.
 +
-+    def process_export_file(self, fname):
-+        """
-+        Parses EXPORT_SYMBOL* macros from a single Kernel source file.
-+        """
-+        try:
-+            with open(fname, "r", encoding="utf8",
-+                      errors="backslashreplace") as fp:
-+                for line in fp:
-+                    KernelDoc.process_export(self.config.function_table, line)
-+
-+        except IOError:
-+            print(f"Error: Cannot open fname {fname}", fname=sys.stderr)
-+            self.config.errors += 1
-+
-+    def file_not_found_cb(self, fname):
-+        """
-+        Callback to warn if a file was not found.
-+        """
-+
-+        self.config.log.error("Cannot find file %s", fname)
-+        self.config.errors += 1
-+
-+    def __init__(self, files=None, verbose=False, out_style=None,
-+                 werror=False, wreturn=False, wshort_desc=False,
-+                 wcontents_before_sections=False,
-+                 logger=None, modulename=None, export_file=None):
-+        """
-+        Initialize startup variables and parse all files
-+        """
-+
-+        if not verbose:
-+            verbose = bool(os.environ.get("KBUILD_VERBOSE", 0))
-+
-+        if not modulename:
-+            modulename = "Kernel API"
-+
-+        dt = datetime.now()
-+        if os.environ.get("KBUILD_BUILD_TIMESTAMP", None):
-+            # use UTC TZ
-+            to_zone = tz.gettz('UTC')
-+            dt = dt.astimezone(to_zone)
-+
-+        if not werror:
-+            kcflags = os.environ.get("KCFLAGS", None)
-+            if kcflags:
-+                match = re.search(r"(\s|^)-Werror(\s|$)/", kcflags)
-+                if match:
-+                    werror = True
-+
-+            # reading this variable is for backwards compat just in case
-+            # someone was calling it with the variable from outside the
-+            # kernel's build system
-+            kdoc_werror = os.environ.get("KDOC_WERROR", None)
-+            if kdoc_werror:
-+                werror = kdoc_werror
-+
-+        # Set global config data used on all files
-+        self.config = argparse.Namespace
-+
-+        self.config.verbose = verbose
-+        self.config.werror = werror
-+        self.config.wreturn = wreturn
-+        self.config.wshort_desc = wshort_desc
-+        self.config.wcontents_before_sections = wcontents_before_sections
-+        self.config.modulename = modulename
-+
-+        self.config.function_table = set()
-+        self.config.source_map = {}
-+
-+        if not logger:
-+            self.config.log = logging.getLogger("kernel-doc")
-+        else:
-+            self.config.log = logger
-+
-+        self.config.kernel_version = os.environ.get("KERNELVERSION",
-+                                                    "unknown kernel version'")
-+        self.config.src_tree = os.environ.get("SRCTREE", None)
-+
-+        self.out_style = out_style
-+        self.export_file = export_file
-+
-+        # Initialize internal variables
-+
-+        self.config.errors = 0
-+        self.results = []
-+
-+        self.file_list = files
-+        self.files = set()
-+
-+    def parse(self):
-+        """
-+        Parse all files
++        The algorithm shoud work fine for properly paired lines, but will
++        silently ignore end delimiters that preceeds an start delimiter.
++        This should be OK for kernel-doc parser, as unaligned delimiters
++        would cause compilation errors. So, we don't need to rise exceptions
++        to cover such issues.
 +        """
 +
-+        glob = GlobSourceFiles(srctree=self.config.src_tree)
++        stack = []
 +
-+        # Let's use a set here to avoid duplicating files
++        for match_re in regex.finditer(line):
++            start = match_re.start()
++            offset = match_re.end()
 +
-+        for fname in glob.parse_files(self.file_list, self.file_not_found_cb):
-+            if fname in self.files:
++            d = line[offset - 1]
++            if d not in self.DELIMITER_PAIRS:
 +                continue
 +
-+            self.files.add(fname)
++            end = self.DELIMITER_PAIRS[d]
++            stack.append(end)
 +
-+            res = self.parse_file(fname)
-+            self.results.append((res.fname, res.entries))
++            for match in self.RE_DELIM.finditer(line[offset:]):
++                pos = match.start() + offset
 +
-+        if not self.files:
-+            sys.exit(1)
++                d = line[pos]
 +
-+        # If a list of export files was provided, parse EXPORT_SYMBOL*
-+        # from the ones not already parsed
++                if d in self.DELIMITER_PAIRS:
++                    end = self.DELIMITER_PAIRS[d]
 +
-+        if self.export_file:
-+            files = self.files
++                    stack.append(end)
++                    continue
 +
-+            glob = GlobSourceFiles(srctree=self.config.src_tree)
++                # Does the end delimiter match what it is expected?
++                if stack and d == stack[-1]:
++                    stack.pop()
 +
-+            for fname in glob.parse_files(self.export_file,
-+                                          self.file_not_found_cb):
-+                if fname not in files:
-+                    files.add(fname)
++                    if not stack:
++                        yield start, offset, pos + 1
++                        break
 +
-+                    self.process_export_file(fname)
-+
-+    def out_msg(self, fname, name, arg):
++    def search(self, regex, line):
 +        """
-+        Output messages from a file name using the output style filtering.
++        This is similar to re.search:
 +
-+        If output type was not handled by the syler, return False.
-+        """
-+
-+        # NOTE: we can add rules here to filter out unwanted parts,
-+        # although OutputFormat.msg already does that.
-+
-+        return self.out_style.msg(fname, name, arg)
-+
-+    def msg(self, enable_lineno=False, export=False, internal=False,
-+            symbol=None, nosymbol=None):
-+        """
-+        Interacts over the kernel-doc results and output messages.
++        It matches a regex that it is followed by a delimiter,
++        returning occurrences only if all delimiters are paired.
 +        """
 +
-+        function_table = self.config.function_table
++        for t in self._search(regex, line):
 +
-+        if symbol:
-+            for s in symbol:
-+                function_table.add(s)
++            yield line[t[0]:t[2]]
 +
-+        # Output none mode: only warnings will be shown
-+        if not self.out_style:
-+            return
++    def sub(self, regex, sub, line, count=0):
++        """
++        This is similar to re.sub:
 +
-+        self.out_style.set_config(self.config)
++        It matches a regex that it is followed by a delimiter,
++        replacing occurrences only if all delimiters are paired.
 +
-+        self.out_style.set_filter(export, internal, symbol, nosymbol,
-+                                  function_table, enable_lineno)
++        if r'\1' is used, it works just like re: it places there the
++        matched paired data with the delimiter stripped.
 +
-+        for fname, arg_tuple in self.results:
-+            for name, arg in arg_tuple:
-+                if self.out_msg(fname, name, arg):
-+                    ln = arg.get("ln", 0)
-+                    dtype = arg.get('type', "")
++        If count is different than zero, it will replace at most count
++        items.
++        """
++        out = ""
 +
-+                    self.config.log.warning("%s:%d Can't handle %s",
-+                                            fname, ln, dtype)
++        cur_pos = 0
++        n = 0
++
++        for start, end, pos in self._search(regex, line):
++            out += line[cur_pos:start]
++
++            # Value, ignoring start/end delimiters
++            value = line[end:pos - 1]
++
++            # replaces \1 at the sub string, if \1 is used there
++            new_sub = sub
++            new_sub = new_sub.replace(r'\1', value)
++
++            out += new_sub
++
++            # Drop end ';' if any
++            if line[pos] == ';':
++                pos += 1
++
++            cur_pos = pos
++            n += 1
++
++            if count and count >= n:
++                break
++
++        # Append the remaining string
++        l = len(line)
++        out += line[cur_pos:l]
++
++        return out
 -- 
 2.49.0
 
