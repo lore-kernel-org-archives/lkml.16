@@ -1,180 +1,209 @@
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C86F6227E96;
-	Tue,  8 Apr 2025 15:11:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CC821CCEE2;
+	Tue,  8 Apr 2025 15:11:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744125095; cv=none; b=EgEPmK5ijGlwgnvJfkDV97PlHSP2E4y9qPHAKZWuh9MhAOjcaCBGvaZkR4T9I89cwc5UUcITzDmBYZ+HxFozxWxIt1Ei3d0c04FENFYcSm539Sr3f0UFT28lCOeo688B0Eam7ekldPzPJ80q0fYUXtiGdJhCIAuMnQpqc96fcwA=
+	t=1744125103; cv=none; b=V8Sz6yw+23HkWXPB3P0KscHB02CZN7aDxO5dGHN3I6yLe4j/7mSlHcUOyJIgGNSCDdi3W6jwmQ8odqMY8/mfSUUm3evlWApNeUfE9uiaV7saSoVMT8y0EstSWPfVDNNXM595gQcgMQ+fz4iUCoSHpl3Rz2Dz83kVikp5G5Q0tOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744125095; c=relaxed/simple;
-	bh=iAge/TCQFEQxz188bugCjBSt7K57C1F/d/6gwLwpoCw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UJLp85aK0h689+UOfgdFIgBK5CcMJMeu/6rD8r6n0VDAaWML2lzEQ1tVi460GPhLtSn2sjzOVe6B0UgapyBcGeO2ylLRalvDSl2WWBPJQ56zcA8M1yfkponcafROHBJNFC1gHassCrvEAEtcFDxZdSXJm/PTN3WrkcDz+1X/Iaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U8qNatti; arc=none smtp.client-ip=209.85.219.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U8qNatti"
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6e8fb83e137so51574916d6.0;
-        Tue, 08 Apr 2025 08:11:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744125092; x=1744729892; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fi2eBmkzJiBdyrJlnjIzeZPmXlpwSuN6LV/0MwZZJQk=;
-        b=U8qNatti0qrsZHGCzmGv6ql/rwWpZHtmzA50WAQ4421wkZqGdyl9JFha6twjgSdiEG
-         h8qJ7vSvKoJUev+0rWt626i6ltKZ6FOpeC8LbxDs3KkGoe/vzid+N6ZelIGKBnpa+z6n
-         QAvRiPiU6AakIk/1FC+3p4BlbSalFX96U97oBSejJFNGfJ1QT8xfDvCtFUgtny0FJc95
-         hKKDD8JuX5uJwbiddRTt6MgLn2FvMZs2Ur0vNxJrquSiSDxpuAkTzjOK6YLPjMKwF06+
-         +E5a1ZyY3S9sEJHaAXglWAcRzdvWRU9nYcTj18+utn2yWrMaTJtg17v2DecgkOjG63HU
-         8+4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744125092; x=1744729892;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fi2eBmkzJiBdyrJlnjIzeZPmXlpwSuN6LV/0MwZZJQk=;
-        b=LxLsFkSxYHTEZugp/ZEBiX0aESm/JpGC1UmfAqvNuxWX+BcUwvhz5lxx2o9L8wpvPT
-         0tQgQRuYU5HYJBQR51f+CNAKh2wXx1ch8XbPfWmi6MhfkuiPFTEUSDOn4yqdUW91fSzK
-         5BdyU1TfYSFgz//yxT/LQ5TjhaHvbWUq2PMucEdy1fB7sM1FWuFyJyNa1PGYs13LhCbC
-         x283g+svvqcjCr5k2nfv4XeDb/Y6renZJM2GBBj8GkhrnPO40/T4C1bkE1XB2IxPakdC
-         P+Ae9D458BhmnZhK3FsT2W/mJEuyZuuPIbhWqL/49D7mBzrQoC5TfLqBOt6WOQZhkk7I
-         dNig==
-X-Forwarded-Encrypted: i=1; AJvYcCUPO2hqRq8/gq78clrLHCRTU7TGV0AFGMxRHg3G4fHWJ1th4Pgpvdmi7tdFJRNujO65MdxPAQn00+g=@vger.kernel.org, AJvYcCUai74JV9RYvmbGBvBde2a552mywVKtTQG6evmmmtxKtvghgwPC4OZbzC1oMJRzwORwfphl4nte@vger.kernel.org, AJvYcCVbkomYQ75rcuU+sLmelldOPEtgYDrVA3VS9J8mMwmM2H2pLLWBYMVYp0Gc9IAYwHuyb7CJcUnMcUzPbpr/@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxugec4ui2UqWqTxjUgU2vsEwZHvyTg9GgRy8bQ/0/I2xJpjyYz
-	MfDnd9NzBjA/qwVZzG5VJY27e8FCFsNx3PxDpeOVDM6tRAo4cAO8uB8LDQhtBykuZy+gnbjGDFR
-	BpTgwNUmjysVlk6oXLvEc2EltIf4=
-X-Gm-Gg: ASbGncsCb4EpquGEroieiB8VLfKetR+0MsGNBf+N/KZ3xQf8dzc/eo+sW/T8EPCu/5o
-	fQgln+2GnpLXpqYGExbChNVXLyFPwrKe2vV1LQiVxuI5Tz46SSOzhoN4gqA3ZPpw/lvcE5UUcg3
-	4RcMQ80v1kHv+fQ2v5cu+MrU2JwLlr7NOtXfUWf3N2KwcSigOIRkFxLsqjpw==
-X-Google-Smtp-Source: AGHT+IEBzzayKvqC39EUgHVBWtu/wY1YXqZBYY6cBaTXuY1bD1506pK2P8WVCfFC0SJvQwUENGg3TY07BxlZ30qZMmY=
-X-Received: by 2002:a05:6214:20a1:b0:6ed:df6:cdcd with SMTP id
- 6a1803df08f44-6f0b749934amr221872706d6.21.1744125092487; Tue, 08 Apr 2025
- 08:11:32 -0700 (PDT)
+	s=arc-20240116; t=1744125103; c=relaxed/simple;
+	bh=kJqo/8IGdQrE3R8digcDbm08uHIaoAS8anwz06A50Qs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=hLDTBPOLPrdZYXIvnd/WPybIt6lDs75m/uLBprL1UP7rsq/EWQFNvGedGGf4QuLa43TINlwy2YdUGIrystH1xHeD8EXwznIpUFZ+uo6wtRrh2N9myUZTsOKGfK4zvUR0Jr6w/OtFDS6tLwkO0c055Y5x2+j/zJ1S/mcjmf3NR3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from [127.0.0.1] (unknown [116.232.27.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id 69853343026;
+	Tue, 08 Apr 2025 15:11:38 +0000 (UTC)
+From: Yixun Lan <dlan@gentoo.org>
+Date: Tue, 08 Apr 2025 23:11:20 +0800
+Subject: [PATCH v4] gpiolib: support parsing gpio three-cell interrupts
+ scheme
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407234223.1059191-1-nphamcs@gmail.com> <20250407234223.1059191-4-nphamcs@gmail.com>
- <20250408141555.GA816@cmpxchg.org>
-In-Reply-To: <20250408141555.GA816@cmpxchg.org>
-From: Nhat Pham <nphamcs@gmail.com>
-Date: Tue, 8 Apr 2025 08:11:21 -0700
-X-Gm-Features: ATxdqUHmaTfVyV2I-0EHfU2y-rKG2ACn3QSFVY1QEBvNDfhELczRDQ5ahbXOhYE
-Message-ID: <CAKEwX=PSK-f0mK=Ffsvqs72qicPAoUWW-MdcNurj4PO0NMuJ3w@mail.gmail.com>
-Subject: Re: [RFC PATCH 03/14] mm: swap: add a separate type for physical swap slots
-To: Johannes Weiner <hannes@cmpxchg.org>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hughd@google.com, 
-	yosry.ahmed@linux.dev, mhocko@kernel.org, roman.gushchin@linux.dev, 
-	shakeel.butt@linux.dev, muchun.song@linux.dev, len.brown@intel.com, 
-	chengming.zhou@linux.dev, kasong@tencent.com, chrisl@kernel.org, 
-	huang.ying.caritas@gmail.com, ryan.roberts@arm.com, viro@zeniv.linux.org.uk, 
-	baohua@kernel.org, osalvador@suse.de, lorenzo.stoakes@oracle.com, 
-	christophe.leroy@csgroup.eu, pavel@kernel.org, kernel-team@meta.com, 
-	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
-	linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250408-04-gpio-irq-threecell-v4-1-fd170d5e2d2b@gentoo.org>
+X-B4-Tracking: v=1; b=H4sIAJc89WcC/4XOTWrDMBAF4KsYrasy+rHsZJV7lCxG0tgWJFYiq
+ SYl+O5VnUVbSuhm4M0wH+/OMqVAme2bO0u0hBziXIN+aZibcB6JB18zkyBbkLLjoPl4CZGHdOV
+ lSkSOTiduDAmCTrkeDKu/l0RDuG3u2/GRE13fK18eS2YxE3fxfA5l3+zId9oPCL2UFtue0CE5I
+ wYrjPV6IKs0tmjYlzWFXGL62CovYsP+abcIDlwjab8TFtG7w0hzifE1pnEjF/nNKJDPmHrgSg9
+ CoVcdof7DqB+MNM8YVRlEC2DqIIBfzLqun64ZJ0yVAQAA
+X-Change-ID: 20250227-04-gpio-irq-threecell-66e1e073c806
+To: Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Alex Elder <elder@riscstar.com>, 
+ Inochi Amaoto <inochiama@gmail.com>, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org, 
+ spacemit@lists.linux.dev, Yixun Lan <dlan@gentoo.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5570; i=dlan@gentoo.org;
+ h=from:subject:message-id; bh=kJqo/8IGdQrE3R8digcDbm08uHIaoAS8anwz06A50Qs=;
+ b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBn9TymmoKaxPjndUkTL/uONIdEU8latJ+8KRdoF
+ eUmS9ZwlFmJApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCZ/U8pl8UgAAAAAAuAChp
+ c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0QjVCQUI4QzlDMzF
+ CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277U5RD/9IuD5VKbjaRZvD8L
+ fMjaoKhPQ4VuBlrYfEi25ZTVhsYkwpbpNTyGHKCVcdjnOf5lk4/hQL2GwFX1QfgTbLiAbmxrPrA
+ qcNFmtYbQefEYGg265P+dFhxTYVca1lJJsMrE5slJSvZMAnD4O7GnipUyVG68sppsrKbk7pqsoX
+ P6aMk0TweiCBJWtQq3I37UKoDsciw6c+54xsceNiD1KkTi4JX8KtXGIi7Ws2I2WP/Kscbl/ta3P
+ k49t544lwEOzhT/OCE9YOxmmA8JXThzj+1355bJSHTnZhLiFxH9nSA4P5yNzlpzwPaDKgvAv5NI
+ vDQzSM2Ec2bcFFc8NRSQ6QpIwRddx02oCAeuklfPcDROutKBc3K5OopQV94gWpVxqCTxPacTaVh
+ YAHd+/YkXGlOuuE8w9fyX3NxhalhLUj6VR6QY5n9twZOLDpxr6ufdp8jN0RNzzmhvNCjI23dsC1
+ SCwtprvXEhfeSoddRCr0DrrgvZucV/Rk9IZ9hfzSbzOAPkfPFPt7feBB95KDwkj4exIQYhjvDQ0
+ Y5r+flQO4bIhraJpxCVDwiFaxIZhB4eGvXYiZ86iKwEbBK6JTPTNdQ/J1zzz45AXV9/+se7Ij56
+ jQz3GpXEnWSMF9cTx853fEFMqfeAFtpxumtPsqJ8DgNTHJzGrgwwpGl+JA9KUyuTcl2w==
+X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
+ fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
 
-On Tue, Apr 8, 2025 at 7:16=E2=80=AFAM Johannes Weiner <hannes@cmpxchg.org>=
- wrote:
->
-> On Mon, Apr 07, 2025 at 04:42:04PM -0700, Nhat Pham wrote:
-> > In preparation for swap virtualization, add a new type to represent the
-> > physical swap slots of swapfile. This allows us to separates:
-> >
-> > 1. The logical view of the swap entry (i.e what is stored in page table
-> >    entries and used to index into the swap cache), represented by the
-> >    old swp_entry_t type.
-> >
-> > from:
-> >
-> > 2. Its physical backing state (i.e the actual backing slot on the swap
-> >    device), represented by the new swp_slot_t type.
-> >
-> > The functions that operate at the physical level (i.e on the swp_slot_t
-> > types) are also renamed where appropriate (prefixed with swp_slot_* for
-> > e.g). We also take this opportunity to re-arrange the header files
-> > (include/linux/swap.h and swapops.h), grouping the swap API into the
-> > following categories:
-> >
-> > 1. Virtual swap API (i.e functions on swp_entry_t type).
-> >
-> > 2. Swap cache API (mm/swap_state.c)
-> >
-> > 3. Swap slot cache API (mm/swap_slots.c)
-> >
-> > 4. Physical swap slots and device API (mm/swapfile.c).
->
-> This all makes sense.
->
-> However,
->
-> > @@ -483,50 +503,37 @@ static inline long get_nr_swap_pages(void)
-> >       return atomic_long_read(&nr_swap_pages);
-> >  }
-> >
-> > -extern void si_swapinfo(struct sysinfo *);
-> > -swp_entry_t folio_alloc_swap(struct folio *folio);
-> > -bool folio_free_swap(struct folio *folio);
-> > -void put_swap_folio(struct folio *folio, swp_entry_t entry);
-> > -extern swp_entry_t get_swap_page_of_type(int);
-> > -extern int get_swap_pages(int n, swp_entry_t swp_entries[], int order)=
-;
-> > -extern int add_swap_count_continuation(swp_entry_t, gfp_t);
-> > -extern void swap_shmem_alloc(swp_entry_t, int);
-> > -extern int swap_duplicate(swp_entry_t);
-> > -extern int swapcache_prepare(swp_entry_t entry, int nr);
-> > -extern void swap_free_nr(swp_entry_t entry, int nr_pages);
-> > -extern void swapcache_free_entries(swp_entry_t *entries, int n);
-> > -extern void free_swap_and_cache_nr(swp_entry_t entry, int nr);
-> > +void si_swapinfo(struct sysinfo *);
-> > +swp_slot_t swap_slot_alloc_of_type(int);
-> > +int swap_slot_alloc(int n, swp_slot_t swp_slots[], int order);
-> > +void swap_slot_free_nr(swp_slot_t slot, int nr_pages);
-> > +void swap_slot_cache_free_slots(swp_slot_t *slots, int n);
-> >  int swap_type_of(dev_t device, sector_t offset);
-> > +sector_t swapdev_block(int, pgoff_t);
-> >  int find_first_swap(dev_t *device);
-> > -extern unsigned int count_swap_pages(int, int);
-> > -extern sector_t swapdev_block(int, pgoff_t);
-> > -extern int __swap_count(swp_entry_t entry);
-> > -extern int swap_swapcount(struct swap_info_struct *si, swp_entry_t ent=
-ry);
-> > -extern int swp_swapcount(swp_entry_t entry);
-> > -struct swap_info_struct *swp_swap_info(swp_entry_t entry);
-> > +unsigned int count_swap_pages(int, int);
-> > +struct swap_info_struct *swap_slot_swap_info(swp_slot_t slot);
-> >  struct backing_dev_info;
-> > -extern int init_swap_address_space(unsigned int type, unsigned long nr=
-_pages);
-> > -extern void exit_swap_address_space(unsigned int type);
-> > -extern struct swap_info_struct *get_swap_device(swp_entry_t entry);
-> > +struct swap_info_struct *swap_slot_tryget_swap_info(swp_slot_t slot);
-> >  sector_t swap_folio_sector(struct folio *folio);
->
-> this is difficult to review.
->
-> Can you please split out:
->
-> 1. Code moves / cut-and-paste
->
-> 2. Renames
->
-> 3. New code
->
-> into three separate steps
+gpio irq which using three-cell scheme should always call
+instance_match() function to find the correct irqdomain.
 
-Makes sense, yeah.
+The select() function will be called with !DOMAIN_BUS_ANY,
+so for specific gpio irq driver, it need to set bus token
+explicitly, something like:
+  irq_domain_update_bus_token(girq->domain, DOMAIN_BUS_WIRED);
 
-I will reorganize the series as follows:
+Signed-off-by: Yixun Lan <dlan@gentoo.org>
+---
+In this patch [1], the GPIO controller add support for describing
+hardware with a three-cell scheme:
 
-1. Rearrange in the first patch (which I already did for
-mm/swapfile.c, but now I'll also rearrange the functions in header
-files as well).
-2. One more patch to rename the function and add the new type.
-3. The rest of the series (new API, new code, etc.).
+    gpios = <&gpio instance offset flags>;
+
+It also result describing interrupts in three-cell as this in DT:
+
+    node {
+            interrupt-parent = <&gpio>;
+            interrupts = <instance hwirq irqflag>;
+    }
+
+This series try to extend describing interrupts with three-cell scheme.
+
+The first patch will add capability for parsing irq number and flag
+from last two cells which eventually will support the three-cells
+interrupt, the second patch support finding irqdomain according to
+interrupt instance index.
+
+Link: https://lore.kernel.org/all/20250225-gpio-ranges-fourcell-v3-0-860382ba4713@linaro.org [1]
+---
+Changes in v4:
+- rebase patch [2/2] to gpio's for-next branch, no changes
+- drop [1/2] of patch v3 which merged into irq tree
+- Link to v3: https://lore.kernel.org/r/20250326-04-gpio-irq-threecell-v3-0-aab006ab0e00@gentoo.org
+
+Changes in v3:
+- explicitly introduce *_twothreecell() to support 3 cell interrupt
+- Link to v2: https://lore.kernel.org/r/20250302-04-gpio-irq-threecell-v2-0-34f13ad37ea4@gentoo.org
+
+Changes in v2:
+- introduce generic irq_domain_translate_cells(), other inline cells function 
+- hide the OF-specific things into gpiolib-of.c|h
+- Link to v1: https://lore.kernel.org/r/20250227-04-gpio-irq-threecell-v1-0-4ae4d91baadc@gentoo.org
+---
+ drivers/gpio/gpiolib-of.c |  8 ++++++++
+ drivers/gpio/gpiolib-of.h |  6 ++++++
+ drivers/gpio/gpiolib.c    | 22 ++++++++++++++++++----
+ 3 files changed, 32 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index f29143c71e9db61a6ad6d45d64e88a3f3f2d4fa7..3651c4178b81a1346809ec43b91a532e9f48af2b 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -1285,3 +1285,11 @@ void of_gpiochip_remove(struct gpio_chip *chip)
+ {
+ 	of_node_put(dev_of_node(&chip->gpiodev->dev));
+ }
++
++bool of_gpiochip_instance_match(struct gpio_chip *gc, unsigned int index)
++{
++	if (gc->of_node_instance_match)
++		return gc->of_node_instance_match(gc, index);
++
++	return false;
++}
+diff --git a/drivers/gpio/gpiolib-of.h b/drivers/gpio/gpiolib-of.h
+index 16d6ac8cb156c02232ea868b755bbdc46c78e3c7..3eebfac290c571e3b90e4437295db8eaacb021a3 100644
+--- a/drivers/gpio/gpiolib-of.h
++++ b/drivers/gpio/gpiolib-of.h
+@@ -22,6 +22,7 @@ struct gpio_desc *of_find_gpio(struct device_node *np,
+ 			       unsigned long *lookupflags);
+ int of_gpiochip_add(struct gpio_chip *gc);
+ void of_gpiochip_remove(struct gpio_chip *gc);
++bool of_gpiochip_instance_match(struct gpio_chip *gc, unsigned int index);
+ int of_gpio_count(const struct fwnode_handle *fwnode, const char *con_id);
+ #else
+ static inline struct gpio_desc *of_find_gpio(struct device_node *np,
+@@ -33,6 +34,11 @@ static inline struct gpio_desc *of_find_gpio(struct device_node *np,
+ }
+ static inline int of_gpiochip_add(struct gpio_chip *gc) { return 0; }
+ static inline void of_gpiochip_remove(struct gpio_chip *gc) { }
++static inline bool of_gpiochip_instance_match(struct gpio_chip *gc,
++					      unsigned int index)
++{
++	return false;
++}
+ static inline int of_gpio_count(const struct fwnode_handle *fwnode,
+ 				const char *con_id)
+ {
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 8252a671d7208105a315bdc914acb092d5f95e79..ed8397a88dea1d92c3d4cb3cc9a6b30be29d31f6 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1507,9 +1507,8 @@ static int gpiochip_hierarchy_irq_domain_translate(struct irq_domain *d,
+ 						   unsigned int *type)
+ {
+ 	/* We support standard DT translation */
+-	if (is_of_node(fwspec->fwnode) && fwspec->param_count == 2) {
+-		return irq_domain_translate_twocell(d, fwspec, hwirq, type);
+-	}
++	if (is_of_node(fwspec->fwnode))
++		return irq_domain_translate_twothreecell(d, fwspec, hwirq, type);
+ 
+ 	/* This is for board files and others not using DT */
+ 	if (is_fwnode_irqchip(fwspec->fwnode)) {
+@@ -1811,11 +1810,26 @@ static void gpiochip_irq_unmap(struct irq_domain *d, unsigned int irq)
+ 	irq_set_chip_data(irq, NULL);
+ }
+ 
++static int gpiochip_irq_select(struct irq_domain *d, struct irq_fwspec *fwspec,
++			       enum irq_domain_bus_token bus_token)
++{
++	struct fwnode_handle *fwnode = fwspec->fwnode;
++	struct gpio_chip *gc = d->host_data;
++	unsigned int index = fwspec->param[0];
++
++	if (fwspec->param_count == 3 && is_of_node(fwnode))
++		return of_gpiochip_instance_match(gc, index);
++
++	/* Fallback for twocells */
++	return (fwnode && (d->fwnode == fwnode) && (d->bus_token == bus_token));
++}
++
+ static const struct irq_domain_ops gpiochip_domain_ops = {
+ 	.map	= gpiochip_irq_map,
+ 	.unmap	= gpiochip_irq_unmap,
++	.select	= gpiochip_irq_select,
+ 	/* Virtually all GPIO irqchips are twocell:ed */
+-	.xlate	= irq_domain_xlate_twocell,
++	.xlate	= irq_domain_xlate_twothreecell,
+ };
+ 
+ static struct irq_domain *gpiochip_simple_create_domain(struct gpio_chip *gc)
+
+---
+base-commit: 9ed74dfa0822ba58eacaec61fb16bd4feb34a5a6
+change-id: 20250227-04-gpio-irq-threecell-66e1e073c806
+
+Best regards,
+-- 
+Yixun Lan
+
