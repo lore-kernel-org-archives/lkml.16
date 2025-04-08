@@ -1,65 +1,65 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8497026461C
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 07:38:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AE3E264638
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 07:38:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744097914; cv=none; b=d1uDrX93uAkiSPHh+bnYR8Y0/GinShJKORncz0bwTcRJ5M2OiABo7HzHKDI1X6NOm1Lx0/Ga6BKn7Oh3r9Rnt/UQaeG0a6gB6n6+dioDtX+hQ13Oy2FGVbEVEPWP3Qcr+tq5iPIW9/L9mOKBqExIdAcf41ADrgPC42EuNLOgApU=
+	t=1744097915; cv=none; b=sYuRFL7FHHW6Jf8lLXM7MQh0u5xHR5aSHZlSyEGzrxnDTa3WnDL9LmGkZQp9V9+V00sclHIEIoelGwXzblEj7OdZXKnBavwskr9We89JQqHFfGROWhLP8iUSCfUTiVyUHKFClTLQfRwCJYcuKA18uSfNWPzwbm2z7aU0m78D/q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744097914; c=relaxed/simple;
-	bh=gnxLULCAyuh9NQsbezqTT7XeAICs/jSdAV8dBui03AY=;
+	s=arc-20240116; t=1744097915; c=relaxed/simple;
+	bh=gmKssN881RyaMdbX9IDKos6vpe0C9x5lclww+lbf4e4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ud2gWwR2w0EJLDVfJttKK2xY52ELiCLLhDVOT639yaJzLdbIIhuFqeFpdIF8s7blloByYPLsjaYmMquqJ7nHy9w0Lkd3ZyvN0dS5sGD1tdWgUktnUk5IWypEtQTCrKEgABC09PUJVERyXMgYhSU+Ovklvbt4hRRGayxLPNhlQL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Zz8ItODr; arc=none smtp.client-ip=209.85.221.43
+	 In-Reply-To:To:Cc; b=D1j9h7rMMYeAsuAvAUtBRW0/dgUAz3QqhjAKiFqYp9HGZ0buPCR44Jtj24sZEF5WU/00hVhNMPFbfh20HIgLrO7O3RYUFG1eEOYL/zjuLV2Bz0b1DUTV7mLoCFxycX0QOtwtFfrf4tWEO/5sqcQIkqUT4/LazNCOY0uVmMWq/so=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=zpKGol//; arc=none smtp.client-ip=209.85.221.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Zz8ItODr"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-39c30d9085aso3037574f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 00:38:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="zpKGol//"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-39bf44be22fso3464038f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 00:38:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744097911; x=1744702711; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744097912; x=1744702712; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=aDax3Ws05YZ8zmDA6rC1tfgqVxvQ1cnKk2mOaqzS1/I=;
-        b=Zz8ItODr+iek7sistyaWm9uOHGLFGzwiCzZqY6h698pvEiBDAA69ZRpP+4SXCizoKg
-         /C/TKZ3zMZRaSuENpRx1K55P0MXim1OLralrQYVtqwXruZdAoE+vzfEWAaJJq2Ux5pWY
-         1OGSznWL1t4ykOzYE7BA0GR3fbovH+jDJ6PJlc4q9quO5htqnyS5M6gZRZpD3jduci3n
-         NQClzZhf+cbGyxWrGImXHddpv2kkE0o6iMcUQmjW7CYHQN21ne/RKSI4eeqi0clWPdk1
-         MQD/C7MOquBdTVQgRWT/Wq8FnClbEvpZrJrEMoTPrrKOAX4t/fv/U9AjtfWZGiD/JRrT
-         xGUA==
+        bh=LQVmUT29V2vBtC9E+gdEFAxcap/8e4R6NNrtBDHE7iQ=;
+        b=zpKGol//Mt5OILiY9yqXj2vaJ4bvigJlZ+KtIIfWpKOHQIcibL7AT2h5z7nwcgNBWf
+         664teir3Gl4Y+XC2chp7oqu5MwKcEJpkoGImMKwdPKUhyEhggXNHPfKocpHhEj/NNMWa
+         WWTzwkEH4DeHWkzXlHzFkoe/By8LA8rJazGlXvRvcJjDwLiBqEXmOLdXIIM+Soh4Mqi0
+         xzZvIdyuf7rfCDsjmciLWlS8OrSN7sdmSQU79mk8TKshaj6oNJKFz/IdEbw+v7dcNKxX
+         btH6xZa0ieEurCxreWDCsYvtKVwVSzEVkm1Jph86qZuRn1z6CBxVlTUugm20roSMiN+d
+         FUeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744097911; x=1744702711;
+        d=1e100.net; s=20230601; t=1744097912; x=1744702712;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=aDax3Ws05YZ8zmDA6rC1tfgqVxvQ1cnKk2mOaqzS1/I=;
-        b=U9D0zPXw0Uvt4GVdlGAl/0GA7hgjsQ+1KwNwQv3bgf7wKcYzBykuqhiL+EEkAwQU70
-         Y8D8BEkgGC+pwHUiMMcDnKX9l8PFTMZS0644ozge895XeVNe7dPfco0KwqIbb94+SDQE
-         U7oPC020Xfurv8Y6VoWb6kKlYbh58JfpC4Vs8MzcJWW3pUPRpKN9jdShgP5uP+E8iJqB
-         J4V1Hvy0h4zNwiTEhBJ8T6jX1z5/ZdFt4A5FmtArP6LSsT8g5I5UAOzZ4pbczFQ7MT9N
-         11NgtwbP1PH4287QzNyBbsyBLr3vBfSGsYYwzCqZ3NBPbyZOCIWe/YP0AeUT40m2552e
-         94yg==
-X-Forwarded-Encrypted: i=1; AJvYcCVSmRDgZqRNAIK/KLHB5kk2JyjEmUL9H4KSus84FaDImaxTK5q3JULPtRkW5B6grc5WyiQaodfYLMR/d6s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWfTwCd7vCdb+HBnlbxC4lJlAEUpSr0YcxlY5PtBmy4kOGFdfI
-	bacLeSUmWaWOiFFmtNSzSLQirH6KrBezbOT/91wp5v47kNxjjbrB9cm25poUE5s=
-X-Gm-Gg: ASbGncuaKnMKd7TCILc7CDRByHF+yOViFOnoMrR1nisb1BocJ63SsHtkEJowqCCgje5
-	qEDxnp6aAqY7ZHKje8nGXPcLAxExDxbc67cJP+Za2JTj8o+PsxFXTyAzit1Ijm07tvZyP54zVmc
-	W2KCbBQk7kZQvpW21T+iLmWoM0ia6r4IBhBCUBCVW3XiGYOZdTpXY8H/OsJulrChRH58GPU1vDz
-	KdGKamWdvb0G1kEHGxAUfEDLveXyMUexJThWjUOQuQHaEZjP0WGFmbyFgwYPnPCWi0HwYf4DmDN
-	2bowRJvD7DHjq6wa+whOWFwqyTbIP/urJpO47A==
-X-Google-Smtp-Source: AGHT+IEWN9bYde/xMBfOkHQNa6HTYyFDHb28eVaUUMXpnBBVvhESil1QEAAwJj+1rOSrQNH6YQ+0zg==
-X-Received: by 2002:a05:6000:1867:b0:39c:2688:6edd with SMTP id ffacd0b85a97d-39cb3595c48mr12927726f8f.15.1744097910752;
-        Tue, 08 Apr 2025 00:38:30 -0700 (PDT)
+        bh=LQVmUT29V2vBtC9E+gdEFAxcap/8e4R6NNrtBDHE7iQ=;
+        b=Or92nlVad4zky2RA6H35cCZfFvcOFyvU2qqWq325+5zxllp4fY8nsP5mHAcqMAcVlo
+         xUc5tH1yOWz+8j5fALsJidCF7ZoyvI8dM0uUStS48P8RAWah8mRc/2FGWUwT9aXHGFNs
+         a5ijHl7NRa/CqmIYjZx6zhLlOqLJcYVLCYTk0+o+Z25cPAUnB+jD9oKb+zxA0p2Rr+ky
+         eVCZENd0dHggsR4aq/oPpqQuR0z99sKLq8Vz67reupaBN9ij0EHH6EGt2TlcI+hk19PY
+         KfwF0jnwwU3FAI+MQRyAEe/o/OwCOtbONnUSP97ipSbyAnm+yGEB47N2cxDUY9fP3okh
+         2+vQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUfbVh3zhDBmP90nJwxCM3jZV9MZtGcXwRcfxJegx6f3CvXW7uIbxkhEraVQZ2nNe7t9w3STzTXJ5xMspY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3iFl85yJQAwgZkyW6kMaXgncL5qTidlUwQjkGX2c9diglpUXf
+	NmqZ68C+JakIHVbs+e6q0J2h79OQT8MrcCbU5vtPU2KWmDSifFs+EHV16HbtmnA=
+X-Gm-Gg: ASbGnctiahuRFQbEIDqfyHQWJwylMOh/tGR71zVWulAsfNapTPHUun8f8v35WJIS1pv
+	FmrW11H5+2/SsNT1EYFiFoZ05G4PAh4tFxscwEiHKLYP3ztUi0mtxjeWjeWt10A+IO0JgYTPw1A
+	j7xWOleustwXLwHw9qJQk5Bj+24pvaYKYrHYAHztBlluJDylgJnH6XUW1qBud9/ccuZvxAq8OTp
+	PPsfJa7NZhAGteC0gWx8PeI+vaTc2lHfPJbHDOBwy/I3OgvcW3gfh9IKho/haaber9izC57hu4R
+	21p7jpNu6va1H7+pa+byg+4wdDxtRBdHf2m8zg==
+X-Google-Smtp-Source: AGHT+IGUJn8Zq34HDc5Dha7/WV8HrI2iZCosrT+ksBpGa3LxTqmcQ7HJ8H3bhYBFYza4iwBG7cA9tw==
+X-Received: by 2002:a5d:59ad:0:b0:391:1139:2653 with SMTP id ffacd0b85a97d-39d6fd06913mr7779430f8f.52.1744097911839;
+        Tue, 08 Apr 2025 00:38:31 -0700 (PDT)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:2adf:eaae:f6ea:1a73])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c30239813sm13892137f8f.101.2025.04.08.00.38.29
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c30239813sm13892137f8f.101.2025.04.08.00.38.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 00:38:30 -0700 (PDT)
+        Tue, 08 Apr 2025 00:38:31 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 08 Apr 2025 09:38:23 +0200
-Subject: [PATCH 05/12] ASoC: codecs: rt5677: use new GPIO line value setter
+Date: Tue, 08 Apr 2025 09:38:24 +0200
+Subject: [PATCH 06/12] ASoC: codecs: wm8996: use new GPIO line value setter
  callbacks
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -69,7 +69,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250408-gpiochip-set-rv-sound-v1-5-dd54b6ca1ef9@linaro.org>
+Message-Id: <20250408-gpiochip-set-rv-sound-v1-6-dd54b6ca1ef9@linaro.org>
 References: <20250408-gpiochip-set-rv-sound-v1-0-dd54b6ca1ef9@linaro.org>
 In-Reply-To: <20250408-gpiochip-set-rv-sound-v1-0-dd54b6ca1ef9@linaro.org>
 To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
@@ -86,21 +86,21 @@ Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-gpio@vger.kernel.org, patches@opensource.cirrus.com, 
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1523;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1551;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=zqMzTD4a9F77NzTYV5GJminLBgRVL2t9zDj4XQHtrdg=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn9NJuPhUyJQBxaca+q9M4yYolMhou4yTpNTZ4z
- bBZeOmVg++JAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ/TSbgAKCRARpy6gFHHX
- cjTPEAC1m5Nhh2RvAgn2Pdst2uBxBgbujINKZhSTjhjkRq2GEmSbijkEPVPhf3lTtSgh831MbWY
- /u0gfFdKiH205VrjCt/8wzP2IL4IMpSaWYwt2Q2JAIHbbCVfDnJRL7y3hwEnoxArxbkJytcOKis
- FzezC8j6QX/iHLKZT/aBdX0ldbqSsKmyQYRMVMKm8sJjAS3ytnxsrKtuvjXt39QjGz+9/rJ6U3X
- +P5nukSNs+yzFNVyFIk6iGrXCC8UEmzVdAe+D1naSqPiirI7nnYt5fcie0iR04GoHq2IDEJaDRu
- 6hJZJJNBBiLZLIcEQMSs45Xwts0A+SrnEbcXOBgrs+JdkQTJ8zwWppLPWPfbBfdtUDAzOwF9nhR
- a1fMazH4gjgsVO5GQboxTzs12sAQyUyBKTsWmU/6C1koEFip2C6I7oJJnmqTMtnUgbL1RWHYQ2k
- dUwigXx6LBL7gN59RUhnnViGXAWoWdibP7VWrZ0YCm+zXd+Kqeoli3saaMek+mza0XqWSyZgcL4
- G2KDLyBbxTUWfHj3Wvybh8SBenScb9aaAyCfnFFl43VlOsRbnOieVGSaFPQ6UMTbjj4spNmsfEn
- qHnY6WkI0X1nN5hEOof8Ym1FX5XGI6rpQDm8qDZ2Sj5QCuCNSeCkDbUvPsjK80aWka4sZj5El99
- 62Jw0Pdii81VBAA==
+ bh=J+UXKSUM53U2y2pHQ+9DPWteN9/2otTFvDTKRKmiZUs=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn9NJuvYmZB5HOytKdjpF+bXv0ibp4qgHi/JhNO
+ UlbOT9UwHiJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ/TSbgAKCRARpy6gFHHX
+ ctRxD/40q9HVEWkMEU1CQ2bpA1xLXRmNnYTvAA1+Rh9v+2slXDl8EpukoU/ntP7Zcb1HZqDmdHB
+ As0sbr1Xthx002nsTO2ykfLst8E1tfhiQpGo2/YiirvAx5S4g9CAECLgVNBa3vpm/bvdxqP0ZB9
+ YliQrDQSyolU+tdSU7F0ZDjwLf/9QnQMSEUU2NJRHe/XhUOJ6Dn31c/sAVhCD3/w5NjkPqNwD/R
+ kgXonWNMNi0DvCJq83xI8bdTwID9JF/BdSM6mur2PPpzhnhiPYBAmoUWecdLm8VDKgjbdK1UF87
+ rtIQJBU4lAbtxRiyn3p3qHPTmLNYDbnPI0hYRi6Mi60rAoqLZqIrXqmjkC56vDzVg+tajH8C9+k
+ glVthIuYXvAblFH2dVsuWzFclKI4mCCtUweAbyQXhflJOD+XNdqkAgIGnQlFsY8nQ0/gYhZa/v4
+ uGG6YoTTDJaO0cNlWiqGEtJVt/C7CZcaRJLtTek9DYqWHap+kr/vCEjP02Cv62+z/IOdCty3WwS
+ mIEfGgYqsjeX99tBd6rWTZUIVqLLDoNjCHWgp5wZBrG1zu0PzIvpeCe9rTV1MgZdmtIrjE/8eG3
+ phAnYyMls+IsW2vudz+FckW5zGScBZgs4t6oPuRhEXE2vnTP/6IPkkFQmyHCRAfOjl86CNz9gxh
+ pnSNCdM+uwGQMgw==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
@@ -112,39 +112,40 @@ them.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- sound/soc/codecs/rt5677.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ sound/soc/codecs/wm8996.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/sound/soc/codecs/rt5677.c b/sound/soc/codecs/rt5677.c
-index 6e4774148566..69a0fb8d7f77 100644
---- a/sound/soc/codecs/rt5677.c
-+++ b/sound/soc/codecs/rt5677.c
-@@ -4725,13 +4725,14 @@ static int rt5677_update_gpio_bits(struct rt5677_priv *rt5677, unsigned offset,
+diff --git a/sound/soc/codecs/wm8996.c b/sound/soc/codecs/wm8996.c
+index c2af8d7ecdd8..e364d0da9044 100644
+--- a/sound/soc/codecs/wm8996.c
++++ b/sound/soc/codecs/wm8996.c
+@@ -2136,12 +2136,14 @@ static int wm8996_set_fll(struct snd_soc_component *component, int fll_id, int s
  }
  
  #ifdef CONFIG_GPIOLIB
--static void rt5677_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
-+static int rt5677_gpio_set(struct gpio_chip *chip, unsigned int offset,
+-static void wm8996_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
++static int wm8996_gpio_set(struct gpio_chip *chip, unsigned int offset,
 +			   int value)
  {
- 	struct rt5677_priv *rt5677 = gpiochip_get_data(chip);
- 	int level = value ? RT5677_GPIOx_OUT_HI : RT5677_GPIOx_OUT_LO;
- 	int m = RT5677_GPIOx_OUT_MASK;
+ 	struct wm8996_priv *wm8996 = gpiochip_get_data(chip);
  
--	rt5677_update_gpio_bits(rt5677, offset, m, level);
-+	return rt5677_update_gpio_bits(rt5677, offset, m, level);
+-	regmap_update_bits(wm8996->regmap, WM8996_GPIO_1 + offset,
+-			   WM8996_GP1_LVL, !!value << WM8996_GP1_LVL_SHIFT);
++	return regmap_update_bits(wm8996->regmap, WM8996_GPIO_1 + offset,
++				  WM8996_GP1_LVL,
++				  !!value << WM8996_GP1_LVL_SHIFT);
  }
  
- static int rt5677_gpio_direction_out(struct gpio_chip *chip,
-@@ -4834,7 +4835,7 @@ static const struct gpio_chip rt5677_template_chip = {
- 	.label			= RT5677_DRV_NAME,
+ static int wm8996_gpio_direction_out(struct gpio_chip *chip,
+@@ -2184,7 +2186,7 @@ static const struct gpio_chip wm8996_template_chip = {
+ 	.label			= "wm8996",
  	.owner			= THIS_MODULE,
- 	.direction_output	= rt5677_gpio_direction_out,
--	.set			= rt5677_gpio_set,
-+	.set_rv			= rt5677_gpio_set,
- 	.direction_input	= rt5677_gpio_direction_in,
- 	.get			= rt5677_gpio_get,
- 	.to_irq			= rt5677_to_irq,
+ 	.direction_output	= wm8996_gpio_direction_out,
+-	.set			= wm8996_gpio_set,
++	.set_rv			= wm8996_gpio_set,
+ 	.direction_input	= wm8996_gpio_direction_in,
+ 	.get			= wm8996_gpio_get,
+ 	.can_sleep		= 1,
 
 -- 
 2.45.2
