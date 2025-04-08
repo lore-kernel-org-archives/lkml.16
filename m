@@ -1,73 +1,33 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ABD7232786
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 18:18:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2077522ACF1;
+	Tue,  8 Apr 2025 18:19:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744136323; cv=none; b=qvgf4iwqwfQGJA4AB5Kvv+6cZNh495pzjgcGJLoQ/PXHhwDacRmwEYKnvh+D8Ml2EsBcRAOccYSs67R3iO7Ag8RxC7TrsIMx55PByhKl9BD2Kht78Eb4DQnHUcGxFH5TxWkLih40GevP9twncuxQe9pgFNNgqLBWuiML75DayO4=
+	t=1744136385; cv=none; b=t8qrxnYu6pE4EfeKaZky0bWG2AIPA3/kL/6PA5bRZtJDq/7xEpWC6gJzlVc3jlyFxb7NhBsMg0CXMPRhvzRc3fXQJvXicxqW3V+uWB7yM2aFOCsJjzUZQKVLwEZlg53OTcQhxLWKxXxeAWZByBIqeTgilsimQyaQ6YiDyjgp6b0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744136323; c=relaxed/simple;
-	bh=33JDFRyvDs8HR1vl7NYCjQs8vBWEkaxL/bF60gGL8Uc=;
+	s=arc-20240116; t=1744136385; c=relaxed/simple;
+	bh=BT04Q3wx5T7KJY9SpsyQpGR+AaGDiZCFQmKIG2PNw30=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UVFFC17r/+l9jvHGDNotbKxHWorR+FZ84H16BjVgM4GrRLi9C2OFUfJu6uKDAYldLxMuPaRb94RNKN1ip9oNCC3Ac040wv2/rxlMezTYQkdihqcdO4HCZPXRX3+p1hoZb0FDKKYDWC3ZG22JUeBmSKWjDZ/5wUJD1uKHcTmc54A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=a3tEIf5o; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=vGLuePBgd1V7nghrBtZs4nginNG14/17J1+8SoZZ5K5kueKIzPKYhQHuykvO3oMEp24/DZa8kcxub8hC6OfedE3eaFSpCg/NNamaHOvJv6jLtpzwbiTkDJTYkds+wwUFh/XVshcKP9xAvM3MXJAO5RlE503OpisTHbGi3w63b9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GRyomLqp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a3tEIf5o"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744136320;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=a5MNTcQLVVXVMARql3CFcEx28D/XK8NJIFEW1cH0fos=;
-	b=a3tEIf5oKiW8ZtT2gfpSq1LBkMZMqc51MPJoHR0Ped3ECoIB5UwX51zs0+Mw93ZPY6B4Kv
-	XhZRyY5lVus5E4vJBbnyDcK5VQZ+biZs4ltn9p4kPGYzYmp1p3HMTp+8b7QPeMgEzB0/GY
-	ysOg0SFgt3SZ9wHbCiHtncN8zoho7RI=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-20-WoD2pnRsPAi-pUFTOlHCRQ-1; Tue, 08 Apr 2025 14:18:38 -0400
-X-MC-Unique: WoD2pnRsPAi-pUFTOlHCRQ-1
-X-Mimecast-MFC-AGG-ID: WoD2pnRsPAi-pUFTOlHCRQ_1744136317
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43d3b211d0eso34704475e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 11:18:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744136317; x=1744741117;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=a5MNTcQLVVXVMARql3CFcEx28D/XK8NJIFEW1cH0fos=;
-        b=SzV3b7OFw1r3wa3T/tRgIuazU5AkszHgJV0q86fNVKQVn7Yapo68cDFWXC26uYQ1O3
-         iwqKwQb7scIUwC3oegcfSuHU/LY1s9gspFjN6VRFdyXTmxOaIk3Zkid7lYfhBTQKaILX
-         0ksIyqt8LFCuEaPdysjf8mFUtrTwpEcwJZxvMio8YxOHKwPfBxhM6panfuUn3ZYCYhuB
-         INcsRta1C7MA3pl9+Jzv3orAdhLZRdirSDU3lD/2ubA+4/PCOdXNUAb1toRHeqBUOK1O
-         mGNC5+NCACrj5x12oLgOv5rX2DJyVYwZzOFxpP9IT+qnWQO3wxEkSbwpd+bzylmX/K9b
-         1Vow==
-X-Forwarded-Encrypted: i=1; AJvYcCWTuC4Buy9MOO0QPfqwGq93wIqp0StpgAd6DGv8I6TWgxYKriJNu3loWZNoxzTOguaUbtAgChM5iyJ2/wA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQw9NiEQAhCP3oAh5u/FPPKKhaiKn62TR60qbKmHM5zwi6H+CZ
-	k2DlsI6bOGsoJLxC6UsgKSjzRKErjL3TAzWfa76ikkzXuub+1t7SW+e5XNn5pm2LPyZf4yX1THC
-	hNPlBswsXcpfe7ymHu/1pvjLP4dpbXxQrKpT2zXqgiN2YFwZMlUJ2VV7RzE294A==
-X-Gm-Gg: ASbGnctCH6AmL35sezHfreOZC4ovA56QtpA4wadKGcfgGIkwFOpFt7MQexSbJtW/yGl
-	CRdjKFE1d2Yq7h2kH2CQJE32KSfVtcD0IP7uo+fBGiuCScKPclJNdxPImviUbY9WQxHmgaJpxzY
-	4lw4VjzatCJjpPhm/bghW5IhtQP7nraTNnkwg9nn+HN+UM7jAVL7t2IFPgu6BrglIsoA9z02ZmH
-	khAlPhtqKmbIP4ZfghMABciWB2G0V4zOMIcUVYy5LoSdSjdcCg944BzZZ/kLxqVw2CNt+l6Oq0J
-	vYzbP2ji0QOasmOewa4PujWYVldyv4suMj0Y8rpWyNE2AItaN6scyjyqmthRn2tG0pQQtFGsGXr
-	xDxSMv6KnTaNhvB3NmYmRQ12C//daOlqhtW6B9sDg
-X-Received: by 2002:a05:600c:cc7:b0:439:9737:675b with SMTP id 5b1f17b1804b1-43f1ef4ed59mr687675e9.7.1744136317494;
-        Tue, 08 Apr 2025 11:18:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHHt6LtzhtOCodKlEDsv24JUxo5GCvyjuPDd1u+OK+hcqeg+gGGG7/Q1UKS8qILxl7CGg59mw==
-X-Received: by 2002:a05:600c:cc7:b0:439:9737:675b with SMTP id 5b1f17b1804b1-43f1ef4ed59mr687595e9.7.1744136317185;
-        Tue, 08 Apr 2025 11:18:37 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c707:4f00:a44a:5ad6:765a:635? (p200300cbc7074f00a44a5ad6765a0635.dip0.t-ipconnect.de. [2003:cb:c707:4f00:a44a:5ad6:765a:635])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec1630ddesm172061645e9.5.2025.04.08.11.18.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Apr 2025 11:18:33 -0700 (PDT)
-Message-ID: <60ae4d6b-3ace-482b-9945-1261003f3785@redhat.com>
-Date: Tue, 8 Apr 2025 20:18:32 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GRyomLqp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB3F6C4CEE5;
+	Tue,  8 Apr 2025 18:19:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744136384;
+	bh=BT04Q3wx5T7KJY9SpsyQpGR+AaGDiZCFQmKIG2PNw30=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=GRyomLqpYeC4cWWY48sDagpvvFWbMsJDe3XyiEHnk1OjF+/POjGtI9CfUEmuUNtXq
+	 No/GIjxAA9sl10WtBsFDABF8VXKm5ED7RJBHpfUUWv2HW4qoQC3cowfKPen8ntschG
+	 PD/W0K1bLtu3E/AQdKT1RVGu6RQ6W41XLOA+FglL0qw//WD5c2GjIGzB7NjTAOpAlZ
+	 xjmT3kNEgSg5pv9CsyGrlmgluZYDO6Eq5G1VFQiWIkpY1fHg3MHVLv/9GFQAdEuX/D
+	 4xRni1dvojKF/zdBfWsEL0R4GEIlseeP+IN+KA7pXds5kaphe+2xXWZISQEomFRkEX
+	 L4CRyBWTIBlJw==
+Message-ID: <a8bed98e-0393-4b0a-8b5b-3007015a9af6@kernel.org>
+Date: Tue, 8 Apr 2025 13:19:42 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,145 +35,78 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] mm,slub: Do not special case N_NORMAL nodes for
- slab_nodes
-To: Vlastimil Babka <vbabka@suse.cz>, Harry Yoo <harry.yoo@oracle.com>
-Cc: Oscar Salvador <osalvador@suse.de>,
- Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, Jonathan Cameron
- <Jonathan.Cameron@huawei.com>, linux-cxl@vger.kernel.org
-References: <20250408084153.255762-1-osalvador@suse.de>
- <20250408084153.255762-2-osalvador@suse.de>
- <92ff4f7f-90d2-48ab-8f7d-7fc3485276b5@redhat.com> <Z_UwPmyxyu8YNLG_@harry>
- <b26b32c9-6b3a-4ab4-9ef4-c20b415d5483@redhat.com>
- <d581417f-7756-4ce7-8a5a-49149db33b8c@suse.cz>
-From: David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH v2 2/2] x86/CPU/AMD: Print the reason for the last reset
+To: Borislav Petkov <bp@alien8.de>
+Cc: Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+ "H . Peter Anvin" <hpa@zytor.com>,
+ "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ Yazen Ghannam <yazen.ghannam@amd.com>,
+ Mario Limonciello <mario.limonciello@amd.com>
+References: <20250408174726.3999817-1-superm1@kernel.org>
+ <20250408174726.3999817-2-superm1@kernel.org>
+ <20250408181451.GFZ_Vnm6JXaItfwVpK@fat_crate.local>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <d581417f-7756-4ce7-8a5a-49149db33b8c@suse.cz>
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <20250408181451.GFZ_Vnm6JXaItfwVpK@fat_crate.local>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 08.04.25 19:55, Vlastimil Babka wrote:
-> On 4/8/25 16:25, David Hildenbrand wrote:
->> On 08.04.25 16:18, Harry Yoo wrote:
->>> On Tue, Apr 08, 2025 at 12:17:52PM +0200, David Hildenbrand wrote:
->>>> On 08.04.25 10:41, Oscar Salvador wrote:
->>>>> Currently, slab_mem_going_going_callback() checks whether the node has
->>>>> N_NORMAL memory in order to be set in slab_nodes.
->>>>> While it is true that gettind rid of that enforcing would mean
->>>>> ending up with movables nodes in slab_nodes, the memory waste that comes
->>>>> with that is negligible.
->>>>>
->>>>> So stop checking for status_change_nid_normal and just use status_change_nid
->>>>> instead which works for both types of memory.
->>>>>
->>>>> Also, once we allocate the kmem_cache_node cache  for the node in
->>>>> slab_mem_online_callback(), we never deallocate it in
->>>>> slab_mem_off_callback() when the node goes memoryless, so we can just
->>>>> get rid of it.
->>>>>
->>>>> The only side effect is that we will stop clearing the node from slab_nodes.
->>>>>
->>>>
->>>> Feel free to add a Suggested-by: if you think it applies.
->>>>
->>>>
->>>> Do we have to take care of the N_NORMAL_MEMORY check in kmem_cache_init() ? Likely it
->>>> would have to be a N_MEMORY check.
->>>>
->>>>
->>>> But, I was wondering if we could get rid of the "slab_nodes" thingy as a first step?
->>>
->>> The following commit says that SLUB has slab_nodes thingy for a reason...
->>> kmem_cache_node might not be ready yet even when N_NORMAL_MEMORY check
->>> says it now has normal memory.
->>
->> node_states_set_node() is called from memory hotplug code after
->> MEM_GOING_ONLINE and after online_pages_range().
->>
->> Pages might be isolated at that point, but node_states_set_node() is set
->> only after the memory notifier (MEM_GOING_ONLINE) was triggered.
->>
->> So I don't immediately see the problem assuming that we never free the
->> structures.
+On 4/8/2025 1:14 PM, Borislav Petkov wrote:
+> On Tue, Apr 08, 2025 at 12:47:26PM -0500, Mario Limonciello wrote:
+>> diff --git a/Documentation/admin-guide/amd/amd-reboot-reason.csv b/Documentation/admin-guide/amd/amd-reboot-reason.csv
+>> new file mode 100644
+>> index 0000000000000..c31c7a0464c38
+>> --- /dev/null
+>> +++ b/Documentation/admin-guide/amd/amd-reboot-reason.csv
+>> @@ -0,0 +1,21 @@
+>> +Bit, Type, Reason
+>> +0, Pin, Thermal trip (BP_THERMTRIP_L)
+>> +1, Pin, Power button
+>> +2, Pin, SHUTDOWN# pin
+>> +4, Remote, Remote ASF power off command
+>> +9, Internal, Thermal trip (internal)
+>> +16, Pin, User reset (BP_SYS_RST_L)
+>> +17, Software, PCI reset (PMIO 0xC4)
+>> +18, Software, CF9 reset (0x04)
+>> +19, Software, CF9 reset (0x06)
+>> +20, Software, CF9 reset (0x0E)
+>> +21, Sleep, Power state or ACPI state transition
+>> +22, Pin, Keyboard reset (KB_RST_L)
+>> +23, Internal, Internal CPU shutdown
+>> +24, Hardware, Failed boot timer
+>> +25, Hardware, Watchdog timer
+>> +26, Remote, Remote ASF reset command
+>> +27, Internal, Data fabric sync flood event due to uncorrected error
+>> +29, Internal, MP1 Watchdog timer timeout
+>> +30, Internal, Parity error
+>> +31, Internal, SW sync flood event
+>> \ No newline at end of file
 > 
-> Hm, I think it still exists. So consider:
+> Do we need that table now?
 
-Ah, now I understand the problem, thanks for pointing that out.
+I think it's still valuable to have it in documentation for anyone who 
+wants to read more about this.  As we get issues that come out of the 
+woodwork I could see people punching the string into a search engine and 
+then being spit at debugging.rst and we can adjust documentation to tell 
+them what to do with it when it's not clear.
 
 > 
-> - slab_mem_going_online_callback() creates kmem_cache_node for the new node
-> for existing caches under the mutex
+> If so, why not integrate it into debugging.rst?
 > 
-> Then a cache creation races with "node_states_set_node() is set only after
-> the memory notifier (MEM_GOING_ONLINE) was triggered" in a way that it
-> doesn't see the node set yet - kmem_cache_node for the new node on the new
-> cache will be missing.
-> 
-> The root issue is node_states_set_node() doesn't happen under slab_mutex.
-> slab_nodes update happens under the slab_mutex to avoid this race.
 
-We could by grabbing the mutex in MEM_GOING_ONLINE and putting it in 
-MEM_CANCEL_ONLINE / MEM_ONLINE when a node is going online.
+That's what this does:
 
-We use something similar in virtio-mem code to sync over the whole 
-onlining period.
++.. csv-table::
++   :header-rows: 1
++   :widths: 1, 1, 1
++   :file: ./amd-reboot-reason.csv
 
-Of course, if someone would try creating a cache from inside a notifier, 
-it would be problematic. (unlikely, but pointing it out)
+Or do you mean directly in the RST itself?  The RST documentation [1] 
+said and I quote: "Choose whatever sucks least."
 
-Onlining a node is not a particularly common operation, so maybe ... 
-good enough.
-
-Let me think about other alternatives that require minimal adjustments.
-
--- 
-Cheers,
-
-David / dhildenb
-
+Link: 
+https://pandemic-overview.readthedocs.io/en/latest/myGuides/reStructuredText-Tables-Examples.html 
+[1]
