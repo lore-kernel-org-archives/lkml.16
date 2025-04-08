@@ -1,108 +1,85 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F75241CB5;
-	Tue,  8 Apr 2025 19:43:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3B742C9A;
+	Tue,  8 Apr 2025 19:46:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744141398; cv=none; b=djJAnJqTOJiIVdJOSzRmpgYqTW3w8QSS4kDzVEXh9nuBc9k0PBVO8g5tE0Aw6BXTbXy787Eglijt0Auks1wPCKfK8BSz1rZywEfbw2CkKcQqcz0cYJK5xeR4fRlNFoyuOPZkWxjGCb0tFJL2GugfjgQeQhYQp01U4dYpVYXqooM=
+	t=1744141620; cv=none; b=X+YcB0gZAOJKUPDRLlSHuAcUqql2MMVIHCUGsx+5+jQITGj8XopG6whoRNQAUGNZdGvyK5wF+yupVKL0MINW/4M+FDLU5/0kYrwTiTF1zBjHGFsX9KQlqAAB9BSVBqp8BbPH256J5YtMf3Y3e+lubV9TF8zHW/jLZOsUOwIdBLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744141398; c=relaxed/simple;
-	bh=yV15HTrE/vKKBCW27J0iRu2xsmctgldlTygl0Il5Tic=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PT11EWT2GY+57vw/p9kOYOO8WBYJqTAZczYNTOCzwfyzDzJMv/y1fgEfNIEIwfHY9zefd6EFYHldVH35OmWjbyuVs0Cft3fst+80uWuz7VH1Q9bug206VoOmzi06wsPTOpo8oFrYT+LcQfJO+9xsEsp4zCNFZjtT7bc39N4iLVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=YaxnJ/xF; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	s=arc-20240116; t=1744141620; c=relaxed/simple;
+	bh=ykljCqn6FF0Yab/J+sQBV/c6rKO+79JVLrOtQ1WmWVM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=DLjXvOQMelYB7E6S2BzJ+1IX8HD4l37wUfsb7dcBgTPJ4+yZcTZlr3Gt6HaeOyBnPNWoVWhtgE7rY8qmFhxynUVf7oe1ZbBa71JycOlpoomI1TiLM22ME+rl46ygaO0ePHTc+TDI4ZJyucrC04BH0wrFxlDM0yUKCf4jzvtVqwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ieI20o2X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="YaxnJ/xF"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-39ac9aea656so5096595f8f.3;
-        Tue, 08 Apr 2025 12:43:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1744141395; x=1744746195; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hhaVg/u+b5SbQYX4VE9hUR0TbRx0qr+d12G30wYA5Vw=;
-        b=YaxnJ/xFOjvNplTRQFvWMgRdRwfXS6h+0EEd/lV0bDIL1hmVeZEeR3JwCCwY3VDvsQ
-         uRtaWDengqebFxaJwQFkqdC6i8kRV4M2dc/pAmQt6bsAZ/jiO4jcKFytRilm9zWrUdox
-         BQR+F0Ajil5f9o/YlkhzdH4posAmADI/XPSnT/WsfZGQlx/50qLa2tITX5yssDn6ITUf
-         BkZbxcXLy0FlCjYHNEJeWoYDDGPtlfxaqNcQkjNH8pCLV8w/4xIChaTSeIv2YXfchnbx
-         amAVg0/yU8jnEHZnpQl2LLNcJf17Is25c+srMef2Ih+Jx2Cn3WuALAcirmUtqmp/HHwg
-         KiXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744141395; x=1744746195;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hhaVg/u+b5SbQYX4VE9hUR0TbRx0qr+d12G30wYA5Vw=;
-        b=IIREXl+u+gxFQBhK/MnsfvYdOlWMMZBUiUkrftWWWQsTtKLILs9kVQermGRLYJyvfk
-         HZrWFpykFVqnXnGcRzTiCQnhE9eKR85e6sD/LI2YYwWhAdGDTD53n5J62bGk/NGYc78D
-         auz4QvlLAkXw5t1sc3kh8vADdumVBNB5RN5eyX4EDSTQHEkdixAukFGGul5nSTh3Ja/R
-         Ds0uQGDBD+HOVPT2+mRze0Nmn7XBdW+aWxgxBnOwFrRI88DjxfYfvkCkcG081W152FDR
-         W1AWYhR3BCs5VJuGtNZSYtkrb671lS+qLobXVW5MnSYVWDnyjoP30OnJY2Y3Pf748KVH
-         Tb9g==
-X-Forwarded-Encrypted: i=1; AJvYcCUUhzyh/qKlZwPDJePeVyEkZVi78ueP7Hb4WufHPLwj+WPWMBE86refxwUBuf1gZFPQHxFhkyhLsCOHNUg=@vger.kernel.org, AJvYcCUnpjbhZ14yAWFlAeVMZAJSqxlNFMOuA6a7K/dTKnnlhQ3HRK7FIwB3FRcFxDmSgq4Xz1RWP9E8@vger.kernel.org
-X-Gm-Message-State: AOJu0YzgJO5GsFk79hFJPGX/4/4r9O4QvRCjjyfe8Ic4qYRwMHxHnytk
-	0xd4FONthLyd9ohdvTZpUsQ3hMtT4jWclmm9lVFgn3DqvOiGJc8=
-X-Gm-Gg: ASbGncuEBxOQSWqDDLFm0HEEufvAswyo2NdRlgtZ8ELMGGljzxavd/nodbdGX9yU9nj
-	rpYa/FTOyVsnrkzjTNn22OMYGDJeDoqjfCQMWC9WGaVZiTJyRNAwRGk/YutCpCaeU6Bo14HdDLs
-	A3gLz0AXZ98li88PW0OtrpnBhdu7sXhq2UiPGIVNfSpUiihPi6y2UwnfvYmR/cISk/+Qo2Ackxq
-	60EYICenJGiEgOWu4NwCRZB+3Xn2Wd0NjbLfM7+QJ49drMgDnuZwM/pkE08NTZXW0wWyb6UZB0/
-	qEm37/oirArxWoZAWSjdvyWvGYMcKy82GxJJ997YRCqGtrhQhE4yNr5nIIwd25PF0dmGhcmRYUs
-	4h/2JYUGzUB5A0WU4JUdf+w==
-X-Google-Smtp-Source: AGHT+IFC4RLdzeq9tc5tRagXQaUbTZ7xImbPKse7l+EXFdAMRZ4Lk6cqBp9PptCPSsId7erm159yIw==
-X-Received: by 2002:a05:6000:228a:b0:391:4bcb:828f with SMTP id ffacd0b85a97d-39d87aa7b53mr401576f8f.14.1744141394866;
-        Tue, 08 Apr 2025 12:43:14 -0700 (PDT)
-Received: from [192.168.1.3] (p5b057de8.dip0.t-ipconnect.de. [91.5.125.232])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301b6321sm15491218f8f.44.2025.04.08.12.43.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Apr 2025 12:43:14 -0700 (PDT)
-Message-ID: <1f2803ac-3e1f-4605-89e6-fa5b9504f470@googlemail.com>
-Date: Tue, 8 Apr 2025 21:43:13 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ieI20o2X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83463C4CEE5;
+	Tue,  8 Apr 2025 19:46:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744141619;
+	bh=ykljCqn6FF0Yab/J+sQBV/c6rKO+79JVLrOtQ1WmWVM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=ieI20o2XC9sqVx27k6M5ZLvXJv0oeJ39/VH12q8QeJbsqqVjn1W3JdiLb0PT+k+7J
+	 lNDqH/WAwk30m/tnWBHpDUjPbPH16UXtdSht1dBefLhcVUFcIa4r1KJaxI3EXDO4Fl
+	 znOWAuTSZXCjzgpXSRe9YpghtSGVJ5BtdlkDEYHm5c/rJkZFBYpxRP5lpi8RyOwnJ6
+	 3AMZOfQVCe9N9gbuhvn57hfOj2Pp7J70MrTWjq4lLZTzeomxOliPEYoHvFrRMbyWDF
+	 KnhZoNE8DFphYErc2ef9/tFza3vCMaGg4Nwp/9OOD+24p2ie03vT3C70Ovxows3hVO
+	 7Nhj3lq8rd+Sw==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com>
+Cc: "Benno Lossin" <benno.lossin@proton.me>,  "Abdiel Janulgue"
+ <abdiel.janulgue@gmail.com>,  <ojeda@kernel.org>,  "Danilo Krummrich"
+ <dakr@kernel.org>,  "Daniel Almeida" <daniel.almeida@collabora.com>,
+  "Robin Murphy" <robin.murphy@arm.com>,  "Alex Gaynor"
+ <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
+ <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Alice
+ Ryhl" <aliceryhl@google.com>,  "Trevor Gross" <tmgross@umich.edu>,  "open
+ list:DMA MAPPING HELPERS DEVICE DRIVER API [RUST]"
+ <rust-for-linux@vger.kernel.org>,  "Marek Szyprowski"
+ <m.szyprowski@samsung.com>,  "open list:DMA MAPPING HELPERS"
+ <iommu@lists.linux.dev>,  "open list" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/3] rust: dma: convert the read/write macros to return
+ Result
+In-Reply-To: <CANiq72mahS0jiOHv-7RE8QWQunYo0bJqeGo-FAVoUL7v42RsoQ@mail.gmail.com>
+ (Miguel
+	Ojeda's message of "Tue, 08 Apr 2025 15:34:12 +0200")
+References: <20250326201230.3193329-1-abdiel.janulgue@gmail.com>
+	<20250326201230.3193329-3-abdiel.janulgue@gmail.com>
+	<nujfDI6IKBsjlQtGWaMrhjZSQYYeQYckCyOUs9jIzgZGsP1WTalJE0sSg6tp_WMACWo9mzuDfpdzsIlmkKnL8w==@protonmail.internalid>
+	<D8REH728BFP1.2BGE9DTRP2IPU@proton.me> <87ldsahlxr.fsf@kernel.org>
+	<NBhs6N93VPsKCxDOdnggZCiQWIxBfcYJU49nl2DmkqlTDaZet_q7V-_LjkS_uZPtkb8u2yW_oRh0TVjV3cLdkQ==@protonmail.internalid>
+	<CANiq72mahS0jiOHv-7RE8QWQunYo0bJqeGo-FAVoUL7v42RsoQ@mail.gmail.com>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Tue, 08 Apr 2025 21:46:47 +0200
+Message-ID: <87a58qh1w8.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH 6.13 000/500] 6.13.11-rc2 review
-Content-Language: de-DE
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250408154123.083425991@linuxfoundation.org>
-From: Peter Schneider <pschneider1968@googlemail.com>
-In-Reply-To: <20250408154123.083425991@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Am 08.04.2025 um 17:54 schrieb Greg Kroah-Hartman:
-> This is the start of the stable review cycle for the 6.13.11 release.
-> There are 500 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+"Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com> writes:
 
-Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
-oddities or regressions found.
+> On Tue, Apr 8, 2025 at 2:40=E2=80=AFPM Andreas Hindborg <a.hindborg@kerne=
+l.org> wrote:
+>>
+>> But the `assert_eq!` would panic anyway if comparison fails, right?
+>
+> Previously the `?` generated by the macro would return out of the
+> closure written by the sample, and thus it wouldn't reach the
+> `assert_eq!`.
 
-Tested-by: Peter Schneider <pschneider1968@googlemail.com>
+Right, I see. So the question is whether we want to have the assert
+panic here or not, of we get an Err. I vote yes.
 
 
-Beste Grüße,
-Peter Schneider
+Best regards,
+Andreas Hindborg
 
--- 
-Climb the mountain not to plant your flag, but to embrace the challenge,
-enjoy the air and behold the view. Climb it so you can see the world,
-not so the world can see you.                    -- David McCullough Jr.
 
-OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
-Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
+
