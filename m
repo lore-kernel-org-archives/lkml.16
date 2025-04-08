@@ -1,55 +1,55 @@
 Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89DA9264F9B
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 09:24:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA2E3265612
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 09:24:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744104246; cv=none; b=E2fknNoMR6LnsjoRiuzJEkH3vl8W9IEHZ1WFW64csTMpBiD+er2E/ZR0AwNDDD/1kWbI2bxlDTD7zRcGBm2P1mjtBPbcDg3c/EtvsGRHSYiKdtDKbA/WwsJ3Y62SIDO00+mj/TA6xdRShpXVosD1APiDJ+PGUC7KzzjO0GOmp5I=
+	t=1744104249; cv=none; b=QIsf17GaJaI40Z8dfk7ceskRqNQf2WvJfDBLlqfxRZq6ICUG1mXx+qkFxrUndfcDS/01t8BcIZJYcJp/HcYENEHOZr+6zLTJ/3CSxVcvCIxnMIGhr1rKxl0GKfNlFWqfrx0OeMn3uUKgvZFDi7fvsGQg8sunjzdggEZZukEX3dY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744104246; c=relaxed/simple;
-	bh=GtH47wxbR+6d0aNTneO5pMigxZ/fp5PImw8k1ccf9Tg=;
+	s=arc-20240116; t=1744104249; c=relaxed/simple;
+	bh=6cK8H0f1bjkfbBZECW+oXwSFALiwF8hLaYj708yZ9Vs=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=p62iJ4HeCLzf/231cgDaqsHT+ucVDTNpnhS/ZvKj6F+hCT1qpCzxGq7aHFYzS5wbHJdOc61CnQgmCPhCdANDq7p+yWH9kSuUK/KR8nScgpzKQQgOPLvqdyzrp66YDjwJ2smWoDcKrn4pE53t6u1oubSJtUpzO84/u4aP/ty9I/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hS4XC6CF; arc=none smtp.client-ip=209.85.128.74
+	 To:Cc:Content-Type; b=KtZQ9ZKyhGc6L8BZ3+hufshRUKwwgTEhl5ThArUeEf3WmV0WmG7F1tFIJo9kVx6BWJMs13+3x6oodLUmCmaQLPtCteIXBaY5TENpn+kflY/G4nLUarFXXJncbgY0L2GeJsilQvfnNLmkMW0xxcBk95P+lMbQZTduYILmrFiJkko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=v9pHGTwn; arc=none smtp.client-ip=209.85.128.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hS4XC6CF"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43eed325461so14243175e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 02:24:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v9pHGTwn"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43ceeaf1524so29979945e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 02:24:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744104243; x=1744709043; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1744104245; x=1744709045; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9QyemcvIui2lVzxcGzSSLvwxhrDIAPa4Re4ibbE0iVw=;
-        b=hS4XC6CFP/C5yFWMA2XlCssYWt9LoWKx8xYTL099tAxMdFARMsO73ZyiA2zsZlfVwB
-         Lwp1iExQqNFNBJbb81wxlTkdy+znYN7ufD+wClloLgZucAc7lwCaDNxCmojnb53b8QSG
-         ttED+FbiBz1BQWrhQGEFxSCIZZb4hWx1inZAb9odpCuQ3iSiRwLei6LZzG41OWnZfxnD
-         AGQcxTO7yNr+JoYviyRPg10IUqU2nDIbZXDdH+IHib9yuY2j7YawOZmA2m0GPfm8dB9p
-         kGBBkP4nIjhL0XXl2rUFcMxCKT0MS9DG3VILCmhwaoD5sbPbj8vIZAzykJQDBOGbAPHG
-         BNpg==
+        bh=s5w8I1p3Tb9DO8JsnIo9VM8qLIkaDI8pOQrbVUWT6uI=;
+        b=v9pHGTwnWt/CIeVyoBV0Gse996PE34inGSro+PcqxGZqHfU0QYruROSvExS5BWWXOD
+         BfQGqOmAJwHMAW4eKtqkNP4p9xdqeYcZC8WQslYUmHIDSf1A6KxM3Q34GWem01Zi04a4
+         BLAG4J9G9XYY+R37KEXRQb6HCxWPwoO82NjJw7Gyvuxk1iAb88FkrBICuyjhapmkgl8F
+         /5A1aMivzBSsCqWc7N8x1YnPlECclHUOQCeFDyphF1kDqZat2RaHCWkIVmeNG4cs6EDQ
+         mwjtHncSavcb8+ggdvtQtLgR2lJVf8CJo3gadcSWAdfH9QM43rIatNykiSYo/q61HhCM
+         V1Cg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744104243; x=1744709043;
+        d=1e100.net; s=20230601; t=1744104245; x=1744709045;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9QyemcvIui2lVzxcGzSSLvwxhrDIAPa4Re4ibbE0iVw=;
-        b=MQG2GZ0fAnHAN8arBcg5OCBe74Gz/hz559l1poMEZNhq/8JEzzQyss8jcrrmTpoSpW
-         9pExqH1OSV4nZI1YfNMn0UpNT4rqkiRx29nO6yEQaE0jI4f9/8exNwwrY/csNaapSLVY
-         rfhdMVqvqWDYBkp79NvWR8CETeRIqHzheeX9zaqffVzDJcCmN89Bs2h5l4GH0dIemVd8
-         hFfKLvvbrb8EfF8pgw47wo2/e6eOtU0/8sBTsTLlpeUh9j6DhiQ6fsGtDzekCE4Oy52u
-         iCVbtfcSLQfJ/okysSxLB8WPAyZqQ/Jn8+i22p06oT9OSquo0YzfOl49JA9nnv70dwtm
-         aHFA==
-X-Forwarded-Encrypted: i=1; AJvYcCUhWs1CXGl9fzw8sCW8xhfPdtNl2P5vwDh85+fTwH3bqyOwRtY/L8vk4TzJMMasrx82oo8epldoQtDqmw8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYFd0QQHWOPqHjAVATIAbP4fH97uGvyLAo/Sezuzt4zezD42Ek
-	c9y1DCpHUBgFQ3I+1jb02mzdeDSKzGYZ8tbJnh6ze6aO3QTHUs3V8ajO5s0Bu1O6P/4dqkRiVfd
-	cMTl19UeeACZLxQ==
-X-Google-Smtp-Source: AGHT+IFxxFUu1qGOXyvkCU5XAz4kFicPKHdX0TfjTmS5tS8Ie5mgbTz+4dEhe4qW9IslRJpSem7hRyy9es0XXr0=
-X-Received: from wmbh17.prod.google.com ([2002:a05:600c:a111:b0:43d:8f:dd29])
+        bh=s5w8I1p3Tb9DO8JsnIo9VM8qLIkaDI8pOQrbVUWT6uI=;
+        b=FAC3uN2ZBPTTySD1J94MxAkvT0sG1D2X9761hzFMzc0/Q3kISgRypU7JoopKAMDg2+
+         0KKcFEzG5EtXHYIguClfTd5+GzORgPEaz1RjepfSe/jfjSKeptOsNlYvw05avtmFOfOB
+         l4BQPI6N0zKnbYcjFPnnLnFKOWgiaJQ2EhQMi94ma4SAFdWaUA4pFycN4ji5/XWtMCka
+         T9AoLgqnUpbH2oFi7p0pKisgQOR8N+UEY1o/WMgKF/ewvu0hmgwfhG/kN1wuyzJzLo+X
+         6v4a22jTctO4TtaZobTnZYeN1VwgTMBwthiEGRJjlZvC1gaWYsl1vmltMtI6t7aD1qoZ
+         Pcaw==
+X-Forwarded-Encrypted: i=1; AJvYcCVpSrhrpdvXT+hpgpKKj1bCPhbAPeU27I1EYG6LXmooZr0U2NnM4aCKTvlZB29vmMoeQhNrr3UYBtSqH9M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLdqzufBwyUq4Ua/Qgj6nHJg/J/NNMzjuQ/pqvBzpVRdsrnxHs
+	Qek/yq7j5Q9sde1e/6qifpbonKRZhK2tGB/A67m/gqeuMayu+AGrQjGVGfBjHDPuwbbDDtuvLvZ
+	x8jm+kOIwSr4vZw==
+X-Google-Smtp-Source: AGHT+IHpYdwjp62GC42TgJRjq1KuRmzOAAEOqv7lAljye6ysUkygRaxUq/uM+rb+EggvJF0qu6sb2cFi0FK4uNE=
+X-Received: from wmbh6.prod.google.com ([2002:a05:600c:a106:b0:43c:eb09:3790])
  (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:3b94:b0:43d:649:4e50 with SMTP id 5b1f17b1804b1-43f0ab8c6d2mr38195215e9.13.1744104242867;
- Tue, 08 Apr 2025 02:24:02 -0700 (PDT)
-Date: Tue, 08 Apr 2025 09:22:39 +0000
+ 2002:a05:600c:5845:b0:439:4c1e:d810 with SMTP id 5b1f17b1804b1-43f0e59c566mr15047995e9.9.1744104244985;
+ Tue, 08 Apr 2025 02:24:04 -0700 (PDT)
+Date: Tue, 08 Apr 2025 09:22:40 +0000
 In-Reply-To: <20250408-vma-v16-0-d8b446e885d9@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,23 +59,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250408-vma-v16-0-d8b446e885d9@google.com>
 X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
-X-Developer-Signature: v=1; a=openpgp-sha256; l=12083; i=aliceryhl@google.com;
- h=from:subject:message-id; bh=GtH47wxbR+6d0aNTneO5pMigxZ/fp5PImw8k1ccf9Tg=;
- b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBn9OsmVSvhUiA913nl+JAw+MlOHGWc8EvMXmmCp
- FwIUbqzQCWJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZ/TrJgAKCRAEWL7uWMY5
- RkWHEACjkc6iHWBOlrZetxMPhzthtkwd5NgmH0SN7rYXNpTp64E3opnX715hk0ef5PRZ5Nm/iIb
- OtkXcUfufrOdrLx+/qYdaVCOz06KYK7WD4uis3zU5B0Ri+aRTVulNIGlXRqepDmR3pYbp8PPF07
- 0Bu1WvumxR1Xim2M9XHDCOtyAd4G0vry0F+zjHGvWeleJmyha06PKWRZYj2bfpj+dtj7CHk+sE8
- vaeAWQ91zCa0KwO8YUxDp2K1aQWMob4/+8GBkmrVq6XlGaWDd0cL6m6xqdcAaDXD9gBZ796xiaa
- tQyDvkO3tysYm+xTpw6NZ4pGfOIaFQugyjqhWbcLDuEPU7X6F67NZKIqf5ABJmqHcFniTyg8v9a
- 8uH2eJawIb6+7ZFgtzUdd2jcAmZxI58iVRiO2mzS5DMqX/KaCN+9nyf04fqol4eSsbJUGJDyxkw
- y387YiEA7VvHmYLbmmL0MqGs/u4koer7PHf2RPIANMWwarx4bceJPj2cB1L/JekMsMd6kC3uDNV
- i/5sM6BW2h+/uyu8vQMJBdH5xkUx0Rh73TCsADJOR22xGNHWo2v+9JFZU7kB8PwQBJrK3Px5GIc
- qBcE0dFheejnjo5NRQabW0CDywfmxR0dq969Q79nhVQDdkCNFzCNY4rCQ1YJ0IZvdgzRzXKqXkH cL7GVSoLH/eHi7w==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4393; i=aliceryhl@google.com;
+ h=from:subject:message-id; bh=6cK8H0f1bjkfbBZECW+oXwSFALiwF8hLaYj708yZ9Vs=;
+ b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBn9OsnO6hmFHtTeBdUk9KFgbrB2QrDLVOl+CpTX
+ d6JGe8HUuKJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZ/TrJwAKCRAEWL7uWMY5
+ RldLEACSoWh10crAZ99JPh2xNve1MWXfeXmmLSD1NzqPq91mZuyNyd7KxvS8MCgtkDxjI4lf/EK
+ yl3m+I12OBvL54nMiHw6/jwjv8z/14XNQeRQx0aDtU2N66XpXG1O+tQ3Ow12J7cTrqmQaPNRBry
+ lEjdcqaKJCly/EPPyJjRdLHd42EKtbyJN/OCoXQu1p/a/GvwLVbOVhGRTzC/i9XHCIzn0Tl5G2F
+ kIAi6g93MU6TMnO3GGvKqDdS5exJQllY+P5pd9MxDU/4O/mMoxbfVxHtIbw3zavFNbI7ifI2w+g
+ hc65G3O7tEkNtCwmy19QiNF/BkS/dnDnqKgco1rsL1enCAJSxUK87DZHaQ4cfvO08iABgGfa8tA
+ fEQFM0ry4n1mDKBHHr34ICS9Tmrrj+zqh8ydMudFmwBYAVGu4A6YDBYs3whhMDeDxFT5gOb6IwW
+ fTcdaAwIvwLNDqd/5iXGY8t/zcdrngDyChZB6VbZCwln/MEEyh1mhh0sCKs3oVO+ixfj4JrBG8E
+ E3NaAjrWqbNzifbv+AII4tSHJFmW3ExuWdgRDNxSkrBhGFPjNDw4/VRsFlMnXVUUjhZsEpDjyjJ
+ CO4gGUAFnizx/292hDoxB8xe9gzUaUycfj4uGObs+4NHG6wkZiS4K7YrktZkNEw7AcV0CdW5Yip h29xzmoJxJ6uJMg==
 X-Mailer: b4 0.14.2
-Message-ID: <20250408-vma-v16-2-d8b446e885d9@google.com>
-Subject: [PATCH v16 2/9] mm: rust: add vm_area_struct methods that require
- read access
+Message-ID: <20250408-vma-v16-3-d8b446e885d9@google.com>
+Subject: [PATCH v16 3/9] mm: rust: add vm_insert_page
 From: Alice Ryhl <aliceryhl@google.com>
 To: Miguel Ojeda <ojeda@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
 	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
@@ -90,299 +89,121 @@ Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
 	Alice Ryhl <aliceryhl@google.com>
 Content-Type: text/plain; charset="utf-8"
 
-This adds a type called VmaRef which is used when referencing a vma that
-you have read access to. Here, read access means that you hold either
-the mmap read lock or the vma read lock (or stronger).
+The vm_insert_page method is only usable on vmas with the VM_MIXEDMAP
+flag, so we introduce a new type to keep track of such vmas.
 
-Additionally, a vma_lookup method is added to the mmap read guard, which
-enables you to obtain a &VmaRef in safe Rust code.
-
-This patch only provides a way to lock the mmap read lock, but a
-follow-up patch also provides a way to just lock the vma read lock.
+The approach used in this patch assumes that we will not need to encode
+many flag combinations in the type. I don't think we need to encode more
+than VM_MIXEDMAP and VM_PFNMAP as things are now. However, if that
+becomes necessary, using generic parameters in a single type would scale
+better as the number of flags increases.
 
 Acked-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 Acked-by: Liam R. Howlett <Liam.Howlett@Oracle.com>
-Reviewed-by: Jann Horn <jannh@google.com>
 Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
 Reviewed-by: Gary Guo <gary@garyguo.net>
 Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 ---
- rust/helpers/mm.c      |   6 ++
- rust/kernel/mm.rs      |  23 ++++++
- rust/kernel/mm/virt.rs | 210 +++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 239 insertions(+)
+ rust/kernel/mm/virt.rs | 79 +++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 78 insertions(+), 1 deletion(-)
 
-diff --git a/rust/helpers/mm.c b/rust/helpers/mm.c
-index 7201747a5d314b2b120b30c0b906715c04ca77a5..7b72eb065a3e1173c920f02a440053cf6e93814e 100644
---- a/rust/helpers/mm.c
-+++ b/rust/helpers/mm.c
-@@ -37,3 +37,9 @@ void rust_helper_mmap_read_unlock(struct mm_struct *mm)
- {
- 	mmap_read_unlock(mm);
- }
-+
-+struct vm_area_struct *rust_helper_vma_lookup(struct mm_struct *mm,
-+					      unsigned long addr)
-+{
-+	return vma_lookup(mm, addr);
-+}
-diff --git a/rust/kernel/mm.rs b/rust/kernel/mm.rs
-index eda7a479cff7e79760bb49eb4bb16209bbfc6147..f1689ccb374078a3141489e487fc32cd97c9c232 100644
---- a/rust/kernel/mm.rs
-+++ b/rust/kernel/mm.rs
-@@ -18,6 +18,8 @@
- };
- use core::{ops::Deref, ptr::NonNull};
+diff --git a/rust/kernel/mm/virt.rs b/rust/kernel/mm/virt.rs
+index a66be649f0b8d3dfae8ce2d18b70cb2b283fb7fe..3e2eabcc21450497a02ffa1ed1f31f3e7e7e1b6b 100644
+--- a/rust/kernel/mm/virt.rs
++++ b/rust/kernel/mm/virt.rs
+@@ -14,7 +14,15 @@
+ //! ensures that you can't, for example, accidentally call a function that requires holding the
+ //! write lock when you only hold the read lock.
  
-+pub mod virt;
+-use crate::{bindings, mm::MmWithUser, types::Opaque};
++use crate::{
++    bindings,
++    error::{to_result, Result},
++    mm::MmWithUser,
++    page::Page,
++    types::Opaque,
++};
 +
- /// A wrapper for the kernel's `struct mm_struct`.
++use core::ops::Deref;
+ 
+ /// A wrapper for the kernel's `struct vm_area_struct` with read access.
  ///
- /// This represents the address space of a userspace process, so each process has one `Mm`
-@@ -201,6 +203,27 @@ pub struct MmapReadGuard<'a> {
-     _nts: NotThreadSafe,
- }
- 
-+impl<'a> MmapReadGuard<'a> {
-+    /// Look up a vma at the given address.
-+    #[inline]
-+    pub fn vma_lookup(&self, vma_addr: usize) -> Option<&virt::VmaRef> {
-+        // SAFETY: By the type invariants we hold the mmap read guard, so we can safely call this
-+        // method. Any value is okay for `vma_addr`.
-+        let vma = unsafe { bindings::vma_lookup(self.mm.as_raw(), vma_addr) };
+@@ -119,6 +127,75 @@ pub fn zap_page_range_single(&self, address: usize, size: usize) {
+             bindings::zap_page_range_single(self.as_ptr(), address, size, core::ptr::null_mut())
+         };
+     }
 +
-+        if vma.is_null() {
-+            None
++    /// If the [`VM_MIXEDMAP`] flag is set, returns a [`VmaMixedMap`] to this VMA, otherwise
++    /// returns `None`.
++    ///
++    /// This can be used to access methods that require [`VM_MIXEDMAP`] to be set.
++    ///
++    /// [`VM_MIXEDMAP`]: flags::MIXEDMAP
++    #[inline]
++    pub fn as_mixedmap_vma(&self) -> Option<&VmaMixedMap> {
++        if self.flags() & flags::MIXEDMAP != 0 {
++            // SAFETY: We just checked that `VM_MIXEDMAP` is set. All other requirements are
++            // satisfied by the type invariants of `VmaRef`.
++            Some(unsafe { VmaMixedMap::from_raw(self.as_ptr()) })
 +        } else {
-+            // SAFETY: We just checked that a vma was found, so the pointer references a valid vma.
-+            //
-+            // Furthermore, the returned vma is still under the protection of the read lock guard
-+            // and can be used while the mmap read lock is still held. That the vma is not used
-+            // after the MmapReadGuard gets dropped is enforced by the borrow-checker.
-+            unsafe { Some(virt::VmaRef::from_raw(vma)) }
++            None
 +        }
 +    }
 +}
 +
- impl Drop for MmapReadGuard<'_> {
-     #[inline]
-     fn drop(&mut self) {
-diff --git a/rust/kernel/mm/virt.rs b/rust/kernel/mm/virt.rs
-new file mode 100644
-index 0000000000000000000000000000000000000000..a66be649f0b8d3dfae8ce2d18b70cb2b283fb7fe
---- /dev/null
-+++ b/rust/kernel/mm/virt.rs
-@@ -0,0 +1,210 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+// Copyright (C) 2024 Google LLC.
-+
-+//! Virtual memory.
-+//!
-+//! This module deals with managing a single VMA in the address space of a userspace process. Each
-+//! VMA corresponds to a region of memory that the userspace process can access, and the VMA lets
-+//! you control what happens when userspace reads or writes to that region of memory.
-+//!
-+//! The module has several different Rust types that all correspond to the C type called
-+//! `vm_area_struct`. The different structs represent what kind of access you have to the VMA, e.g.
-+//! [`VmaRef`] is used when you hold the mmap or vma read lock. Using the appropriate struct
-+//! ensures that you can't, for example, accidentally call a function that requires holding the
-+//! write lock when you only hold the read lock.
-+
-+use crate::{bindings, mm::MmWithUser, types::Opaque};
-+
-+/// A wrapper for the kernel's `struct vm_area_struct` with read access.
++/// A wrapper for the kernel's `struct vm_area_struct` with read access and [`VM_MIXEDMAP`] set.
 +///
 +/// It represents an area of virtual memory.
 +///
++/// This struct is identical to [`VmaRef`] except that it must only be used when the
++/// [`VM_MIXEDMAP`] flag is set on the vma.
++///
 +/// # Invariants
 +///
-+/// The caller must hold the mmap read lock or the vma read lock.
++/// The caller must hold the mmap read lock or the vma read lock. The `VM_MIXEDMAP` flag must be
++/// set.
++///
++/// [`VM_MIXEDMAP`]: flags::MIXEDMAP
 +#[repr(transparent)]
-+pub struct VmaRef {
-+    vma: Opaque<bindings::vm_area_struct>,
++pub struct VmaMixedMap {
++    vma: VmaRef,
 +}
 +
-+// Methods you can call when holding the mmap or vma read lock (or stronger). They must be usable
-+// no matter what the vma flags are.
-+impl VmaRef {
++// Make all `VmaRef` methods available on `VmaMixedMap`.
++impl Deref for VmaMixedMap {
++    type Target = VmaRef;
++
++    #[inline]
++    fn deref(&self) -> &VmaRef {
++        &self.vma
++    }
++}
++
++impl VmaMixedMap {
 +    /// Access a virtual memory area given a raw pointer.
 +    ///
 +    /// # Safety
 +    ///
-+    /// Callers must ensure that `vma` is valid for the duration of 'a, and that the mmap or vma
-+    /// read lock (or stronger) is held for at least the duration of 'a.
++    /// Callers must ensure that `vma` is valid for the duration of 'a, and that the mmap read lock
++    /// (or stronger) is held for at least the duration of 'a. The `VM_MIXEDMAP` flag must be set.
 +    #[inline]
 +    pub unsafe fn from_raw<'a>(vma: *const bindings::vm_area_struct) -> &'a Self {
 +        // SAFETY: The caller ensures that the invariants are satisfied for the duration of 'a.
 +        unsafe { &*vma.cast() }
 +    }
 +
-+    /// Returns a raw pointer to this area.
-+    #[inline]
-+    pub fn as_ptr(&self) -> *mut bindings::vm_area_struct {
-+        self.vma.get()
-+    }
-+
-+    /// Access the underlying `mm_struct`.
-+    #[inline]
-+    pub fn mm(&self) -> &MmWithUser {
-+        // SAFETY: By the type invariants, this `vm_area_struct` is valid and we hold the mmap/vma
-+        // read lock or stronger. This implies that the underlying mm has a non-zero value of
-+        // `mm_users`.
-+        unsafe { MmWithUser::from_raw((*self.as_ptr()).vm_mm) }
-+    }
-+
-+    /// Returns the flags associated with the virtual memory area.
++    /// Maps a single page at the given address within the virtual memory area.
 +    ///
-+    /// The possible flags are a combination of the constants in [`flags`].
++    /// This operation does not take ownership of the page.
 +    #[inline]
-+    pub fn flags(&self) -> vm_flags_t {
-+        // SAFETY: By the type invariants, the caller holds at least the mmap read lock, so this
-+        // access is not a data race.
-+        unsafe { (*self.as_ptr()).__bindgen_anon_2.vm_flags }
++    pub fn vm_insert_page(&self, address: usize, page: &Page) -> Result {
++        // SAFETY: By the type invariant of `Self` caller has read access and has verified that
++        // `VM_MIXEDMAP` is set. By invariant on `Page` the page has order 0.
++        to_result(unsafe { bindings::vm_insert_page(self.as_ptr(), address, page.as_ptr()) })
 +    }
-+
-+    /// Returns the (inclusive) start address of the virtual memory area.
-+    #[inline]
-+    pub fn start(&self) -> usize {
-+        // SAFETY: By the type invariants, the caller holds at least the mmap read lock, so this
-+        // access is not a data race.
-+        unsafe { (*self.as_ptr()).__bindgen_anon_1.__bindgen_anon_1.vm_start }
-+    }
-+
-+    /// Returns the (exclusive) end address of the virtual memory area.
-+    #[inline]
-+    pub fn end(&self) -> usize {
-+        // SAFETY: By the type invariants, the caller holds at least the mmap read lock, so this
-+        // access is not a data race.
-+        unsafe { (*self.as_ptr()).__bindgen_anon_1.__bindgen_anon_1.vm_end }
-+    }
-+
-+    /// Zap pages in the given page range.
-+    ///
-+    /// This clears page table mappings for the range at the leaf level, leaving all other page
-+    /// tables intact, and freeing any memory referenced by the VMA in this range. That is,
-+    /// anonymous memory is completely freed, file-backed memory has its reference count on page
-+    /// cache folio's dropped, any dirty data will still be written back to disk as usual.
-+    ///
-+    /// It may seem odd that we clear at the leaf level, this is however a product of the page
-+    /// table structure used to map physical memory into a virtual address space - each virtual
-+    /// address actually consists of a bitmap of array indices into page tables, which form a
-+    /// hierarchical page table level structure.
-+    ///
-+    /// As a result, each page table level maps a multiple of page table levels below, and thus
-+    /// span ever increasing ranges of pages. At the leaf or PTE level, we map the actual physical
-+    /// memory.
-+    ///
-+    /// It is here where a zap operates, as it the only place we can be certain of clearing without
-+    /// impacting any other virtual mappings. It is an implementation detail as to whether the
-+    /// kernel goes further in freeing unused page tables, but for the purposes of this operation
-+    /// we must only assume that the leaf level is cleared.
-+    #[inline]
-+    pub fn zap_page_range_single(&self, address: usize, size: usize) {
-+        let (end, did_overflow) = address.overflowing_add(size);
-+        if did_overflow || address < self.start() || self.end() < end {
-+            // TODO: call WARN_ONCE once Rust version of it is added
-+            return;
-+        }
-+
-+        // SAFETY: By the type invariants, the caller has read access to this VMA, which is
-+        // sufficient for this method call. This method has no requirements on the vma flags. The
-+        // address range is checked to be within the vma.
-+        unsafe {
-+            bindings::zap_page_range_single(self.as_ptr(), address, size, core::ptr::null_mut())
-+        };
-+    }
-+}
-+
-+/// The integer type used for vma flags.
-+#[doc(inline)]
-+pub use bindings::vm_flags_t;
-+
-+/// All possible flags for [`VmaRef`].
-+pub mod flags {
-+    use super::vm_flags_t;
-+    use crate::bindings;
-+
-+    /// No flags are set.
-+    pub const NONE: vm_flags_t = bindings::VM_NONE as _;
-+
-+    /// Mapping allows reads.
-+    pub const READ: vm_flags_t = bindings::VM_READ as _;
-+
-+    /// Mapping allows writes.
-+    pub const WRITE: vm_flags_t = bindings::VM_WRITE as _;
-+
-+    /// Mapping allows execution.
-+    pub const EXEC: vm_flags_t = bindings::VM_EXEC as _;
-+
-+    /// Mapping is shared.
-+    pub const SHARED: vm_flags_t = bindings::VM_SHARED as _;
-+
-+    /// Mapping may be updated to allow reads.
-+    pub const MAYREAD: vm_flags_t = bindings::VM_MAYREAD as _;
-+
-+    /// Mapping may be updated to allow writes.
-+    pub const MAYWRITE: vm_flags_t = bindings::VM_MAYWRITE as _;
-+
-+    /// Mapping may be updated to allow execution.
-+    pub const MAYEXEC: vm_flags_t = bindings::VM_MAYEXEC as _;
-+
-+    /// Mapping may be updated to be shared.
-+    pub const MAYSHARE: vm_flags_t = bindings::VM_MAYSHARE as _;
-+
-+    /// Page-ranges managed without `struct page`, just pure PFN.
-+    pub const PFNMAP: vm_flags_t = bindings::VM_PFNMAP as _;
-+
-+    /// Memory mapped I/O or similar.
-+    pub const IO: vm_flags_t = bindings::VM_IO as _;
-+
-+    /// Do not copy this vma on fork.
-+    pub const DONTCOPY: vm_flags_t = bindings::VM_DONTCOPY as _;
-+
-+    /// Cannot expand with mremap().
-+    pub const DONTEXPAND: vm_flags_t = bindings::VM_DONTEXPAND as _;
-+
-+    /// Lock the pages covered when they are faulted in.
-+    pub const LOCKONFAULT: vm_flags_t = bindings::VM_LOCKONFAULT as _;
-+
-+    /// Is a VM accounted object.
-+    pub const ACCOUNT: vm_flags_t = bindings::VM_ACCOUNT as _;
-+
-+    /// Should the VM suppress accounting.
-+    pub const NORESERVE: vm_flags_t = bindings::VM_NORESERVE as _;
-+
-+    /// Huge TLB Page VM.
-+    pub const HUGETLB: vm_flags_t = bindings::VM_HUGETLB as _;
-+
-+    /// Synchronous page faults. (DAX-specific)
-+    pub const SYNC: vm_flags_t = bindings::VM_SYNC as _;
-+
-+    /// Architecture-specific flag.
-+    pub const ARCH_1: vm_flags_t = bindings::VM_ARCH_1 as _;
-+
-+    /// Wipe VMA contents in child on fork.
-+    pub const WIPEONFORK: vm_flags_t = bindings::VM_WIPEONFORK as _;
-+
-+    /// Do not include in the core dump.
-+    pub const DONTDUMP: vm_flags_t = bindings::VM_DONTDUMP as _;
-+
-+    /// Not soft dirty clean area.
-+    pub const SOFTDIRTY: vm_flags_t = bindings::VM_SOFTDIRTY as _;
-+
-+    /// Can contain `struct page` and pure PFN pages.
-+    pub const MIXEDMAP: vm_flags_t = bindings::VM_MIXEDMAP as _;
-+
-+    /// MADV_HUGEPAGE marked this vma.
-+    pub const HUGEPAGE: vm_flags_t = bindings::VM_HUGEPAGE as _;
-+
-+    /// MADV_NOHUGEPAGE marked this vma.
-+    pub const NOHUGEPAGE: vm_flags_t = bindings::VM_NOHUGEPAGE as _;
-+
-+    /// KSM may merge identical pages.
-+    pub const MERGEABLE: vm_flags_t = bindings::VM_MERGEABLE as _;
-+}
+ }
+ 
+ /// The integer type used for vma flags.
 
 -- 
 2.49.0.504.g3bcea36a83-goog
