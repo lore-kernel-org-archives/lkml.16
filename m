@@ -1,49 +1,80 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4BA11CAA86;
-	Tue,  8 Apr 2025 22:49:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 562EB2405EB
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 22:51:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744152577; cv=none; b=D1fw4LqIifB0rPfJw7bgnkJLfRL1K9l4NYsIkPEHddYJ3U27StsI1GI9CXe798yqi4p3OpnOICrwzJvgCekfZX4C4UzTHoyIUFftLZ1FT6N/9Nej0V7ryAyTVaq+7mTta4pxFrROC9RXxQLqAV7ummVB+GyJacQYS/SSUtVCmgQ=
+	t=1744152663; cv=none; b=VMBtZ22EFiQ2KwlbjuUzjVSQvWUGt2kiYKfuDeSmDV53229nDwOlNp2kbRMfgM7/FTMnl40LGdOAYmt7ZER/gfpwwZBAWAPJvzPf7M7quzQiV+bRk80ijbV3oQXfVk2LJivpV6+i9Rny05EUA82Dd1cyJyMGlKkioSFmiOUKIJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744152577; c=relaxed/simple;
-	bh=esWlGWMk0hjOHa0vXYnDQpyJZQI+y4/+EFbomDvljNQ=;
+	s=arc-20240116; t=1744152663; c=relaxed/simple;
+	bh=vMn/pqlIgdXeLiIiX6Qi2jw179hC4RQghNBS8hGqYZ0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dWgOYseFifZrWuPjEpiGSjOYoTeHVspyN11jLhEYWoJt016vpfSGsGLny9JgBx+Q3YHoz3sKbsIjriWuthOKiB3geHudKJz+hSnn8unbC4Y60cmHRQ8BgSMre41Tc2+/iAnlOGJIJufTFpDNXx1N/vOMdLCzuc83+qXSnOD8nac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=evilplan.org; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=fail (0-bit key) header.d=infradead.org header.i=@infradead.org header.b=W/Vij0LF reason="key not found in DNS"; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=evilplan.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=M0zLxmX6+C7xEGFwLZmkyPhrx5uysAQd+sb4PSAiNyYFEFEl7O0PmPq9X/GBP1KUkgCM4/sO7ZvAV9Wwk2KbkJswDRSrPVeumxO1gH48ka1S3jP3dUjUVW6mnDa1Md9FYLz9pe2aGGN94LHSQqUmlLi9vTQvijGu5YPbWBRB24M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=vW5fBzAe; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=infradead.org header.i=@infradead.org header.b="W/Vij0LF"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=GKcebr4KZ1je+omvI6wYjVgDBZuusvMWLccgV7EesoE=; b=W/Vij0LFOWUhA5fJmr7CYgXTiO
-	Sw7GTf9d6f0+PG+yZQ/BrXkz3AU1JMQTC2e1v3/iT5Yfx5kTdRYAbOK2ML4PiOaIB1ILuf6toTKub
-	43mwOJNugokxfw6PQRrwYHqAWtiJgI8t/KwpHMM+U/5pD9coT2QW9MHJIWEesEcIkHr2/Yn+OnLQv
-	DVAitfQxAZCDGT2+qBS3YQVOghgN+yOTbHdTjyozq1gog4UD/+BhVhvtwlk+RM03wOFoJyYs0HwEx
-	afJJck1pZGqDMoMhAf3OT79aB9u8EI2NE8/nMMuSPIJD35cqEWPyc/UcBqjD7HZJPKzjXKw96S3xB
-	zQHxtCnw==;
-Received: from jlbec by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u2Hl4-00000002pTB-3uzk;
-	Tue, 08 Apr 2025 22:49:31 +0000
-Date: Tue, 8 Apr 2025 15:49:27 -0700
-From: Joel Becker <jlbec@evilplan.org>
-To: Zijun Hu <zijun_hu@icloud.com>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-	Al Viro <viro@zeniv.linux.org.uk>, linux-kernel@vger.kernel.org,
-	Zijun Hu <quic_zijuhu@quicinc.com>, stable@vger.kernel.org
-Subject: Re: [PATCH 4/4] configfs: Correct condition for returning -EEXIST in
- configfs_symlink()
-Message-ID: <Z_Wn978o-kwscN29@google.com>
-Mail-Followup-To: Zijun Hu <zijun_hu@icloud.com>,
-	Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-	Al Viro <viro@zeniv.linux.org.uk>, linux-kernel@vger.kernel.org,
-	Zijun Hu <quic_zijuhu@quicinc.com>, stable@vger.kernel.org
-References: <20250408-fix_configfs-v1-0-5a4c88805df7@quicinc.com>
- <20250408-fix_configfs-v1-4-5a4c88805df7@quicinc.com>
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="vW5fBzAe"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7398d65476eso121729b3a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 15:51:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1744152661; x=1744757461; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=t4e6TcScSbS46TYPzeS1oWS93atKNlcHoXycK2oxcMQ=;
+        b=vW5fBzAe0imxu4fNHVLF4G0+rBz6dchsprA38wmkFpTUyJDs6MmA0hRVK/3TJEarkR
+         wcOFCYgPGCGbQxejqah1vjSnYWaXl0Llt8YGa3+DTV/7ykPq0WdD21xS7uJ0HWEwy1W+
+         vduYKCqV9Vb+QmQEkayZNQpKBCaFWcN4XG9PYDTduUz/euckEU4pCV1wLbfeRWF581FW
+         23v7nbe75gdUBCvuyyczWq7xsX14MWOIYjs6iktc4bOM0b6I9ByH6sGQEfQ84LGPztfG
+         RnI46D+hkTBe7mJ49Iu6Ggr54GFr/RqMqjyuan0gzOJ1Bo0AevAjEMsb7A4H8f53AL/O
+         C3kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744152661; x=1744757461;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=t4e6TcScSbS46TYPzeS1oWS93atKNlcHoXycK2oxcMQ=;
+        b=c5Mah1MxLGKRj5f/f+Ulryyq7EiOeDWJwWx1GuS9Hrn3a2T3T2qH7Ou2b2XAo6jViM
+         JhY3/Endk+BrG0MOlORgV2R+P1lxm1ESSYGvbIJ2d1vvDyrSk5nHUfJDjyGBUQ7ECDSM
+         ugBjaZK/qh+wij1PlOzdlKZEqyZymz/KoSlLt+iaO9nWN6Vn+u53mLdm7If9lY+mU9T9
+         hWjT7JZmQGB6Z5rjPnq1Uz40WLldw1Imh10lL1kgoEhOwyMqiq/MiaFFsaa/kZc7P6Cj
+         AJnKsCnJxsAxBBaiqCRTifj0Y9xOFNeMmNm0eY6S4f2VXhwvqNoPLiVoDDFxAz8Wp1rc
+         bruw==
+X-Forwarded-Encrypted: i=1; AJvYcCWagwU72g0aVHc/RP+l6I2CeFw0N4DTib0UXZ1Px1z/Wdwm9wT1AIUK7HFEswB7m5u/kp4f66B54nbdjpA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwshVsf4RedTCBRWvv7UtqPr/nqziYOUEiZP29TmS9immLFX92t
+	FVD/PtNm1a+rqRAO1wKJmiTztzlTAwKSDyk2c9Xb+Jrny34HC2wkpwY15IM2ioo=
+X-Gm-Gg: ASbGnct0Vdzxa31O7VxXk978Krs0Ayk44X11u52lVk5gaYA93rEMmNjv0jqOo+OkCHS
+	tRw0dSoa7XMFSKtuj8ZrzPLHRicJI11zgkL14l6hObD4XPzjm/GepQZ8Ic+W2KkJXEczY525L4P
+	Kyl4m/9W0QXyS/N+eNyZ0sibuK7iGFS/m3eYL5Sx21sjV6ktgNLdp4UXZtweFUwCtFUBT6y86ma
+	d05nKWBbARM07waFgEYeUSBAJITjy110AAYsUT9cGSIldEQui9AW4Jy1BMB9YDBsAoFkCAxNhfs
+	KL+88zIFAsMhiLo2Ngrseuv76LD+ervDoqWScv4/xd6kGuQPG8a0IqkvnqAUBHHiooF1VKdI2BY
+	PTn7I3/TGi1cN46kaRbILBMOeV8Re
+X-Google-Smtp-Source: AGHT+IH1vqfq5KmC7q977AO5WgEcrZQ60lrohQ1dtQpSWtpSiqHurs35gj5R27z5qJYFLZ4y41PN8w==
+X-Received: by 2002:a05:6a00:2411:b0:734:ded8:77aa with SMTP id d2e1a72fcca58-73bae4cc284mr829197b3a.9.1744152661136;
+        Tue, 08 Apr 2025 15:51:01 -0700 (PDT)
+Received: from dread.disaster.area (pa49-181-60-96.pa.nsw.optusnet.com.au. [49.181.60.96])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d9ea0a71sm11117925b3a.113.2025.04.08.15.51.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 15:51:00 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.98)
+	(envelope-from <david@fromorbit.com>)
+	id 1u2HmT-00000006F85-0aHp;
+	Wed, 09 Apr 2025 08:50:57 +1000
+Date: Wed, 9 Apr 2025 08:50:57 +1000
+From: Dave Chinner <david@fromorbit.com>
+To: John Garry <john.g.garry@oracle.com>
+Cc: brauner@kernel.org, djwong@kernel.org, hch@lst.de,
+	viro@zeniv.linux.org.uk, jack@suse.cz, cem@kernel.org,
+	linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
+	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
+	linux-block@vger.kernel.org, catherine.hoang@oracle.com
+Subject: Re: [PATCH v6 02/12] xfs: add helpers to compute log item overhead
+Message-ID: <Z_WoUawfJ_QFF5kP@dread.disaster.area>
+References: <20250408104209.1852036-1-john.g.garry@oracle.com>
+ <20250408104209.1852036-3-john.g.garry@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,81 +83,85 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250408-fix_configfs-v1-4-5a4c88805df7@quicinc.com>
-X-Burt-Line: Trees are cool.
-X-Red-Smith: Ninety feet between bases is perhaps as close as man has ever
- come to perfection.
-Sender: Joel Becker <jlbec@ftp.linux.org.uk>
+In-Reply-To: <20250408104209.1852036-3-john.g.garry@oracle.com>
 
-On Tue, Apr 08, 2025 at 09:26:10PM +0800, Zijun Hu wrote:
-> From: Zijun Hu <quic_zijuhu@quicinc.com>
+On Tue, Apr 08, 2025 at 10:41:59AM +0000, John Garry wrote:
+> From: "Darrick J. Wong" <djwong@kernel.org>
 > 
-> configfs_symlink() returns -EEXIST under condition d_unhashed(), but the
-> condition often means the dentry does not exist.
+> Add selected helpers to estimate the transaction reservation required to
+> write various log intent and buffer items to the log.  These helpers
+> will be used by the online repair code for more precise estimations of
+> how much work can be done in a single transaction.
 > 
-> Fix by changing the condition to !d_unhashed().
-
-I don't think this is quite right.
-
-viro put this together in 351e5d869e5ac, which was a while ago.  Read
-his comment on 351e5d869e5ac.  Because I unlock the parent directory to
-look up the target, we can't trust our symlink dentry hasn't been
-changed underneath us.
-
-* If there is now dentry->d_inode, some other inode has been put here.
-  -EEXIST.
-* If the dentry was unhashed, somehow the dentry we are creating was
-  removed from the dcache, and adding things to our dentry will at best
-  go nowhere, and at worst dangle in space.  I'm pretty sure viro
-  returns -EEXIST because if this dentry is unhashed, some *other*
-  dentry has entered the dcache in its place (another file type,
-  perhaps).
-
-If you instead check for !d_unhashed(), you're discovering our candidate
-dentry is still live in the dcache, which is what we expect and want.
-
-How did you identify this as a problem?  Perhaps we need a more nuanced
-check than d_unhashed() these days (for example, d_is_positive/negative
-didn't exist back then).
-
-Thanks,
-Joel
-
-PS: I enjoyed the trip down memory lane to Al reaming me quite
-    thoroughly for this API.
-
-> 
-> Fixes: 351e5d869e5a ("configfs: fix a deadlock in configfs_symlink()")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+> Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
+> Signed-off-by: John Garry <john.g.garry@oracle.com>
 > ---
->  fs/configfs/symlink.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  fs/xfs/libxfs/xfs_trans_resv.c |  6 +++---
+>  fs/xfs/libxfs/xfs_trans_resv.h |  4 ++++
+>  fs/xfs/xfs_bmap_item.c         | 10 ++++++++++
+>  fs/xfs/xfs_bmap_item.h         |  3 +++
+>  fs/xfs/xfs_buf_item.c          | 19 +++++++++++++++++++
+>  fs/xfs/xfs_buf_item.h          |  3 +++
+>  fs/xfs/xfs_extfree_item.c      | 10 ++++++++++
+>  fs/xfs/xfs_extfree_item.h      |  3 +++
+>  fs/xfs/xfs_log_cil.c           |  4 +---
+>  fs/xfs/xfs_log_priv.h          | 13 +++++++++++++
+>  fs/xfs/xfs_refcount_item.c     | 10 ++++++++++
+>  fs/xfs/xfs_refcount_item.h     |  3 +++
+>  fs/xfs/xfs_rmap_item.c         | 10 ++++++++++
+>  fs/xfs/xfs_rmap_item.h         |  3 +++
+>  14 files changed, 95 insertions(+), 6 deletions(-)
 > 
-> diff --git a/fs/configfs/symlink.c b/fs/configfs/symlink.c
-> index 69133ec1fac2a854241c2a08a3b48c4c2e8d5c24..cccf61fb8317d739643834e1810b7f136058f56c 100644
-> --- a/fs/configfs/symlink.c
-> +++ b/fs/configfs/symlink.c
-> @@ -193,7 +193,7 @@ int configfs_symlink(struct mnt_idmap *idmap, struct inode *dir,
->  	if (ret)
->  		goto out_put;
+> diff --git a/fs/xfs/libxfs/xfs_trans_resv.c b/fs/xfs/libxfs/xfs_trans_resv.c
+> index 13d00c7166e1..ce1393bd3561 100644
+> --- a/fs/xfs/libxfs/xfs_trans_resv.c
+> +++ b/fs/xfs/libxfs/xfs_trans_resv.c
+> @@ -47,7 +47,7 @@ xfs_buf_log_overhead(void)
+>   * will be changed in a transaction.  size is used to tell how many
+>   * bytes should be reserved per item.
+>   */
+> -STATIC uint
+> +uint
+>  xfs_calc_buf_res(
+>  	uint		nbufs,
+>  	uint		size)
+> @@ -84,7 +84,7 @@ xfs_allocfree_block_count(
+>   * in the same transaction as an allocation or a free, so we compute them
+>   * separately.
+>   */
+> -static unsigned int
+> +unsigned int
+>  xfs_refcountbt_block_count(
+>  	struct xfs_mount	*mp,
+>  	unsigned int		num_ops)
+> @@ -129,7 +129,7 @@ xfs_rtrefcountbt_block_count(
+>   *	  additional to the records and pointers that fit inside the inode
+>   *	  forks.
+>   */
+> -STATIC uint
+> +uint
+>  xfs_calc_inode_res(
+>  	struct xfs_mount	*mp,
+>  	uint			ninodes)
+> diff --git a/fs/xfs/libxfs/xfs_trans_resv.h b/fs/xfs/libxfs/xfs_trans_resv.h
+> index 0554b9d775d2..e76052028cc9 100644
+> --- a/fs/xfs/libxfs/xfs_trans_resv.h
+> +++ b/fs/xfs/libxfs/xfs_trans_resv.h
+> @@ -97,6 +97,10 @@ struct xfs_trans_resv {
 >  
-> -	if (dentry->d_inode || d_unhashed(dentry))
-> +	if (dentry->d_inode || !d_unhashed(dentry))
->  		ret = -EEXIST;
->  	else
->  		ret = inode_permission(&nop_mnt_idmap, dir,
-> 
-> -- 
-> 2.34.1
-> 
+>  void xfs_trans_resv_calc(struct xfs_mount *mp, struct xfs_trans_resv *resp);
+>  uint xfs_allocfree_block_count(struct xfs_mount *mp, uint num_ops);
+> +unsigned int xfs_refcountbt_block_count(struct xfs_mount *mp,
+> +		unsigned int num_ops);
+> +uint xfs_calc_buf_res(uint nbufs, uint size);
+> +uint xfs_calc_inode_res(struct xfs_mount *mp, uint ninodes);
 
+Why are these exported? They aren't used in this patch, and any code
+that doing calculate log reservation calculation should really be
+placed in xfs_trans_resv.c along with all the existing log
+reservation calculations...
+
+-Dave
 -- 
-
-"We will have to repent in this generation not merely for the
- vitriolic words and actions of the bad people, but for the 
- appalling silence of the good people."
-	- Rev. Dr. Martin Luther King, Jr.
-
-			http://www.jlbec.org/
-			jlbec@evilplan.org
+Dave Chinner
+david@fromorbit.com
