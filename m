@@ -1,78 +1,82 @@
-Received: from smtpbg151.qq.com (smtpbg151.qq.com [18.169.211.239])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7978D22D79D
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 16:13:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.169.211.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 167ED22DFB2
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 16:13:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744128808; cv=none; b=lUsUVwn9xXFkxg+PPZaMatMhsb5JH01unWId4e/LuRpUUt4OXps4Ryg32YHic5b4TxNCsZCqtqp5CMxHQiAWIhGLi2qUOk4n0rEwftx7jqG7DGs/XbM8PucgEoAMLP/nmLLB7IagFZ6xB7nN7iQ/AP585XjD5JWSkJTUHglLeCw=
+	t=1744128820; cv=none; b=fgnoOMDiXRIkQAF0WMjJKbdnpGB8A5/0drGdTNI5B9VwSIed071OdDYTS4Yz+uju/crGHs5NA4b1YaA6Zaro/AyFUNcAOQU8TzoH8K3NWcoHrlwEAIAj1j0Zh1qNR7vsfPcdqzWDhfnzb/5J9PDuDZlAOppOWoVIHQDTh1dzdvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744128808; c=relaxed/simple;
-	bh=/8Lgt7AKgNy/yDj5PsFIIZ/OI++yjozIZZNWQd0Jg2I=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=E2ky8HwoXhjxm0ZS23tZnDR/Zlm9FLoaiviBw5yVlO3oan4IpK1PYazIuW3VFIYBTVSJxYCAFWXs6T03pjwSYHuaPH9dRF8fnkJdBModWoVaecnOKy3Q7yQnAAhoHFP/VF9g/FXouExuGGRQ38jzvmLlL5IeryjzpNb7wF64zF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=T9Mw1ZCd; arc=none smtp.client-ip=18.169.211.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1744128820; c=relaxed/simple;
+	bh=0mCCXm0C9x1oPD5Ax3/llLVQSyvjry3U/xqp/JoYlFw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VGmcDtb92KdxmxO2HUyhxAwieReyDQ56WxTYD0sAePbmk3ruN8kyXao9jA2cPCxDnFWbd03SJaGmQmwYq7yVz3al+Xb64XwueahpY6DhB3FqDkHnPbtZU/WPjgM06UgAhNFkdZ/L+kMuMz6Db/YXQi/qSEH9Sne2njPRwBAJZ18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1bwh1C7T; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UwrMdjxl; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="T9Mw1ZCd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1744128769;
-	bh=/8Lgt7AKgNy/yDj5PsFIIZ/OI++yjozIZZNWQd0Jg2I=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=T9Mw1ZCdw6VmCwcNeQ8NyuErcuE70NIe6GHvHBoSCslDNc/geczEXqIH8WfJ98S9G
-	 mdzBbKL4IIrSPUAT/tFYhqQw3d4MWElJ55GzfJIjLHUFXq5aQmhK4gKAgP9ieY6nn+
-	 4xM68HH+OwhHKOA0cZlKOFQxEvQvxxGAjH3JmlR4=
-X-QQ-mid: bizesmtpsz9t1744128763tb211cb
-X-QQ-Originating-IP: B3aoT2lfQT7lhb4CK9eX2m41pUeTGC7vlEq6PnA9Zbg=
-Received: from localhost.localdomain ( [113.57.152.160])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 09 Apr 2025 00:12:40 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 14729311663327765348
-From: Wentao Guan <guanwentao@uniontech.com>
-To: yangtiezhu@loongson.cn
-Cc: chenhuacai@kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev
-Subject: Re: [PATCH] LoongArch: Handle fp, lsx, lasx and lbt assembly symbols
-Date: Wed,  9 Apr 2025 00:12:39 +0800
-Message-Id: <20250408161239.1023788-1-guanwentao@uniontech.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20250408092907.22856-1-yangtiezhu@loongson.cn>
-References: <20250408092907.22856-1-yangtiezhu@loongson.cn>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1bwh1C7T";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UwrMdjxl"
+Date: Tue, 8 Apr 2025 18:13:35 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744128816;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0mCCXm0C9x1oPD5Ax3/llLVQSyvjry3U/xqp/JoYlFw=;
+	b=1bwh1C7Tru+vHvPWRbPESE9S/80UR3OYGugOBXQc7ZT/Vt8t+WmeIDOX2nBBqoAjMw3xwV
+	Xxb7oiBqsEr6aljxMZ63b7j5z2ict0zPWSegeCbwWxQV0+ibTJXpmTku+xGjO7miFgfJzE
+	h9y+NbXLKQK0EY29FObBkmHWfG4m+g1U6q2ZyJKXH8GelMmYf8OI4RSeETIbU/C3Dfp0wV
+	Ztdso4eg2QQerF2cl5JR/lFe+iUTPOY1uB4lRcssq4MAXQ2B/4HrzZkjB35UQNOYyuwbq0
+	pxKzsqqJgjEzG+h0NOC6dJ+CAKjj34b9crFzE33k1ntQd7VpTF59MfOV8w8I7Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744128816;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0mCCXm0C9x1oPD5Ax3/llLVQSyvjry3U/xqp/JoYlFw=;
+	b=UwrMdjxlY5e20i7ws2Go7wK8LCzeN6KNKEZbnUw0s7sV8z2o5xC/QuqmhzmZA0BU9bkPW5
+	rB3t/rUruhNW9HBg==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: =?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>
+Cc: linux-kernel@vger.kernel.org, Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v11 00/19] futex: Add support task local hash maps,
+ FUTEX2_NUMA and FUTEX2_MPOL
+Message-ID: <20250408161335.rAuKGKP_@linutronix.de>
+References: <20250407155742.968816-1-bigeasy@linutronix.de>
+ <df442511-8a3d-496b-bd7f-a1c7b0973a3c@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-0
-X-QQ-XMAILINFO: NRN3UPsLzYKVqIrPzeEpHTRKRq7s/4DCgNDwMWIe0+UiIz4mph4S3ZU1
-	LWI1eS7ChDVbMfg2oou0gd2elwvFTwy7tkX8jL0dEB5GEcANibimH4Z+DsJtGc8TDsL5pjC
-	+zuuWmzuCzd1QXUhoztriJA0ge4o4cBKTikEPsw6SZQDM0RSg8xRStaf0RyBqAAIqNyleSu
-	G8krFAVl5tla39YHVGKUNydR3kzgkuGQ3I5rB7CQtPp56URfMsZUQ3aa+FSe/Qo21XWLKoA
-	FJqm+G65FS8QHEqYrns+LqWsYXOmckxLfSHeVI3x5isZwPKMBMVm1qDgt7LAoLvss0LjrI2
-	5wN4ZjxBJXnXR+YOmGr0GG/+kBOFGUkfArXGFxzfzlyND2QY5R9QDYRZvnP62DeTjTsSAzG
-	Kw+nrNf6KLCBmPu7YiFpCEKKrxro95hL8VkDDL1RNCaY3ZQ3KTqMUFsXy1iTdSommaAwC2p
-	/gulo3Jx0A6qPRL+d5FCFSWX9CQeUHalQDrTBjeXrQQKroRwXy7g4vFMSXS5xlERD3QpiZb
-	XZi0WzhFlsCV5+eM/Ohx9iRtbYeAP96ywt528SPweH55v5kNz+RGwCynIXsmxucQJPe4AIa
-	0ufi/rUjGny1IcKKjOI7Ql7ZUiuePMe6a9I3J+aeLbd8ybK6LeALiokmh+WfGCetvSOOLEc
-	78OSmEiMAMSL8SholdfBahMTcg2dbFT6fuJefdqT123k0FF9Hq2mfsqenzCOYxNY9uVbOmR
-	1McDOixyhdtCBFDlGr0Hl9aFizxtRZoRWDzA1USKlHz0n7SE1PUoLBPesFoIEltWBo4sbJF
-	xqrS7orMkYuxhsPuwF+cpDjC8BLLN3n7Cz7Frib4bf2eYUd630tAMIwT+5LzRb25meN5zmm
-	K8aDA4/1hPCa8A0NgttnVgx8jL57CIa18ySjeNtlLC0DW+Hn405pmKhXS+4mgGelwrclEry
-	UcJPF43fAqLhDnDVpc5hUxG/Qfo1JRYnIal0e1a8+ovzlFPE1yxzJBN/A
-X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
-X-QQ-RECHKSPAM: 0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <df442511-8a3d-496b-bd7f-a1c7b0973a3c@igalia.com>
 
-Hello Yang,
+On 2025-04-08 10:51:29 [-0300], Andr=C3=A9 Almeida wrote:
+> Hi Sebastian,
+Hi,
 
-I don`t know why change it defination remove "asmlinkage",
-why not explain it in commit message?
+> Thanks for your patchset. I think the perf support is great, but usually
+> those new uAPI options should come with some selftests too.
 
-BRs
-Wentao Guan
+You mean "tools/testing/selftests/futex/functional" ?
+I could add something once it is merged. The API changed in this
+submission vs the previous one where the "immutable" argument was added.
+And I am waiting for some feedback on that.
+
+The MPOL & NUMA bits could use also some documentation. Slowly once we
+get there=E2=80=A6
+
+Sebastian
