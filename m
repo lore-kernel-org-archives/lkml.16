@@ -1,164 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A2AB1B6CFE;
-	Tue,  8 Apr 2025 17:52:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52A4722F39F;
+	Tue,  8 Apr 2025 17:54:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744134774; cv=none; b=AlUSUoZrtGYE0bvkEA9EHKJvjHpQl7AtOEm0wCU66j2dPD+O/xls6lMOQ2kD+ly0Uc8ZtlEF/21T/sXBVxaqOX4NGQQpSUx/qpfQRG1PWtDjil64HvU1n2X/3TSc27Ddt+nqlkM0Yg8mp5U4erU6yFtgAxLDZy3lyA+HHg4GYsw=
+	t=1744134841; cv=none; b=ZfPdA20pnqPH9qNhscn/iaZgyork9mDL3QyS0oMZB4BBRrPFVqg0uRhXUNbW8+VCMZ32h47MuqASAf3qFcXa1d3IeZ+EKMfYwsCYKwjCtczT0tsIXS8GiLOmRusmaZvR+hhi7+/zGnukRFXbTQptnXiglen6e1YJomU/n7HSvi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744134774; c=relaxed/simple;
-	bh=jhFQN4n2+3BCxXUk6o/zTy4jcVT5r4gTUiwXyzT6UP4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ttzouqAQwAKA4EDuxXI505PgrBb6ufIMkKzwJKJQLxHuWEM2+iRFeKKlgJiQ2osoNGxYO5aXvxc5FO0sFFPy1sZqzdeXQ8DpuOeVuk/DzBoV3IsPJo+owzrzcOwQbzk7mvVp7AzIArCNE99lf2CNfmRWPXMtb2S592Z9T5G7w3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KfHJxXnT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744134841; c=relaxed/simple;
+	bh=8u/R4IJ+6xtmmt9hG8w5dzqqRQgisr9y0glGKVrx8Tg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B+fnX3jHqETqMXzIiFhdshbj3u5+cE9B2YVPcmZRNoq9QARI6JaF3nukwpuwBgt7pY0UpHRqDtxNO0zgu0rXBIy7zrV7+vhj70iOuNHrk8vNKaeIauAebeFLzWkhhL93NGfjc8i1v2w/tVxexBflzpf7lWe82nWuSHo+xWsvcwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C9Ybww+N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KfHJxXnT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DE28C4CEE9;
-	Tue,  8 Apr 2025 17:52:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C9Ybww+N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F343DC4CEEA;
+	Tue,  8 Apr 2025 17:54:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744134774;
-	bh=jhFQN4n2+3BCxXUk6o/zTy4jcVT5r4gTUiwXyzT6UP4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=KfHJxXnTTRwSnEBpt5o5jSm+jS4oYQETz9qWiXHHFyZ/0j5lr55D4gP9H5sWUpufS
-	 HpQ36T8Ev2+ODQRDElC/lXDrMt1hTzE7NKpuOzXvyJSMjjowbzPPhyHaeqEqU50A3Z
-	 eQvRW8QT2eFM2alRP5avlrXtFqTmCna2X1M4+ENH/pSCbMl29qhFXQlGUSIenmBrA/
-	 TseUs4IdhC4/tIeibELH5iyaqFr1J3hSPJZ93N9En/4ndt3+P+lNV/ZVne1xrk0CJP
-	 vNaKN2Zh2SaOTABcFzOV/h6WDhvHOl3m5OJgquvPSVZYLxpjjRCqqo7eogbFRezLOe
-	 c2dP7s2FJSQsg==
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ac28e66c0e1so890342066b.0;
-        Tue, 08 Apr 2025 10:52:54 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUapI9SnkvAckrGAJ3SIqbSXNRF6K+cHHgAooM6IwiiE92CIptHiydn/TnBtWTWYnBHsppvUPn+IU7/cQPm@vger.kernel.org, AJvYcCWZHBFcNHUqA3Mu2lZCJn37FH0SmbqooCg7dUA3kG01npxafVCi5hbSBTyTpF7y1VBSwLIS+v/KKTcqSw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNvguo8au8qQGZ9NnmWnup/abP4/GW4OVU6znoD6U0MpHQwxWg
-	70Uzaf1jk6Kf0fcwZ0iGH03OEQQ4fFrJhhoJIhXfu48Se1vdja3yMwO7AEoV05BpKCJXNRwqe6+
-	Vi2+1h7r+bTuMtmUTTcRG+p2cLTQ=
-X-Google-Smtp-Source: AGHT+IEUY821H8E/1HCQbaWN87Ugcv7DetZfR/tmpFkjatz8CS6iGXM9MMrgDsx2iSZbMgFtpktuurQOUBQmeFhnK3w=
-X-Received: by 2002:a17:907:d14:b0:ac7:3912:5ea8 with SMTP id
- a640c23a62f3a-aca9b7655famr8336166b.61.1744134772984; Tue, 08 Apr 2025
- 10:52:52 -0700 (PDT)
+	s=k20201202; t=1744134841;
+	bh=8u/R4IJ+6xtmmt9hG8w5dzqqRQgisr9y0glGKVrx8Tg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=C9Ybww+NEgApEINHlurbMXbRhqnEul7xv8rUjsZ6y1r3cmm9kw3ZmgjuxDkiFn9Po
+	 6tGQlrS4jyjmg4z4dfnx6sy/ueVby5d0s9Fff8eZN3kBcQftXuoIUzpmGExdzffqd1
+	 bP/gERHAcwrSxiwkI/WYPnBiQAABuhKWvRjpHAP2mOwHee2eqO5hoFI3x7QFIBFbWc
+	 /KEU8K+8MdnOla2YGmJ8uVEhi4oGnZWVCWDkdGEU1kKxYhv6dBJHEN2KTT1bcL28A2
+	 uYWsUxwAQZoyxWxTy+NBPAb6SUs7hoz+kPENrgIIOKa9sGsTp5M76sLNp34eCSn7jS
+	 xD4KbYZz1QJiw==
+Date: Tue, 8 Apr 2025 07:53:59 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
+	Changwoo Min <changwoo@igalia.com>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	linux-kernel@vger.kernel.org, christophe.jaillet@wanadoo.fr,
+	stable@vger.kernel.org, Rik van Riel <riel@surriel.com>
+Subject: Re: [PATCH v3] sched_ext: Use kvzalloc for large exit_dump allocation
+Message-ID: <Z_Vit8V1J2rCrlRC@slm.duckdns.org>
+References: <20250408-scx-v3-1-159b6c7a680d@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250408122933.121056-1-frank.li@vivo.com> <CAL3q7H6ysGxpXs8P9iPY-Y1KNKPggGSFHR_tMv-34Q+Qf6PZTQ@mail.gmail.com>
- <CAPjX3Fem5E26+Fj537zcOXk9YZum2pDdcY9SAwCOr12wrGrroA@mail.gmail.com>
- <CAL3q7H40yF8q78vZgd2c92LZMzBxqvU3XTrWMu86th1mGsGYDg@mail.gmail.com> <CAPjX3Fd275aj0g5CWVKyX2wu0Sjn3a3UdZBaOR5MqUV55e4ZXw@mail.gmail.com>
-In-Reply-To: <CAPjX3Fd275aj0g5CWVKyX2wu0Sjn3a3UdZBaOR5MqUV55e4ZXw@mail.gmail.com>
-From: Filipe Manana <fdmanana@kernel.org>
-Date: Tue, 8 Apr 2025 18:52:16 +0100
-X-Gmail-Original-Message-ID: <CAL3q7H5BGF6cnLd3-fbp_Szq4_DSekbcM_nz_ZSGnS40w90X6Q@mail.gmail.com>
-X-Gm-Features: ATxdqUFWfBOJ268iOOm6tFiMaXkFTmuMhSwNEf-5nfKP_t825tO75ilS8PiUimU
-Message-ID: <CAL3q7H5BGF6cnLd3-fbp_Szq4_DSekbcM_nz_ZSGnS40w90X6Q@mail.gmail.com>
-Subject: Re: [PATCH 1/4] btrfs: use BTRFS_PATH_AUTO_FREE in insert_balance_item()
-To: Daniel Vacek <neelx@suse.com>
-Cc: Yangtao Li <frank.li@vivo.com>, clm@fb.com, josef@toxicpanda.com, dsterba@suse.com, 
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250408-scx-v3-1-159b6c7a680d@debian.org>
 
-On Tue, Apr 8, 2025 at 6:47=E2=80=AFPM Daniel Vacek <neelx@suse.com> wrote:
->
-> On Tue, 8 Apr 2025 at 19:41, Filipe Manana <fdmanana@kernel.org> wrote:
-> >
-> > On Tue, Apr 8, 2025 at 6:36=E2=80=AFPM Daniel Vacek <neelx@suse.com> wr=
-ote:
-> > >
-> > > On Tue, 8 Apr 2025 at 16:47, Filipe Manana <fdmanana@kernel.org> wrot=
-e:
-> > > >
-> > > > On Tue, Apr 8, 2025 at 1:18=E2=80=AFPM Yangtao Li <frank.li@vivo.co=
-m> wrote:
-> > > > >
-> > > > > All cleanup paths lead to btrfs_path_free so we can define path w=
-ith the
-> > > > > automatic free callback.
-> > > > >
-> > > > > Signed-off-by: Yangtao Li <frank.li@vivo.com>
-> > > > > ---
-> > > > >  fs/btrfs/volumes.c | 7 ++-----
-> > > > >  1 file changed, 2 insertions(+), 5 deletions(-)
-> > > > >
-> > > > > diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
-> > > > > index c8c21c55be53..a962efaec4ea 100644
-> > > > > --- a/fs/btrfs/volumes.c
-> > > > > +++ b/fs/btrfs/volumes.c
-> > > > > @@ -3730,7 +3730,7 @@ static int insert_balance_item(struct btrfs=
-_fs_info *fs_info,
-> > > > >         struct btrfs_trans_handle *trans;
-> > > > >         struct btrfs_balance_item *item;
-> > > > >         struct btrfs_disk_balance_args disk_bargs;
-> > > > > -       struct btrfs_path *path;
-> > > > > +       BTRFS_PATH_AUTO_FREE(path);
-> > > > >         struct extent_buffer *leaf;
-> > > > >         struct btrfs_key key;
-> > > > >         int ret, err;
-> > > > > @@ -3740,10 +3740,8 @@ static int insert_balance_item(struct btrf=
-s_fs_info *fs_info,
-> > > > >                 return -ENOMEM;
-> > > > >
-> > > > >         trans =3D btrfs_start_transaction(root, 0);
-> > > > > -       if (IS_ERR(trans)) {
-> > > > > -               btrfs_free_path(path);
-> > > > > +       if (IS_ERR(trans))
-> > > > >                 return PTR_ERR(trans);
-> > > > > -       }
-> > > > >
-> > > > >         key.objectid =3D BTRFS_BALANCE_OBJECTID;
-> > > > >         key.type =3D BTRFS_TEMPORARY_ITEM_KEY;
-> > > > > @@ -3767,7 +3765,6 @@ static int insert_balance_item(struct btrfs=
-_fs_info *fs_info,
-> > > > >         btrfs_set_balance_sys(leaf, item, &disk_bargs);
-> > > > >         btrfs_set_balance_flags(leaf, item, bctl->flags);
-> > > > >  out:
-> > > > > -       btrfs_free_path(path);
-> > > > >         err =3D btrfs_commit_transaction(trans);
-> > > >
-> > > > This isn't a good idea at all.
-> > > > We're now committing a transaction while holding a write lock on so=
-me
-> > > > leaf of the tree root - this can result in a deadlock as the
-> > > > transaction commit needs to update the tree root (see
-> > > > update_cowonly_root()).
-> > >
-> > > I do not follow. This actually looks good to me.
-> >
-> > path->nodes[0] has a write locked leaf, returned by btrfs_insert_empty_=
-item().
->
-> Well, the first return is before calling this function and the final
-> return is only after committing.
->
-> Again, the function keeps it's former structure as it was before this
-> patch. I still don't see any logical or functional change.
+On Tue, Apr 08, 2025 at 09:50:42AM -0700, Breno Leitao wrote:
+> Replace kzalloc with kvzalloc for the exit_dump buffer allocation, which
+> can require large contiguous memory depending on the implementation.
+> This change prevents allocation failures by allowing the system to fall
+> back to vmalloc when contiguous memory allocation fails.
+> 
+> Since this buffer is only used for debugging purposes, physical memory
+> contiguity is not required, making vmalloc a suitable alternative.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 07814a9439a3b0 ("sched_ext: Print debug dump after an error exit")
+> Suggested-by: Rik van Riel <riel@surriel.com>
+> Signed-off-by: Breno Leitao <leitao@debian.org>
+> Acked-by: Andrea Righi <arighi@nvidia.com>
 
-I don't know how to put it simpler to you. There's a path setup by
-btrfs_insert_empty_item(), with a leaf locked in write mode.
-You can't just do a transaction commit while holding it locked, as
-this can deadlock because updating the tree root is part of the
-critical section of a transaction commit.
-It seems trivial to me...
+Applied to sched_ext/for-6.15-fixes.
 
->
-> I'm lost. This still looks to me just as a straightforward cleanup.
->
-> > > Is there really any functional change? What am I missing?
-> >
-> > Yes there is, a huge one. Even if a transaction commit didn't need to
-> > update the root tree, it would be performance wise to commit a
-> > transaction while holding a lock on a leaf unnecessarily.
-> >
-> > >
-> > > --nX
-> > >
-> > > > Thanks.
-> > > >
-> > > >
-> > > > >         if (err && !ret)
-> > > > >                 ret =3D err;
-> > > > > --
-> > > > > 2.39.0
-> > > > >
-> > > > >
-> > > >
+Thanks.
+
+-- 
+tejun
