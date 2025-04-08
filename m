@@ -1,141 +1,87 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A6A426B2D1;
-	Tue,  8 Apr 2025 10:21:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A684426A098;
+	Tue,  8 Apr 2025 10:21:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744107679; cv=none; b=cinOi5CCWpbkuIICQXzLNDPEJEaabJxfzGifRMWneMBci5Ch7Aguimb1ucaRZC67jkM3sX/NL4hTG2rViZ/zKuSuGkFWywt9S9v5ekmN9lBMLPSXpmo9yxxoJY4fv4x/Swpn+O1pIRfWY9chWWgBxnMG7eXHYS6KNiH+yTTh4Hg=
+	t=1744107697; cv=none; b=XmEtC5qr0n16zCck+fl7SyxFe3f+BWKYtpsh/SD6GImKp8kSvHKBgIYXAq/niXQhqw9J5kD42O9qhrESLMvSzVcLbApuHW7Ge1B6RKUOFduzu7va8A8UVmpXjCR5otfJskRMaRRI4OSosna6t0JpDTRm9qbaWOuPR5G+QdIrFAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744107679; c=relaxed/simple;
-	bh=u6zEX+t1aVIDzy0JiAoJ7d4d/Fs9Xyppen8tPxxJuLg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=u+dkfJm/z/UITKqjsKdJVfLrgyFoQZkUwukWXg1VLh7bexOoZX3e4A/mCmOBRjjwuIlgX/0hzWuAk+8Zbyrgc71p3GznJywGAv9L5/5OaX0KQX5EXsr31ZvIXncYJbL0bkWbliBPjWLEqmGxinBhe3W7wJG1Ow9tuZJKFbL2WB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JV1Era81; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744107697; c=relaxed/simple;
+	bh=nETQKSnCcvm1AKuhmE8CfkD32LpdKCI5lwW/Zi5YJrk=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RmaA+HyZi8RgCrhpLfSDr0AGnGcqPnljNtRGJXWXCBhzV6cO5lDmztYgWq+2hebry592CPTMRFT9xW8wBvHuWq6Xk1EGwPsRoFg6tJwcFC5n+YfzobIIgN1FbSd7bky1IoznNJHYq/iHwjq/jPwG9i2M4KclrwbaSUznOYYatRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=jkEDR1JB; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JV1Era81"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cfe574976so36974945e9.1;
-        Tue, 08 Apr 2025 03:21:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744107676; x=1744712476; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nvS5tdlccUpYMdewqVDUL2P1AZVRPsP3RNJi07oU4SQ=;
-        b=JV1Era8141Jyr/eGbsoNzfLum3/9HlFAsdhyRSFKUrm/6Ny4sP8xGq6nCDj1sSqtf3
-         tvZjotqcncKUCFZVTKuMONkkgqj1ZcoVee8xGKbn3f/U8EzYIqFwKe6J+lelVYwjQvRd
-         eNZRKd6urxhUjmuCdCscgEayd8kxFBfEIbONR+sdh+TQNMXqkasxFsyLcfdu1RtQztwy
-         dqrocfyZdj4muLcex4+AeOJ4WqDyTOm38EfO0K53eQJl7i7B2cYVT3zALxT/GtLHR0Om
-         7bMu+F3lJ3Dzd6Lc1ONcTczutyzGmMY1xVI1QLVcBVVYAZIlUBWtEqAK0Q3QYIIaIjf6
-         snnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744107676; x=1744712476;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nvS5tdlccUpYMdewqVDUL2P1AZVRPsP3RNJi07oU4SQ=;
-        b=ZLwa0BgxrG1de3qPEAPEInE/uKDkGT5ihkFPX+fVoRzgdzWkfwUmVdG8oZhapZq6VK
-         nCDQgjd8b3Rt/k86sfwwIZx2HhzhAD6VRtVgXpkIuP9Imbl+TOJrcA3hlUS0lY8+3QtB
-         iYq5rxliom6c8226fEwcsGYBLAwyrQgaGZkwaRNq60B0hnGlya4B5J17rcROlc4L5THI
-         szWarm7Sa1eq5SNYyeYloMFAu2Oi70CYB6Kr7pdRwU2Dwy2SKJBiIxKWuAoK/heJeqRP
-         BwELcVNowt5aEh6f5QAeCKpy/VJe+A+Omz4cDUDihL47IdSzqZreNixj5SXHo9A1Dgku
-         IHJw==
-X-Forwarded-Encrypted: i=1; AJvYcCUq/68XV58yv7kOnCAU+UpQMR5gD3hluerRdLM7/zfexEOdcgAdhkryEAIBlV0Jc7i6Zm9veN4HqHKaaA==@vger.kernel.org, AJvYcCXC1FUjS9+lLzyaE8IBmI00Su3aA6WT34uejcQgyaQpDWyh26gN481mSABYKAB9eEJawj6ISG7IDE33hZU7@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzrv+1G7xEl4qoTKtoC15AUQIYUOuKXFoo4UTPvB/dVsDAyAVyI
-	V4UpH3UxBerCPeOPSX3sV4Kwfqo17+49HdRAEFj4tXX92mGXLr91
-X-Gm-Gg: ASbGnctZcdxl1lhLAfgWqIpSOe9Rda24sfjzfk7JxfCRLBAp+UN0+eoJ/gpfeVxrPI+
-	ghSelsIp7MwysTavyk0tREjOvdkOmRKq2aQUKBsaJ8BHUUn/7018SGuXgzhsq4Mbv9ajwK+FxQ1
-	MnBHiCIgpzTC5sYO9nMx0nY3W4VpiT3FWXOCP6Hq4Tt4WtMMwvisL9P1Yw5rWMN1uZ26w8kYswE
-	N1Imr9V/ZcMSY7IIFH7merP/ToX16PHSmGGiqnMY06xx98rPQYSuml28OzJQMr643ijUmWcLc5Z
-	4OSoaSz7TEV6nOSas+COR4nS06k=
-X-Google-Smtp-Source: AGHT+IHTQ7zdy21IjggxB65+WUeE2WffLJ03VXeHe93ycTaduBaTH+0V/SULfFmqu1/Ro1Mn7ZBtWA==
-X-Received: by 2002:a05:600c:4ca7:b0:43c:e8ba:e166 with SMTP id 5b1f17b1804b1-43edd3bd698mr70802975e9.22.1744107676131;
-        Tue, 08 Apr 2025 03:21:16 -0700 (PDT)
-Received: from parrot ([105.113.112.27])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec364c959sm155838995e9.25.2025.04.08.03.21.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 03:21:15 -0700 (PDT)
-From: Richard Akintola <princerichard17a@gmail.com>
-To: outreachy@lists.linux.dev
-Cc: sudipm.mukherjee@gmail.com,
-	teddy.wang@siliconmotion.com,
-	gregkh@linuxfoundation.org,
-	linux-fbdev@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Richard Akintola <princerichard17a@gmail.com>
-Subject: [PATCH v2 8/8] staging: sm750fb: change sii164ClearInterrupt to snake_case
-Date: Tue,  8 Apr 2025 11:20:40 +0100
-Message-Id: <549b645b265edcb793458a534427f75f0ea343c4.1744105389.git.princerichard17a@gmail.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <cover.1744105388.git.princerichard17a@gmail.com>
-References: <cover.1744105388.git.princerichard17a@gmail.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jkEDR1JB"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 538ALT6e502981
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 8 Apr 2025 05:21:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744107689;
+	bh=wduqzuUnyN4v6B979S2NkcvhwxgSQYfa7l4KxdYqumQ=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=jkEDR1JBjJ4DR4EYmAYLvk52/VVVopl++GdGfwpP5+26Mvr/PXpar4Ff6NbmJ99oa
+	 ut/KdUUfUC3vvkPM1WxQ89gkjdQPjt5rXf3STJILjDl5l477r3kzqCob4oYxR/OMQ5
+	 r73sb8jjjRUsgwVTMceIDAVL9XaIMfPFVzVKOohY=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 538ALSih117396
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 8 Apr 2025 05:21:29 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 8
+ Apr 2025 05:21:28 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 8 Apr 2025 05:21:28 -0500
+Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.113])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 538ALRuv130575;
+	Tue, 8 Apr 2025 05:21:27 -0500
+Date: Tue, 8 Apr 2025 15:51:26 +0530
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>
+CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
+        <s-vadapalli@ti.com>
+Subject: Re: [PATCH 0/2] J722S: Disable WIZ0 and WIZ1 in SoC file
+Message-ID: <20250408102126.uzmhkkt5ebiaotvq@uda0492258>
+References: <20250408060636.3413856-1-s-vadapalli@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250408060636.3413856-1-s-vadapalli@ti.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Change camelCase function name sii164ClearInterrupt to
-sii164_clear_interrupt in order to conform to kernel code styles
-as reported by checkpatch.pl
+On Tue, Apr 08, 2025 at 11:36:34AM +0530, Siddharth Vadapalli wrote:
+> Hello,
+> 
+> This series disables the "serdes_wiz0" and "serdes_wiz1" device-tree
+> nodes in the J722S SoC file and enables them in the board files where
+> they are required along with "serdes0" and "serdes1". There are two
+> reasons behind this change:
+> 1. To follow the existing convention of disabling nodes in the SoC file
+>    and enabling them in the board file as required.
+> 2. To address situations where a board file hasn't explicitly disabled
+>    "serdes_wiz0" and "serdes_wiz1" (example: am67a-beagley-ai.dts)
+>    as a result of which booting the board displays the following errors:
+>      wiz bus@f0000:phy@f000000: probe with driver wiz failed with error -12
+>      ...
+>      wiz bus@f0000:phy@f010000: probe with driver wiz failed with error -12
 
-CHECK: Avoid camelCase: <sii164ClearInterrupt>
+Since this series fixes the above errors on Beagley-AI, I will include
+the "Fixes" tag in the commit message of the respective patches in this
+series and post the v2 series.
 
-Signed-off-by: Richard Akintola <princerichard17a@gmail.com>
----
- drivers/staging/sm750fb/ddk750_dvi.c    | 2 +-
- drivers/staging/sm750fb/ddk750_sii164.c | 4 ++--
- drivers/staging/sm750fb/ddk750_sii164.h | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/staging/sm750fb/ddk750_dvi.c b/drivers/staging/sm750fb/ddk750_dvi.c
-index 1def02be4cce..6fef1ab484c1 100644
---- a/drivers/staging/sm750fb/ddk750_dvi.c
-+++ b/drivers/staging/sm750fb/ddk750_dvi.c
-@@ -24,7 +24,7 @@ static struct dvi_ctrl_device dcft_supported_dvi_controller[] = {
- 		.enable_hot_plug_detection = sii164_enable_hot_plug_detection,
- 		.is_connected = sii164_is_connected,
- 		.check_interrupt = sii164_check_interrupt,
--		.clear_interrupt = sii164ClearInterrupt,
-+		.clear_interrupt = sii164_clear_interrupt,
- #endif
- 	},
- #endif
-diff --git a/drivers/staging/sm750fb/ddk750_sii164.c b/drivers/staging/sm750fb/ddk750_sii164.c
-index aebde3d8b903..fc725a9952d4 100644
---- a/drivers/staging/sm750fb/ddk750_sii164.c
-+++ b/drivers/staging/sm750fb/ddk750_sii164.c
-@@ -390,10 +390,10 @@ unsigned char sii164_check_interrupt(void)
- }
- 
- /*
-- *  sii164ClearInterrupt
-+ *  sii164_clear_interrupt
-  *      Clear the hot plug interrupt.
-  */
--void sii164ClearInterrupt(void)
-+void sii164_clear_interrupt(void)
- {
- 	unsigned char detectReg;
- 
-diff --git a/drivers/staging/sm750fb/ddk750_sii164.h b/drivers/staging/sm750fb/ddk750_sii164.h
-index aa3f34c13979..ebc173658f0e 100644
---- a/drivers/staging/sm750fb/ddk750_sii164.h
-+++ b/drivers/staging/sm750fb/ddk750_sii164.h
-@@ -37,7 +37,7 @@ void sii164_set_power(unsigned char powerUp);
- void sii164_enable_hot_plug_detection(unsigned char enable_hot_plug);
- unsigned char sii164_is_connected(void);
- unsigned char sii164_check_interrupt(void);
--void sii164ClearInterrupt(void);
-+void sii164_clear_interrupt(void);
- #endif
- /*
-  * below register definition is used for
--- 
-2.39.5
-
+Regards,
+Siddharth.
