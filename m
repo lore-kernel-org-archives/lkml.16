@@ -1,70 +1,84 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F2A51E8348;
-	Tue,  8 Apr 2025 19:03:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 327AF21517D;
+	Tue,  8 Apr 2025 19:03:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744139000; cv=none; b=daCmE0sVdDX+eQmS6fsTLgTrP4Ip9q6WVVWpZlMuciXDDjhBpoXO1anZIdrkORTyhkX8stt6uM8nmzzc/jUGoq8tu81euHCyoxjyRhRVo7IG66jHWoacJ5MkEHei3aJlZa9J2Vcxb2J3zZ4sKe2a0yxOHsPAfxSBS+fXl7V+YIo=
+	t=1744139019; cv=none; b=QfEY4xvOlqDTcdd08BmZ3WkbOu+fn3N7HBjEhTELj6R4vKTXMAkI5itwUQq4+COTMSxcZw9KtgZli0BzYegy5Acx/JqbSvU9Wp8bAmWkr+1CdwjByyq0ffgT3xAVFIIziKSE4qmHSgTrUQ68GWA1mDKUT3n8AFEx2XwHbmYIu/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744139000; c=relaxed/simple;
-	bh=EARKT6yocmAnZReK9tqnX7V8Nt3uW8Qi9d8HfF7ZBIc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IxyggzWqJ83UIZVSncoBpOGjQyZ/Ab8ASl3yzwuToa/UB0QPBJcp3Vs9Di0AB3vse05DX0MIyfXLdCJBt7DJr+6kioPQrqj8QvcyUcDY3UK0O0eps9OfWA4s3pIOTRnFEqaYJ7yG+HCO89H4dN7YQPeNe56144jMq8LxZ4Qx3U0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QgzbA7j2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744139019; c=relaxed/simple;
+	bh=pHSSTO56neWEEEtpVKmutcv8dw9yWs0shUPmz9GS6v4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EyvAQIp4IIwl+RkUfQDCGYcuha1GBaB9J6/01AhwOnvoqjX+ernppMORB/wVNw+BWNa9BkQvcw+NAZIsz5As2dHRyHJoU4twpMJTZNyFDmspxNNbONwWP78lx9B6c11w5PlqqcMFY+U5CWcjocr7KK2rWgJCnVf0yN4IFnq3EWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jHGbB9wr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QgzbA7j2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25DEAC4CEE5;
-	Tue,  8 Apr 2025 19:03:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jHGbB9wr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EE3CC4CEE5;
+	Tue,  8 Apr 2025 19:03:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744138999;
-	bh=EARKT6yocmAnZReK9tqnX7V8Nt3uW8Qi9d8HfF7ZBIc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=QgzbA7j2lLvOFPCnvGx0gUDpMilm+wUBS+wydoweKRrbUNyJND9JIA2BnY8WbOP4Q
-	 gCschZ3zZWrxxq92rKWwHsb6Au5m28T1hvK1J+7YUPAem5ChwnK00OhB/2ARcpEYGY
-	 5jBejeZJDT3hHEjrOz2R1qrlQLztAIqvhNv9U1wgRTN/KFJwXewLP595EXnXQZRikx
-	 J9HNQu8gU82pzmzhEYIYf31wgv1BlKZQwzPxLhykp+1uwo0b991bQtU8C8irCcfRlu
-	 46EM5E76hGYjp+y2kZfV338kCYp9DxwiKZmpRIM8JdEdwWe8bmNDi3UwuDP4SzSqQ5
-	 7VioB9FTcWMDg==
-Date: Tue, 8 Apr 2025 12:03:18 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: Stanislav Fomichev <sdf@fomichev.me>, netdev@vger.kernel.org,
- davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
- paulmck@kernel.org, joel@joelfernandes.org, steven.price@arm.com,
- akpm@linux-foundation.org, anshuman.khandual@arm.com,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH net-next] configs/debug: run and debug PREEMPT
-Message-ID: <20250408120318.65125876@kernel.org>
-In-Reply-To: <df253016-81df-4cc9-8a8c-f92fd1cb8aea@kernel.org>
-References: <20250402172305.1775226-1-sdf@fomichev.me>
-	<df253016-81df-4cc9-8a8c-f92fd1cb8aea@kernel.org>
+	s=k20201202; t=1744139018;
+	bh=pHSSTO56neWEEEtpVKmutcv8dw9yWs0shUPmz9GS6v4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=jHGbB9wrS9Ga5nO6c0XIStwD4hEx9MwNOOY6sWYkQHLfuTLHDwrqeMnev/R8Eytb3
+	 XMBwXMzr/I5AKWpi5uzAkRBTixYzLesS10cKeUpijGLkpq1iN5gnEuzobgwtUXKgd2
+	 x7Hee3peXsAH5HBtzxDAzMNfxZd8SQDa9AF9mZ6JNCKQHC1y17umW6tT2PNuMJwT81
+	 dA2e6VCBSK3iBRYkZtOIlp17ky+mKuO4Hpeg1hOmn4w1Z7QNNbwnLG380iwzNdeGZs
+	 Jxkh2bTYEhWGeKNff2lSODAvwGwfajmmXBoMu7cDK9cnz3z4/g7DypdvsSNKfIyTyO
+	 0PsqvzaYQTRqw==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Jeff Johnson <jjohnson@kernel.org>
+Cc: linux-wireless@vger.kernel.org,
+	ath11k@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] wifi: ath11k: Use of_property_present() to test property presence
+Date: Tue,  8 Apr 2025 14:02:11 -0500
+Message-ID: <20250408190211.2505737-2-robh@kernel.org>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Tue, 8 Apr 2025 20:18:26 +0200 Matthieu Baerts wrote:
-> On 02/04/2025 19:23, Stanislav Fomichev wrote:
-> > Recent change [0] resulted in a "BUG: using __this_cpu_read() in
-> > preemptible" splat [1]. PREEMPT kernels have additional requirements
-> > on what can and can not run with/without preemption enabled.
-> > Expose those constrains in the debug kernels.  
-> 
-> Good idea to suggest this to find more bugs!
-> 
-> I did some quick tests on my side with our CI, and the MPTCP selftests
-> seem to take a bit more time, but without impacting the results.
-> Hopefully, there will be no impact in slower/busy environments :)
+The use of of_property_read_u32() isn't really correct as
+"memory-region" contains phandles (though those happen to be u32s. As
+it is just testing for property presence, use of_property_present()
+instead.
 
-What kind of slow down do you see? I think we get up to 50% more time
-spent in the longer tests. Not sure how bad is too bad.. I'm leaning
-towards applying this to net-next and we can see if people running
-on linux-next complain?
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+---
+I'm assuming this should still go to linux-wireless list? I had to 
+manually add that, so looks like recent MAINTAINERS changes aren't quite 
+right.
 
-Let me CC kselftests, patch in question:
-https://lore.kernel.org/all/20250402172305.1775226-1-sdf@fomichev.me/
+ drivers/net/wireless/ath/ath11k/pci.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/wireless/ath/ath11k/pci.c b/drivers/net/wireless/ath/ath11k/pci.c
+index 412f4a134e4a..87ef7f321065 100644
+--- a/drivers/net/wireless/ath/ath11k/pci.c
++++ b/drivers/net/wireless/ath/ath11k/pci.c
+@@ -929,7 +929,7 @@ static int ath11k_pci_probe(struct pci_dev *pdev,
+ {
+ 	struct ath11k_base *ab;
+ 	struct ath11k_pci *ab_pci;
+-	u32 soc_hw_version_major, soc_hw_version_minor, addr;
++	u32 soc_hw_version_major, soc_hw_version_minor;
+ 	int ret;
+ 	u32 sub_version;
+ 
+@@ -955,8 +955,7 @@ static int ath11k_pci_probe(struct pci_dev *pdev,
+ 	 * from DT. If memory is reserved from DT for FW, ath11k driver need not
+ 	 * allocate memory.
+ 	 */
+-	ret = of_property_read_u32(ab->dev->of_node, "memory-region", &addr);
+-	if (!ret)
++	if (of_property_present(ab->dev->of_node, "memory-region"))
+ 		set_bit(ATH11K_FLAG_FIXED_MEM_RGN, &ab->dev_flags);
+ 
+ 	ret = ath11k_pci_claim(ab_pci, pdev);
+-- 
+2.47.2
+
