@@ -1,66 +1,66 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4BF126158C
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 07:17:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 090B126159B
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 07:17:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744096675; cv=none; b=MYkk5Wh5oVAKlSxDoRZEBlFSvZq2Len+bzDb1meZxoD3IBE4o5inpemOJTVlgOaepIFvBEYPt2Kdh01dq2/7KLr7DFzrN0wLTLR6t6ldOQaM7/YdgRiRwMQMIxp/FiQtbuvSIxpAQcxguJROqa3S0wI1AiKyjZzWaMtE5MPPUKQ=
+	t=1744096676; cv=none; b=oxyWUpImqsWEd3WkpYWucBouz4mV7unj9Ju6gtuX2hC93rYfvwcW2+NQkLmKu+WzCMUfpb38ewJe2/yHvw1l1SsH8ZTulArf9rhvxhs0kOVgOpNCm5GVKYbPcpIs2flujLhcD2BSi5oRksszNnYfCGZ2tPzscTS9vLAnscTSb7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744096675; c=relaxed/simple;
-	bh=rMoLNEgc8ra7f81mpaEJiXyRA6uVb804TO4wJizq22k=;
+	s=arc-20240116; t=1744096676; c=relaxed/simple;
+	bh=mm+CYE4HlFqyXrmHXF0COUC9+WgpXE6WtAJk1HFSlKk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HVrYXJtE7VCojzVucn7Fjf1CqRSulmWEHiGxNPAOJC2q23VUKbGBBTWOry+9qNv3qI3S82ITcm3yfKtWRn/89DAGGTLAejfo2jKowlhU9A9a55XGCgGNiSZbfTwAjPZ25+fx3VYzr4CT6EjPGdzFnuxcs00azIknXhVl0FQluXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=EFSvf1WQ; arc=none smtp.client-ip=209.85.221.44
+	 In-Reply-To:To:Cc; b=vBFTXSoR+NV5AsK8Yz7JVvW1ygdea5xAMPg8iTmn3oUkRQuPKMhRXqlaQ37mqKdhmhPu7CPhGCVEiGgSoXkIxqdUmUEKVooRgvxA85Ex2HksrjJU4c4uC++5CL1KHCmyY25d3fWww9sduzzW60nbrOS0moeGHmuiydhnPO1WZfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=zmyANZSP; arc=none smtp.client-ip=209.85.128.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="EFSvf1WQ"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-39c1ef4acf2so3061472f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 00:17:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="zmyANZSP"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cf628cb14so40734065e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 00:17:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744096672; x=1744701472; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744096673; x=1744701473; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=KHbdZ8I5zBJbhRifEOkTpCnTw3e9jVPzpvQJpqCzg30=;
-        b=EFSvf1WQKpEWCnApfQNGOOGMqEPzX8xFBMhVaRCe5FcN7KbsgavU1TM5dOBX1Xqrys
-         g/PoAYz4JYnwhdiicpg2SWpK+rTaPNhZB4P82Ykiz/MkHreacbO3pttwLm85pOdOZv0t
-         CJ75QlsVMV6iiSDK8esSOVZWssltvx1DA6QxIIRO+GEH+GoU+AdLZZQpYEyP0dL6wuVl
-         LVRtHQ3VpdFSRnxtV0jVylfSf+2ExtS9Cy+o0k+L+vzImzF1RBKckaAuUN3hrAol6CfL
-         BpbneKOSVU3a4i8EgAR6DCZoB1UiQfk/1k+FMzJbzxHw+FVEaaUHVBmOBWEaq8A0Ss3Z
-         TJhg==
+        bh=kgKpi2eMQzrwoQvXzcbqAzy5xxQOgpVGvK0+n6zqybM=;
+        b=zmyANZSPe5F0+SNAThTUiSayS4NkdTkMGA9SIWxQat4TXal8PWxLSmTWqTcE6YZGWI
+         486Fyj6TZXQ2Dv7Qowzg2U2n3n/AzTXou7AP93hkr4HFfimm3DrJ49Wy7p8UdVJbhI+d
+         2QhwopRrLFA6v34FFph9Q8zblCwTwzaquiHD93HLWuqVrT9/ZV+rz9vB3YvEQvQYRhZ/
+         aaYx36+wkBFy2IqnRFUZ3yJChj4cL78YDGvPmS4qDU9OcBcW2GkyzQ/Sm8QLG21rx6l4
+         YLE+m93Obb0PfHkx3t1vdrk8GLwBoEL+9jwnCeaUSMNh5CnRZWLh1H5oH/vSmuMYmOhO
+         hF+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744096672; x=1744701472;
+        d=1e100.net; s=20230601; t=1744096673; x=1744701473;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KHbdZ8I5zBJbhRifEOkTpCnTw3e9jVPzpvQJpqCzg30=;
-        b=xAtqd3q/nOmTuOwM2ePYiCq3oIFOByRj/sS+wBmpPaqZ+wCmXZmtv3SKF7A+Bbly3G
-         i0UOCcwGaGjdIGG+mrW7EVsvQ9wPxNLxHTa1TORXD8SiUvbUaOqio/54dvf9ALlGPV9U
-         +PwaWcThy1cZvU/knGWN2gPv98dbw8/0PP8XLUQaY53jX3m67jZTzwxxQbSjrJPPPu+8
-         gMkfRvV8lfBaScyXqqXAUVlN50JFl8x0uz3b2vmZA+HynQFfaI9rRDt7BLmYuxs15Dym
-         B6G7VzQ7d78cREHksmR1OFqJbtvf1ZZcH5H1F4l4AYx8Sxyvi/F/GNT7tT/2XtraCowN
-         DlKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWRotTdpAcvjfdSkeL5pWw4Vy/PKcRUjdR4vlAXTiSp+r51JSDrGBAUXVbOT5sGKx1U6dJpZcV15IeOH9w=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0YURPa5PEPSnhxEqdEIeycGc0FQcY1ZcJ6rJhntAqKZi0r8LN
-	UIkHZHc/BTtTF0iEYH07gocn2TPs127dcRZVFcdhXB0uA4SwlD8/ditHYKFSshs=
-X-Gm-Gg: ASbGncvJ2sGb3xrAtCudahBB/TR/deuVcDl02PAGi+igNS9/mw+Lf+XA7Z+YanFWeGK
-	Fj+J9Z0UgsavfgZEBBbCWyfhzlqwLpj8ch/FWyyDP61thzKHEKm2v2YanMaoWXXpFVjKC9ushld
-	/Jns7Z90q2bPwp9YMzjsVsamWJwFbP9vn/5VUzYZWcmXipIwP+wCC7+4fSPC5YpGw28xRL7ckKf
-	ybBO2HP9qUna7hklj+1esgbRTAhjSnreuRltltJ9MZsjucsTXzDfBZmIgeF9NitpwjVwJ+orSQm
-	J4265QgqbSGx8Z0C8adFe7u0pJLbxZIyecqiJA==
-X-Google-Smtp-Source: AGHT+IG66JLNMA6/+F4yvPGqakGWzMF6ZtCNetVsbjFv2aPqMbejsIAN56v674i7htexv9OZa2w1UA==
-X-Received: by 2002:a5d:5f96:0:b0:390:f2f1:2a17 with SMTP id ffacd0b85a97d-39d1466229bmr14181138f8f.53.1744096672155;
-        Tue, 08 Apr 2025 00:17:52 -0700 (PDT)
+        bh=kgKpi2eMQzrwoQvXzcbqAzy5xxQOgpVGvK0+n6zqybM=;
+        b=CRsQrtv4QAYH2R8GjU5bWN+lE6+OUl6pm35CilIL7lKNZmPNRDrfJ4rv10Jdh8l5rI
+         8oGP59xA4KTbaSN1/og1fPj3IZFPqCDGwTuILM9/diJrl5WrwOrE6UgVqEI9Wm76WTUd
+         JNkITx1xG2SS5EUA3eLzus9l9b/USWt7eSwP6M+RYwUrhV04Tmj+3NGIr8CdxRg55CzY
+         G6YOTtyi1H1N33ZD71cBNTnAZirkPkuOPKaJbFIuh+XYdGxpi+2FP/mUkcAhGCKpHq3j
+         ELirAeyr8PmMHsxReC+QF2TbNaga9wyWcBJWfwAiHtzACqR+AoHJL+uMfrCF0UUb2KDx
+         yQMA==
+X-Forwarded-Encrypted: i=1; AJvYcCXOykXMcFLFJ8xhTq1iGq0gHOmSllCN/DL9Vpkhqb0NWrN4Gmf0YF5OCZ5UYBhycrz5SWbSBMwuvm9+dSc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1VgWfZbFyu3c3EP9pyjSlyvf0pC75ivf/ondt2oOmynwFvJ2V
+	OIUfVJ7+FPny5ww+YcJmtSVvQzwUfR8Ns4wEtQCEarOZnSG+Z5wTME/huDGhRMM=
+X-Gm-Gg: ASbGncsD1dcI7VvFwlvjFXTq7xtgC6qa+5LwS//trCCx3V4B6qY/WlPhMboSE04hOIJ
+	PtHRG18N7E0rnfICzct+1TH/dCcPiRxPHqsw6pbQ782iyjjD12rv7kVhIuRsm3NJn0WwraCRSzN
+	xt2VukXo+/QsQXwczy/gLCSK5kfuAZcrKwTQJgAuzP3JX5d0UATv0ns7QN8CGOrVAxQ4WAuk3K+
+	WTUfFpqd9f4DtdqN8wdJoie14SelC21Bvwbp8IX9HVkdUaZ5KYGCoSf/KgrjaW+kE1cXZK2QCJq
+	/yHhe1U+EuV2F1Em7QiVkANkQxvPXh0VSbalzQ==
+X-Google-Smtp-Source: AGHT+IFIDoEgtgjZmRm76oLe4qBixaJVFcxIWBxSgP9eQc/+muRPjB5OZ4DhcXqFSFfMWbn8IPCLNw==
+X-Received: by 2002:a05:6000:2484:b0:38d:ae1e:2f3c with SMTP id ffacd0b85a97d-39d820eb1f9mr1593525f8f.25.1744096673169;
+        Tue, 08 Apr 2025 00:17:53 -0700 (PDT)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:2adf:eaae:f6ea:1a73])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d5d1sm14257694f8f.77.2025.04.08.00.17.51
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d5d1sm14257694f8f.77.2025.04.08.00.17.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 00:17:51 -0700 (PDT)
+        Tue, 08 Apr 2025 00:17:52 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 08 Apr 2025 09:17:39 +0200
-Subject: [PATCH 02/10] pinctrl: rk805: use new GPIO line value setter
- callbacks
+Date: Tue, 08 Apr 2025 09:17:40 +0200
+Subject: [PATCH 03/10] pinctrl: abx500: enable building modules with
+ COMPILE_TEST=y
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +69,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250408-gpiochip-set-rv-pinctrl-part1-v1-2-c9d521d7c8c7@linaro.org>
+Message-Id: <20250408-gpiochip-set-rv-pinctrl-part1-v1-3-c9d521d7c8c7@linaro.org>
 References: <20250408-gpiochip-set-rv-pinctrl-part1-v1-0-c9d521d7c8c7@linaro.org>
 In-Reply-To: <20250408-gpiochip-set-rv-pinctrl-part1-v1-0-c9d521d7c8c7@linaro.org>
 To: Ludovic Desroches <ludovic.desroches@microchip.com>, 
@@ -87,87 +87,63 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, 
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2092;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1197;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=sUTrzWuOo7PVik1QzFjSyEGMbbgvgdGB1epc3LKWdY4=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn9M2ZtGmml6ycwEzk3KhRs/YW0AQqsaUfB686c
- +V6uDVoAR+JAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ/TNmQAKCRARpy6gFHHX
- cttsEACbtqoZ/RYzP/rSItzAm6RyIKDSI67qmiaM3eZO+Qwuz4UvIvJ/GL6pV94KgneXWwmwPKo
- P7ywI2W0szbMsr9K+DM7p2BGeLSS8pyImHtM3ITgmaayPUvVb3Y7MrTj+v9MYNRnjYl5sGRlIjK
- 1EmAEesdJqsGiDikg07oXYnqGVad+4NJ2zxDtQ5n7tB3ShEJusRuIFA35sixjIGRTR4Nr+0DmSH
- ARiPMtTFkfjtgsXBEDCv0PRzyup4961wgfvFgQ7GRwqsXxRacjsZAEmoYduAjZjqdJ1dny8C8i/
- Evwq8RUqfgTcjvwjmVDu3klH9BEGNcZX9frolFeag0oRT7/RZHWm0ZxaKaU4rlH/E0Io6pd73nU
- sw0vsjb8AZuD4il5knSflEdQN3RuRoPp/QdnpHdPim0zwLKdIVMyzNu6p2O0tRQGmQi3tJnf6+/
- +iwIO4FrFQOgX9vh4VdG91Tuu+BBuoCRJMWkbcnWF5dZaX6tREBxwtDhCsxPH58+4G5NQgX0XN+
- IJgHJLn/R/KYnp/l1eWewkxcLXRRPGbcaEUJ5lTHuvd6fGpdv0Af4X3rK0WZJ6UwBJw5u6pQLY5
- 8YdLZCYvmvA8jSXhIocYAmemyaGKAMW/JnBi6mtMkH5dOwmpnp+SvX5iwwf+9a5m+kDEg4dWidg
- WpA2txNtQ9d547g==
+ bh=7gT59a+ieEBoRyUfHtp8d/jvYbZrPQXR8M3Rkb54480=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn9M2Z62HjgrUOk13umM6zCKtt5wsF8hMyPqGii
+ +FbeYzWZu2JAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ/TNmQAKCRARpy6gFHHX
+ cr+9D/4pVK6myjhrhbvOnoR4PHJ367IIWOAh/Zh8cc762qftCq98AjRSHWjpi3KMWk+T1SoewR6
+ yd9FAaYyN5ggStwHN8ifchYiv+JA8sO+i6UuSIOQUVQzey/SsbW1SeTgmZ3o/GsdKPG/HjoxejZ
+ M1kbfrXMCRWGU5zTxGwLAZl126dUhXDTKScOqGDG6ZLFctZH0MSBmu4Nu7uWpRWQK3R+Xr6OGfa
+ +BSLVhz77RThlP5bmwNejIlKFQNdlTKOpKLwZ4d0FEN5QJPa8Epbb+Vvkputkda+ERCCbCEvjf9
+ 8ZSHC0SCNCcLyorbyOA6rgYWiPo+GZMHSqoF/Pl1OFZzp2mCtAXPyQrKJ2wv0I5KYUJSLuNstbX
+ pAA8HtMWVKN2o8VTfFf0kYbEFAo7BM5D+3B86ctemR78XtjX9vA/33qPRw6qbRuWNjF2jLMxwGg
+ 7sr3CLWFwcyqt8oNdhyjEWmfnIO2z+BYPCo7Btr52pKon7rbGIyJAAG4gxmUqgjRO/PJ06aCPjV
+ erKdtcafZvxLT9Mf2jX/+expNbOTo5PKgOvekHmSlI2xdATbBZgMQPxFNUNJVlXLL3UGV8fR/Zh
+ +ApMwVs12NjHuf/sT9aZDxPH2zbKJvARpXLKynmGD52HIn+u06LPHHbZH2+obwAez7+Tde1ydSJ
+ G1AuErL37JcATMA==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-struct gpio_chip now has callbacks for setting line values that return
-an integer, allowing to indicate failures. Convert the driver to using
-them.
+Increase the build coverage by enabling the abx500 modules with
+COMPILE_TEST=y.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/pinctrl/pinctrl-rk805.c | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+ drivers/pinctrl/nomadik/Kconfig | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-rk805.c b/drivers/pinctrl/pinctrl-rk805.c
-index c42f1bf93404..fc0e330b1d11 100644
---- a/drivers/pinctrl/pinctrl-rk805.c
-+++ b/drivers/pinctrl/pinctrl-rk805.c
-@@ -325,26 +325,26 @@ static int rk805_gpio_get(struct gpio_chip *chip, unsigned int offset)
- 	return !!(val & pci->pin_cfg[offset].val_msk);
- }
+diff --git a/drivers/pinctrl/nomadik/Kconfig b/drivers/pinctrl/nomadik/Kconfig
+index aafecf348670..2c1f8a4f5d24 100644
+--- a/drivers/pinctrl/nomadik/Kconfig
++++ b/drivers/pinctrl/nomadik/Kconfig
+@@ -1,20 +1,20 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-if ARCH_U8500
++if (ARCH_U8500 || COMPILE_TEST)
  
--static void rk805_gpio_set(struct gpio_chip *chip,
--			   unsigned int offset,
--			   int value)
-+static int rk805_gpio_set(struct gpio_chip *chip, unsigned int offset,
-+			  int value)
- {
- 	struct rk805_pctrl_info *pci = gpiochip_get_data(chip);
--	int ret;
+ config PINCTRL_ABX500
+ 	bool "ST-Ericsson ABx500 family Mixed Signal Circuit gpio functions"
+-	depends on AB8500_CORE
++	depends on AB8500_CORE || COMPILE_TEST
+ 	select GENERIC_PINCONF
+ 	help
+ 	  Select this to enable the ABx500 family IC GPIO driver
  
--	ret = regmap_update_bits(pci->rk808->regmap,
--				 pci->pin_cfg[offset].reg,
--				 pci->pin_cfg[offset].val_msk,
--				 value ? pci->pin_cfg[offset].val_msk : 0);
--	if (ret)
--		dev_err(pci->dev, "set gpio%d value %d failed\n",
--			offset, value);
-+	return regmap_update_bits(pci->rk808->regmap,
-+				  pci->pin_cfg[offset].reg,
-+				  pci->pin_cfg[offset].val_msk,
-+				  value ? pci->pin_cfg[offset].val_msk : 0);
- }
+ config PINCTRL_AB8500
+ 	bool "AB8500 pin controller driver"
+-	depends on PINCTRL_ABX500 && ARCH_U8500
++	depends on PINCTRL_ABX500 && (ARCH_U8500 || COMPILE_TEST)
  
- static int rk805_gpio_direction_output(struct gpio_chip *chip,
- 				       unsigned int offset, int value)
- {
--	rk805_gpio_set(chip, offset, value);
-+	int ret;
-+
-+	ret = rk805_gpio_set(chip, offset, value);
-+	if (ret)
-+		return ret;
-+
- 	return pinctrl_gpio_direction_output(chip, offset);
- }
+ config PINCTRL_AB8505
+ 	bool "AB8505 pin controller driver"
+-	depends on PINCTRL_ABX500 && ARCH_U8500
++	depends on PINCTRL_ABX500 && (ARCH_U8500 || COMPILE_TEST)
  
-@@ -378,7 +378,7 @@ static const struct gpio_chip rk805_gpio_chip = {
- 	.free			= gpiochip_generic_free,
- 	.get_direction		= rk805_gpio_get_direction,
- 	.get			= rk805_gpio_get,
--	.set			= rk805_gpio_set,
-+	.set_rv			= rk805_gpio_set,
- 	.direction_input	= pinctrl_gpio_direction_input,
- 	.direction_output	= rk805_gpio_direction_output,
- 	.can_sleep		= true,
+ endif
+ 
 
 -- 
 2.45.2
