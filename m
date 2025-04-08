@@ -1,113 +1,88 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D0BC206F18;
-	Tue,  8 Apr 2025 12:40:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2772EB663;
+	Tue,  8 Apr 2025 12:40:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744116005; cv=none; b=qcQZm5fAHArOwH7RnQjaLNGWpVoqj2KfAihhpEyMD4QbI/LqTozjSBUXv6buEz9ft9XR2S9pmY8VdZs22eTnSERWa/mUmRmZaYvMuFpHQ8r1ghTP9jjpJgZtjFFaqg58aPR7HTCdjZrDwCioPCExnJw0T1o9Bfk45RYcG6gmueo=
+	t=1744116038; cv=none; b=Vyy3FmdccmN21mGImUwyTTnMcSyJ/tfuTHx2bw53dEMCpV5zSk3isupzHD+df376i0/JqUW2pSRX3ozGBhbh2QzoPccmPer8c/9gxF9dh2VKwrB4+3Y4KM0jgrZ0IjjIpbw9+C+hd2nAEb5ENm96PJ4kAbK8Wjd2USBV/8RrCGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744116005; c=relaxed/simple;
-	bh=W2T7YCdGADKb75b9b3DlWwavvOCPJ0/TwhvEwmQo7f4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UYRFFVmUQvWXyDWpa1/oBr7Thb8GZcdeYmcIOSsxMWIj8QIXPOqZJijP9Fh7lpL2HQA44JQi9mZNAwRyCJIcJ/a5eSkvy6jg4hkUuydWD35zCOVP62T74mnbnZF6qGFj/GjTEXkR/OWkYWd4jXvvImzEQnahT3nT+KWzrhhYg3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=TCaZdcmO; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1744116038; c=relaxed/simple;
+	bh=J9sS9BYFKqNpm63hs9bprrqPIhjvC0tgMde5KXh1DFw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=XzCgbVr2astxh5Wvw2lItox4X1JS2oEe4Wjk7/zYqFUTd/xRmSAg+HcYf5gm0hbhMAghmByQ/qKfnVEy/im+9wXUYRAcuX41okuwB0hULnzRdcjEvb3RSx+3TyPXIK0v+mfvm0KgcDN8nXO70p1DFw1GY8zrnjVrltoGV/Di18g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PaZQ7Nyb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="TCaZdcmO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=W2T7Y
-	CdGADKb75b9b3DlWwavvOCPJ0/TwhvEwmQo7f4=; b=TCaZdcmOEC/SZynHAHLgD
-	lCdsXB0IaOmQ0WUoOtRqdOPzO1I5js4hWQIu+Hbz3mD9GLipxDvvo7XXlTfdzTg3
-	BQsTpn2YVHv021pE9euB414Zfl7soUMKBdIpWkd4xL4L4cjqzZgP4Bx3sh9FcABN
-	7peCjWyNPtsstIBc0a+Ot8=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wDnpgLtGPVneK_AEw--.41217S4;
-	Tue, 08 Apr 2025 20:39:10 +0800 (CST)
-From: lvxiafei <xiafei_xupt@163.com>
-To: fw@strlen.de
-Cc: coreteam@netfilter.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	horms@kernel.org,
-	kadlec@netfilter.org,
-	kuba@kernel.org,
-	linux-kernel@vger.kernel.org,
-	lvxiafei@sensetime.com,
-	netdev@vger.kernel.org,
-	netfilter-devel@vger.kernel.org,
-	pabeni@redhat.com,
-	pablo@netfilter.org,
-	xiafei_xupt@163.com
-Subject: Re: [PATCH V2] netfilter: netns nf_conntrack: per-netns net.netfilter.nf_conntrack_max sysctl
-Date: Tue,  8 Apr 2025 20:39:08 +0800
-Message-Id: <20250408123908.3608-1-xiafei_xupt@163.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20250408095854.GB536@breakpoint.cc>
-References: <20250408095854.GB536@breakpoint.cc>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PaZQ7Nyb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F1C6C4CEE5;
+	Tue,  8 Apr 2025 12:40:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744116037;
+	bh=J9sS9BYFKqNpm63hs9bprrqPIhjvC0tgMde5KXh1DFw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=PaZQ7NybpSTc3u6LMf0GyakpZbAH6uWAYkR3PEAVRoLikJQ6JTcBZW35reZTyFFN+
+	 E8yJ7Z0KrjFy8CHATkOlPTvGUUM9on6Hvx2h+dji3NJt9Rcjcl3R+Y70htmt7tMZh0
+	 XcFhP72Ypa8tCNKazIX2duu5kWA0jm9YQRRH8OxGXQqd/pflPU16KJvECLJelWdf5X
+	 pqEGNs0lVB3AqBsHsw1VsijG5T87Cg0qc7VWRIMFeoNo/by4q8qWaU8+3rAttmgocv
+	 3pu1K08NEYGtJ+batEIRnp/NOgV2n0EdN7XPp5VmoGTbNEHeaoe1atqsNd8j/MFpjK
+	 DG2C/uCeDlUqw==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Abdiel Janulgue" <abdiel.janulgue@gmail.com>
+Cc: <ojeda@kernel.org>,  "Danilo Krummrich" <dakr@kernel.org>,  "Daniel
+ Almeida" <daniel.almeida@collabora.com>,  "Robin Murphy"
+ <robin.murphy@arm.com>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Boqun
+ Feng" <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,
+  =?utf-8?Q?Bj=C3=B6rn?= Roy
+ Baron <bjorn3_gh@protonmail.com>,  "Benno Lossin"
+ <benno.lossin@proton.me>,  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor
+ Gross" <tmgross@umich.edu>,  <rust-for-linux@vger.kernel.org>,  "Marek
+ Szyprowski" <m.szyprowski@samsung.com>,  <iommu@lists.linux.dev>,
+  <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/3] rust: dma: be consistent in using the `coherent`
+ nomenclature
+In-Reply-To: <20250326201230.3193329-2-abdiel.janulgue@gmail.com> (Abdiel
+	Janulgue's message of "Wed, 26 Mar 2025 22:11:42 +0200")
+References: <20250326201230.3193329-1-abdiel.janulgue@gmail.com>
+	<iA3Kum15KL4RrDONXH8tPrKBbFuskGFUDLRzBFHceQi9DhEFzoDSryS7C3eLAJCtGkRCswvoORtja0H68Pyadg==@protonmail.internalid>
+	<20250326201230.3193329-2-abdiel.janulgue@gmail.com>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Tue, 08 Apr 2025 14:27:42 +0200
+Message-ID: <87wmbuhm81.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDnpgLtGPVneK_AEw--.41217S4
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Kw47XrWfAFyfGrWxGw43GFg_yoW8uFW8p3
-	yftrZrAryDtan3A34kKw17Ca1Fy393Ar13KF1UCFy8Cay5KrnI9rWxKF17CF97Cw4kCr1a
-	vr4jvr1kJas5AaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JUhF4_UUUUU=
-X-CM-SenderInfo: x0ldwvplb031rw6rljoofrz/1tbiKBMpU2f05gwTsgACsb
+Content-Type: text/plain
 
+"Abdiel Janulgue" <abdiel.janulgue@gmail.com> writes:
 
-On Tue, 8 Apr 2025 11:58:54 Florian Westphal <fw@strlen.de> wrote:
-> That seems the wrong thing to do.
-> There must be some way to limit the netns conntrack usage.
+> In the kernel, `consistent` and `coherent` are used interchangeably for
+> the region described in this api. Stick with `coherent` nomenclature
+> to show that dma_alloc_coherent() is being used.
 >
-> Whats the actual intent here?
+> Signed-off-by: Abdiel Janulgue <abdiel.janulgue@gmail.com>
+> ---
+>  rust/kernel/dma.rs | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
 >
-> You could apply max = min(init_net->max, net->max)
-> Or, you could relax it as long as netns are owned
-> by initial user ns, I guess.
+> diff --git a/rust/kernel/dma.rs b/rust/kernel/dma.rs
+> index 8cdc76043ee7..d3f448868457 100644
+> --- a/rust/kernel/dma.rs
+> +++ b/rust/kernel/dma.rs
+> @@ -89,15 +89,15 @@ pub mod attrs {
+>      /// Forces contiguous allocation of the buffer in physical memory.
+>      pub const DMA_ATTR_FORCE_CONTIGUOUS: Attrs = Attrs(bindings::DMA_ATTR_FORCE_CONTIGUOUS);
 >
-> Or perhaps its possible to make a guesstimate of
-> the maximum memory needed by the new limit, then
-> account that to memcg (at sysctl change time), and
-> reject if memcg is exhausted.
->
-> No other ideas at the moment, but I do not like the
-> "no limits" approach.
+> -    /// This is a hint to the DMA-mapping subsystem that it's probably not worth the time to try
+> +    /// Hints DMA-mapping subsystem that it's probably not worth the time to try
 
-The original nf_conntrack_max is a global variable.
-Modification will affect the connection tracking
-limit in other netns, and the maximum memory
-consumption = number of netns * nf_conntrack_max
+This and the next two edits has nothing to do with coherent/consistent
+nomenclature. Please update the commit message to reflect that.
 
-This modification can make nf_conntrack_max support
-the netns level to set the size of the connection
-tracking table, and more flexibly limit the connection
-tracking of each netns. For example, the initial user ns
-has a default value (=max_factor*nf_conntrack_htable_size).
-The nf_conntrack_max when netns 1 and netns 2 are created
-is the same as the nf_conntrack_max in the initial user ns.
-You can set it to netns 1 1k and netns 2 2k without
-affecting each other.
 
-If you are worried that different netns may exceed the
-initial user limit and memory limit when setting,
-apply max = min(init_net->max, net->max), the value in
-netns is not greater than init_net->max, and the new
-maximum memory consumption <= the original maximum memory
-consumption, which limits memory consumption to a certain
-extent. However, this will bring several problems:
+Best regards,
+Andreas Hindborg
 
-1. Do not allow nf_conntrack_max in other netns to be greater
-than nf_conntrack_max of the initial user. For example, when
-other netns carry north-south traffic, the actual number of
-connection tracking is greater than that of the initial user.
-
-2. If nf_conntrack_max of the initial user is increased, the
-maximum memory consumption will inevitably increase by n copies
-
-3. If nf_conntrack_max of the initial user is reduced, will
-the existing connections in other netns be affected?
 
