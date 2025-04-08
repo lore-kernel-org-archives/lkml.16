@@ -1,132 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D97C255230
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 21:31:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B5422332A
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 21:34:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744147896; cv=none; b=J2IOQ88vHyN8CcUDn/Ha3BSVBtf224szP+VG8Nvf2IDuGFDPsmMduQ0NYAZaHjLAfuojccHJ/m59Bdp/zu0SHbaG1iDR6tUDwFjJ2COp8u9a+TdF+Rt3RtqMAT0UJu9p1vEl8ZdlfdE8fmXC2+a78OjB0rcHhBzmgTSMRhrtqAA=
+	t=1744148067; cv=none; b=d52ZLXQsZhONOU8+DxOzKjPhwpqjhV5f4P2GrpmHXHMjjN7OrEyBoTiGJ9zZKZn1d5A6DmGIi9RNOA7YXovh5CMdmszwernyGDFjucGACmLQ3P/G8B2mNt3waw+WVNIMf9qgoUE/cJvmJDbl9I/MhA2l6LPcPLeXVLbzXsO5k4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744147896; c=relaxed/simple;
-	bh=i2/vDRlfpffmboNAdB2RhvhuQdFfbEnJ2xP4l9EWlSM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DyqJFRJX/eeDYIt4oTBRUwSrs2mNLwZY1y/e2F17hUgmzcCNE6jPUAzmwO1+7JzOCJTiHikyIxFjBNYjWswVUiTFIlwGAVyshMnF/OGrDKtx+6AOWn5oA2MnrpOEOY5pL4MUTknj7pVCr/wstrM6GZF3gaFd5yFdngUstepmRQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G1dMFUgG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744148067; c=relaxed/simple;
+	bh=5y+jYg4tFLii2fhDXKuV70GCZYiXZr2+wmGH9PNJeas=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LuQHwBnMqitFQ6mo8I/1tf47ONkkM/9DB3iqcebcOTGzTyAUIKj0A2IwiN89WymwMaSzEoVu/ohtFsOkcaqUKcTnp7cIkT4hsME6pP8+zYKGNkHBgyjR/Qkypz4wk6254O81MUu/Q9qhw+LPuzmhc1+oy9b/YH+voy2hdHRJh4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=S7obbZgk; arc=none smtp.client-ip=83.149.199.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G1dMFUgG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C870AC4CEE5;
-	Tue,  8 Apr 2025 21:31:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744147895;
-	bh=i2/vDRlfpffmboNAdB2RhvhuQdFfbEnJ2xP4l9EWlSM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=G1dMFUgGdq/9nZWq7JNPoKm9uhI5lljtTBhOBN00mZDn87cNF1hV4Fx0r8xcmPtWl
-	 lb7G7wNwXCqp9ir9jAL6yv2tIjAZpXcHmug2HLMs2OqOdd0ZUu3XTt1c963H5KQRlN
-	 O6kuizVdKHQj5RnqjHuZaXnzv+uiQ0l5mKg4WRQ281Ega4WYXMZlO4Qrr2RJsUGyBf
-	 4wJGT3JzOA17jz0s8na0eJXrj2TW75RWaOk84jinKtkyxqd5ZyE0FIRyfaVkszetJy
-	 2vipdhZQ3qRNaJT3Hzfv8RoFkJCS6EFZI/+ZHGQiRf+fBfGW7q3UgmSvEVDwUEIB7Z
-	 +hVN5oA2SKW7w==
-Date: Tue, 8 Apr 2025 14:31:31 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: "Dmitry V. Levin" <ldv@strace.io>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Arnd Bergmann <arnd@arndb.de>, strace-devel@lists.strace.io,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v7 2/6] syscall.h: add syscall_set_arguments()
-Message-ID: <20250408213131.GA2872426@ax162>
-References: <20250303111910.GA24170@strace.io>
- <20250303112009.GC24170@strace.io>
+	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="S7obbZgk"
+Received: from fedora.intra.ispras.ru (unknown [10.10.165.6])
+	by mail.ispras.ru (Postfix) with ESMTPSA id EA32B448787D;
+	Tue,  8 Apr 2025 21:34:21 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru EA32B448787D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
+	s=default; t=1744148062;
+	bh=N4Tgywr8Fw9WMBSdeYcYar/HdOFlbUR5lSCeLjJ1bfI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=S7obbZgkV6jYoLfjlL/M4N/YTI1c824HzIw6nELFmc/PghNyXdL3IHonvhBcwXrw8
+	 vJ/7kRbFH9TkfbZlj6ALLYrJCCkUIHLUwPHtAmRYPxRXD0IaATfEHKDLCp1mQcfLzH
+	 KPO+ELugplkE+qWSv3dzE1upgXz4/ZUbW9PstazI=
+From: Fedor Pchelkin <pchelkin@ispras.ru>
+To: Joerg Roedel <joro@8bytes.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
+	Will Deacon <will@kernel.org>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Nicolin Chen <nicolinc@nvidia.com>,
+	iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org
+Subject: [PATCH] iommu: fix crash in report_iommu_fault()
+Date: Wed,  9 Apr 2025 00:33:41 +0300
+Message-ID: <20250408213342.285955-1-pchelkin@ispras.ru>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250303112009.GC24170@strace.io>
+Content-Transfer-Encoding: 8bit
 
-Hi Dmitry,
+The following crash is observed while handling an IOMMU fault with a
+recent kernel:
 
-[dropping majority of folks since this seems irrelevant to them]
+kernel tried to execute NX-protected page - exploit attempt? (uid: 0)
+BUG: unable to handle page fault for address: ffff8c708299f700
+PGD 19ee01067 P4D 19ee01067 PUD 101c10063 PMD 80000001028001e3
+Oops: Oops: 0011 [#1] SMP NOPTI
+CPU: 4 UID: 0 PID: 139 Comm: irq/25-AMD-Vi Not tainted 6.15.0-rc1+ #20 PREEMPT(lazy)
+Hardware name: LENOVO 21D0/LNVNB161216, BIOS J6CN50WW 09/27/2024
+RIP: 0010:0xffff8c708299f700
+Call Trace:
+ <TASK>
+ ? report_iommu_fault+0x78/0xd3
+ ? amd_iommu_report_page_fault+0x91/0x150
+ ? amd_iommu_int_thread+0x77/0x180
+ ? __pfx_irq_thread_fn+0x10/0x10
+ ? irq_thread_fn+0x23/0x60
+ ? irq_thread+0xf9/0x1e0
+ ? __pfx_irq_thread_dtor+0x10/0x10
+ ? __pfx_irq_thread+0x10/0x10
+ ? kthread+0xfc/0x240
+ ? __pfx_kthread+0x10/0x10
+ ? ret_from_fork+0x34/0x50
+ ? __pfx_kthread+0x10/0x10
+ ? ret_from_fork_asm+0x1a/0x30
+ </TASK>
 
-On Mon, Mar 03, 2025 at 01:20:09PM +0200, Dmitry V. Levin wrote:
-> This function is going to be needed on all HAVE_ARCH_TRACEHOOK
-> architectures to implement PTRACE_SET_SYSCALL_INFO API.
-> 
-> This partially reverts commit 7962c2eddbfe ("arch: remove unused
-> function syscall_set_arguments()") by reusing some of old
-> syscall_set_arguments() implementations.
-> 
-> Signed-off-by: Dmitry V. Levin <ldv@strace.io>
-> Tested-by: Charlie Jenkins <charlie@rivosinc.com>
-> Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
-> Acked-by: Helge Deller <deller@gmx.de> # parisc
-> Reviewed-by: Maciej W. Rozycki <macro@orcam.me.uk> # mips
-...
-> diff --git a/arch/riscv/include/asm/syscall.h b/arch/riscv/include/asm/syscall.h
-> index 121fff429dce..8d389ba995c8 100644
-> --- a/arch/riscv/include/asm/syscall.h
-> +++ b/arch/riscv/include/asm/syscall.h
-> @@ -66,6 +66,15 @@ static inline void syscall_get_arguments(struct task_struct *task,
->  	memcpy(args, &regs->a1, 5 * sizeof(args[0]));
->  }
->  
-> +static inline void syscall_set_arguments(struct task_struct *task,
-> +					 struct pt_regs *regs,
-> +					 const unsigned long *args)
-> +{
-> +	regs->orig_a0 = args[0];
-> +	args++;
-> +	memcpy(&regs->a1, args, 5 * sizeof(regs->a1));
-> +}
+report_iommu_fault() checks for an installed handler comparing the
+corresponding field to NULL. It can (and could before) be called for a
+domain with a different cookie type - IOMMU_COOKIE_DMA_IOVA, specifically.
+Cookie is represented as a union so we may end up with a garbage value
+treated there if this happens for a domain with another cookie type.
 
-This upsets the compiletime fortify checks, as I see a warning after
-syscall_set_arguments() starts being used in kernel/ptrace.c later in
-the series.
+Formerly there were two exclusive cookie types in the union.
+IOMMU_DOMAIN_SVA has a dedicated iommu_report_device_fault().
 
-  $ make -skj"$(nproc)" ARCH=riscv CROSS_COMPILE=riscv64-linux- allmodconfig kernel/ptrace.o
-  In file included from include/linux/string.h:392,
-                   from include/linux/bitmap.h:13,
-                   from include/linux/cpumask.h:12,
-                   from arch/riscv/include/asm/processor.h:55,
-                   from include/linux/sched.h:13,
-                   from kernel/ptrace.c:13:
-  In function 'fortify_memcpy_chk',
-      inlined from 'syscall_set_arguments.isra' at arch/riscv/include/asm/syscall.h:82:2:
-  include/linux/fortify-string.h:571:25: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]
-    571 |                         __write_overflow_field(p_size_field, size);
-        |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  cc1: all warnings being treated as errors
+Call the fault handler only if the passed domain has a required cookie
+type.
 
-The compiler knows the size of the destination and the size to be copied
-so it knows there will be an (intentional) overwrite here.
-struct_group() would normally work but I think this structure already
-has a struct_group() around some of the members that would be needed. I
-build tested eliminating the memcpy() altogether, which would appear to
-work, but I am not sure if there is a better solution, hence just the
-report.
+Found by Linux Verification Center (linuxtesting.org).
 
-Cheers,
-Nathan
+Fixes: 6aa63a4ec947 ("iommu: Sort out domain user data")
+Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
+---
 
-diff --git a/arch/riscv/include/asm/syscall.h b/arch/riscv/include/asm/syscall.h
-index a5281cdf2b10..70ec19dc8506 100644
---- a/arch/riscv/include/asm/syscall.h
-+++ b/arch/riscv/include/asm/syscall.h
-@@ -78,8 +78,11 @@ static inline void syscall_set_arguments(struct task_struct *task,
-                                         const unsigned long *args)
- {
-        regs->orig_a0 = args[0];
--       args++;
--       memcpy(&regs->a1, args, 5 * sizeof(regs->a1));
-+       regs->a1 = args[1];
-+       regs->a2 = args[2];
-+       regs->a3 = args[3];
-+       regs->a4 = args[4];
-+       regs->a5 = args[5];
- }
+I've seen the discussion [1] on 6aa63a4ec947 ("iommu: Sort out domain user
+data") and got a bit confused by the fragment:
 
- static inline int syscall_get_arch(struct task_struct *task)
+> iommu-dma itself isn't ever going to use a fault 
+> handler because it expects the DMA API to be used correctly and thus no 
+> faults to occur.
+
+My first thought about this is that iommu-dma is not interested in
+installing a fault handler ever, okay. But why does it suppose that no
+faults would occur? It is a matter of "chance", firmware bugs, abovesaid
+DMA API abusing, etc... isn't it?
+
+[1]: https://lore.kernel.org/linux-iommu/d9a6c611-2a19-4830-964d-44b711fffb08@arm.com/
+
+
+BTW, the device in question is Realtek RTL8852BE PCIe Wireless Network
+controller. It had occasionally dumped IO fault messages before the 6.15
+changes but I didn't pay attention to them since there was no connectivity
+problems observed or similar.
+
+IOMMU group 16 03:00.0 Network controller [0280]: Realtek Semiconductor Co., Ltd. RTL8852BE PCIe 802.11ax Wireless Network Controller [10ec:b852]
+
+
+[ 2628.582070] rtw89_8852be 0000:03:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0012 address=0x0 flags=0x0000]
+
+Turns out it started with a recent firmware upgrade so will report that
+certain issue to rtw maintainers.
+
+ drivers/iommu/iommu.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index c8033ca66377..5729e8ecdda3 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -2717,7 +2717,8 @@ int report_iommu_fault(struct iommu_domain *domain, struct device *dev,
+ 	 * if upper layers showed interest and installed a fault handler,
+ 	 * invoke it.
+ 	 */
+-	if (domain->handler)
++	if (domain->cookie_type == IOMMU_COOKIE_FAULT_HANDLER &&
++	    domain->handler)
+ 		ret = domain->handler(domain, dev, iova, flags,
+ 						domain->handler_token);
+ 
+-- 
+2.49.0
+
