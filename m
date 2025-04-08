@@ -1,164 +1,100 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63AB22561A9
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 22:47:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E02617A312;
+	Tue,  8 Apr 2025 22:47:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744152435; cv=none; b=GtPBT3/1PhZIgJ61xgCEL+kko4Gg6uHCQst1U7BJBXL8AOBPrieGRzkL2GVXog4ZqkUjmpcuiiT4Gm2Kli/VS3E8oMX3woPMD4fa07GgS/QhOaYwL7WTJjMZaUU1e2CZHjNxJDVxRSyyKGOwDx3300/yCRIaCMwKnfr/NtOKlTE=
+	t=1744152477; cv=none; b=q7/Nl2RU3ZW7oD7yMpzu+5ohpSlj2At1J7H5W7AR6Gm5rDm0ui8rQbmXBTvLPcJBhyVwRjY3PhRqX0bryDD42zLOqUfJau+AQYNDBKbs+66lJerLW4BikTaN/VhaznUQdfQQXFmSJhHJVPZ2nKGBnPpPOydlebAQdyfcTIRSnGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744152435; c=relaxed/simple;
-	bh=Uy6csq/iZO0iF/avJnW6XXU0ZKj+Jg8iaWCbQWtkHLE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gwi8OSSLFZc+cfocaPOeTg/ZpL4eWWZ+TNH4GltcirSdKte2UrH0HGm5QkKjVy+VeBs0qXl/1A3gBAFqKkhRqpLO/Xjk9QfPawu/xF9CRVOH8YlySV/piV3hH4ucHNYUwF85v+57+x2RqYbIna1XJ/sRTQ94vEC7a0fg1J4O9XI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=1eFAvur0; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+	s=arc-20240116; t=1744152477; c=relaxed/simple;
+	bh=fIPtBiRc85KglBFHKIkn/4MssQypTUE6fovGzmUBKxY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=g2tOP+eyAtT3WaGLtCozqQhvD7Lm0P+bQ5f0bJiE/G0n+hq1vZIt+bkqTDTy4UXkMOSGlD6tb6IWZwbGp0M6FXYnBIptTtdOCf7kNhRxyJLQt9/rXPBO+pt01/Q1lVdkHxex7jeYAkmb1q9SHBzWP0kXVDJn42pHgPga3N86OTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gQIu6jXx; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="1eFAvur0"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-223fd89d036so74475815ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 15:47:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1744152432; x=1744757232; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=o6NRZ+eIBvD2ygB/RFw901KQrONh8kxWwYZ7rUvs968=;
-        b=1eFAvur0uvXIdBCtJvaz6H8SigyTFohvXCKvsXpzWYHkGOZ/mnXG65nf+BeRcCFycZ
-         G4a9py3Qet1t+lh0XcWRCxwfrGwHMcs3x4Sm4gDmSBlP4SAV0/qtAWhoeH59+BWVpD5J
-         QtcSwdOUsByIuOFokVyODL2mqALqPzA6860MQnRmWE9+z29yatYP3uafpO5GFA0Budv6
-         bRV+ERyuhK6aYo6Yn0ojWEAEacmB35XWCE5j3JlXudPCsKtOPU4Jef+Fnttg0f7yO43b
-         fFvofDDv3vIiGQnDyfKl2YCKUwXxWU6JhFN90I6b+l1Pxb8NDpM24D6PvXuAg3G4Pr+7
-         2WeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744152432; x=1744757232;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=o6NRZ+eIBvD2ygB/RFw901KQrONh8kxWwYZ7rUvs968=;
-        b=Lm+2VU8uj+wSAsu8JybfDyh4fNpKvDEXSMQYjqikivtpeK2su4M9x5sGQq2cudWdYA
-         qZQjyD3F751XuT2ZoJp1aVg6Ji+Ab1cP7Fo5xPiyapCswkTZF06HCUxHRvt6jnvCEpbm
-         l/SwOkgs3rTABEEqaDxrZcIsaxfFeFTFmI2C9Z08nCloBnOlvgVGSrWWvaROCKtCuGhE
-         MMHu/E27XQDEeRXz/zP23UGCk7okiEaguwsqtse7GhSQH0mDr8O53jjkXPyXoqcfxo+p
-         SUgIYATZhMC+cssd15hOQKd498hDe/WIsRsN2Saf9Ein+ZCKkyVM3VBMSeuPUz33Ywc/
-         P/Jw==
-X-Forwarded-Encrypted: i=1; AJvYcCXOASIj91vOHjBJD515IRFgeqANCn4Lw8lbjDvBH/BETdD8w/IxSPiBgjpsu6J7thr1w91++Pz+ADTbA1g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkXINf2mG/vlSd1FW2theRWNnxV7yYDmQulXEJlkU5wAtyMEgl
-	iCiBeRy4kGBrfk8i7ZovwlU+2Q3Pjq86OwwFYyoRqd+q4UeQ8yz5XaMbt04jzO8=
-X-Gm-Gg: ASbGnctF583Znv95ZG5/qf1WO5w57+MQcz9RqhuKOMwm0zsNrKQaPQC3V5NP0KlYd6m
-	E42El4F0T7A9hPtlujzHsaH/aiKiwtgDkKcsKcL1jSPJ4cC0XaNf6nqlyeHxuoV5J0nKbDjAjUV
-	rnAbniM//+IKDDR7gtVNdf7GuBQJyy41sbY3Me8268FDwHEgx5O7mClFdHtsSq9Zhtn1GyP2m+/
-	SJkgEvifG2eEBfhUHYwzSqOTSSNccKB0CYw55DCVTUFUj12R41C1uzMyuVhMVU3hh0a6HQjcXdM
-	JWdv5u4gz9iD/s9e6k8gri0wNur5h2aakBx0qehGOHq4uCphWuQAB6ptJMPjYm1QPJEqC/Hhvv4
-	NL6lKOjXogDZjNZEhV4b1OJ6jujhH
-X-Google-Smtp-Source: AGHT+IGurDzqMih/v0exHbuE7Zr5SXTWizgQjwosdkoAtELLC7VfyDCiglM0XFRzA9ZoR+zeRWPrvw==
-X-Received: by 2002:a17:902:cecc:b0:223:4341:a994 with SMTP id d9443c01a7336-22ac3f34df7mr4238895ad.9.1744152432520;
-        Tue, 08 Apr 2025 15:47:12 -0700 (PDT)
-Received: from dread.disaster.area (pa49-181-60-96.pa.nsw.optusnet.com.au. [49.181.60.96])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297866e2a0sm106697685ad.180.2025.04.08.15.47.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 15:47:11 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.98)
-	(envelope-from <david@fromorbit.com>)
-	id 1u2Hin-00000006F62-0WE5;
-	Wed, 09 Apr 2025 08:47:09 +1000
-Date: Wed, 9 Apr 2025 08:47:09 +1000
-From: Dave Chinner <david@fromorbit.com>
-To: John Garry <john.g.garry@oracle.com>
-Cc: brauner@kernel.org, djwong@kernel.org, hch@lst.de,
-	viro@zeniv.linux.org.uk, jack@suse.cz, cem@kernel.org,
-	linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
-	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
-	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
-	linux-block@vger.kernel.org, catherine.hoang@oracle.com
-Subject: Re: [PATCH v6 11/12] xfs: add xfs_compute_atomic_write_unit_max()
-Message-ID: <Z_WnbfRhKR6RQsSA@dread.disaster.area>
-References: <20250408104209.1852036-1-john.g.garry@oracle.com>
- <20250408104209.1852036-12-john.g.garry@oracle.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gQIu6jXx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744152476; x=1775688476;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=fIPtBiRc85KglBFHKIkn/4MssQypTUE6fovGzmUBKxY=;
+  b=gQIu6jXx6U0MJGA0qROTgL6RU08Hqxez68HC8xbsanZDXfEyiRLSQNnr
+   feNkvmwkeqSrWBaFyxu0dow5zh3VSgodhRGDjedWfCbJf8WnTGGkOtrPp
+   5zNBX5VKrOjipp/X1ipuQkiMoSjXYteJMEIVQJ4r0gEdVt88Sbuu1Lhew
+   ilss/5e1HI1gGwGwaq1WCg5qMX13lJlYICX0RRC366qcSgpL/GzPA4AkM
+   Zvfs366JD2hQHHmr83CjUeCrXmYCof2spr3YjAtHXVmf706TU9rBNTJah
+   9CET2y9V6PVMOFFbCJQU2wvW1j247xiUzuxHxKo9pD1/gN23Tm43E69oA
+   A==;
+X-CSE-ConnectionGUID: ppOAjYwSRRuC9v57qDcElA==
+X-CSE-MsgGUID: VbZEqYN7RgmmRXb9wVa3ww==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="45769860"
+X-IronPort-AV: E=Sophos;i="6.15,199,1739865600"; 
+   d="scan'208";a="45769860"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 15:47:55 -0700
+X-CSE-ConnectionGUID: gU55Fw/hSTSiCWlCrwOF9A==
+X-CSE-MsgGUID: 0/EaaJv0SnyWHXKS3yu+1A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,199,1739865600"; 
+   d="scan'208";a="132531294"
+Received: from tjmaciei-mobl5.ger.corp.intel.com (HELO [10.125.111.184]) ([10.125.111.184])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 15:47:54 -0700
+Message-ID: <a1a54ff1-8b14-4bd0-aba6-c23d8261fd9c@intel.com>
+Date: Tue, 8 Apr 2025 15:47:52 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250408104209.1852036-12-john.g.garry@oracle.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dmaengine: idxd: Remove unused pointer and macro
+To: Eder Zulian <ezulian@redhat.com>, vinicius.gomes@intel.com,
+ vkoul@kernel.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250408173829.892317-1-ezulian@redhat.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250408173829.892317-1-ezulian@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 08, 2025 at 10:42:08AM +0000, John Garry wrote:
-> Now that CoW-based atomic writes are supported, update the max size of an
-> atomic write for the data device.
+
+
+On 4/8/25 10:38 AM, Eder Zulian wrote:
+> The pointer 'extern struct kmem_cache *idxd_desc_pool' and the macro
+> '#define IDXD_ALLOCATED_BATCH_SIZE 128U' were introduced in commit
+> bfe1d56091c1 ("dmaengine: idxd: Init and probe for Intel data
+> accelerators") but they were never used.
 > 
-> The limit of a CoW-based atomic write will be the limit of the number of
-> logitems which can fit into a single transaction.
+> Signed-off-by: Eder Zulian <ezulian@redhat.com>
 
-I still think this is the wrong way to define the maximum
-size of a COW-based atomic write because it is going to change from
-filesystem to filesystem and that variability in supported maximum
-length will be exposed to userspace...
-
-i.e. Maximum supported atomic write size really should be defined as
-a well documented fixed size (e.g. 16MB). Then the transaction
-reservations sizes needed to perform that conversion can be
-calculated directly from that maximum size and optimised directly
-for the conversion operation that atomic writes need to perform.
-
-.....
-
-> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-> index b2dd0c0bf509..42b2b7540507 100644
-> --- a/fs/xfs/xfs_super.c
-> +++ b/fs/xfs/xfs_super.c
-> @@ -615,6 +615,28 @@ xfs_init_mount_workqueues(
->  	return -ENOMEM;
->  }
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>  drivers/dma/idxd/idxd.h | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
+> index 214b8039439f..74e6695881e6 100644
+> --- a/drivers/dma/idxd/idxd.h
+> +++ b/drivers/dma/idxd/idxd.h
+> @@ -19,7 +19,6 @@
 >  
-> +unsigned int
-> +xfs_atomic_write_logitems(
-> +	struct xfs_mount	*mp)
-> +{
-> +	unsigned int		efi = xfs_efi_item_overhead(1);
-> +	unsigned int		rui = xfs_rui_item_overhead(1);
-> +	unsigned int		cui = xfs_cui_item_overhead(1);
-> +	unsigned int		bui = xfs_bui_item_overhead(1);
-> +	unsigned int		logres = M_RES(mp)->tr_write.tr_logres;
-> +
-> +	/*
-> +	 * Maximum overhead to complete an atomic write ioend in software:
-> +	 * remove data fork extent + remove cow fork extent +
-> +	 * map extent into data fork
-> +	 */
-> +	unsigned int		atomic_logitems =
-> +		(bui + cui + rui + efi) + (cui + rui) + (bui + rui);
+>  #define IDXD_DRIVER_VERSION	"1.00"
+>  
+> -extern struct kmem_cache *idxd_desc_pool;
+>  extern bool tc_override;
+>  
+>  struct idxd_wq;
+> @@ -171,7 +170,6 @@ struct idxd_cdev {
+>  
+>  #define DRIVER_NAME_SIZE		128
+>  
+> -#define IDXD_ALLOCATED_BATCH_SIZE	128U
+>  #define WQ_NAME_SIZE   1024
+>  #define WQ_TYPE_SIZE   10
+>  
 
-This seems wrong. Unmap from the data fork only logs a (bui + cui)
-pair, we don't log a RUI or an EFI until the transaction that
-processes the BUI or CUI actually frees an extent from the the BMBT
-or removes a block from the refcount btree.
-
-We also need to be able to relog all the intents and everything that
-was modified, so we effectively have at least one
-xfs_allocfree_block_count() reservation needed here as well. Even
-finishing an invalidation BUI can result in BMBT block allocation
-occurring if the operation splits an existing extent record and the
-insert of the new record causes a BMBT block split....
-
-
-> +
-> +	/* atomic write limits are always a power-of-2 */
-> +	return rounddown_pow_of_two(logres / (2 * atomic_logitems));
-
-What is the magic 2 in that division?
-
-> +}
-
-Also this function does not belong in xfs_super.c - that file is for
-interfacing with the VFS layer.  Calculating log reservation
-constants at mount time is done in xfs_trans_resv.c - I suspect most
-of the code in this patch should probably be moved there and run
-from xfs_trans_resv_calc()...
-
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
