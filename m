@@ -1,82 +1,96 @@
-Received: from out187-1.us.a.mail.aliyun.com (out187-1.us.a.mail.aliyun.com [47.90.187.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B96B23AD;
-	Tue,  8 Apr 2025 04:54:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.187.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88B1423AD;
+	Tue,  8 Apr 2025 04:55:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744088050; cv=none; b=Jlx3h5F6Enu1kB4g4Pk4iBAYSUurwFk23L3FSxi+AacjnaCmx5NKXo5rTciSdvmn3PZD3/zooDx9pyZyoGst/3u1f0cwI8i+SU81/h5o5R1j4aZbZsy0vDlbvb39PwRApVHOEpdT+o1mL8+O4uRKDpiVTPYRap4YR2RtxTo9Wew=
+	t=1744088118; cv=none; b=gKPX1N4cTutS2hjgML5N/WjR22B/54mgT+jPQ7WkU0votpRQa7hvjjDR7p1w/leB9Sv5SvCdbtlvy22vFtod79YO6olnv56P+DiLDdfGZQK+f0b1YEPi4ITsQgZpbz/ECX6gz8aL9x5SaUO4JNyQ6MfaSjscyp9R81i6cZaKDwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744088050; c=relaxed/simple;
-	bh=THts4x8lAg2CXDirVmNIxj8FwPRaS1SHPGFkz2avijk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l99hEVpZL2y4NHRVCZLENYH7by0WUTFq6FlFiLSZDPvI9PxxyBAcCs0wy2KZjCfPu1u9k4BboUGHcXSjFRiUktp33TuCme0dXH2zYoDdLybBSUIVFyrWNsTXTc5l8pz7spdjfDdToQikXzBnzQRVkNvbGwml9jfQT68FMvvN93Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=aKN+zk1N; arc=none smtp.client-ip=47.90.187.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
+	s=arc-20240116; t=1744088118; c=relaxed/simple;
+	bh=/0ZuFfuotMs9byNxCq+GVMW6tAKZAVyZQSFYb7/UdKw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OMcJNkt5tfL2P6c8uF+5HfaAwM9IrKe/kpoqk4fE+AJz3ufxCV4/8hPXifWBAxGL3XoMy8ucuOdg1Zhe47U9KSxN1yYJcpr+X56NHeiSNUlXEsHN+edhJSdCGOWtCaQHOxi9O65mqRryD4nT0gsM9pP/ycsz2z1q5GaNwg9Cx10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NNOnLy29; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="aKN+zk1N"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=antgroup.com; s=default;
-	t=1744088033; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=xc3RQHbbWhjaENeV54tCo3uz4MbXYhwQLPGC2Mc716Q=;
-	b=aKN+zk1NYCD9hjqg8NZg8UBPEH2BFHOYt1yq8g1110dyxzriOgELfxseNJHJ+LeKRMwf0WpOvIVyH3FDPpoE+QahzuhlOjFRftSBB7qPX2e0ESG1fs07pDwO2rzYxlYjL+1zjxoH9TkJskbl1kHEldLj8fCA6fYbB3LstUlGC+M=
-Received: from 30.174.97.68(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.cGd.uV9_1744087093 cluster:ay29)
-          by smtp.aliyun-inc.com;
-          Tue, 08 Apr 2025 12:38:13 +0800
-Message-ID: <621e867f-5427-4062-8783-e474e3dcdb3f@antgroup.com>
-Date: Tue, 08 Apr 2025 12:38:12 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NNOnLy29"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 651FFC4CEE5;
+	Tue,  8 Apr 2025 04:55:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744088117;
+	bh=/0ZuFfuotMs9byNxCq+GVMW6tAKZAVyZQSFYb7/UdKw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NNOnLy29R0zcdGEmVM0P+gKVxBNkU0dVruOAk7XtM4FJXbjNJiFpp+MnuytQ9MjlV
+	 om5ltprKxzCOBvoZutxS9TdTACKbaKSS11bXy1bLFyXfM5pDgIhFL+nrWqgfWD1Z2g
+	 YHE6KoO4WHtWFzDsM4jHVyTnc/2FJnRhxEH4laDq2OGWz62SuvjX8biUzJV6UN+J0C
+	 tvh0egRImxtl91rqInCNbFJPr/FIBsPz2eBo8lxiSgyEDVyc5bdd68IcqGqZw6/5s6
+	 FmSoD6it9lskqIuV9lxlh3XItxTm14ketpZVPf1KnWN9iTwKXmRvwf1Os6xQ2wfNqs
+	 EiVtk1qYYAJjg==
+Date: Tue, 8 Apr 2025 12:55:13 +0800
+From: Coly Li <colyli@kernel.org>
+To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Cc: Kent Overstreet <kent.overstreet@linux.dev>, 
+	linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org, skhan@linuxfoundation.org, 
+	kernelmentees@lists.linuxfoundation.org
+Subject: Re: [PATCH 1/2] bcache: Fix undeclared symbol warning for
+ bcache_is_reboot
+Message-ID: <6s4hsqctezmwk73bgz4u6clielbbndijfk6hpciqfbjc53yzhq@hm4ybp4splhl>
+References: <20250408033322.401680-1-gshahrouzi@gmail.com>
+ <20250408033322.401680-2-gshahrouzi@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH AUTOSEL 6.13 23/28] um: Rewrite the sigio workaround based
- on epoll and tgkill
-To: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-Cc: Johannes Berg <johannes.berg@intel.com>, richard@nod.at,
- anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
- benjamin.berg@intel.com, linux-um@lists.infradead.org
-References: <20250407181224.3180941-1-sashal@kernel.org>
- <20250407181224.3180941-23-sashal@kernel.org>
-Content-Language: en-US
-From: "Tiwei Bie" <tiwei.btw@antgroup.com>
-In-Reply-To: <20250407181224.3180941-23-sashal@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250408033322.401680-2-gshahrouzi@gmail.com>
 
-On 2025/4/8 02:12, Sasha Levin wrote:
-> From: Tiwei Bie <tiwei.btw@antgroup.com>
+On Mon, Apr 07, 2025 at 11:33:21PM +0800, Gabriel Shahrouzi wrote:
+> Add extern declaration for bcache_is_reboot to bcache.h. Ensure proper
+> visibility for use across multiple files (super.c, sysfs.c) and follow
+> the declaration pattern for other forward declarations.
 > 
-> [ Upstream commit 33c9da5dfb18c2ff5a88d01aca2cf253cd0ac3bc ]
-> 
-> The existing sigio workaround implementation removes FDs from the
-> poll when events are triggered, requiring users to re-add them via
-> add_sigio_fd() after processing. This introduces a potential race
-> condition between FD removal in write_sigio_thread() and next_poll
-> update in __add_sigio_fd(), and is inefficient due to frequent FD
-> removal and re-addition. Rewrite the implementation based on epoll
-> and tgkill for improved efficiency and reliability.
-> 
-> Signed-off-by: Tiwei Bie <tiwei.btw@antgroup.com>
-> Link: https://patch.msgid.link/20250315161910.4082396-2-tiwei.btw@antgroup.com
-> Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
 > ---
->  arch/um/drivers/random.c       |   2 +-
->  arch/um/drivers/rtc_user.c     |   2 +-
->  arch/um/include/shared/os.h    |   2 +-
->  arch/um/include/shared/sigio.h |   1 -
->  arch/um/kernel/sigio.c         |  26 ---
->  arch/um/os-Linux/sigio.c       | 330 +++++----------------------------
->  6 files changed, 47 insertions(+), 316 deletions(-)
+>  drivers/md/bcache/bcache.h | 1 +
+>  drivers/md/bcache/sysfs.c  | 2 --
+>  2 files changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/md/bcache/bcache.h b/drivers/md/bcache/bcache.h
+> index 785b0d9008fac..531933351b8b8 100644
+> --- a/drivers/md/bcache/bcache.h
+> +++ b/drivers/md/bcache/bcache.h
+> @@ -1007,6 +1007,7 @@ extern struct workqueue_struct *bch_journal_wq;
+>  extern struct workqueue_struct *bch_flush_wq;
+>  extern struct mutex bch_register_lock;
+>  extern struct list_head bch_cache_sets;
+> +extern bool bcache_is_reboot;
+>  
 
-Please drop this patch. Thanks! Details can be found here: 
+NACK. It is uncessary to make more .c files to be aware of
+bcache_is_reboot. Current code is in better form IMHO.
 
-https://lore.kernel.org/linux-um/ffa0b6af-523d-4e3e-9952-92f5b04b82b3@antgroup.com/
 
-Regards,
-Tiwei
+>  extern const struct kobj_type bch_cached_dev_ktype;
+>  extern const struct kobj_type bch_flash_dev_ktype;
+> diff --git a/drivers/md/bcache/sysfs.c b/drivers/md/bcache/sysfs.c
+> index e8f696cb58c05..47ef0167b9d23 100644
+> --- a/drivers/md/bcache/sysfs.c
+> +++ b/drivers/md/bcache/sysfs.c
+> @@ -17,8 +17,6 @@
+>  #include <linux/sort.h>
+>  #include <linux/sched/clock.h>
+>  
+> -extern bool bcache_is_reboot;
+> -
+>  /* Default is 0 ("writethrough") */
+>  static const char * const bch_cache_modes[] = {
+>  	"writethrough",
+> -- 
+> 2.43.0
+> 
+
+-- 
+Coly Li
