@@ -1,144 +1,93 @@
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B5422332A
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 21:34:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50699254B09;
+	Tue,  8 Apr 2025 21:38:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744148067; cv=none; b=d52ZLXQsZhONOU8+DxOzKjPhwpqjhV5f4P2GrpmHXHMjjN7OrEyBoTiGJ9zZKZn1d5A6DmGIi9RNOA7YXovh5CMdmszwernyGDFjucGACmLQ3P/G8B2mNt3waw+WVNIMf9qgoUE/cJvmJDbl9I/MhA2l6LPcPLeXVLbzXsO5k4s=
+	t=1744148291; cv=none; b=lMCLst2COOGEQvWaRgkDLu9/a1x7wjlqGJKN6XBzQTKIQ4HzH3pyGp6D7nvLqi8tDHqNPLTcJCmWK7Zi7zXz20LRv9UUjnR/yLKHkfpgDrnM/B0cCLwPwi+hO5x4LBX9KYWMsT/cWJfz0AqFl0ADddFfef2wmlkaX++yb/HOVLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744148067; c=relaxed/simple;
-	bh=5y+jYg4tFLii2fhDXKuV70GCZYiXZr2+wmGH9PNJeas=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LuQHwBnMqitFQ6mo8I/1tf47ONkkM/9DB3iqcebcOTGzTyAUIKj0A2IwiN89WymwMaSzEoVu/ohtFsOkcaqUKcTnp7cIkT4hsME6pP8+zYKGNkHBgyjR/Qkypz4wk6254O81MUu/Q9qhw+LPuzmhc1+oy9b/YH+voy2hdHRJh4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=S7obbZgk; arc=none smtp.client-ip=83.149.199.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
+	s=arc-20240116; t=1744148291; c=relaxed/simple;
+	bh=x1IQnem5+1V3vvJSgA6Xjam0vT8Hi4iOlcZBMq1s+ho=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FVGQ8Bf59L6LXaH7W3drieYAABwG7XlnRBImVF+8b6AOnqC9XbQ6rskycCIx+SM+hzC/SbftZT4nD2kKsrKvMYLfE6F6ernLb1lU4GZKVhBEd9jdbkcmaC5PK9CZhSeKxScpJI7y/6T+5KfuRCH8yUz2lsNwd/gBucNh+1Zreg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=DYo7txUI; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="S7obbZgk"
-Received: from fedora.intra.ispras.ru (unknown [10.10.165.6])
-	by mail.ispras.ru (Postfix) with ESMTPSA id EA32B448787D;
-	Tue,  8 Apr 2025 21:34:21 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru EA32B448787D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-	s=default; t=1744148062;
-	bh=N4Tgywr8Fw9WMBSdeYcYar/HdOFlbUR5lSCeLjJ1bfI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=S7obbZgkV6jYoLfjlL/M4N/YTI1c824HzIw6nELFmc/PghNyXdL3IHonvhBcwXrw8
-	 vJ/7kRbFH9TkfbZlj6ALLYrJCCkUIHLUwPHtAmRYPxRXD0IaATfEHKDLCp1mQcfLzH
-	 KPO+ELugplkE+qWSv3dzE1upgXz4/ZUbW9PstazI=
-From: Fedor Pchelkin <pchelkin@ispras.ru>
-To: Joerg Roedel <joro@8bytes.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
-	Will Deacon <will@kernel.org>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Nicolin Chen <nicolinc@nvidia.com>,
-	iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org
-Subject: [PATCH] iommu: fix crash in report_iommu_fault()
-Date: Wed,  9 Apr 2025 00:33:41 +0300
-Message-ID: <20250408213342.285955-1-pchelkin@ispras.ru>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="DYo7txUI"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-226185948ffso63344235ad.0;
+        Tue, 08 Apr 2025 14:38:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1744148289; x=1744753089; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x1IQnem5+1V3vvJSgA6Xjam0vT8Hi4iOlcZBMq1s+ho=;
+        b=DYo7txUIsr4FOTbgXdltQOBzAm1lVaM/WbA6lXrOhsOOa3NdapWk+59uINsgqbhR3Y
+         kj9nB18pSymOetRaj7aeohfIkLqdzEvgI3eZk2sNAp9E5LPWOrd8zvyTot33JZeacmDw
+         YKlGLzlHtDlras3+Gt8yhPqhCYRuRrTf4Mm8ueAiEtxzssmpdTpsOCuoykrKPF9gAcPR
+         tNZdWFrfxxsHj07a36QNRHvuuZL7dzS7YQ4QogT0md82JAEm/fuvC/1ES95yNm+yqT4C
+         4mmHhR3crNYztb1yWY8X9LYmTj1NBtuz5gCZOENsf9GQ+Q+k8w0TtyAYJcKpdpurbJi7
+         Bybw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744148289; x=1744753089;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=x1IQnem5+1V3vvJSgA6Xjam0vT8Hi4iOlcZBMq1s+ho=;
+        b=rpBJaxlB2FtcUXkh8utyronAwV+KHzlBBXhuQc/yRyr0S9SpVUczS2utvIdpwyTf6C
+         pbMTd6dXaxQLDDiX0PCSDfgbEWfysb1XpnsDtMsjw4x59vDwCNTviPlmDEElQDPmia2U
+         eOk/wuGQj3q0Dr+ZVZKgb0Fzg7jLZEN+8LTRwtfau8P5iPBMsCaFTSBjNLj/8jxq9T7e
+         vgSldPSOeAJbfhZLUc4rKPOoSwydjrkPkaBJ4yFTwK5G1KeyySGroFLYYQ38Tf6FRhpg
+         s0yDvzc5Q3/XxamiKU3gMJdia68zEM9DVozpTvh3eOVLBCVKrKeq2Wl/fLFUfUPs4bc1
+         WlZA==
+X-Forwarded-Encrypted: i=1; AJvYcCViIcGXqBSUEO5V1BOftJySqijTwqFbJLs8pCZaaTbGXmsvlQ2wizLH+6tWcgeRgLUVhUFF9TwMTGOJQr7A@vger.kernel.org, AJvYcCWgnWPfmiNGkv0oyZ4WLM5QcuLIXbXlWEWoTwCyeuWaI7iF6h8LYlNeUR23Fic6VJOAFYOCm4hVxEiF@vger.kernel.org
+X-Gm-Message-State: AOJu0YySBxlEUiXozjjrcbhW+OFcVQc1CBeTXf6odv3Tg0+M6zflf1uj
+	PDvBln5qM437ToZYwAmbbqxkNV2AyT2E70teOzjBgWgC1NLMQlACZlWmOcp2VQrCngrmET4YSaK
+	XPzqYFhseykF+u1wTvP7R7e3LMWc=
+X-Gm-Gg: ASbGncvp2ocTEtpBeTHg/wY8uAH60bOE//u+/wmmiZJSJNBODQiddpB+kzKNhW0TZ0t
+	WR1LgwERPmoX4f+1DMVZFYHFk9wXDcIl8EiBtYNLWgDqq46GALGzLknjAMjdCi3TYxTwILkoaS+
+	/dBrYsHeIT6tsGkhRm+lch2ifPh1zgPrMZjFOKYPCrVUdlhP5Jb5Q=
+X-Google-Smtp-Source: AGHT+IH5QfmQXLyEs8yLl4lnNgBrQz+0B2EeQlnngabquZiUIdHCYM/yaoQjm3bCiH0/CtFIBdc6DASRUSj6QcJIqNc=
+X-Received: by 2002:a17:902:e94c:b0:223:f408:c3cf with SMTP id
+ d9443c01a7336-22ac29a7d9bmr12335945ad.21.1744148289467; Tue, 08 Apr 2025
+ 14:38:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250408-gpiochip-set-rv-pinctrl-part1-v1-0-c9d521d7c8c7@linaro.org>
+ <20250408-gpiochip-set-rv-pinctrl-part1-v1-5-c9d521d7c8c7@linaro.org>
+In-Reply-To: <20250408-gpiochip-set-rv-pinctrl-part1-v1-5-c9d521d7c8c7@linaro.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date: Tue, 8 Apr 2025 23:37:58 +0200
+X-Gm-Features: ATxdqUGtVxx8aXdM5QJbHejwtOyKwVkD40TpZrZvEEbdFgeGmw_KA4eTPuMlZqQ
+Message-ID: <CAFBinCCk5MKNomc+nGMEOiwnU7NbfRf5dsVbKtEjxSoyOU_Oag@mail.gmail.com>
+Subject: Re: [PATCH 05/10] pinctrl: meson: use new GPIO line value setter callbacks
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Ludovic Desroches <ludovic.desroches@microchip.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, 
+	Jerome Brunet <jbrunet@baylibre.com>, Xianwei Zhao <xianwei.zhao@amlogic.com>, 
+	Patrick Rudolph <patrick.rudolph@9elements.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-amlogic@lists.infradead.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The following crash is observed while handling an IOMMU fault with a
-recent kernel:
-
-kernel tried to execute NX-protected page - exploit attempt? (uid: 0)
-BUG: unable to handle page fault for address: ffff8c708299f700
-PGD 19ee01067 P4D 19ee01067 PUD 101c10063 PMD 80000001028001e3
-Oops: Oops: 0011 [#1] SMP NOPTI
-CPU: 4 UID: 0 PID: 139 Comm: irq/25-AMD-Vi Not tainted 6.15.0-rc1+ #20 PREEMPT(lazy)
-Hardware name: LENOVO 21D0/LNVNB161216, BIOS J6CN50WW 09/27/2024
-RIP: 0010:0xffff8c708299f700
-Call Trace:
- <TASK>
- ? report_iommu_fault+0x78/0xd3
- ? amd_iommu_report_page_fault+0x91/0x150
- ? amd_iommu_int_thread+0x77/0x180
- ? __pfx_irq_thread_fn+0x10/0x10
- ? irq_thread_fn+0x23/0x60
- ? irq_thread+0xf9/0x1e0
- ? __pfx_irq_thread_dtor+0x10/0x10
- ? __pfx_irq_thread+0x10/0x10
- ? kthread+0xfc/0x240
- ? __pfx_kthread+0x10/0x10
- ? ret_from_fork+0x34/0x50
- ? __pfx_kthread+0x10/0x10
- ? ret_from_fork_asm+0x1a/0x30
- </TASK>
-
-report_iommu_fault() checks for an installed handler comparing the
-corresponding field to NULL. It can (and could before) be called for a
-domain with a different cookie type - IOMMU_COOKIE_DMA_IOVA, specifically.
-Cookie is represented as a union so we may end up with a garbage value
-treated there if this happens for a domain with another cookie type.
-
-Formerly there were two exclusive cookie types in the union.
-IOMMU_DOMAIN_SVA has a dedicated iommu_report_device_fault().
-
-Call the fault handler only if the passed domain has a required cookie
-type.
-
-Found by Linux Verification Center (linuxtesting.org).
-
-Fixes: 6aa63a4ec947 ("iommu: Sort out domain user data")
-Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
----
-
-I've seen the discussion [1] on 6aa63a4ec947 ("iommu: Sort out domain user
-data") and got a bit confused by the fragment:
-
-> iommu-dma itself isn't ever going to use a fault 
-> handler because it expects the DMA API to be used correctly and thus no 
-> faults to occur.
-
-My first thought about this is that iommu-dma is not interested in
-installing a fault handler ever, okay. But why does it suppose that no
-faults would occur? It is a matter of "chance", firmware bugs, abovesaid
-DMA API abusing, etc... isn't it?
-
-[1]: https://lore.kernel.org/linux-iommu/d9a6c611-2a19-4830-964d-44b711fffb08@arm.com/
-
-
-BTW, the device in question is Realtek RTL8852BE PCIe Wireless Network
-controller. It had occasionally dumped IO fault messages before the 6.15
-changes but I didn't pay attention to them since there was no connectivity
-problems observed or similar.
-
-IOMMU group 16 03:00.0 Network controller [0280]: Realtek Semiconductor Co., Ltd. RTL8852BE PCIe 802.11ax Wireless Network Controller [10ec:b852]
-
-
-[ 2628.582070] rtw89_8852be 0000:03:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0012 address=0x0 flags=0x0000]
-
-Turns out it started with a recent firmware upgrade so will report that
-certain issue to rtw maintainers.
-
- drivers/iommu/iommu.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index c8033ca66377..5729e8ecdda3 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -2717,7 +2717,8 @@ int report_iommu_fault(struct iommu_domain *domain, struct device *dev,
- 	 * if upper layers showed interest and installed a fault handler,
- 	 * invoke it.
- 	 */
--	if (domain->handler)
-+	if (domain->cookie_type == IOMMU_COOKIE_FAULT_HANDLER &&
-+	    domain->handler)
- 		ret = domain->handler(domain, dev, iova, flags,
- 						domain->handler_token);
- 
--- 
-2.49.0
-
+On Tue, Apr 8, 2025 at 9:17=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl> =
+wrote:
+>
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. Convert the driver to using
+> them.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
