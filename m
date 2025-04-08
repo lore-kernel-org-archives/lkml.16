@@ -1,193 +1,125 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 771CE262802;
-	Tue,  8 Apr 2025 07:35:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DA17263F24
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 07:35:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744097727; cv=none; b=j237SBJWAUXYltnwTxW21UxArXLNrhS7hc98AcA/sVB0nt5u1yjznYm/XpO8bJQOjJD81pGzTO7d/P0MObdBquCBjdm3D/+KNDH/jZyE6OcmF5OIVeSE8txjzWCT6OzZGlSpG10aJrIpsMuG9kwsG+FLwdIcs+sIERxSIrlX/WE=
+	t=1744097732; cv=none; b=L+vWeKAaJzBSLP8wLEMkYVnTWY21kFkD1v34cbRr5JfT5iv8ndjmTamC6fs8qDOvT4eICLaIbqSTKD7m+lDJO1IjPRXMY7qxpGzy8ln2TvYf5WJyegfDqFZsJLEZPT2/vJ/PBxfRV1h7bBNhaYIgHyZ47F8o0V8hZhOO+uHeeKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744097727; c=relaxed/simple;
-	bh=RfVYczxIb1l3GGMPXFeT6GWHpmjtTJlf7l2gvlRQhAI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ov2PVGcyuCKSsFFuOmvuILDVpYb1EkLefRjMJ0YMRAJ+nOp5OCGlaCGtBcM1HE5w/UNjnW77atsNo3TgrS3E8YoEsMMk+mWAIN4+/jID9stPCdU/p1ax9jLOL2DIbUpFXOO4suDxoo1jUZe7s89LhOSEqH3cBRSgkZUYmayfN4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iYbtY1cx; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744097732; c=relaxed/simple;
+	bh=lT5mKdSlq8oPEv2oBvQ90+eQd2L1YXxqPfN8R/eFRE4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AE4LVRUKxtcZ3eX1Nv5NLxdpiwlJpndjdyDZDb6H5wP4t+4uiNBakckBE3bQ1tEiAUwDiL9tJQ1wB4CP3zbdR7vsW+/SmbrGr+5Z2kF8fBX7lyrShdn6OPcT9jzHe1qvrImKE1DQ13iKc+lgaIuh0lesu68561PZdTSB0ItrN7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JnQWSaZx; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iYbtY1cx"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30db3f3c907so47697171fa.1;
-        Tue, 08 Apr 2025 00:35:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JnQWSaZx"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43edecbfb46so23014135e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 00:35:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744097723; x=1744702523; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=g5JtdeaXKDYvfwZoLN8X6ZLeGIMqSphwrswY3PSKZU0=;
-        b=iYbtY1cxzMw5QVacP4DKlzjuDbCKnYYkzKAdI8uitM8xtHMj9PoxlGN91J8dDDngMj
-         whnSjPjvTeGukOTugVaHQbVoMOeEtG4HMOdqOeUZwZM4t3+cShoKT3oo6Oibjw1eIg8D
-         EyZcfhw87yvfJij521POrz11UpIBR2snrI+SAtMXlglBOuKtJrefsXRsupQWJLcd/Bp6
-         KG+4bUfQlk1+jgBuLRLPxzKEemKO/uPLgBX778xf8456uA68efM/APwuQ/70mVCBkraZ
-         H5KWB4TocRn1AHyw0my6OgYWblF+FgGKJONNhrWeUhAKInwerzi/cQ4u4ijb406VMCff
-         19lQ==
+        d=linaro.org; s=google; t=1744097729; x=1744702529; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bzDOAHoHmGJFY2C4m+oCbnEJZ1yOWSsgLDpINkYOwtw=;
+        b=JnQWSaZxGQ8u8bxeKuhWxZtROTpv1UdpcKMxAlked7NqrEL0rYhgWe+0+UsT20yj5E
+         9fyMpx6PhxHne4v/PcNgkVnApKe3Zof0j71+YGACPwufsRkvTRDp/Emqf/nJlWOAFka8
+         AE4r9Yhzbhw54PnJKao38xgS4hmCmFdBzj8IF039TdTfHpIJf8oMdcJZZPYfdhuEtTIS
+         kzunyLWUxK2zNSCTnaSUaWGJC6rTNmxJPlU3GDUTSaclpwcn4j/jGC7GPS1ojp0OWLbd
+         r3pgsEYHch3JhztDjZ5OsCFvgZ7txmUlugPImCiHwiTjS7VkV1Tj3+ZwzM5Ee3VHczXK
+         Abww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744097723; x=1744702523;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=g5JtdeaXKDYvfwZoLN8X6ZLeGIMqSphwrswY3PSKZU0=;
-        b=VylWvTiQpm9uDThuNqurp3zQV8kPrfwpTGy28MRrzdkFZsSsurNOA3AXZ23Qse/zup
-         ALZFLo9mH5P4EarjzjXNnU0QwJSbVQ7fa2AwFVUDtKSydwt2fz2oAXnrV0cZNjzxXYvv
-         Hko+vcHzDwhdxh+yOs1aYnWVNGuvKTqBZyJK3VOsOZDYI1UfrKLFKtEWIN+35tSf9rS4
-         AMRwZapAkd5qKTcOMUa1EGVm6xStI8bEmWy6y+OS+/XOi8iVho8y8NpQpPqDTmI180iu
-         +xchhji1DAW9zRX5WiGk9Jyj4/xk11sYEg8tV/1unvarYTHsFoTr53z4q7ORZ9Ba/2wQ
-         uIrw==
-X-Forwarded-Encrypted: i=1; AJvYcCUNRp8/uSobG6W3C863ZkVYQtFG40McW/e4V3i6K0xfBmWr94FxBp/jOznsH4ebAyrXzdhXyqdc/71D2mLCqc47@vger.kernel.org, AJvYcCVa9KzsqNcMSPBM44QwX+lPnXWjS7etfqWAtFkehzbCuRJoER4K8eF/oydvkXBUlB6pTGpVLJQEtZPTuTU=@vger.kernel.org, AJvYcCWEr0uj4O1DtglK1Rf1iSkvYLJ5CxS5VyiNiSJdtxZLf6f0dNf4i9kfB5y4JoBBQEtg/gHZz7Q1UgWX8TNH@vger.kernel.org, AJvYcCWY1ZM5puxS05impNVWBMoa3rI3dTC2UPmW5J5yOuDZpk3dxZP3zdl3k9vQWlC6887zMCx2yy/5HREB@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzregvc9nG+nMEwcdjjrsQ6J2GG2PODtHjY6gtrpYj8xHFhrqKX
-	uLbfq6HwWvW8SF7nkZ4fMfsw8EM3MBP5Mm86iuZXFNjV0MtXkt8o1yF64N/yan6QYygDXvqScGM
-	NG8qCE8qgAD2DaQrlC/9vIsT9YII=
-X-Gm-Gg: ASbGncuGl4vhekU3GZGsMk0cCTlHsXduZn0wDsULgKGHpIKm5T/2sGiut1YQCTlsOxH
-	M6m/3D0Hmmag65FeXzur4hrIhyZmKtLCTtzY8sJlMNNLNJogSZSLntoObluQFTCm7oxZWyGEQQP
-	3TRdTGYwMFP/+yY4jdKJ+XMFsaOA==
-X-Google-Smtp-Source: AGHT+IGLFlGV0+F2A7WjAzugPsJsNrpzgZaS1otIu2dmbXOM18v+qIiibbTKcAKtDA2ibCYLFOZG4haJvxewlqhpI/k=
-X-Received: by 2002:a2e:bccf:0:b0:307:e0c3:5293 with SMTP id
- 38308e7fff4ca-30f0a1d4e3amr55882911fa.36.1744097723300; Tue, 08 Apr 2025
- 00:35:23 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744097729; x=1744702529;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bzDOAHoHmGJFY2C4m+oCbnEJZ1yOWSsgLDpINkYOwtw=;
+        b=FkjBb38RlxL3IAwHKNka1FCTMxU73BPkfFu59q0qe7JEfcsSabSTi9t7Dj8U05onJJ
+         k+/6Yb+88Udn9G2LpKG/SUSPGiTXUFGdltjlu4K6nJ2249pKphPK4G8m6/62MlydcPLm
+         th59FPhkt/8sWKfKqp/anj4KM7m78f1NpcistjmS9vMJzR5nm/ji2vRO9SmNrji8f031
+         RZVOU0eoeKhWIhnKjipmGkjWjAaoO1rYzDZKEzVdhbcDxf5aXw4/R3TWwNn7G6VS6UpE
+         STkonDyrxd4nSXGrVnK/QvJv1dihbKBrZnQcQBVje8b/0+ey3BnH/kcRXSa7pnDNoQry
+         HUcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX9v6mRK7jyiRw5BNimM4mwgEbb1e5bjepZ4v9b2JvuQqrC4M7NjPG6rvZja9w7ZiyBxEgj24Q0h4woyQM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpzOyO2oalRiscOKGqOwK6tfZfnPgdS9GxjD1bBx5TCvhLVrNV
+	qIHb4f0u7+DlNtcL1dMDq86shREBGoOxxfy8M+HZnmWeJ2Xbcbl4y0I8o5lObCk=
+X-Gm-Gg: ASbGncvH5JvOgzczFjrWTObZrZEqC2nA+aiPzjzNRCXko5zQccHxLvCihcG83g3aDD3
+	XrFy8E/lnxnYjDLr3szgHvLTwhNpHV6pCerKJRviXJW3NeVVq50+l8d+ppgyQouINBCeCAdSYzp
+	rMHgf3I0OLj4dOxphGft8QYPZgqVxqYubTpYxy3fpRzlaPjRjlUeul+0su7S/c7wkx0d8V/iv6X
+	LozUclV6hwANfrAokYkW5fP97ot15pSsJXwo3RC6dHTQW4US5s3EQ+gXaNPCFNEFyDlIt6lwL2n
+	mc+S2VFBSAPJRxIPhhqXKMBOxJa7Oj3Onvr6KWtJWVs=
+X-Google-Smtp-Source: AGHT+IHJ4HfDuWG19jV3pAC/z0UwKWS4vohMre2m90wxX+hddBFsMJUEGHrkQ7C6iLrYU3yh7T2Htg==
+X-Received: by 2002:a05:600c:8719:b0:43c:f85d:1245 with SMTP id 5b1f17b1804b1-43ecf8e7321mr170671655e9.17.1744097728808;
+        Tue, 08 Apr 2025 00:35:28 -0700 (PDT)
+Received: from myrica ([2.221.137.100])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec34be2ffsm151346185e9.22.2025.04.08.00.35.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 00:35:28 -0700 (PDT)
+Date: Tue, 8 Apr 2025 08:35:27 +0100
+From: Jean-Philippe Brucker <jean-philippe@linaro.org>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, virtualization@lists.linux.dev,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: virtio: pci-iommu: Add ref to
+ pci-device.yaml
+Message-ID: <20250408073527.GA2279090@myrica>
+References: <20250407165341.2934499-1-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250406-tegra-pstore-v1-1-bf5b57f12293@gmail.com>
- <6920a557-9181-4c9c-98f4-a9be4e796a13@kernel.org> <CALHNRZ--to8B3zhg6zV90siL0x78BAjhS04DgfLwmnXEiOMe3g@mail.gmail.com>
- <83d17d6e-41c2-4729-94e6-5ccf480c766d@kernel.org>
-In-Reply-To: <83d17d6e-41c2-4729-94e6-5ccf480c766d@kernel.org>
-From: Aaron Kling <webgeek1234@gmail.com>
-Date: Tue, 8 Apr 2025 02:35:11 -0500
-X-Gm-Features: ATxdqUEhT_cCsCHIzbYXLVPcrwdWBAkM0Y94ixPBAugMf6UkgCf_WAucGZWtu5k
-Message-ID: <CALHNRZ8+vnXrx7xw=qjpB34MX32hW_m7k+=CdePJpErBPPzv-g@mail.gmail.com>
-Subject: Re: [PATCH] arm64: tegra: Enable ramoops on Tegra210 and newer
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, devicetree@vger.kernel.org, 
-	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250407165341.2934499-1-robh@kernel.org>
 
-On Tue, Apr 8, 2025 at 1:08=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.org=
-> wrote:
->
-> On 07/04/2025 18:00, Aaron Kling wrote:
-> > On Mon, Apr 7, 2025 at 7:59=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel=
-.org> wrote:
-> >>
-> >> On 06/04/2025 23:12, Aaron Kling via B4 Relay wrote:
-> >>> From: Aaron Kling <webgeek1234@gmail.com>
-> >>>
-> >>> This allows using pstore on all such platforms. There are some
-> >>> differences per arch:
-> >>>
-> >>> * Tegra132: Flounder does not appear to enumerate pstore and I do not
-> >>>   have access to norrin, thus Tegra132 is left out of this commit.
-> >>> * Tegra210: Does not support ramoops carveouts in the bootloader, ins=
-tead
-> >>>   relying on a dowstream driver to allocate the carveout, hence this
-> >>>   hardcodes a location matching what the downstream driver picks.
-> >>> * Tegra186 and Tegra194 on cboot: Bootloader fills in the address and
-> >>>   size in a node specifically named /reserved-memory/ramoops_carveout=
-,
-> >>>   thus these cannot be renamed.
-> >>> * Tegra194 and Tegra234 on edk2: Bootloader looks up the node based o=
-n
-> >>>   compatible, however the dt still does not know the address, so keep=
-ing
-> >>>   the node name consistent on Tegra186 and newer.
-> >>>
-> >>> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
-> >>> ---
-> >>>  arch/arm64/boot/dts/nvidia/tegra186.dtsi | 16 ++++++++++++++++
-> >>>  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 16 ++++++++++++++++
-> >>>  arch/arm64/boot/dts/nvidia/tegra210.dtsi | 13 +++++++++++++
-> >>>  arch/arm64/boot/dts/nvidia/tegra234.dtsi | 16 ++++++++++++++++
-> >>>  4 files changed, 61 insertions(+)
-> >>>
-> >>> diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/bo=
-ot/dts/nvidia/tegra186.dtsi
-> >>> index 2b3bb5d0af17bd521f87db0484fcbe943dd1a797..2e2b27deb957dfd754e42=
-dd03f5a1da5079971dc 100644
-> >>> --- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-> >>> +++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-> >>> @@ -2051,6 +2051,22 @@ pmu-denver {
-> >>>               interrupt-affinity =3D <&denver_0 &denver_1>;
-> >>>       };
-> >>>
-> >>> +     reserved-memory {
-> >>> +             #address-cells =3D <2>;
-> >>> +             #size-cells =3D <2>;
-> >>> +             ranges;
-> >>> +
-> >>> +             ramoops_carveout {
-> >>
-> >> Please follow DTS coding style for name, so this is probably only ramo=
-ops.
-> >
-> > As per the commit message regarding tegra186: bootloader fills in the
-> > address and size in a node specifically named
-> > /reserved-memory/ramoops_carveout, thus these cannot be renamed.
->
-> That's not a reason to introduce issues. Bootloader is supposed to
-> follow same conventions or use aliases or labels (depending on the node).
->
-> If bootloader adds junk, does it mean we have to accept that junk?
->
-> >
-> >>
-> >> It does not look like you tested the DTS against bindings. Please run
-> >> `make dtbs_check W=3D1` (see
-> >> Documentation/devicetree/bindings/writing-schema.rst or
-> >> https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-=
-sources-with-the-devicetree-schema/
-> >> for instructions).
-> >> Maybe you need to update your dtschema and yamllint. Don't rely on
-> >> distro packages for dtschema and be sure you are using the latest
-> >> released dtschema.
-> >
-> > The bot is reporting that the reg field is missing from the added
-> > ramoops nodes on t186, t194, and t234. However, as also mentioned in
-> > the commit message, this is intentional because it is expected for the
-> > bootloader to fill that in. It is not known at dt compile time. Is
-> > there a way to mark this as intentional, so dtschema doesn't flag it?
->
-> Fix your bootloader or chain load some normal one, like U-Boot.
-How would chainloading a second bootloader 'fix' previous stage
-bootloaders trampling on an out-of-sync hardcoded reserved-memory
-address? It's possible for carveout addresses and sizes to change. Not
-from boot to boot on the same version of the Nvidia bootloader, but
-potentially from one version to another. Depending on if the
-bootloader was configured with different carveout sizes.
+On Mon, Apr 07, 2025 at 11:53:40AM -0500, Rob Herring (Arm) wrote:
+> The virtio pci-iommu is a PCI device, so it should have a reference to
+> the pci-device.yaml schema. The pci-device.yaml schema defines the 'reg'
+> format as a schema, so the text description for 'reg' can be dropped.
+> 
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 
-There is precedence for this. When blind cleanup was done on arm
-device trees, a chromebook broke because the memory node has to be
-named exactly '/memory' [0]. How is this any different from that case?
-These nodes are an ABI to an existing bootloader. Carveouts on these
-archs are set up in bl1 or bl2, which are not source available. I
-could potentially hardcode things for myself in bl33, which is source
-available, but the earlier stages could still overwrite any chosen
-block depending on how carveouts are configured. But even then, that
-will not change the behaviour of the vast majority of units that use a
-fully prebuilt boot stack direct from Nvidia. My intent here is for
-pstore to work on such units without users needing to use a custom
-bootloader.
->
-> Best regards,
-> Krzysztof
+Reviewed-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 
-Sincerely,
-Aaron
-
-[0] https://patchwork.kernel.org/project/linux-arm-kernel/patch/20190211110=
-919.10388-1-thierry.reding@gmail.com/#22474263
+> ---
+>  .../devicetree/bindings/virtio/pci-iommu.yaml          | 10 ++++------
+>  1 file changed, 4 insertions(+), 6 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/virtio/pci-iommu.yaml b/Documentation/devicetree/bindings/virtio/pci-iommu.yaml
+> index 972a785a42de..8bd6ad72ac7a 100644
+> --- a/Documentation/devicetree/bindings/virtio/pci-iommu.yaml
+> +++ b/Documentation/devicetree/bindings/virtio/pci-iommu.yaml
+> @@ -20,6 +20,9 @@ description: |
+>    virtio-iommu node doesn't have an "iommus" property, and is omitted from
+>    the iommu-map property of the root complex.
+>  
+> +allOf:
+> +  - $ref: /schemas/pci/pci-device.yaml#
+> +
+>  properties:
+>    # If compatible is present, it should contain the vendor and device ID
+>    # according to the PCI Bus Binding specification. Since PCI provides
+> @@ -33,12 +36,7 @@ properties:
+>            - const: pci1af4,1057
+>  
+>    reg:
+> -    description: |
+> -      PCI address of the IOMMU. As defined in the PCI Bus Binding
+> -      reference, the reg property is a five-cell address encoded as (phys.hi
+> -      phys.mid phys.lo size.hi size.lo). phys.hi should contain the device's
+> -      BDF as 0b00000000 bbbbbbbb dddddfff 00000000. The other cells should be
+> -      zero. See Documentation/devicetree/bindings/pci/pci.txt
+> +    maxItems: 1
+>  
+>    '#iommu-cells':
+>      const: 1
+> -- 
+> 2.47.2
+> 
