@@ -1,100 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx.gpxsee.org (mx.gpxsee.org [37.205.14.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74E4326869D;
-	Tue,  8 Apr 2025 10:48:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C082F267731;
+	Tue,  8 Apr 2025 10:49:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.205.14.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744109327; cv=none; b=oBYDm5ZVJXux8SAXF3lfri0IFrBy3vJBMBcpbBynoGT4o/U76Jkz5A4LiTHqvkt0ZBwIHNOmCFFPx8LGrmBnXfx2XxnzTNSPAslOvj6Kls1OwASmjvh8SHaiMWaiwq+Kv1NPgdPEAIDFe1bciCBw437jczM3Zh0ho1Wj1pEhvoo=
+	t=1744109369; cv=none; b=cn8RI3D9flK22gKglZKWk/xp41UeOPi5yRDzo56YWTUUBDDTppBaiPpAkg5/QsC/T3d2dLFry1LkYQnSx9ySANixZCzbKwPuBf47YNh9o3PRO5fiw3Bd0L3ksVYY8JwUvskKOBS8y9GP/coX3mGJbsdllwcvPjdt32CR65ijyq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744109327; c=relaxed/simple;
-	bh=FTVz9/Au2ZWltkg8U7rxRusmQV1CQyFoUcdSZf9O96g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T7PGO0rN3nV+At0j4OGJS/9wLQHKcWyibdGBVmIc8xsTgtdr262YTs2gmSHn9O0tStTBcDdyJ1VVwVfg9ZsyTYPTmxg9VL/6qFyczpIXRQIelUblx5fj/PHKOP5gIHACxpMrGhFhiM+b00nd5u0/ykRWZe3co+mbpx4K2F4mkmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=sksJtGtb; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="sksJtGtb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B97AC4CEEC;
-	Tue,  8 Apr 2025 10:48:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1744109326;
-	bh=FTVz9/Au2ZWltkg8U7rxRusmQV1CQyFoUcdSZf9O96g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sksJtGtbDgUWvLMbtDL9OxOnGxOmIbQj5Zks1mDske3E00JbpVwTKZ/088dcGtYjA
-	 BaJU1pqeLH5MaSyuno0S1mBqKYcneW1tEmOOz1BRNpS3/nz4x//rwefLNZ+GmsVDQX
-	 NOstaBlOwHxEqzIiJDVGzpVeIU2iUbPm/z4Fq3BY=
-Date: Tue, 8 Apr 2025 12:47:14 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Richard Akintola <princerichard17a@gmail.com>
-Cc: Samuel Abraham <abrahamadekunle50@gmail.com>, outreachy@lists.linux.dev,
-	sudipm.mukherjee@gmail.com, teddy.wang@siliconmotion.com,
-	linux-fbdev@vger.kernel.org, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/8] staging: sm750fb: change function naming style
-Message-ID: <2025040840-domain-boasting-81ec@gregkh>
-References: <cover.1743857160.git.princerichard17a@gmail.com>
- <2025040538-breeze-espionage-dc6e@gregkh>
- <CAMyr_bL4Qo_eeVSHhy-_z9_PwcQAvD6N4jfqBb+rtN-Lj+YdmA@mail.gmail.com>
- <CADYq+fY-twT=NruAmfb6EpmYJLM971aTu-CUi-We_Fd6JSP47Q@mail.gmail.com>
- <CAMyr_bLkvFBTpYehG4fs-tqVE18YBf53okddU2=i7+Rr-zbCsw@mail.gmail.com>
- <2025040711-refutable-monetary-f0c4@gregkh>
- <CAMyr_bKgveKkpRdOWw+VfZDWridLirHp4VoeG_F-wwgSY5jpgQ@mail.gmail.com>
+	s=arc-20240116; t=1744109369; c=relaxed/simple;
+	bh=Wro/QQ/Y7WUVrtEFE+aw8JXvs1Rqp/cELrPaRNiFwhQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ikwkf1e5Cx3mUSjqAFkSSJQweZJ0aKWbhaodlWj+RpSsV2FtBGHoLcI0R//VDBvXTeH0UHdaPEDGOXEgzbFK1JQXnmi9aCSiR1d3UPPHWweSdKEAUFDs1KiPrDardFYEvQLot51PQxAsf7ViuhJpMcAR4fgEslldQW1JFy/B3yY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gpxsee.org; spf=pass smtp.mailfrom=gpxsee.org; arc=none smtp.client-ip=37.205.14.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gpxsee.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gpxsee.org
+Received: from mgb4.. (unknown [62.77.71.229])
+	by mx.gpxsee.org (Postfix) with ESMTPSA id 4DAD521E96;
+	Tue, 08 Apr 2025 12:49:23 +0200 (CEST)
+From: tumic@gpxsee.org
+To: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>
+Cc: linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	=?UTF-8?q?Martin=20T=C5=AFma?= <martin.tuma@digiteqautomotive.com>
+Subject: [PATCH] media: mgb4: Enumerate only the available timings
+Date: Tue,  8 Apr 2025 12:49:12 +0200
+Message-ID: <20250408104912.2476-1-tumic@gpxsee.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMyr_bKgveKkpRdOWw+VfZDWridLirHp4VoeG_F-wwgSY5jpgQ@mail.gmail.com>
 
-On Tue, Apr 08, 2025 at 11:38:28AM +0100, Richard Akintola wrote:
-> On Mon, Apr 7, 2025 at 7:01 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Mon, Apr 07, 2025 at 06:57:38AM +0100, Richard Akintola wrote:
-> > > On Sat, Apr 5, 2025 at 3:16 PM Samuel Abraham
-> > > <abrahamadekunle50@gmail.com> wrote:
-> > >
-> > > > This looks like a new version of a previously submitted patch, but you
-> > > >   did not list below the --- line any changes from the previous version.
-> > > >   Please read the section entitled "The canonical patch format" in the
-> > > >   kernel file, Documentation/process/submitting-patches.rst for what
-> > > >   needs to be done here to properly describe this.
-> > >
-> > >
-> > > Hi Samuel,
-> > >
-> > > I sent the patches individually before, but I was instructed to send a
-> > > patch series.
-> > >
-> > > Given that I didn't change any code, should I still add version number
-> > > and sending
-> > > patch series as the difference?
-> >
-> > Yes.
-> >
-> > Think about it from our side, what would you want to see if you had to
-> > review hundreds of different patches a day?
-> >
-> > thanks,
-> >
-> > greg k-h
-> 
-> Hi Greg,
-> 
-> I have sent the new version, please do have a look at it.
+From: Martin Tůma <martin.tuma@digiteqautomotive.com>
 
-Again, please realize that some of us get hundreds, if not thousands, of
-changes a day to review.  A normal delay is about 1-2 weeks to get to a
-review of a change.  Ideally it would be faster, but there are only so
-many hours in a day.
+Enumerate and allow setting only the available (as given by the input
+source) timings, not all theoretically possible.
 
-To help make this faster, please help out in reviewing other changes
-submitted by other developers, that will cause your changes to bubble
-up.
+The "complete" set is misleading for user SW (including qv4l) and
+the missing check on set even allowed timings leading to completely broken
+video streams.
 
-thanks,
+Signed-off-by: Martin Tůma <martin.tuma@digiteqautomotive.com>
+---
+ drivers/media/pci/mgb4/mgb4_vin.c | 38 +++++++++++++++++++++++++------
+ 1 file changed, 31 insertions(+), 7 deletions(-)
 
-greg k-h
+diff --git a/drivers/media/pci/mgb4/mgb4_vin.c b/drivers/media/pci/mgb4/mgb4_vin.c
+index 434eaf0440e2..c3b82bd366dd 100644
+--- a/drivers/media/pci/mgb4/mgb4_vin.c
++++ b/drivers/media/pci/mgb4/mgb4_vin.c
+@@ -604,14 +604,31 @@ static int vidioc_s_dv_timings(struct file *file, void *fh,
+ 			       struct v4l2_dv_timings *timings)
+ {
+ 	struct mgb4_vin_dev *vindev = video_drvdata(file);
+-
+-	if (timings->bt.width < video_timings_cap.bt.min_width ||
+-	    timings->bt.width > video_timings_cap.bt.max_width ||
+-	    timings->bt.height < video_timings_cap.bt.min_height ||
+-	    timings->bt.height > video_timings_cap.bt.max_height)
++	struct v4l2_dv_timings active_timings;
++
++	if (get_timings(vindev, &active_timings) < 0)
++		return -ENODATA;
++	if (timings->bt.width != active_timings.bt.width ||
++	    timings->bt.height != active_timings.bt.height ||
++	    timings->bt.polarities != active_timings.bt.polarities ||
++	    timings->bt.pixelclock != active_timings.bt.pixelclock ||
++	    timings->bt.hfrontporch != active_timings.bt.hfrontporch ||
++	    timings->bt.hsync != active_timings.bt.hsync ||
++	    timings->bt.hbackporch != active_timings.bt.hbackporch ||
++	    timings->bt.vfrontporch != active_timings.bt.vfrontporch ||
++	    timings->bt.vsync != active_timings.bt.vsync ||
++	    timings->bt.vbackporch != active_timings.bt.vbackporch)
+ 		return -EINVAL;
+ 	if (timings->bt.width == vindev->timings.bt.width &&
+-	    timings->bt.height == vindev->timings.bt.height)
++	    timings->bt.height == vindev->timings.bt.height &&
++	    timings->bt.polarities == vindev->timings.bt.polarities &&
++	    timings->bt.pixelclock == vindev->timings.bt.pixelclock &&
++	    timings->bt.hfrontporch == vindev->timings.bt.hfrontporch &&
++	    timings->bt.hsync == vindev->timings.bt.hsync &&
++	    timings->bt.hbackporch == vindev->timings.bt.hbackporch &&
++	    timings->bt.vfrontporch == vindev->timings.bt.vfrontporch &&
++	    timings->bt.vsync == vindev->timings.bt.vsync &&
++	    timings->bt.vbackporch == vindev->timings.bt.vbackporch)
+ 		return 0;
+ 	if (vb2_is_busy(&vindev->queue))
+ 		return -EBUSY;
+@@ -641,7 +658,14 @@ static int vidioc_query_dv_timings(struct file *file, void *fh,
+ static int vidioc_enum_dv_timings(struct file *file, void *fh,
+ 				  struct v4l2_enum_dv_timings *timings)
+ {
+-	return v4l2_enum_dv_timings_cap(timings, &video_timings_cap, NULL, NULL);
++	struct mgb4_vin_dev *vindev = video_drvdata(file);
++
++	if (timings->index != 0)
++		return -EINVAL;
++	if (get_timings(vindev, &timings->timings) < 0)
++		return -ENODATA;
++
++	return 0;
+ }
+ 
+ static int vidioc_dv_timings_cap(struct file *file, void *fh,
+
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+-- 
+2.48.1
+
