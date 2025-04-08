@@ -1,313 +1,169 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8533B1F8921
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 05:34:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2622B1EE7BE;
+	Tue,  8 Apr 2025 05:36:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744090452; cv=none; b=jp8sj7gkQ1qeXK9uo778k6HYTTFuN+xgTjP9mVQceEeemViUmO99DuTDXSmNk0+gvum7jE2GwU8Xkb95NabdqpY32BQZU16I5aymWp0E3CfTEkFc0W6iVEuhpMVH31B22BNSq5vakHzHDTmAqpOVAnnRIHvwQNIagRqlUhijsO0=
+	t=1744090567; cv=none; b=NlTmpxKPxcDi72ThNTfrz+ziU+GcVSFcC/lQL44Zi3OhZravr8mVFN6vanUdtqfl4lZUM02Hav8MaP1m72Qz2F/y3IfZG4FwMfsseSZrv9c4C3mrt9mrY6dS63sLV2zqnDxJOre8z9arFMq6Dy3+CH1gIJfDQoOBkyguVot2jbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744090452; c=relaxed/simple;
-	bh=arEAU13z8MWOdnZ1xPhjdxMiWHSQSfSV4fMV+rYaaUc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n37aXI8bd0Lc99YkBywYBCnMnG39QmB/J47TbG76IFo0ztBFjLRsBLmCVvwsF7PO8LRRTeK7knJIDXSr16X29pWVJK0HtNV/kRmlyjq++YvKjQZP8GDX9syZ6z+tF51QcTVZvEBn8sq35ZWJQaxLukb9sSMZ0OIFmR4oio7KMck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=W5Jlbc8Q; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1744090567; c=relaxed/simple;
+	bh=bpV5FGMaMPPNBMNGXul9vlBbf0D9HtZpxIRHD5Mb47c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aHmPd1PZv8XklYOTYnVqrJkgLktJSW9u/Rn76iTjWq8Pqyj28bjiNYXI6mdM7KO0Hg73CsQ6vWGkCFnqh4tbwrUE7E3jhmxafU68hh3EC0/6xjucLKVYX/68zfcoq06+oDR+KB8R83PGS9Lgi4KxT8/QRXorlmdX5ChwSPLttrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XMsnsnbN; arc=none smtp.client-ip=209.85.222.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="W5Jlbc8Q"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5382GU5f020214
-	for <linux-kernel@vger.kernel.org>; Tue, 8 Apr 2025 05:34:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	AyLfoahGroLli+OuVnqvLk3oTAd0/hoycgj1k4pZnnc=; b=W5Jlbc8QaQ9PM1q+
-	lQAafySwzPfnaEX8CB/jBYhfIQ3jCBGKbJJvaQkcBqCMhtGsZ3hbXl5hDIojVEYB
-	WSeD6l7P8bLCWfaSBnYnm7PNGqL+xap7r/Bi4m1dyZ+vxS5cekmQF0f/++2bew/p
-	Z8J8I6qCdUzJTxeSUw8RSXfjSFGBCVpd4g1Bv2pddD5us6z8ugpQs0dBCm6vRqzS
-	dsGB7d282G6/crr1sPLZZIqL+XJH4TfQdZdtrBdbgLjS/5v/gi7ISdXJ1BvbHPh5
-	l8tIZcGTrnTwWk6w1d4EtvxdmdSPzHjuv/5K3B8AB9OhB+5UIH8NsNXvSHhvFVA0
-	w3aCmw==
-Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twd2pkyp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 05:34:09 +0000 (GMT)
-Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-af423fb4f0eso3441791a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 22:34:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XMsnsnbN"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7c597760323so462006285a.3;
+        Mon, 07 Apr 2025 22:36:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744090565; x=1744695365; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=66z8xNX7QfE8/G8d9xcH5NpbXBfUgfRudiKLL4Me/eY=;
+        b=XMsnsnbNVOtWnMDi4ZE60AKpNzUYCwaJf/U3p1JyY311FSliLL0I3xTKfJnarWqZyW
+         PZkgGBSAtSAjcAGawl5fYTSYODnWMcPYkiwjR/IwIEOeu7vLxDJIPYL040wlEkfnzQpJ
+         D3KTKZQkeElwM/P+a+AhEppZ4DNsx7ycTE9h5wx1lDy1afKc7sgn6UzD6pSxIORdTAq2
+         lmzk/tCH6mPyROASfSbawbZJvKTSiWQzR3bE6HoEVKYIBw1kYeBJJ6Ro8hNJUSI5TD4G
+         auhP6jYrT+WpmzyIuowejYBBtsaNvBjvHx7FytCbk4IVg+fc1rTvs+NLBNhyDDbUHcql
+         i8Og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744090448; x=1744695248;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AyLfoahGroLli+OuVnqvLk3oTAd0/hoycgj1k4pZnnc=;
-        b=faQ8bwTMoQKxfmhbPdZkQPDJgey82tDCICp7OV+dTL6TkIEvHjbiuxuny2BbSWjFM1
-         dLyuEzR+jebUN2eu0SwktuXJLdrbtFMJrWhHjvt3PbBVstNYZqRVQFl+jy42h4NF57zR
-         nEQMhzWaU80uyOyKwVpJQkBmhrJgXX/BVUqlErjiOQfXZS5c5DswueED1863eXCOK2oT
-         GT9Nu+YMt4mwU63IFtPBkznlAuxG40+DBNp3NE5eG1OIL9ZPf0u9fJI2an7cCq54o9+8
-         5BHzH7XhB2dDDzGA+hTzWrqudSPMd7JHzAhGyf/c7776/kubth58kSbCAc9ibMQBmfKn
-         aB3w==
-X-Forwarded-Encrypted: i=1; AJvYcCXLPqONb1MLmCOpN8/vIpuIgHcIMGFO2QKU8mPdHo+i0SoqdSPka4WgnD4s74BN5vcdfExQORz76BzKYnY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0Zs2SfWB4CDS/SLingbIf/LPZXW46MdtAIaev0QTJ4/vDMKVu
-	rk3SJrSu8Y2cWA2qyFC2FCkRy1ye81LMzvA7QaOTY3HAUuuQwjhKoA57OIuhfXL3++m/Axetny3
-	RxIg4dC7ZVdT0Se5BQ/gp5Y77Fw7OFe5RVj7xyol7f5MrdnZeOitZrW7KLe6JSwc=
-X-Gm-Gg: ASbGnctl6Ai8ck7abrkr06eEJTs8m5PbV/CWL/QWDiWI2YMarxpVu+ghY6FsQerOqeP
-	lwqTTMYTDdMy0BfXy+qGzKemNM0/WPcxHaNu3+EXSlyAbSPy4xOmGCGg9U8s0AKFZ7eU1xbPel4
-	a1+jW/IKemz1JQUU6HmHr6M6X5NJYng2eIJmDOzh91BBFz2btaK86fgYca81SIdW3cqX2iFq4gE
-	at0iPT7iGE9KKn911P9QSMpZQtPoTxt3MTvs3gU6KG4cd+M4N8Af6Itu/Alj4sxpsjJlA2Ra5r0
-	nteUl57H/pG8hhLQgeKjsRKpwaqxj3N+VqLKZbbZ
-X-Received: by 2002:a17:902:f683:b0:220:eade:d77e with SMTP id d9443c01a7336-22a8a0a3a86mr227994335ad.40.1744090448418;
-        Mon, 07 Apr 2025 22:34:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFrCBpPNjEdWABvuv4bJIXaTPfZw2ZOm5NwxYwP2yGhcU5Ak5+Ud6QjmkG6m+ScvVEbAd3eiw==
-X-Received: by 2002:a17:902:f683:b0:220:eade:d77e with SMTP id d9443c01a7336-22a8a0a3a86mr227993995ad.40.1744090447997;
-        Mon, 07 Apr 2025 22:34:07 -0700 (PDT)
-Received: from [10.218.35.239] ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229787778e3sm91201265ad.254.2025.04.07.22.34.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Apr 2025 22:34:07 -0700 (PDT)
-Message-ID: <10bf04c1-f040-4646-9484-70827db36d27@oss.qualcomm.com>
-Date: Tue, 8 Apr 2025 11:04:03 +0530
+        d=1e100.net; s=20230601; t=1744090565; x=1744695365;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=66z8xNX7QfE8/G8d9xcH5NpbXBfUgfRudiKLL4Me/eY=;
+        b=R3Ex813dwuD7migflBWe1M25H8NTyWqyFha6TR+bJqA0offKpUdG9LG3kFbtsaxw2d
+         jUVNfvomuvm2vcWFnTY/ID85tk8HpRV9jTlBJpmw4XoLmMBDMiHOd7C/0yzYG2tGhdZS
+         fiebe5ZJj6uqiL+EMtsqicdls6Zu/32mwyHSXARSFzzC65o/V2tK+6aKxlQnBp1uM+jK
+         1mTphI6g2VJHdb47BDLLEPCL1jsWArI6nvL99eRxL44iiCru7/ZZIOHTkb1lR//Cffs7
+         VNn9p5lycMVcAmcT7YFhgKScAOqqm9/uPsnM5zjplItzw8e8fIn2x/sSIGbMvJAGdOxl
+         EyIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWPdEZCYh6kVZxyNIDA0LWNqMSYH7800kyi74hycwchxxVAm2YTMTPga7G9vt5o6CttgQmA6JeJ5Fek5oI=@vger.kernel.org, AJvYcCXiK1kEZX7LAi9ZwraJ+t6Q9KPOOnNXzsC+V9aeb3v5ooZulAWo/u0TLK4C5gPBia9uV1Gddq2uG9vePvA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNpo4NMwqEMiPmd8sf6iGGc0Si/eh5ZFob/Xa26q4MDIGREw9B
+	JJi5ZTytN2agN5LLaS9IK1zApNl5oQwc73BkNAX56rQzF75F3fHGWm7bPOmegHEEMRSd1j/nyq6
+	AvM7pe9FrXCHBxFCqCO1pmRi0va4=
+X-Gm-Gg: ASbGncuaiTa8lumWp5AP7b/gu4+VXxfd75hRgL9+lsFeaOLzr7sAy5dCh6GxSogUsmM
+	7t2vtgB4DTdKs0bZ/LDTVD8trlCObeTBvawqHYz/lguUfG8Cg/LYE/SVfWXWgfoSWEUCb+FKOcK
+	imYY0B/S/o+Q+cgrc6qHX2Lt8Aa9MzOiBdMYf0WywzxdGEGSvjCuK6+49uaQ==
+X-Google-Smtp-Source: AGHT+IF3zriAobKyOd+EfxBcRPVpJO7KdHPNEN1iPME2bkhFC2JQsEh6Wt5ZpPCetHwqivdlHTSNYgyvuNmoxmCXhqw=
+X-Received: by 2002:a05:620a:70cc:b0:7c7:9349:e468 with SMTP id
+ af79cd13be357-7c79349e48fmr395965885a.12.1744090564951; Mon, 07 Apr 2025
+ 22:36:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 3/3] usb: dwc3: gadget: Make gadget_wakeup asynchronous
-To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Bakker <kees@ijzerbout.nl>,
-        William McVicker <willmcvicker@google.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@kernel.org" <stable@kernel.org>
-References: <20250403110805.865311-1-prashanth.k@oss.qualcomm.com>
- <20250403110805.865311-4-prashanth.k@oss.qualcomm.com>
- <20250407233757.jmtohzgm4xebjndn@synopsys.com>
-Content-Language: en-US
-From: Prashanth K <prashanth.k@oss.qualcomm.com>
-In-Reply-To: <20250407233757.jmtohzgm4xebjndn@synopsys.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: XXXEq1n5ImAZbF8JcmE8zLlSXJ5Ll1Vk
-X-Proofpoint-GUID: XXXEq1n5ImAZbF8JcmE8zLlSXJ5Ll1Vk
-X-Authority-Analysis: v=2.4 cv=NaLm13D4 c=1 sm=1 tr=0 ts=67f4b551 cx=c_pps a=oF/VQ+ItUULfLr/lQ2/icg==:117 a=fChuTYTh2wq5r3m49p7fHw==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=yKX1jj3aC-1AoQY6T0QA:9 a=QEXdDO2ut3YA:10
- a=3WC7DwWrALyhR5TkjVHa:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-08_01,2025-04-07_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
- priorityscore=1501 adultscore=0 malwarescore=0 suspectscore=0
- lowpriorityscore=0 bulkscore=0 mlxlogscore=999 clxscore=1015 phishscore=0
- spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504080038
+References: <67e26157.0c0a0220.36adcd.506e@mx.google.com> <CANiDSCsvEke31SAgXhs_sXEN7d6fXrwuhJFsi2mzESq1Jc8pxA@mail.gmail.com>
+ <CAKUZ0zJjdSDH3cw=8iKJauU5dmcq9TFhAaJX4yS5UQoiCUaguA@mail.gmail.com>
+ <20250326001336.GA23984@pendragon.ideasonboard.com> <CAKUZ0zKDy47cQ0ZQo-=1c7wmazbutF=VF3qX09DfZFBz01hh-g@mail.gmail.com>
+ <20250402002948.GC4845@pendragon.ideasonboard.com>
+In-Reply-To: <20250402002948.GC4845@pendragon.ideasonboard.com>
+From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Date: Tue, 8 Apr 2025 01:35:00 -0400
+X-Gm-Features: ATxdqUFhO6KYOXY4yVNrKrJ9pclVIZLupMuKBIYL2k0WzLK5KckrSLkKAPiarzg
+Message-ID: <CAKUZ0z+V0pBvAf1VRGcWf_QcROZFsTUcHmNM1T1=DpBw56yi8A@mail.gmail.com>
+Subject: Re: [PATCH] media: Fix invalid link creation when source entity has 0 pads
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Ricardo Ribalda <ribalda@chromium.org>, hdegoede@redhat.com, mchehab@kernel.org, 
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzbot+701fc9cc0cb44e2b0fe9@syzkaller.appspotmail.com, 
+	skhan@linuxfoundation.org, kernelmentees@lists.linuxfoundation.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On 08-04-25 05:08 am, Thinh Nguyen wrote:
-> On Thu, Apr 03, 2025, Prashanth K wrote:
->> Currently gadget_wakeup() waits for U0 synchronously if it was
->> called from func_wakeup(), this is because we need to send the
->> function wakeup command soon after the link is active. And the
->> call is made synchronous by polling DSTS continuosly for 20000
->> times in __dwc3_gadget_wakeup(). But it observed that sometimes
->> the link is not active even after polling 20K times, leading to
->> remote wakeup failures. Adding a small delay between each poll
->> helps, but that won't guarantee resolution in future. Hence make
->> the gadget_wakeup completely asynchronous.
->>
->> Since multiple interfaces can issue a function wakeup at once,
->> add a new variable func_wakeup_pending which will indicate the
->> functions that has issued func_wakup, this is represented in a
->> bitmap format. If the link is in U3, dwc3_gadget_func_wakeup()
->> will set the bit corresponding to interface_id and bail out.
->> Once link comes back to U0, linksts_change irq is triggered,
->> where the function wakeup command is sent based on bitmap.
->>
->> Cc: stable@kernel.org
->> Fixes: 92c08a84b53e ("usb: dwc3: Add function suspend and function wakeup support")
->> Signed-off-by: Prashanth K <prashanth.k@oss.qualcomm.com>
->> ---
->>  drivers/usb/dwc3/core.h   |  4 +++
->>  drivers/usb/dwc3/gadget.c | 60 ++++++++++++++++-----------------------
->>  2 files changed, 28 insertions(+), 36 deletions(-)
->>
->> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
->> index aaa39e663f60..2cdbbd3236d7 100644
->> --- a/drivers/usb/dwc3/core.h
->> +++ b/drivers/usb/dwc3/core.h
->> @@ -1164,6 +1164,9 @@ struct dwc3_scratchpad_array {
->>   * @gsbuscfg0_reqinfo: store GSBUSCFG0.DATRDREQINFO, DESRDREQINFO,
->>   *		       DATWRREQINFO, and DESWRREQINFO value passed from
->>   *		       glue driver.
->> + * @func_wakeup_pending: Indicates whether any interface has requested for
->> + *			 function wakeup. Also represents the interface_id
->> + *			 using bitmap.
->>   */
->>  struct dwc3 {
->>  	struct work_struct	drd_work;
->> @@ -1394,6 +1397,7 @@ struct dwc3 {
->>  	int			num_ep_resized;
->>  	struct dentry		*debug_root;
->>  	u32			gsbuscfg0_reqinfo;
->> +	u32			func_wakeup_pending;
-> 
-> Can we rename this to wakeup_pending_funcs to not be mixed with bitmap
-> vs boolean?
-> 
-ACK
->>  };
->>  
->>  #define INCRX_BURST_MODE 0
->> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
->> index 89a4dc8ebf94..3289e57471f4 100644
->> --- a/drivers/usb/dwc3/gadget.c
->> +++ b/drivers/usb/dwc3/gadget.c
->> @@ -276,8 +276,6 @@ int dwc3_send_gadget_generic_command(struct dwc3 *dwc, unsigned int cmd,
->>  	return ret;
->>  }
->>  
->> -static int __dwc3_gadget_wakeup(struct dwc3 *dwc, bool async);
->> -
->>  /**
->>   * dwc3_send_gadget_ep_cmd - issue an endpoint command
->>   * @dep: the endpoint to which the command is going to be issued
->> @@ -2351,10 +2349,8 @@ static int dwc3_gadget_get_frame(struct usb_gadget *g)
->>  	return __dwc3_gadget_get_frame(dwc);
->>  }
->>  
->> -static int __dwc3_gadget_wakeup(struct dwc3 *dwc, bool async)
->> +static int __dwc3_gadget_wakeup(struct dwc3 *dwc)
->>  {
->> -	int			retries;
->> -
->>  	int			ret;
->>  	u32			reg;
->>  
->> @@ -2382,8 +2378,7 @@ static int __dwc3_gadget_wakeup(struct dwc3 *dwc, bool async)
->>  		return -EINVAL;
->>  	}
->>  
->> -	if (async)
->> -		dwc3_gadget_enable_linksts_evts(dwc, true);
->> +	dwc3_gadget_enable_linksts_evts(dwc, true);
->>  
->>  	ret = dwc3_gadget_set_link_state(dwc, DWC3_LINK_STATE_RECOV);
->>  	if (ret < 0) {
->> @@ -2404,25 +2399,6 @@ static int __dwc3_gadget_wakeup(struct dwc3 *dwc, bool async)
->>  	 * Since link status change events are enabled we will receive
->>  	 * an U0 event when wakeup is successful. So bail out.
->>  	 */
->> -	if (async)
->> -		return 0;
->> -
->> -	/* poll until Link State changes to ON */
->> -	retries = 20000;
->> -
->> -	while (retries--) {
->> -		reg = dwc3_readl(dwc->regs, DWC3_DSTS);
->> -
->> -		/* in HS, means ON */
->> -		if (DWC3_DSTS_USBLNKST(reg) == DWC3_LINK_STATE_U0)
->> -			break;
->> -	}
->> -
->> -	if (DWC3_DSTS_USBLNKST(reg) != DWC3_LINK_STATE_U0) {
->> -		dev_err(dwc->dev, "failed to send remote wakeup\n");
->> -		return -EINVAL;
->> -	}
->> -
->>  	return 0;
->>  }
->>  
->> @@ -2443,7 +2419,7 @@ static int dwc3_gadget_wakeup(struct usb_gadget *g)
->>  		spin_unlock_irqrestore(&dwc->lock, flags);
->>  		return -EINVAL;
->>  	}
->> -	ret = __dwc3_gadget_wakeup(dwc, true);
->> +	ret = __dwc3_gadget_wakeup(dwc);
->>  
->>  	spin_unlock_irqrestore(&dwc->lock, flags);
->>  
->> @@ -2471,14 +2447,10 @@ static int dwc3_gadget_func_wakeup(struct usb_gadget *g, int intf_id)
->>  	 */
->>  	link_state = dwc3_gadget_get_link_state(dwc);
->>  	if (link_state == DWC3_LINK_STATE_U3) {
->> -		ret = __dwc3_gadget_wakeup(dwc, false);
->> -		if (ret) {
->> -			spin_unlock_irqrestore(&dwc->lock, flags);
->> -			return -EINVAL;
->> -		}
->> -		dwc3_resume_gadget(dwc);
->> -		dwc->suspended = false;
->> -		dwc->link_state = DWC3_LINK_STATE_U0;
->> +		dwc->func_wakeup_pending |= BIT(intf_id);
->> +		ret = __dwc3_gadget_wakeup(dwc);
->> +		spin_unlock_irqrestore(&dwc->lock, flags);
->> +		return ret;
->>  	}
->>  
->>  	ret = dwc3_send_gadget_generic_command(dwc, DWC3_DGCMD_DEV_NOTIFICATION,
->> @@ -4300,6 +4272,7 @@ static void dwc3_gadget_linksts_change_interrupt(struct dwc3 *dwc,
->>  {
->>  	enum dwc3_link_state	next = evtinfo & DWC3_LINK_STATE_MASK;
->>  	unsigned int		pwropt;
->> +	int			ret, intf_id = 0;
-> 
-> Can we keep declarations in separate lines?
-> 
-OK
->>  
->>  	/*
->>  	 * WORKAROUND: DWC3 < 2.50a have an issue when configured without
->> @@ -4375,7 +4348,7 @@ static void dwc3_gadget_linksts_change_interrupt(struct dwc3 *dwc,
->>  
->>  	switch (next) {
->>  	case DWC3_LINK_STATE_U0:
->> -		if (dwc->gadget->wakeup_armed) {
->> +		if (dwc->gadget->wakeup_armed || dwc->func_wakeup_pending) {
->>  			dwc3_gadget_enable_linksts_evts(dwc, false);
->>  			dwc3_resume_gadget(dwc);
->>  			dwc->suspended = false;
->> @@ -4398,6 +4371,21 @@ static void dwc3_gadget_linksts_change_interrupt(struct dwc3 *dwc,
->>  	}
->>  
->>  	dwc->link_state = next;
->> +
->> +	/* Proceed with func wakeup if any interfaces that has requested */
->> +	while (dwc->func_wakeup_pending && (next == DWC3_LINK_STATE_U0)) {
->> +		if (dwc->func_wakeup_pending & BIT(0)) {
->> +			ret = dwc3_send_gadget_generic_command(dwc, DWC3_DGCMD_DEV_NOTIFICATION,
->> +							       DWC3_DGCMDPAR_DN_FUNC_WAKE |
->> +							       DWC3_DGCMDPAR_INTF_SEL(intf_id));
->> +			if (ret)
->> +				dev_err(dwc->dev, "function remote wakeup failed for %d, ret:%d\n",
->> +					intf_id, ret);
->> +		}
->> +		dwc->func_wakeup_pending >>= 1;
-> 
-> This would break the bitmap of dwc->func_wakeup_pending. Perhaps we can
-> use ffs(x) to properly find and clear the interface ID from the bitmap
-> one at a time.
-> 
-Yes, we can use ffs(x). But I didn't understand how this would break
-bitmap of dwc->func_wakeup_pending.
-
-Regards,
-Prashanth K
->> +		intf_id++;
->> +	}
->> +
->>  }
->>  
->>  static void dwc3_gadget_suspend_interrupt(struct dwc3 *dwc,
->> -- 
->> 2.25.1
->>
-> 
-> Thanks,
-> Thinh
-
+On Tue, Apr 1, 2025 at 8:30=E2=80=AFPM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Gabriel,
+>
+> On Sat, Mar 29, 2025 at 01:50:00PM -0400, Gabriel wrote:
+> > Hi Laurent,
+> >
+> > I=E2=80=99ve analyzed the bug report, and the root cause of the
+> > "WARNING-media_create_pad_link" issue is a mismatch in terminal
+> > references in the USB descriptor.
+> >
+> > The format type descriptor references terminal ID 6, while the audio
+> > streaming interface descriptor points to terminal ID 5. This
+> > discrepancy triggers the warning: "No streaming interface found for
+> > terminal 6", followed by the media pad link warning.
+>
+> Can you share the USB descriptors.
+The USB descriptors via the Syzkaller reproducer:
+         "\x12\x01\x00\x00\xfb\x5d\x7d\x08\x6d\x04\xc3\x08\x16\x6b\x01\x02\=
+x03"
+         "\x01\x09\x02\x50\x00\x01\x00\x00\x00\x00\x09\x04\x1f\x00\x00\xff\=
+x01"
+         "\x00\x00\x0a\x24\x02\x00\x00\x05\x02\x01\x02\x07\x24\x07\x05\x00\=
+x00"
+         "\x18\xc2\x24\x08\x05\x04\x00\x04\x96\x0d\x24\x06\x01\x01\x03\x02\=
+x00"
+         "\x01\x00\x06\x00\x06\x09\x24\x03\x05\x05\x03\x06\x05\x81\x09\x24\=
+x03"
+         "\x06\x01\x01\x04\x05\x05\x07\x24\x04\x05\x01\x00\x9c\xbd\x89"
+>
+> > I confirmed this by changing the terminal ID in the format descriptor
+> > from 6 to 5, which eliminates both warnings. This shows the warning is
+> > correctly identifying an invalid descriptor configuration, not a
+> > kernel bug.
+>
+> There's still something not quite right. uvc_entity->num_pads should
+> always be equal to the corresponding media_entity->num_pads. That's not
+> the case here, and I think it indicates a bug.
+Ah ok - the mismatch itself shouldn't happen regardless of the descriptor
+>
+> > Since the USB descriptor is invalid, I believe the warning is
+> > necessary and should remain. The code should stay as is.
+>
+> There should be a warning, but I think it needs to be caught in a
+> different place, earlier.
+Got it.
+>
+> > On Tue, Mar 25, 2025 at 8:13=E2=80=AFPM Laurent Pinchart wrote:
+> > >
+> > > On Tue, Mar 25, 2025 at 06:05:00PM -0400, Gabriel wrote:
+> > > > Hi Ricardo,
+> > > >
+> > > > > I cannot reach that URL
+> > > > I was unable to access the URL from my email client when I initiall=
+y
+> > > > sent the email, but a couple of hours later, I was able to. Initial=
+ly,
+> > > > copying and pasting the URL into the browser provided a workaround.
+> > > >
+> > > > > Shouldn't it be?:
+> > > > > Fixes: 4ffc2d89f38a ("[media] uvcvideo: Register subdevices for e=
+ach entity")
+> > > > You're right, I incorrectly referenced the wrong commit. However, I=
+=E2=80=99m
+> > > > not certain if it should reference a96aa5342d57 (Fixes: a96aa5342d5=
+7 -
+> > > > '[media] uvcvideo: Ignore entities for terminals with no supported
+> > > > format') as it's the latest commit affecting the line I'm changing =
+or
+> > > > the one you mentioned.
+> > > >
+> > > > > Shouldn't source->num_pads be the same as remote->num_pads?
+> > > > The fuzzer (Syzkaller) that triggered the warning appears to have
+> > > > encountered a case where source->num_pads and remote->num_pads were
+> > > > different. When analyzing the case in GDB, remote->num_pads was 1,
+> > > > while source->num_pads was 0.
+> > >
+> > > This seems like the real bug that should be fixed.
+> > >
+> > > > > Are you sure that your kernel does not contain?
+> > > > > https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linu=
+x.git/commit/drivers/media/usb/uvc/uvc_entity.c?id=3D41ddb251c68ac75c101d3a=
+50a68c4629c9055e4c
+> > > > Yes, it should be included since I am running the upstream kernel.
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
