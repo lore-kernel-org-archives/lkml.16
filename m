@@ -1,63 +1,63 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAFAC23534E;
-	Tue,  8 Apr 2025 15:43:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 781B52356AC;
+	Tue,  8 Apr 2025 15:43:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744126983; cv=none; b=CJtX9vjqs/4mgl6oDnFnwJAeg6mx04ffhfdMtHmmp4RTLlHoE081KKrBAKHhsR6t9Hua/4+xksSL88ntZnl9o5sDyd+flNRH9ebCpBH3fa+/wlA5wKa+d7JdMz7Dui+l3hSHdWzAhztLh/AHuUjKA3nD0LmBLfP+hjMTMB9AOgw=
+	t=1744126985; cv=none; b=sBxGqWarj2VVNwpc7J0K18lAzlEH2mWSiNymqoCyvWIwD3FbK+bYY+gbXgSfj2RVuaFd1icfI4zPwtay+/gZYyN+5muXvWwlrqbpodDbE2L8ftMXRANmhqp4j1ddB94SNt7vPg55GduBqY4GXKf6MDhDpFMKtL1H70Lx31qKsy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744126983; c=relaxed/simple;
-	bh=i/623J9RhzwazO09b9AuVaXf4VhtohpFAm02gcyGGEk=;
+	s=arc-20240116; t=1744126985; c=relaxed/simple;
+	bh=n1/mnxdtmAPmH/0yCHkDnFu0hUsdIiRl4rwzDoAtvHs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hvSqw8OJOBdNJ58crgU2furexkBahj4Qx8+MGhhV60EdaoANa1tSuQ9WicBdo73LYUPioWWjjqymupX0DRdnUPUtnUGNx4/Fv0325TQQ89BfxCjMLxU2bzihPu/JJEY3tjz+NK/LzCIYUxziNIE24bgysAffLLEgESFxR3mZjlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RqsZngOK; arc=none smtp.client-ip=209.85.128.52
+	 MIME-Version; b=C1nNxFYnRug1RgP2/oK2DH0cbNOlXyVAdalI3jJDBOwJfq74vBqp5yXzwLiF9JaAN/qkuJYu6pt9TzndlfmNM9k5NkKhTTFvB4yGdhGCyoXSdUVvKkP888Q+DYb464NaQem+p3Lf+mYMLLPpHj61jfbGPGLWx+QOq2zXiT65kbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DMIc5fjK; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RqsZngOK"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43edecbfb46so27324335e9.0;
-        Tue, 08 Apr 2025 08:43:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DMIc5fjK"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so56969455e9.3;
+        Tue, 08 Apr 2025 08:43:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744126980; x=1744731780; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744126982; x=1744731782; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wDMY9SZRBf4/sxBsgjkGyJScAm+G1kZtC9xjm4IFOEk=;
-        b=RqsZngOK5b75GrrrOUoeOFGBEyEUDebqGO/ybOKRabCfggcVK44+jjQY4ZUbMJFGkk
-         X65jQvjuTrUt7XBDW6kLjM1ovcMRwHgyXhce3lslVIWi1OVdDsnSi86dG/Sq1C/0zm1l
-         X+VReGx1KHB2sV82a2ojpf9DN9YBNxOiviUX+dZFm/Pj7Tbfus8ZcASKg2GmHwTanbau
-         QxUXaOxwXLcGsWLAtkpPr1TY6XdeYhj5ytNe3eN8h4GZN6vZw20QPVkvJ+GHDuJvPS14
-         0NH1d4ahIROcSzgOYfotb9sNeveAmBgy4qw9sLP40K4VvA13lMWnu/uEXPGy2CKxotKd
-         3hFA==
+        bh=maaEXNzrca1Kg4OV2OKYRdvmHiFVuGZqAVh5fMF8Ylk=;
+        b=DMIc5fjKkLV0Dpo9LDyU1KTBHIyeC85XD9AZceu6iN+fbPJ2K0roIjAFmnhqP35QjN
+         W5QvxjxCQzRKHrHa3Z6iJyBRptGnMBvYrkjfif194FI9Y5gcEkbYct24aDRuB7PccVlV
+         SqLgyUUxMzh9oAzD8Z7EwDJpTjXhm8d4mbru0gpKj4fElj0W5ZkQFD6k5+dql7K1g0SY
+         Uedf+2hGG962jkSWqHG1oUSV/mqZ5iI92Duz1XQGtGrqdiR1ROSzgBB4D0x7pS2x8Ire
+         7AZHaAdCHg4iEDrcvlkCkb1UO/41UPsXoH/MLohwNNQpiKjfLyKLB3B9nv6NZebORENO
+         MM/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744126980; x=1744731780;
+        d=1e100.net; s=20230601; t=1744126982; x=1744731782;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wDMY9SZRBf4/sxBsgjkGyJScAm+G1kZtC9xjm4IFOEk=;
-        b=E4O/dy1sCapzyoX9qcwmPep4BOiD44tk28ps5mVwARH6CexxB/kbHwcK4x5rdgdSCV
-         d3QcBlR29dJao1znSzZj6/rFVPUUgM+m9dY1W19jAGEGKU8mL/4jQICtkviTF5Szolet
-         GNl00vHiJHWxKiY5/MsNTg6hTK/kAXcL80nyaZ1/8oLl90QFJ9DoaUf+UB6ALrAFX7m7
-         ZgFMlWt49KgQhh9FjH/DNc/jhyMS3PikhIEjacU51WrY62qmYyqVdAeVNUlIMNhoSzx9
-         zgsLTsyuUK0pBklfcMyaJv63ZnTwCYyz5kz9JNamTPUFy2HNlNayVnKO+Ag/T9OCnrNb
-         JMOw==
-X-Forwarded-Encrypted: i=1; AJvYcCUOQGdM+akzoFJ5mGVBZwdgiO0NHfT1uuEWv9pqu8laGyHYA0IhG4mI7Jxmr9PbabAP4eyjOIGPekSzWFt3@vger.kernel.org, AJvYcCWPyjSvPtwiP5ZUSNpXhwvLpdWXs+0eOiMVViOXt9PczMXEeYa+yh90CKytUfd4kTsdOeGtE2W/A1B+@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9E0M35ZGlSuJ/lioaccgPeKmvoc+O+Ww/tciBgLRSVDMk5sdj
-	cntn7Stfur73iYN2Dx9HBIyZc1zJHKOJ43HZq93pYD4xiMMzQ6fW
-X-Gm-Gg: ASbGncs0sqjDvNO0FBqBU80XmmW30NW5IaAYE9TDFLOGMNnslqr4VgBfF8y0IoAAb14
-	XzEqMlpsxFPQTxnKC6MwHGWdx5H8TOQDxcBOwmAX1uPhufcZt5OUYuCFghWCI6MeGX5YIu4sjGL
-	5PrL0MGVJ6xKgFokD0EQCFVQn3/FANIxd6hrM+T7cO2oG9M3or2z2xj8PnQnz+RxUa4q6Rv6I2N
-	7fgmE0s5MGPqghaOacyr6Sdwf7mnbz3zeHkiGYUGmiG6ymhV8DEH8cOx3y9QbQI4WUQ7ID8j4S+
-	kDVo1D1zA/waeAc19+hQGAExMWD3Ny8KOD9/fH8zbcWSfPcuCvRrpsPtEdsAQwOM4GIyATqAXk2
-	mzcYUK7w=
-X-Google-Smtp-Source: AGHT+IGK0ruPX4WysFV+SZLwQ89r5QOiFeAdeHiZNygg9R+OkQB5zmqWtRPqwT+0SEhCLeJWSD9ebQ==
-X-Received: by 2002:a05:600c:8411:b0:43d:d06:3798 with SMTP id 5b1f17b1804b1-43ecf9fe1f0mr141672885e9.20.1744126979744;
-        Tue, 08 Apr 2025 08:42:59 -0700 (PDT)
+        bh=maaEXNzrca1Kg4OV2OKYRdvmHiFVuGZqAVh5fMF8Ylk=;
+        b=VxQvYN6+tiqKmlIKV0FhOQ0SAn14jQ2/NXjkZCXJ5e/yNRFZyACW1orxQywMiSiCTq
+         YXYZsB7Qs4KC30NboZF1fme2MXeMVlx6k5D1pRlze+KzMzfaZCP1QiQ/Mny2tNNucNpD
+         XaANO0TbCTAs2/J73rotxU5NEeKMqFgeZ+sM5nH7AnIaHffWr4vmnEHn8T3L0QkdSKPn
+         uttrc4UNVzxXhoUqATbYUHukDjJdRIb0vJ8Sg2q2N0SIXOxGc8VWSdwDNMe6ynirlglN
+         nlozULHlF3ifEIi2MFSi4xJkHb4DnE9tZW0pNdMZ1WIWUAIYExuksChp1r1RgsqPKCv9
+         g7pw==
+X-Forwarded-Encrypted: i=1; AJvYcCUD61wjxD021t5uYfKHvubWa802jpNrNq3Bkrqodjs77hOktUziE5VI/8kIZdLBIdbVK17z8hXWpG9P@vger.kernel.org, AJvYcCUFbhXjfJQfZui5q/sGXovjPKgIOMUjIU219RBUZP//QGxjcyxVM3mEBjkBc0O5kBibBdKrl8zoUPCri7Ie@vger.kernel.org
+X-Gm-Message-State: AOJu0YxC4UoOcA4a7C/bMBXDtj8VBOqdEcJxhA82XSDJJwxQi66HXQSz
+	+eSdp9GmLv8bsRjBDI+Huk087yOyjhJd0EBeSPTUvcmJwmoCT3Se
+X-Gm-Gg: ASbGncuRtQxfQUTboDVLvGJtqdZxa/zZzDRbwe8/krv7fMXGXdjavBVVK8ZFryu74kb
+	qEv1Om9E095ZL8cQ8URV+KB3iluvMsxtC7zAagMu1tRgH8uzNMJlGCXkFCCkfrKW03N3U7SIOfK
+	a9wPQ26w5swui62wrYblCAllT6evsgvQbbVHd+2kdKPyWD/UzWx7BinXLWE/gCrpClJymG8StMl
+	dzAkALnYpNWvi6PO3WWeZ0hGVT1KBVEcdpBzE+LgzZy6UGNm8mpCLFoIDIJ+sDB4Z0g5D7M/+ic
+	toyiKLGP1oMMQFDt3eKrXk4s4IF83c0ddNOC8gFxuNEKEz0CAUt2QaRhTNkHTQmJcfVeU9lS4Gh
+	zEX83ZYOUkzHzB6glbg==
+X-Google-Smtp-Source: AGHT+IFOFcncwKUYi57UNaeAvO+49/JOi3agiI45bF7fu89GYair4F29jldwkpCUEx5THNXGOXM2Mg==
+X-Received: by 2002:a05:600c:1549:b0:43c:efed:732d with SMTP id 5b1f17b1804b1-43ecf8f2f4bmr173448545e9.16.1744126981776;
+        Tue, 08 Apr 2025 08:43:01 -0700 (PDT)
 Received: from playground.localdomain ([82.79.237.110])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec34be2e6sm164476675e9.18.2025.04.08.08.42.58
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec34be2e6sm164476675e9.18.2025.04.08.08.43.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 08:42:59 -0700 (PDT)
+        Tue, 08 Apr 2025 08:43:01 -0700 (PDT)
 From: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
 To: Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -76,9 +76,9 @@ Cc: Pengutronix Kernel Team <kernel@pengutronix.de>,
 	imx@lists.linux.dev,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 4/6] arm64: dts: imx8mp: convert 'aips5' to 'aipstz5'
-Date: Tue,  8 Apr 2025 11:42:34 -0400
-Message-Id: <20250408154236.49421-5-laurentiumihalcea111@gmail.com>
+Subject: [PATCH v5 5/6] arm64: dts: imx8mp: add aipstz-related definitions
+Date: Tue,  8 Apr 2025 11:42:35 -0400
+Message-Id: <20250408154236.49421-6-laurentiumihalcea111@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250408154236.49421-1-laurentiumihalcea111@gmail.com>
 References: <20250408154236.49421-1-laurentiumihalcea111@gmail.com>
@@ -92,51 +92,73 @@ Content-Transfer-Encoding: 8bit
 
 From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
 
-AIPS5 is actually AIPSTZ5 as it offers some security-related
-configurations. Since these configurations need to be applied before
-accessing any of the peripherals on the bus, it's better to make AIPSTZ5
-be their parent instead of keeping AIPS5 and adding a child node for
-AIPSTZ5. Also, because of the security configurations, the address space
-of the bus has to be changed to that of the configuration registers.
+Add header file with AIPSTZ-related definitions: consumer types,
+master/peripheral configuration bits, and master ID definitions.
 
-Finally, since AIPSTZ5 belongs to the AUDIOMIX power domain, add the
-missing 'power-domains' property. The domain needs to be powered on before
-attempting to configure the security-related registers.
-
-The DT node name is not changed to avoid potential issues with DTs in
-which this node is referenced.
-
-Co-developed-by: Daniel Baluta <daniel.baluta@nxp.com>
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
 Signed-off-by: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
 ---
- arch/arm64/boot/dts/freescale/imx8mp.dtsi | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/freescale/imx8mp-aipstz.h | 39 +++++++++++++++++++
+ arch/arm64/boot/dts/freescale/imx8mp.dtsi     |  1 +
+ 2 files changed, 40 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8mp-aipstz.h
 
+diff --git a/arch/arm64/boot/dts/freescale/imx8mp-aipstz.h b/arch/arm64/boot/dts/freescale/imx8mp-aipstz.h
+new file mode 100644
+index 000000000000..b816cb6ee9d0
+--- /dev/null
++++ b/arch/arm64/boot/dts/freescale/imx8mp-aipstz.h
+@@ -0,0 +1,39 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR MIT) */
++/*
++ * Copyright 2025 NXP
++ */
++
++#ifndef __IMX8MP_AIPSTZ_H
++#define __IMX8MP_AIPSTZ_H
++
++/* consumer type - master or peripheral */
++#define IMX8MP_AIPSTZ_MASTER 0x0
++#define IMX8MP_AIPSTZ_PERIPH 0x1
++
++/* master configuration options */
++#define IMX8MP_AIPSTZ_MPL (1 << 0)
++#define IMX8MP_AIPSTZ_MTW (1 << 1)
++#define IMX8MP_AIPSTZ_MTR (1 << 2)
++#define IMX8MP_AIPSTZ_MBW (1 << 3)
++
++/* peripheral configuration options */
++#define IMX8MP_AIPSTZ_TP (1 << 0)
++#define IMX8MP_AIPSTZ_WP (1 << 1)
++#define IMX8MP_AIPSTZ_SP (1 << 2)
++#define IMX8MP_AIPSTZ_BW (1 << 3)
++
++/* master ID definitions */
++#define IMX8MP_AIPSTZ_EDMA 0 /* AUDIOMIX EDMA */
++#define IMX8MP_AIPSTZ_CA53 1 /* Cortex-A53 cluster */
++#define IMX8MP_AIPSTZ_SDMA2 3 /* AUDIOMIX SDMA2 */
++#define IMX8MP_AIPSTZ_SDMA3 3 /* AUDIOMIX SDMA3 */
++#define IMX8MP_AIPSTZ_HIFI4 5 /* HIFI4 DSP */
++#define IMX8MP_AIPSTZ_CM7 6 /* Cortex-M7 */
++
++/* helper macros */
++#define IMX8MP_AIPSTZ_HIFI4_T_RW_PL					\
++	IMX8MP_AIPSTZ_MASTER						\
++	IMX8MP_AIPSTZ_HIFI4						\
++	(IMX8MP_AIPSTZ_MPL | IMX8MP_AIPSTZ_MTW | IMX8MP_AIPSTZ_MTR)
++
++#endif /* __IMX8MP_AIPSTZ_H */
 diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-index ce6793b2d57e..aa7940c65f2d 100644
+index aa7940c65f2d..ebbc99f9ceba 100644
 --- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
 +++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-@@ -1399,12 +1399,14 @@ eqos: ethernet@30bf0000 {
- 			};
- 		};
+@@ -12,6 +12,7 @@
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/thermal/thermal.h>
  
--		aips5: bus@30c00000 {
--			compatible = "fsl,aips-bus", "simple-bus";
--			reg = <0x30c00000 0x400000>;
-+		aips5: bus@30df0000 {
-+			compatible = "fsl,imx8mp-aipstz";
-+			reg = <0x30df0000 0x10000>;
-+			power-domains = <&pgc_audio>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
--			ranges;
-+			#access-controller-cells = <3>;
-+			ranges = <0x30c00000 0x30c00000 0x400000>;
++#include "imx8mp-aipstz.h"
+ #include "imx8mp-pinfunc.h"
  
- 			spba-bus@30c00000 {
- 				compatible = "fsl,spba-bus", "simple-bus";
+ / {
 -- 
 2.34.1
 
