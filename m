@@ -1,167 +1,154 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFDF42AE69
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 17:47:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F9E023E34F;
+	Tue,  8 Apr 2025 17:47:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744134456; cv=none; b=SSYxm3JZrsB8oTiVtmiYHerP0Y+VYA0OA30l0GXvkeIxjIinQ81fJRlZ0fFGUsPNNBFZEBSvQ6Y4jBjWKhpi6OiizeyUrt8XsHyKdty3jI0uE3ovLFw4nCr3WNJJGu5ZS2tE+GJUFhzfbXkgMjg7+DwMRfMfrtIq6n5nInVik6c=
+	t=1744134465; cv=none; b=qg6xy1Qb5OYzeZYQ+dSA6PiZfhdPOEBqX4bZGHFGkFtTLJcIVUUxpBZJWK2tUIiSLwymN1rBilOqVwJSY7n/XljVaRJWw7U2oJhCOl508iF8u8JONeLhQ/FYsiAHfuZdtXhbLMvPRoHjIxUf0ykmW6fJRPVC3tcSiiejc6Cqjbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744134456; c=relaxed/simple;
-	bh=6xnX5NUK57zOuUDC2r2Qt1QdSl2C7YJiwPptSlINKtE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YjgEEnafsN2ktYKhL0AQaFeFyr/fdaxpp8Wjc1BIlXUF8BLtVc56ZFCRIIjp1vbqoT5blXXeS34IS2I4TWvUhWN0q1vstdKkMMZnctpmZ0TF1uFNmjAgruTNT03gDloH8CWSTxxU5R5RT2CT7PWTzaCkeD8+LTW3ycEf/GhRwdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Y/qee6O+; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1744134465; c=relaxed/simple;
+	bh=zptJOXWD95DsZZXqKCKA4a7kcU5OVsuiSy9vlDH7JOs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=WHpgArCzSzgTwd2mnUi4uJk5gAw99VC+ywh7tPP0owjIUsXNliXtL7lvAxDa/qOuuAma6XpNnuP9xvMkuW3H/yXvCI812Mg1A01VLkcFVysAH3qN0S8efP0blXVfrLHDNUe6jhchPXT7EjrDSVk5S8iFGVEPBvZKNYkK/1MDNjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZJW8peCx; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Y/qee6O+"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5e5deb6482cso12671252a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 10:47:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1744134452; x=1744739252; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RCbKSs5ZbNLa65xSwrJ8gawGsTAvmrtEZ4B0b2dQDs4=;
-        b=Y/qee6O+0p+O7bfTDQXHhFg25/RfJKHPaG9zLU3NNVZ2F0Hr6pcW6CeCKCPirNWdmv
-         yJm5+grV3IfoGkaRTP/S81sgix7UvHdOU1jtGBeQYCMkpobVXQo++qlpi/cAjUA+q5hz
-         xAx7RdokCYFtK8pZb1uECTl5OWviPGOXdqphJ0k7+zShgwrF6PtN5+EKPbQG1nTcDbpd
-         s53XDIMIJAW1jI+9iqPTju6ma5Cdnrxxx5EqgrjppVa/+NdTHcrv+UDqcy+Gj4Z3j142
-         IbecdZ7BNFHZ6qQaqiyW7XhgJ73udP7SEZdVqwfPHcBsmR4gf3EfegCjnZGoW2pgEbsf
-         MbpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744134452; x=1744739252;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RCbKSs5ZbNLa65xSwrJ8gawGsTAvmrtEZ4B0b2dQDs4=;
-        b=wsiIL/I9t5gv/bFJVzAiEIklxTJ0PnO5Hh+4iXAZQ/cp+dnRR+sP6Xoa194GQVYw8k
-         g6TGSbY4puW8UNDl/YwoEhJHAoXnFXvTRKsxyt8a6ehrrY2FqxNB9EV6ap14tPJAovZH
-         gfXK9LDV52Dd467w6eQWi8hUNxaJgSfmMMEjk3ViVWiBrUUbsmMGwLzPI20ZmjKeosn7
-         LHOzBR9DJ5i4uUR4nG+0AEdui3r+K0QRfpH4aSKhZ+qenCUJIKCx/KdDpzs6QpI7K2yg
-         GyOQ1T3uplLXJtBaNI6Hbw1wwexvOKNDteVLi5T/K3/UxsD666PcBnDQmDKCppnZ7m8I
-         L/dA==
-X-Forwarded-Encrypted: i=1; AJvYcCU+8NpbgukDhSnyq3QcYR9WYoVR295qSjaJuok/FFWU//K+rNq8qjY4kdWnbXWg2UDiTquwRNQGSqTrtlc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyC1lQWNVi9D0QqzpiDkuy4OirGAeNW1Ay923sydeiNS1oBrCXO
-	Lg1OfZg3shQ+1vFED7qC0MkYKWe3wN0TsXPjQeafPsF/+sBNrsh+pZfuPlC3B/aPMzHY9W+wK2a
-	UO8eBNDWTZc3BoN05FckzilfJHxbi3XiRP72SbQ==
-X-Gm-Gg: ASbGncszkCQOS3Jp92ammleb+NbZUjf2paUrpyYDG/OxrGpJ3qSBlK6JHAebchVuk6q
-	KXA8JH08tQGKaRg1wmV1pV1uXfnoTVqF7ltgp8HkmuZ5+0BYrv8C0tzRjM+p1RkN4FU51/X+6P4
-	YbwIfCUahCD87ITrSBjcs4hhig
-X-Google-Smtp-Source: AGHT+IHMMiRAydzAbwJa+Ye4XOnz9bIdvcLG9qlWjCjAcE2n1Ae1dSMKIpzsYeJBUticNHo0yFDd8FYuI/NOlq0Fa24=
-X-Received: by 2002:a17:906:7cc5:b0:ac8:1bbe:1a5b with SMTP id
- a640c23a62f3a-ac81bbe1a82mr305167366b.9.1744134451946; Tue, 08 Apr 2025
- 10:47:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZJW8peCx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744134464; x=1775670464;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=zptJOXWD95DsZZXqKCKA4a7kcU5OVsuiSy9vlDH7JOs=;
+  b=ZJW8peCxEDz72iYwVvX7VU1wRx3iJPFJA4N+WFD17p05xtFb6mHHkrtY
+   40pKVjGNAVb7FYZxqqfHR//7FFG3YXIDvLVfJG6AQk09Zxnf5oaW9uQDQ
+   3FJG0PCj/N7+1Lhtk2AzD523GZeIcMt674Hc/NxUU8hsQSZWlnDYeiwz6
+   BoCV25zt+/VxZMmzSExVHrNupmgc0Ng5WeugFxIU1uDgkRRHBERlof5Ho
+   lUrqB1TflTdjm5Tv6GKY+vdrTr83wej06fmbQGnd9eySmCrPfJe0JO2vT
+   rKNz2Kz8azTVrHwty+7uKDCurb2wc+aIQd4DLqVpXBVH1iXYgdTcW02qa
+   g==;
+X-CSE-ConnectionGUID: rig7wPmpTJaL8tgNlyIVEw==
+X-CSE-MsgGUID: PBWViyWjTjya+2knapHscw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="48291859"
+X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
+   d="scan'208";a="48291859"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 10:47:43 -0700
+X-CSE-ConnectionGUID: onU/gqSRQ+OL7P3AtSBxvA==
+X-CSE-MsgGUID: pYnWEB7kROCZ9N3gYR11mQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
+   d="scan'208";a="159335040"
+Received: from spandruv-desk1.amr.corp.intel.com ([10.125.111.121])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 10:47:42 -0700
+Message-ID: <6346af9942a0e6730fd6b26f2586b82e6fc04d4c.camel@linux.intel.com>
+Subject: Re: [PATCH v1 10/10] cpufreq: Pass policy pointer to
+ ->update_limits()
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM
+ <linux-pm@vger.kernel.org>,  LKML <linux-kernel@vger.kernel.org>, Viresh
+ Kumar <viresh.kumar@linaro.org>, Mario Limonciello
+ <mario.limonciello@amd.com>, Sudeep Holla <sudeep.holla@arm.com>
+Date: Tue, 08 Apr 2025 10:47:42 -0700
+In-Reply-To: <CAJZ5v0hJCtqbkyMaOSMNoiD5DSz+H6PK_FyUdoVTZTVWEFJQyQ@mail.gmail.com>
+References: <4651448.LvFx2qVVIh@rjwysocki.net>
+	 <8560367.NyiUUSuA9g@rjwysocki.net>
+	 <CAJZ5v0iMYSTnX9mkZb8aEmtbKxWOgsshNJ_AqnB9Mn27y8jzeQ@mail.gmail.com>
+	 <2362a42de1403e99a66551575efd910cc92980bc.camel@linux.intel.com>
+	 <CAJZ5v0i7uUFDcTYuam4Hz2fYxpnT6QQQzULk8CNHvkOUfg=bfQ@mail.gmail.com>
+	 <CAJZ5v0hJCtqbkyMaOSMNoiD5DSz+H6PK_FyUdoVTZTVWEFJQyQ@mail.gmail.com>
+Autocrypt: addr=srinivas.pandruvada@linux.intel.com; prefer-encrypt=mutual;
+ keydata=mQGNBGYHNAsBDAC7tv5u9cIsSDvdgBBEDG0/a/nTaC1GXOx5MFNEDL0LWia2p8Asl7igx
+ YrB68fyfPNLSIgtCmps0EbRUkPtoN5/HTbAEZeJUTL8Xdoe6sTywf8/6/DMheEUzprE4Qyjt0HheW
+ y1JGvdOA0f1lkxCnPXeiiDY4FUqQHr3U6X4FPqfrfGlrMmGvntpKzOTutlQl8eSAprtgZ+zm0Jiwq
+ NSiSBOt2SlbkGu9bBYx7mTsrGv+x7x4Ca6/BO9o5dIvwJOcfK/cXC/yxEkr1ajbIUYZFEzQyZQXrT
+ GUGn8j3/cXQgVvMYxrh3pGCq9Q0Q6PAwQYhm97ipXa86GcTpP5B2ip9xclPtDW99sihiL8euTWRfS
+ TUsEI+1YzCyz5DU32w3WiXr3ITicaMV090tMg9phIZsjfFbnR8hY03n0kRNWWFXi/ch2MsZCCqXIB
+ oY/SruNH9Y6mnFKW8HSH762C7On8GXBYJzH6giLGeSsbvis2ZmV/r+LmswwZ6ACcOKLlvvIukAEQE
+ AAbQ5U3Jpbml2YXMgUGFuZHJ1dmFkYSA8c3Jpbml2YXMucGFuZHJ1dmFkYUBsaW51eC5pbnRlbC5j
+ b20+iQHRBBMBCAA7FiEEdki2SeUi0wlk2xcjOqtdDMJyisMFAmYHNAsCGwMFCwkIBwICIgIGFQoJC
+ AsCBBYCAwECHgcCF4AACgkQOqtdDMJyisMobAv+LLYUSKNuWhRN3wS7WocRPCi3tWeBml+qivCwyv
+ oZbmE2LcxYFnkcj6YNoS4N1CHJCr7vwefWTzoKTTDYqz3Ma0D0SbR1p/dH0nDgN34y41HpIHf0tx0
+ UxGMgOWJAInq3A7/mNkoLQQ3D5siG39X3bh9Ecg0LhMpYwP/AYsd8X1ypCWgo8SE0J/6XX/HXop2a
+ ivimve15VklMhyuu2dNWDIyF2cWz6urHV4jmxT/wUGBdq5j87vrJhLXeosueRjGJb8/xzl34iYv08
+ wOB0fP+Ox5m0t9N5yZCbcaQug3hSlgp9hittYRgIK4GwZtNO11bOzeCEMk+xFYUoa5V8JWK9/vxrx
+ NZEn58vMJ/nxoJzkb++iV7KBtsqErbs5iDwFln/TRJAQDYrtHJKLLFB9BGUDuaBOmFummR70Rbo55
+ J9fvUHc2O70qteKOt5A0zv7G8uUdIaaUHrT+VOS7o+MrbPQcSk+bl81L2R7TfWViCmKQ60sD3M90Y
+ oOfCQxricddC
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250408122933.121056-1-frank.li@vivo.com> <CAL3q7H6ysGxpXs8P9iPY-Y1KNKPggGSFHR_tMv-34Q+Qf6PZTQ@mail.gmail.com>
- <CAPjX3Fem5E26+Fj537zcOXk9YZum2pDdcY9SAwCOr12wrGrroA@mail.gmail.com> <CAL3q7H40yF8q78vZgd2c92LZMzBxqvU3XTrWMu86th1mGsGYDg@mail.gmail.com>
-In-Reply-To: <CAL3q7H40yF8q78vZgd2c92LZMzBxqvU3XTrWMu86th1mGsGYDg@mail.gmail.com>
-From: Daniel Vacek <neelx@suse.com>
-Date: Tue, 8 Apr 2025 19:47:20 +0200
-X-Gm-Features: ATxdqUGZ91u223X10tzq9NgOGLqvLsNRF_lv_kEhVEqSVkZaOP4gLp8OkuuPRv0
-Message-ID: <CAPjX3Fd275aj0g5CWVKyX2wu0Sjn3a3UdZBaOR5MqUV55e4ZXw@mail.gmail.com>
-Subject: Re: [PATCH 1/4] btrfs: use BTRFS_PATH_AUTO_FREE in insert_balance_item()
-To: Filipe Manana <fdmanana@kernel.org>
-Cc: Yangtao Li <frank.li@vivo.com>, clm@fb.com, josef@toxicpanda.com, dsterba@suse.com, 
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, 8 Apr 2025 at 19:41, Filipe Manana <fdmanana@kernel.org> wrote:
->
-> On Tue, Apr 8, 2025 at 6:36=E2=80=AFPM Daniel Vacek <neelx@suse.com> wrot=
-e:
-> >
-> > On Tue, 8 Apr 2025 at 16:47, Filipe Manana <fdmanana@kernel.org> wrote:
-> > >
-> > > On Tue, Apr 8, 2025 at 1:18=E2=80=AFPM Yangtao Li <frank.li@vivo.com>=
- wrote:
-> > > >
-> > > > All cleanup paths lead to btrfs_path_free so we can define path wit=
-h the
-> > > > automatic free callback.
-> > > >
-> > > > Signed-off-by: Yangtao Li <frank.li@vivo.com>
-> > > > ---
-> > > >  fs/btrfs/volumes.c | 7 ++-----
-> > > >  1 file changed, 2 insertions(+), 5 deletions(-)
-> > > >
-> > > > diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
-> > > > index c8c21c55be53..a962efaec4ea 100644
-> > > > --- a/fs/btrfs/volumes.c
-> > > > +++ b/fs/btrfs/volumes.c
-> > > > @@ -3730,7 +3730,7 @@ static int insert_balance_item(struct btrfs_f=
-s_info *fs_info,
-> > > >         struct btrfs_trans_handle *trans;
-> > > >         struct btrfs_balance_item *item;
-> > > >         struct btrfs_disk_balance_args disk_bargs;
-> > > > -       struct btrfs_path *path;
-> > > > +       BTRFS_PATH_AUTO_FREE(path);
-> > > >         struct extent_buffer *leaf;
-> > > >         struct btrfs_key key;
-> > > >         int ret, err;
-> > > > @@ -3740,10 +3740,8 @@ static int insert_balance_item(struct btrfs_=
-fs_info *fs_info,
-> > > >                 return -ENOMEM;
-> > > >
-> > > >         trans =3D btrfs_start_transaction(root, 0);
-> > > > -       if (IS_ERR(trans)) {
-> > > > -               btrfs_free_path(path);
-> > > > +       if (IS_ERR(trans))
-> > > >                 return PTR_ERR(trans);
-> > > > -       }
-> > > >
-> > > >         key.objectid =3D BTRFS_BALANCE_OBJECTID;
-> > > >         key.type =3D BTRFS_TEMPORARY_ITEM_KEY;
-> > > > @@ -3767,7 +3765,6 @@ static int insert_balance_item(struct btrfs_f=
-s_info *fs_info,
-> > > >         btrfs_set_balance_sys(leaf, item, &disk_bargs);
-> > > >         btrfs_set_balance_flags(leaf, item, bctl->flags);
-> > > >  out:
-> > > > -       btrfs_free_path(path);
-> > > >         err =3D btrfs_commit_transaction(trans);
-> > >
-> > > This isn't a good idea at all.
-> > > We're now committing a transaction while holding a write lock on some
-> > > leaf of the tree root - this can result in a deadlock as the
-> > > transaction commit needs to update the tree root (see
-> > > update_cowonly_root()).
-> >
-> > I do not follow. This actually looks good to me.
->
-> path->nodes[0] has a write locked leaf, returned by btrfs_insert_empty_it=
-em().
+On Tue, 2025-04-08 at 15:37 +0200, Rafael J. Wysocki wrote:
+> On Tue, Apr 8, 2025 at 1:41=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.o=
+rg>
+> wrote:
+> >=20
+> > On Tue, Apr 8, 2025 at 12:28=E2=80=AFAM srinivas pandruvada
+> > <srinivas.pandruvada@linux.intel.com> wrote:
+> > >=20
+> > > On Mon, 2025-04-07 at 20:48 +0200, Rafael J. Wysocki wrote:
+> > > > On Fri, Mar 28, 2025 at 9:49=E2=80=AFPM Rafael J. Wysocki
+> > > > <rjw@rjwysocki.net>
+> > > > wrote:
+> > > > >=20
+> > > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > > >=20
+> > > > > Since cpufreq_update_limits() obtains a cpufreq policy
+> > > > > pointer for
+> > > > > the
+> > > > > given CPU and reference counts the corresponding policy
+> > > > > object, it
+> > > > > may
+> > > > > as well pass the policy pointer to the cpufreq driver's -
+> > > > > > update_limits()
+> > > > > callback which allows that callback to avoid invoking
+> > > > > cpufreq_cpu_get()
+> > > > > for the same CPU.
+> > > > >=20
+> > > > > Accordingly, redefine ->update_limits() to take a policy
+> > > > > pointer
+> > > > > instead
+> > > > > of a CPU number and update both drivers implementing it,
+> > > > > intel_pstate
+> > > > > and amd-pstate, as needed.
+> > > > >=20
+> > > > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > >=20
+> > > Hi Rafael,
+> > >=20
+> > > > Hi Srinivas,
+> > > >=20
+> > > > If you have any concerns regarding this patch, please let me
+> > > > know
+> > > > (note that it is based on the [05/10]).
+> > > >=20
+> > > Changes looks fine, but wants to test out some update limits from
+> > > interrupt path.
+> > > Checked your branches at linux-pm, not able to locate in any
+> > > branch to
+> > > apply.
+> > > Please point me to a branch.
+> >=20
+> > I'll put it in 'testing' later today.
+>=20
+> Now available from
+>=20
+> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git
+> testing
+>=20
+Looks good.
 
-Well, the first return is before calling this function and the final
-return is only after committing.
+Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-Again, the function keeps it's former structure as it was before this
-patch. I still don't see any logical or functional change.
-
-I'm lost. This still looks to me just as a straightforward cleanup.
-
-> > Is there really any functional change? What am I missing?
->
-> Yes there is, a huge one. Even if a transaction commit didn't need to
-> update the root tree, it would be performance wise to commit a
-> transaction while holding a lock on a leaf unnecessarily.
->
-> >
-> > --nX
-> >
-> > > Thanks.
-> > >
-> > >
-> > > >         if (err && !ret)
-> > > >                 ret =3D err;
-> > > > --
-> > > > 2.39.0
-> > > >
-> > > >
-> > >
+Thanks,
+Srinivas
