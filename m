@@ -1,63 +1,63 @@
 Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6F82268FFB;
-	Tue,  8 Apr 2025 09:52:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79CA2269811;
+	Tue,  8 Apr 2025 09:52:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744105954; cv=none; b=n52WsLIt2VYlIMnbbptTYBZG7Ku5lUhFFfFCrdiWOwgc5vZgZPHrm8di62z1ENro/JN9BqHXCMq7XQXqGdYmYI5Udcce/DcW4qaQz9m8DcyI4gQmDHdwpQWt+fWwqvEEu1O5wvHDqjXfUn1rNeWeCRwUlHPZhbI251jLHORJ8Pg=
+	t=1744105959; cv=none; b=cqHQU6554/6VG9te4DhjbAhYfhQPzOB7qTAAi8z4jyHNbf486eWobyTZ5dNzzQj5izZyfIXmV+YsJe79Ro7c4T774EUBetpZmflpqdFhGlz+bfK44mVijXYTcABEifXMgUs4Ak8S7r+6JwFtDSuSUigcOl+SxO4YxVZdIwYGb2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744105954; c=relaxed/simple;
-	bh=0j5PF56HQ4B3Au1Nft9H3QRxVjHbIBpRO2Nt7/QS4uI=;
+	s=arc-20240116; t=1744105959; c=relaxed/simple;
+	bh=Ky0vVuHkIaVyMDtnKq7UmLpKJfVLTIH3occ1Yz1Kmd4=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XZri/HvfiB4z3X67rzqYhqtv3cDrK6qUwVP5zlUYXRMzFISYQaLr53RT2WOzCOFw4B2zGe4vsKnx1gWT2S6L1+d2KkTG0e/LrpIzEbtP3zcATbsVlJvmjWSFRSuS7vq6VSuxxpyB8qD5qvlLEbw9K2TQ0c3DRUqrTWfD9/fnaCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C2cYk1g4; arc=none smtp.client-ip=209.85.221.50
+	 MIME-Version; b=PunFPf953AadbBwZ/Hm26tVHOgrM9+7humi3DsFGpWUQOJEGKt8ceruhInAY380kYVYsNy0svBOWaeWLrFmekiZiv8oI8X5cNxEr0TA3I04VI4YAry40znTvZEHm6uAfWIFOfkh6GTtduP8kz3ShmvV7XyJu8ckxHCWMNB45/K8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NOQamwx5; arc=none smtp.client-ip=209.85.221.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C2cYk1g4"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3914aba1ce4so4295929f8f.2;
-        Tue, 08 Apr 2025 02:52:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NOQamwx5"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-39727fe912cso2324337f8f.3;
+        Tue, 08 Apr 2025 02:52:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744105950; x=1744710750; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744105955; x=1744710755; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=d6eFHR/+HwP+QVEyAdkJj9R1VCVx1cbNXlZ7PvgU5mg=;
-        b=C2cYk1g42RQvQ+gfqRoa7Q4IaXfhaWqb+vneMzEkKpYnv71SsWwUqvTmo1eHvYHbfm
-         NCycvsiMv//O+AvzVeFza4giKS63FAXf7maJ9G373DRu/ZTm4YciYp50cFn/dnFRA0l9
-         d8DXGTho2oe0gsZ0j/YTSH/wCrYwaGv7vMHGnnXv8kGjvYMCClgzSNsn5fA6fpQBP191
-         qlRiPe8I4Bo/y2ZaPgf1zblmgn/inK9KldK+EZ2ZGLxjWuYJrWfB2W0/hC/bLx9aVPzY
-         bqqTQyCSCRj1snDXo7W1zEu3hDNg13VwjUX8HUmSuqQG2YCAHobB0kShw1MBt/0SjjAB
-         WXIA==
+        bh=oQ6Ge5N/x+UWP4V38Q6zLxAFPEUt65Fhe18GDR23LPg=;
+        b=NOQamwx5+BzxM25H2Fqo7omWYr+p+szdLq23JY4ZCF/s7cmB5IyyTnCmf9RnCx0eA4
+         rKQQ2w72pP554zLwH7sNM0HIAeCIPgJvOYt2un0YN0hUom2wPYg+oPcpQFHjN6laGfGZ
+         7KkIPuZKcIiy756l76NyBmWH06q5iwvsqHYLUIpwoaFu733nBRADWkPWUH8Zz7vhP7kw
+         LzVLqJQj0mgPla0wgkfJAhqLtXffsjLTqvQBCTKkn2HsrThwsgr1MmtyQlBLk8kKTLxB
+         e0Tses5w6ofUp2cBd9UoZnlKFJi2043n00w+d3GQL/6jqKofZV0gA1qrXCObt9+FgLs3
+         Ewow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744105950; x=1744710750;
+        d=1e100.net; s=20230601; t=1744105955; x=1744710755;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=d6eFHR/+HwP+QVEyAdkJj9R1VCVx1cbNXlZ7PvgU5mg=;
-        b=YSBn1wcTkwLxxGDZxQQ6zPNP9SueKixpk35VxczX0q6YIGT75JEGCDPmpGpKvzle1Z
-         zWAbMWLLgPZ9kutTm5kGF74Y7uq3UlgwOMV7Alw9j/0bAecyZRJO83K9rNVElSIPRcQR
-         8pTfN1Cf3mf1W7gWKU6xmtuSDy/qCcHyyWjtamRJCbJN5/WSpEpEZ7hOky6iZogBOYNC
-         +K4yT2Jal0Cypu1S4a4Bm3FMrYL4oV2e/kIRoThs2sRSf9ZWKzREgPKaoUUgydjhiv5R
-         Gl3yyDn7PaVD58NqLwzoKIrx4axawa7TsERXjaJK2P/Y/zFmVGpskbB3312BWslfa3nU
-         eCMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUgtjvuW4JizLEd9sctvGdmXABEJkqYiV5WZqLn6C3Su6XhXWNywStn+B0TG0FiJqyehhw8bXeZ@vger.kernel.org, AJvYcCUwPATCfEFcAydKCfnHSXWLekVigfujDaDQCwZhOGkpxt51nCP5OrjWcqwuKy4UDmHUJ1iIx1gbsfOfCYl3@vger.kernel.org, AJvYcCXWPDiqek7s/2S0NjBN2VnN0rlJxzn53UYTmgQNpm8+EwMJO+tdhb/6OEfh4XEtfiA0gwtJzk/bjxKI@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+wKPjOlxXvR+QYz0krhWhDRqO8G2FDVxm2nGgmSix20iXjjZV
-	wD6NFM1LF9aWPUk/y8W/Q3bZ8Q15MPyVwe2oCwPMfVPNxcA3Ft/Y
-X-Gm-Gg: ASbGncuE+kHG6MBHe5VrAi6CJMlJkhZ7X9LpnA6heauuJKsLxjTz53EU/DVx3gTppPt
-	btjT/6PxcjECcv9xnrq/6zNB4eZiJY5A5I6R1E0SGNYLZXXG2LZ1/65ZnlH+d5KMMdIAuBpIcnH
-	/Z4tdK3YbhGbDuXc29nPlkdZXkDKJ7LZWCmf75GeXEJloNrm3KJVJgGUa+hVRGnL0iOObCc7Fbr
-	4VFArd0XvTtiIKlbhzT9susylt0ZWfmtPgKKiCG8MJsO1qgOsfvzIDXHju/aVZuj3XfmCo5WDsl
-	Y/G92wudx6YD+bR+YzS3SqA8iOjH+3rt9GCLqRp5cov5iIOiaKg0xV7O/zI+LsUltu0rYFijNWs
-	+VQ82YnLvuNuZKz6fjwgMTVFd
-X-Google-Smtp-Source: AGHT+IGnYUhJy/g8TudXJhkOLcfaktByFDYkfaf3ydBwVqRyzcsHcERQeIuA1I+0QEB3ctl78R0VKg==
-X-Received: by 2002:a05:6000:4203:b0:399:7f43:b3a4 with SMTP id ffacd0b85a97d-39d0de28771mr13511876f8f.24.1744105949782;
-        Tue, 08 Apr 2025 02:52:29 -0700 (PDT)
+        bh=oQ6Ge5N/x+UWP4V38Q6zLxAFPEUt65Fhe18GDR23LPg=;
+        b=VyBo9hU15U+TuecAmXxIE1vTQoar+hbDgKz0jtej/TLhVckqTwt3AUKyx0erYRqYlE
+         96JxclSI3agGFqCWhLakx5EGHcVKXS8Nfa2JBj1EyWC/bAph3VPjTBhCBAN8kbSS7Srq
+         pi0wYk5/Y8jj/sUEw+SDVVtGzVgPBWorGRpmMvjmvhMGnGQIhB8tKz53A56OXYRy+Tli
+         2RNMze+zPcZFJPGlN5BbiOlPWDg+EXEGNLFk3DtBTEbIaSPKO8Dnw3e8R/+P4usR3Owy
+         Tx9g/sl0bnEHXgouPB7FMvDvRFRUdQyQ8ww22moipQBYj7nGPYaeJnlF29loz6Ieq/I3
+         aWaA==
+X-Forwarded-Encrypted: i=1; AJvYcCUdZL9Kg0MDF1w+Y/2BbfaRqw/rsLx68o7RXySw6e9yh5ReATfetdWtwhHgL9UUtobyXRkIOTSePrNY@vger.kernel.org, AJvYcCUi/CafwV/r2018SHioME8LbzQi+NGziGZRHR0gapO5Q7lbJ+dRhPnN5rPc69nmIYlHt9EIThPx6lIkIpUN@vger.kernel.org, AJvYcCVb5tFFaMzAgbx0fUJxFlGJJC/YSp/71R3wOMAUoK0tZap+wk+83UaMPwCR3I7cSBIpjdMxve4m@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1umQwpA5I0pw6LfZqW/shdFprq43yD/uxF5JpVAwtXSa8z5Kd
+	L0nM+zdZ05+VFx3wW/BuD1MpAECUxr6WtKn7RKOCBDakqtQNZSmv
+X-Gm-Gg: ASbGnct0LZmS0/TGfGBd1CuzKViygMnbN+j2KkubK3bRN7op+AowEe/alY0SBLko2LF
+	kWJnvTuKiKt4Or46JqPfVd5CQKzIWAJRcNmiQak84f2LL4j7EUUdlrH/uGNwl8tljBRsqXktYgq
+	uOKd4q7U/ZryDy/PaBZoM34nczP+/Cld1fDG3Jfvdz38gX57rYAGPrutiImFfo4saG75ZIVVtnI
+	8z91kY/tKyHqSK1v33ejojuhnxYu27W2ELjt4Hrh2pXeejEUwCK5ZkYsymfb2XdV5CZ7r6mclaf
+	TkRYgE9kPWfUmbcYzYkKBIdp5ihcJEFuEup0bR3IFFXFoJxCPPNGZmlO5acr8JAHtkickhi2/LW
+	c9T8Kqq6f5a8joQ==
+X-Google-Smtp-Source: AGHT+IHpMGk4Yds8HZnyNiJDTf38Jb7LdTvCKQAIkk5y2ICjoSbvIt78dAK6v2Z6pag114kDRk80RQ==
+X-Received: by 2002:a05:6000:2403:b0:399:71d4:b8 with SMTP id ffacd0b85a97d-39d6fc293edmr7839272f8f.23.1744105954688;
+        Tue, 08 Apr 2025 02:52:34 -0700 (PDT)
 Received: from localhost.localdomain (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-39c3020dacfsm14493310f8f.72.2025.04.08.02.52.28
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-39c3020dacfsm14493310f8f.72.2025.04.08.02.52.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 02:52:29 -0700 (PDT)
+        Tue, 08 Apr 2025 02:52:34 -0700 (PDT)
 From: Christian Marangi <ansuelsmth@gmail.com>
 To: Christian Marangi <ansuelsmth@gmail.com>,
 	Lee Jones <lee@kernel.org>,
@@ -87,9 +87,9 @@ To: Christian Marangi <ansuelsmth@gmail.com>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	upstream@airoha.com
-Subject: [net-next PATCH v14 12/16] nvmem: an8855: Add support for Airoha AN8855 Switch EFUSE
-Date: Tue,  8 Apr 2025 11:51:19 +0200
-Message-ID: <20250408095139.51659-13-ansuelsmth@gmail.com>
+Subject: [net-next PATCH v14 15/16] MAINTAINERS: add myself as maintainer for AN8855
+Date: Tue,  8 Apr 2025 11:51:22 +0200
+Message-ID: <20250408095139.51659-16-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250408095139.51659-1-ansuelsmth@gmail.com>
 References: <20250408095139.51659-1-ansuelsmth@gmail.com>
@@ -101,121 +101,43 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add support for Airoha AN8855 Switch EFUSE. These EFUSE might be used
-for calibration data for the internal switch PHYs.
+Add myself as maintainer for AN8855 DSA driver and all the related
+subdriver (mfd, mdio, phy, nvmem)
 
 Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
 ---
- drivers/nvmem/Kconfig        | 11 +++++++
- drivers/nvmem/Makefile       |  2 ++
- drivers/nvmem/an8855-efuse.c | 63 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 76 insertions(+)
- create mode 100644 drivers/nvmem/an8855-efuse.c
+ MAINTAINERS | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
-index 8671b7c974b9..ca96c6ea685a 100644
---- a/drivers/nvmem/Kconfig
-+++ b/drivers/nvmem/Kconfig
-@@ -28,6 +28,17 @@ source "drivers/nvmem/layouts/Kconfig"
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4c5c2e2c1278..74f99bea4875 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -729,6 +729,24 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/net/airoha,en7581-eth.yaml
+ F:	drivers/net/ethernet/airoha/
  
- # Devices
- 
-+config NVMEM_AN8855_EFUSE
-+	tristate "Airoha AN8855 eFuse support"
-+	depends on MFD_AIROHA_AN8855 || COMPILE_TEST
-+	help
-+	  Say y here to enable support for reading eFuses on Airoha AN8855
-+	  Switch. These are e.g. used to store factory programmed
-+	  calibration data required for the PHY.
++AIROHA AN8855 DSA DRIVER
++M:	Christian Marangi <ansuelsmth@gmail.com>
++L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
++L:	linux-mediatek@lists.infradead.org (moderated for non-subscribers)
++L:	netdev@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/mfd/airoha,an8855.yaml
++F:	Documentation/devicetree/bindings/net/airoha,an8855-mdio.yaml
++F:	Documentation/devicetree/bindings/net/airoha,an8855-phy.yaml
++F:	Documentation/devicetree/bindings/net/dsa/airoha,an8855-switch.yaml
++F:	Documentation/devicetree/bindings/nvmem/airoha,an8855-efuse.yaml
++F:	drivers/mfd/airoha-an8855.c
++F:	drivers/net/dsa/an8855.c
++F:	drivers/net/dsa/an8855.h
++F:	drivers/net/mdio/mdio-an8855.c
++F:	drivers/net/phy/air_an8855.c
++F:	drivers/nvmem/an8855-efuse.c
 +
-+	  This driver can also be built as a module. If so, the module will
-+	  be called nvmem-an8855-efuse.
-+
- config NVMEM_APPLE_EFUSES
- 	tristate "Apple eFuse support"
- 	depends on ARCH_APPLE || COMPILE_TEST
-diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
-index 5b77bbb6488b..c732132c0e45 100644
---- a/drivers/nvmem/Makefile
-+++ b/drivers/nvmem/Makefile
-@@ -10,6 +10,8 @@ nvmem_layouts-y			:= layouts.o
- obj-y				+= layouts/
- 
- # Devices
-+obj-$(CONFIG_NVMEM_AN8855_EFUSE)	+= nvmem-an8855-efuse.o
-+nvmem-an8855-efuse-y 			:= an8855-efuse.o
- obj-$(CONFIG_NVMEM_APPLE_EFUSES)	+= nvmem-apple-efuses.o
- nvmem-apple-efuses-y 			:= apple-efuses.o
- obj-$(CONFIG_NVMEM_BCM_OCOTP)		+= nvmem-bcm-ocotp.o
-diff --git a/drivers/nvmem/an8855-efuse.c b/drivers/nvmem/an8855-efuse.c
-new file mode 100644
-index 000000000000..cd1564379098
---- /dev/null
-+++ b/drivers/nvmem/an8855-efuse.c
-@@ -0,0 +1,63 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *  Airoha AN8855 Switch EFUSE Driver
-+ */
-+
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/nvmem-provider.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+#define AN8855_EFUSE_CELL		50
-+
-+#define AN8855_EFUSE_DATA0		0x1000a500
-+#define   AN8855_EFUSE_R50O		GENMASK(30, 24)
-+
-+static int an8855_efuse_read(void *context, unsigned int offset,
-+			     void *val, size_t bytes)
-+{
-+	struct regmap *regmap = context;
-+
-+	return regmap_bulk_read(regmap, AN8855_EFUSE_DATA0 + offset,
-+				val, bytes / sizeof(u32));
-+}
-+
-+static int an8855_efuse_probe(struct platform_device *pdev)
-+{
-+	struct nvmem_config an8855_nvmem_config = {
-+		.name = "an8855-efuse",
-+		.size = AN8855_EFUSE_CELL * sizeof(u32),
-+		.stride = sizeof(u32),
-+		.word_size = sizeof(u32),
-+		.reg_read = an8855_efuse_read,
-+	};
-+	struct device *dev = &pdev->dev;
-+	struct nvmem_device *nvmem;
-+
-+	/* Assign NVMEM priv to MFD regmap */
-+	an8855_nvmem_config.priv = dev_get_regmap(dev->parent, "switch");
-+	an8855_nvmem_config.dev = dev;
-+	nvmem = devm_nvmem_register(dev, &an8855_nvmem_config);
-+
-+	return PTR_ERR_OR_ZERO(nvmem);
-+}
-+
-+static const struct of_device_id an8855_efuse_of_match[] = {
-+	{ .compatible = "airoha,an8855-efuse", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, an8855_efuse_of_match);
-+
-+static struct platform_driver an8855_efuse_driver = {
-+	.probe = an8855_efuse_probe,
-+	.driver = {
-+		.name = "an8855-efuse",
-+		.of_match_table = an8855_efuse_of_match,
-+	},
-+};
-+module_platform_driver(an8855_efuse_driver);
-+
-+MODULE_AUTHOR("Christian Marangi <ansuelsmth@gmail.com>");
-+MODULE_DESCRIPTION("Driver for AN8855 Switch EFUSE");
-+MODULE_LICENSE("GPL");
+ AIROHA PCIE PHY DRIVER
+ M:	Lorenzo Bianconi <lorenzo@kernel.org>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
 -- 
 2.48.1
 
