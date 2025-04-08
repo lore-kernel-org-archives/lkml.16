@@ -1,67 +1,67 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 610EA26463F
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 07:41:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05753264A78
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 07:41:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744098098; cv=none; b=IOciDuCX7kVGQsGm2C2vA64MY5xk0wePZBHDzLHftMq4GUgjON2pv6b5y5zQY7FMsWnigqDDRqJR2HRJPB2nqXjzF8rVOEvEHwf9ACHOK/d68bIWrLziyglYYl620pxOiacYRWeDZ5HUKaJQOfhpZ7kRawPtK9KZUC0+UOnxPqE=
+	t=1744098118; cv=none; b=Fo/soZSjD6I2VjmPAy50Ryu0P1BZt2QUsLqdH+hoA3wuUt2pFxvulq56btpAhlP+mPinJbwq0I/6x6UikNZSGadWS7vxk/yxRwNi/2B49znGGPQXZnNx8+oJDO0g0WcRPOq2+ILqVpjErApNyg7Pe/0nYHlhdvQ58fVvovj5bT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744098098; c=relaxed/simple;
-	bh=WFrbgnjtIdLegARnh8ZOz8cdARf39yPGWF1ZZYqL4Q0=;
+	s=arc-20240116; t=1744098118; c=relaxed/simple;
+	bh=Jav4/X15NTJC8fKKfWLydfKFfKawXUY0jOZUYLa0vuM=;
 	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=FgXkxashC0JWfwZE7OpRukVW7pyfHqV5eokEkDh4OG0Eg3egsI3B00L4HgBHdOXq3nE/K5SiLYMGUfHJQZDv7yfVulLFueoYER3R0xj7W0jQ4GYUaJUBXrq+M7ZaOe5gMAmJ4xCww8nymqV6cJO83YTPod5UR0uFBG2bU/QpmtM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hmod+tMg; arc=none smtp.client-ip=209.85.128.52
+	 In-Reply-To:Content-Type; b=Hl5aiF1AkfOg5hJIQcx7eZjbb4uOeSU2qG2xU1wxpDBJInm3Yd0Kyga72dBeyl8l4Dxj8tHn8RogFuEXo4N0/vlHYUubpo1UhaborDAI/PCc9HG6uaBTYyUefEz4tRpqJ2Mv3I49AXdmttHFxO4R9UZYN5gR0d5YAAMfHm2wEME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ag5MdjoU; arc=none smtp.client-ip=209.85.221.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hmod+tMg"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43cf680d351so36414595e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 00:41:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ag5MdjoU"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-39c0dfba946so3230503f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 00:41:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744098094; x=1744702894; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1744098115; x=1744702915; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=XXt1VUtxJKVhenaGxKn/M7BRvobuDoOHV9yLu3KSCFE=;
-        b=hmod+tMgF0WotVFTL+iHV4tKhgkjQpggj8li7esK8pax9yO5nnXw5YJeT27LFU3KoI
-         XKEgAszIzLam3mb1tyqxO397uwfnI2Gk5EVVgXh4YQ8UnGf4yAyZwXNNmOkFyWm7eB0M
-         ZWLSRx2XpAzbT0WCzUwoEFrzu9kmsw9KuT4amdr272Brmc4Gm3UkQqGfDyfpyujtyf/b
-         AevnWpRIqegCFZ8+YOVoGAJPA4+0/YqIPe0zgFBb3NFfQEgIoGx4pa1m/oi3lRYRqUEq
-         Pp9qeGxE1oCEfno/L7cD4Ggzs4HfcnL93tvYPGOCpLJAiJ5j6r0c3IlulZzRGexIZbS4
-         EQ1Q==
+        bh=tQBx3vMQCN7LC3XtCmwPt8309d/psSSD/2A8vw8TijU=;
+        b=ag5MdjoUibWanfHJJv/oV3AGBM5bmorCawJxk/gUxvVUyFJY/u/dWyKSSHtRJv5abi
+         D4jKav1gSRnGW42ZS/v6QCJjvg6p/8bG1KKOuf97ZHeR32Xim51ZXDRdfeDevlmMqoSm
+         30jD/L8T0gm+LiMlvHTF5qSktznr3XWqb9vbYa5QppmqdHXec41zVnGMIo+Ky5y5hERD
+         q1jsoZXGOXmGpb6yObWEq18FgYgXKRz5jxkZZB1fh5jAUiuP0HNEZnJn0OWDSzq6+dU7
+         N+kWY9zKS81tuMvbJjjAeTvHortJ7NGWAtApcxqM5ZE9358KP7VSohdNzNGaJ3kRkl+4
+         /veA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744098095; x=1744702895;
+        d=1e100.net; s=20230601; t=1744098115; x=1744702915;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=XXt1VUtxJKVhenaGxKn/M7BRvobuDoOHV9yLu3KSCFE=;
-        b=FDi50sGMMrVRyDh6fsrJpLtlVCSrYRytEPYU519kGYg3iImRziO44RXOOfYgRZ9HaK
-         Z6FcWNUzghJTKELbUz0NyDZHy3TDMGw+5ScKzJtU1U20tdqHe6+MvxkCarooHAHZJ0Eq
-         bX9GFATnosTQFGOfHb+hCnkhqQH1nYpf5Px/CYN8aDVaicT/XS06F8U7Ad/59owQuHn+
-         NzcAKZe2MlaK7W0h49IdDfQ/bebE4rA7jld7hNhzyRGJsw0sZT263w+4lG6jYRL5Oa5F
-         Ss+AGb9jJjYedSmKBMkuegoeW7S8aiMS+hEY82v0iAs004/NvXywBa25C3p7M+f0eHPR
-         xZMg==
-X-Forwarded-Encrypted: i=1; AJvYcCUXzV6gXwR9WApIGkhuHGxBQfe6wH93JHnp3KoFeBLJ1ofBm1I24qu/nId2BEGtYsPVO6M7c8cX0A4s/N8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1Z0q7StIdy4KoOoN8F+UUg5x8ou62rTrjabyf1VBm3AZ/G872
-	GxxqfLnjkHkC8mfnS6g63qm6bCeUaK80m/4z4/To8kWwNIDnNEoc14JFwU6Fru8=
-X-Gm-Gg: ASbGncs9WMa4qoWq+v6txaMBIQ4Z8W0l3MBh4KhN/taOfwtvaGLL3zoYSz0gZdMg2BD
-	Mi7T893MmigcEKsCvfzcsrbiFr5SbSkZ7rKKVYOASiZw7zOcxQYVjvyKT7YKQZs1z8fTRsJ70uD
-	lRpTAGtJDTKRFm4qCQMD/kbT9TQxwsLxgCmUbotHiN7emZ3DukOXsxdIwwNdLv0yGTWUJPGpEdx
-	1M5xmhLivN+NHRAz73RqW57K/Uiy8vAcDVS6O8EmA84kCSxxiWBWs4/w+/e0igsk+l8VmV/FiqY
-	ZL4o1muyVvtyTEoULdzkYjpwRJOzp6CGCljS2qFsMDbzKRrnKi7owIQMNc92XuKQCsL+a/SW3Jn
-	RJKvF3PkVYHMgy7dlJmCDkg==
-X-Google-Smtp-Source: AGHT+IGwV0LdqrELIcKaYg5qGdauKUw5ISrN3fxgvRHpkZn+vvc+/FEZS7JUbltTES57GokFyHQFlA==
-X-Received: by 2002:a05:6000:2cc:b0:391:952:c74a with SMTP id ffacd0b85a97d-39d820aca79mr1827989f8f.8.1744098094642;
-        Tue, 08 Apr 2025 00:41:34 -0700 (PDT)
+        bh=tQBx3vMQCN7LC3XtCmwPt8309d/psSSD/2A8vw8TijU=;
+        b=rmpBxX5A1ILpLQdaY0z4PJq4vsPsRwpPoUJ9iXyXQVWGnE3H59mIWgFsKOyEbTuf0K
+         RpxHjCyoLWJEpfkAgVUdjXrK3YaEw8Gv39IZcNa3TbDZ26MjxVEPqfmI4k7RO6F9Jtbz
+         IQWJ49IAK4p+K/sk9PLn0sPt+8fgdfMffHKFug0LK7LIFa0JXpCmuEFEpp3be54rv/x0
+         OhHZNr2O936lAxDakQQQgDXWKuhbl+i7MnhVXzx7CeORR3yQhCHMogfroWdxparRNTk6
+         sSSABy0P0ac3Ot/02TUVnV2FtMKtexLvTWQup6+129wt62a0XB2xqiR3UUpILZWHJuT6
+         oR5w==
+X-Forwarded-Encrypted: i=1; AJvYcCUC6ZtV7cQMB//lCTL0skgcdmq0XNGg/3jYUAPNulrAjMbQA0jq9yZJ08/RH8LB653fw8PQIhKymvg1ASg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWMYy9tVCN/uPmziY1i4xHSezLrZEFb8YM9JTCWcmq1+rL88fM
+	WlJnmBn2eLhVQYzxeA+tN5vvHXlZk/I56o/VXwYSgO/eFKhGygKgCp81RIw0brg=
+X-Gm-Gg: ASbGnctzTVhycUzcWnTWV5Ey31jZLeoXPTOy8JPciNRQQOCyvfTaZ9fIr5TSQANWIKR
+	mL4ZRI1NwmfEnZLcUM7FhJHMHaeGKYT3At5nsarcn4djV7ke/EKiCylXhsWf+Lj6qmOjVGurTMn
+	EmZoDrqPf3XuAu8xEKgaKFzsvxgH98NS0P/sJiDEKEwMbJAImCmmtQAAX6WKbVwrBicMeGK0ojj
+	dx4iP34jtBw5oQiCd98ohjhDktYJppafEp83YS6JsLB74ZTzxKXAEp/NiaJvNhGTHXdiPxTlzX1
+	/o7RSq9X2ZYu2TpC4ETSN0opNGo99vc9J8Mkc0GmdOiQOvgUDYLK8VIZ1VroNIn1CO4sWR/o79r
+	nxWNoVh+MrNylODoj1cxlyg==
+X-Google-Smtp-Source: AGHT+IFByldQ5+nIkIPUYqBDt+YbeQyC/TXD+J4hkwGfx+xeCVHaOyZ6wcecOFkR7gObrVdmBOHTrg==
+X-Received: by 2002:a5d:648b:0:b0:39a:d336:16 with SMTP id ffacd0b85a97d-39cb35aa6ffmr13189979f8f.34.1744098114336;
+        Tue, 08 Apr 2025 00:41:54 -0700 (PDT)
 Received: from ?IPV6:2a01:e0a:3d9:2080:3daa:5b6d:6ccb:4c71? ([2a01:e0a:3d9:2080:3daa:5b6d:6ccb:4c71])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c300968c4sm14179491f8f.9.2025.04.08.00.41.33
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c30096b9csm14163670f8f.13.2025.04.08.00.41.53
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Apr 2025 00:41:34 -0700 (PDT)
-Message-ID: <a5c44052-1873-4df3-ae2b-ffe21246c16b@linaro.org>
-Date: Tue, 8 Apr 2025 09:41:33 +0200
+        Tue, 08 Apr 2025 00:41:54 -0700 (PDT)
+Message-ID: <1b0f322d-94b7-4ba5-8423-eecd835db07a@linaro.org>
+Date: Tue, 8 Apr 2025 09:41:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,7 +71,7 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 From: Neil Armstrong <neil.armstrong@linaro.org>
 Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH 05/10] pinctrl: meson: use new GPIO line value setter
+Subject: Re: [PATCH 06/10] pinctrl: amlogic-a4: use new GPIO line value setter
  callbacks
 To: Bartosz Golaszewski <brgl@bgdev.pl>,
  Ludovic Desroches <ludovic.desroches@microchip.com>,
@@ -87,7 +87,7 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 References: <20250408-gpiochip-set-rv-pinctrl-part1-v1-0-c9d521d7c8c7@linaro.org>
- <20250408-gpiochip-set-rv-pinctrl-part1-v1-5-c9d521d7c8c7@linaro.org>
+ <20250408-gpiochip-set-rv-pinctrl-part1-v1-6-c9d521d7c8c7@linaro.org>
 Content-Language: en-US, fr
 Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
@@ -114,7 +114,7 @@ Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
  QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
 Organization: Linaro
-In-Reply-To: <20250408-gpiochip-set-rv-pinctrl-part1-v1-5-c9d521d7c8c7@linaro.org>
+In-Reply-To: <20250408-gpiochip-set-rv-pinctrl-part1-v1-6-c9d521d7c8c7@linaro.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
@@ -127,34 +127,41 @@ On 08/04/2025 09:17, Bartosz Golaszewski wrote:
 > 
 > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > ---
->   drivers/pinctrl/meson/pinctrl-meson.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
+>   drivers/pinctrl/meson/pinctrl-amlogic-a4.c | 8 ++++----
+>   1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
-> index 253a0cc57e39..e7485c82089c 100644
-> --- a/drivers/pinctrl/meson/pinctrl-meson.c
-> +++ b/drivers/pinctrl/meson/pinctrl-meson.c
-> @@ -580,9 +580,9 @@ static int meson_gpio_direction_output(struct gpio_chip *chip, unsigned gpio,
->   					      gpio, value);
+> diff --git a/drivers/pinctrl/meson/pinctrl-amlogic-a4.c b/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
+> index ee7bbc72f9b3..a76f266b4b94 100644
+> --- a/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
+> +++ b/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
+> @@ -806,15 +806,15 @@ static int aml_gpio_direction_output(struct gpio_chip *chip, unsigned int gpio,
+>   				  value ? BIT(bit) : 0);
 >   }
 >   
-> -static void meson_gpio_set(struct gpio_chip *chip, unsigned gpio, int value)
-> +static int meson_gpio_set(struct gpio_chip *chip, unsigned int gpio, int value)
+> -static void aml_gpio_set(struct gpio_chip *chip, unsigned int gpio, int value)
+> +static int aml_gpio_set(struct gpio_chip *chip, unsigned int gpio, int value)
 >   {
-> -	meson_pinconf_set_drive(gpiochip_get_data(chip), gpio, value);
-> +	return meson_pinconf_set_drive(gpiochip_get_data(chip), gpio, value);
+>   	struct aml_gpio_bank *bank = gpiochip_get_data(chip);
+>   	unsigned int bit, reg;
+>   
+>   	aml_gpio_calc_reg_and_bit(bank, AML_REG_OUT, gpio, &reg, &bit);
+>   
+> -	regmap_update_bits(bank->reg_gpio, reg, BIT(bit),
+> -			   value ? BIT(bit) : 0);
+> +	return regmap_update_bits(bank->reg_gpio, reg, BIT(bit),
+> +				  value ? BIT(bit) : 0);
 >   }
 >   
->   static int meson_gpio_get(struct gpio_chip *chip, unsigned gpio)
-> @@ -616,7 +616,7 @@ static int meson_gpiolib_register(struct meson_pinctrl *pc)
->   	pc->chip.direction_input = meson_gpio_direction_input;
->   	pc->chip.direction_output = meson_gpio_direction_output;
->   	pc->chip.get = meson_gpio_get;
-> -	pc->chip.set = meson_gpio_set;
-> +	pc->chip.set_rv = meson_gpio_set;
->   	pc->chip.base = -1;
->   	pc->chip.ngpio = pc->data->num_pins;
->   	pc->chip.can_sleep = false;
+>   static int aml_gpio_get(struct gpio_chip *chip, unsigned int gpio)
+> @@ -832,7 +832,7 @@ static const struct gpio_chip aml_gpio_template = {
+>   	.request		= gpiochip_generic_request,
+>   	.free			= gpiochip_generic_free,
+>   	.set_config		= gpiochip_generic_config,
+> -	.set			= aml_gpio_set,
+> +	.set_rv			= aml_gpio_set,
+>   	.get			= aml_gpio_get,
+>   	.direction_input	= aml_gpio_direction_input,
+>   	.direction_output	= aml_gpio_direction_output,
 > 
 
 Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
