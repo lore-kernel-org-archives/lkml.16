@@ -1,101 +1,69 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2866245017;
-	Tue,  8 Apr 2025 19:40:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32330241CB5
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 19:41:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744141243; cv=none; b=OpVUi5A2s8qYQVeL23JzM0l5M0kukSdn+3YzXhRPedfNAdQ/q/ZanlG8nLpLH9zK65ftWJH7mSelkQWki3m+8v0JxWyTfi3eXqQdUYhr4CorWwRLIwRexzjP7y/UJ2n8XzJTsZpYUJtzKtT1E5tQG9gCwMu0OBx9fdcWMdBF9qc=
+	t=1744141274; cv=none; b=aeRCiwfAW/3/n4SWCAQUfDD1RyQKphupse2rcAxM8p3l74GrgC1fqStj+dXiWoM6TFqVh7ziY42Zu8AOydeDjB9vMX5fYHTrNvXIdGau8wCYPZ5gGbqY9DI6yIGxPBXB/tcwJsYsOSAC8VGM6mpJkYm5NV2ZmlCe/ho6afTUorw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744141243; c=relaxed/simple;
-	bh=bGZk48l7Fum8Jf5aCucmbCvAzx9GCibM0c2fKAF+XQ4=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=FerF8jlgiUlusnQKBozAW2/yaacL2iRXJrqSEtY2DEgfxVzhLbKwBeBzpd4BxfxPtLe32T3SLfdkGDEJmkbkK244YLuK2wbkJxoXwcl/0JyOi0EaNEGfhGwUlUrc234SJPEyOUGBL4DQT9g/CfhBCY6wkib2S9H9a4UmbJvAsek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=sy9Hjebu; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="sy9Hjebu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1744141224; x=1744746024; i=markus.elfring@web.de;
-	bh=fzurtuNXWGHUwPRwx8cIR9L0eo858r1VtrVlYB34TH4=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=sy9HjebuvTvHQAUTrklAGIIMarPy0Rn+3jYwBWD5zoxCYmEmoQIi7ht4j07+8JXO
-	 BZgHQsMjKYoBSVb8Ew+qkquVbtn9Nm0DHOQJFMGTWJ5vKbA0baeY9a+X77dP2deAS
-	 3Ndiv4F2GmywYwcMFTKiLPONZXdJUB5YKRPEHC6NHocL1EQrCO3/U32WCFzAwKnda
-	 fr/1W7Uv816kKxOl7SkVwKhUr/tYKFKgNgx3R0tnpLNxZnuosqx5VRGe3474hyAAF
-	 vVhxey/Cdf3N6Ot+9gYRoUhTHPpJRVojDSUYtppKqnNBZfhSiNTqaNw87+hGyQWJe
-	 m45P3w5+YbHXaHwohw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.41]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MhFlo-1tPJ9p3kaw-00nMpX; Tue, 08
- Apr 2025 21:40:23 +0200
-Message-ID: <c9a2b94a-9330-4329-b808-4e59065d7cfa@web.de>
-Date: Tue, 8 Apr 2025 21:40:22 +0200
+	s=arc-20240116; t=1744141274; c=relaxed/simple;
+	bh=WvyOxFcjnEQDjoY5VZPTMKfsaOU7pDlNTjjExeRbJ74=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X+BAGPGFjy/A5bYJVQTLYU+b0AEQcN9xLloclbqV2HmwVzR7kMX7+Q+47iqqzZmWsj8YX8fg0PohdMRinkZJ5MW49olzg84AIBRG2BqxvpmEHDlwUhd25ngv2emN5IWW7qBXfNkplx4vO9gcRVl36yjpxTWGXavDGMg6F1LHn78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: EFsOEqfsTpuDpCIBHc+1Vg==
+X-CSE-MsgGUID: t0j2mlb5Sd+72jKyvemNXA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="68071126"
+X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
+   d="scan'208";a="68071126"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 12:41:13 -0700
+X-CSE-ConnectionGUID: sX2Fs3fhT6eBZGugaCpGcg==
+X-CSE-MsgGUID: 6EeWdHeHSJWq7OkGLUhRgg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
+   d="scan'208";a="128701364"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 12:41:10 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1u2Eol-0000000AVBT-34ii;
+	Tue, 08 Apr 2025 22:41:07 +0300
+Date: Tue, 8 Apr 2025 22:41:07 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
+Cc: outreachy@lists.linux.dev, julia.lawall@inria.fr,
+	gregkh@linuxfoundation.org, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org, david.laight.linux@gmail.com,
+	dan.carpenter@linaro.org
+Subject: Re: [PATCH v8 0/2] staging: rtl8723bs: Improve readability and
+ clarity of sequence number wrapping
+Message-ID: <Z_V70-9Bk-aZ914y@smile.fi.intel.com>
+References: <cover.1744126058.git.abrahamadekunle50@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Henry Martin <bsdhenrymartin@gmail.com>, linux-rdma@vger.kernel.org,
- netdev@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>, Amir Tzin <amirtz@nvidia.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, Aya Levin <ayal@nvidia.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Leon Romanovsky <leon@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Saeed Mahameed <saeedm@nvidia.com>,
- Simon Horman <horms@kernel.org>, Tariq Toukan <tariqt@nvidia.com>
-References: <20250408154058.106668-1-bsdhenrymartin@gmail.com>
-Subject: Re: [PATCH v2 1/2] net/mlx5: Fix null-ptr-deref in
- mlx5_create_inner_ttc_table()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250408154058.106668-1-bsdhenrymartin@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:Rbzve1EASf9H+KgUZ1by8DnH80A2vn9325JgM4dUkO8qM+GD/4C
- j9XEujIe9vpX/0OY+p+avNS9ZqMNkW4DIKpeJGDUjcx0Pk5i2/EYoAEWk+BfjXwBo1hU3a0
- dVvl3MGwd0AcvVGTcHpWQtbejLMlk2hQxt+DeqWGZR9YIbFcmUk24kb39LcnyQTTNnvKNQ9
- m7DvTgb9WkPu0PMmL6VPA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:D9kHfzn3EYc=;CUY2qSZgf4PONHEQTKgzkRKugBR
- PjmGVGzOOZqLlZE/YCRAde0M4OfnecpFlPlEHBbcUn9OQNKSQxhTMCitgFTJQkcKY/Vy3faLF
- 9cfAHHgZ//+dF9j+iPUkVatIoRl0G2F68wlTRzEt7yp6CNG0abx8loA/jyjf7ZfX5vJTK+TWC
- YKDhgqUc8DMFN9jw9/2mTBXexOFGaCs8zyaBDozALSNR8ItNqNFxuWUq/QIotH/6h6XzYfw4i
- K4pJlcnQdQ8PC5W3J1rzx5eT0cZvWQbksF9SpomfThfRu/hskY6R7GFZ/jlunX0VRozBkbhMe
- f/tkXSYLOt0WVfHqbQlfwe7fJLoW+5UNchmb6VaMlnJhx4AnUf4wDyYFDcy533y72zzyVKKiX
- XuF4B4LZmBrQPu/Z0BhAOz4x55CqsOPiAS8JwyI1NkapM9FS0q2rJ/qdC2VvV/Rw1jcxjXPbv
- 90zm9quHJ6bhzdfY1S2TbbThQW1++2VxS438UKpK9u2ee/Jvu8fA6TPbAAx+ona80nn4vHvfw
- KfA6lVXrxILw05hVyVZBFxf98CqCxxZOSdrd2e0/smnaQRqOs6NhdQLelrhAZ60+3Zo3oU09f
- wPWxuXhTBc5pDCOXduuxVkB5R1zy53F8VjtmhDaGXo3yAsBcqcfpNv2PUmOZbBWuVSIfrbqcS
- m/jbqYAcG8488Rz2CFSfyf/SiNCizL9Y4uJZ0K8IK9DLAFUMQ1SdyRIGWhBkrpA3dtRhPRp58
- YII8uPLBEXqvrdFh6ZTWuHUMus89QFIadbp9OnkX6Ac8GELaVmvqtec8x6JccFSUpb65yez30
- jS91TdUqSvmeNvKj2gqWcVgMw+lOwSkashg/xR0FjD139Wm675DL6akOXTadUWOhsjFK/RuX2
- 73kPTNAeysQqQZYXMvJ+ENpa1XU3WoH6uOD0iBjrAdMQFYAyZR4sXlEY68zSZC+CFYMCvyQg0
- Rxge/I1fiN3dYJOS62eLbGvb0hA466etsRXcq8LjqAXoa4Rxewis5DoPkkEW1FZrnssIFdKML
- FkQv/ha/WLMQENGaM7IsbsRCnJV+5qzDWPypYNOMR0upL0tAbejE7aKWUmSdSXiW6+HBVGVz+
- mxAgq60T6LXAWVVevYVtnBnyPvN74fi4sCp9u3uPAanHFVCu1dnDy8jPVWGpKpPp+8o1VgHSi
- 7uGxNJvpNSSRXIi9jxMaP7NwLdw1U3+Yaf2yUFS0Y3psHLcWz6sWBBvU1Q3s5f+RkeevoDQ4H
- up1Yd+uj0R08Di6eu2ihrKktNd1k8OGHOX2t6GndRqeL1MN/u12uanelkHfX3INNbA57vKeMh
- KWVxECvmIjWu1g45wCac9WbFaPUFLTsva7+x3ojA89C7kX0/30PsrSbyAVcuieDAE6fxfLMT1
- y6xTgiq/VuWZ1KJRpERdN6cmimqon8E0eiKgc7GSFc9kKO2dSxUWxWyLyYsruW1WU0tnWj9yN
- TQ1KC8FnGJMT4bnXWAEcOZqoBaQ4hkDV8vhOXhnceIHWjA+eE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1744126058.git.abrahamadekunle50@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-> Add NULL check for mlx5_get_flow_namespace() returns in
-> mlx5_create_inner_ttc_table() to prevent NULL pointer dereference.
+On Tue, Apr 08, 2025 at 03:41:55PM +0000, Abraham Samuel Adekunle wrote:
+> The patchset adds spaces around binary operators, breaks long lines to enhance readability
+> and provides clarity on sequence number wrapping by using a modulo operation % 4096u, in
+> place of the bitwise AND(&) operation & 0xfff.
+> The patches are required to be applied in sequence.
 
-* Did you propose to adjust the error handling for three function
-  implementations from a common subdirectory initially?
+You missed my tags I gave in a previous review round.
 
-* Can any other summary phrase variants become more desirable accordingly?
-
-* Would a cover letter usually be helpful for patch series?
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-Regards,
-Markus
