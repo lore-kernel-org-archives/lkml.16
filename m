@@ -1,162 +1,155 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B66C2676FA;
-	Tue,  8 Apr 2025 12:53:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 190F026B972
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 12:53:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744116823; cv=none; b=DTO/sVPlRoB4cIrRbCOnEMmHM0ybig/bipFNpfwdK54E+5+W4xW9l5WtvNqBvg3TSWbz5vBj9XQAvVX9YIy8RmDfemIsw1cLfDB+I8arhaWD9bFQEI1SwEB3yWteseardN+3FTVP1dtpTlbZzLsPc2RknEXDlMlngYLahDOlP60=
+	t=1744116824; cv=none; b=iEWP6iTtIAgCW72oMOzNFFyuzFY88e3wMIWesA24rnFYr4tQNuHk37KH8sCg9mqSqKSH7PXh8oacoJ+9qUFUdTCqfrqdI5LxLVCWhvo3QMa8HY7w90Sea3KRxaCkOirEmLv7Q/+qJjspdhVbLkbv/+mYc+PQrVIRrTg9T+poIZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744116823; c=relaxed/simple;
-	bh=ANRuPSUX1yQYlirs/55RG2vUbIaqAiDgBcLWkS79nlg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FwnLbkkc4SCCyrjZl9+LYENx2ASS6/6CDmmZQ/MeI5LLiknU/XBRFHlNH7L/9CfkvY/ldlcGFAKpeo/geQFlYH3YkPRQk3WOXddbK18bEhwZfavR1KrwE/yRlYzj2cQCk4ppO5I/2xLfbHZwTlhTEw67Oma6dxfwL5nxbHCUwKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nHLCtdfO; arc=none smtp.client-ip=209.85.218.51
+	s=arc-20240116; t=1744116824; c=relaxed/simple;
+	bh=eDQnZvYqzPIHj3GXOYZ62c9kispFDw2UFftF8wYsUPE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ld1dT54uYJsNWwaGeA8OdNn1JiZsdd2/BtQGzun5prCo9oR/gYYyEIHDeLOW4ZiNyV5B5imYKlN6qJ9psYJBIRCHlnwHNV3lDBLf6mTJnjA1MkIwfhgDRBbUuqt5gHDm3FnhiOX6IgIl+4Qvq+cdUliWjRUz+pbhTbpjnqDGEN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZbaqzDZM; arc=none smtp.client-ip=209.85.221.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nHLCtdfO"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac2963dc379so915846466b.2;
-        Tue, 08 Apr 2025 05:53:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZbaqzDZM"
+Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-5240317b3e0so2010706e0c.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 05:53:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744116818; x=1744721618; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=23H5BtSYVmOZ7yC+0VeF4pw/eWnuPDNyjqSPU4O+LQE=;
-        b=nHLCtdfOoYqDgifY58NAR3Gl+KxLdpoziAFZRQS3sEr/RgIRbGDNhV+QuTbpJBNiiB
-         XpY/NNopeleCRv5Tn8VtH8Dfe7yuuwMAF7krlwGiD6gvgKV7Vr4m9c+pcUOFh9/79ZtF
-         KYujUSY3gwsxDP2shEsvOLvRHS+pOWl1V9loPgq8nXmyqdSn5CtcJDmpRfvxBiWDKMl2
-         Whj/j7d/cJNgSH6aJi+71TRZ1nSsSqYwbB5gXkcTCP7tjZ2BnFY+sIGCl5qr9yQL2YBz
-         f21npHnByTf/jcmNxHqKFHky//GuAeeR97lT6mIOEHge4wkkvg9EFGXKivpt6ymRW4HP
-         dfzQ==
+        d=gmail.com; s=20230601; t=1744116822; x=1744721622; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GIq/yQ5RheCuvsfWtElAvvAAikClpQGQxOw/BQ1qNWc=;
+        b=ZbaqzDZM2ljUI/oap1s8vjtWiQGNSocWXhXUyMKoCJ/ZLK1JCxohT8X9xsgj/4hoAA
+         5VaPlIfpavxnIRkKbx2NK+23gh3t7s1LE7I4zJuJeQT7IjdGZqqvsu1s6tis40UlL5cN
+         uOBIvLyuZvk3GG+IOw2GO0hBdAoc+yMBAsR4WrhWutEzciBIVOwm/84S9HqopYkb1xvJ
+         oU5LH3m5Q3ZJHUodLEMM8PremezAXY1WYcWaML9hhAF8FEFMcaSAHdPrNskdeCY6NK2V
+         QFt1HTLMTGdIfQVA0G5FNJlq5T7HiAtMeXFBS3co9s5yK2dHyVKhOM1gr+THT3ta3G0B
+         xJbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744116818; x=1744721618;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=23H5BtSYVmOZ7yC+0VeF4pw/eWnuPDNyjqSPU4O+LQE=;
-        b=JpWorw/3LVooKVRK4pxBTezTa/o3737945zTTM5n2UY9Kj9aH4nSNdA2/hV3CJL/NL
-         2mArclEgxn9Cysoetk2tpO4Ir6Zc/w+5JeqlJWsDBjl44uKNO38zW9YKJ3fRUCXe/H9H
-         qROnLFnfDaKDRcQg1EQ2WCdKwyP71jLxQthcU0KSFh9eLARhtaLo4cDrSFzH8NJwVNMv
-         UxcZSDN2nEGdrKm3UMYiSIaxoA6Z4SW+LBh6BQydLe6ZJrvKTMCown5+ly9CGgYUzVcl
-         t6puW67G4FDsxhYQr4GARZJFOun+9PgcEp9cnSbaehcvJoYZZJSTMyiVkgCeSKbOfTQ6
-         oavA==
-X-Forwarded-Encrypted: i=1; AJvYcCWPNzuaP3ABFfjWejstCPBBG83T8pVyrKKJiKi+KifrxvQtI2jN+bnob6M+w4QuKjLLw8N88ZE/5nitYYg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6CCz9VbgZ3u4nEz06aVgU92GDyMRGcTSy7AqAPNVXPzl8Y9Gz
-	K5pjGQCEIQHDWLH13ow650CFY4EbSYlm+WNrI3WVtmT7HqJRNvcZ
-X-Gm-Gg: ASbGncv/I6Acz5ShTQdQSVyweRaXGQnYcFFz2vpeii25hrconh9wEeIbbu4ZWlxRyZH
-	k4Oib4AainZUu5OYUVU35WKpDHcZYsXtNfmvRj54HbTeM11QWK+t+SJ2x2bvqsQXu1eDzgPSkAf
-	9Ho1UULXtKkQTW6JLqy9h+Zg+bVbZd4r00Xj/HRNlSRG7y/0w96KJzcgIs9+UmUxcvqOy0a4gvh
-	T1aW6/69CTpBUX4wAbip3WFWzjI4DwwZG5EkEhJhVgQxb4XQbcMwgQ5GW4ulb7TUaAdsAN/7zNX
-	DznysGlvi/bwW/keMT3FfEKfIwBzwd/+iB3pef362GC8q1kpk674bQ==
-X-Google-Smtp-Source: AGHT+IGvmN1EO4VHRezExYMW/kUpvaSsqhCo9Bd2ESrlndGiMScDggYQTe9O53Y7t99TmRR9Zxt9lQ==
-X-Received: by 2002:a17:907:98a:b0:ac1:791c:1532 with SMTP id a640c23a62f3a-ac7d19f4f5cmr1566313466b.51.1744116818364;
-        Tue, 08 Apr 2025 05:53:38 -0700 (PDT)
-Received: from [192.168.0.50] ([79.119.240.177])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7bfe67e17sm915537466b.34.2025.04.08.05.53.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Apr 2025 05:53:37 -0700 (PDT)
-Message-ID: <cc66d83c-fb1e-4982-ae68-d5ebd78bbbce@gmail.com>
-Date: Tue, 8 Apr 2025 15:53:36 +0300
+        d=1e100.net; s=20230601; t=1744116822; x=1744721622;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GIq/yQ5RheCuvsfWtElAvvAAikClpQGQxOw/BQ1qNWc=;
+        b=GO1wwBTC6/N33e84GJPxCd8up9aZ4w9nLSvtEeRp9sGe5iczxZLkQdGC+UqOsg+Rw9
+         uj8Es17mbFg4tpQSJGGbP4WSBBx2GHWkKoSfvn+TQiojn8qJyTZJidqAa9TQYl0kAYe7
+         oWNT5/xrh9K1ZDTpTG5RsqaByDJrnSi7iBV7Z15wwpNsft6Lbom1uNv6Vk5ZZI9QBfcz
+         v141GxgMfowG2tjlKpDozthOHgAaQ4a5T0aEB6mLvuh6OS1o8nehaIMYXx0vWLZvwYq6
+         wqpLso59hrjHRzYHT8E4ERVIob2cd0hgfQgZgh0DTv8cvi/Mmf59u0j499MNweeRphBQ
+         UioA==
+X-Forwarded-Encrypted: i=1; AJvYcCXlgiKCSyJGn5kMB3vlpO6AFg/8B9DWEwS0D22u/DlVyEerqOdTCNGZw9VyLvh380KOUi0CJN79LArZ6zk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzghD5UglFQB8bp/zltbMRDMj2HKdP02Q7N3WAtIZT+uPXBo7O8
+	gWRs8H1gSpqspKXH4IX9XPQZ4J2pGOJSjAWdwFegwkGBM8NRdbWevT7jrRA3FFzYCVrzG8JwFDt
+	lkc5sLCRKBagXA3ZpZbWT1N7loxY=
+X-Gm-Gg: ASbGncuebdCSpwX57D0ru9yjW9c3wKVgUS3rrnYfAQiYsaoveNtnUQhzN2CeKnc6pgy
+	sSDt5r630ro5vJCcvC2xoZxbR+/s+wvUNJ+e1gj4Mq79puUnbvy+5awCf5BAJqw17RxETnnSHGC
+	dvZdXPuBQLJ2iRdNQN2LWaaQjz/w==
+X-Google-Smtp-Source: AGHT+IEHB/H9Zx51XBa+bNpK+8kfLf3aYgLj0AMK8itP336eyoFF/iW7S/dMcwS8QaJoGoxnRarogoVf8Q8WSArFHZw=
+X-Received: by 2002:a05:6122:2016:b0:520:6773:e5bf with SMTP id
+ 71dfb90a1353d-52765c22e36mr9606626e0c.1.1744116821855; Tue, 08 Apr 2025
+ 05:53:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [External] RE: [RFC -v1] wifi: rtw88: sdio: Tx status for
- management frames
-To: Zhen XIN <zhen.xin@nokia-sbell.com>, Ping-Ke Shih <pkshih@realtek.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <b7651a17-afeb-4abd-ae23-29a85a2f6412@nokia-sbell.com>
-Content-Language: en-US
-From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
-In-Reply-To: <b7651a17-afeb-4abd-ae23-29a85a2f6412@nokia-sbell.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <cover.1744061673.git.abrahamadekunle50@gmail.com>
+ <4ccdbfd3e8d74d99679927f294f71cfb694fcc6c.1744061673.git.abrahamadekunle50@gmail.com>
+ <CAHp75Vfp8Je1fUavSwTDAM_5_rDaDfXETa2oM5f0CjL1mxWX_Q@mail.gmail.com>
+ <CADYq+fbh=kG2JABmdF8FjjPiyigMpnJ7WhQh+faqRk6FJe4MBQ@mail.gmail.com>
+ <Z_TtyXwkOBK1MXGy@smile.fi.intel.com> <b89c8837-4aa1-4073-bb09-f71f37b5dcc6@stanley.mountain>
+ <CADYq+fZ-LmoyGrAFsEHBwM2WJthpqGYhPLmAJ3Ea0B=NvmC8aw@mail.gmail.com> <7bcdd745-539a-436a-a0df-bb2cd8dc7340@stanley.mountain>
+In-Reply-To: <7bcdd745-539a-436a-a0df-bb2cd8dc7340@stanley.mountain>
+From: Samuel Abraham <abrahamadekunle50@gmail.com>
+Date: Tue, 8 Apr 2025 13:53:33 +0100
+X-Gm-Features: ATxdqUE_dphc2k6uzLw_C1GT06QIbYUlHzPUkh4Z-A6lb5uA7H9AiEW5_qnOICo
+Message-ID: <CADYq+fas148z7WFMVk1_0bj4EmaWSV4_mE3sDr1VfTdFfts2-Q@mail.gmail.com>
+Subject: Re: [PATCH v6 1/2] staging: rtl8723bs: Add white spaces around binary operators
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, outreachy@lists.linux.dev, 
+	gregkh@linuxfoundation.org, julia.lawall@inria.fr, 
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	david.laight.linux@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 08/04/2025 06:29, Zhen XIN wrote:
-> 
-> On 1/1/1970 8:00 AM, Ping-Ke Shih wrote:
->> Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
->>>>> @@ -1195,7 +1195,7 @@ static void rtw_sdio_indicate_tx_status(struct rtw_dev *rtwdev,
->>>>>          skb_pull(skb, rtwdev->chip->tx_pkt_desc_sz);
->>>>>
->>>>>          /* enqueue to wait for tx report */
->>>>> -       if (info->flags & IEEE80211_TX_CTL_REQ_TX_STATUS) {
->>>>> +       if (info->flags & IEEE80211_TX_CTL_REQ_TX_STATUS && queue
->>>>> + <= RTW_TX_QUEUE_VO) {
->>>> Is this because you have seen "failed to get tx report"?
->>>> Have you tried to increasing RTW_TX_PROBE_TIMEOUT?
->>>>
->>>> If it still can't get TX report, we might take this workaround with
->>>> comments to mention why we need it. Or a local variable with proper
->>>> naming to point out this, like
->>>>
->>>>          bool queue_has_no_tx_report = queue > RTW_TX_QUEUE_VO;
->>>>
->>>>
->>>> By the way, USB behavior is very like to SDIO, but TX report seems to work well.
->>> On my RTL8822CS I can confirm your thought:
->>> I don't notice any extra "failed to get tx report" messages regardless
->>> of whether I have "&& queue <= RTW_TX_QUEUE_VO" or not.
->>>
->> This workaround might need an chip attribute to enable then.
->> Not sure if people in the GitHub thread have experiments on all supported SDIO WiFi chips.
-> 
-> On my RTL8723DS, without condition"&& queue <= RTW_TX_QUEUE_VO", there are messages in the console:
-> 
-> [ 23.298425] rtw_8723ds mmc2:0001:1: failed to get tx report from firmware
-> 
-> Ever after I doubled the RTW_TX_PROBE_TIMEOUT (500 * 2), there messages were still there, and AP mode didn't work:
-> 
-> root@OpenWrt:~# iw dev phy0-ap0 station dump Station 04:ea:56:2f:6f:07 (on phy0-ap0) inactive time: 480 ms ... authorized: no authenticated: yes associated: yes
-> 
-> Seems tx status report didn't reach hostapd.
-> 
-> 
+On Tue, Apr 8, 2025 at 1:38=E2=80=AFPM Dan Carpenter <dan.carpenter@linaro.=
+org> wrote:
+>
+> On Tue, Apr 08, 2025 at 12:51:03PM +0100, Samuel Abraham wrote:
+> > On Tue, Apr 8, 2025 at 11:36=E2=80=AFAM Dan Carpenter <dan.carpenter@li=
+naro.org> wrote:
+> > >
+> > > On Tue, Apr 08, 2025 at 12:35:05PM +0300, Andy Shevchenko wrote:
+> > > > On Tue, Apr 08, 2025 at 10:22:44AM +0100, Samuel Abraham wrote:
+> > > > > On Tue, Apr 8, 2025 at 8:20=E2=80=AFAM Andy Shevchenko
+> > > > > <andy.shevchenko@gmail.com> wrote:
+> > > > > > On Tue, Apr 8, 2025 at 12:54=E2=80=AFAM Abraham Samuel Adekunle
+> > > > > > <abrahamadekunle50@gmail.com> wrote:
+> > > >
+> > > > ...
+> > > >
+> > > > > > > -                                               psta->BA_star=
+ting_seqctrl[pattrib->priority & 0x0f] =3D (tx_seq+1)&0xfff;
+> > > > > > > +                                               psta->BA_star=
+ting_seqctrl[pattrib->priority & 0x0f] =3D (tx_seq + 1) & 0xfff;
+> > > > > >
+> > > > > > > -                                               psta->BA_star=
+ting_seqctrl[pattrib->priority & 0x0f] =3D (pattrib->seqnum+1)&0xfff;
+> > > > > > > +                                               psta->BA_star=
+ting_seqctrl[pattrib->priority & 0x0f] =3D (pattrib->seqnum + 1) & 0xfff;
+> > > > > >
+> > > > > > You mentioned Linux coding style, which also requires lines not=
+ to be
+> > > > > > so long. These lines are. That's why a few versions ago I sugge=
+sted
+> > > > > > you to change these to be two lines each. I don't know how many=
+ times
+> > > > > > to repeat this (it's third one).
+> > > > >
+> > > > > Okay, sorry
+> > > > > I will add a third patch for a line break before the patch for %
+> > > > > operations since each patch should handle a single thing.
+> > > >
+> > > > I am not sure you need a third patch for that. It lies into categor=
+y of space
+> > > > and indentation fix.
+> > > >
+> > >
+> > > Yeah.  Let's not go crazy.  Do the white space change as one patch.  =
+The
+> > > rules are there to make reviewing easier.  Splitting it up into three
+> > > patches doesn't help anyone.
+> >
+> > Okay thank you Dan. I have collapsed the spaces and linebreaks into one=
+ patch
+> >
+> > >
+> > > In staging we say, "Fix one type of checkpatch warning at a time."
+> > > That's because it's a simple rule to explain and it stops people from
+> > > sending us huge patches that fix every checkpatch warning.  But this
+> > > patch is small and everything is related and it's easy to review.
+> > >
+> > Thank you very much for the clarity. I understand now.
+> >
+> > I already asked Andy, but I would also like to seek your opinion on
+> > how I should version
+> > the next patch. I already made this current one v6. Do I send v7 with
+> > changes in the cover letter,
+>
+> Yes.
+>
+> > or changes in the individual patches?
+>
+> Both?  Put yourself in Greg's shoes and do whatever is easiest for
+> Greg.
 
-That's because management frames are going to the high queue instead
-of the management queue:
+Thank you very much, Dan.
 
-static u8 rtw_sdio_get_tx_qsel(struct rtw_dev *rtwdev, struct sk_buff *skb,
-			       u8 queue)
-{
-	switch (queue) {
-	case RTW_TX_QUEUE_BCN:
-		return TX_DESC_QSEL_BEACON;
-	case RTW_TX_QUEUE_H2C:
-		return TX_DESC_QSEL_H2C;
-	case RTW_TX_QUEUE_MGMT:
-		if (rtw_chip_wcpu_11n(rtwdev))
-			return TX_DESC_QSEL_HIGH;
-		else
-			return TX_DESC_QSEL_MGMT;
-
-And the chip is not configured to provide TX reports for the high
-queue.
-
-All the chips should be using the management queue for management
-frames. What happens if you change it like this?
-
-	case RTW_TX_QUEUE_MGMT:
-		return TX_DESC_QSEL_MGMT;
-
-If that doesn't work, try to change the rqpn table as well. Right now
-it's like this:
-
-static const struct rtw_rqpn rqpn_table_8723d[] = {
-	{RTW_DMA_MAPPING_NORMAL, RTW_DMA_MAPPING_NORMAL,
-	 RTW_DMA_MAPPING_LOW, RTW_DMA_MAPPING_LOW,
-	 RTW_DMA_MAPPING_EXTRA, RTW_DMA_MAPPING_HIGH},
-
-I think RTW_DMA_MAPPING_EXTRA for dma_map_mg is wrong for SDIO. This
-is what the out of tree rtl8723ds driver does:
-
-static const struct rtw_rqpn rqpn_table_8723d[] = {
-	{RTW_DMA_MAPPING_HIGH, RTW_DMA_MAPPING_NORMAL,
-	 RTW_DMA_MAPPING_LOW, RTW_DMA_MAPPING_LOW,
-	 RTW_DMA_MAPPING_HIGH, RTW_DMA_MAPPING_HIGH},
+Adekunle.
