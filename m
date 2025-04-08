@@ -1,104 +1,82 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from pv50p00im-zteg10011501.me.com (pv50p00im-zteg10011501.me.com [17.58.6.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56DF43BBF2;
-	Tue,  8 Apr 2025 13:25:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29FD9374D1
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 13:26:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744118755; cv=none; b=DUHqGws8Q/e81h+nEwRl72x21nDKvR+69EniQBxGOfqvBL3kFRDUvMJZ+Fj2WPeRjiHCpqa3nuJp0l1xO7x5ap4TOlYKIZE8O8gzZoT1act8kUFeEEVQ4sxCk7wiHV94Dtl4XgUqjkVJZGT4nHSOPUbteLNIaS39pzBLPvATOzo=
+	t=1744118791; cv=none; b=s2WAdMf4cEmk7ezB5ourFVogedn+CtIkmKHIXTRyvNJDXSVZsE8RBePYlBSRN6+qlNt8Dzqq2uMnFgNH6MBTU/Hd5al6m1dG6zd9fJHoaJ7silXdaQDokOx7zJZmtRSNqKlnJDPoPlsasMwhAv36j0F/9rD3U/Ed3medoGH5Olk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744118755; c=relaxed/simple;
-	bh=eIYL+W0qNdQyEZYoFpWw1PXFI0J3GSiKF7Bhr9jioTs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SBOI9YN1s/pFXzKGhAenVHL4nnES7dkoJr9gtLrvyvq/t/ucEVxykcgE853a7QIJ8xlMDaT9jhV4ygWTla310+FOXt7/K+3Iabzgqiv5FB6Dv7FBr3Zpc7DJU7mM9Xr/h5QBxKQ9OJOAzTBR5EZGNP72ijo+s1amhIldkCfDtOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Dw2SA4Km; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744118791; c=relaxed/simple;
+	bh=WAUIDIsnKRAAA+UK8OPhXqHvCzs1BjI5KtJ72Bdx6jc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ApA7ahrIC0Oy1eGi+ajnTyDfR5Qhlt1wQMunc45j0hwpgS2GOSd7vcffJpoMdP13viGBYBzIb0rjrKjzLxIPKB1CeLKhH5pKLH3Sr11R55ZYorUVxiXR6AK4YLYI9dvp5qnTbehiCPz3pnC4NrX3h/rbfLeMsFhy9iBnQvq4SIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=q6oecDEI; arc=none smtp.client-ip=17.58.6.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dw2SA4Km"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744118753; x=1775654753;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=eIYL+W0qNdQyEZYoFpWw1PXFI0J3GSiKF7Bhr9jioTs=;
-  b=Dw2SA4KmZnyInFRtiZwA9+hq1QCb87IUyDVb4QPhgIvFf7FuoMNd3Var
-   Xwth12+JmBSobt64O/wmyJA3OzEQvYx63QctXpjBv5rHJPm9uVOHGNkVC
-   yvf3nH56SJ2Bz4pYgy6q+sN6LeQkiX/sKLuGu6371v4Nk+uZqMv+MZYKo
-   ZTh3Yj+pEk5HKuNlRgqVdcXMrrGMv457F700iGGLk3p7an5XqGBsiyOnE
-   6+DKqnJkVtpVI2xNr1nfT+ClXa7ZKVv7faN/2Yiizkml1BGMUhRDErq3k
-   rRm793S0dU21zXtnWtg+3L7oprQ8kq1KhJKIBqm6aSKAbBnxwr4dlFKLj
-   Q==;
-X-CSE-ConnectionGUID: IresKA8bSwSz6RNcPiREKg==
-X-CSE-MsgGUID: qmxyXPFMR++QAMVqfNNQBw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="44799638"
-X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
-   d="scan'208";a="44799638"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 06:25:52 -0700
-X-CSE-ConnectionGUID: BrPx6C64RyuOYPmsvMbJXg==
-X-CSE-MsgGUID: XKLRXlQfQyaB/vwio25t6Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
-   d="scan'208";a="159258220"
-Received: from qiuxu-clx.sh.intel.com ([10.239.53.109])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 06:25:50 -0700
-From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-To: Tony Luck <tony.luck@intel.com>
-Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-	Borislav Petkov <bp@alien8.de>,
-	James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Robert Richter <rric@kernel.org>,
-	Yi Lai <yi1.lai@intel.com>,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] EDAC/igen6: Add Intel Amston Lake SoCs support
-Date: Tue,  8 Apr 2025 21:24:55 +0800
-Message-ID: <20250408132455.489046-4-qiuxu.zhuo@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250408132455.489046-1-qiuxu.zhuo@intel.com>
-References: <20250408132455.489046-1-qiuxu.zhuo@intel.com>
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="q6oecDEI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=rRupCG7fg7L/LdQTOLD+yYmhuKVa5h5e2wWxKMSjtaI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:x-icloud-hme;
+	b=q6oecDEIiT4+Xf2YVGpX9Te3vKf9f9Hrh3TT/lRe6vPXlORWVw66e4if+BWUTeUAs
+	 3mlzK9uS9JZzPVBJNVSy8k6DXnmOFKPRviX8hZEU1BMA9bIFfkAbSG0n1DfNt1vjwM
+	 Gvk++m4qhB/xzL1aMsicbPOelB47Bz/+fmeEc61JPA06VKxWynnSgndzPWUmNh2c05
+	 JOFDbTeYCMSIXOyDjWWv2DQtvLqsqwdB73Ng+jJ5C66IqjgNrs49HEARshQw8R7MGX
+	 yLrckOjAK0u8kK4pBTnldBN08ERJxlv0M3z+G0Q5qUvljKdK1HTwjnYxl8ZRZpMuDX
+	 +6p5Kok/uC0wg==
+Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
+	by pv50p00im-zteg10011501.me.com (Postfix) with ESMTPSA id 980E24A0234;
+	Tue,  8 Apr 2025 13:26:22 +0000 (UTC)
+From: Zijun Hu <zijun_hu@icloud.com>
+Subject: [PATCH 0/4] configfs: fix bugs
+Date: Tue, 08 Apr 2025 21:26:06 +0800
+Message-Id: <20250408-fix_configfs-v1-0-5a4c88805df7@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAO4j9WcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDEwML3bTMivjk/Ly0zPS0Yl0zS0tzE2NDM+NkMxMloJaColSgPNi46Nj
+ aWgD20misXgAAAA==
+X-Change-ID: 20250408-fix_configfs-699743163c64
+To: Joel Becker <jlbec@evilplan.org>, 
+ Pantelis Antoniou <pantelis.antoniou@konsulko.com>, 
+ Al Viro <viro@zeniv.linux.org.uk>
+Cc: Zijun Hu <zijun_hu@icloud.com>, linux-kernel@vger.kernel.org, 
+ Zijun Hu <quic_zijuhu@quicinc.com>, stable@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-Proofpoint-GUID: 0BKMqQEmZowqoHAp5lCCka2RxPLuDXLp
+X-Proofpoint-ORIG-GUID: 0BKMqQEmZowqoHAp5lCCka2RxPLuDXLp
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-08_05,2025-04-08_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=862 spamscore=0
+ adultscore=0 suspectscore=0 clxscore=1011 mlxscore=0 phishscore=0
+ bulkscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2504080095
+X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
 
-Intel Amston Lake is a series of SoCs tailored for edge computing needs.
-The Amston Lake SoCs, equipped with IBECC(In-Band ECC) capability, share
-the same IBECC registers with Alder Lake-N SoCs. Add the Intel Amston Lake
-SoC compute die ID for EDAC support.
-
-Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
 ---
- drivers/edac/igen6_edac.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Zijun Hu (4):
+      configfs: Delete semicolon from macro type_print() definition
+      configfs: Do not override creating attribute file failure in populate_attrs()
+      configfs: Correct error value returned by API config_item_set_name()
+      configfs: Correct condition for returning -EEXIST in configfs_symlink()
 
-diff --git a/drivers/edac/igen6_edac.c b/drivers/edac/igen6_edac.c
-index 13314f24536b..1930dc00c791 100644
---- a/drivers/edac/igen6_edac.c
-+++ b/drivers/edac/igen6_edac.c
-@@ -244,6 +244,9 @@ static struct work_struct ecclog_work;
- /* Compute die IDs for Arizona Beach with IBECC */
- #define DID_AZB_SKU1	0x4676
- 
-+/* Compute did IDs for Amston Lake with IBECC */
-+#define DID_ASL_SKU1	0x464a
-+
- /* Compute die IDs for Raptor Lake-P with IBECC */
- #define DID_RPL_P_SKU1	0xa706
- #define DID_RPL_P_SKU2	0xa707
-@@ -600,6 +603,7 @@ static const struct pci_device_id igen6_pci_tbl[] = {
- 	{ PCI_VDEVICE(INTEL, DID_ADL_N_SKU11), (kernel_ulong_t)&adl_n_cfg },
- 	{ PCI_VDEVICE(INTEL, DID_ADL_N_SKU12), (kernel_ulong_t)&adl_n_cfg },
- 	{ PCI_VDEVICE(INTEL, DID_AZB_SKU1), (kernel_ulong_t)&adl_n_cfg },
-+	{ PCI_VDEVICE(INTEL, DID_ASL_SKU1), (kernel_ulong_t)&adl_n_cfg },
- 	{ PCI_VDEVICE(INTEL, DID_RPL_P_SKU1), (kernel_ulong_t)&rpl_p_cfg },
- 	{ PCI_VDEVICE(INTEL, DID_RPL_P_SKU2), (kernel_ulong_t)&rpl_p_cfg },
- 	{ PCI_VDEVICE(INTEL, DID_RPL_P_SKU3), (kernel_ulong_t)&rpl_p_cfg },
+ fs/configfs/dir.c     | 4 ++--
+ fs/configfs/item.c    | 2 +-
+ fs/configfs/symlink.c | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+---
+base-commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557
+change-id: 20250408-fix_configfs-699743163c64
+
+Best regards,
 -- 
-2.43.0
+Zijun Hu <quic_zijuhu@quicinc.com>
 
