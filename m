@@ -1,101 +1,64 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D1CC1CB501;
-	Tue,  8 Apr 2025 18:53:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 209AE1CB501
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 18:54:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744138431; cv=none; b=AHb9LIcPl/+pObOWevu9mhRjeHZ0NDjNaT810MrMHUsdvRCzz9GER5Ji2SE13qsB0DLo1iVg68E+phB4tFjK3dBRvPicNiPydSsBZFwTjMHRb6Vsv+tS2DMsQhnTfswtQqdLRS7MST4hfz4pjZnezbhnO6xMd2Wi5xOxLl3SNKc=
+	t=1744138455; cv=none; b=XH9L6SEskN5BkbHNZfcyutvVCC4Qd53qKR6AmKIYvK5rqVD9T+V6DaCqcWZUdCClN7ray7y9bpFVZ9U8sEjyTtmGsdDrAueY1PARmDqVQIt9veGozsek6o+eBYRxr5Hi3R/jbo/8zItm58plhbR7JBUabwiU8AM5JEXVWl1DXqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744138431; c=relaxed/simple;
-	bh=t9WDCISyLU0OtSFlYPIAJbwW13zZs7DvP9XF3zTTqQI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=alLwX4ULjJiWg3tJcDhPVyC8cK2456xN13d5LgEKGlqmDMGw2X8rIvH9eGbgCcHHps+d/yygKBC/A7p1uoibwHHaMhIl6VjdySmi5tyYU6rAXzWnAtVTSr8fZSAGZUxbWX6lLiNHrJ+QpLWZWFIGa+YRfSPffqMv//HKtyhU+Y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HG0bzQtb; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744138455; c=relaxed/simple;
+	bh=VmS/4ParMDF83Zncg5BQod7Q/xEIxRkbJD6MfHxGsAQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZCNfCTE73IqS6W5gxNNL95LLzzhe2BqOWaVhOJc4fG1hGf8TYbBzT01kBAgGR8rIdSCf89Afqc1qaD4LI8l3+ApTQdZ2I1pEV1Wvo1AYRlJ1MTBmFrB8JvnPmxLaosKt1Ip/+etSrIfRS/7aCibD992Dg/PbPRHhZbK6vK8pp/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M1ReKC1Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HG0bzQtb"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2295d78b45cso79380105ad.0;
-        Tue, 08 Apr 2025 11:53:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744138429; x=1744743229; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bJ9vS9EqkTncTqFn5a/VlQGoVHTrHvxxJ9ZuXG4yUr4=;
-        b=HG0bzQtbJXuSOOqEIgtbuDXcnFwSNwElVJ8uD9K9H4NQAZHdRdvCv8yhe0rALhQEqh
-         EfMGayPItnBQzAhbUFqg6ZZJm3oHDZmeV3Uj4B35B2z7g4mK46RaJaWAzcKN84y6dS3y
-         G42zU9tlnyPUD4uhcDohaLT2l9ko5exscaP15qnYEcWVrkXAPxyAhJG5lkSqZ6wveQSw
-         Xt9qUBgJCWis2tSuOVzTK38pPA3IBBpqnqvnDTDhU3pf4A3qRQhlAB6IIb1iglOUZdBs
-         2D9RbxVX/O8E7zUf/E6uHYNUH3040oo1Iq4k4eUDSgZacG4QF3056wTDP4gwXdE3Nk+6
-         xrsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744138429; x=1744743229;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bJ9vS9EqkTncTqFn5a/VlQGoVHTrHvxxJ9ZuXG4yUr4=;
-        b=kTM/DFKe7o3Wtjc+1G8Ky7Ne5Gvy3Hq66nuftAC1WZDhK2Id0JeE8XpTCR2heL41Wl
-         CkZXUW5ywmEuSK6QNOjGwrnNHvfgzqznBiyT0zmq9uB/6uo28jD/+7esQWVotpt0Rff9
-         fSKFG7GpvHBOPUiuVh68V8V+/1VxWnL33w49HU1n+T703P6n18zk5uNhOM6u55UPPfmo
-         5MjeomEXPiDLdP3qe4vTvc8nHEV5zZ+PtCReckkzubPgtJ20a4Gq7aMCdcnTJdoznKu+
-         QcJKRHBL+35JMRNZ5HYGGFnnY9Ji+ipCfUoiGyrjDl9nGchuWGglR4K4ii5fyLX1De49
-         hScA==
-X-Forwarded-Encrypted: i=1; AJvYcCVUpJACmspouuqsMv647SmQJbkPcOkhbN+l/LPE+YgL7VutExBMoVF03moVolodvDmIZbVRa9HD@vger.kernel.org, AJvYcCXAulVEaqbjkYirzPyI63SyClAnA4QhZEnZOrUUvfoDPuZjxxdJAMZcNSPFYkM3MaZ5ElSvHcot9MGFZBc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxifMyof+1jaZDouuL7NPMsqPteBh3QAFeFZkfgzKbpZMGCHMr
-	vkwkBlfnekwnW4qnIF9BR+WhGuQqKT2SzS/F8838QdD9+GkOXNU=
-X-Gm-Gg: ASbGncspSCUX6/RiVaos02c/DPtTbckumGbd8fHECXk18VpUPZuaU7qwmS1uBhYJHTj
-	TE7imK4UzGi35/bqaYxOOpC2N8JSwB/Mhb8a7fEl9hC4UPhD51UDm4ULyUzDnEKinD5+7v44JqM
-	ShVrQ5GB99v576O9+yFJSWex2fsTJtqm5UuFDtW8tQzZW4NH7Hlb+txUjUzhARNYBLgr9YTpq3h
-	FzL3IfG/8mgXtDGAbyc+Zr0YXXIlv+4Fjgt1YM5Cn8XKvc5xHCcDtzN8t4PRh5I8QeIm5fQjAVq
-	j5pYgYXoWkDlem6XFERlIcMwcapTqQrZ65kME8Ajvkf5Ic0z6BsCzdG1S0qZ/lpob9QJijsmfrl
-	dJY/VLqs07NuG1WUwZ941
-X-Google-Smtp-Source: AGHT+IGgfDAOhk2QH4pxgPvRpx/sCzEvZBPxE7/6w6jBs7RCkO5Dq4xUzVyMB3TVsWPVnbUiWgnMJA==
-X-Received: by 2002:a17:902:d54e:b0:223:f408:c3e2 with SMTP id d9443c01a7336-22ac29a99b4mr4849685ad.14.1744138429327;
-        Tue, 08 Apr 2025 11:53:49 -0700 (PDT)
-Received: from ?IPV6:2a03:83e0:115c:1:ed73:89b2:721a:76ad? ([2620:10d:c090:500::5:7de6])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297866e1bfsm104499945ad.168.2025.04.08.11.53.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Apr 2025 11:53:48 -0700 (PDT)
-Message-ID: <1d570fb8-1da0-4aa6-99f5-052adf559091@gmail.com>
-Date: Tue, 8 Apr 2025 11:53:47 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M1ReKC1Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFB66C4CEE8;
+	Tue,  8 Apr 2025 18:54:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744138454;
+	bh=VmS/4ParMDF83Zncg5BQod7Q/xEIxRkbJD6MfHxGsAQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M1ReKC1YMjqOoXKDfLoS/q7HiGXvyj5cp8M4GMWXWtMBvBvBgsUo+HFonPYQz0VKE
+	 D91xuNjI520um8YYYqiKX7fO25TiByzOjzhUaeELjvlw4/CnGl0fEGhRa0T1Fe1r4s
+	 wjAfnLOLAAiCpWuvOi5e9eFZiUfzGwfoU3IjJnd/AxfW4JYfB+Kkzc85Yld6rkywqc
+	 wL1aJdddrW1B28Xznj54fssejap/nnhzBMXNZC/kFQdUmVU+v/HLnvndX38kfMAfHk
+	 +lPgNOmW7iJ6k9y3h4RjOUkuUKtG8shnnXKHN486WsK/87Pmrohl2gzYoAzq81FpQS
+	 eEZjKSFfCv6vw==
+Date: Tue, 8 Apr 2025 08:54:13 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Andrea Righi <arighi@nvidia.com>
+Cc: David Vernet <void@manifault.com>, Changwoo Min <changwoo@igalia.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 sched_ext/for-6.15-fixes] sched_ext: Mark
+ SCX_OPS_HAS_CGROUP_WEIGHT for deprecation
+Message-ID: <Z_Vw1cP0nofz6tsa@slm.duckdns.org>
+References: <Z_RdpDkLCXm140RT@slm.duckdns.org>
+ <Z_TXIe2fVpAt-CAg@gpd3>
+ <Z_VnKbElcEWWg4CH@slm.duckdns.org>
+ <Z_VrcMkl2w7EIPC0@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 0/2] GCPS Spec Compliance Patch Set
-To: Paul Fertser <fercerpav@gmail.com>
-Cc: Sam Mendoza-Jonas <sam@mendozajonas.com>, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, npeacock@meta.com,
- akozlov@meta.com
-References: <cover.1744048182.git.kalavakunta.hari.prasad@gmail.com>
- <ee5feee4-e74a-4dc6-ad8e-42cf9c81cb3c@mendozajonas.com>
- <b1abcf84-e187-468f-a05e-e634e825210c@gmail.com>
- <Z/VqQVGI6oP5oEzB@home.paul.comp>
-Content-Language: en-US
-From: Hari Kalavakunta <kalavakunta.hari.prasad@gmail.com>
-In-Reply-To: <Z/VqQVGI6oP5oEzB@home.paul.comp>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_VrcMkl2w7EIPC0@slm.duckdns.org>
 
-On 4/8/2025 11:26 AM, Paul Fertser wrote:
-> Can you please add the checks so that we are sure that hardware,
-> software and the specification all match after your fixes?
-Sure, I can give a try. Could you please provide an example or guideline 
-that I can use as a reference for proper alignment?
+On Tue, Apr 08, 2025 at 08:31:12AM -1000, Tejun Heo wrote:
+> SCX_OPS_HAS_CGROUP_WEIGHT was only used to suppress the missing cgroup
+> weight support warnings. Now that the warnings are removed, the flag doesn't
+> do anything. Mark it for deprecation and remove its usage from scx_flatcg.
 > 
-> Also, please do provide the example counter values read from real
-> hardware (even if they're not yet exposed properly you can still
-> obtain them with some hack; don't forget to mention what network card
-> they were read from).
-Our verification process is centered on confirming that the counter 
-values are accurately populated within the ncsi_channel_stats struct, 
-specifically in the ncsi_rsp_handler_gcps function. This verification is 
-conducted using synthesized statistics, rather than actual data from a 
-network card. Sure, I will provide NCSI packet capture showing the 
-synthesized data used for testing by end of the day.
+> v2: Actually include the scx_flatcg update.
+> 
+> Signed-off-by: Tejun Heo <tj@kernel.org>
+> Suggested-by: Andrea Righi <arighi@nvidia.com>
+
+Applied to sched_ext/for-6.15-fixes. Thanks.
+
+-- 
+tejun
