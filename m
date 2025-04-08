@@ -1,145 +1,101 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8E012356CC;
-	Tue,  8 Apr 2025 18:53:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D1CC1CB501;
+	Tue,  8 Apr 2025 18:53:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744138389; cv=none; b=BjyyrpqMMbyLVKqNRMJ61IEXgJW6xla9PYg3BsPoHj6wtZw0Y2o4NJfzOGV9dX7lTkZQEu3YvQbYJcZZahKuH6MRlVrI+fqkFBriCWPg3LjFsNsrNBnKboxlqpj7f6X54E7EgZAjE9fKX10aUuJIMVsaq2MyLagKKTM0qlMrEwk=
+	t=1744138431; cv=none; b=AHb9LIcPl/+pObOWevu9mhRjeHZ0NDjNaT810MrMHUsdvRCzz9GER5Ji2SE13qsB0DLo1iVg68E+phB4tFjK3dBRvPicNiPydSsBZFwTjMHRb6Vsv+tS2DMsQhnTfswtQqdLRS7MST4hfz4pjZnezbhnO6xMd2Wi5xOxLl3SNKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744138389; c=relaxed/simple;
-	bh=t4ntxsD59AauSomOOTSJBPia12h5IlpOu402MCxtBk4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AM2OCFTdZsaGOTYLcxw94yoTkR3Y5vdHg6uI1hiO76zlI1cx1F28+FRlhPmKumRj7Pz9wTvrNuF8luHM2BpJGlISia1mJeuHfjSFt+0xjKZcHLHrDj/6bt+77QyyeUEVjhXb3ua7SsX4B7vunrkyqPOERvuJP7F5frtIUOvf1BE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SIfVKk6g; arc=none smtp.client-ip=209.85.214.173
+	s=arc-20240116; t=1744138431; c=relaxed/simple;
+	bh=t9WDCISyLU0OtSFlYPIAJbwW13zZs7DvP9XF3zTTqQI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=alLwX4ULjJiWg3tJcDhPVyC8cK2456xN13d5LgEKGlqmDMGw2X8rIvH9eGbgCcHHps+d/yygKBC/A7p1uoibwHHaMhIl6VjdySmi5tyYU6rAXzWnAtVTSr8fZSAGZUxbWX6lLiNHrJ+QpLWZWFIGa+YRfSPffqMv//HKtyhU+Y8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HG0bzQtb; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SIfVKk6g"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-224341bbc1dso53122405ad.3;
-        Tue, 08 Apr 2025 11:53:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HG0bzQtb"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2295d78b45cso79380105ad.0;
+        Tue, 08 Apr 2025 11:53:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744138387; x=1744743187; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SlTNyadWIt0Y/k7BO39BMe8cnK8/su0vGORgpd0j3a0=;
-        b=SIfVKk6gE3kuAbb/y88FJsWjEaWoN4/Fuiz+9WhLeFaJMPt61fHF9/fAwvRPUpfrLd
-         BnOs3ouprW3z8Nbof4/nQxDStyIrV+nJzdHhTnmRuZROQYRdm25Xm6hKsW7HDTEpcK5X
-         BcSp1i1y6T1YnORpYdv4dSkXKwWlNd7OrN7TmMQjGURzr7J1bdXfa8igdr9vM7UezYfv
-         cy8U9vxX5t4qYNPNKtCCPIBH5wtj4q8yMO5tH5yKqLCkNUZBnOfxyP9EofncND4gVzfb
-         52uU/cYzAPoeP1o02g3dSR+maAoqOW02PmDRtMQfFpGlRjDRr3zMCG79SsvLQ8nL02x7
-         VDAg==
+        d=gmail.com; s=20230601; t=1744138429; x=1744743229; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bJ9vS9EqkTncTqFn5a/VlQGoVHTrHvxxJ9ZuXG4yUr4=;
+        b=HG0bzQtbJXuSOOqEIgtbuDXcnFwSNwElVJ8uD9K9H4NQAZHdRdvCv8yhe0rALhQEqh
+         EfMGayPItnBQzAhbUFqg6ZZJm3oHDZmeV3Uj4B35B2z7g4mK46RaJaWAzcKN84y6dS3y
+         G42zU9tlnyPUD4uhcDohaLT2l9ko5exscaP15qnYEcWVrkXAPxyAhJG5lkSqZ6wveQSw
+         Xt9qUBgJCWis2tSuOVzTK38pPA3IBBpqnqvnDTDhU3pf4A3qRQhlAB6IIb1iglOUZdBs
+         2D9RbxVX/O8E7zUf/E6uHYNUH3040oo1Iq4k4eUDSgZacG4QF3056wTDP4gwXdE3Nk+6
+         xrsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744138387; x=1744743187;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SlTNyadWIt0Y/k7BO39BMe8cnK8/su0vGORgpd0j3a0=;
-        b=wFXb5PtpR2/GvM7TVrhKiELzyPeIK3rtMVpGiGpV96J3Q1S+n6QIA3tlnXNbbRY7PV
-         XUIwplzVGr9wEXd8RF85Y55uoIuAPZokYRYfLgfVBwGluxNV8BJyPUqbOEIgN47yuJ7F
-         TLedSlCEfLX2TA4qk8HWqS6DfFJf/ko4MPrEbM6pgDHf1jim/GqzKoHK1lCO4UGbNi04
-         A1ScA0FkB99dC9HwSSfterz8E3UGrElsQlwlAD/Jh7XPyeUd6HtHXMuecGD8yt8lLQ83
-         pUyAXy3l8BlcyvGOzfhzS07xv2naPUMeB3i/mYbO2CsH2m5E39oq+fu9OQ75paeaC6za
-         ng2w==
-X-Forwarded-Encrypted: i=1; AJvYcCVcMCVQak61Fv4A2FBAEKl7y/2YldT/Ghv6NMyG70/5epqsM82/UBeJfhlB56wiiJgjfFdJ9ohUoGWzfFvVGFcZ@vger.kernel.org, AJvYcCWZs3mVarDHzWgefLpNuvey15lbltwohcy5wJtroGZUsCLzj+6GnGYmCr7Y+Qn3kq4+GYuLHnlA0qTwEhA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVbMyKii/CTAV/IUVsvQ5Okx8pMa6gAKqNd+8P2rCJJ4uti3O9
-	sSwVAgVOTjAH+kyUcfbqzupYmS7gCWygiJo3x5Tgsl++jpoXn6Gg
-X-Gm-Gg: ASbGncvstUGKZKlht1soXGBN7F7MSdIdNKmIm6szv9ouROj8N3vAvCNri5lfpwoWwp7
-	RKaYaNbxtOQneFknk5SytH+wEL5oiE2JOfYh6QUC2NG9jAfLIO7TkdH0N25vNQNtIvU6bS+W8g1
-	SMOJDX8WHBqfxzU7e/9pIaF3KORRhMDXipw/bsNUZGy0Uo7X+1/q12S+KmECwZbu4Pldc/h6Hwy
-	Yc5a6X0/QJPlyXn3tMcmJimQELuBwUW3VRygsIH5Vi4EHZ+7kgMu6rI/Pddl1YyxOM5D+EXPEd0
-	itElBeoilYL8BhBea/DnkPxqwZXWTOMAORiD1q8UPSvnUbNsIyV/cvvwrHxg2w85BiAwuEyaMUO
-	rBJUZg+94pwVldyk8+i/IQLk4nu0=
-X-Google-Smtp-Source: AGHT+IFm+gcLss+dKyd4t6lqJ37o2rU8f2lNWS+cne/WUF3ng/HI2286W9C3sdmE686OBfpVpUSqQQ==
-X-Received: by 2002:a17:903:904:b0:224:e2a:9ff5 with SMTP id d9443c01a7336-22ac297fe6emr4250915ad.9.1744138387049;
-        Tue, 08 Apr 2025 11:53:07 -0700 (PDT)
-Received: from malayaVM.mrout-thinkpadp16vgen1.punetw6.csb ([103.133.229.222])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22978772746sm104284585ad.223.2025.04.08.11.53.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 11:53:06 -0700 (PDT)
-From: Malaya Kumar Rout <malayarout91@gmail.com>
-To: mingo@kernel.org
-Cc: Malaya Kumar Rout <malayarout91@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Shuah Khan <shuah@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: RE:[PATCH RESEND x86-next v4] selftests/x86/lam: fix resource leak in do_uring() and allocate_dsa_pasid()
-Date: Wed,  9 Apr 2025 00:22:45 +0530
-Message-ID: <20250408185248.7722-1-malayarout91@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <Z_TZ138UxQ_uZzys@gmail.com>
-References: <Z_TZ138UxQ_uZzys@gmail.com>
+        d=1e100.net; s=20230601; t=1744138429; x=1744743229;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bJ9vS9EqkTncTqFn5a/VlQGoVHTrHvxxJ9ZuXG4yUr4=;
+        b=kTM/DFKe7o3Wtjc+1G8Ky7Ne5Gvy3Hq66nuftAC1WZDhK2Id0JeE8XpTCR2heL41Wl
+         CkZXUW5ywmEuSK6QNOjGwrnNHvfgzqznBiyT0zmq9uB/6uo28jD/+7esQWVotpt0Rff9
+         fSKFG7GpvHBOPUiuVh68V8V+/1VxWnL33w49HU1n+T703P6n18zk5uNhOM6u55UPPfmo
+         5MjeomEXPiDLdP3qe4vTvc8nHEV5zZ+PtCReckkzubPgtJ20a4Gq7aMCdcnTJdoznKu+
+         QcJKRHBL+35JMRNZ5HYGGFnnY9Ji+ipCfUoiGyrjDl9nGchuWGglR4K4ii5fyLX1De49
+         hScA==
+X-Forwarded-Encrypted: i=1; AJvYcCVUpJACmspouuqsMv647SmQJbkPcOkhbN+l/LPE+YgL7VutExBMoVF03moVolodvDmIZbVRa9HD@vger.kernel.org, AJvYcCXAulVEaqbjkYirzPyI63SyClAnA4QhZEnZOrUUvfoDPuZjxxdJAMZcNSPFYkM3MaZ5ElSvHcot9MGFZBc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxifMyof+1jaZDouuL7NPMsqPteBh3QAFeFZkfgzKbpZMGCHMr
+	vkwkBlfnekwnW4qnIF9BR+WhGuQqKT2SzS/F8838QdD9+GkOXNU=
+X-Gm-Gg: ASbGncspSCUX6/RiVaos02c/DPtTbckumGbd8fHECXk18VpUPZuaU7qwmS1uBhYJHTj
+	TE7imK4UzGi35/bqaYxOOpC2N8JSwB/Mhb8a7fEl9hC4UPhD51UDm4ULyUzDnEKinD5+7v44JqM
+	ShVrQ5GB99v576O9+yFJSWex2fsTJtqm5UuFDtW8tQzZW4NH7Hlb+txUjUzhARNYBLgr9YTpq3h
+	FzL3IfG/8mgXtDGAbyc+Zr0YXXIlv+4Fjgt1YM5Cn8XKvc5xHCcDtzN8t4PRh5I8QeIm5fQjAVq
+	j5pYgYXoWkDlem6XFERlIcMwcapTqQrZ65kME8Ajvkf5Ic0z6BsCzdG1S0qZ/lpob9QJijsmfrl
+	dJY/VLqs07NuG1WUwZ941
+X-Google-Smtp-Source: AGHT+IGgfDAOhk2QH4pxgPvRpx/sCzEvZBPxE7/6w6jBs7RCkO5Dq4xUzVyMB3TVsWPVnbUiWgnMJA==
+X-Received: by 2002:a17:902:d54e:b0:223:f408:c3e2 with SMTP id d9443c01a7336-22ac29a99b4mr4849685ad.14.1744138429327;
+        Tue, 08 Apr 2025 11:53:49 -0700 (PDT)
+Received: from ?IPV6:2a03:83e0:115c:1:ed73:89b2:721a:76ad? ([2620:10d:c090:500::5:7de6])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297866e1bfsm104499945ad.168.2025.04.08.11.53.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Apr 2025 11:53:48 -0700 (PDT)
+Message-ID: <1d570fb8-1da0-4aa6-99f5-052adf559091@gmail.com>
+Date: Tue, 8 Apr 2025 11:53:47 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next 0/2] GCPS Spec Compliance Patch Set
+To: Paul Fertser <fercerpav@gmail.com>
+Cc: Sam Mendoza-Jonas <sam@mendozajonas.com>, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, npeacock@meta.com,
+ akozlov@meta.com
+References: <cover.1744048182.git.kalavakunta.hari.prasad@gmail.com>
+ <ee5feee4-e74a-4dc6-ad8e-42cf9c81cb3c@mendozajonas.com>
+ <b1abcf84-e187-468f-a05e-e634e825210c@gmail.com>
+ <Z/VqQVGI6oP5oEzB@home.paul.comp>
+Content-Language: en-US
+From: Hari Kalavakunta <kalavakunta.hari.prasad@gmail.com>
+In-Reply-To: <Z/VqQVGI6oP5oEzB@home.paul.comp>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Exception branch returns without closing
-the file descriptors 'file_fd' and 'fd'
-
-Signed-off-by: Malaya Kumar Rout <malayarout91@gmail.com>
----
- tools/testing/selftests/x86/lam.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/tools/testing/selftests/x86/lam.c b/tools/testing/selftests/x86/lam.c
-index 18d736640ece..0873b0e5f48b 100644
---- a/tools/testing/selftests/x86/lam.c
-+++ b/tools/testing/selftests/x86/lam.c
-@@ -682,7 +682,7 @@ int do_uring(unsigned long lam)
- 		return 1;
- 
- 	if (fstat(file_fd, &st) < 0)
--		return 1;
-+		goto cleanup;
- 
- 	off_t file_sz = st.st_size;
- 
-@@ -690,7 +690,7 @@ int do_uring(unsigned long lam)
- 
- 	fi = malloc(sizeof(*fi) + sizeof(struct iovec) * blocks);
- 	if (!fi)
--		return 1;
-+		goto cleanup;
- 
- 	fi->file_sz = file_sz;
- 	fi->file_fd = file_fd;
-@@ -698,7 +698,7 @@ int do_uring(unsigned long lam)
- 	ring = malloc(sizeof(*ring));
- 	if (!ring) {
- 		free(fi);
--		return 1;
-+		goto cleanup;
- 	}
- 
- 	memset(ring, 0, sizeof(struct io_ring));
-@@ -729,6 +729,8 @@ int do_uring(unsigned long lam)
- 	}
- 
- 	free(fi);
-+cleanup:
-+	close(file_fd);
- 
- 	return ret;
- }
-@@ -1189,6 +1191,7 @@ void *allocate_dsa_pasid(void)
- 
- 	wq = mmap(NULL, 0x1000, PROT_WRITE,
- 			   MAP_SHARED | MAP_POPULATE, fd, 0);
-+	close(fd);
- 	if (wq == MAP_FAILED)
- 		perror("mmap");
- 
--- 
-2.43.0
-
+On 4/8/2025 11:26 AM, Paul Fertser wrote:
+> Can you please add the checks so that we are sure that hardware,
+> software and the specification all match after your fixes?
+Sure, I can give a try. Could you please provide an example or guideline 
+that I can use as a reference for proper alignment?
+> 
+> Also, please do provide the example counter values read from real
+> hardware (even if they're not yet exposed properly you can still
+> obtain them with some hack; don't forget to mention what network card
+> they were read from).
+Our verification process is centered on confirming that the counter 
+values are accurately populated within the ncsi_channel_stats struct, 
+specifically in the ncsi_rsp_handler_gcps function. This verification is 
+conducted using synthesized statistics, rather than actual data from a 
+network card. Sure, I will provide NCSI packet capture showing the 
+synthesized data used for testing by end of the day.
