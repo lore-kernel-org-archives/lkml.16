@@ -1,205 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB008267F57;
-	Tue,  8 Apr 2025 11:45:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B84F12686B9
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 11:46:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744112735; cv=none; b=XTUvxka45kamdKhdfIDm04lCRNd6ZSkb/hhyldgqxgVRIhMEEWr6C47WfYw5i1f22TRQ8m0i09DL5EuifAK0Me9PmwJ0oYm+bdcRgE3syqt/MqdYnTPGWC42a4HnGqjkSQ6y92u41u2tZhAjKKbCo5cT0vni6E0gPIB7XtONufk=
+	t=1744112776; cv=none; b=vFYmJ1bShJPkkCpjUWEGk0dbAIFV4zWugWOH9BvpKGmKrXE+iSD9NQeXjui+I8hR47EwjmjpsQNwY7wxSJtJ4/ETS8tQij+DHypx8RqwH2k79m3s+62R51J1+H526+Wmt00T1+pGurCoh1HHDUVW54uGP9tFELNdb+Z82GOqM+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744112735; c=relaxed/simple;
-	bh=boIwNzAemyOsPgk8LQh6CNl9rgNqmlDp1qRbFRb8oHQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=f/NJbtymph3ZcpVLwqXErgi9AvdMzCKiVCdXUBioUrVyChNqiPFzl9TvvSTc692x+lCfyYPpQYlwQPBc5q0y/9CLresKh3rj1r8L8wUdG16TaOxDfl7gdfkSl1QVrN9W8KJyvvEsJDyAupL2uBERIWaatc0GPkbfezgk/EO7GRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=VIX+8SpH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744112776; c=relaxed/simple;
+	bh=vfYcDK8W91jQEu8aDezx1/EMBUzk7HuR49zxGn3n2ug=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZpuU1BPZ9TQ+2GfZTCxzRHm4wEw8KkTIbS+npKmKQuxcVnXpIAPp//D6bFKTYTEGY0bVjxD+gGdKd7/MzcGLg6xrqIMyOkcG4uW7usWQs3rq1vlSkEiC2qd9wHUkiH0FBrbaQDf4in4hJRC0AlDVqCVQEB1skKi99T6NvFBxMo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bHo1wGid; arc=none smtp.client-ip=209.85.221.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="VIX+8SpH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FF8DC4CEE5;
-	Tue,  8 Apr 2025 11:45:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1744112734;
-	bh=boIwNzAemyOsPgk8LQh6CNl9rgNqmlDp1qRbFRb8oHQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VIX+8SpHaI/DzCPiNte61sYEhgABb46pz5BhVSeC2o+2R6Lgtu00qcWV7j1ZXBm7q
-	 eSAvDP8HdjyftWa3L1j1AlNdPCM4u8R8eHoXR3+hq9LcVEXABPZ45S0TkeUWd0MeWH
-	 gpgf5jiQuwtyglTZ02H5S3kNQsowrtKmNq6ROphA=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Leon Romanovsky <leon@kernel.org>,
-	Maher Sanalla <msanalla@nvidia.com>,
-	linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Parav Pandit <parav@nvidia.com>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 179/279] RDMA/core: Dont expose hw_counters outside of init net namespace
-Date: Tue,  8 Apr 2025 12:49:22 +0200
-Message-ID: <20250408104831.161960989@linuxfoundation.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250408104826.319283234@linuxfoundation.org>
-References: <20250408104826.319283234@linuxfoundation.org>
-User-Agent: quilt/0.68
-X-stable: review
-X-Patchwork-Hint: ignore
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bHo1wGid"
+Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-52413efd0d3so2350263e0c.2
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 04:46:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744112772; x=1744717572; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vfYcDK8W91jQEu8aDezx1/EMBUzk7HuR49zxGn3n2ug=;
+        b=bHo1wGidFU2ISwHBkWJjr1/N87jE+3rlJVzlnf9kVuG+9FatUylNG71YncU2kEnq6W
+         5m3mDI5NG+59MbQu0YBfn9btdHcHGsNK3Fx9FEgDyR+6O5eY3Zww+bB57dNDIHaeh+6f
+         80C4zerN7ADlq0BH3f3j5ZoYM9ei5vu4Z5Ah5IN4R8lRLUUWSAnCoUjamnGr6ZelTj7p
+         7AiPLbp1FzhFlEdAD+spzHOTNmLtX95XQkT+kaIm1x6TVQsh8X61UgbHzUtNZ6Tqjmkh
+         pMU1CA9yslf5m/gt3AC8XEDWIEriEvENOiJNM1HOfeqUQzb0YMPPYT9+eDX5ZMpm6VFg
+         s/kQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744112772; x=1744717572;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vfYcDK8W91jQEu8aDezx1/EMBUzk7HuR49zxGn3n2ug=;
+        b=Aiq0yiqyRxiULcYIb7364ZWQ1exvsfzlU0SMwwURtJDNJ6MeuWk65xKPCKD4WU7eQT
+         k5L2dBkEr2tCF391XHfd2Gk1gaBScYOWFwxLdM9PgD0wevtNFAgsznBQjOZujp24xmBp
+         kfJsUo3auNQDisF5dzV0ngsD232TBF7dLpU2M2R8kwlLmFR+Ef/PSNUsBYiE7i1qc/UY
+         AZmA2NFXKi/qj5QV4o6tyCO7T14lfcXtPbFOFWfWD2GepG0yJjobTv4QZYw/d58PleOt
+         10rBO7iTwezyNneV5qs5DIGKvvVatB/0OQGzBUJuprWkHvidutp5EQamxOPHBxmPx1yF
+         q78Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVxmY9pDl7TwpII1ch6NzmG8DP4iXyf7sag0nuRUqAyEty043d3HdttsAVM+hCmJIIZs2g6F6ovwLR4eS0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzfu8IZ3t6l5OstCNr9gg4Mh4UfngM9KU/INNnmT8/go10pQ78L
+	Xev/1y7Lmt/ZsD+4WpzyDzYRoDk0BbiUMHdElmDOItObGKa1NEOIiT4Rui22a3s+AiFInKTu8di
+	mlgSWP6GmXvTKe0OeMxoi6bkq4Itim1ni
+X-Gm-Gg: ASbGncsGl09Jtl6BZe461INYYIXnN6uZzUCLGM/duw/huQ1weAh97nZnG+5BYMB9q9s
+	k4LwqFUVD0+7MgD950ouRwNI2Ou3Uy6GND+6JoYNJ2l+F6jKNCFBThrdgjd5K7ET7KnhOEjAmZI
+	UFuapMdUj9uRNvJ9YrM4pvgFfQwQ==
+X-Google-Smtp-Source: AGHT+IGc7DDfMqh9nubhR58qDhK7AJO3px6RkG3rfBzevANUMo8NKMnT5ZD39JWOXn5PG3fovJZ/bytwHru8KKdxAH0=
+X-Received: by 2002:a05:6122:250c:b0:520:5a87:66fa with SMTP id
+ 71dfb90a1353d-5276444665cmr10905004e0c.3.1744112772482; Tue, 08 Apr 2025
+ 04:46:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1744061673.git.abrahamadekunle50@gmail.com>
+ <CAHp75VcCdS30LHPMwk3HO1o6db_0p+LDQoASx-7oCVw__MpMdw@mail.gmail.com>
+ <CADYq+fYeXCUgXqWu_97gvUBOvTG+H4Q76TSX2M1s5jV7EWcuyA@mail.gmail.com> <Z_TuIjwuihXF3mbM@smile.fi.intel.com>
+In-Reply-To: <Z_TuIjwuihXF3mbM@smile.fi.intel.com>
+From: Samuel Abraham <abrahamadekunle50@gmail.com>
+Date: Tue, 8 Apr 2025 12:46:03 +0100
+X-Gm-Features: ATxdqUETrnM7RqnM5irfx0EHl9vUJKqc2rm4n9p8JTcJxxQNWiJnaUY83TsWmNA
+Message-ID: <CADYq+fZAr7BMvzex7izRuR_t4Ez5v3f3LaaPOS_=7=LYjwExbg@mail.gmail.com>
+Subject: Re: [PATCH v6 0/2] staging: rtl8723bs: Improve readability and
+ clarity of sequence number wrapping
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: outreachy@lists.linux.dev, gregkh@linuxfoundation.org, 
+	julia.lawall@inria.fr, linux-staging@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, david.laight.linux@gmail.com, 
+	dan.carpenter@linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-5.15-stable review patch.  If anyone has any objections, please let me know.
+On Tue, Apr 8, 2025 at 10:46=E2=80=AFAM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Tue, Apr 08, 2025 at 10:28:36AM +0100, Samuel Abraham wrote:
+> > On Tue, Apr 8, 2025 at 8:21=E2=80=AFAM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> > > On Tue, Apr 8, 2025 at 12:54=E2=80=AFAM Abraham Samuel Adekunle
+> > > <abrahamadekunle50@gmail.com> wrote:
+>
+> ...
+>
+> > > > Changes in v5:
+> > >
+> > > This is v6. Are there any changes in comparison to v5?
+> >
+> > I added a cover letter and named it v6 to show it's a continuation
+> > from v5 and to show I added a
+> > new patch for spaces.
+> > I was not sure where would be best to add the change log so I put it
+> > in the cover letter.
+> > But as it concerns the patch for the % operation, there is no change
+> > between v5 and v6
+>
+> Then it should have
+>
+> Changes in v6:
+> - none
+>
+> which then questions the purpose of v6 :-)
+>
+Okay, what should I version the next patchset I will be sending as, and als=
+o
+how about the change log. Do I write it in the individual patches
+rather than the cover letter?
 
-------------------
-
-From: Roman Gushchin <roman.gushchin@linux.dev>
-
-[ Upstream commit a1ecb30f90856b0be4168ad51b8875148e285c1f ]
-
-Commit 467f432a521a ("RDMA/core: Split port and device counter sysfs
-attributes") accidentally almost exposed hw counters to non-init net
-namespaces. It didn't expose them fully, as an attempt to read any of
-those counters leads to a crash like this one:
-
-[42021.807566] BUG: kernel NULL pointer dereference, address: 0000000000000028
-[42021.814463] #PF: supervisor read access in kernel mode
-[42021.819549] #PF: error_code(0x0000) - not-present page
-[42021.824636] PGD 0 P4D 0
-[42021.827145] Oops: 0000 [#1] SMP PTI
-[42021.830598] CPU: 82 PID: 2843922 Comm: switchto-defaul Kdump: loaded Tainted: G S      W I        XXX
-[42021.841697] Hardware name: XXX
-[42021.849619] RIP: 0010:hw_stat_device_show+0x1e/0x40 [ib_core]
-[42021.855362] Code: 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 49 89 d0 4c 8b 5e 20 48 8b 8f b8 04 00 00 48 81 c7 f0 fa ff ff <48> 8b 41 28 48 29 ce 48 83 c6 d0 48 c1 ee 04 69 d6 ab aa aa aa 48
-[42021.873931] RSP: 0018:ffff97fe90f03da0 EFLAGS: 00010287
-[42021.879108] RAX: ffff9406988a8c60 RBX: ffff940e1072d438 RCX: 0000000000000000
-[42021.886169] RDX: ffff94085f1aa000 RSI: ffff93c6cbbdbcb0 RDI: ffff940c7517aef0
-[42021.893230] RBP: ffff97fe90f03e70 R08: ffff94085f1aa000 R09: 0000000000000000
-[42021.900294] R10: ffff94085f1aa000 R11: ffffffffc0775680 R12: ffffffff87ca2530
-[42021.907355] R13: ffff940651602840 R14: ffff93c6cbbdbcb0 R15: ffff94085f1aa000
-[42021.914418] FS:  00007fda1a3b9700(0000) GS:ffff94453fb80000(0000) knlGS:0000000000000000
-[42021.922423] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[42021.928130] CR2: 0000000000000028 CR3: 00000042dcfb8003 CR4: 00000000003726f0
-[42021.935194] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[42021.942257] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[42021.949324] Call Trace:
-[42021.951756]  <TASK>
-[42021.953842]  [<ffffffff86c58674>] ? show_regs+0x64/0x70
-[42021.959030]  [<ffffffff86c58468>] ? __die+0x78/0xc0
-[42021.963874]  [<ffffffff86c9ef75>] ? page_fault_oops+0x2b5/0x3b0
-[42021.969749]  [<ffffffff87674b92>] ? exc_page_fault+0x1a2/0x3c0
-[42021.975549]  [<ffffffff87801326>] ? asm_exc_page_fault+0x26/0x30
-[42021.981517]  [<ffffffffc0775680>] ? __pfx_show_hw_stats+0x10/0x10 [ib_core]
-[42021.988482]  [<ffffffffc077564e>] ? hw_stat_device_show+0x1e/0x40 [ib_core]
-[42021.995438]  [<ffffffff86ac7f8e>] dev_attr_show+0x1e/0x50
-[42022.000803]  [<ffffffff86a3eeb1>] sysfs_kf_seq_show+0x81/0xe0
-[42022.006508]  [<ffffffff86a11134>] seq_read_iter+0xf4/0x410
-[42022.011954]  [<ffffffff869f4b2e>] vfs_read+0x16e/0x2f0
-[42022.017058]  [<ffffffff869f50ee>] ksys_read+0x6e/0xe0
-[42022.022073]  [<ffffffff8766f1ca>] do_syscall_64+0x6a/0xa0
-[42022.027441]  [<ffffffff8780013b>] entry_SYSCALL_64_after_hwframe+0x78/0xe2
-
-The problem can be reproduced using the following steps:
-  ip netns add foo
-  ip netns exec foo bash
-  cat /sys/class/infiniband/mlx4_0/hw_counters/*
-
-The panic occurs because of casting the device pointer into an
-ib_device pointer using container_of() in hw_stat_device_show() is
-wrong and leads to a memory corruption.
-
-However the real problem is that hw counters should never been exposed
-outside of the non-init net namespace.
-
-Fix this by saving the index of the corresponding attribute group
-(it might be 1 or 2 depending on the presence of driver-specific
-attributes) and zeroing the pointer to hw_counters group for compat
-devices during the initialization.
-
-With this fix applied hw_counters are not available in a non-init
-net namespace:
-  find /sys/class/infiniband/mlx4_0/ -name hw_counters
-    /sys/class/infiniband/mlx4_0/ports/1/hw_counters
-    /sys/class/infiniband/mlx4_0/ports/2/hw_counters
-    /sys/class/infiniband/mlx4_0/hw_counters
-
-  ip netns add foo
-  ip netns exec foo bash
-  find /sys/class/infiniband/mlx4_0/ -name hw_counters
-
-Fixes: 467f432a521a ("RDMA/core: Split port and device counter sysfs attributes")
-Signed-off-by: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Leon Romanovsky <leon@kernel.org>
-Cc: Maher Sanalla <msanalla@nvidia.com>
-Cc: linux-rdma@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Link: https://patch.msgid.link/20250227165420.3430301-1-roman.gushchin@linux.dev
-Reviewed-by: Parav Pandit <parav@nvidia.com>
-Signed-off-by: Leon Romanovsky <leon@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/infiniband/core/device.c | 9 +++++++++
- drivers/infiniband/core/sysfs.c  | 1 +
- include/rdma/ib_verbs.h          | 1 +
- 3 files changed, 11 insertions(+)
-
-diff --git a/drivers/infiniband/core/device.c b/drivers/infiniband/core/device.c
-index 5d1ce55fda71e..241245e25f004 100644
---- a/drivers/infiniband/core/device.c
-+++ b/drivers/infiniband/core/device.c
-@@ -542,6 +542,8 @@ static struct class ib_class = {
- static void rdma_init_coredev(struct ib_core_device *coredev,
- 			      struct ib_device *dev, struct net *net)
- {
-+	bool is_full_dev = &dev->coredev == coredev;
-+
- 	/* This BUILD_BUG_ON is intended to catch layout change
- 	 * of union of ib_core_device and device.
- 	 * dev must be the first element as ib_core and providers
-@@ -553,6 +555,13 @@ static void rdma_init_coredev(struct ib_core_device *coredev,
- 
- 	coredev->dev.class = &ib_class;
- 	coredev->dev.groups = dev->groups;
-+
-+	/*
-+	 * Don't expose hw counters outside of the init namespace.
-+	 */
-+	if (!is_full_dev && dev->hw_stats_attr_index)
-+		coredev->dev.groups[dev->hw_stats_attr_index] = NULL;
-+
- 	device_initialize(&coredev->dev);
- 	coredev->owner = dev;
- 	INIT_LIST_HEAD(&coredev->port_list);
-diff --git a/drivers/infiniband/core/sysfs.c b/drivers/infiniband/core/sysfs.c
-index afc59048c40c8..f68673c370d2e 100644
---- a/drivers/infiniband/core/sysfs.c
-+++ b/drivers/infiniband/core/sysfs.c
-@@ -976,6 +976,7 @@ int ib_setup_device_attrs(struct ib_device *ibdev)
- 	for (i = 0; i != ARRAY_SIZE(ibdev->groups); i++)
- 		if (!ibdev->groups[i]) {
- 			ibdev->groups[i] = &data->group;
-+			ibdev->hw_stats_attr_index = i;
- 			return 0;
- 		}
- 	WARN(true, "struct ib_device->groups is too small");
-diff --git a/include/rdma/ib_verbs.h b/include/rdma/ib_verbs.h
-index fa13bf15feb3e..f4257c2e96b6d 100644
---- a/include/rdma/ib_verbs.h
-+++ b/include/rdma/ib_verbs.h
-@@ -2707,6 +2707,7 @@ struct ib_device {
- 	 * It is a NULL terminated array.
- 	 */
- 	const struct attribute_group	*groups[4];
-+	u8				hw_stats_attr_index;
- 
- 	u64			     uverbs_cmd_mask;
- 
--- 
-2.39.5
-
-
-
+I am a bit confused with that please kindly clarify.
+Thanks
+Adekunle
