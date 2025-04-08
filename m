@@ -1,190 +1,89 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F22B3225779
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 20:41:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFCBB4642D;
+	Tue,  8 Apr 2025 20:45:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744144908; cv=none; b=johqtqqkLFE1C4jet9AQGj2i3LTquCGI736Emv9/5GhR9G82jflaG4ntcTWGrZR8VX2IPxZq1d7/fuvezFA3rkrc0yvIH5IHqtycsntxs7SiIMvUPXufbW4/vO9541MNwPvzmNdcylc2CypCpghJo75f/+GwVplJ4uUUlaGdBnQ=
+	t=1744145117; cv=none; b=mogMh4rBSP1Ow/YkqV8xjbXryQY2B9dv6terUxRvQD9d52F2LHPEEKBdXE0Y78MUKH/3d1BnsgQl+AytRuKohLklGavaLn4WF9uq06fPzOzSrDJ4wamkgIK/GCps7irnkPQ4a5Kyl7VU5ho1b8bv8huTf5TDAS/PJZ+zHytVTFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744144908; c=relaxed/simple;
-	bh=GFB0IF7Cn0n4Q6auzito82YpH6bLTABJG6OGJs/6TS4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HBZPhgQy0i6ElxCQe+q5dvlpWBdTTRosgtrIqOTR/B8ka5OYXhK/oH4YcGF1xL/jNzdooTb07giE6ruVeCt0Jmalj6getCnwNwn6a7u2WzyI62xNv2uGILcTxhzAZo3/HHZhuOyQEQW5VIVylMOSrlJHZ4nEkkmQIioKol56gAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JPPyVr+Y; arc=none smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1744145117; c=relaxed/simple;
+	bh=c9QrNns8lWQBZAm0oGh5Jp/aaGonP67faSrZGbYCpDk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JQArssNFgWxAiP6H1DGjS43YliOhR0PzQrInA7//slBiCb4IbK3YSevc4N4NCO/GjYQQ7c6zpcKWuxQK21VoIhn34nxZN8cqv4lJHmzjSUYW/8Tx9e22cH//PbB+zoVjGXjunMYN17nWaTAvGvFqGD5EX3rXqqPSlcslQYVJKQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HJ1yaPf3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JPPyVr+Y"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-4766631a6a4so59420061cf.2
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 13:41:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744144905; x=1744749705; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EVTdQLCsbN0cVigq4hecvHon4nuKEqP1DouZoJpgWNU=;
-        b=JPPyVr+YbsUVUi5cLz/VJMGK3vKMpRSZ7wlURa9SdaHZ/5R4GEG7tWYdMgjwM8WxOt
-         Retasq//MfGjgzCmBeye36JdkYef9qzXzaUhKUGA5ezFf13TmmkUFhLvnpbAniOSLquC
-         9ap/HbBHNGZ9ySGix20Efn1rGpMkfcjPDA2wCb8ov36LAg6bGTtFDBlcnFvGukQ/XGeR
-         Sa3g227DoP5CidGSluHS0XXr4K/qTZfPbZs/zNu9JgsAzVCEDL6e+qulkbh59NvN7mnc
-         89VaFPwyPFLJ3+QhNIPCy5C1N+Dsz0ABIJOID8FedxbcLrJtVKDWOHjAfu7IDBFgJK0g
-         tERA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744144905; x=1744749705;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EVTdQLCsbN0cVigq4hecvHon4nuKEqP1DouZoJpgWNU=;
-        b=fNuj0UBEwQSW4ORbXgGIq6/8r3ay0B2czup2VD/0Hy1D6JOjeeiJByaQmQZNffpSOG
-         UjWBWiFBAbrDXJY47MiyzXd0ucyYB4wT6Lzm+FPjYrfjEbC3AGiESvRpGRmEjdjDFdda
-         vWXbzHt//yQa/45AF4coBtxWP/e+WJG+htk3dUvUMUcnmXYu08ZgLalwiDu9S42/pV3r
-         uO0jQGOhCNWBNIzqpnTazKTRMHJCzINyenybbCclMW9iHVkeFXX0EGMZ7jfkPofcer7t
-         +o8XDPwlxfQPADjbputFNjgz3wcYO9EgdDRiERcHJAq84mDvrf9+15Go/mp34uBcrusJ
-         xhrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVt2sbbalwdxyyKsf3AG4K6/KrFBZHe3oqxmOuioCCwmr1Tc3B2zlJEin3z2DCytzOaNAgOu8SbO86BOX0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzaW5od50j20PZQIvnTJSSoMaM0tu2VJ++wyHibuA3IT/uXmKpn
-	09T/wXXBHZvgwNMiAKsPUcUAmg1FbgzNE/X41YKo5zGvpzV5zGdt3T+HDTYwIyDB10ghT+HNF2L
-	domorzUMAmg129+sbG4ESl9Vr3i7b7lo2oLIt
-X-Gm-Gg: ASbGncuZfYpbQxOmNmsetrzrLXz+Y6MNMqNwZqTwkaXwAN5QDWKKh0co+XE1zGzQUGH
-	WmOD9iyHdNva3s84/inOLoC54clxQ/r84g00VFbG4Pu7aM+OTjPhBN5U457C6SLLR4zTH4CMOtv
-	3d5VLnsPrGRwF+gHvkNw1c9T0ozDs=
-X-Google-Smtp-Source: AGHT+IHJucqGqBT/cZhrNZIpCoklFKHoTaYd9R9xPvw5vruQlW3Ys48NKk7evtKCO1P/cXlXV9rnwOG3DxLGerAttFE=
-X-Received: by 2002:a05:622a:1390:b0:476:8288:9558 with SMTP id
- d75a77b69052e-4795f37e439mr5938161cf.46.1744144904629; Tue, 08 Apr 2025
- 13:41:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HJ1yaPf3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47972C4CEE5;
+	Tue,  8 Apr 2025 20:45:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744145116;
+	bh=c9QrNns8lWQBZAm0oGh5Jp/aaGonP67faSrZGbYCpDk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HJ1yaPf3DJGWZnqvqT/ZO9B/BtdzdNft4aevebUPKuzrebtkkLq6w2uTFYd/kurVi
+	 CinZx8+cLyqpTOa7lCjZaAZItaCxz357QsS7ch0TroiGaIHj3Q5zrxJJpBsPrkp9ox
+	 icp0o8j326SMp100dTbNMPLUw1IIJSmzRHZo1zBIEhWpTiqoefcjOTi/JcxyiVzZO/
+	 4MAD+z9ixPuo59NmmPr5hE8WsafWQzD2r+wEtPRbCzodquNjZ/VXept05iQ2U72uzz
+	 eM17M9bVsMXqqS1lOHzpI0lFBxGqxMxrjXx0ksrCBf5aOYnValdfg/SHEwxHL7ciQp
+	 ZkLUBojhA3LzA==
+Date: Tue, 8 Apr 2025 20:45:14 +0000
+From: Eric Biggers <ebiggers@kernel.org>
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: linux-nfs@vger.kernel.org, Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>, Jeff Layton <jlayton@kernel.org>,
+	Neil Brown <neilb@suse.de>, Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] nfs: add missing selections of CONFIG_CRC32
+Message-ID: <20250408204514.GA3142638@google.com>
+References: <20250401220221.22040-1-ebiggers@kernel.org>
+ <35874d6a-d5bc-4f5f-a62c-c03a6e877588@oracle.com>
+ <20250402162940.GB1235@sol.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z_PfCosPB7GS4DJl@mini-arch> <20250407161308.19286-1-kuniyu@amazon.com>
- <CANp29Y5RjJD3FK8zciRL92f0+tXEaZ=DbzSF3JrnVRGyDmag2A@mail.gmail.com>
- <CACT4Y+acJ-D6TiynzWef4vAwTNhCNAgey=RmfZHEXDJVrPxDCg@mail.gmail.com>
- <CANn89iK=SrbwSN20nKY5y71huhsabLEdX=OGsdqwMPZOmNW8Gw@mail.gmail.com> <CANp29Y5cTga9UrkySy6GiOco+nOHuDnFOWSb5PF-P0i6hU+hnA@mail.gmail.com>
-In-Reply-To: <CANp29Y5cTga9UrkySy6GiOco+nOHuDnFOWSb5PF-P0i6hU+hnA@mail.gmail.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Tue, 8 Apr 2025 22:41:32 +0200
-X-Gm-Features: ATxdqUG1UVRLynsyei216IbnoTCMsa2TfGH7-rydQFtiDybzeVMSm_mghwzM5oU
-Message-ID: <CANn89iJTHf-sJCqcyrFJiLMLBOBgtN0+KrfPSuW0mhOzLS08Rw@mail.gmail.com>
-Subject: Re: [syzbot] [net?] WARNING: bad unlock balance in do_setlink
-To: Aleksandr Nogikh <nogikh@google.com>, Sven Eckelmann <sven@narfation.org>
-Cc: Dmitry Vyukov <dvyukov@google.com>, Kuniyuki Iwashima <kuniyu@amazon.com>, stfomichev@gmail.com, 
-	andrew@lunn.ch, davem@davemloft.net, horms@kernel.org, kuba@kernel.org, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
-	sdf@fomichev.me, syzbot+45016fe295243a7882d3@syzkaller.appspotmail.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250402162940.GB1235@sol.localdomain>
 
-On Tue, Apr 8, 2025 at 10:16=E2=80=AFPM Aleksandr Nogikh <nogikh@google.com=
-> wrote:
->
-> On Tue, Apr 8, 2025 at 1:33=E2=80=AFPM Eric Dumazet <edumazet@google.com>=
- wrote:
-> >
-> > On Tue, Apr 8, 2025 at 12:44=E2=80=AFPM Dmitry Vyukov <dvyukov@google.c=
-om> wrote:
-> > >
-> > > On Tue, 8 Apr 2025 at 10:11, Aleksandr Nogikh <nogikh@google.com> wro=
-te:
-> > > >
-> > > > On Mon, Apr 7, 2025 at 6:13=E2=80=AFPM 'Kuniyuki Iwashima' via syzk=
-aller-bugs
-> > > > <syzkaller-bugs@googlegroups.com> wrote:
-> > > > >
-> > > > > From: Stanislav Fomichev <stfomichev@gmail.com>
-> > > > > Date: Mon, 7 Apr 2025 07:19:54 -0700
-> > > > > > On 04/07, syzbot wrote:
-> > > > > > > Hello,
-> > > > > > >
-> > > > > > > syzbot has tested the proposed patch but the reproducer is st=
-ill triggering an issue:
-> > > > > > > unregister_netdevice: waiting for DEV to become free
-> > > > > > >
-> > > > > > > unregister_netdevice: waiting for batadv0 to become free. Usa=
-ge count =3D 3
-> > > > > >
-> > > > > > So it does fix the lock unbalance issue, but now there is a han=
-g?
-> > > > >
-> > > > > I think this is an orthogonal issue.
-> > > > >
-> > > > > I saw this in another report as well.
-> > > > > https://lore.kernel.org/netdev/67f208ea.050a0220.0a13.025b.GAE@go=
-ogle.com/
-> > > > >
-> > > > > syzbot may want to find a better way to filter this kind of noise=
-.
-> > > > >
-> > > >
-> > > > Syzbot treats this message as a problem worthy of reporting since a
-> > > > long time (Cc'd Dmitry who may remember the context):
-> > > > https://github.com/google/syzkaller/commit/7a67784ca8bdc3b26cce2f0e=
-c9a40d2dd9ec9396
-> > > >
-> > > > Since v6.15-rc1, we do observe it happen at least 10x more often th=
-an
-> > > > before, both during fuzzing and while processing #syz test commands=
-:
-> > > > https://syzkaller.appspot.com/bug?extid=3D881d65229ca4f9ae8c84
-> > >
-> > > IIUC this error means a leaked reference count on a device, and the
-> > > device and everything it references leaked forever + a kernel thread
-> > > looping forever. This does not look like noise.
-> > >
-> > > Eric, should know more. Eric fixed a bunch of these bugs and added a
-> > > ref count tracker to devices to provide better diagnostics. For some
-> > > reason I don't see the reftracker output in the console output, but
-> > > CONFIG_NET_DEV_REFCNT_TRACKER=3Dy is enabled in the config.
-> >
-> > I think that Kuniyuki patch was fixing the original syzbot report.
-> >
-> > After fixing this trivial bug, another bug showed up,
-> > and this second bug triggered "syzbot may want to find a better way to
-> > filter this kind of noise." comment.
->
-> FWIW I've just bisected the recent spike in "unregister_netdevice:
-> waiting for batadv0 to become free" and git bisect pointed to:
->
-> 00b35530811f2aa3d7ceec2dbada80861c7632a8
-> Author: Eric Dumazet <edumazet@google.com>
-> Date:   Thu Feb 6 14:04:22 2025 +0000
->
->     batman-adv: adopt netdev_hold() / netdev_put()
->
->     Add a device tracker to struct batadv_hard_iface to help
->     debugging of network device refcount imbalances.
->
->
-> Eric, could you please have a look?
->
+On Wed, Apr 02, 2025 at 09:29:41AM -0700, Eric Biggers wrote:
+> On Wed, Apr 02, 2025 at 09:51:05AM -0400, Chuck Lever wrote:
+> > On 4/1/25 6:02 PM, Eric Biggers wrote:
+> > > From: Eric Biggers <ebiggers@google.com>
+> > > 
+> > > nfs.ko, nfsd.ko, and lockd.ko all use crc32_le(), which is available
+> > > only when CONFIG_CRC32 is enabled.  But the only NFS kconfig option that
+> > > selected CONFIG_CRC32 was CONFIG_NFS_DEBUG, which is client-specific and
+> > > did not actually guard the use of crc32_le() even on the client.
+> > > 
+> > > The code worked around this bug by only actually calling crc32_le() when
+> > > CONFIG_CRC32 is built-in, instead hard-coding '0' in other cases.  This
+> > > avoided randconfig build errors, and in real kernels the fallback code
+> > > was unlikely to be reached since CONFIG_CRC32 is 'default y'.  But, this
+> > > really needs to just be done properly, especially now that I'm planning
+> > > to update CONFIG_CRC32 to not be 'default y'.
+> > 
+> > It's interesting that no-one has noticed this before. dprintk is not the
+> > only consumer of the FH hash function: NFS/NFSD trace points also use
+> > it.
+> > 
+> > Eric, assuming you would like to carry this patch forward instead of us
+> > taking it through one of the NFS client or server trees:
+> > 
+> > Acked-by: Chuck Lever <chuck.lever@oracle.com>
+> > 
+> > for the hunks related to nfsd and lockd.
+> 
+> Please go ahead and take it through one of the NFS trees.  Thanks!
+> 
 
-My original patch was :
-https://lore.kernel.org/netdev/CANn89i+ySFS5C24guM9E9UsPWfQBL69-OoRDbOGfih9=
-vLGxDJg@mail.gmail.com/T/
+I ended up sending in the removal of 'default y' from CONFIG_CRC32 for 6.15.  So
+I recommend that you send this NFS patch in for 6.15 as well, as it's now
+slightly more likely that people can end up with CONFIG_CRC32 disabled (though
+many other parts of the kernel select it anyway, so it still tends to be
+enabled).
 
-I think it was correct.
-
-Then Sven added code in it, instead of adding a separate patch.
-
-I guess a fix would be :
-
-diff --git a/net/batman-adv/hard-interface.c b/net/batman-adv/hard-interfac=
-e.c
-index f145f96626531053bbf8f58a31f28f625a9d80f9..7cd4bdcee43935b9e5fb7d16964=
-30909b7af67b4
-100644
---- a/net/batman-adv/hard-interface.c
-+++ b/net/batman-adv/hard-interface.c
-@@ -725,7 +725,6 @@ int batadv_hardif_enable_interface(struct
-batadv_hard_iface *hard_iface,
-
-        kref_get(&hard_iface->refcount);
-
--       dev_hold(mesh_iface);
-        netdev_hold(mesh_iface, &hard_iface->meshif_dev_tracker, GFP_ATOMIC=
-);
-        hard_iface->mesh_iface =3D mesh_iface;
-        bat_priv =3D netdev_priv(hard_iface->mesh_iface);
+- Eric
