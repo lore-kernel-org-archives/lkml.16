@@ -1,149 +1,250 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE3C1D63FF;
-	Tue,  8 Apr 2025 14:27:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E65E31E1DEB;
+	Tue,  8 Apr 2025 14:27:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744122422; cv=none; b=VesIZ6bxQ+4xNwH/7mHC4oWG/dd34KGsfMr3Iof+jFdF4moIKjIkKHRPnkUJsX1dsVRJkxQjyU5Kp1yWMzswmKsOOm9zNz8BXVijkwhFx6VZ5ZVxf4GMQSudoGHlkktfxlRhVc0cyaTSH/UYTGdQnrWkRiCbRPqGWIh/tMSKia4=
+	t=1744122449; cv=none; b=HBdNEVoiqvm6GvgilxWdOIsldTv4jdoJs+IMIsd2iljIXdaF76OY1YBwPkmAAWPHVIR3hpiT1avF5L0YpHXZ+bpSZ2Rlrn7g4AZWlgozimgFKcWTW3xqISfiwIClC8CcFtypiSY0uhwr3zJfRexYyTDJJa7fd6yJY6cC8wh1Ucg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744122422; c=relaxed/simple;
-	bh=n3N51Ftxd9J9zRsSJVY/HxCOw38xt1zT3G3cDtkTVUs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=lSu0Hsl8WuYU6ynajUPPuQPYjf3UD4bmktU1dCS+bWGH72dFgeNntaUwviGlrKrgx+5om/Q6MTtYhOvLxBJYKkDPI8GT1L7r5FgOGnM9LZMQepcdoQEqCzl7v/XPTmW/yK6TBjd15lgaQD2ezf0R5MKcrdoxLULtgXurio7lV0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=It7Ln4Vk; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1744122449; c=relaxed/simple;
+	bh=HaCdujLpcs1ViV4+soV1n8EIjCN7TY5Kpzu/24ehm0o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iIs04YrQnlj20/uQ2CzFZjNqhba/hr8rJCm08L3STEfW/9U2wY7a8c7pvQpWMhB7fn/HwMjiLbySAwyo+8XcJkLLeSlGbl5dA4RhpzZs80YCIlXcpZWYktkGgqsVozcm7X+s513SF8lSz/qS8NrjFPptHqeMpTEwfaAmtmVEOxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d9Lhw1GW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="It7Ln4Vk"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 538AkvLe025333;
-	Tue, 8 Apr 2025 14:21:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=TAs+0t
-	cGs9Gp50zejQZIViX1uDlyODSQhUTm/49LdbA=; b=It7Ln4Vk+6s7KX1Xivhjr+
-	TzpfzRODFAH7A8MHjlTSh7v3E5Z08LKo6/JvRlBgOOVkN27fzWLZioj3BxRghx4L
-	f6T/g6ADQxGpq0CbFti75J/WMGZEjkhusMoiRHSz/9968OBGVvQ6zDM0E7HBdGcZ
-	FZQrL79MwXCgeTEAaEEap59f1/4fHwUeZmIBW86NERAl2zc2FMMArYSEgQofUD/t
-	mdGNd56iS/FFzA9lmr+HI5P9Fope45QtXXu0o19R3hdwvcw7dcH15NZjpuZXZrAh
-	aU4XxU7hCnfW7B3zWe29CfqhgJVUeVTgs4+SzRuGVmDK5LsJn1z+utk20X3acifw
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45vnvq423e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 08 Apr 2025 14:21:33 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 538BdA7B011518;
-	Tue, 8 Apr 2025 14:21:32 GMT
-Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45uf7yk5db-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 08 Apr 2025 14:21:32 +0000
-Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
-	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 538ELVBJ24052298
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 8 Apr 2025 14:21:31 GMT
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AE29B58053;
-	Tue,  8 Apr 2025 14:21:31 +0000 (GMT)
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DD9D15805D;
-	Tue,  8 Apr 2025 14:21:29 +0000 (GMT)
-Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.48.163])
-	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  8 Apr 2025 14:21:29 +0000 (GMT)
-Message-ID: <90fff5f793fb48659e20fa69cb5895867f51e021.camel@linux.ibm.com>
-Subject: Re: [PATCH v11 5/9] ima: kexec: define functions to copy IMA log at
- soft boot
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: steven chen <chenste@linux.microsoft.com>, stefanb@linux.ibm.com,
-        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
-        code@tyhicks.com, bauermann@kolabnow.com,
-        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
-        James.Bottomley@HansenPartnership.com, bhe@redhat.com,
-        vgoyal@redhat.com, dyoung@redhat.com
-Date: Tue, 08 Apr 2025 10:21:29 -0400
-In-Reply-To: <20250402124725.5601-6-chenste@linux.microsoft.com>
-References: <20250402124725.5601-1-chenste@linux.microsoft.com>
-	 <20250402124725.5601-6-chenste@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d9Lhw1GW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85289C4CEE5;
+	Tue,  8 Apr 2025 14:27:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744122448;
+	bh=HaCdujLpcs1ViV4+soV1n8EIjCN7TY5Kpzu/24ehm0o=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=d9Lhw1GWzL1hq7Tac6TpQDxSyuxSCUe/63q9gLH56qRDISIT6CnuH8hwZ2uqCvbOO
+	 S3/SS/WOdjAIT4YVrreVrImDGPG8EG/gSGjkBqmKaf4KP4Fd+cjsKVeEFF59SQBdKC
+	 7Jy8G/5URU+iGuhqf6BhJr25yt70II0jIWHQK1USc+W151dpVHwzdD39FIHYGOnhq4
+	 59Bu69pmOlMvHTjF+9bNzP1GblotdqvC+ahlurGd4Hqv5MTRG3Wrlxk8tp8sBjAogu
+	 46Vdq0In02ETa3XlY5KXcaGQoc6Lk0J0mNgOudqyoJLkTTTn9CWiPK3+L94iREAFUf
+	 m1vZzbmiyj9fg==
+Message-ID: <5766d152-51e7-42f5-864f-5cb1798606a3@kernel.org>
+Date: Tue, 8 Apr 2025 16:27:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: LFIZAZOa8Py6A9mi7oxapgfZlsbgYwW4
-X-Proofpoint-ORIG-GUID: LFIZAZOa8Py6A9mi7oxapgfZlsbgYwW4
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-08_06,2025-04-08_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
- mlxscore=0 lowpriorityscore=0 adultscore=0 suspectscore=0 mlxlogscore=999
- malwarescore=0 priorityscore=1501 clxscore=1015 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504080098
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] dt-bindings: clock: add TI CDCE6214 binding
+To: Sascha Hauer <s.hauer@pengutronix.de>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, kernel@pengutronix.de,
+ =?UTF-8?Q?Alvin_=C5=A0ipraga?= <alsi@bang-olufsen.dk>
+References: <20250408-clk-cdce6214-v1-0-bd4e7092a91f@pengutronix.de>
+ <20250408-clk-cdce6214-v1-3-bd4e7092a91f@pengutronix.de>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250408-clk-cdce6214-v1-3-bd4e7092a91f@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, 2025-04-02 at 05:47 -0700, steven chen wrote:
-> The IMA log is currently copied to the new kernel during kexec 'load'=20
-> using ima_dump_measurement_list(). However, the log copied at kexec=20
-> 'load' may result in loss of IMA measurements that only occurred after
-> kexec "load'.
+On 08/04/2025 14:00, Sascha Hauer wrote:
+> +
 
-Ok
+A nit, subject: drop second/last, redundant "binding". The "dt-bindings"
+prefix is already stating that these are bindings.
+See also:
+https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
 
-> Therefore, the log needs to be copied during kexec=20
-> 'execute'.=C2=A0
 
-The above line is unnecessary.
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - ti,cdce6214
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  clock-names:
+> +    minItems: 1
+> +    items:
+> +      - const: priref
+> +      - const: secref
 
-> Setup the needed infrastructure to move the IMA log copy from
-> kexec 'load' to 'execute'.
->=20
-> Define a new IMA hook ima_update_kexec_buffer() as a stub function.
-> It will be used to call ima_dump_measurement_list() during kexec 'execute=
-'.
->=20
-> Implement ima_kexec_post_load() function to be invoked after the new=20
-> Kernel image has been loaded for kexec. ima_kexec_post_load() maps the=
-=20
-> IMA buffer to a segment in the newly loaded Kernel.  It also registers=
-=20
-> the reboot notifier_block to trigger ima_update_kexec_buffer() at=20
-> kexec 'execute'.
->=20
-> Set the priority of register_reboot_notifier to INT_MIN to ensure that th=
-e
-> IMA log copy operation will happen at the end of the operation chain, whi=
-ch
-> is crucial for maintaining the integrity of the logs
+So one input is optional?
 
-Instead of ", which is crucial for maintaining the integrity of the logs"
-say something like=C2=A0", so that all the IMA measurement records extended=
- into the
-TPM are copied."
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 0
+> +
+> +  "#clock-cells":
 
->=20
-> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Cc: Baoquan He <bhe@redhat.com>=20
-> Cc: Vivek Goyal <vgoyal@redhat.com>
-> Cc: Dave Young <dyoung@redhat.com>
-> Signed-off-by: steven chen <chenste@linux.microsoft.com>
-> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+Use consistent quotes, either ' or "
 
-Thanks, Steven.  With the change to use INT_MIN, the "kexec_execute" record=
- is
-now added to the IMA measurement list, extended into the PCR, and included =
-in
-the IMA measurement list records copied.
+> +    const: 1
+> +
+> +patternProperties:
+> +  "^clk@[0-1]$":
+> +    type: object
+> +    description: |
 
-Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+Do not need '|' unless you need to preserve formatting.
 
+> +      optional child node that can be used to specify input pin parameters. The reg
+> +      properties match the CDCE6214_CLK_* defines.
+> +
+> +    additionalProperties: false
+> +
+> +    properties:
+> +      reg:
+> +        description:
+> +          clock input identifier.
+> +        minimum: 0
+> +        maximum: 1
+> +
+> +      ti,ref-xtal:
+> +        type: boolean
+> +        description: |
+> +          If true use input as XTAL input
+> +
+> +      ti,ref-lvcmos:
+> +        type: boolean
+> +        description: |
+> +          If true use input as LVCMOS input
+> +
+> +      ti,ref-diff:
+> +        type: boolean
+> +        description: |
+> +          If true use input as differential input
+
+So these three are an enum string.
+
+> +
+> +  "^clk@[2-9]$":
+> +    type: object
+> +    description: |
+> +      optional child node that can be used to specify output pin parameters.  The reg
+> +      properties match the CDCE6214_CLK_* defines.
+> +
+> +    additionalProperties: false
+> +
+> +    properties:
+> +      reg:
+> +        description:
+> +          clock output identifier.
+> +        minimum: 2
+> +        maximum: 9
+> +
+> +      ti,lphcsl:
+> +        type: boolean
+> +        description: |
+> +          If true enable LP-HCSL output mode for this clock
+> +
+> +      ti,lvds:
+> +        type: boolean
+> +        description: |
+> +          If true enable LVDS output mode for this clock
+> +
+> +      ti,cmosp:
+> +        type: boolean
+> +        description: |
+> +          If true enable CMOSP output for this clock
+> +
+> +      ti,cmosn:
+> +        type: boolean
+> +        description: |
+> +          If true enable CMOSN output for this clock
+
+Looks the same here. Anyway having these as subnodes is too much. You
+have fixed number of clocks, so you need one or two array properties in
+top-level.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - "#clock-cells"
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/ti,cdce6214.h>
+
+This file does not exist. Something is odd in this example.
+
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        clock-generator@67 {
+> +            compatible = "ti,cdce6214";
+> +            reg = <0x67>;
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +            #clock-cells = <1>;
+> +            clocks = <&clock_ref25m>;
+> +            clock-names = "priref";
+> +
+> +            clk@CDCE6214_CLK_SECREF {
+
+That's not a valid unit address. Use simple numbers, see DT spec and DTS
+coding style.
+
+
+Best regards,
+Krzysztof
