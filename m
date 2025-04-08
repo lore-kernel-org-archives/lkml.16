@@ -1,88 +1,113 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D0614A1E;
-	Tue,  8 Apr 2025 03:27:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1185F4A1E;
+	Tue,  8 Apr 2025 03:28:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744082858; cv=none; b=C81YQYlLVBw4xhc1nLj2xncR6G5cXjBSuiQudwYldSureQ3kxhbM91Sh3Amqy62hkuJbRvDiQa/QcI2jDyvLVhqL87ulRcl7Z6/z9x2YcIe1wvs/RFaV8nALqlwyCALMinVTACGCH/8JxV4x2bgl+Q8/pqmsq0cHf8M/3We4O8M=
+	t=1744082925; cv=none; b=kOVCsRiqgjnUEehACpTIMaF5Ee0Akec/OMM7++O+ZVoKfTkMJvoo1YvfImcn1LOdioBN7T5njWcpYK+zp4eETwhTR5URsS8W0FLrCsJUHj8DpPMDwVgSxTVcyqDBszDCTD1UNq0EnhB5/vsGdbMGnELwxTdp5NQGMqi+9MHTP/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744082858; c=relaxed/simple;
-	bh=QBoHFP0rkCTLN++g+05IHMNfIPqZQxK2EUYy3s9EOrs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=KzK49O07Gvg0Ko2O+3bVrvlsPnVOatDAZIzLWFX+cp2GgmNScB1wIaYEgxMR2UBSgeFlAFEgkE93NzkEjVWAkqoJDQOTj2A39T/8Udk9R4Tu51GwoTD2LVWIdSTDiGejh1lHEl/zhkIapyJX6McggzzXjKkfO6CbA1NX7FabP8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=NvwkrS0C; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1744082925; c=relaxed/simple;
+	bh=nzjhib953oS0hVUOBcaDvvbJLZ6cdA3gRX5MsetGVRI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KUK6oybB/xSNIlessBfOjMxbWvZF6JNPF9k/nXmIymXh0AfCfRRe0zPKLmHUyRpjsf68il46+0VzhzT0KNUAIt8Wsv6RhWPXncZXPFD+IWCW5U5IyVIrd3oGwHBrfe1oA+JJBha/JFu8Jmd1ReuRFmLaPqxzRwojqsRVqiJ7UmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IZ983dHG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NvwkrS0C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1744082850;
-	bh=K2YteJBgFjtwBya1zY/KtJZdKMUSs1MqU9scQWyifhs=;
-	h=Date:From:To:Cc:Subject:From;
-	b=NvwkrS0CFCyPEPh7aQ1pd2ue7HKzIiad4ccj2yNCcyl9DkqQu42nkMMq+7mTf6zGF
-	 SQYc9xVTN3q9MUzMXa2oAKMvTKXHEMi7INlgyiEnO22f1yiH884dmv2zForMQ+ajQJ
-	 +7ICsrnIySQYqE3qgspKPFzXQCcOD0s7Cp8rSsKko/ZSXf3Bbi3inMJX+4MMYCdTy6
-	 A9MqVs/6bEH7ZKht1x6KIdMndkMPaowOUYDt2BZMVXshY8aZNY/Rdpc1Heasly02Ih
-	 oc4hifF8sM9fpW9ccQFrGNBR9s9hDBmpTms/p5YADxrNyF2CktZ7KwoAiHD05CwAQA
-	 IECOjbWfp1b1w==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZWs2p3TdDz4wby;
-	Tue,  8 Apr 2025 13:27:30 +1000 (AEST)
-Date: Tue, 8 Apr 2025 13:27:29 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Takashi Iwai <tiwai@suse.de>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: duplicate patch in the sound-asoc tree
-Message-ID: <20250408132729.78ce049a@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IZ983dHG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F038DC4CEDD;
+	Tue,  8 Apr 2025 03:28:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744082924;
+	bh=nzjhib953oS0hVUOBcaDvvbJLZ6cdA3gRX5MsetGVRI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=IZ983dHGqACCd1RR41uXnPie3Y105feJuqszTXk2HNhyDvXO1QHjY15f/xGIJIynB
+	 ayQDMyUOh6d44XTarnAHcgd1kwe187IxDbHv8Or9sc47ErHKdcTVzxp0Zi+knvVTlC
+	 R6JEP8bRVyex6gssfx2z1DlJE7tid9lXxJOaBTtR9wHFAmmqSskF/sJW0nFpSTGsU4
+	 VPUp0Y5ltngxq48/Jxd8X8DCV6Y4/qvPGy5uS5Q+3QkhLRu3+achu8ivrxw3sWMBSQ
+	 N+G1SmI3JptPGNdO/Tgcl/DxDY/jsTW4/ldBRazjpGfqCylbJj/F+eLEomgMeZHLy1
+	 eHxW+uVa/abyg==
+Message-ID: <ae64e37e-0a4b-4ab4-8dcf-cd4561388334@kernel.org>
+Date: Tue, 8 Apr 2025 12:28:02 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Uhb1c._RLftDrcd5VR57jIK";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] libata: Add error handling for pdc20621_i2c_read()
+To: Wentao Liang <vulab@iscas.ac.cn>, cassel@kernel.org
+Cc: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250405135333.2348-1-vulab@iscas.ac.cn>
+From: Damien Le Moal <dlemoal@kernel.org>
+Content-Language: en-US
+Organization: Western Digital Research
+In-Reply-To: <20250405135333.2348-1-vulab@iscas.ac.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
---Sig_/Uhb1c._RLftDrcd5VR57jIK
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 4/5/25 10:53 PM, Wentao Liang wrote:
 
-Hi all,
+You forgot to update the patch title. As I said, it must be:
 
-The following commit is also in the sound tree as a different commit
-(but the same patch):
+ata: sata_sx4: Add error handling in pdc20621_i2c_read()
 
-  7288aa73e5cf ("ASoC: loongson: Replace deprecated PCI functions")
+> The function pdc20621_prog_dimm0() calls the function pdc20621_i2c_read()
+> but does not handle the error if the read fails. This could lead to
+> process with invalid data. A proper inplementation can be found in
+> /source/drivers/ata/sata_sx4.c, pdc20621_prog_dimm_global(). As mentioned
+> in its commit: bb44e154e25125bef31fa956785e90fccd24610b, the variable spd0
+> might be used uninitialized when pdc20621_i2c_read() fails.
+> 
+> Add error handling to the pdc20621_i2c_read(). If a read operation fails,
 
-This is commit
+s/to the/to
 
-  a81aca6f8ed8 ("ASoC: loongson: Replace deprecated PCI functions")
+> an error message is logged via dev_err(), and return a negative error
+> code.
+> 
+> Add error handling to pdc20621_prog_dimm0() in pdc20621_dimm_init(), and
+> return a negative error code if pdc20621_prog_dimm0() fails.
+> 
+> Fixes: 4447d3515616 ("libata: convert the remaining SATA drivers to new init model")
+> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+> ---
+>  drivers/ata/sata_sx4.c | 13 ++++++++++---
+>  1 file changed, 10 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/ata/sata_sx4.c b/drivers/ata/sata_sx4.c
+> index a482741eb181..c3042eca6332 100644
+> --- a/drivers/ata/sata_sx4.c
+> +++ b/drivers/ata/sata_sx4.c
+> @@ -1117,9 +1117,14 @@ static int pdc20621_prog_dimm0(struct ata_host *host)
+>  	mmio += PDC_CHIP0_OFS;
+>  
+>  	for (i = 0; i < ARRAY_SIZE(pdc_i2c_read_data); i++)
+> -		pdc20621_i2c_read(host, PDC_DIMM0_SPD_DEV_ADDRESS,
+> -				  pdc_i2c_read_data[i].reg,
+> -				  &spd0[pdc_i2c_read_data[i].ofs]);
+> +		if (!pdc20621_i2c_read(host, PDC_DIMM0_SPD_DEV_ADDRESS,
+> +				       pdc_i2c_read_data[i].reg,
+> +				       &spd0[pdc_i2c_read_data[i].ofs])) {
+> +			dev_err(host->dev,
+> +				"Failed in i2c read at index %d: device=%#x, reg=%#x\n",
+> +				i, PDC_DIMM0_SPD_DEV_ADDRESS, pdc_i2c_read_data[i].reg);
+> +			return -EIO;
+> +		}
+>  
+>  	data |= (spd0[4] - 8) | ((spd0[21] != 0) << 3) | ((spd0[3]-11) << 4);
+>  	data |= ((spd0[17] / 4) << 6) | ((spd0[5] / 2) << 7) |
+> @@ -1284,6 +1289,8 @@ static unsigned int pdc20621_dimm_init(struct ata_host *host)
+>  
+>  	/* Programming DIMM0 Module Control Register (index_CID0:80h) */
+>  	size = pdc20621_prog_dimm0(host);
+> +	if (size < 0)
+> +		return size;
+>  	dev_dbg(host->dev, "Local DIMM Size = %dMB\n", size);
+>  
+>  	/* Programming DIMM Module Global Control Register (index_CID0:88h) */
 
-in the sound tree.
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Uhb1c._RLftDrcd5VR57jIK
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmf0l6EACgkQAVBC80lX
-0GwwbggAo9W1UVmajRyVPyldCvqXzpcHpIWoijP7XTTJa0xTjOc0LXVn1s4fCe7K
-N8GxYfGkIcPNn5QNKI5+IgCVrGSw0ME97D/wZsSoasf6OHyhXV42veoNzjJImORM
-273Fm0KvrkXRv3K5orx1nBvz5rXFVxFdDxvsu40vJvAmVINQnwApRWzIeUj02t4B
-YX81jIjO00KAqmieUELXYmYuAQMomRRwnrBmnEzeSLVKDfoqVORovtSsO0xeSKGC
-vvtKnKPPcKVFjfCvEa3xleW0s+h4bCFlH/+wD/jguYtvdzFCV5W9PQV/qGr/iM9d
-usWX2mQPeXFoP9X0bRHsMBO6/AurbQ==
-=gvM1
------END PGP SIGNATURE-----
-
---Sig_/Uhb1c._RLftDrcd5VR57jIK--
+-- 
+Damien Le Moal
+Western Digital Research
