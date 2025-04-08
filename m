@@ -1,94 +1,71 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34F57217F5D;
-	Tue,  8 Apr 2025 07:02:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 716C725FA0D
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 07:02:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744095727; cv=none; b=DrGviFVutHbelOcZeHu4OZKu0CV5/GUq71he72sjvGu06UAddl3flsP5NyAVkHXUx+tnf9hpqYAMyXRFwok1AfpkLeoBPD3a5lLSmeXnakoBcxT/yCyrXcEQwdsodEX+m7+tN43G4TZpFYGD1yeCDFkcfgQ+Fh6JrKeOALHveMM=
+	t=1744095746; cv=none; b=rop3V/n6ZpbqIusp/8paRSkcwlHBU9zkzO9h4Uh/Y/SVG4JY3J19cMkxOzYwngc8z2z5Elbu7RoVdYH4uDUderPspCeJF4jYwgz1gSJag4BkbxbbGWkTFCot+npn6xzLg7Wq9d0Zs0OSNl5rCXTFcyxryn38/RsXBY2cr7fMmiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744095727; c=relaxed/simple;
-	bh=n5s/LEoEQT9NSU6XeyqlvUReVnAp5oh6ZpPr1vmJWlc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=daH7c0vixexDxZpkgjqDUQ5ppImQq5E3U6kVJGraKfVZ5kboOmY2AgCx2FraVbwapjtYs/JoIdKyM9AOBxftqhVY/K2/eB82iWcrEif2OUCDZEdVYyK/FewocCitsSSJH1DeqRXNu6/37MnyARSLqRO6UK74acZK0hib0zhZL7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qWK6hpiK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744095746; c=relaxed/simple;
+	bh=8Bs2exazEOSYlhHnMS9ABkVQB539MAMkQeivRftqwEk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DeU8h0bEM5Ji/eu463O/1bOqq5GOHibhin34ekUFpbELDBXgHMAsDYMFjwWX2y7OPWItxFHOqKn455tCf4+RM2nAmE7Qm+xk0f++p8QhpTuhsucZ1OXR5NXrFd52dLA7sTd0Ug3bSAeKOcPN0H3c4MIMRWZOVFDwJCnOtvX+s2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=idibb8rz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qWK6hpiK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74B82C4CEE5;
-	Tue,  8 Apr 2025 07:02:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="idibb8rz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEBE6C4CEE5;
+	Tue,  8 Apr 2025 07:02:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744095727;
-	bh=n5s/LEoEQT9NSU6XeyqlvUReVnAp5oh6ZpPr1vmJWlc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qWK6hpiKl5YRKO1XST0DS4G1798u4QPzV/BYigAc7enKX9RvtfbHVZiIyWLipOFNq
-	 R/TI9O0yCS5wZAOjM3gUxOGG8kzT8ZfEscsNFE+cdoEabPjcPBX+eqizMRGHd2XQhE
-	 wMoFS5FBU9Q5I5jPyg01niVBXZsCkXhf5ZUGW7XIHNYkuu0yRx6BMVUkkkCFN9XtC4
-	 JArmSuarCNVcbj+kNHG8QIz5FV9j+QXgqgAFJrE4C5/3HCklP4QdgsDJBip5WC0TUx
-	 t/ZQJD52d9OnT3Kgmj9mtlKP7XfL0pXlXKEJp0kwo32dByen14GJSaQHzP24ksgM7H
-	 //0NShTXgPthQ==
-Date: Tue, 8 Apr 2025 09:02:04 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Patrice Chotard <patrice.chotard@foss.st.com>
-Cc: Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, christophe.kerello@foss.st.com, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v8 0/7] Add STM32MP25 SPI NOR support
-Message-ID: <20250408-offbeat-esoteric-millipede-ed8a2a@shite>
-References: <20250407-upstream_ospi_v6-v8-0-7b7716c1c1f6@foss.st.com>
- <20250408-opal-pillbug-of-acumen-0fbb68@shite>
+	s=k20201202; t=1744095745;
+	bh=8Bs2exazEOSYlhHnMS9ABkVQB539MAMkQeivRftqwEk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=idibb8rzK8OryoRxuO5Zsc5I/g7csmTzdAahRluI+Nxolx7shqUvmufgumHTosC2i
+	 d2t+hIvm6C0j5tC7tcWEDCLEfKkeHIvexynN4+eLovuYVfBHojN36XHIG23aAD+1sZ
+	 X9EocWrCp5p/67eb0e14cvHrrBNu3q6siamKIl3YHZSomi8lYg9PmJiTCJ4qtbBH7S
+	 cJhd7aRYzg8sjxEPA/Rkapw3L+O4D5OJ4/8kEnmvGn7dyE94jOvoaME07jZjZ248N/
+	 nHvstUuXdHVtMTWsbzHAVkSsHsZ09BsPd/vVKif4cnzLy7plH4KCwdkyeEIL1c5fLp
+	 KSfeSARaLDOMg==
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: x86@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Juergen Gross <jgross@suse.com>
+Subject: [PATCH v4 0/4] objtool: Fix INSN_CONTEXT_SWITCH
+Date: Tue,  8 Apr 2025 00:02:12 -0700
+Message-ID: <cover.1744095216.git.jpoimboe@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250408-opal-pillbug-of-acumen-0fbb68@shite>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 08, 2025 at 08:38:08AM GMT, Krzysztof Kozlowski wrote:
-> On Mon, Apr 07, 2025 at 03:27:31PM GMT, Patrice Chotard wrote:
-> > Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
-> > ---
-> > Patrice Chotard (7):
-> >       MAINTAINERS: add entry for STM32 OCTO MEMORY MANAGER driver
-> >       dt-bindings: memory-controllers: Add STM32 Octo Memory Manager controller
-> >       memory: Add STM32 Octo Memory Manager driver
-> >       arm64: dts: st: Add OMM node on stm32mp251
-> >       arm64: dts: st: Add ospi port1 pinctrl entries in stm32mp25-pinctrl.dtsi
-> >       arm64: dts: st: Add SPI NOR flash support on stm32mp257f-ev1 board
-> >       arm64: defconfig: Enable STM32 Octo Memory Manager and OcstoSPI driver
-> > 
-> >  .../memory-controllers/st,stm32mp25-omm.yaml       | 226 ++++++++++
-> >  MAINTAINERS                                        |   6 +
-> >  arch/arm64/boot/dts/st/stm32mp25-pinctrl.dtsi      |  51 +++
-> >  arch/arm64/boot/dts/st/stm32mp251.dtsi             |  54 +++
-> >  arch/arm64/boot/dts/st/stm32mp257f-ev1.dts         |  32 ++
-> >  arch/arm64/configs/defconfig                       |   2 +
-> >  drivers/memory/Kconfig                             |  17 +
-> >  drivers/memory/Makefile                            |   1 +
-> >  drivers/memory/stm32_omm.c                         | 474 +++++++++++++++++++++
-> >  9 files changed, 863 insertions(+)
-> > ---
-> > base-commit: 88424abd55ab36c3565898a656589a0a25ecd92f
-> 
-> That's unknown commit.
-> 
-> b4 diff '20250407-upstream_ospi_v6-v8-0-7b7716c1c1f6@foss.st.com'
-> Using cached copy of the lookup
-> ---
-> Analyzing 81 messages in the thread
-> Preparing fake-am for v7: MAINTAINERS: add entry for STM32 OCTO MEMORY MANAGER driver
-> ERROR: Could not write fake-am tree
-> ---
-> Could not create fake-am range for lower series v7
+I decided to keep the "unsupported instruction in callable function"
+warning, it's not hurting anything.  As a result we now have
+INSN_SYSCALL and INSN_SYSRET.
 
-Hm, both v7 and v8 apply cleanly on next, so not sure why fake-am
-failed.
+v4:
+- split up patches
+- don't get rid of "unsupported instruction in callable function" warning
+- split INSN_CONTEXT_SWITCH -> INSN_SYSCALL / INSN_SYSRET
 
-Best regards,
-Krzysztof
+v3: https://lore.kernel.org/9b23e4413873bee38961e628b0c73f6d3a26d494.1743799705.git.jpoimboe@kernel.org
+
+Josh Poimboeuf (4):
+  objtool: Fix INSN_CONTEXT_SWITCH handling in validate_unret()
+  objtool: Split INSN_CONTEXT_SWITCH into INSN_SYSCALL and INSN_SYSRET
+  objtool: Stop UNRET validation on UD2
+  objtool, xen: Fix INSN_SYSCALL / INSN_SYSRET semantics
+
+ arch/x86/xen/xen-asm.S               |  4 +---
+ tools/objtool/arch/x86/decode.c      | 18 ++++++++++-------
+ tools/objtool/check.c                | 29 +++++++++++++++++++++-------
+ tools/objtool/include/objtool/arch.h |  3 ++-
+ 4 files changed, 36 insertions(+), 18 deletions(-)
+
+-- 
+2.49.0
 
