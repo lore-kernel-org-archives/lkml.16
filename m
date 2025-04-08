@@ -1,242 +1,124 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D87008F77;
-	Tue,  8 Apr 2025 02:33:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06ECF1A5BBB;
+	Tue,  8 Apr 2025 02:34:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744079618; cv=none; b=qsrJpP7VXJEckAlfkn8egG5InM8td/7W/rvU/BAlJ2i2bb8kzHXpAnIg72o9YMbn58kcEMPGF4dvYjckzSBzzwyxK3CzPCpZ6i273ic5gGCnDpGamOyLlvLj/RUgvjRM16a/4aOCrqehyaUTSAkNxZEoiAE2l4WRDscP8dQ+dfg=
+	t=1744079651; cv=none; b=T0Tm471PP95zSGFB6enMLJaqHPSjG97sYfCUfGgEnxYqeBkDhf+nzP9PemUcT7jXSMD83fJkLchDxAKecR9w/u0qPCoTzXUpQezjSMV5G/UxKHpz4vQCD1zKpz3+XmwMWnVDpEoNtvV1UfC04cmG73uYofBNlMBB3OcSLzk8FkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744079618; c=relaxed/simple;
-	bh=vSBnwvoM1GwONMhi4Pk2sXk0SrZulUpa7dTpzQ9opg0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=n3pzZjdtp3xtk10AVNHoXTgWueP/6eKV4dgA5VTG4/j8/K98r5JBX6pJWJBE6EH8MnocolGir2R40MEq68OOwFo3aO3JuEfDUR2E5G3DA6Vu3HyP8jgP+6lxrL+eeCHXqf5rmZAYatfTzN41H6dKLfzvEVRM/r/830VIZRHXvmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=SIAaWqhZ; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1744079651; c=relaxed/simple;
+	bh=+hLj8ICUAAVqQQcsCRHJOsDstttPzIFItann4SgbdTw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MdwYM9leJ/ubrrSe3ucWlPe8NWaZthLJqRAhNBqBITbpgotUe5jK38aNAAyA6YiwIH8iKLtUGu0V9Lfq87jmjPQ5aTx1BBguZBeulfLtb+atiy6dsntxw0DPXiohbVwWZy4nMxkK2QsFrWGJZOt6KEhuYNaXajYZLBI19v7nDKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GkKetjWS; arc=none smtp.client-ip=209.85.222.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="SIAaWqhZ"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5382GPej019664;
-	Tue, 8 Apr 2025 02:32:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	8tkLU/q9k4bzXOFaIPnKaXKZ9vxRAORbRLbV0GT2sj4=; b=SIAaWqhZKCRyXT5b
-	LPOPvCKqjpkCu4mwv6zyomN6MHZkgmlw0so8HPOIgFTvYq9Cf0A5r6JjZrxaZXeX
-	OvSmKVyc0wqaJiV6Ici0LY8qoLGCe9CFuvsFTbncuBBYcapvFSp6QRA+NlhNZBMA
-	YZracMLeBdI3rOiAtyyfMvzSSgrV9iS26Q/4pRmCEW59Rb+JkDisEovKEPAZMAHx
-	8G92RknUmauD2coG9zoNEIUFGGyckGXdiK/JEne37Ai79LhaYsRwU7OyUnl9SneG
-	MYCt2UZ2tEpMAw3SRTBU9KAAYZ8jF8DTs4J/VIldsAvFodejUY9NvJbK+gTiWQSq
-	pD0VDg==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twg3e566-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 08 Apr 2025 02:32:56 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5382WtF9000584
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 8 Apr 2025 02:32:55 GMT
-Received: from [10.110.75.38] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 7 Apr 2025
- 19:32:54 -0700
-Message-ID: <73499d82-e7e5-b88a-41a4-160529efc988@quicinc.com>
-Date: Mon, 7 Apr 2025 19:32:53 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GkKetjWS"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7c08f9d0ef3so303486185a.2;
+        Mon, 07 Apr 2025 19:34:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744079649; x=1744684449; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=waaMzRcEYQgRpRjT/cb8agAmmDWkveY+/Tn+x5v2WbI=;
+        b=GkKetjWSYHbzm/fQlyh7Dbt7eVpQWG3He0fWFjvpRKEl6K9QAQEgkirdrkG3fOeeu+
+         946j698ct5N1444jNMyup7SJEbTyvxTTE+JzZs0Z5NyOtlJaFfykyK61c0BnkOB9/KYd
+         ZVqeTDfMwoRnuvRFkZmld7KryaV9RJ24z7z6Butl1GtRGO9OkCzRqYr3bX8uebxMrpEZ
+         2BackYStPHFPAZurkAxfHkG9Lnfkn2bHHdtvUlgBnIxAS4nPcpFImXMzk03Hw7IGKnjX
+         zrlej2tsrwOeZc14UWDaqgE+vWNaQ2EGO1IMJQ4O8Lm4trTHlEuulGQA0RYOvhkALAT4
+         OyRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744079649; x=1744684449;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=waaMzRcEYQgRpRjT/cb8agAmmDWkveY+/Tn+x5v2WbI=;
+        b=w3qvznv5zXVvrancwZG/94JZ9S5p4eryUS2Zw+wSJHDQYuHH7UvhTY1LeydY+fGQKl
+         D9KNpWmBjq+wl2OJFaTBxKsX36NnNZ8DM+5o/2ZAQtpfBc2HGs5QbtM6PYGe18AbcEsZ
+         8IAqlDR5vQzNty4inza+i4kdqjA3+KLlFTFU5NS6MPYnkwr1+PJKmvF7Bql1HXbYNmP/
+         kCgHhgBnQGRR1Jpnv/OBLu6r+06OlwWgp3J1rf43f8EwlaW66PSr82Tc33Csj7f161PR
+         n8HYBqR3O34NQ3EOtZAiq0Si7bxZ7MCVdTpK2nihHzBJGW/NnCmJPGPAO7nj/rozNq7Y
+         NubA==
+X-Forwarded-Encrypted: i=1; AJvYcCW2RNJZM6+GZNDekG/A4OVguRCwuaVpEnoGRqcVXC2RFzpwE1IGDok1ZdiHXKeg7bmsai38a5W6nYwG@vger.kernel.org, AJvYcCW5/XgNzXO8E93SZG1uAReghJWJp569G6n/AIg+1fdAfGsn8TUC1B4caPAHtoG9KEkCoLq7MlKuciJ9@vger.kernel.org, AJvYcCWLdUtf7wL9z3YLafEWqx7XBC2BA4jjQJYAl48WQuQYy0ZbvfJXKC2b+SFDmchCbLsO4VAaXcsgh4Y0gtMq@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzwot0VF95ubuJSrX9oZWfN4FH0mbkXyxIO11yjX3azF/9a9jH/
+	k3rBFpaieZawLrLZQQNdQCvA6Q2eUQNM3z6KOnWw7uVOjeJmV3iG
+X-Gm-Gg: ASbGncsTBnc5mZm+DvzIQkyI2yQFRwbtQo3ff9R2Oaznl+PmPmKek6IXPk9LI47DNNL
+	rpz+Q5oklRCxUA1zWrOWgxs2q3xPMt0r3hLYoYyaYDGMEMQ5NGm9E6x9FUJPOfQo2GgySg89eWK
+	HTsnhVLQo5NR+wEYc73zg80pVvVPvudCXt8kna6Lh3DIjftsEm03HZoYzrjQFYBz0778BSDFZ0N
+	8juagCZ9ta2VfdTY01LrjUopjTwUFerTcOtp2gOOp1xVG+iu9dII4KgartO6ilPfY12bPWLHdaF
+	XrawwaHlvPN65dtj4gu1
+X-Google-Smtp-Source: AGHT+IHa2pjYh5qtU2xFWFpFRw710b9YzXGj/CQhpz4LU55IzIv/AkIca8T95g1vDXO/do3EzvlTyA==
+X-Received: by 2002:a05:620a:372c:b0:7c5:a5a2:eea3 with SMTP id af79cd13be357-7c775a3a33bmr1702022885a.34.1744079648872;
+        Mon, 07 Apr 2025 19:34:08 -0700 (PDT)
+Received: from localhost ([2001:da8:7001:11::cb])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6ef0f14d2a7sm67012176d6.107.2025.04.07.19.34.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 19:34:08 -0700 (PDT)
+Date: Tue, 8 Apr 2025 10:33:32 +0800
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Rob Herring <robh@kernel.org>, 
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: Longbin Li <looong.bin@gmail.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto <inochiama@gmail.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, ghost <2990955050@qq.com>, 
+	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, sophgo@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 1/2] dt-bindings: pwm: sophgo: add pwm controller for
+ SG2044
+Message-ID: <3y4nm5ievsfyomyzm35b3moj2buunwmisjowmvovhbglcjwnhi@gaj7wz4sm7tj>
+References: <20250407072056.8629-1-looong.bin@gmail.com>
+ <20250407072056.8629-2-looong.bin@gmail.com>
+ <jq55x7uhftvejninh56tzk32jtmmwa5wxzna5uxbkk5woi7zi5@6wrg2ctmyg7b>
+ <20250407141119.GA2192351-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v3 06/10] phy: qcom: Add M31 based eUSB2 PHY driver
-Content-Language: en-US
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        Melody Olvera
-	<quic_molvera@quicinc.com>
-CC: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "Bjorn
- Andersson" <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-phy@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20250324-sm8750_usb_master-v3-0-13e096dc88fd@quicinc.com>
- <20250324-sm8750_usb_master-v3-6-13e096dc88fd@quicinc.com>
- <kj5dyy7bclmkft7x4hdpzpo7n35cu5nkpksj47phb7jt5lceab@7fb5i6gluqwz>
-From: Wesley Cheng <quic_wcheng@quicinc.com>
-In-Reply-To: <kj5dyy7bclmkft7x4hdpzpo7n35cu5nkpksj47phb7jt5lceab@7fb5i6gluqwz>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 21XJomGnkL8m6ur2pvtTBprBrwIZ3tQc
-X-Proofpoint-ORIG-GUID: 21XJomGnkL8m6ur2pvtTBprBrwIZ3tQc
-X-Authority-Analysis: v=2.4 cv=I/9lRMgg c=1 sm=1 tr=0 ts=67f48ad8 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=IJHOkPr1J-CqusO2T_sA:9 a=QEXdDO2ut3YA:10
- a=RVmHIydaz68A:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-07_07,2025-04-07_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- phishscore=0 suspectscore=0 mlxlogscore=999 lowpriorityscore=0 spamscore=0
- clxscore=1015 malwarescore=0 adultscore=0 priorityscore=1501
- impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504080016
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250407141119.GA2192351-robh@kernel.org>
 
-Hi Dmitry,
-
-On 3/26/2025 7:33 AM, Dmitry Baryshkov wrote:
-> On Mon, Mar 24, 2025 at 01:18:34PM -0700, Melody Olvera wrote:
->> From: Wesley Cheng <quic_wcheng@quicinc.com>
->>
->> SM8750 utilizes an eUSB2 PHY from M31.  Add the initialization
->> sequences to bring it out of reset and into an operational state.  This
->> differs to the M31 USB driver, in that the M31 eUSB2 driver will
->> require a connection to an eUSB2 repeater.  This PHY driver will handle
->> the initialization of the associated eUSB2 repeater when required.
->>
->> Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
->> Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
->> ---
->>   drivers/phy/qualcomm/Kconfig              |  10 +
->>   drivers/phy/qualcomm/Makefile             |   1 +
->>   drivers/phy/qualcomm/phy-qcom-m31-eusb2.c | 297 ++++++++++++++++++++++++++++++
->>   3 files changed, 308 insertions(+)
->>
->> diff --git a/drivers/phy/qualcomm/phy-qcom-m31-eusb2.c b/drivers/phy/qualcomm/phy-qcom-m31-eusb2.c
->> new file mode 100644
->> index 0000000000000000000000000000000000000000..b18aab968122683e2e87287a4b570321d376870a
->> --- /dev/null
->> +++ b/drivers/phy/qualcomm/phy-qcom-m31-eusb2.c
->> @@ -0,0 +1,297 @@
->> +// SPDX-License-Identifier: GPL-2.0+
+On Mon, Apr 07, 2025 at 09:11:19AM -0500, Rob Herring wrote:
+> On Mon, Apr 07, 2025 at 02:31:24PM +0200, Uwe Kleine-König wrote:
+> > Hello,
+> > 
+> > On Mon, Apr 07, 2025 at 03:20:38PM +0800, Longbin Li wrote:
+> > > diff --git a/Documentation/devicetree/bindings/pwm/sophgo,sg2042-pwm.yaml b/Documentation/devicetree/bindings/pwm/sophgo,sg2042-pwm.yaml
+> > > index bbb6326d47d7..e0e91aa237ec 100644
+> > > --- a/Documentation/devicetree/bindings/pwm/sophgo,sg2042-pwm.yaml
+> > > +++ b/Documentation/devicetree/bindings/pwm/sophgo,sg2042-pwm.yaml
+> > > @@ -17,7 +17,9 @@ allOf:
+> > > 
+> > >  properties:
+> > >    compatible:
+> > > -    const: sophgo,sg2042-pwm
+> > > +    enum:
+> > > +      - sophgo,sg2042-pwm
+> > > +      - sophgo,sg2044-pwm
+> > 
+> > Given that the sg2044 has more registers (to e.g. implement different
+> > polarity), but the sg2042 registers are identical, I wonder if the 2044
+> > device should use:
+> > 
+> > 	compatible = "sophgo,sg2044-pwm", "sophgo,sg2042-pwm";
+> > 
+> > Note, I'm unsure here, only providing input to people who are more
+> > knowledgeable in DT that I am.
 > 
-> GPL-2.0-only
+> Depends if s/w only understanding "sophgo,sg2042-pwm" will work on the 
+> 2044. IOW, will a kernel without the driver change here work?
 > 
 
-Will fix.
+No luck, the logic for SG2042 is broken on SG2044. In fact, it seems
+to be more familiar to the pwm ip on CV1800 than it on SG2042.
 
->> +/*
->> + * Copyright (c) 2024-2025 Qualcomm Innovation Center, Inc. All rights reserved.
->> + */
->> +
->> +#include <linux/clk.h>
->> +#include <linux/delay.h>
->> +#include <linux/err.h>
->> +#include <linux/io.h>
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/phy/phy.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/reset.h>
->> +#include <linux/slab.h>
->> +
->> +#include <linux/regulator/consumer.h>
->> +
->> +#define USB_PHY_UTMI_CTRL0		(0x3c)
->> +
->> +#define USB_PHY_UTMI_CTRL5		(0x50)
->> +
->> +#define USB_PHY_HS_PHY_CTRL_COMMON0	(0x54)
->> +#define FSEL				GENMASK(6, 4)
->> +#define FSEL_38_4_MHZ_VAL		(0x6)
->> +
->> +#define USB_PHY_HS_PHY_CTRL2		(0x64)
->> +
->> +#define USB_PHY_CFG0			(0x94)
->> +#define USB_PHY_CFG1			(0x154)
->> +
->> +#define USB_PHY_FSEL_SEL		(0xb8)
->> +
->> +#define USB_PHY_XCFGI_39_32		(0x16c)
->> +#define USB_PHY_XCFGI_71_64		(0x17c)
->> +#define USB_PHY_XCFGI_31_24		(0x168)
->> +#define USB_PHY_XCFGI_7_0		(0x15c)
->> +
->> +#define M31_EUSB_PHY_INIT_CFG(o, b, v)	\
->> +{				\
->> +	.off = o,		\
->> +	.mask = b,		\
->> +	.val = v,		\
->> +}
->> +
->> +struct m31_phy_tbl_entry {
->> +	u32 off;
->> +	u32 mask;
->> +	u32 val;
->> +};
->> +
->> +struct m31_eusb2_priv_data {
->> +	const struct m31_phy_tbl_entry	*setup_seq;
->> +	unsigned int			setup_seq_nregs;
->> +	const struct m31_phy_tbl_entry	*override_seq;
->> +	unsigned int			override_seq_nregs;
->> +	const struct m31_phy_tbl_entry	*reset_seq;
->> +	unsigned int			reset_seq_nregs;
->> +	unsigned int			fsel;
->> +};
->> +
->> +static const struct m31_phy_tbl_entry m31_eusb2_setup_tbl[] = {
->> +	M31_EUSB_PHY_INIT_CFG(USB_PHY_CFG0, BIT(1), 1),
->> +	M31_EUSB_PHY_INIT_CFG(USB_PHY_UTMI_CTRL5, BIT(1), 1),
->> +	M31_EUSB_PHY_INIT_CFG(USB_PHY_CFG1, BIT(0), 1),
->> +	M31_EUSB_PHY_INIT_CFG(USB_PHY_FSEL_SEL, BIT(0), 1),
-> 
-> I suppose, we can not expect to have #defines for all used bitfields?
-> 
-
-Added the bitfields as requested.
-
->> +};
->> +
-> 
-> [...]
-> 
->> +
->> +static const struct phy_ops m31eusb2_phy_gen_ops = {
->> +	.init	= m31eusb2_phy_init,
->> +	.exit	= m31eusb2_phy_exit,
-> 
-> I think, you have a missing .set_mode callback here.
-> 
-
-Added this to properly set the mode on the repeater as well.
-
->> +	.owner	= THIS_MODULE,
->> +};
->> +
->> +static int m31eusb2_phy_probe(struct platform_device *pdev)
->> +{
->> +	struct phy_provider *phy_provider;
->> +	const struct m31_eusb2_priv_data *data;
->> +	struct device *dev = &pdev->dev;
->> +	struct m31eusb2_phy *phy;
->> +	int ret;
->> +
->> +	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
->> +	if (!phy)
->> +		return -ENOMEM;
->> +
->> +	data = of_device_get_match_data(dev);
-> 
-> device_get_match_data()
-> 
-
-Done.
-
-Thanks
-Wesley Cheng
+Regards,
+Inochi 
