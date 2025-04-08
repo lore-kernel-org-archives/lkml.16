@@ -1,162 +1,179 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2066.outbound.protection.outlook.com [40.107.243.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C11BC22A4D6
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 13:12:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744117925; cv=none; b=MD/fU8Wwc943yLBPPfhjqATXZkzpMZMmp+B7SoL8OuaD7kXg0bx0Obqy7nBREKum6ycqMHoOOOeQQ6UsaPMyiY7v7dP3Dn1M7o5AFdaaosXAUaE5YLBMaT748FIFHWSOQx/9Hd9Tlhl4PjmsHYJVFos4txkXlCkMWdsjDWXdh+c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744117925; c=relaxed/simple;
-	bh=y5PBEcHtoKRAjIKMcCw4vFbETq+E/6uta6ffiRCS7Ew=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=D7oIGXG/voPXL8UYmYFx0cJBLYkzNGhZPvTenDhYjDAEaIym8dH6rMtgz2iN9l7KEsR0DZubVe2OiYbn9KgVBrP1imrLNIx8DzeZmE1a5dCj1tyL+hQ7Fv9+YlkKLyariTLJmHwajykS/VnyT892m69S7xL7BSdSYy5+jCuVdiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=FQ2AnxcO; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AEBB288B1;
+	Tue,  8 Apr 2025 13:12:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744117982; cv=fail; b=n3sFTiDt6vZlUAEqOFD7wRewXcJrNznr8R6mf0sVS1mZz/dMMKvMSBgEgtSxeXAMfq/z81vavtg+4wcCFGsCZc0Nid+GUJXYdp43lfe0LEYBHfhvvO47bg8V1axI26m1paPPZDwzIBNcpqeUHgHjOllihZ5nlDrBuK9+TV/nogE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744117982; c=relaxed/simple;
+	bh=BoWwRiTyaxhHfSPJDUpB6ECaDvEXkyqWXmnv5hn9IzU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=YNt12uMB/93JZswWd0eslOGG6nMyY67CHvMiPqMuvKIiQiUq8VGmfbU1rAsXu5d9kIFyHQhRPmJltKWD+DjH/2o9h8TKYjc2oEaOGmvQ/HgCh9jHig+fz58k11n0pXiYW6i8Pm3omoXFwFf6xtyuzdqurqtYB0/NFCQhm3KEhks=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=YEsloho/; arc=fail smtp.client-ip=40.107.243.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FQ2AnxcO"
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250408131155epoutp02b41a98852d88fc59871319aa31f24067~0WgDzK8wt2364923649epoutp02O
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 13:11:55 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250408131155epoutp02b41a98852d88fc59871319aa31f24067~0WgDzK8wt2364923649epoutp02O
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1744117915;
-	bh=UpfyEqcbyWYNvj+IMLEyTAQFHr3NXL7nlnPV5XPxuFc=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=FQ2AnxcOql+tqzfam9vPPLFZ/XCnFjd2fjgfYgEBxsM1SIhHZdueZWoyYUSxMwr8b
-	 4VtsoJ0wUpxsywtOuMhvG5U86ebs+vlwIm3tVWfp8hGgyS8PzJ9rYTa6LrHMEIgYda
-	 8BVKwlmKrQmqcikeEKXWk4I7oeTU1BBqr+8WWXmc=
-Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
-	epcas1p2.samsung.com (KnoxPortal) with ESMTPS id
-	20250408131154epcas1p2f53c808216ea8bf2e3efb2bd64a857a3~0WgC8slU-0624206242epcas1p2y;
-	Tue,  8 Apr 2025 13:11:54 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.36.223]) by
-	epsnrtp01.localdomain (Postfix) with ESMTP id 4ZX6165nb9z6B9m4; Tue,  8 Apr
-	2025 13:11:54 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-	epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-	03.58.10191.A9025F76; Tue,  8 Apr 2025 22:11:54 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250408131153epcas1p1bb1c8d060037bd37ab623348a210db80~0WgBi8iL51807118071epcas1p1i;
-	Tue,  8 Apr 2025 13:11:53 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250408131153epsmtrp26b03680167f30fb304810f06e6523a3b~0WgBiLyDL0774107741epsmtrp2v;
-	Tue,  8 Apr 2025 13:11:53 +0000 (GMT)
-X-AuditID: b6c32a39-42cce700000027cf-3c-67f5209adbe0
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	03.75.08805.99025F76; Tue,  8 Apr 2025 22:11:53 +0900 (KST)
-Received: from W10PB11329 (unknown [10.253.152.129]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250408131153epsmtip1bdfe66dbabdd2bdba2aa9c6d45b367e5~0WgBS5bma1049710497epsmtip1Q;
-	Tue,  8 Apr 2025 13:11:53 +0000 (GMT)
-From: "Sungjong Seo" <sj1557.seo@samsung.com>
-To: "'Jan Kara'" <jack@suse.cz>, "'Phillip Lougher'"
-	<phillip@squashfs.org.uk>
-Cc: "'Andreas Gruenbacher'" <agruenba@redhat.com>, "'Namjae Jeon'"
-	<linkinjeon@kernel.org>, "'OGAWA Hirofumi'" <hirofumi@mail.parknet.co.jp>,
-	"'Carlos Maiolino'" <cem@kernel.org>, "'Darrick J. Wong'"
-	<djwong@kernel.org>, <linux-fsdevel@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, "'Luis	Chamberlain'" <mcgrof@kernel.org>,
-	<sjdev.seo@gmail.com>, <sj1557.seo@samsung.com>, <cpgs@samsung.com>
-In-Reply-To: <ormbk7uxe7v4givkz6ylo46aacfbrcy5zbasmti5tsqcirgijs@ulgt66vb2wbg>
-Subject: RE: Recent changes mean sb_min_blocksize() can now fail
-Date: Tue, 8 Apr 2025 22:11:53 +0900
-Message-ID: <dd0001dba887$cbe78280$63b68780$@samsung.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="YEsloho/"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=gNbAI4Ndkn67EhxQfn3XKd6NLPOA/APEel+0yZ4TjFtzwg3W6yP4jAS2xe7nn+nkraqp//7N9LvQtT4yxMAWCNSAHR65/LRpjbIvtMK/g+w4dDVQOqE4wNSASQu4yXj3Lqwbi8Y8c+YUuhpMzHOzr368yrS923bwOLwGTAFJqZzfRTXxzttzme7FNwcdAs705wZcf5706hgQCYi4TCOjRpHcLwUgGqNNr/T2VkXAKXWRMI52iaawQ9PBg3NHVGbpqL5MeDC1yy/lVPatzWFWGms8pT9rrP5PAiXictUmO1RfF/9bqk3qR11XUZqynRCoL3EPe2+bjBdmZLF4S2utag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=k/1Hg3pPRlCxzs3N5RsHf7NPgIa6KsZjTglqC6L5m1g=;
+ b=SftpyGQWhpOVNPvEacO55afKI5Qn7laji4VgiPGj2QfkmzYcSNsm0nw3F25gXursb1rv+wRVWuqaBaJG/t9d2a82HuQBNeQiQre8UDeYNH1KDdyi2xj4plD4pmv3eFVtOntF05XTL+taCQhQpI4AZGejZoz+/p15ywZOLsrJJbviziDzlGaWFUCh3E/faa3P7epDZJjD1AaHdDFiH6MkEljBCCjHy2qrF5Ia950aqT2lDPrS0IpEH0z7zmMZHWpPLKOUkpZbtWd1XMxijUdgDtCjNLM2Bm44ESF3DBSGQ1bL8fLCn7/Pn9p8lErxF+QsCPZpc25VoAHrS3p66fZepQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=k/1Hg3pPRlCxzs3N5RsHf7NPgIa6KsZjTglqC6L5m1g=;
+ b=YEsloho/6U0PYsMatidBIi1V+8Adiksc1NiXMAnqxSW2TsBkAcTkeUXQqMke4U02bQ96G+63uncu2S7Rzk1FeAN3beiMcgoXJyVikcYECXHXZrvrnop1SMM6mHNnJ2tbQL0s8nvS2vRTGlxG4IpmgO9nqruD/sIll9QpfZfL+xmeR1eKTde7y2G5VRJ/uBY8yYZ57xaVs8qD5YWVtcvwtnDOTFyqWpzDQtcnAWpYJenvHHvoQVfm+3bkksTRtFEV3bZigqc0Gmva13OT3IshkBsbkjyNz2CAH8Q8Nw2ZcbqHRCzbGeopLkYbeSRguJ9GTN0PEWJBOpnsvQwh7JU0ng==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CY5PR12MB6405.namprd12.prod.outlook.com (2603:10b6:930:3e::17)
+ by LV2PR12MB5893.namprd12.prod.outlook.com (2603:10b6:408:175::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.33; Tue, 8 Apr
+ 2025 13:12:51 +0000
+Received: from CY5PR12MB6405.namprd12.prod.outlook.com
+ ([fe80::2119:c96c:b455:53b5]) by CY5PR12MB6405.namprd12.prod.outlook.com
+ ([fe80::2119:c96c:b455:53b5%6]) with mapi id 15.20.8632.017; Tue, 8 Apr 2025
+ 13:12:51 +0000
+Date: Tue, 8 Apr 2025 15:12:43 +0200
+From: Andrea Righi <arighi@nvidia.com>
+To: Breno Leitao <leitao@debian.org>
+Cc: Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>,
+	Changwoo Min <changwoo@igalia.com>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	linux-kernel@vger.kernel.org, christophe.jaillet@wanadoo.fr,
+	kernel-team@meta.com, stable@vger.kernel.org,
+	Rik van Riel <riel@surriel.com>
+Subject: Re: [PATCH v2] sched_ext: Use kvzalloc for large exit_dump allocation
+Message-ID: <Z_Ugy6NDFBscP9Ef@gpd3>
+References: <20250408-scx-v2-1-1979fc040903@debian.org>
+ <Z_UI2AHtkIGS4bZR@gpd3>
+ <Z/UTzPoI7+LElhEE@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z/UTzPoI7+LElhEE@gmail.com>
+X-ClientProxiedBy: MRXP264CA0016.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:500:15::28) To CY5PR12MB6405.namprd12.prod.outlook.com
+ (2603:10b6:930:3e::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 15.0
-Thread-Index: AQJRCaHaogomL6hlNxnS1IqQdP5a5wHHr4YsAptGYzWyi+DQkA==
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpnl+LIzCtJLcpLzFFi42LZdljTQHeWwtd0g3lzNS22rdvNbrHv0lRG
-	i5eHNC0uP+GzmD53A4vF7OnNTBYTpy1lttiz9ySLxeVdc9gsbkx4ymhxtGczm8WWf0dYLV58
-	2MDmwOuxc9Zddo9NqzrZPO6/TfR4v+8qm0ffllWMHlO+Pmf2OLPgCLvH501yARxRDYw2iUXJ
-	GZllqQqpecn5KZl56bZKoSFuuhZKChn5xSW2StGGhkZ6hgbmekZGRnqmRrFWRqZKCnmJuam2
-	ShW6UL1KCkXJBUC1uZXFQANyUvWg4nrFqXkpDln5pSBf6hUn5haX5qXrJefnKimUJeaUAo1Q
-	0k/4xpjx7NFm5oLv7BW/Hj5ka2Ccx9bFyMkhIWAicXzZa+YuRi4OIYEdjBK7TmxgB0kICXxi
-	lLjSnwWR+MYocXfuRVaYjj3XHrJCJPYySkx7tQnKecko8evkPrC5bAK6Ek9u/GQGsUUEAiQ6
-	Oz+xgBQxC0xllni9bh7YDk4BP4n5Pw6CjRUWcJBYuuIjWJxFQEVi8vXvYIN4BSwlHm15xQJh
-	C0qcnPkEzGYWkJfY/nYOM8RJChK7Px1lhVjmJLHo2GJmiBoRidmdbWDPSQjc4JA4dfM50FAO
-	IMdF4uUfF4heYYlXx7ewQ9hSEp/f7WWDqO9mlDj+8R0LRGIGo8SSDgcI216iubUZbA6zgKbE
-	+l36ELv4JN597YEGEa9Ew8bfUDMFJU5f62aGWMsr0dEmBBFWkfj+YSfLBEblWUg+m4Xks1lI
-	PpiFsGwBI8sqRrHUguLc9NRiwwJT5AjfxAhO41qWOxinv/2gd4iRiYPxEKMEB7OSCO/biV/S
-	hXhTEiurUovy44tKc1KLDzEmA8N6IrOUaHI+MJPklcQbmplZWlgamRgamxkaEhY2sTQwMTMy
-	sTC2NDZTEufd8/FpupBAemJJanZqakFqEcwWJg5OqQYmc0urT2oyD952xGSenvFFq2C/TizP
-	z1vPw+Nq805zBktMefI4vMJw/rXfQjaaCS9vr+DjVu1+3HbWcs8p61ZG+4wz73olo0xKOO7p
-	HDrS9UopWshTNHryrbvi7X6rnnX4a19dmKwzVybs5/P85coVL+d3rw/ad8hQqLR0eraG+3TX
-	/kta4X+OORdWiXHHW91uC/9w1Zav9lCo+eLqkoeyV806tbT1zjA8txJfE8L+4ZTCa03ZjsMv
-	0k3WfJRZLOVRqVjL0aArqPlU8NnlmFdfPnwI+O3MwpWmftxF+V1z0F293EVch7taXITPzTOZ
-	fUypabnixGSNTGUvZR5Ju+0vzrAFKTB3z2999myenBJLcUaioRZzUXEiADkpFEmaBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrNIsWRmVeSWpSXmKPExsWy7bCSnO5Mha/pBg/f81tsW7eb3WLfpamM
-	Fi8PaVpcfsJnMX3uBhaL2dObmSwmTlvKbLFn70kWi8u75rBZ3JjwlNHiaM9mNost/46wWrz4
-	sIHNgddj56y77B6bVnWyedx/m+jxft9VNo++LasYPaZ8fc7scWbBEXaPz5vkAjiiuGxSUnMy
-	y1KL9O0SuDKePdrMXPCdveLXw4dsDYzz2LoYOTkkBEwk9lx7yApiCwnsZpSYddCli5EDKC4l
-	cXCfJoQpLHH4cHEXIxdQxXNGicmHZzKDlLMJ6Eo8ufETzBYRCJBYuewaO0gRs8B8ZokTEzqY
-	IWZeY5Q4sTYGxOYU8JOY/+Mg2C5hAQeJpSs+soPYLAIqEpOvfwe7h1fAUuLRllcsELagxMmZ
-	T8BsZgE9ifXr5zBC2PIS29/OYYa4X0Fi96ejrBBHOEksOraYGaJGRGJ2ZxvzBEbhWUhGzUIy
-	ahaSUbOQtCxgZFnFKJlaUJybnltsWGCUl1quV5yYW1yal66XnJ+7iREcn1paOxj3rPqgd4iR
-	iYPxEKMEB7OSCO/biV/ShXhTEiurUovy44tKc1KLDzFKc7AoifN+e92bIiSQnliSmp2aWpBa
-	BJNl4uCUamAKmbviu8wCthwLE27zmVfqNj1hmWaeIJgvktqgIHlNu/krf3ypIG/GVn3RjxPY
-	/l5cE7ix6bp3tZlLpguTcYiW7ZQHsxvDDf/ET7328HR4xLw53l4/o+P2Bx1TOzMn4cKLKoYL
-	6y64sO5kWz6hXrulsELEkNUjXnOSz82bk1Z1mpatZWG1nWCXGS4Yp/ugi/GYx+mZGptmCplM
-	4Us26/7ffUNYc5rVmcMHE85/4/dwfvk+yegQ1x4z++r3clErWZ6uqdvEFTsvfbnG/+Cjk7Pv
-	91pciDtk/Gq7AWegkNThKu4VC78Ku83ZcKhHbv26acfavT6v3bS/UCRTp+vR1aenH3XMvJfd
-	7nW88VeoipUSS3FGoqEWc1FxIgD8sJNRPgMAAA==
-X-CMS-MailID: 20250408131153epcas1p1bb1c8d060037bd37ab623348a210db80
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 101P
-X-CPGSPASS: Y
-X-ArchiveUser: EV
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250408104502epcas1p1bd964ac9143218dace05538507ef8c6b
-References: <86290c9b-ba40-4ebd-96c1-d3a258abe9d4@squashfs.org.uk>
-	<CGME20250408104502epcas1p1bd964ac9143218dace05538507ef8c6b@epcas1p1.samsung.com>
-	<ormbk7uxe7v4givkz6ylo46aacfbrcy5zbasmti5tsqcirgijs@ulgt66vb2wbg>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY5PR12MB6405:EE_|LV2PR12MB5893:EE_
+X-MS-Office365-Filtering-Correlation-Id: 74b61a55-510f-46eb-d490-08dd769f10d0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?WyXjigptWHsujQpp94eM+pLHR1JZWl2/2OFA1954TtQU+zinESsnJrNPckxO?=
+ =?us-ascii?Q?DbCoAkvVHv7p4jso4zSExVlomL7TF1X/Cs/hujrnFD+KtGWoUrkHLe3dnzUb?=
+ =?us-ascii?Q?8zRyrqM5e0+1CDMwutIwX3bbZHAiaXQBUjOAybu0QL7eWcbK5XpFQiEhISvD?=
+ =?us-ascii?Q?9HA3OJNBsrs9V/u3GoC18YfVqC5LA21DS4rhqmiURWCqofhw+oH6FXERfx59?=
+ =?us-ascii?Q?dI7sDzn0rjkv8W6Wp03Plv8K3dWbk/q8x6xVT5SIxdg+p8o8YzP/5Z6fUxyB?=
+ =?us-ascii?Q?qGX13WOSsZP1AfEdr7L6BDWlbPtRqURMkrSdySFqP6gB9SanGQ8ecNNI+nP/?=
+ =?us-ascii?Q?Y5bR56gITgaYVn/QigwGS2fxB/QlJZEXLuBvrHVdozeB2mBTPwc1axQ5UjGt?=
+ =?us-ascii?Q?MEZYFVBhp1UR9VmvfxySyI53e/LKXNztR88Bvx6zqhRPXArpeEg3j9QpKuXc?=
+ =?us-ascii?Q?zqJdNPYMexffCYfmdL9RjBR1KKXlMK4BTv7UJjlK0LFQ6DXK6Llm2+v5BauC?=
+ =?us-ascii?Q?w/hnlzysmkLvs7pG64jikx6besYX0D3kU/FDDwdO+ttFL43q2ZubKq9z7PMY?=
+ =?us-ascii?Q?EdsxYBW0tG7rT/0KC5sCaE5BdkGq2FWKFPpceSwNcTDRckZ1oW0fnpof9sSN?=
+ =?us-ascii?Q?ln5pEhRe3SMqomdCsgYFaFn0cNLCECFDW/H9flr1Qdfzq/1+bLqf5zkQkPmR?=
+ =?us-ascii?Q?C5cXQ0zuU5PID8Gi8a3vyfjlwMTWY6belGsMyxyY2Zf9FPYbMYtiO5zrXdE9?=
+ =?us-ascii?Q?+R6QZVOwAsCjn5Rtzwggs2yCk0K6/dKWl5v419BqKwmzW6mu8Hekp7WpHFUu?=
+ =?us-ascii?Q?kUxGgeXIDs5iPrEm2amGnxhkqIJt62Ne/S2gAWCcvT9nnUoAcQVQeznrVRIr?=
+ =?us-ascii?Q?PJ6cJ8gzjefTZdcJpFnd1cdjuXmu0QrJ7gPGtytG+j7O7yqsa5k10gboHNmO?=
+ =?us-ascii?Q?APJcEHtLM64/4au9ZA4pgJ+zdz9DOwlitG1fZdqdpMhf6KwSSC5AUx1yeuiK?=
+ =?us-ascii?Q?3qfRrgyf0Nf91MBzOpGuqkfg+ntKvYUalXzHrHrIN3TM0fHWFEIJ6UQ986vU?=
+ =?us-ascii?Q?XD0AL4klnVkYMLDsjuJ14GgfJDk3+nnx6/yvQEQqIQ9/1dPgKm3lG/ImZFlt?=
+ =?us-ascii?Q?kqfVAgucHZX5gzjfuX6H4J1fmiShe3P6q1EU/jSwHD7d2MQqU1r9pn2yPQU4?=
+ =?us-ascii?Q?uNksLVg8+xruEp+J3EzunwSarcnvwnEBjIqeSENC0wXxfCmcl15p2wHgvkIA?=
+ =?us-ascii?Q?Q3aiKzl8mh/vYGKAaqHK20Mw8SvUAc5ZxPaPCjAXNhklnbj1B0mOFDJ9aDz3?=
+ =?us-ascii?Q?3Vbqt0dtH9rsitHkLxg0wK68lnIqeNQJVkeZeB0QiG0dMNl6aDMU3HVRkCRp?=
+ =?us-ascii?Q?6yDF4IuLbf2PXwLpJi2S3jwymSz3TlLD78HLyMFDJeTW70conOBD4L6A4yI0?=
+ =?us-ascii?Q?ePK2CPsvWck=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6405.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?0GG49o3z71UHuw+f2WYy0tQtHnmFNvTTBpkCr5+dnlHmihMZ6JjYj7wrpTkg?=
+ =?us-ascii?Q?jMuGx8Xjrxk3vlMKuZ7UHVr6xp6pPKarznRzGsd9i/vD9o1EFUzdmQMpkHGB?=
+ =?us-ascii?Q?e0V+JHXvcPLNDPBMRe/F4IlH8k1MjgBzmaJOLLOAozryI+m1PCrEQVcg8Zo/?=
+ =?us-ascii?Q?SKJuztU3k4ReEsveo1GqCMSQtruPMFfZpqlv2a8wdZ595Zkgq/euqnEe9gLC?=
+ =?us-ascii?Q?PXmwnWjE3eSFrEwPybuvokicJ5OElc162MbocF20DnHPADRKL74H+AH3DJCg?=
+ =?us-ascii?Q?usRtOYs+UclwJUBH5dZChDP+8G8w8GvKKiZ5oPXIRwc+0r5rvV2+wdvyceWB?=
+ =?us-ascii?Q?3/XRoLqv8Sf6PvmEyD5GDQt/xs3whap2OL6ksvdyLHj911Kb0kokx7K6hv8Y?=
+ =?us-ascii?Q?RkF2zF/R0uzzY5PRLPV1tNEZxL3jvjcaJsbPK3qUxGw61uHQW9MmabTTD50r?=
+ =?us-ascii?Q?odnOPl6qU6U5erqFAsU034WIZXGs0eKbrTs6L75jDx2wHAmRhjXWI2PKl0N2?=
+ =?us-ascii?Q?entHR2WXmVIHJZYoagskpplWPVZIERj5Y2YYn/pUGrTBIGz0hn+imq0VpPxG?=
+ =?us-ascii?Q?HXYILMwiFUhddPAXdCbTaxjMatMmlNJQCPfq08Uc2tKYGFP03kPMkgz4GGRO?=
+ =?us-ascii?Q?vKNUVe/L9a5WlEg/tYr9iDpvXjHakeokZSEf6OTgAywOz4Za9336xo65NQnS?=
+ =?us-ascii?Q?brui6iJR3AasT3tlvFwxdF6d0b8REmPsUv+EGVeM/E0H4o7C0BpBanQXtww+?=
+ =?us-ascii?Q?ppMhzNzek0yhu0QtpXBJtpFL+SvUhdx4o9PwoQbsn/MF2HT/2r+dzgC711+2?=
+ =?us-ascii?Q?kMWzF3dTCatetFuFoIP1Gk5j521Dj6BFqQ51b3p44p6BbY7qlWni/N2Pvw0C?=
+ =?us-ascii?Q?NWMBQQ7+p/xfhRkDGuwmZhuGadDpqE6RHiacdb+/qq5y0DxNZO1g1aMM+JBB?=
+ =?us-ascii?Q?17OkqMWOwX9HgrUj1GdfRL2EiabetdiwYuZT49kbpqqSWaKKnJEmtiBnAVLY?=
+ =?us-ascii?Q?khDxNvFIRUsT6JCWG4HWAsfnYrAkU5hd/NZjgRv1wTkZNa+3i8WkxO5nTReC?=
+ =?us-ascii?Q?qsU/jPvXCv4Bnx3BJEvpwgKzJC2LreFavWVdx7816vpX3fnlRDZE5M3igKzq?=
+ =?us-ascii?Q?NIKlAol3hZ4sXC6a/y/MRUfXK7qxT2hoTLYx+TsWmJBvA7zupC+yO4yXcZtq?=
+ =?us-ascii?Q?bey5UNOAzm5RWLFdHTSIdm9pbwabD8P0LubZj1fTZqtx//Jb3HKuV3d+wjeS?=
+ =?us-ascii?Q?h9ngCSEcnoyhYBPOptLsxM5TjNkIsAVa3FWo4lFFORDw4TW8wYPGx8Ho7vrO?=
+ =?us-ascii?Q?YX7lKtsb3TzxrPgT3hv7GNpZb2HBt4HfE/F0b9vCZN8QgQjyqslV82Ibl84q?=
+ =?us-ascii?Q?ihfCpPZiX7IKbYZsIgQxoyqMk4uNFGeOtGZDOcb1GoWNavRmKB4O0zPg0PU3?=
+ =?us-ascii?Q?hDTkTXs3Sj/MKOoGebwJMhZgLHFotzGkuAYcMj3zkw0DDGyVkUlW8YQnHB15?=
+ =?us-ascii?Q?zuMuBXRcpIIVT5P0oeiLQzeN8MHEOczYWhr0qRMMLixzdg0XnDkUpFaP56jA?=
+ =?us-ascii?Q?Kejn3aK9SZRsiYRh9EBvvmfyUWP8Nhm8i6GenjfH?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 74b61a55-510f-46eb-d490-08dd769f10d0
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6405.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2025 13:12:51.4070
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: T1q2JnDPaS8I22BkgGKX9z60MS77LaEALVyyAQ+25eAWGDCVE7Dx/tfmBr0iStY5lmEZGyP0qO/L+sJRHuR7Xg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5893
 
-Hi, All
-
-> Hi!
+On Tue, Apr 08, 2025 at 05:17:16AM -0700, Breno Leitao wrote:
+> Hello Andrea,
 > 
-> On Tue 08-04-25 06:33:53, Phillip Lougher wrote:
-> > A recent (post 6.14) change to the kernel means sb_min_blocksize() can
-> now fail,
-> > and any filesystem which doesn't check the result may behave
-> unexpectedly as a
-> > result.  This change has recently affected Squashfs, and checking the
-> kernel code,
-> > a number of other filesystems including isofs, gfs2, exfat, fat and xfs
-> do not
-> > check the result.  This is a courtesy email to warn others of this
-> change.
-> >
-> > The following emails give the relevant details.
-> >
-> > https://lore.kernel.org/all/2a13ea1c-08df-4807-83d4-
-> 241831b7a2ec@squashfs.org.uk/
-> > https://lore.kernel.org/all/129d4f39-6922-44e9-8b1c-
-> 6455ee564dda@squashfs.org.uk/
+> On Tue, Apr 08, 2025 at 01:30:32PM +0200, Andrea Righi wrote:
+> > Hi Breno,
+> > 
+> > I already acked even the buggy version, so this one looks good. :)
+> > 
+> > On Tue, Apr 08, 2025 at 04:09:02AM -0700, Breno Leitao wrote:
+> > > Replace kzalloc with kvzalloc for the exit_dump buffer allocation, which
+> > > can require large contiguous memory (up to order=9) depending on the
+> > 
+> > BTW, from where this order=9 is coming from? exit_dump_len is 32K by
+> > default, but a BPF scheduler can arbitrarily set it to any value via
+> > ops->exit_dump_len, so it could be even bigger than an order 9 allocation.
 > 
-> Indeed. Thanks for the heads up!
+> You are absolutely correct, this allocation could be of any size.
 > 
-> 								Honza
-> --
-> Jan Kara <jack@suse.com>
-> SUSE Labs, CR
+> I've got this problem because I was monitoring the Meta fleet, and saw
+> a bunch of allocation failures and decided to investigate. In this case
+> specifically, the users were using order=9 (512 pages), but, again, this
+> could be even bigger.
 
-exfat-fs calls it to set it to the minimum value of 512, but it's not
-particularly problematic if it fails.
+I see, makes sense. Maybe we can rephrase this part to not mention the
+order=9 allocation and avoid potential confusion.
 
-Thank you
-B.R.
-Sungjong Seo
-
+Thanks,
+-Andrea
