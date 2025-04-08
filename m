@@ -1,106 +1,148 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 672D3801;
-	Tue,  8 Apr 2025 22:02:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1668C1DF99C;
+	Tue,  8 Apr 2025 22:03:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744149739; cv=none; b=GIdbdlyWgyTNFEYJokYzdk32BoImcd/uF4ZvuV3G3naQf1fIxPs1NIdlsXZw+bSopQRVsHsR3wF24JDWXJyDPGSLtopmblQVOK9WsP6wgy6tpsQFlGwdh+WJxFiIvRvSQPQR9GlLQq6wkFfSzlOEtLI0QYR9NCaUQPtWVvFo4To=
+	t=1744149804; cv=none; b=ox1PxSrnzdiOqFh3w1yjU/bfSO0yM15aZXDZQJ76FjnuisKTPDS2Y88Jiit95lZuyArAcAKTS/iTcvcDWYb6shqGR6wLgFx8a1M30NQshv44x5sCK/Dsaxnc9AMOGDYrUI5DhadW0vAlMHRh68nVKCxMOTy98EM8Qg+3rim0R5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744149739; c=relaxed/simple;
-	bh=9lX8wh61BYIq6E4SXmVUNndEK6nzrq+wZuS8HRjbnA4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Vt0U2QxLc+kdlBt5zLweZLW9A2cGqSWZbRjCM4VS8PWktq6LeEL7ZxFXXusBb03LbQ9JQ+wxWuYiq3QecC2xWvFx9bHi5xNSzAiXULXnRlq8ABO7DRwJoxjcn8tc/UCQ+sWrT0b5tRAMn60fxtwwjrENACGMnWjDLRVIWtbFLPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T+AKZKle; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744149804; c=relaxed/simple;
+	bh=xOdajHCO7ZEy273vrF1Pnc6StW6I57Grl/gjkVjIkWQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YsH8KSh9oy5c+cgKNcp/R/uEoBkNegU2lQjZiWtozcheV/0JRh9uJrpjsTGKq45nXoPTKpHk1F6E2mys5Os3SaXThjFUQHHNaAddb+PiDi+BQcCRwxWOWv7MCTIKup5m5VTLOD78fpkvNeeN4OEbY4PoKBNrMpwRqfMkNxuFmxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D5RtukQr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T+AKZKle"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-736ad42dfd6so4996990b3a.3;
-        Tue, 08 Apr 2025 15:02:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744149736; x=1744754536; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=CKLxdjoJBD9fIc5Dhkkx8uZiXNwOxA2THYRoD8HoSis=;
-        b=T+AKZKleq8qIASX5nmEOaInRiAxEafoZc0PvpQFasy3MLKuN41UMl41Li7tSUeOYw5
-         xiEYZxyQGpt1IuUN6qrGC4bNXSWuyEunMq0xb/d+BTyzll5lGmoMtqArxQCbbq3dVEsC
-         wn1hAfpvQQF21Tx1kMdjYIt7nD3Or9xBny6366SK6zMESrzpYWGkRWQyvleowRfrN2Hg
-         9N3iR5zRtiYn2buTHLle31tSVA6cU9fI+1bkcZeYoyd9rNJdqf+YvBgBjNeUZcJGtjqU
-         RlWQT+YSgUY0fMBIVh3p+nqVW5kkW950CcwWfmwe4SLUxn56ARkvcv58u4YJ8FrsqqvZ
-         0L7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744149736; x=1744754536;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CKLxdjoJBD9fIc5Dhkkx8uZiXNwOxA2THYRoD8HoSis=;
-        b=pKD6Bd5hkke8lfSRC7D7M390Ww+k5oVHAqJI6Nx9oiWC9iTXEtBxmdwVAXl66PI8EP
-         zV77YLzMwPFixQNrbzlESBtzU74UkEpMxI6JWfavhbTGoVgmFHRMuRgP0krqA+slZLW2
-         8Q+ZfJQ3Xq7yrwaYCYr+KZYbVoIfLhxEZDnV0nmTLeEgM1HsRj8Ppqt9e9UZifT5p8ZV
-         LjJYKwJn1BLzoQQYfLVFRCJuyrPGMfNNTioFSHZW4rXxoiMe94DJnfVBzf4zZfgL6+r3
-         Y1a1/egVbaO/fOGOdJxPzGkD4NvJJlxaCuLp4osE3HVmSAvoZNCGQIi85dHaIhr4BwWi
-         NGOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVsDlgW0LYFYSQS7l7TEkCwjP7FMhAV+8OZ+zKJGBcwCY0dIQ/BtBJpSlhGEuO0tb0a8JzgtcbcECmLsxg=@vger.kernel.org, AJvYcCWvY0soMXCwfUfFrUtxb6+M/kVFxPoaTliDw6N7/5Pntd3EtY4R8l8HI9uAPyM2nBDa24pett/7@vger.kernel.org
-X-Gm-Message-State: AOJu0YySJo7TL68ZNViV6N4OGa9+ZwFKLqrA08/n6g3sukFGVEFEmZKK
-	NeblyWVHtmZrMrkoVWOZJ3bQvwjcpcjLiOhclUMFJ/ozxXFDG8U=
-X-Gm-Gg: ASbGncuaXbeyJe5BhdIdI2xVgCJazF9od+Pt9QdWHWTziTRnRx10SQNTxfu5jNFboN4
-	q89thVi9gHzW/BwNOQhmftwcBXfQRqEXJxuRgKfGnfAjFp+hCzvxeM1p1DQ2GQlqSJ3cGu4ANRy
-	g3hyrz/4rfmtegbXQMQ9q7xEqyKZdtRjon0SKuezs6Bm4CLyfhcY9EiKuMfLRUMJlCZljVXBRgp
-	6JlvoD9fAdN3Eq5UVj0cRe4NKy8Jtb0d7dbhfKZjK6Y8A6YbhrcOnNZymaP/vpzm/f8pGdbtvff
-	d7KKJRB1VGYadSL7h0cSpObHlaMslv2hhz9Lx8Cjqu5WvAa6oLBzw8sYVhlaPqq3V9pjqGpGcS4
-	cCWuJ4wuzzhPXXIkStaLw
-X-Google-Smtp-Source: AGHT+IG/kgNyg6qxRCHE/ao52Xup57eS+G5VAFerGvjti+r9yE7Rso5856iKNaa0+/lCxBkNE8xN7Q==
-X-Received: by 2002:a05:6a00:21c1:b0:730:7600:aeab with SMTP id d2e1a72fcca58-73bae4d52admr645416b3a.13.1744149736478;
-        Tue, 08 Apr 2025 15:02:16 -0700 (PDT)
-Received: from ?IPV6:2a03:83e0:115c:1:f94c:8e92:7ff5:32bf? ([2620:10d:c090:500::4:98ff])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739da0e371esm11166055b3a.168.2025.04.08.15.02.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Apr 2025 15:02:16 -0700 (PDT)
-Message-ID: <b1d373d7-77e5-4341-a685-07a617935db5@gmail.com>
-Date: Tue, 8 Apr 2025 15:02:14 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D5RtukQr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4C24C4CEE7;
+	Tue,  8 Apr 2025 22:03:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744149803;
+	bh=xOdajHCO7ZEy273vrF1Pnc6StW6I57Grl/gjkVjIkWQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=D5RtukQrS76KOBf7UmuXRFauX6hLjObdzmn0OWN9xK/NoMAcu8uhjxssvQNC5djne
+	 RlgRfMnbiUSHS+XP+kl3kJf/r3orZpQy7Y2m7HO1Wq1YiqfMzcClDR0AEVZZwjZBi/
+	 UITi47XD18B37q0mXbwxN3WG11OEpR5SUPLlz/QAx/1Y/JP0dQuoV3ee0W4NpNNN++
+	 pqdEn1r2HrZXhPFcplm6t9J1U2QMCvetgMKPIg5QKOeGS+nwIXc4ihjAsw79GYgmPk
+	 CTYEZ5QR/R/rJdcOiH1eqlbAdnoqFnZroXBW5RkUvlI2LhWSghfndTf+h8FpvY13K3
+	 0xIc2Rs8CA8HQ==
+From: Miguel Ojeda <ojeda@kernel.org>
+To: Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Masahiro Yamada <masahiroy@kernel.org>
+Cc: Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	rust-for-linux@vger.kernel.org,
+	Alexander Potapenko <glider@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	kasan-dev@googlegroups.com,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	patches@lists.linux.dev,
+	Matthew Maurer <mmaurer@google.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] rust: kasan/kbuild: fix missing flags on first build
+Date: Wed,  9 Apr 2025 00:03:11 +0200
+Message-ID: <20250408220311.1033475-1-ojeda@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 0/2] GCPS Spec Compliance Patch Set
-To: Paul Fertser <fercerpav@gmail.com>
-Cc: Sam Mendoza-Jonas <sam@mendozajonas.com>, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, npeacock@meta.com,
- akozlov@meta.com
-References: <cover.1744048182.git.kalavakunta.hari.prasad@gmail.com>
- <ee5feee4-e74a-4dc6-ad8e-42cf9c81cb3c@mendozajonas.com>
- <b1abcf84-e187-468f-a05e-e634e825210c@gmail.com>
- <Z/VqQVGI6oP5oEzB@home.paul.comp>
- <1d570fb8-1da0-4aa6-99f5-052adf559091@gmail.com>
- <Z/V2pCKe8N6Uxa0O@home.paul.comp>
-Content-Language: en-US
-From: Hari Kalavakunta <kalavakunta.hari.prasad@gmail.com>
-In-Reply-To: <Z/V2pCKe8N6Uxa0O@home.paul.comp>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 4/8/2025 12:19 PM, Paul Fertser wrote:
+If KASAN is enabled, and one runs in a clean repository e.g.:
 
-> In other words, you're testing your code only with simulated data so
-> there's no way to guarantee it's going to work on any real life
-> hardware (as we know hardware doesn't always exactly match the specs)?
-> That's unsettling. Please do mention it in the commit log, it's an
-> essential point. Better yet, consider going a bit off-centre after the
-> regular verification and do a control run on real hardware.
-> 
-> After all, that's what the code is for so if it all possible it's
-> better to know if it does the actual job before merging (to avoid
-> noise from follow-up patches like yours which fix something that never
-> worked because it was never tested).
+    make LLVM=1 prepare
+    make LLVM=1 prepare
 
-I would like to request a week's time to integrate a real hardware 
-interface, which will enable me to test and demonstrate end-to-end 
-results. This will also allow me to identify and address any additional 
-issues that may arise during the testing process. Thank you for the 
-feedback.
+Then the Rust code gets rebuilt, which should not happen.
+
+The reason is some of the LLVM KASAN `rustc` flags are added in the
+second run:
+
+    -Cllvm-args=-asan-instrumentation-with-call-threshold=10000
+    -Cllvm-args=-asan-stack=0
+    -Cllvm-args=-asan-globals=1
+    -Cllvm-args=-asan-kernel-mem-intrinsic-prefix=1
+
+Further runs do not rebuild Rust because the flags do not change anymore.
+
+Rebuilding like that in the second run is bad, even if this just happens
+with KASAN enabled, but missing flags in the first one is even worse.
+
+The root issue is that we pass, for some architectures and for the moment,
+a generated `target.json` file. That file is not ready by the time `rustc`
+gets called for the flag test, and thus the flag test fails just because
+the file is not available, e.g.:
+
+    $ ... --target=./scripts/target.json ... -Cllvm-args=...
+    error: target file "./scripts/target.json" does not exist
+
+There are a few approaches we could take here to solve this. For instance,
+we could ensure that every time that the config is rebuilt, we regenerate
+the file and recompute the flags. Or we could use the LLVM version to
+check for these flags, instead of testing the flag (which may have other
+advantages, such as allowing us to detect renames on the LLVM side).
+
+However, it may be easier than that: `rustc` is aware of the `-Cllvm-args`
+regardless of the `--target` (e.g. I checked that the list printed
+is the same, plus that I can check for these flags even if I pass
+a completely unrelated target), and thus we can just eliminate the
+dependency completely.
+
+Thus filter out the target.
+
+This does mean that `rustc-option` cannot be used to test a flag that
+requires the right target, but we don't have other users yet, it is a
+minimal change and we want to get rid of custom targets in the future.
+
+We could only filter in the case `target.json` is used, to make it work
+in more cases, but then it would be harder to notice that it may not
+work in a couple architectures.
+
+Cc: Matthew Maurer <mmaurer@google.com>
+Cc: Sami Tolvanen <samitolvanen@google.com>
+Cc: stable@vger.kernel.org
+Fixes: e3117404b411 ("kbuild: rust: Enable KASAN support")
+Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+---
+By the way, I noticed that we are not getting `asan-instrument-allocas` enabled
+in neither C nor Rust -- upstream LLVM renamed it in commit 8176ee9b5dda ("[asan]
+Rename asan-instrument-allocas -> asan-instrument-dynamic-allocas")). But it
+happened a very long time ago (9 years ago), and the addition in the kernel
+is fairly old too, in 342061ee4ef3 ("kasan: support alloca() poisoning").
+I assume it should either be renamed or removed? Happy to send a patch if so.
+
+ scripts/Makefile.compiler | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/Makefile.compiler b/scripts/Makefile.compiler
+index 8956587b8547..7ed7f92a7daa 100644
+--- a/scripts/Makefile.compiler
++++ b/scripts/Makefile.compiler
+@@ -80,7 +80,7 @@ ld-option = $(call try-run, $(LD) $(KBUILD_LDFLAGS) $(1) -v,$(1),$(2),$(3))
+ # TODO: remove RUSTC_BOOTSTRAP=1 when we raise the minimum GNU Make version to 4.4
+ __rustc-option = $(call try-run,\
+ 	echo '#![allow(missing_docs)]#![feature(no_core)]#![no_core]' | RUSTC_BOOTSTRAP=1\
+-	$(1) --sysroot=/dev/null $(filter-out --sysroot=/dev/null,$(2)) $(3)\
++	$(1) --sysroot=/dev/null $(filter-out --sysroot=/dev/null --target=%,$(2)) $(3)\
+ 	--crate-type=rlib --out-dir=$(TMPOUT) --emit=obj=- - >/dev/null,$(3),$(4))
+
+ # rustc-option
+
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+--
+2.49.0
