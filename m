@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F2C825F999
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBF6525FA23
 	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 07:02:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744095746; cv=none; b=PwvVPiuAcRpk2AneMDTtDicM+E6bK72dufxsY+MNHgDHvDTuFJmq9K5YDCVDRApksFY4aBxzN2Zw1nm7TJiVEWtLyhWEqubXJ+FIfI6FCqu9RMAz4ila7nnRCd26qrfLhZZG/6AD+DUfE2t8IcAPHSU5vbx78WczOvIWCnUkE0w=
+	t=1744095746; cv=none; b=m97/2vTQ8bLLZ+vzy7QXRvgDtXLjTv2nxXOp/AekzlEiwLnKq/gRbYZWmRK1Y7uaTCHmMzzweiH00VlcOdgp0klx2INMQu1vB2WZvg8HV8NPrplrfhQMXXMLZak3QmjtWHIznxwbkPQ5wmI8xBIsSwyVLTFjOypG7quLbuFeBRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744095746; c=relaxed/simple;
-	bh=ssSk/dLBIqnA2lH+wz9VIJewqhP/EcXBDWETR4atZWo=;
+	bh=k4/MKOOZH4NpMS5GeWM0EvPG1Sqm8xWCVQ2WGoP0xdM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jEgnMnO0uq/BOJy5gbXHTP3VmWo402oDuRMUIDPFuM8xo3nlGBHPGF8o+ZM/9Sr5yFb1O5vPZ/NGvBFJbb1mguihNBAH5gdoMA1sxUooPfXEIEQGWdDKEUsVE8fad2ff5OQPAWBY6C+tZ+Ra2CyGYMlVDDggmQSf8ceS1LaVxwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hUSAg2QI; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=piDexQO2VQ9HUbKnbpu8FyfPYubCijhhko2ubwJvrlm9pnJxaq4y5Iiwfdh+cD9ulKKaiyBa0Fvjh6bp3tLO0MtC7s+TcJE/ANWT2Y0Rk341aowH5B/wbrE98QADybNqMObHaeXE/CA7vZ+kWUgv9EGmBjf6Voa5t5PS/0oDdmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pfykiJaP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hUSAg2QI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14AF2C4CEEC;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pfykiJaP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74F46C4CEE9;
 	Tue,  8 Apr 2025 07:02:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1744095746;
-	bh=ssSk/dLBIqnA2lH+wz9VIJewqhP/EcXBDWETR4atZWo=;
+	bh=k4/MKOOZH4NpMS5GeWM0EvPG1Sqm8xWCVQ2WGoP0xdM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hUSAg2QIfWVCoNA4Ecwd3LzWu0neMiKLTHRrmZKFThDz2F0XJ3Izp1h7iTSa/jyrf
-	 q+dNuhp08z+Ko6lf55tRn55Z2fqHManN5j2IeVR25lIoGXi1N7GvgxANO6H1vIKbux
-	 eoIy7tiRnPt5Xa4w3LYFcbx+0SMDuvy/ol3uxJsq//WQ+7VvtIlv1v697tFrUgHzL6
-	 Pq2Ozy8zZXj9h+EC3NbyGUbElKg5yXKZe4ozNU3StVj1gsWXZrDZ1MZGWpwdHOTA/q
-	 WOXqfXiiSCNyDFkEpZMvLfg/8ASLoZ65RCXmZ/Cjd8VErpbWDywq4aI7+2f1xCMTwu
-	 V3EOzjL2eDubg==
+	b=pfykiJaPTuSsy06Tgsybau043mDI9B9HKdx6J2Kxhztk35dE2hRxtQMmG+ggoN78Y
+	 sRzpMyuS2zSiYAZ1lCOjzn12NdujnCSWJirVmyHY/ldTIxBU2CiP/y7kO7YhHmp9kK
+	 pfJdopflL9VBOTccYbz4eoWVbO2GmjYRUIICqdcLij1kLaeNxDWX/ANuQq+8/j0Hor
+	 aNvJ22SZuTYOg+ykkaV9IH80nKrvK6lxL9zmBmt2bTbBaQoM5gcMZfaf6vrp1ikJh3
+	 KSdZd5p4a13GqTcxogigijNZJZ8pzUG2KFkeNCTDOnlRioHEq6l8uupuSj4AgoCn6c
+	 +A3I0os7O5sQA==
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>,
-	Juergen Gross <jgross@suse.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>
-Subject: [PATCH v4 1/4] objtool: Fix INSN_CONTEXT_SWITCH handling in validate_unret()
-Date: Tue,  8 Apr 2025 00:02:13 -0700
-Message-ID: <f5eda46fd09f15b1f5cde3d9ae3b92b958342add.1744095216.git.jpoimboe@kernel.org>
+	Juergen Gross <jgross@suse.com>
+Subject: [PATCH v4 2/4] objtool: Split INSN_CONTEXT_SWITCH into INSN_SYSCALL and INSN_SYSRET
+Date: Tue,  8 Apr 2025 00:02:14 -0700
+Message-ID: <19a76c74d2c051d3bc9a775823cafc65ad267a7a.1744095216.git.jpoimboe@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1744095216.git.jpoimboe@kernel.org>
 References: <cover.1744095216.git.jpoimboe@kernel.org>
@@ -47,43 +46,116 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The !CONFIG_IA32_EMULATION version of xen_entry_SYSCALL_compat() ends
-with a SYSCALL instruction which is classified by objtool as
-INSN_CONTEXT_SWITCH.
+INSN_CONTEXT_SWITCH is ambiguous.  It can represent both call semantics
+(SYSCALL, SYSENTER) and return semantics (SYSRET, IRET, RETS, RETU).
+Those differ significantly: calls preserve control flow whereas returns
+terminate it.
 
-Unlike validate_branch(), validate_unret() doesn't consider
-INSN_CONTEXT_SWITCH in a non-function to be a dead end, so it keeps
-going past the end of xen_entry_SYSCALL_compat(), resulting in the
-following warning:
+Objtool uses an arbitrary rule for INSN_CONTEXT_SWITCH that almost works
+by accident: if in a function, keep going; otherwise stop.  It should
+instead be based on the semantics of the underlying instruction.
 
-  vmlinux.o: warning: objtool: xen_reschedule_interrupt+0x2a: RET before UNTRAIN
+In preparation for improving that, split INSN_CONTEXT_SWITCH into
+INSN_SYCALL and INSN_SYSRET.
 
-Fix that by adding INSN_CONTEXT_SWITCH handling to validate_unret() to
-match what validate_branch() is already doing.
+No functional change.
 
-Fixes: a09a6e2399ba ("objtool: Add entry UNRET validation")
-Reported-by: Andrew Cooper <andrew.cooper3@citrix.com>
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 ---
- tools/objtool/check.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ tools/objtool/arch/x86/decode.c      | 18 +++++++++++-------
+ tools/objtool/check.c                |  6 ++++--
+ tools/objtool/include/objtool/arch.h |  3 ++-
+ 3 files changed, 17 insertions(+), 10 deletions(-)
 
+diff --git a/tools/objtool/arch/x86/decode.c b/tools/objtool/arch/x86/decode.c
+index 33d861c04ebd..3ce7b54003c2 100644
+--- a/tools/objtool/arch/x86/decode.c
++++ b/tools/objtool/arch/x86/decode.c
+@@ -522,7 +522,7 @@ int arch_decode_instruction(struct objtool_file *file, const struct section *sec
+ 			case INAT_PFX_REPNE:
+ 				if (modrm == 0xca)
+ 					/* eretu/erets */
+-					insn->type = INSN_CONTEXT_SWITCH;
++					insn->type = INSN_SYSRET;
+ 				break;
+ 			default:
+ 				if (modrm == 0xca)
+@@ -535,11 +535,15 @@ int arch_decode_instruction(struct objtool_file *file, const struct section *sec
+ 
+ 			insn->type = INSN_JUMP_CONDITIONAL;
+ 
+-		} else if (op2 == 0x05 || op2 == 0x07 || op2 == 0x34 ||
+-			   op2 == 0x35) {
++		} else if (op2 == 0x05 || op2 == 0x34) {
+ 
+-			/* sysenter, sysret */
+-			insn->type = INSN_CONTEXT_SWITCH;
++			/* syscall, sysenter */
++			insn->type = INSN_SYSCALL;
++
++		} else if (op2 == 0x07 || op2 == 0x35) {
++
++			/* sysret, sysexit */
++			insn->type = INSN_SYSRET;
+ 
+ 		} else if (op2 == 0x0b || op2 == 0xb9) {
+ 
+@@ -676,7 +680,7 @@ int arch_decode_instruction(struct objtool_file *file, const struct section *sec
+ 
+ 	case 0xca: /* retf */
+ 	case 0xcb: /* retf */
+-		insn->type = INSN_CONTEXT_SWITCH;
++		insn->type = INSN_SYSRET;
+ 		break;
+ 
+ 	case 0xe0: /* loopne */
+@@ -721,7 +725,7 @@ int arch_decode_instruction(struct objtool_file *file, const struct section *sec
+ 		} else if (modrm_reg == 5) {
+ 
+ 			/* jmpf */
+-			insn->type = INSN_CONTEXT_SWITCH;
++			insn->type = INSN_SYSRET;
+ 
+ 		} else if (modrm_reg == 6) {
+ 
 diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 4a1f6c3169b3..c81b070ca495 100644
+index c81b070ca495..2c703b960420 100644
 --- a/tools/objtool/check.c
 +++ b/tools/objtool/check.c
-@@ -3886,6 +3886,11 @@ static int validate_unret(struct objtool_file *file, struct instruction *insn)
+@@ -3684,7 +3684,8 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
+ 
+ 			break;
+ 
+-		case INSN_CONTEXT_SWITCH:
++		case INSN_SYSCALL:
++		case INSN_SYSRET:
+ 			if (func) {
+ 				if (!next_insn || !next_insn->hint) {
+ 					WARN_INSN(insn, "unsupported instruction in callable function");
+@@ -3886,7 +3887,8 @@ static int validate_unret(struct objtool_file *file, struct instruction *insn)
  			WARN_INSN(insn, "RET before UNTRAIN");
  			return 1;
  
-+		case INSN_CONTEXT_SWITCH:
-+			if (insn_func(insn))
-+				break;
-+			return 0;
-+
- 		case INSN_NOP:
- 			if (insn->retpoline_safe)
- 				return 0;
+-		case INSN_CONTEXT_SWITCH:
++		case INSN_SYSCALL:
++		case INSN_SYSRET:
+ 			if (insn_func(insn))
+ 				break;
+ 			return 0;
+diff --git a/tools/objtool/include/objtool/arch.h b/tools/objtool/include/objtool/arch.h
+index 089a1acc48a8..01ef6f415adf 100644
+--- a/tools/objtool/include/objtool/arch.h
++++ b/tools/objtool/include/objtool/arch.h
+@@ -19,7 +19,8 @@ enum insn_type {
+ 	INSN_CALL,
+ 	INSN_CALL_DYNAMIC,
+ 	INSN_RETURN,
+-	INSN_CONTEXT_SWITCH,
++	INSN_SYSCALL,
++	INSN_SYSRET,
+ 	INSN_BUG,
+ 	INSN_NOP,
+ 	INSN_STAC,
 -- 
 2.49.0
 
