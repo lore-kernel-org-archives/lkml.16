@@ -1,105 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ssh248.corpemail.net (ssh248.corpemail.net [210.51.61.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D54B725F798;
-	Tue,  8 Apr 2025 07:05:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41766217F5D;
+	Tue,  8 Apr 2025 07:06:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.61.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744095926; cv=none; b=lWDclQqvTc/AVn3PIOiPS4CAHF/Ogu+rzmSabv5iIgwBVvIDvxU81dMWxMRc2jcqYCM58dLjb5059HsVz4D9uv3BKkRGnq8kxwNxxYIZQoDx8qG1aesam8ikEWsNchLAecXVVpuCzyQ7U/1K/MLSpREpblNaDk3ZTtQv7hEL7bU=
+	t=1744095985; cv=none; b=J6Dq7CcKu1VIfnkBsHko5YuuMc+wBw5GJpNbm6p8fC2rCR7D2QaeoJutJ5cPnF6mSf+JPUK3Mit8s5I4PzkmE0dOUBZw1IxoxEvYx5yC9ZqZK64oMhp+jAT5ZRRYXHptGMSj58tYh3CZztyFBeLlEQBPfVJjDnBTkJHYqS7bYiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744095926; c=relaxed/simple;
-	bh=GciUSmDoiyOOH8RESRqc/QgBNQpo9ZXAnJgR53gp4So=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c4kPITsppd0ljVEi6iK6O3YSVSIAnTX+wvF5wlp0zbIFdnoxi5FU62aIxfxh0mUbdGafpV/Zf53mC7etxdyTP0JgZT+XQyQb1+b1V9HQGz9pMIMqmphjt0aKCIoWfeYf1UtJUMY3YTH17W9QcmIRvCp+yhR0DnP0rADsN4SDEQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HhBKXmf2; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HhBKXmf2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EF76C4CEE5;
-	Tue,  8 Apr 2025 07:05:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744095926;
-	bh=GciUSmDoiyOOH8RESRqc/QgBNQpo9ZXAnJgR53gp4So=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HhBKXmf2loebWjpDATXkQowrCtc9eRDG2jooHYgtnX/ND1fwM/DXn9ndz99JTWBG0
-	 dSDhLzo1RIDGNLhIkzX8H6TPpt/RftkdzcmtW52paJwsb4gAUum2S9tl3cmKoTbaGC
-	 n3TwbNINdKoCB2v85KYPwPAdZbpIb1HiK6Fzy+GEQhlIWlp175/ce8lZbWYvO6XH6k
-	 jQW5eAp/68D5fzVZJzh3D6sMt+XLmkAf305YhMpxsH6UDmE5SN8DPqjUix8SZj9EQb
-	 c5iUx+hYhSvGYb4t2xOy59B+Vt3loE44+lx+gF7f73jK9JiC0W6f62hei2NvehaEt6
-	 E4UOOmnt45OHQ==
-Date: Tue, 8 Apr 2025 09:05:24 +0200
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 3/3] iio: imu: st_lsm6dsx: Fix wakeup source leaks on
- device unbind
-Message-ID: <Z_TKtP_5S99Nakrs@lore-desk>
-References: <20250406-b4-device-wakeup-leak-iio-v1-0-2d7d322a4a93@linaro.org>
- <20250406-b4-device-wakeup-leak-iio-v1-3-2d7d322a4a93@linaro.org>
+	s=arc-20240116; t=1744095985; c=relaxed/simple;
+	bh=i+SH6NrltKs2n1E0agdH8rfYxvPrzIIvE/KB787JoXk=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nn8x6eU89P8Gcshecfkl+ErVv6Mdxxqeg6eg5kLPZMLRHx4Vokn0F9HDAkHl4R/Waxp2nRNe/XD6MgmKKxPFv8r7yEqLNTXmv/V81vrKMCt3ky4N8H47VK5HBoiS6pQjXRscSWNq1s10Rh5WO8lC4rX3zhIv/FCb2wdAbD05oHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.61.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
+Received: from jtjnmail201604.home.langchao.com
+        by ssh248.corpemail.net ((D)) with ASMTP (SSL) id 202504081506064651;
+        Tue, 08 Apr 2025 15:06:06 +0800
+Received: from localhost (10.94.17.24) by jtjnmail201604.home.langchao.com
+ (10.100.2.4) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 8 Apr
+ 2025 15:06:06 +0800
+Date: Tue, 8 Apr 2025 15:06:06 +0800
+From: Charles Han <hanchunchao@inspur.com>
+To: Tariq Toukan <ttoukan.linux@gmail.com>
+CC: <saeedm@nvidia.com>, <tariqt@nvidia.com>, <leon@kernel.org>,
+	<andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <lariel@nvidia.com>,
+	<paulb@nvidia.com>, <maord@nvidia.com>, <netdev@vger.kernel.org>,
+	<linux-rdma@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V2] net/mlx5e: fix potential null dereference in
+ mlx5e_tc_nic_create_miss_table
+Message-ID: <Z_TK3uIIlJ5y3fWy@locahost.localdomain>
+References: <9ae1228039dcba4ff24853ac72410ad67-4-25gmail.com@g.corp-email.com>
+ <2bfd9684-7ef0-40b0-b35d-abb0a3453935@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="s3vjrGR+QtVN7rVS"
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20250406-b4-device-wakeup-leak-iio-v1-3-2d7d322a4a93@linaro.org>
+In-Reply-To: <2bfd9684-7ef0-40b0-b35d-abb0a3453935@gmail.com>
+tUid: 20254081506071e55cc4f74c8ee590d7e9c7350ba31e6
+X-Abuse-Reports-To: service@corp-email.com
+Abuse-Reports-To: service@corp-email.com
+X-Complaints-To: service@corp-email.com
+X-Report-Abuse-To: service@corp-email.com
 
-
---s3vjrGR+QtVN7rVS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-> Device can be unbound, so driver must also release memory for the wakeup
-> source.
-
-Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
-
->=20
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/i=
-mu/st_lsm6dsx/st_lsm6dsx_core.c
-> index 4fdcc2acc94ed0f594116b9141ce85f7c4449a58..96c6106b95eef60b43eb41fef=
-67889d44d5836db 100644
-> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-> @@ -2719,8 +2719,11 @@ int st_lsm6dsx_probe(struct device *dev, int irq, =
-int hw_id,
->  	}
-> =20
->  	if (device_property_read_bool(dev, "wakeup-source") ||
-> -	    (pdata && pdata->wakeup_source))
-> -		device_init_wakeup(dev, true);
-> +	    (pdata && pdata->wakeup_source)) {
-> +		err =3D devm_device_init_wakeup(dev);
-> +		if (err)
-> +			return dev_err_probe(dev, err, "Failed to init wakeup\n");
-> +	}
-> =20
->  	return 0;
->  }
->=20
-> --=20
-> 2.45.2
->=20
-
---s3vjrGR+QtVN7rVS
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZ/TKswAKCRA6cBh0uS2t
-rOgiAP0XRypFHUm+gAEZRrabccqH17B5Tp2XEjsujDO9TsmlMwD+LQBZVclZuoGz
-s7oaY38hSzzhd5wAUkrhmyRXALvwDAc=
-=FnZy
------END PGP SIGNATURE-----
-
---s3vjrGR+QtVN7rVS--
+On Mon, Apr 07, 2025 at 12:29:22PM +0300, Tariq Toukan wrote:
+> 
+> 
+> On 07/04/2025 10:20, Charles Han wrote:
+> > mlx5_get_flow_namespace() may return a NULL pointer, dereferencing it
+> > without NULL check may lead to NULL dereference.
+> > Add a NULL check for ns.
+> > 
+> > Fixes: 66cb64e292d2 ("net/mlx5e: TC NIC mode, fix tc chains miss table")
+> > Signed-off-by: Charles Han <hanchunchao@inspur.com>
+> > ---
+> >   drivers/net/ethernet/mellanox/mlx5/core/en_tc.c | 4 ++++
+> >   1 file changed, 4 insertions(+)
+> > 
+> > diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
+> > index 9ba99609999f..c2f23ac95c3d 100644
+> > --- a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
+> > +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
+> > @@ -5216,6 +5216,10 @@ static int mlx5e_tc_nic_create_miss_table(struct mlx5e_priv *priv)
+> >   	ft_attr.level = MLX5E_TC_MISS_LEVEL;
+> >   	ft_attr.prio = 0;
+> >   	ns = mlx5_get_flow_namespace(priv->mdev, MLX5_FLOW_NAMESPACE_KERNEL);
+> > +	if (!ns) {
+> > +		netdev_err(priv->mdev, "Failed to get flow namespace\n");
+> > +		return -EOPNOTSUPP;
+> > +	}
+> >   	*ft = mlx5_create_auto_grouped_flow_table(ns, &ft_attr);
+> >   	if (IS_ERR(*ft)) {
+> 
+> Same question here, did it fail for you, or just saw it while reading the
+> code?
+I just saw it while reading the code.
+I've been working on code vulnerability scanning recently.
