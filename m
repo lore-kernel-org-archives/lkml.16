@@ -1,184 +1,119 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5617020A5EE
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 05:23:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AC2120330
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 05:30:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744089785; cv=none; b=F+Ev8y4lN+RGoORHAGynBN5EtmhHea6uJSb4ANHeGTknWYBJ8rF+jQ45Sz/VL6W5l21O5qibEnlqmKmgK/4WqxGYZzl5MTG7i0yUM/qu/2l355hPh8UO83UloqUs8+BbHhrIiCp795wDxFjVG31on71Mdd6zAkbwYzhGnR3kbMg=
+	t=1744090252; cv=none; b=mt1CMF/DzOeRtWau5SLdDuy8FF4GIjh2HeaoLBRxbS+HIhQLn6GfPInsB+eP4p/QWNRfEWbHERNRlhK7TJiDaOV5eRXbrTFckaOHqtQnbhKaQR55A/f1sStqpzSz0zZygyAxJcNEs4OKd/8plnxHesuEwOlANTWo7CWJdQCYxD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744089785; c=relaxed/simple;
-	bh=kuaUaBppjC3pVohX/ZirHPmZTmFoBhG+ay7OGmaCfK4=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ccfm8f5Xub8b4+cjvE1qagSwIYU0tIiIzs2KhJUsz7sn4vSEwz3tRm/jIjR0OrRQOs8oC42QYqHCNiZllYdICVuGK1+2wVtEH2xnQiHYiu8QE1mjx7DnCc0Zr9iERowpRWuHwYoMAORRz9drOvLclO3telMmmPyoJTSnoAYdlMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=kN/mGuLB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=TreGu643; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=kN/mGuLB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=TreGu643; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1744090252; c=relaxed/simple;
+	bh=vs7thu9ZGjlYIf6x+aITyKdaIi50BAkOES4aa0JW7Ac=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dcUj/t/QrunrgX9D22N9sf29u6NSR5Hnc9O8gB8zDoQ9RLUfVCEwWLPwlEUBKfM8W838w+PjtaS7cA2uAf8sLBGhZf2Ho5uD29k35UIDH2ZPOH/wVCVCOheu+9qto8h+VkpXU5RV+BC1jmJkWviU6XRYeI7dwZlJHLquZrLYKBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KqhvpYe3; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="kN/mGuLB";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="TreGu643";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="kN/mGuLB";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="TreGu643"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 927A92117F;
-	Tue,  8 Apr 2025 05:22:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744089775; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MaL9R8uqMyLYrAkKk+9UKfW5eq2Lkk+0ZVyqZSvS72Q=;
-	b=kN/mGuLB52nPNRsKhhmBHd5RxhLR5oOmAYILDYFTKYzvXqDH8ImCsIvg9I6cmZmmdPjdRb
-	H2nAQwtK3KauvvCeU/HrjMHhL45/zUOwppwzUy4N28w+B1PpZaTjGF7PjOEk3MhOUFwfba
-	FE8bVRpqGZDvhOaaZyYBFo6XETwYPYw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744089775;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MaL9R8uqMyLYrAkKk+9UKfW5eq2Lkk+0ZVyqZSvS72Q=;
-	b=TreGu64377ixgPhqf+aCfCDtrTyXRmccmZzNVWiTbeDuU79vhhlkWr1Z1vntgWAzc5RAHR
-	gR4uLre76R0YmGCQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="kN/mGuLB";
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=TreGu643
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744089775; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MaL9R8uqMyLYrAkKk+9UKfW5eq2Lkk+0ZVyqZSvS72Q=;
-	b=kN/mGuLB52nPNRsKhhmBHd5RxhLR5oOmAYILDYFTKYzvXqDH8ImCsIvg9I6cmZmmdPjdRb
-	H2nAQwtK3KauvvCeU/HrjMHhL45/zUOwppwzUy4N28w+B1PpZaTjGF7PjOEk3MhOUFwfba
-	FE8bVRpqGZDvhOaaZyYBFo6XETwYPYw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744089775;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MaL9R8uqMyLYrAkKk+9UKfW5eq2Lkk+0ZVyqZSvS72Q=;
-	b=TreGu64377ixgPhqf+aCfCDtrTyXRmccmZzNVWiTbeDuU79vhhlkWr1Z1vntgWAzc5RAHR
-	gR4uLre76R0YmGCQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 092DB1371A;
-	Tue,  8 Apr 2025 05:22:55 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id m2duAK+y9Gd+GQAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Tue, 08 Apr 2025 05:22:55 +0000
-Date: Tue, 08 Apr 2025 07:22:54 +0200
-Message-ID: <87tt6zb51t.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Mark Brown <broonie@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Clemens Ladisch <clemens@ladisch.de>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Thorsten Blum <thorsten.blum@linux.dev>,
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
-	Bard Liao <yung-chuan.liao@linux.intel.com>,
-	Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Maxim Mikityanskiy <maxtram95@gmail.com>,
-	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-	He Lugang <helugang@uniontech.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	Tang Bin <tangbin@cmss.chinamobile.com>,
-	Philipp Stanner <phasta@kernel.org>,
-	linux-parisc@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: (subset) [PATCH 00/11] sound: Replace deprecated PCI functions
-In-Reply-To: <174406895437.1337819.1919250165088744285.b4-ty@kernel.org>
-References: <20250404121911.85277-2-phasta@kernel.org>
-	<174406895437.1337819.1919250165088744285.b4-ty@kernel.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KqhvpYe3"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2240aad70f2so151745ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 22:30:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744090250; x=1744695050; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=iIblNaCDqbuIOdoWiMsvT5bzQtdq7ut/Mrgb9e4M8PA=;
+        b=KqhvpYe3agxIdALzddfYEFQWdCXmxSJED4EVqgKz+w+Y8vjXHb5MbbegpWaUb0JCL5
+         GpoH4wDLdmopMPENuO5TBHK8GoR2mQYNzDgco/WJvZb52yJohWpHikd+bhd4iLW0VZYU
+         IJp2DSbIFtz6/qvz6IhcL2Rag3OIpeUryNuULWNVEmAe/8jlVqzNPZu7mkECQczWy6sO
+         vGuDXtmS+fRj/I7wkb4b3OU6USC9M3sQKrGUy5AleZ7EUW/EO4vVHwjtSJGdPdMnwKT7
+         7DL4tY9s446hVrSj0Ve51+pQR4BZyRpBqtVwqAAqRiQNCZcJ0FkSl6uthC8O+5NzyKZr
+         RTFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744090250; x=1744695050;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iIblNaCDqbuIOdoWiMsvT5bzQtdq7ut/Mrgb9e4M8PA=;
+        b=ZCWCEA2sp/Pm7tPfuUlggqv1cbhiqlIVupYWTR2Tx5A6n84HjGZkMcwMKMBHe8pDde
+         MnblmjqWiXbXvqy5KAXnmKAUFuY/gQIApmjANVbIN7ZZzln6c5NDKw7ZgX52AwsFmDjl
+         ozcpk4tLabgmb6AlUNg3oxM/rcDp2TpjyVKSpG3yJNuj2bjASwARCeI4vGMgynvygZiY
+         owITHPXAJyiPZEEY53kGLHCj9IbF6FFtVL1MZs+lrXg7n/Bqi+GbL6DTcNvQTpgwzHnn
+         oeeZ/QaMx37OvFzNFbc6e3qc19zc+ON7LCj3xdXZYdl8B/u7KD0MWuviuvmLWnrtMQ0e
+         gRUA==
+X-Forwarded-Encrypted: i=1; AJvYcCV4qNyvhjPe5JSvYC/3xfA4P/Q+sTgp3G4iJCWdjbeFRRy9AMMq76M44dzpcSY4nJnx4+ICBNoqdKav4W0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YysvWm/4yYIv8uXIbg+gFzacgykAZPS7qeL5JOywvXAmrfXMMuL
+	T2VL6Tzd+kOpRvJeXMTNmH3KT5BIi6elBEoaPOlYBsCKk+lvuMdj10nF1SQ/oUeMyGzDl+MCsxb
+	kug==
+X-Gm-Gg: ASbGncsl0b/79ea616QgCxL2mhyFSXVWIBbkydFt4xYVCtMJsiQ8xr+kwaqy2kG5WXx
+	xjSbUedR9VIODETIC+8T8t5FCVANyQCbHtW02MjgFUh1c6YFQJwA0gdeB1nBWAk//4Dfzf3zEk8
+	BzOIwjNqysCcehatdtgpwmWj8TlLotAIQPmliL2NrDG35HSdR0Bl9UKwLDcqFzqZHUDyhikLy8U
+	0F7+4v+3YwgJtHLNgtHnoo9VuLImavsmp2w6GRIlFW7TJHBVs6Nzlct5zrISEwKdSgw+DnmW23+
+	G0MW7x2VbAQDkOgavCMLSy9ZqOjTMKUR/XXwo4m/IfP0uOggfa/xeomgd4hFenIjVReg9CU5Y92
+	TzfA=
+X-Google-Smtp-Source: AGHT+IEVENxuSQ9koyTDCtEVC43uFdSdVMF6wPG/+02fUSwR03JHFDiN0ICdqRcuMfCQhrHrrYOGyQ==
+X-Received: by 2002:a17:903:22d2:b0:223:3b76:4e25 with SMTP id d9443c01a7336-22ab804c493mr1114505ad.17.1744090250071;
+        Mon, 07 Apr 2025 22:30:50 -0700 (PDT)
+Received: from google.com (188.152.87.34.bc.googleusercontent.com. [34.87.152.188])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d97ee90asm9907314b3a.57.2025.04.07.22.30.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 22:30:49 -0700 (PDT)
+Date: Tue, 8 Apr 2025 05:30:41 +0000
+From: Pranjal Shrivastava <praan@google.com>
+To: "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>
+Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, will@kernel.org,
+	robin.murphy@arm.com, jgg@ziepe.ca, nicolinc@nvidia.com,
+	jsnitsel@redhat.com, kevin.tian@intel.com, ddutile@redhat.com
+Subject: Re: [PATCH] iommu/arm-smmu-v3: Add missing S2FWB feature detection
+Message-ID: <Z_S0gVMuAqrv3R_v@google.com>
+References: <20250408033351.1012411-1-aneesh.kumar@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Rspamd-Queue-Id: 927A92117F
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	RCPT_COUNT_TWELVE(0.00)[20];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[perex.cz,suse.com,ladisch.de,gmail.com,linux.dev,linux.intel.com,renesas.com,uniontech.com,baylibre.com,loongson.cn,cmss.chinamobile.com,kernel.org,vger.kernel.org];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -3.51
-X-Spam-Flag: NO
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250408033351.1012411-1-aneesh.kumar@kernel.org>
 
-On Tue, 08 Apr 2025 01:35:54 +0200,
-Mark Brown wrote:
+On Tue, Apr 08, 2025 at 09:03:51AM +0530, Aneesh Kumar K.V (Arm) wrote:
+> Commit 67e4fe398513 ("iommu/arm-smmu-v3: Use S2FWB for NESTED domains")
+> introduced S2FWB usage but omitted the corresponding feature detection.
+> As a result, vIOMMU allocation fails on FVP in arm_vsmmu_alloc(), due to
+> the following check:
 > 
-> On Fri, 04 Apr 2025 14:19:01 +0200, Philipp Stanner wrote:
-> > pcim_iomap_table() and pcim_iomap_regions() have been deprecated by the
-> > PCI subsystem. In sound/, they can easily be replaced with
-> > pcim_iomap_region().
-> > 
-> > This series was around some time in late summer last year as a single
-> > patch. I lost track of it for a while, but Takashi Iwai (AFAIR)
-> > requested that I split it by component.
-> > 
-> > [...]
+> 	if (!arm_smmu_master_canwbs(master) &&
+> 	    !(smmu->features & ARM_SMMU_FEAT_S2FWB))
+> 		return ERR_PTR(-EOPNOTSUPP);
 > 
-> Applied to
+> This patch adds the missing detection logic to prevent allocation
+> failure when S2FWB is supported.
 > 
->    https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+> Fixes: 67e4fe398513 ("iommu/arm-smmu-v3: Use S2FWB for NESTED domains")
+> Signed-off-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
+> ---
+>  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> Thanks!
-> 
-> [11/11] ASoC: loongson: Replace deprecated PCI functions
->         commit: 7288aa73e5cfb3f37ae93b55d7b7d63eca5140a8
-> 
-> All being well this means that it will be integrated into the linux-next
-> tree (usually sometime in the next 24 hours) and sent to Linus during
-> the next merge window (or sooner if it is a bug fix), however if
-> problems are discovered then the patch may be dropped or reverted.
-> 
-> You may get further e-mails resulting from automated or manual testing
-> and review of the tree, please engage with people reporting problems and
-> send followup patches addressing any issues that are reported if needed.
-> 
-> If any updates are required or you are submitting further changes they
-> should be sent as incremental updates against current git, existing
-> patches will not be replaced.
-> 
-> Please add any relevant lists and maintainers to the CCs when replying
-> to this mail.
+> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+> index 358072b4e293..c7d297ceabdb 100644
+> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+> @@ -4405,6 +4405,8 @@ static int arm_smmu_device_hw_probe(struct arm_smmu_device *smmu)
+>  	reg = readl_relaxed(smmu->base + ARM_SMMU_IDR3);
+>  	if (FIELD_GET(IDR3_RIL, reg))
+>  		smmu->features |= ARM_SMMU_FEAT_RANGE_INV;
+> +	if (FIELD_GET(IDR3_FWB, reg))
+> +		smmu->features |= ARM_SMMU_FEAT_S2FWB;
+>  
+>  	/* IDR5 */
+>  	reg = readl_relaxed(smmu->base + ARM_SMMU_IDR5);
 
-Oh, I already applied this one blindly as a part of series to my
-tree.  But it's a trivial fix and shouldn't be a big problem to apply
-twice...
+Indeed. Looks like setting the feature flag was missed previously.
 
+Reviewed-by: Pranjal Shrivastava <praan@google.com>
 
-Takashi
+Thanks,
+Praan
