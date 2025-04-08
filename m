@@ -1,344 +1,1561 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2071.outbound.protection.outlook.com [40.107.21.71])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D179226770E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF91F267728;
 	Tue,  8 Apr 2025 10:09:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744107000; cv=fail; b=ARhs0owrJsOOryjK/PUg7UJrH3b2JwoCKQCQjwEqWLvx2Vk3mHihFkzFXqeBMrlZ9OHHXd1U6+8jbWnhklygh1lKMWP79muJ+fv8Lz+3AtrIGkDzDFkHAapgp/KU7WZZpmCEJSK3I+TNs+UN71kfb/r/cjV9wNQ11IvYI2mtYBo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744107000; c=relaxed/simple;
-	bh=YhMicrKiGfBPbanrgSFwn+J83LSskHvcbhZfeOdkGYg=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=PtXAdqdOz5j1MMNJdxOM+tfTqQ7e9ujpzvdb8EQYFHKTf+DtjZs3P+yLcfEXEmXNIrQdFVzG4RWqCakT1cfFNwdqUElYnWyigjlCM1RVogXq1lE8ixazL+WPQv5eb/7k1ayWc7M2htAWwZW5gNpZEEPdrGHoF0AQth3IFOookk8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=w3kkv0U3; arc=fail smtp.client-ip=40.107.21.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744106997; cv=none; b=brTIRGU1ujm3IZga3dF7nbU+YsSmPGOFv9QC8gTvR84z/kPdXSxrEvDBQRnWvBL2q4yeCrtVAW3DqeuGMtJo9/bWB4ivOOkqUKHseM1q1yNuvpQprB39LJgmes/s0heMPFUWL4zqkp4cwviwyUF8Baa0dEJpnfsTF4K4d+QNg8k=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744106997; c=relaxed/simple;
+	bh=WC+f6MF8GfFGr87diUnskmJPC7KBcMzgHUcQy1jHo0Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=TfER6g9h/HBF667pWSKEroHTmqedRx8xIFu108JlSUubVQ1K4OUPb5RKLjH3VAFZbKdkeRb7kWd3LYHwkUE7lMyNpC72OXHK/H5APzEGGQpLf1zSbkU7pCU6/cQJXHvkJJ2Ag6A42yrXLxZld7IBIur0P5pProd61s/+XubL9gk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JLSz1ik1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="w3kkv0U3"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PLQFQq7jNroBO+OBY3eIigahevG2x932i6QFYFu/BR60gN+OAxjtGe6POBA2k8wyIFdwKQy14lIzGzQw1oubDYjY9jhAv/fo3CJsN/FnB6iJo11ec4H7QQEfX+cotTzSgnnqEctZGTljAs+j9TJeoeasU7etys6T/p1tt132Kvur7lz4sgmNutvJ6ykvwfcFJbo2VYk9T0tC9XEb8sbIypFdczi+97WIzz6oSK+b/qSn+lOlTERez7G64e1Af7DRtyJCHY9PWqaTzY1VHlG+2OtL499n++7y7DgDaq7mLpV4YP/uOpbTMiDT1CuOAaw1WqCIiPE8jGkObrD9jWErhg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=i3iC2hUZYiCqI+T5Ojcgu4B88NwAD8nSdFKmGW37u5Q=;
- b=pax6YrCI9n8EDGzP9BowVNroKiJfsSNzp8Y+ESgM/qC4+PiNDIIfxob9oTlg2pj3mf2WDA8eXwbH9LX1wvvIDjkYNS/ruV2cEDfdptJIaOIfzK1IQigy7tul6SQfIe5VcgcoL2nKseWM2hT/vO2sx6TzPUZKHGAOnDpgnKrbEBr3xNt/uyyQuRA4nO9vwGH9TBw/75pezZsuHGhcoLTbO5O6SDb51c/1hxuwuJH8yaIZgnt6W2btEBVydj0Tysl0D2MbIYVB11tqzzf2A1Dfxnl3BZtqP6vnVj05dELfIhPtvroIWUxi5lwOhoqBcrhYaqMWKI3gyBSOha6hwYY/TA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=i3iC2hUZYiCqI+T5Ojcgu4B88NwAD8nSdFKmGW37u5Q=;
- b=w3kkv0U3u6KM9jg8cPmQv4STHPQzQXaKP+6fmhbnpyAMcpqClYiBSNOxjHMP/zE2GEK+YdsPNr09/fn/VBQS/02CPXkmg2AthqXUFpxFjPV8ZO7n5Tc23Y7sB04DYopsUfZBdrGjzYbptLRDUV6jPqZ2ZYv5HreA9jOGvSy95GJ2+stTYxmQNgDcBPemE7GWRQYbNTVO8ovz6Seu7sykJjjPVLesi9p0CxJK2WqgZlBIcaD1TnHhRBF07a5CFamop9ddYF4+oh8133GGwQ8VPXy/d+XhqMX3JAqi0ozx+vei0SgdDyyXuYPNbj437HIiXuMpNJvQazNRebyQ3k3FZg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from PAXPR04MB8254.eurprd04.prod.outlook.com (2603:10a6:102:1cd::24)
- by VI2PR04MB11073.eurprd04.prod.outlook.com (2603:10a6:800:26e::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.33; Tue, 8 Apr
- 2025 10:09:53 +0000
-Received: from PAXPR04MB8254.eurprd04.prod.outlook.com
- ([fe80::2755:55ac:5d6f:4f87]) by PAXPR04MB8254.eurprd04.prod.outlook.com
- ([fe80::2755:55ac:5d6f:4f87%4]) with mapi id 15.20.8606.033; Tue, 8 Apr 2025
- 10:09:53 +0000
-Message-ID: <45784eee-ad24-495a-a199-4df75b2300bf@oss.nxp.com>
-Date: Tue, 8 Apr 2025 18:09:43 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/4] media: v4l: dev-decoder: Add source change
- V4L2_EVENT_SRC_CH_COLORSPACE
-To: Hans Verkuil <hverkuil-cisco@xs4all.nl>, mchehab@kernel.org
-Cc: nicolas@ndufresne.ca, shawnguo@kernel.org, robh+dt@kernel.org,
- s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
- linux-imx@nxp.com, xiahong.bao@nxp.com, eagle.zhou@nxp.com,
- tao.jiang_2@nxp.com, imx@lists.linux.dev, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20250117061938.3923516-1-ming.qian@oss.nxp.com>
- <3e5f003a-f689-4f5a-ac75-6bf95379637b@xs4all.nl>
- <50ce67b7-ef06-4e8e-bf4f-f4b0d5e40961@oss.nxp.com>
- <d5a8988f-1038-4a8b-8478-968ceca37879@xs4all.nl>
- <c9aef3f6-43cd-48fb-8aba-0abd33c4e263@oss.nxp.com>
- <d2a1a4d2-dbce-40e2-9cca-fe2fbf1d6daa@xs4all.nl>
-From: "Ming Qian(OSS)" <ming.qian@oss.nxp.com>
-In-Reply-To: <d2a1a4d2-dbce-40e2-9cca-fe2fbf1d6daa@xs4all.nl>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SI1PR02CA0041.apcprd02.prod.outlook.com
- (2603:1096:4:1f6::18) To PAXPR04MB8254.eurprd04.prod.outlook.com
- (2603:10a6:102:1cd::24)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JLSz1ik1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDE73C4CEF8;
+	Tue,  8 Apr 2025 10:09:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744106996;
+	bh=WC+f6MF8GfFGr87diUnskmJPC7KBcMzgHUcQy1jHo0Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=JLSz1ik1QaYVzyAQ9lMi3N82ZZgS2mb8I5/hWo0dcA4vTQiKV41iork2xAUjen4qF
+	 BCgXyrUvDK7SO7d/znIRxTAZjBFSdYoloCi71nUZJX1hy/9Mn5TWDVFA3MLqP7NiOm
+	 p5gUmhklTj3Wpmz8rZG+92h+h1ei4vFzAUmBwnlIpYYCxOxacOc+892BvrDBDC4hkp
+	 bdiI87FzfiVfPZSb1yBVcnNdQtDd3qVCfaAjjuJ5hIEfJyz3qOkTs3gPM1sEOydrVT
+	 yirH0LIbEIhtW7AnYvdaFVQpMC7eTvC+LV66enIT2hCHCHKk7mMCHmzkRUN1mk8T47
+	 Mzs53J8mzCFTQ==
+Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
+	(envelope-from <mchehab@kernel.org>)
+	id 1u25tt-00000008RVj-0nD6;
+	Tue, 08 Apr 2025 18:09:49 +0800
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 10/33] scripts/kernel-doc.py: move output classes to a separate file
+Date: Tue,  8 Apr 2025 18:09:13 +0800
+Message-ID: <81087eff25d11c265019a8631f7fc8d3904795d0.1744106242.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <cover.1744106241.git.mchehab+huawei@kernel.org>
+References: <cover.1744106241.git.mchehab+huawei@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8254:EE_|VI2PR04MB11073:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7d04ec18-4614-4a51-9b98-08dd7685813e
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VDJlTlBUMDR2UEc1ek01UzVka0tXUkRBSkxWSXZuUEsydnQ3NXUxdEt5NGZR?=
- =?utf-8?B?UDBkbWtCNTJtUVdEamZ2WEp4SXZEWFhJYXZzMDVMbi9RUUt3YTdBZ0JwN3Ry?=
- =?utf-8?B?cG1odkJ3OWJpVEVGeGpxNmNpRWRZOVlUK0o4YmtMNWNSTU15NjgxSXJyb1FR?=
- =?utf-8?B?ZVRBS050N0pSaWlNeHdTNnZtbnNNbi96TnVGc01JcnZPb3drWStMdW1TcWh5?=
- =?utf-8?B?cHN1d0FDajI4eFZhMTlubC9Wd1pSU1oxSW4ya0s5SzBRbWk4Vm1lODYyQ1NX?=
- =?utf-8?B?b3J5Y2ppcjlzOFVkZDAxRVB1ak1SNHRyVHdkL2s5d2pwUjI5MC8ydEp3RWYv?=
- =?utf-8?B?bTliaWxQTHdYb0NDc2ZtMGRtNGhidS80M3RreTFKT3MxMkJHNDFWeGR5ODRx?=
- =?utf-8?B?WmY3QkpuMWdSNExuOW96eWhiRnlBa2tNMzU4Snk1MmsrYzRTbzRhTkhEaGtQ?=
- =?utf-8?B?NjhnQmtrVkxDR2g1ckpsdHZVejFYem1ZQkwxTzNVRE4zcnhlNENTWFo4S1pp?=
- =?utf-8?B?MTJjVVdBdFFaL1ZUeHJqakFXZzVldlZNRDIyMWh2Z3ZtOGY2a0ZabUd4Yk9I?=
- =?utf-8?B?TEpDNk8zVGFRQzdGVmR0RXBJRVVqd1VCVWZqREg4SlBzQU92bmhsZGdvQ25O?=
- =?utf-8?B?b3pWQ1JDcVZvTWo3TkFzK1BxV1ZaODJvbUR2OUZldVJTRnZZU1pPbUZPNFVI?=
- =?utf-8?B?aUN5cHNMRy9HMG8xQlBqdUF4TUZ3NThZRVJ5cmpaYjk5b2ZRbFdPeGtsZUJI?=
- =?utf-8?B?ZGgyTFhVUlg2TzRDRDZzNnArNloyUEUybEJva1Q1NVpBanJGR1RUWU9yeDM2?=
- =?utf-8?B?S1N4anVja3dUTUpmdlRZbXBzQmVBN2kybGZlSHc3bzlyNngyUk4xZzBpd2lT?=
- =?utf-8?B?cUxGY3hReFFOM0h4LzQ5dDJvZzhhdENYSUVhaityTkRNYkRkWCtiTm4zRmZt?=
- =?utf-8?B?RkJDTnFFUmJTQTFwTEdOQW0wT3h3UkNNSm85bXZsd2xQQi94UWpBS1A3ZU0z?=
- =?utf-8?B?Mjc3YUprTjVhSXoyQVFlcVFOMi95L1RETnhrNUNyUGJhZG5rTU9RbWgxOTEr?=
- =?utf-8?B?eFJ1K0dtcjFhOVNtKzFkbjFjM0w5c3ZBRG5XT3ZBZ2tqRW9ZTDE2NzVwbVZH?=
- =?utf-8?B?cXdlc3VWNHlkQjZoOTNVeG9DVWdTOHdob1dydityVjFua3l2QmsxOVdzclBM?=
- =?utf-8?B?QzB2RktIMWVTUWxBeWY5RndVWFZDbDh3K3ZuOEZrdEtQMUxZUHgxclJaL1hK?=
- =?utf-8?B?YmtvRXh5YVlQc0ZJeHFiUTlrdG1ROWVyK2N2WVl4V3RUTGUzeGtYSWFsNXJH?=
- =?utf-8?B?OWx4bHg4ZWprbzlROXJBQ0tBSUFmNUxFRjRGdzRsZ1A3ZlpwM3pwT3hwUHhW?=
- =?utf-8?B?bHBZQTVVZlZXNzZIdlMxWCt4NUszQ1BvS2RnQ1k4cGZCVFNjbGpqbEhwQ0tu?=
- =?utf-8?B?MzNHMW5oY0JkaWVUTVVFclRzaUd3Z0hjR09kZjFuWHVzZjlGQk0zNHNyYVd1?=
- =?utf-8?B?dlFYMGhFeW5TWDdSRzUvOW1FYS9tand2cFRTbXVFN2NhUXhBSlVCb212QzRW?=
- =?utf-8?B?ZFhXUS92TmxpdEV6MzdoN0ZaaW5IcVlaK2pvT2VTTHp5Y3haN05kZ1MzSHpS?=
- =?utf-8?B?NmRmNmp1MlpzeXpsckRySnBnelpPVzFJZ21IMDV1R3d1Z3JRV1NOaU9ZWU02?=
- =?utf-8?B?VUNUdzBBcVpqY0RUKzhKbUFMRnQ2d0NMeGpGY0ExcU1aTGJ5S1l6b1I2UC9M?=
- =?utf-8?B?TnlZb0hXQlh6ZG8zZktmMW1vN1BMSWtmdmpsS2IwbFB3emNTT1U4V2FNajRQ?=
- =?utf-8?B?ZHphbUFxVmxHU0RUL0g2eldvZWNkYnB6djNPc2phTEE4cFJ3RTY5N1NQa1J3?=
- =?utf-8?Q?+0ibuFOX9Y+9c?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8254.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WHNZT2ZuNDdMUmR1Z2d5eFpvS05BS21zalkvWjQ4MVFiTnUyNkY5R3AwQWx6?=
- =?utf-8?B?QnVtRVRFVnQxN2lMT1NQTFd4S0NRUEJuWlFQNWRSRnJ1NTIzMUJCemtBRGF5?=
- =?utf-8?B?ditDMXZZTThLVXRrUnlyY2VaMWl3bVBhMysyeGpNTDMvYVlvOE5oRDF5amZE?=
- =?utf-8?B?ekRhbkR3dXl0d2Q0NTdkZFRoR2x5Znh3U1RZbER1Q3grNEtONzNhNkRrS1NN?=
- =?utf-8?B?RE9Vc3c3ZnlyMU5uOEFtcUNhM3JXYjh3WlplVXFINStXRGg2UmdrZkt0cTlL?=
- =?utf-8?B?YVJoUi9vNWYxa3FINHA1ODE1a2JVYVVmUDVTd1hMK05ocE1kV3IxMTVuU2Y0?=
- =?utf-8?B?WUtKTWwya2ExRXQ5cFZFSFpnOVFnYm5aeVFveERscXB3WnE1c3Qvc0xWU2Fv?=
- =?utf-8?B?RnRyQ1l0bVFNZkwrSk9XM3FrbnBhNUNOeE9KU1dKRkdnNWdsSGtwRVgrZkVM?=
- =?utf-8?B?V3F3NDRTbjBtRUd3L0ZZck9OUDRNaEtpZkxhb1FhMWpCakRYY0tCbzE4SWhC?=
- =?utf-8?B?eHhUVjlSZXJVa0t6MkY0U1NxcEpGY0FMQ296MnMzcUVhcm85UEtjUEFDV3R5?=
- =?utf-8?B?Q1VHcXNYb0U2QlJLWjhnaWp6VGxIMHRHTDhjVWV3aFIxSGY1dzlCendTbG4v?=
- =?utf-8?B?SkFOdVJ3SUlWZmFWTTRrMWJCaTZoci9sQThyYVlEMzVxRFQ3OTRVcjlCY0sx?=
- =?utf-8?B?QlI4aGhxWUN2RFZGY2ZvRWZUQURsT2paaXNqNGJxL2JuUHMwR1k2NHpueXZU?=
- =?utf-8?B?QmN0QTRHaEJCL04yczdIcXhDRWZVSkRRemM3VGUyKzFYY1d4ZHBhZkc0WnZl?=
- =?utf-8?B?MEEzUlhxU1YzYmdzSEF2WTBOSmJHUU5ERElPUnYvY0trbUVLRDRrUWJnZHdy?=
- =?utf-8?B?UTkzcmJreWxoSEgxSnMyZC8wNjQwRXRTcUxTVlZHY3ZMb0lVVUdQK3NuWGdL?=
- =?utf-8?B?NFI3VVJIaEFlUXFETk8yRU9wUzlLaklkd0JIRjgzVTRoQUMyTFR3SUpwMm5l?=
- =?utf-8?B?UGkrRVE2MVBlektBRjlxeFdTVjhGWGRIREFudldYVFpGQXgxNUw4SkhSdFN0?=
- =?utf-8?B?NWY3NDdQMVN3ZEpMUkplTW5XZzJVZ2xtWkdPeEtmR3hMOXZ6VWZJN0tQdTBP?=
- =?utf-8?B?em1IUWw5NlpwSjhFa3NNd0l1WVRUWVhzdE5McisyUHlneExtN0pjQUk4M21y?=
- =?utf-8?B?c1RJNDRtellRWEFUVDY3aW5mZjRBcEVCYmIyNlBwNTdWKzFyNXN2d0tNOHhy?=
- =?utf-8?B?UTRnaStSYWtma0pORGpDQitleUxjSVVsTW5RaklFTjJyV3hRdng2a1JtbzNO?=
- =?utf-8?B?RXNPaGxGMjRjRVMzNjErN0h6c2pDcGh0anR0bERjbjZPbHVCTmYzY29pcXla?=
- =?utf-8?B?UGQvdUNwOERXTk91QlZ6MnFSQTcxaENkY2plRkNYaGN5QkRJbUw2eHpKVE9a?=
- =?utf-8?B?RURiY29rdGhKWTRGdU9IY0pNNXR4OHJZUGpaeDNqbGhBdXJ3ZEZTVk41Q2o3?=
- =?utf-8?B?S2tmVktBRlhnMDBQTU5NS3dtWTZPaDExWU5OdERYczFBaUhTUE1YZzFqWjBW?=
- =?utf-8?B?aWFINk9XdmdFL3h3dzc3Z3NYRHJmZDc3LzVmSENUajB5cEd0dzVVQ0Rrdmto?=
- =?utf-8?B?alZGWllJckorMjVVcWhsSG9NblU2bDRjTWdhamR3VHNTaE1ybGpiR04yK1V6?=
- =?utf-8?B?alpwMVVLOUdoMFpuSjFEQ05NdkdzalBtMzhadHlvMTZVMTdtZnNBUzFiTVZ5?=
- =?utf-8?B?NzJ1TnVTcUZvQklTaEN4SDcyQ1MzWU1vQjZXbXFlcHprZENVUGxaaDhubXFJ?=
- =?utf-8?B?Rk1vQWIrWkFOY243eXRVRER5d2R5cmtMMVZaOWNSWXdlOWFtQjBzYkFQNW5N?=
- =?utf-8?B?ZGN3aUJkLzJ5bGQ3RUdhRXBKakdCSjlpem1UNlhqT21YVkdWOEpSQnNLb1l0?=
- =?utf-8?B?TldqUTloUG1WMTEvdDFvUVRhTDJOMm82TkwvNVd6Ri95cThHaDhjakdlVnl1?=
- =?utf-8?B?Wmc1RnMrbG9HblIyeG5rNWZiYmprZWJVa3ViMkNxYXJLKytaeERoWThJZm1M?=
- =?utf-8?B?WGxMcjFyTEp0ci9RL1pBY1g3QjhQSDg5MFNWbWZRaXRkSUt4MWRjSHl2b3ZO?=
- =?utf-8?Q?krbHLwSIc4DOFF+NNTdDHf8iT?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7d04ec18-4614-4a51-9b98-08dd7685813e
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8254.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2025 10:09:53.0032
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5JXwzBJwxWNYTgoh1traGb/LIsd9BwqnX0Feb7IGrdTllbJQSFi9vVzp4bf0ZCOzBNK79d27/XyXjg2XIKmaQQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI2PR04MB11073
+Content-Transfer-Encoding: 8bit
+Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
 
-Hi Hans,
+In preparation for letting kerneldoc Sphinx extension to import
+Python libraries, move kernel-doc output logic to a separate file.
 
-On 2025/4/8 17:39, Hans Verkuil wrote:
-> On 4/8/25 10:45, Ming Qian(OSS) wrote:
->> Hi Hans,
->>
->> On 2025/4/8 16:30, Hans Verkuil wrote:
->>> On 08/04/2025 08:34, Ming Qian(OSS) wrote:
->>>> Hi Hans,
->>>>
->>>> On 2025/4/7 17:54, Hans Verkuil wrote:
->>>>> On 17/01/2025 07:19, Ming Qian wrote:
->>>>>> Add a new source change V4L2_EVENT_SRC_CH_COLORSPACE that
->>>>>> indicates colorspace change in the stream.
->>>>>> The change V4L2_EVENT_SRC_CH_RESOLUTION will always affect
->>>>>> the allocation, but V4L2_EVENT_SRC_CH_COLORSPACE won't.
->>>>>>
->>>>>> Signed-off-by: Ming Qian <ming.qian@oss.nxp.com>
->>>>>> ---
->>>>>>     Documentation/userspace-api/media/v4l/vidioc-dqevent.rst | 9 +++++++++
->>>>>>     .../userspace-api/media/videodev2.h.rst.exceptions       | 1 +
->>>>>>     include/uapi/linux/videodev2.h                           | 1 +
->>>>>>     3 files changed, 11 insertions(+)
->>>>>>
->>>>>> diff --git a/Documentation/userspace-api/media/v4l/vidioc-dqevent.rst b/Documentation/userspace-api/media/v4l/vidioc-dqevent.rst
->>>>>> index 8db103760930..91e6b86c976d 100644
->>>>>> --- a/Documentation/userspace-api/media/v4l/vidioc-dqevent.rst
->>>>>> +++ b/Documentation/userspace-api/media/v4l/vidioc-dqevent.rst
->>>>>> @@ -369,6 +369,15 @@ call.
->>>>>>     	loss of signal and so restarting streaming I/O is required in order for
->>>>>>     	the hardware to synchronize to the video signal.
->>>>>>     
->>>>>> +    * - ``V4L2_EVENT_SRC_CH_COLORSPACE``
->>>>>> +      - 0x0002
->>>>>> +      - This event gets triggered when a colorsapce change is detected at
->>>>>
->>>>> colorsapce -> colorspace
->>>>>
->>>>
->>>> Will fix in v3
->>>>
->>>>>> +	an input. This can come from a video decoder. Applications will query
->>>>>
->>>>> It can also come from a video receiver. E.g. an HDMI source changes colorspace
->>>>> signaling, but not the resolution.
->>>>>
->>>>>> +	the new colorspace information (if any, the signal may also have been
->>>>>> +	lost)
->>>>>
->>>>> Missing . at the end. Also, if the signal is lost, then that is a CH_RESOLUTION
->>>>> change, not CH_COLORSPACE.
->>>>>
->>>> OK, will fix in v3
->>>>>> +
->>>>>> +	For stateful decoders follow the guidelines in :ref:`decoder`.
->>>>>
->>>>> I think this should emphasize that if CH_COLORSPACE is set, but not CH_RESOLUTION,
->>>>> then only the colorspace changed and there is no need to reallocate buffers.
->>>>>
->>>>
->>>> OK, will add in v3
->>>>
->>>>> I also wonder if the description of CH_RESOLUTION should be enhanced to explain
->>>>> that this might also imply a colorspace change. I'm not sure what existing codec
->>>>> drivers do if there is a colorspace change but no resolution change.
->>>>
->>>> I think there is no uniform behavior at the moment, it depends on the
->>>> behavior of the decoder. Maybe most decoders ignore this.
->>>
->>> Can you try to do a quick analysis of this? Don't spend too much time on this,
->>> but it is helpful to have an idea of how existing codecs handle this.
->>>
->>> Regards,
->>>
->>> 	Hans
->>>
->>
->> I checked the vpu used in our platforms,
->> 1. amphion vpu, it will ignore the colorspace change.
->> 2. hantro g1/g2 decoder, it also ignore the colorspace change.
->> 3. chipsnmedia wave6 decoder, the firmware detect the colorspace change
->> for HEVC format, but ignore for AVC format. But its driver just ignore
->> it.
->> 4. chipsnmedia wave511 decoder, same as wave6.
-> 
-> I meant stateful codec drivers that are in mainline. Out-of-tree drivers do not
-> concern me.
-> 
-> Regards,
-> 
-> 	Hans
-> 
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ scripts/kernel-doc.py           | 727 +------------------------------
+ scripts/lib/kdoc/kdoc_output.py | 736 ++++++++++++++++++++++++++++++++
+ 2 files changed, 739 insertions(+), 724 deletions(-)
+ create mode 100755 scripts/lib/kdoc/kdoc_output.py
 
-Sorry, I misunderstand
+diff --git a/scripts/kernel-doc.py b/scripts/kernel-doc.py
+index d09ada2d862a..abff78e9160f 100755
+--- a/scripts/kernel-doc.py
++++ b/scripts/kernel-doc.py
+@@ -2,9 +2,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # Copyright(c) 2025: Mauro Carvalho Chehab <mchehab@kernel.org>.
+ #
+-# pylint: disable=R0902,R0903,R0904,R0911,R0912,R0913,R0914,R0915,R0917,R1702
+-# pylint: disable=C0302,C0103,C0301
+-# pylint: disable=C0116,C0115,W0511,W0613
++# pylint: disable=C0103
+ #
+ # Converted from the kernel-doc script originally written in Perl
+ # under GPLv2, copyrighted since 1998 by the following authors:
+@@ -102,14 +100,8 @@ documentation comment syntax.
+ import argparse
+ import logging
+ import os
+-import re
+ import sys
+ 
+-from datetime import datetime
+-from pprint import pformat
+-
+-from dateutil import tz
+-
+ # Import Python modules
+ 
+ LIB_DIR = "lib/kdoc"
+@@ -117,721 +109,8 @@ SRC_DIR = os.path.dirname(os.path.realpath(__file__))
+ 
+ sys.path.insert(0, os.path.join(SRC_DIR, LIB_DIR))
+ 
+-from kdoc_parser import KernelDoc, type_param
+-from kdoc_re import Re
+-from kdoc_files import KernelFiles
+-
+-function_pointer = Re(r"([^\(]*\(\*)\s*\)\s*\(([^\)]*)\)", cache=False)
+-
+-# match expressions used to find embedded type information
+-type_constant = Re(r"\b``([^\`]+)``\b", cache=False)
+-type_constant2 = Re(r"\%([-_*\w]+)", cache=False)
+-type_func = Re(r"(\w+)\(\)", cache=False)
+-type_param_ref = Re(r"([\!~\*]?)\@(\w*((\.\w+)|(->\w+))*(\.\.\.)?)", cache=False)
+-
+-# Special RST handling for func ptr params
+-type_fp_param = Re(r"\@(\w+)\(\)", cache=False)
+-
+-# Special RST handling for structs with func ptr params
+-type_fp_param2 = Re(r"\@(\w+->\S+)\(\)", cache=False)
+-
+-type_env = Re(r"(\$\w+)", cache=False)
+-type_enum = Re(r"\&(enum\s*([_\w]+))", cache=False)
+-type_struct = Re(r"\&(struct\s*([_\w]+))", cache=False)
+-type_typedef = Re(r"\&(typedef\s*([_\w]+))", cache=False)
+-type_union = Re(r"\&(union\s*([_\w]+))", cache=False)
+-type_member = Re(r"\&([_\w]+)(\.|->)([_\w]+)", cache=False)
+-type_fallback = Re(r"\&([_\w]+)", cache=False)
+-type_member_func = type_member + Re(r"\(\)", cache=False)
+-
+-
+-class OutputFormat:
+-    # output mode.
+-    OUTPUT_ALL          = 0 # output all symbols and doc sections
+-    OUTPUT_INCLUDE      = 1 # output only specified symbols
+-    OUTPUT_EXPORTED     = 2 # output exported symbols
+-    OUTPUT_INTERNAL     = 3 # output non-exported symbols
+-
+-    # Virtual member to be overriden at the  inherited classes
+-    highlights = []
+-
+-    def __init__(self):
+-        """Declare internal vars and set mode to OUTPUT_ALL"""
+-
+-        self.out_mode = self.OUTPUT_ALL
+-        self.enable_lineno = None
+-        self.nosymbol = {}
+-        self.symbol = None
+-        self.function_table = set()
+-        self.config = None
+-
+-    def set_config(self, config):
+-        self.config = config
+-
+-    def set_filter(self, export, internal, symbol, nosymbol, function_table,
+-                   enable_lineno):
+-        """
+-        Initialize filter variables according with the requested mode.
+-
+-        Only one choice is valid between export, internal and symbol.
+-
+-        The nosymbol filter can be used on all modes.
+-        """
+-
+-        self.enable_lineno = enable_lineno
+-
+-        if symbol:
+-            self.out_mode = self.OUTPUT_INCLUDE
+-            function_table = symbol
+-        elif export:
+-            self.out_mode = self.OUTPUT_EXPORTED
+-        elif internal:
+-            self.out_mode = self.OUTPUT_INTERNAL
+-        else:
+-            self.out_mode = self.OUTPUT_ALL
+-
+-        if nosymbol:
+-            self.nosymbol = set(nosymbol)
+-
+-        if function_table:
+-            self.function_table = function_table
+-
+-    def highlight_block(self, block):
+-        """
+-        Apply the RST highlights to a sub-block of text.
+-        """
+-
+-        for r, sub in self.highlights:
+-            block = r.sub(sub, block)
+-
+-        return block
+-
+-    def check_doc(self, name):
+-        """Check if DOC should be output"""
+-
+-        if self.out_mode == self.OUTPUT_ALL:
+-            return True
+-
+-        if self.out_mode == self.OUTPUT_INCLUDE:
+-            if name in self.nosymbol:
+-                return False
+-
+-            if name in self.function_table:
+-                return True
+-
+-        return False
+-
+-    def check_declaration(self, dtype, name):
+-        if name in self.nosymbol:
+-            return False
+-
+-        if self.out_mode == self.OUTPUT_ALL:
+-            return True
+-
+-        if self.out_mode in [ self.OUTPUT_INCLUDE, self.OUTPUT_EXPORTED ]:
+-            if name in self.function_table:
+-                return True
+-
+-        if self.out_mode == self.OUTPUT_INTERNAL:
+-            if dtype != "function":
+-                return True
+-
+-            if name not in self.function_table:
+-                return True
+-
+-        return False
+-
+-    def check_function(self, fname, name, args):
+-        return True
+-
+-    def check_enum(self, fname, name, args):
+-        return True
+-
+-    def check_typedef(self, fname, name, args):
+-        return True
+-
+-    def msg(self, fname, name, args):
+-
+-        dtype = args.get('type', "")
+-
+-        if dtype == "doc":
+-            self.out_doc(fname, name, args)
+-            return False
+-
+-        if not self.check_declaration(dtype, name):
+-            return False
+-
+-        if dtype == "function":
+-            self.out_function(fname, name, args)
+-            return False
+-
+-        if dtype == "enum":
+-            self.out_enum(fname, name, args)
+-            return False
+-
+-        if dtype == "typedef":
+-            self.out_typedef(fname, name, args)
+-            return False
+-
+-        if dtype in ["struct", "union"]:
+-            self.out_struct(fname, name, args)
+-            return False
+-
+-        # Warn if some type requires an output logic
+-        self.config.log.warning("doesn't now how to output '%s' block",
+-                                dtype)
+-
+-        return True
+-
+-    # Virtual methods to be overridden by inherited classes
+-    def out_doc(self, fname, name, args):
+-        pass
+-
+-    def out_function(self, fname, name, args):
+-        pass
+-
+-    def out_enum(self, fname, name, args):
+-        pass
+-
+-    def out_typedef(self, fname, name, args):
+-        pass
+-
+-    def out_struct(self, fname, name, args):
+-        pass
+-
+-
+-class RestFormat(OutputFormat):
+-    # """Consts and functions used by ReST output"""
+-
+-    highlights = [
+-        (type_constant, r"``\1``"),
+-        (type_constant2, r"``\1``"),
+-
+-        # Note: need to escape () to avoid func matching later
+-        (type_member_func, r":c:type:`\1\2\3\\(\\) <\1>`"),
+-        (type_member, r":c:type:`\1\2\3 <\1>`"),
+-        (type_fp_param, r"**\1\\(\\)**"),
+-        (type_fp_param2, r"**\1\\(\\)**"),
+-        (type_func, r"\1()"),
+-        (type_enum, r":c:type:`\1 <\2>`"),
+-        (type_struct, r":c:type:`\1 <\2>`"),
+-        (type_typedef, r":c:type:`\1 <\2>`"),
+-        (type_union, r":c:type:`\1 <\2>`"),
+-
+-        # in rst this can refer to any type
+-        (type_fallback, r":c:type:`\1`"),
+-        (type_param_ref, r"**\1\2**")
+-    ]
+-    blankline = "\n"
+-
+-    sphinx_literal = Re(r'^[^.].*::$', cache=False)
+-    sphinx_cblock = Re(r'^\.\.\ +code-block::', cache=False)
+-
+-    def __init__(self):
+-        """
+-        Creates class variables.
+-
+-        Not really mandatory, but it is a good coding style and makes
+-        pylint happy.
+-        """
+-
+-        super().__init__()
+-        self.lineprefix = ""
+-
+-    def print_lineno (self, ln):
+-        """Outputs a line number"""
+-
+-        if self.enable_lineno and ln:
+-            print(f".. LINENO {ln}")
+-
+-    def output_highlight(self, args):
+-        input_text = args
+-        output = ""
+-        in_literal = False
+-        litprefix = ""
+-        block = ""
+-
+-        for line in input_text.strip("\n").split("\n"):
+-
+-            # If we're in a literal block, see if we should drop out of it.
+-            # Otherwise, pass the line straight through unmunged.
+-            if in_literal:
+-                if line.strip():  # If the line is not blank
+-                    # If this is the first non-blank line in a literal block,
+-                    # figure out the proper indent.
+-                    if not litprefix:
+-                        r = Re(r'^(\s*)')
+-                        if r.match(line):
+-                            litprefix = '^' + r.group(1)
+-                        else:
+-                            litprefix = ""
+-
+-                        output += line + "\n"
+-                    elif not Re(litprefix).match(line):
+-                        in_literal = False
+-                    else:
+-                        output += line + "\n"
+-                else:
+-                    output += line + "\n"
+-
+-            # Not in a literal block (or just dropped out)
+-            if not in_literal:
+-                block += line + "\n"
+-                if self.sphinx_literal.match(line) or self.sphinx_cblock.match(line):
+-                    in_literal = True
+-                    litprefix = ""
+-                    output += self.highlight_block(block)
+-                    block = ""
+-
+-        # Handle any remaining block
+-        if block:
+-            output += self.highlight_block(block)
+-
+-        # Print the output with the line prefix
+-        for line in output.strip("\n").split("\n"):
+-            print(self.lineprefix + line)
+-
+-    def out_section(self, args, out_reference=False):
+-        """
+-        Outputs a block section.
+-
+-        This could use some work; it's used to output the DOC: sections, and
+-        starts by putting out the name of the doc section itself, but that
+-        tends to duplicate a header already in the template file.
+-        """
+-
+-        sectionlist = args.get('sectionlist', [])
+-        sections = args.get('sections', {})
+-        section_start_lines = args.get('section_start_lines', {})
+-
+-        for section in sectionlist:
+-            # Skip sections that are in the nosymbol_table
+-            if section in self.nosymbol:
+-                continue
+-
+-            if not self.out_mode == self.OUTPUT_INCLUDE:
+-                if out_reference:
+-                    print(f".. _{section}:\n")
+-
+-                if not self.symbol:
+-                    print(f'{self.lineprefix}**{section}**\n')
+-
+-            self.print_lineno(section_start_lines.get(section, 0))
+-            self.output_highlight(sections[section])
+-            print()
+-        print()
+-
+-    def out_doc(self, fname, name, args):
+-        if not self.check_doc(name):
+-            return
+-
+-        self.out_section(args, out_reference=True)
+-
+-    def out_function(self, fname, name, args):
+-
+-        oldprefix = self.lineprefix
+-        signature = ""
+-
+-        func_macro = args.get('func_macro', False)
+-        if func_macro:
+-            signature = args['function']
+-        else:
+-            if args.get('functiontype'):
+-                signature = args['functiontype'] + " "
+-            signature += args['function'] + " ("
+-
+-        parameterlist = args.get('parameterlist', [])
+-        parameterdescs = args.get('parameterdescs', {})
+-        parameterdesc_start_lines = args.get('parameterdesc_start_lines', {})
+-
+-        ln = args.get('ln', 0)
+-
+-        count = 0
+-        for parameter in parameterlist:
+-            if count != 0:
+-                signature += ", "
+-            count += 1
+-            dtype = args['parametertypes'].get(parameter, "")
+-
+-            if function_pointer.search(dtype):
+-                signature += function_pointer.group(1) + parameter + function_pointer.group(3)
+-            else:
+-                signature += dtype
+-
+-        if not func_macro:
+-            signature += ")"
+-
+-        if args.get('typedef') or not args.get('functiontype'):
+-            print(f".. c:macro:: {args['function']}\n")
+-
+-            if args.get('typedef'):
+-                self.print_lineno(ln)
+-                print("   **Typedef**: ", end="")
+-                self.lineprefix = ""
+-                self.output_highlight(args.get('purpose', ""))
+-                print("\n\n**Syntax**\n")
+-                print(f"  ``{signature}``\n")
+-            else:
+-                print(f"``{signature}``\n")
+-        else:
+-            print(f".. c:function:: {signature}\n")
+-
+-        if not args.get('typedef'):
+-            self.print_lineno(ln)
+-            self.lineprefix = "   "
+-            self.output_highlight(args.get('purpose', ""))
+-            print()
+-
+-        # Put descriptive text into a container (HTML <div>) to help set
+-        # function prototypes apart
+-        self.lineprefix = "  "
+-
+-        if parameterlist:
+-            print(".. container:: kernelindent\n")
+-            print(f"{self.lineprefix}**Parameters**\n")
+-
+-        for parameter in parameterlist:
+-            parameter_name = Re(r'\[.*').sub('', parameter)
+-            dtype = args['parametertypes'].get(parameter, "")
+-
+-            if dtype:
+-                print(f"{self.lineprefix}``{dtype}``")
+-            else:
+-                print(f"{self.lineprefix}``{parameter}``")
+-
+-            self.print_lineno(parameterdesc_start_lines.get(parameter_name, 0))
+-
+-            self.lineprefix = "    "
+-            if parameter_name in parameterdescs and \
+-               parameterdescs[parameter_name] != KernelDoc.undescribed:
+-
+-                self.output_highlight(parameterdescs[parameter_name])
+-                print()
+-            else:
+-                print(f"{self.lineprefix}*undescribed*\n")
+-            self.lineprefix = "  "
+-
+-        self.out_section(args)
+-        self.lineprefix = oldprefix
+-
+-    def out_enum(self, fname, name, args):
+-
+-        oldprefix = self.lineprefix
+-        name = args.get('enum', '')
+-        parameterlist = args.get('parameterlist', [])
+-        parameterdescs = args.get('parameterdescs', {})
+-        ln = args.get('ln', 0)
+-
+-        print(f"\n\n.. c:enum:: {name}\n")
+-
+-        self.print_lineno(ln)
+-        self.lineprefix = "  "
+-        self.output_highlight(args.get('purpose', ''))
+-        print()
+-
+-        print(".. container:: kernelindent\n")
+-        outer = self.lineprefix + "  "
+-        self.lineprefix = outer + "  "
+-        print(f"{outer}**Constants**\n")
+-
+-        for parameter in parameterlist:
+-            print(f"{outer}``{parameter}``")
+-
+-            if parameterdescs.get(parameter, '') != KernelDoc.undescribed:
+-                self.output_highlight(parameterdescs[parameter])
+-            else:
+-                print(f"{self.lineprefix}*undescribed*\n")
+-            print()
+-
+-        self.lineprefix = oldprefix
+-        self.out_section(args)
+-
+-    def out_typedef(self, fname, name, args):
+-
+-        oldprefix = self.lineprefix
+-        name = args.get('typedef', '')
+-        ln = args.get('ln', 0)
+-
+-        print(f"\n\n.. c:type:: {name}\n")
+-
+-        self.print_lineno(ln)
+-        self.lineprefix = "   "
+-
+-        self.output_highlight(args.get('purpose', ''))
+-
+-        print()
+-
+-        self.lineprefix = oldprefix
+-        self.out_section(args)
+-
+-    def out_struct(self, fname, name, args):
+-
+-        name = args.get('struct', "")
+-        purpose = args.get('purpose', "")
+-        declaration = args.get('definition', "")
+-        dtype = args.get('type', "struct")
+-        ln = args.get('ln', 0)
+-
+-        parameterlist = args.get('parameterlist', [])
+-        parameterdescs = args.get('parameterdescs', {})
+-        parameterdesc_start_lines = args.get('parameterdesc_start_lines', {})
+-
+-        print(f"\n\n.. c:{dtype}:: {name}\n")
+-
+-        self.print_lineno(ln)
+-
+-        oldprefix = self.lineprefix
+-        self.lineprefix += "  "
+-
+-        self.output_highlight(purpose)
+-        print()
+-
+-        print(".. container:: kernelindent\n")
+-        print(f"{self.lineprefix}**Definition**::\n")
+-
+-        self.lineprefix = self.lineprefix + "  "
+-
+-        declaration = declaration.replace("\t", self.lineprefix)
+-
+-        print(f"{self.lineprefix}{dtype} {name}" + ' {')
+-        print(f"{declaration}{self.lineprefix}" + "};\n")
+-
+-        self.lineprefix = "  "
+-        print(f"{self.lineprefix}**Members**\n")
+-        for parameter in parameterlist:
+-            if not parameter or parameter.startswith("#"):
+-                continue
+-
+-            parameter_name = parameter.split("[", maxsplit=1)[0]
+-
+-            if parameterdescs.get(parameter_name) == KernelDoc.undescribed:
+-                continue
+-
+-            self.print_lineno(parameterdesc_start_lines.get(parameter_name, 0))
+-
+-            print(f"{self.lineprefix}``{parameter}``")
+-
+-            self.lineprefix = "    "
+-            self.output_highlight(parameterdescs[parameter_name])
+-            self.lineprefix = "  "
+-
+-            print()
+-
+-        print()
+-
+-        self.lineprefix = oldprefix
+-        self.out_section(args)
+-
+-
+-class ManFormat(OutputFormat):
+-    """Consts and functions used by man pages output"""
+-
+-    highlights = (
+-        (type_constant, r"\1"),
+-        (type_constant2, r"\1"),
+-        (type_func, r"\\fB\1\\fP"),
+-        (type_enum, r"\\fI\1\\fP"),
+-        (type_struct, r"\\fI\1\\fP"),
+-        (type_typedef, r"\\fI\1\\fP"),
+-        (type_union, r"\\fI\1\\fP"),
+-        (type_param, r"\\fI\1\\fP"),
+-        (type_param_ref, r"\\fI\1\2\\fP"),
+-        (type_member, r"\\fI\1\2\3\\fP"),
+-        (type_fallback, r"\\fI\1\\fP")
+-    )
+-    blankline = ""
+-
+-    def __init__(self):
+-        """
+-        Creates class variables.
+-
+-        Not really mandatory, but it is a good coding style and makes
+-        pylint happy.
+-        """
+-
+-        super().__init__()
+-
+-        dt = datetime.now()
+-        if os.environ.get("KBUILD_BUILD_TIMESTAMP", None):
+-            # use UTC TZ
+-            to_zone = tz.gettz('UTC')
+-            dt = dt.astimezone(to_zone)
+-
+-        self.man_date = dt.strftime("%B %Y")
+-
+-    def output_highlight(self, block):
+-
+-        contents = self.highlight_block(block)
+-
+-        if isinstance(contents, list):
+-            contents = "\n".join(contents)
+-
+-        for line in contents.strip("\n").split("\n"):
+-            line = Re(r"^\s*").sub("", line)
+-
+-            if line and line[0] == ".":
+-                print("\\&" + line)
+-            else:
+-                print(line)
+-
+-    def out_doc(self, fname, name, args):
+-        module = args.get('module')
+-        sectionlist = args.get('sectionlist', [])
+-        sections = args.get('sections', {})
+-
+-        print(f'.TH "{module}" 9 "{module}" "{self.man_date}" "API Manual" LINUX')
+-
+-        for section in sectionlist:
+-            print(f'.SH "{section}"')
+-            self.output_highlight(sections.get(section))
+-
+-    def out_function(self, fname, name, args):
+-        """output function in man"""
+-
+-        parameterlist = args.get('parameterlist', [])
+-        parameterdescs = args.get('parameterdescs', {})
+-        sectionlist = args.get('sectionlist', [])
+-        sections = args.get('sections', {})
+-
+-        print(f'.TH "{args['function']}" 9 "{args['function']}" "{self.man_date}" "Kernel Hacker\'s Manual" LINUX')
+-
+-        print(".SH NAME")
+-        print(f"{args['function']} \\- {args['purpose']}")
+-
+-        print(".SH SYNOPSIS")
+-        if args.get('functiontype', ''):
+-            print(f'.B "{args['functiontype']}" {args['function']}')
+-        else:
+-            print(f'.B "{args['function']}')
+-
+-        count = 0
+-        parenth = "("
+-        post = ","
+-
+-        for parameter in parameterlist:
+-            if count == len(parameterlist) - 1:
+-                post = ");"
+-
+-            dtype = args['parametertypes'].get(parameter, "")
+-            if function_pointer.match(dtype):
+-                # Pointer-to-function
+-                print(f'".BI "{parenth}{function_pointer.group(1)}" " ") ({function_pointer.group(2)}){post}"')
+-            else:
+-                dtype = Re(r'([^\*])$').sub(r'\1 ', dtype)
+-
+-                print(f'.BI "{parenth}{dtype}"  "{post}"')
+-            count += 1
+-            parenth = ""
+-
+-        if parameterlist:
+-            print(".SH ARGUMENTS")
+-
+-        for parameter in parameterlist:
+-            parameter_name = re.sub(r'\[.*', '', parameter)
+-
+-            print(f'.IP "{parameter}" 12')
+-            self.output_highlight(parameterdescs.get(parameter_name, ""))
+-
+-        for section in sectionlist:
+-            print(f'.SH "{section.upper()}"')
+-            self.output_highlight(sections[section])
+-
+-    def out_enum(self, fname, name, args):
+-
+-        name = args.get('enum', '')
+-        parameterlist = args.get('parameterlist', [])
+-        sectionlist = args.get('sectionlist', [])
+-        sections = args.get('sections', {})
+-
+-        print(f'.TH "{args['module']}" 9 "enum {args['enum']}" "{self.man_date}" "API Manual" LINUX')
+-
+-        print(".SH NAME")
+-        print(f"enum {args['enum']} \\- {args['purpose']}")
+-
+-        print(".SH SYNOPSIS")
+-        print(f"enum {args['enum']}" + " {")
+-
+-        count = 0
+-        for parameter in parameterlist:
+-            print(f'.br\n.BI "    {parameter}"')
+-            if count == len(parameterlist) - 1:
+-                print("\n};")
+-            else:
+-                print(", \n.br")
+-
+-            count += 1
+-
+-        print(".SH Constants")
+-
+-        for parameter in parameterlist:
+-            parameter_name = Re(r'\[.*').sub('', parameter)
+-            print(f'.IP "{parameter}" 12')
+-            self.output_highlight(args['parameterdescs'].get(parameter_name, ""))
+-
+-        for section in sectionlist:
+-            print(f'.SH "{section}"')
+-            self.output_highlight(sections[section])
+-
+-    def out_typedef(self, fname, name, args):
+-        module = args.get('module')
+-        typedef = args.get('typedef')
+-        purpose = args.get('purpose')
+-        sectionlist = args.get('sectionlist', [])
+-        sections = args.get('sections', {})
+-
+-        print(f'.TH "{module}" 9 "{typedef}" "{self.man_date}" "API Manual" LINUX')
+-
+-        print(".SH NAME")
+-        print(f"typedef {typedef} \\- {purpose}")
+-
+-        for section in sectionlist:
+-            print(f'.SH "{section}"')
+-            self.output_highlight(sections.get(section))
+-
+-    def out_struct(self, fname, name, args):
+-        module = args.get('module')
+-        struct_type = args.get('type')
+-        struct_name = args.get('struct')
+-        purpose = args.get('purpose')
+-        definition = args.get('definition')
+-        sectionlist = args.get('sectionlist', [])
+-        parameterlist = args.get('parameterlist', [])
+-        sections = args.get('sections', {})
+-        parameterdescs = args.get('parameterdescs', {})
+-
+-        print(f'.TH "{module}" 9 "{struct_type} {struct_name}" "{self.man_date}" "API Manual" LINUX')
+-
+-        print(".SH NAME")
+-        print(f"{struct_type} {struct_name} \\- {purpose}")
+-
+-        # Replace tabs with two spaces and handle newlines
+-        declaration = definition.replace("\t", "  ")
+-        declaration = Re(r"\n").sub('"\n.br\n.BI "', declaration)
+-
+-        print(".SH SYNOPSIS")
+-        print(f"{struct_type} {struct_name} " + "{" +"\n.br")
+-        print(f'.BI "{declaration}\n' + "};\n.br\n")
+-
+-        print(".SH Members")
+-        for parameter in parameterlist:
+-            if parameter.startswith("#"):
+-                continue
+-
+-            parameter_name = re.sub(r"\[.*", "", parameter)
+-
+-            if parameterdescs.get(parameter_name) == KernelDoc.undescribed:
+-                continue
+-
+-            print(f'.IP "{parameter}" 12')
+-            self.output_highlight(parameterdescs.get(parameter_name))
+-
+-        for section in sectionlist:
+-            print(f'.SH "{section}"')
+-            self.output_highlight(sections.get(section))
+-
+-
+-# Command line interface
+-
++from kdoc_files import KernelFiles                      # pylint: disable=C0413
++from kdoc_output import RestFormat, ManFormat           # pylint: disable=C0413
+ 
+ DESC = """
+ Read C language source or header FILEs, extract embedded documentation comments,
+diff --git a/scripts/lib/kdoc/kdoc_output.py b/scripts/lib/kdoc/kdoc_output.py
+new file mode 100755
+index 000000000000..24e40b3e7d1d
+--- /dev/null
++++ b/scripts/lib/kdoc/kdoc_output.py
+@@ -0,0 +1,736 @@
++#!/usr/bin/env python3
++# SPDX-License-Identifier: GPL-2.0
++# Copyright(c) 2025: Mauro Carvalho Chehab <mchehab@kernel.org>.
++#
++# pylint: disable=C0301,R0911,R0912,R0913,R0914,R0915,R0917
++
++# TODO: implement warning filtering
++
++"""
++Implement output filters to print kernel-doc documentation.
++
++The implementation uses a virtual base class (OutputFormat) which
++contains a dispatches to virtual methods, and some code to filter
++out output messages.
++
++The actual implementation is done on one separate class per each type
++of output. Currently, there are output classes for ReST and man/troff.
++"""
++
++import os
++import re
++from datetime import datetime
++
++from dateutil import tz
++
++from kdoc_parser import KernelDoc, type_param
++from kdoc_re import Re
++
++
++function_pointer = Re(r"([^\(]*\(\*)\s*\)\s*\(([^\)]*)\)", cache=False)
++
++# match expressions used to find embedded type information
++type_constant = Re(r"\b``([^\`]+)``\b", cache=False)
++type_constant2 = Re(r"\%([-_*\w]+)", cache=False)
++type_func = Re(r"(\w+)\(\)", cache=False)
++type_param_ref = Re(r"([\!~\*]?)\@(\w*((\.\w+)|(->\w+))*(\.\.\.)?)", cache=False)
++
++# Special RST handling for func ptr params
++type_fp_param = Re(r"\@(\w+)\(\)", cache=False)
++
++# Special RST handling for structs with func ptr params
++type_fp_param2 = Re(r"\@(\w+->\S+)\(\)", cache=False)
++
++type_env = Re(r"(\$\w+)", cache=False)
++type_enum = Re(r"\&(enum\s*([_\w]+))", cache=False)
++type_struct = Re(r"\&(struct\s*([_\w]+))", cache=False)
++type_typedef = Re(r"\&(typedef\s*([_\w]+))", cache=False)
++type_union = Re(r"\&(union\s*([_\w]+))", cache=False)
++type_member = Re(r"\&([_\w]+)(\.|->)([_\w]+)", cache=False)
++type_fallback = Re(r"\&([_\w]+)", cache=False)
++type_member_func = type_member + Re(r"\(\)", cache=False)
++
++
++class OutputFormat:
++    # output mode.
++    OUTPUT_ALL          = 0 # output all symbols and doc sections
++    OUTPUT_INCLUDE      = 1 # output only specified symbols
++    OUTPUT_EXPORTED     = 2 # output exported symbols
++    OUTPUT_INTERNAL     = 3 # output non-exported symbols
++
++    # Virtual member to be overriden at the  inherited classes
++    highlights = []
++
++    def __init__(self):
++        """Declare internal vars and set mode to OUTPUT_ALL"""
++
++        self.out_mode = self.OUTPUT_ALL
++        self.enable_lineno = None
++        self.nosymbol = {}
++        self.symbol = None
++        self.function_table = set()
++        self.config = None
++
++    def set_config(self, config):
++        self.config = config
++
++    def set_filter(self, export, internal, symbol, nosymbol, function_table,
++                   enable_lineno):
++        """
++        Initialize filter variables according with the requested mode.
++
++        Only one choice is valid between export, internal and symbol.
++
++        The nosymbol filter can be used on all modes.
++        """
++
++        self.enable_lineno = enable_lineno
++
++        if symbol:
++            self.out_mode = self.OUTPUT_INCLUDE
++            function_table = symbol
++        elif export:
++            self.out_mode = self.OUTPUT_EXPORTED
++        elif internal:
++            self.out_mode = self.OUTPUT_INTERNAL
++        else:
++            self.out_mode = self.OUTPUT_ALL
++
++        if nosymbol:
++            self.nosymbol = set(nosymbol)
++
++        if function_table:
++            self.function_table = function_table
++
++    def highlight_block(self, block):
++        """
++        Apply the RST highlights to a sub-block of text.
++        """
++
++        for r, sub in self.highlights:
++            block = r.sub(sub, block)
++
++        return block
++
++    def check_doc(self, name):
++        """Check if DOC should be output"""
++
++        if self.out_mode == self.OUTPUT_ALL:
++            return True
++
++        if self.out_mode == self.OUTPUT_INCLUDE:
++            if name in self.nosymbol:
++                return False
++
++            if name in self.function_table:
++                return True
++
++        return False
++
++    def check_declaration(self, dtype, name):
++        if name in self.nosymbol:
++            return False
++
++        if self.out_mode == self.OUTPUT_ALL:
++            return True
++
++        if self.out_mode in [self.OUTPUT_INCLUDE, self.OUTPUT_EXPORTED]:
++            if name in self.function_table:
++                return True
++
++        if self.out_mode == self.OUTPUT_INTERNAL:
++            if dtype != "function":
++                return True
++
++            if name not in self.function_table:
++                return True
++
++        return False
++
++    def check_function(self, fname, name, args):
++        return True
++
++    def check_enum(self, fname, name, args):
++        return True
++
++    def check_typedef(self, fname, name, args):
++        return True
++
++    def msg(self, fname, name, args):
++
++        dtype = args.get('type', "")
++
++        if dtype == "doc":
++            self.out_doc(fname, name, args)
++            return False
++
++        if not self.check_declaration(dtype, name):
++            return False
++
++        if dtype == "function":
++            self.out_function(fname, name, args)
++            return False
++
++        if dtype == "enum":
++            self.out_enum(fname, name, args)
++            return False
++
++        if dtype == "typedef":
++            self.out_typedef(fname, name, args)
++            return False
++
++        if dtype in ["struct", "union"]:
++            self.out_struct(fname, name, args)
++            return False
++
++        # Warn if some type requires an output logic
++        self.config.log.warning("doesn't now how to output '%s' block",
++                                dtype)
++
++        return True
++
++    # Virtual methods to be overridden by inherited classes
++    def out_doc(self, fname, name, args):
++        pass
++
++    def out_function(self, fname, name, args):
++        pass
++
++    def out_enum(self, fname, name, args):
++        pass
++
++    def out_typedef(self, fname, name, args):
++        pass
++
++    def out_struct(self, fname, name, args):
++        pass
++
++
++class RestFormat(OutputFormat):
++    # """Consts and functions used by ReST output"""
++
++    highlights = [
++        (type_constant, r"``\1``"),
++        (type_constant2, r"``\1``"),
++
++        # Note: need to escape () to avoid func matching later
++        (type_member_func, r":c:type:`\1\2\3\\(\\) <\1>`"),
++        (type_member, r":c:type:`\1\2\3 <\1>`"),
++        (type_fp_param, r"**\1\\(\\)**"),
++        (type_fp_param2, r"**\1\\(\\)**"),
++        (type_func, r"\1()"),
++        (type_enum, r":c:type:`\1 <\2>`"),
++        (type_struct, r":c:type:`\1 <\2>`"),
++        (type_typedef, r":c:type:`\1 <\2>`"),
++        (type_union, r":c:type:`\1 <\2>`"),
++
++        # in rst this can refer to any type
++        (type_fallback, r":c:type:`\1`"),
++        (type_param_ref, r"**\1\2**")
++    ]
++    blankline = "\n"
++
++    sphinx_literal = Re(r'^[^.].*::$', cache=False)
++    sphinx_cblock = Re(r'^\.\.\ +code-block::', cache=False)
++
++    def __init__(self):
++        """
++        Creates class variables.
++
++        Not really mandatory, but it is a good coding style and makes
++        pylint happy.
++        """
++
++        super().__init__()
++        self.lineprefix = ""
++
++    def print_lineno(self, ln):
++        """Outputs a line number"""
++
++        if self.enable_lineno and ln:
++            print(f".. LINENO {ln}")
++
++    def output_highlight(self, args):
++        input_text = args
++        output = ""
++        in_literal = False
++        litprefix = ""
++        block = ""
++
++        for line in input_text.strip("\n").split("\n"):
++
++            # If we're in a literal block, see if we should drop out of it.
++            # Otherwise, pass the line straight through unmunged.
++            if in_literal:
++                if line.strip():  # If the line is not blank
++                    # If this is the first non-blank line in a literal block,
++                    # figure out the proper indent.
++                    if not litprefix:
++                        r = Re(r'^(\s*)')
++                        if r.match(line):
++                            litprefix = '^' + r.group(1)
++                        else:
++                            litprefix = ""
++
++                        output += line + "\n"
++                    elif not Re(litprefix).match(line):
++                        in_literal = False
++                    else:
++                        output += line + "\n"
++                else:
++                    output += line + "\n"
++
++            # Not in a literal block (or just dropped out)
++            if not in_literal:
++                block += line + "\n"
++                if self.sphinx_literal.match(line) or self.sphinx_cblock.match(line):
++                    in_literal = True
++                    litprefix = ""
++                    output += self.highlight_block(block)
++                    block = ""
++
++        # Handle any remaining block
++        if block:
++            output += self.highlight_block(block)
++
++        # Print the output with the line prefix
++        for line in output.strip("\n").split("\n"):
++            print(self.lineprefix + line)
++
++    def out_section(self, args, out_reference=False):
++        """
++        Outputs a block section.
++
++        This could use some work; it's used to output the DOC: sections, and
++        starts by putting out the name of the doc section itself, but that
++        tends to duplicate a header already in the template file.
++        """
++
++        sectionlist = args.get('sectionlist', [])
++        sections = args.get('sections', {})
++        section_start_lines = args.get('section_start_lines', {})
++
++        for section in sectionlist:
++            # Skip sections that are in the nosymbol_table
++            if section in self.nosymbol:
++                continue
++
++            if not self.out_mode == self.OUTPUT_INCLUDE:
++                if out_reference:
++                    print(f".. _{section}:\n")
++
++                if not self.symbol:
++                    print(f'{self.lineprefix}**{section}**\n')
++
++            self.print_lineno(section_start_lines.get(section, 0))
++            self.output_highlight(sections[section])
++            print()
++        print()
++
++    def out_doc(self, fname, name, args):
++        if not self.check_doc(name):
++            return
++
++        self.out_section(args, out_reference=True)
++
++    def out_function(self, fname, name, args):
++
++        oldprefix = self.lineprefix
++        signature = ""
++
++        func_macro = args.get('func_macro', False)
++        if func_macro:
++            signature = args['function']
++        else:
++            if args.get('functiontype'):
++                signature = args['functiontype'] + " "
++            signature += args['function'] + " ("
++
++        parameterlist = args.get('parameterlist', [])
++        parameterdescs = args.get('parameterdescs', {})
++        parameterdesc_start_lines = args.get('parameterdesc_start_lines', {})
++
++        ln = args.get('ln', 0)
++
++        count = 0
++        for parameter in parameterlist:
++            if count != 0:
++                signature += ", "
++            count += 1
++            dtype = args['parametertypes'].get(parameter, "")
++
++            if function_pointer.search(dtype):
++                signature += function_pointer.group(1) + parameter + function_pointer.group(3)
++            else:
++                signature += dtype
++
++        if not func_macro:
++            signature += ")"
++
++        if args.get('typedef') or not args.get('functiontype'):
++            print(f".. c:macro:: {args['function']}\n")
++
++            if args.get('typedef'):
++                self.print_lineno(ln)
++                print("   **Typedef**: ", end="")
++                self.lineprefix = ""
++                self.output_highlight(args.get('purpose', ""))
++                print("\n\n**Syntax**\n")
++                print(f"  ``{signature}``\n")
++            else:
++                print(f"``{signature}``\n")
++        else:
++            print(f".. c:function:: {signature}\n")
++
++        if not args.get('typedef'):
++            self.print_lineno(ln)
++            self.lineprefix = "   "
++            self.output_highlight(args.get('purpose', ""))
++            print()
++
++        # Put descriptive text into a container (HTML <div>) to help set
++        # function prototypes apart
++        self.lineprefix = "  "
++
++        if parameterlist:
++            print(".. container:: kernelindent\n")
++            print(f"{self.lineprefix}**Parameters**\n")
++
++        for parameter in parameterlist:
++            parameter_name = Re(r'\[.*').sub('', parameter)
++            dtype = args['parametertypes'].get(parameter, "")
++
++            if dtype:
++                print(f"{self.lineprefix}``{dtype}``")
++            else:
++                print(f"{self.lineprefix}``{parameter}``")
++
++            self.print_lineno(parameterdesc_start_lines.get(parameter_name, 0))
++
++            self.lineprefix = "    "
++            if parameter_name in parameterdescs and \
++               parameterdescs[parameter_name] != KernelDoc.undescribed:
++
++                self.output_highlight(parameterdescs[parameter_name])
++                print()
++            else:
++                print(f"{self.lineprefix}*undescribed*\n")
++            self.lineprefix = "  "
++
++        self.out_section(args)
++        self.lineprefix = oldprefix
++
++    def out_enum(self, fname, name, args):
++
++        oldprefix = self.lineprefix
++        name = args.get('enum', '')
++        parameterlist = args.get('parameterlist', [])
++        parameterdescs = args.get('parameterdescs', {})
++        ln = args.get('ln', 0)
++
++        print(f"\n\n.. c:enum:: {name}\n")
++
++        self.print_lineno(ln)
++        self.lineprefix = "  "
++        self.output_highlight(args.get('purpose', ''))
++        print()
++
++        print(".. container:: kernelindent\n")
++        outer = self.lineprefix + "  "
++        self.lineprefix = outer + "  "
++        print(f"{outer}**Constants**\n")
++
++        for parameter in parameterlist:
++            print(f"{outer}``{parameter}``")
++
++            if parameterdescs.get(parameter, '') != KernelDoc.undescribed:
++                self.output_highlight(parameterdescs[parameter])
++            else:
++                print(f"{self.lineprefix}*undescribed*\n")
++            print()
++
++        self.lineprefix = oldprefix
++        self.out_section(args)
++
++    def out_typedef(self, fname, name, args):
++
++        oldprefix = self.lineprefix
++        name = args.get('typedef', '')
++        ln = args.get('ln', 0)
++
++        print(f"\n\n.. c:type:: {name}\n")
++
++        self.print_lineno(ln)
++        self.lineprefix = "   "
++
++        self.output_highlight(args.get('purpose', ''))
++
++        print()
++
++        self.lineprefix = oldprefix
++        self.out_section(args)
++
++    def out_struct(self, fname, name, args):
++
++        name = args.get('struct', "")
++        purpose = args.get('purpose', "")
++        declaration = args.get('definition', "")
++        dtype = args.get('type', "struct")
++        ln = args.get('ln', 0)
++
++        parameterlist = args.get('parameterlist', [])
++        parameterdescs = args.get('parameterdescs', {})
++        parameterdesc_start_lines = args.get('parameterdesc_start_lines', {})
++
++        print(f"\n\n.. c:{dtype}:: {name}\n")
++
++        self.print_lineno(ln)
++
++        oldprefix = self.lineprefix
++        self.lineprefix += "  "
++
++        self.output_highlight(purpose)
++        print()
++
++        print(".. container:: kernelindent\n")
++        print(f"{self.lineprefix}**Definition**::\n")
++
++        self.lineprefix = self.lineprefix + "  "
++
++        declaration = declaration.replace("\t", self.lineprefix)
++
++        print(f"{self.lineprefix}{dtype} {name}" + ' {')
++        print(f"{declaration}{self.lineprefix}" + "};\n")
++
++        self.lineprefix = "  "
++        print(f"{self.lineprefix}**Members**\n")
++        for parameter in parameterlist:
++            if not parameter or parameter.startswith("#"):
++                continue
++
++            parameter_name = parameter.split("[", maxsplit=1)[0]
++
++            if parameterdescs.get(parameter_name) == KernelDoc.undescribed:
++                continue
++
++            self.print_lineno(parameterdesc_start_lines.get(parameter_name, 0))
++
++            print(f"{self.lineprefix}``{parameter}``")
++
++            self.lineprefix = "    "
++            self.output_highlight(parameterdescs[parameter_name])
++            self.lineprefix = "  "
++
++            print()
++
++        print()
++
++        self.lineprefix = oldprefix
++        self.out_section(args)
++
++
++class ManFormat(OutputFormat):
++    """Consts and functions used by man pages output"""
++
++    highlights = (
++        (type_constant, r"\1"),
++        (type_constant2, r"\1"),
++        (type_func, r"\\fB\1\\fP"),
++        (type_enum, r"\\fI\1\\fP"),
++        (type_struct, r"\\fI\1\\fP"),
++        (type_typedef, r"\\fI\1\\fP"),
++        (type_union, r"\\fI\1\\fP"),
++        (type_param, r"\\fI\1\\fP"),
++        (type_param_ref, r"\\fI\1\2\\fP"),
++        (type_member, r"\\fI\1\2\3\\fP"),
++        (type_fallback, r"\\fI\1\\fP")
++    )
++    blankline = ""
++
++    def __init__(self):
++        """
++        Creates class variables.
++
++        Not really mandatory, but it is a good coding style and makes
++        pylint happy.
++        """
++
++        super().__init__()
++
++        dt = datetime.now()
++        if os.environ.get("KBUILD_BUILD_TIMESTAMP", None):
++            # use UTC TZ
++            to_zone = tz.gettz('UTC')
++            dt = dt.astimezone(to_zone)
++
++        self.man_date = dt.strftime("%B %Y")
++
++    def output_highlight(self, block):
++
++        contents = self.highlight_block(block)
++
++        if isinstance(contents, list):
++            contents = "\n".join(contents)
++
++        for line in contents.strip("\n").split("\n"):
++            line = Re(r"^\s*").sub("", line)
++
++            if line and line[0] == ".":
++                print("\\&" + line)
++            else:
++                print(line)
++
++    def out_doc(self, fname, name, args):
++        module = args.get('module')
++        sectionlist = args.get('sectionlist', [])
++        sections = args.get('sections', {})
++
++        print(f'.TH "{module}" 9 "{module}" "{self.man_date}" "API Manual" LINUX')
++
++        for section in sectionlist:
++            print(f'.SH "{section}"')
++            self.output_highlight(sections.get(section))
++
++    def out_function(self, fname, name, args):
++        """output function in man"""
++
++        parameterlist = args.get('parameterlist', [])
++        parameterdescs = args.get('parameterdescs', {})
++        sectionlist = args.get('sectionlist', [])
++        sections = args.get('sections', {})
++
++        print(f'.TH "{args['function']}" 9 "{args['function']}" "{self.man_date}" "Kernel Hacker\'s Manual" LINUX')
++
++        print(".SH NAME")
++        print(f"{args['function']} \\- {args['purpose']}")
++
++        print(".SH SYNOPSIS")
++        if args.get('functiontype', ''):
++            print(f'.B "{args['functiontype']}" {args['function']}')
++        else:
++            print(f'.B "{args['function']}')
++
++        count = 0
++        parenth = "("
++        post = ","
++
++        for parameter in parameterlist:
++            if count == len(parameterlist) - 1:
++                post = ");"
++
++            dtype = args['parametertypes'].get(parameter, "")
++            if function_pointer.match(dtype):
++                # Pointer-to-function
++                print(f'".BI "{parenth}{function_pointer.group(1)}" " ") ({function_pointer.group(2)}){post}"')
++            else:
++                dtype = Re(r'([^\*])$').sub(r'\1 ', dtype)
++
++                print(f'.BI "{parenth}{dtype}"  "{post}"')
++            count += 1
++            parenth = ""
++
++        if parameterlist:
++            print(".SH ARGUMENTS")
++
++        for parameter in parameterlist:
++            parameter_name = re.sub(r'\[.*', '', parameter)
++
++            print(f'.IP "{parameter}" 12')
++            self.output_highlight(parameterdescs.get(parameter_name, ""))
++
++        for section in sectionlist:
++            print(f'.SH "{section.upper()}"')
++            self.output_highlight(sections[section])
++
++    def out_enum(self, fname, name, args):
++
++        name = args.get('enum', '')
++        parameterlist = args.get('parameterlist', [])
++        sectionlist = args.get('sectionlist', [])
++        sections = args.get('sections', {})
++
++        print(f'.TH "{args['module']}" 9 "enum {args['enum']}" "{self.man_date}" "API Manual" LINUX')
++
++        print(".SH NAME")
++        print(f"enum {args['enum']} \\- {args['purpose']}")
++
++        print(".SH SYNOPSIS")
++        print(f"enum {args['enum']}" + " {")
++
++        count = 0
++        for parameter in parameterlist:
++            print(f'.br\n.BI "    {parameter}"')
++            if count == len(parameterlist) - 1:
++                print("\n};")
++            else:
++                print(", \n.br")
++
++            count += 1
++
++        print(".SH Constants")
++
++        for parameter in parameterlist:
++            parameter_name = Re(r'\[.*').sub('', parameter)
++            print(f'.IP "{parameter}" 12')
++            self.output_highlight(args['parameterdescs'].get(parameter_name, ""))
++
++        for section in sectionlist:
++            print(f'.SH "{section}"')
++            self.output_highlight(sections[section])
++
++    def out_typedef(self, fname, name, args):
++        module = args.get('module')
++        typedef = args.get('typedef')
++        purpose = args.get('purpose')
++        sectionlist = args.get('sectionlist', [])
++        sections = args.get('sections', {})
++
++        print(f'.TH "{module}" 9 "{typedef}" "{self.man_date}" "API Manual" LINUX')
++
++        print(".SH NAME")
++        print(f"typedef {typedef} \\- {purpose}")
++
++        for section in sectionlist:
++            print(f'.SH "{section}"')
++            self.output_highlight(sections.get(section))
++
++    def out_struct(self, fname, name, args):
++        module = args.get('module')
++        struct_type = args.get('type')
++        struct_name = args.get('struct')
++        purpose = args.get('purpose')
++        definition = args.get('definition')
++        sectionlist = args.get('sectionlist', [])
++        parameterlist = args.get('parameterlist', [])
++        sections = args.get('sections', {})
++        parameterdescs = args.get('parameterdescs', {})
++
++        print(f'.TH "{module}" 9 "{struct_type} {struct_name}" "{self.man_date}" "API Manual" LINUX')
++
++        print(".SH NAME")
++        print(f"{struct_type} {struct_name} \\- {purpose}")
++
++        # Replace tabs with two spaces and handle newlines
++        declaration = definition.replace("\t", "  ")
++        declaration = Re(r"\n").sub('"\n.br\n.BI "', declaration)
++
++        print(".SH SYNOPSIS")
++        print(f"{struct_type} {struct_name} " + "{" + "\n.br")
++        print(f'.BI "{declaration}\n' + "};\n.br\n")
++
++        print(".SH Members")
++        for parameter in parameterlist:
++            if parameter.startswith("#"):
++                continue
++
++            parameter_name = re.sub(r"\[.*", "", parameter)
++
++            if parameterdescs.get(parameter_name) == KernelDoc.undescribed:
++                continue
++
++            print(f'.IP "{parameter}" 12')
++            self.output_highlight(parameterdescs.get(parameter_name))
++
++        for section in sectionlist:
++            print(f'.SH "{section}"')
++            self.output_highlight(sections.get(section))
+-- 
+2.49.0
 
-1. Chips&Media wave5 driver, it enable colorspace change detection for 
-AVC format,
-but disable for HEVC format, but in firmware, it only detect colorspace
-change for HEVC format, so the result is it ignore the colorspace
-change.
-2. Aspeed driver, it only check resolution change. ignore colorspace.
-3. Amphion driver, it ignores the colorspace change.
-4. Mediatek vcodec driver, it only check resolution change.
-5. Qualcomm iris decoder driver, not sure, firmware report seq change
-event.
-6. Qualcomm Venus driver, not sure, firmwae report sequence change
-event, but vdec_event_change() didn't handle colorspace.
-7. Amlogic video decoder driver, it only check resolution change, no
-colorspace change check.
-
-Regards,
-Ming
-
->>
->> Regards,
->> Ming
->>
->>>>
->>>>>
->>>>> I'm a bit concerned about backwards compatibility issues: if a userspace application
->>>>> doesn't understand this new flag and just honors CH_RESOLUTION, then it would
->>>>> never react to just a colorspace change.
->>>>>
->>>>> Nicolas, does gstreamer look at these flags?
->>>>
->>>> I checked the gstreamer code, it does check this flag:
->>>>
->>>> if (event.type == V4L2_EVENT_SOURCE_CHANGE &&
->>>>        (event.u.src_change.changes & V4L2_EVENT_SRC_CH_RESOLUTION)) {
->>>>      GST_DEBUG_OBJECT (v4l2object->dbg_obj,
->>>>          "Can't streamon capture as the resolution have changed.");
->>>>      ret = GST_V4L2_FLOW_RESOLUTION_CHANGE;
->>>> }
->>>>
->>>> Currently the gstreamer can't handle the CH_COLORSPACE flag.
->>>>
->>>> Thanks,
->>>> Ming
->>>>
->>>>>
->>>>> Regards,
->>>>>
->>>>> 	Hans
->>>>>
->>>>>> +
->>>>>>     Return Value
->>>>>>     ============
->>>>>>     
->>>>>> diff --git a/Documentation/userspace-api/media/videodev2.h.rst.exceptions b/Documentation/userspace-api/media/videodev2.h.rst.exceptions
->>>>>> index 35d3456cc812..ac47c6d9448b 100644
->>>>>> --- a/Documentation/userspace-api/media/videodev2.h.rst.exceptions
->>>>>> +++ b/Documentation/userspace-api/media/videodev2.h.rst.exceptions
->>>>>> @@ -526,6 +526,7 @@ replace define V4L2_EVENT_CTRL_CH_RANGE ctrl-changes-flags
->>>>>>     replace define V4L2_EVENT_CTRL_CH_DIMENSIONS ctrl-changes-flags
->>>>>>     
->>>>>>     replace define V4L2_EVENT_SRC_CH_RESOLUTION src-changes-flags
->>>>>> +replace define V4L2_EVENT_SRC_CH_COLORSPACE src-changes-flags
->>>>>>     
->>>>>>     replace define V4L2_EVENT_MD_FL_HAVE_FRAME_SEQ :c:type:`v4l2_event_motion_det`
->>>>>>     
->>>>>> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
->>>>>> index c8cb2796130f..242242c8e57b 100644
->>>>>> --- a/include/uapi/linux/videodev2.h
->>>>>> +++ b/include/uapi/linux/videodev2.h
->>>>>> @@ -2559,6 +2559,7 @@ struct v4l2_event_frame_sync {
->>>>>>     };
->>>>>>     
->>>>>>     #define V4L2_EVENT_SRC_CH_RESOLUTION		(1 << 0)
->>>>>> +#define V4L2_EVENT_SRC_CH_COLORSPACE		(1 << 1)
->>>>>>     
->>>>>>     struct v4l2_event_src_change {
->>>>>>     	__u32 changes;
->>>>>
->>>>
->>>
->>
-> 
