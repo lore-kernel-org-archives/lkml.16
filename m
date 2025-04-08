@@ -1,92 +1,136 @@
-Received: from mail.parknet.co.jp (mail.parknet.co.jp [210.171.160.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB87F2288CB;
-	Tue,  8 Apr 2025 11:32:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.171.160.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3FEF269813
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 11:33:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744111964; cv=none; b=Sj1mBrI998QNECUjXopMMrODpmaedX5KMRf32hLP+9B+e1y831Eth9ni8Ro6DNuUeLbMldJFOj9CMpEpBeBiqpyGVTOQKTJETBTcae8JG0dQUVQZ54i38xaw6eXY/hk8x3+HcFJutx23cysamqrn9pjnezp2cTXFMwe2tKEBo9k=
+	t=1744112011; cv=none; b=TGPb90bFu/5QmU4qRObbArR8bAAexuXyvafk63c6wvxMyVZ+Ujs2vqaRo9LQh0IRseTNysv5F/pWjdbhnnrV5DjKw8kpzh4huSDa+sauUeD5rpD961aTjcRQeiq2prop4OVh9nj/SP3BkBDYsWTEVlZ+3P3/7f7kKy9iOap/ak8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744111964; c=relaxed/simple;
-	bh=Xs8PJBU/iWCgCOVJ5fPwYHizshTqxB2SddH3d9H0hhA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=gP3c8OIlEO80AYETU/yp0R02/wblCMv4x8QLgBCuHACzItSTyuvBBxDeXtxtgYrdnFmYG5FcpKnyv0xHlw761AMFYpzX+UuXbSYM/kNeqSF1ABefyvq7/btX8Jmfa2vrzx42mFQSjILPrWUmALge8eJRO1nBtzK4lT9m5rLXEn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mail.parknet.co.jp; spf=pass smtp.mailfrom=parknet.co.jp; dkim=pass (2048-bit key) header.d=parknet.co.jp header.i=@parknet.co.jp header.b=scpJC7kU; dkim=permerror (0-bit key) header.d=parknet.co.jp header.i=@parknet.co.jp header.b=EanyYM60; arc=none smtp.client-ip=210.171.160.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mail.parknet.co.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=parknet.co.jp
+	s=arc-20240116; t=1744112011; c=relaxed/simple;
+	bh=pmfB746tZY3x2MSY89UXFLrQP4OguQ2wCGg19gP8NwI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ifTJZ1yA65HcLJDjfo0qxMcfjWzMBcZoKNhIpwZQcgt2ftjW9/xsA2JWKn3X0CrWzRwjpc8VNJLN4RSPJ7MTRATqERF4R7oNsM9lU9v0ertYJU4wNFckAfBhAV6yQGX72nrwagHIdWOLwTPUXCiNuQ1MkjKUo0fcpnM9H9enqgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hLDvz2n4; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=parknet.co.jp header.i=@parknet.co.jp header.b="scpJC7kU";
-	dkim=permerror (0-bit key) header.d=parknet.co.jp header.i=@parknet.co.jp header.b="EanyYM60"
-Received: from ibmpc.myhome.or.jp (server.parknet.ne.jp [210.171.168.39])
-	by mail.parknet.co.jp (Postfix) with ESMTPSA id 73FA0209655E;
-	Tue,  8 Apr 2025 20:27:29 +0900 (JST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=parknet.co.jp;
-	s=20250114; t=1744111649;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eclY3tA3zystiASLWhhinS2NZVbTVtIRsNQzHJbWjV8=;
-	b=scpJC7kU+WJfI3elD0AmrrqQ8rv47m1hGbnZUq85ivFjNcDWY/U97xKL0wlQmsEe2nWnF6
-	fyJKqaNccL1Pw1r979uRPcjsUcuPOMkVxi+flIpbQzN+9OR9eI2I8b2HNXQwYAeIbsVyR8
-	dCbg1DmfDIHv0wK4GVgOw1Smcwb5YaO1EY9L2VSGuG03Ib/cFVzmg+6E1hNqNY3MmDrJrA
-	oH8EYt3Nc/IarHvcO8tpH4dHazuqkaX/c+cgSixzOEuL7M8fudqoTRCTsoqnOl8qnrCKVB
-	taZx6tI2yi3/pIhFIXoWzIFYetpkf5DN+4Z7gPc9X1EOmtWHRKeNLBonAO+hDA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=parknet.co.jp;
-	s=20250114-ed25519; t=1744111649;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eclY3tA3zystiASLWhhinS2NZVbTVtIRsNQzHJbWjV8=;
-	b=EanyYM601dLl/HVbStSWN7E3LzgFC4FXwl7RqTj6e4QefxQtMl+mdSR4uWjIE2NS7vfJBt
-	QdYS73GWOQIzGVDQ==
-Received: from devron.myhome.or.jp (foobar@devron.myhome.or.jp [192.168.0.3])
-	by ibmpc.myhome.or.jp (8.18.1/8.18.1/Debian-6) with ESMTPS id 538BRS7U473091
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Tue, 8 Apr 2025 20:27:29 +0900
-Received: from devron.myhome.or.jp (foobar@localhost [127.0.0.1])
-	by devron.myhome.or.jp (8.18.1/8.18.1/Debian-6) with ESMTPS id 538BRSTY1314074
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Tue, 8 Apr 2025 20:27:28 +0900
-Received: (from hirofumi@localhost)
-	by devron.myhome.or.jp (8.18.1/8.18.1/Submit) id 538BRRVC1314073;
-	Tue, 8 Apr 2025 20:27:27 +0900
-From: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-To: Phillip Lougher <phillip@squashfs.org.uk>
-Cc: Jan Kara <jack@suse.cz>, Andreas Gruenbacher <agruenba@redhat.com>,
-        Namjae Jeon <linkinjeon@kernel.org>,
-        Sungjong Seo
- <sj1557.seo@samsung.com>,
-        Carlos Maiolino <cem@kernel.org>,
-        "Darrick J.
- Wong" <djwong@kernel.org>, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
-Subject: Re: Recent changes mean sb_min_blocksize() can now fail
-In-Reply-To: <86290c9b-ba40-4ebd-96c1-d3a258abe9d4@squashfs.org.uk>
-References: <86290c9b-ba40-4ebd-96c1-d3a258abe9d4@squashfs.org.uk>
-Date: Tue, 08 Apr 2025 20:27:27 +0900
-Message-ID: <87zfgqq4f4.fsf@mail.parknet.co.jp>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hLDvz2n4"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-47692b9d059so16335781cf.3
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 04:33:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744112009; x=1744716809; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pmfB746tZY3x2MSY89UXFLrQP4OguQ2wCGg19gP8NwI=;
+        b=hLDvz2n4zncsyxwlCeaOot9ouJzADOC+pPLGg14xoZnYiiBN8dnMPxG1pvcNCzQvVT
+         EBNrRvWSAjvx2EoWR79cnWtUPLFL2hJMVXbzlxt5xRkby01eE+07QPUfdahH48Uhfrfy
+         O/TPDaVpGlvR0ihm75KXzzHk6/DlfHrZgZCfYdjnfjqHNUXcdozqLuAfsdbjMFxHkyrK
+         nN5ASQXejQwq5VkKit1c6IYpfiaPqLhw4R/opDzDtg0cg5k713HV+Ogz+DVELURnZ4o0
+         0UKsd6a7LqkfvvcgacM4/0pLOZ4Y1kMow8ZJRAyuohq5y8Mvr/gzG8upCJAhkw1AXkoL
+         HtUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744112009; x=1744716809;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pmfB746tZY3x2MSY89UXFLrQP4OguQ2wCGg19gP8NwI=;
+        b=Hi8+OuThDxDzjWiZAyKlrZCT3DiIJW3bDL9e2cxSdiIzpLKCAfM6HAf1u7lb0VUDCS
+         VEIu180RO6BAYhbCleDalDgd1+rAgOlo9kssSjPNMkpXfSyP/mwIfuLFwDcxIr4qRl6b
+         T4hMnTK2OiB3bl16JnLOqJIP83+SFhY7EeYyNWjOfNgxtBnl43UIbIqAqdFlOupmmIWl
+         NEfUrnWlT7AivcdnJmZG61T8MYgmYurnLawps72GiZmLAzJVNwGOGKSGAxM86Pp/zb5u
+         4hptgauICbAbTKKHgjPK00ekgRJl0V2bE+sOJzd7JFamtZ2hTxUCIk5b9ZGvPWEY75mf
+         yduA==
+X-Forwarded-Encrypted: i=1; AJvYcCUkILd0V/CvHjXteBD6ijYMvvC35akc1xOh5dHDC++Q6+gH07M5PFBkzokxF9HIye6uo+XBvN9XmBuyGuQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwC11z91bngZRHVDd/PW3UdzgIVCdzYmhzs5reojP8sfXen84bR
+	yZT1hCWEOudpmdmQN0zkv2C936NFNHpOujPh/se9wzlH45r2G7ewj3LbCQU5FEAJtLN3fnIUHT2
+	eZwC1QCeRuWRIx9JtZBGAtmBKhHoihqCzwzGj
+X-Gm-Gg: ASbGncv2eJeqrQpYBEyS+q5ZI0/gTqchC+KanQk2v1BNv+uhSLdx3kR6UfdbyKcdaGE
+	49aIOIidFyQM87YwZnrGeTBKbTLRmRMSNWUu3bkBJI8nxMHFKjwuqI9uKRUKqUtHWBpCC+6259H
+	SCIIjDQ8lxBFbLfWnWm5UyrgyUecGLcDhmF77U/w==
+X-Google-Smtp-Source: AGHT+IFHPCsvlmhlWeIsCvIClxZz4k+jha4O3x2y574CMDdrnX/ftbN7RQHvNWavGdipp08MXHA6Nt7AXbYnxhDrnfQ=
+X-Received: by 2002:a05:622a:19a4:b0:477:6f1f:e1d6 with SMTP id
+ d75a77b69052e-479249115c3mr252735611cf.3.1744112008415; Tue, 08 Apr 2025
+ 04:33:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <Z_PfCosPB7GS4DJl@mini-arch> <20250407161308.19286-1-kuniyu@amazon.com>
+ <CANp29Y5RjJD3FK8zciRL92f0+tXEaZ=DbzSF3JrnVRGyDmag2A@mail.gmail.com> <CACT4Y+acJ-D6TiynzWef4vAwTNhCNAgey=RmfZHEXDJVrPxDCg@mail.gmail.com>
+In-Reply-To: <CACT4Y+acJ-D6TiynzWef4vAwTNhCNAgey=RmfZHEXDJVrPxDCg@mail.gmail.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Tue, 8 Apr 2025 13:33:17 +0200
+X-Gm-Features: ATxdqUFoxW4EAQ8DWeKoT-eQ2hIeqNReBAeLwQIOMKacF92_AuEB3gUBe-fWFCk
+Message-ID: <CANn89iK=SrbwSN20nKY5y71huhsabLEdX=OGsdqwMPZOmNW8Gw@mail.gmail.com>
+Subject: Re: [syzbot] [net?] WARNING: bad unlock balance in do_setlink
+To: Dmitry Vyukov <dvyukov@google.com>
+Cc: Aleksandr Nogikh <nogikh@google.com>, Kuniyuki Iwashima <kuniyu@amazon.com>, stfomichev@gmail.com, 
+	andrew@lunn.ch, davem@davemloft.net, horms@kernel.org, kuba@kernel.org, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
+	sdf@fomichev.me, syzbot+45016fe295243a7882d3@syzkaller.appspotmail.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Phillip Lougher <phillip@squashfs.org.uk> writes:
-
-> A recent (post 6.14) change to the kernel means sb_min_blocksize() can now fail,
-> and any filesystem which doesn't check the result may behave unexpectedly as a
-> result.  This change has recently affected Squashfs, and checking the kernel code,
-> a number of other filesystems including isofs, gfs2, exfat, fat and xfs do not
-> check the result.  This is a courtesy email to warn others of this change.
+On Tue, Apr 8, 2025 at 12:44=E2=80=AFPM Dmitry Vyukov <dvyukov@google.com> =
+wrote:
 >
-> The following emails give the relevant details.
+> On Tue, 8 Apr 2025 at 10:11, Aleksandr Nogikh <nogikh@google.com> wrote:
+> >
+> > On Mon, Apr 7, 2025 at 6:13=E2=80=AFPM 'Kuniyuki Iwashima' via syzkalle=
+r-bugs
+> > <syzkaller-bugs@googlegroups.com> wrote:
+> > >
+> > > From: Stanislav Fomichev <stfomichev@gmail.com>
+> > > Date: Mon, 7 Apr 2025 07:19:54 -0700
+> > > > On 04/07, syzbot wrote:
+> > > > > Hello,
+> > > > >
+> > > > > syzbot has tested the proposed patch but the reproducer is still =
+triggering an issue:
+> > > > > unregister_netdevice: waiting for DEV to become free
+> > > > >
+> > > > > unregister_netdevice: waiting for batadv0 to become free. Usage c=
+ount =3D 3
+> > > >
+> > > > So it does fix the lock unbalance issue, but now there is a hang?
+> > >
+> > > I think this is an orthogonal issue.
+> > >
+> > > I saw this in another report as well.
+> > > https://lore.kernel.org/netdev/67f208ea.050a0220.0a13.025b.GAE@google=
+.com/
+> > >
+> > > syzbot may want to find a better way to filter this kind of noise.
+> > >
+> >
+> > Syzbot treats this message as a problem worthy of reporting since a
+> > long time (Cc'd Dmitry who may remember the context):
+> > https://github.com/google/syzkaller/commit/7a67784ca8bdc3b26cce2f0ec9a4=
+0d2dd9ec9396
+> >
+> > Since v6.15-rc1, we do observe it happen at least 10x more often than
+> > before, both during fuzzing and while processing #syz test commands:
+> > https://syzkaller.appspot.com/bug?extid=3D881d65229ca4f9ae8c84
 >
-> https://lore.kernel.org/all/2a13ea1c-08df-4807-83d4-241831b7a2ec@squashfs.org.uk/
-> https://lore.kernel.org/all/129d4f39-6922-44e9-8b1c-6455ee564dda@squashfs.org.uk/
+> IIUC this error means a leaked reference count on a device, and the
+> device and everything it references leaked forever + a kernel thread
+> looping forever. This does not look like noise.
+>
+> Eric, should know more. Eric fixed a bunch of these bugs and added a
+> ref count tracker to devices to provide better diagnostics. For some
+> reason I don't see the reftracker output in the console output, but
+> CONFIG_NET_DEV_REFCNT_TRACKER=3Dy is enabled in the config.
 
-Thanks. FATfs should have no issue.
--- 
-OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+I think that Kuniyuki patch was fixing the original syzbot report.
+
+After fixing this trivial bug, another bug showed up,
+and this second bug triggered "syzbot may want to find a better way to
+filter this kind of noise." comment.
+
+
+-ETOOMANYBUGS.
