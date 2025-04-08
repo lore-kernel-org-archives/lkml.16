@@ -1,160 +1,142 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD51DB676;
-	Tue,  8 Apr 2025 16:59:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB312356D6
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 17:00:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744131585; cv=none; b=BiBVj9vkwSCYWo84biEwY4Z8QKxMjG6iBpjki+Ntz+TyzqphTS1WxJ9UjYLqG/+S9t3IG2L/VWO90hkj5tKI95acAlCILtn5Iujeig4rOLP33D8yH9jSRQEpqBPkzz+3fyrr8WGcWHeX4Ts9V7+MaqQwOMV9+PAHnm3C2qzWpCM=
+	t=1744131613; cv=none; b=Ys7U0UXt6OCP5IN973GkoskS/KykPA4KxQAXblmaU097ohEQ90bUr5GpsunklhR6xZ3F+1emK8LrTtI8CpKf43ar6yU1ESzm5/3P9aMfWzvSWLJYTrm8axTD/uP3aHBHGLF23TuZ02n18lE3vsbRltNy7zn8p/2Xv/Ao4QVxpiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744131585; c=relaxed/simple;
-	bh=DftV1a27ak/l5309d19IF5/drsGm5W5ni5972SsniR4=;
+	s=arc-20240116; t=1744131613; c=relaxed/simple;
+	bh=SjOuF3EfAG/Cm4uKwVJhwmrygpxq+tAaTnsO4W7wjWI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=k/cUsK7vVmyNvEUOsol6hDH7BKqwAbdDGgYKCACNCjMyqToBfzx3lHk17Nq8P+R0iW0Qru/4PM6AvfEnB79sDUnNi3NoCbLGiQ7nEI/S6zxga7F/Gz9LyT19idPrxpbmoDKVRv8yUqlEJR1l+oJC1c1kRs7VJksulZBa20+hW0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R0Qi4AO1; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=cQuGdVWgr9a8P9ue3ZtcSdVzQIt75b1VFaNW6WptTDO4u6daa8S0/zQfNT3xZPOeZSxcTYCViE09rImsEA76BCFykk4nOXwBe7KVERfFsTjinqo3uQDfDuxrb4rkKzLTsnfAx+GSC0Zgrmi8oMu1pnP0rJX7xa+5RXj76SqEVwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=n+4ZQ5uT; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R0Qi4AO1"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-30bf7d0c15eso56390071fa.0;
-        Tue, 08 Apr 2025 09:59:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n+4ZQ5uT"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5e5dce099f4so7454210a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 10:00:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744131582; x=1744736382; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DftV1a27ak/l5309d19IF5/drsGm5W5ni5972SsniR4=;
-        b=R0Qi4AO1QrhORrmi1CQShYnzjvgQG1nLyCrH9F3AKHt9UrVBM7M7bOXmsoTVyHAIuG
-         DnJMMw8i2LClUBVBhgiv2o3zMlBMnCdmux9VIuf+VwKM3A+XToM3Hu9OZ9UWjXtYUFwY
-         ooWLwvCoX8/YKZeXPIEuiNcDwZiu/ylMKhdMKgDaC7iRq8gy182wYkGkTdFzCGzeVlyC
-         xOYoEwCvx65opZG2QJ4repGPhdNfnqGES0V9Mqy+6wWW7bZFw8MZSMe2VEAkL6kOM05y
-         XGXWcWF3DNwfXETedhLJi4FghYt16f+gXaCqFypVM/zLZcV56txRePiLNkp6LvLJXjqY
-         PXpQ==
+        d=linaro.org; s=google; t=1744131610; x=1744736410; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=lnqPpyCI67o+FtOeQVQFZzGEVChwMTKzHgvwg9jq2HQ=;
+        b=n+4ZQ5uTR3sa5ZwcZVt9wiZi0x0jZyjSNj/00ZNMM+pqc1Jl6HIl8XkCEYfwL7Kvts
+         lQHSi4MSRWOQUsKgZ56MpJWywfTbgyncSAiBtUh4pu2K+MFTisvbx4AiDRqdY1mbK3DP
+         uKzMHS/Se7oPXSSD7qdcL7ZnHngxEDoGjZSxloMqCmuuLFI7RLlEjYT/uDf5rFh52aVa
+         9cJQQWyWT6yghn4IT1tLbOYPZO4Ob8ge0v6gjFAlAEj4NZVJgqOBT1Fw1BxtwAOz9aXW
+         NrTowdrIKnLmKtXBAD9FWElfpUZNs3vjSrMKPc+ojNcCRqzK94/vtf/Uh5AA6GEpel0O
+         lrlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744131582; x=1744736382;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DftV1a27ak/l5309d19IF5/drsGm5W5ni5972SsniR4=;
-        b=Sk8jkHkbmt4qU+l8YqnFgM57SVii+5cHt7dBri98ofaW/n7iOsPYBNOlCZ86V2uSk8
-         mQATI2QIcsH6HPYz+FbIcLxU7hyrTQHKf1grVNpRebNr/desJz9Hz087oN2n2I1NcHFC
-         dSrrzhPVOC7YHjHinvzoPo/Vhgh3JIpQxAwRHQjmkG5tdegqWNO4zgvUsBBniNGHxVtK
-         gyqmSt64LR7DtpA3kbMVlW+QE9GWq6vHH2Eaz0uXBh+xHKp80SKWGXwPfd36FNon8e6U
-         8go1sUy+zWoJL77xVheA6BP1+SQFrEPIIZ3YMdsvyCrnOVBgtfHVSRVceXv04ZwloQsp
-         Gs2w==
-X-Forwarded-Encrypted: i=1; AJvYcCV2/L6meTTICwo98VvM66iRKLlqjwj8P9fDt8f+k9uE7qz60WgxYdYcFSl/Vd55Z2Kd5fefvY6uTmM=@vger.kernel.org, AJvYcCX18KUWqfxL/jGrPpmHCYmsbyf7yZaVlUtGyvCqlcvs6CuXJul0lhWRGtWQZNLHSVPGuc+KNGame99q9snT@vger.kernel.org, AJvYcCXeUdRTLlGdTx0JyB33UDMpV8U/II33yLQx2BvqxDMPE87iY3yrgN4nYT2yLgrg2/TEVS39Q4vL@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSIt9ikiDVyxFOgleYo2lz8RwXjlaUcFCoij8K473ku6O2/6KF
-	EYiDJZgCcwOH5TLLgXdDrkMS4VCEyBW3S3Ue3XAcCJ3Cvkc64LmScR4qTr+3RMv9CCLLez2YLu/
-	F/Nw66CGY43Ha0gZyYsNTPLtegcs=
-X-Gm-Gg: ASbGncsUZMlak2TkMXxlWOr7BvC7QkwcHC+aTGVaCeS2uGQEG4wHz2E2qHgrKBPJdmu
-	1JJ7AbkRmKlxQCBgSjIsr1vVk9lLOdgXqw8EiBHX3yugy6kbAX/JwFuzyxFqEIQk/dVLUdKPu2X
-	NS4g00zaP14II29rKAN8XvEKb5pg==
-X-Google-Smtp-Source: AGHT+IH9R7h7ieFhvrQGM67HDK4QXM6Z/1TM33bKp4N8o3XFtaF4quedno31N3Wfa38ljpf82w+2jKVzk5o6XxRjqZI=
-X-Received: by 2002:a2e:bd81:0:b0:30b:f775:bb25 with SMTP id
- 38308e7fff4ca-30f0a190a9emr57862711fa.36.1744131581435; Tue, 08 Apr 2025
- 09:59:41 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744131610; x=1744736410;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lnqPpyCI67o+FtOeQVQFZzGEVChwMTKzHgvwg9jq2HQ=;
+        b=EDFWrmIjJKGb1Q/XICN/12l+fI+LnkFCNUrYxe1jFkB213R7m/ExvjRBAKU5T5IyWm
+         2gPZmpavyJxORMB1m0bqdVjUY/EoIklAcdVlzdGHdeRHF73BaaK3RjZFABdm9vyYTMYB
+         9bs/7MX+mcAjVheePHf7k6lHkPoHeK/jO3uZ0Uij+/oC8tPtlfhjMfphd9koyAk7tRJ5
+         OaKjUiqgTx3oJ8jPv6iGn+RFZBrHGSEuM2Y6x2Piz+kWK/3AkK09Vk/wQjlYomw7ynjn
+         hOqjb8M/70gZemXQdo9c1HXSkWzDm5a/WjFity349XtdPJKikIVTpwxY5f7JwRqmGIi4
+         jA8A==
+X-Forwarded-Encrypted: i=1; AJvYcCUIJB+ZzfiAOVONDbTpScFh4H4allsEXK3neaMUy6QmK3iuHE+rz4DNfO4Jm19oQ7qNRmS2DjHN56Xw/CI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywt461pmiuhdvD+mOhA1CvReas5JBgoawarxFJADzHbFpnFCqBd
+	IAd2hiW3RDjpToHuD4HS+2lFOfz7Dz4Jnq8HmzWQFm2Pm/FZblS5QyBsswGqDqkObqSsoi0oZ7i
+	E4aWuTp+bw0psCrGLGrCpn3xSPhjr3Oz5s9P0nw==
+X-Gm-Gg: ASbGncv7Sepa+yhtQ0BM/LszPHuq8MbF3UyNWUGK/vDseVIkieYey6nZUJPJAy/6WF/
+	+XcvHgyfCntZxQatwWJK/p7yA/CfFX7NlzXLdjYnqIRqHmOuPy3kIVPJSqPL+2qFX4qh2VGYwIz
+	gI8456OBT106OYe8wXQar8tVrpof2A2QKiCOsSMAJrADxSrLwJybLRwwdkoIE=
+X-Google-Smtp-Source: AGHT+IGekmSfbQuIyvFfz7Stho6MU7GYlFI2lRYDKhjH7rLTkfZA+zKeGtWaeR97sSmOaYBlCFP7b52v5Ds+MX19Al0=
+X-Received: by 2002:a05:6402:34c1:b0:5e5:bfab:51f with SMTP id
+ 4fb4d7f45d1cf-5f0b5c43ba6mr15002775a12.0.1744131609168; Tue, 08 Apr 2025
+ 10:00:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407234223.1059191-1-nphamcs@gmail.com> <CAMgjq7CdARdTEZB3ik4X9cAzNUFa6GRqjT61brygihGUYFBAeQ@mail.gmail.com>
- <CAKEwX=M5y4yoW62U5GkHTxaDaD7UOJu_sgkkwNXJ5Hn4Gvot9g@mail.gmail.com>
-In-Reply-To: <CAKEwX=M5y4yoW62U5GkHTxaDaD7UOJu_sgkkwNXJ5Hn4Gvot9g@mail.gmail.com>
-From: Kairui Song <ryncsn@gmail.com>
-Date: Wed, 9 Apr 2025 00:59:24 +0800
-X-Gm-Features: ATxdqUHGkDm_i6GEKMJkd2mD4BjrHrGRZ9eR_uwYqr_cY42CF_aL_IYSEBAo7bQ
-Message-ID: <CAMgjq7D9Z=u2J18DExmzeU8fRbvqNwyC3tem2aykAsm79=QGEA@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/14] Virtual Swap Space
-To: Nhat Pham <nphamcs@gmail.com>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hannes@cmpxchg.org, 
-	hughd@google.com, yosry.ahmed@linux.dev, mhocko@kernel.org, 
-	roman.gushchin@linux.dev, shakeel.butt@linux.dev, muchun.song@linux.dev, 
-	len.brown@intel.com, chengming.zhou@linux.dev, chrisl@kernel.org, 
-	huang.ying.caritas@gmail.com, ryan.roberts@arm.com, viro@zeniv.linux.org.uk, 
-	baohua@kernel.org, osalvador@suse.de, lorenzo.stoakes@oracle.com, 
-	christophe.leroy@csgroup.eu, pavel@kernel.org, kernel-team@meta.com, 
-	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
-	linux-pm@vger.kernel.org
+References: <Z-WO-fhDJKyG7hn2@p14s> <20250328045012.GA16723@nxa18884-linux>
+ <Z-au0USkvoDYTF7A@p14s> <20250329125629.GA11929@nxa18884-linux>
+ <Z-q3ebPSjkSPVlgP@p14s> <20250401014124.GB15525@nxa18884-linux>
+ <Z-wOr3eLaX9myqb4@p14s> <20250402014355.GA22575@nxa18884-linux>
+ <v5xgigrvpy6shmgdkivmxywkacsubnsimk6vyrue4mmoyufpbk@br7lnyvtnatc>
+ <20250403143239.GA22779@nxa18884-linux> <20250408161054.GC31497@nxa18884-linux>
+In-Reply-To: <20250408161054.GC31497@nxa18884-linux>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Date: Tue, 8 Apr 2025 10:59:58 -0600
+X-Gm-Features: ATxdqUFxRkJwgjEdzSDI73SR9AFZYTXSMJ4xjqknUtylbhMnKOBBwweFsaVOm2Y
+Message-ID: <CANLsYkyEhhQA5KOsNveGSHUc3ZpckoL-CCHNZ0DZLMNYdNGzdQ@mail.gmail.com>
+Subject: Re: [PATCH V2] remoteproc: core: Clear table_sz when rproc_shutdown
+To: Peng Fan <peng.fan@oss.nxp.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, 
+	"open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" <linux-remoteproc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	Peng Fan <peng.fan@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 9, 2025 at 12:48=E2=80=AFAM Nhat Pham <nphamcs@gmail.com> wrote=
-:
+On Tue, 8 Apr 2025 at 09:02, Peng Fan <peng.fan@oss.nxp.com> wrote:
 >
-> On Tue, Apr 8, 2025 at 9:23=E2=80=AFAM Kairui Song <ryncsn@gmail.com> wro=
-te:
+> On Thu, Apr 03, 2025 at 10:32:39PM +0800, Peng Fan wrote:
+> >Hi Bjorn,
 > >
 > >
-> > Thanks for sharing the code, my initial idea after the discussion at
-> > LSFMM is that there is a simple way to combine this with the "swap
-> > table" [1] design of mine to solve the performance issue of this
-> > series: just store the pointer of this struct in the swap table. It's
-> > a bruteforce and glue like solution but the contention issue will be
-> > gone.
->
-> Was waiting for your submission, but I figured I should send what I
-> had out first for immediate feedback :)
->
-> Johannes actually proposed something similar to your physical swap
-> allocator for the virtual swap slots allocation logic, to solve our
-> lock contention problem. My apologies - I should have name-dropped you
-> in the RFC cover as well (the cover was a bit outdated, and I haven't
-> updated the newest developments that came from the LSFMMBPF
-> conversation in the cover letter).
->
+> >Thanks for replying this thread.
 > >
-> > Of course it's not a good approach, ideally the data structure can be
-> > simplified to an entry type in the swap table. The swap table series
-> > handles locking and synchronizations using either cluster lock
-> > (reusing swap allocator and existing swap logics) or folio lock (kind
-> > of like page cache). So many parts can be much simplified, I think it
-> > will be at most ~32 bytes per page with a virtual device (including
-> > the intermediate pointers).Will require quite some work though.
+> >On Wed, Apr 02, 2025 at 08:48:58AM -0500, Bjorn Andersson wrote:
+> >>On Wed, Apr 02, 2025 at 09:43:55AM +0800, Peng Fan wrote:
+> >>> On Tue, Apr 01, 2025 at 10:05:03AM -0600, Mathieu Poirier wrote:
+> >>> >On Tue, Apr 01, 2025 at 09:41:24AM +0800, Peng Fan wrote:
+> >>...
+> >>> >
+> >>> >The core is already checking if @loaded_table is valid in rproc_start(), why
+> >>> >can't that be used instead of adding yet another check?
+> >>>
+> >>> Ah. I was thinking clear table_sz in rpoc_shutdown is an easy approach and
+> >>> could benifit others in case other platforms meet similar issue in future.
+> >>>
+> >>
+> >>I like the general idea of keeping things clean and avoid leaving stale
+> >>data behind.
+> >>
+> >>But clearing table_sz during stop in order to hide the fact that the
+> >>future table_ptr will contain valid data that shouldn't be used, that's
+> >>just a bug waiting to show up again in the future.
 > >
-> > The good side with that approach is we will have a much lower memory
-> > overhead and even better performance. And the virtual space part will
-> > be optional, for non virtual setup the memory consumption will be only
-> > 8 bytes per page and also dynamically allocated, as discussed at
-> > LSFMM.
+> >Agree.
+> >
+> >Do you need me to post a fix for
+> >commit efdde3d73ab25ce("remoteproc: core: Clear table_sz when rproc_shutdown")
+> >by clearing table_sz in rproc_fw_boot and rproc_detach as did in this v2?
+> >
+> >To i.MX, the above in-tree patch is ok, so all it fine, and this v2 patch
+> >could be dropped.
+> >
+> >But anyway, if you prefer a follow up fix, please let me know, I
+> >could post a patch.
 >
-> I think one problem with your design, which I alluded to at the
-> conference, is that it doesn't quite work for our requirements -
-> namely the separation of zswap from its underlying backend.
+> Hi Bjorn, Mathieu,
 >
-> All the metadata HAVE to live at the virtual layer. For once, we are
-> duplicating the logic if we push this to the backend.
+>  I will wait for one more week to see if any concerns or questions.
+>  Please raise if you have.
 >
-> But more than that, there are lifetime operations that HAVE to be
-> backend-agnostic. For instance, on the swap out path, when we unmap
-> the page from the page table, we do swap_duplicate() (i.,e increasing
-> the swap count/reference count of the swap entries). At that point, we
-> have not (and cannot) make a decision regarding the backend storage
-> yet, and thus does not have any backend-specific places to hold this
-> piece of information. If we couple all the backends then yeah sure we
-> can store it at the physical swapfile level, but that defeats the
-> purpose of swap virtualization :)
 
-Ah, now I get why you have to store the data in the virtual layer.
+I am working with Bjorn to get your patch reverted.  Once that has
+happened you can send another patch.
 
-I was thinking that doing it in the physical layer will make it easier
-to reuse what swap already has. But if you need to be completely
-backend-agnostic, then just keep it in the virtual layer. Seems not a
-foundunmentail issue, it could be worked out in some way I think. eg.
-using another table type. I'll check if that would work after I've
-done the initial parts.
-
+>  If no, I suppose this thread is done and I will start my other work
+>  regarding rproc.
+>
+> Thanks,
+> Peng
 >
 > >
-> > So sorry that I still have a few parts undone, looking forward to
-> > posting in about one week, eg. After this weekend it goes well. I'll
-> > also try to check your series first to see how these can be
-> > collaborated better.
->
-> Of course, I'm not against collaboration :) As I mentioned earlier, we
-> need more work on the allocation part, which your physical swapfile
-> allocator should either work, or serve as the inspiration for.
->
-> Cheers,
-> Nhat
+> >Thanks,
+> >Peng
+> >
+> >>
+> >>Regards,
+> >>Bjorn
+> >>
+> >
