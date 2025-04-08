@@ -1,893 +1,276 @@
-Received: from out198-23.us.a.mail.aliyun.com (out198-23.us.a.mail.aliyun.com [47.90.198.23])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94FA7264FA5;
-	Tue,  8 Apr 2025 09:29:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.198.23
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744104554; cv=none; b=fiB2OVq94WQHHEaRClUY7bU0TxQnuDto2DGmbSLZ6ZFPaeXFWn/A7v/R3kajFU7oSt1ypqm0g54GZgtVAR6TZ1bXhiqpMUs4G94HGzzhRx2904ePmaVV+pGoUR1+vihqVqopsyM8LmYQ1kwc1rudQ5WRgxmIpTX+qZJZ1vKms0Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744104554; c=relaxed/simple;
-	bh=RLLOkO43wtpdPHJ+o9kyOUY3/I2aX3P1cWkGdrW3ltw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=doEfdoF6iCA1CSoX5b6rRBa8mwyGcEKSsd7Fgbbttv0nLf6RYNw9ldUAjZifz6ahzm2YxHRbKeXjqTyAdaGmBOn7Of5ChKz/W/qZejZfteJXdQYIu9wxKLNFCYMO5il8evdih+4rJI2wLnGviAvgvu+NL+mhb/PRUb8ZH6o9NyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motor-comm.com; spf=pass smtp.mailfrom=motor-comm.com; arc=none smtp.client-ip=47.90.198.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motor-comm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=motor-comm.com
-Received: from sun-VirtualBox..(mailfrom:Frank.Sae@motor-comm.com fp:SMTPD_---.cGww7QX_1744104536 cluster:ay29)
-          by smtp.aliyun-inc.com;
-          Tue, 08 Apr 2025 17:28:57 +0800
-From: Frank Sae <Frank.Sae@motor-comm.com>
-To: Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Frank <Frank.Sae@motor-comm.com>,
-	netdev@vger.kernel.org
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	Parthiban.Veerasooran@microchip.com,
-	linux-kernel@vger.kernel.org,
-	"andrew+netdev @ lunn . ch" <andrew+netdev@lunn.ch>,
-	lee@trager.us,
-	horms@kernel.org,
-	linux-doc@vger.kernel.org,
-	corbet@lwn.net,
-	geert+renesas@glider.be,
-	xiaogang.fan@motor-comm.com,
-	fei.zhang@motor-comm.com,
-	hua.sun@motor-comm.com
-Subject: [PATCH net-next v4 08/14] yt6801: Implement the fxgmac_hw_init function
-Date: Tue,  8 Apr 2025 17:28:29 +0800
-Message-Id: <20250408092835.3952-9-Frank.Sae@motor-comm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250408092835.3952-1-Frank.Sae@motor-comm.com>
-References: <20250408092835.3952-1-Frank.Sae@motor-comm.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F414425FA04
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 09:30:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744104620; cv=fail; b=c1psBeD2/JufYDRYgnrB0Q96u2bsZHVzvl4orswjpRNU3Pih9atSDoZmAC77lL+6FmACObSfrxCECUsWIS+nnkTHIWWbmmKefUvOSneFpKGJ2V3CLi/2LOicdjIo/hDHfql+2tA1T5jgMbyWQmTuxcQ1o7hCZdjGAGdEo7qLTXw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744104620; c=relaxed/simple;
+	bh=4ImneCKdNmGYhtY0AJAhfBYzRMQOuSFKuHx45rR5SpI=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=uwlyHm7qtFf4rFDZ7CjfMzipi7lTLt8gLOH2meYH5cS7L7Y/YimdsPcb0Qd9mINZMQRYMykZfatUNqP292InRPldrEFyzQlYwoaMDogbhufRNiaZMLquYEBeD6g7v2O2kxsVtjNyZTGd7Q0a3dWNu/ra0kuVZbEtLhpLVtj1NWw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=QQSK8aj/; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=FF+hJJpW; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QQSK8aj/";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="FF+hJJpW"
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5381u7eG001181;
+	Tue, 8 Apr 2025 09:29:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=corp-2023-11-20; bh=CiBvbAjS0ifNtyem
+	zlrwAGEuTOFkr/cJSa4k2suNAMA=; b=QQSK8aj/ifCODLC05cXmvTd+ZDEUd1ok
+	eikDdhapbom7NOkFFo046MbYOF0V3xqUFz1dvwxbpLCBznRXB0ngUpEsmCsowj53
+	Vv+ppgt93Vy2M6eZdL+dJWdffVIJRkf7deMd9h6LBMvbUynhbjeUsPTGlTTX01Mt
+	zgkz4P9ejlx0trjp+OevnemzPGI7VGs91+0ratx+X9BtdWv/Lbj33XWu8TYnqwm8
+	duJXZ5XQ0aHp5M/LOMdgk3WhV+b2tD/F6J0clZd0LLpCImFRMXDikkZZ0cBmXohH
+	H6IMQOlAFq6AAwNLweh6uwpGl4DSxjeiEefC4F6TpWfi3hZhLV40Pw==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45tuebmd12-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 08 Apr 2025 09:29:41 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5388ULdq001741;
+	Tue, 8 Apr 2025 09:29:40 GMT
+Received: from cy4pr05cu001.outbound.protection.outlook.com (mail-westcentralusazlp17010004.outbound.protection.outlook.com [40.93.6.4])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 45tty915e8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 08 Apr 2025 09:29:40 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=WyDpruQqV6t6y0Ng2NIJzievLMQWZ9XvkbbfFKUdL2t3jHXkozbV84WLeEakx7aJlPanzyoVFxhmwbn/LjHzqWT3HbtkYWjlJc1mQKZZThskTYkDGeNscFGSobxyz2hmdWKiAWjZhl7w0C/uBQdh/5i175DA0qMjy1qhWtvrIXWC51h96D0+OWmEeZBBdWGu6dYnBdYMnuMh5D+6KkU0mOLNTsrhSOvSUwog8Z7Pgz/4NVULDfr1nh2Jo91Zgj6pj95arll8To8iqRoVfIPQHdHW5/a2WLoaYjhfpD1DAE+IdFofw5PDeWCqHFsyElescGQjUu5UjfWrHBzWJhAJbw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CiBvbAjS0ifNtyemzlrwAGEuTOFkr/cJSa4k2suNAMA=;
+ b=U1oBXIa04atyO7+hJVqZLnDOVGbWT3VfSR33ykc8jQ0EbIPfVolo3dZencUlqZRzNAH5t6HA6FDeKdTHQ/7Bfwklo4BbQ1dCrjLC1ZxaZJEdualampH9vUEvzuhVJMvGTSOnWupWI7aov3KeTfjeO4DM1JSNGekTeR1PWk3Fj9Bd2LzGFxaqIJw7QTOGK45lIzhlGyWwzgvUP8hwLfzcVM65T0vFUGG7bwcW3PHZpL4BFWeayUGzAAfJlxXI0EDyrb0G+UKUrm2iH/qkun43aDNf45PztdRLjh34ryXWYd6UIM0r65+2wbK5s+/1fvuTR7sZGJdjwEnMQUE8oZS2QQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CiBvbAjS0ifNtyemzlrwAGEuTOFkr/cJSa4k2suNAMA=;
+ b=FF+hJJpWd3JCfZdSRXGY7RtCG8qtH6Sfsy4Sfp5tUqSvNFtgvRPwWzguvcM50Lp/JBHqoWUJigWSbilvAV3oROZ39DrIi72G5ImQM1GzSUbc+RyVmmNiyevKMSlp+DaQ8HChKy8VWlx9lRaciGLMtn0/2uaIuGXpTy9N32yM++I=
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
+ by CY8PR10MB7244.namprd10.prod.outlook.com (2603:10b6:930:6c::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Tue, 8 Apr
+ 2025 09:29:38 +0000
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2%7]) with mapi id 15.20.8606.033; Tue, 8 Apr 2025
+ 09:29:38 +0000
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        David Hildenbrand <david@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>, Rik van Riel <riel@surriel.com>,
+        Wei Yang <richard.weiyang@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] fix incorrectly disallowed anonymous VMA merges
+Date: Tue,  8 Apr 2025 10:29:30 +0100
+Message-ID: <cover.1744104124.git.lorenzo.stoakes@oracle.com>
+X-Mailer: git-send-email 2.49.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: LO4P265CA0139.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:2c4::14) To DM4PR10MB8218.namprd10.prod.outlook.com
+ (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|CY8PR10MB7244:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8f535580-f7b7-4da9-a69f-08dd767fe1da
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?HQkLggXjgaZAeG1yP/ozwQrs2EOCDwlqeA2x+IVhw8ULlo4bqSDrLYD8E3rD?=
+ =?us-ascii?Q?GIUgd6J8gr3i/9dlJ7IhrqNh5nfajkc1Os8lt2fzZ29XLJo3Zg3DKL6UNNMp?=
+ =?us-ascii?Q?DKgtVr8UT9W2yF3CdyD8NvZyr50rPBkeNCbrRpid1QPWsNL4BLDo96flZA+p?=
+ =?us-ascii?Q?R51u2f5wx9EpxOENRspPoBxpAn4n39rpamygXcBDZuZ6viK07i1Uy7RVPVOB?=
+ =?us-ascii?Q?WaCjTN4lTEKyFCkzSPrc67JX9sTqXGxdrxD/ixqzMXsNJ8/QgSuo/F2EpvQs?=
+ =?us-ascii?Q?YcHt9c5QdHs6HNeVLcqgUhf5XOhcWGMlkUzl6QlzgMkzZ8coQa9nTWTjTiGW?=
+ =?us-ascii?Q?g+vq/Qt7jxmh9uZdfj3YpK/FUN4md+PIys6jJf7pFMkn0bCjBy540xAaAzcw?=
+ =?us-ascii?Q?8I/6TDSuhi4C3x0AvwzCfDiPwEdi4ABN73bmM/X69WvHvSiDT3+1JrXhb11c?=
+ =?us-ascii?Q?Ouu3J1SlziENznD9QZLQQJLznZArSNlXwZz0e9XbZIX9VywxXjYF2c4aTeSh?=
+ =?us-ascii?Q?H1955V5tlgO7Me5qJn1+vadxc8lmm2DGetv/H8zXeXwpFshNTdEGbjS2IiQl?=
+ =?us-ascii?Q?0UKSFfirkye/L9WPMQKenLjD2fiAJCXc2TnZYwUrLLEHRuy9pXUgbJWSR8E6?=
+ =?us-ascii?Q?8D80G3sl2ymcx9gf2RnTNK2a/cqi9FO9UbZ7ELw2dYYSC+p4u+TSvw+2wDsK?=
+ =?us-ascii?Q?VhJioUQJVAmmyryLNNVfkveVKzUV8EHO7PuqECPUF5IQV9TKleyy+tuDb7BR?=
+ =?us-ascii?Q?/Mpp4d7B1FEsZgiWcOTcsx1gb06+fSbhsPwZd+aNfsknCwwvrX3Noh5Y85Md?=
+ =?us-ascii?Q?vePhlC/V/YJssa0aFAq2WERHz1QtXKjPyDO4nbDhfdO8Q/OJoV434zhhcaPp?=
+ =?us-ascii?Q?XSF/+X/HWCTPBat692cD8vs4jzQEXD52p+in35qWITyuPJcrgnu1zIDZHBx1?=
+ =?us-ascii?Q?NwZhgnRnQSPVNAbdJ1uUfAd3cvSsxDatJozafxB27eUJsa5MYO8fy0MFRiNq?=
+ =?us-ascii?Q?UAA4mkI7TBg26VdKD7G8qi+SHjy4kQXzgGZdokFg54LKJVOtNeo1tFmY27yF?=
+ =?us-ascii?Q?grEB2X+ELiySkubnb2wYaqGBf+cX8s6wN2wecwlfF1f+Mb3LpwSd4bEg/rEX?=
+ =?us-ascii?Q?6teAO6VhfiTW7GdVMYYMLmuqzDKSTou9jSAjheYjdfmZp3doI1oJGdnGAY05?=
+ =?us-ascii?Q?dkr+aCo2AJMeBPCjFNK0c1ZiXcK6uck3Z+QZ5Xf53ntZ0TW1Whw8kJW0O2Il?=
+ =?us-ascii?Q?HWkXtm+NOMAWEbDiHa0GtfFIL79BxgHQufAv+04Qxs2j/mV6tYiHBIkJmTpk?=
+ =?us-ascii?Q?ESa++5HXs0d0dw6mU+M7RGZswpFFojVZcr+jj/Jnt0hQw5UxMufIMyeW68PZ?=
+ =?us-ascii?Q?APF3detS47yvw7qq3+uOxCtSpHUz?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?RkBb/uRhxrQL6QOik0K3L8eBMyavoiHX/DI3HiBnxeob9g1LQeNWkxXEjm95?=
+ =?us-ascii?Q?bIXt4Jlr/rGLWvuhh11UNpIfNhwDWJjUCzCbrnWhAi5x7eBi6T0W16SCYn54?=
+ =?us-ascii?Q?6Ovc02ja/XrXMYtOkOlv/AJJkPYMHWPe7Tnsy7TL4Zl8Ts1iEhRYpyaST9+V?=
+ =?us-ascii?Q?vf1r9WU3JPUxeuyYfTis2Cf95xX16P4wa+2pNe9CL2XmILVduKWc6otQIGhs?=
+ =?us-ascii?Q?v3RUfPnVjtsRQqPbZ3Duu8ifUHrSlD202yXNl5/ybZ5hFWqxjiEHkamOT36+?=
+ =?us-ascii?Q?Dv9qo5DaB+LVOlAxzTVnVUb61eMFIJiUYL/cTDnDq7ywDG+4sjLAYFhFfSYp?=
+ =?us-ascii?Q?6ru/Ys2MIij9sj56L/ePpHVEFUYKj+jdwM/cGD+3QC4OFE4Eh8wAPCOYg08A?=
+ =?us-ascii?Q?+9e11GXCoAtz74rLinPBHaitf2QTqmDXUxbRPlQZ4aAaN+bS8dUpsdITiAJ3?=
+ =?us-ascii?Q?smuQWUAa9Izru0S1HMcK3jwz62jvEz3JlrXhbRH/lqZGZ7M18B0MPVYTpsAH?=
+ =?us-ascii?Q?EZoyrgGiajrhsqKNpCXXTyxaDaxdmMoMpkJoy0d00mCfRH64SHnnwzs4M8iW?=
+ =?us-ascii?Q?9yGz0m6pYziXBfyIeoQDAiSO3H6qATfI243QTqSJpcKGssLMuLLtEXcA61g6?=
+ =?us-ascii?Q?7wmeK/zlPc3vMJzXl5EgQJK6zcVp1gC9jxGoJG9OBy068vSvcyKPWtrA3k1C?=
+ =?us-ascii?Q?4SyEZiDbQGldkpbQaCYSIgTv7CX5yTgzfxI7PDRM2XBZFnRd1M4PHcDew1y9?=
+ =?us-ascii?Q?tLKZTxfQQQCDBIHU98/OTkki832tOlpM/Vo75/Rqaw0xcsUucQIgSWCe96ZO?=
+ =?us-ascii?Q?sBRtJwrlywADHDmqOtgkkZqlkuSlmSkbmubsyRhAn15p2Pd9jb+eZMtAABZN?=
+ =?us-ascii?Q?tRycToPDItW8A/wh8kutB1Rl9AKOOpqJr4oGqHGwflADNt2ddid9v5QAlPB1?=
+ =?us-ascii?Q?BmgN6BS/RMSRGtgWEfLPvrxHh1DRRpRkGh2sofgTf0L4pXXZvRzu5/3E/RRu?=
+ =?us-ascii?Q?WSjRMRx0fWMuGakGeSANGeClwvzONVDRt16wrjwEvpAaSSJQjAtENYaw87Gf?=
+ =?us-ascii?Q?p0JNl09Oyw7NwJYV063S3cBA0eDLIqJ9sY76RTCiT3JWTfyL+wHGnjWrC3hy?=
+ =?us-ascii?Q?P53ty8Ibh0lKqSegIMOBdkWjcd4zWKnliq3a4gElySWupt8NtPLfUnbZfUcn?=
+ =?us-ascii?Q?WQXp6KvX2m/rjSXgYpZupd0SCZkGOTxbwRxyDnS4nSN3uGR8LaeH9eS7/g2k?=
+ =?us-ascii?Q?pTMv1x5edKmyd01yptE24fQmplRIPaH/nL2PEws/d7xnIcaftLng8H2ubsZe?=
+ =?us-ascii?Q?6OJfXeBCW78yUIQD3RoIXLKi8/xDAvStG2UxFhg8q54EH2D+9NPmE4qjRrQt?=
+ =?us-ascii?Q?LizaZ0IRGrN10WqgFVlnMN86aFd6INomeebJwTEKdnz5g2S92xNnI9Ou1QTV?=
+ =?us-ascii?Q?v9xOCTymglSYTdBLS1I5Vm4TdmR+56utC7P6VcGhRdhYX/vtNfGR8+/D3pGF?=
+ =?us-ascii?Q?IG/MZSN2sSVGdjwfI0gNw6SRK2Q6M0cTsEQ6aNjbmKxit7d60mVPXeWj7tux?=
+ =?us-ascii?Q?uHG8tSwYmtsQysrk4zdmz8KtTyqUJnLGJiWqPYq4lNI/5McztR2/TrGcSgX+?=
+ =?us-ascii?Q?wg=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	8STGqpn9kfKGSX0Vric7PnlwprkPewNe1iJZOBj41jmz4Fi7U8w2mQd6/zcZW3jFLBIrqNhUNUn3KTv4I7wnFAOhlw2OcP0NxBp+tKHiGYqG2gUs31szLGaArZrYLoyd/1oAR4qc+2ETAeiHfqGYEYcw39C0Tsm2X0ZEqfDJAg9y1ZA+oZxfXO4RFLysT7W1FCUGP0ouvl0QN9QnrGQsWEOmcaxJmL3NTqqPNS3ktuYiq4bocHVU6rTZlOD7xxrFIIR0ClbwMfRjYZppIOIFwgaX5xvin62x4vkIjblIqpMPzfZDBwfkcI07qobaHHMtBPu5EmQ6u/S798442V0gu1MCWdav8zQyBMjbo5EU7nMJWv35C29xVvv+kogWyG/40jJngDRggWYHx1uND3SIMJqo7p25gFYIPnFDitmmaswgFFqs7IiDzvnyIECz/l2kagDRQUktkFMoR90e4zslM/1AfKVnDKGfKF03iMSKYdL7IjYk4zFaklk4YU7om3/hYhJlLi0d8WNiNVMOP9eCoScsLEzChVtvBO6uq5Ruy+0CHYf+dRQF+aegSCnnojNwB/DFL9RbnbwwKwxshMy9uWR/Zgubf+/FsS2REyJC95A=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8f535580-f7b7-4da9-a69f-08dd767fe1da
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2025 09:29:38.0535
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: eOTbxHHoexaC5u5oNNhw4r41AS4klOuGPQsLq3JPJnP3FM9oGZn3JmSkG5TsCJtn1rrvK4sBSxEDDGWeoNzbKdMF4YnQz6r2Y+dFcXlgAfg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR10MB7244
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-08_03,2025-04-07_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
+ suspectscore=0 adultscore=0 bulkscore=0 mlxscore=0 phishscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2502280000 definitions=main-2504080067
+X-Proofpoint-GUID: i3KlSgmy5PZwy-J2qBF1q1SNjjJ5lpXY
+X-Proofpoint-ORIG-GUID: i3KlSgmy5PZwy-J2qBF1q1SNjjJ5lpXY
 
-Implement some hardware init functions to set default hardware
- settings, including PHY control, Vlan related config, RX coalescing,
- and other basic function control.
+It appears that we have been incorrectly rejecting merge cases for 15
+years, apparently by mistake.
 
-Signed-off-by: Frank Sae <Frank.Sae@motor-comm.com>
----
- .../ethernet/motorcomm/yt6801/yt6801_main.c   | 546 ++++++++++++++++++
- .../ethernet/motorcomm/yt6801/yt6801_type.h   | 193 +++++++
- 2 files changed, 739 insertions(+)
+Imagine a range of anonymous mapped momemory divided into two VMAs like
+this, with incompatible protection bits:
 
-diff --git a/drivers/net/ethernet/motorcomm/yt6801/yt6801_main.c b/drivers/net/ethernet/motorcomm/yt6801/yt6801_main.c
-index 34ccefdf9..5922a2449 100644
---- a/drivers/net/ethernet/motorcomm/yt6801/yt6801_main.c
-+++ b/drivers/net/ethernet/motorcomm/yt6801/yt6801_main.c
-@@ -484,6 +484,325 @@ static void fxgmac_enable_msix_irqs(struct fxgmac_pdata *priv)
- 		fxgmac_enable_msix_one_irq(priv, intid);
- }
- 
-+static void __fxgmac_set_mac_address(struct fxgmac_pdata *priv, u8 *addr)
-+{
-+	u32 mac_hi, mac_lo;
-+
-+	mac_lo = (u32)addr[0] | ((u32)addr[1] << 8) | ((u32)addr[2] << 16) |
-+		 ((u32)addr[3] << 24);
-+
-+	mac_hi = (u32)addr[4] | ((u32)addr[5] << 8);
-+
-+	fxgmac_io_wr(priv, MAC_MACA0LR, mac_lo);
-+	fxgmac_io_wr(priv, MAC_MACA0HR, mac_hi);
-+}
-+
-+static void fxgmac_config_mac_address(struct fxgmac_pdata *priv)
-+{
-+	__fxgmac_set_mac_address(priv, priv->mac_addr);
-+	fxgmac_io_wr_bits(priv, MAC_PFR, MAC_PFR_HPF, 1);
-+	fxgmac_io_wr_bits(priv, MAC_PFR, MAC_PFR_HUC, 1);
-+	fxgmac_io_wr_bits(priv, MAC_PFR, MAC_PFR_HMC, 1);
-+}
-+
-+static void fxgmac_config_crc_check_en(struct fxgmac_pdata *priv)
-+{
-+	fxgmac_io_wr_bits(priv, MAC_ECR, MAC_ECR_DCRCC, 1);
-+}
-+
-+static void fxgmac_config_checksum_offload(struct fxgmac_pdata *priv)
-+{
-+	if (priv->ndev->features & NETIF_F_RXCSUM)
-+		fxgmac_io_wr_bits(priv, MAC_CR, MAC_CR_IPC, 1);
-+	else
-+		fxgmac_io_wr_bits(priv, MAC_CR, MAC_CR_IPC, 0);
-+}
-+
-+static void fxgmac_set_promiscuous_mode(struct fxgmac_pdata *priv,
-+					unsigned int enable)
-+{
-+	fxgmac_io_wr_bits(priv, MAC_PFR, MAC_PFR_PR, enable);
-+}
-+
-+static void fxgmac_enable_rx_broadcast(struct fxgmac_pdata *priv,
-+				       unsigned int enable)
-+{
-+	fxgmac_io_wr_bits(priv, MAC_PFR, MAC_PFR_DBF, enable);
-+}
-+
-+static void fxgmac_set_all_multicast_mode(struct fxgmac_pdata *priv,
-+					  unsigned int enable)
-+{
-+	fxgmac_io_wr_bits(priv, MAC_PFR, MAC_PFR_PM, enable);
-+}
-+
-+static void fxgmac_config_rx_mode(struct fxgmac_pdata *priv)
-+{
-+	u32 pr_mode, am_mode, bd_mode;
-+
-+	pr_mode = ((priv->ndev->flags & IFF_PROMISC) != 0);
-+	am_mode = ((priv->ndev->flags & IFF_ALLMULTI) != 0);
-+	bd_mode = ((priv->ndev->flags & IFF_BROADCAST) != 0);
-+
-+	fxgmac_enable_rx_broadcast(priv, bd_mode);
-+	fxgmac_set_promiscuous_mode(priv, pr_mode);
-+	fxgmac_set_all_multicast_mode(priv, am_mode);
-+}
-+
-+static void fxgmac_config_tx_flow_control(struct fxgmac_pdata *priv)
-+{
-+	/* Set MTL flow control */
-+	for (u32 i = 0; i < priv->rx_q_count; i++)
-+		fxgmac_mtl_wr_bits(priv, i, MTL_Q_RQOMR, MTL_Q_RQOMR_EHFC,
-+				   priv->tx_pause);
-+
-+	/* Set MAC flow control */
-+	fxgmac_io_wr_bits(priv, MAC_Q0TFCR, MAC_Q0TFCR_TFE, priv->tx_pause);
-+
-+	if (priv->tx_pause == 1) /* Set pause time */
-+		fxgmac_io_wr_bits(priv, MAC_Q0TFCR, MAC_Q0TFCR_PT, 0xffff);
-+}
-+
-+static void fxgmac_config_rx_flow_control(struct fxgmac_pdata *priv)
-+{
-+	fxgmac_io_wr_bits(priv, MAC_RFCR, MAC_RFCR_RFE, priv->rx_pause);
-+}
-+
-+static void fxgmac_config_rx_coalesce(struct fxgmac_pdata *priv)
-+{
-+	struct fxgmac_channel *channel = priv->channel_head;
-+
-+	for (u32 i = 0; i < priv->channel_count; i++, channel++) {
-+		if (!channel->rx_ring)
-+			break;
-+		fxgmac_dma_wr_bits(channel, DMA_CH_RIWT, DMA_CH_RIWT_RWT,
-+				   priv->rx_riwt);
-+	}
-+}
-+
-+static void fxgmac_config_rx_fep_disable(struct fxgmac_pdata *priv)
-+{
-+	/* Enable the rx queue forward packet with error status
-+	 * (crc error,gmii_er, watch dog timeout.or overflow)
-+	 */
-+	for (u32 i = 0; i < priv->rx_q_count; i++)
-+		fxgmac_mtl_wr_bits(priv, i, MTL_Q_RQOMR, MTL_Q_RQOMR_FEP, 1);
-+}
-+
-+static void fxgmac_config_rx_fup_enable(struct fxgmac_pdata *priv)
-+{
-+	for (u32 i = 0; i < priv->rx_q_count; i++)
-+		fxgmac_mtl_wr_bits(priv, i, MTL_Q_RQOMR, MTL_Q_RQOMR_FUP, 1);
-+}
-+
-+static void fxgmac_config_rx_buffer_size(struct fxgmac_pdata *priv)
-+{
-+	struct fxgmac_channel *channel = priv->channel_head;
-+
-+	for (u32 i = 0; i < priv->channel_count; i++, channel++)
-+		fxgmac_dma_wr_bits(channel, DMA_CH_RCR, DMA_CH_RCR_RBSZ,
-+				   priv->rx_buf_size);
-+}
-+
-+static void fxgmac_config_tso_mode(struct fxgmac_pdata *priv)
-+{
-+	fxgmac_dma_wr_bits(priv->channel_head, DMA_CH_TCR, DMA_CH_TCR_TSE,
-+			   priv->hw_feat.tso);
-+}
-+
-+static void fxgmac_config_sph_mode(struct fxgmac_pdata *priv)
-+{
-+	struct fxgmac_channel *channel = priv->channel_head;
-+
-+	for (u32 i = 0; i < priv->channel_count; i++, channel++)
-+		fxgmac_dma_wr_bits(channel, DMA_CH_CR, DMA_CH_CR_SPH, 0);
-+
-+	fxgmac_io_wr_bits(priv, MAC_ECR, MAC_ECR_HDSMS, MAC_ECR_HDSMS_512B);
-+}
-+
-+static void fxgmac_config_rx_threshold(struct fxgmac_pdata *priv,
-+				       unsigned int set_val)
-+{
-+	for (u32 i = 0; i < priv->rx_q_count; i++)
-+		fxgmac_mtl_wr_bits(priv, i, MTL_Q_RQOMR, MTL_Q_RQOMR_RTC,
-+				   set_val);
-+}
-+
-+static void fxgmac_config_mtl_mode(struct fxgmac_pdata *priv)
-+{
-+	/* Set Tx to weighted round robin scheduling algorithm */
-+	fxgmac_io_wr_bits(priv, MTL_OMR, MTL_OMR_ETSALG, MTL_ETSALG_WRR);
-+
-+	/* Set Tx traffic classes to use WRR algorithm with equal weights */
-+	fxgmac_mtl_wr_bits(priv, 0, MTL_TC_QWR, MTL_TC_QWR_QW, 1);
-+
-+	/* Set Rx to strict priority algorithm */
-+	fxgmac_io_wr_bits(priv, MTL_OMR, MTL_OMR_RAA, MTL_RAA_SP);
-+}
-+
-+static void fxgmac_config_queue_mapping(struct fxgmac_pdata *priv)
-+{
-+	unsigned int ppq, ppq_extra, prio_queues;
-+	unsigned int __maybe_unused prio;
-+	unsigned int reg, val, mask;
-+
-+	/* Map the 8 VLAN priority values to available MTL Rx queues */
-+	prio_queues =
-+		min_t(unsigned int, IEEE_8021QAZ_MAX_TCS, priv->rx_q_count);
-+	ppq = IEEE_8021QAZ_MAX_TCS / prio_queues;
-+	ppq_extra = IEEE_8021QAZ_MAX_TCS % prio_queues;
-+
-+	reg = MAC_RQC2R;
-+	for (u32 i = 0, prio = 0; i < prio_queues;) {
-+		val = 0;
-+		mask = 0;
-+		for (u32 j = 0; j < ppq; j++) {
-+			mask |= (1 << prio);
-+			prio++;
-+		}
-+
-+		if (i < ppq_extra) {
-+			mask |= (1 << prio);
-+			prio++;
-+		}
-+
-+		val |= (mask << ((i++ % MAC_RQC2_Q_PER_REG) << 3));
-+
-+		if ((i % MAC_RQC2_Q_PER_REG) && i != prio_queues)
-+			continue;
-+
-+		fxgmac_io_wr(priv, reg, val);
-+		reg += MAC_RQC2_INC;
-+	}
-+
-+	/* Configure one to one, MTL Rx queue to DMA Rx channel mapping
-+	 * ie Q0 <--> CH0, Q1 <--> CH1 ... Q7 <--> CH7
-+	 */
-+	val = fxgmac_io_rd(priv, MTL_RQDCM0R);
-+	val |= (MTL_RQDCM0R_Q0MDMACH | MTL_RQDCM0R_Q1MDMACH |
-+		MTL_RQDCM0R_Q2MDMACH | MTL_RQDCM0R_Q3MDMACH);
-+	fxgmac_io_wr(priv, MTL_RQDCM0R, val);
-+
-+	val = fxgmac_io_rd(priv, MTL_RQDCM0R + MTL_RQDCM_INC);
-+	val |= (MTL_RQDCM1R_Q4MDMACH | MTL_RQDCM1R_Q5MDMACH |
-+		MTL_RQDCM1R_Q6MDMACH | MTL_RQDCM1R_Q7MDMACH);
-+	fxgmac_io_wr(priv, MTL_RQDCM0R + MTL_RQDCM_INC, val);
-+}
-+
-+static unsigned int fxgmac_calculate_per_queue_fifo(unsigned int fifo_size,
-+						    unsigned int queue_count)
-+{
-+	u32 q_fifo_size, p_fifo;
-+
-+	/* Calculate the configured fifo size */
-+	q_fifo_size = 1 << (fifo_size + 7);
-+
-+#define FXGMAC_MAX_FIFO 81920
-+	/* The configured value may not be the actual amount of fifo RAM */
-+	q_fifo_size = min_t(unsigned int, FXGMAC_MAX_FIFO, q_fifo_size);
-+	q_fifo_size = q_fifo_size / queue_count;
-+
-+	/* Each increment in the queue fifo size represents 256 bytes of
-+	 * fifo, with 0 representing 256 bytes. Distribute the fifo equally
-+	 * between the queues.
-+	 */
-+	p_fifo = q_fifo_size / 256;
-+	if (p_fifo)
-+		p_fifo--;
-+
-+	return p_fifo;
-+}
-+
-+static void fxgmac_config_tx_fifo_size(struct fxgmac_pdata *priv)
-+{
-+	u32 fifo_size;
-+
-+	fifo_size = fxgmac_calculate_per_queue_fifo(priv->hw_feat.tx_fifo_size,
-+						    FXGMAC_TX_1_Q);
-+	fxgmac_mtl_wr_bits(priv, 0, MTL_Q_TQOMR, MTL_Q_TQOMR_TQS, fifo_size);
-+}
-+
-+static void fxgmac_config_rx_fifo_size(struct fxgmac_pdata *priv)
-+{
-+	u32 fifo_size;
-+
-+	fifo_size = fxgmac_calculate_per_queue_fifo(priv->hw_feat.rx_fifo_size,
-+						    priv->rx_q_count);
-+
-+	for (u32 i = 0; i < priv->rx_q_count; i++)
-+		fxgmac_mtl_wr_bits(priv, i, MTL_Q_RQOMR, MTL_Q_RQOMR_RQS,
-+				   fifo_size);
-+}
-+
-+static void fxgmac_config_flow_control_threshold(struct fxgmac_pdata *priv)
-+{
-+	for (u32 i = 0; i < priv->rx_q_count; i++) {
-+		/* Activate flow control when less than 4k left in fifo */
-+		fxgmac_mtl_wr_bits(priv, i, MTL_Q_RQOMR, MTL_Q_RQOMR_RFA, 6);
-+		/* De-activate flow control when more than 6k left in fifo */
-+		fxgmac_mtl_wr_bits(priv, i, MTL_Q_RQOMR, MTL_Q_RQOMR_RFD, 10);
-+	}
-+}
-+
-+static void fxgmac_config_tx_threshold(struct fxgmac_pdata *priv,
-+				       unsigned int set_val)
-+{
-+	fxgmac_mtl_wr_bits(priv, 0, MTL_Q_TQOMR, MTL_Q_TQOMR_TTC, set_val);
-+}
-+
-+static void fxgmac_config_rsf_mode(struct fxgmac_pdata *priv,
-+				   unsigned int set_val)
-+{
-+	for (u32 i = 0; i < priv->rx_q_count; i++)
-+		fxgmac_mtl_wr_bits(priv, i, MTL_Q_RQOMR, MTL_Q_RQOMR_RSF,
-+				   set_val);
-+}
-+
-+static void fxgmac_config_tsf_mode(struct fxgmac_pdata *priv,
-+				   unsigned int set_val)
-+{
-+	fxgmac_mtl_wr_bits(priv, 0, MTL_Q_TQOMR, MTL_Q_TQOMR_TSF, set_val);
-+}
-+
-+static void fxgmac_config_osp_mode(struct fxgmac_pdata *priv)
-+{
-+	fxgmac_dma_wr_bits(priv->channel_head, DMA_CH_TCR, DMA_CH_TCR_OSP,
-+			   priv->tx_osp_mode);
-+}
-+
-+static void fxgmac_config_pblx8(struct fxgmac_pdata *priv)
-+{
-+	struct fxgmac_channel *channel = priv->channel_head;
-+
-+	for (u32 i = 0; i < priv->channel_count; i++, channel++)
-+		fxgmac_dma_wr_bits(channel, DMA_CH_CR, DMA_CH_CR_PBLX8,
-+				   priv->pblx8);
-+}
-+
-+static void fxgmac_config_tx_pbl_val(struct fxgmac_pdata *priv)
-+{
-+	fxgmac_dma_wr_bits(priv->channel_head, DMA_CH_TCR, DMA_CH_TCR_PBL,
-+			   priv->tx_pbl);
-+}
-+
-+static void fxgmac_config_rx_pbl_val(struct fxgmac_pdata *priv)
-+{
-+	struct fxgmac_channel *channel = priv->channel_head;
-+
-+	for (u32 i = 0; i < priv->channel_count; i++, channel++)
-+		fxgmac_dma_wr_bits(channel, DMA_CH_RCR, DMA_CH_RCR_PBL,
-+				   priv->rx_pbl);
-+}
-+
-+static void fxgmac_config_mmc(struct fxgmac_pdata *priv)
-+{
-+	/* Set counters to reset on read, Reset the counters */
-+	fxgmac_io_wr_bits(priv, MMC_CR, MMC_CR_ROR, 1);
-+	fxgmac_io_wr_bits(priv, MMC_CR, MMC_CR_CR, 1);
-+
-+	fxgmac_io_wr(priv, MMC_IPC_RXINT_MASK, 0xffffffff);
-+}
-+
- static void fxgmac_enable_dma_interrupts(struct fxgmac_pdata *priv)
- {
- 	struct fxgmac_channel *channel = priv->channel_head;
-@@ -514,6 +833,233 @@ static void fxgmac_enable_dma_interrupts(struct fxgmac_pdata *priv)
- 	}
- }
- 
-+static void fxgmac_enable_mtl_interrupts(struct fxgmac_pdata *priv)
-+{
-+	unsigned int mtl_q_isr;
-+
-+	for (u32 i = 0; i < priv->hw_feat.rx_q_cnt; i++) {
-+		/* Clear all the interrupts which are set */
-+		mtl_q_isr = fxgmac_mtl_io_rd(priv, i, MTL_Q_IR);
-+		fxgmac_mtl_io_wr(priv, i, MTL_Q_IR, mtl_q_isr);
-+
-+		/* No MTL interrupts to be enabled */
-+		fxgmac_mtl_io_wr(priv, i, MTL_Q_IR, 0);
-+	}
-+}
-+
-+static void fxgmac_enable_mac_interrupts(struct fxgmac_pdata *priv)
-+{
-+	/* Disable Timestamp interrupt */
-+	fxgmac_io_wr_bits(priv, MAC_IER, MAC_IER_TSIE, 0);
-+
-+	fxgmac_io_wr_bits(priv, MMC_RIER, MMC_RIER_ALL_INTERRUPTS, 0);
-+	fxgmac_io_wr_bits(priv, MMC_TIER, MMC_TIER_ALL_INTERRUPTS, 0);
-+}
-+
-+static int fxgmac_flush_tx_queues(struct fxgmac_pdata *priv)
-+{
-+	u32 val, count = 2000;
-+
-+	fxgmac_mtl_wr_bits(priv, 0, MTL_Q_TQOMR, MTL_Q_TQOMR_FTQ, 1);
-+	do {
-+		fsleep(20);
-+		val = fxgmac_mtl_io_rd(priv, 0, MTL_Q_TQOMR);
-+		val = FIELD_GET(MTL_Q_TQOMR_FTQ, val);
-+
-+	} while (--count && val);
-+
-+	if (val)
-+		return -EBUSY;
-+
-+	return 0;
-+}
-+
-+static void fxgmac_config_dma_bus(struct fxgmac_pdata *priv)
-+{
-+	u32 val = fxgmac_io_rd(priv, DMA_SBMR);
-+
-+	val &= ~(DMA_SBMR_EAME | DMA_SBMR_RD_OSR_LMT |
-+		 DMA_SBMR_WR_OSR_LMT | DMA_SBMR_FB);
-+
-+	/* Set enhanced addressing mode */
-+	val |= DMA_SBMR_EAME;
-+
-+	/* Out standing read/write requests */
-+	val |= FIELD_PREP(DMA_SBMR_RD_OSR_LMT, 0x7);
-+	val |= FIELD_PREP(DMA_SBMR_WR_OSR_LMT, 0x7);
-+
-+	/* Set the System Bus mode */
-+	val |= (DMA_SBMR_BLEN_4 | DMA_SBMR_BLEN_8 |
-+		DMA_SBMR_BLEN_16 | DMA_SBMR_BLEN_32);
-+
-+	fxgmac_io_wr(priv, DMA_SBMR, val);
-+}
-+
-+static void fxgmac_desc_rx_channel_init(struct fxgmac_channel *channel)
-+{
-+	struct fxgmac_ring *ring = channel->rx_ring;
-+	unsigned int start_index = ring->cur;
-+	struct fxgmac_desc_data *desc_data;
-+
-+	/* Initialize all descriptors */
-+	for (u32 i = 0; i < ring->dma_desc_count; i++) {
-+		desc_data = FXGMAC_GET_DESC_DATA(ring, i);
-+		fxgmac_desc_rx_reset(desc_data); /* Initialize Rx descriptor */
-+	}
-+
-+	/* Update the total number of Rx descriptors */
-+	fxgmac_dma_io_wr(channel, DMA_CH_RDRLR, ring->dma_desc_count - 1);
-+
-+	/* Update the starting address of descriptor ring */
-+	desc_data = FXGMAC_GET_DESC_DATA(ring, start_index);
-+
-+	fxgmac_dma_io_wr(channel, DMA_CH_RDLR_HI,
-+			 upper_32_bits(desc_data->dma_desc_addr));
-+	fxgmac_dma_io_wr(channel, DMA_CH_RDLR_LO,
-+			 lower_32_bits(desc_data->dma_desc_addr));
-+
-+	/* Update the Rx Descriptor Tail Pointer */
-+	desc_data = FXGMAC_GET_DESC_DATA(ring, start_index +
-+					 ring->dma_desc_count - 1);
-+	fxgmac_dma_io_wr(channel, DMA_CH_RDTR_LO,
-+			 lower_32_bits(desc_data->dma_desc_addr));
-+}
-+
-+static void fxgmac_desc_rx_init(struct fxgmac_pdata *priv)
-+{
-+	struct fxgmac_channel *channel = priv->channel_head;
-+	struct fxgmac_desc_data *desc_data;
-+	struct fxgmac_dma_desc *dma_desc;
-+	dma_addr_t dma_desc_addr;
-+	struct fxgmac_ring *ring;
-+
-+	for (u32 i = 0; i < priv->channel_count; i++, channel++) {
-+		ring = channel->rx_ring;
-+		dma_desc = ring->dma_desc_head;
-+		dma_desc_addr = ring->dma_desc_head_addr;
-+
-+		for (u32 j = 0; j < ring->dma_desc_count; j++) {
-+			desc_data = FXGMAC_GET_DESC_DATA(ring, j);
-+			desc_data->dma_desc = dma_desc;
-+			desc_data->dma_desc_addr = dma_desc_addr;
-+			if (fxgmac_rx_buffe_map(priv, ring, desc_data))
-+				break;
-+
-+			dma_desc++;
-+			dma_desc_addr += sizeof(struct fxgmac_dma_desc);
-+		}
-+
-+		ring->cur = 0;
-+		ring->dirty = 0;
-+
-+		fxgmac_desc_rx_channel_init(channel);
-+	}
-+}
-+
-+static void fxgmac_desc_tx_channel_init(struct fxgmac_channel *channel)
-+{
-+	struct fxgmac_ring *ring = channel->tx_ring;
-+	struct fxgmac_desc_data *desc_data;
-+	int start_index = ring->cur;
-+
-+	/* Initialize all descriptors */
-+	for (u32 i = 0; i < ring->dma_desc_count; i++) {
-+		desc_data = FXGMAC_GET_DESC_DATA(ring, i);
-+		fxgmac_desc_tx_reset(desc_data); /* Initialize Tx descriptor */
-+	}
-+
-+	/* Update the total number of Tx descriptors */
-+	fxgmac_dma_io_wr(channel, DMA_CH_TDRLR,
-+			 channel->priv->tx_desc_count - 1);
-+
-+	/* Update the starting address of descriptor ring */
-+	desc_data = FXGMAC_GET_DESC_DATA(ring, start_index);
-+
-+	fxgmac_dma_io_wr(channel, DMA_CH_TDLR_HI,
-+			 upper_32_bits(desc_data->dma_desc_addr));
-+	fxgmac_dma_io_wr(channel, DMA_CH_TDLR_LO,
-+			 lower_32_bits(desc_data->dma_desc_addr));
-+}
-+
-+static void fxgmac_desc_tx_init(struct fxgmac_pdata *priv)
-+{
-+	struct fxgmac_channel *channel = priv->channel_head;
-+	struct fxgmac_ring *ring = channel->tx_ring;
-+	struct fxgmac_desc_data *desc_data;
-+	struct fxgmac_dma_desc *dma_desc;
-+	dma_addr_t dma_desc_addr;
-+
-+	dma_desc = ring->dma_desc_head;
-+	dma_desc_addr = ring->dma_desc_head_addr;
-+
-+	for (u32 j = 0; j < ring->dma_desc_count; j++) {
-+		desc_data = FXGMAC_GET_DESC_DATA(ring, j);
-+		desc_data->dma_desc = dma_desc;
-+		desc_data->dma_desc_addr = dma_desc_addr;
-+
-+		dma_desc++;
-+		dma_desc_addr += sizeof(struct fxgmac_dma_desc);
-+	}
-+
-+	ring->cur = 0;
-+	ring->dirty = 0;
-+	memset(&ring->tx, 0, sizeof(ring->tx));
-+	fxgmac_desc_tx_channel_init(priv->channel_head);
-+}
-+
-+static int fxgmac_hw_init(struct fxgmac_pdata *priv)
-+{
-+	int ret;
-+
-+	ret = fxgmac_flush_tx_queues(priv); /* Flush Tx queues */
-+	if (ret < 0) {
-+		dev_err(priv->dev, "%s, flush tx queue failed:%d\n",
-+			__func__, ret);
-+		return ret;
-+	}
-+
-+	/* Initialize DMA related features */
-+	fxgmac_config_dma_bus(priv);
-+	fxgmac_config_osp_mode(priv);
-+	fxgmac_config_pblx8(priv);
-+	fxgmac_config_tx_pbl_val(priv);
-+	fxgmac_config_rx_pbl_val(priv);
-+	fxgmac_config_rx_coalesce(priv);
-+	fxgmac_config_rx_buffer_size(priv);
-+	fxgmac_config_tso_mode(priv);
-+	fxgmac_config_sph_mode(priv);
-+	fxgmac_desc_tx_init(priv);
-+	fxgmac_desc_rx_init(priv);
-+	fxgmac_enable_dma_interrupts(priv);
-+
-+	/* Initialize MTL related features */
-+	fxgmac_config_mtl_mode(priv);
-+	fxgmac_config_queue_mapping(priv);
-+	fxgmac_config_tsf_mode(priv, priv->tx_sf_mode);
-+	fxgmac_config_rsf_mode(priv, priv->rx_sf_mode);
-+	fxgmac_config_tx_threshold(priv, priv->tx_threshold);
-+	fxgmac_config_rx_threshold(priv, priv->rx_threshold);
-+	fxgmac_config_tx_fifo_size(priv);
-+	fxgmac_config_rx_fifo_size(priv);
-+	fxgmac_config_flow_control_threshold(priv);
-+	fxgmac_config_rx_fep_disable(priv);
-+	fxgmac_config_rx_fup_enable(priv);
-+	fxgmac_enable_mtl_interrupts(priv);
-+
-+	/* Initialize MAC related features */
-+	fxgmac_config_mac_address(priv);
-+	fxgmac_config_crc_check_en(priv);
-+	fxgmac_config_rx_mode(priv);
-+	fxgmac_config_tx_flow_control(priv);
-+	fxgmac_config_rx_flow_control(priv);
-+	fxgmac_config_mac_speed(priv);
-+	fxgmac_config_checksum_offload(priv);
-+	fxgmac_config_mmc(priv);
-+	fxgmac_enable_mac_interrupts(priv);
-+
-+	return 0;
-+}
-+
- static void fxgmac_dismiss_all_int(struct fxgmac_pdata *priv)
- {
- 	struct fxgmac_channel *channel = priv->channel_head;
-diff --git a/drivers/net/ethernet/motorcomm/yt6801/yt6801_type.h b/drivers/net/ethernet/motorcomm/yt6801/yt6801_type.h
-index 4afc6d4cd..4702ed1dc 100644
---- a/drivers/net/ethernet/motorcomm/yt6801/yt6801_type.h
-+++ b/drivers/net/ethernet/motorcomm/yt6801/yt6801_type.h
-@@ -134,6 +134,33 @@
- #define MAC_CR_IPC			BIT(27)
- #define MAC_CR_ARPEN			BIT(31)
- 
-+#define MAC_ECR				0x2004
-+#define MAC_ECR_DCRCC			BIT(16)
-+#define MAC_ECR_HDSMS			GENMASK(22, 20)
-+#define  MAC_ECR_HDSMS_64B		0
-+#define  MAC_ECR_HDSMS_128B		1
-+#define  MAC_ECR_HDSMS_256B		2
-+#define  MAC_ECR_HDSMS_512B		3
-+#define  MAC_ECR_HDSMS_1023B		4
-+
-+#define MAC_PFR				0x3008
-+#define MAC_PFR_PR			BIT(0) /*  Promiscuous Mode. */
-+#define MAC_PFR_HUC			BIT(1) /*  Hash Unicast Mode. */
-+#define MAC_PFR_HMC			BIT(2)
-+#define MAC_PFR_PM			BIT(4) /* Pass all Multicast. */
-+#define MAC_PFR_DBF			BIT(5) /* Disable Broadcast Packets. */
-+#define MAC_PFR_HPF			BIT(10)
-+#define MAC_PFR_VTFE			BIT(16)
-+
-+#define MAC_Q0TFCR			0x2070
-+#define MAC_Q0TFCR_TFE			BIT(1)
-+#define MAC_Q0TFCR_PT			GENMASK(31, 16)
-+
-+#define MAC_RFCR			0x2090
-+#define MAC_RFCR_RFE			BIT(0)
-+#define MAC_RFCR_UP			BIT(1)
-+#define MAC_RFCR_PFCE			BIT(8)
-+
- #define MAC_RQC0R			0x20a0
- #define MAC_RQC1R			0x20a4
- #define MAC_RQC2R			0x20a8
-@@ -230,6 +257,60 @@
- #define MAC_MDIO_DATA_GD		GENMASK(15, 0)
- #define MAC_MDIO_DATA_RA		GENMASK(31, 16)
- 
-+#define MAC_GPIO_CR			0x2208
-+#define MAC_GPIO_SR			0x220c
-+#define MAC_ARP_PROTO_ADDR		0x2210
-+#define MAC_CSR_SW_CTRL			0x2230
-+#define MAC_MACA0HR			0x2300
-+#define MAC_MACA0LR			0x2304
-+#define MAC_MACA1HR			0x2308
-+#define MAC_MACA1LR			0x230c
-+
-+/* MMC registers */
-+#define MMC_CR				0x2700
-+#define MMC_CR_CR			BIT(0)
-+#define MMC_CR_CSR			BIT(1)
-+#define MMC_CR_ROR			BIT(2)
-+#define MMC_CR_MCF			BIT(3)
-+
-+#define MMC_RISR			0x2704
-+#define MMC_TISR			0x2708
-+
-+#define MMC_RIER			0x270c
-+#define MMC_RIER_ALL_INTERRUPTS		GENMASK(27, 0)
-+
-+#define MMC_TIER			0x2710
-+#define MMC_TIER_ALL_INTERRUPTS		GENMASK(27, 0)
-+
-+#define MMC_IPC_RXINT_MASK		0x2800
-+#define MMC_IPC_RXINT			0x2808
-+
-+/* MTL registers */
-+#define MTL_OMR				0x2c00
-+#define MTL_OMR_RAA			BIT(2)
-+#define MTL_OMR_ETSALG			GENMASK(6, 5)
-+
-+#define MTL_FDCR			0x2c08
-+#define MTL_FDSR			0x2c0c
-+#define MTL_FDDR			0x2c10
-+#define MTL_INT_SR			0x2c20
-+
-+#define MTL_RQDCM_INC			4
-+#define MTL_RQDCM_Q_PER_REG		4
-+
-+#define MTL_RQDCM0R			0x2c30
-+#define MTL_RQDCM0R_Q0MDMACH		0x0
-+#define MTL_RQDCM0R_Q1MDMACH		0x00000100
-+#define MTL_RQDCM0R_Q2MDMACH		0x00020000
-+#define MTL_RQDCM0R_Q3MDMACH		0x03000000
-+
-+#define MTL_ECC_INT_SR			0x2ccc
-+
-+#define MTL_RQDCM1R_Q4MDMACH		0x00000004
-+#define MTL_RQDCM1R_Q5MDMACH		0x00000500
-+#define MTL_RQDCM1R_Q6MDMACH		0x00060000
-+#define MTL_RQDCM1R_Q7MDMACH		0x07000000
-+
- /* MTL queue registers */
- #define MTL_Q_BASE			0x2d00
- #define MTL_Q_INC			0x40
-@@ -242,11 +323,69 @@
- #define MTL_Q_EN_IF_AV			0x01
- #define MTL_Q_ENABLED			0x02
- 
-+#define MTL_Q_TQOMR_TTC			GENMASK(6, 4)
-+#define  MTL_Q_TQOMR_TTC_THRESHOLD_32	0x00
-+#define  MTL_Q_TQOMR_TTC_THRESHOLD_64	0x01
-+#define  MTL_Q_TQOMR_TTC_THRESHOLD_96	0x02
-+#define  MTL_Q_TQOMR_TTC_THRESHOLD_128	0x03
-+#define  MTL_Q_TQOMR_TTC_THRESHOLD_192	0x04
-+#define  MTL_Q_TQOMR_TTC_THRESHOLD_256	0x05
-+#define  MTL_Q_TQOMR_TTC_THRESHOLD_384	0x06
-+#define  MTL_Q_TQOMR_TTC_THRESHOLD_512	0x07
-+
-+#define MTL_Q_TQOMR_TQS			GENMASK(22, 16)
-+
-+#define MTL_Q_TQUR			0x04
-+#define MTL_Q_TXDEG			0x08 /* Transmit debug */
- #define MTL_Q_IR			0x2c /* Interrupt control status */
-+
-+#define MTL_Q_RQOMR			0x30
-+#define MTL_Q_RQOMR_RTC			GENMASK(1, 0)
-+#define  MTL_Q_RQOMR_RTC_THRESHOLD_64	0x00
-+#define  MTL_Q_RQOMR_RTC_THRESHOLD_32	0x01
-+#define  MTL_Q_RQOMR_RTC_THRESHOLD_96	0x02
-+#define  MTL_Q_RQOMR_RTC_THRESHOLD_128	0x03
-+
-+#define MTL_Q_RQOMR_FUP			BIT(3)
-+#define MTL_Q_RQOMR_FEP			BIT(4)
-+#define MTL_Q_RQOMR_RSF			BIT(5)
-+#define MTL_Q_RQOMR_EHFC		BIT(7)
-+#define MTL_Q_RQOMR_RFA			GENMASK(13, 8)
-+#define MTL_Q_RQOMR_RFD			GENMASK(19, 14)
-+#define MTL_Q_RQOMR_RQS			GENMASK(28, 20)
-+
-+#define MTL_Q_RQMPOCR			0x34
-+
- #define MTL_Q_RQDR			0x38
- #define MTL_Q_RQDR_RXQSTS		GENMASK(5, 4)
- #define MTL_Q_RQDR_PRXQ			GENMASK(29, 16)
- 
-+#define MTL_Q_RQCR			0x3c
-+
-+/* MTL queue registers */
-+#define MTL_ETSALG_WRR				0x00
-+#define MTL_ETSALG_WFQ				0x01
-+#define MTL_ETSALG_DWRR				0x02
-+#define MTL_ETSALG_SP				0x03
-+
-+#define MTL_RAA_SP				0x00
-+#define MTL_RAA_WSP				0x01
-+
-+/* MTL traffic class registers */
-+#define MTL_TC_BASE				MTL_Q_BASE
-+#define MTL_TC_INC				MTL_Q_INC
-+
-+#define MTL_TC_TQDR				0x08
-+#define MTL_TC_TQDR_TRCSTS			GENMASK(2, 1)
-+#define MTL_TC_TQDR_TXQSTS			BIT(4)
-+
-+#define MTL_TC_ETSCR				0x10
-+#define MTL_TC_ETSCR_TSA			GENMASK(1, 0)
-+
-+#define MTL_TC_ETSSR				0x14
-+#define MTL_TC_QWR				0x18
-+#define MTL_TC_QWR_QW				GENMASK(20, 0)
-+
- /* DMA registers */
- #define DMA_MR					0x3000
- #define DMA_MR_SWR				BIT(0)
-@@ -256,16 +395,50 @@
- #define DMA_MR_TNDF				GENMASK(21, 20)
- #define DMA_MR_RNDF				GENMASK(23, 22)
- 
-+#define DMA_SBMR				0x3004
-+#define DMA_SBMR_FB				BIT(0)
-+#define DMA_SBMR_BLEN_4				BIT(1)
-+#define DMA_SBMR_BLEN_8				BIT(2)
-+#define DMA_SBMR_BLEN_16			BIT(3)
-+#define DMA_SBMR_BLEN_32			BIT(4)
-+#define DMA_SBMR_BLEN_64			BIT(5)
-+#define DMA_SBMR_BLEN_128			BIT(6)
-+#define DMA_SBMR_BLEN_256			BIT(7)
-+#define DMA_SBMR_AALE				BIT(10)
-+#define DMA_SBMR_EAME				BIT(11)
-+#define DMA_SBMR_AAL				BIT(12)
-+#define DMA_SBMR_RD_OSR_LMT			GENMASK(23, 16)
-+#define DMA_SBMR_WR_OSR_LMT			GENMASK(29, 24)
-+#define DMA_SBMR_LPI_XIT_PKT			BIT(30)
-+#define DMA_SBMR_EN_LPI				BIT(31)
-+
-+#define DMA_ISR					0x3008
-+#define DMA_ISR_MTLIS				BIT(16)
-+#define DMA_ISR_MACIS				BIT(17)
-+
- #define DMA_DSRX_INC				4
- #define DMA_DSR0				0x300c
- #define DMA_DSR0_TPS				GENMASK(15, 12)
- #define  DMA_TPS_STOPPED			0x00
- #define  DMA_TPS_SUSPENDED			0x06
- 
-+#define DMA_DSR1				0x3010
-+#define DMA_DSR2				0x3014
-+#define DMA_AXIARCR				0x3020
-+#define DMA_AXIAWCR				0x3024
-+#define DMA_AXIAWRCR				0x3028
-+#define DMA_SAFE_ISR				0x3080
-+#define DMA_ECC_IE				0x3084
-+#define DMA_ECC_INT_SR				0x3088
-+
- /* DMA channel registers */
- #define DMA_CH_BASE			0x3100
- #define DMA_CH_INC			0x80
- 
-+#define DMA_CH_CR			0x00
-+#define DMA_CH_CR_PBLX8			BIT(16)
-+#define DMA_CH_CR_SPH			BIT(24)
-+
- #define DMA_CH_TCR			0x04
- #define DMA_CH_TCR_ST			BIT(0)
- #define DMA_CH_TCR_OSP			BIT(4)
-@@ -286,6 +459,15 @@
- #define DMA_CH_RCR_RBSZ			GENMASK(14, 1)
- #define DMA_CH_RCR_PBL			GENMASK(21, 16)
- 
-+#define DMA_CH_TDLR_HI			0x10
-+#define DMA_CH_TDLR_LO			0x14
-+#define DMA_CH_RDLR_HI			0x18
-+#define DMA_CH_RDLR_LO			0x1c
-+#define DMA_CH_TDTR_LO			0x20
-+#define DMA_CH_RDTR_LO			0x28
-+#define DMA_CH_TDRLR			0x2c
-+#define DMA_CH_RDRLR			0x30
-+
- #define DMA_CH_IER			0x34
- #define DMA_CH_IER_TIE			BIT(0)
- #define DMA_CH_IER_TXSE			BIT(1)
-@@ -297,6 +479,16 @@
- #define DMA_CH_IER_AIE			BIT(14)
- #define DMA_CH_IER_NIE			BIT(15)
- 
-+#define DMA_CH_RIWT			0x38
-+#define DMA_CH_RIWT_RWT			GENMASK(7, 0)
-+
-+#define DMA_CH_CATDR_LO			0x44
-+#define DMA_CH_CARDR_LO			0x4c
-+#define DMA_CH_CATBR_HI			0x50
-+#define DMA_CH_CATBR_LO			0x54
-+#define DMA_CH_CARBR_HI			0x58
-+#define DMA_CH_CARBR_LO			0x5c
-+
- #define DMA_CH_SR			0x60
- #define DMA_CH_SR_TI			BIT(0)
- #define DMA_CH_SR_TPS			BIT(1)
-@@ -558,6 +750,7 @@ struct fxgmac_pdata {
- 
- 	/* ndev related settings */
- 	unsigned char mac_addr[ETH_ALEN];
-+	struct napi_struct napi;
- 
- 	int mac_speed;
- 	int mac_duplex;
--- 
-2.34.1
+              RW         RWX
+	  unfaulted    faulted
+	|-----------|-----------|
+	|    prev   |    vma    |
+	|-----------|-----------|
+	             mprotect(RW)
 
+Now imagine mprotect()'ing vma so it is RW. This appears as if it should
+merge, it does not.
+
+Neither does this case, again mprotect()'ing vma RW:
+
+              RWX        RW
+	   faulted    unfaulted
+	|-----------|-----------|
+	|    vma    |   next    |
+	|-----------|-----------|
+	 mprotect(RW)
+
+Nor:
+
+              RW         RWX          RW
+	  unfaulted    faulted    unfaulted
+	|-----------|-----------|-----------|
+	|    prev   |    vma    |    next   |
+	|-----------|-----------|-----------|
+	             mprotect(RW)
+
+What's going on here?
+
+In commit 5beb49305251 ("mm: change anon_vma linking to fix multi-process
+server scalability issue"), from 2010, Rik von Riel took careful care to
+account for these cases - commenting that '[this is] easily overlooked:
+when mprotect shifts the boundary, make sure the expanding vma has anon_vma
+set if the shrinking vma had, to cover any anon pages imported.'
+
+However, commit 965f55dea0e3 ("mmap: avoid merging cloned VMAs") introduced
+a little over a year later, appears to have accidentally disallowed this.
+
+By adjusting the is_mergeable_anon_vma() function to avoid lock contention
+across large trees of forked anon_vma's, this commit wrongly assumed the
+VMA being checked (the ostensible merge 'target') should be faulted, that
+is, have an anon_vma, and thus an anon_vma_chain list established, but only
+of length 1.
+
+This appears to have been unintentional, as disallowing empty target VMAs
+like this across the board makes no sense.
+
+We already have logic that accounts for this case, the same logic Rik
+introduced in 2010, now via dup_anon_vma() (and ultimately
+anon_vma_clone()), so there is no problem permitting this.
+
+This series fixes this mistake and also ensures that scalability concerns
+remain addressed by explicitly checking that whatever VMA is being merged
+has not been forked.
+
+A full set of self tests which reproduce the issue are provided, as well as
+updating userland VMA tests to assert this behaviour.
+
+The self tests additionally assert scalability concerns are addressed.
+
+v2:
+* Added tags (thanks!)
+* Folded small fix-patch to patch 2, returning -errno rather than errno in
+  vm_util.c.
+* Merge conflict fixup in vm_util.c.
+* Some comment fixups in the merge tests as per Wei.
+* Added vma_merge to run_vmtests.sh usage() function as per Wei.
+* Added the new test file to memory mapping section in MAINTAINERS, as
+  specifically memory mapping-related.
+
+v1:
+https://lore.kernel.org/all/cover.1742245056.git.lorenzo.stoakes@oracle.com/
+
+Lorenzo Stoakes (3):
+  mm/vma: fix incorrectly disallowed anonymous VMA merges
+  tools/testing: add PROCMAP_QUERY helper functions in mm self tests
+  tools/testing/selftests: assert that anon merge cases behave as
+    expected
+
+ MAINTAINERS                               |   1 +
+ mm/vma.c                                  |  81 ++--
+ tools/testing/selftests/mm/.gitignore     |   1 +
+ tools/testing/selftests/mm/Makefile       |   1 +
+ tools/testing/selftests/mm/merge.c        | 455 ++++++++++++++++++++++
+ tools/testing/selftests/mm/run_vmtests.sh |   4 +
+ tools/testing/selftests/mm/vm_util.c      |  62 +++
+ tools/testing/selftests/mm/vm_util.h      |  21 +
+ tools/testing/vma/vma.c                   | 100 ++---
+ 9 files changed, 656 insertions(+), 70 deletions(-)
+ create mode 100644 tools/testing/selftests/mm/merge.c
+
+--
+2.49.0
