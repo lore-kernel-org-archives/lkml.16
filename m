@@ -1,100 +1,127 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E54CB189B84
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 14:16:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8C171C3BEA
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 14:17:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744121813; cv=none; b=oLEpTIWtcrhf9nKtZkkXxlBmXX3g/lsRgvTx+93yCr+k0Hgme44xGT7gEVPKzJbonBouHr4I4N3hXaCN9VHZuyaUtUBcKtJt3WgPpsPwJgvrFu6EBqgDq3/dNLb81obh9hVv1QZCMHR2gDxO7YnpZkT1u2ewZqkmWWyb3qwlPVo=
+	t=1744121876; cv=none; b=NJhuSviuGzp18PwIVzbxj4XTKKmtepV5M51CFsEtZ0HedW/zQ9D3f5ErSCllXPAi/ojH+j8hxquuR1XssAyflbEVqJlZhlJgc6QLx9/rXxakunp61+bLCPjmIFCUAfA0HmsQAMhLir0EbdKO3xSEx2UDiohryFbDmi10x39hI40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744121813; c=relaxed/simple;
-	bh=LPJ5DC/qJdNwC6BaugmZeWV0dPB1/Q4W000XRyMqt98=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=usTqQPeJ1HxHGuPoKKYDIxDwlItwRD3LE8Ihv+sDGlsZifIJHyLR9qU8l3/ZsILbWXgn69XmdQumcKLMfuxNPu8qLCiU8Cn9oUbApTCq0lvxK7WL4xLwspEw1CvXSfKs9BTF2jXtAYrrP6x+N+PpJQyc7Lf1ls9IagDHy3UFjQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aP+dfGPS; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1744121876; c=relaxed/simple;
+	bh=5m5nWiPFNLKM1puhbXTTKtKMKrP1Pq77BwDQZsF+51U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Qa9sAX6lYWlHzJwSAGp+khh7buycWIyHA0Gb2VT8bPQUjeWQQTY2i5QZf7KeLN6nxL+oEM68SkeEOIKZNvZo+Wg89EgCUBquzJHhqHOyAXA/+R4tyCUyxeMrF/zjFyDBvVClFetlGS0VrrFYbcMjQm3rhUp51YlbUs6pXBLtRLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ccmUlN2o; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aP+dfGPS"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-476964b2c1dso93132451cf.3
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 07:16:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744121811; x=1744726611; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LPJ5DC/qJdNwC6BaugmZeWV0dPB1/Q4W000XRyMqt98=;
-        b=aP+dfGPSKmirZPV8tjGdr3KDeDyNcXmfHJs1Aip61R5A5tf+2prq/TK02tGnfLn0TT
-         +fgVZvYgflJyv+wh2El/jm1zMoHTH1lCNd2h6dHcqWSm5NM8/QK9c8yPLJIa75esu0q2
-         y1N6SD8saKUtGGfNgHt29N7ph6ahbQhbNBwPZwmfRz88Nx6DeERpcgc5Gu1xhY7tyFd1
-         jADaiI6cebEcthFF3zrfYDgZP8VvKOT3D+e3gio9pXCeKvbB6LiEI55g3YZvy89C7X+h
-         QKfsavgYPxJuLmlImr4m2WsK7VFdxuHJgVXwVsdSAHmRAdrTQmqV9zue7y52ZeBcq0f/
-         GFxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744121811; x=1744726611;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LPJ5DC/qJdNwC6BaugmZeWV0dPB1/Q4W000XRyMqt98=;
-        b=HShEzs66wllXlFel2cjsTblIWEq6g7LL0UrnGKN0/mb6nFui1k1UCuhnjE7v//ERFG
-         nPph388ytrRdOTbUOIr9C4ihuzEqdLK4p1Rf80eID+TUb2EmBeoepoTepCkvk5+DzaNT
-         X9FcH7X14Q0hdsqtAaWaC+G9qZjL+RlanHgwn/Ujqw9uROD2kuSl/ULlV1uevh7aiHZn
-         UqymQl1hqiynxD6HIXnwPAhPxdoBI6BBI6TlF3sPP4nQcnoNXF3GcT+JdMwCCEyfFUAb
-         5ww8slJQ+S5ErsGlWPBSuTh38L1ieVeDvZfioch1u40floGJjEAFmtKCfLKHB+UMoVma
-         I18A==
-X-Forwarded-Encrypted: i=1; AJvYcCXkw2G5kNz8NxwrLT7kuyXCi2IOIfTvszI0pkvTb9iwnGyDqE9g0MWurwc2c2Xk686Y0yTqQORQveWED00=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxM+MG95+H2P+hYMXZFUtbmJbwkHRQbz+r/x9FgwEb9znUq4kgJ
-	6+x6J2ySsx0y9mTdBnhb8BMFDqlHWFvozznsEjnlzyaN9l5SbBQjz20Ru8qI7ccw8U0gV8piMY6
-	aVqpuBF+Gh93AB9tMrwFA2QdNCPyMlfr/ykSS
-X-Gm-Gg: ASbGncuMv0A4KiyWo5T1av8tYisU8WMtIJTyru6GgaLsuXnhwYoejJpGdS+f+2WMlFI
-	1PGfbCNx8zeEPKOLEQeJeHS9dp3YwusLQjA0omI6kQzPnlMvHDGUGBEq4GW4+YK1FJWMxK8YGfe
-	/2tvwhnOvyEjSeD1AeXeYXCXpCd8g=
-X-Google-Smtp-Source: AGHT+IHUjVyFD7izpuiUpvmNnf+FDUH75moOoGezgMNusboh88UNsivDmQCcYc+G4RahQGt7lDjXkGMaNSEWhyim3Q0=
-X-Received: by 2002:a05:622a:20b:b0:476:7199:4da1 with SMTP id
- d75a77b69052e-479249bd49dmr285747491cf.46.1744121810231; Tue, 08 Apr 2025
- 07:16:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ccmUlN2o"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744121875; x=1775657875;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=5m5nWiPFNLKM1puhbXTTKtKMKrP1Pq77BwDQZsF+51U=;
+  b=ccmUlN2oBbHIzNv2RVBHiw2MPMBsMlBgv1UCaKeQVGmUgBqbHHJOBlaL
+   Mwa5A2PxIe1QpLTxQTMXtNdzt5kOXogP4My4HrQYk5I4/cee4O1YbLGlj
+   MASKtsp91zEfjIS8xKefKPcKLm+e/E6zP17oni/y72+vRl4q4QEq1SSPE
+   o4pWjPfYUNndjKWMyOT8OUkHgr0cb5p24JRqcDkcl76RAsTGYiD/f8Q60
+   iYCzDD49/cucsU06N7CvuCLLppVrDsne+uE9BZvCi9+9LrW4sTx3s51Jg
+   s3NTOoWHYMKTQu6QOQb4wr10tiGpJ7h8FVOfByuuBKxg8TURIzcYxTuTe
+   g==;
+X-CSE-ConnectionGUID: rBcdHDmARoCosB+Pg9hhCg==
+X-CSE-MsgGUID: NrpB7OMFT5yX9jS3NUaX8g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="45717132"
+X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
+   d="scan'208";a="45717132"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 07:17:54 -0700
+X-CSE-ConnectionGUID: jRL/8y7gRKSA9GuNtg2Vew==
+X-CSE-MsgGUID: MolB1IufR7if4SmIq3WHzA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
+   d="scan'208";a="128791014"
+Received: from ssimmeri-mobl2.amr.corp.intel.com (HELO [10.124.220.83]) ([10.124.220.83])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 07:17:53 -0700
+Message-ID: <f670905f-f14b-4482-83ee-568234647f46@intel.com>
+Date: Tue, 8 Apr 2025 07:17:51 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407140001.13886-1-jiayuan.chen@linux.dev> <20250407140001.13886-2-jiayuan.chen@linux.dev>
-In-Reply-To: <20250407140001.13886-2-jiayuan.chen@linux.dev>
-From: Eric Dumazet <edumazet@google.com>
-Date: Tue, 8 Apr 2025 16:16:39 +0200
-X-Gm-Features: ATxdqUGjCQjPmmLIhcLV4VA-4isczJrM0_7BiR56nk0Heb7yBGKhT8w790UEEEE
-Message-ID: <CANn89i+a2tbuEJgzQ-yvSt-jqXq6S5y6=C90jNB4QXGseg0mDw@mail.gmail.com>
-Subject: Re: [PATCH RESEND net-next v3 1/2] tcp: add TCP_RFC7323_TW_PAWS drop reason
-To: Jiayuan Chen <jiayuan.chen@linux.dev>
-Cc: bpf@vger.kernel.org, mrpre@163.com, 
-	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Neal Cardwell <ncardwell@google.com>, 
-	Kuniyuki Iwashima <kuniyu@amazon.com>, David Ahern <dsahern@kernel.org>, 
-	Steffen Klassert <steffen.klassert@secunet.com>, Sabrina Dubroca <sd@queasysnail.net>, 
-	Antony Antony <antony.antony@secunet.com>, Christian Hopps <chopps@labn.net>, netdev@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/1] x86/reboot: KVM: Guard
+ nmi_shootdown_cpus_on_restart() with ifdeffery
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Sean Christopherson <seanjc@google.com>
+Cc: linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
+ <morbo@google.com>, Justin Stitt <justinstitt@google.com>
+References: <20241008191555.2336659-1-andriy.shevchenko@linux.intel.com>
+ <ZwbazZpTSAn9aAC7@google.com> <ZwcT149jx-iOmEfl@surfacebook.localdomain>
+ <ZykbvVZ32FKCRT_q@smile.fi.intel.com> <Z_UUXOe61BwVkGob@smile.fi.intel.com>
+Content-Language: en-US
+From: Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <Z_UUXOe61BwVkGob@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 7, 2025 at 4:00=E2=80=AFPM Jiayuan Chen <jiayuan.chen@linux.dev=
-> wrote:
->
-> PAWS is a long-standing issue, especially when there are upstream network
-> devices, making it more prone to occur.
+On 4/8/25 05:19, Andy Shevchenko wrote:
+> Any news here? Build error is still reproducible.
 
-This sentence is quite confusing. I do not think PAWS is an issue at all.
+In the end, adding the #ifdefs leads to worse code, less maintainable
+code. I'll take the occasional actual unused static inline in a .c file
+over a mess of #ifdefs to make the compiler happy.
 
->
-> Currently, packet loss statistics for PAWS can only be viewed through MIB=
-,
-> which is a global metric and cannot be precisely obtained through tracing
-> to get the specific 4-tuple of the dropped packet. In the past, we had to
-> use kprobe ret to retrieve relevant skb information from
-> tcp_timewait_state_process().
-
->
-> Suggested-by: Eric Dumazet <edumazet@google.com>
-> Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
-
-Reviewed-by: Eric Dumazet <edumazet@google.com>
+I really think that warning needs to go away in some way, shape or form.
+Either get rid of it entirely, or kick it out of -Wall somehow. It's a
+super pedantic warning that leads to worse code most of the time.
