@@ -1,58 +1,48 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B7281EE7BE
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 08:05:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D548C202996;
+	Tue,  8 Apr 2025 08:05:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744099507; cv=none; b=DT2k1gcbCPYViJot41OmJsO0kw+OWceFryqXqNcC030/7iZGZDWyyVARI0JHXoLhPF60YO7S+lo0Fl3ZvttJOFp0VA5ninAUMqObdVfHAZkEb/a1wlJFhQ4FOMuFkpvqdxodbQFJsx2DdDv0FfxQvY5iMc5+DEN46GH+ZRgmKHA=
+	t=1744099523; cv=none; b=HXjKJQPvYFYrC5rqkvJ6c663wTQ3h72U/WuxFY0vAskOlpphYElYnNUhcQqdkhSDT8HjK5n5WlLq0ZqbRt2tYpij3oZumhovgdvR3/bYIFrhXE7zSdjBeYDoGagsNSctKG3nJk2bONvMnk4XRf7AsHpbQ9XMNbuqsauxxjO3cMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744099507; c=relaxed/simple;
-	bh=w2lCtd5Q5SafcD4jWGACwK8qM6Vcsr8SYyg8qVl57oI=;
+	s=arc-20240116; t=1744099523; c=relaxed/simple;
+	bh=yeJ5Lab9tWLRKPloPFY4ioCGI82IURnAJ9FlA0hr9wE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X2QoL5AIvku75ufngrbUqmPEtZIJwPUVlX62ApERn3pMzG5tQ9bykDCzDehrZKOwEzuZ1V9CvTK7CaCR8vrJSuW0oRoIUEOGvTbsiZzIzExksQe4ghor/6eop1kr+I87zOFHPiFviOG05DYjGEjveE+uj44n/zLsioK9zt4fuHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gnZ2qE0I; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=KhfesCqdW49Qk8Z0/K0nb3qGettQoZQNlCDqVtKRxyWW2pjMzcULksfsY8cuOP1N+UUJ7XKrjqi0VocvLdCDKLoPRbqX7fh7xksiPfkAhkRjztn3MENWtyooYvAZ7jBdzq1SdKaQFzyXZuuEXOeEoMYuoyMl9Di/QqjJXcbxqfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=I+l49Ad1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gnZ2qE0I"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744099505; x=1775635505;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=w2lCtd5Q5SafcD4jWGACwK8qM6Vcsr8SYyg8qVl57oI=;
-  b=gnZ2qE0ID98PH2bvWDiAtJaYRXlaOLtb6SEpxoBTsugez20V7vzhw8uw
-   SAq64aANLR2jKyBOPP01OQxakQt3P9bHycrwiEDqwETQwN2DjohoeP10c
-   FFdUcMtM9jrJf1GGLYr3zdKeFRW+q0HS2t4gS0nvqyWWu+0NFbbcgvTcS
-   ryJVCOLaBtCWNN8YiyNCr2n1G5SVHYFX3K28zTiVgD5JhAUfgpjFSy22S
-   EjsE4jLOIYV6KEz58Z8/cSwAgaJeAyl4bgiUa/oZb95oQ2RjszHD/6QlV
-   RKSVn3GfplwAtXaCryY3+QJl/fnaUN/hB+A4U7rEe30+YPE4hgKijc4K0
-   g==;
-X-CSE-ConnectionGUID: I9G5nxNnQ0KlRYiAp5aIvA==
-X-CSE-MsgGUID: aPaUhv/BS/K13InV3sr9zg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="45232044"
-X-IronPort-AV: E=Sophos;i="6.15,197,1739865600"; 
-   d="scan'208";a="45232044"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 01:05:05 -0700
-X-CSE-ConnectionGUID: x5DfdbooSU6kX6PKSIBu1w==
-X-CSE-MsgGUID: SGIkkVlvTze+rvhMf2cF1g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,197,1739865600"; 
-   d="scan'208";a="128698137"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 01:05:02 -0700
-Date: Tue, 8 Apr 2025 11:04:59 +0300
-From: Raag Jadav <raag.jadav@intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: gregkh@linuxfoundation.org, david.m.ertman@intel.com,
-	ira.weiny@intel.com, lee@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mfd: core: Support auxiliary device
-Message-ID: <Z_TYq5J0CPFvdm7e@black.fi.intel.com>
-References: <20250407074614.1665575-1-raag.jadav@intel.com>
- <Z_OQgqt0Wg17N05j@smile.fi.intel.com>
- <Z_OQqgSjHxq6kwDp@smile.fi.intel.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="I+l49Ad1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47952C4CEE5;
+	Tue,  8 Apr 2025 08:05:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1744099522;
+	bh=yeJ5Lab9tWLRKPloPFY4ioCGI82IURnAJ9FlA0hr9wE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=I+l49Ad1DesnHBe0imd7XRlS5oJGkuoArtJdPjqMxx5/Z5K4TYwlYxmZLwHmkTGwF
+	 55CUzIzfm3+9DFRghWh5teA9+udDd9zevONTnJR4lHR//NFtdiHicHTUObSpzwOQaO
+	 10mtxdofsxLbdzocSjI667M3jTnBsAQPS8+iE7uQ=
+Date: Tue, 8 Apr 2025 10:03:50 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Christian Brauner <brauner@kernel.org>, cve@kernel.org
+Cc: Cengiz Can <cengiz.can@canonical.com>,
+	Attila Szasz <szasza.contact@gmail.com>,
+	Salvatore Bonaccorso <carnil@debian.org>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	lvc-patches@linuxtesting.org, dutyrok@altlinux.org,
+	syzbot+5f3a973ed3dfb85a6683@syzkaller.appspotmail.com,
+	stable@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH] hfs/hfsplus: fix slab-out-of-bounds in hfs_bnode_read_key
+Message-ID: <2025040801-finalize-headlock-669d@gregkh>
+References: <20241019191303.24048-1-kovalev@altlinux.org>
+ <Z9xsx-w4YCBuYjx5@eldamar.lan>
+ <d4mpuomgxqi7xppaewlpey6thec7h2fk4sm2iktqsx6bhwu5ph@ctkjksxmkgne>
+ <2025032402-jam-immovable-2d57@gregkh>
+ <7qi6est65ekz4kjktvmsbmywpo5n2kla2m3whbvq4dsckdcyst@e646jwjazvqh>
+ <2025032404-important-average-9346@gregkh>
+ <dzmprnddbx2qaukb7ukr5ngdx6ydwxynaq6ctxakem43yrczqb@y7dg7kzxsorc>
+ <20250407-biegung-furor-e7313ca9d712@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,36 +51,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z_OQqgSjHxq6kwDp@smile.fi.intel.com>
+In-Reply-To: <20250407-biegung-furor-e7313ca9d712@brauner>
 
-On Mon, Apr 07, 2025 at 11:45:30AM +0300, Andy Shevchenko wrote:
-> On Mon, Apr 07, 2025 at 11:44:50AM +0300, Andy Shevchenko wrote:
-> > On Mon, Apr 07, 2025 at 01:16:14PM +0530, Raag Jadav wrote:
-> > > Extend MFD subsystem to support auxiliary child device. This is useful
-> > > for MFD usecases where parent device is on a discoverable bus and doesn't
-> > > fit into the platform device criteria. Purpose of this implementation is
-> > > to provide discoverable MFDs just enough infrastructure to register
-> > > independent child devices with their own memory and interrupt resources
-> > > without abusing the platform device.
+On Mon, Apr 07, 2025 at 12:59:18PM +0200, Christian Brauner wrote:
+> On Sun, Apr 06, 2025 at 07:07:57PM +0300, Cengiz Can wrote:
+> > On 24-03-25 11:53:51, Greg KH wrote:
+> > > On Mon, Mar 24, 2025 at 09:43:18PM +0300, Cengiz Can wrote:
+> > > > In the meantime, can we get this fix applied?
 > > > 
-> > > Current support is limited to just PCI type MFDs, but this can be further
-> > > extended to support other types like USB in the future.
+> > > Please work with the filesystem maintainers to do so.
 > > 
-> > > PS: I'm leaning towards not doing any of the ioremap or regmap on MFD
-> > > side and think that we should enforce child devices to not overlap.
+> > Hello Christian, hello Alexander
 > > 
-> > Yes, but we will have the cases in the future, whatever,
-> > for the first step it's okay.
+> > Can you help us with this?
 > > 
-> > > If there's a need to handle common register access by parent device,
-> > > then I think it warrants its own driver which adds auxiliary devices
-> > > along with a custom interface to communicate with them, and MFD on
-> > > AUX is not the right solution for it.
+> > Thanks in advance!
 > 
-> And yes, I still consider enforcing regmap is the right step to go.
+> Filesystem bugs due to corrupt images are not considered a CVE for any
+> filesystem that is only mountable by CAP_SYS_ADMIN in the initial user
+> namespace. That includes delegated mounting.
 
-Unless there's an explicit need for it, I think we should leave that
-choice to the individial drivers instead of forcing them to revamp.
-But let's see what Lee and Greg have to say about this.
+Thank you for the concise summary of this.  We (i.e. the kernel CVE
+team) will try to not assign CVEs going forward that can only be
+triggered in this way.
 
-Raag
+> The blogpost is aware that the VFS maintainers don't accept CVEs like
+> this. Yet a CVE was still filed against the upstream kernel. IOW,
+> someone abused the fact that a distro chose to allow mounting arbitrary
+> filesystems including orphaned ones by unprivileged user as an argument
+> to gain a kernel CVE.
+
+Yes, Canonical abused their role as a CNA and created this CVE without
+going through the proper processes.  kernel.org is now in charge of this
+CVE, and:
+
+> Revoke that CVE against the upstream kernel. This is a CVE against a
+> distro. There's zero reason for us to hurry with any fix.
+
+I will go reject this now.
+
+Note, there might be some older CVEs that we have accidentally assigned
+that can only be triggered by hand-crafted filesystem images.  If anyone
+wants to dig through the 5000+ different ones we have, we will be glad
+to reject them as well.
+
+thanks,
+
+greg k-h
