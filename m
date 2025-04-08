@@ -1,109 +1,107 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 473AE1B422A;
-	Tue,  8 Apr 2025 17:13:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 580AA191F79
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 17:13:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744132391; cv=none; b=ORWWns6G1RHFh5AwqrRECiapuurwusaKUTVEIkZdAEhtSWVzkOPg7VN9CwC8eMMmc8RkqwfEsCuHUkyaQ0S8sT/rlNCiiEC2sKeSAy6pyMqX8mxeP/mXFpMvRFTAuF0mL2wQwTCcL9v0LkSx1Ui3AFqR//xaC8mo1kzVSbRK9nk=
+	t=1744132418; cv=none; b=OjWSv9VPzAEauJYWYa1h0Scv+4gbP18Ey4faAmoIayn0j0k72f1b1064F9KfYoPTFExjAtskeiChEMu5OB4YYLQnA56KDnbkRfPyTRLbVvU/dHp26U4PKp+Bi2x5xmyHOEaYoPRnh7+g+Gb0TUI7hDgUFMKlRziFHFOHWAdlfHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744132391; c=relaxed/simple;
-	bh=ZmKKaF88TDW5BhsqNDRVpPFhYgW4wUtMCyjmNc6OQI4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=NK+Kz/dWd4opJIlBFrEhl4FX2FPBIv5fx5dZVdKBmyjVJooaa/1CYoYn5TQoE21JnPpP4cRMHX+wtjS99JuNNCGV9GkQKgeEuNm9neF6aA5IpryoTyX6q0bb1ndcm0vEuXflE0SeX/28IVWBVvqsZTx8t3ALWOMjT7mWjZ70IMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=N+LYhooy; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1744132418; c=relaxed/simple;
+	bh=nnw9eJ8KOGN5QlUkiDoYliONcmf9ltltrlpJBMq/rPM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FFftBj9oNV+h8zpMicoZJGHiKK4ptQjz6LcIOWSaHjcyAw+sHzErCyce0kKVD/Aj0dwbxnYyobchnQEsE+Ik6xAKIGQnugjCPKN2iQJx5IRpqhg4d7+Np8v1L1t0/qozQx1DcwpQGGBYp/INvoB+8pigLSK05PzzCRdFElscBUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kI/HtAgw; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="N+LYhooy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1744132387;
-	bh=ZmKKaF88TDW5BhsqNDRVpPFhYgW4wUtMCyjmNc6OQI4=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=N+LYhooyQkLc4kOLhP8SJHaiNWekPAzmDrAUOC36on+9cwi20BvQRvfQNKoQnvJgI
-	 brR9vh2Y284w75RfWBCOWMaX5WSR4e7QM8tw1fAPVkqXKRFlTLP4E/aRJuSZTUM/hD
-	 KHqw85ddoinhSpHsfdKMdo3Eof1MFPCGSpqhwS19I8yK1aMeq4V1gO/GgNoOH9bv6F
-	 SLmwTeshxovOM25iBuDnKwEIhSl+X1cvaNET0pDIs+Cgl7XqTIj+ddkgZCJT8LaebE
-	 h+3EJfn5y1A1plsZKqLCBOSoaWFENw+mgTBvw0Ac+FlFAfQFhcdl39Uco78WlELXWq
-	 VOHuyrr4Yti2g==
-Received: from [IPv6:2606:6d00:11:e976::5ac] (unknown [IPv6:2606:6d00:11:e976::5ac])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nicolas)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 87EC617E07FD;
-	Tue,  8 Apr 2025 19:13:05 +0200 (CEST)
-Message-ID: <af5275a0017bc802379ee63df23fcafd44c8c285.camel@collabora.com>
-Subject: Re: [PATCH v7 09/12] media: rkvdec: Add get_image_fmt ops
-From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-To: Hans Verkuil <hverkuil@xs4all.nl>, Sebastian Fricke	
- <sebastian.fricke@collabora.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>,  Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Boris Brezillon	
- <boris.brezillon@collabora.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-rockchip@lists.infradead.org, linux-staging@lists.linux.dev, Mauro
- Carvalho Chehab <mchehab+huawei@kernel.org>, Alex Bee
- <knaerzche@gmail.com>, Benjamin Gaignard	
- <benjamin.gaignard@collabora.com>, Detlev Casanova	
- <detlev.casanova@collabora.com>, Dan Carpenter <dan.carpenter@linaro.org>, 
- Jonas Karlman <jonas@kwiboo.se>, Christopher Obbard
- <christopher.obbard@linaro.org>
-Date: Tue, 08 Apr 2025 13:13:03 -0400
-In-Reply-To: <5cd6e8d3-fa51-4225-a3b8-9727cfd95062@xs4all.nl>
-References: 
-	<20250225-rkvdec_h264_high10_and_422_support-v7-0-7992a68a4910@collabora.com>
-	 <20250225-rkvdec_h264_high10_and_422_support-v7-9-7992a68a4910@collabora.com>
-	 <e6b99109-bd35-46ff-a4e2-eb69b549dcbc@xs4all.nl>
-	 <77bdada5dce991842e377759c8e173ada115694f.camel@collabora.com>
-	 <47c0011f-693d-4c94-8a1b-f0174f3d5b89@xs4all.nl>
-	 <19a11d429d9078b82f27e108aa5ac80cc4041bef.camel@collabora.com>
-	 <35d34100-7013-4acb-a5a6-3408e0f45d9d@xs4all.nl>
-	 <1747c9d2f653a07418422157f4b1613246f39a6c.camel@collabora.com>
-	 <5cd6e8d3-fa51-4225-a3b8-9727cfd95062@xs4all.nl>
-Organization: Collabora Canada
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.0 (3.56.0-1.fc42) 
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kI/HtAgw"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54af20849bbso3393404e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 10:13:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744132414; x=1744737214; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=st5xjw/A21tQtkt6th/OJeKKznmds9c4r1pftIhJsuU=;
+        b=kI/HtAgwIOsnmQnLkr//6XQbruueUKe4xMIixkgkwSRgiFXgDQ63tb1W6NUmV9pvVa
+         Q42g66MCuhlxaM3ORiJTlx49xQz4+kC3btZ3CPLJiSVd+bfChpwKL2kXlPuZvDbR4ODR
+         h4E8uIbcW1tvKhysLknPq3XcDmB6sTScn3Eokc0fEoKIfTv/o504GWLLnz9PlPYjaVqY
+         xNZPB06LYp2IoNCFSYcl/QdpTKZ4Go67xMwkLytO12IMeBYsS4fwx0B1Wn0yXNE9pJ9Q
+         na4Zs5Qd/heScTm+tSSDhqDsTLLmyyHHvKqrZYhtAGMub4/roLJ4lwaNcjmMyXc92y0D
+         ZNGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744132414; x=1744737214;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=st5xjw/A21tQtkt6th/OJeKKznmds9c4r1pftIhJsuU=;
+        b=LP4Iy/j5HGeHMKdDk57QuDKaXUAMzOicTwbjxbcE0+8gOGjIWnQpawcVMqejemzRjU
+         GEl2emjdz5UjFW/x2UU3+y2nJlEXPzoG0mAyiXEzQZ/ExDW1vdBFMiGNxBdrBfunZstO
+         Hqbe1ef9DFQH3eq9BweiMIT0l5lnurEpl7uVzbtyCXm3yzs9Jn+5KubtEppihSKJlYCv
+         pDBI7xnI/8pBncWQgIHQy9K7y5O/Rel4VHMUj/unTj0dbzcn3j6B/NDYbO1GHifstE4g
+         GAWJm+GzQsjkmNBZvLFmm9qnW7M5CMsyb3+87PlanFyzSL5XnC4y9AXCzd5DwvXr0V6v
+         foEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUNtSZryCsDfnrKB7PxPcf2lqCHgEDswh+TzZyT1aGsMbNy6GDgPvVK/DSKumfxLtOy+UhPOU8YPo4SYsI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/lG7WFg5bEvlCDJSbcEGljDWJtefggLxnicvx7yzcbdbJkLp6
+	/mRr/mEQNVL7GsaY5qTEO9HNJN/HHHQEuFuMj3IyyaPa5oaJsgiIdivrQj2RpAfsLAhTacgXL+S
+	0gwe1qj+X335YXaZi/9FnkVdI8tS5odWbAsNj
+X-Gm-Gg: ASbGncthSrmlzE+QbY+dMc2Kx/ivdQjtoM0j4+BeNDf7hOVDLmUKFfps30ubVy21gJS
+	csSiXYHu9osmcMexFctrgJrpFyjovstavpqaHc/iqCfusutxV77ulcFMs4/6MfYiJmfrPHMPXGM
+	GmO+vay5C8KKqBVkAortw5yYVfVA==
+X-Google-Smtp-Source: AGHT+IEojOGt6jWAwX5Gcm/P2e+H5jOlOGkH6KU9klaguOraWZfMNwVU/6kY9rYk7qohNkpmZ9j0DjdTIdgt0Ju7HmA=
+X-Received: by 2002:a05:6512:118b:b0:549:8f01:6a71 with SMTP id
+ 2adb3069b0e04-54c22808c0amr4933383e87.51.1744132413969; Tue, 08 Apr 2025
+ 10:13:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250404193923.1413163-1-seanjc@google.com>
+In-Reply-To: <20250404193923.1413163-1-seanjc@google.com>
+From: David Matlack <dmatlack@google.com>
+Date: Tue, 8 Apr 2025 10:13:05 -0700
+X-Gm-Features: ATxdqUHtXVL6zBbBDHxkUQLM1RAtccgSreGFrNU_ZXaEoEaE0jP24eQuxtxkag8
+Message-ID: <CALzav=dMSLy7kt6sJtRqAK8tOZwFz9Ktp3vzqggdD+J_aPVycg@mail.gmail.com>
+Subject: Re: [PATCH 00/67] KVM: iommu: Overhaul device posted IRQs support
+To: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Joerg Roedel <joro@8bytes.org>, 
+	David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>, kvm@vger.kernel.org, 
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Maxim Levitsky <mlevitsk@redhat.com>, Joao Martins <joao.m.martins@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-(just trimmed a bit)
+On Fri, Apr 4, 2025 at 12:39=E2=80=AFPM Sean Christopherson <seanjc@google.=
+com> wrote:
+>
+> This series is well tested except for one notable gap: I was not able to
+> fully test the AMD IOMMU changes.  Long story short, getting upstream
+> kernels into our full test environments is practically infeasible.  And
+> exposing a device or VF on systems that are available to developers is a
+> bit of a mess.
+>
+> The device the selftest (see the last patch) uses is an internel test VF
+> that's hosted on a smart NIC using non-production (test-only) firmware.
+> Unfortunately, only some of our developer systems have the right NIC, and
+> for unknown reasons I couldn't get the test firmware to install cleanly o=
+n
+> Rome systems.  I was able to get it functional on Milan (and Intel CPUs),
+> but APIC virtualization is disabled on Milan.  Thanks to KVM's force_avic
+> I could test the KVM flows, but the IOMMU was having none of my attempts
+> to force enable APIC virtualization against its will.
 
-Le mardi 08 avril 2025 à 16:32 +0200, Hans Verkuil a écrit :
-> So can we agree on the following (I think):
-> 
-> 1) rkvdec_try_ctrl no longer checks the image_fmt. Effectively this means that there
->    is no longer any need to change rkvdec_try_ctrl in this patch.
+(Sean already knows this but just sharing for the broader visibility.)
 
-Correct.
+I am working on a VFIO selftests framework and helper library that we
+can link into the KVM selftests to make this kind of testing much
+easier. It will support a driver framework so we can support testing
+against different devices in a common way. Developers/companies can
+carry their own out-of-tree drivers for non-standard/custom test
+devices, e.g. the "Mercury device" used in this series.
 
-> 
-> 2) in rkvdec_s_ctrl we do the image_fmt check: if it changes, but vb2_is_busy is true,
->    then return -EBUSY, otherwise call rkvdec_reset_decoded_fmt(). This code is specific
->    for V4L2_CID_STATELESS_H264_SPS, so just make sure it is under an if/switch for that
->    control ID.
-
-Correct. In practice, the IOCTL implementation function will be renamed
-to what Jonas proposed (translated to s_ctrl instead of try), with some
-name like s_sps_ctrl() (can't remember exactly). This is because
-upcoming HEVC will endup sharing this code. Its going to be 1 control
-per codec that supports 10bit.
-
-> 
-> 3) I'll see if I can make a patch to clarify in the control documentation that setting
->    it can change the format.
-
-Thanks.
-
-> 
-> 4) I'll make a patch for the cedrus driver as well to align with the approach in rkvdec.
-
-Thank you ! Glad we got to the bottom of it. As for rkvdec TODO, I will
-prepare an upstaging patch series, and fix anything needed.
-
-Nicolas
+I will send an RFC in the coming weeks. If/when my proposal is merged,
+then I think we'll have a clean way to get the vfio_irq_test merged
+upstream as well.
