@@ -1,108 +1,211 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0E8822C35B
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 16:25:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C244C22C35B;
+	Tue,  8 Apr 2025 16:26:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744129560; cv=none; b=cww6553widSKnUdip6359aZLJ+sK1RW70M0KwN5Yc56wT++FIn9fbaTs7HeVn7astuVAU876H2b0tFoNyeEqFGnYEM90SHDsh3NqSx0C+U83EQoave1Mn3Cii2FWjRmr/Jl8Ow+lkKVIoraIua2xpNAwanIDmqY3E4nI3yGp6jk=
+	t=1744129573; cv=none; b=tHinLpff/Dd+GPJR3W4FPI2cLveROA6rpZ6Rb9WtvT07/6v9cdnB61OB3J1e4lkpKPSjOFL/UhHA7NG18TX4D93lUTmvVg5e5OHeQlMVZGb9uYHz6XlJop00j5kfMHvkVh7xHlyev2mbGa9JNdVC00Ex4vQ6ehjteBGvINX7e7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744129560; c=relaxed/simple;
-	bh=ljFPIOq3znfMAq1hPUQc5glriASqAaiOXMDYR6i6u48=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=JS45sbOLycaR9pKN+mPgEWe+ObVnPzZd+aFh5tc8Hjxgdyme6JifDswOdTkQkgDi5UNDdbz1Y3zbQPnkqtVpkgObSLaBkWq7xOoswUd8/KC4j+w2DXyDTPhSyOpPb7Oafzp59BPwPRq8USIpU7GSLzkFNGdsgbpkbT/ZsNGGXg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eYSPj+Ke; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744129573; c=relaxed/simple;
+	bh=Rd6D39mHfzdcD74W1C2YwPbPtRgtevNmGiWO8VUM5EA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kOPAOTDLVhx/4RlYf44J+0Grogpv5XDIWUJj9SpJWx0q5M0sIYSuXxvzQeuYbk1n2HNCC3dBpjr0Bm1NmMfLcvybJp/PBMF9/9rfnWlXb6O7QPE0h7TF1vHX5QM9evnm5jLXb2m7KDnUqZpyDb0NH8hwRCmQDCQXzm5ar9mUDj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ahbnNzuv; arc=none smtp.client-ip=209.85.219.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eYSPj+Ke"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43ceeb85ab2so4372435e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 09:25:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ahbnNzuv"
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6e8f43c1fa0so69674136d6.3;
+        Tue, 08 Apr 2025 09:26:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744129557; x=1744734357; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1744129569; x=1744734369; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RFphVcqK3mFE7z2xyqgIGdTaijWdMSkT/C4V2pISyXU=;
-        b=eYSPj+Kes8bLRHabUmJ0gn2WrliHC1zORE4e26cCsDtm65ZJ55AZGmUewn8sgUH7LJ
-         /gBOs+RBRBeAvS94Yz1NP7RxSJYeu7w6949M0x/uRuYiPUDnis09fpaCARnFQV8eu96Z
-         VG2MsepuGlcGlmPCcJEighzg2Z/lXYUikFTz0ttfl8VdAAgx4m69tOBjey5fctaUSjqu
-         GvkUBldDd/WQKmOVPIaaSjkLPTw14xeuWnELcfBSCWwYHngXu/d/4LLVZokszjWZcBNV
-         X5onQIadAY2tFoWXuh/+8Wg+j9ToOkORTWCRptreCb28gSe3XpzlruKVVwF8NAPZcBIN
-         cvsg==
+        bh=lhn6KcKMjy8VBvjrg/SdvedbkOPjB9+PrtODTZSo3FU=;
+        b=ahbnNzuvDufiVt8rfbWGVk6zCqma5ekXKAz95lBTYYLEWugSAAlWdOS7nofxNWiceG
+         KHC4d2obApN6GiECyIn6k6Kh54ylEHSLwjB/edUO08uXODpRnf98B38ft904lbJSw98Q
+         wNApgr9xTPiJNvtxdvTOE88dfkn11ITkn8fcS7Xa703brEwwWXvutcStsO4RdJMw2Eh5
+         GPJzaaXHYzwt5rqg890XIbVbHGawueqkMtyik8LB+F6DgviRNH08plizRFwIowpIgSbw
+         0UFXWVoNCY+IUPLr0sxixUQ5ERINBHqKbj5Q4FOkLwhoUIJNd1zy7UaHqYAOn0YWC7oV
+         HU4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744129557; x=1744734357;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1744129569; x=1744734369;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=RFphVcqK3mFE7z2xyqgIGdTaijWdMSkT/C4V2pISyXU=;
-        b=g0qhGEA6LR065cgG1dygLOkaz8djDxOD0GYNyhzn8OD/RJOD2J15iGZccbNkLSnfgW
-         469Mr3Zlt5BbmXaiW2OC2AAJDkuT9vOr76u+CPUurAaw61DD7ZSqfVUIZaBMqC0Ayw3e
-         GDVpPJNmO1XwNOoNsJUi4bhJKQTJnBB84suMXKi+7BmD7CBkRnD5z5JVSTiV2yKdnmzK
-         f4+W7S8FtxESk0RrOfaqwirJxl2G3Yg5oy1WCICTw412bejnHzYnMwnRuVQhHk1qUuxk
-         ABNvWCvKK2XNOdJDWFJCTyQ4HBfEKcU58hPM57uBuTyZpaGwTNVm7cNOoaYSv/xDvnAV
-         aZ+A==
-X-Forwarded-Encrypted: i=1; AJvYcCUN1PN38bXpvvl+jrExYmxHNArSrX4RMI3l2t2Tr2QswO7F63elzlC1XtaPD/4qDYU0BDWCk1s1Q/CG5r0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6HnPzd2OYcq4t9fxVD/SKvTrCbTSTFlArhyFLi1U0Wqhy4xcU
-	yxKyojOOaqCuP8dHwOGC1bAJtYqGkvxsi4FwKs6FYCM1fA9frutzUWBxK1G0nPk=
-X-Gm-Gg: ASbGnctN0HeCZm7EjHKnx5TuVcK3F9erFwte4nx6YwibgAFYvZ9vcB6ovgBCXIH5uVP
-	rU/6P16AqwxPVub4HODr05L18mXDO8g9+E4ny6M2YnuJUVXFjfLkgM1BtILdz4azyZF5/oc9dOC
-	58GfpPKNfFs8SV0azsqtJeBgyxGaUAsgREYV5BxjhxkQ7+xnNGYFH4xC2cG142lKnFgdtQliDCQ
-	60bYZ5cngkq9rb9Zv5vd/+iY6pcZiQnqQJmje/4+0hWUMzHAGuK3L+O768OpK0UyhbHfXihMw1D
-	SQa7/VqNnKTdjfN86fuaAFsKBo7CEP4mBxBThnd0jxpRmq0Z+c3F/7K0LD7rHMceocHpIjcGrA=
-	=
-X-Google-Smtp-Source: AGHT+IHcjPw7vTVflIx/On2eYRJY4Tq9MrtcT3MQ3yA+ESz6rLfbUvrWYzlL9vvcgtQLsbxNYvAtHw==
-X-Received: by 2002:a05:600c:848d:b0:439:a3df:66f3 with SMTP id 5b1f17b1804b1-43ecfa18ba7mr56191265e9.6.1744129557114;
-        Tue, 08 Apr 2025 09:25:57 -0700 (PDT)
-Received: from [192.168.1.26] ([178.197.198.86])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec34a7615sm164763125e9.9.2025.04.08.09.25.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 09:25:56 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: krzk+dt@kernel.org, linux-fsd@tesla.com, robh@kernel.org, 
- conor+dt@kernel.org, richardcochran@gmail.com, alim.akhtar@samsung.com, 
- Swathi K S <swathi.ks@samsung.com>
-Cc: jayati.sahu@samsung.com, linux-arm-kernel@lists.infradead.org, 
- linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
- pankaj.dubey@samsung.com, ravi.patel@samsung.com, gost.dev@samsung.com
-In-Reply-To: <20250307044904.59077-1-swathi.ks@samsung.com>
-References: <CGME20250307045516epcas5p3b4006a5e2005beda04170179dc92ad16@epcas5p3.samsung.com>
- <20250307044904.59077-1-swathi.ks@samsung.com>
-Subject: Re: [PATCH v8 0/2] arm64: dts: fsd: Add Ethernet support for FSD
- SoC
-Message-Id: <174412955552.86459.1583748766350981659.b4-ty@linaro.org>
-Date: Tue, 08 Apr 2025 18:25:55 +0200
+        bh=lhn6KcKMjy8VBvjrg/SdvedbkOPjB9+PrtODTZSo3FU=;
+        b=P2m3eCPtJ1hk8AledqFWlwPiCB6QSF721gfYNyIPxQ0klqEHQiouqRpyHXXdOXMVob
+         YfHPEeq4xh7QOdeClfknoKoNkUpE6l+q3A2TR20Dfu7JNsxu1cnNaITyWdkwoKKe71ef
+         rMYst7JQkOeRsCD1U42clb5z6SXcr8tYY6ptFfPM1UObCTbUW1Pr+kw+e3sqOqMlvBVw
+         gz2hmxuYR+VH++lAwmNn1Gi8kb3vfZ4vqpc502enghObWpsvaQzMfvR2dcg8Dw05QwBV
+         xEDzpQmSCqJ/CDzhopT/Ug7ES897s/6OTsTwZsB2T4uSVGRgvZLTvTIOkxkBWrvhNQix
+         7y2g==
+X-Forwarded-Encrypted: i=1; AJvYcCUk6jEK9bhC6TfcxJluzRkn9TaBCp8kOFUawdRNNHuVRv/EAOqvNTtVHBKMcHQL4c1w3fiRjErv@vger.kernel.org, AJvYcCVND83gbgsjdg00WgwXYFM/SuJ7XdMM67Wd4OIbq+9Lv3Qqhm9iuhmuwZAaa01jTxesSIfHdiSW+XkvqgAc@vger.kernel.org, AJvYcCX2MnQu5v4IEw5VK+4Yupzzjkc3vDCVfrcnpLaS8LHM+2xNu4k/RMMFnWeZcxCrDi/fI8dC3AheLb0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzvgAGgR7qwZgIq8qDqec+74JinEJHUt/pp4Q8Irqs8knspSpT
+	5MGZZmjVh4ylUQ6Ceie7vx+stlL+PsANF1j2/MDfnMEQnGGh7s2G49/1UVfBf3cdlb5zKldharr
+	djKUCNeoukMsEZwhwHGePzgeT5ZA=
+X-Gm-Gg: ASbGnctD9Y8S8E8nhDZ2QXMC06zxF+qDPSB3Zgvp2Ur6Jb7XUXSNEjHkM9Qc5zsfwmV
+	Stod/cTXsf5/ZkV42nNH33p9Xzl1FmCIjzMQiurnWJ5SETSWnsURWxh4CH5wp+NssXfz/pKBjXZ
+	dxqJN27sfdbNuZrqgpAw6Qjfi44eyTAyGI/nwJ5ZzjyeY1hWhpAfKem+8Gziz4iSqSEwKV
+X-Google-Smtp-Source: AGHT+IF95+ROBjtnrwaG59uDsd7mH2fJA1TgN7kNoJHPZ0NwlONqzdIMZcvIDeGvkgOQjd1e0Dk5wWb7MdU2E1rIBq8=
+X-Received: by 2002:ad4:5c66:0:b0:6e8:fa7a:14ab with SMTP id
+ 6a1803df08f44-6f00de8c617mr244954026d6.6.1744129569215; Tue, 08 Apr 2025
+ 09:26:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+References: <20250407234223.1059191-1-nphamcs@gmail.com> <983965b6-2262-4f72-a672-39085dcdaa3c@gmail.com>
+ <20250408154547.GC816@cmpxchg.org>
+In-Reply-To: <20250408154547.GC816@cmpxchg.org>
+From: Nhat Pham <nphamcs@gmail.com>
+Date: Tue, 8 Apr 2025 09:25:57 -0700
+X-Gm-Features: ATxdqUGRI-s0CMdaIzHY2p5bsSzJ0Q70zuzJHdhPtpKtQvsR8BXYJRkkZdtS_3I
+Message-ID: <CAKEwX=M3do_7SJGKwfZQ8vOSQN4aM1ZU04Q3E99CW=UTCkUMOQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 00/14] Virtual Swap Space
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Usama Arif <usamaarif642@gmail.com>, linux-mm@kvack.org, akpm@linux-foundation.org, 
+	hughd@google.com, yosry.ahmed@linux.dev, mhocko@kernel.org, 
+	roman.gushchin@linux.dev, shakeel.butt@linux.dev, muchun.song@linux.dev, 
+	len.brown@intel.com, chengming.zhou@linux.dev, kasong@tencent.com, 
+	chrisl@kernel.org, huang.ying.caritas@gmail.com, ryan.roberts@arm.com, 
+	viro@zeniv.linux.org.uk, baohua@kernel.org, osalvador@suse.de, 
+	lorenzo.stoakes@oracle.com, christophe.leroy@csgroup.eu, pavel@kernel.org, 
+	kernel-team@meta.com, linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
+	linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Apr 8, 2025 at 8:45=E2=80=AFAM Johannes Weiner <hannes@cmpxchg.org>=
+ wrote:
+>
+> On Tue, Apr 08, 2025 at 02:04:06PM +0100, Usama Arif wrote:
+> >
+> >
+> > On 08/04/2025 00:42, Nhat Pham wrote:
+> > >
+> > > V. Benchmarking
+> > >
+> > > As a proof of concept, I run the prototype through some simple
+> > > benchmarks:
+> > >
+> > > 1. usemem: 16 threads, 2G each, memory.max =3D 16G
+> > >
+> > > I benchmarked the following usemem commands:
+> > >
+> > > time usemem --init-time -w -O -s 10 -n 16 2g
+> > >
+> > > Baseline:
+> > > real: 33.96s
+> > > user: 25.31s
+> > > sys: 341.09s
+> > > average throughput: 111295.45 KB/s
+> > > average free time: 2079258.68 usecs
+> > >
+> > > New Design:
+> > > real: 35.87s
+> > > user: 25.15s
+> > > sys: 373.01s
+> > > average throughput: 106965.46 KB/s
+> > > average free time: 3192465.62 usecs
+> > >
+> > > To root cause this regression, I ran perf on the usemem program, as
+> > > well as on the following stress-ng program:
+> > >
+> > > perf record -ag -e cycles -G perf_cg -- ./stress-ng/stress-ng  --page=
+swap $(nproc) --pageswap-ops 100000
+> > >
+> > > and observed the (predicted) increase in lock contention on swap cach=
+e
+> > > accesses. This regression is alleviated if I put together the
+> > > following hack: limit the virtual swap space to a sufficient size for
+> > > the benchmark, range partition the swap-related data structures (swap
+> > > cache, zswap tree, etc.) based on the limit, and distribute the
+> > > allocation of virtual swap slotss among these partitions (on a per-CP=
+U
+> > > basis):
+> > >
+> > > real: 34.94s
+> > > user: 25.28s
+> > > sys: 360.25s
+> > > average throughput: 108181.15 KB/s
+> > > average free time: 2680890.24 usecs
+> > >
+> > > As mentioned above, I will implement proper dynamic swap range
+> > > partitioning in a follow up work.
+> > >
+> > > 2. Kernel building: zswap enabled, 52 workers (one per processor),
+> > > memory.max =3D 3G.
+> > >
+> > > Baseline:
+> > > real: 183.55s
+> > > user: 5119.01s
+> > > sys: 655.16s
+> > >
+> > > New Design:
+> > > real: mean: 184.5s
+> > > user: mean: 5117.4s
+> > > sys: mean: 695.23s
+> > >
+> > > New Design (Static Partition)
+> > > real: 183.95s
+> > > user: 5119.29s
+> > > sys: 664.24s
+> > >
+> >
+> > Hi Nhat,
+> >
+> > Thanks for the patches! I have glanced over a couple of them, but this =
+was the main question that came to my mind.
+> >
+> > Just wanted to check if you had a look at the memory regression during =
+these benchmarks?
+> >
+> > Also what is sizeof(swp_desc)? Maybe we can calculate the memory overhe=
+ad as sizeof(swp_desc) * swap size/PAGE_SIZE?
+> >
+> > For a 64G swap that is filled with private anon pages, the overhead in =
+MB might be (sizeof(swp_desc) in bytes * 16M) - 16M (zerobitmap) - 16M*8 (s=
+wap map)?
+> >
+> > This looks like a sizeable memory regression?
+>
+> One thing to keep in mind is that the swap descriptor is currently
+> blatantly explicit, and many conversions and optimizations have not
+> been done yet. There are some tradeoffs made here regarding code
+> reviewability, but I agree it makes it hard to see what this would
+> look like fully realized.
+>
+> I think what's really missing is an analysis of what the goal is and
+> what the overhead will be then.
+>
+> The swapin path currently consults the swapcache, then the zeromap,
+> then zswap, and finally the backend. The external swap_cgroup array is
+> consulted to determine who to charge for the new page.
+>
+> With vswap, the descriptor is looked up and resolves to a type,
+> location, cgroup ownership, a refcount. This means it replaces the
+> swapcache, the zeromap, the cgroup map, and largely the swap_map.
+>
+> Nhat was not quite sure yet if the swap_map can be a single bit per
+> entry or two bits to represent bad slots. In any case, it's a large
+> reduction in static swap space overhead, and eliminates the tricky
+> swap count continuation code.
 
-On Fri, 07 Mar 2025 10:19:02 +0530, Swathi K S wrote:
-> FSD platform has two instances of EQoS IP, one is in FSYS0 block and
-> another one is in PERIC block. This patch series add required DT file
-> modifications for the same.
-> 
-> Changes since v1:
-> 1. Addressed the format related corrections.
-> 2. Addressed the MAC address correction.
-> 
-> [...]
+You're right. I haven't touched the swapfile swap map and the zeromap
+bitmap at all, primarily because it's non-functional change
+(optimization only). It also adds more ifdefs to the final codebase :)
 
-Applied, thanks!
+In the next version, I can tag on one patch to:
 
-[1/2] arm64: dts: fsd: Add Ethernet support for FSYS0 Block of FSD SoC
-      https://git.kernel.org/krzk/linux/c/1d62af229b18bff2430ea5dde0e129d43515e12c
-[2/2] arm64: dts: fsd: Add Ethernet support for PERIC Block of FSD SoC
-      https://git.kernel.org/krzk/linux/c/ebeab0be707ddcffd2b7f6ff4f9bd8e0c1c49fdd
+1. remove zeromap bitmap. This one is pretty much straightforward -
+we're not using it at all.
 
-Best regards,
--- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
+2. Swap map reduction. I'm like 70% sure we don't need SWAP_MAP_BAD
+state. With the vswap reverse map and the swapfile inuse counters, we
+should be able to convert the swapmap into a pure bitmap. If we can't,
+then it's 2 bits per physical swapfiles.
