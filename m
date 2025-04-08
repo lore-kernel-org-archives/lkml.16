@@ -1,39 +1,39 @@
 Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7936E2236FC;
-	Tue,  8 Apr 2025 14:32:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A60C1EB195;
+	Tue,  8 Apr 2025 14:32:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744122768; cv=none; b=mRUWFBOlasjOXIBKeELpispO2GYQHuLKfJp1JkUBzfiOiBT5e7e41U0yfhGHh/oZKae5oYLkP0gxdSDrLcaappM1lxrS+/eB4kKeeDruqyR+UqBGPxrRRhU55DFE+CgzWrv3vC4AVzhf/I5FRr25B8ZT9eUxujf4/vCA5DE6sik=
+	t=1744122768; cv=none; b=saNDcUHmUjwK+nzhSbuQHsfSegcT6wgQgZEaEsODjYVcAirHUflw2oXr3Qi99sdm10CPGp+yFYmltWqEcYk3IzH00tz6hHPFQGeyXUIE/QAWe7Yl/Z2b7YtYvXapejltcgdG/8En7uI3POcHuXKmjwI3nU3E2yvtcRuOUZJdIVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744122768; c=relaxed/simple;
-	bh=kGsXN25MF5gR2Dcb6V434fYrrb46r5vmJ176my5Zc04=;
+	bh=ENX4N9pOf1OBke+ShHYeV41uaSSKJ7KyJ1u4mpopUF4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=j4R/9nKhJI+z1daQefC01DzVjzfbGVd/EBOd3MfbyEosccu0gr5F5KlLxJCGLHXFeSukGTqgiqu/k2pUQvbVkZVLwnRZyAsrpRl2Kg4Skqw4mtdO+SmJcyOG4wTCUB944sFmjIYahhAnQSPPYUUMyCrZu0Zfi/+SC0fdB5OMOkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=TLNIgnO+; arc=none smtp.client-ip=217.70.183.194
+	 In-Reply-To:To:Cc; b=ciTnDvqwwWy/QZ0KzQqrYhBaNRXx857qB/r2kY9lTc//A+oWewlNmi4piYDmYjE7/IYSDDasMcWwcvPxoPnIBAlHXqveLxIp2c/fnm70jIOxvlysmbIayldr5Jge7pT86Ohvq19jlYLy5sf0n5PSWC9r1TQVTZcasADncfgGO7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UM/B8cQk; arc=none smtp.client-ip=217.70.183.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="TLNIgnO+"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E0659441D2;
-	Tue,  8 Apr 2025 14:32:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UM/B8cQk"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id BBFF1441C6;
+	Tue,  8 Apr 2025 14:32:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744122763;
+	t=1744122756;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=D7XsMAZ/bY3AXgiHfs0mec7RZx05gzFYeVzX97wp8Gk=;
-	b=TLNIgnO+Koz8/orwhQ1r15fQ5NrgGqXde794RXI6XKJ7eljhFUNLrNQVj/Krxr+JHLSWcd
-	6AayUmDjLESdaEE4EGTYcu36t8XsSKKzLM6BCHJrDx8TzJHwRkVYAk77UghJw7JCO6vjU0
-	QSvj51GY03Hvhx97JHIE9l4KUaug6tUmPAXfVPyldlbw6rBqhai6ReMnZk/Jv6p6PcNUfR
-	1pKXg8oRtK5Hc5/6NIqxycdKB1MB1ZpdWvgGVbkTYkIc6R7v7irNrmVApwmlbPf30N0eJC
-	QlXlMrhia0Q5rOVvVi415ZCili4OLsyMIVp0+Gx9CNl51v4sK/7iTUmiIWvmBQ==
+	bh=7EAWChO19kLZ01RRfrTa6erCBonpzhOkC+Wu+5AzD3g=;
+	b=UM/B8cQkTbHz3M8ka54vwOXt56P+L/cqKi4cInGC6L+SkZlkvFVf++XBXq3Vpoidcp2Qpl
+	CdIaMLzsymTlqaVidMds+5Xbtj3HkuDk+tzSlH/BjVIGawOWDpNfWGukolenoiV/J+1WG8
+	UPELHX6dx374ap+5emRaSBRn1RyoREOkx4lYpALMXe4VnHNVmXc9BRrBj5Jxu095e7Bn/R
+	uaQFqvvD5N/68YKnKmy3rD5ba+/vQ2lR3tAQfGE0U89FGqeGxLfjJtSeHPXI8fsfMjpH5Z
+	aj0I451fInSMxbQC8ZabIez5X3LtyJB7BNl40VO6eEulCz7v79IwUPPxeXZIOw==
 From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Tue, 08 Apr 2025 16:32:17 +0200
-Subject: [PATCH net-next v7 08/13] net: ethtool: Add PSE port priority
- support feature
+Date: Tue, 08 Apr 2025 16:32:12 +0200
+Subject: [PATCH net-next v7 03/13] net: pse-pd: tps23881: Add support for
+ PSE events and interrupts
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250408-feature_poe_port_prio-v7-8-9f5fc9e329cd@bootlin.com>
+Message-Id: <20250408-feature_poe_port_prio-v7-3-9f5fc9e329cd@bootlin.com>
 References: <20250408-feature_poe_port_prio-v7-0-9f5fc9e329cd@bootlin.com>
 In-Reply-To: <20250408-feature_poe_port_prio-v7-0-9f5fc9e329cd@bootlin.com>
 To: Andrew Lunn <andrew@lunn.ch>, Oleksij Rempel <o.rempel@pengutronix.de>, 
@@ -64,195 +64,274 @@ Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
 X-Mailer: b4 0.15-dev-8cb71
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdeffeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepmfhorhihucforghinhgtvghnthcuoehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeevgfdvgfektefgfefggeekudfggffhtdfffedtueetheejtddvledvvdelhedtveenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpeehnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvjedprhgtphhtthhopeguvghvihgtvghtrhgvvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehkhihlvgdrshifvghnshhonhesvghsthdrthgvtghhpdhrtghpthhtohepsghrohhonhhivgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepughonhgrlhgurdhhuhhnthgvrhesghhmrghilhdrtghomhdprhgtphhtthhopehordhrvghmphgvlhesphgvnhhguhhtrhhonhhig
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdeffeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepmfhorhihucforghinhgtvghnthcuoehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeevgfdvgfektefgfefggeekudfggffhtdfffedtueetheejtddvledvvdelhedtveenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvjedprhgtphhtthhopeguvghvihgtvghtrhgvvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehkhihlvgdrshifvghnshhonhesvghsthdrthgvtghhpdhrtghpthhtohepsghrohhonhhivgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepughonhgrlhgurdhhuhhnthgvrhesghhmrghilhdrtghomhdprhgtphhtthhopehordhrvghmphgvlhesphgvnhhguhhtrhhonhhig
  idruggvpdhrtghpthhtoheplhhinhhugidqughotgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomh
 X-GND-Sasl: kory.maincent@bootlin.com
 
 From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
 
-This patch expands the status information provided by ethtool for PSE c33
-with current port priority and max port priority. It also adds a call to
-pse_ethtool_set_prio() to configure the PSE port priority.
+Add support for PSE event reporting through interrupts. Set up the newly
+introduced devm_pse_irq_helper helper to register the interrupt. Events are
+reported for over-current and over-temperature conditions.
 
+Reviewed-by: Oleksij Rempel <o.rempel@pengutronix.de>
 Signed-off-by: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
 ---
-Change in v6:
-- Remove c33 standard reference from new netlink field in documentation.
-- Remove report of budget evaluation strategy.
+Change in v7:
+- Add a max irq retry limit to avoid infinite loop in the interrupt
+  handler.
 
 Change in v4:
-- Remove disconnection policy features.
-- Rename port priority to budget evaluation strategy.
+- Small rename of a function.
 
 Change in v3:
-- Add disconnection policy.
+- Loop over interruption register to be sure the interruption pin is
+  freed before exiting the interrupt handler function.
+- Add exist variable to not report event for undescribed PIs.
+- Used helpers to convert the chan number to the PI port number.
 
 Change in v2:
-- Improve port priority documentation.
-- Add port priority modes.
+- Remove support for OSS pin and TPC23881 specific port priority management
 ---
- Documentation/netlink/specs/ethtool.yaml       | 11 +++++++++++
- Documentation/networking/ethtool-netlink.rst   | 26 ++++++++++++++++++++++++++
- include/uapi/linux/ethtool_netlink_generated.h |  2 ++
- net/ethtool/pse-pd.c                           | 18 ++++++++++++++++++
- 4 files changed, 57 insertions(+)
+ drivers/net/pse-pd/tps23881.c | 190 +++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 188 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/netlink/specs/ethtool.yaml b/Documentation/netlink/specs/ethtool.yaml
-index 93e470895dc1..814aa54b35b5 100644
---- a/Documentation/netlink/specs/ethtool.yaml
-+++ b/Documentation/netlink/specs/ethtool.yaml
-@@ -1379,6 +1379,14 @@ attribute-sets:
-         name: pse-pw-d-id
-         type: u32
-         name-prefix: ethtool-a-
-+      -
-+        name: pse-prio-max
-+        type: u32
-+        name-prefix: ethtool-a-
-+      -
-+        name: pse-prio
-+        type: u32
-+        name-prefix: ethtool-a-
-   -
-     name: rss
-     attr-cnt-name: __ethtool-a-rss-cnt
-@@ -2200,6 +2208,8 @@ operations:
-             - c33-pse-avail-pw-limit
-             - c33-pse-pw-limit-ranges
-             - pse-pw-d-id
-+            - pse-prio-max
-+            - pse-prio
-       dump: *pse-get-op
-     -
-       name: pse-set
-@@ -2214,6 +2224,7 @@ operations:
-             - podl-pse-admin-control
-             - c33-pse-admin-control
-             - c33-pse-avail-pw-limit
-+            - pse-prio
-     -
-       name: rss-get
-       doc: Get RSS params.
-diff --git a/Documentation/networking/ethtool-netlink.rst b/Documentation/networking/ethtool-netlink.rst
-index 49c9a0e79af5..efc410ae26c8 100644
---- a/Documentation/networking/ethtool-netlink.rst
-+++ b/Documentation/networking/ethtool-netlink.rst
-@@ -1790,6 +1790,10 @@ Kernel response contents:
-   ``ETHTOOL_A_C33_PSE_PW_LIMIT_RANGES``       nested  Supported power limit
-                                                       configuration ranges.
-   ``ETHTOOL_A_PSE_PW_D_ID``                      u32  Index of the PSE power domain
-+  ``ETHTOOL_A_PSE_PRIO_MAX``                     u32  Priority maximum configurable
-+                                                      on the PoE PSE
-+  ``ETHTOOL_A_PSE_PRIO``                         u32  Priority of the PoE PSE
-+                                                      currently configured
-   ==========================================  ======  =============================
+diff --git a/drivers/net/pse-pd/tps23881.c b/drivers/net/pse-pd/tps23881.c
+index 5e9dda2c0eac..69a3ede20b33 100644
+--- a/drivers/net/pse-pd/tps23881.c
++++ b/drivers/net/pse-pd/tps23881.c
+@@ -16,7 +16,15 @@
+ #include <linux/pse-pd/pse.h>
  
- When set, the optional ``ETHTOOL_A_PODL_PSE_ADMIN_STATE`` attribute identifies
-@@ -1866,6 +1870,12 @@ equal.
- The ``ETHTOOL_A_PSE_PW_D_ID`` attribute identifies the index of PSE power
- domain.
- 
-+When set, the optional ``ETHTOOL_A_PSE_PRIO_MAX`` attribute identifies
-+the PSE maximum priority value.
-+When set, the optional ``ETHTOOL_A_PSE_PRIO`` attributes is used to
-+identifies the currently configured PSE priority.
-+For a description of PSE priority attributes, see ``PSE_SET``.
+ #define TPS23881_MAX_CHANS 8
+-
++#define TPS23881_MAX_IRQ_RETRIES 10
 +
- PSE_SET
- =======
++#define TPS23881_REG_IT		0x0
++#define TPS23881_REG_IT_MASK	0x1
++#define TPS23881_REG_IT_IFAULT	BIT(5)
++#define TPS23881_REG_IT_SUPF	BIT(7)
++#define TPS23881_REG_FAULT	0x7
++#define TPS23881_REG_SUPF_EVENT	0xb
++#define TPS23881_REG_TSD	BIT(7)
+ #define TPS23881_REG_PW_STATUS	0x10
+ #define TPS23881_REG_OP_MODE	0x12
+ #define TPS23881_OP_MODE_SEMIAUTO	0xaaaa
+@@ -24,6 +32,7 @@
+ #define TPS23881_REG_DET_CLA_EN	0x14
+ #define TPS23881_REG_GEN_MASK	0x17
+ #define TPS23881_REG_NBITACC	BIT(5)
++#define TPS23881_REG_INTEN	BIT(7)
+ #define TPS23881_REG_PW_EN	0x19
+ #define TPS23881_REG_2PAIR_POL1	0x1e
+ #define TPS23881_REG_PORT_MAP	0x26
+@@ -51,6 +60,7 @@ struct tps23881_port_desc {
+ 	u8 chan[2];
+ 	bool is_4p;
+ 	int pw_pol;
++	bool exist;
+ };
  
-@@ -1879,6 +1889,8 @@ Request contents:
-   ``ETHTOOL_A_C33_PSE_ADMIN_CONTROL``        u32  Control PSE Admin state
-   ``ETHTOOL_A_C33_PSE_AVAIL_PWR_LIMIT``      u32  Control PoE PSE available
-                                                   power limit
-+  ``ETHTOOL_A_PSE_PRIO``                     u32  Control priority of the
-+                                                  PoE PSE
-   ======================================  ======  =============================
+ struct tps23881_priv {
+@@ -782,8 +792,10 @@ tps23881_write_port_matrix(struct tps23881_priv *priv,
+ 		hw_chan = port_matrix[i].hw_chan[0] % 4;
  
- When set, the optional ``ETHTOOL_A_PODL_PSE_ADMIN_CONTROL`` attribute is used
-@@ -1901,6 +1913,20 @@ various existing products that document power consumption in watts rather than
- classes. If power limit configuration based on classes is needed, the
- conversion can be done in user space, for example by ethtool.
+ 		/* Set software port matrix for existing ports */
+-		if (port_matrix[i].exist)
++		if (port_matrix[i].exist) {
+ 			priv->port[pi_id].chan[0] = lgcl_chan;
++			priv->port[pi_id].exist = true;
++		}
  
-+When set, the optional ``ETHTOOL_A_PSE_PRIO`` attributes is used to
-+control the PSE priority. Allowed priority value are between zero and
-+the value of ``ETHTOOL_A_PSE_PRIO_MAX`` attribute.
-+
-+A lower value indicates a higher priority, meaning that a priority value
-+of 0 corresponds to the highest port priority.
-+Port priority serves two functions:
-+
-+ - Power-up Order: After a reset, ports are powered up in order of their
-+   priority from highest to lowest. Ports with higher priority
-+   (lower values) power up first.
-+ - Shutdown Order: When the power budget is exceeded, ports with lower
-+   priority (higher values) are turned off first.
-+
- PSE_NTF
- =======
- 
-diff --git a/include/uapi/linux/ethtool_netlink_generated.h b/include/uapi/linux/ethtool_netlink_generated.h
-index ccd7ab3bf1b1..0220cd83728a 100644
---- a/include/uapi/linux/ethtool_netlink_generated.h
-+++ b/include/uapi/linux/ethtool_netlink_generated.h
-@@ -634,6 +634,8 @@ enum {
- 	ETHTOOL_A_C33_PSE_AVAIL_PW_LIMIT,
- 	ETHTOOL_A_C33_PSE_PW_LIMIT_RANGES,
- 	ETHTOOL_A_PSE_PW_D_ID,
-+	ETHTOOL_A_PSE_PRIO_MAX,
-+	ETHTOOL_A_PSE_PRIO,
- 
- 	__ETHTOOL_A_PSE_CNT,
- 	ETHTOOL_A_PSE_MAX = (__ETHTOOL_A_PSE_CNT - 1)
-diff --git a/net/ethtool/pse-pd.c b/net/ethtool/pse-pd.c
-index f73d4fbe82e6..44dbff8c99f8 100644
---- a/net/ethtool/pse-pd.c
-+++ b/net/ethtool/pse-pd.c
-@@ -112,6 +112,9 @@ static int pse_reply_size(const struct ethnl_req_info *req_base,
- 		len += st->c33_pw_limit_nb_ranges *
- 		       (nla_total_size(0) +
- 			nla_total_size(sizeof(u32)) * 2);
-+	if (st->prio_max)
-+		/* _PSE_PRIO_MAX + _PSE_PRIO */
-+		len += nla_total_size(sizeof(u32)) * 2;
- 
- 	return len;
- }
-@@ -206,6 +209,11 @@ static int pse_fill_reply(struct sk_buff *skb,
- 	    pse_put_pw_limit_ranges(skb, st))
- 		return -EMSGSIZE;
- 
-+	if (st->prio_max > 0 &&
-+	    (nla_put_u32(skb, ETHTOOL_A_PSE_PRIO_MAX, st->prio_max) ||
-+	     nla_put_u32(skb, ETHTOOL_A_PSE_PRIO, st->prio)))
-+		return -EMSGSIZE;
-+
+ 		/* Initialize power policy internal value */
+ 		priv->port[pi_id].pw_pol = -1;
+@@ -1017,6 +1029,174 @@ static int tps23881_flash_sram_fw(struct i2c_client *client)
  	return 0;
  }
  
-@@ -227,6 +235,7 @@ const struct nla_policy ethnl_pse_set_policy[ETHTOOL_A_PSE_MAX + 1] = {
- 		NLA_POLICY_RANGE(NLA_U32, ETHTOOL_C33_PSE_ADMIN_STATE_DISABLED,
- 				 ETHTOOL_C33_PSE_ADMIN_STATE_ENABLED),
- 	[ETHTOOL_A_C33_PSE_AVAIL_PW_LIMIT] = { .type = NLA_U32 },
-+	[ETHTOOL_A_PSE_PRIO] = { .type = NLA_U32 },
- };
- 
- static int
-@@ -275,6 +284,15 @@ ethnl_set_pse(struct ethnl_req_info *req_info, struct genl_info *info)
- 	if (ret)
- 		return ret;
- 
-+	if (tb[ETHTOOL_A_PSE_PRIO]) {
-+		unsigned int prio;
++/* Convert interrupt events to 0xff to be aligned with the chan
++ * number.
++ */
++static u8 tps23881_irq_export_chans_helper(u16 reg_val, u8 field_offset)
++{
++	u8 val;
 +
-+		prio = nla_get_u32(tb[ETHTOOL_A_PSE_PRIO]);
-+		ret = pse_ethtool_set_prio(phydev->psec, info->extack, prio);
++	val = (reg_val >> (4 + field_offset) & 0xf0) |
++	      (reg_val >> field_offset & 0x0f);
++
++	return val;
++}
++
++/* Convert chan number to port number */
++static void tps23881_set_notifs_helper(struct tps23881_priv *priv,
++				       u8 chans,
++				       unsigned long *notifs,
++				       unsigned long *notifs_mask,
++				       enum ethtool_pse_events event)
++{
++	u8 chan;
++	int i;
++
++	if (!chans)
++		return;
++
++	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
++		if (!priv->port[i].exist)
++			continue;
++		/* No need to look at the 2nd channel in case of PoE4 as
++		 * both registers are set.
++		 */
++		chan = priv->port[i].chan[0];
++
++		if (BIT(chan) & chans) {
++			*notifs_mask |= BIT(i);
++			notifs[i] |= event;
++		}
++	}
++}
++
++static void tps23881_irq_event_over_temp(struct tps23881_priv *priv,
++					 u16 reg_val,
++					 unsigned long *notifs,
++					 unsigned long *notifs_mask)
++{
++	int i;
++
++	if (reg_val & TPS23881_REG_TSD) {
++		for (i = 0; i < TPS23881_MAX_CHANS; i++) {
++			if (!priv->port[i].exist)
++				continue;
++
++			*notifs_mask |= BIT(i);
++			notifs[i] |= ETHTOOL_PSE_EVENT_OVER_TEMP;
++		}
++	}
++}
++
++static void tps23881_irq_event_over_current(struct tps23881_priv *priv,
++					    u16 reg_val,
++					    unsigned long *notifs,
++					    unsigned long *notifs_mask)
++{
++	u8 chans;
++
++	chans = tps23881_irq_export_chans_helper(reg_val, 0);
++	if (chans)
++		tps23881_set_notifs_helper(priv, chans, notifs, notifs_mask,
++					   ETHTOOL_PSE_EVENT_OVER_CURRENT);
++}
++
++static int tps23881_irq_event_handler(struct tps23881_priv *priv, u16 reg,
++				      unsigned long *notifs,
++				      unsigned long *notifs_mask)
++{
++	struct i2c_client *client = priv->client;
++	int ret;
++
++	/* The Supply event bit is repeated twice so we only need to read
++	 * the one from the first byte.
++	 */
++	if (reg & TPS23881_REG_IT_SUPF) {
++		ret = i2c_smbus_read_word_data(client, TPS23881_REG_SUPF_EVENT);
++		if (ret < 0)
++			return ret;
++		tps23881_irq_event_over_temp(priv, ret, notifs, notifs_mask);
++	}
++
++	if (reg & (TPS23881_REG_IT_IFAULT | TPS23881_REG_IT_IFAULT << 8)) {
++		ret = i2c_smbus_read_word_data(client, TPS23881_REG_FAULT);
++		if (ret < 0)
++			return ret;
++		tps23881_irq_event_over_current(priv, ret, notifs, notifs_mask);
++	}
++
++	return 0;
++}
++
++static int tps23881_irq_handler(int irq, struct pse_controller_dev *pcdev,
++				unsigned long *notifs,
++				unsigned long *notifs_mask)
++{
++	struct tps23881_priv *priv = to_tps23881_priv(pcdev);
++	struct i2c_client *client = priv->client;
++	int ret, it_mask;
++
++	/* Get interruption mask */
++	ret = i2c_smbus_read_word_data(client, TPS23881_REG_IT_MASK);
++	if (ret < 0)
++		return ret;
++	it_mask = ret;
++
++	/* Read interrupt register until it frees the interruption pin. */
++	while (true) {
++		int retry = 0;
++
++		if (retry > TPS23881_MAX_IRQ_RETRIES) {
++			dev_err(&client->dev, "interrupt never freed");
++			return -ETIMEDOUT;
++		}
++
++		ret = i2c_smbus_read_word_data(client, TPS23881_REG_IT);
++		if (ret < 0)
++			return ret;
++
++		/* No more relevant interruption */
++		if (!(ret & it_mask))
++			return 0;
++
++		ret = tps23881_irq_event_handler(priv, (u16)ret, notifs,
++						 notifs_mask);
++		if (ret)
++			return ret;
++
++		retry++;
++	}
++	return 0;
++}
++
++static int tps23881_setup_irq(struct tps23881_priv *priv, int irq)
++{
++	struct i2c_client *client = priv->client;
++	struct pse_irq_desc irq_desc = {
++		.name = "tps23881-irq",
++		.map_event = tps23881_irq_handler,
++	};
++	int ret;
++	u16 val;
++
++	val = TPS23881_REG_IT_IFAULT | TPS23881_REG_IT_SUPF;
++	val |= val << 8;
++	ret = i2c_smbus_write_word_data(client, TPS23881_REG_IT_MASK, val);
++	if (ret)
++		return ret;
++
++	ret = i2c_smbus_read_word_data(client, TPS23881_REG_GEN_MASK);
++	if (ret < 0)
++		return ret;
++
++	val = (u16)(ret | TPS23881_REG_INTEN | TPS23881_REG_INTEN << 8);
++	ret = i2c_smbus_write_word_data(client, TPS23881_REG_GEN_MASK, val);
++	if (ret < 0)
++		return ret;
++
++	return devm_pse_irq_helper(&priv->pcdev, irq, 0, &irq_desc);
++}
++
+ static int tps23881_i2c_probe(struct i2c_client *client)
+ {
+ 	struct device *dev = &client->dev;
+@@ -1097,6 +1277,12 @@ static int tps23881_i2c_probe(struct i2c_client *client)
+ 				     "failed to register PSE controller\n");
+ 	}
+ 
++	if (client->irq) {
++		ret = tps23881_setup_irq(priv, client->irq);
 +		if (ret)
 +			return ret;
 +	}
 +
- 	if (tb[ETHTOOL_A_C33_PSE_AVAIL_PW_LIMIT]) {
- 		unsigned int pw_limit;
+ 	return ret;
+ }
  
 
 -- 
