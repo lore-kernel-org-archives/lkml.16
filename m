@@ -1,28 +1,50 @@
-Received: from plesk.hostmyservers.fr (plesk.hostmyservers.fr [45.145.164.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9402A23BD0E;
-	Tue,  8 Apr 2025 15:55:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.145.164.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0127922DFA4;
+	Tue,  8 Apr 2025 15:55:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744127731; cv=none; b=Dvg/wegI4NZ60OnFsasi9nowm9AygfQfSOkOHVin+ekp1Sd42SErR+C8P9ZNpDFlL49PVxh7gdJTZ7fFrMo9zwBpjxpJXMAIXygkHLDx4Kq07iFCUSSPkTuCkVCmXufj5XNDW1+wlOpu+/Dhe1rDbQ9THxoAGTMxaS2J09mdqkc=
+	t=1744127732; cv=none; b=jLpENQanMgeY6ghpUVtbKDOGAxwVIpKxdshFkqOqEG3jKrTwgqFvTPurqykZL/3JmHq3qcjvHd88IQsuo7VrJfPlm9p6Ix09FjBvP+fAujIey3BN2jWd+pwfC+X9IKT//9POvaG0/Lqd2I6vvoX6aXOVpPZ+PXrS7JkE7/eCUDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744127731; c=relaxed/simple;
-	bh=J7epX/UdilumfA3U27hHk3T8ih71De8kfSzGxe+PO3k=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=my9rGBJh+hddFL95KgkTWLYFniJ7uU4YrJyxyFObptzPsqKycaEf9GmWHsegs+TUk+HhoHZFDlaJn5dcdNg0i4jYfMDhv2I1WzsL1jvbpLovVBF2J6T7DQWvj/gq5vlhrkLez2Zaltrlc/tAbQGR5Jhz/V/xCj261T/qtPVyYrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arnaud-lcm.com; spf=pass smtp.mailfrom=arnaud-lcm.com; arc=none smtp.client-ip=45.145.164.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arnaud-lcm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arnaud-lcm.com
-Received: from [127.0.1.1] (unknown [IPv6:2a01:e0a:3e8:c0d0:9059:1ccf:a15c:f330])
-	by plesk.hostmyservers.fr (Postfix) with ESMTPSA id A2C0C371F23;
-	Tue,  8 Apr 2025 15:55:21 +0000 (UTC)
-Authentication-Results: Plesk;
-        spf=pass (sender IP is 2a01:e0a:3e8:c0d0:9059:1ccf:a15c:f330) smtp.mailfrom=contact@arnaud-lcm.com smtp.helo=[127.0.1.1]
-Received-SPF: pass (Plesk: connection is authenticated)
-From: Arnaud Lecomte <contact@arnaud-lcm.com>
-Date: Tue, 08 Apr 2025 17:55:08 +0200
-Subject: [PATCH v2] net: ppp: Add bound checking for skb d on
- ppp_sync_txmung
+	s=arc-20240116; t=1744127732; c=relaxed/simple;
+	bh=9cgfIJPo13nVcJSIDHHqC8F3QDl6D0/+VyXTs6soU+w=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=nzeWGrLWdNY4v2a/emRlfSI75QCWWUEEmcCqJ/9eDaRQrHBN/lMB6MWc6D6vcTq3ADt8JUSlGXRifJX3NgSsJfWYeI//HMZv8aypSPTmXP9WHNH2aS1eqMt4qEzpXA5uAk8gddo6cx6HBGm5x9s0x1Sw0eVMLkXRq70vVmgBbGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gdX61hAO; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gdX61hAO"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 538BDdNH008070;
+	Tue, 8 Apr 2025 15:55:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	jNVy6x5tCC2ATkH3o5b/ImkuBnPR3ltvMGsn9NYEp28=; b=gdX61hAOUUHC0htU
+	GnHZHiFkWHL/UQI/DtytXyfGq2YQP+8GC3zFU98hXkhENS7L/ei1ccWdf4Bm1gk8
+	pRx65Z+X5DWeNL3T2UAE+7qur07kDUrLLL/yqkZ6YG9fGNzX1a/pvae+LrB1sRag
+	NucA8GhBz0nLlfj2mK04i6R1P8U2sHMm+OXucW8eu3+e/P9ozEh8Ggz6LT69j/ZJ
+	QPC4MRyEoyMVc9VLJ3e6VMMFv7weD+bneOJnpCmHAqaK2DF2KBCmhwqlcsUZzXEW
+	LCebG94JCKlU5i5y+96tlky5zj2dxodhR3Zz32J6DmXSFMvpl490PTb3CoA151md
+	7MjqbA==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twtb0cjm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 08 Apr 2025 15:55:27 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 538FtRR0002715
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 8 Apr 2025 15:55:27 GMT
+Received: from hu-dikshita-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 8 Apr 2025 08:55:21 -0700
+From: Dikshita Agarwal <quic_dikshita@quicinc.com>
+Date: Tue, 8 Apr 2025 21:24:23 +0530
+Subject: [PATCH 09/20] media: iris: Prevent HFI queue writes when core is
+ in deinit state
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -30,96 +52,87 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: 
- <20250408-bound-checking-ppp_txmung-v2-1-94bb6e1b92d0@arnaud-lcm.com>
-X-B4-Tracking: v=1; b=H4sIANtG9WcC/32NwQ6CMBBEf8Xs2TWl0ICe/A9DDG4XaJS2aYFgC
- P9uJfHqbd4k82aFyMFwhMthhcCzicbZBPJ4AOob2zEanRikkEoUQuHDTVYj9UxPYzv03t/HZZh
- SLCpRUqUK1pWCtPeBW7Ps7luduDdxdOG9X83Zt/1Zyz/WOcMMqSUtueX8zPm1CbaZNL5oOJEbo
- N627QP7NiDHxwAAAA==
-To: Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: linux-ppp@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, contact@arnaud-lcm.com,
- skhan@linuxfoundation.org,
- syzbot+29fc8991b0ecb186cf40@syzkaller.appspotmail.com
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744127721; l=2087;
- i=contact@arnaud-lcm.com; s=20250405; h=from:subject:message-id;
- bh=J7epX/UdilumfA3U27hHk3T8ih71De8kfSzGxe+PO3k=;
- b=AJA3Cy6DjlQbZQe1vxWvNIhkINO0dAJqsOoeJ/QTKbJJq9in5/ju+7sF5kB1RMMPoZHHAblWp
- xoHCr2csKzvC/tIHr/n9k1Yf+fkuk+p/Q5eSw3Shi8LbEKPZidsXtsd
-X-Developer-Key: i=contact@arnaud-lcm.com; a=ed25519;
- pk=Ct5pwYkf/5qSRyUpocKOdGc2XBlQoMYODwgtlFsDk7o=
-X-PPP-Message-ID: <174412772207.7158.8026498672365097069@Plesk>
-X-PPP-Vhost: arnaud-lcm.com
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250408-iris-dec-hevc-vp9-v1-9-acd258778bd6@quicinc.com>
+References: <20250408-iris-dec-hevc-vp9-v1-0-acd258778bd6@quicinc.com>
+In-Reply-To: <20250408-iris-dec-hevc-vp9-v1-0-acd258778bd6@quicinc.com>
+To: Vikash Garodia <quic_vgarodia@quicinc.com>,
+        Abhinav Kumar
+	<quic_abhinavk@quicinc.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Stefan Schmidt <stefan.schmidt@linaro.org>,
+        Hans Verkuil
+	<hverkuil@xs4all.nl>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@linaro.org>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        "Dikshita
+ Agarwal" <quic_dikshita@quicinc.com>,
+        <stable@vger.kernel.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744127674; l=1349;
+ i=quic_dikshita@quicinc.com; s=20240917; h=from:subject:message-id;
+ bh=9cgfIJPo13nVcJSIDHHqC8F3QDl6D0/+VyXTs6soU+w=;
+ b=tw44yHZlh+UnH2AnhahfnA3TqVOY277ctF64q4Ra6StuELpCJm2jhzc3cPEJOwntola8FvYfT
+ BAUM8avk/taC2xEJXtfo+Oafs3c3TGiTwwMGRjL+83fAKfyaKn4sm7D
+X-Developer-Key: i=quic_dikshita@quicinc.com; a=ed25519;
+ pk=EEvKY6Ar1OI5SWf44FJ1Ebo1KuQEVbbf5UNPO+UHVhM=
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: aXt8FkzZ_gA3pY1waBHLSUoO-qr4Xx2r
+X-Authority-Analysis: v=2.4 cv=LLlmQIW9 c=1 sm=1 tr=0 ts=67f546ef cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=TuTThgpRNTc_Uxy4z7QA:9
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: aXt8FkzZ_gA3pY1waBHLSUoO-qr4Xx2r
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-08_06,2025-04-08_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
+ clxscore=1015 mlxlogscore=999 malwarescore=0 phishscore=0
+ lowpriorityscore=0 priorityscore=1501 mlxscore=0 spamscore=0 adultscore=0
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504080110
 
-Ensure we have enough data in linear buffer from skb before accessing
-initial bytes. This prevents potential out-of-bounds accesses
-when processing short packets.
+The current check only considers the core error state before allowing
+writes to the HFI queues. However, the core can also transition to the
+deinit state due to a system error triggered by the response thread.
+In such cases, writing to the HFI queues should not be allowed.
 
-When ppp_sync_txmung receives an incoming package with an empty
-payload:
-(remote) gef➤  p *(struct pppoe_hdr *) (skb->head + skb->network_header)
-$18 = {
-	type = 0x1,
-	ver = 0x1,
-	code = 0x0,
-	sid = 0x2,
-        length = 0x0,
-	tag = 0xffff8880371cdb96
-}
+Fix this by adding a check for the core deinit state, ensuring that
+writes are rejected when core is not in a valid state.
 
-from the skb struct (trimmed)
-      tail = 0x16,
-      end = 0x140,
-      head = 0xffff88803346f400 "4",
-      data = 0xffff88803346f416 ":\377",
-      truesize = 0x380,
-      len = 0x0,
-      data_len = 0x0,
-      mac_len = 0xe,
-      hdr_len = 0x0,
-
-it is not safe to access data[2].
-
-Reported-by: syzbot+29fc8991b0ecb186cf40@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=29fc8991b0ecb186cf40
-Tested-by: syzbot+29fc8991b0ecb186cf40@syzkaller.appspotmail.com
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Arnaud Lecomte <contact@arnaud-lcm.com>
+Cc: stable@vger.kernel.org
+Fixes: fb583a214337 ("media: iris: introduce host firmware interface with necessary hooks")
+Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
 ---
-Changes in v2:
-- Fixed the Fixes: tag to refer to initial commit instead of merge commit (1da177e4c3f4)
-- Remove the skb check as it can not be null
-- Link to v1: https://lore.kernel.org/r/20250407-bound-checking-ppp_txmung-v1-1-cfcd2efe39e3@arnaud-lcm.com
----
- drivers/net/ppp/ppp_synctty.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/media/platform/qcom/iris/iris_hfi_queue.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ppp/ppp_synctty.c b/drivers/net/ppp/ppp_synctty.c
-index 644e99fc3623..9c4932198931 100644
---- a/drivers/net/ppp/ppp_synctty.c
-+++ b/drivers/net/ppp/ppp_synctty.c
-@@ -506,6 +506,11 @@ ppp_sync_txmunge(struct syncppp *ap, struct sk_buff *skb)
- 	unsigned char *data;
- 	int islcp;
+diff --git a/drivers/media/platform/qcom/iris/iris_hfi_queue.c b/drivers/media/platform/qcom/iris/iris_hfi_queue.c
+index fac7df0c4d1a..221dcd09e1e1 100644
+--- a/drivers/media/platform/qcom/iris/iris_hfi_queue.c
++++ b/drivers/media/platform/qcom/iris/iris_hfi_queue.c
+@@ -113,7 +113,7 @@ int iris_hfi_queue_cmd_write_locked(struct iris_core *core, void *pkt, u32 pkt_s
+ {
+ 	struct iris_iface_q_info *q_info = &core->command_queue;
  
-+	/* Ensure we can safely access protocol field and LCP code */
-+	if (!pskb_may_pull(skb, 3)) {
-+		kfree_skb(skb);
-+		return NULL;
-+	}
- 	data  = skb->data;
- 	proto = get_unaligned_be16(data);
+-	if (core->state == IRIS_CORE_ERROR)
++	if (core->state == IRIS_CORE_ERROR || core->state == IRIS_CORE_DEINIT)
+ 		return -EINVAL;
  
+ 	if (!iris_hfi_queue_write(q_info, pkt, pkt_size)) {
 
----
-base-commit: 9946eaf552b194bb352c2945b54ff98c8193b3f1
-change-id: 20250405-bound-checking-ppp_txmung-4807c854ed85
-
-Best regards,
 -- 
-Arnaud Lecomte <contact@arnaud-lcm.com>
+2.34.1
 
