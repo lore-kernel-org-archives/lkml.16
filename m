@@ -1,95 +1,62 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D106426156E;
-	Tue,  8 Apr 2025 12:28:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C2FD227BA4
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 12:29:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744115308; cv=none; b=QjFOCtWnir/J8ZnICY4gAdEm+Ygew8EP/EQSV5eYNE3O+fLVHBK0l9nKmmiof3psXnuS7N4XnsYnNdnO3/RcdvfORlREnCZ+sqU1//Fn3IvZH+qevPNoI8ixEjprnus6O+uf7CtyZDSLyZdZJNrcuMKhBNZRsNWnCcnghXT3Wec=
+	t=1744115385; cv=none; b=rgL9l1sixTBPQstgGPKcmKH9Q8cYkIlh9Cjj6xQ89lnRAYlLr1BMxP0IxEfGgUZi2OS+utVVqf95tGvPJP/PpmWtI/NfSDp6zSBpqlFBVM3q2osHN+02xk0Vh+i10w1bb6RJp7NGLh/7P1mUIruifenmmpE+ltzka8kRwGaE1Rs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744115308; c=relaxed/simple;
-	bh=NCeWg0s9VQQlDDR6/jZTJWDMUKyOApEDxvm6/O7IKUc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=RtTfc7k6c9uikS0vHeir6d1G+3dj4O0oIAaAkZeu+C2XktZJFCUThMHU69M+JeGHLULMl0j/UrbeTNOqPr/aRfNLXltBAwFB0ZjyFBrj9khDWwNcfJTV2JrEKyOgN0rYTofe7FD7jbJbDFQEHQNV8AEh8X1P2D3HWg6zYnUKkZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ensm72M9; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cm16+ioB; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ensm72M9";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cm16+ioB"
-From: John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744115305;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NCeWg0s9VQQlDDR6/jZTJWDMUKyOApEDxvm6/O7IKUc=;
-	b=ensm72M9yZ2NX9fnKMJrXUDBN9SfqKWFo0VLf5Z7ORbIO5a15uWkG8ZymcWyRHjdtb32GE
-	VWOvz0lhh6Epdg6Lm5ciDsRTooTkvG/93BqGzcnJvzSSo/TtO8yRi1ku9Sz3h9P0MZiPIw
-	ddkQeKZt+dKDsvWdDNexpzdlkmmcjNoPU1a1eIM+Cs2+65ju8BT3VRo+SSpLA6UEOPrfnV
-	gsYGpXwDSbXjoAFJho33PC4+XeGKTFJUo77SfRN/hxuRUyyWEKPjjU7C0kkIiVDBa0RZSS
-	m9RSunBRcqdIoqKLGn+TrBI7Wh0csjV2P4kDCcMdtrd0VW5Mz1ax6bD++Q9Tdg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744115305;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NCeWg0s9VQQlDDR6/jZTJWDMUKyOApEDxvm6/O7IKUc=;
-	b=cm16+ioBeLtQyOIkqIx0wHqDs7HT5AEpuR14XucWvfTJgBddrrHOmCbCbBDSKJFlfyIBsp
-	2BrGcEz8XJnRMWBg==
-To: Yunhui Cui <cuiyunhui@bytedance.com>, gregkh@linuxfoundation.org,
- jirislaby@kernel.org, pmladek@suse.com, arnd@arndb.de,
- andriy.shevchenko@linux.intel.com, namcao@linutronix.de,
- benjamin.larsson@genexis.eu, schnelle@linux.ibm.com,
- matt.porter@linaro.org, tim.kryger@linaro.org, markus.mayer@linaro.org,
- heikki.krogerus@linux.intel.com, linux-kernel@vger.kernel.org,
- linux-serial@vger.kernel.org
-Cc: Yunhui Cui <cuiyunhui@bytedance.com>
-Subject: Re: [PATCH v2] serial: 8250: fix panic due to PSLVERR
-In-Reply-To: <20250408061200.76148-1-cuiyunhui@bytedance.com>
-References: <20250408061200.76148-1-cuiyunhui@bytedance.com>
-Date: Tue, 08 Apr 2025 14:34:24 +0206
-Message-ID: <84bjt6rg5z.fsf@jogness.linutronix.de>
+	s=arc-20240116; t=1744115385; c=relaxed/simple;
+	bh=fMFpWnIjQCZbGxVynWhw/NR1OLrMkyW6C6CcMGny/QY=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=LfxyuWVoi2OnSXKO1lkeMFs9z92LU7l3DzTidEAhuS0o4QjpM4wjnGBUc7CZIQs2Lw92yk/d2yz9hyIjZDbaEhGh1dPg40fzIlIO70ozE6KG3TwwPI4QxVVCeibEdVhNhllIFqxYOU37j6KU/hx+zHb37xg7v46jA16GFoizWjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+	id 9455992009C; Tue,  8 Apr 2025 14:29:40 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by angie.orcam.me.uk (Postfix) with ESMTP id 8D0D892009B;
+	Tue,  8 Apr 2025 13:29:40 +0100 (BST)
+Date: Tue, 8 Apr 2025 13:29:40 +0100 (BST)
+From: "Maciej W. Rozycki" <macro@orcam.me.uk>
+To: Borislav Petkov <bp@alien8.de>
+cc: Kevin Koster <lkml@ombertech.com>, Thomas Gleixner <tglx@linutronix.de>, 
+    Oerg866 <oerg866@googlemail.com>, linux-kernel@vger.kernel.org, 
+    Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
+    x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH] x86/microcode: Fix crashes on early 486 CPUs due to
+ usage of 'cpuid'.
+In-Reply-To: <20250408103137.GAZ_T7CfnHx7cgU7CA@fat_crate.local>
+Message-ID: <alpine.DEB.2.21.2504081137400.29566@angie.orcam.me.uk>
+References: <CANpbe9Wm3z8fy9HbgS8cuhoj0TREYEEkBipDuhgkWFvqX0UoVQ@mail.gmail.com> <20250405130306.ca9822c1f27db119cc973603@ombertech.com> <20250405093127.GAZ_D4b6NdyTS-UW1J@fat_crate.local> <20250406164049.c0666bc18073e3b88c92d1f1@ombertech.com>
+ <20250406174633.2c581923c145687476191753@ombertech.com> <20250406190253.GAZ_LP3RPZInWKcHN7@fat_crate.local> <alpine.DEB.2.21.2504081107390.29566@angie.orcam.me.uk> <20250408103137.GAZ_T7CfnHx7cgU7CA@fat_crate.local>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
 
-On 2025-04-08, Yunhui Cui <cuiyunhui@bytedance.com> wrote:
-> When the PSLVERR_RESP_EN parameter is set to 1, the device generates
-> an error response if an attempt is made to read an empty RBR (Receive
-> Buffer Register) while the FIFO is enabled.
->
-> In serial8250_do_startup(), calling serial_port_out(port, UART_LCR,
-> UART_LCR_WLEN8) triggers dw8250_check_lcr(), which invokes
-> dw8250_force_idle() and serial8250_clear_and_reinit_fifos(). The latter
-> function enables the FIFO via serial_out(p, UART_FCR, p->fcr).
-> Execution proceeds to the dont_test_tx_en label:
-> ...
-> serial_port_in(port, UART_RX);
-> This satisfies the PSLVERR trigger condition.
->
-> Because another CPU(e.g., using printk()) is accessing the UART (UART
-> is busy), the current CPU fails the check (value & ~UART_LCR_SPAR) ==
-> (lcr & ~UART_LCR_SPAR), causing it to enter dw8250_force_idle().
->
-> To resolve this issue, relevant serial_port_out() operations should be
-> placed in a critical section, and UART_RX data should only be read
-> when the UART_LSR DR bit is set.
+On Tue, 8 Apr 2025, Borislav Petkov wrote:
 
-The UART_LSR_DR check still has a race condition if the console is in
-RS485 mode and !SER_RS485_RX_DURING_TX. It seems DW supports this mode
-as there is code in dw8250_rs485_config() that sets DW_UART_TCR
-differently for this.
+> >  C'mon, these are good room heaters with nice extra side effects. ;)
+> 
+> Maybe we should intentionally prevent booting Linux on such machines and make
+> this our community's contribution in the fight against global warming!
 
-In this mode, serial8250_console_write() will call the callback
-->rs485_stop_tx(), which for DW is serial8250_em485_stop_tx(). And this
-calls serial8250_clear_and_reinit_fifos().
+ Hehe...  But seriously, consuming energy is not by itself wrong, energy 
+is plentiful in the universe and gets used all the time whether humankind 
+contributes to it or not.  The issue is using dirty sources.  And that's 
+not exactly individual people's problem, it's not us personally who are to 
+build clean power stations.  Which does happen already, so we're moving in 
+the right direction.  I would be more concerned of the various industrial 
+contributors to global warming whose purpose isn't electricity production.
 
-To really close this race, all UART_RX reads would need to be under the
-port lock. Most of them already are.
+ Plus we still need heating anyway, at least in some places, so why not 
+having one that runs Linux? ;)
 
-John Ogness
+ FWIW,
+
+  Maciej
