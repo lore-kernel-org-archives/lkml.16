@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8607267708;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C853C267707;
 	Tue,  8 Apr 2025 10:09:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744106996; cv=none; b=pYyFzf9zKVN1op4i2r5jVABJTCYxsabV7FN86htwzFJSstIFQkvI6YmTN3yHrbKuBV8l54YV3ajZUY60GH7gpmIithzHd23mPCjyOnOyzd+EX5QwE+My4YoqO9JcNlc9CfQZLCRS7d3Zk66g4zgloIzfpGrUS1DojjHVDMwAugk=
+	t=1744106996; cv=none; b=TdZzZymH5frMaO4WQ+gE50tfsObG8gSflWGIQsyyBl/NaE/3013vPywnDUDPOknysqKgMCI84obQP7niv3UCLxJx4dWGEDNcXZs5PWOsMMY3fLnfY2wMJJKYyXLuXVLQdWHvkB/76uy/Xr/du0zbOFktOB5D0UsiTULOxt37Y/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744106996; c=relaxed/simple;
-	bh=M/5483xsneVac2QnbA1ZZyNS5r11vVv9aaft8Yje1UA=;
+	bh=2gtlbokD3wIvcyskgL2DYRWExsd4tWZg94PvP3UaS7o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nTgw9QNpvhpyRIxelN+pA5UV4jebcgFtRdaLMKT3ChcKvVi/0HLERdQyUXjMHEv9IVk7ujzfGF9su0i0OoP9KJM7bbMva/LPAmMiE2zovabpgfHsh9y4r5xx736FPCjgYzbnqTqL2Q8SyGpCBL9l/5DPCvGQyYw9mLCbBcfHG88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H4N3UPvh; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=jIDaJU3CR0MvkaVhSI+lMKdmsXAfQDujhy+CcF9zEvzgFA4lHjuhiKCtu/MTq3VvWWsJ09YWs8PTAXjDFYAdDOyzSkRqZFEfwSIdJcxO8GpQWLeKvv2CHBBY+bHgRPLyS+dHXamvqp5RzrVmQow5m2XA7bt+ThHKKs9JQRF1nRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=omwK458e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H4N3UPvh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 628B9C4CEF1;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="omwK458e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64672C4CEEE;
 	Tue,  8 Apr 2025 10:09:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1744106996;
-	bh=M/5483xsneVac2QnbA1ZZyNS5r11vVv9aaft8Yje1UA=;
+	bh=2gtlbokD3wIvcyskgL2DYRWExsd4tWZg94PvP3UaS7o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=H4N3UPvhIOT3p3fhRQOi5DCB5j1bnGfsVRxncUvcuUnsJ2TbOOVo4J+xCIJsTuwOk
-	 8wtiv1UK16DJr1bVGzFbwCZpi0rNXMWohwjHZqaGjo8q+m9VLVTUX4I7aNglWBTll+
-	 SDztmfh5e08Od6Askc/ObQREySXVfqgKvAbZrpzDCXqAbVFf/8zHMIKF4tJ+v/bO5i
-	 Xfg5UDnnyMBvgl/C4NVr0OMJkbF7lSDx8yGROtYHfZqzU8glU6UEi/kTEuhCAAR1rb
-	 qng21hz+FBLKxBPEPARQDTN+M1vxD/BCqwQXm2wla42GzxCJ5RsSGq8vEIZGCyW72O
-	 FqpiGXZg3dMKg==
+	b=omwK458eL+K/pQKW9eEpQfOOETKxlPJV6K8dd2yoiSFjxcGhsCrcJaaAgOR53ZiFz
+	 /W8Z2sAgUDlxxRpNWi2piA5sa1dSSN0lZCT3kqpk2i6PyIIvGjCjOH11LbeztfKxy3
+	 o29u5nX8adDLX6z/QLpOM6jHHxt/24tMOHfjrRuiyYB4pLrdMDzBtNuNLnr/hVp+Yt
+	 QW3ff+eSLG5nOk5bvdvodwH3QQLmO6TYFWishnksf689pvfVj7Hu0BuzcnEHbOcxN5
+	 IkmobPrZcNPFmPKqHTtL83My7YBBiBjzoEgSmGdExpEVpfqoUMacluLYtdGI5JqvoH
+	 hGJMqDEumRO1A==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab@kernel.org>)
-	id 1u25tt-00000008RVv-1B4E;
+	id 1u25tt-00000008RWM-21WJ;
 	Tue, 08 Apr 2025 18:09:49 +0800
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
@@ -36,9 +36,9 @@ To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	Sean Anderson <sean.anderson@linux.dev>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 14/33] scripts/kernel-doc.py: fix line number output
-Date: Tue,  8 Apr 2025 18:09:17 +0800
-Message-ID: <5182a531d14b5fe9e1fc5da5f9dae05d66852a60.1744106242.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v3 23/33] scripts/kernel-doc.py: adjust some coding style issues
+Date: Tue,  8 Apr 2025 18:09:26 +0800
+Message-ID: <0f9d5473105e4c09c6c41e3db72cc63f1d4d55f9.1744106242.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1744106241.git.mchehab+huawei@kernel.org>
 References: <cover.1744106241.git.mchehab+huawei@kernel.org>
@@ -51,186 +51,325 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
 
-With the Pyhton version, the actual output happens after parsing,
-from records stored at self.entries.
-
-Ensure that line numbers will be properly stored there and
-that they'll produce the desired results at the ReST output.
+Make pylint happier by adding some missing documentation and
+addressing a couple of pylint warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- scripts/lib/kdoc/kdoc_output.py | 13 +++++++------
- scripts/lib/kdoc/kdoc_parser.py | 21 +++++++++++++++++----
- 2 files changed, 24 insertions(+), 10 deletions(-)
+ scripts/kernel-doc.py           | 12 ++++----
+ scripts/lib/kdoc/kdoc_files.py  |  4 +--
+ scripts/lib/kdoc/kdoc_output.py | 50 ++++++++++++++++++++++++++-------
+ scripts/lib/kdoc/kdoc_parser.py | 30 +++++---------------
+ scripts/lib/kdoc/kdoc_re.py     |  3 +-
+ 5 files changed, 57 insertions(+), 42 deletions(-)
+ mode change 100755 => 100644 scripts/lib/kdoc/kdoc_files.py
 
+diff --git a/scripts/kernel-doc.py b/scripts/kernel-doc.py
+index 90aacd17499a..eca7e34f9d03 100755
+--- a/scripts/kernel-doc.py
++++ b/scripts/kernel-doc.py
+@@ -2,7 +2,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # Copyright(c) 2025: Mauro Carvalho Chehab <mchehab@kernel.org>.
+ #
+-# pylint: disable=C0103
++# pylint: disable=C0103,R0915
+ #
+ # Converted from the kernel-doc script originally written in Perl
+ # under GPLv2, copyrighted since 1998 by the following authors:
+@@ -165,6 +165,8 @@ neither here nor at the original Perl script.
+ 
+ 
+ class MsgFormatter(logging.Formatter):
++    """Helper class to format warnings on a similar way to kernel-doc.pl"""
++
+     def format(self, record):
+         record.levelname = record.levelname.capitalize()
+         return logging.Formatter.format(self, record)
+@@ -241,7 +243,7 @@ def main():
+ 
+     # Those are valid for all 3 types of filter
+     parser.add_argument("-n", "-nosymbol", "--nosymbol", action='append',
+-                         help=NOSYMBOL_DESC)
++                        help=NOSYMBOL_DESC)
+ 
+     parser.add_argument("-D", "-no-doc-sections", "--no-doc-sections",
+                         action='store_true', help="Don't outputt DOC sections")
+@@ -286,9 +288,9 @@ def main():
+     kfiles.parse(args.files, export_file=args.export_file)
+ 
+     for t in kfiles.msg(enable_lineno=args.enable_lineno, export=args.export,
+-                          internal=args.internal, symbol=args.symbol,
+-                          nosymbol=args.nosymbol,
+-                          no_doc_sections=args.no_doc_sections):
++                        internal=args.internal, symbol=args.symbol,
++                        nosymbol=args.nosymbol,
++                        no_doc_sections=args.no_doc_sections):
+         msg = t[1]
+         if msg:
+             print(msg)
+diff --git a/scripts/lib/kdoc/kdoc_files.py b/scripts/lib/kdoc/kdoc_files.py
+old mode 100755
+new mode 100644
+index dd3dbe87520b..e2221db7022a
+--- a/scripts/lib/kdoc/kdoc_files.py
++++ b/scripts/lib/kdoc/kdoc_files.py
+@@ -4,8 +4,6 @@
+ #
+ # pylint: disable=R0903,R0913,R0914,R0917
+ 
+-# TODO: implement warning filtering
+-
+ """
+ Parse lernel-doc tags on multiple kernel source files.
+ """
+@@ -128,7 +126,7 @@ class KernelFiles():
+     def __init__(self, verbose=False, out_style=None,
+                  werror=False, wreturn=False, wshort_desc=False,
+                  wcontents_before_sections=False,
+-                 logger=None, modulename=None, export_file=None):
++                 logger=None, modulename=None):
+         """
+         Initialize startup variables and parse all files
+         """
 diff --git a/scripts/lib/kdoc/kdoc_output.py b/scripts/lib/kdoc/kdoc_output.py
-index a246d213523c..6a7187980bec 100755
+index 6582d1f64d1e..7f84bf12f1e1 100755
 --- a/scripts/lib/kdoc/kdoc_output.py
 +++ b/scripts/lib/kdoc/kdoc_output.py
-@@ -255,7 +255,8 @@ class RestFormat(OutputFormat):
-     def print_lineno(self, ln):
-         """Outputs a line number"""
+@@ -2,9 +2,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # Copyright(c) 2025: Mauro Carvalho Chehab <mchehab@kernel.org>.
+ #
+-# pylint: disable=C0301,R0911,R0912,R0913,R0914,R0915,R0917
+-
+-# TODO: implement warning filtering
++# pylint: disable=C0301,R0902,R0911,R0912,R0913,R0914,R0915,R0917
  
--        if self.enable_lineno and ln:
-+        if self.enable_lineno and ln is not None:
-+            ln += 1
+ """
+ Implement output filters to print kernel-doc documentation.
+@@ -52,6 +50,11 @@ type_member_func = type_member + Re(r"\(\)", cache=False)
+ 
+ 
+ class OutputFormat:
++    """
++    Base class for OutputFormat. If used as-is, it means that only
++    warnings will be displayed.
++    """
++
+     # output mode.
+     OUTPUT_ALL          = 0 # output all symbols and doc sections
+     OUTPUT_INCLUDE      = 1 # output only specified symbols
+@@ -75,6 +78,10 @@ class OutputFormat:
+         self.data = ""
+ 
+     def set_config(self, config):
++        """
++        Setup global config variables used by both parser and output.
++        """
++
+         self.config = config
+ 
+     def set_filter(self, export, internal, symbol, nosymbol, function_table,
+@@ -117,6 +124,10 @@ class OutputFormat:
+         return block
+ 
+     def out_warnings(self, args):
++        """
++        Output warnings for identifiers that will be displayed.
++        """
++
+         warnings = args.get('warnings', [])
+ 
+         for warning, log_msg in warnings:
+@@ -146,6 +157,11 @@ class OutputFormat:
+         return False
+ 
+     def check_declaration(self, dtype, name, args):
++        """
++        Checks if a declaration should be output or not based on the
++        filtering criteria.
++        """
++
+         if name in self.nosymbol:
+             return False
+ 
+@@ -169,6 +185,10 @@ class OutputFormat:
+         return False
+ 
+     def msg(self, fname, name, args):
++        """
++        Handles a single entry from kernel-doc parser
++        """
++
+         self.data = ""
+ 
+         dtype = args.get('type', "")
+@@ -203,24 +223,25 @@ class OutputFormat:
+         return None
+ 
+     # Virtual methods to be overridden by inherited classes
++    # At the base class, those do nothing.
+     def out_doc(self, fname, name, args):
+-        pass
++        """Outputs a DOC block"""
+ 
+     def out_function(self, fname, name, args):
+-        pass
++        """Outputs a function"""
+ 
+     def out_enum(self, fname, name, args):
+-        pass
++        """Outputs an enum"""
+ 
+     def out_typedef(self, fname, name, args):
+-        pass
++        """Outputs a typedef"""
+ 
+     def out_struct(self, fname, name, args):
+-        pass
++        """Outputs a struct"""
+ 
+ 
+ class RestFormat(OutputFormat):
+-    # """Consts and functions used by ReST output"""
++    """Consts and functions used by ReST output"""
+ 
+     highlights = [
+         (type_constant, r"``\1``"),
+@@ -265,6 +286,11 @@ class RestFormat(OutputFormat):
              self.data += f".. LINENO {ln}\n"
  
      def output_highlight(self, args):
-@@ -358,7 +359,7 @@ class RestFormat(OutputFormat):
-         parameterdescs = args.get('parameterdescs', {})
-         parameterdesc_start_lines = args.get('parameterdesc_start_lines', {})
++        """
++        Outputs a C symbol that may require being converted to ReST using
++        the self.highlights variable
++        """
++
+         input_text = args
+         output = ""
+         in_literal = False
+@@ -579,6 +605,10 @@ class ManFormat(OutputFormat):
+         self.man_date = dt.strftime("%B %Y")
  
--        ln = args.get('ln', 0)
-+        ln = args.get('declaration_start_line', 0)
+     def output_highlight(self, block):
++        """
++        Outputs a C symbol that may require being highlighted with
++        self.highlights variable using troff syntax
++        """
  
-         count = 0
-         for parameter in parameterlist:
-@@ -375,11 +376,11 @@ class RestFormat(OutputFormat):
-         if not func_macro:
-             signature += ")"
+         contents = self.highlight_block(block)
  
-+        self.print_lineno(ln)
-         if args.get('typedef') or not args.get('functiontype'):
-             self.data += f".. c:macro:: {args['function']}\n\n"
+@@ -601,7 +631,7 @@ class ManFormat(OutputFormat):
+         sections = args.get('sections', {})
  
-             if args.get('typedef'):
--                self.print_lineno(ln)
-                 self.data += "   **Typedef**: "
-                 self.lineprefix = ""
-                 self.output_highlight(args.get('purpose', ""))
-@@ -434,7 +435,7 @@ class RestFormat(OutputFormat):
-         name = args.get('enum', '')
-         parameterlist = args.get('parameterlist', [])
-         parameterdescs = args.get('parameterdescs', {})
--        ln = args.get('ln', 0)
-+        ln = args.get('declaration_start_line', 0)
+         if not self.check_doc(name, args):
+-                return
++            return
  
-         self.data += f"\n\n.. c:enum:: {name}\n\n"
+         self.data += f'.TH "{module}" 9 "{module}" "{self.man_date}" "API Manual" LINUX' + "\n"
  
-@@ -464,7 +465,7 @@ class RestFormat(OutputFormat):
- 
-         oldprefix = self.lineprefix
-         name = args.get('typedef', '')
--        ln = args.get('ln', 0)
-+        ln = args.get('declaration_start_line', 0)
- 
-         self.data += f"\n\n.. c:type:: {name}\n\n"
- 
-@@ -484,7 +485,7 @@ class RestFormat(OutputFormat):
-         purpose = args.get('purpose', "")
-         declaration = args.get('definition', "")
-         dtype = args.get('type', "struct")
--        ln = args.get('ln', 0)
-+        ln = args.get('declaration_start_line', 0)
- 
-         parameterlist = args.get('parameterlist', [])
-         parameterdescs = args.get('parameterdescs', {})
 diff --git a/scripts/lib/kdoc/kdoc_parser.py b/scripts/lib/kdoc/kdoc_parser.py
-index 3ce116595546..e8c86448d6b5 100755
+index 3698ef625367..dcb9515fc40b 100755
 --- a/scripts/lib/kdoc/kdoc_parser.py
 +++ b/scripts/lib/kdoc/kdoc_parser.py
-@@ -276,7 +276,7 @@ class KernelDoc:
-         self.entry.brcount = 0
+@@ -131,7 +131,7 @@ class KernelDoc:
+         # Place all potential outputs into an array
+         self.entries = []
  
-         self.entry.in_doc_sect = False
--        self.entry.declaration_start_line = ln
-+        self.entry.declaration_start_line = ln + 1
+-    # TODO: rename to emit_message
++    # TODO: rename to emit_message after removal of kernel-doc.pl
+     def emit_warning(self, ln, msg, warning=True):
+         """Emit a message"""
  
-     def push_parameter(self, ln, decl_type, param, dtype,
-                        org_arg, declaration_name):
-@@ -806,8 +806,10 @@ class KernelDoc:
-                                 parameterlist=self.entry.parameterlist,
-                                 parameterdescs=self.entry.parameterdescs,
-                                 parametertypes=self.entry.parametertypes,
-+                                parameterdesc_start_lines=self.entry.parameterdesc_start_lines,
-                                 sectionlist=self.entry.sectionlist,
-                                 sections=self.entry.sections,
-+                                section_start_lines=self.entry.section_start_lines,
-                                 purpose=self.entry.declaration_purpose)
+@@ -157,19 +157,6 @@ class KernelDoc:
+         name = self.entry.section
+         contents = self.entry.contents
  
-     def dump_enum(self, ln, proto):
-@@ -882,8 +884,10 @@ class KernelDoc:
-                                 module=self.config.modulename,
-                                 parameterlist=self.entry.parameterlist,
-                                 parameterdescs=self.entry.parameterdescs,
-+                                parameterdesc_start_lines=self.entry.parameterdesc_start_lines,
-                                 sectionlist=self.entry.sectionlist,
-                                 sections=self.entry.sections,
-+                                section_start_lines=self.entry.section_start_lines,
-                                 purpose=self.entry.declaration_purpose)
+-        # TODO: we can prevent dumping empty sections here with:
+-        #
+-        #    if self.entry.contents.strip("\n"):
+-        #       if start_new:
+-        #           self.entry.section = self.section_default
+-        #           self.entry.contents = ""
+-        #
+-        #        return
+-        #
+-        # But, as we want to be producing the same output of the
+-        # venerable kernel-doc Perl tool, let's just output everything,
+-        # at least for now
+-
+         if type_param.match(name):
+             name = type_param.group(1)
  
-     def dump_declaration(self, ln, prototype):
-@@ -1054,8 +1058,10 @@ class KernelDoc:
-                                     parameterlist=self.entry.parameterlist,
-                                     parameterdescs=self.entry.parameterdescs,
-                                     parametertypes=self.entry.parametertypes,
-+                                    parameterdesc_start_lines=self.entry.parameterdesc_start_lines,
-                                     sectionlist=self.entry.sectionlist,
-                                     sections=self.entry.sections,
-+                                    section_start_lines=self.entry.section_start_lines,
-                                     purpose=self.entry.declaration_purpose,
-                                     func_macro=func_macro)
-         else:
-@@ -1067,8 +1073,10 @@ class KernelDoc:
-                                     parameterlist=self.entry.parameterlist,
-                                     parameterdescs=self.entry.parameterdescs,
-                                     parametertypes=self.entry.parametertypes,
-+                                    parameterdesc_start_lines=self.entry.parameterdesc_start_lines,
-                                     sectionlist=self.entry.sectionlist,
-                                     sections=self.entry.sections,
-+                                    section_start_lines=self.entry.section_start_lines,
-                                     purpose=self.entry.declaration_purpose,
-                                     func_macro=func_macro)
+@@ -205,7 +192,7 @@ class KernelDoc:
+             self.entry.section = self.section_default
+             self.entry.contents = ""
  
-@@ -1112,8 +1120,10 @@ class KernelDoc:
-                                     parameterlist=self.entry.parameterlist,
-                                     parameterdescs=self.entry.parameterdescs,
-                                     parametertypes=self.entry.parametertypes,
-+                                    parameterdesc_start_lines=self.entry.parameterdesc_start_lines,
-                                     sectionlist=self.entry.sectionlist,
-                                     sections=self.entry.sections,
-+                                    section_start_lines=self.entry.section_start_lines,
-                                     purpose=self.entry.declaration_purpose)
+-    # TODO: rename it to store_declaration
++    # TODO: rename it to store_declaration after removal of kernel-doc.pl
+     def output_declaration(self, dtype, name, **args):
+         """
+         Stores the entry into an entry array.
+@@ -225,13 +212,13 @@ class KernelDoc:
+         args["type"] = dtype
+         args["warnings"] = self.entry.warnings
+ 
+-        # TODO: use colletions.OrderedDict
++        # TODO: use colletions.OrderedDict to remove sectionlist
+ 
+         sections = args.get('sections', {})
+         sectionlist = args.get('sectionlist', [])
+ 
+         # Drop empty sections
+-        # TODO: improve it to emit warnings
++        # TODO: improve empty sections logic to emit warnings
+         for section in ["Description", "Return"]:
+             if section in sectionlist:
+                 if not sections[section].rstrip():
+@@ -636,7 +623,9 @@ class KernelDoc:
+ 
+             # Replace macros
+             #
+-            # TODO: it is better to also move those to the NestedMatch logic,
++            # TODO: use NestedMatch for FOO($1, $2, ...) matches
++            #
++            # it is better to also move those to the NestedMatch logic,
+             # to ensure that parenthesis will be properly matched.
+ 
+             (Re(r'__ETHTOOL_DECLARE_LINK_MODE_MASK\s*\(([^\)]+)\)', re.S), r'DECLARE_BITMAP(\1, __ETHTOOL_LINK_MODE_MASK_NBITS)'),
+@@ -906,7 +895,6 @@ class KernelDoc:
+             self.dump_struct(ln, prototype)
              return
  
-@@ -1136,6 +1146,7 @@ class KernelDoc:
-                                     module=self.entry.modulename,
-                                     sectionlist=self.entry.sectionlist,
-                                     sections=self.entry.sections,
-+                                    section_start_lines=self.entry.section_start_lines,
-                                     purpose=self.entry.declaration_purpose)
-             return
+-        # TODO: handle other types
+         self.output_declaration(self.entry.decl_type, prototype,
+                                 entry=self.entry)
  
-@@ -1168,7 +1179,7 @@ class KernelDoc:
-             return
+@@ -1680,10 +1668,6 @@ class KernelDoc:
+                                           self.st_inline_name[self.inline_doc_state],
+                                           line)
  
-         # start a new entry
--        self.reset_state(ln + 1)
-+        self.reset_state(ln)
-         self.entry.in_doc_sect = False
+-                    # TODO: not all states allow EXPORT_SYMBOL*, so this
+-                    # can be optimized later on to speedup parsing
+-                    self.process_export(self.config.function_table, line)
+-
+                     # Hand this line to the appropriate state handler
+                     if self.state == self.STATE_NORMAL:
+                         self.process_normal(ln, line)
+diff --git a/scripts/lib/kdoc/kdoc_re.py b/scripts/lib/kdoc/kdoc_re.py
+index 512b6521e79d..d28485ff94d6 100755
+--- a/scripts/lib/kdoc/kdoc_re.py
++++ b/scripts/lib/kdoc/kdoc_re.py
+@@ -131,7 +131,8 @@ class NestedMatch:
+     will ignore the search string.
+     """
  
-         # next line is always the function name
-@@ -1281,7 +1292,7 @@ class KernelDoc:
-             if r.match(line):
-                 self.dump_section()
-                 self.entry.section = self.section_default
--                self.entry.new_start_line = line
-+                self.entry.new_start_line = ln
-                 self.entry.contents = ""
- 
-         if doc_sect.search(line):
-@@ -1619,7 +1630,9 @@ class KernelDoc:
-             self.dump_section()
-             self.output_declaration("doc", None,
-                                     sectionlist=self.entry.sectionlist,
--                                    sections=self.entry.sections, module=self.config.modulename)
-+                                    sections=self.entry.sections,
-+                                    section_start_lines=self.entry.section_start_lines,
-+                                    module=self.config.modulename)
-             self.reset_state(ln)
- 
-         elif doc_content.search(line):
+-    # TODO:
++    # TODO: make NestedMatch handle multiple match groups
++    #
+     # Right now, regular expressions to match it are defined only up to
+     #       the start delimiter, e.g.:
+     #
 -- 
 2.49.0
 
