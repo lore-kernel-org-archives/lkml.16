@@ -1,227 +1,250 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DA9D21ADC4
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 21:31:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5342231C9F
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 21:31:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744147871; cv=none; b=BfD4Kj1Qkxtxe0dVoSeDFaxVJTD/sGxUzLFkYdUavnesUJ6bG7CKiDPVhDblAjweO4MmhSoGqVS3vUI4Vh7Xhd7yS+lJ6CSL5NCpdGkUvLhNa73Vj2BUrOZDqEKvII4L0nLeF4dFXUGxjXXXHxtKfs3d9HR2NxbZ+9fEcBvmwrs=
+	t=1744147893; cv=none; b=mtaGVYTaz3r9cklmn/hfqFW1MFShMmQJL92oFxY28bT2OSF2hqC2GDqm+cnVxh9eOUttUv2qGy0o4Mzexu/69vRqnz5sfPEiy/teEu2C5/PXEIRxqkOAPj7U1rrd1tvmwKQYVLUBeQ87dx87BsAQi6bvKwg/cqXWZa5X3WYPdKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744147871; c=relaxed/simple;
-	bh=ceuktwmE6Tz6ySyYjExWpcHUrmoXfJEVisxJS0xJM/U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-type; b=i2vnPvYYYrcfbdphp1lWXji7YmPAq8fJ2yoO71Itp06bJuOLK3e5yR0e/YK+iqQ+Ohu3pNQ8E/UhtZzwR7GkAGJm0ms3LEsHR/3MRiO2+w8QVMT2Xn9LO+r0az8BYKCpI8gtMmeyCqCvOnsQBPaVtjjzemsFp4u/lJSD8vFLCho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J0XX1wBP; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744147893; c=relaxed/simple;
+	bh=AGINcubrwDHhNZhMG/5qRMWHfMGWmK7tdHB0j9/zR7Y=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=tQb7OlGF167CqkqSHDmKQW8OyqbVJ5I6xoBNHpVkgtcA7KKIUMhk1RdKIUuSGLXWlsb3MqEAWtV53UCvyysqx6Q1vjQXX+RBAMvZvJJiADJ4Fd6Jim414+peRbGSVEqXXmNRxhmub8yWFyWlREIFCTzdOJrvmy41qP08HBeJ0Zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=epboGODE; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J0XX1wBP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744147867;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=zJ/vYvJFdaljL1EBPrzkdHubi4p6O3iwKoThG4V7wUE=;
-	b=J0XX1wBP9n5aM4EmYi6sXDtSFw2jd+zzm3gBOCf4CjZ0NnRn8JKfrbUFFY6lu4/ndyF3zp
-	2+sEO5l9eFqyyC59Gyv3wfK78lEfjZGsIr47pF/19+GopyWaG94U9ewE/Iy1gAM+gA8LUg
-	wqRa9r5CvJEm+8XuQG9vDmFpxDvJt1Y=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-300-M_aXImNoPMC0KC4igJKe0g-1; Tue, 08 Apr 2025 17:31:06 -0400
-X-MC-Unique: M_aXImNoPMC0KC4igJKe0g-1
-X-Mimecast-MFC-AGG-ID: M_aXImNoPMC0KC4igJKe0g_1744147866
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-47686947566so89174681cf.3
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 14:31:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="epboGODE"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-227a8cdd272so52847925ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 14:31:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744147891; x=1744752691; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Uam7GnobKmUw9hclFkCECYy0gTHPZztonbEuBIMruls=;
+        b=epboGODEtejbTq808AoYZkSeJOmKndRR55CtUpMKYvSuAV1uwuuhKJgEu7y0BZpQrm
+         qKFGAGlMmcecP7SWcsZzgBhgEhIOmE7L/mwSEQ2E5rrHPGiBN6gN4TiXEtStbvW+aFnG
+         uKHKs0ydVBtWePN8yLGfnhq1/6i08jy9qD4YL9dUv7gOUS21txxqv4mvqar7adl6xqr9
+         AG92WdjANekKLYwmw31w1Wv8MGbu9n2mS2GyeeCHMXgHj1y82VJtFpYf52uPLMZRqVxG
+         fVBnDY7Wap//42gwbZ1TnNqao26iEjTvknAbNLGvbHxnwJxmtgo9j8YDDDQHFD/thwOF
+         FaAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744147866; x=1744752666;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zJ/vYvJFdaljL1EBPrzkdHubi4p6O3iwKoThG4V7wUE=;
-        b=cZ2GGyhoSBv5oKMDrNCOTpJ6mbdaoCXGaE4QTGCtaA4oOgbUSyso/rvhMEueJlgpcI
-         jbAYvQvB8IPrrgvhY2SOBezeqU+V2H9s77WCoHXXwjiIuRPURIKmAtxx46FnTEPVOhET
-         Uph3iSAFauvFywe+f+2YgBiP6IFZsTqk2o3Rfalb257RdYugMgl0wj9ftlv6Rp8XvDr2
-         3eLrR6JrYd/awmCObey8mi3PRGjLQcghBr1IkMOYrf1VL3WRTtph6T7DVmomSFHQGLtg
-         njGpr7DscOw43hr4WWpwx/VrWxmbOhdNDH/gLWqssL75SiRGxK9aX97+yGENTrfB59sG
-         J8lw==
-X-Forwarded-Encrypted: i=1; AJvYcCWz/jW9zpdVenBDCiLqha8EKf8SwgUvhE/KAu7rmt4GLjtfYASxbedbsZWJZNNcFSVPfyLEkdpbXsqv0dw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGSgaIB9zagKEazLfEYkpZxMLN2HzfdYCp62Q4awVab0B86Wid
-	TbRBM1aV4GRhobTl6BenJLeNp+n5S/SG0HBleyjvcy5Y6cFYhg1gJ22FO9gIRsZVZkgR9rPE+rx
-	xbLGtn3WYgNcB4Ta0pEHXedJjOOU9adCUoAxgVS/tSVZszvR0ISOpf3zLVRjkMA==
-X-Gm-Gg: ASbGncs9TAPjyVBIQBT+4JB+BSbAPyoSFR1EWc5qEnYIRNwBkMVfVhveiQT5qBGWu9s
-	msiSJEQUhm2oC5uorzqZq/PJL6cO7PE6BgDOWTDSrAc/hTnzNe6+z5+ZbAB/o/p9VPjxhIgh4bP
-	OJy9nIU4W9JD0lQOCDwI0iAyr/ke1QvCQ0aENJ8x/+jBCOaoLXZiVH57T5TYI82zC8naLy+VXRZ
-	6KE1jSi4Sq6/YTeEt5DP+zYK2Qx7AdltiPHCM7xLpwftR3EtEZXhfWudM8JK4zjKXeybqV2QnmU
-	x9DI2VQ99oB+MXVa1t4VnoOs6ou6tBVmkqrmi6fS9V9VAEILAOxM77UaACA=
-X-Received: by 2002:ac8:5710:0:b0:472:1d98:c6df with SMTP id d75a77b69052e-4795f3830c5mr9360671cf.52.1744147866065;
-        Tue, 08 Apr 2025 14:31:06 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHaqQKFqtCmlZORrUMH7gDif9S184NDQ21l5dk4cYMD2uysBUK7u+SSTsZwMdSwHGbSJYvRkQ==
-X-Received: by 2002:ac8:5710:0:b0:472:1d98:c6df with SMTP id d75a77b69052e-4795f3830c5mr9359851cf.52.1744147865368;
-        Tue, 08 Apr 2025 14:31:05 -0700 (PDT)
-Received: from localhost (pool-100-17-21-114.bstnma.fios.verizon.net. [100.17.21.114])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4791b071b42sm81639081cf.27.2025.04.08.14.31.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 14:31:04 -0700 (PDT)
-From: Eric Chanudet <echanude@redhat.com>
-To: Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Clark Williams <clrkwllms@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ian Kent <ikent@redhat.com>
-Cc: linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev,
-	Eric Chanudet <echanude@redhat.com>,
-	Alexander Larsson <alexl@redhat.com>,
-	Lucas Karpinski <lkarpins@redhat.com>
-Subject: [PATCH v4] fs/namespace: defer RCU sync for MNT_DETACH umount
-Date: Tue,  8 Apr 2025 16:58:34 -0400
-Message-ID: <20250408210350.749901-12-echanude@redhat.com>
-X-Mailer: git-send-email 2.49.0
+        d=1e100.net; s=20230601; t=1744147891; x=1744752691;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Uam7GnobKmUw9hclFkCECYy0gTHPZztonbEuBIMruls=;
+        b=XygUPpwMACyQLVp1Gf65cJrDn3qA2CZ3mK7bv4X7vBPwyvBX0+L/8Ii5nqWTgzmlfZ
+         wfPbxBVZzalbD2RnkDZB90ELREGQ9+Ilmtu3puDEJ5UXhaGc9zfa8WuL0VpbzqtUiTdf
+         ot0ytUhqDAiCBnOv3lCEhp1hqUp7sK9D3eYm3EE61xuqHFK8JDBuprkBPMaLDWXVL0r6
+         06pAcHuntzP8f7cCgUrqZ5Lw032lIhKmXsXgOd043JlTFFdWu86JYMfM4SA2EKdhdg8L
+         oaSm6LpHY2h4O2FVnPa3NiK9JcF/SZZhKjkVc2lW3U6ZJgqZI7ThaCVbQ7SEMPtngKgX
+         o1YA==
+X-Forwarded-Encrypted: i=1; AJvYcCWajpGIsunZanK7nT7AeyuXt1DMpm1K8rmoyvNqF08XH+c0ak8BiRea35BQsex56NeBz6GQ22yDpVOGAK4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyX8hLuWNirALkgiM8E1e0+JLtlq4IsAQ9ZA8QPtWoWT4CEB4Yv
+	roPBI/TxCsqj+bg5LrEtctOjJcH4p9wAvff/PZOibzBnTfhU1Bhu3pttx64GXT+f6L1JLWaxx1W
+	zNw==
+X-Google-Smtp-Source: AGHT+IEKRdfCo7P0dOM9nLMdnn/wJxKiZkQkp2kalAXi+Af3MMzb50Othlo0RizKEkwtKlr8YY3PKqUJQ1s=
+X-Received: from pfbfc24.prod.google.com ([2002:a05:6a00:2e18:b0:730:7e2d:df69])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ccc8:b0:227:e7c7:d451
+ with SMTP id d9443c01a7336-22ac3f9a8fcmr4363085ad.29.1744147891223; Tue, 08
+ Apr 2025 14:31:31 -0700 (PDT)
+Date: Tue, 8 Apr 2025 14:31:29 -0700
+In-Reply-To: <4c396e79-845a-481a-8a3e-4a7f458371b8@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-type: text/plain
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250404193923.1413163-1-seanjc@google.com> <20250404193923.1413163-66-seanjc@google.com>
+ <4c396e79-845a-481a-8a3e-4a7f458371b8@redhat.com>
+Message-ID: <Z_WVsZQbY23XrhAG@google.com>
+Subject: Re: [PATCH 65/67] KVM: SVM: Generate GA log IRQs only if the
+ associated vCPUs is blocking
+From: Sean Christopherson <seanjc@google.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Joerg Roedel <joro@8bytes.org>, David Woodhouse <dwmw2@infradead.org>, 
+	Lu Baolu <baolu.lu@linux.intel.com>, kvm@vger.kernel.org, iommu@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Maxim Levitsky <mlevitsk@redhat.com>, 
+	Joao Martins <joao.m.martins@oracle.com>, David Matlack <dmatlack@google.com>
+Content-Type: text/plain; charset="us-ascii"
 
-Defer releasing the detached file-system when calling namespace_unlock()
-during a lazy umount to return faster.
+On Tue, Apr 08, 2025, Paolo Bonzini wrote:
+> On 4/4/25 21:39, Sean Christopherson wrote:
+> > @@ -892,7 +893,7 @@ static void __avic_vcpu_load(struct kvm_vcpu *vcpu, int cpu, bool toggle_avic)
+> >   	WRITE_ONCE(kvm_svm->avic_physical_id_table[vcpu->vcpu_id], entry);
+> > -	avic_update_iommu_vcpu_affinity(vcpu, h_physical_id, toggle_avic);
+> > +	avic_update_iommu_vcpu_affinity(vcpu, h_physical_id, toggle_avic, false);
+> >   	spin_unlock_irqrestore(&svm->ir_list_lock, flags);
+> >   }
+> > @@ -912,7 +913,8 @@ void avic_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+> >   	__avic_vcpu_load(vcpu, cpu, false);
+> >   }
+> > -static void __avic_vcpu_put(struct kvm_vcpu *vcpu, bool toggle_avic)
+> > +static void __avic_vcpu_put(struct kvm_vcpu *vcpu, bool toggle_avic,
+> > +			    bool is_blocking)
+> 
+> What would it look like to use an enum { SCHED_OUT, SCHED_IN, ENABLE_AVIC,
+> DISABLE_AVIC, START_BLOCKING } for both __avic_vcpu_put and
+> __avic_vcpu_load's second argument?
 
-When requesting MNT_DETACH, the caller does not expect the file-system
-to be shut down upon returning from the syscall. Calling
-synchronize_rcu_expedited() has a significant cost on RT kernel that
-defaults to rcupdate.rcu_normal_after_boot=1. Queue the detached struct
-mount in a separate list and put it on a workqueue to run post RCU
-grace-period.
+There's gotta be a way to make it look better than this code.  I gave a half-
+hearted attempt at using an enum before posting, but wasn't able to come up with
+anything decent.
 
-w/o patch, 6.15-rc1 PREEMPT_RT:
-perf stat -r 10 --null --pre 'mount -t tmpfs tmpfs mnt' -- umount mnt
-    0.02455 +- 0.00107 seconds time elapsed  ( +-  4.36% )
-perf stat -r 10 --null --pre 'mount -t tmpfs tmpfs mnt' -- umount -l mnt
-    0.02555 +- 0.00114 seconds time elapsed  ( +-  4.46% )
+Coming back to it with fresh eyes, what about this (full on-top diff below)?
 
-w/ patch, 6.15-rc1 PREEMPT_RT:
-perf stat -r 10 --null --pre 'mount -t tmpfs tmpfs mnt' -- umount mnt
-    0.026311 +- 0.000869 seconds time elapsed  ( +-  3.30% )
-perf stat -r 10 --null --pre 'mount -t tmpfs tmpfs mnt' -- umount -l mnt
-    0.003194 +- 0.000160 seconds time elapsed  ( +-  5.01% )
+enum avic_vcpu_action {
+	AVIC_SCHED_IN		= 0,
+	AVIC_SCHED_OUT		= 0,
+	AVIC_START_BLOCKING	= BIT(0),
 
-Signed-off-by: Alexander Larsson <alexl@redhat.com>
-Signed-off-by: Lucas Karpinski <lkarpins@redhat.com>
-Signed-off-by: Eric Chanudet <echanude@redhat.com>
+	AVIC_TOGGLE_ON_OFF	= BIT(1),
+	AVIC_ACTIVATE		= AVIC_TOGGLE_ON_OFF,
+	AVIC_DEACTIVATE		= AVIC_TOGGLE_ON_OFF,
+};
+
+AVIC_SCHED_IN and AVIC_SCHED_OUT are essentially syntactic sugar, as are
+AVIC_ACTIVATE and AVIC_DEACTIVATE to a certain extent.  But it's much better than
+booleans, and using a bitmask makes avic_update_iommu_vcpu_affinity() slightly
+prettier.
+
+> Consecutive bools are ugly...
+
+Yeah, I hated it when I wrote it, and still hate it now.
+
+And more error prone, e.g. the __avic_vcpu_put() call from avic_refresh_apicv_exec_ctrl()
+should specify is_blocking=false, not true, as kvm_x86_ops.refresh_apicv_exec_ctrl()
+should never be called while the vCPU is blocking.
+
 ---
+ arch/x86/kvm/svm/avic.c | 41 ++++++++++++++++++++++++++++-------------
+ 1 file changed, 28 insertions(+), 13 deletions(-)
 
-Attempt to re-spin this series based on the feedback received in v3 that
-pointed out the need to wait the grace-period in namespace_unlock()
-before calling the deferred mntput().
-
-v4:
-- Use queue_rcu_work() to defer free_mounts() for lazy umounts
-- Drop lazy_unlock global and refactor using a helper
-v3: https://lore.kernel.org/all/20240626201129.272750-2-lkarpins@redhat.com/
-- Removed unneeded code for lazy umount case.
-- Don't block within interrupt context.
-v2: https://lore.kernel.org/all/20240426195429.28547-1-lkarpins@redhat.com/
-- Only defer releasing umount'ed filesystems for lazy umounts
-v1: https://lore.kernel.org/all/20230119205521.497401-1-echanude@redhat.com/
-
- fs/namespace.c | 52 +++++++++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 45 insertions(+), 7 deletions(-)
-
-diff --git a/fs/namespace.c b/fs/namespace.c
-index 14935a0500a2..e5b0b920dd97 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -45,6 +45,11 @@ static unsigned int m_hash_shift __ro_after_init;
- static unsigned int mp_hash_mask __ro_after_init;
- static unsigned int mp_hash_shift __ro_after_init;
+diff --git a/arch/x86/kvm/svm/avic.c b/arch/x86/kvm/svm/avic.c
+index 425674e1a04c..1752420c68aa 100644
+--- a/arch/x86/kvm/svm/avic.c
++++ b/arch/x86/kvm/svm/avic.c
+@@ -833,9 +833,20 @@ int avic_pi_update_irte(struct kvm_kernel_irqfd *irqfd, struct kvm *kvm,
+ 	return irq_set_vcpu_affinity(host_irq, NULL);
+ }
  
-+struct deferred_free_mounts {
-+	struct rcu_work rwork;
-+	struct hlist_head release_list;
++enum avic_vcpu_action {
++	AVIC_SCHED_IN		= 0,
++	AVIC_SCHED_OUT		= 0,
++	AVIC_START_BLOCKING	= BIT(0),
++
++	AVIC_TOGGLE_ON_OFF	= BIT(1),
++	AVIC_ACTIVATE		= AVIC_TOGGLE_ON_OFF,
++	AVIC_DEACTIVATE		= AVIC_TOGGLE_ON_OFF,
 +};
 +
- static __initdata unsigned long mhash_entries;
- static int __init set_mhash_entries(char *str)
+ static void avic_update_iommu_vcpu_affinity(struct kvm_vcpu *vcpu, int cpu,
+-					    bool toggle_avic, bool ga_log_intr)
++					    enum avic_vcpu_action action)
  {
-@@ -1789,11 +1794,29 @@ static bool need_notify_mnt_list(void)
- }
- #endif
++	bool ga_log_intr = (action & AVIC_START_BLOCKING);
+ 	struct amd_svm_iommu_ir *ir;
+ 	struct vcpu_svm *svm = to_svm(vcpu);
  
--static void namespace_unlock(void)
-+static void free_mounts(struct hlist_head *mount_list)
- {
--	struct hlist_head head;
- 	struct hlist_node *p;
- 	struct mount *m;
-+
-+	hlist_for_each_entry_safe(m, p, mount_list, mnt_umount) {
-+		hlist_del(&m->mnt_umount);
-+		mntput(&m->mnt);
-+	}
-+}
-+
-+static void defer_free_mounts(struct work_struct *work)
-+{
-+	struct deferred_free_mounts *d = container_of(
-+		to_rcu_work(work), struct deferred_free_mounts, rwork);
-+
-+	free_mounts(&d->release_list);
-+	kfree(d);
-+}
-+
-+static void __namespace_unlock(bool lazy)
-+{
-+	HLIST_HEAD(head);
- 	LIST_HEAD(list);
- 
- 	hlist_move_list(&unmounted, &head);
-@@ -1817,12 +1840,27 @@ static void namespace_unlock(void)
- 	if (likely(hlist_empty(&head)))
+@@ -849,7 +860,7 @@ static void avic_update_iommu_vcpu_affinity(struct kvm_vcpu *vcpu, int cpu,
  		return;
  
--	synchronize_rcu_expedited();
-+	if (lazy) {
-+		struct deferred_free_mounts *d =
-+			kmalloc(sizeof(*d), GFP_KERNEL);
- 
--	hlist_for_each_entry_safe(m, p, &head, mnt_umount) {
--		hlist_del(&m->mnt_umount);
--		mntput(&m->mnt);
-+		if (unlikely(!d))
-+			goto out;
-+
-+		hlist_move_list(&head, &d->release_list);
-+		INIT_RCU_WORK(&d->rwork, defer_free_mounts);
-+		queue_rcu_work(system_wq, &d->rwork);
-+		return;
+ 	list_for_each_entry(ir, &svm->ir_list, node) {
+-		if (!toggle_avic)
++		if (!(action & AVIC_TOGGLE_ON_OFF))
+ 			WARN_ON_ONCE(amd_iommu_update_ga(ir->data, cpu, ga_log_intr));
+ 		else if (cpu >= 0)
+ 			WARN_ON_ONCE(amd_iommu_activate_guest_mode(ir->data, cpu, ga_log_intr));
+@@ -858,7 +869,8 @@ static void avic_update_iommu_vcpu_affinity(struct kvm_vcpu *vcpu, int cpu,
  	}
-+
-+out:
-+	synchronize_rcu_expedited();
-+	free_mounts(&head);
-+}
-+
-+static inline void namespace_unlock(void)
-+{
-+	__namespace_unlock(false);
  }
  
- static inline void namespace_lock(void)
-@@ -2056,7 +2094,7 @@ static int do_umount(struct mount *mnt, int flags)
- 	}
- out:
- 	unlock_mount_hash();
--	namespace_unlock();
-+	__namespace_unlock(flags & MNT_DETACH);
- 	return retval;
+-static void __avic_vcpu_load(struct kvm_vcpu *vcpu, int cpu, bool toggle_avic)
++static void __avic_vcpu_load(struct kvm_vcpu *vcpu, int cpu,
++			     enum avic_vcpu_action action)
+ {
+ 	struct kvm_svm *kvm_svm = to_kvm_svm(vcpu->kvm);
+ 	int h_physical_id = kvm_cpu_get_apicid(cpu);
+@@ -904,7 +916,7 @@ static void __avic_vcpu_load(struct kvm_vcpu *vcpu, int cpu, bool toggle_avic)
+ 
+ 	WRITE_ONCE(kvm_svm->avic_physical_id_table[vcpu->vcpu_id], entry);
+ 
+-	avic_update_iommu_vcpu_affinity(vcpu, h_physical_id, toggle_avic, false);
++	avic_update_iommu_vcpu_affinity(vcpu, h_physical_id, action);
+ 
+ 	spin_unlock_irqrestore(&svm->ir_list_lock, flags);
+ }
+@@ -921,11 +933,10 @@ void avic_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+ 	if (kvm_vcpu_is_blocking(vcpu))
+ 		return;
+ 
+-	__avic_vcpu_load(vcpu, cpu, false);
++	__avic_vcpu_load(vcpu, cpu, AVIC_SCHED_IN);
  }
  
--- 
-2.49.0
+-static void __avic_vcpu_put(struct kvm_vcpu *vcpu, bool toggle_avic,
+-			    bool is_blocking)
++static void __avic_vcpu_put(struct kvm_vcpu *vcpu, enum avic_vcpu_action action)
+ {
+ 	struct kvm_svm *kvm_svm = to_kvm_svm(vcpu->kvm);
+ 	struct vcpu_svm *svm = to_svm(vcpu);
+@@ -947,7 +958,7 @@ static void __avic_vcpu_put(struct kvm_vcpu *vcpu, bool toggle_avic,
+ 	 */
+ 	spin_lock_irqsave(&svm->ir_list_lock, flags);
+ 
+-	avic_update_iommu_vcpu_affinity(vcpu, -1, toggle_avic, is_blocking);
++	avic_update_iommu_vcpu_affinity(vcpu, -1, action);
+ 
+ 	WARN_ON_ONCE(entry & AVIC_PHYSICAL_ID_ENTRY_GA_LOG_INTR);
+ 
+@@ -964,7 +975,7 @@ static void __avic_vcpu_put(struct kvm_vcpu *vcpu, bool toggle_avic,
+ 	 * Note!  Don't set AVIC_PHYSICAL_ID_ENTRY_GA_LOG_INTR in the table as
+ 	 * it's a synthetic flag that usurps an unused a should-be-zero bit.
+ 	 */
+-	if (is_blocking)
++	if (action & AVIC_START_BLOCKING)
+ 		entry |= AVIC_PHYSICAL_ID_ENTRY_GA_LOG_INTR;
+ 
+ 	svm->avic_physical_id_entry = entry;
+@@ -992,7 +1003,8 @@ void avic_vcpu_put(struct kvm_vcpu *vcpu)
+ 			return;
+ 	}
+ 
+-	__avic_vcpu_put(vcpu, false, kvm_vcpu_is_blocking(vcpu));
++	__avic_vcpu_put(vcpu, kvm_vcpu_is_blocking(vcpu) ? AVIC_START_BLOCKING :
++							   AVIC_SCHED_OUT);
+ }
+ 
+ void avic_refresh_virtual_apic_mode(struct kvm_vcpu *vcpu)
+@@ -1024,12 +1036,15 @@ void avic_refresh_apicv_exec_ctrl(struct kvm_vcpu *vcpu)
+ 	if (!enable_apicv)
+ 		return;
+ 
++	/* APICv should only be toggled on/off while the vCPU is running. */
++	WARN_ON_ONCE(kvm_vcpu_is_blocking(vcpu));
++
+ 	avic_refresh_virtual_apic_mode(vcpu);
+ 
+ 	if (kvm_vcpu_apicv_active(vcpu))
+-		__avic_vcpu_load(vcpu, vcpu->cpu, true);
++		__avic_vcpu_load(vcpu, vcpu->cpu, AVIC_ACTIVATE);
+ 	else
+-		__avic_vcpu_put(vcpu, true, true);
++		__avic_vcpu_put(vcpu, AVIC_DEACTIVATE);
+ }
+ 
+ void avic_vcpu_blocking(struct kvm_vcpu *vcpu)
+@@ -1055,7 +1070,7 @@ void avic_vcpu_blocking(struct kvm_vcpu *vcpu)
+ 	 * CPU and cause noisy neighbor problems if the VM is sending interrupts
+ 	 * to the vCPU while it's scheduled out.
+ 	 */
+-	__avic_vcpu_put(vcpu, false, true);
++	__avic_vcpu_put(vcpu, AVIC_START_BLOCKING);
+ }
+ 
+ void avic_vcpu_unblocking(struct kvm_vcpu *vcpu)
 
+base-commit: fe5b44cf46d5444ff071bc2373fbe7b109a3f60b
+-- 
