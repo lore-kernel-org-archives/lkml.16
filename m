@@ -1,47 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E9E2267F55;
-	Tue,  8 Apr 2025 10:09:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC891267B97;
+	Tue,  8 Apr 2025 10:09:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744106999; cv=none; b=Jg8uV4uyR6oCoOg+NtPZWYZLMekb2ueIEKqeBd1sLHM9pgYF7kknLmhYy6KfW0H7SVhw73lhHvd2XkNXBgz/+fgZptjovWM0PPalrQxf7mwGhLhlGDnCnGQMyohQ6etFh+C/UMk+oyd42S8e3y5z4zvwDvBZQGyyk2FOFR2rCgo=
+	t=1744106998; cv=none; b=E6JrzAvjKJYVes/eR4mNer+L3uwI/aFXKD5yglx7zR2/GnAm+FqXmVAPKVLsmfHBBh7IOvBUjLwHkMmN1P/3juxZI2IkEWeKkjSdmxxl2ShU6giilt+IszxQITWve4u9nMgsjrFH0kekkWhWrZXFmFyzY0Rla8mOlEtxAxMr+0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744106999; c=relaxed/simple;
-	bh=iHwJIWf+EpApsxQknvppsFpmD/7QpWJ0mtVTdwRXEsw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JRSItDdCi6bqV44pkRt6VsWf0ZoIcHA/vcXfDq3q5OF6YTCRu3T2ThATCG2oksluDEMsMvs/hk6JxyQXJa4sdxoAJs0p8emx5a0JBmyup0dcoIpy16iirqZITnF5CeQq8DdSWCKcJMIwuk34RdR0yVdUB+ywRDCpBMjZkrvYkSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o8YedC33; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744106998; c=relaxed/simple;
+	bh=d/BYHBpOIyDxdhqarTYvBnjLDL46UOVxmUyyk5fM4rs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Xyeqwze+rd2fB/T5RPWHRGG5hro2gCcHvISyLuybxKdGty9+XMkJ5mEkeJDcUrRtvqNcjegw+f8vemN/7two6LH4b73F8xtsG51qbNgJvAZ+TDk6bigkJQduza3LRPSAttinJk06ywfLoOJgut0c1xVr4wfmRvM3GsduEa1jzow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EoOCA0gj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o8YedC33"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8373DC4CEE5;
-	Tue,  8 Apr 2025 10:09:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EoOCA0gj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A576CC4CEEF;
+	Tue,  8 Apr 2025 10:09:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744106997;
-	bh=iHwJIWf+EpApsxQknvppsFpmD/7QpWJ0mtVTdwRXEsw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=o8YedC33i8tsSrK0yDhUBlA6CUcSx6KQiR3tVpiqhdxWtXw4Qim5VVCBRFoX/jZb3
-	 mAiY4M3nbxvwkTqLEg2VrLlIV3JnejtUJm+ur/xIoa04lYFnTNyZ1hCXoe25A40Z04
-	 77FyeQVkpkzCy4EUd7sIiu7slY83WQQO3NVRiOWqXZqbN175T74gBWI0oVoZPIlR3M
-	 IJgaCIYUWzZimla1cZsHXZJMATxORKiCIpzG1vtl9ckQIlxSpkbcg260KskzoV5pn9
-	 WTKzQrJ2HS0rMIkJPRDfUjU+finLARH7fCxeE3j2m/SDEK/4VViJITmTROj95l2ecp
-	 0HWYVtjiRD4Aw==
+	s=k20201202; t=1744106998;
+	bh=d/BYHBpOIyDxdhqarTYvBnjLDL46UOVxmUyyk5fM4rs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=EoOCA0gjpP5kNp7IxMvdfhSXk4LE0e0klVMlet9TnM4SOeEop12AZMGueqoT9ROEC
+	 5Q4b9DJrE9QXgKc0BG/zu+wFDm427U8sS+wSJW1cdC/wFDSfRV75A1KUYORhrhl0A3
+	 3M5GJ3rJM/+5kxPIjxFi3/T1kd8fSoLASrkAhw1srQmnbGL4OOe1Ll7GnaJIM6hPb6
+	 LKVVkGxS6gLZCFoH7VKzUTav1JFp4YcbV2hHQelH+o7yKYXVJ4KZJyIa8YwpP82TeK
+	 dnlYeHX5DF0BDSL1nEj+CPlGdXATmwYpo6VVesqUm7UmyheUmo87u/ijGhcHwbbljQ
+	 PoRKhXHBRRGNQ==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab@kernel.org>)
-	id 1u25tt-00000008RVy-1HDy;
-	Tue, 08 Apr 2025 18:09:49 +0800
+	id 1u25ts-00000008RVF-3oXj;
+	Tue, 08 Apr 2025 18:09:48 +0800
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
 	Jonathan Corbet <corbet@lwn.net>
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Sean Anderson <sean.anderson@linux.dev>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 15/33] scripts/kernel-doc.py: fix handling of doc output check
-Date: Tue,  8 Apr 2025 18:09:18 +0800
-Message-ID: <6d8b77af85295452c0191863ea1041f4195aeaaf.1744106242.git.mchehab+huawei@kernel.org>
+	linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Kees Cook <kees@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	linux-hardening@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH v3 00/33] Implement kernel-doc in Python
+Date: Tue,  8 Apr 2025 18:09:03 +0800
+Message-ID: <cover.1744106241.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1744106241.git.mchehab+huawei@kernel.org>
-References: <cover.1744106241.git.mchehab+huawei@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,129 +52,113 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
 
-The filtering logic was seeking for the DOC name to check for
-symbols, but such data is stored only inside a section. Add it
-to the output_declaration, as it is quicker/easier to check
-the declaration name than to check inside each section.
+Hi Jon,
 
-While here, make sure that the output for both ReST and man
-after filtering will be similar to what kernel-doc Perl
-version does.
+This changeset contains the kernel-doc.py script to replace the verable
+kernel-doc originally written in Perl. It replaces the first version and the
+second series I sent on the top of it.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+I tried to stay as close as possible of the original Perl implementation
+on the first patch introducing kernel-doc.py, as it helps to double check
+if each function was  properly translated to Python.  This have been 
+helpful debugging troubles that happened during the conversion.
+
+I worked hard to make it bug-compatible with the original one. Still, its
+output has a couple of differences from the original one:
+
+- The tab expansion works better with the Python script. With that, some
+  outputs that contain tabs at kernel-doc markups are now different;
+
+- The new script  works better stripping blank lines. So, there are a couple
+  of empty new lines that are now stripped with this version;
+
+- There is a buggy logic at kernel-doc to strip empty description and
+  return sections. I was not able to replicate the exact behavior. So, I ended
+  adding an extra logic to strip empty sections with a different algorithm.
+
+Yet, on my tests, the results are compatible with the venerable script
+output for all .. kernel-doc tags found in Documentation/. I double-checked
+this by adding support to output the kernel-doc commands when V=1, and
+then I ran a diff between kernel-doc.pl and kernel-doc.py for the same
+command lines.
+
+The only patch that doesn't belong to this series is a patch dropping
+kernel-doc.pl. I opted to keep it for now, as it can help to better
+test the new tools.
+
+With such changes, if one wants to build docs with the old script,
+all it is needed is to use KERNELDOC parameter, e.g.:
+
+	$ make KERNELDOC=scripts/kernel-doc.pl htmldocs
+
 ---
- scripts/lib/kdoc/kdoc_output.py | 29 ++++++++++++-----------------
- scripts/lib/kdoc/kdoc_parser.py |  3 ++-
- 2 files changed, 14 insertions(+), 18 deletions(-)
 
-diff --git a/scripts/lib/kdoc/kdoc_output.py b/scripts/lib/kdoc/kdoc_output.py
-index 6a7187980bec..7a945dd80c9b 100755
---- a/scripts/lib/kdoc/kdoc_output.py
-+++ b/scripts/lib/kdoc/kdoc_output.py
-@@ -122,13 +122,13 @@ class OutputFormat:
-         if self.no_doc_sections:
-             return False
- 
-+        if name in self.nosymbol:
-+            return False
-+
-         if self.out_mode == self.OUTPUT_ALL:
-             return True
- 
-         if self.out_mode == self.OUTPUT_INCLUDE:
--            if name in self.nosymbol:
--                return False
--
-             if name in self.function_table:
-                 return True
- 
-@@ -154,15 +154,6 @@ class OutputFormat:
- 
-         return False
- 
--    def check_function(self, fname, name, args):
--        return True
--
--    def check_enum(self, fname, name, args):
--        return True
--
--    def check_typedef(self, fname, name, args):
--        return True
--
-     def msg(self, fname, name, args):
-         self.data = ""
- 
-@@ -306,7 +297,7 @@ class RestFormat(OutputFormat):
-         for line in output.strip("\n").split("\n"):
-             self.data += self.lineprefix + line + "\n"
- 
--    def out_section(self, args, out_reference=False):
-+    def out_section(self, args, out_docblock=False):
-         """
-         Outputs a block section.
- 
-@@ -325,7 +316,7 @@ class RestFormat(OutputFormat):
-                 continue
- 
-             if not self.out_mode == self.OUTPUT_INCLUDE:
--                if out_reference:
-+                if out_docblock:
-                     self.data += f".. _{section}:\n\n"
- 
-                 if not self.symbol:
-@@ -339,8 +330,7 @@ class RestFormat(OutputFormat):
-     def out_doc(self, fname, name, args):
-         if not self.check_doc(name):
-             return
--
--        self.out_section(args, out_reference=True)
-+        self.out_section(args, out_docblock=True)
- 
-     def out_function(self, fname, name, args):
- 
-@@ -583,8 +573,10 @@ class ManFormat(OutputFormat):
- 
-         for line in contents.strip("\n").split("\n"):
-             line = Re(r"^\s*").sub("", line)
-+            if not line:
-+                continue
- 
--            if line and line[0] == ".":
-+            if line[0] == ".":
-                 self.data += "\\&" + line + "\n"
-             else:
-                 self.data += line + "\n"
-@@ -594,6 +586,9 @@ class ManFormat(OutputFormat):
-         sectionlist = args.get('sectionlist', [])
-         sections = args.get('sections', {})
- 
-+        if not self.check_doc(name):
-+                return
-+
-         self.data += f'.TH "{module}" 9 "{module}" "{self.man_date}" "API Manual" LINUX' + "\n"
- 
-         for section in sectionlist:
-diff --git a/scripts/lib/kdoc/kdoc_parser.py b/scripts/lib/kdoc/kdoc_parser.py
-index e8c86448d6b5..74b311c8184c 100755
---- a/scripts/lib/kdoc/kdoc_parser.py
-+++ b/scripts/lib/kdoc/kdoc_parser.py
-@@ -1198,6 +1198,7 @@ class KernelDoc:
-             else:
-                 self.entry.section = doc_block.group(1)
- 
-+            self.entry.identifier = self.entry.section
-             self.state = self.STATE_DOCBLOCK
-             return
- 
-@@ -1628,7 +1629,7 @@ class KernelDoc:
- 
-         if doc_end.search(line):
-             self.dump_section()
--            self.output_declaration("doc", None,
-+            self.output_declaration("doc", self.entry.identifier,
-                                     sectionlist=self.entry.sectionlist,
-                                     sections=self.entry.sections,
-                                     section_start_lines=self.entry.section_start_lines,
+v3:
+- rebased on the top of v6.15-rc1;
+- Removed patches that weren't touching kernel-doc and its Sphinx extension;
+- The "Re" class was renamed to "KernRe"
+- It contains one patch from Sean with an additional hunk for the
+  python version.
+
+Mauro Carvalho Chehab (32):
+  scripts/kernel-doc: rename it to scripts/kernel-doc.pl
+  scripts/kernel-doc: add a symlink to the Perl version of kernel-doc
+  scripts/kernel-doc.py: add a Python parser
+  scripts/kernel-doc.py: output warnings the same way as kerneldoc
+  scripts/kernel-doc.py: better handle empty sections
+  scripts/kernel-doc.py: properly handle struct_group macros
+  scripts/kernel-doc.py: move regex methods to a separate file
+  scripts/kernel-doc.py: move KernelDoc class to a separate file
+  scripts/kernel-doc.py: move KernelFiles class to a separate file
+  scripts/kernel-doc.py: move output classes to a separate file
+  scripts/kernel-doc.py: convert message output to an interactor
+  scripts/kernel-doc.py: move file lists to the parser function
+  scripts/kernel-doc.py: implement support for -no-doc-sections
+  scripts/kernel-doc.py: fix line number output
+  scripts/kernel-doc.py: fix handling of doc output check
+  scripts/kernel-doc.py: properly handle out_section for ReST
+  scripts/kernel-doc.py: postpone warnings to the output plugin
+  docs: add a .pylintrc file with sys path for docs scripts
+  docs: sphinx: kerneldoc: verbose kernel-doc command if V=1
+  docs: sphinx: kerneldoc: ignore "\" characters from options
+  docs: sphinx: kerneldoc: use kernel-doc.py script
+  scripts/kernel-doc.py: Set an output format for --none
+  scripts/kernel-doc.py: adjust some coding style issues
+  scripts/lib/kdoc/kdoc_parser.py: fix Python compat with < v3.13
+  scripts/kernel-doc.py: move modulename to man class
+  scripts/kernel-doc.py: properly handle KBUILD_BUILD_TIMESTAMP
+  scripts/lib/kdoc/kdoc_parser.py: remove a python 3.9 dependency
+  scripts/kernel-doc.py: Properly handle Werror and exit codes
+  scripts/kernel-doc: switch to use kernel-doc.py
+  scripts/lib/kdoc/kdoc_files.py: allow filtering output per fname
+  scripts/kernel_doc.py: better handle exported symbols
+  scripts/kernel-doc.py: Rename the kernel doc Re class to KernRe
+
+Sean Anderson (1):
+  scripts: kernel-doc: fix parsing function-like typedefs (again)
+
+ .pylintrc                         |    2 +
+ Documentation/Makefile            |    2 +-
+ Documentation/conf.py             |    2 +-
+ Documentation/sphinx/kerneldoc.py |   46 +
+ scripts/kernel-doc                | 2440 +----------------------------
+ scripts/kernel-doc.pl             | 2439 ++++++++++++++++++++++++++++
+ scripts/kernel-doc.py             |  315 ++++
+ scripts/lib/kdoc/kdoc_files.py    |  282 ++++
+ scripts/lib/kdoc/kdoc_output.py   |  793 ++++++++++
+ scripts/lib/kdoc/kdoc_parser.py   | 1715 ++++++++++++++++++++
+ scripts/lib/kdoc/kdoc_re.py       |  273 ++++
+ 11 files changed, 5868 insertions(+), 2441 deletions(-)
+ create mode 100644 .pylintrc
+ mode change 100755 => 120000 scripts/kernel-doc
+ create mode 100755 scripts/kernel-doc.pl
+ create mode 100755 scripts/kernel-doc.py
+ create mode 100644 scripts/lib/kdoc/kdoc_files.py
+ create mode 100755 scripts/lib/kdoc/kdoc_output.py
+ create mode 100755 scripts/lib/kdoc/kdoc_parser.py
+ create mode 100755 scripts/lib/kdoc/kdoc_re.py
+
 -- 
 2.49.0
+
 
