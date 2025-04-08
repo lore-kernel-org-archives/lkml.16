@@ -1,240 +1,236 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2C6B206F31;
-	Tue,  8 Apr 2025 08:24:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E481263C66
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 08:24:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744100642; cv=none; b=LmIIQyBusGo7jU5nXMiet9hrUPc1JC6rrVWWkRLeOghkeIJIB36OquvDgh5eW/AJncAdTcggmfTOUItVgc2ZU8eT7eMJzimIkm9cImBpMAuev4if+dxzA1pQ4nZPfzNQ5uPmT8LfH41wgDiBFufbjl2xSyNXl7GwcxDW5YOdn84=
+	t=1744100662; cv=none; b=RiK1bl3Es1KjRnEOVITqMRylUtSqw96G+xbqZXusBSS//C92gIZ5F1FBEu68JbVHMXgHaE7u2npeFm6gsr6jq//gXYnc1JjdxdqNtGyaL7IaqzwCbxBH7FYxzw0/0SEByA0umtZY8kH5zvWxHScdcsKK4VAqIXiemqovUDwVjSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744100642; c=relaxed/simple;
-	bh=rda/MHFcTPsfeFix8oc1bzrNhImCUMfogBAN8EeJ6Ok=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B8rxl+FC8qTaU3+w9KaYH/BMqOaQkWizIOoAGzNb01Vm8RV5DIVzp5c/c2IR1cpu0x4oWNYDge8mPR0OS7N3R4bS6UPr04y6Vk941EW4hAmvLj58WU8ndZs8q0+YTr75/YzkgPFf3/f0M4o3ZJD4FLxGqeD6KNVW7RR0la9cymQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UP/Dvjc1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744100662; c=relaxed/simple;
+	bh=FqODxgcq4xTFsQUBvIg6+QfBbchRG2U4JrA5fgAq0Ko=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sjI5x4HDbTybQi4FDHiolsasYkMpVriQfDlVXf7dqXzL0zwjnColwMmqU9X26660lOZhqVrCzjyw75ACcQdlESsQSmGKjBZ3kbMaZwO0rD4nR95fGxYnOJel4DXIAm5D8gBhW4cyF5KiFskleiRYM0HDltzpYibntwkCfywzhDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=GWWDd+b3; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=CNtYQJvk; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=GWWDd+b3; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=CNtYQJvk; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UP/Dvjc1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0898C4CEE5;
-	Tue,  8 Apr 2025 08:24:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744100642;
-	bh=rda/MHFcTPsfeFix8oc1bzrNhImCUMfogBAN8EeJ6Ok=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UP/Dvjc1VAV3ZnL7Rrs+l2K9782E0hARPphUeZHbD46pTY2BIrK42WWr8hTYtu6Jn
-	 SBUIJFYcfObJULCChbibhmCujuWv+v8zNYUBr1h3vJWctwwLpSxfbvW2Fcb7dfX+NH
-	 PLpG3gixKNYF7WqMU/ETaPVu0lzXPm4vLb2qAtxydkbUmBU8MsGjCGW0IddPKD/dKW
-	 tjlWELECkNqmQKXLx3JSvd7/w9YjpM3kUE/hqMmy5FiXH7odMyJQ8XSbQInzqHqH7L
-	 801MK13u+Ih8eARLjno82gHe1EXb1lxAsnFI0ZTIw6WjM6EUahz2301FLMjniYHDy+
-	 4DXV/CG5/LWkw==
-Date: Tue, 8 Apr 2025 10:23:57 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Cc: sforshee@kernel.org, linux-fsdevel@vger.kernel.org, 
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, Linux regressions mailing list <regressions@lists.linux.dev>, 
-	lennart@poettering.net
-Subject: Re: 6.15-rc1/regression/bisected - commit 474f7825d533 is broke
- systemd-nspawn on my system
-Message-ID: <20250408-regal-kommt-724350b8a186@brauner>
-References: <CABXGCsPXitW-5USFdP4fTGt5vh5J8MRZV+8J873tn7NYXU61wQ@mail.gmail.com>
- <20250407-unmodern-abkam-ce0395573fc2@brauner>
- <CABXGCsNk2ycAKBtOG6fum016sa_-O9kD04betBVyiUTWwuBqsQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="GWWDd+b3";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="CNtYQJvk";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="GWWDd+b3";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="CNtYQJvk"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 71C8C21175;
+	Tue,  8 Apr 2025 08:24:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744100658; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=LNd99R1t/Bgh6Ea4Ap3UBNSYTs4ZusQqscRM8yi/jQE=;
+	b=GWWDd+b3Z7zo/FKROoRZk06fZocWuP8dWBaQ/AUPYgyzD17vZclpa1zNwud1YBRkvslREn
+	CMnUPY/7UxZW2Oxkdm9mmOysgwOFhnM2HGLZphzest1qHlG0USwaT+ytB4RSeQ5Sj7HO46
+	ocE7M4ZYCs+hP+TKVvQFL53v801nfjs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744100658;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=LNd99R1t/Bgh6Ea4Ap3UBNSYTs4ZusQqscRM8yi/jQE=;
+	b=CNtYQJvkPUCOM8Ma9+WwGu1i/vT5wpREwzHYGO6K/ey5wCHBSWutFQIUY290n557JEYB3g
+	hK01mNX8n0TIyNCg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=GWWDd+b3;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=CNtYQJvk
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744100658; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=LNd99R1t/Bgh6Ea4Ap3UBNSYTs4ZusQqscRM8yi/jQE=;
+	b=GWWDd+b3Z7zo/FKROoRZk06fZocWuP8dWBaQ/AUPYgyzD17vZclpa1zNwud1YBRkvslREn
+	CMnUPY/7UxZW2Oxkdm9mmOysgwOFhnM2HGLZphzest1qHlG0USwaT+ytB4RSeQ5Sj7HO46
+	ocE7M4ZYCs+hP+TKVvQFL53v801nfjs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744100658;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=LNd99R1t/Bgh6Ea4Ap3UBNSYTs4ZusQqscRM8yi/jQE=;
+	b=CNtYQJvkPUCOM8Ma9+WwGu1i/vT5wpREwzHYGO6K/ey5wCHBSWutFQIUY290n557JEYB3g
+	hK01mNX8n0TIyNCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2652B13691;
+	Tue,  8 Apr 2025 08:24:18 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id jDWMBTLd9GcuUQAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Tue, 08 Apr 2025 08:24:18 +0000
+Message-ID: <e976fa2c-88ce-44c3-807b-c6e6e414a28d@suse.de>
+Date: Tue, 8 Apr 2025 10:24:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 06/10] panel/th101mb31ig002-28a: Use refcounted allocation
+ in place of devm_kzalloc()
+To: Anusha Srivatsa <asrivats@redhat.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Jessica Zhang <quic_jesszhan@quicinc.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Linus Walleij <linus.walleij@linaro.org>,
+ Joel Selvaraj <jo@jsfamily.in>, Douglas Anderson <dianders@chromium.org>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20250401-b4-drm-panel-mass-driver-convert-v1-0-cdd7615e1f93@redhat.com>
+ <20250401-b4-drm-panel-mass-driver-convert-v1-6-cdd7615e1f93@redhat.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <20250401-b4-drm-panel-mass-driver-convert-v1-6-cdd7615e1f93@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CABXGCsNk2ycAKBtOG6fum016sa_-O9kD04betBVyiUTWwuBqsQ@mail.gmail.com>
+X-Rspamd-Queue-Id: 71C8C21175
+X-Spam-Score: -4.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FREEMAIL_TO(0.00)[redhat.com,linaro.org,quicinc.com,linux.intel.com,kernel.org,gmail.com,ffwll.ch,jsfamily.in,chromium.org];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.de:+];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Mon, Apr 07, 2025 at 07:34:04PM +0500, Mikhail Gavrilov wrote:
-> On Mon, Apr 7, 2025 at 7:15 PM Christian Brauner <brauner@kernel.org> wrote:
-> >
-> > I'm a bit confused by your git bisect log and the dmesg output you're
-> > showing. The dmesg output suggests you did actually test on:
-> >
-> > [    0.000000] Linux version 6.15.0-rc1 (mikhail@primary-ws) (gcc (GCC) 14.2.1 20241104 (Red Hat 14.2.1-6), GNU ld version 2.44-3.fc43) #4 SMP PREEMPT_DYNAMIC Mon Apr  7 10:58:22 +05 2025
-> >
-> > But your git bisect starts at 1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95
-> > according to:
-> >
-> > git bisect start
-> > # status: waiting for both good and bad commits
-> > # bad: [1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95] Merge tag 'net-next-6.15' of git://git.kernel.
-> > git bisect bad 1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95
-> >
-> > Which is way before -rc1. Where you testing on actual v6.15-rc1 released
-> > yesterday or were you testing on
-> > 1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95? If the latter, please test
-> > actual v6.15-rc1 as I suspect this is caused by faulty locking in
-> > clone_private_mount() which I fixed.
-> 
-> I don't want to upset you.
+Hi
 
-Oh, you didn't.
+this patch doesn't build.
 
-> But I checked bisect between 1a9239bb4253 and b3ee1e460951 commits,
-> but the final test was made at 6.15-rc1 (0af2f6be1b42) before posting
-> the bug report here.
-> It's clear from the attached full log that systemd-nspawn hangs and
-> continues to hang, and the issue is not fixed at 6.15-rc1
-> (0af2f6be1b42).
+linux/drivers/gpu/drm/panel/panel-boe-th101mb31ig002-28a.c: In function 
+‘boe_th101mb31ig002_dsi_probe’:
+linux/drivers/gpu/drm/panel/panel-boe-th101mb31ig002-28a.c:352:9: error: 
+‘panel’ undeclared (first use in this function)
+   352 |         panel = devm_drm_panel_alloc(dev, struct panel_desc, panel,
+       |         ^~~~~
+linux/drivers/gpu/drm/panel/panel-boe-th101mb31ig002-28a.c:352:9: note: 
+each undeclared identifier is reported only once for each function it 
+appears in
+In file included from 
+linux/drivers/gpu/drm/panel/panel-boe-th101mb31ig002-28a.c:18:
+linux/drivers/gpu/drm/panel/panel-boe-th101mb31ig002-28a.c:352:38: 
+error: ‘dev’ undeclared (first use in this function); did you mean ‘cdev’?
+   352 |         panel = devm_drm_panel_alloc(dev, struct panel_desc, panel,
+       |                                      ^~~
 
-I have a hard time seeing what that would caused by. I'll try to look
-into it but it's not a lot to go by and this just shows a hanging FUSE
-request which seems very unrelated to the change you point to.
 
-> -- 
-> Best Regards,
-> Mike Gavrilov.
-> 
-> On Mon, Apr 7, 2025 at 7:15 PM Christian Brauner <brauner@kernel.org> wrote:
-> >
-> > On Mon, Apr 07, 2025 at 12:14:01PM +0500, Mikhail Gavrilov wrote:
-> > > Hi,
-> > > I use Fedora. On Fedora systemd-nspawn is used for creating a clean
-> > > build environment for packaging.
-> > > I noted that on fresh kernels I can't build packages any more because
-> > > the command "mock -r fedora-rawhide-i386 --rebuild" is stuck.
-> > > I started debugging and found that systemd-nspawn was hanging.
-> > > Sending SysRq for  displaying list of blocked (D state) tasks gave me
-> > > this trace:
-> > > [  743.382717] sysrq: Show Blocked State
-> > > [  743.383154] task:systemd-nspawn  state:D stack:27120 pid:4609
-> > > tgid:4609  ppid:4435   task_flags:0x400140 flags:0x00000002
-> > > [  743.383164] Call Trace:
-> > > [  743.383167]  <TASK>
-> > > [  743.383171]  __schedule+0x895/0x1bf0
-> > > [  743.383178]  ? __pfx___schedule+0x10/0x10
-> > > [  743.383182]  ? __pfx_do_raw_spin_trylock+0x10/0x10
-> > > [  743.383187]  ? __raw_spin_unlock_irqrestore+0x5d/0x80
-> > > [  743.383191]  ? rcu_is_watching+0x12/0xc0
-> > > [  743.383195]  ? schedule+0x1d5/0x260
-> > > [  743.383199]  schedule+0xd4/0x260
-> > > [  743.383202]  fuse_get_req+0x92d/0x1060 [fuse]
-> > > [  743.383218]  ? rcu_is_watching+0x12/0xc0
-> > > [  743.383222]  ? __pfx_fuse_get_req+0x10/0x10 [fuse]
-> > > [  743.383233]  ? rcu_is_watching+0x12/0xc0
-> > > [  743.383236]  ? __pfx_autoremove_wake_function+0x10/0x10
-> > > [  743.383240]  ? rcu_is_watching+0x12/0xc0
-> > > [  743.383243]  ? is_bpf_text_address+0x64/0x100
-> > > [  743.383247]  ? __pfx_stack_trace_consume_entry+0x10/0x10
-> > > [  743.383252]  __fuse_simple_request+0x8f/0xab0 [fuse]
-> > > [  743.383263]  ? kernel_text_address+0x145/0x160
-> > > [  743.383268]  ? __kernel_text_address+0x12/0x40
-> > > [  743.383272]  fuse_getxattr+0x2cd/0x3e0 [fuse]
-> > > [  743.383287]  ? __pfx_fuse_getxattr+0x10/0x10 [fuse]
-> > > [  743.383299]  ? rcu_is_watching+0x12/0xc0
-> > > [  743.383304]  ? rcu_is_watching+0x12/0xc0
-> > > [  743.383307]  ? is_bpf_text_address+0x64/0x100
-> > > [  743.383310]  ? lock_release+0xb7/0xf0
-> > > [  743.383314]  ? is_bpf_text_address+0x6e/0x100
-> > > [  743.383318]  ? kernel_text_address+0x145/0x160
-> > > [  743.383323]  fuse_xattr_get+0x64/0x90 [fuse]
-> > > [  743.383333]  __vfs_getxattr+0xf0/0x150
-> > > [  743.383338]  ? __pfx___vfs_getxattr+0x10/0x10
-> > > [  743.383344]  get_vfs_caps_from_disk+0x138/0x450
-> > > [  743.383349]  ? __pfx_get_vfs_caps_from_disk+0x10/0x10
-> > > [  743.383353]  ? rcu_is_watching+0x12/0xc0
-> > > [  743.383356]  ? handle_path+0x27c/0x6b0
-> > > [  743.383360]  ? lock_release+0xb7/0xf0
-> > > [  743.383363]  ? handle_path+0x281/0x6b0
-> > > [  743.383368]  audit_copy_inode+0x339/0x4f0
-> > > [  743.383372]  ? __pfx_audit_copy_inode+0x10/0x10
-> > > [  743.383376]  ? path_lookupat+0x16a/0x670
-> > > [  743.383381]  filename_lookup+0x391/0x550
-> > > [  743.383386]  ? __pfx_filename_lookup+0x10/0x10
-> > > [  743.383394]  ? audit_alloc_name+0x398/0x490
-> > > [  743.383398]  ? __audit_getname+0x10b/0x160
-> > > [  743.383402]  ? getname_flags.part.0+0x1a5/0x510
-> > > [  743.383406]  user_path_at+0x9e/0xe0
-> > > [  743.383411]  __x64_sys_mount_setattr+0x247/0x340
-> > > [  743.383415]  ? __pfx___x64_sys_mount_setattr+0x10/0x10
-> > > [  743.383418]  ? seqcount_lockdep_reader_access.constprop.0+0xa5/0xb0
-> > > [  743.383422]  ? seqcount_lockdep_reader_access.constprop.0+0xa5/0xb0
-> > > [  743.383426]  ? ktime_get_coarse_real_ts64+0x41/0xd0
-> > > [  743.383431]  do_syscall_64+0x97/0x190
-> > > [  743.383437]  ? rcu_is_watching+0x12/0xc0
-> > > [  743.383440]  ? rcu_read_unlock+0x17/0x60
-> > > [  743.383444]  ? lock_release+0xb7/0xf0
-> > > [  743.383448]  ? handle_mm_fault+0x4e5/0xa60
-> > > [  743.383451]  ? exc_page_fault+0x7e/0x110
-> > > [  743.383456]  ? rcu_is_watching+0x12/0xc0
-> > > [  743.383458]  ? exc_page_fault+0x7e/0x110
-> > > [  743.383462]  ? do_user_addr_fault+0x8cb/0xe70
-> > > [  743.383466]  ? irqentry_exit_to_user_mode+0xa2/0x290
-> > > [  743.383469]  ? rcu_is_watching+0x12/0xc0
-> > > [  743.383472]  ? irqentry_exit_to_user_mode+0xa2/0x290
-> > > [  743.383475]  ? trace_hardirqs_on_prepare+0xdf/0x120
-> > > [  743.383480]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> > > [  743.383483] RIP: 0033:0x7fac4ff0419e
-> > > [  743.383499] RSP: 002b:00007ffc843092f8 EFLAGS: 00000246 ORIG_RAX:
-> > > 00000000000001ba
-> > > [  743.383504] RAX: ffffffffffffffda RBX: 000000000000000b RCX: 00007fac4ff0419e
-> > > [  743.383507] RDX: 0000000000009000 RSI: 00007fac503472a8 RDI: 000000000000000b
-> > > [  743.383509] RBP: 00007ffc843093a0 R08: 0000000000000020 R09: 00007fac4fff6ac0
-> > > [  743.383512] R10: 00007ffc84309340 R11: 0000000000000246 R12: 0000000000000009
-> > > [  743.383514] R13: 000056069822b629 R14: 000056069822b635 R15: 0000000000000007
-> > > [  743.383519]  </TASK>
-> > >
-> > > > sudo /usr/bin/systemd-nspawn -q --ephemeral -D /var/lib/mock/fedora-rawhide-x86_64/root
-> > > [sudo] password for mikhail:
-> > > ^CShort read while reading whether to enable FUSE.
-> > > mikhail@primary-ws ~ [1]>
-> > >
-> > > And started bisecting the issue and the first bad commit is
-> > > 474f7825d5335798742b92f067e1d22365013107.
-> > >
-> > > Author: Christian Brauner <brauner@kernel.org>
-> > > Date:   Tue Jan 28 11:33:40 2025 +0100
-> > >
-> > >     fs: add copy_mount_setattr() helper
-> > >
-> > >     Split out copy_mount_setattr() from mount_setattr() so we can use it in
-> > >     later patches.
-> > >
-> > >     Link: https://lore.kernel.org/r/20250128-work-mnt_idmap-update-v2-v1-2-c25feb0d2eb3@kernel.org
-> > >     Reviewed-by: "Seth Forshee (DigitalOcean)" <sforshee@kernel.org>
-> > >     Signed-off-by: Christian Brauner <brauner@kernel.org>
-> > >
-> > > Unfortunately I can't test the revert of this commit because of conflicts.
-> > >
-> > > > git revert -n 474f7825d5335798742b92f067e1d22365013107
-> > > Auto-merging fs/namespace.c
-> > > CONFLICT (content): Merge conflict in fs/namespace.c
-> > > error: could not revert 474f7825d533... fs: add copy_mount_setattr() helper
-> > > hint: after resolving the conflicts, mark the corrected paths
-> > > hint: with 'git add <paths>' or 'git rm <paths>'
-> > > hint: Disable this message with "git config set advice.mergeConflict false"
-> > >
-> > > My machine spec: https://linux-hardware.org/?probe=619658e7cf
-> > > And I attached below my build config and full kernel log.
-> > >
-> > > Christian, can you look please?
-> >
-> > I'm a bit confused by your git bisect log and the dmesg output you're
-> > showing. The dmesg output suggests you did actually test on:
-> >
-> > [    0.000000] Linux version 6.15.0-rc1 (mikhail@primary-ws) (gcc (GCC) 14.2.1 20241104 (Red Hat 14.2.1-6), GNU ld version 2.44-3.fc43) #4 SMP PREEMPT_DYNAMIC Mon Apr  7 10:58:22 +05 2025
-> >
-> > But your git bisect starts at 1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95
-> > according to:
-> >
-> > git bisect start
-> > # status: waiting for both good and bad commits
-> > # bad: [1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95] Merge tag 'net-next-6.15' of git://git.kernel.
-> > git bisect bad 1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95
-> >
-> > Which is way before -rc1. Where you testing on actual v6.15-rc1 released
-> > yesterday or were you testing on
-> > 1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95? If the latter, please test
-> > actual v6.15-rc1 as I suspect this is caused by faulty locking in
-> > clone_private_mount() which I fixed.
-> 
-> 
-> 
-> -- 
-> Best Regards,
-> Mike Gavrilov.
+Please fix.
+
+Best regards
+Thomas
+
+Am 01.04.25 um 18:03 schrieb Anusha Srivatsa:
+> Move to using the new API devm_drm_panel_alloc() to allocate the
+> panel.
+>
+> Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
+> ---
+>   drivers/gpu/drm/panel/panel-boe-th101mb31ig002-28a.c | 11 +++++------
+>   1 file changed, 5 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/panel/panel-boe-th101mb31ig002-28a.c b/drivers/gpu/drm/panel/panel-boe-th101mb31ig002-28a.c
+> index 0b87f1e6ecaea71f10a249bdc53466d281f07a34..7ae196424b6dfb731cd1ea48363c4fa1e6c36464 100644
+> --- a/drivers/gpu/drm/panel/panel-boe-th101mb31ig002-28a.c
+> +++ b/drivers/gpu/drm/panel/panel-boe-th101mb31ig002-28a.c
+> @@ -349,9 +349,11 @@ static int boe_th101mb31ig002_dsi_probe(struct mipi_dsi_device *dsi)
+>   	const struct panel_desc *desc;
+>   	int ret;
+>   
+> -	ctx = devm_kzalloc(&dsi->dev, sizeof(*ctx), GFP_KERNEL);
+> -	if (!ctx)
+> -		return -ENOMEM;
+> +	panel = devm_drm_panel_alloc(dev, struct panel_desc, panel,
+> +				     &boe_th101mb31ig002_funcs,
+> +				     DRM_MODE_CONNECTOR_DSI);
+> +	if (IS_ERR(panel))
+> +		return PTR_ERR(panel);
+>   
+>   	mipi_dsi_set_drvdata(dsi, ctx);
+>   	ctx->dsi = dsi;
+> @@ -383,9 +385,6 @@ static int boe_th101mb31ig002_dsi_probe(struct mipi_dsi_device *dsi)
+>   		return dev_err_probe(&dsi->dev, ret,
+>   				     "Failed to get orientation\n");
+>   
+> -	drm_panel_init(&ctx->panel, &dsi->dev, &boe_th101mb31ig002_funcs,
+> -		       DRM_MODE_CONNECTOR_DSI);
+> -
+>   	ret = drm_panel_of_backlight(&ctx->panel);
+>   	if (ret)
+>   		return ret;
+>
+
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
+
