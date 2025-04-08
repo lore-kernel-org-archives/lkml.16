@@ -1,193 +1,130 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 153BC2AE6C
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 02:46:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1801288CC;
+	Tue,  8 Apr 2025 02:50:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744080366; cv=none; b=nfFpi7Ar9tYxqAUiMt+QJngUgTuPut3mW1JCxWGUpPdd3fLvMQlZMj7rixHKBmlNz/aj0/FsAaAtBzADLotsHOkjqjoZIB5dOEZ+/SozKRGOVeKiuLsi/wi9spoPneLMrz5gbqPwF0/48DFoFWj2iy0xow1Avuo9qQWt1vOvTJU=
+	t=1744080606; cv=none; b=D9NU7SD+ANqwg919O+axTnz48bd6ikiOopjNh0p5EmPgSLkVzem+eQEPk83XVvO1uuFVdod10nIA0NPfk6uptguf2Oq8j4S4OBp0bg1EE52+efh1gAPT+Qx3raSu4L6jG4I+ssYS0LCgb4H5NdSgl5iOFW1ByMdm55EzCqVgO2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744080366; c=relaxed/simple;
-	bh=EJwspP7jB0NxkzeKqLfyaDNnRfd+oKg3DseSPP9tNLs=;
-	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=S8dTt3/SvUUNEN1AExrIKByhATnSJGzUA+x55MTlNLCUvcHZQa4AFJ+ZtsbKAnYZW+8x6h97a9KKFFHIFGfO+Sd8er6U4DorwUkvagwjwChVJsXuGRiHvEizCJdpnCKi6Ob53QpXdKwj/X2uvhT00Hg/PN+u5OT7oahkfR1G6CQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8CxqmrljfRnINq0AA--.40207S3;
-	Tue, 08 Apr 2025 10:45:57 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMAxj8XfjfRnhCB0AA--.21383S3;
-	Tue, 08 Apr 2025 10:45:52 +0800 (CST)
-Subject: Re: [linux-next:master 12681/13861] drivers/i2c/i2c-core-base.o:
- warning: objtool: __i2c_transfer+0x120: stack state mismatch: reg1[24]=-1+0
- reg2[24]=-2-24
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-References: <202504011011.jyZ6NtXx-lkp@intel.com> <Z+ttzRArSBMqfABz@rli9-mobl>
- <xqfrt2rueezh3upug2umvuw2r44luoaxfqycnmvkh5sezaosw6@h77yjfio4ws6>
- <348cdb14-f8cf-1e7b-44b2-79dc4dda4e35@loongson.cn>
- <lcozyamcrcuff6a3pgly7sptluuj7ubzvy4na2vrus7hfmwmb6@zv7tooy3pmkh>
- <0cbe7ab8-bd87-b5f7-0513-07c82a7e76c9@loongson.cn>
- <bzy7cad37tafrbcmsstn355fpljxxmi25ifc4piihp6ln3ztxh@zp3c7ydsjmuq>
-Cc: Philip Li <philip.li@intel.com>, kernel test robot <lkp@intel.com>,
- Guenter Roeck <linux@roeck-us.net>, oe-kbuild-all@lists.linux.dev,
- Andrew Morton <akpm@linux-foundation.org>,
- Linux Memory Management List <linux-mm@kvack.org>,
- Alessandro Carminati <acarmina@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <5f830e7a-7cfa-3c62-ba3f-f93808e95821@loongson.cn>
-Date: Tue, 8 Apr 2025 10:45:51 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+	s=arc-20240116; t=1744080606; c=relaxed/simple;
+	bh=Cth6DEzU1Lvdb8MsfD7VRg/uZ2/8DWvACgqcGwYJqcw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e3yYQPMBwY4CtUNJUsEfpz+4x976JazWoapeTHLe2Dii8HwfZ3/Y60UJzBD0t6tpU6CUOtuBBUrjL/2fRnYWGTPovaoGW1mH5VjAZCSIAOWS+TrORbzNfh3YRTOzh5GpzquWO+1USxWtmLQaS9YDTW/MhfgEQigKTMrtrgGcLME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QwVoAonN; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QwVoAonN"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-736ab1c43c4so4818809b3a.1;
+        Mon, 07 Apr 2025 19:50:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744080604; x=1744685404; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Cth6DEzU1Lvdb8MsfD7VRg/uZ2/8DWvACgqcGwYJqcw=;
+        b=QwVoAonNG7ydmRGUiYeqnJIvp29AWleIAnXWsDCgxB/uGhOVBYB3DQztenncDXVH+m
+         95YL7OhDSIvVZhOtr8A4J1Dtyv4CzVt6nacEKvGRNMBG6B5ozo2ufwioKfZKYxVkLEDh
+         snxA3cx0lpu0tr9KDc88hCJyl49boZ4sk5fGJztd7NRqA4lOqig70z/xPMvXQShLOKuA
+         3+bJrVBculVRmZC9EbHXU49RJB1vJzEFchyj6JMnUq+9/SGClTo09OmsZ0p2ox1srr2L
+         8qlpcU8/qPq7FFo/nPySAP5jbUpswFtu3GzkCbzkEzLJZI79GAg+nOld4q5yvDvDx+Xe
+         KpIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744080604; x=1744685404;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Cth6DEzU1Lvdb8MsfD7VRg/uZ2/8DWvACgqcGwYJqcw=;
+        b=SY7zSTKr61NI9+aE8Qd6/sYQXo2za8KI6Of+seO8U7R5oWDPs1+6GLCMUdcosSWZG+
+         uTHMAcnTKyFie2p56cSFQh/X+NarsnywFd/2ulcYLT3BQWLT29Z8GayNcdJknFZvZ3YF
+         +MSNr0EFfuGrMeaQtwbohaxkbOBheC3PJ4S15J82iw1L2qrXN/gXAkG3lkRM/OwEfq2W
+         i0Yr7Ge6PDcFFjIp1ucDpCmhUceuP9kfxT/7jHB03pwOjfAaTqzb5EmPuekJtw9sn51R
+         ZrZLAw6x93KPc2vjJMCoitjFuo11vqr+TLEVC6gjFOgKpt3FI6V6qNX5fMdKElkHa7zA
+         K6eA==
+X-Forwarded-Encrypted: i=1; AJvYcCUMoVs+nM9DeD+5b8FuqD0VG9+XtAl1BddOD0hSKyA0RGoN58+Ze4WLbOrW/6MnVtg1zMr5hYNw13M=@vger.kernel.org, AJvYcCUXGgT1NWfzV7gbZ3VSrv5oDOycKSp4rCV0v3/KFka77+3VfVBUb+k1TWklpanpNOpkQonyOqwDg0v2BiCCMAyWDK6Row==@vger.kernel.org, AJvYcCXhTptESZ4Vu4+7bBwRB07e7/DgPL4Wb5iHwqqdLe3UAcO+84HwRsQoIcIQjrtdsHw4smAIrV3yf4wHyOFW@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzedviien23t/sW4X3vKncpraKPcWlTa8RT1zSsHQ9U3UkMYH4E
+	q5nUqWaoVu+YW37uHz8d187WkAW1Sac6qpYLPzwdBvUZrq5oTJLx
+X-Gm-Gg: ASbGnct5ByKh7puBXnVTQKazq3nWUglsk5aG0SZrewOoh+fZ4O7qy0e1eH+KzZpVvAE
+	hN0SKQ3vWycJuW4w4uyvnUvJrMQ+l6v1gcem1Fs7OEvVSF4UpVmNS76RSJueXbVdzhpUD91hooC
+	w9lyRfw4a6hjPBN6KS3vFVstPyyLU1QjEY464Gd0MeCEH4InNvrmknkdft5hZgbw82JmY3U+Hsu
+	JS5GiR6bNDbVGTFXO2kQOS+jw0BJ2D4LNgYOAMWVMn9KWKbS5bQB5S2SDN3nrZ+70thmPC0FnrK
+	p8cwYwPG0YPQWFszXjaiTkswvBDO18+p9whAArcTlnrJxxkWwpS6elc=
+X-Google-Smtp-Source: AGHT+IGK5tUXHAlmfULfhwp1g4yLp0i/9elCRhY3So2bgspe0qrtj9S4q7rbiEKjVFgicIz8ng8r4A==
+X-Received: by 2002:a05:6a21:8cc6:b0:1fd:f46c:fb42 with SMTP id adf61e73a8af0-201047339c6mr28279180637.31.1744080603933;
+        Mon, 07 Apr 2025 19:50:03 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af9c62739a8sm7231602a12.64.2025.04.07.19.50.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 19:50:02 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 9A9A9420A696; Tue, 08 Apr 2025 09:50:00 +0700 (WIB)
+Date: Tue, 8 Apr 2025 09:50:00 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: "Derek J. Clark" <derekjohn.clark@gmail.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Armin Wolf <W_Armin@gmx.de>, Jonathan Corbet <corbet@lwn.net>,
+	Mario Limonciello <superm1@kernel.org>,
+	Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>,
+	Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
+	"Cody T . -H . Chiu" <codyit@gmail.com>,
+	John Martens <johnfanv2@gmail.com>,
+	platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v5 1/6] platform/x86: Add lenovo-wmi-* driver
+ Documentation
+Message-ID: <Z_SO2AkhedcuHeOe@archie.me>
+References: <20250408012815.1032357-1-derekjohn.clark@gmail.com>
+ <20250408012815.1032357-2-derekjohn.clark@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <bzy7cad37tafrbcmsstn355fpljxxmi25ifc4piihp6ln3ztxh@zp3c7ydsjmuq>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:qMiowMAxj8XfjfRnhCB0AA--.21383S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxZw4rur4UAF47tw4rCr4UGFX_yoWrAr18pF
-	s2v3WkJa1kJr4vyr9rXF4fXF15ArsrGw1Uu34fWFyUAa1Yqr97XF95tr45ZFZYgwsrAry0
-	qrZ5CrnaqF90ywcCm3ZEXasCq-sJn29KB7ZKAUJUUUUD529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
-	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5
-	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
-	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCF
-	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r
-	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
-	64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr
-	0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
-	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jnEfOUUUUU=
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="HZiyhvZc60l0G0IJ"
+Content-Disposition: inline
+In-Reply-To: <20250408012815.1032357-2-derekjohn.clark@gmail.com>
 
-On 04/08/2025 09:23 AM, Josh Poimboeuf wrote:
-> On Mon, Apr 07, 2025 at 06:52:10PM +0800, Tiezhu Yang wrote:
->> There is a potential execution path with only using s0 and ra
->> (without using s1, s2, s3, etc): 2d58-->2d70-->2f88-->2e78-->2e84
->
-> [...]
->
->> From this point of view, it seems that there is no problem for the
->> generated instructions of the current code, it is not a runtime bug,
->> just a GCC optimization.
->
-> I don't see how this is responsive to my email.
->
-> I described a code path which revealed a GCC bug, specifically with asm
-> goto (unless I got something wrong).  Then you responded with a
-> *completely different* code path.
->
-> How does that prove my original code path isn't possible?
->
-> To summarize, the path I found was
->
->   2d58 ... 2d9c -> 2da8 .. 2dc4 -> 2ebc .. 2ec0 (runtime patched static branch) -> 2e78 .. 2e84 (ret)
 
-Sorry, you are right, I misunderstood.
+--HZiyhvZc60l0G0IJ
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->> (2) Analysis
->>
->> In fact, the generated objtool warning is because the break instruction
->> (2ee8) which is before the restoring s1 instruction (2eec) is annotated
->> as dead end.
->
-> Actually, it's the opposite.  Objtool would normally consider BREAK to
-> be a dead end.  But it's annotated as "reachable", aka "non dead end".
->
->> This issue is introduced by the following changes:
->>
->>  #define __WARN_FLAGS(flags)					\
->>  do {								\
->>  	instrumentation_begin();				\
->> -	__BUG_FLAGS(BUGFLAG_WARNING|(flags), ANNOTATE_REACHABLE(10001b));\
->> +	if (!KUNIT_IS_SUPPRESSED_WARNING(__func__))			\
->> +		__BUG_FLAGS(BUGFLAG_WARNING|(flags), ANNOTATE_REACHABLE(10001b));\
->>  	instrumentation_end();					\
->>  } while (0)
->>
->> of commit e61a8b4b0d83 ("loongarch: add support for suppressing warning
->> backtraces") in the linux-next.git.
->
-> Putting that annotation behind a conditional should not break anything.
+On Mon, Apr 07, 2025 at 06:28:10PM -0700, Derek J. Clark wrote:
+> +Balanced-Performance
+> +~~~~~~~~~~~~~~~~~~~~
+> +Some newer Lenovo "Gaming Series" laptops have an "Extreme Mode" profile
+> +enabled in their BIOS. For these devices, the performance platform profi=
+le
+> +will correspond to the BIOS Extreme Mode, while the balanced-performance
+> +platform profile will correspond to the BIOS Performance mode. For legacy
+> +devices, the performance platform profile will correspond with the BIOS
+> +Performance mode. For some newer devices the "Extreme Mode" profile is
+> +incomplete in the BIOS and setting it will cause undefined behavior. A
+> +BIOS bug quirk table is provided to ensure these devices cannot set
+> +"Extreme Mode" from the driver.
+s/will correspond/corresponds to/
 
-OK, got it.
+Thanks.
 
->> (4) Solution 1
->> One way is to annotate __BUG_ENTRY() as reachable whether
->> KUNIT_IS_SUPPRESSED_WARNING() is true or false, like this:
->>
->> ---8<---
->> diff --git a/arch/loongarch/include/asm/bug.h
->> b/arch/loongarch/include/asm/bug.h
->> index b79ff6696ce6..e41ebeaba204 100644
->> --- a/arch/loongarch/include/asm/bug.h
->> +++ b/arch/loongarch/include/asm/bug.h
->> @@ -60,8 +60,9 @@
->>  #define __WARN_FLAGS(flags)                                    \
->>  do {                                                           \
->>         instrumentation_begin();                                \
->> -       if (!KUNIT_IS_SUPPRESSED_WARNING(__func__))                     \
->> -               __BUG_FLAGS(BUGFLAG_WARNING|(flags),
->> ANNOTATE_REACHABLE(10001b));\
->> +       if (!KUNIT_IS_SUPPRESSED_WARNING(__func__))             \
->> +               __BUG_FLAGS(BUGFLAG_WARNING|(flags), "");       \
->> +       __BUG_FLAGS(0, ANNOTATE_REACHABLE(10001b));             \
->>         instrumentation_end();                                  \
->>  } while (0)
->
-> Huh?  That's basically:
->
-> 	if (!suppress_warning)
-> 		WARN();
-> 	BUG();
->
-> So it upgrades a conditional WARN to an unconditional BUG???
->
-> Not to mention the reachable annotations are backwards: the WARN() is
-> annotated as dead end while the BUG() is annotated reachable.
->
-> Even if that silences objtool somehow, it will most definitely have the
-> wrong runtime behavior.
+--=20
+An old man doll... just what I always wanted! - Clara
 
-Yes, my original analysis seems wrong.
+--HZiyhvZc60l0G0IJ
+Content-Type: application/pgp-signature; name=signature.asc
 
->> (5) Solution 2
->> The other way is to use "-fno-shrink-wrap" to aovid such issue under
->> CONFIG_OBJTOOL at compile-time, like this:
->
-> As far as I can tell, that would be a workaround to get objtool to stop
-> warning about a legitimate compiler bug.
+-----BEGIN PGP SIGNATURE-----
 
-So this is a run-time bug rather than a compile-time warning, it should
-put the option "-fno-shrink-wrap" outside CONFIG_OBJTOOL in
-arch/loongarch/Makefile as a workaround, like this:
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZ/SO2AAKCRD2uYlJVVFO
+o59yAP9Su2TBW33AvsAIPJ1o6NJs5L2hZcTeVxtxQXxyvkRmVwEAkMvgXYDZ9Qsz
+cWnog2KyZKoSej6dBqln6RS7bBEWTw8=
+=KunM
+-----END PGP SIGNATURE-----
 
-diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
-index 0304eabbe606..98241e3015fb 100644
---- a/arch/loongarch/Makefile
-+++ b/arch/loongarch/Makefile
-@@ -108,6 +108,8 @@ KBUILD_CFLAGS                       += 
--fno-jump-tables # keep compatibility with older compilers
-  endif
-  endif
-
-+KBUILD_CFLAGS                  += -fno-shrink-wrap
-+
-  KBUILD_RUSTFLAGS               += 
---target=loongarch64-unknown-none-softfloat -Ccode-model=small
-  KBUILD_RUSTFLAGS_KERNEL                += 
--Zdirect-access-external-data=yes
-  KBUILD_RUSTFLAGS_MODULE                += -Zdirect-access-external-data=no
-
-Thanks,
-Tiezhu
-
+--HZiyhvZc60l0G0IJ--
