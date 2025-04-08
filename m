@@ -1,116 +1,151 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A818020B7EC;
-	Tue,  8 Apr 2025 08:35:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C93A5156CA;
+	Tue,  8 Apr 2025 08:36:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744101322; cv=none; b=LPaBnutsbihb1eA3GsKB9N+83qHY4ttCQDM+7+nDUekjnPelmR4My1vxebUIUx4+IYp3LxGe7u0IzFyi9IoEvDz6GVB8y5b3YZ/Dh+TXmgwwULYPEzurLZF9NQnTC+BbE0+m2SPKzfV8ecf5t5a6CXkftTY/5GpQidThg7d+pao=
+	t=1744101369; cv=none; b=rgmS+bkAKLm8QN3RtwMi11TMB2GlGRTlrhkscNRZ4xhc4TVA6HiU3Z80R5ZSZv7AnypEH6dJVxhQkOsMkUPWCxl7oBOMsEMkqZF9VhhtH9WSaEgc1SPEAhNqT9sDzXwwpQlrei03bYo5AD/V0xTlCTNcbF6Z0Il/DKywfjkuJ5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744101322; c=relaxed/simple;
-	bh=KzjoqOqYDCXtxlc3Hol6YOIfBy2OmCIPyYdnm6eJh8g=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=fgFDEah70s85jWtYNDw5KHMAeKQo1KyB1iGX+dFdjIr3GgA877hMJlvmgxzNtFZuzrWa0ExvHqhLxSCrf2OxYH/i1uWloPJc97S+luOvlLeCxG8ofYagGFhkZk0bVKfJy9uRqbqfmwBSp8YRnRS30soTAxHRuEFWCEjngADmDWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=OgsHMGm2; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1744101369; c=relaxed/simple;
+	bh=mzMfxAueJ3ZwWsr2CHBeJPRrTw/FwTzzBC5ucJhL2fY=;
+	h=Message-ID:Date:MIME-Version:Subject:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RTaFF2ZDNGl9eUsDbOvmfff40VnyP7Z2HiEP3ZsTaDnFe8ufwvZ3+QcmOkb307SCxa9SA5JCC5akm4Cjkd5ekdF1IB7f+/U6oet/GP63FQ3Qe2l9/uoHixgYN5V8GZC5x/JwLdMjgKKa2q1dVN0uB7axNm5jlaHp7Wv6YnlXdaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=hFtMJlQt; arc=none smtp.client-ip=54.207.19.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="OgsHMGm2"
-Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 0C34C1F91A;
-	Tue,  8 Apr 2025 10:35:16 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1744101316;
-	bh=RMIaEj3zohUGYvvm32lDbkghJh7svLhWp2HrTir4CEQ=; h=From:To:Subject;
-	b=OgsHMGm2+PdrrEV5mCfAE5oP8QO9XF80IvOK/cePrdbUc1u7QirAzxIElhvqqSurv
-	 xgjRl6LWAnMuBoGM445fM1P5mISbMmP8TE2tzBX0lyV1GiZ8SL5KdDkClLXCc37drb
-	 x4PJ34ty2EArVKWLt4wU53U7kidEhueahDsrNkBrFdYRIla3V6IxzyHRR6ak4yIF9f
-	 VWx/ZqKh7T6nySZZruwG4thmNiaWTTJpChd3MPoQ02oUURwQD52N6iVSJv/pck16Ku
-	 ULblTiDOAdwF5gcIf1H/nnRQ6FLO1TQEddIP8hkv+QFeS7kRHPhKwj3ECF4f0AsiIY
-	 6LQ5VtWHAmIGw==
-Date: Tue, 8 Apr 2025 10:35:12 +0200
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Amitkumar Karwar <amitkumar.karwar@nxp.com>,
-	Neeraj Kale <neeraj.sanjaykale@nxp.com>, Nishanth Menon <nm@ti.com>,
-	Tero Kristo <kristo@kernel.org>,
-	Santosh Shilimkar <ssantosh@kernel.org>
-Cc: linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Subject: Kernel WARNING (RCU) with btnxpuart on TI AM62 platform
-Message-ID: <20250408083512.GA26035@francesco-nb>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="hFtMJlQt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1744101320;
+	bh=mzMfxAueJ3ZwWsr2CHBeJPRrTw/FwTzzBC5ucJhL2fY=;
+	h=Message-ID:Date:MIME-Version:Subject:From;
+	b=hFtMJlQtddxNcHQVngIMyaVD7hc4YWJnWWMNDG0r9CDOh+urltFUYGnAWTdfSmeE9
+	 erpJiehVQwk+n5PaLaqnwwnBnPdG4qWm5xp7983uGPyByLshmuqNhKw6y5PO8jvTUH
+	 XlnQc5GGO14WUeniiJXG+uzcar+rc6ZczWu2PNcU=
+X-QQ-mid: bizesmtpip3t1744101310t5651a7
+X-QQ-Originating-IP: RmaqZH5hr4481NUI7HYifJ4cNp0cXuiOQek1MvsFBMU=
+Received: from [IPV6:240e:668:120a::212:156] ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 08 Apr 2025 16:35:08 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 14910186757885448490
+EX-QQ-RecipientCnt: 10
+Message-ID: <8BFABE0C4796C2D3+aa206f17-7b7a-4f2b-b843-7318792a4702@uniontech.com>
+Date: Tue, 8 Apr 2025 16:35:08 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] kbuild: rpm-pkg: Add elfutils-devel to
+ BuildRequires
+Cc: guanwentao@uniontech.com, linux-kbuild@vger.kernel.org,
+ linux-kernel@vger.kernel.org, masahiroy@kernel.org, nathan@kernel.org,
+ nicolas.schier@linux.dev, niecheng1@uniontech.com, petr.pavlu@suse.com,
+ samitolvanen@google.com, zhanjun@uniontech.com
+References: <215802BA292C2DF6+20250408081441.61776-1-wangyuli@uniontech.com>
+ <964B3FC2F607F2F4+20250408081921.63040-2-wangyuli@uniontech.com>
+Content-Language: en-US
+From: WangYuli <wangyuli@uniontech.com>
+Autocrypt: addr=wangyuli@uniontech.com; keydata=
+ xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSKP+nX39DN
+ IVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAxFiEEa1GMzYeuKPkg
+ qDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMBAAAKCRDF2h8wRvQL7g0UAQCH
+ 3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfPbwD/SrncJwwPAL4GiLPEC4XssV6FPUAY
+ 0rA68eNNI9cJLArOOARmgSyJEgorBgEEAZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7
+ VTL0dvPDofBTjFYDAQgHwngEGBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIb
+ DAAKCRDF2h8wRvQL7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkU
+ o9ERi7qS/hbUdUgtitI89efbY0TVetgDsyeQiwU=
+In-Reply-To: <964B3FC2F607F2F4+20250408081921.63040-2-wangyuli@uniontech.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------2wVuXK0f0SL55SpJ26paKBNj"
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: NSTiGhYb0MY63XCGtQ3oK413sB0gefN1AOvvv1ye2rWcMwO4Wc3U08V/
+	dAlTJ9GZqYdwgdoEIC8jzybs+o+uj6uLi06e136UvBeabAVW5SVhdc12gJ+fTTU7tPJJzie
+	pWdCV3+aNrpvM2WZ6DKqTtFgqKK7rx89RrPXBvoEDigWlvpkpj2M4m5m8QlAqOxh3DP1mWq
+	Yt6bD9KhDEyLk9DzarnNUwnx9ftpomAStcmOhg1EPCVPLNEc3enDwVWDxjQWTltBsxYWBo7
+	jrlGsy/yHojMiwIes8r5fwiQSdPYNlJQ3MOeXjYZ6fbMTTf8bIAs+Zt5X553ckuPMRFD3BJ
+	4dIyO3eZm9nGDFyy65lizrfQzSIHEQ/V2xQwyid0TBgUP3V2cffh5l+lRj56KwgWtmDsL93
+	ePY/U/C/+vvdN9blk3l8hDjxF2HmW4FJx+d16VB90NAGuBwwmXhZakoLDa4QDuTAR50Nap/
+	TgZnHhKp7ysI9lxmtblSD2RqLQ9DJe4kTkf1vxjvmV7orOpq3Z5WpiHcsnXiksoSqaXofdQ
+	03OaJpByHBNlPxcJwK1ZQ1F1bX+rhEotJ88O/c/kiakYjvBYetNZrt58AEgZvTB4gzKHXKu
+	sKsCgTV2K6ej1F4LPh4i9+Y2jN0d1ZVS1f5078Y721WMLV0JYnkz0WE3HUkYoqsoZA8ECn3
+	dosiKrcv5XYnMvbkKD7Bqrxm1uwDE0oCZU4VE1Q8WAcj0/OO7g6+li6pl9UpGeS96L0FotX
+	nfwYOq9X9wfAYiJdfsJo+doYeyUpYFngfE7ycnrP3C87QAhS4FW+ogVu1f82eDjXkYPJL3e
+	j1jrjeE5j4g/cSdRn0EmQevAsIDa9VFwbVsPAVkgVyqPbvBV7VRYBnrHT7Eh/zpJJIKpQqp
+	xrBk2S2JxKdHOM26XeoBiMNddN67kUE5Wow9nfV/rUdqDzzRPzCUQakCAylUhGces9OTMQJ
+	dMHP4vLKjJ9X2R0ayJHB7+IyR4yHNpmeJVUd2EbCpOtJsexnEKzx5x4ZarPcd0ig7xICtKN
+	X1LK3mmRW3S3DNKR6TThWSVTOeuRsNmfo8Recr6obBqyTeZV6o
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+X-QQ-RECHKSPAM: 0
 
-Hello,
-I do have the following kernel warning with 6.15-rc1, on a TI AM62
-platform (arm64), single CPU core, using btnxpuart driver, any idea?
-PREEMPT_RT is enabled, if it matters.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------2wVuXK0f0SL55SpJ26paKBNj
+Content-Type: multipart/mixed; boundary="------------tOXAy93uQtA6f5XKoqrdW45E";
+ protected-headers="v1"
+From: WangYuli <wangyuli@uniontech.com>
+Cc: guanwentao@uniontech.com, linux-kbuild@vger.kernel.org,
+ linux-kernel@vger.kernel.org, masahiroy@kernel.org, nathan@kernel.org,
+ nicolas.schier@linux.dev, niecheng1@uniontech.com, petr.pavlu@suse.com,
+ samitolvanen@google.com, zhanjun@uniontech.com
+Message-ID: <aa206f17-7b7a-4f2b-b843-7318792a4702@uniontech.com>
+Subject: Re: [PATCH v2 2/2] kbuild: rpm-pkg: Add elfutils-devel to
+ BuildRequires
+References: <215802BA292C2DF6+20250408081441.61776-1-wangyuli@uniontech.com>
+ <964B3FC2F607F2F4+20250408081921.63040-2-wangyuli@uniontech.com>
+In-Reply-To: <964B3FC2F607F2F4+20250408081921.63040-2-wangyuli@uniontech.com>
 
-Either the issue is not systematic, or multi cores SoCs are not affected
-(no error on the exact same image on a dual nor on quad core TI AM62).
+--------------tOXAy93uQtA6f5XKoqrdW45E
+Content-Type: multipart/mixed; boundary="------------Lm2SeCT0ensXmBg7P1tPw32s"
 
+--------------Lm2SeCT0ensXmBg7P1tPw32s
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-[   23.139080] Voluntary context switch within RCU read-side critical section!
-[   23.139119] WARNING: CPU: 0 PID: 61 at /kernel/rcu/tree_plugin.h:332 rcu_note_context_switch+0x3c4/0x430
-[   23.139172] Modules linked in: uas onboard_usb_dev optee_rng dwc3 evdev btnxpuart spidev aes_ce_blk aes_ce_cipher ghash_ce gf128mul sha2_ce sha256_arm64 sha1_ce snd_soc_simple_card snd_soc_simple_card_utils optee spi_cadence_quadspi tee gpio_keys usb_conn_gpio display_connector roles dwc3_am62 mwifiex_sdio k3_j72xx_bandgap mwifiex rtc_ti_k3 cfg80211 tidss sa2ul sha512_generic snd_soc_davinci_mcasp authenc drm_display_helper snd_soc_ti_udma crypto_null snd_soc_ti_edma sha1_generic snd_soc_ti_sdma omap_hwspinlock lontium_lt8912b ina2xx snd_soc_wm8904 ti_ads1015 industrialio_triggered_buffer kfifo_buf lm75 tpm_tis_i2c tps65219_pwrbutton crc_ccitt tpm_tis_core tpm rng_core tc358768 m_can_platform pwm_tiehrpwm m_can spi_omap2_mcspi can_dev bluetooth ecdh_generic ecc rfkill libaes loop fuse ipv6 autofs4
-[   23.139459] CPU: 0 UID: 0 PID: 61 Comm: kworker/u5:0 Not tainted 6.15.0-rc1-0.0.0-devel #1 PREEMPT_RT
-[   23.139471] Hardware name: Toradex Verdin AM62 WB on Dahlia Board (DT)
-[   23.139478] Workqueue: hci0 hci_power_off [bluetooth]
-[   23.139615] pstate: 600000c5 (nZCv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[   23.139625] pc : rcu_note_context_switch+0x3c4/0x430
-[   23.139647] lr : rcu_note_context_switch+0x3c4/0x430
-[   23.139658] sp : ffff8000819fb740
-[   23.139661] x29: ffff8000819fb740 x28: 0000000000000000 x27: ffff0000079d2010
-[   23.139673] x26: ffff0000011e7810 x25: ffff000001c2c200 x24: 0000000000000000
-[   23.139688] x23: 0000000000000000 x22: ffff000001c2c200 x21: ffff000001c2c200
-[   23.139700] x20: ffff800081083ec0 x19: ffff00001da9fec0 x18: fffffffffffe7e78
-[   23.139712] x17: ffff7fff9ca1c000 x16: ffff800080000000 x15: ffff00001da9f8c0
-[   23.139726] x14: fffffffffffc7e77 x13: 216e6f6974636573 x12: 206c616369746972
-[   23.139738] x11: 6320656469732d64 x10: 6165722055435220 x9 : 206e696874697720
-[   23.139750] x8 : ffff80008113f040 x7 : ffff8000819fb4e0 x6 : 000000000000000c
-[   23.139761] x5 : ffff00001da95888 x4 : 0000000000000000 x3 : 0000000000000027
-[   23.139775] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff000001c2c200
-[   23.139788] Call trace:
-[   23.139793]  rcu_note_context_switch+0x3c4/0x430 (P)
-[   23.139813]  __schedule+0xa0/0x7dc
-[   23.139830]  schedule+0x34/0x11c
-[   23.139841]  schedule_timeout+0x8c/0x110
-[   23.139861]  wait_for_completion_timeout+0x78/0x14c
-[   23.139873]  ti_sci_set_device_state+0x120/0x1fc
-[   23.139886]  ti_sci_cmd_get_device_exclusive+0x18/0x30
-[   23.139899]  ti_sci_pd_power_on+0x28/0x54
-[   23.139916]  _genpd_power_on+0x98/0x188
-[   23.139927]  genpd_power_on+0xa8/0x168
-[   23.139940]  genpd_runtime_resume+0xc0/0x298
-[   23.139957]  __rpm_callback+0x48/0x1a4
-[   23.139974]  rpm_callback+0x74/0x80
-[   23.139987]  rpm_resume+0x3b0/0x698
-[   23.140000]  __pm_runtime_resume+0x48/0x88
-[   23.140012]  omap8250_set_mctrl+0x2c/0xbc
-[   23.140030]  serial8250_set_mctrl+0x20/0x40
-[   23.140046]  uart_update_mctrl+0x80/0x110
-[   23.140062]  uart_dtr_rts+0x104/0x118
-[   23.140079]  tty_port_shutdown+0xd4/0xe0
-[   23.140092]  tty_port_close+0x3c/0xb8
-[   23.140103]  uart_close+0x34/0x98
-[   23.140116]  ttyport_close+0x50/0xa0
-[   23.140137]  serdev_device_close+0x40/0x5c
-[   23.140150]  btnxpuart_close+0x1c/0xa0 [btnxpuart]
-[   23.140175]  hci_dev_close_sync+0x304/0x7cc [bluetooth]
-[   23.140243]  hci_dev_do_close+0x2c/0x70 [bluetooth]
-[   23.140309]  hci_power_off+0x20/0x64 [bluetooth]
-[   23.140379]  process_one_work+0x148/0x284
-[   23.140403]  worker_thread+0x2c8/0x3dc
-[   23.140414]  kthread+0x12c/0x208
-[   23.140426]  ret_from_fork+0x10/0x20
+QXBvbG9naWVzLCB0aGUgY29tbWl0IG1lc3NhZ2UgaGFkIGEgc21hbGwgcHJvYmxlbS4gSSB3
+aWxsIHJlcGx5IHRvIHRoaXMgDQp3aXRoIHRoZSByZXZpc2VkIHYzLi4uDQoNCi0tDQoNCldh
+bmdZdWxpDQoNCg==
+--------------Lm2SeCT0ensXmBg7P1tPw32s
+Content-Type: application/pgp-keys; name="OpenPGP_0xC5DA1F3046F40BEE.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xC5DA1F3046F40BEE.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
 
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
-Francesco
+xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSK
+P+nX39DNIVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAx
+FiEEa1GMzYeuKPkgqDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMB
+AAAKCRDF2h8wRvQL7g0UAQCH3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfP
+bwD/SrncJwwPAL4GiLPEC4XssV6FPUAY0rA68eNNI9cJLArOOARmgSyJEgorBgEE
+AZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7VTL0dvPDofBTjFYDAQgHwngE
+GBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIbDAAKCRDF2h8wRvQL
+7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkUo9ERi7qS
+/hbUdUgtitI89efbY0TVetgDsyeQiwU=3D
+=3DBlkq
+-----END PGP PUBLIC KEY BLOCK-----
 
+--------------Lm2SeCT0ensXmBg7P1tPw32s--
+
+--------------tOXAy93uQtA6f5XKoqrdW45E--
+
+--------------2wVuXK0f0SL55SpJ26paKBNj
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+wnsEABYIACMWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZ/TfvAUDAAAAAAAKCRDF2h8wRvQL7opS
+AQC1V6d2v5Hcnvb7l6YxFnsat/OKQtYLieifSNxFBngMwAEAyIqSopo14HVGSxPsczJAVYDfyPjF
+Tfb0rQzTV6qiZwU=
+=+Lmv
+-----END PGP SIGNATURE-----
+
+--------------2wVuXK0f0SL55SpJ26paKBNj--
