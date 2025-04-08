@@ -1,122 +1,144 @@
-Received: from smtpbg154.qq.com (smtpbg154.qq.com [15.184.224.54])
+Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB81620B7EF;
-	Tue,  8 Apr 2025 08:37:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=15.184.224.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE6402627EA;
+	Tue,  8 Apr 2025 08:38:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744101457; cv=none; b=e1GcLF3+bvoSwPnkfh2FggT+q/2vvqd1QeDDDO6pa7CmEGjUVsk75D+S1+9wwbtJsk4G6DRjwL0BEkB5DvU4x3q+DwULEmq93xVW/m5CrFOIPtO5LOebOYuK+99/Dj0KBnwGms8jkri4A1k4R+LuwHgwjew3r5GPc+2ZqjNrxWI=
+	t=1744101494; cv=none; b=OI3uqU9s9AHa8L0VomQ+HXjQthmzgfxc/s3hEf4+0pbWBpeSPK0EMAx+JbwVfSqWe9ZXEmT6zI5GF9fJWrvwl/Vvk9ynxE8j2MToWbN+kXnMxlGIL5jcDWZrV1XH4Q4ni24cIjfL98hvW2IBKkF+3sVHVQG+OSrZkEAjJdnt/j0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744101457; c=relaxed/simple;
-	bh=zYwN5AXNDb9BX5Xil/czoYAh3N+dUlbKkka0+Eyt2hg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uWkWyPp1FcdmsZELRygNpiUJhTITKUx7t/xLmE8nn6zhKGqPQhH3Y93O9zlzaNaaQy4yxlTA4xOglT29aIVLIpweaU625R+ePU2T1RopK+AT69gvqZYMzGjabt7psG7d7PLlw+2VPvyRzHGL0ZqBloOIqA3kyHdPicem6obXKJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=G1U5Xdxl; arc=none smtp.client-ip=15.184.224.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1744101494; c=relaxed/simple;
+	bh=XX34lPy+Q29lQ57hsRPpZu70XY8syx0PGiPZ9KWfto4=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=UcUdXsMaof60w/gMGe6rH1FaTh6GQyvTZ2TAERWT4bmLURbVJAg1n+h/dR7ULNWYrilrx2rtFNusmwvNv2UFDeSsjb/jX9x0wZB3vHS+9OrGk8ZSztK26jssn3+hZ0CugUuYz42s0z1xSsnyims5xlI61eK+8iA2KEsUmN/QJjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=d3gSowO5; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=c0vX2+O/; arc=none smtp.client-ip=103.168.172.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="G1U5Xdxl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1744101413;
-	bh=oCA2zRVnBob9l6TGh97Bpu7K3K5rJPTxMgimLHEAx7Y=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=G1U5Xdxllz4cCuWgOiaht8dO3wA8zb/VEz1xFXSb1OuSAj73s6lP04qpdF86bKAV6
-	 JN+yNnFrGcYfbbjoMciN0ZEz8CTUFshPBcM8HJ/T2Ak4MsyZ3UT+zoNkg5gPsmWUQO
-	 kmnvUYniyyPr15PEYELFP/KI2FJLmRz9ddJidFk0=
-X-QQ-mid: bizesmtpip4t1744101365tea48f4
-X-QQ-Originating-IP: SYyhI77PtA9jQTEoZCNoOyln5/n1sEdZfmwMWVdWlX4=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 08 Apr 2025 16:36:03 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 10433558673128327035
-EX-QQ-RecipientCnt: 11
-From: WangYuli <wangyuli@uniontech.com>
-To: wangyuli@uniontech.com
-Cc: guanwentao@uniontech.com,
-	linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	masahiroy@kernel.org,
-	nathan@kernel.org,
-	nicolas.schier@linux.dev,
-	niecheng1@uniontech.com,
-	petr.pavlu@suse.com,
-	samitolvanen@google.com,
-	zhanjun@uniontech.com
-Subject: [PATCH v3] kbuild: rpm-pkg: Add (elfutils-devel or libdw-devel) to BuildRequires
-Date: Tue,  8 Apr 2025 16:35:58 +0800
-Message-ID: <8F253522AA2663E6+20250408083558.66575-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <964B3FC2F607F2F4+20250408081921.63040-2-wangyuli@uniontech.com>
-References: <964B3FC2F607F2F4+20250408081921.63040-2-wangyuli@uniontech.com>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="d3gSowO5";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="c0vX2+O/"
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id C4F48114017C;
+	Tue,  8 Apr 2025 04:38:11 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-12.internal (MEProxy); Tue, 08 Apr 2025 04:38:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1744101491;
+	 x=1744187891; bh=VlvkU1faDx+thQEdDrOoGOPLhFtXWFIgx9WnhEz6y6Y=; b=
+	d3gSowO5zzowHZ2h4AqNsVzu9wnZXqlT1UveryZFYO11x/R+WzxEbG7SbS0ZCKPd
+	y8bicZcOBeg/URkB010IHD4eZ4BY9pmR23R3IEgF2aStwFFpx/v7+mi022toaFpr
+	9uGD4z3t6Fv6a6HnTPFUpTN/xYmHSG8eOmR1SmwvGW01bcgpV96+Nz6JPvM+SJ2J
+	/Y6FqkFXSghM9MKEt//4vfLMH/n9YKzqohfpd/BiIUYMe12+ysS3Lwq36PeU1x3n
+	2IyOq+6Ksb4fqk0ZKwuhCGAuOyoxmlHrlawmmdhD+UtavNBO4KQ92Nj9pqaEWwJA
+	y2mYP84KYYHZ5wJNf41A/w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744101491; x=
+	1744187891; bh=VlvkU1faDx+thQEdDrOoGOPLhFtXWFIgx9WnhEz6y6Y=; b=c
+	0vX2+O/tBfL+SfZ/cBvm6NUH0nAu6SUQeZe1kW++6GCH0XCzRzHVhkdH+nIcW79Q
+	Id00SH6dNRVSyhObO2J1FIkNCL/93+L+NhMs24v886kOoekO80jyFf6uTHExLTWd
+	2MZoQyfbVFCYtqvt/UFs1oJlmDAaY2hT5U7hCQnYGf3ilwFirYmMlS4GAPOuWpZc
+	mNuIjIckRSmXqskOYZ4CJOhSquM32S4Mi73WkJ0Koe4A3yUu2Iz3tWC+2y6WxjkF
+	ZQdf/u4a1TtcIVYRU0ibiaOZ0PdW6R6+DSdyx/SbwZhcDumnynvG14+xsehBuxb4
+	WrEsNwxeZ5L10Ao7opjLQ==
+X-ME-Sender: <xms:cuD0Zznghr422oPqDPolst399HuAmFd-Clo7xVYEpSpf4Ac0XLubkw>
+    <xme:cuD0Z23KYreNX_nkPYOohrNeTmnZeZrcqHUL_ASDg_jcR8_vTrW1oSoK9YJhlB1aD
+    EhHFzxhgIp8INrtzUg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddviedvucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
+    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
+    uddupdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehlihhnmhgrghejsehgmhgrih
+    hlrdgtohhmpdhrtghpthhtohepmhgrthhtshhtkeeksehgmhgrihhlrdgtohhmpdhrtghp
+    thhtohepphgruhhlmhgtkheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhitghhrg
+    hrugdrhhgvnhguvghrshhonheslhhinhgrrhhordhorhhgpdhrtghpthhtohepthhorhhv
+    rghlughssehlihhnuhigqdhfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehmrg
+    gtrhhosehorhgtrghmrdhmvgdruhhkpdhrtghpthhtohepghhlrghusghithiisehphhih
+    shhikhdrfhhuqdgsvghrlhhinhdruggvpdhrtghpthhtohepihhnkhesuhhnshgvvghnrd
+    hprghrthhspdhrtghpthhtoheplhhinhhugidqrghlphhhrgesvhhgvghrrdhkvghrnhgv
+    lhdrohhrgh
+X-ME-Proxy: <xmx:cuD0Z5p2yvCKgKIGVW4kpMODvptzKgkFKhSjrwpjtl1CCgpuRVZCog>
+    <xmx:cuD0Z7lHnpNeAU1-5Y_dV16uJuIqhP4BJXwcpWr2-nx558x4W_uITg>
+    <xmx:cuD0Zx2EpNc5h69ZU2yEht0pz4693TraFiNHcUMpFq4XDJz146rQDA>
+    <xmx:cuD0Z6vqYBG4PBFu0HbdLrZvGeiipMCwJwyQJ7dASSI2saQ1fo6PRw>
+    <xmx:c-D0Zz5O0f_2t6RPrZkGXiK8j5klBf1TEFNJ5yOBW8jX3idx6r7qqAr8>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 1F6232220073; Tue,  8 Apr 2025 04:38:10 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: MAV4M+M/KN87dR5mjMdEn2fCex3vV0EF5iKl+tNfgcP/+Rtzkro1GzKK
-	p0jCHT+uYXuajLKZ/94UnwmLtTOAV2ISsWMmwB3jCK/+EYr+fFWpDzbVsxyVJY3XD4iLHTw
-	WCTRVCOpDDoJsAidpLOPbWcwbA4xyVrkj4KPOs4Y2o9wuSCPo1Fe6jzvfvlUL4Ysr/iUfl0
-	hXzQRkHgWewsfQAFjfZFhETZLSvrvGKvCzlXIAevISXTx7kl+fprKZ97SsG52xoshOjBU3a
-	IDTfPyorJ5tF9xkTltkVsl+Ja4rCGbDgoopZpxHEXaqXswOweHTvnL/cCR2xtKxI/o4dMcy
-	zn1PguAiaZ52stf/FFOzLN9loC6QvAtN2cBGEKWhpPS9kFR7rZ99w0865d0JeAh3WF8Lgg/
-	miUwI/u4lYvf+CpPStqwD9I477SpABAD4UuWAtb7RJqEcBmcPg8RpnHd4uJjONbykPER/vQ
-	nBxzq8kRhWcj2akpCbLZdoH7sAYLQRCBzEuU00iGno9cfSg/mE0xc+nmCq78JIbQBgmTIM7
-	jo4jWf9cBgk1o68hs+uRqb0hn9NTnBRjZVg5A+rJmPyUyPsQNyQlJIBlqJglEz2U78pEZ41
-	H2wlsBYkfufcRkvuo5WiXbQKkWqF/d8EugW5bxUWGsPEev4IaeoiNm+Rdnqdd7fMGxMpGCl
-	j8m2KBaD6X+qG7x8vRnYXCq3ajjkwyGqzNzRLPy3OrDn+3oh2w7+dnJ2WcmQPLZfZaacUNs
-	3WAsXbZ8cR2I0n4q8bnduuR45jKlIgDq7i+OpsJc6Nlb7lavPRAToLFmeMnL1U1aq3hBSa8
-	I23+bjYYrjDEERb7odYMy0QTtxGRJv/Ej1LTRn/zTWvi3Z3v1ab8/9TsyMw8kzk+7zIKnrc
-	cA8NQWnTlXGgUIiHcuLvGjUJdjDFmr2Xco3fiHGFVILZhLeykFJW1vHbHZvng09Naq+1nE5
-	HzhzMYVfmh4WTdQgZqZwge8tEIPCUW4nwoqag1ZYZFD3K2fBT6lH+0pverB8R6MrZZ7GL0n
-	QUPLVf7w==
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
-X-QQ-RECHKSPAM: 0
+X-ThreadId: T56050b542f246355
+Date: Tue, 08 Apr 2025 10:37:49 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Linus Torvalds" <torvalds@linux-foundation.org>,
+ "Maciej W. Rozycki" <macro@orcam.me.uk>
+Cc: "Richard Henderson" <richard.henderson@linaro.org>,
+ "Ivan Kokshaysky" <ink@unseen.parts>, "Matt Turner" <mattst88@gmail.com>,
+ "John Paul Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>,
+ "Magnus Lindholm" <linmag7@gmail.com>,
+ "Paul E. McKenney" <paulmck@kernel.org>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>, linux-alpha@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Message-Id: <e1356a60-525b-4405-ad5b-eb6e93de8fef@app.fastmail.com>
+In-Reply-To: 
+ <CAHk-=whKa0-myNkpq2aMCQ=o7S+Sqj--TQEM8wfC9b2C04jidA@mail.gmail.com>
+References: <alpine.DEB.2.21.2502181912230.65342@angie.orcam.me.uk>
+ <CAHk-=wgBZk1FFOyiTKLnz4jNe-eZtYsrztcYRRXZZxF8evk1Rw@mail.gmail.com>
+ <alpine.DEB.2.21.2502202106200.65342@angie.orcam.me.uk>
+ <alpine.DEB.2.21.2504072042350.29566@angie.orcam.me.uk>
+ <CAHk-=whKa0-myNkpq2aMCQ=o7S+Sqj--TQEM8wfC9b2C04jidA@mail.gmail.com>
+Subject: Re: [PATCH] Alpha: Emulate unaligned LDx_L/STx_C for data consistency
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-The dwarf.h header, which is included by
-scripts/gendwarfksyms/gendwarfksyms.h, resides within elfutils-devel
-or libdw-devel package.
+On Tue, Apr 8, 2025, at 02:34, Linus Torvalds wrote:
+> On Mon, 7 Apr 2025 at 13:46, Maciej W. Rozycki <macro@orcam.me.uk> wrote:
+>>
+>>  So unless I'm proved otherwise (e.g. that all such code paths are now
+>> gone from networking, which may or may not be the case: I saw IPX go but I
+>> can see AppleTalk still around; or that no sub-longword accesses are ever
+>> used in the relevant networking paths), I'm going to keep kernel emulation
+>> in v2, because what just used to be wrapped in an unaligned LDQ/STQ pair,
+>> which we trapped on and emulated, will now become an LDQ_L/STQ_C loop.
+>>
+>>  Do you happen to know what the situation is here?
+>
+> I think networking ends up using 'get_unaligned()' properly for header
+> accesses these days for any of this.
+>
+> If you don't, some architectures will literally silently give you
+> garbage back and not even fault.
+>
+> Admittedly that's mainly some really broken old 32-bit ARM stuff and
+> hopefully it's all dead by now.
 
-This portion of the code is compiled under the condition that
-CONFIG_GENDWARFKSYMS is enabled.
+Yes, the last one doing this was EBSA110, which we removed in 2020.
 
-Consequently, add (elfutils-devel or libdw-devel) to BuildRequires to
-prevent unforeseen compilation failures.
+> So unless you actually *see* the unaligned faults, I really think you
+> shouldn't emulate them.
+>
+> And I'd like to know where they are if you do see them
 
-Fix follow possible error:
-  In file included from scripts/gendwarfksyms/cache.c:6:
-  scripts/gendwarfksyms/gendwarfksyms.h:6:10: fatal error: 'dwarf.h' file not found
-      6 | #include <dwarf.h>
-        |          ^~~~~~~~~
+FWIW, all the major architectures that have variants without
+unaligned load/store (arm32, mips, ppc, riscv) trap and emulate
+them for both user and kernel access for normal memory, but
+they don't emulate it for atomic ll/sc type instructions.
+These instructions also trap and kill the task on the
+architectures that can do hardware unaligned access (x86
+cmpxchg8b being a notable exception).
 
-Link: https://lore.kernel.org/all/3e52d80d-0c60-4df5-8cb5-21d4b1fce7b7@suse.com/
-Fixes: f28568841ae0 ("tools: Add gendwarfksyms")
-Suggested-by: Petr Pavlu <petr.pavlu@suse.com>
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
----
-Changelog:
- *v3: Fix commit message.
----
- scripts/package/kernel.spec | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/scripts/package/kernel.spec b/scripts/package/kernel.spec
-index 726f34e11960..98f206cb7c60 100644
---- a/scripts/package/kernel.spec
-+++ b/scripts/package/kernel.spec
-@@ -16,6 +16,7 @@ Source1: config
- Source2: diff.patch
- Provides: kernel-%{KERNELRELEASE}
- BuildRequires: bc binutils bison dwarves
-+BuildRequires: (elfutils-devel or libdw-devel)
- BuildRequires: (elfutils-libelf-devel or libelf-devel) flex
- BuildRequires: gcc make openssl openssl-devel perl python3 rsync
- 
--- 
-2.49.0
-
+     Arnd
