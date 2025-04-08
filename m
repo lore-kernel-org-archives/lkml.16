@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B2723F262;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80AC722173D;
 	Tue,  8 Apr 2025 07:45:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744098340; cv=none; b=AzYBaVFJILWUrZo2oy5WaGyFR62jkCevl52qfmlKX+8Xo3ncjIM5liBCP9k+wh+C8gH+ChOK1krdaJ/DPP1JmQUt3USbEX0JUPKPD0ve2Hx1JA0rT1NNzwK/2F7PRs1ZCYib03E7FtJuuwf644C7poqG1VCNP7d1lj0t5CfdfN4=
+	t=1744098340; cv=none; b=cyNBHrV4mI2WmMA2RCs0A7v63fkys4cCasEQUtudpJvyn9azxaIn6YdESj4H39cb9wyoVJNSCFah58G/XpUGImmXL+y83CqGNwq77DlvhVv0v+ekL6tFpPVhMwriVTTHSZRI7I/2kV2sIEf1duHbEDLIjD3H3xEtNunyqm3f704=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744098340; c=relaxed/simple;
-	bh=OvKGbB2FbzBCATO/Bgq5TPoN+AHARPbGu6KH2H1fDDw=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=DsCShPiScDo6KQm7knW8F3v/TwOg3bMEEP/56qCIac4+5nez3v1uYzChyLd3mX38SpLo6JOGzaZL4SyVZ0SgXG2VMwd9bFXvVXeilY/0sY4W7c3UVacJhq+83Xf/yb7Dp4NM62NYTn2wKHqZ7bCCXg4KKqyWUtx3VVdpqdrKB+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tQdvLmS8; arc=none smtp.client-ip=10.30.226.201
+	bh=YQ4zPBqKO+TbeflKF81WpWFVnmtHT3kG5mWSk4tlLrM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=lOnE2NIDqVbCQVcm3hciVBoEjj9489ic+AG4M1A7xPBO81+4GUF0ZhxZxCswSJ0MHRD9saiHsv6fwDnTbu+V61JcZCGNj9DvZJ4Pn0X1iixtjTDYlGfqAP4VkSB0kDsHANkVwVluYmjU69xYMfijF3h0iqR35DXyncgchMm7Nfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rOxDV5va; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tQdvLmS8"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DCAFEC4CEE5;
-	Tue,  8 Apr 2025 07:45:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rOxDV5va"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0BC0DC4CEEC;
+	Tue,  8 Apr 2025 07:45:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744098339;
-	bh=OvKGbB2FbzBCATO/Bgq5TPoN+AHARPbGu6KH2H1fDDw=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=tQdvLmS8MIfd49Xe4tK5hslcfvoCAGk+GU51525sTG1EZRm+xHftDRmZwWk73O8DU
-	 ut29CtQx15xtyYbka91mmzQrdegSaHL4AVNmD5O9gYSE+zSYHeAR0qeSGke02gYC6j
-	 pBAIpP5qgB5Sbvf4tkwRa8EWIah9aUx5WoTkCinS157Ay4DCmsYV930F7fqbk7lZAX
-	 e3KnS1HYOosGypqzLu5+4LF5TK6uWD43Bx0MLjzFfKhB3qUcVvTNsO791OOemovqWI
-	 THj9/H1ilGQkWS0oOgIb4YSbS87dtN4TsrLsGIpkvyApB2GmH41d5Mfs+I3Lo/FQll
-	 vWcqE8g/8ljGw==
+	s=k20201202; t=1744098340;
+	bh=YQ4zPBqKO+TbeflKF81WpWFVnmtHT3kG5mWSk4tlLrM=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=rOxDV5vakHUpoBOuNi7NEhjByf9IG+nD+BdGQFkKxpBkDaaaH+OsCP/ZgEtYGpLGL
+	 HFCbAemJxCMmUjAkJ2Th7HwmC51bmv7gSqmT4Z+2a9c0MEF6BfZbXU34TvrHwFsE42
+	 cfby1zZACZdDNQywt39xO6zB2aIbSujrKb9wWQIB2J5Zm/9AwFz9CeC7QcoxK5gt3i
+	 Wsw6UmM+VgbI43VredeREb5nIILY4tdnJQCWBCcSE5q9ePd4dtAC2KqZfBu+Sw/g6i
+	 A5/vU2CDerzjXtFw1zoPBgsFEpelNyPrfLBRBw9LuARIKX2Tms13ptOzfMrwhdGnHt
+	 S04xnWeG1yKhg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C4CC3600C;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED6F4C369A5;
 	Tue,  8 Apr 2025 07:45:39 +0000 (UTC)
 From: Dimitri Fedrau via B4 Relay <devnull+dimitri.fedrau.liebherr.com@kernel.org>
-Subject: [PATCH net-next v2 0/3] net: phy: dp83822: Add support for
- changing the MAC series termination
-Date: Tue, 08 Apr 2025 09:45:31 +0200
-Message-Id: <20250408-dp83822-mac-impedance-v2-0-fefeba4a9804@liebherr.com>
+Date: Tue, 08 Apr 2025 09:45:33 +0200
+Subject: [PATCH net-next v2 2/3] net: phy: Add helper for getting MAC
+ termination resistance
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,11 +41,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIABvU9GcC/3WNywqDMBBFf0Vm3Skxmhpd9T+KizymdaBGSUQs4
- r83SLddHg733B0SRaYEXbFDpJUTTyGDvBTgBhNehOwzgxRSiUoo9LOutJQ4Goc8zuRNcIS6FnW
- lrHAt3SBv50hP3s7uAwItGGhboM9m4LRM8XMeruXpf+3mT3stUaD1XivTqNbW6v5msgPFeHXTC
- P1xHF/GHUuUxwAAAA==
-X-Change-ID: 20250305-dp83822-mac-impedance-840435b0c9e6
+Message-Id: <20250408-dp83822-mac-impedance-v2-2-fefeba4a9804@liebherr.com>
+References: <20250408-dp83822-mac-impedance-v2-0-fefeba4a9804@liebherr.com>
+In-Reply-To: <20250408-dp83822-mac-impedance-v2-0-fefeba4a9804@liebherr.com>
 To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
  Russell King <linux@armlinux.org.uk>, 
  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
@@ -56,11 +54,11 @@ Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, Dimitri Fedrau <dimitri.fedrau@liebherr.com>, 
  Dimitri Fedrau <dima.fedrau@gmail.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744098338; l=1500;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744098338; l=1963;
  i=dimitri.fedrau@liebherr.com; s=20241202; h=from:subject:message-id;
- bh=OvKGbB2FbzBCATO/Bgq5TPoN+AHARPbGu6KH2H1fDDw=;
- b=LAP+5KozOfLFiM9ARSpBu0uYlfKBnWFlKSIEmHuCE92oEypvNMNHSfEJlTOZxY+HY6lLA1X/f
- tK9686IiRiaAPUOAdgx9IRqOWq4Szc8sSbjvHzzoEx48sIfqzoqz3aj
+ bh=3rPSnMTtXUybCDZzRHxcQdj0rW3ShNxaNA2Hqxzp20o=;
+ b=RzeHcv3bxb4pNq+oou9OTP8EPu91EcvX4bUD80IzWFxMsMqw06vIkTHvLevnaltX76Yo2Vzcw
+ 8eEEn1Yr9/xD5DcfxkUVa3A8JqvCmq0ZyIL6WzTlaMBB1o2McbWVFQf
 X-Developer-Key: i=dimitri.fedrau@liebherr.com; a=ed25519;
  pk=rT653x09JSQvotxIqQl4/XiI4AOiBZrdOGvxDUbb5m8=
 X-Endpoint-Received: by B4 Relay for dimitri.fedrau@liebherr.com/20241202
@@ -68,38 +66,60 @@ X-Endpoint-Received: by B4 Relay for dimitri.fedrau@liebherr.com/20241202
 X-Original-From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
 Reply-To: dimitri.fedrau@liebherr.com
 
-The dp83822 provides the possibility to set the resistance value of the
-the MAC series termination. Modifying the resistance to an appropriate
-value can reduce signal reflections and therefore improve signal quality.
+From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+
+Add helper which returns the MAC termination resistance value. Modifying
+the resistance to an appropriate value can reduce signal reflections and
+therefore improve signal quality.
 
 Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
 ---
-Changes in v2:
-- Renamed "mac-series-termination-ohms" to "mac-termination-ohms"
-- Added description for "mac-termination-ohms"
-- Renamed "phy_get_mac_series_termination" to "phy_get_mac_termination"
-- Dropped "mac_series_termination_modify" from dp83822_private
-- Init mac_termination_index in dp8382x_probe
-- Renamed "mac_series_termination" to "mac_termination"
-- Link to v1: https://lore.kernel.org/r/20250307-dp83822-mac-impedance-v1-0-bdd85a759b45@liebherr.com
+ drivers/net/phy/phy_device.c | 15 +++++++++++++++
+ include/linux/phy.h          |  3 +++
+ 2 files changed, 18 insertions(+)
 
----
-Dimitri Fedrau (3):
-      dt-bindings: net: ethernet-phy: add property mac-termination-ohms
-      net: phy: Add helper for getting MAC termination resistance
-      net: phy: dp83822: Add support for changing the MAC termination
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 675fbd225378796085cdc6c92ee2d7e9bff0b6f6..6bd888a7ad14f0e71670e43cf0dd7ecebc2b23b9 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -2948,6 +2948,21 @@ int phy_get_tx_amplitude_gain(struct phy_device *phydev, struct device *dev,
+ }
+ EXPORT_SYMBOL_GPL(phy_get_tx_amplitude_gain);
+ 
++/**
++ * phy_get_mac_termination - stores MAC termination in @val
++ * @phydev: phy_device struct
++ * @dev: pointer to the devices device struct
++ * @val: MAC termination
++ *
++ * Returns: 0 on success, < 0 on failure
++ */
++int phy_get_mac_termination(struct phy_device *phydev, struct device *dev,
++			    u32 *val)
++{
++	return phy_get_u32_property(dev, "mac-termination-ohms", val);
++}
++EXPORT_SYMBOL_GPL(phy_get_mac_termination);
++
+ static int phy_led_set_brightness(struct led_classdev *led_cdev,
+ 				  enum led_brightness value)
+ {
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index a2bfae80c44975db013760413867cebdf20c8216..63d237763f842e80d04bb534e32cd42110129e41 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -2046,6 +2046,9 @@ int phy_get_tx_amplitude_gain(struct phy_device *phydev, struct device *dev,
+ 			      enum ethtool_link_mode_bit_indices linkmode,
+ 			      u32 *val);
+ 
++int phy_get_mac_termination(struct phy_device *phydev, struct device *dev,
++			    u32 *val);
++
+ void phy_resolve_pause(unsigned long *local_adv, unsigned long *partner_adv,
+ 		       bool *tx_pause, bool *rx_pause);
+ 
 
- .../devicetree/bindings/net/ethernet-phy.yaml      |  9 ++++++
- drivers/net/phy/dp83822.c                          | 33 ++++++++++++++++++++++
- drivers/net/phy/phy_device.c                       | 15 ++++++++++
- include/linux/phy.h                                |  3 ++
- 4 files changed, 60 insertions(+)
----
-base-commit: 61f96e684edd28ca40555ec49ea1555df31ba619
-change-id: 20250305-dp83822-mac-impedance-840435b0c9e6
-
-Best regards,
 -- 
-Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+2.39.5
 
 
