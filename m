@@ -1,158 +1,98 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DB052641DB;
-	Tue,  8 Apr 2025 08:41:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A75F526460D;
+	Tue,  8 Apr 2025 08:41:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744101684; cv=none; b=KN2CwfWZ7z697iLwOW0BjGxZDAPchTLmA3faevt/pcl9MFdxWzG3wGfcnZbVeJqnsfOgWfsvvyqpf3NfS39lLIP+5mYbQnCwo1xfbeGmdgGlB/UO55dJABC6F1rmvhsAbzVXOV8Y5tY9/pt3vAQCM4SIuyAX9/AAWhzXodFLQaI=
+	t=1744101705; cv=none; b=j8D4F22gYTcgnpaOljZnrezrDT3OX9EGS3YAbsGoluApUkbgkS+eZFmuIblgJibN8oUA7TuaDeeKtQto61BqdqxDw+Zvs2IQ8o20dwCAa16XnW60vimgy4/mDTZt+Spvge723xiKDWWi5IO1du0a7gAQy1oSh/8fq7nRzR9MKMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744101684; c=relaxed/simple;
-	bh=Iqee5RrWEeGxdk7646RRwu+1jLljC0WdgOXwKzC+Dqs=;
+	s=arc-20240116; t=1744101705; c=relaxed/simple;
+	bh=5WteQ7YdNoFXvIEtbsDbq4fbGNek1M2TYmJsBLMEzgo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b3hONeo3G5niQyeIi0t/K8vfTvmutqnWnfYhsH3fquMYNtggZyWaDTIZ70BtTArFiijtBdOpdXG4vxNMS0SnVpDlA0dslcd0u27sSSGnPphvd5kE8pjSg5kOCbl9ha0dITk5TJhYhiw9Ba7nWvMU9B75H1qRnCRlop82w7ka/wg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=egXKRSzI; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZFmaREbd9zUMA6rCgsGmzOQNrDfTVC0C8r732UBO/i4w92bv5mPWgK4b2nPFoKULVTqJFyD9524viMfXRMP5jw0CQkS8JYoJ+ivfVDEqyEsySzBZbW3v7oT29p6eNpJmI7TGzpbK2a7+IYhNmSHZpqu/MQM01SpOS/lkimgbC1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dAWC0gEw; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="egXKRSzI"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5499614d3d2so6094835e87.3;
-        Tue, 08 Apr 2025 01:41:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744101681; x=1744706481; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ACIOIbm0p+1PTv9P9JIta3dAyYPe2LdYdKxjKYYTx9Y=;
-        b=egXKRSzIn7DrQCDrhuW2GfGrNKVQWDRZLaVRui5PyJm1wUZYMCtnua2vBg65aFC+hb
-         OrTS8KFBWpJeUNuLe8lq1CZX9yNVEtvF09WlhnhR+KHNbb7kqTUFpBdyammxrsXSWWcd
-         EmybE/tgYzX1AFVEMaAZfxrnw70Z5lxbQGIoV9M/paTG3zJe6bRIKr2u89BErR1hJQq/
-         73B69UCRiGRJg03QwBVvCtC8Cj948QnJz/T8MZk0XlyeLj5Fv9LYEMfGYglK1V8k6JuK
-         WxeLDsLH1Qp9wxSyxweeTHGISJtJPOZLUybjVwW866AK3mOQgdyxvxDi3770ES6Pvir3
-         +Zjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744101681; x=1744706481;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ACIOIbm0p+1PTv9P9JIta3dAyYPe2LdYdKxjKYYTx9Y=;
-        b=bYNKrsUgykKNU7mbyAzFSwUt6o0VshY6POnwzWrAiVCC5xmN+0KfQiRhApIyEFKS+i
-         vPkZMKFnig1BEux/zh5FhaWfWoGaGriXPY2/vj3uX6DPRJYO+ueXDSy0JX9Hdp/8Ns8s
-         mxMsVrcXaEuHXftsyGuMmFEfWnRtGYU319Qdr6Ej6v/oA1PbJQlkEveILm0nvmctOtSl
-         NZSSOiU2P6MHWXDrryOSqQQkqnOD2cUGerg4s5kv/xrKdv5Co8JoE5SEhtPfr9z8siEZ
-         fhskv7HzBX09zw6pKIhHxRL/BXAwg0Mnt1rrwD10bUz5oMzdzQoMmogq2sUS4JOQT0bx
-         h82A==
-X-Forwarded-Encrypted: i=1; AJvYcCVfjk2k9lADtRoTo5J/GqVEf5w66nt8qs4UDZUBoK0QEe1jwEklRCBDO101B+PkXW52suZwmEd2kINxM6hf@vger.kernel.org, AJvYcCVkBSTBfMNkvuyadC4np93tS2piqvzudqAHbYAQ3L21Shl33jaoehef1xHMw5Xh014TQh5Y5fWj7Sbr@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9U5pnsVZ2vywad+Y6rs6XDx2kUsVQg4uK8wcANvonJDU2NZT6
-	3FXCnXqtuG5Ig9D+QyJMupUAl1EoA/5qxYMxV85QGf+qOZ3G/iTQ/bxukw==
-X-Gm-Gg: ASbGncva/uGR/3evh0p72YnaVNk+Tn5g5yEJ18i2BwZHmjUMHPOhMaOxYCZRMazZJ/v
-	/gRmrSasB7vCGIkTP0biEoCigyIi6J+Y+BaecjteD1rKuJrUPH1cild15zMhIBg3F0mVLrYZVY8
-	erouIhDWSVcDNZiUCu1Z+zSAs/WXtxorFJuVEdZiNf0m/gKIqHHkkqfRTdmRVquT6e+rE/i96BO
-	pxw/p5GiUqYisJNODzndPFweX1i4MAYuaWvCfkI/joQt2vqXlFSiyTdkg5jcW+x5P4PF1s8peDH
-	ADGgLSKq9WkZL2WxpWbTRZ+WCB1h49GSetG0yDUvv26q++Rx9m51TLBQEg==
-X-Google-Smtp-Source: AGHT+IEm21EBbYmNkyzRDOFs9TzsbgYse65RwBYM1gdJbCrrwjvMVZPVowKwrXwUH3ajBMGduDYe1Q==
-X-Received: by 2002:a05:6512:3b98:b0:549:7145:5d28 with SMTP id 2adb3069b0e04-54c232f7744mr3502276e87.25.1744101680828;
-        Tue, 08 Apr 2025 01:41:20 -0700 (PDT)
-Received: from mva-rohm ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54c1e635bd6sm1475351e87.157.2025.04.08.01.41.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 01:41:19 -0700 (PDT)
-Date: Tue, 8 Apr 2025 11:41:16 +0300
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-To: Matti Vaittinen <mazziesaccount@gmail.com>,
-	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 03/14] dt-bindings: mfd: bd96801: Add ROHM BD96805
-Message-ID: <f49addee698b683a071c12808f06a56509152f5c.1744090658.git.mazziesaccount@gmail.com>
-References: <cover.1744090658.git.mazziesaccount@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dAWC0gEw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744101704; x=1775637704;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=5WteQ7YdNoFXvIEtbsDbq4fbGNek1M2TYmJsBLMEzgo=;
+  b=dAWC0gEwTZ+fJAYbEC8LS4lwAleRlOdDZlWeQ1KNw0OJ1+tCHMlJgZyA
+   NJMwuGSHEw8OjbPfA1a/DKyVnvOS5KRb8gn9XwwfJfyq6ZU7zHAjGkPCB
+   YmCrQaFKpN3UlZTdoVpOsE6zbHJ4r+XucSHgMb9P5ikm8vwdRQQvRh6Jg
+   WVht82pzzMhXOSYx8/rEDg2a1vOQAqkOJAucfVZevpBu+FL7l2dp2qPJg
+   cI24zaHmerSIkiu1Yv2LiBBDXOZUCbXNwoUvAK4my/BW4UEJMkxzIm9Jn
+   xahNJJQImAd0r6X9Rb2ETFO9RlFoc10Eqx2fh8jMC9QbnvYoK1uXIbxJ8
+   g==;
+X-CSE-ConnectionGUID: U9zooZwqSxS9Fi99zEpRrQ==
+X-CSE-MsgGUID: j3wTnsKBRYmq0l6wIaWkkg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="45410329"
+X-IronPort-AV: E=Sophos;i="6.15,197,1739865600"; 
+   d="scan'208";a="45410329"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 01:41:43 -0700
+X-CSE-ConnectionGUID: e4xa6mZKSgiZsPgdHaLFpw==
+X-CSE-MsgGUID: FbaDQkLOSt6Ln5P2KltInA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,197,1739865600"; 
+   d="scan'208";a="129152257"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 01:41:37 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u24WS-0000000ALEM-3zpw;
+	Tue, 08 Apr 2025 11:41:32 +0300
+Date: Tue, 8 Apr 2025 11:41:32 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Aditya Garg <gargaditya08@live.com>
+Cc: alyssa@rosenzweig.io, Petr Mladek <pmladek@suse.com>,
+	Sven Peter <sven@svenpeter.dev>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Aun-Ali Zaidi <admin@kodeit.net>,
+	Maxime Ripard <mripard@kernel.org>, airlied@redhat.com,
+	Simona Vetter <simona@ffwll.ch>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andrew Morton <akpm@linux-foundation.org>, apw@canonical.com,
+	joe@perches.com, dwaipayanray1@gmail.com, lukas.bulwahn@gmail.com,
+	Kees Cook <kees@kernel.org>, tamird@gmail.com,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
+	Hector Martin <marcan@marcan.st>,
+	Asahi Linux Mailing List <asahi@lists.linux.dev>
+Subject: Re: [PATCH v4 0/3] Use proper printk format in appletbdrm
+Message-ID: <Z_ThPOOKXa3VwvmO@smile.fi.intel.com>
+References: <PN3PR01MB9597382EFDE3452410A866AEB8B52@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="5+V+aybW6NeMgsZb"
-Content-Disposition: inline
-In-Reply-To: <cover.1744090658.git.mazziesaccount@gmail.com>
-
-
---5+V+aybW6NeMgsZb
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <PN3PR01MB9597382EFDE3452410A866AEB8B52@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-The ROHM BD96805 is very similar to the BD96801. The differences visible
-to the drivers is different tune voltage ranges.
+On Tue, Apr 08, 2025 at 12:17:13PM +0530, Aditya Garg wrote:
+> The vsprint patch was originally being sent as a seperate patch [1], and
+> I was waiting it to be taken up. But as suggested by Petr, I'm sending
+> them via DRM.
 
-Add compatible for the ROHM BD96805 PMIC.
-
-Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-
----
-Revision history:
- v1 =3D> :
-  - No changes
----
- .../devicetree/bindings/mfd/rohm,bd96801-pmic.yaml     | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd96801-pmic.yaml b=
-/Documentation/devicetree/bindings/mfd/rohm,bd96801-pmic.yaml
-index efee3de0d9ad..0e06570483ae 100644
---- a/Documentation/devicetree/bindings/mfd/rohm,bd96801-pmic.yaml
-+++ b/Documentation/devicetree/bindings/mfd/rohm,bd96801-pmic.yaml
-@@ -4,19 +4,21 @@
- $id: http://devicetree.org/schemas/mfd/rohm,bd96801-pmic.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
-=20
--title: ROHM BD96801 Scalable Power Management Integrated Circuit
-+title: ROHM BD96801/BD96805 Scalable Power Management Integrated Circuit
-=20
- maintainers:
-   - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-=20
- description:
--  BD96801 is an automotive grade single-chip power management IC.
--  It integrates 4 buck converters and 3 LDOs with safety features like
-+  BD96801 and BD96805 are automotive grade, single-chip power management I=
-Cs.
-+  They both integrate 4 buck converters and 3 LDOs with safety features li=
-ke
-   over-/under voltage and over current detection and a watchdog.
-=20
- properties:
-   compatible:
--    const: rohm,bd96801
-+    enum:
-+      - rohm,bd96801
-+      - rohm,bd96805
-=20
-   reg:
-     maxItems: 1
---=20
-2.49.0
+You need to do something about your tools, really.
+Now it's patch 3 threaded to patch 1, while the rest, including cover letter,
+seems okay.
 
 
---5+V+aybW6NeMgsZb
-Content-Type: application/pgp-signature; name=signature.asc
+-- 
+With Best Regards,
+Andy Shevchenko
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmf04SwACgkQeFA3/03a
-ocX2xwgAgBu1xyqzQgr2AzTACxbU95p5svkRVMluMGTMKIYZUN19lxZ+sJN3dHV8
-Yru7ncEpOv7GQzCyADm1BfatTu4sANYRVfvU9TzyihEEZCLXsWyt1a+q4kIAO8Ga
-3N8ysIgZgU7X2HO5rta3yM+wYgExwol+4br2emQhZO9Ebf26hJWp1SbA5uirnOoD
-bbfhYlCA8EMOyYAgapzxAMBDtNg+mnrdDuveKMoOoT+SPjMc1JwBtj5CsS8ZTzJd
-mQNgqLTgtYTbuIfP9A9LQc4MYv6UyR4R3HDapMr1Fn8iaTbt4boTN9v5TPy0mHO+
-DK7tGrB3hqOuA/jPIocv/z2eJbv4EA==
-=uCOW
------END PGP SIGNATURE-----
-
---5+V+aybW6NeMgsZb--
