@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9373A2673A0;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9664C2673A8;
 	Tue,  8 Apr 2025 10:09:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744106996; cv=none; b=AcKa0Qt12sPyas9LRgyFMkOiCv/Dur0OdJ4obZQ9MbZcp5YH2hwa8BlX04ZIU9JOBdWQI07IpXqpPIdvZPMANlAXjWeE6HV/SgZJM7izlvGiV3jCIGzhyC0/MdQHc3h75aLExYigb2FmtdHXNpEsYf2iqqTAIlyAPyAw78lvXN4=
+	t=1744106996; cv=none; b=EDWInrrHuolpXx8nkS6u7FVFZnQfi8gHNMivj+wSf8IDRUsN3/wLpLQxKKzOfnUOvM4ge9HrluMg32PhRYbmaJTkTJ5l8cs9uL7IP3dTd+Ks8M7QxXOq6lJZVgT1QLwFEmyMz4wcpkxKVVdQqEcvlNtRGnQTsjyaGd++Kv4FpaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744106996; c=relaxed/simple;
-	bh=qNbb8ty5fRnxFkcUXw+miskt6Tu11OYOQ5Ju3o0WAzI=;
+	bh=3BDYTh1/WNFZ05pM+UlQyBSQkq+sjQ/vD8b342dkHcE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qKdm3S8m8v+faCjE8GGEbemvyW4xm6MRxxKG53ckho6uSUtQSGgKtvEc9w1//4yR+5GfsjphvnGZxz7uUOdqHPdVZsfarrxdgSZXyOsyPseUrHgSQdYshVoiH8Ga3HgRRH3JQUIm8Z4BymZ1JLFiNlU9aiblnXlfBVv3rDn1MFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Igstavse; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=cUxoDF+3Ls8YVtdIwjfnJQGEHvpLkbdQoXMCAksOn/fzvrgYZg1+/4XFR0BtlwR2IUPZmfLtbdCMDFKHDMbZDq8MOfKeD/917F7VElg4J52sKBSBKt9PAGONcy0MurY6SgkSxKeiTcSQ69T/9ri4bbAa0t0c887qg1PauwSPSAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TNwaozQz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Igstavse"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CE98C4CEEC;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TNwaozQz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A2C9C4CEED;
 	Tue,  8 Apr 2025 10:09:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1744106996;
-	bh=qNbb8ty5fRnxFkcUXw+miskt6Tu11OYOQ5Ju3o0WAzI=;
+	bh=3BDYTh1/WNFZ05pM+UlQyBSQkq+sjQ/vD8b342dkHcE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IgstavseRL2eOlVa2rHZE9QalA4Z2S7D8SROqhmrZv0E701E2uwwLmXoXKaCs5Vfz
-	 uYtoc7DOWTlOhni/I/gAeTwiI5KXuN2mMt0GMUDeIse+V46Ks8k5CuLTM1f5OHnoO1
-	 /NwS/fdnwyo3ykZ+lFeNigTuxQe56WC7griisuckf9ltjV+13HZIwrl+dfhU4WoxEx
-	 2QC5uvn23yjDENalxqKgXDeYCnLs3HPgrscz1/vrG3Snk/YbnMU8Z1ibKEkwHS+scl
-	 t7m8BP44dIjzvdI1YGwb3ydhl/9BrKQa+m4dc0wxAwx9Pe0UHjmp41nBXgXrXg7lFn
-	 x7FA93jrD0hhQ==
+	b=TNwaozQz1eXfwIoxIgOj+N3Vr+rRFutWbt2QVglR9yv+EwvV3WitJfjr7kjWvq0hK
+	 jb15LLcItUowJ7z+bcU/atRXB16+Q07OcvFbNEIg9njPbvbL0ZA1Yma+G3iGujFmeI
+	 o4sEjgDiX9Lmqbob+3iFuqvaL20xQAe3jdATP5lTYDIAueHcWG8Te/x9BBeI8rBTU2
+	 spWJpf9F4uvZUXHW4mxPIeBa0qcLx1xbPgpXjYIvryKiCTHKpEoiJsjerQElNYDAuk
+	 PZ3V6DJy/KR3wm0I9SqONSsBfS9KWbyw/jXtwvQ0fBsGaXS5iVKkfn1b2z1VB2+i1Q
+	 sKmNy76XNEn3A==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab@kernel.org>)
-	id 1u25tt-00000008RVU-0C02;
+	id 1u25tt-00000008RWV-2Jmx;
 	Tue, 08 Apr 2025 18:09:49 +0800
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
 	Jonathan Corbet <corbet@lwn.net>
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 05/33] scripts/kernel-doc.py: better handle empty sections
-Date: Tue,  8 Apr 2025 18:09:08 +0800
-Message-ID: <1b057092a48ba61d92a411f4f6d505b802913785.1744106241.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v3 26/33] scripts/kernel-doc.py: properly handle KBUILD_BUILD_TIMESTAMP
+Date: Tue,  8 Apr 2025 18:09:29 +0800
+Message-ID: <ffc70a1b741b010365ed82f31611018f24f91ce7.1744106242.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1744106241.git.mchehab+huawei@kernel.org>
 References: <cover.1744106241.git.mchehab+huawei@kernel.org>
@@ -50,82 +50,97 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
 
-While doing the conversion, we opted to skip empty sections
-(description, return), but this makes harder to see the differences
-between kernel-doc (Perl) and kernel-doc.py.
+The logic that handles KBUILD_BUILD_TIMESTAMP is wrong, and adds
+a dependency of a third party module (dateutil).
 
-Also, the logic doesn't always work properly. So, change the
-way this is done by adding an extra step to remove such
-sections, doing it only for Return and Description.
+Fix it.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- scripts/kernel-doc.py | 31 ++++++++++++++++++++++++++++---
- 1 file changed, 28 insertions(+), 3 deletions(-)
+ scripts/lib/kdoc/kdoc_files.py  |  9 ---------
+ scripts/lib/kdoc/kdoc_output.py | 28 +++++++++++++++++++++-------
+ 2 files changed, 21 insertions(+), 16 deletions(-)
 
-diff --git a/scripts/kernel-doc.py b/scripts/kernel-doc.py
-index 8625209d6293..90808d538de7 100755
---- a/scripts/kernel-doc.py
-+++ b/scripts/kernel-doc.py
-@@ -317,6 +317,19 @@ class KernelDoc:
-         name = self.entry.section
-         contents = self.entry.contents
+diff --git a/scripts/lib/kdoc/kdoc_files.py b/scripts/lib/kdoc/kdoc_files.py
+index 5a6e92e34d05..e52a6d05237e 100644
+--- a/scripts/lib/kdoc/kdoc_files.py
++++ b/scripts/lib/kdoc/kdoc_files.py
+@@ -13,9 +13,6 @@ import logging
+ import os
+ import re
+ import sys
+-from datetime import datetime
+-
+-from dateutil import tz
  
-+        # TODO: we can prevent dumping empty sections here with:
-+        #
-+        #    if self.entry.contents.strip("\n"):
-+        #       if start_new:
-+        #           self.entry.section = self.section_default
-+        #           self.entry.contents = ""
-+        #
-+        #        return
-+        #
-+        # But, as we want to be producing the same output of the
-+        # venerable kernel-doc Perl tool, let's just output everything,
-+        # at least for now
+ from kdoc_parser import KernelDoc
+ from kdoc_output import OutputFormat
+@@ -137,12 +134,6 @@ class KernelFiles():
+         if out_style is None:
+             out_style = OutputFormat()
+ 
+-        dt = datetime.now()
+-        if os.environ.get("KBUILD_BUILD_TIMESTAMP", None):
+-            # use UTC TZ
+-            to_zone = tz.gettz('UTC')
+-            dt = dt.astimezone(to_zone)
+-
+         if not werror:
+             kcflags = os.environ.get("KCFLAGS", None)
+             if kcflags:
+diff --git a/scripts/lib/kdoc/kdoc_output.py b/scripts/lib/kdoc/kdoc_output.py
+index 8be69245c0d0..eb013075da84 100755
+--- a/scripts/lib/kdoc/kdoc_output.py
++++ b/scripts/lib/kdoc/kdoc_output.py
+@@ -19,8 +19,6 @@ import os
+ import re
+ from datetime import datetime
+ 
+-from dateutil import tz
+-
+ from kdoc_parser import KernelDoc, type_param
+ from kdoc_re import Re
+ 
+@@ -586,6 +584,15 @@ class ManFormat(OutputFormat):
+     )
+     blankline = ""
+ 
++    date_formats = [
++        "%a %b %d %H:%M:%S %Z %Y",
++        "%a %b %d %H:%M:%S %Y",
++        "%Y-%m-%d",
++        "%b %d %Y",
++        "%B %d %Y",
++        "%m %d %Y",
++    ]
 +
-         if type_param.match(name):
-             name = type_param.group(1)
+     def __init__(self, modulename):
+         """
+         Creates class variables.
+@@ -597,11 +604,18 @@ class ManFormat(OutputFormat):
+         super().__init__()
+         self.modulename = modulename
  
-@@ -373,6 +386,19 @@ class KernelDoc:
- 
-         args["type"] = dtype
- 
-+        # TODO: use colletions.OrderedDict
+-        dt = datetime.now()
+-        if os.environ.get("KBUILD_BUILD_TIMESTAMP", None):
+-            # use UTC TZ
+-            to_zone = tz.gettz('UTC')
+-            dt = dt.astimezone(to_zone)
++        dt = None
++        tstamp = os.environ.get("KBUILD_BUILD_TIMESTAMP")
++        if tstamp:
++            for fmt in self.date_formats:
++                try:
++                    dt = datetime.strptime(tstamp, fmt)
++                    break
++                except ValueError:
++                    pass
 +
-+        sections = args.get('sections', {})
-+        sectionlist = args.get('sectionlist', [])
-+
-+        # Drop empty sections
-+        # TODO: improve it to emit warnings
-+        for section in [ "Description", "Return" ]:
-+            if section in sectionlist:
-+                if not sections[section].rstrip():
-+                    del sections[section]
-+                    sectionlist.remove(section)
-+
-         self.entries.append((name, args))
++        if not dt:
++            dt = datetime.now()
  
-         self.config.log.debug("Output: %s:%s = %s", dtype, name, pformat(args))
-@@ -476,7 +502,7 @@ class KernelDoc:
-         # to ignore "[blah" in a parameter string.
+         self.man_date = dt.strftime("%B %Y")
  
-         self.entry.parameterlist.append(param)
--        org_arg = Re(r'\s\s+').sub(' ', org_arg, count=1)
-+        org_arg = Re(r'\s\s+').sub(' ', org_arg)
-         self.entry.parametertypes[param] = org_arg
- 
-     def save_struct_actual(self, actual):
-@@ -1384,8 +1410,7 @@ class KernelDoc:
-             return
- 
-         if doc_end.search(line):
--            if self.entry.contents.strip("\n"):
--                self.dump_section()
-+            self.dump_section()
- 
-             # Look for doc_com + <text> + doc_end:
-             r = Re(r'\s*\*\s*[a-zA-Z_0-9:\.]+\*/')
 -- 
 2.49.0
 
