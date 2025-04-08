@@ -1,105 +1,129 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBE7A14BF89;
-	Tue,  8 Apr 2025 14:05:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 431421DD9A6
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 14:06:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744121154; cv=none; b=aE/l8ikB+6Dyshhk2aWUFrBLx1VrrFg+THvou+WyKEqOYfbowy4qL2mwxrGNIUQXuRGtgIW9y7LSlOeV9kHpn+rGc1Msl1bzWUlhV062sjfSy3ZpGUj/fy8fp0oaWwIpNOf8D1PH9ys4fQjqZ78pxbpv3X2RFcGxwjrzyn1LX6o=
+	t=1744121179; cv=none; b=NLcy2jzI4BJCCh6DWp+o/F/AmkEAAyApcWV5u1Xsx4/is9WbaHWTgKGO3xTMB+gAetber3W53hCrCVZpxrM1XRz4z7KVKgpY2wHnINjHk/V93L0qNiIiEeC9U3y6EMIEYonzPO2WDRDJx9fRcBzYi2kdqWklusSy2tDLXatUpL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744121154; c=relaxed/simple;
-	bh=krfSXjfZeWQRXkJflCUdRZC8X/IhC/mZgFEqqBj1vZE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rV4eDSMBjNKPWrqttXnN/Jjq5MboJbpc+S9ycr2FEgfVRtS221ULNl/4b5lPYe4nbs+z8wlsBFts8AYHYp0jb9whTQOxKxjbFeoX/cQlrjnj/d3rBZhqh3fVLlqWfC/dAdtK5hbuW7Yn6YXNytbUDN8ylkId9VVd4Op4/2HLbX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=OKkDXDR6; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744121179; c=relaxed/simple;
+	bh=ccn+5EjBCBAZog8J2jgDf6TBp/pRYSIg1+WTilFcn2k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hVhBlHbFrwSRy8BfaeFuutcjrtg3P21Q0wkoUTNvRNBpJnq1x1WiQSk2LolX0Zbb1xSTYLyHVjNJeYjPGGoj7vL0+qmxFGGNWRpScj6nuGDUx7/lA91mCGPWqgZbFj14uYsIoLS+AhrOI9ekNg8WMyOEbpOlLprGCjjgqQOOENc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=WzIr2Z1n; arc=none smtp.client-ip=209.85.210.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OKkDXDR6"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D8C1A4433E;
-	Tue,  8 Apr 2025 14:05:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744121150;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Pu1GCurYBEeBEHD5ue7wgscszjfmcKubyyhFO/17Ga0=;
-	b=OKkDXDR6kOgIdgXe/d5FjMq93Zab1MiEXDqj2nV8J0I3ItL9YtPeY/fNV0RPMCXVb39Mqe
-	ozM5VujxZfToV2bzGHEczSyWfFSv1wRn1WCAwD/v3YjBynKYz4TTePLuNIBTO8LIUtMi1G
-	TVBfqRdJpYwl1YKDgnfSgCl36l/kyWG6HIXIY/6djSba96tih3meWXywSFVoEzYCg6t98O
-	y9KNF8m+EpLip3P+ZZFJ9w7GFVoMbc+hf1PzJUcxlehlVrdg65bWxgcY5/fLHwccUuDOWV
-	fqOxMWolT0T3z4IBKHtw+BriYc3dEiBqW2XdWs62aAyEZK6dbdBKl23D50KUwA==
-Date: Tue, 8 Apr 2025 16:05:46 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Shawn Guo
- <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
- Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang
- <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Derek
- Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
- Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Saravana
- Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark
- Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, Daniel Scally
- <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>,
- Geert Uytterhoeven <geert+renesas@glider.be>, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
- devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, Allan Nielsen
- <allan.nielsen@microchip.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 13/16] i2c: busses: at91: Add MCHP_LAN966X_PCI
- dependency
-Message-ID: <20250408160546.07ae304b@bootlin.com>
-In-Reply-To: <Z_PyfyBq5cDeIQwS@smile.fi.intel.com>
-References: <20250407145546.270683-1-herve.codina@bootlin.com>
-	<20250407145546.270683-14-herve.codina@bootlin.com>
-	<Z_PyfyBq5cDeIQwS@smile.fi.intel.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="WzIr2Z1n"
+Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-72a4793d4e2so3468471a34.2
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 07:06:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744121176; x=1744725976; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=awTzyD3tiaTSsEy1mjlUb+KI9F9b893/y6sLaVTL5xk=;
+        b=WzIr2Z1nBwKoKh/r7LY+Q/hSTefKxlioFRxZV/XWypSNArxrB0crm0XKcu/bdZHGpm
+         Ieez9HIQAFzGx+R8YjEdYB790ZsUUGSUUdEqJJdbYRRuPAa5j1LfpkcJ9gXIBRLQ54TL
+         6dEcZmxeM06H++O5CL8yPtfiAVIoOMxfm9TeNMyqZxSl9tMY9ojyk4SvIsdBrMRviUhg
+         u/vXFlektxtCUVaNLAFxKDVeh7gHGgbcKUyuF3Ue9Ffc1C0u6JfoorvAFJCCOR3a9mnL
+         1Lj40vK5VIUD/7e3Yuk5NmWD2A+jNr3RJZR38NymbvWY4XxUDjnKbqQse8gsXwLSuPhi
+         o04g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744121176; x=1744725976;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=awTzyD3tiaTSsEy1mjlUb+KI9F9b893/y6sLaVTL5xk=;
+        b=ZEazJh4uXZafsdv5uPJI71qR8GqAd9edP0b7EIHhyNt1DL6cuuqZBPcoqrnLjuP9h4
+         8+ng4dCbY9mANnXLeTYEOgtG6XKcNXE7kpBaAGHlkAJGU/eOEFdbwhffXl/2XbdcqL0e
+         6oVxrkOVDX0/5/KUa/IVG4p9KU69NRlT3Rd5CL1oqxhHfqAJy0PlJIfkR4RHMy/bWYy2
+         XGBJPANCusNvKu4phCxsmA8KSYUBVysccZmxrXGv7E1/JX14B6ousYz9SC0L6dMNB1ym
+         gyu3vL9jBwjyhLbTWmKHfBHvjk2zdbwc/5FDV7k9yf+fXjgILIUgUzOIUQJFh5NUFp5H
+         PoeA==
+X-Forwarded-Encrypted: i=1; AJvYcCXHdMXpsaXUxGrRuj9xT0sB/daO7ZSHbd2BGIZZT0avLtOMXKqgZGJc8JOhuuhlr9RxJGE85++wdP9C208=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4Uv8IHrFmP5AfpocO+iaFgr9Bh44fbpf0OX3SSpU9x+hHDGLg
+	sxGvcS1AOmW8w6rel9rHm3ntsSUuqN1P5XErdf8T4+KOnKp7M+n917uaK0R9d2M=
+X-Gm-Gg: ASbGncu/dDPAUT9gJh+FMGjmTTWSchpUbSIfd8+EYsv1U/GkU2jt57t97Q6os1VnLwj
+	58XtGZSAnHJ35j2dxkvvjCEv34/yYgzDKsx7UhgNzWW4PY0rsQnTZ/Ni+PPp8RpSjaGCTkroQPE
+	z+xXi2upsH59o/M8Do7+mLMCNZ/xR8frt2tVTfH0eCixTcSBMTYR+UF3RoZiUM9EyCaVWRd1480
+	jcU9erJUQOhWOw5zv4C7RaBt54QkJm/CSLwPHyLPUpGtFbZl+Kindts6NaDSAinXrMF9xWZ5FOj
+	zBUPMTttQRDk5WvUcLRtXM8MdSO9WI7KuDbs9VD2vy13Zp5mzIYy4w2kNENhg8qKh2g82KVM12O
+	hUwSkYw==
+X-Google-Smtp-Source: AGHT+IGI8akES2tMKtN9OgqCGGv0YCjv3fajcZabsYwfuE6WQ9bdTeDcItimlghdyvozI9ofTv1KRw==
+X-Received: by 2002:a05:6830:7305:b0:72b:7d60:fda6 with SMTP id 46e09a7af769-72e365c2c3dmr11493160a34.0.1744121176268;
+        Tue, 08 Apr 2025 07:06:16 -0700 (PDT)
+Received: from [192.168.0.113] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-72e65272502sm457114a34.65.2025.04.08.07.06.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Apr 2025 07:06:15 -0700 (PDT)
+Message-ID: <a66220e9-f690-4f95-9a14-d2b663d63490@baylibre.com>
+Date: Tue, 8 Apr 2025 09:06:14 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/3] iio: dac: ad3530r: Add driver for AD3530R and
+ AD3531R
+To: "Paller, Kim Seer" <KimSeer.Paller@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+ "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+References: <20250403-togreg-v3-0-d4b06a4af5a9@analog.com>
+ <20250403-togreg-v3-3-d4b06a4af5a9@analog.com>
+ <fd2116bd-b0e2-4db4-97ff-1a1e88545413@baylibre.com>
+ <PH0PR03MB714159E822B96E7A788A5CD4F9AA2@PH0PR03MB7141.namprd03.prod.outlook.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <PH0PR03MB714159E822B96E7A788A5CD4F9AA2@PH0PR03MB7141.namprd03.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdefvdelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveeiffefgeeitdelleeigefhjeelueeuveekveetgeffheeltdekgeduiefggfdvnecukfhppedvrgdtudemvgdtrgemvdegieemjeejledtmedviegtgeemvgdvvdemiedtfegumeehkegrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvtdgrmedvgeeimeejjeeltdemvdeitgegmegvvddvmeeitdefugemheekrgdphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeegtddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhop
- egurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhhrgifnhhguhhosehkvghrnhgvlhdrohhrghdprhgtphhtthhopehsrdhhrghuvghrsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehkvghrnhgvlhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepfhgvshhtvghvrghmsehgmhgrihhlrdgtohhm
-X-GND-Sasl: herve.codina@bootlin.com
+Content-Transfer-Encoding: 7bit
 
-Hi Andy,
-
-On Mon, 7 Apr 2025 18:42:55 +0300
-Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-
-> On Mon, Apr 07, 2025 at 04:55:42PM +0200, Herve Codina wrote:
-> > The AT91 I2C driver depends on ARCH_AT91.
-> > 
-> > This I2C controller can be used by the LAN966x PCI device and so
-> > it needs to be available when the LAN966x PCI device is enabled.  
+On 4/7/25 3:01 AM, Paller, Kim Seer wrote:
+>>> +	for (i = 0; i < chip_info->num_channels; i++)
+>>> +		st->chan[i].powerdown_mode =
+>> AD3530R_32KOHM_POWERDOWN_MODE;
+>>> +
+>>> +	st->ldac_gpio = devm_gpiod_get_optional(dev, "ldac",
+>> GPIOD_OUT_HIGH);
+>>> +	if (IS_ERR(st->ldac_gpio))
+>>> +		return dev_err_probe(dev, PTR_ERR(st->ldac_gpio),
+>>> +				     "Failed to get ldac GPIO\n");
+>>> +
+>>> +	if (device_property_present(dev, "adi,double-output-range")) {
+>>
+>> This is not documented in the DT bindings.
+>>
+>> This could instead be implemented by making the out_voltage_scale attribute
+>> writeable.
+>>
+>> If we really do need it in the devicetree because we want to protect against
+>> someone accidentally setting it too high, then the property should be the actual
+>> multipler value with an enum specifier of 1, 2 and a default of 1 rather than a
+>> flag (e.g. adi,output-multipler).
 > 
-> ...
-> 
-> >  config I2C_AT91
-> >  	tristate "Atmel AT91 I2C Two-Wire interface (TWI)"
-> > -	depends on ARCH_AT91 || COMPILE_TEST
-> > +	depends on ARCH_AT91 || MCHP_LAN966X_PCI || COMPILE_TEST  
-> 
-> I would drop it altogether in similar way as suggested for the clock driver.
+> Thank you for the feedback. This should be adi,range-double, which is already
+> documented in the DT bindings and is also used as a boolean type in other drivers.
+> I just forgot to update it here. This is a one-bit configuration that doubles the
+> output range (multiplier of 2).  Should I proceed with the suggested approach?
 > 
 
-IMHO, they should be kept for the reason mentionned for the clock driver.
+I see adi,range-double in
+Documentation/devicetree/bindings/iio/adc/adi,ad7923.yaml
 
-Best regards,
-Hervé
+We would need to add the same in the new .yaml file added in this
+series along with a justification in the commit message of why this
+needs to be set in the devicetree rather than at runtime.
+
+Ideally, we would ask the applications engineer for this chip to
+find out how real users would want to use this feature to make sure
+setting it in the devicetree aligns with that and is not too
+restrictive.
