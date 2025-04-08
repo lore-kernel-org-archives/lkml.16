@@ -1,69 +1,120 @@
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77F9B2686A0
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 10:37:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6597226659C;
+	Tue,  8 Apr 2025 10:38:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744108627; cv=none; b=NaW+v2jI2f+0lXcoPVqmOb0LYx8rrvdc3kcxpGvCjNVXDtmRawlvBZhMsLSmP42TaBATzq2759ob3d0Csdeo72diVA9WgktIdwcEz6SLBv0oFFmWEFTKjHREoJhIf6FzLD7JxYyK8IZopB/lytxQAadqu8spBSogB+7pJZAwIDc=
+	t=1744108725; cv=none; b=Oj8OLydy0Nb2t2boDc9LVPxFR8Z0tCj7fcGf48zVW8faUCXr5fZW9QHZ+kXUVO1Gc2gtYuGnZv8MVWEx1QRV0zMY7wZOLk0+Nm99itazNlzMVEg2BwVtYdxRQHsINitpk0xTWHTxJ5xuKm4TBFRZ7bKI+2MI48tJlFwYVMElWSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744108627; c=relaxed/simple;
-	bh=RKIzGkJ9K6o+c6b2EpnYpCH+wdgLRLW0kNgcGBhVPwE=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=fL5g+KyRCkg+SDgWh578npNpHtf5+NBlMiUsBoQk/+QjN0exxmzRtoyb5CysUhQjRni8Rfk9Za6l6q6ZAAY1Sa8pS/O5OAkbZY6WqQEOKNov6qP8iQLlq+m1/Dzgx2mR7AmjyaPY/eagS5OQU2I/s/hoyi2ErCczGx+KBLVzg4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-	id C2BDF92009C; Tue,  8 Apr 2025 12:37:02 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by angie.orcam.me.uk (Postfix) with ESMTP id BB7FF92009B;
-	Tue,  8 Apr 2025 11:37:02 +0100 (BST)
-Date: Tue, 8 Apr 2025 11:37:02 +0100 (BST)
-From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-To: Oerg866 <oerg866@googlemail.com>
-cc: Borislav Petkov <bp@alien8.de>, Kevin Koster <lkml@ombertech.com>, 
-    Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, 
-    Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
-    x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH] x86/microcode: Fix crashes on early 486 CPUs due to
- usage of 'cpuid'.
-In-Reply-To: <CANpbe9Vyss7wEd0rQA7Z=mfi6WTkm5JjCJjTkcsqGCd0mGA2aw@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.2504081115310.29566@angie.orcam.me.uk>
-References: <CANpbe9Wm3z8fy9HbgS8cuhoj0TREYEEkBipDuhgkWFvqX0UoVQ@mail.gmail.com> <20250405130306.ca9822c1f27db119cc973603@ombertech.com> <20250405093127.GAZ_D4b6NdyTS-UW1J@fat_crate.local> <20250406164049.c0666bc18073e3b88c92d1f1@ombertech.com>
- <20250406174633.2c581923c145687476191753@ombertech.com> <20250406190253.GAZ_LP3RPZInWKcHN7@fat_crate.local> <20250407095848.7933a358c9f450fe03fb8234@ombertech.com> <20250407102927.GAZ_OpBw5hJ2QTFsKz@fat_crate.local> <20250408002150.8955343f4e2f2ac31b4663e8@ombertech.com>
- <20250407135533.GDZ_PZVZ-2CKmhbt7d@fat_crate.local> <CANpbe9Vyss7wEd0rQA7Z=mfi6WTkm5JjCJjTkcsqGCd0mGA2aw@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+	s=arc-20240116; t=1744108725; c=relaxed/simple;
+	bh=ClASX4VBDVwAzQdSceNylf/BZKDO4TwJQdbNrAChR4o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fyjZT8PRcYYIs9uSazQc+L3T/Qsd/p0qQV92OqHt7TqVzZtfHoF3FG1GXSq+ljFN7eqf5Ket9sfpFNeMm5A9iE7gBI4ii8lRO0uV0DQPAbEIctNGyxmjrBl83HEpp4BGnE1NtDLgx/2SJrXftta66/3UPBTpxx4kxIzIuFJ4IS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WVtF8ce6; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WVtF8ce6"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5efe8d9ebdfso10937598a12.3;
+        Tue, 08 Apr 2025 03:38:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744108719; x=1744713519; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aLaSOgwbcr+Il2t2O6boJjLPotCqperIiZ1qWfjVdnY=;
+        b=WVtF8ce6OjIUqqzDcJx7MAvYrNhl4kDzC39ErxKOoj3FuLAwdfNLGxP+8oWBMqLPK3
+         vuqbByNmNhuIAmepL4Tepfyjj+TtQxbMMKzkNSeI9ZIyktmsY9/mvvVnrs5jDAAbx76f
+         i3aYwHymc9SP3NLPUGiRI9CpfquUfQKHmpLl0Cc7KfyT53fRwM7WJri+ZUk2C3rsBA3z
+         0NySltE5mLLqBEHVzcV4E8ygv+DM4+2EIzCl/Cq32ZvDgkC1Zsy+/cITTu7MxAi8SWjX
+         OcO0gIXSJXvRY4/T/Io5PZ7P6Tzjc70UHW9qV13tbqQrfOoXFmJ/QMzKqB1m79yoQfSD
+         jKmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744108719; x=1744713519;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aLaSOgwbcr+Il2t2O6boJjLPotCqperIiZ1qWfjVdnY=;
+        b=taE4MILIeBRhJLUg9TSa4W9TGAC3GxpIEEfnHsJ/b3kMfIuHIxbI6SadnIOO9XkF1L
+         iaj+5VE9gvi59hIUxfsJ38FaFNtcxem5zduyXH8SEQc6IwiqErgX18L8K+ud8aEqHGeT
+         YMUPIvK9nbPlGtOFZ9PTN5obcCcbUk+BWeZlv+3HO0gf8In8IZmlS4ESriFDzzlsurw6
+         M0XPgUgwTm4NiyDvQUuAhru4Xq0VQD9Irx5Blh73Qm+vhfMZnHD2sHMRrs4QGT6tkCvd
+         HiNOFrI/3Pplhdl285vie5Lq1jQafC9fRmYNqdFk6oh5MurX1gEIM/Q6SBOMp0gTcDcN
+         mang==
+X-Forwarded-Encrypted: i=1; AJvYcCW9Hh901KajZiMezMZRoBHP6/OVHBWWOa9hpe03RVZWQZvkpApuw+P6LW1bHrnqCQEk580Fqn9fi33AwL3Y@vger.kernel.org, AJvYcCWUmUojnomx/eBcqNZN+EV+RfUbPN/BbZMNiSxidufjYWwuWEO/OR2CA+5RgIN0Ln0u1NvPQAj4+ViWxQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkdZy+bkXwaghOsqBVRqaCoZyizVRUiM7Ibp2QqF2mF8RuSnHR
+	p+fvR8BPzwvL25CGQnOCmImaRudAFXqLtdC4n6cfKLejP+ocAFa6PtHxdkV00kvw/ulwrpnTLTA
+	KXp1bGEx4IyY8FL/04dxefrFplww=
+X-Gm-Gg: ASbGncujsuwNOWLHAH5l07Wtv7qfdRM8hF4q02XR6vgBOiH+JOfILplpMOS4QZtuERn
+	uF2TimTckJP5JlJs2GrPlYP2rY9HDQreMW/Q53AUFKnnKZRzowXB3kglZdl7mn1PLJpm1W+KhcD
+	BqCb+Aabu/Ibrm9xM6JcIIgjq718o=
+X-Google-Smtp-Source: AGHT+IG1OkLi2dBwtZHj8xh6E4uTxeL61LbO5cEWBcFX3jqGDmARdYvh3vX315w/re8lZ0aqREIlR0wet3AJ2lKZaAc=
+X-Received: by 2002:a05:6402:5194:b0:5e7:b02b:6430 with SMTP id
+ 4fb4d7f45d1cf-5f0b45001b9mr13069758a12.23.1744108719601; Tue, 08 Apr 2025
+ 03:38:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <cover.1743857160.git.princerichard17a@gmail.com>
+ <2025040538-breeze-espionage-dc6e@gregkh> <CAMyr_bL4Qo_eeVSHhy-_z9_PwcQAvD6N4jfqBb+rtN-Lj+YdmA@mail.gmail.com>
+ <CADYq+fY-twT=NruAmfb6EpmYJLM971aTu-CUi-We_Fd6JSP47Q@mail.gmail.com>
+ <CAMyr_bLkvFBTpYehG4fs-tqVE18YBf53okddU2=i7+Rr-zbCsw@mail.gmail.com> <2025040711-refutable-monetary-f0c4@gregkh>
+In-Reply-To: <2025040711-refutable-monetary-f0c4@gregkh>
+From: Richard Akintola <princerichard17a@gmail.com>
+Date: Tue, 8 Apr 2025 11:38:28 +0100
+X-Gm-Features: ATxdqUED4mJO0oYd1IguyXKnR51UPXRuHJL-QRIDRwetTTWsHh880oNHQC9O1UU
+Message-ID: <CAMyr_bKgveKkpRdOWw+VfZDWridLirHp4VoeG_F-wwgSY5jpgQ@mail.gmail.com>
+Subject: Re: [PATCH 0/8] staging: sm750fb: change function naming style
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Samuel Abraham <abrahamadekunle50@gmail.com>, outreachy@lists.linux.dev, 
+	sudipm.mukherjee@gmail.com, teddy.wang@siliconmotion.com, 
+	linux-fbdev@vger.kernel.org, linux-staging@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 7 Apr 2025, Oerg866 wrote:
+On Mon, Apr 7, 2025 at 7:01=E2=80=AFAM Greg KH <gregkh@linuxfoundation.org>=
+ wrote:
+>
+> On Mon, Apr 07, 2025 at 06:57:38AM +0100, Richard Akintola wrote:
+> > On Sat, Apr 5, 2025 at 3:16=E2=80=AFPM Samuel Abraham
+> > <abrahamadekunle50@gmail.com> wrote:
+> >
+> > > This looks like a new version of a previously submitted patch, but yo=
+u
+> > >   did not list below the --- line any changes from the previous versi=
+on.
+> > >   Please read the section entitled "The canonical patch format" in th=
+e
+> > >   kernel file, Documentation/process/submitting-patches.rst for what
+> > >   needs to be done here to properly describe this.
+> >
+> >
+> > Hi Samuel,
+> >
+> > I sent the patches individually before, but I was instructed to send a
+> > patch series.
+> >
+> > Given that I didn't change any code, should I still add version number
+> > and sending
+> > patch series as the difference?
+>
+> Yes.
+>
+> Think about it from our side, what would you want to see if you had to
+> review hundreds of different patches a day?
+>
+> thanks,
+>
+> greg k-h
 
-> One of my projects uses a modern Linux kernel to install Windows 9x (sorry!)
-> onto a legacy (or modern, if that's your thing) systems, including
-> magical things like VESA Local Bus 486 systems, way faster than the
-> official MS installer ever could. There's quirks here and there, especially
-> with regards to libata and obscure IDE/SCSI controllers, but other than
-> that the kernel does its job and it does it extremely well.
+Hi Greg,
 
- FWIW I run a plain EISA 486 box to verify our defxx driver keeps working 
-with an EISA FDDI network interface, one of the host bus attachments the 
-driver supports.  I also run a dual Pentium MMX box (i430HX chipset), 
-which I recently used for i386 GNU toolchain/C library verification in the 
-course of upstreaming some stuff for my day job (it's the very box I used 
-for APIC fiddling some 25 years ago, which Ingo may remember).
+I have sent the new version, please do have a look at it.
+Thank you.
 
- Both machines are permanently wired for continuous use and remote control 
-in my remote lab and run fairly recent versions of the kernel (as my time 
-permits upgrading).
-
- I note that the lack of support for SW DMA mode in libata has degraded 
-performance of a PATA drive (the rest is SCSI) in the MMX box compared to 
-old IDE code, forcing the drive to use PIO 1.  Alas, I've found no time so 
-far to look into porting that stuff over and said drive is not essential 
-for that system.
-
-  Maciej
+Richard Akintola
