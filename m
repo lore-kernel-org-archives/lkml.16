@@ -1,137 +1,115 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F02F1ADC94
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 13:32:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F4301EA65;
+	Tue,  8 Apr 2025 13:34:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744119151; cv=none; b=ZM4NegR/+h5Hi9WtN9EOqv0+1zZEH7t9umN2YgmX0CCwltqPI22ZyIAyyCxEzsD6ofhnVuxx2FuIiUdkuZBIL/Fvg0qqtBZj32/dG2DMBAXddQL6uPskAPIg3c7VXVTPWdxsKwFNHqNR3bdbAFUIKJ+2tKd4cAPKhEuT5WAIKPw=
+	t=1744119268; cv=none; b=COXzkPhVuAy6pBgnScpMvE5lqQYjExv7A+9xUR/eng0+x/Im1VlY16tlYdXk0apmsfica/slwtdyc8jPYVCZ4NoM+S2VpjYaI68CnFklPy5LgNKRFlnZdrBCxrRc7DsHVrRwBhdcZPiG09eyPHrC79bLlkgP2JWipL3dmrtmK8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744119151; c=relaxed/simple;
-	bh=lWsrQEzNqzjBfUgCQgg/t3kJreBAVX3Wp1jmrt3C+VU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hcZVQryYX2DHKDAlQCIPy68bmxYZvLSHLFJk1ZZVlRNeTw+YfTS4t84QL6ipuUtW8cVjCGethSjMLUxuagjJ+iqCZcuAwEbhcttqU8NRolHzu2TBldXy5NqZTZADM0m3NDvm7/jErUqJjksBNInSGXK6JsCY3IxBmbKvHx5OZfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hf6GQz46; arc=none smtp.client-ip=209.85.222.174
+	s=arc-20240116; t=1744119268; c=relaxed/simple;
+	bh=411Ez4gUf+PPQ0Wkm6N8Om+ZijBspEASwlNOO8RTqbU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IHvGlDUAIUaKxp0zW6dexPhBje55yOxTV0115ZXnfeKaNl3hECbw0MhqoBLgrRaT8LAGhdiFEugji+Y6dmWfApQe2bFmlYlSjg8SJ04o93NKdJE9A4Qx//L/SKETsCvqyALFGuizld3Iad3N6TvnJs+qKr+vCvlhgPu9r3ypxt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dw/W3kam; arc=none smtp.client-ip=209.85.216.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hf6GQz46"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7c5b8d13f73so583843385a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 06:32:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dw/W3kam"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2ff53b26af2so1149346a91.0;
+        Tue, 08 Apr 2025 06:34:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744119148; x=1744723948; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1744119266; x=1744724066; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xfztqMVKNg0/SZeeg1Ddj2nw5qVrzuwCYVhV7uuKNoQ=;
-        b=hf6GQz46Y+wjMGA7/aO7iPpX96ai+xrut1qF5S4/AN4HzmHJKV9qaeadKVY+B+nxQO
-         vVxFpWiZcQMMG8C87K0wEx66hC6BrI9wa9h6K8M27vIe5XkYCITb+GjOaLU7WuZ0dO6R
-         iF5TnPtWRXFkXgkuBBmaSXcQ16tpW5DXSU8/ESd9bkuNUoP2k3zUsmsHMUj79T5CPi0s
-         fq88aAko7S0eBUhT8VIcO/bMS6vWlbRF1bY5NR8EBACiK+Os0JkzkYgiNO1zZP5muKSn
-         Fl9jcporSrptq80r8Kge4hq17qi97S03H4opz1G4ToYIbgSBAvM5bB7Ykl/5Ec6BBszf
-         hWaw==
+        bh=zX26Qk5SatOtBLsQoeTiKbsjY4GKTg7m3OAXobasiiA=;
+        b=Dw/W3kamxRwNzIkuO+Hp+Sm00RU3s740USF0zhdhCocqnarZuFtZVkWBlBBJz9RjnH
+         eEsowp+C457WHgtxCbuhxHTQpRbqEop9w/Esp8tQwR/2sP4iLE2/DYF023jtCCRjMx9l
+         +05lA0W1F+k3AcxYvjyqfb3f8qR2rYXsCEjYC0s1OfaGd1zQi+1poIMBf22C1Wq55Tww
+         hSRWs6fgg0hnqRDGV2c+4800KL8MPTEno51/SwkX5CiO4KmSozx5PEDqGOBQ/lCoyHNr
+         BOmkU+8viGLoY5UYFl5KrGwdayKHJRF65zxrgEBePW+Hul+wYwN23XeHKfHHl/DyIf5B
+         xcOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744119148; x=1744723948;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1744119266; x=1744724066;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xfztqMVKNg0/SZeeg1Ddj2nw5qVrzuwCYVhV7uuKNoQ=;
-        b=a8GB68veTl4L1e/PG6CFt2g9NdNboiBVLHX/pxRFv+9yrs1yXDeYMdjyiej7BdInOR
-         r0aHpHtmPp4F3Po4dbxGLbMwXAfmM4Iasr9c/cytL/ASjJSC4eG++uZk+dR7PHWaJ0oE
-         3O4rzJW3ce96PIa0UZJVHjw38sGZlpZZ3skjwSl2nDMUDgUYBqDd4ILyKQ268dX9irIO
-         U49deQAKm9LCFDwrTPhUE4u3Rvsb6wC2aKEjWtNF0EEDza6qwdUEG0YrnZun84DExLkh
-         lPewPyyr+kYTHT7y695mTpmMoo5Dv563NBG8AWqG1GZjr/Rt8jNMbvcJRPoTGPkq1s55
-         RUDA==
-X-Forwarded-Encrypted: i=1; AJvYcCWBFr9qYXVVHGHGjpoKb+UI+0emUNBwkUZtAvIqiouC13NHsTXLYsMz5ulnITJb74hq7luxy5Mr8eQVS20=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnV7QNTr/Rto3exZwgk5ctLtkp63bTiuQoZ0nuPZBOeUjS9NP9
-	vnvKsXyswMNO/+B1l7Fwt3820it09Fix8zQSxpf7mG3qm52pM3gk
-X-Gm-Gg: ASbGncsFInvxmsx+COVpq3g73efEcZ+GLS6zTPwfGrH27cQWDAFzjelfiapMtJVWh+I
-	uiJ/wlL34fsiocVM+wGIQBg89UpcY6+2eDrlFNyBKQEbU59bLe4Hj8RCQ+ml97OGHOXV1vxaVqD
-	uoC2CH0vy0413QS/3Zn1c5zHXBzpMnrarIiOn0zfpYHDjVy3R9GZeo9A61qM/CP/G8q3w89IuZs
-	a3jm4DYmBvDw6opdFbc1ySOWWn9Yd4VLoshnuhB7Gh2C1x/FgeTu8jgX5WjoEQZUJPRW2q49lvh
-	6h7pCW3r9guh3XPzWCFdMvulEGHN6ffDMEXDdVSx3qIvIPI=
-X-Google-Smtp-Source: AGHT+IHRe2pR2pJowlyrKsIN0u6V7E88s/zkQejK6Cne2C22r80j/QC+KoIH7VUQQ4Mi/eo0ECKN1A==
-X-Received: by 2002:a05:620a:28d3:b0:7c5:60c7:339 with SMTP id af79cd13be357-7c7759ea8b9mr2362665985a.9.1744119148274;
-        Tue, 08 Apr 2025 06:32:28 -0700 (PDT)
-Received: from ubuntu ([105.117.1.177])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c76e75b72csm758082785a.37.2025.04.08.06.32.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 06:32:28 -0700 (PDT)
-From: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
-To: outreachy@lists.linux.dev,
-	julia.lawall@inria.fr
-Cc: gregkh@linuxfoundation.org,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	david.laight.linux@gmail.com,
-	dan.carpenter@linaro.org,
-	andy@kernel.org,
-	Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
-Subject: [PATCH v7 2/2] staging: rtl8723bs: Use % 4096 instead of & 0xfff
-Date: Tue,  8 Apr 2025 13:31:42 +0000
-Message-Id: <c71ec1f13a2a5cc38a745314f134f6e7eb935227.1744117091.git.abrahamadekunle50@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1744117091.git.abrahamadekunle50@gmail.com>
-References: <cover.1744117091.git.abrahamadekunle50@gmail.com>
+        bh=zX26Qk5SatOtBLsQoeTiKbsjY4GKTg7m3OAXobasiiA=;
+        b=Qwe0mMuY9Yk9hgvY+dFTXq0yFx5HVNiQEFjJ07yoUF8zErZ4+ME680GT7DVXcuovil
+         t/Z90ul/IdMUVi6GkYpfweONtY6l/MSpdu3Iy/hkPdxUQn+CF7JTrw53Gq7MQjEubfMG
+         uJfJCFyyQV1wYGdpvrRcJ7ov32EvDdsJNuGCRQbxl4HuUK758gMsF+cf4DJV9+lMIjd5
+         gxZQieeRS9gEsl5BVzHoymVVyXPB8g5b04VMByckQjCXj/9YQn0vDIvO6GVkvsY79NcG
+         KJPyFe6CI3aNG9JCjDSBIu77Mq7FIKBsv0/ZvQA7y9MAMQ7sOl99IGAIW/CFyThCno1d
+         uD+A==
+X-Forwarded-Encrypted: i=1; AJvYcCUL5LSbEWdCHwURDPsOslb5FKpFam9QifuJekfT0YrLTQ5CuPk6sOEfLNi5FIMpLlbn3OlQ6u3QqoNyMTc=@vger.kernel.org, AJvYcCUt7BPkoFAJu1jGdEAcKlop7CImiF3OKYplXhPUugFGC/9TELlHxi8IUYJAEciDLsmcWWm1hImPpIBjpdTVhdg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxotagZhsfHkZhamVfEt4qYgj+wOOt5HSqvUGKeeLMuNY59h9qM
+	7saM0mgqED9CywmWamL9gzXQU0xQV6Ss2jYDiUI+tRUYquE7JnV2QIpOIsNBEAx2C84D0G5EvDu
+	RoN5UHYevwnVubyBOZeNwGPQTd6k=
+X-Gm-Gg: ASbGncvxgigQQTU8n/fRnHOp+5tRUQQ2GlNXniCru14CLKWjZYQNgcK+5bWfl8fer0I
+	XNP2WMtxxpttc5JgT4IbIZQPnfwFNa1eka2RAtAscORt9B5Iu2OgnWDxYtK0rfjgNyzfx2WOpfU
+	nqbkYICBt/VWX0S/SlbRWJyIzKmA==
+X-Google-Smtp-Source: AGHT+IHcq4EUgp5Iqa1qm+n+D0VL23C5HVqaoXE0A3FBJOcsRsJ2dj/ietDD7S4vT1adOFrbI/kcQWhlhS+m7NZLATQ=
+X-Received: by 2002:a17:90b:384d:b0:2ff:7970:d2bd with SMTP id
+ 98e67ed59e1d1-306a498e230mr8715147a91.5.1744119266243; Tue, 08 Apr 2025
+ 06:34:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250326201230.3193329-1-abdiel.janulgue@gmail.com>
+ <20250326201230.3193329-3-abdiel.janulgue@gmail.com> <nujfDI6IKBsjlQtGWaMrhjZSQYYeQYckCyOUs9jIzgZGsP1WTalJE0sSg6tp_WMACWo9mzuDfpdzsIlmkKnL8w==@protonmail.internalid>
+ <D8REH728BFP1.2BGE9DTRP2IPU@proton.me> <87ldsahlxr.fsf@kernel.org>
+In-Reply-To: <87ldsahlxr.fsf@kernel.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 8 Apr 2025 15:34:12 +0200
+X-Gm-Features: ATxdqUE0Cefmm1_5lUv9FqxWq5Fl0OBZj8JSRTuEMjQZc6JAlEH1sJXPGSEU63A
+Message-ID: <CANiq72mahS0jiOHv-7RE8QWQunYo0bJqeGo-FAVoUL7v42RsoQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] rust: dma: convert the read/write macros to return Result
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: Benno Lossin <benno.lossin@proton.me>, Abdiel Janulgue <abdiel.janulgue@gmail.com>, ojeda@kernel.org, 
+	Danilo Krummrich <dakr@kernel.org>, Daniel Almeida <daniel.almeida@collabora.com>, 
+	Robin Murphy <robin.murphy@arm.com>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	"open list:DMA MAPPING HELPERS DEVICE DRIVER API [RUST]" <rust-for-linux@vger.kernel.org>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, 
+	"open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The sequence number is constrained to a range of [0, 4095], which
-is a total of 4096 values. The bitmask operation using `& 0xfff` is
-used to perform this wrap-around. While this is functionally correct,
-it obscures the intended semantic of a 4096-based wrap.
+On Tue, Apr 8, 2025 at 2:40=E2=80=AFPM Andreas Hindborg <a.hindborg@kernel.=
+org> wrote:
+>
+> But the `assert_eq!` would panic anyway if comparison fails, right?
 
-Using a modulo operation `% 4096u` makes the wrap-around logic
-explicit and easier to understand. It clearly signals that the
-sequence number cycles through a range of 4096 values.
-It also makes the code robust against potential changes of the 4096
-upper limit, especially when it becomes a non power of 2 value while
-the AND(&) works solely for power of 2 values.
+Previously the `?` generated by the macro would return out of the
+closure written by the sample, and thus it wouldn't reach the
+`assert_eq!`.
 
-The use of `% 4096u` also guarantees that the modulo operation is
-performed with unsigned arithmetic, preventing potential issues with
-the signed types.
+Expanded:
 
-Suggested-by: Andy Shevchenko <andy@kernel.org>
-Suggested-by: David Laight <david.laight.linux@gmail.com>
-Signed-off-by: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
----
- drivers/staging/rtl8723bs/core/rtw_xmit.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+    let _ =3D (|| -> Result {
+        for (i, value) in TEST_VALUES.into_iter().enumerate() {
+            match (
+                &{
+                    let item =3D ...::item_from_index(&self.ca, i)?;
+                    unsafe { ... }
+                },
+                &value.0,
+            ) {
+                (left_val, right_val) =3D> {
+                    if !(*left_val =3D=3D *right_val) {
+                        ...::assert_failed(...);
+                    }
+                }
+            };
+        }
+        Ok(())
+    })();
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_xmit.c b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-index 9ba3bebfc8bd..db5f1b931530 100644
---- a/drivers/staging/rtl8723bs/core/rtw_xmit.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-@@ -943,7 +943,7 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
- 
- 			if (psta) {
- 				psta->sta_xmitpriv.txseq_tid[pattrib->priority]++;
--				psta->sta_xmitpriv.txseq_tid[pattrib->priority] &= 0xFFF;
-+				psta->sta_xmitpriv.txseq_tid[pattrib->priority] %= 4096u;
- 				pattrib->seqnum = psta->sta_xmitpriv.txseq_tid[pattrib->priority];
- 
- 				SetSeqNum(hdr, pattrib->seqnum);
-@@ -964,12 +964,12 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
- 						pattrib->ampdu_en = false;/* AGG BK */
- 					} else if (SN_EQUAL(pattrib->seqnum, tx_seq)) {
- 						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] =
--							(tx_seq + 1) & 0xfff;
-+							(tx_seq + 1) % 4096u;
- 
- 						pattrib->ampdu_en = true;/* AGG EN */
- 					} else {
- 						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] =
--							(pattrib->seqnum + 1) & 0xfff;
-+							(pattrib->seqnum + 1) % 4096u;
- 						pattrib->ampdu_en = true;/* AGG EN */
- 					}
- 				}
--- 
-2.34.1
-
+Cheers,
+Miguel
