@@ -1,162 +1,394 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A70C244EA1;
-	Tue,  8 Apr 2025 20:55:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20404253331
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 20:57:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744145749; cv=none; b=F0uTID6OuKlAMU1FyWmjxgAluscv3luqb8rqoxuGLqOJwjhbvREhA4gUvnZ7DD8rrjlM+oBQy96M1k5wtGVbKFdDLAtEJEMYZSRPQZB+Fw+gufXMMIrnNSXOQUj877NxVakMsJ8QWhyfvTcldNl1Ok0eQdno/TkID4ZYxMNUdHs=
+	t=1744145859; cv=none; b=E6JY1XoyoyVzLNux+K/CE5vhYn0EoReWWesHQHnHOKZkiKFZool32Qyf46d7Wd2tEDU/tMoOiF36hi7QEK19I50nTxqj+THUsNKB5hi8QAdBX8XBbXl67MpIGZ5DNMASe9/JMnyaKSQeR14l0FOumpV2rEn7p2rKnMPq/7bOpvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744145749; c=relaxed/simple;
-	bh=J5qQaP4IGKiB45yKzlSZw0CAc2eUB8Kdf065jJzXhtE=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=F9x85byO8hHWjgVoWahcaIiS/9VCEyHkgbPG9Oa2Jm4nBT0qce/+bAcdblUxwNy5Cty2Lr0cTCN9rMd1kAr/4jqcA4Oip9LQCkFsYBCkydom/a5/i7fr74hP044WkGCKKO/OpmGxJKdGPVWaA+7uojsdzfMhByMujGWBHbynIhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=M0+obKGn; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/62W3yPo; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744145859; c=relaxed/simple;
+	bh=B0U8Vcv6k5qxhGHDsdzLC2/NIe+68/brTmvtgy4STLs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gJWVx/fhsZXxVCWYocGFu4QXrzWPKk29lF13yE8mP2/t8nyb2tq4NUngO758edGyLiDJfVfj6zKY+zLAWTMxPM1cCqnnG77wKBNKPLJ0os4IiTzUa1UuyS/BA+6cLjY+9LVqgFtBa99B5+85274wRzsilwGA+Vbjk9sRF4CN8eE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Sj/4cfnU; arc=none smtp.client-ip=209.85.160.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="M0+obKGn";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/62W3yPo"
-Date: Tue, 08 Apr 2025 20:55:33 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744145743;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Zyl+bPHErcWjxeLYNOEUamNFFcousmJp0wSNVnNNkWk=;
-	b=M0+obKGnzuKSw+jQDtux2bEjx61ZnKzoqvVE/0nPhIcQQXWmW6JwIAVcukR1Ld9IUCM5vr
-	JYf+KuSJxcrK8IkDjOR4bQTYgsIgHrIqRSB2bkHyT+mLUQEpbCvJCl0DpCsQnR/Cs6ZGRg
-	bKYLg7W6sTyTAL25dQ+7N2CYtT2ETL4jAfrI6sqTDbcE0FwkNwLN6bXtAlSE+oEgDTh2FN
-	oJtJ81mKyqOlC9Pi3bsHmda851B2Ss2nJUYev7pjNevNdoL1tISW09MPAzNThxgiN13KQB
-	pzV+3GgryX9rQ+OD4Ps46cjQ5laZvRn1t+15SJUgTprMGGFhmKF3UGoRGKUsNg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744145743;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Zyl+bPHErcWjxeLYNOEUamNFFcousmJp0wSNVnNNkWk=;
-	b=/62W3yPovEmk82z0GuqO5HtcpvYy5xkHFbNqw31SJA+uv/+rvCJNWZ2h/SYMW2MvCMe08v
-	rnQXpN/bZen25EBA==
-From: "tip-bot2 for Geert Uytterhoeven" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: irq/drivers] genirq/generic-chip: Fix incorrect lock guard conversions
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
- Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: =?utf-8?q?=3C514f94c5891c61ac0a4a7fdad113e75db1eea367=2E17441?=
- =?utf-8?q?35467=2Egit=2Egeert+renesas=40glider=2Ebe=3E?=
-References: =?utf-8?q?=3C514f94c5891c61ac0a4a7fdad113e75db1eea367=2E174413?=
- =?utf-8?q?5467=2Egit=2Egeert+renesas=40glider=2Ebe=3E?=
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Sj/4cfnU"
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-2c1caacc1f7so3637572fac.3
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 13:57:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744145855; x=1744750655; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qaDwk/rTlVSzsAVLqKNpTmTzHrcmKNMZwL+bLzgU1Zk=;
+        b=Sj/4cfnULqihiPhTRrz3Nv+H/oDTZPtC+lrlNRZ5xKJXe7W/5rB0b7MuO5aih2GSD2
+         8Iczj9QWcdACZPWbDIubjlMgr8SuSSa8w3M2/VXt/TF+pVHe36TKaLlrPkJ1O98yeuLD
+         miYoC9Rps5SF3HZgdnjPl97ZQYazK+Sg2g3Ka+q8govKVNKNwHhadJplz2HbIid62cJ+
+         jabkTQ2BchZoo0899Xa8m45TeffJgilaJPtvHMjwS15VDcXCoFRySpDY/rwlOg+6tWFF
+         Gv0HDArYoO4Uv6e2kiRedEpZzGrNpOy/aBdzdEHC1K0cg69LIhPC+tct39jY8w6ym5Qz
+         dnyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744145855; x=1744750655;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qaDwk/rTlVSzsAVLqKNpTmTzHrcmKNMZwL+bLzgU1Zk=;
+        b=w749lwbGgpOrMUyQcLFEcm8GKqNEVs8PtT3vFU7j2R9mkx08voV4xq90FA6t0OddwZ
+         uGQ/WVILRXo95O39/6CTXVSwfsbPEXRQMm1lp2FwMOdv8yS9Dm+XXktwuOQ3t9p/TBEX
+         g3Egj1P5qZJCuI8FjNrisn0tS0/U2zw7xt+Ei3hhpfwNanfeBlcQroE22c+Oe4RXVy8C
+         X+5nlVDvoCx9d7aztmW5A6i4fAhEO+P1gMIYUM4FkWUNA7JoMivWvN6hOJjLwQAUc7cU
+         u7bYfhADsal5FBn728nllz9CIklcaNTwG0aHPHsT4KbGYxSqEdfq/7PbI/7n1yNvdzlB
+         0gkg==
+X-Forwarded-Encrypted: i=1; AJvYcCVsZBR8frPv8P421bnLhvePZYecwBvILZ8kzfNbQx+KHaEWDgc2o0F8jc5+sa/mlZ3UWllN3+JzRaszTRQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFNeRAdMN/1lYNFEFYidtbtUDhC67G4gSkXyQv6ITi3odZ0i7S
+	VkgDNeTrnhNpp0y0+yfz9M28NIRuOilqdtBa5gAudCy/V7wfwaDlcY+29oPmdgo=
+X-Gm-Gg: ASbGncs+YJQilRoXVsqswRyNHzjlKLzQhOsSTwF03E//wN3nrR99kIMEui65hdw1IoN
+	loXRpZVFzpspSYo/2RAXJZTyU7Ouh+34pzXGBkqdOXKVpBN4p3YzkIqVatPqtkn+y1GVzTYOBBa
+	Kj+Ng0ft5RslhtGNm6XawTPeX4aEY1Yvu7j2+4D8iyjNBguANibFQ1pmbMZUhn930Wyo2F68i5d
+	4gP8Qxv7EH7ddKQsZcPBzm/b69fB9Lo+m+gF5N2Eg2NagqdkV7rcokyLueXdUhoVD/FCBPqWt/t
+	t+F+dscyHjah0YMnubC57IintDXxTxkcxCx/IllJurN44DqNfJGF5FbLM+ZVPgmeYswLNDWepzx
+	iYhbkUg==
+X-Google-Smtp-Source: AGHT+IFjFgG+zdclxE9RrlgDOAhQBgIkljxsFYN0IeA14TkzF0YKGa8T/thY5EwoXPtKqouGqj5skw==
+X-Received: by 2002:a05:6870:9e8e:b0:2c2:2e8e:202b with SMTP id 586e51a60fabf-2d08dd8bb09mr368582fac.10.1744145855062;
+        Tue, 08 Apr 2025 13:57:35 -0700 (PDT)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-72e6515c0b7sm582787a34.1.2025.04.08.13.57.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Apr 2025 13:57:34 -0700 (PDT)
+Message-ID: <25291cca-a456-4f6c-8aac-466cd6124683@baylibre.com>
+Date: Tue, 8 Apr 2025 15:57:32 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174414573357.31282.17815254049625566388.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] iio: adc: ti-adc128s052: Add lower resolution devices
+ support
+To: Sukrut Bellary <sbellary@baylibre.com>,
+ Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Angelo Compagnucci <angelo.compagnucci@gmail.com>
+Cc: Nishanth Menon <nm@ti.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250408132120.836461-1-sbellary@baylibre.com>
+ <20250408132120.836461-3-sbellary@baylibre.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20250408132120.836461-3-sbellary@baylibre.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the irq/drivers branch of tip:
+On 4/8/25 8:21 AM, Sukrut Bellary wrote:
+> The adcxx4s communicates with a host processor via an SPI/Microwire Bus
+> interface. The device family responds with 12-bit data, of which the LSB
+> bits are transmitted by the lower resolution devices as 0.
+> The unavailable bits are 0 in LSB.
+> Shift is calculated per resolution and used in scaling and
+> raw data read.
 
-Commit-ID:     771487050f83b030090079133b192de6e3cf5909
-Gitweb:        https://git.kernel.org/tip/771487050f83b030090079133b192de6e3cf5909
-Author:        Geert Uytterhoeven <geert+renesas@glider.be>
-AuthorDate:    Tue, 08 Apr 2025 20:07:02 +02:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 08 Apr 2025 22:49:02 +02:00
+Could improve the line wrapping in the commit message if there is a v4.
 
-genirq/generic-chip: Fix incorrect lock guard conversions
+> 
+> Lets reuse the driver to support the family of devices with name
+> ADC<bb><c>S<sss>, where
+> * bb is the resolution in number of bits (8, 10, 12)
+> * c is the number of channels (1, 2, 4, 8)
+> * sss is the maximum conversion speed (021 for 200 kSPS, 051 for 500 kSPS
+> and 101 for 1 MSPS)
+> 
+> Complete datasheets are available at TI's website here:
+> https://www.ti.com/lit/gpn/adc<bb><c>s<sss>.pdf
+> 
+> Tested only with ti-adc102s051 on BegalePlay SBC.
+> https://www.beagleboard.org/boards/beagleplay
+> 
+> Co-developed-by: Nishanth Menon <nm@ti.com>
+> Signed-off-by: Nishanth Menon <nm@ti.com>
+> Signed-off-by: Sukrut Bellary <sbellary@baylibre.com>
+> ---
 
-When booting BeagleBone Black:
+I didn't see any serious issues, just some room for more polish...
 
-    ------------[ cut here ]------------
-    WARNING: CPU: 0 PID: 0 at kernel/locking/lockdep.c:4398 lockdep_hardirqs_on_prepare+0x23c/0x280
-    DEBUG_LOCKS_WARN_ON(early_boot_irqs_disabled)
-    CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.15.0-rc1-boneblack-00004-g195298c3b116 #209 NONE
-    Hardware name: Generic AM33XX (Flattened Device Tree)
-    Call trace:
-     _raw_spin_unlock_irq from irq_map_generic_chip+0x144/0x190
-     irq_map_generic_chip from irq_domain_associate_locked+0x68/0x164
-     irq_domain_associate_locked from irq_create_fwspec_mapping+0x34c/0x43c
-     irq_create_fwspec_mapping from irq_create_of_mapping+0x64/0x8c
-     irq_create_of_mapping from irq_of_parse_and_map+0x54/0x7c
-     irq_of_parse_and_map from dmtimer_clkevt_init_common+0x54/0x15c
-     dmtimer_clkevt_init_common from dmtimer_systimer_init+0x41c/0x5b8
-     dmtimer_systimer_init from timer_probe+0x68/0xf0
-     timer_probe from start_kernel+0x4a4/0x6bc
-     start_kernel from 0x0
-    irq event stamp: 0
-    hardirqs last  enabled at (0): [<00000000>] 0x0
-    hardirqs last disabled at (0): [<00000000>] 0x0
-    softirqs last  enabled at (0): [<00000000>] 0x0
-    softirqs last disabled at (0): [<00000000>] 0x0
-    ---[ end trace 0000000000000000 ]---
+> Changes in v3: 
+>         - used be16_to_cpu() for the endian conversion.
+>         - used config index enum while setting up the adc128_config[]
+> 
+> - Link to v2: 
+>         https://lore.kernel.org/lkml/20231022031203.632153-1-sukrut.bellary@linux.com/
+> 
+> Changes in v2:
+>         - Arranged of_device_id and spi_device_id in numeric order.
+>         - Used enum to index into adc128_config.
+>         - Reorder adc128_config in alphabetical.
+>         - Include channel resolution information.
+>         - Shift is calculated per resolution and used in scaling and 
+>         raw data read.
+> 
+> - Link to v1: https://lore.kernel.org/all/20220701042919.18180-1-nm@ti.com/
+> ---
+>  drivers/iio/adc/ti-adc128s052.c | 149 ++++++++++++++++++++++++--------
+>  1 file changed, 112 insertions(+), 37 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/ti-adc128s052.c b/drivers/iio/adc/ti-adc128s052.c
+> index a456ea78462f..d4b76fd85abd 100644
+> --- a/drivers/iio/adc/ti-adc128s052.c
+> +++ b/drivers/iio/adc/ti-adc128s052.c
+> @@ -7,6 +7,22 @@
+>   * https://www.ti.com/lit/ds/symlink/adc128s052.pdf
+>   * https://www.ti.com/lit/ds/symlink/adc122s021.pdf
+>   * https://www.ti.com/lit/ds/symlink/adc124s021.pdf
+> + *
+> + * The adcxx4s communicates with a host processor via an SPI/Microwire Bus
+> + * interface. This driver supports the whole family of devices with a name
+> + * ADC<bb><c>S<sss>, where
+> + * bb is the resolution in number of bits (8, 10, 12)
+> + * c is the number of channels (1, 2, 4, 8)
+> + * sss is the maximum conversion speed (021 for 200 kSPS, 051 for 500 kSPS
+> + * and 101 for 1 MSPS)
 
-and:
+Looks like odd line wrapping. I assume bullet points were meant here?
 
-    ------------[ cut here ]------------
-    WARNING: CPU: 0 PID: 0 at init/main.c:1022 start_kernel+0x4e8/0x6bc
-    Interrupts were enabled early
-    CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Tainted: G        W           6.15.0-rc1-boneblack-00004-g195298c3b116 #209 NONE
-    Tainted: [W]=WARN
-    Hardware name: Generic AM33XX (Flattened Device Tree)
-    Call trace:
-     unwind_backtrace from show_stack+0x10/0x14
-     show_stack from dump_stack_lvl+0x6c/0x90
-     dump_stack_lvl from __warn+0x70/0x1b0
-     __warn from warn_slowpath_fmt+0x1d4/0x1ec
-     warn_slowpath_fmt from start_kernel+0x4e8/0x6bc
-     start_kernel from 0x0
-    irq event stamp: 0
-    hardirqs last  enabled at (0): [<00000000>] 0x0
-    hardirqs last disabled at (0): [<00000000>] 0x0
-    softirqs last  enabled at (0): [<00000000>] 0x0
-    softirqs last disabled at (0): [<00000000>] 0x0
-    ---[ end trace 0000000000000000 ]---
+* ... where:
+* - bb is ...
+* - c is ...
+* - sss is ...
 
-Fix this by correcting two misconversions of
-raw_spin_{,un}lock_irq{save,restore}() to lock guards.
+> + *
+> + * Complete datasheets are available at TI's website here:
+> + *   https://www.ti.com/lit/gpn/adc<bb><c>s<sss>.pdf
+> + *
+> + * 8, 10, and 12 bits converters send 12-bit data with
+> + * unavailable bits set to 0 in LSB.
+> + * Shift is calculated per resolution and used in scaling and
+> + * raw data read.
+>   */
+>  
+>  #include <linux/err.h>
+> @@ -53,7 +69,7 @@ static int adc128_adc_conversion(struct adc128 *adc, u8 channel)
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	return ((adc->buffer[0] << 8 | adc->buffer[1]) & 0xFFF);
+> +	return be16_to_cpu(*((__be16 *)adc->buffer));
+>  }
+>  
+>  static int adc128_read_raw(struct iio_dev *indio_dev,
+> @@ -70,7 +86,8 @@ static int adc128_read_raw(struct iio_dev *indio_dev,
+>  		if (ret < 0)
+>  			return ret;
+>  
+> -		*val = ret;
+> +		*val = (ret >> channel->scan_type.shift) &
+> +			GENMASK(channel->scan_type.realbits - 1, 0);
 
-Fixes: 195298c3b11628a6 ("genirq/generic-chip: Convert core code to lock guards")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/514f94c5891c61ac0a4a7fdad113e75db1eea367.1744135467.git.geert+renesas@glider.be
+It's a bit odd to do this here instead of in the helper function since
+the helper function is doing some rearranging of bits already.
 
----
- kernel/irq/generic-chip.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Could pass scan_type to the helper function and do it all in one
+place.
 
-diff --git a/kernel/irq/generic-chip.c b/kernel/irq/generic-chip.c
-index 8014bfe..bf59e37 100644
---- a/kernel/irq/generic-chip.c
-+++ b/kernel/irq/generic-chip.c
-@@ -330,7 +330,7 @@ int irq_domain_alloc_generic_chips(struct irq_domain *d,
- 				goto err;
- 		}
- 
--		scoped_guard (raw_spinlock, &gc_lock)
-+		scoped_guard (raw_spinlock_irqsave, &gc_lock)
- 			list_add_tail(&gc->list, &gc_list);
- 		/* Calc pointer to the next generic chip */
- 		tmp += gc_sz;
-@@ -467,7 +467,7 @@ int irq_map_generic_chip(struct irq_domain *d, unsigned int virq,
- 
- 	/* We only init the cache for the first mapping of a generic chip */
- 	if (!gc->installed) {
--		guard(raw_spinlock_irq)(&gc->lock);
-+		guard(raw_spinlock_irqsave)(&gc->lock);
- 		irq_gc_init_mask_cache(gc, dgc->gc_flags);
- 	}
- 
+>  		return IIO_VAL_INT;
+>  
+>  	case IIO_CHAN_INFO_SCALE:
+> @@ -80,7 +97,7 @@ static int adc128_read_raw(struct iio_dev *indio_dev,
+>  			return ret;
+>  
+>  		*val = ret / 1000;
+> -		*val2 = 12;
+> +		*val2 = channel->scan_type.realbits;
+>  		return IIO_VAL_FRACTIONAL_LOG2;
+>  
+>  	default:
+> @@ -89,24 +106,34 @@ static int adc128_read_raw(struct iio_dev *indio_dev,
+>  
+>  }
+>  
+> -#define ADC128_VOLTAGE_CHANNEL(num)	\
+> -	{ \
+> -		.type = IIO_VOLTAGE, \
+> -		.indexed = 1, \
+> -		.channel = (num), \
+> -		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW), \
+> -		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE) \
+> +#define _ADC128_VOLTAGE_CHANNEL(num, real_bits, store_bits)		\
+> +	{								\
+> +		.type = IIO_VOLTAGE,					\
+> +		.indexed = 1,						\
+> +		.channel = (num),					\
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
+> +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
+> +		.scan_index = (num),					\
+> +		.scan_type = {						\
+> +			.sign = 'u',					\
+> +			.realbits = (real_bits),			\
+> +			.storagebits = (store_bits),			\
+
+It looks like storagebits is always 16, so we could drop that parameter.
+
+> +			.shift = (12 - real_bits),			\
+> +		},							\
+>  	}
+>  
+> -static const struct iio_chan_spec adc128s052_channels[] = {
+> -	ADC128_VOLTAGE_CHANNEL(0),
+> -	ADC128_VOLTAGE_CHANNEL(1),
+> -	ADC128_VOLTAGE_CHANNEL(2),
+> -	ADC128_VOLTAGE_CHANNEL(3),
+> -	ADC128_VOLTAGE_CHANNEL(4),
+> -	ADC128_VOLTAGE_CHANNEL(5),
+> -	ADC128_VOLTAGE_CHANNEL(6),
+> -	ADC128_VOLTAGE_CHANNEL(7),
+> +#define ADC082_VOLTAGE_CHANNEL(num) _ADC128_VOLTAGE_CHANNEL(num, 8, 16)
+> +#define ADC102_VOLTAGE_CHANNEL(num) _ADC128_VOLTAGE_CHANNEL(num, 10, 16)
+> +#define ADC128_VOLTAGE_CHANNEL(num) _ADC128_VOLTAGE_CHANNEL(num, 12, 16)
+> +
+> +static const struct iio_chan_spec adc082s021_channels[] = {
+> +	ADC082_VOLTAGE_CHANNEL(0),
+> +	ADC082_VOLTAGE_CHANNEL(1),
+> +};
+> +
+> +static const struct iio_chan_spec adc102s021_channels[] = {
+> +	ADC102_VOLTAGE_CHANNEL(0),
+> +	ADC102_VOLTAGE_CHANNEL(1),
+>  };
+>  
+>  static const struct iio_chan_spec adc122s021_channels[] = {
+> @@ -121,10 +148,46 @@ static const struct iio_chan_spec adc124s021_channels[] = {
+>  	ADC128_VOLTAGE_CHANNEL(3),
+>  };
+>  
+> +static const struct iio_chan_spec adc128s052_channels[] = {
+> +	ADC128_VOLTAGE_CHANNEL(0),
+> +	ADC128_VOLTAGE_CHANNEL(1),
+> +	ADC128_VOLTAGE_CHANNEL(2),
+> +	ADC128_VOLTAGE_CHANNEL(3),
+> +	ADC128_VOLTAGE_CHANNEL(4),
+> +	ADC128_VOLTAGE_CHANNEL(5),
+> +	ADC128_VOLTAGE_CHANNEL(6),
+> +	ADC128_VOLTAGE_CHANNEL(7),
+> +};
+> +
+> +enum adc128_configuration_index {
+> +	ADC128_CONFIG_INDEX_082S,
+> +	ADC128_CONFIG_INDEX_102S,
+> +	ADC128_CONFIG_INDEX_122S,
+> +	ADC128_CONFIG_INDEX_124S,
+> +	ADC128_CONFIG_INDEX_128S,
+> +};
+> +
+>  static const struct adc128_configuration adc128_config[] = {
+
+I would have rather removed the array here. Adding the enum just
+makes lots more code to read without any technical benefit.
+
+> -	{ adc128s052_channels, ARRAY_SIZE(adc128s052_channels) },
+> -	{ adc122s021_channels, ARRAY_SIZE(adc122s021_channels) },
+> -	{ adc124s021_channels, ARRAY_SIZE(adc124s021_channels) },
+> +	[ADC128_CONFIG_INDEX_082S] = {
+> +		.channels = adc082s021_channels,
+> +		.num_channels = ARRAY_SIZE(adc082s021_channels)
+> +	},
+> +	[ADC128_CONFIG_INDEX_102S] = {
+> +		.channels = adc102s021_channels,
+> +		.num_channels = ARRAY_SIZE(adc102s021_channels)
+> +	},
+> +	[ADC128_CONFIG_INDEX_122S] = {
+> +		.channels = adc122s021_channels,
+> +		.num_channels = ARRAY_SIZE(adc122s021_channels)
+> +	},
+> +	[ADC128_CONFIG_INDEX_124S] = {
+> +		.channels = adc124s021_channels,
+> +		.num_channels = ARRAY_SIZE(adc124s021_channels)
+> +	},
+> +	[ADC128_CONFIG_INDEX_128S] = {
+> +		.channels = adc128s052_channels,
+> +		.num_channels = ARRAY_SIZE(adc128s052_channels)
+> +	},
+>  };
+
+I.e. instead:
+
+static const struct adc128_configuration adc08s021_config = {
+	.channels = adc082s021_channels,
+	.num_channels = ARRAY_SIZE(adc082s021_channels),
+};
+
+static const struct adc128_configuration adc10s021_config = {
+	.channels = adc102s021_channels,
+	.num_channels = ARRAY_SIZE(adc102s021_channels)
+};
+
+...
+
+>  
+>  static const struct iio_info adc128_info = {
+> @@ -177,31 +240,43 @@ static int adc128_probe(struct spi_device *spi)
+>  }
+>  
+>  static const struct of_device_id adc128_of_match[] = {
+> -	{ .compatible = "ti,adc128s052", .data = &adc128_config[0] },
+> -	{ .compatible = "ti,adc122s021", .data = &adc128_config[1] },
+> -	{ .compatible = "ti,adc122s051", .data = &adc128_config[1] },
+> -	{ .compatible = "ti,adc122s101", .data = &adc128_config[1] },
+> -	{ .compatible = "ti,adc124s021", .data = &adc128_config[2] },
+> -	{ .compatible = "ti,adc124s051", .data = &adc128_config[2] },
+> -	{ .compatible = "ti,adc124s101", .data = &adc128_config[2] },
+> +	{ .compatible = "ti,adc082s021", .data = &adc128_config[ADC128_CONFIG_INDEX_082S] },
+> +	{ .compatible = "ti,adc082s051", .data = &adc128_config[ADC128_CONFIG_INDEX_082S] },
+> +	{ .compatible = "ti,adc082s101", .data = &adc128_config[ADC128_CONFIG_INDEX_082S] },
+> +	{ .compatible = "ti,adc102s021", .data = &adc128_config[ADC128_CONFIG_INDEX_102S] },
+> +	{ .compatible = "ti,adc102s051", .data = &adc128_config[ADC128_CONFIG_INDEX_102S] },
+> +	{ .compatible = "ti,adc102s101", .data = &adc128_config[ADC128_CONFIG_INDEX_102S] },
+> +	{ .compatible = "ti,adc122s021", .data = &adc128_config[ADC128_CONFIG_INDEX_122S] },
+> +	{ .compatible = "ti,adc122s051", .data = &adc128_config[ADC128_CONFIG_INDEX_122S] },
+> +	{ .compatible = "ti,adc122s101", .data = &adc128_config[ADC128_CONFIG_INDEX_122S] },
+> +	{ .compatible = "ti,adc124s021", .data = &adc128_config[ADC128_CONFIG_INDEX_124S] },
+> +	{ .compatible = "ti,adc124s051", .data = &adc128_config[ADC128_CONFIG_INDEX_124S] },
+> +	{ .compatible = "ti,adc124s101", .data = &adc128_config[ADC128_CONFIG_INDEX_124S] },
+> +	{ .compatible = "ti,adc128s052", .data = &adc128_config[ADC128_CONFIG_INDEX_128S] },
+>  	{ /* sentinel */ },
+>  };
+>  MODULE_DEVICE_TABLE(of, adc128_of_match);
+
+It would be easier to see what is new and what is changed if we split out the
+"cleanup" to a separate patch.
+
+>  
+>  static const struct spi_device_id adc128_id[] = {
+> -	{ "adc128s052", (kernel_ulong_t)&adc128_config[0] },
+> -	{ "adc122s021",	(kernel_ulong_t)&adc128_config[1] },
+> -	{ "adc122s051",	(kernel_ulong_t)&adc128_config[1] },
+> -	{ "adc122s101",	(kernel_ulong_t)&adc128_config[1] },
+> -	{ "adc124s021", (kernel_ulong_t)&adc128_config[2] },
+> -	{ "adc124s051", (kernel_ulong_t)&adc128_config[2] },
+> -	{ "adc124s101", (kernel_ulong_t)&adc128_config[2] },
+> +	{ "adc082s021", (kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_082S] },
+> +	{ "adc082s051", (kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_082S] },
+> +	{ "adc082s101", (kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_082S] },
+> +	{ "adc102s021", (kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_102S] },
+> +	{ "adc102s051", (kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_102S] },
+> +	{ "adc102s101", (kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_102S] },
+> +	{ "adc122s021",	(kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_122S] },
+> +	{ "adc122s051",	(kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_122S] },
+> +	{ "adc122s101",	(kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_122S] },
+> +	{ "adc124s021", (kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_124S] },
+> +	{ "adc124s051", (kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_124S] },
+> +	{ "adc124s101", (kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_124S] },
+> +	{ "adc128s052", (kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_128S] },
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(spi, adc128_id);
+>  
+>  static const struct acpi_device_id adc128_acpi_match[] = {
+> -	{ "AANT1280", (kernel_ulong_t)&adc128_config[2] },
+> +	{ "AANT1280", (kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_124S] },
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(acpi, adc128_acpi_match);
+
