@@ -1,90 +1,100 @@
-Received: from out203-205-221-242.mail.qq.com (out203-205-221-242.mail.qq.com [203.205.221.242])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EFC0229B0E
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 14:35:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.242
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 528F1229B0E
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 14:36:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744122920; cv=none; b=MgrO+7mA5LZTK9b5mvNzxNs0W64sS/VKKsp8sZDEyYDWXmHn85s32iYpmBHqQznrDzqoH+VbM+xPp/n4LvYEWO2hEKqqhl3M6kKplyfl2oHrD8IpXCpEXN20bJX1k9bmz/JP6xZtPjsHCawOqGcVTztPdlWjJJgCW79yvV0Af7E=
+	t=1744122975; cv=none; b=FMFPqT6C+/SAbV+ghUhjUtMs9tmWhKSS97HrUagkjnRAEdySM0wPARFGzQGOFwlwx9SAEKkOcY/yPKU1rzTad9jvo/4cVuSqcbNyhG0MNkgcVdATF+h4aLpyNPHeq74ihHPeGB9znT+Gh+RNdgDh9A2A+y8f0gYOSqov7X6XkBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744122920; c=relaxed/simple;
-	bh=d4dw3UtEQPiO8IEP8vvc8HeEFz5IXVTxrsBo9othd40=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=Q5QAkmK5QKi0bVfW3Kb6+N20EpTTU+6y1FBWP/e/AE21fy/U8VCQFYYi71KTkM7Bc9cff51jK3g/aFbcohYT9YBAA47JdIAEEiFHNgDFLBh2Eu8NruS9XrX8xqo8G3r4oAGA4tHKlPspErXcsOspkyToWKFyqc8UuFR267aGOgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=e8mYwwdd; arc=none smtp.client-ip=203.205.221.242
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1744122975; c=relaxed/simple;
+	bh=1FfTJO/QLlag6WFx411/x8xKsrT7nnIgrMSC3imzVtY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ny7qSWEReTV0FFJqmfS47zqYbOYTHEQhFiYbotYzQJV7D7CV5xNBEvhRZg+LsHEkhr4FbcfchL/JLHuwi/XLq5C0KLO4UWJQkw2XOcxvLwVGZJZLdTWM6ccWnRbISF0PDsFnEMTAj4AL0lNq6zcXbBF8Iy04BzX9Nno5oTekQLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LV7/MKYS; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="e8mYwwdd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1744122607; bh=c3fU22hrWc+1LebSDLwlA+MOIZeQWbaEf4w0uYoHHCQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=e8mYwwddW5n79rCEK+s/wGZ7QfHvET2YZwwEDPztnHvst6rvCAUHnVUpBsNSrzhuA
-	 pJ7Wr/We0GzW3wUGzv61fZ3/lFimgKIUBo7ALNXaUSzaM55pcV2b6b2SqDW88JrJZk
-	 IwLbBPfS7mjdp2gTj8UqPCkFUMgJrcGBMe7t1jTs=
-Received: from pek-lxu-l1.wrs.com ([114.244.57.157])
-	by newxmesmtplogicsvrszc13-0.qq.com (NewEsmtp) with SMTP
-	id 7852CAD5; Tue, 08 Apr 2025 22:30:05 +0800
-X-QQ-mid: xmsmtpt1744122605t642mlii7
-Message-ID: <tencent_7D179E301BED4B391BC12537BA47BB6D3308@qq.com>
-X-QQ-XMAILINFO: NLNuKjcZ2ePXewyGwfvPkHsH6BjzCPr6Y+Wi8Va/E4Uj1tu4WXHulXHFut2YcH
-	 8/qjitRtjGWiN8Vtszw/AEaG8AY0+Bwa4XA34kUWL/MQK5nZMAg6RpbBlsDtuGjXQwWCMShV9h5S
-	 ZOCZAsPatsdE9ptQRA7b4KPeq5wsguw8VlZvuUpkIstXAauqjeZ469HNnA9VYbMvMFCN6gMZK2Gc
-	 citacM9+M4H4zrtD6UTdpwDqt7xUCUhM+8BfeoGpPB8JqGWW66X+pah1aPnyhHPBhZr9xVQEXcPe
-	 HXoR/2zQhyXz61KSMXAi9s7L5HfDSQzk8WMLnPDkT3J52nufbtLHiAOaDuSQvm1JrLc6K+RagptU
-	 k73S5Wqfzkh/qkdc/FsHB/5nXO4RT1ISvdxnxaAPW7ewJRJGzytp0PGcHSlzHT0F5wypPa7lZdcc
-	 VfhofrX1q3u74jravQl6xrnvKU3TRcsSoBgM4XYiYMjOQheQ/hLj16sJbGdHnD6MsXe1DzvDRFab
-	 63pUDbDkF4ZX0KRZ5Ae5iMitxyCjW4/9ZhWoAUDmVJaJDvgktXEH5wnfet8MgRBgaCgCMlR0IXlE
-	 eADmOI0PpztVe/A94V+xicg8asqaEAc6wje8X0ifx8YzHhIoxSb+gVlucfk5WCR1e08W5U0QzbUw
-	 +y/03dSIhU6EfnPEqpzZn2cI74P1Fv3kX1kuLSB34CFglIv00UkgLl8rjbTKVgZrActiIpdhSQCg
-	 yoSpvEenjLWUkoKyeDXvNzDqOru63MfuHsdHcCBRmWPHWDYTm/YM2JmztHHRL1uSzy4ApGDcgLIp
-	 jgYXltmbs2iuUtEDT91MFf5Zrcg1Dcy5jXMkjMkViCrfWR517RyrRL3eekkE43IMkURnqjsvHbvS
-	 qIl7Zyjhelj/0Jv/4X/bY=
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+00778a9a557a2a5e1a33@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [wireless?] general protection fault in cfg80211_mlme_deauth
-Date: Tue,  8 Apr 2025 22:30:05 +0800
-X-OQ-MSGID: <20250408143004.1485824-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <67f50e3e.050a0220.396535.0561.GAE@google.com>
-References: <67f50e3e.050a0220.396535.0561.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LV7/MKYS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744122974; x=1775658974;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=1FfTJO/QLlag6WFx411/x8xKsrT7nnIgrMSC3imzVtY=;
+  b=LV7/MKYSZLv6vzs6s8KqFOgyjVo8xEkQzX/ILUJDonFQFCVFPca7Hr5/
+   BZ7HNuPm6DVFVHn1NNBRYjZVWxpitBN4vsFhkWClqeDJ4PbKfjwIs37Rm
+   mTS0jDxRE+/PkTVXBg3aw3XmsbE3/VvbuwBw+4FJMpj5WeS8U45uQRYDV
+   HIXmteVyWkE2gDvvH/vY2oCURmvC5qs7MgNGsvBQMRujCCpybROGUymXr
+   2yCg52S3kYRC45p+gUJ3Z1sqv+ewjDHwcwOrJEYZ1xJ/9cxj3xtf+YUTT
+   o/XWfw9yqDcr+WVXAhPRFiV8/Fly/G29ginWDfHECkxudyIa3C9clS2RI
+   A==;
+X-CSE-ConnectionGUID: zoLs4jSqQk6Rv9FlXOjrOw==
+X-CSE-MsgGUID: 6tABZv8GSDe/TZgoaRmuyQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="49218618"
+X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
+   d="scan'208";a="49218618"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 07:36:14 -0700
+X-CSE-ConnectionGUID: 2TbrZd5ATWOS8rTjrm1t2g==
+X-CSE-MsgGUID: I2tCfs2+RZyIG3+tq+DqJQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
+   d="scan'208";a="133157273"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 07:36:10 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u2A3b-0000000AQkH-0OCL;
+	Tue, 08 Apr 2025 17:36:07 +0300
+Date: Tue, 8 Apr 2025 17:36:06 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Sean Christopherson <seanjc@google.com>, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>
+Subject: Re: [PATCH v2 1/1] x86/reboot: KVM: Guard
+ nmi_shootdown_cpus_on_restart() with ifdeffery
+Message-ID: <Z_U0Vn0V18KYGjkP@smile.fi.intel.com>
+References: <20241008191555.2336659-1-andriy.shevchenko@linux.intel.com>
+ <ZwbazZpTSAn9aAC7@google.com>
+ <ZwcT149jx-iOmEfl@surfacebook.localdomain>
+ <ZykbvVZ32FKCRT_q@smile.fi.intel.com>
+ <Z_UUXOe61BwVkGob@smile.fi.intel.com>
+ <f670905f-f14b-4482-83ee-568234647f46@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f670905f-f14b-4482-83ee-568234647f46@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-#syz test
+On Tue, Apr 08, 2025 at 07:17:51AM -0700, Dave Hansen wrote:
+> On 4/8/25 05:19, Andy Shevchenko wrote:
+> > Any news here? Build error is still reproducible.
+> 
+> In the end, adding the #ifdefs leads to worse code, less maintainable
+> code. I'll take the occasional actual unused static inline in a .c file
+> over a mess of #ifdefs to make the compiler happy.
+> 
+> I really think that warning needs to go away in some way, shape or form.
+> Either get rid of it entirely, or kick it out of -Wall somehow. It's a
+> super pedantic warning that leads to worse code most of the time.
 
-diff --git a/net/wireless/sme.c b/net/wireless/sme.c
-index cf998500a965..916c9e8fea15 100644
---- a/net/wireless/sme.c
-+++ b/net/wireless/sme.c
-@@ -268,6 +268,12 @@ void cfg80211_conn_work(struct work_struct *work)
- 		if (wdev->conn->params.bssid) {
- 			memcpy(bssid_buf, wdev->conn->params.bssid, ETH_ALEN);
- 			bssid = bssid_buf;
-+		} else {
-+			if (wdev->conn->state == CFG80211_CONN_ASSOC_FAILED && wdev->conn->bssid) {
-+				wdev->conn->params.bssid = wdev->conn->bssid;
-+				memcpy(bssid_buf, wdev->conn->bssid, ETH_ALEN);
-+				bssid = bssid_buf;
-+			}
- 		}
- 		treason = NL80211_TIMEOUT_UNSPECIFIED;
- 		if (cfg80211_conn_do_work(wdev, &treason)) {
-@@ -411,6 +417,8 @@ bool cfg80211_sme_rx_assoc_resp(struct wireless_dev *wdev, u16 status)
- 		return true;
- 	}
- 
-+	printk("bssid: %p, pbssid: %p, dis bssid: %p, %s\n",
-+		wdev->conn->bssid, wdev->conn->params.bssid, wdev->disconnect_bssid, __func__);
- 	wdev->conn->state = CFG80211_CONN_ASSOC_FAILED;
- 	schedule_work(&rdev->conn_work);
- 	return false;
+Does it mean you can take Sean's approach?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
