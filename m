@@ -1,113 +1,154 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31B82261368;
-	Tue,  8 Apr 2025 06:06:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF05A261377
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 06:06:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744092415; cv=none; b=s7RAX4ogFWkKtMtq/LUBWBJxvv7stBOkaLnsjcga4noMKljKRtYLxwDG2PdkaP/PBLnhNa6EIWCFuL79evHFW71Z94yHNIX4l9slnXf/5a/Hs3jQJ+00YJTvBSpSwlzhxh5zdpUsAI4PKkv1fSVdCL/KLrmms3DJX9HR+HUseew=
+	t=1744092415; cv=none; b=ABReBNQxYBbf0BfbtuJF5TM82vbo8lsygA7vO/i/c8u+DMbyXb9GRy9wNoRbY9dcVQR5A+na/IJqRpx6oHciGK3NdETzx+dn3nyr15G8G+WcmA6j9bAo9+kYQ9nTxUmOUQwbMVDW9TMUV+mN+VZyZoGAes+XGGwNpzKQ+wGAFB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744092415; c=relaxed/simple;
-	bh=lbyr4jAcBGFK8mXvlPAmwgrKXYVaOjbCX2i/IuY5L1U=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iJ6tAS5Ox/athuSMiUioLfgO4jxreqO18pMBo4Bk4JwtVpWD0LI8VmtirEewjozKnk8U8+IrdULNHt7NUx2Gx5kdwnvAocM2W7w6lLALmpLh2o7FeeudMl/1uUCSoY3tcQD9iJ6sbFdYkYLcCXe6NMqH+SAmsaxk1pxPuoC/jTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=VrANH8gc; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	bh=Qg2tuu0wK5R2PRbA4sG9GA532XpVl4FSIzs+bRLlMCg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=T+csANCV5gGgO+N8RUzXbl9p396DFHwU2kSDC8fJ0CPMtTtdoOBM4rxcKJIgD5VBt7SljBfru/BEBkud8BexpcTZAc1SPXlW3q3mTTGOdWdYialoeF3KB/46fv67s9BHP7FN3ocQG6teGL/AmYC+qMC8YBZkDkqOwa+ilAt0/7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Q90arvgM; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VrANH8gc"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53866l1C1125966
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 8 Apr 2025 01:06:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744092407;
-	bh=fyZscUILXrq7HToqkjP2DEJv/CIstI5SN7efBYH3aaw=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=VrANH8gccndwQImRnI7znA/SNWESJbWJHGbAap4lkzAIexP1YUjxG9HMPDmZizUbU
-	 W5xlO0XdBLtKh0xw3C1RUuv8/Li9qJ8jUoUG+kmaNRgLF8KbMThUN7Y5+dNOQmoaSt
-	 XlkHV4iK2RjXSDSiwepcbMHRtVElNtQEQ1+YtbVs=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53866lVY112422
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 8 Apr 2025 01:06:47 -0500
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 8
- Apr 2025 01:06:47 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 8 Apr 2025 01:06:47 -0500
-Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [10.24.72.113])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53866bvq080076;
-	Tue, 8 Apr 2025 01:06:44 -0500
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>
-CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
-        <s-vadapalli@ti.com>
-Subject: [PATCH 2/2] arm64: dts: ti: k3-j722s-main: Disable "serdes_wiz0" and "serdes_wiz1"
-Date: Tue, 8 Apr 2025 11:36:36 +0530
-Message-ID: <20250408060636.3413856-3-s-vadapalli@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250408060636.3413856-1-s-vadapalli@ti.com>
-References: <20250408060636.3413856-1-s-vadapalli@ti.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Q90arvgM"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5382GNbM006296
+	for <linux-kernel@vger.kernel.org>; Tue, 8 Apr 2025 06:06:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	pxD1d8+SURGaW2WmT3Vs97sir9axBka6nu3u7fHBVV4=; b=Q90arvgMkL3TE1WA
+	mysAs83NjH5kzrWE3STROVHVvYMG77Sh+YFpUtpIf1QZG58NkwHrA4uwgCHwJsJ1
+	Tr7gNTz9tCZ+PyhONtCnVhLi0qPVM1kZ4aP2Q9Lzanu0CWwXgUZ6mUF7DRm5/Dbk
+	pQCqNRcrYBovURYF5PhbVfyf0GynOtA8I+gwyuMWW6NhNp3HZIoV0q+1jvmntwKI
+	DtwLEYYsa0q9DxlmV8uPMgp+RsTb+Sg/nZRSzg45ITSsEjfU10+xfwdcZ0QIURDj
+	YN7TNezaQy9rxyq2GIGpERK1pBtrdsyWLa0KXoYTaaLQ6PYIL7phPkGaJWmRBDvF
+	LKG/TQ==
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twftekp2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 06:06:52 +0000 (GMT)
+Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-73009f59215so6176228b3a.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 23:06:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744092412; x=1744697212;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pxD1d8+SURGaW2WmT3Vs97sir9axBka6nu3u7fHBVV4=;
+        b=Adp0nrFi/IRglOGjjvcwsyvPlvDEOjjWsh9f4IGu6p6vzjjlRNFuoMR5WSUamDSBrs
+         5uGioDvHVnxeXjFBhOuhtcYZCb9pOm8HrEykLxS0G4GDJhZn8kWitPmzoRruFugSYJxS
+         q9BYaBro7UMSwdnEihAGY7EnHJplBuoBubMK+kvul51DeB2MJGVjmhvQjgis7E8zw4u4
+         8kpo24BIUkPk5UL/M03auFeyPKn6LzzL37oxzSlWMgjZ5H4vehOw7n1z0eZBFNsFdFTb
+         0ZaHUVllG16aQMTLGC2REm4zFJDPmUt/TWJSzUhLLPjhv9w8ibSfg4FBjqdKiTCjqdrt
+         DMNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX1NWw+x6Lr4dDVWHcn487FVKqa0zxkqAXqL4Q9WrN/H0V6RLtuYolc/3cYATtf1OfIjNkCweF/8+dfR4k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YygUP0AjyhikGyq5nvBICq2mp+ua+NoS9bkQA8pHyqSbQB9jYO9
+	ETeNz2Kjkfi0wBAjwqiUZFaXi18SzOsKY4jUKOjI4SnPQ9l0jSdM8uNMy3Sd6O7QpwEgoHcoGcQ
+	izp0S81q5cqLWFz45GVdQyhjav+5JURdWc5RR38Oykbr6xq2DD6lm/oIUiA/N2uc=
+X-Gm-Gg: ASbGncuRtoqLeYpvBRBD5zcpJlsOr0vDRYtZv/pWRgimn2l588Y6qkLAscoRQs9gPxG
+	o1xwJBIXZC9sZ1dgbUkz6VnjWxz/dLY9zzBodGsHygeHEnJWgcJeea/uAPgFIkvU2z9l9wYhtHe
+	+PEIg6lDMGazFcpPrtuTIvnB7LP4xZmGN5uJJPrrAqdw05x/QudBOqqPao3kmSAxV5TvLjXBqDA
+	cjQNVS+7oFTapNBSEFhWzY2s9SEfSO5Xj89b+BU0euDVMaBrOtSvjDCdqFw3/rb81QbNUmBBsLj
+	383NY+a1+sBvUASoaZ7o02WlcljLTLYpz9zlA+/JaHY9/sb9alAb9tf96s8hsfNyaRVuyw6lemq
+	CY//6rixfnmhOBCww+skS4x3PPrPc76I9GqOmPv1K
+X-Received: by 2002:a05:6a20:2d06:b0:1f5:5ed0:4d75 with SMTP id adf61e73a8af0-20108139fbamr29100398637.31.1744092411772;
+        Mon, 07 Apr 2025 23:06:51 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGGNs6YIAjtRMwCSgr1KcB95nwYEiAKpz4GyZD+0pmYEVFXHVcTPMA7Lk9EKDFmHiBoEw/Jaw==
+X-Received: by 2002:a05:6a20:2d06:b0:1f5:5ed0:4d75 with SMTP id adf61e73a8af0-20108139fbamr29100341637.31.1744092411321;
+        Mon, 07 Apr 2025 23:06:51 -0700 (PDT)
+Received: from hu-adisi-blr.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com. [103.229.18.19])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af9bc35079fsm6863981a12.41.2025.04.07.23.06.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 23:06:51 -0700 (PDT)
+From: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
+Date: Tue, 08 Apr 2025 11:36:31 +0530
+Subject: [PATCH ath-next v4 3/9] wifi: ath12k: fix failed to set mhi state
+ error during reboot with hardware grouping
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250408-fix_reboot_issues_with_hw_grouping-v4-3-95e7bf048595@oss.qualcomm.com>
+References: <20250408-fix_reboot_issues_with_hw_grouping-v4-0-95e7bf048595@oss.qualcomm.com>
+In-Reply-To: <20250408-fix_reboot_issues_with_hw_grouping-v4-0-95e7bf048595@oss.qualcomm.com>
+To: Johannes Berg <johannes@sipsolutions.net>,
+        Jeff Johnson <jjohnson@kernel.org>,
+        Karthikeyan Periyasamy <quic_periyasa@quicinc.com>,
+        Kalle Valo <kvalo@kernel.org>, Harshitha Prem <quic_hprem@quicinc.com>
+Cc: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+        linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Authority-Analysis: v=2.4 cv=B5+50PtM c=1 sm=1 tr=0 ts=67f4bcfc cx=c_pps a=mDZGXZTwRPZaeRUbqKGCBw==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=zZIk_WvpsQkbQcpLs4gA:9 a=QEXdDO2ut3YA:10
+ a=zc0IvFSfCIW2DFIPzwfm:22
+X-Proofpoint-GUID: re9c8IhqpeJVbdf5puosxc75q1_sfcMn
+X-Proofpoint-ORIG-GUID: re9c8IhqpeJVbdf5puosxc75q1_sfcMn
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-08_02,2025-04-07_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ suspectscore=0 malwarescore=0 bulkscore=0 phishscore=0 spamscore=0
+ priorityscore=1501 adultscore=0 impostorscore=0 lowpriorityscore=0
+ mlxscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504080042
 
-Since "serdes0" and "serdes1" which are the sub-nodes of "serdes_wiz0"
-and "serdes_wiz1" respectively, have been disabled in the SoC file already,
-and, given that these sub-nodes will only be enabled in a board file if the
-board utilizes any of the SERDES instances and the peripherals bound to
-them, we may end up in a situation where the board file doesn't explicitly
-disable "serdes_wiz0" and "serdes_wiz1". As a consequence of this, the
-following errors show up when booting Linux:
+With hardware grouping, during reboot, whenever a device is removed, it
+powers down itself and all its partner devices in the same group. Now this
+is done by all devices and hence there is multiple power down for devices
+and hence the following error messages can be seen:
 
-  wiz bus@f0000:phy@f000000: probe with driver wiz failed with error -12
-  ...
-  wiz bus@f0000:phy@f010000: probe with driver wiz failed with error -12
+ath12k_pci 0002:01:00.0: failed to set mhi state POWER_OFF(3) in current mhi state (0x0)
+ath12k_pci 0002:01:00.0: failed to set mhi state: POWER_OFF(3)
+ath12k_pci 0002:01:00.0: failed to set mhi state DEINIT(1) in current mhi state (0x0)
+ath12k_pci 0002:01:00.0: failed to set mhi state: DEINIT(1)
+ath12k_pci 0003:01:00.0: failed to set mhi state POWER_OFF(3) in current mhi state (0x0)
+ath12k_pci 0003:01:00.0: failed to set mhi state: POWER_OFF(3)
+ath12k_pci 0003:01:00.0: failed to set mhi state DEINIT(1) in current mhi state (0x0)
+ath12k_pci 0003:01:00.0: failed to set mhi state: DEINIT(1)
+ath12k_pci 0004:01:00.0: failed to set mhi state POWER_OFF(3) in current mhi state (0x0)
+ath12k_pci 0004:01:00.0: failed to set mhi state: POWER_OFF(3)
 
-To not only fix the above, but also, in order to follow the convention of
-disabling device-tree nodes in the SoC file and enabling them in the board
-files for those boards which require them, disable "serdes_wiz0" and
-"serdes_wiz1" device-tree nodes.
+To prevent this, check if the ATH12K_PCI_FLAG_INIT_DONE flag is already
+set before powering down. If it is set, it indicates that another partner
+device has already performed the power down, and this device can skip this
+step.
 
-Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.3.1-00173-QCAHKSWPL_SILICONZ-1
+Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.4.1-00199-QCAHKSWPL_SILICONZ-1
+Tested-on: WCN7850 hw2.0 PCI WLAN.HMT.1.0.c5-00481-QCAHMTSWPL_V1.0_V2.0_SILICONZ-3
+
+Signed-off-by: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
 ---
- arch/arm64/boot/dts/ti/k3-j722s-main.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/wireless/ath/ath12k/pci.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi b/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi
-index 6850f50530f1..beda9e40e931 100644
---- a/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi
-@@ -32,6 +32,8 @@ serdes_wiz0: phy@f000000 {
- 		assigned-clocks = <&k3_clks 279 1>;
- 		assigned-clock-parents = <&k3_clks 279 5>;
+diff --git a/drivers/net/wireless/ath/ath12k/pci.c b/drivers/net/wireless/ath/ath12k/pci.c
+index 7f1bb150f326b317157f6721d990d61a27f38d6a..aae1989c686bda37c12544e72338bbfbc5f75042 100644
+--- a/drivers/net/wireless/ath/ath12k/pci.c
++++ b/drivers/net/wireless/ath/ath12k/pci.c
+@@ -1487,6 +1487,9 @@ void ath12k_pci_power_down(struct ath12k_base *ab, bool is_suspend)
+ {
+ 	struct ath12k_pci *ab_pci = ath12k_pci_priv(ab);
  
-+		status = "disabled";
++	if (!test_bit(ATH12K_PCI_FLAG_INIT_DONE, &ab_pci->flags))
++		return;
 +
- 		serdes0: serdes@f000000 {
- 			compatible = "ti,j721e-serdes-10g";
- 			reg = <0x0f000000 0x00010000>;
-@@ -70,6 +72,8 @@ serdes_wiz1: phy@f010000 {
- 		assigned-clocks = <&k3_clks 280 1>;
- 		assigned-clock-parents = <&k3_clks 280 5>;
+ 	/* restore aspm in case firmware bootup fails */
+ 	ath12k_pci_aspm_restore(ab_pci);
  
-+		status = "disabled";
-+
- 		serdes1: serdes@f010000 {
- 			compatible = "ti,j721e-serdes-10g";
- 			reg = <0x0f010000 0x00010000>;
+
 -- 
 2.34.1
 
