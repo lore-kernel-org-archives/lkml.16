@@ -1,65 +1,37 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ptr1337.dev (mail.ptr1337.dev [202.61.224.105])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0376C25F78F
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 07:52:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEA8225F987;
+	Tue,  8 Apr 2025 07:52:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.61.224.105
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744098777; cv=none; b=bo8q9HnEde4kG8rjrIiwbEzI1nTYS1CEZULQ/gteDdGUae7FKRSYHBRgF2CzAbczxiUIiY4TuNma9C8Zzs05Q1p8LrMm0Vbq52xUDLVUvxR6vzMBJ1sPv50PBi3bDREOF8a/nKSSd9z3RtJafCOxu5YifMGWOnU8+bnMxjqOo3k=
+	t=1744098777; cv=none; b=sreayV06sKYMnE2oIK3fkwu+0mxroVN/3QvpaF/opsx2tat3TkzZQ+F/TtbbR03p9EVx16xk7fNW9/VsuuxMq0GpLLNTgym0cFqQB75XiZnDWoKzVdyPl+czJJ8TuKHJ5hT0JRrUvFeuoo96a21GPz4gyNK+B89vJwOPIAesW7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744098777; c=relaxed/simple;
-	bh=CTsItxJL+eAetG/isG1aUgyaeY2KhExTdrxot2RtR78=;
+	bh=ljJS8qQYfo2nm8bvCJlRcDRlmr6hYT/e363s6heZw+A=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jUQ9KBNkf6Rf+ZNas+oWZvx/lhOT+0aYYIBqjIALwcbiFu8KgtmNq+qeyblfDY3cpy65pcQHrAjuLH24opuxVM1Pz49qswEKPMjHabXNTcY5Nf4q3nOV908IqPtHOmk6Cnu93NGyYc7CUgjZPk7CCQHQNL2ehodfM+dGAnebMxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bR5YL44z; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=I0yAI6Pp7QRzmyEbC1pHqdIbp3FNpkAGJb11GKMUb7Br3flbPDE51xR3M8oJuvisadqYvSV+44OAbm2r40LyyuOK1W1GH1cxvaKRAnRZUnXHnvueLrCDJkDy/IssPY2wAHzQtf+xrpOUc8dlYerrvxuILoFdxUlAa3mbX4Y8JGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cachyos.org; spf=pass smtp.mailfrom=cachyos.org; dkim=pass (2048-bit key) header.d=cachyos.org header.i=@cachyos.org header.b=IlkTbDSc; arc=none smtp.client-ip=202.61.224.105
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cachyos.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cachyos.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bR5YL44z"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39c266c1389so3688068f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 00:52:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744098773; x=1744703573; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VjqzmMMacWbqnYleHoXhpQrGKOlADT8P8Fl3BGcFhsk=;
-        b=bR5YL44zld3EMthCyGntjPuWWVshcp2NhQSxYhlg6yAtAMHcMLzH+WwJBrhf6nBoob
-         knCErgGn+jukq0pxMFm1XVDTh2vox5aJbKJDk2k5X0joNqrJJbWlhdliLsrrnOwoSPvA
-         HfvLiD2hRsZV8CJaKByHn549MqtNxiGkI5IbKhWGZp12ZM+f/ukccKSDl6x8z4HaTh8K
-         QgfZ8dsSRHlKyDdQ1HAxB714b6FP2wvVKIn2QIEUpuVu+PBV6dDPYqWlKRSve8aOAigF
-         8uIONxyneu8QjewgBZ0a7bgrA7FdJK+PtzhePGE8aY932MDTBOSZk5li75vbZ1eeh0FW
-         43FQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744098773; x=1744703573;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VjqzmMMacWbqnYleHoXhpQrGKOlADT8P8Fl3BGcFhsk=;
-        b=Fy5GrsPHedMMiSm5YIApXuPow0tADGygHhoL/lfneIo8B2Zv2iwOKvaL5qUxeosKZ0
-         xtwG2tL90VVLx5oDXBGzmu8p3RqSuB4Pn/ZjHKPifspTXJ8qdrsWW6QB6tQ//vx0sjYb
-         gqbv7EECxzlkC/PxCjX7x5ls36xvawaRH10eZAaTN3EI8cE4Tx1ArApxa/vaOfg7EE75
-         dKsm6VCLQSJ7fy9dVosnRXXfRn98frkS638chM8AYSADPIP66onpzGz4FKb2NEECxSu/
-         yC5izyviC/VISFMs5xCdfZKmHelPIdRI0YqlQGJhe/J38UauuTTJAJOlkyI3Pu9eMjx1
-         LHiw==
-X-Forwarded-Encrypted: i=1; AJvYcCU8+4lWmCizHbZGhXiQC6pvBN4wIj9KcpxuF+py+HfJomawcbyj2gIwM53dsBdIIUG6VT3beqqfCW82KAM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXJSFy2eCllqay6gQzXbGefvmpX2TEcE9k1SPMNkwR7aQkuhYh
-	b9cffyG3+BEU7Yapw7ZkW15Bzbh/DBSQGUW9SKYEfUyZzUClZ05kCmmrkk7CUOM=
-X-Gm-Gg: ASbGncvNHfac2rvugskpUgEhH5YL+uztIgodRyygdGetGQ+CK0wa2au7oFxjZI3h7wR
-	YPnzEnH4due8pVP0/cVWBZhvHpORoKWTc6XodSoAkiVjyi2nwbkVusQHHcPaZhgIOCaWlfwJRxI
-	d+FPFG2peef7OjcXXvTIEFv87+Wk6WDt+7oTTbaz8V/5utOAE0+7zvDuP370Jcx1SL9Zp/t7vTC
-	YCyqP+dHX94rG/3II39z+rzbswjY2Nx26T+rKmXyy/YyuBxSw/nX0MisGYMNbKd94prc/PudmmV
-	7RtAtGMxL1Hmdny5y9LFEHQUwxDSAYwNJGMBy0vLV5RJQf0978rgg4hg1pYO/iJlo3lCJf7w5Q=
-	=
-X-Google-Smtp-Source: AGHT+IFjPNgRl4VdkKERBfDPcS8BhfY+2C/V1T+Jsm5dqC+mD8MANyETkIFS4IOMCADrnAUsLmNxeg==
-X-Received: by 2002:a5d:588f:0:b0:390:d6b0:b89 with SMTP id ffacd0b85a97d-39d146622b5mr11257778f8f.50.1744098773275;
-        Tue, 08 Apr 2025 00:52:53 -0700 (PDT)
-Received: from [192.168.68.117] ([5.133.47.210])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43ec169b4e4sm156238455e9.20.2025.04.08.00.52.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Apr 2025 00:52:52 -0700 (PDT)
-Message-ID: <206d1405-5a8b-4f2a-8545-458c88345a41@linaro.org>
-Date: Tue, 8 Apr 2025 08:52:51 +0100
+	dkim=pass (2048-bit key) header.d=cachyos.org header.i=@cachyos.org header.b="IlkTbDSc"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id B996C280AA4;
+	Tue,  8 Apr 2025 09:52:35 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cachyos.org; s=dkim;
+	t=1744098772;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OqgTZYxXv/xNrmSvb/jrSTI6+V6l0vurYjj+uVFpJnM=;
+	b=IlkTbDScrHTPu/x+i7AOpVtg6teF1LgwjWNKInB07JSsjdz7dcxBamVs07xSB8dlmcwlsC
+	iJIWGhuLRU18Mmd526P0Q6nvaqDHoB6YrfWb/Ncs/W6+SZVnE/6VUMz7lsbaU5Tc82cSZc
+	bvfvSNeU9sp8d9gKeqOyEgr8vIRhp5szn/xiRUQZGeTN4NULgbFoUUjbiYEPTvW/roGJXf
+	0xmBbAK3P3XLGeyUnDQxDG3QuQpPzGHx5j1eGkbkHMmNwelTwDs8APoVKbu4xxt675CipS
+	1HOsBR5UcJ3bqS1aWMo3HVql511PHiin89av3brrxDffAf9GIeYLpXnh43MKnQ==
+Message-ID: <182bfb4f-e856-47d8-bc54-d419109cb4ac@cachyos.org>
+Date: Tue, 8 Apr 2025 15:52:25 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,112 +39,83 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 RESEND] nvmem: layouts: u-boot-env: remove crc32
- endianness conversion
-To: "Michael C. Pratt" <mcpratt@pm.me>
-Cc: Christian Lamparter <chunkeey@gmail.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?=
- <rafal@milecki.pl>, linux-kernel@vger.kernel.org,
- INAGAKI Hiroshi <musashino.open@gmail.com>
-References: <20250405045617.26106-1-mcpratt@pm.me>
+Subject: Re: [PATCH v7 10/17] mm: uninline the main body of vma_start_write()
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Christoph Hellwig <hch@infradead.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>, Suren Baghdasaryan <surenb@google.com>,
+ akpm@linux-foundation.org, peterz@infradead.org, willy@infradead.org,
+ liam.howlett@oracle.com, mhocko@suse.com, hannes@cmpxchg.org,
+ mjguzik@gmail.com, oliver.sang@intel.com, mgorman@techsingularity.net,
+ david@redhat.com, peterx@redhat.com, oleg@redhat.com, dave@stgolabs.net,
+ paulmck@kernel.org, brauner@kernel.org, dhowells@redhat.com,
+ hdanton@sina.com, hughd@google.com, lokeshgidra@google.com,
+ minchan@google.com, jannh@google.com, shakeel.butt@linux.dev,
+ souravpanda@google.com, pasha.tatashin@soleen.com, klarasmodin@gmail.com,
+ corbet@lwn.net, linux-doc@vger.kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, kernel-team@android.com
+References: <20241226170710.1159679-1-surenb@google.com>
+ <20241226170710.1159679-11-surenb@google.com>
+ <0d36fd53-b817-4bbd-ae38-af094bd301df@suse.cz>
+ <40182b31-95ad-4825-9c0c-0127be1734a6@cachyos.org>
+ <Z_S7yjRXWIXnVXsf@infradead.org>
+ <3f9f8a06-a044-4bce-a4e6-f17090cb3c0f@lucifer.local>
 Content-Language: en-US
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-In-Reply-To: <20250405045617.26106-1-mcpratt@pm.me>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Eric Naim <dnaim@cachyos.org>
+In-Reply-To: <3f9f8a06-a044-4bce-a4e6-f17090cb3c0f@lucifer.local>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Last-TLS-Session-Version: TLSv1.3
+
+On 4/8/25 14:25, Lorenzo Stoakes wrote:
+> On Mon, Apr 07, 2025 at 11:01:46PM -0700, Christoph Hellwig wrote:
+>> On Tue, Apr 08, 2025 at 12:39:25PM +0800, Eric Naim wrote:
+>>> The out-of-tree NVIDIA modules seem to rely on this symbol, is it possible to use EXPORT_SYMBOL() here instead of EXPORT_SYMBOL_GPL(), below is the modpost error:
+>>
+>> No.  They don't have any business using this.
+> 
+> What on _earth_ are they using this for? Is this just via the VMA flag
+> manipulation functions? If it's something else, it's an unintended use of this.
+> 
+> Anyway, generally speaking - agreed, this is absolutely a no-go Eric. In my view
+> we simply should not be using EXPORT_SYMBOL() for _any_ new symbols whatsoever.
+> 
+> Out-of-tree modules are simply a non-consideration for core mm code, this is a
+> GPL open source project. If I had my way we'd simply revoke _all_
+> EXPORT_SYMBOL()'s, not add new ones.
+> 
+>>
+>> In fact vma_start_write should not be exported at all, just the
+>> vm_flags_{set,clear,mod} helpers.
+> 
+> Yup, I'd rather we just kept vma_start_write() mm-internal, though of course
+> kernel/fork.c (ugh) needs it (we could probably refactor that in some way to
+> avoid), and literally just the PPC arch (again maybe we can find a way round
+> that).
+> 
+> Maybe one for me to look at actually... hmm.
+> 
+> Anyway Eric - I wonder if this is simply the nvidia OOT driver doing a
+> vm_flags_...() call and then having an issue because the lock is uninlined now?
+> 
+> I guess you are jut noticing this is breaking and don't know since - proprietary
+> code.
 
 
-
-On 05/04/2025 05:57, Michael C. Pratt wrote:
-> On 11 Oct 2022, it was reported that the crc32 verification
-> of the u-boot environment failed only on big-endian systems
-> for the u-boot-env nvmem layout driver with the following error.
-> 
->    Invalid calculated CRC32: 0x88cd6f09 (expected: 0x096fcd88)
-> 
-> This problem has been present since the driver was introduced,
-> and before it was made into a layout driver.
-> 
-> The suggested fix at the time was to use further endianness
-> conversion macros in order to have both the stored and calculated
-> crc32 values to compare always represented in the system's endianness.
-> This was not accepted due to sparse warnings
-> and some disagreement on how to handle the situation.
-> Later on in a newer revision of the patch, it was proposed to use
-> cpu_to_le32() for both values to compare instead of le32_to_cpu()
-> and store the values as __le32 type to remove compilation errors.
-> 
-> The necessity of this is based on the assumption that the use of crc32()
-> requires endianness conversion because the algorithm uses little-endian,
-> however, this does not prove to be the case and the issue is unrelated.
-> 
-> Upon inspecting the current kernel code,
-> there already is an existing use of le32_to_cpu() in this driver,
-> which suggests there already is special handling for big-endian systems,
-> however, it is big-endian systems that have the problem.
-> 
-> This, being the only functional difference between architectures
-> in the driver combined with the fact that the suggested fix
-> was to use the exact same endianness conversion for the values
-> brings up the possibility that it was not necessary to begin with,
-> as the same endianness conversion for two values expected to be the same
-> is expected to be equivalent to no conversion at all.
-> 
-> After inspecting the u-boot environment of devices of both endianness
-> and trying to remove the existing endianness conversion,
-> the problem is resolved in an equivalent way as the other suggested fixes.
-> 
-> Ultimately, it seems that u-boot is agnostic to endianness
-> at least for the purpose of environment variables.
-> In other words, u-boot reads and writes the stored crc32 value
-> with the same endianness that the crc32 value is calculated with
-> in whichever endianness a certain architecture runs on.
-> 
-> Therefore, the u-boot-env driver does not need to convert endianness.
-> Remove the usage of endianness macros in the u-boot-env driver,
-> and change the type of local variables to maintain the same return type.
-> 
-> If there is a special situation in the case of endianness,
-> it would be a corner case and should be handled by a unique "compatible".
-> 
-> Even though it is not necessary to use endianness conversion macros here,
-> it may be useful to use them in the future for consistent error printing.
+This seems to be the case, upon looking a bit deeper it looks like the driver code 
+is calling atleast one of vm_flags_set. I couldn't find any direct calls to {,__}vma_start_write
+at first and was bit confused.
 
 > 
-> Fixes: d5542923f200 ("nvmem: add driver handling U-Boot environment variables")
-> Reported-by: INAGAKI Hiroshi <musashino.open@gmail.com>
+> Anyway in this case, the OOT driver should just write some GPL wrapper code or
+> something here. Or better yet - make the driver open source :)
 
-CC Stable is missing.
+Yeah, as obvious as it seems it doesn't happen on their open-sourced code :)
 
---srini
-> Link: https://lore.kernel.org/all/20221011024928.1807-1-musashino.open@gmail.com
-> Signed-off-by: Michael C. Pratt <mcpratt@pm.me>
-> ---
->   drivers/nvmem/layouts/u-boot-env.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/nvmem/layouts/u-boot-env.c b/drivers/nvmem/layouts/u-boot-env.c
-> index 731e6f4f12b2..21f6dcf905dd 100644
-> --- a/drivers/nvmem/layouts/u-boot-env.c
-> +++ b/drivers/nvmem/layouts/u-boot-env.c
-> @@ -92,7 +92,7 @@ int u_boot_env_parse(struct device *dev, struct nvmem_device *nvmem,
->   	size_t crc32_data_offset;
->   	size_t crc32_data_len;
->   	size_t crc32_offset;
-> -	__le32 *crc32_addr;
-> +	uint32_t *crc32_addr;
->   	size_t data_offset;
->   	size_t data_len;
->   	size_t dev_size;
-> @@ -143,8 +143,8 @@ int u_boot_env_parse(struct device *dev, struct nvmem_device *nvmem,
->   		goto err_kfree;
->   	}
->   
-> -	crc32_addr = (__le32 *)(buf + crc32_offset);
-> -	crc32 = le32_to_cpu(*crc32_addr);
-> +	crc32_addr = (uint32_t *)(buf + crc32_offset);
-> +	crc32 = *crc32_addr;
->   	crc32_data_len = dev_size - crc32_data_offset;
->   	data_len = dev_size - data_offset;
->   
-> 
-> base-commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557
+Either way, I'm thankful for the replies. NVIDIA *should* have probably noticed
+this already and it would probably fixed in the next driver or two so I'll just
+let sleeping dogs lie.
+
+
+-- 
+Regards,
+Eric
