@@ -1,199 +1,175 @@
-Received: from esa6.fujitsucc.c3s2.iphmx.com (esa6.fujitsucc.c3s2.iphmx.com [68.232.159.83])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63202AE74;
-	Tue,  8 Apr 2025 05:38:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.159.83
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744090718; cv=fail; b=BME0swS0ziLhWFBs6bNYDHqpvAVZKMuDdtDvne97HKfLzSHF5Hh2Rf+/mJLqhnlboKcMZaK2C1hES7+ia9uaL48jcV/dgL8f0K+GsIsdFTitoeXmNnVspcyXIcegETsLMgnGp42PrBEAqzVx2g/RlizfZvNa89D+prExQx2Da4M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744090718; c=relaxed/simple;
-	bh=iQ9P2G4KO69VxplDyJPPZ2eUwe7CIFpz6V45a100YFE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=QOAUpLd+Xg/9PeZSbThoZ0JI2FIiSQ1oeLKbXmfYQzVXd95A5S4FCbDZNafwxpi+e1GARLcRLX22o0D9axJ88icLtkDQHe8nvWUw+ws+/gJBsGz/fDr6WUgcuLtta4Y6EP4RGurSO8ZwySTLwkIFPzT4gs8zyM54qqrfBAwD2G8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=Y4UWQlQI; arc=fail smtp.client-ip=68.232.159.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADCD9215782;
+	Tue,  8 Apr 2025 05:39:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744090744; cv=none; b=r7KT7eHaOkGgyOdlMnBLaB8E2DAxylWV7GOFw2PLRP7nw2plLKkK6/k9zOsaoLmfkdy5l7JjDv2OBUx8uHvM9skbob+bpcvcMHfFoP2OtbPbe9jhkb0CAALROu/hX3HiweQni51Lkzf1vwaiYy6ds5xt84w/ejrEmOw68BZ7LxU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744090744; c=relaxed/simple;
+	bh=oWaA2H6BcrLZcleZ8oSxypJ20x+11KKhnPxk9s+HpCw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=d5ZqZSYJni3LL5tyoR3vVcFqGAP6ae507Mo5P2HwoCxX/hLqr0y+tyeMTJe5nKKNUfnrpFnf209OphwyoM2YoqTc+Ja4UdWnDrZHcKopbGydVJ/qoKOjJtB+4wUD+ZRhvaegqhQ63pSfxy8vzFnS7mPGQ51lQs2QMuAjWKZ+ip4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=LdZSueD3; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="Y4UWQlQI"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
-  t=1744090716; x=1775626716;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=iQ9P2G4KO69VxplDyJPPZ2eUwe7CIFpz6V45a100YFE=;
-  b=Y4UWQlQIYfe6DwRR6WwWFU9c/5bHcFW2yB3O/j3dSEkYK45KQ4oNq+Pw
-   OlspMkZqnrkRKnOHlS1/tVSMA7rbNoFIjUdulilQAI5jzGi6WiBzSn4sP
-   pqJ9R76qdgDII+pJj9+SGH7jHcw4cjfy+M4m8YEZg9sjwjwLRlVucbO+9
-   BhZOFFAWEL4LGVZ5/YsUeQPdyMJFp+trLs+5Iva/aapL4HYcS1ULUrXhl
-   KWcAFZrUT1jMp3HHD3b34Po0wwKB3RRcdH+/xyCOdC1YAP7g9Vn0YjSpo
-   v+Rxa9oFm8Ldhue9QDkBv4FjLdkDPszXZLFNX2AOWR8sBXOJmKU9fEw48
-   Q==;
-X-CSE-ConnectionGUID: V5W76cD8TU+PifF6IuHZUw==
-X-CSE-MsgGUID: lRqrpqJARcuLdQK74rMn6g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="152077252"
-X-IronPort-AV: E=Sophos;i="6.15,197,1739804400"; 
-   d="scan'208";a="152077252"
-Received: from mail-japaneastazlp17010002.outbound.protection.outlook.com (HELO TY3P286CU002.outbound.protection.outlook.com) ([40.93.73.2])
-  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 14:37:24 +0900
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BjWvzqxCN3P4BuiuR4zlhLSn8PF8/ImjvR0gXhFDKbCywFD17n00lBKqEZHFTewvwgjXu5tGEk3tfb43Z7V8EfNpZKBd0/HtnocGexYyRkxjVrpL+Wr12TiArIKOQATn9EyfsG80aiampMRTMH7xVCaECNmUgPGYqOT05pMCIL7CxyAnTaqe2HIFaDVRUmiHFDkDhdNAFi+xc7BcIKCCtFLjBU00u1C+MI+S+vQgeLnCWV4QJ8/is+bDNpN9/nkkyLFwjjPGb/ZBbvCKeZswKUlK8OVtIFwudtJkC2Z8H0xcuGk7BHz3tjbMwrjA4VVFTLGyX1Q+obCyOqdxre1uYw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iQ9P2G4KO69VxplDyJPPZ2eUwe7CIFpz6V45a100YFE=;
- b=fwpujL5TDvK3kSkJ213AfeHLfUSUS42v/t7HfVYVQsnNAkao0FF4Dtfd+6PXJx4hjX7EAU77fACNaSrdrWidWORQd5/12Lvwr3TJDSbsXqUD5JqHRAFk0Lp63X3c2Awx9anvBuOU7ZhH3bz10HOhoQYIwytoHh7x7wDdkrJNa1PxCMqXQAEMVXuBVXtDvoihD7xUMSyvMmpX1Zee4bH0eQoMMb7ja1ylVJgnyK4vtE3oiKE3d/qwc9ho5wac9XH0K5/WIIDUoiGMNBA/ZjfrnohJrv61Z/pQB2SS7baH68ak/4RAWydvb8K2HiMLN3cTLVZ0BPL3xzg9CCgg2pHy2A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
- dkim=pass header.d=fujitsu.com; arc=none
-Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com (2603:1096:403:6::12)
- by TY4PR01MB12733.jpnprd01.prod.outlook.com (2603:1096:405:1ea::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.33; Tue, 8 Apr
- 2025 05:37:17 +0000
-Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com
- ([fe80::d9ba:425a:7044:6377]) by TY1PR01MB1562.jpnprd01.prod.outlook.com
- ([fe80::d9ba:425a:7044:6377%4]) with mapi id 15.20.8606.029; Tue, 8 Apr 2025
- 05:37:16 +0000
-From: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>
-To: Gregory Price <gourry@gourry.net>
-CC: "lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: Re: CXL Boot to Bash - Section 2a (Drivers): CXL Decoder Programming
-Thread-Topic: CXL Boot to Bash - Section 2a (Drivers): CXL Decoder Programming
-Thread-Index: AQHbjvNia1PhMmp5z06r6vu5ANRYCrOQF8EAgAB+mQCACLNIgIAAEfCAgAAXGIA=
-Date: Tue, 8 Apr 2025 05:37:16 +0000
-Message-ID: <ed9880a0-0dd5-4ae0-a9d0-d871fae200ac@fujitsu.com>
-References: <Z226PG9t-Ih7fJDL@gourry-fedora-PF4VCD3F>
- <Z6OMcLt3SrsZjgvw@gourry-fedora-PF4VCD3F>
- <Z8o2HfVd0P_tMhV2@gourry-fedora-PF4VCD3F>
- <cf7b97d8-4393-424c-89fc-aa810d907a67@fujitsu.com>
- <Z-1HPqufU7MnQ6ii@gourry-fedora-PF4VCD3F>
- <fb2e8912-9a64-4053-bb8c-dcaceb669731@fujitsu.com>
- <Z_Siq6JrfST1T7la@gourry-fedora-PF4VCD3F>
-In-Reply-To: <Z_Siq6JrfST1T7la@gourry-fedora-PF4VCD3F>
-Accept-Language: en-US, zh-CN
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Mozilla Thunderbird
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=fujitsu.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TY1PR01MB1562:EE_|TY4PR01MB12733:EE_
-x-ms-office365-filtering-correlation-id: 47b38687-5627-4e46-ff1b-08dd765f6bf1
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|376014|366016|38070700018|1580799027;
-x-microsoft-antispam-message-info:
- =?utf-8?B?UEZDV2VBS1dYZmhPeWpNRUlhS05JYXh3MjUyZUVNVmVmaXV2NUo1SFRDRG1a?=
- =?utf-8?B?dTRueDlrdUZoZkhkWjlGUWtvOTltck1ZOHk2bVdYRSs2Wm1SMWt5V2hJY3hD?=
- =?utf-8?B?UVdLTGxNbUUyZ1RyQ01GMC83dlg4NUV5SVJ0N3NrclNaL2RsQTUyY0NMM3dn?=
- =?utf-8?B?M2N4cml3SUk4NXNXQ0xtdE53T3ViL3B6T01GemFSSlZsVWtZb2pxRjByUTBE?=
- =?utf-8?B?UG1COTl6MGF5UWErK005WGZoaWR2S2w5M1ExRnJPMWFIU3M0QmVCSHF6cUdC?=
- =?utf-8?B?RGxuM3hIV1VqSndoSmJmeVprcU5zOXZsTkkyRmp5bW9LU3NGdHR5aUNMWWZK?=
- =?utf-8?B?NDRER3l6dy9DSWxQUitrMFFucDg5VUx5a1J1dTh2a1ZjMXJrbVJMdS83N3BW?=
- =?utf-8?B?c3dxQWViTWU5R2FGSXNSRTBHSzJvRU9OT0tmYlVvZ0Q2WWtkTktqa0Y4ZEhi?=
- =?utf-8?B?ZmFuQ01ocTNwaHM2bFJ6eFJkWjlFZzlPalN1RXB1TXFEVHc3bWVrSWFmYkZQ?=
- =?utf-8?B?Z05BSEZ2RTRKODhFbDIzTEtOTkpITnUvcTcxRmxCMUpESjlBazZSQ05OSktX?=
- =?utf-8?B?dVVzOHJlcXdDTEZGcDljQnliSkRWL2UweUNBbEs1NVRoRS9vRHZRc21WQUpq?=
- =?utf-8?B?Y1IxRTJkeDJDY1VKb3lrQTlNK0VadC9PLy9tNzFwQmtraU9VZGJpbWk1cUgr?=
- =?utf-8?B?aERmNGM2MVB3VmEycUoyOWN6dFZtSHZzaWwyWTd0eG0wNFRUZ2plOTU2cDYz?=
- =?utf-8?B?VkYwZ3lMZVNPZHRleUZ3bVk3aXFhN1p6elg3dmNZNXc5R2xia1QvVjR4VHp3?=
- =?utf-8?B?Tmt6eUlQUFV2WVA2ampWdDJ3aC92ekRlMXByYlRBejdKeFpiWm1RZHBnb1ha?=
- =?utf-8?B?Y0N1dXcvRHNTU3R0TmlLVjRVc0JicGlYRDdINmZEWEhNM2VudUozSnNHM01Y?=
- =?utf-8?B?NGxYd2lWWmgzbmQ5RGhJSFpKbGY0Zk1nZW1DZ3hQUGZYSEs0eC9PTms4d2V1?=
- =?utf-8?B?UXJZanpmYmxpL05NZVE3a3VCVjdMZDJkNFhWQ2F6MDFTVE0weFFyNm1mQkR6?=
- =?utf-8?B?UkpOTjBsam4raG9FUUdZZWM0QUY2N1NxMFY4RzdlSVArQU5TM0R6NXE3VEo5?=
- =?utf-8?B?S2haZHVMOUJ0R1I4cDQrcUhiVzdTSXBOYmtjZVNOcnltdURrK3p3OVU4U1VF?=
- =?utf-8?B?UDkxYmw2aGtMQVJsemJYN3UzalJjZmRPQ1J4NjhJb21zdHhwSUVrSW5uV2RS?=
- =?utf-8?B?MzE2YkEwVEsyaTdqcGFJalFkSTFXSWJxOGUvczdpalJUd3B1K01FMFdHRkdk?=
- =?utf-8?B?ajZ5RWZBQnBEeStCWEo2Nk1yOFRMS1hGUDdVUDhGT0JUQnVQMk44ZysvRVFG?=
- =?utf-8?B?dUxhUW1zUTE1RHYwaW9TNXJXTUpCVWJmd3gwVHd3KzBBZzhNeE8wcFI2MWh6?=
- =?utf-8?B?NXk0dHpzV2FHOTNka2wrL2h5QXo4UmZWOW92MjhRTjJVaGlnU3VsMHNkdzBW?=
- =?utf-8?B?ZFRWdkpVQmlmdzFrMi9FcEVEYW1XdndCQStCRHlDR1VmTmJXVkpia2c2Z1ZS?=
- =?utf-8?B?VmhFZm43a0pMRG5QZXF0VWdNeUk1OG1SQXFmM25FUktYNFArRHRpWEg4cndU?=
- =?utf-8?B?bGd4byt1emVlTFZBR0FMblJtcU9xQUxtZTA1NVVhS0ptc3FkWXh0Um8ybUNz?=
- =?utf-8?B?YUlwTFFpYm1XdWoyRy84cy9WU2ZXMmVMWnBjdG1xcEhWenVMUzkvNkhoY1hT?=
- =?utf-8?B?NlROOFZselFKZmhjZE5LT0dBNENFTW9uaE5VNTBHWUdXamphY1A0ZkRwRm5k?=
- =?utf-8?B?Rk1GNklGYTNRaW56Y050VUZxeEJHRGNQMytveVN1eUhneDVpZHovVXBiaG02?=
- =?utf-8?B?eGZPdUVZMDRQKzBsTnIwbGhONStMRzBrVllmYmI4QUd4VGxkNFM1dUxRdUNh?=
- =?utf-8?B?d0tpWUR3NWxlTFEwbXRmT3YvQVoycTRGN2E0M2xlblZ3cXNsR3gvNEZzMy9l?=
- =?utf-8?B?b0o2S1Z0RG53PT0=?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY1PR01MB1562.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018)(1580799027);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?dmVSc01FU1Q3R2s4d2xhaWRPSG53cEQ5bDF5dHZBNTlTa2NTK2tua20zQXhy?=
- =?utf-8?B?bzlEK3YzM29xOTA4aERZVmJtd0l2dFQ3NjczdENSWnJxeGRJSEdqcHUzRHRw?=
- =?utf-8?B?MTNYVVRTMjZUTXMvcHBQbzBMTEhhVCtmMDA2NVlWMG1oam5lNlI5RllLbHNI?=
- =?utf-8?B?cXh6Q0VaanhuSWhJQXFIM0VmUTZocWVFaGJldmExSy9vSmEvUzJPRWVQM3dW?=
- =?utf-8?B?QkZKT0RWUUswK0NmckxNa1FIQ2FEQkdiRnhVWDA3MytrQStySldhM0pVelFr?=
- =?utf-8?B?ak8xbGVVVGYvWHBWNEJ1ektVa2Uvdmo0cDhmcExieC9Lcmh1QmVtLzJKZitu?=
- =?utf-8?B?azZwekFWTmxReEQ4T2xsdEVESUljMmUyN2ZNblludHVKWHFwMzZJQi9QR2h1?=
- =?utf-8?B?RGpZbDk3NnlCblo4cFBXNmNrT1lCem4rVFNucENMTmNpV3Vhd1gzWUFxS0M2?=
- =?utf-8?B?dmVzMFBqL3cwMVRQRkdqenhtYWxYMVovc1NsK3h0VjJodEdQc3JuM29MTFNH?=
- =?utf-8?B?eG1QY2NQSTgrYWo0cjNEcFBLRDQwTkVvU3VMVkh4WitvNGFSclh4MWl2TVZq?=
- =?utf-8?B?S2JXMENrK3VhdEdMbTlKQWptdWRTUjg5RnRKTkNBVjZoYUYrdC9abEZBQXZm?=
- =?utf-8?B?L2FNbHlHdTBuaTV3NGlIaEdzNGFHRC9kQmNINm5nbHFZS0hqbHU2SW8zY2h1?=
- =?utf-8?B?ZDBkQ2lFdFNvZ3BwaE9YSU9kUHZ2Zmh3NDVndmllbUE0YzNRcDFLU0NzcC9t?=
- =?utf-8?B?c1dic2xkNHQ0V1pKY0FGT2JaYjB3Y1R3OWxWcWNCYzMvQVIzbG5ubCtDb2li?=
- =?utf-8?B?QzVsL3RxMWdVZEhLSFo2R2lGaUx2WUVMWVdFdDNqdnlqaVZRdzZQYzNVSTVH?=
- =?utf-8?B?bkMyNS9WVWJLN2RUSVJVOTVENFo5M25taldvYjFxVnBBNlkzTVBWTkNmRnE5?=
- =?utf-8?B?UHRHNVFZSkxPS2FSajZUaU9PNGxteVBOOWtYaVU2dVdqYXZNcEw5VGdaUzM2?=
- =?utf-8?B?b1lpeWZTZk05a3U1UFhRZGpZUGZjK0htei9pVnZXS1FEa2xlL0NkRUYvdlVa?=
- =?utf-8?B?bkhVZ0pyRUY2aklVWkh0TmJ6R3BhT2xvVkFkQVJTTTNiNW82TFNlamxwK3NC?=
- =?utf-8?B?bmU5K0VrS216SW53YTFPZVFLeXR2Z2hKMHR4a0h2WGwxRW1BeDlMT3FSVHBB?=
- =?utf-8?B?QllFRStmMHZxZVRwQ2hiaHdjVDErWmRGYnhvenlXdjg2eEhhVWgxUG9aTDNo?=
- =?utf-8?B?bE8xTFJKc1daMkhIOXpWQm0wMjZQRlpxakpXS1BSazJ4eXQ3ZnAxYStqTnUw?=
- =?utf-8?B?ZTJBSUpyNStEUWJpR3E5VHRTcXRBak85NHUxSGZKT0dvckgzTHVuREJ3aEVn?=
- =?utf-8?B?eHI1N2l1ZElpMzlJUHpPYUQwSldLT2Z0WHhmdXFsWGNReVJtQ1VQOEUvbGx6?=
- =?utf-8?B?V0lMMkRjeldHOW5tS3FkNjF6Mmd4MXFjaHc1ZzBZbkIvNC9tWStHckRyUXk3?=
- =?utf-8?B?V2krOXMvZnJ0bjdJVWFIb2U5VE1UdkFaZXJ6NmF5USs4ejhYNUMyYVZKVGdJ?=
- =?utf-8?B?QS96SEcybjNGdDBXMEQ1QWlLeDdRRDVkUzhhTHg4a3FqL2Z4S2ZGNGQ4WktH?=
- =?utf-8?B?MTkvR3czRUVXWFFnY2xHVTBOMStNMmZEMkY3ZnhMbGtzaG5FQ1gwd3FoQ3NZ?=
- =?utf-8?B?SkhMSmV0WUxtRmkvQ2hmSTZodW5pR0JvT0oxMGJxOG9KNjNPU3hLWXJ5UENL?=
- =?utf-8?B?aGFpUzJKUStBSGNYdzluYVBpTlFTMmdqODZsQmRkdkJDeEg1TENOTnBqMVNp?=
- =?utf-8?B?SDd1R0ozaktvc1V4M2kwdDB0TDMrT0xBQmxyZEVna1JxdVRUdVFWd0gxR0ZZ?=
- =?utf-8?B?NWZxSjRGdWJVUVZsMVQwSk5CT2hoY3NlMmxINlB6Wlc2OFFmdU4vK1ludXY0?=
- =?utf-8?B?NHRiSWY5NkZUN0loelMzL2JSeHlYOVVQai9YQmNpWXpZZmhJd1ZNeTVIcWpY?=
- =?utf-8?B?ZzVMSVRTNUZScFFVUFoyYVNwQ2JrMk5UN282U3VwZGVmNVJSWmxlb2Nac0Iz?=
- =?utf-8?B?ckEyTDUvTEJaNVJzdk42dTRkR2dqNm5KS3BqVzdhOU9Na2VFbWREbUM2cmVX?=
- =?utf-8?B?RGp6V1ZuNi92NmdycEJSaUtCK1NNaEpqNEk4TzJYR3FYcFRvNmhlOU5RT3FZ?=
- =?utf-8?B?YkE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7D80A90760E4F54F940B6CF18C025748@jpnprd01.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LdZSueD3"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5382HcwS023850;
+	Tue, 8 Apr 2025 05:38:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	W04bo2gjFy9d2YdweaHf66J+BDIRb38cQgx3cFMMsn4=; b=LdZSueD3a6EOUCka
+	sX8FyBl9GQUv3KffWK2C5MC3m0pxh0ht4xgOQCNV+M5E4gASodlvwZmhROwmPXoJ
+	v4NqzrXTi0kLZ+Q97d69RYLxmIBsjCMPNybDhszBBlzIQPcdk/R3lVHLaXGYPFss
+	T/a0JCm+D1NZFemx/KGxC8csylD5oQdIU9dzMOYa7rrfZ1PtlS0Pls6fGQND92kn
+	l12/fphn5vHLMOCGZ797jwUotArSVQC8wX1FC6mob0AZ2pkK1Ef8mcyQyXLNRMoZ
+	PTpFA6w1aJevpJkfbzYj9QGt05jbXdNf+1WbSxOQKjFeWLmpiPC1Jc6v/qLZBbFD
+	57I48A==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twftehmp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 08 Apr 2025 05:38:09 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5385c9cY030548
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 8 Apr 2025 05:38:09 GMT
+Received: from [10.217.217.240] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 7 Apr 2025
+ 22:38:05 -0700
+Message-ID: <d09641c7-c266-4f0a-a0e3-56f63d8c9ce3@quicinc.com>
+Date: Tue, 8 Apr 2025 11:07:58 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	NTxJ6MF2LUTiifi6NlXz9p4i3InrD+HRPPrRbaSYssUELgR8wpuPf5L+rdpAqoNpjhp43L+0AgH2JZELUfUbIM7PlJABUelc65KYJpR6P2jl35/BnzYlOMjYh2aW92NHh2VjX0EzBztZ+fJQPmpmZ9/AKcwlHvBO9LczMnfOuhDyRKaTH9jdB0gTzem0ff6i7jZ5r+4hOzmyLMEWb2dFCOQmt/ZtNVAO1YJgIzfInfzvj2NbQpIyt0tRhYdvoJBKf59W1OSFCuHCSUpqwTU+3vTtsO7DQcBqBuve6GaMcQ+lw3IihTUOD23iwpyyicWPXRME6WcB8AJ1KBz/R4q2dpltc6CoCLAY6s8QhHqGLNAz/uSqE1h9UtsOh4tyYpEoMpUcYzn+78XPiF9ZyHrq+Pq7q0U8LhweVZPoAOh6pF9A9QT2XAQKTeR0odc+bbi4OUNjfQIEAWJGjFWo4K91qz8XW/ItkbeR/cdkUkKkF1jF73/uoHPrW6n8pSTrUWqV6KkyHGsZyFGMuL3nsaiojN4n3mqMn/Ect+QNudIYHoK6OODUjg0Nv1ZlS2ilORL2yb4eH5t6hxBKC4f3gCg10kQR9X75OJR0OvwT558ERDxPiPL5jE9tP4u1ap9jJUe0
-X-OriginatorOrg: fujitsu.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY1PR01MB1562.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 47b38687-5627-4e46-ff1b-08dd765f6bf1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2025 05:37:16.1142
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: eePbA50bJTWkV5yJSfiWZ69l8SHyNxq1jUfuMNmtbe2bYMyJl45bJ/7iCafB4oN+ou+mvbPOH4Q9TN2PhX9Gng==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY4PR01MB12733
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2 2/2] scsi: ufs: introduce quirk to extend
+ PA_HIBERN8TIME for UFS devices
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+CC: "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        "Martin K.
+ Petersen" <martin.petersen@oracle.com>,
+        Alim Akhtar
+	<alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Bart Van Assche
+	<bvanassche@acm.org>, <linux-scsi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <quic_nitirawa@quicinc.com>, <quic_bhaskarv@quicinc.com>,
+        <quic_rampraka@quicinc.com>, <quic_cang@quicinc.com>,
+        <quic_nguyenb@quicinc.com>
+References: <20250404174539.28707-1-quic_mapa@quicinc.com>
+ <20250404174539.28707-3-quic_mapa@quicinc.com>
+ <hcguawgzuqgi2cyw3nf7uiilahjsvrm37f6zgfqlnfkck3jatv@xgaca3zgts2u>
+Content-Language: en-US
+From: MANISH PANDEY <quic_mapa@quicinc.com>
+In-Reply-To: <hcguawgzuqgi2cyw3nf7uiilahjsvrm37f6zgfqlnfkck3jatv@xgaca3zgts2u>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=B5+50PtM c=1 sm=1 tr=0 ts=67f4b641 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=C3wUGYcifkSLtJB_Z24A:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: eoztKyiyFp5nqaVSt1ZwT0ZLfSVVnkpU
+X-Proofpoint-ORIG-GUID: eoztKyiyFp5nqaVSt1ZwT0ZLfSVVnkpU
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-08_01,2025-04-07_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ suspectscore=0 malwarescore=0 bulkscore=0 phishscore=0 spamscore=0
+ priorityscore=1501 adultscore=0 impostorscore=0 lowpriorityscore=0
+ mlxscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504080039
 
-R3JlZ29yeSwNCg0KDQpPbiAwOC8wNC8yMDI1IDEyOjE0LCBHcmVnb3J5IFByaWNlIHdyb3RlOg0K
-PiBNeSByZWFkaW5nIG9mIHRoZSAzLjEgc3BlYyBzdWdnZXN0cyB0aGlzIGlzIGFsc28gZGVmaW5l
-ZCBieSBpbXBsaWNhdGlvbg0KPiBvZiB0aGUgIkltcGxlbWVudGF0aW9uIE5vdGVzIiBhdCB0aGUg
-ZW5kIG9mIHNlY3Rpb24NCj4gDQo+IDguMi40LjIwIENYTCBIRE0gRGVjb2RlciBDYXBhYmlsaXR5
-IFN0cnVjdHVyZQ0KPiANCj4gSU1QTEVNRU5UQVRJT04gTk9URQ0KPiBDWEwgSG9zdCBCcmlkZ2Ug
-YW5kIFVwc3RyZWFtIFN3aXRjaCBQb3J0IERlY29kZSBGbG93DQo+IA0KPiBJTVBMRU1FTlRBVElP
-TiBOT1RFDQo+IERldmljZSBEZWNvZGUgTG9naWMNCg0KR3JlYXQsIEkgYW0gZ3JhdGVmdWwgZm9y
-IHlvdXIgZW5saWdodGVuaW5nIGd1aWRhbmNlLg0KDQpNYW55IG1hbnkgdGhhbmtzIGFnYWluLg==
+
+
+On 4/7/2025 12:05 AM, Manivannan Sadhasivam wrote:
+> On Fri, Apr 04, 2025 at 11:15:39PM +0530, Manish Pandey wrote:
+>> Some UFS devices need additional time in hibern8 mode before exiting,
+>> beyond the negotiated handshaking phase between the host and device.
+>> Introduce a quirk to increase the PA_HIBERN8TIME parameter by 100 µs
+>> to ensure proper hibernation process.
+>>
+> 
+> This commit message didn't mention the UFS device for which this quirk is being
+> applied.
+> 
+Since it's a quirk and may be applicable to other vendors also in 
+future, so i thought to keep it general.
+
+Will update in next patch set if required.
+  >> Signed-off-by: Manish Pandey <quic_mapa@quicinc.com>
+>> ---
+>>   drivers/ufs/core/ufshcd.c | 31 +++++++++++++++++++++++++++++++
+>>   include/ufs/ufs_quirks.h  |  6 ++++++
+>>   2 files changed, 37 insertions(+)
+>>
+>> diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
+>> index 464f13da259a..2b8203fe7b8c 100644
+>> --- a/drivers/ufs/core/ufshcd.c
+>> +++ b/drivers/ufs/core/ufshcd.c
+>> @@ -278,6 +278,7 @@ static const struct ufs_dev_quirk ufs_fixups[] = {
+>>   	  .model = UFS_ANY_MODEL,
+>>   	  .quirk = UFS_DEVICE_QUIRK_DELAY_BEFORE_LPM |
+>>   		   UFS_DEVICE_QUIRK_HOST_PA_TACTIVATE |
+>> +		   UFS_DEVICE_QUIRK_PA_HIBER8TIME |
+>>   		   UFS_DEVICE_QUIRK_RECOVERY_FROM_DL_NAC_ERRORS },
+>>   	{ .wmanufacturerid = UFS_VENDOR_SKHYNIX,
+>>   	  .model = UFS_ANY_MODEL,
+>> @@ -8384,6 +8385,33 @@ static int ufshcd_quirk_tune_host_pa_tactivate(struct ufs_hba *hba)
+>>   	return ret;
+>>   }
+>>   
+>> +/**
+>> + * ufshcd_quirk_override_pa_h8time - Ensures proper adjustment of PA_HIBERN8TIME.
+>> + * @hba: per-adapter instance
+>> + *
+>> + * Some UFS devices require specific adjustments to the PA_HIBERN8TIME parameter
+>> + * to ensure proper hibernation timing. This function retrieves the current
+>> + * PA_HIBERN8TIME value and increments it by 100us.
+>> + */
+>> +static void ufshcd_quirk_override_pa_h8time(struct ufs_hba *hba)
+>> +{
+>> +	u32 pa_h8time = 0;
+> 
+> Why do you need to initialize it?
+> 
+Agree.. Not needed, will update.>> +	int ret;
+>> +
+>> +	ret = ufshcd_dme_get(hba, UIC_ARG_MIB(PA_HIBERN8TIME),
+>> +			&pa_h8time);
+>> +	if (ret) {
+>> +		dev_err(hba->dev, "Failed to get PA_HIBERN8TIME: %d\n", ret);
+>> +		return;
+>> +	}
+>> +
+>> +	/* Increment by 1 to increase hibernation time by 100 µs */
+> 
+>  From where the value of 100us adjustment is coming from?
+> 
+> - Mani
+> 
+These values are derived from experiments on Qualcomm SoCs.
+However this is also matching with ufs-exynos.c
+
+fsd_ufs_post_link() {
+     ufshcd_dme_get(hba,UIC_ARG_MIB(PA_HIBERN8TIME),  		 
+&max_rx_hibern8_time_cap);
+     .......
+     ufshcd_dme_set(hba, UIC_ARG_MIB(PA_HIBERN8TIME), 	 
+max_rx_hibern8_time_cap + 1);
+     ...
+}
+
+Thanks
+Manish
