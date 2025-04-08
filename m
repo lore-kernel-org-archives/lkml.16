@@ -1,113 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA4C62116F4;
-	Tue,  8 Apr 2025 06:23:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D9D218587
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 06:23:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744093402; cv=none; b=nTm2gbibdrLu6iljimwEe1tx5WYUpKeVN9ki8QnIRBI4GSXBaTnrBR3m6/U0M9gdIZOocb8VRd49yVpCZlXbxG5KJXZ0enK5pzKYEWPWhDaMeBs37BhIiUOoS4jN51xbPI8BBRnvV4hmuw8iEF+LVvEA1a0uX3OWt6KBu5kjJ9E=
+	t=1744093424; cv=none; b=a4Un6gaoLjuEosKsG6imMY7X+/Ac++xBtjgYmcd55k0zUTA3EO+8RcWYBI02ziuEwAgAY1KrOs60+sfKXvVO03wd5hXvPl7wWna7/0GmNu8XgeU/D8Uh4b3SoPWqYHQ7OhAnCsixUI2t69W1G8sSguIQlh3MKciIJTGdS5sTaYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744093402; c=relaxed/simple;
-	bh=vDlFkI7K44fG/1eX2PGlhRalUbXRAzJfsPAtS28hMhE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nw3vkIeB0m27K32Wz/EFHUJ9vSy13s2P5x7O5AfWW/Kf4MtBonWQOZr0IRZF/2USfVqr2IRZPbjeAO5tiyoKLa8PMwtgb1zfDCqI1kW6FEI0CUmgdw1k/pQ6y5TcN2xqZtfMzA0jLsIWldypAdygc8DIimMaUdchziI3rbsyYdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aaTj/65c; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744093424; c=relaxed/simple;
+	bh=gQwgHMK+g5MP4cnX6961bnkS2wSa/8ntMGORd4vyZ1I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B2rfLQatQFqh2axWZFm2iqkvEEoUTDD6dxtp6ALQxPtRp4M/KmLd06uXv725Hkl/3ykG4SHe1A53gn0tGXQcEVXN4uVHhtdbe+Hsy9O7oe8d7C4FebF6hU4pS1+psUvg9gd9XocsbJZGl/+a+vNMBxvYl85Op1LSJbceL7AeNmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=YzGd/NAe; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aaTj/65c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CEE0C4CEE9;
-	Tue,  8 Apr 2025 06:23:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744093402;
-	bh=vDlFkI7K44fG/1eX2PGlhRalUbXRAzJfsPAtS28hMhE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=aaTj/65cKDusEpdjo46yvcT+JBtLHGM4U30oO5yXxUGKqMPzBBpN6N8H60NYepB7t
-	 kndKlyUUSH0Zjgnb+EAI79tXth0zIJ80Zm5+Li2NYPeNLWlsCSspcjIE51/uK+3kPa
-	 a+DW6WRFLWsCbMFqGeCVU8GHaoVkqX/4yxniucmEb/isl1jDcW8w8RBY1tZ0Vi03jb
-	 QnZDgPK2bbgCMHfcZN7aKvkxc2qXGm0pXacNWPTlrSSCunlolsV3gk5eBlrzqfZAEE
-	 7EymTebsmnitxhpsCPU+mTZqedaQbxuCVsG8Py3FFAfHgHQHCo7L9CrpBG/ggurJ72
-	 0dWSMfwl6aMlA==
-Date: Tue, 8 Apr 2025 14:22:56 +0800
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: Sean Anderson <sean.anderson@linux.dev>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scripts: kernel-doc: fix parsing function-like typedefs
- (again)
-Message-ID: <20250408142256.4b36b7e9@sal.lan>
-In-Reply-To: <87h62z8utr.fsf@trenco.lwn.net>
-References: <20250407222134.2280553-1-sean.anderson@linux.dev>
-	<87h62z8utr.fsf@trenco.lwn.net>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="YzGd/NAe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=gQwg
+	HMK+g5MP4cnX6961bnkS2wSa/8ntMGORd4vyZ1I=; b=YzGd/NAe/8LUbXa9Mgha
+	8ooVPcpS4xEJHgXxaxw37j/0FAhN8oHEC0vMx95lfXCD+swYASZHsXpSodIgonoV
+	/OgBaB4bCbREHGTK7d6Q6Pky3DOHQFP/ecSmnywEcRgTrbc3a0roK7wUytd40F5u
+	zIh1ldeit7Pq7NJPwhveNWtet2ofobG38knUSlfQ1gFweUgwiljI9kX/pqnp9M3Q
+	mZLtrjbo9MJ/4IQHBinQWJ+/AdzDB5jZKVSFtVKDJeGD1T+m9fS+NMBduI83K3r9
+	UdpPm1BSA7PTkzauc2uj+CGXfQNmxZNSU3NPvw7hylXQV/q+biZgQKg7bDq0leEX
+	aA==
+Received: (qmail 4069015 invoked from network); 8 Apr 2025 08:23:31 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 8 Apr 2025 08:23:31 +0200
+X-UD-Smtp-Session: l3s3148p1@rEQ9ZD4y0LkgAwDPXyfYALbiJ46yNPq3
+Date: Tue, 8 Apr 2025 08:23:31 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Thomas Bonnefille <thomas.bonnefille@bootlin.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	=?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@bootlin.com>,
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	=?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <clement.leger@bootlin.com>
+Subject: Re: [PATCH v3] ARM: dts: r9a06g032: add r9a06g032-rzn1d400-eb board
+ device-tree
+Message-ID: <Z_TA46i0KfFq89ch@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	=?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@bootlin.com>,
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	=?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <clement.leger@bootlin.com>
+References: <20250314-rzn1d400-eb-v3-1-45c4fd3f6e01@bootlin.com>
+ <D8IEWP78KVOE.1SD29H0S51FZM@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="9lPWgJKryjainis/"
+Content-Disposition: inline
+In-Reply-To: <D8IEWP78KVOE.1SD29H0S51FZM@bootlin.com>
 
-Em Mon, 07 Apr 2025 16:34:24 -0600
-Jonathan Corbet <corbet@lwn.net> escreveu:
 
-> Sean Anderson <sean.anderson@linux.dev> writes:
-> 
-> > Typedefs like
-> >
-> >     typedef struct phylink_pcs *(*pcs_xlate_t)(const u64 *args);
-> >
-> > have a typedef_type that ends with a * and therefore has no word
-> > boundary. Add an extra clause for the final group of the typedef_type so
-> > we only require a word boundary if we match a word.
-> >
-> > Fixes: 7d2c6b1edf79 ("scripts: kernel-doc: fix parsing function-like typedefs")
-> > Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
-> > ---
-> >
-> >  scripts/kernel-doc | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/scripts/kernel-doc b/scripts/kernel-doc
-> > index af6cf408b96d..5db23cbf4eb2 100755
-> > --- a/scripts/kernel-doc
-> > +++ b/scripts/kernel-doc
-> > @@ -1325,7 +1325,7 @@ sub dump_enum($$) {
-> >      }
-> >  }
-> >  
-> > -my $typedef_type = qr { ((?:\s+[\w\*]+\b){1,8})\s* }x;
-> > +my $typedef_type = qr { ((?:\s+[\w\*]+\b){0,7}\s+(?:\w+\b|\*+))\s* }x;
-> >  my $typedef_ident = qr { \*?\s*(\w\S+)\s* }x;
-> >  my $typedef_args = qr { \s*\((.*)\); }x;  
-> 
-> This seems like a worth fix but ... we're kind of hoping to replace that
-> script entirely in 6.16.
+--9lPWgJKryjainis/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi Jon,
 
-The same regex was preserved at:	
+> I'll send a v4 soon.
 
-scripts/lib/kdoc/kdoc_parser.py:        typedef_type = r'((?:\s+[\w\*]+\b){1,8})\s*'
+Please do with the minor review comments addressed. I have some patches
+depending on it. Which means that I am using this DTS regularly now and
+it works great.
 
-It sounds to me that all we need to to is to rebase this change from
-kernel-doc to kdoc_parser.py.
 
-> 
-> Mauro, do you have a series for me along those lines?  It seems like
-> time to put that in if we're going to do it.  Then maybe this fix could
-> be adapted on top?
+--9lPWgJKryjainis/
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I'll rebase my latest series on the top of upstream and send you.
+-----BEGIN PGP SIGNATURE-----
 
-If you prefer, I can rebase this patch on the top of it, preserving
-its original authorship and adding something like:
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmf0wN8ACgkQFA3kzBSg
+KbZrfhAAluEQLV+tfzv7xuGV7MUBYyc/AO3qenfaU6TtbMNnU+S4EOuVT2ZHFfpo
+07HoNPprmpKFGJ6BP9o0ZyOzjn8BvA7iRaWH8a4g8+OBBOzqRgthwcrmiuDhkDHz
+Q5CtFfeVW++uDIrrhL5J5BDuCI/CpTOc1CC1zWPpA9DOdh2hxOqxOfisf0SDXrre
+VaLgjKZSVqEgvRXKvdQjD/gzByW8E3oes7ZhDz9sQc6Hp1SXHX1+0/M73lELU7o5
+c2FKMe/ePrb+3ldxdvvzu8H8xUIWLbkajv8G+aV4G3608uEPXCkLFiJGdJsF8YJI
+8yXz5BcF9CWh+0an6tfCkeGDLQ22pcVf3urQI+VKXXjDcIZfLtBohZ9r0LX+e5ON
+o9oZudSSH8pl3MZzoW7T4Y/f3eNnQb3MRQ4+7LVaGcNLUoXz6eN65/89Bq+0077K
+ZB+zNMWIwkKYf0VazsXhmxAsmFcfMCVSH2s35uAVq0nELRG1GeczK5eBorS+/3to
+EUTi+KHFwaNL3/wIFPrIyBXvd+LpjGS+54sHM0PhRVmLX6153gwN4wsWXCvOy+Xe
+ZVeGhQp9cvx7+Yd12yTQy+dA70MoDaQxKoKNE3NcaCQVQUEdLd45qAhtZcoD952a
+o2LnIwEYFnX+88i065V5DN9P/o7ZhpK6+7oXPko2gBzn1/vgOIo=
+=HfnY
+-----END PGP SIGNATURE-----
 
-	[mchehab: modified to apply on the top of kdoc_parser.py]
-
-and submit altogether.
-
-Another alternative would be for you to merge first my series, and then
-Sean would send you a version of it on the top of the new kernel-doc.py.
-
-Regards,
-Mauro
+--9lPWgJKryjainis/--
