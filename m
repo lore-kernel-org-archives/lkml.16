@@ -1,72 +1,72 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAEE22571D6
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 22:20:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CB8025743A
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 22:20:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744150857; cv=none; b=J+K3WemfFKwPZjtP9NFA1cN/asBI+wN8EXf8/7ZCQfmmw7Y/E3MnLh9rPP6cwgIJbCAZ57iGRvPFmy5pistiZGMCXazr+XzjCYFMy7UhtUHdDwlVDVQKBpfS5INNTzw9XupJKv9Cpg8k/xAQ6iyoX1FqjJqldlZTZ3Bb2PHmg2Q=
+	t=1744150858; cv=none; b=jlgxqMFT6APEaqLLaLtXce0CE+1AmYVbK222xAAHnkEdEEAIRwzrC3sqaeIUaRxFjiogDU3yfiq5mblPZKtrCGDjs6M7wPt2bVqT7WtW8btManxJF3y8HIpe9/TNKl6BFDrHN5Bi4X1fT9zDVMxO46InBF+oUShM31OBHhhnbjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744150857; c=relaxed/simple;
-	bh=SiVbOWZe/96Umw9JJTP6IhACNDyTr4xaMMduXTYLSCE=;
+	s=arc-20240116; t=1744150858; c=relaxed/simple;
+	bh=9MoYSy+i6KAZhpILjMy1L1BRjlM996c5bRCz4EBRL14=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RnmEDJUApq8AB8dtdmJA6hA0X5yAk+hafltnJnDGfY4MMKd9R06QxrLHz1ibgzY014DqjZC5nQBn10ZnLzSIs+0oaVpO6Oggr2+81ZtCYhFUB/BI4vF4uWTGAs4xq6g1SkzCUTXCex/k/MeZ4/l6+I8yPCqlxKJEEFikLxGOumQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org; spf=pass smtp.mailfrom=neverthere.org; dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b=DmEdCdhn; arc=none smtp.client-ip=209.85.215.182
+	 MIME-Version; b=nTKJnsSAHrjEZWv8fO4b+76pfWj+4cN0UBOwWTQRCspY9OMkl0r+63XdnexX8BY8bZjzELzg9DV85OzyfMKb138VoU+dLxdRgxDz323J8LBUPOMXWAWHWxnkl02OxIfpT/X2PdYIlqtBJWnfdGAFsh140kv2il7pE7HYbxXpKh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org; spf=pass smtp.mailfrom=neverthere.org; dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b=XCXCCR3/; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neverthere.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b="DmEdCdhn"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-af5a4cd980dso4357336a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 15:20:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b="XCXCCR3/"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-22622ddcc35so82605115ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 15:20:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=neverthere.org; s=google; t=1744150855; x=1744755655; darn=vger.kernel.org;
+        d=neverthere.org; s=google; t=1744150856; x=1744755656; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ERsZ7LaPH9EF0px3KCn5mDa4zdfj5RpKAWp42LkC4Dk=;
-        b=DmEdCdhnQ0ZRTRoi1n9NA9KfdvU+FsKzmqr2YB+TxVOU6bE8SaVMfted8HR9wIFHqd
-         Km6Yv8ltrwn/YUq+E23gitgH+Yd7S28jna3YRZtFqn17oRtN1FXiOBgH3Dl7AlEWb2rz
-         KB1OYsqk01imqFj0RZmmkuv1CUxvoN8qQnoZd4dUVOJRJv9rD+ZWnj6mrMxMMqeu9bP0
-         r4gFwM2582mEpGY8woBg8+QeKuteGG2FjBXt6rrW9NfYGMGtKJJKLaaN+T3nD5UkbT1e
-         sYJlyl3IZO/pFk4P6XFJtTnujjcFSzVlx22dLpEVwGF/7dhhsbyw3QvJCBZd0gBrqbbs
-         UUyA==
+        bh=bj7aeiZmrkJPreyeHTYcjpGxFgUS2pxAs3IkhIasNDc=;
+        b=XCXCCR3/S9kbPd0p3dGMBbOG9IrGiFr8F0F/p/8b7qbSUILWCc3YKA7chYeyXJrLvY
+         Xt4tCT5cZdaJF5vuaJGMNJvIrf2H/BhNcyFD8OvNbBWv7Azt4dvRFfbymjJ9nHoXRFCs
+         3UPEKGoo7llMjbuHDHgehQDnPlM2QRmQq7tcjC2ZMn98uiFnnF3GJp0PKiw4z2+QxsSl
+         uwNNIzU3mLsiqEE7wXrWj5Q/MeBtT7zQEM/EnnaS7gBGMBBmxy7Q8TcOCKIgzCVxDtGA
+         uHQMolVQ9nh4/ZbXByAmn5b5spPT4h2BiXIVEzNCXV8J6hUAKYQUaB8vg4fQpwYHx2Md
+         6FYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744150855; x=1744755655;
+        d=1e100.net; s=20230601; t=1744150856; x=1744755656;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ERsZ7LaPH9EF0px3KCn5mDa4zdfj5RpKAWp42LkC4Dk=;
-        b=nmM2Ef8SG7nWTotgKgpIqkqWoalQfgy5UEMY8uS59b9M8gZ6dZjeLHCrNRWEXi4Lm2
-         QqIj/5titTQ5yLyteH7JBUCzLoQH1nqqf1tgVG9YvvGFjrwh5L4GmypoIG+pmlaGNIB7
-         lLDHpFVHxTEprcs3rLW1mpcAgUTfBEEYUm3d+LL7dIaXjIbfpFJElQMdD7C1n1F7NPCP
-         1+ce8cBVyetRYLU99VKwBSIfXp84PbRk16jVyHLUsD9CA0BgcproRe21yIsw+K4ORNfv
-         VSxfaQLR6MaJryrVha1UksaXtSlu1MYHZKUcZjFifrhJ/iz1WcmdUKFCMFO+9S3FKkD3
-         g+FQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUAMaEdhTmh9foSDqhTloZDLBtKBdwIYM9MYNduhm8tZfJBp8MsUHMYmhFBVTsp3CLTHO6i9L3qykdD6J0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDo52/dy/Xvd1p1aM9hE3cknZdfuKVWDcE5fjLYlK1rFy9YjHo
-	4PB+ZxXIC/QHs9Fa92ptLXhXr3+7PmOa3CMBXhYBMV8bz+8oQNVX1/EyItqlOw==
-X-Gm-Gg: ASbGnctcEY1c30Gc4wiAM7kojeKr3dN690HRj1uMPjZqrLBE4BFIkvWO5uyvyi2PVii
-	9ZDl9ylDMkmrTANfVP5yrhW0nyKZ1K0HEulsbXM3PR77C1cGyrszWPC2xhRF08LZPgTRlKvyUwl
-	EdM0vlX+8sh0igwIQZHcnRTgPT87slXAo9z3Ipzw7G6kmTk76+xrDlMIEONcVA/HWo2Jypzj9Mx
-	w19XHBGVN6wMeIQAxNFdCq01KrdlFHsIFEZVWV9zsRC5t58ERGtzVKbJZ61Li1gXDn1CFijskeF
-	CfwRlPHzDZfDAfScoMhnjutxpdt2V4RKM2bxNGGw0ZAU5gASLKOG2KIsMGayUp6aRnmOkfLN812
-	fP/F5NrsE9kqNknbwzZs1
-X-Google-Smtp-Source: AGHT+IENWxG8nUy5YKs94+WWP546/fjQ0DvxUsIJil5vbvQG4ajvr61NBzhqFV0rmLwmouYIT48Y9w==
-X-Received: by 2002:a17:902:f644:b0:224:c46:d167 with SMTP id d9443c01a7336-22ac29a7d25mr12909955ad.16.1744150855114;
-        Tue, 08 Apr 2025 15:20:55 -0700 (PDT)
+        bh=bj7aeiZmrkJPreyeHTYcjpGxFgUS2pxAs3IkhIasNDc=;
+        b=an5ynM5c31iosGKlBdLvh4O+Z2z1PzljyAdEiUHaaUhr4ZOTUCMP6p/6EgXUQasZF3
+         fRJeujnJVWEOfkkrf+EYDN4gbvB5MKgo8WbhjQMw2FJRBy+lrGPIqSsOxoVO7eQJje3K
+         ZxrrG6aBa9OJfmLvQl4RikUCGEHSCBHj878cymd7lErNPktVjYVab2GMtqzorGV0JJvM
+         2R3KuzMU66XuZL3rJAqz8a1rAG4b4rFefvDtzuKG+Bq4XHvoz8D/9mNhv4aHDhbcCouK
+         7SJ2PEioYOJPezTxS3QJX3Cks5SD/Oa0hcqRx+CflsojXVH3c6+a0bVidRbIo1pWF4mV
+         +vgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV4UKvXhaSs2cOwn+wdGzW5PUZF5oxBuKdNY5GtmO6DO+IwRQ7G87qQawDB6B0/K4iZbOE/7lW2337bxY8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQ1qZocx5UWjV6rI78WVbSESxPlDJM9numFINevQcwrqFRY8h5
+	tfhkkwxKntdeo7YbSBvWa7eJIXe88VZi692au5rWFHBYmachq21JjFKjivJA0A==
+X-Gm-Gg: ASbGnctcddkmtivZfFvtxjnfESpa7ZzxjPphdFP2n0gx4UM8S3maj2pr6Se4dUxeg0O
+	7d3klJS2h8nlBklrx/X/V2CWhJ0HuTvTLys92nxE2dq/XdMeoazxct3NH5ua/bxL0/4l4M2nJ4E
+	Md7PsX9M5Sb2bk9qMywGupekcQFjYHisqgtGqJLX4XonJElkyyMkwaBKY2kwlEysvCZhjYxMfzA
+	YCKpcaxiij4VWBTnzm3B47iykFh28kEztZZC2EFCVqni1OB2wddOwLd59mT1+v8yD7W7fw/WpUD
+	ysOUNYUGxYrovHreQZ43KSSNBJ8IWAga253IT9p7daEjT5Cw7mjS7EmpgTgFCSwn7+hJipPPUay
+	X3feceiPt0A==
+X-Google-Smtp-Source: AGHT+IHJQsYnkDlPjG+SnVvIKi+ZRS5hRzX9ZAJr0r8knqb7BsSR2a7FOCMN8XF9PE0LXQx/O9k7+g==
+X-Received: by 2002:a17:903:32cb:b0:220:c164:6ee1 with SMTP id d9443c01a7336-22ac2a1df5cmr11766275ad.32.1744150856306;
+        Tue, 08 Apr 2025 15:20:56 -0700 (PDT)
 Received: from tiamat (c-69-181-214-135.hsd1.ca.comcast.net. [69.181.214.135])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785ad7fcsm106309705ad.4.2025.04.08.15.20.54
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229787780b6sm106086545ad.258.2025.04.08.15.20.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 15:20:54 -0700 (PDT)
+        Tue, 08 Apr 2025 15:20:56 -0700 (PDT)
 From: Michael Rubin <matchstick@neverthere.org>
 To: gregkh@linuxfoundation.org,
 	dpenkler@gmail.com,
 	linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org
 Cc: Michael Rubin <matchstick@neverthere.org>
-Subject: [PATCH v1 09/14] staging: gpib: tnt4882: lines exceeded 100 columns
-Date: Tue,  8 Apr 2025 22:20:35 +0000
-Message-ID: <20250408222040.186881-10-matchstick@neverthere.org>
+Subject: [PATCH v1 10/14] staging: gpib: uapi: Fix CamelCase and IBA Dup
+Date: Tue,  8 Apr 2025 22:20:36 +0000
+Message-ID: <20250408222040.186881-11-matchstick@neverthere.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250408222040.186881-1-matchstick@neverthere.org>
 References: <20250408222040.186881-1-matchstick@neverthere.org>
@@ -78,32 +78,95 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Adhere to Linux kernel coding style.
+Resolved duplicate entry for IbaSPollBit vs IbaSpollBit.
+Correct CamelCase for IBA enums
 
-CHECK: line length exceeds 100 columns
+Adhere to Linux kernel coding style.
 
 Reported by checkpatch
 
 Signed-off-by: Michael Rubin <matchstick@neverthere.org>
 ---
- drivers/staging/gpib/tnt4882/tnt4882_gpib.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/staging/gpib/uapi/gpib_user.h | 65 +++++++++++++--------------
+ 1 file changed, 32 insertions(+), 33 deletions(-)
 
-diff --git a/drivers/staging/gpib/tnt4882/tnt4882_gpib.c b/drivers/staging/gpib/tnt4882/tnt4882_gpib.c
-index caf53f8ded2e..3b29f541fd49 100644
---- a/drivers/staging/gpib/tnt4882/tnt4882_gpib.c
-+++ b/drivers/staging/gpib/tnt4882/tnt4882_gpib.c
-@@ -539,8 +539,8 @@ static int generic_write(struct gpib_board *board, uint8_t *buffer, size_t lengt
- 	return retval;
+diff --git a/drivers/staging/gpib/uapi/gpib_user.h b/drivers/staging/gpib/uapi/gpib_user.h
+index ff5a257f9a01..e02323508245 100644
+--- a/drivers/staging/gpib/uapi/gpib_user.h
++++ b/drivers/staging/gpib/uapi/gpib_user.h
+@@ -253,40 +253,39 @@ static inline int gpib_address_equal(unsigned int pad1, int sad1, unsigned int p
  }
  
--static int tnt4882_accel_write(struct gpib_board *board, uint8_t *buffer, size_t length, int send_eoi,
--			       size_t *bytes_written)
-+static int tnt4882_accel_write(struct gpib_board *board, uint8_t *buffer,
-+			       size_t length, int send_eoi, size_t *bytes_written)
- {
- 	return generic_write(board, buffer, length, send_eoi, 0, bytes_written);
- }
+ enum ibask_option {
+-	IbaPAD = 0x1,
+-	IbaSAD = 0x2,
+-	IbaTMO = 0x3,
+-	IbaEOT = 0x4,
+-	IbaPPC = 0x5,	/* board only */
+-	IbaREADDR = 0x6,	/* device only */
+-	IbaAUTOPOLL = 0x7,	/* board only */
+-	IbaCICPROT = 0x8,	/* board only */
+-	IbaIRQ = 0x9,	/* board only */
+-	IbaSC = 0xa,	/* board only */
+-	IbaSRE = 0xb,	/* board only */
+-	IbaEOSrd = 0xc,
+-	IbaEOSwrt = 0xd,
+-	IbaEOScmp = 0xe,
+-	IbaEOSchar = 0xf,
+-	IbaPP2 = 0x10,	/* board only */
+-	IbaTIMING = 0x11,	/* board only */
+-	IbaDMA = 0x12,	/* board only */
+-	IbaReadAdjust = 0x13,
+-	IbaWriteAdjust = 0x14,
+-	IbaEventQueue = 0x15,	/* board only */
+-	IbaSPollBit = 0x16,	/* board only */
+-	IbaSpollBit = 0x16,	/* board only */
+-	IbaSendLLO = 0x17,	/* board only */
+-	IbaSPollTime = 0x18,	/* device only */
+-	IbaPPollTime = 0x19,	/* board only */
+-	IbaEndBitIsNormal = 0x1a,
+-	IbaUnAddr = 0x1b,	/* device only */
+-	IbaHSCableLength = 0x1f,	/* board only */
+-	IbaIst = 0x20,	/* board only */
+-	IbaRsv = 0x21,	/* board only */
+-	IbaBNA = 0x200,	/* device only */
++	IBA_PAD = 0x1,
++	IBA_SAD = 0x2,
++	IBA_TMO = 0x3,
++	IBA_EOT = 0x4,
++	IBA_PPC = 0x5,	/* board only */
++	IBA_READ_DR = 0x6,	/* device only */
++	IBA_AUTOPOLL = 0x7,	/* board only */
++	IBA_CICPROT = 0x8,	/* board only */
++	IBA_IRQ = 0x9,	/* board only */
++	IBA_SC = 0xa,	/* board only */
++	IBA_SRE = 0xb,	/* board only */
++	IBA_EOS_RD = 0xc,
++	IBA_EOS_WRT = 0xd,
++	IBA_EOS_CMP = 0xe,
++	IBA_EOS_CHAR = 0xf,
++	IBA_PP2 = 0x10,	/* board only */
++	IBA_TIMING = 0x11,	/* board only */
++	IBA_DMA = 0x12,	/* board only */
++	IBA_READ_ADJUST = 0x13,
++	IBA_WRITE_ADJUST = 0x14,
++	IBA_EVENT_QUEUE = 0x15,	/* board only */
++	IBA_SPOLL_BIT = 0x16,	/* board only */
++	IBA_SEND_LLO = 0x17,	/* board only */
++	IBA_SPOLL_TIME = 0x18,	/* device only */
++	IBA_PPOLL_TIME = 0x19,	/* board only */
++	IBA_END_BIT_IS_NORMAL = 0x1a,
++	IBA_UN_ADDR = 0x1b,	/* device only */
++	IBA_HS_CABLE_LENGTH = 0x1f,	/* board only */
++	IBA_IST = 0x20,	/* board only */
++	IBA_RSV = 0x21,	/* board only */
++	IBA_BNA = 0x200,	/* device only */
+ 	/* linux-gpib extensions */
+-	Iba7BitEOS = 0x1000	/* board only. Returns 1 if board supports 7 bit eos compares*/
++	IBA_7BitEOS = 0x1000	/* board only. Returns 1 if board supports 7 bit eos compares*/
+ };
+ 
+ enum ibconfig_option {
 -- 
 2.43.0
 
