@@ -1,102 +1,184 @@
-Received: from mr85p00im-zteg06021501.me.com (mr85p00im-zteg06021501.me.com [17.58.23.183])
+Received: from HK3PR03CU002.outbound.protection.outlook.com (mail-eastasiaazon11011049.outbound.protection.outlook.com [52.101.129.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9246F26B09F
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 12:09:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.23.183
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744114198; cv=none; b=iW/UlrtgBa7nfASCytFokK0ENcnVMB+U7kic6iO1DhXtm0gcSfzsfpy+IXA/a+Dd8GyF02i8AlPhxs3ib9jQyvKYniowYTq9Fp6eB66/q+r+bMJdUxwizQCsPXBTdIC/N3RanZjnyjhxnnPgK0sXC4ObX5FRgm/yTiARo1Rrj+k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744114198; c=relaxed/simple;
-	bh=QEqKjxqbWub8YsuQbU+tPhuhK3lJRWqkR2DgLlJnxvQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Y0WT9yeUkth3g3FFUo7tsJumxSnKrViq3y6SBrFxH1fcn3Z6QfLpGBtrinloinWfoYjXrpl6Esq1EuDW16SF5mUVTWAUMqPAX3mT/bG8tcZD+roOwzJgKiZ/9ksLLc7/XqJfInkH3G7jTyblqzvXHLi+yDJs5DHLH+6Vuj8fT74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=Bgm3jS76; arc=none smtp.client-ip=17.58.23.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF4DF26B2B8;
+	Tue,  8 Apr 2025 12:10:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.129.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744114210; cv=fail; b=IWOYvgBCAItaGVy9XxEIi3rrk3Ou1WBWIDzydPkHH3AwQS3CDDtDqQtgDzQCPIUruYap4kItofZ+9hB+uvkdHKrpvoXkDqhfhE9LnL0KqBJZou3G4/hbrQ6r7oq98dNb4oGnd+Ccvl0X3lXcRG7TG0wrcRA/Je2n4pvyExVucA8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744114210; c=relaxed/simple;
+	bh=Jl3fZCZc4C9gbbFOak5RP7mMZaYoMBS4FOyWbb+o+go=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=rnZWjVRtPOSWMqaCIi4Dd4oGtt5sD9Qlp0omZ8knlPMMPV/CO40PmAsnt/raor/b2kayoALelmCz8H+N8OZMgU/7IN9ZWuSj8ACg+E42yuthLzLIascNAjkpVaMA5zo801sO/Gt3JNXPocj5suyzODF7P7SJA17N0xvS8ts89HE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=ip3ssHLh; arc=fail smtp.client-ip=52.101.129.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="Bgm3jS76"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=BDiMM4gbvtusq153Cw0jBPOX1iQ4qyGjf3UtgNk2nRQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme;
-	b=Bgm3jS76T0ExwCoHgcW23Pl2H4wM3F0J2gZznH5M7UOovoLE4b0EGT+8OvTX4UrZf
-	 IGZDjtj/EUlFSr6zvMrGnRDP4PNbVwgGRTxZSNyg87knuq5TpUJUIsJ2/47IB/cJrN
-	 NQVxtjmmhIXk+5iEYkHun3pErC3gyYuJVE1uIqAqbPvgY68BZzfZjpq8ix3GZefrcZ
-	 AcT8LmkEB0n1gKUMQse2N541qju9CUY0OGH4zlt6X8cFDy9d41vW4MEFx3eRLpw82w
-	 /Q1t/qZZ1kTSzl+he19tkfkOSnGHjRk4L1Y6x8+Y68Ffix9KSKOqKe+fZb9z9GxJ2x
-	 5yhpjQDkdzCmA==
-Received: from [192.168.1.26] (mr38p00im-dlb-asmtp-mailmevip.me.com [17.57.152.18])
-	by mr85p00im-zteg06021501.me.com (Postfix) with ESMTPSA id F26582793FE0;
-	Tue,  8 Apr 2025 12:09:05 +0000 (UTC)
-From: Zijun Hu <zijun_hu@icloud.com>
-Date: Tue, 08 Apr 2025 20:08:51 +0800
-Subject: [PATCH] USB: core: Correct API usb_(enable|disable)_autosuspend()
- prototypes
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="ip3ssHLh"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ErP2DqYwblICUUxWu5YXWIUhfpJmAhSKGH/i0a+NYHx2QWlwqZ2apR6K/TgYaUlRyeaFUENxtSbAOv6T23JlPJc93UvPHveqCqNaqDmkI4OTEGbWpALbawMlNG8bgKUgCovIKARefO0AwnBtrNus72w/V2aRUCJaCVlkPna7dKOqmgSE1CVylqVaWD3DsL/od/wjW98kXKB0K6witbMLC/HrO2iiIpzCEVFQdQAhsCtsjUsV6cKpZc9iGZfF8LqxzsA//qBFf/HGCRa7X8iKThcXMOvbO1wg/6D3yJ+++J0OR+j2oZk9BD9PB+Rq0FK48NqgncTJcz/xtpnmZGclEg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/gQmQ1M4UJndloGVVGQQ0xZwUDCRtmHzxBUo5KB7hAk=;
+ b=dmF0XKTWUxt1jqixaSMkxIg82rEGAb59Q2f6bd1CawrheHvQAj8l3PwAJvak6uu9OfJpNEZW948cwro9W+MXJk3DoDksuNDPgbH2LH2+lPYy5RvqGGse9HCIygiG2w+lJVoIzOfwwkJ37cuOLNJzC85CV8Un2Ls795B3LtG7Gq3TqY0KB1CGfz54fqSW8QeSrBXOtk+XhDS0ZyALFWWYL/vJcoNPFHHxO+FsXRSy9d2Sxwe7s4ezn6qKM/94gkODfTMnN4zmoi1P/a00K1CTVd9SZXmGx0vxYW8FXRXn7ZFxHEf9+W5I8LkfbaqSSpzpDKtoPNjRayrjObOivdslvg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/gQmQ1M4UJndloGVVGQQ0xZwUDCRtmHzxBUo5KB7hAk=;
+ b=ip3ssHLhNtS4WdwQCkW9P9ojzd8kvwtYfXd+Ne9qIeNhun+BsDyEaRjCWPMpsQgXy3Evo/sMqOZ0GvOD6f9CuIiGXvPBrXli3llMa8m0AQSX1c3DBXZ1Kjn8mvfwBowohNkkvBcQq4thAOHBjvHclvAueeF/IHqdhrUaDbBxhHxxr92L27GIaQ5p+v6TOdmBCA+totOKOf1MnKVeyh5Tz5cCx/XvxbibCE8oXjqKyDpJjDeUXcEO1AZkFVdKHbLab+Z+01lYmoFE1D08yD2Co9hLJy3d+JWFrRP8L0zYVxga6gJVOQE+jnwCvjWgFn9Wr+MtPe+O3NY1mSVeIXhPvQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from SEZPR06MB5269.apcprd06.prod.outlook.com (2603:1096:101:78::6)
+ by TY0PR06MB5233.apcprd06.prod.outlook.com (2603:1096:400:21b::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.35; Tue, 8 Apr
+ 2025 12:10:04 +0000
+Received: from SEZPR06MB5269.apcprd06.prod.outlook.com
+ ([fe80::8c74:6703:81f7:9535]) by SEZPR06MB5269.apcprd06.prod.outlook.com
+ ([fe80::8c74:6703:81f7:9535%6]) with mapi id 15.20.8606.033; Tue, 8 Apr 2025
+ 12:10:04 +0000
+From: Yangtao Li <frank.li@vivo.com>
+To: clm@fb.com,
+	josef@toxicpanda.com,
+	dsterba@suse.com
+Cc: linux-btrfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yangtao Li <frank.li@vivo.com>
+Subject: [PATCH 1/4] btrfs: use BTRFS_PATH_AUTO_FREE in insert_balance_item()
+Date: Tue,  8 Apr 2025 06:29:30 -0600
+Message-Id: <20250408122933.121056-1-frank.li@vivo.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR02CA0037.apcprd02.prod.outlook.com
+ (2603:1096:3:18::25) To SEZPR06MB5269.apcprd06.prod.outlook.com
+ (2603:1096:101:78::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250408-fix_usb_hdr-v1-1-e785c5b49481@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIANIR9WcC/x2MWwqAIBAAryL7neATpKtESOWa+2OhFIF096TPY
- ZhpULEQVhhZg4I3VTpyBzkw2NKSd+QUOoMSygojHI/0+KuuPoXCnRZWWxeNQgm9OAt2/d+m+X0
- /abSx510AAAA=
-X-Change-ID: 20250408-fix_usb_hdr-8305358f42e1
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Zijun Hu <zijun_hu@icloud.com>, linux-usb@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Proofpoint-GUID: FQj8FmXbrb2tqslaEMhyWDlIIDI50Zr_
-X-Proofpoint-ORIG-GUID: FQj8FmXbrb2tqslaEMhyWDlIIDI50Zr_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-08_04,2025-04-08_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015
- malwarescore=0 spamscore=0 suspectscore=0 adultscore=0 bulkscore=0 mlxscore=0
- phishscore=0 mlxlogscore=697 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.22.0-2503100000 definitions=main-2504080086
-X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SEZPR06MB5269:EE_|TY0PR06MB5233:EE_
+X-MS-Office365-Filtering-Correlation-Id: bb998d2e-0059-4435-12ad-08dd76964b32
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|52116014|1800799024|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?+RVF/Zn2WIWR93d4KGb8QO0IqrKGEGi0DCzT6ZyFoX/jWz1EEmabvwRKEnaC?=
+ =?us-ascii?Q?GYqdvMv1DXuBiwnpECDvgQk5clROirN4AuQfbIhnu4xfUInMBtLxeBgL3rzm?=
+ =?us-ascii?Q?TknU01am858x9/BXXnZVE/igeWgfRYXT4RNrllqQypoAGNt0X3iR4t4xANOJ?=
+ =?us-ascii?Q?0E30Y/U5p4Ojb2kXtFcuR1mqyBYTeDkC0NmbQU+qB9baS4/sP80VHO0fzOTy?=
+ =?us-ascii?Q?cK4zEhTbDsSWsySrqJtTMB1e++Cf7fpqCDKi8RfiQHvcCckq9v0uCNrHTTDW?=
+ =?us-ascii?Q?LsQ7M+drITvekQhMEvpD2nlr18kM952anCM1rGiQrdT6PWGb8vuC5Y0x6g57?=
+ =?us-ascii?Q?9qdCVFBFo5B1BKvmA2/mDkk5KqSTZtA1Buk1zWlig4jZrBzOmNNuFpdp7gYE?=
+ =?us-ascii?Q?c/hinWy9M/n9Gj9O8OnH7Q/XKPHzeaeNTne/QSMLF489qny33Zep2ZC0+cPo?=
+ =?us-ascii?Q?h94rjH9YftVLejui4A+p9Ef/X49xUl1aKnKbO45sm7EJmk325KayXutqj6J0?=
+ =?us-ascii?Q?GPr+fi1+9oGusRYpu6M6MWcsDqxVfidqoUrL9swp41aTC68VLpyfk548h7lu?=
+ =?us-ascii?Q?oZqdrvxY5c0sduKhv0RQzms31qrt2gXjjie1DNB+5omDJ9MXQoPJ6aSIWIIQ?=
+ =?us-ascii?Q?LXKrlprESwHe32/F4QDzC6OkUezC+zB/CEtCyk6/3rjDWSlsGdcxgjxES9Zu?=
+ =?us-ascii?Q?4GQDxCpMi4ASM+kH9FhX21iQSMaT83jJjXqG/1UTk/lrLrvzS3ARrniFq0Qj?=
+ =?us-ascii?Q?WR8k7s4l4YrTS46lsiR/DyKyhCn17n9RPv0iWY7dqlAWJL2ddyd6+P9oGi2W?=
+ =?us-ascii?Q?3mym6W3HKvp+5Z2KLphJr8l50Qdm1IzM5CKjkkKS584v/RMvr9jMohB/R4by?=
+ =?us-ascii?Q?9pkoC0bQx/AnNZKwWUG9OkO9Efiy9DYB8V7+MWJfZT4gZJpWTfEGtEwp294V?=
+ =?us-ascii?Q?0mpVCJQqslf17lZ/zxbBiXSPf8gR04jdy05yAr2lW573mOzCjhHMZ4GQ96IJ?=
+ =?us-ascii?Q?QHj1C8hv6jzIEQEbHtTvRMl9kIzb5FS9oB6mB9sKrksXsOvBEajQWpi/2oSk?=
+ =?us-ascii?Q?XCsriS9hqsL2ciE9xgFT575jeSwZQYMoqkwpNbG7+g5HHs8MwVdFtAVoo/kC?=
+ =?us-ascii?Q?8+76W0cYsLiD7pAWvN+byz5JfabVTg/gl8gf5TWcm9MNxkHrdg8TeUg5gb6k?=
+ =?us-ascii?Q?Pmuj2PrYRf5Oe1NTGov8d3eyR9UjTFQMqeTb/aqaEBqOO9dPhHQA62iqxHqq?=
+ =?us-ascii?Q?ETbw8HIjESNkVTsO12SuLw5wmtLeQGBImIEyqZUOsq6Fy6MBoTUaT1eBjy6D?=
+ =?us-ascii?Q?ImpXOTcFlK2Vdwl46Ice5tmSbmqUt6auKtGGzUWWN/6HlrrbIWL2SMNkobwy?=
+ =?us-ascii?Q?svrztjfN4Ar6+dI8aMz8SIIgzkpLxr+lwj+SntYRpAv3QccMuievgYm7V5Km?=
+ =?us-ascii?Q?eM/zdixQ2Mc=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5269.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(52116014)(1800799024)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?VZJzMXWqr/4MFpma7NFw0Mb5f1AQSzI4znXyCFubtPpp2G6ofToNRNM63u7r?=
+ =?us-ascii?Q?1Q4xzQQtjVd5WUBVOMItfRFYmQmOhVlNusLq17ybFgbUbvqJ7PvcVP0XS8gL?=
+ =?us-ascii?Q?0elrhgM46jwx41EBMc3Cv16iUuyHzW7GmJDhk5wG7Tb5FSnF94UzIBC34WWi?=
+ =?us-ascii?Q?20td5FpbErX/ja74cauirhL/EHCanCTK+wmU5KRPMEchhuW3eEQCAflmTxHo?=
+ =?us-ascii?Q?HEry0ucO+O7x48xsjGazSFOhe3y+7zC7hjnI5qdcknY18t7vI77FT59GGJ/6?=
+ =?us-ascii?Q?ZZ9vdXyF2y5Ddgi4XMaxwBXLbcwoP/lxnjfqtjMjTS371HTVC73mUjfurhd4?=
+ =?us-ascii?Q?roo7wWHjNc6yOXoP9qMzStt7TyAqF6r5Ngu08E81K5NYShRiWVzoVu/ajXFr?=
+ =?us-ascii?Q?26i1cU/V+Q7SuqFqyZgcYXds4BnklVISqJVDr4qgflAvYK2omZ7ajBEWZnvR?=
+ =?us-ascii?Q?jVCxZfSlZ/JNad4XwwDOrA2zSnuzgarlXlYqydYgzE3Si0VPawdHVoSwg40W?=
+ =?us-ascii?Q?3iljwcrELO0ZpMehVO8bHeTSlXThhe0BYZVyVNIqWFiFb/1jU3/tGHO0Hn9o?=
+ =?us-ascii?Q?B2/M1subqahxLSEYbo36LbxRidaFhpKCJdjrONjyyRN8OO5l728bQAhEWpQn?=
+ =?us-ascii?Q?spLM/tstczerYogPiuclyWokfrKB8c91h5bcTbLQo1u+HTUNDFVfC5HIKThy?=
+ =?us-ascii?Q?o+LosRHxa8PKJbL7jqug/vIBUFOnXwFeF5awY0G1Vzy+9VPol4R8NePyEcbg?=
+ =?us-ascii?Q?0yxPbGHuZhr6ZMFOWSuRjZdJlK6+7v+X6fCdpLsbviPo3d/UjR4ihEZLHabN?=
+ =?us-ascii?Q?jVEZG+3jjIICQfXV20rs1+/vTU/ePxW7Hfjx8ot3XEqf7+KnLuZahs5fu8y9?=
+ =?us-ascii?Q?4cSg++a3BMutkdjhbFaZFo6Ama688iBm+ClJ9s7r876/M0fAV6e2TF4RaWj4?=
+ =?us-ascii?Q?pdF8AsRT1SNoKzQnu2ueobkSQoywkTSTQrMsOly8G/HLk8QpYL89iEo9Zkdg?=
+ =?us-ascii?Q?XmeJHPIvpDe7sf5PXDP0CaidduRfxpGqU89eytHZsB7LYv78CCYbncJPXTuZ?=
+ =?us-ascii?Q?nHD6oX3oWmvDlYLVPA71b87CpyJNaE1EPahkjHFKFIEK2dTLzIFiPHlpurzs?=
+ =?us-ascii?Q?sqSWqC/xHXutMdCIJqR43Z9YnyowMjAf6+1CuhXuntqbsYQ3tdipgBbbVWuD?=
+ =?us-ascii?Q?GYXGr85kdJQIYKWxQSVjjzbWLUkgoU2BeX+sCMVCcCC2blBsGzWrrY6bUSek?=
+ =?us-ascii?Q?ZGIng+O8iLl56JkmxauRCdn/8Jl8+R7gwqRUFaNiRr8wUxlzVuSm1Sax9zAB?=
+ =?us-ascii?Q?nd3C9hHYMZi4rM++F6HaFDrTP1dno2zRWoK7cKT2g/bqQuJVPJgaRnMxv1O2?=
+ =?us-ascii?Q?IVLSaCOcjf6oLdBVObAzpm6axn0JI7ApzPZR+6qJwyFGqQSu6a0aJEUGRQ8d?=
+ =?us-ascii?Q?3hLVK2MKqImwKI9pAS/eMJDiQqgVor6x9j1ybRyQsXJI3qSg/urLVTh7OUNa?=
+ =?us-ascii?Q?v7vkw/XdlSOJuv6yNZvQ9m7qKDiQb6vuPf1HQN7BuIMrY+jWWBLqfqapRoZO?=
+ =?us-ascii?Q?11prVMAMdtXbo/QC/0T9wwVlbn8yb0T2qHcjfpR9?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bb998d2e-0059-4435-12ad-08dd76964b32
+X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5269.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2025 12:10:03.8855
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: HUs85pArn3VbdJwAOvWx7NtgGW3Wv9dGTfAOTadaIEazLYzsR6ZMmDw4boCSZTqnpo0eCCstI4yJcEl1LFEBIw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY0PR06MB5233
 
-From: Zijun Hu <quic_zijuhu@quicinc.com>
+All cleanup paths lead to btrfs_path_free so we can define path with the
+automatic free callback.
 
-API usb_(enable|disable)_autosuspend() have inconsistent prototypes
-regarding if CONFIG_PM is defined.
-
-Correct prototypes when the macro is undefined by referring to those
-when the macro is defined.
-
-Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+Signed-off-by: Yangtao Li <frank.li@vivo.com>
 ---
- include/linux/usb.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ fs/btrfs/volumes.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/usb.h b/include/linux/usb.h
-index b46738701f8dc46085f251379873b6a8a008d99d..1b2545b4363bcf3ef97a53a004ebf456eb9d5d05 100644
---- a/include/linux/usb.h
-+++ b/include/linux/usb.h
-@@ -815,10 +815,10 @@ static inline void usb_mark_last_busy(struct usb_device *udev)
+diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
+index c8c21c55be53..a962efaec4ea 100644
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -3730,7 +3730,7 @@ static int insert_balance_item(struct btrfs_fs_info *fs_info,
+ 	struct btrfs_trans_handle *trans;
+ 	struct btrfs_balance_item *item;
+ 	struct btrfs_disk_balance_args disk_bargs;
+-	struct btrfs_path *path;
++	BTRFS_PATH_AUTO_FREE(path);
+ 	struct extent_buffer *leaf;
+ 	struct btrfs_key key;
+ 	int ret, err;
+@@ -3740,10 +3740,8 @@ static int insert_balance_item(struct btrfs_fs_info *fs_info,
+ 		return -ENOMEM;
  
- #else
+ 	trans = btrfs_start_transaction(root, 0);
+-	if (IS_ERR(trans)) {
+-		btrfs_free_path(path);
++	if (IS_ERR(trans))
+ 		return PTR_ERR(trans);
+-	}
  
--static inline int usb_enable_autosuspend(struct usb_device *udev)
--{ return 0; }
--static inline int usb_disable_autosuspend(struct usb_device *udev)
--{ return 0; }
-+static inline void usb_enable_autosuspend(struct usb_device *udev)
-+{ }
-+static inline void usb_disable_autosuspend(struct usb_device *udev)
-+{ }
- 
- static inline int usb_autopm_get_interface(struct usb_interface *intf)
- { return 0; }
-
----
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-change-id: 20250408-fix_usb_hdr-8305358f42e1
-
-Best regards,
+ 	key.objectid = BTRFS_BALANCE_OBJECTID;
+ 	key.type = BTRFS_TEMPORARY_ITEM_KEY;
+@@ -3767,7 +3765,6 @@ static int insert_balance_item(struct btrfs_fs_info *fs_info,
+ 	btrfs_set_balance_sys(leaf, item, &disk_bargs);
+ 	btrfs_set_balance_flags(leaf, item, bctl->flags);
+ out:
+-	btrfs_free_path(path);
+ 	err = btrfs_commit_transaction(trans);
+ 	if (err && !ret)
+ 		ret = err;
 -- 
-Zijun Hu <quic_zijuhu@quicinc.com>
+2.39.0
 
