@@ -1,120 +1,189 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45D3C1EA65;
-	Tue,  8 Apr 2025 06:05:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98DB621129A
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 06:06:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744092337; cv=none; b=ZCssl1s4ctvlyyQSRQzU8iBiv1dam+BtyknjRN3SupH+KmLHODfWc47erxj0KdChFtgVGFGA4DmFB1cbCUYZi8KzBIn1+3JX8riVsp4IUgFcFvn04m7ngvkqopUof89eZRm1DGuGV79HHx6rte+MQN/fJwm+/kmJFDsWG0CVu5g=
+	t=1744092406; cv=none; b=F8zdMz5RgNdvdxJZciVe7h5z6YBnjjhqhTT0Y07fqQV/0OYouC0yOmq+s6aDb9NiRElO00vp4RWz5ZgHzIJej26p4rhKleCU4/3gVI4q7DPz8L2ZVikY8tqR4T58K+GhTHUPQ/u6yI/6fg5sc8/liqxQLAUIq/5yOcZAEr2UdlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744092337; c=relaxed/simple;
-	bh=R/byLNIrcWM+dcFIioTGrewEb6YU76BO06rIy5Y0gxk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DX5Z0sd7PgQ9H6ku6TjOesYloTvLbZfhgzkbR2OhCTmKY3Vxzzwi022iVeLFFcdE4BfJAfwV1aj+l+uOQ9wL8jAZvGTX1EBazyrZqRm+3Ekrq34jfxeG1Y960g1VM29kd/6aljWhkhRXqpf0Zy+z3i9lyeDwquLGAd+JqPHAhZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z48KeYwO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744092406; c=relaxed/simple;
+	bh=CeVpOA2b62RgSn3idH2D7jjGpJdQDZhB6loS4rC7hUk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=kKROhgCzXpSGw0LqUPKqdN15ODHN2aVWQxP9UCZNZ1sbRzwIcbE40B23Ki48t3StzaZyf5CbI9VWcIqO22xBIvBuoLryZxQQ5sgl9jvxpeabSQds9exP4nn9aNtnXZ6/QH04DKz+30X3IGJUOF56br31vM14kyOrIPhx28WjuA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=AdrrdRgd; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z48KeYwO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAE9BC4CEE5;
-	Tue,  8 Apr 2025 06:05:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744092337;
-	bh=R/byLNIrcWM+dcFIioTGrewEb6YU76BO06rIy5Y0gxk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Z48KeYwOhWMCOKLm+SPfTdjWSlP/S2tVErcsftuNUAg4+km6F3qkNy4+7UHz62R3M
-	 LfE+pDJBh2oIYC2zCDKKtc21LwnsLx+2/sLH/zsrBgmSylwi8GoGoJ7nAyvHf6BYvU
-	 QtjdTiKgCVN6m7WDG+uBwylHyPQy6r2NuPNYEeKQ5sarWJYqFKRMrClTYgP2af1Osh
-	 VBSihHHgQNtbRoI4TBxmZTFzws2QI5EMQIKaXSEwivxyqLyWk5g3m2s+gZd1vJNlDi
-	 lZDQxgrQ2C5Zzar4bOjrxv168TjOnv7RjDm7w/JEA40hc5dlNUpYac6fP1/+jlNMmx
-	 GuC9EU+PiTnoA==
-Message-ID: <8abcf2bf-77cb-4380-bdc4-95c3796a96f0@kernel.org>
-Date: Tue, 8 Apr 2025 08:05:32 +0200
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="AdrrdRgd"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5382GxFJ022441
+	for <linux-kernel@vger.kernel.org>; Tue, 8 Apr 2025 06:06:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=rPJvbK708nKLqv7QHHGj//
+	BT/jZMd+wf9IwoNFeDmZg=; b=AdrrdRgdaTlk/sJkmnZqf4pX74Rp6uWoz2dahR
+	WUDh7bvIPxySJUMZtrcWa/OXD1vvAEemkxsosINC93hkTUPYuYTTHc9wF2v29FFr
+	VY7KTtOcDUB0qcj2+HBoB1T07EF82oS7rQ0fHfpgcycNdmJtlvQ9FKfDjDmKHMc5
+	N/kWNi8XC1gFG0jQ7+sh1oXMKvUswl8lQHBp/IluJrR1vGoCLMKVMw4ZFjC+RkWu
+	jr0etUqOkowc4SwNAp+E2IxkQ0CHrE7ktDL/EQ6dTrIPcCnFV8fDeqXBU5Mt7mOj
+	wpXzd9lyCSiu4vAE7iD0j0Cq+N2wgjyf+SIbYVqFqI7Goi6g==
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twfteknf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 06:06:43 +0000 (GMT)
+Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-736d64c5e16so4542377b3a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 23:06:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744092402; x=1744697202;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rPJvbK708nKLqv7QHHGj//BT/jZMd+wf9IwoNFeDmZg=;
+        b=RWtExGpMlI2CfMCqbkelzXIyy0TVzbmVNDtLJYYxOd7gqyZjDQ2m7FkZE6LINqIiE7
+         1gSxKwf8TT24y5pRXPkc6xSuyD0lb+b8XHPtutSRZHn7RzyPOZ66n8GfWi5aVbrgPlP0
+         ozOPPT5KBxAUV1kOJwAEq7r+b4E3VVw3JkTrD+TG6+H873CyAm3XlPjvhcCY5XxeP0AU
+         Uq01DeG3Wx3cZcwuTXu6kjiktjHik7e4Y6HnPZG62WRtlMLW/WeD/NProKKscAq5vvSo
+         +F2yYULJae9Y1UzUu5ArDREnW5mPHoxmJ4ov47iQZqvuRIQzo2LwArSfPxPI+xL72DEy
+         zK9A==
+X-Forwarded-Encrypted: i=1; AJvYcCX7SZLw4y7yGySBiieEueQILk1JA5jfehk6Vt9M/XXPXGxocbpsLBNJeOb7PuKw+vRXMzJnPboufvP5BoY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbzF7KoUIo47KFEzeIA/4pt5Y9jAKTGciNwCTZoRGLyxbvgn7G
+	kIgyK5otzzO/oQ5/AJvoEBtPMS+CyHavgenDRW3VB5YfolO0We9VVOxgJQGw3jy34zdfADiG+W0
+	xrPLzp0uW6RQO98mgKhVb54nymLKBqR+grcCgtGv4EsBzxU05idZyNkTt0jelf/Q=
+X-Gm-Gg: ASbGnct4tNLWdXH4tGNVsryJK+oIDK/1CQDzpn8RiRM4IhesYiAM8AmOBtXBOqXACUh
+	XTsNjXMiAR2jEqstd1rek6hYN/Dh9XoPjGJSvwJZYoYkeoqHtnO6fL3cGbuz9ap8ZGoQMSiFvln
+	vVL11O2n6Cwf79o2wvTR1L+GRbv3xcnbMiWZ4xCEhuaDzJ4r5IVaDKlaYbWiDP3VLsKljBwZ4u0
+	i21kaR871MgC6ZeNtL7I4YvYv3dDMQ+XlprGsNha64nEaC+wI+mt8MBvcvvl7tDrw6wup9Me2KV
+	H5gHERNIMijsP8qpeO4lhshHapo5eJ3VVpGk3IBBjA2I7cfc68r4ppbTkNPx3VGDUDFx/nIwujI
+	I0w7Z+fTKLJQLvyrGX3FqMJ21CtXJaiXXVnKHl3ef
+X-Received: by 2002:a05:6a20:c78e:b0:1f5:535c:82dc with SMTP id adf61e73a8af0-201047315d9mr18142219637.42.1744092402514;
+        Mon, 07 Apr 2025 23:06:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGDQGkfHHXHzQnzn2S7sZR/SlqyFD4E76f4ItSX8gh3a16V1yPXO+CG98vBVOmnzhJbyAvBCQ==
+X-Received: by 2002:a05:6a20:c78e:b0:1f5:535c:82dc with SMTP id adf61e73a8af0-201047315d9mr18142189637.42.1744092402103;
+        Mon, 07 Apr 2025 23:06:42 -0700 (PDT)
+Received: from hu-adisi-blr.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com. [103.229.18.19])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af9bc35079fsm6863981a12.41.2025.04.07.23.06.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 23:06:41 -0700 (PDT)
+From: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
+Subject: [PATCH ath-next v4 0/9] wifi: ath12k: fixes for rmmod and recovery
+ issues with hardware grouping
+Date: Tue, 08 Apr 2025 11:36:28 +0530
+Message-Id: <20250408-fix_reboot_issues_with_hw_grouping-v4-0-95e7bf048595@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] dt-bindings: mailbox: Add support for bcm74110
-To: Justin Chen <justin.chen@broadcom.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: florian.fainelli@broadcom.com, conor+dt@kernel.org, krzk+dt@kernel.org,
- robh@kernel.org, jassisinghbrar@gmail.com,
- bcm-kernel-feedback-list@broadcom.com
-References: <20250404222058.396134-1-justin.chen@broadcom.com>
- <20250404222058.396134-2-justin.chen@broadcom.com>
- <b32aa644-6984-476b-abc0-a5416f551bba@kernel.org>
- <9088acd0-4650-4b10-88f9-6b6c0b1f9978@broadcom.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <9088acd0-4650-4b10-88f9-6b6c0b1f9978@broadcom.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOS89GcC/43OwW7DIAyA4VepOI/JmGRJetp7TBMKxA0+DDoga
+ acq7z6UU7VdcrQsf78fIlNiyuJ8eohEK2eOoQ7Ny0k4P4aZJE91FgjYKFS9vPDdJLIxFsM5L5T
+ NjYs3/mbmFJcrh1mCw0m/dWPbd1ZU6JqoXu2RDzEWLwPdi/isG8+5xPSz11e172uoBQXDkdCqJ
+ MiL1QM50E2r6P17YcfBvbr4tQdWfEIRDqFYUdtN0GlrcUT8j+pntDmE6opqHECDVf00/Pl027Z
+ fRrvTnIoBAAA=
+X-Change-ID: 20241218-fix_reboot_issues_with_hw_grouping-0c2d367a587b
+To: Johannes Berg <johannes@sipsolutions.net>,
+        Jeff Johnson <jjohnson@kernel.org>,
+        Karthikeyan Periyasamy <quic_periyasa@quicinc.com>,
+        Kalle Valo <kvalo@kernel.org>, Harshitha Prem <quic_hprem@quicinc.com>
+Cc: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+        linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Authority-Analysis: v=2.4 cv=B5+50PtM c=1 sm=1 tr=0 ts=67f4bcf3 cx=c_pps a=rEQLjTOiSrHUhVqRoksmgQ==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=3fJN4-It2fq8u9xqJHoA:9 a=QEXdDO2ut3YA:10
+ a=2VI0MkxyNR6bbpdq8BZq:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: qdfvI_4r6OExKwfIazMlICVUe7CKBKMC
+X-Proofpoint-ORIG-GUID: qdfvI_4r6OExKwfIazMlICVUe7CKBKMC
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-08_02,2025-04-07_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=996
+ suspectscore=0 malwarescore=0 bulkscore=0 phishscore=0 spamscore=0
+ priorityscore=1501 adultscore=0 impostorscore=0 lowpriorityscore=0
+ mlxscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504080042
 
-On 07/04/2025 22:57, Justin Chen wrote:
+With hardware grouping, there is a kernel crash with signature -
 
+$ rmmod ath12k.ko
+Unable to handle kernel paging request at virtual address 000000000000d1a8
+[...]
+Call trace:
+ ath12k_reg_free+0x14/0x74 [ath12k] (P)
+ ath12k_core_hw_group_destroy+0x7c/0xb4 [ath12k] (L)
+ ath12k_core_hw_group_destroy+0x7c/0xb4 [ath12k]
+ ath12k_core_deinit+0xd8/0x124 [ath12k]
+ ath12k_pci_remove+0x6c/0x130 [ath12k]
+ pci_device_remove+0x44/0xe8
+ device_remove+0x4c/0x80
+ device_release_driver_internal+0x1d0/0x22c
+ driver_detach+0x50/0x98
+ bus_remove_driver+0x70/0xf4
+ driver_unregister+0x30/0x60
+ pci_unregister_driver+0x24/0x9c
+ ath12k_pci_exit+0x18/0x24 [ath12k]
+ __arm64_sys_delete_module+0x1a0/0x2a8
+ invoke_syscall+0x48/0x110
+ el0_svc_common.constprop.0+0x40/0xe0
+ do_el0_svc+0x1c/0x28
+ el0_svc+0x30/0xd0
+ el0t_64_sync_handler+0x10c/0x138
+ el0t_64_sync+0x198/0x19c
+Code: a9bd7bfd 910003fd a9025bf5 91402015 (f968d6a1)
+---[ end trace 0000000000000000 ]---
+Segmentation fault
 
-> from v2 of my patch was copied from said generated DTS.
-> 
-> Apologies as I navigate through the different yaml keywords here. The HW
-> isn't changing, I am just struggling with representing the HW using the
-> different keywords. And the different implications of using said keywords.
-> 
-> Here is what I have for v4.
->       items:
->         - description: RX doorbell and watermark interrupts
->         - description: TX doorbell and watermark interrupts
-> +    description:
-> +      RX interrupts are required to notify the host of pending messages. TX
-> +      interrupts are optional. The TX doorbell interrupt is not used by the
-> +      host, but watermark interrupts may be used to notify a host 
-> waiting on
-> +      a full out queue.
-What does it mean optional? Board decides on SoC connections? Given SoC
-is fixed isn't it?
+This series aims to fix this stability issue. With this now, 100+ iteration
+of rmmod and insmod works perfectly.
 
-Best regards,
-Krzysztof
+Also, firmware recovery with grouping is not working fine. Randomly, some
+NULL pointer crash or another firmware assert is seen. This series aims to
+fix that as well.
+
+With this in place now, 100+ iteration of firmware recovery with one 3 link
+AP MLD up works fine.
+
+---
+Changes in v4:
+- Rebased on ToT.
+- Fixed potential deadlock warning.
+- Moved to oss email from quicinc.
+- Link to v3: https://lore.kernel.org/r/20250124-fix_reboot_issues_with_hw_grouping-v3-0-329030b18d9e@quicinc.com
+
+Changes in v3:
+- Rebased on ToT due to FTM changes conflict.
+- Link to v2: https://lore.kernel.org/r/20250120-fix_reboot_issues_with_hw_grouping-v2-0-b7d073bb2a22@quicinc.com
+
+Changes in v2:
+- Rebased on ToT.
+- No changes in 1-4, 6-10.
+- Removed regd_freed flag in 5.
+- Link to v1: https://lore.kernel.org/r/20250109-fix_reboot_issues_with_hw_grouping-v1-0-fb39ec03451e@quicinc.com
+
+---
+Aditya Kumar Singh (9):
+      wifi: ath12k: fix SLUB BUG - Object already free in ath12k_reg_free()
+      wifi: ath12k: add reference counting for core attachment to hardware group
+      wifi: ath12k: fix failed to set mhi state error during reboot with hardware grouping
+      wifi: ath12k: fix ATH12K_FLAG_REGISTERED flag handling
+      wifi: ath12k: fix firmware assert during reboot with hardware grouping
+      wifi: ath12k: fix ath12k_core_pre_reconfigure_recovery() with grouping
+      wifi: ath12k: handle ath12k_core_restart() with hardware grouping
+      wifi: ath12k: handle ath12k_core_reset() with hardware grouping
+      wifi: ath12k: reset MLO global memory during recovery
+
+ drivers/net/wireless/ath/ath12k/core.c | 110 ++++++++++++++++++++++++++++++---
+ drivers/net/wireless/ath/ath12k/core.h |  15 +----
+ drivers/net/wireless/ath/ath12k/mac.c  |   6 --
+ drivers/net/wireless/ath/ath12k/pci.c  |  26 +++++++-
+ drivers/net/wireless/ath/ath12k/qmi.c  |  22 +++++++
+ drivers/net/wireless/ath/ath12k/qmi.h  |   2 +
+ drivers/net/wireless/ath/ath12k/reg.c  |   4 ++
+ 7 files changed, 156 insertions(+), 29 deletions(-)
+---
+base-commit: ac17b1211841c98a9b4c2900ba2a7f457c80cf90
+change-id: 20241218-fix_reboot_issues_with_hw_grouping-0c2d367a587b
+
