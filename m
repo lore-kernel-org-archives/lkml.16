@@ -1,75 +1,70 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2062.outbound.protection.outlook.com [40.107.237.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F14B625333F
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 22:56:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744152996; cv=none; b=WnftJPm8bl925/ra5wfJX07Zk6whnuN4WTAk1d/n3RniIHV4LL88PifFJXQkIMWZo7dF37D4MMwuVIp4BGVd6g4Fii8CkXCjMk/tTAVSfUT/kNyS+2rJn1o30MbXEvBCNArssgTpAwd5esIs/bAVG7g2yMN0k7PYLtLfzUgVVds=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744152996; c=relaxed/simple;
-	bh=64A1fL3icCqLfyIFzefIzkWUMnxUtIKnTUU/t0fgAxE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=clAhoE/Lulhl242aMx304FLaYEfjGDfqS580XDSlgZLihZ6ewgE+VYNkAybwxoMbcYZWhAm3tqIZ3uQBHoTqpWeUMDCUb0/fOBuBJgRGAhRyD8A+JNWREjc81A8t+TQT7QTqQpKoj0ff1bSH6K7rzm1TLiq/zefgCSXNg51sgdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org; spf=pass smtp.mailfrom=neverthere.org; dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b=AtgxXv25; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neverthere.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED9FA1990CD;
+	Tue,  8 Apr 2025 22:57:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.62
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744153048; cv=fail; b=Cc2gvAA3KSXb5yAdBYG5Pl0Al8zZQFI8KTOjaCi4NfxW3hjyp1mFFNvVIfh4nRasy3oIdckWtEi+KYdKGfuueHF+dTdeR5VlJIp3mgr8KOBU+cbSgupj9N/5qKzbzsNpAo7szhzUjcS3GjIZKiPJLMkyTTd0Al3wswaZ39qy/Vg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744153048; c=relaxed/simple;
+	bh=BjKM6P9xk+XMqczgiMFEywTeNqeI/Y70rTLLBqIDmNo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=r2FFPgHXiqEhlLgQuXCD9KClRHCJIgFnegfKtKSbEK1Vj6vQumF0kKE5jmChEACIZMFMy7C0mW0KmHENPtV8JMGfhABv23i8RXG3nUvmnP1gfxKil0HosmW2bObt8ED5OV5QXS7KU2Ql9owTfXsi/hxNKxJLAeXiTs2pFZe6IpI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Ag7ZPnZL; arc=fail smtp.client-ip=40.107.237.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b="AtgxXv25"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-af28bc68846so5396056a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 15:56:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=neverthere.org; s=google; t=1744152994; x=1744757794; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Fm5AXhXZ7EO6Xz/bF1BEFBHOOg08llbrt+bodgHagxI=;
-        b=AtgxXv25Egh0xUiz6YvaiBcvjElMMLLtnnw4uY1SpvizyZN5HLorYjDS+cT2QZnXJm
-         dewxnDHVC6gjiqpGnYuCC0y3ylk9Es6uOvuSaViB9iv4tO+9vlR2+M9Re+ZE4X+fHqvh
-         s9V0GeAGZyPqQ2iQvlzYIHex2hgBXTGVnql0OrPldUXRXiQFNGAi1MZd1blahVw4SdbK
-         9M0MRkzD2sr4lf3OgCe9UY+zwuB5aiIiaowgIsLluZ+wr1T07tHiwb5bW93WwwyWPbFA
-         RKwfUIAwI669jBnfpsZPhEx0qrkd05zauYlNW39imF581WNHbBb4eMKww9VXVge3PTo9
-         go9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744152994; x=1744757794;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Fm5AXhXZ7EO6Xz/bF1BEFBHOOg08llbrt+bodgHagxI=;
-        b=oRZizdlsS1MT5DjCiT3JzL2JfzKr4NxhgcT57GxVSGRKzBxmXpcYYl5MHQvdGiMtIN
-         GKnLInQspA+7oX1eJHAP+Xgsn7BJRu2jfvmn7OdkOpCF5WTe2GCXMT0enfVmOPxtT3ue
-         ZAbDS1nkQtyiCovuyQCJRVGBEDsDrXWHuaEYKlcxLPgDe0lgft8v28X7MIX6zp/J7JJp
-         YWH5rKFKwki7eOo8yGpxwVSqMKpj25gGQY/7atE21USHlrxvqeIue+sNdQE+ybnNfnHF
-         GPYjktkQOBNp8lUEHyrN6DD397eY4sbPpKdAYVLxlVXkCHug7vT0uj0LRokrPzpaTejL
-         Clgw==
-X-Forwarded-Encrypted: i=1; AJvYcCWzHd3jqJOVzHUrBuoo7RrbIGQtoncw4GTkGo9jbHAdXGDP9PIoOtU8E+TsNLCknq7semXXr5SN+4TBNik=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRsZ0qB39lIejhDAw68zz4SsjOLDlQko7PicdaqNthjQwZ0HDs
-	Mpm3qm2w9utEIYSF86oSVXF6YrOYMtAeMjc0skIHTn+t9ZeOTXGIT6lj7AH38g==
-X-Gm-Gg: ASbGnctou1diLSflrAiJEgKlhX1/Pd6lzPZrRxPfsBpkPc6La+pGG9Cp/1eqmoD7+AT
-	Nuqv8p1vvxxgXm59NID9bID7r2BAAhclI4LWddozTP5ECdTK1s/GUdyEb7NfdrvEkUB9XBLYRa+
-	Id6aa4L41XLEspowQFJXNHlczfEZp71sma7dS0ehOYZ9bE56sY0xax57sSh4bB///J1OxRq2LL7
-	y3KcAyo9KJDux8nB30yEQs5MDLjFs8GRHKgr5cInHu2Qgi1bQlZUVYkRzWCn9qbL88NQiShQwYz
-	5bzxY562+gg0kExv3VFeMtGIRq7r2qq+m+vpgeiCgq5qrQTL07DmGeTIpZ1FRphzJEXLtqgajH0
-	AwvQMU7m0nA==
-X-Google-Smtp-Source: AGHT+IHMrbGlBdlcelE02MMVEgm0kvLnYsiD8ZRzKlv7S7zsxd3sFgnnnfkO0DUDWMP68U3E3qjqzg==
-X-Received: by 2002:a05:6a21:a34b:b0:1f6:2d39:8713 with SMTP id adf61e73a8af0-201591c9103mr1018919637.19.1744152994244;
-        Tue, 08 Apr 2025 15:56:34 -0700 (PDT)
-Received: from tiamat (c-69-181-214-135.hsd1.ca.comcast.net. [69.181.214.135])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739da0b4869sm11504349b3a.138.2025.04.08.15.56.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 15:56:33 -0700 (PDT)
-From: Michael Rubin <matchstick@neverthere.org>
-To: gregkh@linuxfoundation.org,
-	dpenkler@gmail.com
-Cc: linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Michael Rubin <matchstick@neverthere.org>
-Subject: [Patch v1 1/1] staging: gpib: agilent_82357a uses completion
-Date: Tue,  8 Apr 2025 22:56:28 +0000
-Message-ID: <20250408225628.187316-2-matchstick@neverthere.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250408225628.187316-1-matchstick@neverthere.org>
-References: <20250408225628.187316-1-matchstick@neverthere.org>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Ag7ZPnZL"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=w/9CdL4k3otNmThvJ9lMuFl7CDASQelKSQt6zJqUEwnvUHRlR6w+OhB0zUrL/Qi3rmMQMimGNjpxp1nwsmDKdQ8YH2dAInY/Er1dwdlWj/MSQXO4IYy30Fv07jEhhJ8oNX8Z0zNNdXbTIQX1yrcE6H/QKDFMpKCktSoyK8LSFL16j6mP3lT5ea86tPuRN5ed7yiHtwZB/VX6Qi/vJp9iQ8P2Uj62uOj7a21FCGqwirFFJWtqT9llLR2R7hgBYhlCLM7L7wc8MFCrCya+9rmsUz8sHT6iMxxWGTdFTqDkgurYWgcK0nbOdO2ftq4oFYeX7E50G2G3F84s05IpPCmabA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=esmMgPwekb3CdOfYKArgV2NEMfNseuNIL4+mqIpMPSA=;
+ b=vNJNeMqPM2durwwnrYdE8u6O5nXZvrT/PyFojpq36NqaM3uFQqHM+wI0vsenzcpiVXQjCJ60rDkPB/JKVfMWYU8XhAa8AObw/leqzCL23Tr5WqFUeUcDElxIGuBRCSqtKlKstGyTDzviVJSXobsonVwcTxsny6vI6tW2nhWCmVNRCWP+C09bOT92iE3F3jOK2l30GredGZSuowRrkT4Fd/JnagY/CSKCE5Jb6Zd4N7eDf7GlkmERjt2gnjg0WxanyGgl1xGxaijq8aQ8GkdA1zlcqLEI3n2G/VGJ3VreRf+cvkmigR1cXaxEHbqCPfEdnGefRsjkXV93aXxaCRUuog==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linutronix.de smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=esmMgPwekb3CdOfYKArgV2NEMfNseuNIL4+mqIpMPSA=;
+ b=Ag7ZPnZLIhSb4fJyo9bv1S20QbfCcT3EomYYUs3ule0aoqlGhvmE8wccWtI3nF517clBLfHQjbdqDD+VRtoA3YMpW4hR8bhx+cAVQ/78leyM8aXfAntOVKgJZ7fMUraONz5xjDizaXLIXq3TPTTXEGOp2sa22+uLPRfduHk31GU=
+Received: from SA9PR13CA0086.namprd13.prod.outlook.com (2603:10b6:806:23::31)
+ by DM6PR12MB4468.namprd12.prod.outlook.com (2603:10b6:5:2ac::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.21; Tue, 8 Apr
+ 2025 22:57:24 +0000
+Received: from SN1PEPF00036F3F.namprd05.prod.outlook.com
+ (2603:10b6:806:23:cafe::6c) by SA9PR13CA0086.outlook.office365.com
+ (2603:10b6:806:23::31) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.10 via Frontend Transport; Tue,
+ 8 Apr 2025 22:57:23 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SN1PEPF00036F3F.mail.protection.outlook.com (10.167.248.23) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8632.13 via Frontend Transport; Tue, 8 Apr 2025 22:57:23 +0000
+Received: from bmoger-ubuntu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 8 Apr
+ 2025 17:57:21 -0500
+From: Babu Moger <babu.moger@amd.com>
+To: <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>, <seanjc@google.com>, <pbonzini@redhat.com>
+CC: <x86@kernel.org>, <hpa@zytor.com>, <daniel.sneddon@linux.intel.com>,
+	<jpoimboe@kernel.org>, <pawan.kumar.gupta@linux.intel.com>,
+	<thomas.lendacky@amd.com>, <perry.yuan@amd.com>,
+	<linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>
+Subject: [PATCH] x86/cpufeatures: Define X86_FEATURE_PREFETCHI (AMD)
+Date: Tue, 8 Apr 2025 17:57:09 -0500
+Message-ID: <ee1c08fc400bb574a2b8f2c6a0bd9def10a29d35.1744130533.git.babu.moger@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,102 +72,105 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF00036F3F:EE_|DM6PR12MB4468:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6257e5d0-7c82-4df7-3747-08dd76f0b97e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Vb9aZlFLtlhOI0FZfXPB1iZBcFudA3l4UbtKid+DXhlf0zOl5lxdcqsPyXVT?=
+ =?us-ascii?Q?FMLcUolbQBv65BG7x8y5ZZZHshggXLTSJ0wm57S6Ba6pIv2qHUkhb8R6Eq3i?=
+ =?us-ascii?Q?4KykCAqLOYwK3klT5v08NeiMTblNL111o4GF3P+WXbvyovITDsaB2IqPGw2e?=
+ =?us-ascii?Q?CP1C0nBsazMskFwroENbqApSJDMJwvEry6u+a/D0h+yx5nxvDULKlLwkHp+H?=
+ =?us-ascii?Q?zmOgcAuS9otWsFzzlEzFy4W+e6Qf1VK0N/yh1tY6Zz/v3wsQiwZ3bsBV6+iz?=
+ =?us-ascii?Q?TgxWcSEIwATwYxAN22yU6XlfOzODYfUpT6pX4/wZsO+lvm6Y60Lmsthr8xJz?=
+ =?us-ascii?Q?Rd2XoracVdvsevH6JqP6bO4ZK6Mrmg5L2l/uko73qYhnomYc0aMW3GsKcyUI?=
+ =?us-ascii?Q?I9Yh5yuPkOaENGWJ4qnSe8FFhM5q9oNWK5E6CJsreVd0QJ4+Wh8CSkXaMYMX?=
+ =?us-ascii?Q?cJa50xVU6W0R5hKKf1VAiaotVMsdZKjSsVeI8d07YEO1iq/hfeYy0yRLJuii?=
+ =?us-ascii?Q?kzGilff7MD4oX2/0WLKJ7Gc5ZVl3J/Ph655Mv48gGIsyXQWlCtm6/Zy/VAqO?=
+ =?us-ascii?Q?bO5TCRJFAgoartAaZW3v2mey0fuVnSlpvsfAOj1H5kfoCYxffteMzi4VXopY?=
+ =?us-ascii?Q?ZbchTM5DIqO2coIkH3/RAF748skCJzXWXgmPTXB+HRqVcNbxzCA6zFhxVjUp?=
+ =?us-ascii?Q?Ad9hKbHBpUHggNbOgMvGPp0Zhg0+FZn0DLlYmylWCLz3TNYAvNb5XboQuZLd?=
+ =?us-ascii?Q?joONnRpJazBNulPe+r8qw+oYwqcYZwkrJizxdJVduXARESdWOgiIk0tCHm10?=
+ =?us-ascii?Q?5sfmBe9cF3gOY/nq6NXK8e0B54HY+SrcQAhQsSFyerkZDcokk0KeLPW53vDx?=
+ =?us-ascii?Q?4/gkexhIx/3Y4eOFxj3KrbSqTsFJrreJqlbD1vZUgBTp5rKD3FTbcZ8MYkPF?=
+ =?us-ascii?Q?VtrPdz/2aa8w2r7QX1rKhIISjW5UBhKwCUuSIH9foN/JSNeCaC8mk1MwCrj+?=
+ =?us-ascii?Q?jKQdnCQrVQ/ELYfm7T21cgaAMhtijktMt/t4IYuHh9nNq1qk42ACs7BY2Oa9?=
+ =?us-ascii?Q?8oZfVSxpIBQ0R8ZniyvusxPSB6WDbACSVm3HwMhv0Fp3T41jInzk6iuMuziO?=
+ =?us-ascii?Q?vKBFGUr1ZCuBrJx/LbDyYOeAqcK3F975lg660Rdtowmk+6jlnpUkKqEvsDHJ?=
+ =?us-ascii?Q?LIs0zvCSTaC/dkV7GWBzshy7GMEduHirYNOeJwLXYlVVoe/RDWLc/n1xBOfS?=
+ =?us-ascii?Q?snq7y/mH2WGyvU/YU9OC/c1+/bDhdGYnQ9eW3MeR3VKNFHK3fq5FPNk0U6qG?=
+ =?us-ascii?Q?+rxnq9PZLx4FC+o0oO4JiQKAjQRXU+jKUeWGAlHhLHP10lxMCfYw5I1XmhmW?=
+ =?us-ascii?Q?BOY/2s/pTBECThOmT8DA1qXwf88ih6m6Nc4yEAfTg1ZsZrfxTR+CFFuRDSde?=
+ =?us-ascii?Q?HmAvcoQsjwpVYANpSY/h+TQpQS7gFvF0tyPc5S81gG3rXcnNsKE3N8n0ug/o?=
+ =?us-ascii?Q?wC1cZMHwK4qxMXzwBhs2P/Lkn52XZOOsJGsF?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014)(7416014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2025 22:57:23.2138
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6257e5d0-7c82-4df7-3747-08dd76f0b97e
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF00036F3F.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4468
 
-agilent_82357a_send_bulk_msg is a oneshot event where a semphore is meant for
-synchronizing over counting events.
+The latest AMD platform has introduced a new instruction called PREFETCHI.
+This instruction loads a cache line from a specified memory address into
+the indicated data or instruction cache level, based on locality reference
+hints.
 
-Recommendation is to use a completion instead.
+Feature bit definition:
+CPUID_Fn80000021_EAX [bit 20] - Indicates support for IC prefetch.
 
-Reported by checkpatch.
+This feature is analogous to Intel's PREFETCHITI (CPUID.(EAX=7,ECX=1):EDX),
+though the CPUID bit definitions differ between AMD and Intel.
 
-WARNING: consider using a completion
+Expose the feature to KVM guests.
 
-Signed-off-by: Michael Rubin <matchstick@neverthere.org>
+The feature is documented in Processor Programming Reference (PPR)
+for AMD Family 1Ah Model 02h, Revision C1 (Link below).
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
+Signed-off-by: Babu Moger <babu.moger@amd.com>
 ---
- drivers/staging/gpib/agilent_82357a/agilent_82357a.c | 12 ++++++------
- drivers/staging/gpib/agilent_82357a/agilent_82357a.h |  4 ++--
- 2 files changed, 8 insertions(+), 8 deletions(-)
+ arch/x86/include/asm/cpufeatures.h | 1 +
+ arch/x86/kvm/cpuid.c               | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/staging/gpib/agilent_82357a/agilent_82357a.c b/drivers/staging/gpib/agilent_82357a/agilent_82357a.c
-index baa8f149024c..97e7caefe35b 100644
---- a/drivers/staging/gpib/agilent_82357a/agilent_82357a.c
-+++ b/drivers/staging/gpib/agilent_82357a/agilent_82357a.c
-@@ -34,7 +34,7 @@ static void agilent_82357a_bulk_complete(struct urb *urb)
- {
- 	struct agilent_82357a_urb_ctx *context = urb->context;
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 6c2c152d8a67..7d7507b3eefd 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -457,6 +457,7 @@
+ #define X86_FEATURE_AUTOIBRS		(20*32+ 8) /* Automatic IBRS */
+ #define X86_FEATURE_NO_SMM_CTL_MSR	(20*32+ 9) /* SMM_CTL MSR is not present */
  
--	up(&context->complete);
-+	complete(&context->complete);
- }
- 
- static void agilent_82357a_timeout_handler(struct timer_list *t)
-@@ -43,7 +43,7 @@ static void agilent_82357a_timeout_handler(struct timer_list *t)
- 	struct agilent_82357a_urb_ctx *context = &a_priv->context;
- 
- 	context->timed_out = 1;
--	up(&context->complete);
-+	complete(&context->complete);
- }
- 
- static int agilent_82357a_send_bulk_msg(struct agilent_82357a_priv *a_priv, void *data,
-@@ -74,7 +74,7 @@ static int agilent_82357a_send_bulk_msg(struct agilent_82357a_priv *a_priv, void
- 	}
- 	usb_dev = interface_to_usbdev(a_priv->bus_interface);
- 	out_pipe = usb_sndbulkpipe(usb_dev, a_priv->bulk_out_endpoint);
--	sema_init(&context->complete, 0);
-+	init_completion(&context->complete);
- 	context->timed_out = 0;
- 	usb_fill_bulk_urb(a_priv->bulk_urb, usb_dev, out_pipe, data, data_length,
- 			  &agilent_82357a_bulk_complete, context);
-@@ -89,7 +89,7 @@ static int agilent_82357a_send_bulk_msg(struct agilent_82357a_priv *a_priv, void
- 		goto cleanup;
- 	}
- 	mutex_unlock(&a_priv->bulk_alloc_lock);
--	if (down_interruptible(&context->complete)) {
-+	if (wait_for_completion_interruptible(&context->complete)) {
- 		retval = -ERESTARTSYS;
- 		goto cleanup;
- 	}
-@@ -142,7 +142,7 @@ static int agilent_82357a_receive_bulk_msg(struct agilent_82357a_priv *a_priv, v
- 	}
- 	usb_dev = interface_to_usbdev(a_priv->bus_interface);
- 	in_pipe = usb_rcvbulkpipe(usb_dev, AGILENT_82357_BULK_IN_ENDPOINT);
--	sema_init(&context->complete, 0);
-+	init_completion(&context->complete);
- 	context->timed_out = 0;
- 	usb_fill_bulk_urb(a_priv->bulk_urb, usb_dev, in_pipe, data, data_length,
- 			  &agilent_82357a_bulk_complete, context);
-@@ -157,7 +157,7 @@ static int agilent_82357a_receive_bulk_msg(struct agilent_82357a_priv *a_priv, v
- 		goto cleanup;
- 	}
- 	mutex_unlock(&a_priv->bulk_alloc_lock);
--	if (down_interruptible(&context->complete)) {
-+	if (wait_for_completion_interruptible(&context->complete)) {
- 		retval = -ERESTARTSYS;
- 		goto cleanup;
- 	}
-diff --git a/drivers/staging/gpib/agilent_82357a/agilent_82357a.h b/drivers/staging/gpib/agilent_82357a/agilent_82357a.h
-index cdbc3ec5d8bd..23aa4799eb86 100644
---- a/drivers/staging/gpib/agilent_82357a/agilent_82357a.h
-+++ b/drivers/staging/gpib/agilent_82357a/agilent_82357a.h
-@@ -6,7 +6,7 @@
- 
- #include <linux/kernel.h>
- #include <linux/mutex.h>
--#include <linux/semaphore.h>
-+#include <linux/completion.h>
- #include <linux/usb.h>
- #include <linux/timer.h>
- #include <linux/compiler_attributes.h>
-@@ -115,7 +115,7 @@ enum xfer_abort_type {
- #define INTERRUPT_BUF_LEN 8
- 
- struct agilent_82357a_urb_ctx {
--	struct semaphore complete;
-+	struct completion complete;
- 	unsigned timed_out : 1;
- };
- 
++#define X86_FEATURE_PREFETCHI		(20*32+20) /* Prefetch Data/Instruction to Cache Level */
+ #define X86_FEATURE_SBPB		(20*32+27) /* Selective Branch Prediction Barrier */
+ #define X86_FEATURE_IBPB_BRTYPE		(20*32+28) /* MSR_PRED_CMD[IBPB] flushes all branch type predictions */
+ #define X86_FEATURE_SRSO_NO		(20*32+29) /* CPU is not affected by SRSO */
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 5e4d4934c0d3..fba018a730ab 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -1178,6 +1178,7 @@ void kvm_set_cpu_caps(void)
+ 		/* SmmPgCfgLock */
+ 		F(NULL_SEL_CLR_BASE),
+ 		F(AUTOIBRS),
++		F(PREFETCHI),
+ 		EMULATED_F(NO_SMM_CTL_MSR),
+ 		/* PrefetchCtlMsr */
+ 		F(WRMSR_XX_BASE_NS),
 -- 
-2.43.0
+2.34.1
 
