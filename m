@@ -1,155 +1,86 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DEC2158553;
-	Tue,  8 Apr 2025 19:00:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DF00158553;
+	Tue,  8 Apr 2025 19:01:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744138861; cv=none; b=QZXSCsMKXKpPIHIbRTKNCr+w9rSYrAxHTzEx/oJDPXx/Kxh6Ntzq0oSEhXmZYYOad430mpCYn0mdecY2J98kAIxFKSjifJxrCY/tbJ58bLIkEJx64ejHclRCldz006usjJxggzJWqSiZlxsSl4rtV3i6EUPxsv+TDj2DNzmMtro=
+	t=1744138876; cv=none; b=TKmhYgwTjyIXESjnUutUJSECpf316sAFIE0XpAeRI1eJQ5kSiU8s+J5WMMa8YMlD/qZejvP6ShEGI34VHV04Ob61XW/1YEt3a5qhh5R/fx7Ex6vxkOod6e+WtUDOlLMdV97mJ6DXR5QRd513AvpEAQ/fllt6hgXICbwuveVYc20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744138861; c=relaxed/simple;
-	bh=3XZrPac3Hw5S3fai1epjOKmznTRQIETE0iMgnKYeJK4=;
+	s=arc-20240116; t=1744138876; c=relaxed/simple;
+	bh=sHfhxuZIQSO5aubGAGZJMSZaqXquLPjutyks3Ab0bmY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mTI7w8e25olQxVvtcgtYCNvmSIfHpSTtyRWu3B7d87DXRSU9Do+bw2mJevSdVY5iaiG5HFJM8luGP8A6O13lTVll4NnDNNKZFrCU0B3wfSVBFLr+q+bJqi7MnIjN7EJBQU3rGmZviQohMygZLC/6QRYC7ScQaE6Fr51Ez7juSkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IT4ocMvV; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=BOH/PX4oCT+Bc+TuUMiPKCSDR6x0+rZ2yaYB/+9of4wC+Xe+bSyCK1qsWNAixDRfye4EeAveHrD/276r6Rdy652z8TK5XkzGC7rlIY5NjPoMMBE0Ua0chRH+dnQzv55v3+ZVNzWTTkywwrrgSS33KQWx2MKIqnLi9iAU42RyT4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=W2pj7XE1; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IT4ocMvV"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ac297cbe017so1511066b.0;
-        Tue, 08 Apr 2025 12:00:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744138858; x=1744743658; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=86qWtNJK63V7fbnn92M5Wwej+llSZGxK/013fMMqHeY=;
-        b=IT4ocMvV7MxY11Uiv0mv0vYxtYc08v8d/4c+7D5mApihMYXvAbKq3+Up5faSdvWwz5
-         tFNVdKayd74tAhR0dLHrKCfVOqCByOnPapQAbm7lbi6V+XZc6yveeM5Wc4yOrp45iHXl
-         3aoE/ITYgf5ugaT2m7iNX4wIuSV5uc2V9doaQvY+GcSXZZwrR5JieCcASAvmVqeYRrXv
-         1aKE5FWSfEBD32aDaz1Z8JJmR2/ff6xUvylEYPv3ZV6QojQjASh0OYhneWsmPef592bM
-         B5/LK0x5iw/0FQxTVGqKcIe1MIlzCXGeVK3pBXb/Mz48gcjyjbvWMBRFsLLKdGSe2ZeU
-         N0TA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744138858; x=1744743658;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=86qWtNJK63V7fbnn92M5Wwej+llSZGxK/013fMMqHeY=;
-        b=ry4reHhG1g/mRXJPqTgozScwYABFdR6W+6MOQtJRoZKN6snQuPxhUUVs+3EVGZOZCo
-         r8rEaCvjNN69+PqSFR/LD30YSmMSgAk+n/Qd+CmUHJSJBWXo2n+wvkHbcdM9bMxGYCcA
-         HJnTMOH2XKA+YENCKbgcgzZsJxcdKjIVoojiS4WFrjhCkXkgl+ChTd+8GnrzF8wH15jo
-         RyR9caBMxyFRZDFyFaIrYpxpG3/BR+JVmyvNockjrLw8F9UlZfItrYQOUi4FiKCMYqon
-         S8xLm0hDIbryVukh9yHsOvwaNtNBrmfcnDuJE2JxiFtp4uoRv/Ns8ImJSmMiwcVVW1mV
-         q5Dg==
-X-Forwarded-Encrypted: i=1; AJvYcCUlHrGXPsVyWBMcSqHE9eQpLdUB4lBGjULZ4zXjIA2cMpfTOq6bVrg1dKPw5Jk/0aSiMYIOxA3iOBiw1KfE@vger.kernel.org, AJvYcCWYJJOxSDdUC8nwW9AhlG+57IQ55ugO+GkUxFqp5T4HxleYDrA3hIGuSRMoFjoKggQBNhiPjN3d5gkH@vger.kernel.org, AJvYcCX6ecMV8zzM3VpEumN4MS8Nfhuk94Wre0fOgEQZC7zTP0lV+HW7Ou7yXpw7U6BeY3TxZoRgUARYLunh@vger.kernel.org
-X-Gm-Message-State: AOJu0YzS/OsRjOeXAQCFYBwzKNetqRip28pOu0xpzTwxfNP/NQJpHGfD
-	od3nIk78uKQvjuWXIWb9rh8xCQ/JvnQwV5eIJIsL8c5kik1C1krn
-X-Gm-Gg: ASbGncu8+bKqSX9/D98wAYkN33Di143CGdWO5TqrVc85KDdhccVSelnVmSRBxF0qUyO
-	Xk6FeLboBeMVH1msDAmfvZF38ZG5m+B0SFDhOH81hlYqJRFjenRTqjDjGuy57o4xY7kEXZTQjvW
-	fqmPgddVv2K+3e7HKkSpA9RzSsBD+/5hdMLxv0w6SLOm+s7VSrqzBaHKVAMHCd9/1FFOABQIzcl
-	Xj0rs0h6Z0dpCE+0iYZHk/AO+ako2B0hlVSt8nJJ4OIb3ekvfHGHyirgZ3iBeAmf8Y384EC9gB3
-	Ld2CWZs0QjS5DYCDI/o7X96CWePhDrVXs2KsFE0SXlvDF0XHOGjsFsNjRPAYlzqMryHFvCkPUJh
-	KzrF6FdXTnHEAKw==
-X-Google-Smtp-Source: AGHT+IG3OUU8/aAdVJYCK6TAljVtxnmldcMJAlzz9XYOf3SCmOSD/fkTD3Wz1wCPcAqWw1fhUjtzJg==
-X-Received: by 2002:a17:907:7f0b:b0:ac7:b8d3:df9c with SMTP id a640c23a62f3a-aca9bfb1039mr16449566b.1.1744138857536;
-        Tue, 08 Apr 2025 12:00:57 -0700 (PDT)
-Received: from antoni-VivoBook-ASUSLaptop-X512FAY-K512FA ([37.161.107.101])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7bfe5d46esm976543366b.19.2025.04.08.12.00.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 12:00:56 -0700 (PDT)
-Date: Tue, 8 Apr 2025 21:00:27 +0200
-From: Antoni Pokusinski <apokusinski01@gmail.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>, linux-rtc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: alexandre.belloni@bootlin.com
-Subject: Re: [PATCH 2/3] rtc: pcf85063: add support for RV8063
-Message-ID: <20250408190027.4odmg77f2f33i5f5@antoni-VivoBook-ASUSLaptop-X512FAY-K512FA>
-References: <20250407193521.634807-1-apokusinski01@gmail.com>
- <20250407193521.634807-3-apokusinski01@gmail.com>
- <b42d082e-0568-4d2c-849c-a0b9ab762afd@kernel.org>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="W2pj7XE1"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 8C20040E01A3;
+	Tue,  8 Apr 2025 19:01:11 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id HQOofhFlsyOu; Tue,  8 Apr 2025 19:01:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1744138861; bh=mifN9dUH7robv2c9Z86cUKGUFRxqEcBWzOtSGDBSvV4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=W2pj7XE1KeskhnNR3PBis+3jQ60c/FULM+K4NUrPKbjycpt2Z+cZ6VilBfDT0bS6H
+	 abE9wzH2DkDiAdiKZGVR7kADjM6qNvBmAY6fbeTQSs5TlhlBPk/cTndxpY/tqinHYr
+	 OgttJBu5vMQbpPz65yt4NQydAPtSzkcxqDxvrJXm9dq4nkbPSr7NNaY/cPVbZ2ikP5
+	 4y3rhPRdER0netXMhqrsFMGLZ6xRQmxRWNGBvkipzMwtyZN3b9UDlvaUFC/1BENI3s
+	 YVwdR+EVb27KF5eE7siQcMaL+aGjXbVKIQyvpyJuyLeQNz2boGOci3B8k+ThbH7bva
+	 ZET5r2r47eG8Okw9hgASaJpGfLeqPXvzw7Z/klEhYKyBUy/CXVsVMS3JoLyINv/i8y
+	 Wsz/tcsmyUJNKYBQ+azleOWv7XcZITI9DTw9HvqSLtjyaTqQHHkC53+k1okC9C0gki
+	 Ylq5mUpYsMG981RaMhN4/9sEZu3myBIyXPJTapWmuUUb0ef8lmzUpsXOkju/71cAjv
+	 AJRumUOnPuzc/vwaK1r+JrQaRmy4UT17vuri/fgSbCJdQDtl5rSM+Hofrray53xcee
+	 BgBJe1uFLoiJKH5G7fuo3aths38C5Ebxo+aXy3P0VUpD9W+0wY0SD1Ytl1Bvqy8ZbI
+	 FpiGlSc8t3AdM5/lXzwmhlL4=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6052240E019F;
+	Tue,  8 Apr 2025 19:00:50 +0000 (UTC)
+Date: Tue, 8 Apr 2025 21:00:44 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	Yazen Ghannam <yazen.ghannam@amd.com>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v2 2/2] x86/CPU/AMD: Print the reason for the last reset
+Message-ID: <20250408190044.GGZ_VyXCG4H25ce6cF@fat_crate.local>
+References: <20250408174726.3999817-1-superm1@kernel.org>
+ <20250408174726.3999817-2-superm1@kernel.org>
+ <20250408181451.GFZ_Vnm6JXaItfwVpK@fat_crate.local>
+ <a8bed98e-0393-4b0a-8b5b-3007015a9af6@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b42d082e-0568-4d2c-849c-a0b9ab762afd@kernel.org>
+In-Reply-To: <a8bed98e-0393-4b0a-8b5b-3007015a9af6@kernel.org>
 
-On Tue, Apr 08, 2025 at 08:14:36AM +0200, Krzysztof Kozlowski wrote:
-> On 07/04/2025 21:35, Antoni Pokusinski wrote:
-> > Microcrystal RV8063 is a real-time clock with SPI interface. Its
-> > functionality is very similar to the RV8263 rtc.
-> > 
-> > Signed-off-by: Antoni Pokusinski <apokusinski01@gmail.com>
-> > ---
-> >  drivers/rtc/Kconfig        | 21 ++++++-----
-> >  drivers/rtc/rtc-pcf85063.c | 74 +++++++++++++++++++++++++++++++++++++-
-> >  2 files changed, 85 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-> > index 838bdc138ffe..1b9be96faa13 100644
-> > --- a/drivers/rtc/Kconfig
-> > +++ b/drivers/rtc/Kconfig
-> > @@ -483,15 +483,6 @@ config RTC_DRV_PCF8523
-> >  	  This driver can also be built as a module. If so, the module
-> >  	  will be called rtc-pcf8523.
-> >  
-> > -config RTC_DRV_PCF85063
-> > -	tristate "NXP PCF85063"
-> > -	select REGMAP_I2C
-> > -	help
-> > -	  If you say yes here you get support for the PCF85063 RTC chip
-> > -
-> > -	  This driver can also be built as a module. If so, the module
-> > -	  will be called rtc-pcf85063.
-> > -
-> >  config RTC_DRV_PCF85363
-> >  	tristate "NXP PCF85363"
-> >  	select REGMAP_I2C
-> > @@ -971,6 +962,18 @@ config RTC_DRV_PCF2127
-> >  	  This driver can also be built as a module. If so, the module
-> >  	  will be called rtc-pcf2127.
-> >  
-> > +config RTC_DRV_PCF85063
-> 
-> Why? This breaks the order.
->
-I moved this config entry to the "SPI and I2C RTC drivers" section,
-because the driver supports now both I2C and SPI devices.
+On Tue, Apr 08, 2025 at 01:19:42PM -0500, Mario Limonciello wrote:
+> Or do you mean directly in the RST itself?  The RST documentation [1] said
+> and I quote: "Choose whatever sucks least."
 
-> > +	tristate "NXP PCF85063"
-> > +	depends on RTC_I2C_AND_SPI
-> > +	select REGMAP_I2C if I2C
-> > +	select REGMAP_SPI if SPI_MASTER
-> > +	help
-> > +	  If you say yes here you get support for the PCF85063 and RV8063
-> > +	  RTC chips.
-> > +
-> > +	  This driver can also be built as a module. If so, the module
-> > +	  will be called rtc-pcf85063.
-> > +
-> 
-> 
-> ...
-> 
-> >  module_exit(pcf85063_exit);
-> > @@ -740,3 +811,4 @@ module_exit(pcf85063_exit);
-> >  MODULE_AUTHOR("Søren Andersen <san@rosetechnology.dk>");
-> >  MODULE_DESCRIPTION("PCF85063 RTC driver");
-> >  MODULE_LICENSE("GPL");
-> > +MODULE_ALIAS("spi:rv8063");
-> 
-> Drop and use proper ID tables.
-> 
-Will fix that in v2, thanks.
-> 
-> Best regards,
-> Krzysztof
+Self-contained sucks less, no?
 
-Kind regards,
-Antoni
+-- 
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
