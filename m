@@ -1,130 +1,202 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA2131D5ACE
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 14:51:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFD72221DB0;
+	Tue,  8 Apr 2025 14:51:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744123894; cv=none; b=iBherkAu+1+VOlYdEV6k+7oG04dTYTsATso1xYvtcm9xlnZx5B6WW/VoVmJqkA+vJEXGskNQX9nM9fgBEhKtTFb57qmzgMSAZOS4JtP0+Ye9X183NEWI0UQ/aKsT2HJYRq+qLPmeOEKRTP+eZmbkpEVenK0yohdevobu695qSg8=
+	t=1744123899; cv=none; b=qEuxBHwPUWlK3FZJsObiAgAThCbLS6e3oeOZTnJihpC1uIsdOAwqJY/aaShvHazvMYD1197G1kDVIWPUlrtS8b/ZDFOyhVMoN/1sHUAk3+SXvmMwF+oniPIyA416VVVNEugXF7cIenW4stkMhreFb25aAI8iB9HdYYZUb+DV3t8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744123894; c=relaxed/simple;
-	bh=QYspwtBhVsFSgwIRvDlo0+t6maQ17Xcqzma1ZXsCdVE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DR9KE4xT1kTdJOK4QO4viMYb5OHvjrNZZNHHeHm5vACjdDdcakLOsMeposJbDABzGRHCGuTe+O9wiJWE0rkIiTjbNZLpPPbLFG65cS9/AYf3UpPrUu12wH1oU7Z3pVneAgO5aUM9ECXAC161fUheB8Q/a1dz9YKMvrgtoyRu0gA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unrealasia.net; spf=pass smtp.mailfrom=unrealasia.net; dkim=pass (2048-bit key) header.d=unrealasia-net.20230601.gappssmtp.com header.i=@unrealasia-net.20230601.gappssmtp.com header.b=2fG5I6s3; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unrealasia.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unrealasia.net
+	s=arc-20240116; t=1744123899; c=relaxed/simple;
+	bh=qHKVhMeNu+6uyMJqrkcJu9sxTEx1ISyc3gVts+BKlVE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=CQPJARpVaUes1d8N8lSk+3NhAfFCB8ELhGl3wozFaj4t9S4uYLuoyszZbBvT6+Ye//FMeZi3glVmoEWSHSbGAWBE9JqcsDASdJ+f3SOQfAyuXkRCwgq6XPK8FEJn2KY+oxapgkV76VqXtf6jh+a3/QM+HmpcGslC8NBwezX2K2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=oO1x1MwF; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=unrealasia-net.20230601.gappssmtp.com header.i=@unrealasia-net.20230601.gappssmtp.com header.b="2fG5I6s3"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54acc0cd458so6878665e87.0
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 07:51:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=unrealasia-net.20230601.gappssmtp.com; s=20230601; t=1744123891; x=1744728691; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MovUcynSAJffR7RJo4naoiiZN0xmuejMREjzSeCfcHU=;
-        b=2fG5I6s3EPcMLwsFhg8HqffOYdlumC3bicuAJ7myLMNSEw2dbOmPrAUPwP/SWzC2uP
-         Q7Ef0U7/2GzNqZfp8XSVB6WqU3E6xkYcPCdLrtEigFlRJbUOOLcaf+ajPhzNoj0p3rQp
-         sstqkIH9oHDp0T0uEPLtrZCAHc1tHB3GQwVN1/kv+gkqBbfqf5yqrta/0lpdz0RwZdzq
-         Jg4rHi5NptKWfNVDa3CtelgG5N6FptYPzBXvr7olO+OxFEbNEiYMGe2vTqqHmK3KL4F+
-         n7J08IjGDFkOg+hbai0L3FlnibHXPYYSXDHdiTJNVZIbZtVjP4VbeoSRXo6kMJKuWmJZ
-         vITw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744123891; x=1744728691;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MovUcynSAJffR7RJo4naoiiZN0xmuejMREjzSeCfcHU=;
-        b=TG04WqY+VU85Xzyx+Zvvvb2oU1YTtbT9BpXHXE2gf/+kNdRxN7SFrAn/jUhGHMgSjw
-         7CbiW+NrfJ9d8FINSFDQHwVQIBua+szY0LSVtX1fQenTM/w6jKL4Fy3Lpa6QQO3/ONcK
-         2etcpHP6tnwmGbDSgzRdYHz+M7nVY8Wih/+EO6NZYdV4rjrwZVz3Jpo1I+LVIGf+cN1p
-         z+7rYooSYC9vQ7E4LLZbHa/euMOUfuJpHuC2RgEuT6gU+i0HOo0EvoS5TTUbjhRN3GP3
-         plu90IiLZh+4jbsHM3979vQ2y6pJEEDQ2QPM9C95z8pRyZiKHWw7EMytat775KaFoxGo
-         EvGA==
-X-Forwarded-Encrypted: i=1; AJvYcCXAOROAITpb4ViC5lo9LC+MeKr6Mpkcun8++Jb8A3h2e+ikUSG7X3jlEIubUKE133k9e+t3qqgh92XBm2M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwczUClcqM+xVTJELbuQCaYz4amqngCkhrWCMw08JH1lgXefNL0
-	EGIssdhqNQqvvWC4TLDA7n0o7QVFFRBR8VYhsG7jOY4LG3AURugS/TsHlejft39wpQzp69mtqpj
-	3LiPfEzQrhpJ0w9o4UIsn0NUoQwNAGnhPz5DSC9VJk2FX8+3X
-X-Gm-Gg: ASbGnctuBNCBUfPTbKKYBEY7NeClL75fxMkRwrn+AMMu9X7nqB1HWDhe+/WHiCuPrdP
-	U2l3tVgLyxg7pRdCrLDM4PxV1zQ8AcmKRkMV5BBgTedDl7U8BCYiojrtF+TLKxyQ+9uM1UOfA3e
-	7ClGhXSX5SnziOqyqLw8E06ajHedHkeSXZhmzoMAoEgwRFNSJQPbhrkPeJJs8=
-X-Google-Smtp-Source: AGHT+IFzWK434nhtb4w+8XqXvvTVLz7cQ33CfkusPzfC4ffnVIgn0gGz66HquvJCMDt0tb15sjoUDK45j0gNOhYrFlo=
-X-Received: by 2002:a05:6402:26d4:b0:5f0:7290:394b with SMTP id
- 4fb4d7f45d1cf-5f0db889fb1mr12787948a12.27.1744123515199; Tue, 08 Apr 2025
- 07:45:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="oO1x1MwF"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 538AxRGf008721;
+	Tue, 8 Apr 2025 16:51:13 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	3RQmySbuo/UCyRNQmzbHNRcOJc6ylALW0myadTLuAJI=; b=oO1x1MwF4IqH7lel
+	i7TxuO7cgSSQ2R1sZZWjEkr09m7XArQeSZ3GF5TRsACoc0jhtT9lnauTQRF0qSrR
+	zxvQ8MUe+KMXhpetm4bw+9cJ4hjautcsdL6MWFc8L1M5etZUhZW9hOgV40hA9/xC
+	7HewaMMiBZpYYE5CQ9BTbg+O5+/CnTc0UJLfg9nBeoZ/0PwUoXzFAWktktQPQsk1
+	5nA/ovi6Rkd9Ualzuk0+s7EzZqeSxJt+J3QOaXxd+9iCs6YnsX+6VBFklsP5R/9F
+	nXUtFZ9J4lHj1mQq3BUxFgmHk28f7sOIH2nnaY1ib7CywwEy91aCU3POrtXM0DSy
+	3fm8cw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45tw2gwmpt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 08 Apr 2025 16:51:12 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id A351040045;
+	Tue,  8 Apr 2025 16:50:02 +0200 (CEST)
+Received: from Webmail-eu.st.com (eqndag1node4.st.com [10.75.129.133])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 196509245C5;
+	Tue,  8 Apr 2025 16:48:52 +0200 (CEST)
+Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE4.st.com
+ (10.75.129.133) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 8 Apr
+ 2025 16:48:51 +0200
+Received: from [10.252.0.136] (10.252.0.136) by SAFDAG1NODE1.st.com
+ (10.75.90.17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 8 Apr
+ 2025 16:48:50 +0200
+Message-ID: <d66bd978-820a-4700-92c2-ba52d7db4efb@foss.st.com>
+Date: Tue, 8 Apr 2025 16:48:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2703842b.58be.195fa426e5e.Coremail.slark_xiao@163.com>
- <DBU4US.LSH9IZJH4Q933@unrealasia.net> <W6W4US.MQDIW3EU4I8R2@unrealasia.net>
- <f0798724-d5dd-498b-89be-7d7521ac4930@gmail.com> <CACNYkD6skGNsR-AH=6TWeXLqXeyCut=HGJeWUadw198Ha3to1g@mail.gmail.com>
- <CAFEp6-2_+25Z+2nPOQtOzJPgfJM8DAs2h_e6HTQ4fAVLt0+bwQ@mail.gmail.com> <BB06D58C-E27D-42FA-8043-AE767E9B5E91@gmail.com>
-In-Reply-To: <BB06D58C-E27D-42FA-8043-AE767E9B5E91@gmail.com>
-From: Muhammad Nuzaihan <zaihan@unrealasia.net>
-Date: Tue, 8 Apr 2025 22:45:03 +0800
-X-Gm-Features: ATxdqUEXOuMMmnIAa6YJ-BdW2lii4EbPgcz6D2oVlm5dOhxW2qYubUdeN-IGJGI
-Message-ID: <CACNYkD7FNx6KR_aKA9S10=bXx4-Xj9WLnGVGDWTgNERerCc6uw@mail.gmail.com>
-Subject: Re: GNSS support for Qualcomm PCIe modem device
-To: Sergey Ryazanov <ryazanov.s.a@gmail.com>
-Cc: Loic Poulain <loic.poulain@oss.qualcomm.com>, Slark Xiao <slark_xiao@163.com>, 
-	Loic Poulain <loic.poulain@linaro.org>, manivannan.sadhasivam@linaro.org, 
-	netdev@vger.kernel.org, Qiang Yu <quic_qianyu@quicinc.com>, johan@kernel.org, 
-	mhi@lists.linux.dev, linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 4/8] clocksource: stm32-lptimer: add support for
+ stm32mp25
+To: <lee@kernel.org>, <alexandre.torgue@foss.st.com>,
+        <daniel.lezcano@linaro.org>, <tglx@linutronix.de>
+CC: <krzk+dt@kernel.org>, <jic23@kernel.org>, <conor+dt@kernel.org>,
+        <ukleinek@kernel.org>, <robh@kernel.org>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <devicetree@vger.kernel.org>, <wbg@kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        <olivier.moysan@foss.st.com>
+References: <20250314171451.3497789-1-fabrice.gasnier@foss.st.com>
+ <20250314171451.3497789-5-fabrice.gasnier@foss.st.com>
+Content-Language: en-US
+From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+In-Reply-To: <20250314171451.3497789-5-fabrice.gasnier@foss.st.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SAFDAG1NODE1.st.com
+ (10.75.90.17)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-08_06,2025-04-08_03,2024-11-22_01
 
-Hi Loic, Sergey,
+On 3/14/25 18:14, Fabrice Gasnier wrote:
+> On stm32mp25, DIER (former IER) must only be modified when the lptimer
+> is enabled. On earlier SoCs, it must be only be modified when it is
+> disabled. There's also a new DIEROK flag, to ensure register access
+> has completed.
+> Add a new "set_evt" routine to be used on stm32mp25, called depending
+> on the version register, read by the MFD core (LPTIM_VERR).
+> 
+> Signed-off-by: Patrick Delaunay <patrick.delaunay@foss.st.com>
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+> ---
+> Changes in V4:
+> - Daniel suggests to encapsulate IER write into a separate function
+>   that manages the enabling/disabling of the LP timer. In addition,
+>   DIEROK and ARROK flags checks have been added. So adopt a new routine
+>   to set the event into ARR register and enable the interrupt.
 
-Thank you Sergey for your time for the prototype.
+Hi all, Daniel,
 
-Looking forward for the code (and coding help if necessary) and help
-to test it on my machine.
+Does anybody else have additional remarks on this driver ?
 
-Zaihan
+I think Lee is waiting for review, before merging the MFD part (at least).
 
-On Tue, Apr 8, 2025 at 6:27=E2=80=AFPM Sergey Ryazanov <ryazanov.s.a@gmail.=
-com> wrote:
->
-> On April 8, 2025 12:13:17 PM GMT+03:00, Loic Poulain <loic.poulain@oss.qu=
-alcomm.com> wrote:
-> >Hi Zhaihan, Sergey.
-> >
-> >On Fri, Apr 4, 2025 at 7:42=E2=80=AFAM Muhammad Nuzaihan <zaihan@unreala=
-sia.net> wrote:
-> >>
-> >> Hi Sergey, Slark,
-> >>
-> >> Using wwan subsystem and it works without issues, maybe i might miss
-> >> something, perhaps the flow control but i never have any problems even
-> >> without flow control.
-> >>
-> >> I am using gpsd + cgps and xgps with a small modification to Linux
-> >> kernel's wwan subsystem in the kernel to get NMEA data.
-> >>
-> >> I had posted the patch previously and i can post the patch again if yo=
-u like.
-> >>
-> >> Attached in this email is the screenshot of cgps + gpsd.
-> >>
-> >> Maybe it should be in GPS subsystem but it's working for me even using
-> >> wwan subsystem for months now.
-> >
-> >Yes, I would strongly recommend doing the extra step of making it
-> >registered to the GNSS subsystem so that device is exposed with the
-> >correct class.
-> >From WWAN driver perspective, it will not change anything, as we could
-> >have the WWAN framework handling this properly (bridging to gnss
-> >intead of exposing the port as wwan character device).
-> >Sergey, is it your plan?
->
-> Yep. I made the prototype exactly in this way. So a modem driver should n=
-ot care about the port type. Just call WWAN core and it will do the job for=
- the driver.
->
-> The prototype is done. Needs some polishing, proper description, and prob=
-ably, today night I'm going to publish  the RFC.
-> Hi Loic,
+Best Regards,
+Thanks,
+Fabrice
+
+> Changes in V2:
+> - rely on fallback compatible as no specific .data is associated to the
+>   driver. Use version data from MFD core.
+> - Added interrupt enable register access update in (missed in V1)
+> ---
+>  drivers/clocksource/timer-stm32-lp.c | 51 +++++++++++++++++++++++++---
+>  1 file changed, 47 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/clocksource/timer-stm32-lp.c b/drivers/clocksource/timer-stm32-lp.c
+> index 928da2f6de69..e58932300fb4 100644
+> --- a/drivers/clocksource/timer-stm32-lp.c
+> +++ b/drivers/clocksource/timer-stm32-lp.c
+> @@ -27,6 +27,7 @@ struct stm32_lp_private {
+>  	u32 psc;
+>  	struct device *dev;
+>  	struct clk *clk;
+> +	u32 version;
+>  };
+>  
+>  static struct stm32_lp_private*
+> @@ -47,12 +48,37 @@ static int stm32_clkevent_lp_shutdown(struct clock_event_device *clkevt)
+>  	return 0;
+>  }
+>  
+> -static int stm32_clkevent_lp_set_timer(unsigned long evt,
+> -				       struct clock_event_device *clkevt,
+> -				       int is_periodic)
+> +static int stm32mp25_clkevent_lp_set_evt(struct stm32_lp_private *priv, unsigned long evt)
+>  {
+> -	struct stm32_lp_private *priv = to_priv(clkevt);
+> +	int ret;
+> +	u32 val;
+> +
+> +	/* Enable LPTIMER to be able to write into IER and ARR registers */
+> +	regmap_write(priv->reg, STM32_LPTIM_CR, STM32_LPTIM_ENABLE);
+> +	/* set next event counter */
+> +	regmap_write(priv->reg, STM32_LPTIM_ARR, evt);
+> +	/* enable ARR interrupt */
+> +	regmap_write(priv->reg, STM32_LPTIM_IER, STM32_LPTIM_ARRMIE);
+> +
+> +	/* Poll DIEROK and ARROK to ensure register access has completed */
+> +	ret = regmap_read_poll_timeout_atomic(priv->reg, STM32_LPTIM_ISR, val,
+> +					      (val & STM32_LPTIM_DIEROK_ARROK) ==
+> +					      STM32_LPTIM_DIEROK_ARROK,
+> +					      10, 500);
+> +	if (ret) {
+> +		dev_err(priv->dev, "access to LPTIM timed out\n");
+> +		/* Disable LPTIMER */
+> +		regmap_write(priv->reg, STM32_LPTIM_CR, 0);
+> +		return ret;
+> +	}
+> +	/* Clear DIEROK and ARROK flags */
+> +	regmap_write(priv->reg, STM32_LPTIM_ICR, STM32_LPTIM_DIEROKCF_ARROKCF);
+> +
+> +	return 0;
+> +}
+>  
+> +static void stm32_clkevent_lp_set_evt(struct stm32_lp_private *priv, unsigned long evt)
+> +{
+>  	/* disable LPTIMER to be able to write into IER register*/
+>  	regmap_write(priv->reg, STM32_LPTIM_CR, 0);
+>  	/* enable ARR interrupt */
+> @@ -61,6 +87,22 @@ static int stm32_clkevent_lp_set_timer(unsigned long evt,
+>  	regmap_write(priv->reg, STM32_LPTIM_CR, STM32_LPTIM_ENABLE);
+>  	/* set next event counter */
+>  	regmap_write(priv->reg, STM32_LPTIM_ARR, evt);
+> +}
+> +
+> +static int stm32_clkevent_lp_set_timer(unsigned long evt,
+> +				       struct clock_event_device *clkevt,
+> +				       int is_periodic)
+> +{
+> +	struct stm32_lp_private *priv = to_priv(clkevt);
+> +	int ret;
+> +
+> +	if (priv->version == STM32_LPTIM_VERR_23) {
+> +		ret = stm32mp25_clkevent_lp_set_evt(priv, evt);
+> +		if (ret)
+> +			return ret;
+> +	} else {
+> +		stm32_clkevent_lp_set_evt(priv, evt);
+> +	}
+>  
+>  	/* start counter */
+>  	if (is_periodic)
+> @@ -176,6 +218,7 @@ static int stm32_clkevent_lp_probe(struct platform_device *pdev)
+>  		return -ENOMEM;
+>  
+>  	priv->reg = ddata->regmap;
+> +	priv->version = ddata->version;
+>  	priv->clk = ddata->clk;
+>  	ret = clk_prepare_enable(priv->clk);
+>  	if (ret)
