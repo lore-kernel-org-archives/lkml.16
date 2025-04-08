@@ -1,121 +1,247 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 958C3187FEC
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 14:04:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7A1C1B4243;
+	Tue,  8 Apr 2025 14:05:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744121055; cv=none; b=SECPXN07m7nudHFVAt4Xc1LiHqDjiWgWMT7+A8XQz4h9PLEtZ3TjgXP6SYQc4OI1KnTMZhAgdoZBcB213mW+f7cbuh8VNhkNNRlxKEA9EarUFTDoHmmeHmWiXnRc/2vEOSnT4fD2ZWBF99fYCFMDFR5WXvtK79/u6KenkuOvTRY=
+	t=1744121115; cv=none; b=cNpMilyoMIdMp9ich3RsMzBnR4BUnpPlFM4xqpQjpZoxm6RvEaE6CpkS8nuInzx9XQMtquFISBhBfrDKKrPy4la09OAfFP+Qgx2nc+zCg4hQJPdp4f+y0LnGOy4e2ANZnIPrBNSYrOxSmtiTvJajka5aMPmyDe7JkLzI/MZBF4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744121055; c=relaxed/simple;
-	bh=QszLQxpdOJMZeh4hhcXWlTx6vi5m5h3fin16cF2jQZw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=tkR/k7yJwHUWQU9piJMMaB0doXQOCk1fUYsbi3xCFwOuWEutDgA0mO2BC5ulL7lqNO33nWackcm9MKPJUbDhhacd1iiMirrndy8P8lQKqXjO07tJkwKaTU2vQYvzJNniT9jVxoTC7DrnVpBImGfqijFk4rgQFETsqsux5IKAmwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CtVsP47+; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CtVsP47+"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43d209dc2d3so36320355e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 07:04:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744121052; x=1744725852; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9XuywzePAIgnrVesJkRqbK4EXd6ZTvUCScbqcLqpJI4=;
-        b=CtVsP47+sIVDSRP32fVo9Uon3scYz/hGcxXEUHzN5+n8SjlUmD8j4Sg9XpuAs9Yht4
-         rwout1qeQfkLdHLZKE1cY8WzvY+88STBYhUPVbh4m2pILEE/VN4eZPG24ObYWWEc/0NM
-         iQQM0zWX7mR++KUcPh4udxl60Sq9bVSIDxLZKMeWuzf2N33rb+13JIvJcA4eXD1GW+OV
-         b4NZKPQXZSunGRcc8bOQS9b511bUDC1PIbHA5eeJqYU4rdotqq6GDzS/6bkZqDdRiwl7
-         Ac9yfGyxx2lf7EBiv1+xwqrU1jr0cvs53JA3EYOvfCHYP7pRGfoiDH9YZI0HCNPjYDXt
-         wJOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744121052; x=1744725852;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=9XuywzePAIgnrVesJkRqbK4EXd6ZTvUCScbqcLqpJI4=;
-        b=VpMwoSq3wFwl4rIctl80vh7FcKO6VYrdVuyJ+YB64lVgEeNno53yl5wfKewmLv6x6R
-         VhWRGEnqZBzpI13EHbgalFBle6aLk+1iHILZlPe4k4dcIGib2NiuwCLlhZhmOyTMHVmJ
-         zT81QjD2CERFxAYJRq6UJbzMIogz52rYIi9LPdUkn90dxPFnErRI3K8wd2VVGywGWMir
-         MyKCz7baJAcrSA0zZ4AbiD6+7SSU+uswRaTwfnTnEW8v0FLYV5H3dFoNMkBB/SORqEHp
-         tTIfvBlBQ/6VOlUTXER6evtVUsjYHPBcInPgLtsBJagATgY9jRfCsfBVmZUTldOQ+18W
-         YJDA==
-X-Forwarded-Encrypted: i=1; AJvYcCXFv4vWSafooofnsXyAf49oju8rVS11Rj6UYvdcDkrQB+V7GS+loYX8S1IwHb4JU0ysNR2BcpV2nOlCEEA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxif+V4eh43fVvwY9NuA87huIIwWO5oDOvgLPyxi5FDzlOO7cJe
-	Y5L+77GOMVgHBO6ZyXFUz9V5kZVy0+zEeO4uPiAG3MxtWxqlIf078hDlH+BN/ofsz1pc60O0ETi
-	CpNynl/xG4g==
-X-Google-Smtp-Source: AGHT+IG6jAdiCw3blTh9N+MXOZQBHsfQ70S/42on8m9V9q2s13qGmJAHFfrODzkQ6jC014vOm7p4ce7FR5W3sA==
-X-Received: from wmcx8-n2.prod.google.com ([2002:a05:600c:c1c8:20b0:43d:9f1:31a9])
- (user=jackmanb job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:4fd6:b0:43b:c5a3:2e1a with SMTP id 5b1f17b1804b1-43ee0616f6fmr131307195e9.2.1744121051903;
- Tue, 08 Apr 2025 07:04:11 -0700 (PDT)
-Date: Tue, 08 Apr 2025 14:04:09 +0000
-In-Reply-To: <CAOzc2pyKFJKxkTs989rMzRaMSwR+EBXDiCB-2xBRTiu=Y8FLvw@mail.gmail.com>
+	s=arc-20240116; t=1744121115; c=relaxed/simple;
+	bh=qG2mRoz2R0ZPisxRTq+9Q2pjdJVvmDJVjpVyGjddaqg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fUBfdLK1eehJNFUx10bhAVuer2jACqf+m6dPaL+LHwFYC7c/k3mfysVcEXIjPtCwbqKt6k/CbLLRold3sWFR/7Gd6cf+fzoDu2xiticfyqJi8cl6bm99F3bfYIrKVcKNkUXOIr/OP3m/JmvMMiOD0WwalX5w3qM3xCbkX3mXZlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 758511688;
+	Tue,  8 Apr 2025 07:05:12 -0700 (PDT)
+Received: from J2N7QTR9R3.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A4AEF3F6A8;
+	Tue,  8 Apr 2025 07:05:07 -0700 (PDT)
+Date: Tue, 8 Apr 2025 15:05:05 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Arnd Bergmann <arnd@kernel.org>, Will Deacon <will@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	"H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+	Borislav Petkov <bp@alien8.de>, Brian Gerst <brgerst@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Ingo Molnar <mingo@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+	Marc Zyngier <maz@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>, Takashi Iwai <tiwai@suse.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Uros Bizjak <ubizjak@gmail.com>,
+	linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-raid@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH 4/4] arm64: drop binutils version checks
+Message-ID: <Z_UtEbZK9kmXtkb2@J2N7QTR9R3.cambridge.arm.com>
+References: <20250407094116.1339199-1-arnd@kernel.org>
+ <20250407094116.1339199-5-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250131001806.92349-1-vishal.moola@gmail.com>
- <20250130164836.1163f66bede77ec4bcc9d4b9@linux-foundation.org> <CAOzc2pyKFJKxkTs989rMzRaMSwR+EBXDiCB-2xBRTiu=Y8FLvw@mail.gmail.com>
-X-Mailer: aerc 0.20.1-1-g87e37b93d34f
-Message-ID: <D91BB945EKGW.UZSCJRUM034H@google.com>
-Subject: Re: [PATCH 0/2] vmalloc: Introduce vmap_file()
-From: Brendan Jackman <jackmanb@google.com>
-To: Vishal Moola <vishal.moola@gmail.com>, Andrew Morton <akpm@linux-foundation.org>
-Cc: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>, <hch@infradead.org>, 
-	<urezki@gmail.com>, <intel-gfx@lists.freedesktop.org>, 
-	Matthew Wilcox <willy@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250407094116.1339199-5-arnd@kernel.org>
 
-On Mon Feb 3, 2025 at 6:53 PM UTC, Vishal Moola wrote:
-> On Thu, Jan 30, 2025 at 4:48=E2=80=AFPM Andrew Morton <akpm@linux-foundat=
-ion.org> wrote:
->>
->> On Thu, 30 Jan 2025 16:18:04 -0800 "Vishal Moola (Oracle)" <vishal.moola=
-@gmail.com> wrote:
->>
->> > Currently, users have to call vmap() or vmap_pfn() to map pages to
->> > kernel virtual space. vmap() requires the page references, and
->> > vmap_pfn() requires page pfns. If we have a file but no page reference=
-s,
->> > we have to do extra work to map them.
->> >
->> > Create a function, vmap_file(), to map a specified range of a given
->> > file to kernel virtual space. Also convert a user that benefits from
->> > vmap_file().
->> >
->>
->> Seems like a pretty specialized thing.  Have you identified any other
->> potential users of vmap_file()?  I couldn't see any.
->>
->> If drm is likely to remain the only user of this, perhaps we should
->> leave the code down in drivers/gpu/drm for now?
->
-> This function is generally useful for file-systems that use the pagecache=
-.
-> I simply chose to highlight the most obvious user that benefits from it (=
-and
-> so that the function is introduced with a user).
->
-> I haven't identified any other specific users of vmap_file() myself. I kn=
-ow
-> Matthew has some other ideas for it; I've cc-ed him so he can chime in.
+Hi Arnd,
 
-Not much to add but just to confirm - yep, this seems like it might be
-useful as a part of the solution to the page cache perf issue[1] with
-ASI that I spoke about (briefly and chaotically) at the end of the
-LSF/MM/BPF session[0] on ASI this year.
+On Mon, Apr 07, 2025 at 11:41:16AM +0200, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> Now that gcc-8 and binutils-2.30 are the minimum versions, a lot of
+> the individual feature checks can go away for simplification.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-[0] https://lwn.net/Articles/1016013/
-[1] https://lore.kernel.org/linux-mm/20250129144320.2675822-1-jackmanb@goog=
-le.com/
+To address Will's concern, I grabbed the LLVM 13.0.1 (since that's the
+minimum supported version) from https://www.kernel.org/pub//tools/llvm/,
+and using v6.15-rc1 I checked the Kconfig resulting from:
 
-But, for the moment this is all still pretty vague stuff, not at all
-clear yet that this idea makes total sense. Hopefully I'll be able to
-follow up in a few weeks after I've made some time to stare at/prototype
-things.
+  # magic script that puts the toolchain in my $PATH
+  usekorg-llvm 13.0.1 make ARCH=arm64 LLVM=1 defconfig
+  usekorg-llvm 13.0.1 make ARCH=arm64 LLVM=1 menuconfig
+
+I then applied this series, and built a defconfig kernel with the same
+toolchain, which built cleanly and boots fine.
+
+The gist is that everything looks good, so:
+
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+
+More specifically, with that I see:
+
+	CC_IS_CLANG [=y]
+	AS_IS_LLVM [=y]
+	LD_IS_LLD [=y]
+
+... and I've noted each of the Kconfig options below.
+
+[...]
+
+> -config ARM64_LD_HAS_FIX_ERRATUM_843419
+> -	def_bool $(ld-option,--fix-cortex-a53-843419)
+
+	ARM64_LD_HAS_FIX_ERRATUM_843419 [=y] 
+
+> -config AS_HAS_LSE_ATOMICS
+> -	def_bool $(as-instr,.arch_extension lse)
+
+	AS_HAS_LSE_ATOMICS [=y]
+
+> -config AS_HAS_ARMV8_2
+> -	def_bool $(cc-option,-Wa$(comma)-march=armv8.2-a)
+
+	AS_HAS_ARMV8_2 [=y]
+
+> -config AS_HAS_SHA3
+> -	def_bool $(as-instr,.arch armv8.2-a+sha3)
+
+	AS_HAS_SHA3 [=y]
+
+> -config CC_HAS_SIGN_RETURN_ADDRESS
+> -	# GCC 7, 8
+> -	def_bool $(cc-option,-msign-return-address=all)
+
+	 CC_HAS_SIGN_RETURN_ADDRESS [=y]
+
+> -config AS_HAS_ARMV8_3
+> -	def_bool $(cc-option,-Wa$(comma)-march=armv8.3-a)
+
+	AS_HAS_ARMV8_3 [=y]
+
+>  config AS_HAS_CFI_NEGATE_RA_STATE
+> +	# binutils 2.34+
+>  	def_bool $(as-instr,.cfi_startproc\n.cfi_negate_ra_state\n.cfi_endproc\n)
+
+	AS_HAS_CFI_NEGATE_RA_STATE [=y]
+
+> -config AS_HAS_LDAPR
+> -	def_bool $(as-instr,.arch_extension rcpc)
+
+	AS_HAS_LDAPR [=y]
+
+> -config AS_HAS_ARMV8_4
+> -	def_bool $(cc-option,-Wa$(comma)-march=armv8.4-a)
+
+	AS_HAS_ARMV8_4 [=y]
+
+> diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+> index 1d5dfcd1c13e..73a10f65ce8b 100644
+> --- a/arch/arm64/Makefile
+> +++ b/arch/arm64/Makefile
+> @@ -16,14 +16,11 @@ ifeq ($(CONFIG_RELOCATABLE), y)
+>  # Pass --no-apply-dynamic-relocs to restore pre-binutils-2.27 behaviour
+>  # for relative relocs, since this leads to better Image compression
+>  # with the relocation offsets always being zero.
+> -LDFLAGS_vmlinux		+= -shared -Bsymbolic -z notext \
+> -			$(call ld-option, --no-apply-dynamic-relocs)
+> +LDFLAGS_vmlinux	+= -shared -Bsymbolic -z notext --no-apply-dynamic-relocs
+>  endif
+
+Looks good:
+
+  [mark@lakrids:~/src/linux]% usekorg-llvm 13.0.1 ld.lld -shared -Bsymbolic -z notext --made-up-argument       
+  ld.lld: error: unknown argument '--made-up-argument'
+  [mark@lakrids:~/src/linux]% usekorg-llvm 13.0.1 ld.lld -shared -Bsymbolic -z notext --no-apply-dynamic-relocs
+  ld.lld: error: no input files
+
+>  ifeq ($(CONFIG_ARM64_ERRATUM_843419),y)
+> -  ifeq ($(CONFIG_ARM64_LD_HAS_FIX_ERRATUM_843419),y)
+>  LDFLAGS_vmlinux	+= --fix-cortex-a53-843419
+> -  endif
+>  endif
+
+Looks good:
+
+  [mark@lakrids:~/src/linux]% usekorg-llvm 13.0.1 ld.lld --made-up-argument
+  ld.lld: error: unknown argument '--made-up-argument'
+  [mark@lakrids:~/src/linux]% usekorg-llvm 13.0.1 ld.lld --fix-cortex-a53-843419
+  ld.lld: error: no input files
+
+[...]
+
+>  ifeq ($(CONFIG_AS_HAS_ARMV8_5), y)
+>    asm-arch := armv8.5-a
+> -else ifeq ($(CONFIG_AS_HAS_ARMV8_4), y)
+> +else
+>    asm-arch := armv8.4-a
+> -else ifeq ($(CONFIG_AS_HAS_ARMV8_3), y)
+> -  asm-arch := armv8.3-a
+> -else ifeq ($(CONFIG_AS_HAS_ARMV8_2), y)
+> -  asm-arch := armv8.2-a
+>  endif
+
+Looks good; this was checked in Kconfig.
+
+[...]
+
+>  archprepare:
+>  	$(Q)$(MAKE) $(build)=arch/arm64/tools kapi
+> -ifeq ($(CONFIG_ARM64_ERRATUM_843419),y)
+> -  ifneq ($(CONFIG_ARM64_LD_HAS_FIX_ERRATUM_843419),y)
+> -	@echo "warning: ld does not support --fix-cortex-a53-843419; kernel may be susceptible to erratum" >&2
+> -  endif
+> -endif
+> -ifeq ($(CONFIG_ARM64_USE_LSE_ATOMICS),y)
+> -  ifneq ($(CONFIG_ARM64_LSE_ATOMICS),y)
+> -	@echo "warning: LSE atomics not supported by binutils" >&2
+> -  endif
+> -endif
+
+Looks good; both were checked in Kconfig.
+
+[...]
+
+> -#ifdef CONFIG_AS_HAS_LDAPR
+>  #define __LOAD_RCPC(sfx, regs...)					\
+>  	ALTERNATIVE(							\
+>  		"ldar"	#sfx "\t" #regs,				\
+>  		".arch_extension rcpc\n"				\
+>  		"ldapr"	#sfx "\t" #regs,				\
+>  	ARM64_HAS_LDAPR)
+> -#else
+> -#define __LOAD_RCPC(sfx, regs...)	"ldar" #sfx "\t" #regs
+> -#endif /* CONFIG_AS_HAS_LDAPR */
+
+Looks good.
+
+>  
+>  /*
+>   * When building with LTO, there is an increased risk of the compiler
+> diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
+> index 096e45acadb2..713248f240e0 100644
+> --- a/arch/arm64/kvm/Kconfig
+> +++ b/arch/arm64/kvm/Kconfig
+> @@ -19,7 +19,6 @@ if VIRTUALIZATION
+>  
+>  menuconfig KVM
+>  	bool "Kernel-based Virtual Machine (KVM) support"
+> -	depends on AS_HAS_ARMV8_4
+>  	select KVM_COMMON
+>  	select KVM_GENERIC_HARDWARE_ENABLING
+>  	select KVM_GENERIC_MMU_NOTIFIER
+
+Looks good.
+
+> diff --git a/arch/arm64/lib/xor-neon.c b/arch/arm64/lib/xor-neon.c
+> index f9a53b7f9842..8fffebfa17b2 100644
+> --- a/arch/arm64/lib/xor-neon.c
+> +++ b/arch/arm64/lib/xor-neon.c
+> @@ -319,7 +319,7 @@ static void xor_arm64_eor3_5(unsigned long bytes,
+>  
+>  static int __init xor_neon_init(void)
+>  {
+> -	if (IS_ENABLED(CONFIG_AS_HAS_SHA3) && cpu_have_named_feature(SHA3)) {
+> +	if (cpu_have_named_feature(SHA3)) {
+
+Looks good.
+
+Mark.
