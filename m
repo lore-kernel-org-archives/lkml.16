@@ -1,90 +1,132 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC9D01CAA86
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 22:48:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4BA11CAA86;
+	Tue,  8 Apr 2025 22:49:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744152514; cv=none; b=RhwHOAL0vTYgyTUotNHlA7emawngf0kjNhmgrotGX+VgW1c57Wk4O9oC6y325skkxOb+523UxtY1EY2Ft7wEMU8RcxVraw0qrSxG5VfBEtHAX6D+MYgUgMJvAj11KAASaxipmAMa9HW+TFywBpkX5EKrodJyAw96uoxNZWxq868=
+	t=1744152577; cv=none; b=D1fw4LqIifB0rPfJw7bgnkJLfRL1K9l4NYsIkPEHddYJ3U27StsI1GI9CXe798yqi4p3OpnOICrwzJvgCekfZX4C4UzTHoyIUFftLZ1FT6N/9Nej0V7ryAyTVaq+7mTta4pxFrROC9RXxQLqAV7ummVB+GyJacQYS/SSUtVCmgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744152514; c=relaxed/simple;
-	bh=prozXevKzEFPeI4skV5Mr12FJCIqh0bNJbYahYXGSEk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=OVuMI2IQrw4mFXxJCmuboqt7coL1XR/GiNUk+WuHTu9qgp+3EUwSPpcof89MMB+fCa6g9jY5TLy4P8N7qa2DAUk09U3Xd8vPoSv2yAfFW9IDXflVK/2fHeEoLlcyl8HH1TB/FB3Z7ypkJWwu8dcmedwNJBMD1fOxVpxHzpTqKWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QrWrmJjI; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744152577; c=relaxed/simple;
+	bh=esWlGWMk0hjOHa0vXYnDQpyJZQI+y4/+EFbomDvljNQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dWgOYseFifZrWuPjEpiGSjOYoTeHVspyN11jLhEYWoJt016vpfSGsGLny9JgBx+Q3YHoz3sKbsIjriWuthOKiB3geHudKJz+hSnn8unbC4Y60cmHRQ8BgSMre41Tc2+/iAnlOGJIJufTFpDNXx1N/vOMdLCzuc83+qXSnOD8nac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=evilplan.org; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=fail (0-bit key) header.d=infradead.org header.i=@infradead.org header.b=W/Vij0LF reason="key not found in DNS"; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=evilplan.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QrWrmJjI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744152513; x=1775688513;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=prozXevKzEFPeI4skV5Mr12FJCIqh0bNJbYahYXGSEk=;
-  b=QrWrmJjIUzc05rOBa447Z5wMdm2Zz4S671qaVotfKJ38kzg9YmKP6/HI
-   EPhWIEhE0FoQ8wnixk1ttpZyzNM/XBXwhTZN0GT29kj0AXGSEKGjZCxQe
-   4EAnPU61D90tn548IRtzXsQTv7VnmyWRGPwXreAnzBGuwRWExsuv5wZpi
-   QNTHh/CRLGeHDAH8FBFgIzPDvyPPSR7+G6bFnhfmm/7jgY7jnFNBauWa5
-   smq/00TZyl6gX2VPmiG3A7M8ylHyCkch3OId40iYALncqhWqhUIzLGGkY
-   auAj3ZFl6NPQFvzberCQ29N3Y3O9UV9FpCwhX7ekFc4or9eoZGV9n1FDe
-   g==;
-X-CSE-ConnectionGUID: /pPi3UD6TPWGQ4NvzFSBgQ==
-X-CSE-MsgGUID: gw0+YmGZS6GbKa53YWPDkw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="45769890"
-X-IronPort-AV: E=Sophos;i="6.15,199,1739865600"; 
-   d="scan'208";a="45769890"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 15:48:32 -0700
-X-CSE-ConnectionGUID: tKeTXejQQ3m6gjfa3IHtgw==
-X-CSE-MsgGUID: fDDCOOowTCOCZGfRBCXS8Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,199,1739865600"; 
-   d="scan'208";a="132531402"
-Received: from tjmaciei-mobl5.ger.corp.intel.com (HELO [10.125.111.184]) ([10.125.111.184])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 15:48:31 -0700
-Message-ID: <2311746f-4116-4df6-81b8-d9f30071af8e@intel.com>
-Date: Tue, 8 Apr 2025 15:48:30 -0700
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=infradead.org header.i=@infradead.org header.b="W/Vij0LF"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=GKcebr4KZ1je+omvI6wYjVgDBZuusvMWLccgV7EesoE=; b=W/Vij0LFOWUhA5fJmr7CYgXTiO
+	Sw7GTf9d6f0+PG+yZQ/BrXkz3AU1JMQTC2e1v3/iT5Yfx5kTdRYAbOK2ML4PiOaIB1ILuf6toTKub
+	43mwOJNugokxfw6PQRrwYHqAWtiJgI8t/KwpHMM+U/5pD9coT2QW9MHJIWEesEcIkHr2/Yn+OnLQv
+	DVAitfQxAZCDGT2+qBS3YQVOghgN+yOTbHdTjyozq1gog4UD/+BhVhvtwlk+RM03wOFoJyYs0HwEx
+	afJJck1pZGqDMoMhAf3OT79aB9u8EI2NE8/nMMuSPIJD35cqEWPyc/UcBqjD7HZJPKzjXKw96S3xB
+	zQHxtCnw==;
+Received: from jlbec by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u2Hl4-00000002pTB-3uzk;
+	Tue, 08 Apr 2025 22:49:31 +0000
+Date: Tue, 8 Apr 2025 15:49:27 -0700
+From: Joel Becker <jlbec@evilplan.org>
+To: Zijun Hu <zijun_hu@icloud.com>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+	Al Viro <viro@zeniv.linux.org.uk>, linux-kernel@vger.kernel.org,
+	Zijun Hu <quic_zijuhu@quicinc.com>, stable@vger.kernel.org
+Subject: Re: [PATCH 4/4] configfs: Correct condition for returning -EEXIST in
+ configfs_symlink()
+Message-ID: <Z_Wn978o-kwscN29@google.com>
+Mail-Followup-To: Zijun Hu <zijun_hu@icloud.com>,
+	Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+	Al Viro <viro@zeniv.linux.org.uk>, linux-kernel@vger.kernel.org,
+	Zijun Hu <quic_zijuhu@quicinc.com>, stable@vger.kernel.org
+References: <20250408-fix_configfs-v1-0-5a4c88805df7@quicinc.com>
+ <20250408-fix_configfs-v1-4-5a4c88805df7@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH fwctl] fwctl: fix repeated device word in log message
-To: Shannon Nelson <shannon.nelson@amd.com>, jgg@nvidia.com,
- saeedm@nvidia.com, Jonathan.Cameron@huawei.com, linux-kernel@vger.kernel.org
-References: <20250408223300.24561-1-shannon.nelson@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250408223300.24561-1-shannon.nelson@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250408-fix_configfs-v1-4-5a4c88805df7@quicinc.com>
+X-Burt-Line: Trees are cool.
+X-Red-Smith: Ninety feet between bases is perhaps as close as man has ever
+ come to perfection.
+Sender: Joel Becker <jlbec@ftp.linux.org.uk>
 
-
-
-On 4/8/25 3:33 PM, Shannon Nelson wrote:
-> Remove the repeated word "device" from a dev_warn() message.
+On Tue, Apr 08, 2025 at 09:26:10PM +0800, Zijun Hu wrote:
+> From: Zijun Hu <quic_zijuhu@quicinc.com>
 > 
-> Signed-off-by: Shannon Nelson <shannon.nelson@amd.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> configfs_symlink() returns -EEXIST under condition d_unhashed(), but the
+> condition often means the dentry does not exist.
+> 
+> Fix by changing the condition to !d_unhashed().
 
+I don't think this is quite right.
+
+viro put this together in 351e5d869e5ac, which was a while ago.  Read
+his comment on 351e5d869e5ac.  Because I unlock the parent directory to
+look up the target, we can't trust our symlink dentry hasn't been
+changed underneath us.
+
+* If there is now dentry->d_inode, some other inode has been put here.
+  -EEXIST.
+* If the dentry was unhashed, somehow the dentry we are creating was
+  removed from the dcache, and adding things to our dentry will at best
+  go nowhere, and at worst dangle in space.  I'm pretty sure viro
+  returns -EEXIST because if this dentry is unhashed, some *other*
+  dentry has entered the dcache in its place (another file type,
+  perhaps).
+
+If you instead check for !d_unhashed(), you're discovering our candidate
+dentry is still live in the dcache, which is what we expect and want.
+
+How did you identify this as a problem?  Perhaps we need a more nuanced
+check than d_unhashed() these days (for example, d_is_positive/negative
+didn't exist back then).
+
+Thanks,
+Joel
+
+PS: I enjoyed the trip down memory lane to Al reaming me quite
+    thoroughly for this API.
+
+> 
+> Fixes: 351e5d869e5a ("configfs: fix a deadlock in configfs_symlink()")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
 > ---
->  drivers/fwctl/main.c | 2 +-
+>  fs/configfs/symlink.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/fwctl/main.c b/drivers/fwctl/main.c
-> index cb1ac9c40239..bc6378506296 100644
-> --- a/drivers/fwctl/main.c
-> +++ b/drivers/fwctl/main.c
-> @@ -105,7 +105,7 @@ static int fwctl_cmd_rpc(struct fwctl_ucmd *ucmd)
->  		if (!test_and_set_bit(0, &fwctl_tainted)) {
->  			dev_warn(
->  				&fwctl->dev,
-> -				"%s(%d): has requested full access to the physical device device",
-> +				"%s(%d): has requested full access to the physical device",
->  				current->comm, task_pid_nr(current));
->  			add_taint(TAINT_FWCTL, LOCKDEP_STILL_OK);
->  		}
+> diff --git a/fs/configfs/symlink.c b/fs/configfs/symlink.c
+> index 69133ec1fac2a854241c2a08a3b48c4c2e8d5c24..cccf61fb8317d739643834e1810b7f136058f56c 100644
+> --- a/fs/configfs/symlink.c
+> +++ b/fs/configfs/symlink.c
+> @@ -193,7 +193,7 @@ int configfs_symlink(struct mnt_idmap *idmap, struct inode *dir,
+>  	if (ret)
+>  		goto out_put;
+>  
+> -	if (dentry->d_inode || d_unhashed(dentry))
+> +	if (dentry->d_inode || !d_unhashed(dentry))
+>  		ret = -EEXIST;
+>  	else
+>  		ret = inode_permission(&nop_mnt_idmap, dir,
+> 
+> -- 
+> 2.34.1
+> 
 
+-- 
+
+"We will have to repent in this generation not merely for the
+ vitriolic words and actions of the bad people, but for the 
+ appalling silence of the good people."
+	- Rev. Dr. Martin Luther King, Jr.
+
+			http://www.jlbec.org/
+			jlbec@evilplan.org
