@@ -1,64 +1,198 @@
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0380228E37;
-	Tue,  8 Apr 2025 01:15:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E7F517548
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 01:15:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744074912; cv=none; b=PpIe8QhsV0rU8eRboSybK1oySo0Pb7PejMW+L+SdDXijnmZFZaH5KLiVF4v10MlPkcRyr/vPKQMR/XW64ff4JADekW+w+bqjVM48zqA6R5peIzPGkjJN7DKbvp2lu31GKkU65QZdO7mfbSPiNysO0G6o093Bhe0uaeq5OkmDhYg=
+	t=1744074942; cv=none; b=Ueb0ZLwJ2KwmRhyfj54RhmSBu1TLjrWN78ikjHf3BFlPA3f/T4ycG+r89xFq9eS6Dp6JPfOgYXN4JbINGb7hzAf9FlHN000JSOcNPG/daREEPHV0vZZF1sbUSSeY5DXIEFTrNOiVsJA4VIEhVQXhCsx7iWnt46ijXBE6jfKSi+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744074912; c=relaxed/simple;
-	bh=pgTNeOJqHTPwVJwa1UwAzqOlSlG7Gym5QmME+/tye50=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=QebnBUQHq1nASdlkVRuM+TCSaIwf0KlTEMrmBjDMIF3REqywJWidCqz+mza3MTqkpLxZeUkVqS6PTflJB6yZw7CqPGmWnAFoMabViYEXfmg1+Q9NI0RPaVwEyfrXcj+L/k/yet5xwyiW4y6tuUNUW/IhHQtRxRQ8NYta8rfyEzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=boT46qQx; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+	s=arc-20240116; t=1744074942; c=relaxed/simple;
+	bh=4Ydbg4FY1mYfVmiCa+z+S8bh+QBo0t4rP9czs/8571o=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=lCmqJ9g/4i+Z0cEaQ/cV7MIU9EiR7GiQEHq2Yb6T/7rjfxYykqRirhju1ojSf6hqHDfLedcelI0y90AUscCsGn4EPVhCNlRgPaxw5XpfsBjmSwVpWGluQ/gpS5kziFCVihi7pqDRUIgCoKKHj+Q1jiRiWY/TRbtYUBZiMnzS+FI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=JgRiN2IH; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="boT46qQx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1744074900;
-	bh=0kVMxKOm5pByEsr4rY99Yr1e+Z6Yn/HV7y/2Si2yC/M=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=boT46qQx4QzfUF6N1cTmPSfjlE1gH6k1Ldsp6tN6mKuPMfkmQi+8PRjMtNdiFTvU4
-	 2ji5dPAdpCzK8pCYa9hcWOrqnDL+imuF1G1rs/S6wxFGT6YSg01De4QFo4bJaE9tFK
-	 cou1Kujnt5WTXg3/2l0zFyP5jxqEQC8A4gRNz8x7Ui1sADHz5wV+zWhcZ2m7oYcwu8
-	 caFC3AzGF7+0hs/y57mcC4QT0MLxE7sUF2cHdhIbbs6OKXQ3mPZrdDctkAqW331lnu
-	 bPA9AJR9nxTOUH+wXESvHuiuLE/+QZ913WMhxVECfprc+DiVq0xvKuoV9QjlPpdt5E
-	 ntmPn7FDs2Vjw==
-Received: from [127.0.1.1] (unknown [180.150.112.225])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 94C587CB20;
-	Tue,  8 Apr 2025 09:14:59 +0800 (AWST)
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: Tomer Maimon <tmaimon77@gmail.com>, Rob Herring <robh@kernel.org>, 
- "William A. Kennington III" <william@wkennington.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- openbmc@lists.ozlabs.org
-In-Reply-To: <20250404191144.4111788-1-william@wkennington.com>
-References: <20250404191144.4111788-1-william@wkennington.com>
-Subject: Re: [PATCH] ARM: dts: nuvoton: Add MMC Nodes
-Message-Id: <174407489947.454798.15613957607681427179.b4-ty@codeconstruct.com.au>
-Date: Tue, 08 Apr 2025 10:44:59 +0930
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JgRiN2IH"
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250408011537epoutp014da8de092e4cf990107192dcd4e9f860~0MupkL8gu3105331053epoutp019
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 01:15:37 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250408011537epoutp014da8de092e4cf990107192dcd4e9f860~0MupkL8gu3105331053epoutp019
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1744074938;
+	bh=l2lTAv2pu6mm09zltNGhj/3F98QYuTythNRzIzI3pBA=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=JgRiN2IHtesRhNIDzzHXMiTiBV/wI1WlTtVlTJgRDkvAhgxZz73uNTbDsLei7ZD+v
+	 zSUTSsbyUUIjkFhx/99eT+QFmBm1Bs3nSoZjhJ4Luzr7qNxbi0WB88RQmiRhgN9oeC
+	 DwxKq4jpQ3oUpKSyX4Jk5zhMRi4gXh+bL/N30E7A=
+Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
+	epcas1p2.samsung.com (KnoxPortal) with ESMTPS id
+	20250408011537epcas1p2cb70b3ae8932d700692658a41215c1e1~0MupLLv8v0068500685epcas1p2X;
+	Tue,  8 Apr 2025 01:15:37 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.38.248]) by
+	epsnrtp01.localdomain (Postfix) with ESMTP id 4ZWp6c4wcjz6B9mN; Tue,  8 Apr
+	2025 01:15:36 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+	epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	37.6F.10189.7B874F76; Tue,  8 Apr 2025 10:15:35 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250408011535epcas1p2a17c09c5ebec6a6188aebea6c47a1eb0~0MunVOC6E3092830928epcas1p2A;
+	Tue,  8 Apr 2025 01:15:35 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250408011535epsmtrp19a961ff66a187eafbac1a20d56bf9a51~0MunUfCyi2564025640epsmtrp1S;
+	Tue,  8 Apr 2025 01:15:35 +0000 (GMT)
+X-AuditID: b6c32a35-1c9cd240000027cd-cb-67f478b7c0fb
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	A8.4E.08766.7B874F76; Tue,  8 Apr 2025 10:15:35 +0900 (KST)
+Received: from W10PB11329 (unknown [10.253.152.129]) by epsmtip1.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250408011535epsmtip15ead91eaa9334918d2ff59e62f559c5f~0MunJQzvw2189721897epsmtip1h;
+	Tue,  8 Apr 2025 01:15:35 +0000 (GMT)
+From: "Sungjong Seo" <sj1557.seo@samsung.com>
+To: "'Anthony Iliopoulos'" <ailiop@suse.com>, "'Namjae Jeon'"
+	<linkinjeon@kernel.org>, "'Yuezhang Mo'" <yuezhang.mo@sony.com>
+Cc: <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<sjdev.seo@gmail.com>, <cpgs@samsung.com>, <sj1557.seo@samsung.com>
+In-Reply-To: <20250407102345.50130-1-ailiop@suse.com>
+Subject: RE: [PATCH] exfat: enable request merging for dir readahead
+Date: Tue, 8 Apr 2025 10:15:35 +0900
+Message-ID: <c2c601dba823$bb2fdf00$318f9d00$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+X-Mailer: Microsoft Outlook 15.0
+Thread-Index: AQJdGYLaRJff6SK8rO6LplO1qtk/tgLgB8WDsn8GOKA=
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrKJsWRmVeSWpSXmKPExsWy7bCmvu72ii/pBrMPmlr8fbiO1eLlIU2L
+	idOWMlvs2XuSxeLyrjlsFlv+HWG1ePFhA5vF9TcPWR04PHbOusvusWlVJ5tH35ZVjB7tE3Yy
+	e6zfcpXF4/MmuQC2qAZGm8Si5IzMslSF1Lzk/JTMvHRbpdAQN10LJYWM/OISW6VoQ0MjPUMD
+	cz0jIyM9U6NYKyNTJYW8xNxUW6UKXaheJYWi5AKg2tzKYqABOal6UHG94tS8FIes/FKQJ/SK
+	E3OLS/PS9ZLzc5UUyhJzSoFGKOknfGPMeP4zrWCpaMWzDcvZGxjfC3QxcnJICJhILNx+ibmL
+	kYtDSGAHo8TVe//YIJxPjBKnpr6Bcr4xSmz9/oyli5EDrGVdTwBEfC+jxMcHD6GKXjJKTF3d
+	xQ4yl01AV+LJjZ/MIA0iAvUSfV9CQWqYgZZKXLx5mg2khlPAVOLV1h+sILawgIvEjjudTCA2
+	i4CKxOTHT1hAbF4BS4kdL74wQtiCEidnQsSZBeQltr+dwwzxg4LE7k9HweaICFhJPDrexQRR
+	IyIxu7MN7DcJgaUcEjMuP4VqcJHovTqLBcIWlnh1fAs7hC0l8bK/jR2ioZtR4vjHd1BFMxgl
+	lnQ4QNj2Es2tzWwgnzELaEqs36UPsYxP4t3XHlaIEl6Jho2/oWYKSpy+1s0MCTleiY42IYiw
+	isT3DztZJjAqz0Ly2iwkr81C8sIshGULGFlWMYqlFhTnpqcWGxYYIsf3JkZwCtYy3cE48e0H
+	vUOMTByMhxglOJiVRHgtT31KF+JNSaysSi3Kjy8qzUktPsSYDAzsicxSosn5wCyQVxJvaGZm
+	aWFpZGJobGZoSFjYxNLAxMzIxMLY0thMSZx3z8en6UIC6YklqdmpqQWpRTBbmDg4pRqYrqbp
+	fLPKlrjPNtl99dfp/h/nT/O6xCUove3q3O1fZJ7taErYUcRlrfO6aEvs6aMZ6e22urfmTWzm
+	cX5uvfLvqQfnHHz/TtEOPqHYP/ft6gfqR5Ri6x5H6Re8kSr03eqzqDrwQu+BJQpyB1duK7vz
+	PXLO3MX62Zlftu6PztSe0OqcLsHgL7b23xdGi+Wcn68/DjO/xvYjcXnXwrkP1i1eUuBybM9Z
+	g5ue8935TrZLzp+zTntZnvSR2O/612Qz1HW17LacKD3yLX93Gcf76Iu6aUKCYUf7jbuOlAp7
+	XlmTpfI+N/a3lcpmLvW5RVEsepeUZjqnO+0sVzh1Z2qZ4PW/5T/EjAUvXPj4aq+s/6ZlvUos
+	xRmJhlrMRcWJAKg1fqN4BAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupikeLIzCtJLcpLzFFi42LZdlhJTnd7xZd0g8Oz5Sz+PlzHavHykKbF
+	xGlLmS327D3JYnF51xw2iy3/jrBavPiwgc3i+puHrA4cHjtn3WX32LSqk82jb8sqRo/2CTuZ
+	PdZvucri8XmTXABbFJdNSmpOZllqkb5dAlfG859pBUtFK55tWM7ewPheoIuRg0NCwERiXU9A
+	FyMnh5DAbkaJaYf4IMJSEgf3aUKYwhKHDxd3MXIBVTxnlLhz5yI7SDmbgK7Ekxs/mUESIgKN
+	jBKnXp5nB3GYBSYwSnR9e8oI0dLGKLFzzndmkBZOAVOJV1t/sILYwgIuEjvudDKB2CwCKhKT
+	Hz9hAbF5BSwldrz4wghhC0qcnAkRZxbQk1i/fg4jhC0vsf3tHLCZEgIKErs/HQWbKSJgJfHo
+	eBcTRI2IxOzONuYJjMKzkIyahWTULCSjZiFpWcDIsopRMrWgODc9t9iwwDAvtVyvODG3uDQv
+	XS85P3cTIzi6tDR3MG5f9UHvECMTB+MhRgkOZiURXstTn9KFeFMSK6tSi/Lji0pzUosPMUpz
+	sCiJ84q/6E0REkhPLEnNTk0tSC2CyTJxcEo1MO1PcO916alp+CT5/WuJ/ZJanrlKYTnl05UO
+	9Gd8XfZaJ+f4XGHLxS3FYjcTM5cUPeHc8TOmwNZFM5f11ZL9d5yZfjyf/F+Qb+q03yaTa0U7
+	l6ZdaYk4Le/1Kry/THbnuaz2TXW79X7cu6cYPOtevYbo7Alqs39I5imFixW8fCyY+dZMctep
+	j9YrZl9es8bj9rFXDl2Nvbl/VznZ8uf6S73/WHfYJcD4Rc1EqbZfz8PWuxstSnx+1sDk4dmT
+	IgdTjnqGGDlM9jl86HGgVDJ7446VnW/UsrboXnf1/Hop7QKP4n0vg3kO/f7XONnmh33I/bNu
+	tRP7bpd/dtoVkbuLpgXd/OuccEKZs3vumcNaFUosxRmJhlrMRcWJANWy9e4dAwAA
+X-CMS-MailID: 20250408011535epcas1p2a17c09c5ebec6a6188aebea6c47a1eb0
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 101P
+X-CPGSPASS: Y
+X-ArchiveUser: EV
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250407102359epcas1p1dd23affd903c1ece78ddbfe85d39034e
+References: <CGME20250407102359epcas1p1dd23affd903c1ece78ddbfe85d39034e@epcas1p1.samsung.com>
+	<20250407102345.50130-1-ailiop@suse.com>
 
-On Fri, 04 Apr 2025 12:11:44 -0700, William A. Kennington III wrote:
-> We have the driver support code, now we just need to expose the device
-> node which can export the SDHCI and SDMMC properties for the 2 MMC
-> controllers in the npcm7xx. Tested on real hardware to verify that the
-> MMC controller is functional with filesystem access.
+Hi, Anthony
+
+> Directory listings that need to access the inode metadata (e.g. via
+> statx to obtain the file types) of large filesystems with lots of
+> metadata that aren't yet in dcache, will take a long time due to the
+> directory readahead submitting one io request at a time which although
+> targeting sequential disk sectors (up to EXFAT_MAX_RA_SIZE) are not
+> merged at the block layer.
 > 
+> Add plugging around sb_breadahead so that the requests can be batched
+> and submitted jointly to the block layer where they can be merged by the
+> io schedulers, instead of having each request individually submitted to
+> the hardware queues.
 > 
+> This significantly improves the throughput of directory listings as it
+> also minimizes the number of io completions and related handling from
+> the device driver side.
 
-Thanks, I've applied this to be picked up through the BMC tree.
+Good approach. However, this attempt was in the past Samsung code,
+and there was a problem that the latency of directory-related operations
+became longer when ra_count is large (maybe, MAX_RA_SIZE).
+In the most recent code, blk_flush_plug is being done in units of
+pages as follows.
 
--- 
-Andrew Jeffery <andrew@codeconstruct.com.au>
+```
+blk_start_plug(&plug);
+for (i = 0; i < ra_count; i++) {
+        if (i && !(i & (sects_per_page - 1)))
+                blk_flush_plug(&plug, false);
+        sb_breadahead(sb, sec + i);
+}
+blk_finish_plug(&plug);
+```
+
+However, since blk_flush_plug is not exported, it can no longer be used in
+module build. It seems that blk_flush_plug needs to be exported or
+improved to repeat blk_start_plug and blk_finish_plug in units of pages.
+
+After changing to plug by page unit, could you also compare the throughput?
+
+Thanks
+
+> 
+> Signed-off-by: Anthony Iliopoulos <ailiop@suse.com>
+> ---
+>  fs/exfat/dir.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/fs/exfat/dir.c b/fs/exfat/dir.c
+> index 3103b932b674..a46ab2690b4d 100644
+> --- a/fs/exfat/dir.c
+> +++ b/fs/exfat/dir.c
+> @@ -621,6 +621,7 @@ static int exfat_dir_readahead(struct super_block *sb,
+> sector_t sec)
+>  {
+>  	struct exfat_sb_info *sbi = EXFAT_SB(sb);
+>  	struct buffer_head *bh;
+> +	struct blk_plug plug;
+>  	unsigned int max_ra_count = EXFAT_MAX_RA_SIZE >> sb-
+> >s_blocksize_bits;
+>  	unsigned int page_ra_count = PAGE_SIZE >> sb->s_blocksize_bits;
+>  	unsigned int adj_ra_count = max(sbi->sect_per_clus, page_ra_count);
+> @@ -644,8 +645,10 @@ static int exfat_dir_readahead(struct super_block
+*sb,
+> sector_t sec)
+>  	if (!bh || !buffer_uptodate(bh)) {
+>  		unsigned int i;
+> 
+> +		blk_start_plug(&plug);
+>  		for (i = 0; i < ra_count; i++)
+>  			sb_breadahead(sb, (sector_t)(sec + i));
+> +		blk_finish_plug(&plug);
+>  	}
+>  	brelse(bh);
+>  	return 0;
+> --
+> 2.49.0
+
 
