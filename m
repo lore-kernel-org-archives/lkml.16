@@ -1,282 +1,402 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 255E5261560;
-	Tue,  8 Apr 2025 07:03:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43D9525FA0D;
+	Tue,  8 Apr 2025 07:04:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744095790; cv=none; b=BSoBwrQjV560f86GOXkWJ2wW/m+WxRAS6eVlI3RKqrfjskBPQrXcSbdMhPYVKf5FnvwturQTH0/h3YYDUmTJykW/zmIfo4ujb5F/ilXoMFePowmzRJYRR3FyxXuqItF6qnRYcCNYAaflD0tzAkQ0FCv85+zvX7DDFjhI7L2LbrQ=
+	t=1744095844; cv=none; b=tIkcGtyNd+wkjxvq/umQj8CNcRTEUgxBV9rmSuEAdbgxmoWr4Qly8QmLP0r7+0YmYIF/3+Xns/2PwzYsJiwW8J0p+2WORUsN3nUiE5+dLSthZB/n/drzqj88vBNEO5OJexXFBYLIKiIxrGCZ1FHLeirUSoePSx74YCd2kKUkpVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744095790; c=relaxed/simple;
-	bh=Mpar1H1xLzORg6HkbqJjbKb4o6wfw+53maSN75ZJCaA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gKIHeZF41FyC3lRDgA1HttaRETiqAa7TJnhokEOHtkLPEl+s0OKBu2bSFfOrFml9KQtBaAESnmKSIo1o7VlF7RXRaH83dbNwioeNgHHBYnyc6lhddr1+ZLLvX5ujecYewDmX6SJCK+9LrjqMFiu80Lk42iqEAA3pZfGAm5GVebQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=BOuX7mre; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1744095844; c=relaxed/simple;
+	bh=fdd64doT3ZUCmvsoRtRL1uM7nadg2Erx2MdHF1BDcyY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=CfrRvPZQNcNJU/PYv+ceJdzXKWiwz+sHnF+5AjQpxScfsj8YG11MnewF5LEgY3DiJZSBOQkqtP0gv5JlU/MoOUzWlIgnQjdF97ShPc8XmHCfoD2DOJAq5veAHCQRZTTj4btRdO2IhZPlE+PPP4UqqPWnZ+YDVb94yzHRSEvIqmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r6BWOmxV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="BOuX7mre"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 537KZjdB025333;
-	Tue, 8 Apr 2025 07:02:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=ioCar8
-	E22wJOUv+ACxM9AbBY5id8yTVLNcAW+LM3E5w=; b=BOuX7mrebuaLJQHLMFT/Tc
-	ufTkwC1Dn5Me/FniLt25V3jKux3El5cJtiRW9QnHt3CLQfZgZ6TZxN63WHq/5aUt
-	o2P/zViXvuuG9K5Z5AmkpLW7C2qh2D0TXMZqAHTg6cg6/8PfxaZz96r0f1UoA6ek
-	e2XJKC0ZopP/v/1vOQBxSi3FdCVFzQR4AzyIEeR4BdXtoI1BNieYSfCdvWgDsOhm
-	eLNrT0FNZw3nAU9YXXwME6Yw+ksk6hZibQJ9BnVdwAgk82w7Ehbv7Sk1mN+6drSg
-	OA3QIo4pdljat2KwttltOWzCRASQKZroyYcJ7PY0pP5SjdHz+ibsEM6KcH4oVPAg
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45vnvq21jd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 08 Apr 2025 07:02:56 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5382QnOV011518;
-	Tue, 8 Apr 2025 07:02:56 GMT
-Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45uf7yhmpr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 08 Apr 2025 07:02:56 +0000
-Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
-	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53872teW13631810
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 8 Apr 2025 07:02:55 GMT
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A6A9058065;
-	Tue,  8 Apr 2025 07:02:55 +0000 (GMT)
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EEE0A58059;
-	Tue,  8 Apr 2025 07:02:52 +0000 (GMT)
-Received: from [9.109.198.149] (unknown [9.109.198.149])
-	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  8 Apr 2025 07:02:52 +0000 (GMT)
-Message-ID: <16ed195d-7f26-41bb-86d6-ea961b3fa691@linux.ibm.com>
-Date: Tue, 8 Apr 2025 12:32:50 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r6BWOmxV"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 9EA90C4CEE9;
+	Tue,  8 Apr 2025 07:04:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744095843;
+	bh=fdd64doT3ZUCmvsoRtRL1uM7nadg2Erx2MdHF1BDcyY=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=r6BWOmxVRabHmMcraz60OK43gNEsbPHAshAOQsFAMGDo6z2beXBxh+Bp+vmx9uT9/
+	 K0qGl4HdZiR61ycc53ENHsM7vWBY3aZ3YT5sO5vuJsm2xqT8DU5Lt17qr1DVUCH6HE
+	 VR2GNNuSTGsl9zNObAuxnFyj8RL4aG/+9HRdPYi5o8HTshpJy4HncIYretMe4/iHCH
+	 aGzwuv4MlVOyTpmcbJ7OB0lNsGDZSsIN6mzREaqDRobUuVyif7QTivVqPqA3Kj+t6K
+	 BAsrJqIFMP18rutfdIHu3H9oVizvzpSc5kOcgChIVING4HEgLuKCQvf6T/q0dioq9p
+	 2sufQcw6bWLsg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B2A6C3600C;
+	Tue,  8 Apr 2025 07:04:03 +0000 (UTC)
+From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
+Date: Tue, 08 Apr 2025 15:04:01 +0800
+Subject: [PATCH] spi: meson-spicc: add DMA support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND] Circular locking dependency involving, elevator_lock,
- rq_qos_mutex and pcpu_alloc_mutex
-To: Tejun Heo <tj@kernel.org>
-Cc: Jakub Kicinski <kuba@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        cgroups@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Ming Lei <ming.lei@redhat.com>
-References: <Z_QjW7zJLsuO0xp6@slm.duckdns.org>
- <Z_QjxCZW7dh_v22Z@slm.duckdns.org>
-Content-Language: en-US
-From: Nilay Shroff <nilay@linux.ibm.com>
-In-Reply-To: <Z_QjxCZW7dh_v22Z@slm.duckdns.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: kGURlarxvk5d80skYNIxmm0mHwGBN6kL
-X-Proofpoint-ORIG-GUID: kGURlarxvk5d80skYNIxmm0mHwGBN6kL
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-08_02,2025-04-07_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
- mlxscore=0 lowpriorityscore=0 adultscore=0 suspectscore=0 mlxlogscore=999
- malwarescore=0 priorityscore=1501 clxscore=1011 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504080045
+Message-Id: <20250408-spi-dma-v1-1-3c38be62c09c@amlogic.com>
+X-B4-Tracking: v=1; b=H4sIAGDK9GcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDEwML3eKCTN2U3ETdZBNLyzRTM4MUI0tTJaDqgqLUtMwKsEnRsbW1ACx
+ sJVRZAAAA
+To: Mark Brown <broonie@kernel.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Sunny Luo <sunny.luo@amlogic.com>, Xianwei Zhao <xianwei.zhao@amlogic.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744095841; l=11051;
+ i=xianwei.zhao@amlogic.com; s=20231208; h=from:subject:message-id;
+ bh=HoQngfucDhq8Rc3lBesyjBYIgN9TUaxT6bDfj5vDpZY=;
+ b=LCuBOKvTVtOq4fONF3GKDsl2aycldIHGZMpCbjNdsFyagqAM/E+wFfih8p3Iox5DlC9SGMYLi
+ d/7sAJuvOhMALJT8Jgwwu4th7/+vvSOf9hzMx0+YIM3QdRLEsIkGfku
+X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
+ pk=o4fDH8ZXL6xQg5h17eNzRljf6pwZHWWjqcOSsj3dW24=
+X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20231208 with
+ auth_id=107
+X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+Reply-To: xianwei.zhao@amlogic.com
 
+From: Xianwei Zhao <xianwei.zhao@amlogic.com>
 
-Adding Ming and Christoph in Cc.
+Add DMA support for spicc driver.
 
-On 4/8/25 12:43 AM, Tejun Heo wrote:
-> [sorry, lost cc list somehow, resending]
-> 
-> Hello,
-> 
-> Jakub reports the following lockdep splat. It looks like q_usage_counter
-> somehow depends on elevator_lock. After your recent changes, iocost init
-> path performs memory allocation while holding elevator_lock completing the
-> circular dependency.
-> 
-> I don't understand q_usage_counter -> elevator_lock dependency. Where is
-> that coming from? Ah, that's q->io_lockdep_map, not the percpu_ref itself. I
-> think it's elevator switch acquiring elevator_lock while queue is frozen,
-> which puts the elevator_lock depended on from io path, and thus you can't do
-> reclaiming memory allocations while holding it.
-> 
-> The involved commits are:
-> 
->  245618f8e45f ("block: protect wbt_lat_usec using q->elevator_lock")
->  9730763f4756 ("block: correct locking order for protecting blk-wbt parameters")
-> 
-> Can you please take a look? It looks like the second one is expanding the
-> locking scopes too wide.
-> 
-> Thanks.
-> 
-> [  139.119772] fb-cgroups-setu/1238 is trying to acquire lock:
-> [  139.119776] ffffffff867ca448 (pcpu_alloc_mutex){+.+.}-{4:4}, at: pcpu_alloc_noprof+0x96f/0x1000
-> [  139.169460] 
->                but task is already holding lock:
-> [  139.169462] ffff88813ba10298 (&q->rq_qos_mutex){+.+.}-{4:4}, at: blkg_conf_open_bdev_frozen+0x218/0x2b0
-> [  139.217563] 
->                which lock already depends on the new lock.
-> [  139.217566] 
->                the existing dependency chain (in reverse order) is:
-> [  139.217568] 
->                -> #4 (&q->rq_qos_mutex){+.+.}-{4:4}:
-> [  139.217577]        __mutex_lock+0x17b/0x17c0
-> [  139.217587]        blkg_conf_open_bdev_frozen+0x218/0x2b0
-> [  139.280864]        ioc_qos_write+0xc9/0xbc0
-> [  139.280870]        cgroup_file_write+0x1a3/0x6f0
-> [  139.280878]        kernfs_fop_write_iter+0x350/0x520
-> [  139.280885]        vfs_write+0x9b2/0xf50
-> [  139.280891]        ksys_write+0xf3/0x1d0
-> [  139.280896]        do_syscall_64+0x6e/0x190
-> [  139.280901]        entry_SYSCALL_64_after_hwframe+0x4b/0x53
-> [  139.280906] 
->                -> #3 (&q->elevator_lock){+.+.}-{4:4}:
-> [  139.280915]        __mutex_lock+0x17b/0x17c0
-> [  139.280919]        blkg_conf_open_bdev_frozen+0x1c8/0x2b0
-> [  139.280925]        ioc_qos_write+0xc9/0xbc0
-> [  139.280929]        cgroup_file_write+0x1a3/0x6f0
-> [  139.280934]        kernfs_fop_write_iter+0x350/0x520
-> [  139.280938]        vfs_write+0x9b2/0xf50
-> [  139.280943]        ksys_write+0xf3/0x1d0
-> [  139.280947]        do_syscall_64+0x6e/0x190
-> [  139.280952]        entry_SYSCALL_64_after_hwframe+0x4b/0x53
-> [  139.280956] 
->                -> #2 (&q->q_usage_counter(io)#2){++++}-{0:0}:
-> [  139.280965]        blk_alloc_queue+0x5c1/0x700
-> [  139.280971]        blk_mq_alloc_queue+0x14c/0x230
-> [  139.280978]        __blk_mq_alloc_disk+0x15/0xc0
-> [  139.280983]        nvme_alloc_ns+0x21d/0x30f0
-> [  139.280988]        nvme_scan_ns+0x4f1/0x850
-> [  139.280991]        async_run_entry_fn+0x93/0x4f0
-> [  139.280997]        process_one_work+0x89e/0x1910
-> [  139.281001]        worker_thread+0x58d/0xcf0
-> [  139.281005]        kthread+0x3d5/0x7a0
-> [  139.281010]        ret_from_fork+0x2d/0x70
-> [  139.281016]        ret_from_fork_asm+0x11/0x20
-> [  139.281023] 
->                -> #1 (fs_reclaim){+.+.}-{0:0}:
-> [  139.281031]        fs_reclaim_acquire+0xff/0x150
-> [  139.281037]        __kmalloc_noprof+0xa9/0x5f0
-> [  139.281042]        pcpu_create_chunk+0x23/0x6e0
-> [  139.281049]        pcpu_alloc_noprof+0xd34/0x1000
-> [  139.281054]        bts_init+0xaa/0x180
-> [  139.281060]        do_one_initcall+0xfa/0x500
-> [  139.281065]        kernel_init_freeable+0x4af/0x6d0
-> [  139.281070]        kernel_init+0x1b/0x1d0
-> [  139.281074]        ret_from_fork+0x2d/0x70
-> [  139.281078]        ret_from_fork_asm+0x11/0x20
-> [  139.281083] 
->                -> #0 (pcpu_alloc_mutex){+.+.}-{4:4}:
-> [  139.281091]        __lock_acquire+0x1569/0x2640
-> [  139.281097]        lock_acquire+0x179/0x330
-> [  139.281102]        __mutex_lock+0x17b/0x17c0
-> [  139.281106]        pcpu_alloc_noprof+0x96f/0x1000
-> [  139.281111]        blk_iocost_init+0x6f/0x820
-> [  139.281116]        ioc_qos_write+0x468/0xbc0
-> [  139.281120]        cgroup_file_write+0x1a3/0x6f0
-> [  139.281125]        kernfs_fop_write_iter+0x350/0x520
-> [  139.281130]        vfs_write+0x9b2/0xf50
-> [  139.281134]        ksys_write+0xf3/0x1d0
-> [  139.281138]        do_syscall_64+0x6e/0x190
-> [  139.281143]        entry_SYSCALL_64_after_hwframe+0x4b/0x53
-> [  139.281147] 
->                other info that might help us debug this:
-> [  139.281149] Chain exists of:
->                  pcpu_alloc_mutex --> &q->elevator_lock --> &q->rq_qos_mutex
-> [  139.281158]  Possible unsafe locking scenario:
-> [  139.281159]        CPU0                    CPU1
-> [  139.281161]        ----                    ----
-> [  139.281162]   lock(&q->rq_qos_mutex);
-> [  139.281166]                                lock(&q->elevator_lock);
-> [  139.281170]                                lock(&q->rq_qos_mutex);
-> [  139.281174]   lock(pcpu_alloc_mutex);
-> [  139.281178] 
->                 *** DEADLOCK ***
-> [  139.281179] 8 locks held by fb-cgroups-setu/1238:
-> [  139.281183]  #0: ffff888114b3aaf8 (&f->f_pos_lock){+.+.}-{4:4}, at: fdget_pos+0x22c/0x2e0
-> [  139.281197]  #1: ffff888148a7c400 (sb_writers#8){.+.+}-{0:0}, at: ksys_write+0xf3/0x1d0
-> [  139.281210]  #2: ffff88819c5a1088 (&of->mutex#2){+.+.}-{4:4}, at: kernfs_fop_write_iter+0x212/0x520
-> [  139.281223]  #3: ffff888124ec8b48 (kn->active#101){.+.+}-{0:0}, at: kernfs_fop_write_iter+0x235/0x520
-> [  139.281236]  #4: ffff88813ba100a8 (&q->q_usage_counter(io)#2){++++}-{0:0}, at: blk_mq_freeze_queue_nomemsave+0xe/0x20
-> [  139.281249]  #5: ffff88813ba100e0 (&q->q_usage_counter(queue)#2){+.+.}-{0:0}, at: blk_mq_freeze_queue_nomemsave+0xe/0x20
-> [  139.281262]  #6: ffff88813ba105c0 (&q->elevator_lock){+.+.}-{4:4}, at: blkg_conf_open_bdev_frozen+0x1c8/0x2b0
-> [  139.281275]  #7: ffff88813ba10298 (&q->rq_qos_mutex){+.+.}-{4:4}, at: blkg_conf_open_bdev_frozen+0x218/0x2b0
-> [  139.281286] 
->                stack backtrace:
-> [  139.281291] CPU: 34 UID: 0 PID: 1238 Comm: fb-cgroups-setu Tainted: G                 N  6.14.0-13254-g2ecc111972cc #114 PREEMPT(undef) 
-> [  139.281299] Tainted: [N]=TEST
-> [  139.281301] Hardware name: Quanta Twin Lakes MP/Twin Lakes Passive MP, BIOS F09_3A23 12/08/2020
-> [  139.281304] Call Trace:
-> [  139.281307]  <TASK>
-> [  139.281309]  dump_stack_lvl+0x7e/0xc0
-> [  139.281318]  print_circular_bug+0x2d8/0x410
-> [  139.281326]  check_noncircular+0x12b/0x140
-> [  139.281336]  __lock_acquire+0x1569/0x2640
-> [  139.281348]  lock_acquire+0x179/0x330
-> [  139.281353]  ? pcpu_alloc_noprof+0x96f/0x1000
-> [  139.281365]  __mutex_lock+0x17b/0x17c0
-> [  139.281370]  ? pcpu_alloc_noprof+0x96f/0x1000
-> [  139.281375]  ? __kasan_kmalloc+0x77/0x90
-> [  139.281380]  ? ioc_qos_write+0x468/0xbc0
-> [  139.281384]  ? cgroup_file_write+0x1a3/0x6f0
-> [  139.281390]  ? pcpu_alloc_noprof+0x96f/0x1000
-> [  139.281395]  ? ksys_write+0xf3/0x1d0
-> [  139.281399]  ? do_syscall_64+0x6e/0x190
-> [  139.281404]  ? entry_SYSCALL_64_after_hwframe+0x4b/0x53
-> [  139.281411]  ? mutex_lock_io_nested+0x1570/0x1570
-> [  139.281418]  ? do_raw_spin_lock+0x12c/0x270
-> [  139.281425]  ? find_held_lock+0x2b/0x80
-> [  139.281432]  ? mark_held_locks+0x49/0x70
-> [  139.281437]  ? _raw_spin_unlock_irqrestore+0x55/0x70
-> [  139.281442]  ? lockdep_hardirqs_on+0x78/0x100
-> [  139.281449]  ? pcpu_alloc_noprof+0x96f/0x1000
-> [  139.281454]  pcpu_alloc_noprof+0x96f/0x1000
-> [  139.281465]  ? kasan_save_track+0x10/0x30
-> [  139.281471]  blk_iocost_init+0x6f/0x820
-> [  139.281480]  ioc_qos_write+0x468/0xbc0
-> [  139.281485]  ? __lock_acquire+0x42c/0x2640
-> [  139.281494]  ? ioc_cost_model_write+0x7a0/0x7a0
-> [  139.281501]  ? __lock_acquire+0x42c/0x2640
-> [  139.281509]  ? rcu_is_watching+0x11/0xb0
-> [  139.281519]  ? find_held_lock+0x2b/0x80
-> [  139.281525]  ? kernfs_root+0xb2/0x1c0
-> [  139.281532]  ? kernfs_root+0xbc/0x1c0
-> [  139.281539]  cgroup_file_write+0x1a3/0x6f0
-> [  139.281546]  ? cgroup_addrm_files+0xa90/0xa90
-> [  139.281552]  ? __virt_addr_valid+0x1e1/0x3c0
-> [  139.281563]  ? cgroup_addrm_files+0xa90/0xa90
-> [  139.281568]  kernfs_fop_write_iter+0x350/0x520
-> [  139.281576]  vfs_write+0x9b2/0xf50
-> [  139.281583]  ? kernel_write+0x550/0x550
-> [  139.281600]  ksys_write+0xf3/0x1d0
-> [  139.281606]  ? __ia32_sys_read+0xa0/0xa0
-> [  139.281611]  ? rcu_is_watching+0x11/0xb0
-> [  139.281620]  do_syscall_64+0x6e/0x190
-> [  139.281626]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
-> [  139.281631] RIP: 0033:0x7f9d58116f8d
-> [  139.281643] Code: e5 48 83 ec 20 48 89 55 e8 48 89 75 f0 89 7d f8 e8 a8 ca f7 ff 41 89 c0 48 8b 55 e8 48 8b 75 f0 8b 7d f8 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 3b 44 89 c7 48 89 45 f8 e8 df ca f7 ff 48 8b
-> [  139.281648] RSP: 002b:00007ffcdd0a6890 EFLAGS: 00000293 ORIG_RAX: 0000000000000001
-> [  139.281653] RAX: ffffffffffffffda RBX: 0000000000000043 RCX: 00007f9d58116f8d
-> [  139.281656] RDX: 0000000000000043 RSI: 00007f9d56ecf200 RDI: 0000000000000007
-> [  139.281659] RBP: 00007ffcdd0a68b0 R08: 0000000000000000 R09: 00007f9d57a19010
-> [  139.281662] R10: 00007f9d5800afd0 R11: 0000000000000293 R12: 0000000000000043
-> [  139.281665] R13: 0000000000000007 R14: 00007ffcdd0a70f0 R15: 0000000000000000
-> [  139.281676]  </TASK>
-> 
->
-Thanks for the report! This is now a known issue. And we're currently working on
-it to cut dependency of q->io_lockdep_map (or queue freeze-lock) on q->elevator_lock. 
-Please see below :https://lore.kernel.org/linux-block/67e6b425.050a0220.2f068f.007b.GAE@google.com/
-https://lore.kernel.org/all/20250403105402.1334206-1-ming.lei@redhat.com/
+DMA works if the transfer meets the following conditions:
+1. 64 bits per word;
+2. The transfer length must be multiples of the dma_burst_len,
+   and the dma_burst_len should be one of 8,7...2,
+   otherwise, it will be split into several SPI bursts.
 
-Thanks,
---Nilay 
+Signed-off-by: Sunny Luo <sunny.luo@amlogic.com>
+Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+---
+ drivers/spi/spi-meson-spicc.c | 243 ++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 232 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/spi/spi-meson-spicc.c b/drivers/spi/spi-meson-spicc.c
+index df74ad5060f8..81e263bceba9 100644
+--- a/drivers/spi/spi-meson-spicc.c
++++ b/drivers/spi/spi-meson-spicc.c
+@@ -21,6 +21,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/reset.h>
+ #include <linux/pinctrl/consumer.h>
++#include <linux/dma-mapping.h>
+ 
+ /*
+  * The Meson SPICC controller could support DMA based transfers, but is not
+@@ -33,6 +34,20 @@
+  * - CS management is dumb, and goes UP between every burst, so is really a
+  *   "Data Valid" signal than a Chip Select, GPIO link should be used instead
+  *   to have a CS go down over the full transfer
++ *
++ * DMA achieves a transfer with one or more SPI bursts, each SPI burst is made
++ * up of one or more DMA bursts. The DMA burst implementation mechanism is,
++ * For TX, when the number of words in TXFIFO is less than the preset
++ * reading threshold, SPICC starts a reading DMA burst, which reads the preset
++ * number of words from TX buffer, then writes them into TXFIFO.
++ * For RX, when the number of words in RXFIFO is greater than the preset
++ * writing threshold, SPICC starts a writing request burst, which reads the
++ * preset number of words from RXFIFO, then write them into RX buffer.
++ * DMA works if the transfer meets the following conditions,
++ * - 64 bits per word
++ * - The transfer length in word must be multiples of the dma_burst_len, and
++ *   the dma_burst_len should be one of 8,7...2, otherwise, it will be split
++ *   into several SPI bursts by this driver
+  */
+ 
+ #define SPICC_MAX_BURST	128
+@@ -128,6 +143,29 @@
+ 
+ #define SPICC_DWADDR	0x24	/* Write Address of DMA */
+ 
++#define SPICC_LD_CNTL0	0x28
++#define VSYNC_IRQ_SRC_SELECT		BIT(0)
++#define DMA_EN_SET_BY_VSYNC		BIT(2)
++#define XCH_EN_SET_BY_VSYNC		BIT(3)
++#define DMA_READ_COUNTER_EN		BIT(4)
++#define DMA_WRITE_COUNTER_EN		BIT(5)
++#define DMA_RADDR_LOAD_BY_VSYNC		BIT(6)
++#define DMA_WADDR_LOAD_BY_VSYNC		BIT(7)
++#define DMA_ADDR_LOAD_FROM_LD_ADDR	BIT(8)
++
++#define SPICC_LD_CNTL1	0x2c
++#define DMA_READ_COUNTER		GENMASK(15, 0)
++#define DMA_WRITE_COUNTER		GENMASK(31, 16)
++#define DMA_BURST_LEN_DEFAULT		8
++#define DMA_BURST_COUNT_MAX		0xffff
++#define SPI_BURST_LEN_MAX	(DMA_BURST_LEN_DEFAULT * DMA_BURST_COUNT_MAX)
++
++enum {
++	DMA_TRIG_NORMAL = 0,
++	DMA_TRIG_VSYNC,
++	DMA_TRIG_LINE_N,
++};
++
+ #define SPICC_ENH_CTL0	0x38	/* Enhanced Feature */
+ #define SPICC_ENH_CLK_CS_DELAY_MASK	GENMASK(15, 0)
+ #define SPICC_ENH_DATARATE_MASK		GENMASK(23, 16)
+@@ -171,6 +209,9 @@ struct meson_spicc_device {
+ 	struct pinctrl			*pinctrl;
+ 	struct pinctrl_state		*pins_idle_high;
+ 	struct pinctrl_state		*pins_idle_low;
++	dma_addr_t			tx_dma;
++	dma_addr_t			rx_dma;
++	bool				using_dma;
+ };
+ 
+ #define pow2_clk_to_spicc(_div) container_of(_div, struct meson_spicc_device, pow2_div)
+@@ -202,6 +243,155 @@ static void meson_spicc_oen_enable(struct meson_spicc_device *spicc)
+ 	writel_relaxed(conf, spicc->base + SPICC_ENH_CTL0);
+ }
+ 
++static int meson_spicc_dma_map(struct meson_spicc_device *spicc,
++			       struct spi_transfer *t)
++{
++	struct device *dev = spicc->host->dev.parent;
++
++	if (!(t->tx_buf && t->rx_buf))
++		return -EINVAL;
++
++	t->tx_dma = dma_map_single(dev, (void *)t->tx_buf, t->len, DMA_TO_DEVICE);
++	if (dma_mapping_error(dev, t->tx_dma))
++		return -ENOMEM;
++
++	t->rx_dma = dma_map_single(dev, t->rx_buf, t->len, DMA_FROM_DEVICE);
++	if (dma_mapping_error(dev, t->rx_dma))
++		return -ENOMEM;
++
++	spicc->tx_dma = t->tx_dma;
++	spicc->rx_dma = t->rx_dma;
++
++	return 0;
++}
++
++static void meson_spicc_dma_unmap(struct meson_spicc_device *spicc,
++				  struct spi_transfer *t)
++{
++	struct device *dev = spicc->host->dev.parent;
++
++	if (t->tx_dma)
++		dma_unmap_single(dev, t->tx_dma, t->len, DMA_TO_DEVICE);
++	if (t->rx_dma)
++		dma_unmap_single(dev, t->rx_dma, t->len, DMA_FROM_DEVICE);
++}
++
++/*
++ * According to the remain words length, calculate a suitable spi burst length
++ * and a dma burst length for current spi burst
++ */
++static u32 meson_spicc_calc_dma_len(struct meson_spicc_device *spicc,
++				    u32 len, u32 *dma_burst_len)
++{
++	u32 i;
++
++	if (len <= spicc->data->fifo_size) {
++		*dma_burst_len = len;
++		return len;
++	}
++
++	*dma_burst_len = DMA_BURST_LEN_DEFAULT;
++
++	if (len == (SPI_BURST_LEN_MAX + 1))
++		return SPI_BURST_LEN_MAX - DMA_BURST_LEN_DEFAULT;
++
++	if (len >= SPI_BURST_LEN_MAX)
++		return SPI_BURST_LEN_MAX;
++
++	for (i = DMA_BURST_LEN_DEFAULT; i > 1; i--)
++		if ((len % i) == 0) {
++			*dma_burst_len = i;
++			return len;
++		}
++
++	i = len % DMA_BURST_LEN_DEFAULT;
++	len -= i;
++
++	if (i == 1)
++		len -= DMA_BURST_LEN_DEFAULT;
++
++	return len;
++}
++
++static void meson_spicc_setup_dma(struct meson_spicc_device *spicc, u8 trig)
++{
++	unsigned int len;
++	unsigned int dma_burst_len, dma_burst_count;
++	unsigned int count_en = 0;
++	unsigned int txfifo_thres = 0;
++	unsigned int read_req = 0;
++	unsigned int rxfifo_thres = 31;
++	unsigned int write_req = 0;
++	unsigned int ld_ctr1 = 0;
++
++	writel_relaxed(spicc->tx_dma, spicc->base + SPICC_DRADDR);
++	writel_relaxed(spicc->rx_dma, spicc->base + SPICC_DWADDR);
++
++	/* Set the max burst length to support a transmission with length of
++	 * no more than 1024 bytes(128 words), which must use the CS management
++	 * because of some strict timing requirements
++	 */
++	writel_bits_relaxed(SPICC_BURSTLENGTH_MASK, SPICC_BURSTLENGTH_MASK,
++			    spicc->base + SPICC_CONREG);
++
++	len = meson_spicc_calc_dma_len(spicc, spicc->xfer_remain,
++				       &dma_burst_len);
++	spicc->xfer_remain -= len;
++	dma_burst_count = DIV_ROUND_UP(len, dma_burst_len);
++	dma_burst_len--;
++
++	if (trig == DMA_TRIG_LINE_N)
++		count_en |= VSYNC_IRQ_SRC_SELECT;
++
++	if (spicc->tx_dma) {
++		spicc->tx_dma += len;
++		count_en |= DMA_READ_COUNTER_EN;
++		if (trig == DMA_TRIG_VSYNC || trig == DMA_TRIG_LINE_N)
++			count_en |= DMA_RADDR_LOAD_BY_VSYNC
++				    | DMA_ADDR_LOAD_FROM_LD_ADDR;
++		txfifo_thres = spicc->data->fifo_size - dma_burst_len;
++		read_req = dma_burst_len;
++		ld_ctr1 |= FIELD_PREP(DMA_READ_COUNTER, dma_burst_count);
++	}
++
++	if (spicc->rx_dma) {
++		spicc->rx_dma += len;
++		count_en |= DMA_WRITE_COUNTER_EN;
++		if (trig == DMA_TRIG_VSYNC || trig == DMA_TRIG_LINE_N)
++			count_en |= DMA_WADDR_LOAD_BY_VSYNC
++				    | DMA_ADDR_LOAD_FROM_LD_ADDR;
++		rxfifo_thres = dma_burst_len;
++		write_req = dma_burst_len;
++		ld_ctr1 |= FIELD_PREP(DMA_WRITE_COUNTER, dma_burst_count);
++	}
++
++	writel_relaxed(count_en, spicc->base + SPICC_LD_CNTL0);
++	writel_relaxed(ld_ctr1, spicc->base + SPICC_LD_CNTL1);
++	writel_relaxed(((trig == DMA_TRIG_NORMAL) ? SPICC_DMA_ENABLE : 0)
++		    | SPICC_DMA_URGENT
++		    | FIELD_PREP(SPICC_TXFIFO_THRESHOLD_MASK, txfifo_thres)
++		    | FIELD_PREP(SPICC_READ_BURST_MASK, read_req)
++		    | FIELD_PREP(SPICC_RXFIFO_THRESHOLD_MASK, rxfifo_thres)
++		    | FIELD_PREP(SPICC_WRITE_BURST_MASK, write_req),
++		    spicc->base + SPICC_DMAREG);
++}
++
++static void meson_spicc_dma_irq(struct meson_spicc_device *spicc)
++{
++	if (readl_relaxed(spicc->base + SPICC_DMAREG) & SPICC_DMA_ENABLE)
++		return;
++
++	if (spicc->xfer_remain) {
++		meson_spicc_setup_dma(spicc, DMA_TRIG_NORMAL);
++	} else {
++		writel_bits_relaxed(SPICC_SMC, 0, spicc->base + SPICC_CONREG);
++		writel_relaxed(0, spicc->base + SPICC_INTREG);
++		writel_relaxed(0, spicc->base + SPICC_DMAREG);
++		meson_spicc_dma_unmap(spicc, spicc->xfer);
++		complete(&spicc->done);
++	}
++}
++
+ static inline bool meson_spicc_txfull(struct meson_spicc_device *spicc)
+ {
+ 	return !!FIELD_GET(SPICC_TF,
+@@ -293,6 +483,11 @@ static irqreturn_t meson_spicc_irq(int irq, void *data)
+ 
+ 	writel_bits_relaxed(SPICC_TC, SPICC_TC, spicc->base + SPICC_STATREG);
+ 
++	if (spicc->using_dma) {
++		meson_spicc_dma_irq(spicc);
++		return IRQ_HANDLED;
++	}
++
+ 	/* Empty RX FIFO */
+ 	meson_spicc_rx(spicc);
+ 
+@@ -426,9 +621,6 @@ static int meson_spicc_transfer_one(struct spi_controller *host,
+ 
+ 	meson_spicc_reset_fifo(spicc);
+ 
+-	/* Setup burst */
+-	meson_spicc_setup_burst(spicc);
+-
+ 	/* Setup wait for completion */
+ 	reinit_completion(&spicc->done);
+ 
+@@ -442,11 +634,40 @@ static int meson_spicc_transfer_one(struct spi_controller *host,
+ 	/* Increase it twice and add 200 ms tolerance */
+ 	timeout += timeout + 200;
+ 
+-	/* Start burst */
+-	writel_bits_relaxed(SPICC_XCH, SPICC_XCH, spicc->base + SPICC_CONREG);
++	if (xfer->bits_per_word == 64) {
++		int ret;
+ 
+-	/* Enable interrupts */
+-	writel_relaxed(SPICC_TC_EN, spicc->base + SPICC_INTREG);
++		/* must tx */
++		if (!xfer->tx_buf)
++			return -EINVAL;
++
++		/* dma_burst_len 1 can't trigger a dma burst */
++		if (xfer->len < 16)
++			return -EINVAL;
++
++		ret = meson_spicc_dma_map(spicc, xfer);
++		if (ret) {
++			meson_spicc_dma_unmap(spicc, xfer);
++			dev_err(host->dev.parent, "dma map failed\n");
++			return ret;
++		}
++
++		spicc->using_dma = true;
++		spicc->xfer_remain = DIV_ROUND_UP(xfer->len, spicc->bytes_per_word);
++		meson_spicc_setup_dma(spicc, DMA_TRIG_NORMAL);
++		writel_relaxed(SPICC_TE_EN, spicc->base + SPICC_INTREG);
++		writel_bits_relaxed(SPICC_SMC, SPICC_SMC, spicc->base + SPICC_CONREG);
++	} else {
++		spicc->using_dma = false;
++		/* Setup burst */
++		meson_spicc_setup_burst(spicc);
++
++		/* Start burst */
++		writel_bits_relaxed(SPICC_XCH, SPICC_XCH, spicc->base + SPICC_CONREG);
++
++		/* Enable interrupts */
++		writel_relaxed(SPICC_TC_EN, spicc->base + SPICC_INTREG);
++	}
+ 
+ 	if (!wait_for_completion_timeout(&spicc->done, msecs_to_jiffies(timeout)))
+ 		return -ETIMEDOUT;
+@@ -853,10 +1074,10 @@ static int meson_spicc_probe(struct platform_device *pdev)
+ 	host->num_chipselect = 4;
+ 	host->dev.of_node = pdev->dev.of_node;
+ 	host->mode_bits = SPI_CPHA | SPI_CPOL | SPI_CS_HIGH | SPI_LOOP;
+-	host->bits_per_word_mask = SPI_BPW_MASK(32) |
+-				   SPI_BPW_MASK(24) |
+-				   SPI_BPW_MASK(16) |
+-				   SPI_BPW_MASK(8);
++	/* DMA works at 64 bits, but it is invalidated by the spi core,
++	 * clr the mask to avoid the spi core validation check
++	 */
++	host->bits_per_word_mask = 0;
+ 	host->flags = (SPI_CONTROLLER_MUST_RX | SPI_CONTROLLER_MUST_TX);
+ 	host->min_speed_hz = spicc->data->min_speed_hz;
+ 	host->max_speed_hz = spicc->data->max_speed_hz;
+
+---
+base-commit: 49807ed87851916ef655f72e9562f96355183090
+change-id: 20250408-spi-dma-c499f560d295
+
+Best regards,
+-- 
+Xianwei Zhao <xianwei.zhao@amlogic.com>
+
 
