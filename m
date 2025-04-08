@@ -1,116 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55E782550D5;
-	Tue,  8 Apr 2025 21:57:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EFD21E2843;
+	Tue,  8 Apr 2025 21:58:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744149442; cv=none; b=gqbBFWz4U1XAGOonN75mWLzn+W+PpcADEEA6CCnPvM09bPq7zIT4PYBaBoG4pTRG/xux2lzVDfzkoWLhu1lvAPJfbZhhEjboMze+xgwpoBc7pDPQjDgmxYOQbEgIFMX82saF9oYx0zLdJn32q2ftHZQvMR8s+AdzneMnw12HLCU=
+	t=1744149518; cv=none; b=S+P0alDMXyZlwYIKybU4Jbl4Cm4KLE5BYQOOGwsWIcg9fqMj5T/Dlswyyjdy0zS8T7uW7Hab2GicuR2bazn+f0GznSWc1pGmISbA81Obkzan6MLHGgkaVqnHrhutW55VsA+2kORdM/qnvgLDsi4sJ2jWcvEtYODyTanBMeZ/hnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744149442; c=relaxed/simple;
-	bh=13bwSaLivT7PWT7yUVcAfAg2qBe5W0x6LJ2TLwmH5hY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EurTw/NyRae6ME+VuNbEb3b9nW45SxLzezYwtu28v7Z/IGSv5MIMmkwjvl83EACoGoANbafBx8mYrRNpSUPST0KrAD3iBh5PbZnGlYFK5yGcQy5lO2JuYNX6XRZkW5Fd3rlkMBlH+z1dWu4aBj+MJCp9FoJyfJgSklvYcuHybOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jxtG6cyH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744149518; c=relaxed/simple;
+	bh=HtuFhXI63urBA3dRKYyXQ6GHreCYVeNttV6YM+zDLlM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=crFEbrqOQffQqCNiyrukPvVzXrb+EHEBMBKiQRGzPQgSUL0vRdRII14cJlFPM4uORO6Q0aqrZ7oSXsBgYm6wAs8jDo9sTBAwruKVZvwVk8beG05JvgZcdA9yeZQ0gyO7ZOQ+XT7QNGaj7Clgo0zOg2KEh8QDzJrsUYsa7ZqYAfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b=LrhAcCGU; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jxtG6cyH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D036DC4CEE5;
-	Tue,  8 Apr 2025 21:57:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744149441;
-	bh=13bwSaLivT7PWT7yUVcAfAg2qBe5W0x6LJ2TLwmH5hY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jxtG6cyHv89DdB2PnUxODTgCDaLldaPSr+JhG2xN9sCVBsDmww34SfB0kmnOMRPtt
-	 xaOYkzZnblT5Zu95vJHgmQUyrT1QVvv0ZUdJgS2kFGOWMbPpgu39BTnrCZ/szKmH73
-	 TeailpYcpa6QMhKDrLH0cQ0S+pR8mmO8wRqagmPdcsDTUPY5kQ15gCyF7cjkFm0WYe
-	 5/oJr0yP33grObfcOvgKrbMzWRD1ZjWRGnH/NYQ4yDcQaizFUJS4BX4InqW4LHQ6l/
-	 eqQpBNvhSkGG0Zys6bzKOJZlbRs/8gyvRNBieXjLoIUv+WGHw28HF/HxxuiutM/lEH
-	 LBn2ddlCP75kg==
-Date: Tue, 8 Apr 2025 16:57:18 -0500
-From: Bjorn Andersson <andersson@kernel.org>
-To: Luca Weiss <luca.weiss@fairphone.com>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Dmitry Baryshkov <lumag@kernel.org>
-Subject: Re: [PATCH v2 03/24] ARM: dts: qcom: msm8916: Use the header with
- DSI phy clock IDs
-Message-ID: <5jvedjfbkuumgmqovf65cavdgnta5zss3emiwnwdnh5o3aw7te@4d5ecfbxlwui>
-References: <20250408-dts-qcom-dsi-phy-clocks-v2-0-73b482a6dd02@linaro.org>
- <20250408-dts-qcom-dsi-phy-clocks-v2-3-73b482a6dd02@linaro.org>
- <D916M5DUK1YC.282XEZ0TMSNEC@fairphone.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b="LrhAcCGU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1744149508; x=1744754308; i=rwarsow@gmx.de;
+	bh=HtuFhXI63urBA3dRKYyXQ6GHreCYVeNttV6YM+zDLlM=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=LrhAcCGU72NTdllavFWgkIw5YODVitP1AyVrJHQKeCouPKLDuwpAQT+TGkex+qJj
+	 C4XIOWakcFlvUQpFC2VOO22X2GfhDjrohJ6s+ppsV1q0S97VlNxMYTAKACgxqbWmS
+	 rSvw2PG6I9ZQ4Vunhb5WZTjzydRjYVMedoUJmbla7x7Wvl7SZq6MgeEqlGBcBmVkj
+	 sdW9xK2XU3fV4wJVgJuv3os2dAa10tZOpKom3+c9RbdCaxtIqGqy8BgjNEbQsb2d8
+	 uefew11tBPTUcmgpfREm7IywqRL83FQj7yc53lfeCxSEtEjaEziQOUvPP2fPUb5zd
+	 uRBeDjTX1UgTI8ul3Q==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.200.20] ([46.142.33.88]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1M8QWG-1txr7L3Ue0-006dVb; Tue, 08
+ Apr 2025 23:58:27 +0200
+Message-ID: <d88f1ca2-95bd-49b7-b73b-95d87f18f82b@gmx.de>
+Date: Tue, 8 Apr 2025 23:58:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D916M5DUK1YC.282XEZ0TMSNEC@fairphone.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.14 000/728] 6.14.2-rc3 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250408195232.204375459@linuxfoundation.org>
+From: Ronald Warsow <rwarsow@gmx.de>
+Content-Language: de-DE, en-US
+In-Reply-To: <20250408195232.204375459@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:wSwSTIaSEpoC/UVnroQbBTEhUSqml79b6tWgLqkL9aA2RL99GHb
+ gimaCkxDh+/ViSQToStDJWCb1btwstETT7APG9EMzMyoMT6mbCgeqigtLDSoD1G0kgtm/GQ
+ Tlkg6BH8qJKwZIAGl2iR/9jZAGZ8MWSjXOmh7AyaLWHRJFnLTsbhi+FEkIxDFp2EZBr9VR2
+ iuDKNw8fkyFG028o7kCkA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:99jK/KI/pSc=;5Ur4d1uh1VE+6IBRkhSx6o1HMJV
+ YVTEXab7hOPuipwt5s3teW1HVO2gXfYMvUhiotkPtBaT6e4xBVXEfROKWY1g1ORcJ2BOSrG5t
+ f6OMrmmrJJllXWC3deGlqma04SOyvvvR4lKhkqNnLYTY1zKWG/VBvnSRNXOGXwG90+ZCfuXXq
+ nXfMjfTTGFpfxoH7xE/kjI2osHkvCnTZqIQhQ76lSDJtleL9o1LlrxZS5IFLw28hsnVJr+2F/
+ 6GBLVtC/ZLlf6kUkD7JUox10I2Z8cKflpB9UF/PmUoHWnO+Pc/6SoIW4WpthZRjlxmprObxgm
+ HYhPC2zozPLEH2z1Lmrou05FDZC7X5ySJ0+CUxMRd/GTuYhSCClwhpbhw/0fKBluPQBtbddaG
+ 3RV2rKx5LY61YmUACxJdYgdYEH9sOI7+EPqf0Su0wvx8dEsekkrt4A8QYMcBvCcg7yd1pPy4B
+ Pk6GOx3JHiMJrcS6tqW0gQBHoLW1gtpLmRCk0z9uuZBLJjdw5n93Y2mFKxfCyWOhaU5wHz9QW
+ x36AvImowgEtT6B6sxoi6NrDj6EMdqJZ1ny3RXcvQL+RTjGgMCJ3cCTsaFIFEQ4nAtTPDCPg4
+ YVlNWFXCbnd/Kd0IDUY16Y8hcaYIudGODPwzEAe44Cg5ftEDdOektzNLq65N4ZKKKDS3HCIL/
+ qmbdrr3jTI9cD/AJXkWmjBNTCshX7ONc6P4jEfocwAKjGumwqeHdmfHcBGjoIuhYetjfV6IVF
+ WA7Yh76Ac/3Imeqy8+61jdaklU5bARGm65TedESszxARpYHhygMbR2ZJpDIvSY/mk85p/CyLi
+ qyTBRQFHWLDv/JSDCyW/bTTTApvLi384VxE8WAyY+UE7tj22YZGu5wzylHGhKS+qPDmq7wfFx
+ LoV/hCKvYQ0UeaCHPoVwpgquoCMxwSyyBt/Dl7r8iw2H1LDURqC5gqQoBtaXQNC4dEfzNDznK
+ JBaw2pyge4iCQnTZ292WiMNLKRnjR8UOftfG+ogjZBbzQECtCi9hWMJH7sRK6sd9RauEzLxy/
+ K8/132ID1ajyx142JWqyjEzBdOyn0GqtfBBN5oMoiGV+bZAcUrP6kpFKBLe5BN4iel09Ho9Hg
+ YiByn/9/nIlflTJx6hrjZsfh6/lPcjSP6DhCvcTH55GYEB8xXxQksHFAoLVKyDrwQG0agCi1k
+ RjzmOPEQ+aHeXNS0ofkX3qEoeJpQgf6GdKM5JTetQ93b3KgxKx/9DCtfEiEDWYjE3MliE6gvV
+ gFsiBxP6Nt6/cQcVOEW7+9IwOCERwFa9tsLGnOBsC37X2bjYlUSgD5cliAC/DRDqzStgJGuCw
+ l7CqNcnH9ujfzfouJZuBCq1S67FUL1CcqjLwnXL2T8lWcbGKprq+FpldQUbEVy5nNhvNweD3t
+ WbLI7Z5GZPaXHxPPptD+cbiG4/dn8D5zDns0opdzr4SqSCVoClXhmLuMqI5Tl2ap+ECBB4foM
+ X0YbjYSs7CUcEtr1j+jt+weB73Uc=
 
-On Tue, Apr 08, 2025 at 12:23:18PM +0200, Luca Weiss wrote:
-> On Tue Apr 8, 2025 at 11:32 AM CEST, Krzysztof Kozlowski wrote:
-> > Use the header with DSI phy clock IDs to make code more readable.
-> 
-> Hi Krzysztof,
-> 
-> This patch was the wrong subject, it's touching arm64, not arm32.
-> 
+Hi Greg
 
-Thanks for spotting this, I'll fix it up while applying the patches.
+no regressions here on x86_64 (RKL, Intel 11th Gen. CPU)
 
-Thanks,
-Bjorn
+Thanks
 
-> And thanks for sending this series, it's nice to see some magic numbers
-> disappear that make little sense if you don't know what it's about :)
-> 
-> Regards
-> Luca
-> 
-> >
-> > Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
-> > Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> > ---
-> >  arch/arm64/boot/dts/qcom/msm8916.dtsi | 9 +++++----
-> >  1 file changed, 5 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> > index 8f35c9af18782aa1da7089988692e6588c4b7c5d..c89f9e92e832eae8f630555e9e7f5817d6731d4d 100644
-> > --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> > @@ -4,6 +4,7 @@
-> >   */
-> >  
-> >  #include <dt-bindings/arm/coresight-cti-dt.h>
-> > +#include <dt-bindings/clock/qcom,dsi-phy-28nm.h>
-> >  #include <dt-bindings/clock/qcom,gcc-msm8916.h>
-> >  #include <dt-bindings/clock/qcom,rpmcc.h>
-> >  #include <dt-bindings/interconnect/qcom,msm8916.h>
-> > @@ -1497,8 +1498,8 @@ gcc: clock-controller@1800000 {
-> >  			reg = <0x01800000 0x80000>;
-> >  			clocks = <&xo_board>,
-> >  				 <&sleep_clk>,
-> > -				 <&mdss_dsi0_phy 1>,
-> > -				 <&mdss_dsi0_phy 0>,
-> > +				 <&mdss_dsi0_phy DSI_PIXEL_PLL_CLK>,
-> > +				 <&mdss_dsi0_phy DSI_BYTE_PLL_CLK>,
-> >  				 <0>,
-> >  				 <0>,
-> >  				 <0>;
-> > @@ -1590,8 +1591,8 @@ mdss_dsi0: dsi@1a98000 {
-> >  
-> >  				assigned-clocks = <&gcc BYTE0_CLK_SRC>,
-> >  						  <&gcc PCLK0_CLK_SRC>;
-> > -				assigned-clock-parents = <&mdss_dsi0_phy 0>,
-> > -							 <&mdss_dsi0_phy 1>;
-> > +				assigned-clock-parents = <&mdss_dsi0_phy DSI_BYTE_PLL_CLK>,
-> > +							 <&mdss_dsi0_phy DSI_PIXEL_PLL_CLK>;
-> >  
-> >  				clocks = <&gcc GCC_MDSS_MDP_CLK>,
-> >  					 <&gcc GCC_MDSS_AHB_CLK>,
-> 
+Tested-by: Ronald Warsow <rwarsow@gmx.de>
+
