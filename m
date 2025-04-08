@@ -1,225 +1,134 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5676E2641FC
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 07:36:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64AF6263F5B;
+	Tue,  8 Apr 2025 07:36:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744097798; cv=none; b=TiIO7aEoDvjpRRa2fz+i1N18Qj5zDmoFTM5J3rqO4vbO23CurQ/YkSpnaDanPL3seoaQ+l6GqMUkWI7S++59y5F8X4cRTfAiQzVW7CH+RZLU2X0IE2ljXxY4q/FIOC7MBdP8ioMYkwY4hZ6FEr/JmXELyIoNS2lw+GWp+D6E65U=
+	t=1744097807; cv=none; b=XADuK2aXP7c+VbGrhkjiXwfYxcycguLF6uU233pIB0CdCb3zTlera2OW1MaQzgzWJbOXE78qEmFpHit8PEzYBkb4SsRJiM2q+iV/YG10W5YN9SSJqSCAZY7DlvVe4mRbsyQCupXjRkplKqMvudsk75kK8xA9ilb6QdkBuzhIsHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744097798; c=relaxed/simple;
-	bh=jYN84no5HfMrvCOtmNwOTquSUUgh/6PVglmv/98TzZM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=MOA5PeOTnluzKKpq1s1Bq5xKIDBDBYp2TjINlaP8a5nTIc/nsB7V2kaCSceo3HBfVh8LCw3KOKF9MXFi+nrVy7QcXVWwsdYVOW9QxNxgPO66GNToYwMsERe2VUno2PqAuex7pvqQuBfm9hOMuae1QCj6XEwkutUEBq30QEcJf6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Nn8LGNts; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1744097807; c=relaxed/simple;
+	bh=qStEiInZ6QdmTNPscErtkbrO8I7VqKWbI7Vow2/nZlQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hhj2LrOpKB8gY+gu9MtT5Oo57LRjGQ8gTopX77gTfYeU40QOf7+CAmPSLcu/sWhoIxoK1wuSHpHcnsgceIxV9ZPEIHgDXBHqLg4kuaQcLftGMVLVuD1GCedbASxsKDYK9lBnzmzRaZ/kc+jr0dVGsbF0Wb0mMJG/ETBtOj3Itys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=OgBMdpby; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Nn8LGNts"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cf257158fso36323155e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 00:36:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744097794; x=1744702594; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gHis8ysDm+/ce9937f9eb+O8K3AUE5i9Qwr+5PKEGCI=;
-        b=Nn8LGNtsvypMEqPk8ddjC+3x5t8Ln9kzsj9uChKAAk0L3htMeta8QGCYrem2z0V8ch
-         ZaZXSX64D+z9NTpvhFAH8ZZzoT6vZqAKcz5N4WEI4t7wPC5xSDNjvT6+ASpVLLJOxMcd
-         0ns+4jYZ72aohBaTzWrXVZuzo4jKqUZNvqvvR5xDRHDWMSpKUmt5QlhnKXNg01cBsMBH
-         u+vIuLDrvbo2OcBGZU/DUkp99zlYzdigHH4oN16MiA/6q0WXf7ooOMlFVTtTe8LW/gL+
-         v1lMzYlVatrhonk8Rha2SYPEZXDSjgxcdThefwpNZKZcKAoUfrhcELOCxpSE7ks14gqQ
-         dP/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744097794; x=1744702594;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gHis8ysDm+/ce9937f9eb+O8K3AUE5i9Qwr+5PKEGCI=;
-        b=ElqWpapi6Ig2o6SunCuV6/4S7FeiNTOWGjhyDurS7LwtG7oqIcGb02A7YK/QkcpGeF
-         +sbza5xJkU1IeGcWGW6b20guKFQir3RmlXP0wTCl39zhIxbwVa1Gojrgpt09huPisSB+
-         98V49kwOXXdbSGX9zv4DI6V1FQdSxr2AxxzjNP2vEF+MEmUVVpo4LXjWSVqJggM16d8p
-         7Ly89jRM6+834jpY9bmAu2PWvPec7UoSuhEdgbgefPjYWRWnW/kCy/gMELn2eDWI4Eaz
-         28/rNdrtX1R7OjucduXALrtfFs8g0tXWyjaW8pu/bkyZ2zJiGOuGLfYQhXsSJgiZPJoJ
-         Mc8Q==
-X-Gm-Message-State: AOJu0Yxj8AwGFuLamynfFPgSwnAGUPjyEFEEet/09rhh2w02PlMcvE2C
-	NDhCRLFnxHfra9x0+VyaXOTJqZFhqszCle7iWzm/tVzpOK/ptSj6xvKh1S4Ae7I=
-X-Gm-Gg: ASbGnct7Jxe1k2oBRnSYE+tb0/rN9QXkkBP8B7xGL1jia0Bfi/6x6Uxl7gjsNx1aQ/5
-	MWf21uGascCRNEGalckEzZVGqKcwnwcRVuodPxZ0eI7bNzazZJR0Wt8caJKhVZpeh2k23HCnrP2
-	3DTRW2F2y3dnJIthNXVFLGbEnCHscKfbzLemu0ivO2hdYKCwzes1MfXfdxZjcHE4Mgn0Or7fq3T
-	NXmqnKR8ILzY6vCTE3BwFoVsz9MxakUpJkpi665wqmR5OCa13NQ+vI77Qe0XUPh35ncg7n8NFcD
-	pBtSp832Oa/JIbtkTx6IE5elB9GttX63w6k2SQ==
-X-Google-Smtp-Source: AGHT+IGHagAQNTtn2a+MuMwHyBshBsQtM9UgV2ixBg56P23KxFjIh375u0gTz/ubybm8RglkXY7FFA==
-X-Received: by 2002:a05:600c:1382:b0:43c:f8fc:f69a with SMTP id 5b1f17b1804b1-43ecf8231a8mr152102955e9.4.1744097794503;
-        Tue, 08 Apr 2025 00:36:34 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:2adf:eaae:f6ea:1a73])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d980sm14287627f8f.61.2025.04.08.00.36.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 00:36:33 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 08 Apr 2025 09:36:30 +0200
-Subject: [PATCH 3/4] regulator: rpi-panel-attiny: use lock guards for the
- state mutex
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OgBMdpby"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id CAF22442DC;
+	Tue,  8 Apr 2025 07:36:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744097802;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vqZg4tEnT3kYdltFRHVi26EBjikLyKFcZ9ynT2bbpFA=;
+	b=OgBMdpby5E/xgaA7CMEHegfw3/FY7SMlp19DXobX0C1ETaxvLon+no8FD7xGrYEjZ5swQQ
+	49hh4s+R7bCt69pr+LWDRXSG6NpYxt+970wfH5eRm08tvXphPL3kyoRvkqmMrepAHdyJWg
+	Xf6YRqoXwwwhEBENueCkJ7SzDplsmgHLuO+FLaKfBjHHjqRVza4+sCGybwmpj2cFbo3jWV
+	elVezCkW4v3C3fNFwmbk0Q+m6DCsvQuIHW9zgo5jmryRC0KpJR+OPppCi6wk8XUt+vKKuL
+	im8Tcacxro+BEBEt/AnC2afndKXk2aGQ300/+CBiFiDYlWH83gPb9OEm+21INQ==
+Date: Tue, 8 Apr 2025 09:36:41 +0200
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Antoni Pokusinski <apokusinski01@gmail.com>, krzk+dt@kernel.org,
+	conor+dt@kernel.org, robh@kernel.org,
+	alexander.stein@ew.tq-group.com, linux-rtc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/3] rtc: pcf85063: add support for RV8063
+Message-ID: <20250408073641fa372d2e@mail.local>
+References: <20250407193521.634807-1-apokusinski01@gmail.com>
+ <20250407193521.634807-3-apokusinski01@gmail.com>
+ <b42d082e-0568-4d2c-849c-a0b9ab762afd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250408-gpiochip-set-rv-regulator-v1-3-a18b6154b31a@linaro.org>
-References: <20250408-gpiochip-set-rv-regulator-v1-0-a18b6154b31a@linaro.org>
-In-Reply-To: <20250408-gpiochip-set-rv-regulator-v1-0-a18b6154b31a@linaro.org>
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3451;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=Cm0XoajVTF7WGyfXVhXt5rXgkMBzUPTLlPuMZdlyTXc=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn9NH9Pmx8NozKyr2Yh4useXvhNRl9MT5x7yLAm
- 2Z1OrJBtJiJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ/TR/QAKCRARpy6gFHHX
- cpdOD/0TJ2PvGhJPRb6muqCjVh6EsoEvWJ62CYpFC7GLKMbP9kosgqZRbg6EY6pbiQaREHAPLc0
- XF1Pgj4ipR5iKaieNqfJV11RL1vPr9dfZ4hjU/YoCtHeoQl/oG2MWXGVFsIcb8raL3xdQ87iTl8
- wQBrNOzOlMCpcnakqxkC1pmo366tNDO34hDb5X72FQ8QvevW9YT5J7Hu8L5fq/TwdnPWcuOKw6e
- Qs50ASLtjcbqOGpwwxJVBfD1j1cE+xhLBBd4svrqThG6TDn5Ks+ixcHLsnxkgQz9oY3jZUgDQQT
- EvOcHhSKwmSJ5BzuomgfCoGvJaLJ8lhQjU419CPlmSj/csMB5hVguJ0AqJB3DB8ALky5hyUcKAb
- vFZz2YhuGPWb91KW7RgyXQPumPh5yYsW+Sb5u6h/VOWRgtR1lE0H5WDpLs6s9vWeyV027Ed4MZW
- XZpN8Kffo2PSye8H+Oc7xzjF6L8XshROKx8DS2TFiD9jfWsdOs/k8RiRzRZtiqDS5PyvmwCisbV
- 5qX1BSIw+syRhGirNNEm1LXlh45YEnetjuP2SXuqrMqq+L4hRmeixS6GXLJQDFZoqCTQR/0z7Lq
- DLBZOqybxUROocdeWM8s4oRAKN5i1SqgiByVzDL0v0eiQ71nsBAJ/HLH+SGwODtnXLEZvqUYWhM
- +8wA0vMGpZEWThg==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b42d082e-0568-4d2c-849c-a0b9ab762afd@kernel.org>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddvhedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtugfgjgesthekredttddtudenucfhrhhomheptehlvgigrghnughrvgcuuegvlhhlohhnihcuoegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeevudevhfdvheelgfeileefteduuefghefguefgkeeljeeufeeutedtffeuteeivdenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegrugdtfeemgehflegtmeeffeejfhemfheffegunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegrugdtfeemgehflegtmeeffeejfhemfheffegupdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeelpdhrtghpthhtohepkhhriihksehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrphhokhhushhinhhskhhitddusehgmhgrihhlrdgtohhmpdhrtghpthhtohepkhhriihkodgut
+ heskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlvgigrghnuggvrhdrshhtvghinhesvgifrdhtqhdqghhrohhuphdrtghomhdprhgtphhtthhopehlihhnuhigqdhrthgtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-GND-Sasl: alexandre.belloni@bootlin.com
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On 08/04/2025 08:14:36+0200, Krzysztof Kozlowski wrote:
+> On 07/04/2025 21:35, Antoni Pokusinski wrote:
+> > Microcrystal RV8063 is a real-time clock with SPI interface. Its
+> > functionality is very similar to the RV8263 rtc.
+> > 
+> > Signed-off-by: Antoni Pokusinski <apokusinski01@gmail.com>
+> > ---
+> >  drivers/rtc/Kconfig        | 21 ++++++-----
+> >  drivers/rtc/rtc-pcf85063.c | 74 +++++++++++++++++++++++++++++++++++++-
+> >  2 files changed, 85 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+> > index 838bdc138ffe..1b9be96faa13 100644
+> > --- a/drivers/rtc/Kconfig
+> > +++ b/drivers/rtc/Kconfig
+> > @@ -483,15 +483,6 @@ config RTC_DRV_PCF8523
+> >  	  This driver can also be built as a module. If so, the module
+> >  	  will be called rtc-pcf8523.
+> >  
+> > -config RTC_DRV_PCF85063
+> > -	tristate "NXP PCF85063"
+> > -	select REGMAP_I2C
+> > -	help
+> > -	  If you say yes here you get support for the PCF85063 RTC chip
+> > -
+> > -	  This driver can also be built as a module. If so, the module
+> > -	  will be called rtc-pcf85063.
+> > -
+> >  config RTC_DRV_PCF85363
+> >  	tristate "NXP PCF85363"
+> >  	select REGMAP_I2C
+> > @@ -971,6 +962,18 @@ config RTC_DRV_PCF2127
+> >  	  This driver can also be built as a module. If so, the module
+> >  	  will be called rtc-pcf2127.
+> >  
+> > +config RTC_DRV_PCF85063
+> 
+> Why? This breaks the order.
+> 
 
-Use mutex lock guards from linux/cleanup.h to simplify the driver code.
+I don't think it does but you can't see it from the diff.
 
-Note that ret must be initialized in order to avoid a build warning as
-scoped_guard() is implemented as a for loop.
-
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/regulator/rpi-panel-attiny-regulator.c | 35 ++++++++++----------------
- 1 file changed, 13 insertions(+), 22 deletions(-)
-
-diff --git a/drivers/regulator/rpi-panel-attiny-regulator.c b/drivers/regulator/rpi-panel-attiny-regulator.c
-index 5ff348939560..43a7c4737cb4 100644
---- a/drivers/regulator/rpi-panel-attiny-regulator.c
-+++ b/drivers/regulator/rpi-panel-attiny-regulator.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <linux/backlight.h>
-+#include <linux/cleanup.h>
- #include <linux/err.h>
- #include <linux/gpio/driver.h>
- #include <linux/i2c.h>
-@@ -94,7 +95,7 @@ static int attiny_lcd_power_enable(struct regulator_dev *rdev)
- {
- 	struct attiny_lcd *state = rdev_get_drvdata(rdev);
- 
--	mutex_lock(&state->lock);
-+	guard(mutex)(&state->lock);
- 
- 	/* Ensure bridge, and tp stay in reset */
- 	attiny_set_port_state(state, REG_PORTC, 0);
-@@ -115,8 +116,6 @@ static int attiny_lcd_power_enable(struct regulator_dev *rdev)
- 
- 	msleep(80);
- 
--	mutex_unlock(&state->lock);
--
- 	return 0;
- }
- 
-@@ -124,7 +123,7 @@ static int attiny_lcd_power_disable(struct regulator_dev *rdev)
- {
- 	struct attiny_lcd *state = rdev_get_drvdata(rdev);
- 
--	mutex_lock(&state->lock);
-+	guard(mutex)(&state->lock);
- 
- 	regmap_write(rdev->regmap, REG_PWM, 0);
- 	usleep_range(5000, 10000);
-@@ -136,8 +135,6 @@ static int attiny_lcd_power_disable(struct regulator_dev *rdev)
- 	attiny_set_port_state(state, REG_PORTC, 0);
- 	msleep(30);
- 
--	mutex_unlock(&state->lock);
--
- 	return 0;
- }
- 
-@@ -145,19 +142,17 @@ static int attiny_lcd_power_is_enabled(struct regulator_dev *rdev)
- {
- 	struct attiny_lcd *state = rdev_get_drvdata(rdev);
- 	unsigned int data;
--	int ret, i;
-+	int ret = 0, i;
- 
--	mutex_lock(&state->lock);
--
--	for (i = 0; i < 10; i++) {
--		ret = regmap_read(rdev->regmap, REG_PORTC, &data);
--		if (!ret)
--			break;
--		usleep_range(10000, 12000);
-+	scoped_guard(mutex, &state->lock) {
-+		for (i = 0; i < 10; i++) {
-+			ret = regmap_read(rdev->regmap, REG_PORTC, &data);
-+			if (!ret)
-+				break;
-+			usleep_range(10000, 12000);
-+		}
- 	}
- 
--	mutex_unlock(&state->lock);
--
- 	if (ret < 0)
- 		return ret;
- 
-@@ -190,7 +185,7 @@ static int attiny_update_status(struct backlight_device *bl)
- 	int brightness = backlight_get_brightness(bl);
- 	int ret, i;
- 
--	mutex_lock(&state->lock);
-+	guard(mutex)(&state->lock);
- 
- 	for (i = 0; i < 10; i++) {
- 		ret = regmap_write(regmap, REG_PWM, brightness);
-@@ -198,8 +193,6 @@ static int attiny_update_status(struct backlight_device *bl)
- 			break;
- 	}
- 
--	mutex_unlock(&state->lock);
--
- 	return ret;
- }
- 
-@@ -217,7 +210,7 @@ static void attiny_gpio_set(struct gpio_chip *gc, unsigned int off, int val)
- 	struct attiny_lcd *state = gpiochip_get_data(gc);
- 	u8 last_val;
- 
--	mutex_lock(&state->lock);
-+	guard(mutex)(&state->lock);
- 
- 	last_val = attiny_get_port_state(state, mappings[off].reg);
- 	if (val)
-@@ -239,8 +232,6 @@ static void attiny_gpio_set(struct gpio_chip *gc, unsigned int off, int val)
- 
- 		msleep(100);
- 	}
--
--	mutex_unlock(&state->lock);
- }
- 
- static int attiny_i2c_read(struct i2c_client *client, u8 reg, unsigned int *buf)
+> > +	tristate "NXP PCF85063"
+> > +	depends on RTC_I2C_AND_SPI
+> > +	select REGMAP_I2C if I2C
+> > +	select REGMAP_SPI if SPI_MASTER
+> > +	help
+> > +	  If you say yes here you get support for the PCF85063 and RV8063
+> > +	  RTC chips.
+> > +
+> > +	  This driver can also be built as a module. If so, the module
+> > +	  will be called rtc-pcf85063.
+> > +
+> 
+> 
+> ...
+> 
+> >  module_exit(pcf85063_exit);
+> > @@ -740,3 +811,4 @@ module_exit(pcf85063_exit);
+> >  MODULE_AUTHOR("Søren Andersen <san@rosetechnology.dk>");
+> >  MODULE_DESCRIPTION("PCF85063 RTC driver");
+> >  MODULE_LICENSE("GPL");
+> > +MODULE_ALIAS("spi:rv8063");
+> 
+> Drop and use proper ID tables.
+> 
+> 
+> Best regards,
+> Krzysztof
 
 -- 
-2.45.2
-
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
