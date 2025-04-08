@@ -1,113 +1,129 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A41219A9D;
-	Tue,  8 Apr 2025 07:54:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95BC2216605
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 07:55:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744098885; cv=none; b=gSUXpc3No8D/Zza+rjK/YGd/1MZ3cJST0HChU4+doz2LduGE3zwoCMzk9TiAvENvdUb/TAyXww+/9uIHVFdm0lptvb6dXat6xGDG4cZH3ly0POxP+dmOGUHVMpmnn237yXtihXRC26DGvIiwSxriTILxp1hwlh6lFFbJqRSIejU=
+	t=1744098922; cv=none; b=f+PbG96DobQy4OGabJ/dNlYStHAtu1dpYOqu+rsrhgfSf6NAkUwG8HJ5i757oS7Pm80S3F00Mx54oe+cMC/x8D+k2p+a0XMoA/I8P33tB9Aldxwi8A0GeAfQNfn7rzomNCZyOoUHT0FHa/z9wHR1pdBvoWsq58A0CwxfPUMmrB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744098885; c=relaxed/simple;
-	bh=xxetUDTZlqHK0fEp7Vi6b/HN4t5K5gsdbrTM3CzIMZc=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=SK5WXiWCB2eXWz0RHnBZx4fZ0ALxka3zv0uGiTMgbMXSYn/Tvo3ZNETcxYDsJXEy3oCHhEZDRX/yGFrXsW7T+Wp+nLzox157aNxnlVRczNGNdObpoHxIjJ+vOvBIWVVszZy8+3HLwW6Yedz4hKsV4JwfdU1/mrDf+A//pLQ12N8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=M3xXo6sy; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744098922; c=relaxed/simple;
+	bh=A8OsWXAueBE0PuEQC4ic4IQiibJGAlkVcpHSS3VZ8iE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QgPA5tkF1NYxytZycUZQJ5Kw/bFOACSHRVVFlR9ZwuICtq9YmKFpfrROdmSIFgUBuAFD19D7F+G39vx+/D1VJkL/SAdhVW0elmmdDaJfaZjRqFjr4ZzqNrfpr464rk883gMstg8mFl1u4YGVSurix6Xj77Q+LGFMH273YzvoDOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Z0rQnJuF; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="M3xXo6sy"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A30B420483;
-	Tue,  8 Apr 2025 07:54:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744098875;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z0rQnJuF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744098919;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=JKsaa5Qw6MpBCcMH9HOs47mW1tDXG/PfpB5X4FVgPbw=;
-	b=M3xXo6sykhWw+N7TXiXB1g6Hcor8ZMEk7uaESpU493qpZPI9Eg9SHzDy7EE0z5uGqY3/qW
-	CZy+juqPIIl8RcI/C9xJClXuX3lz1HMgbJXpN1fIDd2ISJdc77ek3rhHgSdZVBIpQoTXM8
-	lFFC5t8zBs1piZNyDhqwaOK/xI3zsJULaVlSKpcWEM/+4QQmbiPdN4EYFC1VE1etA2bLW7
-	TDp2fFPL1rmSR3gtwP54pbspGaoacRHRKje1HZtlAOxKXv+OGZrzUUrRcjXeuyLEvKxvjO
-	forGNMl3mo/lNByht2d9qsT+7aULp2h+/a7lEyZ2SFGunVTen1DALXBUmgWNyA==
+	bh=x79QHpIfsA+l7691cd5z+VO+/jgiyth1028qKXbzGKk=;
+	b=Z0rQnJuFphvtXmoGngJgvbsRcLH90ZkUew5biWjqFf5XXxpKLyba3UsM+ufRLgWotF7q6r
+	DgbMqCqwqeLOv7r3WBFfQTuAQ/Y5Gw6HhRfRskIaONWeqyRfMSvjU7/SUYuzLijj2ALg1q
+	7pY55fap6OlgXXftmY4gTsDV9ju0aC8=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-441-M4smaJV9N4qyQiDibetfTQ-1; Tue, 08 Apr 2025 03:55:18 -0400
+X-MC-Unique: M4smaJV9N4qyQiDibetfTQ-1
+X-Mimecast-MFC-AGG-ID: M4smaJV9N4qyQiDibetfTQ_1744098917
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-ac3e0c13278so501905466b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 00:55:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744098917; x=1744703717;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=x79QHpIfsA+l7691cd5z+VO+/jgiyth1028qKXbzGKk=;
+        b=lVlDtGZJ2S493YJEXR2au4IV8aWMAbxan3ZgXW9udpbnH3PKXm+uHOhuBRQLZWqqEF
+         HxlQiQLEXRFYrG77qIXzi6TwSUwLe+AQV87AYM+ncoL+9wFMQTouZdtiX71WrO0Sepvu
+         45PEFCQX52bN63rqJKNd8aNNAx+bmSszGETkSjZhPj2VkspY4HIjbETm9Fl5+AZe6NIf
+         k2e0kPIpUWMWYHV2Oo4E9WjZT/PdcHIFCwM8W012gaK1XT/qrDLUf6DpljS3rDyxI6yh
+         LFb7NEZVnUtLJ05QvwjBuWcTD9uVDRXjZkAa9K4pQvPMtU/uTAVRA7F0Xwe5D60z32K5
+         Rqrw==
+X-Forwarded-Encrypted: i=1; AJvYcCWHV0t3/hWkA5KRdhMV3UuniCJuJcdd3lFvalgMKUP+al/9dOTb+irdLWdQdwArxV0LGeWduZzZpuMV1xw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzJKLm9NtsXGDuA4Ru0Bm2ISnTDvtkvLJhrAbjIFR7zHCy/uiq
+	Ts5aY+vEW2ClpuTZTjjzvww030leqhGV63Wm37wR6v63sX6AhEnnEHIqIDpFJrLK7eX7FsEJ95U
+	I4ml2N5tDXPlKuThk9BCJSHfDH3xjKkyPqjNAWOEpCNeoSC6z1GzP+LPiJeEQCfVCJ+h+gwgmrV
+	xAaNv6dytPiT72bQ5zORgvQEbmh71C7xyLXdS/
+X-Gm-Gg: ASbGncv+EuVfr94RDiHt5YxjNYBG9JGRMKK9EzOj6DF0IJrZXweoiEyTg1xdJXgNu1M
+	WtpfS28Wqd6cENAAYqjuEemxeN7jxRPPAqp6tlpSxhWuaaUum7nXTIQ0YvZw3WXIfwELa3/Gw/g
+	==
+X-Received: by 2002:a17:907:970b:b0:ac6:edd3:e466 with SMTP id a640c23a62f3a-ac7d6d03dc7mr1243224566b.19.1744098916910;
+        Tue, 08 Apr 2025 00:55:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHsrjWeGBerTieJ+ttyB1gK4msQNk0ahMdt0piWop09SNP4zpG8Otx87xRRHmyaRFy0Bq4LVDJzBGSQoM5E+Po=
+X-Received: by 2002:a17:907:970b:b0:ac6:edd3:e466 with SMTP id
+ a640c23a62f3a-ac7d6d03dc7mr1243221566b.19.1744098916535; Tue, 08 Apr 2025
+ 00:55:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20250328100359.1306072-1-lulu@redhat.com> <20250328100359.1306072-6-lulu@redhat.com>
+ <8c87752e-bffe-4cc0-b838-cb6486b6261d@oracle.com>
+In-Reply-To: <8c87752e-bffe-4cc0-b838-cb6486b6261d@oracle.com>
+From: Cindy Lu <lulu@redhat.com>
+Date: Tue, 8 Apr 2025 15:54:39 +0800
+X-Gm-Features: ATxdqUFbbN4Q5UKXqEkcU4pBHlwr8BYd3yOQUAtnTFpNUfmJCvAF1MhDr_dM47Y
+Message-ID: <CACLfguWQD5yMBOQLhMh1rt5FoqdfJtmBiHaC3y9g7p1f5q9zRw@mail.gmail.com>
+Subject: Re: [PATCH v8 5/8] vhost: Reintroduce kthread mode support in vhost
+To: Mike Christie <michael.christie@oracle.com>
+Cc: jasowang@redhat.com, mst@redhat.com, sgarzare@redhat.com, 
+	linux-kernel@vger.kernel.org, virtualization@lists.linux-foundation.org, 
+	netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 08 Apr 2025 09:54:27 +0200
-Message-Id: <D913G6I023M1.NLMLJDZ1PYSA@bootlin.com>
-To: "Inochi Amaoto" <inochiama@gmail.com>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>, "Jingbao Qiu" <qiujingbao.dlmu@gmail.com>
-Cc: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
- <unicorn_wang@outlook.com>, <dlan@gentoo.org>, <linux-pwm@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 2/2] pwm: sophgo: add pwm support for Sophgo CV1800
- SoC
-From: "Thomas Bonnefille" <thomas.bonnefille@bootlin.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20240501083242.773305-1-qiujingbao.dlmu@gmail.com>
- <20240501083242.773305-3-qiujingbao.dlmu@gmail.com>
- <k6jbdbhkgwthxwutty6l4q75wds2nilb3chrv7n4ccycnzllw4@yubxfh5ciahr>
- <D8Z4GLQZGKKS.37TDZ7QBN4V4N@bootlin.com>
- <j74t2zqvoslo5fgmea4kp434tafgchkncytofj65zbbt7ivcqy@auboc3pkdiz3>
-In-Reply-To: <j74t2zqvoslo5fgmea4kp434tafgchkncytofj65zbbt7ivcqy@auboc3pkdiz3>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddvheefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkvfevuffhofhfjgesthhqredtredtjeenucfhrhhomhepfdfvhhhomhgrshcuuehonhhnvghfihhllhgvfdcuoehthhhomhgrshdrsghonhhnvghfihhllhgvsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeetuedvlefhtedujeevtdffgeevjeetuedvudehtefhgfeuteefhefguddtfedtteenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehthhhomhgrshdrsghonhhnvghfihhllhgvsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduuddprhgtphhtthhopehinhhotghhihgrmhgrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepuhhklhgvihhnvghksehkvghrnhgvlhdrohhrghdprhgtphhtthhopehqihhujhhinhhgsggrohdrughlmhhusehgmhgrihhlrdgtohhmpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrg
- hdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuhhnihgtohhrnhgpfigrnhhgsehouhhtlhhoohhkrdgtohhmpdhrtghpthhtohepughlrghnsehgvghnthhoohdrohhrgh
-X-GND-Sasl: thomas.bonnefille@bootlin.com
 
-On Mon Apr 7, 2025 at 9:21 AM CEST, Inochi Amaoto wrote:
-> On Sun, Apr 06, 2025 at 02:16:41AM +0200, Thomas Bonnefille wrote:
->> Hello,
->>=20
->> On Sat Jun 1, 2024 at 1:53 PM CEST, Uwe Kleine-K=C3=B6nig wrote:
->> > On Wed, May 01, 2024 at 04:32:42PM +0800, Jingbao Qiu wrote:
->> >> [...]
->> >> +	if ((state & BIT(pwm->hwpwm)) && enable)
->> >> +		regmap_update_bits(priv->map, PWM_CV1800_OE,
->> >> +				   PWM_CV1800_OE_MASK(pwm->hwpwm),
->> >> +				   PWM_CV1800_REG_ENABLE(pwm->hwpwm));
->> >
->> > This looks strange. If BIT(hwpwm) is already set, set it again?!
->> > Also if you used the caching implemented in regmap, you don't need to
->> > make this conditional.
->> >
->>=20
->> I was testing the series and noticed indeed an issue in this driver at
->> those lines. If PWM_CV1800_OE isn't set by something else than the
->> kernel it will never be set and so, there will never be a PWM outputted.
->>=20
->> Using :
->>     if (!(state & BIT(pwm->hwpwm)) && enable)
->> Solved the issue but as Uwe said you can probably rely on regmap caching
->> to avoid this condition.
->>=20
->> >
->> > ...
->> >=20
->>=20
->> Do you plan on sending a new iteration some day ? I may have some time
->> to continue the upstreaming process if you need to.
->>=20
->> Thank you for this series !
->> Thomas
+On Tue, Apr 8, 2025 at 12:04=E2=80=AFAM Mike Christie
+<michael.christie@oracle.com> wrote:
 >
-> I suggest checking existing spi-sg2044-nor driver, which may reduce your
-> work for upstreaming.
+> On 3/28/25 5:02 AM, Cindy Lu wrote:
+> > +static int vhost_kthread_worker_create(struct vhost_worker *worker,
+> > +                                    struct vhost_dev *dev, const char =
+*name)
+> > +{
+> > +     struct task_struct *task;
+> > +     u32 id;
+> > +     int ret;
+> > +
+> > +     task =3D kthread_create(vhost_run_work_kthread_list, worker, "%s"=
+, name);
+> > +     if (IS_ERR(task))
+> > +             return PTR_ERR(task);
+> > +
+> > +     worker->kthread_task =3D task;
+> > +     wake_up_process(task);
+> > +     ret =3D xa_alloc(&dev->worker_xa, &id, worker, xa_limit_32b, GFP_=
+KERNEL);
+> > +     if (ret < 0)
+> > +             goto stop_worker;
+> > +
+> > +     ret =3D vhost_attach_task_to_cgroups(worker);
+> > +     if (ret)
 >
-> Regards,
-> Inochi
+> If you go to stop_worker here, it will leave the worker in the xa above. =
+I
+> think you need another goto to unwind that.
+>
+sure, will fix this
+Thanks
+Cindy
+> > +             goto stop_worker;
+> > +
+> > +     worker->id =3D id;
+> > +     return 0;
+> > +
+> > +stop_worker:
+> > +     vhost_kthread_do_stop(worker);
+> > +     return ret;
+> > +}
+> > +
+>
 
-Hello Inochi,
-
-Thank you very much, however even after reading it I can't see the link
-between the SPI NOR controller driver of the SG2044 and the PWM driver
-for the CV18XX series ?
-
-Regards,
-Thomas
