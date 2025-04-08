@@ -1,85 +1,162 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2161E226CE4;
-	Tue,  8 Apr 2025 13:12:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C11BC22A4D6
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 13:12:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744117922; cv=none; b=QuOU05t9onNUuUXB291muGytO+LLX5aj1pQUCM6qk1X8M5Q5fFDlq6gcmjzbwY5vBlMSyZiWiNNjge4VfsxAp8/UtpSp6cTFr41evKDY1y8m47YhU9bDIs73JKGi/SOCQTZA69MtEim8NZkMGIXdY4C2xyU5H2dJhusW+6Td6JI=
+	t=1744117925; cv=none; b=MD/fU8Wwc943yLBPPfhjqATXZkzpMZMmp+B7SoL8OuaD7kXg0bx0Obqy7nBREKum6ycqMHoOOOeQQ6UsaPMyiY7v7dP3Dn1M7o5AFdaaosXAUaE5YLBMaT748FIFHWSOQx/9Hd9Tlhl4PjmsHYJVFos4txkXlCkMWdsjDWXdh+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744117922; c=relaxed/simple;
-	bh=ps4chw34OHJ0V+JbdkNGtAxeh60Col1rVzxxMHsVFjQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MObqTNkoMxsALqT+MUaDhkqx11kWWklyo5Mhop0INJOIHtuD18cGdeUDGmnHtRQnNL3gfKNUHH64UFYqgbeLZ0oZOyD+JA25MPRUlS4tD2lykXR1mBNqABtmDrqFvV2idfWBMECpii4USS/u8B437MjAqmpfCG43pxLpDte7t1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=xTZ8sCXL; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1744117925; c=relaxed/simple;
+	bh=y5PBEcHtoKRAjIKMcCw4vFbETq+E/6uta6ffiRCS7Ew=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=D7oIGXG/voPXL8UYmYFx0cJBLYkzNGhZPvTenDhYjDAEaIym8dH6rMtgz2iN9l7KEsR0DZubVe2OiYbn9KgVBrP1imrLNIx8DzeZmE1a5dCj1tyL+hQ7Fv9+YlkKLyariTLJmHwajykS/VnyT892m69S7xL7BSdSYy5+jCuVdiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=FQ2AnxcO; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="xTZ8sCXL"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=UCzoQEukubcn8L70JJd4rpAlW2PfrAAtWJTRZbroIZk=; b=xTZ8sCXL9XcC7sa3PC9OupCBHr
-	7mqfZ+nBbA40wZOEMIKX5HuZ000SIL7hGbyIrw/I3srRcI/hxQC14FsgqJ6+PSd1G2tlubDdCa55F
-	xTuPbVJdlYAjF7RMMpM5F4oyjjq7GcUVu9InSa3ou0zx/nbhk7wBcirRK8WiKMBX6Pn8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u28jt-008OHY-9d; Tue, 08 Apr 2025 15:11:41 +0200
-Date: Tue, 8 Apr 2025 15:11:41 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Frank Sae <Frank.Sae@motor-comm.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, netdev@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Parthiban.Veerasooran@microchip.com, linux-kernel@vger.kernel.org,
-	"andrew+netdev @ lunn . ch" <andrew+netdev@lunn.ch>, lee@trager.us,
-	horms@kernel.org, linux-doc@vger.kernel.org, corbet@lwn.net,
-	geert+renesas@glider.be, xiaogang.fan@motor-comm.com,
-	fei.zhang@motor-comm.com, hua.sun@motor-comm.com
-Subject: Re: [PATCH net-next v4 07/14] net:phy:motorcomm: Add
- PHY_INTERFACE_MODE_INTERNAL to support YT6801
-Message-ID: <37354708-0fce-42ca-b7f9-6bb83ad87d10@lunn.ch>
-References: <20250408092835.3952-1-Frank.Sae@motor-comm.com>
- <20250408092835.3952-8-Frank.Sae@motor-comm.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FQ2AnxcO"
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250408131155epoutp02b41a98852d88fc59871319aa31f24067~0WgDzK8wt2364923649epoutp02O
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 13:11:55 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250408131155epoutp02b41a98852d88fc59871319aa31f24067~0WgDzK8wt2364923649epoutp02O
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1744117915;
+	bh=UpfyEqcbyWYNvj+IMLEyTAQFHr3NXL7nlnPV5XPxuFc=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=FQ2AnxcOql+tqzfam9vPPLFZ/XCnFjd2fjgfYgEBxsM1SIhHZdueZWoyYUSxMwr8b
+	 4VtsoJ0wUpxsywtOuMhvG5U86ebs+vlwIm3tVWfp8hGgyS8PzJ9rYTa6LrHMEIgYda
+	 8BVKwlmKrQmqcikeEKXWk4I7oeTU1BBqr+8WWXmc=
+Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
+	epcas1p2.samsung.com (KnoxPortal) with ESMTPS id
+	20250408131154epcas1p2f53c808216ea8bf2e3efb2bd64a857a3~0WgC8slU-0624206242epcas1p2y;
+	Tue,  8 Apr 2025 13:11:54 +0000 (GMT)
+Received: from epsmges1p5.samsung.com (unknown [182.195.36.223]) by
+	epsnrtp01.localdomain (Postfix) with ESMTP id 4ZX6165nb9z6B9m4; Tue,  8 Apr
+	2025 13:11:54 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+	epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+	03.58.10191.A9025F76; Tue,  8 Apr 2025 22:11:54 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250408131153epcas1p1bb1c8d060037bd37ab623348a210db80~0WgBi8iL51807118071epcas1p1i;
+	Tue,  8 Apr 2025 13:11:53 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250408131153epsmtrp26b03680167f30fb304810f06e6523a3b~0WgBiLyDL0774107741epsmtrp2v;
+	Tue,  8 Apr 2025 13:11:53 +0000 (GMT)
+X-AuditID: b6c32a39-42cce700000027cf-3c-67f5209adbe0
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	03.75.08805.99025F76; Tue,  8 Apr 2025 22:11:53 +0900 (KST)
+Received: from W10PB11329 (unknown [10.253.152.129]) by epsmtip1.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250408131153epsmtip1bdfe66dbabdd2bdba2aa9c6d45b367e5~0WgBS5bma1049710497epsmtip1Q;
+	Tue,  8 Apr 2025 13:11:53 +0000 (GMT)
+From: "Sungjong Seo" <sj1557.seo@samsung.com>
+To: "'Jan Kara'" <jack@suse.cz>, "'Phillip Lougher'"
+	<phillip@squashfs.org.uk>
+Cc: "'Andreas Gruenbacher'" <agruenba@redhat.com>, "'Namjae Jeon'"
+	<linkinjeon@kernel.org>, "'OGAWA Hirofumi'" <hirofumi@mail.parknet.co.jp>,
+	"'Carlos Maiolino'" <cem@kernel.org>, "'Darrick J. Wong'"
+	<djwong@kernel.org>, <linux-fsdevel@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, "'Luis	Chamberlain'" <mcgrof@kernel.org>,
+	<sjdev.seo@gmail.com>, <sj1557.seo@samsung.com>, <cpgs@samsung.com>
+In-Reply-To: <ormbk7uxe7v4givkz6ylo46aacfbrcy5zbasmti5tsqcirgijs@ulgt66vb2wbg>
+Subject: RE: Recent changes mean sb_min_blocksize() can now fail
+Date: Tue, 8 Apr 2025 22:11:53 +0900
+Message-ID: <dd0001dba887$cbe78280$63b68780$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250408092835.3952-8-Frank.Sae@motor-comm.com>
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 15.0
+Thread-Index: AQJRCaHaogomL6hlNxnS1IqQdP5a5wHHr4YsAptGYzWyi+DQkA==
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpnl+LIzCtJLcpLzFFi42LZdljTQHeWwtd0g3lzNS22rdvNbrHv0lRG
+	i5eHNC0uP+GzmD53A4vF7OnNTBYTpy1lttiz9ySLxeVdc9gsbkx4ymhxtGczm8WWf0dYLV58
+	2MDmwOuxc9Zddo9NqzrZPO6/TfR4v+8qm0ffllWMHlO+Pmf2OLPgCLvH501yARxRDYw2iUXJ
+	GZllqQqpecn5KZl56bZKoSFuuhZKChn5xSW2StGGhkZ6hgbmekZGRnqmRrFWRqZKCnmJuam2
+	ShW6UL1KCkXJBUC1uZXFQANyUvWg4nrFqXkpDln5pSBf6hUn5haX5qXrJefnKimUJeaUAo1Q
+	0k/4xpjx7NFm5oLv7BW/Hj5ka2Ccx9bFyMkhIWAicXzZa+YuRi4OIYEdjBK7TmxgB0kICXxi
+	lLjSnwWR+MYocXfuRVaYjj3XHrJCJPYySkx7tQnKecko8evkPrC5bAK6Ek9u/GQGsUUEAiQ6
+	Oz+xgBQxC0xllni9bh7YDk4BP4n5Pw6CjRUWcJBYuuIjWJxFQEVi8vXvYIN4BSwlHm15xQJh
+	C0qcnPkEzGYWkJfY/nYOM8RJChK7Px1lhVjmJLHo2GJmiBoRidmdbWDPSQjc4JA4dfM50FAO
+	IMdF4uUfF4heYYlXx7ewQ9hSEp/f7WWDqO9mlDj+8R0LRGIGo8SSDgcI216iubUZbA6zgKbE
+	+l36ELv4JN597YEGEa9Ew8bfUDMFJU5f62aGWMsr0dEmBBFWkfj+YSfLBEblWUg+m4Xks1lI
+	PpiFsGwBI8sqRrHUguLc9NRiwwJT5AjfxAhO41qWOxinv/2gd4iRiYPxEKMEB7OSCO/biV/S
+	hXhTEiurUovy44tKc1KLDzEmA8N6IrOUaHI+MJPklcQbmplZWlgamRgamxkaEhY2sTQwMTMy
+	sTC2NDZTEufd8/FpupBAemJJanZqakFqEcwWJg5OqQYmc0urT2oyD952xGSenvFFq2C/TizP
+	z1vPw+Nq805zBktMefI4vMJw/rXfQjaaCS9vr+DjVu1+3HbWcs8p61ZG+4wz73olo0xKOO7p
+	HDrS9UopWshTNHryrbvi7X6rnnX4a19dmKwzVybs5/P85coVL+d3rw/ad8hQqLR0eraG+3TX
+	/kta4X+OORdWiXHHW91uC/9w1Zav9lCo+eLqkoeyV806tbT1zjA8txJfE8L+4ZTCa03ZjsMv
+	0k3WfJRZLOVRqVjL0aArqPlU8NnlmFdfPnwI+O3MwpWmftxF+V1z0F293EVch7taXITPzTOZ
+	fUypabnixGSNTGUvZR5Ju+0vzrAFKTB3z2999myenBJLcUaioRZzUXEiADkpFEmaBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrNIsWRmVeSWpSXmKPExsWy7bCSnO5Mha/pBg/f81tsW7eb3WLfpamM
+	Fi8PaVpcfsJnMX3uBhaL2dObmSwmTlvKbLFn70kWi8u75rBZ3JjwlNHiaM9mNost/46wWrz4
+	sIHNgddj56y77B6bVnWyedx/m+jxft9VNo++LasYPaZ8fc7scWbBEXaPz5vkAjiiuGxSUnMy
+	y1KL9O0SuDKePdrMXPCdveLXw4dsDYzz2LoYOTkkBEwk9lx7yApiCwnsZpSYddCli5EDKC4l
+	cXCfJoQpLHH4cHEXIxdQxXNGicmHZzKDlLMJ6Eo8ufETzBYRCJBYuewaO0gRs8B8ZokTEzqY
+	IWZeY5Q4sTYGxOYU8JOY/+Mg2C5hAQeJpSs+soPYLAIqEpOvfwe7h1fAUuLRllcsELagxMmZ
+	T8BsZgE9ifXr5zBC2PIS29/OYYa4X0Fi96ejrBBHOEksOraYGaJGRGJ2ZxvzBEbhWUhGzUIy
+	ahaSUbOQtCxgZFnFKJlaUJybnltsWGCUl1quV5yYW1yal66XnJ+7iREcn1paOxj3rPqgd4iR
+	iYPxEKMEB7OSCO/biV/ShXhTEiurUovy44tKc1KLDzFKc7AoifN+e92bIiSQnliSmp2aWpBa
+	BJNl4uCUamAKmbviu8wCthwLE27zmVfqNj1hmWaeIJgvktqgIHlNu/krf3ypIG/GVn3RjxPY
+	/l5cE7ix6bp3tZlLpguTcYiW7ZQHsxvDDf/ET7328HR4xLw53l4/o+P2Bx1TOzMn4cKLKoYL
+	6y64sO5kWz6hXrulsELEkNUjXnOSz82bk1Z1mpatZWG1nWCXGS4Yp/ugi/GYx+mZGptmCplM
+	4Us26/7ffUNYc5rVmcMHE85/4/dwfvk+yegQ1x4z++r3clErWZ6uqdvEFTsvfbnG/+Cjk7Pv
+	91pciDtk/Gq7AWegkNThKu4VC78Ku83ZcKhHbv26acfavT6v3bS/UCRTp+vR1aenH3XMvJfd
+	7nW88VeoipUSS3FGoqEWc1FxIgD8sJNRPgMAAA==
+X-CMS-MailID: 20250408131153epcas1p1bb1c8d060037bd37ab623348a210db80
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 101P
+X-CPGSPASS: Y
+X-ArchiveUser: EV
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250408104502epcas1p1bd964ac9143218dace05538507ef8c6b
+References: <86290c9b-ba40-4ebd-96c1-d3a258abe9d4@squashfs.org.uk>
+	<CGME20250408104502epcas1p1bd964ac9143218dace05538507ef8c6b@epcas1p1.samsung.com>
+	<ormbk7uxe7v4givkz6ylo46aacfbrcy5zbasmti5tsqcirgijs@ulgt66vb2wbg>
 
-On Tue, Apr 08, 2025 at 05:28:28PM +0800, Frank Sae wrote:
-> YT6801 NIC Integrated a PHY that is YT8531S, but it used GMII interface.
-> Add a case of PHY_INTERFACE_MODE_INTERNAL to support YT6801.
+Hi, All
+
+> Hi!
 > 
-> Signed-off-by: Frank Sae <Frank.Sae@motor-comm.com>
-> ---
->  drivers/net/phy/motorcomm.c | 6 ++++++
->  1 file changed, 6 insertions(+)
+> On Tue 08-04-25 06:33:53, Phillip Lougher wrote:
+> > A recent (post 6.14) change to the kernel means sb_min_blocksize() can
+> now fail,
+> > and any filesystem which doesn't check the result may behave
+> unexpectedly as a
+> > result.  This change has recently affected Squashfs, and checking the
+> kernel code,
+> > a number of other filesystems including isofs, gfs2, exfat, fat and xfs
+> do not
+> > check the result.  This is a courtesy email to warn others of this
+> change.
+> >
+> > The following emails give the relevant details.
+> >
+> > https://lore.kernel.org/all/2a13ea1c-08df-4807-83d4-
+> 241831b7a2ec@squashfs.org.uk/
+> > https://lore.kernel.org/all/129d4f39-6922-44e9-8b1c-
+> 6455ee564dda@squashfs.org.uk/
 > 
-> diff --git a/drivers/net/phy/motorcomm.c b/drivers/net/phy/motorcomm.c
-> index 0e91f5d1a..ac3a46939 100644
-> --- a/drivers/net/phy/motorcomm.c
-> +++ b/drivers/net/phy/motorcomm.c
-> @@ -896,6 +896,12 @@ static int ytphy_rgmii_clk_delay_config(struct phy_device *phydev)
->  		val |= FIELD_PREP(YT8521_RC1R_RX_DELAY_MASK, rx_reg) |
->  		       FIELD_PREP(YT8521_RC1R_GE_TX_DELAY_MASK, tx_reg);
->  		break;
-> +	case PHY_INTERFACE_MODE_INTERNAL:
-> +		if (phydev->drv->phy_id != PHY_ID_YT8531S)
-> +			return -EOPNOTSUPP;
-> +
-> +		dev_info_once(&phydev->mdio.dev, "Integrated YT8531S phy of YT6801.\n");
+> Indeed. Thanks for the heads up!
+> 
+> 								Honza
+> --
+> Jan Kara <jack@suse.com>
+> SUSE Labs, CR
 
-Drivers should be silent unless something going wrong. dev_dbg() or
-nothing please.
+exfat-fs calls it to set it to the minimum value of 512, but it's not
+particularly problematic if it fails.
 
-	Andrew
+Thank you
+B.R.
+Sungjong Seo
+
