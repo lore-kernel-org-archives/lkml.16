@@ -1,155 +1,560 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2066.outbound.protection.outlook.com [40.107.22.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4488261593
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 07:24:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744097053; cv=none; b=hx4y9MSTkCH7Ar2eHh2NihzBvWEwUCleKYJp91bMQgYvmK6p8JI0wZbERoQEIXISkABJaM5CSP3uco6QarVHnMk1fYfedPa7BYHARd0HOwp1yHuSw9ON/lp2aUBYu8XZAWIk4UheD11zV5bMXlKp/PQ2l+B3lTH5FziEp6WESJ8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744097053; c=relaxed/simple;
-	bh=hmSxWGIiK/DtDwGKJHp041KAlwlf/8OprB/NVG8dke8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=aeyJNWUAj8Iq6CthuzINYyCMgLZLHzJDqSsWpvLKxPCX6wQ0GeVf8hIDkfQ1BZoZKH0PZF8N1Klw4Pu6q4/LWjZNePlspONL3+e7e6LIF4VrGBe1JZlHxlHjRiQzQXA7yWxPE96NgJSFR5/P6nM1vIN1jXoCBkUOlDOOaNTJOBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=BjmtHDyu; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA8EA23ED60;
+	Tue,  8 Apr 2025 07:25:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.66
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744097136; cv=fail; b=fHjFvy6o518NXFjJ2nBv8VFXP3+en5+EceThT/oY00MsV8X4MsbMFlYWvluyksRco6o2pB5JDxYYGopihoWXrrpan6kkun8B1zPMYWhccangr3PLWUL/L22HX6JEC+g+hHCyzdv+GcLKnB/S1EKrkB9017befwaC4yemrDoKWO4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744097136; c=relaxed/simple;
+	bh=YhoY2TI3qu7Up6DMN2eHZFGY8/JICaWFWC9JtUugb5I=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=SztbIYjZcXk4ISvevGb2EJ5Tm88QmYYbFvdegPxfg1U55Y15J5N7xwqQrE5l7xdQ6/bDGwL0xm70mqDbykXPq8v0DdbuR4UESNuAtND4ekTwxbRBXX/h7odZhS+EWRBapmg2HmvauWbgbMFcn0VMM+c887lcaYmgirxMWdvpxrw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=KgrwXzQN; arc=fail smtp.client-ip=40.107.22.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="BjmtHDyu"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac339f53df9so909675566b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 00:24:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744097050; x=1744701850; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XOjNNeHzyY58LMv3k+FTJZV8HBjSzUrYs1slCEoFb4s=;
-        b=BjmtHDyuKnlFfBK0vH6M3+3br0zZ2mFCf22sAkLEhxDNfcqlU3zP7hvE1HrwBN6SLJ
-         Ihz59AlOM5u0OSx1n8DQqBBIjQS/HulxCk/79pe/RVPCo1aYjP/vS802U4vTgtLxDuQd
-         Mxo7bDrP3q9U++6m8FD3s/ic8arsNtg266LUPDoQ1dveybzWmn0F4NRobCsJ84xtYMxn
-         I8Rng74pSBwBvo81xVo+zQLySQKMY8mGBGiHlgHWzDedurJNP+haXpE3nQeZ9WGStw+c
-         SpOXkg7eaOfz2E+ZS78WVMrZ0rC7GoZeH1vbQP8ZyMScu53Ns0QuBBQfF1t0JBIRQ7tx
-         XIQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744097050; x=1744701850;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XOjNNeHzyY58LMv3k+FTJZV8HBjSzUrYs1slCEoFb4s=;
-        b=viy4fKeZUgMYM61drhEr8aRKKpnRpJdskHZ0IMgtBUNaUGnF1zGlXHHX1rEZcBZwiX
-         g6Iq5C3W1CVQbUToeOGGxRX0okmAiSMSovE1KqAYuMX5B69FNS9Tbe9IdG0cbsofUauu
-         ocBwRwSXAp7ppybbF2hdFOSsY62yGc4OPyDxTnqIRvc96D58xq0s5K36sx34dMeljLNp
-         5PMq1PNZ4QAO6giQXfY/aaZFaFqGWy/Lbkn2Nu/qSTQMD1FCYarHPLs9kXQN01Av5J1i
-         +sYL1n5frY9PyBylC6bHutfwFqXUIsTcXcbkP404uyd6WkZNeT7yDaqj6gTlNSWkyYzL
-         mpMw==
-X-Forwarded-Encrypted: i=1; AJvYcCX3zds2c0Y5FGoG9iXuSZ9oC9SuyxCofn50lFDrvwl6rh0OgyCXEbaDxy2IJP4fm3eWxCuJx5wq6ozEdVU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZddhb9IMyLIBvkievHN05fUkQUQhMyVWRgnvIqtZLI04tSnsU
-	PAd6P3begZxQYy5nR/r1h0S4NscphD4980R7IkedACAKQCmOD2UX25ZEzT3SDkHVNj6HG9XWuKk
-	cfwk=
-X-Gm-Gg: ASbGnculZazMo3DtsAI96Vx87OIJeSxdBg0qn4pJrYuTSGJBOCtUcd89QPbREeP4iwj
-	CYtdu3+87li/t6Cr08sxWn5FWjVf7e6YYQY0zgqcioBrNEyGExu+kMfEehfcLCruQUCaL9XrAO0
-	LQVJK5TVOLhCDVNUJOr3SJnnYU6/nJ9VbPv/oqqiXfXlRcAMOJJtavk+v5gIWmy1Q8vJl88lnvk
-	tRY02myytGk7Xek05IkLiOPuX/lRszeD6wjfbEvQpADoGRfOJdi5MXIbzpxTzDwW7Fd4Ny7TVr7
-	U77Y5RmE+OoCGMrJh0fFSc+mgjawVOfrrIumFw==
-X-Google-Smtp-Source: AGHT+IGDlv/Wz2Tv0JI+8Hx2njCPUM9rczyDR5EAPHa4oqor0nd3oFYHO3dEgeKjIpQ3eleoyeURtg==
-X-Received: by 2002:a5d:59ae:0:b0:39c:27cc:7ba3 with SMTP id ffacd0b85a97d-39cb35aa8ecmr14702868f8f.33.1744096676320;
-        Tue, 08 Apr 2025 00:17:56 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:2adf:eaae:f6ea:1a73])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d5d1sm14257694f8f.77.2025.04.08.00.17.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 00:17:55 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 08 Apr 2025 09:17:43 +0200
-Subject: [PATCH 06/10] pinctrl: amlogic-a4: use new GPIO line value setter
- callbacks
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="KgrwXzQN"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Z099mCbFvxfhH7EOspNoxhW9h/ZYft6dhCgNB4tfmkVc1bs6U0FeKW6sWfcGCsxB7CvV01Uke/1Wj+15kXDWg5q+M3YWwxYkX97NRbgPwhiz2JhnJQtWpO0Kn/HEOB/3YmK5x9BFfONAc7lMlDp7QwZfz7SLUNfFDbyUW+BjkcQ4n0729rIvCaygJusWcG9d0uO8CeJJGjK2IhTdlB/sVxSJiiTNURjPTIOkVpQnwDLog0wL5YH7WsL37dYyXUJ82hsMvn1jZVPM40awu0Btw904R/OgOPxh66w5wXOO5KEoP5EdZ4+ojd1a6+YErKh0jPrcSy47fSxQAPKtuMvxeg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4PeMR6YU4SS552NhgmSzEGPi2JzXzbC780tKEN1X5QM=;
+ b=MMXOaoTm3/tNZfTCdXVRvxp07Od1Oe+hgAr2ng2exmBR0ifSROStprOdz2RNiRadCPq/mt64cs209Bv7ULPJEUYdKjrR9NksPjsym2KQCmxr/raeORY9vQ/KhR3hUx+butfY7EOLspxKuFOEdFgMmGbVoMxFTXS1moaJU5R3fjIiCZo8g6SorBBaK77N1OfTiAD+z+aj47+RDFA2olfAumogk3WF9BpbD7hhinrRhIDYH65kR6aq6smJMvlL4l3jlq4T1FQCXQTAB87byLQoNRZrT10+W0johUgCdOw2esTJ+7W7wBdrTDwxF+yQeGRMaO8DOiDO53c+6+tga1ivAw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4PeMR6YU4SS552NhgmSzEGPi2JzXzbC780tKEN1X5QM=;
+ b=KgrwXzQNAv5wjKY3eUKV6R6iDEVFFvlqonv7i2dtGUjAp5q5/LSRpYpe5Sg62yHhgEntZCmbM8pG3rASrfgH4htWNyMpY7VCitYVRHXGg0pO+SPBQZZ/TcIV7fVA8NJ5WLpR4Ard/JXvzKBH/7pg2wNNTViQKko9CONj9nEKvm3FEKtzRgAJ6K2nzx5Yq2ZLwBKxeTJvnKCKNAQ5M2WVSk+BayqxvnAnXvScBpNIPw6XIkabXZjQkvVILxsr0rz7U8AW27cQI6/F0el4jHKQfPV5zpVZsx3o/amzCNKsz4Qk7RJGUXqH08TAhyC1GGv3mvYvAaAj4+OrEG45SqNr1A==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB8473.eurprd04.prod.outlook.com (2603:10a6:102:1dc::15)
+ by DUZPR04MB9846.eurprd04.prod.outlook.com (2603:10a6:10:4db::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.35; Tue, 8 Apr
+ 2025 07:25:30 +0000
+Received: from PAXPR04MB8473.eurprd04.prod.outlook.com
+ ([fe80::2a15:12f0:d937:151a]) by PAXPR04MB8473.eurprd04.prod.outlook.com
+ ([fe80::2a15:12f0:d937:151a%3]) with mapi id 15.20.8606.027; Tue, 8 Apr 2025
+ 07:25:30 +0000
+Message-ID: <a9b50cec-c2c9-4d2b-bf6d-430e58a87ca3@nxp.com>
+Date: Tue, 8 Apr 2025 10:25:26 +0300
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] watchdog: Add the Watchdog Timer for the NXP S32
+ platform
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, wim@linux-watchdog.org
+Cc: linux@roeck-us.net, linux-watchdog@vger.kernel.org,
+ linux-kernel@vger.kernel.org, S32@nxp.com, ghennadi.procopciuc@nxp.com,
+ thomas.fossati@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, devicetree@vger.kernel.org
+References: <20250407160318.936142-1-daniel.lezcano@linaro.org>
+ <20250407160318.936142-3-daniel.lezcano@linaro.org>
+Content-Language: en-US
+From: Alexandru-Catalin Ionita <alexandru-catalin.ionita@nxp.com>
+In-Reply-To: <20250407160318.936142-3-daniel.lezcano@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AS4P189CA0021.EURP189.PROD.OUTLOOK.COM
+ (2603:10a6:20b:5db::12) To PAXPR04MB8473.eurprd04.prod.outlook.com
+ (2603:10a6:102:1dc::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250408-gpiochip-set-rv-pinctrl-part1-v1-6-c9d521d7c8c7@linaro.org>
-References: <20250408-gpiochip-set-rv-pinctrl-part1-v1-0-c9d521d7c8c7@linaro.org>
-In-Reply-To: <20250408-gpiochip-set-rv-pinctrl-part1-v1-0-c9d521d7c8c7@linaro.org>
-To: Ludovic Desroches <ludovic.desroches@microchip.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Nicolas Ferre <nicolas.ferre@microchip.com>, 
- Alexandre Belloni <alexandre.belloni@bootlin.com>, 
- Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Xianwei Zhao <xianwei.zhao@amlogic.com>, 
- Patrick Rudolph <patrick.rudolph@9elements.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1680;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=zFDAJ44H3rDElvqiaNPmVwvOeCsvopBV8K2+vzPv+N0=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn9M2aCcCPhwuF/Scl+dWhUvbWutpdgADlyzo6E
- dkwEIOpAkiJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ/TNmgAKCRARpy6gFHHX
- cnRjEACRE1eo2DpKjHGbPlQbMpv86tO6SMwS6frSIq+KfYxOaODnxG0vYoNPl1XeTMMPfKWxuKo
- MspJKWTkvUN0QuIxmjcZ8vBjIh2Ssf2biltkgH+3Ut1/ExIvxXr/M7gT0UOy2/r94+c7DkVzBEK
- MXr/4KXQXVZ4OSvLf588xywzpAYfsAPShtYaqDz9OdGk8uc9fPG5lzGH4ccc++V5cuv0ZlY9tD3
- ZXnb+hLdVs0BvC1ESV29eq9xcIkTRj/KhdzH4WdJDJB4Fx4xRvCBxuTrv9+Hv2FE6VyVgnX8Knt
- wPQY7lA3cwjzj0sWtwauKnLeZ0x1DD6IMexNhfxrfvgGpEXh0w3i09yOn6vnAvTxetgrzUoiZsq
- 5210n+9CVXDRsBqfEUuqtBOx2/HJBwMibEOeyf/tK8wVBtbrEFq1ji769lP5H/PGJUFNT0bPXLd
- vnKVHrJiJUiyX0REr7gSm1AjTYXZb/jNq6PcBIY1JG8vYGaruh/7KsvN5PbWlmeIxn2DIKitoEB
- 5c3paQ4gObhMQ1lHal6NduGavNkTb99awzhp7MjrFLQ7vHEkk6LWPVdn1/obav1Qnh7bwi6/RYI
- rfIeivF5Tge1zaLyASFLrEOQUIffbwsDEofBTf4iFicbK3EDjEXXtUNKuD4DDgO+q2/1XPzUYDj
- IgJ4xDux3XMrr+w==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8473:EE_|DUZPR04MB9846:EE_
+X-MS-Office365-Filtering-Correlation-Id: aebba05a-a01c-4155-29bb-08dd766e8aae
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|376014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SmZWUmJJTW9sbUN2Q2t0R3k2dFZBalJHcjhYd2lVaVZyamhvSnpSSkNNSTBB?=
+ =?utf-8?B?UkZXZkNISlBTdTBac2cvRnIrMHV5TzRFUXhXN285UzRTUmtLTzdxWUhGR3Br?=
+ =?utf-8?B?KzJZdlJBVlNCN3dYb3laSkJBZkJuUkcvTVhBbUFsV2hOb2lzMDV0YjhETDBH?=
+ =?utf-8?B?czNSZUtRVzZVaFhxV2RjQWVjRkpCMndGSWxZOTd3UTVvWGppaS9jRG5icGIv?=
+ =?utf-8?B?NkFPZGRVRlBTQThrMzNqL3NETXVSZzRTdFNnUk9VNENXcDBkSytmZ1E3V01O?=
+ =?utf-8?B?azRZTTVydU9ab0ZrejFtK29VcHJnK21PSjhiOUd6S0RMVVYwSThTVzFWcG83?=
+ =?utf-8?B?NHNQZDREU0dnNzFmRzRQZTRsVlY4czlTay9VdUE1dUE3VkRaT2dTUk5rSW11?=
+ =?utf-8?B?TEJoTDliSGRDVnhFWEd3cEVzY3FpWkh1akJhTGcwdHlmVkIycWx3OGRaZmVG?=
+ =?utf-8?B?ajRIb2pnaGZ5ZnhWa1dPTXNRdGNKT1pLbU1pM3ZWZERsQ0RSK2U4ZGpab3FC?=
+ =?utf-8?B?ckFiR3E1RHo3QVhGTm9PdHV2OW5jR0JNQ1dpZ3BXaHpWK1JQZjBZREJCSmFa?=
+ =?utf-8?B?Y2VKZnhsb0hJVlRSL2JIQjhzT2cydUU0cW55Q3NaUHZaSmhwQzZSOUdhamN2?=
+ =?utf-8?B?bWt2QWpMaG9IckpKT3JGNlJYVjlTQmVvcDh4cDBkQ25ia1luT2RpTmtaQ3Ew?=
+ =?utf-8?B?aVRZZ09aOXRUeFMwbXhsMStkcm8wZC9wZUJLTm8xTDlqenpTNTJzaWJXMFgv?=
+ =?utf-8?B?YitGdFB4S09QNlA1NWxmbXZ3bTVHajRoMStyOWdsL1hrb21nbUdDRWMyWE50?=
+ =?utf-8?B?UUdTMFFaVVRvb2FoeFYzMkw0c3NWTkF3L1hkRnNOS3NEYTBkV0sxWHBqSGlj?=
+ =?utf-8?B?a0Y3REZaWGhmbHlaU3puZ2dRSEtjU1JQeXRadHBZdEk1b2tEbXNham5RNEhG?=
+ =?utf-8?B?NmlZNGwrVG9zYUFTK3AzRWV2UUxyZFRCTmlXY0dUOVJKQW4ydWpsemtPL2xE?=
+ =?utf-8?B?dFFxalM1Z0tpQ3o2YUR1dmxFTWFkTnl0RG12YnF5RlhQNG4wUWFYSXdoRFJv?=
+ =?utf-8?B?SU1KVUE5ZzVVRklkam9Lb0FueXNIbHVnZitSWFpIckZ2N3VCYWdYWkxYdjJN?=
+ =?utf-8?B?RUhhVDFodSsxMGFHUTMyVDdySkdLZ3VpTGtqY2RNL2RQUkFzWEVJRHZwTnJX?=
+ =?utf-8?B?YXduVC9aZmZXK0MzR1h4NDhva3pFT3JGZnRvWXQ2VCtmSXpWZndiRUV6TUUr?=
+ =?utf-8?B?aDJQcDNFTmxmc1BKdGN0bnQxZ1JRTS80b3BvUGJGY1RZMlJMYVdxeCszaGht?=
+ =?utf-8?B?ejZlT0RUelNsQVpSV2dBZ09NeThQbFRQZGE3UURvZzVDVmR3L1RScjBFT0Fs?=
+ =?utf-8?B?amNHQ1REV2tvSFhaaS9tcll6bjRkV1JHK3ZMK0gwNGpiWmdYYlBENTNoZTAw?=
+ =?utf-8?B?VVdDWWNBa1l4Ymp0Vks2WFFyQzlkRE9Wb1dmbm81b1Z5NC83SWJMRUsvbllL?=
+ =?utf-8?B?QUtSVGFvb1U5Qk5zbTJ0WXlSa1VVOTNEOXcwZGRBUTZBSk5yVTlCZndha3B3?=
+ =?utf-8?B?UHB1K0xrOFFhTWNoNzR4eDExMFpJZjcvZnprT2UyMnk4Sm9pbGtvQ1BzQlJB?=
+ =?utf-8?B?dCtYMkVvK1lEbXlkNTBBMDBHbmxXbSs1OWc5azZuTWE5NldZaXluaTRFNUt0?=
+ =?utf-8?B?VzYzaGJ0cnY3d2pZazFPcXc1WGdSZW1QQkpsTUgramVjVnJualJ6d2Fxa0VW?=
+ =?utf-8?B?ZWFEcTBpaXFJNGhaTGREQ205RnFaK0RVaExVdGRQU2dVcGNRS0dSVTBQVWZN?=
+ =?utf-8?B?TFNUc2k0WkQyai9aNGFoTUZmUGtTNzBaZXNYQTFDZ0o3VnRsalFkSTBLK0Vp?=
+ =?utf-8?Q?e8CJY7ZNzEPkF?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8473.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?amxZaktaTGZ6ZkFVVVU4WXRTaXkza0NiYTE0VHFST1FFUmlmSlZmZkwvaEJ0?=
+ =?utf-8?B?TmtmVGhOWXNrNHE0eFYvT1QxYW9KQVhWYUpaL0pIT0JwKzFhMUxZUGdEeW9I?=
+ =?utf-8?B?bkVuTUptWVhXU2tpNUk0WGZETmg0UEFrVjd5R3VMd3NpRVNwcWhBMzVwWjJL?=
+ =?utf-8?B?amtQcFpheWIvWkdNMnorRUFRRm1PN3pLYk1HeGlKRHY0d1gxRG95cGR0UGp4?=
+ =?utf-8?B?YlhDZWF0QmNVaUNEelFjbi94eWFnbWdiWDdBeElEaVlLWDE0Y1l5Ukh1VzdS?=
+ =?utf-8?B?QkJkQXN2Y0I1UnRjWGVSVkxGbEFNdFZyR1VPRTlMZXhqZWhtRWlpblZKVFNK?=
+ =?utf-8?B?RnR2alFaS2tkemQ0OUlUbGF4T2pNRUdNUkNrd0ZVYnJOK1VnRVNyU0hpSHBI?=
+ =?utf-8?B?eVc0Skl2clBxNldWMXltT2VUUEZGcy91aFJpcWoyb292NzdKUHFnbkxveUhM?=
+ =?utf-8?B?R0xIQzhvT0dwMys3Rm1uOTZWWHNNOVEvK1I4MWxaUXU2bzU1d3R6WXpoTVZL?=
+ =?utf-8?B?UlhsVkdlOUV5K1dMQXJ3T29IQ2hhME9JbTlYMDZYeTA3MURreU9iTkJ2ckQy?=
+ =?utf-8?B?dWZmamNlbnJFWTQ1UjlxN2REb1prd2g4QmxNdFlKV2Ztd1RUMG04WHhQbTFs?=
+ =?utf-8?B?NC9FcUhWK1V2ZDlvaVhmUkUwSjdDRFhIemd5Zy9SVkZlbDUybzlNS1liWUtP?=
+ =?utf-8?B?YmVWbEFoMmxOcko4WjNmZm9mNlZyYVVsQ0JMUkFlbSsvT2dNN2M5U1FYQ3c1?=
+ =?utf-8?B?U21IQ2svSmw3dVRrdmlzc1Mxd25WT2VBK0g0Q0RrTXZSUndoTi9SM09wbzhR?=
+ =?utf-8?B?d1FpcTFRRGt5TFlBUW42WDJOT251MGZqN29NbERrUFhvNXl3UzF4Vy9NbUxh?=
+ =?utf-8?B?OUNFSEZhWWZGemgyeWZNS01kLzVXb3haTjErSzNaSHpNWldVV1BWN2J5dEFi?=
+ =?utf-8?B?Vyt0bFZ5aWRjV2JFcFZnMmF4cWJNWkJyT0VQdGF1cTV2OUhuZWJ4MGpXVDBT?=
+ =?utf-8?B?ZVo0Z29NU1MxNFJQdncrcnViNjF1SW1uZkxuNjRiUXpZNE5HWW1Lb2V4dndJ?=
+ =?utf-8?B?bVI4VU5YMHNObTRBQXpKL0QwTW5lVkRNeTRtbEJEbGxoeDhQbzVzUVBzZVVu?=
+ =?utf-8?B?U1VPbWYwZGhlOUpWanJhWDIwNzN4SzFCcVJzTGFRbmpxY3pTQ2RYODVxVHI5?=
+ =?utf-8?B?KzNicDE4RjFqeFUvMktsWG9KMnFnNm1TamhzMG1zUXdRZjdKcitqME9zMEo2?=
+ =?utf-8?B?YkZvOUJxSUpqOVdQSmN2N0draGlQYTl3U0M0TWpNTk9JaFp6ekxlVXlmTUti?=
+ =?utf-8?B?eDFYRVJqVndTQU5Od1JuMkIxS1U4SjZtNktyMGxLblpxcHQ0YkJvQ2lQcFk5?=
+ =?utf-8?B?Mk5qVzhPMmRqRUVKSVE5bHdUSlNYSHY0ZXh2VjFIMGY1T0ZqZGplSCtPeEtm?=
+ =?utf-8?B?Rk90cjFtM2U1bHF2dE9RUHZRbEpuMVdVbnRNZzRxbDNQa0FyQnFQaUdTTWRh?=
+ =?utf-8?B?Z0Q4QW1Ndm83VU9yVFdkOEk2MnN3RVdEWWoxTEFQN2lnSTZ6Mi9CZ2lVczJF?=
+ =?utf-8?B?WEVKb2RwakNtVmkwdHBpSjA5eWhiTXQ3aFJvSWtFc2M1dzY4TGl2dHRTdUda?=
+ =?utf-8?B?czAxQTRBNnEvNUVEQzlIL2JJR01LRmpIQlgxYkV2U2diRUJMM0Ztais1RE40?=
+ =?utf-8?B?WGRDcnEyOC9wdHZTTXhnaENHeFlyc2JrTzJPUm51b2lEQ3kyVlJYNjdyMGJ5?=
+ =?utf-8?B?TWI2Zk1nenROSTk1WEhtbXBxU2VaNjFPV0QwRStWZjNFcHF2T2JCZTVTSGZS?=
+ =?utf-8?B?SHZOZVd1YXg2dHRyUUdIcmV3K1B6VG5tNWQrOE1LTFZneE9TV2FHYnJPVGFj?=
+ =?utf-8?B?T3JaWStWMlEyZmExaG9OdmcrV29Ldm5YakY0dzI1MVZITXNWUW5NajY1d2pm?=
+ =?utf-8?B?ZUJRZUxwZ1RKdGNjc1A4aWV5NW9aUWo3MzJvcnNEQ1JRRzM2UVVhcTlpMjg5?=
+ =?utf-8?B?djJ0UWN0T1E0dzNRdlFyeXRvMURJeTRpRlh3djBNTDdCaHVrWXhqOTRMRVRX?=
+ =?utf-8?B?VENleHhKeEpEUG1Lbmw4cjQ1Q01Ya3o2dS9Eb0t2ZUsvZVljdG9na1ZqNkFR?=
+ =?utf-8?B?blBqSUpqdFg0ZlZFMUJ0ZWVoSVpHN3duR1h5ZFN1VDF6b2hYbGsvbGhkU3ds?=
+ =?utf-8?Q?jQH1Mtdk3BlVIpbxeCcGwPo=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: aebba05a-a01c-4155-29bb-08dd766e8aae
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8473.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2025 07:25:30.7168
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: JGvu6GlURK1iewLAOUQ5gTJJahfPwWTlaz7s2k0cG6c1LSHbdNU8WTcqsPRSYrqIDcwCw4WLa24qkQHUuWwAWx8MUFYiqwUyHilyuFOic7lKuNBds3qYCPyd6ewOyfYM
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DUZPR04MB9846
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-struct gpio_chip now has callbacks for setting line values that return
-an integer, allowing to indicate failures. Convert the driver to using
-them.
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/pinctrl/meson/pinctrl-amlogic-a4.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+On 07-Apr-25 7:03 PM, Daniel Lezcano wrote:
+> The S32 platform has several Watchdog Timer available and tied with a
+> CPU. The SWT0 is the only one which directly asserts the reset line,
+> other SWT require an external setup to configure the reset behavior
+> which is not part of this change.
+> 
+> As a side note, in the NXP documentation, the s32g2 and s32g3
+> reference manuals refer the watchdog as the 'Software Timer Watchdog'
+> where the name can be misleading as it is actually a hardware
+> watchdog.
+> 
+> The maximum watchdog timeout value depends on the clock feeding the
+> SWT counter which is 32bits wide. On the s32g274-rb2, the clock has a
+> rate of 51MHz which result on 83 seconds maximum timeout.
+> 
+> The timeout can be specified via the device tree with the usual
+> existing bindings 'timeout-sec' or via the module param timeout.
+> 
+> The watchdog can be loaded with the 'nowayout' option, preventing the
+> watchdog to be stopped.
+> 
+> The watchdog can be started at boot time with the 'early-enable'
+> option, thus letting the watchdog framework to service the watchdog
+> counter.
+> 
+> The watchdog support the magic character to stop when the userspace
+> releases the device.
+> 
+> Cc: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
+> Cc: Thomas Fossati <thomas.fossati@linaro.org>
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> ---
+>   drivers/watchdog/Kconfig    |   9 ++
+>   drivers/watchdog/Makefile   |   1 +
+>   drivers/watchdog/s32g_wdt.c | 313 ++++++++++++++++++++++++++++++++++++
+>   3 files changed, 323 insertions(+)
+>   create mode 100644 drivers/watchdog/s32g_wdt.c
+> 
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index f81705f8539a..4ab4275ef49f 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -792,6 +792,15 @@ config IMX7ULP_WDT
+>   	  To compile this driver as a module, choose M here: the
+>   	  module will be called imx7ulp_wdt.
+>   
+> +config S32G_WDT
+> +	tristate "S32G Watchdog"
+> +	depends on ARCH_S32 || COMPILE_TEST
+> +	select WATCHDOG_CORE
+> +	help
+> +	  This is the driver for the hardware watchdog on the NXP
+> +	  S32G platforms. If you wish to have watchdog support
+> +	  enabled, say Y, otherwise say N.
+> +
+>   config DB500_WATCHDOG
+>   	tristate "ST-Ericsson DB800 watchdog"
+>   	depends on MFD_DB8500_PRCMU
+> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+> index 8411626fa162..d0f9826e32c3 100644
+> --- a/drivers/watchdog/Makefile
+> +++ b/drivers/watchdog/Makefile
+> @@ -69,6 +69,7 @@ obj-$(CONFIG_TS72XX_WATCHDOG) += ts72xx_wdt.o
+>   obj-$(CONFIG_IMX2_WDT) += imx2_wdt.o
+>   obj-$(CONFIG_IMX_SC_WDT) += imx_sc_wdt.o
+>   obj-$(CONFIG_IMX7ULP_WDT) += imx7ulp_wdt.o
+> +obj-$(CONFIG_S32G_WDT) += s32g_wdt.o
+>   obj-$(CONFIG_DB500_WATCHDOG) += db8500_wdt.o
+>   obj-$(CONFIG_RETU_WATCHDOG) += retu_wdt.o
+>   obj-$(CONFIG_BCM2835_WDT) += bcm2835_wdt.o
+> diff --git a/drivers/watchdog/s32g_wdt.c b/drivers/watchdog/s32g_wdt.c
+> new file mode 100644
+> index 000000000000..f7e44c39aace
+> --- /dev/null
+> +++ b/drivers/watchdog/s32g_wdt.c
+> @@ -0,0 +1,313 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * Watchdog driver for S32G SoC
+> + *
+> + * Copyright 2017-2019, 2021-2025 NXP.
+> + *
+> + */
+> +#include <linux/clk.h>
+> +#include <linux/debugfs.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/moduleparam.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/watchdog.h>
+> +
+> +#define DRIVER_NAME "s32g-swt"
+> +
+> +#define S32G_SWT_CR(__base)	((__base) + 0x00)	/* Control Register offset	*/
+> +#define S32G_SWT_CR_SM		(BIT(9) | BIT(10))	/* -> Service Mode		*/
+> +#define S32G_SWT_CR_STP		BIT(2)			/* -> Stop Mode Control		*/
+> +#define S32G_SWT_CR_FRZ		BIT(1)			/* -> Debug Mode Control	*/
+> +#define S32G_SWT_CR_WEN		BIT(0)			/* -> Watchdog Enable		*/
+> +
+> +#define S32G_SWT_TO(__base)	((__base) + 0x08)	/* Timeout Register offset	*/
+> +
+> +#define S32G_SWT_SR(__base)	((__base) + 0x10)	/* Service Register offset	*/
+> +#define S32G_WDT_SEQ1		0xA602			/* -> service sequence number 1	*/
+> +#define S32G_WDT_SEQ2		0xB480			/* -> service sequence number 2	*/
+> +
+> +#define S32G_SWT_CO(__base)	((__base) + 0x14)	/* Counter output register	*/
+> +
+> +#define S32G_WDT_DEFAULT_TIMEOUT	30
+> +
+> +struct s32g_wdt_device {
+> +	int rate;
+> +	void __iomem *base;
+> +	struct watchdog_device wdog;
+> +};
+> +
+> +static bool nowayout = WATCHDOG_NOWAYOUT;
+> +module_param(nowayout, bool, 0);
+> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
+> +		 __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
+> +
+> +static unsigned int timeout_param = S32G_WDT_DEFAULT_TIMEOUT;
+> +module_param(timeout_param, uint, 0);
+> +MODULE_PARM_DESC(timeout_param, "Watchdog timeout in seconds (default="
+> +		 __MODULE_STRING(S32G_WDT_DEFAULT_TIMEOUT) ")");
+> +
+> +static bool early_enable;
+> +module_param(early_enable, bool, 0);
+> +MODULE_PARM_DESC(early_enable,
+> +		 "Watchdog is started on module insertion (default=false)");
+> +
+> +static const struct watchdog_info s32g_wdt_info = {
+> +	.identity = "s32g watchdog",
+> +	.options = WDIOF_KEEPALIVEPING | WDIOF_SETTIMEOUT | WDIOF_MAGICCLOSE |
+> +	WDIOC_GETTIMEOUT | WDIOC_GETTIMELEFT,
+> +};
+> +
+> +static struct s32g_wdt_device *wdd_to_s32g_wdt(struct watchdog_device *wdd)
+> +{
+> +	return container_of(wdd, struct s32g_wdt_device, wdog);
+> +}
+> +
+> +static unsigned int wdog_sec_to_count(struct s32g_wdt_device *wdev, unsigned int timeout)
+> +{
+> +	return wdev->rate * timeout;
+> +}
+> +
+> +static int s32g_wdt_ping(struct watchdog_device *wdog)
+> +{
+> +	struct s32g_wdt_device *wdev = wdd_to_s32g_wdt(wdog);
+> +
+> +	writel(S32G_WDT_SEQ1, S32G_SWT_SR(wdev->base));
+> +	writel(S32G_WDT_SEQ2, S32G_SWT_SR(wdev->base));
+> +
+> +	return 0;
+> +}
+> +
+> +static int s32g_wdt_start(struct watchdog_device *wdog)
+> +{
+> +	struct s32g_wdt_device *wdev = wdd_to_s32g_wdt(wdog);
+> +	unsigned long val;
+> +
+> +	val = readl(S32G_SWT_CR(wdev->base));
+> +
+> +	val |= S32G_SWT_CR_WEN;
+> +
+> +	writel(val, S32G_SWT_CR(wdev->base));
+> +
+> +	return 0;
+> +}
+> +
+> +static int s32g_wdt_stop(struct watchdog_device *wdog)
+> +{
+> +	struct s32g_wdt_device *wdev = wdd_to_s32g_wdt(wdog);
+> +	unsigned long val;
+> +
+> +	val = readl(S32G_SWT_CR(wdev->base));
+> +
+> +	val &= ~S32G_SWT_CR_WEN;
+> +
+> +	writel(val, S32G_SWT_CR(wdev->base));
+> +
+> +	return 0;
+> +}
+> +
+> +static int s32g_wdt_set_timeout(struct watchdog_device *wdog, unsigned int timeout)
+> +{
+> +	struct s32g_wdt_device *wdev = wdd_to_s32g_wdt(wdog);
+> +
+> +	writel(wdog_sec_to_count(wdev, timeout), S32G_SWT_TO(wdev->base));
+wdog->timeout should also be set here otherwise the following sequence 
+will fail for userspace:
+- ioctl WDIOC_SETTIMEOUT != 30
+- ioctl WDIOC_GETTIMEOUT
 
-diff --git a/drivers/pinctrl/meson/pinctrl-amlogic-a4.c b/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
-index ee7bbc72f9b3..a76f266b4b94 100644
---- a/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
-+++ b/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
-@@ -806,15 +806,15 @@ static int aml_gpio_direction_output(struct gpio_chip *chip, unsigned int gpio,
- 				  value ? BIT(bit) : 0);
- }
- 
--static void aml_gpio_set(struct gpio_chip *chip, unsigned int gpio, int value)
-+static int aml_gpio_set(struct gpio_chip *chip, unsigned int gpio, int value)
- {
- 	struct aml_gpio_bank *bank = gpiochip_get_data(chip);
- 	unsigned int bit, reg;
- 
- 	aml_gpio_calc_reg_and_bit(bank, AML_REG_OUT, gpio, &reg, &bit);
- 
--	regmap_update_bits(bank->reg_gpio, reg, BIT(bit),
--			   value ? BIT(bit) : 0);
-+	return regmap_update_bits(bank->reg_gpio, reg, BIT(bit),
-+				  value ? BIT(bit) : 0);
- }
- 
- static int aml_gpio_get(struct gpio_chip *chip, unsigned int gpio)
-@@ -832,7 +832,7 @@ static const struct gpio_chip aml_gpio_template = {
- 	.request		= gpiochip_generic_request,
- 	.free			= gpiochip_generic_free,
- 	.set_config		= gpiochip_generic_config,
--	.set			= aml_gpio_set,
-+	.set_rv			= aml_gpio_set,
- 	.get			= aml_gpio_get,
- 	.direction_input	= aml_gpio_direction_input,
- 	.direction_output	= aml_gpio_direction_output,
-
--- 
-2.45.2
+Second ioctl will return 30.
+> +
+> +	/*
+> +	 * Conforming to the documentation, the timeout counter is
+> +	 * loaded when servicing is operated (aka ping) or when the
+> +	 * counter is enabled. In case the watchdog is already started
+> +	 * it must be stopped and started again to update the timeout
+> +	 * register or a ping can be sent to refresh the counter. Here
+> +	 * we choose to send a ping to the watchdog which is harmless
+> +	 * if the watchdog is stopped.
+> +	 */
+> +	return s32g_wdt_ping(wdog);
+> +}
+> +
+> +static unsigned int s32g_wdt_get_timeleft(struct watchdog_device *wdog)
+> +{
+> +	struct s32g_wdt_device *wdev = wdd_to_s32g_wdt(wdog);
+> +	unsigned long counter;
+> +	bool is_running;
+> +
+> +	/*
+> +	 * The counter output can be read only if the SWT is
+> +	 * disabled. Given the latency between the internal counter
+> +	 * and the counter output update, there can be very small
+> +	 * difference. However, we can accept this matter of fact
+> +	 * given the resolution is a second based unit for the output.
+> +	 */
+> +	is_running = watchdog_hw_running(wdog);
+> +
+> +	if (is_running)
+> +		s32g_wdt_stop(wdog);
+> +
+> +	counter = readl(S32G_SWT_CO(wdev->base));
+> +
+> +	if (is_running)
+> +		s32g_wdt_start(wdog);
+> +
+> +	return counter / wdev->rate;
+> +}
+> +
+> +static const struct watchdog_ops s32g_wdt_ops = {
+> +	.owner		= THIS_MODULE,
+> +	.start		= s32g_wdt_start,
+> +	.stop		= s32g_wdt_stop,
+> +	.ping		= s32g_wdt_ping,
+> +	.set_timeout	= s32g_wdt_set_timeout,
+> +	.get_timeleft	= s32g_wdt_get_timeleft,
+> +};
+> +
+> +static void s32g_wdt_init(struct s32g_wdt_device *wdev)
+> +{
+> +	unsigned long val;
+> +
+> +	/* Set the watchdog's Time-Out value */
+> +	val = wdog_sec_to_count(wdev, wdev->wdog.timeout);
+> +
+> +	writel(val, S32G_SWT_TO(wdev->base));
+> +
+> +	/*
+> +	 * Get the control register content. We are at init time, the
+> +	 * watchdog should not be started.
+> +	 */
+> +	val = readl(S32G_SWT_CR(wdev->base));
+> +
+> +	/*
+> +	 * We want to allow the watchdog timer to be stopped when
+> +	 * device enters debug mode.
+> +	 */
+> +	val |= S32G_SWT_CR_FRZ;
+> +
+> +	/*
+> +	 * However, when the CPU is in WFI or suspend mode, the
+> +	 * watchdog must continue. The documentation refers it as the
+> +	 * stopped mode.
+> +	 */
+> +	val &= ~S32G_SWT_CR_STP;
+> +
+> +	/*
+> +	 * Use Fixed Service Sequence to ping the watchdog which is
+> +	 * 0x00 configuration value for the service mode. It should be
+> +	 * already set because it is the default value but we reset it
+> +	 * in case.
+> +	 */
+> +	val &= ~S32G_SWT_CR_SM;
+> +
+> +	writel(val, S32G_SWT_CR(wdev->base));
+> +
+> +	/*
+> +	 * When the 'early_enable' option is set, we start the
+> +	 * watchdog from the kernel.
+> +	 */
+> +	if (early_enable) {
+> +		s32g_wdt_start(&wdev->wdog);
+> +		set_bit(WDOG_HW_RUNNING, &wdev->wdog.status);
+> +	}
+> +}
+> +
+> +static int s32g_wdt_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct resource *res;
+> +	struct clk *clk;
+> +	struct s32g_wdt_device *wdev;
+> +	struct watchdog_device *wdog;
+> +	int ret;
+> +
+> +	wdev = devm_kzalloc(dev, sizeof(*wdev), GFP_KERNEL);
+> +	if (!wdev)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	wdev->base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(wdev->base))
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(wdev->base), "Can not get resource\n");
+> +
+> +	clk = devm_clk_get_enabled(dev, "counter");
+> +	if (IS_ERR(clk))
+> +		return dev_err_probe(dev, PTR_ERR(clk), "Can't get Watchdog clock\n");
+> +
+> +	wdev->rate = clk_get_rate(clk);
+> +	if (!wdev->rate) {
+> +		dev_err(dev, "Input clock rate is not valid\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	wdog = &wdev->wdog;
+> +	wdog->info = &s32g_wdt_info;
+> +	wdog->ops = &s32g_wdt_ops;
+> +
+> +	/*
+> +	 * The code converts the timeout into a counter a value, if
+> +	 * the value is less than 0x100, then it is clamped by the SWT
+> +	 * module, so it is safe to specify a zero value as the
+> +	 * minimum timeout.
+> +	 */
+> +	wdog->min_timeout = 0;
+> +
+> +	/*
+> +	 * The counter register is a 32 bits long, so the maximum
+> +	 * counter value is UINT_MAX and the timeout in second is the
+> +	 * value divided by the rate.
+> +	 *
+> +	 * For instance, a rate of 51MHz lead to 84 seconds maximum
+> +	 * timeout.
+> +	 */
+> +	wdog->max_timeout = UINT_MAX / wdev->rate;
+> +
+> +	/*
+> +	 * The module param and the DT 'timeout-sec' property will
+> +	 * override the default value if they are specified.
+> +	 */
+> +	ret = watchdog_init_timeout(wdog, timeout_param, dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/*
+> +	 * As soon as the watchdog is started, there is no way to stop
+> +	 * it if the 'nowayout' option is set at boot time
+> +	 */
+> +	watchdog_set_nowayout(wdog, nowayout);
+> +
+> +	/*
+> +	 * The devm_ version of the watchdog_register_device()
+> +	 * function will call watchdog_unregister_device() when the
+> +	 * device is removed.
+> +	 */
+> +	watchdog_stop_on_unregister(wdog);
+> +
+> +	s32g_wdt_init(wdev);
+> +
+> +	ret = devm_watchdog_register_device(dev, wdog);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Cannot register watchdog device\n");
+> +
+> +	dev_info(dev, "S32G Watchdog Timer Registered, timeout=%ds, nowayout=%d, early_enable=%d\n",
+> +		 wdog->timeout, nowayout, early_enable);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id s32g_wdt_dt_ids[] = {
+> +	{ .compatible = "nxp,s32g2-swt" },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, s32g_wdt_dt_ids);
+> +
+> +static struct platform_driver s32g_wdt_driver = {
+> +	.probe = s32g_wdt_probe,
+> +	.driver = {
+> +		.name = DRIVER_NAME,
+> +		.of_match_table = s32g_wdt_dt_ids,
+> +	},
+> +};
+> +
+> +module_platform_driver(s32g_wdt_driver);
+> +
+> +MODULE_AUTHOR("Daniel Lezcano <daniel.lezcano@linaro.org>");
+> +MODULE_DESCRIPTION("Watchdog driver for S32G SoC");
+> +MODULE_LICENSE("GPL");
 
