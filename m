@@ -1,225 +1,309 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA3A1AAA32;
-	Tue,  8 Apr 2025 12:33:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00F442698AE
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 12:33:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744115597; cv=none; b=qXFOyh1rD8qCED9YH7dkjzUDuOenO3Icw4Tu9PR1Bk9OifHwZre3vu4BEm3Cqr8FlIB3zjf8qANTOhmgeGfEl6eft4f9CL+oVtp+hvBrPp4rIIEqz29VFbuk+a7DsHZIlNbsQ90DEkliKcgbZFXO8vom357cfPny4JEI7N91wqo=
+	t=1744115598; cv=none; b=QyUWOm7Xe2WCMWDaHdK+hbjaIEXhuxWNs8RiIWEiOMgl1pFlX/a9Wt4Ve1iW0a+wlOq0LRmESYKU1jVOl/LGjwL+b/0CPibQnNlWLCM/UjMl/D2T3NDvnL4n6jlseUsCBQ103DnLtB0XtYSOop9vvVypVLokL2qNLbg3/OEBxSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744115597; c=relaxed/simple;
-	bh=wUf1I3G91DtSOH9aKzGyhBVYA1gBjDZ6llSyIbkY0WM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NY13HZkgREab1RB8BvE/upT95E44XvtFKxB41uDEdhu6//DUvHqz3ypbbEGxRES8Uzb0bt7AxtO7XPBzXP/XgE23SQk9Tm3xFNcHvO9kx5/+HxpxV5fUbnHiXoUHWdORdmzSKEIXiwxxaFBXHjLRhgvZG1df7QZ0b3ZslQ5vUxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MsF2bOyM; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744115598; c=relaxed/simple;
+	bh=KRqpYdjdkLFX2Hv9Ih+KYvzw+LKybuqmo6t0xcOVB24=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oqVM719hSnsr5396h/jESErnbbGsun5v1A9hl7RGdK/p1to4Lql8LjgNgfqZlO00BWPssLaYd9bVqlqsEJQk/YIpB6HbL2MvJJeaDMRc1Y6nYSCMiGrk3Z9qu+SJjvZGnScqzhEkZCNc2ihHkOWJfaWIxwkY46+REyEi+3AOzVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ArDK5s1F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MsF2bOyM"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-225477548e1so50773905ad.0;
-        Tue, 08 Apr 2025 05:33:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744115595; x=1744720395; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=/nF9UHsTjavBiIQDEA/vItUfmoGpLwv3vVUwf7BNWYQ=;
-        b=MsF2bOyMVnryeZ8VMGVewJpYt4OOEgE+OCWaL166Y9V5NkZMUnT+vHk/tr09z10maV
-         y5jyuYKY+amOw1HZZISq5bvJi0KrPIFKgk1F+7tPIvhPvp36+O3cr/dOi5XD4/IPHBOl
-         Itm96wjtxUkGcnUmct/6kT/F5nmDGYd04A9LxM57IGBEcs3/50JHtP+8p00euVomXg6m
-         R+tgJiNhiAKulX6sH7sEG3jdY8sQkqc4xT8uJJnLocJ1VC7DKvhel+cJvrm1/+zxoxPG
-         Mzq9p2/9NHXacl54IU7uURRZiutrylbD7QKaaUw3LJqRl8yUP4B5QKpzjLg1TYq7v8zl
-         HpCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744115595; x=1744720395;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/nF9UHsTjavBiIQDEA/vItUfmoGpLwv3vVUwf7BNWYQ=;
-        b=Yhnq4mHVIul4TDxxIEgANu9JoGJ1v3n+ODFMi8HNUEnjozBCkDOQqIAhensJ93wMd7
-         /LVbAKG3psqSHS+DyAJ0FA55p/M9OBnzoSQbCEfyHeYkVuyTyT4k0fZOuMpesSjHLX1Z
-         E8YexVCQ1Th1RUaOiBa657HM0Q9Zcl8X9GOjb2zJzMogipO8fGUXQtRj+/pthh4t+mYL
-         uxgP7mF9nLk2YQr/Mk3yRFbkiBtHYxdZcTI69tjGsIEdEW0Zt2mJ+B0kti0Kl1GTpnbv
-         b4LL+COw0rxkTbakNpR0lKzpN3TYukAVH6cb3sqIJZ3OIht2P+17Nx2CaBAVBWjF3wey
-         9Xxw==
-X-Forwarded-Encrypted: i=1; AJvYcCUecZJkfWhyO2EDp4iPPwNnd81RQ0w4+8snCQ7ghVtr93k/tSOiCPY5QIMlTkpDpUyGlXDuoKh57Xcd@vger.kernel.org, AJvYcCV5Y/5w16DEBYT2WdZUghmwDU8+2MzQkNcITCdpA/czS9e+Dky7zb6X3O5E8yF3m3bLI9PdC1mmXZ5v5DdR@vger.kernel.org, AJvYcCVxN2iHtLBX1TheRZFoaKWvW4fiLAKU470YWGW9RsFI/2VgAK+hNHij4Wm9QldB90hoKkRi0abIK/sKw/JQN0Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZX0qRMJQIcXMwbsMm+Xw6qvfvnCk3ZZBBOZmuLA+FCtTFQdSz
-	76E1uIhffgcZRGm8nK1GtnF8Eg9C/OBgYxex6IRjiu9aYpKv0oFe
-X-Gm-Gg: ASbGncv16I0q91+PAJo2XOJ/qBMqoIXoyK0XdULOboaUArSvu9lq3EXb1cTE5wMzBcH
-	qqkaQPOJWmKLPZJ0vpbkN5MZGr5c8PJy0EYGl+S1uzF80uim404x9kGMMXDF6LgP+4JKa1Jj8zQ
-	TwahZuhGla5EVETosI2tY3QMchAr71S2v6XnAYGsRjyWIsENJnzDxUDTPBK+o+ocaadkHireDKp
-	gnvdwYN5MjUBkBRPw9ZPfzocs1E3YRRbeeIyKJFi+odh0GHMexRmMXW/5kVNa0cs5z+XctjxQqP
-	s6d12XxA7lIAdIEaTJpCygzplgtJJgQwM+WY/DGWQrRvtg9UFJLrEi+KOK9qquLMV7eodtlii8A
-	e6c6xfLs6JFIBx2G+jA==
-X-Google-Smtp-Source: AGHT+IFPKxw0kQu5TDkKvHbyIFUGFcpYxBGmNw870k+hopqQQs5wQGQiZg50KgRRxbLhvgP+K93CBw==
-X-Received: by 2002:a17:903:1a10:b0:224:216e:3342 with SMTP id d9443c01a7336-22a8a8e3d97mr225074215ad.43.1744115594771;
-        Tue, 08 Apr 2025 05:33:14 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22978771c07sm98918465ad.212.2025.04.08.05.33.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Apr 2025 05:33:14 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <e02e7431-2e30-4e65-b04b-15fbb0bcd8d0@roeck-us.net>
-Date: Tue, 8 Apr 2025 05:33:12 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ArDK5s1F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 689B9C4CEEE;
+	Tue,  8 Apr 2025 12:33:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744115597;
+	bh=KRqpYdjdkLFX2Hv9Ih+KYvzw+LKybuqmo6t0xcOVB24=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ArDK5s1F9NXB9keSZV+mKB8onvxwuxO0oq8yPXhUaNgRCNzKZcPfzCNxOcfye9esy
+	 2yZvEF3czlWDJ/aG11tgAH6afOnggnE5iXzgasGNIT0vHxeoaYJIabwYaxmLbH5202
+	 UqT3Bwm9IBaJN0cGMy6aAq5INkCvF6nELEr6YBnrajHYN9uf7Mh+ZsmFQu0VZxP0wN
+	 hpYZ3a8dxFfzkf2DqUlXmCPaUp0fcqLwU/EA0nAYejcTf3ln7jPU0UhnuABENQaNEA
+	 nk6K3C4cBWQOLQNhmLSWKm77+lnAY9rM+Kiji7Wu0cNYeikGgEID89/ZlKV+jqXLl0
+	 9TbRGjLMGZZ2A==
+Date: Tue, 8 Apr 2025 14:33:15 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Oleg Nesterov <oleg@redhat.com>, Yi Lai <yi1.lai@linux.intel.com>,
+	syzbot+3c4321e10eea460eb606@syzkaller.appspotmail.com
+Subject: Re: [PATCH] perf: Fix hang while freeing sigtrap event
+Message-ID: <Z_UXi3DkMqGf_s4X@localhost.localdomain>
+References: <20250304135446.18905-1-frederic@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 5/6] watchdog: qcom-wdt: add support to read the
- restart reason from IMEM
-To: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>,
- Wim Van Sebroeck <wim@linux-watchdog.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
-References: <20250408-wdt_reset_reason-v1-0-e6ec30c2c926@oss.qualcomm.com>
- <20250408-wdt_reset_reason-v1-5-e6ec30c2c926@oss.qualcomm.com>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <20250408-wdt_reset_reason-v1-5-e6ec30c2c926@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250304135446.18905-1-frederic@kernel.org>
 
-On 4/8/25 01:49, Kathiravan Thirumoorthy wrote:
-> When the system boots up after a watchdog reset, the EXPIRED_STATUS bit
-> in the WDT_STS register is cleared. To identify if the system was restarted
-> due to WDT expiry, bootloaders update the information in the IMEM region.
-> Update the driver to read the restart reason from IMEM and populate the
-> bootstatus accordingly.
+Ping :-)
+
+Le Tue, Mar 04, 2025 at 02:54:46PM +0100, Frederic Weisbecker a écrit :
+> Perf can hang while freeing a sigtrap event if a related deferred
+> signal hadn't managed to be sent before the file got closed:
 > 
-> For backward compatibility, keep the EXPIRED_STATUS bit check. Add a new
-> function qcom_wdt_get_restart_reason() to read the restart reason from
-> IMEM.
+> perf_event_overflow()
+>    task_work_add(perf_pending_task)
 > 
-> Signed-off-by: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+> fput()
+>    task_work_add(____fput())
+> 
+> task_work_run()
+>     ____fput()
+>         perf_release()
+>             perf_event_release_kernel()
+>                 _free_event()
+>                     perf_pending_task_sync()
+>                         task_work_cancel() -> FAILED
+>                         rcuwait_wait_event()
+> 
+> Once task_work_run() is running, the list of pending callbacks is
+> removed from the task_struct and from this point on task_work_cancel()
+> can't remove any pending and not yet started work items, hence the
+> task_work_cancel() failure and the hang on rcuwait_wait_event().
+> 
+> Task work could be changed to remove one work at a time, so a work
+> running on the current task can always cancel a pending one, however
+> the wait / wake design is still subject to inverted dependencies when
+> remote targets are involved, as pictured by Oleg:
+> 
+> T1                                                      T2
+> ---                                                    ---
+> fd = perf_event_open(pid => T2->pid);                  fd = perf_event_open(pid => T1->pid);
+> close(fd)                                              close(fd)
+>     <IRQ>                                                  <IRQ>
+>     perf_event_overflow()                                  perf_event_overflow()
+>        task_work_add(perf_pending_task)                        task_work_add(perf_pending_task)
+>     </IRQ>                                                 </IRQ>
+>     fput()                                                 fput()
+>         task_work_add(____fput())                              task_work_add(____fput())
+> 
+>     task_work_run()                                        task_work_run()
+>         ____fput()                                             ____fput()
+>             perf_release()                                         perf_release()
+>                 perf_event_release_kernel()                            perf_event_release_kernel()
+>                     _free_event()                                          _free_event()
+>                         perf_pending_task_sync()                               perf_pending_task_sync()
+>                             rcuwait_wait_event()                                   rcuwait_wait_event()
+> 
+> Therefore the only option left is to acquire the event reference count
+> upon queueing the perf task work and release it from the task work, just
+> like it was done before 3a5465418f5f ("perf: Fix event leak upon exec and file release")
+> but without the leaks it fixed.
+> 
+> Some adjustments are necessary to make it work:
+> 
+> * A child event might dereference its parent upon freeing. Care must be
+>   taken to release the parent last.
+> 
+> * Some places assuming the event doesn't have any reference held and
+>   therefore can be freed right away must instead put the reference and
+>   let the reference counting to its job.
+> 
+> Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> Cc: Oleg Nesterov <oleg@redhat.com>
+> Reported-by: "Yi Lai" <yi1.lai@linux.intel.com>
+> Closes: https://lore.kernel.org/all/Zx9Losv4YcJowaP%2F@ly-workstation/
+> Reported-by: syzbot+3c4321e10eea460eb606@syzkaller.appspotmail.com
+> Closes: https://lore.kernel.org/all/673adf75.050a0220.87769.0024.GAE@google.com/
+> Fixes: 3a5465418f5f ("perf: Fix event leak upon exec and file release")
+> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 > ---
->   drivers/watchdog/qcom-wdt.c | 40 +++++++++++++++++++++++++++++++++++++++-
->   1 file changed, 39 insertions(+), 1 deletion(-)
+>  include/linux/perf_event.h |  1 -
+>  kernel/events/core.c       | 64 +++++++++++---------------------------
+>  2 files changed, 18 insertions(+), 47 deletions(-)
 > 
-> diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
-> index 006f9c61aa64fd2b4ee9db493aeb54c8fafac818..54d6eaa132ab9f63e1312a69ad51b7a14f78fe2d 100644
-> --- a/drivers/watchdog/qcom-wdt.c
-> +++ b/drivers/watchdog/qcom-wdt.c
-> @@ -9,6 +9,7 @@
->   #include <linux/kernel.h>
->   #include <linux/module.h>
->   #include <linux/of.h>
-> +#include <linux/of_address.h>
->   #include <linux/platform_device.h>
->   #include <linux/watchdog.h>
->   
-> @@ -22,6 +23,8 @@ enum wdt_reg {
->   
->   #define QCOM_WDT_ENABLE		BIT(0)
->   
-> +#define NON_SECURE_WDT_RESET	0x5
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index 76f4265efee9..4e8970da6953 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -832,7 +832,6 @@ struct perf_event {
+>  	struct irq_work			pending_disable_irq;
+>  	struct callback_head		pending_task;
+>  	unsigned int			pending_work;
+> -	struct rcuwait			pending_work_wait;
+>  
+>  	atomic_t			event_limit;
+>  
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index b2334d27511b..253791d99e21 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -5355,30 +5355,6 @@ static bool exclusive_event_installable(struct perf_event *event,
+>  
+>  static void perf_free_addr_filters(struct perf_event *event);
+>  
+> -static void perf_pending_task_sync(struct perf_event *event)
+> -{
+> -	struct callback_head *head = &event->pending_task;
+> -
+> -	if (!event->pending_work)
+> -		return;
+> -	/*
+> -	 * If the task is queued to the current task's queue, we
+> -	 * obviously can't wait for it to complete. Simply cancel it.
+> -	 */
+> -	if (task_work_cancel(current, head)) {
+> -		event->pending_work = 0;
+> -		local_dec(&event->ctx->nr_no_switch_fast);
+> -		return;
+> -	}
+> -
+> -	/*
+> -	 * All accesses related to the event are within the same RCU section in
+> -	 * perf_pending_task(). The RCU grace period before the event is freed
+> -	 * will make sure all those accesses are complete by then.
+> -	 */
+> -	rcuwait_wait_event(&event->pending_work_wait, !event->pending_work, TASK_UNINTERRUPTIBLE);
+> -}
+> -
+>  /* vs perf_event_alloc() error */
+>  static void __free_event(struct perf_event *event)
+>  {
+> @@ -5433,7 +5409,6 @@ static void _free_event(struct perf_event *event)
+>  {
+>  	irq_work_sync(&event->pending_irq);
+>  	irq_work_sync(&event->pending_disable_irq);
+> -	perf_pending_task_sync(event);
+>  
+>  	unaccount_event(event);
+>  
+> @@ -5526,10 +5501,17 @@ static void perf_remove_from_owner(struct perf_event *event)
+>  
+>  static void put_event(struct perf_event *event)
+>  {
+> +	struct perf_event *parent;
 > +
->   static const u32 reg_offset_data_apcs_tmr[] = {
->   	[WDT_RST] = 0x38,
->   	[WDT_EN] = 0x40,
-> @@ -187,6 +190,39 @@ static const struct qcom_wdt_match_data match_data_kpss = {
->   	.max_tick_count = 0xFFFFFU,
->   };
->   
-> +static int  qcom_wdt_get_restart_reason(struct qcom_wdt *wdt)
-> +{
-> +	struct device_node *np;
-> +	struct resource imem;
-> +	void __iomem *base;
-> +	int ret;
+>  	if (!atomic_long_dec_and_test(&event->refcount))
+>  		return;
+>  
+> +	parent = event->parent;
+>  	_free_event(event);
 > +
-> +	np = of_find_compatible_node(NULL, NULL, "qcom,restart-reason-info");
-> +	if (!np)
-> +		return -ENOENT;
-> +
-> +	ret = of_address_to_resource(np, 0, &imem);
-> +	of_node_put(np);
-> +	if (ret < 0) {
-> +		dev_err(wdt->wdd.parent, "can't translate OF node address\n");
-> +		return ret;
-> +	}
-> +
-> +	base = ioremap(imem.start, resource_size(&imem));
-> +	if (!base) {
-> +		dev_err(wdt->wdd.parent, "failed to map restart reason info region\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	memcpy_fromio(&ret, base, sizeof(ret));
-> +	iounmap(base);
-> +
-> +	if (ret == NON_SECURE_WDT_RESET)
-> +		wdt->wdd.bootstatus = WDIOF_CARDRESET;
-> +
-> +	return 0;
-> +}
-> +
->   static int qcom_wdt_probe(struct platform_device *pdev)
->   {
->   	struct device *dev = &pdev->dev;
-> @@ -267,7 +303,9 @@ static int qcom_wdt_probe(struct platform_device *pdev)
->   	wdt->wdd.parent = dev;
->   	wdt->layout = data->offset;
->   
-> -	if (readl(wdt_addr(wdt, WDT_STS)) & 1)
-> +	ret = qcom_wdt_get_restart_reason(wdt);
-> +	if (ret == -ENOENT &&
-> +	    readl(wdt_addr(wdt, WDT_STS)) & 1)
->   		wdt->wdd.bootstatus = WDIOF_CARDRESET;
-
-This ignores all other error returns from qcom_wdt_get_restart_reason(),
-but in that function it generates several dev_err(). Either make those
-messages less than an error, or treat them as error and drop out here.
-
-Thanks,
-Guenter
-
+> +	/* Matches the refcount bump in inherit_event() */
+> +	if (parent)
+> +		put_event(parent);
+>  }
+>  
+>  /*
+> @@ -5613,11 +5595,6 @@ int perf_event_release_kernel(struct perf_event *event)
+>  		if (tmp == child) {
+>  			perf_remove_from_context(child, DETACH_GROUP);
+>  			list_move(&child->child_list, &free_list);
+> -			/*
+> -			 * This matches the refcount bump in inherit_event();
+> -			 * this can't be the last reference.
+> -			 */
+> -			put_event(event);
+>  		} else {
+>  			var = &ctx->refcount;
+>  		}
+> @@ -5643,7 +5620,8 @@ int perf_event_release_kernel(struct perf_event *event)
+>  		void *var = &child->ctx->refcount;
+>  
+>  		list_del(&child->child_list);
+> -		free_event(child);
+> +		/* Last reference unless ->pending_task work is pending */
+> +		put_event(child);
+>  
+>  		/*
+>  		 * Wake any perf_event_free_task() waiting for this event to be
+> @@ -5654,7 +5632,11 @@ int perf_event_release_kernel(struct perf_event *event)
+>  	}
+>  
+>  no_ctx:
+> -	put_event(event); /* Must be the 'last' reference */
+> +	/*
+> +	 * Last reference unless ->pending_task work is pending on this event
+> +	 * or any of its children.
+> +	 */
+> +	put_event(event);
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(perf_event_release_kernel);
+> @@ -7065,12 +7047,6 @@ static void perf_pending_task(struct callback_head *head)
+>  	struct perf_event *event = container_of(head, struct perf_event, pending_task);
+>  	int rctx;
+>  
+> -	/*
+> -	 * All accesses to the event must belong to the same implicit RCU read-side
+> -	 * critical section as the ->pending_work reset. See comment in
+> -	 * perf_pending_task_sync().
+> -	 */
+> -	rcu_read_lock();
+>  	/*
+>  	 * If we 'fail' here, that's OK, it means recursion is already disabled
+>  	 * and we won't recurse 'further'.
+> @@ -7081,9 +7057,8 @@ static void perf_pending_task(struct callback_head *head)
+>  		event->pending_work = 0;
+>  		perf_sigtrap(event);
+>  		local_dec(&event->ctx->nr_no_switch_fast);
+> -		rcuwait_wake_up(&event->pending_work_wait);
+>  	}
+> -	rcu_read_unlock();
+> +	put_event(event);
+>  
+>  	if (rctx >= 0)
+>  		perf_swevent_put_recursion_context(rctx);
+> @@ -10030,6 +10005,7 @@ static int __perf_event_overflow(struct perf_event *event,
+>  		    !task_work_add(current, &event->pending_task, notify_mode)) {
+>  			event->pending_work = pending_id;
+>  			local_inc(&event->ctx->nr_no_switch_fast);
+> +			WARN_ON_ONCE(!atomic_long_inc_not_zero(&event->refcount));
+>  
+>  			event->pending_addr = 0;
+>  			if (valid_sample && (data->sample_flags & PERF_SAMPLE_ADDR))
+> @@ -12382,7 +12358,6 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+>  	init_irq_work(&event->pending_irq, perf_pending_irq);
+>  	event->pending_disable_irq = IRQ_WORK_INIT_HARD(perf_pending_disable);
+>  	init_task_work(&event->pending_task, perf_pending_task);
+> -	rcuwait_init(&event->pending_work_wait);
+>  
+>  	mutex_init(&event->mmap_mutex);
+>  	raw_spin_lock_init(&event->addr_filters.lock);
+> @@ -13512,8 +13487,7 @@ perf_event_exit_event(struct perf_event *event, struct perf_event_context *ctx)
+>  		 * Kick perf_poll() for is_event_hup();
+>  		 */
+>  		perf_event_wakeup(parent_event);
+> -		free_event(event);
+> -		put_event(parent_event);
+> +		put_event(event);
+>  		return;
+>  	}
+>  
+> @@ -13631,13 +13605,11 @@ static void perf_free_event(struct perf_event *event,
+>  	list_del_init(&event->child_list);
+>  	mutex_unlock(&parent->child_mutex);
+>  
+> -	put_event(parent);
+> -
+>  	raw_spin_lock_irq(&ctx->lock);
+>  	perf_group_detach(event);
+>  	list_del_event(event, ctx);
+>  	raw_spin_unlock_irq(&ctx->lock);
+> -	free_event(event);
+> +	put_event(event);
+>  }
+>  
+>  /*
+> -- 
+> 2.48.1
+> 
