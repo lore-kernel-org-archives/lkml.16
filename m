@@ -1,97 +1,93 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58E5A35973;
-	Tue,  8 Apr 2025 00:51:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E60CF35973;
+	Tue,  8 Apr 2025 00:53:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744073514; cv=none; b=GeE9k08em+ot78VbwaRQfc5tQX4zdy6rgTx0g7kdNgEXgYrvT2y6Y5Kta5V9xSdf7J3hXaMaK2QHFcZWHCut3WbFogwClUTuoeatgs90mib8J0dL9LZ2FQBzqx1BWgFq9NyQ7jDz0Iqo8xaUk50cfeg/fS2EWYGeYcJ6JO7KijM=
+	t=1744073621; cv=none; b=WXpUd2tpEJRPDEruuYLoK7Kqw9tp8OnZfqESKBvwAWKfipAbWh2O+EnqZpdgIyjOoic8OTs+Ye7v2KoAMckUP9NiyOB3e238I5TvDfXXboCgpWYxuUkSi3CteU62/5f8epCfTWpVg5Ov5kaOZfktPij6wuX3YU3HNBIoWzXljOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744073514; c=relaxed/simple;
-	bh=ZWT6+rBYoO49saLQZfVHV8q0ZQmRZ/vxByILhRGafKM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=q9ny5pirzjMwmpnp+ueRn041bgkq9SPtCEj6dILjN8h2LMU7G8fv+ttjT1tlvlV2HBKJBn6bsIrBZaUhOuQ6mf551pVPoWjMEqe6zE8S3ROFq1iR+Ugq5k2zCDe/RAbNbBh5OrG+8tKb11c7sCulM406e5jzOhD3CXRZ/Vqf0RY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=fH3DHDIA; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1744073621; c=relaxed/simple;
+	bh=2tioJx7A1oHG6jVTeIhvZwxr2imWJglUGKGr1y1xJkY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=sUymaJXMPvzPTCFuMBSUfIKBOFqGath93WAc5NdOGtCoOEUIR1Jq//GUkwBBGsBcVzSsBKO5OMfc4u/ug9rJpgqn6v0kgLILtAiJO+knvxKoGkHhyugYXesknA1EL4EK5fz0Yoj5GEM7wBPsHoFwmo4J3XpfXnthn4FfeR8qA9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O43cs2gO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fH3DHDIA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1744073507;
-	bh=aOTZzP50siEULUrf5/csQUelECo0W99PmsjoCCM1QfI=;
-	h=Date:From:To:Cc:Subject:From;
-	b=fH3DHDIAVgDtmrPzwkVPoCd/ZbryzeW4F+snxVdxkS9+d+sFWmy9Q4f2jHVhP++Gj
-	 bn6cC3seRDZHxm4YekVGa5myKbFsYJ9+WMVOkf50GZ9sfmIF46Uy8wt5mvOMCrwY6H
-	 CyIjLusqF8F/VMNgErXkAlMuHeLUyqtcMr/IGAyN2XIlfv0pvrWMkAf4JYkApRB+vZ
-	 se5vedU2YjKiypmDdXcZ7v0GstvUU8LC1Da181zWollgTfI9v6Pbsxd4yo7q8frv3W
-	 0qJOhq0j9ZfS3MwXDsGvhn/LFg2KwLvUuejlgDtjON3idU3aX/BRql+aFj1XRdGi8f
-	 7KrfTKF+O7mjg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZWnb71gbMz4wc4;
-	Tue,  8 Apr 2025 10:51:47 +1000 (AEST)
-Date: Tue, 8 Apr 2025 10:51:46 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Kalle Valo <kvalo@kernel.org>, Jeff Johnson <jjohnson@kernel.org>
-Cc: Balamurugan S <quic_bselvara@quicinc.com>, Jeff Johnson
- <jeff.johnson@oss.qualcomm.com>, P Praneesh <quic_ppranees@quicinc.com>,
- Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>, Ath10k List
- <ath10k@lists.infradead.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build failure after merge of the ath-next tree
-Message-ID: <20250408105146.459dfcf5@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O43cs2gO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A932AC4CEDD;
+	Tue,  8 Apr 2025 00:53:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744073620;
+	bh=2tioJx7A1oHG6jVTeIhvZwxr2imWJglUGKGr1y1xJkY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=O43cs2gOdBdLaqG/dW+Ojdf2ozJ3BmEuyYFheOdItkMESfNLXpPSdMi7VgQgvHmBi
+	 yKRLWqj+dlAXBTPskDH0GEAYUCb8GS+4rX6K3aVeTmulZ4a7qOylBV474JyRCcIiTk
+	 /yIn7N19JpNawTYcoGmxiKu19kDAIbNbbXnTwmL0mIO2xRMO6SVAScaR/glUS+CGb5
+	 iVJYtYlLUpNwt3LI/0Yo/ZKxN/oAPf1cC97IYVTHqgdaX9k/MLl+GRGCZhBbUHah2e
+	 Jxf7RhYkAUhrwyscD7riE5/RX4RpVXQTePG7V1gnXMCrgLweXnbOSJkcSveJ8xqwpo
+	 eMrNCUrd9FNpA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Gary Guo <gary@garyguo.net>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	alex.gaynor@gmail.com,
+	linux-kbuild@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.14 1/3] kbuild, rust: use -fremap-path-prefix to make paths relative
+Date: Mon,  7 Apr 2025 20:53:33 -0400
+Message-Id: <20250408005335.3334585-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/U4LlY.F_bTv1q3nIDCt2.wy";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.14.1
+Content-Transfer-Encoding: 8bit
 
---Sig_/U4LlY.F_bTv1q3nIDCt2.wy
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Thomas Weißschuh <linux@weissschuh.net>
 
-Hi all,
+[ Upstream commit dbdffaf50ff9cee3259a7cef8a7bd9e0f0ba9f13 ]
 
-After merging the ath-next tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+Remap source path prefixes in all output, including compiler
+diagnostics, debug information, macro expansions, etc.
+This removes a few absolute paths from the binary and also makes it
+possible to use core::panic::Location properly.
 
-drivers/net/wireless/ath/ath12k/ahb.c: In function 'ath12k_ahb_stop':
-drivers/net/wireless/ath/ath12k/ahb.c:337:9: error: implicit declaration of=
- function 'del_timer_sync'; did you mean 'dev_mc_sync'? [-Wimplicit-functio=
-n-declaration]
-  337 |         del_timer_sync(&ab->rx_replenish_retry);
-      |         ^~~~~~~~~~~~~~
-      |         dev_mc_sync
+Equivalent to the same configuration done for C sources in
+commit 1d3730f0012f ("kbuild: support -fmacro-prefix-map for external
+modules") and commit a73619a845d5 ("kbuild: use -fmacro-prefix-map to
+make __FILE__ a relative path").
 
-Caused by commit
+Link: https://doc.rust-lang.org/rustc/command-line-arguments.html#--remap-path-prefix-remap-source-names-in-output
+Acked-by: Miguel Ojeda <ojeda@kernel.org>
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+Tested-by: Gary Guo <gary@garyguo.net>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-  6cee30f0da75 ("wifi: ath12k: add AHB driver support for IPQ5332")
+diff --git a/Makefile b/Makefile
+index 8b6764d44a610..c4eeb97ab3df2 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1068,6 +1068,7 @@ endif
+ # change __FILE__ to the relative path to the source directory
+ ifdef building_out_of_srctree
+ KBUILD_CPPFLAGS += $(call cc-option,-fmacro-prefix-map=$(srcroot)/=)
++KBUILD_RUSTFLAGS += --remap-path-prefix=$(srcroot)/=
+ endif
+ 
+ # include additional Makefiles when needed
+-- 
+2.39.5
 
-I have used the ath-next tree from next-20250407 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/U4LlY.F_bTv1q3nIDCt2.wy
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmf0cyIACgkQAVBC80lX
-0GxGaAf/almYg2cNCpAsxVo4sRFqSBPbvl8F4TJWeA8bXrIUmzAIM9z00YUaSXSy
-9HctDk69oV/LLSwacS5+QeyBuvMUZDvFSCg8cEcaynMUfBTaUioDWdVMNYhZEhaW
-mG0Pys6YNIZddblWaVFiCyfzyptJKznKCxjEgdIo9RSR98Pvjx0MI8OLUu5KuBgo
-BlhA+uajM2zbHlN4ZcpEnL24eXZXOayuiWDcVoaZsFAD20gQBChDvdHJJvTbn86V
-Le+RbvPVcLejP9dliPJhaaSUVTmAfjvxch2ZJ1G4eFjUccGOXS0vPubPi+N9ELs7
-eVIyDKE/dYw81aLxuUdtRPaErWmR5Q==
-=7ypU
------END PGP SIGNATURE-----
-
---Sig_/U4LlY.F_bTv1q3nIDCt2.wy--
