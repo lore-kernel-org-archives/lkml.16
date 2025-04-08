@@ -1,155 +1,160 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E464926A0D9
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 11:59:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 083EB26B080;
+	Tue,  8 Apr 2025 12:00:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744113592; cv=none; b=AHIpz+V3XgmhPbLm6u19qQkWy7X9vd0JQYQIOwvF3f2UrFRyCB4ECxWrjHhO3Ks5PT+udk6E0bxWLBs/ISYGmzeTotW8Xm2/GEYogNaUD/QiS3yd5QLG/OwKv+XtgiILw6G72jvRtZ5T2YyvqeDCGeWoUaI7RtZMXWn6d9fQt7I=
+	t=1744113609; cv=none; b=NqF/skm86sSJjrkavOpFLOOOIDcVAfirtqF5/BvT/RyWeLoMEBMXfnPfn1fjQO3njuANzW16Iby7371i9QSZEuu0qznJBvLmQB31bHA3O79Ckqmr5jbtL5k1codKHcYXjQSkSEWXPmr7BHebmH473TfcTJgwTrJeaZOlHtGyFZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744113592; c=relaxed/simple;
-	bh=O/+jAgGAxbyjXO4PAZC5MX8LL4I1nO1tb+Jf+oRpypY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W06gqIWjeotTOKYd12Hfinf1I316NpQvbMvXfmMCYQGRM85FXGIayks7vfUh7fSKMK0WU8UYhY+0cGl2f/beMtCzAqN78kxBVwF10yw7//WNpRT2UX3z/Gb73GEx0K8bwiggVMVPHqeU5vUQflawXIna1QcQFJI9XmzZzSoIbiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=kAsOPgkP; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1744113609; c=relaxed/simple;
+	bh=dUWKfjDqnRfQ8UmOMYbbmq/7pli/zMe8OAjslWmSiwI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bagY4gIFb6OBrpl26vSYeMqzkFRhdeizIgzFoQEoeezuqk1gg5P287tesEByEuU/6D6zujuxv1vg1Yu9yiNBu9XRv5RXAImpkr63YhIcCM9ytbQndQ5Tpoa4wucuNK4cNm3/yjO2+OpcgAnffMhdjyxSP7439cUu5dVkyXcUHhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ic1LVhfK; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="kAsOPgkP"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 538Aj7Jl006556
-	for <linux-kernel@vger.kernel.org>; Tue, 8 Apr 2025 11:59:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=J5UKc7ae/UXmKHiunvfff8Ov
-	kaw6Ua5MEgH+S/e5ZyQ=; b=kAsOPgkPIbWTYpxxLnV2o/tiI/3bdehvaBEoCyZ0
-	dKGf+6HEMV+mOXtQg3TKew5ae8DTSn+qdcXvJtxK8ge+EnSr0tx+sCis1veuSQzg
-	3edDDEClKZRUG3Frlttq3EXW9eGg6Cq4X/qOzYcAUEzeYFIgmgXGz/jg2tCX0Qeh
-	VWNmF31+A/CHv5/qZ4QGp8dwZPB7U8WGPeLlfGkV1qCdeh+Pr9a3vvCkTGjqRHjf
-	xF2zmMvSqSQDEiIKdecpulOEdxi8iAwxtfFzVa7K2HvKyiTWyAFBTNH+DWP29d2W
-	vg8Y4qTFoI8b2c5ttNqjBRTpAkdNMdU6PF+BTUhr0+c3xA==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twftfhxw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 11:59:50 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c5e2872e57so1026199085a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 04:59:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ic1LVhfK"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43edecbfb46so25032825e9.0;
+        Tue, 08 Apr 2025 05:00:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744113606; x=1744718406; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6L4iQychx1uy7jgHj1WvD41sEY0IgZaWGgrNA0ppE3A=;
+        b=Ic1LVhfKauWrhUhWCyzsOBkLRI/NwRSi+/RRy1ksEPZo1eT5VNm5Y96rBi9adE0Ip8
+         WvRAOzQrZZEOd1vs6EOD3Vt8r0+hqNU1m16TqcCDGIzZKCY6Vu4Dy2xj8wle1GGOB4gJ
+         1p2Ng0mKKUMiONJ1M4CwLwBV0FcZGmaRPZhH3pt7Bnkkh/QgwXi4SNtJS4j5ZYCimo+B
+         VTmMt+EDvxpIDZnG85bBivCsAOhmNQ6PR2fSdRCxRDGJnesSvKoCV5rBoo1bNmyK1WCM
+         PhSVSXLKDKRu8nN2OILyIDJxOZ3JcZbrG67dw4pER3Xl+DzMRsIZFbMLrrolgGx89Yid
+         3L/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744113589; x=1744718389;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=J5UKc7ae/UXmKHiunvfff8Ovkaw6Ua5MEgH+S/e5ZyQ=;
-        b=vcZF9hGwL6dCApJ2m6AmVNYk7tLq7n+Xa/oLBKW9gvk4M96gPKI6pZ8Sbr6ic0zKPi
-         6QLvwyaEbtQ2Xzb0zZrv2f7FrpLbK9njEv2LoC4CqCpEmNSbCnAT/xMdKxZOPaMvp8Ub
-         SU0BKHt1LtzEYXjetHTqbdM46o8nVVxs2n7Okc58R/W+S4ML0kGPN2EhqM5BO9BBdJvb
-         KOcyctRkDvY6uIpNyhceZY8RDIK0YtbsoxFyasoyCLaO4b+gHHd45080Ghy8SejQjQ0K
-         umCRP4FryP4Mc4vMVudIZu9TzI9Y4YTShJJ+A8hYr7APgKOw2tswwnLjR0r6UkdGPvDP
-         MhOw==
-X-Forwarded-Encrypted: i=1; AJvYcCWAjH31O9nwDHIXPLbaAF2XMB4eh4DWMrkljHWXz0CdtmQ8UMCJBMYwmXn+MgJmjOu7NxRkcOQJUJxfhls=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwaxziFJEG3w/5Q8PBcNkEDs7A5/tOHeYdSRFY8fA83IsFDXX7L
-	bc9NilyGqURUxMTv4N5JbjrTLvBNom6oBA54qiOcHxToCHo9YsN1Te5/5LfhgEKXHBGEETx6Cax
-	MvLNjtfXoJ6Opqe5cehgAS+DzvtUsoi3VVi5NZP1YHdnEy0m7mJeV1oIoCfz9URg=
-X-Gm-Gg: ASbGncvyyl5p+Y27Iy02uCeS5DCmFxUG5poq3UsQUDiNvg1QZwT4SLPeiKLaD45tNud
-	1OVg66KQQ+FugDpZ30n71MCuyXbFuVe+TrIeKHaWQqOuO5XKcWTP4CHQTLLvoCVhcQbSD9d44sU
-	LXy+Y6+YVJGFgZiotv2g6lqUHklSu2N9bvt6bAZxwB7G0OETFIFYB5FVl2sjT0dM86aL6AKG1Vq
-	oKU5GxSmD7kzssZtSrQrDwZPZcGSoeIsSg0PqE7Z+WsSHccl7M+n9nwuxyN8FOKKwC/Y/Tv/7md
-	rk4+efutme4RctJtp1j9MLinOsWBFqO8e7oasXZ7erjdB7bgvCbC1SrIeED0L+oeDpwkzgSpISW
-	vZ/4=
-X-Received: by 2002:a05:620a:3189:b0:7c5:a513:1fd2 with SMTP id af79cd13be357-7c7759e8788mr2682363185a.6.1744113589009;
-        Tue, 08 Apr 2025 04:59:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHLjG0AgWeS1WAQhJR3SCJI5Qh4YJ14xwCKURGmhWqtrP5XHH87RDOupWg+DezPfWGcaUO7og==
-X-Received: by 2002:a05:620a:3189:b0:7c5:a513:1fd2 with SMTP id af79cd13be357-7c7759e8788mr2682358785a.6.1744113588696;
-        Tue, 08 Apr 2025 04:59:48 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54c1e6370ebsm1479003e87.130.2025.04.08.04.59.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 04:59:47 -0700 (PDT)
-Date: Tue, 8 Apr 2025 14:59:46 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Andrzej Hajda <andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert Foss <rfoss@kernel.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Anusha Srivatsa <asrivats@redhat.com>,
-        Paul Kocialkowski <paulk@sys-base.io>,
-        Dmitry Baryshkov <lumag@kernel.org>,
-        =?utf-8?B?SGVydsOp?= Codina <herve.codina@bootlin.com>,
-        Hui Pu <Hui.Pu@gehealthcare.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        dri-devel@lists.freedesktop.org, asahi@lists.linux.dev,
-        linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev,
-        imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Bjorn Andersson <quic_bjorande@quicinc.com>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>
-Subject: Re: [PATCH 16/34] drm/msm/dp: convert to devm_drm_bridge_alloc() API
-Message-ID: <s5uvbdcv7pqogwg7gyy42vfxv3ubffj4ww7nili6sd3y67kdf5@byctauuurvwe>
-References: <20250407-drm-bridge-convert-to-alloc-api-v1-0-42113ff8d9c0@bootlin.com>
- <20250407-drm-bridge-convert-to-alloc-api-v1-16-42113ff8d9c0@bootlin.com>
+        d=1e100.net; s=20230601; t=1744113606; x=1744718406;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6L4iQychx1uy7jgHj1WvD41sEY0IgZaWGgrNA0ppE3A=;
+        b=ZiqBMFP8t8IgsQYKp1x/BlbRNnNZ6Ir8zBBMn8se0UhRj7X6fTZxe1lAuqGBZFFcZu
+         8hDIJ8OJJ31LBjnPZd64db9SmlnfdeI5F0UWxlsdgD+rQnZwOoeI62YfPmwUfNoNRtIq
+         TP3RKavmB2gb9RcyZwckkuOrzdJKjUcTu2Iqri29OFKm79YL/GEEq+tiPXVR47zgkCEi
+         A2gVKuOPh7kMskDx0SKufc4oXW3oXPF6+cPICjCkHpxYZJ2XHejs7sTChGmayv/PDH9B
+         DRcwJps8XaNDBwj3zCbrRDoweUujngvOiujeDQgigRPwvVLtlSkPG4AboZ7SDzdnhuOh
+         hG7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU4BhOURwsXuIyK8XjjzTrpSe0DOp5k50tafQYMUqZ5d8cEtauKlZsdHyOMR61mwIdGzlI6K+qhObNEy94n@vger.kernel.org, AJvYcCVcdrlZIIzusDaiBD2qYijaQbmgmmhoMGY8EzIyFanuNO58x21wsws+UUvKe6jGlh/Rb7OIr2k1@vger.kernel.org, AJvYcCWPW3Xa4l/sPav041lNUeqyDTOmp9jEeYB3uSMdOuvxMuNgazwMTYz4enimUQPv3/sN90Tjn9ZlUBVCWRcN@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5HHsje2/ghw/nut7G1Hftf/GOnwAWFzjmqwkrxcHSZURmlTxl
+	7KTA08GjcicLJSr01vnI5kh1dTe/YJzTlB0oW83C4Z2scIZpei4o
+X-Gm-Gg: ASbGnctl54rdYZSwUxmfxXQvOcDW3D3Hn1IkKCe76zOY5evuBzT2d2ez6/02J5pydcl
+	nBixtfB5mj43y3OUpJFben1Q9jCBi6w05QjP5IT3RZhnHYJWC58q2Xba54DzR6C1/KsAUIOALcE
+	A8CcLmNJGp3zf/nW54RDZdoSEFhZmBftvZbbJcT9RG9dGc4xDr/nCPyRCoOGk0w6JvD1LJlBLHa
+	cJ8zvLrxQ5NdLVS+czxBmzNO9XTeMJKoxVhkSJVrW9p+EiIMn+4BxBmoSeWnnQBIZlovuFAHtKL
+	zsj/Sa0mcZgv8mUSPuQ2z7FewIje+w6JfE2W73rlBLPstmWHpWYsaWwHRqN8Xo7YUq2ddQSDZUs
+	UxVX6yX62Yg==
+X-Google-Smtp-Source: AGHT+IFWUl6RnxQjdIwM81eDxBsClW9ge0wo/OtuxlY8w+xK//1FoFjcr6BLnTvk1k+o61j8H//cpQ==
+X-Received: by 2002:a05:6000:1445:b0:38f:5057:5810 with SMTP id ffacd0b85a97d-39cb35a6bd8mr13264113f8f.25.1744113605890;
+        Tue, 08 Apr 2025 05:00:05 -0700 (PDT)
+Received: from [192.168.0.33] (85.219.19.182.dyn.user.ono.com. [85.219.19.182])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c301ba17csm14843955f8f.58.2025.04.08.05.00.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Apr 2025 05:00:05 -0700 (PDT)
+Message-ID: <e678b85e-efc3-491b-8cfa-72d33d769d25@gmail.com>
+Date: Tue, 8 Apr 2025 14:00:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407-drm-bridge-convert-to-alloc-api-v1-16-42113ff8d9c0@bootlin.com>
-X-Authority-Analysis: v=2.4 cv=B5+50PtM c=1 sm=1 tr=0 ts=67f50fb6 cx=c_pps a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=P-IC7800AAAA:8 a=COk6AnOGAAAA:8 a=tVI0ZWmoAAAA:8 a=pGLkceISAAAA:8 a=EUspDBNiAAAA:8
- a=Yq7wtpIrRiHUN6cIw-cA:9 a=CjuIK1q_8ugA:10 a=PEH46H7Ffwr30OY-TuGO:22 a=d3PnA9EDa4IxuAV0gXij:22 a=TjNXssC_j7lpFel5tvFf:22 a=-BPWgnxRz2uhmvdm1NTO:22
-X-Proofpoint-GUID: e7YxT63nmAfZwkTd_wOaNo65vkEH5y0y
-X-Proofpoint-ORIG-GUID: e7YxT63nmAfZwkTd_wOaNo65vkEH5y0y
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-08_04,2025-04-08_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- suspectscore=0 malwarescore=0 bulkscore=0 phishscore=0 spamscore=0
- priorityscore=1501 adultscore=0 impostorscore=0 lowpriorityscore=0
- mlxscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504080085
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] hfs/hfsplus: fix slab-out-of-bounds in hfs_bnode_read_key
+To: Greg KH <gregkh@linuxfoundation.org>,
+ Christian Brauner <brauner@kernel.org>, cve@kernel.org
+Cc: Cengiz Can <cengiz.can@canonical.com>,
+ Salvatore Bonaccorso <carnil@debian.org>, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, lvc-patches@linuxtesting.org,
+ dutyrok@altlinux.org, syzbot+5f3a973ed3dfb85a6683@syzkaller.appspotmail.com,
+ stable@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>
+References: <20241019191303.24048-1-kovalev@altlinux.org>
+ <Z9xsx-w4YCBuYjx5@eldamar.lan>
+ <d4mpuomgxqi7xppaewlpey6thec7h2fk4sm2iktqsx6bhwu5ph@ctkjksxmkgne>
+ <2025032402-jam-immovable-2d57@gregkh>
+ <7qi6est65ekz4kjktvmsbmywpo5n2kla2m3whbvq4dsckdcyst@e646jwjazvqh>
+ <2025032404-important-average-9346@gregkh>
+ <dzmprnddbx2qaukb7ukr5ngdx6ydwxynaq6ctxakem43yrczqb@y7dg7kzxsorc>
+ <20250407-biegung-furor-e7313ca9d712@brauner>
+ <2025040801-finalize-headlock-669d@gregkh>
+Content-Language: en-US
+From: Attila Szasz <szasza.contact@gmail.com>
+In-Reply-To: <2025040801-finalize-headlock-669d@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 07, 2025 at 04:23:31PM +0200, Luca Ceresoli wrote:
-> This is the new API for allocating DRM bridges.
-> 
-> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-> 
-> ---
-> 
-> Cc: Abhinav Kumar <quic_abhinavk@quicinc.com>
-> Cc: Bjorn Andersson <quic_bjorande@quicinc.com>
-> Cc: Marijn Suijten <marijn.suijten@somainline.org>
-> Cc: Rob Clark <robdclark@gmail.com>
-> Cc: Sean Paul <sean@poorly.run>
-> ---
->  drivers/gpu/drm/msm/dp/dp_drm.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
-> 
+I’m not sure what you're doing with CVEs at the moment, but it doesn’t 
+matter too much for me personally, though it can be a bit worrisome for 
+others. Post-CRA, things will likely change again anyway.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Distros should probably consider guestmounting, as Richard suggested, or 
+disabling the feature altogether once edge cases are worked out.
 
--- 
-With best wishes
-Dmitry
+https://github.com/torvalds/linux/commit/25efb2ffdf991177e740b2f63e92b4ec7d310a92
+
+Looking at other unpatched syzkaller reports and older commits, it seems 
+plausible that the HFS+ driver was—and possibly still is—unstable in how 
+it manipulates B-trees. One could potentially mount a valid, empty image 
+and cause corruption through normal, unprivileged operations, leading to 
+a memory corruption primitive that could root the box.
+
+I’m not working on this right now, but it might be the case that 
+syzkaller might uncover stuff similar to whatever was /*formerly 
+referred to by*/ CVE-2025-0927. People tend to view these things as 
+either abuse or contribution, depending on their sentiment toward 
+information security, anyway.
+
+Still, it might be worth keeping in mind for the distros and taking 
+lessons from this to improve whatever implicit threat models the 
+involved parties are working with.
+
+Thanks for the fix upstream! It was probably a good call after all, all 
+things considered.
+
+On 4/8/25 10:03, Greg KH wrote:
+> On Mon, Apr 07, 2025 at 12:59:18PM +0200, Christian Brauner wrote:
+>> On Sun, Apr 06, 2025 at 07:07:57PM +0300, Cengiz Can wrote:
+>>> On 24-03-25 11:53:51, Greg KH wrote:
+>>>> On Mon, Mar 24, 2025 at 09:43:18PM +0300, Cengiz Can wrote:
+>>>>> In the meantime, can we get this fix applied?
+>>>> Please work with the filesystem maintainers to do so.
+>>> Hello Christian, hello Alexander
+>>>
+>>> Can you help us with this?
+>>>
+>>> Thanks in advance!
+>> Filesystem bugs due to corrupt images are not considered a CVE for any
+>> filesystem that is only mountable by CAP_SYS_ADMIN in the initial user
+>> namespace. That includes delegated mounting.
+> Thank you for the concise summary of this.  We (i.e. the kernel CVE
+> team) will try to not assign CVEs going forward that can only be
+> triggered in this way.
+>
+>> The blogpost is aware that the VFS maintainers don't accept CVEs like
+>> this. Yet a CVE was still filed against the upstream kernel. IOW,
+>> someone abused the fact that a distro chose to allow mounting arbitrary
+>> filesystems including orphaned ones by unprivileged user as an argument
+>> to gain a kernel CVE.
+> Yes, Canonical abused their role as a CNA and created this CVE without
+> going through the proper processes.  kernel.org is now in charge of this
+> CVE, and:
+>
+>> Revoke that CVE against the upstream kernel. This is a CVE against a
+>> distro. There's zero reason for us to hurry with any fix.
+> I will go reject this now.
+>
+> Note, there might be some older CVEs that we have accidentally assigned
+> that can only be triggered by hand-crafted filesystem images.  If anyone
+> wants to dig through the 5000+ different ones we have, we will be glad
+> to reject them as well.
+>
+> thanks,
+>
+> greg k-h
