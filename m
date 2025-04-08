@@ -1,146 +1,55 @@
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15047266EEB;
-	Tue,  8 Apr 2025 10:15:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18842266EF6
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 10:16:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744107357; cv=none; b=cn+zijFNFDm6tAErk9OWTMiFXcq0B75fRv1YUXu16nt4JUPvhaB5e0PaO5pWp0gcxKI1bxvXFor/5E3UHjhMYzMUcqOrVivYqyXVd25qi5f+PLSc+g/901Dgb14JfSoZRJy7zReJ0pr3k7yEAPVfTBURbhAb0sj4cQlGZKXtSvk=
+	t=1744107391; cv=none; b=V+f+w2MwvdjtlHeKcgkBc6xhII8WPLix7irLHD6T8751KgkTQr9W5pq0prfAsefy8OcwmRbmnsEqwcKLFtcuTGwrItPvgWpdd1AncmNaxwMXENnerVffJgplXAc0zwoPQBFchI0qiR1QbJMTZ/DNqN0VnChcHnRmeod47JW4D4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744107357; c=relaxed/simple;
-	bh=F5jgsqXwGSznc/ks79mQwm/auTZ55zbs/7FmfTPKs4k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Otrh0heJ4iCNKp7unYO0y+rNhALhveqEIO+MOQC40mJ6x4WNzi7v7WFouW3+uBxkPtjFN2Qjj9m31IcKGiDb07BlSG8b41AePg7Ct8qtvqlqpCU67P3I01qZZxR1NRyor9HeezRwSSl3EOslc08XgpxGPe58ukCpEnhx721Yhr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U54G7KM3; arc=none smtp.client-ip=209.85.222.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U54G7KM3"
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c554d7dc2aso887143085a.3;
-        Tue, 08 Apr 2025 03:15:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744107354; x=1744712154; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=I9Ppw8vR47G47P1j9HJc/DVvecueKLo2E/NHI0ohsC8=;
-        b=U54G7KM3MKzyVKjpeEKX3xfDzuKHc59R2lm5HVtqhBhemnYsnG88GfzqnjX97OP9Sv
-         DoAnmxVxuKGZexlqz49LNreiFf9ZxXOZ8KsRkO/M82PBcAfZLHcXhweaMqpVwvMXTkn1
-         b6WurudsMh64NxjekVovpEgju2SXcHsNhj05UbpQGmNKlQvyF8ibJueedy38I0Yd5NMC
-         fwBYBuI/ljz4oRuQypDF4956FTiEVUoe4DB8c61Mk6O6Hv89o7Wt64EKXyvlDXSiM5BQ
-         iBJXhR9jjTCuouKxQXPhRpB4i+UWP64DG/weG7BCCQzOKvXWn3mXkjUWz1bnSnfjxtVV
-         RaVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744107354; x=1744712154;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=I9Ppw8vR47G47P1j9HJc/DVvecueKLo2E/NHI0ohsC8=;
-        b=Es33uBTtCZuiD3hUacxDw1m52lfHpN5P32biWn2k+RQsLb1qdoEIAEO7DYeiS/YQbW
-         HiA7Aj5c+lcIp22Xdcaq4q0Iwue9sdtSHL53jEbQKMfkPYkfrXITNAXFJsbKOLf/A4p1
-         UFMjHsnH4JowckiRAEB2rWxXruTRolQdCIF11TN9f6PAjuDEU6+yAHTr7R0LKE8rkbGo
-         zVKaTKaam2j3FksyF3V2kG8Id5b22Hl2H/C8pnY7F2CW7s0K6vfrgVokVbvqE3vjSoA0
-         /5oA2Rl4Jy6dhh8Uh0/V7SMWugv8UhSRMzp1UVnnN+QAzq4NIonkPCSrUc3807icBtIp
-         kN+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVW1dSLqWNbUDLBx4esGxF0C8J+XlKHsuBl8oFzXh2DniKiLa+kDGcsOBR3mJpzSGN3rKSUOkwhnAXOnuzn@vger.kernel.org, AJvYcCVs7/5lcVv0CwY5N6t5lxd5UVxPCJQogxAJ81oBB2Hp3CgQ0IeNk3qJfS3069+7YDroAWJHnh8sR4bU@vger.kernel.org, AJvYcCVt3KcoGdQBzZYtajkFWQDzjO8oGBI4GsB6iNvIx/mzM/YUOHSicB7oy8DqiDfuDrTUgyoXf0CTWRfj@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2Av2G7/7nLfpY1E4ojXrOzpJmQIAARFD21+6w0kLHQYl5y8DJ
-	zwWhwnN83rqbCeowYZc+LxmuZ5CUPm6dou5X8HglEXLY3XFveIy/
-X-Gm-Gg: ASbGncutJDXZpla2J0CV6bNElBKhnaMKhvN7ck23io92aqMWbmDXwF+j+6jVHPYKETs
-	bRFRfvgvEAfUsmYLA1cN48KILbrrIX8+rXkRiBNmGvOBufdLhmJYpS0zOTKYoUrsM7kLbk23V2+
-	tHYX/07AGFtctE226oRpSUDVHZsOSRGcILfTEtQEwsM8G/bsfyLjI0OxoH6z/eMh1Fa4Px31RaB
-	whuWpNIVVugseAEJOAiqoFK+70gzQXnINb0K8oYVxXbaBIrPDM5KdoSVAFo7VIUWyZeS01YN6Uy
-	es0bzom03fRRGtv3WSUJZMm0tpIhLXo=
-X-Google-Smtp-Source: AGHT+IH23+fBypf9fr3Elpk3n1gRkPJVqS8WHxAKtFVO5CG6iIAA5fMRsI1J8HrPQnuK8Bsg9SUsHw==
-X-Received: by 2002:a05:620a:318f:b0:7c5:6a66:5c1e with SMTP id af79cd13be357-7c774dfcc5dmr2575493785a.58.1744107353738;
-        Tue, 08 Apr 2025 03:15:53 -0700 (PDT)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c76e96e611sm735194785a.62.2025.04.08.03.15.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 03:15:52 -0700 (PDT)
-Date: Tue, 8 Apr 2025 18:15:16 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Thomas Bonnefille <thomas.bonnefille@bootlin.com>, 
-	Inochi Amaoto <inochiama@gmail.com>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
-	Jingbao Qiu <qiujingbao.dlmu@gmail.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	unicorn_wang@outlook.com, dlan@gentoo.org, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 2/2] pwm: sophgo: add pwm support for Sophgo CV1800 SoC
-Message-ID: <laanxdjx2bd5zgxftefyjhfcih4mx54qzscnoavzosqvib463h@pclt37x4zomr>
-References: <20240501083242.773305-1-qiujingbao.dlmu@gmail.com>
- <20240501083242.773305-3-qiujingbao.dlmu@gmail.com>
- <k6jbdbhkgwthxwutty6l4q75wds2nilb3chrv7n4ccycnzllw4@yubxfh5ciahr>
- <D8Z4GLQZGKKS.37TDZ7QBN4V4N@bootlin.com>
- <j74t2zqvoslo5fgmea4kp434tafgchkncytofj65zbbt7ivcqy@auboc3pkdiz3>
- <D913G6I023M1.NLMLJDZ1PYSA@bootlin.com>
+	s=arc-20240116; t=1744107391; c=relaxed/simple;
+	bh=x/Vq1ulfJyLt/8bph2k3JJ9FH8R/3+iOzyNqANplotM=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=sp+BzYwVsCCTsO+U7Mh09JUovjW8aX+EhdxPS4af8ywrCsTX5p12pFrr3xGOtgQSo8PahUWUm22I7B/ggsso2GMrz7EzKhvZxUfAH05nlePG0xmq77+Lu5Pq56OC6q93hEB6VCpTGOvRO/pR3MQwqceIKQkXC0Cj/NUrbqqKpN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+	id ECBE392009C; Tue,  8 Apr 2025 12:16:26 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by angie.orcam.me.uk (Postfix) with ESMTP id E915D92009B;
+	Tue,  8 Apr 2025 11:16:26 +0100 (BST)
+Date: Tue, 8 Apr 2025 11:16:26 +0100 (BST)
+From: "Maciej W. Rozycki" <macro@orcam.me.uk>
+To: Borislav Petkov <bp@alien8.de>
+cc: Kevin Koster <lkml@ombertech.com>, Thomas Gleixner <tglx@linutronix.de>, 
+    Oerg866 <oerg866@googlemail.com>, linux-kernel@vger.kernel.org, 
+    Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
+    x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH] x86/microcode: Fix crashes on early 486 CPUs due to
+ usage of 'cpuid'.
+In-Reply-To: <20250406190253.GAZ_LP3RPZInWKcHN7@fat_crate.local>
+Message-ID: <alpine.DEB.2.21.2504081107390.29566@angie.orcam.me.uk>
+References: <CANpbe9Wm3z8fy9HbgS8cuhoj0TREYEEkBipDuhgkWFvqX0UoVQ@mail.gmail.com> <20250405130306.ca9822c1f27db119cc973603@ombertech.com> <20250405093127.GAZ_D4b6NdyTS-UW1J@fat_crate.local> <20250406164049.c0666bc18073e3b88c92d1f1@ombertech.com>
+ <20250406174633.2c581923c145687476191753@ombertech.com> <20250406190253.GAZ_LP3RPZInWKcHN7@fat_crate.local>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <D913G6I023M1.NLMLJDZ1PYSA@bootlin.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Tue, Apr 08, 2025 at 09:54:27AM +0200, Thomas Bonnefille wrote:
-> On Mon Apr 7, 2025 at 9:21 AM CEST, Inochi Amaoto wrote:
-> > On Sun, Apr 06, 2025 at 02:16:41AM +0200, Thomas Bonnefille wrote:
-> >> Hello,
-> >> 
-> >> On Sat Jun 1, 2024 at 1:53 PM CEST, Uwe Kleine-König wrote:
-> >> > On Wed, May 01, 2024 at 04:32:42PM +0800, Jingbao Qiu wrote:
-> >> >> [...]
-> >> >> +	if ((state & BIT(pwm->hwpwm)) && enable)
-> >> >> +		regmap_update_bits(priv->map, PWM_CV1800_OE,
-> >> >> +				   PWM_CV1800_OE_MASK(pwm->hwpwm),
-> >> >> +				   PWM_CV1800_REG_ENABLE(pwm->hwpwm));
-> >> >
-> >> > This looks strange. If BIT(hwpwm) is already set, set it again?!
-> >> > Also if you used the caching implemented in regmap, you don't need to
-> >> > make this conditional.
-> >> >
-> >> 
-> >> I was testing the series and noticed indeed an issue in this driver at
-> >> those lines. If PWM_CV1800_OE isn't set by something else than the
-> >> kernel it will never be set and so, there will never be a PWM outputted.
-> >> 
-> >> Using :
-> >>     if (!(state & BIT(pwm->hwpwm)) && enable)
-> >> Solved the issue but as Uwe said you can probably rely on regmap caching
-> >> to avoid this condition.
-> >> 
-> >> >
-> >> > ...
-> >> > 
-> >> 
-> >> Do you plan on sending a new iteration some day ? I may have some time
-> >> to continue the upstreaming process if you need to.
-> >> 
-> >> Thank you for this series !
-> >> Thomas
-> >
-> > I suggest checking existing spi-sg2044-nor driver, which may reduce your
-> > work for upstreaming.
-> >
-> > Regards,
-> > Inochi
+On Sun, 6 Apr 2025, Borislav Petkov wrote:
+
+> > But if I move "cpuid_1_eax = native_cpuid_eax(1);" to after the
+> > microcode_loader_disabled() check in amd.c, like in the first patch, it
+> > boots fine!
 > 
-> Hello Inochi,
-> 
-> Thank you very much, however even after reading it I can't see the link
-> between the SPI NOR controller driver of the SG2044 and the PWM driver
-> for the CV18XX series ?
-> 
-> Regards,
-> Thomas
+> Yeah, I noticed that too last night. Here's a hopefully better version after
+> I ran it on my 32-bit Atom - I don't have your old rust and maybe you should
+> simply throw it in the garbage - that thing is probably not worth the
+> electricity it uses to power up... :-)
 
-I am sorry, I mistake this as the spi-nor one. You may want to check
-the SG2044 pwm driver, which should be similiar. You could find it at 
-https://lore.kernel.org/all/20250407072056.8629-1-looong.bin@gmail.com/
+ C'mon, these are good room heaters with nice extra side effects. ;)
 
-Regards,
-Inochi
-
-
+  Maciej
