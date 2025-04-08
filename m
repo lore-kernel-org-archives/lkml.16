@@ -1,80 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD3C123FC4B;
-	Tue,  8 Apr 2025 23:33:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8B6924169E;
+	Tue,  8 Apr 2025 23:37:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744155225; cv=none; b=jWVoE+AeIKwg/NG7NZPMmfHVrIgYUGHXxOHRyBlNM1X1tnKiCz73PQG9TgtHTAvDqYyhXf6SZfOj3W9ewQO4EjVPvLUQLjfqBCISnG2qMWfHPeaKZYWN0SFe86Uxh+ghg6gk79/+VuN7VzkIytIa8c1+BEqlEYdA+zimkvtOez8=
+	t=1744155424; cv=none; b=Mn/9ZTD/d/3ljGme3hBwYPLB29qqynzfaaSfNcQDXlU1eXTnJLKMVSOxlciujlLX6B4zS0HC2lIhTp1IvXzMoEwSXpROT/+d8n9wQ2BwhNAe6RG/mJst2wcfyWy/y3XoMVrw0/w4MEAcxwGxt5RNnLclZYoGGa6e+mDtv2Q+gM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744155225; c=relaxed/simple;
-	bh=/ch1wD6o2Vl0FXPYL+F9372/FrXWZmbfesdlSP688wE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XjGjvG/zf1BnGTuFlSntdRIfPDYN3Ggg7rehXmzcLQ73ot9U0W05Yk1Dpsurx1ckNFGOeRYSS3+iFK0cBqHIBTrrVJp0YI3gP3E3Ln1DVEIfDxtW/w5gymD8daBrAEOiTytjHGSwo7ocOsNnrfuETrROqBpuCtGaQtPitRpAtQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ULrhmzZ8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744155424; c=relaxed/simple;
+	bh=qeBpWOGfbzJOiCA+hJbPkYPDneCqlrg4wZjdvh8DyT0=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Kbvh9MqFXFSdadMvrPQn6T4QYo8Av4xaWjT4DfEUEVyrIKswRvGqQk9/8zSlX5AsPbbHRSice00DfWm3YC0sj7b5WnV+Aqnl18d91vVDq2o9Ddv2xiC7SNZAhi+tSFqzQ7vseztrKCUIPAnz3uLkeh9Bk2hBt8oCuhj+aw3Uvms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mJaDqAgD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ULrhmzZ8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B5C6C4CEE5;
-	Tue,  8 Apr 2025 23:33:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mJaDqAgD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 725E8C4CEE5;
+	Tue,  8 Apr 2025 23:37:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744155225;
-	bh=/ch1wD6o2Vl0FXPYL+F9372/FrXWZmbfesdlSP688wE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ULrhmzZ8tFu65Uf/S9eYFLeouWcrXOr3pHX1lkdpfLcET3XCdrIBqGXcPDGkIKD8A
-	 rUpKpnf/RCcHKUk1thFwNtW/ZamTngoGZZjAWyTX0kEmib2nhT1zwLco+tskHfAVBo
-	 /0QcGtrXTFeoJyqYFAx87uH5XGcsfs4ov9E+BU5bRJ8de0LnGazmHZ58VFXYaLFOom
-	 Kc3tE/6xRPg4aHPc4OrJ68KMkjC/Fo3BTYqcPEf81GDPryt0Z+vquFjb3Wki/OvHUY
-	 RHN2erKiiiyBwZiUhW5BzrfZQUzIzsIUYbv9ty6D71AkfIRs9dRueP6KI2hGYA/eC5
-	 3htlonFoMaG2w==
-Date: Tue, 8 Apr 2025 16:33:42 -0700
-From: Kees Cook <kees@kernel.org>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] kbuild: Add '-fno-builtin-wcslen'
-Message-ID: <202504081632.00837E7921@keescook>
-References: <20250407-fno-builtin-wcslen-v1-1-6775ce759b15@kernel.org>
+	s=k20201202; t=1744155424;
+	bh=qeBpWOGfbzJOiCA+hJbPkYPDneCqlrg4wZjdvh8DyT0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=mJaDqAgDhT7NyTXj0SNQLNfYR7g62SMYxdeXXe5/AGznNqblaZmLUyyXNFVObzMoC
+	 dxn0Fihnox9zkhwzcwqXZBoAsQqDlvjQiA/1MPOs9elK8RBNTYCtcfz4KoD2cpdyHa
+	 M9NhRTmyLCwMbIn9mqTr7IBkYCUjkUisDotcUK0oxc5oyQfmALq9fm9w5aBRV/VfLr
+	 rtsJtkzbPDeh7owLrrA9ipR6pCTiM4kO6nBBVxdw2wfp4V9oIl94p7Uc7HT7070uMg
+	 AAaUHoSjTTBKs2fDWAmvL1eZCYVC3fLnnrY/1bM1RSVcnr/69BkWA56sf7VmKreatV
+	 rb+nqmNQsAvTw==
+Date: Wed, 9 Apr 2025 08:36:58 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Tom Zanussi <zanussi@kernel.org>, Douglas Raillard
+ <douglas.raillard@arm.com>
+Subject: Re: [PATCH] tracing: Do not add length to print format in synthetic
+ events
+Message-Id: <20250409083658.25c2687da3fad617514f8b22@kernel.org>
+In-Reply-To: <20250407154139.69955768@gandalf.local.home>
+References: <20250407154139.69955768@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407-fno-builtin-wcslen-v1-1-6775ce759b15@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 07, 2025 at 04:22:12PM -0700, Nathan Chancellor wrote:
-> A recent optimization change in LLVM [1] aims to transform certain loop
-> idioms into calls to strlen() or wcslen(). This change transforms the
-> first while loop in UniStrcat() into a call to wcslen(), breaking the
-> build when UniStrcat() gets inlined into alloc_path_with_tree_prefix():
+On Mon, 7 Apr 2025 15:41:39 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> From: Steven Rostedt <rostedt@goodmis.org>
 > 
->   ld.lld: error: undefined symbol: wcslen
->   >>> referenced by nls_ucs2_utils.h:54 (fs/smb/client/../../nls/nls_ucs2_utils.h:54)
->   >>>               vmlinux.o:(alloc_path_with_tree_prefix)
->   >>> referenced by nls_ucs2_utils.h:54 (fs/smb/client/../../nls/nls_ucs2_utils.h:54)
->   >>>               vmlinux.o:(alloc_path_with_tree_prefix)
+> The following causes a vsnprintf fault:
 > 
-> Disable this optimization with '-fno-builtin-wcslen', which prevents the
-> compiler from assuming that wcslen() is available in the kernel's C
-> library
+>   # echo 's:wake_lat char[] wakee; u64 delta;' >> /sys/kernel/tracing/dynamic_events
+>   # echo 'hist:keys=pid:ts=common_timestamp.usecs if !(common_flags & 0x18)' > /sys/kernel/tracing/events/sched/sched_waking/trigger
+>   # echo 'hist:keys=next_pid:delta=common_timestamp.usecs-$ts:onmatch(sched.sched_waking).trace(wake_lat,next_comm,$delta)' > /sys/kernel/tracing/events/sched/sched_switch/trigger
 > 
+> Because the synthetic event's "wakee" field is created as a dynamic string
+> (even though the string copied is not). The print format to print the
+> dynamic string changed from "%*s" to "%s" because another location
+> (__set_synth_event_print_fmt()) exported this to user space, and user
+> space did not need that. But it is still used in print_synth_event(), and
+> the output looks like:
+> 
+>           <idle>-0       [001] d..5.   193.428167: wake_lat: wakee=(efault)sshd-sessiondelta=155
+>     sshd-session-879     [001] d..5.   193.811080: wake_lat: wakee=(efault)kworker/u34:5delta=58
+>           <idle>-0       [002] d..5.   193.811198: wake_lat: wakee=(efault)bashdelta=91
+>             bash-880     [002] d..5.   193.811371: wake_lat: wakee=(efault)kworker/u35:2delta=21
+>           <idle>-0       [001] d..5.   193.811516: wake_lat: wakee=(efault)sshd-sessiondelta=129
+>     sshd-session-879     [001] d..5.   193.967576: wake_lat: wakee=(efault)kworker/u34:5delta=50
+> 
+> The length isn't needed as the string is always nul terminated. Just print
+> the string and not add the length (which was hard coded to the max string
+> length anyway).
+> 
+
+Good catch!
+
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thanks!
+
 > Cc: stable@vger.kernel.org
-> Link: https://github.com/llvm/llvm-project/commit/9694844d7e36fd5e01011ab56b64f27b867aa72d [1]
-> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+> Fixes: 4d38328eb442d ("tracing: Fix synth event printk format for str fields");
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  kernel/trace/trace_events_synth.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
+> index 969f48742d72..33cfbd4ed76d 100644
+> --- a/kernel/trace/trace_events_synth.c
+> +++ b/kernel/trace/trace_events_synth.c
+> @@ -370,7 +370,6 @@ static enum print_line_t print_synth_event(struct trace_iterator *iter,
+>  				union trace_synth_field *data = &entry->fields[n_u64];
+>  
+>  				trace_seq_printf(s, print_fmt, se->fields[i]->name,
+> -						 STR_VAR_LEN_MAX,
+>  						 (char *)entry + data->as_dynamic.offset,
+>  						 i == se->n_fields - 1 ? "" : " ");
+>  				n_u64++;
+> -- 
+> 2.47.2
+> 
 
-Thanks for chasing this down. :)
-
-Reviewed-by: Kees Cook <kees@kernel.org>
-
-Since I have stuff queued for -rc2, do you want me to snag this too?
 
 -- 
-Kees Cook
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
