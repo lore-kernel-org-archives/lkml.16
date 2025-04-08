@@ -1,93 +1,101 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 188B3268FC9;
-	Tue,  8 Apr 2025 11:26:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1F8B2686B1
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 11:27:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744111583; cv=none; b=mtE9K64rB4ocQMCCHvayEGsPIDe2ldV/yX7H8ft+PWwVxoPIPHWU+GrgIRht0K3knHjUu58nFRkgog8laJzXLoNdayyNAV1d8fv0fre9NYKZNh+/rYb4Cd3ptOaNJuT9O8WV5voVFOKyVxu+IWfB1OciHP+h88g5iuabJ08JCng=
+	t=1744111669; cv=none; b=epDozOYJOBs4Cdji1Ss2xcxArpd7B36+n5ckGTXfJHdO20wvnFCGAd3VzVAghhB0OuVJdOL9UxF0HViK2J96oqUMdhHizb+ONlvGQ6eh/4DqAumNUEOJCcMyIhbXDlv0YCvVnKryeGvR4c/lNSV0cQiWPnHWPUa6l0xQuE4OXbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744111583; c=relaxed/simple;
-	bh=Le4vHaTBbaUs4r0cCQNyRklq5JDSJXBj4TB2yF2UJL0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LcnxSXohdzt6sDq1tf0pI6FA7HF7fH3t+Eb8PlP8Y6brilbYnCigxJMCOA/Rl3pBOGGirr4ySVV6LgHVZxwy9qD+rxSPsGW5WbdYjrZ9TcvZCxSfTQoz+S2LRCAQ9SYsN977ZWRj0pB4ecCTXn+cKGAxaBD96sGTAbhWCtyuJRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E392106F;
-	Tue,  8 Apr 2025 04:26:21 -0700 (PDT)
-Received: from J2N7QTR9R3.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 36AB03F59E;
-	Tue,  8 Apr 2025 04:26:18 -0700 (PDT)
-Date: Tue, 8 Apr 2025 12:26:11 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Timothy Hayes <timothy.hayes@arm.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH 16/24] arm64: cpucaps: Add GCIE capability
-Message-ID: <Z_UH0808dGkS3v7-@J2N7QTR9R3.cambridge.arm.com>
-References: <20250408-gicv5-host-v1-0-1f26db465f8d@kernel.org>
- <20250408-gicv5-host-v1-16-1f26db465f8d@kernel.org>
+	s=arc-20240116; t=1744111669; c=relaxed/simple;
+	bh=9/SI4TkAJnViIG+zH8NnrAYsWGamcMlzfn1L2zXyGUY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Fd4XO8BW0CbX8xB8od2v96oNr5Bnx5yM5nDc5PUIcnqZH58wrZIMSLu1fOJhjCUW2TpaQp1FSAxuRZ4yQpVdnZPPKQT8SCdfdw5NGP/4sK+TFRbyOuclFyAqUhhx72BYn2HyFdLtA2N3TPvP1XxfbMIPBE7+LRjJsaBLXQEufmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-22435603572so51108545ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 04:27:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744111666; x=1744716466;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sWNuU4PXGcFFUxJOOD6+vUejwIulJeOU2+PZK360UKs=;
+        b=OdxcOt2K5v+kCcBAv98UVNfDb8ctAAsMK6qnHxkfDshLrNw5HJxX+ByfjfXdbom//z
+         QFQ3znXpcmh1CGjeOvBVsNkYstak5kZMBFgazOK4+8sxy7IatrX1v7ShfOdrWvxUrgP4
+         KEBO+Go29EVpkzft4KZSK3SuXQZeXKpC7y4QgaEM0EWa7NDLjDrY+e3fSoLQrSvb24sI
+         tlsS965doan++XDd5qwH9k2diCh9/Y5y/z7Hn+2x18KrTlR8KeAcnYdWu/rE+IR6WkmF
+         i5C86QwFcMOzMvr5dkaI6ghz8xSaJV685wvZTJMSM0/wtsdpevC5B/bMHztUPoKUFneQ
+         t9SQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX6iBnuBjb01tnjYIssxffHQIgczfdR7GrhKBx/u58VL5e4nYc8IDsDdmLUNQFfelsWm5103THUTdIz5YM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnNiHHmqljUwKdImf5YWeZUQcL4B3HMoJ/N3Mfe0GyGq/SJpNP
+	fktr7cpX+m7NS/vNhs3GOPVTv4Lus97F7KehZca9Ne/JzmVjgwP/
+X-Gm-Gg: ASbGncuShDnF6FD0nKKLtbP9yyNWoMXxJq42DCmNsPVGQw+1ZkjJBeBjKk8LbVopYG9
+	0QI6hXvVb8t1Fd/T/RZ66wq+6wDdIfntf+Si4lSl7I2gUu3C85MI/SJEYHacXH4TpT3dvaeQfLc
+	Nlr7/575DntR0BNmp8/4Pm0sLIo+5OddBd+2bFuC7PX/Zy2xCAOc8+l9+fF4kpGeGj7r1s7lLsB
+	9HsWgO1OMlz8FmG3PqQzHgrLxxHsthN6Xd3dTqlLUkq+QI/z4UrCgumLi8+hyF13X59qYq4bu1k
+	YvIrNqIGbp+XffqBbA8FtZxF8j7xgkz6zlO2tkgU0dAu0mbXjsF4lcnhcsXj
+X-Google-Smtp-Source: AGHT+IHq28UvQIqWAknFOlE8tIbb/hwfHmeUHFw2eZnKNEbxo/0KO+z2EsthClTeQucSfsOEE2tUVw==
+X-Received: by 2002:a17:902:f684:b0:224:2a6d:55ae with SMTP id d9443c01a7336-22a8a8e44camr224245775ad.48.1744111665988;
+        Tue, 08 Apr 2025 04:27:45 -0700 (PDT)
+Received: from localhost.localdomain ([116.128.244.169])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785c0127sm97708895ad.91.2025.04.08.04.27.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 04:27:45 -0700 (PDT)
+From: jiangfeng@kylinos.cn
+To: maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	rodrigo.vivi@intel.com,
+	christian.koenig@amd.com,
+	raag.jadav@intel.com,
+	andrealmeid@igalia.com
+Cc: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Feng Jiang <jiangfeng@kylinos.cn>
+Subject: [PATCH v2] drm: Fix the length of event_string in drm_dev_wedged_event()
+Date: Tue,  8 Apr 2025 19:27:28 +0800
+Message-Id: <20250408112728.244146-1-jiangfeng@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250408-gicv5-host-v1-16-1f26db465f8d@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 08, 2025 at 12:50:15PM +0200, Lorenzo Pieralisi wrote:
-> Implement the GCIE capability as a strict boot cpu capability to
-> detect whether architectural GICv5 support is available in HW.
-> 
-> Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Marc Zyngier <maz@kernel.org>
+From: Feng Jiang <jiangfeng@kylinos.cn>
 
-This looks good; I have a minor consistency/bikeshedding concern below.
+When calling scnprintf() to append recovery method to event_string,
+the second argument should be `sizeof(event_string) - len`, otherwise
+there is a potential overflow problem.
 
-> ---
->  arch/arm64/kernel/cpufeature.c | 7 +++++++
->  arch/arm64/tools/cpucaps       | 1 +
->  2 files changed, 8 insertions(+)
-> 
-> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-> index 9c4d6d552b25cb3a31d1fb267bd73d3f82513e69..8c60591633f3d435ad9b80a10e484f26af328964 100644
-> --- a/arch/arm64/kernel/cpufeature.c
-> +++ b/arch/arm64/kernel/cpufeature.c
-> @@ -3041,6 +3041,13 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
->  		.matches = has_pmuv3,
->  	},
->  #endif
-> +	{
-> +		.desc = "GCIE",
-> +		.type = ARM64_CPUCAP_STRICT_BOOT_CPU_FEATURE,
-> +		.capability = ARM64_HAS_GCIE,
-> +		.matches = has_cpuid_feature,
-> +		ARM64_CPUID_FIELDS(ID_AA64PFR2_EL1, GCIE, IMP)
-> +	},
+Fixes: b7cf9f4ac1b8 ("drm: Introduce device wedged event")
+Signed-off-by: Feng Jiang <jiangfeng@kylinos.cn>
+---
+v2:
+- update commit message
+- keep scnprintf() as a single line
+---
+ drivers/gpu/drm/drm_drv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I reckon it's worth making the desc a bit clearer, e.g. "GICv5 CPU
-interface".
+diff --git a/drivers/gpu/drm/drm_drv.c b/drivers/gpu/drm/drm_drv.c
+index 17fc5dc708f4..60e5ac179c15 100644
+--- a/drivers/gpu/drm/drm_drv.c
++++ b/drivers/gpu/drm/drm_drv.c
+@@ -549,7 +549,7 @@ int drm_dev_wedged_event(struct drm_device *dev, unsigned long method)
+ 		if (drm_WARN_ONCE(dev, !recovery, "invalid recovery method %u\n", opt))
+ 			break;
+ 
+-		len += scnprintf(event_string + len, sizeof(event_string), "%s,", recovery);
++		len += scnprintf(event_string + len, sizeof(event_string) - len, "%s,", recovery);
+ 	}
+ 
+ 	if (recovery)
+-- 
+2.25.1
 
-It might be worth cleaning up the existing ARM64_HAS_GIC_CPUIF_SYSREGS
-feature, e.g. making that have "GICv3 CPU interface" as its desc.
-
-Likewise, could make the names consistent, e.g. have:
-
-	ARM64_HAS_GICV3_CPUIF
-	ARM64_HAS_GICV5_CPUIF
-
-... ?
-
-Mark.
