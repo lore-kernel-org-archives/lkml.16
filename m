@@ -1,112 +1,123 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 467E82638B0;
-	Tue,  8 Apr 2025 09:31:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04637218ABD
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 09:32:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744104716; cv=none; b=aPD4UQJ6Ux7/HUW+IY42MEBDhOeEDAEDRXygTdG0QeixQ5wthdKpwysYCieNCbgSn5vxJrP9eS2k+oJlYCXjpK46nBre0/BvqHfzFpdb1jmouBekVoWSQj1E282UYx8rikiL5A+dirVpIiAQXXwMI15Cnx2B1x8rTTGDT4BXrrI=
+	t=1744104733; cv=none; b=uN5IMmxn5Pf68y9M70ufObZOuj/LMYHrq4RectjHnAjty1R2T+d3rppes74lBC92ONwEnOvVAEvbSc4BWgqR7/aCpSLqXO8Cp4AIoo70dD7PqFsEOjWY3yBsjV3sGZ7yTPil5tvKzoX+vzFCWIGppxf3VhAOrjr4elu3jhVVrVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744104716; c=relaxed/simple;
-	bh=aZIBSFALC/gWmKJb+8VewxdBOL8Dcul95zyo9NwOpdc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=A8inttQDsUuBIsRMmH+HBon96znEx12ExVyjC560HnN5UOMu3FP/pADLxn11+1+cqO3nG1Zkt+K7IFmiPJI/HnB/H67USlneIqL5buUangvMahj8sV0cPEWzT0C7hWYW8pyhvishJNJlVrDMmeYHCoBR9Zzjt6q8AB0KRyYnuYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=NNPnQ4Dw; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=Ra5PtcIJ reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="NNPnQ4Dw";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="Ra5PtcIJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1744104714; x=1775640714;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=AckmueFcdt0W23SueItleJPhRc4kKUpsswgxRfizL5o=;
-  b=NNPnQ4DwkLVVdCTXtf5isgUKQwJ6s5IpqkbL77jSh4cKDnqYy+6PVWER
-   G5Y9t0G7alFKmI1U+HtJtrHqf5kvzuAwLtYSR9YHAxpAf/25PaBv6MMLH
-   ioIibIygLBLgsVEKUQpAEe+n4nD3pfOMGeeTGqH2wP5tPVURd5waC40pY
-   fJrToLG1xbsY1olFJQSc6nkLS84bDKRoetzLw0EJhiHkOAerKK9VY8RWI
-   yiKwp0RQkZv6aBY7uO+8l1N4QDAud9oaYgjR4zWM+MFrAkqgQ941VkQed
-   7EeIc7FeLSxIf+QXPlUUiBwPXxHDEvonXAxZs+tASU9FBy3VcJXLpQ3Qd
-   g==;
-X-CSE-ConnectionGUID: 4FoT1ObOQFGxPd2lIWTCQg==
-X-CSE-MsgGUID: EskZjJRaQdGXBz0LN5/6qg==
-X-IronPort-AV: E=Sophos;i="6.15,197,1739833200"; 
-   d="scan'208";a="43397420"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 08 Apr 2025 11:31:53 +0200
-X-CheckPoint: {67F4ED09-1E-903EAEAC-E04C76C8}
-X-MAIL-CPID: 98DAD71A01D231204733A360F0E25679_5
-X-Control-Analysis: str=0001.0A006368.67F4ED13.004F,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id E9ADC1697CE;
-	Tue,  8 Apr 2025 11:31:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1744104709;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AckmueFcdt0W23SueItleJPhRc4kKUpsswgxRfizL5o=;
-	b=Ra5PtcIJL3Nr2bC0BZs7PGuW1Nrg7fnXJbAbgemcTjfit61ZJX2gQKIAOcGuxpFqUNvIO1
-	SEGBMWGIe4e+9xoxmNhRxKWXXST6nGkRcP//hokUWpk+0aJO209salYAu5eHAbCBVrp1YG
-	aHXvwyjFLj4k6v1Mvw5CID1pzCNNAlTrwv4Omfc6IXgPOTBimeaufw9GjxE9NdlXvc2mET
-	wfhcnXxKY7yam0Q5ZLQIgW6ClqTauGTZncbpXepVjd31l45ssZ4PzIKYR8urK15of3TI7v
-	XpQxl/mpcku8MZjLxD4qLNF1xjtNLQnuEyoWh34Q4oU72n1IvmCSizeix0CDFw==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Shawn Guo <shawnguo@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
-	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev,
-	Frank Li <Frank.Li@nxp.com>
-Subject: [PATCH v2 7/7] ARM: dts: ls1021a-tqmals1021a: change sound card model name
-Date: Tue,  8 Apr 2025 11:30:54 +0200
-Message-ID: <20250408093059.551700-8-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250408093059.551700-1-alexander.stein@ew.tq-group.com>
-References: <20250408093059.551700-1-alexander.stein@ew.tq-group.com>
+	s=arc-20240116; t=1744104733; c=relaxed/simple;
+	bh=eUgN16UZ6MZKlcacifOD015XeGjpiWidkDRVHjo/3mY=;
+	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=S7EPZvaW2eFJkB7EX9UdZNSUS+7tu3tXYwjdZUHyRkqPQHMpwwHfftW4PuJWkSlI3nwJ5pCqaXU91UvY028Jce4m/PV37rqpFoXj5g9rYliEtg6/MJa025VSlmdPcoEh9Z9o5z1SMnY2zA3kITgBDfKjS5xSs5OJHFcGAtVtrds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8CxaWoV7fRn9hC1AA--.40655S3;
+	Tue, 08 Apr 2025 17:32:05 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowMDxPcUS7fRnun90AA--.18864S3;
+	Tue, 08 Apr 2025 17:32:03 +0800 (CST)
+Subject: Re: [linux-next:master 12681/13861] drivers/i2c/i2c-core-base.o:
+ warning: objtool: __i2c_transfer+0x120: stack state mismatch: reg1[24]=-1+0
+ reg2[24]=-2-24
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+References: <202504011011.jyZ6NtXx-lkp@intel.com> <Z+ttzRArSBMqfABz@rli9-mobl>
+ <xqfrt2rueezh3upug2umvuw2r44luoaxfqycnmvkh5sezaosw6@h77yjfio4ws6>
+ <348cdb14-f8cf-1e7b-44b2-79dc4dda4e35@loongson.cn>
+ <lcozyamcrcuff6a3pgly7sptluuj7ubzvy4na2vrus7hfmwmb6@zv7tooy3pmkh>
+ <0cbe7ab8-bd87-b5f7-0513-07c82a7e76c9@loongson.cn>
+ <bzy7cad37tafrbcmsstn355fpljxxmi25ifc4piihp6ln3ztxh@zp3c7ydsjmuq>
+ <5f830e7a-7cfa-3c62-ba3f-f93808e95821@loongson.cn>
+ <ozfqe7ppl6q632nzyimsxvs2vh2uanjaranc3kj4pca5uwzt7g@hmhmjvtvrmb2>
+Cc: Philip Li <philip.li@intel.com>, kernel test robot <lkp@intel.com>,
+ Guenter Roeck <linux@roeck-us.net>, oe-kbuild-all@lists.linux.dev,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Linux Memory Management List <linux-mm@kvack.org>,
+ Alessandro Carminati <acarmina@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <35f7eac8-a970-5fd3-25f4-55f417e8e15e@loongson.cn>
+Date: Tue, 8 Apr 2025 17:32:02 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+In-Reply-To: <ozfqe7ppl6q632nzyimsxvs2vh2uanjaranc3kj4pca5uwzt7g@hmhmjvtvrmb2>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:qMiowMDxPcUS7fRnun90AA--.18864S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7uw45XF1kGFWxJF1fKr43CFX_yoW8WF47pr
+	ZrA395CF4kGF4rtF9Fyw4jqF4Yvr93KryaqF4xK3yDAF1Yqry7CF48KFWq9F98G392q3yS
+	qF47WasI9F4UAwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUD529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5
+	McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
+	I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCF
+	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r
+	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
+	64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr
+	0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF
+	0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jr9NsUUUUU=
 
-The card name for ALSA is generated from the model name string and
-is limited to 16 characters. Use a shorter name to prevent cutting the
-name.
-MBLS1021A uses the same audio codec as most i.MX based starter kits
-by TQ-Systems. Adjust the sound card model to i.MX based platforms,
-as done by commit e6303798b6ac4 ("arm64: dts: imx8mp-tqma8mpql-mba8mpxl:
-change sound card model name"). This allows sharing a default asound.conf
-in BSP over all the kits.
+On 04/08/2025 02:29 PM, Josh Poimboeuf wrote:
+> On Tue, Apr 08, 2025 at 10:45:51AM +0800, Tiezhu Yang wrote:
+>> So this is a run-time bug rather than a compile-time warning, it should
+>> put the option "-fno-shrink-wrap" outside CONFIG_OBJTOOL in
+>> arch/loongarch/Makefile as a workaround, like this:
+>
+> If loongarch folks agree it's a compiler bug, it should be reported to
+> GCC, so the issue is better understood (and can get fixed).
+>
+> Without understanding the root cause, we don't know if -fno-shrink-wrap
+> fixes it, or just makes this particular occurrence go away.
 
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
----
- arch/arm/boot/dts/nxp/ls/ls1021a-tqmls1021a-mbls1021a.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+OK, thank you. I have discussed offline with the developers
+Rui Wang and Lulu Cheng who are familiar with compiler, the
+root cause may be that if a jump label's control flow path
+exactly matches the caller's epilogue, the compiler may omit
+restoring saved registers, it needs to be confirmed by GCC
+developers.
 
-diff --git a/arch/arm/boot/dts/nxp/ls/ls1021a-tqmls1021a-mbls1021a.dts b/arch/arm/boot/dts/nxp/ls/ls1021a-tqmls1021a-mbls1021a.dts
-index 80dae0c09542d..5606585dd5607 100644
---- a/arch/arm/boot/dts/nxp/ls/ls1021a-tqmls1021a-mbls1021a.dts
-+++ b/arch/arm/boot/dts/nxp/ls/ls1021a-tqmls1021a-mbls1021a.dts
-@@ -157,7 +157,7 @@ port {
- 
- 	sound {
- 		compatible = "fsl,imx-audio-tlv320aic32x4";
--		model = "ls1021a-mbls1021a-tlv320aic32";
-+		model = "tqm-tlv320aic32";
- 		ssi-controller = <&sai1>;
- 		audio-codec = <&tlv320aic32x4>;
- 	};
--- 
-2.43.0
+By the way, add an empty inline assembly can also work around
+the problem, like this:
+
+diff --git a/arch/loongarch/include/asm/jump_label.h 
+b/arch/loongarch/include/asm/jump_label.h
+index 8a924bd69d19..dbc105e62380 100644
+--- a/arch/loongarch/include/asm/jump_label.h
++++ b/arch/loongarch/include/asm/jump_label.h
+@@ -34,6 +34,7 @@ static __always_inline bool arch_static_branch(struct 
+static_key * const key, co
+         return false;
+
+  l_yes:
++       asm volatile("");
+         return true;
+  }
+
+@@ -47,6 +48,7 @@ static __always_inline bool 
+arch_static_branch_jump(struct static_key * const ke
+         return false;
+
+  l_yes:
++       asm volatile("");
+         return true;
+  }
+
+We will fix this issue once the root cause is clear.
+
+Thanks,
+Tiezhu
 
