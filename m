@@ -1,209 +1,144 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B91FF25FA0F;
-	Tue,  8 Apr 2025 07:15:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D0C1E4BE
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 07:15:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744096524; cv=none; b=HoZPX5wyRfjD94pSANEHS0Ka8YJNazLtwPgcQAdOjPltv9EGE467jTHIyr9Sop+bHSoGb2MMFxMJH4iJWJkpNDHEGlZ0pQQ0lZ+YtqnlfVLmwMrBNmW61xKz1ZNXNVisrNFlVNWYRHimo91bMQdMcDh/vHL6eFawiKl7zDHYJdo=
+	t=1744096526; cv=none; b=GerOZWSnl+4au5A2s/z28v5sTEasCtMnh1zrvev8KEBr2j/hTfY+wILKvrRpqByj8LZo7JhVbBzQxPK21/u2LQrIj6ZALAr8foXuzaVHcvClNAqcWbfSnVDpdbvcsR5SMWNTl9b5rXNu1GHPuikBuKsLuYnoHQK449vbYYkIJcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744096524; c=relaxed/simple;
-	bh=w79wsZ+Z3zvxnUteGzbjczmdUN5Ud24ThtVl5U+j6xU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ehCuDOM2Y/8eBVFryAVLsZ57r25k6zKnDqrOXatCMKrSanZGt58t7auxalhSjdKFBh3Aais1mdLA16nrMFYNhMTXXg71upBy7YTRdPjxf7axAZQmXlmlrNObbx/rAPtS0mj6QEopmLa4fjaSqSvaLAcbEhtSR7K1qXGJ8nLjcWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IGNNlSAU; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744096526; c=relaxed/simple;
+	bh=2OQmR7mRWtvtKjyh0z/59iR1+/cvbohWxA1sKXFqnDo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ML+spqnNcGOumjjcq32IXgdSs0cbJ1h9xU7IYnH3Clz9ruxUBNMNkrutlt/zBqs6AS2yR7ddipFzPiBPmmlViQV0fr4zAQ5p7512HZeAB0pA15wRnJYOlmWRASfdIPeikpydMRVcTeY0uS4uRlIMt6uC2qdgtH8cRhnq0PeN3Xc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=fZaJeQRE; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IGNNlSAU"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-47663aeff1bso47079511cf.0;
-        Tue, 08 Apr 2025 00:15:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="fZaJeQRE"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5eb5ecf3217so8965060a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 00:15:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744096521; x=1744701321; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/4fUW/nDY6dt7KyQHcmGyhHOCX6yvJ4vqRJp6uTh4Dk=;
-        b=IGNNlSAUO3iS3qHACgTQtihIUKzg5KvJSFGFOm4uyacwIqwjsMpAKdOpLC/487SVDD
-         X8Pfbo8K9NwniUspzgvXAOGRAdkAfxn8cqKWfVghVQY1hyAdLLhYQLGCiQ5qEz6gMNly
-         NgpvwfgnXBWkhHH6kbr1m41HIIxbX0D5rbhYIDXbB7DdcBwGoiNkKyGQ6TbhPJBpucAR
-         s3e5rrPAPNy7hPKEK5E7I9o5Tiy3cLelmklASHg7uTs0wH7jkKqUndmpRLxU1I0atPeT
-         urIcyqAjdN4TecgjKmdjzUVwCttCVztX4aGkkO8Omlk+LX6rwTdXdx94rfNo1kTScuyh
-         1jtA==
+        d=suse.com; s=google; t=1744096523; x=1744701323; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=O+i2Xik3+39ZL2udNnhfnH82XMLPSIJDczg397VweSM=;
+        b=fZaJeQRE32txkkiZfBTljjaK8RFg84IFtPt/Vy7E4bvpt0jLfYuZu+9CdOMQPlV3Hd
+         nq0cDJxeKlNe7zfD0S6iAdz0iFFnl7LadJW2eBCYI2QBxBz0rqlKT6pcNeYp8qjuSBvz
+         d9idzTHpmPgStRAPbuUqYcRTGDVZGrqnC/8hmIeWMIyOHkrPzNPsek5JmUxbOmGvWv9a
+         CP98xiHV007J1o0PaCj7fnJn6RVjLhQOI961Dn5fw1EAh5BZ8uVrwPCIYwQbOZUPPoZm
+         DgPPYSHeYuSTK8WgktKYVMg0JuZNyI50OD0BCK4yC5a5l50WTqQIsxK1ZYYyipRYrMMh
+         bGGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744096521; x=1744701321;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/4fUW/nDY6dt7KyQHcmGyhHOCX6yvJ4vqRJp6uTh4Dk=;
-        b=cj5v6XxnuuQ30c+EevClL09W5i6XasrIiJA5u8hrp95mrGTuAQ5FeNLHvytZG2ZIis
-         ShaNZxTwrVlybNUNyZMfBYOXyL1r3DWiTOPKE7aREZH1b/hffX93uVqJhauXI7BqBa0C
-         dbLzR8ewr5UbaCP1+pEoZt7y46g9yCJKGSjLsTTPOKTzcLwOVF+EJf58zE9AnT/grHVh
-         i+AicZ9ZX7D8j6Y9nb+7gYJRgyDH6u1iaEGOkiGMBplhgk89f64gOABBzUR3/HexHS2n
-         DtFIsVOVU4hBXf7jy+BjNr6mJbAR+XTi6iAYz5k0XXFL+D7NwsrBHfyutaYmq7wcuu7W
-         ZPkg==
-X-Forwarded-Encrypted: i=1; AJvYcCVkqN1zmuKSCXz8AdtpXeuRsCsyF5VXEsMtsVB+JsRyoQo3eOA3rhVbIhiiqQzg1k+MOsX4DWZ253yOJto8@vger.kernel.org, AJvYcCWHGVoztIT9IMQPVt8E8PSJZLiXDUENsIkUXHc2H9LyskwiItTm8AHxGaHklT6llWMTujvTW1OtU1Bj/8g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxgqv+vH+/C+sz0VrrqvhX/N83+hLHsBLwxIbvnLJV9fnrl3cdV
-	FFR27zz7AgXjSHv6XhD8Ox9M/+6MT3eNDHPiZvQfJcTbu5Pfv6ex7pwMcbWaWAaXrUtNzEQrNs/
-	DhGPUH3JcpUKvTWU/ksrzpQMoApH9lFVc3z4=
-X-Gm-Gg: ASbGncvInbpnf1vPUtH+AD6zp9xsUMaUvEfQ+cpR9DRqR08u6L5GIQPHWCHlNKjFdw1
-	IbjxeQhK96rrGMMhgfAP+UVTu0PT8bHDzN3XtSal+pR78yg9MqBijb8fP+iMk4pTuVqJDp3tgBm
-	Tc9G+cAaRkHbsfxCuVyI/RZYLemgbY28K3XpwoB1aM5c+UQzZ0/7koT28eVA==
-X-Google-Smtp-Source: AGHT+IE3QPodmDDoq2scPLjifIAKN6EhHjqSM3us4hHgKtwjH+njxwgHT0RLwG1U29V7IyhwIcx7h8RR/7sSNmr2no8=
-X-Received: by 2002:ac8:7d8a:0:b0:476:8c68:dcbc with SMTP id
- d75a77b69052e-47930f5064cmr129579801cf.9.1744096521423; Tue, 08 Apr 2025
- 00:15:21 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744096523; x=1744701323;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=O+i2Xik3+39ZL2udNnhfnH82XMLPSIJDczg397VweSM=;
+        b=cnVdvxHxicBg/TRwD3kQwihnAqK6mkdm4dMxS+Qy1DkkIapB44t8sdtv+N0RtgPRA1
+         gIv9Bue+EZCwmSuXOcGjTTT/R/ZF8ILHPXeK8vRSc5xjhhHNhb1aebuDz5gfX9P/3DSb
+         o8CnjYk99FHyR2WJPLgscxGMfxtsUDrUVXlUtN4iiia+la7CUf2EfwESgLoA01b3Gv+l
+         2Q55PKkyuqIw8fIVIQnfnqEULXg1GL4rnFnFvZBApL5l97tKLJcORkLkrXl6rna5/Ppd
+         qb6i6By3Ble5PS1h6OaOnrCOZyHTtY525jly6S6MQzLtSV0BjLZ7mAIR62kmwhhxqrPg
+         66yA==
+X-Forwarded-Encrypted: i=1; AJvYcCV8S0OI0FoAcQqCYu1HHErUaH7OI8jjw6EwwsrRvMf8RY9LnnI1si5ibLsfSjz5jIr8mgdsChdQBPBXTZo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWeBDYwDF9yKdWHcW7AE+MGnOgCTgr5jbJnqb1Ju6KQZBvefBJ
+	+9Q2KAbfFEHIUQUJJTI1IeqdrJ5NgYckV8Uy8IK/UYL5UHnsauma7vT/wF22hT0=
+X-Gm-Gg: ASbGncuNljEytf7e7PSkg4U46JV0zkHh2PzrcgvDQuG+akZh54GU685FpzpLOcNex9Z
+	ybP3oOhLcBPjMatgfQ7XZN0sZmcp/0oFCuCh4Szjmp0eUztkX/vPVLqfKosWujmEJuy7/Dq2lYu
+	H8Biu0k9O+mhb4QzJCx4AK+BWou5DB9zJ5Kcn0G8LPEmoU20RhqLIohjMDJR3uacrk8J4P3YptE
+	fX57Y/8X8fzeaVfjncWqoBN36YTWaR+E0EkpvzNlEY1bU9JMGx8DMy8U61T3U1CrDBm/HtXQDX2
+	xsnx2ZaoBCTrQBMlFHfn4+zzA+jWaa93uAQi0+nnhmSTFeMCwA==
+X-Google-Smtp-Source: AGHT+IFhUpOqIsWkQdwVxQ7C/6KZC+/pD1emRBUF9cWPtulP0plPyoTTI1Vt9BX41dH3B2vSU/uYIQ==
+X-Received: by 2002:a05:6402:3489:b0:5e7:b015:c636 with SMTP id 4fb4d7f45d1cf-5f0b3b65b4cmr10076863a12.6.1744096522642;
+        Tue, 08 Apr 2025 00:15:22 -0700 (PDT)
+Received: from [192.168.0.20] ([212.21.133.214])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f08771a1c6sm7825812a12.11.2025.04.08.00.15.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Apr 2025 00:15:22 -0700 (PDT)
+Message-ID: <68b2f901-c179-4a53-8464-d9644371ce42@suse.com>
+Date: Tue, 8 Apr 2025 10:15:20 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250408033322.401680-1-gshahrouzi@gmail.com> <20250408033322.401680-3-gshahrouzi@gmail.com>
- <7muoawncdumcsclkcxklw6olqcjko63et26ptbh5lidximffoh@lu34aqtcujtn>
-In-Reply-To: <7muoawncdumcsclkcxklw6olqcjko63et26ptbh5lidximffoh@lu34aqtcujtn>
-From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-Date: Tue, 8 Apr 2025 03:15:00 -0400
-X-Gm-Features: ATxdqUGyy3-JgqqBSrqvELuHcNhq2Y3RCtUWedAqomuG1z8PZ_996LyWmnSlJh4
-Message-ID: <CAKUZ0zKWDVocdSa60ZZPjq9u24wEW+EaUsXoUrrCF=Z+pacGHQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] bcache: Fix warnings for incorrect type in assignments
-To: Coly Li <colyli@kernel.org>
-Cc: Kent Overstreet <kent.overstreet@linux.dev>, linux-bcache@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, skhan@linuxfoundation.org, 
-	kernelmentees@lists.linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Apr 8, 2025 at 12:58=E2=80=AFAM Coly Li <colyli@kernel.org> wrote:
->
-> On Mon, Apr 07, 2025 at 11:33:22PM +0800, Gabriel Shahrouzi wrote:
-> > Remove unnecessary cpu_to_le16() and cpu_to_le32() conversions when
-> > assigning values (priorities, timestamps) to native integer type
-> > members. Prevent incorrect byte ordering for big-endian systems.
-> >
->
-> Hmm, why do you feel the conversions are unncessary? Please explain
-> with details.
-I used Sparse for static analysis on bcache and it gave incorrect type
-in assignment warnings.
-
-For example:
-
-u->invalidated =3D cpu_to_le32((u32)ktime_get_real_seconds());
-
-ktime_get_real_seconds() returns back u64 and gets casted down to a
-u32. u is of type struct uuid_entry whose member fields are either u8,
-u32, or u64. A conversion here contradicts the type it should be
-assigned.
-
-From my understanding, this would not produce an unexpected result if
-the value were to be read from or written to some location which seems
-to be the case here. I believe it would only cause issues on
-big-endian systems if the value were to be modified in some way.
-
-Looking at the commit history for when the code for this specific
-example was first introduced (12 years ago), it seems like this was
-the author=E2=80=99s intent. It looks like the intention was to store the
-value as little endian in uint32_t. Doing this, the author saves space
-/ time. If the type was le32 instead, the conversion would have to be
-applied each time it=E2=80=99s used. Alternatively, if another member varia=
-ble
-was defined but for the le32 version, then extra space is used up.
-
-In the unlikely event that these specific files change drastically,
-making sure the types are the same serves as a preventative measure
-to make sure it=E2=80=99s not misused. On the other hand, making the change
-most likely goes against the author=E2=80=99s original intent and could cau=
-se
-something unintended.
->
-> I don't mean the modification is correct or incorrect, just want to
-> see detailed analysis and help me understand in correct why as you
-> are.
->
-> BTW, did you have chance to test your patch on big-endian machine?
-I only analyzed the compilation warnings so far. I=E2=80=99ll look into try=
-ing
-to test this on a big-endian machine.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/6] x86/bugs: Fix RSB clearing in
+ indirect_branch_prediction_barrier()
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, amit@kernel.org,
+ kvm@vger.kernel.org, amit.shah@amd.com, thomas.lendacky@amd.com,
+ bp@alien8.de, tglx@linutronix.de, peterz@infradead.org,
+ pawan.kumar.gupta@linux.intel.com, corbet@lwn.net, mingo@redhat.com,
+ dave.hansen@linux.intel.com, hpa@zytor.com, seanjc@google.com,
+ pbonzini@redhat.com, daniel.sneddon@linux.intel.com, kai.huang@intel.com,
+ sandipan.das@amd.com, boris.ostrovsky@oracle.com, Babu.Moger@amd.com,
+ david.kaplan@amd.com, dwmw@amazon.co.uk, andrew.cooper3@citrix.com
+References: <cover.1743617897.git.jpoimboe@kernel.org>
+ <27fe2029a2ef8bc0909e53e7e4c3f5b437242627.1743617897.git.jpoimboe@kernel.org>
+ <d5ad36d8-40da-4c13-a6a7-ed8494496577@suse.com>
+ <ioxjh7izpnmbutljkbhdqorlpwtm5iwosorltmhkp3t7nyoqlo@tiecv24hnbar>
+ <86903805-569a-41d5-93d8-df8169e61cef@suse.com>
+ <j75r3jm5sujsn3hhf5prto3vcnl4nitsiqb5fp4rlwgqhlwylu@ofi3g6valzu2>
+Content-Language: en-US
+From: Nikolay Borisov <nik.borisov@suse.com>
+In-Reply-To: <j75r3jm5sujsn3hhf5prto3vcnl4nitsiqb5fp4rlwgqhlwylu@ofi3g6valzu2>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
->
-> Thanks.
->
->
-> > Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-> > ---
-> >  drivers/md/bcache/super.c | 12 ++++++------
-> >  1 file changed, 6 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-> > index e42f1400cea9d..c4c5ca17fb600 100644
-> > --- a/drivers/md/bcache/super.c
-> > +++ b/drivers/md/bcache/super.c
-> > @@ -648,7 +648,7 @@ int bch_prio_write(struct cache *ca, bool wait)
-> >               for (b =3D ca->buckets + i * prios_per_bucket(ca);
-> >                    b < ca->buckets + ca->sb.nbuckets && d < end;
-> >                    b++, d++) {
-> > -                     d->prio =3D cpu_to_le16(b->prio);
-> > +                     d->prio =3D b->prio;
-> >                       d->gen =3D b->gen;
-> >               }
-> >
-> > @@ -721,7 +721,7 @@ static int prio_read(struct cache *ca, uint64_t buc=
-ket)
-> >                       d =3D p->data;
-> >               }
-> >
-> > -             b->prio =3D le16_to_cpu(d->prio);
-> > +             b->prio =3D d->prio;
-> >               b->gen =3D b->last_gc =3D d->gen;
-> >       }
-> >
-> > @@ -832,7 +832,7 @@ static void bcache_device_detach(struct bcache_devi=
-ce *d)
-> >
-> >               SET_UUID_FLASH_ONLY(u, 0);
-> >               memcpy(u->uuid, invalid_uuid, 16);
-> > -             u->invalidated =3D cpu_to_le32((u32)ktime_get_real_second=
-s());
-> > +             u->invalidated =3D (u32)ktime_get_real_seconds();
-> >               bch_uuid_write(d->c);
-> >       }
-> >
-> > @@ -1188,7 +1188,7 @@ void bch_cached_dev_detach(struct cached_dev *dc)
-> >  int bch_cached_dev_attach(struct cached_dev *dc, struct cache_set *c,
-> >                         uint8_t *set_uuid)
-> >  {
-> > -     uint32_t rtime =3D cpu_to_le32((u32)ktime_get_real_seconds());
-> > +     uint32_t rtime =3D (u32)ktime_get_real_seconds();
-> >       struct uuid_entry *u;
-> >       struct cached_dev *exist_dc, *t;
-> >       int ret =3D 0;
-> > @@ -1230,7 +1230,7 @@ int bch_cached_dev_attach(struct cached_dev *dc, =
-struct cache_set *c,
-> >           (BDEV_STATE(&dc->sb) =3D=3D BDEV_STATE_STALE ||
-> >            BDEV_STATE(&dc->sb) =3D=3D BDEV_STATE_NONE)) {
-> >               memcpy(u->uuid, invalid_uuid, 16);
-> > -             u->invalidated =3D cpu_to_le32((u32)ktime_get_real_second=
-s());
-> > +             u->invalidated =3D (u32)ktime_get_real_seconds();
-> >               u =3D NULL;
-> >       }
-> >
-> > @@ -1591,7 +1591,7 @@ int bch_flash_dev_create(struct cache_set *c, uin=
-t64_t size)
-> >
-> >       get_random_bytes(u->uuid, 16);
-> >       memset(u->label, 0, 32);
-> > -     u->first_reg =3D u->last_reg =3D cpu_to_le32((u32)ktime_get_real_=
-seconds());
-> > +     u->first_reg =3D u->last_reg =3D (u32)ktime_get_real_seconds();
-> >
-> >       SET_UUID_FLASH_ONLY(u, 1);
-> >       u->sectors =3D size >> 9;
-> > --
-> > 2.43.0
-> >
->
-> --
-> Coly Li
+
+On 5.04.25 г. 3:56 ч., Josh Poimboeuf wrote:
+> On Sat, Apr 05, 2025 at 01:56:59AM +0300, Nikolay Borisov wrote:
+>> On 4.04.25 г. 18:17 ч., Josh Poimboeuf wrote:
+>>> On Fri, Apr 04, 2025 at 05:45:37PM +0300, Nikolay Borisov wrote:
+>>>>
+>>>>
+>>>> On 2.04.25 г. 21:19 ч., Josh Poimboeuf wrote:
+>>>>> IBPB is expected to clear the RSB.  However, if X86_BUG_IBPB_NO_RET is
+>>>>> set, that doesn't happen.  Make indirect_branch_prediction_barrier()
+>>>>> take that into account by calling __write_ibpb() which already does the
+>>>>> right thing.
+>>>>
+>>>> I find this changelog somewhat dubious. So zen < 4 basically have
+>>>> IBPB_NO_RET, your patch 2 in this series makes using SBPB for cores which
+>>>> have SRSO_NO or if the mitigation is disabled. So if you have a core which
+>>>> is zen <4 and doesn't use SBPB then what happens?
+>>>
+>>> I'm afraid I don't understand the question.  In that case write_ibpb()
+>>> uses IBPB and manually clears the RSB.
+>>>
+>>
+>> Actually isn't this patch a noop. The old code simply wrote the value of
+>> x86_pred_cmd to the IA32-PRED_CMD register iff FEATURE_IBPB was set. So
+>> x86_pred_cmd might contain either PRED_CMD_IBPB or PRED_CMD_SBPB, meaning
+>> the correct value was written.
+>>
+>> With your change you now call __write_ibpb() which does effectively the same
+>> thing.
+> 
+> Hm, are you getting SBPB and IBPB_NO_RET mixed up?  They're completely
+> separate and distinct:
+> 
+>    - SBPB is an AMD feature which is just like IBPB, except it doesn't
+>      flush branch type predictions.  It can be used when the SRSO
+>      mitigation isn't needed.  That was fixed by the previous patch.
+> 
+>    - AMD has a bug on older CPUs where IBPB doesn't flush the RSB.  Such
+>      CPUs have X86_BUG_IBPB_NO_RET set.  That's fixed with this patch due
+>      to the fact that write_ibpb() has this:
+> 
+> 	/* Make sure IBPB clears return stack preductions too. */
+> 	FILL_RETURN_BUFFER %rax, RSB_CLEAR_LOOPS, X86_BUG_IBPB_NO_RET
+> 
+> So you're right in that this patch doesn't change SBPB behavior.  But
+> that's not what it intends to do :-)
+
+Fair enough, it just wasn't obvious from the diff context that there is 
+the FILL_RETURN_BUFFER , my bad for not looking at __write_ibpb.
+
+Reviewed-by: Nikolay Borisov <nik.borisov@suse.com>
+
