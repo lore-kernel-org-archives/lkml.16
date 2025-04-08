@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A63E2673B8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F4D7267394;
 	Tue,  8 Apr 2025 10:09:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744106996; cv=none; b=mNbRKmI2QvKitEswzW4Xupx7NCWrl7LB6TF3kYze0LqyGOP3IeHjHIyCg0XCFOP+EJWuOKcyAD5s1ovMQD7Faci0Mqz49PTTjsFde2+47JiyKPUBco0sGUOWt362I+g30JTv8M3P77vBv4kERRMU9UYwAy+469eQeKzydho/hUA=
+	t=1744106996; cv=none; b=HEcdRhtJtbKrCEJKOSKT/LDu0KectXskWQf1pdYEO78+8rqQusZVUiq6uzMdWG5kAreobcnyOkz5JvoQRWOdWQzF3RmqePX5yb6plqnZIi4P0Was0S+CqJvvRh9h7rm/qv8zhwUbr8Zu+eB/IGFJFdskcdgu+pKOWzwgCnFRfFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744106996; c=relaxed/simple;
-	bh=5NIsmVCuy0Ps73FY9SsRdlOH9IrLgYYVlKEUKddXlno=;
+	bh=acYo2Td1sfM4zaQAyEu4vloX6YMzSDuGC17yA6ctkig=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZAck7/qdVT7bbjo8gn8UIDfl7sqxVj8JlRJvWm4tFdp8FI41r9ISHQoulazwA3oojcev1OKP3UIiOsfbaIw1375WiGXvUAfGvhdqgC9T+u1WKCfS3EKcV6bUAqTK+k8tRi4VImFe9oZR3f/p26DT87a75nJdBtCrJpegp26l5rY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nRC9cHDV; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=V84xQ48byOpexOXhOFHBjLRKOHpjgM09mU53Y7FbujzX7MDUKoKyuVYFMyjIXV6bFoOopBNE4aKZbvZ7CBIF+pyPJa1QowONit0VxVIvSRHz9cSxEFBsSWLhJrTTtzvLgGIu62BjCP7Dl15IxOEMjaNTktqzOEnBSvScrhnvfp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=niGp3+t/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nRC9cHDV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B064C4CEEA;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="niGp3+t/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 678E0C4CEF7;
 	Tue,  8 Apr 2025 10:09:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1744106996;
-	bh=5NIsmVCuy0Ps73FY9SsRdlOH9IrLgYYVlKEUKddXlno=;
+	bh=acYo2Td1sfM4zaQAyEu4vloX6YMzSDuGC17yA6ctkig=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nRC9cHDV9zHdrcvINwNoFFY0cfM0R31zuO686CM/9sneLkEO7j3EHhvS1LL6GTD24
-	 Z/qFyNnDQJgO27iRqE08pZmwZ0Q9F47TRLuX5rA/0CrgE7KauKdGHSn0BYWahNuWI3
-	 /dXpg7P76+5KY+yTftnHjBa6rjz7qm31nYVFvKAskDfWsmOL5ZVB8QtSVIO4OXPWF5
-	 L1FSs+sEd5IQUQ7E1xMqRQyf3W/fRnjnavYByusFu2l7hJepqrNnmXiV6av6ihOX7a
-	 W81p0/u+CxuwuZz34hQWlhu692cSzoUk9pV9v1g+vD7WiJK+RFP4g8Ii7UQeBb364g
-	 QyD/kPIvkPVzA==
+	b=niGp3+t/hhCMwYHaz99dZ11PjRoZkuTGDKzekH7Su4v4j8l+9JraPAlKPwSNHoa6v
+	 Kndg6wB2+4rp5KosB43J1Nkb4LnUYdz0VV0xg0Y5Q6sBpxglRO1YSsru6Agy60AF3s
+	 U+aLnCklJ9uv+egJRceGYxRBS2b77BHXseNpzI+lLhtNZiFCH0qwhUArJss7u3o/Cz
+	 AuDFwBqtV7W2kcmKezO6ogCzlqE+xozzhFk3SECP1luqZbfPpqNMCTA8Rm4MVsqDUZ
+	 +dVHtHJAmu9Ud/2Qkek3ee7lnfUTbVhUpvkq+VHuCEe4qbiE4vDqXlD1x/pa7uMP8l
+	 huUfhQSCwZ14g==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab@kernel.org>)
-	id 1u25tt-00000008RWA-1e8a;
+	id 1u25tt-00000008RWD-1kFW;
 	Tue, 08 Apr 2025 18:09:49 +0800
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
@@ -36,9 +36,9 @@ To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	Kees Cook <kees@kernel.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 19/33] docs: sphinx: kerneldoc: verbose kernel-doc command if V=1
-Date: Tue,  8 Apr 2025 18:09:22 +0800
-Message-ID: <a2f01590814b111e138f278e8a721024fdf2d445.1744106242.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v3 20/33] docs: sphinx: kerneldoc: ignore "\" characters from options
+Date: Tue,  8 Apr 2025 18:09:23 +0800
+Message-ID: <4c652d6c57b20500c135b95294e554d9e9a97f42.1744106242.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1744106241.git.mchehab+huawei@kernel.org>
 References: <cover.1744106241.git.mchehab+huawei@kernel.org>
@@ -51,81 +51,65 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
 
-It is useful to know what kernel-doc command was used during
-document build time, as it allows one to check the output the same
-way as Sphinx extension does.
+Documentation/driver-api/infiniband.rst has a kernel-doc tag
+with "\" characters at the end:
+
+	.. kernel-doc:: drivers/infiniband/ulp/iser/iscsi_iser.c
+	   :functions: iscsi_iser_pdu_alloc iser_initialize_task_headers \
+	        iscsi_iser_task_init iscsi_iser_mtask_xmit iscsi_iser_task_xmit \
+	        iscsi_iser_cleanup_task iscsi_iser_check_protection \
+	        iscsi_iser_conn_create iscsi_iser_conn_bind \
+	        iscsi_iser_conn_start iscsi_iser_conn_stop \
+	        iscsi_iser_session_destroy iscsi_iser_session_create \
+	        iscsi_iser_set_param iscsi_iser_ep_connect iscsi_iser_ep_poll \
+	        iscsi_iser_ep_disconnect
+
+This is not handled well, as the "\" strings will be just stored inside
+Sphinx options.
+
+While the actual problem deserves being fixed, better to relax the
+keneldoc.py extension to silently strip "\" from the end of strings,
+as otherwise this may cause troubles when preparing arguments to
+be executed by kernel-doc.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/sphinx/kerneldoc.py | 34 +++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+ Documentation/sphinx/kerneldoc.py | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
 diff --git a/Documentation/sphinx/kerneldoc.py b/Documentation/sphinx/kerneldoc.py
-index 39ddae6ae7dd..d206eb2be10a 100644
+index d206eb2be10a..344789ed9ea2 100644
 --- a/Documentation/sphinx/kerneldoc.py
 +++ b/Documentation/sphinx/kerneldoc.py
-@@ -43,6 +43,29 @@ from sphinx.util import logging
- 
- __version__  = '1.0'
- 
-+def cmd_str(cmd):
-+    """
-+    Helper function to output a command line that can be used to produce
-+    the same records via command line. Helpful to debug troubles at the
-+    script.
-+    """
+@@ -118,6 +118,10 @@ class KernelDocDirective(Directive):
+             identifiers = self.options.get('identifiers').split()
+             if identifiers:
+                 for i in identifiers:
++                    i = i.rstrip("\\").strip()
++                    if not i:
++                        continue
 +
-+    cmd_line = ""
+                     cmd += ['-function', i]
+             else:
+                 cmd += ['-no-doc-sections']
+@@ -126,9 +130,17 @@ class KernelDocDirective(Directive):
+             no_identifiers = self.options.get('no-identifiers').split()
+             if no_identifiers:
+                 for i in no_identifiers:
++                    i = i.rstrip("\\").strip()
++                    if not i:
++                        continue
 +
-+    for w in cmd:
-+        if w == "" or " " in w:
-+            esc_cmd = "'" + w + "'"
-+        else:
-+            esc_cmd = w
+                     cmd += ['-nosymbol', i]
+ 
+         for pattern in export_file_patterns:
++            pattern = pattern.rstrip("\\").strip()
++            if not pattern:
++                continue
 +
-+        if cmd_line:
-+            cmd_line += " " + esc_cmd
-+            continue
-+        else:
-+            cmd_line = esc_cmd
-+
-+    return cmd_line
-+
- class KernelDocDirective(Directive):
-     """Extract kernel-doc comments from the specified file"""
-     required_argument = 1
-@@ -57,6 +80,7 @@ class KernelDocDirective(Directive):
-     }
-     has_content = False
-     logger = logging.getLogger('kerneldoc')
-+    verbose = 0
- 
-     def run(self):
-         env = self.state.document.settings.env
-@@ -65,6 +89,13 @@ class KernelDocDirective(Directive):
-         filename = env.config.kerneldoc_srctree + '/' + self.arguments[0]
-         export_file_patterns = []
- 
-+        verbose = os.environ.get("V")
-+        if verbose:
-+            try:
-+                self.verbose = int(verbose)
-+            except ValueError:
-+                pass
-+
-         # Tell sphinx of the dependency
-         env.note_dependency(os.path.abspath(filename))
- 
-@@ -104,6 +135,9 @@ class KernelDocDirective(Directive):
- 
-         cmd += [filename]
- 
-+        if self.verbose >= 1:
-+            print(cmd_str(cmd))
-+
-         try:
-             self.logger.verbose("calling kernel-doc '%s'" % (" ".join(cmd)))
- 
+             for f in glob.glob(env.config.kerneldoc_srctree + '/' + pattern):
+                 env.note_dependency(os.path.abspath(f))
+                 cmd += ['-export-file', f]
 -- 
 2.49.0
 
