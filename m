@@ -1,196 +1,136 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7211B1A76D0
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 02:24:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D32610D;
+	Tue,  8 Apr 2025 02:30:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744079051; cv=none; b=MhlBGWKYbFON+2CbzFPbUu7LJd7eLAMoXrSv0wfgHBqT7ZrpqBPbDvLETYjeqY/PqzHETM3G8CQjGNhojraMosl2DsH+ZejKNqBll4ON7GfrvDz+b3MzmRddK4AWbwyysQgQNz1KGVpqEk4c8QblW8FWFcsTHP71q5/v1zTXSak=
+	t=1744079446; cv=none; b=joZMnRCjCpcPZZLJNHVXvmOwsN97VO++s5r3fHZmXfCVra9TFzytPk+OJ6jGL5/sK92kGc3UzsPSgQzS36vnkxhKr74nsBjVfG13b3WZ+BY6w9D1iEtXd+YhrNAHXJixDN7SnFyxbqdWIPKeoKEEi+cZ75oLiN4Lj4U4y4TTgfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744079051; c=relaxed/simple;
-	bh=MdkpQCnMo49opJex7OZUG+NIbeQFZNJQY/fbJ6jtgho=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MpxQFdHPFPEkoAKurVqz2dMaauFW7sPwyuZsGIX1Q6/lVV1H9ZM7o/1TdIKDE+NUnnCewYZR+Lxpmnljqz2YpiauZteEVPIWa1Jg1+fWsBUP2U62i6obfoKDpG9j8mgpKRZDYICbDwW+2D6WRWqgz0D1650jByaTD1/FE4UskRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OD1W9KMo; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OD1W9KMo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744079048;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=K7shp0i8xV6W4sEMIfoyEtGIoaU0RHBOh45LNxxy8wY=;
-	b=OD1W9KMoJbw9AcFui1abBTsTYzqPwPRubYygmae/7BLQsWikmQq/Lva1fG5YRuKNYwanfm
-	CNuRe0C4wfaFP1+DPAdzN3NbyCy/UJpkOO37UHo3cFxsEe+X0ulJKV0yMl40HKyyejahLe
-	QfgltisL8kztjW30SixWTeEiGAFMxSM=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-475-fVNTxx_CPL6CJ9AhxUkyVA-1; Mon,
- 07 Apr 2025 22:24:04 -0400
-X-MC-Unique: fVNTxx_CPL6CJ9AhxUkyVA-1
-X-Mimecast-MFC-AGG-ID: fVNTxx_CPL6CJ9AhxUkyVA_1744079042
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0CEC01956048;
-	Tue,  8 Apr 2025 02:24:01 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.61])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 71DE6180B48C;
-	Tue,  8 Apr 2025 02:23:58 +0000 (UTC)
-Date: Tue, 8 Apr 2025 10:23:53 +0800
-From: Baoquan He <bhe@redhat.com>
-To: steven chen <chenste@linux.microsoft.com>
-Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
-	roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-	eric.snowberg@oracle.com, ebiederm@xmission.com,
-	paul@paul-moore.com, code@tyhicks.com, bauermann@kolabnow.com,
-	linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
-	madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
-	James.Bottomley@hansenpartnership.com, vgoyal@redhat.com,
-	dyoung@redhat.com
-Subject: Re: [PATCH v11 1/9] ima: rename variable the set_file "file" to
- "ima_kexec_file"
-Message-ID: <Z/SIudAyHVspsTa4@MiWiFi-R3L-srv>
-References: <20250402124725.5601-1-chenste@linux.microsoft.com>
- <20250402124725.5601-2-chenste@linux.microsoft.com>
+	s=arc-20240116; t=1744079446; c=relaxed/simple;
+	bh=vxSR4qoeAaxo3jAFbr5vM/RG917YaQvN1X3kPh4iQXc=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=naPlFvyKiX2ZSxo/rvLQbcWMpor1RS/SMxY05n2vRR9B92E0CGYN2IY8cc/pdYzN98pcNphytwPKTKlaRRUWf0h7g97x6G4NBGUSkAxzjKlrD92JWwVFS3wQpkPDqOdk8IUsDIcIJJq7L8aJJm68riImQMoTURTfcknTm6AWVVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZWqmf4Jqjz4f3jtK;
+	Tue,  8 Apr 2025 10:30:10 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 8EABF1A058E;
+	Tue,  8 Apr 2025 10:30:28 +0800 (CST)
+Received: from [10.174.176.117] (unknown [10.174.176.117])
+	by APP1 (Coremail) with SMTP id cCh0CgDnS3xBivRnHJvPIg--.58832S2;
+	Tue, 08 Apr 2025 10:30:28 +0800 (CST)
+Subject: Re: [PATCH v2] selftests/bpf: close the file descriptor to avoid
+ resource leaks
+To: Malaya Kumar Rout <malayarout91@gmail.com>, andrii.nakryiko@gmail.com
+Cc: Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>,
+ Shuah Khan <shuah@kernel.org>, Geliang Tang <geliang@kernel.org>,
+ bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <CAE2+fR992BprqDXkZTqi3Mgtq9WErSFvOtxvc16ZT9ufiBLNNQ@mail.gmail.com>
+ <20250407100132.439412-1-malayarout91@gmail.com>
+From: Hou Tao <houtao@huaweicloud.com>
+Message-ID: <92596c82-4a12-3afc-6cb2-21a11bef3739@huaweicloud.com>
+Date: Tue, 8 Apr 2025 10:30:25 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250402124725.5601-2-chenste@linux.microsoft.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-
-On 04/02/25 at 05:47am, steven chen wrote:
-> The current kernel behavior is IMA measurements snapshot is taken at
-> kexec 'load' and not at kexec 'execute'. IMA log is then carried
-> over to the new kernel after kexec 'execute'. However, the time gap
-> between kexec load and kexec reboot can be very long. During this
-> time window, new events extended into TPM PCRs miss the chance
-> to be carried over to the second kernel.
->  
-> To address the above, the following approach is proposed:
->   - Allocate the necessary buffer during the kexec load phase.
->   - Populate this buffer with the IMA measurements during
->     the kexec execute phase.
-> 
-> In the current implementation, a local variable "file" of type seq_file
-> is used in the API ima_dump_measurement_list() to store the IMA measurements
-> to be carried over across kexec system call. To make this buffer accessible
-> at kexec 'execute' time, rename it to "ima_kexec_file" before making it
-> a file variable to better reflect its purpose.
-> 
-> Renaming the local variable "file" of type seq_file defined in the 
-> ima_dump_measurement_list function to "ima_kexec_file" will improve code
-> readability and maintainability by making the variable's role more explicit.
-
-Seems it's clearer with below paragraph to replace the whole log:
-
-=====
-Rename the local variable "file" of type seq_file defined in the 
-ima_dump_measurement_list function to "ima_kexec_file" to improve code
-readability and maintainability by making the variable's role more explicit.
-=====
-
-The code change looks good to me.
+In-Reply-To: <20250407100132.439412-1-malayarout91@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-CM-TRANSID:cCh0CgDnS3xBivRnHJvPIg--.58832S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7uFW7Xw48AF48ArW8JF1fZwb_yoW8Kr47pa
+	48Ga4jkFySvF1YyF17CFWqvFWfurn7Xr45AF4rAr1UZF1xJFWxXr1xKa95Xan8C3yFgrs3
+	ZFyIgFnxZw48Jw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU92b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7I2V7IY0VAS
+	07AlzVAYIcxG8wCY1x0262kKe7AKxVW8ZVWrXwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4
+	IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1r
+	MI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJV
+	WUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j
+	6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYx
+	BIdaVFxhVjvjDU0xZFpf9x07j7l19UUUUU=
+X-CM-SenderInfo: xkrx3t3r6k3tpzhluzxrxghudrp/
 
 
-> 
-> Suggested-by: Mimi Zohar <zohar@linux.ibm.com>
-> Signed-off-by: steven chen <chenste@linux.microsoft.com>
-> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
 
-If there's code change in patch content, the reviewing tag should be
-reset so that reviewing is taken again on the new change.
+On 4/7/2025 6:01 PM, Malaya Kumar Rout wrote:
+> Static Analyis for bench_htab_mem.c with cppcheck:error
+> tools/testing/selftests/bpf/benchs/bench_htab_mem.c:284:3:
+> error: Resource leak: fd [resourceLeak]
+> tools/testing/selftests/bpf/prog_tests/sk_assign.c:41:3:
+> error: Resource leak: tc [resourceLeak]
+>
+> fix the issue  by closing the file descriptor (fd & tc) when
+> read & fgets operation fails.
+>
+> Signed-off-by: Malaya Kumar Rout <malayarout91@gmail.com>
 
+Acked-by: Hou Tao <houtao1@huawei.com>
+
+It will be better to resend the patch and change the subject prefix to
+"[PATCH RESEND bpf-next v2]" instead of "[PATCH v2]".
 > ---
->  security/integrity/ima/ima_kexec.c | 31 +++++++++++++++---------------
->  1 file changed, 16 insertions(+), 15 deletions(-)
-> 
-> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
-> index 9d45f4d26f73..650beb74346c 100644
-> --- a/security/integrity/ima/ima_kexec.c
-> +++ b/security/integrity/ima/ima_kexec.c
-> @@ -18,30 +18,30 @@
->  static int ima_dump_measurement_list(unsigned long *buffer_size, void **buffer,
->  				     unsigned long segment_size)
->  {
-> +	struct seq_file ima_kexec_file;
->  	struct ima_queue_entry *qe;
-> -	struct seq_file file;
->  	struct ima_kexec_hdr khdr;
->  	int ret = 0;
->  
->  	/* segment size can't change between kexec load and execute */
-> -	file.buf = vmalloc(segment_size);
-> -	if (!file.buf) {
-> +	ima_kexec_file.buf = vmalloc(segment_size);
-> +	if (!ima_kexec_file.buf) {
->  		ret = -ENOMEM;
->  		goto out;
+>  tools/testing/selftests/bpf/benchs/bench_htab_mem.c | 3 +--
+>  tools/testing/selftests/bpf/prog_tests/sk_assign.c  | 4 +++-
+>  2 files changed, 4 insertions(+), 3 deletions(-)
+>
+> diff --git a/tools/testing/selftests/bpf/benchs/bench_htab_mem.c b/tools/testing/selftests/bpf/benchs/bench_htab_mem.c
+> index 926ee822143e..297e32390cd1 100644
+> --- a/tools/testing/selftests/bpf/benchs/bench_htab_mem.c
+> +++ b/tools/testing/selftests/bpf/benchs/bench_htab_mem.c
+> @@ -279,6 +279,7 @@ static void htab_mem_read_mem_cgrp_file(const char *name, unsigned long *value)
 >  	}
 >  
-> -	file.file = NULL;
-> -	file.size = segment_size;
-> -	file.read_pos = 0;
-> -	file.count = sizeof(khdr);	/* reserved space */
-> +	ima_kexec_file.file = NULL;
-> +	ima_kexec_file.size = segment_size;
-> +	ima_kexec_file.read_pos = 0;
-> +	ima_kexec_file.count = sizeof(khdr);	/* reserved space */
+>  	got = read(fd, buf, sizeof(buf) - 1);
+> +	close(fd);
+>  	if (got <= 0) {
+>  		*value = 0;
+>  		return;
+> @@ -286,8 +287,6 @@ static void htab_mem_read_mem_cgrp_file(const char *name, unsigned long *value)
+>  	buf[got] = 0;
 >  
->  	memset(&khdr, 0, sizeof(khdr));
->  	khdr.version = 1;
->  	/* This is an append-only list, no need to hold the RCU read lock */
->  	list_for_each_entry_rcu(qe, &ima_measurements, later, true) {
-> -		if (file.count < file.size) {
-> +		if (ima_kexec_file.count < ima_kexec_file.size) {
->  			khdr.count++;
-> -			ima_measurements_show(&file, qe);
-> +			ima_measurements_show(&ima_kexec_file, qe);
->  		} else {
->  			ret = -EINVAL;
->  			break;
-> @@ -55,23 +55,24 @@ static int ima_dump_measurement_list(unsigned long *buffer_size, void **buffer,
->  	 * fill in reserved space with some buffer details
->  	 * (eg. version, buffer size, number of measurements)
->  	 */
-> -	khdr.buffer_size = file.count;
-> +	khdr.buffer_size = ima_kexec_file.count;
->  	if (ima_canonical_fmt) {
->  		khdr.version = cpu_to_le16(khdr.version);
->  		khdr.count = cpu_to_le64(khdr.count);
->  		khdr.buffer_size = cpu_to_le64(khdr.buffer_size);
->  	}
-> -	memcpy(file.buf, &khdr, sizeof(khdr));
-> +	memcpy(ima_kexec_file.buf, &khdr, sizeof(khdr));
->  
->  	print_hex_dump_debug("ima dump: ", DUMP_PREFIX_NONE, 16, 1,
-> -			     file.buf, file.count < 100 ? file.count : 100,
-> +			     ima_kexec_file.buf, ima_kexec_file.count < 100 ?
-> +			     ima_kexec_file.count : 100,
->  			     true);
->  
-> -	*buffer_size = file.count;
-> -	*buffer = file.buf;
-> +	*buffer_size = ima_kexec_file.count;
-> +	*buffer = ima_kexec_file.buf;
->  out:
->  	if (ret == -EINVAL)
-> -		vfree(file.buf);
-> +		vfree(ima_kexec_file.buf);
->  	return ret;
+>  	*value = strtoull(buf, NULL, 0);
+> -
+> -	close(fd);
 >  }
 >  
-> -- 
-> 2.25.1
-> 
+>  static void htab_mem_measure(struct bench_res *res)
+> diff --git a/tools/testing/selftests/bpf/prog_tests/sk_assign.c b/tools/testing/selftests/bpf/prog_tests/sk_assign.c
+> index 0b9bd1d6f7cc..10a0ab954b8a 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/sk_assign.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/sk_assign.c
+> @@ -37,8 +37,10 @@ configure_stack(void)
+>  	tc = popen("tc -V", "r");
+>  	if (CHECK_FAIL(!tc))
+>  		return false;
+> -	if (CHECK_FAIL(!fgets(tc_version, sizeof(tc_version), tc)))
+> +	if (CHECK_FAIL(!fgets(tc_version, sizeof(tc_version), tc))) {
+> +		pclose(tc);
+>  		return false;
+> +	}
+>  	if (strstr(tc_version, ", libbpf "))
+>  		prog = "test_sk_assign_libbpf.bpf.o";
+>  	else
 
