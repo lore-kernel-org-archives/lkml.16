@@ -1,79 +1,80 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89F3722DF8A
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 15:45:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3FDB235C00
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 15:45:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744127155; cv=none; b=oFY61Y5HL33dYMMZvMwKu0Z4k1NWS7tayVfa1MtK5u3GYbtLRVL19pjanCVd/X1xV8iaS+Sca8oJbl2aggKAKANzfgZkwQuOAYXRBVoZfozRGC6gebmaii1zTjzKcUfn37icnc/hYAiFGh7CxZt1tWLJHib2Ylf8su1YrEBlsDI=
+	t=1744127159; cv=none; b=F2jnr4AGbYSwFmJkBG2dluO7zPpkMPKBokzB8eE96v0OJWLLx9oMM1ILwZ7HHm2knPyN9qj2dt6582OGSKXwOr+XhyakAU0HOfPgMRUiyAKlsWmbTDBJgW+dWSD+y+7Zv5vSPAoi7mmNJQ71HIWTbmT9f0hUByYA8BgyW7rHePU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744127155; c=relaxed/simple;
-	bh=0Vk4Q/tbcxmqoPdlz6UIUsDuIxw5cq/UVJKCtm5vkU4=;
+	s=arc-20240116; t=1744127159; c=relaxed/simple;
+	bh=mjBuZ4+ZgrBFpY/9zvDNPYwTF8Lw4OT1AFFQ3ui0A8k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FshRrz8B0nx+21hdj7yzbBAYB+s0Yu7g+Dl9ktCys/5ekLQTiseK1VkymFmRBC+y9wicmcZULRaT0T8oLs4HS9CZBBU+10Dd0tiKy3Iae8O4i+WNJHmpbWbUCjzYbYtN2ea7f1aNyoiMVN/xRgR59GIfdFknJ3Zr4Fx0/iLp4ow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=mdOBOdHW; arc=none smtp.client-ip=209.85.219.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=i8U4mLIiTmYi9kmOmgfaMypqGUno+CPt8Gt4hk4uBlVCJg1M1BLDsenHBPdFLoegHvIDimroZPMeaqEytenFZGz7WfdWPYhp8vd/cUEI+AjFOldUBl+x8myOXpd94DsEJqpAapvAV0aWemoBA6+dXsaS3dlKCeaVyYLhVbtnYiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=niCnm59S; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="mdOBOdHW"
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6f0ad744811so30453866d6.1
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 08:45:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="niCnm59S"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4775ce8a4b0so101783811cf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 08:45:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1744127152; x=1744731952; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1744127156; x=1744731956; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z4ws45xegNtEo3hyX9VLFGRAMSTn7tItQyk+TYKn5LE=;
-        b=mdOBOdHWh/fvGknv0gXu1ly70YBcK/mlc6XLthNm42wAwihn0QSyGIrZdMyIhEwsLh
-         eU17LAnpgdsRIv9EXQDRcveignOVir9nOnkym0VA36Ss96poFdxYd86RyMQj7Yy66kgn
-         2wAGdrb2POQMbO3dAKlqGaf9vzCW0TkpRvtxgIBjkuubY4c5ANKbz4wL8TMuQ18sjEDT
-         BiiLma7vLVSjuBK5JODSdopgmEHTap9QdOpNnlFyhURNmc4ZFZ3JZ0Q3qUV2C4OvkGL3
-         rODWUQx1Mn3xlKBAFW+vYt4XL+x3KkWlqSnX8fJsduQJqTobQAy0NLKDj/feuyRHC5ZX
-         JwdA==
+        bh=VoXkx7vCK0V8Vdi8YRN6LJcm0AotHEaK6mdkVU4exog=;
+        b=niCnm59So3Ij29BsoGLZF141Hw63RbHoWrnJwoFwjvtN6RxgBFEwEGGugA64wHRSN7
+         JB/xyfsBkI0Ob9ZWXE3+4XZVpfBmTvKFKHQthGLKNNZdSeoFfm6O9ct2KFt827KJ+VWC
+         rC2rSec/pMaKZFesovKj5DJ2twY5LW7MMhHLaiDyqdfK9hAo0/ZqHDUwxCd8cejhbw8G
+         3BIpGJzzO3XzmDoEK2i0+ywcCzEX/HqwLsfTD5I6scBY4Q5y6IY48y+I/YBKfp9+x0eB
+         BZnJeFBmd9PkHRlEpGoEFgPQUgKnsMD9215zFo6yuqX8qT5DqEpgm5IDI0lBKBXcD5RW
+         aq/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744127152; x=1744731952;
+        d=1e100.net; s=20230601; t=1744127156; x=1744731956;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Z4ws45xegNtEo3hyX9VLFGRAMSTn7tItQyk+TYKn5LE=;
-        b=VqdYkvjknN5Js1lwfSi5sB1a2LAU8sK09Mo+kwf9iMVp0E8frL3nzN16e9+i6Rh3f4
-         FVBw4HKpKzXfbkaTW+B5a2BfnJDZSeOFK48B4UfHnkOtPu2nJcpLIfm2MG9CZMMOyLK8
-         5x5n7DigWhSKMEDTKPRwxSSyyi58gceFPu1S4Hu6iaBDlWmzKXwvXapxSrdlW2815jUW
-         8+VCFrjrdCO3IlZqghTBSSXnGSoZB5YJ5Ixp5JrnfVM9+cnvFe27for2FAQa7nM3XWFZ
-         ZrSn9x15gSPM+R2b/tAS/unm7W8r4X2UbwT+erTUygIgZkXu+dvYDMpkwRSGu9g4nQTX
-         pGNA==
-X-Forwarded-Encrypted: i=1; AJvYcCWFHrdfazn4zEgiJ72nzBOC/WvZGtiNNsBURf2iGhVNKQ2KSS/t1UlL2NoTD3+ZqHuLRCorR1CILR3GKXo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy18AgA/DnNnl0uoro7TWRK/Q4SywMUUeUQAllysMqfkEJ8WE8T
-	7XwvBfL8LNXsbhlc2hZh1by7hpWlVScUwjJWrhJrNvXywocqQ9SV1CDG2768qtM=
-X-Gm-Gg: ASbGnctJPXbSuOrH4S8i0N2WJ5iVlcNmn0iMAAyHGbZI8JJkfBuKpC05gmnfrkED0pD
-	22jLylMErzJlkSVeJDVsuvYlaWAf7wgQBj1qdcgpX42Xc65lMPXYTxUywepjtGestblqVC9TNxs
-	wt0LX/THgOexUC6wsbCBbrj4jIGKwSck7JM3VgZ1nY03/prr+26zrVYaO6xUphtA1nuVYRRwlD2
-	9dFL7F4wByRHGEBeRTzdFRPlEuPtUDn1pWb7855ziJoewI2cODCp0kAohK/TyY6V+kZrzGmjv1d
-	WgUk9aBUmfqwGJ/xXAOf94aJoP3qK9QS+6jufTsgHTE=
-X-Google-Smtp-Source: AGHT+IFB93sjhMlD8Tc/Abwf4lsvbVA+UK3BQyylz33ogjZ0LPpUmiNISCzwhQcTDhyWWyzZaM2+Eg==
-X-Received: by 2002:a05:6214:2588:b0:6e6:5d61:4f01 with SMTP id 6a1803df08f44-6f0584a4650mr233144056d6.8.1744127152257;
-        Tue, 08 Apr 2025 08:45:52 -0700 (PDT)
-Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6ef0efc0a6csm75867956d6.14.2025.04.08.08.45.51
+        bh=VoXkx7vCK0V8Vdi8YRN6LJcm0AotHEaK6mdkVU4exog=;
+        b=lhtoPhRqu5GEIXdA8eU8ELgnX1u+xP6EZw6Npae4ttyH+sr2spjJR630z30xs2wvC9
+         IkoEje+BJVfxC17T429bGD9Ii3xqsdyFH4ccLEiYeOv576D83Qs46l1e9tYbz8Gp5nJ6
+         +lNgtmwzRwLo63QFKGtk5NaGx6iKrl6lCzWFKlbDsBCm3394qjYUBZtaellrQxeQIbXX
+         4jPvFCWBqZltctDos4EdQFIO0ZvTlHbedzFcPsDEkiDYcpr4A4eVQu67GYByrvH1J3t6
+         i7pW5KDNC8FlWNCQCSHjGq996RXupxF1En8XW+trO319uUcXbrpMTMMaNrfpZfZmiTQt
+         rkug==
+X-Forwarded-Encrypted: i=1; AJvYcCVJoJJNx+yJxQX30VRBsRyY2aObXfXZAdxJFAOYitHo34vaJ4UI78bmjpeTCuDVI28ZHNciHp16AK+p/+0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5PV9N49dzm51B/+5oa5CAQoCkfemqH2RhaYVfwfSs4Y6J2Dmu
+	+kRTJhm0hrfvOxqSOxpwYdZvT1hGiMPGHvpErNzpnkVCErJBTE+RK2AV/OkQ6KU=
+X-Gm-Gg: ASbGncvfZVpmMvLrsaLdqXcm5J06Yuvbbo2NeEwLgkjPHHgWhXjQIPLS8tzYCRcTWf5
+	//omF8xnKMf0s5VLSrKEdOtqans1FLfer2AyyzJ+OolHJooCfn0tvJkD84CngWkVtSxzvQIIZGB
+	iwAXqTUuNVfPt14Y2vsFV7wPmmzPqGnDSPI1RYOyyKMNdXqlH53cLV06VBLkmwG5L/K3InN3Ybs
+	n7scIf7SgOdEzhoLcgTNQ5TiASC1/mKdGzna7xgiwbYAO7QSjDgTnobKOliLSEpYzNAlgOsDp1w
+	Il7s1OqS7Hsg+JOg+5iY8vl3KKZizA9pVdmC1mqj7/txgksGFKRaNPyOQEHRw+jsmTvjR9D2dyE
+	ueypTy5F+I4ZaUh1Q69uwyWx2Gig=
+X-Google-Smtp-Source: AGHT+IE0t0oHePrcFXYkuYevl7iuOHqLSKUup+qyVgXocIBtQicJgUL+StRyzSINlW/hNULuQT1bVw==
+X-Received: by 2002:ac8:7f01:0:b0:476:b06a:716e with SMTP id d75a77b69052e-479249a7ef6mr322034311cf.34.1744127155544;
+        Tue, 08 Apr 2025 08:45:55 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4791b07456csm77885091cf.32.2025.04.08.08.45.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 08:45:51 -0700 (PDT)
-Date: Tue, 8 Apr 2025 11:45:47 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Usama Arif <usamaarif642@gmail.com>
-Cc: Nhat Pham <nphamcs@gmail.com>, linux-mm@kvack.org,
-	akpm@linux-foundation.org, hughd@google.com, yosry.ahmed@linux.dev,
-	mhocko@kernel.org, roman.gushchin@linux.dev, shakeel.butt@linux.dev,
-	muchun.song@linux.dev, len.brown@intel.com,
-	chengming.zhou@linux.dev, kasong@tencent.com, chrisl@kernel.org,
-	huang.ying.caritas@gmail.com, ryan.roberts@arm.com,
-	viro@zeniv.linux.org.uk, baohua@kernel.org, osalvador@suse.de,
-	lorenzo.stoakes@oracle.com, christophe.leroy@csgroup.eu,
-	pavel@kernel.org, kernel-team@meta.com,
-	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: Re: [RFC PATCH 00/14] Virtual Swap Space
-Message-ID: <20250408154547.GC816@cmpxchg.org>
-References: <20250407234223.1059191-1-nphamcs@gmail.com>
- <983965b6-2262-4f72-a672-39085dcdaa3c@gmail.com>
+        Tue, 08 Apr 2025 08:45:55 -0700 (PDT)
+Date: Tue, 8 Apr 2025 11:45:53 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Robert Richter <rrichter@amd.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v2 08/15] cxl/region: Use the endpoint's SPA range to
+ find a region
+Message-ID: <Z_VEsYYevJ-BPJnx@gourry-fedora-PF4VCD3F>
+References: <20250218132356.1809075-1-rrichter@amd.com>
+ <20250218132356.1809075-9-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,109 +83,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <983965b6-2262-4f72-a672-39085dcdaa3c@gmail.com>
+In-Reply-To: <20250218132356.1809075-9-rrichter@amd.com>
 
-On Tue, Apr 08, 2025 at 02:04:06PM +0100, Usama Arif wrote:
+On Tue, Feb 18, 2025 at 02:23:49PM +0100, Robert Richter wrote:
+> To find the correct region and root port of an endpoint of a system
+> needing address translation, the endpoint's HPA range must be
+> translated to each of the parent port address ranges up to the root
+> decoder.
 > 
+> Use the calculated SPA range of an endpoint to find the endpoint's
+> region.
 > 
-> On 08/04/2025 00:42, Nhat Pham wrote:
-> > 
-> > V. Benchmarking
-> > 
-> > As a proof of concept, I run the prototype through some simple
-> > benchmarks:
-> > 
-> > 1. usemem: 16 threads, 2G each, memory.max = 16G
-> > 
-> > I benchmarked the following usemem commands:
-> > 
-> > time usemem --init-time -w -O -s 10 -n 16 2g
-> > 
-> > Baseline:
-> > real: 33.96s
-> > user: 25.31s
-> > sys: 341.09s
-> > average throughput: 111295.45 KB/s
-> > average free time: 2079258.68 usecs
-> > 
-> > New Design:
-> > real: 35.87s
-> > user: 25.15s
-> > sys: 373.01s
-> > average throughput: 106965.46 KB/s
-> > average free time: 3192465.62 usecs
-> > 
-> > To root cause this regression, I ran perf on the usemem program, as
-> > well as on the following stress-ng program:
-> > 
-> > perf record -ag -e cycles -G perf_cg -- ./stress-ng/stress-ng  --pageswap $(nproc) --pageswap-ops 100000
-> > 
-> > and observed the (predicted) increase in lock contention on swap cache
-> > accesses. This regression is alleviated if I put together the
-> > following hack: limit the virtual swap space to a sufficient size for
-> > the benchmark, range partition the swap-related data structures (swap
-> > cache, zswap tree, etc.) based on the limit, and distribute the
-> > allocation of virtual swap slotss among these partitions (on a per-CPU
-> > basis):
-> > 
-> > real: 34.94s
-> > user: 25.28s
-> > sys: 360.25s
-> > average throughput: 108181.15 KB/s
-> > average free time: 2680890.24 usecs
-> > 
-> > As mentioned above, I will implement proper dynamic swap range
-> > partitioning in a follow up work.
-> > 
-> > 2. Kernel building: zswap enabled, 52 workers (one per processor),
-> > memory.max = 3G.
-> > 
-> > Baseline:
-> > real: 183.55s
-> > user: 5119.01s
-> > sys: 655.16s
-> > 
-> > New Design:
-> > real: mean: 184.5s
-> > user: mean: 5117.4s
-> > sys: mean: 695.23s
-> > 
-> > New Design (Static Partition)
-> > real: 183.95s
-> > user: 5119.29s
-> > sys: 664.24s
-> > 
-> 
-> Hi Nhat,
-> 
-> Thanks for the patches! I have glanced over a couple of them, but this was the main question that came to my mind.
-> 
-> Just wanted to check if you had a look at the memory regression during these benchmarks?
-> 
-> Also what is sizeof(swp_desc)? Maybe we can calculate the memory overhead as sizeof(swp_desc) * swap size/PAGE_SIZE?
-> 
-> For a 64G swap that is filled with private anon pages, the overhead in MB might be (sizeof(swp_desc) in bytes * 16M) - 16M (zerobitmap) - 16M*8 (swap map)?
-> 
-> This looks like a sizeable memory regression?
 
-One thing to keep in mind is that the swap descriptor is currently
-blatantly explicit, and many conversions and optimizations have not
-been done yet. There are some tradeoffs made here regarding code
-reviewability, but I agree it makes it hard to see what this would
-look like fully realized.
+After debugging some other patches, I think this patch needs to just be
+rolled in with the introduction of cxled->spa_range (Patch 5).
 
-I think what's really missing is an analysis of what the goal is and
-what the overhead will be then.
+(spa_range == hpa_range) up to this point, so this is effectively a NOP.
 
-The swapin path currently consults the swapcache, then the zeromap,
-then zswap, and finally the backend. The external swap_cgroup array is
-consulted to determine who to charge for the new page.
-
-With vswap, the descriptor is looked up and resolves to a type,
-location, cgroup ownership, a refcount. This means it replaces the
-swapcache, the zeromap, the cgroup map, and largely the swap_map.
-
-Nhat was not quite sure yet if the swap_map can be a single bit per
-entry or two bits to represent bad slots. In any case, it's a large
-reduction in static swap space overhead, and eliminates the tricky
-swap count continuation code.
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> ---
+>  drivers/cxl/core/region.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 6d5ede5b4c43..ffe6038249ed 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -3535,7 +3535,6 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+>  
+>  static int cxl_endpoint_decoder_add(struct cxl_endpoint_decoder *cxled)
+>  {
+> -	struct range *hpa = &cxled->cxld.hpa_range;
+>  	struct cxl_root_decoder *cxlrd = cxled->cxlrd;
+>  	struct cxl_region_params *p;
+>  	struct cxl_region *cxlr;
+> @@ -3547,7 +3546,7 @@ static int cxl_endpoint_decoder_add(struct cxl_endpoint_decoder *cxled)
+>  	 * one does the construction and the others add to that.
+>  	 */
+>  	mutex_lock(&cxlrd->range_lock);
+> -	cxlr = cxl_find_region_by_range(cxlrd, hpa);
+> +	cxlr = cxl_find_region_by_range(cxlrd, &cxled->spa_range);
+>  	if (!cxlr)
+>  		cxlr = construct_region(cxlrd, cxled);
+>  	mutex_unlock(&cxlrd->range_lock);
+> -- 
+> 2.39.5
+> 
