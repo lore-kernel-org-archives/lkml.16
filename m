@@ -1,158 +1,184 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80EED207E0F;
-	Tue,  8 Apr 2025 05:20:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5617020A5EE
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 05:23:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744089636; cv=none; b=YRziZiEjr1J74jR+gE9AozR9hnZPpewUgxFLKKSbhrNLUAAXpS5qNPu/x5Qe4yYGU6AfjdhAZ0f4ghNetPisBP2JQ9OJX62ktYqP8EJcLaP4+UBTwaKGtWn70cl2w0KHuODtQcVgivS2ujTcFX1gc5eI7OFbrdZkJXjLUGLU+Fw=
+	t=1744089785; cv=none; b=F+Ev8y4lN+RGoORHAGynBN5EtmhHea6uJSb4ANHeGTknWYBJ8rF+jQ45Sz/VL6W5l21O5qibEnlqmKmgK/4WqxGYZzl5MTG7i0yUM/qu/2l355hPh8UO83UloqUs8+BbHhrIiCp795wDxFjVG31on71Mdd6zAkbwYzhGnR3kbMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744089636; c=relaxed/simple;
-	bh=/0DCSkYs9FK7HPj8e3N5ePHpwmEPO47Lc4S2mr9GGEg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lbX27jdIMod2Ofg748lu6aCUpCb8UdH1vmEjQexbUVN6n75LloYWUBRtHP+Lbf6ImawB4MdQvBVzh5yDU+g+evbXNVq4W0NlYoAXsXdvYMLQuT3mNKlStlVnpxoCNsaLCg98HaHLDqCOLhE4NZ866kTVPalQtAoyBhpg4UBKhU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JlPwC5pf; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744089785; c=relaxed/simple;
+	bh=kuaUaBppjC3pVohX/ZirHPmZTmFoBhG+ay7OGmaCfK4=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ccfm8f5Xub8b4+cjvE1qagSwIYU0tIiIzs2KhJUsz7sn4vSEwz3tRm/jIjR0OrRQOs8oC42QYqHCNiZllYdICVuGK1+2wVtEH2xnQiHYiu8QE1mjx7DnCc0Zr9iERowpRWuHwYoMAORRz9drOvLclO3telMmmPyoJTSnoAYdlMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=kN/mGuLB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=TreGu643; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=kN/mGuLB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=TreGu643; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JlPwC5pf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744089635; x=1775625635;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=/0DCSkYs9FK7HPj8e3N5ePHpwmEPO47Lc4S2mr9GGEg=;
-  b=JlPwC5pfnFOYqR7+o3DjMPAl9RnYfFb1UTSSK+J4mqJ6ICrXrgUTElyz
-   CZx8AsPcI/Y8pbWc4oYnCVVvvAYr49INGBYgnaM8/LodKy+RhRoM6q7yd
-   TAoJ1L+ihitRB11EeUlpU0mdgJv25lBEKSGXv/0HxRl7h0TXq/B6KivwP
-   IcrgkPux1NUbqRGipLzBGdscFS5JYyi0LV/DighxzQXdbc94bMfOYuSCO
-   E1cIyLT6C9q8PTpWwq/nKBvwVefjv/FDhzTDu4XJdWB2syxcGG+4yq4Ex
-   2+hyoGWBAoNxJcLNc9Au6uBjktWlG48npVDRk4qYxCeYHWOZnTGhnuuZB
-   g==;
-X-CSE-ConnectionGUID: 6s9qu/pxS3OeWOQYFgESjA==
-X-CSE-MsgGUID: 21VmzwerSfOvPZBbUc9ctg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="45390090"
-X-IronPort-AV: E=Sophos;i="6.15,197,1739865600"; 
-   d="scan'208";a="45390090"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 22:20:34 -0700
-X-CSE-ConnectionGUID: z7YBI9LvRBmLdFYHNnA0RA==
-X-CSE-MsgGUID: oDg5vx6gTu2Rw5dbJx4vng==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,197,1739865600"; 
-   d="scan'208";a="151343970"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 07 Apr 2025 22:20:30 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u21Ns-00048Z-0a;
-	Tue, 08 Apr 2025 05:20:28 +0000
-Date: Tue, 8 Apr 2025 13:19:40 +0800
-From: kernel test robot <lkp@intel.com>
-To: Pengyu Luo <mitltlatltl@gmail.com>, Jianhua Lu <lujianhua000@gmail.com>,
-	Lee Jones <lee@kernel.org>, Daniel Thompson <danielt@kernel.org>,
-	Jingoo Han <jingoohan1@gmail.com>, Pavel Machek <pavel@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Helge Deller <deller@gmx.de>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-fbdev@vger.kernel.org, Pengyu Luo <mitltlatltl@gmail.com>
-Subject: Re: [PATCH 4/4] backlight: ktz8866: add definitions to make it more
- readable
-Message-ID: <202504081215.rL4DExNA-lkp@intel.com>
-References: <20250407095119.588920-5-mitltlatltl@gmail.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="kN/mGuLB";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="TreGu643";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="kN/mGuLB";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="TreGu643"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 927A92117F;
+	Tue,  8 Apr 2025 05:22:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744089775; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MaL9R8uqMyLYrAkKk+9UKfW5eq2Lkk+0ZVyqZSvS72Q=;
+	b=kN/mGuLB52nPNRsKhhmBHd5RxhLR5oOmAYILDYFTKYzvXqDH8ImCsIvg9I6cmZmmdPjdRb
+	H2nAQwtK3KauvvCeU/HrjMHhL45/zUOwppwzUy4N28w+B1PpZaTjGF7PjOEk3MhOUFwfba
+	FE8bVRpqGZDvhOaaZyYBFo6XETwYPYw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744089775;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MaL9R8uqMyLYrAkKk+9UKfW5eq2Lkk+0ZVyqZSvS72Q=;
+	b=TreGu64377ixgPhqf+aCfCDtrTyXRmccmZzNVWiTbeDuU79vhhlkWr1Z1vntgWAzc5RAHR
+	gR4uLre76R0YmGCQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="kN/mGuLB";
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=TreGu643
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744089775; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MaL9R8uqMyLYrAkKk+9UKfW5eq2Lkk+0ZVyqZSvS72Q=;
+	b=kN/mGuLB52nPNRsKhhmBHd5RxhLR5oOmAYILDYFTKYzvXqDH8ImCsIvg9I6cmZmmdPjdRb
+	H2nAQwtK3KauvvCeU/HrjMHhL45/zUOwppwzUy4N28w+B1PpZaTjGF7PjOEk3MhOUFwfba
+	FE8bVRpqGZDvhOaaZyYBFo6XETwYPYw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744089775;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MaL9R8uqMyLYrAkKk+9UKfW5eq2Lkk+0ZVyqZSvS72Q=;
+	b=TreGu64377ixgPhqf+aCfCDtrTyXRmccmZzNVWiTbeDuU79vhhlkWr1Z1vntgWAzc5RAHR
+	gR4uLre76R0YmGCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 092DB1371A;
+	Tue,  8 Apr 2025 05:22:55 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id m2duAK+y9Gd+GQAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Tue, 08 Apr 2025 05:22:55 +0000
+Date: Tue, 08 Apr 2025 07:22:54 +0200
+Message-ID: <87tt6zb51t.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Mark Brown <broonie@kernel.org>
+Cc: Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Clemens Ladisch <clemens@ladisch.de>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Thorsten Blum <thorsten.blum@linux.dev>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
+	Bard Liao <yung-chuan.liao@linux.intel.com>,
+	Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Maxim Mikityanskiy <maxtram95@gmail.com>,
+	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+	He Lugang <helugang@uniontech.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Binbin Zhou <zhoubinbin@loongson.cn>,
+	Tang Bin <tangbin@cmss.chinamobile.com>,
+	Philipp Stanner <phasta@kernel.org>,
+	linux-parisc@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: (subset) [PATCH 00/11] sound: Replace deprecated PCI functions
+In-Reply-To: <174406895437.1337819.1919250165088744285.b4-ty@kernel.org>
+References: <20250404121911.85277-2-phasta@kernel.org>
+	<174406895437.1337819.1919250165088744285.b4-ty@kernel.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407095119.588920-5-mitltlatltl@gmail.com>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Rspamd-Queue-Id: 927A92117F
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[perex.cz,suse.com,ladisch.de,gmail.com,linux.dev,linux.intel.com,renesas.com,uniontech.com,baylibre.com,loongson.cn,cmss.chinamobile.com,kernel.org,vger.kernel.org];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -3.51
+X-Spam-Flag: NO
 
-Hi Pengyu,
+On Tue, 08 Apr 2025 01:35:54 +0200,
+Mark Brown wrote:
+> 
+> On Fri, 04 Apr 2025 14:19:01 +0200, Philipp Stanner wrote:
+> > pcim_iomap_table() and pcim_iomap_regions() have been deprecated by the
+> > PCI subsystem. In sound/, they can easily be replaced with
+> > pcim_iomap_region().
+> > 
+> > This series was around some time in late summer last year as a single
+> > patch. I lost track of it for a while, but Takashi Iwai (AFAIR)
+> > requested that I split it by component.
+> > 
+> > [...]
+> 
+> Applied to
+> 
+>    https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+> 
+> Thanks!
+> 
+> [11/11] ASoC: loongson: Replace deprecated PCI functions
+>         commit: 7288aa73e5cfb3f37ae93b55d7b7d63eca5140a8
+> 
+> All being well this means that it will be integrated into the linux-next
+> tree (usually sometime in the next 24 hours) and sent to Linus during
+> the next merge window (or sooner if it is a bug fix), however if
+> problems are discovered then the patch may be dropped or reverted.
+> 
+> You may get further e-mails resulting from automated or manual testing
+> and review of the tree, please engage with people reporting problems and
+> send followup patches addressing any issues that are reported if needed.
+> 
+> If any updates are required or you are submitting further changes they
+> should be sent as incremental updates against current git, existing
+> patches will not be replaced.
+> 
+> Please add any relevant lists and maintainers to the CCs when replying
+> to this mail.
 
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on lee-backlight/for-backlight-next]
-[also build test ERROR on lee-leds/for-leds-next lee-backlight/for-backlight-fixes linus/master v6.15-rc1 next-20250407]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Pengyu-Luo/dt-bindings-backlight-kinetic-ktz8866-add-ktz8866-slave-compatible/20250407-175635
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/backlight.git for-backlight-next
-patch link:    https://lore.kernel.org/r/20250407095119.588920-5-mitltlatltl%40gmail.com
-patch subject: [PATCH 4/4] backlight: ktz8866: add definitions to make it more readable
-config: riscv-randconfig-002-20250408 (https://download.01.org/0day-ci/archive/20250408/202504081215.rL4DExNA-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 92c93f5286b9ff33f27ff694d2dc33da1c07afdd)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250408/202504081215.rL4DExNA-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504081215.rL4DExNA-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   drivers/video/backlight/ktz8866.c:77:32: error: incompatible pointer types passing 'unsigned int **' to parameter of type 'unsigned int *'; remove & [-Werror,-Wincompatible-pointer-types]
-      77 |         regmap_read(ktz->regmap, reg, &val);
-         |                                       ^~~~
-   include/linux/regmap.h:1297:69: note: passing argument to parameter 'val' here
-    1297 | int regmap_read(struct regmap *map, unsigned int reg, unsigned int *val);
-         |                                                                     ^
->> drivers/video/backlight/ktz8866.c:112:66: error: expected ')'
-     112 |         ktz8866_write(ktz, BL_BRT_LSB, FIELD_GET(LOWER_BYTE, brightness);
-         |                                                                         ^
-   drivers/video/backlight/ktz8866.c:112:15: note: to match this '('
-     112 |         ktz8866_write(ktz, BL_BRT_LSB, FIELD_GET(LOWER_BYTE, brightness);
-         |                      ^
-   drivers/video/backlight/ktz8866.c:113:67: error: expected ')'
-     113 |         ktz8866_write(ktz, BL_BRT_MSB, FIELD_GET(HIGHER_BYTE, brightness);
-         |                                                                          ^
-   drivers/video/backlight/ktz8866.c:113:15: note: to match this '('
-     113 |         ktz8866_write(ktz, BL_BRT_MSB, FIELD_GET(HIGHER_BYTE, brightness);
-         |                      ^
-   drivers/video/backlight/ktz8866.c:136:13: warning: use of logical '&&' with constant operand [-Wconstant-logical-operand]
-     136 |                 if (!(val && CURRENT_SINKS_MASK))
-         |                           ^  ~~~~~~~~~~~~~~~~~~
-   drivers/video/backlight/ktz8866.c:136:13: note: use '&' for a bitwise operation
-     136 |                 if (!(val && CURRENT_SINKS_MASK))
-         |                           ^~
-         |                           &
-   drivers/video/backlight/ktz8866.c:136:13: note: remove constant to silence this warning
-     136 |                 if (!(val && CURRENT_SINKS_MASK))
-         |                           ^~~~~~~~~~~~~~~~~~~~~
-   1 warning and 3 errors generated.
+Oh, I already applied this one blindly as a part of series to my
+tree.  But it's a trivial fix and shouldn't be a big problem to apply
+twice...
 
 
-vim +112 drivers/video/backlight/ktz8866.c
-
-    97	
-    98	static int ktz8866_backlight_update_status(struct backlight_device *backlight_dev)
-    99	{
-   100		struct ktz8866 *ktz = bl_get_data(backlight_dev);
-   101		unsigned int brightness = backlight_get_brightness(backlight_dev);
-   102	
-   103		if (!ktz->led_on && brightness > 0) {
-   104			ktz8866_update_bits(ktz, BL_EN, BL_EN_BIT, BL_EN_BIT);
-   105			ktz->led_on = true;
-   106		} else if (brightness == 0) {
-   107			ktz8866_update_bits(ktz, BL_EN, BL_EN_BIT, 0);
-   108			ktz->led_on = false;
-   109		}
-   110	
-   111		/* Set brightness */
- > 112		ktz8866_write(ktz, BL_BRT_LSB, FIELD_GET(LOWER_BYTE, brightness);
-   113		ktz8866_write(ktz, BL_BRT_MSB, FIELD_GET(HIGHER_BYTE, brightness);
-   114	
-   115		return 0;
-   116	}
-   117	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Takashi
