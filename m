@@ -1,129 +1,101 @@
 Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4775879CF;
-	Tue,  8 Apr 2025 02:43:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18E13215798
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 02:44:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744080225; cv=none; b=I9hbe/s3RoH2BT/sQziBgbF3Qwy0xmXf4IxtedeI1tjxvd6IbDW3W6cg6/oO6HlibiBXNjgbLu6x2QfEyPBBanP2CCvEC3vVB2y4/+MnzNav6YWO88hImvGB2GH71aO/o8r59BToGX5GoWzP8tn23zjGdWRf7BAC25+J+RQfWRQ=
+	t=1744080297; cv=none; b=KiMw02mEhBOEySD/BacXz40CQFjbOALNOAKAZrMWKP5pWKuwrDIlLwfo5wqGHXH5F3n9/1qbU54I5Ka2gssz7CZQ8YqGaoCCiu5Yk4NJP4CupXevRoHJxaCev6ieNNAFZ8PLEYBgwX842zWGan1vu2w3ZLBgA0hS/FNdmjxs8pE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744080225; c=relaxed/simple;
-	bh=uMJrwov1IZxKFW0XGBsQ/tzJB+eGUEzjRoiJvWFEqXs=;
+	s=arc-20240116; t=1744080297; c=relaxed/simple;
+	bh=iWxvemNBYjvEqfzf1xQ8uYXWUJ1YhCHZoVYw97TFXvg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GtcRUUg5/RgKY5r7Pw8ZFdueRgWlNSuUaohS0oPTYBrLyQpBVW/4O9sRBsS/rkjFIUbYh9HQzlQguFnlmOucBKsRGp005y5nIa+f+40x6YNM0w/wUyiIBYPhznH79xh7a9W9gOsin3RkgGS6qF80zaNS/lcnsI676jzn6GerNRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lp91UWfr; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=SsOPFIJf/xtmvKCwskXP0Aa7MgurqB6o7x8uHMHrIrNlQi/wihx84NjkgFuZhDBK2Zt6pLLVJJytk5uEzp199e2j+bF8DDcXIIxzDg2rq2NVaR8W2bqiHBT+gyFpIiFa1dL8wwjiaeqpLdqw8S8mxHGb/7vzxuSOvyp+1e5kp+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=J0Y8qw5p; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lp91UWfr"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7376dd56f60so3634476b3a.3;
-        Mon, 07 Apr 2025 19:43:41 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="J0Y8qw5p"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-739525d4e12so4460054b3a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 19:44:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744080221; x=1744685021; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=i/OtvVm6zScWbSjh6iMXwvJQ3OZdxi/HpzsiqDN7FpA=;
-        b=lp91UWfr+DF23Ka7wsqWg0hJ2xKNR6NYpgEYTbvUGwbgBnUXUGo4kM8TDQSti6FiDz
-         NF/lShOGXhMGKlOgbBjOlGzrgGpbpJFKI6PPBJNilxh14BxK5iKdDo11odovv4LrS8Lr
-         V5Bto+a+ynRVJCzddstjPCaf8Ki6DsuzW5PTpGYyHT68cjJXB07CCcIprXxsiibxyS8k
-         XguMPCfH++F7MxFno0yCkB7akQSqW1B7cw4oQGdBNneR35B9ySY/3zx4SnvCzDIiHeXw
-         Lwhcp9GMuc9s4kuhVypU8HsSKbztSrhs7+kKx4kRRyIL0KIdj8qXtJvZwuOFaSqv22Me
-         6RMg==
+        d=fastly.com; s=google; t=1744080295; x=1744685095; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tHYsYt6MomkIl7F9y0PfeyDugJcu7HVSAIBbjfocuDM=;
+        b=J0Y8qw5pQUHpqCHdVNJZ+hmwWThpiwUI7KJBfq7ZVm5uUiDLiAZOTrL2y5WQ4C+Aah
+         jFUC03UWmkmvsgePyahZzZwr6RRmGH3RHEeNWrtC+SWT0IFH0zseNzNXulpOQ5KO4n9B
+         aUetEwx0kkwhepFAVY7Gb1/3XytAWmt4fELKg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744080221; x=1744685021;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=i/OtvVm6zScWbSjh6iMXwvJQ3OZdxi/HpzsiqDN7FpA=;
-        b=VqupIZHcITmtiV73ISbVpd5XFYM4x7zocUbbat1JtC3gO5+06pZJKLWJwmZCkmHjzq
-         ODUEUIfYAzhQUQp4yi/kPmGpDrXW97WcU6gCv62GpPJBImkzW/tZfVFJwVCJr7Pp33FM
-         omWBd1tN3lU8jCehitXPexgSMUFEkPcPf41VTUuiU1Aui76WEPWImHaJt4VvKoVudnQf
-         27MtOvj4cL0wRfnikYtlmSNCBC1GlNr49lVMyEfg0JWAVAwuCHz9D6kQwgs1MHjcH8zt
-         oceOGQWQvrfUixEpDxR+pcSsbGxp1ZuG2eNNzzyKCrb214jQqSzIIQTQn7jetjueX/PL
-         a+LQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVkqM3k2Zifie7TI+KqabWi16lw7KSX+Co1M7AefnMbPoETeXK/cKpSbKcZ6M4AhefzPCZFm3TD9X0=@vger.kernel.org, AJvYcCWMcJ+8eOQrDEzmoseY0jlx25qEDcmBbicqgzjYeTsF1/Vlz9iyCvFrXV5eWqsz1Ks5c8Sr8LB77u6d1pMYCgsXWCyVAQ==@vger.kernel.org, AJvYcCX1LIOf1j4jnaNAcPGxv6ulvJf4ziUPp26VADgazu5DIIs3AP+alDjfk8S1EwWn65PlzhlGhjuWS+xgyA+N@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAm7b28n2eIpYtmE4uDq4aIniQMIV2EytbaHQ0CPc8q6TLfW0g
-	3hAUE816kzTHFLQ5sVF8XXXiWdY1qOLdfniYGU9S6y9KETfT4w9n
-X-Gm-Gg: ASbGncuwWY2dIpUM2Xs7zHR9Nl7X0o41AFAjgiqEKLHgzFalKZy8RFE9h4J7nwQx5dQ
-	gcLxnfjZT+I38dYXCAUVL+87csDES8RcoJ81r1/JWmlw67Ym3cmw3ZIZrhgQ7z+jTXiN9TzFkM2
-	PhRJsMmLK2ZmTMOjkTeLQg8wWRYGJCbQZiWKz9APS7dZ/ke03Xo2Rmz4mv9qNPocyccIoon3YJW
-	sX8w1Nc5cVreTacIs/vaYHMCh6Y0kq7yaKegABY3NTgo6jfUnpipcByUTAZN5kDpMtSk/IYskTE
-	cc1zbc3KJtDQo54eGocCSQGXm0am2VhdQ1KnseY27m6e
-X-Google-Smtp-Source: AGHT+IGYJY3Vw8eQZB3fM7nHVZhinPtXWjfzVKGVrZd+aXEvu0+KorEQ0ZkcCaKU6jpo7PFAEqoaVw==
-X-Received: by 2002:a05:6a00:188a:b0:739:3f55:b23f with SMTP id d2e1a72fcca58-739e703c33bmr19565974b3a.14.1744080221174;
-        Mon, 07 Apr 2025 19:43:41 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d97f36besm9307315b3a.72.2025.04.07.19.43.39
+        d=1e100.net; s=20230601; t=1744080295; x=1744685095;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tHYsYt6MomkIl7F9y0PfeyDugJcu7HVSAIBbjfocuDM=;
+        b=k31qgsPcc/mF3iN2LY/isxjpBlrX1zIPixCXe9J3SQaQgONg/wJkIqv0I/57DfAAuL
+         EBSo34WsNNOOuOYuP6Z2GLTt7CuZN9Gvms1IVnNSwFL5GeXNK25dm7u3E3Hte6TkUbI3
+         f+VM606vrq86YSE83Gx4z/VcNGAYrU+XUiIIWh9rmt0RdnP3Ce3jSRMozVPdBqNzKUQg
+         DQTUkVew/lPmyTSloqaKJNjgfOTW1xztvVzYGly9nK+c0udBe2E0RkwUPUqDLg1+utW1
+         Xy7ZvGq9FqqQIWiE2kWNW+U8JtstjHUNpjpKibClDuTXQsRUXyR3/8+OGGsYtod0bPnY
+         P3kg==
+X-Forwarded-Encrypted: i=1; AJvYcCX9/DnVgrO//Iun6zKXrojQzyJKHltVZndyFzDaAaXLgemSTNpc2BJQkVyXAZ0xCkCsU+QfZxHm9yBvtks=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeZ+/hqb0q6W4kR9Ad/0fW44IS+pCi43DP5yL3nlNR+EWSlQbj
+	0LBQ+kJPafQG1pZvEYr73jklFHpS6HjNZoZdaBfi0iGPVEeipWyobOvVMBvdCqU=
+X-Gm-Gg: ASbGnctQ2iEuGacxAsbh08HnWSFtYki2C27Dr31TF1ftv4zxlOzepOMw8mWBXgyjX0R
+	5MbZty/jRwryaoP+EC1us+zzPnhyKuMFqI3Y8eWtG5BPZZLic623wm7FYOp0BVjt3LG6g0EF+jm
+	rLff6B4+poTMPH6X5NIN0wz9VnfHJ3BwpLvF8DPRtN/Nb0du8e8x61ORz3k71OzutpuTkPH9KNe
+	mYxH4gYYPFfbu41ngfjpuPitgUv2AxylAcE4MkBRcD5MykVoAoeR4ChFAkPbuXKWVwxRUIu7PCV
+	qVoW3WSd0m2IQOT7OxxixJu66B1mLoXys02pSZ7xSe7ELKLTk92gFPI88/fYxz3zApudIY++Ikv
+	kadGvDnwod7Q=
+X-Google-Smtp-Source: AGHT+IF8c8tbfJL7Tc+eVNs822MO2Rrs+FLwJdu7yuVU6P6f4x0rmn31/NkizNyw4Y9jdApe51pJGw==
+X-Received: by 2002:a05:6a21:6d91:b0:1f8:e0f5:846d with SMTP id adf61e73a8af0-2010472df12mr25513369637.34.1744080295388;
+        Mon, 07 Apr 2025 19:44:55 -0700 (PDT)
+Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af9bc31d4d1sm8075554a12.21.2025.04.07.19.44.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 19:43:40 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 00674420A696; Tue, 08 Apr 2025 09:43:36 +0700 (WIB)
-Date: Tue, 8 Apr 2025 09:43:36 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: "Derek J. Clark" <derekjohn.clark@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Armin Wolf <W_Armin@gmx.de>, Jonathan Corbet <corbet@lwn.net>,
-	Mario Limonciello <superm1@kernel.org>,
-	Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>,
-	Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>,
-	Mark Pearson <mpearson-lenovo@squebb.ca>,
-	"Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
-	"Cody T . -H . Chiu" <codyit@gmail.com>,
-	John Martens <johnfanv2@gmail.com>,
-	platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH v5 1/6] platform/x86: Add lenovo-wmi-* driver
- Documentation
-Message-ID: <Z_SNWC4zWC3hoXef@archie.me>
-References: <20250408012815.1032357-1-derekjohn.clark@gmail.com>
- <20250408012815.1032357-2-derekjohn.clark@gmail.com>
+        Mon, 07 Apr 2025 19:44:54 -0700 (PDT)
+Date: Mon, 7 Apr 2025 19:44:52 -0700
+From: Joe Damato <jdamato@fastly.com>
+To: Chenyuan Yang <chenyuan0y@gmail.com>
+Cc: jiawenwu@trustnetic.com, mengyuanlou@net-swift.com,
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+	duanqiangwen@net-swift.com, dlemoal@kernel.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] net: libwx: handle page_pool_dev_alloc_pages error
+Message-ID: <Z_SNpFmFXJwjWATx@LQ3V64L9R2>
+Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
+	Chenyuan Yang <chenyuan0y@gmail.com>, jiawenwu@trustnetic.com,
+	mengyuanlou@net-swift.com, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, horms@kernel.org, duanqiangwen@net-swift.com,
+	dlemoal@kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+References: <20250407184952.2111299-1-chenyuan0y@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="5GXWb2ZFP6f/j9R0"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250408012815.1032357-2-derekjohn.clark@gmail.com>
+In-Reply-To: <20250407184952.2111299-1-chenyuan0y@gmail.com>
 
+On Mon, Apr 07, 2025 at 01:49:52PM -0500, Chenyuan Yang wrote:
+> page_pool_dev_alloc_pages could return NULL. There was a WARN_ON(!page)
+> but it would still proceed to use the NULL pointer and then crash.
+> 
+> This is similar to commit 001ba0902046
+> ("net: fec: handle page_pool_dev_alloc_pages error").
+> 
+> This is found by our static analysis tool KNighter.
+> 
+> Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
+> Fixes: 3c47e8ae113a ("net: libwx: Support to receive packets in NAPI")
+> ---
+>  drivers/net/ethernet/wangxun/libwx/wx_lib.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 
---5GXWb2ZFP6f/j9R0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Apr 07, 2025 at 06:28:10PM -0700, Derek J. Clark wrote:
-> +LENOVO WMI DRIVERS
-> +M:	Derek J. Clark <derekjohn.clark@gmail.com>
-> +L:	platform-driver-x86@vger.kernel.org
-> +S:	Maintained
-> +F:	Documentation/wmi/devices/lenovo-wmi-gamezone.rst
-> +F:	Documentation/wmi/devices/lenovo-wmi-other.rst
-> +
-
-I get a new Sphinx htmldocs warning:
-
-MAINTAINERS:29601: WARNING: unknown document: '../wmi/devices/lenovo-wmi-ot=
-her' [ref.doc]
-
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---5GXWb2ZFP6f/j9R0
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZ/SNUQAKCRD2uYlJVVFO
-o93UAPoCWyKkA+MUDv8s3SY4BWwFsI0SKZz9E5UV6iJfRcbAjAD/S9TXAkttDxWn
-FU2BVXhtWYb0RI3K7q5pcftRmfoBqQc=
-=Ltuz
------END PGP SIGNATURE-----
-
---5GXWb2ZFP6f/j9R0--
+Reviewed-by: Joe Damato <jdamato@fastly.com>
