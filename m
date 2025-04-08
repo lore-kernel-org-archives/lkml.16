@@ -1,407 +1,505 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2062.outbound.protection.outlook.com [40.107.22.62])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B1E72063D3;
-	Tue,  8 Apr 2025 14:36:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.62
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744123012; cv=fail; b=SvAhUZGuXbN98mekA3VsgbwFwxVrnIyn4raGpuCybUWEIn5y/hkQ6cv+m5rY/pCK67IO4RsHWuJv2ECyXnSXVj/+dafA6EVXhAK7IQGwN9c+X9O0KJjHVygvtiIeYPuUOZmklbZmcQrsqMAMG8JsFrTUca+m9ZrlK2YdO4u1ZFo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744123012; c=relaxed/simple;
-	bh=wS88OBdXGP9cr7/P1vXMurpqFmKyjYy13FDKMzvFnIk=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=jvdHlKjSsFFYWmjztB37fHqud1iXWKd9fNNBAToFOissUC51VTGhrMb4uizva+qavGRLQuXNv7JRnAZomxx32La3aUYDm6Uiv72kjtfqbpFBUdKfixwO4DyOfuL9GOBxTlht2XoqL13PE/TkVfB0W/oDfIBYMrtOp/7PwCIOWKY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=RxWTYTd3; arc=fail smtp.client-ip=40.107.22.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7340D2063D3;
+	Tue,  8 Apr 2025 14:37:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744123024; cv=none; b=rmyjN3Md2BRKVWPvhGVxNlmriDMaqNiDEoIVGhyyotPch3u6o/ddlN/Ekm3KRDdXbLmTyvHbeGzuNnzd0ML/GXuUYvCxVm+oln5mlD6/Ycz3LzPd685XywNEwHJqB1+Kjd5/A13VAClOay8IlUJ0eGyH9agjYPLZE31Fkm6USUM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744123024; c=relaxed/simple;
+	bh=avE+MCCNpKRWbq7W+JC5m0bJnzZ8i3RkHkTCTjJUAKQ=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=EQApYU3ILOBpUGbh2EnZ2hv8yG3nSGVjGUo4QbbiA5YrzZU7t454F8Q5MOYZd35JOCQIMVCKJ5MSxeGmSyp8KcR90A+UwUrVZGb7qp4sWyEZSlEBLOlET4CRB+n9vocR08DB5sIa630Qp6RRAzXQhsiv+dhBZO0k73mZABnhQGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gZPBgZXm; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="RxWTYTd3"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=e21KoE6YaEGxlZyNg3CZ3+KJfWBdqbVHLQPPPyoYx/zQvPLIJjWZycZIyi6ju1muedEZm6Iy4+btJTVgSVrUL49hYKKYjVQwusICwHKSDh2ye5YEiPZfqjDUT+iswE0El6MLQS00mjbxu2ZGN6CH02XUaTO+sOVIEFEoyjdMxKp7IurnQXFOC2LV+Yvw7FAp0XyTtigDqiW8WPwgrXB1KerK4V44BIwXWk7aubVcv+d9yzmyNzl1bypg7CluVNbLylhMeVtRACBtKy2rNbMNHUSzSZhsADjm10WJKxb14i0llgOdZbiG+VOUFPX4uHHdmWXBvCaggUTFz2ZLkALf0A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bm3czYCtv7nIslB/48sh0AksVzPXQdap5rkOBnOpGHo=;
- b=AUNsLRVZsn6DQTM28WXtvXV5kWlb9M2lxnfvWwvJ7fLV/5g410j49OOn/FcStT1leQTvrHiHzjR7NVFS2fOHvlCKrpnLh+ZO9zdjfR8tDziRXWUTaYInWgm/6CI3OhI3b8K3lJdjf0tWDboydTJAoXRkSS06X4WX8gAqrHoG0GpOV3tIepT+X27gV4luaAVJ2VJ70rLTFKH7HwwrmI1c8tEvw2SDg+Vf9eYMlwWnlgXjT4nyb3giHVSX4m/eX9md+WiTQdzXfLt7+laCmENCCZy7zjg0m1dmr5GDz8y0V2eIrsgklIoVJ4dPXfHeX44N9+bbg3plcw5QX6Vv/hmNLQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bm3czYCtv7nIslB/48sh0AksVzPXQdap5rkOBnOpGHo=;
- b=RxWTYTd34p/r5pNJZY1nbft0zdmFiInc003LvyYgLnONweCQFcrfRYez5+g0GXs4Ueu1L6FctH33YumIElZN29XIhEQwm73CxUi+Xlt/xAEEJT0PExDUOGPDKN2derZt+L7EvG4i1MRDy5HZKPDrEQBheqZrKvXhJ4o/34t9QmJcnDonQaZlJ2T0oQe8F9fbnQg4kuhRZcBwNr6jwI6BOWxGVTEe2hENwag+Urdc+nFlMOAoMgGgUXN5cyJoSaBMPpS6XbMF8kUPqGz6twjnQQXUC3Xl0okW63aGL7mbwU3ZtS4aVF6B7/1bPiy1bRudYnKwH3EfMOO1rrejAT6BBQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DU2PR04MB8774.eurprd04.prod.outlook.com (2603:10a6:10:2e1::21)
- by VI0PR04MB10853.eurprd04.prod.outlook.com (2603:10a6:800:26c::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.35; Tue, 8 Apr
- 2025 14:36:45 +0000
-Received: from DU2PR04MB8774.eurprd04.prod.outlook.com
- ([fe80::88b8:8584:24dc:e2a1]) by DU2PR04MB8774.eurprd04.prod.outlook.com
- ([fe80::88b8:8584:24dc:e2a1%6]) with mapi id 15.20.8606.029; Tue, 8 Apr 2025
- 14:36:45 +0000
-Message-ID: <5dcd3487-6411-4bbe-ba20-b2e5279e5310@nxp.com>
-Date: Tue, 8 Apr 2025 17:36:43 +0300
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] remoteproc: imx_dsp_rproc: Add support for
- DSP-specific features
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>, "S.J. Wang" <shengjiu.wang@nxp.com>,
- Fabio Estevam <festevam@gmail.com>, Daniel Baluta <daniel.baluta@nxp.com>,
- Mpuaudiosw <Mpuaudiosw@nxp.com>, imx@lists.linux.dev,
- linux-remoteproc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Pengutronix Kernel Team
- <kernel@pengutronix.de>, "Iuliana Prodan (OSS)" <iuliana.prodan@oss.nxp.com>
-References: <20250403100124.637889-1-iuliana.prodan@oss.nxp.com>
- <Z_P6n5wQfGuSmV2B@p14s> <29a04e57-2b41-4571-8bb9-ab3222105d8c@nxp.com>
- <CANLsYkzNkgNs03oaEeERxuqrxfjcp3cgs346AnTw1aeOqz5+ww@mail.gmail.com>
-Content-Language: en-US
-From: Iuliana Prodan <iuliana.prodan@nxp.com>
-In-Reply-To: <CANLsYkzNkgNs03oaEeERxuqrxfjcp3cgs346AnTw1aeOqz5+ww@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-X-ClientProxiedBy: FR4P281CA0155.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:ba::9) To DU2PR04MB8774.eurprd04.prod.outlook.com
- (2603:10a6:10:2e1::21)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gZPBgZXm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744123022; x=1775659022;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=avE+MCCNpKRWbq7W+JC5m0bJnzZ8i3RkHkTCTjJUAKQ=;
+  b=gZPBgZXmInbaW9JVqS4tZasMCJb3KXu3Wp9qsaUnxbk2dPlqAlOnaMZv
+   avtFVOaAfJ4oPyfDfZYbeRYdbXMTc7CEe0U3MJkIa4rx0KWR20FuQXgag
+   3SrkIDkZfdPHmF22XxNCygMG4zDEA1TEv0eSPWWV1JEH5FAHH1bzYI7uM
+   OesCUw/pmDC2rVWu3hgUkotSAv23QqSxuYBRd9k3edPRQsgZ25k39yt39
+   MjrfEB+S1wzQp/iP2g5ATrU4f5HXpOhVt+eEzVd8jEWq2+MNCzJRCga+0
+   N0cQ30TtGVG0UpEHMr3EKprJc7N9s5VqMKeWRKZSGX7zZOVmFa2KoeFeh
+   A==;
+X-CSE-ConnectionGUID: l+kH17e8R3OYXbaEhg6okQ==
+X-CSE-MsgGUID: jA9dTCX0TlK1Y1muNyIfHw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="48269389"
+X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
+   d="scan'208";a="48269389"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 07:36:58 -0700
+X-CSE-ConnectionGUID: DrjKlff0RGuNqPjDZdvNzA==
+X-CSE-MsgGUID: Kj+sfb1URDuce1HFFuAMmA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
+   d="scan'208";a="128159864"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.125])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 07:36:55 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 8 Apr 2025 17:36:52 +0300 (EEST)
+To: Luke Jones <luke@ljones.dev>
+cc: linux-kernel@vger.kernel.org, hdegoede@redhat.com, 
+    ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org, 
+    mario.limonciello@amd.com
+Subject: Re: [PATCH v8 5/8] platform/x86: asus-armoury: add core count
+ control
+In-Reply-To: <20250319065827.53478-6-luke@ljones.dev>
+Message-ID: <5078fc78-6b78-eea0-b009-9229fcdd9731@linux.intel.com>
+References: <20250319065827.53478-1-luke@ljones.dev> <20250319065827.53478-6-luke@ljones.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU2PR04MB8774:EE_|VI0PR04MB10853:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8d20bc20-6563-48ae-b0a0-08dd76aac99a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|366016|1800799024|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?SWlVTGkybTJWTWxVN0hxNlBwTFZMM0tRM3g0M3V5bnJiRWlTUy8ydVRMdGtV?=
- =?utf-8?B?UHJjbDRSOVoxemVKSStXVlo4N05HaGUvdm83c2JGZ0FlYW1ybFlSbmU2VEpF?=
- =?utf-8?B?cTNwVmdTRGhaU2w0V21xaEI4RzFYNE0vNzdzb3Z2MjFPeUxKZmJURzJ2dkxY?=
- =?utf-8?B?UzM2VHRhWVZOYndxeWVEQzNxTU4vTGV1bm1PNjNhd3VOTW84RE5lMG1yZTAv?=
- =?utf-8?B?M1ZCeDFnemhLOTNSeDdvaklUdUFsVUVkN0pEK2M2c1U3azJteGhyTThHNmds?=
- =?utf-8?B?Wk5OUWRjZkg1MGRSc0RpUmYwb3NiRnM1L0xHV1pqY1RmMjVDZVV3Rk4rRW1n?=
- =?utf-8?B?bVdwVmxFT3FobFI2YkNETmV0MG5xclp3TmxHZVlNb2pNUlRjZkFUemFVQkFI?=
- =?utf-8?B?SWhkU1ZCVDVKdkpVQ1ozdEtxTnM3bXlPa0VSS29kTGpWaWdIa1g3ODU5bEdT?=
- =?utf-8?B?TTRTLzlGNnZRcnN3ZldqQVl5eHZ0V05VRlBRcWJUNmE2S1pPMm9UNCtrMDdo?=
- =?utf-8?B?cXl3azVWSVc4MDBzM3RMaS9saUZFUVVMVDA4S1pqOHVCUnpkRTQ2UWZEWlN4?=
- =?utf-8?B?TURvZ2JOSWxWVUxzcG1ISEx0TDdNTDNla25DWGQ2Qytmd3I2QXNVeDcrZ1JH?=
- =?utf-8?B?WmZjYW55dm1iaEFFeklOcDVkNGZCbUZZbjBuVk9oZjdJMGJXVnJhaGpOSjVo?=
- =?utf-8?B?cGxWVGVYNEg0ekFRMnJ2K1dHQmROQkI3Zyt3RExaRXZEYlV3UWZnSy9TQnNa?=
- =?utf-8?B?bUw2b1BxdXQ1Ni9pR3BHV0RFeXhBaWttSjNPRHVZbzdpUjE1OGxCcjJ6ZmhK?=
- =?utf-8?B?OWdEaUMvOUcySHlIcERwMnNwSy8yNndnTUxaV094ajB0WnY2U28vT3BOalZK?=
- =?utf-8?B?RmhIbkxaVllodTE0YzZ1UHFDa3VFYmxFbGlJWjNTK0tKa0RMS05YNU5ibjZn?=
- =?utf-8?B?YkgwOU54MVdvK2t3bGNSOHYzN1lEMjJheitmdCsrNklVcU12ME5uRERGWlJI?=
- =?utf-8?B?cGhJcjU0YW9zaUQ1Qk5yNHdsZ01CU09YdkVWYlc1bC9BSUJuREphbEVaRG84?=
- =?utf-8?B?K1c4U2QySEpYZlVxYVZiRE1pcFpaVldYdVNSMFZMK0Exdk9SZDdpbkxtWmJP?=
- =?utf-8?B?UTBrcVovdm5LaEsvZ25jbEdDbEVtMUZGSldTbzREODlaT0MvUnhoSE5CdzYr?=
- =?utf-8?B?Y1hSNnBxTjk0cWNTWUlCclUxbXVJZ3hwVkxGVXJmV2RIb09pOXN2QjQ3TzNu?=
- =?utf-8?B?S3ZZVkdWVlhqZEloYWRCSEJISzNEaE05ckwvTVpuTlZuN3RWbHQwU3B5RHFQ?=
- =?utf-8?B?TmRVb2ROT204MkIraXZETjZzZkw4cEt3QWZhcVRCU2RGK0ZWVC9USWdqRlJ1?=
- =?utf-8?B?YVorYXRMV3VnRUlraUtrRnBXY0F6VFg3KzFUeGxhZFdkaENjdEhwNG5wUXh4?=
- =?utf-8?B?TTN0RG5xYU9pVkFDSGFqdHB6V0NlUE5HaDRXS0VSMFp5dmVjSU40cWllVndX?=
- =?utf-8?B?T2VrU25nR0l6a05IUmxlWjFpYWVsMUxOR1d2STFmUG0vYjlmNFlCYW8vQ29L?=
- =?utf-8?B?Ykk0LzB0cUZ1aDVoY2p2LzNnYUtUWWVtMWxqNTErb2NlaTkyUms3ekUxUjVB?=
- =?utf-8?B?QWJiQ3pSbE93c3dRRmF4M2p1eWNQcXR2bldHd2pORXJVcS8zMnJ0ZVRBZUJO?=
- =?utf-8?B?L2tqTGxZZWdwTkN1UHI0SWdNM3pSK1czMWlnMWNCY0c4VW55WjliKzN0UnRa?=
- =?utf-8?B?QkwvcGprV1h1ZUJmVDlYVGx5amF3NGJwelk1UFhwVlpsbnAvYTdjM2NWT0tN?=
- =?utf-8?B?bFl0SFgxVE1sOUZIalFCZz09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8774.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(13003099007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NGcvUDZ2OW5iaFI2dGJZWDBQYkVlUGEzWktwR3pKdWlGRWc3YVg5c1l4QnJw?=
- =?utf-8?B?V0dkVU9IUThEd1YySVJZdDBNZDFDUGtQTDRsbDBDTElkb3EyZGNhd2RTY3ov?=
- =?utf-8?B?a2lCTmswQzlqTDZRN21KWWlrZFlTaFVRZ3NhVDlVOFpmUmpCc1JrbWRld3FB?=
- =?utf-8?B?U1VxV0NVQUc1ODJlVmdoTGtMK2lvT0tFMzZEYzlNT2RCTUM1cjV3RmkyYlY0?=
- =?utf-8?B?MGxIR3NOOURkN0diTXJVMWlrZ3NPb1hiZTFvdSs0MFBlc1lEZmR0L1hybjFY?=
- =?utf-8?B?UlNpYkl3RlpxWTRBV1VzaFlGZGJ4OEg0ei84S2dxNXdjNGxaUFZuSGg4cVQr?=
- =?utf-8?B?aThRaFlscFdvOXkrZ3U1RVkzZkZUeEdIbDhXYmFFcUh4OXN3Rk5mREl4NzRk?=
- =?utf-8?B?Y0lnRE10aFdSZDVsbkUxK2hmdU5mV0tuYjNHSnduQjNvVUE1OWdNbXVaMGJv?=
- =?utf-8?B?QUdPanZRR0YxQUI1RWNxamw2b1cxZ2Jja1ZZYmNRUk8zVk9YYzZCcHRFN3Nz?=
- =?utf-8?B?UTk5aWVSRmFtTHNST3o0YzJkRU5oZ2dOKzNvdmJwem84Y3krZVl0SUNJclBW?=
- =?utf-8?B?RWpFU0JVYTVVR25PYTlHTkxrMFhUc3ljaDhmWFdEUGpOanVwYkI2MktvclBI?=
- =?utf-8?B?SDlERFgyM0NvT285YzFSWVJjWXRDSitXeUR2MGlmR29ib0xBdkl5Wmg5SVk4?=
- =?utf-8?B?NkZzUHhuL3JxUk9qM3hZSGRvUTVlZWcyK0p3cmY5bS9YZzhkS3U4UFNMWXZz?=
- =?utf-8?B?REwwTXpyYk84YWhMeUY4VlFkdWx1YklDczRzTmJubXM4VlRsbUVLa3hTcnNO?=
- =?utf-8?B?TVFRVVRRQ0l1L2d2MGdIU1JlSVd1VU40VzhpUlY1NkZpbU1YTDArUzd5Z0hN?=
- =?utf-8?B?TE8rZ1l5ckJMcTlMaXhnOTY3MEQ4ODR5TjN4aUozQ2NJUkx3MDYwQjV0b3h6?=
- =?utf-8?B?MldLZ3NNaU1scmttRldrNDlWZjJ6cGU4dExRa2dmV2Fyd2Q3OUh4TmlkZkxl?=
- =?utf-8?B?aEp6Qmc3bzhERlMxSU1oS1FWLzhrd3ZuYTcrbEhRUXBtTU5oSFE2dXM1NjE4?=
- =?utf-8?B?N284T2lyVG52Y28zV3pFOFFUMDZrV1NBWVVxMkZRQjRMTU5reUEvMzdwa1ZE?=
- =?utf-8?B?UjcxY3hjL0JCZXl3a081UU9SSmRXUWs3VlI4eno0MTlIUHNvUitwNnFIL3Rz?=
- =?utf-8?B?YmpLcWZUbEcrV1J6ZS9lTjNtRS9HRm0rUzlNek10V25pQU16S3BWeHRsQnJI?=
- =?utf-8?B?SXJTdDNudWdvdW5HOUhhdFBJTUpPVGF0dVJBSDdEWWUwbXhTdEZ1SXBuQUdF?=
- =?utf-8?B?eGJpZE5tQUtaTXdieXBSMTNJVldmQklLNmo1WG5zQWNPcmI2YzMwNHdvenhJ?=
- =?utf-8?B?bnZqVFZvdnNEMEIxb1VtUFJJcGJoTWhJRmJVbHNBSTJLdjczSXVKc04ya211?=
- =?utf-8?B?Vml0LzlsRkRXOU8rT2hQOVUyVXo1THREaURUaUpjVFREMjQvMzlydllCWHNK?=
- =?utf-8?B?eGhHWTJoYVN6NXovOVNWUEVFWHFvSWd0UHRscWR1enNpdnBodUlnU2FlN01q?=
- =?utf-8?B?emdRVVJmUzN2dGdhTlNTQXEvbnVvd1hFZUszeXBrSko5OGJrUW03c09iT0RG?=
- =?utf-8?B?ZTZtdkExS3J6MlZ4MFBWNW5XdXhBRTBpdGtuVVBmTGU5Sjh0TzBESmFvOG1x?=
- =?utf-8?B?RFBxbUZzL1I2SzZYOXlSSnNnazFNZHovTWI2OWtmZFE1K2dEMnJvdEhCdUlT?=
- =?utf-8?B?NEdKRll1ejZjSWVQQTRjekxEODBsdlhYYXlHSGpuZEFrc1k4Vlk5MitINE1a?=
- =?utf-8?B?eWpaYlpPL3UxTUp0SmZPNGN5UWUxVlE1eG0zdzN4MGh3bU8xR0RmZUZBZzF6?=
- =?utf-8?B?bnE4M2xFWEttdkQxNjY5UTREVkRLakFmclExZHVJOThSR3IvQ09sYlErQlZq?=
- =?utf-8?B?N1VyTDliTjhWZnpLWW5KSHd5cEw2Wnl5Z1BVb2V3NjdvK1p3Wm0zeTFzUEZI?=
- =?utf-8?B?bHI4Y21FM3NSc0pYeno0dVdLUHlUcExWZG9mNDZFOUZDV0lpdXo4MEVRNjgz?=
- =?utf-8?B?eXVMMFJHWHNRTmhhMUUxRGhGWXQxbXJ2ajZjQ3E2MGd2YVY4NWpCUlgwNzE4?=
- =?utf-8?Q?PZvDjrNBRE/X7ScBuPAXHZjT6?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8d20bc20-6563-48ae-b0a0-08dd76aac99a
-X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8774.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2025 14:36:45.6842
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nk2JorW9qr9Pjm02Fd7dlQ8sgt1+O4A/ClGnGZGM3P8kqvej649U9zZzW6PkWfjKCSgGAIDUH7Kr+GlsPsdLOw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR04MB10853
+Content-Type: text/plain; charset=US-ASCII
 
-On 4/8/2025 4:46 PM, Mathieu Poirier wrote:
-> On Tue, 8 Apr 2025 at 02:47, Iuliana Prodan <iuliana.prodan@nxp.com> wrote:
->> Hello Mathieu,
->>
->> On 4/7/2025 7:17 PM, Mathieu Poirier wrote:
->>> Good morning,
->>>
->>> On Thu, Apr 03, 2025 at 01:01:24PM +0300, Iuliana Prodan (OSS) wrote:
->>>> From: Iuliana Prodan <iuliana.prodan@nxp.com>
->>>>
->>>> Some DSP firmware requires a FW_READY signal before proceeding, while
->>>> others do not.
->>>> Therefore, add support to handle i.MX DSP-specific features.
->>>>
->>>> Implement handle_rsc callback to handle resource table parsing and to
->>>> process DSP-specific resource, to determine if waiting is needed.
->>>>
->>>> Update imx_dsp_rproc_start() to handle this condition accordingly.
->>>>
->>>> Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
->>>> ---
->>>> Changes in v3:
->>>> - Reviews from Mathieu Poirier:
->>>>     - Added version and magic number to vendor-specific resource table entry.
->>>>     - Updated defines to maintain backward compatibility with a resource table that doesn't have a vendor-specific resource.
->>>>       - By default, wait for `fw_ready`, unless specified otherwise.
->>>> - Link to v2: https://lore.kernel.org/all/20250318215007.2109726-1-iuliana.prodan@oss.nxp.com
->>>>
->>>> Changes in v2:
->>>> - Reviews from Mathieu Poirier:
->>>>     - Use vendor-specific resource table entry.
->>>>     - Implement resource handler specific to the i.MX DSP.
->>>> - Revise commit message to include recent updates.
->>>> - Link to v1: https://lore.kernel.org/all/20250305123923.514386-1-iuliana.prodan@oss.nxp.com/
->>>>
->>>>    drivers/remoteproc/imx_dsp_rproc.c | 102 ++++++++++++++++++++++++++++-
->>>>    1 file changed, 100 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/drivers/remoteproc/imx_dsp_rproc.c b/drivers/remoteproc/imx_dsp_rproc.c
->>>> index b9bb15970966..80d4470cc731 100644
->>>> --- a/drivers/remoteproc/imx_dsp_rproc.c
->>>> +++ b/drivers/remoteproc/imx_dsp_rproc.c
->>>> @@ -35,9 +35,17 @@ module_param_named(no_mailboxes, no_mailboxes, int, 0644);
->>>>    MODULE_PARM_DESC(no_mailboxes,
->>>>                "There is no mailbox between cores, so ignore remote proc reply after start, default is 0 (off).");
->>>>
->>>> +/* Flag indicating that the remote is up and running */
->>>>    #define REMOTE_IS_READY                            BIT(0)
->>>> +/* Flag indicating that the host should wait for a firmware-ready response */
->>>> +#define WAIT_FW_READY                               BIT(1)
->>>>    #define REMOTE_READY_WAIT_MAX_RETRIES              500
->>>>
->>>> +/* This flag is set in the DSP resource table's features field to indicate
->>>> + * that the firmware requires the host NOT to wait for a FW_READY response.
->>>> + */
->>>> +#define FEATURE_DONT_WAIT_FW_READY          BIT(0)
->>>> +
->>>>    /* att flags */
->>>>    /* DSP own area */
->>>>    #define ATT_OWN                                    BIT(31)
->>>> @@ -72,6 +80,10 @@ MODULE_PARM_DESC(no_mailboxes,
->>>>
->>>>    #define IMX8ULP_SIP_HIFI_XRDC                      0xc200000e
->>>>
->>>> +#define FW_RSC_NXP_S_MAGIC                  ((uint32_t)'n' << 24 |  \
->>>> +                                             (uint32_t)'x' << 16 |  \
->>>> +                                             (uint32_t)'p' << 8 |   \
->>>> +                                             (uint32_t)'s')
->>>>    /*
->>>>     * enum - Predefined Mailbox Messages
->>>>     *
->>>> @@ -136,6 +148,24 @@ struct imx_dsp_rproc_dcfg {
->>>>       int (*reset)(struct imx_dsp_rproc *priv);
->>>>    };
->>>>
->>>> +/**
->>>> + * struct fw_rsc_imx_dsp - i.MX DSP specific info
->>>> + *
->>>> + * @len: length of the resource entry
->>>> + * @magic_num: 32-bit magic number
->>>> + * @version: version of data structure
->>>> + * @features: feature flags supported by the i.MX DSP firmware
->>>> + *
->>>> + * This represents a DSP-specific resource in the firmware's
->>>> + * resource table, providing information on supported features.
->>>> + */
->>>> +struct fw_rsc_imx_dsp {
->>>> +    uint32_t len;
->>>> +    uint32_t magic_num;
->>>> +    uint32_t version;
->>>> +    uint32_t features;
->>>> +} __packed;
->>>> +
->>>>    static const struct imx_rproc_att imx_dsp_rproc_att_imx8qm[] = {
->>>>       /* dev addr , sys addr  , size      , flags */
->>>>       { 0x596e8000, 0x556e8000, 0x00008000, ATT_OWN },
->>>> @@ -300,6 +330,73 @@ static int imx_dsp_rproc_ready(struct rproc *rproc)
->>>>       return -ETIMEDOUT;
->>>>    }
->>>>
->>>> +/**
->>>> + * imx_dsp_rproc_handle_rsc() - Handle DSP-specific resource table entries
->>>> + * @rproc: remote processor instance
->>>> + * @rsc_type: resource type identifier
->>>> + * @rsc: pointer to the resource entry
->>>> + * @offset: offset of the resource entry
->>>> + * @avail: available space in the resource table
->>>> + *
->>>> + * Parse the DSP-specific resource entry and update flags accordingly.
->>>> + * If the WAIT_FW_READY feature is set, the host must wait for the firmware
->>>> + * to signal readiness before proceeding with execution.
->>>> + *
->>>> + * Return: RSC_HANDLED if processed successfully, RSC_IGNORED otherwise.
->>>> + */
->>>> +static int imx_dsp_rproc_handle_rsc(struct rproc *rproc, u32 rsc_type,
->>>> +                                void *rsc, int offset, int avail)
->>>> +{
->>>> +    struct imx_dsp_rproc *priv = rproc->priv;
->>>> +    struct fw_rsc_imx_dsp *imx_dsp_rsc = rsc;
->>>> +    struct device *dev = rproc->dev.parent;
->>>> +    size_t expected_size;
->>>> +
->>>> +    if (!imx_dsp_rsc) {
->>>> +            dev_dbg(dev, "Invalid fw_rsc_imx_dsp.\n");
->>>> +            goto ignored;
->>>> +    }
->>>> +
->>>> +    /* Make sure resource isn't truncated */
->>>> +    expected_size = imx_dsp_rsc->len + sizeof(imx_dsp_rsc->len);
->>> Something seems odd with this check... I don't see how adding
->>> imx_dsp_rsc->len with 4 will give us any indication of the expected size.
->> The fw_rsc_imx_dsp structure is based on Zephyr and OpenAMP ([1]).
->>
->> The imx_dsp_rsc->len indicates the available resource size. Adding 4
->> bytes (for uint32_t len member) gives the total structure size. If this
->> does not match sizeof(struct fw_rsc_imx_dsp), the structure is incomplete.
->>
-> Ok, but why is adding 4 to imx_dsp_rsc->len needed?  Why doesn't
-> imx_dsp_rsc->len already contain the right size?
->
-> The size of struct fw_rsc_imx_dsp is 16 byte.  From your
-> implementation, it seems like ->len is equal to 12 and 4 needs to be
-> added to make it 16.  To me ->len should be 16... What am I missing?
+On Wed, 19 Mar 2025, Luke Jones wrote:
 
-You're correct. In my implementation, len is 12, which represents the 
-available
-bytes for writing additional data such as the magic number, version,
-and supported features. This is based on my understanding of the len member
-from the OpenAMP [1] and how I applied it in Zephyr.
+> From: "Luke D. Jones" <luke@ljones.dev>
+> 
+> Implement Intel core enablement under the asus-armoury module using the
+> fw_attributes class.
+> 
+> This allows users to enable or disable preformance or efficiency cores
+> depending on their requirements. After change a reboot is required.
+> 
+> Signed-off-by: Luke D. Jones <luke@ljones.dev>
+> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>  drivers/platform/x86/asus-armoury.c        | 257 ++++++++++++++++++++-
+>  drivers/platform/x86/asus-armoury.h        |  28 +++
+>  include/linux/platform_data/x86/asus-wmi.h |   5 +
+>  3 files changed, 289 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
+> index b1d6b0c41669..b36e19b9d2bf 100644
+> --- a/drivers/platform/x86/asus-armoury.c
+> +++ b/drivers/platform/x86/asus-armoury.c
+> @@ -39,13 +39,49 @@
+>  #define ASUS_MINI_LED_2024_STRONG 0x01
+>  #define ASUS_MINI_LED_2024_OFF    0x02
+>  
+> +#define ASUS_POWER_CORE_MASK GENMASK(15, 8)
+> +#define ASUS_PERF_CORE_MASK GENMASK(7, 0)
 
+Align.
 
-I will update the code to define len as the size of the struct 
-fw_rsc_imx_dsp.
+> +
+> +enum cpu_core_type {
+> +	CPU_CORE_PERF = 0,
+> +	CPU_CORE_POWER,
+> +};
+> +
+> +enum cpu_core_value {
+> +	CPU_CORE_DEFAULT = 0,
+> +	CPU_CORE_MIN,
+> +	CPU_CORE_MAX,
+> +	CPU_CORE_CURRENT,
+> +};
+> +
+> +#define CPU_PERF_CORE_COUNT_MIN 4
+> +#define CPU_POWR_CORE_COUNT_MIN 0
+> +
+> +/* Tunables provided by ASUS for gaming laptops */
+> +struct cpu_cores {
+> +	u32 cur_perf_cores;
+> +	u32 min_perf_cores;
+> +	u32 max_perf_cores;
+> +	u32 cur_power_cores;
+> +	u32 min_power_cores;
+> +	u32 max_power_cores;
+> +};
+> +
+>  static struct asus_armoury_priv {
+>  	struct device *fw_attr_dev;
+>  	struct kset *fw_attr_kset;
+>  
+> +	struct cpu_cores *cpu_cores;
+>  	u32 mini_led_dev_id;
+>  	u32 gpu_mux_dev_id;
+> -} asus_armoury;
+> +	/*
+> +	 * Mutex to prevent big/little core count changes writing to same
+> +	 * endpoint at the same time. Must lock during attr store.
+> +	 */
+> +	struct mutex cpu_core_mutex;
+> +} asus_armoury = {
+> +	.cpu_core_mutex = __MUTEX_INITIALIZER(asus_armoury.cpu_core_mutex)
+> +};
+>  
+>  struct fw_attrs_group {
+>  	bool pending_reboot;
+> @@ -87,6 +123,8 @@ static struct kobj_attribute pending_reboot = __ATTR_RO(pending_reboot);
+>  static bool asus_bios_requires_reboot(struct kobj_attribute *attr)
+>  {
+>  	return !strcmp(attr->attr.name, "gpu_mux_mode") ||
+> +	       !strcmp(attr->attr.name, "cores_performance") ||
+> +	       !strcmp(attr->attr.name, "cores_efficiency") ||
+>  	       !strcmp(attr->attr.name, "panel_hd_mode");
+>  }
+>  
+> @@ -165,6 +203,12 @@ static ssize_t enum_type_show(struct kobject *kobj, struct kobj_attribute *attr,
+>  	return sysfs_emit(buf, "enumeration\n");
+>  }
+>  
+> +static ssize_t int_type_show(struct kobject *kobj, struct kobj_attribute *attr,
+> +			     char *buf)
+> +{
+> +	return sysfs_emit(buf, "integer\n");
+> +}
+> +
+>  /* Mini-LED mode **************************************************************/
+>  static ssize_t mini_led_mode_current_value_show(struct kobject *kobj,
+>  						struct kobj_attribute *attr, char *buf)
+> @@ -501,6 +545,201 @@ static ssize_t apu_mem_possible_values_show(struct kobject *kobj, struct kobj_at
+>  }
+>  ATTR_GROUP_ENUM_CUSTOM(apu_mem, "apu_mem", "Set available system RAM (in GB) for the APU to use");
+>  
+> +static int init_max_cpu_cores(void)
+> +{
+> +	u32 cores;
+> +	int err;
+> +
+> +	err = asus_wmi_get_devstate_dsts(ASUS_WMI_DEVID_CORES_MAX, &cores);
+> +	if (err)
+> +		return err;
+> +
+> +	cores &= ~ASUS_WMI_DSTS_PRESENCE_BIT;
 
-Thanks,
-Iulia
+Looks unnecessary?
 
-[1] 
-https://github.com/OpenAMP/open-amp/blob/main/lib/include/openamp/remoteproc.h#L356
+I've a faint memory I've commented this line as well (relatively long time 
+ago), I'm starting to wonder if have you perhaps missed some of my comments.
 
+> +	asus_armoury.cpu_cores->max_power_cores = FIELD_GET(ASUS_POWER_CORE_MASK, cores);
+> +	asus_armoury.cpu_cores->max_perf_cores = FIELD_GET(ASUS_PERF_CORE_MASK, cores);
+> +
+> +	err = asus_wmi_get_devstate_dsts(ASUS_WMI_DEVID_CORES, &cores);
+> +	if (err) {
+> +		pr_err("Could not get CPU core count: error %d", err);
+> +		return err;
+> +	}
+> +
+> +	asus_armoury.cpu_cores->cur_perf_cores = FIELD_GET(ASUS_PERF_CORE_MASK, cores);
+> +	asus_armoury.cpu_cores->cur_power_cores = FIELD_GET(ASUS_POWER_CORE_MASK, cores);
+> +
+> +	asus_armoury.cpu_cores->min_perf_cores = CPU_PERF_CORE_COUNT_MIN;
+> +	asus_armoury.cpu_cores->min_power_cores = CPU_POWR_CORE_COUNT_MIN;
+> +
+> +	return 0;
+> +}
+> +
+> +static ssize_t cores_value_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf,
+> +				enum cpu_core_type core_type, enum cpu_core_value core_value)
+> +{
+> +	u32 cores;
+> +
+> +	switch (core_value) {
+> +	case CPU_CORE_DEFAULT:
+> +	case CPU_CORE_MAX:
+> +		if (core_type == CPU_CORE_PERF)
+> +			return sysfs_emit(buf, "%d\n",
 
->
->> I will also verify with avail and send a v4.
->>
->> [1]
->> https://github.com/OpenAMP/open-amp/blob/main/lib/include/openamp/remoteproc.h#L356
->>
->> Thanks,
->> Iulia
->>>    To me
->>> two checks are required here:
->>>
->>> 1) if (sizeof(*rsc) > avail)
->>>
->>> 2) if (sizeof(*rsc) != imx_dsp_rsc->len)
->>>
->>> Otherwise I'm good with this new revision.
->>>
->>> Thanks,
->>> Mathieu
->>>
->>>> +    if (expected_size < sizeof(struct fw_rsc_imx_dsp)) {
->>>> +            dev_dbg(dev, "Resource fw_rsc_imx_dsp is truncated.\n");
->>>> +            goto ignored;
->>>> +    }
->>>> +
->>>> +    /*
->>>> +     * If FW_RSC_NXP_S_MAGIC number is not found then
->>>> +     * wait for fw_ready reply (default work flow)
->>>> +     */
->>>> +    if (imx_dsp_rsc->magic_num != FW_RSC_NXP_S_MAGIC) {
->>>> +            dev_dbg(dev, "Invalid resource table magic number.\n");
->>>> +            goto ignored;
->>>> +    }
->>>> +
->>>> +    /*
->>>> +     * For now, in struct fw_rsc_imx_dsp, version 0,
->>>> +     * only FEATURE_DONT_WAIT_FW_READY is valid.
->>>> +     *
->>>> +     * When adding new features, please upgrade version.
->>>> +     */
->>>> +    if (imx_dsp_rsc->version > 0) {
->>>> +            dev_warn(dev, "Unexpected fw_rsc_imx_dsp version %d.\n",
->>>> +                     imx_dsp_rsc->version);
->>>> +            goto ignored;
->>>> +    }
->>>> +
->>>> +    if (imx_dsp_rsc->features & FEATURE_DONT_WAIT_FW_READY)
->>>> +            priv->flags &= ~WAIT_FW_READY;
->>>> +    else
->>>> +            priv->flags |= WAIT_FW_READY;
->>>> +
->>>> +    return RSC_HANDLED;
->>>> +
->>>> +ignored:
->>>> +    priv->flags |= WAIT_FW_READY;
->>>> +    return RSC_IGNORED;
->>>> +}
->>>> +
->>>>    /*
->>>>     * Start function for rproc_ops
->>>>     *
->>>> @@ -335,8 +432,8 @@ static int imx_dsp_rproc_start(struct rproc *rproc)
->>>>
->>>>       if (ret)
->>>>               dev_err(dev, "Failed to enable remote core!\n");
->>>> -    else
->>>> -            ret = imx_dsp_rproc_ready(rproc);
->>>> +    else if (priv->flags & WAIT_FW_READY)
->>>> +            return imx_dsp_rproc_ready(rproc);
->>>>
->>>>       return ret;
->>>>    }
->>>> @@ -936,6 +1033,7 @@ static const struct rproc_ops imx_dsp_rproc_ops = {
->>>>       .kick           = imx_dsp_rproc_kick,
->>>>       .load           = imx_dsp_rproc_elf_load_segments,
->>>>       .parse_fw       = imx_dsp_rproc_parse_fw,
->>>> +    .handle_rsc     = imx_dsp_rproc_handle_rsc,
->>>>       .find_loaded_rsc_table = rproc_elf_find_loaded_rsc_table,
->>>>       .sanity_check   = rproc_elf_sanity_check,
->>>>       .get_boot_addr  = rproc_elf_get_boot_addr,
->>>> --
->>>> 2.25.1
->>>>
+Please use %u with u32.
+
+> +					  asus_armoury.cpu_cores->max_perf_cores);
+> +		else
+> +			return sysfs_emit(buf, "%d\n",
+> +					  asus_armoury.cpu_cores->max_power_cores);
+> +	case CPU_CORE_MIN:
+> +		if (core_type == CPU_CORE_PERF)
+> +			return sysfs_emit(buf, "%d\n",
+> +					  asus_armoury.cpu_cores->min_perf_cores);
+> +		else
+> +			return sysfs_emit(buf, "%d\n",
+> +					  asus_armoury.cpu_cores->min_power_cores);
+> +	default:
+> +		break;
+> +	}
+> +
+> +	if (core_type == CPU_CORE_PERF)
+> +		cores = asus_armoury.cpu_cores->cur_perf_cores;
+> +	else
+> +		cores = asus_armoury.cpu_cores->cur_power_cores;
+> +
+> +	return sysfs_emit(buf, "%d\n", cores);
+> +}
+> +
+> +static ssize_t cores_current_value_store(struct kobject *kobj, struct kobj_attribute *attr,
+> +					 const char *buf, enum cpu_core_type core_type)
+> +{
+> +	u32 new_cores, perf_cores, power_cores, out_val, min, max;
+> +	int result, err;
+> +
+> +	result = kstrtou32(buf, 10, &new_cores);
+> +	if (result)
+> +		return result;
+> +
+> +	mutex_lock(&asus_armoury.cpu_core_mutex);
+> +
+> +	if (core_type == CPU_CORE_PERF) {
+> +		perf_cores = new_cores;
+> +		power_cores = out_val = asus_armoury.cpu_cores->cur_power_cores;
+
+Please assign out_val separately, perhaps as the last line of this block.
+
+> +		min = asus_armoury.cpu_cores->min_perf_cores;
+> +		max = asus_armoury.cpu_cores->max_perf_cores;
+> +	} else {
+> +		perf_cores = asus_armoury.cpu_cores->cur_perf_cores;
+> +		power_cores = out_val = new_cores;
+
+Ditto.
+
+> +		min = asus_armoury.cpu_cores->min_power_cores;
+> +		max = asus_armoury.cpu_cores->max_power_cores;
+> +	}
+> +
+> +	if (new_cores < min || new_cores > max) {
+> +		mutex_unlock(&asus_armoury.cpu_core_mutex);
+> +		return -EINVAL;
+> +	}
+
+All the above do is to read into local variables and perform some checks, 
+so why they need to be protected by yhe mutex?
+
+> +
+> +	out_val = 0;
+
+Eh, you're overwriting out_val here so why it was set above?
+
+> +	out_val |= FIELD_PREP(ASUS_PERF_CORE_MASK, perf_cores);
+> +	out_val |= FIELD_PREP(ASUS_POWER_CORE_MASK, power_cores);
+
+You can just combine all these into:
+
+	outval = FIELD_PREP(ASUS_PERF_CORE_MASK, perf_cores) |
+		 FIELD_PREP(...);
+
+> +
+> +	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_CORES, out_val, &result);
+> +
+> +	if (err) {
+
+No empty lines in between func and its error handling.
+
+> +		pr_warn("Failed to set CPU core count: %d\n", err);
+> +		mutex_unlock(&asus_armoury.cpu_core_mutex);
+
+If you ever need to do separate unlocks while handling errors, it's very 
+strong hint you should use guard() or scoped_guard() instead. So please 
+use scoped_guard().
+
+> +		return err;
+> +	}
+> +
+> +	if (result > 1) {
+> +		pr_warn("Failed to set CPU core count (result): 0x%x\n", result);
+> +		mutex_unlock(&asus_armoury.cpu_core_mutex);
+> +		return -EIO;
+> +	}
+> +
+> +	pr_info("CPU core count changed, reboot required\n");
+> +	mutex_unlock(&asus_armoury.cpu_core_mutex);
+
+No need to protect pr_info() with the mutex.
+
+What is expected after this on the show side for current values? Should 
+they be updated too so that the show function shows the updated value for 
+current # of cores?
+
+> +
+> +	sysfs_notify(kobj, NULL, attr->attr.name);
+> +	asus_set_reboot_and_signal_event();
+> +
+> +	return 0;
+> +}
+> +
+> +static ssize_t cores_performance_min_value_show(struct kobject *kobj,
+> +						struct kobj_attribute *attr, char *buf)
+> +{
+> +	return cores_value_show(kobj, attr, buf, CPU_CORE_PERF, CPU_CORE_MIN);
+> +}
+> +
+> +static ssize_t cores_performance_max_value_show(struct kobject *kobj,
+> +						struct kobj_attribute *attr, char *buf)
+> +{
+> +	return cores_value_show(kobj, attr, buf, CPU_CORE_PERF, CPU_CORE_MAX);
+> +}
+> +
+> +static ssize_t cores_performance_default_value_show(struct kobject *kobj,
+> +						    struct kobj_attribute *attr, char *buf)
+> +{
+> +	return cores_value_show(kobj, attr, buf, CPU_CORE_PERF, CPU_CORE_DEFAULT);
+> +}
+> +
+> +static ssize_t cores_performance_current_value_show(struct kobject *kobj,
+> +						    struct kobj_attribute *attr, char *buf)
+> +{
+> +	return cores_value_show(kobj, attr, buf, CPU_CORE_PERF, CPU_CORE_CURRENT);
+> +}
+> +
+> +static ssize_t cores_performance_current_value_store(struct kobject *kobj,
+> +						     struct kobj_attribute *attr,
+> +						     const char *buf, size_t count)
+> +{
+> +	int err;
+> +
+> +	err = cores_current_value_store(kobj, attr, buf, CPU_CORE_PERF);
+> +	if (err)
+> +		return err;
+> +
+> +	return count;
+> +}
+> +ATTR_GROUP_CORES_RW(cores_performance, "cores_performance",
+> +		    "Set the max available performance cores");
+> +
+> +static ssize_t cores_efficiency_min_value_show(struct kobject *kobj, struct kobj_attribute *attr,
+> +					       char *buf)
+> +{
+> +	return cores_value_show(kobj, attr, buf, CPU_CORE_POWER, CPU_CORE_MIN);
+> +}
+> +
+> +static ssize_t cores_efficiency_max_value_show(struct kobject *kobj, struct kobj_attribute *attr,
+> +					       char *buf)
+> +{
+> +	return cores_value_show(kobj, attr, buf, CPU_CORE_POWER, CPU_CORE_MAX);
+> +}
+> +
+> +static ssize_t cores_efficiency_default_value_show(struct kobject *kobj,
+> +						   struct kobj_attribute *attr, char *buf)
+> +{
+> +	return cores_value_show(kobj, attr, buf, CPU_CORE_POWER, CPU_CORE_DEFAULT);
+> +}
+> +
+> +static ssize_t cores_efficiency_current_value_show(struct kobject *kobj,
+> +						   struct kobj_attribute *attr, char *buf)
+> +{
+> +	return cores_value_show(kobj, attr, buf, CPU_CORE_POWER, CPU_CORE_CURRENT);
+> +}
+> +
+> +static ssize_t cores_efficiency_current_value_store(struct kobject *kobj,
+> +						    struct kobj_attribute *attr, const char *buf,
+> +						    size_t count)
+> +{
+> +	int err;
+> +
+> +	err = cores_current_value_store(kobj, attr, buf, CPU_CORE_POWER);
+> +	if (err)
+> +		return err;
+> +
+> +	return count;
+> +}
+> +ATTR_GROUP_CORES_RW(cores_efficiency, "cores_efficiency",
+> +		    "Set the max available efficiency cores");
+> +
+>  /* Simple attribute creation */
+>  ATTR_GROUP_ENUM_INT_RO(charge_mode, "charge_mode", ASUS_WMI_DEVID_CHARGE_MODE, "0;1;2",
+>  		       "Show the current mode of charging");
+> @@ -522,6 +761,8 @@ static const struct asus_attr_group armoury_attr_groups[] = {
+>  	{ &egpu_enable_attr_group, ASUS_WMI_DEVID_EGPU },
+>  	{ &dgpu_disable_attr_group, ASUS_WMI_DEVID_DGPU },
+>  	{ &apu_mem_attr_group, ASUS_WMI_DEVID_APU_MEM },
+> +	{ &cores_efficiency_attr_group, ASUS_WMI_DEVID_CORES_MAX },
+> +	{ &cores_performance_attr_group, ASUS_WMI_DEVID_CORES_MAX },
+>  
+>  	{ &charge_mode_attr_group, ASUS_WMI_DEVID_CHARGE_MODE },
+>  	{ &boot_sound_attr_group, ASUS_WMI_DEVID_BOOT_SOUND },
+> @@ -625,6 +866,7 @@ static int asus_fw_attr_add(void)
+>  static int __init asus_fw_init(void)
+>  {
+>  	char *wmi_uid;
+> +	int err;
+>  
+>  	wmi_uid = wmi_get_acpi_device_uid(ASUS_WMI_MGMT_GUID);
+>  	if (!wmi_uid)
+> @@ -637,6 +879,19 @@ static int __init asus_fw_init(void)
+>  	if (!strcmp(wmi_uid, ASUS_ACPI_UID_ASUSWMI))
+>  		return -ENODEV;
+>  
+> +	if (asus_wmi_is_present(ASUS_WMI_DEVID_CORES_MAX)) {
+> +		asus_armoury.cpu_cores = kzalloc(sizeof(struct cpu_cores), GFP_KERNEL);
+> +		if (!asus_armoury.cpu_cores)
+> +			return -ENOMEM;
+> +
+> +		err = init_max_cpu_cores();
+> +		if (err) {
+> +			kfree(asus_armoury.cpu_cores);
+
+Why is the alloc/freeing handled here, and not in init_max_cpu_cores() ?
+
+> +			pr_err("Could not initialise CPU core control %d\n", err);
+> +			return err;
+> +		}
+> +	}
+> +
+>  	return asus_fw_attr_add();
+>  }
+>  
+> diff --git a/drivers/platform/x86/asus-armoury.h b/drivers/platform/x86/asus-armoury.h
+> index 42c8171e5d8a..584a75df113d 100644
+> --- a/drivers/platform/x86/asus-armoury.h
+> +++ b/drivers/platform/x86/asus-armoury.h
+> @@ -162,4 +162,32 @@
+>  		.name = _fsname, .attrs = _attrname##_attrs			\
+>  	}
+>  
+> +/* CPU core attributes need a little different in setup */
+> +#define ATTR_GROUP_CORES_RW(_attrname, _fsname, _dispname)		\
+> +	__ATTR_SHOW_FMT(scalar_increment, _attrname, "%d\n", 1);	\
+> +	__ATTR_SHOW_FMT(display_name, _attrname, "%s\n", _dispname);	\
+> +	static struct kobj_attribute attr_##_attrname##_current_value =	\
+> +		__ASUS_ATTR_RW(_attrname, current_value);		\
+> +	static struct kobj_attribute attr_##_attrname##_default_value = \
+> +		__ASUS_ATTR_RO(_attrname, default_value);		\
+> +	static struct kobj_attribute attr_##_attrname##_min_value =	\
+> +		__ASUS_ATTR_RO(_attrname, min_value);			\
+> +	static struct kobj_attribute attr_##_attrname##_max_value =	\
+> +		__ASUS_ATTR_RO(_attrname, max_value);			\
+> +	static struct kobj_attribute attr_##_attrname##_type =		\
+> +		__ASUS_ATTR_RO_AS(type, int_type_show);			\
+> +	static struct attribute *_attrname##_attrs[] = {		\
+> +		&attr_##_attrname##_current_value.attr,			\
+> +		&attr_##_attrname##_default_value.attr,			\
+> +		&attr_##_attrname##_min_value.attr,			\
+> +		&attr_##_attrname##_max_value.attr,			\
+> +		&attr_##_attrname##_scalar_increment.attr,		\
+> +		&attr_##_attrname##_display_name.attr,			\
+> +		&attr_##_attrname##_type.attr,				\
+> +		NULL							\
+> +	};								\
+> +	static const struct attribute_group _attrname##_attr_group = {	\
+> +		.name = _fsname, .attrs = _attrname##_attrs		\
+> +	}
+> +
+>  #endif /* _ASUS_ARMOURY_H_ */
+> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+> index f3494a9efea7..e735f35b423c 100644
+> --- a/include/linux/platform_data/x86/asus-wmi.h
+> +++ b/include/linux/platform_data/x86/asus-wmi.h
+> @@ -137,6 +137,11 @@
+>  /* dgpu on/off */
+>  #define ASUS_WMI_DEVID_DGPU		0x00090020
+>  
+> +/* Intel E-core and P-core configuration in a format 0x0[E]0[P] */
+> +#define ASUS_WMI_DEVID_CORES		0x001200D2
+> + /* Maximum Intel E-core and P-core availability */
+> +#define ASUS_WMI_DEVID_CORES_MAX	0x001200D3
+> +
+>  #define ASUS_WMI_DEVID_APU_MEM		0x000600C1
+>  
+>  /* gpu mux switch, 0 = dGPU, 1 = Optimus */
+> 
+
+-- 
+ i.
+
