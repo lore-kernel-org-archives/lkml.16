@@ -1,105 +1,108 @@
-Received: from smtp-fw-80008.amazon.com (smtp-fw-80008.amazon.com [99.78.197.219])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A904F1BD9C1
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 22:41:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BBEA21CC47;
+	Tue,  8 Apr 2025 22:42:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744152100; cv=none; b=ap9n9RWzVTw5fOF4VuvGDLUDFFN97bl0OvvMJRf6oYBjUWhS/SkcJM7WdkZCwcbcVU01ZzmYJOIi87tqnYwF+mj0MyxIa/b7fMZx5CDXOBY/H3q8zE1DMqKzYS/6Ht1n/74fet8GqqjV1o7l7YeC/4opapW/RvPpPXDWPGBD+ME=
+	t=1744152164; cv=none; b=sumPnnrBRTnZSxBeUeB0AViVB2xIQ+4Z0fLNlTl0Oq4WvoYS3fcwEldTuiL40eHPPLS2EcjOSAxXdVidc2wwqtYX8t6grgBZG1Ac7d8rNGbI//4byZItZ5aSJunCSmwJRN93yviTBuWFARKLODBiJSa208qLjUo/7dzwe/sw6fQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744152100; c=relaxed/simple;
-	bh=lFugHM2fYSBv2yxNLU8QtJ9rbP/44joCYKE8Eg/7XqY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZMPSB76YJVyhkglVV5KBs3nh/zjcb/V35wkTnwz3BLe7PGL1jb7PNad8uRdJ9qUhGSJ90HEVZeek3oqyXYYiK3jzL4BLRL8BoMQdjMauCrrBUAPBF1ZPJI8jqKmC6+z8wnP8paM4DDqrGMTQdkBYY/5qHBBrYi6kktN4je/L3mU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=rlsllmRs; arc=none smtp.client-ip=99.78.197.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1744152164; c=relaxed/simple;
+	bh=VvOE2r3DtdBAe8IWcDaWLBTTphQj9Rjj5bt89NIvxfM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GlKLiO3F0exca3Yed7SDxftqAxXSPAkTZ9+iBhJAtzQQSII5A/8Bb+KwhW3NfpsjooB8aEeh4vn/AUeZ6D/YmnAM3ZQ8OAnwIf+HNkzDR2tFXo6nVrysRb8ka9zqnhVzfqwg4yfxHMx2s9lqPLBvHihKoathxm50+WMd0VXdWPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=mWE7Stnl; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="rlsllmRs"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="mWE7Stnl"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43edecbfb94so41326795e9.1;
+        Tue, 08 Apr 2025 15:42:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1744152098; x=1775688098;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=HeUzgINLSTNqzHLJeO36JJlCLs5/j5o0fs3XgBEV6S8=;
-  b=rlsllmRsYCDa0NAh3mBRZXOs+gtjM7y7Vu6Q5e6HI596mUMWsFzv8AUX
-   3yVPI58NlnU+BGJ2XwrBK77jlOlAzL3quC8KCnOKG6gR8IIqorps0NxBn
-   QQbWKsXGXitfsYL+Rvaz5sGr1OsqHxzHqCwZm8Bw65ywgRMDtC/PFFLZB
-   A=;
-X-IronPort-AV: E=Sophos;i="6.15,199,1739836800"; 
-   d="scan'208";a="185724054"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-80008.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 22:41:37 +0000
-Received: from EX19MTAUWB001.ant.amazon.com [10.0.21.151:24873]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.47.159:2525] with esmtp (Farcaster)
- id 2db7eea8-f5e1-4a6b-8bde-c7eba5f29475; Tue, 8 Apr 2025 22:41:36 +0000 (UTC)
-X-Farcaster-Flow-ID: 2db7eea8-f5e1-4a6b-8bde-c7eba5f29475
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Tue, 8 Apr 2025 22:41:36 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.106.100.5) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Tue, 8 Apr 2025 22:41:33 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>, "Christoph
- Hellwig" <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>
-CC: Peijie Shao <shaopeijie@cestc.cn>, Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Kuniyuki Iwashima <kuni1840@gmail.com>, <linux-nvme@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH] nvme-tcp: Fix use-after-free of netns by kernel TCP socket.
-Date: Tue, 8 Apr 2025 15:40:54 -0700
-Message-ID: <20250408224105.2344-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.49.0
+        d=googlemail.com; s=20230601; t=1744152161; x=1744756961; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cVrsX/RC2oFN8Uzy2xhFPNyhEXxy3W34iQYpN21V0sw=;
+        b=mWE7Stnl7wen3uh9M3c47Q1c2ArDk/SO0NPl+WT7L20CkTBSCODDVfqumHNZ5ky4lP
+         PiQvO73DpCupVF2GipopP2+mQaaapy+bNE8bowCmNv8n1hMqdLVDzJaaNmi28Wq9TFr4
+         k4A3P4YJXOrwXr4HshpIWVCn/oPfkOH7aDdCYVDElRfOkAS1CKY0GVQp6cSMcTGGiRGX
+         6k7OpT0allPd0e3h8xvy+c7HNCcKM55bRiwBoetaQtPugMvHZnRqKdB7/eZ0cSqhyVKu
+         S8hy0FNY7PrcLRkK98VFd3UHtst4zY8YNA/PRa4MDaCNTSIuw5Bv8Jse4QhpIupN+h4p
+         VQkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744152161; x=1744756961;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cVrsX/RC2oFN8Uzy2xhFPNyhEXxy3W34iQYpN21V0sw=;
+        b=KEUtvSFzObK5wOVnXcqJgkAT7olyHbA5GCuJ4alKWPb4A6iL2OltpO2lxSLUZQ+Apd
+         B6oOqelSIJ51C/gl5PyTpVd1DHlAc8OzMbTFSXMUbc2r4nDNuBOWwR7xhk8us2JJZmSD
+         BwHGrb6oyIlN7M0NEJwU0mSJ+p2KU7DNMgatuRxm2mKrlfdn7abpwhzXVl02MZj3MJGB
+         wmyEaoZI0ma1pMLj6+sgPZMoltNPgK/YjSukqOOkEc3bu+ldt6RHn1Kn/EmOjWgllNKz
+         meRgu3UO5SYS0Hn/kzc3OP7bvFpO9f3j2mI8eyWknjK94lPKwlT9U3kfxjMVnRoqvArS
+         hKEw==
+X-Forwarded-Encrypted: i=1; AJvYcCUsWsNQJE049j1Mrm3VTSZEG2aMPd1b167QBLk27sdd/u5GV5QBjyeBDlhcLhkE09imfG4fC9qK@vger.kernel.org, AJvYcCXrPmfQBKbDeiu0BTnvs3fbBOFWvfuqyW6BmpgAYwDarcqL19VPZq0bnBZH/bHMre5pIYSof5FdTk80OYk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNoRgyUTE8WZIAMEMTgau6QvfDL5Yvfz1/LiJZJ/CDDPM+BWTh
+	gHR51zf+s//Xc6CSr1aDF5dgz6vAacWHnHPS5utM/769cB1I0io=
+X-Gm-Gg: ASbGncswdoUKw3QBaR6OCMou4EhYmBrpSM21YwVdn1BeStVCNiusjv7L6pUdG/c2LCB
+	8PETneR8UbqMJgOWh1N1bM12/dZsVf3QS7L85ZFtz4L3aPuxWeJMBzuouRl7ZC/aGhTeGX3ly0O
+	oPeiKPtMmF/uqbqW83qYy6M+K2PoTo3XD9OnaAKAhrtvZQGM6Ye2l1yRSG0p+xo2gWan/YssszZ
+	AmBGqGtr1O5VGGlsiCRWYMTe+dU6sy1lMJ+GGV4iapw46QM/QotVftpk2J8toviH46NZlSVdvSn
+	50+4cQVrOr8WRAZR88sIPFQB33ChcMDs0j+rPSLsuJ/IIeQ+TRB/15iTfDM8/3w4BxO1+/L08l6
+	Tyt+0OY+nNM6x9X8iYKEC3PByR/4aqo5r
+X-Google-Smtp-Source: AGHT+IEHm/LVYmhjkn2NZ+yNt7YdDBEtZNlPDop53WT6mMXLBhiVifJtxaaSv6mZb6Y23He6cKCvRQ==
+X-Received: by 2002:a05:600c:1d94:b0:43c:f629:66f3 with SMTP id 5b1f17b1804b1-43f1ed0b0eamr6927825e9.18.1744152161210;
+        Tue, 08 Apr 2025 15:42:41 -0700 (PDT)
+Received: from [192.168.1.3] (p5b057de8.dip0.t-ipconnect.de. [91.5.125.232])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec34be2f4sm171797715e9.19.2025.04.08.15.42.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Apr 2025 15:42:40 -0700 (PDT)
+Message-ID: <87dbc3c0-dc7f-4d0f-88a4-bacef81dc56a@googlemail.com>
+Date: Wed, 9 Apr 2025 00:42:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH 6.14 000/728] 6.14.2-rc3 review
+Content-Language: de-DE
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250408195232.204375459@linuxfoundation.org>
+From: Peter Schneider <pschneider1968@googlemail.com>
+In-Reply-To: <20250408195232.204375459@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D041UWB003.ant.amazon.com (10.13.139.176) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-Commit 1be52169c348 ("nvme-tcp: fix selinux denied when calling
-sock_sendmsg") converted sock_create() in nvme_tcp_alloc_queue()
-to sock_create_kern().
+Am 08.04.2025 um 21:55 schrieb Greg Kroah-Hartman:
+> This is the start of the stable review cycle for the 6.14.2 release.
+> There are 728 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-sock_create_kern() creates a kernel socket, which does not hold
-a reference to netns.  If the code does not manage the netns
-lifetime properly, use-after-free could happen.
+Just like rc2, rc3 builds, boots and works fine on my 2-socket Ivy Bridge Xeon E5-2697 v2 
+server. No dmesg oddities or regressions found.
 
-Also, TCP kernel socket with sk_net_refcnt 0 has a socket leak
-problem: it remains FIN_WAIT_1 if it misses FIN after close()
-because tcp_close() stops all timers.
+Tested-by: Peter Schneider <pschneider1968@googlemail.com>
 
-To fix such problems, let's hold netns ref by sk_net_refcnt_upgrade().
 
-We had the same issue in CIFS, SMC, etc, and applied the same
-solution, see commit ef7134c7fc48 ("smb: client: Fix use-after-free
-of network namespace.") and commit 9744d2bf1976 ("smc: Fix
-use-after-free in tcp_write_timer_handler().").
+Beste Grüße,
+Peter Schneider
 
-Fixes: 1be52169c348 ("nvme-tcp: fix selinux denied when calling sock_sendmsg")
-Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
----
- drivers/nvme/host/tcp.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
-index 26c459f0198d..72d260201d8c 100644
---- a/drivers/nvme/host/tcp.c
-+++ b/drivers/nvme/host/tcp.c
-@@ -1803,6 +1803,8 @@ static int nvme_tcp_alloc_queue(struct nvme_ctrl *nctrl, int qid,
- 		ret = PTR_ERR(sock_file);
- 		goto err_destroy_mutex;
- 	}
-+
-+	sk_net_refcnt_upgrade(queue->sock->sk);
- 	nvme_tcp_reclassify_socket(queue->sock);
- 
- 	/* Single syn retry */
 -- 
-2.49.0
+Climb the mountain not to plant your flag, but to embrace the challenge,
+enjoy the air and behold the view. Climb it so you can see the world,
+not so the world can see you.                    -- David McCullough Jr.
 
+OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
+Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
