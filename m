@@ -1,467 +1,344 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2071.outbound.protection.outlook.com [40.107.21.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76B90267B07;
-	Tue,  8 Apr 2025 10:09:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744106997; cv=none; b=QHRPMo0tiZVWM1VDfRYJ2niDRwF6L1C6NNTMXQk5JU/qd8JWKnWHm5jXrVl0wkI+CTZfotMuJvnUkytfRm56ItIWheZBWT1Bj2uWSkJ+wGIFv5PBryI25NnIRzhoMN9ju1jg6v9kIbwm5TbJUMdX2zDGmApcCI4vfYLDcOWI6aQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744106997; c=relaxed/simple;
-	bh=fECQ0wT3cwyILMq52vt+FKrJbJo2Gu0emu+5UkOVdgM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Bgm6n0IR67XbAYdw7QZx7V27Z/5FoMFhRzCR5HtkolAN89nG2D3pCs2idgsyV1E9sXQhdwNRefi1voLwKCDMo5uh+4QvH6JxksO6rqd4z4q4yRDlv6CLfcecEmYF9pEPeH5vLdpwXkW53oXOe2/yWBQK9Em+vO9vw24oe9ma46M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VVtGygnS; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VVtGygnS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F90CC4AF0D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D179226770E;
 	Tue,  8 Apr 2025 10:09:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744106997;
-	bh=fECQ0wT3cwyILMq52vt+FKrJbJo2Gu0emu+5UkOVdgM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VVtGygnSL21S0Bb+6WFI3FSyVeXdlkaF4bB6gh8jFc3yLM/+Uv4zPZD/oSgzwXl/L
-	 TSjXMfLCi+MUcIubTqXDSCLySusbS9xFeL+tgzHo883+J/PtVak5yLqpmWVPV8Fgze
-	 +mvbFuupjjadPYwNFtPoR/W381sapvryTeUQfVTQDbOl9b1lu9lH8TQInyGxU3j70J
-	 G4ovXGNaiqyPD2PvNWYARsPbJLS3W8iz+ibCYVdehk3Qvrtl7GG/1Vqqpg+LWFwomt
-	 c82a5k0ESFEvB/4mrypW7h9+SdHrTzHFL8VazOMXxeuxUAwAIOb3GYodMmEFZYiwTK
-	 6tRH5gV1EVoSg==
-Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
-	(envelope-from <mchehab@kernel.org>)
-	id 1u25tt-00000008RWk-2nBW;
-	Tue, 08 Apr 2025 18:09:49 +0800
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Sean Anderson <sean.anderson@linux.dev>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 31/33] scripts/kernel_doc.py: better handle exported symbols
-Date: Tue,  8 Apr 2025 18:09:34 +0800
-Message-ID: <6a69ba8d2b7ee6a6427abb53e60d09bd4d3565ee.1744106242.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1744106241.git.mchehab+huawei@kernel.org>
-References: <cover.1744106241.git.mchehab+huawei@kernel.org>
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.71
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744107000; cv=fail; b=ARhs0owrJsOOryjK/PUg7UJrH3b2JwoCKQCQjwEqWLvx2Vk3mHihFkzFXqeBMrlZ9OHHXd1U6+8jbWnhklygh1lKMWP79muJ+fv8Lz+3AtrIGkDzDFkHAapgp/KU7WZZpmCEJSK3I+TNs+UN71kfb/r/cjV9wNQ11IvYI2mtYBo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744107000; c=relaxed/simple;
+	bh=YhMicrKiGfBPbanrgSFwn+J83LSskHvcbhZfeOdkGYg=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=PtXAdqdOz5j1MMNJdxOM+tfTqQ7e9ujpzvdb8EQYFHKTf+DtjZs3P+yLcfEXEmXNIrQdFVzG4RWqCakT1cfFNwdqUElYnWyigjlCM1RVogXq1lE8ixazL+WPQv5eb/7k1ayWc7M2htAWwZW5gNpZEEPdrGHoF0AQth3IFOookk8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=w3kkv0U3; arc=fail smtp.client-ip=40.107.21.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="w3kkv0U3"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=PLQFQq7jNroBO+OBY3eIigahevG2x932i6QFYFu/BR60gN+OAxjtGe6POBA2k8wyIFdwKQy14lIzGzQw1oubDYjY9jhAv/fo3CJsN/FnB6iJo11ec4H7QQEfX+cotTzSgnnqEctZGTljAs+j9TJeoeasU7etys6T/p1tt132Kvur7lz4sgmNutvJ6ykvwfcFJbo2VYk9T0tC9XEb8sbIypFdczi+97WIzz6oSK+b/qSn+lOlTERez7G64e1Af7DRtyJCHY9PWqaTzY1VHlG+2OtL499n++7y7DgDaq7mLpV4YP/uOpbTMiDT1CuOAaw1WqCIiPE8jGkObrD9jWErhg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=i3iC2hUZYiCqI+T5Ojcgu4B88NwAD8nSdFKmGW37u5Q=;
+ b=pax6YrCI9n8EDGzP9BowVNroKiJfsSNzp8Y+ESgM/qC4+PiNDIIfxob9oTlg2pj3mf2WDA8eXwbH9LX1wvvIDjkYNS/ruV2cEDfdptJIaOIfzK1IQigy7tul6SQfIe5VcgcoL2nKseWM2hT/vO2sx6TzPUZKHGAOnDpgnKrbEBr3xNt/uyyQuRA4nO9vwGH9TBw/75pezZsuHGhcoLTbO5O6SDb51c/1hxuwuJH8yaIZgnt6W2btEBVydj0Tysl0D2MbIYVB11tqzzf2A1Dfxnl3BZtqP6vnVj05dELfIhPtvroIWUxi5lwOhoqBcrhYaqMWKI3gyBSOha6hwYY/TA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=i3iC2hUZYiCqI+T5Ojcgu4B88NwAD8nSdFKmGW37u5Q=;
+ b=w3kkv0U3u6KM9jg8cPmQv4STHPQzQXaKP+6fmhbnpyAMcpqClYiBSNOxjHMP/zE2GEK+YdsPNr09/fn/VBQS/02CPXkmg2AthqXUFpxFjPV8ZO7n5Tc23Y7sB04DYopsUfZBdrGjzYbptLRDUV6jPqZ2ZYv5HreA9jOGvSy95GJ2+stTYxmQNgDcBPemE7GWRQYbNTVO8ovz6Seu7sykJjjPVLesi9p0CxJK2WqgZlBIcaD1TnHhRBF07a5CFamop9ddYF4+oh8133GGwQ8VPXy/d+XhqMX3JAqi0ozx+vei0SgdDyyXuYPNbj437HIiXuMpNJvQazNRebyQ3k3FZg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from PAXPR04MB8254.eurprd04.prod.outlook.com (2603:10a6:102:1cd::24)
+ by VI2PR04MB11073.eurprd04.prod.outlook.com (2603:10a6:800:26e::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.33; Tue, 8 Apr
+ 2025 10:09:53 +0000
+Received: from PAXPR04MB8254.eurprd04.prod.outlook.com
+ ([fe80::2755:55ac:5d6f:4f87]) by PAXPR04MB8254.eurprd04.prod.outlook.com
+ ([fe80::2755:55ac:5d6f:4f87%4]) with mapi id 15.20.8606.033; Tue, 8 Apr 2025
+ 10:09:53 +0000
+Message-ID: <45784eee-ad24-495a-a199-4df75b2300bf@oss.nxp.com>
+Date: Tue, 8 Apr 2025 18:09:43 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/4] media: v4l: dev-decoder: Add source change
+ V4L2_EVENT_SRC_CH_COLORSPACE
+To: Hans Verkuil <hverkuil-cisco@xs4all.nl>, mchehab@kernel.org
+Cc: nicolas@ndufresne.ca, shawnguo@kernel.org, robh+dt@kernel.org,
+ s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+ linux-imx@nxp.com, xiahong.bao@nxp.com, eagle.zhou@nxp.com,
+ tao.jiang_2@nxp.com, imx@lists.linux.dev, linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20250117061938.3923516-1-ming.qian@oss.nxp.com>
+ <3e5f003a-f689-4f5a-ac75-6bf95379637b@xs4all.nl>
+ <50ce67b7-ef06-4e8e-bf4f-f4b0d5e40961@oss.nxp.com>
+ <d5a8988f-1038-4a8b-8478-968ceca37879@xs4all.nl>
+ <c9aef3f6-43cd-48fb-8aba-0abd33c4e263@oss.nxp.com>
+ <d2a1a4d2-dbce-40e2-9cca-fe2fbf1d6daa@xs4all.nl>
+From: "Ming Qian(OSS)" <ming.qian@oss.nxp.com>
+In-Reply-To: <d2a1a4d2-dbce-40e2-9cca-fe2fbf1d6daa@xs4all.nl>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SI1PR02CA0041.apcprd02.prod.outlook.com
+ (2603:1096:4:1f6::18) To PAXPR04MB8254.eurprd04.prod.outlook.com
+ (2603:10a6:102:1cd::24)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8254:EE_|VI2PR04MB11073:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7d04ec18-4614-4a51-9b98-08dd7685813e
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?VDJlTlBUMDR2UEc1ek01UzVka0tXUkRBSkxWSXZuUEsydnQ3NXUxdEt5NGZR?=
+ =?utf-8?B?UDBkbWtCNTJtUVdEamZ2WEp4SXZEWFhJYXZzMDVMbi9RUUt3YTdBZ0JwN3Ry?=
+ =?utf-8?B?cG1odkJ3OWJpVEVGeGpxNmNpRWRZOVlUK0o4YmtMNWNSTU15NjgxSXJyb1FR?=
+ =?utf-8?B?ZVRBS050N0pSaWlNeHdTNnZtbnNNbi96TnVGc01JcnZPb3drWStMdW1TcWh5?=
+ =?utf-8?B?cHN1d0FDajI4eFZhMTlubC9Wd1pSU1oxSW4ya0s5SzBRbWk4Vm1lODYyQ1NX?=
+ =?utf-8?B?b3J5Y2ppcjlzOFVkZDAxRVB1ak1SNHRyVHdkL2s5d2pwUjI5MC8ydEp3RWYv?=
+ =?utf-8?B?bTliaWxQTHdYb0NDc2ZtMGRtNGhidS80M3RreTFKT3MxMkJHNDFWeGR5ODRx?=
+ =?utf-8?B?WmY3QkpuMWdSNExuOW96eWhiRnlBa2tNMzU4Snk1MmsrYzRTbzRhTkhEaGtQ?=
+ =?utf-8?B?NjhnQmtrVkxDR2g1ckpsdHZVejFYem1ZQkwxTzNVRE4zcnhlNENTWFo4S1pp?=
+ =?utf-8?B?MTJjVVdBdFFaL1ZUeHJqakFXZzVldlZNRDIyMWh2Z3ZtOGY2a0ZabUd4Yk9I?=
+ =?utf-8?B?TEpDNk8zVGFRQzdGVmR0RXBJRVVqd1VCVWZqREg4SlBzQU92bmhsZGdvQ25O?=
+ =?utf-8?B?b3pWQ1JDcVZvTWo3TkFzK1BxV1ZaODJvbUR2OUZldVJTRnZZU1pPbUZPNFVI?=
+ =?utf-8?B?aUN5cHNMRy9HMG8xQlBqdUF4TUZ3NThZRVJ5cmpaYjk5b2ZRbFdPeGtsZUJI?=
+ =?utf-8?B?ZGgyTFhVUlg2TzRDRDZzNnArNloyUEUybEJva1Q1NVpBanJGR1RUWU9yeDM2?=
+ =?utf-8?B?S1N4anVja3dUTUpmdlRZbXBzQmVBN2kybGZlSHc3bzlyNngyUk4xZzBpd2lT?=
+ =?utf-8?B?cUxGY3hReFFOM0h4LzQ5dDJvZzhhdENYSUVhaityTkRNYkRkWCtiTm4zRmZt?=
+ =?utf-8?B?RkJDTnFFUmJTQTFwTEdOQW0wT3h3UkNNSm85bXZsd2xQQi94UWpBS1A3ZU0z?=
+ =?utf-8?B?Mjc3YUprTjVhSXoyQVFlcVFOMi95L1RETnhrNUNyUGJhZG5rTU9RbWgxOTEr?=
+ =?utf-8?B?eFJ1K0dtcjFhOVNtKzFkbjFjM0w5c3ZBRG5XT3ZBZ2tqRW9ZTDE2NzVwbVZH?=
+ =?utf-8?B?cXdlc3VWNHlkQjZoOTNVeG9DVWdTOHdob1dydityVjFua3l2QmsxOVdzclBM?=
+ =?utf-8?B?QzB2RktIMWVTUWxBeWY5RndVWFZDbDh3K3ZuOEZrdEtQMUxZUHgxclJaL1hK?=
+ =?utf-8?B?YmtvRXh5YVlQc0ZJeHFiUTlrdG1ROWVyK2N2WVl4V3RUTGUzeGtYSWFsNXJH?=
+ =?utf-8?B?OWx4bHg4ZWprbzlROXJBQ0tBSUFmNUxFRjRGdzRsZ1A3ZlpwM3pwT3hwUHhW?=
+ =?utf-8?B?bHBZQTVVZlZXNzZIdlMxWCt4NUszQ1BvS2RnQ1k4cGZCVFNjbGpqbEhwQ0tu?=
+ =?utf-8?B?MzNHMW5oY0JkaWVUTVVFclRzaUd3Z0hjR09kZjFuWHVzZjlGQk0zNHNyYVd1?=
+ =?utf-8?B?dlFYMGhFeW5TWDdSRzUvOW1FYS9tand2cFRTbXVFN2NhUXhBSlVCb212QzRW?=
+ =?utf-8?B?ZFhXUS92TmxpdEV6MzdoN0ZaaW5IcVlaK2pvT2VTTHp5Y3haN05kZ1MzSHpS?=
+ =?utf-8?B?NmRmNmp1MlpzeXpsckRySnBnelpPVzFJZ21IMDV1R3d1Z3JRV1NOaU9ZWU02?=
+ =?utf-8?B?VUNUdzBBcVpqY0RUKzhKbUFMRnQ2d0NMeGpGY0ExcU1aTGJ5S1l6b1I2UC9M?=
+ =?utf-8?B?TnlZb0hXQlh6ZG8zZktmMW1vN1BMSWtmdmpsS2IwbFB3emNTT1U4V2FNajRQ?=
+ =?utf-8?B?ZHphbUFxVmxHU0RUL0g2eldvZWNkYnB6djNPc2phTEE4cFJ3RTY5N1NQa1J3?=
+ =?utf-8?Q?+0ibuFOX9Y+9c?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8254.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?WHNZT2ZuNDdMUmR1Z2d5eFpvS05BS21zalkvWjQ4MVFiTnUyNkY5R3AwQWx6?=
+ =?utf-8?B?QnVtRVRFVnQxN2lMT1NQTFd4S0NRUEJuWlFQNWRSRnJ1NTIzMUJCemtBRGF5?=
+ =?utf-8?B?ditDMXZZTThLVXRrUnlyY2VaMWl3bVBhMysyeGpNTDMvYVlvOE5oRDF5amZE?=
+ =?utf-8?B?ekRhbkR3dXl0d2Q0NTdkZFRoR2x5Znh3U1RZbER1Q3grNEtONzNhNkRrS1NN?=
+ =?utf-8?B?RE9Vc3c3ZnlyMU5uOEFtcUNhM3JXYjh3WlplVXFINStXRGg2UmdrZkt0cTlL?=
+ =?utf-8?B?YVJoUi9vNWYxa3FINHA1ODE1a2JVYVVmUDVTd1hMK05ocE1kV3IxMTVuU2Y0?=
+ =?utf-8?B?WUtKTWwya2ExRXQ5cFZFSFpnOVFnYm5aeVFveERscXB3WnE1c3Qvc0xWU2Fv?=
+ =?utf-8?B?RnRyQ1l0bVFNZkwrSk9XM3FrbnBhNUNOeE9KU1dKRkdnNWdsSGtwRVgrZkVM?=
+ =?utf-8?B?V3F3NDRTbjBtRUd3L0ZZck9OUDRNaEtpZkxhb1FhMWpCakRYY0tCbzE4SWhC?=
+ =?utf-8?B?eHhUVjlSZXJVa0t6MkY0U1NxcEpGY0FMQ296MnMzcUVhcm85UEtjUEFDV3R5?=
+ =?utf-8?B?Q1VHcXNYb0U2QlJLWjhnaWp6VGxIMHRHTDhjVWV3aFIxSGY1dzlCendTbG4v?=
+ =?utf-8?B?SkFOdVJ3SUlWZmFWTTRrMWJCaTZoci9sQThyYVlEMzVxRFQ3OTRVcjlCY0sx?=
+ =?utf-8?B?QlI4aGhxWUN2RFZGY2ZvRWZUQURsT2paaXNqNGJxL2JuUHMwR1k2NHpueXZU?=
+ =?utf-8?B?QmN0QTRHaEJCL04yczdIcXhDRWZVSkRRemM3VGUyKzFYY1d4ZHBhZkc0WnZl?=
+ =?utf-8?B?MEEzUlhxU1YzYmdzSEF2WTBOSmJHUU5ERElPUnYvY0trbUVLRDRrUWJnZHdy?=
+ =?utf-8?B?UTkzcmJreWxoSEgxSnMyZC8wNjQwRXRTcUxTVlZHY3ZMb0lVVUdQK3NuWGdL?=
+ =?utf-8?B?NFI3VVJIaEFlUXFETk8yRU9wUzlLaklkd0JIRjgzVTRoQUMyTFR3SUpwMm5l?=
+ =?utf-8?B?UGkrRVE2MVBlektBRjlxeFdTVjhGWGRIREFudldYVFpGQXgxNUw4SkhSdFN0?=
+ =?utf-8?B?NWY3NDdQMVN3ZEpMUkplTW5XZzJVZ2xtWkdPeEtmR3hMOXZ6VWZJN0tQdTBP?=
+ =?utf-8?B?em1IUWw5NlpwSjhFa3NNd0l1WVRUWVhzdE5McisyUHlneExtN0pjQUk4M21y?=
+ =?utf-8?B?c1RJNDRtellRWEFUVDY3aW5mZjRBcEVCYmIyNlBwNTdWKzFyNXN2d0tNOHhy?=
+ =?utf-8?B?UTRnaStSYWtma0pORGpDQitleUxjSVVsTW5RaklFTjJyV3hRdng2a1JtbzNO?=
+ =?utf-8?B?RXNPaGxGMjRjRVMzNjErN0h6c2pDcGh0anR0bERjbjZPbHVCTmYzY29pcXla?=
+ =?utf-8?B?UGQvdUNwOERXTk91QlZ6MnFSQTcxaENkY2plRkNYaGN5QkRJbUw2eHpKVE9a?=
+ =?utf-8?B?RURiY29rdGhKWTRGdU9IY0pNNXR4OHJZUGpaeDNqbGhBdXJ3ZEZTVk41Q2o3?=
+ =?utf-8?B?S2tmVktBRlhnMDBQTU5NS3dtWTZPaDExWU5OdERYczFBaUhTUE1YZzFqWjBW?=
+ =?utf-8?B?aWFINk9XdmdFL3h3dzc3Z3NYRHJmZDc3LzVmSENUajB5cEd0dzVVQ0Rrdmto?=
+ =?utf-8?B?alZGWllJckorMjVVcWhsSG9NblU2bDRjTWdhamR3VHNTaE1ybGpiR04yK1V6?=
+ =?utf-8?B?alpwMVVLOUdoMFpuSjFEQ05NdkdzalBtMzhadHlvMTZVMTdtZnNBUzFiTVZ5?=
+ =?utf-8?B?NzJ1TnVTcUZvQklTaEN4SDcyQ1MzWU1vQjZXbXFlcHprZENVUGxaaDhubXFJ?=
+ =?utf-8?B?Rk1vQWIrWkFOY243eXRVRER5d2R5cmtMMVZaOWNSWXdlOWFtQjBzYkFQNW5N?=
+ =?utf-8?B?ZGN3aUJkLzJ5bGQ3RUdhRXBKakdCSjlpem1UNlhqT21YVkdWOEpSQnNLb1l0?=
+ =?utf-8?B?TldqUTloUG1WMTEvdDFvUVRhTDJOMm82TkwvNVd6Ri95cThHaDhjakdlVnl1?=
+ =?utf-8?B?Wmc1RnMrbG9HblIyeG5rNWZiYmprZWJVa3ViMkNxYXJLKytaeERoWThJZm1M?=
+ =?utf-8?B?WGxMcjFyTEp0ci9RL1pBY1g3QjhQSDg5MFNWbWZRaXRkSUt4MWRjSHl2b3ZO?=
+ =?utf-8?Q?krbHLwSIc4DOFF+NNTdDHf8iT?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7d04ec18-4614-4a51-9b98-08dd7685813e
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8254.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2025 10:09:53.0032
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5JXwzBJwxWNYTgoh1traGb/LIsd9BwqnX0Feb7IGrdTllbJQSFi9vVzp4bf0ZCOzBNK79d27/XyXjg2XIKmaQQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI2PR04MB11073
 
-Change the logic which detects internal/external symbols in a way
-that we can re-use it when calling via Sphinx extension.
+Hi Hans,
 
-While here, remove an unused self.config var and let it clearer
-that self.config variables are read-only. This helps to allow
-handling multiple times in parallel if ever needed.
+On 2025/4/8 17:39, Hans Verkuil wrote:
+> On 4/8/25 10:45, Ming Qian(OSS) wrote:
+>> Hi Hans,
+>>
+>> On 2025/4/8 16:30, Hans Verkuil wrote:
+>>> On 08/04/2025 08:34, Ming Qian(OSS) wrote:
+>>>> Hi Hans,
+>>>>
+>>>> On 2025/4/7 17:54, Hans Verkuil wrote:
+>>>>> On 17/01/2025 07:19, Ming Qian wrote:
+>>>>>> Add a new source change V4L2_EVENT_SRC_CH_COLORSPACE that
+>>>>>> indicates colorspace change in the stream.
+>>>>>> The change V4L2_EVENT_SRC_CH_RESOLUTION will always affect
+>>>>>> the allocation, but V4L2_EVENT_SRC_CH_COLORSPACE won't.
+>>>>>>
+>>>>>> Signed-off-by: Ming Qian <ming.qian@oss.nxp.com>
+>>>>>> ---
+>>>>>>     Documentation/userspace-api/media/v4l/vidioc-dqevent.rst | 9 +++++++++
+>>>>>>     .../userspace-api/media/videodev2.h.rst.exceptions       | 1 +
+>>>>>>     include/uapi/linux/videodev2.h                           | 1 +
+>>>>>>     3 files changed, 11 insertions(+)
+>>>>>>
+>>>>>> diff --git a/Documentation/userspace-api/media/v4l/vidioc-dqevent.rst b/Documentation/userspace-api/media/v4l/vidioc-dqevent.rst
+>>>>>> index 8db103760930..91e6b86c976d 100644
+>>>>>> --- a/Documentation/userspace-api/media/v4l/vidioc-dqevent.rst
+>>>>>> +++ b/Documentation/userspace-api/media/v4l/vidioc-dqevent.rst
+>>>>>> @@ -369,6 +369,15 @@ call.
+>>>>>>     	loss of signal and so restarting streaming I/O is required in order for
+>>>>>>     	the hardware to synchronize to the video signal.
+>>>>>>     
+>>>>>> +    * - ``V4L2_EVENT_SRC_CH_COLORSPACE``
+>>>>>> +      - 0x0002
+>>>>>> +      - This event gets triggered when a colorsapce change is detected at
+>>>>>
+>>>>> colorsapce -> colorspace
+>>>>>
+>>>>
+>>>> Will fix in v3
+>>>>
+>>>>>> +	an input. This can come from a video decoder. Applications will query
+>>>>>
+>>>>> It can also come from a video receiver. E.g. an HDMI source changes colorspace
+>>>>> signaling, but not the resolution.
+>>>>>
+>>>>>> +	the new colorspace information (if any, the signal may also have been
+>>>>>> +	lost)
+>>>>>
+>>>>> Missing . at the end. Also, if the signal is lost, then that is a CH_RESOLUTION
+>>>>> change, not CH_COLORSPACE.
+>>>>>
+>>>> OK, will fix in v3
+>>>>>> +
+>>>>>> +	For stateful decoders follow the guidelines in :ref:`decoder`.
+>>>>>
+>>>>> I think this should emphasize that if CH_COLORSPACE is set, but not CH_RESOLUTION,
+>>>>> then only the colorspace changed and there is no need to reallocate buffers.
+>>>>>
+>>>>
+>>>> OK, will add in v3
+>>>>
+>>>>> I also wonder if the description of CH_RESOLUTION should be enhanced to explain
+>>>>> that this might also imply a colorspace change. I'm not sure what existing codec
+>>>>> drivers do if there is a colorspace change but no resolution change.
+>>>>
+>>>> I think there is no uniform behavior at the moment, it depends on the
+>>>> behavior of the decoder. Maybe most decoders ignore this.
+>>>
+>>> Can you try to do a quick analysis of this? Don't spend too much time on this,
+>>> but it is helpful to have an idea of how existing codecs handle this.
+>>>
+>>> Regards,
+>>>
+>>> 	Hans
+>>>
+>>
+>> I checked the vpu used in our platforms,
+>> 1. amphion vpu, it will ignore the colorspace change.
+>> 2. hantro g1/g2 decoder, it also ignore the colorspace change.
+>> 3. chipsnmedia wave6 decoder, the firmware detect the colorspace change
+>> for HEVC format, but ignore for AVC format. But its driver just ignore
+>> it.
+>> 4. chipsnmedia wave511 decoder, same as wave6.
+> 
+> I meant stateful codec drivers that are in mainline. Out-of-tree drivers do not
+> concern me.
+> 
+> Regards,
+> 
+> 	Hans
+> 
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- scripts/kernel-doc.py           |   2 +-
- scripts/lib/kdoc/kdoc_files.py  | 142 +++++++++++++++++---------------
- scripts/lib/kdoc/kdoc_output.py |   9 +-
- scripts/lib/kdoc/kdoc_parser.py |  52 ++++++++++--
- 4 files changed, 125 insertions(+), 80 deletions(-)
+Sorry, I misunderstand
 
-diff --git a/scripts/kernel-doc.py b/scripts/kernel-doc.py
-index 2f2fad813024..12ae66f40bd7 100755
---- a/scripts/kernel-doc.py
-+++ b/scripts/kernel-doc.py
-@@ -287,7 +287,7 @@ def main():
- 
-     for t in kfiles.msg(enable_lineno=args.enable_lineno, export=args.export,
-                         internal=args.internal, symbol=args.symbol,
--                        nosymbol=args.nosymbol,
-+                        nosymbol=args.nosymbol, export_file=args.export_file,
-                         no_doc_sections=args.no_doc_sections):
-         msg = t[1]
-         if msg:
-diff --git a/scripts/lib/kdoc/kdoc_files.py b/scripts/lib/kdoc/kdoc_files.py
-index 527ab9117268..dd003feefd1b 100644
---- a/scripts/lib/kdoc/kdoc_files.py
-+++ b/scripts/lib/kdoc/kdoc_files.py
-@@ -68,6 +68,9 @@ class GlobSourceFiles:
-         handling directories if any
-         """
- 
-+        if not file_list:
-+            return
-+
-         for fname in file_list:
-             if self.srctree:
-                 f = os.path.join(self.srctree, fname)
-@@ -84,40 +87,70 @@ class GlobSourceFiles:
- 
- class KernelFiles():
-     """
--    Parse lernel-doc tags on multiple kernel source files.
-+    Parse kernel-doc tags on multiple kernel source files.
-+
-+    There are two type of parsers defined here:
-+        - self.parse_file(): parses both kernel-doc markups and
-+          EXPORT_SYMBOL* macros;
-+        - self.process_export_file(): parses only EXPORT_SYMBOL* macros.
-     """
- 
-+    def warning(self, msg):
-+        """Ancillary routine to output a warning and increment error count"""
-+
-+        self.config.log.warning(msg)
-+        self.errors += 1
-+
-+    def error(self, msg):
-+        """Ancillary routine to output an error and increment error count"""
-+
-+        self.config.log.error(msg)
-+        self.errors += 1
-+
-     def parse_file(self, fname):
-         """
-         Parse a single Kernel source.
-         """
- 
-+        # Prevent parsing the same file twice if results are cached
-+        if fname in self.files:
-+            return
-+
-         doc = KernelDoc(self.config, fname)
--        doc.run()
-+        export_table, entries = doc.parse_kdoc()
- 
--        return doc.entries
-+        self.export_table[fname] = export_table
-+
-+        self.files.add(fname)
-+        self.export_files.add(fname)      # parse_kdoc() already check exports
-+
-+        self.results[fname] = entries
- 
-     def process_export_file(self, fname):
-         """
-         Parses EXPORT_SYMBOL* macros from a single Kernel source file.
-         """
--        try:
--            with open(fname, "r", encoding="utf8",
--                      errors="backslashreplace") as fp:
--                for line in fp:
--                    KernelDoc.process_export(self.config.function_table, line)
--
--        except IOError:
--            self.config.log.error("Error: Cannot open fname %s", fname)
--            self.config.errors += 1
-+
-+        # Prevent parsing the same file twice if results are cached
-+        if fname in self.export_files:
-+            return
-+
-+        doc = KernelDoc(self.config, fname)
-+        export_table = doc.parse_export()
-+
-+        if not export_table:
-+            self.error(f"Error: Cannot check EXPORT_SYMBOL* on {fname}")
-+            export_table = set()
-+
-+        self.export_table[fname] = export_table
-+        self.export_files.add(fname)
- 
-     def file_not_found_cb(self, fname):
-         """
-         Callback to warn if a file was not found.
-         """
- 
--        self.config.log.error("Cannot find file %s", fname)
--        self.config.errors += 1
-+        self.error(f"Cannot find file {fname}")
- 
-     def __init__(self, verbose=False, out_style=None,
-                  werror=False, wreturn=False, wshort_desc=False,
-@@ -147,7 +180,9 @@ class KernelFiles():
-             if kdoc_werror:
-                 werror = kdoc_werror
- 
--        # Set global config data used on all files
-+        # Some variables are global to the parser logic as a whole as they are
-+        # used to send control configuration to KernelDoc class. As such,
-+        # those variables are read-only inside the KernelDoc.
-         self.config = argparse.Namespace
- 
-         self.config.verbose = verbose
-@@ -156,27 +191,25 @@ class KernelFiles():
-         self.config.wshort_desc = wshort_desc
-         self.config.wcontents_before_sections = wcontents_before_sections
- 
--        self.config.function_table = set()
--        self.config.source_map = {}
--
-         if not logger:
-             self.config.log = logging.getLogger("kernel-doc")
-         else:
-             self.config.log = logger
- 
--        self.config.kernel_version = os.environ.get("KERNELVERSION",
--                                                    "unknown kernel version'")
-+        self.config.warning = self.warning
-+
-         self.config.src_tree = os.environ.get("SRCTREE", None)
- 
-+        # Initialize variables that are internal to KernelFiles
-+
-         self.out_style = out_style
- 
--        # Initialize internal variables
--
--        self.config.errors = 0
-+        self.errors = 0
-         self.results = {}
- 
-         self.files = set()
-         self.export_files = set()
-+        self.export_table = {}
- 
-     def parse(self, file_list, export_file=None):
-         """
-@@ -185,28 +218,11 @@ class KernelFiles():
- 
-         glob = GlobSourceFiles(srctree=self.config.src_tree)
- 
--        # Prevent parsing the same file twice to speedup parsing and
--        # avoid reporting errors multiple times
--
-         for fname in glob.parse_files(file_list, self.file_not_found_cb):
--            if fname not in self.files:
--                self.results[fname] = self.parse_file(fname)
--                self.files.add(fname)
--
--        # If a list of export files was provided, parse EXPORT_SYMBOL*
--        # from files that weren't fully parsed
--
--        if not export_file:
--            return
--
--        self.export_files |= self.files
--
--        glob = GlobSourceFiles(srctree=self.config.src_tree)
-+            self.parse_file(fname)
- 
-         for fname in glob.parse_files(export_file, self.file_not_found_cb):
--            if fname not in self.export_files:
--                self.process_export_file(fname)
--                self.export_files.add(fname)
-+            self.process_export_file(fname)
- 
-     def out_msg(self, fname, name, arg):
-         """
-@@ -223,32 +239,35 @@ class KernelFiles():
- 
-     def msg(self, enable_lineno=False, export=False, internal=False,
-             symbol=None, nosymbol=None, no_doc_sections=False,
--            filenames=None):
-+            filenames=None, export_file=None):
-         """
-         Interacts over the kernel-doc results and output messages,
-         returning kernel-doc markups on each interaction
-         """
- 
--        function_table = self.config.function_table
--
--        if symbol:
--            for s in symbol:
--                function_table.add(s)
--
--        # Output none mode: only warnings will be shown
--        if not self.out_style:
--            return
--
-         self.out_style.set_config(self.config)
- 
--        self.out_style.set_filter(export, internal, symbol, nosymbol,
--                                  function_table, enable_lineno,
--                                  no_doc_sections)
--
-         if not filenames:
-             filenames = sorted(self.results.keys())
- 
-         for fname in filenames:
-+            function_table = set()
-+
-+            if internal or export:
-+                if not export_file:
-+                    export_file = [fname]
-+
-+                for f in export_file:
-+                    function_table |= self.export_table[f]
-+
-+            if symbol:
-+                for s in symbol:
-+                    function_table.add(s)
-+
-+            self.out_style.set_filter(export, internal, symbol, nosymbol,
-+                                      function_table, enable_lineno,
-+                                      no_doc_sections)
-+
-             msg = ""
-             for name, arg in self.results[fname]:
-                 msg += self.out_msg(fname, name, arg)
-@@ -261,12 +280,3 @@ class KernelFiles():
-                                             fname, ln, dtype)
-             if msg:
-                 yield fname, msg
--
--    @property
--    def errors(self):
--        """
--        Return a count of the number of warnings found, including
--        the ones displayed while interacting over self.msg.
--        """
--
--        return self.config.errors
-diff --git a/scripts/lib/kdoc/kdoc_output.py b/scripts/lib/kdoc/kdoc_output.py
-index e9b4d0093084..c352b7f8d3fd 100755
---- a/scripts/lib/kdoc/kdoc_output.py
-+++ b/scripts/lib/kdoc/kdoc_output.py
-@@ -69,7 +69,7 @@ class OutputFormat:
-         self.enable_lineno = None
-         self.nosymbol = {}
-         self.symbol = None
--        self.function_table = set()
-+        self.function_table = None
-         self.config = None
-         self.no_doc_sections = False
- 
-@@ -94,10 +94,10 @@ class OutputFormat:
- 
-         self.enable_lineno = enable_lineno
-         self.no_doc_sections = no_doc_sections
-+        self.function_table = function_table
- 
-         if symbol:
-             self.out_mode = self.OUTPUT_INCLUDE
--            function_table = symbol
-         elif export:
-             self.out_mode = self.OUTPUT_EXPORTED
-         elif internal:
-@@ -108,8 +108,6 @@ class OutputFormat:
-         if nosymbol:
-             self.nosymbol = set(nosymbol)
- 
--        if function_table:
--            self.function_table = function_table
- 
-     def highlight_block(self, block):
-         """
-@@ -129,8 +127,7 @@ class OutputFormat:
-         warnings = args.get('warnings', [])
- 
-         for log_msg in warnings:
--            self.config.log.warning(log_msg)
--            self.config.errors += 1
-+            self.config.warning(log_msg)
- 
-     def check_doc(self, name, args):
-         """Check if DOC should be output"""
-diff --git a/scripts/lib/kdoc/kdoc_parser.py b/scripts/lib/kdoc/kdoc_parser.py
-index 43e6ffbdcc2c..33f00c77dd5f 100755
---- a/scripts/lib/kdoc/kdoc_parser.py
-+++ b/scripts/lib/kdoc/kdoc_parser.py
-@@ -1133,21 +1133,25 @@ class KernelDoc:
-         self.emit_warning(ln, "error: Cannot parse typedef!")
- 
-     @staticmethod
--    def process_export(function_table, line):
-+    def process_export(function_set, line):
-         """
-         process EXPORT_SYMBOL* tags
- 
--        This method is called both internally and externally, so, it
--        doesn't use self.
-+        This method doesn't use any variable from the class, so declare it
-+        with a staticmethod decorator.
-         """
- 
-+        # Note: it accepts only one EXPORT_SYMBOL* per line, as having
-+        # multiple export lines would violate Kernel coding style.
-+
-         if export_symbol.search(line):
-             symbol = export_symbol.group(2)
--            function_table.add(symbol)
-+            function_set.add(symbol)
-+            return
- 
-         if export_symbol_ns.search(line):
-             symbol = export_symbol_ns.group(2)
--            function_table.add(symbol)
-+            function_set.add(symbol)
- 
-     def process_normal(self, ln, line):
-         """
-@@ -1617,17 +1621,39 @@ class KernelDoc:
-         elif doc_content.search(line):
-             self.entry.contents += doc_content.group(1) + "\n"
- 
--    def run(self):
-+    def parse_export(self):
-+        """
-+        Parses EXPORT_SYMBOL* macros from a single Kernel source file.
-+        """
-+
-+        export_table = set()
-+
-+        try:
-+            with open(self.fname, "r", encoding="utf8",
-+                      errors="backslashreplace") as fp:
-+
-+                for line in fp:
-+                    self.process_export(export_table, line)
-+
-+        except IOError:
-+            return None
-+
-+        return export_table
-+
-+    def parse_kdoc(self):
-         """
-         Open and process each line of a C source file.
--        he parsing is controlled via a state machine, and the line is passed
-+        The parsing is controlled via a state machine, and the line is passed
-         to a different process function depending on the state. The process
-         function may update the state as needed.
-+
-+        Besides parsing kernel-doc tags, it also parses export symbols.
-         """
- 
-         cont = False
-         prev = ""
-         prev_ln = None
-+        export_table = set()
- 
-         try:
-             with open(self.fname, "r", encoding="utf8",
-@@ -1659,6 +1685,16 @@ class KernelDoc:
-                                           self.st_inline_name[self.inline_doc_state],
-                                           line)
- 
-+                    # This is an optimization over the original script.
-+                    # There, when export_file was used for the same file,
-+                    # it was read twice. Here, we use the already-existing
-+                    # loop to parse exported symbols as well.
-+                    #
-+                    # TODO: It should be noticed that not all states are
-+                    # needed here. On a future cleanup, process export only
-+                    # at the states that aren't handling comment markups.
-+                    self.process_export(export_table, line)
-+
-                     # Hand this line to the appropriate state handler
-                     if self.state == self.STATE_NORMAL:
-                         self.process_normal(ln, line)
-@@ -1675,3 +1711,5 @@ class KernelDoc:
-                         self.process_docblock(ln, line)
-         except OSError:
-             self.config.log.error(f"Error: Cannot open file {self.fname}")
-+
-+        return export_table, self.entries
--- 
-2.49.0
+1. Chips&Media wave5 driver, it enable colorspace change detection for 
+AVC format,
+but disable for HEVC format, but in firmware, it only detect colorspace
+change for HEVC format, so the result is it ignore the colorspace
+change.
+2. Aspeed driver, it only check resolution change. ignore colorspace.
+3. Amphion driver, it ignores the colorspace change.
+4. Mediatek vcodec driver, it only check resolution change.
+5. Qualcomm iris decoder driver, not sure, firmware report seq change
+event.
+6. Qualcomm Venus driver, not sure, firmwae report sequence change
+event, but vdec_event_change() didn't handle colorspace.
+7. Amlogic video decoder driver, it only check resolution change, no
+colorspace change check.
 
+Regards,
+Ming
+
+>>
+>> Regards,
+>> Ming
+>>
+>>>>
+>>>>>
+>>>>> I'm a bit concerned about backwards compatibility issues: if a userspace application
+>>>>> doesn't understand this new flag and just honors CH_RESOLUTION, then it would
+>>>>> never react to just a colorspace change.
+>>>>>
+>>>>> Nicolas, does gstreamer look at these flags?
+>>>>
+>>>> I checked the gstreamer code, it does check this flag:
+>>>>
+>>>> if (event.type == V4L2_EVENT_SOURCE_CHANGE &&
+>>>>        (event.u.src_change.changes & V4L2_EVENT_SRC_CH_RESOLUTION)) {
+>>>>      GST_DEBUG_OBJECT (v4l2object->dbg_obj,
+>>>>          "Can't streamon capture as the resolution have changed.");
+>>>>      ret = GST_V4L2_FLOW_RESOLUTION_CHANGE;
+>>>> }
+>>>>
+>>>> Currently the gstreamer can't handle the CH_COLORSPACE flag.
+>>>>
+>>>> Thanks,
+>>>> Ming
+>>>>
+>>>>>
+>>>>> Regards,
+>>>>>
+>>>>> 	Hans
+>>>>>
+>>>>>> +
+>>>>>>     Return Value
+>>>>>>     ============
+>>>>>>     
+>>>>>> diff --git a/Documentation/userspace-api/media/videodev2.h.rst.exceptions b/Documentation/userspace-api/media/videodev2.h.rst.exceptions
+>>>>>> index 35d3456cc812..ac47c6d9448b 100644
+>>>>>> --- a/Documentation/userspace-api/media/videodev2.h.rst.exceptions
+>>>>>> +++ b/Documentation/userspace-api/media/videodev2.h.rst.exceptions
+>>>>>> @@ -526,6 +526,7 @@ replace define V4L2_EVENT_CTRL_CH_RANGE ctrl-changes-flags
+>>>>>>     replace define V4L2_EVENT_CTRL_CH_DIMENSIONS ctrl-changes-flags
+>>>>>>     
+>>>>>>     replace define V4L2_EVENT_SRC_CH_RESOLUTION src-changes-flags
+>>>>>> +replace define V4L2_EVENT_SRC_CH_COLORSPACE src-changes-flags
+>>>>>>     
+>>>>>>     replace define V4L2_EVENT_MD_FL_HAVE_FRAME_SEQ :c:type:`v4l2_event_motion_det`
+>>>>>>     
+>>>>>> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+>>>>>> index c8cb2796130f..242242c8e57b 100644
+>>>>>> --- a/include/uapi/linux/videodev2.h
+>>>>>> +++ b/include/uapi/linux/videodev2.h
+>>>>>> @@ -2559,6 +2559,7 @@ struct v4l2_event_frame_sync {
+>>>>>>     };
+>>>>>>     
+>>>>>>     #define V4L2_EVENT_SRC_CH_RESOLUTION		(1 << 0)
+>>>>>> +#define V4L2_EVENT_SRC_CH_COLORSPACE		(1 << 1)
+>>>>>>     
+>>>>>>     struct v4l2_event_src_change {
+>>>>>>     	__u32 changes;
+>>>>>
+>>>>
+>>>
+>>
+> 
