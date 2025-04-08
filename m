@@ -1,178 +1,141 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A678F1E1A3F;
-	Tue,  8 Apr 2025 14:58:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A9151E521A;
+	Tue,  8 Apr 2025 14:58:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744124288; cv=none; b=chM83X335qpngRdYRSHb5Lo1LKbvwVadvz5R14GFY/E3HeQg+4oacPpVhGHHIyxDptHNRvA0s2qRJYvzudlv2tfa27nycAJGpHEi32YZZ5A1ff1loDa7yXZfaoCAzpFogHMljYrX1WbKCEuLjKXVw2OHqbbw2aIODRhNEplZG3k=
+	t=1744124323; cv=none; b=iFOhGE8JzrF9u4rGbr+srhMFuPtguOQ4PdBh1kCajz5DFYK2S7dfq6iS6gFwNt8RmFuEBOAxRcVleMiSD7UOmYm9Th60s9vWmjkEKjLPYAdKHfdevb8Ft0kUh2M3ZsvicUE9uOlzu46YBIZdhc5hSjwLzaXNHgIrF98x/lVYa+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744124288; c=relaxed/simple;
-	bh=8H5Xn3sQovWkd+GJDu5CdgqtheWeaa0IPtY2GnP1Q0o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n+GlTq/HArWK8TOc7yMNcR5wdoSeSSmwOa1WZhm/BxXB3Yxe4hLoRASmunhJaxJLElJ/jKuWwkS/C5EPGxeXAcsmQ06/hNKN9Bd7aRLqAuVPJmX6edOFn7Jt2Q3gC6Gk33auaB20ch9/HT4AYHYWbpIX1df0F3kvj0tyyxXmAGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lQL+qfsv; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744124323; c=relaxed/simple;
+	bh=5qALSFBZ7L1tAKOyN1L/oKlk3jA7LDA7goT+jZYqeQE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=mrIMN3ilD9cMlYVR1eY7tQpogWL+wx8BranSByhW86xBppr3E5iT4gboH/2jOsnzY6CkMjDN/kbOsYXbHbY9AdXgfKtJovTpHCPoA+Y5VmA8z1to3lPj78UtDL167u1JZUktNADGLJK/Rn3v6RyFyoM0Jp2haeLS3qn6jozJ/Ng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K4GkieZE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lQL+qfsv"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-54996d30bfbso2790547e87.2;
-        Tue, 08 Apr 2025 07:58:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744124285; x=1744729085; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0jIrA3mx6C6mZy2tnJofkxitpjJevE8nbzOCRz8TRh8=;
-        b=lQL+qfsvXJTnNDdV5ufNF6G/iyOwwwT6x+Qh77ul2LikAOxvrlQkoIZtzKwvy3pttL
-         cTOmrr+GqdgZHnP9u27AO3dJHnSh0t9m6UWBh4QXFPJftKpbNjiAA+6e9vqcr1bEcuDQ
-         I1NU+SiLiQ0qrmY9sOWMPetQjoQl/HfetPEw5gf14yY7Ha5PI6mmHd9XosBefYWIhYzT
-         qfBk2jzEsmoCAjwu/CZfcImmNqGnNVIqCAaIuSlX++13ZS2tt9yETw+Q6x8Xf3gvgVMK
-         d5KiUa1mGHg+1GiTIyjJnVfJCxkHlWyPyt/6KIOTQ9R5CbqF/z9BDMJ4tQLLR/x9Log2
-         fO1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744124285; x=1744729085;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0jIrA3mx6C6mZy2tnJofkxitpjJevE8nbzOCRz8TRh8=;
-        b=gHNxgOY9T9nw/AVzkmnCActoMpcVC3hgNTUciM65NnX414oB5Skv6nE/1KXtJscHSW
-         wqmsKPiqqZDuDCYcGwvBjD6LM/bkuLpmY5Kzto5HYL/Rz62HRGHN0zRyhCQnVQek+vcd
-         0ypP57giP89CqOxbAg1WeBC7LQWW3ZxjNgoQc7FJdrkFoj/myYSAlFbL+CBZ5iHndWTG
-         vO0gyrxPErgYrpQPqN6ipQRWINuIzkyfmBaqcLaFfQra/8yImYJADaaueBlJYxCkh0jT
-         1+rluXcx9Cml2w1Yl+OvwWNJAu0usJZs0agmPOWrhBhMbnr2pITU41yeOh3QPbehfVze
-         Gqbg==
-X-Forwarded-Encrypted: i=1; AJvYcCUq7mbyb49UuTp2ACdlr9dJuZ+36nVgErMCO2ibugq2v0C0SjyTXqgrKpa62cjZz0XhJrqiMidSgOaE@vger.kernel.org, AJvYcCXcnXyRjmDhG1KSoR4swlgnv8/0or2a0YH+o0T3x/3U6X/1nC8/TBn11OAqSKHf0GMpFfAVLync1V34LMug@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxoo4HQaMhl/SCK4LkWfNBKtNt4YuUb078sOVZQul50Folpn8zp
-	YWDSdFdDkHpErM2L6RdJysVXjqcMy91E878SgxfmIitdCnYlMdaQ
-X-Gm-Gg: ASbGncsCC64PDI+YxXMEP2enwW8clLtQa4A1VD1lsfwvp5CYl/UBpBg9Vc+rZ4FC8J8
-	1ZYqUlCumS72pGZ4picFtzgBlbxTnk/Z/Om5da2gGTp+jL3/M/wHC8TtfUhGfqzE2kw/Mgd8N20
-	7yIHGqvzY+8gKq04nho9mpoUhJpA90VRHEVKg3K1z+hMmwIA3GjT3C0KfkuscAFzwpA2hD4/XG9
-	AuD100MgzWJL1tABa8fSFjW2mctXBLglo+T+5YqdgNXMLpa3jiBIuPBka0Zch2MM8y8Qoyprsmx
-	XQE1JQaLnn7+GbXjKTwfDQDkhmMNyiw8+w0oOnc4oVw5AHhVH9/lOGPcuYNY3e+CPGp4RHCwiYx
-	FSb6Xjg==
-X-Google-Smtp-Source: AGHT+IH7AfCDvYI4ulQvJiioz+8wMgXMRFnMBvJTApo51eq7l+wLWCNH4RztQpIl6uGPT7+sa6FzgA==
-X-Received: by 2002:a05:6512:e92:b0:549:8d16:7267 with SMTP id 2adb3069b0e04-54c2276aba5mr4772259e87.10.1744124284349;
-        Tue, 08 Apr 2025 07:58:04 -0700 (PDT)
-Received: from gmail.com (83-233-6-197.cust.bredband2.com. [83.233.6.197])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54c1e65d6d5sm1510577e87.181.2025.04.08.07.58.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 07:58:02 -0700 (PDT)
-Date: Tue, 8 Apr 2025 16:58:00 +0200
-From: Marcus Folkesson <marcus.folkesson@gmail.com>
-To: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Javier Martinez Canillas <javierm@redhat.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Thomas Zimmermann <tzimmrmann@suse.de>
-Subject: Re: [PATCH v3 2/3] drm/st7571-i2c: add support for Sitronix ST7571
- LCD controller
-Message-ID: <Z_U5eGy3vLgHZmz1@gmail.com>
-References: <20250408-st7571-v3-0-200693efec57@gmail.com>
- <20250408-st7571-v3-2-200693efec57@gmail.com>
- <87cydn9bkx.fsf@minerva.mail-host-address-is-not-set>
- <Z_Uin2dvmbantQU4@gmail.com>
- <05fa4ac7-db09-401d-8680-0d71112d2239@suse.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K4GkieZE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 514B8C4CEE7;
+	Tue,  8 Apr 2025 14:58:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744124322;
+	bh=5qALSFBZ7L1tAKOyN1L/oKlk3jA7LDA7goT+jZYqeQE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=K4GkieZEjPaQUxrBjrfFf+HbVXS8mw+BEAtGOYNOXTvf4VF8m3MCpnlZPMPOSRlfH
+	 8vYR05N6YB7ZEJ5MQ87vjONWAfQkVD6jETSGWA2UFuQ/szVITaH3AIVNLrcoGCj003
+	 87PFmhZtVwUET57ZIpb/XhgdSo4xkltqb1f9Zj3ylSM9NY6sqLG6A0EH2344ToQiuD
+	 KEgwjURPS77QNjkzaQIq3IlTuPLSVd2U8mTP3DjYmhIOMPV9v8vLBzcvzI8rGj1Y6D
+	 9mZLYg6pM+BxUWkElUqJrUaxNif2yaFj/pmr0rTbAPnFBQy4FK5AqLp/ut01PAtYPr
+	 T3bEU0hrhAEGA==
+Date: Tue, 8 Apr 2025 09:58:40 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Richard Zhu <hongxing.zhu@nxp.com>
+Cc: jingoohan1@gmail.com, frank.li@nxp.com, l.stach@pengutronix.de,
+	lpieralisi@kernel.org, kw@linux.com,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	bhelgaas@google.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+	kernel@pengutronix.de, festevam@gmail.com,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	imx@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/4] PCI: dwc: Add quirk to fix hang issue in L2 poll
+ of suspend
+Message-ID: <20250408145840.GA231894@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="lMPor8puCNzndVuT"
-Content-Disposition: inline
-In-Reply-To: <05fa4ac7-db09-401d-8680-0d71112d2239@suse.de>
-
-
---lMPor8puCNzndVuT
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250408065221.1941928-2-hongxing.zhu@nxp.com>
 
-Hi,
+On Tue, Apr 08, 2025 at 02:52:18PM +0800, Richard Zhu wrote:
+> i.MX6QP PCIe is hang in L2 poll during suspend when one endpoint device is
+> connected, for example the Intel e1000e network card.
+> 
+> Refer to Figure5-1 Link Power Management State Flow Diagram of PCI
+> Express Base Spec Rev6.0. L0 can be transferred to LDn directly.
 
-On Tue, Apr 08, 2025 at 03:57:22PM +0200, Thomas Zimmermann wrote:
-> Hi
->=20
-> Am 08.04.25 um 15:20 schrieb Marcus Folkesson:
-> [...]
-> > >=20
-> > > > +static int st7571_set_pixel_format(struct st7571_device *st7571,
-> > > > +				   u32 pixel_format)
-> > > > +{
-> > > > +	switch (pixel_format) {
-> > > > +	case DRM_FORMAT_C1:
-> > > > +		return st7571_set_color_mode(st7571, ST7571_COLOR_MODE_BLACKWHIT=
-E);
-> > > > +	case DRM_FORMAT_C2:
-> > > > +		return st7571_set_color_mode(st7571, ST7571_COLOR_MODE_GRAY);
-> > > > +	default:
-> > > > +		return -EINVAL;
-> > > > +	}
-> > > These should be DRM_FORMAT_R1 and DRM_FORMAT_R2 and not C{1,2}. The f=
-ormer
-> > > is for displays have a single color (i.e: grey) while the latter is w=
-hen a
-> > > pixel can have different color, whose values are defined by a CLUT ta=
-ble.
-> > >=20
-> > I see.
-> > Does fbdev only works with CLUT formats? I get this error when I switch
-> > to DRM_FORMAT_R{1,2}:
-> >=20
-> > [drm] Initialized st7571 1.0.0 for 0-003f on minor 0
-> > st7571 0-003f: [drm] format C1   little-endian (0x20203143) not support=
-ed
-> > st7571 0-003f: [drm] No compatible format found
-> > st7571 0-003f: [drm] *ERROR* fbdev: Failed to setup emulation (ret=3D-2=
-2)
->=20
-> For testing purposes, you can add the _R formats to the switch case at
->=20
-> https://elixir.bootlin.com/linux/v6.13.7/source/drivers/gpu/drm/drm_fb_he=
-lper.c#L1246
->=20
-> and see how it goes.
+Please include the section number.  Section numbers are easy to find
+because they're in the spec PDF contents, but figures are not.  E.g.,
+"PCIe r6.0, sec 5.2, fig 5-1"
 
-Still no penguin (same error as above).
+> It's harmless to let dw_pcie_suspend_noirq() proceed suspend after the
+> PME_Turn_Off is sent out, whatever the ltssm state is in L2 or L3 on
+> some PME_Turn_Off handshake broken platforms.
 
-The problem is that drm_mode_legacy_fb_format(), which is called from
-drm_fbdev_shmem_driver_fbdev_probe -> drm_driver_legacy_fb_format -> drm_mo=
-de_legacy_fb_format
+Maybe we don't need to poll for these LTSSM states on *any* platform,
+and we could just remove the poll and timeout completely?
 
-Sets the pixel format DRM_FORMAT_C{1,2} when bpp is 1 or 2.
-So I don't think it is possible to use the _R formats with fbdev.
-But I'm not sure?
+If not, we need to explain why it is safe to skip the poll on some
+platforms.  "Skipping the poll avoids a hang" is not a sufficient
+explanation.
 
->=20
-> Best regards
-> Thomas
+s/ltssm/LTSSM/
 
-Best regards,
-Marcus Folkesson
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -947,7 +947,7 @@ int dw_pcie_suspend_noirq(struct dw_pcie *pci)
+>  {
+>  	u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+>  	u32 val;
+> -	int ret;
+> +	int ret = 0;
+>  
+>  	/*
+>  	 * If L1SS is supported, then do not put the link into L2 as some
+> @@ -964,15 +964,17 @@ int dw_pcie_suspend_noirq(struct dw_pcie *pci)
+>  			return ret;
+>  	}
+>  
+> -	ret = read_poll_timeout(dw_pcie_get_ltssm, val,
+> -				val == DW_PCIE_LTSSM_L2_IDLE ||
+> -				val <= DW_PCIE_LTSSM_DETECT_WAIT,
+> -				PCIE_PME_TO_L2_TIMEOUT_US/10,
+> -				PCIE_PME_TO_L2_TIMEOUT_US, false, pci);
+> -	if (ret) {
+> -		/* Only log message when LTSSM isn't in DETECT or POLL */
+> -		dev_err(pci->dev, "Timeout waiting for L2 entry! LTSSM: 0x%x\n", val);
+> -		return ret;
+> +	if (!dwc_check_quirk(pci, QUIRK_NOL2POLL_IN_PM)) {
+> +		ret = read_poll_timeout(dw_pcie_get_ltssm, val,
+> +					val == DW_PCIE_LTSSM_L2_IDLE ||
+> +					val <= DW_PCIE_LTSSM_DETECT_WAIT,
+> +					PCIE_PME_TO_L2_TIMEOUT_US/10,
+> +					PCIE_PME_TO_L2_TIMEOUT_US, false, pci);
+> +		if (ret) {
+> +			/* Only log message when LTSSM isn't in DETECT or POLL */
+> +			dev_err(pci->dev, "Timeout waiting for L2 entry! LTSSM: 0x%x\n", val);
+> +			return ret;
+> +		}
+>  	}
+>  
+>  	/*
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index 56aafdbcdaca..05fe654d7761 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -282,6 +282,9 @@
+>  /* Default eDMA LLP memory size */
+>  #define DMA_LLP_MEM_SIZE		PAGE_SIZE
+>  
+> +#define QUIRK_NOL2POLL_IN_PM		BIT(0)
+> +#define dwc_check_quirk(pci, val)	(pci->quirk_flag & val)
 
---lMPor8puCNzndVuT
-Content-Type: application/pgp-signature; name=signature.asc
+Maybe just my personal preference, but I don't like things named
+"check" because that just means "look at"; it doesn't give any hint
+about how to interpret the result of looking at it.
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEBVGi6LZstU1kwSxliIBOb1ldUjIFAmf1OXQACgkQiIBOb1ld
-UjITCBAAnmJ67WKzefUaDAR0UVVZ3Bc/0DD0kDE1HD0PNw44h8PIW3Tw+fQB0OQP
-LqPs0Vi33D4Zf81iutlO/hfS2L57bkdPBVFvQckWyeA6fomaQYIprdi4U9bE9T/x
-0/e1IfZQ1+AkgjuXaba6Hw4t8P8fDCqSFIqvZ+PEuizgJEA+aLrk2Sav1+xucRhi
-R0vAzjmJk4MKIONG1ZhHMxCP1WgduGfwA9z7rpB2sMkT/sAg2+ydrTXIEEBZAe1C
-7ippzhsChYflIiAG5VWqS5WetIZOumzvxe5lbPEiQa22n6D8lgtTXnxOEt8H3254
-lDeOCuklGlC6zNr6vr7B6I2AhkKxHI60tNM9C2ZzRZCx7fgmjh32XZTqlS9Ux9CF
-UdP5bmSJwn0I1KgwfCTouCNtAK4OwPHeqRipT6/0ADPcAL4Cvs39CdwErBmpEkQk
-KsdrZ4ALHHVrSX7mTMNQKQnpgByZqJep4/y2Y5aTd63x3+UC8Kabnob46xgDlMJq
-pIaV0qsoshSHxyF2xDqQBWSCfC4L4WDbQzuhZhQZ8E7pAInv72MC/l7tvFTk3OSK
-pOdCim/LJ8p3wF0bpBQb54uaV0S72lL65CIJ2qOoZvZSrF1sm7Y2PDKwridY3Spi
-IPNO8mHiN8BIRcVtigKkSS0aAoCYmRbWwIUAPws4c4kw2TXeE2o=
-=fljt
------END PGP SIGNATURE-----
-
---lMPor8puCNzndVuT--
+>  struct dw_pcie;
+>  struct dw_pcie_rp;
+>  struct dw_pcie_ep;
+> @@ -491,6 +494,7 @@ struct dw_pcie {
+>  	const struct dw_pcie_ops *ops;
+>  	u32			version;
+>  	u32			type;
+> +	u32			quirk_flag;
+>  	unsigned long		caps;
+>  	int			num_lanes;
+>  	int			max_link_speed;
+> -- 
+> 2.37.1
+> 
