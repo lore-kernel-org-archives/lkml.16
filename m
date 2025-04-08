@@ -1,67 +1,67 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 639AE21B9C2;
-	Tue,  8 Apr 2025 08:12:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DE3B263F23;
+	Tue,  8 Apr 2025 08:12:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744099943; cv=none; b=WUhq2mpm14LOAeuFDU7YN6ec0sCMCLr44Tv/qsjCke7et0Ip35u1UfDl3xwnNNyM0/LM4bXDcYt3WzS5Jvdpv794n7mIJxlaeHRn23tFx8HGSbtf5hetM8UNzk4ARdLCSFNmmLyMNKDl8Q2ihrjIfsRNaivSeDr7K424pUfU8D8=
+	t=1744099945; cv=none; b=AXUbzqTMd/WVErrad7XDEmxFQrbshjaU778iU8iQSe3tq8QEAw8c0fBe2E8H0OnrRDUTB7+hQivDmoWwX3XMYdNMGXjRI6SlsIvt6zYh2MN9Ixcko6UnciD4g8KXWPtZBuRbE00TdG2Xs01Mfu5ObH1rcGn4cz5A5YyJyOxgqRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744099943; c=relaxed/simple;
-	bh=lcqwwAZ1qfxQBD8Vxb/ZinQz9djbJMiM19YvBwJPd5E=;
+	s=arc-20240116; t=1744099945; c=relaxed/simple;
+	bh=06seFx7k3BNlphlhTX0uBu7X2wZe/CuK4ryc5063EX8=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=uOIzX7fyqQQsZQQLLT7Y6l5KsfIEjYdmhL9wS8qA/J2Ac2tsz+KcTx36bWEsBohh1B0yWQ/Ra+gOykJewDNfyMZwH1BmrM34oC4RGlxIFZzA3BTz/qZCYzdnSXTgDDY3HxkgxqN+8hzRgyPxoITZ86VujPeMTcvN/QrhClgRGyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Zj9/D7J4; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BQyl9otL; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=B1giifYt1d4/gqMr1/gPof/SfwoFGetMH8xbCfvB5Z+WesAYM4Q4d1TfAXkKuzMcyZ2Ove1tXD7VGdAiv1bmCAAnDeP+UKknbbFObapQ7FrB5bcfsLPC374bUkEW1ApxBca+cEQACzoOK30AVPDHY7+EokDzhnPAs+QZw5FkrVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ss3dYONB; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uHZvJNs3; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Zj9/D7J4";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BQyl9otL"
-Date: Tue, 08 Apr 2025 08:12:14 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ss3dYONB";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uHZvJNs3"
+Date: Tue, 08 Apr 2025 08:12:20 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744099939;
+	s=2020; t=1744099941;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=vszxfyShc0++498NH0BgEFLXzhjs7aclqkUGT0A5z5Y=;
-	b=Zj9/D7J4hfOLhXgFhaMBcIk5CNhHF5lRj7ooaJ/V3ehpqbqz58JHl1jv26WuclTAvXQPIh
-	F/nIppJmI/ZAX98EjPtVKOY1wy/M64PP5/1XbSdD7Hv9FnAw6DoRZysLejvOpIZlIwOwKB
-	rMj8WqSc6EqprJ6GAyOjpGrsT4vShdTfl3Kqa6wm2HcbdISsVfJuaDhwRsijbIh93ZM149
-	w5xCzr+hkL6dm5H8qQ7BcI0qBq0uaUMZwa5WbkWmvn2RY7XZ1EMrm0AvgnKF/eEmwaozJh
-	slvU16550ijpGmLYI+sbOk7WxXbZjPQ8ggE7EnaM+5ebZ8ZimDwrJ4yQOoHCfw==
+	bh=WUHzzfNdYsMzpzypkJkPSgadEDRfQIhKGULFIj6LKso=;
+	b=ss3dYONBR3kOUS3WIl1HpK6io0eaRcS4JkZvUTauImxx+sp36Ba7a2N63mBde7V5Vq+2ne
+	r1v5LilCARbzX3enJBa2Q8Bf9rbDbxudzvW33iw76kkfPjNCp15WdrP5SNGoKHlwMb0j1D
+	uqZENGWvKBSRBUxaBD4hSAF34LvHLE5p7TCUzANlw+Rfb8h0zefssd2oKXVxop/0xH2Xfo
+	HFbLMlbHD64lyyEMDpSAL7aummcpP+ZI8y4BDKmsAN4dJZEAGoVOEb6m7pSOOh7odMu9qC
+	KPbRu7iYkxyqJtZHk9fkrqsN4DyOj+zpXjMPV+a50FKJtydLfio0Ti3YpCyXyQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744099939;
+	s=2020e; t=1744099941;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=vszxfyShc0++498NH0BgEFLXzhjs7aclqkUGT0A5z5Y=;
-	b=BQyl9otLZfoKbNjQKWY/DhAZT/4fodIULb1ZWEimZbu/53vevGoNzRkRWZrq/wqxXtNkFK
-	WkcXvyVlTSmvWVCg==
+	bh=WUHzzfNdYsMzpzypkJkPSgadEDRfQIhKGULFIj6LKso=;
+	b=uHZvJNs3kOh+6Pcv3cbY9uij7xo3MB3QyJoCi2KyRP8qLa+yigJAQdJTDTUd+/dhfXm331
+	sLU1Apx0SnU3L7Bg==
 From: "tip-bot2 for Josh Poimboeuf" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: objtool/urgent] objtool, xen: Fix INSN_SYSCALL / INSN_SYSRET semantics
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>,
- Juergen Gross <jgross@suse.com>,
+Subject: [tip: objtool/urgent] objtool: Fix INSN_CONTEXT_SWITCH handling in
+ validate_unret()
+Cc: Andrew Cooper <andrew.cooper3@citrix.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>,
  Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
 In-Reply-To:
- <19453dfe9a0431b7f016e9dc16d031cad3812a50.1744095216.git.jpoimboe@kernel.org>
+ <f5eda46fd09f15b1f5cde3d9ae3b92b958342add.1744095216.git.jpoimboe@kernel.org>
 References:
- <19453dfe9a0431b7f016e9dc16d031cad3812a50.1744095216.git.jpoimboe@kernel.org>
+ <f5eda46fd09f15b1f5cde3d9ae3b92b958342add.1744095216.git.jpoimboe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174409993428.31282.16321486770522273299.tip-bot2@tip-bot2>
+Message-ID: <174409994098.31282.4830296640824754094.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -71,93 +71,52 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the objtool/urgent branch of tip:
 
-Commit-ID:     2dbbca9be4e5ed68d0972a2bcf4561d9cb85b7b7
-Gitweb:        https://git.kernel.org/tip/2dbbca9be4e5ed68d0972a2bcf4561d9cb85b7b7
+Commit-ID:     a8df7d0ef92eca28c610206c6748daf537ac0586
+Gitweb:        https://git.kernel.org/tip/a8df7d0ef92eca28c610206c6748daf537ac0586
 Author:        Josh Poimboeuf <jpoimboe@kernel.org>
-AuthorDate:    Tue, 08 Apr 2025 00:02:16 -07:00
+AuthorDate:    Tue, 08 Apr 2025 00:02:13 -07:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 08 Apr 2025 09:14:12 +02:00
+CommitterDate: Tue, 08 Apr 2025 09:14:11 +02:00
 
-objtool, xen: Fix INSN_SYSCALL / INSN_SYSRET semantics
+objtool: Fix INSN_CONTEXT_SWITCH handling in validate_unret()
 
-Objtool uses an arbitrary rule for INSN_SYSCALL and INSN_SYSRET that
-almost works by accident: if it's in a function, control flow continues
-after the instruction, otherwise it terminates.
+The !CONFIG_IA32_EMULATION version of xen_entry_SYSCALL_compat() ends
+with a SYSCALL instruction which is classified by objtool as
+INSN_CONTEXT_SWITCH.
 
-That behavior should instead be based on the semantics of the underlying
-instruction.  Change INSN_SYSCALL to always preserve control flow and
-INSN_SYSRET to always terminate it.
+Unlike validate_branch(), validate_unret() doesn't consider
+INSN_CONTEXT_SWITCH in a non-function to be a dead end, so it keeps
+going past the end of xen_entry_SYSCALL_compat(), resulting in the
+following warning:
 
-The changed semantic for INSN_SYSCALL requires a tweak to the
-!CONFIG_IA32_EMULATION version of xen_entry_SYSCALL_compat().  In Xen,
-SYSCALL is a hypercall which usually returns.  But in this case it's a
-hypercall to IRET which doesn't return.  Add UD2 to tell objtool to
-terminate control flow, and to prevent undefined behavior at runtime.
+  vmlinux.o: warning: objtool: xen_reschedule_interrupt+0x2a: RET before UNTRAIN
 
+Fix that by adding INSN_CONTEXT_SWITCH handling to validate_unret() to
+match what validate_branch() is already doing.
+
+Fixes: a09a6e2399ba ("objtool: Add entry UNRET validation")
+Reported-by: Andrew Cooper <andrew.cooper3@citrix.com>
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Juergen Gross <jgross@suse.com> # for the Xen part
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/r/19453dfe9a0431b7f016e9dc16d031cad3812a50.1744095216.git.jpoimboe@kernel.org
+Link: https://lore.kernel.org/r/f5eda46fd09f15b1f5cde3d9ae3b92b958342add.1744095216.git.jpoimboe@kernel.org
 ---
- arch/x86/xen/xen-asm.S |  4 +---
- tools/objtool/check.c  | 21 +++++++++++++--------
- 2 files changed, 14 insertions(+), 11 deletions(-)
+ tools/objtool/check.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/x86/xen/xen-asm.S b/arch/x86/xen/xen-asm.S
-index 109af12..461bb15 100644
---- a/arch/x86/xen/xen-asm.S
-+++ b/arch/x86/xen/xen-asm.S
-@@ -226,9 +226,7 @@ SYM_CODE_END(xen_early_idt_handler_array)
- 	push %rax
- 	mov  $__HYPERVISOR_iret, %eax
- 	syscall		/* Do the IRET. */
--#ifdef CONFIG_MITIGATION_SLS
--	int3
--#endif
-+	ud2		/* The SYSCALL should never return. */
- .endm
- 
- SYM_CODE_START(xen_iret)
 diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 2dd89b0..69f94bc 100644
+index 4a1f6c3..c81b070 100644
 --- a/tools/objtool/check.c
 +++ b/tools/objtool/check.c
-@@ -3685,14 +3685,19 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
- 			break;
- 
- 		case INSN_SYSCALL:
-+			if (func && (!next_insn || !next_insn->hint)) {
-+				WARN_INSN(insn, "unsupported instruction in callable function");
-+				return 1;
-+			}
-+
-+			break;
-+
- 		case INSN_SYSRET:
--			if (func) {
--				if (!next_insn || !next_insn->hint) {
--					WARN_INSN(insn, "unsupported instruction in callable function");
--					return 1;
--				}
--				break;
-+			if (func && (!next_insn || !next_insn->hint)) {
-+				WARN_INSN(insn, "unsupported instruction in callable function");
-+				return 1;
- 			}
-+
- 			return 0;
- 
- 		case INSN_STAC:
-@@ -3888,9 +3893,9 @@ static int validate_unret(struct objtool_file *file, struct instruction *insn)
+@@ -3886,6 +3886,11 @@ static int validate_unret(struct objtool_file *file, struct instruction *insn)
+ 			WARN_INSN(insn, "RET before UNTRAIN");
  			return 1;
  
- 		case INSN_SYSCALL:
-+			break;
++		case INSN_CONTEXT_SWITCH:
++			if (insn_func(insn))
++				break;
++			return 0;
 +
- 		case INSN_SYSRET:
--			if (insn_func(insn))
--				break;
- 			return 0;
- 
  		case INSN_NOP:
+ 			if (insn->retpoline_safe)
+ 				return 0;
