@@ -1,97 +1,138 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from pv50p00im-ztdg10011901.me.com (pv50p00im-ztdg10011901.me.com [17.58.6.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA53117A2EB
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 13:43:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33155185B67
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 13:43:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744119789; cv=none; b=jJ2S1/fo+CHMYmgtaBNS6x9VEWK3FG0n8SXWC6VX3pw6vf6Hn9fBj+UMUI+T267UkNQ4xiUlcsXoSqboWmbfOvRssslh9dXzJnDew2Pm8KdItGGamPwcemtgdERbEiyMcH9rzaFERMsFyh00DPOzTaV6ZvW0P52Ph4NCCqPjpF4=
+	t=1744119795; cv=none; b=eDVKsEEeZVdxkxysHpL3fJ5DT7kFa1L9czXx2UEv+dS89um0Rci7HhtYsi/vcBK+nLuK3cj00DBV2a3rq6Yv5FHTTLeEgb4RF3PQAHFI4soOLCY838U75Abp3A/4+4itL4wKvVPr0OMSD8NxwUznxoNr7lG4KpJ9RtLiyUJTkYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744119789; c=relaxed/simple;
-	bh=HgYlIYp91IYrdwdY6Wqx+xPiGtRl8VPT4nWckc3dLfE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B2vss5CrBZt/5Mji1V1fBw7R030KecHrtjkCTL3uNBMqj7ZnqadrFHWkKPbsoq+qowbBiIjAqVtETSP7ZX7H9TF6M15FPAvssuK1WtRkpozFIeb9wUBwaAASDWkq8lZ8VPe8UnpZNr0tYNnB4lGtCf2czU5/ykifHL2Opypw8sk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=Iu6XeEYo; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=C++Ed0o9 reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1744119795; c=relaxed/simple;
+	bh=0oqFzUOBPKKix/1j0ccQIbPAQksuNWmVXOUfqjkEL2E=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=WnfcxFtfgP44NXmTQAx/KCticRGLr8A2cPRMpPm6n81o16qJRqMiKcrfhRGPRBggwdpAfD6UU8V4ZvbDget/fVSBeT4RBjFZ9NOSFK07Nv7W7KjJbXuDuqWS+QXOzsUytCUclHPkN5FLYArnJzz8sTpDmo3PYRMY5mWduVNOnJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=NuZ/nKj6; arc=none smtp.client-ip=17.58.6.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="Iu6XeEYo";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="C++Ed0o9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1744119786; x=1775655786;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=cBlxxxb9nLj+a13bsh9GOCOaWnykOv7HHBx/rUoFZZ8=;
-  b=Iu6XeEYo6oeNnYEbm8uoGtN3PTfMR5SHZcMS+Xpf0kU3dxyt16XQxCiO
-   iqb2uxJi+i2SXPaT3QLucemoty/UFUOxkTVH1ykm31YYwD4e4ev8OKBSn
-   mPE1N5s5RXldAQoL63XQaze3SxNLImUEwwa222g+k+89BISeUWnOUtJcD
-   oLL4niGnMrSJv3XSw85w6iN1YNcfRHam1rJ7FuUn+HlD3OXWByZR2qqYI
-   YX1ACQPwm4vkjvynmLiQHsE2k56Io+h8YE6883d4+qLyMSDRZ+Tdl/Pxo
-   OKqFGYHqQvGO7D/11xDr60FOS228LPwNu61YtrtMrFhfT0KCpMChvv6AF
-   A==;
-X-CSE-ConnectionGUID: vw8GpyTAReSSaLfk24lcSA==
-X-CSE-MsgGUID: OKwzMlX9SZWU9zJjUXTEnQ==
-X-IronPort-AV: E=Sophos;i="6.15,198,1739833200"; 
-   d="scan'208";a="43404992"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 08 Apr 2025 15:43:02 +0200
-X-CheckPoint: {67F527E6-40-F35B2447-E1635CDE}
-X-MAIL-CPID: 91F38755CB118F1CDA92F1B37A55066D_1
-X-Control-Analysis: str=0001.0A006378.67F527E3.0082,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id ABBD0163407;
-	Tue,  8 Apr 2025 15:42:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1744119778;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=cBlxxxb9nLj+a13bsh9GOCOaWnykOv7HHBx/rUoFZZ8=;
-	b=C++Ed0o9vS4mi++RY6GGfEEWEcZjEa508qm2ev21ncqu4bBt2gixgAmPF9E179ozN4kSki
-	v0hHlGwxLr+Gm5RzjvYjJq+5ZqI89ulFotrqESEMNh7PqoDm88Jfk1qgTkWjG7xlBJX/hV
-	/yvyu0XzKyPB00kZUhgi8TiMihyseHl00ggh9qzhp3vH2/aHlt1YUsuraiasuVPEFrLXNv
-	6YPoFtw5xtxiJJKY8mjDz7UbR/A1rgxGBrKqqlonx0Xi8BYHUfpyPwBYDfX0uuY8Ilogze
-	l7YpDQds/hHjSmpEIw9COmlCNy+6sH4oJIJnoLlaITopU7e8Cokil3cGDcCkIg==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] arm64: defconfig: enable backlight device class
-Date: Tue,  8 Apr 2025 15:42:48 +0200
-Message-ID: <20250408134249.1131127-1-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="NuZ/nKj6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=KAvqNbZUARSQP7AzfZVwLgfRlsqyVvzAxLJDPsnC2Po=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme;
+	b=NuZ/nKj66k1VnNWfy5cjzJva75QohhM9B18hLWowCBLLMj5G4tNZLJOs1sU6x9+dH
+	 D1hwFtrc1ghGXNzF1hm85e1O5saV1JFR7Qf5w849NAfcGU9DYu0SXNNjI7nuYMye07
+	 Ie/YVZpHSLZSA86joSkqAIVxQFOSIbV7AD1hLNo9H/HGJhj3LPVBsNtSASn9vCcE9M
+	 Mk/ny+fgY0BKeNSZ/6ZMyOdtU6bTjjLFXKXyKNuXC/1tT9PLCLHLty90e1GMfPErKv
+	 fsAY2PJQr2B/LkBMrLqgG7EExD2T0Ank8MqseM2LbMTIIOK8Kyxd7lP66mFTXl/1HU
+	 ygE7bw4xC6N2g==
+Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
+	by pv50p00im-ztdg10011901.me.com (Postfix) with ESMTPSA id CAA2D3A0165;
+	Tue,  8 Apr 2025 13:43:07 +0000 (UTC)
+From: Zijun Hu <zijun_hu@icloud.com>
+Date: Tue, 08 Apr 2025 21:42:34 +0800
+Subject: [PATCH net-next] sock: Correct error checking condition for
+ assign|release_proto_idx()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250408-fix_net-v1-1-375271a79c11@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAMkn9WcC/x2MWwqAIBAAryL7nWA+IrpKRESutT8WKiGId8/6H
+ GaYAhEDYYSJFQj4UKTLN+g7Bvu5+QM52cYghTRCC8Md5dVj4gpHNWirhHQOWn0HbOo/zfAFHnO
+ CpdYXHEI09mMAAAA=
+X-Change-ID: 20250405-fix_net-3e8364d302ff
+To: Eric Dumazet <edumazet@google.com>, 
+ Kuniyuki Iwashima <kuniyu@amazon.com>, Paolo Abeni <pabeni@redhat.com>, 
+ Willem de Bruijn <willemb@google.com>, 
+ "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
+ Simon Horman <horms@kernel.org>, Pavel Emelyanov <xemul@openvz.org>
+Cc: Zijun Hu <zijun_hu@icloud.com>, Eric Dumazet <dada1@cosmosbay.com>, 
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Zijun Hu <quic_zijuhu@quicinc.com>
+X-Mailer: b4 0.14.2
+X-Proofpoint-GUID: oIss7fQIRjTA0gW9VpyqYZaKxVA9fHnV
+X-Proofpoint-ORIG-GUID: oIss7fQIRjTA0gW9VpyqYZaKxVA9fHnV
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-08_05,2025-04-08_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999
+ clxscore=1011 spamscore=0 suspectscore=0 malwarescore=0 bulkscore=0
+ mlxscore=0 phishscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.22.0-2503100000 definitions=main-2504080097
+X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
 
-CONFIG_DRM_PANEL_SIMPLE is enabled in this config. But it depends on
-CONFIG_BACKLIGHT_CLASS_DEVICE which is only transitively enabled by
-DRM_NOUVEAU, iff DRM_NOUVEAU_BACKLIGHT is enabled as well.
-As simple-panel depends on backlight, enable this in defconfig as well.
+From: Zijun Hu <quic_zijuhu@quicinc.com>
 
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+assign|release_proto_idx() wrongly check find_first_zero_bit() failure
+by condition '(prot->inuse_idx == PROTO_INUSE_NR - 1)' obviously.
+
+Fix by correcting the condition to '(prot->inuse_idx == PROTO_INUSE_NR)'
+Also check @->inuse_idx before accessing @->val[] to avoid OOB.
+
+Fixes: 13ff3d6fa4e6 ("[SOCK]: Enumerate struct proto-s to facilitate percpu inuse accounting (v2).")
+Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
 ---
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ include/net/sock.h | 5 ++++-
+ net/core/sock.c    | 7 +++++--
+ 2 files changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 65ec5a5be407d..b70257878812e 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -963,6 +963,7 @@ CONFIG_DRM_POWERVR=m
- CONFIG_FB=y
- CONFIG_FB_EFI=y
- CONFIG_FB_MODE_HELPERS=y
-+CONFIG_BACKLIGHT_CLASS_DEVICE=m
- CONFIG_BACKLIGHT_PWM=m
- CONFIG_BACKLIGHT_LP855X=m
- CONFIG_LOGO=y
+diff --git a/include/net/sock.h b/include/net/sock.h
+index 8daf1b3b12c607d81920682139b53fee935c9bb5..9ece93a3dd044997276b0fa37dddc7b5bbdacc43 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -1421,7 +1421,10 @@ struct prot_inuse {
+ static inline void sock_prot_inuse_add(const struct net *net,
+ 				       const struct proto *prot, int val)
+ {
+-	this_cpu_add(net->core.prot_inuse->val[prot->inuse_idx], val);
++	unsigned int idx = prot->inuse_idx;
++
++	if (likely(idx < PROTO_INUSE_NR))
++		this_cpu_add(net->core.prot_inuse->val[idx], val);
+ }
+ 
+ static inline void sock_inuse_add(const struct net *net, int val)
+diff --git a/net/core/sock.c b/net/core/sock.c
+index 323892066def8ba517ff59f98f2e4ab47edd4e63..92f4618c576a3120bcc8e9d03d36738b77447360 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -3948,6 +3948,9 @@ int sock_prot_inuse_get(struct net *net, struct proto *prot)
+ 	int cpu, idx = prot->inuse_idx;
+ 	int res = 0;
+ 
++	if (unlikely(idx >= PROTO_INUSE_NR))
++		return 0;
++
+ 	for_each_possible_cpu(cpu)
+ 		res += per_cpu_ptr(net->core.prot_inuse, cpu)->val[idx];
+ 
+@@ -3999,7 +4002,7 @@ static int assign_proto_idx(struct proto *prot)
+ {
+ 	prot->inuse_idx = find_first_zero_bit(proto_inuse_idx, PROTO_INUSE_NR);
+ 
+-	if (unlikely(prot->inuse_idx == PROTO_INUSE_NR - 1)) {
++	if (unlikely(prot->inuse_idx == PROTO_INUSE_NR)) {
+ 		pr_err("PROTO_INUSE_NR exhausted\n");
+ 		return -ENOSPC;
+ 	}
+@@ -4010,7 +4013,7 @@ static int assign_proto_idx(struct proto *prot)
+ 
+ static void release_proto_idx(struct proto *prot)
+ {
+-	if (prot->inuse_idx != PROTO_INUSE_NR - 1)
++	if (prot->inuse_idx != PROTO_INUSE_NR)
+ 		clear_bit(prot->inuse_idx, proto_inuse_idx);
+ }
+ #else
+
+---
+base-commit: 34a07c5b257453b5fcadc2408719c7b075844014
+change-id: 20250405-fix_net-3e8364d302ff
+
+Best regards,
 -- 
-2.43.0
+Zijun Hu <quic_zijuhu@quicinc.com>
 
