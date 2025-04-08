@@ -1,403 +1,145 @@
-Received: from OS0P286CU010.outbound.protection.outlook.com (mail-japanwestazon11011020.outbound.protection.outlook.com [40.107.74.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F6E2266EFA;
-	Tue,  8 Apr 2025 10:40:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.74.20
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744108819; cv=fail; b=G93+I+PM6JguwGeypY8i0/QD/esK9kwUVYqjyZgg7KNyEfoauicXA3yeTpW2TKMzsRbuMWs1sy23qRltmGzqJK6zCuK0Un8aVj1dTQOlHqMlOn4ZpfGLKaRR0HfLD1ghDa6oqtQ/OG5afUb+2NkeEbDUfBk2wH56j1SOvMHrwLM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744108819; c=relaxed/simple;
-	bh=3PPSI81tJYtYC14x1ZOhKdpci+xlkQ2mCsHPV02GYyE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=HQwa/GiXnrU18VZop+dZTcqAzwc+6ozmoko2ktTHY9tPKIkBZoiNniEL0FvOklTq608iO0JQhVYIRxzl3qTrGE2gzsZS0aSNPH94i4VT99Uy1kaZ3S5qlzX4GWNPfmDn6D+Cq1iY6/fF6zzTxjDvi7OBxcirf5mPKYl9EayGLrU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b=ThbX2Bxt; arc=fail smtp.client-ip=40.107.74.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5742266EFA;
+	Tue,  8 Apr 2025 10:42:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744108938; cv=none; b=iugQwUPjBchb+t0i6PmmX4VvSAQuZajxJ2WlaR0PRnCtDgRQjCqMRxfvYBSOK3LujfJPCTfryGqfqJqU5ElXqjTDNPDr7fUc1NvbyBJJQAPGWoCqAjrxOJdjluTHDOG10zx9aKSKo+4iiavTDN5FTEko2D8bieTgDDEQVIypg5o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744108938; c=relaxed/simple;
+	bh=KF6FPa5ukU03kNzrVnuzq3Y1dL14x0ThIwInftlnjlw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YHPJ7P01l0cABAKShTxV100gD2lfNpX/karbT8NrGpXOV/RrJHq3JUiHoMq/FTvwTis6mS8APE0HpHPtRjHbRrzRt9bc6FMmWl9Y69jMEhXQhsgqlrfOVJHxdjMfRnK+rxfAPl+CGWRFDd58o49nX06iVNN+eze9PPbPvP7EOVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lSgif8ro; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b="ThbX2Bxt"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Z+Mo0BOtQMX0QikU4WTDhg7c3MCKEKmJ8wn4zfjmUpI6P7arx1aKDDs1OcH0mJaB7J1w3ED0lzI3MuhZOXTCojAxlxPzpgijNTD/sSRG8o7pKtxaW42yfJG5MU/ApJtTUgfndzRsZ2daxm1sTnq5vjuE+XJtdz7K4C4oy6LX/tnggDVQFBhcvzDOmRKN+cCWRJQVUMh4ebG2wZm0xBnOY4OO1JaW5WU1EzsMifG0GABu1/x14NmGyVOXm2CgsjjdDLp5GtBQ6lRaQoLY3Ojt391MxwsdKsgvUUqANh5IjXuBVJ4CIMFZmG96WxkLpD947XndhZhJmnheNcKvID5W4Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PBJmKEgmnVULFBAKKmJ0GdWAX3JatVibcytPFvfJlzw=;
- b=H0zySMARrWDv3lOn0A7V1gVpcrW31ZHESvzwgPYT2DtrbWF5FovaicgHFb+qp11ggsWNQ+hUcLl8Nlx4u81z+kCo96s7YaJQaso/WRI9JFqCQPXD2d+Ztua8/RR9lObg45Ufh80KF18P2VL4MbgXDeNDz9x1gy6kuSobLIQrAdqOFj78F47RdXsgI722k1l4e8zzAoeR3a43X3RpUZ9hyyLBh971z1/I4FjIlsmeMQS79AUQDrLgdV+1O9J4PL8gmFlu6tzPm3tIR7iCx1hZk+ygH1dt4nz4h+sS58TTLFNYB3XbkdxOlRrerpxLKye7UdWMsrohUoG8oAA84zXxKA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PBJmKEgmnVULFBAKKmJ0GdWAX3JatVibcytPFvfJlzw=;
- b=ThbX2Bxtz5edOrO5DfkQwUNneqovrf7YwGkUTZZ2/DARVnRT3wEpFmxyztxM/PbHvIIAEo7K5rZ/IQCM0rD1/PnuigqfCd+ezwIYX037Svej4gT+pRmYH9Vw997ryOwG96AJsco3UQI7dYFbqOJfQaJJ8mRQsmodAjEDNk6GfmQ=
-Received: from TYCPR01MB11040.jpnprd01.prod.outlook.com (2603:1096:400:3a7::6)
- by OSCPR01MB13698.jpnprd01.prod.outlook.com (2603:1096:604:37f::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.45; Tue, 8 Apr
- 2025 10:40:08 +0000
-Received: from TYCPR01MB11040.jpnprd01.prod.outlook.com
- ([fe80::b183:a30f:c95f:a155]) by TYCPR01MB11040.jpnprd01.prod.outlook.com
- ([fe80::b183:a30f:c95f:a155%3]) with mapi id 15.20.8606.033; Tue, 8 Apr 2025
- 10:40:08 +0000
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To: Prabhakar <prabhakar.csengg@gmail.com>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, Geert Uytterhoeven <geert+renesas@glider.be>,
-	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-CC: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Biju
- Das <biju.das.jz@bp.renesas.com>, Claudiu Beznea
-	<claudiu.beznea.uj@bp.renesas.com>, Fabrizio Castro
-	<fabrizio.castro.jz@renesas.com>, Prabhakar Mahadev Lad
-	<prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: RE: [PATCH v2 3/3] usb: renesas_usbhs: Reorder clock handling and
- power management in probe
-Thread-Topic: [PATCH v2 3/3] usb: renesas_usbhs: Reorder clock handling and
- power management in probe
-Thread-Index: AQHbp6raLCyMPN3kxkGUjRK8DG3KN7OZk3vA
-Date: Tue, 8 Apr 2025 10:40:08 +0000
-Message-ID:
- <TYCPR01MB11040727E81F6DF8647D92343D8B52@TYCPR01MB11040.jpnprd01.prod.outlook.com>
-References: <20250407105002.107181-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250407105002.107181-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250407105002.107181-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=renesas.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYCPR01MB11040:EE_|OSCPR01MB13698:EE_
-x-ms-office365-filtering-correlation-id: 80e93d04-73cb-47f0-2bfd-08dd7689bb99
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|376014|366016|10070799003|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?1uPg3uodVGn3kclEZukTq6SvcuRFetl8w8DnH9h69kMv5uXrnZPISI4rb+wO?=
- =?us-ascii?Q?DMe/t0Q6c7rUgIaygzDc6CxGPTC11XSlDtaPba/HBLmNhtR2CDp2MSJ+bvLV?=
- =?us-ascii?Q?BWRdhRFQ+E0sreAyMux4Dtkzp18ExNCSZM4Pk3zsDLRHsIAwEmwys7rd1Vzs?=
- =?us-ascii?Q?3pXKXzrQSQQIhwsNMn8Mrw8kZX6ZwZ68/L0o+mXRLytRoBXLSgKg75YlPr1s?=
- =?us-ascii?Q?uPxOcSQQydiPt8bRhQzfJusFbdQDcvLrHM8JUQ1l1gPoJP3MvuMACAp8HvJ7?=
- =?us-ascii?Q?rr7fU0Mvl+yj5a9hlmkLUViHopT1lPredoQxQeOuAlT2Z6h6gfNl2Dgy/SmW?=
- =?us-ascii?Q?D0i99DKMiVymdulhoZMwiBn/isn3DT2mfjPAU9lPMyvqxm+VOEsXf8sEIX1G?=
- =?us-ascii?Q?rhhGgHMAlB7RBLc4hOEDr4P1SBoT466+earRcuLSUWrAi5hqmeao64bLjRmJ?=
- =?us-ascii?Q?ORdvkSuz+9HdqU+Lom/q8XGY0A+xdMj0wKtZ126GQZal7nYL727buRlQsTmy?=
- =?us-ascii?Q?nPkWGWs+G+NvzPZTOL8UAkCK4C82UXbK/FfPYKg2SeYWaO4pPin7CeicPZ43?=
- =?us-ascii?Q?7/oVZ71f7SlataSpRuAzCh3vJxdrDaDd1YqmrQd0pwgntlCo7ukM3O2PV+pq?=
- =?us-ascii?Q?1ZIzsd8q88wHRTPrf4MlTYiIhaCIrqAywCiQz38Tx2BYqdX2EunNO7WNjLB4?=
- =?us-ascii?Q?x2ENCkAEP3fwd3cY6bPo4zZK1ZBpmRLRyb+lOjlg6mPNokIOsrlvwOo2lCoO?=
- =?us-ascii?Q?sCXIUgnSNzCZN7+pGNcZrpC+Fjqu6j/WlnsZtResPaXRv9o8yvIijnP9695j?=
- =?us-ascii?Q?Yvc762ZmNjgVa+JuYAB6y2tpdzPrrpwaBDlzUw4TzvtMB1PEQQo5yTZ/+7Ww?=
- =?us-ascii?Q?9JD5+Amh9t29OvqkCmXFNDiqeJTBYf0GrQOA/XuDuNsBiMqQRXgA2377INwJ?=
- =?us-ascii?Q?YTRuTvV/T9xmEMwHSGp7Vx758k9kiRJ5rbnpUP+CeAJubqNJ283JUWEaOlAH?=
- =?us-ascii?Q?oLJS8ILgSjL0R2hnULWIK2VeAjHk/HKfr1k7GwoxInvDIw6GCFxW+HuJi8Jk?=
- =?us-ascii?Q?JRujGiZDeBjombDiGarnXMZbuFjcA/HTrecAghfEROiLVSaVF2eMaAKbJ6KM?=
- =?us-ascii?Q?hSzQmawocavkFmJyKiHAf3olnvHh1icUS/LwrVRJLdukxvMDfEvAznZXKv8F?=
- =?us-ascii?Q?YQJWbz6iZxe0v3Ebh6m7Vg09nX+r+oufzPYcKyfkPU5kGgbjsvlFWNWXLrY4?=
- =?us-ascii?Q?9qbzQYxDIA8RqeRdU7BTaQA2W54MPQaWirv5KbCtRk7kR1mmmP+WwChOyU8s?=
- =?us-ascii?Q?PGk1in6aNGKBsBS0vdKhKRqsa8hEpzxFeOd9MY6P/Ck/OXMCZwGagdAyau6F?=
- =?us-ascii?Q?qQa31ZiJQEfxm0e25wmYOau+btVvwCsdaSw/NXV66nA94JKjszBQ/OoQ4yMJ?=
- =?us-ascii?Q?2ldWexqtPNmqTuyfPaLPZfbffOS23w8L+hz4Sl6AJqbOJ1t6ku2Iul1JlOxd?=
- =?us-ascii?Q?20J6QwF2c5sNUKE=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCPR01MB11040.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(10070799003)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?6CQedeKirJ0OCzpKkertPOERT5QII3/hHVAZFn6Z1U9bJhFSnWQAlc38wt5n?=
- =?us-ascii?Q?gCMgGSrt+R0uPTr8yqciI4bT+fBJR+nNB08BtbxD8mEDPB6HdVR+l2gxw/jd?=
- =?us-ascii?Q?5xmYa09j+1ntmXPKW+MxTWO9kYRrTQu51WTMS3LheBQalN1VORuiV07DSfZ/?=
- =?us-ascii?Q?mmdA+s27giuKlmp9alghiGk3pZwMCteiunSH1mZrs+2OyLxXSSifwpbOpwY4?=
- =?us-ascii?Q?sKfGI67vWUTykkrzKqozXmu82fIty92SuxdgJcbsKstVcIkU7uLTqRz/BF64?=
- =?us-ascii?Q?Ld3b1vUUw3XtLw9dtqHOVI/Yl5rBWdIg7ZR4r0Od6ueh85ESJ/UW2h7jQHMb?=
- =?us-ascii?Q?7fuIIQ+ABXHWI5FhA0SqFuNxeW8VcJ3ol4TPFWko3C85GZGM3tIfY72LTNHT?=
- =?us-ascii?Q?PIvJkx2ojS4J2DqGrHsNhH6Sk6gl16ZMjQMWWN7nq/GeiJeD6SSOfrYOx93v?=
- =?us-ascii?Q?O0JVlgIFqiWzJ4N4wAI2MPQfyxvTd7/p+0USfNFAW9m0F+XYRG41odU9jtbZ?=
- =?us-ascii?Q?M6hHNCrQHU9wIE76QpFeYpacMEpm5SUnWRLng2lGY+gvp21s2CHBGCwLHLuj?=
- =?us-ascii?Q?lR9t134/PXtSAvDyyCnS4RjKOEdH3gSSG3U6JHJUdtgCEuKSt8HhUJ1PiqzN?=
- =?us-ascii?Q?ZR+gXx2vQyLcjDHpW2vVx7NWkcmkX0ZG6SH7T30xB3A+qJcZ1njH01fwmzHX?=
- =?us-ascii?Q?nSRyx3yssTZvNYZHgY/Q2KsZJoUbOjo1z81H77FwyKUMqm2odyocVASk63L9?=
- =?us-ascii?Q?DEXFDg46BD7Xnjuk+TqbOqi41pusRbg5ThxO5ss6wO0i6ObmVlQ7HKiyht95?=
- =?us-ascii?Q?9mzDe3i+WdpWDte/rrN5mR1balDcrLa6+QC2iBXQp6wlvCHn2SYXjcDCJmeX?=
- =?us-ascii?Q?+5XHSS7DPmGF1JxuceuihXFFOQPNPJEZb7yeWM78NPrE/PuPvT9HnrW0vJSj?=
- =?us-ascii?Q?zkC0eh+9oqqh/ZntmZuIhudLC1Fr1a3CDUWBW55BiQyDvgG1Rvr7uP/HqYkV?=
- =?us-ascii?Q?IgkfQYSKAv2judty2wmoiY2RXUAMvvRyVj11syDyO2qX+muC4HI29suAaxyJ?=
- =?us-ascii?Q?bF/gmJYaww6ZgHg1LDkiFYS2QlMI2oIqQehcLfaBhP0r2X3np0dCOKVQXwZw?=
- =?us-ascii?Q?7tmlJdUcc0Igvyk0Eq4rvxiKmONvi7kn3n+ziLRpdtiWvUYgxY2Th/Y2hDQc?=
- =?us-ascii?Q?XT0WSZap1Lm4JwMvo38mMWkMd/4/Ry8w480AlEqTFlPspgqfMfpIWRa1qrc9?=
- =?us-ascii?Q?bIhQdqbF0c4/AnrBAYk9sa9iabeQiAyBZ+Kq6Y37wHQBPXwL75i57XclX+HW?=
- =?us-ascii?Q?Z7eSE7925QP2w6OyTIlbYTUAkK6MzYoFlSvO1rska77PyO6BLQN86OHUZcnt?=
- =?us-ascii?Q?hyv7KYGK68kqUltp5XANlbaFBDfueZik9YEfoW1sndB6CfgcO2NgF/4qPKFh?=
- =?us-ascii?Q?iV5yk7m+drK14REcE20aQu47gzNxHwppHqbxCjja12emaQ9zS2YxLqRGRdKD?=
- =?us-ascii?Q?er971/plQbms28VM6OsT2i4cAH05LMq9GtVcquDsdzSc6dcx+bSl9fNijEWR?=
- =?us-ascii?Q?EgDzyYS6C0IAKSpihGYYjemGA7D+XISP8AVRcVfLRmbyPAna94EscKFmkoKO?=
- =?us-ascii?Q?rI5lPIV0BYPDOPtvygQleAk545eqfs7RvH0+sw8/hxady99DfZAK+UT3Qshc?=
- =?us-ascii?Q?5fQ7Hw=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lSgif8ro"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30bf1d48843so47156721fa.2;
+        Tue, 08 Apr 2025 03:42:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744108934; x=1744713734; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+CyhRhd2dM84GfelfuAF9y0FVmQr9y2b3jxxIDrknhc=;
+        b=lSgif8ro4dSmJPl6F2RepaTAfTQ1rb3jC9VwlTYNO4wE9AeUxAEJVGiCA9InOOPP/M
+         OOXO+rnt32yWeRK8WGmjEhG5fJF1brlfhDq6UxCQE1U7Ft3nU3go5lTwxx/yqytyXQM+
+         crenm8e9wmi4d5fNmEH5qXIaeg7ow4zp5YhYiiKySkIHjZMMmSjjDOgDFB1zcI3fRrta
+         9jTJH/GueDLQCc4NodIv9qKMDWJ+CUytGIM8ioFaUcmyoWC9Y0RoZteOy00Fl3nnvfTJ
+         +8ZIs89LReaGjYBn6UyVTEE0p7paD3aFFZ1jDcrk1YL8BPT6DmQpdYM7IfJMOhXQWNWz
+         ekYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744108934; x=1744713734;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+CyhRhd2dM84GfelfuAF9y0FVmQr9y2b3jxxIDrknhc=;
+        b=ZA/QDQRH+CHygUPsxV9wWrq89jd98+9o4B1G/vUH9fb/2C6mGmnGbSBIAoz/p25V5j
+         Gxic+0jyK9R2WLvtCnpbDhUxpAvUkNbrhguqw3clbuXE/w3Dql8UdGYBDpfl/vcgUdpc
+         W4wTw3kqqyD/HFMhIBLjObZdVlvqM9QiaR1by2leKU+tZOJvPZykXL+HjkNjGs3zLHfA
+         wq1YjF6suqgjdcCHDdhW3HcMdN3iCIXtkUfh1JVbVOpYzYpGsH8h4QJissAs/FJuzxfC
+         9wJclxRlDCeOdReFQZMTuHRt2b8F1K31ZT1R2vlT7+nmmEZ+r2JVu/SedYH1QL5Z6rtA
+         9bCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVxHmfjTj9eOkykl1LOZBLZLIryKX3t/F8U+iizdxX+g4iGJwY4XnGUO5tvJgtE3AYw0FVCSx+UKXIc8gY=@vger.kernel.org, AJvYcCWzdu6Vpdf7kmv/GXIoWG5boEXIKYBVTmQEwa36lwVFk16mkfb7FT49kTnxUsdOdeTo6gyTz6akVCaAfr4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSSQ/DufGZuNA6Y4Y1EwCII0cWAwfIElJm7HxWMyd3O0lyZLw5
+	xhdGJIv93E6KVDCWuSMx0xqXzJCYMqgr56tGMG9JF/+FI6Q46lOD
+X-Gm-Gg: ASbGncslfWsh6WY0ubzz3LAh+Uxjmgak3Cfj2bJ8GeLYWTuJDMJmhirHkxNYiz7SJCA
+	a79gTYRbHhf2L5OkFH5qrX3c/EXxVTvzR5bYMQhtJMxVG8f1ChhvuB65RwWRwajnbx4IZtDfvjF
+	+lI4xV1TZO94LuCRUmx04v7/RQ8tFtiedu5WRj7hYAqZHyXho2A5OCS26vhFGn0Pi7qljpTC/d7
+	Nzd1QHZLQmK7JxTYhhtSr66LeeE9bI7cxPySx6oHEWcluWPArpJTv/rU25yigouPRVKO7MFPphW
+	Y3jSHTwXfw6xIQOo2DKzCgXqToiqWhPVqYWippk6YAQNhoAt6GWVTT0PAQ==
+X-Google-Smtp-Source: AGHT+IGb39lKVdBVUtZAlz6Az0P+SuKCnWMid+raIpiA+LlOh9DSRMzwwyahUsewbQ0j+0jav3yChQ==
+X-Received: by 2002:a05:651c:30d6:b0:308:f0c9:c4cf with SMTP id 38308e7fff4ca-30f0c085ee6mr60112641fa.33.1744108933411;
+        Tue, 08 Apr 2025 03:42:13 -0700 (PDT)
+Received: from [172.16.183.207] ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f031246a1sm19099301fa.1.2025.04.08.03.42.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Apr 2025 03:42:12 -0700 (PDT)
+Message-ID: <6f6a0ade-09fd-49eb-a8ae-ac8849b8ce92@gmail.com>
+Date: Tue, 8 Apr 2025 13:42:12 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB11040.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 80e93d04-73cb-47f0-2bfd-08dd7689bb99
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2025 10:40:08.6039
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zrRWXte5RWjAl/nSqUPtrRWAgD9SzIvZ3m6NEJ8AMtYWJyIxwd/F3irqx3ug73O3Vl4dQJzAdXfL7wde71XYQo2Zurf9arqWG81f6sl/8FLKi87Xe2LqXrVFbgWPigqj
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSCPR01MB13698
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] media: i2c: thp7312: use fwnode_for_each_child_node()
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+ Paul Elder <paul.elder@ideasonboard.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <Z90qM33DvkTMGg_x@mva-rohm>
+ <20250321104100.GC25483@pendragon.ideasonboard.com>
+ <Z_Ti7aQK2_OlrUee@kekkonen.localdomain>
+ <20250408101252.GB31475@pendragon.ideasonboard.com>
+ <3d8546b9-92bd-40da-a61a-4534ba7779db@gmail.com>
+ <Z_T8N8aHR-2OzHAO@kekkonen.localdomain>
+Content-Language: en-US, en-AU, en-GB, en-BW
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <Z_T8N8aHR-2OzHAO@kekkonen.localdomain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello Prabhakar-san,
+On 08/04/2025 13:36, Sakari Ailus wrote:
+> Hei Laurent, Matti,
+> 
+> On Tue, Apr 08, 2025 at 01:26:42PM +0300, Matti Vaittinen wrote:
+>> On 08/04/2025 13:12, Laurent Pinchart wrote:
+>>> Hi Sakari,
+>>>
+>>> On Tue, Apr 08, 2025 at 08:48:45AM +0000, Sakari Ailus wrote:
+>>>> On Fri, Mar 21, 2025 at 12:41:00PM +0200, Laurent Pinchart wrote:
+>>>>> On Fri, Mar 21, 2025 at 10:58:27AM +0200, Matti Vaittinen wrote:
+>>>>>> When fwnode_for_each_available_child_node() is used on the device-tree
+>>>>>> backed systems, it renders to same operation as the
+>>>>>> fwnode_for_each_child_node(), because the fwnode_for_each_child_node()
+>>>>>> does only iterate through those device-tree nodes which are available.
+>>>>>
+>>>>> This makes me wonder why the OF backend implements
+>>>>> fwnode_for_each_child_node() as fwnode_for_each_available_child_node().
+>>>>> Is that on purpose, or is it a bug ?
+>>>>
+>>>> I discussed this with Rafael and he didn't recall why the original
+>>>> implementation was like that. The general direction later on has been not
+>>>> to present unavailable nodes over the fwnode interface.
+>>>>
+>>>> So I'd say:
+>>>>
+>>>> Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+>>>>
+>>>> We should also change the documentation of the fwnode API accordingly.
+>>>
+>>> Does that also mean that the fwnode_for_each_available_child_node()
+>>> function will be dropped ? It's used by few drivers (5 in addition to
+>>> the thp7312 driver, plus 3 call sites in drivers/base/core.c), so a
+>>> patch series to drop it should be easy.
+>>>
+>>
+>> I assume the fwnode_for_each_available_child_node() still makes sense for
+>> ACPI backed users, no?
+> 
+> Not really (see my earlier explanation in
+> <Z9mQPJwnKAkPHriT@kekkonen.localdomain>).
 
-Thank you for the patch!
+I capture that the _named_ available nodes don't have value as ACPI 
+names aren't really what is expected by the _named_ callers. What I 
+didn't pick is that the fwnode_for_each_available_child_node() - which 
+should iterate all available child nodes ignoring the name - wouldn't be 
+useful.
 
-> From: Prabhakar, Sent: Monday, April 7, 2025 7:50 PM
->=20
-> Reorder the initialization sequence in `usbhs_probe()` to enable runtime
-> PM before accessing registers, preventing potential crashes due to
-> uninitialized clocks.
+> I think all the *available* stuff
+> should be removed from include/linux/property.h, apart from
+> fwnode_device_is_availble(), which should be turned to work on struct
+> device to signal its availability for device nodes only.
 
-Just for a record. I don't know why, but the issue didn't occur on the orig=
-inal code
-with my environment (R-Car H3). But, anyway, I understood that we need this=
- patch for RZ/V2H.
+I am not saying I have any understanding of the uses of the 
+'unavailable' nodes. As such I am not arguing over what you say here :)
 
------ I added some debug printk -----
-<snip>
-[    3.193400] usbhs_probe:706
-[    3.196204] usbhs_probe:710
-[    3.199012] usbhs_probe:715
-[    3.201808] usbhs_probe:720
-[    3.204605] usbhs_read: reg =3D 0
-[    3.207754] usbhs_write: reg =3D 0, data =3D 20
-[    3.211941] usbhs_probe:727
-[    3.214738] usbhs_read: reg =3D 102
-[    3.218061] usbhs_write: reg =3D 102, data =3D 4000
-[    3.222697] usbhs_read: reg =3D 0
-[    3.225845] usbhs_write: reg =3D 0, data =3D 420
-[    3.230118] usbhs_write: reg =3D 30, data =3D 0
-[    3.234304] usbhs_write: reg =3D 32, data =3D 0
-[    3.238489] usbhs_write: reg =3D 3a, data =3D 0
-[    3.242673] usbhs_write: reg =3D 36, data =3D 0
-[    3.246859] usbhs_write: reg =3D 30, data =3D 8000
-[    3.251312] usbhs_read: reg =3D 40
-[    3.254540] renesas_usbhs e659c000.usb: probed
-[    3.802010] usbhs_probe:690
-[    3.808677] renesas-cpg-mssr e6150000.clock-controller: MSTP 704/hsusb O=
-N
------
-
-> Currently, in the probe path, registers are accessed before enabling the
-> clocks, leading to a synchronous external abort on the RZ/V2H SoC.
-> The problematic call flow is as follows:
->=20
->     usbhs_probe()
->         usbhs_sys_clock_ctrl()
->             usbhs_bset()
->                 usbhs_write()
->                     iowrite16()  <-- Register access before enabling cloc=
-ks
->=20
-> Since `iowrite16()` is performed without ensuring the required clocks are
-> enabled, this can lead to access errors. To fix this, enable PM runtime
-> early in the probe function and ensure clocks are acquired before registe=
-r
-> access, preventing crashes like the following on RZ/V2H:
->=20
-> [13.272640] Internal error: synchronous external abort: 0000000096000010 =
-[#1] PREEMPT SMP
-> [13.280814] Modules linked in: cec renesas_usbhs(+) drm_kms_helper fuse d=
-rm backlight ipv6
-> [13.289088] CPU: 1 UID: 0 PID: 195 Comm: (udev-worker) Not tainted 6.14.0=
--rc7+ #98
-> [13.296640] Hardware name: Renesas RZ/V2H EVK Board based on r9a09g057h44=
- (DT)
-> [13.303834] pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=
-=3D--)
-> [13.310770] pc : usbhs_bset+0x14/0x4c [renesas_usbhs]
-> [13.315831] lr : usbhs_probe+0x2e4/0x5ac [renesas_usbhs]
-> [13.321138] sp : ffff8000827e3850
-> [13.324438] x29: ffff8000827e3860 x28: 0000000000000000 x27: ffff8000827e=
-3ca0
-> [13.331554] x26: ffff8000827e3ba0 x25: ffff800081729668 x24: 000000000000=
-0025
-> [13.338670] x23: ffff0000c0f08000 x22: 0000000000000000 x21: ffff0000c0f0=
-8010
-> [13.345783] x20: 0000000000000000 x19: ffff0000c3b52080 x18: 00000000ffff=
-ffff
-> [13.352895] x17: 0000000000000000 x16: 0000000000000000 x15: ffff8000827e=
-36ce
-> [13.360009] x14: 00000000000003d7 x13: 00000000000003d7 x12: 000000000000=
-0000
-> [13.367122] x11: 0000000000000000 x10: 0000000000000aa0 x9 : ffff8000827e=
-3750
-> [13.374235] x8 : ffff0000c1850b00 x7 : 0000000003826060 x6 : 000000000000=
-001c
-> [13.381347] x5 : 000000030d5fcc00 x4 : ffff8000825c0000 x3 : 000000000000=
-0000
-> [13.388459] x2 : 0000000000000400 x1 : 0000000000000000 x0 : ffff0000c3b5=
-2080
-> [13.395574] Call trace:
-> [13.398013]  usbhs_bset+0x14/0x4c [renesas_usbhs] (P)
-> [13.403076]  platform_probe+0x68/0xdc
-> [13.406738]  really_probe+0xbc/0x2c0
-> [13.410306]  __driver_probe_device+0x78/0x120
-> [13.414653]  driver_probe_device+0x3c/0x154
-> [13.418825]  __driver_attach+0x90/0x1a0
-> [13.422647]  bus_for_each_dev+0x7c/0xe0
-> [13.426470]  driver_attach+0x24/0x30
-> [13.430032]  bus_add_driver+0xe4/0x208
-> [13.433766]  driver_register+0x68/0x130
-> [13.437587]  __platform_driver_register+0x24/0x30
-> [13.442273]  renesas_usbhs_driver_init+0x20/0x1000 [renesas_usbhs]
-> [13.448450]  do_one_initcall+0x60/0x1d4
-> [13.452276]  do_init_module+0x54/0x1f8
-> [13.456014]  load_module+0x1754/0x1c98
-> [13.459750]  init_module_from_file+0x88/0xcc
-> [13.464004]  __arm64_sys_finit_module+0x1c4/0x328
-> [13.468689]  invoke_syscall+0x48/0x104
-> [13.472426]  el0_svc_common.constprop.0+0xc0/0xe0
-> [13.477113]  do_el0_svc+0x1c/0x28
-> [13.480415]  el0_svc+0x30/0xcc
-> [13.483460]  el0t_64_sync_handler+0x10c/0x138
-> [13.487800]  el0t_64_sync+0x198/0x19c
-> [13.491453] Code: 2a0103e1 12003c42 12003c63 8b010084 (79400084)
-> [13.497522] ---[ end trace 0000000000000000 ]---
->=20
-> Fixes: f1407d5c66240 ("usb: renesas_usbhs: Add Renesas USBHS common code"=
-)
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
->  drivers/usb/renesas_usbhs/common.c | 50 +++++++++++++++++++++++-------
->  1 file changed, 38 insertions(+), 12 deletions(-)
->=20
-> diff --git a/drivers/usb/renesas_usbhs/common.c b/drivers/usb/renesas_usb=
-hs/common.c
-> index 703cf5d0cb41..f52418fe3fd4 100644
-> --- a/drivers/usb/renesas_usbhs/common.c
-> +++ b/drivers/usb/renesas_usbhs/common.c
-> @@ -685,10 +685,29 @@ static int usbhs_probe(struct platform_device *pdev=
-)
->  	INIT_DELAYED_WORK(&priv->notify_hotplug_work, usbhsc_notify_hotplug);
->  	spin_lock_init(usbhs_priv_to_lock(priv));
->=20
-> +	/*
-> +	 * Acquire clocks and enable power management (PM) early in the
-> +	 * probe process, as the driver accesses registers during
-> +	 * initialization. Ensure the device is active before proceeding.
-> +	 */
-> +	pm_runtime_enable(dev);
-> +
-> +	ret =3D usbhsc_clk_get(dev, priv);
-> +	if (ret)
-> +		goto probe_pm_disable;
-> +
-> +	ret =3D pm_runtime_resume_and_get(dev);
-> +	if (ret)
-> +		goto probe_clk_put;
-> +
-> +	ret =3D usbhsc_clk_prepare_enable(priv);
-> +	if (ret)
-> +		goto probe_pm_put;
-> +
-
-Did you really need to call these functions at this timing?
-IIUC, usbhs_{pipe,fifo,mod}_probe() will not access any registers.
-
->  	/* call pipe and module init */
->  	ret =3D usbhs_pipe_probe(priv);
->  	if (ret < 0)
-> -		return ret;
-> +		goto probe_clk_dis_unprepare;
->=20
->  	ret =3D usbhs_fifo_probe(priv);
->  	if (ret < 0)
-> @@ -705,10 +724,6 @@ static int usbhs_probe(struct platform_device *pdev)
->  	if (ret)
->  		goto probe_fail_rst;
->=20
-> -	ret =3D usbhsc_clk_get(dev, priv);
-> -	if (ret)
-> -		goto probe_fail_clks;
-> -
-
-If my understanding above is correct, I would like to add some functions ca=
-lling around here
-to reduce modification lines.
-
-Best regards,
-Yoshihiro Shimoda
-
->  	/*
->  	 * device reset here because
->  	 * USB device might be used in boot loader.
-> @@ -721,7 +736,7 @@ static int usbhs_probe(struct platform_device *pdev)
->  		if (ret) {
->  			dev_warn(dev, "USB function not selected (GPIO)\n");
->  			ret =3D -ENOTSUPP;
-> -			goto probe_end_mod_exit;
-> +			goto probe_assert_rest;
->  		}
->  	}
->=20
-> @@ -735,14 +750,19 @@ static int usbhs_probe(struct platform_device *pdev=
-)
->  	ret =3D usbhs_platform_call(priv, hardware_init, pdev);
->  	if (ret < 0) {
->  		dev_err(dev, "platform init failed.\n");
-> -		goto probe_end_mod_exit;
-> +		goto probe_assert_rest;
->  	}
->=20
->  	/* reset phy for connection */
->  	usbhs_platform_call(priv, phy_reset, pdev);
->=20
-> -	/* power control */
-> -	pm_runtime_enable(dev);
-> +	/*
-> +	 * Disable the clocks that were enabled earlier in the probe path,
-> +	 * and let the driver handle the clocks beyond this point.
-> +	 */
-> +	usbhsc_clk_disable_unprepare(priv);
-> +	pm_runtime_put(dev);
-> +
->  	if (!usbhs_get_dparam(priv, runtime_pwctrl)) {
->  		usbhsc_power_ctrl(priv, 1);
->  		usbhs_mod_autonomy_mode(priv);
-> @@ -759,9 +779,7 @@ static int usbhs_probe(struct platform_device *pdev)
->=20
->  	return ret;
->=20
-> -probe_end_mod_exit:
-> -	usbhsc_clk_put(priv);
-> -probe_fail_clks:
-> +probe_assert_rest:
->  	reset_control_assert(priv->rsts);
->  probe_fail_rst:
->  	usbhs_mod_remove(priv);
-> @@ -769,6 +787,14 @@ static int usbhs_probe(struct platform_device *pdev)
->  	usbhs_fifo_remove(priv);
->  probe_end_pipe_exit:
->  	usbhs_pipe_remove(priv);
-> +probe_clk_dis_unprepare:
-> +	usbhsc_clk_disable_unprepare(priv);
-> +probe_pm_put:
-> +	pm_runtime_put(dev);
-> +probe_clk_put:
-> +	usbhsc_clk_put(priv);
-> +probe_pm_disable:
-> +	pm_runtime_disable(dev);
->=20
->  	dev_info(dev, "probe failed (%d)\n", ret);
->=20
-> --
-> 2.49.0
+Yours,
+	-- Matti
 
