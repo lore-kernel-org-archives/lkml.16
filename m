@@ -1,179 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05olkn2072.outbound.protection.outlook.com [40.92.90.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 358C921517D;
-	Tue,  8 Apr 2025 20:31:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744144282; cv=none; b=Zwvc14VVAjWfE/bcWew44+EEpbd4432TMtk+NFbS4/X1yrC1xgpz3qT1bRAcUygUJmfE8NFsDo4mMlqvfrA21oagLBCV9+vUhpO6rwDf9nICjwYAPszW5TJtSUzJGFiW/s8eWBTPQYeUnGFDA87IZCToINeGlDbSI3xkOeR5DM8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744144282; c=relaxed/simple;
-	bh=DMjZ1/RAZgEsuBn5HCdCnHNlTOYxIgcnTcp3ByTgwos=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CGyTsR61RqbIyVegoeFIY/nHMCCKA8WYCfyBPZtqk4IJfKgxFgr8RWPe5qgiICcTUWPo395+ROmOlfJ63RXGRQBpxWOIeeJ1Bw6Y3g4mAcvZZt6hU55W1E4OSLtcE3cwqeUa6jFf1JM3eDXKHyIo3ex4/YZY6Z3d2XmPMO9Jkok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NARKNKLj; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EC16253F1B;
+	Tue,  8 Apr 2025 20:31:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.90.72
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744144307; cv=fail; b=Xbp2M8OrtB8jBXrW4eYrvie914ol7xnhxvRUIKFQn9rKBD8l75OKx3AtiyCfWfypdQzzsWXGYEja59+upUOUpRiwCiMaZqs1JkB3T8zaRURqbnS6ozpGOctXoGNcarFjHB9p7hnMQAF+e7qhNzU6eFbcp+jMJ06X7JXQqhmg7Xc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744144307; c=relaxed/simple;
+	bh=t5ThA1kM/SIMshxKgFaMONO3dUFOy4EZgYGqRzOqrEo=;
+	h=Date:From:To:Cc:Subject:Message-ID:Content-Type:
+	 Content-Disposition:MIME-Version; b=c97fjuma+7s98+h/vfJcALg8vEyZYnLzAf0JiHikP826Lr49NPD/hEh54693v/4IjC2/Ld8Bu40jxpC0YUzkcdQlgix69CGqQBTYEYsWRRvnqrEVp9FbgHsMQMs8xbY/h3BZvSgYoQVhmKfOuQwZBHfMTwmBDpwJjARUmJVueJQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com; spf=pass smtp.mailfrom=hotmail.com; dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b=ZdnBZYSJ; arc=fail smtp.client-ip=40.92.90.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hotmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NARKNKLj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1E14C4CEE5;
-	Tue,  8 Apr 2025 20:31:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744144281;
-	bh=DMjZ1/RAZgEsuBn5HCdCnHNlTOYxIgcnTcp3ByTgwos=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NARKNKLjS4L3Drr8clmsRxD7yfH2dqRL2fHdj5qiVNMEvUBhvoGY0QM7dnFK0JjlR
-	 Dq5pVs7/d2Uck1UyGdfYQ/MDRx8QEM7naCVDkf4WWJxX0ZQQfdJwbmD4/ys58b0B0Y
-	 Pm58XV2T06p0YsenRmzpg0lvPQODOWMqbUaaE3F/bwMuBKP2J7Kt2qgSlQTQU7Orl4
-	 /rFiSGVKgqpLzwePYcoWzkWo/3LioKv/t7ewxzw09tL1xhXs9Cwm23xohetRlVxr6y
-	 sZgcjUjFdwRfhZREks/BAGwug8fBeFuWxARlwTNfHVPbH2/RGfyX4/Pf8mgwFxIZK+
-	 nmkL14WG+ADKQ==
-Date: Tue, 8 Apr 2025 22:31:15 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>, Jonathan Corbet <corbet@lwn.net>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	Yazen Ghannam <yazen.ghannam@amd.com>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH v2 2/2] x86/CPU/AMD: Print the reason for the last reset
-Message-ID: <Z_WHk4jP0inUSt7T@gmail.com>
-References: <20250408174726.3999817-1-superm1@kernel.org>
- <20250408174726.3999817-2-superm1@kernel.org>
+	dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b="ZdnBZYSJ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=iGlufAptMajQN8ibMsnoHojNn9QNfkKJ3IRBabxFkSnymRtMBZrWeJdk/7VUVJwr0SkFBnfp1kJzfQcdexc2JlI+3Kx9dQV85x806WDtrMXOBZ4sz4xoEw+So81lV5NfPbHP2K93U3WZOvPHJjiLLpsAjw4y2NM5wJfx12KnRoAGgiXrYjE5FE/CYS+Gd1rE2tR0klv2s0h39g+LvNK6MMV2hj8VXmuSCVAFIZ5N4MzrL6dZGS6p8u1Ir2abuS6EO9TUJ/l4jW5l9FcZmnm5mWFt4uRfK08KrX9g2GSheHK7gpMK5fsajo9tzr07j3ueosdVYPE86CibGqMhJrP39w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IAmLwbfxyLCToAs8T5Ll0bxlX+U1hO9PEI89xu4fyVo=;
+ b=UT5KJ5QC8mG3K0hcwZ5PrNly1t8kiLMFcJZ52J6xPnSjS1JVsl4qJ9Q8EyO782ziNhbeKbJ/1im8fe1PZ7rspGk+ThYWmvVuWgZp7O+PrWwvfq0j52am7GGX80KXL7uvphGO70sAdyD6XDId9jsZBRFWtSVO2GR60aSAlE61bU7rGDA5jzdht2PKtWNyh19Z0R6TM3vKhXjKxwxzW5ESnHTiYcli63smUB4LfAijlU9iEQK34IY54rZFkoSnXB+o93uBw0nU3YPjnqbCvXPVxBtP5KO80GRopKSIA7fywj/a7TpivT2VpiZI3juieYZTF7Rz9S9lxsGDi8PTLQTonQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IAmLwbfxyLCToAs8T5Ll0bxlX+U1hO9PEI89xu4fyVo=;
+ b=ZdnBZYSJhVg0bXYgUlvKl8/VCKsokw57jF6xX5BgKXkQZFZt3q/XtEKakoM77PfJF3WEwZdsZLSzXN0YSqqCTtOPzUJO6vlXEfzl3+9J431HpQcGJuyzbQEmts9tmuXNw2g9ALYuKPvfWjikFrf3bUMfipBv5fikD40SrJCqgNlHiuAuZLfjjIn4JmPWjP18uOBh2lqdGRnpqZuxc72YbslJ+5Ebjw9w1gTEdMisiAMQf2Rqvah8nDrswEC+EEQPShJvoo8bXNzYP++Tjwxyze8RNHkBcXk5eTnt2EhiTDIuPGCQxoYoUC/+sujUb2sLScJeWjH1HCXLYVvM1T6SDw==
+Received: from GV1P250MB0716.EURP250.PROD.OUTLOOK.COM (2603:10a6:150:8c::8) by
+ GV2P250MB1047.EURP250.PROD.OUTLOOK.COM (2603:10a6:150:d1::10) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8632.13; Tue, 8 Apr 2025 20:31:39 +0000
+Received: from GV1P250MB0716.EURP250.PROD.OUTLOOK.COM
+ ([fe80::fa5:9fcd:cd66:534c]) by GV1P250MB0716.EURP250.PROD.OUTLOOK.COM
+ ([fe80::fa5:9fcd:cd66:534c%5]) with mapi id 15.20.8632.017; Tue, 8 Apr 2025
+ 20:31:39 +0000
+Date: Tue, 8 Apr 2025 21:31:25 +0100
+From: Chris Green <chris.e.green@hotmail.com>
+To: mchehab@kernel.org
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] media: v4l: subdev: Fix coverity issue: Logically dead code
+Message-ID:
+ <GV1P250MB0716680153B0E06CA96AD94AB2B52@GV1P250MB0716.EURP250.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-ClientProxiedBy: LO4P123CA0017.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:150::22) To GV1P250MB0716.EURP250.PROD.OUTLOOK.COM
+ (2603:10a6:150:8c::8)
+X-Microsoft-Original-Message-ID: <Z_WHnTcdLm3iPpdN@chris.chris>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250408174726.3999817-2-superm1@kernel.org>
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: GV1P250MB0716:EE_|GV2P250MB1047:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0b1ea136-9f01-4f48-e161-08dd76dc5d86
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|15080799006|5072599009|8060799006|7092599003|19110799003|6090799003|461199028|5062599005|41001999003|440099028|3412199025;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?MJk7t00SEeS7rSudv8sAQ9FWr3mV16SVNxnKdiq/+K3a7ekyVzRs41tPOJmi?=
+ =?us-ascii?Q?qbKy5E+KMwV/cbRDEEFrmyKL4R6SGhm+WVRC3dt3BULUXICT1eWeNZuEnGlR?=
+ =?us-ascii?Q?fOVsHxpBXIWeQSZKO9lTeG9zGhwyrW+zjMGo8O+Xs2HB/cHwWxAhx5WfTdqM?=
+ =?us-ascii?Q?p7CL822Lf0UXicNwwkNHoOVykeecf7NtSfDtGljWxLz8fbZyUUod8JVthp4N?=
+ =?us-ascii?Q?H0MpzJV3OQsEeanw3v+x0x4GRROW77MEULle+z/l+Y6OJZsyJ8aSbRdm3jNd?=
+ =?us-ascii?Q?5ph8Qrej1pO5L6gePcVwuXH+VFadsaIPN46Vd+qGk74XTXVOvt6Ctz3oyvhH?=
+ =?us-ascii?Q?1F1c48hUI00eYjWtPwZAmE0ye6okpHlWTYjtlfZbAZni8DqMCdIlzQf5GvHC?=
+ =?us-ascii?Q?TzgC1Gysj6kWXdCpiVyQDjrVgWhHDnCV/o6O16RhtFdQtkiMPThmT3eC3LNW?=
+ =?us-ascii?Q?h+dIddx0LrEaBeB7eLSDZhuyz4yR4526TLkCpUbtrkhmpfMf5aKDyyPhVtC4?=
+ =?us-ascii?Q?7quS5DFMdewQuKj91Kv6CHeHXPljXFNu8zBaB7xY0ElgeRf0LOPpi/BX9Zh/?=
+ =?us-ascii?Q?pnhwaWvZMCcH5Ovq4N/pNKMowsRKOzdM6EGk0mmFNbOpcKsVm5rnSB3s3YQe?=
+ =?us-ascii?Q?L/jXno+OASs2AqZE9+sAjVIf9sSSkDxZQBvyPjcnOCBDctxx3FT3r+VDhihE?=
+ =?us-ascii?Q?Apq8rKApOatE4zXR8nfhmVMt/dKxdLMzPL/aVPk1a2axmI1YfugaH3RrAn05?=
+ =?us-ascii?Q?VuL91V3OYjbIX9J5aSiD4ekGbVKcwis3N6HYNieikD2wJZ0pELnlEUryhXrp?=
+ =?us-ascii?Q?giHc2OpvUI03f5mKd5tpZTJtpIPWeqSg+GiZbq23gVu1U2XCcARKHsNcbSWs?=
+ =?us-ascii?Q?kGQtXrUzf6x6ovap7+UkrBvgraRIeT7ELBSY0UnIyzEpyf9prR2Vd286RiKE?=
+ =?us-ascii?Q?BXQs4YkNybOsBs/zj+3w98DhdQUM/OZOiz0x1zckxGjhAGexvO8tjdLlwTMv?=
+ =?us-ascii?Q?REfFKd+mZkcCXpPJXdzFAQ3SsJlvTpeqoxBTMlz9lEnmC2tBi8lKd6GmPAMe?=
+ =?us-ascii?Q?IIGFzBzssOzQCmIF5dru7SkzlIDslrIXyjPWM3EKx5I/kgKDxfKOfg4JYVZP?=
+ =?us-ascii?Q?NIakdgaux+SNK0D9OOhczRphdsRrTBhOI1wNsnpgkm3D4GSOKorwJKGd717o?=
+ =?us-ascii?Q?iQfUhK2JD+31WfvMe48rCnj+CsP/mtOyf5KBqg=3D=3D?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?yxuyDX1uwkyUhKMN6kqkj/vW4ZQDDAKcfsfZzh2vSM490HiKSHGFqwOIC8Gy?=
+ =?us-ascii?Q?xP6ae6bKEZTgJSAzCWU0utiDw+dbkTBNoQ2c6h451AI0GUp9h8VpgnFXla2I?=
+ =?us-ascii?Q?l+Mxdw1PN7QHUc1aJAQaD+M6c9Nof40+b7k56iaxg8LYZLzl0z02h1y1A6nk?=
+ =?us-ascii?Q?B7SsJRa4XdplpspuJQtYtuL4/f8E4lQEnuhZ07/vzQ3He56fRfzVxLPUeeRt?=
+ =?us-ascii?Q?py1R0L1lHi82185ieoYDm1L7WaoyNDs+2eD75eavtWWADKJcJcAQYsHgHCT6?=
+ =?us-ascii?Q?XUwny/g8tvUnNZHFbXrxBrIIx6p9wGIZFOz00nmPzvG2ELgFluCgKn5kCG0U?=
+ =?us-ascii?Q?lSnVf3NF0aDmPTHp3BWvpH5yvSCyJI9XfgOiI8zIcYgJ4dbbzhAdjx2rocFt?=
+ =?us-ascii?Q?zv3m316zHjgXV/fBxEKS8dhMk78qvpF5OnbGN/txXvNrBTO4sn9n1sPzKlUF?=
+ =?us-ascii?Q?SDtbL08qhy0mnKGb1RgKwJRXuN2HEiZ2VMSdqvj2YHB4vvTvHBr/spm/Fmn8?=
+ =?us-ascii?Q?pKaHvNSPVUv1/YYt6qngrfBoAZmOlnbjqv+bh7Oq0EnNvFVrg5e0EKB1W5wl?=
+ =?us-ascii?Q?AQRBQ9uzHva9ztrGV/wqIzUjOF0Lkp82nuZLXhiSnD4F5EylHn5E7vRHIvMK?=
+ =?us-ascii?Q?IcN32RvnV9ZjERMJ5NW4Chv7GBFMz0thSHHYlVaFokfcTwN8n222VGLg+Hzt?=
+ =?us-ascii?Q?MzXqLCAmEIcWHenK/KlcgNIYM1DJgR+FTXw1Fq0nyD83n/Iv/KOPh1S/nPwu?=
+ =?us-ascii?Q?Uq7sAR/56ZveYHiPj44Oy0BTm+OSwOx7iCS9z71cjadiEmf/tQQ0uJs+VEL9?=
+ =?us-ascii?Q?RTw7cf6Ni8Vz1QKYvJJovUn5COrVmEo05Jhw3SiQvBDwxcT6U9znEAwDcKgh?=
+ =?us-ascii?Q?6S+XWJMVbGH7mogwu9Guh5kScdJmcYeOUGgp+/ValimGoS1lOai5UgA6IR5g?=
+ =?us-ascii?Q?Ub7RRS9T/ronOfJLhthHcXa2iIcDjzUQosBE0FrqvWvnuNVQBftiEfQ2TrvK?=
+ =?us-ascii?Q?77YP0QINpcIO9WGEQ94D9ug+e7gUreXjlTB4Tihf4UvoPrDQU69iPNfPyRmC?=
+ =?us-ascii?Q?wdhvsbaoN12Z7zG9nEeTxaD8Iqci/e18BiAd31qmHqHj1kUQ5C+WxxqFOB6Q?=
+ =?us-ascii?Q?j+0m8QPf4YgRu9xUtQz0/Vrj9e3J836hTlQBu8vBhDWVjxmar9WZ9ESiU0ss?=
+ =?us-ascii?Q?BLxAMkrCmPnWA/MNsthTP4BIT/qPtJ5pzQ6kbcAjyYNkLatwqHvXreNlOEms?=
+ =?us-ascii?Q?wMrf64PUdgLbImEkBZA6?=
+X-OriginatorOrg: sct-15-20-7784-11-msonline-outlook-95b76.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0b1ea136-9f01-4f48-e161-08dd76dc5d86
+X-MS-Exchange-CrossTenant-AuthSource: GV1P250MB0716.EURP250.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2025 20:31:39.3832
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV2P250MB1047
 
+The conditional (type == V4L2_TUNER_RADIO) always evaluates true due to the
+earlier check for (type != V4L2_TUNER_RADIO) (line 2826)
 
-* Mario Limonciello <superm1@kernel.org> wrote:
+CID: 1226742
 
-> +static inline char *get_s5_reset_reason(u32 value)
-> +{
-> +	if (value & BIT(0))
-> +		return "trip of thermal pin BP_THERMTRIP_L";
-> +	if (value & BIT(1))
-> +		return "power button";
-> +	if (value & BIT(2))
-> +		return "shutdown pin";
-> +	if (value & BIT(4))
-> +		return "remote ASF power off command";
-> +	if (value & BIT(9))
-> +		return "internal CPU thermal trip";
-> +	if (value & BIT(16))
-> +		return "user reset via BP_SYS_RST_L pin";
-> +	if (value & BIT(17))
-> +		return "PCI reset";
-> +	if (value & BIT(18) ||
-> +	    value & BIT(19) ||
-> +	    value & BIT(20))
-> +		return "CF9 reset";
-> +	if (value & BIT(21))
-> +		return "power state of acpi state transition";
-> +	if (value & BIT(22))
-> +		return "keyboard reset pin KB_RST_L";
-> +	if (value & BIT(23))
-> +		return "internal CPU shutdown";
-> +	if (value & BIT(24))
-> +		return "failed boot timer";
-> +	if (value & BIT(25))
-> +		return "watchdog timer";
-> +	if (value & BIT(26))
-> +		return "remote ASF reset command";
-> +	if (value & BIT(27))
-> +		return "data fabric sync flood event due to uncorrected error";
-> +	if (value & BIT(29))
-> +		return "MP1 watchdog timer timeout";
-> +	if (value & BIT(30))
-> +		return "parity error";
-> +	if (value & BIT(31))
-> +		return "software sync flood event";
-> +	return "unknown reason";
+Signed-off-by: Chris Green <chris.e.green@hotmail.com>
+---
+ drivers/media/v4l2-core/v4l2-ioctl.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Can multiple bits be set in principle, belonging to different reasons?
-
-Also, wouldn't a clean, readable text array and find_first_bit() result 
-in more readable and more maintainable code?
-
-Which can be initialized thusly:
-
-  static const char *s6_reset_reason_txt[] = {
-
-	[0] = "trip of thermal pin BP_THERMTRIP_L",
-	[1] = "power button",
-	[2] = "shutdown pin",
-	[4] = "remote ASF power off command",
-	[9] = "internal CPU thermal trip",
-	...
-
-  };
-
-Also the text should probably be expanded into standard noun+verb 
-sentences or so, to make it all less ambiguous:
-
-  static const char *s6_reset_reason_txt[] = {
-
-	[0] = "thermal pin BP_THERMTRIP_L was tripped",
-	[1] = "power button was pressed",
-	[2] = "shutdown pin was shorted",
-	[4] = "remote ASF power off command was received",
-	[9] = "internal CPU thermal limit was tripped",
-	...
-  };
-
-etc. Note the deliberate use of past tense, to make it clear this 
-refers to a previous event, while usually syslog events indicate 
-current events.
-
-> +	/*
-> +	 * FCH::PM::S5_RESET_STATUS
-> +	 * PM Base = 0xFED80300
-> +	 * S5_RESET_STATUS offset = 0xC0
-> +	 */
-> +	addr = ioremap(0xFED803C0, sizeof(value));
-
-0xFED803C0 is a magic number, please define a symbol for it.
-
-> +	if (!addr)
-> +		return 0;
-> +	value = ioread32(addr);
-> +	iounmap(addr);
-> +
-> +	pr_info("System was reset due to %s (0x%08x)\n",
-> +		get_s5_reset_reason(value), value);
-
-Please make the source of this printout a bit more specific, something 
-like:
-
-      x86/amd/Fam17h: Previous system reset reason [%0x08x]: %s
-
-or so? Also note how grepped output will be easier to read due to 
-flipping the fixed-width numeric and the variable-length text output:
-
- # Before:
-
-        x86/amd/Fam17h: Previous system reset reason: thermal pin BP_THERMTRIP_L was tripped (0x00000001)
-        x86/amd/Fam17h: Previous system reset reason: power button was pressed (0x00000002)
-        x86/amd/Fam17h: Previous system reset reason: shutdown pin was shorted (0x00000004)
-        x86/amd/Fam17h: Previous system reset reason: remote ASF power off command was received (0x00000010)
-        x86/amd/Fam17h: Previous system reset reason: internal CPU thermal limit was tripped (0x00000200)
-
- # After:
-
-        x86/amd/Fam17h: Previous system reset reason: [0x00000001]: thermal pin BP_THERMTRIP_L was tripped
-        x86/amd/Fam17h: Previous system reset reason: [0x00000002]: power button was pressed
-        x86/amd/Fam17h: Previous system reset reason: [0x00000004]: shutdown pin was shorted
-        x86/amd/Fam17h: Previous system reset reason: [0x00000010]: remote ASF power off command was received
-        x86/amd/Fam17h: Previous system reset reason: [0x00000200]: internal CPU thermal limit was tripped
-
-Thanks,
-
-	Ingo
+diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+index a16fb44c7246..275846a6850d 100644
+--- a/drivers/media/v4l2-core/v4l2-ioctl.c
++++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+@@ -2833,8 +2833,7 @@ static int v4l_enum_freq_bands(const struct v4l2_ioctl_ops *ops,
+ 		p->capability = m.capability | V4L2_TUNER_CAP_FREQ_BANDS;
+ 		p->rangelow = m.rangelow;
+ 		p->rangehigh = m.rangehigh;
+-		p->modulation = (type == V4L2_TUNER_RADIO) ?
+-			V4L2_BAND_MODULATION_FM : V4L2_BAND_MODULATION_VSB;
++		p->modulation = V4L2_BAND_MODULATION_FM;
+ 		return 0;
+ 	}
+ 	return -ENOTTY;
