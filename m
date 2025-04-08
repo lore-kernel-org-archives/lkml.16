@@ -1,123 +1,168 @@
-Received: from vern.gendns.com (vern.gendns.com [98.142.107.122])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B78B17B402;
-	Tue,  8 Apr 2025 14:14:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=98.142.107.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30A21C3C18
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 14:16:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744121677; cv=none; b=DpZv+pqzcycurdpQqNPvUj+7tYNfJghznRKgNsurIxkyVXh9bXtna9iSZ5Qt3ZpBjehntfyIxE1RwhgQOVZVWZCjJblktOXVDRL3+YbusIJWfy8VLDvKXz2W6qwdy73kNthgu9ReCFggY0TBgfgaMBVwuVrhB6htrzSK5U0w2QI=
+	t=1744121765; cv=none; b=Nlj7y1p/oKxol+qx+hCQ/Adf+Hl09Wh8/dOSskV2e7vnN2aINVv9TIJvE/R80AdvqxVzz7wVxVEn3jyPJeQUWm5rV4Hudm5kimD2ajIJBOSkCfv91EBHVEHStlxmJjCzilHuYZOTgqeZG3y27g1imfWxhNZ3k0iv3HowCQgpMBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744121677; c=relaxed/simple;
-	bh=s+qOBAVQpvLqN9//v1tqyB5DUBWzwAQcZ3fYm/ougrA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BihiNcFDdZEVhx2ejA8a4WEVCQRBYX/QRWgJsxjS+5RrGwf1dwOBvM+6oITKr1N+/ldxu2bQp3md2DlW0UpjvNo7eJbgYbu3+Ku8EK8sUg3N4yDP4IIZc07fo17db5XAy+3USw1ovQOMCAYH9Bhk5oDv9D3cyNQzkJN4xXxx65Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lechnology.com; spf=pass smtp.mailfrom=lechnology.com; dkim=pass (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b=iQWtKUM4; arc=none smtp.client-ip=98.142.107.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lechnology.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lechnology.com
+	s=arc-20240116; t=1744121765; c=relaxed/simple;
+	bh=ZOzyfMkpdpLdOqPYvJ6NG3Jr2p9hlkTo83L5zV3YmZ8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z+Hc/u9Zzeq1G1QKSqhhM+XP8UWhRxe/KfKXGgSfn8yLdEqVsfJNOQof2xF/aOIyNNugmSMeKQ5gSWVVOjsQu9LSGp5WHK9V+ZfefnWDkEK2qY6RMVUrMw1TcVE+BECU5qbIvfSR7NNfijVyrMfIOVSyOZzpTf9TG6M22kKBZ4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=wsEX/Wc9; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="iQWtKUM4"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=km5apth/lJMRMaoitZa8+7iBhXLzzDOt5FW/izV8Agg=; b=iQWtKUM4x/cn/gv0dOQW0I2q6W
-	3vO1DFeoo/HD3tCeyhF8OE7vnjIhflVkEE58DS/2ox/p/MVDUaStukcqtOCeXll9Y5I2jX35+Y9mS
-	ri9aGYni6wJT+aZEBm5FAMUnp8SO6r/LHsj2qj/OtX8713JlCG5lDFDUzQBlRyZYNsfAonb6Ph4sy
-	I5ZGoejZlYx3NIQ0UTXvqt1CeCDF0wQrFtxNaiDMsIHTapjCBPqnVNsq3pwjj0Lp6h6LlBZhUPAip
-	UiSB1QjHLdMqSSlA+x+o+0CYo4vPkBstm9cp72fXtJV15CV15wNHV91nsDrBZVXQ/pzbJVt2o15QQ
-	YRJQKaAw==;
-Received: from ip98-183-112-25.ok.ok.cox.net ([98.183.112.25]:46774 helo=[192.168.0.113])
-	by vern.gendns.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <david@lechnology.com>)
-	id 1u29k6-000000001BP-1ijI;
-	Tue, 08 Apr 2025 10:14:27 -0400
-Message-ID: <b652a76d-508a-4b46-b330-4479dd63158b@lechnology.com>
-Date: Tue, 8 Apr 2025 09:14:24 -0500
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="wsEX/Wc9"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4775ccf3e56so69276241cf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 07:16:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1744121760; x=1744726560; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ah6YTymBCtd5GZI1uE1J8/OvCttX8CmH9zAIXWl9EoY=;
+        b=wsEX/Wc9ob1akzoKddbTlmnCfqSIQinJ1BaXHLWEo2YzInDgx0k0S3Bg744N9uw2Nz
+         BtHoTFjIt4wMLIPMo+2KlLZYVnEAILJmkjPmMeRUE8BCCcN8hdKW34oJ7guWSnbXnA1B
+         AWDfUxhoxaRsWbgoxIssPeieEdC0SrWtCUtVq3OxUbvMcTSd0GWzMgGkkCBqUt3vDMOy
+         cg6y6ZlKty+W3nZirkyAAIrsyZSZRThuKpgdu0CbNtTbW98qUwoUBRLMcPnlkYBCisJu
+         z6DQv2AZ2LdSLYyDFpNFotm61tZA8SDbUB8smmUbeYEY++NRiuA5S9z9Abu7OYVjwnKZ
+         aGSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744121760; x=1744726560;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ah6YTymBCtd5GZI1uE1J8/OvCttX8CmH9zAIXWl9EoY=;
+        b=bYBBh2FTYXKGtXG1a5smJ+v7koa9cUbX2kuhHndUoMtQpKuX0Yx6lZp5pyzb97+guC
+         CMC9tYyij27Umv124YSy1gAy+kiyPhWEuTJ74Zm8DskFZV/i923jO4LWuGxOqF1KCkU6
+         MDinqhuw3uAxVEDd6Dzx5pbkTWDBxH0WYeI2Fws9Tj6PrIzT8NeU1SSBlQygXkJ+zyE7
+         o6FS5xH6aXDDvAeAJNpF7VyvUV6uvCl2SxFZ4xSBHDn5aERkKmO1mLzroTP0Iw+ibhd9
+         FULXmlgfpZGQu9QjUhJwvrT49qllDptV2mliM5R6KiZflq+KJHvfXvlfKhNV/YtMaMxI
+         g1iw==
+X-Forwarded-Encrypted: i=1; AJvYcCVP+7Q92vpNxs2Gj1zBLacBpeB6pz51ctI2pdZb+A/quL9fUh9FqnJlcz6UcRrraAcD3+kwdvQLKrLogzs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOutSrVE3MiYrFp1MihnxpZbQbFz7BTszv8C2mESkgEvAKQK70
+	Qm/BAbFJUcDAtIsAJP7RFXUPkR4jaV9YzX7SIJ6t6rltIDdBSj3wkuUmooktQMk=
+X-Gm-Gg: ASbGncvz+td3WPbRJqjJtaahIsQi0GSaua+m9SV/nS1De5jOgzaIkxtibJJFff/SFg1
+	hOgLcqlCTzfpbezepfy77UIeZE/zjiAv0/1qVSlNOqNv8V9kYWrkmEjb+tXdyFjU4rUsxZ9isEe
+	GUNxsxE63WvuyKIk77u8cBYpxvRrZAwn0/Vjz0bWCf96LTXcRG5NnLj49lixI16pzc6zKObTU/5
+	dyp5NGTSX+ilk5K8uNih1p99HF1vbsXvU9tX2hRCSBcT2I9JeYi6koBk3c1tV8ee1ZwGuxzxwBN
+	wqb8JpBeXlQoxbGS6W9mzz9i9USVUpLz5n9cLD/4CSM=
+X-Google-Smtp-Source: AGHT+IHjj4MgbYS8ZxVYXdi4tjA8mIF1AgEuXmh5FbR2yMsDFWAWr9GN3UnFHbHD2D1SbT1qBgClxA==
+X-Received: by 2002:ac8:5e12:0:b0:479:1a0:3448 with SMTP id d75a77b69052e-47953ea88bfmr52199611cf.10.1744121760367;
+        Tue, 08 Apr 2025 07:16:00 -0700 (PDT)
+Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
+        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-4791b057a6esm76771061cf.16.2025.04.08.07.15.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 07:15:59 -0700 (PDT)
+Date: Tue, 8 Apr 2025 10:15:55 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Nhat Pham <nphamcs@gmail.com>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hughd@google.com,
+	yosry.ahmed@linux.dev, mhocko@kernel.org, roman.gushchin@linux.dev,
+	shakeel.butt@linux.dev, muchun.song@linux.dev, len.brown@intel.com,
+	chengming.zhou@linux.dev, kasong@tencent.com, chrisl@kernel.org,
+	huang.ying.caritas@gmail.com, ryan.roberts@arm.com,
+	viro@zeniv.linux.org.uk, baohua@kernel.org, osalvador@suse.de,
+	lorenzo.stoakes@oracle.com, christophe.leroy@csgroup.eu,
+	pavel@kernel.org, kernel-team@meta.com,
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: Re: [RFC PATCH 03/14] mm: swap: add a separate type for physical
+ swap slots
+Message-ID: <20250408141555.GA816@cmpxchg.org>
+References: <20250407234223.1059191-1-nphamcs@gmail.com>
+ <20250407234223.1059191-4-nphamcs@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] clk: davinci: Add NULL check in davinci_lpsc_clk_register
-To: Charles Han <hanchunchao@inspur.com>, mturquette@baylibre.com,
- sboyd@kernel.org
-Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250407092010.6243-1-hanchunchao@inspur.com>
-Content-Language: en-US
-From: David Lechner <david@lechnology.com>
-Autocrypt: addr=david@lechnology.com; keydata=
- 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
-In-Reply-To: <20250407092010.6243-1-hanchunchao@inspur.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - vern.gendns.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lechnology.com
-X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250407234223.1059191-4-nphamcs@gmail.com>
 
-On 4/7/25 4:20 AM, Charles Han wrote:
-> devm_kasprintf() can return a NULL pointer on failure,but this
-> returned value in davinci_lpsc_clk_register() is not checked.
-> Add NULL check in davinci_lpsc_clk_register(), to handle kernel
-> NULL pointer dereference error.
+On Mon, Apr 07, 2025 at 04:42:04PM -0700, Nhat Pham wrote:
+> In preparation for swap virtualization, add a new type to represent the
+> physical swap slots of swapfile. This allows us to separates:
 > 
-> Fixes: c6ed4d734bc7 ("clk: davinci: New driver for davinci PSC clocks")
-> Signed-off-by: Charles Han <hanchunchao@inspur.com>
-> ---
-Thanks, but this looks like a duplicate of [1].
+> 1. The logical view of the swap entry (i.e what is stored in page table
+>    entries and used to index into the swap cache), represented by the
+>    old swp_entry_t type.
+> 
+> from:
+> 
+> 2. Its physical backing state (i.e the actual backing slot on the swap
+>    device), represented by the new swp_slot_t type.
+> 
+> The functions that operate at the physical level (i.e on the swp_slot_t
+> types) are also renamed where appropriate (prefixed with swp_slot_* for
+> e.g). We also take this opportunity to re-arrange the header files
+> (include/linux/swap.h and swapops.h), grouping the swap API into the
+> following categories:
+> 
+> 1. Virtual swap API (i.e functions on swp_entry_t type).
+> 
+> 2. Swap cache API (mm/swap_state.c)
+> 
+> 3. Swap slot cache API (mm/swap_slots.c)
+> 
+> 4. Physical swap slots and device API (mm/swapfile.c).
 
-[1]: https://lore.kernel.org/linux-clk/20250401131341.26800-1-bsdhenrymartin@gmail.com/
+This all makes sense.
 
+However,
+
+> @@ -483,50 +503,37 @@ static inline long get_nr_swap_pages(void)
+>  	return atomic_long_read(&nr_swap_pages);
+>  }
+>  
+> -extern void si_swapinfo(struct sysinfo *);
+> -swp_entry_t folio_alloc_swap(struct folio *folio);
+> -bool folio_free_swap(struct folio *folio);
+> -void put_swap_folio(struct folio *folio, swp_entry_t entry);
+> -extern swp_entry_t get_swap_page_of_type(int);
+> -extern int get_swap_pages(int n, swp_entry_t swp_entries[], int order);
+> -extern int add_swap_count_continuation(swp_entry_t, gfp_t);
+> -extern void swap_shmem_alloc(swp_entry_t, int);
+> -extern int swap_duplicate(swp_entry_t);
+> -extern int swapcache_prepare(swp_entry_t entry, int nr);
+> -extern void swap_free_nr(swp_entry_t entry, int nr_pages);
+> -extern void swapcache_free_entries(swp_entry_t *entries, int n);
+> -extern void free_swap_and_cache_nr(swp_entry_t entry, int nr);
+> +void si_swapinfo(struct sysinfo *);
+> +swp_slot_t swap_slot_alloc_of_type(int);
+> +int swap_slot_alloc(int n, swp_slot_t swp_slots[], int order);
+> +void swap_slot_free_nr(swp_slot_t slot, int nr_pages);
+> +void swap_slot_cache_free_slots(swp_slot_t *slots, int n);
+>  int swap_type_of(dev_t device, sector_t offset);
+> +sector_t swapdev_block(int, pgoff_t);
+>  int find_first_swap(dev_t *device);
+> -extern unsigned int count_swap_pages(int, int);
+> -extern sector_t swapdev_block(int, pgoff_t);
+> -extern int __swap_count(swp_entry_t entry);
+> -extern int swap_swapcount(struct swap_info_struct *si, swp_entry_t entry);
+> -extern int swp_swapcount(swp_entry_t entry);
+> -struct swap_info_struct *swp_swap_info(swp_entry_t entry);
+> +unsigned int count_swap_pages(int, int);
+> +struct swap_info_struct *swap_slot_swap_info(swp_slot_t slot);
+>  struct backing_dev_info;
+> -extern int init_swap_address_space(unsigned int type, unsigned long nr_pages);
+> -extern void exit_swap_address_space(unsigned int type);
+> -extern struct swap_info_struct *get_swap_device(swp_entry_t entry);
+> +struct swap_info_struct *swap_slot_tryget_swap_info(swp_slot_t slot);
+>  sector_t swap_folio_sector(struct folio *folio);
+
+this is difficult to review.
+
+Can you please split out:
+
+1. Code moves / cut-and-paste
+
+2. Renames
+
+3. New code
+
+into three separate steps
