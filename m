@@ -1,148 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DD761D61A2
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 16:46:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB63C142E7C;
+	Tue,  8 Apr 2025 16:48:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744130815; cv=none; b=htZlYjeY2tYhrUIJZcCawhRNlTPXe+mp5cG3qomRia4Fuab/GhX0fk+Jphb+FexkcFCObr4rWcpSoKVzTnqg4og5PlIQ94dAoYBPiduhXP/EO1CmwM0A1C6wfWai8+bsV4VMLFQtyUKFenklwgLXcbnMqRQY0qi8cJRhz3CCD8c=
+	t=1744130888; cv=none; b=pAs6f+D36zfSGgHU9umqZ+lNKDYO5ARBCSK58yk6PzLLA8E8WQsFfuxGhA6I/PXbLmEom9xWr6fds0Bk1ntqMtLM7lMnMNAU0KbJI+qA3mT1x0zGCedYZAB4MVmKKQMguevbceQi/VB/0FdIulcsra51e7M6NEvTiLPaIS9Si3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744130815; c=relaxed/simple;
-	bh=kib4hu2h+hnDSTmXNmw0tHEBiLvGQJXXHt/NICG3OQY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KOYjxP3FZipUcrBg1K3xt7ZWlrvsDjkORxFZBHn495qra5qIEdSPit6GiOpJx0c52FI9wyDNBXCO5Z/3BQ5sdnN8ZsjxMOrOs4X2PfCQARtd0oQHx7bBdq+IDE4OCe4Mv/7St/0MoMqaWe3Mh2EBiGzdBfD0TlAC58PxQM/uvgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OTbcpQvM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744130888; c=relaxed/simple;
+	bh=cwqlzrGgGsz8S5IWqYTRqJ0gqIz3+lT8r7KQevS9BJE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sQZHO+H2Myw0qsXwJ06E0MTY58s8PR69I/Ad7WQO24Mg45TB5DSqakSAFZln/O5CP2F+S6QnNsL/LfwV7E7eHnwY9NdD/5x0AaFJL5msCpqqRnPItwgGBbnCYXkrkQRasswJWpr/67zxH+S/Iwfgb2gyjgKuuXkRpFZknphsGeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EGWu1gZp; arc=none smtp.client-ip=209.85.222.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OTbcpQvM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0FE0C4CEE5;
-	Tue,  8 Apr 2025 16:46:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744130814;
-	bh=kib4hu2h+hnDSTmXNmw0tHEBiLvGQJXXHt/NICG3OQY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OTbcpQvMhiTXk6giO3MMk7yMnsC+hIBU0+7BKR5zfdyRk3N26womBY3+usb030fEA
-	 0jNq6SCzYOrSugg9QojweBCssw1xzd/XJyoVm9UdmmOfRsgc2QHZjKQcsB7+D+IrZm
-	 gArJ8jcSQQr601lLN5Kz7O0K/MQQjgzXz/EHiOx4w6YuV3yTeDefQimjh+W96dWtmh
-	 iHDxg6gv92BTy+vxKmTQtspFVjjcO+kq1JRDGlv2LC4XkCEZMijv74twZxPXGTrtzd
-	 H4czUbAQyGs/lpkTdAP9w56dBX5SYV6moIthmw3dRCYKDavVpnjMaBzRaeAFbiQMPl
-	 Ka3eHTal/0zfg==
-Date: Tue, 8 Apr 2025 09:46:52 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Uros Bizjak <ubizjak@gmail.com>
-Cc: Ingo Molnar <mingo@kernel.org>, x86@kernel.org, 
-	linux-kernel@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH RFC 3/5] noinstr: Use asm_inline() in
- instrumentation_{begin,end}()
-Message-ID: <zjmiiapcr2zvie2iw4s72g27bzwadrzxkoawv2klqxiq6kofsx@352hdmgvcozt>
-References: <cover.1744098446.git.jpoimboe@kernel.org>
- <7cb41fe7e87a003fc925164d5cc18efd8e95fcc0.1744098446.git.jpoimboe@kernel.org>
- <Z_TeoLQfZA858jk-@gmail.com>
- <CAFULd4ao0jmxR7fzbpFsb43E+qAeGSqoWGeV47i7gKMV8chOGg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EGWu1gZp"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7c559b3eb0bso322260685a.1;
+        Tue, 08 Apr 2025 09:48:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744130886; x=1744735686; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cwqlzrGgGsz8S5IWqYTRqJ0gqIz3+lT8r7KQevS9BJE=;
+        b=EGWu1gZpS9EeeeFgwILae+czkZBKoWJiUSlqRTR1vC6SRTQKG7/Udh/TAgUKvg5wpm
+         IRzTDaZHEXuLjZIYVqwgjVpb8AW+myVNnu11/XFEyUQVYuedJoC1vMk8kMZ9VlvnhROY
+         daosGsDT3mS04YTkcYHl55Fn8zd5ardsS58BvwuAlUmSOBmOCFPu9pqwAM2smRb2pf8K
+         Y+NogFMRSlvrlzJukHkaDabo97bYLzCm9pZL5FJytsS8YJvkeR0C7xK1fisRXXJRdzPd
+         2D0W9o5z7JhhC13lJoYAutk9WOxqxP9EG5Tzwg43JXirxplWH3CCU8tCYlXu55MLfNl8
+         VWFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744130886; x=1744735686;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cwqlzrGgGsz8S5IWqYTRqJ0gqIz3+lT8r7KQevS9BJE=;
+        b=PeaeWsEwlhzrQBiJcU/DebSaAEmcXaDjJrWRZ38dTgojYO8f2IWFCqlE3Xh8RGuntE
+         uCrTrFTyK0NQFI7gCZmU5XFkcwb8kVDPHMS30CjWHsIZDf4/goZZPu/argmbSRyY95J4
+         /fEPORzNN23V2/UaFGzHQ/5X5VeT2GU9rSZ9cEcvOqU5rtM7YME1T563PezSwIJxfgio
+         G/ixd7nVuno6bAjIl23r+ZoBVX9vGqPbaCdwOohdVg57OkUJc1SMHzDpdM0sZ4XGdvG4
+         1zFBwvVi9bBX403wUt8JvGNycwCr3bdkPgFxMupqM4ETlCKfVsdLg9RuARFO3LUmUH9O
+         R+cw==
+X-Forwarded-Encrypted: i=1; AJvYcCU+mbIf9MQWu6amC77NuL2w4yn7EppQzyUAtmxz4tRSOQFGrVKs+DclIlvXMR2RTj9BSV6tfs61@vger.kernel.org, AJvYcCUELO3pNOzBnc/9BIeBS8gQ17ElqK0B++8tw1uLtHpawnFhbdgux1X/tcHdwR6RB272DfI5It4M/9A=@vger.kernel.org, AJvYcCVlW/OKIpobDYFA5AM0iBjdtCkYWd875Iv96XSZK4APRicjVtTXo7ZbGv4TOPCzXL8aElRNiuti7S4vpqq5@vger.kernel.org
+X-Gm-Message-State: AOJu0YxA6wWWMIqAGe1aGFSOLOyW1zYvMBFMSK6sIYkQmsEn/FUzvyUe
+	iH45+KKe8Pf+LKEIxYT86tMuVuxi82EeDr2KXl/d/JNZwSEtYe4eRqRbuQquwPQcpYQy/J2SJHF
+	eFsNSeGLj2GNO80fmhzkiKkD6Do0=
+X-Gm-Gg: ASbGncvOeMq+6lbVueVANvVia7OITUJt1/DS/vUZ1qIqAhTylQDqnrRz5TdRjzwZ6Au
+	0CR3LDZRJz/r5Zub1qZsyHpy/S6aRQzSag9m4Mx3ivQIuf0dsu2pSPHL+jsd22OY6ahEtOHVXdM
+	aAg5ZDHUAQjzQyproceW9A8G9ocqQ3XRYzTEvS7+wuhrQ9stvW6HL2xMZK2EFSIan1ZVi6
+X-Google-Smtp-Source: AGHT+IEKXR2lYgBPtREcKxoHmtOozffIzMowJ7ShZqwFuTIitL4UbxHUf/e9JHWN1y5Sr2RR4S+gMCbEdD1KW9VzvF0=
+X-Received: by 2002:a05:6214:76d:b0:6e4:2d8e:5cce with SMTP id
+ 6a1803df08f44-6f064b40812mr317953766d6.36.1744130885672; Tue, 08 Apr 2025
+ 09:48:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAFULd4ao0jmxR7fzbpFsb43E+qAeGSqoWGeV47i7gKMV8chOGg@mail.gmail.com>
+References: <20250407234223.1059191-1-nphamcs@gmail.com> <CAMgjq7CdARdTEZB3ik4X9cAzNUFa6GRqjT61brygihGUYFBAeQ@mail.gmail.com>
+In-Reply-To: <CAMgjq7CdARdTEZB3ik4X9cAzNUFa6GRqjT61brygihGUYFBAeQ@mail.gmail.com>
+From: Nhat Pham <nphamcs@gmail.com>
+Date: Tue, 8 Apr 2025 09:47:54 -0700
+X-Gm-Features: ATxdqUHuDv-cpHmhmZQ2jCWbUMdwvepxeI6ke8OGK8kOxGMVm3G-MVNQ1hqFiFQ
+Message-ID: <CAKEwX=M5y4yoW62U5GkHTxaDaD7UOJu_sgkkwNXJ5Hn4Gvot9g@mail.gmail.com>
+Subject: Re: [RFC PATCH 00/14] Virtual Swap Space
+To: Kairui Song <ryncsn@gmail.com>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hannes@cmpxchg.org, 
+	hughd@google.com, yosry.ahmed@linux.dev, mhocko@kernel.org, 
+	roman.gushchin@linux.dev, shakeel.butt@linux.dev, muchun.song@linux.dev, 
+	len.brown@intel.com, chengming.zhou@linux.dev, chrisl@kernel.org, 
+	huang.ying.caritas@gmail.com, ryan.roberts@arm.com, viro@zeniv.linux.org.uk, 
+	baohua@kernel.org, osalvador@suse.de, lorenzo.stoakes@oracle.com, 
+	christophe.leroy@csgroup.eu, pavel@kernel.org, kernel-team@meta.com, 
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
+	linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 08, 2025 at 01:10:14PM +0200, Uros Bizjak wrote:
-> On Tue, Apr 8, 2025 at 10:30 AM Ingo Molnar <mingo@kernel.org> wrote:
-> > * Josh Poimboeuf <jpoimboe@kernel.org> wrote:
-> >
-> > > Use asm_inline() to prevent the compiler from making poor inlining
-> > > decisions based on the length of the objtool annotations.
-> > >
-> > > For a defconfig kernel built with GCC 14.2.1, bloat-o-meter reports a
-> > > 0.18% text size increase:
-> > >
-> > >   add/remove: 88/433 grow/shrink: 967/487 up/down: 87579/-52630 (34949)
-> > >   Total: Before=19448407, After=19483356, chg +0.18%
-> > >
-> > > Presumably the text growth is due to increased inlining.  A net total of
-> > > 345 functions were removed.
-> >
-> > Since +0.18% puts this into the 'significant' category of .text size
-> > increases, it would be nice to see a bit more details about the nature
-> > of these function calls removed: were they really explicit calls to
-> > __instrumentation_begin()/end(), or somehow tail-call optimized out, or
-> > something else?
-
-The instrumentation macros are used by WARN*() and lockdep, so this can
-affect a lot of functions.
-
-BTW, without the objtool annotations, each of those macros resolves to a
-single NOP.  So using inline_asm() seems obviously correct here as it
-accurately communicates the code size to the compiler.  I'm not sure if
-that was clear from the description.
-
-> > Also, I'm wondering where the 34,949 bytes bloat comes from: with 345
-> > functions removed that's 100 bytes per function? Doesn't sound right.
-> 
-> Please note that removed functions can be inlined at several places. E.g.:
-> 
-> $ grep "<encode_string>"  objdump.old
-> 
-> 00000000004506e0 <encode_string>:
->  45113c:       e8 9f f5 ff ff          call   4506e0 <encode_string>
->  452bcb:       e9 10 db ff ff          jmp    4506e0 <encode_string>
->  453d33:       e8 a8 c9 ff ff          call   4506e0 <encode_string>
->  453ef7:       e8 e4 c7 ff ff          call   4506e0 <encode_string>
->  45549f:       e8 3c b2 ff ff          call   4506e0 <encode_string>
->  455843:       e8 98 ae ff ff          call   4506e0 <encode_string>
->  455b37:       e8 a4 ab ff ff          call   4506e0 <encode_string>
->  455b47:       e8 94 ab ff ff          call   4506e0 <encode_string>
->  4564fa:       e8 e1 a1 ff ff          call   4506e0 <encode_string>
->  456669:       e8 72 a0 ff ff          call   4506e0 <encode_string>
->  456691:       e8 4a a0 ff ff          call   4506e0 <encode_string>
->  4566a0:       e8 3b a0 ff ff          call   4506e0 <encode_string>
->  4569aa:       e8 31 9d ff ff          call   4506e0 <encode_string>
->  456e79:       e9 62 98 ff ff          jmp    4506e0 <encode_string>
->  456efe:       e9 dd 97 ff ff          jmp    4506e0 <encode_string>
-> 
-> all these calls now inline:
-> 
-> encode_string                                 58       -     -58
-> 
-> where for example encode_putfh() grows by:
-> 
-> encode_putfh                                  70     118     +48
-
-Thanks for looking!  That makes sense: encode_string() uses
-WARN_ON_ONCE() which uses instrumentation_begin()/end().
-encode_string() is getting inlined now that GCC has more accurate
-information about its size.
-
-> > Also, is the bloat-o-meter output limited to the .text section, or does
-> > it include growth in out-of-line sections too?
+On Tue, Apr 8, 2025 at 9:23=E2=80=AFAM Kairui Song <ryncsn@gmail.com> wrote=
+:
 >
-> bloat-o-meter by default looks at all sybol types ("tTdDbBrRvVwW" as
-> returned by nm). Adding "-c" option will categorize the output by
-> symbol type (this is x86_64 defconfig change with gcc-4.2.1):
-> 
-> add/remove: 72/350 grow/shrink: 918/348 up/down: 80532/-46857 (33675)
-> Function                                     old     new   delta
-> ...
-> Total: Before=16685068, After=16718743, chg +0.20%
-> add/remove: 0/0 grow/shrink: 0/0 up/down: 0/0 (0)
-> Data                                         old     new   delta
-> Total: Before=4471889, After=4471889, chg +0.00%
-> add/remove: 0/1 grow/shrink: 0/0 up/down: 0/-12 (-12)
-> RO Data                                      old     new   delta
-> icl_voltage_level_max_cdclk                   12       -     -12
-> Total: Before=1783310, After=1783298, chg -0.00%
+>
+> Thanks for sharing the code, my initial idea after the discussion at
+> LSFMM is that there is a simple way to combine this with the "swap
+> table" [1] design of mine to solve the performance issue of this
+> series: just store the pointer of this struct in the swap table. It's
+> a bruteforce and glue like solution but the contention issue will be
+> gone.
 
-Right.  That means that bloat-o-meter's results include any
-text.unlikely growth/shrinkage, because that code is contained by
-symbols (typically .cold subfunctons).
+Was waiting for your submission, but I figured I should send what I
+had out first for immediate feedback :)
 
-I suppose it would be more helpful if .text.unlikely were excluded or
-separated out.  .text.unlikely code growth is always a good thing, as
-opposed to .text for which growth can be good or bad.
+Johannes actually proposed something similar to your physical swap
+allocator for the virtual swap slots allocation logic, to solve our
+lock contention problem. My apologies - I should have name-dropped you
+in the RFC cover as well (the cover was a bit outdated, and I haven't
+updated the newest developments that came from the LSFMMBPF
+conversation in the cover letter).
 
--- 
-Josh
+>
+> Of course it's not a good approach, ideally the data structure can be
+> simplified to an entry type in the swap table. The swap table series
+> handles locking and synchronizations using either cluster lock
+> (reusing swap allocator and existing swap logics) or folio lock (kind
+> of like page cache). So many parts can be much simplified, I think it
+> will be at most ~32 bytes per page with a virtual device (including
+> the intermediate pointers).Will require quite some work though.
+>
+> The good side with that approach is we will have a much lower memory
+> overhead and even better performance. And the virtual space part will
+> be optional, for non virtual setup the memory consumption will be only
+> 8 bytes per page and also dynamically allocated, as discussed at
+> LSFMM.
+
+I think one problem with your design, which I alluded to at the
+conference, is that it doesn't quite work for our requirements -
+namely the separation of zswap from its underlying backend.
+
+All the metadata HAVE to live at the virtual layer. For once, we are
+duplicating the logic if we push this to the backend.
+
+But more than that, there are lifetime operations that HAVE to be
+backend-agnostic. For instance, on the swap out path, when we unmap
+the page from the page table, we do swap_duplicate() (i.,e increasing
+the swap count/reference count of the swap entries). At that point, we
+have not (and cannot) make a decision regarding the backend storage
+yet, and thus does not have any backend-specific places to hold this
+piece of information. If we couple all the backends then yeah sure we
+can store it at the physical swapfile level, but that defeats the
+purpose of swap virtualization :)
+
+>
+> So sorry that I still have a few parts undone, looking forward to
+> posting in about one week, eg. After this weekend it goes well. I'll
+> also try to check your series first to see how these can be
+> collaborated better.
+
+Of course, I'm not against collaboration :) As I mentioned earlier, we
+need more work on the allocation part, which your physical swapfile
+allocator should either work, or serve as the inspiration for.
+
+Cheers,
+Nhat
