@@ -1,170 +1,195 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2044.outbound.protection.outlook.com [40.107.220.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 116B9158DD8;
-	Tue,  8 Apr 2025 20:11:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744143064; cv=fail; b=bSJL3XDDyGZttEvlSQJdw4yeqzacuCRikRkjmoj2qF3PziQ5+PvOxb1UK5le+sSmXgoJEDtskbaw/akV1tITe9UcJ7hYqe/MRcqhk4Jn8ewZ8SXxbx6C1bWcDDXhXef0OMp27nqoRbCNHE9FF72vbgTXns8F/Rb2P5jAIvA5WCw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744143064; c=relaxed/simple;
-	bh=7UH+PesjkLGFu8SSLlaeND+4YM6XngCf67IGONxLr14=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=jTDGlRNgHOxipvHVrtpTxYxjRyHwsN8GLIluR8lPUKHVYqm59GYH1HYYqLqHqMtR81SC4b+Bq9sIrn8uHlGgragMzPxDhIwUtvrfj1VvkGnTAfnRLpc8D5gKDqUHJGN0Up633nxT7EpRQpCWjcrClSRyRBgtfKIbQyWx/6LPllM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=lFCZmHo9; arc=fail smtp.client-ip=40.107.220.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7DA82459C5
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 20:11:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744143077; cv=none; b=e8Gy/PZjbIg5R4DCUO/SO9DbZise2o0/RRQEXwoxBRpr3Yjw4qd5FkQZFz5sjMQoV6UtHG9rE+WcVDVl5Z0Tx5Gjkfap4AooIdmiXPjpTQpEEaxqgl4GmVkh7edDHkDhqq4zuUxeNy3BfAQs8v4ObVTRkeKyGCOGyRne1SpjXYY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744143077; c=relaxed/simple;
+	bh=NKGR9aNCdAuFjHfEVhQYZVeV11egoapzwZVQAXZ0KhY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Baj3+XA2VlCo35HmpDLrup5hizpbQbDeGjO+DXjApqgn12TsGsopugI5YcA/OXLJ7hJ44RN1j8agL2ydoh3U2Oa2V/eiWacKRrC6oUiR76Nm2FwBmVHhORN01ta5ZVrbnFmna15dRp7HJlD3q/rBlWaQqWGkCqp+pH4yAPHvOVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=d6+5PxZN; arc=none smtp.client-ip=209.85.167.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="lFCZmHo9"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rcxQsMJXyrBkSBv9grmQD/bCwpE8c+WjBvsDzH7vhfxxnFGj70IAVjE3iX34Y3ayv6VYAXfO5Xplkhslz0izjG6P628Wt+N+XFSFESRT2htWMm2zQAWSbBIVQJtImPIeympoAD9xEwWbJn+kD9pFTKDjkDWCIQQvxxws5VwuPBMtBx8GBMt2UQlPi9ZTTG3wgv66HGbmpA/BgSBjvqDFXs+RyWgHr0dcPmjl0LA8KwBaFWuj16BmpVpg7/VseGLVe4315ELT+F8MbQfFOqLK1qgc7rynHM3rm8437YNZmM/Rft2v3zo8jVhaBEBCjsfLz1UFcpAuDhoBS6vu6FmPxw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=C5nsupf6veIin5hvVyxITme/AzmpykAjLeH6kIF5BwE=;
- b=tMnZ2ngLlj70urAoCIXiVDFYBt579BKxAmFQm7nJNfknBHu5kaCp29sWAffOK9t0JI1KPslaAdjhOCNgYFpmZ5cymIxxdEtZrD417NDdndgLe8+5TtM5NevXi0zbJTNoR3VP6XOWqvO7yr77nk1oWu5ei1XHhMZZKL2zcDD+S/AupBWUp0LHswiTDVH2hOzj3VXHpDrkmOCmlgZyGCMhSdtcoanlTnbn6UFlTzB25dzRe8mt/aIs2gDxCAKVtKePQls1N5g9vvXZZ1jp2Xymoy4jyuQ3fxVzauRblctZjhAgQZY7y6z9kggLsVdf+/QJ3MKjmSs4j0qkStpgGuvzJQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C5nsupf6veIin5hvVyxITme/AzmpykAjLeH6kIF5BwE=;
- b=lFCZmHo9AQ4chVXdXML/V6N/QEeiELA/R3LrmeqZDlOgRPsp5Zst0kcnOxOKT3TeAfWUCBnoTWNc4Ag8rfk4VvoNxYFV298qaCTfBsjZPUbxAmnWr12vh0aIcoRYWBvEPSifDPCO25RgT0rnTNFrpzrM9lZfRdhXJjrZ6cXZvYw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB6373.namprd12.prod.outlook.com (2603:10b6:8:a4::7) by
- CH3PR12MB8935.namprd12.prod.outlook.com (2603:10b6:610:169::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.27; Tue, 8 Apr
- 2025 20:10:59 +0000
-Received: from DM4PR12MB6373.namprd12.prod.outlook.com
- ([fe80::12f7:eff:380b:589f]) by DM4PR12MB6373.namprd12.prod.outlook.com
- ([fe80::12f7:eff:380b:589f%7]) with mapi id 15.20.8583.043; Tue, 8 Apr 2025
- 20:10:58 +0000
-Date: Tue, 8 Apr 2025 16:10:55 -0400
-From: Yazen Ghannam <yazen.ghannam@amd.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>,
-	Muralidhara M K <muralidhara.mk@amd.com>,
-	linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] RAS/AMD/{ATL,FMPM}: Get masked address
-Message-ID: <20250408201055.GA2700280@yaz-khff2.amd.com>
-References: <20250401-fix-fmpm-extra-records-v1-0-840bcf7a8ac5@amd.com>
- <20250401-fix-fmpm-extra-records-v1-2-840bcf7a8ac5@amd.com>
- <20250407132415.GCZ_PR_82FKBcsIuGr@fat_crate.local>
- <20250407151657.GA1948540@yaz-khff2.amd.com>
- <20250408101415.GEZ_T29wiuh-_sExlk@fat_crate.local>
- <20250408155242.GA2523543@yaz-khff2.amd.com>
- <20250408173333.GEZ_Vd7V0hqJfBXFRu@fat_crate.local>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250408173333.GEZ_Vd7V0hqJfBXFRu@fat_crate.local>
-X-ClientProxiedBy: BN9PR03CA0208.namprd03.prod.outlook.com
- (2603:10b6:408:f9::33) To DM4PR12MB6373.namprd12.prod.outlook.com
- (2603:10b6:8:a4::7)
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="d6+5PxZN"
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3fe9fe62295so1689610b6e.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 13:11:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1744143072; x=1744747872; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Hy3Mbc+QJnexJzWSQDFuvCjCd9Gg8NAoaKf1OoRHY8k=;
+        b=d6+5PxZNs8E2eLcW/C1FMT99NnUfGPkWkt9C2pDWQ7DRE67FF8EBKulcZaAsqtZa82
+         oINDDQqw1sTCrPtiDc7CEKbg1NDn+lntk2beMXMJSi7Q/Kw0hPfsZCYMpYp0mClxIaPT
+         YT/oyajMxCaZrZ77R9GqFdqw6JgKnEZv3Dm9Fcg1zi2yt3VZlSlDdnhSdH/aE50MDNh1
+         e7xMntG2w2CDElxdqSNbKVJ2hZDuu8zObB4MdN6wGb3ajuwI5PTTCCvunf73/URERIfv
+         UjiT84rgycRTYVOXRr/Docp5pTvPPzNeodbnljfx0TfH4iEPhRBClV2/Dt6j7V3DzDdr
+         FW9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744143072; x=1744747872;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Hy3Mbc+QJnexJzWSQDFuvCjCd9Gg8NAoaKf1OoRHY8k=;
+        b=BjmvhsD/GlPyyi4Tmc5d7aogP4XoMaOryhf7KbSMtfIh4ZtV+DvhTaChGtSAVi4240
+         a6nMpYz1/SutaioxjuklsILoIPzB1V7spGvVl2ND8apHXUgoTdAcxObu3b+fIza8/V5S
+         obqNKq87l82jlPti3DL6r3HhXNatGTaefLIRNmc6GwvIp8DjqM5IGZxe+FHv2zajOxIg
+         c3SBx7I66lFtk2vSg4JEqrtEPUF0VDgavCv90FiDnSpu7ec7A3S+WUfKk+e5X+/RdkJN
+         vgvFa2yI6J/jSbm/w8fpP+72pJ/2e+JBCVgnZ1sw7IMryW5YVvXOv6kUdxzabDQU0E7z
+         oh6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX0hpyynwoIbRIzAaDG0A1FMRsMXr/LezXCacK/IHIQ5ToiSzw+yWA2rsZgn+Lou+D6fpDROpmjvINVoyg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YykLvf0ddKhMqyQU1TliLxa5wfHnqU9+A8iEpA4tAC8/Y4PPu97
+	QOibjLiXbh0X17+8FqnI8jAEUREGm/j+rCx/b8z91mPbf9XXdBeQEErvLN8jjLeXa9zJesUvxxc
+	Z3B1qqw==
+X-Gm-Gg: ASbGnctbz+EBwh4wAPnMVnXreXM+5c9qkL5zj7wuj6hur4E64s+d7BfYsVZbKUGyquw
+	e0kucw3DoLhuVm8RvquCwg5cMQLrv7qQU3xZxQ7frQPFzM2Lo2WtKPv8pMq7G/aV4XHr404gD+P
+	H/VOk5T5O07fwVgYDhoIj2m7VqsLyW01Jcz15SfSODHpvhnzpnGGQMdWkq6W6hxIES7ULWMKV4t
+	Dsup5yOvzxFwZfxIH4dBnBXudllMc718ghWQ8uVgEkwqMIX7nAx3gWVDcbvcleYcfNaDL4JJDyK
+	kOu41LLXr0sAmRC73l+nIehh8YL4YTRVrt8+Cm67f4kcdKqvJvv05eudnh2v6J7eM1OeHaZiGRK
+	It23v4DdD
+X-Google-Smtp-Source: AGHT+IE8nNTgB6dy/XdcKIBtTqym2gMO2UZjpx330tqiOTBJS+T/NPOP1RDevUQcPBjWRVuzwCtREw==
+X-Received: by 2002:a05:6808:f16:b0:3f6:ab0d:8dc0 with SMTP id 5614622812f47-4007372de8cmr135170b6e.24.1744143072623;
+        Tue, 08 Apr 2025 13:11:12 -0700 (PDT)
+Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-400699fd5ccsm574106b6e.33.2025.04.08.13.11.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Apr 2025 13:11:12 -0700 (PDT)
+Message-ID: <2b322564-10c0-4bbd-89d9-bc9da405f831@riscstar.com>
+Date: Tue, 8 Apr 2025 15:11:10 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6373:EE_|CH3PR12MB8935:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5de462a6-5558-4eb9-81b4-08dd76d97a27
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?F7o+g7WWbw5IauAk53MvRBprvRdmhiyTZye6K+vxhHkrx1zJcA4z1rKZ8Zob?=
- =?us-ascii?Q?GjHJ7WQeBluNyCAYeu7tNkg4AwEHJV+1tbIqoBfv/wGhkCs3P1p6TGhOV98w?=
- =?us-ascii?Q?KHyq1nNDT9Zxw1kVS+IDWp5qZ7RMIp7vAbtdL7J/+T0rOtdQXDj9lv0uwuj7?=
- =?us-ascii?Q?TJeJSsPK4HMD0Xkt+z7qm+A1gt0ytWNqtk1CkhAVnSAv3NKrdkX/H9ysrnnm?=
- =?us-ascii?Q?SPmxwf8zf9+LfXUHsgMCktMvTdTNtc0eea91teirf0s6QwTiZoIGw1mE067+?=
- =?us-ascii?Q?WR/cf8pxbJObushI0Q5kEJNJ8l6fjP7KTel+kz1NgZqcEpiOMXS7dqHHnWAy?=
- =?us-ascii?Q?6M39SevHmZ9MdypKeMsi7lXISUKt8WeuE8Kb94FQCnvEFWjUe1Z1F1gjGD0N?=
- =?us-ascii?Q?fwdHkXIaH+FQgF4dL6vvKLSZcbVfAsmD2XCSwcWvOHhn+5CDM92bd7hsnxo+?=
- =?us-ascii?Q?SeENoNBxzKTpDGNmGCxTJNJeqLAF2pemc6pR5lT+lHxhxdbpIcmxXyENFfEt?=
- =?us-ascii?Q?UrowYsufY4iOupzksRD6O8F8/c1QZMIe/Pm6ra2zqlL8+PkXz3MTZYdi5Cmr?=
- =?us-ascii?Q?V/XjwynIi8KFu/SK6FDW36jdskGoUS1InHKfpCGnTUm4kRIVyuVM9KIO+ZXx?=
- =?us-ascii?Q?wlM2WoWlio7zgZAtoUZwRzr442smbAu1gLR+8k8uYEe4me7MEHO+XoVATBp/?=
- =?us-ascii?Q?U2je3VU9s9TKPRAIqiGS3L55uwjNL/fyRoGgUwNSsYep3GUWzVXdk8jhacmF?=
- =?us-ascii?Q?hxchUHVZ+eEOHrjVJvMq8GXfXaj8m0URz/S/DP0lDFvWDa9+bzdlap7gHEjB?=
- =?us-ascii?Q?h8+QjParcdspvnfO312BJUTJTawB7ZV4tkCiKzLSWSdKe7UPdtkM7b/2Ncg8?=
- =?us-ascii?Q?2Zy/l2vDCDQ9z0PquEb9tGEBFPYWe6uA6JYy5dWaNgmnNUUcpDWbaJO6U/58?=
- =?us-ascii?Q?ZYdWNJqCzHUxKQ822yuanfSv+TV7NRZt/MwmbsFa+qyXYxQfaSkx+TEWVx2H?=
- =?us-ascii?Q?g/4aGGF1pBt5Qm0biHwtWO2wfquI6yg+xxBIKF1siBjxHF2nNKNmlnPKPB4G?=
- =?us-ascii?Q?t8Q3O4ZeeNleMk321bllc+aDYRwrb+341F7mi6kPPcxKLON7/hbfKdWlgI6L?=
- =?us-ascii?Q?xB7Ak7hZx2AdYaCYFPZ+ZxZf4Bc+BwVVXF9YrUIyhjys/B35YpLiQYI+MLRZ?=
- =?us-ascii?Q?nMHfOCXUrPuubrHiAAuQNm6YC1/qDAUUTQp1tzYmFsjmGFiKKwBIO8FVhbSX?=
- =?us-ascii?Q?SGjvdPNfPj+cW3FNKL5C6fhpoSzBEe4Um80F9474AsLATkU3Q4da9Ncvm+m1?=
- =?us-ascii?Q?4hIcyPJRsXlVErN2tAX0FYR0Oa3Pqjc3Xfwcbo9TYZphqSCgmReey+k+L2Qu?=
- =?us-ascii?Q?ut3SZJDwNgsG9o/8nELf0p+p3cmY?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6373.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?iX7GmfPnEiQy6xtlyTm+LvItgqQ0wOB62Um/THbuDqj/FtIkYrofcUt0E4Qp?=
- =?us-ascii?Q?JjBtQy8yu3Pp+n9Xx9CWN0t98oMgiXTZWGMd0otAouJPiKx61+82b4PznTPY?=
- =?us-ascii?Q?9Zyx+5qV6fWYvntKAIccNadOFTDsGwFyxHJGQAALZs7dSAKw3OYQH3W4Nz2f?=
- =?us-ascii?Q?mC6b/8mNKJx0FsAmiGJUKwWCVmlmWV7lldUbB/4gE3ll6yk+C+pj+F8LLNxj?=
- =?us-ascii?Q?eMB3I2hSVZ+YBvOuP9ApvGxnxugZC0X2n50lOexSxrwKRkf/Efj3TApFWkN3?=
- =?us-ascii?Q?pH4K7b9z6HXqj95JGBTcLY/8aQ1UmwmPY7PRlotJMiUu2pdfXCwuZCiHpq01?=
- =?us-ascii?Q?90TOxqLYmvVJ2sjGpBIQgJGAlgDa+l1ZC7MNKPD8NsfymZerFWd6i7C7ykUv?=
- =?us-ascii?Q?km7osDcO6X1sCzakcBemDUcL+fvzLW1reRqXEuo2PwgCRlVr8WasTCsScCXP?=
- =?us-ascii?Q?w0cmCVEWySRl6cbP+HldtGMvKXwtM0j6Iaf6SivctPLjMTci/nMs1Ize+6sM?=
- =?us-ascii?Q?/Ss8HASKYAXehgDuMbt+1SKLQH3GQFJZaR/5j/hhBIHDs06NCiEXga+KXowP?=
- =?us-ascii?Q?HqYc7bVMFJ4NVV1CNsoy/9IgsGxCXjRrZchCf32ZHPg0RGUQKcQBK5vHQwZb?=
- =?us-ascii?Q?rToQtWfyMyHx0Og75mXqaJ57EFIAFtkKovKUVe/nRYXOVV2CzLyLj3MXNMD3?=
- =?us-ascii?Q?Umvp3Q9LeBHF4hv70jl8jDUNHwv7joP8Wq69P9rVV0BaVmBYrn83ypPw9vcA?=
- =?us-ascii?Q?Vrzs6BE5cyPDVUKu7fC2ExFur+uo/Eh5wJgMDJ71hQZHHXozVZi+ilDivTIt?=
- =?us-ascii?Q?iH/gLLYPW2shu/gZcG8goVfAMn/kFCduz3sJqOlOrwAA7Er5QKa7P06iBAjU?=
- =?us-ascii?Q?JwMsmCPBBl0gW/oLmpqBPo4+jVEfOFPW/c7kA64rAPNqiwrNGJjDHn74a5zp?=
- =?us-ascii?Q?x5cBvcN4+gE456pusmLMIMG8zmpgLmnZ6QigRD/3lKB4FC0LTuRN2mnHHnAc?=
- =?us-ascii?Q?75CzRWW90/4gA6j8uM4RFSozJ7YHqWULWU4wmSY6hgfIWjX+ibzqNcbbVXBY?=
- =?us-ascii?Q?rjlJZ5MHTJaSXJ6lnQmOS5ZL+c657Eep+BkvSyQ8I0W4k26Iiq2e7RslWvR6?=
- =?us-ascii?Q?mMP18kcD0wZBfL5mVRTJMSdOQKJVn+BNKKvANONxGX6BVrWWGX3MdjAn1vNO?=
- =?us-ascii?Q?vqa3SUHXyjYopYinQAUmrttzlcwIcwHsCcohd1+mJ6o9+1XLXEWHJtVV1thx?=
- =?us-ascii?Q?WQVyvmLd0jBmaqmEYzXEQxszzVrBElDgMvHpQgebcGmNkuzaPmFNe8noVybz?=
- =?us-ascii?Q?vlM+Z1PzzbkyEaR7pBr8lQsAXxB3oTK2xK1IoAFB7qul/QhLxkVIs58F19wu?=
- =?us-ascii?Q?8b+Y1Lp9f7shRtrpKpOAKJPluTyTvZ6yVg0gwLDLaaNEfqgCOmPUEzvHsXx2?=
- =?us-ascii?Q?fm+zrZ4JZhIUGgG8EOZI4vT9ycQqqpWFS1r5sBIdRtTmwgxDSfrVnbEiAfjP?=
- =?us-ascii?Q?s82YkESo9OW5xtXcjULF/wAFi+Qe3DisxCW+KT1oIr8V8aDomcsgWEMkVd6a?=
- =?us-ascii?Q?LO42m3k9TzM6+GfpVPLCopbsnIVMjYPDnSD/1X4R?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5de462a6-5558-4eb9-81b4-08dd76d97a27
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6373.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2025 20:10:58.8307
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: e11bCnzTvJh+g9ay01QuVcLkAxsn2P1YCBMuWej/jJE0khjG3X/LQ0maN7K0V9CeKsrIxiiblWN+v3KbuE9lsg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8935
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] serial: 8250_of: add support for an optional bus
+ clock
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: gregkh@linuxfoundation.org, jirislaby@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, benjamin.larsson@genexis.eu,
+ bastien.curutchet@bootlin.com, u.kleine-koenig@baylibre.com, lkundrak@v3.sk,
+ devicetree@vger.kernel.org, linux-serial@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250408175146.979557-1-elder@riscstar.com>
+ <20250408175146.979557-3-elder@riscstar.com>
+ <Z_V-aKBOFHt-0RKz@smile.fi.intel.com>
+Content-Language: en-US
+From: Alex Elder <elder@riscstar.com>
+In-Reply-To: <Z_V-aKBOFHt-0RKz@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 08, 2025 at 07:33:33PM +0200, Borislav Petkov wrote:
-> On Tue, Apr 08, 2025 at 11:52:42AM -0400, Yazen Ghannam wrote:
-> > At the moment, FMPM only loads on MI300A. We can just have a local
-> > function to mask the addresses. I was thinking we can have function
-> > pointers to make things generic. But maybe we keep it simple until
-> > really necessary by just using the MI300 version by default.
+On 4/8/25 2:52 PM, Andy Shevchenko wrote:
+> On Tue, Apr 08, 2025 at 12:51:43PM -0500, Alex Elder wrote:
+>> The SpacemiT UART requires a bus clock to be enabled, in addition to
+>> it's "normal" core clock.  Look up the core clock by name, and if
+>> that's found, look up the bus clock.  If named clocks are used, both
+>> are required.
+>>
+>> Supplying a bus clock is optional.  If no bus clock is needed, the clocks
+>> aren't named and we only look up the first clock.
 > 
-> Now you're talking! :-P
-> 
-> > Please see patch below.
-> 
-> ... which I simplified even more.
-> 
-> I'm thinking whoever is going to test fmpm on something else besides MI300A,
-> they will have to extend this address masking thing and then we can cross that
-> bridge when we get to it.
-> 
-> So this is keeping it simple for now.
-> 
-> Ack?
+> Code and description are not aligned. And What you are described above make
+> more sense to me than what's done below.
 
-Yes, looks good to me.
+I want to do this the right way.
 
-Thanks!
+My explanation says:
+- look up the core clock by name
+     - if that is found, look up the bus clock
+     - both clocks are required in this case (error otherwise)
+- If the "core" clock is not found:
+     - look up the first clock.
 
--Yazen
+And my code does:
+- look up the core clock by name (not found is OK)
+     - if it is found, look up the bus clock by name
+     - If that is not found or error, it's an error
+- if the "core" clock is not found
+     - look up the first clock
+
+What is not aligned?
+
+
+> Also can we simply not not touch this conditional at all, but just add
+> a new one before? Like
+> 
+> 	/* Get clk rate through clk driver if present */
+> 
+> 	/* Try named clock first */
+> 	if (!port->uartclk) {
+> 		...
+> 	}
+> 
+> 	/* Try unnamed core clock */
+> // the below is just an existing code.
+
+That's easy enough.  I think it might be a little more code
+but I have no problem with that.
+
+> 	if (!port->uartclk) {
+> 		...
+> 	}
+> 
+> ...
+> 
+>>   	/* Get clk rate through clk driver if present */
+>>   	if (!port->uartclk) {
+>> -		info->clk = devm_clk_get_enabled(dev, NULL);
+>> +		info->clk = devm_clk_get_optional_enabled(dev, "core");
+>>   		if (IS_ERR(info->clk)) {
+>> -			ret = dev_err_probe(dev, PTR_ERR(info->clk), "failed to get clock\n");
+>> +			ret = dev_err_probe(dev, PTR_ERR(info->clk),
+>> +					    "failed to get core clock\n");
+> 
+> Can be still one line.
+> 
+>>   			goto err_pmruntime;
+>>   		}
+>>   
+>> +		/* If we got the core clock, look for a bus clock */
+>> +		if (info->clk) {
+>> +			info->bus_clk = devm_clk_get_enabled(dev, "bus");
+>> +			if (IS_ERR(info->bus_clk)) {
+>> +				ret = dev_err_probe(dev, PTR_ERR(info->bus_clk),
+>> +					    "failed to get bus clock\n");
+> 
+> Something with indentation happened here and below.
+> 
+>> +				goto err_pmruntime;
+>> +			}
+>> +		} else {
+>> +			/* Fall back to getting the one unnamed clock */
+>> +			info->clk = devm_clk_get_enabled(dev, NULL);
+>> +			if (IS_ERR(info->clk)) {
+>> +				ret = dev_err_probe(dev, PTR_ERR(info->clk),
+>> +						"failed to get clock\n");
+>> +				goto err_pmruntime;
+>> +			}
+>> +		}
+>> +
+>>   		port->uartclk = clk_get_rate(info->clk);
+>>   	}
+> 
+>> +
+> 
+> Stray change.
+
+Sorry, I didn't notice that.  Next time it won't be there.
+
+Thanks for your (quick) review.
+
+					-Alex
+
+
+>>   	/* If current-speed was set, then try not to change it. */
+>>   	if (of_property_read_u32(np, "current-speed", &spd) == 0)
+>>   		port->custom_divisor = port->uartclk / (16 * spd);
+> 
+
