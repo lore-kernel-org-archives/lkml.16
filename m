@@ -1,112 +1,122 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A68D120459F
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 08:09:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ADF220459F;
+	Tue,  8 Apr 2025 08:10:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744099785; cv=none; b=RXnr8KuGORH9/6Wm1XLkdqWnMvcxuGyyryIJMGsmxoAf/CeKdji1Ql3kK12O80a9WZRbPdvFpOdNv1IT9TS5JFRgG/IDsiy6XpCtkAWgyhSYToM9qIY/mF3vRpw2YoKnU9ByXVgJ2k2z/TqTYIJs2gFnCgRkrYxx+gUSDIuvess=
+	t=1744099805; cv=none; b=hZqtBqnGg+9i6ReaWQDgqQBRT9YidN3N+Q6t8POSm8/PuWsNggq3Y8wBTyKQA12fZMTBYWOZMh1kcnxQgtn3teNqRQOqALRs3GhoOLul5zQG4jhz3YmYdg/3+7NRFdciUOL7y4zJpA4HeH+fmLefcQUaxJHJR4Vr0jlkkIbUSUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744099785; c=relaxed/simple;
-	bh=XRf0zAamyphypjWBEWWLCmbvcKPpfe6zqTtigwZbZJA=;
+	s=arc-20240116; t=1744099805; c=relaxed/simple;
+	bh=KuTOWjeh1mKtEtTStWh2LsIuxKIuB+Nc0WiTwPf/dYo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eGQzenVsrKYync4yeBQwXhKIdgg5r2nLhCCGesdFQXSd6KdvWwQT87hh7f+HkhA3ZCfglu3I+xMcNDbLr1U6yjn4Em1/DDsT/WxnoXEVgKKLLoQEVIPxljDk1pVz73hvASe4/Xk1zreetfkraF5BLR4BTasS1R3aBQMqa+pLBNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=X8P5a+3R; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=HQ62gqob5b47MywqSmx+b2dyej2C5Moe746JuzNLVr3s9ga8bL7rh8pcY/T5ccdTKqcOYZilM06mI/4QilwAeEksph39fB3xyg684FcLyomdlOBsYhA4ExR+4p/rweMW5+EicPrWIvQ2Xzb/AMn/po1nPSeUgV93vVeLUcp1aUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SQoqcgoS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="X8P5a+3R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=2ZDu
-	8l/p2Ttljr2CD08dPMjrizR2y53tHnze2nBVxyg=; b=X8P5a+3RjSSds3BZ9v9h
-	I3g3NEZguYT3LwBs3KfFJzTRUgkp8/FB5g9gLdHp3gKw5Gl3vm2TweMiuJ+pQ9NF
-	/wt32td0pMeQBLuzNbmEClBCL4J/TFop2GMOvNEED6OTxgr0gUjah5zHT0TxGGcm
-	oE9EBbgunB5ybom2ctEE2Q0ojhJr3rr8aLbJ9dlXY1RRqky1M/27rMMxwMfxNK4b
-	W3OJxPl6P6k90a3tJV3Wqn+c1898HQxkzZNLiOe3pJaEQgcVSn+LXk0n95UPsRGy
-	lpISKijhXhag2AGFVxdj7HhSCzEJusdKGCdEm+ylhQ+a3CqrHCV8E1oyXWQpMFb9
-	6A==
-Received: (qmail 4105087 invoked from network); 8 Apr 2025 10:09:41 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 8 Apr 2025 10:09:41 +0200
-X-UD-Smtp-Session: l3s3148p1@kZrq3z8yPt4gAwDPXyfYALbiJ46yNPq3
-Date: Tue, 8 Apr 2025 10:09:41 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: linux-mmc@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Avri Altman <Avri.Altman@sandisk.com>,
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/5] mmc: core: Further avoid re-storing power to the
- eMMC before a shutdown
-Message-ID: <Z_TZxXORT8H99qv4@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Avri Altman <Avri.Altman@sandisk.com>,
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250407152759.25160-1-ulf.hansson@linaro.org>
- <20250407152759.25160-3-ulf.hansson@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SQoqcgoS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 271AAC4CEE5;
+	Tue,  8 Apr 2025 08:10:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744099804;
+	bh=KuTOWjeh1mKtEtTStWh2LsIuxKIuB+Nc0WiTwPf/dYo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SQoqcgoSrZuDSLOM4aBawP4yEXKXh1leZyLF2XgXF7P/P7wvzSU8Dwecwfen73Pgy
+	 GC3RsB/XhCizUx+AcG5ydDy4drxJqwE04ocNLxscB8cgyIahM9nab2jXD3V9zsHbkL
+	 8EGtu4H5gc2KHE1lo4DvPaxYswmtRhYq/PMxl1p89yVP3tBE5FlDoDixDUeD3vyZiv
+	 Ew6KqSp4CkM8gJYPjq+VKOyVYiq8yLlIFHAFcas3F40N6p5UnIRkVamFmeE77MX8CT
+	 GDzNt+E7w3dFZdLC5IqTVKpMrTslDPIsY/kp98mZ0t9wsqh64L+foU+hGB8JMwQ0Eb
+	 e/lI6rkaQSNiA==
+Date: Tue, 8 Apr 2025 10:09:59 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Malaya Kumar Rout <malayarout91@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Shuah Khan <shuah@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v3] selftests/x86/lam: fix resource leak in do_uring()
+ and allocate_dsa_pasid()
+Message-ID: <Z_TZ138UxQ_uZzys@gmail.com>
+References: <Z_QXURMplbCtx-YB@gmail.com>
+ <20250407193449.461948-1-malayarout91@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="wFaAIlzBKtP9i0pS"
-Content-Disposition: inline
-In-Reply-To: <20250407152759.25160-3-ulf.hansson@linaro.org>
-
-
---wFaAIlzBKtP9i0pS
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250407193449.461948-1-malayarout91@gmail.com>
 
 
-> @@ -2187,11 +2198,12 @@ static int mmc_shutdown(struct mmc_host *host)
->  	int err =3D 0;
-> =20
->  	/*
-> -	 * In a specific case for poweroff notify, we need to resume the card
-> -	 * before we can shutdown it properly.
-> +	 * If the card remains suspended at this point and it was done by using
-> +	 * the sleep-cmd (CMD5), we may need to re-initialize it first, to allow
-> +	 * us to send the preferred poweroff-notification cmd at shutdown.
->  	 */
->  	if (mmc_can_poweroff_notify(host->card) &&
-> -		!(host->caps2 & MMC_CAP2_FULL_PWR_CYCLE))
-> +	    !mmc_host_can_poweroff_notify(host, true))
+* Malaya Kumar Rout <malayarout91@gmail.com> wrote:
 
-Ooookay, I think I got this logic now. I think it makes sense to make it
-more explicit in the comment, though:
+> Exception branch returns without closing
+> the file descriptors 'file_fd' and 'fd'
+> 
+> Signed-off-by: Malaya Kumar Rout <malayarout91@gmail.com>
+> ---
+>  tools/testing/selftests/x86/lam.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/x86/lam.c b/tools/testing/selftests/x86/lam.c
+> index 18d736640ece..88482d8112de 100644
+> --- a/tools/testing/selftests/x86/lam.c
+> +++ b/tools/testing/selftests/x86/lam.c
+> @@ -682,7 +682,7 @@ int do_uring(unsigned long lam)
+>  		return 1;
+>  
+>  	if (fstat(file_fd, &st) < 0)
+> -		return 1;
+> +		goto cleanup;
+>  
+>  	off_t file_sz = st.st_size;
+>  
+> @@ -690,7 +690,7 @@ int do_uring(unsigned long lam)
+>  
+>  	fi = malloc(sizeof(*fi) + sizeof(struct iovec) * blocks);
+>  	if (!fi)
+> -		return 1;
+> +		goto cleanup;
+>  
+>  	fi->file_sz = file_sz;
+>  	fi->file_fd = file_fd;
+> @@ -698,7 +698,7 @@ int do_uring(unsigned long lam)
+>  	ring = malloc(sizeof(*ring));
+>  	if (!ring) {
+>  		free(fi);
+> -		return 1;
+> +		goto cleanup;
+>  	}
+>  
+>  	memset(ring, 0, sizeof(struct io_ring));
+> @@ -729,6 +729,8 @@ int do_uring(unsigned long lam)
+>  	}
+>  
+>  	free(fi);
+> +cleanup:
+> +	close(file_fd);
+>  
+>  	return ret;
+>  }
+> @@ -1192,6 +1194,7 @@ void *allocate_dsa_pasid(void)
+>  	if (wq == MAP_FAILED)
+>  		perror("mmap");
+>  
+> +	close(fd);
+>  	return wq;
 
-"This is then the case when the card is able to handle poweroff
-notifications in general but the host could not initiate those for
-suspend."
+So in your previous patch you closed the file before the perror(), 
+presumably so that file-leak detection in Valgrind or whatever tool you 
+are using doesn't trigger.
 
-Something like this?
+But here it's done after the perror() call, why? It's perfectly fine to 
+close the mapping fd straight after an mmap() call.
 
+Finally, it would be nice to quote the before/after output of the leak 
+detection tool you are using.
 
---wFaAIlzBKtP9i0pS
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks,
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmf02cUACgkQFA3kzBSg
-KbZ6hQ/+JgjDM+tiqwQyiVHY1ME8Pp9vdyk4aU/f4kmFB0OkiTrvhclAvVKoISaY
-o4UkChV0O+1a+6hcltJS6vHzFNXeY/UYFlKtw1b14DFdAUc9829SOT7+D1c4DWvN
-VmfWkJqaeZaXgKfPutJJKYayfe4RX1FqZujSF1Vyc2NKhmYxCfrLBKf9PJdrDM+H
-Kiv9+nOn1ieG+qJWPJp0wqrQe0NnVvVA0LF6X4zaWqLqKcg8Ad6+OtP18nA8OR4L
-nmNczgC1aeFeE30hTb7rONdWucdH45R76ikbutdfGigsv2PCd85xGam56/BQQ811
-kGXfBUTmnkS/WsycWBCR52zX6ZNRPMBfq2/szudJjnboe/vWbxJnLfbcxIHzUeLb
-NYwYmgpEPaIbm22SutpIZdG1lHcmr6GLF60p8AUTTd6P712sLD0mEHlpa5fvBY7I
-DhIF/UBvsjd1/hQqTZui4EbA1rFSWId/qKACg4AKQUqAgX+U4TxHMfNJdDBDHdp0
-SEG3T099X2W+HaQyYIPwE0ccSYRHqEa/7JTO4HSDQLCiCAPawqAmd/FlDwDkrQgi
-IC4+z+MwdmU+K22SGSmJNfUlvsCUPmFsoKmPzcoG2EBzFpN0c8P6s8JDlogi0iwG
-ICBr6LHOf/jg55SeRjFiRZG7wJZ3ujF9pMW5eqQAaziy98io538=
-=PtM2
------END PGP SIGNATURE-----
-
---wFaAIlzBKtP9i0pS--
+	Ingo
