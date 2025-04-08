@@ -1,204 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97961263C6B;
-	Tue,  8 Apr 2025 09:14:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01ED026463C;
+	Tue,  8 Apr 2025 09:14:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744103675; cv=none; b=UMC0Nt8yU3vynGT1WCu2CZ9eji2n6XK3McT9vf6BeeJVCFrVT/wmp3QdDCFEcPsyiZFNi04Xboummvx+/UNRajiWGQMjtL0dis7saEw7Opl4cF5uzD3BtdK/Gkfg7rlnA1yvsZ83pqRQQL86+lB/rCBU+OXeFlVxI5TQwyd2pmw=
+	t=1744103681; cv=none; b=hS3PfJ9vBGkw+qidse0amJ0t4LOzqTa3VEV/S8h2EFWaKiLOKIMw/SM6yiGGcUa8cdW6NYX59ra6uFa/o6NQeHMF1cs1YvNsYdIImTILkPv9dBmd787Xeeq2EbGB0XUs4VDuA2Rqd26UIcGRJI0UmiSkq3pkIjJEeBjFncVoOdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744103675; c=relaxed/simple;
-	bh=gvibY0b3Sa3/VZFUImm9G5mH7JVGsXUzNoeyoJHUoeQ=;
+	s=arc-20240116; t=1744103681; c=relaxed/simple;
+	bh=5T96jd+YxJ7IGn6UQn3A5R31GnrSZ6GL7SLpCq5VmKw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F1axJl4GogdCsIzgTdZQJG6h75lp9XkEIFLzU/cjRpv1Y66HTgX/68vOwSF8wTJWAV8Nfbzca5rnShD3JCHJcXReGjlUDrUNKTdaaJ4vk3giYSHmVYEekMmMdzN2X07cBVg5f9jTrTfhNmGXtdgIOotctriuYJc4MErNxCki2O0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YwrYfUHx; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=mCVxZIKOaAhWnXQzlNJ3w6W8IDE40mq+XWZTOnIKKitjqZf7dGYt36TayZcYHU3hD1HmPDAG8Dd7mRKtDQZNUpvFmCVA0WhV2HEzBiyS+Y6OGYCFcBJP6dtzY+a0GSPrnA44rzx+KVFtSiK2JzvfaG6iJ5Tjy4enkAAmI1uKwGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tSWNR0Zf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YwrYfUHx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744103674; x=1775639674;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=gvibY0b3Sa3/VZFUImm9G5mH7JVGsXUzNoeyoJHUoeQ=;
-  b=YwrYfUHx5uiAUdslsD48+lCHPus2uEXejalouYZc50cjxP0oco2afexl
-   3PViUneGXV0d3e01xQENebfth2LikWY0u5Lz2ErJNWM52W23UpyujN2Vz
-   snx1U2FNEdrJ4hL3f+9k+nRsEhiJWtPhtW3ZncFWCNk39xn995nbefP4/
-   QFDXYuVsnEK4boTFIn0gO7uc4CcFuFsFnoT0Lq8cnGIDJ3yBYvAGXbEpe
-   PMD2g5DqmdjFS8qRQlAmC6QeAgHW591urnLRU7dNwrpnyT2RTGpcKC9Xa
-   etPmseZH0ldwlBUOkKc+Oa/Owte+c7iZzfrc8mvqh7xyI3JWrThAEREpO
-   Q==;
-X-CSE-ConnectionGUID: /JJln5ejRCyFHZ0YXTLMRg==
-X-CSE-MsgGUID: t6uqto/YQ9CE7htne065dA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="55709144"
-X-IronPort-AV: E=Sophos;i="6.15,197,1739865600"; 
-   d="scan'208";a="55709144"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 02:14:33 -0700
-X-CSE-ConnectionGUID: V1kGg9uZQr6ITUYd6/pVBw==
-X-CSE-MsgGUID: xbQBXVPZSSq7Zifz9uAIUA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,197,1739865600"; 
-   d="scan'208";a="151398279"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 02:14:29 -0700
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id EB9E411FB1F;
-	Tue,  8 Apr 2025 12:14:26 +0300 (EEST)
-Date: Tue, 8 Apr 2025 09:14:26 +0000
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Sean Anderson <sean.anderson@linux.dev>
-Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
-	devicetree@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Len Brown <lenb@kernel.org>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Daniel Scally <djrscally@gmail.com>, linux-kernel@vger.kernel.org,
-	Danilo Krummrich <dakr@kernel.org>, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH 1/2] device property: Add optional nargs_prop for
- get_reference_args
-Message-ID: <Z_To8p6xD7aLrEVk@kekkonen.localdomain>
-References: <20250407223714.2287202-1-sean.anderson@linux.dev>
- <20250407223714.2287202-2-sean.anderson@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tSWNR0Zf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED0BCC4CEEC;
+	Tue,  8 Apr 2025 09:14:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744103679;
+	bh=5T96jd+YxJ7IGn6UQn3A5R31GnrSZ6GL7SLpCq5VmKw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tSWNR0ZfWAED8hNKIJ7DVGo7/V4mFLjdGDbDeA49eX+0ZFM2ERQMmj4JTo2BsJ5U7
+	 NDkIzHb1xw2+71csR2AtpMXLlrB78qDptAL1FSIPPMWuD9ilO7R1UJpReoHugBjTqK
+	 /CYKNXoEsBDBLlPp7S+fp5QjXW+C54362lQou8nh80P5RRiGRdcRTFxrv1mv+dpcl9
+	 rssVvDPM/HEOTI1UQZk14UFeKdtW41XdoW7yDYQr18+sOlk6eP2A/lVaVBePoxasPf
+	 6WNG2dCiRSeuP5IKM6F+k4tlSomwoJFV2K9IS6toDtnQRPHpGMGoXHyBM3I7sI7U0F
+	 vJ+eCCwSWWGZg==
+Date: Tue, 8 Apr 2025 14:44:29 +0530
+From: Sumit Garg <sumit.garg@kernel.org>
+To: Jens Wiklander <jens.wiklander@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+	op-tee@lists.trustedfirmware.org,
+	linux-arm-kernel@lists.infradead.org,
+	Olivier Masse <olivier.masse@nxp.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Yong Wu <yong.wu@mediatek.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Brian Starkey <Brian.Starkey@arm.com>,
+	John Stultz <jstultz@google.com>,
+	"T . J . Mercier" <tjmercier@google.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	azarrabi@qti.qualcomm.com, Simona Vetter <simona.vetter@ffwll.ch>,
+	Daniel Stone <daniel@fooishbar.org>
+Subject: Re: [PATCH v6 05/10] tee: implement restricted DMA-heap
+Message-ID: <Z_To9V-JOKZ7ChhE@sumit-X1>
+References: <20250305130634.1850178-1-jens.wiklander@linaro.org>
+ <20250305130634.1850178-6-jens.wiklander@linaro.org>
+ <Z-JOPgcWlpTlskgd@sumit-X1>
+ <CAHUa44GjpHT5Nqo+Ar5jNYNPV-YJQYpLTCf=7oJ1o0VjP-t0nA@mail.gmail.com>
+ <Z-ucuPzwz4IqVTgb@sumit-X1>
+ <CAHUa44FpsCVrbwj1=nsJVJFVJSF1kzKdWAkAMXRu6EdLrLvh8g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250407223714.2287202-2-sean.anderson@linux.dev>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHUa44FpsCVrbwj1=nsJVJFVJSF1kzKdWAkAMXRu6EdLrLvh8g@mail.gmail.com>
 
-Hi Sean,
+On Tue, Apr 01, 2025 at 10:33:04AM +0200, Jens Wiklander wrote:
+> On Tue, Apr 1, 2025 at 9:58 AM Sumit Garg <sumit.garg@kernel.org> wrote:
+> >
+> > On Tue, Mar 25, 2025 at 11:55:46AM +0100, Jens Wiklander wrote:
+> > > Hi Sumit,
+> > >
+> >
+> > <snip>
+> >
+> > >
+> > > >
+> > > > > +
+> > > > > +#include "tee_private.h"
+> > > > > +
+> > > > > +struct tee_dma_heap {
+> > > > > +     struct dma_heap *heap;
+> > > > > +     enum tee_dma_heap_id id;
+> > > > > +     struct tee_rstmem_pool *pool;
+> > > > > +     struct tee_device *teedev;
+> > > > > +     /* Protects pool and teedev above */
+> > > > > +     struct mutex mu;
+> > > > > +};
+> > > > > +
+> > > > > +struct tee_heap_buffer {
+> > > > > +     struct tee_rstmem_pool *pool;
+> > > > > +     struct tee_device *teedev;
+> > > > > +     size_t size;
+> > > > > +     size_t offs;
+> > > > > +     struct sg_table table;
+> > > > > +};
+> > > > > +
+> > > > > +struct tee_heap_attachment {
+> > > > > +     struct sg_table table;
+> > > > > +     struct device *dev;
+> > > > > +};
+> > > > > +
+> > > > > +struct tee_rstmem_static_pool {
+> > > > > +     struct tee_rstmem_pool pool;
+> > > > > +     struct gen_pool *gen_pool;
+> > > > > +     phys_addr_t pa_base;
+> > > > > +};
+> > > > > +
+> > > > > +#if !IS_MODULE(CONFIG_TEE) && IS_ENABLED(CONFIG_DMABUF_HEAPS)
+> > > >
+> > > > Can this dependency rather be better managed via Kconfig?
+> > >
+> > > This was the easiest yet somewhat flexible solution I could find. If
+> > > you have something better, let's use that instead.
+> > >
+> >
+> > --- a/drivers/tee/optee/Kconfig
+> > +++ b/drivers/tee/optee/Kconfig
+> > @@ -5,6 +5,7 @@ config OPTEE
+> >         depends on HAVE_ARM_SMCCC
+> >         depends on MMU
+> >         depends on RPMB || !RPMB
+> > +       select DMABUF_HEAPS
+> >         help
+> >           This implements the OP-TEE Trusted Execution Environment (TEE)
+> >           driver.
+> 
+> I wanted to avoid that since there are plenty of use cases where
+> DMABUF_HEAPS aren't needed.
 
-On Mon, Apr 07, 2025 at 06:37:13PM -0400, Sean Anderson wrote:
-> get_reference_args does not permit falling back to nargs when nargs_prop
-> is missing. This makes it difficult to support older devicetrees where
-> nargs_prop may not be present. Add support for this by converting nargs
-> to a signed value. Where before nargs was ignored if nargs_prop was
-> passed, now nargs is only ignored if it is strictly negative. When it is
-> positive, nargs represents the fallback cells to use if nargs_prop is
-> absent.
+Yeah, but how the users will figure out the dependency to enable DMA
+heaps with TEE subsystem. So it's better we provide a generic kernel
+Kconfig which enables all the default features.
 
-If you don't know either the argument count or have a property that tells
-it, there's no way to differentiate phandles from arguments. I'd say such
-DTS are broken. Where do they exist?
+> This seems to do the job:
+> +config TEE_DMABUF_HEAP
+> + bool
+> + depends on TEE = y && DMABUF_HEAPS
+> 
+> We can only use DMABUF_HEAPS if the TEE subsystem is compiled into the kernel.
 
-At the very least this needs to be documented as a workaround and moved to
-the OF framework. I wouldn't add such a workaround to swnodes either, the
-bugs should be fixed instead.
+Ah, I see. So we aren't exporting the DMA heaps APIs for TEE subsystem
+to use. We should do that such that there isn't a hard dependency to
+compile them into the kernel. 
+
+-Sumit
 
 > 
-> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
-> ---
-> 
->  drivers/base/property.c |  4 ++--
->  drivers/base/swnode.c   | 13 +++++++++----
->  drivers/of/property.c   | 10 +++-------
->  include/linux/fwnode.h  |  2 +-
->  4 files changed, 15 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/base/property.c b/drivers/base/property.c
-> index c1392743df9c..049f8a6088a1 100644
-> --- a/drivers/base/property.c
-> +++ b/drivers/base/property.c
-> @@ -606,7 +606,7 @@ int fwnode_property_get_reference_args(const struct fwnode_handle *fwnode,
->  		return -ENOENT;
->  
->  	ret = fwnode_call_int_op(fwnode, get_reference_args, prop, nargs_prop,
-> -				 nargs, index, args);
-> +				 nargs_prop ? -1 : nargs, index, args);
->  	if (ret == 0)
->  		return ret;
->  
-> @@ -614,7 +614,7 @@ int fwnode_property_get_reference_args(const struct fwnode_handle *fwnode,
->  		return ret;
->  
->  	return fwnode_call_int_op(fwnode->secondary, get_reference_args, prop, nargs_prop,
-> -				  nargs, index, args);
-> +				  nargs_prop ? -1 : nargs, index, args);
->  }
->  EXPORT_SYMBOL_GPL(fwnode_property_get_reference_args);
->  
-> diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-> index b1726a3515f6..11af2001478f 100644
-> --- a/drivers/base/swnode.c
-> +++ b/drivers/base/swnode.c
-> @@ -503,7 +503,7 @@ software_node_get_named_child_node(const struct fwnode_handle *fwnode,
->  static int
->  software_node_get_reference_args(const struct fwnode_handle *fwnode,
->  				 const char *propname, const char *nargs_prop,
-> -				 unsigned int nargs, unsigned int index,
-> +				 int nargs, unsigned int index,
->  				 struct fwnode_reference_args *args)
->  {
->  	struct swnode *swnode = to_swnode(fwnode);
-> @@ -543,10 +543,15 @@ software_node_get_reference_args(const struct fwnode_handle *fwnode,
->  		error = property_entry_read_int_array(ref->node->properties,
->  						      nargs_prop, sizeof(u32),
->  						      &nargs_prop_val, 1);
-> -		if (error)
-> +
-> +		if (error == -EINVAL) {
-> +			if (nargs < 0)
-> +				return error;
-> +		} else if (error) {
->  			return error;
-> -
-> -		nargs = nargs_prop_val;
-> +		} else {
-> +			nargs = nargs_prop_val;
-> +		}
->  	}
->  
->  	if (nargs > NR_FWNODE_REFERENCE_ARGS)
-> diff --git a/drivers/of/property.c b/drivers/of/property.c
-> index c1feb631e383..c41190e47111 100644
-> --- a/drivers/of/property.c
-> +++ b/drivers/of/property.c
-> @@ -1116,19 +1116,15 @@ of_fwnode_get_named_child_node(const struct fwnode_handle *fwnode,
->  static int
->  of_fwnode_get_reference_args(const struct fwnode_handle *fwnode,
->  			     const char *prop, const char *nargs_prop,
-> -			     unsigned int nargs, unsigned int index,
-> +			     int nargs, unsigned int index,
->  			     struct fwnode_reference_args *args)
->  {
->  	struct of_phandle_args of_args;
->  	unsigned int i;
->  	int ret;
->  
-> -	if (nargs_prop)
-> -		ret = of_parse_phandle_with_args(to_of_node(fwnode), prop,
-> -						 nargs_prop, index, &of_args);
-> -	else
-> -		ret = of_parse_phandle_with_fixed_args(to_of_node(fwnode), prop,
-> -						       nargs, index, &of_args);
-> +	ret = __of_parse_phandle_with_args(to_of_node(fwnode), prop, nargs_prop,
-> +					   nargs, index, &of_args);
->  	if (ret < 0)
->  		return ret;
->  	if (!args) {
-> diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
-> index 6fa0a268d538..69fe44c68f8c 100644
-> --- a/include/linux/fwnode.h
-> +++ b/include/linux/fwnode.h
-> @@ -163,7 +163,7 @@ struct fwnode_operations {
->  				const char *name);
->  	int (*get_reference_args)(const struct fwnode_handle *fwnode,
->  				  const char *prop, const char *nargs_prop,
-> -				  unsigned int nargs, unsigned int index,
-> +				  int nargs, unsigned int index,
->  				  struct fwnode_reference_args *args);
->  	struct fwnode_handle *
->  	(*graph_get_next_endpoint)(const struct fwnode_handle *fwnode,
-
--- 
-Regards,
-
-Sakari Ailus
+> Cheers,
+> Jens
