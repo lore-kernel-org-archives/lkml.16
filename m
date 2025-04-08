@@ -1,89 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4DF123372D;
-	Tue,  8 Apr 2025 17:13:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B14B191F79;
+	Tue,  8 Apr 2025 17:14:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744132433; cv=none; b=GJycXKrWBkahbcAfHxEVNTB+iOipC0luG1aP7RiVw71UnhoAH72YAtbwUuGkpmZhRCx0tRpLB3HpDGxrAgT7C+rmh0AazAr93pV5u4h+d3ZN7jJ4Jl2EKyXuK2hbKJqaC2icSZmgLH5iB7rvQEgRgTWKHSJkmHrvZuLtq2CVYGI=
+	t=1744132497; cv=none; b=KbnoOceYT49FkgKqIIfuMcNMcNda+sZ7YcCZDwVtO/oddFXJVAsweD8HD71OUqrEI2nCNHrU8UYzwxQ/O3PRt+yZYRO9viqB7R5Tts3kjhtuCs2KokGuphtScbIDipEvBdcouAmEN1ZVPC/zgFdV+d3Unc45xTsM9QGQ745Nkn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744132433; c=relaxed/simple;
-	bh=zMsBri3MCQyGuUFjFhMfP7oC09omGu5tlgKMnWc55OI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WimQZ3m+NYcUVDq3laqAbIYqkKJCV6nhFmxQKMbqncyzgVSDlUqpeSWvbw8Oe3GAi1a09KpwS8NAuIomlD1CT2GuCq4Tzi+1QBjQ1/yhXfsJ0d424V/S2AsADKKJEcHLHMZzQQ65ufvtOI1LNN8iUONgI8b/5d95AOydKduVWLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gdv3uxZw; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gdv3uxZw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04AD7C4CEE5;
-	Tue,  8 Apr 2025 17:13:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744132433;
-	bh=zMsBri3MCQyGuUFjFhMfP7oC09omGu5tlgKMnWc55OI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gdv3uxZwyyd06KpRj9uYbprjrPc6GutaFkXCtxht9Ch7Ff4m7bP0ZWv56nVKgTZJx
-	 O6zsbj+ACBVOmIcBL0SwZ6idGd1Bg486CI+6qs0TZTPHudi30jPJo0IH0dz+aH80f9
-	 XrB/vcRpWIBokuEUBfubh9egpqpIsyhbJc4RuVAJKkCqbjoxNDF0MlpwhGPZM+3GsC
-	 FfQqoBdrLvJMalZFkxadzSbg5I/zziHjoyx7Hjx0elDAGlj9CBLWA6bsfbgJv4KeAk
-	 BrGt0/O72S/IzRW3SplTfAdDYrxW+fA++IK5+H/b8otl7r10U1O0HYCRZFgdVZ+rwa
-	 9LwnhyqLUq73w==
-Date: Tue, 8 Apr 2025 10:13:51 -0700
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: Jan Kara <jack@suse.cz>
-Cc: Phillip Lougher <phillip@squashfs.org.uk>,
-	Andreas Gruenbacher <agruenba@redhat.com>,
-	Namjae Jeon <linkinjeon@kernel.org>,
-	Sungjong Seo <sj1557.seo@samsung.com>,
-	OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-	Carlos Maiolino <cem@kernel.org>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Recent changes mean sb_min_blocksize() can now fail
-Message-ID: <Z_VZT9UhPdLT-rk_@bombadil.infradead.org>
-References: <86290c9b-ba40-4ebd-96c1-d3a258abe9d4@squashfs.org.uk>
- <ormbk7uxe7v4givkz6ylo46aacfbrcy5zbasmti5tsqcirgijs@ulgt66vb2wbg>
- <mnrpsfnhhp2xag62qmgdscbmtmskd6wcgytf6p44snkgdjeejc@ohpom722mvpn>
+	s=arc-20240116; t=1744132497; c=relaxed/simple;
+	bh=jcyK2mN7KL6A10vMwCASXq/OxRL74veeQ/dmNNMAYtQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oMNxVKlg3ZLOv3weqJRYc1QtnauhPvtSyIqZ6asoDUXjCEIuLFoVbNoPwtKRAnmPSeZp4tDuYblTLh0RA9z1PhGp6J35eseBBULvgfND4RkoDjJLYyER+kQoVo/qd10MmQ8PXoBdeUWHE0ZKCs4AHUKE27d0LjXK2oa+1vSrKpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fomichev.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fomichev.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-22580c9ee0aso64127225ad.2;
+        Tue, 08 Apr 2025 10:14:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744132494; x=1744737294;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AW5WeJLIZtIq8T9byhQyeBBnS+bdUWcEU8FgEy7dvi0=;
+        b=OtI1nQ9d+LCoRF4rt3RgkRzxg3KoZoXRSic/Xu87nDPJOsJjyUkcuxvReML/JXh90Y
+         /AXi+94MAxt1/hwlv5XNBdq1oEki4asmc6dbIGryWF+6athU4qiWeubuIcbanplnpku8
+         JsudhSNW5zZ3MkGmuRII5EE5T2zx+BjukDfDv/FrmHQVyThoKL+vAdUBmolDtsxm26ar
+         SOwMlvq6Be7ZV7ygspv8+cZjzb7jEMFvGaKxqPEQABE5AsSZiaCtDAADBbzrcSVxk6U+
+         jrcn6omA4kGQknv53keeSsG/0OY8TrbuYXvhcefTjQwAJ70xanZLG47X68alo1RBqZ5c
+         gLeA==
+X-Forwarded-Encrypted: i=1; AJvYcCXuidifYiYOc7sxoWJ8cfTgNvOKjQl2m0ZbRx3bZ5axkTxqQMa3Q7A5gUoa6K+CLk0TAr2LAnEgLo6pQC8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhiAZeDCGZhTCw3LesQeylGkPj5+im4kRF6hw4LaKOBFGoPq86
+	aJmEQNJkJ/dNd7AsVH8xpsczabQwCNLSDYJS4CjIRaPUmqnlVHvaqbn6
+X-Gm-Gg: ASbGncv/BZP2QwJep04bWlwWO+WkSRtQ5bjhR+y7+gf2jv+4MJqe1IftxGFcnnU7CP3
+	syJLLgRrGY9d0JwVRTutU05gkTzaOLZ8gDoVVUW58oYJpT6K29bMZ83RIZS6lnHK8NqGiUMwA4P
+	ad09s05ijEVUELZI8b+BPjfu1yAyl/dk3R8BwuX9iGkQwWHcEGgeGNY74wS5svfjndBUutzW4tu
+	f2KoulGxloezS45scpSzWbCv++0xNLkSpjziuyO9FhtHbb2pdA12v3KHN+ju3bygMhy0EAI7uKE
+	RMARcqzDGVOs2kVAkLCOCWQ4WKbGRrX2507qkRzoqY9b
+X-Google-Smtp-Source: AGHT+IE6rpUteQ6/c4exxF09OpehWY2Hv9kpbP0+sLAH3pLaunBDR4/hyikJ8JyzkiV/Sq847v+J1A==
+X-Received: by 2002:a17:902:cf07:b0:223:f9a4:3f99 with SMTP id d9443c01a7336-22ac29c19f4mr449465ad.29.1744132493955;
+        Tue, 08 Apr 2025 10:14:53 -0700 (PDT)
+Received: from localhost ([2601:646:9e00:f56e:123b:cea3:439a:b3e3])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2297866e161sm102717155ad.171.2025.04.08.10.14.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 10:14:53 -0700 (PDT)
+From: Stanislav Fomichev <sdf@fomichev.me>
+To: netdev@vger.kernel.org
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	jv@jvosburgh.net,
+	andrew+netdev@lunn.ch,
+	sdf@fomichev.me,
+	linux-kernel@vger.kernel.org,
+	syzbot+48c14f61594bdfadb086@syzkaller.appspotmail.com
+Subject: [PATCH net] bonding: hold ops lock around get_link
+Date: Tue,  8 Apr 2025 10:14:51 -0700
+Message-ID: <20250408171451.2278366-1-sdf@fomichev.me>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <mnrpsfnhhp2xag62qmgdscbmtmskd6wcgytf6p44snkgdjeejc@ohpom722mvpn>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 08, 2025 at 12:51:37PM +0200, Jan Kara wrote:
-> On Tue 08-04-25 12:39:52, Jan Kara wrote:
-> > Hi!
-> > 
-> > On Tue 08-04-25 06:33:53, Phillip Lougher wrote:
-> > > A recent (post 6.14) change to the kernel means sb_min_blocksize() can now fail,
-> > > and any filesystem which doesn't check the result may behave unexpectedly as a
-> > > result.  This change has recently affected Squashfs, and checking the kernel code,
-> > > a number of other filesystems including isofs, gfs2, exfat, fat and xfs do not
-> > > check the result.  This is a courtesy email to warn others of this change.
-> > > 
-> > > The following emails give the relevant details.
-> > > 
-> > > https://lore.kernel.org/all/2a13ea1c-08df-4807-83d4-241831b7a2ec@squashfs.org.uk/
-> > > https://lore.kernel.org/all/129d4f39-6922-44e9-8b1c-6455ee564dda@squashfs.org.uk/
-> > 
-> > Indeed. Thanks for the heads up!
-> 
-> But isofs is actually fine since setting bdev block size needs exclusive open
-> (i.e., has to happen before filesystem mount begins and claims bdev) and
-> isofs does:
-> 
-> 	if (bdev_logical_block_size(s->s_bdev) > 2048)
-> 		bail
-> 
-> in its isofs_fill_super().
+syzbot reports a case of ethtool_ops->get_link being called without
+ops lock:
 
-Regardless, we added commit a64e5a596067bddb ("bdev: add back PAGE_SIZE
-block size validation for sb_set_blocksize()" to effectively revert back
-to the original behaviour, and so only filesystems which have FS_LBS are
-not blocked by PAGE_SIZE.
+ ethtool_op_get_link+0x15/0x60 net/ethtool/ioctl.c:63
+ bond_check_dev_link+0x1fb/0x4b0 drivers/net/bonding/bond_main.c:864
+ bond_miimon_inspect drivers/net/bonding/bond_main.c:2734 [inline]
+ bond_mii_monitor+0x49d/0x3170 drivers/net/bonding/bond_main.c:2956
+ process_one_work kernel/workqueue.c:3238 [inline]
+ process_scheduled_works+0xac3/0x18e0 kernel/workqueue.c:3319
+ worker_thread+0x870/0xd50 kernel/workqueue.c:3400
+ kthread+0x7b7/0x940 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
 
-Let me know if you still are seeing issues even with this patch merged.
+Commit 04efcee6ef8d ("net: hold instance lock during NETDEV_CHANGE")
+changed to lockless __linkwatch_sync_dev in ethtool_op_get_link.
+All paths except bonding are coming via locked ioctl. Add necessary
+locking to bonding.
 
-  Luis
+Reported-by: syzbot+48c14f61594bdfadb086@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=48c14f61594bdfadb086
+Fixes: 04efcee6ef8d ("net: hold instance lock during NETDEV_CHANGE")
+Signed-off-by: Stanislav Fomichev <sdf@fomichev.me>
+---
+ drivers/net/bonding/bond_main.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index 950d8e4d86f8..d1ec5ec6f7e5 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -850,8 +850,9 @@ static int bond_check_dev_link(struct bonding *bond,
+ 			       struct net_device *slave_dev, int reporting)
+ {
+ 	const struct net_device_ops *slave_ops = slave_dev->netdev_ops;
+-	struct ifreq ifr;
+ 	struct mii_ioctl_data *mii;
++	struct ifreq ifr;
++	int ret;
+ 
+ 	if (!reporting && !netif_running(slave_dev))
+ 		return 0;
+@@ -860,9 +861,14 @@ static int bond_check_dev_link(struct bonding *bond,
+ 		return netif_carrier_ok(slave_dev) ? BMSR_LSTATUS : 0;
+ 
+ 	/* Try to get link status using Ethtool first. */
+-	if (slave_dev->ethtool_ops->get_link)
+-		return slave_dev->ethtool_ops->get_link(slave_dev) ?
++	if (slave_dev->ethtool_ops->get_link) {
++		netdev_lock_ops(slave_dev);
++		ret = slave_dev->ethtool_ops->get_link(slave_dev) ?
+ 			BMSR_LSTATUS : 0;
++		netdev_unlock_ops(slave_dev);
++
++		return ret;
++	}
+ 
+ 	/* Ethtool can't be used, fallback to MII ioctls. */
+ 	if (slave_ops->ndo_eth_ioctl) {
+-- 
+2.49.0
+
