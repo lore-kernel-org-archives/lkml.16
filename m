@@ -1,230 +1,180 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 639D039ACF;
-	Tue,  8 Apr 2025 15:11:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C86F6227E96;
+	Tue,  8 Apr 2025 15:11:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744125090; cv=none; b=cDlRg5A52XikgimelFiXSLybIN6U19nFwIqff472jwnqHPSGO9aVolkJXHfpTp437HZikOLfpYx3nERJNywcYGMGU4tziynTNI6zATzRu47Rw9KO1+x6p1vTSTeeYE9Jw0j6KCz5WKab+F3ISYOwRmaszl0I5AtdR8TtRr5aQeM=
+	t=1744125095; cv=none; b=EgEPmK5ijGlwgnvJfkDV97PlHSP2E4y9qPHAKZWuh9MhAOjcaCBGvaZkR4T9I89cwc5UUcITzDmBYZ+HxFozxWxIt1Ei3d0c04FENFYcSm539Sr3f0UFT28lCOeo688B0Eam7ekldPzPJ80q0fYUXtiGdJhCIAuMnQpqc96fcwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744125090; c=relaxed/simple;
-	bh=iDHL867Wm1Z34v53LOE/b0GskTUGIOuSB67G+ibvt0w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GQr+DY35lVeI6Tf3Xky6Q8dw0bDntZn/l5PbwS11OUVy/kdWfrXdpWstw7ADZEfXG1P6mt4NeAejG/oMn0FuIbp1W69OQd+Ixz8PVD3tdsxm88UhtcfKkw3RqVrfuUiEklV8U7zH0CZwA2ZuZ5Fr6tvXV/gy8Dh9TxwhXxpyUYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t5MZzqRo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744125095; c=relaxed/simple;
+	bh=iAge/TCQFEQxz188bugCjBSt7K57C1F/d/6gwLwpoCw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UJLp85aK0h689+UOfgdFIgBK5CcMJMeu/6rD8r6n0VDAaWML2lzEQ1tVi460GPhLtSn2sjzOVe6B0UgapyBcGeO2ylLRalvDSl2WWBPJQ56zcA8M1yfkponcafROHBJNFC1gHassCrvEAEtcFDxZdSXJm/PTN3WrkcDz+1X/Iaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U8qNatti; arc=none smtp.client-ip=209.85.219.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t5MZzqRo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48825C4CEE5;
-	Tue,  8 Apr 2025 15:11:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744125089;
-	bh=iDHL867Wm1Z34v53LOE/b0GskTUGIOuSB67G+ibvt0w=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=t5MZzqRoVz8luWLE3kVME9RM0/xjP0+NP2lGKGmx8O1bjzyVXhWU14snopHUKGBu6
-	 Tq0RmkonTX/WBEHHLRVFvEnJySyAeCELjYgoV4vu3WqOjZQVAUlm9BdYHPsGYXFGLx
-	 Ml8tzceK7napCm+hHxluXm1TnjzJST3j+2hWwAcsSbYmll/TR0LsfVb71phkkXpOn8
-	 Xyp/G9Z6zF4W2Fs1giPZE+6jzND2i62uDadkCbjAkJaqetviNP7RVgea34u6nLEIXg
-	 AWCL18cUIu8obhXB3igMDMUVFu4pyXomzYcrEFDQQGyOqFsc5Q/1Mjlk0T9yvOZyOD
-	 /xF7vLkvPdPVA==
-Message-ID: <18365ed3-94bf-432a-a6f0-38e9c7ea0c6c@kernel.org>
-Date: Tue, 8 Apr 2025 17:11:25 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U8qNatti"
+Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6e8fb83e137so51574916d6.0;
+        Tue, 08 Apr 2025 08:11:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744125092; x=1744729892; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fi2eBmkzJiBdyrJlnjIzeZPmXlpwSuN6LV/0MwZZJQk=;
+        b=U8qNatti0qrsZHGCzmGv6ql/rwWpZHtmzA50WAQ4421wkZqGdyl9JFha6twjgSdiEG
+         h8qJ7vSvKoJUev+0rWt626i6ltKZ6FOpeC8LbxDs3KkGoe/vzid+N6ZelIGKBnpa+z6n
+         QAvRiPiU6AakIk/1FC+3p4BlbSalFX96U97oBSejJFNGfJ1QT8xfDvCtFUgtny0FJc95
+         hKKDD8JuX5uJwbiddRTt6MgLn2FvMZs2Ur0vNxJrquSiSDxpuAkTzjOK6YLPjMKwF06+
+         +E5a1ZyY3S9sEJHaAXglWAcRzdvWRU9nYcTj18+utn2yWrMaTJtg17v2DecgkOjG63HU
+         8+4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744125092; x=1744729892;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fi2eBmkzJiBdyrJlnjIzeZPmXlpwSuN6LV/0MwZZJQk=;
+        b=LxLsFkSxYHTEZugp/ZEBiX0aESm/JpGC1UmfAqvNuxWX+BcUwvhz5lxx2o9L8wpvPT
+         0tQgQRuYU5HYJBQR51f+CNAKh2wXx1ch8XbPfWmi6MhfkuiPFTEUSDOn4yqdUW91fSzK
+         5BdyU1TfYSFgz//yxT/LQ5TjhaHvbWUq2PMucEdy1fB7sM1FWuFyJyNa1PGYs13LhCbC
+         x283g+svvqcjCr5k2nfv4XeDb/Y6renZJM2GBBj8GkhrnPO40/T4C1bkE1XB2IxPakdC
+         P+Ae9D458BhmnZhK3FsT2W/mJEuyZuuPIbhWqL/49D7mBzrQoC5TfLqBOt6WOQZhkk7I
+         dNig==
+X-Forwarded-Encrypted: i=1; AJvYcCUPO2hqRq8/gq78clrLHCRTU7TGV0AFGMxRHg3G4fHWJ1th4Pgpvdmi7tdFJRNujO65MdxPAQn00+g=@vger.kernel.org, AJvYcCUai74JV9RYvmbGBvBde2a552mywVKtTQG6evmmmtxKtvghgwPC4OZbzC1oMJRzwORwfphl4nte@vger.kernel.org, AJvYcCVbkomYQ75rcuU+sLmelldOPEtgYDrVA3VS9J8mMwmM2H2pLLWBYMVYp0Gc9IAYwHuyb7CJcUnMcUzPbpr/@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxugec4ui2UqWqTxjUgU2vsEwZHvyTg9GgRy8bQ/0/I2xJpjyYz
+	MfDnd9NzBjA/qwVZzG5VJY27e8FCFsNx3PxDpeOVDM6tRAo4cAO8uB8LDQhtBykuZy+gnbjGDFR
+	BpTgwNUmjysVlk6oXLvEc2EltIf4=
+X-Gm-Gg: ASbGncsCb4EpquGEroieiB8VLfKetR+0MsGNBf+N/KZ3xQf8dzc/eo+sW/T8EPCu/5o
+	fQgln+2GnpLXpqYGExbChNVXLyFPwrKe2vV1LQiVxuI5Tz46SSOzhoN4gqA3ZPpw/lvcE5UUcg3
+	4RcMQ80v1kHv+fQ2v5cu+MrU2JwLlr7NOtXfUWf3N2KwcSigOIRkFxLsqjpw==
+X-Google-Smtp-Source: AGHT+IEBzzayKvqC39EUgHVBWtu/wY1YXqZBYY6cBaTXuY1bD1506pK2P8WVCfFC0SJvQwUENGg3TY07BxlZ30qZMmY=
+X-Received: by 2002:a05:6214:20a1:b0:6ed:df6:cdcd with SMTP id
+ 6a1803df08f44-6f0b749934amr221872706d6.21.1744125092487; Tue, 08 Apr 2025
+ 08:11:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] dt-bindings: clock: add TI CDCE6214 binding
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-clk@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- kernel@pengutronix.de, =?UTF-8?Q?Alvin_=C5=A0ipraga?= <alsi@bang-olufsen.dk>
-References: <20250408-clk-cdce6214-v1-0-bd4e7092a91f@pengutronix.de>
- <20250408-clk-cdce6214-v1-3-bd4e7092a91f@pengutronix.de>
- <5766d152-51e7-42f5-864f-5cb1798606a3@kernel.org>
- <Z_U6fUGbOV2SdO_C@pengutronix.de>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <Z_U6fUGbOV2SdO_C@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250407234223.1059191-1-nphamcs@gmail.com> <20250407234223.1059191-4-nphamcs@gmail.com>
+ <20250408141555.GA816@cmpxchg.org>
+In-Reply-To: <20250408141555.GA816@cmpxchg.org>
+From: Nhat Pham <nphamcs@gmail.com>
+Date: Tue, 8 Apr 2025 08:11:21 -0700
+X-Gm-Features: ATxdqUHmaTfVyV2I-0EHfU2y-rKG2ACn3QSFVY1QEBvNDfhELczRDQ5ahbXOhYE
+Message-ID: <CAKEwX=PSK-f0mK=Ffsvqs72qicPAoUWW-MdcNurj4PO0NMuJ3w@mail.gmail.com>
+Subject: Re: [RFC PATCH 03/14] mm: swap: add a separate type for physical swap slots
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hughd@google.com, 
+	yosry.ahmed@linux.dev, mhocko@kernel.org, roman.gushchin@linux.dev, 
+	shakeel.butt@linux.dev, muchun.song@linux.dev, len.brown@intel.com, 
+	chengming.zhou@linux.dev, kasong@tencent.com, chrisl@kernel.org, 
+	huang.ying.caritas@gmail.com, ryan.roberts@arm.com, viro@zeniv.linux.org.uk, 
+	baohua@kernel.org, osalvador@suse.de, lorenzo.stoakes@oracle.com, 
+	christophe.leroy@csgroup.eu, pavel@kernel.org, kernel-team@meta.com, 
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
+	linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 08/04/2025 17:02, Sascha Hauer wrote:
->>> +  clock-names:
->>> +    minItems: 1
->>> +    items:
->>> +      - const: priref
->>> +      - const: secref
->>
->> So one input is optional?
-> 
-> The chip has two clock inputs and to be operational it needs at least
-> one clock, could be priref or secref or both.
-> 
-> Is there a proper way to express this situation?
+On Tue, Apr 8, 2025 at 7:16=E2=80=AFAM Johannes Weiner <hannes@cmpxchg.org>=
+ wrote:
+>
+> On Mon, Apr 07, 2025 at 04:42:04PM -0700, Nhat Pham wrote:
+> > In preparation for swap virtualization, add a new type to represent the
+> > physical swap slots of swapfile. This allows us to separates:
+> >
+> > 1. The logical view of the swap entry (i.e what is stored in page table
+> >    entries and used to index into the swap cache), represented by the
+> >    old swp_entry_t type.
+> >
+> > from:
+> >
+> > 2. Its physical backing state (i.e the actual backing slot on the swap
+> >    device), represented by the new swp_slot_t type.
+> >
+> > The functions that operate at the physical level (i.e on the swp_slot_t
+> > types) are also renamed where appropriate (prefixed with swp_slot_* for
+> > e.g). We also take this opportunity to re-arrange the header files
+> > (include/linux/swap.h and swapops.h), grouping the swap API into the
+> > following categories:
+> >
+> > 1. Virtual swap API (i.e functions on swp_entry_t type).
+> >
+> > 2. Swap cache API (mm/swap_state.c)
+> >
+> > 3. Swap slot cache API (mm/swap_slots.c)
+> >
+> > 4. Physical swap slots and device API (mm/swapfile.c).
+>
+> This all makes sense.
+>
+> However,
+>
+> > @@ -483,50 +503,37 @@ static inline long get_nr_swap_pages(void)
+> >       return atomic_long_read(&nr_swap_pages);
+> >  }
+> >
+> > -extern void si_swapinfo(struct sysinfo *);
+> > -swp_entry_t folio_alloc_swap(struct folio *folio);
+> > -bool folio_free_swap(struct folio *folio);
+> > -void put_swap_folio(struct folio *folio, swp_entry_t entry);
+> > -extern swp_entry_t get_swap_page_of_type(int);
+> > -extern int get_swap_pages(int n, swp_entry_t swp_entries[], int order)=
+;
+> > -extern int add_swap_count_continuation(swp_entry_t, gfp_t);
+> > -extern void swap_shmem_alloc(swp_entry_t, int);
+> > -extern int swap_duplicate(swp_entry_t);
+> > -extern int swapcache_prepare(swp_entry_t entry, int nr);
+> > -extern void swap_free_nr(swp_entry_t entry, int nr_pages);
+> > -extern void swapcache_free_entries(swp_entry_t *entries, int n);
+> > -extern void free_swap_and_cache_nr(swp_entry_t entry, int nr);
+> > +void si_swapinfo(struct sysinfo *);
+> > +swp_slot_t swap_slot_alloc_of_type(int);
+> > +int swap_slot_alloc(int n, swp_slot_t swp_slots[], int order);
+> > +void swap_slot_free_nr(swp_slot_t slot, int nr_pages);
+> > +void swap_slot_cache_free_slots(swp_slot_t *slots, int n);
+> >  int swap_type_of(dev_t device, sector_t offset);
+> > +sector_t swapdev_block(int, pgoff_t);
+> >  int find_first_swap(dev_t *device);
+> > -extern unsigned int count_swap_pages(int, int);
+> > -extern sector_t swapdev_block(int, pgoff_t);
+> > -extern int __swap_count(swp_entry_t entry);
+> > -extern int swap_swapcount(struct swap_info_struct *si, swp_entry_t ent=
+ry);
+> > -extern int swp_swapcount(swp_entry_t entry);
+> > -struct swap_info_struct *swp_swap_info(swp_entry_t entry);
+> > +unsigned int count_swap_pages(int, int);
+> > +struct swap_info_struct *swap_slot_swap_info(swp_slot_t slot);
+> >  struct backing_dev_info;
+> > -extern int init_swap_address_space(unsigned int type, unsigned long nr=
+_pages);
+> > -extern void exit_swap_address_space(unsigned int type);
+> > -extern struct swap_info_struct *get_swap_device(swp_entry_t entry);
+> > +struct swap_info_struct *swap_slot_tryget_swap_info(swp_slot_t slot);
+> >  sector_t swap_folio_sector(struct folio *folio);
+>
+> this is difficult to review.
+>
+> Can you please split out:
+>
+> 1. Code moves / cut-and-paste
+>
+> 2. Renames
+>
+> 3. New code
+>
+> into three separate steps
 
-No, this is fine, I just wanted to be sure that's the intention.
+Makes sense, yeah.
 
-> 
-> 
->>> +  "^clk@[2-9]$":
->>> +    type: object
->>> +    description: |
->>> +      optional child node that can be used to specify output pin parameters.  The reg
->>> +      properties match the CDCE6214_CLK_* defines.
->>> +
->>> +    additionalProperties: false
->>> +
->>> +    properties:
->>> +      reg:
->>> +        description:
->>> +          clock output identifier.
->>> +        minimum: 2
->>> +        maximum: 9
->>> +
->>> +      ti,lphcsl:
->>> +        type: boolean
->>> +        description: |
->>> +          If true enable LP-HCSL output mode for this clock
->>> +
->>> +      ti,lvds:
->>> +        type: boolean
->>> +        description: |
->>> +          If true enable LVDS output mode for this clock
->>> +
->>> +      ti,cmosp:
->>> +        type: boolean
->>> +        description: |
->>> +          If true enable CMOSP output for this clock
->>> +
->>> +      ti,cmosn:
->>> +        type: boolean
->>> +        description: |
->>> +          If true enable CMOSN output for this clock
->>
->> Looks the same here. Anyway having these as subnodes is too much. You
->> have fixed number of clocks, so you need one or two array properties in
->> top-level.
-> 
-> There are several properties I haven't yet modeled, like
-> 
-> - 1.8V / 2.5V output
-> - sync_delay
-> - LVDS common-mode trim increment/decrement
-> - differential buffer BIAS trim
-> - slew rate
-> - BIAS current setting for XTAL mode
-> - load capacity for XTAL mode
-> 
-> I don't know which of them will ever be supported, but I thought having a
-> node per pin would add a natural place to add these properties. Do you
-> still think arrays would be more appropriate?
+I will reorganize the series as follows:
 
-Binding is supposed to be complete. If you send incomplete, you get
-review like that.
-
-Several of these look like pinctrl thus maybe this should be pin
-controller as well. It's not exactly GPIO, but still configuring
-specific functions and pin characteristics is the exact job of pinctrl.
-
-> 
->>
->>> +
->>> +required:
->>> +  - compatible
->>> +  - reg
->>> +  - clocks
->>> +  - "#clock-cells"
->>> +
->>> +additionalProperties: false
->>> +
->>> +examples:
->>> +  - |
->>> +    #include <dt-bindings/clock/ti,cdce6214.h>
->>
->> This file does not exist. Something is odd in this example.
-> 
-> It is added in the driver patch. Should it come with the binding patch
-> instead?
-
-Yes, because it is a binding.
-
-> 
->>
->>> +    i2c {
->>> +        #address-cells = <1>;
->>> +        #size-cells = <0>;
->>> +
->>> +        clock-generator@67 {
->>> +            compatible = "ti,cdce6214";
->>> +            reg = <0x67>;
->>> +            #address-cells = <1>;
->>> +            #size-cells = <0>;
->>> +            #clock-cells = <1>;
->>> +            clocks = <&clock_ref25m>;
->>> +            clock-names = "priref";
->>> +
->>> +            clk@CDCE6214_CLK_SECREF {
->>
->> That's not a valid unit address. Use simple numbers, see DT spec and DTS
->> coding style.
-> 
-> CDCE6214_CLK_SECREF is a macro added in dt-bindings/clock/ti,cdce6214.h
-> and it expands to a simple number (1 in this case). While I haven't
-> found any examples of someone using macros for the unit address / reg
-> property I thought I'd give it a try as it nicely shows how it is used.
-> 
-> I can switch to plain numbers if you prefer that though.
-
-We don't encode addresses as headers in DTS (with few exception), so
-definitely not as a binding. It just does not bind anything (in the ABI).
-
-Best regards,
-Krzysztof
+1. Rearrange in the first patch (which I already did for
+mm/swapfile.c, but now I'll also rearrange the functions in header
+files as well).
+2. One more patch to rename the function and add the new type.
+3. The rest of the series (new API, new code, etc.).
