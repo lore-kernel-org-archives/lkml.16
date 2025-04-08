@@ -1,82 +1,109 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B2A1A5BBB;
-	Tue,  8 Apr 2025 02:34:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C64431DA23;
+	Tue,  8 Apr 2025 02:35:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744079678; cv=none; b=Ybf/pGqXo7NEEvaa2vLVjX14WaOMEwglqomIbWnTMgJRxfGzzHDie5pwSlVvHvu/CPbOxPHYq+C5rJb7v6dMGyDdo0CYUCtZGC5fcLINgw0CRN35pyrstloTGJj6C2nhdo0Avyik1pcHbXZ5cx5WYkxouiiwZr9RIPe2cWPfWnY=
+	t=1744079728; cv=none; b=btsHLX+Mg5jJqfW+M9BSoUiRsZDm+6xJrIgf3BT+zWt7p5+aTWVlzzhkIeYhIN8lsz8RppvbERZmHUAqiBcV6rWngQllIIrhAMqkgYCO4oDsoUk+wogtd4oteO8BDHSUEIOq9j4sGjycYwfBMR0zuxLojnBKb0iMLNEmy+6FE4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744079678; c=relaxed/simple;
-	bh=f743pXy24fP4ZQGtc5Gp/38982Ecmd2qj65y1f/2EG0=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=nBRpg2VgtBvdNVTSVOoWo7CZf7Lo+7llUmVsn6MTVsUgJqhouHU6Lp9C9XZ/4VjjcQ9SRLoFutyMNDC4a+e3SdlapotKFzJOYxo7MNEMmHdJJFK7u0hiwx94zermAOnjhYY6XXUCUKBWtXzgGnxJ20ap5doOXz9taDlMzeAAi5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4ZWqr46dS8ztRtx;
-	Tue,  8 Apr 2025 10:33:08 +0800 (CST)
-Received: from dggpemf500002.china.huawei.com (unknown [7.185.36.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id EDC361401E9;
-	Tue,  8 Apr 2025 10:34:32 +0800 (CST)
-Received: from [10.174.178.247] (10.174.178.247) by
- dggpemf500002.china.huawei.com (7.185.36.57) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 8 Apr 2025 10:34:31 +0800
-Subject: Re: [RESEND PATCH v18 0/2] ACPI: APEI: handle synchronous errors in
- task work
-To: Shuai Xue <xueshuai@linux.alibaba.com>, <catalin.marinas@arm.com>,
-	<sudeep.holla@arm.com>, <lpieralisi@kernel.org>,
-	<linux-acpi@vger.kernel.org>, <yazen.ghannam@amd.com>,
-	<mark.rutland@arm.com>, <mingo@redhat.com>, <robin.murphy@arm.com>,
-	<Jonathan.Cameron@Huawei.com>, <bp@alien8.de>, <rafael@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <wangkefeng.wang@huawei.com>,
-	<tanxiaofei@huawei.com>, <mawupeng1@huawei.com>, <tony.luck@intel.com>,
-	<linmiaohe@huawei.com>, <naoya.horiguchi@nec.com>, <james.morse@arm.com>,
-	<tongtiangen@huawei.com>, <gregkh@linuxfoundation.org>, <will@kernel.org>,
-	<jarkko@kernel.org>
-CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-	<akpm@linux-foundation.org>, <linux-edac@vger.kernel.org>, <x86@kernel.org>,
-	<justin.he@arm.com>, <ardb@kernel.org>, <ying.huang@linux.alibaba.com>,
-	<ashish.kalra@amd.com>, <baolin.wang@linux.alibaba.com>,
-	<tglx@linutronix.de>, <dave.hansen@linux.intel.com>, <lenb@kernel.org>,
-	<hpa@zytor.com>, <robert.moore@intel.com>, <lvying6@huawei.com>,
-	<xiexiuqi@huawei.com>, <zhuo.song@linux.alibaba.com>
-References: <20250404112050.42040-1-xueshuai@linux.alibaba.com>
-From: Hanjun Guo <guohanjun@huawei.com>
-Message-ID: <38b80839-cd47-cbf6-cd79-44e967ad8cb3@huawei.com>
-Date: Tue, 8 Apr 2025 10:34:15 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+	s=arc-20240116; t=1744079728; c=relaxed/simple;
+	bh=u82h16VKOc/J1DXRbaqcMJDgeUklt2IOYgZZUyak8c8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ryswx+qB8Lh+lezulOAJJieEdQW9kgXEFdX1OG6swRnlodveFLVfM9eI4Rv3AFJlgKAuToqt81kLbtHtc24GpfEUMc1cQ5JsTj/geVxd3ndxebfLjbjeDzNtz1f3WG/7yf+M+kK1S9X+8gl9khyaF3CK8iXB2xlNvIUuu5kXiak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l3mnttzD; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l3mnttzD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744079727; x=1775615727;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=u82h16VKOc/J1DXRbaqcMJDgeUklt2IOYgZZUyak8c8=;
+  b=l3mnttzDkhVuUmuQAjat213gHDU91UpoQ8b/gxz389SRDaJZSG8yZLtA
+   SL3ZuBe1r7aB3q5v3CGCpBSWWBmnPB+d2ov0piymM3S0Y9EDiqCbWTsWH
+   xjnpfTYvVLgh7EAgF0F2HcUEvWCKLVuEmFiQhgTolvGxQREjof4B1WR/Q
+   OXquB08ZHN+hCtcPOYw7zU4V7D80B0+NcQKB5LYWIwEFRdsjSSvAJRitP
+   gGYo4RDWkefWlBOntwTkGUo0jAyVy7ArZ+t4JuECCdG252YKel9ZAY71U
+   XnWNQ4sq2VXxHrNa1LXHhXWnRiin34fbroXd/9olOJY/6qDf0y8ySIUwh
+   w==;
+X-CSE-ConnectionGUID: xohwPv59SFmebp1l1ykdrQ==
+X-CSE-MsgGUID: 1NgL11pMQAGrnEwUzgvnOw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="62895130"
+X-IronPort-AV: E=Sophos;i="6.15,196,1739865600"; 
+   d="scan'208";a="62895130"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 19:35:26 -0700
+X-CSE-ConnectionGUID: TF58ctc0Tj+nT4Zhst7rcw==
+X-CSE-MsgGUID: TWTWb4BUSIaSpYQPljN4+Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,196,1739865600"; 
+   d="scan'208";a="133101777"
+Received: from yijiemei-mobl.ccr.corp.intel.com (HELO [10.238.2.108]) ([10.238.2.108])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 19:35:23 -0700
+Message-ID: <ac936ff2-7a47-42b8-b144-cf54eb05274b@linux.intel.com>
+Date: Tue, 8 Apr 2025 10:35:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250404112050.42040-1-xueshuai@linux.alibaba.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemf500002.china.huawei.com (7.185.36.57)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] KVM: TDX: Handle TDG.VP.VMCALL<GetQuote>
+To: "Huang, Kai" <kai.huang@intel.com>,
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+ "pbonzini@redhat.com" <pbonzini@redhat.com>,
+ "seanjc@google.com" <seanjc@google.com>
+Cc: "mikko.ylinen@linux.intel.com" <mikko.ylinen@linux.intel.com>,
+ "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+ "Gao, Chao" <chao.gao@intel.com>, "Li, Xiaoyao" <xiaoyao.li@intel.com>,
+ "Chatre, Reinette" <reinette.chatre@intel.com>,
+ "Hunter, Adrian" <adrian.hunter@intel.com>,
+ "Lindgren, Tony" <tony.lindgren@intel.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "Zhao, Yan Y" <yan.y.zhao@intel.com>,
+ "Yamahata, Isaku" <isaku.yamahata@intel.com>
+References: <20250402001557.173586-1-binbin.wu@linux.intel.com>
+ <20250402001557.173586-2-binbin.wu@linux.intel.com>
+ <40f3dcc964bfb5d922cf09ddf080d53c97d82273.camel@intel.com>
+ <112c4cdb-4757-4625-ad18-9402340cd47e@linux.intel.com>
+ <45674f2bb8c7bb09f0f3a29d7c4fb9bdc14b22d7.camel@intel.com>
+Content-Language: en-US
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <45674f2bb8c7bb09f0f3a29d7c4fb9bdc14b22d7.camel@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Shuai Xue,
 
-On 2025/4/4 19:20, Shuai Xue wrote:
->>From Catalin:
-> 
->> James Morse is listed as reviewer of the ACPI APEI code but he's busy
->> with resctrl/MPAM.
-> 
-> These two patches have undergone 18 iterations of review and have received
-> 11 'Reviewed-by' tags in total, but they have not yet been merged into the
-> mainline. I am requesting further review and ack from the arm64
-> ACPI maintainers: Lorenzo, Sudeep, and Hanjun. Thank you for your attention
-> and assistance.
 
-I will take a detail review this week.
+On 4/3/2025 6:00 AM, Huang, Kai wrote:
+>>>> +via the same buffer. The 'ret' field represents the return value.
+>>>>
+>>> return value of the GetQuote TDVMCALL?
+>> Yes, thereturn code of the GetQuote TDVMCALL.
+>>>> The userspace
+>>>> +should update the return value before resuming the vCPU according to TDX GHCI
+>>>> +spec.
+>>>>
+>>> I don't quite follow.  Why userspace should "update" the return value?
+>> Because only userspace knows whether the request has been queued successfully.
+>>
+>> According to GHCI, TDG.VP.VMCALL<GetQuote> API allows one TD to issue multiple
+>> requests. This is implementation specific as to how many concurrent requests
+>> are allowed.  The TD should be able to handle TDG.VP.VMCALL_RETRY if it chooses
+>> to issue multiple requests simultaneously.
+>> So the userspace may set the return code as TDG.VP.VMCALL_RETRY.
+> OK.  How about just say:
+>
+> The 'ret' field represents the return value of the GetQuote request.  KVM only
+> bridges the request to userspace VMM after sanity checks, and the userspace VMM
+> is responsible for setting up the return value since only userspace knows
+> whether the request has been queued successfully or not.
+>
+This looks good to me.
+Regarding the sanity checks, I would appreciate inputs from others.
 
-Thanks
-Hanjun
+
