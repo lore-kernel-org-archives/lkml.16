@@ -1,119 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F0551A9B34;
-	Tue,  8 Apr 2025 14:33:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF7CB1DF267;
+	Tue,  8 Apr 2025 14:35:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744122837; cv=none; b=AQd2dmDpaI+DcQiXvcv+NjB3aZY4kmLTV/yL0MvYgVA1LR/kfEJY9wJrRQQTM1jHaazn0nl6NkQh7Wff7ZKYTdWFCcmeuzQbop2sGQ+TqL6ywt+RhJcVObOFPiHDl6JvMNwe3uJNTgJqzbqV9vRERIa409KlWc+eJzreSkFSVWY=
+	t=1744122910; cv=none; b=X946cL5Nd6m7uX3JUCYJdCPYdtQrwhod6AY7SYwVy+Q+mofOxZe/76nt0/JksGL2qVPUwfM+5E+W5fbXByhhUy8qe7eO5do9WdmkF3mGI/MaQSvuGZC+LzJmbn3DP2MTz2uiyU4M0kSn22fN4M7v5mBmlWBfPcjYHG0bhR8+kiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744122837; c=relaxed/simple;
-	bh=WV1NnOm7mQgBNIY8pYSfL1+y3D3B2dOITkOdGnccMYQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e6MFwr1kbE5zKSo5y9zUr2iXxROo0Fk/+TuXhu2UQeX/9FqRXh8mwyVELoxeQbcBJrg/FjJJXnduIoaj748wETtsZs4D5acVzH6BJtEsjs30nbIGTgRHAfD4k2NMJRBFKhSeiF/jrvMjtMA57AHA89GV6eXrllLoMRbGzoSl+ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i4Ie52fF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744122910; c=relaxed/simple;
+	bh=D/18wlxlU1B/qYk8djU+F/aya0mKw/WZV9bFlV1sC2g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I4lOxaSSZtmMaR+zwiN4iWfwc0vF8b7OUYGAoBFFxdjHNU6lJ3XmRJDw5Ct52GlBv6TJNJqmDwKOJLoKWEQtkYSAQ4rSdmgSrRTrHRj3kUR6vizIdeRke5CYGe9ngLAelVROON3/CdgtF+UCOtE9GTMwd1QTKl6r5ZM+w89wk04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aFfANUxk; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i4Ie52fF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4841BC4CEE5;
-	Tue,  8 Apr 2025 14:33:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744122837;
-	bh=WV1NnOm7mQgBNIY8pYSfL1+y3D3B2dOITkOdGnccMYQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=i4Ie52fFronk8AZ4Tn2GfxjKIBPaqb8q7RKCoQYMh8FL/FEm4qROueQ9OVFsQAZlX
-	 8RxUMfpy/ZRtjtjz3SvyyR0Mz8jCoI85zGMjgFmsSFHhoqbidnoiHIROO8Kmcvumdr
-	 FKn0C3E4yIIcKNWOb4IHulKlxYkEB3Egt7FDw2s5Uhw9CltlSvdKHe8W4N+ZjT2xG6
-	 G5Xs+48ZpTGLru+IG78pVBT1ZQNVQo+KH2R+zA+AFb9fE1Wf8wmzQ4jjfpMmMlvy6Q
-	 WZO3tmM9D4qKEPx8uMdXvoSjGIG9cqeQIBg85z/ITCOdP5uEIcby94fsW8FtfVT7g/
-	 WuOoFuKk9X6ow==
-Message-ID: <81988268-7690-46c7-9469-79cefcf30792@kernel.org>
-Date: Tue, 8 Apr 2025 16:33:52 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aFfANUxk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744122909; x=1775658909;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=D/18wlxlU1B/qYk8djU+F/aya0mKw/WZV9bFlV1sC2g=;
+  b=aFfANUxkuDaqekIGLQfunBrtSVwmvYqO8jmxvlUxtgNhQ48zUEhyXI4J
+   NV3Io/V/sHE6EgCPHUfuHiIfpK/rQKm9VV3MwGA+DTSo6cx4jRxlcOtLA
+   DRKQaplvg9nrZShpzgdafcUn6+sBDqOFfEhn00NvPJ+xxi1lTx19gEz3z
+   AY3W3F2hkAj/0lvrSDeaQntJs8tKg21DOrizaRsg8edhZvXM3k0y1q8cp
+   cowQdujOPIVgIBZSVxcnrVvTu8g6umto/xTIWspQNTqQygnb3fNHu+KAM
+   +8Wws7kscLhlFSolddrqIXXyybvJ2pydIq4ntSv7dCqP64zcSdfRsJIUl
+   g==;
+X-CSE-ConnectionGUID: WuZXgfSLQKSOKDQo2NqTiQ==
+X-CSE-MsgGUID: IZste+CcQVeg3/IUqYlmug==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="56928749"
+X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
+   d="scan'208";a="56928749"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 07:35:08 -0700
+X-CSE-ConnectionGUID: g/7RqbvqSSWX44qJ468Qmg==
+X-CSE-MsgGUID: VxgsdQCfS0C/Kcx96bBDtA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
+   d="scan'208";a="128020784"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 07:34:58 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u2A2Q-0000000AQj9-2ym4;
+	Tue, 08 Apr 2025 17:34:54 +0300
+Date: Tue, 8 Apr 2025 17:34:54 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Peter Rosin <peda@axentia.se>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Wolfram Sang <wsa@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 11/16] of: property: Allow fw_devlink device-tree support
+ for x86
+Message-ID: <Z_U0DkSemHK0lrJW@smile.fi.intel.com>
+References: <20250407145546.270683-1-herve.codina@bootlin.com>
+ <20250407145546.270683-12-herve.codina@bootlin.com>
+ <Z_Pw_MoPpVNwiEhc@smile.fi.intel.com>
+ <20250408154925.5653d506@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: iio: adc: ti,adc128s052: Add adc08c and
- adc10c family
-To: Sukrut Bellary <sbellary@baylibre.com>,
- Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Angelo Compagnucci <angelo.compagnucci@gmail.com>
-Cc: Nishanth Menon <nm@ti.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-References: <20250408132120.836461-1-sbellary@baylibre.com>
- <20250408132120.836461-2-sbellary@baylibre.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250408132120.836461-2-sbellary@baylibre.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250408154925.5653d506@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 08/04/2025 15:21, Sukrut Bellary wrote:
-> 
-> Complete datasheets are available at TI's website here:
-> https://www.ti.com/lit/gpn/adc<bb><c>s<sss>.pdf
-> 
-> Co-developed-by: Nishanth Menon <nm@ti.com>
-> Signed-off-by: Nishanth Menon <nm@ti.com>
-> Signed-off-by: Sukrut Bellary <sbellary@baylibre.com>
-> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
-> Changes in v3:
-> 	- No changes in dt-bindings
-> - Link to v2:  https://lore.kernel.org/lkml/20231022031203.632153-1-sukrut.bellary@linux.com/
-> 
-> Changes in v2: 
->         - No changes in dt-bindings
-> - Link to v1: https://lore.kernel.org/all/20220701042919.18180-2-nm@ti.com/
-So that's a v3 or v1? Just start using b4 to avoid such issues.
+On Tue, Apr 08, 2025 at 03:49:25PM +0200, Herve Codina wrote:
+> On Mon, 7 Apr 2025 18:36:28 +0300
+> Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+> > On Mon, Apr 07, 2025 at 04:55:40PM +0200, Herve Codina wrote:
 
-Best regards,
-Krzysztof
+...
+
+> > This is incorrect, they never had ACPI to begin with. Also there is third
+> > platform that are using DT on x86 core — SpreadTrum based phones.
+> 
+> I will rework the commit log to avoid 'mixing ACPI and device-tree'
+> 
+> For "SpreadTrum based phones", do you have an idea about the Kconfig symbol
+> I could use to filter our this x86 systems?
+
+Hmm... good question. I don't think it was anything. The Airmont core just
+works and doesn't require anything special to be set. And platform is x86 with
+the devices that are established on ARM, so nothing special in device tree
+either, I suppose. Basically any x86 platform with OF should be excluded,
+rather think of what should be included. But I see that as opposite
+requirements to the same function. I have no idea how to solve this. Perhaps
+find that SpreadTrum Intel Atom-based device? Would be really hard, I believe.
+Especially if we want to install a custom kernel there...
+
+> Anything I find upstream related to SpreadTrum seems base on ARM cpus.
+> I probably miss something.
+
+There were two SoCs that were Intel Atom based [1]. And some patches [2] to x86
+DT code were made to support those cases.
+
+> > And not sure about AMD stuff (Geode?).
+> 
+> Same here, if some AMD devices need to be filtered out, is there a specific
+> Kconfig symbol I can use ?
+
+This is question to AMD people. I have no clue.
+
+[1]: https://www.anandtech.com/show/11196/mwc-2017-spreadtrum-launches-8core-intel-airmontbased-soc-with-cat-7-lte-for-smartphones
+
+[2]: 4e07db9c8db8 ("x86/devicetree: Use CPU description from Device Tree")
+and co. `git log --no-merges 4e07db9c8db8 -- arch/x86/kernel/devicetree.c
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
