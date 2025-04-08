@@ -1,101 +1,70 @@
-Received: from pv50p00im-ztbu10011701.me.com (pv50p00im-ztbu10011701.me.com [17.58.6.53])
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 751C0207E14
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 11:23:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3A412638B8
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 11:23:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744111397; cv=none; b=hUBoVyHWjqlFWjuiHEt3t1FUUz6HB4O1tlU/fla9MVcYvwMlRHcuvX7AW+Kmy9aBlGg85ZuOI2GWXkCqw0J7Xori4AO3JCUJ4qz/BrZXBaymjdZTTa8nixCkq9vCJUWIxeT3KhFkZtNWIn5IdAjBZW0J+5IcK+TVVd4AB405vgc=
+	t=1744111429; cv=none; b=nfIbwN8GeKuK8+Rjl5S/IbFWJqgi3Nx7JCjV6YnoWCjHKg0AJ7M3ZNgEUQYx7e8e1ji5CcNoC7RoosC35McitW68v+7nrgK1yFwEZnDT5BQwh0TC+6eXZ9MmjyS256ad47WYEKU2akgj850fAvISP5YbDusIzG4X4e3BWY+R9YA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744111397; c=relaxed/simple;
-	bh=ozIZ9X6cm1p2EJP1ur2x2xqVdPIqBJdiXWENd7PDQ60=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aN0RKf89kM8t5ethzqVcreeMXYHNBP2qeXuCCz4JUg3PTKDTIqiTCa82U8XwUCLYSCJvLlgwycR3YmfMiesJw3Mk/DUQ0iPHeYJXdDMqYFVBtXh9iahAGC05atgoL2StF17JjPCpvauyLlgylhgBCsmmYIo8ui3CeT/lYc+TgNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=fYoTSXA2; arc=none smtp.client-ip=17.58.6.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1744111429; c=relaxed/simple;
+	bh=f+Wuv/IwJUOYYGcMReN8qC3U1oqN3II4e7Hi+wV2rsQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cNupACYTjJYQ3lXSRq3+hOkx+hqt8lisiy562VEDP10GloAd+qPg5N4V/ijFsmft07T/ryHyEcJhG3xbdg7aQX7aDaXNovkS4lEGIbOVmMeorS7VElbrKB9GXE6x8LA2d/EgngkqaMDsh/5pxG87y9xKsnNhFnD7tIYoWUm1/NY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=OQ1TN8Y7; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="fYoTSXA2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=qLC+AjXbCpLuLsLmei8R38sdvc8cBnY6Kum200DDnZE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:x-icloud-hme;
-	b=fYoTSXA2wiARvZWYposFpz3cLPyY6NJ2v2RTcpTdhrj+ntYB4NwVTIl6hP9hHe3P5
-	 41Out3djOsANwmR3iY2KMk+Ha0TSWUyjJnEJqBMOZPHYRmiN5j9ONyLY1sXMmFX5Z7
-	 jmYi9jTc3+C9SSjYv4DnuikltwmnMeqj30qgoRWRV0g6fxwDwKPU4zzzQ2+9bnZi+K
-	 KENTQtJAnCJjU/KiZBwGuvupPbdIOZkwGS/q5kp/n4wOap4pIEjr9DVOP4kZSkUCmT
-	 900uWfSqE9NslpaWU+gbGkPznZcNYXsYyyM5Ss6X6+7d89KKtOGKuLdtimimSgfLph
-	 k6xxns0fgWryQ==
-Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-ztbu10011701.me.com (Postfix) with ESMTPSA id 964AA740328;
-	Tue,  8 Apr 2025 11:23:10 +0000 (UTC)
-Message-ID: <43e66024-6d51-44ce-b466-56c06b29c66a@icloud.com>
-Date: Tue, 8 Apr 2025 19:23:06 +0800
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="OQ1TN8Y7"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744111423;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=3O7NNoX7C+wG3R/LFiqLgebTwHeyNEVO4BPSbjqxGi8=;
+	b=OQ1TN8Y7fM3J6VZgBPcx6xjdY9yBurmU2lwzLpnbzhahXrMExiV5ZDwv7AVdfmcVl+1cxe
+	bftQgOIjDuou+HaWjkNNYrXLnY5rSuanwa6KA1BExRke46pltoitsGkB/FB0hUB6WT3qbK
+	UQCYCqD0cVQSx6u7Y6mDr7L8yVzc7fA=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] crypto: essiv - Remove unnecessary strscpy() size argument
+Date: Tue,  8 Apr 2025 13:22:59 +0200
+Message-ID: <20250408112300.804656-1-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/1] device property: Add a note to the fwnode.h
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Zijun Hu <quic_zijuhu@quicinc.com>, linux-acpi@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- Daniel Scally <djrscally@gmail.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Danilo Krummrich <dakr@kernel.org>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-References: <20250408095229.1298005-1-andriy.shevchenko@linux.intel.com>
-Content-Language: en-US
-From: Zijun Hu <zijun_hu@icloud.com>
-In-Reply-To: <20250408095229.1298005-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: v7hq0q6rugjvqhheSEamUejNlt-XNCVk
-X-Proofpoint-GUID: v7hq0q6rugjvqhheSEamUejNlt-XNCVk
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-08_04,2025-04-08_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0
- suspectscore=0 mlxscore=0 adultscore=0 clxscore=1015 phishscore=0
- malwarescore=0 bulkscore=0 mlxlogscore=999 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.22.0-2503100000 definitions=main-2504080081
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On 2025/4/8 17:48, Andy Shevchenko wrote:
-> Add a note to the fwnode.h that the header should not be used
-> directly in the leaf drivers, they all should use the higher
-> level APIs and the respective headers.
-> 
-> The purpose of this note is to give guidance to driver writers
-> to avoid repeating a common mistake.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
-> 
-> v3: reworded the note, added problem statement into commit message (Rafael)
-> v2: added "...into the driver" piece at the end to remove ambiguity
-> 
->  include/linux/fwnode.h | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
-> index 87b183595ba1..900ecd8f45a1 100644
-> --- a/include/linux/fwnode.h
-> +++ b/include/linux/fwnode.h
-> @@ -2,6 +2,11 @@
->  /*
->   * fwnode.h - Firmware device node object handle type definition.
->   *
-> + * This header file provides low-level data types and definitions for firmware
-> + * and device property providers. The respective API header files supplied by
-> + * them should contain all of the requisite data types and definitions for end
-> + * users, so including it directly should not be necessary.
-> + *
->   * Copyright (C) 2015, Intel Corporation
->   * Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->   */
+If the destination buffer has a fixed length, strscpy() automatically
+determines its size using sizeof() when the argument is omitted. This
+makes the explicit size argument unnecessary - remove it.
 
-Reviewed-by: Zijun Hu <quic_zijuhu@quicinc.com>
+No functional changes intended.
+
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ crypto/essiv.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/crypto/essiv.c b/crypto/essiv.c
+index 1c00c3324058..9d6e72a2d2ae 100644
+--- a/crypto/essiv.c
++++ b/crypto/essiv.c
+@@ -549,8 +549,7 @@ static int essiv_create(struct crypto_template *tmpl, struct rtattr **tb)
+ 	}
+ 
+ 	/* record the driver name so we can instantiate this exact algo later */
+-	strscpy(ictx->shash_driver_name, hash_alg->base.cra_driver_name,
+-		CRYPTO_MAX_ALG_NAME);
++	strscpy(ictx->shash_driver_name, hash_alg->base.cra_driver_name);
+ 
+ 	/* Instance fields */
+ 
