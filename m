@@ -1,67 +1,74 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 763A8267B89;
-	Tue,  8 Apr 2025 10:36:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E166267F6A;
+	Tue,  8 Apr 2025 10:36:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744108606; cv=none; b=C7D1rYWMIGleCWwh1RLpe3Et3OOIHBIKc+gxI1XfT8zNiXjiMA9pS5CzPjdsNv8x3oCNOMXZC9rsEZHagNX5t+XHHyOPIY+d4g/78uy7iCxhX4BI5sXYk7wut2+VPcdorJJWAgyWKkpK1PiRvMOxlkY4vb9AHvKuTo2tBFv4M+8=
+	t=1744108609; cv=none; b=EW0OYqJ9sQESKmayaGzn2WYQe8UGRrbqJgEkew/aGGaCp8OVeB0RbGhRT2jC/0OwdfB8tRJHIVFGyMzBYh1p5HEE6/pm1t2vz1uIr7zslx6999iP4sW/gqjKvv057pvyEUVW4gu15x4tAeIJW9+0WbmpsOINSLvuEOgTdUpZxEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744108606; c=relaxed/simple;
-	bh=2p/2K+aLV0YuC6N+J7a78gjspSREhrhlMv2YPySSBDA=;
+	s=arc-20240116; t=1744108609; c=relaxed/simple;
+	bh=ZuWwkuwqeHf0fYJ4ELuETBzDTnsElQHXyQMu2I/1L4A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hZpz6kj9ub7ywAOYe16KHPcIE4gOkzOCrnLWeUKzJoDDjAQQTBN5aFf/yahiVhfeRZ42cgDAHQQOOajvT34CLcy+3ondznW2bY2SE/NTI5XViA+Gu6dTDQHC4IZH6dWfzNA4j4/ax1gg4yMyU0qOC49kwm8lWFRls+TGyDlfXJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CpGcMGfo; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y/+ZxaUSAk9xlIbefsrveiP1KQZNXvJwl27xSFPSyHJFqO6Ll63OdGPJavCEG/vRWPPx80wj0nQK3U90bauha/+gEL/XNpOhdMhkPytwdqo5tUTJH5jCAW/SbSl63aQzBAeDJjxEjXAhP3K6FuHL0Z2i1M/EcwyWzHmdX83kdr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U8d68dZ4; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CpGcMGfo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744108604; x=1775644604;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2p/2K+aLV0YuC6N+J7a78gjspSREhrhlMv2YPySSBDA=;
-  b=CpGcMGfoEvy4N6k12O34gEgjAYyJg54q9U9L5qELFWABM0dEX7TATzpD
-   zXeEltpU4rurMLHxoFPGiO2wNU2cBmzLEQi6D9rYazCmD5cH7Ee06b5DR
-   Xh0wY3vCNw6tbOKOaEtK6ty/L3Dnt9QX7E/es0FY7WrnqgTTMLcx60yAr
-   nG7dqVC61hqRxJfpY9bQLD64GPRtHcYew9dFzEVL8HqhLp+iLeWgojUDK
-   3lg72e99qPmhSYX4zsRyT7Zud6IPihZBt2SgG2TvAK+EVpYsVcMHnzxsE
-   12+n1HjvqBALYDfNpxHR73JBZDpUFkWWEMvDecenpGX5DtOvExmHSWyMl
-   w==;
-X-CSE-ConnectionGUID: k66hc8MCSKOMR1UVWguJ7w==
-X-CSE-MsgGUID: 4wmSfwmhTtWvOP8UXWz5uA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="49329875"
-X-IronPort-AV: E=Sophos;i="6.15,197,1739865600"; 
-   d="scan'208";a="49329875"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 03:36:44 -0700
-X-CSE-ConnectionGUID: 5EaMhe4aQxyQdZTnNP3gsQ==
-X-CSE-MsgGUID: RBhMOcMpQXSc2p0qdjmKJw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,197,1739865600"; 
-   d="scan'208";a="151413235"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 03:36:42 -0700
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id 5F3EE11FB1F;
-	Tue,  8 Apr 2025 13:36:39 +0300 (EEST)
-Date: Tue, 8 Apr 2025 10:36:39 +0000
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-	Paul Elder <paul.elder@ideasonboard.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] media: i2c: thp7312: use fwnode_for_each_child_node()
-Message-ID: <Z_T8N8aHR-2OzHAO@kekkonen.localdomain>
-References: <Z90qM33DvkTMGg_x@mva-rohm>
- <20250321104100.GC25483@pendragon.ideasonboard.com>
- <Z_Ti7aQK2_OlrUee@kekkonen.localdomain>
- <20250408101252.GB31475@pendragon.ideasonboard.com>
- <3d8546b9-92bd-40da-a61a-4534ba7779db@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U8d68dZ4"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac2a81e41e3so972068566b.1;
+        Tue, 08 Apr 2025 03:36:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744108606; x=1744713406; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZuWwkuwqeHf0fYJ4ELuETBzDTnsElQHXyQMu2I/1L4A=;
+        b=U8d68dZ4P6MMD3OpJzcuU91TLyycoCLO/6b0xFSkFcZ6m7N5hTNRTEx8l41Q+eO7Sf
+         tzIBw8SAQWLbeURjAz35eiq/nKM3Vgj2/6c0m73EKdwspIzm/T113JYUA6I8bU1tRHjm
+         tkCknrF+md7ZhLA7GsnFC1z7L+/i7ud5hE48WAO8mbP5rseeyDUtXUk3NT1BBw7W+6qQ
+         5k8YyvUfuN/1r02GTCBSJBD31QJOXQNvLTepe4V7T3gRC/rtsOfplNM5EQRB4icbXzPx
+         m6m2nPkJIwDxa+MN/13iiHq6RctDoh4OYquyOTDVWYQTx9cGj9bGPKH7cQkmIefBv1+j
+         VgTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744108606; x=1744713406;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZuWwkuwqeHf0fYJ4ELuETBzDTnsElQHXyQMu2I/1L4A=;
+        b=gi9mQL5OvPbbQkF8iZk7VhMdfaUsNv7Ky0Qq4PB9dmbECtJMG2ir8ixxy1ocdhyDJl
+         GWlB29TIqxEQWgqdIkoogqQMIzThX7tH2erL+5RXL88bf0Axj9AHBge+1FUK5NjNTr8W
+         1ktaP0q4zYCNge+IgFj7/EmwhIJBwrkVsPHbY87ucvtRZPEq+buL6S0DqjYnJt57bcMn
+         1CeblKMYEvjPSpE1yK4s0ClKRa7rqh0WPELzSVk/r+8/mynoopddeZfZPfGdbV3XH4uI
+         5da3+8MqkVcyKuECDj7iWX7A9kN1Hk3Hy/bJwvxDgHjMN5B5ir9t3xnXxy8fZp/6yvRp
+         XvtA==
+X-Forwarded-Encrypted: i=1; AJvYcCUUrMNn+yyNx1QSW+2GQzdaU9/Z3bVfhWLzVMZd39I62eJs+YIFnsPEs6jPJlZ/an/O9xRooVn04WGWAQ==@vger.kernel.org, AJvYcCXS8wAsImfYUxHgqNo/r6cy1I8HHK38vT/snonsOYFIKQHKwKehvpfbEU0OfhFyljqSV99y2IWj1y7KbOg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAJmKK9LwWTcij6YpRd0ajGnwmgA+C3667OTNNs03k0eZRpkdX
+	wbBcKBpYi42GffXTCJJkxoaReqIJji5RBlvKtc0mo18cDRbVsm8MbE7k/1MI
+X-Gm-Gg: ASbGnctlvQ4jm7UANScD9+Wb4BMvix4JmpLanPq7RcnuQkXsw4Y1Lo9E4qpszrzuvNH
+	vZYjfCDdOtPXWvcpOoZ5+rGYvtU0ppNIGuUIkfEaOBnWzVezD7gUD0nasn8vN0GzA9hWzwT9qgS
+	NZWEBLP9oWoHFd7PrutOgaTFf+HbgHk9OASfjL/UW8017EJt7POZv2kylthtKPaolQTyj5ktPha
+	CjvPlcF5begwdNEGShErng1VvfnF6/ag0AztlTpbM1zudLFk5wdvl5o8rXx5Hd8QDrD4bdeJp4Q
+	mII3TVvsL51WDmm+wuzVCxXRgai6jOWiNdCAX6n6Kw==
+X-Google-Smtp-Source: AGHT+IGL16tlNnfVYVbAhIxKoFpPCwkhvAE4A2TUaiFxYi0ePohEgWmQXUX49wV5hpSFloCwrFx3Cg==
+X-Received: by 2002:a17:907:a4d:b0:ac2:7a97:87fb with SMTP id a640c23a62f3a-ac7e727cee9mr1238023166b.33.1744108605456;
+        Tue, 08 Apr 2025 03:36:45 -0700 (PDT)
+Received: from pampelmuse ([2a02:810d:a1:6000:959d:6b59:1561:d2b4])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7c0186aebsm890142466b.158.2025.04.08.03.36.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 03:36:45 -0700 (PDT)
+Date: Tue, 8 Apr 2025 12:36:42 +0200
+From: Gon Solo <gonsolo@gmail.com>
+To: Duje =?utf-8?Q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Ricardo Ribalda <ribalda@chromium.org>, linux-spdx@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scripts/spdxcheck: Limit the scope of git.Repo
+Message-ID: <Z_T8OiLQzKDGhOJs@pampelmuse>
+References: <20250225-spx-v1-1-e935b27eb80d@chromium.org>
+ <12647854.O9o76ZdvQC@radijator>
+ <Z_Tgp8L_8goc63K1@pampelmuse>
+ <Z_TtXaRnaU1zXbXv@pampelmuse>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,52 +77,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3d8546b9-92bd-40da-a61a-4534ba7779db@gmail.com>
+In-Reply-To: <Z_TtXaRnaU1zXbXv@pampelmuse>
 
-Hei Laurent, Matti,
+It's a known problem:
+https://github.com/gitpython-developers/GitPython/issues/2003
+https://github.com/python/cpython/issues/118761#issuecomment-2661504264
 
-On Tue, Apr 08, 2025 at 01:26:42PM +0300, Matti Vaittinen wrote:
-> On 08/04/2025 13:12, Laurent Pinchart wrote:
-> > Hi Sakari,
-> > 
-> > On Tue, Apr 08, 2025 at 08:48:45AM +0000, Sakari Ailus wrote:
-> > > On Fri, Mar 21, 2025 at 12:41:00PM +0200, Laurent Pinchart wrote:
-> > > > On Fri, Mar 21, 2025 at 10:58:27AM +0200, Matti Vaittinen wrote:
-> > > > > When fwnode_for_each_available_child_node() is used on the device-tree
-> > > > > backed systems, it renders to same operation as the
-> > > > > fwnode_for_each_child_node(), because the fwnode_for_each_child_node()
-> > > > > does only iterate through those device-tree nodes which are available.
-> > > > 
-> > > > This makes me wonder why the OF backend implements
-> > > > fwnode_for_each_child_node() as fwnode_for_each_available_child_node().
-> > > > Is that on purpose, or is it a bug ?
-> > > 
-> > > I discussed this with Rafael and he didn't recall why the original
-> > > implementation was like that. The general direction later on has been not
-> > > to present unavailable nodes over the fwnode interface.
-> > > 
-> > > So I'd say:
-> > > 
-> > > Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > > 
-> > > We should also change the documentation of the fwnode API accordingly.
-> > 
-> > Does that also mean that the fwnode_for_each_available_child_node()
-> > function will be dropped ? It's used by few drivers (5 in addition to
-> > the thp7312 driver, plus 3 call sites in drivers/base/core.c), so a
-> > patch series to drop it should be easy.
-> > 
-> 
-> I assume the fwnode_for_each_available_child_node() still makes sense for
-> ACPI backed users, no?
-
-Not really (see my earlier explanation in
-<Z9mQPJwnKAkPHriT@kekkonen.localdomain>). I think all the *available* stuff
-should be removed from include/linux/property.h, apart from
-fwnode_device_is_availble(), which should be turned to work on struct
-device to signal its availability for device nodes only.
-
--- 
-Terveisin,
-
-Sakari Ailus
