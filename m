@@ -1,127 +1,124 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 942412690CB
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 10:36:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 926DB269816
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 10:36:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744108616; cv=none; b=PQ9I7I00P42/r8/eDp+Lny/Ter02DGzhX940METm85qX+nOeRVQ2XByjr5oqFDoJCUO6VC0jthmiKzi1bnbDpn0pLRxgMbLznwooRP+ZUoM99IZJd0l69DcuWuZhAYxvzCLQ3y4TZ+sN43TwicWLB323pXWzjTi7G5m8dICnneQ=
+	t=1744108620; cv=none; b=INA+WnDtkzl4soaXF3f2B0y9uwj/tcUczjvGYHWW7ABeskpi4305SLOcEzr3xZBCL6iktDt6oqGmqztnJ+jhbW34ljYNZE6GtBOZCR3AiLehh3GKE0hDRePc7vhnWBflppge87ulC8684laeywPp61RjJNzRkwwugRW2vQSlreQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744108616; c=relaxed/simple;
-	bh=wkOLFAUzhjnbM7Ikoz425nbv5U7OazSzqi4J4cwO0c4=;
+	s=arc-20240116; t=1744108620; c=relaxed/simple;
+	bh=z6yPF9uOlyPYwnYcyCbUHbrjMWRaBMiD7QCPSnGxte4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iidBHau3upeA9Z26/2tbcioqIKixTiQTLnvWsyQBVo2y5m2nditu99ZmsomaBQkWZIcTYnBRW55fwmZ1RBlV0iRQNTKCooISDhhPTkIu+zkjV90K/RlbaMW9uUtlwAukh2092HaDGz6s36x780ANsPE42Ek9DfcQE09q3+RI7uA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QGbUdO+d; arc=none smtp.client-ip=209.85.128.50
+	 Content-Type:Content-Disposition:In-Reply-To; b=BzX9uOXj6K3GNvvsxGJbMj5wrnXxOYlDNi0DrNtKK3Cf2Kx+4fDbeJqx1an4x4KJ67Od+21OzoN9ugjpqHhO+lZo8x6rPNWYrJHiohAbNUnZnV27yjgH0rosUgtfzDcbB20HM77hReu2/MzcpSWkZgeBVwmJxrxH4a/Og3kbBrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rJzrZy6R; arc=none smtp.client-ip=209.85.221.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QGbUdO+d"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43ce70f9afbso58506365e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 03:36:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rJzrZy6R"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-39141ffa9fcso5858172f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 03:36:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744108613; x=1744713413; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+9PU6RaqZLEW0CeiqDaSWQKAtYrOqL2T0FLR0/1tl5g=;
-        b=QGbUdO+dSWRXM2e6nVSk+Mwme5UF3zAVge4E5ayQeAYptnv7sRzjgY8OTs5XT9Z14t
-         SGmCUWYwmmorT5dCtxvvRM/qRoy6xoIjJa+avOGQsDgmkyko+H7AmuX+tBJuMC1mui2q
-         81Ne+U+Qd2J2cpOzTKSag3HyEmWcG5okx2JCX9J1/igCl7kh26aZ/80vMb06p5OQr5v6
-         qmqGjFpyfZJ9nj7RBdKxeordFJhqQHMNZ7s55pgmrwdOlpf0/Yhfjr/3wbQQDwHhP4Nc
-         XyYQJoZFsOsgnS+uGdyiNuleURlz7A/xsZMmbbmvjjgbqByxvppIu6gpM8RMS7ta+62X
-         eGqA==
+        d=linaro.org; s=google; t=1744108617; x=1744713417; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=sG5zgBeaBnx+L7h2Ew9MdPNsbBnWrTWwGOQbfcDyH0Y=;
+        b=rJzrZy6R5Kpln99jfUPCUNKqQJl+0SKajWWxTuKX/pfD+NcfY3ubT9c0Q4DNtNzdWl
+         7qAQilYZRKwuHJx61bgsvkqQwok0ufeiB2r4mL6Yok2My3UFJk6ktkFp1lvXZEF3L9m7
+         eyWNfm5mBPV2dG8Vi2xTwDy6sZNcdXRlFXkalv7sJrhtRga3sVGRlI4G1rDRG9Ag10rT
+         SRbp3g6LLIagY5SaVsO+TBDsy3JMAIMB3ZUWf9AFA1ma5cP3yfQdhwvHG0a6tIksS6Sd
+         LLE9aZqdOAPCpktWxVQ2CBZ3pcz/te6J5pJNWbRAaiSjuJfRPhCmp4ZOwftN8ZaddVkL
+         5vEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744108613; x=1744713413;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+9PU6RaqZLEW0CeiqDaSWQKAtYrOqL2T0FLR0/1tl5g=;
-        b=SD3zCMIgjPjxVGHczIQOt6KpXEqkSdzA3VHS2F0BYlvyg39Js+TWM19jzoto9HNzly
-         uGO3+IM/q/QihWb+Idd7IwrFwrz2Gdt1hbGvZhAzL4LCxr9kbtzspMRFG3lFXzEGM+4i
-         XgqA5+4yfA8bakAJKZXx0t/O5ENA1F//GdugWJsZcBPFZXfCN4E+pPWZe4jWH7PAJY4c
-         JZCmpeYcBKPFfIhTwYQfLreufpmYllV2CLMPPNn2Cok65UDSnAhBgBoDmrZIkmt6VuQD
-         r3ur3Kx78lz4sev91FokjhKxfX4M6nyaW2xNAvPfuZ7fE1ovvjdtJUKKrPB9KZTVvXrW
-         7LMg==
-X-Forwarded-Encrypted: i=1; AJvYcCUdSPEfAWRmzpyAIVyDkd02o7Frb5egkWrA/LVUISc66QXB374yw51jx3jS0lmBVReTrAMfwKf18UYwh+8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw08TSzSnuulAjdyQjlYvRe00jcH6HkAVEGuLxJunFA7T34gSVK
-	y3A4C/iQuLd2eJ65rA0UkUJC5wrbIUfPJnE0BK5m8iqL6gP+Xzx/JQnVsuYzQ54=
-X-Gm-Gg: ASbGncsHz8nE9S6/tduPrkBC9mpeI+3aALEis5gwZOPoGtNs6Bm89L3s7uMdZpONWzW
-	FfYmO25zyH23sXRPOle6Gfzz82IE5F89JzV7q0ViC0hyisTCWiLBAqt2e1e2b0gKV/TEzpyRl+f
-	FVG24pivX98/W2dmKHGHbJ4ZqTk10ZhFqxxfZSdfSFnoecZZqiwqAmosmbIACPxfcJuYe/AgHQc
-	AEYJdocLFaeETaSL81WwkFvpWJgDJvkvDWlcdGtHZJHVJZK4yaLfbHGiveV1Bpifw7R46FSmdsY
-	hoaVeSUi8j3uTXikUFpimc9tzg3N39APco/GLmcIGQstJKcDXg==
-X-Google-Smtp-Source: AGHT+IE5t903o03RamYyBBOUOtT0lEmSesMlodjULwqDkGqsFvnjjqyphRtizxEDeFR7TGxXwDEjLA==
-X-Received: by 2002:a05:6000:1863:b0:38d:e6b6:508b with SMTP id ffacd0b85a97d-39d07ad4e86mr13874685f8f.9.1744108612851;
-        Tue, 08 Apr 2025 03:36:52 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744108617; x=1744713417;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sG5zgBeaBnx+L7h2Ew9MdPNsbBnWrTWwGOQbfcDyH0Y=;
+        b=eZhjsAV0wXYOipBA9jmHI88VRhF/ODIY+00ptnAk3x7m8xBQTvTi+8REoRWfEOnuL3
+         sWxqCRS9BYEBcMhgdIvtBJdPXPjABcpf/hP7fnlA0wChOQVmJpmYVRdR+J1b9Oq2aEZj
+         vXorCK5LklqsHu68FCrNZBXZBLU7mnHbj5fQ10Wf3ff0WdtAo6pvX6JhUwAt04WUtO9q
+         rad3BjuuT/G3wfLO0xh43jS6ijY92i3CBtK3KQvwYVv6FkOGee0Njlu/NeRm2LSNn7Jy
+         8VIJDB781srOlQcyRrlcVmtoG05UhlzOEtm95QeUfS14TnMN1iWvE6z/sdh2HjvA8JfR
+         pN6A==
+X-Forwarded-Encrypted: i=1; AJvYcCUsQyZyf2f15clsRmKlrL+wk5TyTzR31btzWZX8kDmfP+151S8Q7dYJH19FzWAq12jdNSRduAYZYxV2Vng=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVpM6cdQhMUH0nRDcjoKepnrd16kR9H0xH7HCGbMCqTqEsepno
+	t3sTBRZqk7MCpmOfJknsJo4ePi48cPcHABpxXDp3qRDzEjmKMRntQcLoi1utnFM=
+X-Gm-Gg: ASbGnctt9C2cWIqBjiF7jY/v1ibMY0Fv6koAQ+SEVoRF0OYwTAsaxzpqmFXxOLi34um
+	icCxTcJjz2UGZ2N3rlFEw+ENiyuctZQ9Ucqn7DfTryoDtlx9TSCONBpda3D+zrKYNTFI0n3XCQb
+	bZvy6Xf9GSk6hTUs6HrmxogM5b63ivIpv3kzHK/LtaDigDA1hSB9R1QIJWLy2Tb2iyAPtokqlXj
+	kRxpY4fdozhhzMcT8yT89jdE8e2vk8rovpj4GhrLSRNZeRdyiHsTP5iRqpx50KDcE0P0KkdCqEI
+	ffm0ZXREdJTGnaPyKw6edGtWoY0juqVU6K5SlH65k+jfsDf/5gEYaLKZ9YeV
+X-Google-Smtp-Source: AGHT+IGtPTU+zuWSgGfB7w18BXvfTFGqbzfm5r9SrIrzLuQfA8Y5CPDOZv1Q0DcjrDiDvt4vtBbAOw==
+X-Received: by 2002:a05:6000:2509:b0:391:2fe4:de0a with SMTP id ffacd0b85a97d-39d6fc0c1d6mr8986003f8f.2.1744108616902;
+        Tue, 08 Apr 2025 03:36:56 -0700 (PDT)
 Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43ec3429f67sm163443095e9.7.2025.04.08.03.36.52
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39c301a727bsm14422827f8f.27.2025.04.08.03.36.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 03:36:52 -0700 (PDT)
-Date: Tue, 8 Apr 2025 12:21:56 +0300
+        Tue, 08 Apr 2025 03:36:56 -0700 (PDT)
+Date: Tue, 8 Apr 2025 13:15:08 +0300
 From: Dan Carpenter <dan.carpenter@linaro.org>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
-	arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev, devicetree@vger.kernel.org,
-	Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH v4 3/7] firmware: arm_scmi: imx: Add i.MX95 LMM protocol
-Message-ID: <b85cd7c9-1747-4f8d-82e5-5bf734263566@stanley.mountain>
-References: <20250408-imx-lmm-cpu-v4-0-4c5f4a456e49@nxp.com>
- <20250408-imx-lmm-cpu-v4-3-4c5f4a456e49@nxp.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Samuel Abraham <abrahamadekunle50@gmail.com>, outreachy@lists.linux.dev,
+	gregkh@linuxfoundation.org, julia.lawall@inria.fr,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
+	david.laight.linux@gmail.com
+Subject: Re: [PATCH v6 1/2] staging: rtl8723bs: Add white spaces around
+ binary operators
+Message-ID: <b89c8837-4aa1-4073-bb09-f71f37b5dcc6@stanley.mountain>
+References: <cover.1744061673.git.abrahamadekunle50@gmail.com>
+ <4ccdbfd3e8d74d99679927f294f71cfb694fcc6c.1744061673.git.abrahamadekunle50@gmail.com>
+ <CAHp75Vfp8Je1fUavSwTDAM_5_rDaDfXETa2oM5f0CjL1mxWX_Q@mail.gmail.com>
+ <CADYq+fbh=kG2JABmdF8FjjPiyigMpnJ7WhQh+faqRk6FJe4MBQ@mail.gmail.com>
+ <Z_TtyXwkOBK1MXGy@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250408-imx-lmm-cpu-v4-3-4c5f4a456e49@nxp.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z_TtyXwkOBK1MXGy@smile.fi.intel.com>
 
-On Tue, Apr 08, 2025 at 04:44:27PM +0800, Peng Fan (OSS) wrote:
-> From: Peng Fan <peng.fan@nxp.com>
+On Tue, Apr 08, 2025 at 12:35:05PM +0300, Andy Shevchenko wrote:
+> On Tue, Apr 08, 2025 at 10:22:44AM +0100, Samuel Abraham wrote:
+> > On Tue, Apr 8, 2025 at 8:20 AM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> > > On Tue, Apr 8, 2025 at 12:54 AM Abraham Samuel Adekunle
+> > > <abrahamadekunle50@gmail.com> wrote:
 > 
-> Add Logical Machine Management(LMM) protocol which is intended for boot,
-> shutdown, and reset of other logical machines (LM). It is usually used to
-> allow one LM to manager another used as an offload or accelerator engine.
+> ...
 > 
-> Reviewed-by: Cristian Marussi <cristian.marussi@arm.com>
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  drivers/firmware/arm_scmi/vendors/imx/Kconfig      |  11 +
->  drivers/firmware/arm_scmi/vendors/imx/Makefile     |   1 +
->  drivers/firmware/arm_scmi/vendors/imx/imx-sm-lmm.c | 262 +++++++++++++++++++++
->  include/linux/scmi_imx_protocol.h                  |  32 +++
->  4 files changed, 306 insertions(+)
+> > > > -                                               psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq+1)&0xfff;
+> > > > +                                               psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq + 1) & 0xfff;
+> > >
+> > > > -                                               psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (pattrib->seqnum+1)&0xfff;
+> > > > +                                               psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (pattrib->seqnum + 1) & 0xfff;
+> > >
+> > > You mentioned Linux coding style, which also requires lines not to be
+> > > so long. These lines are. That's why a few versions ago I suggested
+> > > you to change these to be two lines each. I don't know how many times
+> > > to repeat this (it's third one).
+> > 
+> > Okay, sorry
+> > I will add a third patch for a line break before the patch for %
+> > operations since each patch should handle a single thing.
 > 
-> diff --git a/drivers/firmware/arm_scmi/vendors/imx/Kconfig b/drivers/firmware/arm_scmi/vendors/imx/Kconfig
-> index a01bf5e47301d2f93c9bfc7eebc77e083ea4ed75..1a936fc87d2350e2a21bccd45dfbeebfa3b90286 100644
-> --- a/drivers/firmware/arm_scmi/vendors/imx/Kconfig
-> +++ b/drivers/firmware/arm_scmi/vendors/imx/Kconfig
-> @@ -12,6 +12,17 @@ config IMX_SCMI_BBM_EXT
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called imx-sm-bbm.
->  
-> +config IMX_SCMI_LMM_EXT
-> +	tristate "i.MX SCMI LMM EXTENSION"
-> +	depends on ARM_SCMI_PROTOCOL || (COMPILE_TEST && OF)
-> +	default y if ARCH_MXC
-> +	help
-> +	  This enables i.MX System Logical Machine Protocol to
-> +	  manage Logical Machines boot, shutdown and etc.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called imx-sm-lmm.
-> +
+> I am not sure you need a third patch for that. It lies into category of space
+> and indentation fix.
+> 
 
-Remind me again what happens if you have both the default and the
-extension modules enabled?
+Yeah.  Let's not go crazy.  Do the white space change as one patch.  The
+rules are there to make reviewing easier.  Splitting it up into three
+patches doesn't help anyone.
+
+In staging we say, "Fix one type of checkpatch warning at a time."
+That's because it's a simple rule to explain and it stops people from
+sending us huge patches that fix every checkpatch warning.  But this
+patch is small and everything is related and it's easy to review.
 
 regards,
 dan carpenter
