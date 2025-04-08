@@ -1,174 +1,118 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B2EF238148;
-	Tue,  8 Apr 2025 16:08:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC89222F38B;
+	Tue,  8 Apr 2025 16:08:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744128497; cv=none; b=rQuyHGAIbHjTt2maybLx9RvSMsfHTUrJrIhC5/RV3f3e9Ht2I9iJ5N8XrYzl/pAweHMFbYmK+YMElVouzDW9uu5RDB6do+zUleOC+HOMZ3k+9L2a31pFaQOJo1PnQWwPaSIZwKsM1HmMtMzV8EZ0Of+pYJbjNAWYkHZEarp5Juo=
+	t=1744128502; cv=none; b=hpm2m7zsO5+00sgglcYQhTECOHTr6agnPJudpZAMYKQbsxHN5vFaINdBu3HO3gAmYeMTik/Rt33JuAD9ij3LiO+NeZT+nVo1EsU0OddF6qZhuzOtyGmmoagG5/oiH9whwhJgljoKj02D9JhtwCmrBRry9aIsdfmy7chWdykSNpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744128497; c=relaxed/simple;
-	bh=lNvR9KLyydDCCuKSADWrMHdkdsfJVjvm7XyRbV58kdI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ID9u3MTnDpX8McqZNnZwrNrTHg1s5WSVALiZo1IRcNswTRXiYiaLxlVYAGo+vk3E/fZCkhmwbHfZNTfDjdMJfusKqX7ldKl2Dh5GH5PARZ9o4JvTU9LYJn3l9UMfRBMro0+nb8PUO8HSY877UOjFL7TtbsYAEpOEPNGP59S+e5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=rNlkWZXj; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1744128502; c=relaxed/simple;
+	bh=ckOi7tqsSO7KvykycTRL9CtPqRv/ASq7uban+AGPlrM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gpVZKw+HKoRLMpHu4scGMbeWcGihetUwSf2c5GGfnP4S8Xtkhl4gaJ75XUEY5M7vD2uJ4fNexBmzZOrA5rsbc7bbFgPPevYPX6IRXqDCjQwoX1h3z35famwuUkD8moKvg0GEenO2K43D7KjlWm56zWiwjlcIpcRBew9yt0893/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XhMp3L95; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rNlkWZXj"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 538E3xau029563;
-	Tue, 8 Apr 2025 16:07:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=ow6t3aZjTh8zUSYva
-	0I+1eccwoSgmKvfkvuHek+W7BI=; b=rNlkWZXjqNmrVA9DfqJ9qTqgEL8tDwB8v
-	uW+rRoK5iANBpubG1GKB6moL8Y4rxf1/ciAdNCg7DM56snFXeq6UI27BGzCdiXoL
-	Hr2JPBnmHtPqLjuZGH88qIcxX6n6fTG8p4+QuOCg9WyUsQapClXHAaBAz4VCbhjJ
-	ChFNmfH4CzkNCe02vZlhygEXR9J7hifdORr/28Gcllu/FuSoK+QDhFbPQ7HoT2l3
-	g8Y/Cdw/tx32Fgkpts/Q5SasZwSNURS/WI0A4R0LnPV7CD9LTIe6eJvqHGND+b6c
-	aEm6js3u/gkF2v4JxOC8NjZ+BFWMYfs0Eu9JU8hP/snzGwujEHEow==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45vv6a3cmf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 08 Apr 2025 16:07:35 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 538FxwH6004506;
-	Tue, 8 Apr 2025 16:07:35 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45vv6a3cmc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 08 Apr 2025 16:07:35 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 538E2Kef018870;
-	Tue, 8 Apr 2025 16:07:34 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 45uhj2b31s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 08 Apr 2025 16:07:34 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 538G7WkZ17170806
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 8 Apr 2025 16:07:32 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B38A12004D;
-	Tue,  8 Apr 2025 16:07:32 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9DDE720043;
-	Tue,  8 Apr 2025 16:07:32 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue,  8 Apr 2025 16:07:32 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55669)
-	id 50F3DE171F; Tue, 08 Apr 2025 18:07:32 +0200 (CEST)
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>
-Cc: Hugh Dickins <hughd@google.com>, Nicholas Piggin <npiggin@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>, Juergen Gross <jgross@suse.com>,
-        Jeremy Fitzhardinge <jeremy@goop.org>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, kasan-dev@googlegroups.com,
-        sparclinux@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: [PATCH v2 3/3] mm: Protect kernel pgtables in apply_to_pte_range()
-Date: Tue,  8 Apr 2025 18:07:32 +0200
-Message-ID: <ef8f6538b83b7fc3372602f90375348f9b4f3596.1744128123.git.agordeev@linux.ibm.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <cover.1744128123.git.agordeev@linux.ibm.com>
-References: <cover.1744128123.git.agordeev@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XhMp3L95"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E3A6C4CEEB;
+	Tue,  8 Apr 2025 16:08:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744128502;
+	bh=ckOi7tqsSO7KvykycTRL9CtPqRv/ASq7uban+AGPlrM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XhMp3L959j1gmsrQtuaA2pU6O+vcxsQ/GjFmQORiv/4t1XmucuB7D9c0aUFv9TbSt
+	 VY3TCIbQE/LjfJf6JlhJyXxAZgdzluIjdA5uRcXEgsUX5xCirJbir8FOJKtcA0DfGz
+	 DY/YyD0h9wkh3f+VC8iLjwQGTwdx1+rZsVe5twn+03E+pSYbmopQVZ3Ys/mUL7PyCZ
+	 JiG6D+DytWxgwDz80/bHD6oPKL2JUycQFvU9/P2xnaKkpSKeq52cXxqil2x3FuiHQ0
+	 REmgxqP3yXoxXJk2IlcM2w9dMmMZqfZcGAo9v5GFLVGZsket2LnU2tXpy41zCX5nNE
+	 BDbvVNHd8Qhkg==
+Date: Tue, 8 Apr 2025 17:08:16 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	William Breathitt Gray <wbg@kernel.org>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Kever Yang <kever.yang@rock-chips.com>, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org,
+	kernel@collabora.com, Jonas Karlman <jonas@kwiboo.se>,
+	Detlev Casanova <detlev.casanova@collabora.com>
+Subject: Re: [PATCH 1/7] dt-bindings: pinctrl: rockchip: increase max amount
+ of device functions
+Message-ID: <20250408-deviate-common-7846a921ddaa@spud>
+References: <20250408-rk3576-pwm-v1-0-a49286c2ca8e@collabora.com>
+ <20250408-rk3576-pwm-v1-1-a49286c2ca8e@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 6gWNv_Bw0XevSqtBIthyoWHVrcn2MvLC
-X-Proofpoint-GUID: -fZrXKHJloGCIvDX7whqAyynxCC3jswc
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-08_06,2025-04-08_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- lowpriorityscore=0 spamscore=0 priorityscore=1501 adultscore=0
- clxscore=1015 suspectscore=0 bulkscore=0 mlxlogscore=779 mlxscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504080110
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="3HY2P3D0tNzBUcfu"
+Content-Disposition: inline
+In-Reply-To: <20250408-rk3576-pwm-v1-1-a49286c2ca8e@collabora.com>
 
-The lazy MMU mode can only be entered and left under the protection
-of the page table locks for all page tables which may be modified.
-Yet, when it comes to kernel mappings apply_to_pte_range() does not
-take any locks. That does not conform arch_enter|leave_lazy_mmu_mode()
-semantics and could potentially lead to re-schedulling a process while
-in lazy MMU mode or racing on a kernel page table updates.
 
-Cc: stable@vger.kernel.org
-Fixes: 38e0edb15bd0 ("mm/apply_to_range: call pte function with lazy updates")
-Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
----
- mm/kasan/shadow.c | 7 ++-----
- mm/memory.c       | 5 ++++-
- 2 files changed, 6 insertions(+), 6 deletions(-)
+--3HY2P3D0tNzBUcfu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/mm/kasan/shadow.c b/mm/kasan/shadow.c
-index edfa77959474..6531a7aa8562 100644
---- a/mm/kasan/shadow.c
-+++ b/mm/kasan/shadow.c
-@@ -308,14 +308,14 @@ static int kasan_populate_vmalloc_pte(pte_t *ptep, unsigned long addr,
- 	__memset((void *)page, KASAN_VMALLOC_INVALID, PAGE_SIZE);
- 	pte = pfn_pte(PFN_DOWN(__pa(page)), PAGE_KERNEL);
- 
--	spin_lock(&init_mm.page_table_lock);
- 	if (likely(pte_none(ptep_get(ptep)))) {
- 		set_pte_at(&init_mm, addr, ptep, pte);
- 		page = 0;
- 	}
--	spin_unlock(&init_mm.page_table_lock);
-+
- 	if (page)
- 		free_page(page);
-+
- 	return 0;
- }
- 
-@@ -401,13 +401,10 @@ static int kasan_depopulate_vmalloc_pte(pte_t *ptep, unsigned long addr,
- 
- 	page = (unsigned long)__va(pte_pfn(ptep_get(ptep)) << PAGE_SHIFT);
- 
--	spin_lock(&init_mm.page_table_lock);
--
- 	if (likely(!pte_none(ptep_get(ptep)))) {
- 		pte_clear(&init_mm, addr, ptep);
- 		free_page(page);
- 	}
--	spin_unlock(&init_mm.page_table_lock);
- 
- 	return 0;
- }
-diff --git a/mm/memory.c b/mm/memory.c
-index f0201c8ec1ce..1f3727104e99 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -2926,6 +2926,7 @@ static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
- 			pte = pte_offset_kernel(pmd, addr);
- 		if (!pte)
- 			return err;
-+		spin_lock(&init_mm.page_table_lock);
- 	} else {
- 		if (create)
- 			pte = pte_alloc_map_lock(mm, pmd, addr, &ptl);
-@@ -2951,7 +2952,9 @@ static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
- 
- 	arch_leave_lazy_mmu_mode();
- 
--	if (mm != &init_mm)
-+	if (mm == &init_mm)
-+		spin_unlock(&init_mm.page_table_lock);
-+	else
- 		pte_unmap_unlock(mapped_pte, ptl);
- 
- 	*mask |= PGTBL_PTE_MODIFIED;
--- 
-2.45.2
+On Tue, Apr 08, 2025 at 02:32:13PM +0200, Nicolas Frattaroli wrote:
+> With the introduction of the RK3576, the maximum device function ID used
+> increased to 14, as anyone can easily verify for themselves with:
+>=20
+>   rg -g '*-pinctrl.dtsi' '<\d+\s+RK_P..\s+(?<func>\d+)\s.*>;$' --trim \
+>   -NI -r '$func' arch/arm64/boot/dts/rockchip/ | sort -g | uniq
+>=20
+> Unfortunately, this wasn't caught by dt-validate as those pins are
+> omit-if-no-ref and we had no reference to them in any tree so far.
+>=20
+> Once again kick the can down the road by increasing the limit to 14.
+>=20
+> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+
+> ---
+>  Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.y=
+aml b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
+> index 960758dc417f7405010fab067bfbf6f5c4704179..125af766b99297dc229db1588=
+46daea974dda28e 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
+> @@ -135,7 +135,7 @@ additionalProperties:
+>                description:
+>                  Pin bank index.
+>              - minimum: 0
+> -              maximum: 13
+> +              maximum: 14
+>                description:
+>                  Mux 0 means GPIO and mux 1 to N means
+>                  the specific device function.
+>=20
+> --=20
+> 2.49.0
+>=20
+
+--3HY2P3D0tNzBUcfu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ/VJ8AAKCRB4tDGHoIJi
+0o+cAQC++yhzDEA1pD75hj4YsKzIeFWFw+DrbpYLeNqyLfXtlgEA/5+i3Yju2VbF
+KzvzOSVA72JUCgJJIxDgw7JYzYv+HQc=
+=xuix
+-----END PGP SIGNATURE-----
+
+--3HY2P3D0tNzBUcfu--
