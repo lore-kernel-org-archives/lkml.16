@@ -1,67 +1,101 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 136581E4929;
-	Tue,  8 Apr 2025 14:21:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30F591DB958;
+	Tue,  8 Apr 2025 14:22:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744122076; cv=none; b=BtpVQpwv3uYuhC2nzxIRxFEo2UOTrPosmq65dkR4xjQgY4KNoA9pdyux1KmQfF4XAsDo6Z9wni+NQnGwSrD0MRC46Kcf9vfUV/43EA3UqYfSLVlXF9gJIASsFz16cFXYUcMlhcSp7TJfBKOBwW78fEpEf5+yHpzwKE+ak2tU1FA=
+	t=1744122162; cv=none; b=bUyUlzxxK+uNKWueo/VESKdmetRClV5n5xWY4M7FPELarRdZ3oSOSHaMy2GjP6oeEdtdpjKamSFcfyqWc4e6alyXT/KJjBgPdVlzVEHpBxqGNfFVrjSG3HVSwqGOExST9/BdIVnkYox9OcKbGlU8UW9h5M6YQymDLoWS0OvbR6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744122076; c=relaxed/simple;
-	bh=FXvpcnjh4KW/Iak+N9xM6BGXxzODihNocBL7PxMwEsU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gO4KkNR/T91v8lzS61/Sv/LlLJ/11XbxHn8SyYKHjglHZupKk4MvOZGb16yujYliLj8pBU0mhqDDqZkFakFn2oKboC+lYGVQH6AVBbA/cAvDSMnSYMFdvpd1FgFLU2/QZQ5be65AGOyw2n4nVjatKd6oSge5VAsEV3p1UhazWcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=ReOsdXO+; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1744122162; c=relaxed/simple;
+	bh=lcPbNoHY32hfMLXK0I9on2JgdqFyxj5M9NfZlD7bhIA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=sYKhvVB1e7X+1FrBulDhBOsXYso/uQYRL4EDPXccOsVEUGJLs7LxLn4zJeuTT2Og/m/xG000j3p7U1s9hip2n+eK2SVexBcauADqtkETp0yMUfpnd/qcyBQsUaim8VNpXymAfUP1quhUOHRaGiVqnoZHrsv51KuzE3fJxvp64vM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=gDQ2dgo1; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="ReOsdXO+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=YosJInAbT4fDD/KwRyqL6BKmxeFbvN+2LjbD48SXxxo=; b=ReOsdXO+GtMDld1mD7ycasIHZs
-	/ytnQX4loth8sLfo/HcN43i0ljj1ih+XlY6mgxcQ65CB1ezYW3likeRgDZvW6cpeQNdM0kzBxZMEG
-	5CQJs9AOoJMSGg2o8xjGiSNZVj+jsUUgw+gfezKMG2CCROjNK03Sj047rc5n1/17tkqylO5gpQG6X
-	HlCWiY6DtnrQZgoTzVoCIdQ1qyKGvfuYI1Vpl4/lIM75BVv1GOLAZF3lkmd7Z99Z51fnHbt+FA9yi
-	HR+Nr+MFOgb3AJoZLqw4fPoxtx6MgpBCFMvoeilHoa3JErF5vTpp3nxepkZ+nIkurZZ6rRzri6zOj
-	dsVx6NfA==;
-Received: from [187.57.129.172] (helo=[192.168.15.100])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1u29p7-00DLZb-PL; Tue, 08 Apr 2025 16:21:10 +0200
-Message-ID: <2b254cf0-7b55-4db6-a80c-e81377405fde@igalia.com>
-Date: Tue, 8 Apr 2025 11:21:05 -0300
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gDQ2dgo1"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 538ChQh8029846;
+	Tue, 8 Apr 2025 14:22:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=lcPbNo
+	HY32hfMLXK0I9on2JgdqFyxj5M9NfZlD7bhIA=; b=gDQ2dgo1+c3N4ulFEkxdKS
+	4P2Jlx0wNUPeWNcyzkcq0r/EGsLs8gRdlX+6q8OFuXeU102zAC4FhNHL/V+4qzJc
+	p+niv1CGoOrOt0eBkfU3cTQO4TIhnRf1rmfp9flprMX1XeAa+YvuRExxMXHcFKM4
+	wk/WAkEzjXkt1EixICdM/sx95ZKceC9B9viXquEgUByH8UOIZbEJ1svnNjlfkJ+n
+	x1o5sr5mcVzRaetZy5JA/+L1PZEo36umXXXxleb+3XduujkUjGCy1PJcb5OM/0dH
+	NJK41hSCjQ1yIvcCHzoAkrKg4kYW727re/cQwBfxlboMwaEeAT3m3o0GLyZmvHxw
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45vv6a2tq2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 08 Apr 2025 14:22:15 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 538BLD5Q011078;
+	Tue, 8 Apr 2025 14:22:13 GMT
+Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45uf7yk5hr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 08 Apr 2025 14:22:13 +0000
+Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
+	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 538EMDGD25035364
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 8 Apr 2025 14:22:13 GMT
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 288CB58057;
+	Tue,  8 Apr 2025 14:22:13 +0000 (GMT)
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F3FB458066;
+	Tue,  8 Apr 2025 14:22:11 +0000 (GMT)
+Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.48.163])
+	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  8 Apr 2025 14:22:11 +0000 (GMT)
+Message-ID: <deecee12f444b5b0ad03f5866749d6ad66659f7a.camel@linux.ibm.com>
+Subject: Re: [PATCH v11 7/9] ima: verify if the segment size has changed
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: steven chen <chenste@linux.microsoft.com>, stefanb@linux.ibm.com,
+        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
+        code@tyhicks.com, bauermann@kolabnow.com,
+        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+        James.Bottomley@HansenPartnership.com, bhe@redhat.com,
+        vgoyal@redhat.com, dyoung@redhat.com
+Date: Tue, 08 Apr 2025 10:22:11 -0400
+In-Reply-To: <20250402124725.5601-8-chenste@linux.microsoft.com>
+References: <20250402124725.5601-1-chenste@linux.microsoft.com>
+	 <20250402124725.5601-8-chenste@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests/futex: futex_waitv wouldblock test should fail
-To: Edward Liaw <edliaw@google.com>
-Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
- Darren Hart <dvhart@infradead.org>, linux-kselftest@vger.kernel.org,
- Shuah Khan <shuah@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- kernel-team@android.com, Davidlohr Bueso <dave@stgolabs.net>,
- Thomas Gleixner <tglx@linutronix.de>
-References: <20250404221225.1596324-1-edliaw@google.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
-In-Reply-To: <20250404221225.1596324-1-edliaw@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: tD1oxfS_HxPWPw2k7-OlMQwtJG4Sl7kV
+X-Proofpoint-GUID: tD1oxfS_HxPWPw2k7-OlMQwtJG4Sl7kV
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-08_06,2025-04-08_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ lowpriorityscore=0 spamscore=0 priorityscore=1501 adultscore=0
+ clxscore=1015 suspectscore=0 bulkscore=0 mlxlogscore=825 mlxscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504080098
 
-Thank you Edward,
+On Wed, 2025-04-02 at 05:47 -0700, steven chen wrote:
+> kexec 'load' may be called multiple times. Free and realloc the buffer
+> only if the segment_size is changed from the previous kexec 'load' call.
+>=20
+> Signed-off-by: steven chen <chenste@linux.microsoft.com>
 
-Em 04/04/2025 19:12, Edward Liaw escreveu:
-> Testcase should fail if -EWOULDBLOCK is not returned when expected value
-> differs from actual value from the waiter.
-> 
-> Fixes: 9d57f7c79748920636f8293d2f01192d702fe390 ("selftests: futex: Test sys_futex_waitv() wouldblock")
-> Signed-off-by: Edward Liaw <edliaw@google.com>
+Thanks, Steven.
 
-Reviewed-by: André Almeida <andrealmeid@igalia.com>
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
