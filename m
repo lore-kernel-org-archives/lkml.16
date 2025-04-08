@@ -1,66 +1,37 @@
-Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9135F2638BE
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 07:32:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3278321767D;
+	Tue,  8 Apr 2025 07:33:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744097532; cv=none; b=u0FPiHLJK469exW3dBGvDy5RHhYOQnHN9Uc8A3Hum4zrLL8BpCT/aCwdXJF3gyHD6y0RHJv4Iin0zs9bjhaVzgm0AcRUfutIS0rT+NEXgMwDxYzkTyYHyAB4k07gTTYepRYgyyGG8PXc//digcGzsnNqJm1tzZ0P5k2zbOv0l0g=
+	t=1744097639; cv=none; b=X3kn3LOw1eD8tARVV3b6RVYMswYtUw1oFQwdzZNNdKpBQpE9H1SU9JBrLAE+swZdKN2qEsh9gOk+8fAQtrBSnHFD09kXweNLIEHpLSTkcmxERNcMWTLJJZIY35s/Q/TF4z8Ef43IK1NpA91QQ65zD4GB17VWpNAXRZL/yl5KUr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744097532; c=relaxed/simple;
-	bh=ZOHoR1DVLuoqBGux5wOEYgvMSK5hDjDDqM2npNWq+30=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dp0V1mf/DOJZ9BAPXnvxdAn0zMsjDZBTQr6mpBj4fQ8R/ODRx8/ZxKkgsnPpjtyyRcIbOuWn4dqWs0LphbGeeDzERLjsPtiRj25USpESDooBF7euBkTeSx/ToKTOadhuoTNLFVhicxnvvNXDW6zCub1kMNLTTjRNLUATZLJ0mhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vAF6DArQ; arc=none smtp.client-ip=95.215.58.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vAF6DArQ"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744097527;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BLSYPFz/nwodbHpxtrd6necAV0xMxciGJi0Eu7RL7/E=;
-	b=vAF6DArQxICiHwPXm3kZnG6hCFPfTSX4JcMnXXDJ1UL60dr3mPnIXNE5zna9W9KVTAQuk3
-	BC5omLqJaoKkUI53/UjzTIBU+a4JSPhJEVFbbgXGsJYb6Qs4TtJ++eq+2W1HdnV++Sxx/y
-	jCc8DGGtk4d9o53hjXvnBLxd0Pl2ea8=
-From: Jiayuan Chen <jiayuan.chen@linux.dev>
-To: bpf@vger.kernel.org
-Cc: mrpre@163.com,
-	Jiayuan Chen <jiayuan.chen@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Jakub Sitnicki <jakub@cloudflare.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Michal Luczaj <mhal@rbox.co>,
-	Cong Wang <cong.wang@bytedance.com>,
-	netdev@vger.kernel.org,
+	s=arc-20240116; t=1744097639; c=relaxed/simple;
+	bh=gzZTqg8Iy4Z9Xg/wjZQwPqD67nnEhaC2eeaJMbw96v0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=J8uQ+rLt/m4af2t7qAUNWFY1cXgwu7pGr6ONpmOwbkg6xn+miVIWZ84/Mhv+Bb7q6BQ+IgIp5m3xMqvZa9uMb+E1Hh5LBshk77YFeXWqSS7Bunchs4B17lpVldCjDFL+ijnYn0ib19tiuJY7lIH4Vf/VKDWMhMKX0YKf18TeNdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-681ff7000002311f-f0-67f4d15cb46e
+From: Rakie Kim <rakie.kim@sk.com>
+To: akpm@linux-foundation.org
+Cc: gourry@gourry.net,
+	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH bpf-next v4 3/3] selftests/bpf: Add edge case tests for sockmap
-Date: Tue,  8 Apr 2025 15:29:54 +0800
-Message-ID: <20250408073033.60377-4-jiayuan.chen@linux.dev>
-In-Reply-To: <20250408073033.60377-1-jiayuan.chen@linux.dev>
-References: <20250408073033.60377-1-jiayuan.chen@linux.dev>
+	linux-cxl@vger.kernel.org,
+	joshua.hahnjy@gmail.com,
+	dan.j.williams@intel.com,
+	ying.huang@linux.alibaba.com,
+	david@redhat.com,
+	Jonathan.Cameron@huawei.com,
+	osalvador@suse.de,
+	kernel_team@skhynix.com,
+	honggyu.kim@sk.com,
+	yunjeong.mun@sk.com,
+	rakie.kim@sk.com
+Subject: [PATCH v7 0/3] Enhance sysfs handling for memory hotplug in weighted interleave
+Date: Tue,  8 Apr 2025 16:32:39 +0900
+Message-ID: <20250408073243.488-1-rakie.kim@sk.com>
+X-Mailer: git-send-email 2.48.1.windows.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,120 +39,76 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrILMWRmVeSWpSXmKPExsXC9ZZnkW7MxS/pBt/nmlvMWb+GzWL61AuM
+	Fl/X/2K2+Hn3OLvFqoXX2CyOb53HbnF+1ikWi8u75rBZ3Fvzn9XizLQii9VrMhy4PXbOusvu
+	0d12md2j5chbVo/Fe14yeWz6NInd48SM3yweOx9aerzfd5XNY/Ppao/Pm+QCuKK4bFJSczLL
+	Uov07RK4Mk7/nMVasFaoYtmahSwNjEv4uxg5OSQETCT+bF7DCmPfOLWbpYuRg4NNQEni2N4Y
+	kLCIgKzE1L/ngcJcHMwCj5kkHj1/wQiSEBaIkFh+YQdYL4uAqkTHrPvsIDavgLHEq2t3GCFm
+	ako0XLrHBBEXlDg58wkLiM0sIC/RvHU2M8hQCYH7bBJPZ35kg2iQlDi44gbLBEbeWUh6ZiHp
+	WcDItIpRKDOvLDcxM8dEL6MyL7NCLzk/dxMjMKCX1f6J3sH46ULwIUYBDkYlHl6Po5/ThVgT
+	y4orcw8xSnAwK4nwvp34JV2INyWxsiq1KD++qDQntfgQozQHi5I4r9G38hQhgfTEktTs1NSC
+	1CKYLBMHp1QDo5JgS+CxrDeaJU1zUt5MOmtz+e2u+2EFG6REktST7r3XYDBU+Gy34WjtS9GO
+	msm8DW+Y+uvdzfgtOmdNSr/4Ji7SXCey7M7Eb3N7RUofMESpsHhYyU666FX98LxAoFUOm1tX
+	a/XmpPgZ32QFato4n7WsqYu9GjY32rnSbmeiK9/GhbtLWRYqsRRnJBpqMRcVJwIAdMaYwmQC
+	AAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNLMWRmVeSWpSXmKPExsXCNUNNSzfm4pd0g43PNS3mrF/DZjF96gVG
+	i6/rfzFb/Lx7nN3i87PXzBarFl5jszi+dR67xeG5J1ktzs86xWJxedccNot7a/6zWpyZVmRx
+	6NpzVovVazIsfm9bwebA77Fz1l12j+62y+weLUfesnos3vOSyWPTp0nsHidm/Gbx2PnQ0uP9
+	vqtsHt9ue3gsfvGByWPz6WqPz5vkAniiuGxSUnMyy1KL9O0SuDJO/5zFWrBWqGLZmoUsDYxL
+	+LsYOTkkBEwkbpzazdLFyMHBJqAkcWxvDEhYREBWYurf80BhLg5mgcdMEo+ev2AESQgLREgs
+	v7CDFcRmEVCV6Jh1nx3E5hUwlnh17Q4jxExNiYZL95gg4oISJ2c+YQGxmQXkJZq3zmaewMg1
+	C0lqFpLUAkamVYwimXlluYmZOaZ6xdkZlXmZFXrJ+bmbGIFBvKz2z8QdjF8uux9iFOBgVOLh
+	9Tj6OV2INbGsuDL3EKMEB7OSCO/biV/ShXhTEiurUovy44tKc1KLDzFKc7AoifN6hacmCAmk
+	J5akZqemFqQWwWSZODilGhjPL5y/5dKRbRLJ35pMkjQPb9Rd4Z1/cuZ/Fwcm06cPSwr8ZRd8
+	eCLMsuzFZrXcOV1THqwuOsKjObnzySa2E2yrsneu7s1evIrfTnpdzFXr/IrrjzUnvQ38+dN3
+	64qFNh4NXY37NkTI3O/sncsa6r7zjQbnvEOTWp/cS9oks2JmUItwe/iSnapLlFiKMxINtZiL
+	ihMB9C1t6V4CAAA=
+X-CFilter-Loop: Reflected
 
-Add edge case tests for sockmap.
+The following patch series enhances the weighted interleave policy in the
+memory management subsystem by improving sysfs handling, fixing memory leaks,
+and introducing dynamic sysfs updates for memory hotplug support.
 
-Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
----
- .../selftests/bpf/prog_tests/socket_helpers.h | 13 +++-
- .../selftests/bpf/prog_tests/sockmap_basic.c  | 60 +++++++++++++++++++
- 2 files changed, 72 insertions(+), 1 deletion(-)
+### Background
+The weighted interleave policy distributes memory allocations across multiple
+NUMA nodes based on their performance weight, thereby optimizing memory
+bandwidth utilization. The weight values are configured through sysfs.
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/socket_helpers.h b/tools/testing/selftests/bpf/prog_tests/socket_helpers.h
-index 1bdfb79ef009..a805143dd84f 100644
---- a/tools/testing/selftests/bpf/prog_tests/socket_helpers.h
-+++ b/tools/testing/selftests/bpf/prog_tests/socket_helpers.h
-@@ -313,11 +313,22 @@ static inline int recv_timeout(int fd, void *buf, size_t len, int flags,
- 
- static inline int create_pair(int family, int sotype, int *p0, int *p1)
- {
--	__close_fd int s, c = -1, p = -1;
-+	__close_fd int s = -1, c = -1, p = -1;
- 	struct sockaddr_storage addr;
- 	socklen_t len = sizeof(addr);
- 	int err;
- 
-+	if (family == AF_UNIX) {
-+		int fds[2];
-+
-+		err = socketpair(family, sotype, 0, fds);
-+		if (!err) {
-+			*p0 = fds[0];
-+			*p1 = fds[1];
-+		}
-+		return err;
-+	}
-+
- 	s = socket_loopback(family, sotype);
- 	if (s < 0)
- 		return s;
-diff --git a/tools/testing/selftests/bpf/prog_tests/sockmap_basic.c b/tools/testing/selftests/bpf/prog_tests/sockmap_basic.c
-index 1e3e4392dcca..c72357f41035 100644
---- a/tools/testing/selftests/bpf/prog_tests/sockmap_basic.c
-+++ b/tools/testing/selftests/bpf/prog_tests/sockmap_basic.c
-@@ -1042,6 +1042,59 @@ static void test_sockmap_vsock_unconnected(void)
- 	xclose(map);
- }
- 
-+void *close_thread(void *arg)
-+{
-+	int *fd = (int *)arg;
-+
-+	sleep(1);
-+	close(*fd);
-+	*fd = -1;
-+	return NULL;
-+}
-+
-+void test_sockmap_with_close_on_write(int family, int sotype)
-+{
-+	struct test_sockmap_pass_prog *skel;
-+	int err, map, verdict;
-+	pthread_t tid;
-+	int zero = 0;
-+	int c = -1, p = -1;
-+
-+	skel = test_sockmap_pass_prog__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "open_and_load"))
-+		return;
-+
-+	verdict = bpf_program__fd(skel->progs.prog_skb_verdict);
-+	map = bpf_map__fd(skel->maps.sock_map_rx);
-+
-+	err = bpf_prog_attach(verdict, map, BPF_SK_SKB_STREAM_VERDICT, 0);
-+	if (!ASSERT_OK(err, "bpf_prog_attach"))
-+		goto out;
-+
-+	err = create_pair(family, sotype, &c, &p);
-+	if (!ASSERT_OK(err, "create_pair"))
-+		goto out;
-+
-+	err = bpf_map_update_elem(map, &zero, &p, BPF_ANY);
-+	if (!ASSERT_OK(err, "bpf_map_update_elem"))
-+		goto out;
-+
-+	err = pthread_create(&tid, 0, close_thread, &p);
-+	if (!ASSERT_OK(err, "pthread_create"))
-+		goto out;
-+
-+	while (p > 0)
-+		send(c, "a", 1, MSG_NOSIGNAL);
-+
-+	pthread_join(tid, NULL);
-+out:
-+	if (c > 0)
-+		close(c);
-+	if (p > 0)
-+		close(p);
-+	test_sockmap_pass_prog__destroy(skel);
-+}
-+
- void test_sockmap_basic(void)
- {
- 	if (test__start_subtest("sockmap create_update_free"))
-@@ -1108,4 +1161,11 @@ void test_sockmap_basic(void)
- 		test_sockmap_skb_verdict_vsock_poll();
- 	if (test__start_subtest("sockmap vsock unconnected"))
- 		test_sockmap_vsock_unconnected();
-+	if (test__start_subtest("sockmap with write on close")) {
-+		test_sockmap_with_close_on_write(AF_UNIX, SOCK_STREAM);
-+		test_sockmap_with_close_on_write(AF_UNIX, SOCK_DGRAM);
-+		test_sockmap_with_close_on_write(AF_INET, SOCK_STREAM);
-+		test_sockmap_with_close_on_write(AF_INET, SOCK_DGRAM);
-+		test_sockmap_with_close_on_write(AF_VSOCK, SOCK_STREAM);
-+	}
- }
+Previously, sysfs entries for weighted interleave were managed statically
+at initialization. This led to several issues:
+- Memory Leaks: Improper `kobject` teardown caused memory leaks
+  when initialization failed or when nodes were removed.
+- Lack of Dynamic Updates: Sysfs attributes were created only during
+  initialization, preventing nodes added at runtime from being recognized.
+- Handling of Unusable Nodes: Sysfs entries were generated for all
+  possible nodes (`N_POSSIBLE`), including memoryless or unavailable nodes,
+  leading to sysfs entries for unusable nodes and potential
+  misconfigurations.
+
+### Patch Overview
+1. [PATCH 1/3] mm/mempolicy: Fix memory leaks in weighted interleave sysfs
+   - Ensures proper cleanup of `kobject` allocations.
+   - Adds `kobject_del()` before `kobject_put()` to clean up sysfs state correctly.
+   - Prevents memory/resource leaks and improves teardown behavior.
+
+2. [PATCH 2/3] mm/mempolicy: Prepare weighted interleave sysfs for memory hotplug
+   - Refactors static sysfs layout into a new `sysfs_wi_group` structure.
+   - Makes per-node sysfs attributes accessible to external modules.
+   - Lays groundwork for future hotplug support by enabling runtime modification.
+
+3. [PATCH 3/3] mm/mempolicy: Support memory hotplug in weighted interleave
+   - Dynamically adds/removes sysfs entries when nodes are online/offline.
+   - Limits sysfs creation to nodes with memory, avoiding unusable node entries.
+   - Hooks into memory hotplug notifier for runtime updates.
+
+These patches have been tested under CXL-based memory configurations,
+including hotplug scenarios, to ensure proper behavior and stability.
+
+ mm/mempolicy.c | 193 +++++++++++++++++++++++++++++++------------------
+ 1 file changed, 124 insertions(+), 69 deletions(-)
+
+
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
 -- 
-2.47.1
+2.34.1
 
