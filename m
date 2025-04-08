@@ -1,135 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A26C2360
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 00:13:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4465184F;
+	Tue,  8 Apr 2025 00:15:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744071216; cv=none; b=pbtHcTC25Eze5bnRmorAVeG8RbRdCzchTb06hfNj39754LCWO+sioIv7P/fDwxAyU66kFDvDYHCdGJXwE3qBkw7E0sqNRxGR8s4yYVin8SIEIJIt88nWH/H9ztQ60F/BE7SG4JGbdtdhXlQaCjFdvPfzeigHRvG+jlpNN5fEd+0=
+	t=1744071302; cv=none; b=Y859hSGpr8HwY+sYITxMCQI/xQBxwPwPtJiXkA32rJBIXQd9mwTUemltuGMEdEMx+LyAsFjVxVPBko8zS4xHoxNTV2lBPY5/8MhHrIZLQeAfA/KbJbBuuBEV8Fh8jPRX5AXxhtSvk0klKDLxxU6pl2umsbGWKpP7PE+4dI34WE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744071216; c=relaxed/simple;
-	bh=sLe2pwxNBGHnOjNQ6kRXwxeDWgrAF6CVi6iutseRCmk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Qlt39EntloXG6lg61TZa7daT5/HWwL9R/SBEa+IrS5BoQhAnrkxIeAD2lMKmsYDp5lhqEB9pH9kbBd5c0Cf48deGYvj/E8nS0HUJR1lFP1RtHyB0uD+QnT4mrxkWQovK2sJvRHD1wCoyVFWKBG0b3fXNT+SLzlXOeCEdcA8w8GQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40D6AC4CEDD;
-	Tue,  8 Apr 2025 00:13:35 +0000 (UTC)
-Date: Mon, 7 Apr 2025 20:14:50 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>, Linus Walleij
- <linus.walleij@linaro.org>, Russell King <rmk+kernel@armlinux.org.uk>,
- Linux ARM <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann
- <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel
- <linux-kernel@vger.kernel.org>, frederic@kernel.org, peterz@infradead.org
-Subject: Re: [GIT PULL] Generic entry for ARM
-Message-ID: <20250407201450.5acc83e3@gandalf.local.home>
-In-Reply-To: <xgj3in4cuy3k2phafttxb4cwz6rn6vuj5tvwjioqbrl4hxivkt@wkr5pi6zfrv7>
-References: <CACRpkdZCiiMTwf7eGJJ9aCKFOC3_xTGv1JKQUijjyp+_++cZ_A@mail.gmail.com>
-	<1277cefd-b080-42a5-bfe5-57296e7ccc3e@paulmck-laptop>
-	<CACRpkdaYQx8gBnkjW0zy=-FNS-P+TtjXoNBsBR2D4FTWo28R1Q@mail.gmail.com>
-	<4157fe23-8be8-4fd1-a69a-c59383b9516d@paulmck-laptop>
-	<xgj3in4cuy3k2phafttxb4cwz6rn6vuj5tvwjioqbrl4hxivkt@wkr5pi6zfrv7>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1744071302; c=relaxed/simple;
+	bh=p6MZUSqU/sLAunm0i5UVvuGHuAIYSf5Oj5/EKR2DRKE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LVKGkE7h6W1fvfBtEvQ+QrTbws7iMZt4JmCVAk5RyRGrlawZc/XO6klcMxxQCGAOp3ZNRUrFz3zrbti1LJZmgBwlLMtVASdVPOJ21fXf4zqtxl2VNqxHATmHxzZ/XIFixLETRv3+SR9g5aBAXDxsm+JLPAuJIsy/jDYjdCQrKsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LdGDAG2h; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LdGDAG2h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A05AC4CEDD;
+	Tue,  8 Apr 2025 00:15:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744071302;
+	bh=p6MZUSqU/sLAunm0i5UVvuGHuAIYSf5Oj5/EKR2DRKE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LdGDAG2hgb+NyDTKjmLOYhwyctZI8CG3KVx95SQMiC4tyXDVEOVReqD3wTUk84/MQ
+	 7j3azr1DYeCpYDQFP1fy1l+jZ2cr+LMdDHh5OAJD7iR7qRv+B7YXpliggHVnsc4jaD
+	 2uQI3qK8+T7KJmhI7/Iybfd7jAsUQXV5YH59g18waMkj7NSprj991TBx+SqusjJrwf
+	 tDBzScRmYQjNogmZloPriZL3LjQc4qYCMMpzSohypLsjRAUtW+q+a5Dc3EhFLmN8sD
+	 9Uj89CTBhPupTyhbRY5l/bYYD8aKx0ER+Kvo6Fxvp6gMq2qCwb+0Mqx76U2jGztFie
+	 Kgy38iSJ+0kFQ==
+Date: Mon, 7 Apr 2025 17:14:59 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Oleksandr Natalenko <oleksandr@natalenko.name>
+Cc: linux-kernel@vger.kernel.org, 
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>, netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org, 
+	Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Eric Dumazet <edumazet@google.com>, "David S. Miller" <davem@davemloft.net>, 
+	Andrew Lunn <andrew+netdev@lunn.ch>, Tony Nguyen <anthony.l.nguyen@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [Intel-wired-lan] objtool warning in ice_free_prof_mask
+Message-ID: <6nzfoyak4cewjpmdflg5yi7jh2mqqdsfqgljoolx5lvdo2p65p@rwjfl7cqkfoo>
+References: <4970551.GXAFRqVoOG@natalenko.name>
+ <5874052.DvuYhMxLoT@natalenko.name>
+ <ficwjo5aa6enekhu6nsmsi5vfp6ms7dgyc326yqknda22pthdn@puk4cdrmem23>
+ <2983242.e9J7NaK4W3@natalenko.name>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2983242.e9J7NaK4W3@natalenko.name>
 
-On Mon, 7 Apr 2025 16:47:05 -0700
-Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+On Mon, Apr 07, 2025 at 11:49:35PM +0200, Oleksandr Natalenko wrote:
+> $ make drivers/net/ethernet/intel/ice/ice.o
+> …
+>   LD [M]  drivers/net/ethernet/intel/ice/ice.o
+> drivers/net/ethernet/intel/ice/ice.o: error: objtool: ice_free_prof_mask.isra.0() falls through to next function ice_free_flow_profs.cold()
+> drivers/net/ethernet/intel/ice/ice.o: error: objtool: ice_free_prof_mask.isra.0.cold() is missing an ELF size annotation
 
-> noinstr is much broader than notrace.  No instrumentation of any kind
-> (ftrace, kprobes, sanitizers, profilers, etc), in the prologue or body
-> of the function or its callees, except for regions marked by
-> instrumentation_{begin,end}().
->=20
-> noinstr is needed in early/late entry code before/after RCU transitions,
-> as instrumentation code might depend on RCU.  Also, entry code tends to
-> be sensitive and unable to handle random instrumentation code.
+Thanks, I was able to recreate.
 
-=46rom my understanding, noinstr is usually used in context switching code.
-That is, switching from user to kernel and back. It's highly sensitive
-and I believe there's CPU helpers that will prevent random code from
-happening here (I'm guessing at this, but from the strictness they have
-about not doing any instrumentation and how things will break if you do, I
-feel that there's going to be a hardware enforcement here, if it's not
-already there).
+This is the -O3 optimizer noticing that ice_write_prof_mask_reg() is
+only called with ICE_BLK_RSS or ICE_BLK_FD.  So it optimizes out the
+impossible 'default' case in this switch statement:
 
->=20
-> notrace is more narrow, it just means "no function tracing".  It's used
-> by tracing code and the functions it calls.  It's also used for early
-> boot code, as ftrace can be enabled on the kernel cmdline.
+	switch (blk) {
+	case ICE_BLK_RSS:
+		offset = GLQF_HMASK(mask_idx);
+		val = FIELD_PREP(GLQF_HMASK_MSK_INDEX_M, idx);
+		val |= FIELD_PREP(GLQF_HMASK_MASK_M, mask);
+		break;
+	case ICE_BLK_FD:
+		offset = GLQF_FDMASK(mask_idx);
+		val = FIELD_PREP(GLQF_FDMASK_MSK_INDEX_M, idx);
+		val |= FIELD_PREP(GLQF_FDMASK_MASK_M, mask);
+		break;
+	default:
+		ice_debug(hw, ICE_DBG_PKG, "No profile masks for block %d\n",
+			  blk);
+		return;
+	}
 
-Right, notrace is basically code that doesn't make sense to trace. Like the
-function tracing code itself. Also clocks that the function tracing uses.
-You really don't want the clocks being traced as they are used by the
-function tracer. Now that we have ftrace_test_recursion_trylock(), it
-doesn't crash like it use to. But recursion does cause overhead.
+Unfortunately, instead of finishing the optimization, it inserts
+undefined behavior for the 'default' case by branching off to some
+random code.
 
-Note, I've been thinking of letting some of the tracing code be traced.
-Like the access to files and such. Just because there's been times I want
-to know what code is actually being called there (like when I set up a new
-histogram!).
+So there doesn't seem to be any underlying bug, it's just that objtool
+doesn't like undefined behavior.
 
->=20
-> I believe noinstr is not typically needed for boot code, at least for
-> the primary CPU.  RCU isn't present yet, and many instrumentations might
-> not yet be available.  Or their handlers can detect whether they've been
-> initialized yet.  Or they're disabled in .init sections.
->=20
-> Whether noinstr is needed for *secondary* boot code, I don't know.  It
-> may be dependent on the instrumentation implementations, e.g., whether
-> they're enabled globally or per-CPU.  At least on x86, start_secondary()
-> is notrace.  I don't know enough to say whether that's sufficient.
+So for building with -O3 I'd recommend just disabling
+CONFIG_OBJTOOL_WERROR and ignoring any objtool warnings.
 
-Not sure, as there's really no context switch at this time. But Peter and
-Thomas would know better than I here (continuing to pass the buck!).
-
->=20
-> > > sched_clock_noinstr() is tagged noinstr and sched_clock() is
-> > > tagged notrace, so there must be a difference here.
-
-sched_clock() is using in tracing. If it wasn't tagged notrace, the
-function tracer would be recursing on it.
-
-The noinstr looks like it was created just because some archs call
-sched_clock in noinstr code?
-
-> > >=20
-> > > secondary_start_kernel() is tagged "notrace" on arm64 but
-> > > not on arm, should it be tagged "noinstr" or "notrace"?
-
-According to commit b154886f78924:
-
-    arm64: make secondary_start_kernel() notrace
-   =20
-    We can't call function trace hook before setup percpu offset.
-    When entering secondary_start_kernel(), percpu offset has not
-    been initialized.  So this lead hotplug malfunction.
-    Here is the flow to reproduce this bug:
-   =20
-    echo 0 > /sys/devices/system/cpu/cpu1/online
-    echo function > /sys/kernel/debug/tracing/current_tracer
-    echo 1 > /sys/kernel/debug/tracing/tracing_on
-    echo 1 > /sys/devices/system/cpu/cpu1/online
-
-If other archs crash when doing the above, then sure. Label it notrace ;-)
-
-
-> > >=20
-> > > This kind of stuff makes me uncertain about how this is to be
-> > > done. A "noinstr vs notrace" section in Documentation/core-api/entry.=
-rst
-> > > would help a lot I think! =20
->=20
-> Sounds like a good idea.  We just need a volunteer :-)
->=20
-
-Agreed (but not me!)
-
--- Steve
+-- 
+Josh
