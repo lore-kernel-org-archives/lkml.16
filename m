@@ -1,101 +1,153 @@
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0EF422D7A4;
-	Tue,  8 Apr 2025 16:27:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C1C22D4C1;
+	Tue,  8 Apr 2025 16:30:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744129659; cv=none; b=PuCaGa6BSdp9HbqM2n4DLOcCJrfwGfRctl1YVcdyD3eh8TSjDZI443yd7zOrR4q4Qz7xS53QLtA2Ae34WwpDGKe2noml/WoHNPFMGcqVuW++mPh+YnUmWkl+dXyjMDrSjqcJyZ+fhx6eGSztln7dqWn3CtrPJ3o8Xnw6Q6DCNFo=
+	t=1744129831; cv=none; b=QX0EBWKBuPfK6n8m5n5jm1r8apOPybu7vj6RZj/0a8dNoNKGycnSVqXNWmE2QGO4+iUqJbLTYXMPTo1sessnHc259xujmwUCjxTI1n8GjcGdY860hNllfoGYbu4hLL0Q+nfaktIj0e3eICZ5lGYmehu97n1rszuaTz6LlqMzqGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744129659; c=relaxed/simple;
-	bh=fuFIxc3UmEgiGu4Oa0SVwDPBaqZrTG27mMIS2ft7hRk=;
+	s=arc-20240116; t=1744129831; c=relaxed/simple;
+	bh=oNUYEMgGqJ+3wGse3jpH09pPTdEyTcpXIxcUBN0Qlxk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KXoltIEYvn5Hw+MiRHwnMQM8KR29+ciqlGXeVXqcjgOdyUlxRHHMg1SZTke14U25c8XNZa8EP5KSY2VH3sofzFUaQiSFJP8pQsNPJQHtif7nv2SWoYM8ZTYH2iWwB8QI/0ANUy0x2kJ9OcjWvvBfRZcjixy8z4OlVuUhr+1AD3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=glPRGl/d; arc=none smtp.client-ip=209.85.219.44
+	 To:Cc:Content-Type; b=dSFw2vA06z5aGgXkD7Y18Hylzi+nt++ypx+scO3sW+BSTTjdaSadgjoCA1k/k4E5vqIZwgJ/CRX42FrWm5rI8A787ymYM8dng3w553CmmHqalv685o2mRP+VKJri4I4NrZPlyf1aIXDmOccq68Vcg3lg8tK7wd2s7MhFKMp+QGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PA00jMCX; arc=none smtp.client-ip=209.85.221.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="glPRGl/d"
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6ecfbf8fa76so67820006d6.0;
-        Tue, 08 Apr 2025 09:27:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PA00jMCX"
+Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-523edc385caso2401823e0c.3;
+        Tue, 08 Apr 2025 09:30:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744129657; x=1744734457; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744129829; x=1744734629; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=fuFIxc3UmEgiGu4Oa0SVwDPBaqZrTG27mMIS2ft7hRk=;
-        b=glPRGl/do5QbnFbzhUg5m0Ln+fV5Bm7ABc9wDwiMSdImqEgxoQGw0ubl7y6jZH1Y0K
-         7dg7KZh2Lg/yH2QBw1Wcx6jwytHTTvAhmO5fD0xAVC7Z2T5z53Yh5ruUGabP32YbBRJu
-         MfESB+fyH/LkrRMNMBgnqq7OaKf4wIDM/LnCG4eqaMxZYmgSZmZvAYmbXkYrvXBMJrCb
-         S5MXUsHuBUA4AjfJrvbtR6OoHWyBcFC11bPbK1i/4FyaBrvdD2UaoARD6LCJDnVLd3Xn
-         74AXsXRZWvDMGm+QOunbikanmob8bvCY+ivHdBD5sHMbT4Nnbn80Zz2dvxbExydOCBnn
-         XgQA==
+        bh=7wJ4YLUkXoLkwKjpRqxcQiGAxIAwL7Wsxqtgcenp5GE=;
+        b=PA00jMCXY81sVnE/gO975e6BiJz80jFF7SxLf5MWhFMIbGzk4JjcMZRNn+Vi83a/No
+         3L8VYORtrf72yiHZGnRkfX0qpWQuWJo3SiGdyl1AFDorAE6/yfwnQYEXQPfuvzrbIpkJ
+         JK6EI09oQ0XGvGnYypbaQyv9Xl6ajlL1bvKfuMwAToHcPO13ejHCRrhoH7LCB2BCzH7a
+         uqynQerO1nsIuQfXLmiYDR4SVCxVElxoVwfIGfVNRVh69AYe7lNrIMqVstA1GKp9ois0
+         4CrA+0vmCa0JdvfqXnAIjphNl3B/mmdCfx+v99WBpGZPn+mJZ0ahkAuMYEE3NwhqBY21
+         bNWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744129657; x=1744734457;
+        d=1e100.net; s=20230601; t=1744129829; x=1744734629;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=fuFIxc3UmEgiGu4Oa0SVwDPBaqZrTG27mMIS2ft7hRk=;
-        b=M3J9CJQyOoNKUtD2ECP5IomI9hrm+FIpTELfjch/ODL2eJYf7TzhGy0+tmKZTLhAGl
-         8uIVEnZWuVF64k3gG22ERKEFT87F2F+/QswRCgjJlOHdt+KcXoNbNkYRZmLDcYb1IjbT
-         q6u0adetp41nYNMx33vKvSFu9JD+0jE4Qjm9Tet7C0SIusG1dumo+ip2Bf4JjB9zQzzC
-         5qysfdiMffojLfB1wFNmIz0IcyDAG8s4KOT2TC6vi9s4yGPQOZayPtioRCNgwvdTgrS4
-         UTvKGJPtOno+KrC+hV9hsiM+k80lfDvAhnMhE9uDhMXO1rhZpjNpwq/7I6y5Jxmy++/9
-         YHFA==
-X-Forwarded-Encrypted: i=1; AJvYcCVdVE7SRMLPYod8R2VcZkw0jTBOtSfVcy72YgEQ97xrDdKSOmnxHK9wtNM6usuAAu+0Xk7A3seRkfwlwRue@vger.kernel.org, AJvYcCXf7grkBLPBc7Ue/2PgEiWv5he3JZdYCmEOSKYwfJpLXjgsH1Oa7oTjiqqGjxil3Aotw8Y5NnXmfic=@vger.kernel.org, AJvYcCXsApU6THbsTCChxliCnfLha3yXJTPwoOHcqkVF90vHNOP7dMpzjEyzkZRW4vG04FapIxuJHQbm@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKCG/fi7L8/38UnNwWsQDoXveOoIMxlXUL9YYrgkmIiNFIW3c4
-	tcPJj6AOHCeWNcRBp+eDYyUHyWHt9ps6u6JyTQGOKCoXezZLWMnITM/D79BvdfSIhOTu0mnCvyk
-	ZMal7ehNPdKTRczYsX7M0RXP9it0=
-X-Gm-Gg: ASbGncsjn7g9Wmd/Y6xwHXS+xXe7YRviU9asSkguskMOsXi0qDGioLg3sVmYMKm2W9g
-	AYAYww7JKgKYJzx8841LeEdpEAx8zENeVH7s00m4z0HMy7nn4QbarvA89lHtRFWYnQ3g3bNieNc
-	7HajOF7WsnHeH7dbC/qaP3bvy9zX0sFfcLoePf0VztYbGUbf4kz97XSe+pjxhUSeOImpy+
-X-Google-Smtp-Source: AGHT+IGFsALA7aRqU/W+C/93GMoSwJDaDaxdguDqfpdfePBPeTRNr31OpKPkzMEXpcXrvTG45eGI2Zdb73VRAPZ36cE=
-X-Received: by 2002:ad4:5cee:0:b0:6e8:f2aa:a8af with SMTP id
- 6a1803df08f44-6f01e7bbc76mr306272746d6.38.1744129656879; Tue, 08 Apr 2025
- 09:27:36 -0700 (PDT)
+        bh=7wJ4YLUkXoLkwKjpRqxcQiGAxIAwL7Wsxqtgcenp5GE=;
+        b=oNtnAVbIra8fQDCllu8VL2zwWFrbbEKfGTd7aRQhu5Jphjuwnanpqz8XuJPQ3SoN5h
+         L1DdBEK7EO0ZbMzoBRfj6ZT3Q7NQK+/9pVOc4V2kSbQF7ZEXiizskuL4Xinou/Osakge
+         egqW/Duw2EHwTcevzCDbFriH6YR5Uo6iA7vHBEiN1Qj3sJTM+mIHVqsWVYPCRoeziULH
+         0kxCQpp+tGDeT7M3aoIjkVycxi2imTNISzvrEvFbcOWiYRo2T9cvqg5ayW4qpGxlROMF
+         fbVfxDtEfGz0nYy+cII2DGRG/NkCZcFSBEg4va5L4PQfvIliRjIrw5hwhNk6lBzbdJSJ
+         9lAg==
+X-Forwarded-Encrypted: i=1; AJvYcCUhdSbEgA7p5PjG4xoZ5OHOLnCdVLjMAVvydkq/dj7AWJfwr3PXg6cGU7R9gGhZ74I3HFebIs9fLXW7WVQ=@vger.kernel.org, AJvYcCV0ckyFy+KJG3pFvsaaaHckA+s6j7WcHvRCqr28D3Lr7iS2d41BtLCKkZ4ja0V0YgzKVRfMspLEqCaP@vger.kernel.org, AJvYcCXU2bmT76iaKM3XYJVHUALGWKNo4wyWoyFoCZGM1BmrVhRTZPw5jKRBfFJgQnVTdFpN7ecukHa4Y4hpNmg0Qln5OkA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9awA1hZRenNZ14SjtXztqgB5VEJA31L6J10w/jHWvAdSZmcHe
+	Wm7dlZVcTuZocC9QmQDqt2xPQDTcAmhf+Fz1e+sgeIQUwjlyvpugPWorXp5/7aDt+auOUuc5TH1
+	QxEmBTkigEWCFOSlv7PXpr8pL6ok=
+X-Gm-Gg: ASbGnctslidkNkpWYDsHAzkLqceZPUF9LgB+phpJgjUqI2KFmja1xz6LVhL54DVr0/2
+	C4KjyFfC/SEJ0ZVFNJz7ynrcG14am7nwRIbCJnI9abyK5bJNKjpA0XgWXT+1tBcLXPs2LX7KbU0
+	KcdY5jrRjlFgDT/db+14PwTuUeyQ==
+X-Google-Smtp-Source: AGHT+IF5vpxNNPgG48KmSP5YzAFbWLkv5ORwKd1NXBIFcwfuQX8RWoaUye5P4F2J864AgBaRoMtNJ04iAsqmgY0QlTc=
+X-Received: by 2002:a05:6122:659c:b0:520:3987:ce0b with SMTP id
+ 71dfb90a1353d-5276443fba4mr13910530e0c.2.1744129828922; Tue, 08 Apr 2025
+ 09:30:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407234223.1059191-1-nphamcs@gmail.com> <983965b6-2262-4f72-a672-39085dcdaa3c@gmail.com>
- <20250408154547.GC816@cmpxchg.org> <CAKEwX=M3do_7SJGKwfZQ8vOSQN4aM1ZU04Q3E99CW=UTCkUMOQ@mail.gmail.com>
-In-Reply-To: <CAKEwX=M3do_7SJGKwfZQ8vOSQN4aM1ZU04Q3E99CW=UTCkUMOQ@mail.gmail.com>
-From: Nhat Pham <nphamcs@gmail.com>
-Date: Tue, 8 Apr 2025 09:27:25 -0700
-X-Gm-Features: ATxdqUEYusevCFnCKyMm2x8ip9PTzU9SuYSWaXB61KPZF6jEk2iOHt4bxRrqZ-E
-Message-ID: <CAKEwX=MAeT+ag9mNq7-yfVBzgGQ7y+SN_p7DQnto01TG33EAPQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/14] Virtual Swap Space
-To: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Usama Arif <usamaarif642@gmail.com>, linux-mm@kvack.org, akpm@linux-foundation.org, 
-	hughd@google.com, yosry.ahmed@linux.dev, mhocko@kernel.org, 
-	roman.gushchin@linux.dev, shakeel.butt@linux.dev, muchun.song@linux.dev, 
-	len.brown@intel.com, chengming.zhou@linux.dev, kasong@tencent.com, 
-	chrisl@kernel.org, huang.ying.caritas@gmail.com, ryan.roberts@arm.com, 
-	viro@zeniv.linux.org.uk, baohua@kernel.org, osalvador@suse.de, 
-	lorenzo.stoakes@oracle.com, christophe.leroy@csgroup.eu, pavel@kernel.org, 
-	kernel-team@meta.com, linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
-	linux-pm@vger.kernel.org
+References: <20250407105002.107181-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250407105002.107181-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <TYCPR01MB11040727E81F6DF8647D92343D8B52@TYCPR01MB11040.jpnprd01.prod.outlook.com>
+ <CAMuHMdWXid=9NXUULSA-vedZyjvDKJWt2KX8_Y=arMOp_-gFRQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdWXid=9NXUULSA-vedZyjvDKJWt2KX8_Y=arMOp_-gFRQ@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Tue, 8 Apr 2025 16:30:02 +0000
+X-Gm-Features: ATxdqUGgIgmcjOglWViw_kzyabRFOC_xMFbdUJNoeHkDgkQfHaMF7v3wcEAvb14
+Message-ID: <CA+V-a8v=AtYbFwTtTzFfkf3S126HOioU8jZvcKo1uKkkF-rO+g@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] usb: renesas_usbhs: Reorder clock handling and
+ power management in probe
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
+	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 8, 2025 at 9:25=E2=80=AFAM Nhat Pham <nphamcs@gmail.com> wrote:
->
->
-> You're right. I haven't touched the swapfile swap map and the zeromap
-> bitmap at all, primarily because it's non-functional change
-> (optimization only). It also adds more ifdefs to the final codebase :)
->
-> In the next version, I can tag on one patch to:
->
-> 1. remove zeromap bitmap. This one is pretty much straightforward -
-> we're not using it at all.
->
-> 2. Swap map reduction. I'm like 70% sure we don't need SWAP_MAP_BAD
-> state. With the vswap reverse map and the swapfile inuse counters, we
-> should be able to convert the swapmap into a pure bitmap. If we can't,
-> then it's 2 bits per physical swapfiles.
+Hi Geert,
 
-s/physical swapfiles/physical swap slot (3 states - unallocated,
-allocated, bad slot. the latter two might be mergeable).
+On Tue, Apr 8, 2025 at 4:43=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68k=
+.org> wrote:
+>
+> Hi Shimoda-san,
+>
+> On Tue, 8 Apr 2025 at 12:40, Yoshihiro Shimoda
+> <yoshihiro.shimoda.uh@renesas.com> wrote:
+> > > From: Prabhakar, Sent: Monday, April 7, 2025 7:50 PM
+> > >
+> > > Reorder the initialization sequence in `usbhs_probe()` to enable runt=
+ime
+> > > PM before accessing registers, preventing potential crashes due to
+> > > uninitialized clocks.
+> >
+> > Just for a record. I don't know why, but the issue didn't occur on the =
+original code
+> > with my environment (R-Car H3). But, anyway, I understood that we need =
+this patch for RZ/V2H.
+>
+> On R-Car Gen3 and later, the firmware must trap the external abort,
+> as usually no crash happens, but register reads return zero when
+> the module clock is turned off.  I am wondering why RZ/V2H behaves
+> differently than R-Car Gen3?
+>
+From section 4.4.8.4.1 of RZ/V2H HW manual:
+In this mode, the frequency of the clock signals supplied to specified
+peripheral units is stopped to obtain lower power
+consumption.
+This is achieved by stopping supply of the clock signals by the CPG
+and, through the given CPG registers, switching
+the bus MSTOP ports. Error interrupts notify the system of attempted
+access to units in the MSTOP state.
+
+> On R-Car Gen2, you do get an external abort when accessing hardware
+> registers while the module's clock is turned off.  Has anyone tested
+> usbhs on R-Car Gen2 recently?
+>
+Yes I tested this with the patch applied,
+https://gist.github.com/prabhakarlad/3d1bbb6f745d8d867c8e6e009ab93f8d
+
+1] For R-Car Gen3 looking at the r8a77951.dtsi we have the below:
+
+hsusb: usb@e6590000 {
+        compatible =3D "renesas,usbhs-r8a7795",
+        ...
+        clocks =3D <&cpg CPG_MOD 703>, <&cpg CPG_MOD 704>;
+        ....
+};
+
+The same clocks are used for ehci0/ohci0/phy0 in  r8a77951.dtsi,
+probably by the time we reach probing the usbhs driver these clocks
+may have been already enabled hence register reads were sensible.
+
+2] For the R-Car Gen2, looking at the RZ/G1H USBHS node we have the below:
+
+hsusb: usb@e6590000 {
+    ....
+    clocks =3D <&cpg CPG_MOD 704>;
+    ....
+};
+
+Same clock is for USBPHY, even in this case the PHY driver is probed
+first due to which the clock is ON and then we probe usbhs driver..
+
+Cheers,
+Prabhakar
