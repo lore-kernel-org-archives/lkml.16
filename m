@@ -1,95 +1,89 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EFD21E2843;
-	Tue,  8 Apr 2025 21:58:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA76191F79;
+	Tue,  8 Apr 2025 22:00:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744149518; cv=none; b=S+P0alDMXyZlwYIKybU4Jbl4Cm4KLE5BYQOOGwsWIcg9fqMj5T/Dlswyyjdy0zS8T7uW7Hab2GicuR2bazn+f0GznSWc1pGmISbA81Obkzan6MLHGgkaVqnHrhutW55VsA+2kORdM/qnvgLDsi4sJ2jWcvEtYODyTanBMeZ/hnc=
+	t=1744149603; cv=none; b=RRZuAYeu7xiLhw/P74gxAfNdlAp2Bo9vx2OlpiV80zK5ZykkmMlPkWbropGh4Vj+z15EOmp8Hekgnwrgz0kBObSCTucYaqGm5llE1mynvy8R5HCEtSrQr145uq6RcFx/56AsXUrHeR0LR9ZF2skNWCucFOa7vRgVsweYgrU1lyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744149518; c=relaxed/simple;
-	bh=HtuFhXI63urBA3dRKYyXQ6GHreCYVeNttV6YM+zDLlM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=crFEbrqOQffQqCNiyrukPvVzXrb+EHEBMBKiQRGzPQgSUL0vRdRII14cJlFPM4uORO6Q0aqrZ7oSXsBgYm6wAs8jDo9sTBAwruKVZvwVk8beG05JvgZcdA9yeZQ0gyO7ZOQ+XT7QNGaj7Clgo0zOg2KEh8QDzJrsUYsa7ZqYAfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b=LrhAcCGU; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1744149603; c=relaxed/simple;
+	bh=AjMKNMsrAuLwoFrp7noFAOmIvL9BDDzrxVNpfknHieU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qAfX4vKvIy/WT4JqypVI16xnS9mDURDTgZ08h+LJSYHLZeOK7Yez9k/cJTCLW5D6b0uUbcf8OFJX2Nc0F8L9d+DPYw1nmKt5q+nGJpu85VO/prAP/TsT5pSxBFCuZ0DLQFIu9l5mJim5ibnLYTIRnHowKx5/FqWIqrXYzG7BI5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pivb9WHT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b="LrhAcCGU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1744149508; x=1744754308; i=rwarsow@gmx.de;
-	bh=HtuFhXI63urBA3dRKYyXQ6GHreCYVeNttV6YM+zDLlM=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=LrhAcCGU72NTdllavFWgkIw5YODVitP1AyVrJHQKeCouPKLDuwpAQT+TGkex+qJj
-	 C4XIOWakcFlvUQpFC2VOO22X2GfhDjrohJ6s+ppsV1q0S97VlNxMYTAKACgxqbWmS
-	 rSvw2PG6I9ZQ4Vunhb5WZTjzydRjYVMedoUJmbla7x7Wvl7SZq6MgeEqlGBcBmVkj
-	 sdW9xK2XU3fV4wJVgJuv3os2dAa10tZOpKom3+c9RbdCaxtIqGqy8BgjNEbQsb2d8
-	 uefew11tBPTUcmgpfREm7IywqRL83FQj7yc53lfeCxSEtEjaEziQOUvPP2fPUb5zd
-	 uRBeDjTX1UgTI8ul3Q==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.200.20] ([46.142.33.88]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1M8QWG-1txr7L3Ue0-006dVb; Tue, 08
- Apr 2025 23:58:27 +0200
-Message-ID: <d88f1ca2-95bd-49b7-b73b-95d87f18f82b@gmx.de>
-Date: Tue, 8 Apr 2025 23:58:26 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pivb9WHT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57AB6C4CEE5;
+	Tue,  8 Apr 2025 21:59:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744149602;
+	bh=AjMKNMsrAuLwoFrp7noFAOmIvL9BDDzrxVNpfknHieU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Pivb9WHTBk3nM3kLzdBe4Cgw3V8ZmhTAp68CWQSh4eFgVZr3Y5f6m1NzQTE+iLE22
+	 8b3A9QxiWPKLjQRtFnBRqgDi8uMFmaRxUR07dM+ddGQiGgE8i1uwxdVOxE6SjLk3HT
+	 WprOXVNhaxds+y4eyWOJrfe9eMlSY08bd/fglj27xh8Bnb/a/rg/fhXxPUYIbxnJj+
+	 9tU2uNzYFQKZdvJIUVHHQtlH9KUCW3xmcJ2x2CDepzolmRN+CkRE6grim3gvruFzxx
+	 Hpl23JC0h+2S55LrQ/AlAk0xQqXzma8PRfYDky7V0Lw4JVGEABRKqA/TVa/kvD0GBo
+	 XtMIWG1FtfVJw==
+Date: Tue, 8 Apr 2025 23:59:56 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: Andreas Hindborg <a.hindborg@kernel.org>,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Abdiel Janulgue <abdiel.janulgue@gmail.com>, ojeda@kernel.org,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	"open list:DMA MAPPING HELPERS DEVICE DRIVER API [RUST]" <rust-for-linux@vger.kernel.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	"open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/3] rust: dma: convert the read/write macros to return
+ Result
+Message-ID: <Z_WcXFJQtFTbHI6b@cassiopeiae>
+References: <20250326201230.3193329-1-abdiel.janulgue@gmail.com>
+ <20250326201230.3193329-3-abdiel.janulgue@gmail.com>
+ <nujfDI6IKBsjlQtGWaMrhjZSQYYeQYckCyOUs9jIzgZGsP1WTalJE0sSg6tp_WMACWo9mzuDfpdzsIlmkKnL8w==@protonmail.internalid>
+ <D8REH728BFP1.2BGE9DTRP2IPU@proton.me>
+ <87ldsahlxr.fsf@kernel.org>
+ <NBhs6N93VPsKCxDOdnggZCiQWIxBfcYJU49nl2DmkqlTDaZet_q7V-_LjkS_uZPtkb8u2yW_oRh0TVjV3cLdkQ==@protonmail.internalid>
+ <CANiq72mahS0jiOHv-7RE8QWQunYo0bJqeGo-FAVoUL7v42RsoQ@mail.gmail.com>
+ <87a58qh1w8.fsf@kernel.org>
+ <D91LB39LUIG6.1P7MMHZ6YHSMA@proton.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.14 000/728] 6.14.2-rc3 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250408195232.204375459@linuxfoundation.org>
-From: Ronald Warsow <rwarsow@gmx.de>
-Content-Language: de-DE, en-US
-In-Reply-To: <20250408195232.204375459@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:wSwSTIaSEpoC/UVnroQbBTEhUSqml79b6tWgLqkL9aA2RL99GHb
- gimaCkxDh+/ViSQToStDJWCb1btwstETT7APG9EMzMyoMT6mbCgeqigtLDSoD1G0kgtm/GQ
- Tlkg6BH8qJKwZIAGl2iR/9jZAGZ8MWSjXOmh7AyaLWHRJFnLTsbhi+FEkIxDFp2EZBr9VR2
- iuDKNw8fkyFG028o7kCkA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:99jK/KI/pSc=;5Ur4d1uh1VE+6IBRkhSx6o1HMJV
- YVTEXab7hOPuipwt5s3teW1HVO2gXfYMvUhiotkPtBaT6e4xBVXEfROKWY1g1ORcJ2BOSrG5t
- f6OMrmmrJJllXWC3deGlqma04SOyvvvR4lKhkqNnLYTY1zKWG/VBvnSRNXOGXwG90+ZCfuXXq
- nXfMjfTTGFpfxoH7xE/kjI2osHkvCnTZqIQhQ76lSDJtleL9o1LlrxZS5IFLw28hsnVJr+2F/
- 6GBLVtC/ZLlf6kUkD7JUox10I2Z8cKflpB9UF/PmUoHWnO+Pc/6SoIW4WpthZRjlxmprObxgm
- HYhPC2zozPLEH2z1Lmrou05FDZC7X5ySJ0+CUxMRd/GTuYhSCClwhpbhw/0fKBluPQBtbddaG
- 3RV2rKx5LY61YmUACxJdYgdYEH9sOI7+EPqf0Su0wvx8dEsekkrt4A8QYMcBvCcg7yd1pPy4B
- Pk6GOx3JHiMJrcS6tqW0gQBHoLW1gtpLmRCk0z9uuZBLJjdw5n93Y2mFKxfCyWOhaU5wHz9QW
- x36AvImowgEtT6B6sxoi6NrDj6EMdqJZ1ny3RXcvQL+RTjGgMCJ3cCTsaFIFEQ4nAtTPDCPg4
- YVlNWFXCbnd/Kd0IDUY16Y8hcaYIudGODPwzEAe44Cg5ftEDdOektzNLq65N4ZKKKDS3HCIL/
- qmbdrr3jTI9cD/AJXkWmjBNTCshX7ONc6P4jEfocwAKjGumwqeHdmfHcBGjoIuhYetjfV6IVF
- WA7Yh76Ac/3Imeqy8+61jdaklU5bARGm65TedESszxARpYHhygMbR2ZJpDIvSY/mk85p/CyLi
- qyTBRQFHWLDv/JSDCyW/bTTTApvLi384VxE8WAyY+UE7tj22YZGu5wzylHGhKS+qPDmq7wfFx
- LoV/hCKvYQ0UeaCHPoVwpgquoCMxwSyyBt/Dl7r8iw2H1LDURqC5gqQoBtaXQNC4dEfzNDznK
- JBaw2pyge4iCQnTZ292WiMNLKRnjR8UOftfG+ogjZBbzQECtCi9hWMJH7sRK6sd9RauEzLxy/
- K8/132ID1ajyx142JWqyjEzBdOyn0GqtfBBN5oMoiGV+bZAcUrP6kpFKBLe5BN4iel09Ho9Hg
- YiByn/9/nIlflTJx6hrjZsfh6/lPcjSP6DhCvcTH55GYEB8xXxQksHFAoLVKyDrwQG0agCi1k
- RjzmOPEQ+aHeXNS0ofkX3qEoeJpQgf6GdKM5JTetQ93b3KgxKx/9DCtfEiEDWYjE3MliE6gvV
- gFsiBxP6Nt6/cQcVOEW7+9IwOCERwFa9tsLGnOBsC37X2bjYlUSgD5cliAC/DRDqzStgJGuCw
- l7CqNcnH9ujfzfouJZuBCq1S67FUL1CcqjLwnXL2T8lWcbGKprq+FpldQUbEVy5nNhvNweD3t
- WbLI7Z5GZPaXHxPPptD+cbiG4/dn8D5zDns0opdzr4SqSCVoClXhmLuMqI5Tl2ap+ECBB4foM
- X0YbjYSs7CUcEtr1j+jt+weB73Uc=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <D91LB39LUIG6.1P7MMHZ6YHSMA@proton.me>
 
-Hi Greg
+On Tue, Apr 08, 2025 at 09:54:13PM +0000, Benno Lossin wrote:
+> On Tue Apr 8, 2025 at 9:46 PM CEST, Andreas Hindborg wrote:
+> > "Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com> writes:
+> >> On Tue, Apr 8, 2025 at 2:40 PM Andreas Hindborg <a.hindborg@kernel.org> wrote:
+> >>>
+> >>> But the `assert_eq!` would panic anyway if comparison fails, right?
+> >>
+> >> Previously the `?` generated by the macro would return out of the
+> >> closure written by the sample, and thus it wouldn't reach the
+> >> `assert_eq!`.
+> >
+> > Right, I see. So the question is whether we want to have the assert
+> > panic here or not, of we get an Err. I vote yes.
+> 
+> The assert wouldn't be the source of the panic though, it would be the
+> `.unwrap()`, but I think it's better to report the error. Although I
+> think it would be nicer if the example could use better error handling,
+> but this code is in a `drop` function, so no way to bubble up a
+> result...
 
-no regressions here on x86_64 (RKL, Intel 11th Gen. CPU)
-
-Thanks
-
-Tested-by: Ronald Warsow <rwarsow@gmx.de>
-
+We could be more explicit and assert is_ok() instead and subsequently do the
+assert_eq.
