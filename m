@@ -1,128 +1,147 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5541E3DD7;
-	Tue,  8 Apr 2025 13:08:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 024471DED6C
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 13:10:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744117741; cv=none; b=su9NFpg4+Cl7AGhS+JrRRbyh3chejccMuM7HEbNh3K5zGPfmGPhRu1dJiox4oQ2h+nJyLi7R7D8SUdQid/uCqWeqi9Z1OdKcAjzA1j5FmQs2IY3r89XqmUHM4g7qWhq2zgLElHhGW1tbZfT6hZlpjQplQETV0HUKQCJN+H0s1Z4=
+	t=1744117826; cv=none; b=nEDItJN6Er1KiCwox+WKUoIvjn0sVm9VWguG00IyTn9OH5tqgSjAaUQer27dX6DalwC/yFrtGHCQjTBNcAmAFBwkqzclDCTVQXIKZCky1hSskJa0Zes0JQQWXPb6Mrb+Iqqqp0lTLUCoywXGLrfFikp7pZ711Gd1LFdTrkVOZrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744117741; c=relaxed/simple;
-	bh=Z2if8Lm0m0TrsFCEOGBzFjsUoJATc/spSu3WueTBQOQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I/jPBSuQdTNRHfIn0AuNSH3JWz3yhYS9z6TTtwZBLXbh7Qp0D7oWvMrozZGUny1SFV4VjcMihuroXyGj/2J2+WDpJJOpEcR4+L86KdsZjoPLPqfr+asFX1R2NQJW+YnHyFM5yqPvuaKGNK7K6fNmpsGm9Joubo2i5ZLMuhJC32Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=ZLAfvX77; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1744117826; c=relaxed/simple;
+	bh=wmcbvuwfcexkF/IZq5AXxakmuiHkGVEOuFwNiJ9zpng=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=a10w/FZIRju8L9zhBlZIeZnVBOKV1tCm01iS5aA+ImbI5DwmqDyebuMHjNR85+LsfR5eAbKF+eDd3/RmPTNULqn7bjJw6O4oSeWcJoDH4eNRgA6Xb7gH8GQrH0QZnYA9Mh937hk+lOVI0z8P3KpROviJO3PO2qMtLTB96tcF/VM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=NI4ClvuO; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="ZLAfvX77"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=jpGXYT949Oku6ClLAdOg+rj915jzWwWHQ46B/Xut5n4=; t=1744117739;
-	x=1744549739; b=ZLAfvX77gDJZAkd7Ud2y6BUsSUmhwVf/UyR4XhteMrarZv5crWCu7T4LpbowV
-	Q6jR64GfTrOhC1GfB+nTU5S2xqtCuDpTxhEz0oivGhLAhuZZJXBDlGb8EhR8Jfim0U/dGoFQd47Jj
-	TeLLnjCN/kfoynf84MYs1GgtT62oi+RhaAfSzTEaOcfvvuBfyQ8+AF6o0i6Y0494Bw1KbZfLXpRZA
-	HCNpdoLRSc1b64ev8GHcKNG+HDUFtr23s0sUIO4Q762rc0Aafq94omOk8Je+NjwkA2XpFJx/j8K7d
-	TJ+qBUSrAn/ujn8z9/eIybHq80Cg39X1Zf/48gOVY26c9AsP9g==;
-Received: from [2a02:8108:8984:1d00:a0cf:1912:4be:477f]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128)
-	id 1u28h9-001zwO-0i;
-	Tue, 08 Apr 2025 15:08:51 +0200
-Message-ID: <7d11f01f-9adc-467c-95bc-c9ff4bbf6a0f@leemhuis.info>
-Date: Tue, 8 Apr 2025 15:08:49 +0200
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="NI4ClvuO"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 538BEQTO020065
+	for <linux-kernel@vger.kernel.org>; Tue, 8 Apr 2025 13:10:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=5UBWW4MRrgta4eIXJ9yYXc
+	6dcVrwrrFfqWYMy2Uu/k0=; b=NI4ClvuO39OUzvCXEef7OTJniPpNB7FhjGWtjF
+	TZgqnc4tIxDl/cFF2AvYmAazLljGuT9/JFxYMC7+TUUyo9As95bPsLfzafbfPH4M
+	vfkL4WY6ruPAzXCJbeWjkFezTN5bZxpiNlORu/XhB6qxBxwzO1suqr5wdummxbfN
+	y37Vs3kBADMNxJHDlG+l2LGQa6RyPvZvpiXCdb3/eLuJ121+Om0qRfZQTNyIxnZT
+	WRJqxgWcB6tl1A8HhznjJMf0N3gvZFZBflbVk44ppM8G7CSTHBFY0tsgfREvQe/0
+	NV8tuXHb9x2CI9xzcxPvrrumKWLDhUhHEEh4gF74dlCzk3Eg==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twdgfv6p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 13:10:23 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c549ea7166so904858585a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 06:10:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744117823; x=1744722623;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5UBWW4MRrgta4eIXJ9yYXc6dcVrwrrFfqWYMy2Uu/k0=;
+        b=v3gdHJ5P4s8eESeJfrLtniEFe4SopHwPBI8shAqvfFweuQKXaaGx1FTWAZEkueRLS5
+         r8YpAA1Yw1k935aR19d5SWYOVFWRK1pC0hcT8CrjETQyJWUjivd0j7QeOL10QxOiTCdQ
+         +5be1sB7OQg1ysq+eOodWOcJdbGOFYkAi8BwXastcVt2YVL5bgNJ7JLCuXmzEPpmuVA6
+         6Lj1nqkpOaHoUAv0kwrdAH/p/aUesfCgeJTA+/sEaez418/UUpKNc/uvMTpANDdjg9Dd
+         j8ABgOEWs6NugrytU1OfGraw6KJhx3te5LKL7IdIiVP7RwgFNLvv+PaIfTSjN6sX5hov
+         Honw==
+X-Forwarded-Encrypted: i=1; AJvYcCVwKevjXhgwlSSc5YZ3SvQ2xpPLh/lDvr+Q09owVwNXSJcGfbFHLIRe98dcO6XAmoEn1Kp9CKNkVIUU5mE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1jwyhZisDAerZ5/51j1aTFHe5EA9i93GYsvAhhNnsdXoE2tY9
+	oZ+AqMjgJinv4guZFb/g84kEYda4H7hTd5RBBvBRyOwppAMWcvljcBjLskZtQ9/l+O/BhC3ix0B
+	0VBTaEju+vcEPpEROJrhB9HB78Znw5q3amTcA6iOyWCqn2aOU8yhbUJzPNr05HLmHcZHkZcw=
+X-Gm-Gg: ASbGncvLZ+mK7QHgERUkCe0YRtPtmVaHYedk8L85T8tKr/si7B0kSpQqGaZUtaCu9fd
+	n4ufP+J3ncSRYskjLGo8F/rOXKavZ3grTNK1cC41gYaCu5Lkj7b+YOokuQDWXyXy7xNxVgdIgI6
+	+OgSHoxyrRPviVtBlCKFppighLVV7o7SxURFYQ6MDl4tYCEqUVIaJHzz4H2RJREQd/l3aQqO0dF
+	+Zvxv3UIVrF6fR7RfmLJbMdLUKe8XQyP3QC/A1k8t9PYk/mKfh7aveZ3eXeJwepcIeSNVKzCXsd
+	tL0j8x/EAmSxCZZiC3CkqnCoX88tXV934yjEnNsJmMScvRZeq3GZAPKs/X0kHh/eTBE0y92EXZO
+	oYmVNjyP8AF5NYjVp9VKUEQcVebI8
+X-Received: by 2002:a05:620a:40ca:b0:7c3:97a8:901c with SMTP id af79cd13be357-7c774e4ba4amr2246818085a.53.1744117822650;
+        Tue, 08 Apr 2025 06:10:22 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHKoJuWHnW0lE7wkJ2sSIhMNy1Bxs/JmW2vMjs80QwWr8TuvnplUD0b17fUpjDotwXYWysf0A==
+X-Received: by 2002:a05:620a:40ca:b0:7c3:97a8:901c with SMTP id af79cd13be357-7c774e4ba4amr2246814285a.53.1744117822206;
+        Tue, 08 Apr 2025 06:10:22 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54c1e5ab889sm1514837e87.11.2025.04.08.06.10.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 06:10:20 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Date: Tue, 08 Apr 2025 16:10:19 +0300
+Subject: [PATCH] arm64: dts: qcom: msm8998-lenovo-miix-630: add Venus node
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.13 000/499] 6.13.11-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
- Justin Forbes <jforbes@fedoraproject.org>, Ian Rogers <irogers@google.com>,
- Namhyung Kim <namhyung@kernel.org>
-References: <20250408104851.256868745@linuxfoundation.org>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Content-Language: de-DE, en-US
-Autocrypt: addr=linux@leemhuis.info; keydata=
- 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 n7RI
-In-Reply-To: <20250408104851.256868745@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1744117739;25d1025c;
-X-HE-SMSGID: 1u28h9-001zwO-0i
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250408-miix-630-venus-v1-1-771c330ee279@oss.qualcomm.com>
+X-B4-Tracking: v=1; b=H4sIADog9WcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDEwML3dzMzApdM2MD3bLUvNJiXfNEgySTNMM0Y3MLCyWgpoKi1LTMCrC
+ B0bG1tQCETl/FYAAAAA==
+X-Change-ID: 20250408-miix-630-venus-7a0b4f1f3788
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1021;
+ i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
+ bh=wmcbvuwfcexkF/IZq5AXxakmuiHkGVEOuFwNiJ9zpng=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBn9SA7VNUl98nBv3ZNkD88KYglSCweZUYPxLyTL
+ mCsUeWPNIiJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZ/UgOwAKCRCLPIo+Aiko
+ 1aktB/9/USl+Q+vHI3iIzz4QXK+WZdXBO18AsdRDQ0iQrwGu48tunrs5c076iK0LMbleV42Cqcd
+ e+RxWus5cZSE4w/uRoDGryj/IhAGAkQfvubEOeK8MsaukPzSpGm+TYDLiJMwUzIne3EgjDhELwg
+ BUJYTx2HmX+oH7SsnHXyNnMB3XhqUGhsi0UjAP/To4mWSpER6gBNq/2UT2wFrwrCCC22Cc1o9rm
+ fsab6zH2PnrXJWl6UKkrqgQeLuv66mgRs0jbY9OXKSv8SjXPmCyyWNYzuno0dWdlGe0fO7XedoU
+ 5sx7X9JwUJdvYfQequyzuKn42R2mdzXBvPK66ctodBb8CE94
+X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
+X-Authority-Analysis: v=2.4 cv=PJgP+eqC c=1 sm=1 tr=0 ts=67f5203f cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=TDdjnMeiFjqKsEOA0EcA:9 a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-ORIG-GUID: UlsFr2Q8t60PxHsHtsd6xawhB-i5-FT8
+X-Proofpoint-GUID: UlsFr2Q8t60PxHsHtsd6xawhB-i5-FT8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-08_05,2025-04-08_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ lowpriorityscore=0 clxscore=1015 adultscore=0 malwarescore=0 spamscore=0
+ impostorscore=0 suspectscore=0 mlxlogscore=928 bulkscore=0 mlxscore=0
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504080092
 
-On 08.04.25 12:43, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.13.11 release.
-> There are 499 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+Enable Venus on Lenovo Miix 630 and specify corresponding firmware file.
 
-Compiling for Fedora failed:
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+---
+ arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-util/stat.c: In function ‘evsel__is_alias’:
-util/stat.c:565:16: error: implicit declaration of function ‘perf_pmu__name_no_suffix_match’ [-Wimplicit-function-declaration]
-  565 |         return perf_pmu__name_no_suffix_match(evsel_a->pmu, evsel_b->pmu->name);
-      |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-From a *very very* quick look I wonder if it might be due to this change,
-as it seems to depend on 63e287131cf0c5 ("perf pmu: Rename name matching
-for no suffix or wildcard variants") [v6.15-rc1]:
+diff --git a/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts b/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
+index f160ba562b0af505bdc1357731f75a394b5eeeeb..c11b972771c3881a57ba5a4dfbdcea487da7c6f1 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
++++ b/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
+@@ -100,6 +100,12 @@ i2c5_hid_active: i2c5-hid-active-state {
+ 	};
+ };
  
-> Ian Rogers <irogers@google.com>
->     perf stat: Don't merge counters purely on name
++&venus {
++	firmware-name = "qcom/msm8998/LENOVO/81F1/qcvss8998.mbn";
++
++	status = "okay";
++};
++
+ &wifi {
+ 	qcom,calibration-variant = "Lenovo_Miix630";
+ };
 
-But as I said, it was just a very very quick look, so I might be totally
-off track there.
+---
+base-commit: 2bdde620f7f2bff2ff1cb7dc166859eaa0c78a7c
+change-id: 20250408-miix-630-venus-7a0b4f1f3788
 
-HTH, Ciao, Thorsten
+Best regards,
+-- 
+Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+
