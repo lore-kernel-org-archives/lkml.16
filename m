@@ -1,90 +1,117 @@
-Received: from mg.richtek.com (mg.richtek.com [220.130.44.152])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB8011C6B4;
-	Tue,  8 Apr 2025 03:52:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.130.44.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC231C6B4
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 03:54:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744084374; cv=none; b=p+Isr7kyYn0SzWRPsMdKqS+M2e1uroluPvaTPU87IoxGgUYlIR7OTBxYjoig1f3/nsd4llbnGiaNMlA+rDKJbUseEHUFZeJQYWzacWVm3U9XGZFsucSf/cVKMxXhP1AXH2QJv4liwzSHdam6tzr+Q+cbfQPFrjhrW2igi6JY0Po=
+	t=1744084493; cv=none; b=EtU6zN31cJQDcNIrJcPN2F+hHbNZbfxvJ2hMVX3lH6QvFvsjUVkT4mA3kUgKsOGynNLSu+FlGG/8d0kv0wjseVUWmsvvarqk6ooCEX3R/dmAGW+TOjvjolLERbCAtgYIBK27revedSFIGHkPjSeh47Em71LEKMEcT4fLNhFeDR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744084374; c=relaxed/simple;
-	bh=8IfM+I8emg8N3PNTp4ggTZrlRW4Na7phGokNQ6MLBq8=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=utCFOluqT+8QDDaSUV29+lYLXwTKLWpxr0hmi2siTsITDe58MXRCSgR37PMaX2rOAE7lVNg8VzA0tFUqxUodw5SWb/gOWQgEOvBJ86+zkue35eRmZXMd4O487r6YIBNQ0CEBw7bqtwgpB8fJDeCkU5lD3O4EoZzJlAWs2f34H+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=richtek.com; spf=pass smtp.mailfrom=richtek.com; dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b=emvRTtUv; arc=none smtp.client-ip=220.130.44.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=richtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=richtek.com
+	s=arc-20240116; t=1744084493; c=relaxed/simple;
+	bh=qJ8WPadlWG5MEwR/E8+wnRntvn1EurCfWzwJKqoGTJc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VFd4cFvM6A/4j9Axa+DqEVeZjKreTnyxF14BML0cdbJlNtTgBwyLu5pvEKjscOyqy/hudRmJSM3v9u4EbFm+kZ/8OJzXXPax6OUGrSW9Fbt3QAMTdoJS2sHPI/cQl+01lmimfv9VVOFALRNu+fnNg8Skl/um5VXNCau3xt36wko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TLu4coAp; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b="emvRTtUv"
-X-MailGates: (SIP:2,PASS,NONE)(compute_score:DELIVER,40,3)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=richtek.com;
-	s=richtek; t=1744084363;
-	bh=wKOj8pk/+CdFokUBmpTIMsQBLj3hnpGnGC53w55JnGo=; l=1262;
-	h=Date:From:To:Subject:Message-ID:MIME-Version;
-	b=emvRTtUvjKeJ3lf9/PLnKaVGPE0VfNidpJT96dRHPjbpG1GGjQdaLhF2G3qS6Cohb
-	 6qghS4grWh/NI5YvvDtcG44JSzKLVOO0KTGkd0WGivp5MD/eUCSx2WMp6Koq27fQbJ
-	 5aswcy1l08rdIpR6/owFJvNIEBeKzGViHiQI3zH053ZRki2jfc0RqdEJRfx86WCbtz
-	 aDpV0ORkdIXRzK4DH+mTFLViZRjcdETdobgUONRS+1c/rnM6VupIxxCTp5MM4nZEzX
-	 KhHGFd4RmJnVyOO9xLVoLBZT7TiuB6kBQPc6Gm/wQK0u7fMAlEBhiuYj2K9Fkw0EWb
-	 4Wd7EQtQn/2fg==
-Received: from 192.168.10.47
-	by mg.richtek.com with MailGates ESMTPS Server V6.0(2132232:0:AUTH_RELAY)
-	(envelope-from <cy_huang@richtek.com>)
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256/256); Tue, 08 Apr 2025 11:52:13 +0800 (CST)
-Received: from ex3.rt.l (192.168.10.46) by ex4.rt.l (192.168.10.47) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 8 Apr
- 2025 11:52:13 +0800
-Received: from git-send.richtek.com (192.168.10.154) by ex3.rt.l
- (192.168.10.45) with Microsoft SMTP Server id 15.2.1544.11 via Frontend
- Transport; Tue, 8 Apr 2025 11:52:13 +0800
-Date: Tue, 8 Apr 2025 11:53:34 +0800
-From: ChiYuan Huang <cy_huang@richtek.com>
-To: Mark Brown <broonie@kernel.org>
-CC: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>, Rob Herring <robh@kernel.org>, Liam Girdwood
-	<lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai
-	<tiwai@suse.com>, Otto lin <otto_lin@richtek.com>, Allen Lin
-	<allen_lin@richtek.com>, <devicetree@vger.kernel.org>,
-	<linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/4] ASoC: codecs: Add support for Richtek rt9123
-Message-ID: <Z/SdvomJQKwqte97@git-send.richtek.com>
-References: <cover.1743774849.git.cy_huang@richtek.com>
- <cff65757c4665a81397ef5f559b277f96d4236c3.1743774849.git.cy_huang@richtek.com>
- <4e966f68-527e-4e2c-9043-0795ff094031@sirena.org.uk>
- <Z/Mf1VQ1Ay/Fw3kh@git-send.richtek.com>
- <17e8e4a6-135f-46b4-89d8-3ea0d3bf6e76@sirena.org.uk>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TLu4coAp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744084490;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mq0fN55bc1MQ2ebWlYUs6Z/lMBo/WZPMxJYJMP8sObI=;
+	b=TLu4coApRmetPz77g46N3eXp2zUzA7tgMHs53DLIxwN9EMVNLoM5gPfRZRtbpaxZhjpCCU
+	uf8FpJ8uBa+SiG5DFvI6obwnIkxinCB0ZDDgNMSS9VZOV/+NZR9mMtWhvgI8PyYP3Ky5/W
+	kOAJiTYMOon9MH0EKqjbE4tylBbiMG8=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-571-3FKLeLlaMZiHAllzx_iVPQ-1; Mon,
+ 07 Apr 2025 23:54:46 -0400
+X-MC-Unique: 3FKLeLlaMZiHAllzx_iVPQ-1
+X-Mimecast-MFC-AGG-ID: 3FKLeLlaMZiHAllzx_iVPQ_1744084484
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3E6EC1801A00;
+	Tue,  8 Apr 2025 03:54:44 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.61])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2DCF7180B486;
+	Tue,  8 Apr 2025 03:54:41 +0000 (UTC)
+Date: Tue, 8 Apr 2025 11:54:32 +0800
+From: Baoquan He <bhe@redhat.com>
+To: steven chen <chenste@linux.microsoft.com>
+Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
+	roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+	eric.snowberg@oracle.com, ebiederm@xmission.com,
+	paul@paul-moore.com, code@tyhicks.com, bauermann@kolabnow.com,
+	linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
+	madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+	James.Bottomley@hansenpartnership.com, vgoyal@redhat.com,
+	dyoung@redhat.com
+Subject: Re: [PATCH v11 7/9] ima: verify if the segment size has changed
+Message-ID: <Z/Sd+JdEbih7O48k@MiWiFi-R3L-srv>
+References: <20250402124725.5601-1-chenste@linux.microsoft.com>
+ <20250402124725.5601-8-chenste@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <17e8e4a6-135f-46b4-89d8-3ea0d3bf6e76@sirena.org.uk>
+In-Reply-To: <20250402124725.5601-8-chenste@linux.microsoft.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Mon, Apr 07, 2025 at 01:34:29PM +0100, Mark Brown wrote:
-> On Mon, Apr 07, 2025 at 08:44:05AM +0800, ChiYuan Huang wrote:
-> > On Fri, Apr 04, 2025 at 04:03:57PM +0100, Mark Brown wrote:
-> 
-> > > What's going on with the runtime PM stuff here?  Especially for the DAPM
-> > > widget usually the ASoC core will be able to keep devices runtime PM
-> > > enabled so long as they are in use so I'd expect this not to have any
-> > > impact.  Why not just use a normal DAPM widget?
-> 
-> > That's because The RG 0x01 'RT9123_REG_AMPCTRL' is mixed with other volatile
-> > status bitfield like as 'SW_RST', 'SYS_STATE'. That's why I use pm_runtime to
-> > make sure the RG can really be accessed at that time. Actually, the
-> > mixed RG bitfield  for 'RW' and 'RO' is a bad design.
-> 
-> You need some comments explaining what's going on here.  If the volatile
-> fields are read only shouldn't you be OK, so long as the register is not
-> cached you should be able to do a read modify write fine?  Unless the
-> status bits are clear on read.
+On 04/02/25 at 05:47am, steven chen wrote:
+> kexec 'load' may be called multiple times. Free and realloc the buffer
+> only if the segment_size is changed from the previous kexec 'load' call.
 
-Okay, I'll left some comments to make it more clear for why special handling.
-And yes, Since this register cannot be cached, to use pm_runtime can guarantee
-the read modify write fine.
+This is a great example demonstrating how patch is nicely split. A
+reasonable unit including reasonable code change and log.
 
-Is my understanding correct?
+Acked-by: Baoquan He <bhe@redhat.com>
+
+> 
+> Signed-off-by: steven chen <chenste@linux.microsoft.com>
+> ---
+>  security/integrity/ima/ima_kexec.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
+> index 5c3b3e0b2186..ed867734ee70 100644
+> --- a/security/integrity/ima/ima_kexec.c
+> +++ b/security/integrity/ima/ima_kexec.c
+> @@ -33,6 +33,14 @@ static void ima_free_kexec_file_buf(struct seq_file *sf)
+>  
+>  static int ima_alloc_kexec_file_buf(size_t segment_size)
+>  {
+> +	/*
+> +	 * kexec 'load' may be called multiple times.
+> +	 * Free and realloc the buffer only if the segment_size is
+> +	 * changed from the previous kexec 'load' call.
+> +	 */
+> +	if (ima_kexec_file.buf && ima_kexec_file.size == segment_size)
+> +		goto out;
+> +
+>  	ima_free_kexec_file_buf(&ima_kexec_file);
+>  
+>  	/* segment size can't change between kexec load and execute */
+> @@ -41,6 +49,8 @@ static int ima_alloc_kexec_file_buf(size_t segment_size)
+>  		return -ENOMEM;
+>  
+>  	ima_kexec_file.size = segment_size;
+> +
+> +out:
+>  	ima_kexec_file.read_pos = 0;
+>  	ima_kexec_file.count = sizeof(struct ima_kexec_hdr);	/* reserved space */
+>  
+> -- 
+> 2.25.1
+> 
+
