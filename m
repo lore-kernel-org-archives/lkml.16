@@ -1,46 +1,121 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80831213E67;
-	Tue,  8 Apr 2025 05:58:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A182E10E0;
+	Tue,  8 Apr 2025 06:00:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744091919; cv=none; b=eae3inYPESeei0ZW0BfYUm+HqEQewdjFqu6O8CWMfEG2ovr9eIjy3rJS9S5mBZOSFExXqRWPwM2Cf1savN0LfIDpf8PR6A+SdVRW/CPNertfGu6gG33sGebmVPeRLcNB3GnRhr1lrkU6yFhJbPs7o/yzqHJhwBElRijIwrFpOhk=
+	t=1744092046; cv=none; b=p7hnnSpgtb5mKeCGtUcw/zXoms6YSig1g3i0X94miRKE+JAWtWcmvEYu0c+FMQZGrQJgljrVZAJpooTii2OQD7Ai5btPmNgCAIE82QLpWMKDdl+7+3R6no2QfTXsyecN7nyGCDdQvA1wUz+2p1s2yJS+ebt2Ctw8qjuhPdS7Wco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744091919; c=relaxed/simple;
-	bh=W94j31G+r8Y0Cd8KcgC93GsP943xgufSZZHy829yDhA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oaxl3ZO6GU1cdrvOlUOH+d/t2hckT229XSKifUIuBg5wMDs0RbXazIPJ7s1GYhbpMWNIwEOnJKnfYanCp+hoNtwxWBybIljrFzJBYqFQuVAl26ozkmrzq1LO8tkj4S4bfv+oiWZKlGy5ZKSK9dTX76OCnem5/PFTZsyX/d9G5A0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 96D1F67373; Tue,  8 Apr 2025 07:58:30 +0200 (CEST)
-Date: Tue, 8 Apr 2025 07:58:30 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Kuniyuki Iwashima <kuniyu@amazon.com>
-Cc: hch@lst.de, axboe@kernel.dk, gechangzhong@cestc.cn, kbusch@kernel.org,
-	linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-	netdev@vger.kernel.org, sagi@grimberg.me, shaopeijie@cestc.cn,
-	zhang.guanghui@cestc.cn
-Subject: Re: [PATCH v2] nvme-tcp: Fix netns UAF introduced by commit
- 1be52169c348
-Message-ID: <20250408055830.GA708@lst.de>
-References: <20250408050408.GA32223@lst.de> <20250408055549.16568-1-kuniyu@amazon.com>
+	s=arc-20240116; t=1744092046; c=relaxed/simple;
+	bh=t5v1EGrxruPN3rnXkb7ZXdlcBHG53rlOx/iu6K9DtzA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nxL8vjLLkvz5AG6f/6Cz5R2fzmlWtJs7BuYpJdBkUtddET41gcjcB8VSkGcF/WVwz26pfCWPxZvOU/rB6XQfLYFjkKzYzu9NAw/Vcf3+8ZAN9fwMjS6gT9LCRa3QT6o9c5eiaSy6lfUHh3qeGFaa7XSmgZXtALrUj/oYRL4JbX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dKaDkV2F; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dKaDkV2F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35D9DC4CEE5;
+	Tue,  8 Apr 2025 06:00:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744092045;
+	bh=t5v1EGrxruPN3rnXkb7ZXdlcBHG53rlOx/iu6K9DtzA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=dKaDkV2FyBUntuQjociQEQpD39kdV9feu4PQovz91AFFSHedCUlrI+ZEadxBlndnj
+	 QMKHz85nl132MA23mGJ08zLJN3paq5CvT0ex/XreHb8E/UcgVvRjR5g1vfIafD+Dxn
+	 jwbkNMmH7nfL/oDofcK7SV8Z/XG262PuV7r+UyZfbA3zRIxxkrKM6pbbMTwoGeWKZn
+	 yg/L15m343eWTZ5GQRuOD+kkP7MH6YTjw4Hcdtmusk0yZDpYunniqiX0u+JXfz81Sf
+	 OJfQX9/rcN9FtWguXvcmJ7+Q+2p8qVaRRGtq6I+BSBsl70E1bz/7xknOUehw5WAPm9
+	 RkckVgvZiP9OQ==
+Message-ID: <b3a7ea46-723c-47c4-b7e2-b7a5afb328d9@kernel.org>
+Date: Tue, 8 Apr 2025 08:00:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250408055549.16568-1-kuniyu@amazon.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] media: dt-bindings: Document Tegra186 and Tegra194
+ cec
+To: webgeek1234@gmail.com, Hans Verkuil <hverkuil@xs4all.nl>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>,
+ Jonathan Hunter <jonathanh@nvidia.com>
+Cc: linux-tegra@vger.kernel.org, linux-media@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250407-tegra-cec-v1-0-e25dd9577b5f@gmail.com>
+ <20250407-tegra-cec-v1-1-e25dd9577b5f@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250407-tegra-cec-v1-1-e25dd9577b5f@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 07, 2025 at 10:55:27PM -0700, Kuniyuki Iwashima wrote:
-> Which branch/tag should be based on, for-next or nvme-6.15 ?
-> http://git.infradead.org/nvme.git
+On 08/04/2025 06:39, Aaron Kling via B4 Relay wrote:
+> From: Aaron Kling <webgeek1234@gmail.com>
+> 
+> These are already used in device trees, so describe them here.
+> 
+> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/media/cec/nvidia,tegra114-cec.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/cec/nvidia,tegra114-cec.yaml b/Documentation/devicetree/bindings/media/cec/nvidia,tegra114-cec.yaml
+> index a6b73498bc217a2e884e31af91e9d8845c9b1d76..27987bc428ea1a0db8dba4910727e1ce3fa3dab3 100644
+> --- a/Documentation/devicetree/bindings/media/cec/nvidia,tegra114-cec.yaml
+> +++ b/Documentation/devicetree/bindings/media/cec/nvidia,tegra114-cec.yaml
+> @@ -18,6 +18,8 @@ properties:
+>        - nvidia,tegra114-cec
+>        - nvidia,tegra124-cec
+>        - nvidia,tegra210-cec
+> +      - nvidia,tegra186-cec
+> +      - nvidia,tegra194-cec
+Don't add to the end of lists, but keep entries sorted.
 
-nvme-6.15 is the canonical tree, but for bug fixes I'm fine with
-almost anything :)
+Best regards,
+Krzysztof
