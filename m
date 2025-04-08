@@ -1,70 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 576E222B8AC;
-	Tue,  8 Apr 2025 15:22:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 758F822CBCC;
+	Tue,  8 Apr 2025 15:22:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744125778; cv=none; b=BdCerFtipTiUZhhjGAiNF8VIIqb74oq9BnHLGPhl99INsmgVVjsyGrprgYfO7xpbo10Q1N5sGOYAZhWbJ9op1xKnqpKBbS5O+/vcJTRO1NaTtdwWuKr01Yv6B3mqdP3fzxXBNMfvXP6A0Juf403ZnIeuS0XxEs9WxhS41uD8zEc=
+	t=1744125779; cv=none; b=V6R0v7Jxs0L/bdcyfe/rQwThimzALqmH0X3l8kZhURHAT6fo/6oEpZH78U6jjsG45ljwvEq1rhJydiR8jZm/eFZgpFvmQbt+e2HdWel7h6qfbvbh9zqa3pkkLwGoLVPqRVxGKa2JRaZSg643rLp2OEe+hN/KJ4utGU4pEKFO+Gw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744125778; c=relaxed/simple;
-	bh=E5cENsqRstExmfqwbKUIbbQXiSoHM4TtwUmMndbmO/A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hyPS9XSzjzQrDWgndACkjvMnT3Cy+VzAuxmMgiMCoki7Mom2hgDEunFRbskJ6j8ckWyourAlEZV9aiUn22A3BKACvMUsDAqnF8zFKPGzp4xfjj1cWOxtrDt0iQvs1kEqhpM4iZ9ZuLxyC8a/AcjfvsvRSxZQl63899wWiyqPAmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=YBBGy3GC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744125779; c=relaxed/simple;
+	bh=g38sI2F/r3LVSr8muislTa9JSawGqyk3eG9TFH+dXRA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lNS2u6RfMHvjXqEDE0LdJPzVQZMbPa8M8+LqT+kJQsg7eNlzAjuajZOvwytWNl5lHWOJfpeH+xHKK8HbCV5ct5bRMPCTxEY3j37ojnwdunjZ3GcXyLeNZCk/v56haA/nxGq9z1nuyJxoAAgO2tcPoNyz1GKHeb7/+8gLK+k+vTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XHHK/PeF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="YBBGy3GC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2D81C4CEEA;
-	Tue,  8 Apr 2025 15:22:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1744125777;
-	bh=E5cENsqRstExmfqwbKUIbbQXiSoHM4TtwUmMndbmO/A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YBBGy3GCXzaPGH/fwvI6u+4YmRupzhZnfEcuL2udNECV51l4yzdnAJ6iJP2/k/E49
-	 H1lMZdL9mJvE9D/F4IZsFa3rf+COizGCd1HUCtzL7WMM1KweNVAfE2LLZCM4oEo9r2
-	 bEGWTXkoC9BvHMOuk7DC/cJpHRYDCl5jJZkiqIak=
-Date: Tue, 8 Apr 2025 17:21:23 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com
-Subject: Re: [PATCH 6.14 000/731] 6.14.2-rc1 review
-Message-ID: <2025040809-carded-friend-c2c1@gregkh>
-References: <20250408104914.247897328@linuxfoundation.org>
- <0e5aaddf-d149-40e0-8604-b3975f3998bb@sirena.org.uk>
- <2025040811-irate-cold-152e@gregkh>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XHHK/PeF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D3C0C4CEED;
+	Tue,  8 Apr 2025 15:22:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744125779;
+	bh=g38sI2F/r3LVSr8muislTa9JSawGqyk3eG9TFH+dXRA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=XHHK/PeF7bTPTPlFcZ+0wOd2f8+E4++uNg8a+D5JaH7P0wKrds8VArIUwa/MQsi8i
+	 0lFxttBhBoY/qfK0YDBnNpcR0N/5yMjVhabIULWDOUudS1CuLGqJpGWptye1K1YkIQ
+	 BZMQ7gv7jDkko2x2OTRBfSRLBOBpvB8lUqX3KSPhPmu9Etf8FiKt+XoVDQHL4TwH9S
+	 7UNfC9188QfmKN/hwYFGOnL5C3WZRv3Gmb+C8cMpNK3Fi1MESnjWe+dTW0ZDTgc+Up
+	 o8nXg9BZ0TCQjFYIG1CLdvSXculdXqZjp325W+CqX72eJmRlXJCFIMXPW+HAl30ugv
+	 FdS3wrWwiBQOg==
+Date: Tue, 8 Apr 2025 08:22:57 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Krzysztof =?UTF-8?B?SGHFgmFzYQ==?= <khalasa@piap.pl>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>, netdev
+ <netdev@vger.kernel.org>, Oliver Neukum <oneukum@suse.com>, Andrew Lunn
+ <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+ <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Jose Ignacio
+ Tornos Martinez <jtornosm@redhat.com>, Ming Lei <ming.lei@redhat.com>
+Subject: Re: [PATCH v2] usbnet: asix AX88772: leave the carrier control to
+ phylink
+Message-ID: <20250408082257.7281c61c@kernel.org>
+In-Reply-To: <m3plhmdfte.fsf_-_@t19.piap.pl>
+References: <m35xjgdvih.fsf@t19.piap.pl>
+	<Z_PVOWDMzmLObRM6@pengutronix.de>
+	<m3tt6ydfzu.fsf@t19.piap.pl>
+	<m3plhmdfte.fsf_-_@t19.piap.pl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2025040811-irate-cold-152e@gregkh>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 08, 2025 at 05:20:26PM +0200, Greg Kroah-Hartman wrote:
-> On Tue, Apr 08, 2025 at 03:59:40PM +0100, Mark Brown wrote:
-> > On Tue, Apr 08, 2025 at 12:38:17PM +0200, Greg Kroah-Hartman wrote:
-> > > This is the start of the stable review cycle for the 6.14.2 release.
-> > > There are 731 patches in this series, all will be posted as a response
-> > > to this one.  If anyone has any issues with these being applied, please
-> > > let me know.
-> > 
-> > This fails to build an arm multi_v7_defconfig for me:
-> > 
-> > arm-linux-gnueabihf-ld: kernel/sched/build_utility.o: in function `partition_sched_domains_locked':
-> > /build/stage/linux/kernel/sched/topology.c:2794:(.text+0x8dd0): undefined reference to `dl_rebuild_rd_accounting'
-> 
-> Is this a dependancy issue, the function is there in the tree.  Let me
-> dig....
+On Tue, 08 Apr 2025 13:59:41 +0200 Krzysztof Ha=C5=82asa wrote:
+> ASIX AX88772B based USB 10/100 Ethernet adapter doesn't come
+> up ("carrier off"), despite the built-in 100BASE-FX PHY positive link
+> indication. The internal PHY is configured (using EEPROM) in fixed
+> 100 Mbps full duplex mode.
+>=20
+> The primary problem appears to be using carrier_netif_{on,off}() while,
+> at the same time, delegating carrier management to phylink. Use only the
+> latter and remove "manual control" in the asix driver.
+>=20
+> I don't have any other AX88772 board here, but the problem doesn't seem
+> specific to a particular board or settings - it's probably
+> timing-dependent.
+>=20
+> Remove unused asix_adjust_link() as well.
+>=20
+> Signed-off-by: Krzysztof Ha=C5=82asa <khalasa@piap.pl>
 
-Looks like we need commit 34929a070b7f ("include/{topology,cpuset}: Move
-dl_rebuild_rd_accounting to cpuset.h"), I'll go add that now, thanks.
+In the future, if you don't mind, please add a lore link here, like
+this:
+---
+v1: https://lore.kernel.org/all/m35xjgdvih.fsf@t19.piap.pl/
 
-greg k-h
+Sending in-reply-to is discouraged, it messes up patch ordering for
+reviewers:
+https://www.kernel.org/doc/html/next/process/maintainer-netdev.html#resendi=
+ng-after-review
