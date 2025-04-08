@@ -1,124 +1,132 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DA141B6CE5;
-	Tue,  8 Apr 2025 14:50:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE40F20CCD8;
+	Tue,  8 Apr 2025 14:51:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744123854; cv=none; b=A2UA8JcsjYe1iWrNxsx3tJ8Kjp4XImxol6FoTI5B18xkA1z4WWLKyqvSZxvzYSU4AAYFzHaZxTXZVssaubGXrglQV4BLq8msISvrQtB0VMZsrwoQLuWpB8RajYV5W2eN+w6bsZ20ojXIGs7MPkCGnpVwarr8u5tHhWlvow9rgb4=
+	t=1744123873; cv=none; b=PgcmWrW7B5dDleuYOZgbhoCvoL0/rS1Dbg4Ix5VZM7/CBd4IR2fOU6zdVMcd0kNc5TZnp/SwpcGBFgNcagMCYpXTRfV+bCTpkE5KUE8KTf7RPlh4tpajGLd3Mdot7LI2UmjWLujzpm2TFYeMzUv4bxED83IEdzjgl1FMN34PFmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744123854; c=relaxed/simple;
-	bh=F1gXfDTkprcTVTuQ1eClCfByLT07tIDnQSkinFWdSag=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qClfc+v1KNeaqqCYok9GWaEwRqEA70eTZtPCcZ4SMg25dtaKkgN9t2XQXZXLWQUWquASUqlD8OFod8JTAW9XNWfk2gUOj/lguc3y0R9v7zQa+pB0A8XqHhrQFwDw8Uww2Nz5sKz3GmWr0iGH1TpNU3gdjsgJZ9zirJmS4RtIRDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yb1uNjcl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744123873; c=relaxed/simple;
+	bh=DOqP7PC9/CSNxfy0CTzHFxtwwycinrGKWx3ZrNUpVhE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YZIQ7eC7RqWl+2AD386yfrG1zE3jOGAlRvLKNw3+a0mnELXLWOWrBczavsVQac1dTLOtqYsAu8Vzxxctr/VU2wJFIG5mwD3/kdzf4tfRjRYsQSVZjUlLrmmoS82TEL4eiiyaPjymBu8LmlFyGTb40yZ+OM5XxuVPuS2iGC/b7TM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DWihu77d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yb1uNjcl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEFAAC4CEE5;
-	Tue,  8 Apr 2025 14:50:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DWihu77d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66745C4AF09;
+	Tue,  8 Apr 2025 14:51:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744123853;
-	bh=F1gXfDTkprcTVTuQ1eClCfByLT07tIDnQSkinFWdSag=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Yb1uNjclOMw/7/4tbGQjBfBRgfbioiToBykUskc2CHJlW490ftj23eQdN6rxxIIuY
-	 fUkfXMB52HKOnOJByUOhyo18QqdkGptlSXi10WUetNcuX4ACT/dJbzkaycvG02ka0p
-	 OjgyxDCa1bfEtkSzZTP6XBqs6UclD15OBCp4u95nh9+TL7KAAXoPFeWw2useLNgn+T
-	 O034SUJD2Af1O9UZIbM+CT8Rl1bJlFvgLr3RAqahoH3DuWOw8D9l8ARNPC+n0DKoxc
-	 y8lxEYvTvKdRYJqa49Y3XDu3HVn3Wz7lSMiuB2WaAJr/YXKyRioEwfHjrFNVJ28KE1
-	 aL8TBcQHVnyiA==
-Date: Tue, 8 Apr 2025 07:50:53 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Richard Weinberger <richard.weinberger@gmail.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Cengiz Can <cengiz.can@canonical.com>,
-	Attila Szasz <szasza.contact@gmail.com>,
-	Greg KH <gregkh@linuxfoundation.org>,
-	Salvatore Bonaccorso <carnil@debian.org>,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	lvc-patches@linuxtesting.org, dutyrok@altlinux.org,
-	syzbot+5f3a973ed3dfb85a6683@syzkaller.appspotmail.com,
-	stable@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH] hfs/hfsplus: fix slab-out-of-bounds in hfs_bnode_read_key
-Message-ID: <20250408145053.GJ6266@frogsfrogsfrogs>
-References: <20241019191303.24048-1-kovalev@altlinux.org>
- <Z9xsx-w4YCBuYjx5@eldamar.lan>
- <d4mpuomgxqi7xppaewlpey6thec7h2fk4sm2iktqsx6bhwu5ph@ctkjksxmkgne>
- <2025032402-jam-immovable-2d57@gregkh>
- <7qi6est65ekz4kjktvmsbmywpo5n2kla2m3whbvq4dsckdcyst@e646jwjazvqh>
- <2025032404-important-average-9346@gregkh>
- <dzmprnddbx2qaukb7ukr5ngdx6ydwxynaq6ctxakem43yrczqb@y7dg7kzxsorc>
- <20250407-biegung-furor-e7313ca9d712@brauner>
- <20250407190814.GB6258@frogsfrogsfrogs>
- <CAFLxGvxH=4rHWu-44LSuWaGA_OB0FU0Eq4fedVTj3tf2D3NgYQ@mail.gmail.com>
+	s=k20201202; t=1744123872;
+	bh=DOqP7PC9/CSNxfy0CTzHFxtwwycinrGKWx3ZrNUpVhE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=DWihu77diMO7llC4OkgLsMjWI5AeoqVzAzMi1/6AddBKf28/waPOzjsEVP7tO6p/m
+	 huhjLJIdEVR0a9PYyJXn/OGSH2WNaDzrG3gNwh+sHjJMUaxN2jfcKe1nL4CIdO3OzE
+	 E6sKd9MYw2xjzR5VyKMc5bfcXy0dqZwTCxuw9hk7M6BokbSmhrfh1RSnHpUE5axLX5
+	 dKaI3E2iM/zWInmk4VDDTnVubpm7PF1NgJxQ93q3lklIOH3jU6yxzmgoZR9FLiaA7V
+	 BWQWIdvGpp9comNUgGkfWUr7IUx4fEZbTWVdo1WI78NrxUCwUHMTjzJUDD5NPCizEK
+	 d204DkW4wO1Sw==
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e8be1c6ff8so10504264a12.1;
+        Tue, 08 Apr 2025 07:51:12 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUEpXnUiDlzCNNFSY40DRocgk4a3WLLX25jf+sTA3o4aIWyQSszhw13fZboYCXmQPZUsW2P+bgABPtoFg==@vger.kernel.org, AJvYcCUTilhAdc9DhAL7P5WkBf0BBIw5azrrO0WYHjDr7NgdE/NMhEwIYvP+tupbxqYr+ZAYz0Mpshl1EwToSngD@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyln+V4ZdhnuGEE9rlW1yghW4lJqYRt9LQPGTFGHWbxv/4qC1PG
+	ekU7o/1bbbFRJ1ufCEVmpcDT0XoyzMkh1TVY7OsGqs3pEAWr/Z2J5uBw4tpAZvQfT8tdYki6VlF
+	Ej4GMjKbJCzq4T+1CzcCgfIwKmEw=
+X-Google-Smtp-Source: AGHT+IHyOTHcUgbR5sI3csnlG+ZrE4vBezaZ5/r0WwtZIV0n3hWOrhVqf8Jcvj1Tm6qdgRS0W/lR3uBg+dkSgBvD8U0=
+X-Received: by 2002:a17:907:d91:b0:ac1:e2be:bab8 with SMTP id
+ a640c23a62f3a-ac7d6d52781mr1151445266b.26.1744123870927; Tue, 08 Apr 2025
+ 07:51:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAFLxGvxH=4rHWu-44LSuWaGA_OB0FU0Eq4fedVTj3tf2D3NgYQ@mail.gmail.com>
+References: <20250408122933.121056-1-frank.li@vivo.com> <20250408122933.121056-3-frank.li@vivo.com>
+In-Reply-To: <20250408122933.121056-3-frank.li@vivo.com>
+From: Filipe Manana <fdmanana@kernel.org>
+Date: Tue, 8 Apr 2025 15:50:33 +0100
+X-Gmail-Original-Message-ID: <CAL3q7H7crVYyQrffLWO6Fr8QpFS2B0BjURqrpTYDYbX3ki0imA@mail.gmail.com>
+X-Gm-Features: ATxdqUGVhAP8P4HMOZyfWKhfVmxvqYNpgxPoMH5VGQXuQ7gjTeg-GxSSbDwgWuA
+Message-ID: <CAL3q7H7crVYyQrffLWO6Fr8QpFS2B0BjURqrpTYDYbX3ki0imA@mail.gmail.com>
+Subject: Re: [PATCH 3/4] btrfs: Fix transaction abort during failure in insert_balance_item()
+To: Yangtao Li <frank.li@vivo.com>
+Cc: clm@fb.com, josef@toxicpanda.com, dsterba@suse.com, 
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 08, 2025 at 12:11:36PM +0200, Richard Weinberger wrote:
-> On Mon, Apr 7, 2025 at 9:08 PM Darrick J. Wong <djwong@kernel.org> wrote:
-> > It's also the default policy on Debian 12 and RHEL9 that if you're
-> > logged into the GUI, any program can run:
-> >
-> > $ truncate -s 3g /tmp/a
-> > $ mkfs.hfs /tmp/a
-> > $ <write evil stuff on /tmp/a>
-> > $ udisksctl loop-setup -f /tmp/a
-> > $ udisksctl mount -b /dev/loopX
-> >
-> > and the user never sees a prompt.  GNOME and KDE both display a
-> > notification when the mount finishes, but by then it could be too late.
-> > Someone should file a CVE against them too.
-> 
-> At least on SUSE orphaned and other problematic filesystem kernel modules
-> are blacklisted. I wonder why other distros didn't follow this approach.
+On Tue, Apr 8, 2025 at 1:22=E2=80=AFPM Yangtao Li <frank.li@vivo.com> wrote=
+:
+>
+> Handle insert_empty_item errors by adding explicit
+> btrfs_abort_transaction/btrfs_end_transaction calls.
 
-Maximal flexibility, I'm assuming.  It's at least somewhat comforting
-that RHEL doesn't enable HFS in Kconfig so it's a nonissue for them, but
-some day it's going to be ext4/XFS/btrfs that creates a compromise
-widget.
+But why should we do it?
+More below.
 
-> > You can tighten this up by doing this:
-> >
-> > # cat > /usr/share/polkit-1/rules.d/always-ask-mount.rules << ENDL
-> > // don't allow mounting, reformatting, or loopdev creation without asking
-> > polkit.addRule(function(action, subject) {
-> >         if ((action.id == "org.freedesktop.udisks2.loop-setup" ||
-> >              action.id == "org.freedesktop.udisks2.filesystem-mount" ||
-> >              action.id == "org.freedesktop.udisks2.modify-device") &&
-> >             subject.local == true) {
-> >                 return polkit.Result.AUTH_ADMIN_KEEP;
-> >         }
-> > });
-> > ENDL
-> 
-> Thanks for sharing this!
-> 
-> > so at least you have to authenticate with an admin account.  We do love
-> > our footguns, don't we?  At least it doesn't let you do that if you're
-> > ssh'd in...
-> 
-> IMHO guestmount and other userspace filesystem implementations should
-> be the default
-> for such mounts.
+>
+> Signed-off-by: Yangtao Li <frank.li@vivo.com>
+> ---
+>  fs/btrfs/volumes.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+>
+> diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
+> index 375d92720e17..347c475028e0 100644
+> --- a/fs/btrfs/volumes.c
+> +++ b/fs/btrfs/volumes.c
+> @@ -3733,7 +3733,7 @@ static int insert_balance_item(struct btrfs_fs_info=
+ *fs_info,
+>         BTRFS_PATH_AUTO_FREE(path);
+>         struct extent_buffer *leaf;
+>         struct btrfs_key key;
+> -       int ret, err;
+> +       int ret;
+>
+>         path =3D btrfs_alloc_path();
+>         if (!path)
+> @@ -3749,8 +3749,11 @@ static int insert_balance_item(struct btrfs_fs_inf=
+o *fs_info,
+>
+>         ret =3D btrfs_insert_empty_item(trans, root, path, &key,
+>                                       sizeof(*item));
+> -       if (ret)
+> -               goto out;
+> +       if (ret) {
+> +               btrfs_abort_transaction(trans, ret);
+> +               btrfs_end_transaction(trans);
 
-Agree.  I don't know if they (udisks upstream) have any good way to
-detect that a userspace filesystem driver is available for a given
-filesystem.  Individual fuse drivers don't seem to have a naming
-convention (fusefat, fuse2fs) though at least on Debian some of them
-seem to end up as /sbin/mount.fuse.$FSTYPE.
+A transaction abort will turn the fs into RO mode, and it's meant to
+be used when we can't proceed with changes to the fs after we did
+partial changes, to avoid leaving things in an inconsistent state.
+Here we don't abort because we haven't done any changes before using
+the transaction handle, so an abort is pointless and will turn the fs
+into RO mode unnecessarily.
 
-guestmount seems to boot the running kernel in qemu and use that?  So I
-guess it's hard for guestmount itself even to tell you what formats it
-supports?  I'm probably just ignorant on that issue.
+Thanks.
 
---D
-
-> //richard
-> 
+> +               return ret;
+> +       }
+>
+>         leaf =3D path->nodes[0];
+>         item =3D btrfs_item_ptr(leaf, path->slots[0], struct btrfs_balanc=
+e_item);
+> @@ -3764,11 +3767,8 @@ static int insert_balance_item(struct btrfs_fs_inf=
+o *fs_info,
+>         btrfs_cpu_balance_args_to_disk(&disk_bargs, &bctl->sys);
+>         btrfs_set_balance_sys(leaf, item, &disk_bargs);
+>         btrfs_set_balance_flags(leaf, item, bctl->flags);
+> -out:
+> -       err =3D btrfs_commit_transaction(trans);
+> -       if (err && !ret)
+> -               ret =3D err;
+> -       return ret;
+> +
+> +       return btrfs_commit_transaction(trans);
+>  }
+>
+>  static int del_balance_item(struct btrfs_fs_info *fs_info)
+> --
+> 2.39.0
+>
+>
