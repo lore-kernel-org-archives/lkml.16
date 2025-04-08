@@ -1,156 +1,83 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D98B6265629;
-	Tue,  8 Apr 2025 09:39:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B060267AF2;
+	Tue,  8 Apr 2025 09:39:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744105186; cv=none; b=dF5Cjo2B54HdyMGSWQaJXMKfpZAC7omcUjhqlxA/ymqkIOCzVdcp4h9gjSHHVdSulH1URDVnOqqfbNAO56sPQ+yDH6HpbZrqKZ6U90XGX687WhryVtvsr78aA49khzuvTB5LC0JR6LezTebXu+lAAETvl7FtaE9fL+hwitf6x7E=
+	t=1744105195; cv=none; b=llkIFgHLgxVXoiXmb5ZER3oYPi6WNKhxmfQrMULguMNxPpyD7ntZSjth6AwrqJ/0o/XVBKUPz0YelSeVni5PQO1kd983pXXAwlR2wCzs5Cl9Y+3mXIDiSdl8b4cFX6PonQUywhmeUW2zPmaoDxp3J6YUY8yVviFM6ytVN/9U/aQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744105186; c=relaxed/simple;
-	bh=bLDDurUkL1v70P2v2SwPIpdQFVc5IT27gFgTvVDyEGI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CoYfsRzLyWAYLLrRWLM2Xk2ktbLd+gwqMw/eOPn+6HHtEdUyiczwGvGGJ7zywxSHnr0+CKN3A2NMvQLjibZ77FdP7w3sFs7WZE8nVhzVeUsvK8oOcQZhEvUCNyLnO828Qh5vurqVAXP7G1YhGT0GjVpp/vXups+7uuTaIVK/RJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HW/yyuVb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744105195; c=relaxed/simple;
+	bh=3gDZsk2A3D/pEYugevyHrBygtLAgaecfyjqDZoJz+ls=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=ohkyI2kLWLajYs2qNhbQ3xKZgLqMfsMyLPaqjI2U7m8C+89fhs7gR3HzQTjNgMoskQqmiSXEo4qiyap/ukKkVzqb6bf+UB0+8k+jJh7LYQGtYS1tQp6BSEysmDwgVi339ZCTk1OCrmRmIwEphAV5WWY+TaA/ZFg2yaO3hs5HhLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j5A1IDII; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HW/yyuVb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A976C4CEE5;
-	Tue,  8 Apr 2025 09:39:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j5A1IDII"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B36CC4CEE8;
+	Tue,  8 Apr 2025 09:39:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744105185;
-	bh=bLDDurUkL1v70P2v2SwPIpdQFVc5IT27gFgTvVDyEGI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HW/yyuVbcmWB9qjOM8QSxuQI8sTWkhCrZWcKpldl4z04l3A7CoezphVb/VwVhSMf8
-	 1xDSqb6Phy7Lm5ANnsu3uq5ip3HnulmP9vA1ash2YLjFNCrHWG7AUQlwOheqzAHYT+
-	 2oII4lXlDNp5Txym6O5xZc4jPKkfPt+w7pgCJdLvGsbYiqaC4/THnK1MmzHBse+pBn
-	 9r90p5LiToTy6N215iH6p+KGkMfuz+JjGwBb+O7z9RyCObPte/r+P4OD/lYgzXciBY
-	 m71dc84+YPxPeKaTtSL/hxoY0+jfHwfcThEj6iEGCoXNAroZ3nioNLx9Vieq1ahF4+
-	 jPEytPsGBWq3Q==
-Message-ID: <981498bb-70d8-4304-9b53-065576ae8dc7@kernel.org>
-Date: Tue, 8 Apr 2025 11:39:40 +0200
+	s=k20201202; t=1744105194;
+	bh=3gDZsk2A3D/pEYugevyHrBygtLAgaecfyjqDZoJz+ls=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=j5A1IDIIFWFx4rOC3LpeaZaioc4nMhF8+bFl07kRiP6CCqTTKHa1YJPC2xFq4lwsF
+	 Dr4NtEgGmcWtgVlQg+KbNKXAJOlbbSAR2FEAiq61TRol93Wk1eIa77PSS2DIABPfOb
+	 A2rQ0ogTUc77v0mCVNurooK7EE0kuotI7daj34wrLy2GqR6J4aoqbUij+RxyRAz8pV
+	 bwZRTZQqVvXF9aWbw3mwCOmiMbnoODuhkcfd9efzulrKh/vf6qNIj0YnFQc+NCxKxn
+	 4D6G9dHTGfjbMojbiOzm39gxmZC5iK8NJHoExd3A7Oo4NY6Rf86WKcBSb1gTostdWW
+	 cY7bIVp72yqLg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 340B638111D4;
+	Tue,  8 Apr 2025 09:40:33 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] dt-bindings: watchdog: Add NXP Software Watchdog
- Timer
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, wim@linux-watchdog.org
-Cc: linux@roeck-us.net, linux-watchdog@vger.kernel.org,
- linux-kernel@vger.kernel.org, S32@nxp.com, ghennadi.procopciuc@nxp.com,
- thomas.fossati@linaro.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, devicetree@vger.kernel.org
-References: <20250407160318.936142-1-daniel.lezcano@linaro.org>
- <20250407160318.936142-2-daniel.lezcano@linaro.org>
- <094855d6-a99b-4ca5-bc8f-ab6faccfd332@kernel.org>
- <1e3d9e34-133d-451c-9ce6-6c974a781305@linaro.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <1e3d9e34-133d-451c-9ce6-6c974a781305@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] sctp: detect and prevent references to a freed transport
+ in sendmsg
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174410523201.1843579.6108769809547984395.git-patchwork-notify@kernel.org>
+Date: Tue, 08 Apr 2025 09:40:32 +0000
+References: <20250404-kasan_slab-use-after-free_read_in_sctp_outq_select_transport__20250404-v1-1-5ce4a0b78ef2@igalia.com>
+In-Reply-To: <20250404-kasan_slab-use-after-free_read_in_sctp_outq_select_transport__20250404-v1-1-5ce4a0b78ef2@igalia.com>
+To: =?utf-8?q?Ricardo_Ca=C3=B1uelo_Navarro_=3Crcn=40igalia=2Ecom=3E?=@aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org
+Cc: marcelo.leitner@gmail.com, lucien.xin@gmail.com, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ revest@google.com, kernel-dev@igalia.com, linux-sctp@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
 
-On 08/04/2025 11:03, Daniel Lezcano wrote:
-> On 08/04/2025 10:21, Krzysztof Kozlowski wrote:
->> On 07/04/2025 18:03, Daniel Lezcano wrote:
->>> +
->>> +allOf:
->>> +  - $ref: watchdog.yaml#
->>> +
->>> +properties:
->>> +  compatible:
->>> +    oneOf:
->>> +      - const: nxp,s32g2-swt
->>> +      - items:
->>> +          - const: nxp,s32g3-swt
->>> +          - const: nxp,s32g2-swt
->>> +
->>> +  reg:
->>> +    maxItems: 1
->>> +
->>> +  clocks:
->>> +    items:
->>> +      - description: Counter clock
->>> +      - description: Module clock
->>> +      - description: Register clock
->>> +    minItems: 1
->>
->> Why clocks are flexible? The SoC does not change between boards. It
->> should be a fixed list - block receives that number of clocks or does
->> not... unless you meant that different instances of the block have
->> different clocks?
-> 
-> The documentation describe the watchdog module with a clock for the 
-> counter, a clock for the register and the last one for the module.
-> 
-> IIUC, these clocks are enabled when the system is powered-on or exits 
-> suspend.
-> 
-> The driver does not have a control on them.
-> 
-> The only usage of the clock is to retrieve the rate of the counter in 
-> order to compute the maximum timeout. So only one is needed.
-> 
-> However Ghennadi would like to describe the register and the module 
-> clocks in case there is SoC variant where it is possible to have control 
-> on them [1]
+Hello:
 
-Different SoC means different compatible, so I don't get why this is
-relevant here. Either these clocks inputs are there in the hardware or not.
+This patch was applied to netdev/net.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
+On Fri, 04 Apr 2025 16:53:21 +0200 you wrote:
+> sctp_sendmsg() re-uses associations and transports when possible by
+> doing a lookup based on the socket endpoint and the message destination
+> address, and then sctp_sendmsg_to_asoc() sets the selected transport in
+> all the message chunks to be sent.
 > 
-> The goal is to give the description the flexibility to describe just one 
-> because the other ones are not needed for this s32g2/3 platform.
+> There's a possible race condition if another thread triggers the removal
+> of that selected transport, for instance, by explicitly unbinding an
+> address with setsockopt(SCTP_SOCKOPT_BINDX_REM), after the chunks have
+> been set up and before the message is sent. This can happen if the send
+> buffer is full, during the period when the sender thread temporarily
+> releases the socket lock in sctp_wait_for_sndbuf().
+> 
+> [...]
 
-But bindings are not meant to be flexible but accurately describe the
-hardware. If hardware always has these clock inputs, then they are
-supposed to be always provided.
+Here is the summary with links:
+  - sctp: detect and prevent references to a freed transport in sendmsg
+    https://git.kernel.org/netdev/net/c/f1a69a940de5
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
-Best regards,
-Krzysztof
