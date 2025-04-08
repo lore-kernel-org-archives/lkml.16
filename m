@@ -1,118 +1,146 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BE8E25F78C;
-	Tue,  8 Apr 2025 00:55:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D7BD25F784;
+	Tue,  8 Apr 2025 00:56:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.166.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744073738; cv=none; b=d4u/Ld/825u/ZP7HCeYAtu9Tx8lpgzuVPTZNf5gWXkqNUfQ+hSZHEtgoKrtQVeJB8JaK9rVd+i3yJdigbQcNkK8JmeNtYB0NP0cI+mZJ5wOHn4YrM0g1uj3EMlsb0oqfQv/buBzUZ6NnROw+sKXhIkZiRorW5rvCzXdIHieMVus=
+	t=1744073785; cv=none; b=EFmy45pzThAzI7cK0CJ6pGOt/uj4LM3s0BHnBcVZE62Vlw0Ebrv3UUeR2D2ZY39D1tbx/Pr0YrAfzni4kIMufnC776ouOxsRMou75aSLS/DvXShnlBasjnrfoKKL3ImjxGXx/vuZDIb+sW9BnoqzU9BaWS/N/ckxpQqXW0n17ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744073738; c=relaxed/simple;
-	bh=Yrn+F4gkavee79k5sj+XAefUc0dwD5+qTayzy9SZ/O8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q6jVmSmr5WSA354DePkUh9xo7XX2qMcG9e6dEWIlHh0EtqoyfzRbl3vk3GepSaZogfKAtF9LkAA0zeQFOxUuMD58ePH/KZbTKiHRTzJbuIkD2ZO+v4UNAMpNdqCuQ9VoBwCmBuzURSDLgIIJCD902UOFakZa46WK1utgVogsmAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CmAA/4Vr; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CmAA/4Vr"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2295d78b433so47249845ad.2;
-        Mon, 07 Apr 2025 17:55:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744073736; x=1744678536; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Yrn+F4gkavee79k5sj+XAefUc0dwD5+qTayzy9SZ/O8=;
-        b=CmAA/4VrYQX0sAu0SOH2NfkBxArNSf6eYGb3JU3m7laIoeTrnSMifx/mFZjKW/g/W8
-         JThWKwD0Npi43OfVi5hYTCFxqcU3qgFIrtsTBEFWGjwtFvVcy9cOuCGrLT2wSlbaNTS5
-         vDi7d8txA1elWNIy8qrjpkFGaAZsugUBCZuv/iHHtB3g5O9CA+1+bywXQFfYZDaO4o3h
-         k5TWuyIdsQDQ2HC3Uw1CtEPuCX6AlK63K5+AKSDTMcGSo+Qxnh1u8Of5yfpCyhgQJyPn
-         bbmyKIfmRvOOxQSXN+qgsIGOiN5LkOzOGgSi7R3NVQqdWNCkoZS2t/GV5jT7ZDWkFfSm
-         /3Vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744073736; x=1744678536;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Yrn+F4gkavee79k5sj+XAefUc0dwD5+qTayzy9SZ/O8=;
-        b=ubcWR/g0eKw2WLzCbOvQdHQ2JhIVuH2tEVIEoql7atAf4IglVM/dRSzJqPrHUw9Ba3
-         DEgJU9zljlIfrY/fDaNlC08WpFgDQ5FhFkuTJyrERKnFsUv9reDhjyaAjwll8+qxp7HA
-         yLNoBRN+Gln7SZcHrO3cP+SnpPe6KzKaPXuGCBJ/JoLD20yREfJUovWKgBiB4l/mPbTr
-         pDZA/1PGlv0V+WkMdnfwXMSsufW/mCG/p8LiU8Uqlase/smaOjsmDAtvaSBB/0cBQ8Iz
-         MBTVBiS/8aUwRA1ZU3/9jLWhMlnql5MlTQiIpoeHGnLFoXxjz7iLaafYrZ4c5Yn+RAzD
-         IXAA==
-X-Forwarded-Encrypted: i=1; AJvYcCUHmlZTX38z2dzSgtiRsX2uc8e6wmtMp7+amCLEKfiAGuTmfoowIEwzwPY0knEP9pKgvj/pprQEVmX2J2qI@vger.kernel.org, AJvYcCW0rL3PEAzthFn37ytn7n5kAB9a6gCtVI8r9bQgoAQvqcGV/+bUlWxIRmlbfbiXxAtIeKMzmSaCi9E=@vger.kernel.org, AJvYcCWvytjvd4wzMr+Xd+4ckli0cVJ2z2crdLlG3nnsr7oDdNP14mQ+VF+EMsU7TIdo9t0G63wKSLVDHyrielRLyuNgc1Af@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8svUpmvLY7zLqim5fnxpC0djMsmbIqRSc/vDZP8x/nlnFSGK0
-	CPXPthACdF+LdSEFreDTh6thaQ6FxmJQCbmCmXYXXBu949iSigZf3XsY2g==
-X-Gm-Gg: ASbGncudjZygh5PoHDa8TQk9RJpcUwGwcIkba5/YMcxVJpF4g6ivaGjoEbRu43y3XPl
-	2/wYf97uPAVCweBNlNDKADb1F1qK388eJePrSs7wPUl5yDI79Qs4S84tUDFO7hX0upFGDeYxf0C
-	7luL0+7WXRFYzBKibrpAwK7Su5XWCMKQEIJb1RUHXpVziPYxrF1y9anjyCs7WY2+E1+R8nm4z0j
-	qItDsf7mQcpoN4+h9viwFTL233NRTDS/rT97B4ucbVkEl74YC6waHLluYel7Cu3vII5snSmdxoF
-	7PKVe30Bc2y06pqeQlvUJEaAYY6iKGQw8r48tHrAo/XC
-X-Google-Smtp-Source: AGHT+IHFNncfVvM01qF9QOuw/9iQjTqaaKeztLYsvBrrjmKV2un7O54E6L8ET8/5h1hTByzWg07nyQ==
-X-Received: by 2002:a17:902:ea0d:b0:223:628c:199 with SMTP id d9443c01a7336-22a8a0b4154mr169169355ad.52.1744073735710;
-        Mon, 07 Apr 2025 17:55:35 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22978776a2fsm87625365ad.253.2025.04.07.17.55.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 17:55:34 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id DD359420A696; Tue, 08 Apr 2025 07:55:32 +0700 (WIB)
-Date: Tue, 8 Apr 2025 07:55:32 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Purva Yeshi <purvayeshi550@gmail.com>, corbet@lwn.net
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] docs: tracing: Refactor index.rst for clarity
-Message-ID: <Z_R0BEVn0eFpmWEA@archie.me>
-References: <20250318113230.24950-1-purvayeshi550@gmail.com>
- <20250318113230.24950-2-purvayeshi550@gmail.com>
- <20250321102507.6f02060d@batman.local.home>
+	s=arc-20240116; t=1744073785; c=relaxed/simple;
+	bh=qmNTvFHPZ33JyeaH3gNkORpdeGjMr/hDa3hDZaRHrcU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qpxrSaOEyN+3NjSA7NrU9hYTq4TIc0RKIuJIqPdf6Fz+NWTU3C0j8uOsw+sWgSllwn380T7BTNLL+y5quhPLTnLfbUdkTe4zTdaVfZSIQyr/4pKnFAa8R9mbpWyfGdCjHPOWJJx0yeMlZiFP6+iRG6XygpLDCGzwzWiZbozqzSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.166.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250810.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5380cg6I015863;
+	Mon, 7 Apr 2025 17:56:13 -0700
+Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 45tyt4avaw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Mon, 07 Apr 2025 17:56:12 -0700 (PDT)
+Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.43; Mon, 7 Apr 2025 17:56:12 -0700
+Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
+ 15.1.2507.43 via Frontend Transport; Mon, 7 Apr 2025 17:56:07 -0700
+From: <jianqi.ren.cn@windriver.com>
+To: <stable@vger.kernel.org>
+CC: <Tim.Huang@amd.com>, <Jesse.Zhang@amd.com>, <patches@lists.linux.dev>,
+        <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
+        <jianqi.ren.cn@windriver.com>, <harry.wentland@amd.com>,
+        <sunpeng.li@amd.com>, <Rodrigo.Siqueira@amd.com>,
+        <alexander.deucher@amd.com>, <christian.koenig@amd.com>,
+        <Xinhui.Pan@amd.com>, <airlied@gmail.com>, <daniel@ffwll.ch>,
+        <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
+        <chiahsuan.chung@amd.com>, <alex.hung@amd.com>,
+        <daniel.wheeler@amd.com>, <hersenxs.wu@amd.com>
+Subject: [PATCH 5.15.y] drm/amd/pm: Fix negative array index read
+Date: Tue, 8 Apr 2025 08:56:06 +0800
+Message-ID: <20250408005606.3361967-1-jianqi.ren.cn@windriver.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ScWWEJjtWDu8/daV"
-Content-Disposition: inline
-In-Reply-To: <20250321102507.6f02060d@batman.local.home>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: 4A0S1jrqQW4UZopi2LADRofgMVa2BW0T
+X-Authority-Analysis: v=2.4 cv=RMSzH5i+ c=1 sm=1 tr=0 ts=67f4742c cx=c_pps a=K4BcnWQioVPsTJd46EJO2w==:117 a=K4BcnWQioVPsTJd46EJO2w==:17 a=XR8D0OoHHMoA:10 a=zd2uoN0lAAAA:8 a=t7CeM3EgAAAA:8 a=6BafUjstUjXQXARlYJgA:9 a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-GUID: 4A0S1jrqQW4UZopi2LADRofgMVa2BW0T
+X-Sensitive_Customer_Information: Yes
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-07_07,2025-04-07_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
+ lowpriorityscore=0 mlxscore=0 malwarescore=0 suspectscore=0
+ mlxlogscore=999 spamscore=0 priorityscore=1501 adultscore=0 clxscore=1011
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.21.0-2502280000
+ definitions=main-2504080005
 
+From: Jesse Zhang <jesse.zhang@amd.com>
 
---ScWWEJjtWDu8/daV
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[ Upstream commit c8c19ebf7c0b202a6a2d37a52ca112432723db5f ]
 
-On Fri, Mar 21, 2025 at 10:25:07AM -0400, Steven Rostedt wrote:
-> Jon,
->=20
-> Feel free to apply these to your tree.
+Avoid using the negative values
+for clk_idex as an index into an array pptable->DpmDescriptor.
 
-Hi Jon,
+V2: fix clk_index return check (Tim Huang)
 
-It seems like this series didn't make it to 6.15 merge window. What about
-applying it on current cycle (for 6.16) instead? Or should I carry and resu=
-bmit
-it?
+Signed-off-by: Jesse Zhang <Jesse.Zhang@amd.com>
+Reviewed-by: Tim Huang <Tim.Huang@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+[Minor conflict resolved due to code context change.]
+Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+---
+Verified the build test
+---
+ .../gpu/drm/amd/pm/swsmu/smu11/navi10_ppt.c   | 21 ++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
-Thanks.
+diff --git a/drivers/gpu/drm/amd/pm/swsmu/smu11/navi10_ppt.c b/drivers/gpu/drm/amd/pm/swsmu/smu11/navi10_ppt.c
+index dfba0bc73207..9f5dcfaebe63 100644
+--- a/drivers/gpu/drm/amd/pm/swsmu/smu11/navi10_ppt.c
++++ b/drivers/gpu/drm/amd/pm/swsmu/smu11/navi10_ppt.c
+@@ -1231,19 +1231,22 @@ static int navi10_get_current_clk_freq_by_table(struct smu_context *smu,
+ 					   value);
+ }
+ 
+-static bool navi10_is_support_fine_grained_dpm(struct smu_context *smu, enum smu_clk_type clk_type)
++static int navi10_is_support_fine_grained_dpm(struct smu_context *smu, enum smu_clk_type clk_type)
+ {
+ 	PPTable_t *pptable = smu->smu_table.driver_pptable;
+ 	DpmDescriptor_t *dpm_desc = NULL;
+-	uint32_t clk_index = 0;
++	int clk_index = 0;
+ 
+ 	clk_index = smu_cmn_to_asic_specific_index(smu,
+ 						   CMN2ASIC_MAPPING_CLK,
+ 						   clk_type);
++	if (clk_index < 0)
++		return clk_index;
++
+ 	dpm_desc = &pptable->DpmDescriptor[clk_index];
+ 
+ 	/* 0 - Fine grained DPM, 1 - Discrete DPM */
+-	return dpm_desc->SnapToDiscrete == 0;
++	return dpm_desc->SnapToDiscrete == 0 ? 1 : 0;
+ }
+ 
+ static inline bool navi10_od_feature_is_supported(struct smu_11_0_overdrive_table *od_table, enum SMU_11_0_ODFEATURE_CAP cap)
+@@ -1299,7 +1302,11 @@ static int navi10_print_clk_levels(struct smu_context *smu,
+ 		if (ret)
+ 			return size;
+ 
+-		if (!navi10_is_support_fine_grained_dpm(smu, clk_type)) {
++		ret = navi10_is_support_fine_grained_dpm(smu, clk_type);
++		if (ret < 0)
++			return ret;
++
++		if (!ret) {
+ 			for (i = 0; i < count; i++) {
+ 				ret = smu_v11_0_get_dpm_freq_by_index(smu, clk_type, i, &value);
+ 				if (ret)
+@@ -1468,7 +1475,11 @@ static int navi10_force_clk_levels(struct smu_context *smu,
+ 	case SMU_UCLK:
+ 	case SMU_FCLK:
+ 		/* There is only 2 levels for fine grained DPM */
+-		if (navi10_is_support_fine_grained_dpm(smu, clk_type)) {
++		ret = navi10_is_support_fine_grained_dpm(smu, clk_type);
++		if (ret < 0)
++			return ret;
++
++		if (ret) {
+ 			soft_max_level = (soft_max_level >= 1 ? 1 : 0);
+ 			soft_min_level = (soft_min_level >= 1 ? 1 : 0);
+ 		}
+-- 
+2.34.1
 
---=20
-An old man doll... just what I always wanted! - Clara
-
---ScWWEJjtWDu8/daV
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZ/R0BAAKCRD2uYlJVVFO
-oyeWAP9Eb3KivZiYcAClWbNsDJU8025YFLY61m0OgcdhU5N+pgEAt8vMq7N4QMKT
-L6I1mn2U1Jjhcplh+29aJaan7QJvMQ4=
-=liO0
------END PGP SIGNATURE-----
-
---ScWWEJjtWDu8/daV--
