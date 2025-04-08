@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A7552641F5
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 07:34:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7267F263F2E
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 07:34:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744097667; cv=none; b=Ex9MIp+ZtVVsswbQ9D3yaSIA8oyX8WbcOn1IqkCZgxrRWUaWedRjHBfxBy387FrrO8kyTx12RIRlvLjZrsbRVQXsYkpVtLM1ZewdhO9akjVQQjAXtRxKxAhzcyOocsfA08bD9myCCIxNsiBaLAamBzJqwmDl5gweNcpT+OD4RDM=
+	t=1744097670; cv=none; b=OeDlIzAK1FBPo7i0Td5pri6nSfjek7UP4tRgqnEpY3Fb+leIO5JbVgtj7gZu3A1Y1iQX5aprnb8zAZVE1RFIJibANqkweGbpAe/TPdb6wgXcrMvOUCRgCNPBHWDHd29ZZEDqAwpv8FJeNhy2ftHdsFhMNVCi8Yz9w7RENzVbxSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744097667; c=relaxed/simple;
-	bh=dWe7Fz+nhJsB3QR1kEnLv2yiss8BTbIes6Bs4jDjbNI=;
+	s=arc-20240116; t=1744097670; c=relaxed/simple;
+	bh=RnnIZ34b3oTsJIkOQPflExxRv0VozyVKDB6J0hBGD/E=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HFsg8GEBfkxTSgbDZPGy66gPVB+XnFMKmcXnNnPioRKKgqSlW/T0tfMo/ZDUl1WIgT1a+EAL061DAylUNGnwl5oAvh/N3KyrEETHzW/+WIDwFOL9hi5nFoW1MG0fkLaflAOnrA6ee9fijVrp2I040LDwLFvUgSumGF/5YbgawSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UoOAfjsd; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=s6wBrtGomczkDkicZdPf7oksfuyIlSdttHDb97nC9zjQDg7orAq5lOBa2UsXCVYQloA83pluZzBTU9m6g1oUCopkmrhroxQ+9RpWF2r4jqPtfWfcShfRHaQ5QRvCll5rByaUiLLWRqKAJmqFuioc1HvpAo6/wEaYuccGCkVbdg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mhh/mKKV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UoOAfjsd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE3D4C4CEEA;
-	Tue,  8 Apr 2025 07:34:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mhh/mKKV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86341C4CEE5;
+	Tue,  8 Apr 2025 07:34:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744097667;
-	bh=dWe7Fz+nhJsB3QR1kEnLv2yiss8BTbIes6Bs4jDjbNI=;
+	s=k20201202; t=1744097669;
+	bh=RnnIZ34b3oTsJIkOQPflExxRv0VozyVKDB6J0hBGD/E=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=UoOAfjsdM2w0CH240aPIYDb3rS5O76eBW44xynngk7QUfgt4oRHDbGiCO3P9Homru
-	 cRV/6z7Nd8oMBgAZ6/7baE6cRCVzbY3OBj5tk2yZXWvFZourDIbQfG1n0d8RC9+1Lk
-	 /TaFNSaT78zp6oB/5SYG2nvF/S0sMP7ZakviAhRwCKfdK72qua2OSC/6ni88LUaUKp
-	 iF47AQV1LecNHc9TfWsrYnhpn107F7WAjGMNl8L17QjF/ek5QHYgOMz5GuZjBqXc4k
-	 VfAf08HrHC+6EDQ7VTlsKnEPoBEYnue40t+p8RmP9ZtfnTKFv+PGY4oqAAXxW+C1Fz
-	 S0+g+sU8jwsXA==
+	b=Mhh/mKKVp0dArmRRWV3G8QETtoGLkQ6q/uxYGj27hdnWhLchZmWJFQwGdJA5F8I/U
+	 yktWCg25dTx6xO13xCVuvgs+2NvlpO5M82RofsA6O9uifM1IV9hqplHkhm15qR1FCT
+	 dz9KZCBm7J5jwQHf7OLIAwZCAVgAOz3QgcwVBYXUsX3LX8W3Dr6hueXf1SjfDOMDON
+	 Baf15i6xnx4kmYpZL+pjvNzS8pR9jarNwNVl3FRPwOLzkczau+pQyQPFLXDC33Ue2P
+	 qUXSWNXyM3ElQmU7qrD5wCOO5l3j+aP0htsmp8hiLWeQSpg7GFtm2iREWOpTsm+l4r
+	 fTEKZt2i+gXLA==
 From: Maxime Ripard <mripard@kernel.org>
-Date: Tue, 08 Apr 2025 09:34:08 +0200
-Subject: [PATCH 2/7] drm/tests: modeset: Fix drm_display_mode memory leak
+Date: Tue, 08 Apr 2025 09:34:09 +0200
+Subject: [PATCH 3/7] drm/tests: modeset: Fix drm_display_mode memory leak
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,7 +37,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250408-drm-kunit-drm-display-mode-memleak-v1-2-996305a2e75a@kernel.org>
+Message-Id: <20250408-drm-kunit-drm-display-mode-memleak-v1-3-996305a2e75a@kernel.org>
 References: <20250408-drm-kunit-drm-display-mode-memleak-v1-0-996305a2e75a@kernel.org>
 In-Reply-To: <20250408-drm-kunit-drm-display-mode-memleak-v1-0-996305a2e75a@kernel.org>
 To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
@@ -46,46 +46,60 @@ To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
 Cc: Philipp Stanner <phasta@mailbox.org>, dri-devel@lists.freedesktop.org, 
  linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1372; i=mripard@kernel.org;
- h=from:subject:message-id; bh=dWe7Fz+nhJsB3QR1kEnLv2yiss8BTbIes6Bs4jDjbNI=;
- b=owGbwMvMwCX2+D1vfrpE4FHG02pJDOlfLpZfe8822fVS1VGWR4x5pg73OHoT1N+fM5teq3A+/
- ubsznleHaUsDGJcDLJiiiwxwuZL4k7Net3JxjcPZg4rE8gQBi5OAZhI1TuGf9qh/94UTIxT3VTt
- 7viVZ31MZEHu9dmrPPtSv5TvS+GcLsrIcNuPnWVZwNr4BoFDR78mzWXO/bC33N131pmC/TNcZmj
- s4QIA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2082; i=mripard@kernel.org;
+ h=from:subject:message-id; bh=RnnIZ34b3oTsJIkOQPflExxRv0VozyVKDB6J0hBGD/E=;
+ b=owGbwMvMwCX2+D1vfrpE4FHG02pJDOlfLpa3itVESvOsmrP0+TvuL15qZ2aenKzVuo1ZLr49+
+ vpTu5VWHaUsDGJcDLJiiiwxwuZL4k7Net3JxjcPZg4rE8gQBi5OAZhItBDDP/vl52IFt/5K1ZSu
+ U9/5w+Oe+pGcd7k2bl+y7c+HZUUIujEy/Hj8Tuv4nx0z34jzyM696Xj3spLxR4PLy+bXZ/35lbz
+ gMBcA
 X-Developer-Key: i=mripard@kernel.org; a=openpgp;
  fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
 
-drm_mode_find_dmt() returns a drm_display_mode that needs to be
-destroyed later one. The drm_test_pick_cmdline_res_1920_1080_60() test
+drm_analog_tv_mode() and its variants return a drm_display_mode that
+needs to be destroyed later one. The drm_test_pick_cmdline_named() test
 never does however, which leads to a memory leak.
 
 Let's make sure it's freed.
 
 Closes: https://lore.kernel.org/dri-devel/a7655158a6367ac46194d57f4b7433ef0772a73e.camel@mailbox.org/
-Fixes: 8fc0380f6ba7 ("drm/client: Add some tests for drm_connector_pick_cmdline_mode()")
+Fixes: fedcaf726f54 ("drm/modes: Properly generate a drm_display_mode from a named mode")
 Signed-off-by: Maxime Ripard <mripard@kernel.org>
 ---
- drivers/gpu/drm/tests/drm_client_modeset_test.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/tests/drm_client_modeset_test.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/tests/drm_client_modeset_test.c b/drivers/gpu/drm/tests/drm_client_modeset_test.c
-index 7516f6cb36e4e3a1ed3a655de6f6a4479a0efade..3e9518d7b8b7eb92f1be3ce376d850cbab638d10 100644
+index 3e9518d7b8b7eb92f1be3ce376d850cbab638d10..b2fdb1a774fe69c4e14b718324d7380f900bd548 100644
 --- a/drivers/gpu/drm/tests/drm_client_modeset_test.c
 +++ b/drivers/gpu/drm/tests/drm_client_modeset_test.c
-@@ -93,10 +93,13 @@ static void drm_test_pick_cmdline_res_1920_1080_60(struct kunit *test)
+@@ -130,11 +130,12 @@ static void drm_test_pick_cmdline_named(struct kunit *test)
+ 	const struct drm_connector_pick_cmdline_mode_test *params = test->param_value;
+ 	struct drm_client_modeset_test_priv *priv = test->priv;
+ 	struct drm_device *drm = priv->drm;
+ 	struct drm_connector *connector = &priv->connector;
+ 	struct drm_cmdline_mode *cmdline_mode = &connector->cmdline_mode;
+-	const struct drm_display_mode *expected_mode, *mode;
++	const struct drm_display_mode *mode;
++	struct drm_display_mode *expected_mode;
+ 	const char *cmdline = params->cmdline;
  	int ret;
  
- 	expected_mode = drm_mode_find_dmt(priv->drm, 1920, 1080, 60, false);
+ 	KUNIT_ASSERT_TRUE(test,
+ 			  drm_mode_parse_command_line_for_connector(cmdline,
+@@ -150,10 +151,13 @@ static void drm_test_pick_cmdline_named(struct kunit *test)
+ 	KUNIT_ASSERT_NOT_NULL(test, mode);
+ 
+ 	expected_mode = params->func(drm);
  	KUNIT_ASSERT_NOT_NULL(test, expected_mode);
  
 +	ret = drm_kunit_add_mode_destroy_action(test, expected_mode);
 +	KUNIT_ASSERT_EQ(test, ret, 0);
 +
- 	KUNIT_ASSERT_TRUE(test,
- 			  drm_mode_parse_command_line_for_connector(cmdline,
- 								    connector,
- 								    cmdline_mode));
+ 	KUNIT_EXPECT_TRUE(test, drm_mode_equal(expected_mode, mode));
+ }
  
+ static const
+ struct drm_connector_pick_cmdline_mode_test drm_connector_pick_cmdline_mode_tests[] = {
 
 -- 
 2.49.0
