@@ -1,348 +1,128 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8B31BCA07
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 13:57:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E45A1ADC83;
+	Tue,  8 Apr 2025 13:58:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744120647; cv=none; b=J5Cif1cF+fGzEtyK/FMOq2IYQpa/yi0dwVAHGP8czRoy+BijeKzsI5EukuTpNpIi8rRZK94CVP87AcqJT0Fb+rS/aEjTDKH6l/4kkqx9wSU9fnG+zr5uIe3RuOVNCa622a2qvuUBUk9e3OZ/81+1tf87i+wwnepBi94xDMx7Yks=
+	t=1744120740; cv=none; b=azYps+gM/nWtvgFM/zViJaXbT8ZP3EOQ7yTItTq/nPc0/gfkkm+qJB2Z3uOVYQoG1wkZgUTBqO6gJQgusl/qLQfaHTsBjsssyKfltLF70a6uvJtoZ1IlSQ1Q7gn/ANmGTYBtuGi5jAZmiBJp2T42unjxcBJV21a5xUfxa8J4KBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744120647; c=relaxed/simple;
-	bh=MnIylkOCyO7VgIlJ9Yt/QeaX07sdPWPl15WLwsIwM1Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NODuSp8W5fU6b6CLVlxAxOjuw7s/QzuMOp221raO3Mqjop/k1+JSmeb63/V1jx+yha6AX9ReQs0fPti9e00kxFmXmANzsjGm2FovlCdg5ldNDbWTfafy0PrY+turzuba7d6R1TMlfOvQmU4FDuNL4Lo6vzI/AmMHte6K4RXW5iM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=SqYZq+dZ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=VP6rSTAk; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=SqYZq+dZ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=VP6rSTAk; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1744120740; c=relaxed/simple;
+	bh=nqRV9e4azt4cOTUpqzUrl9g3dIFNhs5erfq8eLDXEm0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Coq9TYCrYRG9tq3JJ/1mQWUw/iDxE5Qc/CGjovPllVK+JhzgOLGpvydwEVZA3Q/PERGgRfpGN/KM/DEJIvHEgmkahb38wmA/4dCyHt2OIWxArQISUw3HZz2CbkQ8RKDF5y6SAnUrwYxyjG4ZLB6P+zdLM1h1KbsWBEI2JPdzKxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lSpp0VBn; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="SqYZq+dZ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="VP6rSTAk";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="SqYZq+dZ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="VP6rSTAk"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 6E5241F388;
-	Tue,  8 Apr 2025 13:57:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744120643; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=kunqwfddltftsnmUGSlI33X8P64ad4/J6Vw9Ian+Eo0=;
-	b=SqYZq+dZ8ouwZX0Dr94LxcGgWkRJb+48XdmwF6KR5SnDhZPsaop01qTbgtZgqfN1haFJiL
-	9ABr2APArJ1O/ukOAWSUPAFm/1HacrltJvB+A6gkQD12cVxD1R6N9Y9pmpNRHZymKZoPhm
-	/a2g0QS7up8kZRpl139e3zNm2EJ+/Uc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744120643;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=kunqwfddltftsnmUGSlI33X8P64ad4/J6Vw9Ian+Eo0=;
-	b=VP6rSTAknTqlAyprqO2Jze+7x9fa+q1yhTNwagZpv+wRYBQyMNYaPaimIJZHYCKLu9pDSZ
-	/ZYSvH0kloivdgDw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744120643; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=kunqwfddltftsnmUGSlI33X8P64ad4/J6Vw9Ian+Eo0=;
-	b=SqYZq+dZ8ouwZX0Dr94LxcGgWkRJb+48XdmwF6KR5SnDhZPsaop01qTbgtZgqfN1haFJiL
-	9ABr2APArJ1O/ukOAWSUPAFm/1HacrltJvB+A6gkQD12cVxD1R6N9Y9pmpNRHZymKZoPhm
-	/a2g0QS7up8kZRpl139e3zNm2EJ+/Uc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744120643;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=kunqwfddltftsnmUGSlI33X8P64ad4/J6Vw9Ian+Eo0=;
-	b=VP6rSTAknTqlAyprqO2Jze+7x9fa+q1yhTNwagZpv+wRYBQyMNYaPaimIJZHYCKLu9pDSZ
-	/ZYSvH0kloivdgDw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1475213A1E;
-	Tue,  8 Apr 2025 13:57:23 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id fcXMA0Mr9WdbPAAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Tue, 08 Apr 2025 13:57:23 +0000
-Message-ID: <05fa4ac7-db09-401d-8680-0d71112d2239@suse.de>
-Date: Tue, 8 Apr 2025 15:57:22 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lSpp0VBn"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-301a6347494so882799a91.3;
+        Tue, 08 Apr 2025 06:58:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744120737; x=1744725537; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mqozlFOZs3I+yiO6Du6yEZKYJaGOQca6xCGdVlT6bD4=;
+        b=lSpp0VBn3vwEK2xh7KxPtx8cywWaR/LjANpXXpOIKpErLlFG92RJwZ5HFZp0X1/wNV
+         6SktxOTIhO6rWHEui+/VAaDfBfa7r2+OEsvPf8l95qbyLlpegGHj2ywaO4zWT2d66P5H
+         Qxbgu/bggr3oeTjUGY5gMK7shL4WLtf8jnq09syR0ldwK42I0n8N6hrE4Yz0Dyrm0n+6
+         TBC8iOpkUfOoBPvqM6p5bKkECvP3BvLtMBz5mMMnoQF+VoTtyZoMyvpCcrDtwnho8YAV
+         hppmL+z/wbha5Q+5qR/egfQnvAfIOLp7rEkORPXqSHnMduXdsSoJ6ta1LUCqxT3QSzI/
+         frsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744120737; x=1744725537;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mqozlFOZs3I+yiO6Du6yEZKYJaGOQca6xCGdVlT6bD4=;
+        b=eNPV3VAiIoNLGdD21hFLdH6JOKqlZe3gM0dBjHqFK/v+BERI2XJHxezYJZf6OULxRd
+         PRG9aWVo9+tMLY5PixlZNHjYWLSIuaxxA5UqcINuT/RrAmVQMRclF8GOHSP2LR+G1/Y/
+         hU34LDMkLrLHA3cvopJfmDbCZojjHNALoyO+hjr4UglHHHRMoa+9gx7j0rR/cE+Fcd5U
+         H6/opz4zTi1lpuf6pn4gzc8AeqdCiuVOmb5nLcCC6xhbaoe9N9YDOb030GwLaptSFrc4
+         UZA86Qws8Y59om+z5MaJoGfLYbrgJEqH/5/RfSXs+45W2fbXgOOk6y+IlInVyhkF8+tJ
+         dwBA==
+X-Forwarded-Encrypted: i=1; AJvYcCWB3/44hEtAD3z0B/9pa7dupTEBXPBWekOt5dAiOqKK8gWTDdwbemrotbIr3nsyGjq9WPjAS56lGqQrcVkOSOU=@vger.kernel.org, AJvYcCWDJvdfRd1Vhn90wGVZwCfAh0BqVOBfL2Lurb75MJtPcpD3KJr9raNZEOQS1VFzCRtKdA/u3hRlKrz0V20=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfkOSZOa9VNlNFmLZF7It4uMxs8iWXHVwndY7raYbjL+HmFyJB
+	Xq503FO+pare5mLDJUt39wN0XhVpJDpFwic0tFzw+7G907vY2IYJVj3y0Uj24FIAD3UZEyZArKW
+	F3rR52hCaf3rNWEmlI5iOjXQSJQk=
+X-Gm-Gg: ASbGnctta+BQ03YeBElOpcuC0Lc9HpgE2DvyjgGgVD0QClMg3XMcCEox8bwQcmFxjrq
+	y3luwoSwLOVDUHOX4MyeK48d61D1QY9CNDkrzAS8NS/lHl9sEeiQOokjKgKySyXF6Bd8OdxNGOI
+	mJc0XTh+UjUYgYLKHU0rPDbsZ8Gg==
+X-Google-Smtp-Source: AGHT+IHu9TJ9RuIlAMlfku6Ehl7CySmwT8+ED6PkGD1kOiaBXB834aPFTd0njc8rc6pp1gnWl3kJtBDGmwApo9Smh3E=
+X-Received: by 2002:a17:90b:1d8b:b0:2ee:acea:9ec4 with SMTP id
+ 98e67ed59e1d1-306a48ff28amr8367635a91.3.1744120737152; Tue, 08 Apr 2025
+ 06:58:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/3] drm/st7571-i2c: add support for Sitronix ST7571
- LCD controller
-To: Marcus Folkesson <marcus.folkesson@gmail.com>,
- Javier Martinez Canillas <javierm@redhat.com>
-Cc: David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Thomas Zimmermann <tzimmrmann@suse.de>
-References: <20250408-st7571-v3-0-200693efec57@gmail.com>
- <20250408-st7571-v3-2-200693efec57@gmail.com>
- <87cydn9bkx.fsf@minerva.mail-host-address-is-not-set>
- <Z_Uin2dvmbantQU4@gmail.com>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <Z_Uin2dvmbantQU4@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Score: -2.80
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TAGGED_RCPT(0.00)[dt];
-	FREEMAIL_TO(0.00)[gmail.com,redhat.com];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com,ffwll.ch,linux.intel.com,kernel.org,lists.freedesktop.org,vger.kernel.org,suse.de];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
+References: <20250408-box_trait_objs-v1-1-58d8e78b0fb2@nvidia.com>
+ <D916LG7Z9Q31.5RVNMYM38E2D@proton.me> <CANiq72k9Lo-M5v338iWWSiwrnU+JwP+aEZeLiR291xc2c+ESOg@mail.gmail.com>
+ <D91ACTUAWQTF.2AZ98BUA5ZKJ6@nvidia.com>
+In-Reply-To: <D91ACTUAWQTF.2AZ98BUA5ZKJ6@nvidia.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 8 Apr 2025 15:58:44 +0200
+X-Gm-Features: ATxdqUGHIjHF3EckxIhFQF13LOWJp6gwb6VlJzlmImJ3vMLsWjYcukaJlL980R4
+Message-ID: <CANiq72=f+0KBT3iOQnWyJ_Va==j5iEYpNE7WLU=0aALbQ8-beg@mail.gmail.com>
+Subject: Re: [PATCH] rust: alloc: allow coercion from `Box<T>` to `Box<dyn U>`
+ if T implements U
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Benno Lossin <benno.lossin@proton.me>, Danilo Krummrich <dakr@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi
+On Tue, Apr 8, 2025 at 3:19=E2=80=AFPM Alexandre Courbot <acourbot@nvidia.c=
+om> wrote:
+>
+> Apologies for that, I had no idea how to build using a specific
+> toolchain and did the wrong thing, which is sending without proper
+> testing.
 
-Am 08.04.25 um 15:20 schrieb Marcus Folkesson:
-[...]
->>
->>> +static int st7571_set_pixel_format(struct st7571_device *st7571,
->>> +				   u32 pixel_format)
->>> +{
->>> +	switch (pixel_format) {
->>> +	case DRM_FORMAT_C1:
->>> +		return st7571_set_color_mode(st7571, ST7571_COLOR_MODE_BLACKWHITE);
->>> +	case DRM_FORMAT_C2:
->>> +		return st7571_set_color_mode(st7571, ST7571_COLOR_MODE_GRAY);
->>> +	default:
->>> +		return -EINVAL;
->>> +	}
->> These should be DRM_FORMAT_R1 and DRM_FORMAT_R2 and not C{1,2}. The former
->> is for displays have a single color (i.e: grey) while the latter is when a
->> pixel can have different color, whose values are defined by a CLUT table.
->>
-> I see.
-> Does fbdev only works with CLUT formats? I get this error when I switch
-> to DRM_FORMAT_R{1,2}:
->
-> [drm] Initialized st7571 1.0.0 for 0-003f on minor 0
-> st7571 0-003f: [drm] format C1   little-endian (0x20203143) not supported
-> st7571 0-003f: [drm] No compatible format found
-> st7571 0-003f: [drm] *ERROR* fbdev: Failed to setup emulation (ret=-22)
+No worries at all! It is completely normal :)
 
-For testing purposes, you can add the _R formats to the switch case at
+> I had some trouble finding how to 1) find out the minimum supported Rust
+> version, and 2) how to build using a specific toolchain.
 
-https://elixir.bootlin.com/linux/v6.13.7/source/drivers/gpu/drm/drm_fb_helper.c#L1246
+For 1), the minimum versions for tools the Linux kernel uses is documented =
+at:
 
-and see how it goes.
+    https://docs.kernel.org/process/changes.html#current-minimal-requiremen=
+ts
 
-Best regards
-Thomas
+`min-tool-version.sh` is also fine, of course.
 
->
->
->> ...
->>
->>> +
->>> +static const uint32_t st7571_primary_plane_formats[] = {
->>> +	DRM_FORMAT_C1,
->>> +	DRM_FORMAT_C2,
->>> +};
->>> +
->> I would add a DRM_FORMAT_XRGB8888 format. This will allow your display to
->> be compatible with any user-space. Your st7571_fb_blit_rect() can then do
->> a pixel format conversion from XRGB8888 to the native pixel format.
-> This were discussed in v2, but there were limitations in the helper
-> functions that we currently have.
->
-> I will look into how this could be implemented in a generic way, but maybe that is
-> something for a follow up patch?
->
->
-> [...]
->>> +
->>> +static const struct drm_plane_helper_funcs st7571_primary_plane_helper_funcs = {
->>> +	DRM_GEM_SHADOW_PLANE_HELPER_FUNCS,
->>> +	.atomic_check = st7571_primary_plane_helper_atomic_check,
->>> +	.atomic_update = st7571_primary_plane_helper_atomic_update,
->>> +};
->> Maybe you want an .atomic_disable callback that clears your screen ?
-> Good point, yes, I will add that.
->
->>
->>> +
->>> +/*
->>> + * CRTC
->>> + */
->>> +
->>> +static const struct drm_crtc_helper_funcs st7571_crtc_helper_funcs = {
->>> +	.atomic_check = drm_crtc_helper_atomic_check,
->> I think you could have an .mode_valid callback that just checks the fixed mode.
-> Got it.
->
->>> +/*
->>> + * Encoder
->>> + */
->>> +
->>> +static const struct drm_encoder_funcs st7571_encoder_funcs = {
->>> +	.destroy = drm_encoder_cleanup,
->>> +};
->> I recommend to have an encoder .atomic_{en,dis}able callbacks to init and turn
->> off your display respectively. That way, the driver can call st7571_lcd_init()
->> only when the display is going to be used instead of at probe time.
-> I will look into this as well.
->
->> ...
->>
->>> +static enum drm_mode_status st7571_mode_config_mode_valid(struct drm_device *dev,
->>> +						       const struct drm_display_mode *mode)
->>> +{
->>> +	struct st7571_device *st7571 = drm_to_st7571(dev);
->>> +
->>> +	return drm_crtc_helper_mode_valid_fixed(&st7571->crtc, mode, &st7571->mode);
->>> +}
->> The fact that you are calling a drm_crtc_helper here is an indication that probably
->> this should be done in a struct drm_crtc_helper_funcs .mode_valid callback instead,
->> as mentioned above.
-> I will move it to drm_crtc_helper_funcs.
->
->>> +
->>> +static const struct drm_mode_config_funcs st7571_mode_config_funcs = {
->>> +	.fb_create = drm_gem_fb_create_with_dirty,
->>> +	.mode_valid = st7571_mode_config_mode_valid,
->> And that way you could just drop this handler.
-> Yep, thanks.
->
->>> +	.atomic_check = drm_atomic_helper_check,
->>> +	.atomic_commit = drm_atomic_helper_commit,
->>> +};
->>> +
->> ...
->>
->>> +static int st7571_probe(struct i2c_client *client)
->>> +{
->>> +	struct st7571_device *st7571;
->>> +	struct drm_device *dev;
->>> +	int ret;
->>> +
->>> +	st7571 = devm_drm_dev_alloc(&client->dev, &st7571_driver,
->>> +				    struct st7571_device, dev);
->>> +	if (IS_ERR(st7571))
->>> +		return PTR_ERR(st7571);
->>> +
->>> +	dev = &st7571->dev;
->>> +	st7571->client = client;
->>> +	i2c_set_clientdata(client, st7571);
->>> +
->>> +	ret = st7571_parse_dt(st7571);
->>> +	if (ret)
->>> +		return ret;
->>> +
->>> +	st7571->mode = st7571_mode(st7571);
->>> +
->>> +	/*
->>> +	 * The chip nacks some messages but still works as expected.
->>> +	 * If the adapter does not support protocol mangling do
->>> +	 * not set the I2C_M_IGNORE_NAK flag at the expense * of possible
->>> +	 * cruft in the logs.
->>> +	 */
->>> +	if (i2c_check_functionality(client->adapter, I2C_FUNC_PROTOCOL_MANGLING))
->>> +		st7571->ignore_nak = true;
->>> +
->>> +	st7571->regmap = devm_regmap_init(&client->dev, &st7571_regmap_bus,
->>> +					   client, &st7571_regmap_config);
->>> +	if (IS_ERR(st7571->regmap)) {
->>> +		dev_err(&client->dev, "Failed to initialize regmap\n");
->> If you use dev_err_probe(), you can give some indication to users about
->> what failed. It prints messages in the /sys/kernel/debug/devices_deferred
->> debugfs entry.
-> Got it, thanks.
->
->>> +
->>> +static void st7571_remove(struct i2c_client *client)
->>> +{
->>> +	struct st7571_device *st7571 = i2c_get_clientdata(client);
->>> +
->>> +	drm_dev_unplug(&st7571->dev);
->> I think you are missing a drm_atomic_helper_shutdown() here.
-> This is a change for v3. As the device has been unplugged already, it
-> won't do anything, so I removed it.
->
-> Isn't it right to do so?
->
->
->> And also a struct i2c_driver .shutdown callback to call to
->> drm_atomic_helper_shutdown() as well.
->>
->> -- 
->> Best regards,
->>
->> Javier Martinez Canillas
->> Core Platforms
->> Red Hat
->>
-> Best regards,
-> Marcus Folkesson
+For 2), similarly, it works like for other tools: either you override
+your binary in the `$PATH` (that is easy with Rust with the command
+you mention or simply with `rustup default X`), or you provide other
+binaries via e.g. `make RUSTC=3D...` like you would do with `make
+CC=3D...`.
 
--- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
+> I can send a patch against the Coding Guidelines adding a section to
+> encourage testing against the minimum version and explain how to force a
+> specific Rust version if you can confirm this would be helpful (and that
+> min-tool-version.sh is the correct way to check the minimum supported
+> Rust version).
 
+So that sort of thing is supposed to be documented in the "Submit
+Checklist Addendum" section of the "Maintainer Entry Profile" document
+(`P:` field in `MAINTAINERS`) of a given subsystem, and in particular
+for Rust is at:
+
+    https://rust-for-linux.com/contributing#submit-checklist-addendum
+
+I agree that linking from the Coding Guidelines or perhaps the root of
+the Rust docs would probably help others to find it, since different
+people go to different places when starting, so please feel free to
+send a patch!
+
+Cheers,
+Miguel
