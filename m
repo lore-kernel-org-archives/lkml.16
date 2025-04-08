@@ -1,49 +1,45 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD453217F54
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 14:44:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B0A1152532;
+	Tue,  8 Apr 2025 14:45:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744123496; cv=none; b=UcCxUyjAvrFuPHJ7rsbdpacxEHGDj2fa/NfVmO0wEMmave2AGaR2XlmAdBnXx1VRr3+vEEmpUEaMYFXD91lJBZ2e0w9NckvrAZaqxTjqOQCaJiqxBTUyMqk2PcoA/yDpKdO9Yl49d5IG/EEtGoJ3vjFxpa2qNtN/lP+0i529gq4=
+	t=1744123536; cv=none; b=hw/s/MHAhHuJzlw4ObcxzIUP1RrCd9getMXDIVJd0GsVWMrMMHMXomxCJqdHYmCXaM6SrPfGBtkzzDcEi8UxNxONMaUwUocln7celNDEBignsY6j6rJX3YzsQIBfx+2NXtshw3wmcAp9CYvcVzpQbBl3ybymoNnTsQLAxifFoF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744123496; c=relaxed/simple;
-	bh=qKfLUJOVmjIhLZ5rBf6uzzEt80+a0moD3VpVZ5BMQNE=;
+	s=arc-20240116; t=1744123536; c=relaxed/simple;
+	bh=irNlBo1IryRAe63MAHnAMbf6FqWMhnjsTarLwK/Bi/I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WBjyab319SwvsR7eYqkkp7h++YDiP5lFEi+fB6aDSFwFxA13hLsPkvtyVkROvLdq2hoMdAfUpCzkPMZrDOjhLn75OCzvvcd8at64ES74KUP75jHhkMhatXDBBVUHjg0kC0PsSSE2aYH9OeHF7NNLZBYSNuHkIPRMG10Owm1cH8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: D44sYblnRa+t9WOKxjchXQ==
-X-CSE-MsgGUID: vHHPhFLjQzaUhGWHNX6ukw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="68035629"
-X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
-   d="scan'208";a="68035629"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 07:44:54 -0700
-X-CSE-ConnectionGUID: GWlHOfUWTo6sn7jOkSFpgw==
-X-CSE-MsgGUID: MZP0rQ4JTeON+y0zx0hDVg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
-   d="scan'208";a="129139183"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 07:44:52 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy@kernel.org>)
-	id 1u2AC1-0000000AQry-2MQZ;
-	Tue, 08 Apr 2025 17:44:49 +0300
-Date: Tue, 8 Apr 2025 17:44:49 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
-Cc: outreachy@lists.linux.dev, julia.lawall@inria.fr,
-	gregkh@linuxfoundation.org, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org, david.laight.linux@gmail.com,
-	dan.carpenter@linaro.org
-Subject: Re: [PATCH v7 1/2] staging: rtl8723bs: Add spaces and line breaks to
- improve readability
-Message-ID: <Z_U2YXpteKmxXriG@smile.fi.intel.com>
-References: <cover.1744117091.git.abrahamadekunle50@gmail.com>
- <8e582c7166200e618ff56ec10ed16b4a4e73eece.1744117091.git.abrahamadekunle50@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=CNynEtlOtHNz9hh5ZT4NlaJy6O4rmLWG1SMw7ZajXuHtMVamKpDsqUTaUSaVQ1hwyDpCZ/Rt5denQG+lk156B1Dx5OoqA6NqZ7l14CRjXq5XCwW+SU7xJUm9hlPGKLmSwKtqHlgdMg+lGMeVJ2oSv+KGj54m+75411QegPOO1PA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=eU9Evarw; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="eU9Evarw"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 109EC44341;
+	Tue,  8 Apr 2025 14:45:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744123532;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=U7VTXtzY8zJJywqc76L9MeA0ZKx5Ng26dSN8EWcxsZU=;
+	b=eU9EvarwQjr3999mkmhDsMhEeE2HwnCjWKg3d5E/JQdFwM+TznkG6xUDJCesMr0S+XwN0s
+	GkkXlVzZjzE+yqVTTv3pEJz1msyLzBUrtgxbzQd8D8B2f/N3k8XlWy3RdHewjIkU6Tov4V
+	Ly9JIHoWXgdV6xWjx5tcHdXEdolSMGw/sCqkAGgXT/0tYLlNzj8UClyzaxhvYqCGPVnlzk
+	A9lXzsO8hZWONu+lGZVFA+n91Mfacs0WoHcvKbY0cuxfjlbjMICiIpETeoukzP2qnP8BMG
+	JRZko8li35U2T8TKPHjXwVel5MYRXjapL7bfLeXXWHf/u1aoEWdMYQiKCD8ytQ==
+Date: Tue, 8 Apr 2025 16:45:31 +0200
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Ard Biesheuvel <ardb@kernel.org>, linux-rtc@vger.kernel.org,
+	linux-efi@vger.kernel.org
+Subject: Re: (subset) [PATCH v2 4/8] rtc: efi: Transition to the faux device
+ interface
+Message-ID: <174412352089.3870554.10940173443800637826.b4-ty@bootlin.com>
+References: <20250318-plat2faux_dev-v2-0-e6cc73f78478@arm.com>
+ <20250318-plat2faux_dev-v2-4-e6cc73f78478@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,43 +48,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8e582c7166200e618ff56ec10ed16b4a4e73eece.1744117091.git.abrahamadekunle50@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20250318-plat2faux_dev-v2-4-e6cc73f78478@arm.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdeffeeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeetlhgvgigrnhgurhgvuceuvghllhhonhhiuceorghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepieejfefhffekjeeuheevueevjedvleevjeetudffheeutdffudefjeduffeuvddtnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegrugdtfeemgehflegtmeeffeejfhemfheffegunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegrugdtfeemgehflegtmeeffeejfhemfheffegupdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeipdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhuuggvvghprdhhohhllhgrsegrr
+ hhmrdgtohhmpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprghruggssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhrthgtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqvghfihesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: alexandre.belloni@bootlin.com
 
-On Tue, Apr 08, 2025 at 01:31:41PM +0000, Abraham Samuel Adekunle wrote:
-> The code contains no spaces around binary operators with long lines
-> which reduces readability thereby not adhering to Linux kernel coding
-> style.
+On Tue, 18 Mar 2025 17:01:42 +0000, Sudeep Holla wrote:
+> The EFI RTC driver does not require the creation of a platform device.
+> Originally, this approach was chosen for simplicity when the driver was
+> first implemented.
 > 
-> Add white spaces around the binary operators and use line breaks to
-> increase readability and ensure adherence to Linux kernel coding
-> styles.
+> With the introduction of the lightweight faux device interface, we now
+> have a more appropriate alternative. Migrate the driver to utilize the
+> faux bus, given that the platform device it previously created was not
+> a real one anyway. This will simplify the code, reducing its footprint
+> while maintaining functionality.
+> 
+> [...]
 
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
-See one nit-pick below.
+Applied, thanks!
 
-...
+[4/8] rtc: efi: Transition to the faux device interface
+      https://git.kernel.org/abelloni/c/89a378d01e7e
 
->  					} else if (SN_EQUAL(pattrib->seqnum, tx_seq)) {
-> -						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq+1)&0xfff;
-> +						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] =
-> +							(tx_seq + 1) & 0xfff;
->  
->  						pattrib->ampdu_en = true;/* AGG EN */
->  					} else {
-> -						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (pattrib->seqnum+1)&0xfff;
-> +						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] =
-> +							(pattrib->seqnum + 1) & 0xfff;
-
-Probably it deserves a blank line here as in the above case.
-But it was in the original like this, so at least it not worse
-than that.
-
->  						pattrib->ampdu_en = true;/* AGG EN */
->  					}
+Best regards,
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
