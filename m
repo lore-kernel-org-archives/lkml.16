@@ -1,143 +1,156 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6D9515A868;
-	Tue,  8 Apr 2025 13:49:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 477AD175D50;
+	Tue,  8 Apr 2025 13:49:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744120161; cv=none; b=I+7Z72Z7H+/Eh9CAdxHM8Tsf9GRBByipF3V92vV5Es7uwKd3fUAbKglQ/yeipx2fwXHEAMPz1qz2hqKb667PV/E29ciEfZ2KrctNRb0kBbyNj7XNVGF7ucYBhLfkCFmqkBN/SK/IgXuca5r8H9pGWqzVlMTYRSajjg6caFw+j9A=
+	t=1744120174; cv=none; b=BjRk8fgQSYaKEkLS5gxh0gE2+H+YNUyqm2zxcXGK2P5ERFx1OjuACqIE/cGgP7Wlo1qI/tFOVEkCnDB4Wuj7hjwY5UIgG5fVO5al9qiT7wbbIqoMveBj/Z1IZRBY7xBxbwT+wT98fx3+i0+0ZtzmsVUreuyUEhYKJRvqJKVfFRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744120161; c=relaxed/simple;
-	bh=yB/ojpOd7H6JAKFutmRFiJFqkuv2+SiCCcS3UK2wzP4=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=VtyDSXEuXPw/8l7xHZR1m6LpPhV5Ku+lP8kXlFd0Pyivja3WMk6Ex7m68Ll0VBjMuK2JlylSTKsAV7YOwCCzUyHrw3PCIDn98m/DpIwu7fTqvfnnTHzhYazZ+dzHGRaFTM35rWWVSeOLVfDf7hqW0UCxEh9uQuFyHCmSXMWzBPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HuiLdHfg; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744120174; c=relaxed/simple;
+	bh=bJHBesezYdSwQj977PGWwvjWknkqIgR5+rczhLN73tc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Sukp6UFaT68e5xEoVSDU1lFnZe4mTOeJ0Easr8d8jj3UP0iNRZRjM7Mjhyt8TC3/kX8Lv5EyJxD4Xf6598EymOCucbSzs8Vc4UBfLolAgqjhAMTJ6bBadfpReyV4xtQ3g700odSqQNewFn9VZQ+vHJ7xXCvPI1Ihw2Xpnjx8E/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ocTueDsO; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HuiLdHfg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744120160; x=1775656160;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=yB/ojpOd7H6JAKFutmRFiJFqkuv2+SiCCcS3UK2wzP4=;
-  b=HuiLdHfg52GQsX2n7OMcBv30FNOsQaatTT0Rx9gS5oiCZ8Cu6pn/0DGP
-   ef6TSV+BsZcwpUXTfwOVaf3qBLG119p2NmL3ZcEq8evoOnOWnYaczHiIg
-   /Tenkie0MYArEOM861siODa0PC8BZMM0gclCPVdz0BMG2tlxznP3CYgiH
-   4TF+JWBEs4ex9T68ani42s0CF7dhTsPVggUEy4vEDVFO9XJHrtNmUVnDU
-   2REhJVfsMFalGHej85Lz2J/gDCOQPFDEF23/Q6F3+AKhHwYBf2u3kM7uC
-   tcJHpWEIE+D+moa+Qp6JFtklmIUAioPzgdstnmBRa0+5sIpJlP1jCHXue
-   Q==;
-X-CSE-ConnectionGUID: XbYkZniHRKCv8dm4+9jNEw==
-X-CSE-MsgGUID: lZEhk8dRQWGTClpaJ0uMvg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="68028190"
-X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
-   d="scan'208";a="68028190"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 06:49:19 -0700
-X-CSE-ConnectionGUID: bK15kNzDTE+tjxXFR+ubVw==
-X-CSE-MsgGUID: 0+Mx/8g5Sbyann8ZVZXvwg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
-   d="scan'208";a="129233040"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.125])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 06:49:16 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 8 Apr 2025 16:49:12 +0300 (EEST)
-To: Luke Jones <luke@ljones.dev>
-cc: LKML <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
-    platform-driver-x86@vger.kernel.org, mario.limonciello@amd.com
-Subject: Re: [PATCH v8 3/8] platform/x86: asus-armoury: add panel_hd_mode
- attribute
-In-Reply-To: <20250319065827.53478-4-luke@ljones.dev>
-Message-ID: <1bd38d12-baa9-fa56-8033-37fe38ee6e00@linux.intel.com>
-References: <20250319065827.53478-1-luke@ljones.dev> <20250319065827.53478-4-luke@ljones.dev>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ocTueDsO"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id B7CA443E60;
+	Tue,  8 Apr 2025 13:49:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744120169;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FGv7EI/vb/WroSRb61QAnWmRAgGHfwWpS5vWQR/P62w=;
+	b=ocTueDsOQBY97b6OOGZOl+0+CGjLCjgOKSwwXqHwiCnH6vmx1anE6O9yAj63OnXYrkuzyc
+	ROeY6i+mCpKNCUjvpEnBoBGRjljPmj9YGxlYTA/MdqwYN0OvjRnHcXpWfG+ih9o15hA3om
+	cSFR/SgeScMlY632kxbwMBT9LJSqMUtWn+KBqMpAkjocWWk9R/fDd/CBhILERv7yvmijyw
+	d/Z/iOC9dEKOrcjowZeFJyqfiBe//l55JzjDhjW1oY0QoY71+uBBGstbso15FwiONrrOyg
+	nYDzGAt8fmeGJE1pR3EzZACDqmlnhQmlHzJPn/UrRwysA5i1M4/SQN4buqsMSQ==
+Date: Tue, 8 Apr 2025 15:49:25 +0200
+From: Herve Codina <herve.codina@bootlin.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Shawn Guo
+ <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
+ Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang
+ <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Derek
+ Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
+ Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Saravana
+ Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark
+ Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, Daniel Scally
+ <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>,
+ Geert Uytterhoeven <geert+renesas@glider.be>, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, Allan Nielsen
+ <allan.nielsen@microchip.com>, Horatiu Vultur
+ <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 11/16] of: property: Allow fw_devlink device-tree
+ support for x86
+Message-ID: <20250408154925.5653d506@bootlin.com>
+In-Reply-To: <Z_Pw_MoPpVNwiEhc@smile.fi.intel.com>
+References: <20250407145546.270683-1-herve.codina@bootlin.com>
+	<20250407145546.270683-12-herve.codina@bootlin.com>
+	<Z_Pw_MoPpVNwiEhc@smile.fi.intel.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-585564477-1744120152=:930"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdefvdehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepfeevgfefffejteefveffkefffefgtedugedvhfevjedvgeekieelffeihfeuvdeknecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegvtdgrmedvgeeimeejjeeltdemvdeitgegmegvvddvmeeitdefugemheekrgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemvgdtrgemvdegieemjeejledtmedviegtgeemvgdvvdemiedtfegumeehkegrpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepgedtpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdpr
+ hgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehshhgrfihnghhuoheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshdrhhgruhgvrhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepkhgvrhhnvghlsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehfvghsthgvvhgrmhesghhmrghilhdrtghomh
+X-GND-Sasl: herve.codina@bootlin.com
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi Andy,
 
---8323328-585564477-1744120152=:930
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+On Mon, 7 Apr 2025 18:36:28 +0300
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
 
-On Wed, 19 Mar 2025, Luke Jones wrote:
+> On Mon, Apr 07, 2025 at 04:55:40PM +0200, Herve Codina wrote:
+> > PCI drivers can use a device-tree overlay to describe the hardware
+> > available on the PCI board. This is the case, for instance, of the
+> > LAN966x PCI device driver.
+> > 
+> > Adding some more nodes in the device-tree overlay adds some more
+> > consumer/supplier relationship between devices instantiated from this
+> > overlay.
+> > 
+> > Those fw_node consumer/supplier relationships are handled by fw_devlink
+> > and are created based on the device-tree parsing done by the
+> > of_fwnode_add_links() function.
+> > 
+> > Those consumer/supplier links are needed in order to ensure a correct PM
+> > runtime management and a correct removal order between devices.
+> > 
+> > For instance, without those links a supplier can be removed before its
+> > consumers is removed leading to all kind of issue if this consumer still
+> > want the use the already removed supplier.
+> > 
+> > The support for the usage of an overlay from a PCI driver has been added
+> > on x86 systems in commit 1f340724419ed ("PCI: of: Create device tree PCI
+> > host bridge node").
+> > 
+> > In the past, support for fw_devlink on x86 had been tried but this
+> > support has been removed in commit 4a48b66b3f52 ("of: property: Disable
+> > fw_devlink DT support for X86"). Indeed, this support was breaking some
+> > x86 systems such as OLPC system and the regression was reported in [0].
+> > 
+> > Instead of disabling this support for all x86 system, use a finer grain
+> > and disable this support only for the possible problematic subset of x86  
+> 
+> > system mixing ACPI and device-tree at boot time (i.e. OLPC and CE4100).  
+> 
+> This is incorrect, they never had ACPI to begin with. Also there is third
+> platform that are using DT on x86 core — SpreadTrum based phones.
 
-> From: "Luke D. Jones" <luke@ljones.dev>
->=20
-> Add panel_hd_mode to toggle the panel mode between single and high
-> definition modes.
->=20
-> Signed-off-by: Luke D. Jones <luke@ljones.dev>
-> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
->  drivers/platform/x86/asus-armoury.c        | 6 +++++-
->  include/linux/platform_data/x86/asus-wmi.h | 1 +
->  2 files changed, 6 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/a=
-sus-armoury.c
-> index 12acd851e6b2..a299471d78d5 100644
-> --- a/drivers/platform/x86/asus-armoury.c
-> +++ b/drivers/platform/x86/asus-armoury.c
-> @@ -86,7 +86,8 @@ static struct kobj_attribute pending_reboot =3D __ATTR_=
-RO(pending_reboot);
-> =20
->  static bool asus_bios_requires_reboot(struct kobj_attribute *attr)
->  {
-> -=09return !strcmp(attr->attr.name, "gpu_mux_mode");
-> +=09return !strcmp(attr->attr.name, "gpu_mux_mode") ||
-> +=09       !strcmp(attr->attr.name, "panel_hd_mode");
->  }
-> =20
->  static int armoury_wmi_set_devstate(struct kobj_attribute *attr, u32 val=
-ue, u32 wmi_dev)
-> @@ -397,6 +398,8 @@ ATTR_GROUP_BOOL_RW(mcu_powersave, "mcu_powersave", AS=
-US_WMI_DEVID_MCU_POWERSAVE,
->  =09=09   "Set MCU powersaving mode");
->  ATTR_GROUP_BOOL_RW(panel_od, "panel_overdrive", ASUS_WMI_DEVID_PANEL_OD,
->  =09=09   "Set the panel refresh overdrive");
-> +ATTR_GROUP_BOOL_RW(panel_hd_mode, "panel_hd_mode", ASUS_WMI_DEVID_PANEL_=
-HD,
-> +=09=09   "Set the panel HD mode to UHD<0> or FHD<1>");
->  ATTR_GROUP_BOOL_RO(egpu_connected, "egpu_connected", ASUS_WMI_DEVID_EGPU=
-_CONNECTED,
->  =09=09   "Show the eGPU connection status");
-> =20
-> @@ -410,6 +413,7 @@ static const struct asus_attr_group armoury_attr_grou=
-ps[] =3D {
->  =09{ &boot_sound_attr_group, ASUS_WMI_DEVID_BOOT_SOUND },
->  =09{ &mcu_powersave_attr_group, ASUS_WMI_DEVID_MCU_POWERSAVE },
->  =09{ &panel_od_attr_group, ASUS_WMI_DEVID_PANEL_OD },
-> +=09{ &panel_hd_mode_attr_group, ASUS_WMI_DEVID_PANEL_HD },
->  };
-> =20
->  static int asus_fw_attr_add(void)
-> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/p=
-latform_data/x86/asus-wmi.h
-> index 4574e30c53fc..62a9adb1af2f 100644
-> --- a/include/linux/platform_data/x86/asus-wmi.h
-> +++ b/include/linux/platform_data/x86/asus-wmi.h
-> @@ -76,6 +76,7 @@
->  #define ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY_VIVO 0x00110019
-> =20
->  /* Misc */
-> +#define ASUS_WMI_DEVID_PANEL_HD=09=090x0005001C
->  #define ASUS_WMI_DEVID_PANEL_OD=09=090x00050019
->  #define ASUS_WMI_DEVID_CAMERA=09=090x00060013
->  #define ASUS_WMI_DEVID_LID_FLIP=09=090x00060062
->=20
+I will rework the commit log to avoid 'mixing ACPI and device-tree'
 
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+For "SpreadTrum based phones", do you have an idea about the Kconfig symbol
+I could use to filter our this x86 systems?
 
---=20
- i.
+Anything I find upstream related to SpreadTrum seems base on ARM cpus.
+I probably miss something.
 
---8323328-585564477-1744120152=:930--
+> 
+> And not sure about AMD stuff (Geode?).
+
+Same here, if some AMD devices need to be filtered out, is there a specific
+Kconfig symbol I can use ?
+
+> 
+> > [0] https://lore.kernel.org/lkml/3c1f2473-92ad-bfc4-258e-a5a08ad73dd0@web.de/  
+> 
+> Can you make this to be a Link tag?
+> 
+> Link: https://lore.kernel.org/lkml/3c1f2473-92ad-bfc4-258e-a5a08ad73dd0@web.de/ [0]
+> 
+
+Yes, of course, I will do that in the next iteration.
+
+Best regards,
+Hervé
+
+
+
+
+-- 
+Hervé Codina, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
