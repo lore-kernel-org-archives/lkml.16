@@ -1,31 +1,62 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E363C1FECDF;
-	Tue,  8 Apr 2025 07:30:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CDAC2192F4
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 07:31:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744097430; cv=none; b=j8loeLKpzU2wtDrwdNIg4oGmpV3BuaGprgyAOWvpscye243Z+CCDYbv9fhb28GtsCE9bFSy9kqmhU08fapxpWd+fY0zAV9oFa656M1M7tVw0OQndcGMhXjlr59/eagxXJUy6+VE8XR3yHTWr48Uk5OJ3JmK0dbZY73IxtszFRnk=
+	t=1744097469; cv=none; b=Y4ls4lqY4E4g5wE26c3v90lULVvWXJMJNCAwHMunY8RrMSDz0vK7D+9sZJeQhPoV7YROP0EUFM6K0YRrogVMIKk99itQhgCI0BKyNA9cs8PFxQAACnvEHFc9zNUyTyRJ+WN708jHzFS3x6tw1xSXkB4CFuujz37OTPrnMj7ZPlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744097430; c=relaxed/simple;
-	bh=Hofow6joM5G6WUWHXcWq4Yd0HZFi17kC/eXbl20Dk6c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ayj3Hjnud1i0/sv2CXPpuRIT2eh1P+jJ6XySqDKyAx35Ld5yuQrxKUDFDOBwjheb82/yDSVh/emxKOmOp2b7gl3lBVVTW+h9NvrYBxdtVjCxLYhx9TnOdGxLHLL1BBzF6xGx4zd5zMX0efnRdtPkk8ko+5eUyLxIwhIuPlSjc7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-05 (Coremail) with SMTP id zQCowABHhw+K0PRnMvgjBw--.29520S2;
-	Tue, 08 Apr 2025 15:30:20 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: dlemoal@kernel.org,
-	cassel@kernel.org
-Cc: linux-ide@vger.kernel.org,
+	s=arc-20240116; t=1744097469; c=relaxed/simple;
+	bh=oa5ieiX2ScLX7V1FecBkrR6NbigcGJLTwyxXUxrNrFM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h49mQoIOEUp0axl4sqpxAjF3UGIoDd/dREs1j+SKP8nribO8+rdIbxaXNbMxyxoValQZZMPIMnCNzmEfbA0Team8+XviOlJXeGMiSgqs/9AM5e4xaYlFMyTsKhOd77sSThimVUP4Gdc6kh1We7li5frmAI5tJJ7penXTc/iqBW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=NS3OqxXD; arc=none smtp.client-ip=95.215.58.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="NS3OqxXD"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744097463;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=idfjo4chKagnHcXhzu8hjWU86/xZSxtihw5RQG6gUIk=;
+	b=NS3OqxXDEuAm876PlF5euDllQASYqICToxPrdqxMBNdS1iWHQfTZJDIlviL6WoICP5pWow
+	LqJ5k3UY6gDKGX86QCAgDd3PPYs9ejtfqrtKusIVATJYj+27DFDvy43WTXfSl68ilzZ0rN
+	nRqRfQKRhNZ1/+lGeSsEj/EC4tp20+Y=
+From: Jiayuan Chen <jiayuan.chen@linux.dev>
+To: bpf@vger.kernel.org
+Cc: mrpre@163.com,
+	Jiayuan Chen <jiayuan.chen@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Jakub Sitnicki <jakub@cloudflare.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Mykola Lysenko <mykolal@fb.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Michal Luczaj <mhal@rbox.co>,
+	Cong Wang <cong.wang@bytedance.com>,
+	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>
-Subject: [PATCH v3] ata: sata_sx4: Add error handling in pdc20621_i2c_read()
-Date: Tue,  8 Apr 2025 15:30:01 +0800
-Message-ID: <20250408073001.3121-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH bpf-next v4 0/3] bpf: Fix use-after-free of sockmap
+Date: Tue,  8 Apr 2025 15:29:51 +0800
+Message-ID: <20250408073033.60377-1-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,79 +64,60 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowABHhw+K0PRnMvgjBw--.29520S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7KFWkWFW7Wr4xWw4xtF1xGrg_yoW8Kr1fpr
-	48Kas8Kry5Wa12vF9xJrZxXFyrWr4kGa47KFWkC34fZw1Sqws7ZFySgay5tw10kF17Ja17
-	X3W8tFs8CFWUXFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkK14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
-	1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-	6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr
-	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v2
-	6r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrV
-	AFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCI
-	c40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267
-	AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_
-	Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUjO6pD
-	UUUUU==
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBwsGA2f0uxVfzAAAsn
+X-Migadu-Flow: FLOW_OUT
 
-The function pdc20621_prog_dimm0() calls the function pdc20621_i2c_read()
-but does not handle the error if the read fails. This could lead to
-process with invalid data. A proper implementation can be found in
-/source/drivers/ata/sata_sx4.c, pdc20621_prog_dimm_global(). As mentioned
-in its commit: bb44e154e25125bef31fa956785e90fccd24610b, the variable spd0
-might be used uninitialized when pdc20621_i2c_read() fails.
+Syzkaller reported this issue [1].
 
-Add error handling to pdc20621_i2c_read(). If a read operation fails,
-an error message is logged via dev_err(), and return a negative error
-code.
+The current sockmap has a dependency on sk_socket in both read and write
+stages, but there is a possibility that sk->sk_socket is released during
+the process, leading to panic situations. For a detailed reproduction,
+please refer to the description in the v2:
+https://lore.kernel.org/bpf/20250228055106.58071-1-jiayuan.chen@linux.dev/
 
-Add error handling to pdc20621_prog_dimm0() in pdc20621_dimm_init(), and
-return a negative error code if pdc20621_prog_dimm0() fails.
+The corresponding fix approaches are described in the commit messages of
+each patch.
 
-Fixes: 4447d3515616 ("libata: convert the remaining SATA drivers to new init model")
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+By the way, the current sockmap lacks statistical information, especially
+global statistics, such as the number of successful or failed rx and tx
+operations. These statistics cannot be obtained from the socket interface
+itself.
+
+These data will be of great help in troubleshooting issues and observing
+sockmap behavior.
+
+If the maintainer/reviewer does not object, I think we can provide these
+statistical information in the future, either through proc/trace/bpftool.
+
+[1] https://syzkaller.appspot.com/bug?extid=dd90a702f518e0eac072
+
 ---
-v3: Fix title error and revise comment
-v2: Revise comment
+v3 -> v4:
+1. Rebase on -rc.
+2. Incorporated valuable feedback from the v3 thread into the commit
+   message, making it easier to review.
+https://lore.kernel.org/all/20250317092257.68760-3-jiayuan.chen@linux.dev/
 
- drivers/ata/sata_sx4.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+v2 -> v3:
+1. Michal Luczaj reported similar race issue under sockmap sending path.
+2. Rcu lock is conflict with mutex_lock in unix socket read implementation.
+https://lore.kernel.org/bpf/20250228055106.58071-1-jiayuan.chen@linux.dev/
 
-diff --git a/drivers/ata/sata_sx4.c b/drivers/ata/sata_sx4.c
-index a482741eb181..c3042eca6332 100644
---- a/drivers/ata/sata_sx4.c
-+++ b/drivers/ata/sata_sx4.c
-@@ -1117,9 +1117,14 @@ static int pdc20621_prog_dimm0(struct ata_host *host)
- 	mmio += PDC_CHIP0_OFS;
- 
- 	for (i = 0; i < ARRAY_SIZE(pdc_i2c_read_data); i++)
--		pdc20621_i2c_read(host, PDC_DIMM0_SPD_DEV_ADDRESS,
--				  pdc_i2c_read_data[i].reg,
--				  &spd0[pdc_i2c_read_data[i].ofs]);
-+		if (!pdc20621_i2c_read(host, PDC_DIMM0_SPD_DEV_ADDRESS,
-+				       pdc_i2c_read_data[i].reg,
-+				       &spd0[pdc_i2c_read_data[i].ofs])) {
-+			dev_err(host->dev,
-+				"Failed in i2c read at index %d: device=%#x, reg=%#x\n",
-+				i, PDC_DIMM0_SPD_DEV_ADDRESS, pdc_i2c_read_data[i].reg);
-+			return -EIO;
-+		}
- 
- 	data |= (spd0[4] - 8) | ((spd0[21] != 0) << 3) | ((spd0[3]-11) << 4);
- 	data |= ((spd0[17] / 4) << 6) | ((spd0[5] / 2) << 7) |
-@@ -1284,6 +1289,8 @@ static unsigned int pdc20621_dimm_init(struct ata_host *host)
- 
- 	/* Programming DIMM0 Module Control Register (index_CID0:80h) */
- 	size = pdc20621_prog_dimm0(host);
-+	if (size < 0)
-+		return size;
- 	dev_dbg(host->dev, "Local DIMM Size = %dMB\n", size);
- 
- 	/* Programming DIMM Module Global Control Register (index_CID0:88h) */
+v1 -> v2:
+1. Add Fixes tag.
+2. Extend selftest of edge case for TCP/UDP sockets.
+3. Add Reviewed-by and Acked-by tag.
+https://lore.kernel.org/bpf/20250226132242.52663-1-jiayuan.chen@linux.dev/T/#t
+
+Jiayuan Chen (3):
+  bpf, sockmap: avoid using sk_socket after free when sending
+  bpf, sockmap: avoid using sk_socket after free when reading
+  selftests/bpf: Add edge case tests for sockmap
+
+ net/core/skmsg.c                              | 22 ++++++-
+ .../selftests/bpf/prog_tests/socket_helpers.h | 13 +++-
+ .../selftests/bpf/prog_tests/sockmap_basic.c  | 60 +++++++++++++++++++
+ 3 files changed, 91 insertions(+), 4 deletions(-)
+
 -- 
-2.42.0.windows.2
+2.47.1
 
