@@ -1,22 +1,22 @@
-Received: from out28-75.mail.aliyun.com (out28-75.mail.aliyun.com [115.124.28.75])
+Received: from out198-13.us.a.mail.aliyun.com (out198-13.us.a.mail.aliyun.com [47.90.198.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E6F2638B0;
-	Tue,  8 Apr 2025 09:29:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.75
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 969C9264FAE;
+	Tue,  8 Apr 2025 09:29:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.198.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744104554; cv=none; b=jqf/1jrSrn23Gbfm2+zUZDlLFYhNEO8H6U+uZ8HTNz0/0ju5xukK4O+fUxU26tAtEza1Sdab6GFh1ruoKzVIWpOpXQtqBeYieO/ydRLK6WU8K8KB4CEvO1kxLvxgAttK5yAmoIyhFSkcpkLgvOy5qOdxBVE1tJ97DhCtrFOBlsU=
+	t=1744104554; cv=none; b=UwNAfBFmuKijKOokDw8H90/i2PwR+g791Z/TSkDSYUy/LOV6E2AG2WvpubwrbD1I5CyxNe1rMnsqHf779YejTMyJHEyCaYaCyl9stLCC/JVwBiBaHQaceOJms0jdjJnl7SJqSDuSM2KOzy1/eKE2DAbugk/IzMRD2j5+fOuynqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744104554; c=relaxed/simple;
-	bh=HsVDZCmJPDeierqtDYvUzaM1kHtAAhjk9X4oqELrwtM=;
+	bh=2iIHEglM+L2mJu4BDOKhM1h/y/LxKGpXCqUWKYJBZCs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lY5Y0Jx3VKkTDDL8+T+Zy+GwvXI2dxmqe+aU3DLtp09cw6HUfKlmAj/fukh68STR8Jf3Hmemgk0LlZVGwE+l9VqbIG9oEeKhh7U0584duqiOopxmmMvGyP679stOVooYViwzV8TstrAxQ38CpNl4hNfD0anV4XmItF/mnqVJDzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motor-comm.com; spf=pass smtp.mailfrom=motor-comm.com; arc=none smtp.client-ip=115.124.28.75
+	 MIME-Version; b=PKvpU0tiF7xuW3Z0FeDhXC8FCJFetU3u6vMxejMceqK0Me6e2cPHnSzc+sgmIiCQ7J6PNFrpQWIe2AujiG5O+BOuqyWeHHTde6KCMmCezTv7c8z3vc+i+Qr0SQ+gxtDxrLcOYqF9rlwubx4NcNXlG14sZpqC8HyvlIuIs22NttQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motor-comm.com; spf=pass smtp.mailfrom=motor-comm.com; arc=none smtp.client-ip=47.90.198.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motor-comm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=motor-comm.com
-Received: from sun-VirtualBox..(mailfrom:Frank.Sae@motor-comm.com fp:SMTPD_---.cGww7Vt_1744104540 cluster:ay29)
+Received: from sun-VirtualBox..(mailfrom:Frank.Sae@motor-comm.com fp:SMTPD_---.cGww7Ic_1744104530 cluster:ay29)
           by smtp.aliyun-inc.com;
-          Tue, 08 Apr 2025 17:29:01 +0800
+          Tue, 08 Apr 2025 17:28:51 +0800
 From: Frank Sae <Frank.Sae@motor-comm.com>
 To: Jakub Kicinski <kuba@kernel.org>,
 	Paolo Abeni <pabeni@redhat.com>,
@@ -39,9 +39,9 @@ Cc: Masahiro Yamada <masahiroy@kernel.org>,
 	xiaogang.fan@motor-comm.com,
 	fei.zhang@motor-comm.com,
 	hua.sun@motor-comm.com
-Subject: [PATCH net-next v4 12/14] yt6801: Implement pci_driver suspend and resume
-Date: Tue,  8 Apr 2025 17:28:33 +0800
-Message-Id: <20250408092835.3952-13-Frank.Sae@motor-comm.com>
+Subject: [PATCH net-next v4 01/14] yt6801: Add support for a pci table in this module
+Date: Tue,  8 Apr 2025 17:28:22 +0800
+Message-Id: <20250408092835.3952-2-Frank.Sae@motor-comm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250408092835.3952-1-Frank.Sae@motor-comm.com>
 References: <20250408092835.3952-1-Frank.Sae@motor-comm.com>
@@ -53,126 +53,340 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Implement the pci_driver suspend function to enable the device to sleep,
- and implement the resume function to enable the device to resume
- operation.
+Add support for a pci table in this module, and implement pci_driver
+ function to initialize this driver, remove this driver or shutdown this
+ driver.
+Implement the fxgmac_drv_probe function to init interrupts, register mdio
+ and netdev.
 
 Signed-off-by: Frank Sae <Frank.Sae@motor-comm.com>
 ---
- .../ethernet/motorcomm/yt6801/yt6801_main.c   | 73 +++++++++++++++++++
- 1 file changed, 73 insertions(+)
+ .../ethernet/motorcomm/yt6801/yt6801_main.c   | 194 ++++++++++++++++++
+ .../ethernet/motorcomm/yt6801/yt6801_type.h   | 114 ++++++++++
+ 2 files changed, 308 insertions(+)
+ create mode 100644 drivers/net/ethernet/motorcomm/yt6801/yt6801_main.c
+ create mode 100644 drivers/net/ethernet/motorcomm/yt6801/yt6801_type.h
 
 diff --git a/drivers/net/ethernet/motorcomm/yt6801/yt6801_main.c b/drivers/net/ethernet/motorcomm/yt6801/yt6801_main.c
-index 6523fe4de..67ff71f80 100644
---- a/drivers/net/ethernet/motorcomm/yt6801/yt6801_main.c
+new file mode 100644
+index 000000000..10d63a8ed
+--- /dev/null
 +++ b/drivers/net/ethernet/motorcomm/yt6801/yt6801_main.c
-@@ -17,7 +17,11 @@
-  *  ********************||******************* **
-  */
- 
-+#include <linux/if_vlan.h>
- #include <linux/module.h>
-+#include <linux/phy.h>
-+#include <linux/tcp.h>
+@@ -0,0 +1,194 @@
++// SPDX-License-Identifier: GPL-2.0+
++/* Copyright (c) 2022 - 2024 Motorcomm Electronic Technology Co.,Ltd.
++ *
++ * Below is a simplified block diagram of YT6801 chip and its relevant
++ * interfaces.
++ *                      ||
++ *  ********************++**********************
++ *  *            | PCIE Endpoint |             *
++ *  *            +---------------+             *
++ *  *                | GMAC |                  *
++ *  *                +--++--+                  *
++ *  *                  |**|                    *
++ *  *         GMII --> |**| <-- MDIO           *
++ *  *                 +-++--+                  *
++ *  *            | Integrated PHY |  YT8531S   *
++ *  *                 +-++-+                   *
++ *  ********************||******************* **
++ */
 +
- #include "yt6801_type.h"
- #include "yt6801_desc.h"
- 
-@@ -1380,6 +1384,21 @@ static void fxgmac_restart_work(struct work_struct *work)
- 	fxgmac_restart(container_of(work, struct fxgmac_pdata, restart_work));
- 	rtnl_unlock();
- }
++#include <linux/module.h>
++#include "yt6801_type.h"
 +
-+static int fxgmac_net_powerup(struct fxgmac_pdata *priv)
++static void fxgmac_phy_release(struct fxgmac_pdata *priv)
 +{
++	fxgmac_io_wr_bits(priv, EPHY_CTRL, EPHY_CTRL_RESET, 1);
++	fsleep(100);
++
++static void fxgmac_phy_reset(struct fxgmac_pdata *priv)
++{
++	fxgmac_io_wr_bits(priv, EPHY_CTRL, EPHY_CTRL_RESET, 0);
++	fsleep(1500);
++}
++
++static void fxgmac_init_interrupt_scheme(struct fxgmac_pdata *priv)
++{
++	struct pci_dev *pdev = to_pci_dev(priv->dev);
++	int req_vectors = FXGMAC_MAX_DMA_CHANNELS;
++
++	/* Since we have FXGMAC_MAX_DMA_CHANNELS channels, we must ensure the
++	 * number of cpu core is ok. otherwise, just roll back to legacy.
++	 */
++	if (num_online_cpus() < FXGMAC_MAX_DMA_CHANNELS - 1)
++		goto enable_msi_interrupt;
++
++	priv->msix_entries =
++		kcalloc(req_vectors, sizeof(struct msix_entry), GFP_KERNEL);
++	if (!priv->msix_entries)
++		goto enable_msi_interrupt;
++
++	for (u32 i = 0; i < req_vectors; i++)
++		priv->msix_entries[i].entry = i;
++
++	if (pci_enable_msix_exact(pdev, priv->msix_entries, req_vectors) < 0) {
++		/* Roll back to msi */
++		kfree(priv->msix_entries);
++		priv->msix_entries = NULL;
++		dev_err(priv->dev, "Enable MSIx failed, clear msix entries.\n");
++		goto enable_msi_interrupt;
++	}
++
++	priv->int_flag &= ~INT_FLAG_INTERRUPT;
++	priv->int_flag |= INT_FLAG_MSIX;
++	priv->per_channel_irq = 1;
++	return;
++
++enable_msi_interrupt:
++	priv->int_flag &= ~INT_FLAG_INTERRUPT;
++	if (pci_enable_msi(pdev) < 0) {
++		priv->int_flag |= INT_FLAG_LEGACY;
++		dev_err(priv->dev, "rollback to LEGACY.\n");
++	} else {
++		priv->int_flag |= INT_FLAG_MSI;
++		dev_err(priv->dev, "rollback to MSI.\n");
++		priv->dev_irq = pdev->irq;
++	}
++}
++
++static int fxgmac_drv_probe(struct device *dev, struct fxgmac_resources *res)
++{
++	struct fxgmac_pdata *priv;
++	struct net_device *ndev;
 +	int ret;
 +
-+	priv->power_state = 0;/* clear all bits as normal now */
-+	ret = fxgmac_start(priv);
++	ndev = alloc_etherdev_mq(sizeof(struct fxgmac_pdata),
++				 FXGMAC_MAX_DMA_RX_CHANNELS);
++	if (!ndev)
++		return -ENOMEM;
++
++	SET_NETDEV_DEV(ndev, dev);
++	priv = netdev_priv(ndev);
++
++	priv->dev = dev;
++	priv->ndev = ndev;
++	priv->dev_irq = res->irq;
++	priv->hw_addr = res->addr;
++	priv->msg_enable = NETIF_MSG_DRV;
++	priv->dev_state = FXGMAC_DEV_PROBE;
++
++	/* Default to legacy interrupt */
++	priv->int_flag &= ~INT_FLAG_INTERRUPT;
++	priv->int_flag |= INT_FLAG_LEGACY;
++
++	pci_set_drvdata(to_pci_dev(priv->dev), priv);
++
++	if (IS_ENABLED(CONFIG_PCI_MSI))
++		fxgmac_init_interrupt_scheme(priv);
++
++	ret = fxgmac_init(priv, true);
 +	if (ret < 0) {
-+		dev_err(priv->dev, "fxgmac start failed:%d.\n", ret);
-+		return ret;
++		dev_err(dev, "fxgmac init failed:%d\n", ret);
++		goto err_free_netdev;
++	}
++
++	fxgmac_phy_reset(priv);
++	fxgmac_phy_release(priv);
++	ret = fxgmac_mdio_register(priv);
++	if (ret < 0) {
++		dev_err(dev, "Register fxgmac mdio failed:%d\n", ret);
++		goto err_free_netdev;
++	}
++
++	netif_carrier_off(ndev);
++	ret = register_netdev(ndev);
++	if (ret) {
++		dev_err(dev, "Register ndev failed:%d\n", ret);
++		goto err_free_netdev;
 +	}
 +
 +	return 0;
-+}
 +
- static void fxgmac_config_powerdown(struct fxgmac_pdata *priv)
- {
- 	fxgmac_io_wr_bits(priv, MAC_CR, MAC_CR_RE, 1); /* Enable MAC Rx */
-@@ -2908,6 +2927,55 @@ static void fxgmac_shutdown(struct pci_dev *pcidev)
- 	}
- 	rtnl_unlock();
- }
-+
-+static int fxgmac_suspend(struct device *device)
-+{
-+	struct fxgmac_pdata *priv = dev_get_drvdata(device);
-+	struct net_device *ndev = priv->ndev;
-+
-+	rtnl_lock();
-+	if (priv->dev_state != FXGMAC_DEV_START)
-+		goto unlock;
-+
-+	if (netif_running(ndev))
-+		__fxgmac_shutdown(to_pci_dev(device));
-+
-+	priv->dev_state = FXGMAC_DEV_SUSPEND;
-+unlock:
-+	rtnl_unlock();
-+
-+	return 0;
-+}
-+
-+static int fxgmac_resume(struct device *device)
-+{
-+	struct fxgmac_pdata *priv = dev_get_drvdata(device);
-+	struct net_device *ndev = priv->ndev;
-+	int ret = 0;
-+
-+	rtnl_lock();
-+	if (priv->dev_state != FXGMAC_DEV_SUSPEND)
-+		goto unlock;
-+
-+	priv->dev_state = FXGMAC_DEV_RESUME;
-+	__clear_bit(FXGMAC_POWER_STATE_DOWN, &priv->power_state);
-+	rtnl_lock();
-+	if (netif_running(ndev)) {
-+		ret = fxgmac_net_powerup(priv);
-+		if (ret < 0) {
-+			netdev_err(priv->ndev, "%s, fxgmac net powerup failed:%d\n",
-+				   __func__, ret);
-+			goto unlock;
-+		}
-+	}
-+
-+	netif_device_attach(ndev);
-+unlock:
-+	rtnl_unlock();
-+
++err_free_netdev:
++	free_netdev(ndev);
 +	return ret;
 +}
 +
- #define MOTORCOMM_PCI_ID			0x1f0a
- #define YT6801_PCI_DEVICE_ID			0x6801
- 
-@@ -2918,11 +2986,16 @@ static const struct pci_device_id fxgmac_pci_tbl[] = {
- 
- MODULE_DEVICE_TABLE(pci, fxgmac_pci_tbl);
- 
-+static const struct dev_pm_ops fxgmac_pm_ops = {
-+	SYSTEM_SLEEP_PM_OPS(fxgmac_suspend, fxgmac_resume)
++static int fxgmac_probe(struct pci_dev *pcidev, const struct pci_device_id *id)
++{
++	struct fxgmac_resources res;
++	int err;
++
++	err = pcim_enable_device(pcidev);
++	if (err)
++		return err;
++
++	memset(&res, 0, sizeof(res));
++	res.irq = pcidev->irq;
++	res.addr  = pcim_iomap_region(pcidev, 0, pci_name(pcidev));
++	err = PTR_ERR_OR_ZERO(res.addr);
++	if (err)
++		return err;
++
++	pci_set_master(pcidev);
++	return fxgmac_drv_probe(&pcidev->dev, &res);
++}
++
++static void fxgmac_remove(struct pci_dev *pcidev)
++{
++	struct fxgmac_pdata *priv = dev_get_drvdata(&pcidev->dev);
++	struct net_device *ndev = priv->ndev;
++
++	unregister_netdev(ndev);
++	fxgmac_phy_reset(priv);
++	free_netdev(ndev);
++
++	if (IS_ENABLED(CONFIG_PCI_MSI) &&
++	    FIELD_GET(INT_FLAG_MSIX, priv->int_flag)) {
++		pci_disable_msix(pcidev);
++		kfree(priv->msix_entries);
++		priv->msix_entries = NULL;
++	}
++}
++
++#define MOTORCOMM_PCI_ID			0x1f0a
++#define YT6801_PCI_DEVICE_ID			0x6801
++
++static const struct pci_device_id fxgmac_pci_tbl[] = {
++	{ PCI_DEVICE(MOTORCOMM_PCI_ID, YT6801_PCI_DEVICE_ID) },
++	{ 0 }
 +};
 +
- static struct pci_driver fxgmac_pci_driver = {
- 	.name		= FXGMAC_DRV_NAME,
- 	.id_table	= fxgmac_pci_tbl,
- 	.probe		= fxgmac_probe,
- 	.remove		= fxgmac_remove,
-+	.driver.pm	= pm_ptr(&fxgmac_pm_ops),
- 	.shutdown	= fxgmac_shutdown,
- };
- 
++MODULE_DEVICE_TABLE(pci, fxgmac_pci_tbl);
++
++static struct pci_driver fxgmac_pci_driver = {
++	.name		= FXGMAC_DRV_NAME,
++	.id_table	= fxgmac_pci_tbl,
++	.probe		= fxgmac_probe,
++	.remove		= fxgmac_remove,
++};
++
++module_pci_driver(fxgmac_pci_driver);
++
++MODULE_AUTHOR("Motorcomm Electronic Tech. Co., Ltd.");
++MODULE_DESCRIPTION(FXGMAC_DRV_DESC);
++MODULE_LICENSE("GPL");
+diff --git a/drivers/net/ethernet/motorcomm/yt6801/yt6801_type.h b/drivers/net/ethernet/motorcomm/yt6801/yt6801_type.h
+new file mode 100644
+index 000000000..bb6c2640a
+--- /dev/null
++++ b/drivers/net/ethernet/motorcomm/yt6801/yt6801_type.h
+@@ -0,0 +1,114 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++/* Copyright (c) 2022 - 2024 Motorcomm Electronic Technology Co.,Ltd. */
++
++#ifndef YT6801_TYPE_H
++#define YT6801_TYPE_H
++
++#include <linux/netdevice.h>
++#include <linux/types.h>
++#include <linux/pci.h>
++
++#define FXGMAC_DRV_NAME		"yt6801"
++#define FXGMAC_DRV_DESC		"Motorcomm Gigabit Ethernet Driver"
++
++#define FXGMAC_RX_BUF_ALIGN	64
++#define FXGMAC_TX_MAX_BUF_SIZE	(0x3fff & ~(FXGMAC_RX_BUF_ALIGN - 1))
++#define FXGMAC_RX_MIN_BUF_SIZE	(ETH_FRAME_LEN + ETH_FCS_LEN + VLAN_HLEN)
++
++/* Descriptors required for maximum contiguous TSO/GSO packet */
++#define FXGMAC_TX_MAX_SPLIT	((GSO_MAX_SIZE / FXGMAC_TX_MAX_BUF_SIZE) + 1)
++
++/* Maximum possible descriptors needed for a SKB */
++#define FXGMAC_TX_MAX_DESC_NR	(MAX_SKB_FRAGS + FXGMAC_TX_MAX_SPLIT + 2)
++
++#define FXGMAC_DMA_STOP_TIMEOUT		5
++#define FXGMAC_JUMBO_PACKET_MTU		9014
++#define FXGMAC_MAX_DMA_RX_CHANNELS	4
++#define FXGMAC_MAX_DMA_TX_CHANNELS	1
++#define FXGMAC_MAX_DMA_CHANNELS                                           \
++	(FXGMAC_MAX_DMA_RX_CHANNELS + FXGMAC_MAX_DMA_TX_CHANNELS)
++
++#define EPHY_CTRL				0x1004
++#define EPHY_CTRL_RESET				BIT(0)
++#define EPHY_CTRL_STA_LINKUP			BIT(1)
++#define EPHY_CTRL_STA_DUPLEX			BIT(2)
++#define EPHY_CTRL_STA_SPEED			GENMASK(4, 3)
++
++struct fxgmac_resources {
++	void __iomem *addr;
++	int irq;
++};
++
++enum fxgmac_dev_state {
++	FXGMAC_DEV_OPEN		= 0x0,
++	FXGMAC_DEV_CLOSE	= 0x1,
++	FXGMAC_DEV_STOP		= 0x2,
++	FXGMAC_DEV_START	= 0x3,
++	FXGMAC_DEV_SUSPEND	= 0x4,
++	FXGMAC_DEV_RESUME	= 0x5,
++	FXGMAC_DEV_PROBE	= 0xFF,
++};
++
++struct fxgmac_pdata {
++	struct net_device *ndev;
++	struct device *dev;
++	struct phy_device *phydev;
++
++	void __iomem *hw_addr;			/* Registers base */
++
++	/* Device interrupt */
++	int dev_irq;
++	unsigned int per_channel_irq;
++	u32 channel_irq[FXGMAC_MAX_DMA_CHANNELS];
++	struct msix_entry *msix_entries;
++#define INT_FLAG_INTERRUPT		GENMASK(4, 0)
++#define INT_FLAG_MSI			BIT(1)
++#define INT_FLAG_MSIX			BIT(3)
++#define INT_FLAG_LEGACY			BIT(4)
++#define INT_FLAG_RX0_NAPI		BIT(18)
++#define INT_FLAG_RX1_NAPI		BIT(19)
++#define INT_FLAG_RX2_NAPI		BIT(20)
++#define INT_FLAG_RX3_NAPI		BIT(21)
++#define INT_FLAG_RX0_IRQ		BIT(22)
++#define INT_FLAG_RX1_IRQ		BIT(23)
++#define INT_FLAG_RX2_IRQ		BIT(24)
++#define INT_FLAG_RX3_IRQ		BIT(25)
++#define INT_FLAG_TX_NAPI		BIT(26)
++#define INT_FLAG_TX_IRQ			BIT(27)
++#define INT_FLAG_LEGACY_NAPI		BIT(30)
++#define INT_FLAG_LEGACY_IRQ		BIT(31)
++	u32 int_flag;		/* interrupt flag */
++
++	u32 msg_enable;
++	enum fxgmac_dev_state dev_state;
++};
++
++static inline u32 fxgmac_io_rd(struct fxgmac_pdata *priv, u32 reg)
++{
++	return ioread32(priv->hw_addr + reg);
++}
++
++static inline u32
++fxgmac_io_rd_bits(struct fxgmac_pdata *priv, u32 reg, u32 mask)
++{
++	u32 cfg = fxgmac_io_rd(priv, reg);
++
++	return FIELD_GET(mask, cfg);
++}
++
++static inline void fxgmac_io_wr(struct fxgmac_pdata *priv, u32 reg, u32 set)
++{
++	iowrite32(set, priv->hw_addr + reg);
++}
++
++static inline void
++fxgmac_io_wr_bits(struct fxgmac_pdata *priv, u32 reg, u32 mask, u32 set)
++{
++	u32 cfg = fxgmac_io_rd(priv, reg);
++
++	cfg &= ~mask;
++	cfg |= FIELD_PREP(mask, set);
++	fxgmac_io_wr(priv, reg, cfg);
++}
++
++#endif /* YT6801_TYPE_H */
 -- 
 2.34.1
 
