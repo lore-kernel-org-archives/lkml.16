@@ -1,124 +1,82 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06ECF1A5BBB;
-	Tue,  8 Apr 2025 02:34:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B2A1A5BBB;
+	Tue,  8 Apr 2025 02:34:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744079651; cv=none; b=T0Tm471PP95zSGFB6enMLJaqHPSjG97sYfCUfGgEnxYqeBkDhf+nzP9PemUcT7jXSMD83fJkLchDxAKecR9w/u0qPCoTzXUpQezjSMV5G/UxKHpz4vQCD1zKpz3+XmwMWnVDpEoNtvV1UfC04cmG73uYofBNlMBB3OcSLzk8FkA=
+	t=1744079678; cv=none; b=Ybf/pGqXo7NEEvaa2vLVjX14WaOMEwglqomIbWnTMgJRxfGzzHDie5pwSlVvHvu/CPbOxPHYq+C5rJb7v6dMGyDdo0CYUCtZGC5fcLINgw0CRN35pyrstloTGJj6C2nhdo0Avyik1pcHbXZ5cx5WYkxouiiwZr9RIPe2cWPfWnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744079651; c=relaxed/simple;
-	bh=+hLj8ICUAAVqQQcsCRHJOsDstttPzIFItann4SgbdTw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MdwYM9leJ/ubrrSe3ucWlPe8NWaZthLJqRAhNBqBITbpgotUe5jK38aNAAyA6YiwIH8iKLtUGu0V9Lfq87jmjPQ5aTx1BBguZBeulfLtb+atiy6dsntxw0DPXiohbVwWZy4nMxkK2QsFrWGJZOt6KEhuYNaXajYZLBI19v7nDKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GkKetjWS; arc=none smtp.client-ip=209.85.222.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GkKetjWS"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7c08f9d0ef3so303486185a.2;
-        Mon, 07 Apr 2025 19:34:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744079649; x=1744684449; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=waaMzRcEYQgRpRjT/cb8agAmmDWkveY+/Tn+x5v2WbI=;
-        b=GkKetjWSYHbzm/fQlyh7Dbt7eVpQWG3He0fWFjvpRKEl6K9QAQEgkirdrkG3fOeeu+
-         946j698ct5N1444jNMyup7SJEbTyvxTTE+JzZs0Z5NyOtlJaFfykyK61c0BnkOB9/KYd
-         ZVqeTDfMwoRnuvRFkZmld7KryaV9RJ24z7z6Butl1GtRGO9OkCzRqYr3bX8uebxMrpEZ
-         2BackYStPHFPAZurkAxfHkG9Lnfkn2bHHdtvUlgBnIxAS4nPcpFImXMzk03Hw7IGKnjX
-         zrlej2tsrwOeZc14UWDaqgE+vWNaQ2EGO1IMJQ4O8Lm4trTHlEuulGQA0RYOvhkALAT4
-         OyRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744079649; x=1744684449;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=waaMzRcEYQgRpRjT/cb8agAmmDWkveY+/Tn+x5v2WbI=;
-        b=w3qvznv5zXVvrancwZG/94JZ9S5p4eryUS2Zw+wSJHDQYuHH7UvhTY1LeydY+fGQKl
-         D9KNpWmBjq+wl2OJFaTBxKsX36NnNZ8DM+5o/2ZAQtpfBc2HGs5QbtM6PYGe18AbcEsZ
-         8IAqlDR5vQzNty4inza+i4kdqjA3+KLlFTFU5NS6MPYnkwr1+PJKmvF7Bql1HXbYNmP/
-         kCgHhgBnQGRR1Jpnv/OBLu6r+06OlwWgp3J1rf43f8EwlaW66PSr82Tc33Csj7f161PR
-         n8HYBqR3O34NQ3EOtZAiq0Si7bxZ7MCVdTpK2nihHzBJGW/NnCmJPGPAO7nj/rozNq7Y
-         NubA==
-X-Forwarded-Encrypted: i=1; AJvYcCW2RNJZM6+GZNDekG/A4OVguRCwuaVpEnoGRqcVXC2RFzpwE1IGDok1ZdiHXKeg7bmsai38a5W6nYwG@vger.kernel.org, AJvYcCW5/XgNzXO8E93SZG1uAReghJWJp569G6n/AIg+1fdAfGsn8TUC1B4caPAHtoG9KEkCoLq7MlKuciJ9@vger.kernel.org, AJvYcCWLdUtf7wL9z3YLafEWqx7XBC2BA4jjQJYAl48WQuQYy0ZbvfJXKC2b+SFDmchCbLsO4VAaXcsgh4Y0gtMq@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzwot0VF95ubuJSrX9oZWfN4FH0mbkXyxIO11yjX3azF/9a9jH/
-	k3rBFpaieZawLrLZQQNdQCvA6Q2eUQNM3z6KOnWw7uVOjeJmV3iG
-X-Gm-Gg: ASbGncsTBnc5mZm+DvzIQkyI2yQFRwbtQo3ff9R2Oaznl+PmPmKek6IXPk9LI47DNNL
-	rpz+Q5oklRCxUA1zWrOWgxs2q3xPMt0r3hLYoYyaYDGMEMQ5NGm9E6x9FUJPOfQo2GgySg89eWK
-	HTsnhVLQo5NR+wEYc73zg80pVvVPvudCXt8kna6Lh3DIjftsEm03HZoYzrjQFYBz0778BSDFZ0N
-	8juagCZ9ta2VfdTY01LrjUopjTwUFerTcOtp2gOOp1xVG+iu9dII4KgartO6ilPfY12bPWLHdaF
-	XrawwaHlvPN65dtj4gu1
-X-Google-Smtp-Source: AGHT+IHa2pjYh5qtU2xFWFpFRw710b9YzXGj/CQhpz4LU55IzIv/AkIca8T95g1vDXO/do3EzvlTyA==
-X-Received: by 2002:a05:620a:372c:b0:7c5:a5a2:eea3 with SMTP id af79cd13be357-7c775a3a33bmr1702022885a.34.1744079648872;
-        Mon, 07 Apr 2025 19:34:08 -0700 (PDT)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6ef0f14d2a7sm67012176d6.107.2025.04.07.19.34.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 19:34:08 -0700 (PDT)
-Date: Tue, 8 Apr 2025 10:33:32 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Rob Herring <robh@kernel.org>, 
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: Longbin Li <looong.bin@gmail.com>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto <inochiama@gmail.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, ghost <2990955050@qq.com>, 
-	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, sophgo@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 1/2] dt-bindings: pwm: sophgo: add pwm controller for
- SG2044
-Message-ID: <3y4nm5ievsfyomyzm35b3moj2buunwmisjowmvovhbglcjwnhi@gaj7wz4sm7tj>
-References: <20250407072056.8629-1-looong.bin@gmail.com>
- <20250407072056.8629-2-looong.bin@gmail.com>
- <jq55x7uhftvejninh56tzk32jtmmwa5wxzna5uxbkk5woi7zi5@6wrg2ctmyg7b>
- <20250407141119.GA2192351-robh@kernel.org>
+	s=arc-20240116; t=1744079678; c=relaxed/simple;
+	bh=f743pXy24fP4ZQGtc5Gp/38982Ecmd2qj65y1f/2EG0=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=nBRpg2VgtBvdNVTSVOoWo7CZf7Lo+7llUmVsn6MTVsUgJqhouHU6Lp9C9XZ/4VjjcQ9SRLoFutyMNDC4a+e3SdlapotKFzJOYxo7MNEMmHdJJFK7u0hiwx94zermAOnjhYY6XXUCUKBWtXzgGnxJ20ap5doOXz9taDlMzeAAi5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4ZWqr46dS8ztRtx;
+	Tue,  8 Apr 2025 10:33:08 +0800 (CST)
+Received: from dggpemf500002.china.huawei.com (unknown [7.185.36.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id EDC361401E9;
+	Tue,  8 Apr 2025 10:34:32 +0800 (CST)
+Received: from [10.174.178.247] (10.174.178.247) by
+ dggpemf500002.china.huawei.com (7.185.36.57) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 8 Apr 2025 10:34:31 +0800
+Subject: Re: [RESEND PATCH v18 0/2] ACPI: APEI: handle synchronous errors in
+ task work
+To: Shuai Xue <xueshuai@linux.alibaba.com>, <catalin.marinas@arm.com>,
+	<sudeep.holla@arm.com>, <lpieralisi@kernel.org>,
+	<linux-acpi@vger.kernel.org>, <yazen.ghannam@amd.com>,
+	<mark.rutland@arm.com>, <mingo@redhat.com>, <robin.murphy@arm.com>,
+	<Jonathan.Cameron@Huawei.com>, <bp@alien8.de>, <rafael@kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <wangkefeng.wang@huawei.com>,
+	<tanxiaofei@huawei.com>, <mawupeng1@huawei.com>, <tony.luck@intel.com>,
+	<linmiaohe@huawei.com>, <naoya.horiguchi@nec.com>, <james.morse@arm.com>,
+	<tongtiangen@huawei.com>, <gregkh@linuxfoundation.org>, <will@kernel.org>,
+	<jarkko@kernel.org>
+CC: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+	<akpm@linux-foundation.org>, <linux-edac@vger.kernel.org>, <x86@kernel.org>,
+	<justin.he@arm.com>, <ardb@kernel.org>, <ying.huang@linux.alibaba.com>,
+	<ashish.kalra@amd.com>, <baolin.wang@linux.alibaba.com>,
+	<tglx@linutronix.de>, <dave.hansen@linux.intel.com>, <lenb@kernel.org>,
+	<hpa@zytor.com>, <robert.moore@intel.com>, <lvying6@huawei.com>,
+	<xiexiuqi@huawei.com>, <zhuo.song@linux.alibaba.com>
+References: <20250404112050.42040-1-xueshuai@linux.alibaba.com>
+From: Hanjun Guo <guohanjun@huawei.com>
+Message-ID: <38b80839-cd47-cbf6-cd79-44e967ad8cb3@huawei.com>
+Date: Tue, 8 Apr 2025 10:34:15 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250407141119.GA2192351-robh@kernel.org>
+In-Reply-To: <20250404112050.42040-1-xueshuai@linux.alibaba.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpemf500002.china.huawei.com (7.185.36.57)
 
-On Mon, Apr 07, 2025 at 09:11:19AM -0500, Rob Herring wrote:
-> On Mon, Apr 07, 2025 at 02:31:24PM +0200, Uwe Kleine-König wrote:
-> > Hello,
-> > 
-> > On Mon, Apr 07, 2025 at 03:20:38PM +0800, Longbin Li wrote:
-> > > diff --git a/Documentation/devicetree/bindings/pwm/sophgo,sg2042-pwm.yaml b/Documentation/devicetree/bindings/pwm/sophgo,sg2042-pwm.yaml
-> > > index bbb6326d47d7..e0e91aa237ec 100644
-> > > --- a/Documentation/devicetree/bindings/pwm/sophgo,sg2042-pwm.yaml
-> > > +++ b/Documentation/devicetree/bindings/pwm/sophgo,sg2042-pwm.yaml
-> > > @@ -17,7 +17,9 @@ allOf:
-> > > 
-> > >  properties:
-> > >    compatible:
-> > > -    const: sophgo,sg2042-pwm
-> > > +    enum:
-> > > +      - sophgo,sg2042-pwm
-> > > +      - sophgo,sg2044-pwm
-> > 
-> > Given that the sg2044 has more registers (to e.g. implement different
-> > polarity), but the sg2042 registers are identical, I wonder if the 2044
-> > device should use:
-> > 
-> > 	compatible = "sophgo,sg2044-pwm", "sophgo,sg2042-pwm";
-> > 
-> > Note, I'm unsure here, only providing input to people who are more
-> > knowledgeable in DT that I am.
+Hi Shuai Xue,
+
+On 2025/4/4 19:20, Shuai Xue wrote:
+>>From Catalin:
 > 
-> Depends if s/w only understanding "sophgo,sg2042-pwm" will work on the 
-> 2044. IOW, will a kernel without the driver change here work?
+>> James Morse is listed as reviewer of the ACPI APEI code but he's busy
+>> with resctrl/MPAM.
 > 
+> These two patches have undergone 18 iterations of review and have received
+> 11 'Reviewed-by' tags in total, but they have not yet been merged into the
+> mainline. I am requesting further review and ack from the arm64
+> ACPI maintainers: Lorenzo, Sudeep, and Hanjun. Thank you for your attention
+> and assistance.
 
-No luck, the logic for SG2042 is broken on SG2044. In fact, it seems
-to be more familiar to the pwm ip on CV1800 than it on SG2042.
+I will take a detail review this week.
 
-Regards,
-Inochi 
+Thanks
+Hanjun
