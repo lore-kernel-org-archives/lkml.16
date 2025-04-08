@@ -1,87 +1,132 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gmmr-2.centrum.cz (gmmr-2.centrum.cz [46.255.227.203])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE902C9A
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 06:17:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B86871AA1C0
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 06:19:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.227.203
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744093059; cv=none; b=OPPAFuqgEKePrMkevFS7oT2C44ri3Irll3Aolcw9tISMSjdvr/BIzaGLdmXHe+oBwfwnniagPHaJ31vrHaT8KbJonP8LonJND3Rr5bFiiAN7mEOPZEs1dgeFAm5BJewDW4+mdyRYkgXTuze+ehorxsrTronQWMW5+0ahe9TX8U4=
+	t=1744093191; cv=none; b=ATvj59cYJFLe0NwtGwy4H7WjjAVcat/KRmtejbASQeTDCssS3EVYD26fYpSGShw4vUcF8r2kfv2auxMSDNhNAk7uaH0/TZ7uOh/RQ5Q78kso6McpgIQn15o09YP/PYm0pjUMN6xwEgA77jj5/v0WjpClQ1sv17oVVRyIs6qk6ds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744093059; c=relaxed/simple;
-	bh=VW+RsJJRpNN89PxvKgUJK1GGasY5iK6flMlTkynIT2M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JxAmNlH3E1PjlC/e/Sw0fpDZndzYGPvzQqh16kOqDP4xFf9NzIhTQ4Z0cEwR1WMY6zMbNQt3SyEDntzcvw3OYXIPYe/0xLipvQKzEKb4vz3k61EhSxBKrbkJ1iYVuYXoFTYUIwYW1qO5IQUh6Ct5/HuB2xzeQrLx2jhpzEeH3aU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=b9pcGPhc; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+	s=arc-20240116; t=1744093191; c=relaxed/simple;
+	bh=ESZ/gDHsgXIMhe8QeZmGDiYKlNIFXzEF0k9fDrzfcvs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LfRhlKH4+7xX5tN+KN6oQ6XkDrQGQ2JZNZVPgucL6BY0O9aPeW/jl/qggIpEWrRw2IHERr4jBmsK4UY3ZeTVeICdlRNqyKjPhUUFTn89nuPacuICR0r10uqDK1lBey7ozQ9JYdoIQ4rsxSnIv+OJip0CEj2d0HwC94WygMnngQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atlas.cz; spf=pass smtp.mailfrom=atlas.cz; dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b=JJXZ7Ip1; arc=none smtp.client-ip=46.255.227.203
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atlas.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atlas.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="b9pcGPhc"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4775ccf3e56so65332841cf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 23:17:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1744093056; x=1744697856; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=nS5SAKrFs9L3a7bg9Pf2lyrhub99zp14T9x9IO3i5/s=;
-        b=b9pcGPhcGEOcqGDWMudRHPYphk1lVLBJqaQYr5QK9mEKrjiw9vWO/w49x1tUTB2hhm
-         WZltNtxI54toK4cvK8lebAzM/m2L4s/KeWW7Iux1V42fdNeuzbcvIjq+y9zlnPXiB9Wo
-         MX3WsGGopiMR9+d+ZtIiBGOITIIoSx70S3YfE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744093056; x=1744697856;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nS5SAKrFs9L3a7bg9Pf2lyrhub99zp14T9x9IO3i5/s=;
-        b=AaXEQ8fvaIvGaxlMxLD+P69jHQG7SJ0GtRGBKXS/A/0V8eB0b3fLvNlbmJOmx6S4+1
-         BsWhn7sQvPKNq9ADDNrrAvzykHyZKAl9VYON4uqmmcTCdomaIs/AVOdQtHlKCb1a4Pnn
-         5FnJJd32OuwwYZE+8ZwGbsd9HZGnOBCjoxd1vz6vYUZpC0OKJKj+ah2cEBNgqv2dknVr
-         MggbEZ/VzJfw0dq2A0iEhe0gj9oFoE2s9nqT5NHiOLIRYfWADuz9CntpbcNWVZFpY0Tp
-         nKjojCW6QicO8lX9m9viDDWapuqSvdUMT5reAZY8Y5yFEL7Y8Jm4Z+xNtF3NviQijJlL
-         bJZA==
-X-Forwarded-Encrypted: i=1; AJvYcCULTWBfeiOSWSwDt1gwHNkvmQeqwz+s0qV5XDAmOOOcgfCXs+mh+M93qxMgll79KZshODGzSvfE7NsYW3s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlgervWvL748XgX5s5CMEKXAA/PYfm8OA5YuXK1DUyjIhOSnjs
-	IFiS+YXnBOEWLmHdLIqUk9APLuDALky+FQsZE3KF4RvYdh7Yxaqb7U5+JkGLlb7J21LgHzdKv/n
-	hYQ1ZLlCnjcmts77lCgz6zEBoBiT3oty9kjucrA==
-X-Gm-Gg: ASbGncsABJrLfAzAXWtXL+T21v32STh9hinRgwupP+A7L0TlkjqgCgCInjY4tf+wBIA
-	YLF02DMeWvlyI1zuTxP3ZhjWq2S51HoRdlN5eGl1xxcByEktH1A3f1AHD7iInI3B6OWYVO3t2BP
-	quwy1FKLAneKlOwMBMG1FkITofMos=
-X-Google-Smtp-Source: AGHT+IGN08NztWSyO7oZY1PKzyq5lt8yT3Bg7u9DzpatY8aRQSviQxIWIRLmXD23CvcOoXDn1LuSBR6ZSex14gtyN48=
-X-Received: by 2002:ac8:5a8a:0:b0:476:6df0:954f with SMTP id
- d75a77b69052e-47953ed2b21mr36161891cf.10.1744093056143; Mon, 07 Apr 2025
- 23:17:36 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b="JJXZ7Ip1"
+Received: from gmmr-2.centrum.cz (localhost [127.0.0.1])
+	by gmmr-2.centrum.cz (Postfix) with ESMTP id 5CB8120931A6
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 08:19:43 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=atlas.cz; s=mail;
+	t=1744093183; bh=lvyjIJKGy8QhZAPg5VkaN7V4KSmrZ8/Cvduct4cuvCU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JJXZ7Ip1rzshsSYnF++lv5XhBb1xUc6/nh7CNM3sUOn2m/LKuBKPSE0zBxNTsxZXO
+	 I1UzvEIhFlRtAljYlB7Uxf/dz/F2WNtmb840cw5dinC3UhODRez80mV70agwS0Zsv1
+	 bWGJMfIYlPgxlng3pSg3DdaXP4Y52bV5Nol8N72s=
+Received: from antispam37.centrum.cz (antispam37.cent [10.30.208.37])
+	by gmmr-2.centrum.cz (Postfix) with ESMTP id 59D662092EC0
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 08:19:43 +0200 (CEST)
+X-CSE-ConnectionGUID: zCTAe/TKRguaPpQhCVET8w==
+X-CSE-MsgGUID: mo02/PjlTVGfV5Mc6j3YCQ==
+X-ThreatScanner-Verdict: Negative
+X-IPAS-Result: =?us-ascii?q?A2ErAACZvvRn/03h/y5aGgEBAQEBAQEBAQEDAQEBARIBA?=
+ =?us-ascii?q?QEBAgIBAQEBQAmBOQIBAQEBCwEBghqBJYFkhFWRdYokiAWBIIxIDwEBAQEBA?=
+ =?us-ascii?q?QEBAQk5CwQBAQMEOIRIAosqJzcGDgECBAEBAQEDAgMBAQEBAQEBAQENAQEGA?=
+ =?us-ascii?q?QEBAQEBBgYBAoEdhTVGDUkBEAGCAIEsgSYBAQEBAQEBAQEBAQEdAg1+AQUjD?=
+ =?us-ascii?q?wFGEAsNAQoCAiYCAlYGE4MCAYIvAQMxFK8ReoEyGgJl3HACSQVVY4EkBoEaL?=
+ =?us-ascii?q?gGITwGFbBuEXEKCDYEVgyo+hBuEA4JpBIItRVWNVJMhUnscA1ksAVUTFwsHB?=
+ =?us-ascii?q?YEpQwOBDyMPBz0FMx2BfINygwqCLoIRgVwDAyIBgxV1HIRug02BDS1PgmpJP?=
+ =?us-ascii?q?R1AAwttPTcUGwaYEoRuYIF9SVTFeYMcgQmETYdLlUozl3ADkmSYfo4Fmy6Bf?=
+ =?us-ascii?q?YIAMyIwQoIFW1IZjjwWFnYBC4dTw0V2CzECBwEKAQEDCYI7i26BQDOBSwEB?=
+IronPort-PHdr: A9a23:PkHKsBVfYWmLPAAM4RqRTUIQAbDV8KwdUjF92vMcY1JmTK2v8tzYM
+ VDF4r011RmVBt+ds6oP0bKM6PuocFdDyKjCmUhKSIZLWR4BhJdetC0bK+nBJGvFadXHVGgEJ
+ vlET0Jv5HqhMEJYS47UblzWpWCuv3ZJQk2sfQV6Kf7oFYHMks+5y/69+4HJYwVPmTGxfa5+I
+ A+5oAjfqMUam5duJro+xhfXvndEZepbyG11Ll+Pghjw4du985Fk/ylMofwq6tROUb/9f6Q2T
+ LxYCCopPmUo78D1thfNUBWC6GIEXmsZihRHDBHJ4Q/1UJnsqif1ufZz1yecPc3tULA7Qi+i4
+ LtxSB/pkygIKTg0+3zKh8NqjaJbpBWhpwFjw4PRfYqYOuZycr/bcNgHQ2dKQ8RfWDFbAo6kY
+ YUBD/QPMPhFoYf+qVsBogexChSjCuzt0TJImnz70Lcm3+g9DQ3L3gotFM8OvnTOq9X1Mb8fX
+ /qrw6nU1zXIcvxZ1i376I3WcRAqvPaBUqhqccrS00YvEhnKjk+LpIP/IzOV0v4Cs3OB4+V8V
+ OOikmgqoBx+rTaz3MkjkJXJhp4LxVDe8yV02Ik7K9K3RkN4f9KpE5tduiWeOoZ4XM8vQ2Fmt
+ SI6x7MJpJK2YCsHxZUpyRPQavGKfYeF7w7+WOuNIzp1h3Joday5ih2v/0agzej8WdO10FZMt
+ idFkcfDtmoL1xPN7siLUPx9/l2u2TuJygvd6flELFg7mKfaMZIt3L49m5oJvUjdACP7mF/6g
+ a2Ue0k85OSk9urqbq/4qpOCK4N4kB/yP6sylsClBek1Mw4DVHWB9+umzr3s50j5Ta1Pjv0xj
+ 6bWrojXJd8epq6lGw9V1Zsj6wqnAzemztsYmX4HIUpKeBKCloTpIFTOIOzgDfuin1igiitky
+ O7APr39GJXNM33DnK39crd880JcyQwzws5D559MBbwMIej/VlHxudHYFBM1LRK4zub9BNh/1
+ I4SQWePDbWYMKPWv1+I/OUvI+yUaYAPojb9KOIq5/v0gn8jglISZ7Wp3Z8NZ3CjBPhpP0SYb
+ WL2gtgdCWcKohY+TOvyhVyNUjNeZm2/X6Ei6TEhDoKpE4PDSpqqgLyb0ye3BodWaXxeClCQD
+ XfocJ2JW+sDaCKWLc5siTgEVbmnS488yRGurgj6y7xmLuvb4CEXqIzs2MBv5+LPjREy6SB0D
+ 8OF3mGJTmF0mH4IRjAv0KB8v0N90FGD3rZ8g/FDC9xT6O1GUh0gOZ7f0eN6EdbyVRzFftuTT
+ 1amWNqmDSk3Tt0q29AOeVpyG82+jhDf2CqnG7EYm6SWC5w386Lc2mD8Kd5yxXnIyqcvk0UrT
+ M1XOWK7g65w7RLTCJLRnkuBjqikbasS0DbW9Gebw2qDpFlWXhdoX6vKRXwffVPWrdrh6UPCU
+ bCuDbMnPxNZx8CbMqVEZY6hsVITePfkPd3FK021lmagAxuSjueQY476U2Ec2jjBEk8CkhBV8
+ XvQZiYkASL0m2/CFnRQHFRMYAu4+PN9oXayVGc90wWDdAtqxezmqVYumfWARqZLjfo/syA7p
+ mAsdGs=
+IronPort-Data: A9a23:+UBBXqCg/n/C7hVW/0riw5YqxClBgxIJ4kV8jS/XYbTApDsr3mcCy
+ 2UdXj/SMv6DMWXzLtxwPIng9E5S78PUzIdlOVdlrnsFo1CmCCbm6XZ1Cm+qYkt+++WaFBoPA
+ /02M4SGcYZtCCeB+39BC5C5xVFkz6aEW7HgP+DNPyF1VGdMRTwo4f5Zs7dRbrVA357gXmthh
+ fuo+5eCYAP9i2YtWo4pw/vrRC1H7amaVAww4QRWicBj5Df2i3QTBZQDEqC9R1OQapVUBOOzW
+ 9HYx7i/+G7Dlz91Yj9yuuuTnuUiG9Y+DCDW4pZkc/HKbitq+kTe5p0G2M80Mi+7vR3Sxowsl
+ 48d3XCHYVxB0qXkwIzxWvTDes10FfUuFLTveRBTvSEPpqFvnrSFL/hGVSkL0YMkFulfE0py3
+ PFfFBM3YQ2Kv/qPwJmFZ9U8mZF2RCXrFNt3VnBIwjScFvM6WcmbBa7H48NCwTJ2jdIm8fT2O
+ 5RfM2cyKk6aPlsQZT/7C7pn9AusrnDlcDRdoUi9rLYz6nOVxx4ZPL3FYYWOJIHRGZg9ckCwo
+ 2WepSPBABUmCvOR92eg+Syu3d7kpHauMG4VPPjinhJwu3WDljI7CxAMU1a/5/6jhSaWR91bO
+ 2QQ+ywzsbI18k27CNXwNzW8oXiZrlsfVsBWHukS9g6A0OzX7hyfC2xCSSROAOHKr+dqG3pwi
+ wLPxYm0Q2Mw2FGIdU+gGn6vhWvaEUAowaUqP3dsodctizU7nLwOsw==
+IronPort-HdrOrdr: A9a23:cTT8NKpXXM6TxS3YOxdUGiYaV5omeYIsimQD101hICG9vPb2qy
+ mLpoV/6faSskd0ZJhAo6HjBEDuexnhHPJOjLX5eI3SOzUO21HYT72Kj7GC/9SIIUSXndK1l5
+ 0BT0EUMrPN5DZB4frH3A==
+X-Talos-CUID: =?us-ascii?q?9a23=3AjRgxEmiJSf/6SxuXr5SNskHdeTJuYFbh5XqXH2y?=
+ =?us-ascii?q?CBntgcKWsSXSu1Z80jJ87?=
+X-Talos-MUID: 9a23:2VX0jQjQ61VRcj6PC58jYMMpMcAwueOWCkQxr7oIhZShPnJyYAa2tWHi
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-AV: E=Sophos;i="6.15,197,1739833200"; 
+   d="scan'208";a="97365345"
+Received: from unknown (HELO gm-smtp10.centrum.cz) ([46.255.225.77])
+  by antispam37.centrum.cz with ESMTP; 08 Apr 2025 08:19:41 +0200
+Received: from arkam (ip-213-220-240-96.bb.vodafone.cz [213.220.240.96])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by gm-smtp10.centrum.cz (Postfix) with ESMTPSA id BF5A480911A9;
+	Tue,  8 Apr 2025 08:19:40 +0200 (CEST)
+Date: Tue, 8 Apr 2025 08:19:39 +0200
+From: Petr =?utf-8?B?VmFuxJtr?= <arkamar@atlas.cz>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [tip: x86/urgent] x86/acpi: Don't limit CPUs to 1 for Xen PV
+ guests due to disabled ACPI
+Message-ID: <20254861939-Z_S_-ybv1at7EdUO-arkamar@atlas.cz>
+References: <20250407132445.6732-2-arkamar@atlas.cz>
+ <174403706955.31282.7031075757256146451.tip-bot2@tip-bot2>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <67f3dc05.050a0220.107db6.059d.GAE@google.com> <1465443.1744059739@warthog.procyon.org.uk>
-In-Reply-To: <1465443.1744059739@warthog.procyon.org.uk>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Tue, 8 Apr 2025 08:17:25 +0200
-X-Gm-Features: ATxdqUHATzE8R7-GtRDaTuVwk64W_yazPWFWR845MefAQpWOnCnETGl6AzmpLJ8
-Message-ID: <CAJfpeguEd49YhmbsZYPgKJ4=BYpgEEhF7gnH2Cp1yRouQUUMWQ@mail.gmail.com>
-Subject: Re: [syzbot] [ext4?] [overlayfs?] WARNING in file_seek_cur_needs_f_lock
-To: David Howells <dhowells@redhat.com>
-Cc: syzbot <syzbot+4036165fc595a74b09b2@syzkaller.appspotmail.com>, 
-	adilger.kernel@dilger.ca, amir73il@gmail.com, linux-ext4@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-unionfs@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, tytso@mit.edu
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <174403706955.31282.7031075757256146451.tip-bot2@tip-bot2>
 
-On Mon, 7 Apr 2025 at 23:03, David Howells <dhowells@redhat.com> wrote:
->
-> syzbot <syzbot+4036165fc595a74b09b2@syzkaller.appspotmail.com> wrote:
->
-> > syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-> > unregister_netdevice: waiting for DEV to become free
-> >
-> > unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
->
-> I've seen this in a bunch of different syzbot tests also where, as far as I
-> can tell, the patch I've offered fixes the actual bug.
+On Mon, Apr 07, 2025 at 02:44:29PM -0000, tip-bot2 for Petr Vaněk wrote:
+> The following commit has been merged into the x86/urgent branch of tip:
+> 
+> Commit-ID:     8b37357a78d7fa13d88ea822b35b40137da1c85e
+> Gitweb:        https://git.kernel.org/tip/8b37357a78d7fa13d88ea822b35b40137da1c85e
+> Author:        Petr Vaněk <arkamar@atlas.cz>
+> AuthorDate:    Mon, 07 Apr 2025 15:24:27 +02:00
+> Committer:     Thomas Gleixner <tglx@linutronix.de>
+> CommitterDate: Mon, 07 Apr 2025 16:35:21 +02:00
+> 
+> x86/acpi: Don't limit CPUs to 1 for Xen PV guests due to disabled ACPI
 
-Which one is that?  I can't seem to find it.
+Thank you for accepting the patch.
+
+Out of curiosity, why did you remove the Cc: stable@vger.kernel.org
+trailer? I thought it should be backported as it is a regression.
 
 Thanks,
-Miklos
+Petr
