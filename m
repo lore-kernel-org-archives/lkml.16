@@ -1,193 +1,119 @@
-Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C3CA142E7C
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 13:28:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 360C11925AF
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 13:29:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744118941; cv=none; b=Y2cfWxYTzMhMeMou84npuGGt/aR+5LCfh+cKJxUsCpxSuxpxOWF1jBgdiArPafMS7z/Pih0VP/RYxKJ6k0CRJEWPknq8Ez49BgemtPDhWNtPunuxQsgBtHdMkwBZFGTsbLuaa1L+gvzOqNsPkbE5ZXHOeIRbKDxGn/x3tQdckFE=
+	t=1744118966; cv=none; b=rCbRKYDd0sfvFeoZNCEcJQ7wHt8/WF1b0N46AFJsddBbKeGGfB2oFXy5/EB7N9/Q9MWIF6uFKDNCJPynIN39lyx4vAUE2fJra/MP2uWDeVkRj4WSdl+L8ppz2jAMmj4wfX+r41vXn0BUAGMXm36B2Key+Q471rNwIC5XPU5wATg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744118941; c=relaxed/simple;
-	bh=lp92M4ZMRL0XIN792/96i5Ero8lxj7Titagx5rgLawY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MKKliKWRFuk9KZJpKILdKWEG8NBIEReMyF+smX6V6Gl1VCkvA0iNhs3Uwmh89gHqvCG535UGmsp8DruTOSgRUnFDRhU6p5DMFvy9tNJbU6lKBT8aYQ6VhKBmLqZb2/jsRFFI2nL4b1syiFTBhA5ZLTmChS+/KKzQrJawK6Ym/ng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bK+eg/M/; arc=none smtp.client-ip=209.85.160.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744118966; c=relaxed/simple;
+	bh=3pOUYj6JIOLbe1ljngk//BXwsbh+xpYpSEW8R94B+kw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Bbs9utntWWBnD+6wJdXYx5V7bKu9MT/W9H+xmV76TpkBiPsl7uyhHOp56UvXUCdtEQ74MQDpzoAIHiWwE+BuVSk/c7MdPwtTUOgzqUQL7cTxZjRBKUVnTShBRDY18zlZ29hag7wcUmnZ/5Owm9F1fp8s95GSDTzp+BpwgtHl02o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b20U59gX; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bK+eg/M/"
-Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-2b8e2606a58so2986648fac.0
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 06:28:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744118938; x=1744723738; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/8oL4Wx/LFCNYSj8OeE9r8nBxp3KNb2RWFN4L2fcM5k=;
-        b=bK+eg/M//2OefqF4Sm/Io6JS3dLOYlxDk9KkAQn6bcpWAJlV8udYjNdDQ+8MqPEInz
-         ZmbChxujKdleE2gN8nq2geIBkF6JDs5cR4+nnhCX6JldEkKNXXcd6qSSLAUViKLhbci9
-         vjZs5F4LGcXsL3uT4rWleQUc3jqf4VCS+/3qBgtm7fXJqk4S8Li6Hi5mfXmT94NwulOO
-         pxOCcDT/a4pcY6gGc/IQ6jjBSCML+b90+/7sLE3qUSqdPAJbcgTPjc0+pbsBv7P98IQE
-         Zvy3vQkptRIYdNkX0/sGC9FgRbaKYHbp8VmPKixPhWAtx5PgafdAx4umhOYcY1WBmIHM
-         JSVA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b20U59gX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744118961;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uBHxE4o+poP6p/ofYoEMxQF6RNUpC2hi/3SExaAVHuA=;
+	b=b20U59gXI4HHjIW2yoNZhiH0QtGvbO7O/giWKJiHoSTBux88satLREZk16kLX2oiM6rTrb
+	9HUYWDaR/Ira/sqz9cNbpA61b1r83bOzJlUQ/60Ji4xQbC+TvSvIbiAoVtJirlcCg4Ssh0
+	sD2I6MrMZiUapQ3U1Y6cQzc9plGaDGw=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-219-HcAvU3vNNBajlCY_m5DIjQ-1; Tue, 08 Apr 2025 09:29:19 -0400
+X-MC-Unique: HcAvU3vNNBajlCY_m5DIjQ-1
+X-Mimecast-MFC-AGG-ID: HcAvU3vNNBajlCY_m5DIjQ_1744118957
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-391492acb59so3223783f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 06:29:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744118938; x=1744723738;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/8oL4Wx/LFCNYSj8OeE9r8nBxp3KNb2RWFN4L2fcM5k=;
-        b=O6kK18KDGGI29Xf5kgEvRVXVi+UZUhquQ79kkDxCYmgxmjK0dTToA3+p3IeXWOMVLS
-         UCahMyMTUhtmfaq27dXGBptJTv2f7iFKMsaRstAyH2CEw1+AloKl9RpqFicYsKvE2V3i
-         cG4rgIaadz8ktV1ZeyG6LlfBqhphNNibYdJg+n7KVX9rUJ0AtAlDsuD75khougO4sS2G
-         5ZUaQxYgk4Or5tLe6Dk2XT0m5iZJjN9cR18Txsw/7r4Q3C7cXqhp08CzuPG9yNWsCbrS
-         /b1ogn8wjew3fSnOKYdVALlNxO2Wkaa13yFWPjbGQh6lv1CrtBaIa7wKOfxwJj9OYBcM
-         S8iQ==
-X-Gm-Message-State: AOJu0YyamxXyohrpjzWvLlt6GfRARyucwYfOAzZ1oIhXZW0tAVEk+yRk
-	XW72wv3WRNdCU1+WBhI9TEXpKodhr0/h6jDMmUz1uaQYNIn8I6+hc33u40PtOH4NZ0E53kXWqnD
-	jkDo6cw6wbbnPDyC444eM2vaWKVJzOb1wW9HXKQ==
-X-Gm-Gg: ASbGncuJ28wodBsTMtAKPmZZJOomoORGDAvEMIPENbk+D9PTi8xyBTSmDEFRGFIwQYh
-	jiCZ0Gg6aRIphA/VTBlV78Nw13trAHOFkjbsj7R7iBhJtJYVxfYhNWcrBxTMWO6xgmgyg0cjgGE
-	eVqBxhPN+EAbABntdR1uSWi+d8lyE=
-X-Google-Smtp-Source: AGHT+IHAG/ejTbg5vA3Vos54fD/tOWqlevkuF4IcqFNjsV/ID7Wtar2qRZ5cZm99uR1FeZB4/PY/aA5SmWOjkV3d+8Q=
-X-Received: by 2002:a05:6870:8185:b0:2c2:4eb0:41f3 with SMTP id
- 586e51a60fabf-2cc9e50b24emr9010028fac.3.1744118938200; Tue, 08 Apr 2025
- 06:28:58 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744118957; x=1744723757;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uBHxE4o+poP6p/ofYoEMxQF6RNUpC2hi/3SExaAVHuA=;
+        b=CajfzYaf26az0DMNSD8em5Kp24PmmdZ+ulnfqu9hkRx08JqL4BYJQ6AbNNf5i1qANi
+         jW54uHetmlnre+qUoFBSg1WLfAt4RetngC0FlrKaN4V325RST1JafGFUnDFcCFWq56Cz
+         wSjV0ELEtCLhXs5iTjWuSIiMsJeTjqxpYGDXLhIqKvXhspmdmhSIg7igvC41YQyJZwv4
+         iU0ozVKAc8RxHBk0iKvcsZwCvmlby4MQhsINIVE+aXjriRcoZ4uHGTJm/F9Hz4n4n9ss
+         3OIcZSUosq1cM1uJWxOhwc9Pep1GKbR2w1gq+UKrJ+MCyVFXXYzq0J8bx2WQ8YZZyrzG
+         DHzg==
+X-Forwarded-Encrypted: i=1; AJvYcCVUohhas9k5feVnQBxZdrefqeu66Yt3M4IMv+W084AUed8R0MAhOaWQjr4MH1N1oJNB9Ievs0hwmawVm78=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQR63Kxs/tK6FqmzQwDjhYjp0j++fZOmJdO7nHXR3cn/09T3il
+	vQIaD3Jjg3qw0riXs1WNEHDHoVtE0BVLbxEwzp3OaWjL6Aus0UkPsZ6OR2VWZD/+VHaUeoULU3x
+	+Uybs9PR8LNctedjra5NbBJH72wJejCuGkkCXR04GY3fRm32ZKXPdo2BR9z1bOA==
+X-Gm-Gg: ASbGnctm/f58UiIAIONIjo3fh5Ny+P2uEMhK3z/vlISGFi4/lnbb4VeLINM8un2W8BS
+	3mGBKM2sTi9NzboijvsTZlWkGDHHRxaHMCGsoc9wAeyFRg3pKi+MGhwu0OBJQlnwRSW5Ykmn1Eo
+	9DDK8+3BPw/HUyCimc8JxBs+UlEZ4Tn7L/m0s+7xW0GKxKgL/ltqlWCACn5yf1aHWVqdLEO48Ct
+	BVWnBT8nRP2Jw1Ww3O8/dl+oYDqhiuo8m3469YHPzkjk5TPcvGzRRGminlNJ4h9fWURigxNEB4J
+	oo7QxC0dhTD8I5JsiYJ2C2S+ABBdg288ZOS2CUuOi7Q=
+X-Received: by 2002:a05:6000:1a8d:b0:39c:1f10:d294 with SMTP id ffacd0b85a97d-39d0de28a44mr13769265f8f.26.1744118956999;
+        Tue, 08 Apr 2025 06:29:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH1HpRnEm/6M6CXH6msdauscTzQ/uB3jUvfgXW4D2EwTpNq9WLAloBhZWMlPFT2ix4Lmb7tOg==
+X-Received: by 2002:a05:6000:1a8d:b0:39c:1f10:d294 with SMTP id ffacd0b85a97d-39d0de28a44mr13769230f8f.26.1744118956594;
+        Tue, 08 Apr 2025 06:29:16 -0700 (PDT)
+Received: from [192.168.88.253] (146-241-84-24.dyn.eolo.it. [146.241.84.24])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f0e5e8dfasm26993845e9.27.2025.04.08.06.29.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Apr 2025 06:29:16 -0700 (PDT)
+Message-ID: <d5e03a72-bff3-4df1-91ed-6916abaaa0ec@redhat.com>
+Date: Tue, 8 Apr 2025 15:29:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250305130634.1850178-1-jens.wiklander@linaro.org>
- <20250305130634.1850178-6-jens.wiklander@linaro.org> <Z-JOPgcWlpTlskgd@sumit-X1>
- <CAHUa44GjpHT5Nqo+Ar5jNYNPV-YJQYpLTCf=7oJ1o0VjP-t0nA@mail.gmail.com>
- <Z-ucuPzwz4IqVTgb@sumit-X1> <CAHUa44FpsCVrbwj1=nsJVJFVJSF1kzKdWAkAMXRu6EdLrLvh8g@mail.gmail.com>
- <Z_To9V-JOKZ7ChhE@sumit-X1>
-In-Reply-To: <Z_To9V-JOKZ7ChhE@sumit-X1>
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Date: Tue, 8 Apr 2025 15:28:45 +0200
-X-Gm-Features: ATxdqUHzionenqJkD4YMHdkp7sUKPz9WrHUIS_ghqCFpfmFZzX0EbynUuoPZUrs
-Message-ID: <CAHUa44EGWuVPjoxpG-S66he=6dkvkwzxNewaGKVKXUxrO41ztg@mail.gmail.com>
-Subject: Re: [PATCH v6 05/10] tee: implement restricted DMA-heap
-To: Sumit Garg <sumit.garg@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
-	op-tee@lists.trustedfirmware.org, linux-arm-kernel@lists.infradead.org, 
-	Olivier Masse <olivier.masse@nxp.com>, Thierry Reding <thierry.reding@gmail.com>, 
-	Yong Wu <yong.wu@mediatek.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
-	John Stultz <jstultz@google.com>, "T . J . Mercier" <tjmercier@google.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, azarrabi@qti.qualcomm.com, 
-	Simona Vetter <simona.vetter@ffwll.ch>, Daniel Stone <daniel@fooishbar.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH REPOST] usbnet: asix: leave the carrier control to phylink
+To: =?UTF-8?Q?Krzysztof_Ha=C5=82asa?= <khalasa@piap.pl>,
+ netdev <netdev@vger.kernel.org>
+Cc: Oliver Neukum <oneukum@suse.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, linux-usb@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Jose Ignacio Tornos Martinez <jtornosm@redhat.com>,
+ Ming Lei <ming.lei@redhat.com>, Oleksij Rempel <o.rempel@pengutronix.de>
+References: <m35xjgdvih.fsf@t19.piap.pl>
+Content-Language: en-US
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <m35xjgdvih.fsf@t19.piap.pl>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 8, 2025 at 11:14=E2=80=AFAM Sumit Garg <sumit.garg@kernel.org> =
-wrote:
->
-> On Tue, Apr 01, 2025 at 10:33:04AM +0200, Jens Wiklander wrote:
-> > On Tue, Apr 1, 2025 at 9:58=E2=80=AFAM Sumit Garg <sumit.garg@kernel.or=
-g> wrote:
-> > >
-> > > On Tue, Mar 25, 2025 at 11:55:46AM +0100, Jens Wiklander wrote:
-> > > > Hi Sumit,
-> > > >
-> > >
-> > > <snip>
-> > >
-> > > >
-> > > > >
-> > > > > > +
-> > > > > > +#include "tee_private.h"
-> > > > > > +
-> > > > > > +struct tee_dma_heap {
-> > > > > > +     struct dma_heap *heap;
-> > > > > > +     enum tee_dma_heap_id id;
-> > > > > > +     struct tee_rstmem_pool *pool;
-> > > > > > +     struct tee_device *teedev;
-> > > > > > +     /* Protects pool and teedev above */
-> > > > > > +     struct mutex mu;
-> > > > > > +};
-> > > > > > +
-> > > > > > +struct tee_heap_buffer {
-> > > > > > +     struct tee_rstmem_pool *pool;
-> > > > > > +     struct tee_device *teedev;
-> > > > > > +     size_t size;
-> > > > > > +     size_t offs;
-> > > > > > +     struct sg_table table;
-> > > > > > +};
-> > > > > > +
-> > > > > > +struct tee_heap_attachment {
-> > > > > > +     struct sg_table table;
-> > > > > > +     struct device *dev;
-> > > > > > +};
-> > > > > > +
-> > > > > > +struct tee_rstmem_static_pool {
-> > > > > > +     struct tee_rstmem_pool pool;
-> > > > > > +     struct gen_pool *gen_pool;
-> > > > > > +     phys_addr_t pa_base;
-> > > > > > +};
-> > > > > > +
-> > > > > > +#if !IS_MODULE(CONFIG_TEE) && IS_ENABLED(CONFIG_DMABUF_HEAPS)
-> > > > >
-> > > > > Can this dependency rather be better managed via Kconfig?
-> > > >
-> > > > This was the easiest yet somewhat flexible solution I could find. I=
-f
-> > > > you have something better, let's use that instead.
-> > > >
-> > >
-> > > --- a/drivers/tee/optee/Kconfig
-> > > +++ b/drivers/tee/optee/Kconfig
-> > > @@ -5,6 +5,7 @@ config OPTEE
-> > >         depends on HAVE_ARM_SMCCC
-> > >         depends on MMU
-> > >         depends on RPMB || !RPMB
-> > > +       select DMABUF_HEAPS
-> > >         help
-> > >           This implements the OP-TEE Trusted Execution Environment (T=
-EE)
-> > >           driver.
-> >
-> > I wanted to avoid that since there are plenty of use cases where
-> > DMABUF_HEAPS aren't needed.
->
-> Yeah, but how the users will figure out the dependency to enable DMA
-> heaps with TEE subsystem.
+On 4/7/25 2:08 PM, Krzysztof Hałasa wrote:
+> [added Oleksij - the author of the phylink code for this driver]
+> 
+> ASIX AX88772B based USB 10/100 Ethernet adapter doesn't come
+> up ("carrier off"), despite the built-in 100BASE-FX PHY positive link
+> indication. The internal PHY is configured (using EEPROM) in fixed
+> 100 Mbps full duplex mode.
+> 
+> The primary problem appears to be using carrier_netif_{on,off}() while,
+> at the same time, delegating carrier management to phylink. Use only the
+> latter and remove "manual control" in the asix driver.
+> 
+> I don't have any other AX88772 board here, but the problem doesn't seem
+> specific to a particular board or settings - it's probably
+> timing-dependent.
+> 
+> Signed-off-by: Krzysztof Hałasa <khalasa@piap.pl>
 
-I hope, without too much difficulty. They are after all looking for a
-way to allocate memory from a DMA heap.
+Does not build:
 
-> So it's better we provide a generic kernel
-> Kconfig which enables all the default features.
+../drivers/net/usb/asix_devices.c:1396:19: error: ‘asix_status’
+undeclared here (not in a function); did you mean ‘si_status’?
+ 1396 |         .status = asix_status,
+      |                   ^~~~~~~~~~~
+      |                   si_status
 
-I disagree, it should be possible to configure without DMABUF_HEAPS if desi=
-red.
+/P
 
->
-> > This seems to do the job:
-> > +config TEE_DMABUF_HEAP
-> > + bool
-> > + depends on TEE =3D y && DMABUF_HEAPS
-> >
-> > We can only use DMABUF_HEAPS if the TEE subsystem is compiled into the =
-kernel.
->
-> Ah, I see. So we aren't exporting the DMA heaps APIs for TEE subsystem
-> to use. We should do that such that there isn't a hard dependency to
-> compile them into the kernel.
-
-I was saving that for a later patch set as a later problem. We may
-save some time by not doing it now.
-
-Cheers,
-Jens
-
->
-> -Sumit
->
-> >
-> > Cheers,
-> > Jens
