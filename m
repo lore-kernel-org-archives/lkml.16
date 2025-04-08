@@ -1,220 +1,148 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCFF1221DA0;
-	Tue,  8 Apr 2025 08:49:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 588A62641CD
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 08:50:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744102168; cv=none; b=aIBOAeME/LmFzGYCbBEYIeLDWc/x9tF9O18+hgdYSFxywiIMD6W50CmcFW9VJv6AzQDUnnI5ARVTbSsrE7WmufZ6bCyFO24Gk7d9rCqoWWEAymeshjIoVExtKLhRhN0qI7Gs0BtindvZC0/XRy8g+auqDVBfyVdaEthlDPj6FGw=
+	t=1744102206; cv=none; b=fZ4xAF3AHVWfsTnVAt9aQg9Jw4xd4pd28kLRdosmvDdbszhNFvY0xM2AkUdM9qr+RjlQorcsdm9fIbuzZx2ZqAwmn8ZK6RE9mucIGcE8jmNQIguVdUryHO4KQO1XyE6BuE5tG3OFGN65tYXRXLM5fYi/642TXQaNFeNbIftwA/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744102168; c=relaxed/simple;
-	bh=/oi0h+YxGjSj0Amrgd3zkGZvok/zMIeGT22vwxuw0xs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CKJrrF7MkhLjPKOk7qPhtOpZXwrCsJHNHF2/2XzR1HSWWvDb97pcfQ9otocmm9cwejE8nMk0MqTmHJ69W9zQ44CCBVbBCE1SDmvSZroS79i1bLvizfBrwWdANEcaUe/LwqZkwoYRsRvJZN9b15g1ilT0eYIw2LglCf4z+i2gi+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F34BNLh/; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744102206; c=relaxed/simple;
+	bh=3WL9RHuOr37ueCpY977pBENFvwmMyXbAuJwbEskYP10=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=uixQEzmqnnuiYkU58cud5wuj6rfZGOiNIo5+qxeuaJLQ84ShnLqVakMCY/s9tSUGIBJ9/6+wHp5iqUmsF0xN/mRC5pZVH2RUDpGUvc/+n+TWKx47b7iloCbRhSVZ6UNylkQ8FR8Zuu9iFCpP9xrP2xprrHVJ/ssT35+ygY0Weck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=SirbSLFw; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F34BNLh/"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-54298ec925bso1675178e87.3;
-        Tue, 08 Apr 2025 01:49:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744102165; x=1744706965; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vLz6PIQLrX7WAvTgN7mKlzbJuOZCZNXq5vbLEn5vmhw=;
-        b=F34BNLh/V77HHZ0mSwg4yanme41aqOwp4+33aLzTWhVhGe6HR3qW+9BjBIfc4ezwPc
-         ug6DjamhNrxaVeSN7DdKVxF4REOJQOiwwECTBn2aUX+wSjFOkbAtFYLzND+1x8Dnqe0B
-         O8Z/HySipzQH0zJBGwA3pcLtOWPsuge9KnOPejZ+zs+VPrdCYaESQ/OsrWf7eKQd+oHr
-         +lLSbHCmbO+fKUGtW3QoQAPp+NA9Ww6OsZ+wA85BvvHjq3Fx0sD67FRVlnty9aBlqeXl
-         fBe6rSUADQl6z+MXtSZO3Zy4I4wBVpN0sxK6B/3ETSSUwmwfWOVZSF8I/vdNEuoUJpMz
-         lK8g==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="SirbSLFw"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5382JKof014105
+	for <linux-kernel@vger.kernel.org>; Tue, 8 Apr 2025 08:50:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=KX0kg+QY5VU+pzrQGxzEsX
+	01PSKAVuHH52HYSLvo0s0=; b=SirbSLFwhmS3MiN7T/Be95a4IWMYEhtzPwoEGz
+	q7fdzjjCQFE4mRLwWgukdleL2+moJSAk7c9ZYURRppGN6pZVJwN5bVSs6vgs2zBQ
+	tWIN7kWMomq9QpjXgdpvmWCxWMUk3fpqtRYQvO5XF3NcQsrNuavaQLboUmTQof9X
+	slTFMTotsfqkyAzYQxt/P3zZXvjgyR22SS69g6Ulax2SELI1YCaHMR+b4fmubOQU
+	BPKm+IbPYaGx08rP3YQ0SlXjjRJyf/LFHRzUUeHDs/DHWA6ZAkdYL5kKITgk9VyW
+	JrB7WfZMYegoN5bwfY92qfxokOSpez45/yfqO1MaJ5Cu+O/g==
+Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twpm73n5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 08:50:03 +0000 (GMT)
+Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-6c8f99fef10so5978537a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 01:50:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744102165; x=1744706965;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vLz6PIQLrX7WAvTgN7mKlzbJuOZCZNXq5vbLEn5vmhw=;
-        b=avZLWhZuAij+EF2kK5E2wECVpcAPtZi6HhgxdQyj1b+h2YO68zNRmWmAyFiOWE/4GF
-         o2lkQCZYzCrzvYtN/2mjvwC8mPgT3sMQnvvmq9FdPG6cDuqsVZQ0+inv0UvhOOqnW+Os
-         Ie3wdfsnalll7Xngya0k+rOIHtXlZz/fQVb/6r7VSjxEleB25EfY0hgZOGlo/DN9E5Yu
-         cxDCqWWe0N/72YkeNXo5cn5ymKHE2rZ5PhraWeTelw2v+oiCgN4+XNiMBtsxZdabp+Nq
-         ntq/0iCpBtP6rWDZbxVWnX62YR58lr25eqMQBWSSt+DM5qf4H7M2WXuJLQTmYsL8AKb8
-         fj9g==
-X-Forwarded-Encrypted: i=1; AJvYcCUc3kQ59cqL1L0JCCGz6pGiWKHNPpJ9hBLfPw8bflgISgu+G3G8lG2FpZK3H4c9LjT14tf/XCixc/PRthY=@vger.kernel.org, AJvYcCVdcoZMfGS7hk4Ju6+N+8HOI6xPMw9oKtfaCjLgsd27ghSXumDkg2SGwoXnqCslJz7dzCYA6AO7lxLqnmyy@vger.kernel.org, AJvYcCWWxwE8acrkZHBM0hr0THrY/coNIyL7kgsIKIpMGR6pv029N93z8Zc1dtlxrstbePkgbXNkG1AKKInv@vger.kernel.org, AJvYcCXM3KDvigMP6aILJla6J31eUfHreOr4IoFPGVrOHgneeMwUUrPmcqRHgd+uxneU1UY3eAO5XmYN0gQP50GU28Xh@vger.kernel.org
-X-Gm-Message-State: AOJu0YywO7pR5vAXju5hoEiEJ4CHMQPwW3Oy+rrvxMMoo1KM32IZtaC8
-	8rOpjcpX2HEECWFN+d/kdi4tf/NbQ+SK9BridPAZbKbqJPq1Dq6FMTvJOjhA6oNozM2xJTJZ86i
-	otxUalq7FOE9rXI8KSA8+S6YzkWQ=
-X-Gm-Gg: ASbGncvGTio1eHTIwAjoVG82AX/rC60n82Al2U8NWeGVz1BDltGcAI1Yw7/WM7At4xb
-	DAXYvwC+kGFeYNqgRa8hPlWxO4KEy20hb/o3yv63Aw92wda9WBWBfppLbyqrJ+Xg8UcWFlP7T6I
-	qjdyC482vtEREwZ8/7qWB7ts9fLw==
-X-Google-Smtp-Source: AGHT+IE+JJyjApRSjTK6zCCcuyEkxu6Qm3vnoWNWSqKZ/kXpSOIJZWdovVbmT7GRh38X03m8OMgFhs3vFURkhxl2cy4=
-X-Received: by 2002:a05:6512:b98:b0:549:b0f3:4391 with SMTP id
- 2adb3069b0e04-54c233470ddmr3538766e87.38.1744102164993; Tue, 08 Apr 2025
- 01:49:24 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744102202; x=1744707002;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KX0kg+QY5VU+pzrQGxzEsX01PSKAVuHH52HYSLvo0s0=;
+        b=M7jgXmAmdbYxVjSbbGemO1o2tzeIj20T6EBZmI7nkUD+1bgzel3MmSXKkISjQy621a
+         CFqSzuXLNR1Nskgfyh1f5A34Cckh7pd34r/+KZ9El+VITTARoxH5i3+hh64klNmjj1fp
+         wNG57a21PJW7N1YEjZT/S6bDuNfosRhtnIAAP5T4JjKTXCjNVsfQDxojtIi2J9HaMM/I
+         Fn3PB3p7VbWRxWyIkvqEBS4IjA+e8rrtdG9U6yhTZzrpu/kfEk1TZSDrqU3MwE1Ol+ed
+         gw+TdpYFISv0Pue/YPGfE63ugW7WU9NxU1H8qYM/P3q1s4T9cErkbeNzLQAN1nroN7sl
+         dP8g==
+X-Forwarded-Encrypted: i=1; AJvYcCXX7953vRTTXlCJ6MVXeeEzooRXYDVC/KZvfIBTXPJt8kVeObveKABDBXMUqYOemJIwb4FNgVw3fGVPfMo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzm16SYvalL9zheyONv5aLkpVMV0fUdRPhCVFXRNk5nlQTEHI0R
+	1QPa3g00gueKzuUhu2xLmCi0NlBIulXQPtrr365Jx7jsXOMPBEZvzc8tuGQdnnSFGRTW7knlYTA
+	HIIqIAF/iVVpyEOIpx1cioDOR9vIPkJXdAUt/gTICiLk4Yp0sHMRh4jF5FOXCx3B6PfDeths=
+X-Gm-Gg: ASbGncvbJt5cX+os3/iCWJKe9QtZ4qx8UY/Bs7IwfCLH0Zcp8I/3m29uw3TvZIlRTSH
+	yLZTt6lDWjAU8kx0uKeuRzrBdN8QJUTOnFul4kHQnQ+occzXkjBdzgYSpZSY/EMuvOqoYN3p+Ps
+	l+DibTFA8cw5tZSZ6PVGm26lRoZFui+AjrLQvW2/AIrgCO/3skhcC5Nu6gvGuWK8f5maOncWTSx
+	P5ZXNR7B1YQw5ZAoVI2ACXeTOtP9LiJ+H3B60ey+DyiNTTm1wUPZy/e+7DCmgPiCsXGTE/HGqY1
+	kmhWkN4f1E500I44Cq947MDh6CkWI7Wn4QWTW/chyOoA8aDTUaFh5yPJKg+011YNqQGYkm9qCTh
+	2nzB4qIpDaFnxrh3l8Q/sVtSXwozEdWqax6QpDvMKEQvSmB+pAGc=
+X-Received: by 2002:a17:90b:5144:b0:2ee:db1a:2e3c with SMTP id 98e67ed59e1d1-306a47c2d86mr21775332a91.1.1744102201950;
+        Tue, 08 Apr 2025 01:50:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHZDu58HLU8z1kjAvtuD0+tTe4rj0TQqBxPVQxMknp/sqfe0o1vsto4rylXMqGaXoGMRj8i7w==
+X-Received: by 2002:a17:90b:5144:b0:2ee:db1a:2e3c with SMTP id 98e67ed59e1d1-306a47c2d86mr21775310a91.1.1744102201605;
+        Tue, 08 Apr 2025 01:50:01 -0700 (PDT)
+Received: from hu-kathirav-blr.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com. [103.229.18.19])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3057cb5a823sm10480846a91.34.2025.04.08.01.49.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 01:50:00 -0700 (PDT)
+From: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+Subject: [PATCH RFC 0/6] Add support to read the restart reason from IMEM
+Date: Tue, 08 Apr 2025 14:19:50 +0530
+Message-Id: <20250408-wdt_reset_reason-v1-0-e6ec30c2c926@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250406-tegra-pstore-v1-1-bf5b57f12293@gmail.com>
- <6920a557-9181-4c9c-98f4-a9be4e796a13@kernel.org> <CALHNRZ--to8B3zhg6zV90siL0x78BAjhS04DgfLwmnXEiOMe3g@mail.gmail.com>
- <83d17d6e-41c2-4729-94e6-5ccf480c766d@kernel.org> <CALHNRZ8+vnXrx7xw=qjpB34MX32hW_m7k+=CdePJpErBPPzv-g@mail.gmail.com>
- <53c943dc-5ea6-456b-a289-08212fc01d5d@kernel.org>
-In-Reply-To: <53c943dc-5ea6-456b-a289-08212fc01d5d@kernel.org>
-From: Aaron Kling <webgeek1234@gmail.com>
-Date: Tue, 8 Apr 2025 03:49:12 -0500
-X-Gm-Features: ATxdqUETOFGFn2EHri9F9_4eIfOQKPNEzsi7Q-YJUiQd95xxiBDN67yuVyhCAbs
-Message-ID: <CALHNRZ8+X61YzQ_gYRkuAZrz2XFiZK36GDgk=801+384y2KnOQ@mail.gmail.com>
-Subject: Re: [PATCH] arm64: tegra: Enable ramoops on Tegra210 and newer
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, devicetree@vger.kernel.org, 
-	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAC/j9GcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDEwML3fKUkvii1OJUEJlYnJ+nm2poZGlkaGlmnJZopgTUVlCUmpZZATY
+ yWinIzVkptrYWAGssErpnAAAA
+X-Change-ID: 20250408-wdt_reset_reason-e12921963fa6
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744102197; l=1647;
+ i=kathiravan.thirumoorthy@oss.qualcomm.com; s=20230906;
+ h=from:subject:message-id; bh=3WL9RHuOr37ueCpY977pBENFvwmMyXbAuJwbEskYP10=;
+ b=SAdcE6fBGzs6IH3MdA9eaCRwAUGWQckJseD6tm3tHBXicqdLB9R1izF2UHddv7nvXjSHsySFw
+ INH8Vd9aLDoBBLlA/OtRlSxMEPi08mLDwQNDgapqIl0DEf3xdgdqfXa
+X-Developer-Key: i=kathiravan.thirumoorthy@oss.qualcomm.com; a=ed25519;
+ pk=xWsR7pL6ch+vdZ9MoFGEaP61JUaRf0XaZYWztbQsIiM=
+X-Proofpoint-GUID: Wc-B9xz8ozpMlljHQ0DxDcO7pg3LRmna
+X-Proofpoint-ORIG-GUID: Wc-B9xz8ozpMlljHQ0DxDcO7pg3LRmna
+X-Authority-Analysis: v=2.4 cv=MpRS63ae c=1 sm=1 tr=0 ts=67f4e33b cx=c_pps a=oF/VQ+ItUULfLr/lQ2/icg==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=6yf5bMAz9jDV2NJdPn0A:9 a=QEXdDO2ut3YA:10
+ a=3WC7DwWrALyhR5TkjVHa:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-08_03,2025-04-07_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ mlxlogscore=901 clxscore=1015 priorityscore=1501 impostorscore=0
+ spamscore=0 bulkscore=0 suspectscore=0 malwarescore=0 adultscore=0
+ phishscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504080062
 
-On Tue, Apr 8, 2025 at 3:17=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.org=
-> wrote:
->
-> On 08/04/2025 09:35, Aaron Kling wrote:
-> > On Tue, Apr 8, 2025 at 1:08=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel=
-.org> wrote:
-> >>
-> >> On 07/04/2025 18:00, Aaron Kling wrote:
-> >>> On Mon, Apr 7, 2025 at 7:59=E2=80=AFAM Krzysztof Kozlowski <krzk@kern=
-el.org> wrote:
-> >>>>
-> >>>> On 06/04/2025 23:12, Aaron Kling via B4 Relay wrote:
-> >>>>> From: Aaron Kling <webgeek1234@gmail.com>
-> >>>>>
-> >>>>> This allows using pstore on all such platforms. There are some
-> >>>>> differences per arch:
-> >>>>>
-> >>>>> * Tegra132: Flounder does not appear to enumerate pstore and I do n=
-ot
-> >>>>>   have access to norrin, thus Tegra132 is left out of this commit.
-> >>>>> * Tegra210: Does not support ramoops carveouts in the bootloader, i=
-nstead
-> >>>>>   relying on a dowstream driver to allocate the carveout, hence thi=
-s
-> >>>>>   hardcodes a location matching what the downstream driver picks.
-> >>>>> * Tegra186 and Tegra194 on cboot: Bootloader fills in the address a=
-nd
-> >>>>>   size in a node specifically named /reserved-memory/ramoops_carveo=
-ut,
-> >>>>>   thus these cannot be renamed.
-> >>>>> * Tegra194 and Tegra234 on edk2: Bootloader looks up the node based=
- on
-> >>>>>   compatible, however the dt still does not know the address, so ke=
-eping
-> >>>>>   the node name consistent on Tegra186 and newer.
-> >>>>>
-> >>>>> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
-> >>>>> ---
-> >>>>>  arch/arm64/boot/dts/nvidia/tegra186.dtsi | 16 ++++++++++++++++
-> >>>>>  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 16 ++++++++++++++++
-> >>>>>  arch/arm64/boot/dts/nvidia/tegra210.dtsi | 13 +++++++++++++
-> >>>>>  arch/arm64/boot/dts/nvidia/tegra234.dtsi | 16 ++++++++++++++++
-> >>>>>  4 files changed, 61 insertions(+)
-> >>>>>
-> >>>>> diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/=
-boot/dts/nvidia/tegra186.dtsi
-> >>>>> index 2b3bb5d0af17bd521f87db0484fcbe943dd1a797..2e2b27deb957dfd754e=
-42dd03f5a1da5079971dc 100644
-> >>>>> --- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-> >>>>> +++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-> >>>>> @@ -2051,6 +2051,22 @@ pmu-denver {
-> >>>>>               interrupt-affinity =3D <&denver_0 &denver_1>;
-> >>>>>       };
-> >>>>>
-> >>>>> +     reserved-memory {
-> >>>>> +             #address-cells =3D <2>;
-> >>>>> +             #size-cells =3D <2>;
-> >>>>> +             ranges;
-> >>>>> +
-> >>>>> +             ramoops_carveout {
-> >>>>
-> >>>> Please follow DTS coding style for name, so this is probably only ra=
-moops.
-> >>>
-> >>> As per the commit message regarding tegra186: bootloader fills in the
-> >>> address and size in a node specifically named
-> >>> /reserved-memory/ramoops_carveout, thus these cannot be renamed.
-> >>
-> >> That's not a reason to introduce issues. Bootloader is supposed to
-> >> follow same conventions or use aliases or labels (depending on the nod=
-e).
-> >>
-> >> If bootloader adds junk, does it mean we have to accept that junk?
-> >>
-> >>>
-> >>>>
-> >>>> It does not look like you tested the DTS against bindings. Please ru=
-n
-> >>>> `make dtbs_check W=3D1` (see
-> >>>> Documentation/devicetree/bindings/writing-schema.rst or
-> >>>> https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetre=
-e-sources-with-the-devicetree-schema/
-> >>>> for instructions).
-> >>>> Maybe you need to update your dtschema and yamllint. Don't rely on
-> >>>> distro packages for dtschema and be sure you are using the latest
-> >>>> released dtschema.
-> >>>
-> >>> The bot is reporting that the reg field is missing from the added
-> >>> ramoops nodes on t186, t194, and t234. However, as also mentioned in
-> >>> the commit message, this is intentional because it is expected for th=
-e
-> >>> bootloader to fill that in. It is not known at dt compile time. Is
-> >>> there a way to mark this as intentional, so dtschema doesn't flag it?
-> >>
-> >> Fix your bootloader or chain load some normal one, like U-Boot.
-> > How would chainloading a second bootloader 'fix' previous stage
-> > bootloaders trampling on an out-of-sync hardcoded reserved-memory
-> > address? It's possible for carveout addresses and sizes to change. Not
-> > from boot to boot on the same version of the Nvidia bootloader, but
-> > potentially from one version to another. Depending on if the
-> > bootloader was configured with different carveout sizes.
-> >
-> > There is precedence for this. When blind cleanup was done on arm
-> > device trees, a chromebook broke because the memory node has to be
-> > named exactly '/memory' [0]. How is this any different from that case?
->
-> That was an existing node, so ABI.
->
-> > These nodes are an ABI to an existing bootloader. Carveouts on these
->
-> You add new ABI, which I object to.
->
-> > archs are set up in bl1 or bl2, which are not source available. I
-> > could potentially hardcode things for myself in bl33, which is source
-> > available, but the earlier stages could still overwrite any chosen
-> > block depending on how carveouts are configured. But even then, that
-> > will not change the behaviour of the vast majority of units that use a
-> > fully prebuilt boot stack direct from Nvidia. My intent here is for
-> > pstore to work on such units without users needing to use a custom
-> > bootloader.
-> I understand your goal. What I still do not understand, why bootloader
-> even bothers with ramoops carveout. It shouldn't and you should just
-> ignore whatever bootloader provides, no?
+In Qualcomm IPQ SoC, if the system is rebooted due to the watchdog
+timeout, there is no way to identify it. Current approach of checking
+the EXPIRED_STATUS in WDT_STS is not working.
 
-Mmm, I actually don't have the answer to this. Ramoops carveout
-handling was added to t186 and t194 in cboot for L4T r32.7.3, fairly
-late in the life cycle. But it has always been in edk2 for t194 and
-t234 afaik. I could hazard some guesses, but don't have any
-documentation on why the decision was made. Maybe Thierry or Jonathan
-could chime in on why this was done.
+To achieve this, if the system is rebooted due to watchdog timeout, the
+information is captured in the IMEM by the bootloader (along with other
+reason codes as well).
 
->
-> It's not the same case as memory, where bootloader needs to fill out the
-> actual size, or some other boot-specific properties.
->
-> Best regards,
-> Krzysztof
-Sincerely,
-Aaron
+This series attempts to address this by adding the support to read the
+IMEM and populate the information via bootstatus sysfs file. As of now,
+we are handling only the non secure watchdog timeout reason.
+
+Signed-off-by: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+---
+Kathiravan Thirumoorthy (6):
+      dt-bindings: sram: qcom,imem: Document IPQ5424 compatible
+      arm64: dts: qcom: ipq5424: Add the IMEM node
+      dt-bindings: watchdog: Add Qualcomm restart reason binding
+      dt-bindings: sram: qcom,imem: add the support for restart reason
+      watchdog: qcom-wdt: add support to read the restart reason from IMEM
+      arm64: dts: qcom: ipq5424: add node for the restart reason information
+
+ .../devicetree/bindings/sram/qcom,imem.yaml        | 25 ++++++++++++
+ .../bindings/watchdog/qcom,restart-reason.yaml     | 46 ++++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/ipq5424.dtsi              | 14 +++++++
+ drivers/watchdog/qcom-wdt.c                        | 40 ++++++++++++++++++-
+ 4 files changed, 124 insertions(+), 1 deletion(-)
+---
+base-commit: 7702d0130dc002bab2c3571ddb6ff68f82d99aea
+change-id: 20250408-wdt_reset_reason-e12921963fa6
+
+Best regards,
+-- 
+Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+
