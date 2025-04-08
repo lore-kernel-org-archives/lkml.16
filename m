@@ -1,132 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE40F20CCD8;
-	Tue,  8 Apr 2025 14:51:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA2131D5ACE
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 14:51:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744123873; cv=none; b=PgcmWrW7B5dDleuYOZgbhoCvoL0/rS1Dbg4Ix5VZM7/CBd4IR2fOU6zdVMcd0kNc5TZnp/SwpcGBFgNcagMCYpXTRfV+bCTpkE5KUE8KTf7RPlh4tpajGLd3Mdot7LI2UmjWLujzpm2TFYeMzUv4bxED83IEdzjgl1FMN34PFmY=
+	t=1744123894; cv=none; b=iBherkAu+1+VOlYdEV6k+7oG04dTYTsATso1xYvtcm9xlnZx5B6WW/VoVmJqkA+vJEXGskNQX9nM9fgBEhKtTFb57qmzgMSAZOS4JtP0+Ye9X183NEWI0UQ/aKsT2HJYRq+qLPmeOEKRTP+eZmbkpEVenK0yohdevobu695qSg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744123873; c=relaxed/simple;
-	bh=DOqP7PC9/CSNxfy0CTzHFxtwwycinrGKWx3ZrNUpVhE=;
+	s=arc-20240116; t=1744123894; c=relaxed/simple;
+	bh=QYspwtBhVsFSgwIRvDlo0+t6maQ17Xcqzma1ZXsCdVE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YZIQ7eC7RqWl+2AD386yfrG1zE3jOGAlRvLKNw3+a0mnELXLWOWrBczavsVQac1dTLOtqYsAu8Vzxxctr/VU2wJFIG5mwD3/kdzf4tfRjRYsQSVZjUlLrmmoS82TEL4eiiyaPjymBu8LmlFyGTb40yZ+OM5XxuVPuS2iGC/b7TM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DWihu77d; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=DR9KE4xT1kTdJOK4QO4viMYb5OHvjrNZZNHHeHm5vACjdDdcakLOsMeposJbDABzGRHCGuTe+O9wiJWE0rkIiTjbNZLpPPbLFG65cS9/AYf3UpPrUu12wH1oU7Z3pVneAgO5aUM9ECXAC161fUheB8Q/a1dz9YKMvrgtoyRu0gA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unrealasia.net; spf=pass smtp.mailfrom=unrealasia.net; dkim=pass (2048-bit key) header.d=unrealasia-net.20230601.gappssmtp.com header.i=@unrealasia-net.20230601.gappssmtp.com header.b=2fG5I6s3; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unrealasia.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unrealasia.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DWihu77d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66745C4AF09;
-	Tue,  8 Apr 2025 14:51:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744123872;
-	bh=DOqP7PC9/CSNxfy0CTzHFxtwwycinrGKWx3ZrNUpVhE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=DWihu77diMO7llC4OkgLsMjWI5AeoqVzAzMi1/6AddBKf28/waPOzjsEVP7tO6p/m
-	 huhjLJIdEVR0a9PYyJXn/OGSH2WNaDzrG3gNwh+sHjJMUaxN2jfcKe1nL4CIdO3OzE
-	 E6sKd9MYw2xjzR5VyKMc5bfcXy0dqZwTCxuw9hk7M6BokbSmhrfh1RSnHpUE5axLX5
-	 dKaI3E2iM/zWInmk4VDDTnVubpm7PF1NgJxQ93q3lklIOH3jU6yxzmgoZR9FLiaA7V
-	 BWQWIdvGpp9comNUgGkfWUr7IUx4fEZbTWVdo1WI78NrxUCwUHMTjzJUDD5NPCizEK
-	 d204DkW4wO1Sw==
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e8be1c6ff8so10504264a12.1;
-        Tue, 08 Apr 2025 07:51:12 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUEpXnUiDlzCNNFSY40DRocgk4a3WLLX25jf+sTA3o4aIWyQSszhw13fZboYCXmQPZUsW2P+bgABPtoFg==@vger.kernel.org, AJvYcCUTilhAdc9DhAL7P5WkBf0BBIw5azrrO0WYHjDr7NgdE/NMhEwIYvP+tupbxqYr+ZAYz0Mpshl1EwToSngD@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyln+V4ZdhnuGEE9rlW1yghW4lJqYRt9LQPGTFGHWbxv/4qC1PG
-	ekU7o/1bbbFRJ1ufCEVmpcDT0XoyzMkh1TVY7OsGqs3pEAWr/Z2J5uBw4tpAZvQfT8tdYki6VlF
-	Ej4GMjKbJCzq4T+1CzcCgfIwKmEw=
-X-Google-Smtp-Source: AGHT+IHyOTHcUgbR5sI3csnlG+ZrE4vBezaZ5/r0WwtZIV0n3hWOrhVqf8Jcvj1Tm6qdgRS0W/lR3uBg+dkSgBvD8U0=
-X-Received: by 2002:a17:907:d91:b0:ac1:e2be:bab8 with SMTP id
- a640c23a62f3a-ac7d6d52781mr1151445266b.26.1744123870927; Tue, 08 Apr 2025
- 07:51:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=unrealasia-net.20230601.gappssmtp.com header.i=@unrealasia-net.20230601.gappssmtp.com header.b="2fG5I6s3"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54acc0cd458so6878665e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 07:51:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=unrealasia-net.20230601.gappssmtp.com; s=20230601; t=1744123891; x=1744728691; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MovUcynSAJffR7RJo4naoiiZN0xmuejMREjzSeCfcHU=;
+        b=2fG5I6s3EPcMLwsFhg8HqffOYdlumC3bicuAJ7myLMNSEw2dbOmPrAUPwP/SWzC2uP
+         Q7Ef0U7/2GzNqZfp8XSVB6WqU3E6xkYcPCdLrtEigFlRJbUOOLcaf+ajPhzNoj0p3rQp
+         sstqkIH9oHDp0T0uEPLtrZCAHc1tHB3GQwVN1/kv+gkqBbfqf5yqrta/0lpdz0RwZdzq
+         Jg4rHi5NptKWfNVDa3CtelgG5N6FptYPzBXvr7olO+OxFEbNEiYMGe2vTqqHmK3KL4F+
+         n7J08IjGDFkOg+hbai0L3FlnibHXPYYSXDHdiTJNVZIbZtVjP4VbeoSRXo6kMJKuWmJZ
+         vITw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744123891; x=1744728691;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MovUcynSAJffR7RJo4naoiiZN0xmuejMREjzSeCfcHU=;
+        b=TG04WqY+VU85Xzyx+Zvvvb2oU1YTtbT9BpXHXE2gf/+kNdRxN7SFrAn/jUhGHMgSjw
+         7CbiW+NrfJ9d8FINSFDQHwVQIBua+szY0LSVtX1fQenTM/w6jKL4Fy3Lpa6QQO3/ONcK
+         2etcpHP6tnwmGbDSgzRdYHz+M7nVY8Wih/+EO6NZYdV4rjrwZVz3Jpo1I+LVIGf+cN1p
+         z+7rYooSYC9vQ7E4LLZbHa/euMOUfuJpHuC2RgEuT6gU+i0HOo0EvoS5TTUbjhRN3GP3
+         plu90IiLZh+4jbsHM3979vQ2y6pJEEDQ2QPM9C95z8pRyZiKHWw7EMytat775KaFoxGo
+         EvGA==
+X-Forwarded-Encrypted: i=1; AJvYcCXAOROAITpb4ViC5lo9LC+MeKr6Mpkcun8++Jb8A3h2e+ikUSG7X3jlEIubUKE133k9e+t3qqgh92XBm2M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwczUClcqM+xVTJELbuQCaYz4amqngCkhrWCMw08JH1lgXefNL0
+	EGIssdhqNQqvvWC4TLDA7n0o7QVFFRBR8VYhsG7jOY4LG3AURugS/TsHlejft39wpQzp69mtqpj
+	3LiPfEzQrhpJ0w9o4UIsn0NUoQwNAGnhPz5DSC9VJk2FX8+3X
+X-Gm-Gg: ASbGnctuBNCBUfPTbKKYBEY7NeClL75fxMkRwrn+AMMu9X7nqB1HWDhe+/WHiCuPrdP
+	U2l3tVgLyxg7pRdCrLDM4PxV1zQ8AcmKRkMV5BBgTedDl7U8BCYiojrtF+TLKxyQ+9uM1UOfA3e
+	7ClGhXSX5SnziOqyqLw8E06ajHedHkeSXZhmzoMAoEgwRFNSJQPbhrkPeJJs8=
+X-Google-Smtp-Source: AGHT+IFzWK434nhtb4w+8XqXvvTVLz7cQ33CfkusPzfC4ffnVIgn0gGz66HquvJCMDt0tb15sjoUDK45j0gNOhYrFlo=
+X-Received: by 2002:a05:6402:26d4:b0:5f0:7290:394b with SMTP id
+ 4fb4d7f45d1cf-5f0db889fb1mr12787948a12.27.1744123515199; Tue, 08 Apr 2025
+ 07:45:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250408122933.121056-1-frank.li@vivo.com> <20250408122933.121056-3-frank.li@vivo.com>
-In-Reply-To: <20250408122933.121056-3-frank.li@vivo.com>
-From: Filipe Manana <fdmanana@kernel.org>
-Date: Tue, 8 Apr 2025 15:50:33 +0100
-X-Gmail-Original-Message-ID: <CAL3q7H7crVYyQrffLWO6Fr8QpFS2B0BjURqrpTYDYbX3ki0imA@mail.gmail.com>
-X-Gm-Features: ATxdqUGVhAP8P4HMOZyfWKhfVmxvqYNpgxPoMH5VGQXuQ7gjTeg-GxSSbDwgWuA
-Message-ID: <CAL3q7H7crVYyQrffLWO6Fr8QpFS2B0BjURqrpTYDYbX3ki0imA@mail.gmail.com>
-Subject: Re: [PATCH 3/4] btrfs: Fix transaction abort during failure in insert_balance_item()
-To: Yangtao Li <frank.li@vivo.com>
-Cc: clm@fb.com, josef@toxicpanda.com, dsterba@suse.com, 
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <2703842b.58be.195fa426e5e.Coremail.slark_xiao@163.com>
+ <DBU4US.LSH9IZJH4Q933@unrealasia.net> <W6W4US.MQDIW3EU4I8R2@unrealasia.net>
+ <f0798724-d5dd-498b-89be-7d7521ac4930@gmail.com> <CACNYkD6skGNsR-AH=6TWeXLqXeyCut=HGJeWUadw198Ha3to1g@mail.gmail.com>
+ <CAFEp6-2_+25Z+2nPOQtOzJPgfJM8DAs2h_e6HTQ4fAVLt0+bwQ@mail.gmail.com> <BB06D58C-E27D-42FA-8043-AE767E9B5E91@gmail.com>
+In-Reply-To: <BB06D58C-E27D-42FA-8043-AE767E9B5E91@gmail.com>
+From: Muhammad Nuzaihan <zaihan@unrealasia.net>
+Date: Tue, 8 Apr 2025 22:45:03 +0800
+X-Gm-Features: ATxdqUEXOuMMmnIAa6YJ-BdW2lii4EbPgcz6D2oVlm5dOhxW2qYubUdeN-IGJGI
+Message-ID: <CACNYkD7FNx6KR_aKA9S10=bXx4-Xj9WLnGVGDWTgNERerCc6uw@mail.gmail.com>
+Subject: Re: GNSS support for Qualcomm PCIe modem device
+To: Sergey Ryazanov <ryazanov.s.a@gmail.com>
+Cc: Loic Poulain <loic.poulain@oss.qualcomm.com>, Slark Xiao <slark_xiao@163.com>, 
+	Loic Poulain <loic.poulain@linaro.org>, manivannan.sadhasivam@linaro.org, 
+	netdev@vger.kernel.org, Qiang Yu <quic_qianyu@quicinc.com>, johan@kernel.org, 
+	mhi@lists.linux.dev, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 8, 2025 at 1:22=E2=80=AFPM Yangtao Li <frank.li@vivo.com> wrote=
-:
->
-> Handle insert_empty_item errors by adding explicit
-> btrfs_abort_transaction/btrfs_end_transaction calls.
+Hi Loic, Sergey,
 
-But why should we do it?
-More below.
+Thank you Sergey for your time for the prototype.
 
->
-> Signed-off-by: Yangtao Li <frank.li@vivo.com>
-> ---
->  fs/btrfs/volumes.c | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
->
-> diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
-> index 375d92720e17..347c475028e0 100644
-> --- a/fs/btrfs/volumes.c
-> +++ b/fs/btrfs/volumes.c
-> @@ -3733,7 +3733,7 @@ static int insert_balance_item(struct btrfs_fs_info=
- *fs_info,
->         BTRFS_PATH_AUTO_FREE(path);
->         struct extent_buffer *leaf;
->         struct btrfs_key key;
-> -       int ret, err;
-> +       int ret;
->
->         path =3D btrfs_alloc_path();
->         if (!path)
-> @@ -3749,8 +3749,11 @@ static int insert_balance_item(struct btrfs_fs_inf=
-o *fs_info,
->
->         ret =3D btrfs_insert_empty_item(trans, root, path, &key,
->                                       sizeof(*item));
-> -       if (ret)
-> -               goto out;
-> +       if (ret) {
-> +               btrfs_abort_transaction(trans, ret);
-> +               btrfs_end_transaction(trans);
+Looking forward for the code (and coding help if necessary) and help
+to test it on my machine.
 
-A transaction abort will turn the fs into RO mode, and it's meant to
-be used when we can't proceed with changes to the fs after we did
-partial changes, to avoid leaving things in an inconsistent state.
-Here we don't abort because we haven't done any changes before using
-the transaction handle, so an abort is pointless and will turn the fs
-into RO mode unnecessarily.
+Zaihan
 
-Thanks.
-
-> +               return ret;
-> +       }
+On Tue, Apr 8, 2025 at 6:27=E2=80=AFPM Sergey Ryazanov <ryazanov.s.a@gmail.=
+com> wrote:
 >
->         leaf =3D path->nodes[0];
->         item =3D btrfs_item_ptr(leaf, path->slots[0], struct btrfs_balanc=
-e_item);
-> @@ -3764,11 +3767,8 @@ static int insert_balance_item(struct btrfs_fs_inf=
-o *fs_info,
->         btrfs_cpu_balance_args_to_disk(&disk_bargs, &bctl->sys);
->         btrfs_set_balance_sys(leaf, item, &disk_bargs);
->         btrfs_set_balance_flags(leaf, item, bctl->flags);
-> -out:
-> -       err =3D btrfs_commit_transaction(trans);
-> -       if (err && !ret)
-> -               ret =3D err;
-> -       return ret;
-> +
-> +       return btrfs_commit_transaction(trans);
->  }
+> On April 8, 2025 12:13:17 PM GMT+03:00, Loic Poulain <loic.poulain@oss.qu=
+alcomm.com> wrote:
+> >Hi Zhaihan, Sergey.
+> >
+> >On Fri, Apr 4, 2025 at 7:42=E2=80=AFAM Muhammad Nuzaihan <zaihan@unreala=
+sia.net> wrote:
+> >>
+> >> Hi Sergey, Slark,
+> >>
+> >> Using wwan subsystem and it works without issues, maybe i might miss
+> >> something, perhaps the flow control but i never have any problems even
+> >> without flow control.
+> >>
+> >> I am using gpsd + cgps and xgps with a small modification to Linux
+> >> kernel's wwan subsystem in the kernel to get NMEA data.
+> >>
+> >> I had posted the patch previously and i can post the patch again if yo=
+u like.
+> >>
+> >> Attached in this email is the screenshot of cgps + gpsd.
+> >>
+> >> Maybe it should be in GPS subsystem but it's working for me even using
+> >> wwan subsystem for months now.
+> >
+> >Yes, I would strongly recommend doing the extra step of making it
+> >registered to the GNSS subsystem so that device is exposed with the
+> >correct class.
+> >From WWAN driver perspective, it will not change anything, as we could
+> >have the WWAN framework handling this properly (bridging to gnss
+> >intead of exposing the port as wwan character device).
+> >Sergey, is it your plan?
 >
->  static int del_balance_item(struct btrfs_fs_info *fs_info)
-> --
-> 2.39.0
+> Yep. I made the prototype exactly in this way. So a modem driver should n=
+ot care about the port type. Just call WWAN core and it will do the job for=
+ the driver.
 >
->
+> The prototype is done. Needs some polishing, proper description, and prob=
+ably, today night I'm going to publish  the RFC.
+> Hi Loic,
