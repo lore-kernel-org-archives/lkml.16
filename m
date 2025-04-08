@@ -1,52 +1,79 @@
-Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B5E212B1E;
-	Tue,  8 Apr 2025 08:16:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.243.244.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F20C2263F3D;
+	Tue,  8 Apr 2025 08:17:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744100198; cv=none; b=hg2YA2h8ItHYb1Rnrz55qBRIzqnqkWR19EZV7nau5kCYDyhLhZTkmRtC/fpd4u+Q4nMsbKOrByGKEuchkptfLOELPQEoGrZTA1RsaWxqJPiTjta1SvnxT2PHUKCyqj4iTuRT4uP8EN5lxJruF3llC31MSq6XT7NmjA8EMpLfapo=
+	t=1744100231; cv=none; b=kfidjKClmjf/soFVgkaaqKDvzHEDT0BYYL0u4KjKGUQcNDZ3NvMFtiIqFwlkIqqOEvfGYNVdfAkXjqynhoZzEzKpEd4W4yK+l1kGoIUpjSFhPk9WFYFe+L9AJ7chOI6ho2ZN7NqZRpSdjq6A+veEU9IiFcPnKsneQ1JEggK0bE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744100198; c=relaxed/simple;
-	bh=gGX6UMUGnQ2Av7O9kFgjOas/NIxooQ2MtNkrVcn8x9Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=awJ8uwd3zfQhFP+/LD/wb/7BNKsDR3axT14AlMppdNjDB4X1BNqNICdQ7iApZH61zPIa9Qc37Nyx1AiiDE0vA9mrfVwWCMbrj67Da2645tUF7hx/l+sIPza1yAtnDfZ6Rx7PjFNAjyi5DXhr2nQ0JJl4LjjSN+akaot8qv3IGDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=fbfgajkn; arc=none smtp.client-ip=54.243.244.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1744100231; c=relaxed/simple;
+	bh=JgO+hdA1GrGHKIDKAAW3feS3nYjo8Wjp/HZ6RcxjzVc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lomYZ7MnuLB5/42Fvi2L7LmPIVW8EGt0IIM4fIm8LJholE0mXcJzVEfkS5ezIAWNDeWPJykLZz+amxEGjNdiXlqzCQSLSJe9ARZEn0s7HeOI1dYo9igqbOcX8INmXFT1TcfQeRNZymTBPIA6U1jvlI1CfJdfzqpHChpQxvjmSCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ImvzWnUB; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="fbfgajkn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1744100131;
-	bh=UXyiqpnsI36hihBNFzdtwvD8db5+Ldya1XbcBW6k468=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=fbfgajkn7kV6f9N5EXQux0yrMAtKUWEy5HZA7ntUNc6xP5F5SmrFEPaGzh5mf1BJC
-	 Bwei13ZFHqSd5lc6wAB33ym6T6bA3G+xiAf87hSXkDvM4sxXEL+lY0Yyc+Y6mXUALD
-	 PuiajRk9ACt+a9MUSQcKwOXPqLYvdQIlfbW+uraA=
-X-QQ-mid: bizesmtpip3t1744100088t83c1f1
-X-QQ-Originating-IP: hsUu7WyaKWQDhq6vANxm2D6GHbiN77lhE6Ao2GFxXx4=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 08 Apr 2025 16:14:46 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 1393141986018351372
-EX-QQ-RecipientCnt: 11
-From: WangYuli <wangyuli@uniontech.com>
-To: masahiroy@kernel.org,
-	nathan@kernel.org,
-	nicolas.schier@linux.dev
-Cc: linux-kbuild@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ImvzWnUB"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2295d78b45cso67837275ad.0;
+        Tue, 08 Apr 2025 01:17:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744100229; x=1744705029; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9fdElPioRI0btoB9YLHJoXBq7OTonUhGxAaIJ5PdYa8=;
+        b=ImvzWnUBHuI5M1leANHgvRUynZGTMzUmeT55+o3jXbh/KQXBLSv8pkgE2zzfso4kM4
+         qbhjAxi9ZACxKTTS9UPJFHHTzZWQo6agttQDi4IA0r8tVhgNGehTRfzSumnOOCTskIu7
+         2Mg9lrkYYsbMtOsabyjcKDCE/If38ud4xn0xDdw2lzVqi8q7aGdWNexFI9qr0l0gnTcO
+         hrecwGl9BrNYR3pWfoGjNTjdYwSBMNsfsQ3xk4tOFwofsS1eUeJcLSCu6973HVqRr21a
+         8e/DQ9nf6akxLec67B8Nq0YnAl7ZK3t8TMxe+aze1U0GzL+iP0kJ87zqRiRlAt0D9VQc
+         Ki0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744100229; x=1744705029;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9fdElPioRI0btoB9YLHJoXBq7OTonUhGxAaIJ5PdYa8=;
+        b=fBDujllPxnKW2NaWtk14I7TfUujS4oNi9yZ8zraCOr+oK9A3okwXI/SycIxNNZhrKx
+         V9gaycKFxzaLgYlAACIGR+9K6uwh12uyyeULywORR1bjR5udmGNaJUaEwf5K6NyF2AOS
+         tdG7Uqi0BYa4bCklSGizgbdyzIJR1+cGEfYLpLpRhRnIomnV4IKg1WpzFw9XaIZKHeBX
+         zBOyF0FhosfwoyzvEzYRhBhIN5JWVQD7gup0hT+PNB+Y3LhQNLyD2WID2TLFvOhRqT8u
+         vew9NEgMpjY7lePlBNRi2nhbwxozjSrn4wob/NLWjNHscdGGNjp5KhcQTPQBGMkOtkNs
+         cxJA==
+X-Forwarded-Encrypted: i=1; AJvYcCVIYa+1O3QddGcG5E5Kagix9nr1SZH2PCBBdolADHBOkpKE2FuzQGKmIIVeqcDwQzvkK5L/sCMqhn9AoAU=@vger.kernel.org, AJvYcCXhl/SHJ1Z+AurtuzoPFM28zLQW2dAr6MUle5ws6YkfOQ7bKbf5hDUKMohBpXlCiQr9w96ePMIihikSFOolNFvY@vger.kernel.org
+X-Gm-Message-State: AOJu0YzL+LtQ3+HbagA5g9lGkGIteHo4sskZcz3VMEHtdSDj0X+FX0z2
+	+I1lD3o42dTeRIs+GM+qDmY96jIeQiPFu6y/1Qv7RWbm5eAdBc5dwHIdQTmsAOw=
+X-Gm-Gg: ASbGncudRTNzs+B5LyL2L23m53UXLhT3x0O3g3bpsv5zJ8bibX35+HJbEy3uEVfsPBG
+	CdfCLR8thOUO5R3mY4AKtTD+QPQoaL1+t7LOM/d7p5kOOsRXcOGBaGD8ypkydDbGV3k0WJdhG/H
+	9EaCGjnSZKHGXG/Kmb4iZoRwilY/iniOwfZ01QNBT0gWJUs2m/5UYrWJbMMguafxWwXvHygSnru
+	0buxQyAO+FcfI5OocB0BfoQ47zKoUQTLZngjeJqhRslwo123mHLHIKh9rgyQFeiVW0WGQBVY1o/
+	9a9yZuaNUVeoTXfdJU4DIL+j4whX0hBkL8SgUrEiE5D3IE5Z0CtMh25nF63PidwcFXTt6g==
+X-Google-Smtp-Source: AGHT+IFe2CIssHzOnft5L6j+qBASQd7ICbxBKBKnPXX2l9y7vhFe+KHnO6lG9nf9EBuFFYKULvvZfQ==
+X-Received: by 2002:a17:903:1b25:b0:220:e1e6:4472 with SMTP id d9443c01a7336-22a8a0545f9mr208034285ad.13.1744100228937;
+        Tue, 08 Apr 2025 01:17:08 -0700 (PDT)
+Received: from fedora.dns.podman ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785ada20sm94319535ad.46.2025.04.08.01.17.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 01:17:08 -0700 (PDT)
+From: Hangbin Liu <liuhangbin@gmail.com>
+To: netdev@vger.kernel.org
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Shuah Khan <shuah@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Simon Horman <horms@kernel.org>,
+	Phil Sutter <phil@nwl.cc>,
+	Florian Westphal <fw@strlen.de>,
+	Petr Mladek <pmladek@suse.com>,
+	Yoann Congal <yoann.congal@smile.fr>,
+	wireguard@lists.zx2c4.com,
+	linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	samitolvanen@google.com,
-	petr.pavlu@suse.com,
-	zhanjun@uniontech.com,
-	niecheng1@uniontech.com,
-	guanwentao@uniontech.com,
-	WangYuli <wangyuli@uniontech.com>
-Subject: [PATCH v2 0/2] kbuild: Support gendwarfksyms
-Date: Tue,  8 Apr 2025 16:14:41 +0800
-Message-ID: <215802BA292C2DF6+20250408081441.61776-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.49.0
+	Hangbin Liu <liuhangbin@gmail.com>
+Subject: [PATCHv6 net-next 0/2] wireguard: selftests: use nftables for testing
+Date: Tue,  8 Apr 2025 08:16:50 +0000
+Message-ID: <20250408081652.1330-1-liuhangbin@gmail.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,44 +81,26 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: NzSDQCFWCzVTYSs1+un13MRhHyR/C+NvHv8GbF1YjNnHpTVjnIAU0R1X
-	qXHqQnnMxQk2wXbNUvjrLK73ZAHeRmTER0ooWnfJdlYZ3n14LOqcX1sCkM7HxeXxq2XDpCp
-	7h44mav9FMkuHTyUoTTyt7VfDj6rqja7IDPQqW3UojkE3Nqs6W1Yf1xhvwi6Rir9vtVy5TO
-	FuySxSYyzNHCEcqpiaClWQs06ryLYpoYJ95Eyy+TeVxK2fa5ljRNbpju7NDDJi41oYh83rd
-	4YF6f/TDyp+16ttGD4/a2hq4Q1OERF6CsI5EQ+XxJP/2nqg+nyO8vMfjbkBqC6mtzZQn4Yj
-	LnYOraR698YUltWjzM8FCrjgfb/31eUo7v8n6sIwGUp1F59MxFehTvnSoXPG4v/wcT0ApFW
-	PufYyFN8f58XN2mi4sqFL1/pp1LnXOzgWzBcudrRToIhleoe5dVjzJJY+GbP5iAcIOuyZ9Z
-	thSg8jrnN0EsII/i2qQoI6ebSQvU7wp63t/PB2olRs05PoKd6NWMvCRPUNDoBb72v4TyorN
-	i5UtmLhSyHiY+LRiDzv2M1jCV5LO0h3UUsoGWxaaP6BYGFaWjtDVWuIrL2oarhCo1lsSZyf
-	HjrdoVEBRhF2/FHK77kNmPWBby+iPINcgnnz5EZDDmTJrzVOAF3CyW7mci3QIE4uoaRTkFr
-	sjf2Jmou2R/70gugTxqaXoqyzOmPemR3rmNSe0p1jV1LGazqdLBA3DwOyyQ0GIHi8xBuv8G
-	+q7uNP2Pb5O9CYlv9NrSoGcWPYMGwTsivaC9yRe8vwnRryH4FUf9qKNMTeWkDg949YYQ2Jr
-	bowSXU0Redxs2DaCUvX26SU80n0Zesd2VF20/0oIwm/dvMlh4i2OghSxfIhHGZGtq91Wuve
-	0RAoJHpJrKUGKT5jOPcaU7c4OqWYuZaCpEDFqIW9FwrqfxZZGTTQPDp6OmbabFg7sFUktvT
-	agOr34t20rGjtdHTmvZ+nGBmksWSdDzIDYRwIM72HctZUrQ==
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
-X-QQ-RECHKSPAM: 0
 
-Commit f28568841ae0 ("tools: Add gendwarfksyms") adds a
-gendwarfksyms tool but did not add build depends for kbuild.
+This patch set convert the wireguard selftest to nftables, as iptables is
+deparated and nftables is the default framework of most releases.
 
-Add the package who provides the dwarf.h header.
+v6: fix typo in patch 1/2. Update the description (Phil Sutter)
+v5: remove the counter in nft rules and link nft statically (Jason A. Donenfeld)
+v4: no update, just re-send
+v3: drop iptables directly (Jason A. Donenfeld)
+    Also convert to using nft for qemu testing (Jason A. Donenfeld)
+v2: use one nft table for testing (Phil Sutter)
 
-NOTE:
-There is no need to alter scripts/package/PKGBUILD as the
-libelf package, which provides dwarf.h for Arch Linux, is
-already listed in makedepends.
+Hangbin Liu (2):
+  wireguard: selftests: convert iptables to nft
+  wireguard: selftests: update to using nft for qemu test
 
-WangYuli (2):
-  kbuild: deb-pkg: Add libdw-dev:native to Build-Depends-Arch
-  kbuild: rpm-pkg: Add elfutils-devel to BuildRequires
-
- scripts/package/kernel.spec | 1 +
- scripts/package/mkdebian    | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ tools/testing/selftests/wireguard/netns.sh    | 29 +++++++++------
+ .../testing/selftests/wireguard/qemu/Makefile | 36 ++++++++++++++-----
+ .../selftests/wireguard/qemu/kernel.config    |  7 ++--
+ 3 files changed, 49 insertions(+), 23 deletions(-)
 
 -- 
-2.49.0
+2.46.0
 
