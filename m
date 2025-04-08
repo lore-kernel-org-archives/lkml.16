@@ -1,142 +1,162 @@
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CDD6255243;
-	Tue,  8 Apr 2025 20:55:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A70C244EA1;
+	Tue,  8 Apr 2025 20:55:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744145739; cv=none; b=czyNUfo4/zNUSUVFv/eYvv2wMJQ3LJgcXJ8Y+QkwH3f5gC5IUfDXAKdwg5jbVIt1aPiOv6wp8jzAk0bApA1AlBzcaQ9dDEXchtJXHFjKGZ5lBKIsmkRzpR+7tM8Dl+5SI/TuDTSdSWkIg/zESWrudHOSWkaHSt+LXkXyX8qDPqI=
+	t=1744145749; cv=none; b=F0uTID6OuKlAMU1FyWmjxgAluscv3luqb8rqoxuGLqOJwjhbvREhA4gUvnZ7DD8rrjlM+oBQy96M1k5wtGVbKFdDLAtEJEMYZSRPQZB+Fw+gufXMMIrnNSXOQUj877NxVakMsJ8QWhyfvTcldNl1Ok0eQdno/TkID4ZYxMNUdHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744145739; c=relaxed/simple;
-	bh=iOxNRJc0WXEIMK79EXVfvMEpc84T6S4BQZVnIq/OHQY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B74aSEnbYjAcfB5ZU0/8iWTEekhLa6QWlSLgf1jkVkPgGd3F5FcnmQcE/eQU1oFoEOqLIpt6Bdr4syQBCi/ax/sq0bM2ZORW9iiO53kEc05FLOzobB/vgMIrODlrChz2TcJS4sUNYve7eo618cI8M+ulRgLfv5UcKS/HyhfGwcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dNhH+Kx2; arc=none smtp.client-ip=209.85.167.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744145749; c=relaxed/simple;
+	bh=J5qQaP4IGKiB45yKzlSZw0CAc2eUB8Kdf065jJzXhtE=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=F9x85byO8hHWjgVoWahcaIiS/9VCEyHkgbPG9Oa2Jm4nBT0qce/+bAcdblUxwNy5Cty2Lr0cTCN9rMd1kAr/4jqcA4Oip9LQCkFsYBCkydom/a5/i7fr74hP044WkGCKKO/OpmGxJKdGPVWaA+7uojsdzfMhByMujGWBHbynIhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=M0+obKGn; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/62W3yPo; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dNhH+Kx2"
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3fbaa18b810so1896659b6e.2;
-        Tue, 08 Apr 2025 13:55:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744145736; x=1744750536; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=NnVz+cffqMT5bt+OlszMM6LQ0gX2IA0dtLrnQm9Cdvo=;
-        b=dNhH+Kx2VA5P+JYM+u5+iVQg+pcIm81EJ63NfwIJ3gq4T0Do2pD9irwB/utrPX9QiB
-         Xvdo4v0/+FEJJSOY0CgY3Q0vRxmxxEh8ygo4soP5AU84FmT12RJoXwwXjXUCCIUvamaL
-         5TteVUGAd1CMgW7w5MDE6m8u/gZeGMIeYKPFRDy9vDe/noXsqQ3JiS/gQdLG7lMe+ECp
-         Mn4Ldl4NNJQiIe0Eg7Lc9aVlkedZO2ez7hJtx+ZInAs9MCXIWh5HzIIXdcP8cNINWDWJ
-         BVMQfwe7yj+N42aSh+XH0+83ROVRgt5Gyu68HPt1kGONXMCFiotiE8khd6ORlG66zamt
-         vfxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744145736; x=1744750536;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NnVz+cffqMT5bt+OlszMM6LQ0gX2IA0dtLrnQm9Cdvo=;
-        b=tRELP1O2KZqf4bf/gb4+RH0C+IZRAx/Vj8rpdk4qmLfCWkVdklBVUYNY0bP7phUMHI
-         y/J5ps5NRCvRG9OhQ4wH86XwIPaYIagGiP9/TT5Xkt70kmNJf8BfPeNLPAS7QV1/tzwi
-         QhEZV35FRnoM1vsl71K2tisECgEO8CKd4GymGGB3Nexz1r/YxnFID70nDuWx92x99myf
-         MrfIgyWSHU+6z8yApYoCpR6B2F4iL7cfy77yVk7ts9ALusghNehrZ6MXxE+wRzHg/vPg
-         0EWEZI1ZvefSMv6p/BPuCuNtHT+3U5RG2NT2WMoWJkLgmW792LIVuhvT2ddTzzJBwNxr
-         x0HA==
-X-Forwarded-Encrypted: i=1; AJvYcCV79Ns72ovX6iBm0dDP41m3EZyeFVsVLNekf1+ntTnB3rfkP/vqNdOOYkSKgLP2HQxbB3hlMgTKZ4mz7S4=@vger.kernel.org, AJvYcCXGJhUqZfD8zm2nTQdHqkz/1NNDPDVNKPlNS9xlaHzgGOegB2DEHIsk8oggGzp+paxSwomorXbd@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/7OPjw6YLQdMSJXeNOg9vzrVC4rvzdSnrULqENXG+tqcLj1O/
-	NboVPTHkrsh3Y5tX6z0n7yYX4WAHE4f9Ik0XcA5Od/fpka0qaF0I
-X-Gm-Gg: ASbGncvS4DRmw00z3V2ZkpxWOSLiqN9ktMdpqBsv7tiyeEbzVz3ZNXuFPssf2lsd98O
-	nmdZSKyNWNaJtdO+a0AGQUs5KWV5Hu0DWfEPyb6PBjMg6XAfq8CCWwsE7OTw+ySwj8PS2z2Xb9o
-	wBDBTZpR9CY4G5vbtOg9LrFDmIR/LBAFNiyiRFyJP9VdH+FZ/1exg3p8pvZn2GRMAG+JXXPW6nU
-	kSrTwkvPI4VKEpvV+S6Fg+AQBfRF09mng/fkq3brBd/b2sZVPLS1J92CzaZzHBr67fM6zGZom6s
-	Zif80QXZyEKzyPv6i+qkx79MhexRhdcPDjqxz/tM3jGl1GpBLZ5HHnY3X8O7rM17/uc3tIl4
-X-Google-Smtp-Source: AGHT+IHxEjVdkIdDAgYSHiRW2k6YrGT+r6JpcU6wkmLMD3ZM85dPF2EMopCGR6mYbf+vwGe1bIzQzQ==
-X-Received: by 2002:a05:6808:22ac:b0:3f6:a476:f7d3 with SMTP id 5614622812f47-400740111ebmr59183b6e.9.1744145735911;
-        Tue, 08 Apr 2025 13:55:35 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-6044f4bf7a3sm598835eaf.23.2025.04.08.13.55.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Apr 2025 13:55:35 -0700 (PDT)
-Message-ID: <84133fc1-d312-4058-95ae-f12b68d1b889@gmail.com>
-Date: Tue, 8 Apr 2025 13:55:32 -0700
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="M0+obKGn";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/62W3yPo"
+Date: Tue, 08 Apr 2025 20:55:33 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744145743;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Zyl+bPHErcWjxeLYNOEUamNFFcousmJp0wSNVnNNkWk=;
+	b=M0+obKGnzuKSw+jQDtux2bEjx61ZnKzoqvVE/0nPhIcQQXWmW6JwIAVcukR1Ld9IUCM5vr
+	JYf+KuSJxcrK8IkDjOR4bQTYgsIgHrIqRSB2bkHyT+mLUQEpbCvJCl0DpCsQnR/Cs6ZGRg
+	bKYLg7W6sTyTAL25dQ+7N2CYtT2ETL4jAfrI6sqTDbcE0FwkNwLN6bXtAlSE+oEgDTh2FN
+	oJtJ81mKyqOlC9Pi3bsHmda851B2Ss2nJUYev7pjNevNdoL1tISW09MPAzNThxgiN13KQB
+	pzV+3GgryX9rQ+OD4Ps46cjQ5laZvRn1t+15SJUgTprMGGFhmKF3UGoRGKUsNg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744145743;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Zyl+bPHErcWjxeLYNOEUamNFFcousmJp0wSNVnNNkWk=;
+	b=/62W3yPovEmk82z0GuqO5HtcpvYy5xkHFbNqw31SJA+uv/+rvCJNWZ2h/SYMW2MvCMe08v
+	rnQXpN/bZen25EBA==
+From: "tip-bot2 for Geert Uytterhoeven" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: irq/drivers] genirq/generic-chip: Fix incorrect lock guard conversions
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
+ Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: =?utf-8?q?=3C514f94c5891c61ac0a4a7fdad113e75db1eea367=2E17441?=
+ =?utf-8?q?35467=2Egit=2Egeert+renesas=40glider=2Ebe=3E?=
+References: =?utf-8?q?=3C514f94c5891c61ac0a4a7fdad113e75db1eea367=2E174413?=
+ =?utf-8?q?5467=2Egit=2Egeert+renesas=40glider=2Ebe=3E?=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5.10 000/227] 5.10.236-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
- conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250408104820.353768086@linuxfoundation.org>
-Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- WlfRzlpjIPmdjgoicA==
-In-Reply-To: <20250408104820.353768086@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Message-ID: <174414573357.31282.17815254049625566388.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-On 4/8/25 03:46, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.10.236 release.
-> There are 227 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 10 Apr 2025 10:47:53 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.10.236-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.10.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+The following commit has been merged into the irq/drivers branch of tip:
 
-On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
-BMIPS_GENERIC:
+Commit-ID:     771487050f83b030090079133b192de6e3cf5909
+Gitweb:        https://git.kernel.org/tip/771487050f83b030090079133b192de6e3cf5909
+Author:        Geert Uytterhoeven <geert+renesas@glider.be>
+AuthorDate:    Tue, 08 Apr 2025 20:07:02 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Tue, 08 Apr 2025 22:49:02 +02:00
 
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
+genirq/generic-chip: Fix incorrect lock guard conversions
+
+When booting BeagleBone Black:
+
+    ------------[ cut here ]------------
+    WARNING: CPU: 0 PID: 0 at kernel/locking/lockdep.c:4398 lockdep_hardirqs_on_prepare+0x23c/0x280
+    DEBUG_LOCKS_WARN_ON(early_boot_irqs_disabled)
+    CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.15.0-rc1-boneblack-00004-g195298c3b116 #209 NONE
+    Hardware name: Generic AM33XX (Flattened Device Tree)
+    Call trace:
+     _raw_spin_unlock_irq from irq_map_generic_chip+0x144/0x190
+     irq_map_generic_chip from irq_domain_associate_locked+0x68/0x164
+     irq_domain_associate_locked from irq_create_fwspec_mapping+0x34c/0x43c
+     irq_create_fwspec_mapping from irq_create_of_mapping+0x64/0x8c
+     irq_create_of_mapping from irq_of_parse_and_map+0x54/0x7c
+     irq_of_parse_and_map from dmtimer_clkevt_init_common+0x54/0x15c
+     dmtimer_clkevt_init_common from dmtimer_systimer_init+0x41c/0x5b8
+     dmtimer_systimer_init from timer_probe+0x68/0xf0
+     timer_probe from start_kernel+0x4a4/0x6bc
+     start_kernel from 0x0
+    irq event stamp: 0
+    hardirqs last  enabled at (0): [<00000000>] 0x0
+    hardirqs last disabled at (0): [<00000000>] 0x0
+    softirqs last  enabled at (0): [<00000000>] 0x0
+    softirqs last disabled at (0): [<00000000>] 0x0
+    ---[ end trace 0000000000000000 ]---
+
+and:
+
+    ------------[ cut here ]------------
+    WARNING: CPU: 0 PID: 0 at init/main.c:1022 start_kernel+0x4e8/0x6bc
+    Interrupts were enabled early
+    CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Tainted: G        W           6.15.0-rc1-boneblack-00004-g195298c3b116 #209 NONE
+    Tainted: [W]=WARN
+    Hardware name: Generic AM33XX (Flattened Device Tree)
+    Call trace:
+     unwind_backtrace from show_stack+0x10/0x14
+     show_stack from dump_stack_lvl+0x6c/0x90
+     dump_stack_lvl from __warn+0x70/0x1b0
+     __warn from warn_slowpath_fmt+0x1d4/0x1ec
+     warn_slowpath_fmt from start_kernel+0x4e8/0x6bc
+     start_kernel from 0x0
+    irq event stamp: 0
+    hardirqs last  enabled at (0): [<00000000>] 0x0
+    hardirqs last disabled at (0): [<00000000>] 0x0
+    softirqs last  enabled at (0): [<00000000>] 0x0
+    softirqs last disabled at (0): [<00000000>] 0x0
+    ---[ end trace 0000000000000000 ]---
+
+Fix this by correcting two misconversions of
+raw_spin_{,un}lock_irq{save,restore}() to lock guards.
+
+Fixes: 195298c3b11628a6 ("genirq/generic-chip: Convert core code to lock guards")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/514f94c5891c61ac0a4a7fdad113e75db1eea367.1744135467.git.geert+renesas@glider.be
+
+---
+ kernel/irq/generic-chip.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/irq/generic-chip.c b/kernel/irq/generic-chip.c
+index 8014bfe..bf59e37 100644
+--- a/kernel/irq/generic-chip.c
++++ b/kernel/irq/generic-chip.c
+@@ -330,7 +330,7 @@ int irq_domain_alloc_generic_chips(struct irq_domain *d,
+ 				goto err;
+ 		}
+ 
+-		scoped_guard (raw_spinlock, &gc_lock)
++		scoped_guard (raw_spinlock_irqsave, &gc_lock)
+ 			list_add_tail(&gc->list, &gc_list);
+ 		/* Calc pointer to the next generic chip */
+ 		tmp += gc_sz;
+@@ -467,7 +467,7 @@ int irq_map_generic_chip(struct irq_domain *d, unsigned int virq,
+ 
+ 	/* We only init the cache for the first mapping of a generic chip */
+ 	if (!gc->installed) {
+-		guard(raw_spinlock_irq)(&gc->lock);
++		guard(raw_spinlock_irqsave)(&gc->lock);
+ 		irq_gc_init_mask_cache(gc, dgc->gc_flags);
+ 	}
+ 
