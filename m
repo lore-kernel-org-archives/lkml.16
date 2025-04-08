@@ -1,133 +1,202 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6261722B5BC;
-	Tue,  8 Apr 2025 16:03:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56A6C1DD526;
+	Tue,  8 Apr 2025 16:03:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744128210; cv=none; b=jmJr7ET4rmEXAv/kKQehs8VsHuUqdfodK+YKaRDHQo501RTpvNZa0OhF1+NUM3vYhvOBneSUOy310XjhcdPRojXz1mi1HtSVAl31Wyg/CC5vDv2ofMMwX9c5+P8Xe0Gf2c8pcblAWoB05mWc1JOQ3YbbYuRHUMSzEbrTcX/KhAw=
+	t=1744128233; cv=none; b=dV8JdGpVJO14Y2izRnpTGo0Hh3+JMbcqMXcNVGC9OM1S1vXysREKpsewhjdv6cWBCk+2ErUgEOMWASALDPg5WmrGY2QvxkO6BfAocp99EekQWtwssOQQcwd2so9YoIvusXzJSa248jsXHLmHOAu0BvHnTeKS3GR5MgeCZlFXLUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744128210; c=relaxed/simple;
-	bh=zhPk8HSSBcaiiWP3jUwfn0byjqSwM7oiaQ+okmzORYc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FAKaUSz9lF1GY8XM4T1+gyxCqv947c4K29udupocT3xHs6uy2W0GSVqwFdXbKW6Qo4d6+QAu82jAcRsxwucA8QA270Qgzakfa1rRfcHNAzVbsJ72UsZ5fSVmZXRtJi3Nbut84EKZ+hhGmvhus44e5OiDMQcMkFpW1gnmk6JFJto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WSQODlrU; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744128233; c=relaxed/simple;
+	bh=sYBQZuJxt5zTSvoYOaRmcgpLbpD2sLbz+LfcVceYw+k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OQcAM/BQ1dTeQXpJrm62hG8GAlMi96SQW71/KvdW/1wKg3ARtWhE4/mdMYDgPpVi9XrGI1cQ54ruQkOGbAt0qF/ulnJncRpzN0B4sZxcvpiKakGjmAjrSlY2s11c7BiTXl+xHvuNeN7qq0Jl43IBjuxi+CG1RznAgZxxWuyjRK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=esdUv9vA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WSQODlrU"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-af51e820336so5405667a12.1;
-        Tue, 08 Apr 2025 09:03:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744128207; x=1744733007; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=GJZssoxdYCurrja8QFrYZ1HhkVfLJVEPErYfFNVDT/c=;
-        b=WSQODlrURux7U3cBo8vrOHGlidQ9v2aEtNRq9H30Ma/464WbX9x7iB9SAh2W8jx2aM
-         THtOhtOX+7PT1BIEA5+8hFY2JYuPSNF8CLAZNqDypZFTKRp/r7pX2WNXwrdD7Li6EhFQ
-         NgH6cEYDsBnIbeytAIPMdMdFZ9azR76Bc/JfAgncnDZPq+7585LH2r4bNn2635UXeS/e
-         BTVFyDzEaNhZjIM3Pm8HArdJZq/Oqz0P+WI33w+odj615N0z7K0trPhl/+R0JjvrW+6Q
-         RrgjfCdzh3fTpdL6vjIDNh6NiA8IquDDV5/C5yQNaPYGbJn6t0BnfDT60t6Zmf9BIVAh
-         h0jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744128207; x=1744733007;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GJZssoxdYCurrja8QFrYZ1HhkVfLJVEPErYfFNVDT/c=;
-        b=NyqjNxuaNVeaSdYXR5cP9qeYgrldVl5ciX7i1yn796MiCzEmpAiu/eTIls4GXvkbI3
-         PAnMOupUyWtncKrLS9GQXFLO4yhJoUiaUXg7sreBfyJvZt43bUoEsUHkSELLDxMg8Mmh
-         1874XHBWnAiQfDGAptj8m2LcOp+Yv/qidD0reTRAsifp8nkhWTW5CsjgeVPjZLdZIjhd
-         Y028FW/Cqkox3qLW3eVxg0U1Iu4jpsMYW5HrqCTQVaiRPIpKFYAgdTSg8k85NmSXSt0L
-         wXuRoBD5r4EtbY7CLSkqrLLRSI0POD+eC/ZSh+b7vjXOq284bfZC17etPxcuQtOxvZHW
-         OagQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVvHITsUi44AD6foXfVItn1aVVZ4IkqEPjE/DrtQq3wNRZdXlQtJ6swBYIg7I3T25hr2jWybhVFxo2q3i3JGqpup3b7@vger.kernel.org, AJvYcCX0RqCaOGkCeVY6FjjgwqWdZJdioYJJDAUT01Gh0FpYHwTya9GAt4gHiiqGb2tJAOIsE+6XdKliEBHHyHU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhfKVcanqsEhAQDslzZNcbmMeb1CngAkj4roJ2QHLRjP3CMo9f
-	Z5+Zno8TA/XmTpKckR6JEb/6fqfAPBnh+sq2Jlx5cXIQKbQvkhhaG1QCjeJm
-X-Gm-Gg: ASbGnctqAwiyxnDE3ZUdSMJHtLSO8Xnd2AKEX1tDzGaqTO37nLU+ne/4HRnO+roQdJz
-	IRFxndBDnlS+1FzOlKUHC/QyjsyAFprHw8gDPOhsC/rOt5ojzut37B69mr2nhuicawsHJt7370w
-	LB99e2MT+JDyc5yjnddpmxEz798UcqBcWjNRfesMB+OdRWkPMdS5a7s0m2f7Dn3FxVFbZVednno
-	nAwC/Ghkh5yHJuLx4z0wKE5gGbCEckdPrjalMy4xz+DGkrsVSrKk/aRdsi3qQvZsspVV0GlgePd
-	09o8AEGVq+wQQyvpXMYaOUsXTRbiO6u/kLETafqNkDRSsu4MZGqoUZ+Bs1DaclSELyoqtKyoWF8
-	dfoEKjjoBLG5khgxrMXg/PRVDccNeuzHoNQ==
-X-Google-Smtp-Source: AGHT+IE2HewcejtZI3NO/WFe16jxsg9JFmJSVKcUYNwQkZ79YEaquztJowpwCkhH2ruVFF5IhK70zQ==
-X-Received: by 2002:a17:902:fc50:b0:223:6455:8752 with SMTP id d9443c01a7336-22a95586abbmr178825445ad.43.1744128207506;
-        Tue, 08 Apr 2025 09:03:27 -0700 (PDT)
-Received: from localhost.localdomain (118-160-134-247.dynamic-ip.hinet.net. [118.160.134.247])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297865e5d7sm101977345ad.124.2025.04.08.09.03.23
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 08 Apr 2025 09:03:26 -0700 (PDT)
-From: Andy Chiu <andybnac@gmail.com>
-To: rostedt@goodmis.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: mark.rutland@arm.com,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	Andy Chiu <andybnac@gmail.com>,
-	bjorn@rivosinc.com,
-	puranjay12@gmail.com,
-	alexghiti@rivosinc.com,
-	paul.walmsley@sifive.com,
-	greentime.hu@sifive.com,
-	nick.hu@sifive.com,
-	nylon.chen@sifive.com,
-	eric.lin@sifive.com,
-	vincent.chen@sifive.com,
-	zong.li@sifive.com,
-	yongxuan.wang@sifive.com,
-	samuel.holland@sifive.com,
-	olivia.chu@sifive.com,
-	c2232430@gmail.com
-Subject: [PATCH v2] ftrace: properly merge notrace hash
-Date: Wed,  9 Apr 2025 00:02:57 +0800
-Message-Id: <20250408160258.48563-1-andybnac@gmail.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-145)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="esdUv9vA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71498C4CEE5;
+	Tue,  8 Apr 2025 16:03:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744128232;
+	bh=sYBQZuJxt5zTSvoYOaRmcgpLbpD2sLbz+LfcVceYw+k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=esdUv9vAPoKScFn2Aa2AEAXqWNxnf79HjKfftZgcA2I2+jsIwiYbaLUUgA1/Xh1vT
+	 /xGzNV9NliTzLT7bQNCYP4AkDqPK2VyTcOiZa0/Ga50XuRHGyQcXePD3FcWum9LrKq
+	 ud0CvYhMDp8JXnjwFZ7Hl49uXEfyO7Q+3fo0JimXG9Zeu148NbDNvX0BvP/kyqQhW9
+	 FYPx+RTPNJi+PD9F4PBslKqdjBlTdZ9l9aQXljdcQMieYjAGJERaL8Hawy3K1ehvKA
+	 dfKKKvtqLf8G0MDmXbVu1gRvhhG6y3nGU1duNZQUROfyFq5KsecqX20mD9xkpHnjoj
+	 VfM82fY43DVZw==
+Date: Tue, 8 Apr 2025 19:03:49 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: keyrings@vger.kernel.org, stable@vger.kernel.org,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	David Howells <dhowells@redhat.com>, Lukas Wunner <lukas@wunner.de>,
+	Ignat Korchagin <ignat@cloudflare.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org
+Subject: Re: [PATCH v4] tpm: Mask TPM RC in tpm2_start_auth_session()
+Message-ID: <Z_VI5ZgavgLrgicA@kernel.org>
+References: <20250407072057.81062-1-jarkko@kernel.org>
+ <20250407122806.15400-1-jarkko@kernel.org>
+ <e7ul3n3rwvv3xiyiaf4dv5x7kbtcgb6zpcf33k6dobxf5ctdyp@z5iwi4pofj7h>
+ <Z_QV0ejAdciCO_Ma@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_QV0ejAdciCO_Ma@kernel.org>
 
-The global notrace hash should be jointly decided by the intersection of
-each subops's notrace hash, but not the filter hash.
+On Mon, Apr 07, 2025 at 09:13:37PM +0300, Jarkko Sakkinen wrote:
+> On Mon, Apr 07, 2025 at 03:51:21PM +0200, Stefano Garzarella wrote:
+> > On Mon, Apr 07, 2025 at 03:28:05PM +0300, Jarkko Sakkinen wrote:
+> > > tpm2_start_auth_session() does not mask TPM RC correctly from the callers:
+> > > 
+> > > [   28.766528] tpm tpm0: A TPM error (2307) occurred start auth session
+> > > 
+> > > Process TPM RCs inside tpm2_start_auth_session(), and map them to POSIX
+> > > error codes.
+> > > 
+> > > Cc: stable@vger.kernel.org # v6.10+
+> > > Fixes: 699e3efd6c64 ("tpm: Add HMAC session start and end functions")
+> > > Reported-by: Herbert Xu <herbert@gondor.apana.org.au>
+> > > Closes: https://lore.kernel.org/linux-integrity/Z_NgdRHuTKP6JK--@gondor.apana.org.au/
+> > > Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
+> > > ---
+> > > v4:
+> > > - tpm_to_ret()
+> > > v3:
+> > > - rc > 0
+> > > v2:
+> > > - Investigate TPM rc only after destroying tpm_buf.
+> > > ---
+> > > drivers/char/tpm/tpm2-sessions.c | 20 ++++++--------------
+> > > include/linux/tpm.h              | 21 +++++++++++++++++++++
+> > > 2 files changed, 27 insertions(+), 14 deletions(-)
+> > > 
+> > > diff --git a/drivers/char/tpm/tpm2-sessions.c b/drivers/char/tpm/tpm2-sessions.c
+> > > index 3f89635ba5e8..102e099f22c1 100644
+> > > --- a/drivers/char/tpm/tpm2-sessions.c
+> > > +++ b/drivers/char/tpm/tpm2-sessions.c
+> > > @@ -40,11 +40,6 @@
+> > >  *
+> > >  * These are the usage functions:
+> > >  *
+> > > - * tpm2_start_auth_session() which allocates the opaque auth structure
+> > > - *	and gets a session from the TPM.  This must be called before
+> > > - *	any of the following functions.  The session is protected by a
+> > > - *	session_key which is derived from a random salt value
+> > > - *	encrypted to the NULL seed.
+> > >  * tpm2_end_auth_session() kills the session and frees the resources.
+> > >  *	Under normal operation this function is done by
+> > >  *	tpm_buf_check_hmac_response(), so this is only to be used on
+> > > @@ -963,16 +958,13 @@ static int tpm2_load_null(struct tpm_chip *chip, u32 *null_key)
+> > > }
+> > > 
+> > > /**
+> > > - * tpm2_start_auth_session() - create a HMAC authentication session with the TPM
+> > > - * @chip: the TPM chip structure to create the session with
+> > > + * tpm2_start_auth_session() - Create an a HMAC authentication session
+> > > + * @chip:	A TPM chip
+> > >  *
+> > > - * This function loads the NULL seed from its saved context and starts
+> > > - * an authentication session on the null seed, fills in the
+> > > - * @chip->auth structure to contain all the session details necessary
+> > > - * for performing the HMAC, encrypt and decrypt operations and
+> > > - * returns.  The NULL seed is flushed before this function returns.
+> > > + * Loads the ephemeral key (null seed), and starts an HMAC authenticated
+> > > + * session. The null seed is flushed before the return.
+> > >  *
+> > > - * Return: zero on success or actual error encountered.
+> > > + * Returns zero on success, or a POSIX error code.
+> > >  */
+> > > int tpm2_start_auth_session(struct tpm_chip *chip)
+> > > {
+> > > @@ -1024,7 +1016,7 @@ int tpm2_start_auth_session(struct tpm_chip *chip)
+> > > 	/* hash algorithm for session */
+> > > 	tpm_buf_append_u16(&buf, TPM_ALG_SHA256);
+> > > 
+> > > -	rc = tpm_transmit_cmd(chip, &buf, 0, "start auth session");
+> > > +	rc = tpm_to_ret(tpm_transmit_cmd(chip, &buf, 0, "StartAuthSession"));
+> > > 	tpm2_flush_context(chip, null_key);
+> > > 
+> > > 	if (rc == TPM2_RC_SUCCESS)
+> > > diff --git a/include/linux/tpm.h b/include/linux/tpm.h
+> > > index 6c3125300c00..c826d5a9d894 100644
+> > > --- a/include/linux/tpm.h
+> > > +++ b/include/linux/tpm.h
+> > > @@ -257,8 +257,29 @@ enum tpm2_return_codes {
+> > > 	TPM2_RC_TESTING		= 0x090A, /* RC_WARN */
+> > > 	TPM2_RC_REFERENCE_H0	= 0x0910,
+> > > 	TPM2_RC_RETRY		= 0x0922,
+> > > +	TPM2_RC_SESSION_MEMORY	= 0x0903,
+> > 
+> > nit: the other values are in ascending order, should we keep it or is it not
+> > important?
+> > 
+> > (more a question for me than for the patch)
+> 
+> nope
+> 
+> > 
+> > > };
+> > > 
+> > > +/*
+> > > + * Convert a return value from tpm_transmit_cmd() to a POSIX return value. The
+> > > + * fallback return value is -EFAULT.
+> > > + */
+> > > +static inline ssize_t tpm_to_ret(ssize_t ret)
+> > > +{
+> > > +	/* Already a POSIX error: */
+> > > +	if (ret < 0)
+> > > +		return ret;
+> > > +
+> > > +	switch (ret) {
+> > > +	case TPM2_RC_SUCCESS:
+> > > +		return 0;
+> > > +	case TPM2_RC_SESSION_MEMORY:
+> > > +		return -ENOMEM;
+> > > +	default:
+> > > +		return -EFAULT;
+> > > +	}
+> > > +}
+> > 
+> > I like this and in the future we could reuse it in different places like
+> > tpm2_load_context() and tpm2_save_context().
+> > 
+> > Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
+> > 
+> > 
+> > BTW for my understading, looking at that code (sorry if the answer is
+> > obvious, but I'm learning) I'm confused about the use of tpm2_rc_value().
+> > 
+> > For example in tpm2_load_context() we have:
+> > 
+> >     	rc = tpm_transmit_cmd(chip, &tbuf, 4, NULL);
+> >     	...
+> > 	} else if (tpm2_rc_value(rc) == TPM2_RC_HANDLE ||
+> > 		   rc == TPM2_RC_REFERENCE_H0) {
+> > 
+> > While in tpm2_save_context(), we have:
+> > 
+> > 	rc = tpm_transmit_cmd(chip, &tbuf, 0, NULL);
+> > 	...
+> > 	} else if (tpm2_rc_value(rc) == TPM2_RC_REFERENCE_H0) {
+> > 
+> > So to check TPM2_RC_REFERENCE_H0 we are using tpm2_rc_value() only
+> > sometimes, what's the reason?
+> 
+> Good catch, I'll update...
+> 
+> TPM RC is a struct or bitfield.
 
-Fixes: 5fccc7552ccb ("ftrace: Add subops logic to allow one ops to manage many")
-Signed-off-by: Andy Chiu <andybnac@gmail.com>
----
-Changelog v2:
-- free both filter and notrace hash when intersect_hash() fails
----
- kernel/trace/ftrace.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Applied to my -next: https://web.git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd.git/log/?h=next
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 1a48aedb5255..bb9e1bf4fe86 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -3526,16 +3526,16 @@ int ftrace_startup_subops(struct ftrace_ops *ops, struct ftrace_ops *subops, int
- 	    ftrace_hash_empty(subops->func_hash->notrace_hash)) {
- 		notrace_hash = EMPTY_HASH;
- 	} else {
--		size_bits = max(ops->func_hash->filter_hash->size_bits,
--				subops->func_hash->filter_hash->size_bits);
-+		size_bits = max(ops->func_hash->notrace_hash->size_bits,
-+				subops->func_hash->notrace_hash->size_bits);
- 		notrace_hash = alloc_ftrace_hash(size_bits);
- 		if (!notrace_hash) {
--			free_ftrace_hash(filter_hash);
-+			free_ftrace_hash(notrace_hash);
- 			return -ENOMEM;
- 		}
- 
--		ret = intersect_hash(&notrace_hash, ops->func_hash->filter_hash,
--				     subops->func_hash->filter_hash);
-+		ret = intersect_hash(&notrace_hash, ops->func_hash->notrace_hash,
-+				     subops->func_hash->notrace_hash);
- 		if (ret < 0) {
- 			free_ftrace_hash(filter_hash);
- 			free_ftrace_hash(notrace_hash);
--- 
-2.39.3 (Apple Git-145)
-
+BR, Jarkko
