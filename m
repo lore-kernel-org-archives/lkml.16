@@ -1,127 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F9EB253B4E;
-	Tue,  8 Apr 2025 05:19:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A5D1D5144
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 05:20:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744089590; cv=none; b=fjyk5BqGVy4FQSwzY9/mYiW2WESPOMFSsC2+T7MqJbJ/REFCfHguOkIho7E64XCeoxN1r1JS4nDsvrqvEGLzVd9x/VlWe4PUiHj+oB/jNPsBogVzohygRMOY3yBGOgMAhRZmSWU/fm4qa8eZz23qlGhO5FWdrEiijgeRdn6//Zs=
+	t=1744089612; cv=none; b=BkqiRzj0Jj8ynrkkeeXDMEIr9t2OB9xIwPUeS8f3p//F849LN4nU+gRjCOROY5XTswNQPKsmXyegLsvn2liTbiqUwDKgYq/pjiJAUFfCzS7Ge7h7DmWgG/7pB9yfMVPaha8V5Wk4Yi/Xqla0Bk1FbExgbx2aX69NctfkQ3Obsgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744089590; c=relaxed/simple;
-	bh=6GBm8mUPt1kQdqjLA6hxiATej9VkFQyogG8+sWfT4fA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MrEG2zF5qL6XtUrx8/Bw9gkC5qct3VQVXb592i/lhoOkIlwwv6zZAdm3rk4cRcYrRpK5gBw5EhF/toF6X728AyPp8m6lTaZs84pm4HvkrDp7T3uoPN6pzgQmkMj903clGwuepQ9PuqY7eAJRFL9/aHzaHmWERNjhgOobFSsA5Vo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=wbN111ko; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744089612; c=relaxed/simple;
+	bh=cPWwWnJ7ViDkLl5MW+qHSwW3GfvvX0QdfidKESl6o9Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VmUPIk90p/bB3cDFaSkBqqDJxTOkTq16EAK6YYkivGpWc4Op9LThSqaMdUlOXrWTPphdvYu9PZCA2u4UhMUwmXRC6tWEWYVkwQ00bk1qoA6S9EPWmCz1rUC2VApm3OYbHVljnn3M6gIpA3ZcRb8oFG7GqVOqD0XZLJCi1puipIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ycp8js6V; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="wbN111ko"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AB42C4CEEA;
-	Tue,  8 Apr 2025 05:19:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1744089590;
-	bh=6GBm8mUPt1kQdqjLA6hxiATej9VkFQyogG8+sWfT4fA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=wbN111koqxsN/ETd6KHqYpZa37OMaCij8L0nhMB0v9Zrk18hMNCYZ9WspVqaaNx5I
-	 o0dSm+RuCX7g7DCn5cQIcge1/QYqLtu5zvmecv+8n85IYDqkyZ9TaU7sXwLxWieRBM
-	 /D/nV186FpCMxenSl4XIwE4edoaO78YkjmI7q40A=
-Date: Tue, 8 Apr 2025 07:18:17 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Wentao Liang <vulab@iscas.ac.cn>
-Cc: philipp.g.hortmann@gmail.com, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v7] staging: rtl8723bs: Add error handling for sd_read()
-Message-ID: <2025040814-curtsy-overrule-1caf@gregkh>
-References: <20250408044152.3009-1-vulab@iscas.ac.cn>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ycp8js6V"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744089609;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cPWwWnJ7ViDkLl5MW+qHSwW3GfvvX0QdfidKESl6o9Y=;
+	b=Ycp8js6VGyZT5BefndTNG8mFNiRC/GRFYarA5FTXwJq2A2bHQbRpuPHPRlzP2Ro8gxGR8P
+	ajX/97ZaXNM74o5/0gf5/Woeo5G5CvkkOtkdy45Z2C0oKoVUS6bCuyQWR9vmTX2oF90JL4
+	MB9+teaFTfJvxqFkAi2JwRIrzYMq3ws=
+Received: from mail-oo1-f70.google.com (mail-oo1-f70.google.com
+ [209.85.161.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-182-wdKTzu8dMA2ns-gLc6SSrA-1; Tue, 08 Apr 2025 01:20:08 -0400
+X-MC-Unique: wdKTzu8dMA2ns-gLc6SSrA-1
+X-Mimecast-MFC-AGG-ID: wdKTzu8dMA2ns-gLc6SSrA_1744089607
+Received: by mail-oo1-f70.google.com with SMTP id 006d021491bc7-601b042d301so638026eaf.3
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 22:20:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744089607; x=1744694407;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cPWwWnJ7ViDkLl5MW+qHSwW3GfvvX0QdfidKESl6o9Y=;
+        b=H8HEVot0eufWVixWC9MXGfRr4/aT2t/VMW/gN6XbsfQE5XF+G1SDXwJhaly88aU47a
+         iI2FwkR2BOLQBnZUaSXX+A11JK8LaVMHn+NDl5UgE1rp1VwjR/zMvOoalGUBzLIIIwWf
+         yscM8EnTbu3kBTD7eOQ9wcIB74DOFdb88sk38A1ReVPc2bjmOVePcg7FgsakhU4W91jk
+         W2qwntR5niEDdumCRnSIESBW9R6VWJmc4o7lpY3ncb7C6330VdxX5xOJeyC8hxSQBPmf
+         7CI50UKxQ9dvDNXxEgjZ9/1F0l6pP5XeConT3FKhxq9IAWEsIyxy6giRwrcL3SQJn6CR
+         srbA==
+X-Forwarded-Encrypted: i=1; AJvYcCXEyo0Eg5E2UHmaw21PqnygKuj0cpWDnVDF/8MaytOOLS9+hOQxHTHymdQaPJrJMrWtL0DCEPJglZcDO7k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPUPPurMxlUUrO8rrrFwvEX/a0OMPBCgvsppgw4WgafSKPCE7h
+	vWBi7kVSEWu4cAWIhBDRDG/qMxxNfkC3x2TYd/MMftrqltTAbSBF4AcEObfHGgJPAu7XOksgpWK
+	U5z1Siivw4HWN6jWVu4kLsMTcLAYIbM2b8mvsE2tlbOh2DXLTr79ujZlZIqNRLNxUgelqnfMEeG
+	LLBqQX7ZpLLIrB46M5C0wtTraSJd9r80xZdNAE
+X-Gm-Gg: ASbGncsoCJrKO2lIV5Cjy+7gC1wYgrach6rn49tVfKfAlpRuqFGzJru/EShx/NQ8FDU
+	hJLXzkKEUZflyJrMPpnG1Q/FNsRNHn3t12nYDZsBjB7fCL2ta1ZVxiK5T1xJ/nzfDOAE01fc=
+X-Received: by 2002:a05:6808:158d:b0:3f6:6dea:55ac with SMTP id 5614622812f47-400456a460fmr3391079b6e.9.1744089607265;
+        Mon, 07 Apr 2025 22:20:07 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFndQwFQTxqQbhh7/1XO26yh+0Bql7sVDUgvChNzviW902Do9tUiMP8jbpkd2ikbG9OPRvnppdBsFKJDjF8szQ=
+X-Received: by 2002:a05:6808:158d:b0:3f6:6dea:55ac with SMTP id
+ 5614622812f47-400456a460fmr3391067b6e.9.1744089606990; Mon, 07 Apr 2025
+ 22:20:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250408044152.3009-1-vulab@iscas.ac.cn>
+References: <20250407172836.1009461-1-ivecera@redhat.com> <20250407173149.1010216-6-ivecera@redhat.com>
+ <74172acd-e649-4613-a408-d1f61ceeba8b@kernel.org>
+In-Reply-To: <74172acd-e649-4613-a408-d1f61ceeba8b@kernel.org>
+From: Michal Schmidt <mschmidt@redhat.com>
+Date: Tue, 8 Apr 2025 07:19:55 +0200
+X-Gm-Features: ATxdqUE8CZctw0bSKyYLZFAm9WOiGKPiK7Kqb-GLiHvQfp2TsbW9P7zTG2qlt-E
+Message-ID: <CADEbmW3Byn8a4otcHqHr_=p4s5kKFq2D9N9xouWVr_0VX3ZikQ@mail.gmail.com>
+Subject: Re: [PATCH 15/28] dt-bindings: dpll: Add device tree bindings for
+ DPLL device and pin
+To: Krzysztof Kozlowski <krzk@kernel.org>, Ivan Vecera <ivecera@redhat.com>
+Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>, 
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>, Jiri Pirko <jiri@resnulli.us>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Prathosh Satish <Prathosh.Satish@microchip.com>, Lee Jones <lee@kernel.org>, 
+	Kees Cook <kees@kernel.org>, Andy Shevchenko <andy@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 08, 2025 at 12:41:52PM +0800, Wentao Liang wrote:
-> The sdio_read32() calls sd_read(), but does not handle the error if
-> sd_read() fails. This could lead to subsequent operations processing
-> invalid data. A proper implementation can be found in sdio_readN(),
-> which has an error handling for the sd_read().
+On Mon, Apr 7, 2025 at 8:02=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.org=
+> wrote:
+> On 07/04/2025 19:31, Ivan Vecera wrote:
+> > This adds DT bindings schema for DPLL (device phase-locked loop)
+> > Reviewed-by: Michal Schmidt <mschmidt@redhat.com>
+>
+> Did this really happen?
 
-Great, why not move to that instead?
+We have been through several iterations of the patchset internally. I
+pointed out numerous bugs in the driver code and suggested cleanups.
+However, I know very little about DT, so in v2 we should omit my
+Reviewed-by on the DT patches.
+Michal
 
-> Add error handling for the sd_read() to free tmpbuf and return error
-> code if sd_read() fails. This ensure that the memcpy() is only performed
-> when the read operation is successful.
-> 
-> Since none of the callers check for the errors, there is no need to
-> return the error code propagated from sd_read(). Returning SDIO_ERR_VAL32
-> might be a better choice, which is a specialized error code for SDIO.
-
-Again, fixing the callers would be best.
-
-> Another problem of returning propagated error code is that the error
-> code is a s32 type value, which is not fit with the u32 type return value
-> of the sdio_read32().
-
-Then that too should be fixed :)
-
-> An practical option would be to go through all the callers and add error
-> handling, which need to pass a pointer to u32 *val and return zero on
-> success or negative on failure. It is not a better choice since will cost
-> unnecessary effort on the error code.
-
-I don't understand why this would be unnecessary effort, it would do the
-right thing, correct?
-
-> The other opion is to replace sd_read() by sd_read32(), which return an
-> u32 type error code that can be directly used as the return value of
-> sdio_read32(). But, it is also a bad choice to use sd_read32() in a
-> alignment failed branch.
-
-What do you mean by "alignment failed branch"?
-
-> Fixes: 554c0a3abf21 ("staging: Add rtl8723bs sdio wifi driver")
-> Cc: stable@vger.kernel.org # v4.12+
-
-Why is this cc: stable?  Can you duplicate this problem on your system?
-Have you tested this change?
-
-> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
-> ---
-> v7: Fix error code and add patch explanation
-> v6: Fix improper code to propagate error code
-> v5: Fix error code
-> v4: Add change log and fix error code
-> v3: Add Cc flag
-> v2: Change code to initialize val
-> 
->  drivers/staging/rtl8723bs/hal/sdio_ops.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/rtl8723bs/hal/sdio_ops.c b/drivers/staging/rtl8723bs/hal/sdio_ops.c
-> index 21e9f1858745..d79d41727042 100644
-> --- a/drivers/staging/rtl8723bs/hal/sdio_ops.c
-> +++ b/drivers/staging/rtl8723bs/hal/sdio_ops.c
-> @@ -185,7 +185,12 @@ static u32 sdio_read32(struct intf_hdl *intfhdl, u32 addr)
->  			return SDIO_ERR_VAL32;
->  
->  		ftaddr &= ~(u16)0x3;
-> -		sd_read(intfhdl, ftaddr, 8, tmpbuf);
-> +		err = sd_read(intfhdl, ftaddr, 8, tmpbuf);
-> +		if (err) {
-> +			kfree(tmpbuf);
-> +			return SDIO_ERR_VAL32;
-> +		}
-
-Again, I think this whole "hal wrapper" should be removed instead, and
-not papered over like this.  If you dig deep enough, it all boils down
-to a call to sdio_readb(), which is an 8 bit read, so the alignment
-issues are not a problem, and if an error happens the proper error value
-is returned from that saying what happened.  Why not work on that like I
-recommended?  That would allow for at least 3, if not more, layers of
-indirection to be removed from this driver, making it more easy to
-understand and maintain over time.
-
-thanks,
-
-greg k-h
