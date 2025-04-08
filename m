@@ -1,136 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2744529A2;
-	Tue,  8 Apr 2025 04:58:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C04429A2
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 04:59:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744088327; cv=none; b=MPPf8UctU9y7e973DtDcukMtJdqaZDjHDcC1zJitZmHAniUanuAyQNvpfGOqmES5hNo20gmESDgFH0GlxzO7dXuQ7gvq6RlZSuf475xcrrSDd34X6fLCeZmAfqeVMmyN4Zl0b29iUZgSa2F2+tPoDGBaeoPMLK8bDtDsmXbvxdk=
+	t=1744088359; cv=none; b=ERv31RBWkolS3VhCWUAHXJtpmxXPIwrqK5dXsO1/AG8Myk+M8pH5e03xHsBfz/68fpB8H1PW3FQr7Dk9JJ1RmSaR1QUyRrxBARSYk0jrnU0m5lQ/bX3AHLxepu9iJZy1bqREQ9LSyhAKaNa7a6IXPwbY/bC7lKH+IXGqEddeUcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744088327; c=relaxed/simple;
-	bh=NCA2SH3nfhAojGa3g1MbLvwbOTfzPUNub82XUWjladc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BiB/I3S2550+qZHMyyofxK3Sebn67YeetEUKmAuo/zYQ/At3lpHxu3x7Uj7Ilq6wWMvO9i3mhrbdt2lx+XRjXt3yfpMNn75TS/2o3dEL3HvVgGzxBBufcgahPGaZYAuN0r612Lpy4XKeXXhI91jx1c9HJeU74ddHMSOAhGlm0Vw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lAfRmE6q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744088359; c=relaxed/simple;
+	bh=lPyKFL6EYtrBQlINHjnofiBgH1A/3A3RrizKk2o/+FQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rLyeZMA/BVCcqJ8A9Z0Y/12B5MqQVGPT4RTGZeNkdHTMG4a4+pJ8z65ZZu4jky2dmMnFHv4slbGAU1SZGkXVtuTIV+sja1ampKTL4KlK1CQ68eJKlDcSdOXrJc4LRWP4498/tFIYTF/XkEotiNpYy3a3yDBdgUr7ucZb/5k1H0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZLNeTHQ1; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lAfRmE6q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74769C4CEE5;
-	Tue,  8 Apr 2025 04:58:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744088326;
-	bh=NCA2SH3nfhAojGa3g1MbLvwbOTfzPUNub82XUWjladc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lAfRmE6qIqfRyd2z/Bjgo0X/dpcE9p6QizYOc9mC7gxFmsqfKtgmU21lHLIYRgD3h
-	 2p0E1Ptzeoo1m8je4CfUNNWVvYNvQlxj1Us86KO7ufYuSNxlO8Y6wwxe/ND+E5/PGg
-	 qMEx1Inf3My5oJdUeLjr5LFY3DWOZn1BDGORZf/eQ29UoIrCNO/dNYorSHiyUUmZNf
-	 cjtTiZmu3AUDBvJcpuI5Kj4P999UWBNP4YhV1fvCR+6v9sL9Nln5XRCqZ7MjiClwGB
-	 nnIL1EEVeM9ym5KQfY1crGQJurMtK9wMva4SBGPIFNvWTJbaBNnZsX1zgBVHtbOaa2
-	 VNoycLSrCOmuQ==
-Date: Tue, 8 Apr 2025 12:58:41 +0800
-From: Coly Li <colyli@kernel.org>
-To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-Cc: Kent Overstreet <kent.overstreet@linux.dev>, 
-	linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org, skhan@linuxfoundation.org, 
-	kernelmentees@lists.linuxfoundation.org
-Subject: Re: [PATCH 2/2] bcache: Fix warnings for incorrect type in
- assignments
-Message-ID: <7muoawncdumcsclkcxklw6olqcjko63et26ptbh5lidximffoh@lu34aqtcujtn>
-References: <20250408033322.401680-1-gshahrouzi@gmail.com>
- <20250408033322.401680-3-gshahrouzi@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZLNeTHQ1"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ac6e8cf9132so627575166b.2
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 21:59:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744088355; x=1744693155; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lPyKFL6EYtrBQlINHjnofiBgH1A/3A3RrizKk2o/+FQ=;
+        b=ZLNeTHQ1odkW9OsQ0WUgDiwIp2Cz/VgIvSoDMztlBYkYfLrhGzNVOK8gJ5tIf5i9j0
+         6YAq6RIpnCfsfnO0i4VmqvZj0Jaim3EDl1pt/ApyTh8S038OjSttaY8RKKF5Nc5ZiZVo
+         ULfYoyW8PaFAEdCOFOiPOe7aJMthvdrjgicaj1SHFhBue66m5NpYm2we+2scbhmrvw7R
+         875viHjUMmi91yuIq/dvQyRvRXJqEzrSy25s+70rlVbwicDRLegWupFpkW+TDDrmew7G
+         zJgrfKCZt0pwyvyrr/vdz8xecjXKXmKf7pYmVzE5peHa6PbzFJZA4unwF8+wuj2VF6A5
+         sQZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744088355; x=1744693155;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lPyKFL6EYtrBQlINHjnofiBgH1A/3A3RrizKk2o/+FQ=;
+        b=EKtwSDwWfE5CZOwImyObaP5QHD7mB1SriFrxJVyjj6zTPAmNb1RUKnCHZtumZ2Vo2H
+         sjZguAzGsBCH8JqbRzeitOs8n7CAFS5LskSAdol6W92VrnhdJT4pglKYQrbiRppJck/3
+         9MD5KCpVxi+NxOm5UajIVf1nl3F9PNUGlhdFPRJCdaDAQvw8LsK2NaX7//W75Q7Bxr/n
+         1L+hSJ4X6dzn8Osmu/HcBI7KpYdDK8cZI77kXF2kLoVlQKR8DBQeBCYcO1Pr6wb8NkVg
+         swFOOH+4nxt/ItYkHCzmdwB3qQinbQambd70Tid2ArfUrwaQL6asP4zq/3u1usZToT75
+         FyaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVTGESmBR55KdGiaW7S4HwPRqMVtrOnRF6un3BFGHSayQXXQlnFT1DSpW32y/Ls2s0Eafh0Aja56cr7ur0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxqp7IqbbHJHTjj2rSk+qQJ9WY663s7RBDnWqJpDiChAutt4vB9
+	uL9nM5xEq90A/vYQB5+rAvKl++WOMYfWh0LJXjXcCp4S1wluA0y+MImMUfZG9PeXwC83QD0zRTV
+	Etn2Gn6ZJd6Necu3kgieTSa+qFdWntE8/Lvs4
+X-Gm-Gg: ASbGncs2ZZqYv0MuovWo/G+EZHqbWFc5LHiTcyXfC1o74OzLA6imnJs6zTYSAgUXhaD
+	8b5LC+M14l1u1uv5WJ2XGLjUtlVlqgVyRduxkBp42kXcqYeBEym/LXwibOGTQrnA0+Z/c7KFPHd
+	57VJwhBwxfG5zZB1qORRBcHA==
+X-Google-Smtp-Source: AGHT+IHMBU+wq6W4T0NSttj+q7k5OMgLNQuKpd0k4v5A7VJLj6wPKTL5/A69Xh6L5iIW/4Jk2sxylEsG5cY8WRJ7HAs=
+X-Received: by 2002:a17:907:3f24:b0:ac7:7f14:f31b with SMTP id
+ a640c23a62f3a-ac7d1824971mr1478492866b.3.1744088355421; Mon, 07 Apr 2025
+ 21:59:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250408033322.401680-3-gshahrouzi@gmail.com>
+References: <20250402202728.2157627-1-dhavale@google.com> <CAB=BE-TzPKSsHo_nvMuGkB_4JbbP8OZ81ce=76y-28nAeZiniQ@mail.gmail.com>
+ <da085862-1c82-4b3e-82ea-b54e2432d96d@linux.alibaba.com>
+In-Reply-To: <da085862-1c82-4b3e-82ea-b54e2432d96d@linux.alibaba.com>
+From: Sandeep Dhavale <dhavale@google.com>
+Date: Mon, 7 Apr 2025 21:59:03 -0700
+X-Gm-Features: ATxdqUH2xMaLI3V97urZLNZW_D7772R4FJJb9-wv2H5MVDeiqjePJE35yusKzi0
+Message-ID: <CAB=BE-T7s7zgExm+A1zqbUFE3SOdB_YzJZgsp4sYBBt2V_EA5Q@mail.gmail.com>
+Subject: Re: [PATCH v2] erofs: lazily initialize per-CPU workers and CPU
+ hotplug hooks
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: linux-erofs@lists.ozlabs.org, Gao Xiang <xiang@kernel.org>, 
+	Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>, 
+	Jeffle Xu <jefflexu@linux.alibaba.com>, kernel-team@android.com, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 07, 2025 at 11:33:22PM +0800, Gabriel Shahrouzi wrote:
-> Remove unnecessary cpu_to_le16() and cpu_to_le32() conversions when
-> assigning values (priorities, timestamps) to native integer type
-> members. Prevent incorrect byte ordering for big-endian systems.
-> 
+On Mon, Apr 7, 2025 at 8:07=E2=80=AFPM Gao Xiang <hsiangkao@linux.alibaba.c=
+om> wrote:
+>
+> Hi Sandeep,
+>
+Hi Gao,
+> On 2025/4/8 10:53, Sandeep Dhavale wrote:
+> > Hi,
+> > Gentle ping for review in case this slipped through the list.
+>
+> I'm working on internal stuffs (unrelated to erofs,
+> currently I have to handle erofs stuffs totally in my
+> spare time), also does it really need to be resolved now?
+>
+I totally understand.
 
-Hmm, why do you feel the conversions are unncessary? Please explain
-with details.
+> It's not like a bugfix, if it's not urgent it will be
+> landed upstream in the next merge window.
+>
+Yes, the next merge window is fine. I was just making sure that I
+collect feedback in case you think this needs any more refinements.
 
-I don't mean the modification is correct or incorrect, just want to
-see detailed analysis and help me understand in correct why as you
-are.
+Thanks,
+Sandeep.
 
-BTW, did you have chance to test your patch on big-endian machine?
-
-Thanks.
-
-
-> Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-> ---
->  drivers/md/bcache/super.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-> index e42f1400cea9d..c4c5ca17fb600 100644
-> --- a/drivers/md/bcache/super.c
-> +++ b/drivers/md/bcache/super.c
-> @@ -648,7 +648,7 @@ int bch_prio_write(struct cache *ca, bool wait)
->  		for (b = ca->buckets + i * prios_per_bucket(ca);
->  		     b < ca->buckets + ca->sb.nbuckets && d < end;
->  		     b++, d++) {
-> -			d->prio = cpu_to_le16(b->prio);
-> +			d->prio = b->prio;
->  			d->gen = b->gen;
->  		}
->  
-> @@ -721,7 +721,7 @@ static int prio_read(struct cache *ca, uint64_t bucket)
->  			d = p->data;
->  		}
->  
-> -		b->prio = le16_to_cpu(d->prio);
-> +		b->prio = d->prio;
->  		b->gen = b->last_gc = d->gen;
->  	}
->  
-> @@ -832,7 +832,7 @@ static void bcache_device_detach(struct bcache_device *d)
->  
->  		SET_UUID_FLASH_ONLY(u, 0);
->  		memcpy(u->uuid, invalid_uuid, 16);
-> -		u->invalidated = cpu_to_le32((u32)ktime_get_real_seconds());
-> +		u->invalidated = (u32)ktime_get_real_seconds();
->  		bch_uuid_write(d->c);
->  	}
->  
-> @@ -1188,7 +1188,7 @@ void bch_cached_dev_detach(struct cached_dev *dc)
->  int bch_cached_dev_attach(struct cached_dev *dc, struct cache_set *c,
->  			  uint8_t *set_uuid)
->  {
-> -	uint32_t rtime = cpu_to_le32((u32)ktime_get_real_seconds());
-> +	uint32_t rtime = (u32)ktime_get_real_seconds();
->  	struct uuid_entry *u;
->  	struct cached_dev *exist_dc, *t;
->  	int ret = 0;
-> @@ -1230,7 +1230,7 @@ int bch_cached_dev_attach(struct cached_dev *dc, struct cache_set *c,
->  	    (BDEV_STATE(&dc->sb) == BDEV_STATE_STALE ||
->  	     BDEV_STATE(&dc->sb) == BDEV_STATE_NONE)) {
->  		memcpy(u->uuid, invalid_uuid, 16);
-> -		u->invalidated = cpu_to_le32((u32)ktime_get_real_seconds());
-> +		u->invalidated = (u32)ktime_get_real_seconds();
->  		u = NULL;
->  	}
->  
-> @@ -1591,7 +1591,7 @@ int bch_flash_dev_create(struct cache_set *c, uint64_t size)
->  
->  	get_random_bytes(u->uuid, 16);
->  	memset(u->label, 0, 32);
-> -	u->first_reg = u->last_reg = cpu_to_le32((u32)ktime_get_real_seconds());
-> +	u->first_reg = u->last_reg = (u32)ktime_get_real_seconds();
->  
->  	SET_UUID_FLASH_ONLY(u, 1);
->  	u->sectors = size >> 9;
-> -- 
-> 2.43.0
-> 
-
--- 
-Coly Li
+> Thanks,
+> Gao Xiang
+> >
+> > Thanks,
+> > Sandeep.
+>
