@@ -1,150 +1,102 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12951F8725
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 04:39:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE5B35973;
+	Tue,  8 Apr 2025 04:40:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744087179; cv=none; b=JuchD/TtZ1ivtRVakvDUb1Yi3mugyQql4VmYqR9V90PEyzgwfod9nL740KQBHpuSejAAlxXYi7qXZtoaajzifCnvrh1Sn4JB5vCkutmPKcqKYiWa4DlDD3oeM7heWChYGBrP0mYZZi7rdePPIC7Q1kIm7Ir1NQ0XnVjDM1LVFPE=
+	t=1744087205; cv=none; b=MjN7GD/cxZzCP2yOVa77I0uKRNZhbfnvjXD2qUX6vSxBfGftsr6Xl4A4EJmOhnTJSNZSixDtSCIg2XeU0Tqqy+u7UUrfZUoCD9q+ZapfFfA9vFISKDXz1pDTriVHRzXtc5kgGTOOfpOZmi/Fbbvk5kq5R29+1owop432jtqKMTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744087179; c=relaxed/simple;
-	bh=xYmbRuqYXLiB//nKBw6z390Qy3fTU2uON5B+DR85Lq0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BCKL/0Ctj3PdABdJWX1xZe+rmfFGDQeYuvQic7IbK1iddg3q7XdgZhgPCaC9ITWZmgaye62o6/N5Kbotu/9w+TLvFE2clKBSIMPInU1EeqOQ5w4iByHqYS1Y1G04uKC0Vg4MGy8rf//IB6tIvEikgbkjGwBufy2ifjMinuOZDeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UWYyvwKa; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744087205; c=relaxed/simple;
+	bh=XEKLLzDUwO73lm036APy9wcjIJRYWRNLNEiLDKpC+yo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Dgi8XdvVEb+u/1mvyJxWeZZ6UCPpNwk4OusN67Hcgzh+t/nNvjOR7f9UoYliotB+Dri9sUyKNobd4RLEQqS8HB2p+VwzIOjx1qKDzKZpzOBiXd08YukAVQ1u5leaJCTKiEvqC/4sI113ZBwcMiEppaTYLFxM4+qyGSLISRmo6Hg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a7RmFrvN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UWYyvwKa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744087176;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=e+0Q1kR0CMCFGP3tTyVdwrjZvM2FReb2Dfl3Am4J0jE=;
-	b=UWYyvwKax9h9iz64Da6s5dGdmWqyr+I4XTTrqAGIUS8Ih/hnNYXPBMjSPO9HaXwmP4fJvr
-	+gopDRdZrTIWoPVmDYMl4Fkn7P7V6ayqzA2ykHt2iB32uIsgk406RMP7gTZ9S7F5GQ05by
-	7p65fQKf8S1x7DoKJw8Iy1RetNDE6XA=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-211-kSFC8oDwPmOf0EdxmEQVAQ-1; Tue,
- 08 Apr 2025 00:39:32 -0400
-X-MC-Unique: kSFC8oDwPmOf0EdxmEQVAQ-1
-X-Mimecast-MFC-AGG-ID: kSFC8oDwPmOf0EdxmEQVAQ_1744087169
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EB9B41955BC9;
-	Tue,  8 Apr 2025 04:39:28 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.61])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 72AFA180094A;
-	Tue,  8 Apr 2025 04:39:26 +0000 (UTC)
-Date: Tue, 8 Apr 2025 12:39:22 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Mimi Zohar <zohar@linux.ibm.com>
-Cc: steven chen <chenste@linux.microsoft.com>, stefanb@linux.ibm.com,
-	roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-	eric.snowberg@oracle.com, ebiederm@xmission.com,
-	paul@paul-moore.com, code@tyhicks.com, bauermann@kolabnow.com,
-	linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
-	madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
-	James.Bottomley@hansenpartnership.com, vgoyal@redhat.com,
-	dyoung@redhat.com
-Subject: Re: [PATCH v11 2/9] ima: define and call ima_alloc_kexec_file_buf()
-Message-ID: <Z/SoekIdreYI3uBZ@MiWiFi-R3L-srv>
-References: <20250402124725.5601-1-chenste@linux.microsoft.com>
- <20250402124725.5601-3-chenste@linux.microsoft.com>
- <a293ed27094f7fa7a36f1641a9e6b17a49e26fa0.camel@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a7RmFrvN"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C0B2FC4CEEC;
+	Tue,  8 Apr 2025 04:40:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744087204;
+	bh=XEKLLzDUwO73lm036APy9wcjIJRYWRNLNEiLDKpC+yo=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=a7RmFrvN0gOaI+VeEyVWumDDev/zJNUxJlyhvZBHG7jSSHPMTMe4kVg2JcHoLx/0s
+	 M3wQOt43jEXEVxYGzhTJjH8Y+1exmHIPus/+Fr2CEZ6dib0QRf60buuKHK+2WWD+2f
+	 B0VhMMeX1bhtuXDgHE7HwPBpElF+0u//0Capx83QhP1djfG2fOPEJjmmewU82xUY0U
+	 vBbxa4KEkPfVxwXOTiGj8snRJ9tPsJGPufNOqLPL68Y7A21+0CWQfOS6u6ayJm852w
+	 Wy1HaB8R0aIda5wiWnb1khPC0RkZXFysHgoa88FoblLdENlCHRqPnSxaMWAtJWDt30
+	 p1aLPJFdVifpQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B022BC369A2;
+	Tue,  8 Apr 2025 04:40:04 +0000 (UTC)
+From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
+Date: Mon, 07 Apr 2025 23:39:50 -0500
+Subject: [PATCH 3/4] arm64: tegra: Add CEC controller on Tegra210
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a293ed27094f7fa7a36f1641a9e6b17a49e26fa0.camel@linux.ibm.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250407-tegra-cec-v1-3-e25dd9577b5f@gmail.com>
+References: <20250407-tegra-cec-v1-0-e25dd9577b5f@gmail.com>
+In-Reply-To: <20250407-tegra-cec-v1-0-e25dd9577b5f@gmail.com>
+To: Hans Verkuil <hverkuil@xs4all.nl>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Thierry Reding <thierry.reding@gmail.com>, 
+ Jonathan Hunter <jonathanh@nvidia.com>
+Cc: linux-tegra@vger.kernel.org, linux-media@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Aaron Kling <webgeek1234@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744087203; l=999;
+ i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
+ bh=bblG65p7/xkPR55OcOIBpt0KSwsSdM49hsWkcsMIg5A=;
+ b=zNgg7owY5OUtcXF0vHQva73Lmo6DNe1GsIsbF8GS6qjP+D7aNxMxSAimzlQ9v78JVjXfxT7MT
+ qD49K/NfYCFAPX0w5HhHDj/65rODLOkqyOkLa38SUvdTHhxqlYBsoCE
+X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
+ pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
+X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
+ auth_id=342
+X-Original-From: Aaron Kling <webgeek1234@gmail.com>
+Reply-To: webgeek1234@gmail.com
 
-On 04/08/25 at 12:07am, Mimi Zohar wrote:
-> On Wed, 2025-04-02 at 05:47 -0700, steven chen wrote:
-> > In the current implementation, the ima_dump_measurement_list() API is 
-> > called during the kexec "load" phase, where a buffer is allocated and 
-> > the measurement records are copied. Due to this, new events added after
-> > kexec load but before kexec execute are not carried over to the new kernel
-> > during kexec operation
-> 
-> Repeating this here is unnecessary.
-> > 
-> > To allow the buffer allocation and population to be separated into distinct
-> > steps, make the function local seq_file "ima_kexec_file" to a file variable.
-> 
-> This change was already made in [PATCH v11 1/9] ima: rename variable the
-> set_file "file" to "ima_kexec_file".  Please remove.
-> 
-> > 
-> > Carrying the IMA measurement list across kexec requires allocating a
-> > buffer and copying the measurement records.  Separate allocating the
-> > buffer and copying the measurement records into separate functions in
-> > order to allocate the buffer at kexec 'load' and copy the measurements
-> > at kexec 'execute'.
-> > 
-> > Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> > Signed-off-by: steven chen <chenste@linux.microsoft.com>
-> > ---
-> >  security/integrity/ima/ima_kexec.c | 46 +++++++++++++++++++++++-------
-> >  1 file changed, 35 insertions(+), 11 deletions(-)
-> > 
-> > diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
-> > index 650beb74346c..b12ac3619b8f 100644
-> > --- a/security/integrity/ima/ima_kexec.c
-> > +++ b/security/integrity/ima/ima_kexec.c
-> > @@ -15,26 +15,46 @@
-> >  #include "ima.h"
-> >  
-> >  #ifdef CONFIG_IMA_KEXEC
-> > +static struct seq_file ima_kexec_file;
-> > +
-> > +static void ima_free_kexec_file_buf(struct seq_file *sf)
-> > +{
-> > +	vfree(sf->buf);
-> > +	sf->buf = NULL;
-> > +	sf->size = 0;
-> > +	sf->read_pos = 0;
-> > +	sf->count = 0;
-> > +}
-> > +
-> > +static int ima_alloc_kexec_file_buf(size_t segment_size)
-> > +{
-> > +	ima_free_kexec_file_buf(&ima_kexec_file);
-> 
-> After moving the vfree() here at this stage in the patch set, the IMA
-> measurement list fails to verify when doing two consecutive "kexec -s -l"
-> with/without a "kexec -s -u" in between.  Only after "ima: kexec: move IMA log
-> copy from kexec load to execute" the IMA measurement list verifies properly with
-> the vfree() here.
+From: Aaron Kling <webgeek1234@gmail.com>
 
-I also noticed this, patch 7 will remedy this. Put patch 7 just after
-this patch or squash it into this patch?
+The CEC controller found on Tegra210 can be used to control consumer
+devices using the HDMI CEC pin.
 
-[PATCH v11 7/9] ima: verify if the segment size has changed
+Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+---
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-> 
-> > +
-> > +	/* segment size can't change between kexec load and execute */
-> > +	ima_kexec_file.buf = vmalloc(segment_size);
-> > +	if (!ima_kexec_file.buf)
-> > +		return -ENOMEM;
-> > +
-> > +	ima_kexec_file.size = segment_size;
-> > +	ima_kexec_file.read_pos = 0;
-> > +	ima_kexec_file.count = sizeof(struct ima_kexec_hdr);	/* reserved space */
-> > +
-> > +	return 0;
-> > +}
-> > +
-> 
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+index b6c84d195c0ef9ae90721fada09ffd46a9c11fa3..402b0ede1472af625d9d9e811f5af306d436cc98 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+@@ -959,6 +959,15 @@ fuse@7000f800 {
+ 		reset-names = "fuse";
+ 	};
+ 
++	cec@70015000 {
++		compatible = "nvidia,tegra210-cec";
++		reg = <0x0 0x070015000 0x0 0x1000>;
++		interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&tegra_car TEGRA210_CLK_CEC>;
++		clock-names = "cec";
++		status = "disabled";
++	};
++
+ 	mc: memory-controller@70019000 {
+ 		compatible = "nvidia,tegra210-mc";
+ 		reg = <0x0 0x70019000 0x0 0x1000>;
+
+-- 
+2.48.1
+
 
