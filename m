@@ -1,107 +1,96 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C692202996
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 08:03:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B7281EE7BE
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 08:05:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744099394; cv=none; b=dx2Us9gdHfpq6U+40lje2MEV6AgarUV1rnemEf1a9TSkwXBTZl3YpjBBTZpHbckeZ5u2VJKg80fTp2ujMe7oK3BigoTN81OlTFwGka+rFqkaEJdZOszpWXd6eyL+VmBh2bntRCWZ+A2qr6Dt7IKU+zI1iBuK2qSXUR6h+R2wmVQ=
+	t=1744099507; cv=none; b=DT2k1gcbCPYViJot41OmJsO0kw+OWceFryqXqNcC030/7iZGZDWyyVARI0JHXoLhPF60YO7S+lo0Fl3ZvttJOFp0VA5ninAUMqObdVfHAZkEb/a1wlJFhQ4FOMuFkpvqdxodbQFJsx2DdDv0FfxQvY5iMc5+DEN46GH+ZRgmKHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744099394; c=relaxed/simple;
-	bh=eOAw0hyWHLIINvb14CVs1GR58Bxf6TZohiFSnFDaF2U=;
+	s=arc-20240116; t=1744099507; c=relaxed/simple;
+	bh=w2lCtd5Q5SafcD4jWGACwK8qM6Vcsr8SYyg8qVl57oI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KXNbgiH8AXpV4dxM4W+MFBx6qIJBAMYiEhkS1Nn6BuFLIRv/b9lt552BASWfsAoYuaJV5xd7ZHZWNACQ6jKpzpu2NBxbxbMpwehuHQRrVSvVL85CKrYMNVHesDYMuk1XS1c2e6Yd6N+C579N32KbNbjpYCppIHxnZshz0JBKANw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=YmlTKyVG; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=X2QoL5AIvku75ufngrbUqmPEtZIJwPUVlX62ApERn3pMzG5tQ9bykDCzDehrZKOwEzuZ1V9CvTK7CaCR8vrJSuW0oRoIUEOGvTbsiZzIzExksQe4ghor/6eop1kr+I87zOFHPiFviOG05DYjGEjveE+uj44n/zLsioK9zt4fuHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gnZ2qE0I; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="YmlTKyVG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=eOAw
-	0hyWHLIINvb14CVs1GR58Bxf6TZohiFSnFDaF2U=; b=YmlTKyVGuYg4ZkoKlIoi
-	PC2qp9kjkR2bU5Pm9PA8uQ8xV68iSkwgBVeqQW/KsbkFjrcUbI5kt8ce48C+dYIe
-	MbYBFLDhPn8sS/4WLGF/p9s/yYLQkKvcRqnf+DqbX9clAQhKbQvfPrK/Sryfagkl
-	aqH+280eqnHXCcIbqZgGmSeZ+XFEfK12zyQ4nOJx1pETMKx/V9rFy9JkaHWddcvA
-	KhqIajrZb3E+M1wOfMc+nIncIcDWruk6U4uUzGH8Z5BSEfPW5t00T3UJMdQegrNC
-	SSWhJwZkFCZPvutSnAU6U+MCw11kvlJWQJMGhAeAURMUuVP66dkgWPNxmyxJpbRR
-	FA==
-Received: (qmail 4102305 invoked from network); 8 Apr 2025 10:03:07 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 8 Apr 2025 10:03:07 +0200
-X-UD-Smtp-Session: l3s3148p1@ahJnyD8yFpcgAwDPXyfYALbiJ46yNPq3
-Date: Tue, 8 Apr 2025 10:03:06 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	=?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@bootlin.com>,
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	=?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <clement.leger@bootlin.com>
-Subject: Re: [PATCH v3] ARM: dts: r9a06g032: add r9a06g032-rzn1d400-eb board
- device-tree
-Message-ID: <Z_TYOm6xuYcQEt_V@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	=?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@bootlin.com>,
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	=?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <clement.leger@bootlin.com>
-References: <20250314-rzn1d400-eb-v3-1-45c4fd3f6e01@bootlin.com>
- <D8IEWP78KVOE.1SD29H0S51FZM@bootlin.com>
- <Z_TA46i0KfFq89ch@shikoro>
- <CAMuHMdWLvqKP6QnLGuR3AT1SEJ_XO5F4119JCqgptv4RFWx8tA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gnZ2qE0I"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744099505; x=1775635505;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=w2lCtd5Q5SafcD4jWGACwK8qM6Vcsr8SYyg8qVl57oI=;
+  b=gnZ2qE0ID98PH2bvWDiAtJaYRXlaOLtb6SEpxoBTsugez20V7vzhw8uw
+   SAq64aANLR2jKyBOPP01OQxakQt3P9bHycrwiEDqwETQwN2DjohoeP10c
+   FFdUcMtM9jrJf1GGLYr3zdKeFRW+q0HS2t4gS0nvqyWWu+0NFbbcgvTcS
+   ryJVCOLaBtCWNN8YiyNCr2n1G5SVHYFX3K28zTiVgD5JhAUfgpjFSy22S
+   EjsE4jLOIYV6KEz58Z8/cSwAgaJeAyl4bgiUa/oZb95oQ2RjszHD/6QlV
+   RKSVn3GfplwAtXaCryY3+QJl/fnaUN/hB+A4U7rEe30+YPE4hgKijc4K0
+   g==;
+X-CSE-ConnectionGUID: I9G5nxNnQ0KlRYiAp5aIvA==
+X-CSE-MsgGUID: aPaUhv/BS/K13InV3sr9zg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="45232044"
+X-IronPort-AV: E=Sophos;i="6.15,197,1739865600"; 
+   d="scan'208";a="45232044"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 01:05:05 -0700
+X-CSE-ConnectionGUID: x5DfdbooSU6kX6PKSIBu1w==
+X-CSE-MsgGUID: SGIkkVlvTze+rvhMf2cF1g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,197,1739865600"; 
+   d="scan'208";a="128698137"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 01:05:02 -0700
+Date: Tue, 8 Apr 2025 11:04:59 +0300
+From: Raag Jadav <raag.jadav@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: gregkh@linuxfoundation.org, david.m.ertman@intel.com,
+	ira.weiny@intel.com, lee@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mfd: core: Support auxiliary device
+Message-ID: <Z_TYq5J0CPFvdm7e@black.fi.intel.com>
+References: <20250407074614.1665575-1-raag.jadav@intel.com>
+ <Z_OQgqt0Wg17N05j@smile.fi.intel.com>
+ <Z_OQqgSjHxq6kwDp@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="O0J9fWFvFi2G9MU+"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWLvqKP6QnLGuR3AT1SEJ_XO5F4119JCqgptv4RFWx8tA@mail.gmail.com>
-
-
---O0J9fWFvFi2G9MU+
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <Z_OQqgSjHxq6kwDp@smile.fi.intel.com>
 
+On Mon, Apr 07, 2025 at 11:45:30AM +0300, Andy Shevchenko wrote:
+> On Mon, Apr 07, 2025 at 11:44:50AM +0300, Andy Shevchenko wrote:
+> > On Mon, Apr 07, 2025 at 01:16:14PM +0530, Raag Jadav wrote:
+> > > Extend MFD subsystem to support auxiliary child device. This is useful
+> > > for MFD usecases where parent device is on a discoverable bus and doesn't
+> > > fit into the platform device criteria. Purpose of this implementation is
+> > > to provide discoverable MFDs just enough infrastructure to register
+> > > independent child devices with their own memory and interrupt resources
+> > > without abusing the platform device.
+> > > 
+> > > Current support is limited to just PCI type MFDs, but this can be further
+> > > extended to support other types like USB in the future.
+> > 
+> > > PS: I'm leaning towards not doing any of the ioremap or regmap on MFD
+> > > side and think that we should enforce child devices to not overlap.
+> > 
+> > Yes, but we will have the cases in the future, whatever,
+> > for the first step it's okay.
+> > 
+> > > If there's a need to handle common register access by parent device,
+> > > then I think it warrants its own driver which adds auxiliary devices
+> > > along with a custom interface to communicate with them, and MFD on
+> > > AUX is not the right solution for it.
+> 
+> And yes, I still consider enforcing regmap is the right step to go.
 
-> > Please do with the minor review comments addressed. I have some patches
-> > depending on it. Which means that I am using this DTS regularly now and
-> > it works great.
->=20
-> v4 was posted on March 24th?
+Unless there's an explicit need for it, I think we should leave that
+choice to the individial drivers instead of forcing them to revamp.
+But let's see what Lee and Greg have to say about this.
 
-Mea culpa, I overlooked it in the list. I am sorry.
-
-
---O0J9fWFvFi2G9MU+
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmf02DYACgkQFA3kzBSg
-KbZKlw/6AjOgH6RhHYUZCXliEOaraIhmt7GNbKOGM1poWQNlOa2Wi4qSDbjE8Q/P
-EDdgHu9Kgwfm4C6NOn8Y6heSbnFSxhe2UQFsCHyDiUK5ABVayN1cI4IXldbF0YA2
-C1LL+SxWIYf5dNlQt0m+ZL1g1VkIUDNqKLByqXT854g/rk91Gwak/uhbUljhC/d0
-D31Q1afnNqc2FLAchDEddbpjW2ejJZIZM2MK1a9sF64Xnru5Y2GSuGAzjV5mKdj1
-r3MbgXvj+85GV6UNyoWhiFWhoS8LBe5CpXAoGCjB3zsmgsD6UZlXMnN33fr+1g9B
-ooD9YzWiPjqMRM2Fe2k58sM38mu4o2aAwotVXw/Xud50vs0fHd7inR88do+eq6kK
-dthigEb7wLkHYMHzXhzaGAWCW5m3Xt68wh36guUTQx0uRC3FgoJhBxGr6M5Scyf/
-YMIyu8p5NjE+Aktkjw9CtgC8jvfcICNxwlizqj8pBnGRl0SwQf0saukHf+f28m7P
-mbTTSexNVh1NmAdNubwtGcxA/P2zzyfQfCJfglSf4tSO+8vlBzq4s6gP4rR8br/1
-25AZM+SHFJvysENWujxmrsqVKzJ5svin3CRzSXvFsUmRbHpmTWUUQBe0zykkGFx/
-1jwGRNgo294/N2DpnbhT+Mqi7xQ8nf1pauB6HUUqYbU7lm48zNA=
-=0lay
------END PGP SIGNATURE-----
-
---O0J9fWFvFi2G9MU+--
+Raag
