@@ -1,147 +1,178 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09E083BBF2;
-	Tue,  8 Apr 2025 13:54:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C950F1ADFFE
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 13:54:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744120458; cv=none; b=mnAiJupuwkCJUPNcRdF7AAZOtZp9J8wFCJidtN1B3Sr3cGAeq/W7Bzjxla3XCtFrBwF1h8oeRd2QG6JLn9mJPJh0mY660lDvb7NK5WiPmJPUExmIFjdsVZt1h/ME9PknayI/xTiCPp/KQJ8BRbIKfLTJUk6GUgy17dmBj8N9U2A=
+	t=1744120464; cv=none; b=bTAkoZPG9ba3H2ef1VeZDwXsDzZO9z/hebbKA595v/tt0vhJWO1QFALnmqgIluWjLyay48YlRWD9hrmB6BiZWxtld6O2SgkRqWp3z4syc1UgdfzBapFAJ8anZYaUsTeBdlipVWvv7HNpK3DRc/wXTokZNpsDUQ0AyshaOFDRDM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744120458; c=relaxed/simple;
-	bh=zZeJW8y/pLhorqi153IgAmOKNsiPwpGGNfmHZJnuqHU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=be20ymdgPvKKAsawxnSwrHSDntU8+t6BYjwDMjqaVrNUa3ngihKwt8ro61OZFcioc6en/aO2UwlK/XoOf5nN0zrGkYnK8ZL2iDAUtzM7cfJVKQY6VW1G3t6X+ypcTyUZ4A7TSiU3nwMM+bWxurVpzqyYMH9Zdnx+SlwE22NNdSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F5wrfDwL; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744120464; c=relaxed/simple;
+	bh=np5UR4WUlfSkbJNtWYs6pHjfKKEJYLBwIY/aJ7Mlujo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Eszs6UuaUPP1fRw+HuPG0Mho42l9NqGqQh7NIWkjneBXJtM76cLRkBJSzWqX+cvnMab6GySaBGNjp5GjvD99At5dhsRXiuOHl1d/PU44MBYHqevvXTewmf31BFIw1IIAUpMMDKawHFUS/wq0hXs34HIks8YT2xnLfdMa+dHV/Yo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=r09DITqq; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=H6ybNsAU; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=r09DITqq; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=H6ybNsAU; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F5wrfDwL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744120457; x=1775656457;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=zZeJW8y/pLhorqi153IgAmOKNsiPwpGGNfmHZJnuqHU=;
-  b=F5wrfDwL/FP6p8FReu15CNpU89NNqTnJHKbMr/KiOTTRv0XOxiWLvieU
-   YT2rBIMVQD3h1TGDWnsDv30wRRkAeO+CAL9Bjs0kRrfVtpi+jz2sr+kFF
-   WqJlMf5simpZ24DmbXSOJBJAri9iAI2+Oj8B3az2csfGxmiaYzdjffSrn
-   sKwZimJBo5E8WG1of99cDaSsFoAj3blem3FeuBWSbc/CFd1s8WY1XBcHZ
-   I1zyoUTlVeBDF5lbjOvzr3z+19J/XDHLtlhlSSMH174J3DpimCTkBE+rX
-   wgHqjzu5Ix+NrWeqGDU1qryUEKYOjr+6HWPRRoHSW8yPxLGte/k8DX0eE
-   w==;
-X-CSE-ConnectionGUID: B4Dpk+M/QFKRxqjTlVO40Q==
-X-CSE-MsgGUID: 04X6p3qeTY+8RjTjGytDtw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="49211571"
-X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
-   d="scan'208";a="49211571"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 06:54:16 -0700
-X-CSE-ConnectionGUID: CwSlN7erRwqc3SSIQGeiLQ==
-X-CSE-MsgGUID: Qv/+a7BzRAOFQlEWn3aklg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
-   d="scan'208";a="128150606"
-Received: from unknown (HELO [10.237.72.199]) ([10.237.72.199])
-  by fmviesa006.fm.intel.com with ESMTP; 08 Apr 2025 06:54:14 -0700
-Message-ID: <357368ff-0c49-4f22-a03d-fd9560c22dae@linux.intel.com>
-Date: Tue, 8 Apr 2025 16:55:24 +0300
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="r09DITqq";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="H6ybNsAU";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="r09DITqq";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="H6ybNsAU"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id D6CBB1F38D;
+	Tue,  8 Apr 2025 13:54:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744120460; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FLrxEWJYmUgKP6lcHFFafdBuMzOHBtJam10U8q12Uyc=;
+	b=r09DITqqwNvvUMrEU5Lgdovl0t6CpkDfKrBUME429WRLnvQet5FovLv0yp/f0ZgBJYfeeW
+	Gk7a5/qKRwY9DKQHBDJY+3XKprDhXGoJwI6bVpU1jV7lKM2ZyJdMMu5ImEug4HLIVZkWBW
+	2UqTC53JPJfetM+3tGOLQJ95V0FBrG0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744120460;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FLrxEWJYmUgKP6lcHFFafdBuMzOHBtJam10U8q12Uyc=;
+	b=H6ybNsAUXX5tJhgIi4hdB7G4KAp+Rhh6Dpf5CfqvJ6t4G/cAL/l507E0rKE1HW6nCLoU22
+	NWmcmKNPnX9cWEBA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=r09DITqq;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=H6ybNsAU
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744120460; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FLrxEWJYmUgKP6lcHFFafdBuMzOHBtJam10U8q12Uyc=;
+	b=r09DITqqwNvvUMrEU5Lgdovl0t6CpkDfKrBUME429WRLnvQet5FovLv0yp/f0ZgBJYfeeW
+	Gk7a5/qKRwY9DKQHBDJY+3XKprDhXGoJwI6bVpU1jV7lKM2ZyJdMMu5ImEug4HLIVZkWBW
+	2UqTC53JPJfetM+3tGOLQJ95V0FBrG0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744120460;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FLrxEWJYmUgKP6lcHFFafdBuMzOHBtJam10U8q12Uyc=;
+	b=H6ybNsAUXX5tJhgIi4hdB7G4KAp+Rhh6Dpf5CfqvJ6t4G/cAL/l507E0rKE1HW6nCLoU22
+	NWmcmKNPnX9cWEBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6D13313A1E;
+	Tue,  8 Apr 2025 13:54:20 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Zuf6F4wq9Wd4OwAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Tue, 08 Apr 2025 13:54:20 +0000
+Date: Tue, 8 Apr 2025 15:54:18 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: Frank van der Linden <fvdl@google.com>
+Cc: akpm@linux-foundation.org, muchun.song@linux.dev, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, david@redhat.com, luizcap@redhat.com
+Subject: Re: [PATCH] mm/hugetlb: use separate nodemask for bootmem allocations
+Message-ID: <Z_Uqiu75bXhqpwm4@localhost.localdomain>
+References: <20250402205613.3086864-1-fvdl@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC RFT] usb: hcd: Add a usb_device argument to
- hc_driver.endpoint_reset()
-To: =?UTF-8?Q?Micha=C5=82_Pecio?= <michal.pecio@gmail.com>,
- Alan Stern <stern@rowland.harvard.edu>,
- Mathias Nyman <mathias.nyman@intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Paul Menzel <pmenzel@molgen.mpg.de>, linux-usb@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>
-References: <c279bd85-3069-4841-b1be-20507ac9f2d7@molgen.mpg.de>
- <b356f743-44b5-4f48-a289-fae0afe106ff@linux.intel.com>
- <84b400f8-2943-44e0-8803-f3aac3b670af@molgen.mpg.de>
- <20250406002311.2a76fc64@foxbook>
- <ade0d77a-651a-4b03-bf21-00369fdc22f8@rowland.harvard.edu>
- <20250406095008.0dbfd586@foxbook> <20250406175032.12b7d284@foxbook>
- <14197657-0a0f-45a8-ac36-dd37b16a1565@rowland.harvard.edu>
- <20250407074905.2d236fb9@foxbook>
- <3efb52b8-0974-4125-a344-00f459fbe4e4@rowland.harvard.edu>
- <20250408121817.6ae8defd@foxbook>
-Content-Language: en-US
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
-In-Reply-To: <20250408121817.6ae8defd@foxbook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250402205613.3086864-1-fvdl@google.com>
+X-Rspamd-Queue-Id: D6CBB1F38D
+X-Spam-Score: -4.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On 8.4.2025 13.18, Michał Pecio wrote:
-> xHCI needs usb_device in this callback so it employed some hacks that
-> proved unreliable in the long term and made the code a little tricky.
+On Wed, Apr 02, 2025 at 08:56:13PM +0000, Frank van der Linden wrote:
+> Hugetlb boot allocation has used online nodes for allocation since
+> commit de55996d7188 ("mm/hugetlb: use online nodes for bootmem
+> allocation"). This was needed to be able to do the allocations
+> earlier in boot, before N_MEMORY was set.
 > 
-> Make USB core supply it directly and simplify xhci_endpoint_reset().
-> Use xhci_check_args() to prevent resetting emulated endpoints of root
-> hubs and to deduplicate argument validation and improve debuggability.
+> This might lead to a different distribution of gigantic hugepages
+> across NUMA nodes if there are memoryless nodes in the system.
 > 
-> Update ehci_endpoint_reset(), which is the only other such callback,
-> to accept (and ignore) the new argument.
+> What happens is that the memoryless nodes are tried, but then
+> the memblock allocation fails and falls back, which usually means
+> that the node that has the highest physical address available
+> will be used (top-down allocation). While this will end up
+> getting the same number of hugetlb pages, they might not be
+> be distributed the same way. The fallback for each memoryless
+> node might not end up coming from the same node as the
+> successful round-robin allocation from N_MEMORY nodes.
 > 
-> This fixes the root cause of a 6.15-rc1 regression reported by Paul,
-> which I was able to reproduce locally. It also solves the general
-> problem of xhci_endpoint_reset() becoming a no-op after device reset
-> or changing configuration or altsetting. Although nobody complained
-> because halted endpoints are reset automatically by xhci_hcd, it was
-> a bug - sometimes class drivers want to reset not halted endpoints.
+> While administrators that rely on having a specific number of
+> hugepages per node should use the hugepages=N:X syntax, it's
+> better not to change the old behavior for the plain hugepages=N
+> case.
 > 
-> Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
-> Closes: https://lore.kernel.org/linux-usb/c279bd85-3069-4841-b1be-20507ac9f2d7@molgen.mpg.de/
-> Signed-off-by: Michal Pecio <michal.pecio@gmail.com>
-> ---
+> To do this, construct a nodemask for hugetlb bootmem purposes
+> only, containing nodes that have memory. Then use that
+> for round-robin bootmem allocations.
 > 
-> Is such change acceptable to interested parties?
+> This saves some cycles, and the added advantage here is that
+> hugetlb_cma can use it too, avoiding the older issue of
+> pointless attempts to create a CMA area for memoryless nodes
+> (which will also cause the per-node CMA area size to be too
+> small).
 
-Looks like an improvement, and will help clear the EP_STALLED flag
-eventually in device reset case.
+Hi Frank,
 
-There are some issues still unsolved due to how xhci endpoints end up being handled
-in usb core usb_reset_and_verify_device().
+Makes sense.
 
-usb_reset_and_verify_device()
-   hub_port_init()
-     hcd->driver->reset_device(hcd, udev);          /*1 xhci frees ep rings, loses td_list heads */
-   usb_hcd_alloc_bandwidth(new_config, NULL, NULL)  /*2 xhci drop+add ep, allocated new ep rings */
-   usb_control_msg(udev, usb_sndctrlpipe(...,USB_REQ_SET_CONFIGURATION,...)
-   for (interfaces) {
-     if (AlternateSetting == 0) {
-       usb_disable_interface()  /*3 flush urbs, ->xhci_urb_dequeue() */
-       usb_enable_interface()   /*4 clear EP_STALLED flag */
-     } else {
-       usb_set_interface()
-     }
+There something I do not quite understand though
 
-1. driver->reset_device will free all xhci endpoint rings, and lose td_list head, but
-    keep cancelled_td_list and ep->ep_state flags. xHC issues reset device command
-    setting all internal ep states in xci to "disabled".
+> @@ -5012,7 +5039,6 @@ void __init hugetlb_bootmem_alloc(void)
+>  
+>  	for_each_hstate(h) {
+>  		h->next_nid_to_alloc = first_online_node;
+> -		h->next_nid_to_free = first_online_node;
 
-2. usb hcd_alloc_bandwith will drop+add xhci endpoints for this configuration,
-    allocate new endpoint rings, and inits new td_list head.
-    Old cancelled_td_list and ep_state flags are still set, not matching ring.
+Why are you unsetting next_nid_to_free? I guess it is because
+we do not use it during boot time and you already set it to
+first_memory_node further down the road in hugetlb_init_hstates.
 
-3. usb_disable_interface() will flush all pending URBs calling xhci_urb_dequeue().
-    xhci_urb_dequeue() makes decision based on stale ep_state flags.
-    May start to cancel/giveback urbs in old cancelled_td_list for tds that existed
-    on old freed ring. will also set host_ep->hcpriv to null
+And the reason you are leaving next_nid_to_alloc set is to see if
+there is any chance that first_online_node is part of hugetlb_bootmem_nodes?
 
-4. usb_enable_interface() calls xhci_endpoint_reset() that finally clears
-    the EP_STALLED flag (udev now found thanks to this patch)
 
-Disabling endpoints, like calling usb_disable_interface() in step 3 should be
-done before calling  usb_hcd_alloc_bandwith().
-This was fixed in other places such as usb_set_interface() and usb_reset_config()
-
-We might need to clean up ep_state flags and give back cancelled URBs in
-xhci_discover_or_reset_device() after the reset device xhci command completion.
-
-Thanks
-Mathias
+-- 
+Oscar Salvador
+SUSE Labs
