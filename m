@@ -1,118 +1,127 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1EF9C148
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 12:51:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6449D26AA85;
+	Tue,  8 Apr 2025 12:51:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744116683; cv=none; b=ndxYQY4sO42MtnfunGwIAo2wb1IWFCcUi0SdE9Vwq3rC7LhExfJny0bFGWpB3u6DmMsnuXEyp86iBUcv8orcwSUZgTqMIFf0kBDA/OGl6rnpKgS9nR3YFILkLyH5IvPi8Quxn8CemFzyZXKqdPdpozGNRoiuJI/0yHz7qIEKk2o=
+	t=1744116715; cv=none; b=U+Hv9NzGmNziwrLFQhmGQPSHrBKF7xf61wa0gXeNLirOhYM5zEhqWzMtshu4fSD7m+Vez9JTwlqCWZ21VQs1LdZxY4kEQDHIpZEbU4cXgjozzVbE2MnEnqHsq2SadUwlUDUyuQKrHDav+hdSg6pkq+te2wwPaozIwkUMsReNYb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744116683; c=relaxed/simple;
-	bh=TWWl9c0f+OLCp2KqCceIXCvZylrgcfJMAqHgJxHOE0E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Pu3m2cGbaoXP2fnfOhAmtoajrpSssk454Wop8Z8gV+h5WCvhhxWhB43B4XW9l1TU2Bd69bRwh+obkPrOUgKrGy/gEqMfw64QhdduJUjmSf12VUCleUCIoDUwla1KLAXy6YN8HBErQm2lnNJzeHtdsmkkV/Tb4WRhY58aPAp0vVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jCGzdmHP; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744116715; c=relaxed/simple;
+	bh=7lm2K430Lexgx1320bQ639uUSZH0FepdkHfEwGSiCh8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=I08ujOr+JN4CCC86iykZFS2LXKNCOxmsK1QQFGkmI5DdWj/SqKD9ScFfeBFQLHRJ4oVsy/wVR5t+Kv4h9/ZHU/aE3czdf9XkG/f8kO+g2IupeBKiaFsQm19Sugz2GnnVBhSE5WEZf6uUfdFY9QZFDmi3SzHAMahvXCW+2oopYiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=nf4kYgYR; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jCGzdmHP"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2ff6b9a7f91so977297a91.3
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 05:51:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744116681; x=1744721481; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jJefxB8FLGWpi/gmyGyC0hTJwrgS8z3n6ed8v3Y5FJ8=;
-        b=jCGzdmHP1PxYcFbzGT9OOnQvvQfYJQlcW8sxF5LcvZh5m1fZKdWZlwgaBi7MbQ3gD7
-         yhm2SgMbLr87EM+e8gfWCRumzZm5mzunHPVD9un3d/MJYUCdJaBBuqqP3UIHV8scpWXe
-         4k2C28UxxAv2C6G7YKEyVLLOkXhaQFHgyZuY2xJMNO17fGU01shYSuh4WSiSmUDUaI/N
-         yIZerFaY0rz28zgwx6Any1xsdVQo4Rz15tHwwdpBlxRBhGtlh0qRNdYOQemmMnsDaebK
-         nsOfgQ0iRINSEOl/RCht3wmm5Eo42OsXUzqu1AAZzSjdHe+mN1ZYuYKhVNAKmSHrG+DE
-         6v/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744116681; x=1744721481;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jJefxB8FLGWpi/gmyGyC0hTJwrgS8z3n6ed8v3Y5FJ8=;
-        b=p4YzJAxTLzFTeoGwY5DJ7D5MN6EQ7yKKVChcy6DH0a5CmJ80GMS6OVsPIa+wXlJ1p3
-         nCsR9nE/6w8aXDU3OMVlNP7KtpVQfmNSSC4WJJX8myU2oe9Wq2eCFCJ4fyHV3atsSoka
-         WKamsCvKQJcJaKQlwzKRp/ptSCVBU0m8yGCeFDvXuZEHTsNXfvL82N9lFIQf588ub6Sm
-         oo8duf7u7apR2fZTKnpMqU9o1FZnXx52TWt+5kxv4RpniMV9X9jQ1V+wmsxQxbV7eZPn
-         lc/1zoWrtWbiTDk7FE0iChjf9GY0MtosC1mnEysDBrxfWyo3mjMqiKkZ/iHEtaC2os4G
-         jRCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXavTZaJSQVeFEoxRx6CkmhCIWf6z7EV4rHExWcyZYipUyO1Jb1OBSMxgeLzvSu4oykzNV6LOHz5bhLhL8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzyHdJmqLIRVH9oZEFwlPwqkkbKlkp7lAAAtGc/lsMLVS/F1/7/
-	KMpuukTQP51RwpQVWn3KxUA3xUhn6IkbBBei5ZkDqyGWgIu5namnSuisrKHRFGtufASHdlu+D6C
-	icKdPXFJKl2762MIEz1Nn4O1D0DN3Ew==
-X-Gm-Gg: ASbGncuzFf9OsGsLE/ENc99dfxbZheclwNmp8iF75YPNqrTEUFuauC79FOy7OkEYFVU
-	qCZ/XonF8dygG339LtWpEHmypL4sb5x5rHtC2RmAdJM2uXls2+ZHKn2YtXLc2VMEssjwz6oLkWh
-	VlxU6thqMBf5ZCLcLH4wZ1qE17uQ==
-X-Google-Smtp-Source: AGHT+IE3BGwIB7veoj6eje0Tze9/r/Sfa9ZWHYQiSGUExiNmqGzA6W8+JIfoimN+DZu/Gni15fMcKjpQ8CFj3IA9bI4=
-X-Received: by 2002:a17:90b:3a88:b0:301:ba2b:3bc6 with SMTP id
- 98e67ed59e1d1-306a496b929mr7897756a91.7.1744116681025; Tue, 08 Apr 2025
- 05:51:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="nf4kYgYR"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 6DBCA43210;
+	Tue,  8 Apr 2025 12:51:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744116704;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UOhMDuFqtRk7BH6T/PmLdxDa9c5hJPubu57xqa7O+Ro=;
+	b=nf4kYgYRWY4bZyISBsuoJ7DSaNAl7+wuSlkQE1iZDaE5xSpRmvhSWjeY7hJmDti38AuTzm
+	AUnD9vw+BQFSq+MrJEm+87J0zwgLW7Fivj/7S9JjOMEeNTD/TxY2sdf4fW1daGQpoyn3WX
+	D/oqMLYo4M5wfxErSiXaBLtG11yE3YIwhsc2oNFI3mpmM6Z10Q35Nl9yDnxMYq9cEnH0RL
+	iA3yzrX9pfWy0AsorLfINMFg4DofnttwbhAIIQsE6PYgDhrNddQPNrLnYtqBYGFBE3Wegg
+	cCT109goYuFvc37Qr0/1D3+27OR+dn+OuoFrn6y0iOz5YvjQrEOG5c5HC4ZtUQ==
+Date: Tue, 8 Apr 2025 14:51:39 +0200
+From: Herve Codina <herve.codina@bootlin.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Shawn Guo
+ <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
+ Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang
+ <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Derek
+ Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
+ Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Saravana
+ Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark
+ Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, Daniel Scally
+ <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>,
+ Geert Uytterhoeven <geert+renesas@glider.be>, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, Allan Nielsen
+ <allan.nielsen@microchip.com>, Horatiu Vultur
+ <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 06/16] PCI: of: Set fwnode.dev of newly created PCI
+ device nodes
+Message-ID: <20250408145139.293c79a2@bootlin.com>
+In-Reply-To: <Z_PvhVkdhubA9jAe@smile.fi.intel.com>
+References: <20250407145546.270683-1-herve.codina@bootlin.com>
+	<20250407145546.270683-7-herve.codina@bootlin.com>
+	<Z_PvhVkdhubA9jAe@smile.fi.intel.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CADnq5_O+TMVD0B28Q6CgzhAi1aDR5ofjogE18HDXrJOJ1XwbDQ@mail.gmail.com>
- <20250408081638.5295-1-arefev@swemel.ru>
-In-Reply-To: <20250408081638.5295-1-arefev@swemel.ru>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Tue, 8 Apr 2025 08:51:09 -0400
-X-Gm-Features: ATxdqUGGeuAEy76obe-8bptynlXwPr_CzRnD4kBRgOpWKyyCycqmaT_JREsPGPI
-Message-ID: <CADnq5_NHD9ULZ21tApHk=c2z+brnms9XotGUvpOri8G3Df594g@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd/pm/smu11: Prevent division by zero
-To: Denis Arefev <arefev@swemel.ru>
-Cc: Jun.Ma2@amd.com, airlied@gmail.com, alexander.deucher@amd.com, 
-	amd-gfx@lists.freedesktop.org, christian.koenig@amd.com, 
-	dri-devel@lists.freedesktop.org, kenneth.feng@amd.com, kevinyang.wang@amd.com, 
-	lijo.lazar@amd.com, linux-kernel@vger.kernel.org, 
-	lvc-project@linuxtesting.org, mario.limonciello@amd.com, simona@ffwll.ch, 
-	srinivasan.shanmugam@amd.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdefudefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveeiffefgeeitdelleeigefhjeelueeuveekveetgeffheeltdekgeduiefggfdvnecukfhppedvrgdtudemvgdtrgemvdegieemjeejledtmedviegtgeemvgdvvdemiedtfegumeehkegrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvtdgrmedvgeeimeejjeeltdemvdeitgegmegvvddvmeeitdefugemheekrgdphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeegtddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhop
+ egurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhhrgifnhhguhhosehkvghrnhgvlhdrohhrghdprhgtphhtthhopehsrdhhrghuvghrsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehkvghrnhgvlhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepfhgvshhtvghvrghmsehgmhgrihhlrdgtohhm
+X-GND-Sasl: herve.codina@bootlin.com
 
-Oh, sorry, I've picked it up now.  Thanks!
+Hi Andy,
 
-Alex
+On Mon, 7 Apr 2025 18:30:13 +0300
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
 
-On Tue, Apr 8, 2025 at 4:16=E2=80=AFAM Denis Arefev <arefev@swemel.ru> wrot=
-e:
->
-> > ---
-> >  drivers/gpu/drm/amd/pm/swsmu/smu11/smu_v11_0.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/gpu/drm/amd/pm/swsmu/smu11/smu_v11_0.c b/drivers/g=
-pu/drm/amd/pm/swsmu/smu11/smu_v11_0.c
-> > index 189c6a32b6bd..54229b991858 100644
-> > --- a/drivers/gpu/drm/amd/pm/swsmu/smu11/smu_v11_0.c
-> > +++ b/drivers/gpu/drm/amd/pm/swsmu/smu11/smu_v11_0.c
-> > @@ -1200,7 +1200,7 @@ int smu_v11_0_set_fan_speed_rpm(struct smu_contex=
-t *smu,
-> >         uint32_t crystal_clock_freq =3D 2500;
-> >         uint32_t tach_period;
-> >
-> > -       if (speed =3D=3D 0)
-> > +       if (!speed || speed > UINT_MAX/8)
-> >                 return -EINVAL;
-> >         /*
-> >          * To prevent from possible overheat, some ASICs may have requi=
-rement
-> > --
-> > 2.43.0
-> >
->
-> Hi Alex.
->
-> The patch 'drm/amd/pm/smu11: Prevent division by zero' was sent
-> separately, not part of the patch series, maybe that's why it wasn't
-> accepted. Should I resend it?
->
-> Regards, Denis.
->
+> On Mon, Apr 07, 2025 at 04:55:35PM +0200, Herve Codina wrote:
+> > Device-tree node can be created when CONFIG_PCI_DYNAMIC_OF_NODES. Those
+> > node are created and filled based on PCI core information but the
+> > fwnode.dev field is not set.
+> > 
+> > When later an overlay is applied, this consuses fw_devlink. Indeed,
+> > without any device attached to the node, fw_devlink considers that this
+> > node will never become a device. When this node is pointed as a
+> > supplier, devlink looks at its ancestors in order to find a node with a
+> > device that could be used as the supplier.
+> > 
+> > In the PCI use case, this leads to links that wrongly use the PCI root
+> > bridge device as the supplier instead of the expected PCI device.
+> > 
+> > Setting fwnode.dev to the dev of the PCI device allows devlink to use
+> > this device as a supplier and so, correct links are created.  
+> 
+> ...
+> 
+> > +	/*
+> > +	 * Set the fwnode.dev in order to have fw_devlink creating links
+> > +	 * pointing to this PCI device instead of walking up to the PCI host
+> > +	 * bridge.
+> > +	 */
+> > +	np->fwnode.dev = &pdev->dev;  
+> 
+> This is too invasive. I suppose here should be a helper for this kind of
+> operation. If not, create one.
+> 
+> 	fw_devlink_set_device(...);
+> 
+> 
+> or alike.
+
+Yes, I will add
+  void fw_devlink_set_device(struct fwnode_handle *fwnode, struct device *dev);
+
+Also, I will probably add a new patch in this series in order to use
+the new fw_devlink_set_device() when relevant in the already existing code.
+
+Best regards,
+Hervé
