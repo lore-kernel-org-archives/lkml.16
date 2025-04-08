@@ -1,62 +1,63 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 511282566CC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 431EF2566F6;
 	Tue,  8 Apr 2025 19:05:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744139141; cv=none; b=AHzIgdkHzrzyv6GMZJNjKEmNSOW+SQPRVTjYvPUK5V4Oxw6UAufV4uAA1g0tOMz2jBQ3ACVTv3Qyb0D6DEAHBELtIf0nWSntd4FRR9oirp4o59+wYu360u8u+dw2O4IkDdLVZr13QCjCMJnpFpwR16wodO32qij1HHUvfWmz4Q8=
+	t=1744139142; cv=none; b=n0VwcUF5VhsLdIv2V5nwq8Dc9XlCYYsJM2/2BrjPv7eDvJwUno0FspnduI+SbAv0TwsRAxttte/5TssMbGFVr2HvjDYrYTJgXH6Q/AKV1GDtAI7mdAcw8/TYh4kdqD6LgB770VWz8DekNUld1GKOPKh8iJLkRqz0SYXO1LtOwJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744139141; c=relaxed/simple;
-	bh=9G2wqLzc4BfInNb+YpTbGKNQ/fJobH5jgUlCk776Yac=;
+	s=arc-20240116; t=1744139142; c=relaxed/simple;
+	bh=egQk8SE4EvVXg0k9opnExpx7g1hltmC3YPuvUS9IdvE=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=LSUstQfpq9n5itKFzPQaTG2mXP6T4XhdcH2T5XjruNaZn3cbwi6hl/xijFOs3IfpA9aEH3RCeFLdSFTBqMgIDUgTNAwrnAuNn9CWofmJ0KrSfkhg2aUdMTrmjsPyb69asCEc5KdIj/Q+GHQY5XR4E9g5EO+ABwZmvMal8IBsn6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jY40Ryo0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MpolooP0; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=lerhudRfFC/nNDPgEHSwAVpwMW2aHReI1f7Vxfdt/5sby5Wt2zcA+UkXdkozcKrIER4vkxZs8uGuhjyTqcu3PpErZ40J1X/4rmGW1ntX6yDL+sYin41ftWC3DC/3H+FPjxtvdKVOo8XpwbXWFactRRqwtcT6Kx8zqAJTlMi6AgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NRFBdcGu; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Klcgt4Zi; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jY40Ryo0";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MpolooP0"
-Date: Tue, 08 Apr 2025 19:05:36 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NRFBdcGu";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Klcgt4Zi"
+Date: Tue, 08 Apr 2025 19:05:37 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744139136;
+	s=2020; t=1744139138;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ZSwAZSwUxf2Jn80qhHtbiK9Y9hZR3vQqZAQ/mzP58II=;
-	b=jY40Ryo0MgyHRecwm2eiwJvGrxQ35lJBb7dKu+B+58X40+SPGSmlT5pSok+viPCkgX2NT5
-	tZZ4b/L1UXPVYZLjvSg3j5lgAcx49gtZwmpl4fOiA3ZgXa4xVPCJlqb/HNVpzmD3q4reOT
-	DaYBAZY4YigRvNmV1PC+q4PVltjzv6Ot0rJUY4hUwp1xbPSVrqA5/oJSJeIqJ2FYY+4qbk
-	0FCdF/f/Pn0XcMqK6B/Wv1JccUQ51jlj/oKiIFJrrOq1ov5pYzhBVbAaDHBRNceVBz+38u
-	ANdzZHxZWB6ftFPsm3dkI8Prk7/Dqs3bhQyBbtVEEFb0IeJyxOfx/U+7li/mpw==
+	bh=huxHGz968rmBlwh4/vl65pK6xYX8iswjfZAR2BG5mLI=;
+	b=NRFBdcGuPRy9WLJ8mnydkaPQYDCqDNEtrIrgHSAU3JLYFQUfttVxrfW6PLe4ywIEZbk5OX
+	gA3gXLYFu6FKTHVvQyR/X0iRRrAUYJq4IKIwUowQBv+y2bAa/ztb+ToeKVaLjoBP65E0sV
+	aM+YyL2D567WdoAYrxdd67m4yYlRVzQ/Byy9QE34hT1bnHPh7i3KSzA/WxyaU6ApS8uCW4
+	rXnRK3WOffzcdpcm143cRJLu2LOsu7wuUmuZ7ppiatruazojnJaymp1WoCiwRBtVqutRin
+	z31fI64VuNN0j7kNBOpHvN5yC+x2nyeDE+Q7f9e/cf6uYLLb9SlCP7Ac4lalmQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744139136;
+	s=2020e; t=1744139138;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ZSwAZSwUxf2Jn80qhHtbiK9Y9hZR3vQqZAQ/mzP58II=;
-	b=MpolooP0JJedEL42v/8l6fdaYz9G8HQYFHh1mDMBf2amBqeQTItF7ObyGgstKPYfIaWezx
-	L/BTKdE1tygAl8Cw==
+	bh=huxHGz968rmBlwh4/vl65pK6xYX8iswjfZAR2BG5mLI=;
+	b=Klcgt4ZiCKewNmCmdi4Xnu+zmm/5uXG0KXk0m6AHvkOPzuOi5mOBUCXuA3GM2xxEh0Vpce
+	MEiqpM4HUnwTNaAw==
 From: tip-bot2 for Michal =?utf-8?q?Koutn=C3=BD?= <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched: Always initialize rt_rq's task_group
+Subject: [tip: sched/core] sched: Convert CONFIG_RT_GROUP_SCHED macros to code
+ conditions
 Cc: mkoutny@suse.com, "Peter Zijlstra (Intel)" <peterz@infradead.org>,
  x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250310170442.504716-4-mkoutny@suse.com>
-References: <20250310170442.504716-4-mkoutny@suse.com>
+In-Reply-To: <20250310170442.504716-2-mkoutny@suse.com>
+References: <20250310170442.504716-2-mkoutny@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174413913619.31282.1198558368261148151.tip-bot2@tip-bot2>
+Message-ID: <174413913751.31282.777696833300765718.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -66,78 +67,77 @@ Content-Transfer-Encoding: quoted-printable
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     a5a25b32c08a31c03258ec4960bec26caaf76e9a
-Gitweb:        https://git.kernel.org/tip/a5a25b32c08a31c03258ec4960bec26caaf=
-76e9a
+Commit-ID:     433bce5dadb4ec3d5eda99c5125926c045b79005
+Gitweb:        https://git.kernel.org/tip/433bce5dadb4ec3d5eda99c5125926c045b=
+79005
 Author:        Michal Koutn=C3=BD <mkoutny@suse.com>
-AuthorDate:    Mon, 10 Mar 2025 18:04:35 +01:00
+AuthorDate:    Mon, 10 Mar 2025 18:04:33 +01:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Tue, 08 Apr 2025 20:55:53 +02:00
+CommitterDate: Tue, 08 Apr 2025 20:55:52 +02:00
 
-sched: Always initialize rt_rq's task_group
+sched: Convert CONFIG_RT_GROUP_SCHED macros to code conditions
 
-rt_rq->tg may be NULL which denotes the root task_group.
-Store the pointer to root_task_group directly so that callers may use
-rt_rq->tg homogenously.
-
-root_task_group exists always with CONFIG_CGROUPS_SCHED,
-CONFIG_RT_GROUP_SCHED depends on that.
-
-This changes root level rt_rq's default limit from infinity to the
-value of (originally) global RT throttling.
+Convert the blocks guarded by macros to regular code so that the RT
+group code gets more compile validation. Reasoning is in
+Documentation/process/coding-style.rst 21) Conditional Compilation.
+With that, no functional change is expected.
 
 Signed-off-by: Michal Koutn=C3=BD <mkoutny@suse.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20250310170442.504716-4-mkoutny@suse.com
+Link: https://lkml.kernel.org/r/20250310170442.504716-2-mkoutny@suse.com
 ---
- kernel/sched/rt.c    | 7 ++-----
- kernel/sched/sched.h | 2 ++
- 2 files changed, 4 insertions(+), 5 deletions(-)
+ kernel/sched/rt.c       | 10 ++++------
+ kernel/sched/syscalls.c |  2 +-
+ 2 files changed, 5 insertions(+), 7 deletions(-)
 
 diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-index 61ec29b..1af3996 100644
+index fa03ec3..2ade81e 100644
 --- a/kernel/sched/rt.c
 +++ b/kernel/sched/rt.c
-@@ -89,6 +89,7 @@ void init_rt_rq(struct rt_rq *rt_rq)
- 	rt_rq->rt_throttled =3D 0;
- 	rt_rq->rt_runtime =3D 0;
- 	raw_spin_lock_init(&rt_rq->rt_runtime_lock);
-+	rt_rq->tg =3D &root_task_group;
- #endif
- }
-=20
-@@ -482,9 +483,6 @@ static inline bool rt_task_fits_capacity(struct task_stru=
-ct *p, int cpu)
-=20
- static inline u64 sched_rt_runtime(struct rt_rq *rt_rq)
+@@ -1066,13 +1066,12 @@ inc_rt_prio_smp(struct rt_rq *rt_rq, int prio, int pr=
+ev_prio)
  {
--	if (!rt_rq->tg)
--		return RUNTIME_INF;
--
- 	return rt_rq->rt_runtime;
+ 	struct rq *rq =3D rq_of_rt_rq(rt_rq);
+=20
+-#ifdef CONFIG_RT_GROUP_SCHED
+ 	/*
+ 	 * Change rq's cpupri only if rt_rq is the top queue.
+ 	 */
+-	if (&rq->rt !=3D rt_rq)
++	if (IS_ENABLED(CONFIG_RT_GROUP_SCHED) && &rq->rt !=3D rt_rq)
+ 		return;
+-#endif
++
+ 	if (rq->online && prio < prev_prio)
+ 		cpupri_set(&rq->rd->cpupri, rq->cpu, prio);
  }
+@@ -1082,13 +1081,12 @@ dec_rt_prio_smp(struct rt_rq *rt_rq, int prio, int pr=
+ev_prio)
+ {
+ 	struct rq *rq =3D rq_of_rt_rq(rt_rq);
 =20
-@@ -1154,8 +1152,7 @@ inc_rt_group(struct sched_rt_entity *rt_se, struct rt_r=
-q *rt_rq)
- 	if (rt_se_boosted(rt_se))
- 		rt_rq->rt_nr_boosted++;
-=20
--	if (rt_rq->tg)
--		start_rt_bandwidth(&rt_rq->tg->rt_bandwidth);
-+	start_rt_bandwidth(&rt_rq->tg->rt_bandwidth);
+-#ifdef CONFIG_RT_GROUP_SCHED
+ 	/*
+ 	 * Change rq's cpupri only if rt_rq is the top queue.
+ 	 */
+-	if (&rq->rt !=3D rt_rq)
++	if (IS_ENABLED(CONFIG_RT_GROUP_SCHED) && &rq->rt !=3D rt_rq)
+ 		return;
+-#endif
++
+ 	if (rq->online && rt_rq->highest_prio.curr !=3D prev_prio)
+ 		cpupri_set(&rq->rd->cpupri, rq->cpu, rt_rq->highest_prio.curr);
  }
-=20
- static void
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 47972f3..c006348 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -821,6 +821,8 @@ struct rt_rq {
- 	unsigned int		rt_nr_boosted;
-=20
- 	struct rq		*rq;
-+#endif
-+#ifdef CONFIG_CGROUP_SCHED
- 	struct task_group	*tg;
- #endif
- };
+diff --git a/kernel/sched/syscalls.c b/kernel/sched/syscalls.c
+index c326de1..2bf5281 100644
+--- a/kernel/sched/syscalls.c
++++ b/kernel/sched/syscalls.c
+@@ -640,7 +640,7 @@ change:
+ 			retval =3D -EPERM;
+ 			goto unlock;
+ 		}
+-#endif
++#endif /* CONFIG_RT_GROUP_SCHED */
+ #ifdef CONFIG_SMP
+ 		if (dl_bandwidth_enabled() && dl_policy(policy) &&
+ 				!(attr->sched_flags & SCHED_FLAG_SUGOV)) {
