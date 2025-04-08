@@ -1,113 +1,107 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DF3C224237
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 15:18:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B2C1ADC8D;
+	Tue,  8 Apr 2025 15:19:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744125489; cv=none; b=Fykr0d2RpLHixAKFsg3nrpA8xlO1xtWF4eONntHDcWKL+vNS94T62EohX6WZXcCGHGlenDv1DaQWnnUzy9xB7rcIfwIYYHADf00TZ/7qLIki2iy5Ymx0sFfdaYVBq2FXfyod/31Fiqsv3I98m1Y4LdxnkaSzggOUGe+496ugS6w=
+	t=1744125540; cv=none; b=PQ4mJRuZaVAqO9Uqv/li2rH0h4ClM03J7h82nJuBJ1KUzAPYbfh5D9ERCR1JrdpPOl2eHY+mr10D/xnk5Fh4jrQXEU3/XnZ9yzBOH+SoNnXlTQdB7EAqG2ACr5SZjjd2XfKou3IIwcI73DrRDE5btSL1q8RG2MJN67eob4LDGRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744125489; c=relaxed/simple;
-	bh=R7gt85kpHUgOXrzFifbXZ9lqyoRD668hCe7Kpfratak=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FcVsVDIHI6nuTmlIpDV2PP6MdM2Q6lji9GeJWFcZ6Z97pazSOosimt3rsQ69yiLPGEpIvvI5RklpSg0SfGUX3GGQxcCC/8EJ1fnixHjKocHnPDhbCuOVZVy6I4SboESFtNBHJD8agpNDJdqsX5w9DVEc8Z6bv5RjWwnRP5LsE8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qYN9elIQ; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744125540; c=relaxed/simple;
+	bh=5UoJUCBT3LAaHEfHe9iTZOH67O24WbB9WsSvXP1s2hA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b71Gw2h+vF7MjnUz0SDzbBRzyQ/UKkvqop66dy6RTyNPjLtozURFZTB8JBgvKTZ3IZcZ4yoSPcwAlrC0VAIEprydfwXDJzxsWoSFM2o7FyZdmmxl09bAh8q3U4MmjezEfPlbikEdsY5xzCsKl2SEDIBCn6ep5j58Jd/1IvhkFXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Fr4PbX8H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qYN9elIQ"
-Message-ID: <e7720741-93c5-450b-99a0-3434a5d535f5@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744125482;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6A0hK4GqrFidtzfUsz5pZ3otqeWdeUksBm3Ffeph64Q=;
-	b=qYN9elIQgFBvOhzsXh3Ym4aLFX9ciaThNCjNQYCkgf6ZQB63IU9qXvViaXtNZ3HsvQ90R2
-	bXwC/4E6c8pVQoaCzqtHCDvwW1Y9QVSXLmO7XXnkXVMao7Ct/yZv1K1u/knJG7IlU0EOxa
-	VCPfs97vLfLKyJjO9Ti4Badxnbc5Kjk=
-Date: Tue, 8 Apr 2025 11:17:52 -0400
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Fr4PbX8H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C62DC4CEE5;
+	Tue,  8 Apr 2025 15:18:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1744125540;
+	bh=5UoJUCBT3LAaHEfHe9iTZOH67O24WbB9WsSvXP1s2hA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Fr4PbX8HNhnunVIWXCWIz4V6g1mV9B0LLvyZ+/RYDaHReGUVB5dEfDb9gsAWyVOG+
+	 TZ05f5iSPywTAG/U5ex7OOG+B3xdVJ6pu+896gN/UY8a1Sx7M9aEagkfg85jFDmmcK
+	 ISYlZuxvNSN5w11FR2z0ONClaTack/zG0f7BIaug=
+Date: Tue, 8 Apr 2025 17:17:26 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Thorsten Leemhuis <linux@leemhuis.info>, stable@vger.kernel.org,
+	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org, akpm@linux-foundation.org,
+	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
+	hargar@microsoft.com, broonie@kernel.org,
+	Justin Forbes <jforbes@fedoraproject.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH 6.13 000/499] 6.13.11-rc1 review
+Message-ID: <2025040818-iodine-theater-7e1f@gregkh>
+References: <20250408104851.256868745@linuxfoundation.org>
+ <7d11f01f-9adc-467c-95bc-c9ff4bbf6a0f@leemhuis.info>
+ <CAP-5=fVCADCyXeeLZT4EpU1OtOxMKB8omf5FFpDHmKgOWetW2A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [RFC net-next PATCH 00/13] Add PCS core support
-To: Daniel Golle <daniel@makrotopia.org>,
- "Christian Marangi (Ansuel)" <ansuelsmth@gmail.com>
-Cc: Kory Maincent <kory.maincent@bootlin.com>, netdev@vger.kernel.org,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S . Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org,
- upstream@airoha.com, Heiner Kallweit <hkallweit1@gmail.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Clark Wang <xiaoning.wang@nxp.com>,
- Claudiu Beznea <claudiu.beznea@microchip.com>,
- Claudiu Manoil <claudiu.manoil@nxp.com>, Conor Dooley <conor+dt@kernel.org>,
- Ioana Ciornei <ioana.ciornei@nxp.com>, Jonathan Corbet <corbet@lwn.net>,
- Joyce Ooi <joyce.ooi@intel.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Li Yang <leoyang.li@nxp.com>, Madalin Bucur <madalin.bucur@nxp.com>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <michal.simek@amd.com>,
- Naveen N Rao <naveen@kernel.org>, Nicholas Piggin <npiggin@gmail.com>,
- Nicolas Ferre <nicolas.ferre@microchip.com>,
- Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
- Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>,
- Robert Hancock <robert.hancock@calian.com>,
- Saravana Kannan <saravanak@google.com>, Shawn Guo <shawnguo@kernel.org>,
- UNGLinuxDriver@microchip.com, Vladimir Oltean <vladimir.oltean@nxp.com>,
- Wei Fang <wei.fang@nxp.com>, devicetree@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-doc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linuxppc-dev@lists.ozlabs.org
-References: <20250403181907.1947517-1-sean.anderson@linux.dev>
- <20250407182738.498d96b0@kmaincent-XPS-13-7390>
- <720b6db8-49c5-47e7-98da-f044fc38fc1a@linux.dev>
- <CA+_ehUyAo7fMTe_P0ws_9zrcbLEWVwBXDKbezcKVkvDUUNg0rg@mail.gmail.com>
- <1aec6dab-ed03-4ca3-8cd1-9cfbb807be10@linux.dev>
- <CA+_ehUzeMBFrDEb7Abn3UO3S7VVjMiKc+2o=p5RGjPDkfLPVtQ@mail.gmail.com>
- <Z_QKl-4563l05WB3@makrotopia.org>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <Z_QKl-4563l05WB3@makrotopia.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fVCADCyXeeLZT4EpU1OtOxMKB8omf5FFpDHmKgOWetW2A@mail.gmail.com>
 
-On 4/7/25 13:25, Daniel Golle wrote:
-> On Mon, Apr 07, 2025 at 07:21:38PM +0200, Christian Marangi (Ansuel) wrote:
->> Il giorno lun 7 apr 2025 alle ore 19:00 Sean Anderson
->> > I agree that a "cells" approach would require this, but
->> >
->> > - There are no in-tree examples of where this is necessary
->> > - I think this would be easy to add when necessary
->> >
->> 
->> There are no in-tree cause only now we are starting to support
->> complex configuration with multiple PCS placed outside the MAC.
->> 
->> I feel it's better to define a standard API for them now before
->> we permit even more MAC driver to implement custom property
->> and have to address tons of workaround for compatibility.
+On Tue, Apr 08, 2025 at 08:07:09AM -0700, Ian Rogers wrote:
+> On Tue, Apr 8, 2025 at 6:09 AM Thorsten Leemhuis <linux@leemhuis.info> wrote:
+> >
+> > On 08.04.25 12:43, Greg Kroah-Hartman wrote:
+> > > This is the start of the stable review cycle for the 6.13.11 release.
+> > > There are 499 patches in this series, all will be posted as a response
+> > > to this one.  If anyone has any issues with these being applied, please
+> > > let me know.
+> >
+> > Compiling for Fedora failed:
+> >
+> > util/stat.c: In function ‘evsel__is_alias’:
+> > util/stat.c:565:16: error: implicit declaration of function ‘perf_pmu__name_no_suffix_match’ [-Wimplicit-function-declaration]
+> >   565 |         return perf_pmu__name_no_suffix_match(evsel_a->pmu, evsel_b->pmu->name);
+> >       |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >
+> > From a *very very* quick look I wonder if it might be due to this change,
+> > as it seems to depend on 63e287131cf0c5 ("perf pmu: Rename name matching
+> > for no suffix or wildcard variants") [v6.15-rc1]:
+> >
+> > > Ian Rogers <irogers@google.com>
+> > >     perf stat: Don't merge counters purely on name
+> >
+> > But as I said, it was just a very very quick look, so I might be totally
+> > off track there.
 > 
-> Qualcomm's PCS driver will require offering multiple phylink_pcs by a
-> single device/of_node. So while it's true that there is currently no
-> in-tree user for that, that very user is already knocking on our doors.
+> Thanks Thorsten, I repeated the failure and reverting that patch fixes
+> the build. Alternatively, cherry-picking:
 > 
-> See
-> https://patchwork.kernel.org/project/netdevbpf/list/?series=931658&state=*
+> ```
+> commit 63e287131cf0c59b026053d6d63fe271604ffa7e
+> Author: Ian Rogers <irogers@google.com>
+> Date:   Fri Jan 31 23:43:18 2025 -0800
+> 
+>    perf pmu: Rename name matching for no suffix or wildcard variants
+> 
+>    Wildcard PMU naming will match a name like pmu_1 to a PMU name like
+>    pmu_10 but not to a PMU name like pmu_2 as the suffix forms part of
+>    the match. No suffix matching will match pmu_10 to either pmu_1 or
+>    pmu_2. Add or rename matching functions on PMU to make it clearer what
+>    kind of matching is being performed.
+> 
+>    Signed-off-by: Ian Rogers <irogers@google.com>
+>    Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+>    Link: https://lore.kernel.org/r/20250201074320.746259-4-irogers@google.com
+>    Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ```
+> 
+> Also fixes the build.
 
-OK, but you have separate nodes for each PCS? So maybe the best thing is to
-allow customizing the fwnode? E.g. something like
+Now added to both queues, thanks.
 
-pcs_register_fwnode(struct device *dev, struct phylink_pcs *pcs, struct fwnode_handle *fwnode)
-
---Sean
+greg k-h
