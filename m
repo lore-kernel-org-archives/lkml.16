@@ -1,160 +1,134 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1861423A99F;
-	Tue,  8 Apr 2025 17:16:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 425D3234979;
+	Tue,  8 Apr 2025 17:16:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744132584; cv=none; b=ZAB5zeWbW8+Jrlxi2aP2VYHzCQqD7Ah70GoY49WNY8MAEwgL+l2lxB9Ah5vMRxx/rrCNFg1IyBD+wxzwKweN2J5rjTRdc057q+nT4bYKi2mr8/v+Q3O4rW4G4kx30kjhsE8i+7qKNon7ZUlNYbXymk44GH7bWJqNLsKmA/aCjUg=
+	t=1744132593; cv=none; b=MjYBv+ugPVFMWcr257dOl8baMPpdxBZ9M1P0D2a/Podb2X9GoF480u3V0GUoEjc83dK4cYKOvVQXeFflHkA802TJsZjy4f3vIhNQrs2mUngVFfONJNlAFMdQMKdaU9HFYhMW7ucNtVefeaI0txuKCJIgK5Yim3MJow8iEhlcsE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744132584; c=relaxed/simple;
-	bh=HhiiV26Eyq2LUq6YKxY+qxDFYUBLI5AgAMAbAOeeP68=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CIAcwAAAHm/bt3aIduSpZZoltpBhqYl6rOmbF6zhT5exoAt/Omu/zsKtU+2nrmmmUPb8ixxjFdmvy7SQE77ac+Dpmsi9GkmqkQBgvGe9V0zXhW3oGIe+rLquJ3pEJcdel83xRl6HitPakLtoelLDnclZBJ07tvREcV+VsBUoFko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0062A1688;
-	Tue,  8 Apr 2025 10:16:23 -0700 (PDT)
-Received: from e128066.cambridge.arm.com (e128066.cambridge.arm.com [10.1.26.81])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7EA4F3F59E;
-	Tue,  8 Apr 2025 10:16:18 -0700 (PDT)
-From: mark.barnett@arm.com
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com
-Cc: ben.gainey@arm.com,
-	deepak.surti@arm.com,
-	ak@linux.intel.com,
-	will@kernel.org,
-	james.clark@arm.com,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	adrian.hunter@intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Mark Barnett <mark.barnett@arm.com>
-Subject: [PATCH v4 3/5] perf: Allow adding fixed random jitter to the sampling period
-Date: Tue,  8 Apr 2025 18:15:28 +0100
-Message-Id: <20250408171530.140858-4-mark.barnett@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250408171530.140858-1-mark.barnett@arm.com>
-References: <20250408171530.140858-1-mark.barnett@arm.com>
+	s=arc-20240116; t=1744132593; c=relaxed/simple;
+	bh=5sVm7Ccq5DFzle8yTbs1g/hLQHzfJVombqZ3QUUwX+Y=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=pCcwJa2akv2wmtCd0ACoCc6CdVNsrBmOzFEhNpSnyLU2MA13DNaNPy/Xz7mDJCuHdJksHRYu8Pcr/MNmcw1BmAoyTPK5vqXFKcVIuG4R0IZ/gOdakYspLA3LgLom1aNC8xE3NuwOXc4YCf/Xm4Bn8L1IzUbSDhyG/C3JZBnB+Tw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=kAKER9WG; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=kxASuWul; arc=none smtp.client-ip=103.168.172.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="kAKER9WG";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kxASuWul"
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 301A611400B6;
+	Tue,  8 Apr 2025 13:16:28 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-12.internal (MEProxy); Tue, 08 Apr 2025 13:16:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1744132588;
+	 x=1744218988; bh=ZusC4j88iZDe7cKmTzZPwEEcBckZyU9z5JAnaD7npYo=; b=
+	kAKER9WG8clrJgdPv5KjhGSlW0MTMk5KT4ZUk7Kw0BFGACZ5jol0penH71/1gQAN
+	5qjpXbVzNbMs9sqso3a55c0mhxatEOgnBlPFswaXbqQVXVuL2b5qa602yQCMJ9Tg
+	C/VVYD9yetDD4NvMjEZRNne8hAFU+Dl7BqDOCFuyobL44dg6iyb60EKsZnC+fm7A
+	u0Ik2rTGasA0fSEjYMnN8h5f0Tbt9X/0Ikpuy4r+fJd3WolKh736R69sUkxgNcQv
+	GvCPiGiFWVaxQXUnxdnQNxTA90CCMynLszA2i7jkuVjgDkgGEtVAEq+b/vqBMwZ0
+	LzXKhjxzgHF6qODoQUzlQA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744132588; x=
+	1744218988; bh=ZusC4j88iZDe7cKmTzZPwEEcBckZyU9z5JAnaD7npYo=; b=k
+	xASuWulBPJTSShQgUfSKwnoLD8ec+A277BzKDuxEnJzp8ZzNq4MdXk/KoUVv6jvB
+	GMb+Llj/jrPu2WhV16RwgIFBSTChgTX14A3Y/Y7dEVGL6qoCYjUlDpPA0851RWje
+	gw0idm5agye/vmHe/LSXchEkPiyoHcCSsDWA7lyl6hN6U76nBVxIM9HcNaXQqPPR
+	2e3y+Rtwa4q+qm50bpWXvaxipmdCC2wcTQgdy1aLlSpt23iaDnPdo+CI4IdUfHLb
+	ZR5w/enAAEe1T96W8TFXkKb+rzLSz16dQr29S287m9i7ftHNci8O3roNlTk9gL3T
+	TOZPxW5NWjLteT6xc52ww==
+X-ME-Sender: <xms:6Vn1ZzgSipKPFrG6IuVoqX5aC0B3zsJ03TwguC7t67ub6IzI064pWg>
+    <xme:6Vn1ZwAuvhR3fDsZ5YZ1Y1k607MrfdkQysMrhL0JsIj5HLd9Ng1ogrHZkwqRYKAbs
+    llOE7mlyo4sQ9Q2Jgw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdefieeiucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhepteeutddtheffkedttdduiefgffefkefhgfeu
+    ieetjeehteeludefleffieevffdtnecuffhomhgrihhnpeduiedrnhhonecuvehluhhsth
+    gvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggs
+    rdguvgdpnhgspghrtghpthhtohepvdeipdhmohguvgepshhmthhpohhuthdprhgtphhtth
+    hopegsphesrghlihgvnhekrdguvgdprhgtphhtthhopegtrghtrghlihhnrdhmrghrihhn
+    rghssegrrhhmrdgtohhmpdhrtghpthhtohepmhgrrhhkrdhruhhtlhgrnhgusegrrhhmrd
+    gtohhmpdhrtghpthhtohepnhhitgholhgrshesfhhjrghslhgvrdgvuhdprhgtphhtthho
+    pegsrhhgvghrshhtsehgmhgrihhlrdgtohhmpdhrtghpthhtohepuhgsihiijhgrkhesgh
+    hmrghilhdrtghomhdprhgtphhtthhopehhvghrsggvrhhtsehgohhnughorhdrrghprghn
+    rgdrohhrghdrrghupdhrtghpthhtoheprghruggssehkvghrnhgvlhdrohhrghdprhgtph
+    htthhopegrrhhnugeskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:6Vn1ZzHurRHuHgzee5gnc6zzuDyC99eqxxcG0Rd-a83_k91ZjMjq6g>
+    <xmx:6Vn1ZwTdHSNtQ4IwxNAhwiTCO_unZ12OFl0sjgDX-1QoynU850u4GQ>
+    <xmx:6Vn1Zwx3PDyMl3hQZQb01ThSkhjNY3lKUTI6KycfntiEaYR15s-G7A>
+    <xmx:6Vn1Z24UqqDehkMC3wjyPDDqgGzgMI5XFgUZNLhnHBQDEILM7AC05Q>
+    <xmx:7Fn1Z3TC_xAheqDni-VD8_gghQnO4lzwgRrKNmcct4VKq6wG0MRxZT47>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 0A5352220073; Tue,  8 Apr 2025 13:16:24 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-ThreadId: T46c1ceb211c7c949
+Date: Tue, 08 Apr 2025 19:16:04 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Mark Rutland" <mark.rutland@arm.com>, "Arnd Bergmann" <arnd@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ "Ard Biesheuvel" <ardb@kernel.org>, "Borislav Petkov" <bp@alien8.de>,
+ "Brian Gerst" <brgerst@gmail.com>,
+ "Catalin Marinas" <catalin.marinas@arm.com>,
+ "Dave Hansen" <dave.hansen@linux.intel.com>,
+ "Herbert Xu" <herbert@gondor.apana.org.au>, "Ingo Molnar" <mingo@redhat.com>,
+ "Jonathan Corbet" <corbet@lwn.net>, "Marc Zyngier" <maz@kernel.org>,
+ "Masahiro Yamada" <masahiroy@kernel.org>,
+ "Nathan Chancellor" <nathan@kernel.org>,
+ "Nicolas Schier" <nicolas@fjasle.eu>, "Takashi Iwai" <tiwai@suse.com>,
+ "Thomas Gleixner" <tglx@linutronix.de>, "Uros Bizjak" <ubizjak@gmail.com>,
+ "Will Deacon" <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
+ linux-crypto@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org, x86@kernel.org
+Message-Id: <37ac1bd5-580c-4980-98fa-653dfe3eb768@app.fastmail.com>
+In-Reply-To: <Z_Uwxe46_o5nYkMB@J2N7QTR9R3.cambridge.arm.com>
+References: <20250407094116.1339199-1-arnd@kernel.org>
+ <Z_Uwxe46_o5nYkMB@J2N7QTR9R3.cambridge.arm.com>
+Subject: Re: [PATCH 0/4] Make gcc-8.1 and binutils-2.30 the minimum version
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-From: Ben Gainey <ben.gainey@arm.com>
+On Tue, Apr 8, 2025, at 16:20, Mark Rutland wrote:
+> On Mon, Apr 07, 2025 at 11:41:12AM +0200, Arnd Bergmann wrote:
+>> From: Arnd Bergmann <arnd@arndb.de>
+>> 
+>> x86 already requires gcc-8.1 since linux-6.15-rc1, which led me to
+>> actually go through all  version checks and make this is the minimum
+>> for all architectures.
+>
+> I am very much in favour of this, so for the series:
+>
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
+>
+> Is the aim to get this in for v6.15?
+>
+> I believe this will permit a number of further cleanups for arm64, and
+> if it's possible to get this in for v6.15, it'd be a bit easier to start
+> preparing those for v6.16. No big problem if that's not the case.
 
-This change modifies the core perf overflow handler, adding some small
-random jitter to each sample period when the high-frequency sample
-period is in use. A new flag is added to perf_event_attr to opt into
-this behaviour.
+I wasn't planning to push it for 6.15, as we've discussed this change
+for a long time already, I don't think there is any rush now, though
+I agree it would have helped to have it earlier.
 
-This change follows the discussion in [1], where it is recognized that it
-may be possible for certain patterns of execution to end up with biased
-results.
+I already found another follow-up, removing support for the sancov
+gcc plugin that is no longer needed, I'm sure there is more.
 
-[1] https://lore.kernel.org/linux-perf-users/Zc24eLqZycmIg3d2@tassilo/
-
-Signed-off-by: Ben Gainey <ben.gainey@arm.com>
-Signed-off-by: Mark Barnett <mark.barnett@arm.com>
----
- include/linux/perf_event.h |  1 +
- kernel/events/core.c       | 26 ++++++++++++++++++++++++++
- 2 files changed, 27 insertions(+)
-
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index be006965054e..78a6fd14b412 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -233,6 +233,7 @@ struct hw_perf_event {
- 
- #define PERF_SPS_HF_ON			0x00000001
- #define PERF_SPS_HF_SAMPLE		0x00000002
-+#define PERF_SPS_HF_RAND		0x00000004
- 	u32				sample_period_state;
- 
- 	/*
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 5752ac7408b1..bc6991a33048 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -56,6 +56,7 @@
- #include <linux/buildid.h>
- #include <linux/task_work.h>
- #include <linux/percpu-rwsem.h>
-+#include <linux/prandom.h>
- 
- #include "internal.h"
- 
-@@ -472,6 +473,8 @@ static int perf_sample_period_ns __read_mostly	= DEFAULT_SAMPLE_PERIOD_NS;
- static int perf_sample_allowed_ns __read_mostly =
- 	DEFAULT_SAMPLE_PERIOD_NS * DEFAULT_CPU_TIME_MAX_PERCENT / 100;
- 
-+static DEFINE_PER_CPU(struct rnd_state, sample_period_jitter_rnd);
-+
- static void update_perf_cpu_limits(void)
- {
- 	u64 tmp = perf_sample_period_ns;
-@@ -10224,6 +10227,19 @@ static int __perf_event_overflow(struct perf_event *event,
- 	 *
- 	 * By ignoring the HF samples, we measure the actual period.
- 	 */
-+
-+	/*
-+	 * Apply optional jitter to the overall sample period
-+	 */
-+	if (hwc->sample_period_state & PERF_SPS_HF_RAND
-+			&& !(hwc->sample_period_state & PERF_SPS_HF_SAMPLE)) {
-+		struct rnd_state *state = &get_cpu_var(sample_period_jitter_rnd);
-+		u64 rand_period = 1 << event->attr.hf_sample_rand;
-+
-+		sample_period -= rand_period / 2;
-+		sample_period += prandom_u32_state(state) & (rand_period - 1);
-+	}
-+
- 	if (hwc->sample_period_state & PERF_SPS_HF_ON) {
- 		u64 hf_sample_period = event->attr.hf_sample_period;
- 
-@@ -12756,6 +12772,14 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
- 	if (attr->hf_sample_period)
- 		hwc->sample_period_state |= PERF_SPS_HF_ON;
- 
-+	if (attr->hf_sample_rand) {
-+		/* high-frequency jitter is only valid with a high-freq period */
-+		if (!attr->hf_sample_period)
-+			return ERR_PTR(-EINVAL);
-+
-+		hwc->sample_period_state |= PERF_SPS_HF_RAND;
-+	}
-+
- 	/*
- 	 * Disallow uncore-task events. Similarly, disallow uncore-cgroup
- 	 * events (they don't make sense as the cgroup will be different
-@@ -14367,6 +14391,7 @@ static void __init perf_event_init_all_cpus(void)
- 	zalloc_cpumask_var(&perf_online_pkg_mask, GFP_KERNEL);
- 	zalloc_cpumask_var(&perf_online_sys_mask, GFP_KERNEL);
- 
-+	prandom_seed_full_state(&sample_period_jitter_rnd);
- 
- 	for_each_possible_cpu(cpu) {
- 		swhash = &per_cpu(swevent_htable, cpu);
-@@ -14384,6 +14409,7 @@ static void __init perf_event_init_all_cpus(void)
- 		cpuctx->online = cpumask_test_cpu(cpu, perf_online_mask);
- 		cpuctx->heap_size = ARRAY_SIZE(cpuctx->heap_default);
- 		cpuctx->heap = cpuctx->heap_default;
-+
- 	}
- }
- 
--- 
-2.43.0
-
+     Arnd
