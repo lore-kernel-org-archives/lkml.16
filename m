@@ -1,189 +1,110 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A4C21FAC48
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 05:07:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8716815A8;
+	Tue,  8 Apr 2025 05:08:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744088826; cv=none; b=YIkoCA9bnaWqvKh8MgrfTqeyfuria+JGHj1R9j03+nTJjUwN1DsyPhqtPXbj7tYydV5ZkNLxP7O+oBEqnaPxGwMkJwfWGpd/NXOf7iuLptgvTbMk+nGbqzXzs6Z6JitVcxzRM8D/KFzsiGyEfQvjI1SIrd8mLeU0heVamrxmHak=
+	t=1744088931; cv=none; b=TcG9Svsq1NpnExPZ/peVTY4iz1AAT3MEedHvsAuJ1RJU4rCgX0N5D1kqQbLCT6ZvxWyR8MagyneGP5VO6GEM6kVDuHQhWnSDeVkYpnPQi9bq1FbNukM+ia8GwjtmcaaRHPxURx7aDbDr5HFsGBB6zz8gq+ffhYezfB+PiFiBmIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744088826; c=relaxed/simple;
-	bh=yhBwHLfqizqpyzfV7mejkBNdj+OfgWkT3OTFaUEypWs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tfAUmheBjrXRtQcc3fpj8kFIQhR8+wlonqvx9Xym1Rroa6aXrksBcgFi9cmXiSdqUWLzwX08VVZ6QRWLupxiiHZAMEnItTPb19qa0SVjoXkW0cY+iXi9EYAtcP73FJ+bD9madDyUP7lWMHFs0dQPkimo6GZPcmkx1+XnRRJoZPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=QLza2bPa; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1744088931; c=relaxed/simple;
+	bh=dCFVXM4MfrbSjUno3IMYIAuWzWR5SEzGsM9gbJlGky8=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=L9gBZ202P3Iu+UdIDD885/BwGzJAwb9UgefZJWksHcMTDVTV2O9c44wkLgbI1cy29cGY4dvmsf1xJtPWbg/iJ4BbrXr2oOj4Os1ZxiKuxsnHMwtCJ7h9bYshaWNuyqZvFlMIexYGw77Iq+hY9LHeuaIQFxs1atUP+vyuaUiQ6as=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CgtXyY3r; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="QLza2bPa"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5382GSv4008168
-	for <linux-kernel@vger.kernel.org>; Tue, 8 Apr 2025 05:07:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	rzU7UwodG3qyyW6TQN+vCBbVngzgxvfapCtRJnPw7nk=; b=QLza2bPaj2nYauIK
-	xv4qHMYfNockI3TQpGfo0gIadcFwzFHUeZpmvIfbPokJWTlCGKsCzG8+tQYHBVvk
-	YRijof9ijgRc/H6i/zlmlRO2MDovRP3yb7vJLoB+RYlp4OG9+I+k8bwIOX2XYHBY
-	NEtGc5QbAngV0CMx6N/l5QTCMc4+p9Jhl/X3W1I5c3Uq2ifEv5GHNysoLFU+hp/Y
-	L0s1gRDgmampmwF3W2XjU8lLqiuLw6Lq8gE8rd1hVudCG//rCIcaV73HkAMcNVI/
-	UiXRkOnwaaViE9yqukIXN3L9g8fK/PdDMXrnPNrTaN/zoFtoSsSgOS0yR1WllFXe
-	rNk+Jw==
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twtaxjwk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 05:07:03 +0000 (GMT)
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2254e0b4b85so45157265ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 22:07:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CgtXyY3r"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7369ce5d323so4016653b3a.1;
+        Mon, 07 Apr 2025 22:08:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744088930; x=1744693730; darn=vger.kernel.org;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=msd/d1ehfzc3JsJDzVJrH86yQ9NABRze3WH3qpDSmYY=;
+        b=CgtXyY3raixh2clH8bli8QJpy/JslcaqX5dZATjlcFIxNfJcAilj4O/3qV19OZXuP6
+         3BWpRjhvc1s5iRHINnLjcvbwPN/Vr4EwDg1RCAigrGVlSZYkRWEH8KFrWt2ymOnJAyGj
+         J+/7MFN/UZYvkR5iw/KUDghfE2IYYNFtM6G4HcFPFGNeWKmBqy5eLmmZ1vFTKovus/3N
+         Ns+HaNXTgRCux0/8fBW1gvRgrSiZnSBTxrpk82lqjTzuUuodWCOA0Ss09k3Tvbvub08p
+         RuJKKzn+2Tj7a/NfiUIZdjJGuzoObmr5YG1HGZJczBCM/jA+L0vogna4OQ2irTWAT92w
+         r0lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744088822; x=1744693622;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rzU7UwodG3qyyW6TQN+vCBbVngzgxvfapCtRJnPw7nk=;
-        b=C2IefS17RXzg+DmBwrhBbxpgH5rDwlgqRaBa0NcaI20H0gWm2wlFe4E6MRfI1uHQNN
-         EQSkvBUqBqKaUA1NskbebK8+lq+zGZIiq56fGu2SkqX48bL/yD6DS6Vm5IIO1rTtU+xg
-         vbJxocynmD0rHRlIDaTdLEntWXe6bfMAUMLQtVRrNcZEUtLF+hge8ZqcPUbw+KNacPiM
-         yOQ0SOv++utKXqdl6tPwAE0v9Itxx6FaxQPFKpXvv+WJ3jbyRMuacfdNBrXOswWR1ydq
-         lDD9CmFLFwpMG56dtSSQIG+F3Ca+oIZfUS+9tgKtT3g+vw2gCuouSFJkMjU2qFhVxY1o
-         Rhpw==
-X-Forwarded-Encrypted: i=1; AJvYcCVsVRMVyxNIiTrgKLq77lJVaT+PlaiuR/fs5849ZuGjio0IrAM8J+c//2e5AxCgzFbKPX0B4QKRlxIL1ys=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAnZBOtjs1VfhtUcbqXzvRjEEUCiwjg4OncWKnVb7JeYKJzkh4
-	MoBffZIPFCiZpkjfthyYakvdgYDR1Cn+dtgSiEuivqnPSj+FTmaku5iIW4URPUyousIiVdll6gn
-	aHlsvyUFkFHJ/Vq8ReoCKIBZaYE4jzXlAtA0VUrmjrfE2fkdtUqQntQgONQ4i3+E=
-X-Gm-Gg: ASbGncum8Dv/7fUlQgQA5JxbaOiNYmxr+gNdB/8dnJ/+TnytR+uyfyp06pshpK+6P0S
-	SblZAjLXfH/usz/rwWn6um8W1CbywrPInF399TR0ih2aN42gIJuMOcE1aw6PnY5dQotj9qLLJvv
-	Tjbu6EQYOyFOqb8SpwyMMIQuTf2gSknX4kEjEGvekYk6a3Kmq5J/oWycgDuC6AIFV3NJyreoWE3
-	pJrTRi4COL05VhoUaSksE+fkET1G7SPFgvHBg/jrLR5qcA/xC/SSwEhJuQXR7S/lAtWeApPXDx1
-	Izyd7fGG3wzUkS4YHmEP4RNhPTLMnGFkYZHIqK5B
-X-Received: by 2002:a17:902:ebc1:b0:21f:2e:4e4e with SMTP id d9443c01a7336-22ab5dfefe3mr29164415ad.5.1744088822432;
-        Mon, 07 Apr 2025 22:07:02 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEFOi+qFW074grRZM0tmColcpxEW6e8LT50yPGQePLPiAI5I4fAS+ASkr4Q4/ratkRlpN20mg==
-X-Received: by 2002:a17:902:ebc1:b0:21f:2e:4e4e with SMTP id d9443c01a7336-22ab5dfefe3mr29164095ad.5.1744088822027;
-        Mon, 07 Apr 2025 22:07:02 -0700 (PDT)
-Received: from [10.218.35.239] ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297866cd1dsm90538615ad.159.2025.04.07.22.06.59
+        d=1e100.net; s=20230601; t=1744088930; x=1744693730;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=msd/d1ehfzc3JsJDzVJrH86yQ9NABRze3WH3qpDSmYY=;
+        b=sPXl0Cd5yZRKqvjMzI2xqN4t32jQekMxkGLtowROT33kvALsZEOSPWdHF1eoTOyYro
+         Rc9bwS9hWk1Ogl1hqb6YnMPnpMtnsZ70FPL5f4iCf+V0uF7DWkgl9tBDYJkQULiZEGa5
+         N67lUyEyjGAedWF/6NugwsneEaWm7AxXeGOnfOPiT6JSijM85PvujWP1wwA7jeleDx9O
+         IVR1EFw5LV/YpfHTAqHYVk7ePnAGm4BJOL406wnL9qMihm8Bn5CJPTYQNtaJ3e0dz0Zg
+         Wdfmqlq4Ez2AAp+RZV/VHCfLS0TEnY+wItucbgZtMbgm8565TIaSy7N3ugYXSG7AQU5I
+         izYg==
+X-Forwarded-Encrypted: i=1; AJvYcCU7hefeHhx72U4DPdfKLK3Ri8y2fPojsgCtLjX90ADq1BfPwB9aBZG5ibyMsM4YTYNHkcN4syUA@vger.kernel.org, AJvYcCUGwbDF76yf6f3/vgfs8eLvY2qSft0Cm4OjFzY88nuNVZgBXywmlxvuzhmw1q+IpR/XrkWrfBqPf2OR8kI=@vger.kernel.org, AJvYcCUM6gjif6+zEJOq5+A+yrOLd4rP4EYi1GKrRZeG6j0wlyzTKy/qCfNpawfNQsPrmgivtH7XqrM8FY9kwypvz6H2IsOS/w==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYgug/a42dicfJCaWW1utSaH/P1bLb6Xnemviw1TuLN9uORYrq
+	P3CYlZ3CF2ResqCXetJtkk9GdlE39CDhTMW8P0vJ2A3XKjzatPZN
+X-Gm-Gg: ASbGncui/S4isNXnuJB2qpQM2f4qv03dF1SQ+VgmnyuNt+w/jIz67sXiQ8uOEXOnG32
+	Nwsmz0ff/hMml8eIgBJ3wbSftQQFQBjLRA5sDO6Q5nhby8xPZguXVE0G4iQ9re3rWTdefvhB1+Z
+	Pc+krZIJkx4ISh/aXMA5ENgOFJBHqv89p7F2a61x/isqeJOxnvTd4jeSLstJWVngkChpirjV8RP
+	jtoHm1cDuqlNqt5xPkFotfHaLD4jGG0XLxyE/9S4a2WTmhb2eJh+RWSOsOflGETps2nv+h+0347
+	F8Pw4ZmgQOYZdyTxyGKLPy14qwcr5CCGzG0pEg==
+X-Google-Smtp-Source: AGHT+IFMc8CTv5CM3QidabaC1+gT5QWZSr42z0RwSRQhSmgrztIdQxQEbgnOQHx7t1YCG0VrCQGQGA==
+X-Received: by 2002:a05:6a00:1411:b0:732:5164:3cc with SMTP id d2e1a72fcca58-739e711fcf5mr19489473b3a.19.1744088929480;
+        Mon, 07 Apr 2025 22:08:49 -0700 (PDT)
+Received: from localhost ([181.91.133.137])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d97d1b87sm9871932b3a.16.2025.04.07.22.08.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Apr 2025 22:07:01 -0700 (PDT)
-Message-ID: <4d68cb04-377f-4ebf-99c7-c63b68aebf60@oss.qualcomm.com>
-Date: Tue, 8 Apr 2025 10:36:58 +0530
+        Mon, 07 Apr 2025 22:08:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/3] usb: gadget: Use get_status callback to set remote
- wakeup capability
-To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Bakker <kees@ijzerbout.nl>,
-        William McVicker <willmcvicker@google.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@kernel.org" <stable@kernel.org>
-References: <20250403110805.865311-1-prashanth.k@oss.qualcomm.com>
- <20250403110805.865311-3-prashanth.k@oss.qualcomm.com>
- <20250408011758.qfdflgrrmahwmfqi@synopsys.com>
-Content-Language: en-US
-From: Prashanth K <prashanth.k@oss.qualcomm.com>
-In-Reply-To: <20250408011758.qfdflgrrmahwmfqi@synopsys.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: emGEeZGX_wxAiWd-HFwTW_GChQkaPtMV
-X-Authority-Analysis: v=2.4 cv=LLlmQIW9 c=1 sm=1 tr=0 ts=67f4aef7 cx=c_pps a=IZJwPbhc+fLeJZngyXXI0A==:117 a=fChuTYTh2wq5r3m49p7fHw==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=HQgqQy662UQdokkEDRwA:9 a=QEXdDO2ut3YA:10
- a=uG9DUKGECoFWVXl0Dc02:22
-X-Proofpoint-ORIG-GUID: emGEeZGX_wxAiWd-HFwTW_GChQkaPtMV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-08_01,2025-04-07_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
- clxscore=1015 mlxlogscore=999 malwarescore=0 phishscore=0
- lowpriorityscore=0 priorityscore=1501 mlxscore=0 spamscore=0 adultscore=0
- suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504080035
+Date: Tue, 08 Apr 2025 02:08:45 -0300
+Message-Id: <D90ZXBE1FIMF.2DV3D7QERNFMR@gmail.com>
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Wentao Liang" <vulab@iscas.ac.cn>, <hmh@hmh.eng.br>,
+ <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>
+Cc: <ibm-acpi-devel@lists.sourceforge.net>,
+ <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <stable@vger.kernel.org>
+Subject: Re: [PATCH v3] platform/x86: thinkpad-acpi: Add error check for
+ tpacpi_check_quirks
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250408013950.2634-1-vulab@iscas.ac.cn>
+In-Reply-To: <20250408013950.2634-1-vulab@iscas.ac.cn>
 
+Hi Wentao,
 
+On Mon Apr 7, 2025 at 10:39 PM -03, Wentao Liang wrote:
+> In tpacpi_battery_init(), the return value of tpacpi_check_quirks() needs
+> to be checked. The battery should not be hooked if there is no matched
+> battery information in quirk table.
 
-On 08-04-25 06:48 am, Thinh Nguyen wrote:
-> On Thu, Apr 03, 2025, Prashanth K wrote:
->> Currently when the host sends GET_STATUS request for an interface,
->> we use get_status callbacks to set/clear remote wakeup capability
->> of that interface. And if get_status callback isn't present for
->> that interface, then we assume its remote wakeup capability based
->> on bmAttributes.
->>
->> Now consider a scenario, where we have a USB configuration with
->> multiple interfaces (say ECM + ADB), here ECM is remote wakeup
->> capable and as of now ADB isn't. And bmAttributes will indicate
->> the device as wakeup capable. With the current implementation,
->> when host sends GET_STATUS request for both interfaces, we will
->> set FUNC_RW_CAP for both. This results in USB3 CV Chapter 9.15
->> (Function Remote Wakeup Test) failures as host expects remote
->> wakeup from both interfaces.
->>
->> The above scenario is just an example, and the failure can be
->> observed if we use configuration with any interface except ECM.
->> Hence avoid configuring remote wakeup capability from composite
->> driver based on bmAttributes, instead use get_status callbacks
->> and let the function drivers decide this.
->>
->> Cc: stable@kernel.org
->> Fixes: 481c225c4802 ("usb: gadget: Handle function suspend feature selector")
->> Signed-off-by: Prashanth K <prashanth.k@oss.qualcomm.com>
->> ---
->>  drivers/usb/gadget/composite.c | 12 ++++--------
->>  1 file changed, 4 insertions(+), 8 deletions(-)
->>
->> diff --git a/drivers/usb/gadget/composite.c b/drivers/usb/gadget/composite.c
->> index 869ad99afb48..5c6da360e95b 100644
->> --- a/drivers/usb/gadget/composite.c
->> +++ b/drivers/usb/gadget/composite.c
->> @@ -2010,16 +2010,12 @@ composite_setup(struct usb_gadget *gadget, const struct usb_ctrlrequest *ctrl)
->>  			break;
->>  
->>  		if (f->get_status) {
->> -			status = f->get_status(f);
->> +			/* if D5 is not set, then device is not wakeup capable */
->> +			if (f->config->bmAttributes & USB_CONFIG_ATT_WAKEUP)
-> 
-> We should allow function to execute get_status regardless of
-> USB_CONFIG_ATT_WAKEUP. There are other status beside wakeup.
+Why is this the case? What problem is this fixing?
+
+It seems only a few devices are listed in battery_quirk_table, and the
+comment above it suggests it is just a fixup:
+
+	/*
+	 * Individual addressing is broken on models that expose the
+	 * primary battery as BAT1.
+	 */
+
+Furthermore, I looked at uses of this quirk in the code and it's absence
+doesn't seem critical.
+
 >
-Agree with the first part, I also wanted to remove the explicit check
-for USB_CONFIG_ATT_WAKEUP. But anyways kept it since only 2 bits (RW_CAP
-and RW) are defined in the spec as the status of GetStatus for an Interface.
+> Add an error check and return -ENODEV immediately if the device fail
+> the check.
 
-Lets do one thing, I'll rearrange it as follows
+I bring this up because it has the potential to cause a regression on a
+lot of devices.
 
-if (f->get_status) {
-	status = f->get_status(f);
-	
-/* if D5 is not set, then device is not wakeup capable */
-if (f->config->bmAttributes & USB_CONFIG_ATT_WAKEUP)
-	status &= ~(USB_INTRF_STAT_FUNC_RW_CAP | USB_INTRF_STAT_FUNC_RW);
-
->> +				status = f->get_status(f);
->> +
->>  			if (status < 0)
->>  				break;
->> -		} else {
->> -			/* Set D0 and D1 bits based on func wakeup capability */
->> -			if (f->config->bmAttributes & USB_CONFIG_ATT_WAKEUP) {
->> -				status |= USB_INTRF_STAT_FUNC_RW_CAP;
-> 
-> 
-> So right now we're not able to configure the function to enable RW
-> capable? Perhaps we need to update the composite configfs for this?
-> 
-
-The removed code used to set USB_INTRF_STAT_FUNC_RW_CAP even for
-interfaces which doesn't have RW capability. Its better to handle this
-from function level than from composite.
-
-Regards,
-Prashanth K
-
+--=20
+ ~ Kurt
