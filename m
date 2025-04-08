@@ -1,140 +1,138 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3FE319580B
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 22:43:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96BCC2505D2
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 22:43:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744152184; cv=none; b=cTXMp4Rp43xAcfQEF4ARIv0kK6IuO+cEMJ3dabtmUXBLCDVlx4SG0FOboyVrqJDxIxq6x1emgbz2n0O2MzAk3uGHrHK7Nw6HoYVSPTsmufpXH/YM//Gc/10Q1ZjpFfebP6pugMkKbzY8YCYHCqIsBjP2p/avvOh4xyqjf1owk5Q=
+	t=1744152218; cv=none; b=QD7OY68nfyErO4QX1ABp9dxvnyCuNTOlCCyNdq/UqcArgsIsrviO3j148olfk5THVh562t2245KbaUu1v2v2ArRRrgkwF1/5jo+8ZZULdMudLVT97s7Y18/NnSDD1VutRGh+MHtbJi/qTwBAF25JzKMPc/B4aFtuTZbwTfnuMek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744152184; c=relaxed/simple;
-	bh=/39HQm/a80E19q76x7+fdBqxNELqvRKNZbYFLVtSRpQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=F1OQDDhUaN9Y6y/aYDo0aFIS3XutnD6Ag0TgqtxHD8SP1mmdy4kKRlu43gpypzkcbvV1f/fDcH3ZA0p0gEjpUHL6e7CqSZuzFHdrU9cTYoUNTEoTeXBShASlBJK9chmWOWnmD8H9sSPY3MjNUod9l4d3EhsvoM8QWFh0zGU1xbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mEPSSV0A; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mEPSSV0A"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-225429696a9so86496195ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 15:43:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744152182; x=1744756982; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=eMUtiO2D0UUMkBs1GE4pjSF4b7J9t7twmr9JLeLias4=;
-        b=mEPSSV0AwL64Rah5OK070cRSARhPtVAYMISR3f3S7euV8/niwGAg1wEdDqNjR5OpRa
-         z2W1CsobSeW/vwhwXq5obmUzX0MpUHa8XwH9L1zXSYBpb4Vk/pvTbXhJ5YXeAFvCivEz
-         rEzs2OJdsz2mkQV0g3EiDeSdanSfjJGZnfhOocir3rooilcmdpCskkX5eMiEl9CJqIVR
-         WXaeFpl5ClGWEvYSJ06PqM/Sf/SVyeqHkDyW5qqzrqHGCWLw0qgJzZtZqoCJr81/A37y
-         lxtpxP2bghhgdE52L6FtuugwZ5006eUPCDnFdJZa8tojMgo5pB3MFgpEFr+FEohSYCz3
-         vdSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744152182; x=1744756982;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eMUtiO2D0UUMkBs1GE4pjSF4b7J9t7twmr9JLeLias4=;
-        b=tRpGZUwMyl1lJUrATpfKWu7AM5oFJQoSvOZQyqMGTlpYl9+agvJrm9FafEbmK0+l/3
-         Za8KuGprfkrqZE+s83T+I3GFdWW1IkSSr6Xd7CgRiEW8RD2a8i6URC9aKmAuw85zpiQv
-         HfvAHgcgcnmt9leLfqFuMlsxqRspOG/Ojnm0zhq+uCg3o0Hh977xHD44S35wQ4C7lZ16
-         jNOhAzzcgxQn53ZKJXkSgRUFS9Oe0ZyN896YHvfl+UlUEiaxvsavAX6+Px4y8Ife1bSQ
-         7VFNVEqUhu5xKEn/G4U55rkhZHp+Y24K3tDM0L5cXvI9mkYovFan50zoPey7meNM7xqL
-         oW7w==
-X-Forwarded-Encrypted: i=1; AJvYcCVT0R8KMFAbtj/5nLA4syrRHqZ8+JeLgieX2y0CHxcMcMxXQPWKiP4ip+XeqGma4wZ1KHjEEkKb6yIglpY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcjriH/R6RTSLrft/NEheN3Op9mbkvZlVl+xG/McMvBC4DhS10
-	aPbAA4Ex8tbhIKLZfeppnHiwUj5X6tz8YpNgBRWBaCGUemKBslj8G9UfX84ejMCr9IRxaL6P5hS
-	V3w==
-X-Google-Smtp-Source: AGHT+IF2GWiciyeJ/g2ZrCMsTGw6QrL2YJJPScvh9TmwHOHAo+GhFkwMDKvylScZhlko0tCTDYUw908Vkak=
-X-Received: from pfbci5.prod.google.com ([2002:a05:6a00:28c5:b0:736:79d0:fd28])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ec8c:b0:220:e023:8fa6
- with SMTP id d9443c01a7336-22ac4002ec2mr4889925ad.50.1744152181939; Tue, 08
- Apr 2025 15:43:01 -0700 (PDT)
-Date: Tue, 8 Apr 2025 15:43:00 -0700
-In-Reply-To: <1b0fbad5b2be164da13034fe486c207d8a19f5e7.camel@redhat.com>
+	s=arc-20240116; t=1744152218; c=relaxed/simple;
+	bh=AmYdHqfVjCD657SNQEqPNHqdMzSO27jBYYDSCQbGIPA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jrSZTlct7k8gct4REB3kWe730Wv3YVrOixedQe+sGXb+JcgTlSs0bqzKTWWNEYJxv8V5QOwNNhttiYdEvOQ70JmPTr303p0F+9wmHK/1gKROJ4kSdUL0Pj6o+aiU/nTvBfzucZa/w63HceYXOWcIrQ1d/ytu6roMQ7Lva5d20yM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+	by vmicros1.altlinux.org (Postfix) with ESMTP id 0DEF672C8CC;
+	Wed,  9 Apr 2025 01:36:12 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+	id 0053E7CCB3A; Wed,  9 Apr 2025 01:36:11 +0300 (IDT)
+Date: Wed, 9 Apr 2025 01:36:11 +0300
+From: "Dmitry V. Levin" <ldv@strace.io>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Arnd Bergmann <arnd@arndb.de>, strace-devel@lists.strace.io,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v7 2/6] syscall.h: add syscall_set_arguments()
+Message-ID: <20250408223611.GA26876@strace.io>
+References: <20250303111910.GA24170@strace.io>
+ <20250303112009.GC24170@strace.io>
+ <20250408213131.GA2872426@ax162>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250227222411.3490595-1-seanjc@google.com> <1b0fbad5b2be164da13034fe486c207d8a19f5e7.camel@redhat.com>
-Message-ID: <Z_WmdAZ9E2dxHpBE@google.com>
-Subject: Re: [PATCH v3 0/6] KVM: SVM: Fix DEBUGCTL bugs
-From: Sean Christopherson <seanjc@google.com>
-To: Maxim Levitsky <mlevitsk@redhat.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, Xiaoyao Li <xiaoyao.li@intel.com>, rangemachine@gmail.com, 
-	whanos@sergal.fun
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250408213131.GA2872426@ax162>
 
-On Tue, Apr 01, 2025, Maxim Levitsky wrote:
-> On Thu, 2025-02-27 at 14:24 -0800, Sean Christopherson wrote:
-> > Fix a long-lurking bug in SVM where KVM runs the guest with the host's
-> > DEBUGCTL if LBR virtualization is disabled.  AMD CPUs rather stupidly
-> > context switch DEBUGCTL if and only if LBR virtualization is enabled (not
-> > just supported, but fully enabled).
-> > 
-> > The bug has gone unnoticed because until recently, the only bits that
-> > KVM would leave set were things like BTF, which are guest visible but
-> > won't cause functional problems unless guest software is being especially
-> > particular about #DBs.
-> > 
-> > The bug was exposed by the addition of BusLockTrap ("Detect" in the kernel),
-> > as the resulting #DBs due to split-lock accesses in guest userspace (lol
-> > Steam) get reflected into the guest by KVM.
-> > 
-> > Note, I don't love suppressing DEBUGCTL.BTF, but practically speaking that's
-> > likely the behavior that SVM guests have gotten the vast, vast majority of
-> > the time, and given that it's the behavior on Intel, it's (hopefully) a safe
-> > option for a fix, e.g. versus trying to add proper BTF virtualization on the
-> > fly.
-> > 
-> > v3:
-> >  - Suppress BTF, as KVM doesn't actually support it. [Ravi]
-> >  - Actually load the guest's DEBUGCTL (though amusingly, with BTF squashed,
-> >    it's guaranteed to be '0' in this scenario). [Ravi]
-> > 
-> > v2:
-> >  - Load the guest's DEBUGCTL instead of simply zeroing it on VMRUN.
-> >  - Drop bits 5:3 from guest DEBUGCTL so that KVM doesn't let the guest
-> >    unintentionally enable BusLockTrap (AMD repurposed bits). [Ravi]
-> >  - Collect a review. [Xiaoyao]
-> >  - Make bits 5:3 fully reserved, in a separate not-for-stable patch.
-> > 
-> > v1: https://lore.kernel.org/all/20250224181315.2376869-1-seanjc@google.com
-> > 
-> 
-> 
-> Hi,
-> 
-> Amusingly there is another DEBUGCTL issue, which I just got to the bottom of.
-> (if I am not mistaken of course).
-> 
-> We currently don't let the guest set DEBUGCTL.FREEZE_WHILE_SMM and neither
-> set it ourselves in GUEST_IA32_DEBUGCTL vmcs field, even when supported by the host
-> (If I read the code correctly, I didn't verify this in runtime)
+Hi Nathan,
 
-Ugh, SMM.  Yeah, KVM doesn't propagate DEBUGCTLMSR_FREEZE_IN_SMM to the guest
-value.  KVM intercepts reads and writes to DEBUGCTL, so it should be easy enough
-to shove the bit in on writes, and drop it on reads.
-
-> This means that the host #SMIs will interfere with the guest PMU.  In
-> particular this causes the 'pmu' kvm-unit-test to fail, which is something
-> that our CI caught.
+On Tue, Apr 08, 2025 at 02:31:31PM -0700, Nathan Chancellor wrote:
+> Hi Dmitry,
 > 
-> I think that kvm should just set this bit, or even better, use the host value
-> of this bit, and hide it from the guest, because the guest shouldn't know
-> about host's smm, and we AFAIK don't really support freezing perfmon when the
-> guest enters its own emulated SMM.
-
-Agreed.  Easy thing is to use the host's value, so that KVM doesn't need to check
-for its existence.  I can't think of anything that would go sideways by freezing
-perfmon if the host happens to take an SMI.
-
-> What do you think? I'll post patches if you think that this is a good idea.
-> (A temp hack to set this bit always in GUEST_IA32_DEBUGCTL fixed the problem for me)
+> [dropping majority of folks since this seems irrelevant to them]
 > 
-> I also need to check if AMD also has this feature, or if this is Intel specific.
+> On Mon, Mar 03, 2025 at 01:20:09PM +0200, Dmitry V. Levin wrote:
+> > This function is going to be needed on all HAVE_ARCH_TRACEHOOK
+> > architectures to implement PTRACE_SET_SYSCALL_INFO API.
+> > 
+> > This partially reverts commit 7962c2eddbfe ("arch: remove unused
+> > function syscall_set_arguments()") by reusing some of old
+> > syscall_set_arguments() implementations.
+> > 
+> > Signed-off-by: Dmitry V. Levin <ldv@strace.io>
+> > Tested-by: Charlie Jenkins <charlie@rivosinc.com>
+> > Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
+> > Acked-by: Helge Deller <deller@gmx.de> # parisc
+> > Reviewed-by: Maciej W. Rozycki <macro@orcam.me.uk> # mips
+> ...
+> > diff --git a/arch/riscv/include/asm/syscall.h b/arch/riscv/include/asm/syscall.h
+> > index 121fff429dce..8d389ba995c8 100644
+> > --- a/arch/riscv/include/asm/syscall.h
+> > +++ b/arch/riscv/include/asm/syscall.h
+> > @@ -66,6 +66,15 @@ static inline void syscall_get_arguments(struct task_struct *task,
+> >  	memcpy(args, &regs->a1, 5 * sizeof(args[0]));
+> >  }
+> >  
+> > +static inline void syscall_set_arguments(struct task_struct *task,
+> > +					 struct pt_regs *regs,
+> > +					 const unsigned long *args)
+> > +{
+> > +	regs->orig_a0 = args[0];
+> > +	args++;
+> > +	memcpy(&regs->a1, args, 5 * sizeof(regs->a1));
+> > +}
+> 
+> This upsets the compiletime fortify checks, as I see a warning after
+> syscall_set_arguments() starts being used in kernel/ptrace.c later in
+> the series.
+> 
+>   $ make -skj"$(nproc)" ARCH=riscv CROSS_COMPILE=riscv64-linux- allmodconfig kernel/ptrace.o
+>   In file included from include/linux/string.h:392,
+>                    from include/linux/bitmap.h:13,
+>                    from include/linux/cpumask.h:12,
+>                    from arch/riscv/include/asm/processor.h:55,
+>                    from include/linux/sched.h:13,
+>                    from kernel/ptrace.c:13:
+>   In function 'fortify_memcpy_chk',
+>       inlined from 'syscall_set_arguments.isra' at arch/riscv/include/asm/syscall.h:82:2:
+>   include/linux/fortify-string.h:571:25: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]
+>     571 |                         __write_overflow_field(p_size_field, size);
+>         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>   cc1: all warnings being treated as errors
 
-Intel only.  I assume/think/hope AMD's Host/Guest Only field in the event selector
-effectively hides SMM from the guest.
+I certainly tested the series on riscv64, but somehow I haven't seen this
+compiler diagnostics before.
+
+> The compiler knows the size of the destination and the size to be copied
+> so it knows there will be an (intentional) overwrite here.
+> struct_group() would normally work but I think this structure already
+> has a struct_group() around some of the members that would be needed. I
+> build tested eliminating the memcpy() altogether, which would appear to
+> work, but I am not sure if there is a better solution, hence just the
+> report.
+> 
+> Cheers,
+> Nathan
+> 
+> diff --git a/arch/riscv/include/asm/syscall.h b/arch/riscv/include/asm/syscall.h
+> index a5281cdf2b10..70ec19dc8506 100644
+> --- a/arch/riscv/include/asm/syscall.h
+> +++ b/arch/riscv/include/asm/syscall.h
+> @@ -78,8 +78,11 @@ static inline void syscall_set_arguments(struct task_struct *task,
+>                                          const unsigned long *args)
+>  {
+>         regs->orig_a0 = args[0];
+> -       args++;
+> -       memcpy(&regs->a1, args, 5 * sizeof(regs->a1));
+> +       regs->a1 = args[1];
+> +       regs->a2 = args[2];
+> +       regs->a3 = args[3];
+> +       regs->a4 = args[4];
+> +       regs->a5 = args[5];
+>  }
+
+I don't mind eliminating the memcpy() altogether, but
+I'd like to note that syscall_set_arguments() is an exact mirror
+of syscall_get_arguments(), so if the intentional overwrite in
+syscall_set_arguments() is not acceptable, then the intentional
+overread in syscall_get_arguments() shouldn't be acceptable either.
+
+
+-- 
+ldv
