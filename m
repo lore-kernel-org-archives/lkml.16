@@ -1,77 +1,82 @@
-Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A514F1E1A3F
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 15:12:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F10F122687C;
+	Tue,  8 Apr 2025 15:12:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744125131; cv=none; b=q6PRHn7DDkyJBthV/KyhY1WpYR0ASVUqCWz9dg0fnfSda3ZjEhBlcHoOHrmvkpAi3Tt56Rr4mM8+l+M1pdPqPKwmc5EMGtq4nwI7wuSU4flDyzn52jjCkFrzjnEsvL7UWhFQu8mso1w1pRhKszKTYi82BLbQogOyCmSuKnzAO3o=
+	t=1744125134; cv=none; b=PyomeDXWOOZ5+31qsHRG4QDZLwTF/rlDrofq81EdC5R6Ha4XQGQgrqsstOMDtx3xfXQ9Ohle0kmciIFOKrBrBOYINuL1UkxlcQjHYN6mZpJOw/q37Agr0P3cx2uXB3FpXlq9cgIKObBNFA2ZqVqOiqeD6x39J3/ca7yWI41yUZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744125131; c=relaxed/simple;
-	bh=AhRbPW8jizYzfxcFtP9Ab9o1R4iiG4UfQvtkcbitkOw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CqLoxuTBabpxQZ5m1zFPutoqsjt1yb4Bwv69qTQ+fp3v/9niNLkarlx/Ty3+DwlfgShgV+wK63QRkmheLpbL3ZI1fR3zUQipuSnn1VUA/VKsWEUBt+UqgpHrmHE9n2GlUNyhblMO2g5/Zd/6xmLeGuUlDKtCXCqzHMOBss2nuLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jt1ru2Bz; arc=none smtp.client-ip=95.215.58.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744125134; c=relaxed/simple;
+	bh=0ZzJMOm4gd5YwODUB1mHoQAdPK+k2rtT33KdGDBf96E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ch7R8zq35Vg80LmMy13A5uYImlqs74YLgz5xp+be+P67hACKx2FV3Q7SOjGQrXqnmr2u+DX5KYlaZykjr2B5aJjHACxu9O4oAG9U57MBAPKFvv4Sog67S2n1yJozC0zTcm8jZ1i3oXzC44suHLG5RTvfP+jnHOwVRcWRtH2T7ZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BN5fhfj3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jt1ru2Bz"
-Message-ID: <52d79db7-f1fa-4695-aeb6-d07d6c2f90dc@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744125127;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fQDzFs3D8+IKQHpA3NyfYp/CU4mVPF0Wh33CkTrO1is=;
-	b=jt1ru2BzEjAWPoNczH0V9smgPKLwAmsttSD53DtCJ23bhyxVZg2k9LmnmKOLNmALUfoIte
-	V/dZMOTDrKhdUQfXl3HCP9d8C2lQnrtx3htm9cl1Rdi43cq0kP6TQ6m43JKpTgWuZzGqcK
-	of4qJ77QmE0dxpUQGTJEm9ucu72Ueuw=
-Date: Tue, 8 Apr 2025 11:12:00 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BN5fhfj3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4224C4CEE5;
+	Tue,  8 Apr 2025 15:12:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744125133;
+	bh=0ZzJMOm4gd5YwODUB1mHoQAdPK+k2rtT33KdGDBf96E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BN5fhfj3DYcY1wjF1f70zw16LIUQtEQFCTWmYx64WDu3eep4pP5PgSgLu6EgHf0SF
+	 xmrZU31BKM+MHsdtlrjcRPVOF6Vd9V7yeJN5D9mYpgxUKNmN915V6mFAaoL4gdtJUp
+	 7LoF3MZekXNm/ezhZUvGXTVJxl1HCSK7+oKV37ec0uCOzJwq8OfvHdO4S7vqNDfh1i
+	 e9IVC8EtGKtiMBXaKYkXh3OxXGhKegCxY9ryw7qNCS6yOxM0kYM6X+njfKxOIpfQRG
+	 rCn9ScpUWHwJKBlg7dyukoDqRCWbhAF/uYAKFKbvVtar+mmpfzz8yrxwtw90Uv2Wz8
+	 /W/cdmYCz+kRw==
+Date: Tue, 8 Apr 2025 08:12:07 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org,
+	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org, akpm@linux-foundation.org,
+	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
+	hargar@microsoft.com
+Subject: Re: [PATCH 6.13 000/499] 6.13.11-rc1 review
+Message-ID: <20250408151207.GA3297942@ax162>
+References: <20250408104851.256868745@linuxfoundation.org>
+ <71339b92-5292-48b7-8a45-addbac43ee32@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 2/2] device property: Add
- fwnode_property_get_reference_optional_args
-To: Rob Herring <robh@kernel.org>
-Cc: Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org,
- Sakari Ailus <sakari.ailus@linux.intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J . Wysocki" <rafael@kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Len Brown <lenb@kernel.org>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Daniel Scally <djrscally@gmail.com>, linux-kernel@vger.kernel.org,
- Danilo Krummrich <dakr@kernel.org>, linux-acpi@vger.kernel.org
-References: <20250407223714.2287202-1-sean.anderson@linux.dev>
- <20250407223714.2287202-3-sean.anderson@linux.dev>
- <CAL_JsqLQvyBvOXJJhRcnVAVx81MUf9YwtyZ5VC-whwY=uoeDXw@mail.gmail.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <CAL_JsqLQvyBvOXJJhRcnVAVx81MUf9YwtyZ5VC-whwY=uoeDXw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <71339b92-5292-48b7-8a45-addbac43ee32@sirena.org.uk>
 
-On 4/8/25 09:00, Rob Herring wrote:
-> On Mon, Apr 7, 2025 at 5:37 PM Sean Anderson <sean.anderson@linux.dev> wrote:
->>
->> Add a fwnode variant of of_parse_phandle_with_optional_args to allow
->> nargs_prop to be absent from the referenced node. This improves
->> compatibility for references where the devicetree might not always have
->> nargs_prop.
+On Tue, Apr 08, 2025 at 04:01:05PM +0100, Mark Brown wrote:
+> On Tue, Apr 08, 2025 at 12:43:32PM +0200, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 6.13.11 release.
+> > There are 499 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
 > 
-> Can't we just make fwnode_property_get_reference_args() handle this
-> case? Or why is it not just a 1 line wrapper function?
+> This fails to build an arm multi_v7_defconfig for me:
+> 
+> arm-linux-gnueabihf-ld:./arch/arm/kernel/vmlinux.lds:31: syntax error
+> 
+> and multi_v5_defconfig gives:
+> 
+> arm-linux-gnueabi-ld:./arch/arm/kernel/vmlinux.lds:30: syntax error
+> 
+> (presumably the same error)
 
-fwnode_property_get_reference_args ignores nargs when nargs_prop is
-non-NULL. So all the existing callers just pass 0 to nargs. Rather than
-convert them, I chose to add another function with different defaults.
-There are only four callers that pass nargs_prop, so I could just as
-easily change the callers instead.
+The prerequisite of commit c3d944a367c0 ("ARM: 9444/1: add KEEP()
+keyword to ARM_VECTORS") failed to apply to 6.12 and 6.13, I am about to
+sit down and send it out:
 
---Sean
+https://lore.kernel.org/2025040805-boaster-hazing-36c3@gregkh/
+https://lore.kernel.org/2025040805-goal-richness-0c23@gregkh/
+
+I don't really know how to make it clear that two separate patches need
+to be taken together.
+
+Cheers,
+Nathan
