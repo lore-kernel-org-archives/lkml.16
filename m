@@ -1,101 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 632EF22A80D;
-	Tue,  8 Apr 2025 16:07:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 979701E1C1F;
+	Tue,  8 Apr 2025 16:08:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744128479; cv=none; b=peY4qVqSCoiQteK2vjgsvwj/5xbYz1TG3IuuOrOBiC+WBU17MxzRxDjZDBEF8XRbI4uSTtGW9D9uOzxcTdVbExDAb8dvq1JkQ/AWPH+tK55h+mzZ8fnBZtj04eN5mWARKmSI5JY1jIq3ICTt7ckzSrljsUkjAxRFvduKlO0KHt8=
+	t=1744128485; cv=none; b=XrlxIS/5KHwDmPM5zKUmTXSkgKSi9a4lC1xR0NKi+arqINJbs9dyM3uQxiQcNiJ4aBPfcBVF7TZL+F6anq9JGsXWcov8G8TxJf3eg6+TePlZrdv4aPbMuosap0L0LbtjVcgfTVSwru2Ah7Do+nQzX30/0QsV/ODbeGyc4GiIdy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744128479; c=relaxed/simple;
-	bh=lzpeBjhQqjKTv5LhjTuLZBeC/RINwYUMzDyi+e++4VE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aTIi4NJkx3vj+cZLu2vFLGHRjjtP4Pr5p19Ix/2uKtiJgHD5CESf923W2f0e9rQKpYl53X9jax9a4F4kNSnLVm47sWAQjeAVZfVJ+w6fW3wXI7NaNlk4bkXYW73B65GIZjzjwxAp8GKvNdhuPKLyHo/g3J7TyREdXGzkLI6Guv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OyLqtvNt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744128485; c=relaxed/simple;
+	bh=bvdTjp4tfAQwpt+HSOPIJRE56XiVhYgKLgRcj1XNAwE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=X6nk5/EIoO+YZ3mw8EgA9h2PlSmCiVl+3h43SOzB+WX55wWsu+skhi0corlJKitkNb3U7RnJ47nsIdhBvx4GYJgtLo0hcKIrigv/kuaT0Q9efioCJDaIgeJRzv2C4e+Y0QqliUxh912eavp7EixS4fO2Qw1dlsKByBnxbxWhuBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=YCQQ+9vP; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OyLqtvNt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B628C4CEE5;
-	Tue,  8 Apr 2025 16:07:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744128478;
-	bh=lzpeBjhQqjKTv5LhjTuLZBeC/RINwYUMzDyi+e++4VE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OyLqtvNt3uo49sXmzsO/X6m+Zm0NwzwtMrSOp3iDAplnzf1boXsd6IaggyeX8dnsQ
-	 +MCD0To/C9JGz07JeAoSJlwidfegqkkqiUcfv+/RaZW6XXPyismKIvOl9t3Ug0yLpt
-	 1UBzkv5S5FQ8cUQps3M7tDN+xDN/BxUUo2Z6yXP47XX3qZ3S1ST6C0r1FLzlUdX6SL
-	 BDjEEtGqjefpz4rTwexrt/ipf13elsC2SaFHxC2kjVkZZOZ1QEQMwX/9EgHkO17fuy
-	 QyK3sRQK+YGvaW4/eCV5B+i53tQHvoXHVTLt5I4ZJOZCJ9gIxL1FZ+nVzUeC1fEA1K
-	 8wM/enLNTWrsg==
-Date: Tue, 8 Apr 2025 17:07:52 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	William Breathitt Gray <wbg@kernel.org>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	Kever Yang <kever.yang@rock-chips.com>, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org,
-	kernel@collabora.com, Jonas Karlman <jonas@kwiboo.se>,
-	Detlev Casanova <detlev.casanova@collabora.com>
-Subject: Re: [PATCH 2/7] dt-bindings: pwm: Add a new binding for
- rockchip,rk3576-pwm
-Message-ID: <20250408-drivable-hypnotize-062fd7cec903@spud>
-References: <20250408-rk3576-pwm-v1-0-a49286c2ca8e@collabora.com>
- <20250408-rk3576-pwm-v1-2-a49286c2ca8e@collabora.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="YCQQ+9vP"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5388e1Pf025362;
+	Tue, 8 Apr 2025 16:07:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=CGQhd4fZt/lPh+ygm
+	PdHCsaE3Xf5iXCG6Bx4it5RIf0=; b=YCQQ+9vPjGdrkuyMR0sX9ZdoBzz5OGLWG
+	Q10fUuKgJYsSC2+P1N/Wwgsp1VEqrCXtjLkOYClRURt5V9mdFdmv7IXxtkxq3MDs
+	j8UsptDFv8dpLYZdz+WDeMOkLTB4xU/6RTuNq+RE2kahacHg8Qh3ovTdBJ86geYt
+	ENGIxAALZVml2Dasm66zoaezHpG4uE5uJaxrIqy2HlOlFLYTumETwzPShL2sbo20
+	i7LcQ4svL/x5R3ptcW5VrnBMR3xWrActkYzv7FtLij4tzggT5jv8eCjnzzKbtbUl
+	7UeyVUxkgPI3r+IbiiyDVlXcoEfZqjTNOi5kvTU431AfYvkpz7a2A==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45vnvq4kme-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 08 Apr 2025 16:07:36 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 538G192m023979;
+	Tue, 8 Apr 2025 16:07:35 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45vnvq4kmc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 08 Apr 2025 16:07:35 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 538CaKov013932;
+	Tue, 8 Apr 2025 16:07:34 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45ufunkd24-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 08 Apr 2025 16:07:34 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 538G7WPl33554826
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 8 Apr 2025 16:07:32 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BBF2220043;
+	Tue,  8 Apr 2025 16:07:32 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A5C8320040;
+	Tue,  8 Apr 2025 16:07:32 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue,  8 Apr 2025 16:07:32 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55669)
+	id 4BAA7E15A1; Tue, 08 Apr 2025 18:07:32 +0200 (CEST)
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>
+Cc: Hugh Dickins <hughd@google.com>, Nicholas Piggin <npiggin@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>, Juergen Gross <jgross@suse.com>,
+        Jeremy Fitzhardinge <jeremy@goop.org>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, kasan-dev@googlegroups.com,
+        sparclinux@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: [PATCH v2 1/3] kasan: Avoid sleepable page allocation from atomic context
+Date: Tue,  8 Apr 2025 18:07:30 +0200
+Message-ID: <2d9f4ac4528701b59d511a379a60107fa608ad30.1744128123.git.agordeev@linux.ibm.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <cover.1744128123.git.agordeev@linux.ibm.com>
+References: <cover.1744128123.git.agordeev@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="P4Hq9KC+O/IONcbS"
-Content-Disposition: inline
-In-Reply-To: <20250408-rk3576-pwm-v1-2-a49286c2ca8e@collabora.com>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: LtzH8ivnniEqxi-8CvOTdzmx58H27VfG
+X-Proofpoint-ORIG-GUID: DdE36rmI5XQZ4C_Epq-fHX139ivWx26P
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-08_06,2025-04-08_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
+ mlxscore=0 lowpriorityscore=0 adultscore=0 suspectscore=0 mlxlogscore=866
+ malwarescore=0 priorityscore=1501 clxscore=1015 bulkscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504080110
 
+apply_to_page_range() enters lazy MMU mode and then invokes
+kasan_populate_vmalloc_pte() callback on each page table walk
+iteration. The lazy MMU mode may only be entered only under
+protection of the page table lock. However, the callback can
+go into sleep when trying to allocate a single page.
 
---P4Hq9KC+O/IONcbS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Change __get_free_page() allocation mode from GFP_KERNEL to
+GFP_ATOMIC to avoid scheduling out while in atomic context.
 
-On Tue, Apr 08, 2025 at 02:32:14PM +0200, Nicolas Frattaroli wrote:
-> The Rockchip RK3576 SoC has a newer PWM controller IP revision than
-> previous Rockchip SoCs. This IP, called "PWMv4" by Rockchip, introduces
-> several new features, and consequently differs in its bindings.
->=20
-> Instead of expanding the ever-growing rockchip-pwm binding that already
-> has an if-condition, add an entirely new binding to handle this.
->=20
-> The "osc" clock is an optional clock available on some instances of the
-> PWM controller. If present, it allows the controller to switch between
-> either the "pwm" clock or the "osc" clock for deriving its PWM signal
-> on a per-channel basis, through a hardware register write.
->=20
-> However, not all instances have this feature, and the hardware copes
-> just fine without this additional clock, so it's optional.
->=20
-> The PWM controller also comes with an interrupt now. This interrupt is
-> used to signal various conditions.
->=20
-> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Cc: stable@vger.kernel.org
+Fixes: 3c5c3cfb9ef4 ("kasan: support backing vmalloc space with real shadow memory")
+Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+---
+ mm/kasan/shadow.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+diff --git a/mm/kasan/shadow.c b/mm/kasan/shadow.c
+index 88d1c9dcb507..edfa77959474 100644
+--- a/mm/kasan/shadow.c
++++ b/mm/kasan/shadow.c
+@@ -301,7 +301,7 @@ static int kasan_populate_vmalloc_pte(pte_t *ptep, unsigned long addr,
+ 	if (likely(!pte_none(ptep_get(ptep))))
+ 		return 0;
+ 
+-	page = __get_free_page(GFP_KERNEL);
++	page = __get_free_page(GFP_ATOMIC);
+ 	if (!page)
+ 		return -ENOMEM;
+ 
+-- 
+2.45.2
 
---P4Hq9KC+O/IONcbS
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ/VJ2AAKCRB4tDGHoIJi
-0jZqAPwOQu41aopdoBSSIQdKHqz2RJ+dwLSozN2+YDI1wW8y7AEAjS2GhaRyfF96
-3GHeudBuxceUrbBxoPB8hzmTAP7etQQ=
-=yLZr
------END PGP SIGNATURE-----
-
---P4Hq9KC+O/IONcbS--
