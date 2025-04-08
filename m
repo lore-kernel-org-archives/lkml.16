@@ -1,167 +1,148 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 583081C2324
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 15:48:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 309FF1C2324
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 15:48:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744127306; cv=none; b=NgqfnM3wbNdts6hO7sT0SmBxnNEWu+3z18PsJc+FTF0uT+OfN3pyWi15fSn5Mnjr6+ixcsKe6JzxI6mNTkWJxCP58D7m+4IJ5N3bRZPbkxthY4OTk2lwOeUJ+nGKqWuG6CTiNqeppSnntBIi5XMol/QL3JCvOtP5OJjztX6SW44=
+	t=1744127327; cv=none; b=cdorZCRUis+x9jo3g7i7j49Qct8k/ZXZJvf6ihJAPCK9isCcjI383LtjTvFv2wwK0JxZxhgvgbXjiBiiTBACtPhuxIgQ9St3QOuv+01zcOrZF5UJdavnuC2yQse/Mb8t2lQFL6aTgyWv4hW9zuctzvE6tS7CPQNAwQJ/kztPW5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744127306; c=relaxed/simple;
-	bh=+dkpx2n/R+Cl5Bj8W/GV2cw7w/4rYtmA3C3jnJoH4dE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WODJJx59YK30GeKe9qoH2YKrbg//F5hYMdx0pxeDX+Gp5vV0V0CTE6i11xkv7oupaqZWYSaosNjXC99z6HWQE1rJ8Qs8qGaGUuz/LMaYMGPLV5CiCXzFhdcHjGZ/WAJy16yuPfjlsmwM+Wfl6to3Ioqudnj5Ds8NNeK5575fJ4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OrVGhxOO; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744127327; c=relaxed/simple;
+	bh=RC6Cpx1V8yAPRFKIwkSicxdBp6XOQdt3wSek5RBuI/4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=O+6aW305PIJJFnMtx2v6ADSdYd6eGkPuV9iDd0WD/7E4hCquANj3BxzXLgOiBSOxCviqnMzUsPEoYbA41VlC48k2E6ZzmXFt2zUQlnTCzmy9rM5+oVtg5+u/9lxJBJREEViulLhPlUMfERN0u9tpVdZEvzsnj8ls1ECpHlrRuLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=y5vxAdCv; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OrVGhxOO"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cfe99f2a7so6041315e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 08:48:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="y5vxAdCv"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4774611d40bso324651cf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 08:48:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744127303; x=1744732103; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1744127325; x=1744732125; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=AMCa4mYnL9/jZeEpICSWWjgokdOUsHJ8MFHq70ctWwg=;
-        b=OrVGhxOOLX+1iZ119equrXkFVd7d6CgrRtGNyENdowPffSeTL33vNpC+Hu4+667GJw
-         Sy1T0VyRksOn/emnYZlmqe2pdVsxz6sUMw9rY8J/o2oyQHn5KihG1pIzxSWIRrftGLjE
-         KgrLWd8LlzqtOrSKfpt0An9IaaJmNy2Wvk2IU4bugbP+VDWnJQV++jNLP190BOUaeUYY
-         +SAC+SiUDt0RUnzuS0y0TRFmff7K07AY0VPsk6/7n4tu15AzAHdyB4HlZWc8i9DmQkI5
-         Y6srcIrZzXsZO8NIqI2sBSyGM3Dd7kO32DyCqno6bAi9YcnpM9UsU2LMtK1pPLsmAKQI
-         uZKg==
+        bh=HChHYMT19CAAjwRKcO44l6baW5S92cXq7xYcS0sntkc=;
+        b=y5vxAdCvbvrmvQ2KizF0Aet2zEryzjUu6ndg8JtVXAGhbBeKwgzTD49utUx/LWPldP
+         501zptnme4qpPh5Csq+vIQp+pj+J1Na5wtX1Z5gZyfr/YG9RCgIcMinK9z0s1gFe6ass
+         EXgXa8lr6rijqy7pOhQDp32kYkMmdepcws20qsieRXCLDaN7h9T3SlDpN+lspw/BGhlJ
+         aQtziV/pI56y0ErfB+mKJskEse/S8XihDYsUJVJG3gsRFsgRHKOgRZ9JIXGS6WWanpuV
+         6FvBI7oS6D4ySh+FHMXZ+oYH4WKhZtMLKgarJR/wvzb5v6kAoszO4OJb/JZ+7gscjgnJ
+         1yJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744127303; x=1744732103;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1744127325; x=1744732125;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=AMCa4mYnL9/jZeEpICSWWjgokdOUsHJ8MFHq70ctWwg=;
-        b=a1Bv1+FIgNH7XDZIm7RsMa7X6eJgjNcJ5HoxJ+p4wbSk0do/bXsoqggyJXM52kkwth
-         qxos1dL/z7Du0zKLQ/n2PSnv8fhe/IV12dvusej31gc3+QT1Z25+CV4rnMKNmfITS0NJ
-         YDOre9ig4d7CsamXgHoinoYchE6kUI/nnjpifIbz89YI7CB7h/AxA/6QEsdDUgEY0WUv
-         8gXBK2RenJHrZG3jRR/rE7b2LoImP1twrnoSfVr5Ao21sBzVceSUYKiQC+tWQDW9PMK/
-         R0wWROOgi0re2vXq8FuclUN5gD8vCjVxk5N3i2ZLmDsodtuWd+UvPX110TDkqK4hb3Qw
-         PXMA==
-X-Forwarded-Encrypted: i=1; AJvYcCXyaB5AGHBt1fJk9Z33SGQ+bCw6G7sDvan7mC96wT4HFsZa/7Xc0Y9+ujKBMWyIIfaW0bBF2Gw2pepnCJA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBKgh2mT9mzO7V+XAGIqdr0pOp+xH8HAG+c+F408S/aK/fj14r
-	mMwNKUgeMhrNl8EyB/UXVuo3Xly73q9qG+UK/ZDb2xF8dSbAdP3K
-X-Gm-Gg: ASbGncsO3nB7IR4w+D3edj97mZb6hcaXx2QbytIm2Cu443CefJwZw9h7OeLzhzxXt/X
-	X/EE7tdk7d02Xd3FV4yXMmj3k3X/fWJHXcmrA1F76FhpsS4AHbR+d0c8EJxgh0KJfRp56iNnNQ3
-	CICanQsdXZNMdjDSLxj7DZrFzacu2I4df/UKYU6I8mRCWehwSWZ1OI9PwVvh24Evcmt+ltnoui5
-	cqwVsF/XxmnDq7HgbXaudgJfmx8W8a0w1OdFPOe+k3qMpgReCikWNnKKgdyVaAAnm2GrLKgyGNl
-	EvEqBknB43huVCGrJrw57NVbJMEte4A3lQj4ovI9pJDB7Nk6/3OHmj5Z
-X-Google-Smtp-Source: AGHT+IEJza/VE3KBD99Of28IXNQNtvTH+ABObaWU5NenBD0MKdnhctsS+DNaE8DwiFwsLSovcTMx3A==
-X-Received: by 2002:a05:600c:4fc6:b0:43b:c0fa:f9bf with SMTP id 5b1f17b1804b1-43ecf85fec7mr55367495e9.3.1744127302549;
-        Tue, 08 Apr 2025 08:48:22 -0700 (PDT)
-Received: from mosaic.enunes.eu.com ([85.93.96.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ec366b571sm166903995e9.40.2025.04.08.08.48.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 08:48:22 -0700 (PDT)
-From: Erico Nunes <nunes.erico@gmail.com>
-To: Qiang Yu <yuq825@gmail.com>
-Cc: christian.koenig@amd.com,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	dri-devel@lists.freedesktop.org,
-	lima@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Erico Nunes <nunes.erico@gmail.com>
-Subject: [PATCH 1/1] drm/lima: implement the file flush callback
-Date: Tue,  8 Apr 2025 17:46:37 +0200
-Message-ID: <20250408154637.1637082-2-nunes.erico@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250408154637.1637082-1-nunes.erico@gmail.com>
-References: <20250408154637.1637082-1-nunes.erico@gmail.com>
+        bh=HChHYMT19CAAjwRKcO44l6baW5S92cXq7xYcS0sntkc=;
+        b=AjXxJ/9IsG6y9C876x0xhpCmnyBgMO9HaK2XnknqgPLEXUAtu7WMdkPM9wecW7CVBD
+         hsL0k/udC+cMgrqqHrlqjkw5ZstzlX695t+cwpbn3iyPxPZcGkmgek5sbL4mQGSWSs8i
+         BzrrAH22TcmOOtwUIvWqf2QUs1vejLaEAPlPXZJtQ8SUtIYpON27GIpF7ymGzQfBK60H
+         1ZY/DkkC8wab2/n4o4zoURtyN7XKWVESUd2Ixtw5+BtFv2ng77m0NkNV0/IyQH1tq4nq
+         J0iTqLEOgMtLPVb2JObvuRRuANAlY2MA4yKx8AGxsDNdF02f3sYQovXIKxfr/8Cm+zpE
+         k8/A==
+X-Forwarded-Encrypted: i=1; AJvYcCUD8/G+sDAhm7LY8zZaXOGGnXgO1sUTuI/MxKhBGVAkWnc9BswN2RWBAY+7/jN6q2nZEpqIZZShrxhV140=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzANqh45COxPLZlESn2KnhCtd3jDf8tvpHwW40/B0cQ8/cbigR+
+	fVohh5ROKNzKgsOyISC/7O8iJICGFgEzCPW/0u2F7jP37504RLRg4irIAE9BJ13I04R73gWG53j
+	4FO5Jfh+9sOI2FHrD7wUwyyp6Y0E7LDDGKCb2
+X-Gm-Gg: ASbGncurspBRfdP7J1gcmej9mtHzpPSQrca838PqUoF2KfrwTFk8U6FIddntO8VSwFv
+	v9gjpsneGOdHt65yoZezrOvhGIr+n8BX4hyreRzTh8rx6jfdRg1x4v6BV3riQ3hB7qVA+Z5cepo
+	AqQnE3inQSY526mimz9H8QQmU=
+X-Google-Smtp-Source: AGHT+IF9VVNpziqW+dyk31xqzQBcnnW7MNMprL13YRhaXAX0XIZc2Ds4SBXJT8rQq90Zgkg2HrJYH8ieK1DCEoRHkfg=
+X-Received: by 2002:a05:622a:19a7:b0:476:f4e9:314e with SMTP id
+ d75a77b69052e-47956378b7amr4383311cf.25.1744127324824; Tue, 08 Apr 2025
+ 08:48:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250402205613.3086864-1-fvdl@google.com> <Z_Uqiu75bXhqpwm4@localhost.localdomain>
+In-Reply-To: <Z_Uqiu75bXhqpwm4@localhost.localdomain>
+From: Frank van der Linden <fvdl@google.com>
+Date: Tue, 8 Apr 2025 08:48:33 -0700
+X-Gm-Features: ATxdqUERDLs5ZmGAg6XIviO_kdQUuaBhgMOkQJccFFxKfnrrT-WebuFMeWNu_UI
+Message-ID: <CAPTztWZCEvgoy-s553nTcd_qyRknaEcw3OU56H_kfePHzi3WdA@mail.gmail.com>
+Subject: Re: [PATCH] mm/hugetlb: use separate nodemask for bootmem allocations
+To: Oscar Salvador <osalvador@suse.de>
+Cc: akpm@linux-foundation.org, muchun.song@linux.dev, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, david@redhat.com, luizcap@redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-With this callback implemented, a terminating application will wait for
-the sched entity to be flushed out to the hardware and cancel all other
-pending jobs before destroying its context.
-This prevents applications with multiple contexts from running into a
-race condition between running tasks and context destroy when
-terminating.
+On Tue, Apr 8, 2025 at 6:54=E2=80=AFAM Oscar Salvador <osalvador@suse.de> w=
+rote:
+>
+> On Wed, Apr 02, 2025 at 08:56:13PM +0000, Frank van der Linden wrote:
+> > Hugetlb boot allocation has used online nodes for allocation since
+> > commit de55996d7188 ("mm/hugetlb: use online nodes for bootmem
+> > allocation"). This was needed to be able to do the allocations
+> > earlier in boot, before N_MEMORY was set.
+> >
+> > This might lead to a different distribution of gigantic hugepages
+> > across NUMA nodes if there are memoryless nodes in the system.
+> >
+> > What happens is that the memoryless nodes are tried, but then
+> > the memblock allocation fails and falls back, which usually means
+> > that the node that has the highest physical address available
+> > will be used (top-down allocation). While this will end up
+> > getting the same number of hugetlb pages, they might not be
+> > be distributed the same way. The fallback for each memoryless
+> > node might not end up coming from the same node as the
+> > successful round-robin allocation from N_MEMORY nodes.
+> >
+> > While administrators that rely on having a specific number of
+> > hugepages per node should use the hugepages=3DN:X syntax, it's
+> > better not to change the old behavior for the plain hugepages=3DN
+> > case.
+> >
+> > To do this, construct a nodemask for hugetlb bootmem purposes
+> > only, containing nodes that have memory. Then use that
+> > for round-robin bootmem allocations.
+> >
+> > This saves some cycles, and the added advantage here is that
+> > hugetlb_cma can use it too, avoiding the older issue of
+> > pointless attempts to create a CMA area for memoryless nodes
+> > (which will also cause the per-node CMA area size to be too
+> > small).
+>
+> Hi Frank,
+>
+> Makes sense.
 
-Signed-off-by: Erico Nunes <nunes.erico@gmail.com>
----
- drivers/gpu/drm/lima/lima_ctx.c | 18 ++++++++++++++++++
- drivers/gpu/drm/lima/lima_ctx.h |  1 +
- drivers/gpu/drm/lima/lima_drv.c | 17 ++++++++++++++++-
- 3 files changed, 35 insertions(+), 1 deletion(-)
+Hi Oskar, thanks for looking at the patch.
 
-diff --git a/drivers/gpu/drm/lima/lima_ctx.c b/drivers/gpu/drm/lima/lima_ctx.c
-index 0e668fc1e0f9..e8fb5788ca69 100644
---- a/drivers/gpu/drm/lima/lima_ctx.c
-+++ b/drivers/gpu/drm/lima/lima_ctx.c
-@@ -100,3 +100,21 @@ void lima_ctx_mgr_fini(struct lima_ctx_mgr *mgr)
- 	xa_destroy(&mgr->handles);
- 	mutex_destroy(&mgr->lock);
- }
-+
-+long lima_ctx_mgr_flush(struct lima_ctx_mgr *mgr, long timeout)
-+{
-+	struct lima_ctx *ctx;
-+	unsigned long id;
-+
-+	mutex_lock(&mgr->lock);
-+	xa_for_each(&mgr->handles, id, ctx) {
-+		for (int i = 0; i < lima_pipe_num; i++) {
-+			struct lima_sched_context *context = &ctx->context[i];
-+			struct drm_sched_entity *entity = &context->base;
-+
-+			timeout = drm_sched_entity_flush(entity, timeout);
-+		}
-+	}
-+	mutex_unlock(&mgr->lock);
-+	return timeout;
-+}
-diff --git a/drivers/gpu/drm/lima/lima_ctx.h b/drivers/gpu/drm/lima/lima_ctx.h
-index 5b1063ce968b..ff133db6ae4c 100644
---- a/drivers/gpu/drm/lima/lima_ctx.h
-+++ b/drivers/gpu/drm/lima/lima_ctx.h
-@@ -30,5 +30,6 @@ struct lima_ctx *lima_ctx_get(struct lima_ctx_mgr *mgr, u32 id);
- void lima_ctx_put(struct lima_ctx *ctx);
- void lima_ctx_mgr_init(struct lima_ctx_mgr *mgr);
- void lima_ctx_mgr_fini(struct lima_ctx_mgr *mgr);
-+long lima_ctx_mgr_flush(struct lima_ctx_mgr *mgr, long timeout);
- 
- #endif
-diff --git a/drivers/gpu/drm/lima/lima_drv.c b/drivers/gpu/drm/lima/lima_drv.c
-index 11ace5cebf4c..08169b0d9c28 100644
---- a/drivers/gpu/drm/lima/lima_drv.c
-+++ b/drivers/gpu/drm/lima/lima_drv.c
-@@ -254,7 +254,22 @@ static const struct drm_ioctl_desc lima_drm_driver_ioctls[] = {
- 	DRM_IOCTL_DEF_DRV(LIMA_CTX_FREE, lima_ioctl_ctx_free, DRM_RENDER_ALLOW),
- };
- 
--DEFINE_DRM_GEM_FOPS(lima_drm_driver_fops);
-+static int lima_drm_driver_flush(struct file *filp, fl_owner_t id)
-+{
-+	struct drm_file *file = filp->private_data;
-+	struct lima_drm_priv *priv = file->driver_priv;
-+	long timeout = MAX_WAIT_SCHED_ENTITY_Q_EMPTY;
-+
-+	timeout = lima_ctx_mgr_flush(&priv->ctx_mgr, timeout);
-+
-+	return timeout >= 0 ? 0 : timeout;
-+}
-+
-+static const struct file_operations lima_drm_driver_fops = {
-+	.owner = THIS_MODULE,
-+	.flush = lima_drm_driver_flush,
-+	DRM_GEM_FOPS,
-+};
- 
- /*
-  * Changelog:
--- 
-2.49.0
+>
+> There something I do not quite understand though
+>
+> > @@ -5012,7 +5039,6 @@ void __init hugetlb_bootmem_alloc(void)
+> >
+> >       for_each_hstate(h) {
+> >               h->next_nid_to_alloc =3D first_online_node;
+> > -             h->next_nid_to_free =3D first_online_node;
+>
+> Why are you unsetting next_nid_to_free? I guess it is because
+> we do not use it during boot time and you already set it to
+> first_memory_node further down the road in hugetlb_init_hstates.
 
+Yes, that's exactly it - it's not used, so there was no need to set
+it, and I made sure it's set later.
+>
+> And the reason you are leaving next_nid_to_alloc set is to see if
+> there is any chance that first_online_node is part of hugetlb_bootmem_nod=
+es?
+
+next_nid_to_alloc is used to remember the last node that was allocated
+from in __alloc_bootmem_huge_page(), so that the next call will
+continue at the node after the one that was successfully allocated
+from. The code there looks a bit confusing, since the macro
+for_each_node_mask_to_alloc is used there not really as a for loop,
+but simply as a way of saying "try this node and remember the next
+one".
+
+I've been meaning to clean that code up for several reasons, but
+didn't get around to it, it's a separate issue.
+
+- Frank
