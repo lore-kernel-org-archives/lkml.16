@@ -1,82 +1,247 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A9741C5F0E;
-	Tue,  8 Apr 2025 15:01:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1B0F22A4CD;
+	Tue,  8 Apr 2025 15:02:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744124519; cv=none; b=RMI5z1WCrRgQ+0P5j0O8sOsqJvoHCuc+w7PNlY/gTHKGF7ifTb83JKhghyY38LTPtDHdYE1/L5qrFLSEgQwaeYcL6EPRbfdc/aEeYTPHdcrepAGmP96ifgsRMIaPClZQIcukoBdayelsQJ1UrqwfMLE5A3jc89wk0w6IqTN5BE0=
+	t=1744124529; cv=none; b=aQ3H5W2N3o+YlbHTobP8N0we7SYmMMaWlolAmypzpVr143SPSdpaPXpOii/JT9tlsmQRDdIkCwHSvDB0H04rUf8tKiltvpKszxVUZIPeF1u/WANVgaVDMs1t+AYa+VALcLoxFCUHJCEQ6Lh+su5+0eiQH4a5Gp9SUki6vlSBGtQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744124519; c=relaxed/simple;
-	bh=tzx7Cxt+g8APcFJQDQGkcEAoJ/wSmHCI5D33TrHAK4o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pC/G/l3GVexVU7tsxOOOKi8ND7LCC2Rf5zU68pm0cdgxtdvPuY1P+JVpLGROp1RqfI1njm/erETQ2N9wHHA4XeKd8QpwSlGnOArqj3hbnXQghTw+lu18VW06F+3eni7Cayf1D/agZ3URuyEfqeOdlde/msWmhafBG/ja87iTCS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FlpYYpgj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744124529; c=relaxed/simple;
+	bh=1V5LM9FxXrHI2YXdgpBEILLpN6lC29GjKLDmdnWD7xg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WMrPq6x/f12wzRy7j6tUT4GJO1zD4+zTKPP5lvQ4ZKPRAd8vrHW71KzTPSpBzPkXtx0Sr4hkjMovTPviC8c+qrd7KqCSRppoHktJN2BRnhX3fHnSWRfA/NyPZPvbGZkQBKUareW4ErycMOBYjRB4HGyve9gpfbYEddjVVF4nLpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f3qLX6E1; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FlpYYpgj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B931C4CEE5;
-	Tue,  8 Apr 2025 15:01:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744124518;
-	bh=tzx7Cxt+g8APcFJQDQGkcEAoJ/wSmHCI5D33TrHAK4o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FlpYYpgjCeRPhKTEwx9i2R8fxaePCMjCLEKzy/19PMPypxSsjfKfIdUKFINERJl3p
-	 tkRnikSXzl7yxJa6TmhgyA/C7fndsOu5jpbN6zarsbs+T67Zhvb7flIl/OKq1i8BPz
-	 awFA1fvt+lqtlxk8v9j1y8uOZ3xK7m39QyrelvbYbrMKoIYpymk4oeU2vffg/Cyacp
-	 RWggO+NOt0hDg5IlHLhlr1jXDN4yCdMy3StafXUo07iKeUNqYbycJFZaSQc9Z19t6D
-	 7zAWAiJ7U/2ORmV3jjeg93VZ+NNgIXIRvp2gz2Gw/yQM/8XxAel25Xp3Dr36vz2MWT
-	 Gnb2KqDCZmw5w==
-Date: Tue, 8 Apr 2025 16:01:52 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com
-Subject: Re: [PATCH 6.12 000/423] 6.12.23-rc1 review
-Message-ID: <5c330e19-79d0-4800-a118-35094fc8bb18@sirena.org.uk>
-References: <20250408104845.675475678@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f3qLX6E1"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-224341bbc1dso50523355ad.3;
+        Tue, 08 Apr 2025 08:02:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744124527; x=1744729327; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lanYKRHOAVQmad7jWC9R3BwXl4xuzrXPK59buSE8nEg=;
+        b=f3qLX6E1QGYZCsp88hOUx9ZT+pi0JQx8Uldqk/iEhVZkdTt114ZED5vJBVvi53Opbl
+         GZjRGZO0z11moHP7NuXTAlu8xCa3YNUO8GSLVieyQIFpiU2/CNQWRrFl1dOhHB3x56qz
+         tHC3q6wbmpkOKWTUektsCpvl25A/XU4iWCK2jG7dcyCd4F2r7x742iYKGJu2rCrwbtLj
+         ib8Dy6kiszifQAPa32hmeNyEn5PIp2ha/mCbASjV1+AiuiojgXxtDcg4ccN1ihBBNSQo
+         n4u+WiUySDmMpRlbC7pbBx9sQCZDMJ9AlWK8kXrZKA7gsbKqmgC2inxFrEqYQdght2Rc
+         j2uA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744124527; x=1744729327;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lanYKRHOAVQmad7jWC9R3BwXl4xuzrXPK59buSE8nEg=;
+        b=jj0v82aZL/oPO3l+bsJPeoMSOdGgCHlMq0K/Zszu31RetOAN57Eg4OMD2HOckHkQzV
+         4FZGlTne+fDXFtesaW1NzrkBEpL0UJaNoWQalz6M/93RMnPkiaGBC2PLv9uzjVy5xshj
+         NIz2fQD/b2f+th4aNVq8GYJne/mj+CKmN+dMmOHGrThavPknKlBhMy+FD6Rkn4G9bM1Q
+         Wlv8IM3urTpbuRZdzUN3R2tbbsF0plw/LEYlzuEW932DtSkt7FRFIvhhCdn9WpRv8LNG
+         TF3hPwJeDDkFdPOjBkmKO9AW/+sww17d/BYHi6FZfncnX/M4woOewYvAUWLVm4NEJT3J
+         8vxg==
+X-Forwarded-Encrypted: i=1; AJvYcCW5VDq/5C2FR7ZBP3QauTj8lGKFTEtw/+QyeW8unVFxnVCMt30pzgkVFX4AvrnTffNepiLt7ejAdwaWs2Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOYeZ8VmDmM8YKjNQ/sR7pXpgUOrrFL19b4mW+Ztjxs8b76azg
+	lCEs1xNWZtCGMW6EdtE5Kmlh+cezLJB4Q0TmHAUaJuHVvX1lizOOx64cpUA=
+X-Gm-Gg: ASbGncum6nYFC+Xs0tUfKTh7BKPNI8HuPUXYo0ZoC5Mv81HT3mhEz/tcxHrS3YfLwOA
+	DfSo6tqtAFetD2hbRpYhknXPCqcuoWr9gyrNbRDg0sVHsZqVYnF+QAO/dJORJTRkl6gXUFkUaw7
+	64CG8/uhIcwTLn9NqeI3a43GptOCxVqOW0pSUH8vjgHbMRLzuFJMYPHiokyDAPy1/zhm5kppU1j
+	VlKdbP08KHljtWxtbU/g6n5sfBrxd3o9u7VmcuR5hur26uGnDT7FCx+N2xCqVfDLdZGv0gOK8hz
+	X4X2NVQml5uTMdU5bn705g6OgAPk29AtIsK6hXmEmjs9U5NOWZqTgEhSwqaJFRbAgUi+XKSAwlS
+	rd7Bq40dLTmDeXxIEvT8zdZjemN3hBsdXwcRR2g==
+X-Google-Smtp-Source: AGHT+IFimZU9V8rdI+tpXInlH/fG10dMMdd9u4/e8prqHcREMC6o2Lmc33zvP2/ddotsXlYb4KuXmg==
+X-Received: by 2002:a17:902:d485:b0:223:3bf6:7e6a with SMTP id d9443c01a7336-22a95529550mr210976505ad.12.1744124526610;
+        Tue, 08 Apr 2025 08:02:06 -0700 (PDT)
+Received: from localhost.localdomain (124-218-201-66.cm.dynamic.apol.com.tw. [124.218.201.66])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22978777259sm101092365ad.251.2025.04.08.08.02.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 08:02:06 -0700 (PDT)
+From: "Lucien.Jheng" <lucienx123@gmail.com>
+To: linux-clk@vger.kernel.org,
+	andrew@lunn.ch,
+	hkallweit1@gmail.com,
+	linux@armlinux.org.uk,
+	kuba@kernel.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	daniel@makrotopia.org,
+	ericwouds@gmail.com
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	joseph.lin@airoha.com,
+	wenshin.chung@airoha.com,
+	lucien.jheng@airoha.com,
+	"Lucien.Jheng" <lucienx123@gmail.com>
+Subject: [PATCH v7 net-next PATCH 1/1] net: phy: air_en8811h: Add clk provider for CKO pin
+Date: Tue,  8 Apr 2025 23:01:18 +0800
+Message-Id: <20250408150118.54478-1-lucienx123@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="jOVoemtQG2pZBf3z"
-Content-Disposition: inline
-In-Reply-To: <20250408104845.675475678@linuxfoundation.org>
-X-Cookie: Meester, do you vant to buy a duck?
+Content-Transfer-Encoding: 8bit
 
+EN8811H outputs 25MHz or 50MHz clocks on CKO, selected by GPIO3.
+CKO clock operates continuously from power-up through md32 loading.
+Implement clk provider driver so we can disable the clock output in case
+it isn't needed, which also helps to reduce EMF noise
 
---jOVoemtQG2pZBf3z
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Lucien.Jheng <lucienx123@gmail.com>
+---
+Change in PATCH v7:
+air_en8811h.c:
+ * Fix: Correct various code style inconsistencies and remove unnecessary initialization.
 
-On Tue, Apr 08, 2025 at 12:45:26PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.12.23 release.
-> There are 423 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+ drivers/net/phy/air_en8811h.c | 103 +++++++++++++++++++++++++++++++++-
+ 1 file changed, 100 insertions(+), 3 deletions(-)
 
-This is showing the same issues as v6.13 was for me.
+diff --git a/drivers/net/phy/air_en8811h.c b/drivers/net/phy/air_en8811h.c
+index e9fd24cb7270..4eebc6e24ce5 100644
+--- a/drivers/net/phy/air_en8811h.c
++++ b/drivers/net/phy/air_en8811h.c
+@@ -16,6 +16,7 @@
+ #include <linux/property.h>
+ #include <linux/wordpart.h>
+ #include <linux/unaligned.h>
++#include <linux/clk-provider.h>
 
---jOVoemtQG2pZBf3z
-Content-Type: application/pgp-signature; name="signature.asc"
+ #define EN8811H_PHY_ID		0x03a2a411
 
------BEGIN PGP SIGNATURE-----
+@@ -112,6 +113,11 @@
+ #define   EN8811H_POLARITY_TX_NORMAL		BIT(0)
+ #define   EN8811H_POLARITY_RX_REVERSE		BIT(1)
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmf1OmAACgkQJNaLcl1U
-h9DRYwf/QMlABTdCNXUDIb92kERSOFqdaHqx1v9KkL0p1135RrfKHmUHVYCIv1+9
-Rjr1oj2hxnUEQP9t3fKK2igbJ7H3PgGVjjTgtwWoLnfNfMu+SedLAi2RZCpFHfOz
-JQLKjNTNdHqY2CNnKSx8nQDQTYOvJe+/wukegchTeWG/7iqbEKGgTadUfvTP9OJ2
-gayD6X0uNMgte/AZGv2ozdiDCH1NTj6DiYg1+xU9qAhI8+edILGpgCRw1gERq7Z3
-Ctx/TwTIIfbwKEowPi20GVtejTRwdMdMCvIAQHsfB/H73FDNmn0GdztPla+U4gBP
-4J5RT+TkMjznI+M4xSKsc2QYajtayA==
-=TirL
------END PGP SIGNATURE-----
++#define EN8811H_CLK_CGM		0xcf958
++#define   EN8811H_CLK_CGM_CKO		BIT(26)
++#define EN8811H_HWTRAP1		0xcf914
++#define   EN8811H_HWTRAP1_CKO		BIT(12)
++
+ #define EN8811H_GPIO_OUTPUT		0xcf8b8
+ #define   EN8811H_GPIO_OUTPUT_345		(BIT(3) | BIT(4) | BIT(5))
 
---jOVoemtQG2pZBf3z--
+@@ -142,10 +148,15 @@ struct led {
+ 	unsigned long state;
+ };
+
++#define clk_hw_to_en8811h_priv(_hw)			\
++	container_of(_hw, struct en8811h_priv, hw)
++
+ struct en8811h_priv {
+-	u32		firmware_version;
+-	bool		mcu_needs_restart;
+-	struct led	led[EN8811H_LED_COUNT];
++	u32			firmware_version;
++	bool			mcu_needs_restart;
++	struct led		led[EN8811H_LED_COUNT];
++	struct clk_hw		hw;
++	struct phy_device	*phydev;
+ };
+
+ enum {
+@@ -806,6 +817,86 @@ static int en8811h_led_hw_is_supported(struct phy_device *phydev, u8 index,
+ 	return 0;
+ };
+
++static unsigned long en8811h_clk_recalc_rate(struct clk_hw *hw,
++					     unsigned long parent)
++{
++	struct en8811h_priv *priv = clk_hw_to_en8811h_priv(hw);
++	struct phy_device *phydev = priv->phydev;
++	u32 pbus_value;
++	int ret;
++
++	ret = air_buckpbus_reg_read(phydev, EN8811H_HWTRAP1, &pbus_value);
++	if (ret < 0)
++		return ret;
++
++	return (pbus_value & EN8811H_HWTRAP1_CKO) ? 50000000 : 25000000;
++}
++
++static int en8811h_clk_enable(struct clk_hw *hw)
++{
++	struct en8811h_priv *priv = clk_hw_to_en8811h_priv(hw);
++	struct phy_device *phydev = priv->phydev;
++
++	return air_buckpbus_reg_modify(phydev, EN8811H_CLK_CGM,
++				       EN8811H_CLK_CGM_CKO,
++				       EN8811H_CLK_CGM_CKO);
++}
++
++static void en8811h_clk_disable(struct clk_hw *hw)
++{
++	struct en8811h_priv *priv = clk_hw_to_en8811h_priv(hw);
++	struct phy_device *phydev = priv->phydev;
++
++	air_buckpbus_reg_modify(phydev, EN8811H_CLK_CGM,
++				EN8811H_CLK_CGM_CKO, 0);
++}
++
++static int en8811h_clk_is_enabled(struct clk_hw *hw)
++{
++	struct en8811h_priv *priv = clk_hw_to_en8811h_priv(hw);
++	struct phy_device *phydev = priv->phydev;
++	int ret;
++	u32 pbus_value;
++
++	ret = air_buckpbus_reg_read(phydev, EN8811H_CLK_CGM, &pbus_value);
++	if (ret < 0)
++		return ret;
++
++	return (pbus_value & EN8811H_CLK_CGM_CKO);
++}
++
++static const struct clk_ops en8811h_clk_ops = {
++	.recalc_rate	= en8811h_clk_recalc_rate,
++	.enable		= en8811h_clk_enable,
++	.disable	= en8811h_clk_disable,
++	.is_enabled	= en8811h_clk_is_enabled,
++};
++
++static int en8811h_clk_provider_setup(struct device *dev, struct clk_hw *hw)
++{
++	struct clk_init_data init;
++	int ret;
++
++	if (!IS_ENABLED(CONFIG_COMMON_CLK))
++		return 0;
++
++	init.name = devm_kasprintf(dev, GFP_KERNEL, "%s-cko",
++				   fwnode_get_name(dev_fwnode(dev)));
++	if (!init.name)
++		return -ENOMEM;
++
++	init.ops = &en8811h_clk_ops;
++	init.flags = 0;
++	init.num_parents = 0;
++	hw->init = &init;
++
++	ret = devm_clk_hw_register(dev, hw);
++	if (ret)
++		return ret;
++
++	return devm_of_clk_add_hw_provider(dev, of_clk_hw_simple_get, hw);
++}
++
+ static int en8811h_probe(struct phy_device *phydev)
+ {
+ 	struct en8811h_priv *priv;
+@@ -838,6 +929,12 @@ static int en8811h_probe(struct phy_device *phydev)
+ 		return ret;
+ 	}
+
++	priv->phydev = phydev;
++	/* Co-Clock Output */
++	ret = en8811h_clk_provider_setup(&phydev->mdio.dev, &priv->hw);
++	if (ret)
++		return ret;
++
+ 	/* Configure led gpio pins as output */
+ 	ret = air_buckpbus_reg_modify(phydev, EN8811H_GPIO_OUTPUT,
+ 				      EN8811H_GPIO_OUTPUT_345,
+--
+2.34.1
+
