@@ -1,116 +1,254 @@
-Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A5F21A931;
-	Tue,  8 Apr 2025 21:03:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F542254875
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 21:03:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744146212; cv=none; b=JbM4ZjIVJ64d9Mny9eBYFE3PYWOQ5W2FxhcoD1iiMPXDk82flk/scOa9NRzP19sijb0GxXdyF+bKPxYqIvFqlXcpNtBPAmK145WyM+oCgxozfAjQjGbYGC3JmjL5iEZ4oxvlxkbmB07fZzc5tLGdpX79Ah+U64651Uea3D/hDiY=
+	t=1744146218; cv=none; b=h24GxrTXMZbqJja4gEFQ31OfVGOAlifHqPM+kY2FkZGnNHBlsPPi7497ree7Ida27bl13AuD/FkgUZzYgRkGQOq79Ip8okodzwDSMbPRkDkOeTqD4i7MUzGJJ1wBEYbhYgW/TFjZuJReEzyatKCREvW6ZeifLL+v8wwY9i+C+2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744146212; c=relaxed/simple;
-	bh=Wq3W0M2VlHnlbSxMjcii3adXzOLAf0O2t7RB/QODDxE=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iBzTZltWBdYnoODJ6DAtN3Zr7yuelxIpZ96Zs9kb6+EncX26ZrthqwFf5fwGjSBOGLVEQjDFbWnYOgJyHJQiYt8uRmzN73w8x/TkMC1I2cXakX1ddL2rJnFjOAapiARTeMw+B51OPRgUWk2GtQ+23sD/xP5s74y4GkddLQfTWso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=Jx/Y8b7V; arc=none smtp.client-ip=185.70.43.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1744146218; c=relaxed/simple;
+	bh=y8zs7myUh/XxhHHshPzfVZ+iRzf6l2Y4xTvulmW7Yco=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=gImF+1UzE+xd5sBhGNZQrDmrNJJ8VWNz2Jx2+juIo9M5IUeIZ1ZhtEAdlTLj/ioqQnlqI1DL0IWzoW0IVUlkgmQ/fRtya/i6Nc0CQb8p3SFHfOlJc5fH6aBRL5vSYBHbapKCy6pBzcdiMG5n81uDSz8poiFvcm8v1zQBsjCy08E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=u8YgKA/w; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="Jx/Y8b7V"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1744146206; x=1744405406;
-	bh=Wq3W0M2VlHnlbSxMjcii3adXzOLAf0O2t7RB/QODDxE=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=Jx/Y8b7V2ifyIm2eDWpQKqvGeoJj9oy4v2TcbFPId0qAxXQYUnNW591TEXEsHrcaE
-	 8JiH00HKM7z7ZQaJzh8u+OHh9haayC7jvRC4L6hUQuLxoaTSSETk7hEGMcPp1Mhjyr
-	 AW/x7qQWa13kt7/4Of2C/o6ba41iqdXf7WUJp0SVbZWw4pT4/fCBmiWSSADErpOpvN
-	 ms8nhItIM50EOArZB/J2wdQ9XHn/xQEluXImssSWx+18DtJd3SMTwlZw8r4Y0TmDg+
-	 xxZNNRBEQtZ2MzdW7uMzGq6QPpJBZDWDEbLhjlx/bIbdugB8rv3EeLqOQ+Gp7QwHhZ
-	 47OfZAkoICscQ==
-Date: Tue, 08 Apr 2025 21:03:21 +0000
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-From: Denis Mukhin <dmkhn@proton.me>
-Cc: Denis Mukhin <dmukhin@ford.com>, Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] x86/early_printk: add MMIO-based UARTs
-Message-ID: <RJ2PbXLplu84G37UUGMyfrvfTrrh5CY5_M6ArUI_eJIl_59Ty7Mqbp4GxJXRd-pjdBuRpqlDy7hak2tcCebae3_lpTqcsrPm-Qpjq4G4wTY=@proton.me>
-In-Reply-To: <Z_TeiDVh50u7OhIw@smile.fi.intel.com>
-References: <20250324-earlyprintk-v3-1-aee7421dc469@ford.com> <Z_P_nWrl4JQJVy2c@black.fi.intel.com> <vCbvBjUt9kPZhYP0tXAoVKrIn5hk5ON-HEqi2OjnCECThGJ73vh7S4qAKspAlxtgBAHFv1Sc_k6Hmdeq_nYXReITCt2FNRy1wWZR-udke9c=@proton.me> <Z_TeiDVh50u7OhIw@smile.fi.intel.com>
-Feedback-ID: 123220910:user:proton
-X-Pm-Message-ID: 3a73dae1dd9e52f60a2fd7d2691e708379e9dfb3
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="u8YgKA/w"
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7c5e39d1db2so352875185a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 14:03:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1744146215; x=1744751015; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=StXUt2o98UrEzmCyhxaifjhbyPqbhX1WlryMmKDUzOY=;
+        b=u8YgKA/ww9uHmNvtSsCGJNDTayimiHx2tIIdLYBGWh6leSRXKZnPt0VfI6wmBKRpn2
+         BYixmK5f73+tHLAUJl7CMpj3GMfIs1F5YiuKOz9o9LVgVJYfYKMlQuIX2umh3PmKKJPm
+         I6aGMvt9umkdxeXQljPJt9L4M9jX3ZMEmUb/ay2sbG2a8GkzwJMomQfYy98nWT66NT5Z
+         nCpJZAvWwe6STSOE6gRpCGsTDbOPm0RZDX7AJmspiltQ2V6UYcQJEodcBWaspf4pV3WZ
+         69+Ub8a5assvIkujAs+eZJvNQaSFFIvwY580mr4QBGbTOpU/HwtTpKcrU4Y7MTKEh2st
+         YqJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744146215; x=1744751015;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=StXUt2o98UrEzmCyhxaifjhbyPqbhX1WlryMmKDUzOY=;
+        b=Cs8P1hyAzdcDqZmp2LwjyhlIx/u2ENK2RxQPTankm4DHdS8J7/TmGjBLOPuwTWAAuK
+         nNizwTqrEaD2K8nW+LoVZpNcfbnMMpmycKMTI4iCJu7A7PMWRi/LEDrTqZ8++89tCVH4
+         yklWjfxMiQ5trDdQT+NLInytJPolZ3GaRtU+ba3nBByG1X3xFqZvpxhrMeHFNBZ9ijRL
+         kKO79yfJl6y/5Z0NjiLszDG0LKfSl04UE/4jFHWKxVQ7Wjg9adlKUTf2LNL+yDhU7b0R
+         wTLZWNdTKzJolqMsQWcBYBz8EsVXVb+nzScJneLpp9vsONQrV0XunNFVYXW+vN14DkY5
+         8I/w==
+X-Forwarded-Encrypted: i=1; AJvYcCWSB6KZ4i/w51kEEVmDaibsOWubXIh/7vsILwFZEjnp1BpZAEsZGnkltrN4icvMsfIuP2T6giC5oC/1YOg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yys5sSyTxcidEmXeoBAayWEsO+C+3pNqfD1595FVT3UvSxa7Z1n
+	T1A72sg8G9gpCTBtFpLB8Ms14lk3SgITadiHRXs7A0ZWTiLno0d/CRowW4qIL9o=
+X-Gm-Gg: ASbGncsA5F/1V3iIVr2pJDXyWMc4xDvQ04Q+NpxUocW6C7XDiiybYv8wgJXk1fibIpr
+	RQ0WuWDfbNN1LTqL0rsbXPjGyDP0LHkOXmrIdXmbw/c+V7OER3IJG5nINhwWVpuVUQouqD5rzSX
+	z5h/sYz285HIVCssooIANX4Kjdk7oYwtc8Oakwwnyg4sqPyJtubPeRAt7eoq5tnMiCIfs//VW/S
+	MTcXh8AinMerJOtcMhL6GrXrSXFAyLCLGnnmtC4rFxX++vpQPRRhu8TMrK7G22CTrGUMcR2LsFH
+	EcKa1zKxAVDm1WrtKQDS+0+Og1PwcPB/jOxF10ulnqhM5ylHpl6MM0hT+FtC
+X-Google-Smtp-Source: AGHT+IFgnJHxAWsuf+QM5cxegWPMvcG8OTlQh/+tfcVS0Sbd6RBnpzz0kQLkyoaYTeZ2+H1M6atR2A==
+X-Received: by 2002:a05:620a:40c8:b0:7c5:6375:144c with SMTP id af79cd13be357-7c79cbd7654mr96683485a.23.1744146215399;
+        Tue, 08 Apr 2025 14:03:35 -0700 (PDT)
+Received: from ?IPv6:2606:6d00:11:e976::5ac? ([2606:6d00:11:e976::5ac])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c76e75bcbesm803695785a.38.2025.04.08.14.03.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 14:03:34 -0700 (PDT)
+Message-ID: <d4515a3dbbba33a45c0dc1c68e47b9a1f0dbbb6e.camel@ndufresne.ca>
+Subject: Re: [PATCH v2 1/4] media: v4l: dev-decoder: Add source change
+ V4L2_EVENT_SRC_CH_COLORSPACE
+From: Nicolas Dufresne <nicolas@ndufresne.ca>
+To: Hans Verkuil <hverkuil-cisco@xs4all.nl>, Ming Qian
+ <ming.qian@oss.nxp.com>, 	mchehab@kernel.org
+Cc: shawnguo@kernel.org, robh+dt@kernel.org, s.hauer@pengutronix.de, 
+	kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+ xiahong.bao@nxp.com, 	eagle.zhou@nxp.com, tao.jiang_2@nxp.com,
+ imx@lists.linux.dev, 	linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org, 	linux-arm-kernel@lists.infradead.org
+Date: Tue, 08 Apr 2025 17:03:33 -0400
+In-Reply-To: <3e5f003a-f689-4f5a-ac75-6bf95379637b@xs4all.nl>
+References: <20250117061938.3923516-1-ming.qian@oss.nxp.com>
+	 <3e5f003a-f689-4f5a-ac75-6bf95379637b@xs4all.nl>
+Autocrypt: addr=nicolas@ndufresne.ca; prefer-encrypt=mutual;
+ keydata=mQGiBEUQN0MRBACQYceNSezSdMjx7sx6gwKkMghrrODgl3B0eXBTgNp6c431IfOOEsdvk
+ oOh1kwoYcQgbg4MXw6beOltysX4e8fFWsiRkc2nvvRW9ir9kHDm49MkBLqaDjTqOkYKNMiurFW+go
+ zpr/lUW15QqT6v68RYe0zRdtwGZqeLzX2LVuukGwCg4AISzswrrYHNV7vQLcbaUhPgIl0D+gILYT9
+ TJgAEK4YHW+bFRcY+cgUFoLQqQayECMlctKoLOE69nIYOc/hDr9uih1wxrQ/yL0NJvQCohSPyoyLF
+ 9b2EuIGhQVp05XP7FzlTxhYvGO/DtO08ec85+bTfVBMV6eeY4MS3ZU+1z7ObD7Pf29YjyTehN2Dan
+ 6w1g2rBk5MoA/9nDocSlk4pbFpsYSFmVHsDiAOFje3+iY4ftVDKunKYWMhwRVBjAREOByBagmRau0
+ cLEcElpf4hX5f978GoxSGIsiKoDAlXX+ICDOWC1/EXhEEmBR1gL0QJgiVviNyLfGJlZWnPjw6xhhm
+ tHYWTDxBOP5peztyc2PqeKsLsLWzAr7QnTmljb2xhcyBEdWZyZXNuZSA8bmljb2xhc0BuZHVmcmVz
+ bmUuY2E+iGIEExECACIFAlXA3CACGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFTAi2sB
+ qgcJngAnRDBTr8bhzuH0KQwFP1nEYtfgpKdAKCrQ/sJfuG/8zsd7J8wVl7y3e8ARbRDTmljb2xhcy
+ BEdWZyZXNuZSAoQi4gU2MuIEluZm9ybWF0aXF1ZSkgPG5pY29sYXMuZHVmcmVzbmVAZ21haWwuY29
+ tPohgBBMRAgAgBQJFlCyOAhsDBgsJCAcDAgQVAggDBBYCAwECHgECF4AACgkQcVMCLawGqBwhLQCg
+ zYlrLBj6KIAZ4gmsfjXD6ZtddT8AoIeGDicVq5WvMHNWign6ApQcZUihtElOaWNvbGFzIER1ZnJlc
+ 25lIChCLiBTYy4gSW5mb3JtYXRpcXVlKSA8bmljb2xhcy5kdWZyZXNuZUBjb2xsYWJvcmEuY28udW
+ s+iGIEExECACIFAkuzca8CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFTAi2sBqgcQX8
+ An2By6LDEeMxi4B9hUbpvRnzaaeNqAJ9Rox8rfqHZnSErw9bCHiBwvwJZ77QxTmljb2xhcyBEdWZy
+ ZXNuZSA8bmljb2xhcy5kdWZyZXNuZUBjb2xsYWJvcmEuY29tPohiBBMRAgAiBQJNzZzPAhsDBgsJC
+ AcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRBxUwItrAaoHLlxAKCYAGf4JL7DYDLs/188CPMGuwLypw
+ CfWKc9DorA9f5pyYlD5pQo6SgSoiC0R05pY29sYXMgRHVmcmVzbmUgKEIgU2MuIEluZm9ybWF0aXF
+ 1ZSkgPG5pY29sYXMuZHVmcmVzbmVAdXNoZXJicm9va2UuY2E+iGAEExECACAFAkUQN0MCGwMGCwkI
+ BwMCBBUCCAMEFgIDAQIeAQIXgAAKCRBxUwItrAaoHPTnAJ0WGgJJVspoctAvEcI00mtp5WAFGgCgr
+ +E7ItOqZEHAs+xabBgknYZIFPU=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.0 (3.56.0-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 
-On Tuesday, April 8th, 2025 at 1:30 AM, Andy Shevchenko <andriy.shevchenko@=
-intel.com> wrote:
+Hi Hans,
 
->=20
->=20
-> On Mon, Apr 07, 2025 at 11:04:42PM +0000, Denis Mukhin wrote:
->=20
-> > On Monday, April 7th, 2025 at 9:38 AM, Andy Shevchenko andriy.shevchenk=
-o@intel.com wrote:
+Le lundi 07 avril 2025 =C3=A0 11:54 +0200, Hans Verkuil a =C3=A9crit=C2=A0:
+> On 17/01/2025 07:19, Ming Qian wrote:
+> > Add a new source change V4L2_EVENT_SRC_CH_COLORSPACE that
+> > indicates colorspace change in the stream.
+> > The change V4L2_EVENT_SRC_CH_RESOLUTION will always affect
+> > the allocation, but V4L2_EVENT_SRC_CH_COLORSPACE won't.
 > >=20
-> > > On Mon, Mar 24, 2025 at 05:55:40PM -0700, Denis Mukhin wrote:
->=20
-> > > > During the bring-up of an x86 board, the kernel was crashing before
-> > > > reaching the platform's console driver because of a bug in the firm=
-ware,
-> > > > leaving no trace of the boot progress.
-> > > >=20
-> > > > It was discovered that the only available method to debug the kerne=
-l
-> > > > boot process was via the platform's MMIO-based UART, as the board l=
-acked
-> > > > an I/O port-based UART, PCI UART, or functional video output.
-> > > >=20
-> > > > Then it turned out that earlyprintk=3D does not have a knob to conf=
-igure
-> > > > the MMIO-mapped UART.
-> > > >=20
-> > > > Extend the early printk facility to support platform MMIO-based UAR=
-Ts
-> > > > on x86 systems, enabling debugging during the system bring-up phase=
-.
-> > > >=20
-> > > > The command line syntax to enable platform MMIO-based UART is:
-> > > > earlyprintk=3Dmmio,membase[,{nocfg|baudrate}][,keep]
-> > > >=20
-> > > > Note, the change does not integrate MMIO-based UART support to:
-> > > > arch/x86/boot/early_serial_console.c
-> > > >=20
-> > > > Also, update kernel parameters documentation with the new syntax an=
-d
-> > > > add missing 'nocfg' setting to PCI serial cards description.
-> > >=20
-> > > Just for your information: Have you seen this rather old series of mi=
-ne?
-> > >=20
-> > > https://bitbucket.org/andy-shev/linux/commits/branch/topic%2Fx86%2Fbo=
-ot-earlyprintk
+> > Signed-off-by: Ming Qian <ming.qian@oss.nxp.com>
+> > ---
+> > =C2=A0Documentation/userspace-api/media/v4l/vidioc-dqevent.rst | 9 ++++=
++++++
+> > =C2=A0.../userspace-api/media/videodev2.h.rst.exceptions=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 | 1 +
+> > =C2=A0include/uapi/linux/videodev2.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 1 +
+> > =C2=A03 files changed, 11 insertions(+)
 > >=20
-> > This is a nice cleanup!
-> > Thanks for sharing.
-> >=20
-> > Sorry, I haven't seen the series above, I had to write a patch (which w=
-as months ago).
-> > It's just I could not post it on the mailing list until recently.
+> > diff --git a/Documentation/userspace-api/media/v4l/vidioc-dqevent.rst b=
+/Documentation/userspace-api/media/v4l/vidioc-dqevent.rst
+> > index 8db103760930..91e6b86c976d 100644
+> > --- a/Documentation/userspace-api/media/v4l/vidioc-dqevent.rst
+> > +++ b/Documentation/userspace-api/media/v4l/vidioc-dqevent.rst
+> > @@ -369,6 +369,15 @@ call.
+> > =C2=A0	loss of signal and so restarting streaming I/O is required in or=
+der for
+> > =C2=A0	the hardware to synchronize to the video signal.
+> > =C2=A0
+> > +=C2=A0=C2=A0=C2=A0 * - ``V4L2_EVENT_SRC_CH_COLORSPACE``
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - 0x0002
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - This event gets triggered when a colo=
+rsapce change is detected at
 >=20
+> colorsapce -> colorspace
 >=20
-> No problem. Can you look at
-> https://lore.kernel.org/r/20250407172214.792745-1-andriy.shevchenko@linux=
-.intel.com
-> ? I forgot to Cc you and that is an important fix.
+> > +	an input. This can come from a video decoder. Applications will query
+>=20
+> It can also come from a video receiver. E.g. an HDMI source changes color=
+space
+> signaling, but not the resolution.
+>=20
+> > +	the new colorspace information (if any, the signal may also have been
+> > +	lost)
+>=20
+> Missing . at the end. Also, if the signal is lost, then that is a CH_RESO=
+LUTION
+> change, not CH_COLORSPACE.
+>=20
+> > +
+> > +	For stateful decoders follow the guidelines in :ref:`decoder`.
+>=20
+> I think this should emphasize that if CH_COLORSPACE is set, but not CH_RE=
+SOLUTION,
+> then only the colorspace changed and there is no need to reallocate buffe=
+rs.
+>=20
+> I also wonder if the description of CH_RESOLUTION should be enhanced to e=
+xplain
+> that this might also imply a colorspace change. I'm not sure what existin=
+g codec
+> drivers do if there is a colorspace change but no resolution change.
+>=20
+> I'm a bit concerned about backwards compatibility issues: if a userspace =
+application
+> doesn't understand this new flag and just honors CH_RESOLUTION, then it w=
+ould
+> never react to just a colorspace change.
+>=20
+> Nicolas, does gstreamer look at these flags?
 
-Done, thanks!
+So its used in two places:
+
+At runtime (shared between HDMI receiver and decoders):
+
+    if ((event.u.src_change.changes & V4L2_EVENT_SRC_CH_RESOLUTION) =3D=3D
+0) {
+      GST_DEBUG_OBJECT (v4l2object->dbg_obj,
+          "Received non-resolution source-change, ignoring.");
+      goto again;
+    }
+
+
+Meaning we currently completely ignore the event if it does not have
+the flag. And the second usage is while waiting for the initial
+resolution:
+
+      if (event.type =3D=3D V4L2_EVENT_SOURCE_CHANGE &&
+          (event.u.src_change.changes & V4L2_EVENT_SRC_CH_RESOLUTION))
+{
+        GST_DEBUG_OBJECT (v4l2object->dbg_obj,
+            "Can't streamon capture as the resolution have changed.");
+        ret =3D GST_V4L2_FLOW_RESOLUTION_CHANGE;
+      }
+
+
+
+I remember some doc explaining that once we receive that even we must
+cycle through streamoff/on, but can't find it now, I'll check further
+tomorrow. I wanted to check if that was specific to
+V4L2_EVENT_SRC_CH_RESOLUTION or global to V4L2_EVENT_SOURCE_CHANGE.
+Also, there is likely some difference between codec and HDMI.
+
+I think backward compatibility will be difficult on that one. I'm happy
+that you find the time to have a look, and looking for good ideas.
+
+Nicolas
+
 
 >=20
-> --
-> With Best Regards,
-> Andy Shevchenko
+> Regards,
+>=20
+> 	Hans
+>=20
+> > +
+> > =C2=A0Return Value
+> > =C2=A0=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > =C2=A0
+> > diff --git a/Documentation/userspace-api/media/videodev2.h.rst.exceptio=
+ns b/Documentation/userspace-api/media/videodev2.h.rst.exceptions
+> > index 35d3456cc812..ac47c6d9448b 100644
+> > --- a/Documentation/userspace-api/media/videodev2.h.rst.exceptions
+> > +++ b/Documentation/userspace-api/media/videodev2.h.rst.exceptions
+> > @@ -526,6 +526,7 @@ replace define V4L2_EVENT_CTRL_CH_RANGE ctrl-change=
+s-flags
+> > =C2=A0replace define V4L2_EVENT_CTRL_CH_DIMENSIONS ctrl-changes-flags
+> > =C2=A0
+> > =C2=A0replace define V4L2_EVENT_SRC_CH_RESOLUTION src-changes-flags
+> > +replace define V4L2_EVENT_SRC_CH_COLORSPACE src-changes-flags
+> > =C2=A0
+> > =C2=A0replace define V4L2_EVENT_MD_FL_HAVE_FRAME_SEQ :c:type:`v4l2_even=
+t_motion_det`
+> > =C2=A0
+> > diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videod=
+ev2.h
+> > index c8cb2796130f..242242c8e57b 100644
+> > --- a/include/uapi/linux/videodev2.h
+> > +++ b/include/uapi/linux/videodev2.h
+> > @@ -2559,6 +2559,7 @@ struct v4l2_event_frame_sync {
+> > =C2=A0};
+> > =C2=A0
+> > =C2=A0#define V4L2_EVENT_SRC_CH_RESOLUTION		(1 << 0)
+> > +#define V4L2_EVENT_SRC_CH_COLORSPACE		(1 << 1)
+> > =C2=A0
+> > =C2=A0struct v4l2_event_src_change {
+> > =C2=A0	__u32 changes;
