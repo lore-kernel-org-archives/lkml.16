@@ -1,159 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A3E117C91
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 00:18:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F22AD12E7F;
+	Tue,  8 Apr 2025 00:28:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744071507; cv=none; b=RYX+x8JeVpIy2bVxo/bmZrtDxQu1MiOOUDhSsjQkpq4Mc25h53sPR0JPVBtkPBbO0GyE8lBBHLEGPtSV/J28YkmATRv+2fRWqPfJXBcqYG4NcWzHu59VW7ZVnfRS0FccVXp4m7Qi0fJjrFBOKJ7z6Hy2SNQ1gvms9GbTUpcqtaI=
+	t=1744072139; cv=none; b=VeVGRj0Ie2/c5LPvdwSzE6G7OPmH+koK4Ea28Bh1VsPvwGIuPBw55L0FwVNpGlD7zmHNnl5W/o6vI16ZSJUfKHtUQl05yCisyFQ86zIvVGuZyVT6GTftI1LhmoKFR9eWfgEaLc5aVXPEUuD8y3p9vYDBsj/dDhmSE42nKDRoZ7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744071507; c=relaxed/simple;
-	bh=NEg8ot9+60o0XVU9F8BkVCyIub49xYwxQ7uQrOauiII=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uvaJ3DUfL9VXKjVarRMupm9OYPW8h5UTN6av3RR+JGLbKBmyIbvklBr1JeUfNYIjv59oyMVXZtzRDLpPZ5NC2f0IMDrujR/y2cNdtF3iF2JsoIXKqKDZFmeb+oKpa3n5KgoY+8GUfjuan9wyiWEWY35zrvStR27QRFvZBuaKsjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HuF9mxA3; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744072139; c=relaxed/simple;
+	bh=PyZ1cQ8Jh+NlsL//fjMKMfyETq9G8zTC5acak2Wp7rY=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=PqEUVqe7ZM2WcsYct8Jk9rDAL8husoKzRNtGhxCsGWsPSXDzJSHWpKgnIDSW0qEA+qb6u+mjX2M5BvYCrLkEAdSBOCpueObNR6PYYeXvnhd+uVYsRu6M90bvjqR5exvjTCCFis4x6Kuu6N5jVbyjTnN4dN/fzPHHRUWRvXD06KY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=cvF7i7dU; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HuF9mxA3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744071506; x=1775607506;
-  h=date:message-id:from:to:cc:subject:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=NEg8ot9+60o0XVU9F8BkVCyIub49xYwxQ7uQrOauiII=;
-  b=HuF9mxA30/5uzIvt+LXwMbHEpnOQEt8MznBwJ07eR/W+U2MJFQCc2+bU
-   xGtb3FVCUgvTkVe7ya6R8nRLBH/ZYaS1VX72i8VLwMVK8n3inxlyiAHKC
-   YjTy2fFNZQJhnihGZgOSxgqJrH1xttjBC+G5j89h7OZf+YOKUn8rGZmu6
-   aAj65b2KbPyEVK053bNQvmFfzCVmL59mwK2EyFGGfuCkyyr+1E0YsATS7
-   I3IbjNoYYUMnskHqjijjZGn0brJ7jOBMlW8i6FsPHQZGwXXHU9SXwTmmS
-   0vYFLj1Ja+DEFJyL/r0WhrGRiW3MiticXuFKQk4P+Pzi/06xdYl11pzI8
-   w==;
-X-CSE-ConnectionGUID: rGDqpNSmTcapiTflr0R3JA==
-X-CSE-MsgGUID: cn8BTrdDQlWx0+b4Ko8gnw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="44629334"
-X-IronPort-AV: E=Sophos;i="6.15,196,1739865600"; 
-   d="scan'208";a="44629334"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 17:18:25 -0700
-X-CSE-ConnectionGUID: t3H/F+gwSFCwxKNA/uREKg==
-X-CSE-MsgGUID: dK9qkXUXS7GHlshAfYP5jQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,196,1739865600"; 
-   d="scan'208";a="151291770"
-Received: from ksmithe-mobl1.amr.corp.intel.com (HELO adixit-MOBL3.intel.com) ([10.125.211.148])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 17:18:25 -0700
-Date: Mon, 07 Apr 2025 17:18:23 -0700
-Message-ID: <87bjt7eca8.wl-ashutosh.dixit@intel.com>
-From: "Dixit, Ashutosh" <ashutosh.dixit@intel.com>
-To: Anusha Srivatsa <asrivats@redhat.com>
-Cc: <imre.deak@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	"Jessica Zhang" <quic_jesszhan@quicinc.com>,
-	Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Joel Selvaraj <jo@jsfamily.in>,
-	Douglas Anderson <dianders@chromium.org>,
-	<dri-devel@lists.freedesktop.org>,
+	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="cvF7i7dU"
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 5380Sif962101352, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
+	t=1744072124; bh=PyZ1cQ8Jh+NlsL//fjMKMfyETq9G8zTC5acak2Wp7rY=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:MIME-Version;
+	b=cvF7i7dUNLts+uc8myIuOw8cyTU+z60tTUG3e2CoCAJfL2CcTjKAwz6Uhe4zcxgK2
+	 Voqz77YhnQGMn9XDUMd5ZsslB1kbpHyMNGPenk5Kt7RG0Z7055bMhFHCL0eQKxBzRE
+	 WHgUeAt7OAYwdgFYpk2icw5y+yrFn4OS+uvca10OVf83URm6VXr1KJL9cXoAmmoyAl
+	 /MwewGi6PfWVKM/Z1QXkd/hGCwWflaV9sKMbEFj+8zSwketR8dejfegl7NO8PF/7b9
+	 3gA2NB7ShvtOvocjLtpWtxUb5l/Kwcq1eftolH1S8FZ/ywTTR/AbxYxVGvO5+dRaQB
+	 1tTpi3n1fylBQ==
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 5380Sif962101352
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 8 Apr 2025 08:28:44 +0800
+Received: from RTEXMBS03.realtek.com.tw (172.21.6.96) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 8 Apr 2025 08:28:44 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXMBS03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 8 Apr 2025 08:28:44 +0800
+Received: from RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622]) by
+ RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622%5]) with mapi id
+ 15.01.2507.035; Tue, 8 Apr 2025 08:28:44 +0800
+From: Ping-Ke Shih <pkshih@realtek.com>
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+CC: Zhen XIN <zhen.xin@nokia-sbell.com>,
+        "linux-wireless@vger.kernel.org"
+	<linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org"
 	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 04/10] panel/auo-a030jtn01: Use refcounted allocation in place of devm_kzalloc()
-In-Reply-To: <85a58rsgjj.wl-ashutosh.dixit@intel.com>
-References: <20250401-b4-drm-panel-mass-driver-convert-v1-0-cdd7615e1f93@redhat.com>
-	<20250401-b4-drm-panel-mass-driver-convert-v1-4-cdd7615e1f93@redhat.com>
-	<Z_P0A9lxWD0aAdjp@ideak-desk.fi.intel.com>
-	<85a58rsgjj.wl-ashutosh.dixit@intel.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?ISO-8859-4?Q?Goj=F2?=) APEL-LB/10.8 EasyPG/1.0.0
- Emacs/29.4 (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+Subject: RE: [RFC -v1] wifi: rtw88: sdio: Tx status for management frames
+Thread-Topic: [RFC -v1] wifi: rtw88: sdio: Tx status for management frames
+Thread-Index: AQHbo+jJuNfRBVSN0k+LjlPmG1YP3LOXjoewgACk5QCAAL5oEA==
+Date: Tue, 8 Apr 2025 00:28:44 +0000
+Message-ID: <c6d200bad399484b9ebe8a265bcaa038@realtek.com>
+References: <20250402160310.996141-1-zhen.xin@nokia-sbell.com>
+ <9d908c7c77684260818470225b8a0980@realtek.com>
+ <CAFBinCD6fcTaJ3VE-0HBv=Vd_yhkqAgMH_8v9MVV1UMCO5m6vw@mail.gmail.com>
+In-Reply-To: <CAFBinCD6fcTaJ3VE-0HBv=Vd_yhkqAgMH_8v9MVV1UMCO5m6vw@mail.gmail.com>
+Accept-Language: en-US, zh-TW
+Content-Language: zh-TW
+x-kse-serverinfo: RTEXMBS03.realtek.com.tw, 9
+x-kse-antispam-interceptor-info: fallback
+x-kse-antivirus-interceptor-info: fallback
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=ISO-8859-7
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-KSE-AntiSpam-Interceptor-Info: fallback
 
-On Mon, 07 Apr 2025 16:22:40 -0700, Dixit, Ashutosh wrote:
->
-> On Mon, 07 Apr 2025 08:49:23 -0700, Imre Deak wrote:
-> >
-> > Hi,
-> >
-> > On Tue, Apr 01, 2025 at 12:03:47PM -0400, Anusha Srivatsa wrote:
-> > > Move to using the new API devm_drm_panel_alloc() to allocate the
-> > > panel.
-> > >
-> > > Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
-> > > ---
-> > >  drivers/gpu/drm/panel/panel-auo-a030jtn01.c | 10 ++++------
-> > >  1 file changed, 4 insertions(+), 6 deletions(-)
-> > >
-> > > diff --git a/drivers/gpu/drm/panel/panel-auo-a030jtn01.c b/drivers/gp=
-u/drm/panel/panel-auo-a030jtn01.c
-> > > index 77604d6a4e72c915c40575be0e47810c90b4ed71..83529b1c2bac2e29f41ef=
-af4028950214b056a95 100644
-> > > --- a/drivers/gpu/drm/panel/panel-auo-a030jtn01.c
-> > > +++ b/drivers/gpu/drm/panel/panel-auo-a030jtn01.c
-> > > @@ -200,9 +200,10 @@ static int a030jtn01_probe(struct spi_device *sp=
-i)
-> > >
-> > >	spi->mode |=3D SPI_MODE_3 | SPI_3WIRE;
-> > >
-> > > -	priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> > > -	if (!priv)
-> > > -		return -ENOMEM;
-> > > +	panel =3D devm_drm_panel_alloc(dev, struct a030jtn01, panel,
-> > > +				     &a030jtn01_funcs, DRM_MODE_CONNECTOR_DPI);
-> >
-> > This doesn't compile and (yet) it's pushed already to drm-tip. AFAIU
-> > it's supposed to be
-> >	priv =3D devm_drm_panel_alloc(...);
->
-> Yes:
->
-> drivers/gpu/drm/panel/panel-auo-a030jtn01.c: In function =A1a030jtn01_pro=
-be=A2:
-> drivers/gpu/drm/panel/panel-auo-a030jtn01.c:203:9: error: =A1panel=A2 und=
-eclared (first use in this function)
->   203 |         panel =3D devm_drm_panel_alloc(dev, struct a030jtn01, pan=
-el,
->       |         ^~~~~
-> drivers/gpu/drm/panel/panel-auo-a030jtn01.c:203:9: note: each undeclared =
-identifier is reported only once for each function it appears in
->
-> Please turn on the config options for particular module if you are making
-> changes to that module.
-
-Though probably, you can argue, that the pre-merge CI build should already
-be doing this. A sort of allmodconfig for the DRM subsystem, so that these
-kinds of issues don't get missed.
-
-
->
-> >
-> > > +	if (IS_ERR(panel))
-> > > +		return PTR_ERR(panel);
-> > >
-> > >	priv->spi =3D spi;
-> > >	spi_set_drvdata(spi, priv);
-> > > @@ -223,9 +224,6 @@ static int a030jtn01_probe(struct spi_device *spi)
-> > >	if (IS_ERR(priv->reset_gpio))
-> > >		return dev_err_probe(dev, PTR_ERR(priv->reset_gpio), "Failed to get =
-reset GPIO");
-> > >
-> > > -	drm_panel_init(&priv->panel, dev, &a030jtn01_funcs,
-> > > -		       DRM_MODE_CONNECTOR_DPI);
-> > > -
-> > >	err =3D drm_panel_of_backlight(&priv->panel);
-> > >	if (err)
-> > >		return err;
-> > >
-> > > --
-> > > 2.48.1
-> > >
+TWFydGluIEJsdW1lbnN0aW5nbCA8bWFydGluLmJsdW1lbnN0aW5nbEBnb29nbGVtYWlsLmNvbT4g
+d3JvdGU6DQo+IA0KPiBIaSBQaW5nLUtlLA0KPiANCj4gT24gTW9uLCBBcHIgNywgMjAyNSBhdCA1
+OjMw4oCvQU0gUGluZy1LZSBTaGloIDxwa3NoaWhAcmVhbHRlay5jb20+IHdyb3RlOg0KPiA+DQo+
+ID4gSGkgTWFydGluLA0KPiA+DQo+ID4gSSByZXBsaWVkIG9yaWdpbmFsIG1haWwsIGJlY2F1c2Ug
+SSB0aGluayBkaXNjdXNzaW9uIHdvdWxkIGJlIGNsZWFyZXIuDQo+IG1ha2VzIHNlbnNlLCB0aGFu
+ayB5b3UhDQo+IA0KPiBbLi4uXQ0KPiA+ID4gQEAgLTExOTUsNyArMTE5NSw3IEBAIHN0YXRpYyB2
+b2lkIHJ0d19zZGlvX2luZGljYXRlX3R4X3N0YXR1cyhzdHJ1Y3QgcnR3X2RldiAqcnR3ZGV2LA0K
+PiA+ID4gICAgICAgICBza2JfcHVsbChza2IsIHJ0d2Rldi0+Y2hpcC0+dHhfcGt0X2Rlc2Nfc3op
+Ow0KPiA+ID4NCj4gPiA+ICAgICAgICAgLyogZW5xdWV1ZSB0byB3YWl0IGZvciB0eCByZXBvcnQg
+Ki8NCj4gPiA+IC0gICAgICAgaWYgKGluZm8tPmZsYWdzICYgSUVFRTgwMjExX1RYX0NUTF9SRVFf
+VFhfU1RBVFVTKSB7DQo+ID4gPiArICAgICAgIGlmIChpbmZvLT5mbGFncyAmIElFRUU4MDIxMV9U
+WF9DVExfUkVRX1RYX1NUQVRVUyAmJiBxdWV1ZSA8PSBSVFdfVFhfUVVFVUVfVk8pIHsNCj4gPg0K
+PiA+IElzIHRoaXMgYmVjYXVzZSB5b3UgaGF2ZSBzZWVuICJmYWlsZWQgdG8gZ2V0IHR4IHJlcG9y
+dCI/DQo+ID4gSGF2ZSB5b3UgdHJpZWQgdG8gaW5jcmVhc2luZyBSVFdfVFhfUFJPQkVfVElNRU9V
+VD8NCj4gPg0KPiA+IElmIGl0IHN0aWxsIGNhbid0IGdldCBUWCByZXBvcnQsIHdlIG1pZ2h0IHRh
+a2UgdGhpcyB3b3JrYXJvdW5kIHdpdGggY29tbWVudHMNCj4gPiB0byBtZW50aW9uIHdoeSB3ZSBu
+ZWVkIGl0LiBPciBhIGxvY2FsIHZhcmlhYmxlIHdpdGggcHJvcGVyIG5hbWluZyB0byBwb2ludCBv
+dXQNCj4gPiB0aGlzLCBsaWtlDQo+ID4NCj4gPiAgICAgICAgIGJvb2wgcXVldWVfaGFzX25vX3R4
+X3JlcG9ydCA9IHF1ZXVlID4gUlRXX1RYX1FVRVVFX1ZPOw0KPiA+DQo+ID4NCj4gPiBCeSB0aGUg
+d2F5LCBVU0IgYmVoYXZpb3IgaXMgdmVyeSBsaWtlIHRvIFNESU8sIGJ1dCBUWCByZXBvcnQgc2Vl
+bXMgdG8gd29yayB3ZWxsLg0KPiBPbiBteSBSVEw4ODIyQ1MgSSBjYW4gY29uZmlybSB5b3VyIHRo
+b3VnaHQ6DQo+IEkgZG9uJ3Qgbm90aWNlIGFueSBleHRyYSAiZmFpbGVkIHRvIGdldCB0eCByZXBv
+cnQiIG1lc3NhZ2VzIHJlZ2FyZGxlc3MNCj4gb2Ygd2hldGhlciBJIGhhdmUgIiYmIHF1ZXVlIDw9
+IFJUV19UWF9RVUVVRV9WTyIgb3Igbm90Lg0KPiANCg0KVGhpcyB3b3JrYXJvdW5kIG1pZ2h0IG5l
+ZWQgYW4gY2hpcCBhdHRyaWJ1dGUgdG8gZW5hYmxlIHRoZW4uIA0KTm90IHN1cmUgaWYgcGVvcGxl
+IGluIHRoZSBHaXRIdWIgdGhyZWFkIGhhdmUgZXhwZXJpbWVudHMgb24gYWxsDQpzdXBwb3J0ZWQg
+U0RJTyBXaUZpIGNoaXBzLiANCg0K
