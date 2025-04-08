@@ -1,117 +1,196 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9F5117C219
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 02:20:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7211B1A76D0
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 02:24:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744078860; cv=none; b=Dh1aA9W1+4aXf3sI2Y/Q6kyJqbwHBXsKBC91jFdu1YGHztjWMSG/E7FEqT6BrYzhGBCvnpfn09u6XqzZ3+ObOJ1za3G6WAz+jpred7QJtO+Be+X9yWSAPZpGP32CxwVfqEDye0kYuutF+EP5FkwIiWtDDCWf4USsGrspF1nb3uY=
+	t=1744079051; cv=none; b=MhlBGWKYbFON+2CbzFPbUu7LJd7eLAMoXrSv0wfgHBqT7ZrpqBPbDvLETYjeqY/PqzHETM3G8CQjGNhojraMosl2DsH+ZejKNqBll4ON7GfrvDz+b3MzmRddK4AWbwyysQgQNz1KGVpqEk4c8QblW8FWFcsTHP71q5/v1zTXSak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744078860; c=relaxed/simple;
-	bh=tXx2Sdxjcd7L4VPO4IMcoREYhlqWNqq3IbNkcTTsaxk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D/i4Xh7J3mDWCbWqoXuGnFrlHgtedbJN9kcdivxKw78dILIk0zRK9BYqyCFhbCkbiNn2bKhkst0tNNsayy6mozaOTeSdlAuwZLLa+PORDEe6Q9lx1XFn5+r+CX0MvCgr+y3Avt8XeTVQY7kGKcvhThtQLGghOBkhsYDPaNyhow8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-05 (Coremail) with SMTP id zQCowAA3dQ30h_RnricPBw--.24673S2;
-	Tue, 08 Apr 2025 10:20:37 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: harry.wentland@amd.com,
-	sunpeng.li@amd.com,
-	Rodrigo.Siqueira@amd.com,
-	alexander.deucher@amd.com,
-	christian.koenig@amd.com,
-	Xinhui.Pan@amd.com,
-	airlied@gmail.com,
-	simona@ffwll.ch
-Cc: hamza.mahfooz@amd.com,
-	chiahsuan.chung@amd.com,
-	sunil.khatri@amd.com,
-	alex.hung@amd.com,
-	aurabindo.pillai@amd.com,
-	hersenxs.wu@amd.com,
-	mario.limonciello@amd.com,
-	mwen@igalia.com,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>
-Subject: [PATCH v2] drm/amd/display: Add error check for avi and vendor infoframe setup function
-Date: Tue,  8 Apr 2025 10:20:18 +0800
-Message-ID: <20250408022018.2786-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1744079051; c=relaxed/simple;
+	bh=MdkpQCnMo49opJex7OZUG+NIbeQFZNJQY/fbJ6jtgho=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MpxQFdHPFPEkoAKurVqz2dMaauFW7sPwyuZsGIX1Q6/lVV1H9ZM7o/1TdIKDE+NUnnCewYZR+Lxpmnljqz2YpiauZteEVPIWa1Jg1+fWsBUP2U62i6obfoKDpG9j8mgpKRZDYICbDwW+2D6WRWqgz0D1650jByaTD1/FE4UskRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OD1W9KMo; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OD1W9KMo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744079048;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K7shp0i8xV6W4sEMIfoyEtGIoaU0RHBOh45LNxxy8wY=;
+	b=OD1W9KMoJbw9AcFui1abBTsTYzqPwPRubYygmae/7BLQsWikmQq/Lva1fG5YRuKNYwanfm
+	CNuRe0C4wfaFP1+DPAdzN3NbyCy/UJpkOO37UHo3cFxsEe+X0ulJKV0yMl40HKyyejahLe
+	QfgltisL8kztjW30SixWTeEiGAFMxSM=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-475-fVNTxx_CPL6CJ9AhxUkyVA-1; Mon,
+ 07 Apr 2025 22:24:04 -0400
+X-MC-Unique: fVNTxx_CPL6CJ9AhxUkyVA-1
+X-Mimecast-MFC-AGG-ID: fVNTxx_CPL6CJ9AhxUkyVA_1744079042
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0CEC01956048;
+	Tue,  8 Apr 2025 02:24:01 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.61])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 71DE6180B48C;
+	Tue,  8 Apr 2025 02:23:58 +0000 (UTC)
+Date: Tue, 8 Apr 2025 10:23:53 +0800
+From: Baoquan He <bhe@redhat.com>
+To: steven chen <chenste@linux.microsoft.com>
+Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
+	roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+	eric.snowberg@oracle.com, ebiederm@xmission.com,
+	paul@paul-moore.com, code@tyhicks.com, bauermann@kolabnow.com,
+	linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
+	madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+	James.Bottomley@hansenpartnership.com, vgoyal@redhat.com,
+	dyoung@redhat.com
+Subject: Re: [PATCH v11 1/9] ima: rename variable the set_file "file" to
+ "ima_kexec_file"
+Message-ID: <Z/SIudAyHVspsTa4@MiWiFi-R3L-srv>
+References: <20250402124725.5601-1-chenste@linux.microsoft.com>
+ <20250402124725.5601-2-chenste@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowAA3dQ30h_RnricPBw--.24673S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7CF4UAr47KFyUJw47ZF4rAFb_yoW8uF1Dpw
-	48ta4DtrWvqFZxCryUAFn5ua90k3s7JFy7Kr45Aw15W3s5KrZ3Ja1fJF1kJ39rZFZ5A3Wa
-	y3WUX3y7XF1vk3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9214x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
-	1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-	7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
-	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02
-	628vn2kIc2xKxwCY1x0262kKe7AKxVW8ZVWrXwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4
-	IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1r
-	MI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJV
-	WUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j
-	6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYx
-	BIdaVFxhVjvjDU0xZFpf9x0pRHUDLUUUUU=
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiDAgGA2f0eChG3AAAsY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250402124725.5601-2-chenste@linux.microsoft.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-The function fill_stream_properties_from_drm_display_mode() calls the
-function drm_hdmi_avi_infoframe_from_display_mode() and the
-function drm_hdmi_vendor_infoframe_from_display_mode(), but does
-not check its return value. Log the error messages to prevent silent
-failure if either function fails.
+On 04/02/25 at 05:47am, steven chen wrote:
+> The current kernel behavior is IMA measurements snapshot is taken at
+> kexec 'load' and not at kexec 'execute'. IMA log is then carried
+> over to the new kernel after kexec 'execute'. However, the time gap
+> between kexec load and kexec reboot can be very long. During this
+> time window, new events extended into TPM PCRs miss the chance
+> to be carried over to the second kernel.
+>  
+> To address the above, the following approach is proposed:
+>   - Allocate the necessary buffer during the kexec load phase.
+>   - Populate this buffer with the IMA measurements during
+>     the kexec execute phase.
+> 
+> In the current implementation, a local variable "file" of type seq_file
+> is used in the API ima_dump_measurement_list() to store the IMA measurements
+> to be carried over across kexec system call. To make this buffer accessible
+> at kexec 'execute' time, rename it to "ima_kexec_file" before making it
+> a file variable to better reflect its purpose.
+> 
+> Renaming the local variable "file" of type seq_file defined in the 
+> ima_dump_measurement_list function to "ima_kexec_file" will improve code
+> readability and maintainability by making the variable's role more explicit.
 
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
-v2: Fix code diff error
+Seems it's clearer with below paragraph to replace the whole log:
 
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+=====
+Rename the local variable "file" of type seq_file defined in the 
+ima_dump_measurement_list function to "ima_kexec_file" to improve code
+readability and maintainability by making the variable's role more explicit.
+=====
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index 5f216d626cbb..8fc6ba12c82d 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -6104,6 +6104,7 @@ static void fill_stream_properties_from_drm_display_mode(
- 	struct amdgpu_dm_connector *aconnector = NULL;
- 	struct hdmi_vendor_infoframe hv_frame;
- 	struct hdmi_avi_infoframe avi_frame;
-+	ssize_t err;
- 
- 	if (connector->connector_type != DRM_MODE_CONNECTOR_WRITEBACK)
- 		aconnector = to_amdgpu_dm_connector(connector);
-@@ -6150,9 +6151,17 @@ static void fill_stream_properties_from_drm_display_mode(
- 	}
- 
- 	if (stream->signal == SIGNAL_TYPE_HDMI_TYPE_A) {
--		drm_hdmi_avi_infoframe_from_display_mode(&avi_frame, (struct drm_connector *)connector, mode_in);
-+		err = drm_hdmi_avi_infoframe_from_display_mode(&avi_frame,
-+							       (struct drm_connector *)connector,
-+							       mode_in);
-+		if (err < 0)
-+			dev_err(connector->dev, "Failed to setup avi infoframe: %zd\n", err);
- 		timing_out->vic = avi_frame.video_code;
--		drm_hdmi_vendor_infoframe_from_display_mode(&hv_frame, (struct drm_connector *)connector, mode_in);
-+		err = drm_hdmi_vendor_infoframe_from_display_mode(&hv_frame,
-+								  (struct drm_connector *)connector,
-+								  mode_in);
-+		if (err < 0)
-+			dev_err(connector->dev, "Failed to setup vendor infoframe: %zd\n", err);
- 		timing_out->hdmi_vic = hv_frame.vic;
- 	}
- 
--- 
-2.42.0.windows.2
+The code change looks good to me.
+
+
+> 
+> Suggested-by: Mimi Zohar <zohar@linux.ibm.com>
+> Signed-off-by: steven chen <chenste@linux.microsoft.com>
+> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+
+If there's code change in patch content, the reviewing tag should be
+reset so that reviewing is taken again on the new change.
+
+> ---
+>  security/integrity/ima/ima_kexec.c | 31 +++++++++++++++---------------
+>  1 file changed, 16 insertions(+), 15 deletions(-)
+> 
+> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
+> index 9d45f4d26f73..650beb74346c 100644
+> --- a/security/integrity/ima/ima_kexec.c
+> +++ b/security/integrity/ima/ima_kexec.c
+> @@ -18,30 +18,30 @@
+>  static int ima_dump_measurement_list(unsigned long *buffer_size, void **buffer,
+>  				     unsigned long segment_size)
+>  {
+> +	struct seq_file ima_kexec_file;
+>  	struct ima_queue_entry *qe;
+> -	struct seq_file file;
+>  	struct ima_kexec_hdr khdr;
+>  	int ret = 0;
+>  
+>  	/* segment size can't change between kexec load and execute */
+> -	file.buf = vmalloc(segment_size);
+> -	if (!file.buf) {
+> +	ima_kexec_file.buf = vmalloc(segment_size);
+> +	if (!ima_kexec_file.buf) {
+>  		ret = -ENOMEM;
+>  		goto out;
+>  	}
+>  
+> -	file.file = NULL;
+> -	file.size = segment_size;
+> -	file.read_pos = 0;
+> -	file.count = sizeof(khdr);	/* reserved space */
+> +	ima_kexec_file.file = NULL;
+> +	ima_kexec_file.size = segment_size;
+> +	ima_kexec_file.read_pos = 0;
+> +	ima_kexec_file.count = sizeof(khdr);	/* reserved space */
+>  
+>  	memset(&khdr, 0, sizeof(khdr));
+>  	khdr.version = 1;
+>  	/* This is an append-only list, no need to hold the RCU read lock */
+>  	list_for_each_entry_rcu(qe, &ima_measurements, later, true) {
+> -		if (file.count < file.size) {
+> +		if (ima_kexec_file.count < ima_kexec_file.size) {
+>  			khdr.count++;
+> -			ima_measurements_show(&file, qe);
+> +			ima_measurements_show(&ima_kexec_file, qe);
+>  		} else {
+>  			ret = -EINVAL;
+>  			break;
+> @@ -55,23 +55,24 @@ static int ima_dump_measurement_list(unsigned long *buffer_size, void **buffer,
+>  	 * fill in reserved space with some buffer details
+>  	 * (eg. version, buffer size, number of measurements)
+>  	 */
+> -	khdr.buffer_size = file.count;
+> +	khdr.buffer_size = ima_kexec_file.count;
+>  	if (ima_canonical_fmt) {
+>  		khdr.version = cpu_to_le16(khdr.version);
+>  		khdr.count = cpu_to_le64(khdr.count);
+>  		khdr.buffer_size = cpu_to_le64(khdr.buffer_size);
+>  	}
+> -	memcpy(file.buf, &khdr, sizeof(khdr));
+> +	memcpy(ima_kexec_file.buf, &khdr, sizeof(khdr));
+>  
+>  	print_hex_dump_debug("ima dump: ", DUMP_PREFIX_NONE, 16, 1,
+> -			     file.buf, file.count < 100 ? file.count : 100,
+> +			     ima_kexec_file.buf, ima_kexec_file.count < 100 ?
+> +			     ima_kexec_file.count : 100,
+>  			     true);
+>  
+> -	*buffer_size = file.count;
+> -	*buffer = file.buf;
+> +	*buffer_size = ima_kexec_file.count;
+> +	*buffer = ima_kexec_file.buf;
+>  out:
+>  	if (ret == -EINVAL)
+> -		vfree(file.buf);
+> +		vfree(ima_kexec_file.buf);
+>  	return ret;
+>  }
+>  
+> -- 
+> 2.25.1
+> 
 
