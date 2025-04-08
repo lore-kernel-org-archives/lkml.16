@@ -1,217 +1,193 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3406223BD1C
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 18:00:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C3BE23C8D3
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 18:00:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744135236; cv=none; b=Cn5tJ6Vh3OuPIUCC5IFTmIwG1u4oBHd+h24vkSmTfauyWrCyFfguJG9sKYASXPeTbkiEFJqOGojJlQEiMm49X3pxiVWwNlAPWIupou6TZf+O+ahfpMG5bBFTJtcHICn29uBMD6IuMczquPN1aKW/czOutik5/CFW+wZYqf7F/Uc=
+	t=1744135246; cv=none; b=lCW2k2D+lmY+qjoeDe8mDX6Uu37z4IWN472BQFl9LRF5MCt0CwPlOgcf0m0M3dUshzy8oZMRwktPAvcyEj/Dk0/wanNRWsXnoihC0T6AXGE203JjXVortT8ZGnieolOzCW8sOZq3SvUsG1OIDTze/scXrzAJcCTj7tFkQ8rox2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744135236; c=relaxed/simple;
-	bh=IKRxW8iOvOnceIWgj2+pn9aFnGfhMnhGEcl6HM1Y/2k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aszfmwHB+gx55rAvHIORGhkDkzJMdBw2MtcD0qV0GJPSnQWFN01rcaBXXTeBVhR1VpRQNWL3/kEuoJakDHDgmWpmbhOTP7B1nn++w/DUDiAZ+vHXVwHdzyMOU671itZ08iemA0+DJieLszXOcdN0fTIZR9S59xf9exJLnTrVe/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bG+1as5e; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744135246; c=relaxed/simple;
+	bh=LYQ/EYSTsD5+LXO9UJC/DMwBTnYSBqqhgEmMojUu3tM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=J72wkrCCZjROYtrnbDymz+7xvita5tjpbwP/P8Hol/GCVm8VmZAwf8cSC8FUn3+d041ziFP98nXwntgMHYCyPZaeGfYr6dMSZWn0LFKTJV4nkoPhvGWKT9jMmMDyRQ/tBOpT4K9mD8+pWrHmF9R4H2tIjDs2Ky19KkgU8EQlx5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=RtEsTnrq; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bG+1as5e"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-736b98acaadso5876806b3a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 11:00:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="RtEsTnrq"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac297cbe017so1274359566b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 11:00:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744135232; x=1744740032; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=S+0LerDyV9VF61DFjpKkcTVQ+Gx5OvKrFKicvV3UQ60=;
-        b=bG+1as5e0Hgqw3O3kXf4NvDmKaHfQmHce0DHomVUkrawe7kNRqNR5rewL7mj6wF0FH
-         17MEJqa/DTA5N9hauXqWDovekXVka+R/ddH1kROYQp35o6MvrYhFnLI2TyTlg31m+h0r
-         RJ0MxUh9Pr2N7NhMX7q73qhiXbbI6mr5aMBOg6RqXAN2wB07WMqN0YmcwJwh8qsj+Nre
-         cSy2BTgsCkyvA1324+zMCSPK0Rxx7zVffdm+yJoa3NnanNi/YOlvtaZJj4jN/TvHtY/j
-         ETM/46+EmJFss+YxoxtM7S9irjxmUOwkh785Ka+sd7nn6cfME2xkf/NyrsubUmuNfGSm
-         6tTw==
+        d=suse.com; s=google; t=1744135242; x=1744740042; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZHRGUg/zBzHIvr3agUopnqTNoN9X+n+lQuy6s3Pbdxs=;
+        b=RtEsTnrqHRugeqIEYVu6Spc9prswzfffrcGJIqQpnu1XdBMIBicbuyegGgTszY/Zkp
+         YBeaa3+BWT+pgBJcGv9TQZpJlV2bHZOii0xeZhlUhUVMclJecXrfb0W7j5IsG8Q3YS7S
+         nGK0pO9HdrpUSWISlY/2sJpkOoQaj/lE0FXffia+xwSDpO7B94aYNzomOWNctqBVNelW
+         prbwbE2Mu+FXVgDlQ0v691SWRmo9eOjQOunS8lpPFW0ikPzFeTr59mXW/s1SNHk+qpn1
+         tveMnxapcnYTvzK2EPuJhz7vLt9EwRbWAMde5vk60YtKL/iO0wu7FpdHL/mq3keFpxuA
+         4D3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744135232; x=1744740032;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=S+0LerDyV9VF61DFjpKkcTVQ+Gx5OvKrFKicvV3UQ60=;
-        b=kSjzrTHLqd7HtD5rjJKBzQizbMstvfs3wqQXau6fmvJf2tmAGBHZwJgs6UbktNpw2T
-         n9B4Vv0tsxZ7Fizzs+Jchw0Izj7E62GiJuOPBH0c0nxl8gBxBy1TpzMW82gg3WRw1IAU
-         G1h7CiH3kfSUFQ+MJ16nb1p6xrricQxW/g4fMTKsLR+nJOP2j//DTIQtfIejSgNpxBAV
-         dJnc5MVATWiZ71p/ZgQXTIh3LD6QdqIhJgWUYbCoJnKwnPVHne/D6Enun5J+BrcqYxWj
-         aBJPdVN8m+2HW+ueOCWN+VQQvwo9FgKYmhaevkJ7RoWmSyvpKcmVMyr1HnPr32IOwLcr
-         aSWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUyNlHe3xzFjkh5hKaDZbRXvbk8FFkjwBcz1zwDOqPH7JnNKaKGNPZEzFx31EuQpeKSaZkXAv8jWNGV+oc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxS6crZZVY8tObD8TDe0CFKp4A73Hf8w7eYjYqtL0knO59gpcAD
-	TOudYDxqYVFri26QpZBGuwS3jyDPjE2tEx+2/CwRMf9VcNZy6/InyfIVFAlcMg==
-X-Gm-Gg: ASbGncsfEw/BbJ4pC1N3GEYrY6LTOpWgTWVuxE1MMDDZKdULHO7mbt74Kt/UEhSCw+V
-	CfyP/OFf55KJfLzv6aggG9EIPfQuttJREXyd5DxhGpTtcSitHSM60loU4YsBqQ+cCZnKi3fvL05
-	toNjrkx4e/xt0DA1TUyD/7RsBHWVUm0Y5OXpbDW9jBgfAoaN6E2ZJXM0Kr7FiAb12Eqqii83rHE
-	EWnhg0ZNOr9GQnd6ez+HkL+aKFEHTZduNEZMOkC73oFqHn0O2H8sMMOsE4mN2ZFLJmvAwdVskRP
-	ttm2PoVz1qkHeavXE4mZMAVGbAwt6C0XkF81BR3cqrPvyoxZNes4AVoh
-X-Google-Smtp-Source: AGHT+IGbXmuvDasWqfR5DUW+LETiZrUs5vidBCFKPfHYN49uKTRWvJsciqfcQbQm8F14O/bxFXbYZw==
-X-Received: by 2002:a05:6a00:14d4:b0:736:476b:fcd3 with SMTP id d2e1a72fcca58-73b6b8fd296mr21570487b3a.24.1744135231604;
-        Tue, 08 Apr 2025 11:00:31 -0700 (PDT)
-Received: from thinkpad ([120.60.134.231])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d9ea0946sm11181427b3a.103.2025.04.08.11.00.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 11:00:31 -0700 (PDT)
-Date: Tue, 8 Apr 2025 23:30:24 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: MANISH PANDEY <quic_mapa@quicinc.com>
-Cc: "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
-	Avri Altman <avri.altman@wdc.com>, Bart Van Assche <bvanassche@acm.org>, linux-scsi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, quic_nitirawa@quicinc.com, 
-	quic_bhaskarv@quicinc.com, quic_rampraka@quicinc.com, quic_cang@quicinc.com, 
-	quic_nguyenb@quicinc.com
-Subject: Re: [PATCH V2 2/2] scsi: ufs: introduce quirk to extend
- PA_HIBERN8TIME for UFS devices
-Message-ID: <fboo23erbvvhjg7hwkamudlopjeeg4tkwfjjcnor7ck2m4v3t4@redldauhvfhr>
-References: <20250404174539.28707-1-quic_mapa@quicinc.com>
- <20250404174539.28707-3-quic_mapa@quicinc.com>
- <hcguawgzuqgi2cyw3nf7uiilahjsvrm37f6zgfqlnfkck3jatv@xgaca3zgts2u>
- <d09641c7-c266-4f0a-a0e3-56f63d8c9ce3@quicinc.com>
- <l6xao2ubcvv3ho56dv6qfr3b62ve3olfbhvywg2is2xdhod27r@2nyjfwinrxzm>
- <25d8a781-14ea-4b97-b6b4-f9d472c1b692@quicinc.com>
- <cwwf4z2lrdhyv3nsj7do6ycn4tmdaii3wsr37vehgqpvvkgkwv@iugp4vu5srdm>
- <cf81fc11-f47b-422c-9c7d-860e6f93d930@quicinc.com>
+        d=1e100.net; s=20230601; t=1744135242; x=1744740042;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZHRGUg/zBzHIvr3agUopnqTNoN9X+n+lQuy6s3Pbdxs=;
+        b=nNwqDXbWAZaKAmMMX/Je6oSnEADDn/aJVQ3W0FY6YA2YxgyM1gM9XdvzET//7onTcv
+         4nDZaLoNYacEbHKDti63uJqOyfLPJGdyc+zD4qTWAy9aartC20cDUCMByI+OZxnLo5q/
+         z0h2QdvxJjV0HKd8K9N9/ImlePE0ABK8odzC4o4cehU9krAweaCu4nmCaBmeiXITLp0O
+         Ua6wgc0gxGo4EDB/c0nQQ5CQ9JriUWt+W904c/i75S6r1EvNh1vyiE2S17dCHG1BWGMZ
+         S3hrKAErh6gWCqnxXWkv5OGJjPrN/GzJoq/v4A3AbmQZxUhfLaDNGdNHXDOyxcDn8a1b
+         92EQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXUVzG4Kt3XYj1yLNASKrN91HFk60IxXwX5VLnwuuxdIl9vH1JfduvifrIKLI2sWBfsP1HckOeEJ9Ylbt4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YydzOu9ZTLLwT6568aKFjq/kqbKcBA/GCTj895CxsqVwl/d2bux
+	HIP5K1t9LzkExGGW7298uit7F9QadF0m7LAzNCXYPfK5c/9W4XudsyexuKH8Hb9c/WVguvOCvZQ
+	OyEqANjjoHfoHIanNlCXUtsSH0U6AirU5DvGFkg==
+X-Gm-Gg: ASbGncvPl1yDItwidiqvMw5PZa/iC+IRMg9YBp/6HOsmJSNvrBu657BhWnFw06GOhNa
+	DeU7V/JDQjfQ1ghEU9hkfMa5pMeD707VqwWWq+qt3yFzGxc1B5yZZ3D06vfC7I/UFjPVrjL1I6F
+	g2YPIhj1t8vzUqBwHiziKDAsoy
+X-Google-Smtp-Source: AGHT+IEcQTZbBwEPToHhlhVm9O0fPdaEu7xjj5dpTlxIaVfShGey8YE5vjRJAMVy6gBWjJ82lj4ubqkYXigh1kL4XdI=
+X-Received: by 2002:a17:907:3c93:b0:ac0:4364:4083 with SMTP id
+ a640c23a62f3a-aca9bdf067dmr4033966b.0.1744135242398; Tue, 08 Apr 2025
+ 11:00:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cf81fc11-f47b-422c-9c7d-860e6f93d930@quicinc.com>
+References: <20250408122933.121056-1-frank.li@vivo.com> <CAL3q7H6ysGxpXs8P9iPY-Y1KNKPggGSFHR_tMv-34Q+Qf6PZTQ@mail.gmail.com>
+ <CAPjX3Fem5E26+Fj537zcOXk9YZum2pDdcY9SAwCOr12wrGrroA@mail.gmail.com>
+ <CAL3q7H40yF8q78vZgd2c92LZMzBxqvU3XTrWMu86th1mGsGYDg@mail.gmail.com>
+ <CAPjX3Fd275aj0g5CWVKyX2wu0Sjn3a3UdZBaOR5MqUV55e4ZXw@mail.gmail.com> <CAL3q7H5BGF6cnLd3-fbp_Szq4_DSekbcM_nz_ZSGnS40w90X6Q@mail.gmail.com>
+In-Reply-To: <CAL3q7H5BGF6cnLd3-fbp_Szq4_DSekbcM_nz_ZSGnS40w90X6Q@mail.gmail.com>
+From: Daniel Vacek <neelx@suse.com>
+Date: Tue, 8 Apr 2025 20:00:30 +0200
+X-Gm-Features: ATxdqUGknCmHkBQq6L-NwppXDtR6YUeam5vq7FQztqmTQEykhuKHOi_GrvcO8jw
+Message-ID: <CAPjX3FepgZqXJ5B1V2Msg4pZHjphqUTRR1K3w=RGeDWzVxaUCA@mail.gmail.com>
+Subject: Re: [PATCH 1/4] btrfs: use BTRFS_PATH_AUTO_FREE in insert_balance_item()
+To: Filipe Manana <fdmanana@kernel.org>
+Cc: Yangtao Li <frank.li@vivo.com>, clm@fb.com, josef@toxicpanda.com, dsterba@suse.com, 
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 08, 2025 at 10:58:10PM +0530, MANISH PANDEY wrote:
-> 
-> 
-> On 4/8/2025 10:01 PM, Manivannan Sadhasivam wrote:
-> > On Tue, Apr 08, 2025 at 01:14:50PM +0530, MANISH PANDEY wrote:
-> > > 
-> > > 
-> > > On 4/8/2025 12:53 PM, Manivannan Sadhasivam wrote:
-> > > > On Tue, Apr 08, 2025 at 11:07:58AM +0530, MANISH PANDEY wrote:
-> > > > > 
-> > > > > 
-> > > > > On 4/7/2025 12:05 AM, Manivannan Sadhasivam wrote:
-> > > > > > On Fri, Apr 04, 2025 at 11:15:39PM +0530, Manish Pandey wrote:
-> > > > > > > Some UFS devices need additional time in hibern8 mode before exiting,
-> > > > > > > beyond the negotiated handshaking phase between the host and device.
-> > > > > > > Introduce a quirk to increase the PA_HIBERN8TIME parameter by 100 µs
-> > > > > > > to ensure proper hibernation process.
-> > > > > > > 
-> > > > > > 
-> > > > > > This commit message didn't mention the UFS device for which this quirk is being
-> > > > > > applied.
-> > > > > > 
-> > > > > Since it's a quirk and may be applicable to other vendors also in future, so
-> > > > > i thought to keep it general.
-> > > > > 
-> > > > 
-> > > > You cannot make commit message generic. It should precisely describe the change.
-> > > > 
-> > > > > Will update in next patch set if required.
-> > > > >    >> Signed-off-by: Manish Pandey <quic_mapa@quicinc.com>
-> > > > > > > ---
-> > > > > > >     drivers/ufs/core/ufshcd.c | 31 +++++++++++++++++++++++++++++++
-> > > > > > >     include/ufs/ufs_quirks.h  |  6 ++++++
-> > > > > > >     2 files changed, 37 insertions(+)
-> > > > > > > 
-> > > > > > > diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
-> > > > > > > index 464f13da259a..2b8203fe7b8c 100644
-> > > > > > > --- a/drivers/ufs/core/ufshcd.c
-> > > > > > > +++ b/drivers/ufs/core/ufshcd.c
-> > > > > > > @@ -278,6 +278,7 @@ static const struct ufs_dev_quirk ufs_fixups[] = {
-> > > > > > >     	  .model = UFS_ANY_MODEL,
-> > > > > > >     	  .quirk = UFS_DEVICE_QUIRK_DELAY_BEFORE_LPM |
-> > > > > > >     		   UFS_DEVICE_QUIRK_HOST_PA_TACTIVATE |
-> > > > > > > +		   UFS_DEVICE_QUIRK_PA_HIBER8TIME |
-> > > > > > >     		   UFS_DEVICE_QUIRK_RECOVERY_FROM_DL_NAC_ERRORS },
-> > > > > > >     	{ .wmanufacturerid = UFS_VENDOR_SKHYNIX,
-> > > > > > >     	  .model = UFS_ANY_MODEL,
-> > > > > > > @@ -8384,6 +8385,33 @@ static int ufshcd_quirk_tune_host_pa_tactivate(struct ufs_hba *hba)
-> > > > > > >     	return ret;
-> > > > > > >     }
-> > > > > > > +/**
-> > > > > > > + * ufshcd_quirk_override_pa_h8time - Ensures proper adjustment of PA_HIBERN8TIME.
-> > > > > > > + * @hba: per-adapter instance
-> > > > > > > + *
-> > > > > > > + * Some UFS devices require specific adjustments to the PA_HIBERN8TIME parameter
-> > > > > > > + * to ensure proper hibernation timing. This function retrieves the current
-> > > > > > > + * PA_HIBERN8TIME value and increments it by 100us.
-> > > > > > > + */
-> > > > > > > +static void ufshcd_quirk_override_pa_h8time(struct ufs_hba *hba)
-> > > > > > > +{
-> > > > > > > +	u32 pa_h8time = 0;
-> > > > > > 
-> > > > > > Why do you need to initialize it?
-> > > > > > 
-> > > > > Agree.. Not needed, will update.>> +	int ret;
-> > > > > > > +
-> > > > > > > +	ret = ufshcd_dme_get(hba, UIC_ARG_MIB(PA_HIBERN8TIME),
-> > > > > > > +			&pa_h8time);
-> > > > > > > +	if (ret) {
-> > > > > > > +		dev_err(hba->dev, "Failed to get PA_HIBERN8TIME: %d\n", ret);
-> > > > > > > +		return;
-> > > > > > > +	}
-> > > > > > > +
-> > > > > > > +	/* Increment by 1 to increase hibernation time by 100 µs */
-> > > > > > 
-> > > > > >    From where the value of 100us adjustment is coming from?
-> > > > > > 
-> > > > > > - Mani
-> > > > > > 
-> > > > > These values are derived from experiments on Qualcomm SoCs.
-> > > > > However this is also matching with ufs-exynos.c
-> > > > > 
-> > > > 
-> > > > Okay. In that case, you should mention that the 100us value is derived from
-> > > > experiments on Qcom and Samsung SoCs. Otherwise, it gives an assumption that
-> > > > this value is universal.
-> > > > 
-> > > > - Mani
-> > > > 
-> > >   << Otherwise, it gives an assumption that this value is universal. >>
-> > > So with this, should i add this quirk for Qcom only, or should add in
-> > > ufshcd.c and make it common for all SoC vendors?
-> > > 
-> > 
-> > You can add the quirk for both Qcom and Samsung. My comment was about clarifying
-> > it in the kernel doc comments.
-> > 
-> > - Mani
-> > 
-> Just for conclusion, why i moved this quirk from ufs-qcom to ufshcd.c is as
-> per Bart's suggestion in patchset
-> https://lore.kernel.org/lkml/c0691392-1523-4863-a722-d4f4640e4e28@acm.org/
-> 
-> << Which of these quirks are required for all host controllers and which of
-> these quirks are only required for Qualcomm host controllers?
-> 
-> > Should we consider moving the QUIRK_PA_HIBER8TIME quirk to the ufshcd
-> > driver? Please advise.
-> 
-> That would be appreciated. >>
-> 
-> Just to brief, QUIRK_PA_HIBER8TIME is required for Samsung UFS devices and
-> may be applicable to all SoC vendors with Samsung ufs device.
-> 
-> If you suggest to move it to ufs-qcom.c, i don't have any concern.
-> BTW Samsung UFS driver already has this implemented in their driver,
-> So i need not have to add this quirk to Samsung driver (ufs-exynos.c).
-> 
+On Tue, 8 Apr 2025 at 19:52, Filipe Manana <fdmanana@kernel.org> wrote:
+>
+> On Tue, Apr 8, 2025 at 6:47=E2=80=AFPM Daniel Vacek <neelx@suse.com> wrot=
+e:
+> >
+> > On Tue, 8 Apr 2025 at 19:41, Filipe Manana <fdmanana@kernel.org> wrote:
+> > >
+> > > On Tue, Apr 8, 2025 at 6:36=E2=80=AFPM Daniel Vacek <neelx@suse.com> =
+wrote:
+> > > >
+> > > > On Tue, 8 Apr 2025 at 16:47, Filipe Manana <fdmanana@kernel.org> wr=
+ote:
+> > > > >
+> > > > > On Tue, Apr 8, 2025 at 1:18=E2=80=AFPM Yangtao Li <frank.li@vivo.=
+com> wrote:
+> > > > > >
+> > > > > > All cleanup paths lead to btrfs_path_free so we can define path=
+ with the
+> > > > > > automatic free callback.
+> > > > > >
+> > > > > > Signed-off-by: Yangtao Li <frank.li@vivo.com>
+> > > > > > ---
+> > > > > >  fs/btrfs/volumes.c | 7 ++-----
+> > > > > >  1 file changed, 2 insertions(+), 5 deletions(-)
+> > > > > >
+> > > > > > diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
+> > > > > > index c8c21c55be53..a962efaec4ea 100644
+> > > > > > --- a/fs/btrfs/volumes.c
+> > > > > > +++ b/fs/btrfs/volumes.c
+> > > > > > @@ -3730,7 +3730,7 @@ static int insert_balance_item(struct btr=
+fs_fs_info *fs_info,
+> > > > > >         struct btrfs_trans_handle *trans;
+> > > > > >         struct btrfs_balance_item *item;
+> > > > > >         struct btrfs_disk_balance_args disk_bargs;
+> > > > > > -       struct btrfs_path *path;
+> > > > > > +       BTRFS_PATH_AUTO_FREE(path);
+> > > > > >         struct extent_buffer *leaf;
+> > > > > >         struct btrfs_key key;
+> > > > > >         int ret, err;
+> > > > > > @@ -3740,10 +3740,8 @@ static int insert_balance_item(struct bt=
+rfs_fs_info *fs_info,
+> > > > > >                 return -ENOMEM;
+> > > > > >
+> > > > > >         trans =3D btrfs_start_transaction(root, 0);
+> > > > > > -       if (IS_ERR(trans)) {
+> > > > > > -               btrfs_free_path(path);
+> > > > > > +       if (IS_ERR(trans))
+> > > > > >                 return PTR_ERR(trans);
+> > > > > > -       }
+> > > > > >
+> > > > > >         key.objectid =3D BTRFS_BALANCE_OBJECTID;
+> > > > > >         key.type =3D BTRFS_TEMPORARY_ITEM_KEY;
+> > > > > > @@ -3767,7 +3765,6 @@ static int insert_balance_item(struct btr=
+fs_fs_info *fs_info,
+> > > > > >         btrfs_set_balance_sys(leaf, item, &disk_bargs);
+> > > > > >         btrfs_set_balance_flags(leaf, item, bctl->flags);
+> > > > > >  out:
+> > > > > > -       btrfs_free_path(path);
+> > > > > >         err =3D btrfs_commit_transaction(trans);
+> > > > >
+> > > > > This isn't a good idea at all.
+> > > > > We're now committing a transaction while holding a write lock on =
+some
+> > > > > leaf of the tree root - this can result in a deadlock as the
+> > > > > transaction commit needs to update the tree root (see
+> > > > > update_cowonly_root()).
+> > > >
+> > > > I do not follow. This actually looks good to me.
+> > >
+> > > path->nodes[0] has a write locked leaf, returned by btrfs_insert_empt=
+y_item().
+> >
+> > Well, the first return is before calling this function and the final
+> > return is only after committing.
+> >
+> > Again, the function keeps it's former structure as it was before this
+> > patch. I still don't see any logical or functional change.
+>
+> I don't know how to put it simpler to you. There's a path setup by
+> btrfs_insert_empty_item(), with a leaf locked in write mode.
+> You can't just do a transaction commit while holding it locked, as
+> this can deadlock because updating the tree root is part of the
+> critical section of a transaction commit.
+> It seems trivial to me...
 
-No. I think there was a miscommunication. You can add the quirk in ufshcd.c, but
-I just want you to mention that the quirk is currently applicable to Samsung UFS
-devices and the value of 100us is derived from experiments.
+Nah, of course. I see. Simply put the btrfs_free_path() needs to be
+called before btrfs_commit_transaction() due to need to
+btrfs_tree_unlock_rw() in btrfs_release_path() first.
 
-- Mani
+So the sequence matters. The path implicit destructor on return from
+insert_balance_item() is only called too late.
 
--- 
-மணிவண்ணன் சதாசிவம்
+Thanks for the details.
+
+> >
+> > I'm lost. This still looks to me just as a straightforward cleanup.
+> >
+> > > > Is there really any functional change? What am I missing?
+> > >
+> > > Yes there is, a huge one. Even if a transaction commit didn't need to
+> > > update the root tree, it would be performance wise to commit a
+> > > transaction while holding a lock on a leaf unnecessarily.
+> > >
+> > > >
+> > > > --nX
+> > > >
+> > > > > Thanks.
+> > > > >
+> > > > >
+> > > > > >         if (err && !ret)
+> > > > > >                 ret =3D err;
+> > > > > > --
+> > > > > > 2.39.0
+> > > > > >
+> > > > > >
+> > > > >
