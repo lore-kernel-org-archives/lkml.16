@@ -1,73 +1,72 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C99F62571B9
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 22:37:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A130F256C96
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 22:37:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744151834; cv=none; b=UIj5rZfw+GZEwe31s34YPpCYndgv12lyrTn8g2bQFv0o/DXc2vj2bGqjA5qeOU3w74IuiWgSJLh4LeJjFgIb4RQ4x6OSmIA17rQWd7MvJeBbSgxPlLWxh27QXYwFFxCwGA4jZTbZtPYt8P626qdpz4FdVTNs6xNhBIPaJRHvaS4=
+	t=1744151834; cv=none; b=NlwtFdeKmMzUXrCWpCmjtC3aaIiaxJDi1p/Y/bAII0ZS186kDDdTNjC/AucLLtT2Tq8SVKeqEFT25v/dDm6kRtQ2mpkHow4DWKOFc1chiDMWVdLj0Pj/pZzNUzqXZax4MoMOZH1Dd84YHaNhVztdUfGwhnjmD+9CajZ6kkdd2Uk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744151834; c=relaxed/simple;
-	bh=oA4pyrX24y1bCy2gqUioXPrzN6EHIu1R3/OUBiH3obw=;
+	bh=9jnj8JCPLNJB7Y8bWf2v76OtUtjBvHVIvX7+JBZZ3HU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JXyfW6+iEsHx2bxaRY7tOm1TQDSP7vm47l7Vs+L2w3oYsHUjPAKTcjDmHs6TEjhcQz07RSlnVWgIdHPFotjOqzxGxe2wniyu7Y49lAQzTFrvCc8XKqUX9GBxr48Xatkzj7QyPpAdq34kfbIfMvlm2mjcbIjkjpv0O9hn7JdXKj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org; spf=pass smtp.mailfrom=neverthere.org; dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b=Q9Pi3gjY; arc=none smtp.client-ip=209.85.214.180
+	 MIME-Version; b=K2BjiB3lNC0ok2MM5rSNh+96m7PjHR/b6HKQvA1bRmGC0u9BFW6x3xqVzAkhs8hNFZmAd0wO5lKEdTilF5/jdnwVaZkgZCD32gWdyi1hyVKa8EF93Yq9QE7YjaJt2PwMmkTrs0zY0C0vMNH2Ia3R077kxyarnlVwIVlTp8V9Gyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org; spf=pass smtp.mailfrom=neverthere.org; dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b=HBs2bE76; arc=none smtp.client-ip=209.85.215.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neverthere.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b="Q9Pi3gjY"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2243803b776so85484705ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 15:37:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b="HBs2bE76"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-aee773df955so111109a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 15:37:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=neverthere.org; s=google; t=1744151832; x=1744756632; darn=vger.kernel.org;
+        d=neverthere.org; s=google; t=1744151830; x=1744756630; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=48CnxiwOG1VbFBlXoNHKj2YQK9a79sPTwkYUOXtTir0=;
-        b=Q9Pi3gjY3DMBimJbLCBOxMyaVNS8ovQSE53Uj3ilCtu98ElF7e8/QlrDCW5HysMmbq
-         VvdZYocJNCCgWgyqE2drxRfIKpxiG2o9aM4u9rI01QBgJ15g/VzNkp5+kZdxkrcDVRDd
-         dmuHs4AJ44Wee3snHEXKGu3jI3usNiDBFOYA+mKDoXELu+Tf5NhnH5AFlzBurpx/Gism
-         K6sz6ReuJDDCPAU04aGvoDuey1k2Qbific5S8LKRIZNutQnhWPUi3wi4QKHQLfHH9Fhw
-         tDB/s0xtZnHqY4fsYIXGVTTEQZJC0qi8UdRMXlPikMlHPIpdTlbmxhev0QEsH1/WpdXg
-         /cPQ==
+        bh=XWMnH0Did5XyzW5jfPrUxbx63YMfVnoGAwbN881GRAA=;
+        b=HBs2bE76HmgHlCQ2rPeqdDv8/VtrE0fzY2ZY1NJ54BYmPKUpa8/VpgAwqC1j9OzX8q
+         rm/b3MCXt1kao35uPw4jtQbEsw9DNrvlQw9d7T5YnKV+ieCebhG11nbpWQFIRi8q1Pul
+         kOoceTQUe9oFIKHz3Cm2jjKVpV0MTBMtxlo65CexDNqrNYYbfG8cbjG2E5IYRXrkxw98
+         dapPjKeZsGt3glj/RuRwyUpOBXruBoUCj8cvfNqxknb2W9p6b8EDTTU/s/IgWwmEuvRZ
+         l6aHHwbNZEY51L2eTtHLCPpN5oA3YVghQMKeFLujFfp9bgOrwT6umpmdmrcQqvax8KhC
+         XuVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744151832; x=1744756632;
+        d=1e100.net; s=20230601; t=1744151830; x=1744756630;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=48CnxiwOG1VbFBlXoNHKj2YQK9a79sPTwkYUOXtTir0=;
-        b=p4hR009o/aV9NahxSEIKhbT3eOpmk4OZte4NTVebmgEQEatRdh8+gnKd9bK/JCUGsO
-         xHeI7JAF6VVWnDLN+Mj2IQBvSyK2qW8wVKO5HIavpo8UjL+JI/uQxIpHVdyl3QoUdCzY
-         r8dnmbvDdcswIVP4cchL+4oJg30FSTDXVZUpzImT1W8URfKC1RHVlZC1zSblRMOcVW3Q
-         qdn+rE3Zxj1PUEme2o9GdN3/vfEBdJbVAImo/ImK6h/2elI2bGZTYyBT+3KIc8HO1pva
-         UDl+5oCtATyZcMz9r0wwJrREMoD9bXYJlcHAK7HF9Tcu32KzO7utBfydAbD0NTZh2Q4I
-         1Bsw==
-X-Forwarded-Encrypted: i=1; AJvYcCW79zbtXUa5D+WWH+jI/Npmh5ABZfIvKxbBb9Ya7FP6Zp2IallhrFJ4/OZXir++NLmcHANvTPziaVCOpzI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzr/6SQbQMpz4wiYAD5r9PNBzngogHn95t1AG7SBFk7mHMN2VUh
-	523xvuXz9bq+cVt6MyO7JiMtpfyP4rIH7ZsiqtodTwLXfgFnYmRG8uiDMLY9gsukGmCwf5IDWP0
-	=
-X-Gm-Gg: ASbGncstH2QXCoLxccgzN2WmIIYcunvASCbVLiK35PF14xJ+ay5tKMhpS7VdhewsnDz
-	yiBXASyx32kdFMC3B88g36TUwi3pyOYI3LljquCHsIaPlTWEQvHLLoHvMqNdrswgMUtsBNrSDcw
-	95m0DA+MO1bxbMfShqb8xKGbNWcm4oVK08a3JJF4fwnUCNkoh5uMjFZryXwG+5jubhkjaLYtw2e
-	TD6vpZzfMunfQAyy+Y66+5vJxG0BTt5eglW7JIhqc5b82Z/sxl7rJRtWLNavx7h/RRyzeFh+YsB
-	b9F5urZOvltDlo6vRX0YYmkw888C3mycS0fV2viUPvuWDcbvwnWw7K6oaoObt2MsDqWuIUy8f2R
-	iCAiwMFZt0g==
-X-Google-Smtp-Source: AGHT+IE7laCrDlkJfZ2SLpK5B8rdk0gdRJBXS0kMSGA9v+TVbdwQ5sHhRHKe4IAEWaIN+FjdabLoGw==
-X-Received: by 2002:a17:902:f686:b0:224:256e:5e3f with SMTP id d9443c01a7336-22ac29bc2b8mr9927275ad.25.1744151832207;
-        Tue, 08 Apr 2025 15:37:12 -0700 (PDT)
+        bh=XWMnH0Did5XyzW5jfPrUxbx63YMfVnoGAwbN881GRAA=;
+        b=dbG6Jp1u9dboA2FsyrczhYOe7UlH2iuNMoevR+6jJm2ryRuZ2Oh3wwsmzT/Xk2JL1G
+         2xoew3c3sMFu4JmU7QJ9u+o1vMpZznDQsSgA+ZK6Q7VqynOwv9dY8wjMSZnPs9qiFJRR
+         y37JkbbI0fNgqqE1PiuVOV8/pyxpnLkEY9MF51h8TKnCsFluWG471zvlbA9PMNyXdapV
+         akHblmUAMMphLSDJPcKpcBYs+E2XrPYpK6UjL4m2Otz5+q8hImn6OISbF/XKEZiLponE
+         BMYb2j502IBcnjrYJDNixn74WBGuA/4JiPUK43GKGF3DFdhCvgUUpDWlc3zjUd5xkvfl
+         mCIg==
+X-Forwarded-Encrypted: i=1; AJvYcCVrUYQQO9vYShI2cvdYvxiT2EQ0QD5ciJ995eIuFktLMJdaxZ4bW90p0tPggbscRe1AojZpYiAV8xdybWY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywcr3Q1eW5Gsc2OrKBQeoigJMEdpyJgZv/JgKHxxJBdEjO9gJKQ
+	luF03mJgB9PJmPYU6vIhszo+I+MgEv7ALDUiOZE5677B9ay3HAtt2HiF4RFzuQ==
+X-Gm-Gg: ASbGncs2boCOrOcjupoCbyoMZTYuJBOWnqWBCJmpE4E2lMYPlbshp4mwgoHrgG0ctNf
+	KCbRTfA9bTKCrmOnlztKTxrBcLMIBcT5qJ1mkPZgtGtSIE4wHcyG92ZJYhDM4r66ImXC6nj9O6I
+	8WCNL9kAoyWv/NCUmTdBNHchs7oUTwDSUBdgMl7jGrkjNfVwQQj12yNTDC428Ek6roGkNySBMmt
+	57Nx6ON/UItfe2XxZMz+3HI8M3+0gezI8FmUa/eGDFFGo4mCU9Uu2NTSQwg0kF7AyzdXKHXYJkX
+	hOXOFz202Eoml9Q1ISfrgrIVxr7ogP0ZipB/BAxfPdA83VAXFD8bmxshWxlidJUx5kWmtAYOrC3
+	fdjy418AaBA==
+X-Google-Smtp-Source: AGHT+IHYwI5R9KBRqVHiDJeq7AElYZCltjRwDzA4lymP8T/15XjM0s5gRterfVSjI9Y2OBeLz0wGVg==
+X-Received: by 2002:a17:90a:f944:b0:2ff:53d6:2b82 with SMTP id 98e67ed59e1d1-306d0d1d6e8mr7027966a91.11.1744151829879;
+        Tue, 08 Apr 2025 15:37:09 -0700 (PDT)
 Received: from tiamat (c-69-181-214-135.hsd1.ca.comcast.net. [69.181.214.135])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297866e132sm106704155ad.177.2025.04.08.15.37.11
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30584761e65sm11641716a91.13.2025.04.08.15.37.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 15:37:12 -0700 (PDT)
+        Tue, 08 Apr 2025 15:37:09 -0700 (PDT)
 From: Michael Rubin <matchstick@neverthere.org>
 To: gregkh@linuxfoundation.org,
 	dpenkler@gmail.com,
 	linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org
 Cc: Michael Rubin <matchstick@neverthere.org>
-Subject: [PATCH v1 08/18] staging: gpib: fmh: struct gpib_board_config
-Date: Tue,  8 Apr 2025 22:36:48 +0000
-Message-ID: <20250408223659.187109-9-matchstick@neverthere.org>
+Subject: [PATCH v1 06/18] staging: gpib: common: struct gpib_board_config
+Date: Tue,  8 Apr 2025 22:36:46 +0000
+Message-ID: <20250408223659.187109-7-matchstick@neverthere.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250408223659.187109-1-matchstick@neverthere.org>
 References: <20250408223659.187109-1-matchstick@neverthere.org>
@@ -90,93 +89,112 @@ directly accessed should never be a typedef.
 
 Signed-off-by: Michael Rubin <matchstick@neverthere.org>
 ---
- drivers/staging/gpib/fmh_gpib/fmh_gpib.c | 27 ++++++++++++++----------
- 1 file changed, 16 insertions(+), 11 deletions(-)
+ drivers/staging/gpib/common/gpib_os.c | 28 +++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/staging/gpib/fmh_gpib/fmh_gpib.c b/drivers/staging/gpib/fmh_gpib/fmh_gpib.c
-index b2c379ce4c88..30fbf1065de2 100644
---- a/drivers/staging/gpib/fmh_gpib/fmh_gpib.c
-+++ b/drivers/staging/gpib/fmh_gpib/fmh_gpib.c
-@@ -32,13 +32,15 @@ MODULE_DESCRIPTION("GPIB Driver for fmh_gpib_core");
- MODULE_AUTHOR("Frank Mori Hess <fmh6jj@gmail.com>");
- 
- static irqreturn_t fmh_gpib_interrupt(int irq, void *arg);
--static int fmh_gpib_attach_holdoff_all(struct gpib_board *board, const gpib_board_config_t *config);
--static int fmh_gpib_attach_holdoff_end(struct gpib_board *board, const gpib_board_config_t *config);
-+static int fmh_gpib_attach_holdoff_all(struct gpib_board *board,
-+				       const struct gpib_board_config *config);
-+static int fmh_gpib_attach_holdoff_end(struct gpib_board *board,
-+				       const struct gpib_board_config *config);
- static void fmh_gpib_detach(struct gpib_board *board);
- static int fmh_gpib_pci_attach_holdoff_all(struct gpib_board *board,
--					   const gpib_board_config_t *config);
-+					   const struct gpib_board_config *config);
- static int fmh_gpib_pci_attach_holdoff_end(struct gpib_board *board,
--					   const gpib_board_config_t *config);
-+					   const struct gpib_board_config *config);
- static void fmh_gpib_pci_detach(struct gpib_board *board);
- static int fmh_gpib_config_dma(struct gpib_board *board, int output);
- static irqreturn_t fmh_gpib_internal_interrupt(struct gpib_board *board);
-@@ -1335,7 +1337,7 @@ static int fmh_gpib_init(struct fmh_priv *e_priv, struct gpib_board *board, int
- /* Match callback for driver_find_device */
- static int fmh_gpib_device_match(struct device *dev, const void *data)
- {
--	const gpib_board_config_t *config = data;
-+	const struct gpib_board_config *config = data;
- 
- 	if (dev_get_drvdata(dev))
- 		return 0;
-@@ -1351,7 +1353,7 @@ static int fmh_gpib_device_match(struct device *dev, const void *data)
- 	return 1;
+diff --git a/drivers/staging/gpib/common/gpib_os.c b/drivers/staging/gpib/common/gpib_os.c
+index 940ea05ba478..f2216768d8bd 100644
+--- a/drivers/staging/gpib/common/gpib_os.c
++++ b/drivers/staging/gpib/common/gpib_os.c
+@@ -50,9 +50,9 @@ static int sad_ioctl(struct gpib_board *board, gpib_file_private_t *file_priv,
+ static int eos_ioctl(struct gpib_board *board, unsigned long arg);
+ static int request_service_ioctl(struct gpib_board *board, unsigned long arg);
+ static int request_service2_ioctl(struct gpib_board *board, unsigned long arg);
+-static int iobase_ioctl(gpib_board_config_t *config, unsigned long arg);
+-static int irq_ioctl(gpib_board_config_t *config, unsigned long arg);
+-static int dma_ioctl(gpib_board_config_t *config, unsigned long arg);
++static int iobase_ioctl(struct gpib_board_config *config, unsigned long arg);
++static int irq_ioctl(struct gpib_board_config *config, unsigned long arg);
++static int dma_ioctl(struct gpib_board_config *config, unsigned long arg);
+ static int autospoll_ioctl(struct gpib_board *board, gpib_file_private_t *file_priv,
+ 			   unsigned long arg);
+ static int mutex_ioctl(struct gpib_board *board, gpib_file_private_t *file_priv,
+@@ -65,8 +65,8 @@ static int set_local_ppoll_mode_ioctl(struct gpib_board *board, unsigned long ar
+ static int get_local_ppoll_mode_ioctl(struct gpib_board *board, unsigned long arg);
+ static int query_board_rsv_ioctl(struct gpib_board *board, unsigned long arg);
+ static int interface_clear_ioctl(struct gpib_board *board, unsigned long arg);
+-static int select_pci_ioctl(gpib_board_config_t *config, unsigned long arg);
+-static int select_device_path_ioctl(gpib_board_config_t *config, unsigned long arg);
++static int select_pci_ioctl(struct gpib_board_config *config, unsigned long arg);
++static int select_device_path_ioctl(struct gpib_board_config *config, unsigned long arg);
+ static int event_ioctl(struct gpib_board *board, unsigned long arg);
+ static int request_system_control_ioctl(struct gpib_board *board, unsigned long arg);
+ static int t1_delay_ioctl(struct gpib_board *board, unsigned long arg);
+@@ -1542,7 +1542,7 @@ static int request_service2_ioctl(struct gpib_board *board, unsigned long arg)
+ 		      request_service2_cmd.new_reason_for_service);
  }
  
--static int fmh_gpib_attach_impl(struct gpib_board *board, const gpib_board_config_t *config,
-+static int fmh_gpib_attach_impl(struct gpib_board *board, const struct gpib_board_config *config,
- 				unsigned int handshake_mode, int acquire_dma)
+-static int iobase_ioctl(gpib_board_config_t *config, unsigned long arg)
++static int iobase_ioctl(struct gpib_board_config *config, unsigned long arg)
  {
- 	struct fmh_priv *e_priv;
-@@ -1454,12 +1456,12 @@ static int fmh_gpib_attach_impl(struct gpib_board *board, const gpib_board_confi
- 	return fmh_gpib_init(e_priv, board, handshake_mode);
- }
- 
--int fmh_gpib_attach_holdoff_all(struct gpib_board *board, const gpib_board_config_t *config)
-+int fmh_gpib_attach_holdoff_all(struct gpib_board *board, const struct gpib_board_config *config)
- {
- 	return fmh_gpib_attach_impl(board, config, HR_HLDA, 0);
- }
- 
--int fmh_gpib_attach_holdoff_end(struct gpib_board *board, const gpib_board_config_t *config)
-+int fmh_gpib_attach_holdoff_end(struct gpib_board *board, const struct gpib_board_config *config)
- {
- 	return fmh_gpib_attach_impl(board, config, HR_HLDE, 1);
- }
-@@ -1497,7 +1499,8 @@ void fmh_gpib_detach(struct gpib_board *board)
- 	fmh_gpib_generic_detach(board);
- }
- 
--static int fmh_gpib_pci_attach_impl(struct gpib_board *board, const gpib_board_config_t *config,
-+static int fmh_gpib_pci_attach_impl(struct gpib_board *board,
-+				    const struct gpib_board_config *config,
- 				    unsigned int handshake_mode)
- {
- 	struct fmh_priv *e_priv;
-@@ -1570,12 +1573,14 @@ static int fmh_gpib_pci_attach_impl(struct gpib_board *board, const gpib_board_c
- 	return fmh_gpib_init(e_priv, board, handshake_mode);
- }
- 
--int fmh_gpib_pci_attach_holdoff_all(struct gpib_board *board, const gpib_board_config_t *config)
-+int fmh_gpib_pci_attach_holdoff_all(struct gpib_board *board,
-+				    const struct gpib_board_config *config)
- {
- 	return fmh_gpib_pci_attach_impl(board, config, HR_HLDA);
- }
- 
--int fmh_gpib_pci_attach_holdoff_end(struct gpib_board *board, const gpib_board_config_t *config)
-+int fmh_gpib_pci_attach_holdoff_end(struct gpib_board *board,
-+				    const struct gpib_board_config *config)
- {
+ 	u64 base_addr;
  	int retval;
- 	struct fmh_priv *e_priv;
+@@ -1561,7 +1561,7 @@ static int iobase_ioctl(gpib_board_config_t *config, unsigned long arg)
+ 	return 0;
+ }
+ 
+-static int irq_ioctl(gpib_board_config_t *config, unsigned long arg)
++static int irq_ioctl(struct gpib_board_config *config, unsigned long arg)
+ {
+ 	unsigned int irq;
+ 	int retval;
+@@ -1578,7 +1578,7 @@ static int irq_ioctl(gpib_board_config_t *config, unsigned long arg)
+ 	return 0;
+ }
+ 
+-static int dma_ioctl(gpib_board_config_t *config, unsigned long arg)
++static int dma_ioctl(struct gpib_board_config *config, unsigned long arg)
+ {
+ 	unsigned int dma_channel;
+ 	int retval;
+@@ -1793,7 +1793,7 @@ static int interface_clear_ioctl(struct gpib_board *board, unsigned long arg)
+ 	return ibsic(board, usec_duration);
+ }
+ 
+-static int select_pci_ioctl(gpib_board_config_t *config, unsigned long arg)
++static int select_pci_ioctl(struct gpib_board_config *config, unsigned long arg)
+ {
+ 	select_pci_ioctl_t selection;
+ 	int retval;
+@@ -1811,7 +1811,7 @@ static int select_pci_ioctl(gpib_board_config_t *config, unsigned long arg)
+ 	return 0;
+ }
+ 
+-static int select_device_path_ioctl(gpib_board_config_t *config, unsigned long arg)
++static int select_device_path_ioctl(struct gpib_board_config *config, unsigned long arg)
+ {
+ 	select_device_path_ioctl_t *selection;
+ 	int retval;
+@@ -2069,9 +2069,9 @@ void gpib_unregister_driver(struct gpib_interface *interface)
+ }
+ EXPORT_SYMBOL(gpib_unregister_driver);
+ 
+-static void init_gpib_board_config(gpib_board_config_t *config)
++static void init_gpib_board_config(struct gpib_board_config *config)
+ {
+-	memset(config, 0, sizeof(gpib_board_config_t));
++	memset(config, 0, sizeof(struct gpib_board_config));
+ 	config->pci_bus = -1;
+ 	config->pci_slot = -1;
+ }
+@@ -2212,7 +2212,7 @@ int gpib_match_device_path(struct device *dev, const char *device_path_in)
+ }
+ EXPORT_SYMBOL(gpib_match_device_path);
+ 
+-struct pci_dev *gpib_pci_get_device(const gpib_board_config_t *config, unsigned int vendor_id,
++struct pci_dev *gpib_pci_get_device(const struct gpib_board_config *config, unsigned int vendor_id,
+ 				    unsigned int device_id, struct pci_dev *from)
+ {
+ 	struct pci_dev *pci_device = from;
+@@ -2231,7 +2231,7 @@ struct pci_dev *gpib_pci_get_device(const gpib_board_config_t *config, unsigned
+ }
+ EXPORT_SYMBOL(gpib_pci_get_device);
+ 
+-struct pci_dev *gpib_pci_get_subsys(const gpib_board_config_t *config, unsigned int vendor_id,
++struct pci_dev *gpib_pci_get_subsys(const struct gpib_board_config *config, unsigned int vendor_id,
+ 				    unsigned int device_id, unsigned int ss_vendor,
+ 				    unsigned int ss_device,
+ 				    struct pci_dev *from)
 -- 
 2.43.0
 
