@@ -1,86 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDCAC2686B9;
-	Tue,  8 Apr 2025 11:08:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FC82267B7F;
+	Tue,  8 Apr 2025 11:09:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744110538; cv=none; b=JqRTJPLQL28r1mYztbr4ZTCt4ISeK8eKnhB27To5ML9pfRwEGiKMaK2bZFXdK/NL8UIKgfy+3XtMnURuoQwjIBU8CbpUbxdPjVfOTO7pGEbsvEKm+aqOJoe5QOAH+f3Tiha8zYi8/VgNZ3zy94QV0JLjhA7jeXq/a1uT6xaxWR8=
+	t=1744110567; cv=none; b=uUyricvkm7TuDrlk3ajfa4br43leo2IW8PDm1SKaLaCDQo0HQVScgFr853HGUI6hJPUMta3twFzI4RE/Wf7HBXbGowxebPiyl3nsMRovuJz1AnfJodJnDxaIPixQ5YEX7bBtTFZ6V3BQEX4nNfM0AtS3l73GOXysWINcmVLHrs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744110538; c=relaxed/simple;
-	bh=Q9qhVI0VAXu8TAAa28jWHMGKiF8kAlOH841EdjjYeWw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F3jzVEaKuO7gMvCtB7dC5TpNmZmRGxbyM5/wWmVBVe2Z3Zc0HhXjZ7+ozq2TduGRgbyeidifrs9CbWLnzHjp+cpzz2DjLTH53BDGAHaa6zM5d9HYWkKWkkl5DVozuJ3urVc7Sypck5BDSM0ZrrjLYood2saSTW50HVQbZEMFVqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IfLYF6uo; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IfLYF6uo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE3F1C4CEE5;
-	Tue,  8 Apr 2025 11:08:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744110538;
-	bh=Q9qhVI0VAXu8TAAa28jWHMGKiF8kAlOH841EdjjYeWw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IfLYF6uonVzCl+5YV62WoOsQu1L1n3sxGoh4t8L4Go3e5nIi5HcU6P/JU/kFd/eci
-	 H72zYs1zngshpn/qkJjjP+YiS+nbdeNtQuXxBNxG8Js+BLJ8e4mv2VxKAJotDv81a8
-	 W7W6k1RmekDv7UiW73hsN1wckSl3nfvCd0kh+tVq2A0Aa9XgprABgKPwSbvZC1a1OV
-	 t2UUMGaa4ZogPOG2eqKu1wZZLiBW9U4Hg4rlPpS2qNMxAKY8AElb1ilqWl/ImJRLtq
-	 pscroOsGuYiL03y7jrvQn9KknI6EjVHoNyC/22602LYra8hfowQWaWHtb4xu+SSk/k
-	 QeLfooM0WbxkQ==
-Date: Tue, 8 Apr 2025 12:08:54 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Alexis Czezar Torreno <alexisczezar.torreno@analog.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 2/2] regulator: adp5055: Add driver for adp5055
-Message-ID: <201f221c-1fc0-4a90-a2f3-7ae8dc31a7e5@sirena.org.uk>
-References: <20250408-upstream-adp5055-v5-0-dc58d98a7a3d@analog.com>
- <20250408-upstream-adp5055-v5-2-dc58d98a7a3d@analog.com>
+	s=arc-20240116; t=1744110567; c=relaxed/simple;
+	bh=aPXYrndgdMPDisO56UD2/E7jW3VS5JPMQlYHE8N3m/c=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=IfDrgMnY4/sVXS6u/iZ1V/7aiPWXpKMKpKpA8N+QlefFDnVOTrtYlydnfHZOhmB5PUSdS0g0kWKIu4c/Iyptv+tQrbDvqGDKMUQC3GrkPg/0nTlGFvzVUQkE1MDtc4UNJX2SCZfaWavHA7e6+If8CMIrIcyACNNMdlQPMDcsQMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5e5deb6482cso11892901a12.1;
+        Tue, 08 Apr 2025 04:09:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744110564; x=1744715364;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=z45/AeptaVau1rF3Bv9GzsdE9rkTDD31oOKZ+k17jHo=;
+        b=fDP2cOyvrkl+CvjCHBUJM0mKgUPGs3+IaH88XdNZIUSliFoyS9YckT9EwkcnAKF3ZX
+         Nyjs3DOLl782sbzOY3Bzc/7gb0tSw8ZkuvwMMG9uaWEjeL3hGY7hzwM7Q6P7CAC/b/7z
+         8VM89X2d9NSBZWEVu2xPklcDWZG1nqNZLGI04SvKGjtrUxOjb+sxF8CPQjhXzjeBe+0D
+         bkqi0hDg2OfPSuIFFjXcrFYz6RwQYPzxf/bmZqcSJ7AFV+s08vI0b60as00rvGdhkJUL
+         be2/BYHaNWC4KF1mdH/cLkiVgj7o6FZgBqIgF/RzZlJ5tqcnDFCIVTzOeSkLxQbTb536
+         H5xw==
+X-Forwarded-Encrypted: i=1; AJvYcCUskwA7ijXLkhavYg6aoc+AIBC3/i+zmZ5ZfbsJGyQvrk/4an1QmD0eX170B6xv00ApAQc3ig8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJ1H04hUjPvsdCUYJLar/SCyYoEGmWzz8W9BVSI3/dObT6Ov5W
+	4x8nriD96Bj+mGP1Z7smD4vHgiERgaLlD71d8b3165ZYqeYW7tuA
+X-Gm-Gg: ASbGncvY7U0ZwRH15rdwvOy2uGc9v09RtIwrGeMYAZyXnTNd1dDCwDBLFtYf5p+scPj
+	tHjTdNgURufGoxi/4NkndSsnltDMvTt5VnQc8JxyUGy6vcLtk9aw+NOF+CXOoU3t2S0UYnf1Pko
+	8mt16j3I8MXcdY7wswoLp3habBHPVmoycn0zAni5CAXuvuI8FQIwpTpyegkGil8foGEnjUmaWrj
+	+zLFjgg4Cwyrb1YOyCqw9/HaNsQpyQ80WOTdSh2gNq68lGFTA4RAAECl8sQpIWaMkocwH8H+HlF
+	IrvblOkNFJdsp0hPI39XjLGlq7tNvgeJDHg=
+X-Google-Smtp-Source: AGHT+IGXjo4xWZPqql1KrbG67ffeTRXSgwVC+ILiRJHZTUtyvNaBWb1XRfhZ6elYi14B3lSkSV0dnA==
+X-Received: by 2002:a05:6402:1e8a:b0:5e5:4807:545f with SMTP id 4fb4d7f45d1cf-5f1e4472346mr2596326a12.12.1744110564051;
+        Tue, 08 Apr 2025 04:09:24 -0700 (PDT)
+Received: from localhost ([2a03:2880:30ff:3::])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f0880a458csm8056627a12.69.2025.04.08.04.09.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 04:09:23 -0700 (PDT)
+From: Breno Leitao <leitao@debian.org>
+Date: Tue, 08 Apr 2025 04:09:02 -0700
+Subject: [PATCH v2] sched_ext: Use kvzalloc for large exit_dump allocation
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="COwVgEfJDcml99cf"
-Content-Disposition: inline
-In-Reply-To: <20250408-upstream-adp5055-v5-2-dc58d98a7a3d@analog.com>
-X-Cookie: Meester, do you vant to buy a duck?
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250408-scx-v2-1-1979fc040903@debian.org>
+X-B4-Tracking: v=1; b=H4sIAM0D9WcC/1XMTQrDIBBA4asMs9aixmLrqvcoWfiXZDZatEhK8
+ O6l2XX74H0HtlQpNbRwYE2dGpWMFhQDDJvLa+IU0QIqoa5CC8Nb2LmU0S93fRNTmJABvmpaaD+
+ V58wAN2rvUj8n2uWv/v9dcsmN0d4Z7VSQ5hGTJ5cvpa44jzG+YBozgpcAAAA=
+X-Change-ID: 20250407-scx-11dbf94803c3
+To: Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>, 
+ Andrea Righi <arighi@nvidia.com>, Changwoo Min <changwoo@igalia.com>, 
+ Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+ Juri Lelli <juri.lelli@redhat.com>, 
+ Vincent Guittot <vincent.guittot@linaro.org>, 
+ Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, 
+ Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>
+Cc: linux-kernel@vger.kernel.org, christophe.jaillet@wanadoo.fr, 
+ changwoo@igalia.com, kernel-team@meta.com, stable@vger.kernel.org, 
+ Rik van Riel <riel@surriel.com>, Breno Leitao <leitao@debian.org>
+X-Mailer: b4 0.15-dev-42535
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1818; i=leitao@debian.org;
+ h=from:subject:message-id; bh=aPXYrndgdMPDisO56UD2/E7jW3VS5JPMQlYHE8N3m/c=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBn9QPiqUZuEDOC7Bta42R0kYSkzDVMUwwGi5oXO
+ BlKsS1FGziJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCZ/UD4gAKCRA1o5Of/Hh3
+ bdnhEACv3OZT8uBUc98v8zwq/PfNKw5xbgcVl5bVC4u4Tvm/P/MZFDe2NSpyfH19+CyybDlTEMo
+ AieOFtfc7yfCqCptEeThjZEAi5V4gGF5lC1656MO/Qg3Lii5iq5vxedAEXoQvzCej+N31v/WD/+
+ Yuw9Y0is5RL9TYrDvU/2rCMtRJsEv6MlwCF4dYSkFP1FTXsZ5azGTXrx9g96ubQ7EVkko2d6c2T
+ u4D4CgcklS96nqg7XagcmwdgJOslBnSg08oihCgkaaM93iWLNKwjfsy4l4yzovfC9+t6SMwG/eu
+ Jo1fXYuUA6MDID7FJc3dHOi5o1R9mxO8aM14PxhIXpgbLkytHstZkBdrk8f6NZgzv6Hl0iFaSLo
+ c53e4XL6Qcs0yclkBEkaRll5cDdO6k2hp1AaM6FUYFG5XOw3EfwQeH1aM2/F1qzc6PTHWXvFQ4B
+ gtuaZKFObsxVGDnD0JxN+1braYTgA/AXLaJwSHHsnNhV2gJwTA00g1rU1VPL+VdZHVCN8ycqpjj
+ 2dewpxULxJs43ZQveWikOwcbhdj0Ni/46WMaHjeE8nldzB6oENa1TOrkDFRBtTNYoP5moyi/oGo
+ nXze56OzNjea2ayIlgzc1njud+aewoZdyW29SisPXQ98tu/52cc4hkVotmKdv2In/HmVeJVfDln
+ pTYaF/hqA6uGeZw==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
 
+Replace kzalloc with kvzalloc for the exit_dump buffer allocation, which
+can require large contiguous memory (up to order=9) depending on the
+implementation. This change prevents allocation failures by allowing the
+system to fall back to vmalloc when contiguous memory allocation fails.
 
---COwVgEfJDcml99cf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Since this buffer is only used for debugging purposes, physical memory
+contiguity is not required, making vmalloc a suitable alternative.
 
-On Tue, Apr 08, 2025 at 12:25:49PM +0800, Alexis Czezar Torreno wrote:
-> Add ADI ADP5055 driver support. The device consists
-> of 3 buck regulators able to connect to high input voltages of up to 18V
-> with no preregulators.
+Cc: stable@vger.kernel.org
+Fixes: 07814a9439a3b0 ("sched_ext: Print debug dump after an error exit")
+Suggested-by: Rik van Riel <riel@surriel.com>
+Signed-off-by: Breno Leitao <leitao@debian.org>
+Acked-by: Andrea Righi <arighi@nvidia.com>
+---
+Changes in v2:
+- Use kvfree() on the free path as well.
+- Link to v1: https://lore.kernel.org/r/20250407-scx-v1-1-774ba74a2c17@debian.org
+---
+ kernel/sched/ext.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-This breaks an x86_64 allmodconfig build with clang-19:
+diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
+index 66bcd40a28ca1..db9af6a3c04fd 100644
+--- a/kernel/sched/ext.c
++++ b/kernel/sched/ext.c
+@@ -4623,7 +4623,7 @@ static void scx_ops_bypass(bool bypass)
+ 
+ static void free_exit_info(struct scx_exit_info *ei)
+ {
+-	kfree(ei->dump);
++	kvfree(ei->dump);
+ 	kfree(ei->msg);
+ 	kfree(ei->bt);
+ 	kfree(ei);
+@@ -4639,7 +4639,7 @@ static struct scx_exit_info *alloc_exit_info(size_t exit_dump_len)
+ 
+ 	ei->bt = kcalloc(SCX_EXIT_BT_LEN, sizeof(ei->bt[0]), GFP_KERNEL);
+ 	ei->msg = kzalloc(SCX_EXIT_MSG_LEN, GFP_KERNEL);
+-	ei->dump = kzalloc(exit_dump_len, GFP_KERNEL);
++	ei->dump = kvzalloc(exit_dump_len, GFP_KERNEL);
+ 
+ 	if (!ei->bt || !ei->msg || !ei->dump) {
+ 		free_exit_info(ei);
 
-/build/stage/linux/drivers/regulator/adp5055-regulator.c:169:3: error: variable 'i' is incremented both in the loop header and in the loop body [-Werror,-Wfor-loop-analysis]
-  169 |                 i++;
-      |                 ^
-/build/stage/linux/drivers/regulator/adp5055-regulator.c:160:34: note: incremented here
-  160 |         for (i = 0; i < ADP5055_NUM_CH; i++) {
-      |                                         ^
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250407-scx-11dbf94803c3
 
---COwVgEfJDcml99cf
-Content-Type: application/pgp-signature; name="signature.asc"
+Best regards,
+-- 
+Breno Leitao <leitao@debian.org>
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmf1A8UACgkQJNaLcl1U
-h9AOIAf9H4Z5VTOk/dUuzFJLSjE6ZkxlYsZ9kBaOdF/1tZhKUTFVyLvtUTHEN0pf
-orDYbwzIr3NYBva/mB3hZKpv3DNowvtflM9VhUdNZBPJM3ou6O3VbDF0c3VkxTaX
-7sjGXHNwvUzq4IYIbkC5n/xN4OeinqMju3FNH1+OOfc76EpGD0WEmTvfSwp5/aok
-JheOUS+lmyZlG+qn7L+tq0Iu1wtrG5fC3BnzZTkPeZfl2Db1A2KbFkzWlU55454o
-IrwDYPw7gcwfpHBQKZmcqGYVFdT7m3tNsQqEwzS0P5JfGI8EVD4Us1bd5vTN1paD
-q/6PZ7Ih9D64jxlQ1kYFPlY3toUX0w==
-=EZ7U
------END PGP SIGNATURE-----
-
---COwVgEfJDcml99cf--
