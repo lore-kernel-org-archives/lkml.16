@@ -1,153 +1,175 @@
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.universe-factory.net (osgiliath.universe-factory.net [141.95.161.142])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C1C22D4C1;
-	Tue,  8 Apr 2025 16:30:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB57E1A3AB8;
+	Tue,  8 Apr 2025 16:30:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.95.161.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744129831; cv=none; b=QX0EBWKBuPfK6n8m5n5jm1r8apOPybu7vj6RZj/0a8dNoNKGycnSVqXNWmE2QGO4+iUqJbLTYXMPTo1sessnHc259xujmwUCjxTI1n8GjcGdY860hNllfoGYbu4hLL0Q+nfaktIj0e3eICZ5lGYmehu97n1rszuaTz6LlqMzqGc=
+	t=1744129848; cv=none; b=gVsHrV0145MuyN/DH9OIqtFZdjAUAWLB63O1UvlAztgtk8Y7b44oEYgXn2F4ac+Za7+iGXIRg4WMbQA4QdACgXL9DLxu/o7TBSIhrHDHbNF6t+U5tW+8qnsu7P7yQi0IJ/KQomcjTQ6Oo9KJBBMRlSYjMrQAe5nMJoizLaXeq8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744129831; c=relaxed/simple;
-	bh=oNUYEMgGqJ+3wGse3jpH09pPTdEyTcpXIxcUBN0Qlxk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dSFw2vA06z5aGgXkD7Y18Hylzi+nt++ypx+scO3sW+BSTTjdaSadgjoCA1k/k4E5vqIZwgJ/CRX42FrWm5rI8A787ymYM8dng3w553CmmHqalv685o2mRP+VKJri4I4NrZPlyf1aIXDmOccq68Vcg3lg8tK7wd2s7MhFKMp+QGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PA00jMCX; arc=none smtp.client-ip=209.85.221.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744129848; c=relaxed/simple;
+	bh=SWjrxx7mBYsKxQ85DT+EJ28yhni0UNOr9J1yNClrQQM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FgCKjtb8J0m3+8ZaiR1H15dDZYkqnKNaUt2+QvOe1XhNJPDU0/jpc7vajJDahmtibmfctVlA2Pc2FsZtGh5QObP14ea+eWOhdHUM6UqGZCy+gv9QmJLSFO9/xDK7brGFQued8HV+QVBXuUB6lFwz2scuX2J3pw+Ts6KHnMPlick=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=universe-factory.net; spf=pass smtp.mailfrom=universe-factory.net; dkim=pass (2048-bit key) header.d=universe-factory.net header.i=@universe-factory.net header.b=lcIfPGas; arc=none smtp.client-ip=141.95.161.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=universe-factory.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=universe-factory.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PA00jMCX"
-Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-523edc385caso2401823e0c.3;
-        Tue, 08 Apr 2025 09:30:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744129829; x=1744734629; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7wJ4YLUkXoLkwKjpRqxcQiGAxIAwL7Wsxqtgcenp5GE=;
-        b=PA00jMCXY81sVnE/gO975e6BiJz80jFF7SxLf5MWhFMIbGzk4JjcMZRNn+Vi83a/No
-         3L8VYORtrf72yiHZGnRkfX0qpWQuWJo3SiGdyl1AFDorAE6/yfwnQYEXQPfuvzrbIpkJ
-         JK6EI09oQ0XGvGnYypbaQyv9Xl6ajlL1bvKfuMwAToHcPO13ejHCRrhoH7LCB2BCzH7a
-         uqynQerO1nsIuQfXLmiYDR4SVCxVElxoVwfIGfVNRVh69AYe7lNrIMqVstA1GKp9ois0
-         4CrA+0vmCa0JdvfqXnAIjphNl3B/mmdCfx+v99WBpGZPn+mJZ0ahkAuMYEE3NwhqBY21
-         bNWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744129829; x=1744734629;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7wJ4YLUkXoLkwKjpRqxcQiGAxIAwL7Wsxqtgcenp5GE=;
-        b=oNtnAVbIra8fQDCllu8VL2zwWFrbbEKfGTd7aRQhu5Jphjuwnanpqz8XuJPQ3SoN5h
-         L1DdBEK7EO0ZbMzoBRfj6ZT3Q7NQK+/9pVOc4V2kSbQF7ZEXiizskuL4Xinou/Osakge
-         egqW/Duw2EHwTcevzCDbFriH6YR5Uo6iA7vHBEiN1Qj3sJTM+mIHVqsWVYPCRoeziULH
-         0kxCQpp+tGDeT7M3aoIjkVycxi2imTNISzvrEvFbcOWiYRo2T9cvqg5ayW4qpGxlROMF
-         fbVfxDtEfGz0nYy+cII2DGRG/NkCZcFSBEg4va5L4PQfvIliRjIrw5hwhNk6lBzbdJSJ
-         9lAg==
-X-Forwarded-Encrypted: i=1; AJvYcCUhdSbEgA7p5PjG4xoZ5OHOLnCdVLjMAVvydkq/dj7AWJfwr3PXg6cGU7R9gGhZ74I3HFebIs9fLXW7WVQ=@vger.kernel.org, AJvYcCV0ckyFy+KJG3pFvsaaaHckA+s6j7WcHvRCqr28D3Lr7iS2d41BtLCKkZ4ja0V0YgzKVRfMspLEqCaP@vger.kernel.org, AJvYcCXU2bmT76iaKM3XYJVHUALGWKNo4wyWoyFoCZGM1BmrVhRTZPw5jKRBfFJgQnVTdFpN7ecukHa4Y4hpNmg0Qln5OkA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9awA1hZRenNZ14SjtXztqgB5VEJA31L6J10w/jHWvAdSZmcHe
-	Wm7dlZVcTuZocC9QmQDqt2xPQDTcAmhf+Fz1e+sgeIQUwjlyvpugPWorXp5/7aDt+auOUuc5TH1
-	QxEmBTkigEWCFOSlv7PXpr8pL6ok=
-X-Gm-Gg: ASbGnctslidkNkpWYDsHAzkLqceZPUF9LgB+phpJgjUqI2KFmja1xz6LVhL54DVr0/2
-	C4KjyFfC/SEJ0ZVFNJz7ynrcG14am7nwRIbCJnI9abyK5bJNKjpA0XgWXT+1tBcLXPs2LX7KbU0
-	KcdY5jrRjlFgDT/db+14PwTuUeyQ==
-X-Google-Smtp-Source: AGHT+IF5vpxNNPgG48KmSP5YzAFbWLkv5ORwKd1NXBIFcwfuQX8RWoaUye5P4F2J864AgBaRoMtNJ04iAsqmgY0QlTc=
-X-Received: by 2002:a05:6122:659c:b0:520:3987:ce0b with SMTP id
- 71dfb90a1353d-5276443fba4mr13910530e0c.2.1744129828922; Tue, 08 Apr 2025
- 09:30:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=universe-factory.net header.i=@universe-factory.net header.b="lcIfPGas"
+From: Matthias Schiffer <mschiffer@universe-factory.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=universe-factory.net;
+	s=dkim; t=1744129843;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=HZjY/++SdcazIcDBDIw/OPGFSAKBqU5udvYkVuC5+dg=;
+	b=lcIfPGasBWgQC8ybApf13bCYOP2yEebhBPyToL5Ae7hFnS26CZz1gAornIr8UGdB0shYyO
+	3TgzJ6PQxBn1IkYFavFo3vMpEIiu24od2c4Cy3oOMJoaq/H5Zh8xihdzioJkBv8qqJvRkQ
+	HxLuJwqMxbAqJl6D6L3KaNTVj+Fmum2R9MTmzbgB6qCbg6nTqNsTEgyFn+lbxRirHCU87n
+	v3L3WvOmygfYdsCBLmdl3RW8CcnL2WCC61Aefq5lME8OrrzHKyAESRyHUH5/2AE0zTlNRj
+	DnlKjKID/59GwvZmoKKXx7J96kgHjYX7QKxgpayVnXWsb4f4rU/cFC+G70XshQ==
+Authentication-Results: mail.universe-factory.net;
+	auth=pass smtp.mailfrom=mschiffer@universe-factory.net
+To: Marek Lindner <marek.lindner@mailbox.org>,
+	Simon Wunderlich <sw@simonwunderlich.de>,
+	Antonio Quartulli <antonio@mandelbit.com>,
+	Sven Eckelmann <sven@narfation.org>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	b.a.t.m.a.n@lists.open-mesh.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Matthias Schiffer <mschiffer@universe-factory.net>
+Subject: [PATCH net] batman-adv: fix duplicate MAC address check
+Date: Tue,  8 Apr 2025 18:30:16 +0200
+Message-ID: <c775aab5514f25014f778c334235a21ee39708b4.1744129395.git.mschiffer@universe-factory.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407105002.107181-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250407105002.107181-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <TYCPR01MB11040727E81F6DF8647D92343D8B52@TYCPR01MB11040.jpnprd01.prod.outlook.com>
- <CAMuHMdWXid=9NXUULSA-vedZyjvDKJWt2KX8_Y=arMOp_-gFRQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdWXid=9NXUULSA-vedZyjvDKJWt2KX8_Y=arMOp_-gFRQ@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Tue, 8 Apr 2025 16:30:02 +0000
-X-Gm-Features: ATxdqUGgIgmcjOglWViw_kzyabRFOC_xMFbdUJNoeHkDgkQfHaMF7v3wcEAvb14
-Message-ID: <CA+V-a8v=AtYbFwTtTzFfkf3S126HOioU8jZvcKo1uKkkF-rO+g@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] usb: renesas_usbhs: Reorder clock handling and
- power management in probe
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
-	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: -
 
-Hi Geert,
+batadv_check_known_mac_addr() is both too lenient and too strict:
 
-On Tue, Apr 8, 2025 at 4:43=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68k=
-.org> wrote:
->
-> Hi Shimoda-san,
->
-> On Tue, 8 Apr 2025 at 12:40, Yoshihiro Shimoda
-> <yoshihiro.shimoda.uh@renesas.com> wrote:
-> > > From: Prabhakar, Sent: Monday, April 7, 2025 7:50 PM
-> > >
-> > > Reorder the initialization sequence in `usbhs_probe()` to enable runt=
-ime
-> > > PM before accessing registers, preventing potential crashes due to
-> > > uninitialized clocks.
-> >
-> > Just for a record. I don't know why, but the issue didn't occur on the =
-original code
-> > with my environment (R-Car H3). But, anyway, I understood that we need =
-this patch for RZ/V2H.
->
-> On R-Car Gen3 and later, the firmware must trap the external abort,
-> as usually no crash happens, but register reads return zero when
-> the module clock is turned off.  I am wondering why RZ/V2H behaves
-> differently than R-Car Gen3?
->
-From section 4.4.8.4.1 of RZ/V2H HW manual:
-In this mode, the frequency of the clock signals supplied to specified
-peripheral units is stopped to obtain lower power
-consumption.
-This is achieved by stopping supply of the clock signals by the CPG
-and, through the given CPG registers, switching
-the bus MSTOP ports. Error interrupts notify the system of attempted
-access to units in the MSTOP state.
+- It is called from batadv_hardif_add_interface(), which means that it
+  checked interfaces that are not used for batman-adv at all. Move it
+  to batadv_hardif_enable_interface(). Also, restrict it to hardifs of
+  the same mesh interface; different mesh interfaces should not interact
+  at all. The batadv_check_known_mac_addr() argument is changed from
+  `struct net_device` to `struct batadv_hard_iface` to achieve this.
+- The check only cares about hardifs in BATADV_IF_ACTIVE and
+  BATADV_IF_TO_BE_ACTIVATED states, but interfaces in BATADV_IF_INACTIVE
+  state should be checked as well, or the following steps will not
+  result in a warning then they should:
 
-> On R-Car Gen2, you do get an external abort when accessing hardware
-> registers while the module's clock is turned off.  Has anyone tested
-> usbhs on R-Car Gen2 recently?
->
-Yes I tested this with the patch applied,
-https://gist.github.com/prabhakarlad/3d1bbb6f745d8d867c8e6e009ab93f8d
+  - Add two interfaces on down state with different MAC addresses to
+    a mesh as hardifs
+  - Change the MAC addresses so they confliect
+  - Set interfaces to up state
 
-1] For R-Car Gen3 looking at the r8a77951.dtsi we have the below:
+  Now there will be two active hardifs with the same MAC address, but no
+  warning. Fix by only ignoring hardifs in BATADV_IF_NOT_IN_USE state.
 
-hsusb: usb@e6590000 {
-        compatible =3D "renesas,usbhs-r8a7795",
-        ...
-        clocks =3D <&cpg CPG_MOD 703>, <&cpg CPG_MOD 704>;
-        ....
-};
+The RCU lock can be dropped, as we're holding RTNL anyways when the
+function is called.
 
-The same clocks are used for ehci0/ohci0/phy0 in  r8a77951.dtsi,
-probably by the time we reach probing the usbhs driver these clocks
-may have been already enabled hence register reads were sensible.
+While we're at it, also switch from pr_warn() to netdev_warn().
 
-2] For the R-Car Gen2, looking at the RZ/G1H USBHS node we have the below:
+Fixes: c6c8fea29769 ("net: Add batman-adv meshing protocol")
+Signed-off-by: Matthias Schiffer <mschiffer@universe-factory.net>
+---
 
-hsusb: usb@e6590000 {
-    ....
-    clocks =3D <&cpg CPG_MOD 704>;
-    ....
-};
+Aside: batadv_hardif_add_interface() being called for all existing
+interfaces and having a global batadv_hardif_list at all is also not
+very nice, but this will be addressed separately, as changing it will
+require more refactoring.
 
-Same clock is for USBPHY, even in this case the PHY driver is probed
-first due to which the clock is ON and then we probe usbhs driver..
+ net/batman-adv/hard-interface.c | 37 ++++++++++++++++++++-------------
+ 1 file changed, 22 insertions(+), 15 deletions(-)
 
-Cheers,
-Prabhakar
+diff --git a/net/batman-adv/hard-interface.c b/net/batman-adv/hard-interface.c
+index f145f9662653..07b436626afb 100644
+--- a/net/batman-adv/hard-interface.c
++++ b/net/batman-adv/hard-interface.c
+@@ -506,28 +506,34 @@ batadv_hardif_is_iface_up(const struct batadv_hard_iface *hard_iface)
+ 	return false;
+ }
+ 
+-static void batadv_check_known_mac_addr(const struct net_device *net_dev)
++static void batadv_check_known_mac_addr(const struct batadv_hard_iface *hard_iface)
+ {
+-	const struct batadv_hard_iface *hard_iface;
++	const struct net_device *mesh_iface = hard_iface->mesh_iface;
++	const struct batadv_hard_iface *tmp_hard_iface;
+ 
+-	rcu_read_lock();
+-	list_for_each_entry_rcu(hard_iface, &batadv_hardif_list, list) {
+-		if (hard_iface->if_status != BATADV_IF_ACTIVE &&
+-		    hard_iface->if_status != BATADV_IF_TO_BE_ACTIVATED)
++	if (!mesh_iface)
++		return;
++
++	list_for_each_entry(tmp_hard_iface, &batadv_hardif_list, list) {
++		if (tmp_hard_iface == hard_iface)
++			continue;
++
++		if (tmp_hard_iface->mesh_iface != mesh_iface)
+ 			continue;
+ 
+-		if (hard_iface->net_dev == net_dev)
++		if (tmp_hard_iface->if_status == BATADV_IF_NOT_IN_USE)
+ 			continue;
+ 
+-		if (!batadv_compare_eth(hard_iface->net_dev->dev_addr,
+-					net_dev->dev_addr))
++		if (!batadv_compare_eth(tmp_hard_iface->net_dev->dev_addr,
++					hard_iface->net_dev->dev_addr))
+ 			continue;
+ 
+-		pr_warn("The newly added mac address (%pM) already exists on: %s\n",
+-			net_dev->dev_addr, hard_iface->net_dev->name);
+-		pr_warn("It is strongly recommended to keep mac addresses unique to avoid problems!\n");
++		netdev_warn(hard_iface->net_dev,
++			    "The newly added mac address (%pM) already exists on: %s\n",
++			    hard_iface->net_dev->dev_addr, tmp_hard_iface->net_dev->name);
++		netdev_warn(hard_iface->net_dev,
++			    "It is strongly recommended to keep mac addresses unique to avoid problems!\n");
+ 	}
+-	rcu_read_unlock();
+ }
+ 
+ /**
+@@ -764,6 +770,8 @@ int batadv_hardif_enable_interface(struct batadv_hard_iface *hard_iface,
+ 			    hard_iface->net_dev->name, hardif_mtu,
+ 			    required_mtu);
+ 
++	batadv_check_known_mac_addr(hard_iface);
++
+ 	if (batadv_hardif_is_iface_up(hard_iface))
+ 		batadv_hardif_activate_interface(hard_iface);
+ 	else
+@@ -902,7 +910,6 @@ batadv_hardif_add_interface(struct net_device *net_dev)
+ 
+ 	batadv_v_hardif_init(hard_iface);
+ 
+-	batadv_check_known_mac_addr(hard_iface->net_dev);
+ 	kref_get(&hard_iface->refcount);
+ 	list_add_tail_rcu(&hard_iface->list, &batadv_hardif_list);
+ 	batadv_hardif_generation++;
+@@ -989,7 +996,7 @@ static int batadv_hard_if_event(struct notifier_block *this,
+ 		if (hard_iface->if_status == BATADV_IF_NOT_IN_USE)
+ 			goto hardif_put;
+ 
+-		batadv_check_known_mac_addr(hard_iface->net_dev);
++		batadv_check_known_mac_addr(hard_iface);
+ 
+ 		bat_priv = netdev_priv(hard_iface->mesh_iface);
+ 		bat_priv->algo_ops->iface.update_mac(hard_iface);
+-- 
+2.49.0
+
