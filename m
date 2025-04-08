@@ -1,119 +1,87 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AE8F2550D0
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 22:25:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 040E1255255
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 22:25:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744151113; cv=none; b=ci1y2LNJDxRiFKysXi4E4wQJjOX/FgWU+dbwHWw2cyemT9mK+Uo2hnzmqd9CFVYDPYIayPJkdYuksWNMKviINFgynKgy6nlyplQW9yMwNoyYWuH7uO4Hp6URiUf9c8hdQpqVVbAz/wwFRFXpeG4DA5aKPGoa3lXhCEZbbHM/ed0=
+	t=1744151114; cv=none; b=W5GAQep21ScagA+0VB6j/5K7xBhQ95WlMNGFD96NW4NQcKPAJ6PYQm6iDyDuXbLGzehzo45hidxFey4grnBuW7TUAv4zaxqQgeWxtrChLOX1RgcdncLHhuJiH96OpJ8Q9t211povJBmRicbNo4CIp/Ho1+5+AB2HFK3Zj0bh7dg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744151113; c=relaxed/simple;
-	bh=oM57btuNW3ekRvgTbROwRISV6vnniljWeMeAhyibHMg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mvRC9kaMIbV65u5/2QyURLi6SHzT9EGQe3nKFzdfI/4xsMd5PnszxLm+hMlxzDjjE6Yn5pyUkBPg6NuNOl3o2ObZYS9VgKkJyn2OE3MZL4/kU8Cu3mYLtXpm/vSYovF6tz9kC8Z2AbymDxJfUEoiFQ6OCf60IrSee2QyVdNAjvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org; spf=pass smtp.mailfrom=neverthere.org; dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b=d9w9Diwb; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neverthere.org
+	s=arc-20240116; t=1744151114; c=relaxed/simple;
+	bh=ccAlpK2GJ8AJvkq+fowLZF3c1eIeInVWDTpL7xW7Uc8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=pnWk8pNxLZPe3PnYqAIMEibMj2LMhHUZ1NDs/o4b7+hJwUlnBL9IEREEKroUmMF/deovr9AjhLlC6/1L0FPaBTIaHk5WKqkc6Yo2QbwxOSVzTQ728pRq5y6sLqyKfJuVm0khndvjVVBZVtU26euFRoHrhhNo2/0WamB+VT1vgXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Wrjaw6x0; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b="d9w9Diwb"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-227b650504fso55904005ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 15:25:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Wrjaw6x0"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-736abba8c5cso7641681b3a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 15:25:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=neverthere.org; s=google; t=1744151111; x=1744755911; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DJII3lwxwEP6btEtokn6sH1x6OEQH5WFvfcqyI8vPWg=;
-        b=d9w9DiwbPdzNxtU0eNxjs1VLBTiMkcX8v9hGHn5qAxkZq2hUkILB7nAhimghcantpb
-         BID8C4/fQW//oRyxhZhl46u0wOKREvq5FqBlpZIZrYX4HvODrKUvTSffBPdda7ZgAw8U
-         3whNnB+tsw1YutouanREa9VnevIDJPqzfHDHBiu1Nk9PnEj/9cFCtr43EqBEenhLrbxS
-         KvZzGNnrFzszIm676lsdUYTx6SssCsgCIccy0q7DG/wGZR9aieimDtR3sP3n9CeBTuQi
-         Dv0jnPgwQov/DfbdX9vtLG6TWgBkGMZNF1IPSO46cGHk7NHyfG9ThEI9/f0Hw3QdyupD
-         KyQw==
+        d=google.com; s=20230601; t=1744151112; x=1744755912; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=sIgnrXOk29PXtGhJ0MJfZMA68k7F5ofitj+uGIUhqWQ=;
+        b=Wrjaw6x00omrao10UBDcRJlfoaMd517VWRscD3ScHmWBgPMqMXnLrHjzO9N74dwjAw
+         s15bq+kIXK0KF6piJWY3cokC4qV2rTgpMHXJ9gMjPJM7Mga7XqlOJY5g+/0IcrQWssWb
+         XZ2K/Pll1oLkYIzDRYniImWUGXSPcFomXpDN6dkVQUCTqfbn3HbgwnylLE917Lpq8BLQ
+         SiK7OPQpCZFdxRDHjt0x0Kb0LVhqfoP/0diR+ZNUl8XizImUlcgpLEJcilMtwblHI844
+         9fwzQEqNlrsm4Ln373mmqAucLxT+MvGHEldwm3Gaxv+/wYdnAV8E7W9PBeXapI2P0pgl
+         +7xQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744151111; x=1744755911;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DJII3lwxwEP6btEtokn6sH1x6OEQH5WFvfcqyI8vPWg=;
-        b=BThGX99JYgVtRvhjSI4mO/GNwCk4k7d3oHNaOcftSQdonC7UN8uNYfxJ13u2nZn8pL
-         kJyGKuQLldwYnIK4tTCmJP7mI1otLU80cJwUB1stgCDXZKMDQwH9yFR5ZSCi/zQ+T+JX
-         cwk7BoHa1HaLjmPYPaCLDABbqf7HG4vdRHHYSbAtsJMQ8RTzbVJiCr4f4vYfisK+5oXs
-         /RV9jSnwR+pC2OCZB2hWH/6vwWR3KoajBij3lnn/7DxsWI3WfgVnxxbuNNu1F/huYTUr
-         CsZXdtPNF5EWi/vbfUoVC3HvrnJhlS4hAtQfzTtAFZBOVaSN1/H4Hin1L4lwj10a30wi
-         4BMg==
-X-Forwarded-Encrypted: i=1; AJvYcCWo8FfTNRn4tnu1rAiviIY/m1orJj4/8eJ6L1yCeQhWh8fflR8PeuxsyJzBlA7xKHBzQ698+wx3vFDEixs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyf+DzUzO5ioLQlQ0FzJlU7mSkzfO/xwmozVqX7kEObeG36af2Q
-	isz33AIDVQAMkq3TxySsdR0N53yk+3CKyc9IfADKSK+6rnR03CTVL34JUyAfgg==
-X-Gm-Gg: ASbGnctRGtUa9flG1KG5cWy14xvL45ofgGAUpI5+Mnxi9E9sFO96L4V19SbHzCSbj0x
-	nrU96Ru1KitlFmtwicv3491PbjLcuaJ2/6GeXDZMmzH7V1HDEeYqeDPij6cozhKX36tJwy75TPE
-	IwAL+Ia52lcMMMMIkw7PUxXfN37ebwOLIVQ/UkD8dr5H9jDDAi7HPspH4DI96q+pxZFXX5WYs7B
-	FBRk+vycH1R0VkUCjSwLvvZrjVziJt6Dm7KPoGiJL8dxIFX5jHMvwVlmAssrPh8uz4R++qgea4J
-	5UadulVRi21ntqu5fTNkXhk935yO5TJz3ioKT6me0WWvXSfj3lDtbxn/U/AmqmONrxtBCMmOJfz
-	iNqjJWrvheg==
-X-Google-Smtp-Source: AGHT+IGGBaJsq6ra1J2TD6QhHEFEL49tTMqBX3rGuKBOfmUq0C4kINeHdNJZOfurJQ52gP0Ji/nVZw==
-X-Received: by 2002:a17:903:1c5:b0:223:619e:71e9 with SMTP id d9443c01a7336-22ac3f2e04emr4578645ad.11.1744151111495;
-        Tue, 08 Apr 2025 15:25:11 -0700 (PDT)
-Received: from tiamat (c-69-181-214-135.hsd1.ca.comcast.net. [69.181.214.135])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785bfeb2sm105911555ad.74.2025.04.08.15.25.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 15:25:11 -0700 (PDT)
-From: Michael Rubin <matchstick@neverthere.org>
-To: gregkh@linuxfoundation.org,
-	dpenkler@gmail.com,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Michael Rubin <matchstick@neverthere.org>
-Subject: [PATCH v1 02/18] staging: gpib: agilent_82350b: gpib_interface
-Date: Tue,  8 Apr 2025 22:24:48 +0000
-Message-ID: <20250408222504.186992-3-matchstick@neverthere.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250408222504.186992-1-matchstick@neverthere.org>
-References: <20250408222504.186992-1-matchstick@neverthere.org>
+        d=1e100.net; s=20230601; t=1744151112; x=1744755912;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sIgnrXOk29PXtGhJ0MJfZMA68k7F5ofitj+uGIUhqWQ=;
+        b=qsJqnKlBsx6xgnrsaoniTzaOYZmUCeNMjU8zEsFrX+H2wXgfVdF3wC4SBVcvzjyPeG
+         46NYb+fjfePvktgOunvQNoffyfXSPdIPSoiU56l2QgKLCaaV+xjypXGSxZfa9TtuzDsY
+         v5Nv5DJ6w0opbQGkQ/T4HWSXIjQ1/lmBqQazp9lluyx6t3NI2Fv6KPXTIR+J8ZbX1Qop
+         x5wpnKy+tpCc9HZfInA+YsM6HYVKEu1tTXKNsJsedIUMY5SFWT1fi5krAit/O46u9Oa2
+         Fh9iEeya7QuTBdd52M7UTsS8f9mA8IXZYHt6KleKPYpEwkLdCYgqLfvwfWkreiVFHUQ6
+         pQOg==
+X-Forwarded-Encrypted: i=1; AJvYcCXlcawTHNbOa+W9Rpw1VIWps94I2DvsDM3vLzU16KbN4WjIk1oO2MyaPosE7nKVOWpkzZIVyS1ZVdNtzVA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdA/tcGzh9Lpoy4iAqR/IdJS8MglokRxN6mmVX4m1SPP+zZg83
+	pRX7bhAAN/Hg4K0ZHO4XfE7cjH29vhBDBpQuvB2+P7jjtMQmkjnHHilLRy3QYUd/80pHb1f5Q3Z
+	abg==
+X-Google-Smtp-Source: AGHT+IHTqPfvPHA35LrKeVma6IN8V+jh3iCyiyfrKN6jlTE/sMMd957ClboQYBC0BvqEPRp7vq7SpPie8ks=
+X-Received: from pfbef12.prod.google.com ([2002:a05:6a00:2c8c:b0:730:796b:a54a])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:2285:b0:736:baa0:2acd
+ with SMTP id d2e1a72fcca58-73bae55297bmr811030b3a.20.1744151112304; Tue, 08
+ Apr 2025 15:25:12 -0700 (PDT)
+Date: Tue, 8 Apr 2025 15:25:10 -0700
+In-Reply-To: <8b061b2d-7137-498e-93b2-0cb714824d7b@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250404193923.1413163-1-seanjc@google.com> <20250404193923.1413163-27-seanjc@google.com>
+ <8b061b2d-7137-498e-93b2-0cb714824d7b@redhat.com>
+Message-ID: <Z_WiRqRjNzmrh_YP@google.com>
+Subject: Re: [PATCH 26/67] iommu/amd: KVM: SVM: Delete now-unused
+ cached/previous GA tag fields
+From: Sean Christopherson <seanjc@google.com>
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Joerg Roedel <joro@8bytes.org>, David Woodhouse <dwmw2@infradead.org>, 
+	Lu Baolu <baolu.lu@linux.intel.com>, kvm@vger.kernel.org, iommu@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Maxim Levitsky <mlevitsk@redhat.com>, 
+	Joao Martins <joao.m.martins@oracle.com>, David Matlack <dmatlack@google.com>
+Content-Type: text/plain; charset="us-ascii"
 
-Using Linux code style for struct gpib_interface.
+On Tue, Apr 08, 2025, Paolo Bonzini wrote:
+> On 4/4/25 21:38, Sean Christopherson wrote:
+> > Delete the amd_ir_data.prev_ga_tag field now that all usage is
+> > superfluous.
+> 
+> This can be moved much earlier (maybe even after patch 10 from a cursory
+> look), can't it? 
 
-Adhering to Linux code style.
+Ya, I independently arrived at the same conclusion[*], specifically after
 
-Reported by checkpatch.pl
+   KVM: SVM: Delete IRTE link from previous vCPU before setting new IRTE
 
-In general, a pointer, or a struct that has elements that can reasonably be
-directly accessed should never be a typedef.
-
-Signed-off-by: Michael Rubin <matchstick@neverthere.org>
----
- drivers/staging/gpib/agilent_82350b/agilent_82350b.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/staging/gpib/agilent_82350b/agilent_82350b.c b/drivers/staging/gpib/agilent_82350b/agilent_82350b.c
-index 445b9380ff98..3880d4a23eea 100644
---- a/drivers/staging/gpib/agilent_82350b/agilent_82350b.c
-+++ b/drivers/staging/gpib/agilent_82350b/agilent_82350b.c
-@@ -773,7 +773,7 @@ static void agilent_82350b_detach(struct gpib_board *board)
- 	agilent_82350b_free_private(board);
- }
- 
--static gpib_interface_t agilent_82350b_unaccel_interface = {
-+static struct gpib_interface agilent_82350b_unaccel_interface = {
- 	.name = "agilent_82350b_unaccel",
- 	.attach = agilent_82350b_unaccel_attach,
- 	.detach = agilent_82350b_detach,
-@@ -801,7 +801,7 @@ static gpib_interface_t agilent_82350b_unaccel_interface = {
- 	.return_to_local = agilent_82350b_return_to_local,
- };
- 
--static gpib_interface_t agilent_82350b_interface = {
-+static struct gpib_interface agilent_82350b_interface = {
- 	.name = "agilent_82350b",
- 	.attach = agilent_82350b_accel_attach,
- 	.detach = agilent_82350b_detach,
--- 
-2.43.0
-
+[*] I was counting patches based on my local tree, which has three extra patches
+    from the posted IRQs module param, and so initially thought the last dependency
+    went away in patch 13.
