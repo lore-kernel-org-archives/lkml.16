@@ -1,250 +1,132 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5342231C9F
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 21:31:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D97C255230
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 21:31:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744147893; cv=none; b=mtaGVYTaz3r9cklmn/hfqFW1MFShMmQJL92oFxY28bT2OSF2hqC2GDqm+cnVxh9eOUttUv2qGy0o4Mzexu/69vRqnz5sfPEiy/teEu2C5/PXEIRxqkOAPj7U1rrd1tvmwKQYVLUBeQ87dx87BsAQi6bvKwg/cqXWZa5X3WYPdKY=
+	t=1744147896; cv=none; b=J2IOQ88vHyN8CcUDn/Ha3BSVBtf224szP+VG8Nvf2IDuGFDPsmMduQ0NYAZaHjLAfuojccHJ/m59Bdp/zu0SHbaG1iDR6tUDwFjJ2COp8u9a+TdF+Rt3RtqMAT0UJu9p1vEl8ZdlfdE8fmXC2+a78OjB0rcHhBzmgTSMRhrtqAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744147893; c=relaxed/simple;
-	bh=AGINcubrwDHhNZhMG/5qRMWHfMGWmK7tdHB0j9/zR7Y=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=tQb7OlGF167CqkqSHDmKQW8OyqbVJ5I6xoBNHpVkgtcA7KKIUMhk1RdKIUuSGLXWlsb3MqEAWtV53UCvyysqx6Q1vjQXX+RBAMvZvJJiADJ4Fd6Jim414+peRbGSVEqXXmNRxhmub8yWFyWlREIFCTzdOJrvmy41qP08HBeJ0Zo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=epboGODE; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1744147896; c=relaxed/simple;
+	bh=i2/vDRlfpffmboNAdB2RhvhuQdFfbEnJ2xP4l9EWlSM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DyqJFRJX/eeDYIt4oTBRUwSrs2mNLwZY1y/e2F17hUgmzcCNE6jPUAzmwO1+7JzOCJTiHikyIxFjBNYjWswVUiTFIlwGAVyshMnF/OGrDKtx+6AOWn5oA2MnrpOEOY5pL4MUTknj7pVCr/wstrM6GZF3gaFd5yFdngUstepmRQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G1dMFUgG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="epboGODE"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-227a8cdd272so52847925ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 14:31:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744147891; x=1744752691; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Uam7GnobKmUw9hclFkCECYy0gTHPZztonbEuBIMruls=;
-        b=epboGODEtejbTq808AoYZkSeJOmKndRR55CtUpMKYvSuAV1uwuuhKJgEu7y0BZpQrm
-         qKFGAGlMmcecP7SWcsZzgBhgEhIOmE7L/mwSEQ2E5rrHPGiBN6gN4TiXEtStbvW+aFnG
-         uKHKs0ydVBtWePN8yLGfnhq1/6i08jy9qD4YL9dUv7gOUS21txxqv4mvqar7adl6xqr9
-         AG92WdjANekKLYwmw31w1Wv8MGbu9n2mS2GyeeCHMXgHj1y82VJtFpYf52uPLMZRqVxG
-         fVBnDY7Wap//42gwbZ1TnNqao26iEjTvknAbNLGvbHxnwJxmtgo9j8YDDDQHFD/thwOF
-         FaAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744147891; x=1744752691;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Uam7GnobKmUw9hclFkCECYy0gTHPZztonbEuBIMruls=;
-        b=XygUPpwMACyQLVp1Gf65cJrDn3qA2CZ3mK7bv4X7vBPwyvBX0+L/8Ii5nqWTgzmlfZ
-         wfPbxBVZzalbD2RnkDZB90ELREGQ9+Ilmtu3puDEJ5UXhaGc9zfa8WuL0VpbzqtUiTdf
-         ot0ytUhqDAiCBnOv3lCEhp1hqUp7sK9D3eYm3EE61xuqHFK8JDBuprkBPMaLDWXVL0r6
-         06pAcHuntzP8f7cCgUrqZ5Lw032lIhKmXsXgOd043JlTFFdWu86JYMfM4SA2EKdhdg8L
-         oaSm6LpHY2h4O2FVnPa3NiK9JcF/SZZhKjkVc2lW3U6ZJgqZI7ThaCVbQ7SEMPtngKgX
-         o1YA==
-X-Forwarded-Encrypted: i=1; AJvYcCWajpGIsunZanK7nT7AeyuXt1DMpm1K8rmoyvNqF08XH+c0ak8BiRea35BQsex56NeBz6GQ22yDpVOGAK4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyX8hLuWNirALkgiM8E1e0+JLtlq4IsAQ9ZA8QPtWoWT4CEB4Yv
-	roPBI/TxCsqj+bg5LrEtctOjJcH4p9wAvff/PZOibzBnTfhU1Bhu3pttx64GXT+f6L1JLWaxx1W
-	zNw==
-X-Google-Smtp-Source: AGHT+IEKRdfCo7P0dOM9nLMdnn/wJxKiZkQkp2kalAXi+Af3MMzb50Othlo0RizKEkwtKlr8YY3PKqUJQ1s=
-X-Received: from pfbfc24.prod.google.com ([2002:a05:6a00:2e18:b0:730:7e2d:df69])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ccc8:b0:227:e7c7:d451
- with SMTP id d9443c01a7336-22ac3f9a8fcmr4363085ad.29.1744147891223; Tue, 08
- Apr 2025 14:31:31 -0700 (PDT)
-Date: Tue, 8 Apr 2025 14:31:29 -0700
-In-Reply-To: <4c396e79-845a-481a-8a3e-4a7f458371b8@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G1dMFUgG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C870AC4CEE5;
+	Tue,  8 Apr 2025 21:31:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744147895;
+	bh=i2/vDRlfpffmboNAdB2RhvhuQdFfbEnJ2xP4l9EWlSM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=G1dMFUgGdq/9nZWq7JNPoKm9uhI5lljtTBhOBN00mZDn87cNF1hV4Fx0r8xcmPtWl
+	 lb7G7wNwXCqp9ir9jAL6yv2tIjAZpXcHmug2HLMs2OqOdd0ZUu3XTt1c963H5KQRlN
+	 O6kuizVdKHQj5RnqjHuZaXnzv+uiQ0l5mKg4WRQ281Ega4WYXMZlO4Qrr2RJsUGyBf
+	 4wJGT3JzOA17jz0s8na0eJXrj2TW75RWaOk84jinKtkyxqd5ZyE0FIRyfaVkszetJy
+	 2vipdhZQ3qRNaJT3Hzfv8RoFkJCS6EFZI/+ZHGQiRf+fBfGW7q3UgmSvEVDwUEIB7Z
+	 +hVN5oA2SKW7w==
+Date: Tue, 8 Apr 2025 14:31:31 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: "Dmitry V. Levin" <ldv@strace.io>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Arnd Bergmann <arnd@arndb.de>, strace-devel@lists.strace.io,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v7 2/6] syscall.h: add syscall_set_arguments()
+Message-ID: <20250408213131.GA2872426@ax162>
+References: <20250303111910.GA24170@strace.io>
+ <20250303112009.GC24170@strace.io>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250404193923.1413163-1-seanjc@google.com> <20250404193923.1413163-66-seanjc@google.com>
- <4c396e79-845a-481a-8a3e-4a7f458371b8@redhat.com>
-Message-ID: <Z_WVsZQbY23XrhAG@google.com>
-Subject: Re: [PATCH 65/67] KVM: SVM: Generate GA log IRQs only if the
- associated vCPUs is blocking
-From: Sean Christopherson <seanjc@google.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Joerg Roedel <joro@8bytes.org>, David Woodhouse <dwmw2@infradead.org>, 
-	Lu Baolu <baolu.lu@linux.intel.com>, kvm@vger.kernel.org, iommu@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Maxim Levitsky <mlevitsk@redhat.com>, 
-	Joao Martins <joao.m.martins@oracle.com>, David Matlack <dmatlack@google.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250303112009.GC24170@strace.io>
 
-On Tue, Apr 08, 2025, Paolo Bonzini wrote:
-> On 4/4/25 21:39, Sean Christopherson wrote:
-> > @@ -892,7 +893,7 @@ static void __avic_vcpu_load(struct kvm_vcpu *vcpu, int cpu, bool toggle_avic)
-> >   	WRITE_ONCE(kvm_svm->avic_physical_id_table[vcpu->vcpu_id], entry);
-> > -	avic_update_iommu_vcpu_affinity(vcpu, h_physical_id, toggle_avic);
-> > +	avic_update_iommu_vcpu_affinity(vcpu, h_physical_id, toggle_avic, false);
-> >   	spin_unlock_irqrestore(&svm->ir_list_lock, flags);
-> >   }
-> > @@ -912,7 +913,8 @@ void avic_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
-> >   	__avic_vcpu_load(vcpu, cpu, false);
-> >   }
-> > -static void __avic_vcpu_put(struct kvm_vcpu *vcpu, bool toggle_avic)
-> > +static void __avic_vcpu_put(struct kvm_vcpu *vcpu, bool toggle_avic,
-> > +			    bool is_blocking)
+Hi Dmitry,
+
+[dropping majority of folks since this seems irrelevant to them]
+
+On Mon, Mar 03, 2025 at 01:20:09PM +0200, Dmitry V. Levin wrote:
+> This function is going to be needed on all HAVE_ARCH_TRACEHOOK
+> architectures to implement PTRACE_SET_SYSCALL_INFO API.
 > 
-> What would it look like to use an enum { SCHED_OUT, SCHED_IN, ENABLE_AVIC,
-> DISABLE_AVIC, START_BLOCKING } for both __avic_vcpu_put and
-> __avic_vcpu_load's second argument?
+> This partially reverts commit 7962c2eddbfe ("arch: remove unused
+> function syscall_set_arguments()") by reusing some of old
+> syscall_set_arguments() implementations.
+> 
+> Signed-off-by: Dmitry V. Levin <ldv@strace.io>
+> Tested-by: Charlie Jenkins <charlie@rivosinc.com>
+> Reviewed-by: Charlie Jenkins <charlie@rivosinc.com>
+> Acked-by: Helge Deller <deller@gmx.de> # parisc
+> Reviewed-by: Maciej W. Rozycki <macro@orcam.me.uk> # mips
+...
+> diff --git a/arch/riscv/include/asm/syscall.h b/arch/riscv/include/asm/syscall.h
+> index 121fff429dce..8d389ba995c8 100644
+> --- a/arch/riscv/include/asm/syscall.h
+> +++ b/arch/riscv/include/asm/syscall.h
+> @@ -66,6 +66,15 @@ static inline void syscall_get_arguments(struct task_struct *task,
+>  	memcpy(args, &regs->a1, 5 * sizeof(args[0]));
+>  }
+>  
+> +static inline void syscall_set_arguments(struct task_struct *task,
+> +					 struct pt_regs *regs,
+> +					 const unsigned long *args)
+> +{
+> +	regs->orig_a0 = args[0];
+> +	args++;
+> +	memcpy(&regs->a1, args, 5 * sizeof(regs->a1));
+> +}
 
-There's gotta be a way to make it look better than this code.  I gave a half-
-hearted attempt at using an enum before posting, but wasn't able to come up with
-anything decent.
+This upsets the compiletime fortify checks, as I see a warning after
+syscall_set_arguments() starts being used in kernel/ptrace.c later in
+the series.
 
-Coming back to it with fresh eyes, what about this (full on-top diff below)?
+  $ make -skj"$(nproc)" ARCH=riscv CROSS_COMPILE=riscv64-linux- allmodconfig kernel/ptrace.o
+  In file included from include/linux/string.h:392,
+                   from include/linux/bitmap.h:13,
+                   from include/linux/cpumask.h:12,
+                   from arch/riscv/include/asm/processor.h:55,
+                   from include/linux/sched.h:13,
+                   from kernel/ptrace.c:13:
+  In function 'fortify_memcpy_chk',
+      inlined from 'syscall_set_arguments.isra' at arch/riscv/include/asm/syscall.h:82:2:
+  include/linux/fortify-string.h:571:25: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]
+    571 |                         __write_overflow_field(p_size_field, size);
+        |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  cc1: all warnings being treated as errors
 
-enum avic_vcpu_action {
-	AVIC_SCHED_IN		= 0,
-	AVIC_SCHED_OUT		= 0,
-	AVIC_START_BLOCKING	= BIT(0),
+The compiler knows the size of the destination and the size to be copied
+so it knows there will be an (intentional) overwrite here.
+struct_group() would normally work but I think this structure already
+has a struct_group() around some of the members that would be needed. I
+build tested eliminating the memcpy() altogether, which would appear to
+work, but I am not sure if there is a better solution, hence just the
+report.
 
-	AVIC_TOGGLE_ON_OFF	= BIT(1),
-	AVIC_ACTIVATE		= AVIC_TOGGLE_ON_OFF,
-	AVIC_DEACTIVATE		= AVIC_TOGGLE_ON_OFF,
-};
+Cheers,
+Nathan
 
-AVIC_SCHED_IN and AVIC_SCHED_OUT are essentially syntactic sugar, as are
-AVIC_ACTIVATE and AVIC_DEACTIVATE to a certain extent.  But it's much better than
-booleans, and using a bitmask makes avic_update_iommu_vcpu_affinity() slightly
-prettier.
-
-> Consecutive bools are ugly...
-
-Yeah, I hated it when I wrote it, and still hate it now.
-
-And more error prone, e.g. the __avic_vcpu_put() call from avic_refresh_apicv_exec_ctrl()
-should specify is_blocking=false, not true, as kvm_x86_ops.refresh_apicv_exec_ctrl()
-should never be called while the vCPU is blocking.
-
----
- arch/x86/kvm/svm/avic.c | 41 ++++++++++++++++++++++++++++-------------
- 1 file changed, 28 insertions(+), 13 deletions(-)
-
-diff --git a/arch/x86/kvm/svm/avic.c b/arch/x86/kvm/svm/avic.c
-index 425674e1a04c..1752420c68aa 100644
---- a/arch/x86/kvm/svm/avic.c
-+++ b/arch/x86/kvm/svm/avic.c
-@@ -833,9 +833,20 @@ int avic_pi_update_irte(struct kvm_kernel_irqfd *irqfd, struct kvm *kvm,
- 	return irq_set_vcpu_affinity(host_irq, NULL);
- }
- 
-+enum avic_vcpu_action {
-+	AVIC_SCHED_IN		= 0,
-+	AVIC_SCHED_OUT		= 0,
-+	AVIC_START_BLOCKING	= BIT(0),
-+
-+	AVIC_TOGGLE_ON_OFF	= BIT(1),
-+	AVIC_ACTIVATE		= AVIC_TOGGLE_ON_OFF,
-+	AVIC_DEACTIVATE		= AVIC_TOGGLE_ON_OFF,
-+};
-+
- static void avic_update_iommu_vcpu_affinity(struct kvm_vcpu *vcpu, int cpu,
--					    bool toggle_avic, bool ga_log_intr)
-+					    enum avic_vcpu_action action)
+diff --git a/arch/riscv/include/asm/syscall.h b/arch/riscv/include/asm/syscall.h
+index a5281cdf2b10..70ec19dc8506 100644
+--- a/arch/riscv/include/asm/syscall.h
++++ b/arch/riscv/include/asm/syscall.h
+@@ -78,8 +78,11 @@ static inline void syscall_set_arguments(struct task_struct *task,
+                                         const unsigned long *args)
  {
-+	bool ga_log_intr = (action & AVIC_START_BLOCKING);
- 	struct amd_svm_iommu_ir *ir;
- 	struct vcpu_svm *svm = to_svm(vcpu);
- 
-@@ -849,7 +860,7 @@ static void avic_update_iommu_vcpu_affinity(struct kvm_vcpu *vcpu, int cpu,
- 		return;
- 
- 	list_for_each_entry(ir, &svm->ir_list, node) {
--		if (!toggle_avic)
-+		if (!(action & AVIC_TOGGLE_ON_OFF))
- 			WARN_ON_ONCE(amd_iommu_update_ga(ir->data, cpu, ga_log_intr));
- 		else if (cpu >= 0)
- 			WARN_ON_ONCE(amd_iommu_activate_guest_mode(ir->data, cpu, ga_log_intr));
-@@ -858,7 +869,8 @@ static void avic_update_iommu_vcpu_affinity(struct kvm_vcpu *vcpu, int cpu,
- 	}
+        regs->orig_a0 = args[0];
+-       args++;
+-       memcpy(&regs->a1, args, 5 * sizeof(regs->a1));
++       regs->a1 = args[1];
++       regs->a2 = args[2];
++       regs->a3 = args[3];
++       regs->a4 = args[4];
++       regs->a5 = args[5];
  }
- 
--static void __avic_vcpu_load(struct kvm_vcpu *vcpu, int cpu, bool toggle_avic)
-+static void __avic_vcpu_load(struct kvm_vcpu *vcpu, int cpu,
-+			     enum avic_vcpu_action action)
- {
- 	struct kvm_svm *kvm_svm = to_kvm_svm(vcpu->kvm);
- 	int h_physical_id = kvm_cpu_get_apicid(cpu);
-@@ -904,7 +916,7 @@ static void __avic_vcpu_load(struct kvm_vcpu *vcpu, int cpu, bool toggle_avic)
- 
- 	WRITE_ONCE(kvm_svm->avic_physical_id_table[vcpu->vcpu_id], entry);
- 
--	avic_update_iommu_vcpu_affinity(vcpu, h_physical_id, toggle_avic, false);
-+	avic_update_iommu_vcpu_affinity(vcpu, h_physical_id, action);
- 
- 	spin_unlock_irqrestore(&svm->ir_list_lock, flags);
- }
-@@ -921,11 +933,10 @@ void avic_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
- 	if (kvm_vcpu_is_blocking(vcpu))
- 		return;
- 
--	__avic_vcpu_load(vcpu, cpu, false);
-+	__avic_vcpu_load(vcpu, cpu, AVIC_SCHED_IN);
- }
- 
--static void __avic_vcpu_put(struct kvm_vcpu *vcpu, bool toggle_avic,
--			    bool is_blocking)
-+static void __avic_vcpu_put(struct kvm_vcpu *vcpu, enum avic_vcpu_action action)
- {
- 	struct kvm_svm *kvm_svm = to_kvm_svm(vcpu->kvm);
- 	struct vcpu_svm *svm = to_svm(vcpu);
-@@ -947,7 +958,7 @@ static void __avic_vcpu_put(struct kvm_vcpu *vcpu, bool toggle_avic,
- 	 */
- 	spin_lock_irqsave(&svm->ir_list_lock, flags);
- 
--	avic_update_iommu_vcpu_affinity(vcpu, -1, toggle_avic, is_blocking);
-+	avic_update_iommu_vcpu_affinity(vcpu, -1, action);
- 
- 	WARN_ON_ONCE(entry & AVIC_PHYSICAL_ID_ENTRY_GA_LOG_INTR);
- 
-@@ -964,7 +975,7 @@ static void __avic_vcpu_put(struct kvm_vcpu *vcpu, bool toggle_avic,
- 	 * Note!  Don't set AVIC_PHYSICAL_ID_ENTRY_GA_LOG_INTR in the table as
- 	 * it's a synthetic flag that usurps an unused a should-be-zero bit.
- 	 */
--	if (is_blocking)
-+	if (action & AVIC_START_BLOCKING)
- 		entry |= AVIC_PHYSICAL_ID_ENTRY_GA_LOG_INTR;
- 
- 	svm->avic_physical_id_entry = entry;
-@@ -992,7 +1003,8 @@ void avic_vcpu_put(struct kvm_vcpu *vcpu)
- 			return;
- 	}
- 
--	__avic_vcpu_put(vcpu, false, kvm_vcpu_is_blocking(vcpu));
-+	__avic_vcpu_put(vcpu, kvm_vcpu_is_blocking(vcpu) ? AVIC_START_BLOCKING :
-+							   AVIC_SCHED_OUT);
- }
- 
- void avic_refresh_virtual_apic_mode(struct kvm_vcpu *vcpu)
-@@ -1024,12 +1036,15 @@ void avic_refresh_apicv_exec_ctrl(struct kvm_vcpu *vcpu)
- 	if (!enable_apicv)
- 		return;
- 
-+	/* APICv should only be toggled on/off while the vCPU is running. */
-+	WARN_ON_ONCE(kvm_vcpu_is_blocking(vcpu));
-+
- 	avic_refresh_virtual_apic_mode(vcpu);
- 
- 	if (kvm_vcpu_apicv_active(vcpu))
--		__avic_vcpu_load(vcpu, vcpu->cpu, true);
-+		__avic_vcpu_load(vcpu, vcpu->cpu, AVIC_ACTIVATE);
- 	else
--		__avic_vcpu_put(vcpu, true, true);
-+		__avic_vcpu_put(vcpu, AVIC_DEACTIVATE);
- }
- 
- void avic_vcpu_blocking(struct kvm_vcpu *vcpu)
-@@ -1055,7 +1070,7 @@ void avic_vcpu_blocking(struct kvm_vcpu *vcpu)
- 	 * CPU and cause noisy neighbor problems if the VM is sending interrupts
- 	 * to the vCPU while it's scheduled out.
- 	 */
--	__avic_vcpu_put(vcpu, false, true);
-+	__avic_vcpu_put(vcpu, AVIC_START_BLOCKING);
- }
- 
- void avic_vcpu_unblocking(struct kvm_vcpu *vcpu)
 
-base-commit: fe5b44cf46d5444ff071bc2373fbe7b109a3f60b
--- 
+ static inline int syscall_get_arch(struct task_struct *task)
