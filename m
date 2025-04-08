@@ -1,63 +1,63 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EA2226771F;
-	Tue,  8 Apr 2025 09:52:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EABD267B7B;
+	Tue,  8 Apr 2025 09:52:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744105944; cv=none; b=cr0OUyg0h6qgQoFTb23kOwmDbZlNF42RvUPdZkA0NiSVOKotBtSVNdIHiR51/W0cgvQqCpnptjbPMFdDHEorLGwWN0B+WByduINGE/GUuMOE0iFH4EmIrk+d5gVzhd0LoUT2Xa4SzhSgrISOgfWTq6Sc5FJp7+eOyhE1c/Hasb0=
+	t=1744105947; cv=none; b=fcqIL+3TmfQgmRAYrZsYLAEhck6m9Z2W73FApwGXOOpmGnVG/SsBY3t05Wp+BH3LqCTXnwfrrv8hLIFveq6V6YcGr3bIfDSq3Way8t0vSQwQQwx+HzIFiAmVPAuiRYoxnA4Ox9xm9E0tOWcKnGrbRfwZPbdl9P/YCAD1hkgAa40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744105944; c=relaxed/simple;
-	bh=e/J9AFAnHogYRe/iJlrSPwXbA3k0hVtFkeaCTXItC3g=;
+	s=arc-20240116; t=1744105947; c=relaxed/simple;
+	bh=JM+0wuRT7FMakNxdB2r0VDHnMDdWzvnL7Cz4mTVE2dc=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lcOPff2GCzAqm2nR4EzMNGy2ymPogFa9rj8Ky40jqax/fRR+IMTyNt/kL3TwyQ+yayWO5v9uoSVjTrTXKEH/fzWZpBj2UZT/oKPffXVbnVlBhSMePNRz9hJy5NGrhXgAnQzxntbg/Os9O7fy2Tn99QrGbic6sQdlGTAQPIFg624=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hj0y2fkP; arc=none smtp.client-ip=209.85.221.44
+	 MIME-Version; b=abUUm+V9zAGePxgfiDAbRmG1As1Zp+XNoCbab/jx3G6CBJDf9moZamMtO8uEGY/ANbigHho48GXPxQ83Oeyyq01ASrzS0O5AGdWEqvHRwRB4cyfICQ7AkmnDLNxoVPdfNtlUh/Hw7UmNnz4yRssyrStc8b4qirW4NgFrRx4ZH2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RS7Aovxw; arc=none smtp.client-ip=209.85.128.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hj0y2fkP"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3912fdddf8fso4080878f8f.1;
-        Tue, 08 Apr 2025 02:52:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RS7Aovxw"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cf3192f3bso52713535e9.1;
+        Tue, 08 Apr 2025 02:52:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744105940; x=1744710740; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744105943; x=1744710743; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=NEeHqPbidnUgfl04t+LLdBVbgy41Di7XU1dGgXeGDSo=;
-        b=Hj0y2fkPX9DrHgcGdog7LMFfy1tc/4+21xFnMx47CgWAkZUFgehGLpCPl6ZM8tBx1r
-         580qislwTdEpSI/Us/qi1RS+XnN6yDk7fWVFroqXjXTkSRLmex23SFU/1DPMHmnouYAC
-         bXLv0lkGnugLQ0bDxrfIQKDj2MlzIh/RDtrENni6jyeFTsdme1I62CKr3fZtSxW6iB07
-         cDwZwbCJDw9Ak2xI63eZQki77ZKDY3LQTh6A6Q4u+E2OB8ab1iLgyKfDFDQT1sBpPoU9
-         xV40MKnSqIYT4Soc0tKTk0Fcnl+iuxTFB3qePZFxz4vayHeIJFeT/zMvTjSdRX3PDm0s
-         6hhg==
+        bh=i9cj1rDP/cubKfbE6LHAYD/iOcx4KqaxRMhogz7zaTE=;
+        b=RS7AovxwevAVEFrIOR5B/kLl7OPk9wPkeko/4YKyFX3TXIj31pQU/W2FTSzNylpd6G
+         zpx4fMmvLdCVHV5A5axkanr61PbiQVkRXpZrPQsCvWds7Lgt85DjLXZsy+4xJGHsuMMM
+         lsRqRo0qA9+vvUkSpJMmf1jcHbxSN3Rf8kngATs66A5pOWiIkPnlE5BNjebLxJrAI9A5
+         8M6NjN3WUBp8t5ZPQ9mkDJ3JRRvjs0qKj/pSYfIdfG+fl2QkLkJK+aeXkjFi6GwDvc93
+         cQC+SnvsI+xcShRTq9gLnPccZ0gx+BsPzopuKpsz+pW58LVH1clAlPC+pEMTWQS+acBu
+         8XKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744105940; x=1744710740;
+        d=1e100.net; s=20230601; t=1744105943; x=1744710743;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NEeHqPbidnUgfl04t+LLdBVbgy41Di7XU1dGgXeGDSo=;
-        b=oLNUih7bmVToa5oSHPuFNGDUlH9//5yXQUdN03cNRjjCxvEQO9X5ml82LXeJlW4whG
-         qg9oYt0IcFg2zxFgW0CXtX4ELw1rNqdCPjuQNPYgk4komg7UmAfeMhUqaqN4Bb5wh+2Z
-         VgTSm94qOKKkLMtOI6uTUjuJ8BOVWToADwjshyV0ZPFooqoi6mc638nhDpPVEP1mcAyQ
-         Fz72cRvxAJHo8JuBq+9zJJYRuI5VwR602oMatgpkgovHpscr7kXIK77rlvYLPkQFZrbq
-         kwmW2nB5ZSRa0VlY5swTrfbY/Hmx2TLF9fsbqgTU/R5aKn/Lshnt+A0XvyaVPWM2/H1Q
-         bgUA==
-X-Forwarded-Encrypted: i=1; AJvYcCUYcbWRZ9TseRIJEGHWgiaowVO5n+XTM4dO9Qa8Hp4DgXzIhcqyB90ky1FDSbKq8NvnqzYQhshKWiyP@vger.kernel.org, AJvYcCVuxh6KZVkOdUqX9hT6aMocrP2My4BpMheVf4waVVtu0ac/ZWuG3sJ7XAItnam+NZKR9fD+jzbS@vger.kernel.org, AJvYcCWOYYi38NqPTtHPvFkqSAZBIaz03oqhnpaf3RHmwJDxAhmcf0jH9+DahxbarP0EZnukXFmsmf5mGjCP3zNJ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+g8ECBSatScktHxIEAAmGiOfEzfXsm+tN7CeSlTt2pQpfJ0oR
-	Fd/Tot7QbQyFP7fW6t7XxJ2kGMEGTN83dsFootVtz8j6dEofdiS1
-X-Gm-Gg: ASbGncv+5z4epFCmCFrAGNpBQfot7LxYxNqYx5RwK1pf/ag8MPQLrIGv6Eouf6Vy6+5
-	yZZnZAM3nncE88dEWBAQxsVFUaYEkJuGqFxoGp+igDahRgmVaQkHTMzhZqjzE+/nesgsnosE3TO
-	G+zriJPPAI9ZWyixxF8yWl+WYHalIHn4BvJrxS4O/D26tIy2KyiiP7mnpnZCYkZic6fHERTR1Tr
-	cgITJuwR33I8YuPQ6fxf4MZZ532/cEug2BejosSN7SXn0ZnwkAZGthNXXf2FR2CfO36UHMYV6F2
-	NhW9BieNOEW8l15cuDoyegZ2+TWwJVIV/HJsHn5dPG6N2FapEOTddetw56FIlBJQYZIFZEXoThm
-	BgYG2fHf3kbxenw==
-X-Google-Smtp-Source: AGHT+IGrqwVCjgn7rIaO84RS/dOygNudZl4m5bHzjJ/0QnrWbjeDDkJm2owzPEvR2qtLmTK4q+Z6+g==
-X-Received: by 2002:a05:6000:2ab:b0:38d:df15:2770 with SMTP id ffacd0b85a97d-39d81f60b1dmr2398842f8f.0.1744105940434;
-        Tue, 08 Apr 2025 02:52:20 -0700 (PDT)
+        bh=i9cj1rDP/cubKfbE6LHAYD/iOcx4KqaxRMhogz7zaTE=;
+        b=O4jR/V01IY+2QWV2WJsqZcqDar45fSfGaHZh2s8uxB+dZ6nCmh9VIQduOYvkwo90Ar
+         M2v6N67W1RiJ5ZcEYD7OId9uNEmcIjkVPzp8rPiS+w9Aw9aYIEQPONOSYWkqkxPTYS87
+         Xg/6BMBfSiTWod9elm0gWTyxPNRyU2X2OsZxDRt9dH8jFyMKhTtycftVLGBLLEyWHFRH
+         OVO5HM2P97KU6OzlNVaqqOvgE+3a6kl3v+/30fVk1FVX8am+tq1k52V4Gjs8vsKu3LNX
+         ZKqkU/FiK4M0Q/GwRheqqdf5kugHOfXaVCHPadB8NLWFteAXjuxZHPkes6R2dzSq/9Ow
+         qbTA==
+X-Forwarded-Encrypted: i=1; AJvYcCV8LW9iyeP0rx5Ee8iTluOV3us58+mNFOwyHpx6vrb1FPg8Z+PBGRFNmL3dhcaPuD4buc4zCr0LyQef@vger.kernel.org, AJvYcCWcDW2jmyjvgU5n2ec2fNC+nEbxrDPrmW3yly3d4Yjs5zFpZWWbmKI2oI9YSXNLFfTu9FXnugiiVNPEcQ1W@vger.kernel.org, AJvYcCXvqCVPd+++MR9cF2IR6czXQaOztpwAbNHSUGC4dmq9YbRjnyq+SjnvhD8MDPS4P17O+pPbfJ3P@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4RruKC8uPr8imqbVSRMMkaT8M2XX3bGawDwvKVSf8BLpItaWa
+	HLk4XU7KeFKnIn99sgO2DNBTtCm00LmhmRxBpfrNPsCULOHEwU6g
+X-Gm-Gg: ASbGncu7Au+UCJIqFba8tlk56/oDJ+zyW6RZ/ba5kV4zdQs/MSLDFtY6Hthwm4eQMQc
+	M+Sbpeg41JCOSch+wBWFW4iBf1ql7OR/8EtaMsR0aBCfShYeJrSeT12Hk48GI71XRCgjBtP7I6B
+	+YP2f3TYax60Kf18pWABpxt8LgTkJ2vE6w+td2sOCo8YNUeMwehudrfBnSzKHzqo480tSF9eROZ
+	wRSDGTH5K7bfooVzYPBdMDZJ6hJ7UJQX1Z+pr4Ep+tnIDbNEgHhBMKqlBpMvZ5vzoRkep1i/rPa
+	ZlLlkuFlH66kNZEOcg2zuAG0nKCxWQrgaFL+CgbxmnHkm2LA1nnea7xSCDdCqNakN300ZjnRiub
+	ibjKiNAExB7wjCWLZWw+zFUtM
+X-Google-Smtp-Source: AGHT+IEY/oDiPIa/nOlTAjnwslt218cYgrDecYU+5L1GpQyJtEecEknywGQ7urVCh3StZq6R+wNITA==
+X-Received: by 2002:a05:600c:3d98:b0:43c:f81d:f with SMTP id 5b1f17b1804b1-43ed0bf62eemr150638415e9.8.1744105943506;
+        Tue, 08 Apr 2025 02:52:23 -0700 (PDT)
 Received: from localhost.localdomain (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-39c3020dacfsm14493310f8f.72.2025.04.08.02.52.19
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-39c3020dacfsm14493310f8f.72.2025.04.08.02.52.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 02:52:20 -0700 (PDT)
+        Tue, 08 Apr 2025 02:52:23 -0700 (PDT)
 From: Christian Marangi <ansuelsmth@gmail.com>
 To: Christian Marangi <ansuelsmth@gmail.com>,
 	Lee Jones <lee@kernel.org>,
@@ -87,9 +87,9 @@ To: Christian Marangi <ansuelsmth@gmail.com>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	upstream@airoha.com
-Subject: [net-next PATCH v14 06/16] net: mdio: regmap: prepare support for multiple valid addr
-Date: Tue,  8 Apr 2025 11:51:13 +0200
-Message-ID: <20250408095139.51659-7-ansuelsmth@gmail.com>
+Subject: [net-next PATCH v14 08/16] net: mdio: regmap: add support for multiple valid addr
+Date: Tue,  8 Apr 2025 11:51:15 +0200
+Message-ID: <20250408095139.51659-9-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250408095139.51659-1-ansuelsmth@gmail.com>
 References: <20250408095139.51659-1-ansuelsmth@gmail.com>
@@ -101,64 +101,58 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Rework the valid_addr and convert it to a mask in preparation for mdio
-regmap to support multiple valid addr in the case the regmap can support
-it.
+Add support for multiple valid addr for mdio regmap. This can be done by
+defining the new valid_addr_mask value in the mdio regmap config.
+
+This makes use of the new implementation used by C45 to encode
+additional info in the regmap address to support multiple MDIO address.
+
+To actually use this, support_encoded_addr MUST be enabled and
+(indirectly) devm_mdio_regmap_init must be used to create the regmap.
 
 Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
 ---
- drivers/net/mdio/mdio-regmap.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/net/mdio/mdio-regmap.c   | 8 +++++++-
+ include/linux/mdio/mdio-regmap.h | 1 +
+ 2 files changed, 8 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/net/mdio/mdio-regmap.c b/drivers/net/mdio/mdio-regmap.c
-index 8a742a8d6387..810ba0a736f0 100644
+index f263e4ae2477..ed0443eb039f 100644
 --- a/drivers/net/mdio/mdio-regmap.c
 +++ b/drivers/net/mdio/mdio-regmap.c
-@@ -19,7 +19,7 @@
+@@ -113,13 +113,19 @@ struct mii_bus *devm_mdio_regmap_register(struct device *dev,
+ 	if (!config->parent)
+ 		return ERR_PTR(-EINVAL);
  
- struct mdio_regmap_priv {
- 	struct regmap *regmap;
--	u8 valid_addr;
-+	u32 valid_addr_mask;
- };
- 
- static int mdio_regmap_read_c22(struct mii_bus *bus, int addr, int regnum)
-@@ -28,7 +28,7 @@ static int mdio_regmap_read_c22(struct mii_bus *bus, int addr, int regnum)
- 	unsigned int val;
- 	int ret;
- 
--	if (ctx->valid_addr != addr)
-+	if (!(ctx->valid_addr_mask & BIT(addr)))
- 		return -ENODEV;
- 
- 	ret = regmap_read(ctx->regmap, regnum, &val);
-@@ -43,7 +43,7 @@ static int mdio_regmap_write_c22(struct mii_bus *bus, int addr, int regnum,
- {
- 	struct mdio_regmap_priv *ctx = bus->priv;
- 
--	if (ctx->valid_addr != addr)
-+	if (!(ctx->valid_addr_mask & BIT(addr)))
- 		return -ENODEV;
- 
- 	return regmap_write(ctx->regmap, regnum, val);
-@@ -65,7 +65,7 @@ struct mii_bus *devm_mdio_regmap_register(struct device *dev,
++	if (config->valid_addr_mask && !config->support_encoded_addr) {
++		dev_err(dev, "encoded address support is required to support multiple MDIO address\n");
++		return ERR_PTR(-EINVAL);
++	}
++
+ 	mii = devm_mdiobus_alloc_size(config->parent, sizeof(*mr));
+ 	if (!mii)
+ 		return ERR_PTR(-ENOMEM);
  
  	mr = mii->priv;
  	mr->regmap = config->regmap;
--	mr->valid_addr = config->valid_addr;
-+	mr->valid_addr_mask = BIT(config->valid_addr);
+-	mr->valid_addr_mask = BIT(config->valid_addr);
++	mr->valid_addr_mask = config->valid_addr_mask ? config->valid_addr_mask :
++							BIT(config->valid_addr);
+ 	mr->encode_addr = config->support_encoded_addr;
  
  	mii->name = DRV_NAME;
- 	strscpy(mii->id, config->name, MII_BUS_ID_SIZE);
-@@ -74,7 +74,7 @@ struct mii_bus *devm_mdio_regmap_register(struct device *dev,
- 	mii->write = mdio_regmap_write_c22;
- 
- 	if (config->autoscan)
--		mii->phy_mask = ~BIT(config->valid_addr);
-+		mii->phy_mask = ~mr->valid_addr_mask;
- 	else
- 		mii->phy_mask = ~0;
- 
+diff --git a/include/linux/mdio/mdio-regmap.h b/include/linux/mdio/mdio-regmap.h
+index 504fa2046043..bb0e7dc9c0dc 100644
+--- a/include/linux/mdio/mdio-regmap.h
++++ b/include/linux/mdio/mdio-regmap.h
+@@ -17,6 +17,7 @@ struct mdio_regmap_config {
+ 	struct regmap *regmap;
+ 	char name[MII_BUS_ID_SIZE];
+ 	u8 valid_addr;
++	u32 valid_addr_mask;
+ 	/* devm_mdio_regmap_init is required with this enabled */
+ 	bool support_encoded_addr;
+ 	bool autoscan;
 -- 
 2.48.1
 
