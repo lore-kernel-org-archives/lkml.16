@@ -1,129 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B5EEEB1;
-	Tue,  8 Apr 2025 02:13:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9F5117C219
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 02:20:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744078395; cv=none; b=t23fQZ0+KraT1rZuVit5NV37XqbkOO7o0PTfuGl25h/FoA2wpGlr6BGwIHIu4ZwM2AuHHtYvylIC076an/kHu0QgE7O4MG5kV3crLBKrNOw8+ifNhAEPhA0HXWJeQJ+CVCYQz/ZB9lZTAtvejZDxGm+6CHELXPXsPgnZN6vi6Zk=
+	t=1744078860; cv=none; b=Dh1aA9W1+4aXf3sI2Y/Q6kyJqbwHBXsKBC91jFdu1YGHztjWMSG/E7FEqT6BrYzhGBCvnpfn09u6XqzZ3+ObOJ1za3G6WAz+jpred7QJtO+Be+X9yWSAPZpGP32CxwVfqEDye0kYuutF+EP5FkwIiWtDDCWf4USsGrspF1nb3uY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744078395; c=relaxed/simple;
-	bh=9j44GVZXTsxQbV1gLmy2/Nifp26hHhQw0Oj1EkUngWk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WrotvIyogD3fjrfRVK3iurthsaL+42HbZrwdxxHhbKPAJuY1eC8FjM8lKD7eVuTzGDvblsTflCvHficBdPhacxVUofydbQSjWYACc52ppNOXDU3lboyHfNyD4nWHfANIhY148yNH0UYdckgVviXujnw5B/z93xL/mN89DVrlRe0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kTyJ0lXn; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kTyJ0lXn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744078394; x=1775614394;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=9j44GVZXTsxQbV1gLmy2/Nifp26hHhQw0Oj1EkUngWk=;
-  b=kTyJ0lXn8FggOkp9lJ5HQw7vSSSOIWxyjYdj4I7Akl/lttO9oK1tDstK
-   vIwNEn4khRca9ItczO0e3YuguS40+hInKB9tNjye29AIsBzVwJh+T4LFq
-   2fLkNFddJPPWI1VIY/nTNNDoTbZV0LcyaL5bje9L0apjiHlhPDjmaXz5/
-   TT5YOMFD8EhaPTTDEE83GwOb/dwz6VB5KAYdrNjEx5nbPsXkqEWla2n65
-   dstNzxybhKs2ZMm6WBdpx3xZSG7Vwe1japn/kQf5canEAWIsKp9WXEBCu
-   zq/xVh1O+6RnkyPn43K5iIBy8YxycSLm2Q28H/q9qtCJw/xa0+j0eUGAJ
-   g==;
-X-CSE-ConnectionGUID: NJdm06HDRhW2+yZeq6X/PA==
-X-CSE-MsgGUID: ar1qmPbcRx+1q4SI18zz0w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="56472615"
-X-IronPort-AV: E=Sophos;i="6.15,196,1739865600"; 
-   d="scan'208";a="56472615"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 19:13:13 -0700
-X-CSE-ConnectionGUID: KnRmpdJGTeC2IFq3rDHTbQ==
-X-CSE-MsgGUID: eK45jMtEQOuNMuBhEszB6Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,196,1739865600"; 
-   d="scan'208";a="127999199"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2025 19:13:11 -0700
-Message-ID: <418fff05-a0d9-4ead-b344-7b0b7fdb7f7f@linux.intel.com>
-Date: Tue, 8 Apr 2025 10:13:07 +0800
+	s=arc-20240116; t=1744078860; c=relaxed/simple;
+	bh=tXx2Sdxjcd7L4VPO4IMcoREYhlqWNqq3IbNkcTTsaxk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D/i4Xh7J3mDWCbWqoXuGnFrlHgtedbJN9kcdivxKw78dILIk0zRK9BYqyCFhbCkbiNn2bKhkst0tNNsayy6mozaOTeSdlAuwZLLa+PORDEe6Q9lx1XFn5+r+CX0MvCgr+y3Avt8XeTVQY7kGKcvhThtQLGghOBkhsYDPaNyhow8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-05 (Coremail) with SMTP id zQCowAA3dQ30h_RnricPBw--.24673S2;
+	Tue, 08 Apr 2025 10:20:37 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: harry.wentland@amd.com,
+	sunpeng.li@amd.com,
+	Rodrigo.Siqueira@amd.com,
+	alexander.deucher@amd.com,
+	christian.koenig@amd.com,
+	Xinhui.Pan@amd.com,
+	airlied@gmail.com,
+	simona@ffwll.ch
+Cc: hamza.mahfooz@amd.com,
+	chiahsuan.chung@amd.com,
+	sunil.khatri@amd.com,
+	alex.hung@amd.com,
+	aurabindo.pillai@amd.com,
+	hersenxs.wu@amd.com,
+	mario.limonciello@amd.com,
+	mwen@igalia.com,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>
+Subject: [PATCH v2] drm/amd/display: Add error check for avi and vendor infoframe setup function
+Date: Tue,  8 Apr 2025 10:20:18 +0800
+Message-ID: <20250408022018.2786-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [linus:master] [perf/x86] 88ec7eedbb: kvm-unit-tests.pmu_lbr.fail
-To: "Liang, Kan" <kan.liang@linux.intel.com>,
- kernel test robot <oliver.sang@intel.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org,
- Ingo Molnar <mingo@kernel.org>, Ravi Bangoria <ravi.bangoria@amd.com>,
- Peter Zijlstra <peterz@infradead.org>, linux-perf-users@vger.kernel.org
-References: <202504071232.3c2fa7d5-lkp@intel.com>
- <f872c998-c076-4e09-8f7d-1ad29a065d4a@linux.intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <f872c998-c076-4e09-8f7d-1ad29a065d4a@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowAA3dQ30h_RnricPBw--.24673S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7CF4UAr47KFyUJw47ZF4rAFb_yoW8uF1Dpw
+	48ta4DtrWvqFZxCryUAFn5ua90k3s7JFy7Kr45Aw15W3s5KrZ3Ja1fJF1kJ39rZFZ5A3Wa
+	y3WUX3y7XF1vk3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9214x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
+	1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
+	7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
+	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02
+	628vn2kIc2xKxwCY1x0262kKe7AKxVW8ZVWrXwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4
+	IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1r
+	MI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJV
+	WUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j
+	6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYx
+	BIdaVFxhVjvjDU0xZFpf9x0pRHUDLUUUUU=
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiDAgGA2f0eChG3AAAsY
 
+The function fill_stream_properties_from_drm_display_mode() calls the
+function drm_hdmi_avi_infoframe_from_display_mode() and the
+function drm_hdmi_vendor_infoframe_from_display_mode(), but does
+not check its return value. Log the error messages to prevent silent
+failure if either function fails.
 
-On 4/7/2025 10:38 PM, Liang, Kan wrote:
->
-> On 2025-04-07 1:07 a.m., kernel test robot wrote:
->>
->> Hello,
->>
->> kernel test robot noticed "kvm-unit-tests.pmu_lbr.fail" on:
->>
->> commit: 88ec7eedbbd21cad38707620ad6c48a4e9a87c18 ("perf/x86: Fix low freqency setting issue")
->> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
->>
->> [test failed on linus/master      0a87d6bb6fd274cde3bf217a821153714374198f]
->> [test failed on linux-next/master fefb886b1344e222b3218f3c0165b0fd770e8b88]
->>
->> in testcase: kvm-unit-tests
->> version: kvm-unit-tests-x86_64-69574079-1_20250322
->> with following parameters:
-> The one line patch only impacts the perf record.
-> But the test case is for LBR on KVM. The case directly access the
-> IA32_DEBUGCTLMSR to enable/disable LBRs. There is nothing related.
-> It is probably a false alarm.
->
-> + Dapeng
->
-> Could you please take a look at the qemu test case?
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+v2: Fix code diff error
 
-Sure. I would investigate it later.
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index 5f216d626cbb..8fc6ba12c82d 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -6104,6 +6104,7 @@ static void fill_stream_properties_from_drm_display_mode(
+ 	struct amdgpu_dm_connector *aconnector = NULL;
+ 	struct hdmi_vendor_infoframe hv_frame;
+ 	struct hdmi_avi_infoframe avi_frame;
++	ssize_t err;
+ 
+ 	if (connector->connector_type != DRM_MODE_CONNECTOR_WRITEBACK)
+ 		aconnector = to_amdgpu_dm_connector(connector);
+@@ -6150,9 +6151,17 @@ static void fill_stream_properties_from_drm_display_mode(
+ 	}
+ 
+ 	if (stream->signal == SIGNAL_TYPE_HDMI_TYPE_A) {
+-		drm_hdmi_avi_infoframe_from_display_mode(&avi_frame, (struct drm_connector *)connector, mode_in);
++		err = drm_hdmi_avi_infoframe_from_display_mode(&avi_frame,
++							       (struct drm_connector *)connector,
++							       mode_in);
++		if (err < 0)
++			dev_err(connector->dev, "Failed to setup avi infoframe: %zd\n", err);
+ 		timing_out->vic = avi_frame.video_code;
+-		drm_hdmi_vendor_infoframe_from_display_mode(&hv_frame, (struct drm_connector *)connector, mode_in);
++		err = drm_hdmi_vendor_infoframe_from_display_mode(&hv_frame,
++								  (struct drm_connector *)connector,
++								  mode_in);
++		if (err < 0)
++			dev_err(connector->dev, "Failed to setup vendor infoframe: %zd\n", err);
+ 		timing_out->hdmi_vic = hv_frame.vic;
+ 	}
+ 
+-- 
+2.42.0.windows.2
 
->
-> Thanks,
-> Kan>
->> config: x86_64-rhel-9.4-func
->> compiler: gcc-12
->> test machine: 8 threads 1 sockets Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz (Haswell) with 8G memory
->>
->> (please refer to attached dmesg/kmsg for entire log/backtrace)
->>
->>
->> If you fix the issue in a separate patch/commit (i.e. not just a new version of
->> the same patch/commit), kindly add following tags
->> | Reported-by: kernel test robot <oliver.sang@intel.com>
->> | Closes: https://lore.kernel.org/oe-lkp/202504071232.3c2fa7d5-lkp@intel.com
->>
->>
->> ...
->> [32mPASS[0m pmu (143 tests, 14 skipped)
->> [31mFAIL[0m pmu_lbr (2 tests, 1 unexpected failures)   <---
->> [33mSKIP[0m pmu_pebs (1 tests, 1 skipped)
->> ...
->>
->>
->> one log is attached.
->>
->>
->> The kernel config and materials to reproduce are available at:
->> https://download.01.org/0day-ci/archive/20250407/202504071232.3c2fa7d5-lkp@intel.com
->>
->>
->>
