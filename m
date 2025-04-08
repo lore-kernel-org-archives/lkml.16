@@ -1,187 +1,125 @@
-Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 059162356D6
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 17:22:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F01A14AD2D;
+	Tue,  8 Apr 2025 17:22:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744132925; cv=none; b=kLFefZZ2gDnfvXhgWvF79oYS0uHqg6dwwWwQA6o2A/eOZhk6/aQUzY/4fE4/4IGUgvoVHuMNEIoZhVcfvDvBeYxTjbdsoxzv6wD+JMZdFE9Vryx1XGFHewy+mkJpPvy2dIOTDrrdi06bgyRHioHRdBL2BrQ88Q0nJ8MQGXsRZLQ=
+	t=1744132958; cv=none; b=Ok6BOJb+f9aeDZOXfsqa4+NjUoqeu2jjl4dnAF9NicOv69OqKy047+BJqIfesVoz1kupCUd4h7R4em7ZvNEFhpBctbzBTARB5uoqYybY4TOyS4yujF2GCLi0wTapacJ2TK0X6I2N/nTraJB/hdoLALQnvm4kxbH3ER3AOoWTdow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744132925; c=relaxed/simple;
-	bh=v0CiySCFIMh8gX8ms1ZA6Lo+roQbGhFoAYSK+fQ9M7Y=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=YISBLQffpeJ1CH1HfApGGVKgGUgSYopTXXmgJz23fBaqmmC5wFeMv5baCpwqKHHHDx0y0qc6ir+BRLjT1nrVyUIkh9Nu/Gg1Q9odSs9v86beOgbqQEJ11geW9+stPkJXelGjQY67IsDAJ1XR+MXnHHn7mbkMw8fiSsxNgGmnQiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sa0ADJOg; arc=none smtp.client-ip=209.85.221.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
+	s=arc-20240116; t=1744132958; c=relaxed/simple;
+	bh=fo4bucBnXY/q0oK6G7meZ4oUY3TMcCAnjpICzIo+a5A=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BpNhSU30BsZWE1vCrg3KJiRiot1tvdl/4j2KMf+kKhuEwUVOEsi1VKxLMXqtwGjgIw43CjfIFANWZLNU2mMg4vtfTy8z/0pK1Yoa3sDzM4dW45lp/VpK8V/GZQQe2EqE1/qdpJjoEuoeJCzKcIfGMJ2gOj223v9ikgqA43mQoq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fOUJVUwK; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sa0ADJOg"
-Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-39c30f26e31so4197099f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 10:22:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fOUJVUwK"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3913b539aabso3493885f8f.2;
+        Tue, 08 Apr 2025 10:22:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744132922; x=1744737722; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=u+luVGLBxL0+rbze1Xlp+FWE6ZfU74Gm/3Cw7pY07Gk=;
-        b=sa0ADJOgXnLPKghtUUz9Ay+Zh000RU48wePKboqVRn335W8nPEWnNzaZIXagKTNF7w
-         Exi90mdQZ6PQskOxCEdMEtbvwMSPTTwESnfW7H6+20CBbfQJXffiewvd0wCwuiLr8x+Y
-         sYEAXxryI1o+h4meYIXWtJKwGUdfB5HMstz4FaJxJLGHZdkE6NR1e7DqUBmHhiTI0/qO
-         BGmDsVs5zPRyBBh7XfPqTMJe5vPptSnj41Ee0PVF2uHeStbdBo5fohhmqaGuwrlx8wIo
-         buRvYw8fGuS/zb+chlZ0yY3LFopQPa4qyMbEQTam+0TAKpR1BlSfF213BZPaGfISXtAr
-         4oeQ==
+        d=gmail.com; s=20230601; t=1744132955; x=1744737755; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=k4URTuU4OqPDMxhBgu52MpzTH+LX835ANJbVjlWk8JY=;
+        b=fOUJVUwK/7BigCFP/cO6ij+v3OIJ/XZAibupTL+cObPZJZi7cNJKnXqBrf4P7pw90+
+         EwYB+Vr5StOvgm1rPvsnAM55EWDs+ZKogCSKWRnuuTeDOw42pqcd10TPKoC/CbfqxOB6
+         XAPTcrbIJ92k3RT2Xtdb1FdFDT5n2TAW4P6cEORLlbxu/UaFjK0Kc8e9k+xGbMfdAKRD
+         SmkU+XP0J3FkbYLBxiys7xLc0SDRWgszJDVm3MLf7nTHehGa4qQ/gyD/wWHp/I0dUZr7
+         lwihvQ78KqTSr47XBwcjZuYkpx10VrV+kzj/h5uyUjkGSTVBrOsrboEs3dgmvIM5UAfh
+         I3RA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744132922; x=1744737722;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=u+luVGLBxL0+rbze1Xlp+FWE6ZfU74Gm/3Cw7pY07Gk=;
-        b=gY6vbt9KOkfWxLkEp0iwFXkS299ZaFoHTNf9AAz9riqC0LIwcz0xaQWefcHv7VFGWw
-         62l5FxAttLQFQi6vq2BPQAKnWl3rWqqExwqYrSaCVcBmVb3XcveLq8qBEAPIqd/MsKUl
-         f0+qRIO1j9CcKHX4Z+SMkKyCbhuCRE1Nk6ekGZsc5gIVS4ah0DcV6QcUP5wVjOI+eI0B
-         4uOILcWsFKotLOZ6KY+M7tmv/NRCEsX9anXMg5byV4TfMw5SJSH9an5uyDi7r/cpivLS
-         yjK9MmShEIjtwWBQgCpBs0R4ExJGGzAnfnVCbKV+DZbGpZAtBByxpmbAWBT7Tm0wD44P
-         EWEg==
-X-Forwarded-Encrypted: i=1; AJvYcCUmC8EKTA2PWXjkMHu3VRFO300gdX8+RQ/79neQ3FN1gh6CSOeAv2alkR0jn8iJVCIqOqscGwIjcqkUB3w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOdDSMuh/W1b1weEsER9sdK6n8AquPA1NJnVfgvNF1/jDWhQLZ
-	80kVsMjrGH0+/mS0ettixx7ymimssSppnXYIwQ/JhFX9wPk0xtyoFptJFIzD639OaFjJbRuLH7C
-	DxGk88L+YxA==
-X-Google-Smtp-Source: AGHT+IHaAZMKhByVkpO7+93Ka+6E50kvY3a7Y4B/+srVfxOdRHrMhLAj+xwnnXkHAeq0Q/znDzgiMtXoGrlkKg==
-X-Received: from wmbbg30.prod.google.com ([2002:a05:600c:3c9e:b0:43d:44cf:11f8])
- (user=jackmanb job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6000:1843:b0:391:2c0c:1247 with SMTP id ffacd0b85a97d-39d87aa8fd6mr53654f8f.1.1744132922425;
- Tue, 08 Apr 2025 10:22:02 -0700 (PDT)
-Date: Tue, 08 Apr 2025 17:22:00 +0000
-In-Reply-To: <20250407180154.63348-1-hannes@cmpxchg.org>
+        d=1e100.net; s=20230601; t=1744132955; x=1744737755;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=k4URTuU4OqPDMxhBgu52MpzTH+LX835ANJbVjlWk8JY=;
+        b=Lpvp2VTvql+rIUc83RIpOOul1H9BjotkkQDZQcgAEV4MPfEldP02BLstoJBgE99+JV
+         QXibqcLpSqlzht4wNxJIm+xvALH080lGRJOAlkuqo3m+PEarzkdNQhyMas5W51j2jeeX
+         SZnOu8xkPCLrbbSGxIUF6dgqZKv2sRuDKFoWRlLwBzflZYnPpmdwrsfvb4RolmdIBC4C
+         zimne1kOHB6XOnphYfry+HyMFHoGdYT5FAeUOGix656Jv69GPAw7SRfOHo7x80VK0vuI
+         /AdCP7ySCxjgRs9ka11zSYX4qhEXnHsI/KBzRZfOrU6yUZrV6fgv5rS6+xcZ1BFIjGQP
+         veJg==
+X-Forwarded-Encrypted: i=1; AJvYcCUlHXD9TlXRRfm0R/2tgCPcuLlOso3T8Z+8i3zUmEiFBqCXuYjO/zUFHb4Zk07hx7+9mOl7L6xqdZTbLgw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YytY18ib+C05YlIWHST5wPtVShhBBgwSc/1/77ZEa/5gYVA/Ubf
+	+hhCzABjq6PbyBgVfxnoObH5VCJeQCASPknuNQz6zU3UrwTbezha
+X-Gm-Gg: ASbGncuaqFSOLTk/a0h2LaaweBTlFscn/WFjLS03M2kyjNv2ifBCS3MRAdUpM3d00HL
+	FHFOw0m/lBOkSaY4DKxli+/E/KzVhBa/2Hd8XyaK5YZR4WL1HdD5Lx1C++z2MDaBddrgbSNB8cO
+	G0XEfUtJVllM5CtMnJlkyZS7J17W6OCNuqX6tllgDVmlUkyjxJEXHA1ByD4EFi/YYj5UsUOKMk3
+	1bZm9XN6m5Sz6n68pmwGraWR0+j9nyKLMAtPW9My0KAowsS5ZNIXpXnTyTeFlKN7OSjxbaDwpLv
+	J4+X1/qJCWbqiFl8H8K/alm+jNtIwgQ+FtSkAXbm6xg9L1z33FJ43h8g
+X-Google-Smtp-Source: AGHT+IGF2ELWn/bt4SThTAhIsS85ycBVt4QmEGy6AROd0iJukYlBEQMvgJpx007p2eIQD1aBh/DVGw==
+X-Received: by 2002:a5d:64c4:0:b0:39c:1257:c7a3 with SMTP id ffacd0b85a97d-39d87ce3284mr16492f8f.59.1744132955207;
+        Tue, 08 Apr 2025 10:22:35 -0700 (PDT)
+Received: from qasdev.Home ([2a02:c7c:6696:8300:5b45:5642:beb0:688f])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c30096896sm15729953f8f.19.2025.04.08.10.22.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 10:22:34 -0700 (PDT)
+From: Qasim Ijaz <qasdev00@gmail.com>
+To: robdclark@gmail.com,
+	quic_abhinavk@quicinc.com,
+	lumag@kernel.org,
+	sean@poorly.run,
+	marijn.suijten@somainline.org,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	quic_jesszhan@quicinc.com
+Cc: linux-arm-msm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	freedreno@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: [PATCH v2 RESEND] drm/msm/dpu: reorder pointer operations after sanity checks to avoid NULL deref
+Date: Tue,  8 Apr 2025 18:22:23 +0100
+Message-Id: <20250408172223.10827-1-qasdev00@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250407180154.63348-1-hannes@cmpxchg.org>
-X-Mailer: aerc 0.18.2
-Message-ID: <D91FIQHR9GEK.3VMV7CAKW1BFO@google.com>
-Subject: Re: [PATCH 1/2] mm: page_alloc: speed up fallbacks in rmqueue_bulk()
-From: Brendan Jackman <jackmanb@google.com>
-To: Johannes Weiner <hannes@cmpxchg.org>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Mel Gorman <mgorman@techsingularity.net>, 
-	Carlos Song <carlos.song@nxp.com>, <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>, 
-	kernel test robot <oliver.sang@intel.com>, <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Mon Apr 7, 2025 at 6:01 PM UTC, Johannes Weiner wrote:
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -2194,11 +2194,11 @@ try_to_claim_block(struct zone *zone, struct page *page,
->   * The use of signed ints for order and current_order is a deliberate
->   * deviation from the rest of this file, to make the for loop
->   * condition simpler.
-> - *
-> - * Return the stolen page, or NULL if none can be found.
->   */
-
-This commentary is pretty confusing now, there's a block of text that
-kinda vaguely applies to the aggregate of __rmqueue_steal(),
-__rmqueue_fallback() and half of __rmqueue(). I think this new code does
-a better job of speaking for itself so I think we should just delete
-this block comment and replace it with some more verbosity elsewhere.
-
-> +
-> +/* Try to claim a whole foreign block, take a page, expand the remainder */
-
-Also on the commentary front, I am not a fan of "foreign" and "native":
-
-- "Foreign" is already used in this file to mean NUMA-nonlocal.
-
-- We already have "start" and "fallback" being used in identifiers
-  as adjectives to describe the mitegratetype concept.
-
-  I wouldn't say those are _better_, "native" and "foreign" might be
-  clearer, but it's not worth introducing inconsistency IMO.
-
->  static __always_inline struct page *
-> -__rmqueue_fallback(struct zone *zone, int order, int start_migratetype,
-> +__rmqueue_claim(struct zone *zone, int order, int start_migratetype,
->  						unsigned int alloc_flags)
->  {
->  	struct free_area *area;
-
-[pasting in more context that wasn't in the original diff..]
->	/*
->	 * Find the largest available free page in the other list. This roughly
->	 * approximates finding the pageblock with the most free pages, which
->	 * would be too costly to do exactly.
->	 */
->	for (current_order = MAX_PAGE_ORDER; current_order >= min_order;
->				--current_order) {
-
-IIUC we could go one step further here and also avoid repeating this
-iteration? Maybe something for a separate patch though?
-
-Anyway, the approach seems like a clear improvement, thanks. I will need
-to take a closer look at it tomorrow, I've run out of brain juice today.
-
-Here's what I got from redistributing the block comment and flipping
-the terminology:
-
-diff --git i/mm/page_alloc.c w/mm/page_alloc.c
-index dfb2b3f508af..b8142d605691 100644
---- i/mm/page_alloc.c
-+++ w/mm/page_alloc.c
-@@ -2183,21 +2183,13 @@ try_to_claim_block(struct zone *zone, struct page *page,
- }
+_dpu_encoder_trigger_start dereferences "struct dpu_encoder_phys *phys"
+before the sanity checks which can lead to a NULL pointer dereference if
+phys is NULL.
  
- /*
-- * Try finding a free buddy page on the fallback list.
-- *
-- * This will attempt to claim a whole pageblock for the requested type
-- * to ensure grouping of such requests in the future.
-- *
-- * If a whole block cannot be claimed, steal an individual page, regressing to
-- * __rmqueue_smallest() logic to at least break up as little contiguity as
-- * possible.
-+ * Try to allocate from some fallback migratetype by claiming the entire block,
-+ * i.e. converting it to the allocation's start migratetype.
-  *
-  * The use of signed ints for order and current_order is a deliberate
-  * deviation from the rest of this file, to make the for loop
-  * condition simpler.
+Fix this by reordering the dereference after the sanity checks.
+ 
+Fixes: 8144d17a81d9 ("drm/msm/dpu: Skip trigger flush and start for CWB")
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
+---
+v2:
+- Moved Signed-off tag below Fixes tag
+- Moved dpu_enc declaration to the top and initialisation below sanity checks
+
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+index 0eed93a4d056..0bd1f2bfaaff 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+@@ -1667,7 +1667,7 @@ static void _dpu_encoder_trigger_flush(struct drm_encoder *drm_enc,
   */
--
--/* Try to claim a whole foreign block, take a page, expand the remainder */
- static __always_inline struct page *
- __rmqueue_claim(struct zone *zone, int order, int start_migratetype,
-                                                unsigned int alloc_flags)
-@@ -2247,7 +2239,10 @@ __rmqueue_claim(struct zone *zone, int order, int start_migratetype,
-        return NULL;
- }
- 
--/* Try to steal a single page from a foreign block */
-+/*
-+ * Try to steal a single page from some fallback migratetype. Leave the rest of
-+ * the block as its current migratetype, potentially causing fragmentation.
-+ */
- static __always_inline struct page *
- __rmqueue_steal(struct zone *zone, int order, int start_migratetype)
+ static void _dpu_encoder_trigger_start(struct dpu_encoder_phys *phys)
  {
-@@ -2307,7 +2302,9 @@ __rmqueue(struct zone *zone, unsigned int order, int migratetype,
-        }
+-	struct dpu_encoder_virt *dpu_enc = to_dpu_encoder_virt(phys->parent);
++	struct dpu_encoder_virt *dpu_enc;
  
-        /*
--        * Try the different freelists, native then foreign.
-+        * First try the freelists of the requested migratetype, then try
-+        * fallbacks. Roughly, each fallback stage poses more of a fragmentation
-+        * risk.
-         *
-         * The fallback logic is expensive and rmqueue_bulk() calls in
-         * a loop with the zone->lock held, meaning the freelists are
-@@ -2332,7 +2329,7 @@ __rmqueue(struct zone *zone, unsigned int order, int migratetype,
-        case RMQUEUE_CLAIM:
-                page = __rmqueue_claim(zone, order, migratetype, alloc_flags);
-                if (page) {
--                       /* Replenished native freelist, back to normal mode */
-+                       /* Replenished requested migratetype's freelist, back to normal mode */
-                        *mode = RMQUEUE_NORMAL;
-                        return page;
-                }
-
+ 	if (!phys) {
+ 		DPU_ERROR("invalid argument(s)\n");
+@@ -1678,6 +1678,8 @@ static void _dpu_encoder_trigger_start(struct dpu_encoder_phys *phys)
+ 		DPU_ERROR("invalid pingpong hw\n");
+ 		return;
+ 	}
++
++	dpu_enc = to_dpu_encoder_virt(phys->parent);
+ 
+ 	if (phys->parent->encoder_type == DRM_MODE_ENCODER_VIRTUAL &&
+ 	    dpu_enc->cwb_mask) {
+-- 
+2.39.5
 
