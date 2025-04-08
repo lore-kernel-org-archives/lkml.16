@@ -1,34 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F29264A6D
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 07:34:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD23B263F46
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 07:34:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744097678; cv=none; b=LJldu2BPQ1kBmAne07Ya0KlFN7yVrcAdLd+1MuKAueJM1VZfKb3+urYH10T2z4wNpK2cFDuEBmtNV9od2vAhcBL4D041ppXNC1Drr6JhdFo9G9mOH74Er4veZ2dwuBjuutUNVwpM6XW/xmV/RM+6Us8y4BV0V8fqjHEGm1F5haU=
+	t=1744097682; cv=none; b=vDm4TbH1YLbu1ZV06gFJrfwqwSTKvTvSE+bHtbi5IuuSgYOctEnV3oHK0r6RvOb5dZqA+3BdHq0L2+FmTapiPw+oUaeOAxexjCucneirNjJa/6PjwoCG/awmRE0kG0BQxElAs5KPhQzfYdBMnfWpcC16YTxBGvPKKHWaKe2vqXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744097678; c=relaxed/simple;
-	bh=/Wbv6r/x71/9TjKPjY3ITwX7nItTXEXLOZ+jDR5+yns=;
+	s=arc-20240116; t=1744097682; c=relaxed/simple;
+	bh=0zYH8GXeZCdhYRoG6dWvpLAyDo/PjwqMRCxfB3+ZTls=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Wkt0HK8pdmPEFOdXBxrzqvExd5Oh7QjtsBy2cQ11EhOMSJa0QkaKXtPs10on5OBy51+TO0XTq9nXpZ50XLqjA8bpO7Y8c7Z3rP1X5cyyV8t5g/KZsgja5vXK3xCU+x2sZC6YU9z/M17ZrZm5KTKwluFhOQYq0gKKR2a70LnKaHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o5+G5drY; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=pF0wRBYaSQJ1+y0laNff4d4t2sFaSyKo8qTKYXfaz4QY+OOrxRqroY5hWONvHY4YJtJy+EvwiBppU9ARv/hPvyRJfoIPuPtS2VCd7qFEpqcLZpY6OZ9gRdhdOczEqL+44aY1IP/0AXg8+2e5UaXMf1aDDZOfEkjlWKuk6GM+W9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OxqjfCoH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o5+G5drY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3980C4CEEA;
-	Tue,  8 Apr 2025 07:34:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OxqjfCoH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC865C4CEE5;
+	Tue,  8 Apr 2025 07:34:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744097678;
-	bh=/Wbv6r/x71/9TjKPjY3ITwX7nItTXEXLOZ+jDR5+yns=;
+	s=k20201202; t=1744097681;
+	bh=0zYH8GXeZCdhYRoG6dWvpLAyDo/PjwqMRCxfB3+ZTls=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=o5+G5drYWrGfZe6gBC97ttkONB4VkJaP87qX5ZoAxAEWIeeBwBku5h96sMrNfd9LN
-	 4c1lGHccW5NSfsGkXx7HI/OfDqNx2tSUPSyN6LWt6AY57Ia4gXnq5lmQ0kQB2WtqO9
-	 VY0UPpeKQ83TER4FwkP0EsfhaqelxafAq9ExQIzlUSEGSQBzxFaBe8oPVQzwNJp+ZC
-	 Xrcn7Ft0P7cqmY9N9DE4XHBVw9i6WS4yWiHDtnu+9nactdhfsDObcT/MU4uCNA8zP1
-	 BxcxHFxlrP8mZLeDpQSoi5MHtF0c5onYTDGWaDcVAjN37LxjCeidjeZPHl5j/jobQS
-	 JOn5WT/sXbbtQ==
+	b=OxqjfCoHeIzklkN3oG4EVzuqyc9X/pvQAIq/xNsehgw+35KEcE96QHRpS1C7c49JU
+	 f6vrE3zjpamudNu3rGa1qCx0NEoNO5LhpurfO3AUliIQXj80hRuLM7TVjMu9LlCCeu
+	 3fhYvFpCfYiT9pM4hF75gP0EgGi6kUsZzrrUJ/GDJPTbBotd7pGDgaSMyQuIiHKY9l
+	 ntxDpYXuX5o2swJKR1G5HqhEGX2ogxVkApOwowmdBluI/mqyr1Jhnh0lFIjRO9rAzL
+	 +obSiOlp383JzdXmjIKID8AKHyXyjadJb5gHxW0uD7jeYo7QPIv7Dd2UudFApJW/SO
+	 Cj3QaqI/NTLsw==
 From: Maxime Ripard <mripard@kernel.org>
-Date: Tue, 08 Apr 2025 09:34:12 +0200
-Subject: [PATCH 6/7] drm/tests: modes: Fix drm_display_mode memory leak
+Date: Tue, 08 Apr 2025 09:34:13 +0200
+Subject: [PATCH 7/7] drm/tests: probe-helper: Fix drm_display_mode memory
+ leak
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,7 +38,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250408-drm-kunit-drm-display-mode-memleak-v1-6-996305a2e75a@kernel.org>
+Message-Id: <20250408-drm-kunit-drm-display-mode-memleak-v1-7-996305a2e75a@kernel.org>
 References: <20250408-drm-kunit-drm-display-mode-memleak-v1-0-996305a2e75a@kernel.org>
 In-Reply-To: <20250408-drm-kunit-drm-display-mode-memleak-v1-0-996305a2e75a@kernel.org>
 To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
@@ -46,55 +47,74 @@ To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
 Cc: Philipp Stanner <phasta@mailbox.org>, dri-devel@lists.freedesktop.org, 
  linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1607; i=mripard@kernel.org;
- h=from:subject:message-id; bh=/Wbv6r/x71/9TjKPjY3ITwX7nItTXEXLOZ+jDR5+yns=;
- b=owGbwMvMwCX2+D1vfrpE4FHG02pJDOlfLlauiZ539Z4mHztL1ncFv5h3OwNDKi+sdg/T/27+N
- ODQkXCmjlIWBjEuBlkxRZYYYfMlcadmve5k45sHM4eVCWQIAxenAExEWo7hn96N+OJi3t1FOdt3
- zRMovNZsZV8Q/v230KnPC3Ry7y4L/srIcPbwlcSo0k8ntn7T3HGgvbnp3Wl9WcsCtgb2olUa369
- E8wEA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2493; i=mripard@kernel.org;
+ h=from:subject:message-id; bh=0zYH8GXeZCdhYRoG6dWvpLAyDo/PjwqMRCxfB3+ZTls=;
+ b=owGbwMvMwCX2+D1vfrpE4FHG02pJDOlfLlat09LI9P9u3f9b1z6mwMYrZV/Uf/n778/LvMj7e
+ CRvqffGjlIWBjEuBlkxRZYYYfMlcadmve5k45sHM4eVCWQIAxenAExk2glGhrt6G5Zk17iFJfRc
+ PjA1tVtnXa/vL8Wjp5zXfv3W+/cuaxUjw17n1h1qgnN1Nv88aHFYY7tOz2PW6scb3zjHBa2Km+h
+ dyQgA
 X-Developer-Key: i=mripard@kernel.org; a=openpgp;
  fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
 
 drm_analog_tv_mode() and its variants return a drm_display_mode that
 needs to be destroyed later one. The
-drm_test_modes_analog_tv_mono_576i() test never does however, which
-leads to a memory leak.
+drm_test_connector_helper_tv_get_modes_check() test never does however,
+which leads to a memory leak.
 
 Let's make sure it's freed.
 
 Closes: https://lore.kernel.org/dri-devel/a7655158a6367ac46194d57f4b7433ef0772a73e.camel@mailbox.org/
-Fixes: e31538489908 ("drm/tests: Add tests for the new Monochrome value of tv_mode")
+Fixes: 1e4a91db109f ("drm/probe-helper: Provide a TV get_modes helper")
 Signed-off-by: Maxime Ripard <mripard@kernel.org>
 ---
- drivers/gpu/drm/tests/drm_modes_test.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/gpu/drm/tests/drm_probe_helper_test.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/tests/drm_modes_test.c b/drivers/gpu/drm/tests/drm_modes_test.c
-index 7ba646d87856f52f99b0f9bcfed0c31d848c798d..f5b20f92df8be73ad9ef46aedae8b855e637e4dd 100644
---- a/drivers/gpu/drm/tests/drm_modes_test.c
-+++ b/drivers/gpu/drm/tests/drm_modes_test.c
-@@ -154,17 +154,21 @@ static void drm_test_modes_analog_tv_pal_576i_inlined(struct kunit *test)
- 
- static void drm_test_modes_analog_tv_mono_576i(struct kunit *test)
- {
- 	struct drm_test_modes_priv *priv = test->priv;
+diff --git a/drivers/gpu/drm/tests/drm_probe_helper_test.c b/drivers/gpu/drm/tests/drm_probe_helper_test.c
+index bc09ff38aca18eb06dc476310e1dbf372bc5545c..db0e4f5df275e8473ec916ed7a7cf16db96b81c5 100644
+--- a/drivers/gpu/drm/tests/drm_probe_helper_test.c
++++ b/drivers/gpu/drm/tests/drm_probe_helper_test.c
+@@ -96,11 +96,11 @@ drm_test_connector_helper_tv_get_modes_check(struct kunit *test)
+ 	const struct drm_connector_helper_tv_get_modes_test *params = test->param_value;
+ 	struct drm_probe_helper_test_priv *priv = test->priv;
+ 	struct drm_connector *connector = &priv->connector;
+ 	struct drm_cmdline_mode *cmdline = &connector->cmdline_mode;
  	struct drm_display_mode *mode;
-+	int ret;
+-	const struct drm_display_mode *expected;
++	struct drm_display_mode *expected;
+ 	size_t len;
+ 	int ret;
  
- 	mode = drm_analog_tv_mode(priv->drm,
- 				  DRM_MODE_TV_MODE_MONOCHROME,
- 				  13500 * HZ_PER_KHZ, 720, 576,
- 				  true);
- 	KUNIT_ASSERT_NOT_NULL(test, mode);
+ 	if (params->cmdline) {
+ 		cmdline->tv_mode_specified = true;
+@@ -132,10 +132,13 @@ drm_test_connector_helper_tv_get_modes_check(struct kunit *test)
+ 		expected = params->expected_modes[0](priv->drm);
+ 		KUNIT_ASSERT_NOT_NULL(test, expected);
  
-+	ret = drm_kunit_add_mode_destroy_action(test, mode);
-+	KUNIT_ASSERT_EQ(test, ret, 0);
+ 		KUNIT_EXPECT_TRUE(test, drm_mode_equal(mode, expected));
+ 		KUNIT_EXPECT_TRUE(test, mode->type & DRM_MODE_TYPE_PREFERRED);
 +
- 	KUNIT_EXPECT_EQ(test, drm_mode_vrefresh(mode), 50);
- 	KUNIT_EXPECT_EQ(test, mode->hdisplay, 720);
++		ret = drm_kunit_add_mode_destroy_action(test, expected);
++		KUNIT_ASSERT_EQ(test, ret, 0);
+ 	}
  
- 	/* BT.601 defines hsync_start at 732 for 576i */
- 	KUNIT_EXPECT_EQ(test, mode->hsync_start, 732);
+ 	if (params->num_expected_modes >= 2) {
+ 		mode = list_next_entry(mode, head);
+ 		KUNIT_ASSERT_NOT_NULL(test, mode);
+@@ -143,10 +146,13 @@ drm_test_connector_helper_tv_get_modes_check(struct kunit *test)
+ 		expected = params->expected_modes[1](priv->drm);
+ 		KUNIT_ASSERT_NOT_NULL(test, expected);
+ 
+ 		KUNIT_EXPECT_TRUE(test, drm_mode_equal(mode, expected));
+ 		KUNIT_EXPECT_FALSE(test, mode->type & DRM_MODE_TYPE_PREFERRED);
++
++		ret = drm_kunit_add_mode_destroy_action(test, expected);
++		KUNIT_ASSERT_EQ(test, ret, 0);
+ 	}
+ 
+ 	mutex_unlock(&priv->drm->mode_config.mutex);
+ }
+ 
 
 -- 
 2.49.0
