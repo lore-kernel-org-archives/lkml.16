@@ -1,86 +1,131 @@
-Received: from lithops.sigma-star.at (mailout.nod.at [116.203.167.152])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from plesk.hostmyservers.fr (plesk.hostmyservers.fr [45.145.164.37])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DAE01E1C1F;
-	Tue,  8 Apr 2025 15:58:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.167.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB9E21E1C1F;
+	Tue,  8 Apr 2025 15:58:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.145.164.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744127907; cv=none; b=AaUYmISbQnuz3s4Hcxhl+ca4UdJlbIkkBEYOyXwEILdShsPNIXCxQAvnulUhPFQb3rtcqLODEdRCK245ipTlpzVxytB27gMD5gGGR1yUM/6LL82j17hJGHuK+DAN0XAMZ/Zyk248Mkuk/dlrVqRCH0xspbI0a/j0+CO4Ub/YJ0I=
+	t=1744127925; cv=none; b=htjORQf6VJfAgkoTIYE6U+fdDZ+E2GeLTHDGkULLgFPhEnRI7MWsmCZ8xBdYuuMTSIoS3P20a5CINSW/+sv9X4HTNdudr67tLDVWov1mqNmuEXUDwJqLoKPvaxwzghdnMzwtCpff704bAdBeEoUrRqS336OPwasHhTgH5E2IccU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744127907; c=relaxed/simple;
-	bh=kQtV6n2Kqim1E4uFpTPCju+r1SQTshVBy2mcPORbT3I=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=Ktcuss/EwCyOTHDQ0WmoTJlJ6a14Rr6dTiJmAi0WOcLNN3dQDsm5RRP8fGFrAWKyUoxmDhPsvxUelxvYjO9KwBe1sJCP8pVXJi/qT/KnsP6+GfS5bdAKk4jgWkbsg+aUUWUdoU0RwYj5CHrK8HSLnkzne4y3Tx6OTSeeS2HYmyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at; spf=fail smtp.mailfrom=nod.at; arc=none smtp.client-ip=116.203.167.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nod.at
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 8170D29857F;
-	Tue,  8 Apr 2025 17:58:21 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id mv9SRLM6fGTr; Tue,  8 Apr 2025 17:58:21 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 258E429858C;
-	Tue,  8 Apr 2025 17:58:21 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id lyA74G31QVcN; Tue,  8 Apr 2025 17:58:20 +0200 (CEST)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-	by lithops.sigma-star.at (Postfix) with ESMTP id C6A5F29857F;
-	Tue,  8 Apr 2025 17:58:20 +0200 (CEST)
-Date: Tue, 8 Apr 2025 17:58:20 +0200 (CEST)
-From: Richard Weinberger <richard@nod.at>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: Richard Weinberger <richard.weinberger@gmail.com>, 
-	Christian Brauner <brauner@kernel.org>, 
-	Cengiz Can <cengiz.can@canonical.com>, 
-	Attila Szasz <szasza.contact@gmail.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Salvatore Bonaccorso <carnil@debian.org>, 
-	linux-fsdevel <linux-fsdevel@vger.kernel.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	lvc-patches@linuxtesting.org, dutyrok@altlinux.org, 
-	syzbot+5f3a973ed3dfb85a6683@syzkaller.appspotmail.com, 
-	stable <stable@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>
-Message-ID: <168561308.256760721.1744127900601.JavaMail.zimbra@nod.at>
-In-Reply-To: <20250408145053.GJ6266@frogsfrogsfrogs>
-References: <20241019191303.24048-1-kovalev@altlinux.org> <7qi6est65ekz4kjktvmsbmywpo5n2kla2m3whbvq4dsckdcyst@e646jwjazvqh> <2025032404-important-average-9346@gregkh> <dzmprnddbx2qaukb7ukr5ngdx6ydwxynaq6ctxakem43yrczqb@y7dg7kzxsorc> <20250407-biegung-furor-e7313ca9d712@brauner> <20250407190814.GB6258@frogsfrogsfrogs> <CAFLxGvxH=4rHWu-44LSuWaGA_OB0FU0Eq4fedVTj3tf2D3NgYQ@mail.gmail.com> <20250408145053.GJ6266@frogsfrogsfrogs>
-Subject: Re: [PATCH] hfs/hfsplus: fix slab-out-of-bounds in
- hfs_bnode_read_key
+	s=arc-20240116; t=1744127925; c=relaxed/simple;
+	bh=AHvLh3VHhH+8s0BqalzzLWIJRhM0DmQZyfPUYf0ycCM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hVNstmxSrRMkXQthLuXagu9ik3f5sxKPbhSoKEHO0t2yYuISfHl9GKwrDHImH8vVKDhGTI+UdH1vwLXVIV+vR4gEPYI1Rn3wVohdbAqVs8t73KKsNymPUqFxCUrBbnH+NMGp+63r7h67anNd7J1F40xEl+iciKq+ymUM6oDm4tk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arnaud-lcm.com; spf=pass smtp.mailfrom=arnaud-lcm.com; arc=none smtp.client-ip=45.145.164.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arnaud-lcm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arnaud-lcm.com
+Received: from [IPV6:2a01:e0a:3e8:c0d0:9059:1ccf:a15c:f330] (unknown [IPv6:2a01:e0a:3e8:c0d0:9059:1ccf:a15c:f330])
+	by plesk.hostmyservers.fr (Postfix) with ESMTPSA id 36E84487F4;
+	Tue,  8 Apr 2025 15:58:40 +0000 (UTC)
+Authentication-Results: Plesk;
+        spf=pass (sender IP is 2a01:e0a:3e8:c0d0:9059:1ccf:a15c:f330) smtp.mailfrom=contact@arnaud-lcm.com smtp.helo=[IPV6:2a01:e0a:3e8:c0d0:9059:1ccf:a15c:f330]
+Received-SPF: pass (Plesk: connection is authenticated)
+Message-ID: <ba2f508e-20b1-4b5a-b512-a85efcf9ad50@arnaud-lcm.com>
+Date: Tue, 8 Apr 2025 17:58:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF136 (Linux)/8.8.12_GA_3809)
-Thread-Topic: hfs/hfsplus: fix slab-out-of-bounds in hfs_bnode_read_key
-Thread-Index: RB6CVOkT8Caj0B9BqKiFFs5kHooyAg==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] net: ppp: Add bound checking for skb d on ppp_sync_txmung
+To: Simon Horman <horms@kernel.org>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ linux-ppp@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
+ syzbot+29fc8991b0ecb186cf40@syzkaller.appspotmail.com
+References: 
+ <20250407-bound-checking-ppp_txmung-v1-1-cfcd2efe39e3@arnaud-lcm.com>
+ <20250408153352.GY395307@horms.kernel.org>
+Content-Language: en-US
+From: Arnaud Lecomte <contact@arnaud-lcm.com>
+In-Reply-To: <20250408153352.GY395307@horms.kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: <174412792069.11363.17962374028464217077@Plesk>
+X-PPP-Vhost: arnaud-lcm.com
 
------ Urspr=C3=BCngliche Mail -----
-> Von: "Darrick J. Wong" <djwong@kernel.org>
->> IMHO guestmount and other userspace filesystem implementations should
->> be the default
->> for such mounts.
->=20
-> Agree.  I don't know if they (udisks upstream) have any good way to
-> detect that a userspace filesystem driver is available for a given
-> filesystem.  Individual fuse drivers don't seem to have a naming
-> convention (fusefat, fuse2fs) though at least on Debian some of them
-> seem to end up as /sbin/mount.fuse.$FSTYPE.
->=20
-> guestmount seems to boot the running kernel in qemu and use that?  So I
-> guess it's hard for guestmount itself even to tell you what formats it
-> supports?  I'm probably just ignorant on that issue.
+Thanks for the review.
 
-Yes, libguestfs runs a Linux kernel inside. It support qemu, UserModeLinux
-and IIRC it had even a PoC for LKL (Linux Kernel Library).
-That said, the performance is not optimal but I'm sure with reasonable
-effort it could be improved at lot.
-At least to work with odd filesystem in a satisfying way.
+You're right, using a merge commit in the `Fixes:` tag was not relevant.
+I'll send a v2 shortly with the fix as well as the removal of the skb 
+check as it is already done before.
 
-Thanks,
-//richard
+On 08/04/2025 17:33, Simon Horman wrote:
+> On Mon, Apr 07, 2025 at 05:26:21PM +0200, Arnaud Lecomte wrote:
+>> Ensure we have enough data in linear buffer from skb before accessing
+>> initial bytes. This prevents potential out-of-bounds accesses
+>> when processing short packets.
+>>
+>> When ppp_sync_txmung receives an incoming package with an empty
+>> payload:
+>> (remote) gef➤  p *(struct pppoe_hdr *) (skb->head + skb->network_header)
+>> $18 = {
+>> 	type = 0x1,
+>> 	ver = 0x1,
+>> 	code = 0x0,
+>> 	sid = 0x2,
+>>          length = 0x0,
+>> 	tag = 0xffff8880371cdb96
+>> }
+>>
+>> from the skb struct (trimmed)
+>>        tail = 0x16,
+>>        end = 0x140,
+>>        head = 0xffff88803346f400 "4",
+>>        data = 0xffff88803346f416 ":\377",
+>>        truesize = 0x380,
+>>        len = 0x0,
+>>        data_len = 0x0,
+>>        mac_len = 0xe,
+>>        hdr_len = 0x0,
+>>
+>> it is not safe to access data[2].
+>>
+>> Reported-by: syzbot+29fc8991b0ecb186cf40@syzkaller.appspotmail.com
+>> Closes: https://syzkaller.appspot.com/bug?extid=29fc8991b0ecb186cf40
+>> Tested-by: syzbot+29fc8991b0ecb186cf40@syzkaller.appspotmail.com
+>> Fixes: 9946eaf552b1 ("Merge tag 'hardening-v6.14-rc2' of git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux")
+> It doesn't seem right to use a Merge commit in a fixes tag.
+>
+> Looking over the code, the access to data[2] seems to have existed since
+> the beginning of git history, in which case I think we can use this:
+>
+> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+>
+>> Signed-off-by: Arnaud Lecomte <contact@arnaud-lcm.com>
+>> ---
+>>   drivers/net/ppp/ppp_synctty.c | 5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/drivers/net/ppp/ppp_synctty.c b/drivers/net/ppp/ppp_synctty.c
+>> index 644e99fc3623..520d895acc60 100644
+>> --- a/drivers/net/ppp/ppp_synctty.c
+>> +++ b/drivers/net/ppp/ppp_synctty.c
+>> @@ -506,6 +506,11 @@ ppp_sync_txmunge(struct syncppp *ap, struct sk_buff *skb)
+>>   	unsigned char *data;
+>>   	int islcp;
+>>   
+>> +	/* Ensure we can safely access protocol field and LCP code */
+>> +	if (!skb || !pskb_may_pull(skb, 3)) {
+> I doubt that skb can be NULL.
+>
+>> +		kfree_skb(skb);
+>> +		return NULL;
+>> +	}
+>>   	data  = skb->data;
+>>   	proto = get_unaligned_be16(data);
+>>   
+>>
+>> ---
+>> base-commit: 9946eaf552b194bb352c2945b54ff98c8193b3f1
+>> change-id: 20250405-bound-checking-ppp_txmung-4807c854ed85
+>>
+>> Best regards,
+>> -- 
+>> Arnaud Lecomte <contact@arnaud-lcm.com>
+>>
+>>
