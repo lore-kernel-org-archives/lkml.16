@@ -1,309 +1,147 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC937137C37;
-	Tue,  8 Apr 2025 13:52:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09E083BBF2;
+	Tue,  8 Apr 2025 13:54:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744120327; cv=none; b=OIKOz60PEi0ZfHmWCMujWKpv2Yct8r4bR7jOtqkmj4SJfJXml95M6FGYyUCuN2HabKMMcPMNixGRJnSa6BCXkKCErgy/Io+06aH3BfZk7rG37VYTPp+w5xoS0iNmQ/Kk2hJ1yrv4AG7uHxagjBrJB7Kb+0B47VoYjlE+Zjb3yrE=
+	t=1744120458; cv=none; b=mnAiJupuwkCJUPNcRdF7AAZOtZp9J8wFCJidtN1B3Sr3cGAeq/W7Bzjxla3XCtFrBwF1h8oeRd2QG6JLn9mJPJh0mY660lDvb7NK5WiPmJPUExmIFjdsVZt1h/ME9PknayI/xTiCPp/KQJ8BRbIKfLTJUk6GUgy17dmBj8N9U2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744120327; c=relaxed/simple;
-	bh=HaGFEf+YwVPYiVCfx8DFFA6TjICSQuB/1KMbhZ4PLbI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BuztOVnFiKYTpaO7bozzTNHcizkhQcR5LWtbH1/5hHMgjAXCIef26lWCmTnstZ8KSNfkK1S20rAUj6qyFqx3Yuy+uHF9omre9iqpHd5TqybZXDezg5A8UrRj7rkMBaxWYrfbXnUs7wB/WRDP1DB1NMATTbCtP01qor8GxpR3oQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GJnyNNxi; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744120458; c=relaxed/simple;
+	bh=zZeJW8y/pLhorqi153IgAmOKNsiPwpGGNfmHZJnuqHU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=be20ymdgPvKKAsawxnSwrHSDntU8+t6BYjwDMjqaVrNUa3ngihKwt8ro61OZFcioc6en/aO2UwlK/XoOf5nN0zrGkYnK8ZL2iDAUtzM7cfJVKQY6VW1G3t6X+ypcTyUZ4A7TSiU3nwMM+bWxurVpzqyYMH9Zdnx+SlwE22NNdSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F5wrfDwL; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GJnyNNxi"
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e6dd991a0e6so4829893276.1;
-        Tue, 08 Apr 2025 06:52:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744120325; x=1744725125; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iggtIaOdKwCaj0c8UnJKvVOsn69XQmtF4Ox/sMEh3ho=;
-        b=GJnyNNxiNL5hGLIV//Sh4tDN2nxnrTmx1QAznEf23QzYIJ9HAJBn1C05Q21FExs0+6
-         jv8q4Yq6txHqOz02afX2cTbedubO14xNqJbqMbahmyeR3T6wKLIXmgno+susx4PTxEv5
-         jdCpmMoClPsDXMCYU9BOMJGkPEeJGY3kEa5TElx8xJ/tnZ5DoGoIjtBqeXrAhbQWZUrB
-         lxUxF5h6udySek915EPAWYe2IwWd6n2TJ0f/yguY+PwcG8JP7dUumgDmdNwrocEimXIs
-         T/BT9Y3uaORJsw0HCj4XXdPm51LtNgmUFatMF0VzF4llHBUHbzjYtSIfc+9ciIHAm0oZ
-         ISkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744120325; x=1744725125;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iggtIaOdKwCaj0c8UnJKvVOsn69XQmtF4Ox/sMEh3ho=;
-        b=BNYdNVxzPsYLI6oQDezHEvq9LjKnJIBHBo2SG7qf260OMp3Exaf7JgYBJqwHqCwLRc
-         fqfeSniYaC/7DOYVDQ8teId9FO/QRs2GnBE5iEjxi6AwLYzlrozT8jvvj5OEnzyTMzpA
-         GXZBSdwur/LQ6sHXsJvNLHSzxyzsyWSzz7MclPT8kwJLX6DqIDQ9/qc4Xuxt71neuAXM
-         4pz3Kj33orWTThkxlhLUdaEsL2fCVDzdCj+7YpGSWtwgR9F6JxiRRKlWIHuS82vN2Cv6
-         uRhr5cSyFJq6eKrhAPMhNpYsl/f35r0obQ62HbW+c0JSPk58sV84oY8z/dGiyGy5IJYa
-         JQmA==
-X-Forwarded-Encrypted: i=1; AJvYcCWGX4TmRwD6nB+M1vDJudN4QuphVa/8H6Fy3Vle7PG37Cy2noFNYRzY0jlhqHBcoiHgjbwOav+OURA=@vger.kernel.org, AJvYcCX/MCOW4UWicRFJuvWOB+Z3QUsTbr4dRevSmAF2ig5fllWY7stYoKMRifzVMv9qMoTt0/R+thlmvTcTOsFe@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2WlBRmVn8vkAfKJASitAUsK2uxNHe/c9y13v86MOtieecxpnQ
-	I6qD8yS3sZJrEdYxJK61vPKVSUG7WTTpYk7dR7zfzu86FjaG8VwA
-X-Gm-Gg: ASbGncviROPganRqbN/Nn7Zi+VlB9u9YGUxEbeTY7owQSZj/yTq3q3gNRHYjS8VPzFm
-	F4f4c0gdjJam+xQSyqeDkwIDNwRgasuASXcMrixarqs3Ahf6JDtCxhDvsNILT76SC3eaizEDRf2
-	vcCFFklKvzpT7xWJ46xMm6vHWKoBxrKEjMgxzRY3iQ0FMgklJyROKWF6o8Miy0R0e1JBgLiAxNo
-	hJQ9KNyuP32GZvxLZe7q5duKfUXVIP2irWuq8mlmpQqm98iPzDcWvNe1O6MfYYElbCuN+QSnZo8
-	PgaYturyYdp0A7WJZlBuQWykudkIqIdmKrVZgjpK
-X-Google-Smtp-Source: AGHT+IEEOIFV5JW5y4gJNyzsPGTfIpKDTk2nVR3Zxvi/DZjydcsNnJirWV6ukyAOhPkuSSu+3YtRSQ==
-X-Received: by 2002:a05:6902:2e0a:b0:e6d:f7ea:c722 with SMTP id 3f1490d57ef6-e6e1c286d11mr28221779276.17.1744120324656;
-        Tue, 08 Apr 2025 06:52:04 -0700 (PDT)
-Received: from localhost ([2a03:2880:25ff::])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e6e0ca96a08sm2853800276.45.2025.04.08.06.52.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 06:52:04 -0700 (PDT)
-From: Joshua Hahn <joshua.hahnjy@gmail.com>
-To: Rakie Kim <rakie.kim@sk.com>
-Cc: akpm@linux-foundation.org,
-	gourry@gourry.net,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	joshua.hahnjy@gmail.com,
-	dan.j.williams@intel.com,
-	ying.huang@linux.alibaba.com,
-	david@redhat.com,
-	Jonathan.Cameron@huawei.com,
-	osalvador@suse.de,
-	kernel_team@skhynix.com,
-	honggyu.kim@sk.com,
-	yunjeong.mun@sk.com
-Subject: Re: [PATCH v7 3/3] mm/mempolicy: Support memory hotplug in weighted interleave
-Date: Tue,  8 Apr 2025 06:52:01 -0700
-Message-ID: <20250408135202.3001047-1-joshua.hahnjy@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250408073243.488-4-rakie.kim@sk.com>
-References: 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F5wrfDwL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744120457; x=1775656457;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=zZeJW8y/pLhorqi153IgAmOKNsiPwpGGNfmHZJnuqHU=;
+  b=F5wrfDwL/FP6p8FReu15CNpU89NNqTnJHKbMr/KiOTTRv0XOxiWLvieU
+   YT2rBIMVQD3h1TGDWnsDv30wRRkAeO+CAL9Bjs0kRrfVtpi+jz2sr+kFF
+   WqJlMf5simpZ24DmbXSOJBJAri9iAI2+Oj8B3az2csfGxmiaYzdjffSrn
+   sKwZimJBo5E8WG1of99cDaSsFoAj3blem3FeuBWSbc/CFd1s8WY1XBcHZ
+   I1zyoUTlVeBDF5lbjOvzr3z+19J/XDHLtlhlSSMH174J3DpimCTkBE+rX
+   wgHqjzu5Ix+NrWeqGDU1qryUEKYOjr+6HWPRRoHSW8yPxLGte/k8DX0eE
+   w==;
+X-CSE-ConnectionGUID: B4Dpk+M/QFKRxqjTlVO40Q==
+X-CSE-MsgGUID: 04X6p3qeTY+8RjTjGytDtw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="49211571"
+X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
+   d="scan'208";a="49211571"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 06:54:16 -0700
+X-CSE-ConnectionGUID: CwSlN7erRwqc3SSIQGeiLQ==
+X-CSE-MsgGUID: Qv/+a7BzRAOFQlEWn3aklg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
+   d="scan'208";a="128150606"
+Received: from unknown (HELO [10.237.72.199]) ([10.237.72.199])
+  by fmviesa006.fm.intel.com with ESMTP; 08 Apr 2025 06:54:14 -0700
+Message-ID: <357368ff-0c49-4f22-a03d-fd9560c22dae@linux.intel.com>
+Date: Tue, 8 Apr 2025 16:55:24 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC RFT] usb: hcd: Add a usb_device argument to
+ hc_driver.endpoint_reset()
+To: =?UTF-8?Q?Micha=C5=82_Pecio?= <michal.pecio@gmail.com>,
+ Alan Stern <stern@rowland.harvard.edu>,
+ Mathias Nyman <mathias.nyman@intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Paul Menzel <pmenzel@molgen.mpg.de>, linux-usb@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>
+References: <c279bd85-3069-4841-b1be-20507ac9f2d7@molgen.mpg.de>
+ <b356f743-44b5-4f48-a289-fae0afe106ff@linux.intel.com>
+ <84b400f8-2943-44e0-8803-f3aac3b670af@molgen.mpg.de>
+ <20250406002311.2a76fc64@foxbook>
+ <ade0d77a-651a-4b03-bf21-00369fdc22f8@rowland.harvard.edu>
+ <20250406095008.0dbfd586@foxbook> <20250406175032.12b7d284@foxbook>
+ <14197657-0a0f-45a8-ac36-dd37b16a1565@rowland.harvard.edu>
+ <20250407074905.2d236fb9@foxbook>
+ <3efb52b8-0974-4125-a344-00f459fbe4e4@rowland.harvard.edu>
+ <20250408121817.6ae8defd@foxbook>
+Content-Language: en-US
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+In-Reply-To: <20250408121817.6ae8defd@foxbook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On Tue,  8 Apr 2025 16:32:42 +0900 Rakie Kim <rakie.kim@sk.com> wrote:
-
-Hi Rakie,
-
-Looks good to me as well : -) Thank you for working on this!
-
-Reviewed-by: Joshua Hahn <joshua.hahnjy@gmail.com>
-
-> The weighted interleave policy distributes page allocations across multiple
-> NUMA nodes based on their performance weight, thereby improving memory
-> bandwidth utilization. The weight values for each node are configured
-> through sysfs.
+On 8.4.2025 13.18, Michał Pecio wrote:
+> xHCI needs usb_device in this callback so it employed some hacks that
+> proved unreliable in the long term and made the code a little tricky.
 > 
-> Previously, sysfs entries for configuring weighted interleave were created
-> for all possible nodes (N_POSSIBLE) at initialization, including nodes that
-> might not have memory. However, not all nodes in N_POSSIBLE are usable at
-> runtime, as some may remain memoryless or offline.
-> This led to sysfs entries being created for unusable nodes, causing
-> potential misconfiguration issues.
+> Make USB core supply it directly and simplify xhci_endpoint_reset().
+> Use xhci_check_args() to prevent resetting emulated endpoints of root
+> hubs and to deduplicate argument validation and improve debuggability.
 > 
-> To address this issue, this patch modifies the sysfs creation logic to:
-> 1) Limit sysfs entries to nodes that are online and have memory, avoiding
->    the creation of sysfs entries for nodes that cannot be used.
-> 2) Support memory hotplug by dynamically adding and removing sysfs entries
->    based on whether a node transitions into or out of the N_MEMORY state.
+> Update ehci_endpoint_reset(), which is the only other such callback,
+> to accept (and ignore) the new argument.
 > 
-> Additionally, the patch ensures that sysfs attributes are properly managed
-> when nodes go offline, preventing stale or redundant entries from persisting
-> in the system.
+> This fixes the root cause of a 6.15-rc1 regression reported by Paul,
+> which I was able to reproduce locally. It also solves the general
+> problem of xhci_endpoint_reset() becoming a no-op after device reset
+> or changing configuration or altsetting. Although nobody complained
+> because halted endpoints are reset automatically by xhci_hcd, it was
+> a bug - sometimes class drivers want to reset not halted endpoints.
 > 
-> By making these changes, the weighted interleave policy now manages its
-> sysfs entries more efficiently, ensuring that only relevant nodes are
-> considered for interleaving, and dynamically adapting to memory hotplug
-> events.
-> 
-> Signed-off-by: Rakie Kim <rakie.kim@sk.com>
-> Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
-> Signed-off-by: Yunjeong Mun <yunjeong.mun@sk.com>
-> Reviewed-by: Oscar Salvador <osalvador@suse.de>
+> Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
+> Closes: https://lore.kernel.org/linux-usb/c279bd85-3069-4841-b1be-20507ac9f2d7@molgen.mpg.de/
+> Signed-off-by: Michal Pecio <michal.pecio@gmail.com>
 > ---
->  mm/mempolicy.c | 106 ++++++++++++++++++++++++++++++++++++++-----------
->  1 file changed, 83 insertions(+), 23 deletions(-)
 > 
-> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> index 988575f29c53..9aa884107f4c 100644
-> --- a/mm/mempolicy.c
-> +++ b/mm/mempolicy.c
-> @@ -113,6 +113,7 @@
->  #include <asm/tlbflush.h>
->  #include <asm/tlb.h>
->  #include <linux/uaccess.h>
-> +#include <linux/memory.h>
->  
->  #include "internal.h"
->  
-> @@ -3421,6 +3422,7 @@ struct iw_node_attr {
->  
->  struct sysfs_wi_group {
->  	struct kobject wi_kobj;
-> +	struct mutex kobj_lock;
->  	struct iw_node_attr *nattrs[];
->  };
->  
-> @@ -3470,13 +3472,24 @@ static ssize_t node_store(struct kobject *kobj, struct kobj_attribute *attr,
->  
->  static void sysfs_wi_node_delete(int nid)
->  {
-> -	if (!wi_group->nattrs[nid])
-> +	struct iw_node_attr *attr;
-> +
-> +	if (nid < 0 || nid >= nr_node_ids)
-> +		return;
-> +
-> +	mutex_lock(&wi_group->kobj_lock);
-> +	attr = wi_group->nattrs[nid];
-> +	if (!attr) {
-> +		mutex_unlock(&wi_group->kobj_lock);
->  		return;
-> +	}
-> +
-> +	wi_group->nattrs[nid] = NULL;
-> +	mutex_unlock(&wi_group->kobj_lock);
->  
-> -	sysfs_remove_file(&wi_group->wi_kobj,
-> -			  &wi_group->nattrs[nid]->kobj_attr.attr);
-> -	kfree(wi_group->nattrs[nid]->kobj_attr.attr.name);
-> -	kfree(wi_group->nattrs[nid]);
-> +	sysfs_remove_file(&wi_group->wi_kobj, &attr->kobj_attr.attr);
-> +	kfree(attr->kobj_attr.attr.name);
-> +	kfree(attr);
->  }
->  
->  static void sysfs_wi_release(struct kobject *wi_kobj)
-> @@ -3495,35 +3508,77 @@ static const struct kobj_type wi_ktype = {
->  
->  static int sysfs_wi_node_add(int nid)
->  {
-> -	struct iw_node_attr *node_attr;
-> +	int ret = 0;
->  	char *name;
-> +	struct iw_node_attr *new_attr = NULL;
->  
-> -	node_attr = kzalloc(sizeof(*node_attr), GFP_KERNEL);
-> -	if (!node_attr)
-> +	if (nid < 0 || nid >= nr_node_ids) {
-> +		pr_err("Invalid node id: %d\n", nid);
-> +		return -EINVAL;
-> +	}
-> +
-> +	new_attr = kzalloc(sizeof(struct iw_node_attr), GFP_KERNEL);
-> +	if (!new_attr)
->  		return -ENOMEM;
->  
->  	name = kasprintf(GFP_KERNEL, "node%d", nid);
->  	if (!name) {
-> -		kfree(node_attr);
-> +		kfree(new_attr);
->  		return -ENOMEM;
->  	}
->  
-> -	sysfs_attr_init(&node_attr->kobj_attr.attr);
-> -	node_attr->kobj_attr.attr.name = name;
-> -	node_attr->kobj_attr.attr.mode = 0644;
-> -	node_attr->kobj_attr.show = node_show;
-> -	node_attr->kobj_attr.store = node_store;
-> -	node_attr->nid = nid;
-> +	mutex_lock(&wi_group->kobj_lock);
-> +	if (wi_group->nattrs[nid]) {
-> +		mutex_unlock(&wi_group->kobj_lock);
-> +		pr_info("Node [%d] already exists\n", nid);
-> +		kfree(new_attr);
-> +		kfree(name);
-> +		return 0;
-> +	}
-> +	wi_group->nattrs[nid] = new_attr;
->  
-> -	if (sysfs_create_file(&wi_group->wi_kobj, &node_attr->kobj_attr.attr)) {
-> -		kfree(node_attr->kobj_attr.attr.name);
-> -		kfree(node_attr);
-> -		pr_err("failed to add attribute to weighted_interleave\n");
-> -		return -ENOMEM;
-> +	sysfs_attr_init(&wi_group->nattrs[nid]->kobj_attr.attr);
-> +	wi_group->nattrs[nid]->kobj_attr.attr.name = name;
-> +	wi_group->nattrs[nid]->kobj_attr.attr.mode = 0644;
-> +	wi_group->nattrs[nid]->kobj_attr.show = node_show;
-> +	wi_group->nattrs[nid]->kobj_attr.store = node_store;
-> +	wi_group->nattrs[nid]->nid = nid;
-> +
-> +	ret = sysfs_create_file(&wi_group->wi_kobj,
-> +				&wi_group->nattrs[nid]->kobj_attr.attr);
-> +	if (ret) {
-> +		kfree(wi_group->nattrs[nid]->kobj_attr.attr.name);
-> +		kfree(wi_group->nattrs[nid]);
-> +		wi_group->nattrs[nid] = NULL;
-> +		pr_err("Failed to add attribute to weighted_interleave: %d\n", ret);
->  	}
-> +	mutex_unlock(&wi_group->kobj_lock);
->  
-> -	wi_group->nattrs[nid] = node_attr;
-> -	return 0;
-> +	return ret;
-> +}
-> +
-> +static int wi_node_notifier(struct notifier_block *nb,
-> +			       unsigned long action, void *data)
-> +{
-> +	int err;
-> +	struct memory_notify *arg = data;
-> +	int nid = arg->status_change_nid;
-> +
-> +	if (nid < 0)
-> +		return NOTIFY_OK;
-> +
-> +	switch(action) {
-> +	case MEM_ONLINE:
-> +		err = sysfs_wi_node_add(nid);
-> +		if (err)
-> +			pr_err("failed to add sysfs [node%d]\n", nid);
-> +		break;
-> +	case MEM_OFFLINE:
-> +		sysfs_wi_node_delete(nid);
-> +		break;
-> +	}
-> +
-> +	return NOTIFY_OK;
->  }
->  
->  static int __init add_weighted_interleave_group(struct kobject *mempolicy_kobj)
-> @@ -3534,13 +3589,17 @@ static int __init add_weighted_interleave_group(struct kobject *mempolicy_kobj)
->  			   GFP_KERNEL);
->  	if (!wi_group)
->  		return -ENOMEM;
-> +	mutex_init(&wi_group->kobj_lock);
->  
->  	err = kobject_init_and_add(&wi_group->wi_kobj, &wi_ktype, mempolicy_kobj,
->  				   "weighted_interleave");
->  	if (err)
->  		goto err_put_kobj;
->  
-> -	for_each_node_state(nid, N_POSSIBLE) {
-> +	for_each_online_node(nid) {
-> +		if (!node_state(nid, N_MEMORY))
-> +			continue;
-> +
->  		err = sysfs_wi_node_add(nid);
->  		if (err) {
->  			pr_err("failed to add sysfs [node%d]\n", nid);
-> @@ -3548,6 +3607,7 @@ static int __init add_weighted_interleave_group(struct kobject *mempolicy_kobj)
->  		}
->  	}
->  
-> +	hotplug_memory_notifier(wi_node_notifier, DEFAULT_CALLBACK_PRI);
->  	return 0;
->  
->  err_del_kobj:
-> -- 
-> 2.34.1
+> Is such change acceptable to interested parties?
 
-Sent using hkml (https://github.com/sjp38/hackermail)
+Looks like an improvement, and will help clear the EP_STALLED flag
+eventually in device reset case.
 
+There are some issues still unsolved due to how xhci endpoints end up being handled
+in usb core usb_reset_and_verify_device().
+
+usb_reset_and_verify_device()
+   hub_port_init()
+     hcd->driver->reset_device(hcd, udev);          /*1 xhci frees ep rings, loses td_list heads */
+   usb_hcd_alloc_bandwidth(new_config, NULL, NULL)  /*2 xhci drop+add ep, allocated new ep rings */
+   usb_control_msg(udev, usb_sndctrlpipe(...,USB_REQ_SET_CONFIGURATION,...)
+   for (interfaces) {
+     if (AlternateSetting == 0) {
+       usb_disable_interface()  /*3 flush urbs, ->xhci_urb_dequeue() */
+       usb_enable_interface()   /*4 clear EP_STALLED flag */
+     } else {
+       usb_set_interface()
+     }
+
+1. driver->reset_device will free all xhci endpoint rings, and lose td_list head, but
+    keep cancelled_td_list and ep->ep_state flags. xHC issues reset device command
+    setting all internal ep states in xci to "disabled".
+
+2. usb hcd_alloc_bandwith will drop+add xhci endpoints for this configuration,
+    allocate new endpoint rings, and inits new td_list head.
+    Old cancelled_td_list and ep_state flags are still set, not matching ring.
+
+3. usb_disable_interface() will flush all pending URBs calling xhci_urb_dequeue().
+    xhci_urb_dequeue() makes decision based on stale ep_state flags.
+    May start to cancel/giveback urbs in old cancelled_td_list for tds that existed
+    on old freed ring. will also set host_ep->hcpriv to null
+
+4. usb_enable_interface() calls xhci_endpoint_reset() that finally clears
+    the EP_STALLED flag (udev now found thanks to this patch)
+
+Disabling endpoints, like calling usb_disable_interface() in step 3 should be
+done before calling  usb_hcd_alloc_bandwith().
+This was fixed in other places such as usb_set_interface() and usb_reset_config()
+
+We might need to clean up ep_state flags and give back cancelled URBs in
+xhci_discover_or_reset_device() after the reset device xhci command completion.
+
+Thanks
+Mathias
