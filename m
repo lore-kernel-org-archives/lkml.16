@@ -1,99 +1,88 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344971CAA7D;
-	Tue,  8 Apr 2025 03:26:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D0614A1E;
+	Tue,  8 Apr 2025 03:27:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744082814; cv=none; b=dKcJb4FSlvkeQmSLu+XhpYTWjlg+bqaNiO8AkJ5QZofP2Rrp/II//T9/rjm9XhQKVgRd2/ySulyf11YqFXSS71hwzzsJFuWizs3QyG30byWPkrC8oDkZnC0qnu/sdzxQQ4wRnWsO2oz86vty98l8AqKd2FPEbUUPV8jGg3eeERk=
+	t=1744082858; cv=none; b=C81YQYlLVBw4xhc1nLj2xncR6G5cXjBSuiQudwYldSureQ3kxhbM91Sh3Amqy62hkuJbRvDiQa/QcI2jDyvLVhqL87ulRcl7Z6/z9x2YcIe1wvs/RFaV8nALqlwyCALMinVTACGCH/8JxV4x2bgl+Q8/pqmsq0cHf8M/3We4O8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744082814; c=relaxed/simple;
-	bh=x5ev/bg388DQWdRmJfwBbTXed9cqflBj9fCL+KF+EoY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lvCCI7gBjOf3AaqqJtcHLqiMsZdXUszH2vcdrmYLuHFph0zeD5LcW7y8A57olf8G3EcwhVAFCPOIo0K9Z3cto2TIlPQlTxCRoxo0l/6X9vsAeHTe3ZqqQ4KVAE2aMkdg7BfQv5xCl5zzRpwAucJsxbVzzuuIMlBzos3QYOWWcIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-01 (Coremail) with SMTP id qwCowAA32_tel_RnzFcRBw--.29916S2;
-	Tue, 08 Apr 2025 11:26:27 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: sgoutham@marvell.com,
-	gakula@marvell.com,
-	sbhatta@marvell.com,
-	hkelam@marvell.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>
-Subject: [PATCH v4] octeontx2-pf: Add error log forcn10k_map_unmap_rq_policer()
-Date: Tue,  8 Apr 2025 11:26:02 +0800
-Message-ID: <20250408032602.2909-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1744082858; c=relaxed/simple;
+	bh=QBoHFP0rkCTLN++g+05IHMNfIPqZQxK2EUYy3s9EOrs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=KzK49O07Gvg0Ko2O+3bVrvlsPnVOatDAZIzLWFX+cp2GgmNScB1wIaYEgxMR2UBSgeFlAFEgkE93NzkEjVWAkqoJDQOTj2A39T/8Udk9R4Tu51GwoTD2LVWIdSTDiGejh1lHEl/zhkIapyJX6McggzzXjKkfO6CbA1NX7FabP8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=NvwkrS0C; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NvwkrS0C"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1744082850;
+	bh=K2YteJBgFjtwBya1zY/KtJZdKMUSs1MqU9scQWyifhs=;
+	h=Date:From:To:Cc:Subject:From;
+	b=NvwkrS0CFCyPEPh7aQ1pd2ue7HKzIiad4ccj2yNCcyl9DkqQu42nkMMq+7mTf6zGF
+	 SQYc9xVTN3q9MUzMXa2oAKMvTKXHEMi7INlgyiEnO22f1yiH884dmv2zForMQ+ajQJ
+	 +7ICsrnIySQYqE3qgspKPFzXQCcOD0s7Cp8rSsKko/ZSXf3Bbi3inMJX+4MMYCdTy6
+	 A9MqVs/6bEH7ZKht1x6KIdMndkMPaowOUYDt2BZMVXshY8aZNY/Rdpc1Heasly02Ih
+	 oc4hifF8sM9fpW9ccQFrGNBR9s9hDBmpTms/p5YADxrNyF2CktZ7KwoAiHD05CwAQA
+	 IECOjbWfp1b1w==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZWs2p3TdDz4wby;
+	Tue,  8 Apr 2025 13:27:30 +1000 (AEST)
+Date: Tue, 8 Apr 2025 13:27:29 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Takashi Iwai <tiwai@suse.de>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: duplicate patch in the sound-asoc tree
+Message-ID: <20250408132729.78ce049a@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowAA32_tel_RnzFcRBw--.29916S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7CFW8XFW3tr4Uur1DCr1rJFb_yoW8Xr1Dpw
-	4jk3429wn7XrWfJan7Wa40gr15tay8G3y7Ga47A343Z39aywnIvFn0yFyI9rZ7CrZ5uFy3
-	tF15AaykCF1DZrDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9214x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
-	1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-	7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
-	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02
-	628vn2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4
-	IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1r
-	MI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJV
-	WUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j
-	6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYx
-	BIdaVFxhVjvjDU0xZFpf9x0JUd-B_UUUUU=
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBg0GA2f0dv1M0gABsJ
+Content-Type: multipart/signed; boundary="Sig_/Uhb1c._RLftDrcd5VR57jIK";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-The cn10k_free_matchall_ipolicer() calls the cn10k_map_unmap_rq_policer()
-for each queue in a for loop without checking for any errors.
+--Sig_/Uhb1c._RLftDrcd5VR57jIK
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Check the return value of the cn10k_map_unmap_rq_policer() function during
-each loop, and report a warning if the function fails.
+Hi all,
 
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
-v4: Add brackets for loop
-v3: Add failed queue number and error code to log.
-v2: Fix error code
+The following commit is also in the sound tree as a different commit
+(but the same patch):
 
- drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+  7288aa73e5cf ("ASoC: loongson: Replace deprecated PCI functions")
 
-diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c b/drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c
-index a15cc86635d6..ff5bb71d67fd 100644
---- a/drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/nic/cn10k.c
-@@ -352,9 +352,12 @@ int cn10k_free_matchall_ipolicer(struct otx2_nic *pfvf)
- 	mutex_lock(&pfvf->mbox.lock);
- 
- 	/* Remove RQ's policer mapping */
--	for (qidx = 0; qidx < hw->rx_queues; qidx++)
--		cn10k_map_unmap_rq_policer(pfvf, qidx,
--					   hw->matchall_ipolicer, false);
-+	for (qidx = 0; qidx < hw->rx_queues; qidx++) {
-+		rc = cn10k_map_unmap_rq_policer(pfvf, qidx, hw->matchall_ipolicer, false);
-+		if (rc)
-+			dev_warn(pfvf->dev, "Failed to unmap RQ %d's policer (error %d).",
-+				 qidx, rc);
-+	}
- 
- 	rc = cn10k_free_leaf_profile(pfvf, hw->matchall_ipolicer);
- 
--- 
-2.42.0.windows.2
+This is commit
 
+  a81aca6f8ed8 ("ASoC: loongson: Replace deprecated PCI functions")
+
+in the sound tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Uhb1c._RLftDrcd5VR57jIK
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmf0l6EACgkQAVBC80lX
+0GwwbggAo9W1UVmajRyVPyldCvqXzpcHpIWoijP7XTTJa0xTjOc0LXVn1s4fCe7K
+N8GxYfGkIcPNn5QNKI5+IgCVrGSw0ME97D/wZsSoasf6OHyhXV42veoNzjJImORM
+273Fm0KvrkXRv3K5orx1nBvz5rXFVxFdDxvsu40vJvAmVINQnwApRWzIeUj02t4B
+YX81jIjO00KAqmieUELXYmYuAQMomRRwnrBmnEzeSLVKDfoqVORovtSsO0xeSKGC
+vvtKnKPPcKVFjfCvEa3xleW0s+h4bCFlH/+wD/jguYtvdzFCV5W9PQV/qGr/iM9d
+usWX2mQPeXFoP9X0bRHsMBO6/AurbQ==
+=gvM1
+-----END PGP SIGNATURE-----
+
+--Sig_/Uhb1c._RLftDrcd5VR57jIK--
