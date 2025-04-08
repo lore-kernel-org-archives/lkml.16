@@ -1,58 +1,80 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66AB326B95A
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 12:10:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05E5F26A0C1
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 12:10:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744114227; cv=none; b=uQhZ6SCzo1MYyBa/a0PirBKL0q9lUJwg+rhkGTl/l980z0xqY15NM6vfF5cXAxOHwd87OWqiarSddXJujvzSga2FR9egelQ55UWlcFFBzdnMf7PCmiNaYMuex6DfBSmWJxlgLCIe1DXWNket3fbdqm0rkUV/SRXhSKoAFrEyYPI=
+	t=1744114249; cv=none; b=dw0hiSBmWNXzLDYsP6LY3kkMWq0Cutc5Pklbmb2IQggmlEu1cgLcYZbT3uRiz589nc9sgj10gCm3ybAO3k83xUCiX2khSdoEmwDzubyZHSgOq/kPaHQ5wbKrqnPvBHHGXhQl33EY5o01DBh6U3UmfibcuMMZAv8CSiVXJAOEQ/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744114227; c=relaxed/simple;
-	bh=krbcNElve3LzrK+Yl40631lbQWKkm890pYqgBHWDaqY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=laxo/7NNbKhKFLqIoh8mbbgjBxQnWF7C2lm4uss7EKF1Jem9BSjdlyefonuqJho5sMZipOxZfOr0smSCTpLmziZ0p9KNGeINuFgUTFkIpY+6pwLZvEv5cDbADtDc5N0Ao289212zLgsBsJr0T22ya3091sJKqe0RF0HDsy1R5C4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Yr/RvF04; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744114249; c=relaxed/simple;
+	bh=KT9mnVU/8FOyOrot9h9qNJcJkGwt/5NV3f3SDXIePjU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UZCNPrH79tKHS49QfuEJL+wkEhhtcgejSls4GxZSGX+vfsXvaTwCh/bCWboR1AVp/bUueVK2sj8dnQtkjmZqeUoqEYYhICJ+1TkYNG8PNRAxD4MgAhsc+kl+bZOgLSxaLw5TBbJqRe1YKzCYySwr6rb74/yBeZK6Vp09zpm8hhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=IQa2Zo5L; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Yr/RvF04"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744114224; x=1775650224;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=krbcNElve3LzrK+Yl40631lbQWKkm890pYqgBHWDaqY=;
-  b=Yr/RvF04rXYSDOCYjTgTtjDkqu+04rut+TBvsMhq0qf37jXwGFYrLkgf
-   qKN7OgIVzACUAqKp9p1f9UIdINfwBdq5hrAUjNza8G7c6Va+dr6iav9GK
-   q5pceCR6ocC6SHeeKaLRE20aaHT0XxObTjg+blpLBrY8mXfTzq5SN6NE7
-   etDslFAcil50Y5bdKiK+7yp1O0VRRy+6a0nqBfF9Jl1JwERmT7fgMwKd2
-   WHTei5pvZ09FYNk65OhxQsp5vqvc90PqMxb9hUi5uV3U1o1nqKDBaIkqI
-   6j9N6p4RooORgr4sP9Ibjs/TM/blFwz/5+P723NZaYyG974nN1dxlr3Ci
-   A==;
-X-CSE-ConnectionGUID: JAtnK70eTvCgB1RbmNV3tA==
-X-CSE-MsgGUID: 18ng6T0hRZyXGsQuzl75Pw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="45429346"
-X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
-   d="scan'208";a="45429346"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 05:10:23 -0700
-X-CSE-ConnectionGUID: KiZSUac6TXmSXmXIdS/ZzQ==
-X-CSE-MsgGUID: k7y/hZA6R3iGRaiVv5Vk2g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
-   d="scan'208";a="128235584"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 08 Apr 2025 05:10:23 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u27mV-00063O-2r;
-	Tue, 08 Apr 2025 12:10:19 +0000
-Date: Tue, 8 Apr 2025 20:10:14 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: kernel/sched/syscalls.c:979:8: error: unexpected token, expected
- comma
-Message-ID: <202504082254.7GLSWAbI-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="IQa2Zo5L"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 538B4q7r000832
+	for <linux-kernel@vger.kernel.org>; Tue, 8 Apr 2025 12:10:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=b73v37AOsmYqy5TlU6/p8jee
+	10512NLdo4MzBxNAfFM=; b=IQa2Zo5LAEndXleXQuvgtit4l6XOx15FV4JspfGP
+	6vEWjM3Tq/x607ZM+gAEwEOfha6NrpTaGA2l77sWAWIVjyr5tQELn3r37uXGKNPx
+	OHkT74WxOXbnx3jcfcsEF1JKmr5Y1sLH426PWmy5HZV8GlCm9920Hpnzu6fpWp3Y
+	0b85g1YhdiWDgyGLRHhwBGrFoFIK8onEAUrxRoOPQ4dGuUk292gtR1qfEyNUtsw3
+	GpSPx7rMOJM/skBxnpnlSFCXn34sCbeP/G7wzY1CmJdDbNPgk3CrNfYtR14Y99P5
+	8MeRbMH5EHj0w5rLP7p7znEmlLs3J+a5JjamM1GHdjdl1w==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twbe7qj6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 12:10:47 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c791987cf6so319986585a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 05:10:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744114246; x=1744719046;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=b73v37AOsmYqy5TlU6/p8jee10512NLdo4MzBxNAfFM=;
+        b=oM92LeEWj/IbJyh4Ekmw1WBaEh3QT37LyPAO138pztFFhRAg2TWRVvLigLWs8LA1qT
+         ntZqYryqs6Xdxia4Fe4Xd/xBKTzTljhULeKgogQ8eWztXTQe63BqeYBjX/xEABDL+YwA
+         C0QbxdMsugbwxoxZf/cTrSqPNyc7W1exVPs+vvlWKg+o4AjxgdSgt4oVoOmLs/0aAeCB
+         KF4XB6n52HfUluqkxloMIaapHm9OjGoZmGHXJETLpTMLiugHQ3L5qjoLbCQKjgAZ9EJ/
+         N8udJd3WJgVJ8yvXJ6cdqKBBmjPe0PGTV39TTRkKhIWtBKNrW5dcNLLnmJi9cWopwNVa
+         JJ5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXyVF7GeFOIdyyojRmY6D5HO+t8MVN1b34M2T2cAoRLwVEGYwvH8+pfxwS/XmKXg+yglVaZw4GNXTEiI+E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzY3hMxuqv2deKIy7INCl8PFyeH1kf/GJUZR5ViYh1D9DK1AO6z
+	+KSPuErOqsJlCnjTeTD82IqzAvjoKgbnPqvwmfE/cnkKSzO4zgx+Ed17zvAMsKWl5/cwIif6l7l
+	VPPFY5vki4dunVosLR+dQ1xzo2e+8so71mzzsX4VOEMI058Cjpjn/p+x6E9pv3DM=
+X-Gm-Gg: ASbGncvJn2EwRb5Qm1FDK7+KajNWaLuKjMoq7TeH/u7FU2Js90Y2HL1kGudLLNYjs27
+	ZwTHIE4UIugUf0jjMj6Pk5/8hoUoWQb0IVFwdppB+qnpyjdE5kxlnZyBUA4ikzdwb+dEVypLz0c
+	HdAJmT5nDK/qYRE93LTxmdyBFIqjCRNPpPugZOnG2xk7+2e3RFPpWRJzsemkCQ5x4b+i24OybP5
+	b6JA3xcna24n8X0beWff9yZxV/e9oBIq2LB0Px3fr5UvpmqxpFEpAc/FrilXS69N+FI96onwJm+
+	Wa5Qj7OKA5poy2eRhT28l9Uctc2xRJCWnZl/s0aNymcb89kZU3a6sYTFpVa0dXfynpBUeUvxfFS
+	Hlfs=
+X-Received: by 2002:a05:620a:1994:b0:7c5:4caa:21b6 with SMTP id af79cd13be357-7c775b1d15emr1774329385a.57.1744114245742;
+        Tue, 08 Apr 2025 05:10:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGqdj19EcF+WMojYfI4PdnZxJbpcMCmvDbz0hh/gURcbOAf793yDXKOJab77a6eCKwniOuYyQ==
+X-Received: by 2002:a05:620a:1994:b0:7c5:4caa:21b6 with SMTP id af79cd13be357-7c775b1d15emr1774326785a.57.1744114245474;
+        Tue, 08 Apr 2025 05:10:45 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54c1e5ab9easm1511766e87.38.2025.04.08.05.10.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 05:10:44 -0700 (PDT)
+Date: Tue, 8 Apr 2025 15:10:43 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+        Varadarajan Narayanan <quic_varada@quicinc.com>,
+        Dmitry Baryshkov <lumag@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] phy: qcom-qusb2: Update the phy settings for IPQ5424
+Message-ID: <3hw324uzu53mskoixqruygeryseqauvuotn5kgyx7jurpxmk2a@zvts7vselb4c>
+References: <20250407-revert_hs_phy_settings-v1-1-ec94e316ea19@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,138 +83,38 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250407-revert_hs_phy_settings-v1-1-ec94e316ea19@oss.qualcomm.com>
+X-Proofpoint-GUID: yMkke7aOkxQwECqWQjmaCylej-wXVccT
+X-Authority-Analysis: v=2.4 cv=T7OMT+KQ c=1 sm=1 tr=0 ts=67f51247 cx=c_pps a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=mh-cVgZ5-v770TwZDRMA:9 a=CjuIK1q_8ugA:10 a=ZXulRonScM0A:10
+ a=IoWCM6iH3mJn3m4BftBB:22
+X-Proofpoint-ORIG-GUID: yMkke7aOkxQwECqWQjmaCylej-wXVccT
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-08_04,2025-04-08_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ mlxlogscore=857 lowpriorityscore=0 adultscore=0 phishscore=0 bulkscore=0
+ mlxscore=0 malwarescore=0 suspectscore=0 priorityscore=1501 spamscore=0
+ clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504080086
 
-Hi Ingo,
+On Mon, Apr 07, 2025 at 07:51:17PM +0530, Kathiravan Thirumoorthy wrote:
+> Update the phy settings for IPQ5424 to meet compliance requirements.
+> The current settings do not meet the requirements, and the design team
+> has requested to use the settings used for IPQ6018.
+> 
+> Revert the commit 9c56a1de296e ("phy: qcom-qusb2: add QUSB2 support for
+> IPQ5424") and reuse the IPQ6018 settings.
+> 
+> Fixes: 9c56a1de296e ("phy: qcom-qusb2: add QUSB2 support for IPQ5424")
+> Signed-off-by: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+> ---
+>  drivers/phy/qualcomm/phy-qcom-qusb2.c | 27 +--------------------------
+>  1 file changed, 1 insertion(+), 26 deletions(-)
+> 
 
-FYI, the error/warning still remains.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   0af2f6be1b4281385b618cb86ad946eded089ac8
-commit: 04746ed80bcf3130951ed4d5c1bc5b0bcabdde22 sched/syscalls: Split out kernel/sched/syscalls.c from kernel/sched/core.c
-date:   11 months ago
-config: mips-randconfig-r064-20250408 (https://download.01.org/0day-ci/archive/20250408/202504082254.7GLSWAbI-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 92c93f5286b9ff33f27ff694d2dc33da1c07afdd)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250408/202504082254.7GLSWAbI-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504082254.7GLSWAbI-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from kernel/sched/build_policy.c:24:
-   In file included from include/linux/livepatch.h:13:
-   In file included from include/linux/ftrace.h:13:
-   In file included from include/linux/kallsyms.h:13:
-   In file included from include/linux/mm.h:2253:
-   include/linux/vmstat.h:514:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     514 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
-   In file included from kernel/sched/build_policy.c:55:
->> kernel/sched/syscalls.c:979:8: error: unexpected token, expected comma
-     979 |         ret = get_user(size, &uattr->size);
-         |               ^
-   arch/mips/include/asm/uaccess.h:97:33: note: expanded from macro 'get_user'
-      97 |         access_ok(__p, sizeof(*__p)) ? __get_user((x), __p) :           \
-         |                                        ^
-   arch/mips/include/asm/uaccess.h:183:23: note: expanded from macro '__get_user'
-     183 |                 __get_data_asm((x), user_lw, __gu_ptr);                 \
-         |                                     ^
-   <inline asm>:3:10: note: instantiated into assembly here
-       3 |         .set    eva
-         |                    ^
-   In file included from kernel/sched/build_policy.c:55:
-   kernel/sched/syscalls.c:979:8: error: instruction requires a CPU feature not currently enabled
-     979 |         ret = get_user(size, &uattr->size);
-         |               ^
-   arch/mips/include/asm/uaccess.h:97:33: note: expanded from macro 'get_user'
-      97 |         access_ok(__p, sizeof(*__p)) ? __get_user((x), __p) :           \
-         |                                        ^
-   arch/mips/include/asm/uaccess.h:183:23: note: expanded from macro '__get_user'
-     183 |                 __get_data_asm((x), user_lw, __gu_ptr);                 \
-         |                                     ^
-   <inline asm>:4:2: note: instantiated into assembly here
-       4 |         lwe $2, 0($16)
-         |         ^
-   In file included from kernel/sched/build_policy.c:55:
-   kernel/sched/syscalls.c:1009:2: error: unexpected token, expected comma
-    1009 |         put_user(sizeof(*attr), &uattr->size);
-         |         ^
-   arch/mips/include/asm/uaccess.h:71:33: note: expanded from macro 'put_user'
-      71 |         access_ok(__p, sizeof(*__p)) ? __put_user((x), __p) : -EFAULT;  \
-         |                                        ^
-   arch/mips/include/asm/uaccess.h:136:18: note: expanded from macro '__put_user'
-     136 |                 __put_data_asm(user_sw, __pu_ptr);                      \
-         |                                ^
-   <inline asm>:3:10: note: instantiated into assembly here
-       3 |         .set    eva
-         |                    ^
-   In file included from kernel/sched/build_policy.c:55:
-   kernel/sched/syscalls.c:1009:2: error: instruction requires a CPU feature not currently enabled
-    1009 |         put_user(sizeof(*attr), &uattr->size);
-         |         ^
-   arch/mips/include/asm/uaccess.h:71:33: note: expanded from macro 'put_user'
-      71 |         access_ok(__p, sizeof(*__p)) ? __put_user((x), __p) : -EFAULT;  \
-         |                                        ^
-   arch/mips/include/asm/uaccess.h:136:18: note: expanded from macro '__put_user'
-     136 |                 __put_data_asm(user_sw, __pu_ptr);                      \
-         |                                ^
-   <inline asm>:4:2: note: instantiated into assembly here
-       4 |         swe $3, 0($16)
-         |         ^
-   1 warning and 4 errors generated.
-
-
-vim +979 kernel/sched/syscalls.c
-
-   967	
-   968	/*
-   969	 * Mimics kernel/events/core.c perf_copy_attr().
-   970	 */
-   971	static int sched_copy_attr(struct sched_attr __user *uattr, struct sched_attr *attr)
-   972	{
-   973		u32 size;
-   974		int ret;
-   975	
-   976		/* Zero the full structure, so that a short copy will be nice: */
-   977		memset(attr, 0, sizeof(*attr));
-   978	
- > 979		ret = get_user(size, &uattr->size);
-   980		if (ret)
-   981			return ret;
-   982	
-   983		/* ABI compatibility quirk: */
-   984		if (!size)
-   985			size = SCHED_ATTR_SIZE_VER0;
-   986		if (size < SCHED_ATTR_SIZE_VER0 || size > PAGE_SIZE)
-   987			goto err_size;
-   988	
-   989		ret = copy_struct_from_user(attr, sizeof(*attr), uattr, size);
-   990		if (ret) {
-   991			if (ret == -E2BIG)
-   992				goto err_size;
-   993			return ret;
-   994		}
-   995	
-   996		if ((attr->sched_flags & SCHED_FLAG_UTIL_CLAMP) &&
-   997		    size < SCHED_ATTR_SIZE_VER1)
-   998			return -EINVAL;
-   999	
-  1000		/*
-  1001		 * XXX: Do we want to be lenient like existing syscalls; or do we want
-  1002		 * to be strict and return an error on out-of-bounds values?
-  1003		 */
-  1004		attr->sched_nice = clamp(attr->sched_nice, MIN_NICE, MAX_NICE);
-  1005	
-  1006		return 0;
-  1007	
-  1008	err_size:
-  1009		put_user(sizeof(*attr), &uattr->size);
-  1010		return -E2BIG;
-  1011	}
-  1012	
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+With best wishes
+Dmitry
