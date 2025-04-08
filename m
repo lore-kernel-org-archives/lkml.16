@@ -1,68 +1,134 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30828206F31;
-	Tue,  8 Apr 2025 09:00:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCC3522257F
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 09:01:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744102854; cv=none; b=FmLuMw9FV2VTnPdcWBX/6/lNIXKmTmXSSp4JWc+EzFUXTAq95m1G7QlAniLwxQ+LG0aSc+5PI1VTqbGfC/W34UL+bNzgX63Z3s++UAqnW7Kno2zjrdD2js+WT37Drwif1r49NB8ZLpQwloteptj0iZ9x8twvqWC4vH7mwIGmob0=
+	t=1744102892; cv=none; b=tZkHtHQ/SWVmet3VyuN+77rNpzcDdEDr8T0wITxYDM+TumhMLiaVLbUhmLoYY1akkhvpXkVD+WWEQXRHHZ7yAx4eotY7FWyWlxrqZTT8kDT+g69IN2BLSul7p4sPTy7+gBqGA1+Hqie5uy/bYM5zOSkYc1cRLXI86zYFTupFrDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744102854; c=relaxed/simple;
-	bh=Z/pcvKfgNqZVt5kg+UI9M+1DEbsC3c9S7vBAF3ADiIM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=USbycY9t66Jl03CvVVEuJQ1VDVxQpa7ZmgvIP0oDgoQ/XEqRENU3jDS9iYLczn6SfHe85eGgVBhgEU7CmFCIHPoTHupnJpUmiotkDbB8et5Pb//dD1zwVmzo1mKXec3sleSYwWYc8+GLPnKQ84QSHDx7sc6xO7ZWqd9SA+tD0C8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FLTcbOre; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RAAYx+1g; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FLTcbOre";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RAAYx+1g"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744102851;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Z/pcvKfgNqZVt5kg+UI9M+1DEbsC3c9S7vBAF3ADiIM=;
-	b=FLTcbOrekMjaZiOAywyNvzZAWxshyzHJMfAuKxuvSgOQQxrTv3pGJSv5wXNlH7AznJ/Bxj
-	BzB7j6vBE/VsSyPfgr48tMz+VU6RbZO9E3TmpGeaNGVHthaZ82XU1S2vJV8cvLO3CcZ7r0
-	VYxpaACs/+forcgxrjUfhDmNO24pH+LaBdMftEOtzuftXWGq2pFE4LAc7lbrDea5EYTSL1
-	N4NPQqkvEt/Nl198DNKzORZloyygiBTntm+vnV3Be+saXmLjYOzJJVv1O+RkcZOe0eZUyq
-	pEGWEi4cuvLsM+Qo82AN8kCDk/jDI0FgMZLtvq2npvtUfSC8JNYKsIwtA7ugcw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744102851;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Z/pcvKfgNqZVt5kg+UI9M+1DEbsC3c9S7vBAF3ADiIM=;
-	b=RAAYx+1g87X/fuPtv+7fUKIjVyB4ca7ZsoUSkjyxj1pLcsu3OBj+BqWcPw91uI7t2JiPLK
-	J4AZewqWuWcEPiBg==
-To: Edward Liaw <edliaw@google.com>, linux-kselftest@vger.kernel.org, Ingo
- Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Darren
- Hart <dvhart@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>,
- =?utf-8?Q?Andr=C3=A9?=
- Almeida <andrealmeid@igalia.com>, Shuah Khan <shuah@kernel.org>
-Cc: linux-kernel@vger.kernel.org, kernel-team@android.com, Edward Liaw
- <edliaw@google.com>
-Subject: Re: [PATCH] selftests/futex: futex_waitv wouldblock test should fail
-In-Reply-To: <20250404221225.1596324-1-edliaw@google.com>
-References: <20250404221225.1596324-1-edliaw@google.com>
-Date: Tue, 08 Apr 2025 11:00:50 +0200
-Message-ID: <87ldsbuiwt.ffs@tglx>
+	s=arc-20240116; t=1744102892; c=relaxed/simple;
+	bh=384l3PTbeYSwCorTutkbhVMp6kKpAlQaOmRq97Jqrj8=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=myayStA6Di23Wr4GgrtJ/tXJ7EzatDwbhiQTnMQSJnxM6gDhmpl7KHfuYnQDBUNKJoAH9gRMsldt4mmzZ7RTbtYQbL78yJG8VEsGDjGbZCf7ublytApxwb8QyhR00IdKijijv+M+eLSw5X7tl1uPccc171kTIB3BzvTxHCcIQ/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-85b4ee2e69bso589582039f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 02:01:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744102890; x=1744707690;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yPm2Fj3K9bOe54x0wglZkU5Qak+qbf+/DlnHrO1S04c=;
+        b=C6q3fVe4skMUMVk/hofNBc4yBp9/lKs4NdEM3PAHRniJ6+QED43Oypt9L+AGS0w04a
+         AfBUPaG2SdvtLHLKu0ZLcbi+cVDGdDmBjBICsdbeWsQ5F2T10E/e68Qho7QUd9aMj5c6
+         iX/3sDRaFVDemW68SoH32dph0sqJ726C23m4KkBnY5rBazgoDzF8Hp2gPRBf1vF0mjP0
+         8Em/lUGbk1uU0EccX1b0HbUdHDg4A7NFP1bQje9+Wjl8jTDP2WpZ+WHZqkaWkCx79hwK
+         TL+nGS8o2oZDo2wqf1jcTxtgapCJRka0aGRRj01/CDxsCrJIo3cZ8rFBI/XkOHs5p40b
+         70lA==
+X-Forwarded-Encrypted: i=1; AJvYcCX2Gcmk9fH8N2e42XvEP6ZLYvncZuqqKAABuB8xgZeWPH3Ju2Azm2+VtRr4cSIn8gwMsW87pmrtLaV2Rjg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywnora1f79wVaSdx7/N3Ajb2xQLm+0Qf7o7VuGc8vLLzyKX0RVA
+	edTdfU8l3lqfJ+MZKZDjiO5H6Trm2F7QnlMyfsghXQUGVZM9SZl/OZA6oTe0e5i/NWtbG6Dzcxs
+	TAtsGBSZBliMreanmae9yJsBQVs+d/kkEhgV9hz4kmmUvWCpHI1xYIr8=
+X-Google-Smtp-Source: AGHT+IHvOmHTaxKw32IHfBibRmPBaLK8bfWab8je54uO/jfBP8shxFJjrhVyBu0cSggEvkPgXqT5kSTTfL7IjrCOn04x0iS6YY8y
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-Received: by 2002:a05:6e02:1c25:b0:3d3:fdcc:8fb8 with SMTP id
+ e9e14a558f8ab-3d6e3f056ebmr135999395ab.10.1744102889953; Tue, 08 Apr 2025
+ 02:01:29 -0700 (PDT)
+Date: Tue, 08 Apr 2025 02:01:29 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67f4e5e9.050a0220.396535.055c.GAE@google.com>
+Subject: [syzbot] [fs?] KCSAN: data-race in file_end_write / posix_acl_update_mode
+From: syzbot <syzbot+dbb3b5b8e91c5be8daad@syzkaller.appspotmail.com>
+To: brauner@kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
+	viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Apr 04 2025 at 22:12, Edward Liaw wrote:
+Hello,
 
-> Testcase should fail if -EWOULDBLOCK is not returned when expected value
-> differs from actual value from the waiter.
->
-> Fixes: 9d57f7c79748920636f8293d2f01192d702fe390 ("selftests: futex: Test sys_futex_waitv() wouldblock")
-> Signed-off-by: Edward Liaw <edliaw@google.com>
+syzbot found the following issue on:
 
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+HEAD commit:    0af2f6be1b42 Linux 6.15-rc1
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10c98070580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e5bf3e2a48bfe768
+dashboard link: https://syzkaller.appspot.com/bug?extid=dbb3b5b8e91c5be8daad
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/d90ae40aa6df/disk-0af2f6be.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/616ed7a70804/vmlinux-0af2f6be.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/ed2c418afc9a/bzImage-0af2f6be.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+dbb3b5b8e91c5be8daad@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KCSAN: data-race in file_end_write / posix_acl_update_mode
+
+write to 0xffff888118513aa0 of 2 bytes by task 16080 on cpu 1:
+ posix_acl_update_mode+0x220/0x250 fs/posix_acl.c:720
+ simple_set_acl+0x6c/0x120 fs/posix_acl.c:1022
+ set_posix_acl fs/posix_acl.c:954 [inline]
+ vfs_set_acl+0x581/0x720 fs/posix_acl.c:1133
+ do_set_acl+0xab/0x130 fs/posix_acl.c:1278
+ do_setxattr fs/xattr.c:633 [inline]
+ filename_setxattr+0x1f1/0x2b0 fs/xattr.c:665
+ path_setxattrat+0x28a/0x320 fs/xattr.c:713
+ __do_sys_setxattr fs/xattr.c:747 [inline]
+ __se_sys_setxattr fs/xattr.c:743 [inline]
+ __x64_sys_setxattr+0x6e/0x90 fs/xattr.c:743
+ x64_sys_call+0x28e7/0x2e10 arch/x86/include/generated/asm/syscalls_64.h:189
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xc9/0x1c0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+read to 0xffff888118513aa0 of 2 bytes by task 16073 on cpu 0:
+ file_end_write+0x1f/0x110 include/linux/fs.h:3059
+ vfs_fallocate+0x3a5/0x3b0 fs/open.c:350
+ ksys_fallocate fs/open.c:362 [inline]
+ __do_sys_fallocate fs/open.c:367 [inline]
+ __se_sys_fallocate fs/open.c:365 [inline]
+ __x64_sys_fallocate+0x78/0xc0 fs/open.c:365
+ x64_sys_call+0x295f/0x2e10 arch/x86/include/generated/asm/syscalls_64.h:286
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xc9/0x1c0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+value changed: 0x8000 -> 0x8072
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 0 UID: 0 PID: 16073 Comm: syz.6.3255 Not tainted 6.15.0-rc1-syzkaller #0 PREEMPT(voluntary) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+==================================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
