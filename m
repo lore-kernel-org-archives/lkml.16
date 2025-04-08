@@ -1,130 +1,220 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF91E264A7B
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 08:49:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCFF1221DA0;
+	Tue,  8 Apr 2025 08:49:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744102143; cv=none; b=VDQuDIJFOh7N/IP59yCgJmRKs66ekxaLDJejPa755azyLa0LNFjPMtO/EP9m38z3PEXf8+x9EHNgKy0Q1j4jaDrwEiByQ31L+JeutNyL+HxoClZTwa3ImOf5rt3V54MbxeX9Lta8NBZAHYGkZcO70nTXoupcNZGjH2rvU6twVk4=
+	t=1744102168; cv=none; b=aIBOAeME/LmFzGYCbBEYIeLDWc/x9tF9O18+hgdYSFxywiIMD6W50CmcFW9VJv6AzQDUnnI5ARVTbSsrE7WmufZ6bCyFO24Gk7d9rCqoWWEAymeshjIoVExtKLhRhN0qI7Gs0BtindvZC0/XRy8g+auqDVBfyVdaEthlDPj6FGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744102143; c=relaxed/simple;
-	bh=zqzlA9n1r9CR6wuCNl1kJxLJLTIDkxwhE6SgiF36x5s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U/SHcTUunmw8f22EWZiUqk9neV5zLeC4iu38ZfE2NiUXYSNyl03RoFN12iePjk0T7MxwKIuR32cYAPHWbDTvaxccgL6Fu7aW/J+g0NT6ZmwlvRhNmeam40poXOKmcDVYKnhlVeXZNxe3sa6dd3/fFPcxp26qsNXCzH3do9t6fKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=qFUykChR; arc=none smtp.client-ip=217.72.192.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
+	s=arc-20240116; t=1744102168; c=relaxed/simple;
+	bh=/oi0h+YxGjSj0Amrgd3zkGZvok/zMIeGT22vwxuw0xs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CKJrrF7MkhLjPKOk7qPhtOpZXwrCsJHNHF2/2XzR1HSWWvDb97pcfQ9otocmm9cwejE8nMk0MqTmHJ69W9zQ44CCBVbBCE1SDmvSZroS79i1bLvizfBrwWdANEcaUe/LwqZkwoYRsRvJZN9b15g1ilT0eYIw2LglCf4z+i2gi+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F34BNLh/; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="qFUykChR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
-	s=s1-ionos; t=1744102138; x=1744706938; i=christian@heusel.eu;
-	bh=zqzlA9n1r9CR6wuCNl1kJxLJLTIDkxwhE6SgiF36x5s=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:In-Reply-To:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=qFUykChRkfs0xaQ/FVNErfJK+ceDdWGsQp5C4v3s5HS9ofLdlZ7rOZF8sxF8SA6b
-	 m2uEB1lfwzGZGI6F/3OHj8jV9zc015W4drtHLojoiGXmAduHIs/9aQIPhae4anfC+
-	 cY0a52q11bLULt0PtWsTEwkheMNXnf7ho61WWB6qRtR/AdXmSdRhdd4Ew0TA1QkHY
-	 PjQyuk2NhkxLnDx4Cr4psT3azXycttI+ZPQjFYE37aOEUzMynhipAhuAhEv5cunVT
-	 JT+iDc+a/hNIkz8eXFa0J7d3JbhSJWB8OMkF9IpCZrvmo15ZSOLN67NdnYnxavx6q
-	 BJ97jLW1QzYjrfdd2w==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost ([89.244.90.49]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MXH3Y-1tYr7T10AQ-00Japt; Tue, 08 Apr 2025 10:34:37 +0200
-Date: Tue, 8 Apr 2025 10:34:34 +0200
-From: Christian Heusel <christian@heusel.eu>
-To: Francesco Dolcini <francesco@dolcini.it>
-Cc: Richard Weinberger <richard@nod.at>, 
-	linux-mtd <linux-mtd@lists.infradead.org>, Matthew Wilcox <willy@infradead.org>, 
-	Zhihao Cheng <chengzhihao1@huawei.com>, regressions@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: Linux 6.15-rc1 regression, folio/ubifs Oops
-Message-ID: <5bba59ac-005e-4994-aa22-c2565b8cdbbd@heusel.eu>
-References: <20250408082018.GA23886@francesco-nb>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F34BNLh/"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-54298ec925bso1675178e87.3;
+        Tue, 08 Apr 2025 01:49:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744102165; x=1744706965; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vLz6PIQLrX7WAvTgN7mKlzbJuOZCZNXq5vbLEn5vmhw=;
+        b=F34BNLh/V77HHZ0mSwg4yanme41aqOwp4+33aLzTWhVhGe6HR3qW+9BjBIfc4ezwPc
+         ug6DjamhNrxaVeSN7DdKVxF4REOJQOiwwECTBn2aUX+wSjFOkbAtFYLzND+1x8Dnqe0B
+         O8Z/HySipzQH0zJBGwA3pcLtOWPsuge9KnOPejZ+zs+VPrdCYaESQ/OsrWf7eKQd+oHr
+         +lLSbHCmbO+fKUGtW3QoQAPp+NA9Ww6OsZ+wA85BvvHjq3Fx0sD67FRVlnty9aBlqeXl
+         fBe6rSUADQl6z+MXtSZO3Zy4I4wBVpN0sxK6B/3ETSSUwmwfWOVZSF8I/vdNEuoUJpMz
+         lK8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744102165; x=1744706965;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vLz6PIQLrX7WAvTgN7mKlzbJuOZCZNXq5vbLEn5vmhw=;
+        b=avZLWhZuAij+EF2kK5E2wECVpcAPtZi6HhgxdQyj1b+h2YO68zNRmWmAyFiOWE/4GF
+         o2lkQCZYzCrzvYtN/2mjvwC8mPgT3sMQnvvmq9FdPG6cDuqsVZQ0+inv0UvhOOqnW+Os
+         Ie3wdfsnalll7Xngya0k+rOIHtXlZz/fQVb/6r7VSjxEleB25EfY0hgZOGlo/DN9E5Yu
+         cxDCqWWe0N/72YkeNXo5cn5ymKHE2rZ5PhraWeTelw2v+oiCgN4+XNiMBtsxZdabp+Nq
+         ntq/0iCpBtP6rWDZbxVWnX62YR58lr25eqMQBWSSt+DM5qf4H7M2WXuJLQTmYsL8AKb8
+         fj9g==
+X-Forwarded-Encrypted: i=1; AJvYcCUc3kQ59cqL1L0JCCGz6pGiWKHNPpJ9hBLfPw8bflgISgu+G3G8lG2FpZK3H4c9LjT14tf/XCixc/PRthY=@vger.kernel.org, AJvYcCVdcoZMfGS7hk4Ju6+N+8HOI6xPMw9oKtfaCjLgsd27ghSXumDkg2SGwoXnqCslJz7dzCYA6AO7lxLqnmyy@vger.kernel.org, AJvYcCWWxwE8acrkZHBM0hr0THrY/coNIyL7kgsIKIpMGR6pv029N93z8Zc1dtlxrstbePkgbXNkG1AKKInv@vger.kernel.org, AJvYcCXM3KDvigMP6aILJla6J31eUfHreOr4IoFPGVrOHgneeMwUUrPmcqRHgd+uxneU1UY3eAO5XmYN0gQP50GU28Xh@vger.kernel.org
+X-Gm-Message-State: AOJu0YywO7pR5vAXju5hoEiEJ4CHMQPwW3Oy+rrvxMMoo1KM32IZtaC8
+	8rOpjcpX2HEECWFN+d/kdi4tf/NbQ+SK9BridPAZbKbqJPq1Dq6FMTvJOjhA6oNozM2xJTJZ86i
+	otxUalq7FOE9rXI8KSA8+S6YzkWQ=
+X-Gm-Gg: ASbGncvGTio1eHTIwAjoVG82AX/rC60n82Al2U8NWeGVz1BDltGcAI1Yw7/WM7At4xb
+	DAXYvwC+kGFeYNqgRa8hPlWxO4KEy20hb/o3yv63Aw92wda9WBWBfppLbyqrJ+Xg8UcWFlP7T6I
+	qjdyC482vtEREwZ8/7qWB7ts9fLw==
+X-Google-Smtp-Source: AGHT+IE+JJyjApRSjTK6zCCcuyEkxu6Qm3vnoWNWSqKZ/kXpSOIJZWdovVbmT7GRh38X03m8OMgFhs3vFURkhxl2cy4=
+X-Received: by 2002:a05:6512:b98:b0:549:b0f3:4391 with SMTP id
+ 2adb3069b0e04-54c233470ddmr3538766e87.38.1744102164993; Tue, 08 Apr 2025
+ 01:49:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="yjhj4l62urfzefuc"
-Content-Disposition: inline
-In-Reply-To: <20250408082018.GA23886@francesco-nb>
-X-Provags-ID: V03:K1:qonpYrkuTDJlp5WFS+b383LvsXrAX+asOUbtT8PWMUg3L4yHDZ2
- sL3ShWIKXJeOAeXZbimyWpIl/S/tDjssqsmlsYyal5wBD5fnbpzWciFEE53fmLg4vGFx2Wn
- I2qjSCk2fQUO6oDVpj1e369gA+RKI4Rx6OxQaivcGqibHm22bScGmaSxt6rMs8rktAypru9
- x2UNhHZFTLBcZKQ/s+gnQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:vY5Q6X3ExnY=;KODHPSAGyWm08t5JAlsL65vsjMy
- uQ3lPmVGNyTvKm8G0ab53vBDx7abZH2IUzy0IEYzbvLtTn+3+WX3kbOVqO8GdHp1mpSyFOvOD
- o4Hb6601Zo0ohF5Qs0BYe+IYpcRrKMA5dy4n1Zpi8+IJNtyYJfGF53koNnlrdJ0r+W+QKxa81
- NG6k0dBmjuJPV0H3i0JQjTBYKtN4DJBxgQEmjvR+2kp9KGUQAVO6MDgd+1zoDT1nn892zsNzk
- 9nx8T5dtjqwJRoh6IOLzlGWlmIiyyf5JeJG56I+KBONOT7+ePZ41NQmB3fFVcA8wOjaSgXg+D
- Z4GLKMtmPQckb7wZ6if6hA06WWqpIy0NnuC7jzwEVMUF18oKpBdG6BBpKZz4ioHML0kvT//nR
- 1Jet03DMx2ZqQGNeOF/CmbrD+tO++QSdAzEU9M2Hvwf93XiS1Jw4Br5bG32hKQqXhlhEHv40U
- DGeKzCiBtgrrWx0YvARuTIkP5Whm5UwkRzl2dGvnB0fr/G4AXi3FkO+mhQg5AF0HbapLD3G7Y
- mt335Jv9JtxL9gr56reGAn2zZOSRz1gD6cthwWWUO0ZsUDs8Fwa7UMIjpl+LtWGosK0F92OKe
- QF33QFo9MQxkJy4RvxnSU2WVIuoTNmJ6ZNLefcgZEaOu+rnqIpey1Rqiyl2R/IR0clSKcCjSL
- vOZeU4NEj6pzhtysYxrKBP6dlpUOYYCOKF9HIP9LO7fg2X2k8VCkUWduXddlAmdu/tZFoDFIQ
- jDRgBw1SE3ES+bSTDVuek98Jf5tBen7X4m7MXkMxMvWS8lw27RR0daat3WJMKc7bfcBUs0kdK
- qq7Uosyz8hh4hXZwfN2EYadY03CzV7q8sMwNZCA26z+7AXlaWCNDbdlb347S9nBSV8dT8n8Vy
- 600m4rpKAeKaUEzgD9QE1Wwb/Um4cAzkvwwNMKyDSKZhQvxOXZdqeRaSNuDuAI+xXS4i2PhOB
- P85SIk314J2a5hurbC6Q0diXYVk6dyze3G1SVmNZW3EEtNtgV9r9Db4GKPwpsAt2i4wj8OQ0q
- FbCLi/ez9NyMPl2lc2NIMAThoE2dN0T+KH5XH7VWlf65kvLSxtOTRBgFiuEZM7MWbaUfheB4D
- bfoyEJwXb50CqUgKZtJN3g+JjuWxbMriVnHdZ/E2akntGL5xFC8+gQc1O8ZUK2l+z9E11tcV+
- LATCrs2hihd+MYg5cbbYUeoI92U32OO1cOoIwnHHCdcR2E10T8SKkBkpJkc7X5C49alfCXwYX
- zQ1W37B3/rQMsJRv2yr4ZgYiTxpF653AcMby5e6V6ETZY3lLkF93eHGQt+1tDUMDMMlOYUfad
- 1kdWkY6o28J8TD+/fRxPlOpoNxiTGe4fNVYnLk3459lHVKrrs1WGazc8lt4KtfGB0Bi28GMAI
- EnSs13qxr1onWRw6PhAlnVQTr5SMz2SUA+YNo=
-
-
---yjhj4l62urfzefuc
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
+References: <20250406-tegra-pstore-v1-1-bf5b57f12293@gmail.com>
+ <6920a557-9181-4c9c-98f4-a9be4e796a13@kernel.org> <CALHNRZ--to8B3zhg6zV90siL0x78BAjhS04DgfLwmnXEiOMe3g@mail.gmail.com>
+ <83d17d6e-41c2-4729-94e6-5ccf480c766d@kernel.org> <CALHNRZ8+vnXrx7xw=qjpB34MX32hW_m7k+=CdePJpErBPPzv-g@mail.gmail.com>
+ <53c943dc-5ea6-456b-a289-08212fc01d5d@kernel.org>
+In-Reply-To: <53c943dc-5ea6-456b-a289-08212fc01d5d@kernel.org>
+From: Aaron Kling <webgeek1234@gmail.com>
+Date: Tue, 8 Apr 2025 03:49:12 -0500
+X-Gm-Features: ATxdqUETOFGFn2EHri9F9_4eIfOQKPNEzsi7Q-YJUiQd95xxiBDN67yuVyhCAbs
+Message-ID: <CALHNRZ8+X61YzQ_gYRkuAZrz2XFiZK36GDgk=801+384y2KnOQ@mail.gmail.com>
+Subject: Re: [PATCH] arm64: tegra: Enable ramoops on Tegra210 and newer
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, devicetree@vger.kernel.org, 
+	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: Linux 6.15-rc1 regression, folio/ubifs Oops
-MIME-Version: 1.0
 
-On 25/04/08 10:20AM, Francesco Dolcini wrote:
-> Hello all,
+On Tue, Apr 8, 2025 at 3:17=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.org=
+> wrote:
+>
+> On 08/04/2025 09:35, Aaron Kling wrote:
+> > On Tue, Apr 8, 2025 at 1:08=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel=
+.org> wrote:
+> >>
+> >> On 07/04/2025 18:00, Aaron Kling wrote:
+> >>> On Mon, Apr 7, 2025 at 7:59=E2=80=AFAM Krzysztof Kozlowski <krzk@kern=
+el.org> wrote:
+> >>>>
+> >>>> On 06/04/2025 23:12, Aaron Kling via B4 Relay wrote:
+> >>>>> From: Aaron Kling <webgeek1234@gmail.com>
+> >>>>>
+> >>>>> This allows using pstore on all such platforms. There are some
+> >>>>> differences per arch:
+> >>>>>
+> >>>>> * Tegra132: Flounder does not appear to enumerate pstore and I do n=
+ot
+> >>>>>   have access to norrin, thus Tegra132 is left out of this commit.
+> >>>>> * Tegra210: Does not support ramoops carveouts in the bootloader, i=
+nstead
+> >>>>>   relying on a dowstream driver to allocate the carveout, hence thi=
+s
+> >>>>>   hardcodes a location matching what the downstream driver picks.
+> >>>>> * Tegra186 and Tegra194 on cboot: Bootloader fills in the address a=
+nd
+> >>>>>   size in a node specifically named /reserved-memory/ramoops_carveo=
+ut,
+> >>>>>   thus these cannot be renamed.
+> >>>>> * Tegra194 and Tegra234 on edk2: Bootloader looks up the node based=
+ on
+> >>>>>   compatible, however the dt still does not know the address, so ke=
+eping
+> >>>>>   the node name consistent on Tegra186 and newer.
+> >>>>>
+> >>>>> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+> >>>>> ---
+> >>>>>  arch/arm64/boot/dts/nvidia/tegra186.dtsi | 16 ++++++++++++++++
+> >>>>>  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 16 ++++++++++++++++
+> >>>>>  arch/arm64/boot/dts/nvidia/tegra210.dtsi | 13 +++++++++++++
+> >>>>>  arch/arm64/boot/dts/nvidia/tegra234.dtsi | 16 ++++++++++++++++
+> >>>>>  4 files changed, 61 insertions(+)
+> >>>>>
+> >>>>> diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/=
+boot/dts/nvidia/tegra186.dtsi
+> >>>>> index 2b3bb5d0af17bd521f87db0484fcbe943dd1a797..2e2b27deb957dfd754e=
+42dd03f5a1da5079971dc 100644
+> >>>>> --- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+> >>>>> +++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+> >>>>> @@ -2051,6 +2051,22 @@ pmu-denver {
+> >>>>>               interrupt-affinity =3D <&denver_0 &denver_1>;
+> >>>>>       };
+> >>>>>
+> >>>>> +     reserved-memory {
+> >>>>> +             #address-cells =3D <2>;
+> >>>>> +             #size-cells =3D <2>;
+> >>>>> +             ranges;
+> >>>>> +
+> >>>>> +             ramoops_carveout {
+> >>>>
+> >>>> Please follow DTS coding style for name, so this is probably only ra=
+moops.
+> >>>
+> >>> As per the commit message regarding tegra186: bootloader fills in the
+> >>> address and size in a node specifically named
+> >>> /reserved-memory/ramoops_carveout, thus these cannot be renamed.
+> >>
+> >> That's not a reason to introduce issues. Bootloader is supposed to
+> >> follow same conventions or use aliases or labels (depending on the nod=
+e).
+> >>
+> >> If bootloader adds junk, does it mean we have to accept that junk?
+> >>
+> >>>
+> >>>>
+> >>>> It does not look like you tested the DTS against bindings. Please ru=
+n
+> >>>> `make dtbs_check W=3D1` (see
+> >>>> Documentation/devicetree/bindings/writing-schema.rst or
+> >>>> https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetre=
+e-sources-with-the-devicetree-schema/
+> >>>> for instructions).
+> >>>> Maybe you need to update your dtschema and yamllint. Don't rely on
+> >>>> distro packages for dtschema and be sure you are using the latest
+> >>>> released dtschema.
+> >>>
+> >>> The bot is reporting that the reg field is missing from the added
+> >>> ramoops nodes on t186, t194, and t234. However, as also mentioned in
+> >>> the commit message, this is intentional because it is expected for th=
+e
+> >>> bootloader to fill that in. It is not known at dt compile time. Is
+> >>> there a way to mark this as intentional, so dtschema doesn't flag it?
+> >>
+> >> Fix your bootloader or chain load some normal one, like U-Boot.
+> > How would chainloading a second bootloader 'fix' previous stage
+> > bootloaders trampling on an out-of-sync hardcoded reserved-memory
+> > address? It's possible for carveout addresses and sizes to change. Not
+> > from boot to boot on the same version of the Nvidia bootloader, but
+> > potentially from one version to another. Depending on if the
+> > bootloader was configured with different carveout sizes.
+> >
+> > There is precedence for this. When blind cleanup was done on arm
+> > device trees, a chromebook broke because the memory node has to be
+> > named exactly '/memory' [0]. How is this any different from that case?
+>
+> That was an existing node, so ABI.
+>
+> > These nodes are an ABI to an existing bootloader. Carveouts on these
+>
+> You add new ABI, which I object to.
+>
+> > archs are set up in bl1 or bl2, which are not source available. I
+> > could potentially hardcode things for myself in bl33, which is source
+> > available, but the earlier stages could still overwrite any chosen
+> > block depending on how carveouts are configured. But even then, that
+> > will not change the behaviour of the vast majority of units that use a
+> > fully prebuilt boot stack direct from Nvidia. My intent here is for
+> > pstore to work on such units without users needing to use a custom
+> > bootloader.
+> I understand your goal. What I still do not understand, why bootloader
+> even bothers with ramoops carveout. It shouldn't and you should just
+> ignore whatever bootloader provides, no?
 
-Hey Francesco,
+Mmm, I actually don't have the answer to this. Ramoops carveout
+handling was added to t186 and t194 in cboot for L4T r32.7.3, fairly
+late in the life cycle. But it has always been in edk2 for t194 and
+t234 afaik. I could hazard some guesses, but don't have any
+documentation on why the decision was made. Maybe Thierry or Jonathan
+could chime in on why this was done.
 
-> I do have the following regression on single core system using UBIFS,
-> dual core seems not affected, any idea?
-
-could you try to bisect which change has caused this problem?
-This usually the best way to pinpoint the commit that causes the issue
-and either get a fix or a revert on the way =F0=9F=A4=97
-
-You can find the relevant docs here:
-https://docs.kernel.org/admin-guide/bug-bisect.html
-
-> Francesco
-
-Cheers,
-Chris
-
---yjhj4l62urfzefuc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmf035oACgkQwEfU8yi1
-JYWgOxAAvhglW0Uz4Z/ODifFww4icGEshUUXIPnNmmCDdBhKgySaOyAOY+UMErNQ
-pN8bHEWr1EDpLX7aIze88pLQalCs48wKfFoVZch7Q87Wde9MZqti5ls75VGCTwvP
-+bDtUm64VRsLOShejWodpdDO0M8I37K/8jMA5E3qujXmqaxXtGtZEvnmHZA3hJAQ
-b5k6of/UxRJySe31B8DHQR36FOX9y4Fq3fp37MOZk5ROGC2C3xv2SNF/iWDEiRFB
-4+hcfoqW25n73v819Balrrv9Zr5g45a7eoS4PXuF0Ugy08vKaWGfB+Cl+FODRtqs
-EPMuXmJJgLiNzldX68GZ31L1So7e6ze3z3IJC2PZuaN+EqAxXTtFT+IKuKxvvRHj
-KI0oviYlE3h2sPX3UD+PK/7lKOcMkUo8CkOvvpLuXMbUstkMXz2xm8M7a/JxQdz6
-KUpddMAdDCe1eTS6N2QVVJ3RG6j6AZD54/1+9N4+HibYlH6mnnPeLccJP1Y11b9p
-7WrYzCjn3uIuK+haw7JYaMZjcWAzwTQlbKWBn3j6FDziqtCQ3h0zX5Vs+1PPFv3/
-x1tqNw6atqQhNgtUayk6vft37XDonDtkgTsKhLP2lom3lCepS5TNo6T3wfANCSey
-uOdLYUphC04ChRKsNFMkwiBz1ommmgM5xUUaXwgrBkL/lj6Z9Xo=
-=UHYC
------END PGP SIGNATURE-----
-
---yjhj4l62urfzefuc--
+>
+> It's not the same case as memory, where bootloader needs to fill out the
+> actual size, or some other boot-specific properties.
+>
+> Best regards,
+> Krzysztof
+Sincerely,
+Aaron
