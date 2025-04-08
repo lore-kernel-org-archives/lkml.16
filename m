@@ -1,145 +1,93 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D60E3254AFD
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 21:38:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E03E1254B17;
+	Tue,  8 Apr 2025 21:38:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744148313; cv=none; b=UYIxWtKRNjdpVxUAg1OR0xBwNP8qViF7T/w8wc0LWum2PmpGoJpzRFc/N/1Ft3uUal1rsY8Nu/dg9/yqGXDiXf65ZvcuZElehtlpLp4peZj3mnH+AGwvXt5l9y0IXelhu4bfgPB1AUXKY+UdfBFhFBr2pY05S0LnEaKqxoh96N4=
+	t=1744148324; cv=none; b=XUlI233gw6xOC8HRvqgBo49K1wLZG6MQDfgTcEMgrHPAD3Nsgf0XVxWdh6/iZuldl0BFixyrwjrXKFGYK2s8TBCyJfGemmdo1L5yyzI3Fo82hfxbBkAK5ya7f5YFFJMvjj5K9WmPfQsRVrrMk0DKug8Vpc4iKb2juCkTDEU0xYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744148313; c=relaxed/simple;
-	bh=pu/YuOWH/Lc2fBaut8InW6ICN95wTACJ6MxryaqAaMk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OgvqOievSAR7vXOltG5q6Cjx3qvwcMer0mTsCPkOQDJJxv88XaLBJ8UrYP2C9e6jasxBphdqO83j5CoQYvMr4vok+jH9ia5JP90U9SbZLDlY+tBuNAGPwYqtEd43jFb0aNFgaxSLYnbsNRHnQ++AdsvcsIYd0TbRDS4aBRiuQU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=PCW9cN6l; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1744148324; c=relaxed/simple;
+	bh=GhWMPbyYndeNm1NHRZ9Pdb3C62NE+jGntpBEcNTlT7o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KX/vf7odKy0JvwjQv2VVNYSeZ1kqwOE7CFeYKlMuylCvSnRMnICs9BloNFAIcgBFLOT6Qv8BXB4csIlOOCGjGgnuGI7ODAzAvGNzKUstYY7NCjer0x9UH+djPfquLh4J7dKUFs/YK1YSLgH4N3JbvTL9qPRPAe32F6Y2FKe9k00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=WHuGg6yS; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="PCW9cN6l"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7c56321b22cso13493185a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 14:38:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="WHuGg6yS"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-af5cdf4a2f8so4477464a12.3;
+        Tue, 08 Apr 2025 14:38:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1744148309; x=1744753109; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yxv9o50eGddEsUuD/tRbYvSgVoXDvHyaDodMka2QGFQ=;
-        b=PCW9cN6l5qxgd5SpZwjgI+WYmHRR6afI3RWZpZflMcw6wrWiDSbSbuHvDszqVh78aW
-         Jrh1aVVBWoG3Ph8WmXEkRCfLd2Ll/aqr8j7Qz4WBsGfJ0fVxLwpcv4plgec1PjF/AagL
-         HOM1Um0p3pRsEf6h/PMONuU37RlPCQ2fNf0KlIopFTUff4ZNUjPI1MU8z0uP3CQN0Or/
-         Ik9cjted8EJ1yex3VdrS8qRpeQv+iXsTxDX0SKqdXgJYyg0Z0NCtWy97xrULRVdM7SSz
-         /oJhWTMZo44qVjvrlwQBIM70Jk3rMSlCQSgtcREOFPtML4IklyjZIdrJ4tBkPZn4Dq2o
-         SEPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744148309; x=1744753109;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=googlemail.com; s=20230601; t=1744148322; x=1744753122; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yxv9o50eGddEsUuD/tRbYvSgVoXDvHyaDodMka2QGFQ=;
-        b=sQ7X3SavaaUuZY8sazF1ulembNJfMeRftpTwqYxN/mUZSx373Don9gg68IbIzm26Mi
-         7XLvR9qZeh+bNFWzr+MIJqVYuoZfNjJSuzSo+/gZQsAkGA0ABnYKEa3fcX0K8f3gsXqs
-         Eym/9uhZqv/4GIaL46MniKAHYIOqFf3NAIPgrIIQuirl3Lbq7a1iTuV3hyPY1nikasdU
-         jZZqWab+Krq+J8us1ynPdFsfKQrSOosGp2dRn714KJVPWWt28DiZENiokEJlCDN5ZAy7
-         tjp0ksHmFYwIT0xW9w1WsRM+BCOkqLkl3sG1D9vcIkdhoMv8nhpdS1TrJWME5zXjRb1y
-         zhKA==
-X-Forwarded-Encrypted: i=1; AJvYcCV6vbZscu9YlyOBJ20HLgppGVO5mW8MrALoIC5wNeu70HLSnbJTh3VXw8kzgen2exqEJyXwvQhIRQrnSh4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDKsxvl1Wi7H+EcVEXFfI15Q+QrFcmE1oxTNglrTL7XcyUNf+B
-	D/SEIITfjc4YtDw7/dIF6wgTjCi5WdNZHahWxdCoO5yj8BqFeVpxV6pnOP55VTE=
-X-Gm-Gg: ASbGncvNTMmt5NV167hDUirOsaPgHQO3mMr8ystHeoqfQSTzlhL4rNDOJE+DWUvJLjA
-	oPb6VotNJskGR1m/3CiGy4D5dG+xF99NP5lPM+lioof6CW4GjwVP/5WfA+pVRIO/tplGKW7w+ax
-	dg7Bf3y6ABaxFc485y/r4VBFO5Qlrb5YXLTlEACe5ujcIJjxPg2hTegfZYlQ6t1vH9ZPmeu7KGq
-	JMDJMzWjs6aNRNEPGzPsGh+I/Uq6jJR61IVVMYXl8/E3pWvlJY4jac5WNo23wVNQivq5GMvjqf+
-	rsqzMQhDDe0CdukCihsrwcitpryOWmygp6+HngHPzjPdmU4GDtpfc5hywIJtx7HBlEB5DNj51Hx
-	WON0BjDwizRqeLtRBtVEOPto=
-X-Google-Smtp-Source: AGHT+IHk6WbyFTIcWDV5GB5Os6d2NKq5gE0pldA0lJWoLAcbSrKSUgBHDiW5s9PcXNYkhgATyty6uQ==
-X-Received: by 2002:a05:620a:2788:b0:7c5:f48b:3c8 with SMTP id af79cd13be357-7c79cd473c5mr126299485a.14.1744148309611;
-        Tue, 08 Apr 2025 14:38:29 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-167-219-86.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.219.86])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c76e94bbfbsm809430185a.46.2025.04.08.14.38.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 14:38:28 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1u2GeK-00000008mG1-1mIv;
-	Tue, 08 Apr 2025 18:38:28 -0300
-Date: Tue, 8 Apr 2025 18:38:28 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Fedor Pchelkin <pchelkin@ispras.ru>
-Cc: Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>,
-	Will Deacon <will@kernel.org>, Kevin Tian <kevin.tian@intel.com>,
-	Nicolin Chen <nicolinc@nvidia.com>, iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org
-Subject: Re: [PATCH] iommu: fix crash in report_iommu_fault()
-Message-ID: <20250408213828.GC1727154@ziepe.ca>
-References: <20250408213342.285955-1-pchelkin@ispras.ru>
+        bh=GhWMPbyYndeNm1NHRZ9Pdb3C62NE+jGntpBEcNTlT7o=;
+        b=WHuGg6ySCFOY5BVFULvsD9gCVc35b6oJpFYJX3egN5q+qFAShOFJyP/YfDV/xBoPQP
+         aGACn00TwbA45RLoptxyDCxg2Ld+P3povImm71EXqZylIz7hSUfRnEirPVC317CRkzdi
+         /YA99V4Uva66znq3qshap8IFME2/RpiKSHG8A0KrofFpuH1Hb4HfmOz4ojmXr+XGUmix
+         FAAFsxqFizSOCKDsnIwxK4DYeS2Vb0qEZsbxmjUX1EsWVQNtzsR7D32QO383Kn1fr8+g
+         vjSceO0pBydt2f2hYiEhTKEHFQaefe8FkGpiO6I5S5IDnvP/08W6wqnHrXh26HOdiMck
+         mj5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744148322; x=1744753122;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GhWMPbyYndeNm1NHRZ9Pdb3C62NE+jGntpBEcNTlT7o=;
+        b=RM6HDipdyG+ukf4A+ECmhYMBGvtK0hAkr6HKrSsbyXooX1vRr6axhXcHlNcK2MubYP
+         7rwZWj4K3EXyrePE4EiHKjYaxH3Cqgo7z6YCwMEfcbk2KTCGtlJhurKmH3/ZnXTQqFVW
+         8fm8zuIaT3+zxLEV4jdljSnJqCYf3R4F7oXzafHYiesfXmixxTlMjupvA9WEq8dYslwM
+         9V6w8aFp+Pk2fkIZzf6fhVIpaNPSy8cQ9roYd6AXU0zH+9xnqRNE9vLfoOoNHuno5h7t
+         CiqF/80gDMgfIdD3PECeS1lc1/uUp4HeclJNMd7ke4w3s/qjJiibBBKZKhIA+o2ovydu
+         +2UA==
+X-Forwarded-Encrypted: i=1; AJvYcCWS156Hj98f4D2uGGVm4JK/hIgoWo6ciUUkxesAGL4T6htx4FMs4mu35nxeKAWwhWEj0Z15XHN8EPnC@vger.kernel.org, AJvYcCWo+bQXDOe7QN4TLOaqQKCep/LT7G8Mumv1Ou6Xeemhm6Pg34OWeEa+kbFL7gO1BMcfIaiuoCBXXeZtgjLE@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMet5iUSGdIX1Ua7/4adt2S1Da77JRIH2ogwQJmel2DLiKVsm2
+	oSTwL1aKnk4/snxJL3lfDe5jvuAyCkZFs3RPQIa4rzUmCX6+j1AEnN5NpaOEZPAc5QXaOyAlQuw
+	8O/4mShWj57kMG96vxuQBEFPHT+w=
+X-Gm-Gg: ASbGncu0aAosGzwLXRkRMqr59+SuvB+r4dZaU2yUT7XB7ywLpFHiCNjEps0v0K51hpi
+	nt4gdfW7Y+F5/fM3EVqNx0k77a9eEiTEJQEs+rbtjOKXo0RXoVVys9JTwqkAlcpsYqiGzBYgtN0
+	nSlVxEEIOkv76ignVWtKt5auwQjiz94iq90cJHUPzb
+X-Google-Smtp-Source: AGHT+IFMZotDtWWAJlBzYOHbY6eZuROd8g46qqXTeR8HSTz+D0BC75aZwtJWVAGQnGX5SFSxfBqUCvgcV0HR+ALG1Sk=
+X-Received: by 2002:a17:902:ec86:b0:223:5e6a:57ab with SMTP id
+ d9443c01a7336-22ac2a2993cmr9011395ad.39.1744148322097; Tue, 08 Apr 2025
+ 14:38:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250408213342.285955-1-pchelkin@ispras.ru>
+References: <20250408-gpiochip-set-rv-pinctrl-part1-v1-0-c9d521d7c8c7@linaro.org>
+ <20250408-gpiochip-set-rv-pinctrl-part1-v1-6-c9d521d7c8c7@linaro.org>
+In-Reply-To: <20250408-gpiochip-set-rv-pinctrl-part1-v1-6-c9d521d7c8c7@linaro.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date: Tue, 8 Apr 2025 23:38:30 +0200
+X-Gm-Features: ATxdqUFqmoWg6ZQUVk7ZN8EWhyXPDuE43IZRW9OybjmWPW4EA1wKzp3juxP0OpY
+Message-ID: <CAFBinCCCH_=Ji4qu_pF_umDhJp3m_osk62gFH5_1bRRvgOx7-g@mail.gmail.com>
+Subject: Re: [PATCH 06/10] pinctrl: amlogic-a4: use new GPIO line value setter callbacks
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Ludovic Desroches <ludovic.desroches@microchip.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, 
+	Jerome Brunet <jbrunet@baylibre.com>, Xianwei Zhao <xianwei.zhao@amlogic.com>, 
+	Patrick Rudolph <patrick.rudolph@9elements.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-amlogic@lists.infradead.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 09, 2025 at 12:33:41AM +0300, Fedor Pchelkin wrote:
-> The following crash is observed while handling an IOMMU fault with a
-> recent kernel:
-> 
-> kernel tried to execute NX-protected page - exploit attempt? (uid: 0)
-> BUG: unable to handle page fault for address: ffff8c708299f700
-> PGD 19ee01067 P4D 19ee01067 PUD 101c10063 PMD 80000001028001e3
-> Oops: Oops: 0011 [#1] SMP NOPTI
-> CPU: 4 UID: 0 PID: 139 Comm: irq/25-AMD-Vi Not tainted 6.15.0-rc1+ #20 PREEMPT(lazy)
-> Hardware name: LENOVO 21D0/LNVNB161216, BIOS J6CN50WW 09/27/2024
-> RIP: 0010:0xffff8c708299f700
-> Call Trace:
->  <TASK>
->  ? report_iommu_fault+0x78/0xd3
->  ? amd_iommu_report_page_fault+0x91/0x150
->  ? amd_iommu_int_thread+0x77/0x180
->  ? __pfx_irq_thread_fn+0x10/0x10
->  ? irq_thread_fn+0x23/0x60
->  ? irq_thread+0xf9/0x1e0
->  ? __pfx_irq_thread_dtor+0x10/0x10
->  ? __pfx_irq_thread+0x10/0x10
->  ? kthread+0xfc/0x240
->  ? __pfx_kthread+0x10/0x10
->  ? ret_from_fork+0x34/0x50
->  ? __pfx_kthread+0x10/0x10
->  ? ret_from_fork_asm+0x1a/0x30
->  </TASK>
-> 
-> report_iommu_fault() checks for an installed handler comparing the
-> corresponding field to NULL. It can (and could before) be called for a
-> domain with a different cookie type - IOMMU_COOKIE_DMA_IOVA, specifically.
-> Cookie is represented as a union so we may end up with a garbage value
-> treated there if this happens for a domain with another cookie type.
-> 
-> Formerly there were two exclusive cookie types in the union.
-> IOMMU_DOMAIN_SVA has a dedicated iommu_report_device_fault().
-> 
-> Call the fault handler only if the passed domain has a required cookie
-> type.
-> 
-> Found by Linux Verification Center (linuxtesting.org).
-> 
-> Fixes: 6aa63a4ec947 ("iommu: Sort out domain user data")
-> Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
-> ---
-
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-
-This should go to rc
-
-> > iommu-dma itself isn't ever going to use a fault 
-> > handler because it expects the DMA API to be used correctly and thus no 
-> > faults to occur.
-> 
-> My first thought about this is that iommu-dma is not interested in
-> installing a fault handler ever, okay. But why does it suppose that no
-> faults would occur? It is a matter of "chance", firmware bugs, abovesaid
-> DMA API abusing, etc... isn't it?
-
-Yes, it should not happen, this driver is clearly buggy.
-
-Jason
+On Tue, Apr 8, 2025 at 9:24=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl> =
+wrote:
+>
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. Convert the driver to using
+> them.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
