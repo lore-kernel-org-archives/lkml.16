@@ -1,114 +1,108 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 256B91DFE1
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 00:35:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 617FDD2FB;
+	Tue,  8 Apr 2025 00:37:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.178.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744072540; cv=none; b=to5QSkgPtDV2mad8cl07vCs3DHKP3YubqRl6lK+pE5EWSJ5bYyXe8Itljudc5tVt9CVg6VqLN+ZybuFuZwPvX34RlTTls8/1I1mHB54isx6Z63Dyw+aG7CZDOZyzapQ6x2WNlQeyWRpX/vzyvhYSelfv6lzGbdONoykoAWKOmHo=
+	t=1744072644; cv=none; b=L8cFtAEa+Lv58/vADN4MODqauPOEajF/fk/JwOU7JOvcigqkwV4ASpIasbKGrdJKHTFOGhOriNf984V7aVmwCXrqw15b4UyM4m+A7xhYnoOLg1+KXVHs0m9Mf3viNymWJLPHX2fwZ+uJvynoX8Z7kqCwF0VJK/+z/q9lQOFD2Lo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744072540; c=relaxed/simple;
-	bh=DaV65SDOazR9yPifTzNsvT2tHThc/Q1IbGQ47406ibk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RV6uukWUQQYZp72XCn5fAaKFaxqvBA4m9ZpClUyWkaqzRlsRujq66tj5ZFPgGAxMftHkSK1g/J82AsjzbpPIplZZrsAh0XPp7NW83ETWB/V0UKQZdX7pH4P6tcVnAdEM1g+jIV50yCBDDKH4WKk4ZvT3zQYVolapck56+xkqHI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=g2jD4cIs; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="g2jD4cIs"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac29fd22163so848423166b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 17:35:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1744072502; x=1744677302; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=r+ZxkGINI7rLoBc6b8D+uct/d147JQCfpdqDjWea//I=;
-        b=g2jD4cIsQDr0PafwB4xOJQ9lrZAbLiNxHKZkDs4+IwguGNPqnkOqGChb8rcNHujfqZ
-         +TP7irfrsnpynQX9IYsbVfP+61h0s7g8t9kc6iY0mmcsdwiJWuiLCYfVQ0yKhURXYvrb
-         SxYyBBCTTE5Muq68dd1e4+G0vPkIr8xjcX/c8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744072502; x=1744677302;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=r+ZxkGINI7rLoBc6b8D+uct/d147JQCfpdqDjWea//I=;
-        b=bBTyOwyLM+ixN5FgM1JUFki9yRMpkh/qOxifmbmDNJ2gP9vkHpAx+/B9FbCOntVb6V
-         9fyLgqhwMRgMiJ0FeGeQXfhDTR9290JerX0WtkA++g3rfc+a+CKNusYMqn92ZjqGNKu7
-         8/SC/KrTp0FFZrrHE7W39rkTh3VnINNRQFucxUbet5U63W35ZfsWTxh/CwmHomyL4ec2
-         ch7xZrCxw6R8jxpelkqaI84TZh5I49a2B3CbDAzDN9uVbRshyDxXg7FbjsAj+vIrI32B
-         8/M6NvH6EEHb2d7BKOWZ9Rrqr6UhF5r5Tag6iqXNJrassF+IngN7KtOJubJoNpG6rAV3
-         2/pA==
-X-Forwarded-Encrypted: i=1; AJvYcCWnrLiCSPPqQlAPejyCRmwNwv753YR3FmTOvJslZnMcnq8w5YoX5tjgRrS2Nl7P1F37X2bByqpS79PwP2E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4Ju0hDeVv3zdGMlVsgs1z76XwYdwvIPvgzPJWWnp926hfDSb9
-	fNvaRK6F6QiJK6kfmyG98CJpsZKPe2mQddsGcHLHCFw7VwZJeiQaEXQs8rvf3OCm8dWWNg0Z6BM
-	iSu0=
-X-Gm-Gg: ASbGncvDB2Bq+DSpd//MuRqEVWf/yJkZh+q6eD5CF7+n+qXUFR7CyXSpa+2ICafLsUO
-	V2Tf1qyxJQeVnzkMy9gCvYvRca6CbM3jhN2yeh8jd5BrQOlDnRWZIzBV6gGQrygfB5+6OxYecNr
-	eLyxhk0euk/XRBfIe4OWbvyurB/MBhVNHuM8GHngAXALD39Ocnn+OtUvMh6MUlbvJUL2zyKrwOZ
-	otBRBX5GrhV6J1XsJu8zCATvR/usNV0Qczz3vq+Pk3j8HfBF6w5TzzwImWm3sFiIifGlIgMRP+v
-	OwXAdDKY0CoXd9r3kjet+3S/reB5Leoke/NNSYN1ZpdNbSaOWVJ69gar0rvJY3LJ8YWUjBxBBHK
-	wu8X0iHwfb/+np36KG1w=
-X-Google-Smtp-Source: AGHT+IFj7UY0GT1Egoe3dWyFP05RznO6h0+qDFGaFx8Y5ZLV9SszAwrN3P781ZLW2Xml1hCpuyXARw==
-X-Received: by 2002:a17:907:3f89:b0:ac6:e42b:7556 with SMTP id a640c23a62f3a-ac7d6cbd8acmr1014919266b.11.1744072502332;
-        Mon, 07 Apr 2025 17:35:02 -0700 (PDT)
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com. [209.85.218.46])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7c013f646sm811069666b.120.2025.04.07.17.35.01
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Apr 2025 17:35:01 -0700 (PDT)
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso670449166b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 17:35:01 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUiXP7eHSCKU1zn4gLInVH5QgW7z0xQVezrbvKUwJ5s22x34sYYVFBlRGmv44DP5hgwdJ1zyis36jVZvgw=@vger.kernel.org
-X-Received: by 2002:a17:907:7eaa:b0:ab7:bac4:b321 with SMTP id
- a640c23a62f3a-ac7d6d6447emr1163743766b.29.1744072500876; Mon, 07 Apr 2025
- 17:35:00 -0700 (PDT)
+	s=arc-20240116; t=1744072644; c=relaxed/simple;
+	bh=gEfjmLVnt9ZhdW9OXMofU8oOyt//Y5GH8VwebzD4VvU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YW6nKmQ3201OQDDjcwLShE+iwVTfIK1D//KvTcJZtWgsHcnEtxRXEbb1JXDCav56t89QJqyWFCUbgwKRTbthXgpx35ZavJ5i9bdJkb/XJ2Tphm1+ANPsuQjr2WS2lIt+Jgfh1eCf3OhCIjU0Py3uWhu0Svm/97TjKGGK5S0w0ZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.178.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250811.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 537N94AX020202;
+	Tue, 8 Apr 2025 00:36:54 GMT
+Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 45tsr1k58r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Tue, 08 Apr 2025 00:36:53 +0000 (GMT)
+Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.43; Mon, 7 Apr 2025 17:36:52 -0700
+Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
+ 15.1.2507.43 via Frontend Transport; Mon, 7 Apr 2025 17:36:48 -0700
+From: <jianqi.ren.cn@windriver.com>
+To: <stable@vger.kernel.org>
+CC: <patches@lists.linux.dev>, <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <jianqi.ren.cn@windriver.com>,
+        <harry.wentland@amd.com>, <sunpeng.li@amd.com>,
+        <Rodrigo.Siqueira@amd.com>, <alexander.deucher@amd.com>,
+        <christian.koenig@amd.com>, <Xinhui.Pan@amd.com>, <airlied@gmail.com>,
+        <daniel@ffwll.ch>, <amd-gfx@lists.freedesktop.org>,
+        <dri-devel@lists.freedesktop.org>, <chiahsuan.chung@amd.com>,
+        <alex.hung@amd.com>, <daniel.wheeler@amd.com>
+Subject: [PATCH 6.6.y] drm/amd/display: Check link_index before accessing dc->links[]
+Date: Tue, 8 Apr 2025 08:36:47 +0800
+Message-ID: <20250408003647.3361342-1-jianqi.ren.cn@windriver.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <alpine.DEB.2.21.2502181912230.65342@angie.orcam.me.uk>
- <CAHk-=wgBZk1FFOyiTKLnz4jNe-eZtYsrztcYRRXZZxF8evk1Rw@mail.gmail.com>
- <alpine.DEB.2.21.2502202106200.65342@angie.orcam.me.uk> <alpine.DEB.2.21.2504072042350.29566@angie.orcam.me.uk>
-In-Reply-To: <alpine.DEB.2.21.2504072042350.29566@angie.orcam.me.uk>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 7 Apr 2025 17:34:44 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whKa0-myNkpq2aMCQ=o7S+Sqj--TQEM8wfC9b2C04jidA@mail.gmail.com>
-X-Gm-Features: ATxdqUHVWAsCJEhhvm-QPqcunGy72geDTRo-IlsWBZxYAFW1rFkcbu5rDcC9MaE
-Message-ID: <CAHk-=whKa0-myNkpq2aMCQ=o7S+Sqj--TQEM8wfC9b2C04jidA@mail.gmail.com>
-Subject: Re: [PATCH] Alpha: Emulate unaligned LDx_L/STx_C for data consistency
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-Cc: Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@unseen.parts>, 
-	Matt Turner <mattst88@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Magnus Lindholm <linmag7@gmail.com>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
-	linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Authority-Analysis: v=2.4 cv=Td6WtQQh c=1 sm=1 tr=0 ts=67f46fa5 cx=c_pps a=/ZJR302f846pc/tyiSlYyQ==:117 a=/ZJR302f846pc/tyiSlYyQ==:17 a=XR8D0OoHHMoA:10 a=zd2uoN0lAAAA:8 a=t7CeM3EgAAAA:8 a=BwQGkkmVnK98ez6iplQA:9 a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-ORIG-GUID: 5r75n8bMt50BzTocoZiDlGTAC4DERPC4
+X-Proofpoint-GUID: 5r75n8bMt50BzTocoZiDlGTAC4DERPC4
+X-Sensitive_Customer_Information: Yes
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-07_07,2025-04-07_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
+ mlxlogscore=999 clxscore=1015 lowpriorityscore=0 adultscore=0 bulkscore=0
+ impostorscore=0 phishscore=0 spamscore=0 suspectscore=0 priorityscore=1501
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.21.0-2502280000
+ definitions=main-2504080002
 
-On Mon, 7 Apr 2025 at 13:46, Maciej W. Rozycki <macro@orcam.me.uk> wrote:
->
->  So unless I'm proved otherwise (e.g. that all such code paths are now
-> gone from networking, which may or may not be the case: I saw IPX go but I
-> can see AppleTalk still around; or that no sub-longword accesses are ever
-> used in the relevant networking paths), I'm going to keep kernel emulation
-> in v2, because what just used to be wrapped in an unaligned LDQ/STQ pair,
-> which we trapped on and emulated, will now become an LDQ_L/STQ_C loop.
->
->  Do you happen to know what the situation is here?
+From: Alex Hung <alex.hung@amd.com>
 
-I think networking ends up using 'get_unaligned()' properly for header
-accesses these days for any of this.
+[ Upstream commit 8aa2864044b9d13e95fe224f32e808afbf79ecdf ]
 
-If you don't, some architectures will literally silently give you
-garbage back and not even fault.
+[WHY & HOW]
+dc->links[] has max size of MAX_LINKS and NULL is return when trying to
+access with out-of-bound index.
 
-Admittedly that's mainly some really broken old 32-bit ARM stuff and
-hopefully it's all dead by now.
+This fixes 3 OVERRUN and 1 RESOURCE_LEAK issues reported by Coverity.
 
-So unless you actually *see* the unaligned faults, I really think you
-shouldn't emulate them.
+Reviewed-by: Harry Wentland <harry.wentland@amd.com>
+Acked-by: Tom Chung <chiahsuan.chung@amd.com>
+Signed-off-by: Alex Hung <alex.hung@amd.com>
+Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+[The macro MAX_LINKS is introduced by Commit 60df5628144b ("drm/amd/display:
+ handle invalid connector indices") after 6.10. So here we still use the
+ original array length MAX_PIPES * 2]
+Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+---
+Verified the build test
+---
+ drivers/gpu/drm/amd/display/dc/core/dc_link_exports.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-And I'd like to know where they are if you do see them
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_exports.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_exports.c
+index f365773d5714..e9b3c1c7a931 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_link_exports.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_exports.c
+@@ -37,6 +37,9 @@
+ #include "dce/dce_i2c.h"
+ struct dc_link *dc_get_link_at_index(struct dc *dc, uint32_t link_index)
+ {
++	if (link_index >= (MAX_PIPES * 2))
++		return NULL;
++
+ 	return dc->links[link_index];
+ }
+ 
+-- 
+2.34.1
 
-             Linus
