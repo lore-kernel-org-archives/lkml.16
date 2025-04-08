@@ -1,175 +1,94 @@
-Received: from mail.universe-factory.net (osgiliath.universe-factory.net [141.95.161.142])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB57E1A3AB8;
-	Tue,  8 Apr 2025 16:30:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.95.161.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65DA5205ABF;
+	Tue,  8 Apr 2025 16:31:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744129848; cv=none; b=gVsHrV0145MuyN/DH9OIqtFZdjAUAWLB63O1UvlAztgtk8Y7b44oEYgXn2F4ac+Za7+iGXIRg4WMbQA4QdACgXL9DLxu/o7TBSIhrHDHbNF6t+U5tW+8qnsu7P7yQi0IJ/KQomcjTQ6Oo9KJBBMRlSYjMrQAe5nMJoizLaXeq8k=
+	t=1744129903; cv=none; b=iwwVn37T3ls/6DyGfX0FfycesdV8D2lqZRnuUW/S2DZai2CwtCMf0WPOgWk7aNHxDUUyo/aDwNLTIgd3pBW/vchCV0/RPbn+pbBJF7QQVGctuNlQ7WOdhKCpFhB+GoyLBbGnu480MtMkn5vdu8aZDat/+8ZmJVE3ZLjHd1Ulv+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744129848; c=relaxed/simple;
-	bh=SWjrxx7mBYsKxQ85DT+EJ28yhni0UNOr9J1yNClrQQM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FgCKjtb8J0m3+8ZaiR1H15dDZYkqnKNaUt2+QvOe1XhNJPDU0/jpc7vajJDahmtibmfctVlA2Pc2FsZtGh5QObP14ea+eWOhdHUM6UqGZCy+gv9QmJLSFO9/xDK7brGFQued8HV+QVBXuUB6lFwz2scuX2J3pw+Ts6KHnMPlick=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=universe-factory.net; spf=pass smtp.mailfrom=universe-factory.net; dkim=pass (2048-bit key) header.d=universe-factory.net header.i=@universe-factory.net header.b=lcIfPGas; arc=none smtp.client-ip=141.95.161.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=universe-factory.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=universe-factory.net
+	s=arc-20240116; t=1744129903; c=relaxed/simple;
+	bh=egziIIrJF2lqSbR/TCnJppLKkivNvDY0/5IO3lTLgJ8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=gDK8/RWnfzs0LDqFZkVYu/gIwJcXD3Rv0bitqwuPNIC1z+18FW2YTutVfea+FrjsIJrBWe0dpTxfjRGMxxg1d8OJOjNOuuEYaFenBAflRD8lFqCeGStpXhR/TkMizKCQndSPHqdXDXy0eiEp+ybm03s+ccupDWT2YgfV4bgWcHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UK6iCA/P; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=universe-factory.net header.i=@universe-factory.net header.b="lcIfPGas"
-From: Matthias Schiffer <mschiffer@universe-factory.net>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=universe-factory.net;
-	s=dkim; t=1744129843;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=HZjY/++SdcazIcDBDIw/OPGFSAKBqU5udvYkVuC5+dg=;
-	b=lcIfPGasBWgQC8ybApf13bCYOP2yEebhBPyToL5Ae7hFnS26CZz1gAornIr8UGdB0shYyO
-	3TgzJ6PQxBn1IkYFavFo3vMpEIiu24od2c4Cy3oOMJoaq/H5Zh8xihdzioJkBv8qqJvRkQ
-	HxLuJwqMxbAqJl6D6L3KaNTVj+Fmum2R9MTmzbgB6qCbg6nTqNsTEgyFn+lbxRirHCU87n
-	v3L3WvOmygfYdsCBLmdl3RW8CcnL2WCC61Aefq5lME8OrrzHKyAESRyHUH5/2AE0zTlNRj
-	DnlKjKID/59GwvZmoKKXx7J96kgHjYX7QKxgpayVnXWsb4f4rU/cFC+G70XshQ==
-Authentication-Results: mail.universe-factory.net;
-	auth=pass smtp.mailfrom=mschiffer@universe-factory.net
-To: Marek Lindner <marek.lindner@mailbox.org>,
-	Simon Wunderlich <sw@simonwunderlich.de>,
-	Antonio Quartulli <antonio@mandelbit.com>,
-	Sven Eckelmann <sven@narfation.org>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	b.a.t.m.a.n@lists.open-mesh.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Matthias Schiffer <mschiffer@universe-factory.net>
-Subject: [PATCH net] batman-adv: fix duplicate MAC address check
-Date: Tue,  8 Apr 2025 18:30:16 +0200
-Message-ID: <c775aab5514f25014f778c334235a21ee39708b4.1744129395.git.mschiffer@universe-factory.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UK6iCA/P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96BF9C4CEE5;
+	Tue,  8 Apr 2025 16:31:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744129902;
+	bh=egziIIrJF2lqSbR/TCnJppLKkivNvDY0/5IO3lTLgJ8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=UK6iCA/PXeVfE+NUy9zsr035g3uKqIlH/wjKEXTUqc8Eep1ISLAccfNVBE5CiIhH8
+	 yIJlPojG6LNrQ+I582kYfNFY3lnbHKmrx4dz97/QvoXyx/khOTIHfO4B1gMQ/WDlhh
+	 8Knea54AxjcN/zNe7Q45JooCod3k/X4FnkgDi5Ld8NYFFJM1wx34zxBpmEPhzw9JLo
+	 5XVjhEthszBNxn1oo6EhlQKqVf+T1ONg5aKEu2D0Uu+lCIYblM0i4hpsNxmgFKhom+
+	 Wx6ylRd9aCiTbtZoXMIrXIDcIBqIP5Jk/owp3/P465S6unG+NaECaDDqHNyeLPbbt+
+	 5eugeNT1TePQQ==
+From: Mark Brown <broonie@kernel.org>
+To: Liam Girdwood <lgirdwood@gmail.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+In-Reply-To: <20250408-gpiochip-set-rv-regulator-v1-0-a18b6154b31a@linaro.org>
+References: <20250408-gpiochip-set-rv-regulator-v1-0-a18b6154b31a@linaro.org>
+Subject: Re: [PATCH 0/4] regulator: rpi-panel-attiny: use new GPIO line
+ value setter callbacks
+Message-Id: <174412990132.2213335.9669148842146678590.b4-ty@kernel.org>
+Date: Tue, 08 Apr 2025 17:31:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: -
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
-batadv_check_known_mac_addr() is both too lenient and too strict:
+On Tue, 08 Apr 2025 09:36:27 +0200, Bartosz Golaszewski wrote:
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. We're in the process of
+> converting all GPIO drivers to using the new API. This series converts
+> the only GPIO controller under drivers/regulator/ and - while at it -
+> refactors the code a bit.
+> 
+> 
+> [...]
 
-- It is called from batadv_hardif_add_interface(), which means that it
-  checked interfaces that are not used for batman-adv at all. Move it
-  to batadv_hardif_enable_interface(). Also, restrict it to hardifs of
-  the same mesh interface; different mesh interfaces should not interact
-  at all. The batadv_check_known_mac_addr() argument is changed from
-  `struct net_device` to `struct batadv_hard_iface` to achieve this.
-- The check only cares about hardifs in BATADV_IF_ACTIVE and
-  BATADV_IF_TO_BE_ACTIVATED states, but interfaces in BATADV_IF_INACTIVE
-  state should be checked as well, or the following steps will not
-  result in a warning then they should:
+Applied to
 
-  - Add two interfaces on down state with different MAC addresses to
-    a mesh as hardifs
-  - Change the MAC addresses so they confliect
-  - Set interfaces to up state
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
-  Now there will be two active hardifs with the same MAC address, but no
-  warning. Fix by only ignoring hardifs in BATADV_IF_NOT_IN_USE state.
+Thanks!
 
-The RCU lock can be dropped, as we're holding RTNL anyways when the
-function is called.
+[1/4] regulator: rpi-panel-attiny: don't double-check GPIO range
+      commit: 06bab1f101337ae9469a7d2c6ac4de5db64e8160
+[2/4] regulator: rpi-panel-attiny: use devres for mutex management
+      commit: 1326e295d6b4ffc9647bd4f073b787b4f79d6b6e
+[3/4] regulator: rpi-panel-attiny: use lock guards for the state mutex
+      commit: 50faedda12e46918a11194a30c2bedf2b983fae2
+[4/4] regulator: rpi-panel-attiny: use new GPIO line value setter callbacks
+      commit: 936df52c29b0d422665c5e84b0cffae61611411b
 
-While we're at it, also switch from pr_warn() to netdev_warn().
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-Fixes: c6c8fea29769 ("net: Add batman-adv meshing protocol")
-Signed-off-by: Matthias Schiffer <mschiffer@universe-factory.net>
----
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-Aside: batadv_hardif_add_interface() being called for all existing
-interfaces and having a global batadv_hardif_list at all is also not
-very nice, but this will be addressed separately, as changing it will
-require more refactoring.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
- net/batman-adv/hard-interface.c | 37 ++++++++++++++++++++-------------
- 1 file changed, 22 insertions(+), 15 deletions(-)
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-diff --git a/net/batman-adv/hard-interface.c b/net/batman-adv/hard-interface.c
-index f145f9662653..07b436626afb 100644
---- a/net/batman-adv/hard-interface.c
-+++ b/net/batman-adv/hard-interface.c
-@@ -506,28 +506,34 @@ batadv_hardif_is_iface_up(const struct batadv_hard_iface *hard_iface)
- 	return false;
- }
- 
--static void batadv_check_known_mac_addr(const struct net_device *net_dev)
-+static void batadv_check_known_mac_addr(const struct batadv_hard_iface *hard_iface)
- {
--	const struct batadv_hard_iface *hard_iface;
-+	const struct net_device *mesh_iface = hard_iface->mesh_iface;
-+	const struct batadv_hard_iface *tmp_hard_iface;
- 
--	rcu_read_lock();
--	list_for_each_entry_rcu(hard_iface, &batadv_hardif_list, list) {
--		if (hard_iface->if_status != BATADV_IF_ACTIVE &&
--		    hard_iface->if_status != BATADV_IF_TO_BE_ACTIVATED)
-+	if (!mesh_iface)
-+		return;
-+
-+	list_for_each_entry(tmp_hard_iface, &batadv_hardif_list, list) {
-+		if (tmp_hard_iface == hard_iface)
-+			continue;
-+
-+		if (tmp_hard_iface->mesh_iface != mesh_iface)
- 			continue;
- 
--		if (hard_iface->net_dev == net_dev)
-+		if (tmp_hard_iface->if_status == BATADV_IF_NOT_IN_USE)
- 			continue;
- 
--		if (!batadv_compare_eth(hard_iface->net_dev->dev_addr,
--					net_dev->dev_addr))
-+		if (!batadv_compare_eth(tmp_hard_iface->net_dev->dev_addr,
-+					hard_iface->net_dev->dev_addr))
- 			continue;
- 
--		pr_warn("The newly added mac address (%pM) already exists on: %s\n",
--			net_dev->dev_addr, hard_iface->net_dev->name);
--		pr_warn("It is strongly recommended to keep mac addresses unique to avoid problems!\n");
-+		netdev_warn(hard_iface->net_dev,
-+			    "The newly added mac address (%pM) already exists on: %s\n",
-+			    hard_iface->net_dev->dev_addr, tmp_hard_iface->net_dev->name);
-+		netdev_warn(hard_iface->net_dev,
-+			    "It is strongly recommended to keep mac addresses unique to avoid problems!\n");
- 	}
--	rcu_read_unlock();
- }
- 
- /**
-@@ -764,6 +770,8 @@ int batadv_hardif_enable_interface(struct batadv_hard_iface *hard_iface,
- 			    hard_iface->net_dev->name, hardif_mtu,
- 			    required_mtu);
- 
-+	batadv_check_known_mac_addr(hard_iface);
-+
- 	if (batadv_hardif_is_iface_up(hard_iface))
- 		batadv_hardif_activate_interface(hard_iface);
- 	else
-@@ -902,7 +910,6 @@ batadv_hardif_add_interface(struct net_device *net_dev)
- 
- 	batadv_v_hardif_init(hard_iface);
- 
--	batadv_check_known_mac_addr(hard_iface->net_dev);
- 	kref_get(&hard_iface->refcount);
- 	list_add_tail_rcu(&hard_iface->list, &batadv_hardif_list);
- 	batadv_hardif_generation++;
-@@ -989,7 +996,7 @@ static int batadv_hard_if_event(struct notifier_block *this,
- 		if (hard_iface->if_status == BATADV_IF_NOT_IN_USE)
- 			goto hardif_put;
- 
--		batadv_check_known_mac_addr(hard_iface->net_dev);
-+		batadv_check_known_mac_addr(hard_iface);
- 
- 		bat_priv = netdev_priv(hard_iface->mesh_iface);
- 		bat_priv->algo_ops->iface.update_mac(hard_iface);
--- 
-2.49.0
+Thanks,
+Mark
 
