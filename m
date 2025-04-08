@@ -1,256 +1,102 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25D4A1ADC83;
-	Tue,  8 Apr 2025 13:49:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90B617E00E
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 13:50:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744120176; cv=none; b=rZmTm/8DLr2zhghlmFt6rX6cspop5AVTEWhhg7coxU40PeKuR/xNx5w3AJIsvTpCzvpeAXRnmGwc4xrXNgD9NJPR9VwHUJkbj1gHIND6WsCELUL67XywYiTaKSq3UMqFgBJoDkzXgsbHlZJzI6OidpnOBENXw6HSZeiv/Hih6M8=
+	t=1744120249; cv=none; b=tPO9a4jx5K9vfT3yNVU8k1FGfEptXU/wXq4q8Zo2cjPwTaufZh2m/LTXhhlFXUtdyQL+k0eAovFGx3MI+Ouumceq471ZHfHv1yuUpjvz2m+LhKixILcw0M17vMSsT+aptAQhrSly8zsv07yLnz1GlbjzYnNpPTVedSUFTTR5og0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744120176; c=relaxed/simple;
-	bh=0ZQKRssJ93hCQOX/jX1fsoONV8oJ2yuBNwmUrm0kM4M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pTI8KvVk5JTmtcnyOhXjV62wZwY8Jf/7MAulXUG+f0QtiNyPqvwO5NxcUBfe0BemZlucOMt+htY4GxEfZAODpYzgCGyw+Q83ePL8KKfHsKr6lRweqo47/5tMOlq6b5K6RFe4LreeCnFsUdsMFq84L1JWz005/foOtZoH8BdShpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WwbbtrQa; arc=none smtp.client-ip=209.85.219.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744120249; c=relaxed/simple;
+	bh=NCsWfL0MybYgp+JwS252qiXik2UmAOGQz50Z5XeC1Ew=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dCPReRrTq26h//tj0ot6b+eu8ghj8l4Gn+QOMVR/Q+yefjf8xWZblj7cKrOzwxQM/iHGlCDWoVF8kAoX2PrJZh3MCq+bMFf51RbEC6Kij8CSYAwX06pDcdhUpNeHfHTaIgFA5tUr2G5ebtv28lh+p93BVAZzeDZWTG+jiWyWUPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Ho/6hiNZ; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WwbbtrQa"
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e6405e4ab4dso5900462276.0;
-        Tue, 08 Apr 2025 06:49:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Ho/6hiNZ"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ac2af2f15d1so756550466b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 06:50:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744120174; x=1744724974; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6roUkAtO7CHIJtMo8g3NkkIj2dqhMEED9ifNn9GTILs=;
-        b=WwbbtrQaKzvHo6vgaIip9hfygsO+6KSwc/jLW7Tc6u2fclBeBLx0vU4Owxttpvx51n
-         8OmJRcoYMVkVDSIDlU8DSu+B0et8d4BBpDqCFQOckSGght1KuhO4aUXqErjACKiGlRSN
-         aGmnoubO6nYs1CczvXtjITijsmqMKxfTIC/BAsb9GCBeAbGUb2s1EjEQAvq0uFLBMXHK
-         Q9NKqt3G0kmHQJu7SgJ/CJWHOp6hkiBErOMOxIpTxRQtIOxaHR6Gi3xGvJ3pEA4GiFaB
-         vvfLs60yqf6pod3tYmo3SfPMsublCWHFlwEjwgcxCB8hhMmrmzPCUJXxsHOiClraVlz+
-         chsQ==
+        d=suse.com; s=google; t=1744120245; x=1744725045; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5fM3gX3mnntU8mKyK8O/mS1b9O+ReWBswTOnb6yk+1U=;
+        b=Ho/6hiNZYSIwTz22vtvQ7tLPj2UbDBPGZCDSMiERo0Rw26WheIMT2kEii46gp4jLHX
+         l18y5R7bltZcf5tC1VPGZuSSEtjKZEj+i1JvVmvEVJa4tgzvSIwLpiWgmdsyTsTvgQvm
+         khCkt/elQYulfa8saQ537QLrWfUzxrPUCCiSk5Ca9/Uj6SVBs5zqcVFVD/f1R/Cfetha
+         HY94Pyd3PuK74cdUah/rwZAaPHNcfVIQQV4q+MpTlk65JUq/kLaPRuCdvTV51PyS6LOe
+         o0OaxXksHTjR0yKXayZ7Z8y49xumz11iBJmaRy6qykWaFMjxL4ugLfdFSxzk64BCtwVS
+         wYdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744120174; x=1744724974;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6roUkAtO7CHIJtMo8g3NkkIj2dqhMEED9ifNn9GTILs=;
-        b=NiCASV+GmRQSExPCNxtq4T37ZceCkoop+2HQL/we1MjmW8uOZJblMaz4fkXB7GvPtF
-         ed8GU4SREeuf/7z7dWknN+VG4KseoFdKQgpya32MJLIhYu45B0aPipdUaXn048gITgWS
-         OHyHW6WvMewozRHAl3ux3fkhAagboxpSs/HTvT5t45e8QU2GJg2jYGgwK7SHSUyn+0ba
-         gIO6FXpJ+o7TcCIrGabhfcApgkvgLZmNOHPGJht4X9MBz24YfJzMEkn8dqdZt1XiTVs+
-         sukhuBAgty5XVB3YLRrYiAbiRjmJzTJHWMxjavKvF20//WTEdxGUGpXDFmbBeCq3iWcU
-         HnMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUU7RFr8t4ssUiSkB5YMr+KZRkBA9taQGpPYQsn/ZiUc/h4vqnIRhUgQmeChOgUqtCY6xR9yfYoIgw=@vger.kernel.org, AJvYcCXXWQJgqMON3ZlsY5L+qwo7zjPqYNizBjuZsJ988WhgvMtq277hO/y2GL/dVoJMLTYlPRr6BDq/QtM/9vUB@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywf4T9nUN3slR6mzGZXptMQ0SfwYGTtvUqm4KkiRUlZIDcGOW4C
-	StkMGBJo2ALM0/aX74T6Fk3vkDkV7+P1SmXhw9ImeMo2fN/kQ33o
-X-Gm-Gg: ASbGncsTbJLkjnXBBGT0n1BPrJwbte7DfzS+cChKdpASYdEGccMXGMmtu1B0TZuj2N9
-	1hJfHvGDC+qfOGaDFvZ2TLEUoRAdoRMPLeC3Gv03LtVZT6JXYB8yRMIijaQM40qyzvYscOC4KSE
-	gtstGszxxHVi4pakrRiDG5InOqZnJ8U87n1I+MTxed/Jda9kLKyvjJzhZ0FoGzt57bvo6ZbcYOB
-	Fr2hKGt23vb7Ob03AaIxPpSVJKzBZ1bRtf636P5OTYEIKPKD1czIsCMRK1DW3L0leQ7EBepD/3A
-	ezMl6Xh5dp+ZR7ODeS0LuAqbBtJzS0DavajJpa38dtgE
-X-Google-Smtp-Source: AGHT+IH8QJ49ySf1MDM3STQQAFouuIhVkERvHQyB9mCSnm4/qtjQlXpAGs8+hfQWwIM74A4i6u9mCg==
-X-Received: by 2002:a05:690c:6111:b0:703:b47a:7312 with SMTP id 00721157ae682-7042d51dad4mr60029507b3.15.1744120173954;
-        Tue, 08 Apr 2025 06:49:33 -0700 (PDT)
-Received: from localhost ([2a03:2880:25ff:71::])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-703d1e4d90bsm31055437b3.32.2025.04.08.06.49.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 06:49:33 -0700 (PDT)
-From: Joshua Hahn <joshua.hahnjy@gmail.com>
-To: Rakie Kim <rakie.kim@sk.com>
-Cc: akpm@linux-foundation.org,
-	gourry@gourry.net,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	joshua.hahnjy@gmail.com,
-	dan.j.williams@intel.com,
-	ying.huang@linux.alibaba.com,
-	david@redhat.com,
-	Jonathan.Cameron@huawei.com,
-	osalvador@suse.de,
-	kernel_team@skhynix.com,
-	honggyu.kim@sk.com,
-	yunjeong.mun@sk.com
-Subject: Re: [PATCH v7 2/3] mm/mempolicy: Prepare weighted interleave sysfs for memory hotplug
-Date: Tue,  8 Apr 2025 06:49:30 -0700
-Message-ID: <20250408134932.2986280-1-joshua.hahnjy@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250408073243.488-3-rakie.kim@sk.com>
-References: 
+        d=1e100.net; s=20230601; t=1744120245; x=1744725045;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5fM3gX3mnntU8mKyK8O/mS1b9O+ReWBswTOnb6yk+1U=;
+        b=QyZZgmdZdtG5WA3S0ZARvZypsyVdJqK1O3RyTS/yLVw7VwAd+A9ez9O/xmgDJBEZM9
+         UCIQ2fq0+koEAp435ylrfLWUpZgwgjbOGSkJZDvvVZokopBRUUNXHp9XW8txBLH/Z40Y
+         Z1Mqa7ZvPKM4M8n687UOnBvTvyxhWUiUiU5ObsZXC1gii/QB7r4eLFbVHobBAu78lXzk
+         tTJ8SlVX+cVYygJ3ae/NhyF/j12u11JCoI7G/XvQDyu1K59B2z/cyQG31r9wwQwmaJJ7
+         fB1Pr4P5u8oHMlRcxMrU/TSmjKPZ4zVaDqnfjtKTkyNobg4OKjYPMCPO7FgYxeY9mjxp
+         shvQ==
+X-Gm-Message-State: AOJu0Yz+Qe3tLXIaRQOR97SnbcA7w/zNFlhOxzJMusF2BcfHGT2A/Ttv
+	srtej6bJ/lyeWBK0+Kpwf576CT7XZWkVZwl+UfzqmLA0ll+qX+XmiVgj4FHnNUY=
+X-Gm-Gg: ASbGnctuS8Bwjw3lMQlvjB3+8NsDkkgqidPmxcgAjQPv6/eMvS8yeVX8vK8HVGTF04C
+	XmxIAWX+nKtPJUqMRpFzcDoHLmcELN7TOP7loP4V3lTV+eLfQ4PQYWstLAj+3Heb4ZthMxqzKhc
+	FEHcvsseTnoyJDi5t79AV8k+uTnTvtEdK+c9pRZPG5kome6lGbOOyoWqp+x5i+aLSCVgjDMdBGD
+	eNabTnvaQn2M3TMNluHSC74Z/5DQ78Z4hKEuOliNbq0aZJyoORmSVQV01Bc1uvNkVlT1Hfry7LY
+	NH0Ygt//TthWNBXA7TgYkRtBNbqPFSedYk0/yVE/8JwZz/gFpg==
+X-Google-Smtp-Source: AGHT+IHAZbCBMTkJULUxkZ8VSTmMiMLSnh65yKkazUvPoIlJAUQd1W73SQfkwomVlw3lt2/E+H3YSw==
+X-Received: by 2002:a17:907:9605:b0:ac3:8993:3c6d with SMTP id a640c23a62f3a-ac7e72b6218mr1158874466b.26.1744120245067;
+        Tue, 08 Apr 2025 06:50:45 -0700 (PDT)
+Received: from [192.168.0.20] ([212.21.133.214])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7bfe99c7dsm925314966b.57.2025.04.08.06.50.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Apr 2025 06:50:44 -0700 (PDT)
+Message-ID: <b9c081b6-3a92-4c46-be04-19abdb1ca429@suse.com>
+Date: Tue, 8 Apr 2025 16:50:42 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/6] x86/bugs: Don't fill RSB on VMEXIT with
+ eIBRS+retpoline
+To: Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org
+Cc: linux-kernel@vger.kernel.org, amit@kernel.org, kvm@vger.kernel.org,
+ amit.shah@amd.com, thomas.lendacky@amd.com, bp@alien8.de,
+ tglx@linutronix.de, peterz@infradead.org, pawan.kumar.gupta@linux.intel.com,
+ corbet@lwn.net, mingo@redhat.com, dave.hansen@linux.intel.com,
+ hpa@zytor.com, seanjc@google.com, pbonzini@redhat.com,
+ daniel.sneddon@linux.intel.com, kai.huang@intel.com, sandipan.das@amd.com,
+ boris.ostrovsky@oracle.com, Babu.Moger@amd.com, david.kaplan@amd.com,
+ dwmw@amazon.co.uk, andrew.cooper3@citrix.com
+References: <cover.1743617897.git.jpoimboe@kernel.org>
+ <a305206cd08cde28c46a1ef19f5668a3fff9b013.1743617897.git.jpoimboe@kernel.org>
+From: Nikolay Borisov <nik.borisov@suse.com>
+Content-Language: en-US
+In-Reply-To: <a305206cd08cde28c46a1ef19f5668a3fff9b013.1743617897.git.jpoimboe@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On Tue,  8 Apr 2025 16:32:41 +0900 Rakie Kim <rakie.kim@sk.com> wrote:
 
-Hi Rakie,
-This also looks good to me!
 
-Reviewed-by: Joshua Hahn <joshua.hahnjy@gmail.com>
+On 2.04.25 г. 21:19 ч., Josh Poimboeuf wrote:
+> eIBRS protects against guest->host RSB underflow/poisoning attacks.
+> Adding retpoline to the mix doesn't change that.  Retpoline has a
+> balanced CALL/RET anyway.
+> 
+> So the current full RSB filling on VMEXIT with eIBRS+retpoline is
+> overkill.  Disable it or do the VMEXIT_LITE mitigation if needed.
+> 
+> Suggested-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+> Reviewed-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+> Reviewed-by: Amit Shah <amit.shah@amd.com>
+> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 
-> Previously, the weighted interleave sysfs structure was statically
-> managed during initialization. This prevented new nodes from being
-> recognized when memory hotplug events occurred, limiting the ability
-> to update or extend sysfs entries dynamically at runtime.
-> 
-> To address this, this patch refactors the sysfs infrastructure and
-> encapsulates it within a new structure, `sysfs_wi_group`, which holds
-> both the kobject and an array of node attribute pointers.
-> 
-> By allocating this group structure globally, the per-node sysfs
-> attributes can be managed beyond initialization time, enabling
-> external modules to insert or remove node entries in response to
-> events such as memory hotplug or node online/offline transitions.
-> 
-> Instead of allocating all per-node sysfs attributes at once, the
-> initialization path now uses the existing sysfs_wi_node_add() and
-> sysfs_wi_node_delete() helpers. This refactoring makes it possible
-> to modularly manage per-node sysfs entries and ensures the
-> infrastructure is ready for runtime extension.
-> 
-> Signed-off-by: Rakie Kim <rakie.kim@sk.com>
-> Signed-off-by: Honggyu Kim <honggyu.kim@sk.com>
-> Signed-off-by: Yunjeong Mun <yunjeong.mun@sk.com>
-> Reviewed-by: Gregory Price <gourry@gourry.net>
-> ---
->  mm/mempolicy.c | 61 ++++++++++++++++++++++++--------------------------
->  1 file changed, 29 insertions(+), 32 deletions(-)
-> 
-> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> index 0da102aa1cfc..988575f29c53 100644
-> --- a/mm/mempolicy.c
-> +++ b/mm/mempolicy.c
-> @@ -3419,6 +3419,13 @@ struct iw_node_attr {
->  	int nid;
->  };
->  
-> +struct sysfs_wi_group {
-> +	struct kobject wi_kobj;
-> +	struct iw_node_attr *nattrs[];
-> +};
-> +
-> +static struct sysfs_wi_group *wi_group;
-> +
->  static ssize_t node_show(struct kobject *kobj, struct kobj_attribute *attr,
->  			 char *buf)
->  {
-> @@ -3461,27 +3468,24 @@ static ssize_t node_store(struct kobject *kobj, struct kobj_attribute *attr,
->  	return count;
->  }
->  
-> -static struct iw_node_attr **node_attrs;
-> -
-> -static void sysfs_wi_node_release(struct iw_node_attr *node_attr,
-> -				  struct kobject *parent)
-> +static void sysfs_wi_node_delete(int nid)
->  {
-> -	if (!node_attr)
-> +	if (!wi_group->nattrs[nid])
->  		return;
-> -	sysfs_remove_file(parent, &node_attr->kobj_attr.attr);
-> -	kfree(node_attr->kobj_attr.attr.name);
-> -	kfree(node_attr);
-> +
-> +	sysfs_remove_file(&wi_group->wi_kobj,
-> +			  &wi_group->nattrs[nid]->kobj_attr.attr);
-> +	kfree(wi_group->nattrs[nid]->kobj_attr.attr.name);
-> +	kfree(wi_group->nattrs[nid]);
->  }
->  
->  static void sysfs_wi_release(struct kobject *wi_kobj)
->  {
-> -	int i;
-> -
-> -	for (i = 0; i < nr_node_ids; i++)
-> -		sysfs_wi_node_release(node_attrs[i], wi_kobj);
-> +	int nid;
->  
-> -	kfree(node_attrs);
-> -	kfree(wi_kobj);
-> +	for (nid = 0; nid < nr_node_ids; nid++)
-> +		sysfs_wi_node_delete(nid);
-> +	kfree(wi_group);
->  }
->  
->  static const struct kobj_type wi_ktype = {
-> @@ -3489,7 +3493,7 @@ static const struct kobj_type wi_ktype = {
->  	.release = sysfs_wi_release,
->  };
->  
-> -static int add_weight_node(int nid, struct kobject *wi_kobj)
-> +static int sysfs_wi_node_add(int nid)
->  {
->  	struct iw_node_attr *node_attr;
->  	char *name;
-> @@ -3511,40 +3515,33 @@ static int add_weight_node(int nid, struct kobject *wi_kobj)
->  	node_attr->kobj_attr.store = node_store;
->  	node_attr->nid = nid;
->  
-> -	if (sysfs_create_file(wi_kobj, &node_attr->kobj_attr.attr)) {
-> +	if (sysfs_create_file(&wi_group->wi_kobj, &node_attr->kobj_attr.attr)) {
->  		kfree(node_attr->kobj_attr.attr.name);
->  		kfree(node_attr);
->  		pr_err("failed to add attribute to weighted_interleave\n");
->  		return -ENOMEM;
->  	}
->  
-> -	node_attrs[nid] = node_attr;
-> +	wi_group->nattrs[nid] = node_attr;
->  	return 0;
->  }
->  
-> -static int add_weighted_interleave_group(struct kobject *root_kobj)
-> +static int __init add_weighted_interleave_group(struct kobject *mempolicy_kobj)
->  {
-> -	struct kobject *wi_kobj;
->  	int nid, err;
->  
-> -	node_attrs = kcalloc(nr_node_ids, sizeof(struct iw_node_attr *),
-> -			     GFP_KERNEL);
-> -	if (!node_attrs)
-> +	wi_group = kzalloc(struct_size(wi_group, nattrs, nr_node_ids),
-> +			   GFP_KERNEL);
-> +	if (!wi_group)
->  		return -ENOMEM;
->  
-> -	wi_kobj = kzalloc(sizeof(struct kobject), GFP_KERNEL);
-> -	if (!wi_kobj) {
-> -		kfree(node_attrs);
-> -		return -ENOMEM;
-> -	}
-> -
-> -	err = kobject_init_and_add(wi_kobj, &wi_ktype, root_kobj,
-> +	err = kobject_init_and_add(&wi_group->wi_kobj, &wi_ktype, mempolicy_kobj,
->  				   "weighted_interleave");
->  	if (err)
->  		goto err_put_kobj;
->  
->  	for_each_node_state(nid, N_POSSIBLE) {
-> -		err = add_weight_node(nid, wi_kobj);
-> +		err = sysfs_wi_node_add(nid);
->  		if (err) {
->  			pr_err("failed to add sysfs [node%d]\n", nid);
->  			goto err_del_kobj;
-> @@ -3554,9 +3551,9 @@ static int add_weighted_interleave_group(struct kobject *root_kobj)
->  	return 0;
->  
->  err_del_kobj:
-> -	kobject_del(wi_kobj);
-> +	kobject_del(&wi_group->wi_kobj);
->  err_put_kobj:
-> -	kobject_put(wi_kobj);
-> +	kobject_put(&wi_group->wi_kobj);
->  	return err;
->  }
->  
-> -- 
-> 2.34.1
-
-Sent using hkml (https://github.com/sjp38/hackermail)
-
+Reviewed-by: Nikolay Borisov <nik.borisov@suse.com>
