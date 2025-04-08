@@ -1,167 +1,184 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38CFC1DA60F
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 18:46:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744138007; cv=none; b=cHrLWSbQwwmKN+uT79sTpACDDPRKKIO4YlabWO5KgXj1mJ/wTGIIFsqP3+x/BX68AN9yByEFcFcWU/IjrqZq9umUxBLsLfF5t3L5cublQt3Y7b6GkAEKR+HlbI115OljfAaQdZaJZcvsRzmwdIz9HNvSIUCc9FaL4dYH4q5ztPs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744138007; c=relaxed/simple;
-	bh=5n/CBPqpvOxwj0nrZjXW8b1nJ5RxIdxXZOk2ui9suBQ=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=L5QA1lpXfHSYSkCMzEy31ia0nZYyuDE0gbBEFNb3YcpBLhj3JkRgTDidHw4ELhNlSE7TLsxKgu7PorXjffDG3ncGMITfTKDXOisGx1vgsW0x5rGvspKXdDzpn35KozjKh5EfiSxeljyTXwRH96BYsJi+69ILmju2WIFCSbZ34aA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BU+empJu; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D63E23A0;
+	Tue,  8 Apr 2025 18:47:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744138050; cv=pass; b=WQ2dUYxmNUvll3gCPbFyhqWd3COTDx5buFOLS7zGmTkUMsQs7Rs84V4SpI85PV0LdT33SpApkarctBUfbLmEDPH48QYESXzoHaDNTPiczFWl1ID8Ocu1A/ho6h5WH0X4J2PfIPIMibhrexQAvGcOPahm2c5nOfYmiRAF2chWyVM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744138050; c=relaxed/simple;
+	bh=UCpJcbNTpC+USecP0R/5Q0caeFOcwevLKiPG1XG1oos=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EfxVXX56PbCxR21mpMoqA6BCMo93rWN+i8+qYq9vqBActd8hIklF0upB4Sg2gu26IO915mOtbJrJY6T2Usk5g4Lz+/fva/oDJ183cjCjhC9YiMOhBEMTP6WthUnJpKVgcHYil+8EoqV3HwpOt5Dpg9ss7FQDsb68bMVW4Xt1fY0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fossekall.de; spf=pass smtp.mailfrom=fossekall.de; dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=WjZwsQSH; dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b=DGTzVuZV; arc=pass smtp.client-ip=85.215.255.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fossekall.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fossekall.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BU+empJu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744138005; x=1775674005;
-  h=date:from:to:cc:subject:message-id;
-  bh=5n/CBPqpvOxwj0nrZjXW8b1nJ5RxIdxXZOk2ui9suBQ=;
-  b=BU+empJuuk2JbY4D3h8MCpPfEwpPK7biOk6SSNySF+Rx1hz0oIlHvXUY
-   7iLRfx+8NzIXWHXh4LUWy6eilzpVSi8WYdNsSrjUTiCmDZVo56+S8M4Yz
-   sGx5RbKbuRihStllopXyOjiMJa6Iw8e2eaMAnWcToiD8Urw9iVBl+4V0O
-   laze5w7c4Po0obHD8G4FcHcCuv+vmUFVTz34plVwDf1l0iJKl7a1YTlM5
-   mXGtKF84tXWYm5mVw/5EBX25IKy+PZPmtxPicoEH2TwVxhajzhnKT6mfy
-   vWs7zFKhoKXl85NeQm0bU0u651nHW0A7icSc88BVX9zf4+U1O6rRx/iup
-   Q==;
-X-CSE-ConnectionGUID: nVfD8U2RRmeHxbGr2bX86w==
-X-CSE-MsgGUID: jc0NvsT8TC6VE/ZjR/xP2w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="56227146"
-X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
-   d="scan'208";a="56227146"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 11:46:43 -0700
-X-CSE-ConnectionGUID: vE2512UkQb2TWH+KojDHug==
-X-CSE-MsgGUID: PSqlxkeWRGqd9dePT/7leg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
-   d="scan'208";a="129195535"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 08 Apr 2025 11:46:42 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u2Dy4-0007t9-0M;
-	Tue, 08 Apr 2025 18:46:40 +0000
-Date: Wed, 09 Apr 2025 02:46:12 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:perf/urgent] BUILD SUCCESS
- 0cd575cab10e114e95921321f069a08d45bc412e
-Message-ID: <202504090257.UJ3648Q1-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="WjZwsQSH";
+	dkim=permerror (0-bit key) header.d=fossekall.de header.i=@fossekall.de header.b="DGTzVuZV"
+ARC-Seal: i=1; a=rsa-sha256; t=1744138043; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=tK/oae5fJUev9lwxy+XZPQcO23vWatZsVTDIEZM8SI2gqCJfDawCgxr5fS423wve/f
+    phaYFDNwQBW1L9Fift0saKu6u6GrGh4RvbEjy5Vc05m/HxjS/ZglsA3seazZgsRUnvut
+    hdXibt7usUBfHsguVwyP5txkTEqubNv3k6rS4KIJV2CjVmD4tFqNi730yDDGpQ/Va9G6
+    amK4M/RDHQVPVkCvIcnb1Fc/h4xL8AGcpi9N5TzZzoypdJ6Rj8IXlDlBlmXGYzkr9f8M
+    bjrGMwACdq7IcXY0zRwu0oblYQQLrq8Wg/g6VJMSWER2TTYD1SfmD1+XIrKuWmuuUgbH
+    KWwg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1744138043;
+    s=strato-dkim-0002; d=strato.com;
+    h=In-Reply-To:References:Message-ID:Subject:To:From:Date:Cc:Date:From:
+    Subject:Sender;
+    bh=JrbJav81393rily8U3ZYwXIVZ7I5lCu0WEy1TvuEyws=;
+    b=BLOis1srZjr3C96QZq0i8nXnI6BzaR5EdpryFQX7uxA1uy1COSba0z2FREtKA6w2eq
+    rxQ3UkCcx/KOdGoJb3/3WXlg6DvvxkNTlnJ13+P4UCYu0b9Pl4P/dmF8T8EJKQ9PSMZp
+    gM9JrU1cgRxe2g3g9Z9s4vwE4tw7YAmgiENEXuGSwGY0ibPhstI2yAgGnrims3qJ5/zV
+    F5F5699yYqqDNHGSEXUF3QXNcxrhXJCvco35epJtYLg1Xx7omhV9GRafrLdrdVD6KOKG
+    8FGo5M4XE/812E3hC+CfbtU0C/hahBU9dE0okfPjlViyLos04QGIoX+oaDAq/NQYzAFb
+    ms5w==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1744138043;
+    s=strato-dkim-0002; d=fossekall.de;
+    h=In-Reply-To:References:Message-ID:Subject:To:From:Date:Cc:Date:From:
+    Subject:Sender;
+    bh=JrbJav81393rily8U3ZYwXIVZ7I5lCu0WEy1TvuEyws=;
+    b=WjZwsQSH6BBDCOV150UOO5OCdnF7VNHe5/iTuTTGy3LCCPmgUb3ClPegG9B/qqp2ow
+    2zxKdbmkLR7sC/U76CgaUXQOHYY0ArhOHebV3cbNKotKqtZos+ascATlZMWAVJ1NXG3J
+    pmOuL+ozP+lQmKUSOgOv3RgXqOP2WZC6VgcOz1ELSRw4KLQRJnMuvoVYpLDfIVd44CWy
+    iRjimhqYXoQd0KWgQPMHDXfwIPh6BZYfdAFBKE7Wcp5jhnpv2r6Sq3O22sqzhfF08loT
+    D4zNzdt6T+K17bwYqimt9eq72j+Yq8RuxSUunPx8gm5BReURvcGeAqBtleLW2R2KslL0
+    jZ2A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1744138043;
+    s=strato-dkim-0003; d=fossekall.de;
+    h=In-Reply-To:References:Message-ID:Subject:To:From:Date:Cc:Date:From:
+    Subject:Sender;
+    bh=JrbJav81393rily8U3ZYwXIVZ7I5lCu0WEy1TvuEyws=;
+    b=DGTzVuZVCSMdpr/CArxinpM9RxN3yCUeSCFXbsE0zrZqAraSxGqtNvj0+O5g/vrRRg
+    qxvjLK+aZLze1z4wm5AA==
+X-RZG-AUTH: ":O2kGeEG7b/pS1EzgE2y7nF0STYsSLflpbjNKxx7cGrBdao6FTL4AJcMdm+lap4JEHkzok9eyEg=="
+Received: from aerfugl
+    by smtp.strato.de (RZmta 51.3.0 AUTH)
+    with ESMTPSA id f28b35138IlM45N
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Tue, 8 Apr 2025 20:47:22 +0200 (CEST)
+Received: from koltrast.home ([192.168.1.27] helo=a98shuttle.de)
+	by aerfugl with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <michael@fossekall.de>)
+	id 1u2Dyk-0008Ot-04;
+	Tue, 08 Apr 2025 20:47:22 +0200
+Date: Tue, 8 Apr 2025 20:47:20 +0200
+From: Michael Klein <michael@fossekall.de>
+To: Joe Damato <jdamato@fastly.com>, Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RESEND net-next v5 2/4] net: phy: realtek: Clean up RTL8211E
+ ExtPage access
+Message-ID: <Z_VvOG91oPZZejye@a98shuttle.de>
+References: <20250407182155.14925-1-michael@fossekall.de>
+ <20250407182155.14925-3-michael@fossekall.de>
+ <Z_SQTi-uKk4wqRcL@LQ3V64L9R2>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <Z_SQTi-uKk4wqRcL@LQ3V64L9R2>
+Content-Transfer-Encoding: 7bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf/urgent
-branch HEAD: 0cd575cab10e114e95921321f069a08d45bc412e  uprobes: Avoid false-positive lockdep splat on CONFIG_PREEMPT_RT=y in the ri_timer() uprobe timer callback, use raw_write_seqcount_*()
+On Mon, Apr 07, 2025 at 07:56:14PM -0700, Joe Damato wrote:
+>> - Factor out RTL8211E extension page access code to
+>>   rtl8211e_modify_ext_page() and clean up rtl8211e_config_init()
+>>
+>> Signed-off-by: Michael Klein <michael@fossekall.de>
+>> ---
+>>  drivers/net/phy/realtek/realtek_main.c | 38 +++++++++++++++-----------
+>>  1 file changed, 22 insertions(+), 16 deletions(-)
+>>
+>> diff --git a/drivers/net/phy/realtek/realtek_main.c b/drivers/net/phy/realtek/realtek_main.c
+>> index b27c0f995e56..e60c18551a4e 100644
+>> --- a/drivers/net/phy/realtek/realtek_main.c
+>> +++ b/drivers/net/phy/realtek/realtek_main.c
+>> @@ -37,9 +37,11 @@
+>>
+>>  #define RTL821x_INSR				0x13
+>>
+>> -#define RTL821x_EXT_PAGE_SELECT			0x1e
+>>  #define RTL821x_PAGE_SELECT			0x1f
+>>
+>> +#define RTL8211E_EXT_PAGE_SELECT		0x1e
+>> +#define RTL8211E_SET_EXT_PAGE			0x07
+>> +
+>>  #define RTL8211E_CTRL_DELAY			BIT(13)
+>>  #define RTL8211E_TX_DELAY			BIT(12)
+>>  #define RTL8211E_RX_DELAY			BIT(11)
+>> @@ -135,6 +137,21 @@ static int rtl821x_write_page(struct phy_device *phydev, int page)
+>>  	return __phy_write(phydev, RTL821x_PAGE_SELECT, page);
+>>  }
+>>
+>> +static int rtl8211e_modify_ext_page(struct phy_device *phydev, u16 ext_page,
+>> +				    u32 regnum, u16 mask, u16 set)
+>> +{
+>> +	int oldpage, ret = 0;
+>> +
+>> +	oldpage = phy_select_page(phydev, RTL8211E_SET_EXT_PAGE);
+>> +	if (oldpage >= 0) {
+>> +		ret = __phy_write(phydev, RTL8211E_EXT_PAGE_SELECT, ext_page);
+>> +		if (ret == 0)
+>> +			ret = __phy_modify(phydev, regnum, mask, set);
+>> +	}
+>> +
+>> +	return phy_restore_page(phydev, oldpage, ret);
+>> +}
+>> +
+>>  static int rtl821x_probe(struct phy_device *phydev)
+>>  {
+>>  	struct device *dev = &phydev->mdio.dev;
+>> @@ -607,7 +624,9 @@ static int rtl8211f_led_hw_control_set(struct phy_device *phydev, u8 index,
+>>
+>>  static int rtl8211e_config_init(struct phy_device *phydev)
+>>  {
+>> -	int ret = 0, oldpage;
+>> +	const u16 delay_mask = RTL8211E_CTRL_DELAY |
+>> +			       RTL8211E_TX_DELAY |
+>> +			       RTL8211E_RX_DELAY;
+>>  	u16 val;
+>>
+>>  	/* enable TX/RX delay for rgmii-* modes, and disable them for rgmii. */
+>> @@ -637,20 +656,7 @@ static int rtl8211e_config_init(struct phy_device *phydev)
+>>  	 * 12 = RX Delay, 11 = TX Delay
+>>  	 * 10:0 = Test && debug settings reserved by realtek
+>>  	 */
+>> -	oldpage = phy_select_page(phydev, 0x7);
+>> -	if (oldpage < 0)
+>> -		goto err_restore_page;
+>> -
+>> -	ret = __phy_write(phydev, RTL821x_EXT_PAGE_SELECT, 0xa4);
+>> -	if (ret)
+>> -		goto err_restore_page;
+>> -
+>> -	ret = __phy_modify(phydev, 0x1c, RTL8211E_CTRL_DELAY
+>> -			   | RTL8211E_TX_DELAY | RTL8211E_RX_DELAY,
+>> -			   val);
+>> -
+>> -err_restore_page:
+>> -	return phy_restore_page(phydev, oldpage, ret);
+>> +	return rtl8211e_modify_ext_page(phydev, 0xa4, 0x1c, delay_mask, val);
+>>  }
+>
+>Seems good to add RTL8211E_SET_EXT_PAGE to remove a constant from
+>the code. Any reason to avoid adding constants for 0xa4 and 0x1c ?
 
-elapsed time: 1462m
-
-configs tested: 90
-configs skipped: 2
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                            allyesconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-14.2.0
-arc                              allyesconfig    gcc-14.2.0
-arc                   randconfig-001-20250408    gcc-14.2.0
-arc                   randconfig-002-20250408    gcc-14.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                              allyesconfig    gcc-14.2.0
-arm                   randconfig-001-20250408    clang-21
-arm                   randconfig-002-20250408    gcc-10.5.0
-arm                   randconfig-003-20250408    clang-17
-arm                   randconfig-004-20250408    gcc-6.5.0
-arm64                            allmodconfig    clang-19
-arm64                 randconfig-001-20250408    clang-21
-arm64                 randconfig-002-20250408    gcc-9.5.0
-arm64                 randconfig-003-20250408    gcc-9.5.0
-arm64                 randconfig-004-20250408    clang-20
-csky                  randconfig-001-20250408    gcc-14.2.0
-csky                  randconfig-002-20250408    gcc-9.3.0
-hexagon                          allmodconfig    clang-17
-hexagon                          allyesconfig    clang-21
-hexagon               randconfig-001-20250408    clang-21
-hexagon               randconfig-002-20250408    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250408    clang-20
-i386        buildonly-randconfig-002-20250408    clang-20
-i386        buildonly-randconfig-003-20250408    gcc-12
-i386        buildonly-randconfig-004-20250408    gcc-12
-i386        buildonly-randconfig-005-20250408    gcc-12
-i386        buildonly-randconfig-006-20250408    gcc-12
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch             randconfig-001-20250408    gcc-14.2.0
-loongarch             randconfig-002-20250408    gcc-13.3.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-microblaze                       alldefconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-nios2                 randconfig-001-20250408    gcc-13.3.0
-nios2                 randconfig-002-20250408    gcc-7.5.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                randconfig-001-20250408    gcc-6.5.0
-parisc                randconfig-002-20250408    gcc-8.5.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc               randconfig-001-20250408    gcc-5.5.0
-powerpc               randconfig-002-20250408    gcc-9.3.0
-powerpc               randconfig-003-20250408    gcc-5.5.0
-powerpc64             randconfig-001-20250408    clang-21
-powerpc64             randconfig-002-20250408    gcc-5.5.0
-powerpc64             randconfig-003-20250408    gcc-7.5.0
-riscv                             allnoconfig    gcc-14.2.0
-riscv                 randconfig-001-20250408    gcc-9.3.0
-riscv                 randconfig-002-20250408    clang-21
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-15
-s390                             allyesconfig    gcc-14.2.0
-s390                  randconfig-001-20250408    gcc-8.5.0
-s390                  randconfig-002-20250408    clang-15
-sh                               allmodconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                    randconfig-001-20250408    gcc-13.3.0
-sh                    randconfig-002-20250408    gcc-13.3.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                 randconfig-001-20250408    gcc-10.3.0
-sparc                 randconfig-002-20250408    gcc-6.5.0
-sparc64               randconfig-001-20250408    gcc-6.5.0
-sparc64               randconfig-002-20250408    gcc-14.2.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250408    clang-21
-um                    randconfig-002-20250408    gcc-12
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250408    clang-20
-x86_64      buildonly-randconfig-002-20250408    clang-20
-x86_64      buildonly-randconfig-003-20250408    clang-20
-x86_64      buildonly-randconfig-004-20250408    gcc-12
-x86_64      buildonly-randconfig-005-20250408    clang-20
-x86_64      buildonly-randconfig-006-20250408    clang-20
-x86_64                              defconfig    gcc-11
-xtensa                randconfig-001-20250408    gcc-6.5.0
-xtensa                randconfig-002-20250408    gcc-6.5.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+My copy of the datasheet does not document this register, so I did not
+feel qualified to come up with a meaningful name.
