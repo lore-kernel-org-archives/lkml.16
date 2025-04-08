@@ -1,74 +1,169 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F67C2185B8;
-	Tue,  8 Apr 2025 08:30:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25F2D25FA28;
+	Tue,  8 Apr 2025 08:30:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744101056; cv=none; b=Iex+0vc5hyZAAkBA1GNh1DqXHW+8Z4tuO2Y8AAeAQqymx1jP5F8ROP7nTYZH06ozjsh4UnmcbOkjnTvMbDix5dCvo2YkxEgsXMO/zbSYXD7fMRo9AnBuy+TKy1ythc+pSeXrhycx04lHCsBzMf2rR8+B+f7XJhE1M/MqAbjfc7M=
+	t=1744101058; cv=none; b=tU+CMzi1O1nhJn80aCRDHGvcu0xHh8fMveglOft1TcB787+eDnLZXJy1Uock4g5MvkfQwREmish9TC8X9vpP9fIimi2I+jQhQqJTmAmQECMqALvq0uYfh+a3h6OHmETbjiRNJng89gmobfmkHbwjMqmdO7lHBdn6l//wJkJqays=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744101056; c=relaxed/simple;
-	bh=lLmyixWXAbXg0lni7YXARd4/32mTDXbWO3DIdMLH52Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IFiHKLPG0qh1R3/VfIakSnc+wY2IqLH3LLsC+nhXNunf8HcyZK8sWfnZtPeJ8xDorCRx2Z3q9axKlOVHCenPV3i8Zq/owrwujgFmVGL2aQyINgV8SSkM1mshqPdcZcN7xFrB2Iy7fqe7nWTeT6aJZYBgPeJ2MAI+4cyOK/srQmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=RW21bC4r; arc=none smtp.client-ip=95.215.58.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="RW21bC4r"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744101053;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=FWMs3klgdUMUUkP/EPWbPqpleRG22QBfuc8WaQGwHc8=;
-	b=RW21bC4rHw74KpRNsn2V4yil/rI19bvggTjEpqBlGGZLEEXrayzX7dG8xeKTnneXs+PeaI
-	0ez78D27oelXuT8/PSdPNdDg+17GlBhXc6g8ldJXJ4r5vbu3lMBzoeuPCKwmZIFOgCazdR
-	lcB9RIGOk7sArt1uKTmYCm3B5cJ1ofM=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ALSA: cs46xx: Remove commented out code
-Date: Tue,  8 Apr 2025 10:30:12 +0200
-Message-ID: <20250408083015.796638-2-thorsten.blum@linux.dev>
+	s=arc-20240116; t=1744101058; c=relaxed/simple;
+	bh=eLQzjpSO4MHKix4gVwbfKJTffPTPxcs1300whTEGdqc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=I9VXQtd98LgIJEwAyigDpfX27HrTY2Vlk/iabAn6Y4ovfDtIhsmC7R3TqfC+ec2GHcOHZRHtLcOcakRBcYNH0qtN6mywB4+CvztYaSpI772/ngz7CklMEjTch6+LRCnutp04XlNbDhIPQEdSfJ8Yh0YagVX3+tpBRZ6n7NGWb9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87130C4CEE5;
+	Tue,  8 Apr 2025 08:30:54 +0000 (UTC)
+Message-ID: <d5a8988f-1038-4a8b-8478-968ceca37879@xs4all.nl>
+Date: Tue, 8 Apr 2025 10:30:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/4] media: v4l: dev-decoder: Add source change
+ V4L2_EVENT_SRC_CH_COLORSPACE
+To: "Ming Qian(OSS)" <ming.qian@oss.nxp.com>, mchehab@kernel.org
+Cc: nicolas@ndufresne.ca, shawnguo@kernel.org, robh+dt@kernel.org,
+ s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+ linux-imx@nxp.com, xiahong.bao@nxp.com, eagle.zhou@nxp.com,
+ tao.jiang_2@nxp.com, imx@lists.linux.dev, linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20250117061938.3923516-1-ming.qian@oss.nxp.com>
+ <3e5f003a-f689-4f5a-ac75-6bf95379637b@xs4all.nl>
+ <50ce67b7-ef06-4e8e-bf4f-f4b0d5e40961@oss.nxp.com>
+Content-Language: en-US, nl
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+In-Reply-To: <50ce67b7-ef06-4e8e-bf4f-f4b0d5e40961@oss.nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The code has been commented out ever since commit 1da177e4c3f4
-("Linux-2.6.12-rc2"), remove it.
+On 08/04/2025 08:34, Ming Qian(OSS) wrote:
+> Hi Hans,
+> 
+> On 2025/4/7 17:54, Hans Verkuil wrote:
+>> On 17/01/2025 07:19, Ming Qian wrote:
+>>> Add a new source change V4L2_EVENT_SRC_CH_COLORSPACE that
+>>> indicates colorspace change in the stream.
+>>> The change V4L2_EVENT_SRC_CH_RESOLUTION will always affect
+>>> the allocation, but V4L2_EVENT_SRC_CH_COLORSPACE won't.
+>>>
+>>> Signed-off-by: Ming Qian <ming.qian@oss.nxp.com>
+>>> ---
+>>>   Documentation/userspace-api/media/v4l/vidioc-dqevent.rst | 9 +++++++++
+>>>   .../userspace-api/media/videodev2.h.rst.exceptions       | 1 +
+>>>   include/uapi/linux/videodev2.h                           | 1 +
+>>>   3 files changed, 11 insertions(+)
+>>>
+>>> diff --git a/Documentation/userspace-api/media/v4l/vidioc-dqevent.rst b/Documentation/userspace-api/media/v4l/vidioc-dqevent.rst
+>>> index 8db103760930..91e6b86c976d 100644
+>>> --- a/Documentation/userspace-api/media/v4l/vidioc-dqevent.rst
+>>> +++ b/Documentation/userspace-api/media/v4l/vidioc-dqevent.rst
+>>> @@ -369,6 +369,15 @@ call.
+>>>   	loss of signal and so restarting streaming I/O is required in order for
+>>>   	the hardware to synchronize to the video signal.
+>>>   
+>>> +    * - ``V4L2_EVENT_SRC_CH_COLORSPACE``
+>>> +      - 0x0002
+>>> +      - This event gets triggered when a colorsapce change is detected at
+>>
+>> colorsapce -> colorspace
+>>
+> 
+> Will fix in v3
+> 
+>>> +	an input. This can come from a video decoder. Applications will query
+>>
+>> It can also come from a video receiver. E.g. an HDMI source changes colorspace
+>> signaling, but not the resolution.
+>>
+>>> +	the new colorspace information (if any, the signal may also have been
+>>> +	lost)
+>>
+>> Missing . at the end. Also, if the signal is lost, then that is a CH_RESOLUTION
+>> change, not CH_COLORSPACE.
+>>
+> OK, will fix in v3
+>>> +
+>>> +	For stateful decoders follow the guidelines in :ref:`decoder`.
+>>
+>> I think this should emphasize that if CH_COLORSPACE is set, but not CH_RESOLUTION,
+>> then only the colorspace changed and there is no need to reallocate buffers.
+>>
+> 
+> OK, will add in v3
+> 
+>> I also wonder if the description of CH_RESOLUTION should be enhanced to explain
+>> that this might also imply a colorspace change. I'm not sure what existing codec
+>> drivers do if there is a colorspace change but no resolution change.
+> 
+> I think there is no uniform behavior at the moment, it depends on the
+> behavior of the decoder. Maybe most decoders ignore this.
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- sound/pci/cs46xx/dsp_spos_scb_lib.c | 7 -------
- 1 file changed, 7 deletions(-)
+Can you try to do a quick analysis of this? Don't spend too much time on this,
+but it is helpful to have an idea of how existing codecs handle this.
 
-diff --git a/sound/pci/cs46xx/dsp_spos_scb_lib.c b/sound/pci/cs46xx/dsp_spos_scb_lib.c
-index 1f90ca723f4d..28faca268196 100644
---- a/sound/pci/cs46xx/dsp_spos_scb_lib.c
-+++ b/sound/pci/cs46xx/dsp_spos_scb_lib.c
-@@ -201,13 +201,6 @@ void cs46xx_dsp_remove_scb (struct snd_cs46xx *chip, struct dsp_scb_descriptor *
- 	if (ins->scb_highest_frag_index > ins->nscb) {
- 		ins->scb_highest_frag_index = ins->nscb;
- 	}
--
--#if 0
--	/* !!!! THIS IS A PIECE OF SHIT MADE BY ME !!! */
--	for(i = scb->index + 1;i < ins->nscb; ++i) {
--		ins->scbs[i - 1].index = i - 1;
--	}
--#endif
- }
- 
- 
--- 
-2.49.0
+Regards,
+
+	Hans
+
+> 
+>>
+>> I'm a bit concerned about backwards compatibility issues: if a userspace application
+>> doesn't understand this new flag and just honors CH_RESOLUTION, then it would
+>> never react to just a colorspace change.
+>>
+>> Nicolas, does gstreamer look at these flags?
+> 
+> I checked the gstreamer code, it does check this flag:
+> 
+> if (event.type == V4L2_EVENT_SOURCE_CHANGE &&
+>      (event.u.src_change.changes & V4L2_EVENT_SRC_CH_RESOLUTION)) {
+>    GST_DEBUG_OBJECT (v4l2object->dbg_obj,
+>        "Can't streamon capture as the resolution have changed.");
+>    ret = GST_V4L2_FLOW_RESOLUTION_CHANGE;
+> }
+> 
+> Currently the gstreamer can't handle the CH_COLORSPACE flag.
+> 
+> Thanks,
+> Ming
+> 
+>>
+>> Regards,
+>>
+>> 	Hans
+>>
+>>> +
+>>>   Return Value
+>>>   ============
+>>>   
+>>> diff --git a/Documentation/userspace-api/media/videodev2.h.rst.exceptions b/Documentation/userspace-api/media/videodev2.h.rst.exceptions
+>>> index 35d3456cc812..ac47c6d9448b 100644
+>>> --- a/Documentation/userspace-api/media/videodev2.h.rst.exceptions
+>>> +++ b/Documentation/userspace-api/media/videodev2.h.rst.exceptions
+>>> @@ -526,6 +526,7 @@ replace define V4L2_EVENT_CTRL_CH_RANGE ctrl-changes-flags
+>>>   replace define V4L2_EVENT_CTRL_CH_DIMENSIONS ctrl-changes-flags
+>>>   
+>>>   replace define V4L2_EVENT_SRC_CH_RESOLUTION src-changes-flags
+>>> +replace define V4L2_EVENT_SRC_CH_COLORSPACE src-changes-flags
+>>>   
+>>>   replace define V4L2_EVENT_MD_FL_HAVE_FRAME_SEQ :c:type:`v4l2_event_motion_det`
+>>>   
+>>> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+>>> index c8cb2796130f..242242c8e57b 100644
+>>> --- a/include/uapi/linux/videodev2.h
+>>> +++ b/include/uapi/linux/videodev2.h
+>>> @@ -2559,6 +2559,7 @@ struct v4l2_event_frame_sync {
+>>>   };
+>>>   
+>>>   #define V4L2_EVENT_SRC_CH_RESOLUTION		(1 << 0)
+>>> +#define V4L2_EVENT_SRC_CH_COLORSPACE		(1 << 1)
+>>>   
+>>>   struct v4l2_event_src_change {
+>>>   	__u32 changes;
+>>
+> 
 
