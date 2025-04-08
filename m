@@ -1,174 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-fw-9106.amazon.com (smtp-fw-9106.amazon.com [207.171.188.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86B5D2046A5;
-	Tue,  8 Apr 2025 06:08:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77C861B21AA;
+	Tue,  8 Apr 2025 06:08:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744092485; cv=none; b=mTjWRKvQPKg+VXZTevQPT0gp15HKBrJCwAJEdJJOaOX9tK/+GfEQRYu5qFa83W241BO2IKkluyy9t4zz7Njr+kVmnHwAJzHesbtUlqXqOYjuQXkSpk23+CejHISeMxVyuo8ZoierYW/DTuHHJewQezl6Y4snP+lPiPgA9s+5ujg=
+	t=1744092509; cv=none; b=Hx+nCdjboT1kTilWdexsa+sjAbGMuhDn2SJMg7Khbw6AuxmbzG4tk9ZZ0qnY5LdJ7VVuVe/+tq74tv+Y7FakN254f3YcNoVFzvnl8J9dYG1xwRRnYEGFIs7vdApesSrDIpq8snShKvyJ3ChYukzr8Kb+AIWJlQJdV3VuI/5Y9AM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744092485; c=relaxed/simple;
-	bh=4EXbaWHpYi8DQSCUTq4v19YcmvFXSvgrzytJ0LYYrew=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eXIyCEQB4q1LtfktkWRaczFhXbbASggsq2kIYKwF2A/2FFPa4i/FcaMZYF3Cn4sgRZJNVjm/2qILa08ptBO/ANXkj86hyJ259BMiUnnBEAOY+scB6nthzga6to2fmLh/epwWrsJoDlGwLmwwHe5i9BTaN+Lyd8uHOAECiTQHSqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i8bAWxti; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744092509; c=relaxed/simple;
+	bh=dE/3mxg4aDk8ZVqEmroY44DZ5XwUFIHKJcLTBMq23Qw=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QdIJARo9dboLTYAgG3fyw7qKV7iE6MC+qNLNldHzFUdOdJKQ2xXUkJzkY2dfbbWUciOUIq9wE8W7EVbC8mEozaNyAS83sdnPsxrT7MKDFqqT507dleAdD5f0YhPGlR0jzAy4vBUIlZpUsIv1Pb0LnsX83evvFCfjI/cp/LW878U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=stRNo9MQ; arc=none smtp.client-ip=207.171.188.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i8bAWxti"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A54F9C4CEE5;
-	Tue,  8 Apr 2025 06:08:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744092485;
-	bh=4EXbaWHpYi8DQSCUTq4v19YcmvFXSvgrzytJ0LYYrew=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=i8bAWxtiJl/Zc9F70+mWYW1dpffCfK+raI81ht60ZhM7SQncYApnR86ZPj54cbPVm
-	 qx9IJjFyJ4OiHxWrooltbxV5F/NMxJ4A2e5miF30zZMvx9HzwW9yQlQoOM5bqYkzUr
-	 1RgKTWJKWIXrdiGUSwUbSvEaGizUSZxKwweIRZQSdgHzg3O+UyNNRt9mhcAms3LiW5
-	 ka2kCYVJdd61MiT8/vkhwvXd+gADMsKj8N/LFf58ZzbJdN9ZWdbLShjjlAI3j9yme3
-	 UZ5I92MnUfHw7AuuGdIZAYdfrsEs2GPC3aPR23fssng7r6mk1uZvAHvO2pBWzjvTey
-	 dWh3TVd4SKf5g==
-Message-ID: <83d17d6e-41c2-4729-94e6-5ccf480c766d@kernel.org>
-Date: Tue, 8 Apr 2025 08:07:59 +0200
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="stRNo9MQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1744092507; x=1775628507;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=nkQR+Pqjxb7qD2vxoEoYXOmPzl6qLR7UVCq3LQivBf8=;
+  b=stRNo9MQ6mAp2KV/6Khe0tF4/IEOXpegBc6Hn7pR0m87de0ux6aJlbdt
+   enair4U0FrO2HVDnEpzaPWEOkejPJkPLXSfekRBmvz6R0yhsACx+sGBHq
+   ZjbYlrMInPFuNg6wHkIgnBh2z+MJOYoKQEJTyNRRsW9dcgsSih8P5aPqJ
+   E=;
+X-IronPort-AV: E=Sophos;i="6.15,197,1739836800"; 
+   d="scan'208";a="814217596"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-9106.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 06:08:22 +0000
+Received: from EX19MTAUWB002.ant.amazon.com [10.0.21.151:35289]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.14.132:2525] with esmtp (Farcaster)
+ id 7e2c9346-85be-47ed-8283-ea868b0c771a; Tue, 8 Apr 2025 06:08:21 +0000 (UTC)
+X-Farcaster-Flow-ID: 7e2c9346-85be-47ed-8283-ea868b0c771a
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 8 Apr 2025 06:08:21 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.106.101.45) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 8 Apr 2025 06:08:17 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <hch@lst.de>
+CC: <axboe@kernel.dk>, <gechangzhong@cestc.cn>, <kbusch@kernel.org>,
+	<kuniyu@amazon.com>, <linux-kernel@vger.kernel.org>,
+	<linux-nvme@lists.infradead.org>, <netdev@vger.kernel.org>,
+	<sagi@grimberg.me>, <shaopeijie@cestc.cn>, <zhang.guanghui@cestc.cn>
+Subject: Re: [PATCH v2] nvme-tcp: Fix netns UAF introduced by commit 1be52169c348
+Date: Mon, 7 Apr 2025 23:08:05 -0700
+Message-ID: <20250408060810.19654-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250408055830.GA708@lst.de>
+References: <20250408055830.GA708@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: tegra: Enable ramoops on Tegra210 and newer
-To: Aaron Kling <webgeek1234@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Thierry Reding
- <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>,
- Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>, devicetree@vger.kernel.org,
- linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20250406-tegra-pstore-v1-1-bf5b57f12293@gmail.com>
- <6920a557-9181-4c9c-98f4-a9be4e796a13@kernel.org>
- <CALHNRZ--to8B3zhg6zV90siL0x78BAjhS04DgfLwmnXEiOMe3g@mail.gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <CALHNRZ--to8B3zhg6zV90siL0x78BAjhS04DgfLwmnXEiOMe3g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D036UWC004.ant.amazon.com (10.13.139.205) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-On 07/04/2025 18:00, Aaron Kling wrote:
-> On Mon, Apr 7, 2025 at 7:59 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>
->> On 06/04/2025 23:12, Aaron Kling via B4 Relay wrote:
->>> From: Aaron Kling <webgeek1234@gmail.com>
->>>
->>> This allows using pstore on all such platforms. There are some
->>> differences per arch:
->>>
->>> * Tegra132: Flounder does not appear to enumerate pstore and I do not
->>>   have access to norrin, thus Tegra132 is left out of this commit.
->>> * Tegra210: Does not support ramoops carveouts in the bootloader, instead
->>>   relying on a dowstream driver to allocate the carveout, hence this
->>>   hardcodes a location matching what the downstream driver picks.
->>> * Tegra186 and Tegra194 on cboot: Bootloader fills in the address and
->>>   size in a node specifically named /reserved-memory/ramoops_carveout,
->>>   thus these cannot be renamed.
->>> * Tegra194 and Tegra234 on edk2: Bootloader looks up the node based on
->>>   compatible, however the dt still does not know the address, so keeping
->>>   the node name consistent on Tegra186 and newer.
->>>
->>> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
->>> ---
->>>  arch/arm64/boot/dts/nvidia/tegra186.dtsi | 16 ++++++++++++++++
->>>  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 16 ++++++++++++++++
->>>  arch/arm64/boot/dts/nvidia/tegra210.dtsi | 13 +++++++++++++
->>>  arch/arm64/boot/dts/nvidia/tegra234.dtsi | 16 ++++++++++++++++
->>>  4 files changed, 61 insertions(+)
->>>
->>> diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
->>> index 2b3bb5d0af17bd521f87db0484fcbe943dd1a797..2e2b27deb957dfd754e42dd03f5a1da5079971dc 100644
->>> --- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
->>> +++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
->>> @@ -2051,6 +2051,22 @@ pmu-denver {
->>>               interrupt-affinity = <&denver_0 &denver_1>;
->>>       };
->>>
->>> +     reserved-memory {
->>> +             #address-cells = <2>;
->>> +             #size-cells = <2>;
->>> +             ranges;
->>> +
->>> +             ramoops_carveout {
->>
->> Please follow DTS coding style for name, so this is probably only ramoops.
+From: Christoph Hellwig <hch@lst.de>
+Date: Tue, 8 Apr 2025 07:58:30 +0200
+> On Mon, Apr 07, 2025 at 10:55:27PM -0700, Kuniyuki Iwashima wrote:
+> > Which branch/tag should be based on, for-next or nvme-6.15 ?
+> > http://git.infradead.org/nvme.git
 > 
-> As per the commit message regarding tegra186: bootloader fills in the
-> address and size in a node specifically named
-> /reserved-memory/ramoops_carveout, thus these cannot be renamed.
+> nvme-6.15 is the canonical tree, but for bug fixes I'm fine with
+> almost anything :)
 
-That's not a reason to introduce issues. Bootloader is supposed to
-follow same conventions or use aliases or labels (depending on the node).
-
-If bootloader adds junk, does it mean we have to accept that junk?
-
-> 
->>
->> It does not look like you tested the DTS against bindings. Please run
->> `make dtbs_check W=1` (see
->> Documentation/devicetree/bindings/writing-schema.rst or
->> https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-sources-with-the-devicetree-schema/
->> for instructions).
->> Maybe you need to update your dtschema and yamllint. Don't rely on
->> distro packages for dtschema and be sure you are using the latest
->> released dtschema.
-> 
-> The bot is reporting that the reg field is missing from the added
-> ramoops nodes on t186, t194, and t234. However, as also mentioned in
-> the commit message, this is intentional because it is expected for the
-> bootloader to fill that in. It is not known at dt compile time. Is
-> there a way to mark this as intentional, so dtschema doesn't flag it?
-
-Fix your bootloader or chain load some normal one, like U-Boot.
-
-Best regards,
-Krzysztof
+Thanks, will post a patch tomorrow :)
