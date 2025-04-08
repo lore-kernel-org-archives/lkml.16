@@ -1,188 +1,150 @@
-Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 686E726E141;
-	Tue,  8 Apr 2025 12:37:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0982026F47B;
+	Tue,  8 Apr 2025 12:37:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744115865; cv=none; b=R3J54HUaTKpGBIkFdYC2sB1xcjzxdTcJ4Qe8zpg/HjhKmEoGBmRjRWfkn7vVrZIOp9lT1HOxbIWjSN+0nBL7irWzILyfNev0IcMPrid4xW1pyfMIvUqoLbppb/teJsape3nJ6mC9793pkNOmB3VGCh4p6o/R+M7u/4zV+H5BZJo=
+	t=1744115871; cv=none; b=iENnp1CJiHoiqz020YJXJInicBrSpC3+sO7fOe1ZYr/f+lU4gXp2O8T7b3yvcdIqs6hOuLQqzsLHx+cCkNPV9c+yKvlV9/xejZObnIaSY808eQPX+xGXVj6XTSAkTQGRcuAg491pHkwJaySRjeVOv75gj8llOalbXZj/Bh4xBJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744115865; c=relaxed/simple;
-	bh=E2AZipTTbQZtglps7EODNhvVECKl6pYX9kBVNiP95fY=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=K8yLQx+zsBzTRf+QhsfWvBVctEuWXTssi0JpX1thB2UJJ54K4gQbf9gyI142uvo1j9KH7qN+EkvCD/hpRy2yoozkPErlYgW/dv0khog6LhDQ2+rzHgxV5zdMt0Xv/m0hOb9b0oqcaTMs7WZpVwNxoBn2WW2SIFrEDsO4yZuELSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Qf0297N0; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Fgq0RluA; arc=none smtp.client-ip=103.168.172.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1744115871; c=relaxed/simple;
+	bh=n5yY3c/M7DGrAou208VOkwvsGsTS780Xs0GL0+1p0Rk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=px5KRGZs5AO3AThCgL27vJUQr/Zthi83/gLRdXUIlNsigjxho6Y9n5Bg/ScFW395oaXqAGRKKeW1yfU9QVcMt/TOwUG9jFmrlE/h18bMuy4gQwH50huuP7KW/eAPupxCcpM6p8Ksebcye0OQtd5Tb394IObORclc5Xji6prN+4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lF/V9+Bw; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Qf0297N0";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Fgq0RluA"
-Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 510181140201;
-	Tue,  8 Apr 2025 08:37:41 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-12.internal (MEProxy); Tue, 08 Apr 2025 08:37:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1744115861;
-	 x=1744202261; bh=zFcPiZ2dymYdvLOyrug0agUR+Yq1LwHn6b82n9khMg4=; b=
-	Qf0297N0imeQiL7hyJIuBesDFq/a+BHRV6/LEPWur/YXXuKI/6r3PZt9rS5Y0vc0
-	PnrfpQMzPxPhF4961sVkO7xjPeQP39wn8HSFAXbcgogfLaS7H2GLrIrFY2t89a0J
-	h6YXCDdsGtqDNu1c4E1t3zgLp32Ob5TI9Rv6cwYq7MxCkMws5xqtmCPegxELSPa6
-	hCxzq6Meypd0fj2IQH5EPo0oQoFwHLbV34hAkeMbLQGNKhNcAM+VLjggfg8TQNlI
-	clz49C20jEPQiHBwww6qH1vohrL5KUnacV8CNFCMTHPB01glDLpHAeHBTJoC7xHg
-	1NJ8WNzoxP2EflxT9fvZsQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744115861; x=
-	1744202261; bh=zFcPiZ2dymYdvLOyrug0agUR+Yq1LwHn6b82n9khMg4=; b=F
-	gq0RluApzIi0bNAlHRstGMer9QdcAWtQ6SV/MDdmeTKcdBMRJIZaQ529ANUP1tc4
-	R7Jzx04bkT0R27M1RWyxyujNcIN2/FjVJ9vP7QT3RNeQdZaUZVA8GHJOwQq0Q+wd
-	rKoh8YG/4wrNoitQvUilGZ0Ndo2EdfNcBJDY2KSfOkwgQxe8iB81BbqOp8C6plYw
-	59U1k+/iA8gVJiTepKCDQnddfkSy2AqLAk7du1BY2aLq9KuhjQWEe0XNSJsI+V3B
-	EWoCq2Fxso6z5at6aYRrSuI9DzaIzuePo5gvvt85ffAAK44wdSXoHynKhDQBNvd4
-	G69R0b4EWpOWJWTbaEfLA==
-X-ME-Sender: <xms:lBj1Z7hgX3cFpkW0LV58_NIF7J5rMr2Efj0rTurIfQ8OGNnb_NedUg>
-    <xme:lBj1Z4CaF4bPuugFG8HjCAB-QCzxWR1xaFwwvo4eHRED9-2-SEzrg9yNlDBfPcski
-    gKdJB8bqBI0u6ZITDE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdefuddtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
-    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
-    udejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehquhhitggptggrrhhlvhesqh
-    huihgtihhntgdrtghomhdprhgtphhtthhopegrihhrlhhivggusehrvgguhhgrthdrtgho
-    mhdprhgtphhtthhopegrlhgvgidrfihilhhlihgrmhhsohhnsehrvgguhhgrthdrtghomh
-    dprhgtphhtthhopehjrghvihgvrhhmsehrvgguhhgrthdrtghomhdprhgtphhtthhopehj
-    fhgrlhgvmhhpvgesrhgvughhrghtrdgtohhmpdhrtghpthhtohepkhhrrgigvghlsehrvg
-    guhhgrthdrtghomhdprhgtphhtthhopehlhihuuggvsehrvgguhhgrthdrtghomhdprhgt
-    phhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohepohdqthgrkh
-    grshhhihesshgrkhgrmhhotggthhhirdhjph
-X-ME-Proxy: <xmx:lBj1Z7EgPLJ8zqV-BwhJaDn18yuAs0d7R3sLR16DH_Ujae8xM6RFaQ>
-    <xmx:lBj1Z4RdCM9qLlXZjKC4b3kh5UwXozUBVxSTSgDAg5pu5B1c4PP_DQ>
-    <xmx:lBj1Z4wtiJS2jP2YWaO4qJ13ldJJXRcH53SDbNAiSnVH7QSr_PivGg>
-    <xmx:lBj1Z-7I3XyQYtYrnodmPe8P6I-m2aivla5dqixH9iL5aQYh-lhXyg>
-    <xmx:lRj1Z7XKsbjtdCEd4qgEFEpKQ8t36YicC1s4kOLkwF3pr3f7A4b3PpMs>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 5F2962220073; Tue,  8 Apr 2025 08:37:40 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lF/V9+Bw"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-abf3d64849dso926631766b.3;
+        Tue, 08 Apr 2025 05:37:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744115868; x=1744720668; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3XDdHAFVrIm9VYmfrBSLGHN4jyk7mQe9dLRJj0l1S2A=;
+        b=lF/V9+BwRAOFAsIhJ2sIxEGKRozk+mIVrIByvlPskSAM2CNejjJsr+5FsfH1tm6L+F
+         fyh5nTTPvlBoFZeh3a1Jcxs8Twben75KA91Xc+AicyTGj18GePv4ckyi+6ELGpaM7hsm
+         gpmeD0G0dKXA1pMT3RYDv0U9SQR+SWVRS6sRzmVekaWqAloDWzjhTLRAFHff37MG4HzP
+         u98kxmyCKgEpf3kt8KRRCQ69Ng3AmSgLW3AJfHAwYKHKVYT1HNDhiaeCBb8nlawN7fMb
+         UqPE+GNB3wdpPDA9h7oxyNKLUIoU1RCb6O7kzLLOwikefgz8WRmlXLYQmysYH7lk4bTI
+         42Tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744115868; x=1744720668;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3XDdHAFVrIm9VYmfrBSLGHN4jyk7mQe9dLRJj0l1S2A=;
+        b=hsWdf/AmFMNAI1N1GffhirBhBSnzyP2N1yyHGdO/H/OKHGdBuRm+ZLj1NL8G+nLnz9
+         eSM9IalwwsV3zKDO9n9Glq7e6SZEyPS73gWROj79ZspetZwvP4RHah3Gc976yLRLhi1a
+         SMWXn3V7Xyf8WFd/R2WSwpMUuCVWHr3JPfHRTT0zMVLqt/6+lwcvJYTmJKXkF6kz/e4w
+         0VFAHoSRtmJ/w2snogTM2j4GwdaZjaZVUhxnM76kumlrhX6nJhEDiLiIbTL16AdCknEu
+         I/l7s+Faq1+S7/eL+fYhe3e629WEpAZzOKzfRqm2Ops58BhGw9VE96aKeSh4zFq9alfc
+         H9fA==
+X-Forwarded-Encrypted: i=1; AJvYcCXKB8gd1xlrPBDJER4Ooac+kLkd941cFjf+iyhHtOKX+/aknzZwLvqo1YjMI8IIJG1W81JulOyk@vger.kernel.org, AJvYcCXoDunpni8meECEYMAJVIuj77pH8ZU2Aasmjuy4ZgwAiqB2a8mkZKGtd0l6ZSl3dNai05VVjcs2/2w7OuQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBo/ghPk7tUrYiTbypkHYzYzdL+E/nRIt3qBs9U2XgFihMbGku
+	vyx5KgOLCEUEx2hprbCW+VB24lnvFi17jw7azQ9yU9jiKy1UJD3PcMyCLk2UHs74VigCT4ayE8y
+	gExuryjoWeQJDxxvao83B119Ie70=
+X-Gm-Gg: ASbGncsoDgY5xH9TPfXQ0Rf+IvOt/NH+ktsvX47BVaWt+jK9lRqefMP/8VsT0dpTE7Y
+	+82HrnxjSIEeu4LPd+4J79St7dp77OT5wnxlQt5oG3ml4Y7TUkvygQ0x6us7F/c3FAJ1MawimU6
+	9T4KKOhBFoj2zx1ExI1YCAzVXV1KKQ800lo9vPXQ==
+X-Google-Smtp-Source: AGHT+IFnh++FCRpnlhvrWegLUR+La0yffyAijO55u8NHyZxWVOF15mHkPKXDFhuFgNXjtR3SujjYNEfhlW/FnTHrSHE=
+X-Received: by 2002:a17:907:3d87:b0:abf:6aa4:924c with SMTP id
+ a640c23a62f3a-ac7d17747cfmr1453840866b.17.1744115868044; Tue, 08 Apr 2025
+ 05:37:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T702257fbe5397c0b
-Date: Tue, 08 Apr 2025 14:37:07 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Geert Uytterhoeven" <geert@linux-m68k.org>,
- "Arnd Bergmann" <arnd@kernel.org>
-Cc: "Bjorn Helgaas" <bhelgaas@google.com>,
- "Jeff Hugo" <jeff.hugo@oss.qualcomm.com>,
- "Carl Vanderlip" <quic_carlv@quicinc.com>,
- "Oded Gabbay" <ogabbay@kernel.org>,
- "Takashi Sakamoto" <o-takashi@sakamocchi.jp>,
- "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>,
- "Maxime Ripard" <mripard@kernel.org>,
- "Thomas Zimmermann" <tzimmermann@suse.de>,
- "Dave Airlie" <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>,
- "Alex Deucher" <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- "Dave Airlie" <airlied@redhat.com>,
- "Jocelyn Falempe" <jfalempe@redhat.com>,
- "Patrik Jakobsson" <patrik.r.jakobsson@gmail.com>,
- "Xinliang Liu" <xinliang.liu@linaro.org>,
- "Tian Tao" <tiantao6@hisilicon.com>,
- "Xinwei Kong" <kong.kongxinwei@hisilicon.com>,
- "Sumit Semwal" <sumit.semwal@linaro.org>,
- "Yongqin Liu" <yongqin.liu@linaro.org>,
- "John Stultz" <jstultz@google.com>,
- "Sui Jingfeng" <suijingfeng@loongson.cn>,
- "Lyude Paul" <lyude@redhat.com>, "Danilo Krummrich" <dakr@kernel.org>,
- "Gerd Hoffmann" <kraxel@redhat.com>,
- "Zack Rusin" <zack.rusin@broadcom.com>,
- "Broadcom internal kernel review list"
- <bcm-kernel-feedback-list@broadcom.com>,
- "Lucas De Marchi" <lucas.demarchi@intel.com>,
- =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
- "Rodrigo Vivi" <rodrigo.vivi@intel.com>,
- "Andrew Lunn" <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>,
- "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
- "Paolo Abeni" <pabeni@redhat.com>,
- "Saurav Kashyap" <skashyap@marvell.com>,
- "Javed Hasan" <jhasan@marvell.com>,
- GR-QLogic-Storage-Upstream@marvell.com,
- "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- "Nilesh Javali" <njavali@marvell.com>,
- "Manish Rangankar" <mrangankar@marvell.com>,
- "Alex Williamson" <alex.williamson@redhat.com>,
- "Geert Uytterhoeven" <geert+renesas@glider.be>,
- "Javier Martinez Canillas" <javierm@redhat.com>,
- "Jani Nikula" <jani.nikula@intel.com>,
- "Mario Limonciello" <mario.limonciello@amd.com>,
- =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
- "Lijo Lazar" <lijo.lazar@amd.com>,
- "Niklas Schnelle" <schnelle@linux.ibm.com>,
- "Dmitry Baryshkov" <lumag@kernel.org>, linux-arm-msm@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux1394-devel@lists.sourceforge.net, amd-gfx@lists.freedesktop.org,
- "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
- virtualization@lists.linux.dev, spice-devel@lists.freedesktop.org,
- intel-xe@lists.freedesktop.org, Netdev <netdev@vger.kernel.org>,
- linux-pci@vger.kernel.org, linux-scsi@vger.kernel.org,
- kvm@vger.kernel.org, "Greg Ungerer" <gerg@linux-m68k.org>
-Message-Id: <9abf582c-ea8e-42ca-a6d5-34c1e1932f95@app.fastmail.com>
-In-Reply-To: 
- <CAMuHMdWN=wurw7qz0t2ovMkUNu0BJRAMv_0U63Lqs2MGxkVnHw@mail.gmail.com>
-References: <20250407104025.3421624-1-arnd@kernel.org>
- <CAMuHMdWN=wurw7qz0t2ovMkUNu0BJRAMv_0U63Lqs2MGxkVnHw@mail.gmail.com>
-Subject: Re: [RFC] PCI: add CONFIG_MMU dependency
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+References: <20250402092500.514305-1-chenhuacai@loongson.cn>
+ <87jz81uty3.ffs@tglx> <CAAhV-H5sO0x1EkWks5QZ8ah-stB7JbDk6eFFeeonXD6JT9fHAw@mail.gmail.com>
+ <87bjt9wq3b.ffs@tglx> <CAAhV-H6r_iiKauPB=7eWhyTetvsTvxt5O9HtmmKb72y62yvXnA@mail.gmail.com>
+ <875xjhwewg.ffs@tglx>
+In-Reply-To: <875xjhwewg.ffs@tglx>
+From: Huacai Chen <chenhuacai@gmail.com>
+Date: Tue, 8 Apr 2025 20:37:36 +0800
+X-Gm-Features: ATxdqUFI9fVaIwXUxf1Igx0gCLAe6stGaO29HAebgaBrjAmfEMADUOm1aVbUZ1k
+Message-ID: <CAAhV-H6tUvwN9UejTRf0zKXdhGG4o5X4ZOppE+1oQhL-rADFHg@mail.gmail.com>
+Subject: Re: [PATCH] irqchip/loongson-liointc: Support to set IRQ_TYPE_EDGE_BOTH
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, stable@vger.kernel.org, 
+	Yinbo Zhu <zhuyinbo@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 8, 2025, at 12:22, Geert Uytterhoeven wrote:
-> On Mon, 7 Apr 2025 at 12:40, Arnd Bergmann <arnd@kernel.org> wrote:
+On Sun, Apr 6, 2025 at 10:20=E2=80=AFPM Thomas Gleixner <tglx@linutronix.de=
+> wrote:
 >
->> --- a/drivers/pci/Kconfig
->> +++ b/drivers/pci/Kconfig
->> @@ -21,6 +21,7 @@ config GENERIC_PCI_IOMAP
->>  menuconfig PCI
->>         bool "PCI support"
->>         depends on HAVE_PCI
->> +       depends on MMU
->>         help
->>           This option enables support for the PCI local bus, including
->>           support for PCI-X and the foundations for PCI Express support.
+> On Sun, Apr 06 2025 at 20:46, Huacai Chen wrote:
+> > On Sun, Apr 6, 2025 at 6:18=E2=80=AFPM Thomas Gleixner <tglx@linutronix=
+.de> wrote:
+> >> On Sun, Apr 06 2025 at 17:46, Huacai Chen wrote:
+> >> > On Thu, Apr 3, 2025 at 11:48=E2=80=AFPM Thomas Gleixner <tglx@linutr=
+onix.de> wrote:
+> >> >> But it won't trigger on both. So no, you cannot claim that this fix=
+es
+> >> >> anything.
+> >> > Yes, it won't trigger on both (not perfect), but it allows drivers
+> >> > that request "both" work (better than fail to request), and there ar=
+e
+> >>
+> >> By some definition of 'work'. There is probably a good technical reaso=
+n
+> >> why those drivers expect EDGE_BOTH to work correctly and otherwise fai=
+l
+> >> to load.
+> > The real problem we encounter is the MMC driver. In
+> > drivers/mmc/core/slot-gpio.c there is
+> > devm_request_threaded_irq(host->parent, irq,
+> >                         NULL, ctx->cd_gpio_isr,
+> >                         IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING |
+> > IRQF_ONESHOT,
+> >                         ctx->cd_label, host);
+> >
+> > "IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING" is an alias of
+> > "IRQ_TYPE_EDGE_RISING | IRQ_TYPE_EDGE_FALLING", and
+> > "IRQ_TYPE_EDGE_RISING | IRQ_TYPE_EDGE_FALLING" is
+> > "IRQ_TYPE_EDGE_BOTH".
 >
-> While having an MMU is a hardware feature, I consider disabling MMU
-> support software configuration.  So this change prevents people from
-> disabling MMU support on a system that has both a PCI bus and an MMU.
-> But other people may not agree, or care?
+> I know that.
+>
+> > Except MMC, "grep IRQ_TYPE_EDGE_BOTH drivers" can give some more exampl=
+es.
+>
+> Sure, but you still do not explain why this works even when the driver
+> is obviously depending on EDGE_BOTH. If it does not then the driver is
+> bogus.
+>
+> Looking at it, there is obviously a reason for this particular driver to
+> request BOTH. Why?
+>
+> This is the card change detection and it uses a GPIO. Insert raises one
+> edge and remove the opposite one.
+>
+> Which means whatever edge you chose randomly the detection will only
+> work in one direction. Please don't tell me that this is correct by any
+> meaning of correct. It's not.
+From experiments, either setting to EDGE_RISING or EDGE_FALLING, card
+detection (inserting and removing) works. Maybe the driver request
+"BOTH", but it really need "ANY"? I've searched git log, but I haven't
+get any useful information.
 
-I created this patch after Greg said that the coldfire-v4 chips
-that have an MMU are not really used without it any more, and
-I had accidentally only build tested a patch without CONFIG_MMU.
 
-On ARM, CONFIG_MMU can no longer be disabled on CPUs that have
-one, this was a side-effect of the ARCH_MULTIPLATFORM conversion.
+Huacai
 
-I just tried building an SH7751 kernel with MMU disabled but PCI
-enable. This produces build errors in several files, clearly nobody
-has tried this in a long time.
-
-I'm not entirely sure about xtensa, but it seems that PCI is
-only supported on the "virt" platform, which in turn cannot
-turn off MMU, even if there are other platforms that can build
-with out without MMU enabled.
-
-     Arnd
+>
+> The driver is perfectly fine, when the request fails. It then does the
+> obvious right thing to poll the card detection pin.
+>
+> So your change makes it worse as it screws up the detection mechanism.
+>
+> What are you actually making "work"?
+>
+> Thanks,
+>
+>         tglx
