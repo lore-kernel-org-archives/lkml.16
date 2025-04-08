@@ -1,131 +1,120 @@
-Received: from plesk.hostmyservers.fr (plesk.hostmyservers.fr [45.145.164.37])
+Received: from mail-io1-f99.google.com (mail-io1-f99.google.com [209.85.166.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB9E21E1C1F;
-	Tue,  8 Apr 2025 15:58:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.145.164.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D399C2397B9
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 15:58:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744127925; cv=none; b=htjORQf6VJfAgkoTIYE6U+fdDZ+E2GeLTHDGkULLgFPhEnRI7MWsmCZ8xBdYuuMTSIoS3P20a5CINSW/+sv9X4HTNdudr67tLDVWov1mqNmuEXUDwJqLoKPvaxwzghdnMzwtCpff704bAdBeEoUrRqS336OPwasHhTgH5E2IccU=
+	t=1744127928; cv=none; b=IWwPfFdM+fG6nnN7k86DH3kl8UWLFBaguLtUjYPQwgxHXfDNlZRdD8DCtvWr/cViI/gpER/qpK8jpCJlTGKymz3hWy70KO4qwOsVoCdTPX3h8S1UxSCL+mtM3mcA3vmg8T3DJFdN9uRK6kbbAZ2CRp303QI2ZdQ8y5cbVxsLycg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744127925; c=relaxed/simple;
-	bh=AHvLh3VHhH+8s0BqalzzLWIJRhM0DmQZyfPUYf0ycCM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hVNstmxSrRMkXQthLuXagu9ik3f5sxKPbhSoKEHO0t2yYuISfHl9GKwrDHImH8vVKDhGTI+UdH1vwLXVIV+vR4gEPYI1Rn3wVohdbAqVs8t73KKsNymPUqFxCUrBbnH+NMGp+63r7h67anNd7J1F40xEl+iciKq+ymUM6oDm4tk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arnaud-lcm.com; spf=pass smtp.mailfrom=arnaud-lcm.com; arc=none smtp.client-ip=45.145.164.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arnaud-lcm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arnaud-lcm.com
-Received: from [IPV6:2a01:e0a:3e8:c0d0:9059:1ccf:a15c:f330] (unknown [IPv6:2a01:e0a:3e8:c0d0:9059:1ccf:a15c:f330])
-	by plesk.hostmyservers.fr (Postfix) with ESMTPSA id 36E84487F4;
-	Tue,  8 Apr 2025 15:58:40 +0000 (UTC)
-Authentication-Results: Plesk;
-        spf=pass (sender IP is 2a01:e0a:3e8:c0d0:9059:1ccf:a15c:f330) smtp.mailfrom=contact@arnaud-lcm.com smtp.helo=[IPV6:2a01:e0a:3e8:c0d0:9059:1ccf:a15c:f330]
-Received-SPF: pass (Plesk: connection is authenticated)
-Message-ID: <ba2f508e-20b1-4b5a-b512-a85efcf9ad50@arnaud-lcm.com>
-Date: Tue, 8 Apr 2025 17:58:39 +0200
+	s=arc-20240116; t=1744127928; c=relaxed/simple;
+	bh=RWDIxjKULERd9rKieT1KlSktqFsibzwWfqHPe/4cIa0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References; b=p0/HGwXt2bAsLnAoBK8kqH7jyOh3ifd8r6bEGhp22YikviMQ9q5DQacvBnsBc/BPdaNQ01VzcRKwfTksWnNctvOFm4AvbryMO0vV8AaLZYxLflgA71R0zRUDQIStMIUcvqkPh6r7dV93mrtTAIexv0JnczCwPiwzMDe41z/lq2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com; spf=pass smtp.mailfrom=arista.com; dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b=OrAdb8Gi; arc=none smtp.client-ip=209.85.166.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arista.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="OrAdb8Gi"
+Received: by mail-io1-f99.google.com with SMTP id ca18e2360f4ac-854a68f5a9cso465017339f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 08:58:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744127926; x=1744732726;
+        h=content-transfer-encoding:references:in-reply-to:message-id:date
+         :subject:cc:to:from:dkim-signature:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jaVO28FUsf/+j+eVB0JXUktqw+0W3V93Ws76bANlpTw=;
+        b=VFHySj0bNuFcExcGcGKi+13WJbJdp1m9IBee/aeHxrdwDoydMneu1AZeFtNOUnrfhl
+         pu3N0OIP+QUigliKaQZnGmV+/sD4jbAzKg08OcOPUwQhNe4Jaf9x2n10KtqijR2kH51J
+         /cGkh+MGt3v/ZsIZ3JfraLOAMA+0c/W22wihyYjyHWctPy9LUcYw0Bi/V8hvlsYkSAg9
+         nd89aAg9Gg7JTekll25ilFHOynvXsb3dmivllytNdyh90xcejnf0jBD1PWE+bHttTh1m
+         A0vneXxy4q4k3SWvb8TEfRAxOMb8cg8DFKL8PwUYAFq9FC0hKYRU7qphDc0Tpz6pMWy2
+         E+/g==
+X-Forwarded-Encrypted: i=1; AJvYcCXuXhKLPq/vWU0ix86pbJvHas3R68MhJkEVEgG5BUd0ZlAuPB9T0YfbidHSSggNTQjNAJq7hcUn+AbshD8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzds0z3w8r80POEwuZLlhpySoVfZhyT2qg71K8M8MY8W0WPQvMu
+	6M8h/AjLDMSxr/o/Cyi5bIHNKGDI3WmLpyfppk7BPtbsdB4Kg3NpcfATU95fFyzP1qOAllNJc0H
+	pmn9M1aB773OhJGEfWYuSCq1m/Nsm9Q==
+X-Gm-Gg: ASbGnctgzEW18K92+IF9mcAFnCzRAfagbJAMD2Yvn2AOcebXzBNshJEE4Y7jLZUAd1I
+	xNy4SNoaEbRBiu0BG8elxfLciJes+PXt70XFffYg+tBfMJ7rJpccMgG6PYwl1TRRxqEX58NitE6
+	7heL5tsTP49A3RV9vwk3fum/K9f2KDaQOueKDC1N7wLhShtaNdEdbwDF0OTlXIaYtsdEk3S6gwj
+	Sdkbd5lir2qjIsAu8MP0R/nubLzkeoVrzM3JZCc2s16nmx6qsYz8kwEy+hZr4h5B68achMUmlvE
+	/TXHjsyxIjMoJBrzT57o7wuoN6g=
+X-Google-Smtp-Source: AGHT+IEUKMpwu6G2eNbCLy7G2hpZnc7p/3gu0cXPUTvBdg3n05YEdQqhBspTylBX68cRhCoAQd3hqLSwSNn3
+X-Received: by 2002:a05:6e02:1aab:b0:3d4:3fed:81f7 with SMTP id e9e14a558f8ab-3d6ec594cbbmr139695615ab.19.1744127925943;
+        Tue, 08 Apr 2025 08:58:45 -0700 (PDT)
+Received: from smtp.aristanetworks.com ([74.123.28.25])
+        by smtp-relay.gmail.com with ESMTPS id e9e14a558f8ab-3d703b6c997sm1199585ab.9.2025.04.08.08.58.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 08:58:45 -0700 (PDT)
+X-Relaying-Domain: arista.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arista.com;
+	s=Arista-A; t=1744127925;
+	bh=jaVO28FUsf/+j+eVB0JXUktqw+0W3V93Ws76bANlpTw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=OrAdb8Gi7kK42a9cG8OQD4nUjCJBGi3FAoNaKh8E2cXUj+0b3ObrsD39TrEIr8Pgv
+	 K3rGJSm2AKRAHDr+BfxIR3xB1yps+6az/gW1yk8PJR8mSi5Pe+TXE95xk3pDKPAQMD
+	 QaY5pqM0eq61PLuqJvFSMbSNqIO8B2+pPCgspfh5xbH/sPQqej0dYzxBoT9uGJ/HQe
+	 8+wMntox3LmSshqP+t7fxT8Ul/9wilvWW8s29wlI0+YV+dSdxnGqrSWZrd/2DZcnKS
+	 eGcg+waTMhSNxsbA9DdQpV8LYrNfq5kWyXYp9iTxhWuzgoQhqsX9pUgq0Xls9nCbig
+	 QCYIX+BOAtxCg==
+Received: from mpazdan-home-zvfkk.localdomain (dhcp-244-168-54.sjc.aristanetworks.com [10.244.168.54])
+	by smtp.aristanetworks.com (Postfix) with ESMTP id 0C1B610023B;
+	Tue,  8 Apr 2025 15:58:45 +0000 (UTC)
+Received: by mpazdan-home-zvfkk.localdomain (Postfix, from userid 91835)
+	id 0560440B1D; Tue,  8 Apr 2025 15:58:45 +0000 (UTC)
+X-SMTP-Authentication: Allow-List-permitted
+X-SMTP-Authentication: Allow-List-permitted
+From: Marek Pazdan <mpazdan@arista.com>
+To: kory.maincent@bootlin.com
+Cc: aleksander.lobakin@intel.com,
+	almasrymina@google.com,
+	andrew+netdev@lunn.ch,
+	anthony.l.nguyen@intel.com,
+	daniel.zahka@gmail.com,
+	davem@davemloft.net,
+	ecree.xilinx@gmail.com,
+	edumazet@google.com,
+	gal@nvidia.com,
+	horms@kernel.org,
+	intel-wired-lan@lists.osuosl.org,
+	jianbol@nvidia.com,
+	kuba@kernel.org,
+	linux-kernel@vger.kernel.org,
+	mpazdan@arista.com,
+	netdev@vger.kernel.org,
+	pabeni@redhat.com,
+	przemyslaw.kitszel@intel.com,
+	willemb@google.com
+Subject: Re: [Intel-wired-lan] [PATCH 1/2] ethtool: transceiver reset and presence pin control
+Date: Tue,  8 Apr 2025 15:54:14 +0000
+Message-ID: <20250408155844.30790-1-mpazdan@arista.com>
+In-Reply-To: <20250407153203.0a3037d7@kmaincent-XPS-13-7390>
+References: <20250407153203.0a3037d7@kmaincent-XPS-13-7390>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] net: ppp: Add bound checking for skb d on ppp_sync_txmung
-To: Simon Horman <horms@kernel.org>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- linux-ppp@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
- syzbot+29fc8991b0ecb186cf40@syzkaller.appspotmail.com
-References: 
- <20250407-bound-checking-ppp_txmung-v1-1-cfcd2efe39e3@arnaud-lcm.com>
- <20250408153352.GY395307@horms.kernel.org>
-Content-Language: en-US
-From: Arnaud Lecomte <contact@arnaud-lcm.com>
-In-Reply-To: <20250408153352.GY395307@horms.kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <174412792069.11363.17962374028464217077@Plesk>
-X-PPP-Vhost: arnaud-lcm.com
 
-Thanks for the review.
+On  Mon, 7 Apr 2025 15:32:03 +0200 Kory Maincent wrote:
+> ETHTOOL_PHY_G/STUNABLE IOCTLs are targeting the PHY of the NIC but IIUC in your
+> case you are targeting the reset of the QSFP module. Maybe phylink API is more
+> appropriate for this feature.
+> 
+> You have to add net-next prefix in the subject like this [PATCH net-next 1/2]
+> when you add new support to net subsystem.
 
-You're right, using a merge commit in the `Fixes:` tag was not relevant.
-I'll send a v2 shortly with the fix as well as the removal of the skb 
-check as it is already done before.
+Thanks for review.
+From up to now replies I see that there are concerns regarding usage phy-tunable ethtool
+option for this purpose, so I will post updated patches after we clarify proper way to go. 
+I need to check more on phylink API, from the overview I read:
+"phylink is a mechanism to support hot-pluggable networking modules directly connected
+to a MAC without needing to re-initialise the adapter on hot-plug events.
 
-On 08/04/2025 17:33, Simon Horman wrote:
-> On Mon, Apr 07, 2025 at 05:26:21PM +0200, Arnaud Lecomte wrote:
->> Ensure we have enough data in linear buffer from skb before accessing
->> initial bytes. This prevents potential out-of-bounds accesses
->> when processing short packets.
->>
->> When ppp_sync_txmung receives an incoming package with an empty
->> payload:
->> (remote) gef➤  p *(struct pppoe_hdr *) (skb->head + skb->network_header)
->> $18 = {
->> 	type = 0x1,
->> 	ver = 0x1,
->> 	code = 0x0,
->> 	sid = 0x2,
->>          length = 0x0,
->> 	tag = 0xffff8880371cdb96
->> }
->>
->> from the skb struct (trimmed)
->>        tail = 0x16,
->>        end = 0x140,
->>        head = 0xffff88803346f400 "4",
->>        data = 0xffff88803346f416 ":\377",
->>        truesize = 0x380,
->>        len = 0x0,
->>        data_len = 0x0,
->>        mac_len = 0xe,
->>        hdr_len = 0x0,
->>
->> it is not safe to access data[2].
->>
->> Reported-by: syzbot+29fc8991b0ecb186cf40@syzkaller.appspotmail.com
->> Closes: https://syzkaller.appspot.com/bug?extid=29fc8991b0ecb186cf40
->> Tested-by: syzbot+29fc8991b0ecb186cf40@syzkaller.appspotmail.com
->> Fixes: 9946eaf552b1 ("Merge tag 'hardening-v6.14-rc2' of git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux")
-> It doesn't seem right to use a Merge commit in a fixes tag.
->
-> Looking over the code, the access to data[2] seems to have existed since
-> the beginning of git history, in which case I think we can use this:
->
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
->
->> Signed-off-by: Arnaud Lecomte <contact@arnaud-lcm.com>
->> ---
->>   drivers/net/ppp/ppp_synctty.c | 5 +++++
->>   1 file changed, 5 insertions(+)
->>
->> diff --git a/drivers/net/ppp/ppp_synctty.c b/drivers/net/ppp/ppp_synctty.c
->> index 644e99fc3623..520d895acc60 100644
->> --- a/drivers/net/ppp/ppp_synctty.c
->> +++ b/drivers/net/ppp/ppp_synctty.c
->> @@ -506,6 +506,11 @@ ppp_sync_txmunge(struct syncppp *ap, struct sk_buff *skb)
->>   	unsigned char *data;
->>   	int islcp;
->>   
->> +	/* Ensure we can safely access protocol field and LCP code */
->> +	if (!skb || !pskb_may_pull(skb, 3)) {
-> I doubt that skb can be NULL.
->
->> +		kfree_skb(skb);
->> +		return NULL;
->> +	}
->>   	data  = skb->data;
->>   	proto = get_unaligned_be16(data);
->>   
->>
->> ---
->> base-commit: 9946eaf552b194bb352c2945b54ff98c8193b3f1
->> change-id: 20250405-bound-checking-ppp_txmung-4807c854ed85
->>
->> Best regards,
->> -- 
->> Arnaud Lecomte <contact@arnaud-lcm.com>
->>
->>
+phylink supports conventional phylib-based setups, fixed link setups
+and SFP (Small Formfactor Pluggable) modules at present."
+
+I don't see QSFP modules are being supported but I need to verify impact of this.
+As I mentioned in other reply this API should allow for transceiver module reset 
+from user space if orchestration agent detects transceiver failure state or when
+it gets direct request from Cli.
