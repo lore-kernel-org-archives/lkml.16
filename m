@@ -1,138 +1,166 @@
-Received: from smtp.smtpout.orange.fr (smtp-20.smtpout.orange.fr [80.12.242.20])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C609D1CD1E0;
-	Tue,  8 Apr 2025 19:04:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D0031CD1E0;
+	Tue,  8 Apr 2025 19:05:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744139073; cv=none; b=CEWSxwKE+I/6k9EZS7fIqUojPgUg6Tar2uwHEh9geqzetla+WpWhI4O2RmyTAK34iEHPHPDip0Hs0j3urPukF+1LOJCDoekdpz0b61Qs76wB7VJkkxFP9YR3G5ECQ65NbExFifnJxTir8Ibjib4WHy3hBEkDb61kUohWJP9B/5c=
+	t=1744139102; cv=none; b=MGFIGxyEXNZ6fRQsDcCteFlyUcNaxTu1Mw8zRmdxcf4lZ7fDaItJQzF9IpW7apZ9rKz0JRg3/SNIblb43JGgJilbvHP07AbiYVnzPxjMj0VH0PcUaQ0duy7cY+wGYCEkaZ3JtEWoDSjP6HECgwsvncA0ahnfWytapEjp+eh2kzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744139073; c=relaxed/simple;
-	bh=NtBCWUxxDuGgaBoBgXUpcx7d3iSvGcqPi1jOe2FQvvs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sCsyKqEG9kuxrtIlFwLh2QGvGwRwE8j0zbArb21OcHfxTsrjeTuVW+n621Jza7i3ClGYBjDmbbY/9ONWnEz+c8PLEAv3gy+S9niGLfPeHMbIWjip1EBjwk6EZAEd/SAaTqiD54CdCAO9mxrK5+96dzUBhr1OpNO/n7WjYJ9Y3DY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=I2Xj45fJ; arc=none smtp.client-ip=80.12.242.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1744139102; c=relaxed/simple;
+	bh=pp9ZSiF31gO1luJsRcp1ScynOVufAQYh0s9NSzlOXZs=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=dY6pz+o7s9r8Eb4EsCOZY69f/vdmO3uj9JmXvfhoAnkVREX/Jv/h4TYzQfSG42PE/JZzUUPvJ/LK5U20watJHndt4NcRU9bNOgPYtSbQi1rXQ8uqruwbRTfYkDdvpJq6OQ8s0AAgWW33N9ZxyKy22tWCHbAR3GEnT2eR/QzWAag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ij2N01l3; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YlPKfR0D; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="I2Xj45fJ"
-Received: from [192.168.1.37] ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id 2EF6uD7N4B4qz2EF9ubaWI; Tue, 08 Apr 2025 21:04:20 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1744139060;
-	bh=iire6AmdsCZKw3Q/MjZ/41gt4RQr5jCzoxH0LpfBJdo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=I2Xj45fJ7ekZQSNUqSpg7lS5jiXIS50RvucZtkfPevdjTw0K2TaU0rIENA+nv9RpR
-	 eRDaKpBo32R6gHgeO2d5Fs4W4DvYpxrajaJp+c1O2sirkJ9nTF3F8dbhFtjSFuR9DJ
-	 +NyiNyiXQmuVsxt14fQSxcCNfZEoOtWDNNCI059jh90cAQyjKXPqgpZIa+WlyV9Dqs
-	 cm8JGAf21T5rWsfB2nf5dIIkeTKuE+EWFjMz9fD/J4T7aUg3ZSIRg5zx8N4cNpCKPE
-	 2a77wIxUeyoXkHDc1sW471fvy6HP6vXqhJG1FqTTWf5qq/QHZOixhcBfcGbFYjhC67
-	 rAJaE6312DxCw==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Tue, 08 Apr 2025 21:04:20 +0200
-X-ME-IP: 90.11.132.44
-Message-ID: <1dacfce7-c66d-44c6-9a0c-2dd00bc24ffc@wanadoo.fr>
-Date: Tue, 8 Apr 2025 21:04:16 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ij2N01l3";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YlPKfR0D"
+Date: Tue, 08 Apr 2025 19:04:57 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744139098;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qiEWWQdodPE311SJkdgd9BCElzJ+IlZCpHBf10zLR+c=;
+	b=ij2N01l3cNK/BzJwBI5Op0ObCWVmhS9b/YwxqS6tyUE1R+AtUVfBoKzaKDcuW4Rb0LLYxC
+	qHcKfNu6JqBSHHbueui90jeFSBMPhDs+KtsTfpRy5yUjhBSXeXeR3mxnjHmb8ClLe8QzPH
+	64ONZbGrcrjVBCYPjItAjJYrKcgRdA2rU+7pAqLsCVHRz+2wkIo2r4eKNk0Fui8UIDcQXn
+	iAxKmKuLqpaxvsYwzbEwNWW4XoAUQIx+07xm6McgRxm+db+Gfu484s0iEsOHi1ODSNriAJ
+	YwiSYSXbEPPJGmIO2T/usNVJCaGvSCLQCS9UW4BrQLtZqWVpIieA2PG9vdjQlw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744139098;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qiEWWQdodPE311SJkdgd9BCElzJ+IlZCpHBf10zLR+c=;
+	b=YlPKfR0D7Q68ahVT2D714xrjghItCgPJyAgExGqSEkdrp/eK6ZHsWwr7Zyw9DRfCtghGon
+	+3JfRWv2TkaRlkBA==
+From: "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/core] perf/x86/intel: Add CPUID enumeration for the auto
+ counter reload
+Cc: Kan Liang <kan.liang@linux.intel.com>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ Thomas Falcon <thomas.falcon@intel.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250327195217.2683619-5-kan.liang@linux.intel.com>
+References: <20250327195217.2683619-5-kan.liang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] i2c: Fix reference leak in of_i2c_register_devices
-To: Sunny <nueralspacetech@gmail.com>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
- linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250406134843.67702-1-nueralspacetech@gmail.com>
- <33bf15be-f99a-40c1-a97c-a51ca8fa4c9e@wanadoo.fr>
- <CAGNPQObiZA76gva-+_DY8TtpEiJfLL3QDoONYST4npOSkgZ+5g@mail.gmail.com>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <CAGNPQObiZA76gva-+_DY8TtpEiJfLL3QDoONYST4npOSkgZ+5g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Message-ID: <174413909765.31282.11473149016229388139.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Hi,
+The following commit has been merged into the perf/core branch of tip:
 
+Commit-ID:     1856c6c2f8416b1340652cccfa1fc302ac8d5ecd
+Gitweb:        https://git.kernel.org/tip/1856c6c2f8416b1340652cccfa1fc302ac8d5ecd
+Author:        Kan Liang <kan.liang@linux.intel.com>
+AuthorDate:    Thu, 27 Mar 2025 12:52:16 -07:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Tue, 08 Apr 2025 20:55:49 +02:00
 
-first of all, you should not reply with HTML mail, because most mailing 
-lists reject such messages.
+perf/x86/intel: Add CPUID enumeration for the auto counter reload
 
+The counters that support the auto counter reload feature can be
+enumerated in the CPUID Leaf 0x23 sub-leaf 0x2.
 
-Le 08/04/2025 à 16:01, Sunny a écrit :
-> To clarify, while there is no early exit path in the 
-> for_each_available_child_of_node() loop, the reference leak can still 
-> occur because the macro increments the reference count for each node 
-> it processes. If i2c_new_client_device() fails, the reference count 
-> for that node must be explicitly decremented using of_node_put(node). 
-> Without this, the reference count remains elevated, leading to a 
-> reference leak.
+Add acr_cntr_mask to store the mask of counters which are reloadable.
+Add acr_cause_mask to store the mask of counters which can cause reload.
+Since the e-core and p-core may have different numbers of counters,
+track the masks in the struct x86_hybrid_pmu as well.
 
-I think you are wrong.
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Tested-by: Thomas Falcon <thomas.falcon@intel.com>
+Link: https://lkml.kernel.org/r/20250327195217.2683619-5-kan.liang@linux.intel.com
+---
+ arch/x86/events/intel/core.c      | 10 ++++++++++
+ arch/x86/events/perf_event.h      | 17 +++++++++++++++++
+ arch/x86/include/asm/perf_event.h |  1 +
+ 3 files changed, 28 insertions(+)
 
-Yes, for_each_available_child_of_node() increments the reference count 
-for each node it processes, but it also decrements it at the end of the 
-iteration, except when there is an early exit (a break or a return).
-See how the 'parent' and 'child' parameters of 
-of_get_next_available_child() are used, especially whtat happen with the 
-first call with child = NULL.
-
-So should i2c_new_client_device() fail or succeed, 'node' is released 
-and the reference count does NOT remain elevated as you state.
-
-
-If you do not agree, please give more details of how you think it works 
-and where the issue is, for exemple with unrolling the loop and noting 
-what and when nodes are get and put.
-
-You should then see that it is correct.
-
-
-The of_node_put(node) you are looking for is there: 
-https://elixir.bootlin.com/linux/v6.14-rc6/source/drivers/of/base.c#L702
-
-CJ
-
->
-> sunny
->
-> On Sun, 6 Apr 2025 at 23:36, Christophe JAILLET 
-> <christophe.jaillet@wanadoo.fr> wrote:
->
->     Le 06/04/2025 à 15:48, Sunny Patel a écrit :
->     > Fix a potential reference leak in of_i2c_register_devices where the
->     > reference to the node is not released if device registration fails.
->     > This ensures proper reference management and avoids memory leaks.
->
->     There is no early exit path in the for_each_available_child_of_node()
->     block, so of_node_put((node) is called for all the nodes that are
->     iterated.
->
->     Can you elaborate and explain how the reference leak can occur?
->
->     CJ
->
->     >
->     > Signed-off-by: Sunny Patel <nueralspacetech@gmail.com>
->     > ---
->     >   drivers/i2c/i2c-core-of.c | 1 +
->     >   1 file changed, 1 insertion(+)
->     >
->     > diff --git a/drivers/i2c/i2c-core-of.c b/drivers/i2c/i2c-core-of.c
->     > index 02feee6c9ba9..7c50905de8f1 100644
->     > --- a/drivers/i2c/i2c-core-of.c
->     > +++ b/drivers/i2c/i2c-core-of.c
->     > @@ -107,6 +107,7 @@ void of_i2c_register_devices(struct
->     i2c_adapter *adap)
->     >                                "Failed to create I2C device for
->     %pOF\n",
->     >                                node);
->     >                       of_node_clear_flag(node, OF_POPULATED);
->     > +                     of_node_put(node);
->     >               }
->     >       }
->     >
->
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 6105024..876678a 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -5069,6 +5069,16 @@ static void update_pmu_cap(struct x86_hybrid_pmu *pmu)
+ 		pmu->fixed_cntr_mask64 = fixed_cntr;
+ 	}
+ 
++	if (eax.split.acr_subleaf) {
++		cpuid_count(ARCH_PERFMON_EXT_LEAF, ARCH_PERFMON_ACR_LEAF,
++			    &cntr, &fixed_cntr, &ecx, &edx);
++		/* The mask of the counters which can be reloaded */
++		pmu->acr_cntr_mask64 = cntr | ((u64)fixed_cntr << INTEL_PMC_IDX_FIXED);
++
++		/* The mask of the counters which can cause a reload of reloadable counters */
++		pmu->acr_cause_mask64 = ecx | ((u64)edx << INTEL_PMC_IDX_FIXED);
++	}
++
+ 	if (!intel_pmu_broken_perf_cap()) {
+ 		/* Perf Metric (Bit 15) and PEBS via PT (Bit 16) are hybrid enumeration */
+ 		rdmsrl(MSR_IA32_PERF_CAPABILITIES, pmu->intel_cap.capabilities);
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index 4410cf0..ab9af2e 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -708,6 +708,15 @@ struct x86_hybrid_pmu {
+ 			u64		fixed_cntr_mask64;
+ 			unsigned long	fixed_cntr_mask[BITS_TO_LONGS(X86_PMC_IDX_MAX)];
+ 	};
++
++	union {
++			u64		acr_cntr_mask64;
++			unsigned long	acr_cntr_mask[BITS_TO_LONGS(X86_PMC_IDX_MAX)];
++	};
++	union {
++			u64		acr_cause_mask64;
++			unsigned long	acr_cause_mask[BITS_TO_LONGS(X86_PMC_IDX_MAX)];
++	};
+ 	struct event_constraint		unconstrained;
+ 
+ 	u64				hw_cache_event_ids
+@@ -806,6 +815,14 @@ struct x86_pmu {
+ 			u64		fixed_cntr_mask64;
+ 			unsigned long	fixed_cntr_mask[BITS_TO_LONGS(X86_PMC_IDX_MAX)];
+ 	};
++	union {
++			u64		acr_cntr_mask64;
++			unsigned long	acr_cntr_mask[BITS_TO_LONGS(X86_PMC_IDX_MAX)];
++	};
++	union {
++			u64		acr_cause_mask64;
++			unsigned long	acr_cause_mask[BITS_TO_LONGS(X86_PMC_IDX_MAX)];
++	};
+ 	int		cntval_bits;
+ 	u64		cntval_mask;
+ 	union {
+diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+index 812dac3..70d1d94 100644
+--- a/arch/x86/include/asm/perf_event.h
++++ b/arch/x86/include/asm/perf_event.h
+@@ -195,6 +195,7 @@ union cpuid10_edx {
+  */
+ #define ARCH_PERFMON_EXT_LEAF			0x00000023
+ #define ARCH_PERFMON_NUM_COUNTER_LEAF		0x1
++#define ARCH_PERFMON_ACR_LEAF			0x2
+ 
+ union cpuid35_eax {
+ 	struct {
