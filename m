@@ -1,110 +1,81 @@
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.50])
+Received: from mx.swemel.ru (mx.swemel.ru [95.143.211.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9161264A77;
-	Tue,  8 Apr 2025 09:16:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744103768; cv=pass; b=kP2CgEKLRkbDX/yu8bfk9Fe0vwg2lvnaWWACE1cd9XSM50QKqn/l03jTiF8YF7qJKyAIE765knYromBcXnlopaBdTuY2/lqMLR/jUbK6a2ZQcl0CO1BtSjsMYfMSVoUqnSYTiisoFf9Kmci8hIkbfCBG4g6qyNQrPCTAmbjATUY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744103768; c=relaxed/simple;
-	bh=j06atkAE5GaJghbZbm7QfVldihTFSd3UlHN8BHnQW38=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=WphHL1CGpaMFEyzF7uJI2m3CPfSEkcMv7F88+aVVP53TXY5lGRiXldokRI8K2cfFxEQzjXpZ3pfr0hQaU3yqK3UP4d0siIzCe22n8HwzEc/mjLTBhdBqrwqO0yZMbWFxkq4EL/gqUnujaM8S0klkTF/ti5UCPlHEsAxSBZCLl2Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=outer-limits.org; spf=none smtp.mailfrom=outer-limits.org; dkim=pass (2048-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b=YKdHt5h5; dkim=permerror (0-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b=JbWIdq+j; arc=pass smtp.client-ip=85.215.255.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=outer-limits.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=outer-limits.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA1029D0E;
+	Tue,  8 Apr 2025 09:17:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.143.211.150
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744103883; cv=none; b=ImjvwEQzZfJIBLvvYvy9cq6YjaeWI9WGw+Cuv2jAny49TDaFaC3wY13QywrLTdTesPg5Aoiw011iPBbjxY+Re5WEhZ5uJH6emoMLg8bzDivcW90XYpVKbJbaZGqwiFnSYux369URD8PGas1oQ2GQzhQGHpyFVfDGGv3AEgcszSo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744103883; c=relaxed/simple;
+	bh=u/xVhUL2P1TIaTkTj6MgSg+nNmISj1VFr25RxwIletE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=asmvutHsH0kluFp+m6+iA54XAeVWM3Gh+Ds6IhypkTlBe9TirpCYfs/DDJDH+Do0rvaKD3ooY3/YXFO1S5kJhDB2YPh7YS3+JKc3edrYkA/SVBL7bQ4xmxNEvukX4Sp42esZVZ6tL1l33qSeLjJX42QzhRoP6B6eA+UpqWg8mI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru; spf=pass smtp.mailfrom=swemel.ru; dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b=moaCAWWZ; arc=none smtp.client-ip=95.143.211.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=swemel.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b="YKdHt5h5";
-	dkim=permerror (0-bit key) header.d=outer-limits.org header.i=@outer-limits.org header.b="JbWIdq+j"
-ARC-Seal: i=1; a=rsa-sha256; t=1744103756; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=Lnj/+Ab+BInSFoJPRhY8Ez4a8zIb2BsVZj0QOZzYZO4aGE+W+MWvcsaJNIFDn9DJ1R
-    d0SKg5NrMu3qW1hzBq2JltkhgeH2FrdRr2/aBGFPBkJlcXeShFnSi3fUa8gUTcE4qO6w
-    izhEFXSJ/rf+hrAaKY0lkrjRLberkAPU+vSUfrhhUQVOdhVuQGLuQ0cWh1Cf0A51kHhm
-    3ullM0pmWbYcnvIjSBqlihwGhpUOaCiJIQ3xW9lIe/0bEa0hbPeZ6FLsL9G6XhF9sXgC
-    KwFmqTCLogsfBDkfqE+vsCQpz/aFEIdc+VJ1YIGoIYJ0FIxi7Ij8rzIh13AKmcda4LUI
-    PITg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1744103756;
-    s=strato-dkim-0002; d=strato.com;
-    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
-    bh=JH7bAes1a5f2oruGiUBDVJZHj7HNc2J4ERrWSVZgLYw=;
-    b=ox7qEDu9c+9pGu9ZFd9UA5D7mA/tDOb6yleh5Yb59PksyDFBKVEXZ4aMm4dTGuGtPW
-    /Bhh9hEB9Me2CSzYFYL3yko6p6IBtRXRed3+Vm6hqGtLwpIkbh/XXRSMHfARiE4uJhuj
-    KpijiiYIMwm7Orh7RZIP2k8t18M/ZAJColUgibootAOGrou6DSHY6LkqX7wm2XaUFyvJ
-    d+H5iDBYwUXLqIUo6ddWezW5i3Lg3gKZ4lg6drhVtFLRejThy5///rHxApmwY4LLNP8i
-    5lVqTIxeBZJ457HxEFmMnFXwhWQrLa7sYwN/WljdpNmkK5aAiTP5k+nkov9zB51lSbtz
-    gAWQ==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1744103756;
-    s=strato-dkim-0002; d=outer-limits.org;
-    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
-    bh=JH7bAes1a5f2oruGiUBDVJZHj7HNc2J4ERrWSVZgLYw=;
-    b=YKdHt5h5KEWl9jZf78YV6NH1uPcqvkWqZcz5G2L2C4wdPzTBBvvNby1eZk58nEQJfX
-    r++2aLRB2+S/1QY9drnS9+BPuGDJRD/tIbjHmf7GXefHLc1yvDTAdEKdwO5R7ppb9Pdw
-    9njCFRYO/0+DYO7lSpN+JoDpJjbto+Vfr/mNgBxKvd7CeYehhNtsMx2M6Olhq9JXyqih
-    GndiRc2x6EcjhcJ8CblvNAlS44vluUTDLuXt0Gm/O5DS2nyCpy8gd9EdLtY6/erE6tRy
-    zkuuyXacc1aZUbwiRmAhgN2Xp5kXSPwMAjBd/N0p//UfqOwHptRPpChFxvyRDcZprciN
-    otXg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1744103756;
-    s=strato-dkim-0003; d=outer-limits.org;
-    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
-    bh=JH7bAes1a5f2oruGiUBDVJZHj7HNc2J4ERrWSVZgLYw=;
-    b=JbWIdq+ju8+whTyI81mm2OrXkaFXB3HKVsyuzhzMeQzOLqPJAjPbVG+NzZzuNLKe+W
-    yxJu69g/XSw45vLLPEDA==
-X-RZG-AUTH: ":JnkIfEGmW/AMJS6HttH4FbRVwc4dHlPLCp4e/IoHo8zEMMHAgwTfqBEHcVJSv9P5mRTGd2ImeA=="
-Received: from ws2104.lan.kalrayinc.com
-    by smtp.strato.de (RZmta 51.3.0 AUTH)
-    with ESMTPSA id J2b1101389FtX7t
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Tue, 8 Apr 2025 11:15:55 +0200 (CEST)
-From: Julian Vetter <julian@outer-limits.org>
-To: Arnd Bergmann <arnd@arndb.de>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b="moaCAWWZ"
+From: Denis Arefev <arefev@swemel.ru>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=swemel.ru; s=mail;
+	t=1744103875;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=1FLiFT+T5gQcR7Vpti1w2BgNdDvjvH7axHcj6poLqfw=;
+	b=moaCAWWZ18pXziwG8oX+TkII9D5Ads52zgtbWvMZzDuX39fTOmjHt1GkoXlh4B6BG9OqwM
+	p6o3vkxR0o29TanFoIgXefyWW+280xeadbOdDlOFzLYuuzGecmd7yDtWHwwrUs8YxEpDMM
+	YaBH8aWZ71hdODC+SzmYFAlLdpdYvTU=
+To: Alex Deucher <alexander.deucher@amd.com>
+Cc: =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
+	Chunming Zhou <david1.zhou@amd.com>,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
-	Julian Vetter <julian@outer-limits.org>
-Subject: [PATCH] net: remove __get_unaligned_cpu32 from macvlan driver
-Date: Tue,  8 Apr 2025 11:15:48 +0200
-Message-Id: <20250408091548.2263911-1-julian@outer-limits.org>
-X-Mailer: git-send-email 2.34.1
+	lvc-project@linuxtesting.org,
+	stable@vger.kernel.org
+Subject: [PATCH] drm/amdgpu: check a user-provided number of BOs in list
+Date: Tue,  8 Apr 2025 12:17:53 +0300
+Message-ID: <20250408091755.10074-1-arefev@swemel.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="us-ascii"
 
-The __get_unaligned_cpu32 function is deprecated. So, replace it with
-the more generic get_unaligned and just cast the input parameter.
+The user can set any value to the variable ‘bo_number’, via the ioctl
+command DRM_IOCTL_AMDGPU_BO_LIST. This will affect the arithmetic
+expression ‘in->bo_number * in->bo_info_size’, which is prone to
+overflow. Add a valid value check.
 
-Signed-off-by: Julian Vetter <julian@outer-limits.org>
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+
+Fixes: 964d0fbf6301 ("drm/amdgpu: Allow to create BO lists in CS ioctl v3")
+Cc: stable@vger.kernel.org
+Signed-off-by: Denis Arefev <arefev@swemel.ru>
 ---
- drivers/net/macvlan.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/macvlan.c b/drivers/net/macvlan.c
-index d0dfa6bca6cc..7045b1d58754 100644
---- a/drivers/net/macvlan.c
-+++ b/drivers/net/macvlan.c
-@@ -254,7 +254,7 @@ static u32 macvlan_hash_mix(const struct macvlan_dev *vlan)
- static unsigned int mc_hash(const struct macvlan_dev *vlan,
- 			    const unsigned char *addr)
- {
--	u32 val = __get_unaligned_cpu32(addr + 2);
-+	u32 val = get_unaligned((u32 *)(addr + 2));
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
+index 702f6610d024..dd30d2426ff7 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
+@@ -189,6 +189,9 @@ int amdgpu_bo_create_list_entry_array(struct drm_amdgpu_bo_list_in *in,
+ 	struct drm_amdgpu_bo_list_entry *info;
+ 	int r;
  
- 	val ^= macvlan_hash_mix(vlan);
- 	return hash_32(val, MACVLAN_MC_FILTER_BITS);
++	if (!in->bo_number || in->bo_number > UINT_MAX / info_size)
++		return -EINVAL;
++
+ 	info = kvmalloc_array(in->bo_number, info_size, GFP_KERNEL);
+ 	if (!info)
+ 		return -ENOMEM;
 -- 
-2.34.1
+2.43.0
 
