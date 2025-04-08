@@ -1,154 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 237F62550A1;
-	Tue,  8 Apr 2025 22:00:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 672D3801;
+	Tue,  8 Apr 2025 22:02:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744149623; cv=none; b=UPAS5yKyBjq4a7YnVABDNx5iAjm7AShIO13omDVkcmZf7Tiz6TotQvxQlmLOvX+Aeo/pnYaIf+8/J4LeL+L6RpCHCcV8qOMpFSmSRDofs1KZhF4U/LY5sP/PWD7jjChGMQmRTVe2sHJuHmwTUFpTWrGQjXys7KBpf/rpkxa7bV4=
+	t=1744149739; cv=none; b=GIdbdlyWgyTNFEYJokYzdk32BoImcd/uF4ZvuV3G3naQf1fIxPs1NIdlsXZw+bSopQRVsHsR3wF24JDWXJyDPGSLtopmblQVOK9WsP6wgy6tpsQFlGwdh+WJxFiIvRvSQPQR9GlLQq6wkFfSzlOEtLI0QYR9NCaUQPtWVvFo4To=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744149623; c=relaxed/simple;
-	bh=0NeZF5gEJfaNTfbHJm9/EDEebiWO448avrsO1Q1dT2E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LxsDc4Vo29+cHw6RlFtonmY8csTOlGJU5KI4NJnXUZoAzFqNJ3gXmILc3oPXskrWvhGW9k6c4NfS3tmRqPFpPyNe7dYJ66hgw4HCkzDSOTrzkfcF/yep/T1JfwvWtDZwej1ntwvDYaihsf8EzBW7cZJD/ju48pqzRuLA+e3Lfgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nDg++kvC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744149739; c=relaxed/simple;
+	bh=9lX8wh61BYIq6E4SXmVUNndEK6nzrq+wZuS8HRjbnA4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Vt0U2QxLc+kdlBt5zLweZLW9A2cGqSWZbRjCM4VS8PWktq6LeEL7ZxFXXusBb03LbQ9JQ+wxWuYiq3QecC2xWvFx9bHi5xNSzAiXULXnRlq8ABO7DRwJoxjcn8tc/UCQ+sWrT0b5tRAMn60fxtwwjrENACGMnWjDLRVIWtbFLPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T+AKZKle; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nDg++kvC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0527C4CEE5;
-	Tue,  8 Apr 2025 22:00:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744149622;
-	bh=0NeZF5gEJfaNTfbHJm9/EDEebiWO448avrsO1Q1dT2E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nDg++kvCsnJf9hgHzins+SZ7ibYFgGw+/nb9SCmPNXksKGIEpzvwW11L5x5/agvDd
-	 FEbYXP+hALBFSwUV8MqPpw4lb11OTCfBMFzJonbgwtvpZSqVKanBC7p7mgBUBNFvzN
-	 g8OflrQmikxUmwyRXhqyQMPpQD22vSSvO54v+K5kmlLrJhLVwEnKeaV9dRj/weumNn
-	 ldwaIFPK1a30Yn2bzdlpbW3rgorDkGv1DWNDcSWQIgp2BJ3gQpPwZEUJ3mACUIRczd
-	 CpyC0ioUEeV3XACO4xOYj8rCtpapG7Bkl/22J11f2m/mfrVaApxKGdn+zxbagOg5cL
-	 90NVAJKcDzqlA==
-Date: Tue, 8 Apr 2025 17:00:19 -0500
-From: Bjorn Andersson <andersson@kernel.org>
-To: neil.armstrong@linaro.org
-Cc: Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Dikshita Agarwal <quic_dikshita@quicinc.com>
-Subject: Re: [PATCH] arm64: dts: qcom: sm8550: add iris DT node
-Message-ID: <jpf7vqlmzlaykgm77brsfcqh4mqxau6pcahd6s3e3e7u3umnyn@vukqip26nqrw>
-References: <20250407-topic-sm8x50-upstream-iris-8550-dt-v1-1-1f7ab3083f49@linaro.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T+AKZKle"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-736ad42dfd6so4996990b3a.3;
+        Tue, 08 Apr 2025 15:02:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744149736; x=1744754536; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CKLxdjoJBD9fIc5Dhkkx8uZiXNwOxA2THYRoD8HoSis=;
+        b=T+AKZKleq8qIASX5nmEOaInRiAxEafoZc0PvpQFasy3MLKuN41UMl41Li7tSUeOYw5
+         xiEYZxyQGpt1IuUN6qrGC4bNXSWuyEunMq0xb/d+BTyzll5lGmoMtqArxQCbbq3dVEsC
+         wn1hAfpvQQF21Tx1kMdjYIt7nD3Or9xBny6366SK6zMESrzpYWGkRWQyvleowRfrN2Hg
+         9N3iR5zRtiYn2buTHLle31tSVA6cU9fI+1bkcZeYoyd9rNJdqf+YvBgBjNeUZcJGtjqU
+         RlWQT+YSgUY0fMBIVh3p+nqVW5kkW950CcwWfmwe4SLUxn56ARkvcv58u4YJ8FrsqqvZ
+         0L7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744149736; x=1744754536;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CKLxdjoJBD9fIc5Dhkkx8uZiXNwOxA2THYRoD8HoSis=;
+        b=pKD6Bd5hkke8lfSRC7D7M390Ww+k5oVHAqJI6Nx9oiWC9iTXEtBxmdwVAXl66PI8EP
+         zV77YLzMwPFixQNrbzlESBtzU74UkEpMxI6JWfavhbTGoVgmFHRMuRgP0krqA+slZLW2
+         8Q+ZfJQ3Xq7yrwaYCYr+KZYbVoIfLhxEZDnV0nmTLeEgM1HsRj8Ppqt9e9UZifT5p8ZV
+         LjJYKwJn1BLzoQQYfLVFRCJuyrPGMfNNTioFSHZW4rXxoiMe94DJnfVBzf4zZfgL6+r3
+         Y1a1/egVbaO/fOGOdJxPzGkD4NvJJlxaCuLp4osE3HVmSAvoZNCGQIi85dHaIhr4BwWi
+         NGOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVsDlgW0LYFYSQS7l7TEkCwjP7FMhAV+8OZ+zKJGBcwCY0dIQ/BtBJpSlhGEuO0tb0a8JzgtcbcECmLsxg=@vger.kernel.org, AJvYcCWvY0soMXCwfUfFrUtxb6+M/kVFxPoaTliDw6N7/5Pntd3EtY4R8l8HI9uAPyM2nBDa24pett/7@vger.kernel.org
+X-Gm-Message-State: AOJu0YySJo7TL68ZNViV6N4OGa9+ZwFKLqrA08/n6g3sukFGVEFEmZKK
+	NeblyWVHtmZrMrkoVWOZJ3bQvwjcpcjLiOhclUMFJ/ozxXFDG8U=
+X-Gm-Gg: ASbGncuaXbeyJe5BhdIdI2xVgCJazF9od+Pt9QdWHWTziTRnRx10SQNTxfu5jNFboN4
+	q89thVi9gHzW/BwNOQhmftwcBXfQRqEXJxuRgKfGnfAjFp+hCzvxeM1p1DQ2GQlqSJ3cGu4ANRy
+	g3hyrz/4rfmtegbXQMQ9q7xEqyKZdtRjon0SKuezs6Bm4CLyfhcY9EiKuMfLRUMJlCZljVXBRgp
+	6JlvoD9fAdN3Eq5UVj0cRe4NKy8Jtb0d7dbhfKZjK6Y8A6YbhrcOnNZymaP/vpzm/f8pGdbtvff
+	d7KKJRB1VGYadSL7h0cSpObHlaMslv2hhz9Lx8Cjqu5WvAa6oLBzw8sYVhlaPqq3V9pjqGpGcS4
+	cCWuJ4wuzzhPXXIkStaLw
+X-Google-Smtp-Source: AGHT+IG/kgNyg6qxRCHE/ao52Xup57eS+G5VAFerGvjti+r9yE7Rso5856iKNaa0+/lCxBkNE8xN7Q==
+X-Received: by 2002:a05:6a00:21c1:b0:730:7600:aeab with SMTP id d2e1a72fcca58-73bae4d52admr645416b3a.13.1744149736478;
+        Tue, 08 Apr 2025 15:02:16 -0700 (PDT)
+Received: from ?IPV6:2a03:83e0:115c:1:f94c:8e92:7ff5:32bf? ([2620:10d:c090:500::4:98ff])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739da0e371esm11166055b3a.168.2025.04.08.15.02.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Apr 2025 15:02:16 -0700 (PDT)
+Message-ID: <b1d373d7-77e5-4341-a685-07a617935db5@gmail.com>
+Date: Tue, 8 Apr 2025 15:02:14 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407-topic-sm8x50-upstream-iris-8550-dt-v1-1-1f7ab3083f49@linaro.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next 0/2] GCPS Spec Compliance Patch Set
+To: Paul Fertser <fercerpav@gmail.com>
+Cc: Sam Mendoza-Jonas <sam@mendozajonas.com>, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, npeacock@meta.com,
+ akozlov@meta.com
+References: <cover.1744048182.git.kalavakunta.hari.prasad@gmail.com>
+ <ee5feee4-e74a-4dc6-ad8e-42cf9c81cb3c@mendozajonas.com>
+ <b1abcf84-e187-468f-a05e-e634e825210c@gmail.com>
+ <Z/VqQVGI6oP5oEzB@home.paul.comp>
+ <1d570fb8-1da0-4aa6-99f5-052adf559091@gmail.com>
+ <Z/V2pCKe8N6Uxa0O@home.paul.comp>
+Content-Language: en-US
+From: Hari Kalavakunta <kalavakunta.hari.prasad@gmail.com>
+In-Reply-To: <Z/V2pCKe8N6Uxa0O@home.paul.comp>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 07, 2025 at 03:03:33PM +0200, neil.armstrong@linaro.org wrote:
-> From: Dikshita Agarwal <quic_dikshita@quicinc.com>
-> 
-> Add DT entries for the sm8550 iris decoder.
-> 
-> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/sm8550.dtsi | 69 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 69 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sm8550.dtsi b/arch/arm64/boot/dts/qcom/sm8550.dtsi
-> index f78d5292c5dd5ec88c8deb0ca6e5078511ac52b7..ab49329a435d87107a4ff20cb7b9eeacbaf63247 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8550.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sm8550.dtsi
-> @@ -3220,6 +3220,75 @@ opp-202000000 {
->  			};
->  		};
->  
-> +		iris: video-codec@aa00000 {
-> +			compatible = "qcom,sm8550-iris";
-> +
-> +			reg = <0 0x0aa00000 0 0xf0000>;
-> +			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +			power-domains = <&videocc VIDEO_CC_MVS0C_GDSC>,
-> +					<&videocc VIDEO_CC_MVS0_GDSC>,
-> +					<&rpmhpd RPMHPD_MXC>,
-> +					<&rpmhpd RPMHPD_MMCX>;
-> +			power-domain-names = "venus", "vcodec0", "mxc", "mmcx";
-> +			operating-points-v2 = <&iris_opp_table>;
-> +
-> +			clocks = <&gcc GCC_VIDEO_AXI0_CLK>,
-> +				 <&videocc VIDEO_CC_MVS0C_CLK>,
-> +				 <&videocc VIDEO_CC_MVS0_CLK>;
-> +			clock-names = "iface", "core", "vcodec0_core";
-> +
-> +			interconnects = <&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ACTIVE_ONLY
-> +					 &config_noc SLAVE_VENUS_CFG QCOM_ICC_TAG_ACTIVE_ONLY>,
-> +					<&mmss_noc MASTER_VIDEO QCOM_ICC_TAG_ALWAYS
-> +					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>;
-> +			interconnect-names = "cpu-cfg", "video-mem";
-> +
-> +			/* FW load region */
-> +			memory-region = <&video_mem>;
-> +
-> +			resets = <&gcc GCC_VIDEO_AXI0_CLK_ARES>;
-> +			reset-names = "bus";
-> +
-> +			iommus = <&apps_smmu 0x1940 0x0000>,
-> +				 <&apps_smmu 0x1947 0x0000>;
-> +			dma-coherent;
+On 4/8/2025 12:19 PM, Paul Fertser wrote:
 
-Given that this node depends on vendor-signed firmware and without
-firmware we're prevented from hitting sync_state, wouldn't it make sense
-to leave it status = "disabled" here, and only enable it in those cases
-where firmware is available and firmware-name specified?
+> In other words, you're testing your code only with simulated data so
+> there's no way to guarantee it's going to work on any real life
+> hardware (as we know hardware doesn't always exactly match the specs)?
+> That's unsettling. Please do mention it in the commit log, it's an
+> essential point. Better yet, consider going a bit off-centre after the
+> regular verification and do a control run on real hardware.
+> 
+> After all, that's what the code is for so if it all possible it's
+> better to know if it does the actual job before merging (to avoid
+> noise from follow-up patches like yours which fix something that never
+> worked because it was never tested).
 
-> +
-> +			iris_opp_table: opp-table {
-> +				compatible = "operating-points-v2";
-> +
-> +				opp-240000000 {
-> +					opp-hz = /bits/ 64 <240000000>;
-> +					required-opps = <&rpmhpd_opp_svs>,
-> +							<&rpmhpd_opp_low_svs>;
-> +				};
-> +
-> +				opp-338000000 {
-> +					opp-hz = /bits/ 64 <338000000>;
-> +					required-opps = <&rpmhpd_opp_svs>,
-> +							<&rpmhpd_opp_svs>;
-> +				};
-> +
-> +				opp-366000000 {
-> +					opp-hz = /bits/ 64 <366000000>;
-> +					required-opps = <&rpmhpd_opp_svs_l1>,
-> +							<&rpmhpd_opp_svs_l1>;
-> +				};
-> +
-> +				opp-444000000 {
-> +					opp-hz = /bits/ 64 <444000000>;
-> +					required-opps = <&rpmhpd_opp_turbo>,
-> +							<&rpmhpd_opp_turbo>;
-> +				};
-> +
-> +				opp-533333334 {
-> +					opp-hz = /bits/ 64 <533333334>;
-> +					required-opps = <&rpmhpd_opp_turbo_l1>,
-> +							<&rpmhpd_opp_turbo_l1>;
-> +				};
-> +			};
-> +		};
-> +
->  		videocc: clock-controller@aaf0000 {
->  			compatible = "qcom,sm8550-videocc";
->  			reg = <0 0x0aaf0000 0 0x10000>;
-> 
-> ---
-> base-commit: 2bdde620f7f2bff2ff1cb7dc166859eaa0c78a7c
-> change-id: 20250407-topic-sm8x50-upstream-iris-8550-dt-2846b493e652
-> 
-> Best regards,
-> -- 
-> Neil Armstrong <neil.armstrong@linaro.org>
-> 
+I would like to request a week's time to integrate a real hardware 
+interface, which will enable me to test and demonstrate end-to-end 
+results. This will also allow me to identify and address any additional 
+issues that may arise during the testing process. Thank you for the 
+feedback.
