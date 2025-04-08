@@ -1,140 +1,115 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FB98244195;
-	Tue,  8 Apr 2025 19:05:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92001244EA1;
+	Tue,  8 Apr 2025 19:05:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744139133; cv=none; b=erQf6SzJ3nJ/Z9WF9TftUy7kqtAxrkgv3sPkh35228P9spvgpm8gjXKgM7ToVqxbGN3xlEhnigiW0Pz9Qovfy6H39hJl+wvgrLk1HS44DT1aAhkoRKeWub1I1H9MzZBHsGofIWbC6QWo7mfrQTxQpgSxwjhK6F7vIh3/zIuO96s=
+	t=1744139135; cv=none; b=AxbyvEhLUpK7Jz0dZLdogstEsH3HhtYdHM+7WYe1U5mYF1lpWTXHZHqdEgu9vJzy31S2nF2z8lX5GQ+sNVDDEVh2kpUa3SqhJrZPyd9GZpNnlhChhFylh7/fcdFEaQ0hoX7vGKTEiThwbIrk//68Zt/N9bJV6t9ACrvrUDqfSdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744139133; c=relaxed/simple;
-	bh=kWJyR/17OkFP3Gny6/lSexyTIjVMLYBZjd/1pSGSGEk=;
+	s=arc-20240116; t=1744139135; c=relaxed/simple;
+	bh=Xv0FjXKuwu34ASaATMpKyf6tN0az2g+m4WiJn32Uo78=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=FAMGBEvG4vWa+6f6yIryrqpmX0G/gqw8JwDpjEPrSdJg+MhhGCtTIJ+MEvLHFItovIglsEoPvb2lCqvvLrXfZjgm8i7smyeyi0n4ggMcAguRYlI+N1/6iznG3QfuqhLM3HWDGcp+L+M5XOlAgfw/plbNt19zUxVsic7Hisykeg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1qoTkxkf; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=q5MmFExe; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=nYJLoPOAVMGIq7nAoK+TTpKXNOVh8qHHfXJaO5xMyxxPn5y0Fagmle2n/4aCJM9AuxHcjtsDgoNxcP+MlnSVg2E7CLvMDx4qmdM8ojXtcHLoAH9dvYgKMkvx5m1MgaUhySsjP0sFJaFK/Oro1dlHDLFfjWIgn3CumSFkHsOhNLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lM+qOySN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IQoOU5in; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1qoTkxkf";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="q5MmFExe"
-Date: Tue, 08 Apr 2025 19:05:30 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lM+qOySN";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IQoOU5in"
+Date: Tue, 08 Apr 2025 19:05:31 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744139130;
+	s=2020; t=1744139132;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QfqSb4hRPM9Am6t3cmfjZ5zvQYJ5srYnkQnW+uwhy3g=;
-	b=1qoTkxkfvZTR0HEccbD1JCQfUcvHKp7gUa6SEfUgfeJfjnnbx4P3uKltsjSZyNbGgLZ09J
-	bqWvsNeQb0ZForWGR3Id4V4wtCg5Doy4IRLm1oKlRVre1gWkaNSUfc99Xk77Tuyf47UZGJ
-	a+xliexjpUkP1xckfWVS++xq+0EQHbV3UCxfJ2XSBCYxqYI4LvizaWlYzWFQ6fWK9AKH0l
-	ieVykYpKLQzS3feIr3WFNeVNhvx57ag4aDSK5zA92Z2M0umHEAFAUimp78YrjE043uXpT3
-	5MMo0+ccV3bkzc/Tkz06jza60WqPqfQaxW9QNa0PaMAJ31WE7k59kM3//k1Pmw==
+	bh=7hTONwpnheu+TbCwJZx1Bn2lhv10zXsrzHHi1Tyw8XE=;
+	b=lM+qOySNRaGZF+3paQN9NY8ppwGO8YNdr9T3IdBVP5PP5A/VOxPl/yAhhzsB78NHCcyJKn
+	bJZ2la2vHFrt4Aaj+C0cK357f09DQpI+LG74fy4frdQ7sXoegy8mp9C8lmZzTVQqVZkLgC
+	EtkFcoWuMrOi9FDItLyFQLKrRq6medVrez0tkq8+bM7CPFT8fiQEY8nuGVksNGgmVuVHHj
+	8E4cf/WZgxoyvxTofaanmasIvr+Gb083a43WvRKsvEI+oI8kNhwQp4LhyCrii79EzpYNvj
+	UTEyldw6OApWfSD+6hzeulDbpX010Pe15yBOFiWNiJr72zMCex+9JJZB9k4VEw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744139130;
+	s=2020e; t=1744139132;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QfqSb4hRPM9Am6t3cmfjZ5zvQYJ5srYnkQnW+uwhy3g=;
-	b=q5MmFExehnujvcyjNrLlg9aqayaq0FRAo8/URqHeliT2Nyu80/0JcfyhRJYAVS8IDPc9oB
-	SNHenZRtOmMOycBQ==
-From: "tip-bot2 for Phil Auld" <tip-bot2@linutronix.de>
+	bh=7hTONwpnheu+TbCwJZx1Bn2lhv10zXsrzHHi1Tyw8XE=;
+	b=IQoOU5in5MAZLQIw7Db2xLj34IJktCkrZ54WdJ2qvjw0FM9Peoy6AhKx70zn0Xp5q5ZqOs
+	YLZgpLGJgNqKYRAA==
+From: tip-bot2 for Michal =?utf-8?q?Koutn=C3=BD?= <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: sched/core] sched/isolation: Make use of more than one housekeeping cpu
-Cc: Phil Auld <pauld@redhat.com>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- Waiman Long <longman@redhat.com>, Vishal Chourasia <vishalc@linux.ibm.com>,
- Frederic Weisbecker <frederic@kernel.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250218184618.1331715-1-pauld@redhat.com>
-References: <20250218184618.1331715-1-pauld@redhat.com>
+Subject: [tip: sched/core] sched: Add annotations to RT_GROUP_SCHED fields
+Cc: mkoutny@suse.com, "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250310170442.504716-10-mkoutny@suse.com>
+References: <20250310170442.504716-10-mkoutny@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174413913011.31282.4940467706477731730.tip-bot2@tip-bot2>
+Message-ID: <174413913152.31282.321178145303822403.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     6432e163ba1b7d80b5876792ce53e511f041ab91
-Gitweb:        https://git.kernel.org/tip/6432e163ba1b7d80b5876792ce53e511f041ab91
-Author:        Phil Auld <pauld@redhat.com>
-AuthorDate:    Tue, 18 Feb 2025 18:46:18 
+Commit-ID:     0ab94c3242742bfb540abeedb6bb98440146ac5b
+Gitweb:        https://git.kernel.org/tip/0ab94c3242742bfb540abeedb6bb9844014=
+6ac5b
+Author:        Michal Koutn=C3=BD <mkoutny@suse.com>
+AuthorDate:    Mon, 10 Mar 2025 18:04:41 +01:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
 CommitterDate: Tue, 08 Apr 2025 20:55:55 +02:00
 
-sched/isolation: Make use of more than one housekeeping cpu
+sched: Add annotations to RT_GROUP_SCHED fields
 
-The exising code uses housekeeping_any_cpu() to select a cpu for
-a given housekeeping task. However, this often ends up calling
-cpumask_any_and() which is defined as cpumask_first_and() which has
-the effect of alyways using the first cpu among those available.
+Update comments to ease RT throttling understanding.
 
-The same applies when multiple NUMA nodes are involved. In that
-case the first cpu in the local node is chosen which does provide
-a bit of spreading but with multiple HK cpus per node the same
-issues arise.
-
-We have numerous cases where a single HK cpu just cannot keep up
-and the remote_tick warning fires. It also can lead to the other
-things (orchastration sw, HA keepalives etc) on the HK cpus getting
-starved which leads to other issues.  In these cases we recommend
-increasing the number of HK cpus.  But... that only helps the
-userspace tasks somewhat. It does not help the actual housekeeping
-part.
-
-Spread the HK work out by having housekeeping_any_cpu() and
-sched_numa_find_closest() use cpumask_any_and_distribute()
-instead of cpumask_any_and().
-
-Signed-off-by: Phil Auld <pauld@redhat.com>
+Signed-off-by: Michal Koutn=C3=BD <mkoutny@suse.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Waiman Long <longman@redhat.com>
-Reviewed-by: Vishal Chourasia <vishalc@linux.ibm.com>
-Acked-by: Frederic Weisbecker <frederic@kernel.org>
-Link: https://lore.kernel.org/r/20250218184618.1331715-1-pauld@redhat.com
+Link: https://lkml.kernel.org/r/20250310170442.504716-10-mkoutny@suse.com
 ---
- kernel/sched/isolation.c | 2 +-
- kernel/sched/topology.c  | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ kernel/sched/sched.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
-index 81bc8b3..93b038d 100644
---- a/kernel/sched/isolation.c
-+++ b/kernel/sched/isolation.c
-@@ -40,7 +40,7 @@ int housekeeping_any_cpu(enum hk_type type)
- 			if (cpu < nr_cpu_ids)
- 				return cpu;
- 
--			cpu = cpumask_any_and(housekeeping.cpumasks[type], cpu_online_mask);
-+			cpu = cpumask_any_and_distribute(housekeeping.cpumasks[type], cpu_online_mask);
- 			if (likely(cpu < nr_cpu_ids))
- 				return cpu;
- 			/*
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index b334f25..bbc2fc2 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -2098,7 +2098,7 @@ int sched_numa_find_closest(const struct cpumask *cpus, int cpu)
- 	for (i = 0; i < sched_domains_numa_levels; i++) {
- 		if (!masks[i][j])
- 			break;
--		cpu = cpumask_any_and(cpus, masks[i][j]);
-+		cpu = cpumask_any_and_distribute(cpus, masks[i][j]);
- 		if (cpu < nr_cpu_ids) {
- 			found = cpu;
- 			break;
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 898aab7..c5a6a50 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -813,17 +813,17 @@ struct rt_rq {
+=20
+ #ifdef CONFIG_RT_GROUP_SCHED
+ 	int			rt_throttled;
+-	u64			rt_time;
+-	u64			rt_runtime;
++	u64			rt_time; /* consumed RT time, goes up in update_curr_rt */
++	u64			rt_runtime; /* allotted RT time, "slice" from rt_bandwidth, RT sharin=
+g/balancing */
+ 	/* Nests inside the rq lock: */
+ 	raw_spinlock_t		rt_runtime_lock;
+=20
+ 	unsigned int		rt_nr_boosted;
+=20
+-	struct rq		*rq;
++	struct rq		*rq; /* this is always top-level rq, cache? */
+ #endif
+ #ifdef CONFIG_CGROUP_SCHED
+-	struct task_group	*tg;
++	struct task_group	*tg; /* this tg has "this" rt_rq on given CPU for runnabl=
+e entities */
+ #endif
+ };
+=20
