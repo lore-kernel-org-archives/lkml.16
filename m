@@ -1,309 +1,237 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 686421CA9C
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 10:17:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3DE020459F;
+	Tue,  8 Apr 2025 10:18:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744107480; cv=none; b=A7S93rpgW5K0XqICLzSAd3XvIUHOkJPNRB8nLeEg3KkEyP8zp+XYA58eOiJgGUZLpWvprjKctdI1hMvWZWTsGLtxGEPGr/Z8tC5d+D69PaXmynmS8MZSAIIkSYuQmwhlrgvYENYyDxkglIdmAwzKCt4TB5piSiw2Q9FEb3n8b5s=
+	t=1744107506; cv=none; b=hTJGPskkdr2j4YHuO47zNqewAICMylomr+1z+qIhOAaz/j+GNjefGRevIFde6VEhkZ/h9GsQzzZa7m5I3gf4LaZ/p2QOuz3X9PV2mnInzaXkSebgigDGLQnrdf5o/xzHg63DU94T/JYKILSYJysIhh4wBup7nrC/R8l99uxpx+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744107480; c=relaxed/simple;
-	bh=2kBfG6+RWoHOgwxBK3FBqUDxjGUCa6Fs9eMz6VWhZro=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GYRKw/+J0azA4N1MkUzgi9As89XaFMbnUxH+a76kbctaYhIc6z9n/OWjD7nvPx6JgfEbgIX+azadpyPX1oeiFndjcaqQTLLVDRop+6IqMOA+jMU3AgIv3L5Nm6jhwivvR3CnVC4Qt4YVnzAV8hzZZS6HlV/mC8LB7xSld8Wl/n4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=W+ANls4T; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744107506; c=relaxed/simple;
+	bh=d8JQ+MyNMKTBF2IizxU/b6I/RWItXomgcUIW0s0VUKU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=btmOqF4aUHIF6vsefuliI06Afi5VwG7yKZF+75ZC4Ufjcjaf3t9m7BAdj8JbC0qDCvHU+w4swS2QkWLdJ/ALPnHzzcmVPYWYP7AmzY2kWRD9Img/0Nc+djzcXgs0BJb0zUVxLDYAIGqJBTfbOUBrf1eYMgvcVLFiQPoY/py6Pps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hvj3SFXQ; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W+ANls4T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744107476;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=+QXjoSO++61Rw3lEBx9/YrC1Wu2Hx1g0Z2dV7dOogaI=;
-	b=W+ANls4TjCT8UmnPfjzOf09Rkn5osCXeNehrQr3HYrtiZNa8rc1c+UCO866NnRx1bVr6pa
-	t9+W3Sz8KalqIeepIK/HMNN77xqp6umdGD9Gq2lgUyDZZRNgIDCSpQiLdTHeCAcrKpuN7F
-	i96mn3FAI2dbcW4FtpGg1RPGrDXok3k=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-683-o9IU1DhiOgiEJsHfpljDuA-1; Tue, 08 Apr 2025 06:17:55 -0400
-X-MC-Unique: o9IU1DhiOgiEJsHfpljDuA-1
-X-Mimecast-MFC-AGG-ID: o9IU1DhiOgiEJsHfpljDuA_1744107474
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43d22c304adso29226625e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 03:17:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hvj3SFXQ"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-54b0d638e86so6502483e87.1;
+        Tue, 08 Apr 2025 03:18:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744107503; x=1744712303; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GBkkvpBAwxMLDl3JDRufEPMKoNS7FiCw8zDnhwNt4xY=;
+        b=Hvj3SFXQdplfaZiCsb292KpDlDU5un5GcQINhj1K0FX1cpsnQOtV/3EwKed3vTYEYv
+         9GWQ5w62wIYB3DkYeadmSjycwphTEsafBsp45JqY9+cI4K7ReNZ/peN2KlSLpPAa2iAv
+         gHu/gb+y09yjNjMAFuM66sV0SXx6ppQrXbT/x8IIdi8PGv4/e294PnurkwKn4GO5CkYu
+         22Z2W1Ci0XW8anCXnZ2QxSydEZCt3CdRZOIj5eMpn3UMI41a6/uogcgnmJQFAhM32IlH
+         Vxy1brjULCm1X5WElbT4mf2UriOhO6dvJ9MPy41p489adBbXgTKyq3pHcRCuRt4tgdQv
+         9h5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744107474; x=1744712274;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=+QXjoSO++61Rw3lEBx9/YrC1Wu2Hx1g0Z2dV7dOogaI=;
-        b=eMM6Lt3ya0Yt2OsjinXqWU3Gc7llWxWhYcC4HOYtwb6rUazqdZwXQhQWpjc2pZt37r
-         AFJ81RYvXCCpNihnvQysUGxTWAoMCtH+5KguWlR7GhD0ZZKzPXuJ4JU9MeD/FDV97enJ
-         mHKCua41a7XqaCBob1uZ4lt3ti0Cuv4D4h9TS0udFD4LrcmtboRc9UbYmkpDeFLJxhZH
-         blOelMNO14i6rUPrdTX3vUi45rTiMreFBaS2Q5kmD55PZLR71bFiWOAb0iSHkLiwXN9w
-         ibTXuamEcbYeW+HdWTZSW14E5MMAmM5FVJo28mwjmpWivC1Yx5ok8yVzelP5Ey9Zqv2S
-         Daqg==
-X-Forwarded-Encrypted: i=1; AJvYcCV5H8adImBxSxwE6EUxk3i2ozr/lKBuZRaO1JRhZyhBfc7vWU/DQNIqNeDPqCdoah2aXkKw2VVFsFNGzzQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxB/jbSAMg5Lmqplb1iG1lEvd742PcTxGnx0fU+lER6MmplU0/k
-	hEvVHo7wW6p5IedS4bXWxQIzauC9fSRRgEHek5lGFW02Eh+SrchL14v79wveM19qkDEBgSVfabU
-	p6vL7PFSCYOsytJhhgWlGq3wOzxnBqrlzIeoj7+C2R58IvnaycxwFXkGPRkRTmg==
-X-Gm-Gg: ASbGncsuUeBnWIfBYce7mWK69Z9TffdhM2cYwmN34ZuIPzSyAfO5OEuB4LV/IVi+L3W
-	+s9X3gk/AOECaWx8BQxlCGEOM7AtqyrTS1damgocrRCvO5CS5rKTPAYn+MdsrYjxwU2Rpt3W7cV
-	tOgWxDC4J2Zrum3xNlYFJUNGu3vWVasOQ/CSWE57bzm7r9CgscZacNX4KR4DJMYNWdwV17mVDm/
-	eRzcG6m60Si3X4mCwt18f/7eIPIrBXLbRei6zRyZg5t7/Yl0Kwzt/tIP+9uDb1RAsMGcMtLJBMA
-	B6gtIlBOegjkMQMzpOmX9yCZegqt74C0cCUiCK3U0T5z+k28x3dQNJowZvMgnURWHaOnpII6iQn
-	Bs45Aqrv/7gq3jdkkEAqg62GuLOTOlY0Dc9CtCrN9
-X-Received: by 2002:a05:600c:6a8e:b0:43d:174:2668 with SMTP id 5b1f17b1804b1-43f0e4169ecmr22305925e9.0.1744107474047;
-        Tue, 08 Apr 2025 03:17:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGvhf/O4SrDVxe52Q5rxDWw5mMOxlWyYd3m7dxYtUfxFz9WvM4KB6/eS6EW0gyvVNLEaYkyqg==
-X-Received: by 2002:a05:600c:6a8e:b0:43d:174:2668 with SMTP id 5b1f17b1804b1-43f0e4169ecmr22305645e9.0.1744107473616;
-        Tue, 08 Apr 2025 03:17:53 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c707:4f00:a44a:5ad6:765a:635? (p200300cbc7074f00a44a5ad6765a0635.dip0.t-ipconnect.de. [2003:cb:c707:4f00:a44a:5ad6:765a:635])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d66csm14985167f8f.63.2025.04.08.03.17.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Apr 2025 03:17:53 -0700 (PDT)
-Message-ID: <92ff4f7f-90d2-48ab-8f7d-7fc3485276b5@redhat.com>
-Date: Tue, 8 Apr 2025 12:17:52 +0200
+        d=1e100.net; s=20230601; t=1744107503; x=1744712303;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GBkkvpBAwxMLDl3JDRufEPMKoNS7FiCw8zDnhwNt4xY=;
+        b=a1ytr2E4ylHlK3QrELkUZK4GQ24WqXetu+aTT/3OE+/nXQztE0HVJcd8Fu425RNEuW
+         ZicsuEzsuCn3SSpy9JDC+b47u5YDjwF3iXxH0zBmP4Kk7We5BHSyr9UrNVur7xn3mRIN
+         L6o/Mbux/ZYmfx79v4zWUr0mzTmlsh1AA0G8gUZuo9Yxg2OGuTf4bMAAz6VESrS7edK7
+         xO0CEY6whLM95SzE4W8sh5bWwMlvwWrS5ER2DKhTBlhca0ReHircoJWYTZRmuYdBz7PN
+         MgDe9M61eMCuePmCZvnoFG26OLdlKxpRT2dKcX4IRaJ54zLmvZBSPL9HzmlbHhMOpZZV
+         hPtw==
+X-Forwarded-Encrypted: i=1; AJvYcCU85qHV+eNmeRTqIniiSnu05p2RVfFmygnhDtKxqrci2nJpdwjZnVE4VCbMp4aVOWEKPtc9GaxqHDxy@vger.kernel.org, AJvYcCUXBqYMjaVm24wte2lZjOMWvXsjUfjNv5Of1z3tBYQo6tg+e+sK0spaXl/r1qg8O0dXW4flMz5c7D7Q8/c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlOnbN5zTriD5FOhzWaPIhjLlu0+mlNtv5P67KpZU3CFtM7Bus
+	pKssxLYXey1shTInIque+Z3NmsQd8kMdV9Go83BuOrrO6Q96nAxa
+X-Gm-Gg: ASbGnct2P3ljdwd+1e0E/GoQhwDn1Ky1cSWYGjWqFaJRSqqhihP4g2R7aNHt7a/08Va
+	L+VIH2SE2qaM/kd81f6+XXqBfqqR25mPTNBQdIpAhBv1AqRW81wCDNvqk92tayNzOQz5DrnfvPr
+	RXvSxqCeK7rBNHPjO86IvH4EFiziIUe3WDw3qI5tshKEW7Y38d/cbwMpUYu7zyvmMEx5sSb2tUh
+	qEZHDyDyA0ypPwatLuWJNkSxwDAPLRMZyQ5PCUusl3HkDL7dwwA4bT1GMxXFqVfuzke9KxNhg6p
+	ZUKmJEFDBKdPi3VAztH0IbjXIH2aL70bXU2TvO0AgkLXnKtc0uamClrYxThU6AGonsS9K37r
+X-Google-Smtp-Source: AGHT+IE33f1qbai7AfYia4ni2e8TuOOEK5WgNlxelgpVl5tugeQ44eLgh1uzbezRxcSqsbh50XLuIQ==
+X-Received: by 2002:a05:6512:1281:b0:549:39ca:13fc with SMTP id 2adb3069b0e04-54c227ff6ddmr4769141e87.49.1744107502358;
+        Tue, 08 Apr 2025 03:18:22 -0700 (PDT)
+Received: from foxbook (adtq195.neoplus.adsl.tpnet.pl. [79.185.228.195])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54c1e67244fsm1463149e87.247.2025.04.08.03.18.21
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Tue, 08 Apr 2025 03:18:21 -0700 (PDT)
+Date: Tue, 8 Apr 2025 12:18:17 +0200
+From: =?UTF-8?B?TWljaGHFgg==?= Pecio <michal.pecio@gmail.com>
+To: Alan Stern <stern@rowland.harvard.edu>, Mathias Nyman
+ <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Paul Menzel <pmenzel@molgen.mpg.de>, Mathias Nyman
+ <mathias.nyman@linux.intel.com>, linux-usb@vger.kernel.org, LKML
+ <linux-kernel@vger.kernel.org>
+Subject: [PATCH RFC RFT] usb: hcd: Add a usb_device argument to
+ hc_driver.endpoint_reset()
+Message-ID: <20250408121817.6ae8defd@foxbook>
+In-Reply-To: <3efb52b8-0974-4125-a344-00f459fbe4e4@rowland.harvard.edu>
+References: <c279bd85-3069-4841-b1be-20507ac9f2d7@molgen.mpg.de>
+	<b356f743-44b5-4f48-a289-fae0afe106ff@linux.intel.com>
+	<84b400f8-2943-44e0-8803-f3aac3b670af@molgen.mpg.de>
+	<20250406002311.2a76fc64@foxbook>
+	<ade0d77a-651a-4b03-bf21-00369fdc22f8@rowland.harvard.edu>
+	<20250406095008.0dbfd586@foxbook>
+	<20250406175032.12b7d284@foxbook>
+	<14197657-0a0f-45a8-ac36-dd37b16a1565@rowland.harvard.edu>
+	<20250407074905.2d236fb9@foxbook>
+	<3efb52b8-0974-4125-a344-00f459fbe4e4@rowland.harvard.edu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] mm,slub: Do not special case N_NORMAL nodes for
- slab_nodes
-To: Oscar Salvador <osalvador@suse.de>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- Vlastimil Babka <vbabka@suse.cz>, Harry Yoo <harry.yoo@oracle.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-cxl@vger.kernel.org
-References: <20250408084153.255762-1-osalvador@suse.de>
- <20250408084153.255762-2-osalvador@suse.de>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250408084153.255762-2-osalvador@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 08.04.25 10:41, Oscar Salvador wrote:
-> Currently, slab_mem_going_going_callback() checks whether the node has
-> N_NORMAL memory in order to be set in slab_nodes.
-> While it is true that gettind rid of that enforcing would mean
-> ending up with movables nodes in slab_nodes, the memory waste that comes
-> with that is negligible.
-> 
-> So stop checking for status_change_nid_normal and just use status_change_nid
-> instead which works for both types of memory.
-> 
-> Also, once we allocate the kmem_cache_node cache  for the node in
-> slab_mem_online_callback(), we never deallocate it in
-> slab_mem_off_callback() when the node goes memoryless, so we can just
-> get rid of it.
-> 
-> The only side effect is that we will stop clearing the node from slab_nodes.
-> 
+xHCI needs usb_device in this callback so it employed some hacks that
+proved unreliable in the long term and made the code a little tricky.
 
-Feel free to add a Suggested-by: if you think it applies.
+Make USB core supply it directly and simplify xhci_endpoint_reset().
+Use xhci_check_args() to prevent resetting emulated endpoints of root
+hubs and to deduplicate argument validation and improve debuggability.
 
+Update ehci_endpoint_reset(), which is the only other such callback,
+to accept (and ignore) the new argument.
 
-Do we have to take care of the N_NORMAL_MEMORY check in kmem_cache_init() ? Likely it
-would have to be a N_MEMORY check.
+This fixes the root cause of a 6.15-rc1 regression reported by Paul,
+which I was able to reproduce locally. It also solves the general
+problem of xhci_endpoint_reset() becoming a no-op after device reset
+or changing configuration or altsetting. Although nobody complained
+because halted endpoints are reset automatically by xhci_hcd, it was
+a bug - sometimes class drivers want to reset not halted endpoints.
 
-
-But, I was wondering if we could get rid of the "slab_nodes" thingy as a first step?
-
- From 518a2b83a9c5bd85d74ddabbc36ce5d181a88ed6 Mon Sep 17 00:00:00 2001
-From: David Hildenbrand <david@redhat.com>
-Date: Tue, 8 Apr 2025 12:16:13 +0200
-Subject: [PATCH] tmp
-
-Signed-off-by: David Hildenbrand <david@redhat.com>
+Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Closes: https://lore.kernel.org/linux-usb/c279bd85-3069-4841-b1be-20507ac9f2d7@molgen.mpg.de/
+Signed-off-by: Michal Pecio <michal.pecio@gmail.com>
 ---
-  mm/slub.c | 56 ++++---------------------------------------------------
-  1 file changed, 4 insertions(+), 52 deletions(-)
 
-diff --git a/mm/slub.c b/mm/slub.c
-index b46f87662e71d..afe31149e7f4e 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -445,14 +445,6 @@ static inline struct kmem_cache_node *get_node(struct kmem_cache *s, int node)
-  	for (__node = 0; __node < nr_node_ids; __node++) \
-  		 if ((__n = get_node(__s, __node)))
-  
--/*
-- * Tracks for which NUMA nodes we have kmem_cache_nodes allocated.
-- * Corresponds to node_state[N_NORMAL_MEMORY], but can temporarily
-- * differ during memory hotplug/hotremove operations.
-- * Protected by slab_mutex.
-- */
--static nodemask_t slab_nodes;
+Is such change acceptable to interested parties?
+
+It solves the problem completely for me, because as Alan said,
+core calls endpoint_reset() after installing a new config or alt
+to notify HCDs that ignore reset_device(), and also those which
+implement it incompletely, I guess ;)
+
+Unlike clearing EP_STALLED on reset_device() or drop_endpoint(),
+this also fixes cases when another STALL happens after device
+reset and the device is not reset again. For example, I see that
+when I insert a card after the original problem happens.
+
+At this point I can insert or remove the card, plug or unplug
+the reader and reload ums-realtek in any order, it all works.
+
+Paul, could you check if this patch works on your hardware too?
+
+ drivers/usb/core/hcd.c      |  2 +-
+ drivers/usb/host/ehci-hcd.c |  3 ++-
+ drivers/usb/host/xhci.c     | 27 ++++++++-------------------
+ include/linux/usb/hcd.h     |  2 +-
+ 4 files changed, 12 insertions(+), 22 deletions(-)
+
+diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
+index a63c793bac21..d2433807a397 100644
+--- a/drivers/usb/core/hcd.c
++++ b/drivers/usb/core/hcd.c
+@@ -1986,7 +1986,7 @@ void usb_hcd_reset_endpoint(struct usb_device *udev,
+ 	struct usb_hcd *hcd = bus_to_hcd(udev->bus);
+ 
+ 	if (hcd->driver->endpoint_reset)
+-		hcd->driver->endpoint_reset(hcd, ep);
++		hcd->driver->endpoint_reset(hcd, udev, ep);
+ 	else {
+ 		int epnum = usb_endpoint_num(&ep->desc);
+ 		int is_out = usb_endpoint_dir_out(&ep->desc);
+diff --git a/drivers/usb/host/ehci-hcd.c b/drivers/usb/host/ehci-hcd.c
+index 6d1d190c914d..813cdedb14ab 100644
+--- a/drivers/usb/host/ehci-hcd.c
++++ b/drivers/usb/host/ehci-hcd.c
+@@ -1044,7 +1044,8 @@ ehci_endpoint_disable (struct usb_hcd *hcd, struct usb_host_endpoint *ep)
+ }
+ 
+ static void
+-ehci_endpoint_reset(struct usb_hcd *hcd, struct usb_host_endpoint *ep)
++ehci_endpoint_reset(struct usb_hcd *hcd, struct usb_device *udev,
++		    struct usb_host_endpoint *ep)
+ {
+ 	struct ehci_hcd		*ehci = hcd_to_ehci(hcd);
+ 	struct ehci_qh		*qh;
+diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+index 0452b8d65832..5bf89ba7e2b8 100644
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -3161,11 +3161,10 @@ static void xhci_endpoint_disable(struct usb_hcd *hcd,
+  * resume. A new vdev will be allocated later by xhci_discover_or_reset_device()
+  */
+ 
+-static void xhci_endpoint_reset(struct usb_hcd *hcd,
++static void xhci_endpoint_reset(struct usb_hcd *hcd, struct usb_device *udev,
+ 		struct usb_host_endpoint *host_ep)
+ {
+ 	struct xhci_hcd *xhci;
+-	struct usb_device *udev;
+ 	struct xhci_virt_device *vdev;
+ 	struct xhci_virt_ep *ep;
+ 	struct xhci_input_control_ctx *ctrl_ctx;
+@@ -3175,7 +3174,12 @@ static void xhci_endpoint_reset(struct usb_hcd *hcd,
+ 	u32 ep_flag;
+ 	int err;
+ 
++	err = xhci_check_args(hcd, udev, host_ep, 1, true, __func__);
++	if (err <= 0)
++		return;
++
+ 	xhci = hcd_to_xhci(hcd);
++	vdev = xhci->devs[udev->slot_id];
+ 	ep_index = xhci_get_endpoint_index(&host_ep->desc);
+ 
+ 	/*
+@@ -3185,28 +3189,13 @@ static void xhci_endpoint_reset(struct usb_hcd *hcd,
+ 	 */
+ 	if (usb_endpoint_xfer_control(&host_ep->desc) && ep_index == 0) {
+ 
+-		udev = container_of(host_ep, struct usb_device, ep0);
+-		if (udev->speed != USB_SPEED_FULL || !udev->slot_id)
+-			return;
 -
-  #ifndef CONFIG_SLUB_TINY
-  /*
-   * Workqueue used for flush_cpu_slab().
-@@ -3706,10 +3698,9 @@ static void *___slab_alloc(struct kmem_cache *s, gfp_t gfpflags, int node,
-  	if (!slab) {
-  		/*
-  		 * if the node is not online or has no normal memory, just
--		 * ignore the node constraint
-+		 * ignore the node constraint.
-  		 */
--		if (unlikely(node != NUMA_NO_NODE &&
--			     !node_isset(node, slab_nodes)))
-+		if (unlikely(node != NUMA_NO_NODE && !node_state(node, N_NORMAL_MEMORY)))
-  			node = NUMA_NO_NODE;
-  		goto new_slab;
-  	}
-@@ -3719,7 +3710,7 @@ static void *___slab_alloc(struct kmem_cache *s, gfp_t gfpflags, int node,
-  		 * same as above but node_match() being false already
-  		 * implies node != NUMA_NO_NODE
-  		 */
--		if (!node_isset(node, slab_nodes)) {
-+		if (!node_state(node, N_NORMAL_MEMORY)) {
-  			node = NUMA_NO_NODE;
-  		} else {
-  			stat(s, ALLOC_NODE_MISMATCH);
-@@ -5623,7 +5614,7 @@ static int init_kmem_cache_nodes(struct kmem_cache *s)
-  {
-  	int node;
-  
--	for_each_node_mask(node, slab_nodes) {
-+	for_each_node_state(node, N_NORMAL_MEMORY) {
-  		struct kmem_cache_node *n;
-  
-  		if (slab_state == DOWN) {
-@@ -6164,30 +6155,6 @@ static int slab_mem_going_offline_callback(void *arg)
-  	return 0;
-  }
-  
--static void slab_mem_offline_callback(void *arg)
--{
--	struct memory_notify *marg = arg;
--	int offline_node;
+-		vdev = xhci->devs[udev->slot_id];
+-		if (!vdev || vdev->udev != udev)
+-			return;
 -
--	offline_node = marg->status_change_nid_normal;
+-		xhci_check_ep0_maxpacket(xhci, vdev);
++		if (udev->speed == USB_SPEED_FULL)
++			xhci_check_ep0_maxpacket(xhci, vdev);
+ 
+ 		/* Nothing else should be done here for ep0 during ep reset */
+ 		return;
+ 	}
+ 
+-	if (!host_ep->hcpriv)
+-		return;
+-	udev = (struct usb_device *) host_ep->hcpriv;
+-	vdev = xhci->devs[udev->slot_id];
 -
--	/*
--	 * If the node still has available memory. we need kmem_cache_node
--	 * for it yet.
--	 */
--	if (offline_node < 0)
+-	if (!udev->slot_id || !vdev)
 -		return;
 -
--	mutex_lock(&slab_mutex);
--	node_clear(offline_node, slab_nodes);
--	/*
--	 * We no longer free kmem_cache_node structures here, as it would be
--	 * racy with all get_node() users, and infeasible to protect them with
--	 * slab_mutex.
--	 */
--	mutex_unlock(&slab_mutex);
--}
--
-  static int slab_mem_going_online_callback(void *arg)
-  {
-  	struct kmem_cache_node *n;
-@@ -6229,11 +6196,6 @@ static int slab_mem_going_online_callback(void *arg)
-  		init_kmem_cache_node(n);
-  		s->node[nid] = n;
-  	}
--	/*
--	 * Any cache created after this point will also have kmem_cache_node
--	 * initialized for the new node.
--	 */
--	node_set(nid, slab_nodes);
-  out:
-  	mutex_unlock(&slab_mutex);
-  	return ret;
-@@ -6253,8 +6215,6 @@ static int slab_memory_callback(struct notifier_block *self,
-  		break;
-  	case MEM_OFFLINE:
-  	case MEM_CANCEL_ONLINE:
--		slab_mem_offline_callback(arg);
--		break;
-  	case MEM_ONLINE:
-  	case MEM_CANCEL_OFFLINE:
-  		break;
-@@ -6309,7 +6269,6 @@ void __init kmem_cache_init(void)
-  {
-  	static __initdata struct kmem_cache boot_kmem_cache,
-  		boot_kmem_cache_node;
--	int node;
-  
-  	if (debug_guardpage_minorder())
-  		slub_max_order = 0;
-@@ -6321,13 +6280,6 @@ void __init kmem_cache_init(void)
-  	kmem_cache_node = &boot_kmem_cache_node;
-  	kmem_cache = &boot_kmem_cache;
-  
--	/*
--	 * Initialize the nodemask for which we will allocate per node
--	 * structures. Here we don't need taking slab_mutex yet.
--	 */
--	for_each_node_state(node, N_NORMAL_MEMORY)
--		node_set(node, slab_nodes);
--
-  	create_boot_cache(kmem_cache_node, "kmem_cache_node",
-  			sizeof(struct kmem_cache_node),
-  			SLAB_HWCACHE_ALIGN | SLAB_NO_OBJ_EXT, 0, 0);
+ 	ep = &vdev->eps[ep_index];
+ 
+ 	spin_lock_irqsave(&xhci->lock, flags);
+diff --git a/include/linux/usb/hcd.h b/include/linux/usb/hcd.h
+index ac95e7c89df5..179c85337eff 100644
+--- a/include/linux/usb/hcd.h
++++ b/include/linux/usb/hcd.h
+@@ -304,7 +304,7 @@ struct hc_driver {
+ 
+ 	/* (optional) reset any endpoint state such as sequence number
+ 	   and current window */
+-	void	(*endpoint_reset)(struct usb_hcd *hcd,
++	void	(*endpoint_reset)(struct usb_hcd *hcd, struct usb_device *udev,
+ 			struct usb_host_endpoint *ep);
+ 
+ 	/* root hub support */
 -- 
 2.48.1
-
-
-Not sure if there are any races to consider ... just an idea.
-
--- 
-Cheers,
-
-David / dhildenb
-
