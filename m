@@ -1,31 +1,31 @@
-Received: from out0-215.mail.aliyun.com (out0-215.mail.aliyun.com [140.205.0.215])
+Received: from out187-1.us.a.mail.aliyun.com (out187-1.us.a.mail.aliyun.com [47.90.187.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7996223AD;
-	Tue,  8 Apr 2025 04:51:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.215
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B96B23AD;
+	Tue,  8 Apr 2025 04:54:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.187.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744087924; cv=none; b=rPY+ZKtbzzPEsFZWjNc1paiFrTetD15MByLJz3FyD8HrTQD3cvW2gLHx3AfV9YuTJ5E8LmtCsPRSSbUItgdclTngqXXxDYOmmqUoG2GuG7y1t9xRGEohlFIBN85O0Bw4ZL92ADc33IHBa7f7rNCcxIjlov03JJ/l0u2OS4pVTlo=
+	t=1744088050; cv=none; b=Jlx3h5F6Enu1kB4g4Pk4iBAYSUurwFk23L3FSxi+AacjnaCmx5NKXo5rTciSdvmn3PZD3/zooDx9pyZyoGst/3u1f0cwI8i+SU81/h5o5R1j4aZbZsy0vDlbvb39PwRApVHOEpdT+o1mL8+O4uRKDpiVTPYRap4YR2RtxTo9Wew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744087924; c=relaxed/simple;
-	bh=OwgXVT4MJwOJzqVS32ZbXbe5I0UVIFilWS1LKeJRDhQ=;
+	s=arc-20240116; t=1744088050; c=relaxed/simple;
+	bh=THts4x8lAg2CXDirVmNIxj8FwPRaS1SHPGFkz2avijk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sfAyJhfIcJ4zHA1G2VtJdW9JtBndw4/IFKD2cL//WsIjigm2g2uzi5cbo9P3XcSswQKiBWIG5vhh1pQnqnl9NtTieHon66AUgEE/l1jHMRf9KEkxnRcU4Pjc7vLqntYRdK/wvopy29j42P/V99uS9/tzBtTIme85L5rnkTf5bnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=mylrOe9U; arc=none smtp.client-ip=140.205.0.215
+	 In-Reply-To:Content-Type; b=l99hEVpZL2y4NHRVCZLENYH7by0WUTFq6FlFiLSZDPvI9PxxyBAcCs0wy2KZjCfPu1u9k4BboUGHcXSjFRiUktp33TuCme0dXH2zYoDdLybBSUIVFyrWNsTXTc5l8pz7spdjfDdToQikXzBnzQRVkNvbGwml9jfQT68FMvvN93Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=aKN+zk1N; arc=none smtp.client-ip=47.90.187.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="mylrOe9U"
+	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="aKN+zk1N"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=antgroup.com; s=default;
-	t=1744087917; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=bwkiWIhCqcHRhh2byO+xlA819heH6mmGnapUcjYd90c=;
-	b=mylrOe9U5aCYivBuUNzS4swS3Oi3MRE//1bm+PDhXcEEJv8IUVknjPZFjKngN3fqo2E54sZ5fc4AxRJhitafm/Z2fwp4F5QlTe0SQzcwd/2Gv54ciSsjYdqMDnkHwfFJE5RzWPJ7TR7r2DXAVx+kyHejr1c/mMgSz/qJG3y18TY=
-Received: from 30.174.97.68(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.cGaosiy_1744086978 cluster:ay29)
+	t=1744088033; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=xc3RQHbbWhjaENeV54tCo3uz4MbXYhwQLPGC2Mc716Q=;
+	b=aKN+zk1NYCD9hjqg8NZg8UBPEH2BFHOYt1yq8g1110dyxzriOgELfxseNJHJ+LeKRMwf0WpOvIVyH3FDPpoE+QahzuhlOjFRftSBB7qPX2e0ESG1fs07pDwO2rzYxlYjL+1zjxoH9TkJskbl1kHEldLj8fCA6fYbB3LstUlGC+M=
+Received: from 30.174.97.68(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.cGd.uV9_1744087093 cluster:ay29)
           by smtp.aliyun-inc.com;
-          Tue, 08 Apr 2025 12:36:18 +0800
-Message-ID: <ab2a3e64-b8ef-4e27-9d73-3b08b4364528@antgroup.com>
-Date: Tue, 08 Apr 2025 12:36:17 +0800
+          Tue, 08 Apr 2025 12:38:13 +0800
+Message-ID: <621e867f-5427-4062-8783-e474e3dcdb3f@antgroup.com>
+Date: Tue, 08 Apr 2025 12:38:12 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,22 +33,22 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH AUTOSEL 6.14 26/31] um: Rewrite the sigio workaround based
+Subject: Re: [PATCH AUTOSEL 6.13 23/28] um: Rewrite the sigio workaround based
  on epoll and tgkill
 To: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
  stable@vger.kernel.org
 Cc: Johannes Berg <johannes.berg@intel.com>, richard@nod.at,
  anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
  benjamin.berg@intel.com, linux-um@lists.infradead.org
-References: <20250407181054.3177479-1-sashal@kernel.org>
- <20250407181054.3177479-26-sashal@kernel.org>
+References: <20250407181224.3180941-1-sashal@kernel.org>
+ <20250407181224.3180941-23-sashal@kernel.org>
 Content-Language: en-US
 From: "Tiwei Bie" <tiwei.btw@antgroup.com>
-In-Reply-To: <20250407181054.3177479-26-sashal@kernel.org>
+In-Reply-To: <20250407181224.3180941-23-sashal@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 2025/4/8 02:10, Sasha Levin wrote:
+On 2025/4/8 02:12, Sasha Levin wrote:
 > From: Tiwei Bie <tiwei.btw@antgroup.com>
 > 
 > [ Upstream commit 33c9da5dfb18c2ff5a88d01aca2cf253cd0ac3bc ]
