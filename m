@@ -1,213 +1,112 @@
-Received: from out0-212.mail.aliyun.com (out0-212.mail.aliyun.com [140.205.0.212])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 951112F5E;
-	Tue,  8 Apr 2025 05:00:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.212
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 364A02F5E;
+	Tue,  8 Apr 2025 05:02:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744088464; cv=none; b=kTOQUa8o2N+ck/tSZc65yS7Yz1UaRaZg6Pom+LM6QhpLv0cmz9s88cwIvWbDTCdb9ON3xdY426Px01J5Hq5BP+azTMzlZokq459JeDuuwyZjdoi2N30FTRGA+tvvKEY4bDiHpVp2/y53WrUrnAN4NZZJiaRvV4foGe+H/sP4Bio=
+	t=1744088548; cv=none; b=qz0kbxnPNP/zk8A6HGUVM8nmDwdGjpfD9KULJZ7qUzzmmhnMmRZlpLI6T4jO1ekrU+KGVHv267aVRskVSKSu0dzq3WY3VIX3c2s0buZGms+1yjzU2c9fWBrSXdV8elbgPXrdW8054EDUus6HgoQrcZOKACea67IAwegXBUb7Azg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744088464; c=relaxed/simple;
-	bh=czZDnMFSnzWfds0qI1KG8y1eD/T8h4GXl9q2qVkHNs0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=okzWq7Va77fFuE9LzD4nUCGkh8FUNTu3YdOGLfU6ZWFmGliI5gVi909Ci6dEHcQPFRWfa2Ol2u+rA/dV7gCxOac3Lxfbx1lsgmdOnvdvQcFO6bOIocvbvXghSqLc4sPBt+BFGTEDIN9xgYyGBh5t1oTg5yoT/zkrp3gOf7T4WGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=dya0aTww; arc=none smtp.client-ip=140.205.0.212
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
+	s=arc-20240116; t=1744088548; c=relaxed/simple;
+	bh=KM4iNMvKGENubzBlP4oFLFuPGo1+bejKdkpXcDrBbw0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FvqobeDoc+SOR42Uk7Ql9cSUyALQgcuGW2TfeeOQwuAOBvsuWEI+sog0aj6QeHJK3Bw78wGZZ0pCWGHfUEdMsGeWEmRz9OWR4aQZqlPcaOOn61LryPKzgz48aQqk/NqL/auvv8z7jjG/iFqiMsc0L6t3VrsSl+yNjNE0FmqJ31U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JRqm5piq; arc=none smtp.client-ip=209.85.219.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="dya0aTww"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=antgroup.com; s=default;
-	t=1744088458; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=FVk1eTGXVWxw3i4OEda44NwW29chjqvlqWUvewaxbH8=;
-	b=dya0aTww9iVTd3ERtk7n8UVmyyX0eyiNKWz1ZGRyBE7xFylWBEgzUjn0Xy3NWfe2sN7WvRnE9VXQ0JXpkyQ3BMgPDrdz9C4XcRmFbOvtzK4xkkYimkSXt7qEc1/Xji847bm3REdRfG3n8Qoj95r79LlK0zEyLAAi6x+1o3MOU1U=
-Received: from 30.174.97.68(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.cGPMUZX_1744086594 cluster:ay29)
-          by smtp.aliyun-inc.com;
-          Tue, 08 Apr 2025 12:30:00 +0800
-Message-ID: <ffa0b6af-523d-4e3e-9952-92f5b04b82b3@antgroup.com>
-Date: Tue, 08 Apr 2025 12:29:53 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JRqm5piq"
+Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6f0c30a1ca3so24402606d6.1;
+        Mon, 07 Apr 2025 22:02:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744088546; x=1744693346; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=R7RoF88PRiXIA+X9QRRmiBMpMzS+lQz5HYzbozNYwWM=;
+        b=JRqm5piqbs/RYUd0EPfQ451KuJieoSpNILGgCDdHaFbkw0tFzak3FBPoEUnxxLC6O8
+         OAcDCakyGQU1mDzKx1QCG2ZkdPYjefCKoNppVEkddLoZqBlydJty6DIwUjcZsnbUp738
+         OLRhuwDg9NQcwL2+ZEiKLITNHRxt+6bZ3V9yIZeGdSHERkdq0VZTo62O3X3ySVZfZyAw
+         5/vOamFDQDXU0cTkKWK0Y/OeLXFrEXuzqal6U8B2l8f1aF3UIpww71L/bOt0KZOi72SL
+         wD1XvOeWvxf41S1BgRCU0BD8w904bcQF/Ogt/ZzeNEP9DfVqPJQsoBQrt1Q0El8fTZ6p
+         0A1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744088546; x=1744693346;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=R7RoF88PRiXIA+X9QRRmiBMpMzS+lQz5HYzbozNYwWM=;
+        b=euG0eHZHD+eDF+zudKPlEl23HgD04Ks9qejHys7a+pICVB50Z9e01QxZDZkE2FPRKt
+         8D93SKCbF6+M0ajpMIjY//r0FeKeNWHITE0hSq1YBBgP9KgOzfbU3+FoXCm0DVPF3Pmy
+         SBcvVYlejRctRwYOLiC4eKM1Dzapl6HxO7exxyOhPe5eOeH+DI3Oa3isd049xs30NIPu
+         lO6zk1KCqG5s7YHlO+198iuTVP9OHEm39kaE6lhAllSz1xLXP9rwCwGY7gvtM2vylyqY
+         xpIJd5EQIB9kBGM+at60C39l8PIMkz58RiKJNXht4sA4kz/nxpWZmFbYCI4DGlBzMnp0
+         HZAA==
+X-Forwarded-Encrypted: i=1; AJvYcCVPtoHcblWlrqdOPt7fcyDSCfR5fClsVqaRsWAyIl4kUz1/3//1yqIF82BZRM/TYO0ywO8c+4HkfmSm@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2S0axKVjP4orRiYb3Wibk5krxYTbU7JtD4kr2tbAoNdmIX7Y5
+	1GEe1RIHz0Gerb5pgF1CLfIlj0VoapQnvgXmHgcQ2Txy3j3cdZXy
+X-Gm-Gg: ASbGnctRb84aSVx2dFt35b7Tqfcqo1OTBltguz7rIV/Sq6KZQyxGvvmrvv19+cp9FZH
+	4SFIzfHeknVwTt7zeskmQKIlfuwBY0bsyTyBC76jDGiW3zUQa0RGYlNzKlctm2vqsPU5Gp/GKu2
+	5FbUmHC0Sv2XLNw4bvqmmdP0BP4CgeK/Gp3HQ2x6043r0lwPZGpGxZIRWqzrbNdzMVAtkom17Pq
+	PxeR8ppfx04IkksC58YbqOxKTUov5+EGsA3iG1MzlDTmbhs8P1QTbyuDinwSo80VRp6tysjcler
+	i2dZsmpVBTlV6zmI61b3
+X-Google-Smtp-Source: AGHT+IFAmQyuLEqKSqUa3zPYlnlVpM+D6CTCY9Gci7d7NscOgG+3f+LABsr60dVnS0EGKdGef2Rzqg==
+X-Received: by 2002:a05:6214:c6d:b0:6e1:f40c:b558 with SMTP id 6a1803df08f44-6f01e7f5050mr180369806d6.44.1744088546031;
+        Mon, 07 Apr 2025 22:02:26 -0700 (PDT)
+Received: from localhost ([2001:da8:7001:11::cb])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6ef0f047aa7sm68706526d6.55.2025.04.07.22.02.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 22:02:25 -0700 (PDT)
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Inochi Amaoto <inochiama@gmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	sophgo@lists.linux.dev,
+	Yixun Lan <dlan@gentoo.org>,
+	Longbin Li <looong.bin@gmail.com>
+Subject: [PATCH v3 0/4] irqchip/sg2042-msi: Add the Sophgo SG2044 MSI interrupt controller
+Date: Tue,  8 Apr 2025 13:01:41 +0800
+Message-ID: <20250408050147.774987-1-inochiama@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH AUTOSEL 6.14 25/31] um: Switch to the pthread-based helper
- in sigio workaround
-To: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-Cc: Johannes Berg <johannes.berg@intel.com>, richard@nod.at,
- anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
- linux-um@lists.infradead.org
-References: <20250407181054.3177479-1-sashal@kernel.org>
- <20250407181054.3177479-25-sashal@kernel.org>
-Content-Language: en-US
-From: "Tiwei Bie" <tiwei.btw@antgroup.com>
-In-Reply-To: <20250407181054.3177479-25-sashal@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2025/4/8 02:10, Sasha Levin wrote:
-> From: Tiwei Bie <tiwei.btw@antgroup.com>
-> 
-> [ Upstream commit d295beeed2552a987796d627ba7d0985b1e2d72f ]
-> 
-> The write_sigio thread and UML kernel thread share the same errno,
-> which can lead to conflicts when both call syscalls concurrently.
-> Switch to the pthread-based helper to address this issue.
-> 
-> Signed-off-by: Tiwei Bie <tiwei.btw@antgroup.com>
-> Link: https://patch.msgid.link/20250319135523.97050-4-tiwei.btw@antgroup.com
-> Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  arch/um/os-Linux/sigio.c | 44 +++++++++++++++++-----------------------
->  1 file changed, 19 insertions(+), 25 deletions(-)
+Like Sophgo SG2042, SG2044 also uses an external interrupt controller
+to handle MSI/MSI-X. It supports more interrupt and has a different
+msi message address mapping.
 
-This patch depends on the helpers introduced by the below patch:
+Changed from v2:
+1. patch 1: separate from patch 2 of v2 for better reviewing
+2. patch 2: separate from patch 2 of v2 for better reviewing
+3. patch 3: apply Chen'tag
 
-https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=4f087eafdcef24b7160b097ddb9704084767b77a
+Changed from v1:
+- https://lore.kernel.org/all/20250303111648.1337543-1-inochiama@gmail.com/
+1. patch 1: apply Conor's tag
+2. patch 1: improve the bindings comments.
+3. patch 2: rebased on tips:irq/drivers patch
+4. patch 2: remove unused macro "SG2042_MAX_MSI_VECTOR"
+5. patch 2: rename generic structure name to match sg204x.
+6. patch 2: rename info field name to avoid misunderstanding.
 
-So it can't be backported to the stable branch alone. Please drop
-it. It is more of a preparation for the new features to be added
-in the future. If it turns out later that it is also necessary for
-the stable branch, I will submit a separate patchset specifically
-targeting it.
+Inochi Amaoto (4):
+  dt-bindings: interrupt-controller: Add Sophgo SG2044 MSI controller
+  irqchip/sg2042-msi: rename generic function and structure
+  irqchip/sg2042-msi: introduce configurable chipinfo for sg2042
+  irqchip/sg2042-msi: Add the Sophgo SG2044 MSI interrupt controller
 
-Regards,
-Tiwei
+ .../sophgo,sg2042-msi.yaml                    |   4 +-
+ drivers/irqchip/irq-sg2042-msi.c              | 149 ++++++++++++++----
+ 2 files changed, 119 insertions(+), 34 deletions(-)
 
-> 
-> diff --git a/arch/um/os-Linux/sigio.c b/arch/um/os-Linux/sigio.c
-> index 9aac8def4d635..61b348a2ea974 100644
-> --- a/arch/um/os-Linux/sigio.c
-> +++ b/arch/um/os-Linux/sigio.c
-> @@ -21,8 +21,7 @@
->   * Protected by sigio_lock(), also used by sigio_cleanup, which is an
->   * exitcall.
->   */
-> -static int write_sigio_pid = -1;
-> -static unsigned long write_sigio_stack;
-> +static struct os_helper_thread *write_sigio_td;
->  
->  /*
->   * These arrays are initialized before the sigio thread is started, and
-> @@ -48,15 +47,15 @@ static struct pollfds current_poll;
->  static struct pollfds next_poll;
->  static struct pollfds all_sigio_fds;
->  
-> -static int write_sigio_thread(void *unused)
-> +static void *write_sigio_thread(void *unused)
->  {
->  	struct pollfds *fds, tmp;
->  	struct pollfd *p;
->  	int i, n, respond_fd;
->  	char c;
->  
-> -	os_set_pdeathsig();
-> -	os_fix_helper_signals();
-> +	os_fix_helper_thread_signals();
-> +
->  	fds = &current_poll;
->  	while (1) {
->  		n = poll(fds->poll, fds->used, -1);
-> @@ -98,7 +97,7 @@ static int write_sigio_thread(void *unused)
->  		}
->  	}
->  
-> -	return 0;
-> +	return NULL;
->  }
->  
->  static int need_poll(struct pollfds *polls, int n)
-> @@ -152,11 +151,10 @@ static void update_thread(void)
->  	return;
->   fail:
->  	/* Critical section start */
-> -	if (write_sigio_pid != -1) {
-> -		os_kill_process(write_sigio_pid, 1);
-> -		free_stack(write_sigio_stack, 0);
-> +	if (write_sigio_td) {
-> +		os_kill_helper_thread(write_sigio_td);
-> +		write_sigio_td = NULL;
->  	}
-> -	write_sigio_pid = -1;
->  	close(sigio_private[0]);
->  	close(sigio_private[1]);
->  	close(write_sigio_fds[0]);
-> @@ -220,7 +218,7 @@ int __ignore_sigio_fd(int fd)
->  	 * sigio_cleanup has already run, then update_thread will hang
->  	 * or fail because the thread is no longer running.
->  	 */
-> -	if (write_sigio_pid == -1)
-> +	if (!write_sigio_td)
->  		return -EIO;
->  
->  	for (i = 0; i < current_poll.used; i++) {
-> @@ -279,14 +277,14 @@ static void write_sigio_workaround(void)
->  	int err;
->  	int l_write_sigio_fds[2];
->  	int l_sigio_private[2];
-> -	int l_write_sigio_pid;
-> +	struct os_helper_thread *l_write_sigio_td;
->  
->  	/* We call this *tons* of times - and most ones we must just fail. */
->  	sigio_lock();
-> -	l_write_sigio_pid = write_sigio_pid;
-> +	l_write_sigio_td = write_sigio_td;
->  	sigio_unlock();
->  
-> -	if (l_write_sigio_pid != -1)
-> +	if (l_write_sigio_td)
->  		return;
->  
->  	err = os_pipe(l_write_sigio_fds, 1, 1);
-> @@ -312,7 +310,7 @@ static void write_sigio_workaround(void)
->  	 * Did we race? Don't try to optimize this, please, it's not so likely
->  	 * to happen, and no more than once at the boot.
->  	 */
-> -	if (write_sigio_pid != -1)
-> +	if (write_sigio_td)
->  		goto out_free;
->  
->  	current_poll = ((struct pollfds) { .poll 	= p,
-> @@ -325,18 +323,15 @@ static void write_sigio_workaround(void)
->  	memcpy(write_sigio_fds, l_write_sigio_fds, sizeof(l_write_sigio_fds));
->  	memcpy(sigio_private, l_sigio_private, sizeof(l_sigio_private));
->  
-> -	write_sigio_pid = run_helper_thread(write_sigio_thread, NULL,
-> -					    CLONE_FILES | CLONE_VM,
-> -					    &write_sigio_stack);
-> -
-> -	if (write_sigio_pid < 0)
-> +	err = os_run_helper_thread(&write_sigio_td, write_sigio_thread, NULL);
-> +	if (err < 0)
->  		goto out_clear;
->  
->  	sigio_unlock();
->  	return;
->  
->  out_clear:
-> -	write_sigio_pid = -1;
-> +	write_sigio_td = NULL;
->  	write_sigio_fds[0] = -1;
->  	write_sigio_fds[1] = -1;
->  	sigio_private[0] = -1;
-> @@ -394,12 +389,11 @@ void maybe_sigio_broken(int fd)
->  
->  static void sigio_cleanup(void)
->  {
-> -	if (write_sigio_pid == -1)
-> +	if (!write_sigio_td)
->  		return;
->  
-> -	os_kill_process(write_sigio_pid, 1);
-> -	free_stack(write_sigio_stack, 0);
-> -	write_sigio_pid = -1;
-> +	os_kill_helper_thread(write_sigio_td);
-> +	write_sigio_td = NULL;
->  }
->  
->  __uml_exitcall(sigio_cleanup);
+--
+2.49.0
 
