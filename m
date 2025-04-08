@@ -1,169 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83D5E1E8348
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 18:49:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 029311E8348;
+	Tue,  8 Apr 2025 18:50:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744138190; cv=none; b=XqRE8DaivOBfDztQGlKGC+RxdxAouWEWaJAlQ3uypW1Cu2s1AbdXCGrQmIFAf9hNpyNF2WXrw6YgqvR7OO/K0e8Ykmq7GQQfPI+dBCS+xtEwzKEgOidHV/TWmVMKge6pFns/S9AXVam5vH2F0cM1et2WxyG9z/3OaSnJyAIqVAg=
+	t=1744138214; cv=none; b=Mhziq+/qAWea3Ui2fMDMVP7L4PxoQaPqoMw+LjMxs9huuf8xlWNS/3vCpQsZ/0I473ZvtPuPi1o88e/cyluejRaUWPCwWpDrg5xNOq8EaVfTZNtq23E72d3x79Phqqg2ILmWucEK0cD6Ccuqn/dxaj/wneDefjP0OkCK1lV82K0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744138190; c=relaxed/simple;
-	bh=JUCB2bV+iYGyCNwUBsapZGnABiFfj1VKYKVKsbGH/zg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SfxPqf7IQWL/2KdpdfCP4SL2P49K3HFSiE/n2bf6msR2ce5AlQwHUG94BraHwnyXqHq9jlrVpGAHLvjW7dkwDHhGH8sTRL4vv+AQtbwigh9jU16m698NpMbyPle0+Sv9qLJkIAOLSyLSmCtTO8/VvcQi+vnp/JeRu5yQ4wYMm6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CoNqvkBP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744138214; c=relaxed/simple;
+	bh=TkyUTyQaH+ruJO4XEeuuO0vbJiIkePtnvRipx0hrx+E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=SDc7ZuQ/sg817XFTOzaaVlNbVLC/x8hg8zQRcgZolq4DzR8/usUEcAU0ViMvdE4TNou6FUHgZtsWQj7WIpJjQKARimm4CRl0+BnKu9ZawuNonnynXPhF3+WRvMNcMenLwBihLaiHKOAEaK3dJm99DJl2F4dhhvREZgY7ZjMdces=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ANmBVDSi; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CoNqvkBP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C866AC4CEE5;
-	Tue,  8 Apr 2025 18:49:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744138190;
-	bh=JUCB2bV+iYGyCNwUBsapZGnABiFfj1VKYKVKsbGH/zg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CoNqvkBP3vFgDfJdX5HyBql73FohlJRuDNvRuQMGzKxFAB+caL0nqg429qqNKUjdi
-	 sUIOtwxJQ4Cv4RXAtKYPfoslTCwqJ5gR0e3zEOlPOJdethtVBJwjg9tgm80VHZ4Al/
-	 HZbgg+oWX2Na/wcsAvrLXMigNawQBde8SdI/fptF56V9IGK367akIkh+ReWJ2XOT+U
-	 muCiP0HGwc6xz0I3feNwoVXK/CExOe7Wg8KMeAp4MkNAoGHokYq4hyHnL8Zbwzd9YB
-	 86T5QoYppsM5bvL+pZwsNTKolNQy61fVP96xchN9BFu6aUuneHAuoouaW+SbI5kO5Y
-	 8bCGM26EeJGUw==
-From: SeongJae Park <sj@kernel.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R.Howlett" <howlett@gmail.com>,
-	David Hildenbrand <david@redhat.com>,
-	Rik van Riel <riel@surriel.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	kernel-team@meta.com,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: Re: [PATCH v2 2/4] mm/madvise: batch tlb flushes for MADV_FREE
-Date: Tue,  8 Apr 2025 11:49:47 -0700
-Message-Id: <20250408184947.62625-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <12a8989c-c4f3-45a5-a66e-06ef7c2ef876@lucifer.local>
-References: 
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ANmBVDSi"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 538Aj2Ge029517;
+	Tue, 8 Apr 2025 18:50:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	0xKW77pHsNVjmQD9NKN5YZmVw8/W/eiz6MnSObafraw=; b=ANmBVDSimGvkdLrH
+	I3iScDex7Bfkz7hdPBkZNh64xZWnzzEG5f4AgkdNryt9Hk+5Ni5lQYKNIQcHUKSL
+	zjQJAJ5KnpjvyF5UetxUhGMf5lIjWjpIGVUsWxTnYCt1NpeRj2gRJkw2/EyvPbRc
+	1CsqeMA3ZYqPU6rXyZOW0pYVitEWr8EwMQiM7Nlk3h3QauGK+gb/cG4qkDYDzaXN
+	aLIdUIPHW60dvtSf/Q21ySMadvYcAJH+3PKnxqWlKlaRWkNmGILD8ltMNYAI3H0/
+	F05ZujNn0+MiRXsK8ZzMp/oEFKFSheDXX8P4iVH8q5EI0MVge6MYBOaq+YghDXFa
+	IxFkAA==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twcrgxej-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 08 Apr 2025 18:50:03 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 538Io2nQ017307
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 8 Apr 2025 18:50:02 GMT
+Received: from [10.134.71.247] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 8 Apr 2025
+ 11:50:01 -0700
+Message-ID: <d6756204-b950-4b71-9efa-d0f1691c56f7@quicinc.com>
+Date: Tue, 8 Apr 2025 11:50:01 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 01/15] drm/msm/dpu: check every pipe per capability
+To: Jun Nie <jun.nie@linaro.org>, Rob Clark <robdclark@gmail.com>,
+        "Dmitry
+ Baryshkov" <dmitry.baryshkov@linaro.org>,
+        Sean Paul <sean@poorly.run>,
+        "Marijn Suijten" <marijn.suijten@somainline.org>,
+        David Airlie
+	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Jessica Zhang
+	<quic_jesszhan@quicinc.com>
+CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+References: <20250303-sm8650-v6-14-hmd-deckard-mdss-quad-upstream-oldbootwrapper-36-prep-v8-0-eb5df105c807@linaro.org>
+ <20250303-sm8650-v6-14-hmd-deckard-mdss-quad-upstream-oldbootwrapper-36-prep-v8-1-eb5df105c807@linaro.org>
+Content-Language: en-US
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+In-Reply-To: <20250303-sm8650-v6-14-hmd-deckard-mdss-quad-upstream-oldbootwrapper-36-prep-v8-1-eb5df105c807@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: U3FIKMp27eUnG1BF_0q02kLU0_27n1bF
+X-Authority-Analysis: v=2.4 cv=QuVe3Uyd c=1 sm=1 tr=0 ts=67f56fdb cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=ceskOXBvEOXfFmsVgpkA:9
+ a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: U3FIKMp27eUnG1BF_0q02kLU0_27n1bF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-08_08,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ spamscore=0 malwarescore=0 mlxlogscore=970 bulkscore=0 priorityscore=1501
+ clxscore=1015 phishscore=0 impostorscore=0 suspectscore=0
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504080129
 
-On Tue, 8 Apr 2025 13:58:18 +0100 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
 
-> On Fri, Apr 04, 2025 at 02:06:58PM -0700, SeongJae Park wrote:
-> > MADV_FREE handling for [process_]madvise() flushes tlb for each vma of
-> > each address range.  Update the logic to do tlb flushes in a batched
-> > way.  Initialize an mmu_gather object from do_madvise() and
-> > vector_madvise(), which are the entry level functions for
-> > [process_]madvise(), respectively.  And pass those objects to the
-> > function for per-vma work, via madvise_behavior struct.  Make the
-> > per-vma logic not flushes tlb on their own but just saves the tlb
-> > entries to the received mmu_gather object.  Finally, the entry level
-> > functions flush the tlb entries that gathered for the entire user
-> > request, at once.
-> >
-> > Signed-off-by: SeongJae Park <sj@kernel.org>
+
+On 3/3/2025 7:14 AM, Jun Nie wrote:
+> The capability stored in sblk and pipe_hw_caps is checked only for
+> SSPP of the first pipe in the pair with current implementation. That
+> of the 2nd pipe, r_pipe, is not checked and may violate hardware
+> capability. Move requirement check to dpu_plane_atomic_check_pipe()
+> for the check of every pipe.
 > 
-> Other than some nitty stuff, and a desire for some careful testing of the
-> horrid edge case that err... I introduced :P this looks fine, so:
+> Fixes: ("dbbf57dfd04e6 drm/msm/dpu: split dpu_plane_atomic_check()")
+> Signed-off-by: Jun Nie <jun.nie@linaro.org>
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+>   drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c | 71 ++++++++++++++++---------------
+>   1 file changed, 36 insertions(+), 35 deletions(-)
 > 
-> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
-Thank you for your kind review!  I will make the next revision following your
-suggestions as I answered below.
-
-> 
-> > ---
-> >  mm/madvise.c | 59 +++++++++++++++++++++++++++++++++++++++++-----------
-> >  1 file changed, 47 insertions(+), 12 deletions(-)
-> >
-> > diff --git a/mm/madvise.c b/mm/madvise.c
-> > index 8bcfdd995d18..564095e381b2 100644
-> > --- a/mm/madvise.c
-> > +++ b/mm/madvise.c
-> > @@ -799,12 +799,13 @@ static const struct mm_walk_ops madvise_free_walk_ops = {
-> >  	.walk_lock		= PGWALK_RDLOCK,
-> >  };
-> >
-> > -static int madvise_free_single_vma(struct vm_area_struct *vma,
-> > -			unsigned long start_addr, unsigned long end_addr)
-> > +static int madvise_free_single_vma(
-> > +		struct madvise_behavior *behavior, struct vm_area_struct *vma,
-> 
-> This is pedantic, but elsewhere you differentiate between int behavior and
-> struct madvise_behavior by referringt to the later as madv_behavior.
-> 
-> The naming kind of sucks in general though.
-> 
-> But for consistency, let's maybe rename this to madv_behavior, and we can
-> maybe do a commit later to do a rename across the board?
-
-I completely agree.  I will rename so in the next spin.
-
-> 
-> > +		unsigned long start_addr, unsigned long end_addr)
-> >  {
-> >  	struct mm_struct *mm = vma->vm_mm;
-> >  	struct mmu_notifier_range range;
-> > -	struct mmu_gather tlb;
-> > +	struct mmu_gather *tlb = behavior->tlb;
-> >
-> >  	/* MADV_FREE works for only anon vma at the moment */
-> >  	if (!vma_is_anonymous(vma))
-[...]
-> > @@ -953,7 +951,7 @@ static long madvise_dontneed_free(struct vm_area_struct *vma,
-> >  	if (action == MADV_DONTNEED || action == MADV_DONTNEED_LOCKED)
-> >  		return madvise_dontneed_single_vma(vma, start, end);
-> >  	else if (action == MADV_FREE)
-> > -		return madvise_free_single_vma(vma, start, end);
-> > +		return madvise_free_single_vma(behavior, vma, start, end);
-> >  	else
-> >  		return -EINVAL;
-> 
-> On error paths, do we correctly finish the batched (botched? :P) TLB
-> operation?
-
-Yes, the change calls tlb_finish_mmu() and tlb_gather_mmu() as needed in the
-error paths.  Of course I might forgot calling those in some edge cases.
-Please let me know if you find such mistakes.
-
-> 
-> >  }
-[...]
-> > @@ -1841,14 +1873,17 @@ static ssize_t vector_madvise(struct mm_struct *mm, struct iov_iter *iter,
-> >  			}
-> >
-> >  			/* Drop and reacquire lock to unwind race. */
-> > +			madvise_finish_tlb(&madv_behavior);
-> >  			madvise_unlock(mm, behavior);
-> >  			madvise_lock(mm, behavior);
-> > +			madvise_init_tlb(&madv_behavior, mm);
-> >  			continue;
-> 
-> Have you found a way in which to test this? Perhaps force this case and
-> find a means of asserting the TLB flushing behaves as expected? I think
-> we're ok from the logic, but it's such a tricky one it'd be good to find a
-> means of doing so, albeit in a manual way.
-
-No, unfortunately I haven't found a good way to test this case.
-
-> 
-> >  		}
-> >  		if (ret < 0)
-> >  			break;
-> >  		iov_iter_advance(iter, iter_iov_len(iter));
-> >  	}
-> > +	madvise_finish_tlb(&madv_behavior);
-> >  	madvise_unlock(mm, behavior);
-> >
-> >  	ret = (total_len - iov_iter_count(iter)) ? : ret;
-> > --
-> > 2.39.5
-
-
-Thanks,
-SJ
+Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
