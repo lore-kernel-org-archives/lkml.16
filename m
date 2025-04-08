@@ -1,186 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40CB422D78D
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 15:29:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C1E922D7A6;
+	Tue,  8 Apr 2025 15:29:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744126161; cv=none; b=VZfQiM3B7V6CuRC86bMbCYljiyLFpccN9Xc4uqczVljcf2Ky8HklRoAyLDW+TWFMXvpweYvymzVG9xKHzLvE/9dz5Cc4DrC1tWiVzoJ9EqCtqDRPbWkX/puELQwA55YJOdYrmO4qeI4bZODcQE4NWFgBQpOxoXm2ul9NKWf1frI=
+	t=1744126162; cv=none; b=XjbS61PJPY7JHNsPy2gYSqTeHva3uNfteziZvcA85m7BjfJDeQst3fbkFGDxqEBRw4Q/1CtEg8q+dFhmv8N15P3yoaC497bqgG9tfLSYFUXpSGHg29v+gkw9drt/XYrJR+gCYwcqanTSiIE2yvgK2ME4Nnak6qLSWqtua+GQEaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744126161; c=relaxed/simple;
-	bh=GSOhZSJXTqBDeMybmCwfGO34LVgry2NBtLmYpTfhtC4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=RQXCFOXCGe3+889QzOOY6iTt2hL+J/YOQsOzCJkiNPXZ9XeTHFweVXanxIWjQR+4WFYBsMzbdeg8Qrqj3jbpkpltswNHtyF4R7Xe/zXDVDUJz8FJNhJdhBIxxvr3hZE8PwzTb5+OghFORUZfXQ4PmWfSx/Z11n3IC9xtXD3kBkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o70oWhqx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744126162; c=relaxed/simple;
+	bh=Fxg70QgtPlj4RdflIuFhZfsFMtC+JbBHqM382S1oi08=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=YdwbHPQLBOhDdyz+wU6bnx0nq7hd6msIsNYCzdu0Wz26DbF8Orm9h2G2wmJATn+O2HXX+7Pys9ftVu1NsRh3pDHFodMZuvq2lFh3fbnhWpSKnJejKnsFuYkYM5sb+5THUAuc3hs0k5fYcUuSwUgWsTwAG1EJkEj3XVii5CntvOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=O7E+d/2y; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rEoCzLzj; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o70oWhqx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2950DC4CEE9;
-	Tue,  8 Apr 2025 15:29:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744126160;
-	bh=GSOhZSJXTqBDeMybmCwfGO34LVgry2NBtLmYpTfhtC4=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=o70oWhqxnwdJfNhdmmReZ+FwwD7RCKOS82aV9uMvdumvge79qWj5sy62pnH9BPqUP
-	 Z2V4SUP9FARy9OECTeEn52hYR1wMuyQ/wRS058pNXy6huI78pLPhN8YqKH/3ZElxXx
-	 covQHTE8aEKmPm8L/bh9zMOJfYU7kY4/X8gFEkzAIYmpX3OmgtYi8ey6c4mbf2svSN
-	 7l3Av6qw9qyjf2xhejMs+lsdsIkZ6CSzaWds1j8z61t4AiRD3BB8MiSd1SDEBmIREU
-	 sZLN1Npz6Lf+wqzigPX+sKcIoGkQGPaUOY4SfDKFBc9pMiloFwEL4R/4TWuo+Yyvgw
-	 EC7u0js6KcRXQ==
-From: Daniel Wagner <wagi@kernel.org>
-Date: Tue, 08 Apr 2025 17:29:05 +0200
-Subject: [PATCH 3/8] nvmet-fcloop: add ref counting to lport
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="O7E+d/2y";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rEoCzLzj"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744126159;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D7lrD777WlV5NoGWVSOIwJfzlgFnXalTH+h9bs4IFhY=;
+	b=O7E+d/2yi1aEz9CuhQPbmWL1Qw27B41tgMWOoWqrUt/1rWS1chF9WxTDui+YBN8rnGmBMG
+	T7CqxLl/g/7rPbuXVYQxqU+F8nLR2Cb6gb/+P2XvncvvdK6e8O3a0sVa4ghfFam+59dyqm
+	vdtupyK9QcH3WAF3PpWEXvwr8tvZCkaJQxdjktVMlt+E5txXLx4gBUq7bATYZPe8wCZ185
+	8/1M7X3hQyy7Yy4AYfVB6+1qKIlQ9hfWVfVNQ34gDUihhPa7BuOrBprkFmgkRzNQAMDXeD
+	+sPrQYovOXlMggMS6t+7tDeSHLM4bl+EfoADIAFKstzzK509lSq72SpV/wNOhg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744126159;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D7lrD777WlV5NoGWVSOIwJfzlgFnXalTH+h9bs4IFhY=;
+	b=rEoCzLzjV6yojdMz9G/ZCzDKYD+gEAIyycNKMOXhxiGwYN2M7aEHhAGGDHswybuZz6TCK2
+	aJdQuDNdbTjDZeBw==
+To: Bert Karwatzki <spasswolf@web.de>
+Cc: Bert Karwatzki <spasswolf@web.de>, Bjorn Helgaas <bhelgaas@google.com>,
+ linux-kernel@vger.kernel.org, James.Bottomley@HansenPartnership.com,
+ Jonathan.Cameron@huawei.com, allenbh@gmail.com, d-gole@ti.com,
+ dave.jiang@intel.com, haiyangz@microsoft.com, jdmason@kudzu.us,
+ kristo@kernel.org, linux-hyperv@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-scsi@vger.kernel.org,
+ logang@deltatee.com, manivannan.sadhasivam@linaro.org,
+ martin.petersen@oracle.com, maz@kernel.org, mhklinux@outlook.com,
+ nm@ti.com, ntb@lists.linux.dev, peterz@infradead.org, ssantosh@kernel.org,
+ wei.huang2@amd.com, wei.liu@kernel.org
+Subject: Re: commit 7b025f3f85ed causes NULL pointer dereference
+In-Reply-To: <87iknevgfb.ffs@tglx>
+References: <20250408120446.3128-1-spasswolf@web.de> <87iknevgfb.ffs@tglx>
+Date: Tue, 08 Apr 2025 17:29:18 +0200
+Message-ID: <87friivfht.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250408-nvmet-fcloop-part-one-v1-3-382ec97ab7eb@kernel.org>
-References: <20250408-nvmet-fcloop-part-one-v1-0-382ec97ab7eb@kernel.org>
-In-Reply-To: <20250408-nvmet-fcloop-part-one-v1-0-382ec97ab7eb@kernel.org>
-To: James Smart <james.smart@broadcom.com>, Christoph Hellwig <hch@lst.de>, 
- Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>, 
- Jens Axboe <axboe@kernel.dk>, Hannes Reinecke <hare@suse.de>
-Cc: James Smart <jsmart2021@gmail.com>, linux-nvme@lists.infradead.org, 
- linux-kernel@vger.kernel.org, Daniel Wagner <wagi@kernel.org>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain
 
-The fcloop_lport objects live time is controlled by the user interface
-add_local_port and del_local_port. nport, rport and tport objects are
-pointing to the lport objects but here is no clear tracking. Let's
-introduce an explicit ref counter for the lport objects and prepare the
-stage for restructuring how lports are used.
+On Tue, Apr 08 2025 at 17:09, Thomas Gleixner wrote:
+> On Tue, Apr 08 2025 at 14:04, Bert Karwatzki wrote:
+>> Since linux-next-20250408 I get a NULL pointer dereference when booting:
+>>
+>> [  T669] BUG: kernel NULL pointer dereference, address: 0000000000000330
+>> [  T669] #PF: supervisor read access in kernel mode
+>> [  T669] #PF: error_code(0x0000) - not-present page
+>> [  T669] PGD 0 P4D 0
+>> [  T669] Oops: Oops: 0000 [#1] SMP NOPTI
+>> [  T669] CPU: 2 UID: 0 PID: 669 Comm: (udev-worker) Not tainted 6.15.0-rc1-next-20250408-master #788 PREEMPT_{RT,(lazy)}
+>> [  T669] Hardware name: Micro-Star International Co., Ltd. Alpha 15 B5EEK/MS-158L, BIOS E158LAMS.107 11/10/2021
+>> [  T669] RIP: 0010:msi_domain_first_desc+0x4/0x30
+>> [  T669] Code: e9 21 ff ff ff 0f 0b 31 c0 e9 f3 8c da ff 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa <48> 8b bf 68 02 00 00 48 85 ff 74 13 85 f6 75 0f 48 c7 47 60 00 00
+>> [  T669] RSP: 0018:ffffcec6c25cfa78 EFLAGS: 00010246
+>> [  T669] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000008
+>> [  T669] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000000000c8
+>> [  T669] RBP: ffff8d26cb419aec R08: 0000000000000228 R09: 0000000000000000
+>> [  T669] R10: ffff8d26c516fdc0 R11: ffff8d26ca5a4aa0 R12: ffff8d26c1aed0c8
+>> [  T669] R13: 0000000000000002 R14: ffffcec6c25cfa90 R15: ffff8d26c1aed000
+>> [  T669] FS:  00007f690f71a980(0000) GS:ffff8d35e83fa000(0000) knlGS:0000000000000000
+>> [  T669] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> [  T669] CR2: 0000000000000330 CR3: 0000000121b64000 CR4: 0000000000750ef0
+>> [  T669] PKRU: 55555554
+>> [  T669] Call Trace:
+>> [  T669]  <TASK>
+>> [  T669]  msix_setup_interrupts+0x23b/0x280
+>
+> Can you please decode the lines please via:
+>
+>     scripts/faddr2line vmlinux msi_domain_first_desc+0x4/0x30
+>     scripts/faddr2line vmlinux msix_setup_interrupts+0x23b/0x280
 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Daniel Wagner <wagi@kernel.org>
----
- drivers/nvme/target/fcloop.c | 44 +++++++++++++++++++++++++++++++-------------
- 1 file changed, 31 insertions(+), 13 deletions(-)
+Can you please also provide kernel configuration and compiler version?
 
-diff --git a/drivers/nvme/target/fcloop.c b/drivers/nvme/target/fcloop.c
-index 67e24c7d59306fec4aa88cacc536c876c465af35..641201e62c1bafa13986642c6c4067b35f784edd 100644
---- a/drivers/nvme/target/fcloop.c
-+++ b/drivers/nvme/target/fcloop.c
-@@ -208,6 +208,7 @@ struct fcloop_lport {
- 	struct nvme_fc_local_port *localport;
- 	struct list_head lport_list;
- 	struct completion unreg_done;
-+	refcount_t ref;
- };
- 
- struct fcloop_lport_priv {
-@@ -994,6 +995,27 @@ fcloop_fcp_abort(struct nvme_fc_local_port *localport,
- 	}
- }
- 
-+static void
-+fcloop_lport_put(struct fcloop_lport *lport)
-+{
-+	unsigned long flags;
-+
-+	if (!refcount_dec_and_test(&lport->ref))
-+		return;
-+
-+	spin_lock_irqsave(&fcloop_lock, flags);
-+	list_del(&lport->lport_list);
-+	spin_unlock_irqrestore(&fcloop_lock, flags);
-+
-+	kfree(lport);
-+}
-+
-+static int
-+fcloop_lport_get(struct fcloop_lport *lport)
-+{
-+	return refcount_inc_not_zero(&lport->ref);
-+}
-+
- static void
- fcloop_nport_put(struct fcloop_nport *nport)
- {
-@@ -1017,6 +1039,8 @@ fcloop_localport_delete(struct nvme_fc_local_port *localport)
- 
- 	/* release any threads waiting for the unreg to complete */
- 	complete(&lport->unreg_done);
-+
-+	fcloop_lport_put(lport);
- }
- 
- static void
-@@ -1128,6 +1152,7 @@ fcloop_create_local_port(struct device *dev, struct device_attribute *attr,
- 
- 		lport->localport = localport;
- 		INIT_LIST_HEAD(&lport->lport_list);
-+		refcount_set(&lport->ref, 1);
- 
- 		spin_lock_irqsave(&fcloop_lock, flags);
- 		list_add_tail(&lport->lport_list, &fcloop_lports);
-@@ -1144,13 +1169,6 @@ fcloop_create_local_port(struct device *dev, struct device_attribute *attr,
- 	return ret ? ret : count;
- }
- 
--
--static void
--__unlink_local_port(struct fcloop_lport *lport)
--{
--	list_del(&lport->lport_list);
--}
--
- static int
- __wait_localport_unreg(struct fcloop_lport *lport)
- {
-@@ -1163,8 +1181,6 @@ __wait_localport_unreg(struct fcloop_lport *lport)
- 	if (!ret)
- 		wait_for_completion(&lport->unreg_done);
- 
--	kfree(lport);
--
- 	return ret;
- }
- 
-@@ -1187,8 +1203,9 @@ fcloop_delete_local_port(struct device *dev, struct device_attribute *attr,
- 	list_for_each_entry(tlport, &fcloop_lports, lport_list) {
- 		if (tlport->localport->node_name == nodename &&
- 		    tlport->localport->port_name == portname) {
-+			if (!fcloop_lport_get(tlport))
-+				break;
- 			lport = tlport;
--			__unlink_local_port(lport);
- 			break;
- 		}
- 	}
-@@ -1198,6 +1215,7 @@ fcloop_delete_local_port(struct device *dev, struct device_attribute *attr,
- 		return -ENOENT;
- 
- 	ret = __wait_localport_unreg(lport);
-+	fcloop_lport_put(lport);
- 
- 	return ret ? ret : count;
- }
-@@ -1625,17 +1643,17 @@ static void __exit fcloop_exit(void)
- 	for (;;) {
- 		lport = list_first_entry_or_null(&fcloop_lports,
- 						typeof(*lport), lport_list);
--		if (!lport)
-+		if (!lport || !fcloop_lport_get(lport))
- 			break;
- 
--		__unlink_local_port(lport);
--
- 		spin_unlock_irqrestore(&fcloop_lock, flags);
- 
- 		ret = __wait_localport_unreg(lport);
- 		if (ret)
- 			pr_warn("%s: Failed deleting local port\n", __func__);
- 
-+		fcloop_lport_put(lport);
-+
- 		spin_lock_irqsave(&fcloop_lock, flags);
- 	}
- 
+Thanks,
 
--- 
-2.49.0
+        tglx
 
