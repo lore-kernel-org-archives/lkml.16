@@ -1,175 +1,127 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA2E223714
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 18:36:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4932A256D;
+	Tue,  8 Apr 2025 18:36:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744137387; cv=none; b=qIinA3q35vFpreL8E3Gg8JEbR8qWRwjpgfoRj87ABtWjocDaO/mv8/sA8YCPsjZHKvoNOicoH/lJLSIGF3tXvv2vLKfhMasqkZIgdFr+PbvOj9mxomfcP41RGkruR8Q3bIOUksxGfv6BN4iakKIRwVq2os90wrnt94wg8YRGhyI=
+	t=1744137420; cv=none; b=eRapqC1kymjwminaC0AdzveWeKPRyqKIhjl0wMhd6I8T/xOCqqJH50wKUYOyR19kf2kkOVfNeMnSjS6u0L6G1D2G7QhY7SUq55nxWyfG8qDdTmDzLXQm0hDvlLpFi2bMFtrJJSXytG9GCgOE0jYG6mHUk5FxF42SDZ0t5AghINo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744137387; c=relaxed/simple;
-	bh=WfWzdxBkhf6dBcEkzQSrptAQ1l/B6nErMT45c4yWgA8=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=W3NJvMzFkmkq6DJOHy70NNQkPyvTiO2NB/UxTJl1wATWJisyPQ2H8JT1e6kVSxfd3Qqd2q/vdLrfUzGOUbqSMvpIcNJo8y8Bd1lq0/cxwyarp1/9iN/olbw1N/qtvpkm+lfhViNr9fReNJb+LuzjXs9lHREwvin/Tx50Xn1Sb9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iYXimukB; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744137420; c=relaxed/simple;
+	bh=5k8hs6+JkPpkUdWzR/s42XOTU/MqiCalasShbvGEV1A=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=RDmXOuBsGeGEjk8P5IZLKnmrXEtV96V5OGXIFmowczDd/fdfcflZPswhL7Ew1+ALtCPzXA9g/XWQldB7qXjO7gQusWlX+x7gXb0Rr8oFVXD/8F0PvA6Bm6U4ooP8p3l5cDGj4P2Fn2c33m2V+TxK2RVIcgDUDaodWGSociE5JzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fgWWiGFq; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iYXimukB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744137382;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Se1FHByXQ0bG9ZLAbgCVErfU/qkKL9uOy+5u+NBsYCA=;
-	b=iYXimukB1e8/2/+U3PMeJG27WUmU9rjG74UrPh3yb7am/DOwvSITWWYEIB7FQRQob/WD9I
-	jV1+zoq7HIKf8mOmbeGDpCUfeVQhkct/fZcf4yJEt/COb091y6Mdz33Q9lGOOWoUJNi+mm
-	NV8AdgVhDvtMaO5V7mJ+DN/uPYRcu00=
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com
- [209.85.166.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-610-ByhznCcXOOii6NoB3EG6vQ-1; Tue, 08 Apr 2025 14:36:21 -0400
-X-MC-Unique: ByhznCcXOOii6NoB3EG6vQ-1
-X-Mimecast-MFC-AGG-ID: ByhznCcXOOii6NoB3EG6vQ_1744137381
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d5b381656dso129736835ab.2
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 11:36:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fgWWiGFq"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-736c062b1f5so5021455b3a.0;
+        Tue, 08 Apr 2025 11:36:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744137418; x=1744742218; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bEeigtXbuhczioF+6lFvsC87+fhHQtlYev57eI/FUBg=;
+        b=fgWWiGFq+jArqL9ySGeHW0PDeuKXjB2aiytICVWiHiwLJnwqtfjDcD5sWDSKVdOeF8
+         nyKIMsz4IZyZx2nwZBv7p0j31xL64cyS2tkB7LcdW3UX8IWkp2iMzWhYl4uCpSCZMHW/
+         Vcl+KfjKd5OTFSPrEwDWK0utD1so8XLOzL+fp9yyyIK6YdLfQhHoE+UbCPT2FzueISif
+         qHUNVC05H09u467QVxPkttw4PqhByshO3sVmkird7YrwFz6CsxpeZnhOV0o9AMUUsKa1
+         aPbKTI8dXgWxjbjXCtLTeI7xRDdI2dUpIx95LLeyvNTbh6LVSaSVqK5hV/vZE62J/TQZ
+         +pJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744137380; x=1744742180;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Se1FHByXQ0bG9ZLAbgCVErfU/qkKL9uOy+5u+NBsYCA=;
-        b=hLt/fqgMpcwCyFK4FiXKRFnxhB9Z11ywWt7AjUlpgMQUWFYAJbJ48dgTir+GWG9386
-         FpkW5hCT5d2fQ+/0yemJDrrjEXRpLxznDepMQsJMXX0h6KzZrH32o5I1LrMoyBgUgfti
-         V83xGYus0mmLy2QJpwWKyThjC1rQca0m08z/wnb+g+1EtaVKeoxTXEpDIgggOGIDWAej
-         r3vC70kOudgqNpqW2tnuzah3T40IVbRyJXRliHStlLXLx+1BTT7D6veouBT5M58kmoA8
-         /6BBB6QPrgfa20GrWTxqTRMJNgBiAEmmDqadeIUqM+32Rtw7N14Kd/wwAal0yXVD5Qwq
-         4/5A==
-X-Forwarded-Encrypted: i=1; AJvYcCUjyKAmq6h1yUYyFvpTFGvmu55HFOX63Hf+9xvlbUeYhXs9LgE/8qmSJR8x9/ragypNPeFegDCOLvK0jYk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyI4GoTnlC7m3UZte04bfPDvYNL+Hfly30g/yKBduDLTqSDodf2
-	qC8/HBB3Y/eOmZSj+H8YW1I21SlVe8SFlHsC8VKeeGR/wvf48tETCXw8QWWnARxv6qVoytZW0CI
-	XoOEHheaA1COr1876A8FvMyD1bA5qv144+GbzntMStRAgKx7KYM7NNYlPZLPiow==
-X-Gm-Gg: ASbGnctNYm5fETwUeFiYoqaVCGeHks0zNWrryVfM9ixl5SlIoXk4Bbw+gd4SXN01Wf2
-	NVayH1XVza3HG5DKXUaPH2rzAdv87Z/3TQRK+e+CJYen78+8WVUTVSoY1NuibSSaoehn/4b5tQw
-	8j9wDnX7eQrqC6hIbhBLPcopso0NGzb1V66TTqj2uU8O8yXHQJtrjynyEbeE610iNIL4hTKoUi1
-	K1gxvmXfAW7Zegy5Xw6tL395tvUQM7ZarO0KzPxbpbahFZzwy7yYzX6wqmuRKPUhkDnjKsInZ+n
-	3X6RkoEBfWWuW40AGDjZh9fMjw90bCZKjSFmg9NV6gCfOfN97hJYvAb8NXVlAA==
-X-Received: by 2002:a05:6e02:3712:b0:3a7:88f2:cfa9 with SMTP id e9e14a558f8ab-3d77c281bfemr116855ab.11.1744137380663;
-        Tue, 08 Apr 2025 11:36:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHE7yFZdGQ6awpFHZ0/pUXwSjXgM/x9GR8AYdv0kxsLsofBNsZ3deO5hBmn+DaHXlnkd8lByA==
-X-Received: by 2002:a05:6e02:3712:b0:3a7:88f2:cfa9 with SMTP id e9e14a558f8ab-3d77c281bfemr116395ab.11.1744137380146;
-        Tue, 08 Apr 2025 11:36:20 -0700 (PDT)
-Received: from ?IPV6:2601:188:c100:5710:315f:57b3:b997:5fca? ([2601:188:c100:5710:315f:57b3:b997:5fca])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d703b6bb26sm5893725ab.7.2025.04.08.11.36.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Apr 2025 11:36:19 -0700 (PDT)
-From: Waiman Long <llong@redhat.com>
-X-Google-Original-From: Waiman Long <longman@redhat.com>
-Message-ID: <b978ec91-306f-45d5-8d88-91febebb8e48@redhat.com>
-Date: Tue, 8 Apr 2025 14:36:16 -0400
+        d=1e100.net; s=20230601; t=1744137418; x=1744742218;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bEeigtXbuhczioF+6lFvsC87+fhHQtlYev57eI/FUBg=;
+        b=nhNW3MZJkQfRNcTDGRNPRcDUGnncGwVxb8RNYRsFaoOpnirmYUJuKlObbcXjZVq/LJ
+         +CiBXgWcuCsgIPD94knmFsiwDbJh8BAocHJ91LulsAajGsJ95/3jfGmAVqazM1HqrbvT
+         MdVB9JNljW1Dnuq5vBABXONL6HFOR6AgOu7MaGui3FGZK5F4LObWgGanVnxRLkJ4Z+qn
+         AoqgXXUWdCCuu+po/A5XK58v22/WZeODY7jFsc8ucabHy054nY8yvot+oHlwNouHMgbl
+         LCx4WwBT9I1Ewu+cL82Ul8bqZaSwxPzhrURcwZx5CTeDotxblA6wSLup3qo1mEbghNLm
+         0Csg==
+X-Forwarded-Encrypted: i=1; AJvYcCVTTkVQWIcXS3WYUkey6nJ3jLvd5NVh09qgv67eOLcfsinXAyTVvIrmsYTaeBXrv46QC3w1Ng1poPyV2ZP5@vger.kernel.org, AJvYcCW75bhLc4E0jU9OYGBOKpTEQqam0GV+DXnPdEtRd5k4NqqZzDYTNUMK4cdV7S9RkF+W7jYXd1evKeV7eA==@vger.kernel.org, AJvYcCXssFLQUA6QKhi69pntIRs9DhuafJC3zIdGJUYlgFdBCQhBC6RXQWApfiwNV1yTPkqH8xO3FmQb0EpBGb8g@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCgv9fTS5M5FKHD2ei45wD5YCUx9La5ZQh1ap6sZ4DaYgXZlh5
+	0EYIXPymdApUvpMHeXiArSNIucNqxqs55g0NCVBmYEUb1TIBXgGi
+X-Gm-Gg: ASbGncv4JyVAxPfiPI6dghcgHcRw6iRGLSspvL6Hg4jC5ysUqXKgL/7k0cfBGYZjsKT
+	Qg9BOjQiYZYBN/nd9LwaswhRoCtUlAdRgelJzhDqwGNpoiN2EtweF4MmNnnSqgnuj6eRxm9X+80
+	EAX8AbL8OjPz70GWUhTxDxZ0gujzVIxwhanP4lyZWPiXs5sLCMu7c9Hf50NfCWXPkM5eO4ip7uz
+	pD+1pKWOKBnahdTqIyQSQZbIpQrMa6YSTiNpl4ClRDM4DRV5esUeg5O66TjQQCYp9Hc55Vo8ru4
+	CP9bXsK2u0foz10LcssMLfdukYO2kCBOk36ZM3othWse4DBZCqXl3OGS7zmUusepAEoHM7ak/i8
+	0hUmn4KxpqKfhyjAoWgAj/m5TNmm6c7d/Cw==
+X-Google-Smtp-Source: AGHT+IE3PGvOtJxss8WsloRc6dNnfNCVIij/xjc7LUujufO1C+pBYPdR2U2LJqkutAnOAYB1T4ZWLA==
+X-Received: by 2002:a05:6a00:1152:b0:736:ab21:6f37 with SMTP id d2e1a72fcca58-73bae30912bmr152031b3a.0.1744137418368;
+        Tue, 08 Apr 2025 11:36:58 -0700 (PDT)
+Received: from localhost.localdomain (c-67-160-120-253.hsd1.wa.comcast.net. [67.160.120.253])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d97d32b2sm10960469b3a.5.2025.04.08.11.36.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 11:36:58 -0700 (PDT)
+From: mhkelley58@gmail.com
+X-Google-Original-From: mhklinux@outlook.com
+To: jayalk@intworks.biz,
+	simona@ffwll.ch,
+	deller@gmx.de,
+	haiyangz@microsoft.com,
+	kys@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	akpm@linux-foundation.org
+Cc: weh@microsoft.com,
+	tzimmermann@suse.de,
+	hch@lst.de,
+	dri-devel@lists.freedesktop.org,
+	linux-fbdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: [PATCH 0/3] fbdev: Add deferred I/O support for contiguous kernel memory framebuffers
+Date: Tue,  8 Apr 2025 11:36:43 -0700
+Message-Id: <20250408183646.1410-1-mhklinux@outlook.com>
+X-Mailer: git-send-email 2.25.1
+Reply-To: mhklinux@outlook.com
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] vmscan,cgroup: apply mems_effective to reclaim
-To: Gregory Price <gourry@gourry.net>, linux-mm@kvack.org
-Cc: cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-team@meta.com, tj@kernel.org, hannes@cmpxchg.org, mkoutny@suse.com,
- akpm@linux-foundation.org
-References: <20250320210919.439964-1-gourry@gourry.net>
-Content-Language: en-US
-In-Reply-To: <20250320210919.439964-1-gourry@gourry.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 3/20/25 5:09 PM, Gregory Price wrote:
-> It is possible for a reclaimer to cause demotions of an lruvec belonging
-> to a cgroup with cpuset.mems set to exclude some nodes. Attempt to apply
-> this limitation based on the lruvec's memcg and prevent demotion.
->
-> Notably, this may still allow demotion of shared libraries or any memory
-> first instantiated in another cgroup. This means cpusets still cannot
-> cannot guarantee complete isolation when demotion is enabled, and the
-> docs have been updated to reflect this.
->
->
-> Note: This is a fairly hacked up method that probably overlooks some
->        cgroup/cpuset controls or designs. RFCing now for some discussion
->        at LSFMM '25.
->
->
-> Signed-off-by: Gregory Price <gourry@gourry.net>
-> ---
->   .../ABI/testing/sysfs-kernel-mm-numa          | 14 +++++---
->   include/linux/cpuset.h                        |  2 ++
->   kernel/cgroup/cpuset.c                        | 10 ++++++
->   mm/vmscan.c                                   | 32 ++++++++++++-------
->   4 files changed, 41 insertions(+), 17 deletions(-)
->
-> diff --git a/Documentation/ABI/testing/sysfs-kernel-mm-numa b/Documentation/ABI/testing/sysfs-kernel-mm-numa
-> index 77e559d4ed80..27cdcab901f7 100644
-> --- a/Documentation/ABI/testing/sysfs-kernel-mm-numa
-> +++ b/Documentation/ABI/testing/sysfs-kernel-mm-numa
-> @@ -16,9 +16,13 @@ Description:	Enable/disable demoting pages during reclaim
->   		Allowing page migration during reclaim enables these
->   		systems to migrate pages from fast tiers to slow tiers
->   		when the fast tier is under pressure.  This migration
-> -		is performed before swap.  It may move data to a NUMA
-> -		node that does not fall into the cpuset of the
-> -		allocating process which might be construed to violate
-> -		the guarantees of cpusets.  This should not be enabled
-> -		on systems which need strict cpuset location
-> +		is performed before swap if an eligible numa node is
-> +		present in cpuset.mems for the cgroup. If cpusets.mems
-> +		changes at runtime, it may move data to a NUMA node that
-> +		does not fall into the cpuset of the new cpusets.mems,
-> +		which might be construed to violate the guarantees of
-> +		cpusets.  Shared memory, such as libraries, owned by
-> +		another cgroup may still be demoted and result in memory
-> +		use on a node not present in cpusets.mem. This should not
-> +		be enabled on systems which need strict cpuset location
->   		guarantees.
-> diff --git a/include/linux/cpuset.h b/include/linux/cpuset.h
-> index 835e7b793f6a..d4169f1b1719 100644
-> --- a/include/linux/cpuset.h
-> +++ b/include/linux/cpuset.h
-> @@ -171,6 +171,8 @@ static inline void set_mems_allowed(nodemask_t nodemask)
->   	task_unlock(current);
->   }
->   
-> +bool memcg_mems_allowed(struct mem_cgroup *memcg, int nid);
-> +
->   #else /* !CONFIG_CPUSETS */
->   
-You should also define an inline function for the !CONFIG_CPUSETS case.
->   static inline bool cpusets_enabled(void) { return false; }
-> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-> index 0f910c828973..bb9669cc105d 100644
-> --- a/kernel/cgroup/cpuset.c
-> +++ b/kernel/cgroup/cpuset.c
-> @@ -4296,3 +4296,13 @@ void cpuset_task_status_allowed(struct seq_file *m, struct task_struct *task)
->   	seq_printf(m, "Mems_allowed_list:\t%*pbl\n",
->   		   nodemask_pr_args(&task->mems_allowed));
->   }
-> +
-> +bool memcg_mems_allowed(struct mem_cgroup *memcg, int nid)
-> +{
-> +	struct cgroup_subsys_state *css;
-> +	struct cpuset *cs;
-> +
-> +	css = cgroup_get_e_css(memcg->css.cgroup, &cpuset_cgrp_subsys);
-> +	cs = css ? container_of(css, struct cpuset, css) : NULL;
-> +	return cs ? node_isset(nid, cs->effective_mems) : true;
+From: Michael Kelley <mhklinux@outlook.com>
 
-As said by Johannes, you will need to take the callback_lock to ensure 
-the stability of effective_mems. I also second his suggestion of 
-defining a cgroup_mems_allowed() here and do the the memcg to cgroup 
-translation outside of cpuset.c.
+Current deferred I/O code works only for framebuffer memory that is
+allocated with vmalloc(). The code assumes that the underlying page
+refcount can be used by the mm subsystem to manage each framebuffer
+page's lifecycle, which is consistent with vmalloc'ed memory, but not
+with contiguous kernel memory from alloc_pages() or similar. When used
+with contiguous kernel memory, current deferred I/O code eventually
+causes the memory free lists to be scrambled, and a kernel panic ensues.
+The problem is seen with the hyperv_fb driver when mmap'ing the
+framebuffer into user space, as that driver uses alloc_pages() for the
+framebuffer in some configurations. This patch set fixes the problem
+by supporting contiguous kernel memory framebuffers with deferred I/O.
 
-Cheers,
-Longman
+Patch 1 exports a 'mm' subsystem function needed by Patch 2.
+
+Patch 2 is the changes to the fbdev deferred I/O code. More details
+are in the commit message of Patch 2.
+
+Patch 3 updates the hyperv_fb driver to use the new functionality
+from Patch 2.
+
+Michael Kelley (3):
+  mm: Export vmf_insert_mixed_mkwrite()
+  fbdev/deferred-io: Support contiguous kernel memory framebuffers
+  fbdev: hyperv_fb: Fix mmap of framebuffers allocated using
+    alloc_pages()
+
+ drivers/video/fbdev/core/fb_defio.c | 126 +++++++++++++++++++++++-----
+ drivers/video/fbdev/hyperv_fb.c     |   1 +
+ include/linux/fb.h                  |   1 +
+ mm/memory.c                         |   1 +
+ 4 files changed, 109 insertions(+), 20 deletions(-)
+
+-- 
+2.25.1
 
