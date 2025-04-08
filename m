@@ -1,65 +1,128 @@
-Received: from sxb1plsmtpa01-09.prod.sxb1.secureserver.net (sxb1plsmtpa01-09.prod.sxb1.secureserver.net [188.121.53.90])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07B592063FA
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 05:42:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.121.53.90
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 880022063FA;
+	Tue,  8 Apr 2025 05:42:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744090973; cv=none; b=c8rLez0nQDVHXb17VTJ9vRV7C0X+FngjUqO8TwytOM0hLPv5Uhr7e/JsSzYzcEjS6mABdo8MEwcy8kGUXA/ZUMZbw6i+i8NOzQMQu5mJL6uP3zIMdCEGdg/K4yUyAeFOpQME/Cp1A/Yg4yAzBpdP2rBgo1FYGfJeT4GgxoPDkSE=
+	t=1744090979; cv=none; b=JnfXwpMUSO10ik5MuwTFCIz7aM4tAYKTOJDxITCD6lm5NAxjSHXXg7FnHWiVA9W0tDqdww16kDcyCOASBjQjnp0R9H+c5Dtu2WdhjkE4tZnPH0DldRNzNFFpCFPoXdPvfO8BKs7c4bNyBY+44RoVAhGmX1dy9tTTUu4zfLeLzbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744090973; c=relaxed/simple;
-	bh=LXuGmP+5eI2TnnMyC1FFsctp5JoeYuH/0EnQ5k2XhjE=;
-	h=Message-ID:Date:MIME-Version:To:From:Cc:Subject:Content-Type; b=SUPHseaN4trUPpAIyqXqHC+UljMpEsMJ5lyYuNbS0iWjI7imBJqIhrsWOdYb8eCDeXf8Y2fVeJbweogXoPYOC/6VfPx4f89wzRWvc4IShTvwiwywsfcDjDphxSlS7/r9F5HH+oLjgzRaLv788kY8g/UDTipaww6wn9j96rZBzD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squashfs.org.uk; spf=pass smtp.mailfrom=squashfs.org.uk; arc=none smtp.client-ip=188.121.53.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squashfs.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squashfs.org.uk
-Received: from [192.168.178.95] ([82.69.79.175])
-	by :SMTPAUTH: with ESMTPSA
-	id 21bfujqzDxJGd21bhufVIz; Mon, 07 Apr 2025 22:34:46 -0700
-X-CMAE-Analysis: v=2.4 cv=ZqoXK87G c=1 sm=1 tr=0 ts=67f4b577
- a=84ok6UeoqCVsigPHarzEiQ==:117 a=84ok6UeoqCVsigPHarzEiQ==:17
- a=IkcTkHD0fZMA:10 a=VwQbUJbxAAAA:8 a=FXvPX3liAAAA:8 a=36k9kUrpFmN1ouI47esA:9
- a=QEXdDO2ut3YA:10 a=zgiPjhLxNE0A:10 a=UObqyxdv-6Yh2QiB9mM_:22
-X-SECURESERVER-ACCT: phillip@squashfs.org.uk
-Message-ID: <86290c9b-ba40-4ebd-96c1-d3a258abe9d4@squashfs.org.uk>
-Date: Tue, 8 Apr 2025 06:33:53 +0100
+	s=arc-20240116; t=1744090979; c=relaxed/simple;
+	bh=sYlu/zxZtd7jHwos4fIUG+rHHrsp1iz1KzM6QEIoWrI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OxkursEgT6VUYZv2R/1oDWMUU7Jksp1CG1qMutBgx7ARgnhWc2D4qam9FLIjjCYuOVezm+LgbSp22NYir/ywgmz0XpIlRuNymuE7/Sf+lzdHGY4zQ1osTu1++/n1u6ZDBeTQ/9aWN6pmLpfbhF8lFZof+jWLo+bvxyLFTRq7CA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mOGe76Xr; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mOGe76Xr"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c7913bab2cso122992685a.0;
+        Mon, 07 Apr 2025 22:42:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744090975; x=1744695775; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BTuC1yLkVLw0KDJ1sl/fXI1uube15Zl0sXYbNMZgOck=;
+        b=mOGe76Xrj7rK7ENLDwlw5vfHJyOgThuDdAejds4MUOvxdDzGxcaOKllMi5LX3Dzrta
+         u7GxfdMZldzbByb1WYNIS8zk5U4VmX0qEFTNdah/U3w5QnX7bp6+k30S0aKoYZXOqioq
+         A+aEMFE027+FEVcxgphjLjhMIES0dxynbSjP0uGa2ihdcgaCTAYieYOv8rqqpmF+ZYop
+         CvLNF+0niyiUXUld1egsvxRMLR/cvtEvyVGtQiUHby+VDZmu5suLH5LJt9RYov+q083M
+         7GSybx1sMy9xQWFAQ2Q2u4jz8XTAUw3FhLPF4J7574a2uAuQuyWhJvvKJ3VFU1KYsmFg
+         8z0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744090975; x=1744695775;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BTuC1yLkVLw0KDJ1sl/fXI1uube15Zl0sXYbNMZgOck=;
+        b=olur+zGa00lHpxjWX2PAAw6VocimtAQIw7WAbE01Tu1WD2QUj/FDEIsu7q2RZQDwFg
+         HplhkECHY1NHg/DYje78F9UHtEAX0oxmoVYrK2PW4f6wFnKfWF3GfA19gKBsgyLdab2K
+         BsNP7+Xj5kK5KxTZ/JnOx3F5SmD5L3QQrDw/11IdInjFDuUcxOkaYnplzQSvaJaEQvtO
+         ewE9W9qOC36uhIfRbs93WO9ZKcHB2ptlZUxLlfCB73fZDNemifYDyHv/o83CgsSns+tS
+         2yD+IszhSmNzN8Xp8wm8J372ceU+q5exsi+E5X4YeV28JFB4E46jvhrBz+omVNwcaLKQ
+         eV9g==
+X-Forwarded-Encrypted: i=1; AJvYcCUJdM28nS3LblcaxY67IrgpAC6ejiuE34UlVPKNZ0FBOtdaGCRzPRUYriHwypAm0tPOwhXiPhU/kFawrD+p@vger.kernel.org, AJvYcCXMraXSlAYuSI90phR/tmw5nma+h1gnsL6UFyykJuqC9j5JjvDO15xg319lTh51pgp1FsWx+tT3sKpiKKA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjPcsFXYhFxI6lKKI6oNkJXR+HvvMU0Qq15lyBPBoDX7p/XUZa
+	NiqHcbc5YsL7VfOMLYRirb4MohvzwVaB9NzoMKKf9ZMuQzjLO6pXAgAfdTQl6oHDR3VtswnFVd9
+	EKegBQp8xhWydz265LCOtb8Ls1DM=
+X-Gm-Gg: ASbGnctaJ0Qk/g6WaftN8A1i5IZn7ZBaHWge+n/91FFznPI/jjnrnh13tbPdCiMuV2z
+	Ll+9wJQzBygcZA0gbB119H8y0byfEskHTzdWpmOYZSDOXDS90cEFy72oIzOGpeDGXjYR720cZxe
+	l8g84IQURS9r90SziZ9QTG+CwkY7lUPir2/yD45SM+2wmX+nv6RM0F003IAg==
+X-Google-Smtp-Source: AGHT+IG3Uf49ROht+s7nR72iOxuW28S1zEz3Tl9TWHw9A08Rv7qvVW4zSIDvBxg+BxfLb4weJfS3eDrTmYQc9Xkm7cw=
+X-Received: by 2002:a05:620a:170d:b0:7c5:dfe5:ea78 with SMTP id
+ af79cd13be357-7c774d1c4d7mr2354805385a.8.1744090975309; Mon, 07 Apr 2025
+ 22:42:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: Jan Kara <jack@suse.cz>, Andreas Gruenbacher <agruenba@redhat.com>,
- Namjae Jeon <linkinjeon@kernel.org>, Sungjong Seo <sj1557.seo@samsung.com>,
- OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
- Carlos Maiolino <cem@kernel.org>, "Darrick J. Wong" <djwong@kernel.org>
-From: Phillip Lougher <phillip@squashfs.org.uk>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- Luis Chamberlain <mcgrof@kernel.org>
-Subject: Recent changes mean sb_min_blocksize() can now fail
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4xfLgiVd6w7M1jJ8sxx/5VfnM0oNjxj3+zXBOKGWp9QyJM+1OrRGPRadhmTQ6uxIhSqs8CBa7rDntCLR/pMBIuPxl6r5O9W6W2eHmmNzqBx2B2OV8KaJ8d
- NuWIkMO2MBbW8c+HnDL7oWTgP+Xf0IENCaa1x/KMyADqDZ/ykUwsOeM1w8AE6wgzeVsAR/GGG7xkRjC8Eee0MOlb+37zD4FuIYV32618X9j9HoRUcBvlMj7o
- dAytz1y+t4Hrwkpgu/27DhsSw/fVcjJqmHpmH7ltEQcu909KQIhOGWTYGsFB7JMBOF3G06EjL7/8r5BGmqyrDSRBp9s5xqtIQyhD/KOcO+j4NGqcI2K8ruV7
- 4aVjjIQ0DrPvShzZfA/p4lC0MlGA4rIr5nc/ffkuViWhshlr8bnswblMbKAjliEKAQiYGRLNYpWqOplLP3EqSIb9/0/FI4mDAPmu6ky4MT9G3zTKkI/1yagS
- leM1xnJd5q+2XrIU
+References: <20250408033322.401680-1-gshahrouzi@gmail.com> <20250408033322.401680-2-gshahrouzi@gmail.com>
+ <6s4hsqctezmwk73bgz4u6clielbbndijfk6hpciqfbjc53yzhq@hm4ybp4splhl>
+In-Reply-To: <6s4hsqctezmwk73bgz4u6clielbbndijfk6hpciqfbjc53yzhq@hm4ybp4splhl>
+From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Date: Tue, 8 Apr 2025 01:42:00 -0400
+X-Gm-Features: ATxdqUEDaPQxYlUXn9iw3QrX_i6bAlfEvLqG-LtPUN95gSF_j8N5amPFx0RxHu4
+Message-ID: <CAKUZ0zJUgFmoKv1oDguhEYWYxxFaKthCp6wY-ahsR8KWy-nqKg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] bcache: Fix undeclared symbol warning for bcache_is_reboot
+To: Coly Li <colyli@kernel.org>
+Cc: Kent Overstreet <kent.overstreet@linux.dev>, linux-bcache@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, skhan@linuxfoundation.org, 
+	kernelmentees@lists.linuxfoundation.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-A recent (post 6.14) change to the kernel means sb_min_blocksize() can now fail,
-and any filesystem which doesn't check the result may behave unexpectedly as a
-result.  This change has recently affected Squashfs, and checking the kernel code,
-a number of other filesystems including isofs, gfs2, exfat, fat and xfs do not
-check the result.  This is a courtesy email to warn others of this change.
-
-The following emails give the relevant details.
-
-https://lore.kernel.org/all/2a13ea1c-08df-4807-83d4-241831b7a2ec@squashfs.org.uk/
-https://lore.kernel.org/all/129d4f39-6922-44e9-8b1c-6455ee564dda@squashfs.org.uk/
-
-Regards
-
-Phillip
+On Tue, Apr 8, 2025 at 12:55=E2=80=AFAM Coly Li <colyli@kernel.org> wrote:
+>
+> On Mon, Apr 07, 2025 at 11:33:21PM +0800, Gabriel Shahrouzi wrote:
+> > Add extern declaration for bcache_is_reboot to bcache.h. Ensure proper
+> > visibility for use across multiple files (super.c, sysfs.c) and follow
+> > the declaration pattern for other forward declarations.
+> >
+> > Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+> > ---
+> >  drivers/md/bcache/bcache.h | 1 +
+> >  drivers/md/bcache/sysfs.c  | 2 --
+> >  2 files changed, 1 insertion(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/md/bcache/bcache.h b/drivers/md/bcache/bcache.h
+> > index 785b0d9008fac..531933351b8b8 100644
+> > --- a/drivers/md/bcache/bcache.h
+> > +++ b/drivers/md/bcache/bcache.h
+> > @@ -1007,6 +1007,7 @@ extern struct workqueue_struct *bch_journal_wq;
+> >  extern struct workqueue_struct *bch_flush_wq;
+> >  extern struct mutex bch_register_lock;
+> >  extern struct list_head bch_cache_sets;
+> > +extern bool bcache_is_reboot;
+> >
+>
+> NACK. It is uncessary to make more .c files to be aware of
+> bcache_is_reboot. Current code is in better form IMHO.
+Ah I see. It's only used in sysfs.c and super.c compared to the other
+forward declarations. Limiting the scope to only those files makes the
+most sense instead of including it in the header file.
+>
+>
+> >  extern const struct kobj_type bch_cached_dev_ktype;
+> >  extern const struct kobj_type bch_flash_dev_ktype;
+> > diff --git a/drivers/md/bcache/sysfs.c b/drivers/md/bcache/sysfs.c
+> > index e8f696cb58c05..47ef0167b9d23 100644
+> > --- a/drivers/md/bcache/sysfs.c
+> > +++ b/drivers/md/bcache/sysfs.c
+> > @@ -17,8 +17,6 @@
+> >  #include <linux/sort.h>
+> >  #include <linux/sched/clock.h>
+> >
+> > -extern bool bcache_is_reboot;
+> > -
+> >  /* Default is 0 ("writethrough") */
+> >  static const char * const bch_cache_modes[] =3D {
+> >       "writethrough",
+> > --
+> > 2.43.0
+> >
+>
+> --
+> Coly Li
