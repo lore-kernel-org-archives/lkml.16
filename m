@@ -1,39 +1,23 @@
-Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C93A5156CA;
-	Tue,  8 Apr 2025 08:36:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5DE720B7EC;
+	Tue,  8 Apr 2025 08:37:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744101369; cv=none; b=rgmS+bkAKLm8QN3RtwMi11TMB2GlGRTlrhkscNRZ4xhc4TVA6HiU3Z80R5ZSZv7AnypEH6dJVxhQkOsMkUPWCxl7oBOMsEMkqZF9VhhtH9WSaEgc1SPEAhNqT9sDzXwwpQlrei03bYo5AD/V0xTlCTNcbF6Z0Il/DKywfjkuJ5I=
+	t=1744101434; cv=none; b=cnuAZaY9KC7rJ3aUrftQ16Ajbn/uRR2R6x4Hm5G0VG1gbPw+Xyt36v1ZHgdpxS45O5aCjT5kG7/qIymsIJSxPpzz42oOnNIOfVDpeFSjHp4Khk+EYn1bZkfCGcconBc9brFLiZ18CNMazBbgK+oubLbgTWyg9efKVKqTt1NNiCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744101369; c=relaxed/simple;
-	bh=mzMfxAueJ3ZwWsr2CHBeJPRrTw/FwTzzBC5ucJhL2fY=;
-	h=Message-ID:Date:MIME-Version:Subject:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RTaFF2ZDNGl9eUsDbOvmfff40VnyP7Z2HiEP3ZsTaDnFe8ufwvZ3+QcmOkb307SCxa9SA5JCC5akm4Cjkd5ekdF1IB7f+/U6oet/GP63FQ3Qe2l9/uoHixgYN5V8GZC5x/JwLdMjgKKa2q1dVN0uB7axNm5jlaHp7Wv6YnlXdaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=hFtMJlQt; arc=none smtp.client-ip=54.207.19.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="hFtMJlQt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1744101320;
-	bh=mzMfxAueJ3ZwWsr2CHBeJPRrTw/FwTzzBC5ucJhL2fY=;
-	h=Message-ID:Date:MIME-Version:Subject:From;
-	b=hFtMJlQtddxNcHQVngIMyaVD7hc4YWJnWWMNDG0r9CDOh+urltFUYGnAWTdfSmeE9
-	 erpJiehVQwk+n5PaLaqnwwnBnPdG4qWm5xp7983uGPyByLshmuqNhKw6y5PO8jvTUH
-	 XlnQc5GGO14WUeniiJXG+uzcar+rc6ZczWu2PNcU=
-X-QQ-mid: bizesmtpip3t1744101310t5651a7
-X-QQ-Originating-IP: RmaqZH5hr4481NUI7HYifJ4cNp0cXuiOQek1MvsFBMU=
-Received: from [IPV6:240e:668:120a::212:156] ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 08 Apr 2025 16:35:08 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 14910186757885448490
-EX-QQ-RecipientCnt: 10
-Message-ID: <8BFABE0C4796C2D3+aa206f17-7b7a-4f2b-b843-7318792a4702@uniontech.com>
-Date: Tue, 8 Apr 2025 16:35:08 +0800
+	s=arc-20240116; t=1744101434; c=relaxed/simple;
+	bh=K9C0JphMEsB+BGyp/ZiBIvH6E0mI+CzVtAzpoaBH0Dw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dSEgAw+dRTpgKrGy7RLZMJt2ghxTovBWq+5w945YpUi/+lNZwTdkvSM2RFp7nk/iSeErzO2UcolT2DFaVpencARzRzy20J7B9IDu7fjfsgutI86KwvjxgGGbc5BxhuAiEeJMgf05srCBy3qOE3nzETXkpz2YmNl8uV1017lDvSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 34BE243291;
+	Tue,  8 Apr 2025 08:36:53 +0000 (UTC)
+Message-ID: <d5684f27-9676-4393-833a-390ccc244b73@ghiti.fr>
+Date: Tue, 8 Apr 2025 10:36:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,111 +25,215 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] kbuild: rpm-pkg: Add elfutils-devel to
- BuildRequires
-Cc: guanwentao@uniontech.com, linux-kbuild@vger.kernel.org,
- linux-kernel@vger.kernel.org, masahiroy@kernel.org, nathan@kernel.org,
- nicolas.schier@linux.dev, niecheng1@uniontech.com, petr.pavlu@suse.com,
- samitolvanen@google.com, zhanjun@uniontech.com
-References: <215802BA292C2DF6+20250408081441.61776-1-wangyuli@uniontech.com>
- <964B3FC2F607F2F4+20250408081921.63040-2-wangyuli@uniontech.com>
+Subject: Re: [PATCH v12 26/28] riscv: Documentation for landing pad / indirect
+ branch tracking
 Content-Language: en-US
-From: WangYuli <wangyuli@uniontech.com>
-Autocrypt: addr=wangyuli@uniontech.com; keydata=
- xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSKP+nX39DN
- IVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAxFiEEa1GMzYeuKPkg
- qDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMBAAAKCRDF2h8wRvQL7g0UAQCH
- 3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfPbwD/SrncJwwPAL4GiLPEC4XssV6FPUAY
- 0rA68eNNI9cJLArOOARmgSyJEgorBgEEAZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7
- VTL0dvPDofBTjFYDAQgHwngEGBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIb
- DAAKCRDF2h8wRvQL7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkU
- o9ERi7qS/hbUdUgtitI89efbY0TVetgDsyeQiwU=
-In-Reply-To: <964B3FC2F607F2F4+20250408081921.63040-2-wangyuli@uniontech.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------2wVuXK0f0SL55SpJ26paKBNj"
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: NSTiGhYb0MY63XCGtQ3oK413sB0gefN1AOvvv1ye2rWcMwO4Wc3U08V/
-	dAlTJ9GZqYdwgdoEIC8jzybs+o+uj6uLi06e136UvBeabAVW5SVhdc12gJ+fTTU7tPJJzie
-	pWdCV3+aNrpvM2WZ6DKqTtFgqKK7rx89RrPXBvoEDigWlvpkpj2M4m5m8QlAqOxh3DP1mWq
-	Yt6bD9KhDEyLk9DzarnNUwnx9ftpomAStcmOhg1EPCVPLNEc3enDwVWDxjQWTltBsxYWBo7
-	jrlGsy/yHojMiwIes8r5fwiQSdPYNlJQ3MOeXjYZ6fbMTTf8bIAs+Zt5X553ckuPMRFD3BJ
-	4dIyO3eZm9nGDFyy65lizrfQzSIHEQ/V2xQwyid0TBgUP3V2cffh5l+lRj56KwgWtmDsL93
-	ePY/U/C/+vvdN9blk3l8hDjxF2HmW4FJx+d16VB90NAGuBwwmXhZakoLDa4QDuTAR50Nap/
-	TgZnHhKp7ysI9lxmtblSD2RqLQ9DJe4kTkf1vxjvmV7orOpq3Z5WpiHcsnXiksoSqaXofdQ
-	03OaJpByHBNlPxcJwK1ZQ1F1bX+rhEotJ88O/c/kiakYjvBYetNZrt58AEgZvTB4gzKHXKu
-	sKsCgTV2K6ej1F4LPh4i9+Y2jN0d1ZVS1f5078Y721WMLV0JYnkz0WE3HUkYoqsoZA8ECn3
-	dosiKrcv5XYnMvbkKD7Bqrxm1uwDE0oCZU4VE1Q8WAcj0/OO7g6+li6pl9UpGeS96L0FotX
-	nfwYOq9X9wfAYiJdfsJo+doYeyUpYFngfE7ycnrP3C87QAhS4FW+ogVu1f82eDjXkYPJL3e
-	j1jrjeE5j4g/cSdRn0EmQevAsIDa9VFwbVsPAVkgVyqPbvBV7VRYBnrHT7Eh/zpJJIKpQqp
-	xrBk2S2JxKdHOM26XeoBiMNddN67kUE5Wow9nfV/rUdqDzzRPzCUQakCAylUhGces9OTMQJ
-	dMHP4vLKjJ9X2R0ayJHB7+IyR4yHNpmeJVUd2EbCpOtJsexnEKzx5x4ZarPcd0ig7xICtKN
-	X1LK3mmRW3S3DNKR6TThWSVTOeuRsNmfo8Recr6obBqyTeZV6o
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-X-QQ-RECHKSPAM: 0
-
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------2wVuXK0f0SL55SpJ26paKBNj
-Content-Type: multipart/mixed; boundary="------------tOXAy93uQtA6f5XKoqrdW45E";
- protected-headers="v1"
-From: WangYuli <wangyuli@uniontech.com>
-Cc: guanwentao@uniontech.com, linux-kbuild@vger.kernel.org,
- linux-kernel@vger.kernel.org, masahiroy@kernel.org, nathan@kernel.org,
- nicolas.schier@linux.dev, niecheng1@uniontech.com, petr.pavlu@suse.com,
- samitolvanen@google.com, zhanjun@uniontech.com
-Message-ID: <aa206f17-7b7a-4f2b-b843-7318792a4702@uniontech.com>
-Subject: Re: [PATCH v2 2/2] kbuild: rpm-pkg: Add elfutils-devel to
- BuildRequires
-References: <215802BA292C2DF6+20250408081441.61776-1-wangyuli@uniontech.com>
- <964B3FC2F607F2F4+20250408081921.63040-2-wangyuli@uniontech.com>
-In-Reply-To: <964B3FC2F607F2F4+20250408081921.63040-2-wangyuli@uniontech.com>
-
---------------tOXAy93uQtA6f5XKoqrdW45E
-Content-Type: multipart/mixed; boundary="------------Lm2SeCT0ensXmBg7P1tPw32s"
-
---------------Lm2SeCT0ensXmBg7P1tPw32s
+To: Deepak Gupta <debug@rivosinc.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ Christian Brauner <brauner@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Oleg Nesterov <oleg@redhat.com>,
+ Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
+ Jann Horn <jannh@google.com>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ alistair.francis@wdc.com, richard.henderson@linaro.org, jim.shu@sifive.com,
+ andybnac@gmail.com, kito.cheng@sifive.com, charlie@rivosinc.com,
+ atishp@rivosinc.com, evan@rivosinc.com, cleger@rivosinc.com,
+ alexghiti@rivosinc.com, samitolvanen@google.com, broonie@kernel.org,
+ rick.p.edgecombe@intel.com, Zong Li <zong.li@sifive.com>
+References: <20250314-v5_user_cfi_series-v12-0-e51202b53138@rivosinc.com>
+ <20250314-v5_user_cfi_series-v12-26-e51202b53138@rivosinc.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20250314-v5_user_cfi_series-v12-26-e51202b53138@rivosinc.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtddviedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpedthfelfeejgeehveegleejleelgfevhfekieffkeeujeetfedvvefhledvgeegieenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmeehsgegieemkeeludekmegtledujeemjeekjedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmeehsgegieemkeeludekmegtledujeemjeekjedvpdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmeehsgegieemkeeludekmegtledujeemjeekjedvngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopeegledprhgtphhtthhopeguvggsuhhgsehrihhvohhsihhntgdrtghomhdprhgtphhtthhopehtghhlgieslhhinhhuthhrohhnihigrdguvgdprhgtphhtthhopehmihhnghhosehrvgguhhgrthdrtghomhdprhgtphhtthhopegsp
+ hesrghlihgvnhekrdguvgdprhgtphhtthhopegurghvvgdrhhgrnhhsvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepgiekieeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohephhhprgesiiihthhorhdrtghomhdprhgtphhtthhopegrkhhpmheslhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhg
+X-GND-Sasl: alex@ghiti.fr
 
-QXBvbG9naWVzLCB0aGUgY29tbWl0IG1lc3NhZ2UgaGFkIGEgc21hbGwgcHJvYmxlbS4gSSB3
-aWxsIHJlcGx5IHRvIHRoaXMgDQp3aXRoIHRoZSByZXZpc2VkIHYzLi4uDQoNCi0tDQoNCldh
-bmdZdWxpDQoNCg==
---------------Lm2SeCT0ensXmBg7P1tPw32s
-Content-Type: application/pgp-keys; name="OpenPGP_0xC5DA1F3046F40BEE.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xC5DA1F3046F40BEE.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+On 14/03/2025 22:39, Deepak Gupta wrote:
+> Adding documentation on landing pad aka indirect branch tracking on riscv
+> and kernel interfaces exposed so that user tasks can enable it.
+>
+> Reviewed-by: Zong Li <zong.li@sifive.com>
+> Signed-off-by: Deepak Gupta <debug@rivosinc.com>
+> ---
+>   Documentation/arch/riscv/index.rst   |   1 +
+>   Documentation/arch/riscv/zicfilp.rst | 115 +++++++++++++++++++++++++++++++++++
+>   2 files changed, 116 insertions(+)
+>
+> diff --git a/Documentation/arch/riscv/index.rst b/Documentation/arch/riscv/index.rst
+> index eecf347ce849..be7237b69682 100644
+> --- a/Documentation/arch/riscv/index.rst
+> +++ b/Documentation/arch/riscv/index.rst
+> @@ -14,6 +14,7 @@ RISC-V architecture
+>       uabi
+>       vector
+>       cmodx
+> +    zicfilp
+>   
+>       features
+>   
+> diff --git a/Documentation/arch/riscv/zicfilp.rst b/Documentation/arch/riscv/zicfilp.rst
+> new file mode 100644
+> index 000000000000..a188d78fcde6
+> --- /dev/null
+> +++ b/Documentation/arch/riscv/zicfilp.rst
+> @@ -0,0 +1,115 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +:Author: Deepak Gupta <debug@rivosinc.com>
+> +:Date:   12 January 2024
+> +
+> +====================================================
+> +Tracking indirect control transfers on RISC-V Linux
+> +====================================================
+> +
+> +This document briefly describes the interface provided to userspace by Linux
+> +to enable indirect branch tracking for user mode applications on RISV-V
 
-xjMEZoEsiBYJKwYBBAHaRw8BAQdAyDPzcbPnchbIhweThfNK1tg1imM+5kgDBJSK
-P+nX39DNIVdhbmdZdWxpIDx3YW5neXVsaUB1bmlvbnRlY2guY29tPsKJBBMWCAAx
-FiEEa1GMzYeuKPkgqDuvxdofMEb0C+4FAmaBLIgCGwMECwkIBwUVCAkKCwUWAgMB
-AAAKCRDF2h8wRvQL7g0UAQCH3mrGM0HzOaARhBeA/Q3AIVfhS010a0MZmPTRGVfP
-bwD/SrncJwwPAL4GiLPEC4XssV6FPUAY0rA68eNNI9cJLArOOARmgSyJEgorBgEE
-AZdVAQUBAQdA88W4CTLDD9fKwW9PB5yurCNdWNS7VTL0dvPDofBTjFYDAQgHwngE
-GBYIACAWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZoEsiQIbDAAKCRDF2h8wRvQL
-7sKvAP4mBvm7Zn1OUjFViwkma8IGRGosXAvMUFyOHVcl1RTgFQEAuJkUo9ERi7qS
-/hbUdUgtitI89efbY0TVetgDsyeQiwU=3D
-=3DBlkq
------END PGP PUBLIC KEY BLOCK-----
 
---------------Lm2SeCT0ensXmBg7P1tPw32s--
+s/RISV-V/RISC-V and add a dot at the end of the line.
 
---------------tOXAy93uQtA6f5XKoqrdW45E--
 
---------------2wVuXK0f0SL55SpJ26paKBNj
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+> +
+> +1. Feature Overview
+> +--------------------
+> +
+> +Memory corruption issues usually result in to crashes, however when in hands of
 
------BEGIN PGP SIGNATURE-----
 
-wnsEABYIACMWIQRrUYzNh64o+SCoO6/F2h8wRvQL7gUCZ/TfvAUDAAAAAAAKCRDF2h8wRvQL7opS
-AQC1V6d2v5Hcnvb7l6YxFnsat/OKQtYLieifSNxFBngMwAEAyIqSopo14HVGSxPsczJAVYDfyPjF
-Tfb0rQzTV6qiZwU=
-=+Lmv
------END PGP SIGNATURE-----
+s/in to/into?
 
---------------2wVuXK0f0SL55SpJ26paKBNj--
+
+> +an adversary and if used creatively can result into variety security issues.
+
+
+"into a variety of security issues" ?
+
+
+> +
+> +One of those security issues can be code re-use attacks on program where adversary
+> +can use corrupt function pointers and chain them together to perform jump oriented
+> +programming (JOP) or call oriented programming (COP) and thus compromising control
+> +flow integrity (CFI) of the program.
+> +
+> +Function pointers live in read-write memory and thus are susceptible to corruption
+> +and allows an adversary to reach any program counter (PC) in address space. On
+> +RISC-V zicfilp extension enforces a restriction on such indirect control
+> +transfers:
+> +
+> +- indirect control transfers must land on a landing pad instruction ``lpad``.
+> +  There are two exception to this rule:
+> +
+> +  - rs1 = x1 or rs1 = x5, i.e. a return from a function and returns are
+> +    protected using shadow stack (see zicfiss.rst)
+> +
+> +  - rs1 = x7. On RISC-V compiler usually does below to reach function
+> +    which is beyond the offset possible J-type instruction::
+> +
+> +      auipc x7, <imm>
+> +      jalr (x7)
+> +
+> +	Such form of indirect control transfer are still immutable and don't rely
+> +    on memory and thus rs1=x7 is exempted from tracking and considered software
+> +    guarded jumps.
+> +
+> +``lpad`` instruction is pseudo of ``auipc rd, <imm_20bit>`` with ``rd=x0`` and
+> +is a HINT nop. ``lpad`` instruction must be aligned on 4 byte boundary and
+> +compares 20 bit immediate withx7. If ``imm_20bit`` == 0, CPU don't perform any
+
+
+s/withx7/with x7
+
+s/don't/doesn't
+
+
+> +comparision with ``x7``. If ``imm_20bit`` != 0, then ``imm_20bit`` must match
+> +``x7`` else CPU will raise ``software check exception`` (``cause=18``) with
+> +``*tval = 2``.
+> +
+> +Compiler can generate a hash over function signatures and setup them (truncated
+> +to 20bit) in x7 at callsites and function prologues can have ``lpad`` with same
+> +function hash. This further reduces number of program counters a call site can
+> +reach.
+> +
+> +2. ELF and psABI
+> +-----------------
+> +
+> +Toolchain sets up :c:macro:`GNU_PROPERTY_RISCV_FEATURE_1_FCFI` for property
+> +:c:macro:`GNU_PROPERTY_RISCV_FEATURE_1_AND` in notes section of the object file.
+> +
+> +3. Linux enabling
+> +------------------
+> +
+> +User space programs can have multiple shared objects loaded in its address space
+> +and it's a difficult task to make sure all the dependencies have been compiled
+> +with support of indirect branch. Thus it's left to dynamic loader to enable
+> +indirect branch tracking for the program.
+> +
+> +4. prctl() enabling
+> +--------------------
+> +
+> +:c:macro:`PR_SET_INDIR_BR_LP_STATUS` / :c:macro:`PR_GET_INDIR_BR_LP_STATUS` /
+> +:c:macro:`PR_LOCK_INDIR_BR_LP_STATUS` are three prctls added to manage indirect
+> +branch tracking. prctls are arch agnostic and returns -EINVAL on other arches.
+> +
+> +* prctl(PR_SET_INDIR_BR_LP_STATUS, unsigned long arg)
+> +
+> +If arg1 is :c:macro:`PR_INDIR_BR_LP_ENABLE` and if CPU supports ``zicfilp``
+> +then kernel will enabled indirect branch tracking for the task. Dynamic loader
+
+
+s/will enabled/will enable
+
+
+> +can issue this :c:macro:`prctl` once it has determined that all the objects
+> +loaded in address space support indirect branch tracking. Additionally if there
+> +is a `dlopen` to an object which wasn't compiled with ``zicfilp``, dynamic
+> +loader can issue this prctl with arg1 set to 0 (i.e.
+> +:c:macro:`PR_INDIR_BR_LP_ENABLE` being clear)
+> +
+> +* prctl(PR_GET_INDIR_BR_LP_STATUS, unsigned long arg)
+> +
+> +Returns current status of indirect branch tracking. If enabled it'll return
+> +:c:macro:`PR_INDIR_BR_LP_ENABLE`
+> +
+> +* prctl(PR_LOCK_INDIR_BR_LP_STATUS, unsigned long arg)
+> +
+> +Locks current status of indirect branch tracking on the task. User space may
+> +want to run with strict security posture and wouldn't want loading of objects
+> +without ``zicfilp`` support in it and thus would want to disallow disabling of
+> +indirect branch tracking. In that case user space can use this prctl to lock
+> +current settings.
+> +
+> +5. violations related to indirect branch tracking
+> +--------------------------------------------------
+> +
+> +Pertaining to indirect branch tracking, CPU raises software check exception in
+> +following conditions:
+> +
+> +- missing ``lpad`` after indirect call / jmp
+> +- ``lpad`` not on 4 byte boundary
+> +- ``imm_20bit`` embedded in ``lpad`` instruction doesn't match with ``x7``
+> +
+> +In all 3 cases, ``*tval = 2`` is captured and software check exception is
+> +raised (``cause=18``)
+> +
+> +Linux kernel will treat this as :c:macro:`SIGSEV`` with code =
+> +:c:macro:`SEGV_CPERR` and follow normal course of signal delivery.
+>
