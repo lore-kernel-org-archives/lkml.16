@@ -1,127 +1,86 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C8F185935
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 15:28:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92BB41CF7AF
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 15:29:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744126129; cv=none; b=LFcxeRdOD0tPcY+2oRV4S7hET+7Pd+c6qOCIpSwqZPfUkciWhuLknblt5/pwEWSG7sIIQlFsNG4kOhKI5uiMOS+GM62F/gf6A9Nm8hf61LCVwKxsMUYgjkmjHln0iXKL7ATQKeSKBgRw7gVxtKvyJzg99U3Ts8deaSkUjE25BW4=
+	t=1744126152; cv=none; b=FZRkLYqc9q+rxKqljCVa+Fx+Fa9nyqa3NQnWqVOf2GQ6S7QrFA+pc61EP0D0I0tD+6zb2xbGg41e75/7RXBiFUp2huA2Jw0QCUoYFIF5TnurwS6B/7FiorJebzKGFxyC5l3Qot9xC4pFr/Ly2oZY+FWbSuuloiZ6cHMeO2m14sg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744126129; c=relaxed/simple;
-	bh=15TAq4+0JCu/vVtFiEew5ZcEiWU9dLv8HKuLeuSlAkc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uSLhBmSJv9SJjnHd7ygLmsM52FGI/J2l76Fm3uzD9UCn5fVPOfvtx2ZWjXfL6A5ztMPmWD/e6kR30YBvRDDCpLCPxQq5Z1t8uBZ9oYx/ksSnwBnaf/9G+/WFa1MNoiwIWIrVjspdX701NK0x+s/IW/kZUpeew6hT5ctEhE2b/0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=w75jfA9i; arc=none smtp.client-ip=91.218.175.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744126152; c=relaxed/simple;
+	bh=aIoMkgJTvkjTjvFmIUdpv6qDltcnB/ZgVTiXC4CU8BE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=YcqnINZmWE5p8NBesMQZfR4V24M2szQ6aWKvxXEcXyLrqAWoZ/6uDLrbroF8iltd2aDf6My85n1c+g17Vk3jr4yU6a83PMlmHDSPdO2hmeObVllKEdFuqWZcfI98MJxIzcpJoBLtD9l7IBt5rFCNhA+pKbrmsLkokCDqRF4+nmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k7cHhRXf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="w75jfA9i"
-Message-ID: <2d674a0e-9a54-4315-bd81-0cb3a2fb1602@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744126125;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2UmQzvgk97m5bud5ShHuuzMTFoqRrCLfyIbWy1LiIbw=;
-	b=w75jfA9io+TTp7OGZgBNEsJ9Im/D0seD8CVNr8YGxBlynMven66c/15jXpnVF4TU7bYgqw
-	5bRn0odCPaOD+3pVjzmrTojpZLf9ycApVg46pA9LO8UpCo1cLbKqgsAi8P+PRj9NX+wHyD
-	wY08dFo7amEjmcJFtWYkuC9IlWhLnPM=
-Date: Tue, 8 Apr 2025 11:28:40 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k7cHhRXf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BAB0C4CEEA;
+	Tue,  8 Apr 2025 15:29:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744126152;
+	bh=aIoMkgJTvkjTjvFmIUdpv6qDltcnB/ZgVTiXC4CU8BE=;
+	h=From:Subject:Date:To:Cc:From;
+	b=k7cHhRXfqXqM+rOB73brR5i91oVIRlWW/ZrrFuRVZHwqCgHlLyUR+Lg2y7Sel8Boh
+	 8ExGdPehfrc4vrVc8uOuZ1+rtjGBUtUu/lgI3nAdONahJHYPYBWnFHDFrVxMQpkNvA
+	 L3b4GfBAw+bx9nzmI/LxvQvjUUVTfqtB1aQsr9bVw6GMA9b6w4iQ6nbq8rdjM2hTpY
+	 5zQqy+IcFWgXL907IT6r0d1QK+NR3fdSVRUlI8TTi09WaB9DpZEINSntO95ldgVnXp
+	 uh4smA/aKy3ARVwOJQKFo/2DNhbNXhdDtye1yvMCM4fg0hwNiu2odxmMMmAKrh6eY3
+	 QYK7rNhextjsA==
+From: Daniel Wagner <wagi@kernel.org>
+Subject: [PATCH 0/8] nvmet-fcloop: bunch of fixes and cleanups
+Date: Tue, 08 Apr 2025 17:29:02 +0200
+Message-Id: <20250408-nvmet-fcloop-part-one-v1-0-382ec97ab7eb@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 2/2] device property: Add
- fwnode_property_get_reference_optional_args
-To: Rob Herring <robh@kernel.org>
-Cc: Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org,
- Sakari Ailus <sakari.ailus@linux.intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J . Wysocki" <rafael@kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Len Brown <lenb@kernel.org>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Daniel Scally <djrscally@gmail.com>, linux-kernel@vger.kernel.org,
- Danilo Krummrich <dakr@kernel.org>, linux-acpi@vger.kernel.org
-References: <20250407223714.2287202-1-sean.anderson@linux.dev>
- <20250407223714.2287202-3-sean.anderson@linux.dev>
- <CAL_JsqLQvyBvOXJJhRcnVAVx81MUf9YwtyZ5VC-whwY=uoeDXw@mail.gmail.com>
- <52d79db7-f1fa-4695-aeb6-d07d6c2f90dc@linux.dev>
- <CAL_JsqJ_EqsxrY67OPm+t6tU5ikFA-TZ-fFqHPYQMuy16c_kLg@mail.gmail.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <CAL_JsqJ_EqsxrY67OPm+t6tU5ikFA-TZ-fFqHPYQMuy16c_kLg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAL5A9WcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDEwML3byy3NQS3bTknPz8At2CxKIS3fy8VF3jJDOjVBOL5NREQ2MloN6
+ CotS0zAqwudGxtbUAyyitCmcAAAA=
+X-Change-ID: 20250408-nvmet-fcloop-part-one-3b62e48cea13
+To: James Smart <james.smart@broadcom.com>, Christoph Hellwig <hch@lst.de>, 
+ Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>, 
+ Jens Axboe <axboe@kernel.dk>, Hannes Reinecke <hare@suse.de>
+Cc: James Smart <jsmart2021@gmail.com>, linux-nvme@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, Daniel Wagner <wagi@kernel.org>
+X-Mailer: b4 0.14.2
 
-On 4/8/25 11:19, Rob Herring wrote:
-> On Tue, Apr 8, 2025 at 10:12 AM Sean Anderson <sean.anderson@linux.dev> wrote:
->>
->> On 4/8/25 09:00, Rob Herring wrote:
->> > On Mon, Apr 7, 2025 at 5:37 PM Sean Anderson <sean.anderson@linux.dev> wrote:
->> >>
->> >> Add a fwnode variant of of_parse_phandle_with_optional_args to allow
->> >> nargs_prop to be absent from the referenced node. This improves
->> >> compatibility for references where the devicetree might not always have
->> >> nargs_prop.
->> >
->> > Can't we just make fwnode_property_get_reference_args() handle this
->> > case? Or why is it not just a 1 line wrapper function?
->>
->> fwnode_property_get_reference_args ignores nargs when nargs_prop is
->> non-NULL. So all the existing callers just pass 0 to nargs. Rather than
->> convert them, I chose to add another function with different defaults.
->> There are only four callers that pass nargs_prop, so I could just as
->> easily change the callers instead.
-> 
-> Why do you have to change the callers? nargs value won't matter
-> because they obviously have nargs_prop present or they would not have
-> worked in the first place. If behavior changes because there's an
-> error in their DT, who cares. That's their problem for not validating
-> the DT.
+The refcount nvmet-fcloop series is getting a bit long [1]. Here are the
+various fixes and small cleanups which are independent of the refcount
+changes.
 
-Because the change would be to make nargs matter even when nargs_prop is
-present. For the sake of example, consider something like
+Only the first patch is new, the rest has already been revied by
+Christoph and Hannes. I've gave this series a good test run and there
+shouldn't be any regressions.
 
-  foo: foo {
-    #my-cells = <1>;
-  };
-  
-  bar: bar {
-  };
+I've got a some more simple patches (with reviews) but they will
+introduce regressions, because they depend on the refcount feature.
 
-  baz {
-    my-prop = <&bar>, <&foo 5>, ;
-    my-prop-names = "bar", "foo";
-  };
+[1] https://lore.kernel.org/all/20250318-nvmet-fcloop-v3-0-05fec0fc02f6@kernel.org/
 
-Before we would have
+Signed-off-by: Daniel Wagner <wagi@kernel.org>
+---
+Daniel Wagner (8):
+      nvmet-fcloop: swap list_add_tail arguments
+      nvmet-fcloop: replace kref with refcount
+      nvmet-fcloop: add ref counting to lport
+      nvmet-fc: inline nvmet_fc_delete_assoc
+      nvmet-fc: inline nvmet_fc_free_hostport
+      nvmet-fc: update tgtport ref per assoc
+      nvmet-fc: take tgtport reference only once
+      nvmet-fc: put ref when assoc->del_work is already scheduled
 
-fwnode_property_get_reference_args(baz, "my-prop", NULL, 0, "bar", args) <bar>
-fwnode_property_get_reference_args(baz, "my-prop", NULL, 0, "foo", args) <foo>
-fwnode_property_get_reference_args(baz, "my-prop", "#my-cells", -1, "bar", args) ERROR
-fwnode_property_get_reference_args(baz, "my-prop", "#my-cells", -1, "foo", args) ERROR
-fwnode_property_get_reference_args(baz, "my-prop", "#my-cells", 0, "bar", args) ERROR
-fwnode_property_get_reference_args(baz, "my-prop", "#my-cells", 0, "foo", args) ERROR
+ drivers/nvme/target/fc.c     | 60 ++++++++++++-----------------------
+ drivers/nvme/target/fcloop.c | 74 ++++++++++++++++++++++++--------------------
+ 2 files changed, 60 insertions(+), 74 deletions(-)
+---
+base-commit: 0514a1379e11c6b8038674f43a478b0857d47a5e
+change-id: 20250408-nvmet-fcloop-part-one-3b62e48cea13
 
-and after we would have
+Best regards,
+-- 
+Daniel Wagner <wagi@kernel.org>
 
-fwnode_property_get_reference_args(baz, "my-prop", NULL, 0, "bar", args) <bar>
-fwnode_property_get_reference_args(baz, "my-prop", NULL, 0, "foo", args) <foo>
-fwnode_property_get_reference_args(baz, "my-prop", "#my-cells", -1, "bar", args) ERROR
-fwnode_property_get_reference_args(baz, "my-prop", "#my-cells", -1, "foo", args) ERROR
-fwnode_property_get_reference_args(baz, "my-prop", "#my-cells", 0, "bar", args) <bar>
-fwnode_property_get_reference_args(baz, "my-prop", "#my-cells", 0, "foo", args) <foo 5>
-
-The problem is that all existing callers pass nargs=0 when
-nargs_prop="#my-cells" so they will get the new behavior even when they
-shouldn't. So if we change the behavior we have to change the callers
-too. If we make a new function with new behavior the callers stay the
-same.
-
---Sean
