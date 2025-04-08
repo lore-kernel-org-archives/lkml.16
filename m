@@ -1,175 +1,102 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mr85p00im-zteg06021501.me.com (mr85p00im-zteg06021501.me.com [17.58.23.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B2FC268FE5
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 11:34:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20930268FCF
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 11:34:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.23.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744112075; cv=none; b=hUgcyVMa1nirqKsBvyp4ieOZ1NHxu90aJv3eWAt2lMr4zDqKjBYN34fAwF0WJ1e4IBSk69oLarYtxJsp+dAHz9Zk/dS/qtM6np01T5LEy+Z724xtduQdi1xbmC8QQ8mEQMVAFhANCl1GWuIPS+FlYCB0fkrCpikRDAgYMawI/4c=
+	t=1744112090; cv=none; b=Xwuc7szyq/OglJZ379s+H5/Sp0AlrjGQW3V/Cr1HBSSuS+mLurT5kgZhEWPOJ3D/Aa4u9Sf5zGfCa3zhrNtwcdrtDstpDrxvccsK49ckDZLuFRw4Py3p9FMEHidfYkLNylgOOta318+GRs2xaKN7hU/rI+rzzEa2d3CSC/1mGIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744112075; c=relaxed/simple;
-	bh=4x59vokfEn4mqffHLLahm5tXLvJ/2uXuqBEPOj6Uy1g=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=NgaT1fgFSwN81Tm2iRVeRir5jNyfmEczPuEKTrduHrUDGVOEgRnUWFvOZkE+gXxhLEgXGohvNQnY9Miy0HBLgCzvhkMA/TJPi12uq5og4Lg1B+hcAGbqsL8osrWvlBACqsGdo/7F/RSulxFata4xz0h5AguOcVBUW9iTLwZe10U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ypu2W7wq; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744112090; c=relaxed/simple;
+	bh=SU1tu9za3zKIMyR4DCCKpc/LUgyMBmasXS8NSRu+YQA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tzJ5Ws6H+dSLx5vxoCMzCPFEkKb9t6gDP2xpYQIbHpFSj52kqzKubg5RQMNHRAQ8ozcWZGU3XnHUeA9NvSCJk8nuu37pe217D43xa4oAbswsxwJd0Yjxw2mjVP1DHLLVuC01PSokrE40C0LikLUXvxfSyJxGE7YWk5cIKogsNmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=zPH8B84F; arc=none smtp.client-ip=17.58.23.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ypu2W7wq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744112072;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PAhKuQb3RoCqJ3z/VKP8lkfDlIZ0rdzLrgCMtYUeatE=;
-	b=Ypu2W7wqIpXpuM2lboTZeljw1dYUbG/c8HvAvINS2OtTBJ+uAgIC/aCW72J4Jh1rFXRue0
-	iaW1B0L4XKfxQy/TrlaQ79POh37O84/se/MCLzvhOs38Nx8Kumzr0K3dEPjHCyg8AGoXxX
-	qIGGD6TEq6MhlN9XWnuiyAtBrd4yCP8=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-681-QphBJrdrPf6ZrfUE36tC1w-1; Tue, 08 Apr 2025 07:34:30 -0400
-X-MC-Unique: QphBJrdrPf6ZrfUE36tC1w-1
-X-Mimecast-MFC-AGG-ID: QphBJrdrPf6ZrfUE36tC1w_1744112070
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3913f97d115so2696751f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 04:34:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744112070; x=1744716870;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PAhKuQb3RoCqJ3z/VKP8lkfDlIZ0rdzLrgCMtYUeatE=;
-        b=fbK5QEW1WUYjoCSo1FNwIW4wKTy9xIOEiBQTpSfVozn5MUbHqszlWFOypAUt0NMIns
-         RlLGeU/8+Dab55r9d7DEmGxMSi4pd3B2zcIAGTa5XpH9gnSzfPmlg3cELLAYhMNq8vuN
-         E2NxH6nZTFvGvT50EWKoESzV67xPqfx7lu/limnhMS5pa/dB3s8kVNjQWiUSXwRnOvLp
-         R6T8NUl/9Nx0kXq4SXzW/ZaQ1V+4nWWq1iGLTHXF/+ips7t3J73U1wCgzbwaSwK7H+6z
-         rGM3WkqPMcMy+fUqQutqVHcMdyJQw+8LAP0Iu9DTPDMs4OiNCYwrqNBsbZqF1CBXfG2x
-         anHA==
-X-Forwarded-Encrypted: i=1; AJvYcCUkQWyAYx8FdxeKSiJLrzqYxVNcwwJsBQ76PeEzdO/UL8aQSUiF2gKgJ0wlqtAnpvPxg0QxcO9MyROJlVU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyICk15SjS78Kur/z08kcAooyn4SqRPoLe51bsY/6ui4ciig2mV
-	OE5eyNBbpkZAH77zIDbBs7FeRWzmXZBP7M+IM3fqC8V4M6Z/kb4DAQl6HmWdo8WFXEaB/RlwCYm
-	FrdqVZqZQFvdp2Eh1NH0kNM70ruuEe5gwg96L4QjgPvLYdGP3uO/gZx+1dF07pg==
-X-Gm-Gg: ASbGncsJP3BJzXY8jG2q1coyStA6IlVv5KGGDzXHMc/1qVsgs1i6HLzbaYikh349pwR
-	nNnhb7lo1IATVvewLBvR7nybpqkQXdrL2F5ujU+JjNb4j++QJ5ATeHZK2PIdHVIxeReT3T1YmCX
-	tckZ6dvgG7weEdLAwnHNJ8p4FoUDaz7UCe1SvBcPzDjxI+9SRflWiIjBUe0qkdQuPD96CP7C4Pn
-	Vxr9EYjW5bs/hmZEbAcnaS3D3scwQqUHLO/Fx7TTzzcll8jE4YlD9klagsYUvGduZrcP8UmNNoA
-	KPR4nMphnrCDqmOWkqNchdtPLjREOtISOdD+p8qiRrl1wh9823EJFQ5ALfMUTdsRGFkbFye16Q=
-	=
-X-Received: by 2002:adf:b605:0:b0:391:21e2:ec3b with SMTP id ffacd0b85a97d-39d820ab5a7mr1911490f8f.3.1744112069652;
-        Tue, 08 Apr 2025 04:34:29 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHF7dCMQ395WPISkch1rK8BCQ56JHVKYbHjaY16C0nZdn5ezaBn6zxMmjhUxzXiNWxckPpQoA==
-X-Received: by 2002:adf:b605:0:b0:391:21e2:ec3b with SMTP id ffacd0b85a97d-39d820ab5a7mr1911463f8f.3.1744112069287;
-        Tue, 08 Apr 2025 04:34:29 -0700 (PDT)
-Received: from localhost (62-151-111-63.jazzfree.ya.com. [62.151.111.63])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39c3020d9cfsm14619063f8f.78.2025.04.08.04.34.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 04:34:28 -0700 (PDT)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: Thomas Zimmermann <tzimmermann@suse.de>, Marcus Folkesson
- <marcus.folkesson@gmail.com>, David Airlie <airlied@gmail.com>, Simona
- Vetter <simona@ffwll.ch>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Thomas Zimmermann <tzimmrmann@suse.de>
-Subject: Re: [PATCH v3 2/3] drm/st7571-i2c: add support for Sitronix ST7571
- LCD controller
-In-Reply-To: <c4669293-0d56-4bdd-9075-01281042b002@suse.de>
-References: <20250408-st7571-v3-0-200693efec57@gmail.com>
- <20250408-st7571-v3-2-200693efec57@gmail.com>
- <87cydn9bkx.fsf@minerva.mail-host-address-is-not-set>
- <c4669293-0d56-4bdd-9075-01281042b002@suse.de>
-Date: Tue, 08 Apr 2025 13:34:27 +0200
-Message-ID: <87iknega4c.fsf@minerva.mail-host-address-is-not-set>
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="zPH8B84F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=elupXrputsiJWGq9GFuUlFEVg6AtQR2+rD/CZNF0CBE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:x-icloud-hme;
+	b=zPH8B84FXjG2vE0DyIEqwFLa88Ot7VxAM93/8nMPU5EuTAuERjPtnZWPY6dN8S4Tk
+	 LqCtnH31bgvRE/pWpuNHKgl/uIrG1gaZ36dsO8bTlqN+S1d5xTRL1WNfd/x8vGgCOO
+	 3WFgQ2oeNhipGP2WFpFDG/ATbtFUM2BYPL0tmh+fzGXPWwFb6/C6JzFMby7p9v3kJW
+	 V33lKz1k3z6BtdWe/e4S5m29cl+tblSqRuBQEIL1k4N1s8QMMRquAnmtFRbdFZq4cv
+	 PjrroAFmnCTb/Ozk5yun7YkvjxKT7pY/BUNMtR3pCrpAigve8+eNpyj58Pv590KZhe
+	 Z+WVRScPIXNVg==
+Received: from [192.168.1.26] (mr38p00im-dlb-asmtp-mailmevip.me.com [17.57.152.18])
+	by mr85p00im-zteg06021501.me.com (Postfix) with ESMTPSA id 132552793E6B;
+	Tue,  8 Apr 2025 11:34:44 +0000 (UTC)
+Message-ID: <1d2e9f40-708d-49b2-b0ee-a1d775f6fd23@icloud.com>
+Date: Tue, 8 Apr 2025 19:34:41 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] lib/string: Improve strstarts() performance
+To: Kees Cook <kees@kernel.org>
+Cc: Andy Shevchenko <andy@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>,
+ "Rob Herring (Arm)" <robh@kernel.org>
+References: <20250407-imp_str_perf-v1-0-ed95d52964a4@quicinc.com>
+ <20250407-imp_str_perf-v1-1-ed95d52964a4@quicinc.com>
+ <202504070912.8BB9AD0AE@keescook>
+Content-Language: en-US
+From: Zijun Hu <zijun_hu@icloud.com>
+In-Reply-To: <202504070912.8BB9AD0AE@keescook>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: ap5-sVUz9nY5FZREWQ4tl0WybHpSmoAY
+X-Proofpoint-GUID: ap5-sVUz9nY5FZREWQ4tl0WybHpSmoAY
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-08_04,2025-04-08_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 bulkscore=0
+ phishscore=0 mlxscore=0 clxscore=1015 mlxlogscore=809 adultscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2411120000 definitions=main-2504080082
 
-Thomas Zimmermann <tzimmermann@suse.de> writes:
-
-> Hi,
->
-> lots of good points in the review.
->
-> Am 08.04.25 um 12:44 schrieb Javier Martinez Canillas:
-> [...]
->>> Reviewed-by: Thomas Zimmermann <tzimmrmann@suse.de>
->>> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
->>> ---
->>>   drivers/gpu/drm/tiny/Kconfig      |  11 +
->>>   drivers/gpu/drm/tiny/Makefile     |   1 +
->>>   drivers/gpu/drm/tiny/st7571-i2c.c | 721 ++++++++++++++++++++++++++++++++++++++
->> I personally think that the tiny sub-directory is slowly becoming a
->> dumping ground for small drivers. Instead, maybe we should create a
->> drivers/gpu/drm/sitronix/ sub-dir and put all Sitronix drivers there?
+On 2025/4/8 00:17, Kees Cook wrote:
+>> strstarts() is frequently invoked to test if a string has another string
+>> as prefix, but its performance is degraded by the strlen() loop contained.
 >>
->> So far we have drivers in tiny for: ST7735R, ST7586 and ST7571 with
->> your driver. And also have a few more Sitronix drivers in the panel
->> sub-directory (although those likely should remain there).
->>
->> I have a ST7565S and plan to write a driver for it. And I know someone
->> who is working on a ST7920 driver. That would be 5 Sitronix drivers and
->> the reason why I think that a dedicated sub-dir would be more organized.
->>
->> Maybe there's even common code among these drivers and could be reused?
->>
->> Just a thought though, it's OK to keep your driver as-is and we could do
->> refactor / move drivers around as follow-up if agreed that is desirable.
->
-> That sounds like a good idea. But the other existing drivers are based 
-> on mipi-dbi helpers, while this one isn't. Not sure if that's important 
-> somehow.
->
+>> Improve its performance by eliminating the strlen() loop.
+> So, as Andy already said: no, this is very unlikely to be a performance
+> improvement, and if it is, you'll need to show the numbers (and likely
+> the reason _why_, in the form of assembly output, etc).
+> 
 
-Yeah, I don't know. In any case, the driver / module name is not an ABI so
-we can always move around the files later if needed.
+agree.
 
->>
->>>   3 files changed, 733 insertions(+)
->>>
->>> diff --git a/drivers/gpu/drm/tiny/Kconfig b/drivers/gpu/drm/tiny/Kconfig
->>> index 94cbdb1337c07f1628a33599a7130369b9d59d98..33a69aea4232c5ca7a04b1fe18bb424e0fded697 100644
->>> --- a/drivers/gpu/drm/tiny/Kconfig
->>> +++ b/drivers/gpu/drm/tiny/Kconfig
->>> @@ -232,6 +232,17 @@ config TINYDRM_ST7586
->>>   
-> [...]
->>> +
->>> +static const uint32_t st7571_primary_plane_formats[] = {
->>> +	DRM_FORMAT_C1,
->>> +	DRM_FORMAT_C2,
->>> +};
->>> +
->> I would add a DRM_FORMAT_XRGB8888 format. This will allow your display to
->> be compatible with any user-space. Your st7571_fb_blit_rect() can then do
->> a pixel format conversion from XRGB8888 to the native pixel format.
->
-> It would be a starting point for XRGB8888 on C1/R1. I always wanted to 
-> reimplement drm_fb_xrgb8888_to_mono() [1] with the generic _xfrm_ 
-> helpers. Once the generic helpers can do such low-bit formats, C2 would 
-> also work easily.
->
-> [1] 
-> https://elixir.bootlin.com/linux/v6.14-rc6/source/drivers/gpu/drm/drm_format_helper.c#L1114
->
+> The reason this isn't going to be an improvement is because
+> strlen($string_constant) is optimized by the compiler into a integral
+> constant value. So you'd be replacing a potentially inline constant with
 
-Agreed. But even in its current form that helper is what I had in mind and
-what is used by the ssd130x driver too for XRGB8888 -> R1 conversion. There
-is no drm_fb_xrgb8888_to_gray2(), but that could be added as a part of this
-driver series.
+will confirm if strlen() within strstarts() is compile-time constant.
 
-> Best regards
-> Thomas
->
+> an explicit function call. That will be much more expensive.
 
--- 
-Best regards,
+strstarts() has a strncmp() function call as well even if it is inline
 
-Javier Martinez Canillas
-Core Platforms
-Red Hat
+> 
+> With almost 300 users:
+> $ git grep 'strstarts' | wc -l
+> 198
+> 
+> Only 38 are _not_ using a string constant:
+> $ git grep 'strstarts' | grep -v '"' | wc -l
+> 38
+> 
+> Additionally, there is no "loop". strlen() of a runtime string would be
+> evaluated once.
+> 
+
+strlen() contains a loop which has strlen() char comparisons
+
+> -Kees
 
