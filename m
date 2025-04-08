@@ -1,144 +1,184 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2D0F23C8B2;
-	Tue,  8 Apr 2025 15:55:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1332E23E34F;
+	Tue,  8 Apr 2025 15:55:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744127733; cv=none; b=cqmPZqWB8I1OVdFqZuHqJof/UWcL9RJ2GovV6j76G2jPoZh6FFpOM/XOckjGv6s4WmmWfYa3oGEX376uQ3OAVz9zt0TjjCsvon0wYutAEuhag7HcROC9SIyyNeJUJ5VA9bTYM5JMnlo/scqs5Y6Qyj3sy0rK12iLYidigKv/x/8=
+	t=1744127738; cv=none; b=VYzKrWVj/i+Fx3y0HCXU7KfCEFkzH8cGeODsc3Y0rzmbd5oKTXvtAVeMo9tRxqg0SKzzQ/HKf1QZaly+zuIAWZk9i9yG2Wr0HNvEWvd3WoAvtTclkb2a4zWybxW1jA4dA2U/FvE8FzKmcw4swNnOK1KDQ3vlfpZzM7QqMukhQZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744127733; c=relaxed/simple;
-	bh=Grp1Pw0/iwvWKb8SP7ouGiFqbuZhmL2YaxkwVJ6Lsjk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dVbYnml4nNqXCg8rCu4ex4jzSnBhVUIsydQRZHZX0DxkeL+v7Re8wf3cOE763D1Ks00kvfNgEJZ9VmugaESIn1VUijZ4ZcCZbe6xuzgyTiKVjcGmCCwIgEHM2wpt3GJpfCZRLlOs4wcHxB7s8j94tpLVg5dgT9R/RBzUbAzAZ/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C9ZYQSdN; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744127738; c=relaxed/simple;
+	bh=KVuvYX62+cimMpA+aoGXMHXJeDk8Hsx9c5dnJrYxg4Y=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=eoJnNKxTm39OITPXBSTxRuMu9Zt8ffKKQuUZKnoUAuHSkx1+Qr6KK7sd356yqKh+qPpI3o+s3PvIarvkslUNXgyIBtDK6KG46k8n9ALXWkCWYo3QGc8tvYlKz/2q6BlePTOYJDTmikyqKkgeQ99kk4QcwfNwJtP4/tu6VvfEfnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=PauRh3f4; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C9ZYQSdN"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-ad5236e6fd6so5246229a12.0;
-        Tue, 08 Apr 2025 08:55:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744127731; x=1744732531; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2r8d4CoqNWfbO+vOmunolZhghnfaufTr/d12tmCx3c8=;
-        b=C9ZYQSdNYqqGDo0aSZafrUwgKH9HDhrWCyhJ3VQH+8nmh7j4eQjDSmT0SOL+Lzi61p
-         b00tHSc5nugAmLaxMKo597W/DyMqsuiJcS4bSTk7ATR8yfNljvTo6tQU2prJQaKPeLjU
-         mt3j1dJ9vdAciCJ/Zv4ZJPznrXiOysNH3WQtTgA1sdZz0fpYFknGSohG3FwoR9bqS/Ib
-         Wp7CLyx9Bpx+IKsBbKsnKvM9XjxsYBeR0LC6gW3DWEyKfdNqUpGf2YC7SFGrzwuZAjqe
-         nviGePYRyVMeWkHKWRjeLppZ3o2mSQTOG5M/lIpT54GT5ZUY+MvaiJhBb8CfUO3iyGxl
-         AUmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744127731; x=1744732531;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2r8d4CoqNWfbO+vOmunolZhghnfaufTr/d12tmCx3c8=;
-        b=TymIhgzcribH+vJUbdrkpBJ3RI9fbssZ0MgCwOHOQ0haTpCsq2I5s66YJDAMju2t+g
-         D++SK37w/2e8cdaybeQBtle+mHAth3NUqRkvVUY+i3pKnoJpK0C4w0M8DGKSFKF+hGju
-         eenwA9/V1sT1vGfOKvVjJgcoGDx7A+a+TMU+eVnddgYqfn1kNDgizEXlW9JIHPgfg5Gc
-         3G7D6UqNSfr/0ONn3TKggABowOqIWCgzZmcJNsoeQNf8mbrwWyMJu4mFIn57TLJQpzjd
-         M8XhFUkqfA+zhlkZVK6CoST+eoWCHvoVV+BuQuAxzyJGR74QmQyDz/7Dxns8nsjMtXF3
-         A6Nw==
-X-Forwarded-Encrypted: i=1; AJvYcCX7PXX6cNZtgB/HKzxVff1i5h/WANSUtuI/NCq2WT6vu5DhSuVLOP/cuBAireZpA4nnp8HK+oIFsyNDy/CN3HhzQqc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6dN2L3EUICX6sEkC6gt5A8zguCEfR/3LT86PLDOQOD2EJDhd2
-	knQfLgqiG5/WpgYvuEt/bRs0GwyM71MA8D4Dy65j2JXTfKgowABDb/mz2kZCQqpB9eaMt0YxHg0
-	235P+9p1I3WufSsmZQCDDy4oZr1X6bxl5
-X-Gm-Gg: ASbGncsXX5xmNy1tiK0tKISdwv2B9N927jNfg1TXzyuCJkz9zbQsnGpBnEOY0CHvfwo
-	S/0eBSFtAxfbwhigIk8hpRTYWWxeKtJ+DpmrbKG7uSVj00Awm/53rrXsH9BQBHS7LVUAYrYJmsY
-	dsh51lqosRBCpcvgkh96eomWrsCfCV
-X-Google-Smtp-Source: AGHT+IEdAdNI/m0mDZDBYf6Uybrhu+VFgs+XsaRN6/KpawOjlF83g1h1SFl0iYxOHt2R9GHMGaZXsz4fEgl+jAnloHw=
-X-Received: by 2002:a17:90a:c890:b0:2ff:53a4:74f0 with SMTP id
- 98e67ed59e1d1-306a48acec4mr23379143a91.29.1744127730882; Tue, 08 Apr 2025
- 08:55:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="PauRh3f4"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 538AsvSv019579;
+	Tue, 8 Apr 2025 15:55:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	9AjMBkValIeT1MIElgyZHTzsj4P6mNuX5gbBpaNqBkM=; b=PauRh3f4ngy5pkCu
+	DrfLy7AX3D8sdkwpnCTXnbAaprjCEp3N2eeIUB3+xMDqQKoS1p7CrEWfHIYEDrKJ
+	tZt0WCKXpeaHJijck3v4lCAWdeHzHmy1kjDW4I0BREEODuJ3sbR86wFQStWADvsI
+	H1crPtzfWkZFYrNJ4cclo5DcUrvwDKBORqxrsz87RFO+Zol2+xT6+N9TaIwgUEpS
+	VjPvCqPR46M2BYNhTb8rXYBUUZXkGEDTkSHVrN48Z+W3CEs1PE9JNQ5ta6Rw1acM
+	4pTADS3CyDNwqC+F/A59/zg0fi+C2GYhc0SrBEbGRWmalRYooZXsYKBQi/vOdu/E
+	v2qlBw==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twg3g9gc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 08 Apr 2025 15:55:33 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 538FtWDK017777
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 8 Apr 2025 15:55:32 GMT
+Received: from hu-dikshita-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 8 Apr 2025 08:55:27 -0700
+From: Dikshita Agarwal <quic_dikshita@quicinc.com>
+Date: Tue, 8 Apr 2025 21:24:24 +0530
+Subject: [PATCH 10/20] media: iris: Remove redundant buffer count check in
+ stream off
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407180745.42848-1-andybnac@gmail.com> <20250407160924.7c28fffd@gandalf.local.home>
-In-Reply-To: <20250407160924.7c28fffd@gandalf.local.home>
-From: Andy Chiu <andybnac@gmail.com>
-Date: Tue, 8 Apr 2025 23:55:19 +0800
-X-Gm-Features: ATxdqUH2NmCkB2Z6aSwDjJk1d3UhdbibANS3Y8DMTs7j6Xq0075pr7HoeVndza4
-Message-ID: <CAFTtA3N=fB9Yr3EiTUpGzF2imtwgnVEextyL3+V1wiTJ_jp+WA@mail.gmail.com>
-Subject: Re: [PATCH] ftrace: properly merge notrace hash
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	mark.rutland@arm.com, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
-	bjorn@rivosinc.com, puranjay12@gmail.com, alexghiti@rivosinc.com, 
-	paul.walmsley@sifive.com, greentime.hu@sifive.com, nick.hu@sifive.com, 
-	nylon.chen@sifive.com, eric.lin@sifive.com, zong.li@sifive.com, 
-	yongxuan.wang@sifive.com, samuel.holland@sifive.com, olivia.chu@sifive.com, 
-	c2232430@gmail.com, vincent.chen@sifive.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250408-iris-dec-hevc-vp9-v1-10-acd258778bd6@quicinc.com>
+References: <20250408-iris-dec-hevc-vp9-v1-0-acd258778bd6@quicinc.com>
+In-Reply-To: <20250408-iris-dec-hevc-vp9-v1-0-acd258778bd6@quicinc.com>
+To: Vikash Garodia <quic_vgarodia@quicinc.com>,
+        Abhinav Kumar
+	<quic_abhinavk@quicinc.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Stefan Schmidt <stefan.schmidt@linaro.org>,
+        Hans Verkuil
+	<hverkuil@xs4all.nl>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@linaro.org>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        "Dikshita
+ Agarwal" <quic_dikshita@quicinc.com>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1744127674; l=2446;
+ i=quic_dikshita@quicinc.com; s=20240917; h=from:subject:message-id;
+ bh=KVuvYX62+cimMpA+aoGXMHXJeDk8Hsx9c5dnJrYxg4Y=;
+ b=Xk9wsEkLxrm/UvB8cQituGL1FmrL3q5/TPYm0yUD8wqDsDL61NTXa8vNIwRnr0rZAO7QbN/9o
+ Uu9WCL7Dy8OCR0fnxF6izmAi7WKWgwlPag8vDLeLjCbB/zSlGGg/5Cw
+X-Developer-Key: i=quic_dikshita@quicinc.com; a=ed25519;
+ pk=EEvKY6Ar1OI5SWf44FJ1Ebo1KuQEVbbf5UNPO+UHVhM=
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: FJd1JH1vdRFCvh60L-Ti6VCjI7nuUpYm
+X-Proofpoint-ORIG-GUID: FJd1JH1vdRFCvh60L-Ti6VCjI7nuUpYm
+X-Authority-Analysis: v=2.4 cv=I/9lRMgg c=1 sm=1 tr=0 ts=67f546f5 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=-qshO7OKkG8J2I8e95wA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-08_06,2025-04-08_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
+ phishscore=0 suspectscore=0 mlxlogscore=999 lowpriorityscore=0 spamscore=0
+ clxscore=1015 malwarescore=0 adultscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504080110
 
-Steven Rostedt <rostedt@goodmis.org> =E6=96=BC 2025=E5=B9=B44=E6=9C=888=E6=
-=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=884:08=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> On Tue,  8 Apr 2025 02:07:44 +0800
-> Andy Chiu <andybnac@gmail.com> wrote:
->
-> > The global notrace hash should be jointly decided by the intersection o=
-f
-> > each subops's notrace hash, but not the filter hash.
-> >
-> > Fixes: 5fccc7552ccb ("ftrace: Add subops logic to allow one ops to mana=
-ge many")
-> > Signed-off-by: Andy Chiu <andybnac@gmail.com>
-> > ---
-> >  kernel/trace/ftrace.c | 11 +++++------
-> >  1 file changed, 5 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> > index 1a48aedb5255..ee662f380b61 100644
-> > --- a/kernel/trace/ftrace.c
-> > +++ b/kernel/trace/ftrace.c
-> > @@ -3526,18 +3526,17 @@ int ftrace_startup_subops(struct ftrace_ops *op=
-s, struct ftrace_ops *subops, int
-> >           ftrace_hash_empty(subops->func_hash->notrace_hash)) {
-> >               notrace_hash =3D EMPTY_HASH;
-> >       } else {
-> > -             size_bits =3D max(ops->func_hash->filter_hash->size_bits,
-> > -                             subops->func_hash->filter_hash->size_bits=
-);
-> > +             size_bits =3D max(ops->func_hash->notrace_hash->size_bits=
-,
-> > +                             subops->func_hash->notrace_hash->size_bit=
-s);
-> >               notrace_hash =3D alloc_ftrace_hash(size_bits);
-> >               if (!notrace_hash) {
-> > -                     free_ftrace_hash(filter_hash);
-> > +                     free_ftrace_hash(notrace_hash);
-> >                       return -ENOMEM;
-> >               }
-> >
-> > -             ret =3D intersect_hash(&notrace_hash, ops->func_hash->fil=
-ter_hash,
-> > -                                  subops->func_hash->filter_hash);
-> > +             ret =3D intersect_hash(&notrace_hash, ops->func_hash->not=
-race_hash,
-> > +                                  subops->func_hash->notrace_hash);
->
-> Thanks for catching this.
->
->
-> >               if (ret < 0) {
-> > -                     free_ftrace_hash(filter_hash);
->
-> The filter_hash still needs to be freed, as it could have been allocated =
-in
-> the previous if statement and never used (both the filter_hash and
-> notrace_hash get used at the end of the function via ftrace_update_ops().
->
-> Care to send a v2?
+Currently, the stream off process checks the count of buffers in
+v4l2_m2m_queues using v4l2_m2m_for_each_src_buf_safe and
+v4l2_m2m_for_each_dst_buf_safe APIs. If the count is non-zero, it
+returns an error. This check is redundant as the V4L2 framework already
+handles buffer management internally.
 
-Yes, thanks for reminding! Let me send a v2 with filter_hash freed on
-this condition.
+Remove the unnecessary buffer count check in stream off, simplifying the
+process and relying on V4L2's internal mechanisms for buffer management.
 
-Regards,
-Andy
+Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+---
+ drivers/media/platform/qcom/iris/iris_vdec.c | 36 ----------------------------
+ 1 file changed, 36 deletions(-)
+
+diff --git a/drivers/media/platform/qcom/iris/iris_vdec.c b/drivers/media/platform/qcom/iris/iris_vdec.c
+index 7058f2d789bd..1305b981a72d 100644
+--- a/drivers/media/platform/qcom/iris/iris_vdec.c
++++ b/drivers/media/platform/qcom/iris/iris_vdec.c
+@@ -244,35 +244,6 @@ void iris_vdec_src_change(struct iris_inst *inst)
+ 	v4l2_event_queue_fh(&inst->fh, &event);
+ }
+ 
+-static int iris_vdec_get_num_queued_buffers(struct iris_inst *inst,
+-					    enum iris_buffer_type type)
+-{
+-	struct v4l2_m2m_ctx *m2m_ctx = inst->m2m_ctx;
+-	struct v4l2_m2m_buffer *buffer, *n;
+-	struct iris_buffer *buf;
+-	u32 count = 0;
+-
+-	switch (type) {
+-	case BUF_INPUT:
+-		v4l2_m2m_for_each_src_buf_safe(m2m_ctx, buffer, n) {
+-			buf = to_iris_buffer(&buffer->vb);
+-			if (!(buf->attr & BUF_ATTR_QUEUED))
+-				continue;
+-			count++;
+-		}
+-		return count;
+-	case BUF_OUTPUT:
+-		v4l2_m2m_for_each_dst_buf_safe(m2m_ctx, buffer, n) {
+-			buf = to_iris_buffer(&buffer->vb);
+-			if (!(buf->attr & BUF_ATTR_QUEUED))
+-				continue;
+-			count++;
+-		}
+-		return count;
+-	default:
+-		return count;
+-	}
+-}
+ 
+ static void iris_vdec_flush_deferred_buffers(struct iris_inst *inst,
+ 					     enum iris_buffer_type type)
+@@ -321,7 +292,6 @@ int iris_vdec_session_streamoff(struct iris_inst *inst, u32 plane)
+ {
+ 	const struct iris_hfi_command_ops *hfi_ops = inst->core->hfi_ops;
+ 	enum iris_buffer_type buffer_type;
+-	u32 count;
+ 	int ret;
+ 
+ 	switch (plane) {
+@@ -339,12 +309,6 @@ int iris_vdec_session_streamoff(struct iris_inst *inst, u32 plane)
+ 	if (ret)
+ 		goto error;
+ 
+-	count = iris_vdec_get_num_queued_buffers(inst, buffer_type);
+-	if (count) {
+-		ret = -EINVAL;
+-		goto error;
+-	}
+-
+ 	ret = iris_inst_state_change_streamoff(inst, plane);
+ 	if (ret)
+ 		goto error;
+
+-- 
+2.34.1
+
