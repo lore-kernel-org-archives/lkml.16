@@ -1,146 +1,135 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CE4639AD6
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 15:23:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DB0439AD6;
+	Tue,  8 Apr 2025 15:24:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744125818; cv=none; b=L8L/MbPZDWyTOUxrQhqtMFSQvl6Ywdzb9GaFWSlRwr8S+VcZypRSWrZjEnf09izKCjg3ELyVdnwYh0miF4Wsb9fx/9Zxt20D5kqMBls/vq3yPm9H5UHqK7wJ7lwh/JT/fiFH821m9yiAKZd5ocGpcsB+4fjB/5dJ7wAX2lXLm8w=
+	t=1744125849; cv=none; b=UtxOvvELanBF2bQhbOHd1lVThq0qQ33WfZbU1vsmV2yD+B2abh7WSwAQHsC5Ao1D7n0wbatH1qsuYbHrYkTcw2L1V6vOBG4C2wjcb20PkKyNwCsVPRiZjpIseDnnQqieFJ9Zf+DKb/u7HGyOv/4gxMMttZhtS1VqWcioQZ1SHps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744125818; c=relaxed/simple;
-	bh=aBGY5VnvleP+F8vMPlH07gsy/nK8dijdNvQCx5soGGg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NsG60UY2wDe2wHrL1jWh1lzluDMJZQm3nHNhIvLmEmZBDIEYrat8uiqRPeLvpJKrXYhIRKj5OHKBgePXoP+4DzynoHdRdz1IVVqIuV21zRYkjOq5vjAhdiiOIi9GKrfgZddmHlw/YfexWcOBL8k/HHijIvA5rGuBo67+ntQ+XgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=GV9cJy5/; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1744125849; c=relaxed/simple;
+	bh=4l2udifujnuvM/3Eti8piApI5uKF7ue1PGu2hSHMYUU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=rEHzkYGgbm361I0MsXgFiADEVwpVSdARedkfl54BKnp6ohTKAPpV/N1wmC38nRf60NABVO6IeHI0IYGPjAqEmNKzdjUgN1QrXfOnyFs99iUYmkWpbGcE+4PJFfciHGzuQ5gcFScCIOMTo1wPQWAjKLFT06zBn/fcu62VjIzPxrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=AQpIIuKB; arc=none smtp.client-ip=130.133.4.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="GV9cJy5/"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 538BGKeS015134
-	for <linux-kernel@vger.kernel.org>; Tue, 8 Apr 2025 15:23:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	NF2u+J3xRv/jYqarjPk3YREaPbF9uPD/ZqubOMJkE28=; b=GV9cJy5/gv6dXktH
-	iTr4SZT3ZHPLPkuMcdGhP8TuBaGTFXPtOFpuO4Mhc8X7iIgaxHilf+ABS7c8Zuo4
-	+vbZVjbk2UcHQ5QXNdfdRdB3AdIcCUWCZs4N2EBb+7aZn3A3OBGbG646ey8CC9yd
-	lwUKwHJG49gWfRufKqA0iigzViGeh8AeoFuicgW27VDebTZQfMmQMS7pMF47f471
-	zttAXcpSt8Y0MWYpreM7KYGS7r0CMPEOi4W4PA5yeu5lz97fwwsbtg0ac46DyOUj
-	ZOErYeuyoXIrpb/Oo6iMH9LFdBPR0578l1h7xf+H0AyuOx1gnTxigdLdeyjzQ293
-	P6IRfg==
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twbug8u2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 15:23:36 +0000 (GMT)
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2240c997059so72269275ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 08:23:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744125815; x=1744730615;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NF2u+J3xRv/jYqarjPk3YREaPbF9uPD/ZqubOMJkE28=;
-        b=ZNqaaepQaMl31DrfGOjuHALwIBGjMAHkIUNCgxkmcgHXmkmEd0y3kq2HvravPbdoYB
-         ZAx2snoBg1yaBxwipqBAymJQ1Bf5a8OsU+2LgTffX7J43aschTPCb7kgTPwKO8fhre5L
-         a+bq11Qv6+LooyE4F7JSyLMFf55kL9leZu6K5CGWU61TjWHyGsajSxUBCjn8Lt3IReK4
-         99ML8vBVI8hTfF+7Y5zr2Sw17vjkQvob9OuIaPjT3iQP66A0Sme7iPEB8iJysoy+iaTT
-         z2FEFnjxL3wkWHdetq6XeAU//Q2sBYDFIz8jc5TA33ZvaKy1XDrYTziqegzHMEdJiASc
-         F0gg==
-X-Forwarded-Encrypted: i=1; AJvYcCVZL4VA8MYs0xj0t3l9Z6RJllpmRigexlYIG4btaVkNY6618s1WaWvc+Qky7Z05V48/jF1qDnKG6qaB/Z0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/9FaPj0PS1ruA8x+T+DMHiv3DxAojp6mftCLG1QoYza2YmxS7
-	8uNBvz/dDvTH2sDCnfWpEC9MsmzKS3mYdSj6RtuQORBdD5EhGGAIKtYru2u+Or0xtxamF5pgDtj
-	Q9DbxIFLobfn2HQzzZxVJGvAbXMMTHU+Z1aU9WQMOoZD/my3KBqxFuCFsUZD/+ns=
-X-Gm-Gg: ASbGnct45fed7HMenBn5SzkBlPRVURBFQdvTPdBzi620RwV3XuqwyPlnvBvetSuG+ZN
-	QURy/oFb9hvP2+YeXnzWPO9dELqkMbNpUZ6rWRRLYFRVeN3JRp2rYMISMmmvtAcGFU5xqOtUQPX
-	9cyZvvsvJ3E8ceHmCOjO++ldM4yFyTc1k6raZS4nQpG5iDrsd7mgop77uo0uuhmmxwcIlgdAcSk
-	gcam3fZgWpPdAN+OooJZRL01AtHeoeN/LqPnb+Q7AWbMnQ9RjXWOPCMEwKGH2BzYZbPre5+pHRD
-	7ReUvYKevGcQwNwl4Y7qcRe/AkhCmI0lETlyaQGO2hjEW4xL0IRw6i0WVG5BKgmevJVzRDw=
-X-Received: by 2002:a17:903:3ba7:b0:215:9642:4d7a with SMTP id d9443c01a7336-22a95428babmr189625055ad.0.1744125814598;
-        Tue, 08 Apr 2025 08:23:34 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHrdN25OA1XG8KyNqW7/XlHJMumnbDPU5Qnl4hGT38grG496JV/Pr0d9saQWHGnZ0hfOM5Gfg==
-X-Received: by 2002:a17:903:3ba7:b0:215:9642:4d7a with SMTP id d9443c01a7336-22a95428babmr189624405ad.0.1744125813874;
-        Tue, 08 Apr 2025 08:23:33 -0700 (PDT)
-Received: from [10.227.110.203] (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785ad8f8sm101872065ad.42.2025.04.08.08.23.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Apr 2025 08:23:33 -0700 (PDT)
-Message-ID: <ee51a503-6580-4f46-aa38-77f1b9ba6535@oss.qualcomm.com>
-Date: Tue, 8 Apr 2025 08:23:31 -0700
+	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="AQpIIuKB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=KhCrvQERtP5/OPC9o3hPqwIWF9s2Dzuwa3WW9MlKEKI=; t=1744125845; x=1744730645; 
+	b=AQpIIuKBs38pFLpSeFsFS3I5otBP9U/p9wISOaApj5YpLe7Oc+VjTZ6U8hlpDn05TrScNB2o1CJ
+	nQTW7YyYyX8PctabMQOF4WIS7ZyKub6dWC4NIW/0IcpC6kE40SycqSVFZy8fJte88kIieU52d8c5y
+	triZnghclOUtX2m+S5lvHZKuxN+3LrZT5LJw9zvQ+JJMc62aAVQFjBLM1PIyjg6nZSqvsTzJSA4Y8
+	SkIL1grbtVTdZvlSmVmZv1LeUAkl+Wr9tMfCGrl115GQferFc4QS95iovjtSt6RjVQHLg3ChXOOJy
+	kOVJy12knM3NInvmWf2xLaKXMDwU6Zv4l66Q==;
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.98)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1u2Anu-00000002Xv0-1yiO; Tue, 08 Apr 2025 17:23:58 +0200
+Received: from p5dc5515a.dip0.t-ipconnect.de ([93.197.81.90] helo=[192.168.178.61])
+          by inpost2.zedat.fu-berlin.de (Exim 4.98)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1u2Anu-00000003RUc-0uRZ; Tue, 08 Apr 2025 17:23:58 +0200
+Message-ID: <afec7233266c6c1fd1e70ac615ff129d9dc3f710.camel@physik.fu-berlin.de>
+Subject: Re: [PATCH 0/2] J2 Turtle Board fixes
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: Rob Landley <rob@landley.net>, Artur Rojek <contact@artur-rojek.eu>, 
+ Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>,
+ Daniel Lezcano	 <daniel.lezcano@linaro.org>, Thomas Gleixner
+ <tglx@linutronix.de>, Uros Bizjak	 <ubizjak@gmail.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, "D . Jeff Dionne"
+	 <jeff@coresemi.io>, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Tue, 08 Apr 2025 17:23:57 +0200
+In-Reply-To: <9cf43bbe-898f-4b29-bd85-04f5320bce77@landley.net>
+References: <20250216175545.35079-1-contact@artur-rojek.eu>
+	 <f574808500e2c5fb733c1e5d9b4d17c2884d1b9f.camel@physik.fu-berlin.de>
+	 <1551804b-fc78-4a3f-add8-af693f340a01@landley.net>
+	 <48881e2d8efa9d7df8156f5f81cd662c2286e597.camel@physik.fu-berlin.de>
+	 <9cf43bbe-898f-4b29-bd85-04f5320bce77@landley.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.0 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: build failure after merge of the ath-next tree
-To: Stephen Rothwell <sfr@canb.auug.org.au>,
-        "Dr. David Alan Gilbert" <linux@treblig.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>
-Cc: Kalle Valo <kvalo@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
-        Balamurugan S <quic_bselvara@quicinc.com>,
-        P Praneesh <quic_ppranees@quicinc.com>,
-        Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>,
-        Ath10k List <ath10k@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-References: <20250408105146.459dfcf5@canb.auug.org.au>
- <Z_R2lEVjqn2Y3_sP@gallifrey> <20250408113747.3a10275a@canb.auug.org.au>
- <26cafcbb-6a94-40ab-aabf-3c9943cfb925@oss.qualcomm.com>
-From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-Content-Language: en-US
-In-Reply-To: <26cafcbb-6a94-40ab-aabf-3c9943cfb925@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: JtEyYsnUs2hoeGFa6lMuc5uGSVeDhyaj
-X-Proofpoint-ORIG-GUID: JtEyYsnUs2hoeGFa6lMuc5uGSVeDhyaj
-X-Authority-Analysis: v=2.4 cv=dbeA3WXe c=1 sm=1 tr=0 ts=67f53f78 cx=c_pps a=IZJwPbhc+fLeJZngyXXI0A==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=3WJfbomfAAAA:8 a=rOUgymgbAAAA:8 a=HC-cJF9i_tize61FGOsA:9 a=QEXdDO2ut3YA:10
- a=uG9DUKGECoFWVXl0Dc02:22 a=1cNuO-ABBywtgFSQhe9S:22 a=MP9ZtiD8KjrkvI0BhSjB:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-08_06,2025-04-08_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- suspectscore=0 mlxlogscore=977 phishscore=0 mlxscore=0 spamscore=0
- malwarescore=0 clxscore=1015 adultscore=0 priorityscore=1501
- lowpriorityscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504080107
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-ZEDAT-Hint: PO
 
-On 4/8/2025 8:09 AM, Jeff Johnson wrote:
-> On 4/7/2025 6:37 PM, Stephen Rothwell wrote:
->> Hi Dave,
->>
->> On Tue, 8 Apr 2025 01:06:28 +0000 "Dr. David Alan Gilbert" <linux@treblig.org> wrote:
->>>
->>> * Stephen Rothwell (sfr@canb.auug.org.au) wrote:
->>>>
->>>> After merging the ath-next tree, today's linux-next build (x86_64
->>>> allmodconfig) failed like this:
->>>>
->>>> drivers/net/wireless/ath/ath12k/ahb.c: In function 'ath12k_ahb_stop':
->>>> drivers/net/wireless/ath/ath12k/ahb.c:337:9: error: implicit declaration of function 'del_timer_sync'; did you mean 'dev_mc_sync'? [-Wimplicit-function-declaration]
->>>>   337 |         del_timer_sync(&ab->rx_replenish_retry);
->>>>       |         ^~~~~~~~~~~~~~
->>>>       |         dev_mc_sync
->>>>
->>>> Caused by commit
->>>>
->>>>   6cee30f0da75 ("wifi: ath12k: add AHB driver support for IPQ5332")
->>>>
->>>> I have used the ath-next tree from next-20250407 for today.  
->>>
->>> I guess a clash with the recent:
->>> Fixes: 8fa7292fee5c ("treewide: Switch/rename to timer_delete[_sync]()")
->>
->> I will try that out tomorrow.
-> 
-> Yes, looks like you'll need to carry a patch:
-> s/del_timer_sync/timer_delete_sync/
-> 
-> Until that renaming patch makes it down to my tree and we rename.
+Hi Rob,
 
-NM. Since the timer_delete_sync() API is already in my tree I can make a
-one-off patch for this.
+On Fri, 2025-02-28 at 16:19 -0600, Rob Landley wrote:
+> > > Which was fixed a year ago, which is why I told you to use the new
+> > > toolchain with a current musl-libc:
+> > >=20
+> > > http://lists.landley.net/pipermail/toybox-landley.net/2024-February/0=
+30040.html
+> > >=20
+> > > Unless you're hitting the OTHER issue I fixed last year...
+> > >=20
+> > > https://github.com/landley/toybox/commit/0b2d5c2bb3f1
+> >=20
+> > I just downloaded the latest toolchain from:
+> >=20
+> > https://landley.net/bin/toolchains/latest/sh2eb-linux-muslfdpic-cross.t=
+ar.xz
+> >=20
+> > and the issue still persists.
+> >=20
+> > Am I missing anything?
+>=20
+> The march 2024 rebuild was in response to that Feb 2024 bugfix, so it=20
+> _should_ have the fix? (I'm waiting for another musl release to rebuild=
+=20
+> them again...)
+>=20
+> I just downloaded the toolchain currently at that URL and built mkroot=
+=20
+> and it worked for me:
+>=20
+> Run /init as init process
+> sntp: time.google.com:123: Try again
+> Type exit when done.
+> $ cat /proc/version
+> Linux version 6.14.0-rc3 (landley@driftwood) (sh2eb-linux-muslfdpic-cc=
+=20
+> (GCC) 11.2.0, GNU ld (GNU Binutils) 2.33.1) #1 SMP Fri Feb 28 15:47:36=
+=20
+> CST 2025
+>=20
+> And the failure _without_ the fix was deterministic rather than=20
+> intermittent, so...
+>=20
+> Keep in mind the init script has a 3 second timeout trying to call sntp=
+=20
+> to set the clock, which will fail if the ethernet isn't connected (or no=
+=20
+> driver, or no internet...)
 
-/jeff
+I just gave it another try and it still hangs for me at:
+
+	Run /init as init process
+
+with the latest toolchain, toybox and kernel (v6.15-rc-1).
+
+FWIW, I did not connect an ethernet cable.
+
+Adrian
+
+--=20
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
