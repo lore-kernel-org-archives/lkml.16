@@ -1,83 +1,57 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86EA515820C
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 02:10:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C0D61388;
+	Tue,  8 Apr 2025 02:12:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744078210; cv=none; b=DMAzCSblC57vqqGvkbSckDm9PfK9i0FDWLcKctaGVi4+FaCzpaFOmtCsy2VgCFGllyP1JtxmHCD9YdX2RpOTd0W4Wcosc1tO2iWI/dhoJTS0MbO+nXWHdjVBteDMKnuasME4kL62BBKy8HrqGN2TWGanhezoVMj+dKnGBdV17gk=
+	t=1744078350; cv=none; b=b4W5/MeuA3xabheiHeopPzsL4+P+cJj1OCwY1vcEVyxX5ZUERUZxgLHLDINeWh4ViSPHDH7u0qIHYO4QFvLnTEs6sIKsyj7nuLpeEMSgRQ1c1sUJxTV02VEIx5wgCAB/lWA3I5it2+CL92XO8RTnprSvb0k3374hjRtv3atuYDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744078210; c=relaxed/simple;
-	bh=eHqdzlCtA2T7bv1J4nuHDRtUKpWIWd/H/uwx8kGgs30=;
+	s=arc-20240116; t=1744078350; c=relaxed/simple;
+	bh=27eWGrXMUOYFPWULHSWJemWuEdGfpL80lkj1C0l9CZk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p5gf0cUeXvgyKPi+gupk9UYxpahtly9OwHW62CNANdW8bxVKK6AHnx7xmn/V/+TVUGUZ70xZwNo4BtAWuxaZfUjtx9prAZ4emv0H/ABFWRznFOtQUrHjeJ2SiKbDbuhDjgOs+L1c9gC6OLMHYPbpL9S232oovesD9LNPCQZUH7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=MCJH+/sG; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=BEsOyCzOpPQQgXTD4XcQep9VaP4PBDHMGnQRfhNx8arGv6xzgF/rsi0nokzikVj+yWf1yTlRbB05KY1PbtlRDxZIyG/m7elcOvCG9ZXYEaTpMigv7JTikutCWagiq6QEgCFO1Rxy7Fa6Z1z63+gUnhGx8CD27FJxWXA+ISsOcmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=jmfLnJd/; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="MCJH+/sG"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-7376dd56f60so3619281b3a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 19:10:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1744078208; x=1744683008; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xw0bNP2Yg/rWmYhnfnKPujP8+GX7eRGIQfk3QlxH5+4=;
-        b=MCJH+/sGO/4ICs1kclrcOJCO3YfTR2Rh0mynVAdXcF3SN+/Zjw6ewHYYC6rDInGmph
-         +yQfTiPvCB5bP5AIlakRV57RoQPPLTQ7JUXhBg49lKwPV1wVESpXBj1bS/fS5rYsXDun
-         xbniO2sAhBogeQXzhirrmNQ5uaYMxdbVlx5tw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744078208; x=1744683008;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xw0bNP2Yg/rWmYhnfnKPujP8+GX7eRGIQfk3QlxH5+4=;
-        b=AtjyQt/77d0aFvFP8h34D1S44PBRkkDgUhKsfAH5fEkW7LeIZziDKD3T+l5QMIriYf
-         OwE6Dd8PEZyTk+xE3/NoIVkwGqh/N1ApwiiGLRlJQrzOcCRAO4QRxJkXd5djvyxxMAXR
-         uv+KnTdp59tvjLxs/KogWWwYZCd7QqynMXayuJofbwEs9ROQcR7ptm/pOSN/MwV4mdyf
-         bIMk0bLQtZ7SIa9GYfSMwCz3qNFMtalemf4ARdgoYsIP4Sb3JS/1fdKMB73tRG0sGxiw
-         jybcQTB7jvp7Q15jnmNy58CH6IwWryf0DvfrJPrWoHgBMl3+tcwoRRcRuJwJ99HTqqC4
-         +5CQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW3tBmKryKGrVgz/NGIpgOevg66XybDrSxfcNPZc+IwEWzIz/P1QvJVJTj4mSS00/a2ttJ5WzgS5nONGoY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0dfmvN2tYd2VN7WBsJrT/sIGyhBzJ0IMijrS8j17Eeo7Dl/0Y
-	rXoMKPzfDQnNJi7kiS4TigaOT1rsqcTiDrp7GzTDCZoBfrdWBs+Is1+V4CGgZdk=
-X-Gm-Gg: ASbGnctFhii0vgPg9OJK6yTSMC3vHopEq+Ger8o4M3Jqyt3L92sc5gDjosqmVpLAyVd
-	oWIhpg7HPmpMwCV+O9GAkbbXNyMhSAn0mdvSWECbi+buZ9dNFlg0b3KQh+bsKH4qM7fr7gNmTEo
-	R1F/nH3rAmm8RVjjZj5T82I/kB0ZdCwmY2ZKTwJ3Qxj2jINU3Rht0JCMZhBzOm/tEZkPmI087mR
-	EwwXyOyyw3b5d21X1PwXFoy90DGnSPHbbuPYkUmwI3bK1cbmst2k0oYOOOJdkI1I86BffqLGeij
-	aKhqgtxZGZQwHzOmH0LFfNEAbY/E5i3exjulpJglTLO/kz8stUW62pzsanIUGFk6php4LGSqwUF
-	+R3w+MAWQotJBsz9gkoPUkQ==
-X-Google-Smtp-Source: AGHT+IH/5CXHv3h6BfVUIkPGYZMx+j5jBXm5Q5QQb4m5Tix6r+HC8jdY/0+cBSX4V1nUaKqUundp9Q==
-X-Received: by 2002:a05:6a20:9c8b:b0:1fd:f8dc:7c0e with SMTP id adf61e73a8af0-20107efe0fdmr21459777637.12.1744078207714;
-        Mon, 07 Apr 2025 19:10:07 -0700 (PDT)
-Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739da0b42e1sm9564665b3a.134.2025.04.07.19.10.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 19:10:07 -0700 (PDT)
-Date: Mon, 7 Apr 2025 19:10:04 -0700
-From: Joe Damato <jdamato@fastly.com>
-To: Michal Luczaj <mhal@rbox.co>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-	David Ahern <dsahern@kernel.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] net: Drop unused @sk of
- __skb_try_recv_from_queue()
-Message-ID: <Z_SFfAGYrvDPl5DM@LQ3V64L9R2>
-Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
-	Michal Luczaj <mhal@rbox.co>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-	David Ahern <dsahern@kernel.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-References: <20250407-cleanup-drop-param-sk-v1-1-cd076979afac@rbox.co>
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="jmfLnJd/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=h987QYeC6HtWQC/6G+tDgn6crpIZ1JTghyzFGJ9D4j0=; b=jmfLnJd/4V6QMAdXWLYg+oVZYP
+	5P5zjnWQpL1+/78rarlmM0g2BjT+qn7qfPWjEDsdQrVz2BqtnddxfqXUvbdLdjs4TM0zp1h7acCwY
+	rQDrKUNuLfcCwOEro4o5cdqEyog9nzmK76yC2s+r7uEyQ/kBZx9kwpYn+h54mjBoLyfV9s4LNqamp
+	Y+5V3McNmXfWR+sg3XbJnwUPHAQWWs9ENcc8pGufPB3/gC9q9nX2xmzL1xXb9MqbV/9KNP0OaRSjo
+	DW8n/m85lZrEZ33DooZdpwxdz2mqyjiqW4ib8j6TVARsjVVxjr3bcjmJdZMdvAqPh6oBvj4cH27d2
+	XnJDUP5A==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1u1yRo-00Dkk6-0Y;
+	Tue, 08 Apr 2025 10:12:21 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Tue, 08 Apr 2025 10:12:20 +0800
+Date: Tue, 8 Apr 2025 10:12:20 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>, linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH] crypto: x86/chacha - Restore SSSE3 fallback path
+Message-ID: <Z_SGBC1pgraNHprS@gondor.apana.org.au>
+References: <Z-zzvXbjt3xzquXb@gondor.apana.org.au>
+ <20250402171930.GD1235@sol.localdomain>
+ <Z-3jkYNtZpTDtKGf@gondor.apana.org.au>
+ <20250403021453.GA2872965@google.com>
+ <Z-344xAsx1uTE9OK@gondor.apana.org.au>
+ <20250403032008.GA129577@sol.localdomain>
+ <Z-4DqsRApwQi6Xju@gondor.apana.org.au>
+ <20250403035934.GB129577@sol.localdomain>
+ <Z-4LOoynbEz3ZLuQ@gondor.apana.org.au>
+ <20250407164842.GC2536@sol.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,19 +60,105 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250407-cleanup-drop-param-sk-v1-1-cd076979afac@rbox.co>
+In-Reply-To: <20250407164842.GC2536@sol.localdomain>
 
-On Mon, Apr 07, 2025 at 09:01:02PM +0200, Michal Luczaj wrote:
-> __skb_try_recv_from_queue() deals with a queue, @sk is never used.
-> Remove sk from function parameters, adapt callers.
+On Mon, Apr 07, 2025 at 09:48:42AM -0700, Eric Biggers wrote:
 > 
-> No functional change intended.
-> 
-> Signed-off-by: Michal Luczaj <mhal@rbox.co>
-> ---
->  include/linux/skbuff.h | 3 +--
->  net/core/datagram.c    | 5 ++---
->  net/ipv4/udp.c         | 8 ++++----
->  3 files changed, 7 insertions(+), 9 deletions(-)
+> First, there doesn't seem to be agreement yet that the library functions should
+> have requirements on the calling context.
 
-Reviewed-by: Joe Damato <jdamato@fastly.com>
+Do you have a real example of hard IRQ usage for chacha? Not some
+imaginary post-crash scenario that ends up calling into generic code.
+
+And if you really wanted to do that, it's much better to fix up
+kernel_fpu_begin to support hard IRQs rather than adding useless
+may_use_simd() checks all over the place.
+
+> Second, your patch made unrelated changes that deleted the checks for SSSE3
+> support.  Thus dropping support for CPUs that don't support SSSE3.
+
+Sorry.  That was an oversight.
+
+---8<---
+The chacha_use_simd static branch is required for x86 machines that
+lack SSSE3 support.  Restore it and the generic fallback code.
+
+Reported-by: Eric Biggers <ebiggers@kernel.org>
+Fixes: 9b4400215e0e ("crypto: x86/chacha - Remove SIMD fallback path")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+
+diff --git a/arch/x86/crypto/chacha_glue.c b/arch/x86/crypto/chacha_glue.c
+index b7fd7a1f0e15..fcc14c006bde 100644
+--- a/arch/x86/crypto/chacha_glue.c
++++ b/arch/x86/crypto/chacha_glue.c
+@@ -5,11 +5,12 @@
+  * Copyright (C) 2015 Martin Willi
+  */
+ 
++#include <asm/simd.h>
+ #include <crypto/chacha.h>
++#include <linux/jump_label.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/sizes.h>
+-#include <asm/simd.h>
+ 
+ asmlinkage void chacha_block_xor_ssse3(u32 *state, u8 *dst, const u8 *src,
+ 				       unsigned int len, int nrounds);
+@@ -31,6 +32,7 @@ asmlinkage void chacha_4block_xor_avx512vl(u32 *state, u8 *dst, const u8 *src,
+ asmlinkage void chacha_8block_xor_avx512vl(u32 *state, u8 *dst, const u8 *src,
+ 					   unsigned int len, int nrounds);
+ 
++static __ro_after_init DEFINE_STATIC_KEY_FALSE(chacha_use_simd);
+ static __ro_after_init DEFINE_STATIC_KEY_FALSE(chacha_use_avx2);
+ static __ro_after_init DEFINE_STATIC_KEY_FALSE(chacha_use_avx512vl);
+ 
+@@ -117,15 +119,23 @@ static void chacha_dosimd(u32 *state, u8 *dst, const u8 *src,
+ 
+ void hchacha_block_arch(const u32 *state, u32 *stream, int nrounds)
+ {
+-	kernel_fpu_begin();
+-	hchacha_block_ssse3(state, stream, nrounds);
+-	kernel_fpu_end();
++	if (!static_branch_likely(&chacha_use_simd)) {
++		hchacha_block_generic(state, stream, nrounds);
++	} else {
++		kernel_fpu_begin();
++		hchacha_block_ssse3(state, stream, nrounds);
++		kernel_fpu_end();
++	}
+ }
+ EXPORT_SYMBOL(hchacha_block_arch);
+ 
+ void chacha_crypt_arch(u32 *state, u8 *dst, const u8 *src, unsigned int bytes,
+ 		       int nrounds)
+ {
++	if (!static_branch_likely(&chacha_use_simd) ||
++	    bytes <= CHACHA_BLOCK_SIZE)
++		return chacha_crypt_generic(state, dst, src, bytes, nrounds);
++
+ 	do {
+ 		unsigned int todo = min_t(unsigned int, bytes, SZ_4K);
+ 
+@@ -142,7 +152,7 @@ EXPORT_SYMBOL(chacha_crypt_arch);
+ 
+ bool chacha_is_arch_optimized(void)
+ {
+-	return true;
++	return static_key_enabled(&chacha_use_simd);
+ }
+ EXPORT_SYMBOL(chacha_is_arch_optimized);
+ 
+@@ -151,6 +161,8 @@ static int __init chacha_simd_mod_init(void)
+ 	if (!boot_cpu_has(X86_FEATURE_SSSE3))
+ 		return 0;
+ 
++	static_branch_enable(&chacha_use_simd);
++
+ 	if (boot_cpu_has(X86_FEATURE_AVX) &&
+ 	    boot_cpu_has(X86_FEATURE_AVX2) &&
+ 	    cpu_has_xfeatures(XFEATURE_MASK_SSE | XFEATURE_MASK_YMM, NULL)) {
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
