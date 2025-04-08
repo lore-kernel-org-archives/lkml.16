@@ -1,128 +1,66 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8784A1862BB;
-	Tue,  8 Apr 2025 15:33:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A1871DF25D
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 15:34:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744126437; cv=none; b=bF9ZOk+HAwJHslnTCHqckL2uYQpdkVj6XOfc8I/3SoBSn2pE6d5Y5lpDVm7zgYjQCScosMVH94RuszzQNGLfo32uMzP6gx1ENBtwC2v0bbYqdf8mlNK+5iLlZdnKn/5CVu5vtuxFazx8QrDr9gwG6OSVSJizqeE0wov9viKFzn4=
+	t=1744126459; cv=none; b=t83iitU0TTVOySAD3y6mI8ZPojd/GBtBQ98VcfyzTAzX4CyMtZai9w59+XJlrRPc1AuB02IqzZguNGyXpawc8HnTE1dH1mPPhWpWDkYcSUbhO2GoqZKJg8vQRxSdssblR3wBFVypPS3ftJGLikunYqAVvct1aQQcAPRCgVDoL18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744126437; c=relaxed/simple;
-	bh=hkj33HvWH7z+7npHbhB7B8fe/3fPCZataiCitI6mP3E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eF1/oXx/qdFPrpT9A3ztg9qNa4+V8LClXyLUxYpIbZM1BIOinoxcuf80LCfKYvxvkxar5T7rLcTnHmzNXenILmacM+2D0n/GLWxYCV67t88JR2F9+XyIC2+l44DM63vfmk2kDMGQx83ETaE3+kj6upyRBdR5qTG35u8ntRDw6Dg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WO+LV9dH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744126459; c=relaxed/simple;
+	bh=WQftzQO++oPoj/m65/7HbOAr97ECatUT7IUw/jtlkoU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jn9daYlUS1i3WmaQ8U5i3WksrG3NU9cI8DyjtmxKogaCFsVhmLJh4WbcVpQaEKg4OJFqu+GhrDnovT/7E1HgRKlmPMkxWeUutgo4fk2s2G5lPeF5i90o4v6kyyS+1PeIgvngEeOGbg27hEG/WPohWN/AUTSuufmHMaBwVA8yuww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NexMqlTX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WO+LV9dH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1AB6C4CEE5;
-	Tue,  8 Apr 2025 15:33:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NexMqlTX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8651C4CEE5;
+	Tue,  8 Apr 2025 15:34:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744126437;
-	bh=hkj33HvWH7z+7npHbhB7B8fe/3fPCZataiCitI6mP3E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WO+LV9dH9KaSOGuQfz83Y4tIchSpkxL1l+QiLyn2ZTJ01hG1Grx2Wdl6tQnEKAUBM
-	 lT1CUoxF+v+Zs8TrpSj8dNK5ERXUNiONbaKeSpfiLZ3QSZcbv+5VTkwU7kWbJ/7UHs
-	 v8jLJuyKe4Q83dZlUFzB36whZ+2x1/NW0WJE0i2+ejkBjTfzDhe/crW8tkanh156jA
-	 g3LyGlo7gpbFkwYhWRvmOEJgiFoAmePVplYvx7cLYto4eLjnHPyZNyZllsH9bACupg
-	 0SUGhBibOu4YYM8Rz3e0s7gU1mNutbiGMgQKmriamamrsoqk/+XpfD4PXFIAmBLZKz
-	 SOVZazRk7PpPw==
-Date: Tue, 8 Apr 2025 16:33:52 +0100
-From: Simon Horman <horms@kernel.org>
-To: Arnaud Lecomte <contact@arnaud-lcm.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	linux-ppp@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
-	syzbot+29fc8991b0ecb186cf40@syzkaller.appspotmail.com
-Subject: Re: [PATCH] net: ppp: Add bound checking for skb d on ppp_sync_txmung
-Message-ID: <20250408153352.GY395307@horms.kernel.org>
-References: <20250407-bound-checking-ppp_txmung-v1-1-cfcd2efe39e3@arnaud-lcm.com>
+	s=k20201202; t=1744126458;
+	bh=WQftzQO++oPoj/m65/7HbOAr97ECatUT7IUw/jtlkoU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=NexMqlTXfGxWJCHOpLBOQoheYIDIr3/P4EbuJrPmMusoL4QXiYv0AYdkuOCJGfqGW
+	 qM8P+Gs/DAStvJ9Nc0W/xEtb0MYTMjjFAbWkPZjXmFeCefpUJmZAJb4NeKFlJ162dQ
+	 3HN4FQT0my2oZ+1WJSa/noN2KLHLQPnku0RkXz90CJ4YgyW+Pd4QjuA3R4uhcfZTdF
+	 td/X5EQHYPzH9KXhnYSTFuVG1ufMiH1IEdD9OtQVkRj0wZWDUqjxFdPiCxVg2SY3sU
+	 P/d3/dcVHvwingfQZvbQDqNCeXGRSSAGnsi0rf4W9t1jLfIG16tcnOJIIRX6tpWDHx
+	 u63n1qXXlz0Aw==
+From: Maxime Ripard <mripard@kernel.org>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Maxime Ripard <mripard@kernel.org>
+Cc: Philipp Stanner <phasta@mailbox.org>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/7] drm/tests: Fix drm_display_mode memory leaks
+Date: Tue,  8 Apr 2025 17:34:13 +0200
+Message-ID: <174412644317.1850669.11850198768886971879.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250408-drm-kunit-drm-display-mode-memleak-v1-0-996305a2e75a@kernel.org>
+References: <20250408-drm-kunit-drm-display-mode-memleak-v1-0-996305a2e75a@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250407-bound-checking-ppp_txmung-v1-1-cfcd2efe39e3@arnaud-lcm.com>
 
-On Mon, Apr 07, 2025 at 05:26:21PM +0200, Arnaud Lecomte wrote:
-> Ensure we have enough data in linear buffer from skb before accessing
-> initial bytes. This prevents potential out-of-bounds accesses
-> when processing short packets.
+On Tue, 08 Apr 2025 09:34:06 +0200, Maxime Ripard wrote:
+> Here's a series that fixes some memory leaks in our kunit tests that
+> eventually show up in kmemleak.
 > 
-> When ppp_sync_txmung receives an incoming package with an empty
-> payload:
-> (remote) gef➤  p *(struct pppoe_hdr *) (skb->head + skb->network_header)
-> $18 = {
-> 	type = 0x1,
-> 	ver = 0x1,
-> 	code = 0x0,
-> 	sid = 0x2,
->         length = 0x0,
-> 	tag = 0xffff8880371cdb96
-> }
+> Let me know what you think,
+> Maxime
 > 
-> from the skb struct (trimmed)
->       tail = 0x16,
->       end = 0x140,
->       head = 0xffff88803346f400 "4",
->       data = 0xffff88803346f416 ":\377",
->       truesize = 0x380,
->       len = 0x0,
->       data_len = 0x0,
->       mac_len = 0xe,
->       hdr_len = 0x0,
 > 
-> it is not safe to access data[2].
-> 
-> Reported-by: syzbot+29fc8991b0ecb186cf40@syzkaller.appspotmail.com
-> Closes: https://syzkaller.appspot.com/bug?extid=29fc8991b0ecb186cf40
-> Tested-by: syzbot+29fc8991b0ecb186cf40@syzkaller.appspotmail.com
-> Fixes: 9946eaf552b1 ("Merge tag 'hardening-v6.14-rc2' of git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux")
+> [...]
 
-It doesn't seem right to use a Merge commit in a fixes tag.
+Applied to misc/kernel.git (drm-misc-fixes).
 
-Looking over the code, the access to data[2] seems to have existed since
-the beginning of git history, in which case I think we can use this:
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-
-> Signed-off-by: Arnaud Lecomte <contact@arnaud-lcm.com>
-> ---
->  drivers/net/ppp/ppp_synctty.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/net/ppp/ppp_synctty.c b/drivers/net/ppp/ppp_synctty.c
-> index 644e99fc3623..520d895acc60 100644
-> --- a/drivers/net/ppp/ppp_synctty.c
-> +++ b/drivers/net/ppp/ppp_synctty.c
-> @@ -506,6 +506,11 @@ ppp_sync_txmunge(struct syncppp *ap, struct sk_buff *skb)
->  	unsigned char *data;
->  	int islcp;
->  
-> +	/* Ensure we can safely access protocol field and LCP code */
-> +	if (!skb || !pskb_may_pull(skb, 3)) {
-
-I doubt that skb can be NULL.
-
-> +		kfree_skb(skb);
-> +		return NULL;
-> +	}
->  	data  = skb->data;
->  	proto = get_unaligned_be16(data);
->  
-> 
-> ---
-> base-commit: 9946eaf552b194bb352c2945b54ff98c8193b3f1
-> change-id: 20250405-bound-checking-ppp_txmung-4807c854ed85
-> 
-> Best regards,
-> -- 
-> Arnaud Lecomte <contact@arnaud-lcm.com>
-> 
-> 
+Thanks!
+Maxime
