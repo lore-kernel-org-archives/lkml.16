@@ -1,120 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f195.google.com (mail-lj1-f195.google.com [209.85.208.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 409A91DBB0C;
-	Tue,  8 Apr 2025 14:37:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C933818E75A;
+	Tue,  8 Apr 2025 14:38:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744123059; cv=none; b=rCAs9mKyn2tLu1KWxmTwoKcdiTz59lryzRUniMHD6yEv756xLUIAaU6mo27F11sGnCDs//pb8NhDOuUHtt2uMO/1Va+dAsJ/rPcaSB5CGCVVq+5NkGdAGBPSF34B3hBq5h7T+hORHvf/IxHSZOG65K/elRLrjZzfxNqBS/WqxmU=
+	t=1744123102; cv=none; b=aQMXV2Qy8h+4TKG+Dq+jeSpEre8oSSQcFUBL5KgQ0tTLpS91Vgj3aNtLk3bfv7P1hwMFuszjUuB7y5WV6ol6+39+m22153T6zbFcltyHWV0IGkjoyfUzgEq2PfeHNnKnCshKF7MMf9VOy7DC2w0CUKyB7g4BJ+eynRyNQI+BdPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744123059; c=relaxed/simple;
-	bh=G742PKXiiYwWDswFW4hAR6scsLht0+Tor8wW8ZThYYA=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=oxsMUGvJYjA0czp2am6AtqxiAeFxUfll+lK0xiKlk24bCYSiuFKeXoZ3lyGLaq518CwV+Yv6dIAbGKKtBGxswnPJWnRvnsupfhNu4jsJmN/aacq0y+LjJCoYPKAt16lu2spY0LhAh8O4SQdd50OgKgnUcSN8wn+LWkNmpoGVtaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IDlRlE7/; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744123102; c=relaxed/simple;
+	bh=4602jiZbb6y/68K9OMjhxQx5fW+hJyFyiR+Ly6hKoVU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=loFJjcwXoLRN7pExktKuohTzqjERAhQWdMM5uIxc7XKGEQLUwtCxrE6P/Est2ZGhQUQLCck/xnMLHodT2YwmoM5Akyeur1ZEysR08SF/dEt8dDPIA/5VCJLoD7baqLkRv4hnRvNLoWkfIaTYSLfTuBsirU3fsWHufHkterBzJHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OlcnOx2v; arc=none smtp.client-ip=209.85.208.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IDlRlE7/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744123058; x=1775659058;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=G742PKXiiYwWDswFW4hAR6scsLht0+Tor8wW8ZThYYA=;
-  b=IDlRlE7/w/4JodfCtnkfiGTXjIe+vuoRecUJaUPjNTbg5oN5TpvItOZK
-   wLlCk7o/GZdQPiWPcbA5NQWW1fK7wHBq1i2vC3RGI3r7N6g9oSwtoI/Yf
-   +W/5MPDTAFtCP+E2J1j0GvsFpc4/EVkvN/ZbcuwJBbB2v/gDMNgt0uoaP
-   wCCr2p6UfaoxNaPuul76ZR1mkcEmrecNXV4AJZz8gNLWDqaprnc2h8uRc
-   rULdobm2vL/BFnDE3WTuml5LEmeR6HfBgl0YxyTHPIw9nP3CVknlCzEwg
-   Nds2pRwEd/d6P8nH6f/3uXDYY1ckWVMbJfzA6oybpJN+Cpk18yO/dVrQq
-   w==;
-X-CSE-ConnectionGUID: xl8yTVRZQUmSm3dAKhTUOA==
-X-CSE-MsgGUID: LBPYZcDtSaqkL9AwFIhTOQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="49405336"
-X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
-   d="scan'208";a="49405336"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 07:37:35 -0700
-X-CSE-ConnectionGUID: r0mfxXzTR/GsIztWkBbXpQ==
-X-CSE-MsgGUID: bv502igSTm+JFAxUFYY5yw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
-   d="scan'208";a="128280535"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.125])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 07:37:32 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 8 Apr 2025 17:37:28 +0300 (EEST)
-To: Luke Jones <luke@ljones.dev>
-cc: LKML <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, 
-    platform-driver-x86@vger.kernel.org, mario.limonciello@amd.com
-Subject: Re: [PATCH v8 6/8] platform/x86: asus-armoury: add screen auto-brightness
- toggle
-In-Reply-To: <20250319065827.53478-7-luke@ljones.dev>
-Message-ID: <4379b33f-564a-70f2-19a6-d3a35879c080@linux.intel.com>
-References: <20250319065827.53478-1-luke@ljones.dev> <20250319065827.53478-7-luke@ljones.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OlcnOx2v"
+Received: by mail-lj1-f195.google.com with SMTP id 38308e7fff4ca-3061513d353so62999311fa.2;
+        Tue, 08 Apr 2025 07:38:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744123099; x=1744727899; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6Q7bxwJNCvq8bg2MwJK2kdA3pNJuhT9mZBUaAlfBwAA=;
+        b=OlcnOx2vpR2pJDp1fnpJBxNlbRZD7BuTFoNzlz8SYDVcg91vKGCp3Q8n9DDeJ9Vwp3
+         SuxSA8dYgaDOsLt1W4o1CzEFVpzP1tQNnAHpFONXufqhvUyJIfmWymK7YOw44kq6UNfr
+         b91aADNRKx1cjrmzJytIVF3icMZeuQKVfi7BbEvI4jbFh9bB7Nls6rAuZhW5R6jedr05
+         CQ2hEThP2+I1BRJBUZ4aYpoXuGMxuKaFKsJfJlft31tb4mYAHcjXHEZ/LTwtt6zQHnZ/
+         n8pAhwrafOVuhd9cWATbaXD3Ua7i1Ej12Bgy5PITwfiqQJUn331OsYh0BG6ZXzOafO4S
+         Qu9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744123099; x=1744727899;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6Q7bxwJNCvq8bg2MwJK2kdA3pNJuhT9mZBUaAlfBwAA=;
+        b=DEcTmeGKRdSJgAvvPqNQ80ezljJmcZw/nqR3vXbk7JPIW9t+fHD5YclYlXhlU4GSUU
+         Yl1FECyF0EUDKwP9QJkexsmCpeWbf5FQBRYnYvSjnkJ2IKA39raF53XjJJGB3chp/KXh
+         cdm6exXmmNQsHX4jU85N6zTmA94R80fLEh9Lfyfv6hCYqGGwWPI4Hx12XqXqIhLTFlfQ
+         dnZAJw/D3SCJHmGHm0HTZ45RD9wxOemsunYta3OJoLbJv5B8KjnjXr1ZbJegdXlx25rg
+         lSBUEnypr/GW7Kinee11fat19oRZvLcQSuOBmFQ1yZ5GMCpiqxFKCO9alRzVpWXFCJ/0
+         1Ijw==
+X-Forwarded-Encrypted: i=1; AJvYcCURm5+S2py6OWrm2pPJBDQ2O/qFTBfuQ1J5/shDy/SPkMvKbp55mg98EOJCqnYME1prrOln1iQvgA==@vger.kernel.org, AJvYcCUvMEkZ9oitalBIyl6FliPVZcTJgpKrr7eRdEIVoJAJChecbrgNxXw9PO7slN03rnFo4XvLO6Do4m4=@vger.kernel.org, AJvYcCXqpd+/2MEgrJzcb36LnPZ6evEZ5cTJFpF1UpN9x4IjFK0Bmp8PfzrkDvmA+ZL8BCyHLmM6gAbSg+Q5AsRg@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpAvdLYaC0XE7bqRjZqSVMxRMtPPk2sDCo8Yv3jFWXakwmTYRq
+	FVAod8VeZWuWxrn+VDEaX3NgzM4HNCV/zv/5pIWhNVYCzuOOeuSyF82cT2gRQMCjHCfRztt6Ml7
+	Fg+av+H7kr79xDqSWkgJHW6e2H4vBXGlo
+X-Gm-Gg: ASbGncvSZ9pSsCoJd0ylZUDpEbq6snLuqiCaaHbOtRXDj6H9wW5DueKAKaAD5awj8ul
+	p27pm1+FDlZQiPdvKMBVZjCWNBOA86t7P1ujghLhZktVjUKH6njN04+VkGr9ufxGTTgbQF4uuZg
+	M7Omf6Wd0pk/juzOr7ot6DvL2bWQ==
+X-Google-Smtp-Source: AGHT+IHU10fpaX9Y+BK0PT1SISRH+YFkz7nb8FFJqSdolPlNMzG1qkWD7zj329MmOVdStqbKBKnJK+oXqDOOT6sYTtk=
+X-Received: by 2002:a05:651c:1442:b0:30c:6f3a:dce9 with SMTP id
+ 38308e7fff4ca-30f1650c370mr35717131fa.10.1744123098278; Tue, 08 Apr 2025
+ 07:38:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1390500884-1744123048=:930"
+References: <20250405055447.73925-1-bsdhenrymartin@gmail.com>
+ <20250407-wondrous-turtle-of-foundation-e92250@sudeepholla> <20250408055505.oked4a3drsym46wz@vireshk-i7>
+In-Reply-To: <20250408055505.oked4a3drsym46wz@vireshk-i7>
+From: henry martin <bsdhenrymartin@gmail.com>
+Date: Tue, 8 Apr 2025 22:38:07 +0800
+X-Gm-Features: ATxdqUGy8OGeNNfaWbovLbK4n8MBpz3d2_OV8hx-iHgIR4LNXqu-6gTdwL3S9-4
+Message-ID: <CAEnQdOo8CUe5Xpdo=qkCtv-E9gs-BvxUAgVa1Hvptp-2iFX0_w@mail.gmail.com>
+Subject: Re: [PATCH v1] cpufreq: scmi: Fix null-ptr-deref in scmi_cpufreq_get_rate()
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, cristian.marussi@arm.com, rafael@kernel.org, 
+	arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+> How about `if (unlikely(!policy))` instead ?
+Agreed, unlikely() makes sense here since the NULL check is for an
+exceptional case.
+I'll update all relevant patches accordingly.
 
---8323328-1390500884-1744123048=:930
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+> Henry, this change applies to all the patches you have sent. Also please =
+send
+> them as a single series, as they are related changes.
+Noted. I=E2=80=99ll consolidate the patches into a single series with a pro=
+per
+cover letter and
+resend them shortly.
 
-On Wed, 19 Mar 2025, Luke Jones wrote:
-
-> Add screen_auto_brightness toggle supported on some laptops.
->=20
-> Signed-off-by: Luke D. Jones <luke@ljones.dev>
-> ---
->  drivers/platform/x86/asus-armoury.c        | 3 +++
->  include/linux/platform_data/x86/asus-wmi.h | 1 +
->  2 files changed, 4 insertions(+)
->=20
-> diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/a=
-sus-armoury.c
-> index b36e19b9d2bf..802c304e2ebc 100644
-> --- a/drivers/platform/x86/asus-armoury.c
-> +++ b/drivers/platform/x86/asus-armoury.c
-> @@ -752,6 +752,9 @@ ATTR_GROUP_BOOL_RW(panel_od, "panel_overdrive", ASUS_=
-WMI_DEVID_PANEL_OD,
->  =09=09   "Set the panel refresh overdrive");
->  ATTR_GROUP_BOOL_RW(panel_hd_mode, "panel_hd_mode", ASUS_WMI_DEVID_PANEL_=
-HD,
->  =09=09   "Set the panel HD mode to UHD<0> or FHD<1>");
-> +ATTR_GROUP_BOOL_RW(screen_auto_brightness, "screen_auto_brightness",
-> +=09=09   ASUS_WMI_DEVID_SCREEN_AUTO_BRIGHTNESS,
-> +=09=09   "Set the panel brightness to Off<0> or On<1>");
->  ATTR_GROUP_BOOL_RO(egpu_connected, "egpu_connected", ASUS_WMI_DEVID_EGPU=
-_CONNECTED,
->  =09=09   "Show the eGPU connection status");
-> =20
-> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/p=
-latform_data/x86/asus-wmi.h
-> index e735f35b423c..92fea0710ada 100644
-> --- a/include/linux/platform_data/x86/asus-wmi.h
-> +++ b/include/linux/platform_data/x86/asus-wmi.h
-> @@ -83,6 +83,7 @@
->  #define ASUS_WMI_DEVID_LID_FLIP_ROG=090x00060077
->  #define ASUS_WMI_DEVID_MINI_LED_MODE=090x0005001E
->  #define ASUS_WMI_DEVID_MINI_LED_MODE2=090x0005002E
-> +#define ASUS_WMI_DEVID_SCREEN_AUTO_BRIGHTNESS=090x0005002A
-> =20
->  /* Storage */
->  #define ASUS_WMI_DEVID_CARDREADER=090x00080013
->=20
-
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-
-
---=20
- i.
-
---8323328-1390500884-1744123048=:930--
+Viresh Kumar <viresh.kumar@linaro.org> =E4=BA=8E2025=E5=B9=B44=E6=9C=888=E6=
+=97=A5=E5=91=A8=E4=BA=8C 13:55=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On 07-04-25, 12:30, Sudeep Holla wrote:
+> > On Sat, Apr 05, 2025 at 01:54:47PM +0800, Henry Martin wrote:
+> > > cpufreq_cpu_get_raw() can return NULL when the target CPU is not pres=
+ent
+> > > in the policy->cpus mask. scmi_cpufreq_get_rate() does not check for
+> > > this case, which results in a NULL pointer dereference.
+> > >
+> > > Add NULL check after cpufreq_cpu_get_raw() to prevent this issue.
+> > >
+> > > Fixes: 99d6bdf33877 ("cpufreq: add support for CPU DVFS based on SCMI=
+ message protocol")
+> > > Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+> > > ---
+> > >  drivers/cpufreq/scmi-cpufreq.c | 10 ++++++++--
+> > >  1 file changed, 8 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/cpufreq/scmi-cpufreq.c b/drivers/cpufreq/scmi-cp=
+ufreq.c
+> > > index c310aeebc8f3..c735f39245bf 100644
+> > > --- a/drivers/cpufreq/scmi-cpufreq.c
+> > > +++ b/drivers/cpufreq/scmi-cpufreq.c
+> > > @@ -37,11 +37,17 @@ static struct cpufreq_driver scmi_cpufreq_driver;
+> > >
+> > >  static unsigned int scmi_cpufreq_get_rate(unsigned int cpu)
+> > >  {
+> > > -   struct cpufreq_policy *policy =3D cpufreq_cpu_get_raw(cpu);
+> > > -   struct scmi_data *priv =3D policy->driver_data;
+> > > +   struct cpufreq_policy *policy;
+> > > +   struct scmi_data *priv;
+> > >     unsigned long rate;
+> > >     int ret;
+> > >
+> > > +   policy =3D cpufreq_cpu_get_raw(cpu);
+> > > +   if (!policy)
+> >
+> > How about `if (unlikely(!policy))` instead ?
+>
+> Henry, this change applies to all the patches you have sent. Also please =
+send
+> them as a single series, as they are related changes.
+>
+> --
+> viresh
