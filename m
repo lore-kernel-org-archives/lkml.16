@@ -1,137 +1,116 @@
-Received: from mailrelay4-3.pub.mailoutpod3-cph3.one.com (mailrelay4-3.pub.mailoutpod3-cph3.one.com [46.30.212.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C9F17A319
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 21:40:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.212.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A40682550DB
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 21:40:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744148415; cv=none; b=Jt6cNpkAv8Jwn1oAHDJbCst/mDwPFGqWraHt8Ecaai6DxfFj3m12nV2T1ttn8/QDkYmPSD3gapalluQImX+wpVOr2P+VnZTu5zGgKLtx+82CnKg9n2cTn/ushFJuKN2PK3vre2XttvQgPL89XMp8GeFeuNyvN+S77KAVnTfR0eI=
+	t=1744148432; cv=none; b=bAfgLkc2GRX80DXvA/YEbxmYr8xTh84v1iT5tMITEIqVaOAIGDD9Vo4p1omB1K5ZpdOtkKhx4EWKJpQfkr/FQFw5W5k4gmLV8Kv7j+l2G13z5lErqZWpnVa7IFxMF3FqWYqDQvRIz4J42zD+vY+WtX5lUJtAdiBYHR/r0N2NMCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744148415; c=relaxed/simple;
-	bh=h9S8zXZLZi67RlzX/pG2eZFsnZWHN6TY9ojoQXGumG8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q9IG+vWdi+Zdp6QZazkqfSVre2KGShWfUyyoW+hGJSAdhFmycjOFCWC2fhJg7b2RAp6l6HQBXAKCtC2q2Nub3+NN6i+TFiRqduv986eTsHLTDu4hxo1xGuYnlOCohPg62V9osJyo7kY7+z4CW4CxwznvNpNGLpUGCeM+oSdCQJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se; spf=none smtp.mailfrom=konsulko.se; dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=UF6r02/x; dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=qQu0hJIs; arc=none smtp.client-ip=46.30.212.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=konsulko.se
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="UF6r02/x";
-	dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="qQu0hJIs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1744148338; x=1744753138;
-	d=konsulko.se; s=rsa1;
-	h=content-transfer-encoding:content-type:in-reply-to:from:references:cc:to:
-	 subject:mime-version:date:message-id:from;
-	bh=DFqccygusJ2q4mLsj0hmSnYNuPPTLeqNCbWp99vTaLk=;
-	b=UF6r02/x+oopiIYU0+noriCI1xgsP2xMeHjUYwxk5lyHYSNooyitx4xlL8pJAOKSTLRiyN+lLG0bF
-	 Qe4UwfbwHhpXyA4r9uG7pxiKVjF5BRgn9Rsp7DTS3dNxmZrkWWHFEaR3Gw62r0vujWl9KmK9jTLR49
-	 wx0hnlLVujFxhNTb5N+W07A0WQFS+VKd/EbKDUUBuiHt3W9/HUucJ90rpXSuAqhCE3YMciqMt2Nxsl
-	 3y0CLweMgQdwnj/BwXp6qTeogwpY8jEO6pHFmvVyoLxNZqv8Mi7Vo9F3/jBvMIEY9/nYU4jBASMeh4
-	 GMZnTUcpDCGDjnNUm8DHknUm2gkN2Tg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1744148338; x=1744753138;
-	d=konsulko.se; s=ed1;
-	h=content-transfer-encoding:content-type:in-reply-to:from:references:cc:to:
-	 subject:mime-version:date:message-id:from;
-	bh=DFqccygusJ2q4mLsj0hmSnYNuPPTLeqNCbWp99vTaLk=;
-	b=qQu0hJIs4IgTLlFCRMMl40jlI7tFppi2Fv6+GR/5GU1y+SNUyHeF9P1GLuBRosqGQOvw7gotnKts/
-	 F9hsC6gBg==
-X-HalOne-ID: e02a6414-14c1-11f0-93e8-29b2d794c87d
-Received: from [192.168.10.245] (host-90-233-218-222.mobileonline.telia.com [90.233.218.222])
-	by mailrelay4.pub.mailoutpod3-cph3.one.com (Halon) with ESMTPSA
-	id e02a6414-14c1-11f0-93e8-29b2d794c87d;
-	Tue, 08 Apr 2025 21:38:58 +0000 (UTC)
-Message-ID: <24e77aad-08ca-41c4-8e64-301fcc9370b1@konsulko.se>
-Date: Tue, 8 Apr 2025 23:38:57 +0200
+	s=arc-20240116; t=1744148432; c=relaxed/simple;
+	bh=0Fu2Jby4IZi3f5YFORTDkehXA9IedVEL6Ecbc+Pr6cw=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=MBkzbKucfAY5Ljv/ile6kvfGOyVfmZq2QB8gtnPBsM5AaSD6bpyroiuL1pKpssm0qyZ1I3hZw2hn0SiFzZQ85Qc4fKcnxyZJMZZOW3xwoXPtDm43RHN+TSvLsYp7hmx2viNEf6/YDisRX1OQZ+32gJGXDNxTaBY7tjjRlRHV1o4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d43541a706so60961785ab.1
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 14:40:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744148430; x=1744753230;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aG6mXlXpyxc14RmTlGpoycr6Zv8mM/crazzDdicDGG8=;
+        b=QzrEIhRZz5lzgS/4pM6LOXo+Svq0R7olm0r7Zrf8cSJeba/OHnB6bjQ9Kx8iOyOVAm
+         wFeFWakb4fHvkSlENn0vsHofZbY8ch3Tt0JQY/I4p3JCa4eetXYjVKp9+Y+J3iwt5HN0
+         dCObjsmYS7Uy72ePsCNKJRqp72UD21v2hkO/AA3LLxwXqzciz1Y3dGe1jrijawxwzHmJ
+         KdGQMNpI9jTX5JPa8wkt3LtcMNNIt1/7CQeJHHrrCjdBa6ai1cxo+lOD21Dr/qXNpIq3
+         7koJLx2qjEaOAhvXoMDt+4dU3X4FjwbtDqNBcpMjTY5xB8BUlHLJOvyaetgkwQfONhAJ
+         MlYA==
+X-Forwarded-Encrypted: i=1; AJvYcCUkmR7ueJs6kIp/8UUKvwhWfZeGKkub7mov4hfjypo6ttPSL884DxnxfvAvTi4h6Q+mKtcNOZ7M6Ng+xWo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGkC82dgKsCKV6xxi1GbwUKonbbv6AR+3XY5K0LBRfYt/UADHT
+	vxcKehfVyDX6QgO3rrz+xvCpzYpzVuAnepCJHN2xSLcmjBweoP6ZFM0pR155rHawNgq/cvSybDt
+	K5jAwqDYzGS7s5uNiqijZXIed7aNJilwycdr+G6l2Bg9QO/cKN5MrE/E=
+X-Google-Smtp-Source: AGHT+IHD9LAcPC3LEF/tGMUuGkQYrgbQILB4qAgmVrRZN7HmVaXNsax6qpqhnf6CeymqTo+nAmXUAO7KnDQgGyQlsclAw4nligEg
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] mm: add zblock allocator
-To: Johannes Weiner <hannes@cmpxchg.org>, Igor Belousov <igor.b@beldev.am>
-Cc: Nhat Pham <nphamcs@gmail.com>, linux-mm@kvack.org,
- akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
- Shakeel Butt <shakeel.butt@linux.dev>, Yosry Ahmed <yosryahmed@google.com>
-References: <1743810988579.7.125720@webmail-backend-production-7b88b644bb-5mmj8>
- <0dbbbe9d17ed489d4a7dbe12026fc6fd@beldev.am>
- <f8063d3fa7e148fecdda82e40b36e10a@beldev.am>
- <CAKEwX=NMjfC1bKTVsB+C7eq3y=O0x3v8MW7KxUfhpg6UUr23rw@mail.gmail.com>
- <f023ba8341f9b44610cc4ac00cf0ee33@beldev.am>
- <CAKEwX=MXD9EB242WkB50ZBmZgV-CwrAHp=_oE+e=7yHDfrMHtg@mail.gmail.com>
- <3f013184c80e254585b56c5f16b7e778@beldev.am>
- <20250408195533.GA99052@cmpxchg.org>
-Content-Language: en-US
-From: Vitaly Wool <vitaly.wool@konsulko.se>
-In-Reply-To: <20250408195533.GA99052@cmpxchg.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:3b07:b0:3d5:8922:77a0 with SMTP id
+ e9e14a558f8ab-3d77c2a8cd3mr7095015ab.18.1744148429834; Tue, 08 Apr 2025
+ 14:40:29 -0700 (PDT)
+Date: Tue, 08 Apr 2025 14:40:29 -0700
+In-Reply-To: <67f4d325.050a0220.396535.0558.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67f597cd.050a0220.258fea.0003.GAE@google.com>
+Subject: Re: [syzbot] [net?] WARNING in __linkwatch_sync_dev
+From: syzbot <syzbot+48c14f61594bdfadb086@syzkaller.appspotmail.com>
+To: andrew@lunn.ch, davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
+	jv@jvosburgh.net, kuba@kernel.org, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, pabeni@redhat.com, sdf@fomichev.me, 
+	stfomichev@gmail.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+
+syzbot has found a reproducer for the following issue on:
+
+HEAD commit:    7702d0130dc0 Add linux-next specific files for 20250408
+git tree:       linux-next
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=138fa7e4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=91edf513888f57d7
+dashboard link: https://syzkaller.appspot.com/bug?extid=48c14f61594bdfadb086
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11520398580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16b1323f980000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/0603dd3556b9/disk-7702d013.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/d384baaee881/vmlinux-7702d013.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/1ac172735b6c/bzImage-7702d013.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+48c14f61594bdfadb086@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+RTNL: assertion failed at ./include/net/netdev_lock.h (56)
+WARNING: CPU: 1 PID: 12 at ./include/net/netdev_lock.h:56 netdev_ops_assert_locked include/net/netdev_lock.h:56 [inline]
+WARNING: CPU: 1 PID: 12 at ./include/net/netdev_lock.h:56 __linkwatch_sync_dev+0x30d/0x360 net/core/link_watch.c:279
+Modules linked in:
+CPU: 1 UID: 0 PID: 12 Comm: kworker/u8:0 Not tainted 6.15.0-rc1-next-20250408-syzkaller #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+Workqueue: bond0 bond_mii_monitor
+RIP: 0010:netdev_ops_assert_locked include/net/netdev_lock.h:56 [inline]
+RIP: 0010:__linkwatch_sync_dev+0x30d/0x360 net/core/link_watch.c:279
+Code: 7c fe ff ff e8 f4 63 cc f7 c6 05 83 28 53 06 01 90 48 c7 c7 60 5c 51 8d 48 c7 c6 8a 9b 67 8e ba 38 00 00 00 e8 04 6b 8b f7 90 <0f> 0b 90 90 e9 4d fe ff ff 89 d9 80 e1 07 38 c1 0f 8c 19 fd ff ff
+RSP: 0018:ffffc90000117710 EFLAGS: 00010246
+RAX: 6875daac7c816500 RBX: 0000000000000000 RCX: ffff88801c685a00
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 0000000000000000 R08: ffffffff81824ed2 R09: fffffbfff1d7a700
+R10: dffffc0000000000 R11: fffffbfff1d7a700 R12: 0000000000000000
+R13: dffffc0000000000 R14: ffff888034096008 R15: ffff888034096000
+FS:  0000000000000000(0000) GS:ffff888125089000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fa9d1a29440 CR3: 0000000075fc0000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ ethtool_op_get_link+0x15/0x60 net/ethtool/ioctl.c:63
+ bond_check_dev_link+0x1fb/0x4b0 drivers/net/bonding/bond_main.c:864
+ bond_miimon_inspect drivers/net/bonding/bond_main.c:2734 [inline]
+ bond_mii_monitor+0x49d/0x3170 drivers/net/bonding/bond_main.c:2956
+ process_one_work kernel/workqueue.c:3238 [inline]
+ process_scheduled_works+0xac3/0x18e0 kernel/workqueue.c:3319
+ worker_thread+0x870/0xd50 kernel/workqueue.c:3400
+ kthread+0x7b7/0x940 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
 
 
-
-On 4/8/25 21:55, Johannes Weiner wrote:
-> On Tue, Apr 08, 2025 at 01:20:11PM +0400, Igor Belousov wrote:
->>>>>> Now what's funny is that when I tried to compare how 32 threaded build
->>>>>> would behave on a 8-core VM I couldn't do it because it OOMs with
->>>>>> zsmalloc as zswap backend. With zblock it doesn't, though, and the
->>>>>> results are:
->>>>>> real    12m14.012s
->>>>>> user    39m37.777s
->>>>>> sys     14m6.923s
->>>>>> Zswap:            440148 kB
->>>>>> Zswapped:         924452 kB
->>>>>> zswpin 594812
->>>>>> zswpout 2802454
->>>>>> zswpwb 10878
->>>>
->>>> It's LZ4 for all the test runs.
->>>
->>> Can you try zstd and let me know how it goes :)
->>
->> Sure. zstd/8 cores/make -j32:
->>
->> zsmalloc:
->> real	7m36.413s
->> user	38m0.481s
->> sys	7m19.108s
->> Zswap:            211028 kB
->> Zswapped:         925904 kB
->> zswpin 397851
->> zswpout 1625707
->> zswpwb 5126
->>
->> zblock:
->> real	7m55.009s
->> user	39m23.147s
->> sys	7m44.004s
->> Zswap:            253068 kB
->> Zswapped:         919956 kB
->> zswpin 456843
->> zswpout 2058963
->> zswpwb 3921
-> 
-> So zstd results in nearly double the compression ratio, which in turn
-> cuts total execution time *almost in half*.
-> 
-> The numbers speak for themselves. Compression efficiency >>> allocator
-> speed, because compression efficiency ultimately drives the continuous
-> *rate* at which allocations need to occur. You're trying to optimize a
-> constant coefficient at the expense of a higher-order one, which is a
-> losing proposition.
-
-Well, not really. This is an isolated use case with
-a. significant computing power under the hood
-b. relatively few cores
-c. relatively short test
-d. 4K pages
-
-If any of these isn't true, zblock dominates.
-!a => zstd is too slow
-!b => parallelization gives more effect
-!c => zsmalloc starts losing due to having to deal with internal 
-fragmentation
-!d => compression efficiency of zblock is better.
-
-Even !d alone makes zblock a better choice for ARM64 based servers.
-
-~Vitaly
+---
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
