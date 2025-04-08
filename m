@@ -1,103 +1,89 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E29719AD5C;
-	Tue,  8 Apr 2025 11:41:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A438219AD5C;
+	Tue,  8 Apr 2025 11:41:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744112476; cv=none; b=RuNUNVwmbFBh0x8n42MOC/a4oSBRlHApTHowqztNjE9CgPsUt4yl0FC+yo0ujvYkQGLBcalfc2ryUXIMXJluGPzd9VgnNMT0HbSwwfnBWNiwX6qMwtHHxcXdlCx7dKrXNRIcOfvAPWIck0fY8pEFJStcQwcWcE9dqqBLY8ctBbQ=
+	t=1744112498; cv=none; b=e6rHsTjt8PNgI5+m3OY7EXw42+oYLrSwb1rpLklotR32t0sTPZ1p+AuZHTegm0R7i3HDv/KwMbNM+5YEg+ULyM2bcExItExTQjsGGkFON2XaigDw2vH7Esfca2eSNLX+C37gb4qeKtAdTlB5yAAUB4RMibsPHhdsU/4bLR7m7Kw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744112476; c=relaxed/simple;
-	bh=Y4Qqj2e8sRw4IcpVEs62t53lddToNxMVHOHtZI31qLA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PwA/IOaGOvhcoRNS/XzV8W2noUdWRR3l9zkGlaaKqojVO8WQE2mKauc4dM2EW4irAu7nx1qv/fl8zf2dH2iLKpejipI+eOM8m234o40QXJ/bvD0S4KxZrvVNy4bVBhdk2/9nAH4Nf55hGuRtO7d8BQ29rebONNCfYsRCKFe6W+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kmo638XH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744112498; c=relaxed/simple;
+	bh=NEnGPEO6W3C829+ENWtu1rBVVodPRfUQmPBIP8EWNEY=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=t8FduHNW/Qz9BVF/arVZm2Gh7pbeuYiDtn+OVA4sYF1muVIhit44DEr3U+9MJkZW4pttbsuAHol2f+YyJJgenW880QqVMzhbSJGjucjX6YanT2b0s2XvEow3U3AAVzgnnqUSm/Da3aq1DXUOTmNphP0EerFQ5oXIjEvM4XTaaYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IrfZcont; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kmo638XH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5C95C4CEEB;
-	Tue,  8 Apr 2025 11:41:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IrfZcont"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35452C4CEE7;
+	Tue,  8 Apr 2025 11:41:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744112475;
-	bh=Y4Qqj2e8sRw4IcpVEs62t53lddToNxMVHOHtZI31qLA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Kmo638XHPrDfntfbt/7HnD3EEGtmgwL3ZC0AURBYbePPWWs/RQlt+S5tzOGj8Hwcx
-	 KTR1nbXWf1YlnvF+5g6SVgiQ9xnzDtb+REbT4rwOY8CHdEYQvFMTFsiJJCYrdImevc
-	 Ih1cbPOmopQub4X4CNS1q0Fi8kxb6huWaxmwCOCEhQ+7XE95oNN9iYqN4uFjqIhbbr
-	 QFvKm/wEDMU/rDlzHsbCcUEHRUTSiGsf8tmjlKrcspvYq4EwUtEZMnpkXZMoSlHw1T
-	 C4Wcq7OfDCwUNnOfGJj9h3FtvR6Q4iocRIcJeYMcfsSlAzhfL6a50xALxCadO3DU3x
-	 4KPlmo63QswoQ==
-Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-72c16e658f4so2342266a34.1;
-        Tue, 08 Apr 2025 04:41:15 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVkf1brNWi00lbQgJxSGYH90ftQF6YkD2Kema2OZplaYMNvYO/pb8n9wUm10BAON6Zx4g4EmZCTGoAB13E=@vger.kernel.org, AJvYcCXuEAlU55CjMJj+gJIapqXKVZhAvxkES2gFeBT6x5b+Hb9BD/R+P0I9GYXsHMumfilNFgS+W7TAL8g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzq3vm/EIjXxOqHGJ0nBULCPthkt0i08HmViOr/84z9Te2Vde7G
-	p6O4IvOkivI8ytdBLzCsrXKvQHkUiAR+qpL7w1uQNcjeSaomLCXOufn4gu6tnLkqjx5eIt0mpqs
-	z52Qd4ox0xwCNk944g1CPYzzX+oY=
-X-Google-Smtp-Source: AGHT+IEcpWj1ur7hPh90DboICwtcCiawjXAh0K7u+IcizwWx+1R+Zd+C5PAclMFiSvtu+Yttll2dZVgfwpVHzhSJSKw=
-X-Received: by 2002:a05:6830:2a8a:b0:72b:a6f4:de5e with SMTP id
- 46e09a7af769-72e37fd1343mr9972915a34.26.1744112475133; Tue, 08 Apr 2025
- 04:41:15 -0700 (PDT)
+	s=k20201202; t=1744112498;
+	bh=NEnGPEO6W3C829+ENWtu1rBVVodPRfUQmPBIP8EWNEY=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=IrfZcontpqggc39cNIGISTvGXcjSpPNQyxzKDDrRaJYLUHrh5pNLyqOwKldVrgjG3
+	 HLCTqLt2m1G11CLR+Poj5srOqOn349PBGM9tWRwuEMecguYr/3qI86kMJ+5dOgaqzB
+	 pbK/4n7tpbPrDnJthIsqKOrHOsZbV3PT3Hh2eT2tcH/5G4JpI7Bh6u4HIj8OEPNm7f
+	 FJsp9V1j34b6SwzzRpepOD9KpgAQ5u/zWrj/kk9I5CVuXGerynpyQ/e1OnSY89F98y
+	 ZQwIqamUnjE4nARLPzJmJp3Ci31wn8ptZGuL4TptwWvwLep5KVpFJ0yyEA0kVVkmCy
+	 Nr9qI0xsczXTw==
+Date: Tue, 08 Apr 2025 06:41:37 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <4651448.LvFx2qVVIh@rjwysocki.net> <8560367.NyiUUSuA9g@rjwysocki.net>
- <CAJZ5v0iMYSTnX9mkZb8aEmtbKxWOgsshNJ_AqnB9Mn27y8jzeQ@mail.gmail.com> <2362a42de1403e99a66551575efd910cc92980bc.camel@linux.intel.com>
-In-Reply-To: <2362a42de1403e99a66551575efd910cc92980bc.camel@linux.intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 8 Apr 2025 13:41:01 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0i7uUFDcTYuam4Hz2fYxpnT6QQQzULk8CNHvkOUfg=bfQ@mail.gmail.com>
-X-Gm-Features: ATxdqUEzPWxoGPM3HLYod2V1jjuFZnoOwCx--NKvhKQb62bHicBeqE3gV5M-skg
-Message-ID: <CAJZ5v0i7uUFDcTYuam4Hz2fYxpnT6QQQzULk8CNHvkOUfg=bfQ@mail.gmail.com>
-Subject: Re: [PATCH v1 10/10] cpufreq: Pass policy pointer to ->update_limits()
-To: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, 
-	Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Mario Limonciello <mario.limonciello@amd.com>, 
-	Sudeep Holla <sudeep.holla@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Konrad Dybcio <konradybcio@kernel.org>, 
+ linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, 
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+ linux-arm-msm@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Wim Van Sebroeck <wim@linux-watchdog.org>, 
+ Guenter Roeck <linux@roeck-us.net>
+To: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+In-Reply-To: <20250408-wdt_reset_reason-v1-3-e6ec30c2c926@oss.qualcomm.com>
+References: <20250408-wdt_reset_reason-v1-0-e6ec30c2c926@oss.qualcomm.com>
+ <20250408-wdt_reset_reason-v1-3-e6ec30c2c926@oss.qualcomm.com>
+Message-Id: <174411249716.1431691.14031212310455675992.robh@kernel.org>
+Subject: Re: [PATCH RFC 3/6] dt-bindings: watchdog: Add Qualcomm restart
+ reason binding
 
-On Tue, Apr 8, 2025 at 12:28=E2=80=AFAM srinivas pandruvada
-<srinivas.pandruvada@linux.intel.com> wrote:
->
-> On Mon, 2025-04-07 at 20:48 +0200, Rafael J. Wysocki wrote:
-> > On Fri, Mar 28, 2025 at 9:49=E2=80=AFPM Rafael J. Wysocki <rjw@rjwysock=
-i.net>
-> > wrote:
-> > >
-> > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > >
-> > > Since cpufreq_update_limits() obtains a cpufreq policy pointer for
-> > > the
-> > > given CPU and reference counts the corresponding policy object, it
-> > > may
-> > > as well pass the policy pointer to the cpufreq driver's -
-> > > >update_limits()
-> > > callback which allows that callback to avoid invoking
-> > > cpufreq_cpu_get()
-> > > for the same CPU.
-> > >
-> > > Accordingly, redefine ->update_limits() to take a policy pointer
-> > > instead
-> > > of a CPU number and update both drivers implementing it,
-> > > intel_pstate
-> > > and amd-pstate, as needed.
-> > >
-> > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> Hi Rafael,
->
-> > Hi Srinivas,
-> >
-> > If you have any concerns regarding this patch, please let me know
-> > (note that it is based on the [05/10]).
-> >
-> Changes looks fine, but wants to test out some update limits from
-> interrupt path.
-> Checked your branches at linux-pm, not able to locate in any branch to
-> apply.
-> Please point me to a branch.
 
-I'll put it in 'testing' later today.
+On Tue, 08 Apr 2025 14:19:53 +0530, Kathiravan Thirumoorthy wrote:
+> Add a devicetree binding for the Qualcomm IPQ SOCs restart reason
+> information region found in the IMEM, allowing the system to identify
+> the cause of a restart.
+> 
+> Signed-off-by: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+> ---
+>  .../bindings/watchdog/qcom,restart-reason.yaml     | 46 ++++++++++++++++++++++
+>  1 file changed, 46 insertions(+)
+> 
+
+My bot found errors running 'make dt_binding_check' on your patch:
+
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/watchdog/qcom,restart-reason.example.dtb: imem@8600000 (qcom,ipq5424-imem): 'restart-reason@7b0' does not match any of the regexes: '^pil-reloc@[0-9a-f]+$', 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/sram/qcom,imem.yaml#
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250408-wdt_reset_reason-v1-3-e6ec30c2c926@oss.qualcomm.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
