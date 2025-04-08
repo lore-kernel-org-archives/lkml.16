@@ -1,188 +1,265 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE83C26A0E7
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 12:27:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE64726A0FF
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 12:28:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744115266; cv=none; b=Cc2CJvyE8FA6cfsZ9tYIAWMTtX92dxAy491qzv+hSAleOiE2a9V3B2gGEOtI34/lJMs5A5IE0MZPtPJu76OuW4qOAs3YCeujMvo5/T7lGHtVO5m6Jsd6H9oNFw1pa/MhBVdsjZEzHoPzePkXw3eFQukZRiN47SJTMuymXtZNGDU=
+	t=1744115299; cv=none; b=mGx7MyqR8heJYmawfsfsi9O5oC7Tj+hVvLxNzGhAqA8gHasq0EjlLQ88favJFH/jrHerL0EOmtC8Lv9d7FEh5tidaw4VU/SSw50P1GzG8hz2zpdYOKR04IrGALqxInP/oSI5UZUGILZLwjwDKqOxsgU3GwpLB2cc+o3EXqBk57k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744115266; c=relaxed/simple;
-	bh=IDQ1GUBQnBf8rB+j8B4YQyr6pwORfkpzRHAeXl4MJdI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=solo0UNmMRiCoCZlmPzG6DsakQqZ1MgdC36wwSfj9pK8q94vzqd8Ml7DCsYimrvj86AwEpUYrQ9xk3oxyVyeucD7ReX2D8CGDU4We9yzOrJd/rPEqh3IKKc+D6nkT+AEwvc2uNQZ41MYr+wfF/M5EMqlY0XS65iiEhzu17l/c48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VMrI9nxB; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744115299; c=relaxed/simple;
+	bh=DObU19VvY006XQ3e10r/OUmsX5tErlL3kFH9coykFdo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sISL/2zWzZj6e0LGE6aS3vOs7mbwYmk2Oh4ZPRoLk/wK9magrpMxj/HBTFXXiv6mBQgK6dYQ9MFzcuNNXzS9mVjf+ZDqSuCELDVVxDeJOPxLFYKPe10hoyWiA8lQQL9WD7D2oPKxBPXAM64M0fUsTE3BZJPlIgSlPvg5e8NfmEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W+Pi8CH5; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VMrI9nxB"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-700b17551cdso53440567b3.0
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 05:27:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W+Pi8CH5"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-226185948ffso55246325ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 05:28:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744115264; x=1744720064; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1744115297; x=1744720097; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gB1seewdxiTr2VW07A3+uDKCe37V8ksv4C8EdOhGRy0=;
-        b=VMrI9nxB0s0Z99TUT7AT9OOLUGMyfuRHfG+aR+L2o2WS1Z8C76iRCy3CPMgS/R5JLQ
-         odPaDbDCDYb7ccEua9sI2sRWmDF7/XAMGe0GC+Hsqnp0Be5p9Ev8elj55TnkGpif/EwD
-         1GGhlNxIHGcccvmpxI26h4pfN4xAz4E6Asihf39+/Xzfg4Oey99U3Wx9cJTdiKo3lbML
-         Hz9fJY/HIeHdMEi1N3rcoGoO+y3LHC6QqxkXEItDV1LIVPQEhpKpdqMcbHt67xT1W+E3
-         4xul1M1L4/cAzkmQQflunjOP55QuoHwAp+7oBcTVy9a2aLB3gfRbJVH2UDV692i544d3
-         CMgA==
+        bh=D41DPV1aln/uONmmmvqsYx6PaSPo1bAlKrhaJKKH4yI=;
+        b=W+Pi8CH5Yl+9imQJ2b9GB3OxYkJOYzVk7/2iwgA4ZPjhy0+sshgmQfl5xovocNInuz
+         IeV1khELv19O6mApVOgUX+qcIo8vcJ3vlrUxS3BALCyM6Bcv0853LFZze02DRGXMn67N
+         Vi0bI+DX8rvNJxPzetSnaceYJlOQT5ErCpM/qzLEcU6m/HDzqP/NnrDeTp8tkZ48cUch
+         LbL1296S/t4stv/lAiUUqqJgvGCFBC91/b9V3jXAOtPwa7vgr++Ss429zYPWGJoDkbvc
+         Mf+e0VkMan/Lvo/OX41UNLtvvbt4P+JJyCOY7I86KGy2K5TR6o0Crimy2PYjqVremlVW
+         gVvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744115264; x=1744720064;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1744115297; x=1744720097;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gB1seewdxiTr2VW07A3+uDKCe37V8ksv4C8EdOhGRy0=;
-        b=cEoZJ9SAlkU0oGqwKeXECIWFUhHQ7tHoFZZOYHsyI0lJnCuTSgcY4sIED360ZeZBvv
-         G6fhPeiKeB7cbX1g1DRJT3vBRWRoeDYjO7akuQV8SMfbCSMoWedPfjHMjzfUpdLeK/2q
-         j5xVlgS4Z/T0VOI65360F4elvbtDVI1b8FahR8X92bP0Tl0767MqLQMCGvBUVuUknBbq
-         dSVWJJvfrYt3rJzwu43GvZBrhmP5ZH0O4YsKTLQpaTBCOl4JNHywDDIokptZRiyPx4/l
-         X5J3QbqGEYUcn45AY9EcWh/aXpK2LqMaEh830CV/dETvgaCy2LFXs+rT6wEE0oztqcPR
-         8QAA==
-X-Forwarded-Encrypted: i=1; AJvYcCX3fKw6D5PhiQmYPH8igw52DL/dnnr8egcan+sy/Yd6sHtV3Oe3VqsUud+sWJjj6XXxBgNbv/jci0pyflY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxv2lb6ctNyAvLMuxX1JPLaAw5+b1PYGWfa1ir6Itcex5iKffwf
-	hF2NtjeO03T6G4N8GJveb4wcgu4gPeagRujpuUy44/voltOJs4fjZzHNZShHRF5I7qDu8EE8mHy
-	59KUwvihEyJSqBppGfNXQ18QwJfNmc6GC5952fQ==
-X-Gm-Gg: ASbGncsydndnxbluwTTPB1k+wNd3e8BpaxB6aS9RO52AT7Dp8/1VHIAgHFn2/yUwtul
-	vFNLgi6Aq0KLYXpjcnAUtemudy4O+D6DVWGuyi8h/KIV5nzfYuhe1c12ppoguYQs5CR0sagzKWg
-	tR9zc2k6B7zvXAvePmVO+7qQ7JQ0w=
-X-Google-Smtp-Source: AGHT+IHPTBP1/MTjSrc/I/MptAtnciiKhGr+WPv5BjoVAvGTZrpvXVXjRqBEPOIQ+IqwWxaW3A1IyTTYeV/ni7FYYsI=
-X-Received: by 2002:a05:690c:4b06:b0:6f9:af1f:53a4 with SMTP id
- 00721157ae682-703e16636afmr292316087b3.32.1744115263719; Tue, 08 Apr 2025
- 05:27:43 -0700 (PDT)
+        bh=D41DPV1aln/uONmmmvqsYx6PaSPo1bAlKrhaJKKH4yI=;
+        b=HX/cowNQbg85wU850OK8Df7BSP5ujbEaEx0eyVC2B1wg/C+Q6qXIhvAvwLSC0DbBig
+         0INiNrj26XuZdqToDesdkl+L+0k+8DRW1gBIonqy/GGQDVpoLZoBwUpUUwHz0kUob7lC
+         GILIJOrFNaUa2vNykTCJAE5mFvFasVb3ljA7DkCyaEPAqCD6vrWJEXwZfiXSYeHntSKG
+         cOoN2MWOd5h2eHJh7mtmSAUFJvrwo8ItaEJEcFjNM+QS7ONNfUGNj6KFil7SpHmyRMkY
+         K6+WDu/Ngs3c2+2hT/Mv7+edzTxSpAG2yLYBQb0jQZOhIeAsY62YpruZ5aFb1qwZtZXv
+         Dn0A==
+X-Forwarded-Encrypted: i=1; AJvYcCWa3PW1zOsYrH6hxWASrQ67BeJPRhAUaGtoJ9q4peQdJEP6vppkxBahvWBnPTagc1wgUAOLLlTZRFiJtao=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRGxU1Wybc2JHkpv973qoJ0gCCE2LYnpfNTUOEziLHVWTv7CEX
+	RQ72c541/gMq45fau42IyFD0cmwIzN3ffgIlY49tmvbQUqkhFGti
+X-Gm-Gg: ASbGncs2RpwyARVMj+lPaz/kORVgjdrD7iDI2mwOwYyulpCWQaW7WLn7xXBxnWv183a
+	O6NZHXtQVH7IrRceHcxv3cweuBCh/H09wu5+TAOxNUQwfjJUM1/Yvz0DtH16On6BoD4xwQTNsQO
+	S7sLosHeJmNMcWyOY9YSWwnd/inlj+uijz8/6raMHXfUoCcikUGuxA5dWxEwjFBjMG8dzM8CSvH
+	sa8Mitvn7IUnR9uGO7pz5vVZo4hOOMjf0yJ5WxuXFHJpm6DkULlf1s5pomwNpj4JVguM0+SXDSW
+	UV2JnHcVCkXcsGe4eTDwObBd1Fj//n1J5VzpwUNjW/TMHRV7ECpJ
+X-Google-Smtp-Source: AGHT+IFX93uD6fHPuXQZl6l4cYSbASjyGb6DJ1ELwG6483Dsa38fYZu6BeqDv5ozCk5EfMHqm4W8/w==
+X-Received: by 2002:a17:903:22c4:b0:227:e980:919d with SMTP id d9443c01a7336-22a955a18b3mr133803495ad.47.1744115296880;
+        Tue, 08 Apr 2025 05:28:16 -0700 (PDT)
+Received: from localhost.localdomain ([43.129.202.66])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297877658fsm98447165ad.238.2025.04.08.05.28.12
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Tue, 08 Apr 2025 05:28:16 -0700 (PDT)
+From: Lance Yang <ioworker0@gmail.com>
+To: akpm@linux-foundation.org
+Cc: amaindex@outlook.com,
+	anna.schumaker@oracle.com,
+	boqun.feng@gmail.com,
+	ioworker0@gmail.com,
+	joel.granados@kernel.org,
+	jstultz@google.com,
+	kent.overstreet@linux.dev,
+	leonylgao@tencent.com,
+	linux-kernel@vger.kernel.org,
+	longman@redhat.com,
+	mhiramat@kernel.org,
+	mingo@redhat.com,
+	mingzhe.yang@ly.com,
+	peterz@infradead.org,
+	rostedt@goodmis.org,
+	senozhatsky@chromium.org,
+	tfiga@chromium.org,
+	will@kernel.org
+Subject: Re: [PATCH v4 2/3] hung_task: show the blocker task if the task is hung on semaphore
+Date: Tue,  8 Apr 2025 20:27:57 +0800
+Message-ID: <20250408122758.83495-1-ioworker0@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250407130845.3c3501a03963f1d44835c755@linux-foundation.org>
+References: <20250407130845.3c3501a03963f1d44835c755@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250303143629.400583-1-m.wilczynski@samsung.com>
- <CGME20250303143637eucas1p1a3abdea520ab88688de1263a5f07bba0@eucas1p1.samsung.com>
- <20250303143629.400583-5-m.wilczynski@samsung.com> <de50dd55e1285726e8d5ebae73877486.sboyd@kernel.org>
- <4c035603-4c11-4e71-8ef3-b857a81bf5ef@samsung.com> <aacd03a071dce7b340d7170eae59d662d58f23b1.camel@pengutronix.de>
- <e90a0c77-61a0-49db-86ba-bac253f8ec53@samsung.com> <38d9650fc11a674c8b689d6bab937acf@kernel.org>
- <CAPDyKFqsJaTrF0tBSY-TjpqdVt5=6aPQHYfnDebtphfRZSU=-Q@mail.gmail.com>
- <ef17e5d1-b364-41e1-ab8b-86140cbe69b2@samsung.com> <21983f8d-681d-4fed-ae44-42eee44c7f14@samsung.com>
-In-Reply-To: <21983f8d-681d-4fed-ae44-42eee44c7f14@samsung.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Tue, 8 Apr 2025 14:27:07 +0200
-X-Gm-Features: ATxdqUHjCmHHXOL_8iuBi_mjDxdVOZW28WwVm4E83fRcaHrvrprcU7GgL8K7Wwo
-Message-ID: <CAPDyKFofVfrK04OVmJ2aX_0uMV0b+f8dCpoezpA9LJbnSOf-9Q@mail.gmail.com>
-Subject: Re: [PATCH v1 4/4] clk: thead: Add GPU clock gate control with CLKGEN
- reset support
-To: Michal Wilczynski <m.wilczynski@samsung.com>
-Cc: Stephen Boyd <sboyd@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, alex@ghiti.fr, 
-	aou@eecs.berkeley.edu, conor+dt@kernel.org, drew@pdp7.com, guoren@kernel.org, 
-	jszhang@kernel.org, krzk+dt@kernel.org, m.szyprowski@samsung.com, 
-	mturquette@baylibre.com, palmer@dabbelt.com, paul.walmsley@sifive.com, 
-	robh@kernel.org, wefu@redhat.com, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Hi Andrew,
+
+Thanks a lot for taking time to review!
+
+On Tue, Apr 8, 2025 at 4:08 AM Andrew Morton <akpm@linux-foundation.org> wrote:
+>
+> On Thu, 20 Mar 2025 14:49:22 +0800 Lance Yang <ioworker0@gmail.com> wrote:
+>
+> > Inspired by mutex blocker tracking[1], this patch makes a trade-off to
+> > balance the overhead and utility of the hung task detector.
+> >
+> > Unlike mutexes, semaphores lack explicit ownership tracking, making it
+> > challenging to identify the root cause of hangs. To address this, we
+> > introduce a last_holder field to the semaphore structure, which is
+> > updated when a task successfully calls down() and cleared during up().
+> >
+> > The assumption is that if a task is blocked on a semaphore, the holders
+> > must not have released it. While this does not guarantee that the last
+> > holder is one of the current blockers, it likely provides a practical hint
+> > for diagnosing semaphore-related stalls.
+> >
+> > With this change, the hung task detector can now show blocker task's info
+> > like below:
+>
+> +#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
+> +#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
+> +#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
+> +#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
+> +#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
+> +#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
+> +#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
+> +#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
+>
+> It looks pretty simple to reduce the amount of ifdeffery which this
+> patch adds.
+
+Good catch! We can reduce five ifdeffery with the following change ;)
+
+diff --git a/kernel/locking/semaphore.c b/kernel/locking/semaphore.c
+index 3d06d4adc05b..db8a8f696f50 100644
+--- a/kernel/locking/semaphore.c
++++ b/kernel/locking/semaphore.c
+@@ -40,7 +40,41 @@ static noinline int __down_interruptible(struct semaphore *sem);
+ static noinline int __down_killable(struct semaphore *sem);
+ static noinline int __down_timeout(struct semaphore *sem, long timeout);
+ static noinline void __up(struct semaphore *sem);
+-static inline void __sem_acquire(struct semaphore *sem);
++
++#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
++static inline void hung_task_sem_set_holder(struct semaphore *sem)
++{
++	WRITE_ONCE((sem)->last_holder, (unsigned long)current);
++}
++
++static inline void hung_task_sem_clear_if_holder(struct semaphore *sem)
++{
++	if (READ_ONCE((sem)->last_holder) == (unsigned long)current)
++		WRITE_ONCE((sem)->last_holder, 0UL);
++}
++
++unsigned long sem_last_holder(struct semaphore *sem)
++{
++	return READ_ONCE(sem->last_holder);
++}
++#else
++static inline void hung_task_sem_set_holder(struct semaphore *sem)
++{
++}
++static inline void hung_task_sem_clear_if_holder(struct semaphore *sem)
++{
++}
++unsigned long sem_last_holder(struct semaphore *sem)
++{
++	return 0UL;
++}
++#endif
++
++static inline void __sem_acquire(struct semaphore *sem)
++{
++	sem->count--;
++	hung_task_sem_set_holder(sem);
++}
+
+ /**
+  * down - acquire the semaphore
+@@ -188,10 +222,7 @@ void __sched up(struct semaphore *sem)
+
+ 	raw_spin_lock_irqsave(&sem->lock, flags);
+
+-#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
+-	if (READ_ONCE(sem->last_holder) == (unsigned long)current)
+-		WRITE_ONCE(sem->last_holder, 0UL);
+-#endif
++	hung_task_sem_clear_if_holder(sem);
+
+ 	if (likely(list_empty(&sem->wait_list)))
+ 		sem->count++;
+@@ -233,9 +264,7 @@ static inline int __sched ___down_common(struct semaphore *sem, long state,
+ 		timeout = schedule_timeout(timeout);
+ 		raw_spin_lock_irq(&sem->lock);
+ 		if (waiter.up) {
+-#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
+-			WRITE_ONCE(sem->last_holder, (unsigned long)current);
+-#endif
++			hung_task_sem_set_holder(sem);
+ 			return 0;
+ 		}
+ 	}
+@@ -254,17 +283,13 @@ static inline int __sched __down_common(struct semaphore *sem, long state,
+ {
+ 	int ret;
+
+-#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
+ 	hung_task_set_blocker(sem, BLOCKER_TYPE_SEM);
+-#endif
+
+ 	trace_contention_begin(sem, 0);
+ 	ret = ___down_common(sem, state, timeout);
+ 	trace_contention_end(sem, ret);
+
+-#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
+ 	hung_task_clear_blocker();
+-#endif
+
+ 	return ret;
+ }
+@@ -297,23 +322,3 @@ static noinline void __sched __up(struct semaphore *sem)
+ 	waiter->up = true;
+ 	wake_up_process(waiter->task);
+ }
+-
+-#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
+-unsigned long sem_last_holder(struct semaphore *sem)
+-{
+-	return READ_ONCE(sem->last_holder);
+-}
+-#else
+-unsigned long sem_last_holder(struct semaphore *sem)
+-{
+-	return 0UL;
+-}
+-#endif
+-
+-static inline void __sem_acquire(struct semaphore *sem)
+-{
+-	sem->count--;
+-#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
+-	WRITE_ONCE(sem->last_holder, (unsigned long)current);
+-#endif
+-}
+---
 
 [...]
 
-> >>>
-> >>> It looks like the SoC glue makes the interactions between the clk and
-> >>> reset frameworks complicated because GPU clks don't work if a reset i=
-s
-> >>> asserted. You're trying to find a place to coordinate the clk and res=
-et.
-> >>> Am I right?
-> >>>
-> >>> I'd advise managing the clks and resets in a generic power domain tha=
-t
-> >>> is attached to the GPU device. In that power domain, coordinate the c=
-lk
-> >>> and reset sequencing so that the reset is deasserted before the clks =
-are
-> >>> enabled (or whatever the actual requirement is). If the GPU driver
-> >>> _must_ have a clk and reset pointer to use, implement one that either
-> >>> does nothing or flag to the GPU driver that the power domain is manag=
-ing
-> >>> all this for it so it should just use runtime PM and system PM hooks =
-to
-> >>> turn on the clks and take the GPU out of reset.
-> >>>
-> >>> From what I can tell, the GPU driver maintainer doesn't want to think
-> >>> about the wrapper that likely got placed around the hardware block
-> >>> shipped by IMG. This wrapper is the SoC glue that needs to go into a
-> >>> generic power domain so that the different PM resources, reset, clk,
-> >>> etc. can be coordinated based on the GPU device's power state. It's
-> >>> either that, or go the dwc3 route and have SoC glue platform drivers
-> >>> that manage this stuff and create a child device to represent the har=
-d
-> >>> macro shipped by the vendor like Synopsys/Imagination. Doing the pare=
-nt
-> >>> device design isn't as flexible as PM domains because you can only ha=
-ve
-> >>> one parent device and the child device state can be ignored vs. many =
-PM
-> >>> domains attached in a graph to a device that are more directly
-> >>> influenced by the device using runtime PM.
-> >>>
-> >>> Maybe you'll be heartened to know this problem isn't unique and has
-> >>> existed for decades :) I don't know what state the graphics driver is=
- in
-> >>> but they'll likely be interested in solving this problem in a way tha=
-t
-> >>> doesn't "pollute" their driver with SoC specific details. It's all a
-> >>> question of where you put the code. The reset framework wants to focu=
-s
-> >>> on resets, the clk framework wants to focus on clks, and the graphics
-> >>> driver wants to focus on graphics. BTW, we went through a similar
-> >>> discussion with regulators and clks years ago and ended up handling t=
-hat
-> >>> with OPPs and power domains.
-> >>
-> >> Right, power-domain providers are mostly implementing SoC specific cod=
-e.
-> >>
-> >> In some cases, power-domain providers also handle per device SoC
-> >> specific constraints/sequences, which seems what you are discussing
-> >> here. For that, genpd has a couple of callbacks that could be
-> >> interesting to have a look at, such as:
-> >>
-> >> genpd->attach|detach_dev() - for probe/remove
-> >> genpd.dev_ops->start|stop() - for runtime/system PM
-> >>
-> >> That said, maybe just using the regular genpd->power_on|off() callback
-> >> is sufficient here, depending on how you decide to model things.
-> >
-> >
-> > Thanks Stephen, Ulf !
-> >
-> > So the way forward I see:
-> >
-> > 1) The reset driver can be merged as-is, if Philipp is fine with this
-> > code [2].
-> > 2) I will cook up the update to the thead power-domain driver which wil=
-l
-> > handle reset and clock management.
+> >  static noinline void __down(struct semaphore *sem);
+> >  static noinline int __down_interruptible(struct semaphore *sem);
+> >  static noinline int __down_killable(struct semaphore *sem);
+> >  static noinline int __down_timeout(struct semaphore *sem, long timeout);
+> >  static noinline void __up(struct semaphore *sem);
+> > +static inline void __sem_acquire(struct semaphore *sem);
 >
-> Hi Ulf,
-> I'm working on the series right now and I wanted to ask you how you
-> prefer versioning to be handled. Would you like me to send a series as a
-> v1, or treat is as a continuation of this series [1] and send as a v9.
-> Would like to avoid any confusion.
+> It feels Just Weird to forward declare a static inline.  Is there a
+> special reason for doing this?
 
-I would suggest starting over with v1, but don't forget to refer to
-some of the previous attempts/discussion in the cover-letter.  At
-least I would be fine by this.
+Thanks for pointing this out.
 
->
-> Thanks,
-> Micha=C5=82
->
-> [1] - https://lore.kernel.org/all/20250311171900.1549916-1-m.wilczynski@s=
-amsung.com/
->
+Indeed, the forward declaratio was weird :(
+Fixed by removing it as shown in the diff above.
 
-[...]
-
-Kind regards
-Uffe
+Thanks,
+Lance
