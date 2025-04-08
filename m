@@ -1,120 +1,145 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2081.outbound.protection.outlook.com [40.107.220.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 634BB21ADC7;
-	Tue,  8 Apr 2025 22:32:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744151531; cv=none; b=cUAqWwpzn1JLKBIMDaGMmSM4JkrrUDvpnEVMPTZsNU2P0Yj42G45SiD07zACJtLTq08qqEf/PLPF8vG+t5tlpYWqtP9bbSvmYJGTfVypiyW/AlmNKE5nUO1kHUK+Qx08/UdnweDy+bkZiX+xQIn5mFVb1Dotwfv5z9CBszUhOmE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744151531; c=relaxed/simple;
-	bh=b0bXRgqQnmm2cNRFGm8SjalL6upzrz3+tOd/LgkS0gI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aWItn/IDsBJdcUvp/1LpyZG/6Wvr/Hxr9fVSeGA0W/NWiMz8fAYGDtvkWI8yJpFGCHpBgu4yznkmnxbxZ0qOi5VqGIBRY1v1Jnb2llQMPzkk3943rzTcewvhcnRwtaVV5ur2DEKGlncB1FdYpgNVqUTASZgcJ9rBSU/vFjyw87A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RMAsP9nQ; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CFD024502F
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 22:33:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.81
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744151604; cv=fail; b=ZVZiZ5ach8sk6XTCuxjsxBdfc3RshDoKeEgaYf4izh685SO3TNYVerO3fA/kRQzKSWg1Bjbr13sGXGVrOBpacnN9P29iirJZe7EjWG9PRUQvkSi3PL9AS2sQLh8O+TZ4OblxJfjJSPDHFBTc2us6PIeL0tl1YdsIqrgcQLpcLxk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744151604; c=relaxed/simple;
+	bh=xEdf9ImSDJ6fM+MFl/Gs7dVqQ6ikTyD7RTDkIO3nJNM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NnIuQpeXZbP/oPxhXJbmQqsT/tz84kaEMo/7RJ5Q4Aa3+N4EvwRGzjnaA93AJYQZiBkhBhDPz76hfBnz9SEXSdfIBrrq1+9ceLk1NxWXBa+Mk1VKXoezWY/psaKVKXIze6dVni7jVzYog3CNhbMy6OSWJVWxqfwN8/ACWcmcAC0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=D0oN0I7k; arc=fail smtp.client-ip=40.107.220.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RMAsP9nQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744151529; x=1775687529;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=b0bXRgqQnmm2cNRFGm8SjalL6upzrz3+tOd/LgkS0gI=;
-  b=RMAsP9nQKdu7teYsupDcXoychgNcV5n/jEI6OwVIUljdZzeqHTAn0Z1O
-   /pGtB0N972nF9cinYgU99Wz320oiwV0dwBYr2Og9lbMCn9b2iD8/mmxCI
-   yuR1xmsmfn4iVy0+d/ZIJOdmC84CgPgLoPRThhIalzriDjlpblfqbCe4f
-   TgzkqJOhpFeEN9YQnCIKt5xi6oIAhIFymx898m2RlfhuZXnxMnIjRPsJq
-   PhKk0cA8by5Kwg+CIOwq09LmSlqFoPKTVrvSGlYRD0cd5EXdKtJcG+Hsa
-   xsA7SkBvRGq1cPB7XdLA2bauCP5PSnKi7LEpwHzfkxGjdsFyzpdr3wMN6
-   g==;
-X-CSE-ConnectionGUID: kHUySt70TxGjNo6SRTVW5w==
-X-CSE-MsgGUID: p8ATdJyIQQGv4IhrdptkkQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="68085744"
-X-IronPort-AV: E=Sophos;i="6.15,199,1739865600"; 
-   d="scan'208";a="68085744"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 15:32:09 -0700
-X-CSE-ConnectionGUID: aP+z0NrzTryiGi6q0VfaUw==
-X-CSE-MsgGUID: 6AYdNThmRlmvePPfHRrbKw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,199,1739865600"; 
-   d="scan'208";a="128935856"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 08 Apr 2025 15:32:04 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u2HU9-000827-1C;
-	Tue, 08 Apr 2025 22:32:01 +0000
-Date: Wed, 9 Apr 2025 06:31:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: Andy Chiu <andybnac@gmail.com>, linux-riscv@lists.infradead.org,
-	alexghiti@rivosinc.com, palmer@dabbelt.com
-Cc: oe-kbuild-all@lists.linux.dev, Andy Chiu <andybnac@gmail.com>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Alexandre Ghiti <alex@ghiti.fr>, bjorn@rivosinc.com,
-	puranjay12@gmail.com, paul.walmsley@sifive.com,
-	greentime.hu@sifive.com, nick.hu@sifive.com, nylon.chen@sifive.com,
-	eric.lin@sifive.com, vicent.chen@sifive.com, zong.li@sifive.com,
-	yongxuan.wang@sifive.com, samuel.holland@sifive.com,
-	olivia.chu@sifive.com, c2232430@gmail.com
-Subject: Re: [PATCH v4 04/12] kernel: ftrace: export ftrace_sync_ipi
-Message-ID: <202504090657.5fiH4UIS-lkp@intel.com>
-References: <20250407180838.42877-4-andybnac@gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="D0oN0I7k"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=DxffWT/wPLD+RxQBjzQ7mfYlpyb2rkyK7fY/144d1wtedU1Mphv3xabDyZ+EBQfD3mAuhHnjM4an72Hi9SG0aywvNZjT1sAuw23ShseuVNkJclb5u8gq9YTpDsOvvjeJNfWHEXh1QjeaWoxM9VqN2oPAL376jXT/iPElCB2OBwa4bSm9murfkz8rFCiB0Jj0TpUVJEB0h4BhFQKkI/jQFD8kNlpanB/P/WZ0oDmUv2tLq/9pbIX5z9XnDsjZF3Lw2hipptX3Mbif067TV8BwsbXsBdcNSijm7sO2YsXCc9p+YPh4D8i1VBsnjb3djcQsmHoPuWQ1xSAluUPJfeqvow==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8T5I3Td/pe/BVl3aAEHMfcjwlKM8kdYpSmpLcisrAo0=;
+ b=fhxpC0dgdUCZbQifRb5mYDkEB0spqDQjwJ1Jhlk9eNLJgEecy47pmGNl1/+lBX6rn2e5fYp6iO5cGsIcTessaVHacC9nFg+ZarrCvkabfAi+FRyYkAFcQXBNtLcAU3dtnW74AxSQ4aSlt7gHrPgrIYAz8Ra2TwwgnL4nPF7zjjvk/8tMG3sgJnuYPv3dEXJxm02MepRuANAcVPrInnM8rshm6wFBdPv9igD6UKejSzbssFHCpSmR3lxBjCB/t25Fe66JqhYaHV80OgCC3T90bMNUj9uA8yTUHvr1aI5qodzfutFk3/0M2S7BnkDWz+E5Tq8FTx83KiSx4hRig/jz2A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=nvidia.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8T5I3Td/pe/BVl3aAEHMfcjwlKM8kdYpSmpLcisrAo0=;
+ b=D0oN0I7kHr+Gc2K3g9GhCPLN433XNDW2REa9SZaaOI5lgY72eazYKas4+YZhjk/c0Iy21jS6xOuAqFa3M5u9nOBSc0WZ+Dp2PJRTzBckDljZzpIYRXt7WgHe6JP7Y1POaWxsl8jdhVl8EEXPNGjRYD5Rw34ELY14qrct9JNOKJk=
+Received: from BN8PR12CA0023.namprd12.prod.outlook.com (2603:10b6:408:60::36)
+ by IA0PPF80FB91A80.namprd12.prod.outlook.com (2603:10b6:20f:fc04::bd5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.35; Tue, 8 Apr
+ 2025 22:33:20 +0000
+Received: from BL6PEPF0001AB76.namprd02.prod.outlook.com
+ (2603:10b6:408:60:cafe::a6) by BN8PR12CA0023.outlook.office365.com
+ (2603:10b6:408:60::36) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.20 via Frontend Transport; Tue,
+ 8 Apr 2025 22:33:20 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BL6PEPF0001AB76.mail.protection.outlook.com (10.167.242.169) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8606.22 via Frontend Transport; Tue, 8 Apr 2025 22:33:20 +0000
+Received: from driver-dev1.pensando.io (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 8 Apr
+ 2025 17:33:20 -0500
+From: Shannon Nelson <shannon.nelson@amd.com>
+To: <jgg@nvidia.com>, <dave.jiang@intel.com>, <saeedm@nvidia.com>,
+	<Jonathan.Cameron@huawei.com>, <linux-kernel@vger.kernel.org>
+CC: Shannon Nelson <shannon.nelson@amd.com>
+Subject: [PATCH fwctl] fwctl: fix repeated device word in log message
+Date: Tue, 8 Apr 2025 15:33:00 -0700
+Message-ID: <20250408223300.24561-1-shannon.nelson@amd.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407180838.42877-4-andybnac@gmail.com>
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB76:EE_|IA0PPF80FB91A80:EE_
+X-MS-Office365-Filtering-Correlation-Id: e1762590-d917-449c-b1ed-08dd76ed5dac
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|82310400026|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?ji1+YRhQK5r8Ryn2iQhm2KGLyG08hBgrLDqaKHJ9/SyTjcs5dLLBSsLuSX4A?=
+ =?us-ascii?Q?fMBB8VQp2wqO7Y5GYMIxA29RegbiEs6I9h4x3i8fvVwaL2Q/lHlKbAhyNgo2?=
+ =?us-ascii?Q?sK8/Sd/R8Nzt74PFavg+K0BGCsih7pv6jUy5A9Hc9apCddKVXC/CrPNxlqp+?=
+ =?us-ascii?Q?Gq6mFNrSLF3fItgEbZVldr4ctCRsxM4mi25Lr5gOqrMcQaHMgnFV/Vkr1SL9?=
+ =?us-ascii?Q?O5lrmQEtsYFoV06Qw/S1vQ6RKIMgAxfVloe5mIBR3whIX5P0tdZVNFaCI02L?=
+ =?us-ascii?Q?FwN5cvFDGu7cm4LzZQYdlnrNrUvuD5JfzfgDFFn23rK91h/H8CrssLRs804E?=
+ =?us-ascii?Q?qGw64oeWo9HPztlI0nXt3tAS3i7c3n3jLHIYxFXOVNFZVL9faU0PzB4txSYt?=
+ =?us-ascii?Q?6acfKxYmzw8d+udvAsZclYScQekl9AelQ/lg+O2zt2JMn4vLdU+pEIGz6FBp?=
+ =?us-ascii?Q?++KTsGqhiZzNhVe5Ggw0CJk9kYZYYe6TWae9fTkuFwk00tNBdYl4a+tk1bSZ?=
+ =?us-ascii?Q?5kkMt/jANq41jp5mmoj9GEbutwPyTEg/BB0g+Wvgt+76B+LmsuWc7OhIcR40?=
+ =?us-ascii?Q?3vqzrFkbItzlluABmzjoyBPMk1ouVWC/6wExRjPokTZvv66y9+HzFAS2CbJY?=
+ =?us-ascii?Q?yX4dZluXovWLBxmtS/ocDUtEazkubgH19jG8ARJQ0s6cfMNa9jO63Mv2ZpYv?=
+ =?us-ascii?Q?HSUnzzyCjE59IpqF6hPsFd8A6EHAutqiKiyrRxZODXsBiavxPiA8lNd5qGmj?=
+ =?us-ascii?Q?jrZBmagWVY2fDMnsD1QxwXX8FonkvkhFmKq/6KY6BoTs2kcUEL8t1v29qlkA?=
+ =?us-ascii?Q?2hgFime6LBz6mQ5R5MhYAXBCy8Qq+41yzUGevutGiq5s4YXETMz4HoNQW4FJ?=
+ =?us-ascii?Q?EhXkkdL0D88syApcXq8qTkcC50EcaGvvEwGA0BClP8nAyxSCIGZHkiV4BRNg?=
+ =?us-ascii?Q?P9g9m0SXoE8PYPNkGOofMrcb+tKNMr5gLrEX7iA2OCYfOFYCcZPOTR6oqFoA?=
+ =?us-ascii?Q?PpjKedieqcxJYw4epd/cRYMRXF+naKXNsXzDkEnMDB9IgzY+Bj0XNedENvdL?=
+ =?us-ascii?Q?pM2MtDijXjbIoHwP80y3F4VZF4Cjvq5pTQPHK/z1mmnoPrnOuhLnr8KKPXOq?=
+ =?us-ascii?Q?/g+l1VQB7cyHUD+ua94/cSSFipuIh8yVuPy7Tx6N58CbugsIQXITjXbanmVm?=
+ =?us-ascii?Q?1E4BsdSLypcIWQfEdPmc1YitwAzy9Y5THxBYHFjazvjaEdpmn22a3+0r+l4B?=
+ =?us-ascii?Q?AL1ycn7oPYV3PfO5w14iwqO3VMti3EOZnSMU/SlGNJjr4PjWglK+kR+8ce+k?=
+ =?us-ascii?Q?ppYfccTms/Q6v65yz96U+sSd4UAoHdnZO6d48gIRznBTkV9HV7baZuLy/DZu?=
+ =?us-ascii?Q?oNTtk9z38WYN1QSrtPcbl8qBjyZcW1UzjeU2RNcgPA38qN0d4U2i+RChyrnd?=
+ =?us-ascii?Q?Pn7dhgTFsLJn8bhhN+b96NNJvBNhEkkIp37yBC+S7X3EbUWl6BIlinTQ10I+?=
+ =?us-ascii?Q?klZdJjpH8qfAqT8=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(82310400026)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2025 22:33:20.6935
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e1762590-d917-449c-b1ed-08dd76ed5dac
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF0001AB76.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PPF80FB91A80
 
-Hi Andy,
+Remove the repeated word "device" from a dev_warn() message.
 
-kernel test robot noticed the following build warnings:
+Signed-off-by: Shannon Nelson <shannon.nelson@amd.com>
+---
+ drivers/fwctl/main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.15-rc1 next-20250408]
-[cannot apply to trace/for-next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Chiu/riscv-ftrace-factor-out-code-defined-by-WITH_ARG/20250408-025114
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250407180838.42877-4-andybnac%40gmail.com
-patch subject: [PATCH v4 04/12] kernel: ftrace: export ftrace_sync_ipi
-config: xtensa-randconfig-001-20250409 (https://download.01.org/0day-ci/archive/20250409/202504090657.5fiH4UIS-lkp@intel.com/config)
-compiler: xtensa-linux-gcc (GCC) 11.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250409/202504090657.5fiH4UIS-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504090657.5fiH4UIS-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> kernel/trace/ftrace.c:191:6: warning: no previous prototype for 'ftrace_sync_ipi' [-Wmissing-prototypes]
-     191 | void ftrace_sync_ipi(void *data)
-         |      ^~~~~~~~~~~~~~~
-
-
-vim +/ftrace_sync_ipi +191 kernel/trace/ftrace.c
-
-   190	
- > 191	void ftrace_sync_ipi(void *data)
-   192	{
-   193		/* Probably not needed, but do it anyway */
-   194		smp_rmb();
-   195	}
-   196	
-
+diff --git a/drivers/fwctl/main.c b/drivers/fwctl/main.c
+index cb1ac9c40239..bc6378506296 100644
+--- a/drivers/fwctl/main.c
++++ b/drivers/fwctl/main.c
+@@ -105,7 +105,7 @@ static int fwctl_cmd_rpc(struct fwctl_ucmd *ucmd)
+ 		if (!test_and_set_bit(0, &fwctl_tainted)) {
+ 			dev_warn(
+ 				&fwctl->dev,
+-				"%s(%d): has requested full access to the physical device device",
++				"%s(%d): has requested full access to the physical device",
+ 				current->comm, task_pid_nr(current));
+ 			add_taint(TAINT_FWCTL, LOCKDEP_STILL_OK);
+ 		}
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.17.1
+
