@@ -1,124 +1,188 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393F217E00E;
-	Tue,  8 Apr 2025 14:03:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C2991C5485;
+	Tue,  8 Apr 2025 14:04:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744121036; cv=none; b=Z4cqCqv0GNQLgz9EWvW0DAIeC5mGbnl4t6vSIwv+2vUbnayqzfJ2FOea3M3/CS68i2z4zmb9f1VFNOWhBvQb60PWCTFXVWltMxS3rOaHjcctrriKzcH/YhSTWKjCrx/AawDXj/D82BTtdeAKN0zYgBtvLYxU1PGR1GyVp8BCiQw=
+	t=1744121044; cv=none; b=JvLKsWyAOgvMUrcaS7OgtNEkbDsmzXqIDZZPwp/rfKPlWu1+pKGIlJ9okP6O68+zAfUm48eEREuwJKtf5wCkQ27zzvIDwigu18aXimCI4TG93S3SSkgtz2elPa/EBG2BRJzyEq49BOPuP7rC4i9Dz6+PAa+lvFHQhtjvgI1rz5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744121036; c=relaxed/simple;
-	bh=Sf45kr7cUtCH9nLRIxWk9P6majZZZ7qoDJBtQNh1WRs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Y2HHNd3SbHOEZPlIAfKUFguAXkLlfXQz4yRg8KEYzqPe6WkT6jFaMpjexjSR6FpZ6kU5GVHs3j3645tieeB53dsLprWZo7aC7Kx+tq/8dIsTVErjgP1rddBMd9Ha1oodQMGhMA6Oe/mYiFtK1B8yefAGUC56dUWvU8SmZS2jGAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=l4hAQeZm; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744121044; c=relaxed/simple;
+	bh=BzFbZA1m9dFOlKsy5ES02lDgkZDWoW80YEBIeHHNu+k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L0Eftc2i6zA+krKBHqIExK63Ip9uf3FTF+6SgliWc2yr/AXFeDiZnEj+ChkvZRio6UDb/D9boNf90vxPZYNhWgr3mDf5XLbTsOkrb/KzICf/9jm3CwoyBasK9EyMl6R3yvSnNnTxbF1slrObY86TsAs0n7WfPOavO+kxUo+ZNZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=FP+SRwJ8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="l4hAQeZm"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id F197044327;
-	Tue,  8 Apr 2025 14:03:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744121031;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JoHpHGrHvAWvhU7WqsQUuRPEF36RuyRVdBvT8MviKt0=;
-	b=l4hAQeZmLC5TBAns0oXotjt35VFAVSgOe8VItJYKZBXR/JTgmG4mFx+mLLC+YZ09PT1PQn
-	IgcQ5XgjFd6R+LQZ/Ca/rD8cIIxblv50Pc0HceVa4xxDBag3jg70UiwZsK+W/ffrwkXTXm
-	J/NlvHM0suGF4SfgCPO/f/VMxvOJZfb1deFP9s60qCPHuX9egj4CjqXBI2Hq0O0irkW5Vj
-	6qQ5wnA7slRnIBspIo+Q6eHd6vwsgouiokXn6ChDwTS7ZGR69VRxSze3J2xk/sA0yzw+nB
-	W4Jfz79hgJsczIM+2YjLZ6eT/b7Uw8IHPn3d7X/fYDzjv9gEC09G204x/G4VmQ==
-Date: Tue, 8 Apr 2025 16:03:44 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Shawn Guo
- <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
- Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang
- <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Derek
- Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
- Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Saravana
- Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark
- Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, Daniel Scally
- <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>,
- Geert Uytterhoeven <geert+renesas@glider.be>, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
- devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, Allan Nielsen
- <allan.nielsen@microchip.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 12/16] clk: lan966x: Add MCHP_LAN966X_PCI dependency
-Message-ID: <20250408160344.3d3c834b@bootlin.com>
-In-Reply-To: <Z_PxdmKbBGlhpQpr@smile.fi.intel.com>
-References: <20250407145546.270683-1-herve.codina@bootlin.com>
-	<20250407145546.270683-13-herve.codina@bootlin.com>
-	<Z_PxdmKbBGlhpQpr@smile.fi.intel.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="FP+SRwJ8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B66C9C4CEE5;
+	Tue,  8 Apr 2025 14:04:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1744121043;
+	bh=BzFbZA1m9dFOlKsy5ES02lDgkZDWoW80YEBIeHHNu+k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FP+SRwJ8NwtZ6RWvC+sp2R+vSOyb/SVNnj+502MfqxHqobE254c3WPy05xy9friP4
+	 gVDbaV14c31Exg+Ww8M0fHQxK7a1M8AcvIKXwrN78CKmfq9fJseo9trjqpDKcXfhsh
+	 wpQ3bxziDcAZVqD11IkMZdI+YDcQyaKiZCLBZFmQ=
+Date: Tue, 8 Apr 2025 16:02:29 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Justin Forbes <jforbes@fedoraproject.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>
+Subject: Re: [PATCH 6.14 000/731] 6.14.2-rc1 review
+Message-ID: <2025040857-disdain-reprocess-0891@gregkh>
+References: <20250408104914.247897328@linuxfoundation.org>
+ <c06b17f2-fc80-47a9-b108-8e53be3d4a76@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdefvdekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepvdfhleejtdeftdejveffgedtuddtgefhtedtudfhuefhtddtffeiueeigfdvhfdvnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvdgrtddumegvtdgrmedvgeeimeejjeeltdemvdeitgegmegvvddvmeeitdefugemheekrgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemvgdtrgemvdegieemjeejledtmedviegtgeemvgdvvdemiedtfegumeehkegrpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepgedtpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehrrghfrggvl
- heskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehshhgrfihnghhuoheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshdrhhgruhgvrhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepkhgvrhhnvghlsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehfvghsthgvvhgrmhesghhmrghilhdrtghomh
-X-GND-Sasl: herve.codina@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c06b17f2-fc80-47a9-b108-8e53be3d4a76@leemhuis.info>
 
-Hi Andy,
-
-On Mon, 7 Apr 2025 18:38:30 +0300
-Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-
-> On Mon, Apr 07, 2025 at 04:55:41PM +0200, Herve Codina wrote:
-> > The lan966x clock controller depends on the LAN969x architecture or the
-> > LAN966x SoC.
-> > 
-> > This clock controller can be used by the LAN966x PCI device and so it
-> > needs to be available when the LAN966x PCI device is enabled.  
+On Tue, Apr 08, 2025 at 03:16:31PM +0200, Thorsten Leemhuis wrote:
+> On 08.04.25 12:38, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 6.14.2 release.
+> > There are 731 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
 > 
-> ...
+> Compiling for Fedora failed for me:
 > 
-> >  	depends on HAS_IOMEM
-> >  	depends on OF
-> > -	depends on SOC_LAN966 || ARCH_LAN969X || COMPILE_TEST
-> > +	depends on SOC_LAN966 || ARCH_LAN969X || MCHP_LAN966X_PCI || COMPILE_TEST  
 > 
-> This doesn't seem to scale. Why not simply
+> """
+> error[E0412]: cannot find type `Core` in module `device`
+>   --> rust/kernel/pci.rs:69:58
+>    |
+> 69 |         let pdev = unsafe { &*pdev.cast::<Device<device::Core>>() };
+>    |                                                          ^^^^ not found in `device`
 > 
-> 	depends on HAS_IOMEM
-> 	depends on OF || COMPILE_TEST
+> error[E0412]: cannot find type `Core` in module `device`
+>    --> rust/kernel/pci.rs:240:35
+>     |
+> 240 |     fn probe(dev: &Device<device::Core>, id_info: &Self::IdInfo) -> Result<Pin<KBox<Self>>>;
+>     |                                   ^^^^ not found in `device`
 > 
-> ?
+> error[E0405]: cannot find trait `DeviceContext` in module `device`
+>    --> rust/kernel/pci.rs:253:32ich of
+>     |
+> 253 | pub struct Device<Ctx: device::DeviceContext = device::Normal>(
+>     |                                ^^^^^^^^^^^^^ not found in `device`
 > 
+> error[E0412]: cannot find type `Normal` in module `device`
+>    --> rust/kernel/pci.rs:253:56
+>     |
+> 253 | pub struct Device<Ctx: device::DeviceCchangeontext = device::Normal>(
+>     |                                                        ^^^^^^ not found in `device`
+>     |
+> help: there is an enum variant `core::intrinsics::mir::BasicBlock::Normal` and 1 other; try using the variant's enum
+>     |
+> 253 | pub struct Device<Ctx: device::DeviceContext = core::intrinsics::mir::BasicBlock>(
+>     |                                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 253 | pub struct Device<Ctx: device::DeviceContext = core::num::FpCategory>(
+>     |                                                ~~~~~~~~~~~~~~~~~~~~~
+> 
+> error[E0412]: cannot find type `Core` in module `device`
+>    --> rust/kernel/pci.rs:411:21
+>     |
+> 411 | impl Device<device::Core> {
+>     |                     ^^^^ not found in `device`
+> 
+> error[E0412]: cannot find type `Core` in module `device`
+>    --> rust/kernel/pci.rs:425:31
+>     |
+> 425 | impl Deref for Device<device::Core> {
+>     |                               ^^^^ not found in `device`
+> 
+> error[E0412]: cannot find type `Core` in module `device`
+>    --> rust/kernel/pci.rs:439:27
+>     |
+> 439 | impl From<&Device<device::Core>> for ARef<Device> {
+>     |                           ^^^^ not found in `device`
+> 
+> error[E0412]: cannot find type `Core` in module `device`
+>    --> rust/kernel/pci.rs:440:34
+>     |
+> 440 |     fn from(dev: &Device<device::Core>) -> Self {
+>     |                                  ^^^^ not found in `device`
+> 
+> error[E0412]: cannot find type `Core` in module `device`
+>   --> rust/kernel/platform.rs:65:58
+>    |
+> 65 |         let pdev = unsafe { &*pdev.cast::<Device<device::Core>>() };
+>    |                                                          ^^^^ not found in `device`
+> 
+> error[E0412]: cannot find type `Core` in module `device`
+>    --> rust/kernel/platform.rs:167:35
+>     |
+> 167 |     fn probe(dev: &Device<device::Core>, id_info: Option<&Self::IdInfo>)
+>     |                                   ^^^^ not found in `device`
+> 
+> error[E0405]: cannot find trait `DeviceContext` in module `device`
+>    --> rust/kernel/platform.rs:182:32
+>     |
+> 182 | pub struct Device<Ctx: device::DeviceContext = device::Normal>(
+>     |                                ^^^^^^^^^^^^^ not found in `device`
+> 
+> error[E0412]: cannot find type `Normal` in module `device`
+>    --> rust/kernel/platform.rs:182:56
+>     |
+> 182 | pub struct Device<Ctx: device::DeviceContext = device::Normal>(
+>     |                                                        ^^^^^^ not found in `device`
+>     |
+> help: there is an enum variant `core::intrinsics::mir::BasicBlock::Normal` and 1 other; try using the variant's enum
+>     |
+> 182 | pub struct Device<Ctx: device::DeviceContext = core::intrinsics::mir::BasicBlock>(
+>     |                                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 182 | pub struct Device<Ctx: device::DeviceContext = core::num::FpCategory>(
+>     |                                                ~~~~~~~~~~~~~~~~~~~~~
+> 
+> error[E0412]: cannot find type `Core` in module `device`
+>    --> rust/kernel/platform.rs:193:31
+>     |
+> 193 | impl Deref for Device<device::Core> {
+>     |                               ^^^^ not found in `device`
+> 
+> error[E0412]: cannot find type `Core` in module `device`
+>    --> rust/kernel/platform.rs:207:27
+>     |
+> 207 | impl From<&Device<device::Core>> for ARef<Device> {
+>     |                           ^^^^ not found in `device`
+> 
+> error[E0412]: cannot find type `Core` in module `device`
+>    --> rust/kernel/platform.rs:208:34
+>     |
+> 208 |     fn from(dev: &Device<device::Core>) -> Self {
+>     |                                  ^^^^ not found in `device`
+> 
+> error: aborting due to 15 previous errors
+> 
+> Some errors have detailed explanations: E0405, E0412.
+> For more information about an error, try `rustc --explain E0405`.
+> make[2]: *** [rust/Makefile:482: rust/kernel.o] Error 1
+> make[1]: *** [/builddir/build/BUILD/kernel-6.14.2-build/kernel-6.14.2-rc1/linux-6.14.2-0.rc1.300.vanilla.fc42.x86_64/Makefile:1283: prepare] Error 2
+> make: *** [Makefile:259: __sub-make] Error 2
+> """
+> 
+> 
+> >From a quick look there seem to be three changes in this set that touch
+> rust/kernel/pci.rs; if needed, I can take a closer look later or tomorrow
+> what exactly is causing trouble (I just hope it's no new build requirement
+> missing on my side or something like that).
 
-With your proposal, if we configure a kernel without SOC_LAN966x or
-ARCH_LAN969x or MCHP_LAN966X_PCI, in other words we configure a kernel
-without a real needed for this clock controller driver, the user will be
-asked about this driver.
+Hm,  odd, I thought I was testing Rust builds on my build system but
+obviously not.  I'll go work on this later tonight...
 
-This was already reported by Geert
-   https://lore.kernel.org/all/369233dfded88ff6fb342e03794fe31985d84d82.1737383314.git.geert+renesas@glider.be/
+thanks,
 
-I agreed with Geert that asking the user about those driver the LAN966x
-depends on was not a good things and leads to confusion.
-
-So, to prevent asking the user about this driver, I followed the same
-strategy and added the dependencies.
-
-IMHO, we should keep those dependencies here.
-
-Best regards,
-Hervé
+greg k-h
