@@ -1,183 +1,106 @@
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B17CB26AA9C
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 12:17:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CDD926AA93;
+	Tue,  8 Apr 2025 12:17:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744114667; cv=none; b=PqUGS8uu/y9jsFHdGONuTiwIKspUCCFfdEGnZo/DwcBgjB61a8nWvbZrrF/PCcKV5539ryvAW7bCDom6HuykhQ19oIq0rnpxxl6GypOrc635/WC1EZFUCh7L08NeF3Iq2efLKFEotKymh/tQ5mIfzS+dckO2gQBNgJPfEuaJNyw=
+	t=1744114669; cv=none; b=vDpJQow4S/YB+Fl8pZdiHUlq110LhTBQnWNUyKz8aT/067EzLLpuN7aQ5/MUkxnyrqhQTZYDsVLQpvi/gZqgs7zIekWKe5ViXVfka88mbLItq3Ngi7+7FjX5xM3QY3GF1AAFx+AH3NfivMRDCIbeM4aGCtLv8EiP9re6ewxr9Zo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744114667; c=relaxed/simple;
-	bh=zrTv3Igv/b40jizFm6EQbXgK0TIclob8WTp61FIgQrU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SQhjYgz08s/6NJTaq9ziL0piaBWGRblhPtTDWyipLKCJEKiebqX1/ZHsRkYyaDc9kYbqgTOKSNvmLX7j0iP5Y2Nz8rDvWGMkYF9SgjI18JjHfvuNFVHJOP+MJxzdzPP0m8GCY43uPKUFoL9dOaIz0mahFzJNZaBQt7UzA7OqFtU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DmAkTUsQ; arc=none smtp.client-ip=209.85.128.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744114669; c=relaxed/simple;
+	bh=V1YRfWmWFWbhpHBtVJZMWNP1AZyQpK52DXn595wf9HY=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rSX7ZfNp2LWOHb2K7U1oO307MY54QM1jFW/SNrddqRvkNXQjB3ZlOG0eAgMa0j6cVhUZkq3/ZAqOVmHwHxewpc/zKliqzgk6bvy5954dloWq1hEx8djegJAFF1hMTq57+UICAuzsMLfviAKaWc5LZS27yGfiw0DiGVyGVaFa/Gk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Z+pTG+24; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DmAkTUsQ"
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-7023843e467so52177437b3.2
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 05:17:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744114663; x=1744719463; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XgQfANebtdqnI5c6U+NPo92x9wLAySpUrYEpuKhqRpM=;
-        b=DmAkTUsQJnJNTUy70pA1EP+YbwSCQFwvpsh5BzKyy2I5xXJOwKPp/MjuyD7Iyvr6wr
-         5lUThj3lRMnhqedjtfRP8J7zDGx0uSK+/VQeMcv8WYxuNchnWCouB6Y9hd1MaJ5j+t5v
-         r+ghHoPGlhagvFh9cQfVJgJHdXNAO4YVRyK61MBQ2x557tIEYYN094pzYGp77sdkROxK
-         EXd1sAvNMiWdvAPUqeqnz+Bhct3FNTbp0bsbtJ7Px8MW+yHMOyEFGSVmdWphUHs58gBq
-         Xhkt+pVwRR9zBHyq0aSEVbDq88LFxyGJDcXxm4MUpMPkXY+cAj1P4wuUVIO5AMpLVVAn
-         4X+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744114663; x=1744719463;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XgQfANebtdqnI5c6U+NPo92x9wLAySpUrYEpuKhqRpM=;
-        b=C2svIQfh8skrDujMewn7M2ZdMXX7UXBduGlThWAJFpIWyUTY+UCxgsXhXNAHmr5dZW
-         o3QO0QK/eB2XYerT/vsMWFnVpd4HtYL8jU5MWtdXQM3LUYokmaOvzlDxAmUyZJFEzlC7
-         7thZVfjvCnOS7SYYhASMuBv/1r5tKR7uAeopWgK3HIBHKyb6ijBGDyc2llDDXMbtuhvg
-         68xDjiEvyazVNy2Tr2pcuIAR3SzoqWwAjUM9lPLVfyCQhnEY08vcsv8/q6NwJVq3VOLj
-         +/NZQPzxm2Wd6b9bbk7plhS/g1CsUjUfhdjeAqmTHDG+oUArj57+d7izqp+3OkBksEia
-         1jdw==
-X-Forwarded-Encrypted: i=1; AJvYcCUX4CkFofHmxJ7a7O7IIAPNSjGAlqwyz/zLXXXhclfn9G/Koh2ZHDgyt5VO1WJ848Y30PdVlzWnc2I84yU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeQIt02xZeAEd9iBXxtDLznLKNHMYQZzMFRmsbwpHJFsdLe3st
-	8w17tac2Dywa2BfCb4XRz3A5UaLy8Hg54GAN6RkIMxc5524QwP2K01MEQePaHdhsxAVBOXIWFjH
-	hdXDjL1QbIfCLT2mzS22SMkhACvhzYrJrEce/8w==
-X-Gm-Gg: ASbGncsf5y5FEAJaeBbor2tsXQCB7GPRHH0v+Cf1XEOCBxrOU+P0xejqWByB/dSxyNm
-	8KMMOdkURS4Te+Hd4FmRNyX+uIKRx8YTf1Nf9weFR0y/182fHw0fQtteBOCoiV2LaHObfprxtBW
-	S/l75pB7srOJdHjb8hPC9FpC6hdRg=
-X-Google-Smtp-Source: AGHT+IE9ys53OzSUdrwDVzPrCpJ3j0rVw9UiRXdXpPHOiJneCGTZtJTMxzg8Xq2rdR9GYtx0ZTNP05CFJHjGpzcayc8=
-X-Received: by 2002:a05:690c:67c4:b0:6ff:28b2:50e1 with SMTP id
- 00721157ae682-703e14ffd3dmr297170407b3.2.1744114663553; Tue, 08 Apr 2025
- 05:17:43 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Z+pTG+24"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 538CHNdb673137
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 8 Apr 2025 07:17:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744114643;
+	bh=40zPUQrlcr8Vw5CjXjou4ckrp+WYfHtg2mzzQ/p+6/0=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=Z+pTG+24QgYuVGeEyiu+Krg6vZD7z7igJ9ynRkHU8gV8Jm+rk/alFJXJ6xgz/x1Ze
+	 a4AtgTKrrLmHMtSXF4MfZwIp5riKITAoI2dWKwHf1d/oOE7WISSopWkXw9bHWnU1/X
+	 FSaUIkDrIXCw+FmbzQOfgnR4PAZo73uoIGk5pqJg=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 538CHN4S008016
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 8 Apr 2025 07:17:23 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 8
+ Apr 2025 07:17:23 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 8 Apr 2025 07:17:23 -0500
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 538CHNA4001367;
+	Tue, 8 Apr 2025 07:17:23 -0500
+Date: Tue, 8 Apr 2025 07:17:23 -0500
+From: Nishanth Menon <nm@ti.com>
+To: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+CC: <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <vaishnav.a@ti.com>,
+        <jai.luthra@linux.dev>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <imx@lists.linux.dev>,
+        <linux-kernel@vger.kernel.org>, <u-kumar1@ti.com>
+Subject: Re: [PATCH 3/5] arm64: dts: ti: k3-j721e-sk: Fix dtbs_check warnings
+ in IMX219 overlay
+Message-ID: <20250408121723.ksjtilh4hxl2wh34@derail>
+References: <20250401114053.229534-1-y-abhilashchandra@ti.com>
+ <20250401114053.229534-4-y-abhilashchandra@ti.com>
+ <20250407134523.d56rjpydflmkw2ze@privatize>
+ <c1762c69-6a76-4f89-ab64-e6d9215e1be2@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403-dt-cpu-schema-v1-0-076be7171a85@kernel.org>
- <20250403-dt-cpu-schema-v1-18-076be7171a85@kernel.org> <CAPDyKFrFRrPVJ_t0JrAE1VTbS02hwr=L-EHtqb7CQiWzB1MnQg@mail.gmail.com>
- <CAL_JsqKygxhcQ=PZW84sfiW7BVXKF839vfNyxS9GwAXuqmN=8g@mail.gmail.com>
- <CAPDyKFoHQdHED0hHUR7VKin0XG6SVnYXuvPjB=Xe+1o2hpiPJA@mail.gmail.com> <CAL_Jsq+Oa7MvVO7Y-RG+qrY2e86B_q0XGq1LWoy5Mq+G72ZHzQ@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+Oa7MvVO7Y-RG+qrY2e86B_q0XGq1LWoy5Mq+G72ZHzQ@mail.gmail.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Tue, 8 Apr 2025 14:17:07 +0200
-X-Gm-Features: ATxdqUE7frfhfuxoKUlf3DinAq4W783EiniruawsYcgTKF9-ms73Ag05S_dZWTY
-Message-ID: <CAPDyKFoKdj-Y4-dCwYRG7TLdS1HcSH=i9EN-b9Cpyo50kMmC5Q@mail.gmail.com>
-Subject: Re: [PATCH 18/19] dt-bindings: arm/cpus: Add power-domains constraints
-To: Rob Herring <robh@kernel.org>
-Cc: Stephan Gerhold <stephan.gerhold@linaro.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Vincenzo Frascino <vincenzo.frascino@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, 
-	Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Viresh Kumar <vireshk@kernel.org>, 
-	Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, zhouyanjie@wanyeetech.com, 
-	Conor Dooley <conor@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>, Steen Hegelund <Steen.Hegelund@microchip.com>, 
-	Daniel Machon <daniel.machon@microchip.com>, UNGLinuxDriver@microchip.com, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	Heiko Stuebner <heiko@sntech.de>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, 
-	linux-arm-msm@vger.kernel.org, linux-mips@vger.kernel.org, 
-	imx@lists.linux.dev, linux-rockchip@lists.infradead.org, 
-	linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <c1762c69-6a76-4f89-ab64-e6d9215e1be2@ti.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-+ Stephan Gerhold
+On 14:31-20250408, Yemike Abhilash Chandra wrote:
+> Hi Nishanth,
+> 
+> On 07/04/25 19:15, Nishanth Menon wrote:
+> > $subject - the patch adds description for the supplies for the sensor.
+> > Please fix the description.
+> > 
+> 
+> In this patch, I am addressing all dtbs_check warnings generated from this
+> overlay:
+> 
+> 1. Adding the missing regulator node
+> 2. Removing the incorrectly added clock-names property
+> 
+> Due to the inclusion of both changes, I opted for a more generic commit
+> title.
+> Please let me know if you want me to split this patch into two separate
+> patches
+> with specific commit titles and commit messages.
 
-On Mon, 7 Apr 2025 at 18:50, Rob Herring <robh@kernel.org> wrote:
->
-> On Mon, Apr 7, 2025 at 11:23=E2=80=AFAM Ulf Hansson <ulf.hansson@linaro.o=
-rg> wrote:
-> >
-> > On Fri, 4 Apr 2025 at 15:09, Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > On Fri, Apr 4, 2025 at 5:37=E2=80=AFAM Ulf Hansson <ulf.hansson@linar=
-o.org> wrote:
-> > > >
-> > > > On Fri, 4 Apr 2025 at 05:06, Rob Herring (Arm) <robh@kernel.org> wr=
-ote:
-> > > > >
-> > > > > The "power-domains" and "power-domains-names" properties are miss=
-ing any
-> > > > > constraints. Add the constraints and drop the generic description=
-s.
-> > > > >
-> > > > > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> > > > > ---
-> > > > >  Documentation/devicetree/bindings/arm/cpus.yaml | 8 ++------
-> > > > >  1 file changed, 2 insertions(+), 6 deletions(-)
-> > > > >
-> > > > > diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Do=
-cumentation/devicetree/bindings/arm/cpus.yaml
-> > > > > index 6f74ebfd38df..5bd5822db8af 100644
-> > > > > --- a/Documentation/devicetree/bindings/arm/cpus.yaml
-> > > > > +++ b/Documentation/devicetree/bindings/arm/cpus.yaml
-> > > > > @@ -313,19 +313,15 @@ properties:
-> > > > >      maxItems: 1
-> > > > >
-> > > > >    power-domains:
-> > > > > -    description:
-> > > > > -      List of phandles and PM domain specifiers, as defined by b=
-indings of the
-> > > > > -      PM domain provider (see also ../power_domain.txt).
-> > > > > +    maxItems: 1
-> > > >
-> > > > There are more than one in some cases. The most is probably three, =
-I think.
-> > >
-> > > Unless I missed it, testing says otherwise. What would the names be i=
-f
-> > > more than 1 entry?
-> >
-> > "psci", "perf", "cpr", etc
-> >
-> > The "psci" is always for CPU power management, the other is for CPU
-> > performance scaling (which may be more than one power-domain in some
-> > cases).
-> >
-> > I would suggest changing this to "maxItems: 3". That should be
-> > sufficient I think.
->
-> Again, my testing says 1 is enough. So where is a .dts file with 3 or 2?
+subject line should indicate what we are fixing here. If the commit
+message indicates two different problems that were to be fixed, it is
+better to do that in two different commits. Generic subject line is hard
+to gork to understand if it is critical or not.
 
-Right! I assume those with 3 or 2 just haven't made it upstream yet,
-but sure they are cases. If you prefer to update the binding later,
-that's fine by me, but I just wanted to avoid unnecessary churns for
-you.
+Do not forget ./Documentation/process/stable-kernel-rules.rst and use
+fixes: tag as appropriate to indicate the original problem patch
+which is being fixed.
 
-For example, msm8916 seems to be one case that already uses "psci",
-but requires an additional two power-domains for performance-scaling.
-At least according to earlier discussions [1] with Stephan Gerhold.
 
-Moreover, it's perfectly fine to also describe CPU's idle-states by
-using the power-domains/domain-idle-states DT bindings, according to
-the bindings for PSCI [2] (no matter of PSCI OSI/PC mode). In other
-words, for all those that only have a "perf" or "cpr" power-domain
-today (or whatever name is used for the performance-scaling domain),
-those could easily add a "psci" power-domain too, depending on how
-they choose to describe things in DT.
+[...]
 
-Kind regards
-Uffe
-
-[1]
-https://lore.kernel.org/all/ZRcC2IRRv6dtKY65@gerhold.net/
-[2]
-Documentation/devicetree/bindings/arm/psci.yaml
+-- 
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
