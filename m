@@ -1,135 +1,181 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2059.outbound.protection.outlook.com [40.107.220.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27ED71E32C3;
-	Tue,  8 Apr 2025 14:29:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744122548; cv=none; b=PYGyt/ECQ9sJRbT9Z9StzeMyygTsFkVpmNkxwxRycYFwX+AXtcZZ9oqqM8Lo8YFgFl6eglB8mOFYpU8yq6ycWJmQG8qQ00Z5TetJYo0VhZ69wDUDbUKBIQmsJswkCsaVKjiirk/3zqyveTFICrD4t+Yd15s+vdxwYW/TR7tk3SM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744122548; c=relaxed/simple;
-	bh=E+sux4jgwb2zA9NM20uBp55k+dzLb2YrMqfaeXyO4/0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hNqp1vBbMXLFMtT8MLyHGYL7S0PsdB3fOSZZD7Hd+h93EWCWeYPnzWYt6K3DN7KThc6vQdOVYHaxIIZiF/8/6wIZTve70xwNIpWlPNDlMy5cPZeYqoGUOHqs8e4LdMC/gtaPOi48C0O3FsPPVCIZWzvMtG1+LcohV342OTTLN4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=gxVrnn/J; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B701517A312;
+	Tue,  8 Apr 2025 14:29:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.59
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744122565; cv=fail; b=pZRzaWCD7sBlB/O/jVsvq58pnB89ntt27k9D0nFlGvB4RbegQtvJaI2bTFCYOSL9BmqA4wA4BrJHhPF6xb0waAKu6Jc3odgerOrfKKUAsbLUBMfhWUnEDopZq+sal0auB37bN+vFqXEQyNnZPkkrEl1eS4FN8anw3oFEa/opiiI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744122565; c=relaxed/simple;
+	bh=9ukfFOEn1zTk4PwKLwJr/5bCMul/3xz+SsLsylw41TY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ieTfHYWQkArUB4T61FcxqrDTJG5thf5kprZwnsnTNSl+V4A85tx4C88B3/56hUt1gzeWT7HXWEtd6y6QoiFL2n9cpBwrQFuwClrIe2vD0cFHXJ7SkSIZEf+pnjAQAPYEHCa8Fdz3xBlhkRYyG/rG8PIp4Ev+iP25VvkHE6jLjCI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=hXdNJX0B; arc=fail smtp.client-ip=40.107.220.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="gxVrnn/J"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 74EF144351;
-	Tue,  8 Apr 2025 14:29:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744122543;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wy3Km0AVXCTI4DrQJkFCQiFPROUoaPoc5lNFfKuzy6A=;
-	b=gxVrnn/JVh0iC4BPAsAridJn4qT7FAvRDSKdNs6dH7buDlSemR54nzZAPf3tIIgziWPivZ
-	owfGzS3t8eTMAXID8Ioi7sBsZdU89YTITi0SEbf8OqVFObyYjO+ht1vLjc5sY+ZyvqoT1K
-	XbseKEUk2rLd/GRjaBGXXD4ZWxucg5+n12Wvsu4S5CSPYu5QmT6BNMavIW1w1SbZQReccT
-	qUUpAhhXYCUUmyEmRSVEe1j6vwK02/srrDJfFTL7lpFtxTtMFeLk14cSsFkAKRvzUyYHkM
-	gSlm2nGbIp2xmGhocUyVGi1ZV+VblO56FfmKtmdd8n0wwK2H7ES6ZJo6/49MhQ==
-Date: Tue, 8 Apr 2025 16:29:00 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Shawn Guo
- <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
- Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, Wolfram Sang
- <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Derek
- Kiernan <derek.kiernan@amd.com>, Dragan Cvetic <dragan.cvetic@amd.com>,
- Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, Saravana
- Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark
- Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, Daniel Scally
- <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>, Wolfram Sang <wsa@kernel.org>,
- Geert Uytterhoeven <geert+renesas@glider.be>, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
- devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org, Allan Nielsen
- <allan.nielsen@microchip.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 08/16] i2c: core: Introduce i2c_get_adapter_supplier()
-Message-ID: <20250408162900.41b6bc08@bootlin.com>
-In-Reply-To: <Z_UpB1cgU_99JHdF@smile.fi.intel.com>
-References: <20250407145546.270683-1-herve.codina@bootlin.com>
-	<20250407145546.270683-9-herve.codina@bootlin.com>
-	<Z_Puy8eEBc6tubEx@smile.fi.intel.com>
-	<20250408150836.327a337d@bootlin.com>
-	<Z_UpB1cgU_99JHdF@smile.fi.intel.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="hXdNJX0B"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=g08suA0Jn60q54dygEtE/l8NEjknHcGmAfepuGoIXCcu/TmVKYYKzdmMSXGUAJhUE8w7DQzvxftDSNPuPgW1qdmMfHDH1BBlQ+zj/plHWTeyrcDEAjABwX6PJf/MD6kI8kqIPPoQI5vVsAf4vHqfq+M6HTiIdZzic5bJa+atQQ29f6FRYxYTzSJC+d6CjyOwYjz3LPZshYtpgtVNS6T4NhaheZ9LQxi1771Ge1WLc86FXqfbTieIaIU+EzB5WQlJcCGsxcYq9G1IKIuB25Y5cf+VawsEz1BoJ/KstDI0cUYPncrau8S8TEUPfPERE2gd1I7Ts34gNGXX+/7jtRUeJg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2DJvSqlYn8knmZZQzGlL9838DiYbFc7y2fF19tdng7o=;
+ b=W3I/NUjARhbIcBnUsmz414Y2ciimLXAKDrXpGmOi4nb1xoNaQYxShyCP3UQ4mMPHkj1A3BbxE4+dTxhbbo26I8PI1zTdAPK9pjO3KBpEVTxnw7Ur7EmXP4MLxDq1jdEJUJ70XUZasJeOW6ZRMqafeTqEmNV3OZ6pmjAEKfHyz+um86h2s02RdwFFu5Zx6ivfL/ZVRwSzp7sMtSQhmoBNNTN+lY8GlSYRSyhoMUtm1I7H9TrsZWHzBgNXXE22EE9/pO2eGl49qC4DgPRDSWorRrSTPOfqtMwDNOg8RMpPXCVhN2CTIIAB+YP3Y+nvbmREIk6AwKUfV35JCc7y2Lcidw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2DJvSqlYn8knmZZQzGlL9838DiYbFc7y2fF19tdng7o=;
+ b=hXdNJX0BLK8zycujMsZPn5odyoFe7K1Cob53FwlVkXT3iQuDIVLNjq79M5Ks/7UtVx5OhuwklUKFOXXnr0+06kPc4s2GIqNR/4IdjEGfVh1d4Do1W5i4xpMGAFsYGAUKokd7HodfKnaG7UM+2m+FnlQZwgLwGzg7W/dD46TLC/qbIyKDFCC2iOi4ZxvjwqdVPsy5Xtstxdx7HNqbVyV41vnprU8z7eIPubnG9MHDh8xjAgBmN2DBKRxvyg9i0IOkyk1Pik9Jr3E6C3GSgcXuQDGnrbjC2GMGnZHUL4XCXp7f5jBbTJE6iDxOwOItLX8GVPZWbx7C/gnydoemRJtt4A==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
+ by SA1PR12MB9004.namprd12.prod.outlook.com (2603:10b6:806:388::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.27; Tue, 8 Apr
+ 2025 14:29:21 +0000
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91%4]) with mapi id 15.20.8583.045; Tue, 8 Apr 2025
+ 14:29:21 +0000
+From: Joel Fernandes <joelagnelf@nvidia.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: rcu <rcu@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, kernel-team <kernel-team@meta.com>, rostedt <rostedt@goodmis.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: Re: [v3,4/12] rcutorture: Make torture.sh --do-rt use CONFIG_PREEMPT_RT
+Date: Tue, 08 Apr 2025 14:29:19 -0000
+Message-ID: <174412255922.117.3971687661268349880@patchwork.local>
+In-Reply-To: <20250407191221.28679-1-paulmck@kernel.org>
+References: <20250407191221.28679-1-paulmck@kernel.org>
+Content-Type: text/plain; charset=utf-8
+X-ClientProxiedBy: BN1PR10CA0012.namprd10.prod.outlook.com
+ (2603:10b6:408:e0::17) To SN7PR12MB8059.namprd12.prod.outlook.com
+ (2603:10b6:806:32b::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdeffeefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveeiffefgeeitdelleeigefhjeelueeuveekveetgeffheeltdekgeduiefggfdvnecukfhppedvrgdtudemvgdtrgemvdegieemjeejledtmedviegtgeemvgdvvdemiedtfegumeehkegrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvtdgrmedvgeeimeejjeeltdemvdeitgegmegvvddvmeeitdefugemheekrgdphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeegtddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhop
- egurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhhrgifnhhguhhosehkvghrnhgvlhdrohhrghdprhgtphhtthhopehsrdhhrghuvghrsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopehkvghrnhgvlhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtohepfhgvshhtvghvrghmsehgmhgrihhlrdgtohhm
-X-GND-Sasl: herve.codina@bootlin.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|SA1PR12MB9004:EE_
+X-MS-Office365-Filtering-Correlation-Id: 805b6554-6a2b-4ddf-cdbd-08dd76a9c0a3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?TTZ6a2drR1lhcWh1elhZOG1YclZkUjFLaG5YNGV5VWVDMWU2NWI0K3ZkWnlW?=
+ =?utf-8?B?UFNpaDBnbWdNSmdGMEVVL1M1T0dzVE81di9BSW8yaWpsSVIrNEQ3dldUeldv?=
+ =?utf-8?B?Zkd1WEUyakR2QlFkUlpERVNEcDVBRWlEem4rYnJOZzd3WUpVc3ArMzd2VDUz?=
+ =?utf-8?B?ZWtNWkFKVHJSVTMyK0RKL2poeGhFc2NPeTgvQlJVTkpGaWdoajBHMlgvQTM3?=
+ =?utf-8?B?WThoYjIvUnlwN2twVDZPcC90bU5YQ2ZSakRvNHpJdWRNZWY0dnhndzJrNExq?=
+ =?utf-8?B?L2NBS1BJdExHczRZc3hSbkhnMnhDUVhnS0RtQkdLWWFLcEpqemo4K0hoUGdY?=
+ =?utf-8?B?MXNLMlhVS3J0UXk3aTZPcU1QdUgxZzhBRGZQblpTOGlrcUhmQjRXa24xSEZT?=
+ =?utf-8?B?NjBaMkZTRFErUCtDaTZPc1hQcGFjZU9HaHdINEE5SHR0cTJ0RmtDUGRteURt?=
+ =?utf-8?B?SmRrVnlFcUhOWCtBM1k4ZTNIakJmWFRLdkl4bjBRRExHam5UUTVxVm1sRVF6?=
+ =?utf-8?B?UnRVV0xiTHd6T0ZCZmdSQTAwQmlsQW9PcGoxZjR4NlVPV0dhdmxVM0Q4c0xs?=
+ =?utf-8?B?ckRCUTNiSmdWOFgvYmhoR0hQNjNyWGtjYVhjdFdEWVhSdGhCenBCKzhkcjI5?=
+ =?utf-8?B?WEVGTjhHZDB6TjJEL1l3aWQyUmU3M0t2OGNJRHVra3NUOHZrSDVSeCtBbUhP?=
+ =?utf-8?B?L2F2djRhWTdTcmxYVk1mUkZuU3NqTjAwS2piTFBSb2x4TnhGQWFOU3NOUUpn?=
+ =?utf-8?B?TTFrVlYwbVBHS3ljZVNiUURvL3ZTY3pZOElGSHJ6TXJ6YmJTbWpYZnJaVi9I?=
+ =?utf-8?B?U1orNkkrTTkxWFRaT0FZdEQ4U2xDZzlQTEErczAvQk03aG9NODhnM2xTSEgz?=
+ =?utf-8?B?K1VYMnVzNUNYYk1IRnAvcGdaUytXVVgxTmZCVnNkaUh1aVBwem1ZQlpxZjJn?=
+ =?utf-8?B?ejQzQlZDVDJ1M2tlOGdFbjBpRHpYYzZoNVNWM3YxclB3ZktMWGJKMmZ3RlFX?=
+ =?utf-8?B?eUVpellPZHNONkY5ZEp4bVg2cmxiYk9EZXJtbC9OR0tpN3JsdktGZWlxdkYr?=
+ =?utf-8?B?d0laUXBuQ1RsVEpmSUtEbXZsMll2MUNYbHNQL1l6TlhodXhDVjNLelo2c0RX?=
+ =?utf-8?B?cHNxanpVUnRLRER0cTl0RXQyZ290RW10SzBXRCtnVEdCcVU3VklIZUs3V3BT?=
+ =?utf-8?B?eGZWQXlERmFPS0RpR29BQWNUeEl4enhqUFpmc2U2Nk8xQ0lRUHZ5T1VOaUFp?=
+ =?utf-8?B?SytpNndNYzdNK3NQRmdMWnB1dnkrT2NIMUVUbEtxY1BialZIQzAvSWg4ZFg4?=
+ =?utf-8?B?OHZiQy81ZXFkNmdUZW5iUkdXakpkbXNkNWNyYXp0NENKaTEvTndveUU2VC9k?=
+ =?utf-8?B?ZUtuS3lnSU9jdFROMG5RQnM1Y0hQWVhqMlJVcWphOFVWNHpTSkxGMlZlK1RK?=
+ =?utf-8?B?aVpkVnRsN01ZWE1LZDlwMk5ybXVRMmhmalBDWllKWVZ0LzdIQklVWUc1UTRq?=
+ =?utf-8?B?TFhhNVc1a0xCUFpabkFJRTRJZ2UwMHlQRDRNcEtKaUdKVnFqaEgxL1d6dFdm?=
+ =?utf-8?B?RWdLZUptMVRxU0NNRmJFUytiTnk1THZNaGEwR0dtUFI2ZTJtbjhmeG15SjhO?=
+ =?utf-8?B?aTRKQlc2VU5vRE53d3hwQm5TRmJXcWg4cHVBSDBtY3NVd0VhNGsxcXpUekpu?=
+ =?utf-8?B?aHYveHVqSHA2L3RnR1BiZmVvQkRtcnQ2US93dkRHd2tiUHJyM3N3MHBONFRU?=
+ =?utf-8?B?bFJxSE1DdUEvUG1Qa3JMSklLeVJqUllUU0NrcUFScnJGRk5ORmIzNVAyZmZv?=
+ =?utf-8?B?N1VLdDF5VVZRT1B5N2JJZkxNeWhHK3dEUnc5THdkRlpWc09RVjJ0SENGVmhj?=
+ =?utf-8?Q?5UrMJ26JUtPIV?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?OEEzVWdoVnRZYTBnYkhrY0t3OEtQMEt5SWFWYjFCZ2FtNXA2VXUvMnpXT2Fs?=
+ =?utf-8?B?bkZBamk5bitjNWJkaGJTTU9VZVVjampwSjl4QlNMeFpzWTk1VFhtbkhnUVdG?=
+ =?utf-8?B?SnR5ZVpkc1NHR0htNmtRZnlKV0lDY21kd3lubk1uRXRib2NDaVAvemhGZVdk?=
+ =?utf-8?B?YXdzK2FuK1JQbk5GY01WQ1Fzd1lXd0tPbHVGREhXRjg3Rm1aWlNCR01xMjBx?=
+ =?utf-8?B?dlkyYWd5WG4vamZTaVFKSTBJZUU5ZVlYZ2gwUnFBek5FWHNJc21jOURZT2RF?=
+ =?utf-8?B?ZjFFWVJ3eUoyU2dkVnlXdWNQVExWZjBjNldUREhxZldDYnc0bVN4N1ZEdVZw?=
+ =?utf-8?B?TWdZYUVDeVIraTE5OHhsUnNMOTZtS3V5Q3B5UUVzQkJUNlpHeEZyZnowVm82?=
+ =?utf-8?B?alNFM0lFYWFPelBRWUlPN1l2bE5sbUFYOWl6cUhRY0kzNktVZW10dUdqUW1m?=
+ =?utf-8?B?NjRLK0JTMktqOHlBNmgzYXd1TEN4Wm5sY3ovKzdaR3Z1OGFiSzN6VXZXQVlh?=
+ =?utf-8?B?Y25aNTRxaWhXcFJsNVc4UDIvTFZMQU9aMkk4aTlNdFI5MGRkT2t4b0hRRGJh?=
+ =?utf-8?B?aGVDNjlmZXRlbnBDWFAvOUozRkkxTDZKQXNGWlZGRFRYVkh3MGNCTzh2WmFX?=
+ =?utf-8?B?K3VqRkJXYnNpNXpyaGpzRDVVNlpWajdvSGloTmxvRzlOY082ZDkwY1p6azFl?=
+ =?utf-8?B?L2JwU1A1cFhCd3BhS2dldWZ4SXZaNTl5dDlnV0hva0dTNGR2REdxa2tiU0Zs?=
+ =?utf-8?B?eHZTU0lVTUJ2SzYzYndvVDdIUFVvNXNlVEFXeGJ3dG0yWFRqTTI0TG8xbk0y?=
+ =?utf-8?B?blNIcnJ5WDF6aWQ1ZVRyQ0JURjd1a29CcWhwRWMyNnpSYXpETG9YNVUvMHlO?=
+ =?utf-8?B?RG5QUWE0M0pjcVRBWloxVER5cjd3REVBUFVtWW9saVI5L3Vac2s2YnZiUXdN?=
+ =?utf-8?B?bjNzcjAvM3grTjk1c2VaeG55KzZ0RW5KTTJWL0xORmtmWmNWV1BPd1ZLbEZJ?=
+ =?utf-8?B?M3o1dkMzOXFTQWoyWDM2bGVLMmEwN1RvTGpRTktCN2YwSnZMcGtXdTY4cXkv?=
+ =?utf-8?B?elFpQVc1ZnZCcTVZVWk4aVYzUHNHQ294NjVWWStHL0ZqamFJQlN4MDVlK1py?=
+ =?utf-8?B?YzVLTHRMRlFHOXdKNW80dkhFV0dYYlpocnNYUjJ5OFVMNm5mRHRRcWFreW5a?=
+ =?utf-8?B?ZW1JdGNlQjJ6bHRVWGdZdzhmT05zV0N3TVZ4SzNFMFVQbWQxa2hCQ1pSSHZP?=
+ =?utf-8?B?djNXZkp6TFlqNFRCQlpXTHFrSGIrQndndTFLZVUwNlgxU0IycEdHMlYvU0Vh?=
+ =?utf-8?B?S3BYckR0cUtKVTIwT1NTbW1YeDVjL0pIbDVXZGVZeVE2RDhQZVhyMG1IZ2w2?=
+ =?utf-8?B?TzhhVUVnNkNsM3dxd0tVM3AzYkFhQ2pQOVRQTmI4VTFKNHlCeUQyS25DYkd1?=
+ =?utf-8?B?TGgzelFNZ29nSWM5aGhxS3U4MWRWY1NjNnpyWXBzem9tLzVIREtuL3ZXQmxQ?=
+ =?utf-8?B?UEVweXpFaE9yQjVKRUJXajJzRmdTbjl5WWNRT016Y1J0cHlYSWdRdEVrZTNT?=
+ =?utf-8?B?bDNVZ0p0RFRKUFBvNFY2NERZczVDWlVWT3crbFFDbDRjTXZrVWExZTlnL3VS?=
+ =?utf-8?B?azAzeDhDeVdoS2pTUEQxNTc0a2dHUEw3L3c3TWhMZFhzVXRvbU15cFhnbTQ4?=
+ =?utf-8?B?UEtOTlFmTER2YUNPUTJ1bmJaN2g2KzRXdFI2YkFKaWtWVXBBK0U1VElxencx?=
+ =?utf-8?B?anA3bjhvSHlTelk0aUtQRFNqU1JJeFpodTVMcjF0clhGRXYxTk9yWTU0a1pS?=
+ =?utf-8?B?TGh6d3ZmSnB6WGFzQlphR1pDYUdRS1pjemdFb2I3U1lYeGxKM2IxWG9Fby80?=
+ =?utf-8?B?OEhYdlZwUzhHblRGSm9HTXNUUzFxd1h4ZHdVenlaUm1ETkhLcE0wN0lkNi9a?=
+ =?utf-8?B?Nm1CVmlOc0RaRldnU3RmTnB4dGJIZXZZWS85VGU0YUNSczIyNG84WWNRTVQv?=
+ =?utf-8?B?S3pnOVpvT3FISThsTnMxekdoZHF1amc3ZzJ5ejUxT29wZS95cEplS1o4bW1R?=
+ =?utf-8?B?aFB3SU51cng0YjRrTk9RN29sME5LTlEzMW8rMEx1VEFPZ25oc3lDWVYxWWxQ?=
+ =?utf-8?Q?HJtnh/h0+4ZwM3AXdkfIQZy1L?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 805b6554-6a2b-4ddf-cdbd-08dd76a9c0a3
+X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2025 14:29:21.2211
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: J/tur0w2evoEFDITjZg6SnTa76Q6GmZrKrodPuP351yq/C9hlxdM1w+q1LySE5FRfUXkpoDJpQsPi9siPzZkcA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB9004
 
-On Tue, 8 Apr 2025 16:47:51 +0300
-Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+Hello, Paul,
 
-> On Tue, Apr 08, 2025 at 03:08:36PM +0200, Herve Codina wrote:
-> > On Mon, 7 Apr 2025 18:27:07 +0300
-> > Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:  
-> > > On Mon, Apr 07, 2025 at 04:55:37PM +0200, Herve Codina wrote:  
+On Tue, 8 Apr 2025 14:23:32 GMT, "Paul E. McKenney" wrote:
+> The torture.sh --do-rt command-line parameter is intended to mimic -rt
+> kernels.  Now that CONFIG_PREEMPT_RT is upstream, this commit makes this
+> mimicking more precise.
 > 
-> ...
+> Note that testing of RCU priority boosting is disabled in favor
+> of forward-progress testing of RCU callbacks.  If it turns out to be
+> possible to make kernels built with CONFIG_PREEMPT_RT=y to tolerate
+> testing of both, both will be enabled.
 > 
-> > > > +	return get_device(adapter->supplier ?: adapter->dev.parent);    
-> > > 
-> > > What will be the meaning when both are set? Why dev.parent is not the same
-> > > as supplier in this case?  Looking at the commit message example, it seems
-> > > like you want to provide a physdev or sysdev (as term supplier seems more
-> > > devlink:ish), like it's done elsewhere. And in the same way _always_ initialise
-> > > it. In such a case, the ambiguity will be gone.  
-> > 
-> > When both are set (this is case for i2c muxes), the adapter->supplier the
-> > device that register the I2C adapter using i2c_add_adapter() or variant.
-> > In other word, the device that creates the I2C adapter.
-> > 
-> > The adapter->dev.parent is most of the time the device that register the
-> > I2C adapter except for i2c muxes. For I2C muxes, this adapter->dev.parent
-> > is the adapter the i2c mux is connected to.
-> > 
-> > Between physdev and sysdev, I really prefer physdev and, if renaming from
-> > supplier to physdev is still needed (and wanted), I will rename it. Let me
-> > know.  
+> [ paulmck: Apply Sebastian Siewior feedback. ]
 > 
-> The terms supplier/consumer are widely used in terms of power and devlink.
-> I think here should not be used the term supplier.
+> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-physdev seems good.
-I will use that.
+I pulled this from your -dev branch for 6.16. I checked and this patch is the
+only one changed so feel free to not re-send the whole series (I will be
+resending it anyway once I have all the topic branches).
 
-> 
-> > For initialization, I don't want to modify all the I2C controller drivers.
-> > What I can do is to initialize adapter->supplier using adapter->dev.parent
-> > during the i2c_register_adapter() call if it was not already initialize by
-> > the caller (i.e. the I2C controller driver).  
-> 
-> This can be done in the I²C core, but I'm not insisting on this part.
-> We can start from your function only and then decide later on how to
-> proceed (depending on how many users of that field appear and what
-> they want to do with it).
-> 
+Also, I added your sign off as it was missing:
+[PATCH 03/12] rcutorture: Split out beginning and end from
+rcu_torture_one_read()
 
-Right I think I can keep my function as it.
+thanks,
 
-Wolfram any opinion?
-
-Best regards,
-Hervé
+ - Joel
