@@ -1,123 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F15210E0;
-	Tue,  8 Apr 2025 06:01:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD5A710E0;
+	Tue,  8 Apr 2025 06:02:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744092083; cv=none; b=lvV++t2GUiItnR/k8dClYO3kTht/Mynw4h+83Evz2/A9fAnxGGqZ/hehK+tPG+EREscyVa5vKpAhorlyEquBqRUad5TqPUjRkxGsLof0MIdhRv0TjgRHwQYH5tXqzkYCxpdJ+hC9lzXL1ilTY+vjEHWkxidzy6rWv4IW4qcCIkU=
+	t=1744092125; cv=none; b=mCsKxmxflpV0ALjZlVw01XUrceJOqo3YvXuEnDU8GiWRWCtPItshSMWw4fLC90T/SOqJOZN86Iw53sCN/yHdXdTUSScKc7jR2jUOTPmkRQ+GrzZ6AKYT3HXRjjSpR4dvlIFK6SVORKNBOtqILeLIxmtSoNr0xsMUK8JgpNsOaVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744092083; c=relaxed/simple;
-	bh=V08LfMrRepcIFzbFA52GTbzWj04RRx3nwYobnk7R1Xc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ndM/yxmYjkgpkUmhfGpua+kuvP5h78GZoLJUF+TtFxUI3Na0oj9bxeBH2AI+VRv5he/pFJbHrSRmo70fUwT4pERThrIqqOXDym9b2jQoPTRJBg2hk3Y0lH4IRSmjNEUJcSkTwy8Eg5/o7ZwfKyHjxLKUP0v95GDK6F7QtFycVd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cbpio9LM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744092125; c=relaxed/simple;
+	bh=e1j0fgkqOXDZec9URWtIbhBA54o0opSuOGLmeemXFQs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tkou2CSuCALqOAaaY8IXd/8LIedBIKWLJL9nthP0y/JeSP9uOjcd2pQgMjokOjbS7ed3sXpyLWLluwj15UVhx16CXk/URCDMUkn2od3mDJj7P6+qOr02D8lXN0UiL5Nnu9W0QmwuKoI6r2ueWjhnuYAw28NnHEMgQI+35/rCsEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=eaj1IaAq; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cbpio9LM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB339C4CEE5;
-	Tue,  8 Apr 2025 06:01:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744092082;
-	bh=V08LfMrRepcIFzbFA52GTbzWj04RRx3nwYobnk7R1Xc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Cbpio9LMXZsKy8AY6obGaCUJBqrRlFA2FxqdBHSxAQtsto+fSfTkszUOo4Il+siPp
-	 YOmRKENa0wnx3GVdhBW5ZI8VpsUgPReqpoiJj/mJtfETw9JZ/FowK0jDXkNOuX/72k
-	 KIdM3tjSOpJHCcz0dwEmaeRLviQGy+4BUR8Xhmf4eO10IKJBvWqdkveBR/Ah88QO5U
-	 VywREMoF7Ee0umkHuYUwR3B+znrH4GWT97UMEgTZMpGu1vhIVzT+96Ufc5z9tZ5Vsy
-	 edpIplC+hLM/QmGhaWEYBJEvMelapkl6o2R+tS5bkyqfctqo0rP39gfCvGn33om70T
-	 685a1tRIIG4nQ==
-Message-ID: <8d41f893-20dc-4362-91fd-689b41076e30@kernel.org>
-Date: Tue, 8 Apr 2025 08:01:18 +0200
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eaj1IaAq"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=EDvhmqcm28EGKlWvqvv6BIg+rBPoOk4uGE1wigR7x3o=; b=eaj1IaAqJLIbwH05lY07iozfAP
+	FvaFhZ8ycdvdRmono/f4bzqeelSUDKtVyi6N76cV4Agkxr95sZdYny5LOdja8Aq1oSTcAdLs+axej
+	w4MABierkL6xejGfPy+ohktMFwQBE52hcO4vFZwpmq54PJ1vgRJK1CB4GR4ngrBlTFRc+9yNCfbWO
+	ZiVBwVsAfXeQjL6bCG3SeO8E27oeD7YW+SbLhpq1+Z7k3C25WQOYytd7rrY4ag8z5//HEFVsC76hV
+	K7oezNLUkf5XqD8Gy54XMP2HcELF5NYwuFI6sXJXSpYPEa8oKvTA8LxLOSiXgRMY0rHMvrNAtGh6Q
+	6rBy0CQQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u221q-00000002qK6-2cV0;
+	Tue, 08 Apr 2025 06:01:46 +0000
+Date: Mon, 7 Apr 2025 23:01:46 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Eric Naim <dnaim@cachyos.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>,
+	Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org,
+	peterz@infradead.org, willy@infradead.org, liam.howlett@oracle.com,
+	lorenzo.stoakes@oracle.com, mhocko@suse.com, hannes@cmpxchg.org,
+	mjguzik@gmail.com, oliver.sang@intel.com,
+	mgorman@techsingularity.net, david@redhat.com, peterx@redhat.com,
+	oleg@redhat.com, dave@stgolabs.net, paulmck@kernel.org,
+	brauner@kernel.org, dhowells@redhat.com, hdanton@sina.com,
+	hughd@google.com, lokeshgidra@google.com, minchan@google.com,
+	jannh@google.com, shakeel.butt@linux.dev, souravpanda@google.com,
+	pasha.tatashin@soleen.com, klarasmodin@gmail.com, corbet@lwn.net,
+	linux-doc@vger.kernel.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, kernel-team@android.com
+Subject: Re: [PATCH v7 10/17] mm: uninline the main body of vma_start_write()
+Message-ID: <Z_S7yjRXWIXnVXsf@infradead.org>
+References: <20241226170710.1159679-1-surenb@google.com>
+ <20241226170710.1159679-11-surenb@google.com>
+ <0d36fd53-b817-4bbd-ae38-af094bd301df@suse.cz>
+ <40182b31-95ad-4825-9c0c-0127be1734a6@cachyos.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] media: tegra-cec: Support Tegra186 and Tegra194
-To: webgeek1234@gmail.com, Hans Verkuil <hverkuil@xs4all.nl>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>,
- Jonathan Hunter <jonathanh@nvidia.com>
-Cc: linux-tegra@vger.kernel.org, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250407-tegra-cec-v1-0-e25dd9577b5f@gmail.com>
- <20250407-tegra-cec-v1-2-e25dd9577b5f@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250407-tegra-cec-v1-2-e25dd9577b5f@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <40182b31-95ad-4825-9c0c-0127be1734a6@cachyos.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On 08/04/2025 06:39, Aaron Kling via B4 Relay wrote:
-> From: Aaron Kling <webgeek1234@gmail.com>
-> 
-> The tegra186 and tegra194 controllers are working with the driver as-is,
-> so add the compatibles to allow them to probe.
-> 
-> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
-> ---
->  drivers/media/cec/platform/tegra/tegra_cec.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/media/cec/platform/tegra/tegra_cec.c b/drivers/media/cec/platform/tegra/tegra_cec.c
-> index 3ed50097262f64c32fe0480698cea9a1056a0953..aa3d36286d256d59f9d726e5c3cee5decacd1d23 100644
-> --- a/drivers/media/cec/platform/tegra/tegra_cec.c
-> +++ b/drivers/media/cec/platform/tegra/tegra_cec.c
-> @@ -456,6 +456,8 @@ static const struct of_device_id tegra_cec_of_match[] = {
->  	{ .compatible = "nvidia,tegra114-cec", },
->  	{ .compatible = "nvidia,tegra124-cec", },
->  	{ .compatible = "nvidia,tegra210-cec", },
-> +	{ .compatible = "nvidia,tegra186-cec", },
-> +	{ .compatible = "nvidia,tegra194-cec", },
+On Tue, Apr 08, 2025 at 12:39:25PM +0800, Eric Naim wrote:
+> The out-of-tree NVIDIA modules seem to rely on this symbol, is it possible to use EXPORT_SYMBOL() here instead of EXPORT_SYMBOL_GPL(), below is the modpost error:
 
-No, express compatible devices with fallbacks.
+No.  They don't have any business using this.
 
-
-Best regards,
-Krzysztof
+In fact vma_start_write should not be exported at all, just the
+vm_flags_{set,clear,mod} helpers.
