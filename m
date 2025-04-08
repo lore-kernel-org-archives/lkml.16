@@ -1,223 +1,146 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02229322B
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 03:18:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3908D4A04;
+	Tue,  8 Apr 2025 03:25:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.166.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744082296; cv=none; b=c9czgC8ypQXU14DbNxE3PjqZPcDPfOE1iRBrlDIMAzfvxOixyM40FnUDvwI9JGEe6TMgsIO47ljMNilNNrwDbVjThPEqJbckc1bT4Mdg4RcJ+iQMwHYTYrBJz+ppJKndOtXiGhVl/Fm/o97BsG0MRsU80ZckwiS0/DgfjX2QyB0=
+	t=1744082719; cv=none; b=RTlNKNXSvJGPbj8T1G+jG2MgWprA68r3a2A/0fRnTV/qpBzknwS1VpAh5E+WEtorHFhfVj7dGNa03VfH+zr8OXvLLoiptb6LdnhAd0pjOpIPUlv2pbBpdXh4WxOBHl+NY2Jybcnjy5b56+Dnjm2Fl2wJ3txj91Z9Jd3Ktp5QHWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744082296; c=relaxed/simple;
-	bh=Y4A9gmRyx+sHzRRPq9DIE+RWZg2MLVTOc6sduDq5MR0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fylX96clZuDSVfIQr75lwqVkn1u70s3VJh66o/49oBh9CAY8vQvqPVNv46uISOt7ybdmg8H0EVmvdnqQI+k1R8b4+hd9MyRDYtfZJFySwuHGrRgFQdRRCY4uylhTuk98O5SHvyM26KVvKXmj4+wIDQ2P8Tj7OHNHxN8GPN0hsQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gPB1j2yb; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gPB1j2yb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744082293;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/3QHJqw7QjuOJT2v2ybOfd35jlW4gSpJQ6mV3BXsjyM=;
-	b=gPB1j2yb22tdW8ZCB53sCkfHjih3rSc+fnZr+xZ1iq9dUrs20qJEPav8SZS0v7+xY//p4M
-	hdPXwXgu41gHoEd1oGuglMFyrnxy4Cd4Yy+UjOqyJhMfJkYH77I5vs0K1s3/Wcli7fDCOh
-	FDcRNi7b8jM5gkNx9TDboell/V4hsMc=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-65-AWIpHe-hPfqeQRJIIPUO2A-1; Mon,
- 07 Apr 2025 23:18:10 -0400
-X-MC-Unique: AWIpHe-hPfqeQRJIIPUO2A-1
-X-Mimecast-MFC-AGG-ID: AWIpHe-hPfqeQRJIIPUO2A_1744082288
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 876C61809CA5;
-	Tue,  8 Apr 2025 03:18:07 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.61])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 74396180174E;
-	Tue,  8 Apr 2025 03:18:05 +0000 (UTC)
-Date: Tue, 8 Apr 2025 11:17:55 +0800
-From: Baoquan He <bhe@redhat.com>
-To: steven chen <chenste@linux.microsoft.com>
-Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
-	roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-	eric.snowberg@oracle.com, ebiederm@xmission.com,
-	paul@paul-moore.com, code@tyhicks.com, bauermann@kolabnow.com,
-	linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
-	madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
-	James.Bottomley@hansenpartnership.com, vgoyal@redhat.com,
-	dyoung@redhat.com
-Subject: Re: [PATCH v11 4/9] ima: kexec: skip IMA segment validation after
- kexec soft reboot
-Message-ID: <Z/SVY1j1C7P0rZGI@MiWiFi-R3L-srv>
-References: <20250402124725.5601-1-chenste@linux.microsoft.com>
- <20250402124725.5601-5-chenste@linux.microsoft.com>
+	s=arc-20240116; t=1744082719; c=relaxed/simple;
+	bh=De9S0jKXQHWL4ddOS+2LDXVwVwuUSfQ6GnrVTLPs2yU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=T/lf1Cz3NnkRH1nsec9U9P8SXv0a21g5VPoF9sIb747flv4o+x9GvyVpwpZOUPqcKDP+CHULo/+r2xdfaTtsGFBijHiizjod+yOcGRyLmqfudmwloQVfvmVJseweXW9pnYkHB+SBeKNTPI387sIbZkKJkeyPriM9noJrFux5Xcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.166.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250810.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5383GKqd014976;
+	Mon, 7 Apr 2025 20:25:02 -0700
+Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 45tyt4b0k1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Mon, 07 Apr 2025 20:25:01 -0700 (PDT)
+Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.43; Mon, 7 Apr 2025 20:25:01 -0700
+Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
+ 15.1.2507.43 via Frontend Transport; Mon, 7 Apr 2025 20:24:57 -0700
+From: <jianqi.ren.cn@windriver.com>
+To: <stable@vger.kernel.org>
+CC: <patches@lists.linux.dev>, <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <jianqi.ren.cn@windriver.com>,
+        <harry.wentland@amd.com>, <sunpeng.li@amd.com>,
+        <Rodrigo.Siqueira@amd.com>, <alexander.deucher@amd.com>,
+        <christian.koenig@amd.com>, <Xinhui.Pan@amd.com>, <airlied@gmail.com>,
+        <daniel@ffwll.ch>, <amd-gfx@lists.freedesktop.org>,
+        <dri-devel@lists.freedesktop.org>, <chiahsuan.chung@amd.com>,
+        <alex.hung@amd.com>, <daniel.wheeler@amd.com>, <hersenxs.wu@amd.com>
+Subject: [PATCH 5.10.y] drm/amd/display: Skip inactive planes within ModeSupportAndSystemConfiguration
+Date: Tue, 8 Apr 2025 11:24:56 +0800
+Message-ID: <20250408032456.3437393-1-jianqi.ren.cn@windriver.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250402124725.5601-5-chenste@linux.microsoft.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: 5-F-MLBWDWSd1-w6nLaD6MTbksbZORpR
+X-Authority-Analysis: v=2.4 cv=RMSzH5i+ c=1 sm=1 tr=0 ts=67f4970d cx=c_pps a=/ZJR302f846pc/tyiSlYyQ==:117 a=/ZJR302f846pc/tyiSlYyQ==:17 a=XR8D0OoHHMoA:10 a=zd2uoN0lAAAA:8 a=t7CeM3EgAAAA:8 a=jWJrOWpaenu_S2W2EP4A:9 a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-GUID: 5-F-MLBWDWSd1-w6nLaD6MTbksbZORpR
+X-Sensitive_Customer_Information: Yes
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-08_01,2025-04-07_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
+ lowpriorityscore=0 mlxscore=0 malwarescore=0 suspectscore=0
+ mlxlogscore=999 spamscore=0 priorityscore=1501 adultscore=0 clxscore=1015
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.21.0-2502280000
+ definitions=main-2504080022
 
-On 04/02/25 at 05:47am, steven chen wrote:
-> The kexec_calculate_store_digests() function calculates and stores the
-> digest of the segment during the kexec_file_load syscall, where the 
-> IMA segment is also allocated.
-> 
-> With this series, the IMA segment will be updated with the measurement 
-> log at the kexec execute stage when a soft reboot is initiated. 
-> Therefore, the digests should be updated for the IMA segment in the 
-> normal case.
-> 
-> The content of memory segments carried over to the new kernel during the
-> kexec systemcall can be changed at kexec 'execute' stage, but the size
-> and the location of the memory segments cannot be changed at kexec
-> 'execute' stage.
-> 
-> However, during the kexec execute stage, if kexec_calculate_store_digests()
-> API is called to update the digest, it does not reuse the same memory
-> segment allocated during the kexec 'load' stage and the new memory segment
-> required cannot be transferred/mapped to the new kernel.
-> 
-> As a result, digest verification will fail in verify_sha256_digest() 
-> after a kexec soft reboot into the new kernel. Therefore, the digest
-> calculation/verification of the IMA segment needs to be skipped.
-> 
-> To address this, skip the calculation and storage of the digest for the
-> IMA segment in kexec_calculate_store_digests() so that it is not added 
-> to the purgatory_sha_regions.
-> 
-> Since verify_sha256_digest() only verifies 'purgatory_sha_regions',
-> no change is needed in verify_sha256_digest() in this context.
-> 
-> With this change, the IMA segment is not included in the digest
-> calculation, storage, and verification.
+From: Hersen Wu <hersenxs.wu@amd.com>
 
-I would write the patch log like:
+[ Upstream commit a54f7e866cc73a4cb71b8b24bb568ba35c8969df ]
 
-======
-Currently, the function kexec_calculate_store_digests() calculates and
-stores the digest of the segment during the kexec_file_load syscall,
-where the  IMA segment is also allocated.
+[Why]
+Coverity reports Memory - illegal accesses.
 
-Later, the IMA segment will be updated with the measurement log at the
-kexec execute stage when a kexec reboot is initiated. Therefore, the
-digests should be updated for the IMA segment in the  normal case. The
-problem is that the content of memory segments carried over to the new
-kernel during the kexec systemcall can be changed at kexec 'execute'
-stage, but the size and the location of the memory segments cannot be
-changed at kexec 'execute' stage.
+[How]
+Skip inactive planes.
 
-To address this, skip the calculation and storage of the digest for the
-IMA segment in kexec_calculate_store_digests() so that it is not added 
-to the purgatory_sha_regions.
+Reviewed-by: Alex Hung <alex.hung@amd.com>
+Acked-by: Tom Chung <chiahsuan.chung@amd.com>
+Signed-off-by: Hersen Wu <hersenxs.wu@amd.com>
+Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+[get_pipe_idx() was introduced as a helper by
+dda4fb85e433 ("drm/amd/display: DML changes for DCN32/321") in v6.0.
+This patch backports it to make code clearer. And minor conflict is
+resolved due to code context change.]
+Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+---
+Verified the build test
+---
+ .../drm/amd/display/dc/dml/display_mode_vba.c | 27 ++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
 
-With this change, the IMA segment is not included in the digest
-calculation, storage, and verification.
-======
-
-> 
-> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Cc: Baoquan He <bhe@redhat.com> 
-> Cc: Vivek Goyal <vgoyal@redhat.com>
-> Cc: Dave Young <dyoung@redhat.com>
-> Signed-off-by: steven chen <chenste@linux.microsoft.com>
-> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
-> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-> Acked-by: Baoquan He <bhe@redhat.com>
-> ---
->  include/linux/kexec.h              |  3 +++
->  kernel/kexec_file.c                | 22 ++++++++++++++++++++++
->  security/integrity/ima/ima_kexec.c |  3 +++
->  3 files changed, 28 insertions(+)
-> 
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index 7d6b12f8b8d0..107e726f2ef3 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -362,6 +362,9 @@ struct kimage {
->  
->  	phys_addr_t ima_buffer_addr;
->  	size_t ima_buffer_size;
-> +
-> +	unsigned long ima_segment_index;
-> +	bool is_ima_segment_index_set;
->  #endif
->  
->  	/* Core ELF header buffer */
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index 3eedb8c226ad..606132253c79 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -38,6 +38,21 @@ void set_kexec_sig_enforced(void)
->  }
->  #endif
->  
-> +#ifdef CONFIG_IMA_KEXEC
-> +static bool check_ima_segment_index(struct kimage *image, int i)
-> +{
-> +	if (image->is_ima_segment_index_set && i == image->ima_segment_index)
-> +		return true;
-> +	else
-> +		return false;
-> +}
-> +#else
-> +static bool check_ima_segment_index(struct kimage *image, int i)
-> +{
-> +	return false;
-> +}
-> +#endif
-> +
->  static int kexec_calculate_store_digests(struct kimage *image);
->  
->  /* Maximum size in bytes for kernel/initrd files. */
-> @@ -764,6 +779,13 @@ static int kexec_calculate_store_digests(struct kimage *image)
->  		if (ksegment->kbuf == pi->purgatory_buf)
->  			continue;
->  
-> +		/*
-> +		 * Skip the segment if ima_segment_index is set and matches
-> +		 * the current index
-> +		 */
-> +		if (check_ima_segment_index(image, i))
-> +			continue;
-> +
->  		ret = crypto_shash_update(desc, ksegment->kbuf,
->  					  ksegment->bufsz);
->  		if (ret)
-> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
-> index b12ac3619b8f..7e0a19c3483f 100644
-> --- a/security/integrity/ima/ima_kexec.c
-> +++ b/security/integrity/ima/ima_kexec.c
-> @@ -145,6 +145,7 @@ void ima_add_kexec_buffer(struct kimage *image)
->  	kbuf.buffer = kexec_buffer;
->  	kbuf.bufsz = kexec_buffer_size;
->  	kbuf.memsz = kexec_segment_size;
-> +	image->is_ima_segment_index_set = false;
->  	ret = kexec_add_buffer(&kbuf);
->  	if (ret) {
->  		pr_err("Error passing over kexec measurement buffer.\n");
-> @@ -155,6 +156,8 @@ void ima_add_kexec_buffer(struct kimage *image)
->  	image->ima_buffer_addr = kbuf.mem;
->  	image->ima_buffer_size = kexec_segment_size;
->  	image->ima_buffer = kexec_buffer;
-> +	image->ima_segment_index = image->nr_segments - 1;
-> +	image->is_ima_segment_index_set = true;
->  
->  	kexec_dprintk("kexec measurement buffer for the loaded kernel at 0x%lx.\n",
->  		      kbuf.mem);
-> -- 
-> 2.25.1
-> 
+diff --git a/drivers/gpu/drm/amd/display/dc/dml/display_mode_vba.c b/drivers/gpu/drm/amd/display/dc/dml/display_mode_vba.c
+index b32093136089..7dfcb1e0a6ff 100644
+--- a/drivers/gpu/drm/amd/display/dc/dml/display_mode_vba.c
++++ b/drivers/gpu/drm/amd/display/dc/dml/display_mode_vba.c
+@@ -825,11 +825,30 @@ static unsigned int CursorBppEnumToBits(enum cursor_bpp ebpp)
+ 	}
+ }
+ 
++static unsigned int get_pipe_idx(struct display_mode_lib *mode_lib, unsigned int plane_idx)
++{
++	int pipe_idx = -1;
++	int i;
++
++	ASSERT(plane_idx < DC__NUM_DPP__MAX);
++
++	for (i = 0; i < DC__NUM_DPP__MAX ; i++) {
++		if (plane_idx == mode_lib->vba.pipe_plane[i]) {
++			pipe_idx = i;
++			break;
++		}
++	}
++	ASSERT(pipe_idx >= 0);
++
++	return pipe_idx;
++}
++
+ void ModeSupportAndSystemConfiguration(struct display_mode_lib *mode_lib)
+ {
+ 	soc_bounding_box_st *soc = &mode_lib->vba.soc;
+ 	unsigned int k;
+ 	unsigned int total_pipes = 0;
++	unsigned int pipe_idx = 0;
+ 
+ 	mode_lib->vba.VoltageLevel = mode_lib->vba.cache_pipes[0].clks_cfg.voltage;
+ 	mode_lib->vba.ReturnBW = mode_lib->vba.ReturnBWPerState[mode_lib->vba.VoltageLevel][mode_lib->vba.maxMpcComb];
+@@ -849,8 +868,14 @@ void ModeSupportAndSystemConfiguration(struct display_mode_lib *mode_lib)
+ 		mode_lib->vba.DISPCLK = soc->clock_limits[mode_lib->vba.VoltageLevel].dispclk_mhz;
+ 
+ 	// Total Available Pipes Support Check
+-	for (k = 0; k < mode_lib->vba.NumberOfActivePlanes; ++k)
++	for (k = 0; k < mode_lib->vba.NumberOfActivePlanes; ++k) {
++		pipe_idx = get_pipe_idx(mode_lib, k);
++		if (pipe_idx == -1) {
++			ASSERT(0);
++			continue; // skip inactive planes
++		}
+ 		total_pipes += mode_lib->vba.DPPPerPlane[k];
++	}
+ 	ASSERT(total_pipes <= DC__NUM_DPP__MAX);
+ }
+ 
+-- 
+2.34.1
 
