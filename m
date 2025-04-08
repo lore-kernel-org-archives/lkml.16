@@ -1,271 +1,88 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C6DD25F99D
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 07:09:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99A6425FA26;
+	Tue,  8 Apr 2025 07:09:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744096181; cv=none; b=Wgf+h7+bSwAe7dU6W9BnRj3Fj2U95zR5DKfvo2Hg8JjWSBgqOMLu0jeydkSau0ypxO/7E3e6A+RT7lI81lUOrWnBTs+deEuQpACssxqOxwLqZI37V4Qric0zp/J72vI9S8YlyfHEzCVRF4gEO5IcQ2isxVk0485xEwNZNcmTMkA=
+	t=1744096195; cv=none; b=fOPy/d3k0PDdZ5s+kSnr7/tYUvDT5fsP1soiIAtGBvQoKulFyvA0irWptI08A/Ht5gANOG9aTWGMyeku8dgYSPATaD/fneEXrYWOliyOnckVvWdvui4JnOHoyHZKCepUgbvuwYRXYZB1jywz7dBS+snbk8AMjcKoWAcKiijR5aM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744096181; c=relaxed/simple;
-	bh=pOyWKdc577ZQSawff2NELuR24APW+FNLW/oQhSOOu1w=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=p+O91YNyXGCbOVINm8McxonVRoAtfLXy3Hlo2e9ArBYVHgbaBShWSnmgWT8vL0xtOkreWXodwBtmGqmM9C1wEIjDq/nIuhrcbUHKvG62Z6/CbdEunHzC+glr6cqF7luryVD9/ekOVPEspEkWDb62TABCJi//yfuqvnRGgJKMN3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=B0xYqhxs; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1744096195; c=relaxed/simple;
+	bh=/sJ/o1RT3knUIms6vniTsTj4eZSX251vKaMc5Y5zJTs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=diB578EjENUIK8/m2FNYoL2pssFH+Kt/B6b8yZZJE+vuFWMryhroGREqgZx7WWR+O2+ahsu2vlNkB9tAayCGwrFEG9cCsLES5I05BqCGlg4tp6rBAwtBpmvN82BFE90VfKIT9oN0RX/qj+0nskveYJeUkqa6l9nAdzLT5ZuexI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WXJhyEEi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="B0xYqhxs"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id B491878E;
-	Tue,  8 Apr 2025 09:07:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1744096059;
-	bh=pOyWKdc577ZQSawff2NELuR24APW+FNLW/oQhSOOu1w=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=B0xYqhxsE6qjKg7Lie67YixsZoO9U358ijGvHSH53suF0UqixQBhEkK1X+L8itcn7
-	 2udKQzvoQ2C9fiKM/Rjzl6/z02LZC1WGGOaIlGLGGWqUh3UwIIFzgsvmOvjqpGZ4dA
-	 lqdQmz8lSwqjWYgqvXVvpSVJ29V1M6Vgq1FVUU2I=
-Message-ID: <03142c89-fc5a-45cf-9233-549ec1b9a469@ideasonboard.com>
-Date: Tue, 8 Apr 2025 10:09:32 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WXJhyEEi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E783C4CEE5;
+	Tue,  8 Apr 2025 07:09:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744096195;
+	bh=/sJ/o1RT3knUIms6vniTsTj4eZSX251vKaMc5Y5zJTs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WXJhyEEi5E76JHjySCjt5VT3TtCKTzxf1CdveOLdnOBm8T8RWH8otR4Ssk/ZetZGi
+	 rpTkA8zgZtQAf5Bd2/HwT+fgslfRXjAa0lPZFX3Y3kGKbHgScXqO3M9BAH/FU/g6ht
+	 fB36kWhByqz7kcy+ppYFFurUVGjePdsfrrlWYG42jknZyV5VO5o/ik0/vB4vBo1KTA
+	 o+HGonS+eOcDSiok/WLEHTqu8IrD45w9mrw+wnIbFeKO29h7NMF8dWzewuUL8TJ/ed
+	 JP+AmVFnoh6+bV688T2SkHyUkvJr2EERJ/CDEDmdlohbLTqSnHfSKcKV0e8X7kdnEK
+	 9AzHzpOIbRZBg==
+Date: Tue, 8 Apr 2025 09:09:50 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Mario Limonciello <superm1@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	Yazen Ghannam <yazen.ghannam@amd.com>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH 2/2] x86/CPU/AMD: Print the reason for the last reset
+Message-ID: <Z_TLvoBDmCRRy12t@gmail.com>
+References: <20250407162525.1357673-1-superm1@kernel.org>
+ <20250407162525.1357673-2-superm1@kernel.org>
+ <Z_Qdn_WYAalNAHOi@gmail.com>
+ <ebfaae8d-7186-454f-ba06-b86fea357d03@kernel.org>
+ <20250407214624.GEZ_RHsCPSfyM4r56w@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 12/18] drm/bridge: cdns-dsi: Drop checks that shouldn't
- be in .mode_valid()
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-To: Aradhya Bhatia <aradhya.bhatia@linux.dev>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux-phy@lists.infradead.org, Francesco Dolcini <francesco@dolcini.it>,
- Devarsh Thakkar <devarsht@ti.com>, Jyri Sarha <jyri.sarha@iki.fi>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Andrzej Hajda <andrzej.hajda@intel.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>
-References: <20250402-cdns-dsi-impro-v2-0-4a093eaa5e27@ideasonboard.com>
- <20250402-cdns-dsi-impro-v2-12-4a093eaa5e27@ideasonboard.com>
- <46dc6803-47f0-4434-9794-08307604e450@linux.dev>
- <daa8c462-e2c7-47fa-9ccd-b72dc3c6b9cc@ideasonboard.com>
-Content-Language: en-US
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- xsFNBE6ms0cBEACyizowecZqXfMZtnBniOieTuFdErHAUyxVgtmr0f5ZfIi9Z4l+uUN4Zdw2
- wCEZjx3o0Z34diXBaMRJ3rAk9yB90UJAnLtb8A97Oq64DskLF81GCYB2P1i0qrG7UjpASgCA
- Ru0lVvxsWyIwSfoYoLrazbT1wkWRs8YBkkXQFfL7Mn3ZMoGPcpfwYH9O7bV1NslbmyJzRCMO
- eYV258gjCcwYlrkyIratlHCek4GrwV8Z9NQcjD5iLzrONjfafrWPwj6yn2RlL0mQEwt1lOvn
- LnI7QRtB3zxA3yB+FLsT1hx0va6xCHpX3QO2gBsyHCyVafFMrg3c/7IIWkDLngJxFgz6DLiA
- G4ld1QK/jsYqfP2GIMH1mFdjY+iagG4DqOsjip479HCWAptpNxSOCL6z3qxCU8MCz8iNOtZk
- DYXQWVscM5qgYSn+fmMM2qN+eoWlnCGVURZZLDjg387S2E1jT/dNTOsM/IqQj+ZROUZuRcF7
- 0RTtuU5q1HnbRNwy+23xeoSGuwmLQ2UsUk7Q5CnrjYfiPo3wHze8avK95JBoSd+WIRmV3uoO
- rXCoYOIRlDhg9XJTrbnQ3Ot5zOa0Y9c4IpyAlut6mDtxtKXr4+8OzjSVFww7tIwadTK3wDQv
- Bus4jxHjS6dz1g2ypT65qnHen6mUUH63lhzewqO9peAHJ0SLrQARAQABzTBUb21pIFZhbGtl
- aW5lbiA8dG9taS52YWxrZWluZW5AaWRlYXNvbmJvYXJkLmNvbT7CwY4EEwEIADgWIQTEOAw+
- ll79gQef86f6PaqMvJYe9QUCX/HruAIbAwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgAAKCRD6
- PaqMvJYe9WmFD/99NGoD5lBJhlFDHMZvO+Op8vCwnIRZdTsyrtGl72rVh9xRfcSgYPZUvBuT
- VDxE53mY9HaZyu1eGMccYRBaTLJSfCXl/g317CrMNdY0k40b9YeIX10feiRYEWoDIPQ3tMmA
- 0nHDygzcnuPiPT68JYZ6tUOvAt7r6OX/litM+m2/E9mtp8xCoWOo/kYO4mOAIoMNvLB8vufi
- uBB4e/AvAjtny4ScuNV5c5q8MkfNIiOyag9QCiQ/JfoAqzXRjVb4VZG72AKaElwipiKCWEcU
- R4+Bu5Qbaxj7Cd36M/bI54OrbWWETJkVVSV1i0tghCd6HHyquTdFl7wYcz6cL1hn/6byVnD+
- sR3BLvSBHYp8WSwv0TCuf6tLiNgHAO1hWiQ1pOoXyMEsxZlgPXT+wb4dbNVunckwqFjGxRbl
- Rz7apFT/ZRwbazEzEzNyrBOfB55xdipG/2+SmFn0oMFqFOBEszXLQVslh64lI0CMJm2OYYe3
- PxHqYaztyeXsx13Bfnq9+bUynAQ4uW1P5DJ3OIRZWKmbQd/Me3Fq6TU57LsvwRgE0Le9PFQs
- dcP2071rMTpqTUteEgODJS4VDf4lXJfY91u32BJkiqM7/62Cqatcz5UWWHq5xeF03MIUTqdE
- qHWk3RJEoWHWQRzQfcx6Fn2fDAUKhAddvoopfcjAHfpAWJ+ENc7BTQROprNHARAAx0aat8GU
- hsusCLc4MIxOQwidecCTRc9Dz/7U2goUwhw2O5j9TPqLtp57VITmHILnvZf6q3QAho2QMQyE
- DDvHubrdtEoqaaSKxKkFie1uhWNNvXPhwkKLYieyL9m2JdU+b88HaDnpzdyTTR4uH7wk0bBa
- KbTSgIFDDe5lXInypewPO30TmYNkFSexnnM3n1PBCqiJXsJahE4ZQ+WnV5FbPUj8T2zXS2xk
- 0LZ0+DwKmZ0ZDovvdEWRWrz3UzJ8DLHb7blPpGhmqj3ANXQXC7mb9qJ6J/VSl61GbxIO2Dwb
- xPNkHk8fwnxlUBCOyBti/uD2uSTgKHNdabhVm2dgFNVuS1y3bBHbI/qjC3J7rWE0WiaHWEqy
- UVPk8rsph4rqITsj2RiY70vEW0SKePrChvET7D8P1UPqmveBNNtSS7In+DdZ5kUqLV7rJnM9
- /4cwy+uZUt8cuCZlcA5u8IsBCNJudxEqBG10GHg1B6h1RZIz9Q9XfiBdaqa5+CjyFs8ua01c
- 9HmyfkuhXG2OLjfQuK+Ygd56mV3lq0aFdwbaX16DG22c6flkkBSjyWXYepFtHz9KsBS0DaZb
- 4IkLmZwEXpZcIOQjQ71fqlpiXkXSIaQ6YMEs8WjBbpP81h7QxWIfWtp+VnwNGc6nq5IQDESH
- mvQcsFS7d3eGVI6eyjCFdcAO8eMAEQEAAcLBXwQYAQIACQUCTqazRwIbDAAKCRD6PaqMvJYe
- 9fA7EACS6exUedsBKmt4pT7nqXBcRsqm6YzT6DeCM8PWMTeaVGHiR4TnNFiT3otD5UpYQI7S
- suYxoTdHrrrBzdlKe5rUWpzoZkVK6p0s9OIvGzLT0lrb0HC9iNDWT3JgpYDnk4Z2mFi6tTbq
- xKMtpVFRA6FjviGDRsfkfoURZI51nf2RSAk/A8BEDDZ7lgJHskYoklSpwyrXhkp9FHGMaYII
- m9EKuUTX9JPDG2FTthCBrdsgWYPdJQvM+zscq09vFMQ9Fykbx5N8z/oFEUy3ACyPqW2oyfvU
- CH5WDpWBG0s5BALp1gBJPytIAd/pY/5ZdNoi0Cx3+Z7jaBFEyYJdWy1hGddpkgnMjyOfLI7B
- CFrdecTZbR5upjNSDvQ7RG85SnpYJTIin+SAUazAeA2nS6gTZzumgtdw8XmVXZwdBfF+ICof
- 92UkbYcYNbzWO/GHgsNT1WnM4sa9lwCSWH8Fw1o/3bX1VVPEsnESOfxkNdu+gAF5S6+I6n3a
- ueeIlwJl5CpT5l8RpoZXEOVtXYn8zzOJ7oGZYINRV9Pf8qKGLf3Dft7zKBP832I3PQjeok7F
- yjt+9S+KgSFSHP3Pa4E7lsSdWhSlHYNdG/czhoUkSCN09C0rEK93wxACx3vtxPLjXu6RptBw
- 3dRq7n+mQChEB1am0BueV1JZaBboIL0AGlSJkm23kw==
-In-Reply-To: <daa8c462-e2c7-47fa-9ccd-b72dc3c6b9cc@ideasonboard.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250407214624.GEZ_RHsCPSfyM4r56w@fat_crate.local>
 
-Hi,
 
-On 08/04/2025 09:09, Tomi Valkeinen wrote:
-> Hi,
+* Borislav Petkov <bp@alien8.de> wrote:
+
+> On Mon, Apr 07, 2025 at 01:56:57PM -0500, Mario Limonciello wrote:
+> > Boris, your thoughts please?
 > 
-> On 07/04/2025 20:59, Aradhya Bhatia wrote:
->> Hi Tomi,
->>
->> On 02/04/25 19:00, Tomi Valkeinen wrote:
->>> The docs say about mode_valid():
->>>
->>> "it is not allowed to look at anything else but the passed-in mode, and
->>> validate it against configuration-invariant hardware constraints"
->>>
->>> We're doing a lot more than just looking at the mode. The main issue
->>> here is that we're doing checks based on the pixel clock, before we know
->>> what the pixel clock from the crtc actually is.
->>>
->>> So, drop the checks from .mode_valid(). This also allows us to remove
->>> the 'mode_valid_check' parameter from internal functions, and the
->>> related code.
->>>
->>> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
->>> ---
->>>   drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 44 +++++++ 
->>> +------------------
->>>   1 file changed, 14 insertions(+), 30 deletions(-)
->>>
->>> diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c b/ 
->>> drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
->>> index e85c8652c96e..cf783680b1b4 100644
->>> --- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
->>> +++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
->>> @@ -469,25 +469,17 @@ static unsigned int dpi_to_dsi_timing(unsigned 
->>> int dpi_timing,
->>>   static int cdns_dsi_mode2cfg(struct cdns_dsi *dsi,
->>>                    const struct drm_display_mode *mode,
->>> -                 struct cdns_dsi_cfg *dsi_cfg,
->>> -                 bool mode_valid_check)
->>> +                 struct cdns_dsi_cfg *dsi_cfg)
->>>   {
->>>       struct cdns_dsi_output *output = &dsi->output;
->>>       u32 dpi_hsa, dpi_hbp, dpi_hfp, dpi_hact;
->>>       bool sync_pulse;
->>>       int bpp;
->>> -    if (mode_valid_check) {
->>> -        dpi_hsa = mode->hsync_end - mode->hsync_start;
->>> -        dpi_hbp = mode->htotal - mode->hsync_end;
->>> -        dpi_hfp = mode->hsync_start - mode->hdisplay;
->>> -        dpi_hact = mode->hdisplay;
->>> -    } else {
->>> -        dpi_hsa = mode->crtc_hsync_end - mode->crtc_hsync_start;
->>> -        dpi_hbp = mode->crtc_htotal - mode->crtc_hsync_end;
->>> -        dpi_hfp =  mode->crtc_hsync_start - mode->crtc_hdisplay;
->>> -        dpi_hact = mode->crtc_hdisplay;
->>> -    }
->>> +    dpi_hsa = mode->crtc_hsync_end - mode->crtc_hsync_start;
->>> +    dpi_hbp = mode->crtc_htotal - mode->crtc_hsync_end;
->>> +    dpi_hfp =  mode->crtc_hsync_start - mode->crtc_hdisplay;
->>> +    dpi_hact = mode->crtc_hdisplay;
->>>       memset(dsi_cfg, 0, sizeof(*dsi_cfg));
->>> @@ -518,8 +510,7 @@ static int cdns_dsi_mode2cfg(struct cdns_dsi *dsi,
->>>   static int cdns_dsi_adjust_phy_config(struct cdns_dsi *dsi,
->>>                     struct cdns_dsi_cfg *dsi_cfg,
->>>                     struct phy_configure_opts_mipi_dphy *phy_cfg,
->>> -                  const struct drm_display_mode *mode,
->>> -                  bool mode_valid_check)
->>> +                  const struct drm_display_mode *mode)
->>>   {
->>>       struct cdns_dsi_output *output = &dsi->output;
->>>       unsigned long long dlane_bps;
->>> @@ -549,11 +540,11 @@ static int cdns_dsi_adjust_phy_config(struct 
->>> cdns_dsi *dsi,
->>>       if (dsi_htotal % lanes)
->>>           adj_dsi_htotal += lanes - (dsi_htotal % lanes);
->>> -    dpi_hz = (mode_valid_check ? mode->clock : mode->crtc_clock) * 
->>> 1000;
->>> +    dpi_hz = mode->crtc_clock * 1000;
->>>       dlane_bps = (unsigned long long)dpi_hz * adj_dsi_htotal;
->>>       /* data rate in bytes/sec is not an integer, refuse the mode. */
->>> -    dpi_htotal = mode_valid_check ? mode->htotal : mode->crtc_htotal;
->>> +    dpi_htotal = mode->crtc_htotal;
->>>       if (do_div(dlane_bps, lanes * dpi_htotal))
->>>           return -EINVAL;
->>> @@ -569,27 +560,25 @@ static int cdns_dsi_adjust_phy_config(struct 
->>> cdns_dsi *dsi,
->>>   static int cdns_dsi_check_conf(struct cdns_dsi *dsi,
->>>                      const struct drm_display_mode *mode,
->>> -                   struct cdns_dsi_cfg *dsi_cfg,
->>> -                   bool mode_valid_check)
->>> +                   struct cdns_dsi_cfg *dsi_cfg)
->>>   {
->>>       struct cdns_dsi_output *output = &dsi->output;
->>>       struct phy_configure_opts_mipi_dphy *phy_cfg = &output- 
->>> >phy_opts.mipi_dphy;
->>>       unsigned int nlanes = output->dev->lanes;
->>> -    int mode_clock = (mode_valid_check ? mode->clock : mode- 
->>> >crtc_clock);
->>>       unsigned long req_hs_clk_rate;
->>>       int ret;
->>> -    ret = cdns_dsi_mode2cfg(dsi, mode, dsi_cfg, mode_valid_check);
->>> +    ret = cdns_dsi_mode2cfg(dsi, mode, dsi_cfg);
->>>       if (ret)
->>>           return ret;
->>> -    ret = phy_mipi_dphy_get_default_config(mode_clock * 1000,
->>> +    ret = phy_mipi_dphy_get_default_config(mode->crtc_clock * 1000,
->>>                              mipi_dsi_pixel_format_to_bpp(output- 
->>> >dev->format),
->>>                              nlanes, phy_cfg);
->>>       if (ret)
->>>           return ret;
->>> -    ret = cdns_dsi_adjust_phy_config(dsi, dsi_cfg, phy_cfg, mode, 
->>> mode_valid_check);
->>> +    ret = cdns_dsi_adjust_phy_config(dsi, dsi_cfg, phy_cfg, mode);
->>>       if (ret)
->>>           return ret;
->>> @@ -635,8 +624,7 @@ cdns_dsi_bridge_mode_valid(struct drm_bridge 
->>> *bridge,
->>>       struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
->>>       struct cdns_dsi *dsi = input_to_dsi(input);
->>>       struct cdns_dsi_output *output = &dsi->output;
->>> -    struct cdns_dsi_cfg dsi_cfg;
->>> -    int bpp, ret;
->>> +    int bpp;
->>>       /*
->>>        * VFP_DSI should be less than VFP_DPI and VFP_DSI should be at
->>> @@ -654,10 +642,6 @@ cdns_dsi_bridge_mode_valid(struct drm_bridge 
->>> *bridge,
->>>       if ((mode->hdisplay * bpp) % 32)
->>>           return MODE_H_ILLEGAL;
->>> -    ret = cdns_dsi_check_conf(dsi, mode, &dsi_cfg, true);
->>> -    if (ret)
->>> -        return MODE_BAD;
->>> -
->>>       return MODE_OK;
->>>   }
->>> @@ -996,7 +980,7 @@ static int cdns_dsi_bridge_atomic_check(struct 
->>> drm_bridge *bridge,
->>>       adjusted_crtc_mode->flags &= ~(DRM_MODE_FLAG_PHSYNC | 
->>> DRM_MODE_FLAG_PVSYNC);
->>>       adjusted_crtc_mode->flags |= DRM_MODE_FLAG_NHSYNC | 
->>> DRM_MODE_FLAG_NVSYNC;
->>> -    return cdns_dsi_check_conf(dsi, mode, dsi_cfg, false);
->>> +    return cdns_dsi_check_conf(dsi, mode, dsi_cfg);
->>
->> With this patch, the driver shifts to using the crtc_* values during the
->> check phase, and then, it is brought back to using non crtc_* values in
->> the next patch.
->>
->> Should this patch just drop the cdns_dsi_check_conf() check from
->> .mode_valid() instead, and let the next patch phase out the
->> mdoe_valid_check parameter as the driver simultaneously shifts to using
->> the non crtc_* values throughout?
+> Right, how hard would it be to decode those as much as possible without
+> having users go look somewhere first?
 > 
-> Yes.
+> I mean, we can always go look somewhere for more info but for starters we
+> should display as much useful information as possible.
 
-Actually, this patch doesn't change the crtc_* vs non-crtc_* behavior. 
-After dropping the cdns_dsi_check_conf() call in mode_valid(), the 
-'mode_valid_check' is always false. So this patch removes the parameter, 
-and any code paths for the true-case.
+Yeah, and I also have an admittedly selfish reason to ask for this: I 
+have a Zen 15h system that is at times unreliable and will 
+spontaneously reboot, and I'd *love* to see whether this reboot-reason 
+register gives me any further insight as to the root cause. :-) 15h 
+appears to be the family when this feature was introduced?
 
-Should the atomic_check() have been using 'true' for the 
-'mode_valid_check'? The atomic_check code was added in 
-a53d987756eab40678f241d7cd0eb7e1ca42bba7.
+Having it printed early straight on bootup in decoded text is very 
+useful for another reason as well: if a system is unreliable it might 
+not make it to userspace to run any tooling ...
 
-  Tomi
+But I think a more structured sysfs entry would be useful as well in 
+addition to the bootup printout (for the raw value if nothing else), if 
+any sysadmin tooling wants to pick up on this register.
 
+Thanks,
+
+	Ingo
