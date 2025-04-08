@@ -1,88 +1,75 @@
-Received: from mta-64-225.siemens.flowmailer.net (mta-64-225.siemens.flowmailer.net [185.136.64.225])
+Received: from lithops.sigma-star.at (mailout.nod.at [116.203.167.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E8C01CAA79
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 08:31:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.64.225
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0800A2185B8
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 08:32:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.167.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744101112; cv=none; b=RKBuBJRWhdH9JQrw1YJQ7S24U8bHy+62VaXa0oDthVfhRsUqawTLuBcZ9dG6er+m/u4l07cdp4jw3I0J+3EvdAj5hgyhVNeiNSjOBiobI/sjv/Ion7owEaVDNiAKDVcRw1QJEAdvqNnFvOy+LiebHWO3vN/KwmIBdqjjVAY1tJo=
+	t=1744101130; cv=none; b=t7dBjeywJRI0NzAQEJOoMZa33bfxkBoKKduVG0wCAI9kSJvvUPWucKwq15vS6SgZaPdNCUG+sfBK2PPw2xKFuqQarIjuODwXktJLP5zUdM1AFpQylEC22OMfvconz2Z/oO00ffg/XLLBvn6DTODeFyzZM/QFP7Ycg/dWi7UWxzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744101112; c=relaxed/simple;
-	bh=Hq7OJ3RwBznOdA733fpGmrFHhd5qVLu5ZN47Y78qB7M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Yf0nXpZAq5p2P7AKyfcSmmJB36sGHp+DATj8cafkDjebNInHKWSQV/bYuVvR7ktUcTTEiKn5S0TyeX5XUbQyZ1lofKcm4UTh/tqM4YvnWj5a9XL2Rb5SC6p3lDc4MjdIIRzf4YxiNE6qb4TfDV0e9SjN7aG05tpjw1qM/0VoCeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=diogo.ivo@siemens.com header.b=eZjKIkFt; arc=none smtp.client-ip=185.136.64.225
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=siemens.com header.i=diogo.ivo@siemens.com header.b="eZjKIkFt"
-Received: by mta-64-225.siemens.flowmailer.net with ESMTPSA id 20250408083140db01be244c7ae4121c
-        for <linux-kernel@vger.kernel.org>;
-        Tue, 08 Apr 2025 10:31:40 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
- d=siemens.com; i=diogo.ivo@siemens.com;
- h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
- bh=aWpO5qb18Mjrv4G9P3h8hBHuno7AfWs3U1lfu4A/j7o=;
- b=eZjKIkFtN42XbkSvuCCCHrc8/AuX8zzbomK2+pWvDT74ckB2Itv7Sn8gjVqGwQSZhbCYI6
- ZikeGt/ZJ+S7gUzYpf44yas18L+bqVb3Ed2Ahjlygsr9Grp/u+XofI+H2B5AZvmm+TpRi70V
- MxHtCEmat8Ktqvr/nZGy3mHS8hv+YwuNXkIF1HwXTXMPUxQz8nAleqDheqLaG9c+VzsB85uS
- QSiv4sNrrZt2nBw0vPXxHJ82gkoSX2KOWiggdiDvlSZkMDlcZomoxIpAmdjZQWnMXS7cR7lI
- WAHgIoe5iAZlwZSK7/2rwPDpnHbG22tT1Tr8PfOjCNONZmUZu77c82JQ==;
-Message-ID: <daeedd95-1d4a-4d17-baa1-9c1580095de9@siemens.com>
-Date: Tue, 8 Apr 2025 09:31:37 +0100
+	s=arc-20240116; t=1744101130; c=relaxed/simple;
+	bh=90SrCrs81hNJWtigTXEVNegwc743G6HzjvtKDCKtgPs=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=YYtY4kyqrqgHJiMa9QgEApt01zheCcpZNIgbS2MNdU48Jizxw6k9Hdb0hnxC89xjXvEldGxAK4G+HsQRBKztq1fVsFHMeH5soYOibjDSqsA/0sEwyrizeBDuITh/Z/voMk/CR5aw9TLYNNnA0lO2N1GcivsyysJ3g7cgE9tJxYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at; spf=fail smtp.mailfrom=nod.at; arc=none smtp.client-ip=116.203.167.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nod.at
+Received: from localhost (localhost [127.0.0.1])
+	by lithops.sigma-star.at (Postfix) with ESMTP id 4858429857F;
+	Tue,  8 Apr 2025 10:32:00 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id 1lnWBbfX9w58; Tue,  8 Apr 2025 10:31:59 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by lithops.sigma-star.at (Postfix) with ESMTP id 6CD5D29858C;
+	Tue,  8 Apr 2025 10:31:59 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id J3zOUV0J1bVT; Tue,  8 Apr 2025 10:31:59 +0200 (CEST)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+	by lithops.sigma-star.at (Postfix) with ESMTP id 4EF8B29857F;
+	Tue,  8 Apr 2025 10:31:59 +0200 (CEST)
+Date: Tue, 8 Apr 2025 10:31:59 +0200 (CEST)
+From: Richard Weinberger <richard@nod.at>
+To: Francesco Dolcini <francesco@dolcini.it>
+Cc: linux-mtd <linux-mtd@lists.infradead.org>, 
+	Matthew Wilcox <willy@infradead.org>, 
+	chengzhihao1 <chengzhihao1@huawei.com>, 
+	regressions <regressions@lists.linux.dev>, 
+	linux-kernel <linux-kernel@vger.kernel.org>
+Message-ID: <1082087744.255264119.1744101119060.JavaMail.zimbra@nod.at>
+In-Reply-To: <20250408082018.GA23886@francesco-nb>
+References: <20250408082018.GA23886@francesco-nb>
+Subject: Re: Linux 6.15-rc1 regression, folio/ubifs Oops
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 1/2] watchdog: Add driver for Intel OC WDT
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>
-Cc: linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-watchdog@vger.kernel.org, jan.kiszka@siemens.com,
- benedikt.niedermayr@siemens.com
-References: <20250317-ivo-intel_oc_wdt-v3-0-32c396f4eefd@siemens.com>
- <20250317-ivo-intel_oc_wdt-v3-1-32c396f4eefd@siemens.com>
-Content-Language: en-US
-From: Diogo Ivo <diogo.ivo@siemens.com>
-In-Reply-To: <20250317-ivo-intel_oc_wdt-v3-1-32c396f4eefd@siemens.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Flowmailer-Platform: Siemens
-Feedback-ID: 519:519-1328357:519-21489:flowmailer
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF136 (Linux)/8.8.12_GA_3809)
+Thread-Topic: Linux 6.15-rc1 regression, folio/ubifs Oops
+Thread-Index: JAPy6KTdykUlw4jPDAxg3vJ2RwMacQ==
 
-Hello,
+----- Urspr=C3=BCngliche Mail -----
+> Von: "Francesco Dolcini" <francesco@dolcini.it>
+> An: "richard" <richard@nod.at>, "linux-mtd" <linux-mtd@lists.infradead.or=
+g>, "Matthew Wilcox" <willy@infradead.org>,
+> "chengzhihao1" <chengzhihao1@huawei.com>
+> CC: "regressions" <regressions@lists.linux.dev>, "linux-kernel" <linux-ke=
+rnel@vger.kernel.org>
+> Gesendet: Dienstag, 8. April 2025 10:20:18
+> Betreff: Linux 6.15-rc1 regression, folio/ubifs Oops
 
-On 3/17/25 10:55 AM, Diogo Ivo wrote:
-> Add a driver for the Intel Over-Clocking Watchdog found in Intel
-> Platform Controller (PCH) chipsets. This watchdog is controlled
-> via a simple single-register interface and would otherwise be
-> standard except for the presence of a LOCK bit that can only be
-> set once per power cycle, needing extra handling around it.
-> 
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> Signed-off-by: Diogo Ivo <diogo.ivo@siemens.com>
-> ---
-> v2->v3:
->   - Collect R-b from Guenter
-> 
-> v1->v2:
->   - Split v1 into two patches, adding the ACPI IDs in a separate patch
->   - Initialize hearbeat module parameter to zero
->   - Clarify wording around lock handling
->   - Properly print resource with %pR when failing to obtain it
->   - Enable compile testing and add dependency on HAS_IOPORT
->   - Drop unneeded ACPI_PTR() and MODULE_ALIAS()
-> ---
-> ---
->   drivers/watchdog/Kconfig        |  11 ++
->   drivers/watchdog/Makefile       |   1 +
->   drivers/watchdog/intel_oc_wdt.c | 233 ++++++++++++++++++++++++++++++++++++++++
->   3 files changed, 245 insertions(+)
-> 
+> Hello all,
+> I do have the following regression on single core system using UBIFS,
+> dual core seems not affected, any idea?
 
-Gentle ping on this patch.
+I'm still massively behind my schedule, but I'd suspect it has something to=
+ do with
+https://patchwork.ozlabs.org/project/linux-mtd/list/?series=3D448466
 
-Best regards,
-Diogo
+Thanks,
+//richard
