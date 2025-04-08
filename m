@@ -1,206 +1,146 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64DB4225779
-	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 15:23:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CE4639AD6
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 15:23:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744125806; cv=none; b=WFvssufUbNWj/dbQHSBuUyoplCtCeuX+qH8Snfg/pYxNQ62rHjH6jPvd8L4r10xu4SOYIDecI02jpKOmZgoNQcaerRgnEe7CcpPsDl08SEf3m/LpLFmOUSkuUFnSQVF8q5wdCr1nOAL4R/Jo38OXZbsxY/dkc4k5zLfyGHz72sI=
+	t=1744125818; cv=none; b=L8L/MbPZDWyTOUxrQhqtMFSQvl6Ywdzb9GaFWSlRwr8S+VcZypRSWrZjEnf09izKCjg3ELyVdnwYh0miF4Wsb9fx/9Zxt20D5kqMBls/vq3yPm9H5UHqK7wJ7lwh/JT/fiFH821m9yiAKZd5ocGpcsB+4fjB/5dJ7wAX2lXLm8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744125806; c=relaxed/simple;
-	bh=c3ebzZgArsGyzgatMkw6+bT9Yrl9e+gUFSCdjTuBYNo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SQ/SHAF/vARo4CgNdvsr9xbaDWBvUSvcOG9jtQizEAhSNRJI3dqHe5B1z1/ebRBNUoVUT1p/D+JRqLtPMzQzlbCXRKS0By5AmMCuvHeMMMcvxfbyfH2F2GpwCxrhGcFO3KeyYmX0w4AGVKubHo5jpSx7TbcSxnqi3dciGvZExxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=PMpqta++; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1744125818; c=relaxed/simple;
+	bh=aBGY5VnvleP+F8vMPlH07gsy/nK8dijdNvQCx5soGGg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NsG60UY2wDe2wHrL1jWh1lzluDMJZQm3nHNhIvLmEmZBDIEYrat8uiqRPeLvpJKrXYhIRKj5OHKBgePXoP+4DzynoHdRdz1IVVqIuV21zRYkjOq5vjAhdiiOIi9GKrfgZddmHlw/YfexWcOBL8k/HHijIvA5rGuBo67+ntQ+XgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=GV9cJy5/; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="PMpqta++"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-39973c72e8cso588508f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 08:23:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1744125802; x=1744730602; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8zwEfz0M9syRgyVjL+64xAeyGIPn5+uO3NdMeHbCP0Y=;
-        b=PMpqta++egWktG91Jz565BrvfEKL8AT9OqKbnqlD3XTsLeNK2GZ+cyNpm7SYDUQXPO
-         318yqChrOwWVRBMMCq2E/NuUFk4UwOeOp48/RlYBHAiPlxZABfFsAqlsyOxpxXUkBud1
-         REXiN6fxU0boUnHc6sZ4T66H6e8TOmXl4mDMgrca1SRdgd6ZM9gqi+vAPs/wCNusG7/9
-         fam2vxNuqt+jIQ90eD04mFO2eeHyvVm0y5dAFqs/M+ju0mrZk9mgPZl3r8929AhCJHXf
-         nAKcaBS4Wv4oj4oLx6x525bVS6Oo409wYsMzTbombQ/nWsvPHFRR6Dcf6KEM0xbVMJ31
-         H/hQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="GV9cJy5/"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 538BGKeS015134
+	for <linux-kernel@vger.kernel.org>; Tue, 8 Apr 2025 15:23:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	NF2u+J3xRv/jYqarjPk3YREaPbF9uPD/ZqubOMJkE28=; b=GV9cJy5/gv6dXktH
+	iTr4SZT3ZHPLPkuMcdGhP8TuBaGTFXPtOFpuO4Mhc8X7iIgaxHilf+ABS7c8Zuo4
+	+vbZVjbk2UcHQ5QXNdfdRdB3AdIcCUWCZs4N2EBb+7aZn3A3OBGbG646ey8CC9yd
+	lwUKwHJG49gWfRufKqA0iigzViGeh8AeoFuicgW27VDebTZQfMmQMS7pMF47f471
+	zttAXcpSt8Y0MWYpreM7KYGS7r0CMPEOi4W4PA5yeu5lz97fwwsbtg0ac46DyOUj
+	ZOErYeuyoXIrpb/Oo6iMH9LFdBPR0578l1h7xf+H0AyuOx1gnTxigdLdeyjzQ293
+	P6IRfg==
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twbug8u2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 15:23:36 +0000 (GMT)
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2240c997059so72269275ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 08:23:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744125802; x=1744730602;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8zwEfz0M9syRgyVjL+64xAeyGIPn5+uO3NdMeHbCP0Y=;
-        b=tkhiWxIM7fUt9Hoz/7pFCfZi/XHhlrzEvAIKapzVvrT5zPUrRzH/JFTtXY5ngF6SXM
-         8RfzyGQLovGJ3fAd7rasXvQXU17suxW7FcKP03Z/gDJRIwWrdqRfd30ISMjywfxrYvZp
-         qO/DLoiWYGaicZDOqoZkx5DCAaj69lxcbuZwJbnBYvygCtYrf+s63fu+IfKkHhH036mL
-         Adoo4laMXOdk7PDqNvPKavCUsAPltZ7Hqn1apGUBqL6DU91spWbErC2GtE57piapjDIF
-         ZRmDygi0id6YgraQUTlhGq2AW80xs0DUrcFYb3H6gaVOGVughQsw+QVfwGRPNuX7TNag
-         QU8w==
-X-Forwarded-Encrypted: i=1; AJvYcCX/AdrL1iSK3aNuqyn+jM94TMJAZSUwdi8dnFwKR0RboG8dUeXOIoWO9KH1cClKB8iIkEzTh6Ly6xkIERw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVlGbIbnZ32rHZ5OvLizWWt3KIXsTFA4lcKrc7Wybp1AF2KSB6
-	umqGeXA/9WmH57ewWlzD1ESfRONv3lHtiOpq3aMarLI46uTYQL/DYjCD5428hKM=
-X-Gm-Gg: ASbGncuxytqvRRJxcr7IpR+hPq5DlEq19UZTSxZ9ddzlAeTsIBYw+/LFKrcaxCFY9FN
-	iWUWucToDmsnx/cSvG0TLJSPqy+SX+oyXcP4bX9wBsKVXFq4hXZGK4zzWEq6U2Ah7fb0PT9Btug
-	O2hr0IKh6Rbuad1zSUOtBqJA5Way/py177ISSvFVDW4ezILfxhFRzkV2XErfOxeSo0CU6GEIcNj
-	wNs8DHGP6++E0YV1+H0Xcl/1pOLtqN2Gtfpe8mCPoqyaYmD65zcCO1fVoB3LKiHa9kyvtWNzbeG
-	fT1RTZE2D45HNFMQUrqwXwuAiL2O16Wg+5IeGjxmwbfEcA==
-X-Google-Smtp-Source: AGHT+IGanaXzQIEy7PI/vaTXp0uLeqwyePzm3pTltYqzf5ygB+AndYs3nwO/6+6WbzKBl+mxL7TxmQ==
-X-Received: by 2002:a05:6000:2511:b0:391:320d:95de with SMTP id ffacd0b85a97d-39cb359e2b0mr5971636f8f.4.1744125802568;
-        Tue, 08 Apr 2025 08:23:22 -0700 (PDT)
-Received: from p15.suse.cz ([202.127.77.110])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-739d9e9dc9dsm10990155b3a.96.2025.04.08.08.23.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 08:23:21 -0700 (PDT)
-From: Heming Zhao <heming.zhao@suse.com>
-To: joseph.qi@linux.alibaba.com
-Cc: Heming Zhao <heming.zhao@suse.com>,
-	ocfs2-devel@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	gautham.ananthakrishna@oracle.com
-Subject: [PATCH 1/1] ocfs2: fix the issue with discontiguous allocation in the global_bitmap
-Date: Tue,  8 Apr 2025 23:23:05 +0800
-Message-ID: <20250408152311.16196-2-heming.zhao@suse.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250408152311.16196-1-heming.zhao@suse.com>
-References: <20250408152311.16196-1-heming.zhao@suse.com>
+        d=1e100.net; s=20230601; t=1744125815; x=1744730615;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NF2u+J3xRv/jYqarjPk3YREaPbF9uPD/ZqubOMJkE28=;
+        b=ZNqaaepQaMl31DrfGOjuHALwIBGjMAHkIUNCgxkmcgHXmkmEd0y3kq2HvravPbdoYB
+         ZAx2snoBg1yaBxwipqBAymJQ1Bf5a8OsU+2LgTffX7J43aschTPCb7kgTPwKO8fhre5L
+         a+bq11Qv6+LooyE4F7JSyLMFf55kL9leZu6K5CGWU61TjWHyGsajSxUBCjn8Lt3IReK4
+         99ML8vBVI8hTfF+7Y5zr2Sw17vjkQvob9OuIaPjT3iQP66A0Sme7iPEB8iJysoy+iaTT
+         z2FEFnjxL3wkWHdetq6XeAU//Q2sBYDFIz8jc5TA33ZvaKy1XDrYTziqegzHMEdJiASc
+         F0gg==
+X-Forwarded-Encrypted: i=1; AJvYcCVZL4VA8MYs0xj0t3l9Z6RJllpmRigexlYIG4btaVkNY6618s1WaWvc+Qky7Z05V48/jF1qDnKG6qaB/Z0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/9FaPj0PS1ruA8x+T+DMHiv3DxAojp6mftCLG1QoYza2YmxS7
+	8uNBvz/dDvTH2sDCnfWpEC9MsmzKS3mYdSj6RtuQORBdD5EhGGAIKtYru2u+Or0xtxamF5pgDtj
+	Q9DbxIFLobfn2HQzzZxVJGvAbXMMTHU+Z1aU9WQMOoZD/my3KBqxFuCFsUZD/+ns=
+X-Gm-Gg: ASbGnct45fed7HMenBn5SzkBlPRVURBFQdvTPdBzi620RwV3XuqwyPlnvBvetSuG+ZN
+	QURy/oFb9hvP2+YeXnzWPO9dELqkMbNpUZ6rWRRLYFRVeN3JRp2rYMISMmmvtAcGFU5xqOtUQPX
+	9cyZvvsvJ3E8ceHmCOjO++ldM4yFyTc1k6raZS4nQpG5iDrsd7mgop77uo0uuhmmxwcIlgdAcSk
+	gcam3fZgWpPdAN+OooJZRL01AtHeoeN/LqPnb+Q7AWbMnQ9RjXWOPCMEwKGH2BzYZbPre5+pHRD
+	7ReUvYKevGcQwNwl4Y7qcRe/AkhCmI0lETlyaQGO2hjEW4xL0IRw6i0WVG5BKgmevJVzRDw=
+X-Received: by 2002:a17:903:3ba7:b0:215:9642:4d7a with SMTP id d9443c01a7336-22a95428babmr189625055ad.0.1744125814598;
+        Tue, 08 Apr 2025 08:23:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHrdN25OA1XG8KyNqW7/XlHJMumnbDPU5Qnl4hGT38grG496JV/Pr0d9saQWHGnZ0hfOM5Gfg==
+X-Received: by 2002:a17:903:3ba7:b0:215:9642:4d7a with SMTP id d9443c01a7336-22a95428babmr189624405ad.0.1744125813874;
+        Tue, 08 Apr 2025 08:23:33 -0700 (PDT)
+Received: from [10.227.110.203] (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229785ad8f8sm101872065ad.42.2025.04.08.08.23.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Apr 2025 08:23:33 -0700 (PDT)
+Message-ID: <ee51a503-6580-4f46-aa38-77f1b9ba6535@oss.qualcomm.com>
+Date: Tue, 8 Apr 2025 08:23:31 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: build failure after merge of the ath-next tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>,
+        "Dr. David Alan Gilbert" <linux@treblig.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>
+Cc: Kalle Valo <kvalo@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
+        Balamurugan S <quic_bselvara@quicinc.com>,
+        P Praneesh <quic_ppranees@quicinc.com>,
+        Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>,
+        Ath10k List <ath10k@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+References: <20250408105146.459dfcf5@canb.auug.org.au>
+ <Z_R2lEVjqn2Y3_sP@gallifrey> <20250408113747.3a10275a@canb.auug.org.au>
+ <26cafcbb-6a94-40ab-aabf-3c9943cfb925@oss.qualcomm.com>
+From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+Content-Language: en-US
+In-Reply-To: <26cafcbb-6a94-40ab-aabf-3c9943cfb925@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: JtEyYsnUs2hoeGFa6lMuc5uGSVeDhyaj
+X-Proofpoint-ORIG-GUID: JtEyYsnUs2hoeGFa6lMuc5uGSVeDhyaj
+X-Authority-Analysis: v=2.4 cv=dbeA3WXe c=1 sm=1 tr=0 ts=67f53f78 cx=c_pps a=IZJwPbhc+fLeJZngyXXI0A==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=3WJfbomfAAAA:8 a=rOUgymgbAAAA:8 a=HC-cJF9i_tize61FGOsA:9 a=QEXdDO2ut3YA:10
+ a=uG9DUKGECoFWVXl0Dc02:22 a=1cNuO-ABBywtgFSQhe9S:22 a=MP9ZtiD8KjrkvI0BhSjB:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-08_06,2025-04-08_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ suspectscore=0 mlxlogscore=977 phishscore=0 mlxscore=0 spamscore=0
+ malwarescore=0 clxscore=1015 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504080107
 
-The commit 4eb7b93e0310 ("ocfs2: improve write IO performance when
-fragmentation is high") introduced another regression.
+On 4/8/2025 8:09 AM, Jeff Johnson wrote:
+> On 4/7/2025 6:37 PM, Stephen Rothwell wrote:
+>> Hi Dave,
+>>
+>> On Tue, 8 Apr 2025 01:06:28 +0000 "Dr. David Alan Gilbert" <linux@treblig.org> wrote:
+>>>
+>>> * Stephen Rothwell (sfr@canb.auug.org.au) wrote:
+>>>>
+>>>> After merging the ath-next tree, today's linux-next build (x86_64
+>>>> allmodconfig) failed like this:
+>>>>
+>>>> drivers/net/wireless/ath/ath12k/ahb.c: In function 'ath12k_ahb_stop':
+>>>> drivers/net/wireless/ath/ath12k/ahb.c:337:9: error: implicit declaration of function 'del_timer_sync'; did you mean 'dev_mc_sync'? [-Wimplicit-function-declaration]
+>>>>   337 |         del_timer_sync(&ab->rx_replenish_retry);
+>>>>       |         ^~~~~~~~~~~~~~
+>>>>       |         dev_mc_sync
+>>>>
+>>>> Caused by commit
+>>>>
+>>>>   6cee30f0da75 ("wifi: ath12k: add AHB driver support for IPQ5332")
+>>>>
+>>>> I have used the ath-next tree from next-20250407 for today.  
+>>>
+>>> I guess a clash with the recent:
+>>> Fixes: 8fa7292fee5c ("treewide: Switch/rename to timer_delete[_sync]()")
+>>
+>> I will try that out tomorrow.
+> 
+> Yes, looks like you'll need to carry a patch:
+> s/del_timer_sync/timer_delete_sync/
+> 
+> Until that renaming patch makes it down to my tree and we rename.
 
-The following ocfs2-test case can trigger this issue:
-> ${RESV_UNWRITTEN_BIN} -f ${WORK_PLACE}/large_testfile -s 0 -l \
-> $((${FILE_MAJOR_SIZE_M}*1024*1024))
+NM. Since the timer_delete_sync() API is already in my tree I can make a
+one-off patch for this.
 
-In my env, test disk size (by "fdisk -l <dev>"):
-> 53687091200 bytes, 104857600 sectors.
-
-Above command is:
-> /usr/local/ocfs2-test/bin/resv_unwritten -f \
-> /mnt/ocfs2/ocfs2-activate-discontig-bg-dir/large_testfile -s 0 -l \
-> 53187969024
-
-Error log:
-> [*] Reserve 50724M space for a LARGE file, reserve 200M space for future test.
-> ioctl error 28: "No space left on device"
-> resv allocation failed Unknown error -1
-> reserve unwritten region from 0 to 53187969024.
-
-Call flow:
-__ocfs2_change_file_space //by ioctl OCFS2_IOC_RESVSP64
- ocfs2_allocate_unwritten_extents //start:0 len:53187969024
-  while()
-   + ocfs2_get_clusters //cpos:0, alloc_size:1623168 (cluster number)
-   + ocfs2_extend_allocation
-     + ocfs2_lock_allocators
-     |  + choose OCFS2_AC_USE_MAIN & ocfs2_cluster_group_search
-     |
-     + ocfs2_add_inode_data
-        ocfs2_add_clusters_in_btree
-         __ocfs2_claim_clusters
-          ocfs2_claim_suballoc_bits
-          + During the allocation of the final part of the large file
-	    (around 47GB), no chain had the required contiguous
-            bits_wanted. Consequently, the allocation failed.
-
-How to fix:
-When OCFS2 is encountering fragmented allocation, the file system should
-stop attempting bits_wanted contiguous allocation and instead provide the
-largest available contiguous free bits from the cluster groups.
-
-Signed-off-by: Heming Zhao <heming.zhao@suse.com>
-Fixes: 4eb7b93e0310 ("ocfs2: improve write IO performance when fragmentation is high")
----
- fs/ocfs2/suballoc.c | 36 +++++++++++++++++++++++++++++-------
- 1 file changed, 29 insertions(+), 7 deletions(-)
-
-diff --git a/fs/ocfs2/suballoc.c b/fs/ocfs2/suballoc.c
-index fde75f2af37a..2e1689fc6cf7 100644
---- a/fs/ocfs2/suballoc.c
-+++ b/fs/ocfs2/suballoc.c
-@@ -1796,6 +1796,7 @@ static int ocfs2_search_chain(struct ocfs2_alloc_context *ac,
- {
- 	int status;
- 	u16 chain;
-+	u32 contig_bits;
- 	u64 next_group;
- 	struct inode *alloc_inode = ac->ac_inode;
- 	struct buffer_head *group_bh = NULL;
-@@ -1821,10 +1822,23 @@ static int ocfs2_search_chain(struct ocfs2_alloc_context *ac,
- 	status = -ENOSPC;
- 	/* for now, the chain search is a bit simplistic. We just use
- 	 * the 1st group with any empty bits. */
--	while ((status = ac->ac_group_search(alloc_inode, group_bh,
--					     bits_wanted, min_bits,
--					     ac->ac_max_block,
--					     res)) == -ENOSPC) {
-+	while (1) {
-+		if (ac->ac_which == OCFS2_AC_USE_MAIN_DISCONTIG) {
-+			contig_bits = le16_to_cpu(bg->bg_contig_free_bits);
-+			if (!contig_bits)
-+				contig_bits = ocfs2_find_max_contig_free_bits(bg->bg_bitmap,
-+						le16_to_cpu(bg->bg_bits), 0);
-+			if (bits_wanted > contig_bits)
-+				bits_wanted = contig_bits;
-+			if (bits_wanted < min_bits)
-+				bits_wanted = min_bits;
-+		}
-+
-+		status = ac->ac_group_search(alloc_inode, group_bh,
-+				bits_wanted, min_bits,
-+				ac->ac_max_block, res);
-+		if (status != -ENOSPC)
-+			break;
- 		if (!bg->bg_next_group)
- 			break;
- 
-@@ -1984,6 +1998,7 @@ static int ocfs2_claim_suballoc_bits(struct ocfs2_alloc_context *ac,
- 	victim = ocfs2_find_victim_chain(cl);
- 	ac->ac_chain = victim;
- 
-+search:
- 	status = ocfs2_search_chain(ac, handle, bits_wanted, min_bits,
- 				    res, &bits_left);
- 	if (!status) {
-@@ -2024,6 +2039,16 @@ static int ocfs2_claim_suballoc_bits(struct ocfs2_alloc_context *ac,
- 		}
- 	}
- 
-+	/* Chains can't supply the bits_wanted contiguous space.
-+	 * We should switch to using every single bit when allocating
-+	 * from the global bitmap. */
-+	if (i == le16_to_cpu(cl->cl_next_free_rec) &&
-+	    status == -ENOSPC && ac->ac_which == OCFS2_AC_USE_MAIN) {
-+		ac->ac_which = OCFS2_AC_USE_MAIN_DISCONTIG;
-+		ac->ac_chain = victim;
-+		goto search;
-+	}
-+
- set_hint:
- 	if (status != -ENOSPC) {
- 		/* If the next search of this group is not likely to
-@@ -2432,9 +2457,6 @@ int ocfs2_claim_clusters(handle_t *handle,
- {
- 	unsigned int bits_wanted = ac->ac_bits_wanted - ac->ac_bits_given;
- 
--	if (ac->ac_which == OCFS2_AC_USE_MAIN_DISCONTIG)
--		bits_wanted = min_clusters;
--
- 	return __ocfs2_claim_clusters(handle, ac, min_clusters,
- 				      bits_wanted, cluster_start, num_clusters);
- }
--- 
-2.43.0
-
+/jeff
