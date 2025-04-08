@@ -1,129 +1,173 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B14B191F79;
-	Tue,  8 Apr 2025 17:14:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2AC152532
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 17:15:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744132497; cv=none; b=KbnoOceYT49FkgKqIIfuMcNMcNda+sZ7YcCZDwVtO/oddFXJVAsweD8HD71OUqrEI2nCNHrU8UYzwxQ/O3PRt+yZYRO9viqB7R5Tts3kjhtuCs2KokGuphtScbIDipEvBdcouAmEN1ZVPC/zgFdV+d3Unc45xTsM9QGQ745Nkn8=
+	t=1744132561; cv=none; b=Hpz9zwofR3/jhLAdaGenqsll+pJWZHH6heJ25VIUk0C7MhMUQYiOS34YbrEgdiVfuDkxhHm5RhLh4s1Y1MWeQ6kBpQedlqEv3dtukqOYPZ9cYn7kmiIO1fQriTOfnw05lwugymDNAW4Fm5/5O61MUgBDpUcET4qsV+SYfY27JVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744132497; c=relaxed/simple;
-	bh=jcyK2mN7KL6A10vMwCASXq/OxRL74veeQ/dmNNMAYtQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oMNxVKlg3ZLOv3weqJRYc1QtnauhPvtSyIqZ6asoDUXjCEIuLFoVbNoPwtKRAnmPSeZp4tDuYblTLh0RA9z1PhGp6J35eseBBULvgfND4RkoDjJLYyER+kQoVo/qd10MmQ8PXoBdeUWHE0ZKCs4AHUKE27d0LjXK2oa+1vSrKpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fomichev.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fomichev.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-22580c9ee0aso64127225ad.2;
-        Tue, 08 Apr 2025 10:14:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744132494; x=1744737294;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AW5WeJLIZtIq8T9byhQyeBBnS+bdUWcEU8FgEy7dvi0=;
-        b=OtI1nQ9d+LCoRF4rt3RgkRzxg3KoZoXRSic/Xu87nDPJOsJjyUkcuxvReML/JXh90Y
-         /AXi+94MAxt1/hwlv5XNBdq1oEki4asmc6dbIGryWF+6athU4qiWeubuIcbanplnpku8
-         JsudhSNW5zZ3MkGmuRII5EE5T2zx+BjukDfDv/FrmHQVyThoKL+vAdUBmolDtsxm26ar
-         SOwMlvq6Be7ZV7ygspv8+cZjzb7jEMFvGaKxqPEQABE5AsSZiaCtDAADBbzrcSVxk6U+
-         jrcn6omA4kGQknv53keeSsG/0OY8TrbuYXvhcefTjQwAJ70xanZLG47X68alo1RBqZ5c
-         gLeA==
-X-Forwarded-Encrypted: i=1; AJvYcCXuidifYiYOc7sxoWJ8cfTgNvOKjQl2m0ZbRx3bZ5axkTxqQMa3Q7A5gUoa6K+CLk0TAr2LAnEgLo6pQC8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhiAZeDCGZhTCw3LesQeylGkPj5+im4kRF6hw4LaKOBFGoPq86
-	aJmEQNJkJ/dNd7AsVH8xpsczabQwCNLSDYJS4CjIRaPUmqnlVHvaqbn6
-X-Gm-Gg: ASbGncv/BZP2QwJep04bWlwWO+WkSRtQ5bjhR+y7+gf2jv+4MJqe1IftxGFcnnU7CP3
-	syJLLgRrGY9d0JwVRTutU05gkTzaOLZ8gDoVVUW58oYJpT6K29bMZ83RIZS6lnHK8NqGiUMwA4P
-	ad09s05ijEVUELZI8b+BPjfu1yAyl/dk3R8BwuX9iGkQwWHcEGgeGNY74wS5svfjndBUutzW4tu
-	f2KoulGxloezS45scpSzWbCv++0xNLkSpjziuyO9FhtHbb2pdA12v3KHN+ju3bygMhy0EAI7uKE
-	RMARcqzDGVOs2kVAkLCOCWQ4WKbGRrX2507qkRzoqY9b
-X-Google-Smtp-Source: AGHT+IE6rpUteQ6/c4exxF09OpehWY2Hv9kpbP0+sLAH3pLaunBDR4/hyikJ8JyzkiV/Sq847v+J1A==
-X-Received: by 2002:a17:902:cf07:b0:223:f9a4:3f99 with SMTP id d9443c01a7336-22ac29c19f4mr449465ad.29.1744132493955;
-        Tue, 08 Apr 2025 10:14:53 -0700 (PDT)
-Received: from localhost ([2601:646:9e00:f56e:123b:cea3:439a:b3e3])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2297866e161sm102717155ad.171.2025.04.08.10.14.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 10:14:53 -0700 (PDT)
-From: Stanislav Fomichev <sdf@fomichev.me>
-To: netdev@vger.kernel.org
-Cc: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	jv@jvosburgh.net,
-	andrew+netdev@lunn.ch,
-	sdf@fomichev.me,
-	linux-kernel@vger.kernel.org,
-	syzbot+48c14f61594bdfadb086@syzkaller.appspotmail.com
-Subject: [PATCH net] bonding: hold ops lock around get_link
-Date: Tue,  8 Apr 2025 10:14:51 -0700
-Message-ID: <20250408171451.2278366-1-sdf@fomichev.me>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1744132561; c=relaxed/simple;
+	bh=+VvQP+mjfJDGDMFkKUdxSWXUqOh1jGtEhT9k+khcEoU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=itZKDmGh+8/MRElCWnfVMnHeZv0iJJ3W5/J748eKxEztV+l9GL9yvmLsZmW3jdoIMmbHS/wJL5ygqfMBds2eiBt6JWkS34fO1dlgjg4cVAaqUDlJbn4KXY8wI7HS1nIz020HyNtRXEwSni/9my2TyCd1z7C3GgovOSlCXp09KxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=nKr96tU5; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=I1hJi2J2; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=nKr96tU5; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=I1hJi2J2; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="nKr96tU5";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="I1hJi2J2";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="nKr96tU5";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="I1hJi2J2"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 7BA4E21172;
+	Tue,  8 Apr 2025 17:15:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744132557; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fFDkzudU6b7rRTJepopLEUgnc++zltkgknW9T8h6Oz0=;
+	b=nKr96tU5MnGdf+sY/Lt+sBC0bgbD3DmIHIOXOIbe4eIpC51EXegJz28/aPaepjcUVsSjUy
+	IhK7HHpcFP66jO/sJKzRI5/t6cF+t6xIbUlv6AwvGTmUmG5rxXhV7yuTxHJWACza32OFqb
+	IVtTxp20F2yl4VBMiFRPY6elrI8mrtY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744132557;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fFDkzudU6b7rRTJepopLEUgnc++zltkgknW9T8h6Oz0=;
+	b=I1hJi2J2vsdpcvukNYGunV4PQiW05o0S1UN6NVTV3wahbjjAB6C4K5SK2ROuLL2ntDipLl
+	tHoYDyC/VrvQleDA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744132557; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fFDkzudU6b7rRTJepopLEUgnc++zltkgknW9T8h6Oz0=;
+	b=nKr96tU5MnGdf+sY/Lt+sBC0bgbD3DmIHIOXOIbe4eIpC51EXegJz28/aPaepjcUVsSjUy
+	IhK7HHpcFP66jO/sJKzRI5/t6cF+t6xIbUlv6AwvGTmUmG5rxXhV7yuTxHJWACza32OFqb
+	IVtTxp20F2yl4VBMiFRPY6elrI8mrtY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744132557;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fFDkzudU6b7rRTJepopLEUgnc++zltkgknW9T8h6Oz0=;
+	b=I1hJi2J2vsdpcvukNYGunV4PQiW05o0S1UN6NVTV3wahbjjAB6C4K5SK2ROuLL2ntDipLl
+	tHoYDyC/VrvQleDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 65FE813691;
+	Tue,  8 Apr 2025 17:15:57 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id nlOBGM1Z9WfkeAAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Tue, 08 Apr 2025 17:15:57 +0000
+Message-ID: <7c60fb0b-fc28-4a69-836a-5cc311890300@suse.cz>
+Date: Tue, 8 Apr 2025 19:15:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] MAINTAINERS: add memory advice section
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@redhat.com>, Jann Horn <jannh@google.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20250408161105.156350-1-lorenzo.stoakes@oracle.com>
+ <acwykb6o3cqda46aq6li6jzjq2rovjlsuf25didyln7mfcguws@z3c2p5n6aand>
+Content-Language: en-US
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <acwykb6o3cqda46aq6li6jzjq2rovjlsuf25didyln7mfcguws@z3c2p5n6aand>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,nod.at:email,linux-foundation.org:email,oracle.com:email]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-syzbot reports a case of ethtool_ops->get_link being called without
-ops lock:
+On 4/8/25 19:00, Liam R. Howlett wrote:
+> * Lorenzo Stoakes <lorenzo.stoakes@oracle.com> [250408 12:11]:
+>> The madvise code straddles both VMA and page table manipulation. As a
+>> result, separate it out into its own section and add maintainers/reviewers
+>> as appropriate.
+>> 
+>> We additionally include the mman-common.h file as this contains the shared
+>> madvise flags and it is important we maintain this alongside madvise.c.
+>> 
+>> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> 
+> Acked-by: Liam R. Howlett <Liam.Howlett@oracle.com>
 
- ethtool_op_get_link+0x15/0x60 net/ethtool/ioctl.c:63
- bond_check_dev_link+0x1fb/0x4b0 drivers/net/bonding/bond_main.c:864
- bond_miimon_inspect drivers/net/bonding/bond_main.c:2734 [inline]
- bond_mii_monitor+0x49d/0x3170 drivers/net/bonding/bond_main.c:2956
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xac3/0x18e0 kernel/workqueue.c:3319
- worker_thread+0x870/0xd50 kernel/workqueue.c:3400
- kthread+0x7b7/0x940 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
 
-Commit 04efcee6ef8d ("net: hold instance lock during NETDEV_CHANGE")
-changed to lockless __linkwatch_sync_dev in ethtool_op_get_link.
-All paths except bonding are coming via locked ioctl. Add necessary
-locking to bonding.
+> 
+>> ---
+>>  MAINTAINERS | 13 +++++++++++++
+>>  1 file changed, 13 insertions(+)
+>> 
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index de97cd54ff24..325424a53acf 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -15552,6 +15552,19 @@ F:	mm/vma.h
+>>  F:	mm/vma_internal.h
+>>  F:	tools/testing/vma/
+>>  
+>> +MEMORY MAPPING - MEMORY ADVICE
+> 
+> Advice or advise?
 
-Reported-by: syzbot+48c14f61594bdfadb086@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=48c14f61594bdfadb086
-Fixes: 04efcee6ef8d ("net: hold instance lock during NETDEV_CHANGE")
-Signed-off-by: Stanislav Fomichev <sdf@fomichev.me>
----
- drivers/net/bonding/bond_main.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+For me "MADVISE" would be the most obvious but I don't really mind either way.
 
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index 950d8e4d86f8..d1ec5ec6f7e5 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -850,8 +850,9 @@ static int bond_check_dev_link(struct bonding *bond,
- 			       struct net_device *slave_dev, int reporting)
- {
- 	const struct net_device_ops *slave_ops = slave_dev->netdev_ops;
--	struct ifreq ifr;
- 	struct mii_ioctl_data *mii;
-+	struct ifreq ifr;
-+	int ret;
- 
- 	if (!reporting && !netif_running(slave_dev))
- 		return 0;
-@@ -860,9 +861,14 @@ static int bond_check_dev_link(struct bonding *bond,
- 		return netif_carrier_ok(slave_dev) ? BMSR_LSTATUS : 0;
- 
- 	/* Try to get link status using Ethtool first. */
--	if (slave_dev->ethtool_ops->get_link)
--		return slave_dev->ethtool_ops->get_link(slave_dev) ?
-+	if (slave_dev->ethtool_ops->get_link) {
-+		netdev_lock_ops(slave_dev);
-+		ret = slave_dev->ethtool_ops->get_link(slave_dev) ?
- 			BMSR_LSTATUS : 0;
-+		netdev_unlock_ops(slave_dev);
-+
-+		return ret;
-+	}
- 
- 	/* Ethtool can't be used, fallback to MII ioctls. */
- 	if (slave_ops->ndo_eth_ioctl) {
--- 
-2.49.0
+>> +M:	Andrew Morton <akpm@linux-foundation.org>
+>> +M:	Liam R. Howlett <Liam.Howlett@oracle.com>
+>> +M:	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+>> +M:	David Hildenbrand <david@redhat.com>
+>> +R:	Vlastimil Babka <vbabka@suse.cz>
+>> +R:	Jann Horn <jannh@google.com>
+>> +S:	Maintained
+>> +W:	http://www.linux-mm.org
+>> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+>> +F:	include/uapi/asm-generic/mman-common.h
+>> +F:	mm/madvise.c
+>> +
+>>  MEMORY TECHNOLOGY DEVICES (MTD)
+>>  M:	Miquel Raynal <miquel.raynal@bootlin.com>
+>>  M:	Richard Weinberger <richard@nod.at>
+>> -- 
+>> 2.49.0
+>> 
 
