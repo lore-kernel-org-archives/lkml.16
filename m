@@ -1,102 +1,114 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F22AD12E7F;
-	Tue,  8 Apr 2025 00:28:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 256B91DFE1
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 00:35:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744072139; cv=none; b=VeVGRj0Ie2/c5LPvdwSzE6G7OPmH+koK4Ea28Bh1VsPvwGIuPBw55L0FwVNpGlD7zmHNnl5W/o6vI16ZSJUfKHtUQl05yCisyFQ86zIvVGuZyVT6GTftI1LhmoKFR9eWfgEaLc5aVXPEUuD8y3p9vYDBsj/dDhmSE42nKDRoZ7U=
+	t=1744072540; cv=none; b=to5QSkgPtDV2mad8cl07vCs3DHKP3YubqRl6lK+pE5EWSJ5bYyXe8Itljudc5tVt9CVg6VqLN+ZybuFuZwPvX34RlTTls8/1I1mHB54isx6Z63Dyw+aG7CZDOZyzapQ6x2WNlQeyWRpX/vzyvhYSelfv6lzGbdONoykoAWKOmHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744072139; c=relaxed/simple;
-	bh=PyZ1cQ8Jh+NlsL//fjMKMfyETq9G8zTC5acak2Wp7rY=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=PqEUVqe7ZM2WcsYct8Jk9rDAL8husoKzRNtGhxCsGWsPSXDzJSHWpKgnIDSW0qEA+qb6u+mjX2M5BvYCrLkEAdSBOCpueObNR6PYYeXvnhd+uVYsRu6M90bvjqR5exvjTCCFis4x6Kuu6N5jVbyjTnN4dN/fzPHHRUWRvXD06KY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=cvF7i7dU; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1744072540; c=relaxed/simple;
+	bh=DaV65SDOazR9yPifTzNsvT2tHThc/Q1IbGQ47406ibk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RV6uukWUQQYZp72XCn5fAaKFaxqvBA4m9ZpClUyWkaqzRlsRujq66tj5ZFPgGAxMftHkSK1g/J82AsjzbpPIplZZrsAh0XPp7NW83ETWB/V0UKQZdX7pH4P6tcVnAdEM1g+jIV50yCBDDKH4WKk4ZvT3zQYVolapck56+xkqHI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=g2jD4cIs; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="cvF7i7dU"
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 5380Sif962101352, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1744072124; bh=PyZ1cQ8Jh+NlsL//fjMKMfyETq9G8zTC5acak2Wp7rY=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=cvF7i7dUNLts+uc8myIuOw8cyTU+z60tTUG3e2CoCAJfL2CcTjKAwz6Uhe4zcxgK2
-	 Voqz77YhnQGMn9XDUMd5ZsslB1kbpHyMNGPenk5Kt7RG0Z7055bMhFHCL0eQKxBzRE
-	 WHgUeAt7OAYwdgFYpk2icw5y+yrFn4OS+uvca10OVf83URm6VXr1KJL9cXoAmmoyAl
-	 /MwewGi6PfWVKM/Z1QXkd/hGCwWflaV9sKMbEFj+8zSwketR8dejfegl7NO8PF/7b9
-	 3gA2NB7ShvtOvocjLtpWtxUb5l/Kwcq1eftolH1S8FZ/ywTTR/AbxYxVGvO5+dRaQB
-	 1tTpi3n1fylBQ==
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 5380Sif962101352
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 8 Apr 2025 08:28:44 +0800
-Received: from RTEXMBS03.realtek.com.tw (172.21.6.96) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 8 Apr 2025 08:28:44 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXMBS03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 8 Apr 2025 08:28:44 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622]) by
- RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622%5]) with mapi id
- 15.01.2507.035; Tue, 8 Apr 2025 08:28:44 +0800
-From: Ping-Ke Shih <pkshih@realtek.com>
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-CC: Zhen XIN <zhen.xin@nokia-sbell.com>,
-        "linux-wireless@vger.kernel.org"
-	<linux-wireless@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [RFC -v1] wifi: rtw88: sdio: Tx status for management frames
-Thread-Topic: [RFC -v1] wifi: rtw88: sdio: Tx status for management frames
-Thread-Index: AQHbo+jJuNfRBVSN0k+LjlPmG1YP3LOXjoewgACk5QCAAL5oEA==
-Date: Tue, 8 Apr 2025 00:28:44 +0000
-Message-ID: <c6d200bad399484b9ebe8a265bcaa038@realtek.com>
-References: <20250402160310.996141-1-zhen.xin@nokia-sbell.com>
- <9d908c7c77684260818470225b8a0980@realtek.com>
- <CAFBinCD6fcTaJ3VE-0HBv=Vd_yhkqAgMH_8v9MVV1UMCO5m6vw@mail.gmail.com>
-In-Reply-To: <CAFBinCD6fcTaJ3VE-0HBv=Vd_yhkqAgMH_8v9MVV1UMCO5m6vw@mail.gmail.com>
-Accept-Language: en-US, zh-TW
-Content-Language: zh-TW
-x-kse-serverinfo: RTEXMBS03.realtek.com.tw, 9
-x-kse-antispam-interceptor-info: fallback
-x-kse-antivirus-interceptor-info: fallback
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="g2jD4cIs"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac29fd22163so848423166b.3
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 17:35:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1744072502; x=1744677302; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=r+ZxkGINI7rLoBc6b8D+uct/d147JQCfpdqDjWea//I=;
+        b=g2jD4cIsQDr0PafwB4xOJQ9lrZAbLiNxHKZkDs4+IwguGNPqnkOqGChb8rcNHujfqZ
+         +TP7irfrsnpynQX9IYsbVfP+61h0s7g8t9kc6iY0mmcsdwiJWuiLCYfVQ0yKhURXYvrb
+         SxYyBBCTTE5Muq68dd1e4+G0vPkIr8xjcX/c8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744072502; x=1744677302;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=r+ZxkGINI7rLoBc6b8D+uct/d147JQCfpdqDjWea//I=;
+        b=bBTyOwyLM+ixN5FgM1JUFki9yRMpkh/qOxifmbmDNJ2gP9vkHpAx+/B9FbCOntVb6V
+         9fyLgqhwMRgMiJ0FeGeQXfhDTR9290JerX0WtkA++g3rfc+a+CKNusYMqn92ZjqGNKu7
+         8/SC/KrTp0FFZrrHE7W39rkTh3VnINNRQFucxUbet5U63W35ZfsWTxh/CwmHomyL4ec2
+         ch7xZrCxw6R8jxpelkqaI84TZh5I49a2B3CbDAzDN9uVbRshyDxXg7FbjsAj+vIrI32B
+         8/M6NvH6EEHb2d7BKOWZ9Rrqr6UhF5r5Tag6iqXNJrassF+IngN7KtOJubJoNpG6rAV3
+         2/pA==
+X-Forwarded-Encrypted: i=1; AJvYcCWnrLiCSPPqQlAPejyCRmwNwv753YR3FmTOvJslZnMcnq8w5YoX5tjgRrS2Nl7P1F37X2bByqpS79PwP2E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4Ju0hDeVv3zdGMlVsgs1z76XwYdwvIPvgzPJWWnp926hfDSb9
+	fNvaRK6F6QiJK6kfmyG98CJpsZKPe2mQddsGcHLHCFw7VwZJeiQaEXQs8rvf3OCm8dWWNg0Z6BM
+	iSu0=
+X-Gm-Gg: ASbGncvDB2Bq+DSpd//MuRqEVWf/yJkZh+q6eD5CF7+n+qXUFR7CyXSpa+2ICafLsUO
+	V2Tf1qyxJQeVnzkMy9gCvYvRca6CbM3jhN2yeh8jd5BrQOlDnRWZIzBV6gGQrygfB5+6OxYecNr
+	eLyxhk0euk/XRBfIe4OWbvyurB/MBhVNHuM8GHngAXALD39Ocnn+OtUvMh6MUlbvJUL2zyKrwOZ
+	otBRBX5GrhV6J1XsJu8zCATvR/usNV0Qczz3vq+Pk3j8HfBF6w5TzzwImWm3sFiIifGlIgMRP+v
+	OwXAdDKY0CoXd9r3kjet+3S/reB5Leoke/NNSYN1ZpdNbSaOWVJ69gar0rvJY3LJ8YWUjBxBBHK
+	wu8X0iHwfb/+np36KG1w=
+X-Google-Smtp-Source: AGHT+IFj7UY0GT1Egoe3dWyFP05RznO6h0+qDFGaFx8Y5ZLV9SszAwrN3P781ZLW2Xml1hCpuyXARw==
+X-Received: by 2002:a17:907:3f89:b0:ac6:e42b:7556 with SMTP id a640c23a62f3a-ac7d6cbd8acmr1014919266b.11.1744072502332;
+        Mon, 07 Apr 2025 17:35:02 -0700 (PDT)
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com. [209.85.218.46])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7c013f646sm811069666b.120.2025.04.07.17.35.01
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Apr 2025 17:35:01 -0700 (PDT)
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso670449166b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Apr 2025 17:35:01 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUiXP7eHSCKU1zn4gLInVH5QgW7z0xQVezrbvKUwJ5s22x34sYYVFBlRGmv44DP5hgwdJ1zyis36jVZvgw=@vger.kernel.org
+X-Received: by 2002:a17:907:7eaa:b0:ab7:bac4:b321 with SMTP id
+ a640c23a62f3a-ac7d6d6447emr1163743766b.29.1744072500876; Mon, 07 Apr 2025
+ 17:35:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-KSE-AntiSpam-Interceptor-Info: fallback
+References: <alpine.DEB.2.21.2502181912230.65342@angie.orcam.me.uk>
+ <CAHk-=wgBZk1FFOyiTKLnz4jNe-eZtYsrztcYRRXZZxF8evk1Rw@mail.gmail.com>
+ <alpine.DEB.2.21.2502202106200.65342@angie.orcam.me.uk> <alpine.DEB.2.21.2504072042350.29566@angie.orcam.me.uk>
+In-Reply-To: <alpine.DEB.2.21.2504072042350.29566@angie.orcam.me.uk>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 7 Apr 2025 17:34:44 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whKa0-myNkpq2aMCQ=o7S+Sqj--TQEM8wfC9b2C04jidA@mail.gmail.com>
+X-Gm-Features: ATxdqUHVWAsCJEhhvm-QPqcunGy72geDTRo-IlsWBZxYAFW1rFkcbu5rDcC9MaE
+Message-ID: <CAHk-=whKa0-myNkpq2aMCQ=o7S+Sqj--TQEM8wfC9b2C04jidA@mail.gmail.com>
+Subject: Re: [PATCH] Alpha: Emulate unaligned LDx_L/STx_C for data consistency
+To: "Maciej W. Rozycki" <macro@orcam.me.uk>
+Cc: Richard Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky <ink@unseen.parts>, 
+	Matt Turner <mattst88@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, Magnus Lindholm <linmag7@gmail.com>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
+	linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-TWFydGluIEJsdW1lbnN0aW5nbCA8bWFydGluLmJsdW1lbnN0aW5nbEBnb29nbGVtYWlsLmNvbT4g
-d3JvdGU6DQo+IA0KPiBIaSBQaW5nLUtlLA0KPiANCj4gT24gTW9uLCBBcHIgNywgMjAyNSBhdCA1
-OjMw4oCvQU0gUGluZy1LZSBTaGloIDxwa3NoaWhAcmVhbHRlay5jb20+IHdyb3RlOg0KPiA+DQo+
-ID4gSGkgTWFydGluLA0KPiA+DQo+ID4gSSByZXBsaWVkIG9yaWdpbmFsIG1haWwsIGJlY2F1c2Ug
-SSB0aGluayBkaXNjdXNzaW9uIHdvdWxkIGJlIGNsZWFyZXIuDQo+IG1ha2VzIHNlbnNlLCB0aGFu
-ayB5b3UhDQo+IA0KPiBbLi4uXQ0KPiA+ID4gQEAgLTExOTUsNyArMTE5NSw3IEBAIHN0YXRpYyB2
-b2lkIHJ0d19zZGlvX2luZGljYXRlX3R4X3N0YXR1cyhzdHJ1Y3QgcnR3X2RldiAqcnR3ZGV2LA0K
-PiA+ID4gICAgICAgICBza2JfcHVsbChza2IsIHJ0d2Rldi0+Y2hpcC0+dHhfcGt0X2Rlc2Nfc3op
-Ow0KPiA+ID4NCj4gPiA+ICAgICAgICAgLyogZW5xdWV1ZSB0byB3YWl0IGZvciB0eCByZXBvcnQg
-Ki8NCj4gPiA+IC0gICAgICAgaWYgKGluZm8tPmZsYWdzICYgSUVFRTgwMjExX1RYX0NUTF9SRVFf
-VFhfU1RBVFVTKSB7DQo+ID4gPiArICAgICAgIGlmIChpbmZvLT5mbGFncyAmIElFRUU4MDIxMV9U
-WF9DVExfUkVRX1RYX1NUQVRVUyAmJiBxdWV1ZSA8PSBSVFdfVFhfUVVFVUVfVk8pIHsNCj4gPg0K
-PiA+IElzIHRoaXMgYmVjYXVzZSB5b3UgaGF2ZSBzZWVuICJmYWlsZWQgdG8gZ2V0IHR4IHJlcG9y
-dCI/DQo+ID4gSGF2ZSB5b3UgdHJpZWQgdG8gaW5jcmVhc2luZyBSVFdfVFhfUFJPQkVfVElNRU9V
-VD8NCj4gPg0KPiA+IElmIGl0IHN0aWxsIGNhbid0IGdldCBUWCByZXBvcnQsIHdlIG1pZ2h0IHRh
-a2UgdGhpcyB3b3JrYXJvdW5kIHdpdGggY29tbWVudHMNCj4gPiB0byBtZW50aW9uIHdoeSB3ZSBu
-ZWVkIGl0LiBPciBhIGxvY2FsIHZhcmlhYmxlIHdpdGggcHJvcGVyIG5hbWluZyB0byBwb2ludCBv
-dXQNCj4gPiB0aGlzLCBsaWtlDQo+ID4NCj4gPiAgICAgICAgIGJvb2wgcXVldWVfaGFzX25vX3R4
-X3JlcG9ydCA9IHF1ZXVlID4gUlRXX1RYX1FVRVVFX1ZPOw0KPiA+DQo+ID4NCj4gPiBCeSB0aGUg
-d2F5LCBVU0IgYmVoYXZpb3IgaXMgdmVyeSBsaWtlIHRvIFNESU8sIGJ1dCBUWCByZXBvcnQgc2Vl
-bXMgdG8gd29yayB3ZWxsLg0KPiBPbiBteSBSVEw4ODIyQ1MgSSBjYW4gY29uZmlybSB5b3VyIHRo
-b3VnaHQ6DQo+IEkgZG9uJ3Qgbm90aWNlIGFueSBleHRyYSAiZmFpbGVkIHRvIGdldCB0eCByZXBv
-cnQiIG1lc3NhZ2VzIHJlZ2FyZGxlc3MNCj4gb2Ygd2hldGhlciBJIGhhdmUgIiYmIHF1ZXVlIDw9
-IFJUV19UWF9RVUVVRV9WTyIgb3Igbm90Lg0KPiANCg0KVGhpcyB3b3JrYXJvdW5kIG1pZ2h0IG5l
-ZWQgYW4gY2hpcCBhdHRyaWJ1dGUgdG8gZW5hYmxlIHRoZW4uIA0KTm90IHN1cmUgaWYgcGVvcGxl
-IGluIHRoZSBHaXRIdWIgdGhyZWFkIGhhdmUgZXhwZXJpbWVudHMgb24gYWxsDQpzdXBwb3J0ZWQg
-U0RJTyBXaUZpIGNoaXBzLiANCg0K
+On Mon, 7 Apr 2025 at 13:46, Maciej W. Rozycki <macro@orcam.me.uk> wrote:
+>
+>  So unless I'm proved otherwise (e.g. that all such code paths are now
+> gone from networking, which may or may not be the case: I saw IPX go but I
+> can see AppleTalk still around; or that no sub-longword accesses are ever
+> used in the relevant networking paths), I'm going to keep kernel emulation
+> in v2, because what just used to be wrapped in an unaligned LDQ/STQ pair,
+> which we trapped on and emulated, will now become an LDQ_L/STQ_C loop.
+>
+>  Do you happen to know what the situation is here?
+
+I think networking ends up using 'get_unaligned()' properly for header
+accesses these days for any of this.
+
+If you don't, some architectures will literally silently give you
+garbage back and not even fault.
+
+Admittedly that's mainly some really broken old 32-bit ARM stuff and
+hopefully it's all dead by now.
+
+So unless you actually *see* the unaligned faults, I really think you
+shouldn't emulate them.
+
+And I'd like to know where they are if you do see them
+
+             Linus
