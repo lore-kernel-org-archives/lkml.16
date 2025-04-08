@@ -1,172 +1,169 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A125322687C;
-	Tue,  8 Apr 2025 18:48:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83D5E1E8348
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 18:49:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744138126; cv=none; b=Q65TgjcUtt2Md0PslXAHSGRhK8nKAYsm3zvLEhvMoF6JllTmnFhjPmx8CssFY+U1S0RVZNOsBrvYYAQPYIasN6Ixp8zI6Q+Ng3BmWyF+Mz2OrRv3jR/k8ISEKF6wyhSiTRH+QF7P0LeiZo3jQDGiWNl6dMx5HVWlGr/cTAgy4GA=
+	t=1744138190; cv=none; b=XqRE8DaivOBfDztQGlKGC+RxdxAouWEWaJAlQ3uypW1Cu2s1AbdXCGrQmIFAf9hNpyNF2WXrw6YgqvR7OO/K0e8Ykmq7GQQfPI+dBCS+xtEwzKEgOidHV/TWmVMKge6pFns/S9AXVam5vH2F0cM1et2WxyG9z/3OaSnJyAIqVAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744138126; c=relaxed/simple;
-	bh=k04i0235xFtKwaaHHQJebbu6djvaXTSPypCZb71l5x8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=BwsJDR0RsrORYAxs3P5rSHP9Z8FhVZnaAofA7MOcHMBkjKhu8l6U7IGpiHzOOF82t3SUb+5zAHAQKUp0uFpeSs0pz+JwVDX3xCM7gre9wVebfupd/1OSjM6fwyRvq/4+g68cf5vWAD6CanTZabokFAO/ixdNtaCPPjrUtLMODHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q2Ofc4BP; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744138190; c=relaxed/simple;
+	bh=JUCB2bV+iYGyCNwUBsapZGnABiFfj1VKYKVKsbGH/zg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=SfxPqf7IQWL/2KdpdfCP4SL2P49K3HFSiE/n2bf6msR2ce5AlQwHUG94BraHwnyXqHq9jlrVpGAHLvjW7dkwDHhGH8sTRL4vv+AQtbwigh9jU16m698NpMbyPle0+Sv9qLJkIAOLSyLSmCtTO8/VvcQi+vnp/JeRu5yQ4wYMm6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CoNqvkBP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q2Ofc4BP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744138125; x=1775674125;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=k04i0235xFtKwaaHHQJebbu6djvaXTSPypCZb71l5x8=;
-  b=Q2Ofc4BPs/qz3xnaTgYXGvVlwpPmOmz1ZBX/pvPhfy842RqwkeZUp+TX
-   jEh4/nph+L5nuMLdWWO5vKM7obBV2CEN4/MfflG+Z4uEEkbvppMBFo4/f
-   StauulUDyjOlG0dXLuPIRlsfAKZ4y76rzhres6H9IGhxaTiNTeFihw6IK
-   xclAe7utMIe/uE/tn0sjKUaMeM8dkvd3uKIuYDDW5yljanO468cjePAOd
-   Iu3mT5js/k8VK2xkNOgS+TPBxfedBtDOQ4hR9xxfda6bbxwk2BNaov0HK
-   cPfuZ9erCoPOkpEniA7MPkIMz2ZMxrf/x+6Cq9LlE41Klzle3zZFYByj4
-   g==;
-X-CSE-ConnectionGUID: aMMGfBdwQACDKLz2Pnwy9g==
-X-CSE-MsgGUID: VHSNVHnkSRqQunmthohAzw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="63132863"
-X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
-   d="scan'208";a="63132863"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 11:48:44 -0700
-X-CSE-ConnectionGUID: YqpeydxSQT6mImyx/BOJqQ==
-X-CSE-MsgGUID: g8wCnN6yQn2KAtecQU7URQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,198,1739865600"; 
-   d="scan'208";a="159350389"
-Received: from spandruv-desk1.amr.corp.intel.com ([10.125.111.171])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 11:48:44 -0700
-Message-ID: <e10c4f6cfff8cd55cfe53de5bd1965e26d3ae8e6.camel@linux.intel.com>
-Subject: Re: [PATCH v1 10/10] cpufreq: Pass policy pointer to
- ->update_limits()
-From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM
- <linux-pm@vger.kernel.org>,  LKML <linux-kernel@vger.kernel.org>, Viresh
- Kumar <viresh.kumar@linaro.org>, Mario Limonciello
- <mario.limonciello@amd.com>, Sudeep Holla <sudeep.holla@arm.com>
-Date: Tue, 08 Apr 2025 11:48:43 -0700
-In-Reply-To: <CAJZ5v0htfoQzL48=-JcocfiV7hN5N5Bjn36vZ+zLCQ=Lathcfg@mail.gmail.com>
-References: <4651448.LvFx2qVVIh@rjwysocki.net>
-	 <8560367.NyiUUSuA9g@rjwysocki.net>
-	 <CAJZ5v0iMYSTnX9mkZb8aEmtbKxWOgsshNJ_AqnB9Mn27y8jzeQ@mail.gmail.com>
-	 <2362a42de1403e99a66551575efd910cc92980bc.camel@linux.intel.com>
-	 <CAJZ5v0i7uUFDcTYuam4Hz2fYxpnT6QQQzULk8CNHvkOUfg=bfQ@mail.gmail.com>
-	 <CAJZ5v0hJCtqbkyMaOSMNoiD5DSz+H6PK_FyUdoVTZTVWEFJQyQ@mail.gmail.com>
-	 <6346af9942a0e6730fd6b26f2586b82e6fc04d4c.camel@linux.intel.com>
-	 <CAJZ5v0htfoQzL48=-JcocfiV7hN5N5Bjn36vZ+zLCQ=Lathcfg@mail.gmail.com>
-Autocrypt: addr=srinivas.pandruvada@linux.intel.com; prefer-encrypt=mutual;
- keydata=mQGNBGYHNAsBDAC7tv5u9cIsSDvdgBBEDG0/a/nTaC1GXOx5MFNEDL0LWia2p8Asl7igx
- YrB68fyfPNLSIgtCmps0EbRUkPtoN5/HTbAEZeJUTL8Xdoe6sTywf8/6/DMheEUzprE4Qyjt0HheW
- y1JGvdOA0f1lkxCnPXeiiDY4FUqQHr3U6X4FPqfrfGlrMmGvntpKzOTutlQl8eSAprtgZ+zm0Jiwq
- NSiSBOt2SlbkGu9bBYx7mTsrGv+x7x4Ca6/BO9o5dIvwJOcfK/cXC/yxEkr1ajbIUYZFEzQyZQXrT
- GUGn8j3/cXQgVvMYxrh3pGCq9Q0Q6PAwQYhm97ipXa86GcTpP5B2ip9xclPtDW99sihiL8euTWRfS
- TUsEI+1YzCyz5DU32w3WiXr3ITicaMV090tMg9phIZsjfFbnR8hY03n0kRNWWFXi/ch2MsZCCqXIB
- oY/SruNH9Y6mnFKW8HSH762C7On8GXBYJzH6giLGeSsbvis2ZmV/r+LmswwZ6ACcOKLlvvIukAEQE
- AAbQ5U3Jpbml2YXMgUGFuZHJ1dmFkYSA8c3Jpbml2YXMucGFuZHJ1dmFkYUBsaW51eC5pbnRlbC5j
- b20+iQHRBBMBCAA7FiEEdki2SeUi0wlk2xcjOqtdDMJyisMFAmYHNAsCGwMFCwkIBwICIgIGFQoJC
- AsCBBYCAwECHgcCF4AACgkQOqtdDMJyisMobAv+LLYUSKNuWhRN3wS7WocRPCi3tWeBml+qivCwyv
- oZbmE2LcxYFnkcj6YNoS4N1CHJCr7vwefWTzoKTTDYqz3Ma0D0SbR1p/dH0nDgN34y41HpIHf0tx0
- UxGMgOWJAInq3A7/mNkoLQQ3D5siG39X3bh9Ecg0LhMpYwP/AYsd8X1ypCWgo8SE0J/6XX/HXop2a
- ivimve15VklMhyuu2dNWDIyF2cWz6urHV4jmxT/wUGBdq5j87vrJhLXeosueRjGJb8/xzl34iYv08
- wOB0fP+Ox5m0t9N5yZCbcaQug3hSlgp9hittYRgIK4GwZtNO11bOzeCEMk+xFYUoa5V8JWK9/vxrx
- NZEn58vMJ/nxoJzkb++iV7KBtsqErbs5iDwFln/TRJAQDYrtHJKLLFB9BGUDuaBOmFummR70Rbo55
- J9fvUHc2O70qteKOt5A0zv7G8uUdIaaUHrT+VOS7o+MrbPQcSk+bl81L2R7TfWViCmKQ60sD3M90Y
- oOfCQxricddC
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CoNqvkBP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C866AC4CEE5;
+	Tue,  8 Apr 2025 18:49:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744138190;
+	bh=JUCB2bV+iYGyCNwUBsapZGnABiFfj1VKYKVKsbGH/zg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=CoNqvkBP3vFgDfJdX5HyBql73FohlJRuDNvRuQMGzKxFAB+caL0nqg429qqNKUjdi
+	 sUIOtwxJQ4Cv4RXAtKYPfoslTCwqJ5gR0e3zEOlPOJdethtVBJwjg9tgm80VHZ4Al/
+	 HZbgg+oWX2Na/wcsAvrLXMigNawQBde8SdI/fptF56V9IGK367akIkh+ReWJ2XOT+U
+	 muCiP0HGwc6xz0I3feNwoVXK/CExOe7Wg8KMeAp4MkNAoGHokYq4hyHnL8Zbwzd9YB
+	 86T5QoYppsM5bvL+pZwsNTKolNQy61fVP96xchN9BFu6aUuneHAuoouaW+SbI5kO5Y
+	 8bCGM26EeJGUw==
+From: SeongJae Park <sj@kernel.org>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: SeongJae Park <sj@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R.Howlett" <howlett@gmail.com>,
+	David Hildenbrand <david@redhat.com>,
+	Rik van Riel <riel@surriel.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	kernel-team@meta.com,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [PATCH v2 2/4] mm/madvise: batch tlb flushes for MADV_FREE
+Date: Tue,  8 Apr 2025 11:49:47 -0700
+Message-Id: <20250408184947.62625-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <12a8989c-c4f3-45a5-a66e-06ef7c2ef876@lucifer.local>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Tue, 2025-04-08 at 20:34 +0200, Rafael J. Wysocki wrote:
-> On Tue, Apr 8, 2025 at 7:47=E2=80=AFPM srinivas pandruvada
-> <srinivas.pandruvada@linux.intel.com> wrote:
-> >=20
-> > On Tue, 2025-04-08 at 15:37 +0200, Rafael J. Wysocki wrote:
-> > > On Tue, Apr 8, 2025 at 1:41=E2=80=AFPM Rafael J. Wysocki
-> > > <rafael@kernel.org>
-> > > wrote:
-> > > >=20
-> > > > On Tue, Apr 8, 2025 at 12:28=E2=80=AFAM srinivas pandruvada
-> > > > <srinivas.pandruvada@linux.intel.com> wrote:
-> > > > >=20
-> > > > > On Mon, 2025-04-07 at 20:48 +0200, Rafael J. Wysocki wrote:
-> > > > > > On Fri, Mar 28, 2025 at 9:49=E2=80=AFPM Rafael J. Wysocki
-> > > > > > <rjw@rjwysocki.net>
-> > > > > > wrote:
-> > > > > > >=20
-> > > > > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > > > >=20
-> > > > > > > Since cpufreq_update_limits() obtains a cpufreq policy
-> > > > > > > pointer for
-> > > > > > > the
-> > > > > > > given CPU and reference counts the corresponding policy
-> > > > > > > object, it
-> > > > > > > may
-> > > > > > > as well pass the policy pointer to the cpufreq driver's -
-> > > > > > > > update_limits()
-> > > > > > > callback which allows that callback to avoid invoking
-> > > > > > > cpufreq_cpu_get()
-> > > > > > > for the same CPU.
-> > > > > > >=20
-> > > > > > > Accordingly, redefine ->update_limits() to take a policy
-> > > > > > > pointer
-> > > > > > > instead
-> > > > > > > of a CPU number and update both drivers implementing it,
-> > > > > > > intel_pstate
-> > > > > > > and amd-pstate, as needed.
-> > > > > > >=20
-> > > > > > > Signed-off-by: Rafael J. Wysocki
-> > > > > > > <rafael.j.wysocki@intel.com>
-> > > > > >=20
-> > > > > Hi Rafael,
-> > > > >=20
-> > > > > > Hi Srinivas,
-> > > > > >=20
-> > > > > > If you have any concerns regarding this patch, please let
-> > > > > > me
-> > > > > > know
-> > > > > > (note that it is based on the [05/10]).
-> > > > > >=20
-> > > > > Changes looks fine, but wants to test out some update limits
-> > > > > from
-> > > > > interrupt path.
-> > > > > Checked your branches at linux-pm, not able to locate in any
-> > > > > branch to
-> > > > > apply.
-> > > > > Please point me to a branch.
-> > > >=20
-> > > > I'll put it in 'testing' later today.
-> > >=20
-> > > Now available from
-> > >=20
-> > > git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git
-> > > testing
-> > >=20
-> > Looks good.
-> >=20
-> > Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
->=20
-> Thanks!
->=20
-> IIUC this applies to both [5/10] and [10/10], or please let me know
-> if
-> that's not the case.
+On Tue, 8 Apr 2025 13:58:18 +0100 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
 
-This is for both. I tested the whole "testing" branch.
+> On Fri, Apr 04, 2025 at 02:06:58PM -0700, SeongJae Park wrote:
+> > MADV_FREE handling for [process_]madvise() flushes tlb for each vma of
+> > each address range.  Update the logic to do tlb flushes in a batched
+> > way.  Initialize an mmu_gather object from do_madvise() and
+> > vector_madvise(), which are the entry level functions for
+> > [process_]madvise(), respectively.  And pass those objects to the
+> > function for per-vma work, via madvise_behavior struct.  Make the
+> > per-vma logic not flushes tlb on their own but just saves the tlb
+> > entries to the received mmu_gather object.  Finally, the entry level
+> > functions flush the tlb entries that gathered for the entire user
+> > request, at once.
+> >
+> > Signed-off-by: SeongJae Park <sj@kernel.org>
+> 
+> Other than some nitty stuff, and a desire for some careful testing of the
+> horrid edge case that err... I introduced :P this looks fine, so:
+> 
+> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+
+Thank you for your kind review!  I will make the next revision following your
+suggestions as I answered below.
+
+> 
+> > ---
+> >  mm/madvise.c | 59 +++++++++++++++++++++++++++++++++++++++++-----------
+> >  1 file changed, 47 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/mm/madvise.c b/mm/madvise.c
+> > index 8bcfdd995d18..564095e381b2 100644
+> > --- a/mm/madvise.c
+> > +++ b/mm/madvise.c
+> > @@ -799,12 +799,13 @@ static const struct mm_walk_ops madvise_free_walk_ops = {
+> >  	.walk_lock		= PGWALK_RDLOCK,
+> >  };
+> >
+> > -static int madvise_free_single_vma(struct vm_area_struct *vma,
+> > -			unsigned long start_addr, unsigned long end_addr)
+> > +static int madvise_free_single_vma(
+> > +		struct madvise_behavior *behavior, struct vm_area_struct *vma,
+> 
+> This is pedantic, but elsewhere you differentiate between int behavior and
+> struct madvise_behavior by referringt to the later as madv_behavior.
+> 
+> The naming kind of sucks in general though.
+> 
+> But for consistency, let's maybe rename this to madv_behavior, and we can
+> maybe do a commit later to do a rename across the board?
+
+I completely agree.  I will rename so in the next spin.
+
+> 
+> > +		unsigned long start_addr, unsigned long end_addr)
+> >  {
+> >  	struct mm_struct *mm = vma->vm_mm;
+> >  	struct mmu_notifier_range range;
+> > -	struct mmu_gather tlb;
+> > +	struct mmu_gather *tlb = behavior->tlb;
+> >
+> >  	/* MADV_FREE works for only anon vma at the moment */
+> >  	if (!vma_is_anonymous(vma))
+[...]
+> > @@ -953,7 +951,7 @@ static long madvise_dontneed_free(struct vm_area_struct *vma,
+> >  	if (action == MADV_DONTNEED || action == MADV_DONTNEED_LOCKED)
+> >  		return madvise_dontneed_single_vma(vma, start, end);
+> >  	else if (action == MADV_FREE)
+> > -		return madvise_free_single_vma(vma, start, end);
+> > +		return madvise_free_single_vma(behavior, vma, start, end);
+> >  	else
+> >  		return -EINVAL;
+> 
+> On error paths, do we correctly finish the batched (botched? :P) TLB
+> operation?
+
+Yes, the change calls tlb_finish_mmu() and tlb_gather_mmu() as needed in the
+error paths.  Of course I might forgot calling those in some edge cases.
+Please let me know if you find such mistakes.
+
+> 
+> >  }
+[...]
+> > @@ -1841,14 +1873,17 @@ static ssize_t vector_madvise(struct mm_struct *mm, struct iov_iter *iter,
+> >  			}
+> >
+> >  			/* Drop and reacquire lock to unwind race. */
+> > +			madvise_finish_tlb(&madv_behavior);
+> >  			madvise_unlock(mm, behavior);
+> >  			madvise_lock(mm, behavior);
+> > +			madvise_init_tlb(&madv_behavior, mm);
+> >  			continue;
+> 
+> Have you found a way in which to test this? Perhaps force this case and
+> find a means of asserting the TLB flushing behaves as expected? I think
+> we're ok from the logic, but it's such a tricky one it'd be good to find a
+> means of doing so, albeit in a manual way.
+
+No, unfortunately I haven't found a good way to test this case.
+
+> 
+> >  		}
+> >  		if (ret < 0)
+> >  			break;
+> >  		iov_iter_advance(iter, iter_iov_len(iter));
+> >  	}
+> > +	madvise_finish_tlb(&madv_behavior);
+> >  	madvise_unlock(mm, behavior);
+> >
+> >  	ret = (total_len - iov_iter_count(iter)) ? : ret;
+> > --
+> > 2.39.5
+
 
 Thanks,
-Srinivas
-
+SJ
