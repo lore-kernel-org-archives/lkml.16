@@ -1,76 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4478720B815;
-	Tue,  8 Apr 2025 09:10:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 481E51C8617
+	for <linux-kernel@vger.kernel.org>; Tue,  8 Apr 2025 09:11:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744103407; cv=none; b=SUzRVyM205FTqRk6zqhkRSval6Q3hyD3z38XsYDq4pnxf99Ua0djj6tn0dSqnvfqmQF3Fv3RECQa7eYT5CFhW66ddPANmgX6oFxGaRr+X0Eq707//aE4a7UzewaXoXwSwH4dZQp4Y9atZJqZjQ6E5XafogequyiIrXLTA85+S+M=
+	t=1744103487; cv=none; b=JHWbKrzrx/LvIIl151rZu/+wm2ijFxNKDvpwJTlJ/vcdFjeXHx8l7xdFHADVW4KrMzWTM5Jgqx9QEfcWwmBI+op4V2dpt3JbtsPNWk74TUjPEBhgWbcLdcBU5yX27Gq28FmINJMXS3jTTFsWVRytvoxZHdsJ7DKBx3dmVt4hs9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744103407; c=relaxed/simple;
-	bh=Z4T2PTHsE4Uthlj+pxngsTdjfyYFz4NTg4R+azU7Sy0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LEYBiWIp7PJvhsWWtGPfVQ9o2V3nsKMDXtQFyqk9zUjyI/Tu46INVnLqYcs/rSh7IN6OcZnnkTpe2ZV9BOUJWLKBRkvscfS30NEU3IKNRM1ju1/zIDsGS6RQN3LOw09bbMNCWZxUsXciz128R1rnvloo+YJNDALGy9mJpQy5ERk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VO99WYQf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744103487; c=relaxed/simple;
+	bh=jVy/MK7bBVX1gRdZQ076RoaH0+XfycZXX7LUcm+1hks=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tyU+fcb0HEXTpXuQUvi8vwLh1qQisXv+s5SxrL1z5AoH5lmbOAGRIC0wSnmTLL+iv85uEG0+iiJ3zUuxFaHwxpjJlmQm50pzEOiVJm1LHNKAf/O2Hm6084XZutSh1FaUEEY6HAEWw824fIy9XbAfDkN8H0I8j7HxEWq9v72d58Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=k+Egiz57; arc=none smtp.client-ip=115.124.30.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VO99WYQf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32067C4CEE8;
-	Tue,  8 Apr 2025 09:10:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744103406;
-	bh=Z4T2PTHsE4Uthlj+pxngsTdjfyYFz4NTg4R+azU7Sy0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VO99WYQfnsdLH1oyz9g3cf1c+xZbDvvWCtWgya/NJWTm4mO5keb5c5xlSR00MBk/B
-	 jmYYOY7okfNL15X/MzBWRHnjsJUFFge5DFk6Zx0l7lkx1DUAxTl1ZCW4ZXCv0F2MS4
-	 jFKaBCqmy70A1C5MwtTi6RIgNa6f+2jyoEOLpaUudXwleUJyJo970D5f710qMfefDg
-	 vpJ2aoZWG0+3MTdrRl572rKAS+zBsc9spCno0VHXIK7Xvrg3ziMm3mJdUm+dPhiIuW
-	 LaYG97yePX02moHa5cdQbkIgqfvC8D+0kqcVPsW6g7t0hdd0ljaR8Sp5XV5zTc2VSJ
-	 H6nmiV59RolRQ==
-From: Christian Brauner <brauner@kernel.org>
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	viro@zeniv.linux.org.uk,
-	jack@suse.cz,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] fs: unconditionally use atime_needs_update() in pick_link()
-Date: Tue,  8 Apr 2025 11:09:58 +0200
-Message-ID: <20250408-marginal-sehnt-4b20d3a08153@brauner>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250408073641.1799151-1-mjguzik@gmail.com>
-References: <20250408073641.1799151-1-mjguzik@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="k+Egiz57"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1744103476; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=luGcT9UL4O/HTTEZuavQB4JaVAyjvuyVqOeWlRcydM8=;
+	b=k+Egiz57IDtOfhAc1xrMIa3xnKNR5yXobnbao9sO8ZJNmilJJD+oOtZ0D0KFFqT/xv0tSlHkNauU/T07WtDh4fhZRorlyL5qD1fFh10/Vyr5H4e3WNFjRR4EWlg9MXWaNWAy9Z30P8uh6t5yY74LccwtRafR7t6/xMIdswgh8s8=
+Received: from 30.74.129.179(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WWEd0mn_1744103474 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 08 Apr 2025 17:11:15 +0800
+Message-ID: <98585dd8-d0b6-4000-b46d-a08c64eae44d@linux.alibaba.com>
+Date: Tue, 8 Apr 2025 17:11:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=974; i=brauner@kernel.org; h=from:subject:message-id; bh=Z4T2PTHsE4Uthlj+pxngsTdjfyYFz4NTg4R+azU7Sy0=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaR/ef5iecHdtjf7zhsvyF6t5ymcnHsq+Sdrun1CR2ZWa KXu7R1cHaUsDGJcDLJiiiwO7Sbhcst5KjYbZWrAzGFlAhnCwMUpABP5nM7wv2bv/p1Ri2cy8lW9 6anZ7R+RyaVp1rB40vVs6SNM05V6XzD84fZov6+22fhq/u4V7+pnP1ufMnfShC03JLfXzzC5kiA ziRcA
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] erofs: add 'offset' mount option for file-backed &
+ bdev-based mounts
+To: Karel Zak <kzak@redhat.com>
+Cc: Sheng Yong <shengyong2021@gmail.com>, xiang@kernel.org, chao@kernel.org,
+ zbestahu@gmail.com, jefflexu@linux.alibaba.com, dhavale@google.com,
+ linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+ Sheng Yong <shengyong1@xiaomi.com>, Wang Shuai <wangshuai12@xiaomi.com>
+References: <20250407110551.1538457-1-shengyong1@xiaomi.com>
+ <20250407110551.1538457-2-shengyong1@xiaomi.com>
+ <7nupludayogog6jylmwnxwel4zlvfxeozzcg5qkf5g5a5fpt7g@3bgvpbqfuxxa>
+ <d4eae031-8fbb-45e2-bdf4-f3a8a034b8ad@linux.alibaba.com>
+ <gk7jzl7pktrdpznqp2hiuflx56xyttw4v4z3epia2ziw4oz547@cft7fyeoirfr>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <gk7jzl7pktrdpznqp2hiuflx56xyttw4v4z3epia2ziw4oz547@cft7fyeoirfr>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, 08 Apr 2025 09:36:41 +0200, Mateusz Guzik wrote:
-> Vast majority of the time the func returns false.
+
+
+On 2025/4/8 16:46, Karel Zak wrote:
+> On Mon, Apr 07, 2025 at 11:49:31PM +0800, Gao Xiang wrote:
+>> On 2025/4/7 19:40, Karel Zak wrote:
+>>> We can improve it in libmount and add any if-erofs hack there, but my
+>>> suggestion is to select a better name for the mount option. For
+>>> example, erofsoff=, erostart=, fsoffset=, start=, or similar.
+>>
+>> Thanks for your suggestion!
+>>
+>> it's somewhat weird to use erofsprefix here, I think fsoffset
+>> may be fine.
 > 
-> This avoids a branch to determine whether we are in RCU mode.
-> 
-> 
+> Yes, fsoffset sounds good. I anticipate more filesystems will support
+> file-backed mounts in the future, making this option reusable.
 
-Applied to the vfs-6.16.misc branch of the vfs/vfs.git tree.
-Patches in the vfs-6.16.misc branch should appear in linux-next soon.
+ From my own kernel perspective, it's not possible for the majority
+of read-write fses especially have nested transaction (like
+`current->journal_info`) in addition to many deadlock factors
+without extra workqueue contexts.  But for erofs it's safe.
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
-
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
-
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs-6.16.misc
-
-[1/1] fs: unconditionally use atime_needs_update() in pick_link()
-      https://git.kernel.org/vfs/vfs/c/e45960c279b0
+Thanks,
+Gao Xiang
