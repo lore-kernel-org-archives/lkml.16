@@ -1,67 +1,47 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 396A5263F4D;
-	Tue,  8 Apr 2025 12:17:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52514269CF7;
+	Tue,  8 Apr 2025 12:17:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744114643; cv=none; b=ia0fxTyylg/7nLIFHl4fHR3HsS1FToHFP1RIguM3ZPRO98aj4SD9r87FtyfjrnJ/nF9W/mRRizUSd6y9vppgcYa8O1c840GRHCmwgOVYwZjG1ZNMCySxd4wdZSKUyDEaO5NOd/cC4H20Qq9Q0Y24xxLA6k3ctkCkxJzom/7q4z4=
+	t=1744114653; cv=none; b=WP+rWRHCs/iwJ4S7nhfwuSL7g1TJ8ewh5HuUqDj1xGsIoxOanHYo9gK9HHjrkRV0Mo2ihUqhtkC/vxecvZOIEDsCVzuo7itoJwkXHNq/ng/SVqDVmvxU3YxcsurKziXqXoEIzIWFGcy+eVMMPllzyLFJOC8j7uoNgNa22+43ybg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744114643; c=relaxed/simple;
-	bh=U6p8SdK5Of739muSFYwDwMYUjP02LQgT2LP4ul25gsM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CUIQ8t15H4bokz9MGwDefp2YjrshwS1DgbGzSFmN8dqmqtuoSMOOd9To5A/6NyF5an8LRPsPg0fbslsCdEFP46vuwT071/Q7rKsYXoU/BP1ymaBENrXKmfsqU3/D7xVdcXy+uymwCEX639vb2GuCLWRenny3cdccugwiaRWY5kk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5e8be1c6ff8so10178635a12.1;
-        Tue, 08 Apr 2025 05:17:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744114640; x=1744719440;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VNsydl7md1y4Nb0tCrKFrlIHVPhyzWyrPJ9rFWgBSaE=;
-        b=e4RHmaWGBdZId53y+mEfR3ubkZ25SXI5ZkOxfRBPTgsQA/bXpC4ouMCBJftHZ451tg
-         fCMfy3Td0FievRSKZV3PYXphJ5OHxWZyJ9GgTlpipJKXPCsY8ZTYgVq5guflQbnq3G02
-         orFG067hwTNpXp8dtEIw+ILedm21SUzFyMyCEhFly1DZjXlRW4ZfPw4SA3KDg/aEWHQi
-         2jIe5JROlX+Ou+rv1M3pebGnHrcSKPO+CjPF0UBMAAHwnzZ+5T1VHQH1eyBRqUQWRSwE
-         nPu2paJY/BTbTVVECVoFqh+LrGuQaVziUG4lByWeQsZhs2dRSO7TCNbjXv74EBqEF5wX
-         Rx8A==
-X-Forwarded-Encrypted: i=1; AJvYcCUqv26s8u/zgF+nIONXNFY1ga3j78Klpnkm2NFjEvpDi8qqiegQrU76FaD8qL16stWr7WLTuAnBDe5z/vs=@vger.kernel.org, AJvYcCVgdaPCNv/z6UnIoEiDqKjrHRaXdoj40Eja6vRuVHot5mt+FoV/ryHEGdnQkUvYK97w2cFhQhWh@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywi9tAwTvhlhGfMovml99Ka1i5J+RVIfOorB9R7muixZt6nMWq3
-	3I/70XYn8OdcjX1qSTvgu+tLh2X9tK5FpTQzT1pwMsGY9c8mbAUU
-X-Gm-Gg: ASbGncteiJNQoEmnGfcw34zaKbWZlgJafn8av/3LoOSk+yYOYs7fioPJv6WV+7b+ibR
-	tMbReOMUaTo9bJijDhZkGYuzf+00pRskGvtXC8OJ4ADu+L5gERhLQQLht70GPkNzWbDrr8l3NHq
-	MIIIU/jW1RuvRXLu6+QpJlK/XifWX+WkNJSmCACUBL7VmML8QkZW/rqWr25nWyX6pOcOrIhFZZq
-	nu0BPB/W14yj78nZtCUgRsOJu26WV8qH6K0jUCE5ZO1XAijP5V1pUX6TSwsrZej4L04Z4hpb7Pg
-	rDIyEruqnAY/g89QEM2WBqtkPGUdugMUVAxd
-X-Google-Smtp-Source: AGHT+IF2XGoy9tYFECepepWqPifMJJJeJD1I4oP3E7mGhMUrh8bLpbtZafML/bqsSoyCkRsrJnRzSA==
-X-Received: by 2002:a05:6402:13d3:b0:5e6:e68c:9d66 with SMTP id 4fb4d7f45d1cf-5f0b5db9cd7mr14121997a12.8.1744114640012;
-        Tue, 08 Apr 2025 05:17:20 -0700 (PDT)
-Received: from gmail.com ([2a03:2880:30ff:71::])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f087f0a0f3sm8454077a12.43.2025.04.08.05.17.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 05:17:19 -0700 (PDT)
-Date: Tue, 8 Apr 2025 05:17:16 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Andrea Righi <arighi@nvidia.com>
-Cc: Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>,
-	Changwoo Min <changwoo@igalia.com>, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	linux-kernel@vger.kernel.org, christophe.jaillet@wanadoo.fr,
-	kernel-team@meta.com, stable@vger.kernel.org,
-	Rik van Riel <riel@surriel.com>
-Subject: Re: [PATCH v2] sched_ext: Use kvzalloc for large exit_dump allocation
-Message-ID: <Z/UTzPoI7+LElhEE@gmail.com>
-References: <20250408-scx-v2-1-1979fc040903@debian.org>
- <Z_UI2AHtkIGS4bZR@gpd3>
+	s=arc-20240116; t=1744114653; c=relaxed/simple;
+	bh=7MIQ9HHSB2bH2AFr+0VI1B0l0NJu73hsXo5dH0HrwKI=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lUYN/Zu6xB0mLgZkxqchzN3Pw4fmwxi6f4KhIT+f5VpbUuo36jcnZjvigWIAU9wg2QXPKjuTAU3oUTbyGkI2f+B4FboU/3F7dP3O24TuMZcqH69et/VTbEEZAh+w0SHMGmUfZ2ZVHiwP+J/BKdtVkLHLZFKEay5IeGe38nggH7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=PWhd/3lX; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="PWhd/3lX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:To:From:Date:From:Sender:Reply-To:Subject:Date:
+	Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=kV+poe5wqojrBL+yWUAaYGMQtjRzHk+4Yf5T5cMCjWE=; b=PWhd/3lXU32H5fKoyfO3jNBLZr
+	PqLirgjLch0awcFc0ZGkz6HGrU/fgiC5+4TAeDV7bJUdpypw4f0100ekTCGWQ4IZNsBa6b1uwfmT1
+	S+AyorDOa9VhA5dessSUieUKMPeNyZW71j/oQqmJ4de7++9njBXAGlkEKxf+9e2Lj5Jc=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u27tH-008NtL-Ru; Tue, 08 Apr 2025 14:17:19 +0200
+Date: Tue, 8 Apr 2025 14:17:19 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Joe Damato <jdamato@fastly.com>, Michael Klein <michael@fossekall.de>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RESEND net-next v5 1/4] net: phy: realtek: Group RTL82* macro
+ definitions
+Message-ID: <96fcff68-6a96-49fe-b771-629d3bef03ea@lunn.ch>
+References: <20250407182155.14925-1-michael@fossekall.de>
+ <20250407182155.14925-2-michael@fossekall.de>
+ <Z_SPgqil9HFyU7Y6@LQ3V64L9R2>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,29 +50,63 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z_UI2AHtkIGS4bZR@gpd3>
+In-Reply-To: <Z_SPgqil9HFyU7Y6@LQ3V64L9R2>
 
-Hello Andrea,
-
-On Tue, Apr 08, 2025 at 01:30:32PM +0200, Andrea Righi wrote:
-> Hi Breno,
+On Mon, Apr 07, 2025 at 07:52:50PM -0700, Joe Damato wrote:
+> On Mon, Apr 07, 2025 at 08:21:40PM +0200, Michael Klein wrote:
+> > Group macro definitions by chip number in lexicographic order.
+> > 
+> > Signed-off-by: Michael Klein <michael@fossekall.de>
+> > ---
+> >  drivers/net/phy/realtek/realtek_main.c | 30 +++++++++++++-------------
+> >  1 file changed, 15 insertions(+), 15 deletions(-)
+> > 
+> > diff --git a/drivers/net/phy/realtek/realtek_main.c b/drivers/net/phy/realtek/realtek_main.c
+> > index 893c82479671..b27c0f995e56 100644
+> > --- a/drivers/net/phy/realtek/realtek_main.c
+> > +++ b/drivers/net/phy/realtek/realtek_main.c
+> > @@ -17,6 +17,15 @@
+> >  
+> >  #include "realtek.h"
+> >  
+> > +#define RTL8201F_ISR				0x1e
+> > +#define RTL8201F_ISR_ANERR			BIT(15)
+> > +#define RTL8201F_ISR_DUPLEX			BIT(13)
+> > +#define RTL8201F_ISR_LINK			BIT(11)
+> > +#define RTL8201F_ISR_MASK			(RTL8201F_ISR_ANERR | \
+> > +						 RTL8201F_ISR_DUPLEX | \
+> > +						 RTL8201F_ISR_LINK)
+> > +#define RTL8201F_IER				0x13
 > 
-> I already acked even the buggy version, so this one looks good. :)
+> If sorting lexicographically, wouldn't RTL8201F_IER come before
+> RTL8201F_ISR ?
+
+The change log says "chip_number" lexicographic order. RTL8201F is the
+chip number, ISR is the register name.
+
+You would normally sub sort register number, so i would of put
+IER=0x13 before ISR=0x1e, within RTL8201F.
+
 > 
-> On Tue, Apr 08, 2025 at 04:09:02AM -0700, Breno Leitao wrote:
-> > Replace kzalloc with kvzalloc for the exit_dump buffer allocation, which
-> > can require large contiguous memory (up to order=9) depending on the
+> >  #define RTL821x_PHYSR				0x11
+> >  #define RTL821x_PHYSR_DUPLEX			BIT(13)
+> >  #define RTL821x_PHYSR_SPEED			GENMASK(15, 14)
+> > @@ -31,6 +40,10 @@
+> >  #define RTL821x_EXT_PAGE_SELECT			0x1e
+> >  #define RTL821x_PAGE_SELECT			0x1f
+> >  
+> > +#define RTL8211E_CTRL_DELAY			BIT(13)
+> > +#define RTL8211E_TX_DELAY			BIT(12)
+> > +#define RTL8211E_RX_DELAY			BIT(11)
 > 
-> BTW, from where this order=9 is coming from? exit_dump_len is 32K by
-> default, but a BPF scheduler can arbitrarily set it to any value via
-> ops->exit_dump_len, so it could be even bigger than an order 9 allocation.
+> Maybe I'm reading this wrong but these don't seem sorted
+> lexicographically ?
 
-You are absolutely correct, this allocation could be of any size.
+This i don't follow, you normally keep register bits next to the
+register. This is particularly important when the register bits don't
+have the register name embedded within it.
 
-I've got this problem because I was monitoring the Meta fleet, and saw
-a bunch of allocation failures and decided to investigate. In this case
-specifically, the users were using order=9 (512 pages), but, again, this
-could be even bigger.
+    Andrew
 
-Thanks for the review,
---breno
+---
+pw-bot: cr
