@@ -1,117 +1,121 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail.ptr1337.dev (mail.ptr1337.dev [202.61.224.105])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA93B1CAA7D;
-	Tue,  8 Apr 2025 04:42:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7884523AD;
+	Tue,  8 Apr 2025 04:45:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.61.224.105
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744087349; cv=none; b=hzIMGchEqe/Ey+TvlyFNx2VJKiZhBv9aaEaeFzEMSxZWK2dBam7Izo96tVB57CvXZ+1maQ4ROJ5x9VQKdgvNJRoYBYr1gpEcKh4ZbS1meG38B370jqAKKtubCv7AOgJTr5Cc+InUcfv2k5oWVOtupdWz6YvzGmSQGTY052NSfz8=
+	t=1744087534; cv=none; b=t5T9zbGbYxOKhdGSjer6ApGupmOefmJLwbNq+uSOngTKl6dpozM6p0ZENC0n42sus7gVxN5UHn28tIB6Z+NzfwJuPRxmN9sLsHO2yOmMN9TJ33I4uRx067m1OWAsSK2nIE315XAec9rnQ6FEGg1+SeMGL5yCT0x66yjFUcPG8rs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744087349; c=relaxed/simple;
-	bh=D31vUVu32ORyo4H6+P+jGQhtvqYv+1sDFDa93HUVz9M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ET37hgwKVtLPl//E/vfJI7Y+VBENHNfOuE88ft9nLlz6y0HWzjY/KmCr3g7f0r1GyTwT+hfNkF9dFSQ5doyonGv+/7SeVyld24wk2Krtr0nWKTzA1W35BuxxfPRw+32RYoKrmH/sFcFT2pT9vL+GTknTer9wgXscsabTbOMaFqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-01 (Coremail) with SMTP id qwCowADHbf4sqfRnikMWBw--.31690S2;
-	Tue, 08 Apr 2025 12:42:21 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: gregkh@linuxfoundation.org
-Cc: philipp.g.hortmann@gmail.com,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH v7] staging: rtl8723bs: Add error handling for sd_read()
-Date: Tue,  8 Apr 2025 12:41:52 +0800
-Message-ID: <20250408044152.3009-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1744087534; c=relaxed/simple;
+	bh=F2PYI+L2dgk/3pQsr9DP7jaG9Mjpx4ZaXFpuiOfJOrc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=t7z0oRVH7iBRqGmU4y0YJXtFOUrRx9Yhydp96xbLgyij8OOdthx/optvwhClQW7YELzJHPnzEzLgf8IcxyxRwJyhr6vuGWtCdL2tHnPfs9Q0sPSzOroOknoeJyIC3OIiTXB1Gl249B4JFy8u33LpDWArITcM8cqmdpNI0fNg5CU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cachyos.org; spf=pass smtp.mailfrom=cachyos.org; dkim=pass (2048-bit key) header.d=cachyos.org header.i=@cachyos.org header.b=RB/UMYRl; arc=none smtp.client-ip=202.61.224.105
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cachyos.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cachyos.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cachyos.org header.i=@cachyos.org header.b="RB/UMYRl"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id E064F281552;
+	Tue,  8 Apr 2025 06:39:35 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cachyos.org; s=dkim;
+	t=1744087189;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=W6lum0tK8iDSD3O1/w0NV8phRZIGe2yefEV3A1OTASE=;
+	b=RB/UMYRl3akr6Y8arx8VoiIh7JJFg6O6efnTlECPY+Udx14ewLdibMHM4h+aPmr6TQgVFg
+	3tYc4etb248jCyDvlQc0dCcAjw7AbJXeXjuUldroGOw8W5iNu9Uy5tEzKBvge3JX4ZukoK
+	vRI0hqTtDyE9prVsl/NwsYvmKc9dDeyu81GiPPKzezA9ustLKrXTGolSkiVHnPHD/0m2zo
+	ovuXnS2VnLE4nF8yO+rGNNR/95LTY3PR9OMIlzxPzIY6SQg6z6JFi3B5p/uCWJOIYE/lAZ
+	c3LgcrefqLIKK39ez7Wg1WNTgzSDeGmUZ0YUMVyfD0vxuq7OX7vBFgojsYsPpg==
+Message-ID: <40182b31-95ad-4825-9c0c-0127be1734a6@cachyos.org>
+Date: Tue, 8 Apr 2025 12:39:25 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowADHbf4sqfRnikMWBw--.31690S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7CryUuFW8JF4xur15Jr1UZFb_yoW8Kw18pF
-	4kKa4DArZ8Wa95ZFn2qas3Ca4rAryrGFW5WrW0kw4Svw15uwsavrWrKa42gr18Gr4qkw4Y
-	qF1v93Z8uw1DAFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
-	1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-	6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr
-	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v2
-	6r126r1DMxkIecxEwVAFwVW8XwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJV
-	W8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
-	1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6x
-	IIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvE
-	x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvj
-	DU0xZFpf9x0JUbzVUUUUUU=
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBgsGA2f0dv3HmQAAsO
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 10/17] mm: uninline the main body of vma_start_write()
+To: Vlastimil Babka <vbabka@suse.cz>, Suren Baghdasaryan <surenb@google.com>,
+ akpm@linux-foundation.org
+Cc: peterz@infradead.org, willy@infradead.org, liam.howlett@oracle.com,
+ lorenzo.stoakes@oracle.com, mhocko@suse.com, hannes@cmpxchg.org,
+ mjguzik@gmail.com, oliver.sang@intel.com, mgorman@techsingularity.net,
+ david@redhat.com, peterx@redhat.com, oleg@redhat.com, dave@stgolabs.net,
+ paulmck@kernel.org, brauner@kernel.org, dhowells@redhat.com,
+ hdanton@sina.com, hughd@google.com, lokeshgidra@google.com,
+ minchan@google.com, jannh@google.com, shakeel.butt@linux.dev,
+ souravpanda@google.com, pasha.tatashin@soleen.com, klarasmodin@gmail.com,
+ corbet@lwn.net, linux-doc@vger.kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, kernel-team@android.com
+References: <20241226170710.1159679-1-surenb@google.com>
+ <20241226170710.1159679-11-surenb@google.com>
+ <0d36fd53-b817-4bbd-ae38-af094bd301df@suse.cz>
+Content-Language: en-US
+From: Eric Naim <dnaim@cachyos.org>
+In-Reply-To: <0d36fd53-b817-4bbd-ae38-af094bd301df@suse.cz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-The sdio_read32() calls sd_read(), but does not handle the error if
-sd_read() fails. This could lead to subsequent operations processing
-invalid data. A proper implementation can be found in sdio_readN(),
-which has an error handling for the sd_read().
+On 1/8/25 01:35, Vlastimil Babka wrote:
+> On 12/26/24 18:07, Suren Baghdasaryan wrote:
+>> vma_start_write() is used in many places and will grow in size very soon.
+>> It is not used in performance critical paths and uninlining it should
+>> limit the future code size growth.
+>> No functional changes.
+>>
+>> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+> 
+> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+> 
+>> --- a/mm/memory.c
+>> +++ b/mm/memory.c
+>> @@ -6328,6 +6328,20 @@ struct vm_area_struct *lock_mm_and_find_vma(struct mm_struct *mm,
+>>  #endif
+>>  
+>>  #ifdef CONFIG_PER_VMA_LOCK
+>> +void __vma_start_write(struct vm_area_struct *vma, unsigned int mm_lock_seq)
+>> +{
+>> +	down_write(&vma->vm_lock.lock);
+>> +	/*
+>> +	 * We should use WRITE_ONCE() here because we can have concurrent reads
+>> +	 * from the early lockless pessimistic check in vma_start_read().
+>> +	 * We don't really care about the correctness of that early check, but
+>> +	 * we should use WRITE_ONCE() for cleanliness and to keep KCSAN happy.
+>> +	 */
+>> +	WRITE_ONCE(vma->vm_lock_seq, mm_lock_seq);
+>> +	up_write(&vma->vm_lock.lock);
+>> +}
+>> +EXPORT_SYMBOL_GPL(__vma_start_write);
+> 
+> Do any modules need it? If not we shouldn't export.
 
-Add error handling for the sd_read() to free tmpbuf and return error
-code if sd_read() fails. This ensure that the memcpy() is only performed
-when the read operation is successful.
+Hi Vlastimil, Suren
 
-Since none of the callers check for the errors, there is no need to
-return the error code propagated from sd_read(). Returning SDIO_ERR_VAL32
-might be a better choice, which is a specialized error code for SDIO.
+The out-of-tree NVIDIA modules seem to rely on this symbol, is it possible to use EXPORT_SYMBOL() here instead of EXPORT_SYMBOL_GPL(), below is the modpost error:
 
-Another problem of returning propagated error code is that the error
-code is a s32 type value, which is not fit with the u32 type return value
-of the sdio_read32().
+	MODPOST Module.symvers
+	WARNING: modpost: missing MODULE_DESCRIPTION() in nvidia.o
+	WARNING: modpost: missing MODULE_DESCRIPTION() in nvidia-uvm.o
+	WARNING: modpost: missing MODULE_DESCRIPTION() in nvidia-modeset.o
+	WARNING: modpost: missing MODULE_DESCRIPTION() in nvidia-drm.o
+	ERROR: modpost: GPL-incompatible module nvidia.ko uses GPL-only symbol '__vma_start_write'
+	ERROR: modpost: GPL-incompatible module nvidia-drm.ko uses GPL-only symbol '__vma_start_write'
+	make[4]: *** [/tmp/makepkg/linux-cachyos-rc-nc/src/linux-6.15-rc1/scripts/Makefile.modpost:147: Module.symvers] Error 1
+	make[3]: *** [/tmp/makepkg/linux-cachyos-rc-nc/src/linux-6.15-rc1/Makefile:1964: modpost] Error 2
 
-An practical option would be to go through all the callers and add error
-handling, which need to pass a pointer to u32 *val and return zero on
-success or negative on failure. It is not a better choice since will cost
-unnecessary effort on the error code.
+If it's possible I can send a patch that changes that.
 
-The other opion is to replace sd_read() by sd_read32(), which return an
-u32 type error code that can be directly used as the return value of
-sdio_read32(). But, it is also a bad choice to use sd_read32() in a
-alignment failed branch.
-
-Fixes: 554c0a3abf21 ("staging: Add rtl8723bs sdio wifi driver")
-Cc: stable@vger.kernel.org # v4.12+
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
-v7: Fix error code and add patch explanation
-v6: Fix improper code to propagate error code
-v5: Fix error code
-v4: Add change log and fix error code
-v3: Add Cc flag
-v2: Change code to initialize val
-
- drivers/staging/rtl8723bs/hal/sdio_ops.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/staging/rtl8723bs/hal/sdio_ops.c b/drivers/staging/rtl8723bs/hal/sdio_ops.c
-index 21e9f1858745..d79d41727042 100644
---- a/drivers/staging/rtl8723bs/hal/sdio_ops.c
-+++ b/drivers/staging/rtl8723bs/hal/sdio_ops.c
-@@ -185,7 +185,12 @@ static u32 sdio_read32(struct intf_hdl *intfhdl, u32 addr)
- 			return SDIO_ERR_VAL32;
- 
- 		ftaddr &= ~(u16)0x3;
--		sd_read(intfhdl, ftaddr, 8, tmpbuf);
-+		err = sd_read(intfhdl, ftaddr, 8, tmpbuf);
-+		if (err) {
-+			kfree(tmpbuf);
-+			return SDIO_ERR_VAL32;
-+		}
-+
- 		memcpy(&le_tmp, tmpbuf + shift, 4);
- 		val = le32_to_cpu(le_tmp);
- 
+> 
+>>  /*
+>>   * Lookup and lock a VMA under RCU protection. Returned VMA is guaranteed to be
+>>   * stable and not isolated. If the VMA is not found or is being modified the
+> 
 -- 
-2.42.0.windows.2
-
+Regards,
+Eric
