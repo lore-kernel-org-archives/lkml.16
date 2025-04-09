@@ -1,96 +1,90 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A75491EB18E
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 07:38:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BD4325A2CF;
+	Wed,  9 Apr 2025 07:40:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744184309; cv=none; b=Y/PrUGdNBVaXRwb9bVrXIBtXlCFDCU638RtRoPnVob7yBNaXKAFngRjLo4tmVWgt4S0/aB4cJ0JW5FlIki48ZXsdiozAzO9eYnU2bFyVrN0mIy6v2GZnOl6hZgWG1PJVRKNIC6bxSde6l0G9yDtR0VzPncDNfrdlDg9MrOPZy8g=
+	t=1744184428; cv=none; b=sU+TS2JFB1O+DkZpBz5eCQs0PCr03l6n3tuqdykzZML1zxspTe0tdcCa+yy3hTMfrm3zFfWSWH+EIhnkkDmdo5e6HCgPrO4E1lP13EszFRP0d9OdBuIOiLlAdPPs0shSZ/q5flJK1hhlxC8P6W0wJYzH7ifEb6XQJnEQJRFgvoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744184309; c=relaxed/simple;
-	bh=KfpRXUCxzkoQbCGtnWTHiZepgMVHCRh0eaffx0cA0xY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=u8I3JftEAc0/qEEysvGWhTPxeuoSGt+EpwkDigOPb170J4onoBmDe1d47HxdAesmqXa3egHYAQ7aHt6Pedz10xI9VGz5OPMLFSsaIOBJWO8TX58O6V7WCMi9mgCRhgLZsafOlac7SJHJ9IUkLUfYvMv56WJWPwdxgp7uLDP7y98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=C8P4Xhw+; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744184428; c=relaxed/simple;
+	bh=5A4/mVtb50kDqC+fC4moBuZWkZin2xvhttRQZOHCkWY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h05mYgwhKahJD5dv+zI9VAAKElg1T6TKZQqzn3ZDJ/D6hULaERp0FtI/1rc1TA6DkxEtvxTrXGb9J/UpNYpIw80fYNH6p3AFh6Rb7yOax2tl0nuBv6zwLH03VbkUC4RhcMLQz67GpSKT2SwNrA3xlyrRz95gXun9bdfZNVAn4gI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=l1WJTwoH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="C8P4Xhw+"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 980D344443;
-	Wed,  9 Apr 2025 07:38:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744184299;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KfpRXUCxzkoQbCGtnWTHiZepgMVHCRh0eaffx0cA0xY=;
-	b=C8P4Xhw+MZU+F89vQSeyNet/H3rSTmbg76soqo8S9hujFZlwC/lMUfamO7+Fan4Fbme0Mg
-	w+2VPXwHkUZ12gLJawWZxVU6qUOruJxh8BCpqRkUHUV4LHIAUbQAXT2Fte9p7TLtqEziGu
-	unvjrAEpPvQIXoGOl54iLh1rFVdxLZqWfDDEbsL9XzBViIYCykHkGYXHQW3QCMAwdVxchc
-	SGI0RQGY8E+IhIKfSwtfWxjKISd10upmdgyG/dm8I4Y1G9Mqi5zrKpQa1YNaxllvmmi3Lm
-	FyTz55Aw/UTEUTVU4HGVTUarra6MYDZWft836O8B34UBz83EgHiBO5FcGhCs2A==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Mikhail Arkhipov <m.arhipov@rosa.ru>
-Cc: Richard Weinberger <richard@nod.at>,  Vignesh Raghavendra
- <vigneshr@ti.com>,  linux-mtd@lists.infradead.org,
-  linux-kernel@vger.kernel.org,  lvc-project@linuxtesting.org
-Subject: Re: [PATCH] mtd: nand: ecc-mxic: Fix use of uninitialized variable ret
-In-Reply-To: <20250408213906.23129-1-m.arhipov@rosa.ru> (Mikhail Arkhipov's
-	message of "Wed, 9 Apr 2025 00:39:06 +0300")
-References: <20250408213906.23129-1-m.arhipov@rosa.ru>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Wed, 09 Apr 2025 09:38:17 +0200
-Message-ID: <87v7rdhjiu.fsf@bootlin.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="l1WJTwoH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4893C4CEE3;
+	Wed,  9 Apr 2025 07:40:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1744184427;
+	bh=5A4/mVtb50kDqC+fC4moBuZWkZin2xvhttRQZOHCkWY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=l1WJTwoHZc3qjvmjY79LDqVw8yNPc7fXVIUSnszBy/x4qMn/nUHuqpBM3yPeH/6c9
+	 hnEYfp9IjOqRmoM1eNivkI2JXhsZVibeFB4LgGY6tT6aTdhPS8L0O+V0Gmh8PGRVBk
+	 cfWBpBRob3BewkrYvHs01eNtHjklIjGNUNHlurb4=
+Date: Wed, 9 Apr 2025 09:38:53 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: FUJITA Tomonori <fujita.tomonori@gmail.com>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	x86@kernel.org, linux-riscv@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, peterz@infradead.org, hpa@zytor.com,
+	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+	catalin.marinas@arm.com, will@kernel.org, chenhuacai@kernel.org,
+	kernel@xen0n.name, tangyouling@loongson.cn, hejinyang@loongson.cn,
+	yangtiezhu@loongson.cn, ojeda@kernel.org, alex.gaynor@gmail.com,
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me, a.hindborg@kernel.org, aliceryhl@google.com,
+	tmgross@umich.edu
+Subject: Re: [PATCH v5 4/4] rust: Add warn_on macro
+Message-ID: <2025040954-prenatal-enamel-373f@gregkh>
+References: <20250409065802.136971-1-fujita.tomonori@gmail.com>
+ <20250409065802.136971-5-fujita.tomonori@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdehgeduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhgffffkgggtgfesthhqredttderjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeffgefhjedtfeeigeduudekudejkedtiefhleelueeiueevheekvdeludehiedvfeenucfkphepvddttddumeekiedumedvtdgtfeemsggufhdtmegvgehftdemfhejudhfmehfsggrvdemkegufhejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumedvtdgtfeemsggufhdtmegvgehftdemfhejudhfmehfsggrvdemkegufhejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeipdhrtghpthhtohepmhdrrghrhhhiphhovhesrhhoshgrrdhruhdprhgtphhtthhopehrihgthhgrrhgusehnohgurdgrthdprhgtphhtthhopehvihhgnhgvshhhrhesthhirdgtohhmpdhrtghpthhtoheplhhinhhugidqmhhtugeslhhishhtshdrihhnfhhrrgguv
- ggrugdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlvhgtqdhprhhojhgvtghtsehlihhnuhigthgvshhtihhnghdrohhrgh
-X-GND-Sasl: miquel.raynal@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409065802.136971-5-fujita.tomonori@gmail.com>
 
-On 09/04/2025 at 00:39:06 +03, Mikhail Arkhipov <m.arhipov@rosa.ru> wrote:
+On Wed, Apr 09, 2025 at 03:58:01PM +0900, FUJITA Tomonori wrote:
+> Add warn_on macro, uses the BUG/WARN feature (lib/bug.c) via assembly
+> for x86_64/arm64/riscv.
+> 
+> The current Rust code simply wraps BUG() macro but doesn't provide the
+> proper debug information. The BUG/WARN feature can only be used from
+> assembly.
+> 
+> This uses the assembly code exported by the C side via ARCH_WARN_ASM
+> macro. To avoid duplicating the assembly code, this approach follows
+> the same strategy as the static branch code: it generates the assembly
+> code for Rust using the C preprocessor at compile time.
+> 
+> Similarly, ARCH_WARN_REACHABLE is also used at compile time to
+> generate the assembly code; objtool's reachable anotation code. It's
+> used for only architectures that use objtool.
+> 
+> For now, Loongarch and arm32 just use a wrapper for WARN macro.
+> 
+> UML doesn't use the assembly BUG/WARN feature; just wrapping generic
+> BUG/WARN functions implemented in C works.
+> 
+> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
 
-> If ctx->steps is zero, the loop processing ECC steps is skipped,
-> and the variable ret remains uninitialized. It is later checked
-> and returned, which leads to undefined behavior and may cause
-> unpredictable results in user space or kernel crashes.
->
-> This scenario can be triggered in edge cases such as misconfigured
-> geometry,
+I don't object to this change, but I would STRONGLY recommend never
+using this in any driver if at all possible.  Only use this if the
+system is in such a state that the only way out is to reboot the kernel,
+which is what both WARN() and BUG() will do.
 
-Would clearly be a huge bug, nothing else would work in this case, not a
-single read, ie. we would stop way before reaching this point.
+Note, any way that a user can trigger either of these code paths will
+result in a CVE, so don't do that either.  Almost always just properly
+handle the issue and propagate up the error to the caller.
 
-> ECC engine misuse,
+thanks,
 
-Ditto.
-
-> or if ctx->steps is not validated after initialization.
-
-steps =3D mtd->writesize / 1K
-and
-we only run on large-page NANDs, ie. chips with mtd->writesize >=3D 1K.
-so this case is not plausible.
-
-> Initialize ret to zero before the loop to ensure correct and safe
-> behavior regardless of the ctx->steps value.
->
-> Found by Linux Verification Center (linuxtesting.org) with SVACE.
->
-> Fixes: 48e6633a9fa2 ("mtd: nand: mxic-ecc: Add Macronix external ECC
-> engine support")
-
-I will apply, but honestly I do not think this fixes anything.
-
-> Signed-off-by: Mikhail Arkhipov <m.arhipov@rosa.ru>
-
-Thanks,
-Miqu=C3=A8l
+gre gk-h
