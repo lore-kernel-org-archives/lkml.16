@@ -1,216 +1,242 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8579E25D556;
-	Wed,  9 Apr 2025 15:44:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EADB025D556;
+	Wed,  9 Apr 2025 15:44:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744213465; cv=none; b=XR6+2VQ9TtEhiGybRaFh8PjvdGNEgvgd2hq95Mbq6okhj+Ogo6oaIe2Lm7piP70n101YO9ypDSj+RTRUJEXu16zNvaeVvVhvWBjWcZCnLaDeK7vLcQzxIHZLqu13EUkxszLoWJwAjWMcY9BMrKTJt55TuRFAX0IivqE41he2Xwo=
+	t=1744213473; cv=none; b=F+k5zeGWqO6XobqXfGpziRvzdRFr5SmdcNvJUK0AZqbFNxLxzgHJn3gqm3VooKISDLN/pMw+O9RTjgfjUnOeUGn4EWYyKJ367HxoHQNoCga8vNlpIJ7W0qSz5rarxyuqHt8tGe5/R0wMNPKH1wgDOhnOkxorJlEZQUpd4M5YkDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744213465; c=relaxed/simple;
-	bh=D04YxEOHigVIOe7nGGXiC5qB0SuQhddrL8+XeL9TRHU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p9WA4IAM4NWM48dgPKnSCzkUavFgj4hcDMpDv/fteLSmBx4cJ4/UnW65ZfxpDVq7grZKbCn9IsmqadFWugoy3CJ30vQneWt4Lj+vc4ixSwoTIKX0s9jUcC+34+AruTtCx8ygL6jMh5Q5gG7SVAKLzEI81zwYm6pcly1mwtQJpa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xt8aGD8H; arc=none smtp.client-ip=209.85.210.178
+	s=arc-20240116; t=1744213473; c=relaxed/simple;
+	bh=Dh2iCy49AlSFY/9nHd6Unte6BCO4NJ7RSIG0FCrmwLQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FeZLPmpmC8D9uUjx5P2+6tguray0g50sPc6/U9WGxEFRh1gcrAGsp0D/LpP2wnad8NRroBpjU3M4xHpfTqDSqF4TxdFJejrS/EerufpEW6R6w4+0M2pAgwbQzXxPmn+HPhmPssooPWzm6iyEdA2LwNBNrU35e0lZh+i0arZT5ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P3grMWA+; arc=none smtp.client-ip=209.85.215.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xt8aGD8H"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-739ab4447c7so839283b3a.0;
-        Wed, 09 Apr 2025 08:44:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P3grMWA+"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-af50f56b862so4885734a12.1;
+        Wed, 09 Apr 2025 08:44:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744213463; x=1744818263; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pzRTGH1ny0vv7Ey4MKuvYlccmkZb3G5nEDPJcfHDxZg=;
-        b=Xt8aGD8HD1y5OoZkwRymrCybLLDzrEMuc4PPhH97/rVm8sJkzzz2+PhvIb5h2j9GpT
-         kpfTAwUV0CYZDVdY9RKE3CUVq3amUUT7SIwEjp7EOMAn7L2TUw7jWqLTSnWgL1Xysv4b
-         qLjlJhnMEttHm35AXTQLGS4Y7zB1ioNNZYddFR4s/gaHG3ZjaRslZPAS/NvGXSQjTE+Y
-         I9lr5jiEtz3xXJXWpzy4GCPRof1Edwi1/rAAaW23mm7df2HGv6+7X+9RIMwzcert4oOF
-         CoJr+upyxvKGTH1yjyCvmJZB285y7Ey1/SGkdzQeNanWBBl6FZbdpZx00ajm3shTlcIw
-         oRkw==
+        d=gmail.com; s=20230601; t=1744213471; x=1744818271; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=MUUuTxOiF/e6pFbiGJ55Vd+VaZOP/yQaXFZJe/XlPzE=;
+        b=P3grMWA+e1iHD/x8gmr9RZaGKL+y35ts6TeeIjR2IueDnvP00TrdUPrUdzulmMe1xq
+         Q5L6qoBA7p8tXyuUmSoZmbDWbPp2eccSytVL7WRGeIdRW0bE1Ko+uo3Nb9WPC4l3zNlI
+         t17XGTYTHVabMOIbz8E77PKG95PQSXiNVe5Aa2/OvTh+OM0HkUxDiuyIX4bpZ0daU5nw
+         3tHcwqltaImNumjvXoztsSYqsjaCd5toL7ilw3auvhdm6cE8X0pVo7gg4UFU/34lbpvG
+         bJVdk81DGhBCOvRXN7RzyCp//oHgsklZjh0q8Uv3ToDWNT6XaaLgaCOw+cA6RGaTfwfv
+         PWpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744213463; x=1744818263;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pzRTGH1ny0vv7Ey4MKuvYlccmkZb3G5nEDPJcfHDxZg=;
-        b=VUooChqZ1nilBxnNOCrN1jhH2RKpmDyI88yQgG/gn8ckT06np3WDqEAsoc959XseXq
-         vvYSBl9Oz3WgHnouoQL0NXjSBrmqbuSSwMKM6P/T5J/6x0oAxdVkXseEUyPeivbrW+ZK
-         iQrH3RaXdBLmZLWTe9lvkHXgo+IEtUlMR6f7B7xpnaZfbvU5t1KOzmnxPHGI9SYVkJpP
-         Uj1SDLhq49y8xl7MyGRW1PNodykP7cMrcixh2WrPftTzL20PDRjM/PIZhBJ15unMqJ3b
-         Dt8OgJjxVl9UriLtuCRfyRVJo2BDrqVkoJQhRTrCKbnaG8MhQyLmPlf2VVqXdqc8P2vF
-         c3sg==
-X-Forwarded-Encrypted: i=1; AJvYcCUwq44oleMUOo5aBmQpYRUPPLnw96c4P4E8++4QEMLzM1Rp8njmRxIF+B17vWX97CK63Fbd8Y5Sqq2MpeIu@vger.kernel.org, AJvYcCVvoU7UiENEs3XI1i0W/2CRDp4kwetkO7FzPOuIF0xugw+SgeXIKuZ23XRHmoxR3+yh5ksR6rbuZvkP70+H@vger.kernel.org, AJvYcCXuDa5HJK7RK2R7ov4mUbeB2C043Uy9ImqkpGZfSUKXmlhzCSYOqNIP/GT1Ym7ieznjAjPZerLT4GPJmchtxaSW@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7s/aTX3roqSC+rHuiAIoalsvm7FCgK/LhjR5nBdR1Fm2gUphV
-	rDhTLhrade6fvHa7aAaBQhs2qLOZ0eNh7JXkFQfsHOeh7lmUmjJPy11J7npCpbwBDfI1KD5eK+t
-	k0Za1DvHRDxH/pXiPfnRnqukWgRU=
-X-Gm-Gg: ASbGncv7Bg1BPf50PWbEtWRhfNbLVyn52YWY2VrxKijykIM1JAT0g7ds5b5qz/Ho2bj
-	IrsmCYRL9Ls8AbV0/zzAF6hkVShp7nwC1NkkBvucLpGGxcQVu+LoK18v4aS1eAecoSiRJbOAjHP
-	yzWybt6R0YoKnoW7r7zv/DlQ==
-X-Google-Smtp-Source: AGHT+IF5oThqq2ezhfnJ6WCfpy2FnPDcHZNg2MdPGxfC5acUPxiGFCloLJ76HFGANCkrc6gQf5RcO2ZdqDZ2EJeWKG4=
-X-Received: by 2002:a05:6a00:2410:b0:730:87b2:e848 with SMTP id
- d2e1a72fcca58-73bae54d12amr1658559b3a.5.1744213462627; Wed, 09 Apr 2025
- 08:44:22 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744213471; x=1744818271;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MUUuTxOiF/e6pFbiGJ55Vd+VaZOP/yQaXFZJe/XlPzE=;
+        b=ezqe8+pyKUqnc+U7I4MsmixHZ/N62IHgLEqYlseKrBC0Sk7iR6zB45gFt7BgFK5a6i
+         SlSjkiQYIUApV5GBg+BuqzMUZCKqaU98mG9iiaZ9p8uWsLloAYlDdhkbNDYiplBLKDHD
+         4YU2aACzOw2DpLdC5X6+QAeshCPcA5icNfJSCcAmN2YzKBBH7zU/Lq1flvdHgdpr9zaA
+         Tf0AbgyIsORSWgzwMtrOBuciPwmOxYcctVOM6sFC/gIEOm9tbnq0yf4fnaL2J4jGvShm
+         sSaldz6GsCsJT23rA08oLMIJSd1hwijTyLceLyM5ut112rzKP1ZuOtAAS5ElBAx1ZnOk
+         WerA==
+X-Forwarded-Encrypted: i=1; AJvYcCV5Rkn4zKLojuF+En+gCnkt7gnvUEwbig8/nXjd43ZEHWwFSLZk5AQeu/WPOvEd8AF6eM8=@vger.kernel.org, AJvYcCVVQI3aGGedKFxdxgGuSwwcDF7dQuqBIkBH3kz2rqNTfHTCkLxBFMezKczODU1Z2xQXnJ9djtHSP722oNg=@vger.kernel.org, AJvYcCVbWCGtfoH09WTi/NT7ZM0mmr/BjbwywlW1sD8VUuagcR1NoU9vLRta5StAsnO/EQZ9FdnIaQIV@vger.kernel.org, AJvYcCVt+xlNsSzhjRCzuxojTpKGdLWm2pO5n+Obb9nmffh0lIePo6CIuOnEM2H3lfPyPzsWNDEygonAjF06b3RX@vger.kernel.org, AJvYcCW1MpgD++n9SKyqcFIhRlZ4ZxXpP19nXWgGVc4nxw5ytQBjr7s6TlG+2RxtUN2tKa5NCz0kvIDbuFi1T30=@vger.kernel.org, AJvYcCW5KvcnBShGwAdqpTKairRWKZLSUXjGARoyHsF786h8xuxcanLGPzyWY+WibXG795HK3rCz1SGhrTcWxPzKP2c=@vger.kernel.org, AJvYcCX0ebyTyZ5rFwbJOV5zf12p6QcxlRVb2nT5psEFWReaqaVXL/Assea5FL22YLFv5xn6ODy4izCvnl6TqxE=@vger.kernel.org, AJvYcCXb/E3Bfte9scP4x81Ru3Bu953vgtfS3YbKzXsJypAy881Zu39OqareJY1w/8/nc9m4C2xURHmnSFbHOjZj@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8fQ2h9tmGG0TTbeTc9aCQDUC8VTVQBjvJpzjMxIWVN/pkC3tV
+	l0F9gCb7Pf70zeuWWM4ZxEEVxFV4iOzLPthzyKGheK0T/hTbrmuh
+X-Gm-Gg: ASbGnctIjBmpRRcrd3OJMiFcbxMMMyahV5tvXuLqykimg08JBYIbJ6p1BRj/gtEZemT
+	5Z4S8QApXGlW9SoHRuBw50AUK3ycBpb5yFRSm/KKs6i8J1yPxN958EDXbuJtRLIYDc5DJP4h0NB
+	LQFX4mFIXN4CagYZtDuvEtlypC7vXc9/K/zPTbPSPH20Hp0Y7PD6SDbccyYsGRFJSBAJY3vTvPB
+	15zJAyrItCiXfSlVH1C9kzfWeGk+69QMUTVcQuEGEaU9kSVF3CtI86Kn25vcID62xd6AibmkVqj
+	qRKfetp7Dmdzy7zsBJpMOPOkwOw288afsfcGgDFJiSgcM90QSJhlNye6lnS8q4aUiJ8Llpk=
+X-Google-Smtp-Source: AGHT+IGnoEozOknyoC6We3L6wSu5LW5c8+l3K2S+PrKsnw7nWoi0Lt21fMnvhITP0Puz6RwfcrL34g==
+X-Received: by 2002:a17:90a:d884:b0:2f9:cf97:56ac with SMTP id 98e67ed59e1d1-306dd1719cfmr5116718a91.0.1744213470998;
+        Wed, 09 Apr 2025 08:44:30 -0700 (PDT)
+Received: from visitorckw-System-Product-Name.. ([140.113.216.168])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306dd171991sm1952304a91.37.2025.04.09.08.44.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 08:44:30 -0700 (PDT)
+From: Kuan-Wei Chiu <visitorckw@gmail.com>
+To: tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	jk@ozlabs.org,
+	joel@jms.id.au,
+	eajames@linux.ibm.com,
+	andrzej.hajda@intel.com,
+	neil.armstrong@linaro.org,
+	rfoss@kernel.org,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	dmitry.torokhov@gmail.com,
+	mchehab@kernel.org,
+	awalls@md.metrocast.net,
+	hverkuil@xs4all.nl,
+	miquel.raynal@bootlin.com,
+	richard@nod.at,
+	vigneshr@ti.com,
+	louis.peens@corigine.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	parthiban.veerasooran@microchip.com,
+	arend.vanspriel@broadcom.com,
+	johannes@sipsolutions.net,
+	gregkh@linuxfoundation.org,
+	jirislaby@kernel.org,
+	yury.norov@gmail.com,
+	akpm@linux-foundation.org,
+	jdelvare@suse.com,
+	linux@roeck-us.net,
+	alexandre.belloni@bootlin.com,
+	pgaj@cadence.com
+Cc: hpa@zytor.com,
+	alistair@popple.id.au,
+	linux@rasmusvillemoes.dk,
+	Laurent.pinchart@ideasonboard.com,
+	jonas@kwiboo.se,
+	jernej.skrabec@gmail.com,
+	kuba@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-fsi@lists.ozlabs.org,
+	dri-devel@lists.freedesktop.org,
+	linux-input@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	linux-mtd@lists.infradead.org,
+	oss-drivers@corigine.com,
+	netdev@vger.kernel.org,
+	linux-wireless@vger.kernel.org,
+	brcm80211@lists.linux.dev,
+	brcm80211-dev-list.pdl@broadcom.com,
+	linux-serial@vger.kernel.org,
+	bpf@vger.kernel.org,
+	jserv@ccns.ncku.edu.tw,
+	Frank.Li@nxp.com,
+	linux-hwmon@vger.kernel.org,
+	linux-i3c@lists.infradead.org,
+	david.laight.linux@gmail.com,
+	andrew.cooper3@citrix.com,
+	Kuan-Wei Chiu <visitorckw@gmail.com>,
+	Yu-Chun Lin <eleanor15x@gmail.com>
+Subject: [PATCH v4 00/13] Introduce parity_odd() and refactor redundant parity code
+Date: Wed,  9 Apr 2025 23:43:43 +0800
+Message-Id: <20250409154356.423512-1-visitorckw@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250409-topic-smem_dramc-v1-0-94d505cd5593@oss.qualcomm.com>
- <20250409-topic-smem_dramc-v1-3-94d505cd5593@oss.qualcomm.com>
- <CACu1E7GMf0Mx2ZX_t76h+b1CPin49LGix7c5uvoWaJZC3dKyOw@mail.gmail.com>
- <c2dac38b-bbe5-4cd1-9d33-b4bba629d54b@oss.qualcomm.com> <CACu1E7F71M0Z5KUdArRYbLEMXoS3jQEtp=0-4LEYFRysOsYZfA@mail.gmail.com>
- <9a12e042-487b-4937-a583-709f0c37ab12@oss.qualcomm.com>
-In-Reply-To: <9a12e042-487b-4937-a583-709f0c37ab12@oss.qualcomm.com>
-From: Connor Abbott <cwabbott0@gmail.com>
-Date: Wed, 9 Apr 2025 11:44:11 -0400
-X-Gm-Features: ATxdqUESO1yUGm43W-4aJ0p1YKGgK-hvQNegRseX9b5IIsphXiy86aIo60d1HwI
-Message-ID: <CACu1E7Hto_Ms3RxQjXXYB+RB+FC5n1VFtohKbe4EzKWgEk9uiQ@mail.gmail.com>
-Subject: Re: [PATCH 3/4] drm/msm/a6xx: Get HBB dynamically, if available
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Konrad Dybcio <konradybcio@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, Rob Clark <robdclark@gmail.com>, 
-	Sean Paul <sean@poorly.run>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Dmitry Baryshkov <lumag@kernel.org>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 9, 2025 at 11:40=E2=80=AFAM Konrad Dybcio
-<konrad.dybcio@oss.qualcomm.com> wrote:
->
-> On 4/9/25 5:30 PM, Connor Abbott wrote:
-> > On Wed, Apr 9, 2025 at 11:22=E2=80=AFAM Konrad Dybcio
-> > <konrad.dybcio@oss.qualcomm.com> wrote:
-> >>
-> >> On 4/9/25 5:12 PM, Connor Abbott wrote:
-> >>> On Wed, Apr 9, 2025 at 10:48=E2=80=AFAM Konrad Dybcio <konradybcio@ke=
-rnel.org> wrote:
-> >>>>
-> >>>> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> >>>>
-> >>>> The Highest Bank address Bit value can change based on memory type u=
-sed.
-> >>>>
-> >>>> Attempt to retrieve it dynamically, and fall back to a reasonable
-> >>>> default (the one used prior to this change) on error.
-> >>>>
-> >>>> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> >>>> ---
-> >>>>  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 22 ++++++++++++++++------
-> >>>>  1 file changed, 16 insertions(+), 6 deletions(-)
-> >>>>
-> >>>> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm=
-/msm/adreno/a6xx_gpu.c
-> >>>> index 06465bc2d0b4b128cddfcfcaf1fe4252632b6777..0cc397378c99db353152=
-09d0265ad9223e8b55c7 100644
-> >>>> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> >>>> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> >>>> @@ -13,6 +13,7 @@
-> >>>>  #include <linux/firmware/qcom/qcom_scm.h>
-> >>>>  #include <linux/pm_domain.h>
-> >>>>  #include <linux/soc/qcom/llcc-qcom.h>
-> >>>> +#include <linux/soc/qcom/smem.h>
-> >>>>
-> >>>>  #define GPU_PAS_ID 13
-> >>>>
-> >>>> @@ -669,17 +670,22 @@ static void a6xx_calc_ubwc_config(struct adren=
-o_gpu *gpu)
-> >>>>  static void a6xx_set_ubwc_config(struct msm_gpu *gpu)
-> >>>>  {
-> >>>>         struct adreno_gpu *adreno_gpu =3D to_adreno_gpu(gpu);
-> >>>> +       u32 hbb =3D qcom_smem_dram_get_hbb();
-> >>>> +       u32 ubwc_mode =3D adreno_gpu->ubwc_config.ubwc_swizzle & 1;
-> >>>> +       u32 level2_swizzling_dis =3D !(adreno_gpu->ubwc_config.ubwc_=
-swizzle & 2);
-> >>>> +       u32 hbb_hi, hbb_lo;
-> >>>> +
-> >>>>         /*
-> >>>>          * We subtract 13 from the highest bank bit (13 is the minim=
-um value
-> >>>>          * allowed by hw) and write the lowest two bits of the remai=
-ning value
-> >>>>          * as hbb_lo and the one above it as hbb_hi to the hardware.
-> >>>>          */
-> >>>> -       BUG_ON(adreno_gpu->ubwc_config.highest_bank_bit < 13);
-> >>>> -       u32 hbb =3D adreno_gpu->ubwc_config.highest_bank_bit - 13;
-> >>>> -       u32 hbb_hi =3D hbb >> 2;
-> >>>> -       u32 hbb_lo =3D hbb & 3;
-> >>>> -       u32 ubwc_mode =3D adreno_gpu->ubwc_config.ubwc_swizzle & 1;
-> >>>> -       u32 level2_swizzling_dis =3D !(adreno_gpu->ubwc_config.ubwc_=
-swizzle & 2);
-> >>>> +       if (hbb < 0)
-> >>>> +               hbb =3D adreno_gpu->ubwc_config.highest_bank_bit;
-> >>>
-> >>> No. The value we expose to userspace must match what we program.
-> >>> You'll break VK_EXT_host_image_copy otherwise.
-> >>
-> >> I didn't know that was exposed to userspace.
-> >>
-> >> The value must be altered either way - ultimately, the hardware must
-> >> receive the correct information. ubwc_config doesn't seem to be const,
-> >> so I can edit it there if you like it better.
-> >>
-> >> Konrad
-> >
-> > Yes, you should be calling qcom_smem_dram_get_hbb() in
-> > a6xx_calc_ubwc_config(). You can already see there's a TODO there to
-> > plug it in.
->
-> Does this look good instead?
->
-> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/=
-adreno/a6xx_gpu.c
-> index 0cc397378c99..ae8dbc250e6a 100644
-> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> @@ -588,6 +588,8 @@ static void a6xx_set_cp_protect(struct msm_gpu *gpu)
->
->  static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
->  {
-> +       u8 hbb;
+Several parts of the kernel contain open-coded and redundant
+implementations of parity calculation. This patch series introduces
+a unified helper, parity_odd(), to simplify and standardize these
+cases.
 
-You can't make it u8 and then test for a negative value on error.
-Other than that, looks good.
+The first patch renames parity8() to parity_odd(), changes its argument
+type from u8 to u64 for broader applicability, and updates its return
+type from int to bool to make its usage and return semantics more
+intuitive-returning true for odd parity and false for even parity. It
+also adds __attribute_const__ to enable compiler optimizations.
 
-Connor
+While more efficient implementations may exist, further optimization is
+postponed until a use case in performance-critical paths arises.
 
-> +
->         gpu->ubwc_config.rgb565_predicator =3D 0;
->         gpu->ubwc_config.uavflagprd_inv =3D 0;
->         gpu->ubwc_config.min_acc_len =3D 0;
-> @@ -636,7 +638,6 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu *=
-gpu)
->             adreno_is_a690(gpu) ||
->             adreno_is_a730(gpu) ||
->             adreno_is_a740_family(gpu)) {
-> -               /* TODO: get ddr type from bootloader and use 2 for LPDDR=
-4 */
->                 gpu->ubwc_config.highest_bank_bit =3D 16;
->                 gpu->ubwc_config.amsbc =3D 1;
->                 gpu->ubwc_config.rgb565_predicator =3D 1;
-> @@ -665,6 +666,13 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu =
-*gpu)
->                 gpu->ubwc_config.highest_bank_bit =3D 14;
->                 gpu->ubwc_config.min_acc_len =3D 1;
->         }
-> +
-> +       /* Attempt to retrieve HBB data from SMEM, keep the above default=
-s in case of error */
-> +       hbb =3D qcom_smem_dram_get_hbb();
-> +       if (hbb < 0)
-> +               return;
-> +
-> +       gpu->ubwc_config.highest_bank_bit =3D hbb;
->  }
->
->  static void a6xx_set_ubwc_config(struct msm_gpu *gpu)
->
->
-> Konrad
+Subsequent patches refactor various kernel components to replace
+open-coded parity logic with the new helper, reducing code duplication
+and improving consistency.
+
+Co-developed-by: Yu-Chun Lin <eleanor15x@gmail.com>
+Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
+Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
+---
+
+To H. Peter:
+I understand your preference for a parity8/16/32/64() style interface,
+and I agree that such a design would better accommodate potential
+arch-specific implementations. However, I suspect there are very few,
+if any, users who care about the performance of parity calculations
+enough to warrant such optimizations. So my inclination is to defer any
+arch-specific or optimized implementations until we see parity_odd()
+being used in hot paths.
+
+Changes in v4:
+- Rename parity8() to parity_odd().
+- Change the argument type from u8 to u64.
+- Use a single parity_odd() function.
+
+Changes in v3:
+- Avoid using __builtin_parity.
+- Change return type to bool.
+- Drop parity() macro.
+- Change parityXX() << y to !!parityXX() << y.
+
+Changes in v2:
+- Provide fallback functions for __builtin_parity() when the compiler
+  decides not to inline it
+- Use __builtin_parity() when no architecture-specific implementation
+  is available
+- Optimize for constant folding when val is a compile-time constant
+- Add a generic parity() macro
+- Drop the x86 bootflag conversion patch since it has been merged into
+  the tip tree
+
+v3: https://lore.kernel.org/lkml/20250306162541.2633025-1-visitorckw@gmail.com/
+v1: https://lore.kernel.org/lkml/20250223164217.2139331-1-visitorckw@gmail.com/
+v2: https://lore.kernel.org/lkml/20250301142409.2513835-1-visitorckw@gmail.com/
+
+Kuan-Wei Chiu (13):
+  bitops: Change parity8() to parity_odd() with u64 input and bool
+    return type
+  media: media/test_drivers: Replace open-coded parity calculation with
+    parity_odd()
+  media: pci: cx18-av-vbi: Replace open-coded parity calculation with
+    parity_odd()
+  media: saa7115: Replace open-coded parity calculation with
+    parity_odd()
+  serial: max3100: Replace open-coded parity calculation with
+    parity_odd()
+  lib/bch: Replace open-coded parity calculation with parity_odd()
+  Input: joystick - Replace open-coded parity calculation with
+    parity_odd()
+  net: ethernet: oa_tc6: Replace open-coded parity calculation with
+    parity_odd()
+  wifi: brcm80211: Replace open-coded parity calculation with
+    parity_odd()
+  drm/bridge: dw-hdmi: Replace open-coded parity calculation with
+    parity_odd()
+  mtd: ssfdc: Replace open-coded parity calculation with parity_odd()
+  fsi: i2cr: Replace open-coded parity calculation with parity_odd()
+  nfp: bpf: Replace open-coded parity calculation with parity_odd()
+
+ arch/x86/kernel/bootflag.c                    |  4 +--
+ drivers/fsi/fsi-master-i2cr.c                 | 20 +++------------
+ .../drm/bridge/synopsys/dw-hdmi-ahb-audio.c   |  8 ++----
+ drivers/hwmon/spd5118.c                       |  2 +-
+ drivers/i3c/master/dw-i3c-master.c            |  2 +-
+ drivers/i3c/master/i3c-master-cdns.c          |  2 +-
+ drivers/i3c/master/mipi-i3c-hci/dat_v1.c      |  2 +-
+ drivers/input/joystick/grip_mp.c              | 17 ++-----------
+ drivers/input/joystick/sidewinder.c           | 25 ++++---------------
+ drivers/media/i2c/saa7115.c                   | 12 ++-------
+ drivers/media/pci/cx18/cx18-av-vbi.c          | 12 ++-------
+ .../media/test-drivers/vivid/vivid-vbi-gen.c  |  8 ++----
+ drivers/mtd/ssfdc.c                           | 20 +++------------
+ drivers/net/ethernet/netronome/nfp/nfp_asm.c  |  7 +-----
+ drivers/net/ethernet/oa_tc6.c                 | 19 +++-----------
+ .../broadcom/brcm80211/brcmsmac/dma.c         | 18 ++-----------
+ drivers/tty/serial/max3100.c                  |  3 ++-
+ include/linux/bitops.h                        | 19 ++++++++------
+ lib/bch.c                                     | 14 +----------
+ 19 files changed, 49 insertions(+), 165 deletions(-)
+
+-- 
+2.34.1
+
