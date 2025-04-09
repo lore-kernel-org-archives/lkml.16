@@ -1,212 +1,181 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80CB6227B9A;
-	Wed,  9 Apr 2025 07:03:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from zg8tmtyylji0my4xnjqumte4.icoremail.net (zg8tmtyylji0my4xnjqumte4.icoremail.net [162.243.164.118])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D6F1189B84;
+	Wed,  9 Apr 2025 07:03:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.164.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744182183; cv=none; b=fu5mG+XytP9ROUe/KbUqZKX/cCZRXC947j8ifp3c+VFSTcA4D2ht8r8medlK0CW/Bbg2acOMgGpkzSygboCKSVaPl5Vs1Y4i7UFnF6eOubPj8F7fZqShr4MOixvpYSDMK2ttUGdHYaQ/RsKxr6FrNGidwJ8WOhj3Evolecf2mdc=
+	t=1744182204; cv=none; b=utZVM3BZQSs8NSxMyIzV77FaJt3ku1Yr92LYqix4rkQ8Rv9MVW5uSiQjednfYVtqxmoJVTJIX/R4BbWKq9rWNVpEaQtrGa9fisBjcm334KljoUiZlT0E55AIYuom245UyHo5T8aQBGTznSgISulm86Vahq57UuqtlYZs7J9L0nI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744182183; c=relaxed/simple;
-	bh=GhJjba4DASE+gn/vKR2p2ZDR4gtAyED9oHXRfRJMQDg=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:MIME-Version:
-	 Content-Type; b=r+2JcNWVdbqU8cvTHOlbtwsG5E7aJGsLHDKlvwdRHXOxga6iUoAJvGZWr19fpHZMX0dO5cJud11XDZzgkDXsr+I5Ssmk7pG4rR4Cys7GPqBTDCv5sz8l8nTUo2hxbscxlFKH1euU7FyfjaupG0ZtH89t5G1rRlmHHY8GDlowyjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3D5Ssgch; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=6ifcU608; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3D5Ssgch";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6ifcU608"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744182179;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:  in-reply-to:in-reply-to;
-	bh=VOmAn5HJOdV8OMSxYWo4JluT1F/+Pu1GjzeS4u5pAO0=;
-	b=3D5SsgchXR80wcDt9UVR8yINSR2645wVWl9u7QujPCmO/G2KS0u8p8PkHkuWPbodk637p0
-	kozkEAM6squKqZ79dn8hLteKVtODT5LH3q1qRgYbSWxWh9YSQDuDiwQfetliKPztI+YFdp
-	Spc+O04y/1zcdLnj23spfCHI87IsCT6QToMvKygaJaWy9pv9nQpwial5SOev2LYiXWmNvX
-	20FALRNtpQrpUyE1VJqgJ2myVtGe8gSlgUKhvAy/UZBEIVyuaFXpJvRkOsEhSd7momrfTY
-	BVSOexTekNViyqoNrAZ1kg8lPWIElkIdthS+myV5AokSGK5Z6MoJZOCZzasU0A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744182179;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:  in-reply-to:in-reply-to;
-	bh=VOmAn5HJOdV8OMSxYWo4JluT1F/+Pu1GjzeS4u5pAO0=;
-	b=6ifcU608szf0bZHytP4UwRb8K9SLqsSsJiJZR+9bDUoHw1d7f318b4GCdlFKQEy1Vqp8dx
-	sCq+Tpm03IjxY9DA==
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>, Marc Zyngier
- <maz@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: Sascha Bischoff <sascha.bischoff@arm.com>, Timothy Hayes
- <timothy.hayes@arm.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Lorenzo
- Pieralisi <lpieralisi@kernel.org>
-Subject: Re: [PATCH 19/24] irqchip/gic-v5: Add GICv5 IRS/SPI support
-In-Reply-To: <20250408-gicv5-host-v1-19-1f26db465f8d@kernel.org>
-Date: Wed, 09 Apr 2025 09:02:58 +0200
-Message-ID: <87zfgpu89p.ffs@tglx>
+	s=arc-20240116; t=1744182204; c=relaxed/simple;
+	bh=q39kQhDN49GLm/lEOP32rR1ke0TxfqFy3ziGaeITL1I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TnPl1bjuoG1WizjEpEkr0Mz41O97PBgG27gUwkOlKDIu4/T4XhdoFIbaqfYkA7hToOLPO9Czm2JW6TMOieht/6oGazFACt+LKLmSoQberLZQo4KnC6uI33S/SZNgvW+5TOHnVPlGIw/JMPKHmtXc12548CZ8fCPv+ZLEObGMaC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=162.243.164.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
+Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
+	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwBnR7yyG_Zn9W65Ew--.14899S2;
+	Wed, 09 Apr 2025 15:03:14 +0800 (CST)
+Received: from phytium.com.cn (unknown [123.150.8.50])
+	by mail (Coremail) with SMTP id AQAAfwBnaoasG_ZnhURkAA--.7272S3;
+	Wed, 09 Apr 2025 15:03:09 +0800 (CST)
+From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	jiaxun.yang@flygoat.com,
+	rppt@kernel.org,
+	akpm@linux-foundation.org,
+	david@redhat.com,
+	Jonathan.Cameron@huawei.com,
+	dave.hansen@linux.intel.com,
+	dan.j.williams@intel.com,
+	alison.schofield@intel.com
+Cc: chenbaozi@phytium.com.cn,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	Yuquan Wang <wangyuquan1236@phytium.com.cn>
+Subject: [PATCH 1/1] LoongArch: Introduce the numa_memblks conversion
+Date: Wed,  9 Apr 2025 15:02:50 +0800
+Message-Id: <20250409070250.3225839-1-wangyuquan1236@phytium.com.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAfwBnaoasG_ZnhURkAA--.7272S3
+X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAPAWf1gRgDIgADsm
+Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=wangyuquan
+	1236@phytium.com.cn;
+X-Coremail-Antispam: 1Uk129KBjvJXoWxXFWxtrW7Gr45Ar4UJrW5ZFb_yoWrGF4rpF
+	ZxCrs3Xr48Wr18Ja40kry29w15Kwn7KanxXa47GFyfZF12vryDZr40grn2vFyUt3y8ur40
+	9rn5C3WavF4rJ3JanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
+	UUUUU
 
-On Tue, Apr 08 2025 at 12:50, Lorenzo Pieralisi wrote:
-> +struct iaffid_entry {
-> +	u16 iaffid;
-> +	bool valid;
-> +};
+"mm: introduce numa_memblks"(87482708210f) has moved numa_memblks
+from x86 to the generic code, but loongarch was left out of this
+conversion.
 
-See the previous documentation link and search for struct definitions on
-that page.
+This patch introduces the generic numa_memblks.
 
-> +static int gicv5_irs_wait_for_spi_op(struct gicv5_irs_chip_data *irs_dat=
-a)
-> +{
-> +	int ret;
-> +	u32 statusr;
+Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+---
 
-See documentaion...
+Background
+----------
+I am managed to land the patch[1] "mm: numa_memblks: introduce numa_add_reserved_memblk"
+but kernel test CI noticed build errors[2] from loongarch64-linux-gcc.
 
-> +	ret =3D readl_relaxed_poll_timeout_atomic(
-> +			irs_data->irs_base + GICV5_IRS_SPI_STATUSR, statusr,
-> +			FIELD_GET(GICV5_IRS_SPI_STATUSR_IDLE, statusr), 1,
-> +			USEC_PER_SEC);
+Link:
+[1]: https://lore.kernel.org/all/20250409040121.3212489-1-wangyuquan1236@phytium.com.cn/
+[2]: https://lore.kernel.org/all/202503282026.QNaOAK79-lkp@intel.com/
 
-See previous mail about how to make stuff like this readable. My eyes
-bleed already.
+ arch/loongarch/Kconfig            |  1 +
+ arch/loongarch/include/asm/numa.h | 14 ----------
+ arch/loongarch/kernel/numa.c      | 43 +------------------------------
+ 3 files changed, 2 insertions(+), 56 deletions(-)
 
-> +	if (ret =3D=3D -ETIMEDOUT) {
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 067c0b994648..5906ccd06705 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -186,6 +186,7 @@ config LOONGARCH
+ 	select MODULES_USE_ELF_RELA if MODULES
+ 	select NEED_PER_CPU_EMBED_FIRST_CHUNK
+ 	select NEED_PER_CPU_PAGE_FIRST_CHUNK
++	select NUMA_MEMBLKS
+ 	select OF
+ 	select OF_EARLY_FLATTREE
+ 	select PCI
+diff --git a/arch/loongarch/include/asm/numa.h b/arch/loongarch/include/asm/numa.h
+index b5f9de9f102e..bbf9f70bd25f 100644
+--- a/arch/loongarch/include/asm/numa.h
++++ b/arch/loongarch/include/asm/numa.h
+@@ -22,20 +22,6 @@ extern int numa_off;
+ extern s16 __cpuid_to_node[CONFIG_NR_CPUS];
+ extern nodemask_t numa_nodes_parsed __initdata;
+ 
+-struct numa_memblk {
+-	u64			start;
+-	u64			end;
+-	int			nid;
+-};
+-
+-#define NR_NODE_MEMBLKS		(MAX_NUMNODES*2)
+-struct numa_meminfo {
+-	int			nr_blks;
+-	struct numa_memblk	blk[NR_NODE_MEMBLKS];
+-};
+-
+-extern int __init numa_add_memblk(int nodeid, u64 start, u64 end);
+-
+ extern void __init early_numa_add_cpu(int cpuid, s16 node);
+ extern void numa_add_cpu(unsigned int cpu);
+ extern void numa_remove_cpu(unsigned int cpu);
+diff --git a/arch/loongarch/kernel/numa.c b/arch/loongarch/kernel/numa.c
+index 30a72fd528c0..0ed384635566 100644
+--- a/arch/loongarch/kernel/numa.c
++++ b/arch/loongarch/kernel/numa.c
+@@ -18,6 +18,7 @@
+ #include <linux/efi.h>
+ #include <linux/irq.h>
+ #include <linux/pci.h>
++#include <linux/numa_memblks.h>
+ #include <asm/bootinfo.h>
+ #include <asm/loongson.h>
+ #include <asm/numa.h>
+@@ -145,48 +146,6 @@ void numa_remove_cpu(unsigned int cpu)
+ 	cpumask_clear_cpu(cpu, &cpus_on_node[nid]);
+ }
+ 
+-static int __init numa_add_memblk_to(int nid, u64 start, u64 end,
+-				     struct numa_meminfo *mi)
+-{
+-	/* ignore zero length blks */
+-	if (start == end)
+-		return 0;
+-
+-	/* whine about and ignore invalid blks */
+-	if (start > end || nid < 0 || nid >= MAX_NUMNODES) {
+-		pr_warn("NUMA: Warning: invalid memblk node %d [mem %#010Lx-%#010Lx]\n",
+-			   nid, start, end - 1);
+-		return 0;
+-	}
+-
+-	if (mi->nr_blks >= NR_NODE_MEMBLKS) {
+-		pr_err("NUMA: too many memblk ranges\n");
+-		return -EINVAL;
+-	}
+-
+-	mi->blk[mi->nr_blks].start = PFN_ALIGN(start);
+-	mi->blk[mi->nr_blks].end = PFN_ALIGN(end - PAGE_SIZE + 1);
+-	mi->blk[mi->nr_blks].nid = nid;
+-	mi->nr_blks++;
+-	return 0;
+-}
+-
+-/**
+- * numa_add_memblk - Add one numa_memblk to numa_meminfo
+- * @nid: NUMA node ID of the new memblk
+- * @start: Start address of the new memblk
+- * @end: End address of the new memblk
+- *
+- * Add a new memblk to the default numa_meminfo.
+- *
+- * RETURNS:
+- * 0 on success, -errno on failure.
+- */
+-int __init numa_add_memblk(int nid, u64 start, u64 end)
+-{
+-	return numa_add_memblk_to(nid, start, end, &numa_meminfo);
+-}
+-
+ static void __init node_mem_init(unsigned int node)
+ {
+ 	unsigned long start_pfn, end_pfn;
+-- 
+2.34.1
 
-unlikely(ret =3D=3D ...) perhaps?
-
-> +		pr_err_ratelimited("Time out waiting for IRS SPI to be configured\n");
-
-> +static int __init gicv5_irs_init_bases(struct gicv5_irs_chip_data *irs_d=
-ata,
-> +				       void __iomem *irs_base,
-> +				       struct fwnode_handle *handle)
-> +{
-> +	u32 cr0, cr1;
-> +	struct device_node *np =3D to_of_node(handle);
-
-Sigh
-
-> +static int __init gicv5_irs_of_init_affinity(struct device_node *node,
-> +				      struct gicv5_irs_chip_data *irs_data,
-> +				      u8 iaffid_bits)
-
-Moar random coding style choices.
-
-> +{
-> +	/*
-> +	 * Detect IAFFID<->CPU mappings from the device tree and
-> +	 * record IRS<->CPU topology information.
-> +	 */
-> +	int ret, i, ncpus, niaffids;
-> +	u16 *iaffids;
-> +	u16 iaffid_mask =3D GENMASK(iaffid_bits - 1, 0);
-> +
-> +	ncpus =3D of_property_count_elems_of_size(node, "cpus", sizeof(u32));
-> +	if (WARN_ON(ncpus < 0))
-> +		return -EINVAL;
-
-Do you really need all these warnings?
-
-> +
-> +	niaffids =3D of_property_count_elems_of_size(node, "arm,iaffids",
-> +						   sizeof(u16));
-> +	if (WARN_ON(niaffids !=3D ncpus))
-> +		return -EINVAL;
-> +
-> +	iaffids =3D kcalloc(niaffids, sizeof(*iaffids), GFP_KERNEL);
-> +	if (!iaffids)
-> +		return -ENOMEM;
-> +
-> +	ret =3D of_property_read_u16_array(node, "arm,iaffids", iaffids, niaffi=
-ds);
-> +	if (ret)
-> +		return ret;
-
-Leaks iaffids. Please use
-
-      u16 *iaffids __free(kfree) =3D kcalloc(...);
-
-and the compiler will take care of that.
-
-> +static int __init gicv5_irs_init(struct device_node *node)
-> +{
-> +	void __iomem *irs_base;
-> +	struct gicv5_irs_chip_data *irs_data;
-> +	int ret;
-> +	u32 idr;
-> +	u8 iaffid_bits;
-> +
-> +	irs_data =3D kzalloc(sizeof(*irs_data), GFP_KERNEL);
-
-__free(kfree)
-
-> +	if (!irs_data)
-> +		return -ENOMEM;
-
-> +	if (irs_data->spi_range)
-> +		pr_info("%s detected SPI range [%u-%u]\n",
-> +						of_node_full_name(node),
-> +						irs_data->spi_min,
-> +						irs_data->spi_min +
-> +						irs_data->spi_range - 1);
-
-Please put those _five_ lines into brackets. It's not required by the
-compiler, but for reading. Brackets should be omitted only if the
-statement which follows =E2=80=98if=E2=80=99, =E2=80=98for=E2=80=99, =E2=80=
-=98while=E2=80=99 etc. is truly a single
-line.
-
-> +static int gicv5_iri_irq_get_irqchip_state(struct irq_data *d,
-> +					   enum irqchip_irq_state which,
-> +					   bool *val, u8 hwirq_type)
-> +{
-> +	u64 icsr, cdrcfg =3D d->hwirq | FIELD_PREP(GICV5_GIC_CDRCFG_TYPE_MASK,
-> +						 hwirq_type);
-> +
-> +	preempt_disable();
-
-That's required because the calling contexts protection (raw spinlock
-held and interrupts disabled) is not enough, right?
-
-> +	gic_insn(cdrcfg, GICV5_OP_GIC_CDRCFG);
-> +	isb();
-> +	icsr =3D read_sysreg_s(SYS_ICC_ICSR_EL1);
-> +	preempt_enable();
-
-> +static int gicv5_irq_spi_domain_translate(struct irq_domain *d,
-> +					  struct irq_fwspec *fwspec,
-> +					  irq_hw_number_t *hwirq,
-> +					  unsigned int *type)
-> +{
-> +	if (is_of_node(fwspec->fwnode)) {
-> +		if (fwspec->param_count < 3)
-> +			return -EINVAL;
-> +
-> +		if (fwspec->param[0] !=3D GICV5_HWIRQ_TYPE_SPI)
-> +			return -EINVAL;
-> +
-> +		*hwirq =3D fwspec->param[1];
-> +		*type =3D fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
-> +
-> +		return 0;
-> +	}
-
-The only difference between this and the ppi variant is the type check
-of param[0]. Common helper perhaps?
-
-Thanks,
-
-        tglx
