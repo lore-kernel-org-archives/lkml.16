@@ -1,101 +1,195 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D2984C80;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2817F263889;
 	Wed,  9 Apr 2025 13:21:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744204914; cv=none; b=XdeRuMIQbZO2+C0qiXyupe99YAOEFqK9eBERKJDnC34bCZnTlVW9/WDh9h/9Bn2WTuy0KXxfQIbrXdKGizcDpIadRPE5Cbim1FEVQaolxvIE5jQM2s128cnOu1Qi0vqqm3Jg3olsgJq1Qe4CcM0j+e6Zp6DABHJk8euqfSOXKwo=
+	t=1744204916; cv=none; b=pGgPezdtFkSX1m9HPbGNp4yfkUFt4Z/fDh2EZGJQJ/Yib2PSRq+aNNiL8gb/IWJF2n4Bsa3Cxx740a6jihwYiGIOaChbcmpsOMNrk20IAe9Z+ElfA59LV/aenBkfjZtFo47GNggij+cSP3R7PULrE0qXf3kkdt2vzHrXcs5Vv4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744204914; c=relaxed/simple;
-	bh=hkkkXU0rPXOW0FHwk4UkS9j/YrFARBVXCZRGq/oo8ek=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a4a3vHgL/ivDsXrPcxN4nn4sxOXP11/IBsHUG65oVYA9fZJHG9jPVGeWTbNjHV4lqb522MddbvPBB1n4n66qCZQT3A2KBnjhVMV/E8/LsuZFp3tQZH1597wbkQTh9nzQ9TORBj4Bmsn4kv7MGLrAA865zX5lDIoGgrl/foCDk7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uPIEbTbA; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WH3yhCDs; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744204916; c=relaxed/simple;
+	bh=SmrqXL4RqYVu9PyS6OdO8GxT2NhYunMwLJ3j18/+GeY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bnjYjDdS8K50R1TfX0caeHkadHSjWdFil49/XA/sFPZEH2X1njaaVuU3qYS9yTWRd2XVKX5EAp7H5ie3WqUrh3t7A+y+b0OFJlOPkjn9QC2ux3Zs0By6XccaMj5Fas9fNKUSMK/IwZWX/GCm+LQiJQPadtOcVj6rIBjcZH+cdoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PSTGE5w0; arc=none smtp.client-ip=209.85.219.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uPIEbTbA";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WH3yhCDs"
-Date: Wed, 9 Apr 2025 15:21:49 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744204910;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iMwQCoiALCNgWaYTDJpegtVRqt9rDoY6rGfEceo5S9k=;
-	b=uPIEbTbAXea1Pk78zz2srCANqqBb+FipN9mltrJ9HaLxRm4/egfHhFBuSZo+jlH1tu8JVK
-	u8/L5RqwSGSeLCVRPPOwz5fi9EJfEtbCkAaXjY9hiuBjhkHM1oHKn5dMkzVhOhSi84MoE3
-	c6719RwcN2Jyvz0eREZ83LCjs9NLNOp7yJHczlbjF8hKL/IjD9HYO3tGUuCGidzIFB8uRD
-	dpz1oX/DdAeT9zHzIJ7TY4o2yRMYt80ZBqI4WU74924VUz5wrSa7PMeL3BnDUi1Yg9Hzm3
-	U8WG93dzIHKMwDubH4i66Gn9yiCBVgTe4JDix5sQbFBXeDAtLbIxkv10ntyI6g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744204910;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iMwQCoiALCNgWaYTDJpegtVRqt9rDoY6rGfEceo5S9k=;
-	b=WH3yhCDsCGnrn0Dgp8DOitWlcaLqmRxWjuCp+BvgpJgV132yYRa33D1v144UvDdbZrvY5o
-	AgLNVB2lGVP7nqAA==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Jan Kiszka <jan.kiszka@siemens.com>
-Cc: Valentin Schneider <vschneid@redhat.com>,
-	linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kprateek.nayak@amd.com, Thomas Gleixner <tglx@linutronix.de>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Clark Williams <williams@redhat.com>,
-	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
-	Andreas Ziegler <ziegler.andreas@siemens.com>,
-	Felix Moessbauer <felix.moessbauer@siemens.com>,
-	Florian Bezdeka <florian.bezdeka@siemens.com>
-Subject: Re: [RT BUG] Stall caused by eventpoll, rwlocks and CFS bandwidth
- controller
-Message-ID: <20250409132149.rFrzBCrP@linutronix.de>
-References: <xhsmhttqvnall.mognet@vschneid.remote.csb>
- <3f7b7ce1-6dd4-4a4e-9789-4c0cbde057bd@siemens.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PSTGE5w0"
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6e900a7ce55so99132896d6.3;
+        Wed, 09 Apr 2025 06:21:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744204912; x=1744809712; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=SCBNp4JG6p8TrqxQOWK55yW9vDXymXnDHD0MufGLyMs=;
+        b=PSTGE5w0p0Q2tjnSQ5R04vSw9bgQzXptP5EbstLF0NnPfEz72aEXZ7V1EcN6UdnonC
+         DGagoJCHh0ivLyplUUAbvVRwls8+9xiDgOEsaYKzJ+uI9mxfPtB7SpXyh+A4jlmRe1mV
+         up7mEUm9KtnNUgwKzAGZhrHztDVTaUjJDb/GXKxo3wMFZ29yhPgGh+iTQ6oH9Ys65WqC
+         xpx7OZcGED7PVqG7n+ZhaNY2EoWioFl1eYEcPYBd1qeGrUeacxyWQRQ//EE+9Ld6auFA
+         Md8rWF181CO4kyfa+W2Xd03MVuC4LRacbJjAW+T6CZcbYDFcD3R2uuSD5qMlMqgPXgcf
+         hpdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744204912; x=1744809712;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SCBNp4JG6p8TrqxQOWK55yW9vDXymXnDHD0MufGLyMs=;
+        b=qmapOstMbsyWIXBIsDHPS5vlch94nOFOsCiTcqr20VL6U/w+mFXMxy1+G+jOENwJf9
+         ntE7um25KbfF7GIm0jjBYFBMYIIlAIVPFkqPEPiT+8RN04mrD8WVmQ6ick1XwVjGdbq9
+         pexBxroKIooun9rXllxzp1RcEKupsw1yFyxWWi59qZBfF/VadtKyHQ2RbTCp4AmQdOkT
+         IbYnipn1OIz0bURRx2gBQwHp5S0URkOh+8GQrf4m1j1hCw9bqdVL0ZpQyBS16Oco67tQ
+         8H7QkXGqQsOh7QU1gY6Qt5AWZVLTdgqtDZPccmll2GjQc/OfyrIP2CGlQe6h7F1ZGTyn
+         j9WA==
+X-Forwarded-Encrypted: i=1; AJvYcCVhkUQlx9IzXwxGF/6S9o6ZlTlpaZJIliurx91mXlgDRT4C9LZn01HcCbOTUhZz8ho7Nvx0xpc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSRyvYapFbnYEn+uOvEgm2gKVrakKIP+vkBn5tzaZxFsP62jAv
+	dEJjkbbSVk3Acmvced04M0OghDDRc1IXb5MusfqUevbXsKmXSIt5sEeSG2TJLUThT2HsAexeNFY
+	4glLYFjgB27IUl8Zo0WAnhAgwNms=
+X-Gm-Gg: ASbGnctCiNUA7wbH6sqvDqdn+TdubMkjyuHf+Td7mJTapafwxrMYY+yeNpkT5f8PsL9
+	LZGJ2FIV4bhajQYHInpTHiVKGccLRyxElR/Ltvofa7nz0DvUgoISAkZwkSvgTluMoOshs7EjsZg
+	li6I5nCbpLcQMEJ2l2vvf6plNo
+X-Google-Smtp-Source: AGHT+IEK6Kny/es6p6BhHc5qmMh2JHSDKmv1HyuA+ZNybmkFb6rEmjsaFGmivL505JRYubKnVnHnszm2Vbrzo6lCChE=
+X-Received: by 2002:a05:6214:1315:b0:6ea:d090:6365 with SMTP id
+ 6a1803df08f44-6f0dd7f0da3mr33962516d6.32.1744204911762; Wed, 09 Apr 2025
+ 06:21:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <3f7b7ce1-6dd4-4a4e-9789-4c0cbde057bd@siemens.com>
+References: <CGME20250409125216eucas1p150b189cd13807197a233718302103a02@eucas1p1.samsung.com>
+ <20250409124950.58819-1-e.kubanski@partner.samsung.com>
+In-Reply-To: <20250409124950.58819-1-e.kubanski@partner.samsung.com>
+From: Magnus Karlsson <magnus.karlsson@gmail.com>
+Date: Wed, 9 Apr 2025 15:21:40 +0200
+X-Gm-Features: ATxdqUGbbHJXnd4jMCEYZb64rxFS1AXoPyCmugRzmhq5mK_PvHhd6OqKS-X-iLI
+Message-ID: <CAJ8uoz1px+AanwpyaY4vNy7yJrwwTdqE8W6mWqgLBR1k1ngZgQ@mail.gmail.com>
+Subject: Re: [PATCH] xsk: Fix race condition in AF_XDP generic RX path
+To: "e.kubanski" <e.kubanski@partner.samsung.com>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, bjorn@kernel.org, 
+	magnus.karlsson@intel.com, maciej.fijalkowski@intel.com, 
+	jonathan.lemon@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 2025-04-09 08:41:44 [+0200], Jan Kiszka wrote:
-> We are hunting for quite some time sporadic lock-ups or RT systems,=20
-> first only in the field (sigh), now finally also in the lab. Those have=
-=20
-> a fairly high overlap with what was described here. Our baselines so=20
-> far: 6.1-rt, Debian and vanilla. We are currently preparing experiments=
-=20
-> with latest mainline.
->=20
-> While this thread remained silent afterwards, we have found [1][2][3] as=
-=20
-> apparently related. But this means we are still with this RT bug, even=20
-> in latest 6.15-rc1?
+On Wed, 9 Apr 2025 at 14:56, e.kubanski <e.kubanski@partner.samsung.com> wrote:
+>
+> rx_lock moved from xsk_socket to xsk_buff_pool.
+> Previous synchronization didn't take care of
+> shared umem mode in generic RX path where sockets
+> share the same xsk_buff_pool.
+>
+> RX queue is exclusive to xsk_socket, while FILL
+> queue can be shared between multiple sockets.
+> This could result in race condition where two
+> CPU cores access RX path of two different sockets
+> sharing the same umem.
 
-Not sure the commits are related. The problem here is that RW locks are
-not really real time friendly. Frederick had a simple fix to it
-	https://lore.kernel.org/all/20210825132754.GA895675@lothringen/
+I do not fully understand what you are doing in user space. Could you
+please provide a user-space code example that will trigger this
+problem?
 
-but yeah. The alternative, which I didn't look into, would be to replace
-the reader side with RCU so we would just have the writer lock. That
-mean we need to RW lock because of performance=E2=80=A6
+Please note that if you share an Rx ring or the fill ring between
+processes/threads, then you have to take care about mutual exclusion
+in user space. If you really want to do this, it is usually a better
+idea to use the other shared umem mode in which each process gets its
+own rx and fill ring, removing the need for mutual exclusion.
 
-> Jan
->=20
-> [1] https://lore.kernel.org/lkml/20231030145104.4107573-1-vschneid@redhat=
-=2Ecom/
-> [2] https://lore.kernel.org/lkml/20240202080920.3337862-1-vschneid@redhat=
-=2Ecom/
-> [3] https://lore.kernel.org/lkml/20250220093257.9380-1-kprateek.nayak@amd=
-=2Ecom/
->=20
-
-Sebastian
+> Now both queues are protected by acquiring spinlock
+> in shared xsk_buff_pool.
+>
+> Lock contention may be minimized in the future by some
+> per-thread FQ buffering.
+>
+> It's safe and necessary to move spin_lock_bh(rx_lock)
+> after xsk_rcv_check():
+> * xs->pool and spinlock_init is synchronized by
+>   xsk_bind() -> xsk_is_bound() memory barriers.
+> * xsk_rcv_check() may return true at the moment
+>   of xsk_release() or xsk_unbind_dev(),
+>   however this will not cause any data races or
+>   race conditions. xsk_unbind_dev() removes xdp
+>   socket from all maps and waits for completion
+>   of all outstanding rx operations. Packets in
+>   RX path will either complete safely or drop.
+>
+> Signed-off-by: Eryk Kubanski <e.kubanski@partner.samsung.com>
+> ---
+>  include/net/xdp_sock.h      | 3 ---
+>  include/net/xsk_buff_pool.h | 2 ++
+>  net/xdp/xsk.c               | 6 +++---
+>  net/xdp/xsk_buff_pool.c     | 1 +
+>  4 files changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/include/net/xdp_sock.h b/include/net/xdp_sock.h
+> index bfe625b55d55..df3f5f07bc7c 100644
+> --- a/include/net/xdp_sock.h
+> +++ b/include/net/xdp_sock.h
+> @@ -71,9 +71,6 @@ struct xdp_sock {
+>          */
+>         u32 tx_budget_spent;
+>
+> -       /* Protects generic receive. */
+> -       spinlock_t rx_lock;
+> -
+>         /* Statistics */
+>         u64 rx_dropped;
+>         u64 rx_queue_full;
+> diff --git a/include/net/xsk_buff_pool.h b/include/net/xsk_buff_pool.h
+> index 50779406bc2d..7f0a75d6563d 100644
+> --- a/include/net/xsk_buff_pool.h
+> +++ b/include/net/xsk_buff_pool.h
+> @@ -53,6 +53,8 @@ struct xsk_buff_pool {
+>         refcount_t users;
+>         struct xdp_umem *umem;
+>         struct work_struct work;
+> +       /* Protects generic receive in shared and non-shared umem mode. */
+> +       spinlock_t rx_lock;
+>         struct list_head free_list;
+>         struct list_head xskb_list;
+>         u32 heads_cnt;
+> diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
+> index 89d2bef96469..e2a75f3be237 100644
+> --- a/net/xdp/xsk.c
+> +++ b/net/xdp/xsk.c
+> @@ -337,13 +337,14 @@ int xsk_generic_rcv(struct xdp_sock *xs, struct xdp_buff *xdp)
+>         u32 len = xdp_get_buff_len(xdp);
+>         int err;
+>
+> -       spin_lock_bh(&xs->rx_lock);
+>         err = xsk_rcv_check(xs, xdp, len);
+>         if (!err) {
+> +               spin_lock_bh(&xs->pool->rx_lock);
+>                 err = __xsk_rcv(xs, xdp, len);
+>                 xsk_flush(xs);
+> +               spin_unlock_bh(&xs->pool->rx_lock);
+>         }
+> -       spin_unlock_bh(&xs->rx_lock);
+> +
+>         return err;
+>  }
+>
+> @@ -1724,7 +1725,6 @@ static int xsk_create(struct net *net, struct socket *sock, int protocol,
+>         xs = xdp_sk(sk);
+>         xs->state = XSK_READY;
+>         mutex_init(&xs->mutex);
+> -       spin_lock_init(&xs->rx_lock);
+>
+>         INIT_LIST_HEAD(&xs->map_list);
+>         spin_lock_init(&xs->map_list_lock);
+> diff --git a/net/xdp/xsk_buff_pool.c b/net/xdp/xsk_buff_pool.c
+> index 1f7975b49657..3a5f16f53178 100644
+> --- a/net/xdp/xsk_buff_pool.c
+> +++ b/net/xdp/xsk_buff_pool.c
+> @@ -87,6 +87,7 @@ struct xsk_buff_pool *xp_create_and_assign_umem(struct xdp_sock *xs,
+>         pool->addrs = umem->addrs;
+>         pool->tx_metadata_len = umem->tx_metadata_len;
+>         pool->tx_sw_csum = umem->flags & XDP_UMEM_TX_SW_CSUM;
+> +       spin_lock_init(&pool->rx_lock);
+>         INIT_LIST_HEAD(&pool->free_list);
+>         INIT_LIST_HEAD(&pool->xskb_list);
+>         INIT_LIST_HEAD(&pool->xsk_tx_list);
+> --
+> 2.34.1
+>
+>
