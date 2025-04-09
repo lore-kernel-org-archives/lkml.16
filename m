@@ -1,40 +1,47 @@
-Received: from mx10.gouders.net (mx10.gouders.net [202.61.206.94])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 571D925D8E7
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 10:50:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.61.206.94
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97B8825D8E7;
+	Wed,  9 Apr 2025 10:50:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744195827; cv=none; b=nKDQKj+vpeZ7Ux7/f0iIwANWz7qQdEDfrl0TgyltNA2R4mI3djdNuZRqHPWWdUnfP1ezNw920DxQvCnc48TkEQuNg/f14UD2MHvXMHYNE5gJBuFnVOXFj6UjlP8PyYuryItdzvQh0T90Q+AlnRw1csnLi7a2NLyGzFH+iMGuFAA=
+	t=1744195857; cv=none; b=WpokI2+0cv31016YyJkfIqNOZ96ZmzoZRewtF5GqCR5vGnov4Bn7IvRxMGy4zeAcaDdA70/aO/dF3aM1KYDevOQU1KGzi5wqSnIr9iamxtpdzPkzzhsfAbhPcTUkFL/PPcCo4uXwmrf8jmmFNC/3NfNU71KOnSCttu8M6CJK5c4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744195827; c=relaxed/simple;
-	bh=PM0AyRSsUqDr6yCZI2UpnzigVHNUW4oNFNQ/8H7gw4Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rckGqtAb1miLOpsfOLFRSTJlWYyfrAKMoZHW1RwSKbMo0Cb+jQmGWz25y6yMD+b1pGA5W+uOiWxAz7YHGYopoCIHse5Bma5zJ7IUVZvPL0uE57ISH7BXnbClwXf2wEFDqinkrQ8gsf7kJgQktnZsheWZyPK41NA1BQ6T61AXYVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gouders.net; spf=pass smtp.mailfrom=gouders.net; dkim=pass (1024-bit key) header.d=gouders.net header.i=@gouders.net header.b=HRM4Zk7d; arc=none smtp.client-ip=202.61.206.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gouders.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gouders.net
+	s=arc-20240116; t=1744195857; c=relaxed/simple;
+	bh=HlVtWoj3LWyiBcoZxrPmX0QXi/NYax4CcC6lrawTBbc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f4XjV6a1g9reVfh/imMpReTRufdjbKHpBxlRuyMn5HzDrpOsekC/6aKnrqRa8CqRe02Yv4BhKC1SgqF3DhUxQgwGcwfPst3JjqZfglTzETT92B1csHpPmBcUDB4a4OK9SVRxxOaEj4uXWXknqm2hcwGvSzZaQ4/dhlbA/D+bCxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fSJhimxH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=gouders.net header.i=@gouders.net header.b="HRM4Zk7d"
-Received: from localhost ([193.175.198.193])
-	(authenticated bits=0)
-	by mx10.gouders.net (8.17.1.9/8.17.1.9) with ESMTPSA id 539AnKlw008265
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Wed, 9 Apr 2025 12:49:20 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gouders.net; s=gnet;
-	t=1744195760; bh=PM0AyRSsUqDr6yCZI2UpnzigVHNUW4oNFNQ/8H7gw4Q=;
-	h=From:To:Cc:Subject:Date;
-	b=HRM4Zk7dch3Md6jhowa2N/GHSFhJq5XbJtPKfSa057PAdeN+UjqjBXl+y000xwoU5
-	 IQNRO44XbFjMXQMDg/F73n6orxeexLPasNiLck1D+Ms0QAFQnTNepvlKabn2Xo5MOl
-	 QL1uBtCFtnZmqE5i+DRWA/taKH9xJTkBbRb++F2s=
-From: Dirk Gouders <dirk@gouders.net>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Linux Kernel <linux-kernel@vger.kernel.org>, Linux x86 <x86@kernel.org>
-Subject: AMD Ryzen 7 PRO 7735U: 8 instead of 16 CPUs?
-User-Agent: Gnus/5.13 (Gnus v5.13)
-Date: Wed, 09 Apr 2025 12:49:14 +0200
-Message-ID: <ghlds9lidx.fsf@gouders.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fSJhimxH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92AD3C4CEE3;
+	Wed,  9 Apr 2025 10:50:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744195857;
+	bh=HlVtWoj3LWyiBcoZxrPmX0QXi/NYax4CcC6lrawTBbc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fSJhimxHin3y/ZB3Pleu3u8j+qCxOs5pQ/MD8yAXnWGAwLdK53UFp1b313UBRUubo
+	 dL6+a1zQv8pgmZj8HjD2a1G+jcTbYICqmdN1rV9kVlwdEwoAfu+XD8HbiXXKHEYk+B
+	 4386xVetZP27Cza1J3J/vATMiaisNlGll5kax3pkPKkd8gCed0PhzE/7ZfhKKZeJUQ
+	 CFLn82aDMJg+Mlt9MnoiFh3Dtc79YiLEknPFI7TvLjmg6i9TGfX+UHYAPu/m0G4P90
+	 Oma/Fv0wwv8+DxDOQqxtpBVaUGyOykCwkf55QGjoukB+JbQ+iKkPNJ5IxCldgWyW/6
+	 PxmDAhNKr3RXg==
+Date: Wed, 9 Apr 2025 12:50:49 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Zhang Yi <yi.zhang@huaweicloud.com>, linux-fsdevel@vger.kernel.org, 
+	linux-ext4@vger.kernel.org, linux-block@vger.kernel.org, dm-devel@lists.linux.dev, 
+	linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org, linux-xfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, tytso@mit.edu, djwong@kernel.org, john.g.garry@oracle.com, 
+	bmarzins@redhat.com, chaitanyak@nvidia.com, shinichiro.kawasaki@wdc.com, 
+	yi.zhang@huawei.com, chengzhihao1@huawei.com, yukuai3@huawei.com, 
+	yangerkun@huawei.com
+Subject: Re: [RFC PATCH -next v3 07/10] fs: introduce FALLOC_FL_WRITE_ZEROES
+ to fallocate
+Message-ID: <20250409-ausdauer-weingut-4025b274ee63@brauner>
+References: <20250318073545.3518707-1-yi.zhang@huaweicloud.com>
+ <20250318073545.3518707-8-yi.zhang@huaweicloud.com>
+ <20250409103548.GC4950@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,66 +49,17 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+In-Reply-To: <20250409103548.GC4950@lst.de>
 
-I got new hardware and after setting up everything, I was wondering why
-I don't see the expected 16 CPUs in top(1) or /proc/cpuinfo...
+On Wed, Apr 09, 2025 at 12:35:48PM +0200, Christoph Hellwig wrote:
+> On Tue, Mar 18, 2025 at 03:35:42PM +0800, Zhang Yi wrote:
+> > Users can check the disk support of unmap write zeroes command by
+> > querying:
+> > 
+> >     /sys/block/<disk>/queue/write_zeroes_unmap
+> 
+> No, that is not in any way a good user interface.  Users need to be
+> able to query this on a per-file basis.
 
-From the AMD website [1] I read:
-------------------------------------------------------------------------
-Name                    AMD Ryzen=E2=84=A2 7 PRO 7735U
-...
-Architecture            Zen 3+
-# of CPU Cores          8
-...
-# of Threads            16
-------------------------------------------------------------------------
-
-But lscpu(1) shows me:
-------------------------------------------------------------------------
-Architecture:             x86_64
-  CPU op-mode(s):         32-bit, 64-bit
-  Address sizes:          48 bits physical, 48 bits virtual
-  Byte Order:             Little Endian
-CPU(s):                   8
-  On-line CPU(s) list:    0-7
-Vendor ID:                AuthenticAMD
-  Model name:             AMD Ryzen 7 Pro 7735U with Radeon Graphics
-    CPU family:           25
-    Model:                68
-    Thread(s) per core:   2
-    Core(s) per socket:   4
-    Socket(s):            1
-
-------------------------------------------------------------------------
-
-Then, I booted a BSD livesystem (NomadBSD), looked at dmesg(1):
-------------------------------------------------------------------------
-# dmesg | grep SMP
-FreeBSD/SMP: Multiprocessor System Detected: 16 CPUs
-FreeBSD/SMP: 1 package(s) x 8 core(s) x 2 hardware threads
-------------------------------------------------------------------------
-
-And I installed it's lscpu(1) and that reports:
-------------------------------------------------------------------------
-Architecture:            amd64
-Byte Order:              Little Endian
-Total CPU(s):            16
-Thread(s) per core:      2
-Core(s) per socket:      8
-Socket(s):               1
-Vendor:                  AuthenticAMD
-CPU family:              25
-Model:                   68
-Model name:              AMD Ryzen 7 Pro 7735U with Radeon Graphics=20=20=
-=20=20=20
-------------------------------------------------------------------------
-
-Do I misunderstand something from the above?
-
-Best regards,
-
-Dirk
-
-[1] https://www.amd.com/en/products/processors/laptop/ryzen-pro/7000-series=
-/amd-ryzen-7-pro-7735u.html
+Agreed. This should get a statx attribute most likely.
