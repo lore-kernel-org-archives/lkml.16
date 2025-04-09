@@ -1,75 +1,43 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C304021504F
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 09:38:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 563FC26ACD
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 09:39:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744191503; cv=none; b=OENHLAKyTPiMmxYrLZC9QlDhe2kMGN7T7pOAZE+YAiePT+X3t5gNFUQcZb90ybxQUlToisS5hwwGJD6ZzCTG+x+dRcjwLRO7tm61ZTZoUrGeztuGuotpqnrofc+7J2jIf7vecZNlra4lIitOWg0V7x47ulayu83GNYYXfisi+eI=
+	t=1744191558; cv=none; b=h5GbJgtTEqwL6AXM20KtXed4CooIXPB93yKsXYTvRZ+MIfx8M76Kavz1JvYb/EF1n0XJN5Q06CIBO4B1ms2fVEGUsPVuaMC0u7wcesXgkJUVYt/8lUKnfkb4quIlYDKLwms6Kfhnx5bgzrDrV/z57WUqNqEfGYl+KHD4SUynVSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744191503; c=relaxed/simple;
-	bh=GHtJ9BIeI0EWZOOSkSxCgeqMbgFB4Nfdtv3BVXZRGGU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SN+nCC458+o32ISnj/umAQcfGbtZLdybwrxn34cRBlAhAPEHBdFnzXNqPV0uj3Z/sjLPtrsiCu4zzXoSEGzEOZs7NTA1ZNWaaj5Ji5ZIZpIhcd3Js5iqk/3W2k49UzCf7w0FHaxKka4URhD9nDxHHaRrEznrwF0PFq0wDBrXAfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=m5nMjjQx; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1744191558; c=relaxed/simple;
+	bh=bL86pMjv61t/RXJtUwElR5rFFhqfg2s5AHtb+7ocKa8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YGB8apDVBtwS7MC2X69pJk47Cc7TBUoIoX8GrSoBCbvYzI0Il/ot0p8TiJjAv0IcjVturqrEXKZcOsKi+mQ+5ubpNFYMQXxFo8CcuGK9xJwjdQOTpZXYD/Nt1Lix5QHH8KJONF+8M4O25lF+RXDvPMN05kkdyADvR7Ak6q+CH3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=cRle58JH; arc=none smtp.client-ip=115.124.30.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="m5nMjjQx"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-3014ae35534so5386604a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 02:38:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1744191501; x=1744796301; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SgTC8w9iL276TFi8uSLwBxbq6oM19eQgvWXN0fTHj+M=;
-        b=m5nMjjQxPGIUadikPJOpmF1u7r7xxszfa0RzpEBQr87FV/H/M/w34zZo2S4SEOmFaN
-         5hduoB9C/kSKVPkxepuVM6XWJokJZe7E0iEk8OJRly1MuT9281C3Yct+Qk6uQRieE1+d
-         hkw2TwKHTUHtG3RtXXtFmNUCWXoZ3M44fOvNE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744191501; x=1744796301;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SgTC8w9iL276TFi8uSLwBxbq6oM19eQgvWXN0fTHj+M=;
-        b=OmI4wSvxYWI+pI25Sk3C3XcanXaSvy4jkzLCukbvH1L+M7bWuNQACMB9ZnbOotl9OH
-         cfB711/klk0SmOOXFximqDnFAIekzwLwIYzu20S3P0LKQemXWRaoUEmwFtrdcmi1lhCK
-         +ubnU5E3D+fIm9EJjyLELZEoTnaV8yDcE/yVh9rwJwDBbxSn4yPUIgc704yRMO0tU8Uk
-         YXbQ/gNttYfahq5bvyWEIONQJCcWIV6Z2yHNadt3ZDcjPHFz9veT/IORaRX9qH3g0naD
-         djhATk0Eb2UCDkSWOXiuqXg4cUjsnmlZz2t6qMCykzC36knpZ/DlRoKEstBF+a4ZBugT
-         Qmjw==
-X-Forwarded-Encrypted: i=1; AJvYcCWivTY2V+3Konj455v8gh2Hg1n9CgFiQhAEgEpzy7B/z6eP4MWvirxaPmyM9hnEcTNfnNlJfsp8VmhD/RE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxdfSpuwJFRZe3zPJDDSQgxpqfEn08hwCqYYrT62/3beLBMCCr
-	wqRKdd+YCy9X6bshlN2QAs2ZspaQykSLR7SmJJYY1I5R41Zf0p9YX4969fkn4Dosheu5MOMPPxU
-	=
-X-Gm-Gg: ASbGncvpFzDX+2zYu1WG300+8iO2dyR32SfpCS5kpHNB2S8gXjCgtLQvFw0GY9WJ9q2
-	YJ0Axq7xGNwaAsfv2/eos0EHJ7Aj3eEilJFyUHGqng5LrMELb/Ifn81BLSmwkP8bSNJY5RpkTqP
-	GB60ZkHT9OMTl+yezUfaFk55IgFq/ivK3MCr9KqRMvMuexzRkzUcfiHKB6wqrer25JrMgicE8lY
-	ttjfFFfvMA4XeU6cp1Tq5ji4iXRrlU/ibx/sXvFPZl26n/2JzJYS8BpniDSeAmhfOwLTlgrjReM
-	kHJmB6MD/9AQFzLGMYSpdv05vKfnCj7hCBfz3Olu3/WOPIU/zYbR5jzn1gc=
-X-Google-Smtp-Source: AGHT+IEFN4eKM3khV+a3oSUDISWcchGGNrkzq2zapiCD0nKURmKZ+1EdmsOfjDcNWMOTQ70G90l/XA==
-X-Received: by 2002:a17:90b:5750:b0:2ff:7331:18bc with SMTP id 98e67ed59e1d1-306dd56b1cemr2114604a91.26.1744191500989;
-        Wed, 09 Apr 2025 02:38:20 -0700 (PDT)
-Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:9ddd:3b40:5dbf:9350])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306df2fb171sm940713a91.34.2025.04.09.02.38.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 02:38:20 -0700 (PDT)
-From: Chen-Yu Tsai <wenst@chromium.org>
-To: Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Chen-Yu Tsai <wenst@chromium.org>,
-	linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH] drm/bridge: anx7625: Use devm_pm_runtime_enable()
-Date: Wed,  9 Apr 2025 17:38:13 +0800
-Message-ID: <20250409093814.3977025-1-wenst@chromium.org>
-X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="cRle58JH"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1744191552; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=qXgmXI91rfrc093sRbBRSsEyn4YoZ8rNV1XRh41K/Yc=;
+	b=cRle58JH3btf+IT6IJwdyHUomOETWq6RcPvChrLD76G3cKY7xTuVDiOpIlrFQZXSwcBJLQ1jmETwSjf0m7YIA0nYg/w1Z6UXbtbvAUVNmXqeF2a9skjQPy7aZPJBKlkqmwiH1aSYFdaHE0XwAUfmFwvOqDxllolf5FCBrMOiTf8=
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WWJihu5_1744191551 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 09 Apr 2025 17:39:11 +0800
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+To: akpm@linux-foundation.org
+Cc: willy@infradead.org,
+	david@redhat.com,
+	hannes@cmpxchg.org,
+	21cnbao@gmail.com,
+	ryan.roberts@arm.com,
+	ziy@nvidia.com,
+	baolin.wang@linux.alibaba.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] mm: huge_memory: add folio_mark_accessed() when zapping file THP
+Date: Wed,  9 Apr 2025 17:38:58 +0800
+Message-ID: <fc117f60d7b686f87067f36a0ef7cdbc3a78109c.1744190345.git.baolin.wang@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,45 +46,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The anx7625 driver is open coding what devm_pm_runtime_enable() does.
+When investigating performance issues during file folio unmap, I noticed some
+behavioral differences in handling non-PMD-sized folios and PMD-sized folios.
+For non-PMD-sized file folios, it will call folio_mark_accessed() to mark the
+folio as having seen activity, but this is not done for PMD-sized folios.
 
-Switch to the common helper instead.
+This might not cause obvious issues, but a potential problem could be that,
+it might lead to reclaim hot file folios under memory pressure, as quoted
+from Johannes:
 
-Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+"
+Sometimes file contents are only accessed through relatively short-lived
+mappings. But they can nevertheless be accessed a lot and be hot. It's
+important to not lose that information on unmap, and end up kicking out a
+frequently used cache page.
+"
+
+Therefore, we should also add folio_mark_accessed() for PMD-sized file
+folios when unmapping.
+
+Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+Acked-by: Zi Yan <ziy@nvidia.com>
 ---
- drivers/gpu/drm/bridge/analogix/anx7625.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+Changes from RFC:
+ - Update the commit message, per Johannes.
+ - Collect Acked tags from Johannes and Zi. Thanks.
+---
+ mm/huge_memory.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/gpu/drm/bridge/analogix/anx7625.c b/drivers/gpu/drm/bridge/analogix/anx7625.c
-index 866806e908cd..8bfe477c476c 100644
---- a/drivers/gpu/drm/bridge/analogix/anx7625.c
-+++ b/drivers/gpu/drm/bridge/analogix/anx7625.c
-@@ -2569,12 +2569,6 @@ static const struct dev_pm_ops anx7625_pm_ops = {
- 			   anx7625_runtime_pm_resume, NULL)
- };
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 2a47682d1ab7..955781b4e946 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -2260,6 +2260,10 @@ int zap_huge_pmd(struct mmu_gather *tlb, struct vm_area_struct *vma,
+ 				zap_deposited_table(tlb->mm, pmd);
+ 			add_mm_counter(tlb->mm, mm_counter_file(folio),
+ 				       -HPAGE_PMD_NR);
++
++			if (flush_needed && pmd_young(orig_pmd) &&
++			    likely(vma_has_recency(vma)))
++				folio_mark_accessed(folio);
+ 		}
  
--static void anx7625_runtime_disable(void *data)
--{
--	pm_runtime_dont_use_autosuspend(data);
--	pm_runtime_disable(data);
--}
--
- static int anx7625_link_bridge(struct drm_dp_aux *aux)
- {
- 	struct anx7625_data *platform = container_of(aux, struct anx7625_data, aux);
-@@ -2708,11 +2702,10 @@ static int anx7625_i2c_probe(struct i2c_client *client)
- 		goto free_wq;
- 	}
- 
--	pm_runtime_enable(dev);
- 	pm_runtime_set_autosuspend_delay(dev, 1000);
- 	pm_runtime_use_autosuspend(dev);
- 	pm_suspend_ignore_children(dev, true);
--	ret = devm_add_action_or_reset(dev, anx7625_runtime_disable, dev);
-+	ret = devm_pm_runtime_enable(dev);
- 	if (ret)
- 		goto free_wq;
- 
+ 		spin_unlock(ptl);
 -- 
-2.49.0.504.g3bcea36a83-goog
+2.43.5
 
