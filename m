@@ -1,193 +1,110 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AEFC2135AD;
-	Wed,  9 Apr 2025 06:58:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C732144DB;
+	Wed,  9 Apr 2025 06:58:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744181926; cv=none; b=UWxFAY0UaOXjroPzejZ+aG2WlDoPS41TcxNh5NgvnI7Rny3HmqDcZ/QZRahFWNv531xrHuw6xIIpbj81HZfu0rOy+oA2YuZJJJFszEIiOJCrUc5A892+oDk1EtEFp4etuIXmjZrKbi+E4tstwm/AXMRPB6gx6alM8N+KZo94IC0=
+	t=1744181937; cv=none; b=MH0gEb73StgwdfxgCAOGCbe+Ltz7f0816b/8iLgV9Sx07ICFS6RMy/NmKXod84pp2O4iJ61pnlhVzGP450xg0id9frEDZC9+sUqnQ5AeZPq2SiXedLrb7nwBXuafi5Hq+Xl5ergLCkSPm2gImwARZyBOfO/qmEZjc8SfCRwKweQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744181926; c=relaxed/simple;
-	bh=ssDD1kW5JSR1Z4yzJ04AQNes/YaLGBHflCTnsWlmZ14=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QkzwwLckMt1XE4MNYQWgFSM4qs75GjNnL/ERBcmlSPUDl2s26dF9nOPNwo1xCuH2E2L0Dv5qUn3+78GphrNoJepCjIJtR+87uYWKtJKZ2dS0c9tIaRDcJd4sJ94Sf2xtsemPL+Dde1HiRo92XsvnVvYOi8O5Yg/Q4UH9OuhcAvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cOJkvfOu; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744181937; c=relaxed/simple;
+	bh=Nt84t6m6mhPkjjvZ7EsC4vTJVqfWi3j4nIQ3mgOiw6A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dv33lUd9vtMV9Xwj1KP6Lwla/JmIRXANnKo8MR5JDFJtYcASuC03AiaMij8a6W/6JjRTqNd1FV1vDVgFRV3yZ19b+3leLdAMU5OW8b7ZfrgHlM+77zltkK8xEtHMJJKZU3SW8rT5O7GoSqesTx7DIA4pmyc5MGKcvf36czDtEbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nmyw/bgF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cOJkvfOu"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-227d6b530d8so57602305ad.3;
-        Tue, 08 Apr 2025 23:58:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744181924; x=1744786724; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=tuG1FMMyGEJx8Q/a143BVklY8otPVHsKGWCgeB32e5Q=;
-        b=cOJkvfOuqimAldFwBEUXE3PVTDk6Sehr/Avp5wexjP9sc3sbUlLmckx5Cm6PUsGjiT
-         vXKWGANLH/5GR1hk/uQRDrg7N4F+Bbifx2b9imC6t0/jgrgFmQRCgu2zHeOQhWc+lQan
-         vs8oOZGxPMZ51a61UHw7XLbrIPzIl1sUA3lX8IGdXQ8Mi0JLAvfWaq4CNWSLxnCbPnE1
-         /mQB29wIcDN8fMs/Ozvttr3vewtP+ks5YCKjNRwGBq2nq4HmyhTnGsUu/xganDXokuu/
-         9QRgSYrnIRu/ObSbaqzL1f5KS0h4mwz+Z1ffc4zLQtf7OioCO3nPZw8e8sHkzZrUJDVj
-         E1AA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744181924; x=1744786724;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tuG1FMMyGEJx8Q/a143BVklY8otPVHsKGWCgeB32e5Q=;
-        b=tC7RbIdR/ZfKoc6E1TIPNAZNAbNXlujUl9vRIDkiRIvOm7W6ruRO83TZSjPq7ETwSf
-         nV9EubB4zpo1e/Jcxz6t5iMtDm16yZEM7e0tSTIn1AFA61El31uKGyEUQiLnYNKGAU1D
-         u8z1KuP19PLwsnJEDZoGWgoOrFZ1x+x1ddS+v1JWKHlw7zLKSo1VLkKxkW+tkngaogFE
-         JT8b7bpUmG8l38yuokWn1jZWLw7HKbxlsT4AA66wwiraPdRTFJODpGx0LqMD8j87TOcG
-         zU05cqhbZuwvu+Cy2E0jXzonSuWcCiQ3xwpxnh9cElSQKV77mvIwFUt09+hQuFZ/o5ZP
-         jKbw==
-X-Forwarded-Encrypted: i=1; AJvYcCUS35M4orQikQ8Es8o4rbsNYpLtg6j+CiOB6GikLobN88yTv5ylLlflWI8yTeDQVxLzdbLrgTkbLkHFh2fdWg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTjLffgIeZl1F31nDsu8ivpLBxJ5cIP+njlRs7GAedp/1ZoXg/
-	2pEOrr2zzp4uHHUMHjRcnONcI84E7RdsL+9Llb73osd2o/kpl8qGgKeb+IYV
-X-Gm-Gg: ASbGncvQNl/Qtm854tlk/9/EMNsYanIrCwggfaYOXx4U3NOZ5U6pyr/MqTY3kaVnoEU
-	GVx0e92PALaNiGOh4r9RM63bXRl8foLGQVzhkX/pwevbfDYBct4chbHi20zrnKIU3dFPNaaJrLS
-	9z5H7KRxZsCCY093oMh36aVDlcK1GZUphXrHdlzJJJ5fgSMsyaFzF/zkWHvF7bBopmytEi2u6Nj
-	sVuow46Y2urBjvx1MzBNmKrB3JknnNc4V1d2onrYRirQoRqTJqlc7OYG9Z38Httvavl+OUZuOO8
-	VXsjxbymUSIS7sQ3Uzm+aeOiLR26pNT8MgOtFOZcGjSb9Zj7VGGvsmlYkX9l7gned/CVaV5D4Vs
-	tZWzfSKY4wBPuBJ2Gew==
-X-Google-Smtp-Source: AGHT+IG81noXBo50t3m2OCMXKg+0aYF1KMaorNM1Bcv25LP3aY0UkFvPSaDMXpFVTZFnE5FrkJ7rsg==
-X-Received: by 2002:a17:902:ec8c:b0:215:89a0:416f with SMTP id d9443c01a7336-22ac29b86abmr21043375ad.30.1744181924161;
-        Tue, 08 Apr 2025 23:58:44 -0700 (PDT)
-Received: from mew.. (p4204131-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.160.176.131])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7ccb596sm4407815ad.220.2025.04.08.23.58.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 23:58:43 -0700 (PDT)
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Cc: x86@kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	loongarch@lists.linux.dev,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	peterz@infradead.org,
-	hpa@zytor.com,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	tangyouling@loongson.cn,
-	hejinyang@loongson.cn,
-	yangtiezhu@loongson.cn,
-	ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me,
-	a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	tmgross@umich.edu
-Subject: [PATCH v5 0/4] rust: Add bug/warn abstractions
-Date: Wed,  9 Apr 2025 15:57:57 +0900
-Message-ID: <20250409065802.136971-1-fujita.tomonori@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nmyw/bgF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9537DC4CEE3;
+	Wed,  9 Apr 2025 06:58:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744181936;
+	bh=Nt84t6m6mhPkjjvZ7EsC4vTJVqfWi3j4nIQ3mgOiw6A=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Nmyw/bgF7jM8ApGX0fKPQRw/4Er05KUaPn17pghbctKVJZS2ooTUt1LKZKRZJZ0Vq
+	 SH6uzOk/VPZCU9rAlBq17ZIm4n4lIm5+dnf+bKwyoT/CjcTfbFdHESaXQjNLdkY0xy
+	 QT5CBeyVE4tLL0l2cDE4lYHZBVpE6KjR3HZlKuE7WKrPM/XrfPI4GpLnzRsWqJhMbq
+	 ACjfstOtJa25HbOwTK2AIXg2GlZsJOnBZNMz1DqCXegh5DE8gz1TUYqXDCa50JHReo
+	 0Nuv1YSvebLQsFt2XMiEztF7gjKoL8uGpVp8uiRoM37lxCSWGRaFlfK6VTG2/EaMTS
+	 1EUkZMTwNpi2g==
+Message-ID: <43dd7191-c797-4d8c-af58-03fc0eaaa95b@kernel.org>
+Date: Wed, 9 Apr 2025 08:58:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 1/6] dt-bindings: sram: qcom,imem: Document IPQ5424
+ compatible
+To: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>,
+ Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
+References: <20250408-wdt_reset_reason-v1-0-e6ec30c2c926@oss.qualcomm.com>
+ <20250408-wdt_reset_reason-v1-1-e6ec30c2c926@oss.qualcomm.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250408-wdt_reset_reason-v1-1-e6ec30c2c926@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This patchset adds warn_on macro with the bug/warn abstraction that
-utilizes the kernel's BUG/WARN feature via assembly.
+On 08/04/2025 10:49, Kathiravan Thirumoorthy wrote:
+> Add compatible for Qualcomm's IPQ5424 IMEM.
+> 
+> Signed-off-by: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+> ---
+>  Documentation/devicetree/bindings/sram/qcom,imem.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 
-Currently, Rust code simply wraps BUG() macro; however the approach
-doesn't provide the proper debug information. For example, I added
-bindings::BUG() to rnull's init method and got the following output:
+Why is this RFC? What is not finished here? I could not find explanation
+in cover letter.
 
-# insmod /root/rnull_mod.ko
-rnull_mod: Rust null_blk loaded
-------------[ cut here ]------------
-kernel BUG at rust/helpers/bug.c:7!
-Oops: invalid opcode: 0000 [#1] SMP CPU: 0 UID: 0 PID: 31 Comm: insmod Not tainted 6.14.0-rc1+ #103
-RIP: 0010:rust_helper_BUG+0x8/0x10
-(snip)
-
-The kernel's BUG/WARN feature (lib/bug.c) can only be used from
-assembly. Rust code needs to directly execute the same assembly code
-used on the C side. To avoid duplicating the assembly code, this
-approach follows the same strategy as the static branch code: it
-generates the assembly code for Rust using the C preprocessor at
-compile time.
-
-The 1st to 3th patches export the BUG/WARN assembly code for Rust on
-x86, RISC-V, and ARM64 architecture, with no functional changes on the
-C side. They have already been acked by the maintainers of their
-respective architectures.
-
-No change for arm32 and LoongArch; they still use the current
-approach; just wrapping C's macro.
-
-UML doesn't use the assembly BUG/WARN feature; just wrapping generic
-BUG/WARN functions implemented in C works.
-
-The last patch adds warn_on implementation on the top of the
-abstraction. To make the patchset easier to review, the remaining
-features such as bug() are not included in this patchset. These
-features will be added after this patchset is merged.
-
-This has been tested on x86, ARM64, and RISC-V (QEMU), with only a
-compile test performed for LoongArch, arm32, and UML.
-
-v5:
-- fix indentation in the macro
-- use $crate::ffi::c_char instead ::kernel::ffi::c_uchar
-- add support for building on arm32
-v4: https://lore.kernel.org/lkml/20250305110814.272792-1-fujita.tomonori@gmail.com/
-- added Acked-by tag to the RISC-V and ARM64 asm change
-- simplify the asm code
-- use the cfgs on the macro rather in its expansion
-- use a const fn for bugflag_taint over macro
-- dropped LoongArch assembly change
-- dropped warn_on_once; make the patch easier to review
-v3: https://lore.kernel.org/lkml/20250213135759.190006-1-fujita.tomonori@gmail.com/
-- rebased on rust-next
-- use ANNOTATE_REACHABLE macro (replaced ASM_REACHABLE)
-- added Acked-by tag to the x86 change
-v2: https://lore.kernel.org/lkml/20241218062009.2402650-1-fujita.tomonori@gmail.com/
-- remove target_arch cfg by using asm comment
-- clean up the changes to loongarch asm
-v1: https://lore.kernel.org/lkml/20241210001802.228725-1-fujita.tomonori@gmail.com/
-
-
-FUJITA Tomonori (4):
-  x86/bug: Add ARCH_WARN_ASM macro for BUG/WARN asm code sharing with
-    Rust
-  riscv/bug: Add ARCH_WARN_ASM macro for BUG/WARN asm code sharing with
-    Rust
-  arm64/bug: Add ARCH_WARN_ASM macro for BUG/WARN asm code sharing with
-    Rust
-  rust: Add warn_on macro
-
- arch/arm64/include/asm/asm-bug.h              |  33 ++++-
- arch/riscv/include/asm/bug.h                  |  37 +++---
- arch/x86/include/asm/bug.h                    |  56 ++++-----
- rust/Makefile                                 |   8 ++
- rust/helpers/bug.c                            |   5 +
- rust/kernel/.gitignore                        |   2 +
- rust/kernel/bug.rs                            | 114 ++++++++++++++++++
- rust/kernel/generated_arch_reachable_asm.rs.S |   7 ++
- rust/kernel/generated_arch_warn_asm.rs.S      |   7 ++
- rust/kernel/lib.rs                            |   1 +
- 10 files changed, 223 insertions(+), 47 deletions(-)
- create mode 100644 rust/kernel/bug.rs
- create mode 100644 rust/kernel/generated_arch_reachable_asm.rs.S
- create mode 100644 rust/kernel/generated_arch_warn_asm.rs.S
-
-
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
--- 
-2.43.0
-
+Best regards,
+Krzysztof
