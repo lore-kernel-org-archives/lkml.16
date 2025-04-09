@@ -1,112 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEA83267AEC
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 15:31:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79DD91482F5;
+	Wed,  9 Apr 2025 15:31:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744212665; cv=none; b=OyCQuaLxQuR7ZnIQIorPwfjwj8FAMt8fsLj/hA0ThmiKm2UPCCh1MflJLpLYrLJOboUnqMsrbypywtdpiS4Gn6jQZcUsFrQSX0X2IMS2r47O6jhG+tZrDJoceX2ZkqMieb9pHPxL7C7RXHuQ78wNcMrPmj54NTUxGB2C9N7JOmo=
+	t=1744212715; cv=none; b=pQq38+D9FuToA11ZH6FV+WEtzcTHqsqrSZ12WvkRrRCSZA4PWRk7D+S+n1MjTd3k5xUu4ngB6CW52wII5Z/2JMmBGfP83WxqbdmNavfrsFviWwmWis/bvM19n5DgOlcJQGqTyo796RWqeCWyZ45Vy2hkenu6aQTb8K1Yrge327Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744212665; c=relaxed/simple;
-	bh=hUEFiiieZcszzZzHIBnNHd7iH5NvppFvtM3AUkX1eJ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FGYWo0a51IBv1u/6z0GpxT8xye5Qf2MATfyzncjF/xY8/tFwPJiJiCvvlogcDb69ajVjJeyaTAgeRgzsIgV6/RYTf036fa9Pa2MuhGFwIl5sYCFjtb5PcfFHdt08XgeiNxUGKzDVe2de8e3UsFikJ/cODTxVVT1d1nMKFe2t6Ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a6YirVoR; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744212715; c=relaxed/simple;
+	bh=0x1dvjO2FZF9lCAIOsZJnj7gZRIyKdsq/t4wPmc2CzQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=msuFjLNYIY9B/3aJRRBPplceOIdNkx3K+xTXvCFtyG5dtToiV5DwqfS0/gIzrUIe926UGUqqLsk98TD8JolGH2NdAdsP0C8lqu0G4pLrXasrhdlLu7dUb1PCv/2kbI6QFWP0N1FRUkEvzRcfV+6bbbCUHsjQH0F9mipFBRNetuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BewS2i+k; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a6YirVoR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BewS2i+k"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744212661; x=1775748661;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hUEFiiieZcszzZzHIBnNHd7iH5NvppFvtM3AUkX1eJ0=;
-  b=a6YirVoRRcTE+cSzXBNrghXNkhnopkGoAvVgn3O45/gwqVeYi15DuttT
-   8uq686txoYNoLtkpHaytGiJP2kmVnVpwxX5jmxJ9pl2cM2znUHffnMPKL
-   1B3Dv3EtwedtssJ6jQNRZRi6TsVCPNz5ihJaGGuhJyBrSJwZnLj0thFmQ
-   4njMR/38odkDo5oebSFcdnkLo/XqaIX/B5d+mQ9MxPd73Q6KZZIZUYXk7
-   GDzVm9XOO4sB19EaL70ya1YRDo6OnBM8Q82m18ooziGNP2EAoKvrysBGa
-   7AI4pXpW9U3yvw9ubQ7DSeRXV4GKyIcAY8S+WUS+BWJRldsdPRxmiPkBf
-   w==;
-X-CSE-ConnectionGUID: BV3WILpyQq+kmDPLt6vMug==
-X-CSE-MsgGUID: MCQhw6lSTg2Oa6xMTiVd6A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="45708260"
+  t=1744212714; x=1775748714;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=0x1dvjO2FZF9lCAIOsZJnj7gZRIyKdsq/t4wPmc2CzQ=;
+  b=BewS2i+k3PSEnIf0L9Ppy3rfZqSIvzV6OVvPllXyGd6hPIQ6TseaH4Vd
+   xJ8uEzY8EqbAQzWXNKvCgj+8EmjZSFVFls1dlOoBJc8UY7UxEsja9/DBW
+   IH1TPTxqUdPtL7CSh54C9qjl8n/t2vJgANk7tl0MKceLf16a3tcenlaMo
+   XXeoSW5Xb4wlEWNnF09W1v/bXNwnB6NwJoR1d1WuU1yklwzitx4guRNnh
+   Ly5zpThdc5Jf53lWSRSljr8EysKPKt6o9e25fX5IWUSTymbvzf2FrL+ct
+   SQizg0gciGxaD/S5tBUmpZiNP+PKiEggHzQN9GhEGdV4IWH8nJ48LC2//
+   A==;
+X-CSE-ConnectionGUID: PSOSY5XIRwu6ZUr/o8AnuQ==
+X-CSE-MsgGUID: VC8UV+IXTKWGwAmHDMDleg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="71072082"
 X-IronPort-AV: E=Sophos;i="6.15,200,1739865600"; 
-   d="scan'208";a="45708260"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 08:31:00 -0700
-X-CSE-ConnectionGUID: xUR8JNgPQPSXOYY+d9JkpA==
-X-CSE-MsgGUID: YyuFKMBfSI2cCmxPVrsrUQ==
+   d="scan'208";a="71072082"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 08:31:53 -0700
+X-CSE-ConnectionGUID: 31pjvctNTSOH6O3KCL536Q==
+X-CSE-MsgGUID: qgtNr2MDS+6UjXITr6JEmg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,200,1739865600"; 
-   d="scan'208";a="129164346"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 08:30:57 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u2XO9-0000000AmLk-22Zp;
-	Wed, 09 Apr 2025 18:30:53 +0300
-Date: Wed, 9 Apr 2025 18:30:53 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-	Markus Stockhausen <markus.stockhausen@gmx.de>,
-	Chris Packham <chris.packham@alliedtelesis.co.nz>,
-	Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/10] [v2] clocksource: atmel_tcb: fix kconfig dependency
-Message-ID: <Z_aSrU0oHAvFfyBW@smile.fi.intel.com>
-References: <20250409122131.2766719-1-arnd@kernel.org>
- <20250409122314.2848028-1-arnd@kernel.org>
- <20250409122314.2848028-2-arnd@kernel.org>
+   d="scan'208";a="151795982"
+Received: from amlin-018-114.igk.intel.com ([10.102.18.114])
+  by fmviesa002.fm.intel.com with ESMTP; 09 Apr 2025 08:31:49 -0700
+From: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
+To: donald.hunter@gmail.com,
+	kuba@kernel.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	vadim.fedorenko@linux.dev,
+	jiri@resnulli.us,
+	anthony.l.nguyen@intel.com,
+	przemyslaw.kitszel@intel.com,
+	andrew+netdev@lunn.ch,
+	saeedm@nvidia.com,
+	leon@kernel.org,
+	tariqt@nvidia.com,
+	jonathan.lemon@gmail.com,
+	richardcochran@gmail.com,
+	aleksandr.loktionov@intel.com,
+	milena.olech@intel.com
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	intel-wired-lan@lists.osuosl.org,
+	linux-rdma@vger.kernel.org,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
+Subject: [PATCH net-next v1 0/4] dpll: add all inputs phase offset monitor
+Date: Wed,  9 Apr 2025 17:25:54 +0200
+Message-Id: <20250409152558.1007335-1-arkadiusz.kubalewski@intel.com>
+X-Mailer: git-send-email 2.38.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250409122314.2848028-2-arnd@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 09, 2025 at 02:22:54PM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> Build-testing this driver on arm without CONFIG_OF produces a warning:
-> 
-> drivers/clocksource/timer-atmel-tcb.c:368:34: error: 'atmel_tcb_of_match' defined but not used [-Werror=unused-const-variable=]
->   368 | static const struct of_device_id atmel_tcb_of_match[] = {
->       |                                  ^~~~~~~~~~~~~~~~~~
-> 
-> Change the dependency to allow build-testing on all architectures but
-> instead require CONFIG_OF to be present.
+Add simple dpll device level feature and capabilities infrastructure over
+netlink dpll interface.
+Using new infrastructure add new feature: ALL_INPUTS_PHASE_OFFSET_MONITOR.
+Allow users control with two new attributes:
+- DPLL_A_CAPABILITIES - for checking if dpll device is capable,
+- DPLL_A_FEATURES - for enable/disable a features.
+Implement feature in ice driver for dpll-enabled devices.
 
-I;m a bit puzzled, maybe due to my misunderstanding of the first line...
+Arkadiusz Kubalewski (4):
+  dpll: add features and capabilities to dpll device spec
+  dpll: pass capabilities on device register
+  dpll: features_get/set callbacks
+  ice: add phase offset monitor for all PPS dpll inputs
 
->  config ATMEL_TCB_CLKSRC
->  	bool "Atmel TC Block timer driver" if COMPILE_TEST
+ Documentation/netlink/specs/dpll.yaml         |  25 +++
+ drivers/dpll/dpll_core.c                      |   5 +-
+ drivers/dpll/dpll_core.h                      |   2 +
+ drivers/dpll/dpll_netlink.c                   |  78 +++++++-
+ drivers/dpll/dpll_nl.c                        |   5 +-
+ .../net/ethernet/intel/ice/ice_adminq_cmd.h   |  20 ++
+ drivers/net/ethernet/intel/ice/ice_common.c   |  26 +++
+ drivers/net/ethernet/intel/ice/ice_common.h   |   3 +
+ drivers/net/ethernet/intel/ice/ice_dpll.c     | 188 +++++++++++++++++-
+ drivers/net/ethernet/intel/ice/ice_dpll.h     |   6 +
+ drivers/net/ethernet/intel/ice/ice_main.c     |   4 +
+ .../net/ethernet/mellanox/mlx5/core/dpll.c    |   2 +-
+ drivers/ptp/ptp_ocp.c                         |   2 +-
+ include/linux/dpll.h                          |   7 +-
+ include/uapi/linux/dpll.h                     |  13 ++
+ 15 files changed, 374 insertions(+), 12 deletions(-)
 
-...^^^ of the dependencies.
 
-> -	depends on ARM && HAS_IOMEM
-> -	select TIMER_OF if OF
-> +	depends on ARM && OF && HAS_IOMEM
-
-But doesn't this still mean that "all architectures" (from the commit message)
-do not apply here (it's all about ARM)?
-
-> +	select TIMER_OF
-
+base-commit: 420aabef3ab5fa743afb4d3d391f03ef0e777ca8
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.38.1
 
