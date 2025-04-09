@@ -1,298 +1,275 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F23026ACB;
-	Wed,  9 Apr 2025 22:32:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4BBB21A451
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 22:32:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744237955; cv=none; b=L9xgtCrWIYU8ZYjlKixaFzTTwnwNFegmMOttwpnLbaQhqGPBlHZMJDJ3z9aQXT3yGYXZyx8m5u+AvpMagJSNQRXsaFTiPM6SF8Em/WxXse1ZoIUUI5qqmP8PE/uKrTvZc3odV1omAj9HxpuOGUO4FOMWnj4hnR9WRswm/0xQnUo=
+	t=1744237955; cv=none; b=cyCD+UDOjBuomkDT1nDtVnSIPxH37yLbpo0DH4D8NmpVaq3eTcLpv3DyCj57sMjwakyTdafnvf9HW5eu871vQL7rzL7enkDXqnAlqKV0Jq16pNQAmS4061z1niT8ykbNQp2bZs029IJpbvBGlNAW+D2Lxwigfs+Od5/6/9oEXXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744237955; c=relaxed/simple;
-	bh=GJBF9YT4qTUceYQdIfBhE7d1Hxel8j5IxMQVI15xlC4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=NZeoV0y3g5lczPewR0uw6QJIuDai2jdsTTkIAr2v9fFg53tgJtW9LavvLhVqDM7PMcj49U6qV9bz9E5kZySeXq+fcUs5/PL8Su6Zo1RspOfq0U8xl5TSO10SsSBhdqENls36pnOsxzCYj8RfrX4bupJyv82b22DllsCiDAUm7ms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=BHkvd6t4; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	bh=By8viJdoAUoJoi7XSd3M03yuIGRREsQtuwL88PTCdwY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FGs4a/X+YOol8mdjVrxXGehFa8KbxGozsUSOgasu6orPZ2c0LdETrFx5YgquR9uAU+8OrIyzB/RlTpLM8QBaPn/nnqOyLFWIntxbysSz4bF9teo0wYnUzMehw9RUtmByxMm9umD84cl5BgHFf/+nm11Lk4XEVGM7othRNVOlYHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tc1qAQXY; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BHkvd6t4"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 539MWMnZ1602107
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 9 Apr 2025 17:32:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744237943;
-	bh=F2DUGq4PpnA0mRyUvzOtXn7CGfV1K5I0ALvoIWAGTP0=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=BHkvd6t4u0ETPPoqD59yPKVttkp1xjIwR36DmTsiR6+Pcvt5W1ITb6cbaDP0vqQf0
-	 XmQ4s/9vtrT5foUApEyyObbMLGq49bn2PGUfRismcohq6IKzD5KrTagCVqGQzRF/D1
-	 IHC7RSMTGK2s2sJ7t2WhbqELNFJVs78OzU5OdRIo=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 539MWMUG006103
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 9 Apr 2025 17:32:22 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 9
- Apr 2025 17:32:22 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 9 Apr 2025 17:32:22 -0500
-Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 539MWMgB116920;
-	Wed, 9 Apr 2025 17:32:22 -0500
-Message-ID: <fe735242-4643-432a-adaf-27e29719948a@ti.com>
-Date: Wed, 9 Apr 2025 17:32:22 -0500
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tc1qAQXY"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e5cbd8b19bso1512a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 15:32:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744237952; x=1744842752; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GMu1FH4a99+6xCgJv+Tb84Trq4JVQxXXa7kqUK3IbB0=;
+        b=tc1qAQXYDH9dtG0Lq3PAf39LIbi8AL15JVsy1Bfqfc1gOnT4OUu/DhTH2xSoadfJ2m
+         nWBc+vRBq9HqRfy26lVsQ6id6qgyQM2JWlQnzCc2wCEr+DRP7NbYh/Eqenh6Py+TCpkr
+         3uiInRAoESBmm/oAWDtkaYyG4uzzUgCD36bN4XnMcmYiWIq/gdjkeCvT68WEDaXs7Yvj
+         sVAilBhl50zNYc/CLEF67pN3Qp6XPPiInlYMVKDvO8Bt6t4Yfyo7ZkU0mKkUVZQtad7w
+         j5YCIer26BBK0mk770akmFQ5GqJt/q5swr/RNx5uT9Lz+XBUnjVtDmkm8FJrAgVAlE7b
+         /Qvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744237952; x=1744842752;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GMu1FH4a99+6xCgJv+Tb84Trq4JVQxXXa7kqUK3IbB0=;
+        b=ZGDBGjnOB7AN+ol0eurKelELjUxqxTk7J2N0+TmsWb5MBF87ULHWhS5X/uHp6gfKoc
+         Z1iQPy+PUDNF8HMlTbRkB87vXdKNk51MembaReOK6srauNHin9Eb1whnQSs0ZJk29jYT
+         80op058XF49gQgwWoeqjXyCV848UasxVhS0W5f251tIRibVaG+wedaOX0faHz6rJOg9m
+         L9xFJMADnPH0q8OGyMmpK4Wez5GKECKt1moBJ3Ed90/uB23G2wxK6d7rYjt12KvBR0HY
+         2zr8xu58F1z3XTMDGPX692UH3wiFZno1mnTaTiV14yAbVnEzszmYgk66xjmLbWt62bF3
+         fLaw==
+X-Forwarded-Encrypted: i=1; AJvYcCWTidt/WNqBkOQFxkl0xzOEL5qxdYTOmx0XWrb7eoNs95cxDQAFn8R9rZjIqwEyBF9oXev7r05FpZEzZ+w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlC0HKdFk47nJDQ7AS4RVK5sHaRlbK66uz4LJB2zkZqwy8blCw
+	Ksf0qd01XDdmUyRVKkREKddllWkAhkBFNCRhnH6/bxosibsmC0PHq6bFxad1KlUh8JIO6VI4LQ0
+	lFOYWGj6mcrYoCYAxHDkkKUdhLj4VTZm0TPj4
+X-Gm-Gg: ASbGncuVEIFR3kUpKhbUMrUn7stmh8fbW0TFbjJNeXXkRq9JBk58XV1E4SgEGatgNma
+	eOydHVpkBUMrqEjsTYPj5YDPx0hn9VrR9nde8UBkLcD10tJsm4AJhSAvC3ZwNjAex9WbSd8W79O
+	EKlOiCYFxD8Tpsrthjp6i6cxDGOGqcyvTqC15d9Xl6KLU/R4jwVPuZ
+X-Google-Smtp-Source: AGHT+IENolhEXzO3rinX4oLrIHh82oHYmfpNxwGNuU8PEr5id+7uNdCOqNh7a5iRadgkh5271oXOm5pqZaF50y0gefE=
+X-Received: by 2002:aa7:dac6:0:b0:5e5:c024:ec29 with SMTP id
+ 4fb4d7f45d1cf-5f328d6ccdbmr28589a12.0.1744237951690; Wed, 09 Apr 2025
+ 15:32:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 06/11] arm64: dts: ti: k3-am62a7-sk: Enable IPC with
- remote processors
-To: Beleswar Prasad Padhi <b-padhi@ti.com>,
-        Devarsh Thakkar
-	<devarsht@lewv0571a.ent.ti.com>,
-        Nishanth Menon <nm@ti.com>, Andrew Davis
-	<afd@ti.com>,
-        Hari Nagalla <hnagalla@ti.com>
-CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Markus
- Schneider-Pargmann <msp@baylibre.com>
-References: <20250405001518.1315273-1-jm@ti.com>
- <20250405001518.1315273-7-jm@ti.com>
- <6868f593-0728-4e92-a57b-87db6a0037f6@ti>
- <f42607f5-e39d-48a1-89c0-11d4982a2426@ti.com>
- <f8f1d877-3d13-4ba7-90e1-455923458c11@ti.com>
-Content-Language: en-US
-From: Judith Mendez <jm@ti.com>
-In-Reply-To: <f8f1d877-3d13-4ba7-90e1-455923458c11@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+References: <20250330234039.29814-1-christiansantoslima21@gmail.com>
+In-Reply-To: <20250330234039.29814-1-christiansantoslima21@gmail.com>
+From: Matthew Maurer <mmaurer@google.com>
+Date: Wed, 9 Apr 2025 15:32:19 -0700
+X-Gm-Features: ATxdqUHRf-B9-YGZ1PElPo9dmH5T3f12ShZBn14fNGAx_Ks12v9UsYMLEah-Kjo
+Message-ID: <CAGSQo00LhscUpQCpL9UwkzK5c1rD1QxutZTOenuZP1d-B==KBQ@mail.gmail.com>
+Subject: Re: [PATCH v6] rust: transmute: Add methods for FromBytes trait
+To: "Christian S. Lima" <christiansantoslima21@gmail.com>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, ~lkcamp/patches@lists.sr.ht, richard120310@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Beleswar,
+On Sun, Mar 30, 2025 at 4:40=E2=80=AFPM Christian S. Lima
+<christiansantoslima21@gmail.com> wrote:
+>
+> Methods receive a slice and perform size check to add a valid way to make
+> conversion safe. An Option is used, in error case just return `None`.
+>
+> The conversion between slices `[T]` is separated from others, because I
+> couldn't implement it in the same way as the other conversions.
+>
+> Link: https://github.com/Rust-for-Linux/linux/issues/1119
+> Signed-off-by: Christian S. Lima <christiansantoslima21@gmail.com>
+> ---
+> Changes in v2:
+> - Rollback the implementation for the macro in the repository and impleme=
+nt
+>   methods in trait
+> - Link to v2: https://lore.kernel.org/rust-for-linux/20241012193657.290cc=
+79c@eugeo/T/#t
+>
+> Changes in v3:
+> - Fix grammar errors
+> - Remove repeated tests
+> - Fix alignment errors
+> - Fix tests not building
+> - Link to v3: https://lore.kernel.org/rust-for-linux/20241109055442.85190=
+-1-christiansantoslima21@gmail.com/
+>
+> Changes in v4:
+> - Removed core::simd::ToBytes
+> - Changed trait and methods to safe Add
+> - Result<&Self, Error> in order to make safe methods
+> - Link to v4: https://lore.kernel.org/rust-for-linux/20250314034910.13446=
+3-1-christiansantoslima21@gmail.com/
+>
+> Changes in v5:
+> - Changed from Result to Option
+> - Removed commentaries
+> - Returned trait impl to unsafe
+> - Link to v5: https://lore.kernel.org/rust-for-linux/20250320014041.10147=
+0-1-christiansantoslima21@gmail.com/
+>
+> Changes in v6:
+> - Add endianess check to doc test and use match to check
+> success case
+> - Reformulated safety comments
+> ---
+>  rust/kernel/transmute.rs | 89 +++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 83 insertions(+), 6 deletions(-)
+>
+> diff --git a/rust/kernel/transmute.rs b/rust/kernel/transmute.rs
+> index 1c7d43771a37..16dfa5c7d467 100644
+> --- a/rust/kernel/transmute.rs
+> +++ b/rust/kernel/transmute.rs
+> @@ -9,29 +9,106 @@
+>  ///
+>  /// It's okay for the type to have padding, as initializing those bytes =
+has no effect.
+>  ///
+> +/// # Example
+> +/// ```
+> +/// let foo =3D &[1, 2, 3, 4];
+> +///
+> +/// let result =3D u32::from_bytes(foo);
+> +///
+> +/// #[cfg(target_endian =3D "little")]
+> +/// match result {
+> +///     Some(x) =3D> assert_eq!(*x, 0x4030201),
+> +///     None =3D> unreachable!()
+> +/// }
+> +///
+> +/// #[cfg(target_endian =3D "big")]
+> +/// match result {
+> +///     Some(x) =3D> assert_eq!(*x, 0x1020304),
+> +///     None =3D> unreachable!()
+> +/// }
+> +/// ```
+> +///
+>  /// # Safety
+>  ///
+>  /// All bit-patterns must be valid for this type. This type must not hav=
+e interior mutability.
+> -pub unsafe trait FromBytes {}
+> +pub unsafe trait FromBytes {
+> +    /// Converts a slice of bytes to a reference to `Self` when possible=
+.
+> +    fn from_bytes(bytes: &[u8]) -> Option<&Self>;
+> +
+> +    /// Converts a mutable slice of bytes to a reference to `Self` when =
+possible.
+> +    fn from_bytes_mut(bytes: &mut [u8]) -> Option<&mut Self>
+> +    where
+> +        Self: AsBytes;
+> +}
+>
+>  macro_rules! impl_frombytes {
+>      ($($({$($generics:tt)*})? $t:ty, )*) =3D> {
+>          // SAFETY: Safety comments written in the macro invocation.
+> -        $(unsafe impl$($($generics)*)? FromBytes for $t {})*
+> +        $(unsafe impl$($($generics)*)? FromBytes for $t {
+> +            fn from_bytes(bytes: &[u8]) -> Option<&$t> {
 
-On 4/7/25 11:00 PM, Beleswar Prasad Padhi wrote:
-> Hi Judith, Andrew,
-> 
-> On 07/04/25 19:43, Judith Mendez wrote:
->> Hi Devarsh,
->>
->> On 4/7/25 8:54 AM, Devarsh Thakkar wrote:
->>> Hi Judith,
->>>
->>> On 05/04/25 05:45, Judith Mendez wrote:
->>>  > From: Devarsh Thakkar <devarsht@ti.com>
->>>>
->>>
->>> Thanks for the patch.
->>>
->>>> For each remote proc, reserve memory for IPC and bind the mailbox
->>>> assignments. Two memory regions are reserved for each remote processor.
->>>> The first region of 1MB of memory is used for Vring shared buffers
->>>> and the second region is used as external memory to the remote 
->>>> processor
->>>> for the resource table and for tracebuffer allocations.
->>>>
->>>> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
->>>> Signed-off-by: Hari Nagalla <hnagalla@ti.com>
->>>> Signed-off-by: Judith Mendez <jm@ti.com>
->>>> ---
->>>>   arch/arm64/boot/dts/ti/k3-am62a7-sk.dts | 96 
->>>> +++++++++++++++++++++++--
->>>>   1 file changed, 90 insertions(+), 6 deletions(-)
->>>>
->>>> diff --git a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts 
->>>> b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
->>>> index 1c9d95696c839..7d817b447c1d0 100644
->>>> --- a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
->>>> +++ b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
->>>> @@ -52,6 +52,42 @@ linux,cma {
->>>>               linux,cma-default;
->>>>           };
->>>> +        c7x_0_dma_memory_region: c7x-dma-memory@99800000 {
->>>> +            compatible = "shared-dma-pool";
->>>> +            reg = <0x00 0x99800000 0x00 0x100000>;
->>>> +            no-map;
->>>> +        };
->>>> +
->>>> +        c7x_0_memory_region: c7x-memory@99900000 {
->>>> +            compatible = "shared-dma-pool";
->>>> +            reg = <0x00 0x99900000 0x00 0xf00000>;
->>>> +            no-map;
->>>> +        };
->>>> +
->>>> +        mcu_r5fss0_core0_dma_memory_region: r5f-dma-memory@9b800000 {
->>>> +            compatible = "shared-dma-pool";
->>>> +            reg = <0x00 0x9b800000 0x00 0x100000>;
->>>> +            no-map;
->>>> +        };
->>>> +
->>>> +        mcu_r5fss0_core0_memory_region: r5f-dma-memory@9b900000 {
->>>> +            compatible = "shared-dma-pool";
->>>> +            reg = <0x00 0x9b900000 0x00 0xf00000>;
->>>> +            no-map;
->>>> +        };
->>>> +
->>>> +        wkup_r5fss0_core0_dma_memory_region: r5f-dma-memory@9c800000 {
->>>> +            compatible = "shared-dma-pool";
->>>> +            reg = <0x00 0x9c800000 0x00 0x100000>;
->>>> +            no-map;
->>>> +        };
->>>> +
->>>> +        wkup_r5fss0_core0_memory_region: r5f-dma-memory@9c900000 {
->>>> +            compatible = "shared-dma-pool";
->>>> +            reg = <0x00 0x9c900000 0x00 0xf00000>;
->>>> +            no-map;
->>>> +        };
->>>> +
->>>>           secure_tfa_ddr: tfa@9e780000 {
->>>>               reg = <0x00 0x9e780000 0x00 0x80000>;
->>>>               alignment = <0x1000>;
->>>> @@ -63,12 +99,6 @@ secure_ddr: optee@9e800000 {
->>>>               alignment = <0x1000>;
->>>>               no-map;
->>>>           };
->>>> -
->>>> -        wkup_r5fss0_core0_memory_region: r5f-dma-memory@9c900000 {
->>>> -            compatible = "shared-dma-pool";
->>>> -            reg = <0x00 0x9c900000 0x00 0x01e00000>;
->>>> -            no-map;
->>>> -        };
->>>>       };
->>>
->>> This is missing the edgeAI specific remote-core carveouts and 
->>> RTOS-to-RTOS IPC memory regions [1] being used by edgeAI firmwares 
->>> which come as pre-packaged in the official SDK release for AM62A.
->>>
->>> There is only one official SDK release for AM62A (which is edgeAI 
->>> based) [2] which packages these edgeAI remoteproc firmwares and in my 
->>> view it is a fair expectation that remote core careveouts in 
->>> device-tree should align with firmwares released in SDK.
->>>
->>> This is because most developers (including me) and vendors download 
->>> this official SDK release and use it with latest upstream kernel and 
->>> modules (right now we are applying required patches locally) and this 
->>> patch won't suffice for this, in-fact it won't work since the 
->>> remoteproc firmwares are already using regions beyond the 
->>> reserved-regions from this patch.
->>
->> I understand your point, currently with this patch remoteproc loading
->> will not work for some cores. However, the goal here is to standardize
->> as much as possible the memory carveout sizes, push the "demo firmware"
->> to request resources the correct way from resource table, 
-> 
-> 
-> It is indeed more suitable if the memory carveouts are called out in the 
-> resource table of the firmware. But you will still need to reserve that 
-> memory sections in the Device Tree so that Kernel does not map that 
-> memory for anything else. So I am thinking how moving to resource table 
-> will help solve this problem?
+Consider factoring this out into a helper function, e.g.
+```
+fn from_bytes_sized<T: FromBytes + Sized>(bytes: &[u8]) -> Option<&T> {
+```
+which you can then call in here. If you were not trying to handle
+`?Sized`, we could even put it in the trait default implementation.
 
-The point is that our default FW is doing things incorrectly. We want to
-push the existing FW to
-1. Request resources via resource table.
-2. Fix their memory requirements (recent offline discussion proved that
-FW is requesting more than it needs)
-3. FW should adapt to Linux not Linux adapt to FW
+> +                if bytes.len() =3D=3D core::mem::size_of::<$t>() {
+> +                    let slice_ptr =3D bytes.as_ptr().cast::<$t>();
 
-If not, then then we should try to move to Zephyr firmware or other/
-better options.
+There's no alignment check, and so the resulting constructed reference
+may be misaligned, which is UB. Same below.
 
-Hope I am able to explain myself better this time around.
-
-~ Judith
-
-> 
-> Thanks,
-> Beleswar
-> 
->> and move away
->> from this dependency and limitations that we have with our firmware. We
->> should soon be able to generate our own firmware using Zephyr, which
->> Andrew is pioneering, so with this firmware we should move to the
->> correct direction upstream. Downstream we are still using the memory
->> carveout sizes that the firmware folk want so desperately to keep, for
->> now..
->>
->> ~ Judith
->>
->>>
->>> [1]: 
->>> https://git.ti.com/cgit/ti-linux-kernel/ti-linux-kernel/tree/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts?h=ti-linux-6.6.y-cicd#n103
->>> [2]: https://www.ti.com/tool/PROCESSOR-SDK-AM62A
->>>
->>> Regards
->>> Devarsh
->>>
->>>>       opp-table {
->>>> @@ -741,3 +771,57 @@ dpi1_out: endpoint {
->>>>           };
->>>>       };
->>>>   };
->>>> +
->>>> +&mailbox0_cluster0 {
->>>> +    status = "okay";
->>>> +
->>>> +    mbox_r5_0: mbox-r5-0 {
->>>> +        ti,mbox-rx = <0 0 0>;
->>>> +        ti,mbox-tx = <1 0 0>;
->>>> +    };
->>>> +};
->>>> +
->>>> +&mailbox0_cluster1 {
->>>> +    status = "okay";
->>>> +
->>>> +    mbox_c7x_0: mbox-c7x-0 {
->>>> +        ti,mbox-rx = <0 0 0>;
->>>> +        ti,mbox-tx = <1 0 0>;
->>>> +    };
->>>> +};
->>>> +
->>>> +&mailbox0_cluster2 {
->>>> +    status = "okay";
->>>> +
->>>> +    mbox_mcu_r5_0: mbox-mcu-r5-0 {
->>>> +        ti,mbox-rx = <0 0 0>;
->>>> +        ti,mbox-tx = <1 0 0>;
->>>> +    };
->>>> +};
->>>> +
->>>> +&wkup_r5fss0 {
->>>> +    status = "okay";
->>>> +};
->>>> +
->>>> +&wkup_r5fss0_core0 {
->>>> +    mboxes = <&mailbox0_cluster0>, <&mbox_r5_0>;
->>>> +    memory-region = <&wkup_r5fss0_core0_dma_memory_region>,
->>>> +            <&wkup_r5fss0_core0_memory_region>;
->>>> +};
->>>> +
->>>> +&mcu_r5fss0 {
->>>> +    status = "okay";
->>>> +};
->>>> +
->>>> +&mcu_r5fss0_core0 {
->>>> +    mboxes = <&mailbox0_cluster2>, <&mbox_mcu_r5_0>;
->>>> +    memory-region = <&mcu_r5fss0_core0_dma_memory_region>,
->>>> +            <&mcu_r5fss0_core0_memory_region>;
->>>> +};
->>>> +
->>>> +&c7x_0 {
->>>> +    mboxes = <&mailbox0_cluster1>, <&mbox_c7x_0>;
->>>> +    memory-region = <&c7x_0_dma_memory_region>,
->>>> +            <&c7x_0_memory_region>;
->>>> +    status = "okay";
->>>> +};
->>>
->>
-
+> +                    unsafe { Some(&*slice_ptr) }
+> +                } else {
+> +                    None
+> +                }
+> +            }
+> +
+> +            fn from_bytes_mut(bytes: &mut [u8]) -> Option<&mut $t>
+> +            where
+> +            Self: AsBytes,
+> +            {
+> +                if bytes.len() =3D=3D core::mem::size_of::<$t>() {
+> +                    let slice_ptr =3D bytes.as_mut_ptr().cast::<$t>();
+> +                    unsafe { Some(&mut *slice_ptr) }
+> +                } else {
+> +                    None
+> +                }
+> +            }
+> +        })*
+>      };
+>  }
+>
+>  impl_frombytes! {
+>      // SAFETY: All bit patterns are acceptable values of the types below=
+.
+> +    // Checking the pointer size makes this operation safe and it's nece=
+ssary
+> +    // to dereference to get the value and return it as a reference to `=
+Self`.
+>      u8, u16, u32, u64, usize,
+>      i8, i16, i32, i64, isize,
+> -
+> -    // SAFETY: If all bit patterns are acceptable for individual values =
+in an array, then all bit
+> -    // patterns are also acceptable for arrays of that type.
+> -    {<T: FromBytes>} [T],
+>      {<T: FromBytes, const N: usize>} [T; N],
+>  }
+>
+> +// SAFETY: If all bit patterns are acceptable for individual values in a=
+n array, then all bit
+> +// patterns are also acceptable for arrays of that type.
+> +unsafe impl<T: FromBytes> FromBytes for [T] {
+> +    fn from_bytes(bytes: &[u8]) -> Option<&Self> {
+> +        let slice_ptr =3D bytes.as_ptr().cast::<T>();
+> +        if bytes.len() % core::mem::size_of::<T>() =3D=3D 0 {
+> +            let slice_len =3D bytes.len() / core::mem::size_of::<T>();
+> +            // SAFETY: Since the code checks the size and can be divided=
+ into blocks of size T
+> +            // the slice is valid because the size is multiple of T.
+> +            unsafe { Some(core::slice::from_raw_parts(slice_ptr, slice_l=
+en)) }
+> +        } else {
+> +            None
+> +        }
+> +    }
+> +
+> +    fn from_bytes_mut(bytes: &mut [u8]) -> Option<&mut Self>
+> +    where
+> +        Self: AsBytes,
+> +    {
+> +        let slice_ptr =3D bytes.as_mut_ptr().cast::<T>();
+> +        if bytes.len() % core::mem::size_of::<T>() =3D=3D 0 {
+> +            let slice_len =3D bytes.len() / core::mem::size_of::<T>();
+> +            // SAFETY: Since the code checks the size and can be divided=
+ into blocks of size T
+> +            // the slice is valid because the size is multiple of T.
+> +            unsafe { Some(core::slice::from_raw_parts_mut(slice_ptr, sli=
+ce_len)) }
+> +        } else {
+> +            None
+> +        }
+> +    }
+> +}
+> +
+>  /// Types that can be viewed as an immutable slice of initialized bytes.
+>  ///
+>  /// If a struct implements this trait, then it is okay to copy it byte-f=
+or-byte to userspace. This
+> --
+> 2.49.0
+>
+>
