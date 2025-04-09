@@ -1,110 +1,126 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65A0725D540;
-	Wed,  9 Apr 2025 08:48:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA60D25C71A;
+	Wed,  9 Apr 2025 08:49:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744188533; cv=none; b=tdxe/G/BNmdaAR4fGnLod4+ykykPb9vMPWHzaqnPylTA26tRObiS7aLMxGJnQVpU3mqimrVb5O2qcuao9LCcbvf1A1DYSSWY0KaEaqr9R3/XQ1m6YyuAMrevxnJm3yzwZgLe0bUR7F70Xxy70fDYZrLR+tcUA9uAJLzcqzGK5VM=
+	t=1744188544; cv=none; b=kzselmc8qvi4qaWYIBfPAbqd1huvBZ2F8KK97FcbDJMMajQxEVNriyLrhtUM8MljX7f+aXMnXqiUeLUKxzdfd3nFuT2GtExxWZuDDda9MrwGuue7ff+tfEUX/l62IzRCzQzHKEobIbY9ujChfdv8JnuvDcl05dEwOXGWcetNgtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744188533; c=relaxed/simple;
-	bh=FPAejTZfx3pIFkrSptuE3yJ70O3m3wZWj/538sY1Ruc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hDJ2dWUw2t1hQDAZOqf6/kDew5urSUiNZsK5PaNhcCOnlCXZ1qU7GIclt/aMpk8MJBekUotFk/G7HL2hMABAwHTy3b3sPO2z0nqlX+kDVCnTDgtQrYd8jCflAL5c+pe4L0plqW6ROz1F4zgL2yXbduY54gvJKEWUUEGhLKEZO1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K0sfjtiN; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744188544; c=relaxed/simple;
+	bh=pMDhXpHEneTMYFt5i3NFp+rGFh7whXli1PrlDbT6MIg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZFbTBJYAiqa7bqkwsNNGPyHsaNzBv1ylTAsQhQiBNJ/fKuksDBFkQpLLHPjqO6jTRChSmLGFh9a3QTRYZ2Wn/toxAXFQQU06g0aUOw7shLBWRE4yW17ZlWaoLvi24+M6RGraq6AEob7TISCAJo3MTJq1NPOUlIUXkrUOZjjXsNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=KQRoMoVA; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K0sfjtiN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744188532; x=1775724532;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=FPAejTZfx3pIFkrSptuE3yJ70O3m3wZWj/538sY1Ruc=;
-  b=K0sfjtiN2nR7nsOVf+9eBmjj3+Ty38W17ot9EFVTFwP5mMMl5UKKAYe+
-   9Q9qeVSYrjgIx0jaBozbZ/YDADVKsRwTyehbjm9zGejp9rK8zHVXi8e7+
-   FkJhFveqbfPUskf4h3FNif/ral2sSzWPwBC6yudYcuAY8XPrr6/wTZGs6
-   SqaXo96Zj3wLO7iXDRajHPC80mjMp8kvgrGouGVxkxLG2Ut6P2CGcFabJ
-   Fgh+MJ75imwBmNaDfCJ/m/Aa621Vx76L5TueeTTtkba+ZFxaPvozxOIgI
-   0236211Ct3G/9+HTqm1yppYRfMm7PsLwYVaHaVpz0v9EU1x9/J8CKdPwc
-   Q==;
-X-CSE-ConnectionGUID: ZwDq+J16RFCpk6njg5Mxmg==
-X-CSE-MsgGUID: DJTQkwg8S56OjoXlf2f56A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="68132398"
-X-IronPort-AV: E=Sophos;i="6.15,200,1739865600"; 
-   d="scan'208";a="68132398"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 01:48:51 -0700
-X-CSE-ConnectionGUID: ggd2NUjXSi6pFmS+/eXNOg==
-X-CSE-MsgGUID: oqOvmpilThW/HtyvRo6DwA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,200,1739865600"; 
-   d="scan'208";a="132651117"
-Received: from jraag-z790m-itx-wifi.iind.intel.com ([10.190.239.23])
-  by fmviesa003.fm.intel.com with ESMTP; 09 Apr 2025 01:48:47 -0700
-From: Raag Jadav <raag.jadav@intel.com>
-To: eugen.hristev@linaro.org,
-	mchehab@kernel.org,
-	nicolas.ferre@microchip.com,
-	alexandre.belloni@bootlin.com,
-	claudiu.beznea@tuxon.dev,
-	hugues.fruchet@foss.st.com,
-	alain.volmat@foss.st.com,
-	mcoquelin.stm32@gmail.com,
-	alexandre.torgue@foss.st.com,
-	andriy.shevchenko@linux.intel.com,
-	sakari.ailus@linux.intel.com
-Cc: linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Raag Jadav <raag.jadav@intel.com>
-Subject: [PATCH v3 2/2] media: stm32-dcmi: use devm_kmemdup_array()
-Date: Wed,  9 Apr 2025 14:17:38 +0530
-Message-Id: <20250409084738.1851463-3-raag.jadav@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250409084738.1851463-1-raag.jadav@intel.com>
-References: <20250409084738.1851463-1-raag.jadav@intel.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="KQRoMoVA"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 17FFF432FB;
+	Wed,  9 Apr 2025 08:48:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744188539;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RQmvAGch9i+jrpaeoacuHgLxUyYJopp3wNNPqVGXr28=;
+	b=KQRoMoVAv7R4wEpDp4VQ8W/wI55S5ZoL08qXD/2EX8qgOLK1sOdq4/hgS3iqyAKlL8O6Ob
+	VLolNjCovHMN0ccQadDQiCHUmll1VRaSvuD4dbgaZXq4mT6hEnDt3Mu1sFeOkyQbCF6ORP
+	GgadHr4712CaDS4tAavr8GDpgX09xuc7tl3mHSEUg+CwFUCOCAWVTPQH8d7HlFfnsN1Ndj
+	sTJfT7YfT/9meh1EMzHbvLNt6pOvjIy8upP9DyRHgTm+uir3vengKYgjFt7VEEl1PiA9uD
+	CMRZTTxE3Oft8DBgNBru5tDHKmIIJxhaHLNsVjgX7xcdWznVvv/VGmFN3up33Q==
+Date: Wed, 9 Apr 2025 10:48:58 +0200
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Simon Horman <horms@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Heiner
+ Kallweit <hkallweit1@gmail.com>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>,
+ Richard Cochran <richardcochran@gmail.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, Maxime Chevallier
+ <maxime.chevallier@bootlin.com>, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org
+Subject: Re: [PATCH net-next v2 2/2] net: phy: Add Marvell PHY PTP support
+Message-ID: <20250409104858.2758e68e@kmaincent-XPS-13-7390>
+In-Reply-To: <Z_YwxYZc7IHkTx_C@shell.armlinux.org.uk>
+References: <20250407-feature_marvell_ptp-v2-0-a297d3214846@bootlin.com>
+	<20250407-feature_marvell_ptp-v2-2-a297d3214846@bootlin.com>
+	<20250408154934.GZ395307@horms.kernel.org>
+	<Z_VdlGVJjdtQuIW0@shell.armlinux.org.uk>
+	<20250409101808.43d5a17d@kmaincent-XPS-13-7390>
+	<Z_YwxYZc7IHkTx_C@shell.armlinux.org.uk>
+Organization: bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdehheehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnheptefgfeffgeelkeeugfejkeetveeffeelveetffefgeeuhfffjeejvdfgueeltdffnecuffhomhgrihhnpehgihhthhhusgdrtghomhdpsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghlohepkhhmrghinhgtvghnthdqigfrufdqudefqdejfeeltddpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduhedprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtohephhhorhhmsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhmpdhrt
+ ghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhm
+X-GND-Sasl: kory.maincent@bootlin.com
 
-Convert to use devm_kmemdup_array() and while at it, make the size robust
-against type changes.
+On Wed, 9 Apr 2025 09:33:09 +0100
+"Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
 
-Signed-off-by: Raag Jadav <raag.jadav@intel.com>
----
- drivers/media/platform/st/stm32/stm32-dcmi.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+> On Wed, Apr 09, 2025 at 10:18:08AM +0200, Kory Maincent wrote:
+> > On Tue, 8 Apr 2025 18:32:04 +0100
+> > "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
+> >  =20
+> > > On Tue, Apr 08, 2025 at 04:49:34PM +0100, Simon Horman wrote: =20
+>  [...] =20
+>  [...] =20
+>  [...] =20
+>  [...] =20
+>  [...] =20
+> > >=20
+> > > ... and anyway, I haven't dropped my patches, I'm waiting for the
+> > > fundamental issue with merging Marvell PHY PTP support destroying the
+> > > ability to use MVPP2 PTP support to be solved, and then I will post
+> > > my patches.
+> > >=20
+> > > They aren't dead, I'm just waiting for the issues I reported years ago
+> > > with the PTP infrastructure to be resolved - and to be tested as
+> > > resolved.
+> > >=20
+> > > I'm still not convinced that they have been given Kory's responses to
+> > > me (some of which I honestly don't understand), but I will get around
+> > > to doing further testing to see whether enabling Marvell PHY PTP
+> > > support results in MVPP2 support becoming unusable.
+> > >=20
+> > > Kory's lack of communication with me has been rather frustrating. =20
+> >=20
+> > You were in CC in all the series I sent and there was not a lot of revi=
+ew
+> > and testing on your side. I know you seemed a lot busy at that time but=
+ I
+> > don't understand what communication is missing here?  =20
+>=20
+> I don't spend much time at the physical location where the hardware that
+> I need to test your long awaited code is anymore. That means the
+> opportunities to test it are *rare*.
+>=20
+> So far, each time I've tested your code, it's been broken. This really
+> doesn't help.
+>=20
+> If you want me to do anything more in a timely manner, like test fixes,
+> you need to get them to me by the end of this week, otherwise I won't
+> again be able to test them for a while.
 
-diff --git a/drivers/media/platform/st/stm32/stm32-dcmi.c b/drivers/media/platform/st/stm32/stm32-dcmi.c
-index 9b699ee2b1e0..ba77062357eb 100644
---- a/drivers/media/platform/st/stm32/stm32-dcmi.c
-+++ b/drivers/media/platform/st/stm32/stm32-dcmi.c
-@@ -1682,18 +1682,14 @@ static int dcmi_formats_init(struct stm32_dcmi *dcmi)
- 		return -ENXIO;
- 
- 	dcmi->num_of_sd_formats = num_fmts;
--	dcmi->sd_formats = devm_kcalloc(dcmi->dev,
--					num_fmts, sizeof(struct dcmi_format *),
--					GFP_KERNEL);
-+	dcmi->sd_formats = devm_kmemdup_array(dcmi->dev, sd_fmts, num_fmts,
-+					      sizeof(*sd_fmts), GFP_KERNEL);
- 	if (!dcmi->sd_formats) {
- 		dev_err(dcmi->dev, "Could not allocate memory\n");
- 		return -ENOMEM;
- 	}
- 
--	memcpy(dcmi->sd_formats, sd_fmts,
--	       num_fmts * sizeof(struct dcmi_format *));
- 	dcmi->sd_format = dcmi->sd_formats[0];
--
- 	return 0;
- }
- 
--- 
-2.34.1
+You could try again with Vlad patch adding support to ndo_hwtstamp_get/set =
+to
+the mvpp2 drivers.
+https://github.com/vladimiroltean/linux/commit/5bde95816f19cf2872367ecdbef1=
+efe476e4f833
 
+Regards,
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
