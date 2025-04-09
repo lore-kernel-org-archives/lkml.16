@@ -1,1123 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EB3D20299B
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 19:30:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A1C81F03FA
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 19:31:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744227023; cv=none; b=u4QE3zCPQQpriIjr5eA4hm6Tkoy1/0+3fTFCRVREB0FcfhdvJcg4ScbHR5D230djYw4bQxhkUSeo8Ht3Y6G0wrYg+XutFTVk347TnSh67mJowEb0Zz6lgKs12S5mWP/FR4Y5jF6eeRa8UElcdAgoug3zPOaUrpZ7uzuNt5e5BQY=
+	t=1744227077; cv=none; b=QsgVZkNgwnDB21WFS3OK8XbQ9m+BlB0uPh/yWIlEbfadqyRQxR3VsOGQZsZ2XsYDfC/abUK2KZYQbcnmMBI4byNQRDpAkWsMBnb4J9V43CAuOsaFusJSmSShv+EeK1xhHs35kCdB35RKvMFplvEsXMfqegm+Tj++4jXn1ORgSg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744227023; c=relaxed/simple;
-	bh=JXvqjmcvJNnlxC1ElswTrRbMWhWfNoS9/e/mvFFGIpA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=o9fS29VDADNmheg9G5PiyfgSNye4EHTITavJdP+fwEt5JJr4TWGa6hqzmE437nXFIE9AwjAdV/4+h2J72UjEe9B4ByRyQmQ5BnK5PSyfwLykikxS4YNFDXqPZelWSwGuZ/6PCCsw/BWI+6rc1FjY2fOWo2QK8zCXWri3YVd90do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ze/L3Kbt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744227077; c=relaxed/simple;
+	bh=3h2o48w0QjOK4ZeGT9FMMoj4ho63MyVRsU5z0hBWp/o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CJ4WTvt/VwC/e1K8vCJIe/7XF4zVju5CvybzmTJWerUjnfeYDYrCYbY14mm7AuCI5gLyZV1e+JoIdyXurrzG0oAnZEf/4VIpaou/QjpkJG9EV4wbKmn4vTEQ0O/rUQoi969nH7PU2HRuScdouqPPe67/TtlwLeba+xaud+DI8t4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Ik/xfEBw; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ze/L3Kbt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78554C4CEE8;
-	Wed,  9 Apr 2025 19:30:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744227022;
-	bh=JXvqjmcvJNnlxC1ElswTrRbMWhWfNoS9/e/mvFFGIpA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ze/L3Kbt2xC7S2FuJ5hk+udvNmbdK5ct3Fcrk2hF0UKzcieCoRUctNs8QwYF+Pfii
-	 3Q2eDuxwE8FODqsMz9SzEWG4BklnSK1gJHPp34WxfQRCIXvIZwAnPTPh3HD9wZbQ3G
-	 //4MX+UvVviIYYj37hqjZFjchDZDx0Pl+WrJJ9pWmt6mc5LlsCNSZz/xL0SVG6twoQ
-	 yJX9zufNm7j67zNZIoZKUC0b/+sARoUOYOsiQmafzf5z/l+pIjq2/zQ3hGIofxpAzP
-	 GLnZ/z9ZA+Npuk77Aqgqa5i46dIG/FZf09dhxlCzb2HzfXKuhou+wffV5+8OroetNK
-	 Qomp6gGJQsFaQ==
-From: =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Song Shuai <songshuaishuai@tinylab.org>,
-	linux-riscv@lists.infradead.org
-Cc: Nick Kossifidis <mick@ics.forth.gr>,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>
-Subject: [PATCH v3 1/2] riscv: kexec_file: Split the loading of kernel and others
-Date: Wed,  9 Apr 2025 21:29:58 +0200
-Message-ID: <20250409193004.643839-2-bjorn@kernel.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250409193004.643839-1-bjorn@kernel.org>
-References: <20250409193004.643839-1-bjorn@kernel.org>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Ik/xfEBw"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 539HroPf010446
+	for <linux-kernel@vger.kernel.org>; Wed, 9 Apr 2025 19:31:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	10ynH9XRCJ86PYB1I7aS6LqVmbsLmtnJe9E3XkJ/SOw=; b=Ik/xfEBw6FirLzxm
+	2ll0LrlaShaPzjzPACGOnomHswT9nQ593DQ8CddiJMhrUecvhHHwRRNflKyD9Wd8
+	Iyr2umpXrFSbN6OH0UdouTlisTA/UaGzN99rr33ZpTfeMhQi8hjhncShba2tObFK
+	ZT3dHj3JTO6XGboJqlMVAPg+slroAl4JQChb7UuzyQuTOlyM35HJZTDf/Y/q+YHY
+	cAwY62S760IWTdoXFQyOCGbdGSq7R9d3IVOrWwbJGipFfEnQi6Grwp+Q3xWCm3hn
+	sCNSe/C+cy8Gz6e37FG1kFQETYJu6llxsqUstosIO8RFQ+uggd8EtDivb1cq8iLK
+	dGoHTg==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twftmcar-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 19:31:15 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c54788bdf7so1156185a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 12:31:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744227069; x=1744831869;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=10ynH9XRCJ86PYB1I7aS6LqVmbsLmtnJe9E3XkJ/SOw=;
+        b=XR/zdpo8edBUYVLspTDcsuIG5j8WZsQqRlQZrLhVfuWYlCmBCP342eS4VsvUd9E/fD
+         IYhQ64FII9+2uGCmGOwH/CHh2jomHMUCCC+Rl/hFIEXr+FlKx6k5qJqCPm7WqqbP4TKl
+         zxrfCOwoa1QK9U1GSmLEd1+Y+6LuaaXhiFjrf6FXN4Wa7cyo9Sw8sTOgTgonIKMNRgox
+         8KfawHvBSsv3iOJ/ZvaYVtBDx2LPffZjnsYx2S97L1vcMIaH0chxF3uSxmteY/z3W/l8
+         jNNfftibv6lGH1ZUMQiCpVFaIFLS+mgwn4NYS3Aucu97EqUYszdd+MJXrjLYeQWS3Wy0
+         boYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWSZTwEzlHFOi3B83ryROiCfQxtzDpJaL4MgCE2Bwj1XK9gEcsec4yRcgjpBVWR2iiNqLAfxNvaYsLJG2s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRs+v4mAtCuOUUSct1fMchhl8+swGjmHhzgqAIIgSvdL5umL2O
+	QOdZhKT0kUlJHdOI8zklGSjaFpzRGUNL8gIld4/8BX0F0mOCx1pI/6h+NhsenXMwBq3rl2lJyQT
+	wkzC+AaqOcGaHWsoGDlz2C9kAj39BfVWRyuzfRNJt75m4nRM1YgP1MerJbkJ7K2w=
+X-Gm-Gg: ASbGncvRtuduhioLfOIUvpj1WEIKQL9x0wQd+AOvqV/Wpx260VDqtnvk7rxQ3FN1LNd
+	KwW2ANjki61NEzXQWMsDcBQ3m/0YBKi5s2QEww91VDvAZvO0l0m+MVpr44Lu8e3b+Ya4c3GzLTR
+	RW+1+DsqqK6+zOQg9eIVOLflCKXxaUjX+7l0NJWTVtw+KRyC0hQk4r2OSc7p73WoUzeTq/CZswE
+	SsGfBoctabtPpy5AyndQb/tViEIEKJg8bEd2M4P3Fgj7THJ7s6msSRYA1hFA58FE36IafJnFqRL
+	B33gOVfESbqPRiHBmprkFCoTnI6FJNBejLYrOY3RNam2BO4pDYnr9YX7A3MGF5m7qA==
+X-Received: by 2002:a05:620a:430e:b0:7c5:e283:7d0f with SMTP id af79cd13be357-7c79cbec03dmr237798785a.8.1744227069294;
+        Wed, 09 Apr 2025 12:31:09 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEGdZkJ3uyM1k6il1QQ4tZzm6Kb6iei6rLgcgi9hbyDE+GWGGvqjoDJjonneM8n5/WqFQGtLg==
+X-Received: by 2002:a05:620a:430e:b0:7c5:e283:7d0f with SMTP id af79cd13be357-7c79cbec03dmr237796685a.8.1744227068851;
+        Wed, 09 Apr 2025 12:31:08 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1bea588sm142930566b.67.2025.04.09.12.31.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Apr 2025 12:31:08 -0700 (PDT)
+Message-ID: <2124b898-2676-4002-8688-d3e19e55e368@oss.qualcomm.com>
+Date: Wed, 9 Apr 2025 21:31:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/2] arm64: dts: qcom: qcs8300-ride: enable WLAN on
+ qcs8300-ride
+To: Stone Zhang <quic_stonez@quicinc.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, quic_miaoqing@quicinc.com,
+        quic_zhichen@quicinc.com, quic_yuzha@quicinc.com
+References: <20250325075331.1662306-1-quic_stonez@quicinc.com>
+ <20250325075331.1662306-3-quic_stonez@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250325075331.1662306-3-quic_stonez@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=B5+50PtM c=1 sm=1 tr=0 ts=67f6cb03 cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=DgEYNLXXC2yaUqHi_YcA:9 a=QEXdDO2ut3YA:10
+ a=NFOGd7dJGGMPyQGDc5-O:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: nTadsV3G1dgSF-VBHcGsYEH5BiEEk_Sa
+X-Proofpoint-ORIG-GUID: nTadsV3G1dgSF-VBHcGsYEH5BiEEk_Sa
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-09_06,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ suspectscore=0 malwarescore=0 bulkscore=0 phishscore=0 spamscore=0
+ priorityscore=1501 adultscore=0 impostorscore=0 lowpriorityscore=0
+ mlxscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504090130
 
-From: Song Shuai <songshuaishuai@tinylab.org>
+On 3/25/25 8:53 AM, Stone Zhang wrote:
+> Enable WLAN on qcs8300-ride by adding a node for the PMU module
+> of the WCN6855 and assigning its LDO power outputs to the existing
+> WiFi module.
+> 
+> On the qcs8300-ride platform, the corresponding firmware and BDF
+> are QCA6698AQ instead of WCN6855, which have been added in the
+> 20250211 release.
+> 
+> Signed-off-by: Stone Zhang <quic_stonez@quicinc.com>
+> ---
 
-This is the preparative patch for kexec_file_load Image support.
+[...]
 
-It separates the elf_kexec_load() as two parts:
-- the first part loads the vmlinux (or Image)
-- the second part loads other segments (e.g. initrd,fdt,purgatory)
 
-And the second part is exported as the load_extra_segments() function
-which would be used in both kexec-elf.c and kexec-image.c.
+> +
+> +	wcn6855-pmu {
+> +		compatible = "qcom,wcn6855-pmu";
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&wlan_en_state>;
 
-No functional change intended.
+property-n
+property-names
 
-Signed-off-by: Song Shuai <songshuaishuai@tinylab.org>
-Signed-off-by: Björn Töpel <bjorn@rivosinc.com>
----
- arch/riscv/include/asm/kexec.h         |   5 +
- arch/riscv/kernel/Makefile             |   2 +-
- arch/riscv/kernel/elf_kexec.c          | 485 -------------------------
- arch/riscv/kernel/kexec_elf.c          | 144 ++++++++
- arch/riscv/kernel/machine_kexec_file.c | 360 ++++++++++++++++++
- 5 files changed, 510 insertions(+), 486 deletions(-)
- delete mode 100644 arch/riscv/kernel/elf_kexec.c
- create mode 100644 arch/riscv/kernel/kexec_elf.c
+please
 
-diff --git a/arch/riscv/include/asm/kexec.h b/arch/riscv/include/asm/kexec.h
-index 2b56769cb530..518825fe4160 100644
---- a/arch/riscv/include/asm/kexec.h
-+++ b/arch/riscv/include/asm/kexec.h
-@@ -67,6 +67,11 @@ int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
- struct kimage;
- int arch_kimage_file_post_load_cleanup(struct kimage *image);
- #define arch_kimage_file_post_load_cleanup arch_kimage_file_post_load_cleanup
-+
-+int load_extra_segments(struct kimage *image, unsigned long kernel_start,
-+			unsigned long kernel_len, char *initrd,
-+			unsigned long initrd_len, char *cmdline,
-+			unsigned long cmdline_len);
- #endif
- 
- #endif
-diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
-index 8d186bfced45..d56305c8e631 100644
---- a/arch/riscv/kernel/Makefile
-+++ b/arch/riscv/kernel/Makefile
-@@ -107,7 +107,7 @@ obj-$(CONFIG_HOTPLUG_CPU)	+= cpu-hotplug.o
- obj-$(CONFIG_PARAVIRT)		+= paravirt.o
- obj-$(CONFIG_KGDB)		+= kgdb.o
- obj-$(CONFIG_KEXEC_CORE)	+= kexec_relocate.o crash_save_regs.o machine_kexec.o
--obj-$(CONFIG_KEXEC_FILE)	+= elf_kexec.o machine_kexec_file.o
-+obj-$(CONFIG_KEXEC_FILE)	+= kexec_elf.o machine_kexec_file.o
- obj-$(CONFIG_CRASH_DUMP)	+= crash_dump.o
- obj-$(CONFIG_VMCORE_INFO)	+= vmcore_info.o
- 
-diff --git a/arch/riscv/kernel/elf_kexec.c b/arch/riscv/kernel/elf_kexec.c
-deleted file mode 100644
-index e783a72d051f..000000000000
---- a/arch/riscv/kernel/elf_kexec.c
-+++ /dev/null
-@@ -1,485 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/*
-- * Load ELF vmlinux file for the kexec_file_load syscall.
-- *
-- * Copyright (C) 2021 Huawei Technologies Co, Ltd.
-- *
-- * Author: Liao Chang (liaochang1@huawei.com)
-- *
-- * Based on kexec-tools' kexec-elf-riscv.c, heavily modified
-- * for kernel.
-- */
--
--#define pr_fmt(fmt)	"kexec_image: " fmt
--
--#include <linux/elf.h>
--#include <linux/kexec.h>
--#include <linux/slab.h>
--#include <linux/of.h>
--#include <linux/libfdt.h>
--#include <linux/types.h>
--#include <linux/memblock.h>
--#include <linux/vmalloc.h>
--#include <asm/setup.h>
--
--int arch_kimage_file_post_load_cleanup(struct kimage *image)
--{
--	kvfree(image->arch.fdt);
--	image->arch.fdt = NULL;
--
--	vfree(image->elf_headers);
--	image->elf_headers = NULL;
--	image->elf_headers_sz = 0;
--
--	return kexec_image_post_load_cleanup_default(image);
--}
--
--static int riscv_kexec_elf_load(struct kimage *image, struct elfhdr *ehdr,
--				struct kexec_elf_info *elf_info, unsigned long old_pbase,
--				unsigned long new_pbase)
--{
--	int i;
--	int ret = 0;
--	size_t size;
--	struct kexec_buf kbuf;
--	const struct elf_phdr *phdr;
--
--	kbuf.image = image;
--
--	for (i = 0; i < ehdr->e_phnum; i++) {
--		phdr = &elf_info->proghdrs[i];
--		if (phdr->p_type != PT_LOAD)
--			continue;
--
--		size = phdr->p_filesz;
--		if (size > phdr->p_memsz)
--			size = phdr->p_memsz;
--
--		kbuf.buffer = (void *) elf_info->buffer + phdr->p_offset;
--		kbuf.bufsz = size;
--		kbuf.buf_align = phdr->p_align;
--		kbuf.mem = phdr->p_paddr - old_pbase + new_pbase;
--		kbuf.memsz = phdr->p_memsz;
--		kbuf.top_down = false;
--		ret = kexec_add_buffer(&kbuf);
--		if (ret)
--			break;
--	}
--
--	return ret;
--}
--
--/*
-- * Go through the available phsyical memory regions and find one that hold
-- * an image of the specified size.
-- */
--static int elf_find_pbase(struct kimage *image, unsigned long kernel_len,
--			  struct elfhdr *ehdr, struct kexec_elf_info *elf_info,
--			  unsigned long *old_pbase, unsigned long *new_pbase)
--{
--	int i;
--	int ret;
--	struct kexec_buf kbuf;
--	const struct elf_phdr *phdr;
--	unsigned long lowest_paddr = ULONG_MAX;
--	unsigned long lowest_vaddr = ULONG_MAX;
--
--	for (i = 0; i < ehdr->e_phnum; i++) {
--		phdr = &elf_info->proghdrs[i];
--		if (phdr->p_type != PT_LOAD)
--			continue;
--
--		if (lowest_paddr > phdr->p_paddr)
--			lowest_paddr = phdr->p_paddr;
--
--		if (lowest_vaddr > phdr->p_vaddr)
--			lowest_vaddr = phdr->p_vaddr;
--	}
--
--	kbuf.image = image;
--	kbuf.buf_min = lowest_paddr;
--	kbuf.buf_max = ULONG_MAX;
--
--	/*
--	 * Current riscv boot protocol requires 2MB alignment for
--	 * RV64 and 4MB alignment for RV32
--	 *
--	 */
--	kbuf.buf_align = PMD_SIZE;
--	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
--	kbuf.memsz = ALIGN(kernel_len, PAGE_SIZE);
--	kbuf.top_down = false;
--	ret = arch_kexec_locate_mem_hole(&kbuf);
--	if (!ret) {
--		*old_pbase = lowest_paddr;
--		*new_pbase = kbuf.mem;
--		image->start = ehdr->e_entry - lowest_vaddr + kbuf.mem;
--	}
--	return ret;
--}
--
--#ifdef CONFIG_CRASH_DUMP
--static int get_nr_ram_ranges_callback(struct resource *res, void *arg)
--{
--	unsigned int *nr_ranges = arg;
--
--	(*nr_ranges)++;
--	return 0;
--}
--
--static int prepare_elf64_ram_headers_callback(struct resource *res, void *arg)
--{
--	struct crash_mem *cmem = arg;
--
--	cmem->ranges[cmem->nr_ranges].start = res->start;
--	cmem->ranges[cmem->nr_ranges].end = res->end;
--	cmem->nr_ranges++;
--
--	return 0;
--}
--
--static int prepare_elf_headers(void **addr, unsigned long *sz)
--{
--	struct crash_mem *cmem;
--	unsigned int nr_ranges;
--	int ret;
--
--	nr_ranges = 1; /* For exclusion of crashkernel region */
--	walk_system_ram_res(0, -1, &nr_ranges, get_nr_ram_ranges_callback);
--
--	cmem = kmalloc(struct_size(cmem, ranges, nr_ranges), GFP_KERNEL);
--	if (!cmem)
--		return -ENOMEM;
--
--	cmem->max_nr_ranges = nr_ranges;
--	cmem->nr_ranges = 0;
--	ret = walk_system_ram_res(0, -1, cmem, prepare_elf64_ram_headers_callback);
--	if (ret)
--		goto out;
--
--	/* Exclude crashkernel region */
--	ret = crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end);
--	if (!ret)
--		ret = crash_prepare_elf64_headers(cmem, true, addr, sz);
--
--out:
--	kfree(cmem);
--	return ret;
--}
--
--static char *setup_kdump_cmdline(struct kimage *image, char *cmdline,
--				 unsigned long cmdline_len)
--{
--	int elfcorehdr_strlen;
--	char *cmdline_ptr;
--
--	cmdline_ptr = kzalloc(COMMAND_LINE_SIZE, GFP_KERNEL);
--	if (!cmdline_ptr)
--		return NULL;
--
--	elfcorehdr_strlen = sprintf(cmdline_ptr, "elfcorehdr=0x%lx ",
--		image->elf_load_addr);
--
--	if (elfcorehdr_strlen + cmdline_len > COMMAND_LINE_SIZE) {
--		pr_err("Appending elfcorehdr=<addr> exceeds cmdline size\n");
--		kfree(cmdline_ptr);
--		return NULL;
--	}
--
--	memcpy(cmdline_ptr + elfcorehdr_strlen, cmdline, cmdline_len);
--	/* Ensure it's nul terminated */
--	cmdline_ptr[COMMAND_LINE_SIZE - 1] = '\0';
--	return cmdline_ptr;
--}
--#endif
--
--static void *elf_kexec_load(struct kimage *image, char *kernel_buf,
--			    unsigned long kernel_len, char *initrd,
--			    unsigned long initrd_len, char *cmdline,
--			    unsigned long cmdline_len)
--{
--	int ret;
--	void *fdt;
--	unsigned long old_kernel_pbase = ULONG_MAX;
--	unsigned long new_kernel_pbase = 0UL;
--	unsigned long initrd_pbase = 0UL;
--	unsigned long kernel_start;
--	struct elfhdr ehdr;
--	struct kexec_buf kbuf;
--	struct kexec_elf_info elf_info;
--	char *modified_cmdline = NULL;
--
--	ret = kexec_build_elf_info(kernel_buf, kernel_len, &ehdr, &elf_info);
--	if (ret)
--		return ERR_PTR(ret);
--
--	ret = elf_find_pbase(image, kernel_len, &ehdr, &elf_info,
--			     &old_kernel_pbase, &new_kernel_pbase);
--	if (ret)
--		goto out;
--	kernel_start = image->start;
--
--	/* Add the kernel binary to the image */
--	ret = riscv_kexec_elf_load(image, &ehdr, &elf_info,
--				   old_kernel_pbase, new_kernel_pbase);
--	if (ret)
--		goto out;
--
--	kbuf.image = image;
--	kbuf.buf_min = new_kernel_pbase + kernel_len;
--	kbuf.buf_max = ULONG_MAX;
--
--#ifdef CONFIG_CRASH_DUMP
--	/* Add elfcorehdr */
--	if (image->type == KEXEC_TYPE_CRASH) {
--		void *headers;
--		unsigned long headers_sz;
--		ret = prepare_elf_headers(&headers, &headers_sz);
--		if (ret) {
--			pr_err("Preparing elf core header failed\n");
--			goto out;
--		}
--
--		kbuf.buffer = headers;
--		kbuf.bufsz = headers_sz;
--		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
--		kbuf.memsz = headers_sz;
--		kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
--		kbuf.top_down = true;
--
--		ret = kexec_add_buffer(&kbuf);
--		if (ret) {
--			vfree(headers);
--			goto out;
--		}
--		image->elf_headers = headers;
--		image->elf_load_addr = kbuf.mem;
--		image->elf_headers_sz = headers_sz;
--
--		kexec_dprintk("Loaded elf core header at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
--			      image->elf_load_addr, kbuf.bufsz, kbuf.memsz);
--
--		/* Setup cmdline for kdump kernel case */
--		modified_cmdline = setup_kdump_cmdline(image, cmdline,
--						       cmdline_len);
--		if (!modified_cmdline) {
--			pr_err("Setting up cmdline for kdump kernel failed\n");
--			ret = -EINVAL;
--			goto out;
--		}
--		cmdline = modified_cmdline;
--	}
--#endif
--
--#ifdef CONFIG_ARCH_SUPPORTS_KEXEC_PURGATORY
--	/* Add purgatory to the image */
--	kbuf.top_down = true;
--	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
--	ret = kexec_load_purgatory(image, &kbuf);
--	if (ret) {
--		pr_err("Error loading purgatory ret=%d\n", ret);
--		goto out;
--	}
--	kexec_dprintk("Loaded purgatory at 0x%lx\n", kbuf.mem);
--
--	ret = kexec_purgatory_get_set_symbol(image, "riscv_kernel_entry",
--					     &kernel_start,
--					     sizeof(kernel_start), 0);
--	if (ret)
--		pr_err("Error update purgatory ret=%d\n", ret);
--#endif /* CONFIG_ARCH_SUPPORTS_KEXEC_PURGATORY */
--
--	/* Add the initrd to the image */
--	if (initrd != NULL) {
--		kbuf.buffer = initrd;
--		kbuf.bufsz = kbuf.memsz = initrd_len;
--		kbuf.buf_align = PAGE_SIZE;
--		kbuf.top_down = true;
--		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
--		ret = kexec_add_buffer(&kbuf);
--		if (ret)
--			goto out;
--		initrd_pbase = kbuf.mem;
--		kexec_dprintk("Loaded initrd at 0x%lx\n", initrd_pbase);
--	}
--
--	/* Add the DTB to the image */
--	fdt = of_kexec_alloc_and_setup_fdt(image, initrd_pbase,
--					   initrd_len, cmdline, 0);
--	if (!fdt) {
--		pr_err("Error setting up the new device tree.\n");
--		ret = -EINVAL;
--		goto out;
--	}
--
--	fdt_pack(fdt);
--	kbuf.buffer = fdt;
--	kbuf.bufsz = kbuf.memsz = fdt_totalsize(fdt);
--	kbuf.buf_align = PAGE_SIZE;
--	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
--	kbuf.top_down = true;
--	ret = kexec_add_buffer(&kbuf);
--	if (ret) {
--		pr_err("Error add DTB kbuf ret=%d\n", ret);
--		goto out_free_fdt;
--	}
--	/* Cache the fdt buffer address for memory cleanup */
--	image->arch.fdt = fdt;
--	kexec_dprintk("Loaded device tree at 0x%lx\n", kbuf.mem);
--	goto out;
--
--out_free_fdt:
--	kvfree(fdt);
--out:
--	kfree(modified_cmdline);
--	kexec_free_elf_info(&elf_info);
--	return ret ? ERR_PTR(ret) : NULL;
--}
--
--#define RV_X(x, s, n)  (((x) >> (s)) & ((1 << (n)) - 1))
--#define RISCV_IMM_BITS 12
--#define RISCV_IMM_REACH (1LL << RISCV_IMM_BITS)
--#define RISCV_CONST_HIGH_PART(x) \
--	(((x) + (RISCV_IMM_REACH >> 1)) & ~(RISCV_IMM_REACH - 1))
--#define RISCV_CONST_LOW_PART(x) ((x) - RISCV_CONST_HIGH_PART(x))
--
--#define ENCODE_ITYPE_IMM(x) \
--	(RV_X(x, 0, 12) << 20)
--#define ENCODE_BTYPE_IMM(x) \
--	((RV_X(x, 1, 4) << 8) | (RV_X(x, 5, 6) << 25) | \
--	(RV_X(x, 11, 1) << 7) | (RV_X(x, 12, 1) << 31))
--#define ENCODE_UTYPE_IMM(x) \
--	(RV_X(x, 12, 20) << 12)
--#define ENCODE_JTYPE_IMM(x) \
--	((RV_X(x, 1, 10) << 21) | (RV_X(x, 11, 1) << 20) | \
--	(RV_X(x, 12, 8) << 12) | (RV_X(x, 20, 1) << 31))
--#define ENCODE_CBTYPE_IMM(x) \
--	((RV_X(x, 1, 2) << 3) | (RV_X(x, 3, 2) << 10) | (RV_X(x, 5, 1) << 2) | \
--	(RV_X(x, 6, 2) << 5) | (RV_X(x, 8, 1) << 12))
--#define ENCODE_CJTYPE_IMM(x) \
--	((RV_X(x, 1, 3) << 3) | (RV_X(x, 4, 1) << 11) | (RV_X(x, 5, 1) << 2) | \
--	(RV_X(x, 6, 1) << 7) | (RV_X(x, 7, 1) << 6) | (RV_X(x, 8, 2) << 9) | \
--	(RV_X(x, 10, 1) << 8) | (RV_X(x, 11, 1) << 12))
--#define ENCODE_UJTYPE_IMM(x) \
--	(ENCODE_UTYPE_IMM(RISCV_CONST_HIGH_PART(x)) | \
--	(ENCODE_ITYPE_IMM(RISCV_CONST_LOW_PART(x)) << 32))
--#define ENCODE_UITYPE_IMM(x) \
--	(ENCODE_UTYPE_IMM(x) | (ENCODE_ITYPE_IMM(x) << 32))
--
--#define CLEAN_IMM(type, x) \
--	((~ENCODE_##type##_IMM((uint64_t)(-1))) & (x))
--
--int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
--				     Elf_Shdr *section,
--				     const Elf_Shdr *relsec,
--				     const Elf_Shdr *symtab)
--{
--	const char *strtab, *name, *shstrtab;
--	const Elf_Shdr *sechdrs;
--	Elf64_Rela *relas;
--	int i, r_type;
--
--	/* String & section header string table */
--	sechdrs = (void *)pi->ehdr + pi->ehdr->e_shoff;
--	strtab = (char *)pi->ehdr + sechdrs[symtab->sh_link].sh_offset;
--	shstrtab = (char *)pi->ehdr + sechdrs[pi->ehdr->e_shstrndx].sh_offset;
--
--	relas = (void *)pi->ehdr + relsec->sh_offset;
--
--	for (i = 0; i < relsec->sh_size / sizeof(*relas); i++) {
--		const Elf_Sym *sym;	/* symbol to relocate */
--		unsigned long addr;	/* final location after relocation */
--		unsigned long val;	/* relocated symbol value */
--		unsigned long sec_base;	/* relocated symbol value */
--		void *loc;		/* tmp location to modify */
--
--		sym = (void *)pi->ehdr + symtab->sh_offset;
--		sym += ELF64_R_SYM(relas[i].r_info);
--
--		if (sym->st_name)
--			name = strtab + sym->st_name;
--		else
--			name = shstrtab + sechdrs[sym->st_shndx].sh_name;
--
--		loc = pi->purgatory_buf;
--		loc += section->sh_offset;
--		loc += relas[i].r_offset;
--
--		if (sym->st_shndx == SHN_ABS)
--			sec_base = 0;
--		else if (sym->st_shndx >= pi->ehdr->e_shnum) {
--			pr_err("Invalid section %d for symbol %s\n",
--			       sym->st_shndx, name);
--			return -ENOEXEC;
--		} else
--			sec_base = pi->sechdrs[sym->st_shndx].sh_addr;
--
--		val = sym->st_value;
--		val += sec_base;
--		val += relas[i].r_addend;
--
--		addr = section->sh_addr + relas[i].r_offset;
--
--		r_type = ELF64_R_TYPE(relas[i].r_info);
--
--		switch (r_type) {
--		case R_RISCV_BRANCH:
--			*(u32 *)loc = CLEAN_IMM(BTYPE, *(u32 *)loc) |
--				 ENCODE_BTYPE_IMM(val - addr);
--			break;
--		case R_RISCV_JAL:
--			*(u32 *)loc = CLEAN_IMM(JTYPE, *(u32 *)loc) |
--				 ENCODE_JTYPE_IMM(val - addr);
--			break;
--		/*
--		 * With no R_RISCV_PCREL_LO12_S, R_RISCV_PCREL_LO12_I
--		 * sym is expected to be next to R_RISCV_PCREL_HI20
--		 * in purgatory relsec. Handle it like R_RISCV_CALL
--		 * sym, instead of searching the whole relsec.
--		 */
--		case R_RISCV_PCREL_HI20:
--		case R_RISCV_CALL_PLT:
--		case R_RISCV_CALL:
--			*(u64 *)loc = CLEAN_IMM(UITYPE, *(u64 *)loc) |
--				 ENCODE_UJTYPE_IMM(val - addr);
--			break;
--		case R_RISCV_RVC_BRANCH:
--			*(u32 *)loc = CLEAN_IMM(CBTYPE, *(u32 *)loc) |
--				 ENCODE_CBTYPE_IMM(val - addr);
--			break;
--		case R_RISCV_RVC_JUMP:
--			*(u32 *)loc = CLEAN_IMM(CJTYPE, *(u32 *)loc) |
--				 ENCODE_CJTYPE_IMM(val - addr);
--			break;
--		case R_RISCV_ADD16:
--			*(u16 *)loc += val;
--			break;
--		case R_RISCV_SUB16:
--			*(u16 *)loc -= val;
--			break;
--		case R_RISCV_ADD32:
--			*(u32 *)loc += val;
--			break;
--		case R_RISCV_SUB32:
--			*(u32 *)loc -= val;
--			break;
--		/* It has been applied by R_RISCV_PCREL_HI20 sym */
--		case R_RISCV_PCREL_LO12_I:
--		case R_RISCV_ALIGN:
--		case R_RISCV_RELAX:
--			break;
--		case R_RISCV_64:
--			*(u64 *)loc = val;
--			break;
--		default:
--			pr_err("Unknown rela relocation: %d\n", r_type);
--			return -ENOEXEC;
--		}
--	}
--	return 0;
--}
--
--const struct kexec_file_ops elf_kexec_ops = {
--	.probe = kexec_elf_probe,
--	.load  = elf_kexec_load,
--};
-diff --git a/arch/riscv/kernel/kexec_elf.c b/arch/riscv/kernel/kexec_elf.c
-new file mode 100644
-index 000000000000..f4755d49b89e
---- /dev/null
-+++ b/arch/riscv/kernel/kexec_elf.c
-@@ -0,0 +1,144 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Load ELF vmlinux file for the kexec_file_load syscall.
-+ *
-+ * Copyright (C) 2021 Huawei Technologies Co, Ltd.
-+ *
-+ * Author: Liao Chang (liaochang1@huawei.com)
-+ *
-+ * Based on kexec-tools' kexec-elf-riscv.c, heavily modified
-+ * for kernel.
-+ */
-+
-+#define pr_fmt(fmt)	"kexec_image: " fmt
-+
-+#include <linux/elf.h>
-+#include <linux/kexec.h>
-+#include <linux/slab.h>
-+#include <linux/of.h>
-+#include <linux/libfdt.h>
-+#include <linux/types.h>
-+#include <linux/memblock.h>
-+#include <asm/setup.h>
-+
-+static int riscv_kexec_elf_load(struct kimage *image, struct elfhdr *ehdr,
-+				struct kexec_elf_info *elf_info, unsigned long old_pbase,
-+				unsigned long new_pbase)
-+{
-+	int i;
-+	int ret = 0;
-+	size_t size;
-+	struct kexec_buf kbuf;
-+	const struct elf_phdr *phdr;
-+
-+	kbuf.image = image;
-+
-+	for (i = 0; i < ehdr->e_phnum; i++) {
-+		phdr = &elf_info->proghdrs[i];
-+		if (phdr->p_type != PT_LOAD)
-+			continue;
-+
-+		size = phdr->p_filesz;
-+		if (size > phdr->p_memsz)
-+			size = phdr->p_memsz;
-+
-+		kbuf.buffer = (void *) elf_info->buffer + phdr->p_offset;
-+		kbuf.bufsz = size;
-+		kbuf.buf_align = phdr->p_align;
-+		kbuf.mem = phdr->p_paddr - old_pbase + new_pbase;
-+		kbuf.memsz = phdr->p_memsz;
-+		kbuf.top_down = false;
-+		ret = kexec_add_buffer(&kbuf);
-+		if (ret)
-+			break;
-+	}
-+
-+	return ret;
-+}
-+
-+/*
-+ * Go through the available phsyical memory regions and find one that hold
-+ * an image of the specified size.
-+ */
-+static int elf_find_pbase(struct kimage *image, unsigned long kernel_len,
-+			  struct elfhdr *ehdr, struct kexec_elf_info *elf_info,
-+			  unsigned long *old_pbase, unsigned long *new_pbase)
-+{
-+	int i;
-+	int ret;
-+	struct kexec_buf kbuf;
-+	const struct elf_phdr *phdr;
-+	unsigned long lowest_paddr = ULONG_MAX;
-+	unsigned long lowest_vaddr = ULONG_MAX;
-+
-+	for (i = 0; i < ehdr->e_phnum; i++) {
-+		phdr = &elf_info->proghdrs[i];
-+		if (phdr->p_type != PT_LOAD)
-+			continue;
-+
-+		if (lowest_paddr > phdr->p_paddr)
-+			lowest_paddr = phdr->p_paddr;
-+
-+		if (lowest_vaddr > phdr->p_vaddr)
-+			lowest_vaddr = phdr->p_vaddr;
-+	}
-+
-+	kbuf.image = image;
-+	kbuf.buf_min = lowest_paddr;
-+	kbuf.buf_max = ULONG_MAX;
-+
-+	/*
-+	 * Current riscv boot protocol requires 2MB alignment for
-+	 * RV64 and 4MB alignment for RV32
-+	 *
-+	 */
-+	kbuf.buf_align = PMD_SIZE;
-+	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
-+	kbuf.memsz = ALIGN(kernel_len, PAGE_SIZE);
-+	kbuf.top_down = false;
-+	ret = arch_kexec_locate_mem_hole(&kbuf);
-+	if (!ret) {
-+		*old_pbase = lowest_paddr;
-+		*new_pbase = kbuf.mem;
-+		image->start = ehdr->e_entry - lowest_vaddr + kbuf.mem;
-+	}
-+	return ret;
-+}
-+
-+static void *elf_kexec_load(struct kimage *image, char *kernel_buf,
-+			    unsigned long kernel_len, char *initrd,
-+			    unsigned long initrd_len, char *cmdline,
-+			    unsigned long cmdline_len)
-+{
-+	int ret;
-+	unsigned long old_kernel_pbase = ULONG_MAX;
-+	unsigned long new_kernel_pbase = 0UL;
-+	struct elfhdr ehdr;
-+	struct kexec_elf_info elf_info;
-+
-+	ret = kexec_build_elf_info(kernel_buf, kernel_len, &ehdr, &elf_info);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	ret = elf_find_pbase(image, kernel_len, &ehdr, &elf_info,
-+			     &old_kernel_pbase, &new_kernel_pbase);
-+	if (ret)
-+		goto out;
-+
-+	/* Add the kernel binary to the image */
-+	ret = riscv_kexec_elf_load(image, &ehdr, &elf_info,
-+				   old_kernel_pbase, new_kernel_pbase);
-+	if (ret)
-+		goto out;
-+
-+	ret = load_extra_segments(image, image->start, kernel_len,
-+				  initrd, initrd_len, cmdline, cmdline_len);
-+out:
-+	kexec_free_elf_info(&elf_info);
-+	return ret ? ERR_PTR(ret) : NULL;
-+}
-+
-+const struct kexec_file_ops elf_kexec_ops = {
-+	.probe = kexec_elf_probe,
-+	.load  = elf_kexec_load,
-+};
-diff --git a/arch/riscv/kernel/machine_kexec_file.c b/arch/riscv/kernel/machine_kexec_file.c
-index b0bf8c1722c0..99bd5a5f4234 100644
---- a/arch/riscv/kernel/machine_kexec_file.c
-+++ b/arch/riscv/kernel/machine_kexec_file.c
-@@ -7,8 +7,368 @@
-  * Author: Liao Chang (liaochang1@huawei.com)
-  */
- #include <linux/kexec.h>
-+#include <linux/elf.h>
-+#include <linux/slab.h>
-+#include <linux/of.h>
-+#include <linux/libfdt.h>
-+#include <linux/types.h>
-+#include <linux/memblock.h>
-+#include <linux/vmalloc.h>
-+#include <asm/setup.h>
- 
- const struct kexec_file_ops * const kexec_file_loaders[] = {
- 	&elf_kexec_ops,
- 	NULL
- };
-+
-+int arch_kimage_file_post_load_cleanup(struct kimage *image)
-+{
-+	kvfree(image->arch.fdt);
-+	image->arch.fdt = NULL;
-+
-+	vfree(image->elf_headers);
-+	image->elf_headers = NULL;
-+	image->elf_headers_sz = 0;
-+
-+	return kexec_image_post_load_cleanup_default(image);
-+}
-+
-+#ifdef CONFIG_CRASH_DUMP
-+static int get_nr_ram_ranges_callback(struct resource *res, void *arg)
-+{
-+	unsigned int *nr_ranges = arg;
-+
-+	(*nr_ranges)++;
-+	return 0;
-+}
-+
-+static int prepare_elf64_ram_headers_callback(struct resource *res, void *arg)
-+{
-+	struct crash_mem *cmem = arg;
-+
-+	cmem->ranges[cmem->nr_ranges].start = res->start;
-+	cmem->ranges[cmem->nr_ranges].end = res->end;
-+	cmem->nr_ranges++;
-+
-+	return 0;
-+}
-+
-+static int prepare_elf_headers(void **addr, unsigned long *sz)
-+{
-+	struct crash_mem *cmem;
-+	unsigned int nr_ranges;
-+	int ret;
-+
-+	nr_ranges = 1; /* For exclusion of crashkernel region */
-+	walk_system_ram_res(0, -1, &nr_ranges, get_nr_ram_ranges_callback);
-+
-+	cmem = kmalloc(struct_size(cmem, ranges, nr_ranges), GFP_KERNEL);
-+	if (!cmem)
-+		return -ENOMEM;
-+
-+	cmem->max_nr_ranges = nr_ranges;
-+	cmem->nr_ranges = 0;
-+	ret = walk_system_ram_res(0, -1, cmem, prepare_elf64_ram_headers_callback);
-+	if (ret)
-+		goto out;
-+
-+	/* Exclude crashkernel region */
-+	ret = crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end);
-+	if (!ret)
-+		ret = crash_prepare_elf64_headers(cmem, true, addr, sz);
-+
-+out:
-+	kfree(cmem);
-+	return ret;
-+}
-+
-+static char *setup_kdump_cmdline(struct kimage *image, char *cmdline,
-+				 unsigned long cmdline_len)
-+{
-+	int elfcorehdr_strlen;
-+	char *cmdline_ptr;
-+
-+	cmdline_ptr = kzalloc(COMMAND_LINE_SIZE, GFP_KERNEL);
-+	if (!cmdline_ptr)
-+		return NULL;
-+
-+	elfcorehdr_strlen = sprintf(cmdline_ptr, "elfcorehdr=0x%lx ",
-+		image->elf_load_addr);
-+
-+	if (elfcorehdr_strlen + cmdline_len > COMMAND_LINE_SIZE) {
-+		pr_err("Appending elfcorehdr=<addr> exceeds cmdline size\n");
-+		kfree(cmdline_ptr);
-+		return NULL;
-+	}
-+
-+	memcpy(cmdline_ptr + elfcorehdr_strlen, cmdline, cmdline_len);
-+	/* Ensure it's nul terminated */
-+	cmdline_ptr[COMMAND_LINE_SIZE - 1] = '\0';
-+	return cmdline_ptr;
-+}
-+#endif
-+
-+#define RV_X(x, s, n)  (((x) >> (s)) & ((1 << (n)) - 1))
-+#define RISCV_IMM_BITS 12
-+#define RISCV_IMM_REACH (1LL << RISCV_IMM_BITS)
-+#define RISCV_CONST_HIGH_PART(x) \
-+	(((x) + (RISCV_IMM_REACH >> 1)) & ~(RISCV_IMM_REACH - 1))
-+#define RISCV_CONST_LOW_PART(x) ((x) - RISCV_CONST_HIGH_PART(x))
-+
-+#define ENCODE_ITYPE_IMM(x) \
-+	(RV_X(x, 0, 12) << 20)
-+#define ENCODE_BTYPE_IMM(x) \
-+	((RV_X(x, 1, 4) << 8) | (RV_X(x, 5, 6) << 25) | \
-+	(RV_X(x, 11, 1) << 7) | (RV_X(x, 12, 1) << 31))
-+#define ENCODE_UTYPE_IMM(x) \
-+	(RV_X(x, 12, 20) << 12)
-+#define ENCODE_JTYPE_IMM(x) \
-+	((RV_X(x, 1, 10) << 21) | (RV_X(x, 11, 1) << 20) | \
-+	(RV_X(x, 12, 8) << 12) | (RV_X(x, 20, 1) << 31))
-+#define ENCODE_CBTYPE_IMM(x) \
-+	((RV_X(x, 1, 2) << 3) | (RV_X(x, 3, 2) << 10) | (RV_X(x, 5, 1) << 2) | \
-+	(RV_X(x, 6, 2) << 5) | (RV_X(x, 8, 1) << 12))
-+#define ENCODE_CJTYPE_IMM(x) \
-+	((RV_X(x, 1, 3) << 3) | (RV_X(x, 4, 1) << 11) | (RV_X(x, 5, 1) << 2) | \
-+	(RV_X(x, 6, 1) << 7) | (RV_X(x, 7, 1) << 6) | (RV_X(x, 8, 2) << 9) | \
-+	(RV_X(x, 10, 1) << 8) | (RV_X(x, 11, 1) << 12))
-+#define ENCODE_UJTYPE_IMM(x) \
-+	(ENCODE_UTYPE_IMM(RISCV_CONST_HIGH_PART(x)) | \
-+	(ENCODE_ITYPE_IMM(RISCV_CONST_LOW_PART(x)) << 32))
-+#define ENCODE_UITYPE_IMM(x) \
-+	(ENCODE_UTYPE_IMM(x) | (ENCODE_ITYPE_IMM(x) << 32))
-+
-+#define CLEAN_IMM(type, x) \
-+	((~ENCODE_##type##_IMM((uint64_t)(-1))) & (x))
-+
-+int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
-+				     Elf_Shdr *section,
-+				     const Elf_Shdr *relsec,
-+				     const Elf_Shdr *symtab)
-+{
-+	const char *strtab, *name, *shstrtab;
-+	const Elf_Shdr *sechdrs;
-+	Elf64_Rela *relas;
-+	int i, r_type;
-+
-+	/* String & section header string table */
-+	sechdrs = (void *)pi->ehdr + pi->ehdr->e_shoff;
-+	strtab = (char *)pi->ehdr + sechdrs[symtab->sh_link].sh_offset;
-+	shstrtab = (char *)pi->ehdr + sechdrs[pi->ehdr->e_shstrndx].sh_offset;
-+
-+	relas = (void *)pi->ehdr + relsec->sh_offset;
-+
-+	for (i = 0; i < relsec->sh_size / sizeof(*relas); i++) {
-+		const Elf_Sym *sym;	/* symbol to relocate */
-+		unsigned long addr;	/* final location after relocation */
-+		unsigned long val;	/* relocated symbol value */
-+		unsigned long sec_base;	/* relocated symbol value */
-+		void *loc;		/* tmp location to modify */
-+
-+		sym = (void *)pi->ehdr + symtab->sh_offset;
-+		sym += ELF64_R_SYM(relas[i].r_info);
-+
-+		if (sym->st_name)
-+			name = strtab + sym->st_name;
-+		else
-+			name = shstrtab + sechdrs[sym->st_shndx].sh_name;
-+
-+		loc = pi->purgatory_buf;
-+		loc += section->sh_offset;
-+		loc += relas[i].r_offset;
-+
-+		if (sym->st_shndx == SHN_ABS)
-+			sec_base = 0;
-+		else if (sym->st_shndx >= pi->ehdr->e_shnum) {
-+			pr_err("Invalid section %d for symbol %s\n",
-+			       sym->st_shndx, name);
-+			return -ENOEXEC;
-+		} else
-+			sec_base = pi->sechdrs[sym->st_shndx].sh_addr;
-+
-+		val = sym->st_value;
-+		val += sec_base;
-+		val += relas[i].r_addend;
-+
-+		addr = section->sh_addr + relas[i].r_offset;
-+
-+		r_type = ELF64_R_TYPE(relas[i].r_info);
-+
-+		switch (r_type) {
-+		case R_RISCV_BRANCH:
-+			*(u32 *)loc = CLEAN_IMM(BTYPE, *(u32 *)loc) |
-+				 ENCODE_BTYPE_IMM(val - addr);
-+			break;
-+		case R_RISCV_JAL:
-+			*(u32 *)loc = CLEAN_IMM(JTYPE, *(u32 *)loc) |
-+				 ENCODE_JTYPE_IMM(val - addr);
-+			break;
-+		/*
-+		 * With no R_RISCV_PCREL_LO12_S, R_RISCV_PCREL_LO12_I
-+		 * sym is expected to be next to R_RISCV_PCREL_HI20
-+		 * in purgatory relsec. Handle it like R_RISCV_CALL
-+		 * sym, instead of searching the whole relsec.
-+		 */
-+		case R_RISCV_PCREL_HI20:
-+		case R_RISCV_CALL_PLT:
-+		case R_RISCV_CALL:
-+			*(u64 *)loc = CLEAN_IMM(UITYPE, *(u64 *)loc) |
-+				 ENCODE_UJTYPE_IMM(val - addr);
-+			break;
-+		case R_RISCV_RVC_BRANCH:
-+			*(u32 *)loc = CLEAN_IMM(CBTYPE, *(u32 *)loc) |
-+				 ENCODE_CBTYPE_IMM(val - addr);
-+			break;
-+		case R_RISCV_RVC_JUMP:
-+			*(u32 *)loc = CLEAN_IMM(CJTYPE, *(u32 *)loc) |
-+				 ENCODE_CJTYPE_IMM(val - addr);
-+			break;
-+		case R_RISCV_ADD16:
-+			*(u16 *)loc += val;
-+			break;
-+		case R_RISCV_SUB16:
-+			*(u16 *)loc -= val;
-+			break;
-+		case R_RISCV_ADD32:
-+			*(u32 *)loc += val;
-+			break;
-+		case R_RISCV_SUB32:
-+			*(u32 *)loc -= val;
-+			break;
-+		/* It has been applied by R_RISCV_PCREL_HI20 sym */
-+		case R_RISCV_PCREL_LO12_I:
-+		case R_RISCV_ALIGN:
-+		case R_RISCV_RELAX:
-+			break;
-+		case R_RISCV_64:
-+			*(u64 *)loc = val;
-+			break;
-+		default:
-+			pr_err("Unknown rela relocation: %d\n", r_type);
-+			return -ENOEXEC;
-+		}
-+	}
-+	return 0;
-+}
-+
-+
-+int load_extra_segments(struct kimage *image, unsigned long kernel_start,
-+			    unsigned long kernel_len, char *initrd,
-+			    unsigned long initrd_len, char *cmdline,
-+			    unsigned long cmdline_len)
-+{
-+	int ret;
-+	void *fdt;
-+	unsigned long initrd_pbase = 0UL;
-+	struct kexec_buf kbuf;
-+	char *modified_cmdline = NULL;
-+
-+	kbuf.image = image;
-+	kbuf.buf_min = kernel_start + kernel_len;
-+	kbuf.buf_max = ULONG_MAX;
-+
-+#ifdef CONFIG_CRASH_DUMP
-+	/* Add elfcorehdr */
-+	if (image->type == KEXEC_TYPE_CRASH) {
-+		void *headers;
-+		unsigned long headers_sz;
-+		ret = prepare_elf_headers(&headers, &headers_sz);
-+		if (ret) {
-+			pr_err("Preparing elf core header failed\n");
-+			goto out;
-+		}
-+
-+		kbuf.buffer = headers;
-+		kbuf.bufsz = headers_sz;
-+		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
-+		kbuf.memsz = headers_sz;
-+		kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
-+		kbuf.top_down = true;
-+
-+		ret = kexec_add_buffer(&kbuf);
-+		if (ret) {
-+			vfree(headers);
-+			goto out;
-+		}
-+		image->elf_headers = headers;
-+		image->elf_load_addr = kbuf.mem;
-+		image->elf_headers_sz = headers_sz;
-+
-+		kexec_dprintk("Loaded elf core header at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
-+			      image->elf_load_addr, kbuf.bufsz, kbuf.memsz);
-+
-+		/* Setup cmdline for kdump kernel case */
-+		modified_cmdline = setup_kdump_cmdline(image, cmdline,
-+						       cmdline_len);
-+		if (!modified_cmdline) {
-+			pr_err("Setting up cmdline for kdump kernel failed\n");
-+			ret = -EINVAL;
-+			goto out;
-+		}
-+		cmdline = modified_cmdline;
-+	}
-+#endif
-+
-+#ifdef CONFIG_ARCH_SUPPORTS_KEXEC_PURGATORY
-+	/* Add purgatory to the image */
-+	kbuf.top_down = true;
-+	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
-+	ret = kexec_load_purgatory(image, &kbuf);
-+	if (ret) {
-+		pr_err("Error loading purgatory ret=%d\n", ret);
-+		goto out;
-+	}
-+	kexec_dprintk("Loaded purgatory at 0x%lx\n", kbuf.mem);
-+
-+	ret = kexec_purgatory_get_set_symbol(image, "riscv_kernel_entry",
-+					     &kernel_start,
-+					     sizeof(kernel_start), 0);
-+	if (ret)
-+		pr_err("Error update purgatory ret=%d\n", ret);
-+#endif /* CONFIG_ARCH_SUPPORTS_KEXEC_PURGATORY */
-+
-+	/* Add the initrd to the image */
-+	if (initrd != NULL) {
-+		kbuf.buffer = initrd;
-+		kbuf.bufsz = kbuf.memsz = initrd_len;
-+		kbuf.buf_align = PAGE_SIZE;
-+		kbuf.top_down = true;
-+		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
-+		ret = kexec_add_buffer(&kbuf);
-+		if (ret)
-+			goto out;
-+		initrd_pbase = kbuf.mem;
-+		kexec_dprintk("Loaded initrd at 0x%lx\n", initrd_pbase);
-+	}
-+
-+	/* Add the DTB to the image */
-+	fdt = of_kexec_alloc_and_setup_fdt(image, initrd_pbase,
-+					   initrd_len, cmdline, 0);
-+	if (!fdt) {
-+		pr_err("Error setting up the new device tree.\n");
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	fdt_pack(fdt);
-+	kbuf.buffer = fdt;
-+	kbuf.bufsz = kbuf.memsz = fdt_totalsize(fdt);
-+	kbuf.buf_align = PAGE_SIZE;
-+	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
-+	kbuf.top_down = true;
-+	ret = kexec_add_buffer(&kbuf);
-+	if (ret) {
-+		pr_err("Error add DTB kbuf ret=%d\n", ret);
-+		goto out_free_fdt;
-+	}
-+	/* Cache the fdt buffer address for memory cleanup */
-+	image->arch.fdt = fdt;
-+	kexec_dprintk("Loaded device tree at 0x%lx\n", kbuf.mem);
-+	goto out;
-+
-+out_free_fdt:
-+	kvfree(fdt);
-+out:
-+	kfree(modified_cmdline);
-+	return ret;
-+}
--- 
-2.45.2
+>  };
+> @@ -406,6 +507,13 @@ ethernet0_mdio: ethernet0-mdio-pins {
+>  			bias-pull-up;
+>  		};
+>  	};
+> +
+> +	wlan_en_state: wlan-en-state {
+> +		pins = "gpio54";
+> +		function = "gpio";
+> +		output-low;
+> +		bias-pull-up;
 
+Please flip the bias and output property order to keep it consistent
+
+Konrad
