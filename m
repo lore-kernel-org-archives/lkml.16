@@ -1,261 +1,99 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6FCF25F7B1
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 12:24:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD57625F782;
+	Wed,  9 Apr 2025 12:24:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744201480; cv=none; b=AL2Hl+3mz7TkoByk/uXSkf+Cf+ZGZdqh653K5eBlgI9AecvLePFAQw4cx1A/1NXFijtSIyuG+3M/BqpBqpaPouQmjxfZcfoWJluarHAnMoS030KqihwWBj6Y07ryrwRukKTE4RhPKOn7+K9eaxf0fp6wTGErAB4tBZRA5tY/pyw=
+	t=1744201488; cv=none; b=VZqNjvLxLmJ23gNcS6jguEVjZfHVNuYnWUjABt0ACIxeJ2aqwLOk0A3hdz3+9FOrS8XQdv2uoP5PmnhL+TXE1RL70bHmFsVwcpB1r2Rh4GtxmUle6B47OJjhmWMqMHbQHoQu+wJohWVx6Lw4P9/l6a/Z9mCFcJJpEgp9Kgb9HhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744201480; c=relaxed/simple;
-	bh=50fY5CqvbIXRuOQjF6sVR9Vhlh7zPPI5xAkTQE68g/A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bmtJbAJKKlYQ3KHhiQdsNliEEcjkAeaKctfmXTDTL2VTDIb71t3RkN39JxIc7ZQ+bay7Ovuu9m5NEXai8HRsAm33hZi4i2tZLngh4Qmyd7fP9+cREm+MDD+QiJp0vBXilv56bXs7VuLvYVqikgZ2i46dDfJ6MtvciEnuy8j4x1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hyd5n5em; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hyd5n5em"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744201477;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=BB0co1XQSYhwpSvOjb23lF2MGsgWfCMGL+h6GKHJnpU=;
-	b=hyd5n5em0A6Ws+1U4tGwWEMIFi21SedmqhhuZ3zBHGe80/OXK1xPKVcb2fDYCY9nF1YahU
-	yyGDDbFh3QhWTjHHlgTDRM5H6yjkQlFWCM38VopPXTNNpffDcH6l4SNqOU7uuuo+EZqO92
-	UT6ojwS3NNCrYn7v9pBuwn3a2fYxtUY=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-373-E2YBvcFRP1SSTXAIkn39QQ-1; Wed, 09 Apr 2025 08:24:36 -0400
-X-MC-Unique: E2YBvcFRP1SSTXAIkn39QQ-1
-X-Mimecast-MFC-AGG-ID: E2YBvcFRP1SSTXAIkn39QQ_1744201475
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43d08915f61so39110445e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 05:24:35 -0700 (PDT)
+	s=arc-20240116; t=1744201488; c=relaxed/simple;
+	bh=EukZBmk3v3ezsiFTo/LdufmPk53turSaEVF0ZzbhKWE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=G4MZj8WcgYZUzdml/Pvo24+T6GTgAEV+MWXZyPrEgoPq74FcKtw6Jt4SSa6QAvKaMlMPcQlegFef9EJE+Xi/Da+GRYQsSGFbBWRCP4MKMtu+QfX6+67HhafdwjlogP1sBZMlkHLn8GquoE0i17MSceR7jN2/eQk8aW0B1ps05Rg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-5240317b3e0so2508086e0c.0;
+        Wed, 09 Apr 2025 05:24:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744201475; x=1744806275;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=BB0co1XQSYhwpSvOjb23lF2MGsgWfCMGL+h6GKHJnpU=;
-        b=FvBA/XGbwOGb1gESMViDtuxx6doYHAbbUpJRmzJx8hYr+PJLK/Ngmftux/n2g1RBjR
-         FJBMoP3Pk2pCVzaHTlfav/x3A6qqN3Bcf0pswd6NrVOn5nrcXJMkElvXxoSqtoBmIPhN
-         67+XFqZEjgmFfYbqAjfsvKdkFGW0HzpCrJIVm5EZ1SsJ8dacPWEugPaMRiXU2NugjzsT
-         MYxapB/APD9RNsb/ay4sEZsWA0JmzJFeT0fHMMuYra5yRaz/J5dxUCSZFT5ofMPDWLUf
-         DbzVgYNMNJ+SGnrEoRKXxbSaJYITcWLEc9IAiMYWqqzLvhH3vrN/BlzXH8ngMTWMcAkH
-         +7Ng==
-X-Forwarded-Encrypted: i=1; AJvYcCWyRaCAmVwoMpD2gSzpul/MdgGLMqVc/bNow3nrxXRnrBNpC3qdIBO1HGhqv1erWo7qfBRzVmBHkrQazh8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCVcsWsSbI07tRPR1oeTJMA3iL69psVeXFmyg81Nw2IkfVYSWW
-	M1MdNYq4gF5T65Yxt1/1pSrCNRqmA4ICO3lTrhGIrFZqJjtVBEYjqeuSn+Jqbvhfl0SRbTqcUcs
-	emprnbDb4bFk6qyNta5R1yhhIQh4fH+4fZ5bjSQMJNSKQT+SIbb0xYaJmlgiLHw==
-X-Gm-Gg: ASbGncvxG6YBF6ueyVv/b/Ete4DwjDU7MA4xdtr7S5/1x824T5oUiMipbGkPJYxeLpv
-	boHxr3M4JYdpCbj4oxribTxOW4u3Bb1uOxGJYphgSQKuyMMoE6L+zwA8jnra9ZnVCohg11cHHQ6
-	0QN9QvewFC9dj/Aj8OsXiphQlsYVGc4u1kIHSAQ4ruvOZvlvKMS7rFQnzHZClqGovfcc7vQDxl6
-	qlI7uz2xeMbJJKOTB2LRozft2B4ywF44kViZCVxghjbhgjV73uvneQbjhdXt7HzKqgSz8a59k4T
-	0r5IcTk9UzEjwQdIaXin9ejIMhfHFEyTJiYK4quOpg==
-X-Received: by 2002:a05:600c:3c9f:b0:43d:17f1:2640 with SMTP id 5b1f17b1804b1-43f1ed4bc36mr23576365e9.26.1744201474915;
-        Wed, 09 Apr 2025 05:24:34 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGr2pJ0AXoGi87tl94rBYvAXq1MU8VYDVKHvStf7fiGqkSwDqMeylbppcsKE9zj5NgoInD/2Q==
-X-Received: by 2002:a05:600c:3c9f:b0:43d:17f1:2640 with SMTP id 5b1f17b1804b1-43f1ed4bc36mr23576175e9.26.1744201474550;
-        Wed, 09 Apr 2025 05:24:34 -0700 (PDT)
-Received: from [192.168.3.141] (p4ff23667.dip0.t-ipconnect.de. [79.242.54.103])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f233c7a68sm14567855e9.19.2025.04.09.05.24.33
+        d=1e100.net; s=20230601; t=1744201483; x=1744806283;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VAy8bA0YlDyP92YSgmPxOzOKGXZiXV73ZeL4JjinSnE=;
+        b=jqNYHA0AnZCMg1alRKclC7PIx44wl8Xt0sclPnNFwJDwmFmyWGUdIdtHqIUujKOwhw
+         qi+jVjkdLYR208hfpPmckut54kjWckPbjlOAnhNKCbN3APqD+deZbUfsnIHPlNBBvKcI
+         qeSU1y0IDxabs1yloj65jMp1uop2G4nbBVidBdkmyCMvxJQgDmCD43xsel/2AOrebN+g
+         l4Ssyzk4n83xzMjwYKRZJPOBQlzEFBgAysp9qBglkjPpAttsiN+y3tfTcavhVXlUZ02u
+         yYQYbv8WrGpPUOUcHQVATT6hYTQNIS4I7P/y3LyutNLMH+/RxYPCNZzCUCQcKBTINOjL
+         4GZw==
+X-Forwarded-Encrypted: i=1; AJvYcCU53BKZe9dO1W5fjfvCtbLm+DWwjBofBWiK48Mm+zRBaEmcn60ue3e6O52B/NhGdO2G/vfVqGuKZnzdXB8=@vger.kernel.org, AJvYcCW4m3z01lft2CtHqitTlNHDXuZ68VYD9Ho0nLr2J2lAHvTf6LgYHjMLHWNUv2EodtKqz7rWMehBisi+a2JTfATSPfY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQx4KC+pVp2UUh4zGsLTSW17EMb+N8cvDrhH4u+cTDfFgABL0C
+	Y4bMJHyXC+Sn0oyUoVqCBk+T4cWmGsfKDzglPVSmgOEGwbk4d3UJ63jtiXibkKI=
+X-Gm-Gg: ASbGncvIMZPOZTjO5BEZvFiNIfmdpelj8O/G/KJ9HwSaZhWwjl0XCA/9lu6lfONana0
+	+BgrlPfMc9ikY11y+uOd3vMv/GkJg7hRe+zGC8yz1nE3esi2qMLGR3IMn+iqw86/ESKCYQDd6b7
+	6bVdrojKJGfZ+asSUltQETKjy59cpuMQKuF5VrPrCsZ0jcu7zeujkcOfAw1uuj2Ay7qM8KKJIN8
+	V8T6YMszNw5BUlACviSt1anRS9x06JwtmU3NWZnU+0bYBIOcuYzk7tnR7lN88WoX/x/VvKIrG26
+	2tURlYAV+f7iXJxtHxUnO92gc50J2FEonPAKBhotLBCdp1bOwd2bdUEfagvpwYLpgzO9cdgFZiO
+	Dyol4brU=
+X-Google-Smtp-Source: AGHT+IFy7FNtJfsK/QweTb8vlkPxrnZ/jD7WoQ+1XHufLjM44NufoVEMmCUkoqiDWH3E78NeaXAKvQ==
+X-Received: by 2002:a05:6122:d10:b0:520:51a4:b81c with SMTP id 71dfb90a1353d-527a921d717mr1485211e0c.6.1744201483633;
+        Wed, 09 Apr 2025 05:24:43 -0700 (PDT)
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com. [209.85.221.171])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-527abd4cde2sm181770e0c.10.2025.04.09.05.24.42
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Apr 2025 05:24:33 -0700 (PDT)
-Message-ID: <5cd8463e-21ed-4c99-a9b2-9af45c6eb7af@redhat.com>
-Date: Wed, 9 Apr 2025 14:24:32 +0200
+        Wed, 09 Apr 2025 05:24:43 -0700 (PDT)
+Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-5259327a93bso2973372e0c.2;
+        Wed, 09 Apr 2025 05:24:42 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUkkE1f/MhOxmoPUDwHWDxA+oKWcTy5wbn3tPXqaesKLXmnCEvym7nJXEoQ9TwLMnXByuVrnVMJrOVqcbkqKCfdXOI=@vger.kernel.org, AJvYcCXN+AtU5ZwJgRpRYvcULd+CiBVaKjF0QxVKtg7fbYDcU8CJ53N2LVHybSvWMdsghPrX/V15+rkxCiUrP9c=@vger.kernel.org
+X-Received: by 2002:a05:6102:5789:b0:4c3:6568:3e18 with SMTP id
+ ada2fe7eead31-4c9c41d70f4mr2245717137.15.1744201482657; Wed, 09 Apr 2025
+ 05:24:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] s390/virtio_ccw: don't allocate/assign airqs for
- non-existing queues
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Daniel Verkamp <dverkamp@chromium.org>, Halil Pasic
- <pasic@linux.ibm.com>, linux-kernel@vger.kernel.org,
- linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
- kvm@vger.kernel.org, Chandra Merla <cmerla@redhat.com>,
- Stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
- Thomas Huth <thuth@redhat.com>, Eric Farman <farman@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, Wei Wang <wei.w.wang@intel.com>,
- "stefanha@redhat.com" <stefanha@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
-References: <20250407045456-mutt-send-email-mst@kernel.org>
- <a86240bc-8417-48a6-bf13-01dd7ace5ae9@redhat.com>
- <33def1b0-d9d5-46f1-9b61-b0269753ecce@redhat.com>
- <88d8f2d2-7b8a-458f-8fc4-c31964996817@redhat.com>
- <CABVzXAmMEsw70Tftg4ZNi0G4d8j9pGTyrNqOFMjzHwEpy0JqyA@mail.gmail.com>
- <3bbad51d-d7d8-46f7-a28c-11cc3af6ef76@redhat.com>
- <20250407170239-mutt-send-email-mst@kernel.org>
- <440de313-e470-4afa-9f8a-59598fe8dc21@redhat.com>
- <20250409065216-mutt-send-email-mst@kernel.org>
- <4ad4b12e-b474-48bb-a665-6c1dc843cd51@redhat.com>
- <20250409073652-mutt-send-email-mst@kernel.org>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250409073652-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250401090133.68146-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250401090133.68146-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250401090133.68146-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 9 Apr 2025 14:24:30 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUbv=ianPwWAUGLjbaZsPzb15TpF3NU5r1o_yALgOQ7Lw@mail.gmail.com>
+X-Gm-Features: ATxdqUH5mdFS5u57CgHVhU_OTQk1snKaw6dEmMP86vWw-ROcRNgQWa_pBvQh_X8
+Message-ID: <CAMuHMdUbv=ianPwWAUGLjbaZsPzb15TpF3NU5r1o_yALgOQ7Lw@mail.gmail.com>
+Subject: Re: [PATCH 2/4] arm64: defconfig: Remove individual Renesas SoC entries
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Russell King <linux@armlinux.org.uk>, Magnus Damm <magnus.damm@gmail.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 09.04.25 14:07, Michael S. Tsirkin wrote:
-> On Wed, Apr 09, 2025 at 01:12:19PM +0200, David Hildenbrand wrote:
->> On 09.04.25 12:56, Michael S. Tsirkin wrote:
->>> On Wed, Apr 09, 2025 at 12:46:41PM +0200, David Hildenbrand wrote:
->>>> On 07.04.25 23:20, Michael S. Tsirkin wrote:
->>>>> On Mon, Apr 07, 2025 at 08:47:05PM +0200, David Hildenbrand wrote:
->>>>>>> In my opinion, it makes the most sense to keep the spec as it is and
->>>>>>> change QEMU and the kernel to match, but obviously that's not trivial
->>>>>>> to do in a way that doesn't break existing devices and drivers.
->>>>>>
->>>>>> If only it would be limited to QEMU and Linux ... :)
->>>>>>
->>>>>> Out of curiosity, assuming we'd make the spec match the current QEMU/Linux
->>>>>> implementation at least for the 3 involved features only, would there be a
->>>>>> way to adjust crossvm without any disruption?
->>>>>>
->>>>>> I still have the feeling that it will be rather hard to get that all
->>>>>> implementations match the spec ... For new features+queues it will be easy
->>>>>> to force the usage of fixed virtqueue numbers, but for free-page-hinting and
->>>>>> reporting, it's a mess :(
->>>>>
->>>>>
->>>>> Still thinking about a way to fix drivers... We can discuss this
->>>>> theoretically, maybe?
->>>>
->>>> Yes, absolutely. I took the time to do some more digging; regarding drivers
->>>> only Linux seems to be problematic.
->>>>
->>>> virtio-win, FreeBSD, NetBSD and OpenBSD and don't seem to support
->>>> problematic features (free page hinting, free page reporting) in their
->>>> virtio-balloon implementations.
->>>>
->>>> So from the known drivers, only Linux is applicable.
->>>>
->>>> reporting_vq is either at idx 4/3/2
->>>> free_page_vq is either at idx 3/2
->>>> statsq is at idx2 (only relevant if the feature is offered)
->>>>
->>>> So if we could test for the existence of a virtqueue at an idx easily, we
->>>> could test from highest-to-smallest idx.
->>>>
->>>> But I recall that testing for the existance of a virtqueue on s390x resulted
->>>> in the problem/deadlock in the first place ...
->>>>
->>>> -- 
->>>> Cheers,
->>>>
->>>> David / dhildenb
->>>
->>> So let's talk about a new feature bit?
->>
->> Are you thinking about a new feature that switches between "fixed queue
->> indices" and "compressed queue indices", whereby the latter would be the
->> legacy default and we would expect all devices to switch to the new
->> fixed-queue-indices layout?
->>
->> We could make all new features require "fixed-queue-indices".
-> 
-> I see two ways:
-> 1. we make driver behave correctly with in spec and out of spec devices
->     and we make qemu behave correctly with in spec and out of spec devices
-> 2. a new feature bit
-> 
-> I prefer 1, and when we add a new feature we can also
-> document that it should be in spec if negotiated.
-> 
-> My question is if 1 is practical.
+On Tue, 1 Apr 2025 at 11:02, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Remove explicit entries for individual Renesas SoCs from the defconfig
+> file.  Since all Renesas SoCs are enabled by default when ARCH_RENESAS
+> is selected, and ARCH_RENESAS is already enabled in the defconfig,
+> listing them separately is redundant.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-AFAIKT, 1) implies:
+Thanks, will queue in renesas-devel for v6.16.
 
-virtio-balloon:
+Gr{oetje,eeting}s,
 
-a) Driver
-
-As mentioned above, we'd need a reliable way to test for the existence 
-of a virtqueue, so we can e.g., test for reporting_vq idx 4 -> 3 -> 2
-
-With that we'd be able to support compressed+fixed at the same time.
-
-Q: Is it possible/feasible?
-
-b) Device: virtio-balloon: we can fake existence of STAT and 
-FREE_PAGE_HINTING easily, such that the compressed layout corresponds to 
-the fixed layout easily.
-
-Q: alternatives? We could try creating multiple queues for the same 
-feature, but it's going to be a mess I'm afraid ...
-
-
-virtio-fs:
-
-a) Driver
-
-Linux does not even implement VIRTIO_FS_F_NOTIFICATION or respect 
-VIRTIO_FS_F_NOTIFICATION when calculating queue indices, ...
-
-b) Device
-
-Same applies to virtiofsd ...
-
-Q: Did anybody actually implement VIRTIO_FS_F_NOTIFICATION ever? If not, 
-can we just remove it from the spec completely and resolve the issue 
-that way?
+                        Geert
 
 -- 
-Cheers,
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-David / dhildenb
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
