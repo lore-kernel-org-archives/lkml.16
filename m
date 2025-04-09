@@ -1,60 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 779BC266B60
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 15:15:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F06022676DC;
+	Wed,  9 Apr 2025 15:15:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744211738; cv=none; b=TMQaVP6x/5WDctjmvnPzoKM2MsBq6j+xc/DiUsLRk041PG6ECgg9GsIug+jDIUnKzsfPT7NWWARqkMXnViphCZtKsHJlIF/Ay001NSX30vskSjc3O3q7Hb11lRKFrYdU2znkbrGx39NaoT9HZDHBlaFRz9QeoQKbc+hgQDhCBOg=
+	t=1744211743; cv=none; b=itlgSQCP3FsDgFbqI5qhX9CG9h6xLbcOgm83V8AvhJ3xYoQqjslbsDGDg/1hbHnu+9XYn8OzvfqPFGAd3IYB2HAToJjKAz6bnGtvPSZiHjfmIlruSSfRFSAnSgIoT8L8U041nxX+VlPkRdRikE8yZLdG0PLfu5IdQdc/RXEpcr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744211738; c=relaxed/simple;
-	bh=ijk8EHdNPCzS8fw2wIGDYZPPz5dns1bRD8VMGPY02Fk=;
-	h=Message-ID:Date:From:To:Subject:In-Reply-To:References:Cc; b=GHm1mr6p2UvKIAFilCM7kGnaAi9vNFLJ5gx1eCbnYJJGj55p17OQrz5Q5sF1q03tdrgwDgRiBzAYOcLXLTz4cb1aL8vogDUjyS+4yev2iKruKhrP4OXLS9M7P5jj7HEgLFs3t540ASwjLPFgO5B9Qj5jASpjXY0zy/dvx0vlV2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tdod68NQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744211743; c=relaxed/simple;
+	bh=Opub4nPFKe0dGEqqnAdG56suvfimC2NloMu5LJWvNkg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=srvzejb1Sa71TQp8+Y7nwYF7PWkeqPtnvAs/Xw5fw2s4nCsQxPS0fF8Q9LUgaiIzV6VBv5TSDPbRBCJHJvdEZrySmBeQNyQq2ShFfaValHW5kRVB0Y20erFI0/oFhMjAn8jeU+yybvr7oqjRKAtkIzzLxWF6lrzn9jLK1GD07zU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=PdIFwprw; arc=none smtp.client-ip=67.231.156.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tdod68NQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90164C4CEE2;
-	Wed,  9 Apr 2025 15:15:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744211737;
-	bh=ijk8EHdNPCzS8fw2wIGDYZPPz5dns1bRD8VMGPY02Fk=;
-	h=Date:From:To:Subject:In-Reply-To:References:Cc:From;
-	b=tdod68NQ/Pl+STS253Nkxk/XgtltVIBAlgKbwgQK4q/1daELzmh9xDRMbPXXKRDHZ
-	 UnqYeXN1ljn+3DVA0GZxXrQqUdkTXSu5wajAYhmt63RalHKkTZQKt9wuE2xDXUUL9o
-	 s/HLFtDGuA+BYrPPJNtjpnqGS68N6BIGO/FnkNPiW0Q/dm552/5/CGdeV2/DnROySs
-	 aRe6CVQFHW5cvkP1hi+CFAlIhkzVKqO8E1VLwfEAk83aw3dqAX0OtF6vv+bSoiHMfG
-	 jVI9QgRvfyiRP9989PmeU9Wr18rB3h84vE1XP7SCt5rMiXtlsNhTSHGbcw1ZCSN/wi
-	 q9ZoToCKnjSLw==
-Message-ID: <9281e95d084cfe6a3045bfad8413d9a1@kernel.org>
-Date: Wed, 09 Apr 2025 15:15:35 +0000
-From: "Maxime Ripard" <mripard@kernel.org>
-To: "Cristian Ciocaltea" <cristian.ciocaltea@collabora.com>
-Subject: Re: [PATCH v3 12/15] drm/tests: hdmi: Setup ycbcr_420_allowed
- before initializing connector
-In-Reply-To: <20250326-hdmi-conn-yuv-v3-12-294d3ebbb4b2@collabora.com>
-References: <20250326-hdmi-conn-yuv-v3-12-294d3ebbb4b2@collabora.com>
-Cc: dri-devel@lists.freedesktop.org, kernel@collabora.com, linux-kernel@vger.kernel.org, "Dave
- Stevenson" <dave.stevenson@raspberrypi.com>, "David Airlie" <airlied@gmail.com>, "Dmitry
- Baryshkov" <dmitry.baryshkov@linaro.org>, "Dmitry Baryshkov" <dmitry.baryshkov@oss.qualcomm.com>, "Maarten
- Lankhorst" <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>, "Simona
- Vetter" <simona@ffwll.ch>, "Thomas Zimmermann" <tzimmermann@suse.de>
-Content-Transfer-Encoding: 7bit
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="PdIFwprw"
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5399wevp001338;
+	Wed, 9 Apr 2025 08:15:19 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pfpt0220; bh=eoPBda+7E2pDFQFTGwL019q
+	+LmJJfjxwNswlPkwFweM=; b=PdIFwprwyNoe/wKhEWV2EIKOYxk3IjUR059+8K6
+	rFSGM7AgNQ3PrshfjEhsH10tNJabyYkoGGV7Y/wwNN4p/8TkxJPPF8ng/bbgloZe
+	UKpiF6WDAjhhqfXTGI8QcfIaTSsQMMvFud3GgifTrqDo1rGw+AdqRpr+vuP5qi45
+	+NOH5cUBOvKRE/SZ78hDn6mUUOe2npZKt6GnA413zx3UQE5rV6ivY2E2I+GPSutn
+	u3/z5BKkn2ppcGgMk3MffjVSnvM1m6qNQ8DoY2ZzhFssiqXZZ61ZbeOJPFE61zay
+	NuSnETQ8MRRJKbM1lzOwM/OYXfv8WzCSuQfyFNS6eJYiHoQ==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 45unnb084j-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 09 Apr 2025 08:15:18 -0700 (PDT)
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Wed, 9 Apr 2025 08:15:17 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Wed, 9 Apr 2025 08:15:17 -0700
+Received: from sburla-PowerEdge-T630.sclab.marvell.com (unknown [10.106.27.217])
+	by maili.marvell.com (Postfix) with ESMTP id 7F5753F7069;
+	Wed,  9 Apr 2025 08:15:17 -0700 (PDT)
+From: Sathesh B Edara <sedara@marvell.com>
+To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <hgani@marvell.com>, <vimleshk@marvell.com>,
+        Veerasenareddy Burru
+	<vburru@marvell.com>,
+        Sathesh Edara <sedara@marvell.com>,
+        Shinas Rasheed
+	<srasheed@marvell.com>,
+        Satananda Burla <sburla@marvell.com>,
+        Andrew Lunn
+	<andrew+netdev@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Eric
+ Dumazet" <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+	<pabeni@redhat.com>
+Subject: [PATCH net v1] octeon_ep_vf: Resolve netdevice usage count issue
+Date: Wed, 9 Apr 2025 08:15:09 -0700
+Message-ID: <20250409151509.31764-1-sedara@marvell.com>
+X-Mailer: git-send-email 2.36.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: nh0IFZLiqJXd6Yl3FNMD1RA8PP21G0TU
+X-Authority-Analysis: v=2.4 cv=E57Npbdl c=1 sm=1 tr=0 ts=67f68f06 cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=XR8D0OoHHMoA:10 a=M5GUcnROAAAA:8 a=21s9sNkdZRs4KDQlc5MA:9 a=OBjm3rFKGHvpk9ecZwUJ:22
+X-Proofpoint-ORIG-GUID: nh0IFZLiqJXd6Yl3FNMD1RA8PP21G0TU
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-09_05,2025-04-08_04,2024-11-22_01
 
-On Wed, 26 Mar 2025 12:20:01 +0200, Cristian Ciocaltea wrote:
-> Initializing HDMI connector via drmm_connector_hdmi_init() requires its
-> ->ycbcr_420_allowed flag to be adjusted according to the supported
-> formats passed as function argument, prior to the actual invocation.
-> 
-> In order to allow providing test coverage for YUV420 modes, ensure the
-> 
-> [ ... ]
+Address the netdevice usage count problem in the following scenarios:
+- When the interface is down
+- During transmit queue timeouts
+Additionally, ensure all queues are stopped when the interface is down.
 
-Reviewed-by: Maxime Ripard <mripard@kernel.org>
+Signed-off-by: Sathesh B Edara <sedara@marvell.com>
+---
+ drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Thanks!
-Maxime
+diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c
+index 18c922dd5fc6..f16b5930d414 100644
+--- a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c
++++ b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c
+@@ -526,6 +526,7 @@ static int octep_vf_stop(struct net_device *netdev)
+ 	netdev_info(netdev, "Stopping the device ...\n");
+ 
+ 	/* Stop Tx from stack */
++	netif_tx_stop_all_queues(netdev);
+ 	netif_carrier_off(netdev);
+ 	netif_tx_disable(netdev);
+ 
+@@ -819,7 +820,6 @@ static void octep_vf_tx_timeout_task(struct work_struct *work)
+ 		octep_vf_open(netdev);
+ 	}
+ 	rtnl_unlock();
+-	netdev_put(netdev, NULL);
+ }
+ 
+ /**
+@@ -834,7 +834,6 @@ static void octep_vf_tx_timeout(struct net_device *netdev, unsigned int txqueue)
+ {
+ 	struct octep_vf_device *oct = netdev_priv(netdev);
+ 
+-	netdev_hold(netdev, NULL, GFP_ATOMIC);
+ 	schedule_work(&oct->tx_timeout_task);
+ }
+ 
+-- 
+2.36.0
+
