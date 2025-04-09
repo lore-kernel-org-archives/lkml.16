@@ -1,65 +1,53 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97B8825D8E7;
-	Wed,  9 Apr 2025 10:50:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7186225D8E7;
+	Wed,  9 Apr 2025 10:51:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744195857; cv=none; b=WpokI2+0cv31016YyJkfIqNOZ96ZmzoZRewtF5GqCR5vGnov4Bn7IvRxMGy4zeAcaDdA70/aO/dF3aM1KYDevOQU1KGzi5wqSnIr9iamxtpdzPkzzhsfAbhPcTUkFL/PPcCo4uXwmrf8jmmFNC/3NfNU71KOnSCttu8M6CJK5c4=
+	t=1744195864; cv=none; b=UmHczxBAwns+j9CMYWRiaLOB2rFd4IvMfYrKGfdrsvdUa45Cc4w0avAQLMXbtWE2SuNsGw6X4fFsjr3yHjO6H/gesQZhJfsI8p9O9YBFwkoy0KrBceKMhIiuWjoA/DHkMOcxanyJMU2mVXwe+GYL2VeK3Q9+EWlhCKyzoUfT3XA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744195857; c=relaxed/simple;
-	bh=HlVtWoj3LWyiBcoZxrPmX0QXi/NYax4CcC6lrawTBbc=;
+	s=arc-20240116; t=1744195864; c=relaxed/simple;
+	bh=dyH26E3PrUyWDV8GXzVKFZc7FnGFYOe7HH2gPbAp+hA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f4XjV6a1g9reVfh/imMpReTRufdjbKHpBxlRuyMn5HzDrpOsekC/6aKnrqRa8CqRe02Yv4BhKC1SgqF3DhUxQgwGcwfPst3JjqZfglTzETT92B1csHpPmBcUDB4a4OK9SVRxxOaEj4uXWXknqm2hcwGvSzZaQ4/dhlbA/D+bCxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fSJhimxH; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fSJhimxH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92AD3C4CEE3;
-	Wed,  9 Apr 2025 10:50:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744195857;
-	bh=HlVtWoj3LWyiBcoZxrPmX0QXi/NYax4CcC6lrawTBbc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fSJhimxHin3y/ZB3Pleu3u8j+qCxOs5pQ/MD8yAXnWGAwLdK53UFp1b313UBRUubo
-	 dL6+a1zQv8pgmZj8HjD2a1G+jcTbYICqmdN1rV9kVlwdEwoAfu+XD8HbiXXKHEYk+B
-	 4386xVetZP27Cza1J3J/vATMiaisNlGll5kax3pkPKkd8gCed0PhzE/7ZfhKKZeJUQ
-	 CFLn82aDMJg+Mlt9MnoiFh3Dtc79YiLEknPFI7TvLjmg6i9TGfX+UHYAPu/m0G4P90
-	 Oma/Fv0wwv8+DxDOQqxtpBVaUGyOykCwkf55QGjoukB+JbQ+iKkPNJ5IxCldgWyW/6
-	 PxmDAhNKr3RXg==
-Date: Wed, 9 Apr 2025 12:50:49 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Zhang Yi <yi.zhang@huaweicloud.com>, linux-fsdevel@vger.kernel.org, 
-	linux-ext4@vger.kernel.org, linux-block@vger.kernel.org, dm-devel@lists.linux.dev, 
-	linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org, linux-xfs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, tytso@mit.edu, djwong@kernel.org, john.g.garry@oracle.com, 
-	bmarzins@redhat.com, chaitanyak@nvidia.com, shinichiro.kawasaki@wdc.com, 
-	yi.zhang@huawei.com, chengzhihao1@huawei.com, yukuai3@huawei.com, 
-	yangerkun@huawei.com
-Subject: Re: [RFC PATCH -next v3 07/10] fs: introduce FALLOC_FL_WRITE_ZEROES
- to fallocate
-Message-ID: <20250409-ausdauer-weingut-4025b274ee63@brauner>
-References: <20250318073545.3518707-1-yi.zhang@huaweicloud.com>
- <20250318073545.3518707-8-yi.zhang@huaweicloud.com>
- <20250409103548.GC4950@lst.de>
+	 Content-Type:Content-Disposition:In-Reply-To; b=bRyURfe6OHNcMyRIa6G0l/p0XPf6xAQRmcYLwT+pspkWVh0hVGOOq3eMZGeWaB+JaOBXX3oU2Zhc8VEW7e8FHdGDKb/WrI2RzwMEBmMRLoPF10KfkUs9vQO8kqICCAzy8fKJ2YXY/ITlaIVIygY0SK08TFtRWdoNhaJTclHaPJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 1B3D568BFE; Wed,  9 Apr 2025 12:50:59 +0200 (CEST)
+Date: Wed, 9 Apr 2025 12:50:58 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: mhklinux@outlook.com
+Cc: jayalk@intworks.biz, simona@ffwll.ch, deller@gmx.de,
+	haiyangz@microsoft.com, kys@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, akpm@linux-foundation.org, weh@microsoft.com,
+	tzimmermann@suse.de, hch@lst.de, dri-devel@lists.freedesktop.org,
+	linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH 2/3] fbdev/deferred-io: Support contiguous kernel
+ memory framebuffers
+Message-ID: <20250409105058.GB5572@lst.de>
+References: <20250408183646.1410-1-mhklinux@outlook.com> <20250408183646.1410-3-mhklinux@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250409103548.GC4950@lst.de>
+In-Reply-To: <20250408183646.1410-3-mhklinux@outlook.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Wed, Apr 09, 2025 at 12:35:48PM +0200, Christoph Hellwig wrote:
-> On Tue, Mar 18, 2025 at 03:35:42PM +0800, Zhang Yi wrote:
-> > Users can check the disk support of unmap write zeroes command by
-> > querying:
-> > 
-> >     /sys/block/<disk>/queue/write_zeroes_unmap
-> 
-> No, that is not in any way a good user interface.  Users need to be
-> able to query this on a per-file basis.
+On Tue, Apr 08, 2025 at 11:36:45AM -0700, mhkelley58@gmail.com wrote:
+> In any case, for x86 and arm64 today, commit 37b4837959cb9 is not
+> sufficient to support contiguous kernel memory framebuffers. The problem
+> can be seen with the hyperv_fb driver, which may allocate the framebuffer
+> memory using vmalloc() or alloc_pages(), depending on the configuration
+> of the Hyper-V guest VM (Gen 1 vs. Gen 2) and the size of the framebuffer.
 
-Agreed. This should get a statx attribute most likely.
+And neither is this code.  You need to provide the functionality at
+the DMA layer as users must not poke into the returned DMA coherent
+memory.
+
