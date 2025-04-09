@@ -1,117 +1,100 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A55B92561C8
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 11:30:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EED625DCE9;
+	Wed,  9 Apr 2025 11:31:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744198234; cv=none; b=uIKKhKwlhKYQT16BzD0b2d8WSnPCSzJ3rof0t7Bl9rQWl+ssAMoDc5YQAb1hau0Y1LPBp2MQEOldDXPoBytNIx/KHbc0HLc0C7Xv2qdvAHf9HEix/xLdTBJ8llBiNvgjb/c7ez+CSZMBmeJuwhsBBc+HyCH0s536MW7CTQmLM1w=
+	t=1744198283; cv=none; b=fLOOWmC4H1qaYc38LL2DMaqxIgkjhktl0w6h/y7rp10j7ky0nelGoDcZkHoj3gU8iZtTJKGakch9nrj9J1x//NhxwWWBtZokFY1urBZEdKRAkpsMbYNNTPHSWgwJkZwVa79j4m675Bczpw/BXOyTDoHdNGUF5thfAZ4v9umgdDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744198234; c=relaxed/simple;
-	bh=3VCEOF0ilPu9rCi4P4IJkdiN8fg/6VKi9mPpwDC4U0c=;
+	s=arc-20240116; t=1744198283; c=relaxed/simple;
+	bh=FLV91CEpQSeUuhyrf6X7Y7S8BnEVeMNhFp42arzdGXU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U+ZgF51/fcHfGDgbXsn9fTsH2XhdiSXAnVJINCahw+s09f7jY0EmxDIXe9WkhUkeIEgdOyiYo8t2pgXld8LMcd2PEPseVxswLO5Xm/JgNthQ5finO9p25JEjcCW616M8SFloGAzPbA81yXbip/B/Gf+1M9qIFTt148Moq9XNtBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7B2B41595;
-	Wed,  9 Apr 2025 04:30:32 -0700 (PDT)
-Received: from [10.57.72.20] (unknown [10.57.72.20])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7D0EA3F694;
-	Wed,  9 Apr 2025 04:30:30 -0700 (PDT)
-Message-ID: <74c07104-d072-4d2f-9b79-d9a1c3f2bc54@arm.com>
-Date: Wed, 9 Apr 2025 12:30:28 +0100
+	 In-Reply-To:Content-Type; b=AaLzr1q3DDJeywLw1dG2tyLwRE/3G7pjr7jr/j03RJcJuh10TW03M0zBXCA1TMf6LppRlgjxoHZSKoDwQhU51pc8UCQuwPg5LLFrTioYUJrCL+nbhvTrrn/Y0+lMJCUnHrbXYzuKiReAWBPxN4WFnGh3tr8nqYlPjqsXrYqeTt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=c7FFw26W; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="c7FFw26W"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=FLV91CEpQSeUuhyrf6X7Y7S8BnEVeMNhFp42arzdGXU=; b=c7FFw26WRc/QcDvoT6DswQt2BF
+	pjsKo96k8Jhg6DT1jL3A3zD7qVhGe56ZplefRjSMaFlWqNTwbLQVraOPY49tPDM7zeU44PESHMfKG
+	a59aze3NrikVXGDVi4+CrVzjqoWsgU7OGjCTRVcdk+VPwWVwA2UAXDKxq+vFcWmOs+DIFo2q9r+XK
+	eSrJ8D+dW0Tfh3UD5XamwRVfJSKNz+CMdWCkDyNXcf+MTE3Pd05g6qYN9pQ5F3vzXTtd3ySDlnBFa
+	8wcaYPrekUWunloaKUrUeOwDomnHCLi0UXfRP2Lt/LbuaND8CCQeZBvZMZG77BT7guBdM/HYNq1Hs
+	NvbHA9ww==;
+Received: from [223.233.71.56] (helo=[192.168.1.12])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1u2TeA-00E4Ri-Pl; Wed, 09 Apr 2025 13:31:11 +0200
+Message-ID: <35b4fe2a-606c-f25c-0d5c-1abb6e7b3003@igalia.com>
+Date: Wed, 9 Apr 2025 17:01:05 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] iommu: fix crash in report_iommu_fault()
-To: Jason Gunthorpe <jgg@ziepe.ca>, Fedor Pchelkin <pchelkin@ispras.ru>
-Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
- Kevin Tian <kevin.tian@intel.com>, Nicolin Chen <nicolinc@nvidia.com>,
- iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
- lvc-project@linuxtesting.org
-References: <20250408213342.285955-1-pchelkin@ispras.ru>
- <20250408213828.GC1727154@ziepe.ca>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20250408213828.GC1727154@ziepe.ca>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH v2 1/3] exec: Dynamically allocate memory to store task's
+ full name
+Content-Language: en-US
+To: Kees Cook <kees@kernel.org>
+Cc: Bhupesh <bhupesh@igalia.com>, akpm@linux-foundation.org,
+ kernel-dev@igalia.com, linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com,
+ laoar.shao@gmail.com, pmladek@suse.com, rostedt@goodmis.org,
+ mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
+ alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com,
+ mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org,
+ david@redhat.com, viro@zeniv.linux.org.uk, ebiederm@xmission.com,
+ brauner@kernel.org, jack@suse.cz, mingo@redhat.com, juri.lelli@redhat.com,
+ bsegall@google.com, mgorman@suse.de, vschneid@redhat.com
+References: <20250331121820.455916-1-bhupesh@igalia.com>
+ <20250331121820.455916-2-bhupesh@igalia.com>
+ <202504030924.50896AD12@keescook>
+ <3202d24e-b155-ab0a-86cd-0a3204ec52dd@igalia.com>
+ <202504041023.A21FA17DDC@keescook>
+From: Bhupesh Sharma <bhsharma@igalia.com>
+In-Reply-To: <202504041023.A21FA17DDC@keescook>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 2025-04-08 10:38 pm, Jason Gunthorpe wrote:
-> On Wed, Apr 09, 2025 at 12:33:41AM +0300, Fedor Pchelkin wrote:
->> The following crash is observed while handling an IOMMU fault with a
->> recent kernel:
->>
->> kernel tried to execute NX-protected page - exploit attempt? (uid: 0)
->> BUG: unable to handle page fault for address: ffff8c708299f700
->> PGD 19ee01067 P4D 19ee01067 PUD 101c10063 PMD 80000001028001e3
->> Oops: Oops: 0011 [#1] SMP NOPTI
->> CPU: 4 UID: 0 PID: 139 Comm: irq/25-AMD-Vi Not tainted 6.15.0-rc1+ #20 PREEMPT(lazy)
->> Hardware name: LENOVO 21D0/LNVNB161216, BIOS J6CN50WW 09/27/2024
->> RIP: 0010:0xffff8c708299f700
->> Call Trace:
->>   <TASK>
->>   ? report_iommu_fault+0x78/0xd3
->>   ? amd_iommu_report_page_fault+0x91/0x150
->>   ? amd_iommu_int_thread+0x77/0x180
->>   ? __pfx_irq_thread_fn+0x10/0x10
->>   ? irq_thread_fn+0x23/0x60
->>   ? irq_thread+0xf9/0x1e0
->>   ? __pfx_irq_thread_dtor+0x10/0x10
->>   ? __pfx_irq_thread+0x10/0x10
->>   ? kthread+0xfc/0x240
->>   ? __pfx_kthread+0x10/0x10
->>   ? ret_from_fork+0x34/0x50
->>   ? __pfx_kthread+0x10/0x10
->>   ? ret_from_fork_asm+0x1a/0x30
->>   </TASK>
->>
->> report_iommu_fault() checks for an installed handler comparing the
->> corresponding field to NULL. It can (and could before) be called for a
->> domain with a different cookie type - IOMMU_COOKIE_DMA_IOVA, specifically.
->> Cookie is represented as a union so we may end up with a garbage value
->> treated there if this happens for a domain with another cookie type.
->>
->> Formerly there were two exclusive cookie types in the union.
->> IOMMU_DOMAIN_SVA has a dedicated iommu_report_device_fault().
->>
->> Call the fault handler only if the passed domain has a required cookie
->> type.
->>
->> Found by Linux Verification Center (linuxtesting.org).
->>
->> Fixes: 6aa63a4ec947 ("iommu: Sort out domain user data")
->> Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
->> ---
-> 
-> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-> 
-> This should go to rc
-> 
->>> iommu-dma itself isn't ever going to use a fault
->>> handler because it expects the DMA API to be used correctly and thus no
->>> faults to occur.
->>
->> My first thought about this is that iommu-dma is not interested in
->> installing a fault handler ever, okay. But why does it suppose that no
->> faults would occur? It is a matter of "chance", firmware bugs, abovesaid
->> DMA API abusing, etc... isn't it?
-> 
-> Yes, it should not happen, this driver is clearly buggy.
+Hi Kees,
 
-Right, it's not that we assume no faults can occur at all, just that any 
-faults are *unexpected* since they represent some device or driver doing 
-something wrong in any number of ways, thus there is nothing a fault 
-handler could reasonably do except print "a fault happened!", which 
-every IOMMU driver is going to do anyway, therefore there is no need to 
-support fault handlers on DMA domains.
+Sorry for the delay - I was out for a couple of days.
 
-But indeed it is now erroneous to be dereferencing domain->handler 
-without checking that it is in fact a handler, sorry I missed that.
+On 4/4/25 10:54 PM, Kees Cook wrote:
+> On Fri, Apr 04, 2025 at 12:18:56PM +0530, Bhupesh Sharma wrote:
+>> In another review for this series, Yafang mentioned the following cleanup +
+>> approach suggested by Linus (see [0]).
+>> Also I have summarized my understanding on the basis of the suggestions
+>> Linus shared and the accompanying background threads (please see [1]).
+>>
+>> Kindly share your views on the same, so that I can change the implementation
+>> in v3 series accordingly.
+> In thinking about this a little more I think we can't universally change
+> all the APIs to use the new full_name since it is a pointer, which may
+> be getting changed out from under readers if a setter changes it. So
+> this may need some careful redesign, likely with RCU. hmm.
+>
 
-Thanks,
-Robin.
+Thinking more about this, Linus mentioned in [0]:
+
+'Since user space can randomly change their names anyway, using locking
+was always wrong for readers (for writers it probably does make sense
+to have some lock'
+
+So, if we go with the union approach, probably we can do with just a writer-lock, whereas if we go with a task->full_name like pointer one, we would probably need a rcu lock.
+
+Please let me know your comments.
+
+[0]. https://lore.kernel.org/all/CAHk-=wivfrF0_zvf+oj6==Sh=-npJooP8chLPEfaFV0oNYTTBA@mail.gmail.com/
+
