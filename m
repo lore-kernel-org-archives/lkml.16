@@ -1,170 +1,165 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from HK3PR03CU002.outbound.protection.outlook.com (mail-eastasiaazon11011041.outbound.protection.outlook.com [52.101.129.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFFB01DC075
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 12:37:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744202259; cv=none; b=bYdmaltJByLVupD2rHX3GrQRvc2y6miJjIpTZqRVxihxg/+sITcMI9ihaR/1YFikoBkq9cLrb4emzRmcFOE536UCGxoFfIBXCnRPXy8AvpXgZ9c5mpqKHqD8+TzZtQ9bSefbgnfqEINf7pGbiNXCG6JFwrm8zrumBjjE1zEfRT0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744202259; c=relaxed/simple;
-	bh=FbCHU52l0d/J/GIAv1Lqu68fgOhCehCIE3fhTZaGyIo=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=UO1BIbbnbLIhtHRv98k4+lMqbXgDxGL1deQlB9/uO1hV7ZzOL8ZceRlshEl/gV85V6bMDYBghwuJrGVUeXxhCWe7A8zNWtyszgpjr4JxjpnO5yl0wBOpp3bTCi1qHhWh08g4UcsC7eAmwYUdUuW/MsVv1B9Bhy9lMtWs3zSEtTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QBy6HegB; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03D0A15689A;
+	Wed,  9 Apr 2025 12:38:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.129.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744202282; cv=fail; b=HFdEN5RpZhGeEU1UMJeWVCn/nm6yF9nQEpvz/55JpXWSUOB6QGi3hpb58+wO6RuoFx36ZYm7GN0G3YtDamuhV2NAwwoaN2CC2JaDDh/peOCU6pvn8QyYjQhIw0IG6W9uSKzoB3v+Bz22WfneZDYscpu7AVsGZF7fJHsGz5l+0vA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744202282; c=relaxed/simple;
+	bh=H15p5Dx2FYmJzzdRNudfWEhSKUXYAxMdvjxMPBTLveI=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=lvCwuqdStSX86Q7p/tlxVT9sfZ9eYEdCMlUGzgwaShyBrfFr64jSV4YOk0Jsiv1PGVVj+puTPEPISUPS+4NsL2SVTe0SG+3qfE4eQy4+IO1NgFPOeeI5Z1xIw+/uViGGTZldfJcw46IoKYzZ8cB3y0vhDmcBPbfBqGP8KHNU6uM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=f7lwI6rw; arc=fail smtp.client-ip=52.101.129.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QBy6HegB"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cf05f0c3eso43625375e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 05:37:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744202256; x=1744807056; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EizCsAk6JvVm39tYzO6oeh9u1h02UreZEmnOvXz5XUc=;
-        b=QBy6HegB1fLcA+pLE6DV38zAEprDKDnxukpqgJ/45APQz32wppOVbzo0oAqAHmxq8q
-         XCopKHtzD+b6nfjzXefFhjz+JNHx1b4xMpVkAhs5daYoFWW+IHm/nZMufvB1I53BtS+s
-         B1ZeH18rvRsqmxuOikZ0V//+1jAvxlIW/PzDShTHonCEfBGdXrF1qAVRbxJNuFd+V8Cp
-         ysUZ+08+YsOEHoaIDG6+gmDJcn8kyxMt22vmIRXnK8D8lnr0kU/KFfvbqUF8YUrQlwCi
-         Ct/W/asFkh4O3rcU+WoI05dA2rmPVGYr+JThNx7cc9/TN1ZyXOS2gIqWjAHMbnnGVF0Q
-         w/Cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744202256; x=1744807056;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=EizCsAk6JvVm39tYzO6oeh9u1h02UreZEmnOvXz5XUc=;
-        b=HZ9AzA9LGurqhihb3jpcHmnjDpm5XjATe1ZTA84OwWJwd5HRJdyQfqlJSE9Et5QeDr
-         U9x2YaJvudDqTzwYvRu54/eCzecSphnvX+wFhMnkSvEaSeqUl9dgqRe/tiw6ZbdNoZjC
-         +XDHkqg3o82jVgHwqolkN95QFm8AR6T5vzMINq8FEEdLop/XX+pJ52vNREARlOmgNwLu
-         kV/iXwjeL4z5G/QZTlaSATmq6IXJDdJaPGrgBWnnA0wv7cAdNHGpj0/Wu42GgeG/NrHj
-         lY855xQz3YCqILlzTjB1t/C46iHI7FDePJnS2lgnJCb23GNKP0VH256fF9JZKUzOEjCF
-         OMMg==
-X-Forwarded-Encrypted: i=1; AJvYcCUlUYuOebwtTgg//ZhwIn79NOaeGmXpk7Tfxp2KFxmdW0zQXyQDsLAsDJ20ZfLk8/tJOCX1wnn3TJq+bSQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwoDl/EeT2S1lsCdc48NLS9kbBLBjG1s9nWHOapKeg2M6QYuodl
-	EzE+SqsdQndWIqF/eOCG8ESg6qrt/X7F9OUWUuXN1rjDjtpjrBJdotz+B4u+OvM=
-X-Gm-Gg: ASbGncvJudGfgOfsw7SF1nu0WA4TzhzwnrA7YlpUJazOzInj2ILirDyW1rxk04h2WsU
-	c0p+a6exOfwqgik6g5r4cOX0IusWnTKfAdyI4VIBaOl16WCPOAdHmzIouaX6nBNfnMvfq9SsV+q
-	62sjlSp+tzgP55rC8M5EOyZUhmADeVqpyBOKRviIwrKWDIexo+DLXWv1JehWTJMjSOIEfSyQnQt
-	s663/JpYROHaSCkYxB1vV2WJFKb7GfUtFFoQI2aG11F3HrI4ObxrJoqKq905SViAEEGauHzDbJx
-	8hBsNIj7NdGGRqrOKDSHL5BYfpeBCo1UpsVEeXk4wVzuZqeRFOBEOr/Gyb2gQZ5/vJbrWMu01v6
-	naw7ilR+r01BF+k+0Jw==
-X-Google-Smtp-Source: AGHT+IEwZypQiJ9yeKfN2R+WddTEm4ee70zVEENJiVyTHHktMmkvGOzfz90SU4Yw0AaEPvy/vMzr2Q==
-X-Received: by 2002:a05:6000:2a10:b0:39c:1257:dbab with SMTP id ffacd0b85a97d-39d87cddd45mr1788420f8f.59.1744202255920;
-        Wed, 09 Apr 2025 05:37:35 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:87d9:979a:1261:ab65? ([2a01:e0a:3d9:2080:87d9:979a:1261:ab65])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d893f0cebsm1534142f8f.61.2025.04.09.05.37.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Apr 2025 05:37:35 -0700 (PDT)
-Message-ID: <d8a0f3a2-03ed-48be-8ca2-dfed622554ee@linaro.org>
-Date: Wed, 9 Apr 2025 14:37:35 +0200
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="f7lwI6rw"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cqfa0Jl7Zgh0GzzaA3Zr0ZhcfiTd3OejJGJOgkBExD1Gn9Lp0kIOUTBdGgb+msJM/iQIE8dIAvGx3PnovXnm6uNQJP4L201VoIGD0/Jh1ruNqfI8wdaqe+1IuGQG+UOfRr/mX5bHcQdBRWRjgFOt554HWePMncXeUTcQIWhkb0g1yHU4bRzYrpP/72rGREQN2422C93ysUYQBgD/1/AbOjSZSZa9mQqsakk5ghMB0s/x8MRHHHC2apPVx11+8tdYJ5AlHH/Tmv85Dwh0+1pyXRwddNzxpilEtp+gmdNSZsLwXSwYq+cyyhiUuQ3qPMaFhLE5Qs2ShRIBMVflPIUAzA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NPjFlqnFRDkqconjnOtiVz8tD6UxFCF0epEZFOpbUfM=;
+ b=o8ANLvwApw+n9LfPmbHTWIhC26NuqMjLc/2tmoARWEYSKDoDVbi2gJbUgi/LZGUnchXB0ymgUzgdnLs9W4k7LBh/kNGidSVBPjicm2VW16+No4ZKaoqaRx71E+hSjR+gmPOhevUhPmMMNSnMbPW3GWIOkDdWs1XFKa3e4SMwC+SgIXpLzSiOYB08FmhRdFfB3hyH8lOxHwcq964hs+ZnM4fkfDZfq8JwkswKAqMFwTorhJhR3Y9k4tXwileee+Vm6J2/dN72/ilWLW8EeFESAYdIu8nmcG365ENKTUkkiBs/QTOiXo56KLI8DZgEERm6TaGhkVKethLuM+eoREN/Hg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NPjFlqnFRDkqconjnOtiVz8tD6UxFCF0epEZFOpbUfM=;
+ b=f7lwI6rw+HMIlPk3VUXcU2D8HzMeElfI8EOe5GpzOhyvNnJIYPF0XpFVGHEVEDTMQYRfoO/9roHTT2aU3mMOQ6hnvsYhq7MMAab9pl+PEoBWaWMZ3devpnJEHAIK3GObRCGTibvthvog+jNPBJZYCj6VzPXWkclyfgXD4wnzPtx1K5Xpjgu0ia9r+Epm/Ee/Xv5R1jtX/jzoz8JS8JKJeQz2DJeKX98LBdZgwCbchTbT+pTrM7SNdbrXkils2k/hD0N08Kh4xQWBB0dy++vCd4vOlgv4GMP8QMHrhExBSmkYDH1EfXr5oP9geHLX9kbjdHF0yKCTrbbNCuYIdzcrsA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from SEZPR06MB5269.apcprd06.prod.outlook.com (2603:1096:101:78::6)
+ by SEZPR06MB6744.apcprd06.prod.outlook.com (2603:1096:101:17f::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Wed, 9 Apr
+ 2025 12:37:56 +0000
+Received: from SEZPR06MB5269.apcprd06.prod.outlook.com
+ ([fe80::8c74:6703:81f7:9535]) by SEZPR06MB5269.apcprd06.prod.outlook.com
+ ([fe80::8c74:6703:81f7:9535%6]) with mapi id 15.20.8606.033; Wed, 9 Apr 2025
+ 12:37:56 +0000
+From: Yangtao Li <frank.li@vivo.com>
+To: clm@fb.com,
+	josef@toxicpanda.com,
+	dsterba@suse.com
+Cc: linux-btrfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yangtao Li <frank.li@vivo.com>
+Subject: [PATCH 1/2] btrfs: convert to spinlock guards in btrfs_update_ioctl_balance_args()
+Date: Wed,  9 Apr 2025 06:57:22 -0600
+Message-Id: <20250409125724.145597-1-frank.li@vivo.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SGXP274CA0006.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b8::18)
+ To SEZPR06MB5269.apcprd06.prod.outlook.com (2603:1096:101:78::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH] serial: msm: Configure correct working mode before
- starting earlycon
-To: Stephan Gerhold <stephan.gerhold@linaro.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>
-Cc: Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
- Sam Day <me@samcday.com>
-References: <20250408-msm-serial-earlycon-v1-1-429080127530@linaro.org>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250408-msm-serial-earlycon-v1-1-429080127530@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SEZPR06MB5269:EE_|SEZPR06MB6744:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8a82f18a-3d6e-4e96-da75-08dd77635a7a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|52116014|1800799024|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?j8ifgudHBlUZoqQ1ibbC5L43BzcW1M5lbgfDlHWkbGZS98kG1QKl9pgje8R0?=
+ =?us-ascii?Q?ZE3jz0WklrqVSoHetDGp/t6D18beQ4Sl/Ud+j4TCIrf36ctaJ3ptcxFek3Da?=
+ =?us-ascii?Q?F0+xqdqqCsor6xDqdNtpAE2S02qDYenSOqTUyMke0hlIHoyM/zGxNBj3Ddz/?=
+ =?us-ascii?Q?L97V4vWmmX5/QVklq8JhsoD9w0d8VMcXTehX47yGO8/Wg+rrpZ/Tii70sVuo?=
+ =?us-ascii?Q?b02H0JtkcMupIC/6pAO88M02CYj1Mcx9qhclqLdLDt2lO+WfMufutOkZ6kdQ?=
+ =?us-ascii?Q?p6/USOIPc5JtlYJJuZeUFKW40dDkvOQYYf6TVgSYzv/h0A0bAcENnuGQ3+PN?=
+ =?us-ascii?Q?2TWql90b6OIomuZHnj/z5nOQrgppTxDzazxWfv071uf+K0GcdY7zyhd9Tz/i?=
+ =?us-ascii?Q?+b+CKaEXos4nIFTK8/7QFTYhcKzsjwMPqf7ena7djbo04eittF0GrPsQ6SRs?=
+ =?us-ascii?Q?OkC38MOh8FebLMnppclrCGk9/And8QiEEQ9ET1kob/UxiHSBr4qEJDHtMmFA?=
+ =?us-ascii?Q?UW6FVT8w3Qjuo/vebxxQJ/4mQHM+KqXLGITN2Vx6rkJr4TWKndzAfjbvsFRj?=
+ =?us-ascii?Q?rrqZ+yjp/ZixkGARQrCwnpMUUOhOETqEoCm56Ly4l06euG0ocwywYWyIpLT0?=
+ =?us-ascii?Q?pED/Q6mwrsNKUtxx1LeXkSMsVX3M2SDUeeirQmjvfsJrc1ulmkA2c8gqHMuK?=
+ =?us-ascii?Q?qLGX8AiMf5e3X2QvZqQxUSqcRbxz3vQhtGGHXOF9CrcVXtOkZFy0zkGit0XK?=
+ =?us-ascii?Q?eW8cj71hIXxqtQg9myyMxuMapPSBzcygoA7AhNlEjZHsTKfkWWQJntLn7ohh?=
+ =?us-ascii?Q?WNQAL5TwVEKFipWK0FF0XbdTwXhxOn8rlxNojlI7Rriu9cAZ2f1W5ramHE7W?=
+ =?us-ascii?Q?sa95aAVxPwCQy/Wq/+ulqvWJeCCe3Dk3UImF9i2gpHqjwBERR0CaL0gavJeD?=
+ =?us-ascii?Q?7WP8ZoyJnT7WHLRMDfrbjUEZ0tvLYNy278eZJr+Jpa3PRZXenJa0iFR3+cVq?=
+ =?us-ascii?Q?WxQctj0nBKgZKA97mK4TJQyU9MJDTjH5E//M16UHlSAOixuxcSdJt3eVxCSs?=
+ =?us-ascii?Q?712e0W9BMgMiDWq7m6hF3bKd+sPvKYZuu+LsvHdNYT0FPlrUP3DrDSliInI2?=
+ =?us-ascii?Q?Y2crp0t7hwAEyISelF313j61GJvv1oqLa4po5NTH/epL4k4QQ0OMkpncBkR4?=
+ =?us-ascii?Q?C6vhSeqIYbUK5nNgROUb+DyyPoA584ilEG1IJIIVoBr6i+jT64eL1twtz9VR?=
+ =?us-ascii?Q?cMcHjMunsXE6GeIjpEMA4xmSZQ8I6HY31KE6KaPyeadGt0ZpJ+pttvEcEGwC?=
+ =?us-ascii?Q?qzdazVOqRUhj8fK0de2GONYYbcOrAfkjkjqzmxp5d5mYSJEdkrkY/lYPHPDL?=
+ =?us-ascii?Q?2Uf4rbmgJNwKtMLHpJHN8U2XatuxLv1J0MSjOKFfx+K4poWIg/RC+T2rokzB?=
+ =?us-ascii?Q?LhUxVTLWr4phUR1O42HWjDorGmtqPqw+?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5269.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(52116014)(1800799024)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?YvFTXY5Kla8w2dfLc2qw/8xWMRTxFTrYuC/jupowqroeLmiE3BzcqEoGnV+k?=
+ =?us-ascii?Q?EyxrBMOcj9ebkQmPHtdy0i7tKe+oVE3o39lEvNsFby9bQt0tYWN1U/ClbG3X?=
+ =?us-ascii?Q?7Lf00sg2w5yyIw851dZQut7oQOy6+shSve4Cdz9kDDllJMXbOS1hjyj95qK9?=
+ =?us-ascii?Q?L4xu91qjqi19jH1arIc68zLwdVZS3G8Sj/LniblIzuJ0SoQCr1J6IyCU+T6d?=
+ =?us-ascii?Q?VPfc6yFX8JI9gG4eVWdatJJCWgLLECincKPOh1b6SMB/BxTFrsUAd8y8KuJP?=
+ =?us-ascii?Q?hbV1hvHXLs2B+WgR+hkwlE2VZvB2Ol+nc6IwH2gWSXLNJsCS5eCfYvXcoOWo?=
+ =?us-ascii?Q?eaj3zSKCdwM3R+CtSForLJR5qBef1eOLWPoFoHHBAt8yxpqqrRwnLNFHQ+s0?=
+ =?us-ascii?Q?kY4oI7aGIw1DQrPsTDEe5EoL/+uqAWUt1R94QyQ7eLV05XJEDqoxvlzs3UC6?=
+ =?us-ascii?Q?ZoivfbEW1SYzT15xU/fDrbhV/4KxTNh2IzY2HgHbItaD/QWgTVqKUHvtnBhI?=
+ =?us-ascii?Q?QFckzzP2bV1IxPqaAq1o5qgjysh5+Ymx430b0+WraJApTtAQBpM/cvKZy/CS?=
+ =?us-ascii?Q?L3+miyNLzKNM4TKmC6+C8kY5flJdWeYsNp1XR8A1r86/frxUwo5jaw35ZYMG?=
+ =?us-ascii?Q?SR5WMQNGoHehxPxoYe3pulFzWkXeLNyAtSydjbdJSRynTNFpN5nMki4sWPea?=
+ =?us-ascii?Q?IxRrL6Mzlk4VAXAashSQ6ZzvxlrvBkyhVaDW1vMUA1GyEWv4QcoysOyxDGQb?=
+ =?us-ascii?Q?9oOj7S3OaxQhKVx/IugHQOYOAr5ke2Ynoj7uQQsfXsWOjtuOlfsGcAVmrjfH?=
+ =?us-ascii?Q?IF2fvIwJJyY2eOz21RKULAW5wdW7Ym+tcFYXC/yTHLit/pe7To8s8XIcqMMG?=
+ =?us-ascii?Q?k/cdBwovEgHPCJ1+65hx9GAe5g+92MHnEYkWde29ax0o8P6J1ZiVAKsXFg+I?=
+ =?us-ascii?Q?CovqRmtpBGVdZn3nJJurQ+KRTZTu88kzR+hIePOT7tLIzdAdVZIKu21D4oQn?=
+ =?us-ascii?Q?YrDFm/cx4DxU375+Jd2yUTJPdOEOFeCdqVTLHzlnCjQE7W0IN3bYpxG2iv18?=
+ =?us-ascii?Q?rF8rupacZ2F7pIiWZNlEjf1/pev7CXL9qngVTy+v9Sb9MoMOOa/CimGh+P2a?=
+ =?us-ascii?Q?sxx/e0Cvun3srkjyx7GTUHvU1+7XVLP+hlbsPl54IJGjRh1cFgBP5Nb6G60R?=
+ =?us-ascii?Q?aEMZ5WvZVgUVuRRE5lht6Qj7BbbQki8S+yb76pe+iGJwzUVNRfaVI55FPac4?=
+ =?us-ascii?Q?FbhXeu7O+JXtRKDXC8GcSuOSeXmqf4iGzjN+pOSIazQw2aOufIVjxmyazYaz?=
+ =?us-ascii?Q?i5AgBRsOdSw3a61MELtbm+TleTaeJy//svDBxNnSuZz3c8rVk7jSn/4l7IEs?=
+ =?us-ascii?Q?EmVHn5mN1HkLRqHKi/yXu/6IQiNiA+9w8/C+GVF9gxcJXOTKSWfTPxQ3dfJl?=
+ =?us-ascii?Q?Aj2RIWmDPckDReNvmVoOwQNa7P2xX0s92XoLBNylxJc+oNqbAqaX7k1cdCxM?=
+ =?us-ascii?Q?AZUouAbabBXPIAL5cvjp0lRraXX815qeA3dF6vACPL/1FkDoFDqprvF5rn5p?=
+ =?us-ascii?Q?GY19y7iSGcPEB3WXisUMhZ2RhcwJK0tKJrUkcdJr?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8a82f18a-3d6e-4e96-da75-08dd77635a7a
+X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5269.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 12:37:56.2709
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: XPOyp9ciS9HYH43xR1foLzDG+LzZDktqQzR6y1LuLhfGeEsUgyLbz40b1lhAaB+3xb595G4kU2CesV7kDjI+Bg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR06MB6744
 
-On 08/04/2025 19:22, Stephan Gerhold wrote:
-> The MSM UART DM controller supports different working modes, e.g. DMA or
-> the "single-character mode", where all reads/writes operate on a single
-> character rather than 4 chars (32-bit) at once. When using earlycon,
-> __msm_console_write() always writes 4 characters at a time, but we don't
-> know which mode the bootloader was using and we don't set the mode either.
-> 
-> This causes garbled output if the bootloader was using the single-character
-> mode, because only every 4th character appears in the serial console, e.g.
-> 
->    "[ 00oni pi  000xf0[ 00i s 5rm9(l)l s 1  1 SPMTA 7:C 5[ 00A ade k d[
->     00ano:ameoi .Q1B[ 00ac _idaM00080oo'"
-> 
-> If the bootloader was using the DMA ("DM") mode, output would likely fail
-> entirely. Later, when the full serial driver probes, the port is
-> re-initialized and output works as expected.
-> 
-> Fix this also for earlycon by clearing the DMEN register and
-> reset+re-enable the transmitter to apply the change. This ensures the
-> transmitter is in the expected state before writing any output.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 0efe72963409 ("tty: serial: msm: Add earlycon support")
-> Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
-> ---
->   drivers/tty/serial/msm_serial.c | 6 ++++++
->   1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/tty/serial/msm_serial.c b/drivers/tty/serial/msm_serial.c
-> index 1b137e06844425584afe5d3f647e9537c6e2d658..3449945493ceb42369d2acafca925350fccc4f82 100644
-> --- a/drivers/tty/serial/msm_serial.c
-> +++ b/drivers/tty/serial/msm_serial.c
-> @@ -1746,6 +1746,12 @@ msm_serial_early_console_setup_dm(struct earlycon_device *device,
->   	if (!device->port.membase)
->   		return -ENODEV;
->   
-> +	/* Disable DM / single-character modes */
-> +	msm_write(&device->port, 0, UARTDM_DMEN);
-> +	msm_write(&device->port, MSM_UART_CR_CMD_RESET_RX, MSM_UART_CR);
-> +	msm_write(&device->port, MSM_UART_CR_CMD_RESET_TX, MSM_UART_CR);
-> +	msm_write(&device->port, MSM_UART_CR_TX_ENABLE, MSM_UART_CR);
-> +
->   	device->con->write = msm_serial_early_write_dm;
->   	return 0;
->   }
-> 
-> ---
-> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-> change-id: 20250408-msm-serial-earlycon-4c5dfa782496
-> 
-> Best regards,
+To simplify handling, use the guard helper to let the compiler care for
+unlocking.
 
-I think it's safe the sanitize the mode in earlycon.
+Signed-off-by: Yangtao Li <frank.li@vivo.com>
+---
+ fs/btrfs/ioctl.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
+index 63aeacc54945..7cec105a4cb0 100644
+--- a/fs/btrfs/ioctl.c
++++ b/fs/btrfs/ioctl.c
+@@ -3438,9 +3438,8 @@ void btrfs_update_ioctl_balance_args(struct btrfs_fs_info *fs_info,
+ 	memcpy(&bargs->meta, &bctl->meta, sizeof(bargs->meta));
+ 	memcpy(&bargs->sys, &bctl->sys, sizeof(bargs->sys));
+ 
+-	spin_lock(&fs_info->balance_lock);
++	guard(spinlock)(&fs_info->balance_lock);
+ 	memcpy(&bargs->stat, &bctl->stat, sizeof(bargs->stat));
+-	spin_unlock(&fs_info->balance_lock);
+ }
+ 
+ /*
+-- 
+2.39.0
 
-Thanks
-Neil
