@@ -1,98 +1,117 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4FC11C8FB5;
-	Wed,  9 Apr 2025 03:41:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 338EC6F073;
+	Wed,  9 Apr 2025 03:42:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744170072; cv=none; b=e7lQjnzK9cONN5hB2X0dtUpO39Tr+r9dJM3CI0xrsxBjXsQGeFlHSLh0DJlIAbHq6Twta+VMV3mgeCCUR/I9oq60wr47a6LsXXJ8IUeyemEF9omEAA2ZJp8NoBO1vzirMGpvuWhQJeA3n3FTkngnV47a1XnUcqnSeyozpHaIBPw=
+	t=1744170151; cv=none; b=IYr4HsAaj63PQP8YeVnIXH5M16bRzHfgpsvsVJMib86SBD9MQYAotMSO6ApNGQTxkDKWMXrv9kKaZrobGsauW4k6IId1NFnmJ0Dh0Izaqv8MxcygR1KuYmU5GCN820I2dPCNM+o/nWOIQge7l7EfIuWBRru5vHoay3+IGNWfr+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744170072; c=relaxed/simple;
-	bh=8GRNmupPyo69Uqcd2hKvAZBLAkhcD42GjfJJe1HVIU8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NlWQfmBQb03gkj0mT0X1HY2Rtb4fIRzLTTY5+xBaAx2GszB9Vr2dlsdAx+7tB2HIY/2Tos17jOclXeg+63D4nUowsVEYfn74cFDqYQCanMU8Srjc8BG5tQ29QOcxo5RAn4unWVvf8ylSovyZ6WC97mfx1fYcz9vHwiDPBGeVZHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=bQOfrYaH; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1744170151; c=relaxed/simple;
+	bh=dxz58imorngaLXiFlNXGntg9NzC3l+1/qxF6Cn/d7Mo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MMXSzLRuY3BHWkF6C/dC9rTswhd5/fEbNMLja6fWy6xajCPW2W32qXmwaqt3+B4j1C4QzMLl4WBzaHNK6iQT+BnmWvxcAVuuzxJUjJ0Z+Ld4xepfM/bJtMlg7odwpY25d36x+fKk9NzwtQGV3uZaAcCs3r1x4OGZwtTcVt7Q8UU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=UGbn5MQZ; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="bQOfrYaH"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=T/H6Sk21vQXGzJuFjA5o2HA0xkd8qQUuh9KY1MVmLDo=; b=bQOfrYaHNanQEkfat5Mr3yobss
-	Ush9P4xezBgp3VctfArgnn7RtGyCFmAtBi4XvUkgG2rwvQAYV7B7zgW/cV5vc7IDxCxUblFQE3tr+
-	bs1n6+/WxZvi9MNqyjA5L6k18kd2AAw2MDQIMpZRTIT5xOSCIF9ylDERn1ALs6+Ciy4PKWH1lLpUT
-	B7gZ5H0hn5VzVUe1lUs5atT7Mm/i2uQqoF8QLgV3HK00PepVsA88g+uMEUZHJ1WFXgPtKXeWRXtna
-	EWBMD6SKxGX4FCyth4M6CFf+TVrFIgQkPwqzLS1xelp93S44ms/niEmiV/vT8vQdepnL6UwDvWd9Q
-	bL5ZbWVw==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1u2Ldc-00E69P-2F;
-	Wed, 09 Apr 2025 10:58:05 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 09 Apr 2025 10:58:04 +0800
-Date: Wed, 9 Apr 2025 10:58:04 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Sean Anderson <sean.anderson@linux.dev>
-Cc: Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>,
-	Pankaj Gupta <pankaj.gupta@nxp.com>,
-	Gaurav Jain <gaurav.jain@nxp.com>, linux-crypto@vger.kernel.org,
-	"David S. Miller" <davem@davemloft.net>,
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="UGbn5MQZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=GkGyx
+	7DPt/EgcE0T4RHJCvE68IU2uPkdWm1gFMOum7I=; b=UGbn5MQZtAv0VWZFSsKdn
+	6XdWJLKdEgzPmLBhTsIDaMMOBPVitoA/lly9XC2BvsWc6+wjcInkON98dbSpuyQJ
+	SIw7mEXv0i3L+412zTY+5d0DHb/ZtS4eq/zw9qE7uWH7Ocypn36v1XAlBoM1Anje
+	8oKhfXujYlkFWSg9oXHbgk=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wDHD3GH7PVnbwQBFQ--.4446S2;
+	Wed, 09 Apr 2025 11:42:02 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: lpieralisi@kernel.org,
+	bhelgaas@google.com
+Cc: kw@linux.com,
+	manivannan.sadhasivam@linaro.org,
+	ilpo.jarvinen@linux.intel.com,
+	robh@kernel.org,
+	jingoohan1@gmail.com,
+	thomas.richard@bootlin.com,
+	linux-pci@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Valentin Ciocoi Radulescu <valentin.ciocoi@nxp.com>
-Subject: Re: [PATCH] crypto: caam/qi - Fix drv_ctx refcount bug
-Message-ID: <Z_XiPLmSVs8PGTZD@gondor.apana.org.au>
-References: <17f9af67-de10-4b96-99ef-3c5cd78124c0@linux.dev>
- <Z_SxYFdyBJTYe_7G@gondor.apana.org.au>
- <e3dd2f83-8451-47b0-a774-a697b861ceb3@linux.dev>
+	Hans Zhang <18255117159@163.com>
+Subject: [PATCH v9 0/6] Refactor capability search into common macros
+Date: Wed,  9 Apr 2025 11:41:50 +0800
+Message-Id: <20250409034156.92686-1-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e3dd2f83-8451-47b0-a774-a697b861ceb3@linux.dev>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDHD3GH7PVnbwQBFQ--.4446S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Cr4rZF13tw1rtFWxWF43GFg_yoW8tr17pF
+	yfJ3Z3Cr4rJFWa9an3Aa12kay3Xan7Ja4xJ3yfKw1fXF17uFy5trs7Kr1rAFZrA397Xwnx
+	ZF45Jr95KFn0y3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0p_YL9UUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWx0qo2f11ShHpgABsA
 
-On Tue, Apr 08, 2025 at 11:44:27AM -0400, Sean Anderson wrote:
->
-> However, note that the following error is still present:
-> 
-> [    3.294978] alg: sig: sign test failed: invalid output
+1. Introduce generic bus config read helper function.
+2. Clean up __pci_find_next_cap_ttl() readability.
+3. Refactor capability search into common macros.
+4. DWC/CDNS use common PCI host bridge macros for finding the
+   capabilities.
+5. Use cdns_pcie_find_*capability to avoid hardcode.
 
-That just looks like a bug in the driver.  I'll leave it in the
-caam maintainers' capable hands :)
- 
-> as well as another error on reboot (present before but I forgot to post it):
-> 
-> [   98.514208] ------------[ cut here ]------------
-> [   98.518823] WARNING: CPU: 3 PID: 1 at crypto/algapi.c:464 crypto_unregister_alg (crypto/algapi.c:464 (discriminator 1)) 
-> [   98.527100] Modules linked in:
-> [   98.530153] CPU: 3 UID: 0 PID: 1 Comm: systemd-shutdow Tainted: G        W          6.14.0-seco+ #163 NONE
-> [   98.539899] Tainted: [W]=WARN
-> [   98.542859] Hardware name: LS1046A RDB Board (DT)
-> [   98.547559] pstate: 20000005 (nzCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> [   98.554520] pc : crypto_unregister_alg (crypto/algapi.c:464 (discriminator 1)) 
-> [   98.559224] lr : crypto_unregister_alg (include/linux/atomic/atomic-arch-fallback.h:457 include/linux/atomic/atomic-instrumented.h:33 include/linux/refcount.h:136 crypto/algapi.c:464) 
+Changes since v8:
+- Split patch.
+- The patch commit message were modified.
+- Other patches(4/6, 5/6, 6/6) are unchanged.
 
-Yes that's a long-standing design fault in the crypto_unregister
-mechanism for drivers.
+Changes since v7:
+- Patch 2/5 and 3/5 compilation error resolved.
+- Other patches are unchanged.
 
-The unregister mechanism was designed for software crypto, so it
-relied on module refcounts to prevent unregistering something
-that's still in use.  For hardware that follows the device model
-where things get unplugged at random, this obviously doesn't work.
+Changes since v6:
+- Refactor capability search into common macros.
+- Delete pci-host-helpers.c and MAINTAINERS.
 
-What I'll do is make the crypto_unregister call wait for the users
-to go away.  That matches how the network device unregistration works
-and hopefully should solve this problem.  But keep your eyes for
-dead locks that used to plague netdev unregistration :)
+Changes since v5:
+- If you put the helpers in drivers/pci/pci.c, they unnecessarily enlarge
+  the kernel's .text section even if it's known already at compile time
+  that they're never going to be used (e.g. on x86).
+- Move the API for find capabilitys to a new file called
+  pci-host-helpers.c.
+- Add new patch for MAINTAINERS.
 
-Cheers,
+Changes since v4:
+- Resolved [v4 1/4] compilation warning.
+- The patch subject and commit message were modified.
+
+Changes since v3:
+- Resolved [v3 1/4] compilation error.
+- Other patches are not modified.
+
+Changes since v2:
+- Add and split into a series of patches.
+
+Hans Zhang (6):
+  PCI: Introduce generic bus config read helper function
+  PCI: Clean up __pci_find_next_cap_ttl() readability
+  PCI: Refactor capability search into common macros
+  PCI: dwc: Use common PCI host bridge APIs for finding the capabilities
+  PCI: cadence: Use common PCI host bridge APIs for finding the
+    capabilities
+  PCI: cadence: Use cdns_pcie_find_*capability to avoid hardcode.
+
+ drivers/pci/access.c                          | 17 ++++
+ .../pci/controller/cadence/pcie-cadence-ep.c  | 40 +++++----
+ drivers/pci/controller/cadence/pcie-cadence.c | 28 ++++++
+ drivers/pci/controller/cadence/pcie-cadence.h | 18 ++--
+ drivers/pci/controller/dwc/pcie-designware.c  | 72 ++-------------
+ drivers/pci/pci.c                             | 68 ++------------
+ drivers/pci/pci.h                             | 88 +++++++++++++++++++
+ include/uapi/linux/pci_regs.h                 |  2 +
+ 8 files changed, 187 insertions(+), 146 deletions(-)
+
+
+base-commit: a24588245776dafc227243a01bfbeb8a59bafba9
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.25.1
+
