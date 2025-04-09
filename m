@@ -1,113 +1,121 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 544E71D6DBC;
-	Wed,  9 Apr 2025 09:24:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9CAC1D6DBC;
+	Wed,  9 Apr 2025 09:24:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744190649; cv=none; b=LjgoAiox7FbofCoVgCD6CXMBkviTRe9koi/Ysa5cFeQSLwciGwtIK2YkPTkmksaDdWFVmM8NyL53EeAwxapYZ5l7BvSiv3U+n0VJMjT1lJ9BYu84FHMudDklO5ghTCqr7UvYoR7fcTFm2XW/4G9GI140j0fvWwhJzg7LmOw0Mp4=
+	t=1744190699; cv=none; b=GjmUOdeUgguve4OdHCOGGpf6szWbnFX5gsdEB1db1GmZNn4xt9RCgf0ZIGwaLXaSUFC74BTYZ9BqGehm6rAGXovPd65zFlL0VBMoWMNz6Gt8rCUPIa9yoLEG31gyAaWMD4B9T7MON3CPJ6BQfMHVKkbw25leiaCI5mWOwQJQh20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744190649; c=relaxed/simple;
-	bh=pKMPn6LX9Ik+1q/L52rcfUEHkvv9f6rdNvpYqbcrERc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p+Le7u4nIfWsP+SiX5czuZtrIWEzG8PfAaM3SZqc9TRSJAXbgS9z1rsavOrr3EyLMRo3BbtabN0i2/f1U3s5dnMD0QMlPBdZuvG3VrkQK74fHRtbY5SwID5fYDsH9dFXf3lNRlUHXFSOvhDpq1ZCdmhxLDjzKB8GLlVprtumxQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=CORhHpP+; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1744190699; c=relaxed/simple;
+	bh=9y05Lr8UWQZsTrWL/CPzmibQKQ++CzKzchknlhwYLJY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EYXAfMddVicuuM+BFfOAT3QT0ZmK8lGkC9YY18U7zq02y9r1VA/h8is9Tn54L9TZeaMHhf5dJ6+rn50T1V+Mdlaqva+LXbPcvKEY0BbON1CTbFS9LqFogmTwPx3tka3Y8Wimn7x/MI6cmChzCT6218+FAQZaa7y78qZabQKFoRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jR1YVk9c; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="CORhHpP+"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 9C90140E021C;
-	Wed,  9 Apr 2025 09:24:03 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id wsQ31adu357h; Wed,  9 Apr 2025 09:24:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1744190639; bh=NLvGKlsAVBdcuD0MlFjXL/oVZE7GoQlaw8lDAa1U9Ss=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CORhHpP+3gm07R/iQCHSwNp6WUNAj/ArCdlVAK4V9rQf9WBOCw0Btx/hvjSv5rger
-	 rse4TmiQImVw0+qJ9+fDhNY7XIaDB/3XpIWY4zScsHcq0HqalUmIgOl6UvYC+ezJuX
-	 C3UQyfthmbv6DSqMVYF5S3vqxNxTn3rfOs2jrWa5VPvEjsiROIsvAfyyiSGN/vG2+F
-	 AJ2ZhJkOrhfZfDcwRt3pyAF9Fvmjpx6j7LYIBEjEEMrWvxPRBIy+g8HsZZAPltnka4
-	 PTFbSl/nfQJB07+ui5mPBWVE/R5y6Gnr2nSDoDXnJMf4SpiB9EUmRKZbzu5XdB0yt/
-	 m72uxvCH+7lO79e9na9Y9QabPgkc9SIUKTMN2aZ8lKxW5wHjyzHyPwwpYkaCLNk76J
-	 RMKpQNdwDZESA70ln62sNSV7cL74l2TxKGPCFnRsgKAfl9bfz7EYFn+UmNE1E4HYdK
-	 mbkd0RP6kJ19NEu//Rd6gpH2VlsHoG9FEVZU3NFfKBQZwsLxh1xyMnNED0gHZVPXOJ
-	 ohvW0W8TQCG9DCwafd+Xn5nnvI7vq6r/9EkoYdZKjH5MAN6J2MMKUoeXitz07/8wFK
-	 Np8HU7vp7/5mGFgLYefK39j4RBsBIOdKCGF/1+s2PAL3JdUbRERxLb3KRWSJ9zj1xo
-	 9lrkUXzw+OW06HHsG6S545Qc=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C8B7940E01A3;
-	Wed,  9 Apr 2025 09:23:43 +0000 (UTC)
-Date: Wed, 9 Apr 2025 11:23:41 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Babu Moger <babu.moger@amd.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	seanjc@google.com, pbonzini@redhat.com, x86@kernel.org,
-	hpa@zytor.com, daniel.sneddon@linux.intel.com, jpoimboe@kernel.org,
-	pawan.kumar.gupta@linux.intel.com, thomas.lendacky@amd.com,
-	perry.yuan@amd.com, linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Subject: Re: [PATCH] x86/cpufeatures: Define X86_FEATURE_PREFETCHI (AMD)
-Message-ID: <20250409092341.GBZ_Y8ne2Of4lfvL_O@fat_crate.local>
-References: <ee1c08fc400bb574a2b8f2c6a0bd9def10a29d35.1744130533.git.babu.moger@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jR1YVk9c"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43ede096d73so29897205e9.2;
+        Wed, 09 Apr 2025 02:24:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744190696; x=1744795496; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Vd0ZQP+RaOtlGM+Bn/aOlJ8Q6DsEZ41QfPHQrkJtrP8=;
+        b=jR1YVk9cLBFnHqNysUdJBwk9ddBfbSm04okKephe52GV/uO38d+k/soA7yIP3I31wt
+         CHfes3fpsmxzwW4UtKZ3mCYU5MjWQpwHwH4DzOraNV7tS8hJhBfZzfsqGlZv7r31MUCL
+         CK1td8bI/coF4alj6e+6vXNGlh4ng430z6tkJ5Jl+PgyQMXVsp4C6GVgH+pAVn/8ydU6
+         nDLhiWIzAND7MiWaHdz+C2+wKt9lF8a0yMHPq1c3wVN0+5TxSmNb2Iuj5NGeYSeuUTTa
+         fr0npykId5gllULslGMzPZdot6HX9jM8D1LE8s9DZ5+f4gtooLr8oombqzTPWg8eA/uf
+         CWqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744190696; x=1744795496;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Vd0ZQP+RaOtlGM+Bn/aOlJ8Q6DsEZ41QfPHQrkJtrP8=;
+        b=sTUdmDXcWpIfymEltJJjM/5/plb6GpX6vJSrCckuvz5NbcCFgobfGmRz7gUOd9wD0b
+         fuAgBrNe2r//BMawNcqiQYHVXevxJvZkRvxymUzfZpbgcYWbDtLUBgOGilqEnCWrR1MK
+         m92Iq74zlIWm3i2dCupUqE3Z4wWqo1qKVKD9B63cmQ9BVM/FAoULCj/gef3uhCKXllN/
+         bv3et6OOIUQYcyG5tvjnae+ILC/IqNSxyBTpinHi6HpQ0FI3lwidmrg6FL9FCbam3Jj8
+         X9YeEgRKD2QalzQTN9hUczd3+wxl4KSQ9JjoVARgYkC9Wy7A+XVqRM+4QWQ5K4Oq/W8U
+         Q+LQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWlp53fVHXVkxPXmDcKM9Z34rGmlQ5ows/vt69QSCREuUEeMbz+Lu1geXLBObNughU1JMPr498=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyj49TL9kbOb/g/keti/XlY8EidhkGP9cuTJFr6pGpysLBKS6O7
+	BnJvFRbdgxyYxeXRcGRmydswQUD4BoqFY6zW3n88I4EnefsQUG0i
+X-Gm-Gg: ASbGncu7JS3+jBk0KZmziftfBmRvpSHcAVy7CaASsZWhuIl/f71/4RTZXrCgNPiAclP
+	r4VIypPOYaXitcXr2Ao7x5NRi2vdM5tpMQCJfTejYFH17DxDjS32M4XVqTvqPBPbqAzMpl/r0Iz
+	J28OHvzsL4gvYnlW0P40vDpgaQa++YBQSIZO3XlsIZnK3rMt0y6SE9x4Q+/xQrk07EY7/SzUUs4
+	le3QbTz16fX4TqtakmudYB+KQ4hFVS3h8OzepjwVW0dJ7OfDM6R7wCvjE7F+r8ospmIJOf0sauc
+	y8ayxhKlDRuv9RtDCHyLHSItyaVm+BNJtKnmMH97UYFv2KrpDXuGgwpFjEufSaXeH2f/qqEocYc
+	Vyw==
+X-Google-Smtp-Source: AGHT+IE8dy+g6fAtm0+Z63ZSBTKVqiQ1ETK79CJd1TMR6OU1rnor+Qjq/XABT4WyE/1qRq6Svnoriw==
+X-Received: by 2002:a05:600c:1992:b0:43d:160:cd97 with SMTP id 5b1f17b1804b1-43f1ed4b5e0mr16806455e9.25.1744190695676;
+        Wed, 09 Apr 2025 02:24:55 -0700 (PDT)
+Received: from fedora.advaoptical.com ([82.166.23.19])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f235a5b08sm10036735e9.33.2025.04.09.02.24.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 02:24:55 -0700 (PDT)
+From: Sagi Maimon <maimon.sagi@gmail.com>
+To: jonathan.lemon@gmail.com,
+	vadim.fedorenko@linux.dev,
+	richardcochran@gmail.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	Sagi Maimon <maimon.sagi@gmail.com>
+Subject: [PATCH v1] ptp: ocp: add irig and dcf NULL-check in __handle_signal functions
+Date: Wed,  9 Apr 2025 12:24:46 +0300
+Message-ID: <20250409092446.64202-1-maimon.sagi@gmail.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ee1c08fc400bb574a2b8f2c6a0bd9def10a29d35.1744130533.git.babu.moger@amd.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 08, 2025 at 05:57:09PM -0500, Babu Moger wrote:
-> The latest AMD platform has introduced a new instruction called PREFETCHI.
-> This instruction loads a cache line from a specified memory address into
-> the indicated data or instruction cache level, based on locality reference
-> hints.
-> 
-> Feature bit definition:
-> CPUID_Fn80000021_EAX [bit 20] - Indicates support for IC prefetch.
-> 
-> This feature is analogous to Intel's PREFETCHITI (CPUID.(EAX=7,ECX=1):EDX),
-> though the CPUID bit definitions differ between AMD and Intel.
-> 
-> Expose the feature to KVM guests.
-> 
-> The feature is documented in Processor Programming Reference (PPR)
-> for AMD Family 1Ah Model 02h, Revision C1 (Link below).
-> 
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
-> Signed-off-by: Babu Moger <babu.moger@amd.com>
-> ---
->  arch/x86/include/asm/cpufeatures.h | 1 +
->  arch/x86/kvm/cpuid.c               | 1 +
->  2 files changed, 2 insertions(+)
-> 
-> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-> index 6c2c152d8a67..7d7507b3eefd 100644
-> --- a/arch/x86/include/asm/cpufeatures.h
-> +++ b/arch/x86/include/asm/cpufeatures.h
-> @@ -457,6 +457,7 @@
->  #define X86_FEATURE_AUTOIBRS		(20*32+ 8) /* Automatic IBRS */
->  #define X86_FEATURE_NO_SMM_CTL_MSR	(20*32+ 9) /* SMM_CTL MSR is not present */
->  
-> +#define X86_FEATURE_PREFETCHI		(20*32+20) /* Prefetch Data/Instruction to Cache Level */
->  #define X86_FEATURE_SBPB		(20*32+27) /* Selective Branch Prediction Barrier */
->  #define X86_FEATURE_IBPB_BRTYPE		(20*32+28) /* MSR_PRED_CMD[IBPB] flushes all branch type predictions */
->  #define X86_FEATURE_SRSO_NO		(20*32+29) /* CPU is not affected by SRSO */
+In __handle_signal_outputs and __handle_signal_inputs add
+irig and dcf NULL-check
 
-Acked-by: Borislav Petkov (AMD) <bp@alien8.de>
+Signed-off-by: Sagi Maimon <maimon.sagi@gmail.com>
+---
+ drivers/ptp/ptp_ocp.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/ptp/ptp_ocp.c b/drivers/ptp/ptp_ocp.c
+index 7945c6be1f7c..4e4a6f465b01 100644
+--- a/drivers/ptp/ptp_ocp.c
++++ b/drivers/ptp/ptp_ocp.c
+@@ -2434,15 +2434,19 @@ ptp_ocp_dcf_in(struct ptp_ocp *bp, bool enable)
+ static void
+ __handle_signal_outputs(struct ptp_ocp *bp, u32 val)
+ {
+-	ptp_ocp_irig_out(bp, val & 0x00100010);
+-	ptp_ocp_dcf_out(bp, val & 0x00200020);
++	if (bp->irig_out)
++		ptp_ocp_irig_out(bp, val & 0x00100010);
++	if (bp->dcf_out)
++		ptp_ocp_dcf_out(bp, val & 0x00200020);
+ }
+ 
+ static void
+ __handle_signal_inputs(struct ptp_ocp *bp, u32 val)
+ {
+-	ptp_ocp_irig_in(bp, val & 0x00100010);
+-	ptp_ocp_dcf_in(bp, val & 0x00200020);
++	if (bp->irig_out)
++		ptp_ocp_irig_in(bp, val & 0x00100010);
++	if (bp->dcf_out)
++		ptp_ocp_dcf_in(bp, val & 0x00200020);
+ }
+ 
+ static u32
 -- 
-Regards/Gruss,
-    Boris.
+2.45.2
 
-https://people.kernel.org/tglx/notes-about-netiquette
