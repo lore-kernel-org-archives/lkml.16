@@ -1,164 +1,243 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2056.outbound.protection.outlook.com [40.107.22.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5572638A9;
-	Wed,  9 Apr 2025 15:35:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744212905; cv=none; b=V2SYLqY0/G4d1JXLB4D2zH45QJ1Xfw/DDdTRZsRoo8N3kRrwKGM7QCyblXmR1nKWMKUhVppBWW+nodymunuB0UJz//K5rCo0fR8jTrKs7Djb1jP2twj2WGVxUJVadnN7V8YOpM3/FdQMekYZ4tGEOBHWjhROPOHNe+yMQkttHlo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744212905; c=relaxed/simple;
-	bh=yRWrmXt8NaZQ6MLBo1bv+eeG7YyvMrMCJtYcM0X4ni0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aAVqgYcgn9MmuBVr7J5pHZ+t2jzBPV7H1zSL0wzVgHCr00JcugfQzfd5CjXMDh1jddxdwz60iWocU5E3lbboG0uhzOh24wrSGfNyo8aay9N6Wq7iwQPMIH5kRCkoJKPVWYsHjIK6Gu08PpZlPDycX+B3N0ip7YR03sC+4A9FYTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YQMR2ujI; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 963C825DCE6;
+	Wed,  9 Apr 2025 15:35:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.56
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744212938; cv=fail; b=Kwukl7wjJAoZ+EjnjWKTFtT2WPP14SEcL+BtgMD3Wd1XXDyVuaMJDute7yU34bZ/+w+w61KtoFGT80BzIKgygELovwAfWB320o7J9RgI1jI7brYKy1e4GaQWxZcVFnzw20+bWP5ZZ6hdCdf61y4jHrffe52AuQqYtkX8lH0uidY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744212938; c=relaxed/simple;
+	bh=cAcTYBcFEONkOvhJW+jujZ/YX/oASJ9fHPslYKpzvYI=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=kUKVi236WiyODhOf71lzyIizkUb0mv9HWR7BpIpRvDA//k77uYy36nT4vtbqCQwML7seNOiPCy06PoDOzjE5MVDnFAgOSnqc00kEf22lNSzsq8sdVOchH95zJrEEhJCAow8EtQjXPwOO3+JJQuLOMsCbidK3u8+6NWXpY7k/SQg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=lMwSm79d; arc=fail smtp.client-ip=40.107.22.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YQMR2ujI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744212903; x=1775748903;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=yRWrmXt8NaZQ6MLBo1bv+eeG7YyvMrMCJtYcM0X4ni0=;
-  b=YQMR2ujIL3/clhotMSo5hYiNkkrljjcJogQyZT+njtuAx//e4l/brj7d
-   g1E7cpZ8yAPABZB9S+xkGoCdb4njy3cVq7R5B6DL9CeGWz95nC5Fj7+1v
-   mIUkFy//1hNUJzVhTDwGKSs/caJhZ8Hiiwr9mKps+DE7UVKsemh3hxgsd
-   1m2qGbFHGV+phDOjiSSzplc51GYky+s4fCYJFJnEPtRQc0wLlmoqy6K32
-   KIbJWpl1xcI/nzJw5AplX3xabI88D1KYWDJilSbk3tkAqniDe+6QNBYGb
-   vIHEyHg1mM1ZJtCsMKXfaWyBNkmAazmt5cUkMLOyjg/Zu8AxVMBjZ0ygK
-   w==;
-X-CSE-ConnectionGUID: D+ks7vNnRRathjRImbzSTg==
-X-CSE-MsgGUID: N2X980T3TOa0cOeMSemoqw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="57071010"
-X-IronPort-AV: E=Sophos;i="6.15,200,1739865600"; 
-   d="scan'208";a="57071010"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 08:35:02 -0700
-X-CSE-ConnectionGUID: uS7fge+TQ261Gwh+xpy8dQ==
-X-CSE-MsgGUID: EQMHv0zHRlWgzedwnWyuQw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,200,1739865600"; 
-   d="scan'208";a="128590609"
-Received: from ldmartin-desk2.corp.intel.com (HELO [10.125.111.236]) ([10.125.111.236])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 08:35:02 -0700
-Message-ID: <d8f5fbc5-5deb-4232-bd5e-440098650da8@intel.com>
-Date: Wed, 9 Apr 2025 08:35:00 -0700
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="lMwSm79d"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=v791GgKLs4C+XXrJYlPdkGL0kx2Ahn/SUGGQKgqigllFR+daIT2vg/z4ZSfKgQwQrKnDhhHPFnFYbPU0d3XELA0iZIzepZBFkFpMXOgwRVGMkD1PwizwyIrsOvV0JQLFkCsJWVKaFieqndCTS957k8b5tjJ4kfAt9gOvisCF6Oz4g+I7M4C6/c7b9rOPURiXE2rWY1TYm+i9geYVkJDNDJEo/eatm6Q2DO9HOtSGGpBoiomGnF3yhNN/tBVhl9YvHeEoq/BSMZEmUe3VsrkHGO2cVlj0fVxuRvdxmtktycf1AdaZQIdMDmfUo4AFMqYj5u/TrgEGqkjMOKAxwPwMpA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pc+tlFVQY7L+y+6uxvolXrEzDyZFImXl/Wda6ws2u/w=;
+ b=IEM2l/9pMXNQypRugAhWO9NEM3NzrIT+NZ1uCha+DhQsp9xDLDpxnbh+PjQUa1pexEQiQtdRNUay2/ly/HPJupNhCqXEuvr2pX3ZBfNEQnSz1xYBgqMqsPw8U0083Y9F0W1g8DKButKhMJcWhqMu8EfsWnD6D8pZio3/wLcf5YARHi0T88yoGX4KYKiWXx8LqbRBLEpzB0/4lEwpeNu7Cw87kzckYdUdq6/lqRYMy+z0AUs6l4A07wmrmm+8C1YJLvf9T0j71K9tT/Ks38mmVjobdIoE1o1n5tMoz5iG/NJw7kw0EmpbRsBjFINteStoxDidTN/1HMlHwIUXfO5UDg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pc+tlFVQY7L+y+6uxvolXrEzDyZFImXl/Wda6ws2u/w=;
+ b=lMwSm79dAFoQj8jHuUAbxHC/qwmFpyBMJqA1JtuBy73HmvgJ9vUXhQF3iK5AZvMWsbdCgvWqcSX4OY/PhGXUY3Yi3awwfqRl3mO3Qvvde1siXSl40/tCQ7Dq73OsEPRiJm3QnUf6G5fX2cGetoErDh+Ss4Wydb1UYcXkm7aeE01QwdF9luEq4eyUjTMx/4vNXMr8gvRxlOdVa7SudMIiZgfI4ENqLEpdy5SVo/dVWnDdxSTe9+FX0LHn/h1XcWrvTBqGNIkktQaID8PnS/lMV/LbgT/3QJKPapJSZf9AIuPNjKp3hOZAGOHZoW1UxgdQ2ihqxMOfJVJOxEJwqQRdBA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by AS8PR04MB7973.eurprd04.prod.outlook.com (2603:10a6:20b:28b::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Wed, 9 Apr
+ 2025 15:35:34 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8606.029; Wed, 9 Apr 2025
+ 15:35:33 +0000
+From: Frank Li <Frank.Li@nxp.com>
+To: s-vadapalli@ti.com
+Cc: Frank.Li@nxp.com,
+	bhelgaas@google.com,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	krzk+dt@kernel.org,
+	kw@linux.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-omap@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	lpieralisi@kernel.org,
+	manivannan.sadhasivam@linaro.org,
+	robh@kernel.org,
+	tony@atomide.com,
+	vigneshr@ti.com
+Subject: [PATCH 1/1] Revert "ARM: dts: Update pcie ranges for dra7"
+Date: Wed,  9 Apr 2025 11:35:18 -0400
+Message-Id: <20250409153518.3068176-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: PH8P222CA0026.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:510:2d7::10) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 1/1] cxl/feature: Using Full Data Transfer only when
- offset is 0
-To: Li Ming <ming.li@zohomail.com>, dave@stgolabs.net,
- jonathan.cameron@huawei.com, alison.schofield@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- shiju.jose@huawei.com
-References: <20250409024825.510632-1-ming.li@zohomail.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250409024825.510632-1-ming.li@zohomail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS8PR04MB7973:EE_
+X-MS-Office365-Filtering-Correlation-Id: dc5661d9-f77a-40cf-2355-08dd777c2ad8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|376014|52116014|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?SyrZafYZKkKN7SRO7Wsg4wjR2e2WI1IJMBM73JL6DF9Hpqy728s7p7WbrMrO?=
+ =?us-ascii?Q?Bxkr6dzp0zqZHWZtNRmhKOm1zfimIPLX3MY2GAeA93MfEZsu9LvPKVvAOTyU?=
+ =?us-ascii?Q?7LjZwRi/8AbVtYk8bhiYWIAFaKEuNyx10E9wiwncgonKbPLP+P8mBgb1PeJL?=
+ =?us-ascii?Q?8r8xueWkmQSH4ILAcz2KA/ceLuaLv8oVcabFlFHOikY8/0KNfD7csXDQ/MmD?=
+ =?us-ascii?Q?EbP5aTt+nnsXmt8GpbOH5Mq5BK3PGQjb6r7hoYgIVp5RND1cJieXQ/nW5xqH?=
+ =?us-ascii?Q?mOTy7UoAlX77Y4Jlny8vKXiJykch7ZNIU7j5sgWIXvmCaeEuytLDAFhsjNI4?=
+ =?us-ascii?Q?2dsqqHtitDX6dirvIllaEKXaMc00BZwC7/Ta7AQZ5Jxec9sz8XiuMMiP5sHK?=
+ =?us-ascii?Q?stmn5bSbH/HRNXZBE/85qNKZMS/Hz2KPPq266fvi3m5uzBZrs2mV1pAhjRlQ?=
+ =?us-ascii?Q?RukIKxsK2/n0S8HPg6P/lodoatdqeuE6bG7y9f1Pm4ZruP1Un1CkzJOYFhSj?=
+ =?us-ascii?Q?KjXQfpm1RRu38SjC+Q5tsht4wNkGEaQD8vfzbVZZvMaHaTOkDMbt1V+Qr7R/?=
+ =?us-ascii?Q?z/q5mFC7UJ0diDolEqAqZ9JFhQmjQqzek7M2oc9dW7UGjMtudvtkQ68AZm4K?=
+ =?us-ascii?Q?KNOwqR3w+mUT5GS+qljBlsNl59nsdSHh2e6t4q8QPTYiF3+kQmeEqla9ihdK?=
+ =?us-ascii?Q?RiVCfP44HklX7AiGWAOQXLWPvgIMf2wsRqNjeZjdQYmBpgVoqZPGeU2KeMP5?=
+ =?us-ascii?Q?Qv3MmOOtmxt1EnjbyFtQZi+pKWa3jU+L3n77/kdNe/t5EIaEiWewzC2V3xNU?=
+ =?us-ascii?Q?FktRUvsGvMfhUdG+cQ+6lxtKmDq6hCb4XDESHl6Y/1S5YiKocgsS/QOgfbiM?=
+ =?us-ascii?Q?3qQ48+/GWWFQRrx6yTaTzVCfbJwLPRWYC2MmSJqKEOzt81wpC5zfnMBFVIDK?=
+ =?us-ascii?Q?gmJiLENvlFZWxzuP/R5QhOUBHiSI8FEOru7cgrvkRRszMql7RokR1Vru944a?=
+ =?us-ascii?Q?vYGszzFlNJxjoD5aC1medK9Z3ySJzXR14n6ZJi/54XL4GMjMt7oViw6Yc6JD?=
+ =?us-ascii?Q?ceSlO3o262fe1kDYKQnapyV5M+cpJuAKfWhMvUyLhVHzJXfgn7hASM4dxIdP?=
+ =?us-ascii?Q?wd4NFwM4K5tuRZSQwuFsPsxYAIpytdns5oMmrzFwn2CHuTH5ij/dWnYAS2Mk?=
+ =?us-ascii?Q?UOjL9SFSy6ta0xwoag2NbUFx/Lr0lMSdfTG/hvpx1RmiwO9ir6EFjvlAH7Mt?=
+ =?us-ascii?Q?9+4j2RMBp6zK56OOmwrbK3FFSNlIdnqeFrrgiWC14DadTVS1CWTnr3akQ3m1?=
+ =?us-ascii?Q?iyhc2Bx3RP4FJCEGpstWw7IohZ5BXqaICk1AlKcKiY7Xv80N1olnzbaHEya/?=
+ =?us-ascii?Q?p/AbZUUJkZfISDKDnlQXpNyKp2TzXjL1zPEemNTMM4KCxjCw84fqH4O6XTu3?=
+ =?us-ascii?Q?wuFxDVtVSxqZOSlQ+4umgAmQOy7O2J8pLQF/fZQkxtkhbmny+06gzQ=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(52116014)(366016)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?NI0WiECNJSOPEEHmJ4teCD5t3ngSL4LHaSx+kSg0SpNbUnPIc4kCm3N5HvDJ?=
+ =?us-ascii?Q?TjyUdaHl1bSfaeBbkCVSNxdlYY7GoesLesIzk6+vxXw/0AK8xs9h2mBdc7eJ?=
+ =?us-ascii?Q?NAYcv0mGm21sdzoz4m7z9r61+o3rh3IqxDnx+36Chmns4leKFlQ2Wod1l9tX?=
+ =?us-ascii?Q?MXVdYLQJTBjwEcEGxFwDsnEpyyq5lqk1HaA5tS9uAwa0OITBXlPUOl7yUExS?=
+ =?us-ascii?Q?DZLoytNZOpyNmSc/CLqT4sJkTFYEyjgKXWUJvRBdUiRBLdOphh2X+3QNPI5V?=
+ =?us-ascii?Q?G/tR0dcSAb//QkFkL47bM0nAfucFDiduAl4e3RZa4Sv16tCRJ/7psrW/58H2?=
+ =?us-ascii?Q?179QB8mPrMmrqHMKdkbRd3ITdkJK7RZpx2TbW+gd6lopXk6f3iqhTAPsATwi?=
+ =?us-ascii?Q?6icni9gc+4lCoDrV0iqWdtwDgSiVAQHxf3LTfFMuYEWoy+AhSyuATfZtXipd?=
+ =?us-ascii?Q?9E+cNtnxvSImFxl27cp41+NBjQBBdW6KegeCirKsfRu5Z3NOTVD1AYscf01C?=
+ =?us-ascii?Q?2CjZoCKKzWKrt80QmtchIKKWuxWCxSrWaJ9VkMZ/zt+PK79JfEaRtlvfC1fI?=
+ =?us-ascii?Q?amRkyqTd2LVlWTaUZb1gaiwaPPlnHGIGhizWT8PDIQxxraWFH9Xnm6UDEVxe?=
+ =?us-ascii?Q?4ObPWxgnwXE955Ayq6wj9g7X1nnVdEWpuDNxRxBZxPIOCVIZYfhbfcaDsBJ6?=
+ =?us-ascii?Q?2eLW+/1kNaCXTqcAFDH0fAONsoieSyjseXhumynChKu/a7iuAzekdhPXhMbk?=
+ =?us-ascii?Q?n9XRyWO+yIVtoaIVv2bOPFcoZGAZeg6lcCtQzOebaqJ2btrxNJOSb2ZwDpOa?=
+ =?us-ascii?Q?PJJIhAKUt9GF5Xv+Zz0t/vF5lhqXZG4nOMFM2qtZMxbRvTnz86uvfunVsWch?=
+ =?us-ascii?Q?jwXyDkdyaCEN/iPs29QuRquMSrSKx2NLhiWNh28vg5Ce2wrEsjiOU9XUq15q?=
+ =?us-ascii?Q?BSG7V2pc148xNJbDl7R2WGK+vkFc1//9YEPWSNrkECtrSE2TRgvMMhRrN+DJ?=
+ =?us-ascii?Q?XAPqDyKVsIet4qfdShd8/p3TQncX6wTfKdX7udmJBPvg1dTuoq7mHDsaDRsb?=
+ =?us-ascii?Q?XboBxYzr2SBmRAIOjpiIPSNuN8CHQmqlXCqeheZVshsH/0bcoUv1P8H+yG7y?=
+ =?us-ascii?Q?ln3aW6t2CMsezTCoJCE8iYAkGRU5NZwlg0dBdI5VGUultlS21odADHoGi1hg?=
+ =?us-ascii?Q?BlivlGBqELlFCcuM2K9Z4Yv/br/M3x2OUjyB4bY0FzxTzTsX8FhtphifCBXY?=
+ =?us-ascii?Q?kmrUNVu7ezg+NDZRBZCIEJ5019iQ7FZfMH8LCbs9VTUK6sj7MlmHpzg4qhmi?=
+ =?us-ascii?Q?xOZsTOCHQ/sa9gcL2dIakWiygzf9JnUbP8iyXgKgS2evOjiJ9EQfheZS+Y/N?=
+ =?us-ascii?Q?/DyWe9P7T6BL5++CILQwy+wjg0nOADWnXwDuIqP8MScWgSEmnXLzUdOvJqZ5?=
+ =?us-ascii?Q?q0cSVIaqSjMJJPNWwjuaduAvB9UvjWEncwo3e0S2/oy/XeN5h1IjkJ0C7Ks0?=
+ =?us-ascii?Q?xD7yhoL7Btbas/dV8ldKLiTN1dbXKU7kkyi3aHkPEPhTWScy+KKMn+Ul8j9C?=
+ =?us-ascii?Q?0CrJL6xXuE5NGN+ukRQQLf9p1NINXBZQ4EInfzQt?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dc5661d9-f77a-40cf-2355-08dd777c2ad8
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 15:35:33.7650
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: BEaT63I6npnYNEvQc6pBly4T+VZqxP73o78ZBhMndp/1JAPbXmWuRQViUTc26P7EbiLA24q7fkwUkbEh6ndMqQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB7973
 
+This reverts commit c761028ef5e27f477fe14d2b134164c584fc21ee.
 
+The previous device tree correctly reflects the hardware behavior.
+The reverted commit introduced a fake address translation at pcie's parent
+bus node.
 
-On 4/8/25 7:48 PM, Li Ming wrote:
-> Per CXL r3.2 section 8.2.10.6.3 Set Feature(Opcode 0502h)
-> 
-> "If the Feature data is transferred in its entirely, the caller makes
-> one call to Set Feature with Action = Full Data Transfer. The Offset
-> field is not used and shall be ignored."
-> 
-> It implies if using Full Data Transfer, the received data should be
-> updated from offset 0 on device side.
-> 
-> Current driver implementation is if feature data size is less than mbox
-> payload - set feature header, driver will use Full Data Transfer even if
-> user provides an offset. Per above description, feature data will be
-> written from offset 0 rather than the offset value user provided, the
-> result will not be what user expects.
-> 
-> The changes is checking if the offset caller provides is equal to 0, if
-> yes, using Full Data Transfer, if not, using Initiate Data Transfer -
-> Finish Data Transfer.
-> 
-> After the changes, all Set Feature transfer scenarios are below:
-> 
-> 1. data size + header is less than mbox payload and offset is 0
-> 	Full Data Transfer
-> 
-> 2. data size + header is less than mbox payload and offset is not 0
-> 	Initiate Data Transfer(with all feature data) - Finish Data Transfer(with no feature data)
-> 
-> 3. data size + header us greater than mbox payload with any value of offset
-> 	Initiate Data Transfer - Continue Data Transfer - Finish Data Transfer
-> 
-> Fixes: 14d502cc2718e ("cxl/mbox: Add SET_FEATURE mailbox command")
-> Signed-off-by: Li Ming <ming.li@zohomail.com>
+Reverting this change prepares for the cleanup of the driver's
+cpu_addr_fixup() hook.
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
+Previous disscusion at
+https://lore.kernel.org/linux-pci/20250314064642.fyf3jqylmc6meft7@uda0492258/
+---
+ arch/arm/boot/dts/ti/omap/dra7.dtsi | 29 +++++++++++------------------
+ 1 file changed, 11 insertions(+), 18 deletions(-)
 
-Thanks for this. LGTM. You can drop the RFC. 
-
-> ---
-> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8 v6.15-rc1
-> ---
->  drivers/cxl/core/features.c | 18 +++++++++++++++---
->  1 file changed, 15 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
-> index f4daefe3180e..fcc624cefe89 100644
-> --- a/drivers/cxl/core/features.c
-> +++ b/drivers/cxl/core/features.c
-> @@ -259,6 +259,17 @@ size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
->  	return data_rcvd_size;
->  }
->  
-> +static bool is_last_feat_transfer(struct cxl_mbox_set_feat_in *pi)
-> +{
-> +	switch (le32_to_cpu(pi->flags) & CXL_SET_FEAT_FLAG_DATA_TRANSFER_MASK) {
-> +	case CXL_SET_FEAT_FLAG_FULL_DATA_TRANSFER:
-> +	case CXL_SET_FEAT_FLAG_FINISH_DATA_TRANSFER:
-> +		return true;
-> +	default:
-> +		return false;
-> +	}
-> +}
-> +
->  /*
->   * FEAT_DATA_MIN_PAYLOAD_SIZE - min extra number of bytes should be
->   * available in the mailbox for storing the actual feature data so that
-> @@ -294,14 +305,14 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox,
->  	if (hdr_size + FEAT_DATA_MIN_PAYLOAD_SIZE > cxl_mbox->payload_size)
->  		return -ENOMEM;
->  
-> -	if (hdr_size + feat_data_size <= cxl_mbox->payload_size) {
-> +	if (hdr_size + feat_data_size <= cxl_mbox->payload_size && !offset) {
->  		pi->flags = cpu_to_le32(feat_flag |
->  					CXL_SET_FEAT_FLAG_FULL_DATA_TRANSFER);
->  		data_in_size = feat_data_size;
->  	} else {
->  		pi->flags = cpu_to_le32(feat_flag |
->  					CXL_SET_FEAT_FLAG_INITIATE_DATA_TRANSFER);
-> -		data_in_size = cxl_mbox->payload_size - hdr_size;
-> +		data_in_size = min(feat_data_size, cxl_mbox->payload_size - hdr_size);
->  	}
->  
->  	do {
-> @@ -322,7 +333,8 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox,
->  		}
->  
->  		data_sent_size += data_in_size;
-> -		if (data_sent_size >= feat_data_size) {
-> +		if (data_sent_size >= feat_data_size &&
-> +		    is_last_feat_transfer(pi)) {
->  			if (return_code)
->  				*return_code = CXL_MBOX_CMD_RC_SUCCESS;
->  			return 0;
+diff --git a/arch/arm/boot/dts/ti/omap/dra7.dtsi b/arch/arm/boot/dts/ti/omap/dra7.dtsi
+index b709703f6c0d4..711ce4c31bb1f 100644
+--- a/arch/arm/boot/dts/ti/omap/dra7.dtsi
++++ b/arch/arm/boot/dts/ti/omap/dra7.dtsi
+@@ -195,24 +195,22 @@ axi0: target-module@51000000 {
+ 			clock-names = "fck", "phy-clk", "phy-clk-div";
+ 			#size-cells = <1>;
+ 			#address-cells = <1>;
+-			ranges = <0x51000000 0x51000000 0x3000>,
+-				 <0x20000000 0x20000000 0x10000000>;
++			ranges = <0x51000000 0x51000000 0x3000
++				  0x0	     0x20000000 0x10000000>;
+ 			dma-ranges;
+ 			/**
+ 			 * To enable PCI endpoint mode, disable the pcie1_rc
+ 			 * node and enable pcie1_ep mode.
+ 			 */
+ 			pcie1_rc: pcie@51000000 {
+-				reg = <0x51000000 0x2000>,
+-				      <0x51002000 0x14c>,
+-				      <0x20001000 0x2000>;
++				reg = <0x51000000 0x2000>, <0x51002000 0x14c>, <0x1000 0x2000>;
+ 				reg-names = "rc_dbics", "ti_conf", "config";
+ 				interrupts = <0 232 0x4>, <0 233 0x4>;
+ 				#address-cells = <3>;
+ 				#size-cells = <2>;
+ 				device_type = "pci";
+-				ranges = <0x81000000 0 0x00000000 0x20003000 0 0x00010000>,
+-					 <0x82000000 0 0x20013000 0x20013000 0 0x0ffed000>;
++				ranges = <0x81000000 0 0          0x03000 0 0x00010000
++					  0x82000000 0 0x20013000 0x13000 0 0xffed000>;
+ 				bus-range = <0x00 0xff>;
+ 				#interrupt-cells = <1>;
+ 				num-lanes = <1>;
+@@ -235,10 +233,7 @@ pcie1_intc: interrupt-controller {
+ 			};
+ 
+ 			pcie1_ep: pcie_ep@51000000 {
+-				reg = <0x51000000 0x28>,
+-				      <0x51002000 0x14c>,
+-				      <0x51001000 0x28>,
+-				      <0x20001000 0x10000000>;
++				reg = <0x51000000 0x28>, <0x51002000 0x14c>, <0x51001000 0x28>, <0x1000 0x10000000>;
+ 				reg-names = "ep_dbics", "ti_conf", "ep_dbics2", "addr_space";
+ 				interrupts = <0 232 0x4>;
+ 				num-lanes = <1>;
+@@ -269,21 +264,19 @@ axi1: target-module@51800000 {
+ 			reset-names = "rstctrl";
+ 			#size-cells = <1>;
+ 			#address-cells = <1>;
+-			ranges = <0x51800000 0x51800000 0x3000>,
+-				 <0x30000000 0x30000000 0x10000000>;
++			ranges = <0x51800000 0x51800000 0x3000
++				  0x0	     0x30000000 0x10000000>;
+ 			dma-ranges;
+ 			status = "disabled";
+ 			pcie2_rc: pcie@51800000 {
+-				reg = <0x51800000 0x2000>,
+-				      <0x51802000 0x14c>,
+-				      <0x30001000 0x2000>;
++				reg = <0x51800000 0x2000>, <0x51802000 0x14c>, <0x1000 0x2000>;
+ 				reg-names = "rc_dbics", "ti_conf", "config";
+ 				interrupts = <0 355 0x4>, <0 356 0x4>;
+ 				#address-cells = <3>;
+ 				#size-cells = <2>;
+ 				device_type = "pci";
+-				ranges = <0x81000000 0 0x00000000 0x30003000 0 0x00010000>,
+-					 <0x82000000 0 0x30013000 0x30013000 0 0x0ffed000>;
++				ranges = <0x81000000 0 0          0x03000 0 0x00010000
++					  0x82000000 0 0x30013000 0x13000 0 0xffed000>;
+ 				bus-range = <0x00 0xff>;
+ 				#interrupt-cells = <1>;
+ 				num-lanes = <1>;
+-- 
+2.34.1
 
