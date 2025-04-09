@@ -1,294 +1,197 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2043.outbound.protection.outlook.com [40.107.92.43])
+Received: from MA0PR01CU009.outbound.protection.outlook.com (mail-southindiaazolkn19010015.outbound.protection.outlook.com [52.103.67.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4E2325A34D;
-	Wed,  9 Apr 2025 07:58:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E746025B673;
+	Wed,  9 Apr 2025 07:58:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.67.15
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744185489; cv=fail; b=R4jNWROAMZnnDseC5ZCp2JmDD25o3Jv48iCggju8L+70KzneYR+7rGbtIE6Whd+kTs1Bhg4pMzJvqSLzNCB6nm/sDpBtap7JV6tnkFBmBPIOIg30MlL4vV61HGmSJJIdGkVBzLIBuCxq4VnXWl8XSuXLejNx22kO9UHcQAig/xU=
+	t=1744185494; cv=fail; b=cn+qyOppGdkMsvqpN9Q1C3s4K+QZ3WLTRDM0Y/lUAM6RbVIWaJcFXcIa3M9bLPaRCfmLTge7KefoCdkyErpjZC85yI7svha29tqJfjnNIjoXO6uT8R6n8jldAdcizyslbNzcx+LlAiEOhikK9noFyM0NB9tG5cRM8kjR2lMrZR8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744185489; c=relaxed/simple;
-	bh=fx60cR793brpc8ZHZrpbwG9qAMSb9AvodTSU8vNgROk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IKg11P1zteqtTTWOK1tnmsGEX1k/b26tNZFaM7guu2YAE68OCXaL5DqO7DOys/68a8Vlwc7czAHo3pTsA2NMClK+vtQ8VjG5YzAk93o7kAhlvzBt8rxulIxiN8WvBnIol/aE8Rf325BeNePDN/7p+NdXiEE7R85SZuYgTN97AxY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=VSN9Fhjy; arc=fail smtp.client-ip=40.107.92.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1744185494; c=relaxed/simple;
+	bh=s1Uo4/Hs4opudZMBKNQ7C9RBu+ZKcqSu4PlAX6hkJ6k=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Ln1VDrkI3pj3EFOhUAyypo/qolTX4h1VCw/Dxzr3BOD9hTUrdbPpaJOe7ysH5eJ6tM9UpA/JZMA4JHgB980w07D8aWreKL4/n3iJq7UBq8PYWL2ncIfOR4FpNrx38DL7kWZRXiEHkxD4cS+R4CLvP1aT2JDKR6+SaBW+Qual32c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=CYIVHgs8; arc=fail smtp.client-ip=52.103.67.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="VSN9Fhjy"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="CYIVHgs8"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RbCxrdrZoCan9LNifiSZvErseoDObpKdzqElMjHehv4IZqPc5sg0XCSJAyk2DvcLymp3O86+NOTHS8Wf9fdT/VDQuClUiOapWrX+DIlzRc5wZon4cwYPAySlQ01Ze46jb+BGcxOTiIMo4p5kEI+NOuV+kbC7NDhvVmwPabktw/0f/uVdBPozXZvPdfuGWz7yyt1o65I6c3UCpCQIqvazBIq+UeAOqVVFJTE0zz4O4ZhGbUFBJMYbGhN/G/yKNdF791sMsNKv4572dgXNFnMiIyXwOXJfhuTZa4PFcF5pJQwolSLeptcZ+gy4AgnmqRn8wNkYOWbJnFqnxOEK6BGhmQ==
+ b=fW3D2R7is2JnNMe32Pomb9gVI486ZUX1JPd/ZpVQOETvspjWL90FTvpyvXq7s6Ev3y8Y6wJpLCY4Y3Be/JcHRVXix4KMCEvIvYOVQKgCHYjFGsyXGZS37fj2b4l3XwvshGOQJJGRso82RIMMnXeJZ3r430gc+ukfKQDMlD25PnIZ43xWbm3lBHpqpmwSBBihTc06ZvdopIv4yINK2/CeMIea8WeR9j/X9Zu17YMOLqptv9BzIeo4PQe9X0FvCGDQ2R9E811hnIPboGUd0Ybe2j0e6NjBQH7PN/RKdkFFPDLf82IbzSRibTwSVMdda6WcfDHU7RMW+lOBQkyBMMZQWg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gbAbUOKJHKW5feB1DbNVW5QP5r24hXZNDI4IkxP7/JU=;
- b=au5OnSTY+6biXL8hv6Kvfij0KulhWEh3ofMO9s+fu41YqsyzbcxhmXu4MTOjV3a4DTZFC6pHA247/ph7KeSbbyTkC/Wj4cNq7XljVL5/lNGeXODo82uYDNYpoES3Ss0VENV4MuCDeFbfsqUunhNNkIqj6Gg4SDdhCsQIjhKsXRtYHAickNoQUzgtev1vuXPlIuQKd/8ko9h58yVPBO3Nd8rU7wnfqoomdMLVaIpLZi2gUPmqneJyU6QQEAMRc26z2bYRGnLJhnCU4e8VBhWqPOmX4CbKQxcTd3q+m/MzKPuzj5TcjIGolgJG2hJrWkWmJ8eHarhZElMKhclKQhU+WA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ bh=1Hq68s2sKu7qZVISx5OZpMZIOZ+3ve5yFJxYwCHEIcU=;
+ b=rKALfKJNMA+Brhwp0ehS99t95Poo9e2QIDrNVaHp2BM4uE3k+egI8MjR/bgWdjRKhPvd9omx9dC55EEB88q7fJOC+F/brPze2NzJ8LY2+ljFcKdFEhuHSClLOPj8yiphYTf7SF60Ly9SCczftLyNdHG789aRMWukJP9VHmoF9qRM9Q01JwPdHQ0COpE79d0eMt/V2IlJCuEMk08A/oqCqt3XhUq31O7FBG3JTYGlNr9JDE3EIJnCXoGe8tdA4jOB9JXeClzGNE+ZEEH6031o6L454Bos24Fcqxmg/JEiaGx6AnjT31e9nxLg1OvBlIByRRuj+wnI3WuR2TZTKdXfvA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gbAbUOKJHKW5feB1DbNVW5QP5r24hXZNDI4IkxP7/JU=;
- b=VSN9FhjyceR44D9BTSrvL4mz3JPr+SvTcw8NQcy8rjLW6O8K7gsbHLMwufZp8DlDD55Lla6jcBmAiXdVGAtgk2gXGR54RH23Mi7idwROd2/v/vpFsQq2DJWRDgFsU4IcTBntaAhpZodLvO5bWnBBuAh4+DYSDtGalI2ghhVgvwY=
-Received: from SJ0PR05CA0032.namprd05.prod.outlook.com (2603:10b6:a03:33f::7)
- by LV2PR12MB5751.namprd12.prod.outlook.com (2603:10b6:408:17d::11) with
+ bh=1Hq68s2sKu7qZVISx5OZpMZIOZ+3ve5yFJxYwCHEIcU=;
+ b=CYIVHgs8icNWSBi5KX9bJJW1xu6NW28DX3QWUdXhhHflhJmssedPnUzOfABTZTfVGKUfPhyLdFCaWTQVG5vrA2SpmpivfMRe1NlD4l+v6vRtHkg40xqfH+WeRnBGi+7WE9yaOys6QGQSg6fWXQCWUdrulNsmfwEXoTpHimY/EABXmpTTuRwEhqDzHGBa2mEDf9GAkAmWjKiCGM93SxejbXy67VITdMCSoUhK+MOHfY0J0RuyGFeWLAweN1oyr06bhovSFbT72bO4EVOAv6ingdhMcFOWE46kUeVhXKfhIkK0KvNtZfTNZZgroWbStF+eJauEGIrTsCzO73UgbJHL8A==
+Received: from MA0P287MB2262.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:100::6)
+ by PN0P287MB0819.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:16a::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.32; Wed, 9 Apr
- 2025 07:58:02 +0000
-Received: from SJ5PEPF000001D7.namprd05.prod.outlook.com
- (2603:10b6:a03:33f:cafe::34) by SJ0PR05CA0032.outlook.office365.com
- (2603:10b6:a03:33f::7) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.10 via Frontend Transport; Wed,
- 9 Apr 2025 07:58:02 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ5PEPF000001D7.mail.protection.outlook.com (10.167.242.59) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8632.13 via Frontend Transport; Wed, 9 Apr 2025 07:58:02 +0000
-Received: from sindhu.amdval.net (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 9 Apr
- 2025 02:57:54 -0500
-From: Sandipan Das <sandipan.das@amd.com>
-To: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-	<tglx@linutronix.de>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>, <hpa@zytor.com>, <eranian@google.com>,
-	<songliubraving@meta.com>, <ravi.bangoria@amd.com>, <ananth.narayan@amd.com>,
-	<sandipan.das@amd.com>
-Subject: [PATCH 2/4] perf/x86/amd/uncore: Use hrtimer for handling overflows
-Date: Wed, 9 Apr 2025 13:27:07 +0530
-Message-ID: <f3a7703c22e6734f0d1bf34bc56be3124f818a8b.1744184837.git.sandipan.das@amd.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1744184837.git.sandipan.das@amd.com>
-References: <cover.1744184837.git.sandipan.das@amd.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.35; Wed, 9 Apr
+ 2025 07:58:07 +0000
+Received: from MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+ ([fe80::ca81:3600:b1e4:fcf4]) by MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+ ([fe80::ca81:3600:b1e4:fcf4%5]) with mapi id 15.20.8606.033; Wed, 9 Apr 2025
+ 07:58:07 +0000
+Message-ID:
+ <MA0P287MB2262C8666D01FDE4B6497D64FEB42@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
+Date: Wed, 9 Apr 2025 15:58:03 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/4] irqchip/sg2042-msi: Add the Sophgo SG2044 MSI
+ interrupt controller
+To: Inochi Amaoto <inochiama@gmail.com>, Thomas Gleixner
+ <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ sophgo@lists.linux.dev, Yixun Lan <dlan@gentoo.org>,
+ Longbin Li <looong.bin@gmail.com>
+References: <20250408050147.774987-1-inochiama@gmail.com>
+From: Chen Wang <unicorn_wang@outlook.com>
+In-Reply-To: <20250408050147.774987-1-inochiama@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SG2PR04CA0196.apcprd04.prod.outlook.com
+ (2603:1096:4:14::34) To MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:a01:100::6)
+X-Microsoft-Original-Message-ID:
+ <9aa680a1-943c-4896-9ab9-27216141751c@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
+X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001D7:EE_|LV2PR12MB5751:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5e728bb1-fa0c-441f-0bf0-08dd773c40dd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
+X-MS-TrafficTypeDiagnostic: MA0P287MB2262:EE_|PN0P287MB0819:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9b01ed59-3200-4be0-5e38-08dd773c4350
+X-MS-Exchange-SLBlob-MailProps:
+	Z68gl6A5j2+rXb3faMtF+Xaa30Omw8BTXrDA4Wm2l4ReuyTazl8YOFzD/+Z7nqjDrnmlQahs5Zp0nLGCTR9sBn/Pfy+hgWmzO9TuUfZuJCE5Ng05W7dWxk2aAF7OAQgbY2ZO7UGp5NdFpiUl3UAMid3csEoHYij6hKff5Ud9Jv/MBJjzAwm312vSMRk/bWe63bs+p9KZxx9y9uI1s0RLdtpqqwU9fFV+KtGliYVhra2/PefMMF2rErn+04IU7rDmEAiX5afFuSHdG3nzh1umV1lrSO9NowIn7v+cz+V+5xFpN1NiAT1/MgVgfQFoA/cR5oG+PwluRhJAC1IwVA9jufOJ9SPRFuBdA9gLCg9qeLnko2UrwCfIFuYBSdMXn1vPzbVIQmkP5UnFI3+x3z8zbECt320da5A+jw4kLSjjpN/ez98SemHScSP6JaRs0ViNDyT/NtZH4waqvHHqlSyzG0cf/6PSg92Ohf5gRUW0twiyDqVpBtGUVSkmO5jl7+cU41emGD2OFY+8VtnPi7Zte7ugstZv9voE9un/dBQX0z7B0hSKuOpinzisxomqZCrdM/IdKnY8cdLxWmSLE8RYmDmzOlR1jekykdCFZsm6HcrDI+OKBZH0hR/pHDe9vXU1gB5SFREIGcEzV05JqLTeWGIK5P59zj0HpOqY6U9WoVfaPxtSAz+hvW2i5MKEGDQePtop2cOsajFRbGtbRPlufLPEor2aEE/no439vpWtCfJaSPnxoFQpheEYDOp9pHIWfQZFDmevZNbS+4XNn4DZuzJ7WqNUvm+r/ZCVwNesEatIF80fLHlRu20FST7hQgss
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|376014|36860700013|7416014|1800799024;
+	BCL:0;ARA:14566002|461199028|8060799006|6090799003|5072599009|7092599003|19110799003|15080799006|10035399004|4302099013|3412199025|440099028|41001999003|1602099012;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ialmGmwwKOMsc1UHc8NhBzslETIjPvv4Skva7PPhK+x82L9pNfUpwWeMXhJL?=
- =?us-ascii?Q?mm4DyLHrtn1kqIMQLmjWkdJiski8TwcMAg4pYWpYbihyhST56SSO5Xc+qG5S?=
- =?us-ascii?Q?H5qTqQoNtjM5ohneSZ185g7rFww7BR9vIwKWZEadQffu7n7aHDRgxvVamaxD?=
- =?us-ascii?Q?IQ1rtET9ePe24yzetybpB8+PhTUHqM1oKtrXnBiSvsGOeaDFUcuYevdap96/?=
- =?us-ascii?Q?gMg6mEyvHR5EEqn6+hTqEcsmVG2qq9wzvlWv8fopTTM8ruf5yEJXGpNPY/t/?=
- =?us-ascii?Q?8EGDsPAY3fB08o6QWIS60xX3uJf8nywTnHvPVtwokpeN8AdUqlh7YpBV6scf?=
- =?us-ascii?Q?gLE+MiZtAtLEcGA+c2F57zWCk7Lmv8O9F+bXVSYvuPb5OSiwODQAsUvQKiWk?=
- =?us-ascii?Q?EX/yQKE6ep8+99p+4ygJEgXHRuk74X3YROhQSQZQNYR2O2TuA0zaaVesz7MM?=
- =?us-ascii?Q?uzWErAsGSYufF3cpyjHLAL2QzqfbhELiH4kaxurZmhsZHKvhwgt32MUwQ9UE?=
- =?us-ascii?Q?xHcAvLkoccdLZqXL0wj8Oac97sHWZLRkru0CbWD7fNZODjcd1Nv9lvgipln/?=
- =?us-ascii?Q?PXpZ61tF/VpuSNqDGuAYiewP4Yrw72gQ5K9DX/+vSPu27OftljQEggT8x8cA?=
- =?us-ascii?Q?3R7Ep8HDZJPDELZ5RImGlHpydDX+aq64Rz4xZWdMb72X23gxUkwl4gH/n8vs?=
- =?us-ascii?Q?8owJKl3sgai75hR7UtjMz3qx3fvd/7YcPs/sFWRUwSHsXQn6pNJlDMkkNT6y?=
- =?us-ascii?Q?9bXnS+kveigSu/QNxVh6iVhhMmEGw+yf0zsyknIjNQTCycGmMYs+qPqZLk28?=
- =?us-ascii?Q?tcSF9fQr0Y3/AmES7/sRSuxtPnz7zSlKxdpptaDK3b4Ge767w1iC8T0hRqFY?=
- =?us-ascii?Q?WEDjHrpgbMVEdmJqVVpH6Ul3Q7T4FoV6gb2ZbPPxjoyWq3+6fCNEJO4xmjw2?=
- =?us-ascii?Q?PpiZgBe/SmXJvEQdy6vqkqHcaTLfTisHYl0Yg53PwpwAMudpgxTr+9zm5N1n?=
- =?us-ascii?Q?n7KbUF68rJ+6/TwG9q66+NFXRD/ijy8hVD5lPGzlkxoGhObrCJTsm5hyByVc?=
- =?us-ascii?Q?Oqs2o5/U1F8Ya7VwITNmI7f1mt1ssQZwQte9+3cyUDhasDkaysoleQrLUu+X?=
- =?us-ascii?Q?VMcUeRTNSA6RaNK5buWOr2C++TwynwnvwlyhWbyVwFeYBqPR7FV7QXeS1UQD?=
- =?us-ascii?Q?w8CuFUgARR7VJooT10/bkCXKHWmnWWJt4G065JxOMBJlMrsBR8dm6IQdCY9L?=
- =?us-ascii?Q?xBfnkB06A/m2mXk3MI3ZR1lYrVTSLFp01oL9+TsBGCzcfrrvWkKQaxUyBVVV?=
- =?us-ascii?Q?5rBRDOe48xHKeLHzqgdjiCpxiG1Cj7Vi/2pu/sZay6GgkDqH/AZRXlcq1Udi?=
- =?us-ascii?Q?UtvS+ni7BHT4GGbGJUn1K5e0mEyptI8F5PWpq8J5VTRcACWI8LWJTYUEkKq2?=
- =?us-ascii?Q?f6LTmyO9n+Cv5Si36CC+o0pUS12W8aol6DnhJIFkdsZofMR/4BNe1DL/g1WF?=
- =?us-ascii?Q?A8VYDHw8r7kKy3U=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(36860700013)(7416014)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 07:58:02.5043
+	=?utf-8?B?N1dnSmp4RmFPRXRQbXFiVE1wcDl5RVJEaEJRSFl5M0dYR243SDBiM0lXRTRW?=
+ =?utf-8?B?MHMxek1vRmlscW9raHFuQjY0SmtxTUpDR1U4Qlo3Tkw5QVlhMUJ2cVpyR1VD?=
+ =?utf-8?B?VjYzcFMyTnBKWXJTcjFvSnhiVi9IMlNJdlkrOURCTitVSUt4M1RwL3ZPc2Rq?=
+ =?utf-8?B?Q0FGL2VBTGxxU0lsaWVIUXR0aCsxdnFKQ0hTc01SSW1ZeHFaWlN6QXNraHJx?=
+ =?utf-8?B?cThTbmR3WURCL25HSG9FT00rZ0dXZldmZE9kblRjUlFJcEI0R0x0MEVPZERG?=
+ =?utf-8?B?QVdVaDBXdk9JZFA0TW45ZkpYa3ZmL3hXRHQ4aldqcHNJT1BEaENubmt0cEJ5?=
+ =?utf-8?B?VENKckplcis4QXVNN3hCSVVYTFk0eW1BVlV4U3FkeDgxaXg3eHk4WUlrUi90?=
+ =?utf-8?B?QzNONFJ4eGVKSWN5NlhJT3NRWFFGU1J6Vkt1MzIvOUthQkxoZ3RaYmNreTBu?=
+ =?utf-8?B?azlqQmUzK2ZjSE9vVkVNem9pNFJGQm1iRTVJcHhabmdCZjltNU9xOGpFRkUr?=
+ =?utf-8?B?M2NObkhIL2pvL2hsYTYwZ3lpdG9xRTBieU5idEo4Z2x0MnQyakhaQURlZ08w?=
+ =?utf-8?B?akhZb2xBQ3l4a3lkWVN0MU9NdTlKZ2Z4SEhaOTVadVJBcDF6VGtoWGczR2pk?=
+ =?utf-8?B?UVZpQVphVUZjOElkMW1nYU9GcVZ6VWpQd0g3bGh4V25xT1dVZEdaak9JQTdM?=
+ =?utf-8?B?VkZEcllmbkdQR2FINHBHSTg4NU05SUQ1TklZM1o3ZEk0cDJtRXoyWWR5eS9r?=
+ =?utf-8?B?ZWozdFZML1lNOEZmQit1aENmRWJFNnl6NitKcDRpcE1Jam1xWlpQOC9VY2hr?=
+ =?utf-8?B?ajY5bkxMUmtDU3pyN1JqZm9FdTVwOStKSzZ3ekJlQWYyZ0ZQc1ArN2xiSUdP?=
+ =?utf-8?B?QzVyMlg4eUovWXpNdFFDaXFKc2lTLytHZmJnTmtYYUZvUHNoRGpaWXJMOTFV?=
+ =?utf-8?B?RkRZYWwzZmF1NW1zMFdsRFl2ZVpiaG9JL0hzZ042R0dPTlhURFd5bTFFdHV3?=
+ =?utf-8?B?U1QvbG5ZMEJPRFJmNm1IRHBUVFpXOHkvQi8wck9VRXd6OER5NlQxUEJ3NVVY?=
+ =?utf-8?B?cGhCVExsUUpjVTlvenJXYjV6N1dnQlNHenRmTWU4RitTbzhXRkNTWEgyeW85?=
+ =?utf-8?B?OW1qSTlBUkh0Y1p3RXJkNGo0eXg4QXJ5b2phM0VabU5LQ1IxRFRtcXo0REZM?=
+ =?utf-8?B?eHJ3STB4MEIxMkdnSHIyVFpYdmQ2dU9MSjBpYUZKQTNzSnBLZkJqNWo0RTd5?=
+ =?utf-8?B?WlBkZHhXZzdkdDFYYU1kMW85SUcxL2d1TXpJZEMwRllvZlRHYXA4VEtBVnFl?=
+ =?utf-8?B?YzFaeDJGODRvTWFDZjFvOWlhNDhFVzFVaDEvdXRwSGJyRDdDMGZoRXdmeVZx?=
+ =?utf-8?B?Um1lSzQrSjhudHFGcXowOXdQVFdVMlljaXZ5SjZDaWwzQ2Jib2NlM0RObmJB?=
+ =?utf-8?B?aVZDdGsyQmsrcVBHZCtydFRNelhONW9SOUxTS1NkYWJuTVE1Uyt5TDNkMHBU?=
+ =?utf-8?B?SFJsVUhoMmRSY2NGejNib0w5SG9SWG9EOHBuc05tKzQ0YUVSdGZWQTN5Qmxp?=
+ =?utf-8?B?ZCtHMWNNb1Y5TlJIa255SldUZXgwSWgxcTd0VmZ3WlI4RGYzdXA3a0V0Rk1U?=
+ =?utf-8?B?bXNvZWZLd0NwQWJ2U2x1SjU1aU1aQy91S1pQWDd4NWYzNTBLcFlHZ3ZnMjdi?=
+ =?utf-8?B?NlZmV1Z4MWtaWmJnS0MrQ1huWXBnTkNBUVgxdDhkZ2lpYW00U3RQSkEyVkdj?=
+ =?utf-8?B?em0xNVg3UDAvKzFpZjZxcXQ5Snk2dVhobk5Ob216ZXVrbGFUSWt5UUpDS09l?=
+ =?utf-8?B?Vklzb2REQmJ5c09TdE9wQT09?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?QWtZYUZ5UGhPOGI5OU5PMStXK3IxVFVER1RNNWVvalFjb3ZhWDBuQ1lORjY1?=
+ =?utf-8?B?TmtZUU1qVDRYRlBndE9YZjZBL0dZc3IvVXErc2R4T2tuZHBTaXQ5cm9LTDhT?=
+ =?utf-8?B?aXk4R0paeTg5SjR5bzBEQTBzUnowVmJ0ekQzUlBGWFpnWVhsbWZJbG1MdmVL?=
+ =?utf-8?B?OC81SFdMT1FkMkxtYjF4WHdXTUxHZkl2TkpjcnRkVGZpR285SVpFS3MxZDdR?=
+ =?utf-8?B?UFJUZStYcFVIR0FEbkRhZEt2RlNJYm1HR1FqRU43d05vY0FqL1dsQUVZYWx6?=
+ =?utf-8?B?ZWQyR3lkOE5BeVNISVljeDN6NjB5RXhmQ25vZTlMSE5IQ3lUYm9yWjEvRG5D?=
+ =?utf-8?B?VFB6VlM1MEp4Q3JYa2hPUlhVS0o1Q3FPSDduWlJnek5lQWI2d0d3Y3FjeXh4?=
+ =?utf-8?B?TngyWEhaZTdpQ0FZZ3JpZUUrYXdKbkZnS2NtUEN1UzRZTlQwbEptKy9LMElY?=
+ =?utf-8?B?MmV1RTNCZnZuUTVRcXA2QmM1aXZSa3VVbDRJSVoya1U3RXF2MmRjUXlGZFow?=
+ =?utf-8?B?SXliakxrMFZ6VHhJVVlqMlpxeUhERTRJVWxycWRWM0x1QlJHb25EOHZJaG1Z?=
+ =?utf-8?B?clppU1dvSHRMQzYvLzE4TzdNN0RNWEozMHowNEtMeXlVNkdyOEZoVmlvYmJW?=
+ =?utf-8?B?NCtqdkFDdGR4aWozSzM2NFVQWk9JOGUyZEk0TUxzdVROSCt0a3NSKzdrMXRY?=
+ =?utf-8?B?clB1TkZNZ3VqWk4zUHVLb3BYTTR6a3U0VWdnMDArUUpheG5vNnVPSXh6RXhM?=
+ =?utf-8?B?RlFJTHJOTTE3WDQrMGFTTGpUT216b0Y0Vk5HT3J5dVpxZkJOMVRUaklscU80?=
+ =?utf-8?B?Znc0RjlBeFdqYjRKa0kzdkJoczFNWERGeDkyK2dFN1lEZ0xKYi91eG94NndL?=
+ =?utf-8?B?QTNNUzh4UmJGVVhOQmRjQlAzY3JrQlIzZTVURjQ5N1hlNlczcEF0b2hUUVkz?=
+ =?utf-8?B?VUM4QjV5T2xOenlFa041T3E3akNMSVg5OFNvRGlUSkcxb0ticHJKc0VuTVl6?=
+ =?utf-8?B?UUpnOGVyUzJ5SjYvcGRHM2dTdjdJTjZNcHd1STQ5VHhXL2Y2bkNwcDByc3oz?=
+ =?utf-8?B?VldZTlk4TGk0NTZEaDNvNVBISWJFQk5hc05XMU9ldElmRmszL2tPb0Y3SHZr?=
+ =?utf-8?B?RlpQaEMycE1LTGZvYVhVVGNSdGVoTFpQVkY0Vkw4enJSWlV3eEpvL252TEkr?=
+ =?utf-8?B?cWVPTTlkZjhCK3lqb1dTNkd6MndwVjlKckNlZlpzcHZJNENQeWYzVlZSWEZB?=
+ =?utf-8?B?aEdEQjc4QzZOQ1hsVmJSc2xmK1VYeWZIMGdJckdjUlVKd1Jxd1NPaUkyMEhL?=
+ =?utf-8?B?K1Q3aWFFRlduRW05ZWxpaXlzbXZKYkgxa2RVUURUdmlKT0ZIellRVXVwU2Jp?=
+ =?utf-8?B?YTNvRURDZkpBVjQ3SXVKTUl4NUdaQk5kWE02aTM0b2dEWmlYNEZya2FkQ3Ni?=
+ =?utf-8?B?MkNaZktKRjlQckVXc1NHdERkSEV5M3pDSWt1QnhEOUYzbXA2alRjVlY0QTZr?=
+ =?utf-8?B?eUN6MXhMWVdITXcxN0RwQlJyUmxRd1QvREhjSm5vTmI5OFdzNWVJQVhxa0U1?=
+ =?utf-8?B?TTVVT25PNXRrN285WlBNeUpkNnErM2R6VjVIY3haMjBpZWp1UmxFc1ZOOXQ3?=
+ =?utf-8?B?MkFDUE1pN0pnL244QlRhdjRTUXcrcU1xazdXM1J4RUliN3JEZTF3cnNOQjNl?=
+ =?utf-8?B?UHordkFsaDVDVVJQamJrT1NLMzBIeGkrVkxBYmhsQTFQYlRDcC9lTmhXWEcv?=
+ =?utf-8?Q?Mu4wEQhLaAQPQfcZ7vh5c6b1l+m/F/paCYl+Muf?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9b01ed59-3200-4be0-5e38-08dd773c4350
+X-MS-Exchange-CrossTenant-AuthSource: MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 07:58:06.9563
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5e728bb1-fa0c-441f-0bf0-08dd773c40dd
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001D7.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5751
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN0P287MB0819
 
-Uncore counters do not provide mechanisms like interrupts to report
-overflows and the accumulated user-visible count is incorrect if there
-is more than one overflow between two successive read requests for the
-same event because the value of prev_count goes out-of-date for
-calculating the correct delta.
 
-To avoid this, start a hrtimer to periodically initiate a pmu->read() of
-the active counters for keeping prev_count up-to-date. It should be
-noted that the hrtimer duration should be lesser than the shortest time
-it takes for a counter to overflow for this approach to be effective.
+On 2025/4/8 13:01, Inochi Amaoto wrote:
+> Like Sophgo SG2042, SG2044 also uses an external interrupt controller
+> to handle MSI/MSI-X. It supports more interrupt and has a different
+> msi message address mapping.
+>
+> Changed from v2:
+> 1. patch 1: separate from patch 2 of v2 for better reviewing
+> 2. patch 2: separate from patch 2 of v2 for better reviewing
+> 3. patch 3: apply Chen'tag
+>
+> Changed from v1:
+> - https://lore.kernel.org/all/20250303111648.1337543-1-inochiama@gmail.com/
+> 1. patch 1: apply Conor's tag
+> 2. patch 1: improve the bindings comments.
+> 3. patch 2: rebased on tips:irq/drivers patch
+> 4. patch 2: remove unused macro "SG2042_MAX_MSI_VECTOR"
+> 5. patch 2: rename generic structure name to match sg204x.
+> 6. patch 2: rename info field name to avoid misunderstanding.
+>
+> Inochi Amaoto (4):
+>    dt-bindings: interrupt-controller: Add Sophgo SG2044 MSI controller
+>    irqchip/sg2042-msi: rename generic function and structure
+>    irqchip/sg2042-msi: introduce configurable chipinfo for sg2042
+>    irqchip/sg2042-msi: Add the Sophgo SG2044 MSI interrupt controller
+>
+>   .../sophgo,sg2042-msi.yaml                    |   4 +-
+>   drivers/irqchip/irq-sg2042-msi.c              | 149 ++++++++++++++----
+>   2 files changed, 119 insertions(+), 34 deletions(-)
+>
+> --
+> 2.49.0
 
-Signed-off-by: Sandipan Das <sandipan.das@amd.com>
----
- arch/x86/events/amd/uncore.c | 72 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
+Tested-by: Chen Wang <wangchen20@iscas.ac.cn>
 
-diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
-index 010024f09f2c..ee6528f2189f 100644
---- a/arch/x86/events/amd/uncore.c
-+++ b/arch/x86/events/amd/uncore.c
-@@ -21,6 +21,7 @@
- #define NUM_COUNTERS_NB		4
- #define NUM_COUNTERS_L2		4
- #define NUM_COUNTERS_L3		6
-+#define NUM_COUNTERS_MAX	64
- 
- #define RDPMC_BASE_NB		6
- #define RDPMC_BASE_LLC		10
-@@ -38,6 +39,10 @@ struct amd_uncore_ctx {
- 	int refcnt;
- 	int cpu;
- 	struct perf_event **events;
-+	unsigned long active_mask[BITS_TO_LONGS(NUM_COUNTERS_MAX)];
-+	int nr_active;
-+	struct hrtimer hrtimer;
-+	u64 hrtimer_duration;
- };
- 
- struct amd_uncore_pmu {
-@@ -87,6 +92,51 @@ static struct amd_uncore_pmu *event_to_amd_uncore_pmu(struct perf_event *event)
- 	return container_of(event->pmu, struct amd_uncore_pmu, pmu);
- }
- 
-+static enum hrtimer_restart amd_uncore_hrtimer(struct hrtimer *hrtimer)
-+{
-+	struct amd_uncore_ctx *ctx;
-+	struct perf_event *event;
-+	unsigned long flags;
-+	int bit;
-+
-+	ctx = container_of(hrtimer, struct amd_uncore_ctx, hrtimer);
-+
-+	if (!ctx->nr_active || ctx->cpu != smp_processor_id())
-+		return HRTIMER_NORESTART;
-+
-+	/*
-+	 * Disable local interrupts to prevent pmu->start() or pmu->stop()
-+	 * from interrupting the update process
-+	 */
-+	local_irq_save(flags);
-+
-+	for_each_set_bit(bit, ctx->active_mask, NUM_COUNTERS_MAX) {
-+		event = ctx->events[bit];
-+		event->pmu->read(event);
-+	}
-+
-+	local_irq_restore(flags);
-+
-+	hrtimer_forward_now(hrtimer, ns_to_ktime(ctx->hrtimer_duration));
-+	return HRTIMER_RESTART;
-+}
-+
-+static void amd_uncore_start_hrtimer(struct amd_uncore_ctx *ctx)
-+{
-+	hrtimer_start(&ctx->hrtimer, ns_to_ktime(ctx->hrtimer_duration),
-+		      HRTIMER_MODE_REL_PINNED);
-+}
-+
-+static void amd_uncore_cancel_hrtimer(struct amd_uncore_ctx *ctx)
-+{
-+	hrtimer_cancel(&ctx->hrtimer);
-+}
-+
-+static void amd_uncore_init_hrtimer(struct amd_uncore_ctx *ctx)
-+{
-+	hrtimer_setup(&ctx->hrtimer, amd_uncore_hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-+}
-+
- static void amd_uncore_read(struct perf_event *event)
- {
- 	struct hw_perf_event *hwc = &event->hw;
-@@ -117,18 +167,26 @@ static void amd_uncore_read(struct perf_event *event)
- 
- static void amd_uncore_start(struct perf_event *event, int flags)
- {
-+	struct amd_uncore_pmu *pmu = event_to_amd_uncore_pmu(event);
-+	struct amd_uncore_ctx *ctx = *per_cpu_ptr(pmu->ctx, event->cpu);
- 	struct hw_perf_event *hwc = &event->hw;
- 
-+	if (!ctx->nr_active++)
-+		amd_uncore_start_hrtimer(ctx);
-+
- 	if (flags & PERF_EF_RELOAD)
- 		wrmsrl(hwc->event_base, (u64)local64_read(&hwc->prev_count));
- 
- 	hwc->state = 0;
-+	__set_bit(hwc->idx, ctx->active_mask);
- 	wrmsrl(hwc->config_base, (hwc->config | ARCH_PERFMON_EVENTSEL_ENABLE));
- 	perf_event_update_userpage(event);
- }
- 
- static void amd_uncore_stop(struct perf_event *event, int flags)
- {
-+	struct amd_uncore_pmu *pmu = event_to_amd_uncore_pmu(event);
-+	struct amd_uncore_ctx *ctx = *per_cpu_ptr(pmu->ctx, event->cpu);
- 	struct hw_perf_event *hwc = &event->hw;
- 
- 	wrmsrl(hwc->config_base, hwc->config);
-@@ -138,6 +196,11 @@ static void amd_uncore_stop(struct perf_event *event, int flags)
- 		event->pmu->read(event);
- 		hwc->state |= PERF_HES_UPTODATE;
- 	}
-+
-+	if (!--ctx->nr_active)
-+		amd_uncore_cancel_hrtimer(ctx);
-+
-+	__clear_bit(hwc->idx, ctx->active_mask);
- }
- 
- static int amd_uncore_add(struct perf_event *event, int flags)
-@@ -490,6 +553,9 @@ static int amd_uncore_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
- 				goto fail;
- 			}
- 
-+			amd_uncore_init_hrtimer(curr);
-+			curr->hrtimer_duration = 60LL * NSEC_PER_SEC;
-+
- 			cpumask_set_cpu(cpu, &pmu->active_mask);
- 		}
- 
-@@ -879,12 +945,18 @@ static int amd_uncore_umc_event_init(struct perf_event *event)
- 
- static void amd_uncore_umc_start(struct perf_event *event, int flags)
- {
-+	struct amd_uncore_pmu *pmu = event_to_amd_uncore_pmu(event);
-+	struct amd_uncore_ctx *ctx = *per_cpu_ptr(pmu->ctx, event->cpu);
- 	struct hw_perf_event *hwc = &event->hw;
- 
-+	if (!ctx->nr_active++)
-+		amd_uncore_start_hrtimer(ctx);
-+
- 	if (flags & PERF_EF_RELOAD)
- 		wrmsrl(hwc->event_base, (u64)local64_read(&hwc->prev_count));
- 
- 	hwc->state = 0;
-+	__set_bit(hwc->idx, ctx->active_mask);
- 	wrmsrl(hwc->config_base, (hwc->config | AMD64_PERFMON_V2_ENABLE_UMC));
- 	perf_event_update_userpage(event);
- }
--- 
-2.43.0
+I only tested this patchset on Pioneerbox(SG2042), I don't have SG2044 now.
+
+It works with another bugfix patch [1] applied.
+
+Link: 
+https://lore.kernel.org/lkml/20250405055625.1530180-1-inochiama@gmail.com/ 
+[1]
+
 
