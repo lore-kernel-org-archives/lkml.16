@@ -1,147 +1,230 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BEA21552EB;
-	Wed,  9 Apr 2025 16:52:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF2941A315A;
+	Wed,  9 Apr 2025 16:54:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744217566; cv=none; b=gi1KqMMZucz+wBNkwLNEwW9foFEjCSnY7yRxPopxtOrCgMo5WCYLpZmIiAzD9LhvwRM/hKLgw7QJLwO+5WMHbfDzxqhHzz2Ic8PgktWq3tduEmEIE+Ingw0qkCVaf1T533UwG9PcM2yM3pfnfd7kIgiFzH7cQrhn8w58WLzhnYI=
+	t=1744217680; cv=none; b=mAS8/55Xg2Js34cpvh70ysNzF28PWU1WDxyY/BJxkARJfjeicePJpZY0+Bn9s+SlRZuo+ZhkDg6nSZ89mLIvcGbG7oDdvyLSTH0DEKVGmvHNhIQ9hGqJIXYXQ0kEXUT+OFfdmE5ygVEis4Hi3Dma2Zbhcw/bIHCGfghvr0u+GTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744217566; c=relaxed/simple;
-	bh=obcPkLgnSbGrm5CefTwDI7VegcN2cHEoIUn425E7JJw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ND6qupKXZJ874pIy40okUyg7LJQBQFjXnfDzMUpt/c76dXTyC+sl8YyCB1o+U7Thfyf1oerbgVTal5zDx8wNmbMRtPD2YI7nxgkh0l8Z9lpNS+NHIUq4OmcnZL7ewmP9f6naZH1FgAWNN6oE2xirvs7DIzvCvSxjjTLMq4G3+bc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=krisman.be; spf=pass smtp.mailfrom=krisman.be; dkim=pass (2048-bit key) header.d=krisman.be header.i=@krisman.be header.b=RcZCvVTX; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=krisman.be
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=krisman.be
+	s=arc-20240116; t=1744217680; c=relaxed/simple;
+	bh=g8tG3x/iWwTVg7jN8iiBSCQ0/dwqSuIjotBmyUKOwao=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mluqk9E9Vr1l08e5q0gjgE5zFXWNym/sjVSs+D1Exf6FI1j+MPsmp3Wi6xWfDDzYmnjMzffxW5zhSTw7edXehP1JlJB8/TyL8mZS2VgxDEDa0fwJJk1cRAYxBogLdUgxegPqH8BXcICA0pR/mtmiIAeO+xcXTwJwQTUUbUr8ql0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VYjIdriz; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=krisman.be header.i=@krisman.be header.b="RcZCvVTX"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 42FA644509;
-	Wed,  9 Apr 2025 16:52:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=krisman.be; s=gm1;
-	t=1744217561;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Lka4EV0ThAd+Rt37FBIFAmnVZ8R6mxrwhqcTrFtj/k8=;
-	b=RcZCvVTXrKMwdF3ETKRZN2tGXA6qIm3HE0gA7fNkc6kfkSpYOkl6u18XmaB/WbbPax6Upu
-	iZ312LTmsxK1x3IYMpAX2JAMcEhqj3M65ZQjLyQB+o0ea5QDt2l1LMe32MsAgR18TsSH9E
-	mSg7mv7ArbW+M4lvAJs5qRm09qYkwzTdvYHPmoneVtsfott+ucXW4zMLB9d/leD6l7qlS0
-	Ghva9BL7tWCvWv1/S3rzSlXH4A+embOrDfSMWzQzesmmuSQjFDjExNhLa6i0kOifKXb4Dr
-	3ZshVanWHAujI9B8f/syuZFOY1qiESeZb620GYIII3fWDabXjneqd4KGh9Upig==
-From: Gabriel Krisman Bertazi <gabriel@krisman.be>
-To: =?utf-8?Q?Andr=C3=A9?= Almeida <andrealmeid@igalia.com>
-Cc: Miklos Szeredi <miklos@szeredi.hu>,  Amir Goldstein
- <amir73il@gmail.com>,  Theodore Tso <tytso@mit.edu>,
-  linux-unionfs@vger.kernel.org,  linux-kernel@vger.kernel.org,
-  linux-fsdevel@vger.kernel.org,  Alexander Viro <viro@zeniv.linux.org.uk>,
-  Christian Brauner <brauner@kernel.org>,  Jan Kara <jack@suse.cz>,
-  kernel-dev@igalia.com
-Subject: Re: [PATCH 0/3] ovl: Enable support for casefold filesystems
-In-Reply-To: <20250409-tonyk-overlayfs-v1-0-3991616fe9a3@igalia.com>
- (=?utf-8?Q?=22Andr=C3=A9?=
-	Almeida"'s message of "Wed, 09 Apr 2025 12:00:40 -0300")
-References: <20250409-tonyk-overlayfs-v1-0-3991616fe9a3@igalia.com>
-Date: Wed, 09 Apr 2025 12:52:38 -0400
-Message-ID: <871pu1b7l5.fsf@mailhost.krisman.be>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VYjIdriz"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2295d78b45cso95877345ad.0;
+        Wed, 09 Apr 2025 09:54:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744217678; x=1744822478; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=CKpfWxOAsmcqfHthdu26r7YWnYaeAaQXRASkSMsz97E=;
+        b=VYjIdrizm3YV7JqtkYAphhDtUUcP9DUzE1aEpy0Lca+yfaBqQwoIB0Q1zDaBUIjto2
+         S447rynsliBcH86aAS7ENxdruy4pME6ynrlFlOcec7henPW4RRuPzg5IJrCpHGB3ShjE
+         N4BsgKKIeHJ7tOtLLYsH7sBkHGJdKkM3Ky+WpHs4VkksQ+elm7Sbz1eVYca+jYdYBp6r
+         skWny+MijrbIT9ec4sW3AgKPV6nA0j9w8+jn3K4yW4BkL/A1CIT/W3Qv5wumMxbV+Tkd
+         9lBOkgnBzUh0JzeS/q1ViLsIl9TktVoMCPnj65oOV9l94bXgLVSNaauOv8JeTnXEyM+g
+         +UaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744217678; x=1744822478;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CKpfWxOAsmcqfHthdu26r7YWnYaeAaQXRASkSMsz97E=;
+        b=Nn3mQbzwdk1ahXklMvw8avJXbG+Sf4U0yQwfoCcKgKnaHgj2Jan/JQlynlxFACYLXo
+         uTh6n0uDDNP+RsmOusfl7NeiPxyDEdVSGu8A2z2AnzsITNZA0ibxJhQ4YQyQIzW8gNF1
+         PCaVb+LpXSS6l0bWeVCvjjc8emiWdNGLfNBymaQ+IYy7E4nYCWRyMjOtdTEW6fL4yx9D
+         AqCmU5Rsft/N55lDlaBPOcCnfdwhhY9jn6DTBFD4/anwRMYXoKhCVM2rBlYgrMPTgLUa
+         dww3nSRsk5/ToWw769fLpaZSf0vvOSgGRe7Wzqlr/eYc8wtCF5yAtmzpb6XgYkL+vWzV
+         vjLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU+X7Vhqd3AwR8R29ZvL4POM3TI7iGvaq3uU+R6K7uuqf4TsX5rdoGohl2Urm8f8yw37+FluwzmlhJEHiIK@vger.kernel.org, AJvYcCUWDDmJvkBvOtRlXuqfAvniO/IQcot9ZKOJh2otS6I9Db1spdTv9WoDn6SZXc3CzrkOSaCPGqio8W5Dqxdome4=@vger.kernel.org, AJvYcCUehj+vUN/hVf9KoBHWBG753ZTSJnc7eoYHgX+XMQmHN9ZPvwzw+Gzym+nTOwTBEwopjAguXtTmFa2Sjb5s@vger.kernel.org, AJvYcCV4Ck6/0SMho01rbeGZNies9yDc0hL4lfyEayPSemUzxSSAcu60CdzCdnKArs7oQKVBayE=@vger.kernel.org, AJvYcCVMH/U9JB4Ksaa4s+/dlYb31MtIadYfoj4rcLfphUi946R1Gx7Bezu7ZMKN+s9LP5kksTaCdnMB+VjRFFA=@vger.kernel.org, AJvYcCVVmvBwZtq29RZVAqey8AhVClRlToWLCBWZ/y9uSyj31WYwGVYAm1OyNsjd11vAsVXPuG3cb+if@vger.kernel.org, AJvYcCVzMmaFjV93Bma183KSUed9NPJN/bA75d0dXOxzlbIYNhsz8eeO+/rRGtAmPezf0iwRRqnoVL0kaN3ne/A=@vger.kernel.org, AJvYcCWMzFkl/9Sq35VQHRuJsSfsdazxGT0tEKb3WXrqvmOBAf8Jq/LzQJfs2cBx94XV7LLupNDT49uWtArVmPI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxgTn76TT4udHseME7eOqF5tXfbpRo5GVwG8RrFtBU8DfxY3Z0E
+	4T/MzKKzxMKeKYP4IBH3S/kvCGNCTSef4Af5AGgF2YyaWExvFr5Y
+X-Gm-Gg: ASbGnctyfj+c6vKIqrzFHYPMaJ8zT24dMTs/90UWRzM5/b7yyWCOwVKgNWgFjA+NlBX
+	8CGrbKtYuS6DZR5AAkw5g/rYDrlh0kisOE33vNYgOQQ/GiFrQassEM65eZeGwIxpzeNc0VGVhBi
+	NLcecftFMb0CcirTrLC2EWIda860qXjRbhc7Dzd1Kv+uRvK8B44GWu8lbavNiBcXLcV3qz9sfz9
+	MzHkmBW3CMgOjaMdPfEOs1EfhJYyLaXc0hHMrdIgQbrkS85G8T0F2Mambz+cyxGQIGqA+ikJ4ze
+	aNfXdWhYPqhv/4xS8zTEb+Bv4JIIck55v4kOSEkO
+X-Google-Smtp-Source: AGHT+IFxnZTQiwyLnCcrMyVoc4gjX/wlLeI10NLEVrusIoE84Mu0MqqI5oCBV9CkTcUXaP/nQxUz2g==
+X-Received: by 2002:a17:903:240b:b0:224:1579:5e91 with SMTP id d9443c01a7336-22ac40026bbmr47037845ad.47.1744217677709;
+        Wed, 09 Apr 2025 09:54:37 -0700 (PDT)
+Received: from localhost ([216.228.127.131])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306df4011dbsm1856612a91.46.2025.04.09.09.54.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 09:54:36 -0700 (PDT)
+Date: Wed, 9 Apr 2025 12:54:35 -0400
+From: Yury Norov <yury.norov@gmail.com>
+To: Kuan-Wei Chiu <visitorckw@gmail.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, jk@ozlabs.org,
+	joel@jms.id.au, eajames@linux.ibm.com, andrzej.hajda@intel.com,
+	neil.armstrong@linaro.org, rfoss@kernel.org,
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
+	dmitry.torokhov@gmail.com, mchehab@kernel.org,
+	awalls@md.metrocast.net, hverkuil@xs4all.nl,
+	miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+	louis.peens@corigine.com, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+	parthiban.veerasooran@microchip.com, arend.vanspriel@broadcom.com,
+	johannes@sipsolutions.net, gregkh@linuxfoundation.org,
+	jirislaby@kernel.org, akpm@linux-foundation.org, jdelvare@suse.com,
+	linux@roeck-us.net, alexandre.belloni@bootlin.com, pgaj@cadence.com,
+	hpa@zytor.com, alistair@popple.id.au, linux@rasmusvillemoes.dk,
+	Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+	jernej.skrabec@gmail.com, kuba@kernel.org,
+	linux-kernel@vger.kernel.org, linux-fsi@lists.ozlabs.org,
+	dri-devel@lists.freedesktop.org, linux-input@vger.kernel.org,
+	linux-media@vger.kernel.org, linux-mtd@lists.infradead.org,
+	oss-drivers@corigine.com, netdev@vger.kernel.org,
+	linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev,
+	brcm80211-dev-list.pdl@broadcom.com, linux-serial@vger.kernel.org,
+	bpf@vger.kernel.org, jserv@ccns.ncku.edu.tw, Frank.Li@nxp.com,
+	linux-hwmon@vger.kernel.org, linux-i3c@lists.infradead.org,
+	david.laight.linux@gmail.com, andrew.cooper3@citrix.com,
+	Yu-Chun Lin <eleanor15x@gmail.com>
+Subject: Re: [PATCH v4 00/13] Introduce parity_odd() and refactor redundant
+ parity code
+Message-ID: <Z_amQp3gK5Dm8Qz3@yury>
+References: <20250409154356.423512-1-visitorckw@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdeiheefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhffkfgfgggtgfesthhqredttderjeenucfhrhhomhepifgrsghrihgvlhcumfhrihhsmhgrnhcuuegvrhhtrgiiihcuoehgrggsrhhivghlsehkrhhishhmrghnrdgsvgeqnecuggftrfgrthhtvghrnhepfedtvdehffevtddujeffffejudeuuefgvdeujeduhedtgfehkeefheegjefgueeknecukfhppeduleekrdehkedrudegfedrvdefudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleekrdehkedrudegfedrvdefuddphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepghgrsghrihgvlheskhhrihhsmhgrnhdrsggvpdhnsggprhgtphhtthhopeduuddprhgtphhtthhopegrnhgurhgvrghlmhgvihgusehighgrlhhirgdrtghomhdprhgtphhtthhopehmihhklhhoshesshiivghrvgguihdrhhhupdhrtghpthhtoheprghmihhrjeefihhlsehgmhgrihhlrdgtohhmpdhrtghpthhtohepthihthhsohesmhhithdrvgguuhdprhgtphhtthhopehlihhnuhigqdhunhhiohhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhug
- idqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqfhhsuggvvhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehvihhrohesiigvnhhivhdrlhhinhhugidrohhrghdruhhk
-X-GND-Sasl: gabriel@krisman.be
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409154356.423512-1-visitorckw@gmail.com>
 
-Andr=C3=A9 Almeida <andrealmeid@igalia.com> writes:
+On Wed, Apr 09, 2025 at 11:43:43PM +0800, Kuan-Wei Chiu wrote:
+> Several parts of the kernel contain open-coded and redundant
+> implementations of parity calculation. This patch series introduces
+> a unified helper, parity_odd(), to simplify and standardize these
+> cases.
+> 
+> The first patch renames parity8() to parity_odd(), changes its argument
 
-> Hi all,
->
-> We would like to support the usage of casefold filesystems with
-> overlayfs. This patchset do some of the work needed for that, but I'm
-> sure there are more places that need to be tweaked so please share your
-> feedback for this work.
+Alright, if it's an extension of the area of applicability, it should be
+renamed to just parity(). I already shared a table that summarized the
+drivers authors' view on that, and they clearly prefer not to add the
+suffix - 13 vs 2. The __builtin_parity() doesn't care of suffix as well. 
 
-I didn't look the patches yet, but this is going to be quite tricky.
-For a start, consider the semantics when mixing volumes with different
-case settings for lower/upper/work directories.  And that could be any
-setting, such as whether the directory has +F, the encoding version and
-the encoding flags (strict mode).  Any mismatch will look bonkers and
-you want to forbid the mount.
+https://lore.kernel.org/all/Z9GtcNJie8TRKywZ@thinkpad/
 
-Consider upperdir is case-sensitive but lowerdir is not.  In this case,
-I suspect the case-exact name would be hidden by the upper, but the
-inexact-case would still resolve from the lower when it shouldn't, and
-can't be raised again.  If we have the other way around, the upper
-will hide more than one file from the lower and it is a matter of luck
-which file we are getting.
+Yes, the argument that boolean function should explain itself sounds
+correct, but in this case, comment on top of the function looks enough
+to me.
 
-In addition, if we have a case-insensitive on top of a case-sensitive,
-there is no way we can do the case-insensitive lookup on the lower
-without doing a sequential search across the entire directory.  Then it
-is again a matter of luck which file we are getting.
+The existing codebase doesn't care about the suffix as well. If no
+strong preference, let's just pick a short and sweet name?
 
-The issue can appear even on the same volume, since case-insensitiveness
-is actually per-directory and can be flipped when a directory is empty.
-If something like the below is possible, we are in the same situation
-again:
+> type from u8 to u64 for broader applicability, and updates its return
+> type from int to bool to make its usage and return semantics more
+> intuitive-returning true for odd parity and false for even parity. It
+> also adds __attribute_const__ to enable compiler optimizations.
 
-mkdir lower/ci
-chattr +F lower/ci
-touch lower/ci/BLA
-mount -o overlay none upperdir=3Dupper,lowerdir=3Dlower,workdir=3Dwork merg=
-ed
-rm -r merged/ci/BLA    // creates a whiteout in upper
-                       // merged looks empty and should be allowed to drop =
-+F
-chattr -F merged/ci
+That's correct and nice, but can you support it with a bloat-o-meter's
+before/after and/or asm snippets? I also think it worth to be a separate
+patch, preferably the last patch in the series.
 
-So we'd also need to always forbid clearing the +F attribute and perhaps
-forbid it from ever being set on the merged directory.  We also want to
-require the encoding version and flags to match.
+> While more efficient implementations may exist, further optimization is
+> postponed until a use case in performance-critical paths arises.
+> 
+> Subsequent patches refactor various kernel components to replace
+> open-coded parity logic with the new helper, reducing code duplication
+> and improving consistency.
+> 
+> Co-developed-by: Yu-Chun Lin <eleanor15x@gmail.com>
+> Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
+> Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
+> ---
+> 
+> To H. Peter:
+> I understand your preference for a parity8/16/32/64() style interface,
+> and I agree that such a design would better accommodate potential
+> arch-specific implementations. However, I suspect there are very few,
+> if any, users who care about the performance of parity calculations
+> enough to warrant such optimizations. So my inclination is to defer any
+> arch-specific or optimized implementations until we see parity_odd()
+> being used in hot paths.
+> 
+> Changes in v4:
+> - Rename parity8() to parity_odd().
+> - Change the argument type from u8 to u64.
+> - Use a single parity_odd() function.
+> 
+> Changes in v3:
+> - Avoid using __builtin_parity.
+> - Change return type to bool.
+> - Drop parity() macro.
+> - Change parityXX() << y to !!parityXX() << y.
+> 
+> Changes in v2:
+> - Provide fallback functions for __builtin_parity() when the compiler
+>   decides not to inline it
+> - Use __builtin_parity() when no architecture-specific implementation
+>   is available
+> - Optimize for constant folding when val is a compile-time constant
+> - Add a generic parity() macro
+> - Drop the x86 bootflag conversion patch since it has been merged into
+>   the tip tree
+> 
+> v3: https://lore.kernel.org/lkml/20250306162541.2633025-1-visitorckw@gmail.com/
+> v1: https://lore.kernel.org/lkml/20250223164217.2139331-1-visitorckw@gmail.com/
+> v2: https://lore.kernel.org/lkml/20250301142409.2513835-1-visitorckw@gmail.com/
+> 
+> Kuan-Wei Chiu (13):
+>   bitops: Change parity8() to parity_odd() with u64 input and bool
+>     return type
+>   media: media/test_drivers: Replace open-coded parity calculation with
+>     parity_odd()
+>   media: pci: cx18-av-vbi: Replace open-coded parity calculation with
+>     parity_odd()
+>   media: saa7115: Replace open-coded parity calculation with
+>     parity_odd()
+>   serial: max3100: Replace open-coded parity calculation with
+>     parity_odd()
+>   lib/bch: Replace open-coded parity calculation with parity_odd()
+>   Input: joystick - Replace open-coded parity calculation with
+>     parity_odd()
+>   net: ethernet: oa_tc6: Replace open-coded parity calculation with
+>     parity_odd()
+>   wifi: brcm80211: Replace open-coded parity calculation with
+>     parity_odd()
+>   drm/bridge: dw-hdmi: Replace open-coded parity calculation with
+>     parity_odd()
+>   mtd: ssfdc: Replace open-coded parity calculation with parity_odd()
+>   fsi: i2cr: Replace open-coded parity calculation with parity_odd()
+>   nfp: bpf: Replace open-coded parity calculation with parity_odd()
+> 
+>  arch/x86/kernel/bootflag.c                    |  4 +--
+>  drivers/fsi/fsi-master-i2cr.c                 | 20 +++------------
+>  .../drm/bridge/synopsys/dw-hdmi-ahb-audio.c   |  8 ++----
+>  drivers/hwmon/spd5118.c                       |  2 +-
+>  drivers/i3c/master/dw-i3c-master.c            |  2 +-
+>  drivers/i3c/master/i3c-master-cdns.c          |  2 +-
+>  drivers/i3c/master/mipi-i3c-hci/dat_v1.c      |  2 +-
+>  drivers/input/joystick/grip_mp.c              | 17 ++-----------
+>  drivers/input/joystick/sidewinder.c           | 25 ++++---------------
+>  drivers/media/i2c/saa7115.c                   | 12 ++-------
+>  drivers/media/pci/cx18/cx18-av-vbi.c          | 12 ++-------
+>  .../media/test-drivers/vivid/vivid-vbi-gen.c  |  8 ++----
+>  drivers/mtd/ssfdc.c                           | 20 +++------------
+>  drivers/net/ethernet/netronome/nfp/nfp_asm.c  |  7 +-----
+>  drivers/net/ethernet/oa_tc6.c                 | 19 +++-----------
+>  .../broadcom/brcm80211/brcmsmac/dma.c         | 18 ++-----------
+>  drivers/tty/serial/max3100.c                  |  3 ++-
+>  include/linux/bitops.h                        | 19 ++++++++------
+>  lib/bch.c                                     | 14 +----------
+>  19 files changed, 49 insertions(+), 165 deletions(-)
 
-> * Implementation
->
-> The most obvious place that required change was the strncmp() inside of
-> ovl_cache_entry_find(), that I managed to convert to use d_same_name(),
-> that will then call the generic_ci_d_compare function if it's set for
-> the dentry. There are more strncmp() around ovl, but I would rather hear
-> feedback about this approach first than already implementing this around
-> the code.
+OK, now it looks like a nice consolidation and simplification of code
+base. Thanks for the work.
 
-I'd suggest marking it as an RFC since it is not a functional
-implementation yet, IIUC.
-
->> * Testing
-> sudo mount -t tmpfs -o casefold tmpfs mnt/
-> cd mnt/
-> mkdir dir
-> chattr +F dir
-> cd dir/
-> mkdir upper lower
-> mkdir lower/A lower/b lower/c
-> mkdir upper/a upper/b upper/d
-> mkdir merged work
-> sudo mount -t overlay overlay -olowerdir=3Dlower,upperdir=3Dupper,workdir=
-=3Dwork, merged
-> ls /tmp/mnt/dir/merged/
-> a  b  c  d
->
-> And ovl is respecting the equivalent names. `a` points to a merged dir
-> between `A` and `a`, but giving that upperdir has a lowercase `a`, this
-> is the name displayed here.
-
-Did you try fstests generic/556?  It might require some work to make it
-run over ovl, but it will exercise several cases that are quite
-hard to spot.
-
-
---=20
-Gabriel Krisman Bertazi
+Thanks,
+Yury
