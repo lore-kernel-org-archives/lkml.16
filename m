@@ -1,200 +1,189 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBDBB25E471;
-	Wed,  9 Apr 2025 12:07:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAA6625E471;
+	Wed,  9 Apr 2025 12:08:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744200465; cv=none; b=ELYNddHyzRrDJc+2PYwSMbv5v++z/wWRbGOt4pwRcpuYebJP6HCSdNxk+A8OwWQdBs3bC26sg6EuJGYwrfMsp0/QNF5LfgvuIMe5jaRjOgLDrLI26AsikaF6hFSBYPkcxUgmh3Lo3KDkvRRSty32lB4/YVyOs8pr8ZeQkpMNyMU=
+	t=1744200487; cv=none; b=njAjIzOTkxiTw3v6uHtCLK93EdUpOIO75NGCy7K5TELXIH/M1FrPYVhgURiW3qpZPHJjloIOP8ger9U0Q1Rxn295jgsyO8+RPEvpFjrRNv/SHCyq9ORjQeh+C2UnxyRjw1KRNT6f7kQJmXgbyOgxWvGB5efadGcpIvdcaXQccEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744200465; c=relaxed/simple;
-	bh=FdUb0DPDYi+ttgoinI37K88fuRyaVge7JDVXiVilF7E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XcNksFkot4tsp9YKxl1KmiF7mC7B3atWiA9KGb0S7PdoJKUDFpEDg/Pom0cbkJ57O+41zt72UWS7oA/KncJf74Ds4nyUV4AbUaMLsQuMbk5uCwng0v4UnES5Tevjc/UV5nJb7de1MBPWarHCDpbNDXynRtV1SO0HMc/Ik+pvuNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GhqxgiUk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744200487; c=relaxed/simple;
+	bh=lq1OiQsVOMHwrGtmmhdpg6FWU56qqzjfijOiXVoJzFc=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y8ORSggcpZ6YCu6c2qye32TP9UJn1i69XztjmlDHLuJ8s3drLhdOJuPsVrG4ZPGML9cuieEp1QfN9q/Tw3TsY5mLMRChP0DsAiI3zzNZN40vxl5wwP1Oa3b6m1kh+0tGoXetyg0LiVZJ9VO1mBu3TpAdPaSUDpurX4WVu4ZtzA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bpsj4Jtp; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GhqxgiUk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3DACC4CEE7;
-	Wed,  9 Apr 2025 12:07:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744200464;
-	bh=FdUb0DPDYi+ttgoinI37K88fuRyaVge7JDVXiVilF7E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GhqxgiUktLqE62NnlGbCozLGAOy1ebYKCfRTbO1C2V8isrEUvyivtHWOlIWWY3iNe
-	 lT7qBhQi0YUXEHd/a3nybBs+okp72WCBqbBHa/gUT5qc5stTjpZBUhmQIEvTFikt5z
-	 3QEX/nurLaDWBdA3+xqEX+t36u0MD+4s/DDnE947U63BOSLACxJE4ATzBnB7162kEM
-	 uJVlOhBR6ng/gxrCkIJmx2DVTmwcGtpsyRWe122qGV/9UBAusoKc1mqJjzRiizRz4e
-	 qqynMSOHuqVH/gL+pm4QM8yBcDL9Jr5dx5FDs1H6jkyRMDbX2Cuq8465NG5c4c31Ao
-	 m0BWGZ8ZfmD1w==
-From: Philipp Stanner <phasta@kernel.org>
-To: Sumit Semwal <sumit.semwal@linaro.org>,
-	Gustavo Padovan <gustavo@padovan.org>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	Felix Kuehling <Felix.Kuehling@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Xinhui Pan <Xinhui.Pan@amd.com>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Russell King <linux+etnaviv@armlinux.org.uk>,
-	Christian Gmeiner <christian.gmeiner@gmail.com>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Frank Binns <frank.binns@imgtec.com>,
-	Matt Coster <matt.coster@imgtec.com>,
-	Qiang Yu <yuq825@gmail.com>,
-	Rob Clark <robdclark@gmail.com>,
-	Sean Paul <sean@poorly.run>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Abhinav Kumar <quic_abhinavk@quicinc.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	Lyude Paul <lyude@redhat.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Boris Brezillon <boris.brezillon@collabora.com>,
-	Rob Herring <robh@kernel.org>,
-	Steven Price <steven.price@arm.com>,
-	Dave Airlie <airlied@redhat.com>,
-	Gerd Hoffmann <kraxel@redhat.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Philipp Stanner <phasta@kernel.org>,
-	Huang Rui <ray.huang@amd.com>,
-	Matthew Auld <matthew.auld@intel.com>,
-	Melissa Wen <mwen@igalia.com>,
-	=?UTF-8?q?Ma=C3=ADra=20Canal?= <mcanal@igalia.com>,
-	Zack Rusin <zack.rusin@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	Bas Nieuwenhuizen <bas@basnieuwenhuizen.nl>,
-	Yang Wang <kevinyang.wang@amd.com>,
-	Jesse Zhang <jesse.zhang@amd.com>,
-	Tim Huang <tim.huang@amd.com>,
-	Sathishkumar S <sathishkumar.sundararaju@amd.com>,
-	Saleemkhan Jamadar <saleemkhan.jamadar@amd.com>,
-	Sunil Khatri <sunil.khatri@amd.com>,
-	Lijo Lazar <lijo.lazar@amd.com>,
-	Hawking Zhang <Hawking.Zhang@amd.com>,
-	Ma Jun <Jun.Ma2@amd.com>,
-	Yunxiang Li <Yunxiang.Li@amd.com>,
-	Eric Huang <jinhuieric.huang@amd.com>,
-	Asad Kamal <asad.kamal@amd.com>,
-	Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>,
-	Jack Xiao <Jack.Xiao@amd.com>,
-	Friedrich Vock <friedrich.vock@gmx.de>,
-	=?UTF-8?q?Michel=20D=C3=A4nzer?= <mdaenzer@redhat.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>
-Cc: linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org,
-	linux-kernel@vger.kernel.org,
-	amd-gfx@lists.freedesktop.org,
-	etnaviv@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org,
-	lima@lists.freedesktop.org,
-	linux-arm-msm@vger.kernel.org,
-	freedreno@lists.freedesktop.org,
-	nouveau@lists.freedesktop.org,
-	virtualization@lists.linux.dev,
-	spice-devel@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org
-Subject: [PATCH 2/2] dma-fence: Improve docu for dma_fence_check_and_signal()
-Date: Wed,  9 Apr 2025 14:06:38 +0200
-Message-ID: <20250409120640.106408-4-phasta@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250409120640.106408-2-phasta@kernel.org>
-References: <20250409120640.106408-2-phasta@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bpsj4Jtp"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e61da95244so10949430a12.2;
+        Wed, 09 Apr 2025 05:08:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744200484; x=1744805284; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NWhG9TBVd/wh+MuWkoZWly0RfKaqH96r0b+wVnwq3FA=;
+        b=bpsj4Jtpsm1qVPBmY+5dqvJzP8E6wW4Zi+Vln2aITbBM6Yv2nXlMQQpN1m4Cg4d8/e
+         VEeBvrT6HjOPnaVp2pMEO0vA8tDG+kTkCooWcD9GDnANHC2hE8ls/Lij/FusHEiw41nm
+         ZHUZG9ytpQa/1c8hy8vkpP3yFYDJb8XqBJCTHepaUh2uFSXnb5taKO1nBhypgUuE3bat
+         08vJXnoEldYAbbdKL1TuhbiUqDKmyeZ8lhk39pslTgLiizHDngbbe5LFtNJtiM9VnJb0
+         g5jNeEy8JGPFsz8Echc70Xb5QQIwMpEviG1E+nWC6PdsQzQaaLlXP5dMUO02U3Rl3ssi
+         wF3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744200484; x=1744805284;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NWhG9TBVd/wh+MuWkoZWly0RfKaqH96r0b+wVnwq3FA=;
+        b=KRtjp9aDBQnjLehB1lm1RqCz6QLxm9x/1j1mLWf+KNvuz1+NMKY0PMiMVA6UwCVnM3
+         6Cs683+IO39AjUy4dph2C6gMh668eCGGHEyCir9nhx9whvqkRlvQbmT0JHD+SBm6NL3c
+         0hEAegY80R9gsGj55kdPq0E0/glkK4OkKGqfRmlB0cQZSlomBMM6TwbUoWZu2OayPKk9
+         0j+XQLtksS0NXADP9f9EFoY3ZDoTFkhYJiwDvU+OhLQD3z18ErvkxuEq/3/bNOD8AUN0
+         0qht2esdJriTqZyaPStzN891zpdVNxsbmIFJEILWBfgg3bbSltOyp6rT4gYslkWaPv2C
+         4z6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUF1iYDadpF3oM7A5puSfTMEU3I56sfUCWYGyTukH4l24P/RoSYtbIrur07MjjUq6w+pBWXfDyVYxZLqivzD3Bm+ynz@vger.kernel.org, AJvYcCWvzMj1Bb+zqLYENUD9jd2XLOohHGrbqbLE/0pj9Y0QQ9p6vy6QKzTlGaSZwSCer8ARhOKOKse3oeFgY3Cg@vger.kernel.org, AJvYcCXaua+EgJ008UmsvkHK/Hknci6Bltf2t5P0G1GpOb9vG6TOEpQ0J1F6jDsDfS7G3arMXEw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyv0SrcZZ83qnoFhSWops5y/7noIAfacuHlqc0O/FEltx0VXOAP
+	7bj05HPJWiGDLYrR68CGnuZ8WbLSS6AILUyNOX7i6l+jUmgEu7TF
+X-Gm-Gg: ASbGncuNCc3+YsGfruZvzW9QXeSM+2J57ZWF1U6xwl97BM1oJaGFL+DdfxNer0dUHVm
+	hIjjtMs3VDOBRAOXThL0T6p59v1KmAJ/buoXzj+GvS0mkCvi6VYVLii3BUNinpiWym3iq1ODjWp
+	zgz6vZoNAcpWTb7J13Su2b42jPI2MH5X/w6ndKAxBOlno+OeiC2Mpi0mzqcrm0dmyl/qAcb9vq+
+	fwlGcqOBVEMXJxAd/6C1v0LB7/M7bRDUtgZmhXNmZmVHXcRdqdCi6IZV6EHJcvccTl/QhxcCz97
+	52gRTdkxOVuZFxhfWTdPf5Pcd+xQg9HLklzw6/5X5kZevBE=
+X-Google-Smtp-Source: AGHT+IE4gmN92nUmZyVQlBNP4+nAs0/QbGtCFNatkp92wpmQEcVPxKH1Iuhd5MEBckojcC+d5Mo1vg==
+X-Received: by 2002:a17:907:3e9e:b0:ac3:c020:25e9 with SMTP id a640c23a62f3a-aca9d6449e2mr185657466b.34.1744200483911;
+        Wed, 09 Apr 2025 05:08:03 -0700 (PDT)
+Received: from krava (85-193-35-57.rib.o2.cz. [85.193.35.57])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1bea593sm88154666b.62.2025.04.09.05.08.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 05:08:03 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Wed, 9 Apr 2025 14:08:01 +0200
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Alan Maguire <alan.maguire@oracle.com>
+Subject: Re: [PATCH 1/2] uprobes/x86: Add support to emulate nop5 instruction
+Message-ID: <Z_ZjIerx-QvY7BSI@krava>
+References: <20250408211310.51491-1-jolsa@kernel.org>
+ <20250409112839.GA32748@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409112839.GA32748@redhat.com>
 
-The documentation of the return value of dma_fence_check_and_signal()
-and dma_fence_check_and_signal_locked() reads as if the returned boolean
-only describes whether dma_fence_signal() (or similar) has been called
-before this function call already. That's not the case, since
-dma_fence_ops.signaled() usually just checks through the sequence number
-whether the hardware is finished with a fence. That doesn't mean a
-signaling function has been called already.
+On Wed, Apr 09, 2025 at 01:28:39PM +0200, Oleg Nesterov wrote:
+> On 04/08, Jiri Olsa wrote:
+> >
+> > --- a/arch/x86/kernel/uprobes.c
+> > +++ b/arch/x86/kernel/uprobes.c
+> > @@ -608,6 +608,16 @@ static void riprel_post_xol(struct arch_uprobe *auprobe, struct pt_regs *regs)
+> >  		*sr = utask->autask.saved_scratch_register;
+> >  	}
+> >  }
+> > +
+> > +static int is_nop5_insn(uprobe_opcode_t *insn)
+> > +{
+> > +	return !memcmp(insn, x86_nops[5], 5);
+> > +}
+> > +
+> > +static bool emulate_nop5_insn(struct arch_uprobe *auprobe)
+> > +{
+> > +	return is_nop5_insn((uprobe_opcode_t *) &auprobe->insn);
+> > +}
+> 
+> Why do we need 2 functions? Can't branch_setup_xol_ops() just use
+> is_nop5_insn(insn->kaddr) ?
 
-Make the documentation clearer.
+I need is_nop5_insn in other changes I have in queue, so did not want
+to introduce extra changes
 
-Move the Return: documentation to the end, since that's the officially
-recommended docu style.
+> 
+> >  #else /* 32-bit: */
+> >  /*
+> >   * No RIP-relative addressing on 32-bit
+> > @@ -621,6 +631,10 @@ static void riprel_pre_xol(struct arch_uprobe *auprobe, struct pt_regs *regs)
+> >  static void riprel_post_xol(struct arch_uprobe *auprobe, struct pt_regs *regs)
+> >  {
+> >  }
+> > +static bool emulate_nop5_insn(struct arch_uprobe *auprobe)
+> > +{
+> > +	return false;
+> > +}
+> 
+> Hmm, why? I mean, why we can't emulate x86_nops[5] if !CONFIG_X86_64 ?
 
-Signed-off-by: Philipp Stanner <phasta@kernel.org>
----
- include/linux/dma-fence.h | 26 ++++++++++++++++++++------
- 1 file changed, 20 insertions(+), 6 deletions(-)
+ok, so the following uprobe optimization is for CONFIG_X86_64 only, so I followed
+that, but I guess we might emulate nop5 for !CONFIG_X86_64
 
-diff --git a/include/linux/dma-fence.h b/include/linux/dma-fence.h
-index dc2ad171458b..3df370b2cc7c 100644
---- a/include/linux/dma-fence.h
-+++ b/include/linux/dma-fence.h
-@@ -385,14 +385,21 @@ void dma_fence_enable_sw_signaling(struct dma_fence *fence);
-  * dma_fence_check_and_signal_locked - Checks a fence and signals it if necessary
-  * @fence: the fence to check
-  *
-- * Returns true if the fence was already signaled, false if not. Since this
-- * function doesn't enable signaling, it is not guaranteed to ever return
-- * true if dma_fence_add_callback(), dma_fence_wait() or
-+ * Checks whether the fence was already signaled, and, if not, whether
-+ * &struct dma_fence_ops.signaled indicates that it should be signaled. If so,
-+ * the fence gets signaled here.
-+ *
-+ * Since this function doesn't enable signaling, it is not guaranteed to ever
-+ * return true if dma_fence_add_callback(), dma_fence_wait() or
-  * dma_fence_enable_sw_signaling() haven't been called before.
-  *
-  * This function requires &dma_fence.lock to be held.
-  *
-  * See also dma_fence_check_and_signal().
-+ *
-+ * Return: true if the fence was already signaled, or if
-+ * &struct dma_fence_ops.signaled is implemented and indicates that this fence
-+ * can be treated as signaled; false otherwise.
-  */
- static inline bool
- dma_fence_check_and_signal_locked(struct dma_fence *fence)
-@@ -412,9 +419,12 @@ dma_fence_check_and_signal_locked(struct dma_fence *fence)
-  * dma_fence_check_and_signal - Checks a fence and signals it if necessary
-  * @fence: the fence to check
-  *
-- * Returns true if the fence was already signaled, false if not. Since this
-- * function doesn't enable signaling, it is not guaranteed to ever return
-- * true if dma_fence_add_callback(), dma_fence_wait() or
-+ * Checks whether the fence was already signaled, and, if not, whether
-+ * &struct dma_fence_ops.signaled indicates that it should be signaled. If so,
-+ * the fence gets signaled here.
-+ *
-+ * Since this function doesn't enable signaling, it is not guaranteed to ever
-+ * return true if dma_fence_add_callback(), dma_fence_wait() or
-  * dma_fence_enable_sw_signaling() haven't been called before.
-  *
-  * It's recommended for seqno fences to call dma_fence_signal when the
-@@ -423,6 +433,10 @@ dma_fence_check_and_signal_locked(struct dma_fence *fence)
-  * value of this function before calling hardware-specific wait instructions.
-  *
-  * See also dma_fence_check_and_signal_locked().
-+ *
-+ * Return: true if the fence was already signaled, or if
-+ * &struct dma_fence_ops.signaled is implemented and indicates that this fence
-+ * can be treated as signaled; false otherwise.
-  */
- static inline bool
- dma_fence_check_and_signal(struct dma_fence *fence)
--- 
-2.48.1
+> 
+> OTOH. What if the kernel is 64-bit, but the probed task is 32-bit and it
+> uses the 64-bit version of BYTES_NOP5?
+> 
+> Perhaps this is fine, I simply don't know, so let me ask...
 
+hum, did not think of that, let me try it
+
+> 
+> > @@ -852,6 +866,8 @@ static int branch_setup_xol_ops(struct arch_uprobe *auprobe, struct insn *insn)
+> >  		break;
+> >
+> >  	case 0x0f:
+> > +		if (emulate_nop5_insn(auprobe))
+> > +			goto setup;
+> 
+> I think this will work, but if we want to emulate nop5, then perhaps
+> we can do the same for other nops?
+> 
+> For the moment, lets forget about compat tasks on a 64-bit kernel, can't
+> we simply do something like below?
+
+I sent similar change (CONFIG_X86_64 only) in this thread:
+  https://lore.kernel.org/bpf/Z_O0Z1ON1YlRqyny@krava/T/#m59c430fb5a30cb9faeb9587fd672ea0adbf3ef4f
+
+uprobe won't attach on nop9/10/11 atm, also I don't have practical justification
+for doing that.. nop5 seems to have future, because of the optimization
+
+thanks,
+jirka
+
+
+> 
+> Oleg.
+> ---
+> 
+> diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+> index 9194695662b2..76d2cceca6c4 100644
+> --- a/arch/x86/kernel/uprobes.c
+> +++ b/arch/x86/kernel/uprobes.c
+> @@ -840,12 +840,16 @@ static int branch_setup_xol_ops(struct arch_uprobe *auprobe, struct insn *insn)
+>  	insn_byte_t p;
+>  	int i;
+>  
+> +	/* prefix* + nop[i]; same as jmp with .offs = 0 */
+> +	for (i = 1; i <= ASM_NOP_MAX; ++i) {
+> +		if (!memcmp(insn->kaddr, x86_nops[i], i))
+> +			goto setup;
+> +	}
+> +
+>  	switch (opc1) {
+>  	case 0xeb:	/* jmp 8 */
+>  	case 0xe9:	/* jmp 32 */
+>  		break;
+> -	case 0x90:	/* prefix* + nop; same as jmp with .offs = 0 */
+> -		goto setup;
+>  
+>  	case 0xe8:	/* call relative */
+>  		branch_clear_offset(auprobe, insn);
+> 
