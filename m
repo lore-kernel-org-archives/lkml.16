@@ -1,99 +1,132 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 399C8266B47;
-	Wed,  9 Apr 2025 14:49:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9CE4264633;
+	Wed,  9 Apr 2025 14:49:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744210164; cv=none; b=kKMkOYRLc69UpPB6+IQZBp1dgfpF6Xwifb4KbVJKQBZgy1K8fKbdDw381wqNfBpAPlCbNDU0CmK5OwNiPRW4RgtaGlTHnn0ThiZkpk1UxVAdzXdGkdwddBcIBt73NMP2zmXcvWiPF6ap/DgoZVmB6Le4NwDhJfzSUJx6ALMO4cc=
+	t=1744210173; cv=none; b=VXSLDfkb35gX16zvG4+Gx3M8A9xOUMVHp2VVpevgdBeQy+YUMH8Z3wPPCvjDv94xMVEVIzSaxR98TIJT4MrNf3N8HHvjl+Y8phYI1fbRZ/jndKmEX0PUaTxLGp7piSzAbQIpiRN1v7mOCRbzemvQERAvG7IddINwdPa1XpVAbEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744210164; c=relaxed/simple;
-	bh=xhjEV056H9FYdTOEcIjULpX+6vmWA46duA0byZ/I/c8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ma+h4C1xXLCjW5fZMsDu+6QZsezXvMBtBOIvxNZEDgGOrJHHgaLgUFakjeVYtmuoQax+vdjCgvChW5pKP4XMHVc7bm8tzsqjYprNuWAg0jylb7wRIC556gsM0H/aamFnhVjQSe2jpQXt3xxke9kXuNjrwlYugnV9X+S9jZ5ALRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ln3deWoU; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744210173; c=relaxed/simple;
+	bh=07QypnSemJ6N4KpkR5GbszKUU6eGU0VWeKKzV9WAYkg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dVuzzg7rzJ8jvHZ4RYd/HwL8x2ylHttALmH4EyuMzdqYEOZn1pmGck/ohrP6peef3UJ3RxRrvRp2fDK+tKMOd63udXKDWy5XpHajdGyM1BrVPnW4U46sGWfnYOL1FgDi4VsxrgQQ+NIAySgfdzT9a+b+1VlLs7TWR1CYA0oI2Q4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ATAPiJmn; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ln3deWoU"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-307325f2436so69549131fa.0;
-        Wed, 09 Apr 2025 07:49:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744210160; x=1744814960; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xhjEV056H9FYdTOEcIjULpX+6vmWA46duA0byZ/I/c8=;
-        b=Ln3deWoUhwBq3UwRSKwVj1GS/gfo8sm0NCTgAkf5cwjDmbHNib9xFEvbIj1VP7hcx1
-         aktbvAu8SP9ZUv2cDlVKAN2o1Wr4mQiCo8iBQZUVo/nOiujvYwZmTttXwJCun/YPXOev
-         y/yx7t7Nte0+VzC9cs5JjpAeOiDFRQNpGH9JSpjgtaRWwJRyRrPFQMz3l7SwU7aKMlSS
-         D9+K7LZc2Onwc25Bc7jGfqb/Q66cXfOUnuncGjiYOgvj5IDTJghW29WZkFb9gCbkcIZt
-         2okcqdf/tvaJkn/JR54fVjWa/z1UtYJmfF1bMprFKVHvDr+mGCEF9zzOSelc9+cnr1I3
-         jH5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744210160; x=1744814960;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xhjEV056H9FYdTOEcIjULpX+6vmWA46duA0byZ/I/c8=;
-        b=VDMD9zwQ3cSNKH1PNCOmQzWI95H0x8aoZ+OChaMW4YMbfO6H7g0SP204qNXf3Bq5c4
-         QOvXQrv9pX1OkRfeYKVRf050qp2pHgRwZGeeWfVrJUnWPWFh9hguaNSWPOgC1LsIl4/h
-         W6U0yRokxgKFwUc3DIuTQvqT1ebwc2uRmFzNyj3BtKiZkNqJlTMWTxzK0TKyDwVCssc9
-         C0XyANjrwsGpgZpEJ5eP4pJUG2w9Lh2AeTj83YAW0l3niXuOIEoRenhMAJHw2YV+3FWJ
-         HMRY4QrDrdupQ+6nqQRyOCNMnp1e4jpYpeD7axUTWcABkfG1ETxpRS0NVKe2sdFtMYQQ
-         enNw==
-X-Forwarded-Encrypted: i=1; AJvYcCXGPgRkCy3Dc1QbR+3KOIkjq+RfBEr2H5sEhOeaZicfeKbMCCO4rcs+B1CLQATJXdgnjXD6gyOAqhBlPps=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0J8oNbuzuzzcueeVHsWV8lE9vr+oRLMZM2QEcCHydPKw5IHGn
-	SDUVCc0VdlzMfCZTZM9LCqeFImUNsggNYwEE8S/mjVzBRljUjVg+r0KMx7Kx9NG5kBG39RxLiTr
-	JHXFQFy8jEia7npJSyjuzo+Ti+Nk=
-X-Gm-Gg: ASbGnctNJq7HTxQgc9bzDjHpWN6twxTyDiHA7h/psrk71kKOsxourcocp0ofhnE/Xoo
-	A82759JT/4xOh/OCrcwZr70qYYGr03SLcb50D7aeXnPD3nQoWl2kuzeBlrVi4MyiGIZp5Q+UsJu
-	o1hxpbkVzkbN+ZrFLTXR27WFE+m/NzTWuClSpweA==
-X-Google-Smtp-Source: AGHT+IE0OjJcLvewU6kRwfbIBnQJ6RvnEQwoJX/+dBHs52WJ/p2RPdESFV141biUeNxPOtMWMCMq/ccZek2tCqQK804=
-X-Received: by 2002:a2e:be9c:0:b0:308:fbd5:9d2d with SMTP id
- 38308e7fff4ca-30f438b6750mr10897051fa.37.1744210160026; Wed, 09 Apr 2025
- 07:49:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ATAPiJmn"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E239E441AE;
+	Wed,  9 Apr 2025 14:49:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744210162;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gsP1KTv2XYPfGaf4M7Q7suclDVzNu6V2bzVq2CpRjnQ=;
+	b=ATAPiJmn3ezHE9H5bkksUbLkZzerTfqYRTtXDvk81wyHnoc8tNfPf1liuoh5Kk2mhuYbws
+	M9iOSaQzhqlDZ7dc2vjsv73jJul6MRBwp3XQhN4pU1T0HcxhvUuh7LD95PkRH4bH4EHE3E
+	TJWPZuX0g0Qu66sWRXzaG2yG3Zgmcei+sqL2r7WqP39CbboXO2HdRw9/xgGNqZGvDJ7jOn
+	qavWCztoh2eT5gxjNEeNJ87m3RRvEDiDjQLyrLC8zZJjWutue5NxUM2txr7rmVhK7GWnUQ
+	ZIuDtVDwM3mv1ucTZtqgZqZyiw1BOkMkOfmn0K+XvDj7Egw/Uy2ecAS8z9duxQ==
+Date: Wed, 9 Apr 2025 16:49:20 +0200
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>, Andrew Lunn
+ <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Marek =?UTF-8?B?QmVo?=
+ =?UTF-8?B?w7pu?= <kabel@kernel.org>, Richard Cochran
+ <richardcochran@gmail.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, Vladimir Oltean <vladimir.oltean@nxp.com>
+Subject: Re: [PATCH net-next v2 0/2] Add Marvell PHY PTP support
+Message-ID: <20250409164920.5fbc3fd1@kmaincent-XPS-13-7390>
+In-Reply-To: <20250409144654.67fae016@fedora.home>
+References: <20250407-feature_marvell_ptp-v2-0-a297d3214846@bootlin.com>
+	<Z_P3FKEhv1s0y4d7@shell.armlinux.org.uk>
+	<20250407182028.75531758@kmaincent-XPS-13-7390>
+	<Z_P-K7mEEH6ProlC@shell.armlinux.org.uk>
+	<20250407183914.4ec135c8@kmaincent-XPS-13-7390>
+	<Z_WJO9g5Al1Yr_LX@shell.armlinux.org.uk>
+	<20250409103130.43ab4179@kmaincent-XPS-13-7390>
+	<Z_Yxb6-qclDSWk01@shell.armlinux.org.uk>
+	<20250409104637.37301e01@kmaincent-XPS-13-7390>
+	<Z_Y-ENUiX_nrR7VY@shell.armlinux.org.uk>
+	<20250409142309.45cdd62f@kmaincent-XPS-13-7390>
+	<20250409144654.67fae016@fedora.home>
+Organization: bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250409-container-of-mutness-v1-1-64f472b94534@gmail.com>
-In-Reply-To: <20250409-container-of-mutness-v1-1-64f472b94534@gmail.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Wed, 9 Apr 2025 10:48:43 -0400
-X-Gm-Features: ATxdqUFC-VpChO_A1OyOXTVwtBpWe4runp8t2SxRqzsNxltH0wOFvEYcx4OFsy8
-Message-ID: <CAJ-ks9mVs6+S6pgz9JEUWTjLNKuRzm45fWP4b+2kbUEeDY4pYQ@mail.gmail.com>
-Subject: Re: [PATCH] rust: retain pointer mut-ness in `container_of!`
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdeivdekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgfdutdefvedtudegvefgvedtgfdvhfdtueeltefffefffffhgfetkedvfeduieeinecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehkmhgrihhntggvnhhtqdgirffuqddufedqjeefledtpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudehpdhrtghpthhtohepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhmp
+ dhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhm
+X-GND-Sasl: kory.maincent@bootlin.com
 
-On Wed, Apr 9, 2025 at 10:43=E2=80=AFAM Tamir Duberstein <tamird@gmail.com>=
- wrote:
->
-> Avoid casting the input pointer to `*const _`, allowing the output
-> pointer to be `*mut` if the input is `*mut`. This allows a number of
-> `*const` to `*mut` conversions to be removed at the cost of slightly
-> worse ergonomics when the macro is used with a reference rather than a
-> pointer; the only example of this was in the macro's own doctest.
->
-> Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> ---
-> This patch is extracted from 3 other series to reduce duplication.
+On Wed, 9 Apr 2025 14:46:54 +0200
+Maxime Chevallier <maxime.chevallier@bootlin.com> wrote:
 
-Oops, forgot to include
+> On Wed, 9 Apr 2025 14:23:09 +0200
+> Kory Maincent <kory.maincent@bootlin.com> wrote:
+>=20
+> > On Wed, 9 Apr 2025 10:29:52 +0100
+> > "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
+> >  =20
+> > > On Wed, Apr 09, 2025 at 10:46:37AM +0200, Kory Maincent wrote:   =20
+>  [...] =20
+> >  =20
+>  [...] =20
+>  [...] =20
+> > >=20
+> > > How do I know that from the output? Nothing in the output appears to
+> > > tells me which PTP implementation will be used.
+> > >=20
+> > > Maybe you have some understanding that makes this obvious that I don't
+> > > have.   =20
+> >=20
+> > You are right there is no report of the PTP source device info in ethto=
+ol.
+> > With all the design change of the PTP series this has not made through =
+my
+> > brain that we lost this information along the way.
+> >=20
+> > You can still know the source like that but that's not the best.
+> > # ls -l /sys/class/ptp
+> >=20
+> > It will be easy to add the source name support in netlink but which nam=
+es
+> > are better report to the user?
+> > - dev_name of the netdev->dev and phydev->mdio.dev?
+> >   Maybe not the best naming for the phy PTP source
+> >   (ff0d0000.ethernet-ffffffff:01)
+> > - "PHY" + the PHY ID and "MAC" string? =20
+>=20
+> How about an enum instead of a string indicating the device type, and if
+> PHY, the phy_index ? (phy ID has another meaning :) )
 
-Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
-
-from https://lore.kernel.org/all/87semhbncg.fsf@kernel.org/. I hope
-this is proper form!
+This will raise the same question I faced during the ptp series mainline
+process. In Linux, the PTP is managed through netdev or phylib API.
+In case of a NIC all is managed through netdev. So if a NIC has a PTP at th=
+e PHY
+layer how should we report that? As MAC PTP because it goes thought netdev,=
+ as
+PHY PTP but without phyindex?
+That's why maybe using netlink string could assure we won't have UAPI break=
+age
+in the future due to weird cases.
+What do you think?
+=20
+Regards,
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
