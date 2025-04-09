@@ -1,79 +1,132 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04FF625A2DC;
-	Wed,  9 Apr 2025 09:50:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 267F225A2DC;
+	Wed,  9 Apr 2025 09:50:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744192226; cv=none; b=AZ3J0NUoJdGbc2nV91UyzFU8Cp3Bpzti0fFWAIeEgjoYPARpx4nYrbciUYZBX14LGzVk20k3R4YVdDRoWtYJ96e977SDh/BAtHHixPwxrYCvCcShzY3Q5jyxvU8Wx4zaPb/j6+nrjnBl6swqDanz0nAfSgCSxd6WEy2x8U9AUEQ=
+	t=1744192251; cv=none; b=neCUkGrK0cBtpkcZk2Oenn705enEw8r0L9T9x8UzX3CjASvlPoZxO/wzVIFUr5qWRT2g5WMbFdrqUQBEnRWiUCy+ogue0r6ZHvjCT3YaVPlz8xhxH7ImuugEeUcfNXV6P762OqASGBvQLUsuytQQ6DRBEuK9B3cqoZRhRYo8mnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744192226; c=relaxed/simple;
-	bh=djv4e+40pLsB+IrtUJHHfQeXkTy4AFV6Uvs67CoZRFk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=EAfd7osSj266QSsiDlvHSqwCIPrtiLpxxT5t+xGyOKJL1xcgjlwP8NJ766KUOrpkQy5sGO51VHTob8hF7gboAwhnlL0T1NCtciKcx7bLdmjBvh1+PvVKhvKK/zw1EUSJQNt7zEVZRVLDKvurwtm8YTWWWMMXFahtI5Tw9GehV3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 76DAC106F;
-	Wed,  9 Apr 2025 02:50:14 -0700 (PDT)
-Received: from a077893.blr.arm.com (a077893.blr.arm.com [10.162.42.12])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id CA9EF3F694;
-	Wed,  9 Apr 2025 02:50:11 -0700 (PDT)
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-To: linux-mm@kvack.org
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] selftests/mm: Fix compiler -Wmaybe-uninitialized warning
-Date: Wed,  9 Apr 2025 15:20:06 +0530
-Message-Id: <20250409095006.1422620-1-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1744192251; c=relaxed/simple;
+	bh=3Xy1d0ZKCKOQ3MBUYJIkxShddwZ/IF8I+/NfadY8KBs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fsSS8ZmuJehMvIZ9Rok18IU8N9YztPOS6v8k8wHOU6pDTN9BSq1sTQFRU6piKAnaKXFReEMvH+Eh+y/4l+3CKXelTlwpNf6AOodYku/Moj/rW5MlMcgL+2AGHMe7mvu6GytACIWMiWIFUsQytbna+10TwyQNwbPQxWojJ/D6u2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MNzdfvrq; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MNzdfvrq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99EEFC4CEEC;
+	Wed,  9 Apr 2025 09:50:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744192250;
+	bh=3Xy1d0ZKCKOQ3MBUYJIkxShddwZ/IF8I+/NfadY8KBs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=MNzdfvrqD3KPqxzYt3+xIIy8bnPL/qmzlLmAsmcF6ceCFXY55RNc9HhomphjQuHy7
+	 cLm6wCVpt4WpmbrqeLfqn72WTJ6sZTQ9ZpStlhUDBV1dG7V1Cw77mPkURm128PozmX
+	 d5X7G0zMsBwJ3CJJRFurEtwUFkN2COUjfmHRf/JadXY2fZr/rqoKZ16sIKcp9yB2/Z
+	 ugOPr0ZjA9i0gGp8zYbl2JsSUeoOx4FN8cxODE1/UUY+cwDPeCjaRwa5JmXofVIeVz
+	 rcB60nZt4Qn7jhCEcn4r9R1Tmtt+RV0zIyfpLrJCk3pOG0qcn50fNglIrF3oCw1utx
+	 pEGV0E716PwIw==
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5e5c9662131so10209942a12.3;
+        Wed, 09 Apr 2025 02:50:50 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU69t5H0LGpyRbxntKauCfNQ/aiYNJKinVjChHRO2GoWDsPz3Ybf4IvUd8mcK6za5Kf6TL9JUUunbRrvIgb@vger.kernel.org, AJvYcCWyB8t5FkEeF9AsSV7UJiqBBU9lcYuTy14BqabE0v2KCHm4dHgXoIhrVxUBDNz7QL9CL/9idJjzsT0wdA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQMrJGVNhAjBdNy8D28hC1iE3luiF3j73cAOWYD0DNre54DIBi
+	4qVMINL0CFAL/jA58QUEurrLOwe0eQmnx0q29wxEE3iDf2Nbvf6NLdwrc/B5lilUALEiBMCvXVd
+	WhSisbp/OxEwA0mWTipjkAB6iyB4=
+X-Google-Smtp-Source: AGHT+IEQPRgz05B5cbUBeFx6ljVX3NfUNAODD2oo5w8cUjx/V6yY1vctEbX9Jt45SZyIT2g8yRkjj4ew0h7AXUvZMYY=
+X-Received: by 2002:a17:907:6094:b0:abf:4bde:51b1 with SMTP id
+ a640c23a62f3a-aca9b65e5d9mr250602966b.21.1744192249141; Wed, 09 Apr 2025
+ 02:50:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250408122933.121056-1-frank.li@vivo.com> <20250408122933.121056-4-frank.li@vivo.com>
+ <CAL3q7H7BS6juCS0eRdo6sqM4jzeMMi1o=huG38wgKYumD7qmmw@mail.gmail.com> <20250408230413.GE13292@twin.jikos.cz>
+In-Reply-To: <20250408230413.GE13292@twin.jikos.cz>
+From: Filipe Manana <fdmanana@kernel.org>
+Date: Wed, 9 Apr 2025 10:50:12 +0100
+X-Gmail-Original-Message-ID: <CAL3q7H49CYEJWv6-zDY2VxTL5MgJtrFL+KEwKrJJFii-exmyyA@mail.gmail.com>
+X-Gm-Features: ATxdqUGWs7SG0Cm4MKLLdiioCwAgCiDq-AAk_INdDxbCxU24Q__DQFEKYn-nw64
+Message-ID: <CAL3q7H49CYEJWv6-zDY2VxTL5MgJtrFL+KEwKrJJFii-exmyyA@mail.gmail.com>
+Subject: Re: [PATCH 4/4] btrfs: Fix transaction abort during failure in del_balance_item()
+To: dsterba@suse.cz
+Cc: Yangtao Li <frank.li@vivo.com>, clm@fb.com, josef@toxicpanda.com, dsterba@suse.com, 
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Following build warning comes up for cow test as 'transferred' variable has
-not been initialized. Fix the warning via zero init for the variable.
+On Wed, Apr 9, 2025 at 12:04=E2=80=AFAM David Sterba <dsterba@suse.cz> wrot=
+e:
+>
+> On Tue, Apr 08, 2025 at 03:53:04PM +0100, Filipe Manana wrote:
+> > On Tue, Apr 8, 2025 at 1:19=E2=80=AFPM Yangtao Li <frank.li@vivo.com> w=
+rote:
+> > >
+> > > Handle errors by adding explicit btrfs_abort_transaction
+> > > and btrfs_end_transaction calls.
+> >
+> > Again, like in the previous patch, why?
+> > This provides no reason at all why we should abort.
+> > And the same comment below.
+> >
+> > >
+> > > Signed-off-by: Yangtao Li <frank.li@vivo.com>
+> > > ---
+> > >  fs/btrfs/volumes.c | 11 +++++++----
+> > >  1 file changed, 7 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
+> > > index 347c475028e0..23739d18d833 100644
+> > > --- a/fs/btrfs/volumes.c
+> > > +++ b/fs/btrfs/volumes.c
+> > > @@ -3777,7 +3777,7 @@ static int del_balance_item(struct btrfs_fs_inf=
+o *fs_info)
+> > >         struct btrfs_trans_handle *trans;
+> > >         BTRFS_PATH_AUTO_FREE(path);
+> > >         struct btrfs_key key;
+> > > -       int ret, err;
+> > > +       int ret;
+> > >
+> > >         path =3D btrfs_alloc_path();
+> > >         if (!path)
+> > > @@ -3800,10 +3800,13 @@ static int del_balance_item(struct btrfs_fs_i=
+nfo *fs_info)
+> > >         }
+> > >
+> > >         ret =3D btrfs_del_item(trans, root, path);
+> > > +       if (ret)
+> > > +               goto out;
+> > > +
+> > > +       return btrfs_commit_transaction(trans);
+> > >  out:
+> > > -       err =3D btrfs_commit_transaction(trans);
+> > > -       if (err && !ret)
+> > > -               ret =3D err;
+> > > +       btrfs_abort_transaction(trans, ret);
+> > > +       btrfs_end_transaction(trans);
+> >
+> > A transaction abort will turn the fs into RO mode, and it's meant to
+> > be used when we can't proceed with changes to the fs after we did
+> > partial changes, to avoid leaving things in an inconsistent state.
+> > Here we don't abort because we haven't done any changes before using
+> > the transaction handle, so an abort is pointless and will turn the fs
+> > into RO mode unnecessarily.
+>
+> The del_balance_item() case seems to be unique, there's only one caller
+> reset_balance_state() that calls btrfs_handle_fs_error() in case of an
+> error. This is almost the same as a transaction abort, but
+> del_balance_item() may be called from various contexts.
+>
+> The error handling may be improved here, e.g. some callers may care
+> about the actual error of del_balance_item/reset_balance_state, but
+> rather a hard transaction abort it could be better to handle it more
+> gracefully for operations that are restartable, like return an EAGAIN.
 
-  CC       cow
-cow.c: In function ‘do_test_vmsplice_in_parent’:
-cow.c:365:61: warning: ‘transferred’ may be used uninitialized [-Wmaybe-uninitialized]
-  365 |                 cur = read(fds[0], new + total, transferred - total);
-      |                                                 ~~~~~~~~~~~~^~~~~~~
-cow.c:296:29: note: ‘transferred’ was declared here
-  296 |         ssize_t cur, total, transferred;
-      |                             ^~~~~~~~~~~
-  CC       compaction_test
-  CC       gup_longterm
-
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: linux-mm@kvack.org
-Cc: linux-kselftest@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
- tools/testing/selftests/mm/cow.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/testing/selftests/mm/cow.c b/tools/testing/selftests/mm/cow.c
-index f0cb14ea8608..b6cfe0a4b7df 100644
---- a/tools/testing/selftests/mm/cow.c
-+++ b/tools/testing/selftests/mm/cow.c
-@@ -293,7 +293,7 @@ static void do_test_vmsplice_in_parent(char *mem, size_t size,
- 		.iov_base = mem,
- 		.iov_len = size,
- 	};
--	ssize_t cur, total, transferred;
-+	ssize_t cur, total, transferred = 0;
- 	struct comm_pipes comm_pipes;
- 	char *old, *new;
- 	int ret, fds[2];
--- 
-2.43.0
-
+That's just not possible in 2 cases out of 3 (btrfs_cancel_balance()
+being the exception where it's possible), since we already have an
+error return value to return to user space.
+The btrfs_handle_fs_error() call is exaggerated and doesn't accomplish
+anything as the balance item was already persisted in a transaction
+committed previously.
