@@ -1,72 +1,39 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B51425B67C
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 11:11:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F40F725B67C;
+	Wed,  9 Apr 2025 11:12:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744197089; cv=none; b=pS/cGNBpnKEq0GmLIehuCHeY+ASEUODoSEDnkbd/TLEwnv5ZH9G9+k4uRdPoASRKJtEZzX2SpD3jUonM03cLplOs3SOJr/N8glqfXTAKz7XFGbBHVlDdz2RgVFqwORkBw9MmoUWwOdXs823kwjqTcoikzhtdNIcPsh+nSMioI6o=
+	t=1744197141; cv=none; b=rqoLS75663/czsYGNtFlpqKldMp8fIgXuE6vjVm8REaOLiL8wSaE1x1vcszhFe015VkyotN5ni8GH2FcMqoGnlAS72jWTa7CjR5kRzIalbsrgibP6XRI39hPgq+36PwQY4rWTL6hfLTRLl45Vd9GIVFN49s2rsG6E9xq77AaIm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744197089; c=relaxed/simple;
-	bh=ik9ItygRr9yIPW2Mc/PZYhjH6z8YDKHWGfbwtOGw0G4=;
+	s=arc-20240116; t=1744197141; c=relaxed/simple;
+	bh=DbCo3zQBVGhLx2s27nDfxKdE++jQWAc8ZqVNI5Xdrdw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BXyWp8NjzQyuJDIGTjzmDtaCTmw24dHMqcLbtYgxqGkXb/fYY/n4pyyBjEjMifZJshLkjOddPmGkhZ+726feXpEpVtNKfO/T6T3RDcakM4f9kkrD4bB5dYSKgB5GNcLHae/lQzZ3Zhl80nsegVRE4ORiPkBzWivKV0n9a7p5lTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zxEB2b6G; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zxEB2b6G"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39ac8e7688aso4800484f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 04:11:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744197085; x=1744801885; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8hUKCIZwdAKFsLiLYa1VO4wMgsObAoyYESjSHJd2mFE=;
-        b=zxEB2b6GkdiH5RmQGYPA3R6M5aRd5o+w45x3omMFEvfbuyTTH1UUKCjgHexbzE20Z3
-         FBnSwe3I/kefB9m2+uAyc2/JUxG1tRXmXyakGFEfNwdA8+xBu6NUvxHc3VZTmn7BOqav
-         0QVDG/000kfdhBTDn/Zoub4TOXiMjvnxITWnZpuP3BdNAtij1kxHvhQaU4G4V8o7VHux
-         UY2kAMmkucXkx2kLg+spYODepMpDSFj43Q9cS4BFhgFiYjkSP+bD9QbmMABc9D0UY8/e
-         FnIVALYTLymZtFSuYjn/ig1/fnDs9U5n4c6GyiaxvYDi84UTm53P9WLSxF5D8HxzpPsp
-         ERzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744197085; x=1744801885;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8hUKCIZwdAKFsLiLYa1VO4wMgsObAoyYESjSHJd2mFE=;
-        b=QZEbakp149S6TZbeDUmKczMti4o/yABiy8T52/qMCRoPEnasHfrTZmplB48zhajkgX
-         7OwVE1y0Xfb9fdsNGWuRZWiRLxTkUBNmSViqsTGXEg+Jh4EWc2Qw4aWoTGFl274iKFnm
-         zhTivE/H+Bh+sD4dKCIuHWLsuLlspwoZPXI5hqu/a9T7MtsaJ7z1YxyZNtyNnDwA3099
-         kcVa/o+KUO/7nB7XiGNkLfnebRSOsKWjic7BmqXVMnNJNm7VezQpeRsfV5fRt0IeRLdp
-         7mpTwhG0nfPVHdleNv2vdbua6Yn2/UIDRY9Da7LF4ux3oUX3rtoVXBYuiivpl954S3VF
-         8d0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUtOu+4fnswBD0o/NsxBl6UjOlP8YQi8AWLP+lkaCUheMXc6dIs8Zlc58n6Ju6PeKMr8qgxu40GCCOzV+s=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0aHdXUz+fUGpDdZE7LO90XrU7Zs2nuMdcrKyh7mGFDlSchqrb
-	608zuw8VTi5F5Bxo+hk0+6LIfoMTwj7UeOfx4DC4ghTKJNYcLctXyH6On3LAf3U=
-X-Gm-Gg: ASbGncul7L+RKqCq/tH132/YI7XrIBsZmTVfj537nUs4iOYJe+vYk/wTCOKdZiZTY5i
-	2DZDTqvg7/hbdSKmF1Ey7UR1jISG/ztMs38YLzpJ8JEDNzFJ9nngv6Yga7d0+Dsic915Ki2nrQu
-	1i7B+/CDjIIqccWHOiicXyHZbhNDYjAE9tFxvh0UdzQ+ru0esQ/4KrG5rgMPSoUMhrAus+aMaWu
-	b8ZgKS60hK6s6hKdyr+xybtZuVOTcwLVd4yZfWsg6TZTEVYzIRXxuVE1eF+EWRe094577muhf1P
-	kghbUP7gqfp9BRYfCqt3/+4MS7IFu5RSw4PznbaBcdVt8w==
-X-Google-Smtp-Source: AGHT+IGXax2LtMxOpUGA9r+oCr9bPGcaXFt/3GzRkKF3FDOJvk1Gx+REYad/Sskufy4uK+n2UYFvKA==
-X-Received: by 2002:a05:6000:4009:b0:391:4684:dbef with SMTP id ffacd0b85a97d-39d87ab6243mr2104415f8f.17.1744197085566;
-        Wed, 09 Apr 2025 04:11:25 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43f23158849sm13409175e9.0.2025.04.09.04.11.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 04:11:25 -0700 (PDT)
-Date: Wed, 9 Apr 2025 14:11:21 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Julia Lawall <julia.lawall@inria.fr>
-Cc: Erick Karanja <karanja99erick@gmail.com>, gregkh@linuxfoundation.org,
-	outreachy@lists.linux.dev, philipp.g.hortmann@gmail.com,
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] staging: rtl8723bs: Improve code readability
-Message-ID: <22a2c8a7-9669-40bd-b886-713833de5cc4@stanley.mountain>
-References: <cover.1744192642.git.karanja99erick@gmail.com>
- <97a2637f3ccefb3de0e15fd04f29f5f209f2a506.1744192642.git.karanja99erick@gmail.com>
- <3dda7f97-4ed8-cf6d-9310-60ed6259a386@inria.fr>
+	 Content-Type:Content-Disposition:In-Reply-To; b=jTxZbpOsRMtOgL8PvUXwjhUA1rMAlJhpBGZySAbwjQwilEAT067S90PpQ+ObczVTZqzEFaRJ2xLvJrA6eqOOe0dNz3gmbab2rVfm5vF4Do6jdZYkCsPY7ROpOu+nPr0oQXviIkiZXDgOw4QyOz76n28C1v4ecK9pz6BnDmu06PM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B186B1595;
+	Wed,  9 Apr 2025 04:12:18 -0700 (PDT)
+Received: from bogus (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C69193F694;
+	Wed,  9 Apr 2025 04:12:16 -0700 (PDT)
+Date: Wed, 9 Apr 2025 12:12:13 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: "Matthew Bystrin" <dev.mbstr@gmail.com>
+Cc: "Cristian Marussi" <cristian.marussi@arm.com>,
+	Sudeep Holla <sudeep.holla@arm.com>, <arm-scmi@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>,
+	"Philipp Zabel" <p.zabel@pengutronix.de>,
+	"Peng Fan" <peng.fan@nxp.com>
+Subject: Re: [PATCH] firmware: arm_scmi: add timeout in
+ do_xfer_with_response()
+Message-ID: <20250409-fierce-astonishing-bug-dd2adb@sudeepholla>
+References: <20250402104254.149998-1-dev.mbstr@gmail.com>
+ <20250402-hidden-unyielding-carp-7ee32d@sudeepholla>
+ <Z-1gY8mQLznSg5Na@pluto>
+ <D8X9JJGPGDNL.1OTKIJODRFKNN@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,32 +42,102 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3dda7f97-4ed8-cf6d-9310-60ed6259a386@inria.fr>
+In-Reply-To: <D8X9JJGPGDNL.1OTKIJODRFKNN@gmail.com>
 
-On Wed, Apr 09, 2025 at 07:04:18AM -0400, Julia Lawall wrote:
-> > @@ -729,10 +721,9 @@ static void hal_ReadEFuse_WiFi(
-> >  		}
+On Thu, Apr 03, 2025 at 10:50:17PM +0300, Matthew Bystrin wrote:
+> Hi Sudeep, Cristian,
+> 
+> Thanks for having a look on the patch.
+> 
+> Cristian Marussi, Apr 02, 2025 at 19:05:
+> > > Please post this patch along with the vendor specific protocols mentioned
+> > > above and with the reasoning as why 2s is not sufficient.
 > >
-> >  		if (offset < EFUSE_MAX_SECTION_8723B) {
-> > -			u16 addr;
-> > +			u16 addr = offset * PGPKT_DATA_SIZE;
-> >  			/*  Get word enable value from PG header */
+> > Ack on this, it would be good to understand why a huge 2 secs is not
+> > enough...and also...
+> 
+> I've been working on firmware update using SCMI vendor/platform-specific
+> extension on FPGA prototype, so not posted it initially. I'm open to share the
+> details if needed, but need some extra time for preparations. For now I'm
+> posting a brief description of the extension. It has 2 commands:
+> 
+> - Obtain firmware version number.
+> - Update firmware. Firmware image is placed into shared physically contiguous
+>   memory, Agent sends to platform micro controller (PuC) physical address and
+>   size of the update image to start update procedure. After update is completed
+>   (successfully or not) PuC sends delayed response.
+> 
+> 	Agent ----     start update         ---> Platform uC
+> 	Agent <--- update procedure started ---- Platform uC
+> 	...
+> 	Agent <--- (async) update completed ---- Platform uC
+> 
+> I've faced timeout problem with the async completion response. And update can't
+> be done faster than 10s due to SPI flash write speed limit.
+> 
+
+Understood.
+
+> Why not to use notifications?
+> 
+> First of all, semantics. IIUC notifications can be sent by PuC in any time. This
+> is not suitable for updates, because procedure is initiated by an agent, not by
+> a platform.
+> 
+
+The start update should retain as soon as Platform uC acks the request.
+And 2 notifications can be sent out for update procedure started and
+completed. I don't see any issue there. What is the semantics you are
+talking about ?
+
+> Secondly, code implementing  notification waiting duplicates delayed response
+> code. I had implemented it as a proof-of-concept before I prepared this patch.
+> 
+
+Even delayed response as some timeout so I would rather prefer to use
+notifications in your usecase as it is completely async.
+
+> > > Also instead of churning up existing users/usage, we can explore to had
+> > > one with this timeout as alternative if you present and convince the
+> > > validity of your use-case and the associated timing requirement.
+> > > 
 > >
-> > -			addr = offset * PGPKT_DATA_SIZE;
+> > ...with the proposed patch (and any kind of alternative API proposed
+> > by Sudeep) the delayed response timeout becomes a parameter of the method
+> > do_xfer_with_response() and so, as a consequence, this timoeut becomes
+> > effectively configurable per-transaction, while usually a timeout is
+> > commonly configurable per-channel,
 > 
-> I'm not sure about this one, due to the comment.
+> Totally agree, usually it is. And that's why I didn't change do_xfer() call.
+> Here is the thing I want to pay attention to.
 > 
-> julia
+> Let's focus on delayed responses. I think delayed response timeout should not be
+> defined by transport but rather should be defined by _function_ PuC providing.
+> And of course platform and transport could influence on the timeout value.
 > 
 
-I feel like it works.  I wish there were a blank line after the
-declaration but that's something for a different patch.  Both of
-these are okay with me.  Try to be more creative with the subjects
-next time.  (Just put the file name in the subject because that's
-the only difference).
+I think in your case, it is not even transport specific. It is more operation
+specific and hence I prefer notifications.
 
-Reviewed-by: Dan Carpenter <dan.carpenter@linaro.org>
+> > so valid as a whole for any protocol
+> > on that channel across the whole platform, AND optionally describable as
+> > different from the default standard value via DT props (like max-rx-timeout).
+> >
+> > Is this what we want ? (a per-transaction configurable timeout ?)
+> >
+> > If not, it could be an option to make instead this a per-channel optional
+> > new DT described property so that you can configure globally a different
+> > delayed timeout.
+> 
+> Taking into account my previous comment, I don't think that having a per-channel
+> timeout for delayed response would solve the problem in the right way. What
+> about having a per-protocol timeout at least?
+> 
 
-regards,
-dan carpenter
+Yes neither per-transport nor per-protocol timeout will suffice in your case.
+This 10s timeout is specific to the update operation and hence use
+notification. All other solution is just workarounds not generic solution.
 
+-- 
+Regards,
+Sudeep
