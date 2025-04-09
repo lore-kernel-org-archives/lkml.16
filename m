@@ -1,114 +1,156 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61BC827816F
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 18:54:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4820E27932D;
+	Wed,  9 Apr 2025 18:54:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744224869; cv=none; b=oP17gLPhrtYJGh9yJyel8zageJ96fLQPC0nka9qJbn6vB+nQkOgMeTDRwQXYtPUtjt00/q+Sy0lButIcu3usX2qP9eK62pHwbmJov8TuEbm3hTOBIgpFWtF3PDQ52xAUXAY+QKedJyLRQbEqx3GKMqNsa0mXrDUZWIECe2521r4=
+	t=1744224870; cv=none; b=MEiOXTntduqi+DxAJZbuBEgqspVeil+Iklyd/5+18BYquQkW11VeXCFIxmAft95waWg8fakqzFK6NQcllWTVOe07C+Gp90kHOq0//vH/nCEMfiPloRBhTJo0snjBTKgU5XPCG5mqPSEjRv0YhuMm5SPE1lkkbtghqHyu61hOEpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744224869; c=relaxed/simple;
-	bh=syPUBIzkEdarCp+N7WDiwHDCNIOV6P5QwWnIfqZVWLQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YDP/1Be15/lwuJCiKDaTXqhJvFred+b/bn8KKC1Mtm1Uifn0aTvzUT98VYQfdT/jFdjN3arIUa0d6cUlsU/e8UPgxikkwBaADxUic94LwTC/o3yhIl5ZftgWoMg1lhjwSt//TOjk8jTUB6vEdrDzLxqUBuFULK2ajpZhSJr7sJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=YfJq30qN; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1744224870; c=relaxed/simple;
+	bh=mMG6xH4tZQ2fTDUJgPzk70r/8nOTLnpgQpsI7uB3zkw=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=dN04Pho3S3OGLzPw45NaR/2ycbczZ5WjMiKWbcD7Ok4HRxq1YDVbHGgHXAMvzespj+QMEnMJTlmPh2d08qLlviDtZ9SsxkHM8pJeMMeHlsxptEAX6qvPLWwR66B1uNHzb4PM4L1j1Dgo5oQ01id41xyyrOAC6Mv+PoOgZZVW7rk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UwwXgD9U; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qmdwCcMj; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YfJq30qN"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-af59c920d32so51237a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 11:54:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1744224867; x=1744829667; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=EuoB16/glHZs8DH9yStavq4EmyDzORTC/5S9hgU6uRQ=;
-        b=YfJq30qNt2eazDQvF4ru6jdllvyjlGpTAJzqLbUOFSL9VSJev4ElvKMvIME1R3GiYq
-         sXqMHcoeeSoA3hSqgdrihAOmz9gs/eIVuSZ4cCKjCC+iD/q0MGfQKRTDe2ncYB+nl2HQ
-         zBllJMa6NnDp0usZ/Xi2qxLHOhUYAUYJ5cpXM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744224867; x=1744829667;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EuoB16/glHZs8DH9yStavq4EmyDzORTC/5S9hgU6uRQ=;
-        b=bsvkd0m9U5+NmhnSKUzhDgQSRtd3Rlpmh7A987SKDVHObUtz6TQBGh7Bz7owaWu0Oq
-         Uhjc4vbuAU5Dp5WYp624KKDmXWi515eAxG8ATa8RVDh+k1P369ZRea9MTprA/tKl4QHb
-         V6+ROwKYH8W2IfQw1aBAw3sUbNVNlbAuJU/Zdqlz9Gcoiaf+yIYuBjRwm2nsbMkpnpSF
-         AViCVv2bsFlgLd6DsZUgpdF6Prf/dDv0KnFM3u/tVnDtBOpCTUlrAE7/NEbiGlryIIh9
-         ZGXV/4P4ibUWIEtlacBfbiusHycekQj6BoNX5+Ke/vifxtZfoc64hevUMQe+8YX/HjN0
-         almA==
-X-Gm-Message-State: AOJu0YzVXDSIgfelKePXFe3ZM+QpjmIJ3iqwfl7gcSFm0Zds+Jcqf653
-	nTtv70QiqsWujsN+FvZlDPvgVjtR3ipm/H/CPsbVEA27O7LO2mz6AZu6H/49Sg==
-X-Gm-Gg: ASbGncvaYpxoWXhgXJy6ljbWI3pBfseHAbPUqsztEs1yWA2qEUSv9wWJ1wS/0l3sRyc
-	MU94xMtspPtZ8zx3FSJ8OP4IQ4eagvnhpoBcQv4lz1u9qoFrH1yq5+UWDTfYUSCrv86255SzpsR
-	8aFUft+TA5PgYkcmlYW/1YUO9EqWj/5Dn+yfjtCtxk4BVZC9ZvP1tDbVh/yZPQEOv028RO6XbrS
-	f7DP+hQve3G1g34d7TnoctteYqi6uen4Pe41GFNfUjFPwN6/rMBDySptz/yre7HzL/FuIoasBf5
-	AitwgHV3oJZVWRC8hQfGCpjfPwAlEP2l9W8TxMnvaw4pBck+kN5k68kA+HvH/GVNHTlXnBk4sVc
-	+7g==
-X-Google-Smtp-Source: AGHT+IFaHlE9ZoUh5364MdBMCmTSlfQCXd+iwEWJTQuSiqhbGD8ldtSoWxeJNBTDXaBLlDhuQihS0Q==
-X-Received: by 2002:a17:90b:53c8:b0:2ee:cded:9ac7 with SMTP id 98e67ed59e1d1-30718b83034mr77258a91.20.1744224867680;
-        Wed, 09 Apr 2025 11:54:27 -0700 (PDT)
-Received: from localhost ([2a00:79e0:2e14:7:461b:92cc:c320:f98])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-22ac7b642besm15656375ad.46.2025.04.09.11.54.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Apr 2025 11:54:27 -0700 (PDT)
-From: Brian Norris <briannorris@chromium.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Brian Norris <briannorris@google.com>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Brian Norris <briannorris@chromium.org>
-Subject: [PATCH] PCI/pwrctrl: Cancel outstanding rescan work when unregistering
-Date: Wed,  9 Apr 2025 11:53:13 -0700
-Message-ID: <20250409115313.1.Ia319526ed4ef06bec3180378c9a008340cec9658@changeid>
-X-Mailer: git-send-email 2.49.0.604.gff1f9ca942-goog
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UwwXgD9U";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qmdwCcMj"
+Date: Wed, 09 Apr 2025 18:54:21 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744224867;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WvAiMyF7rx9J7jNxozNCGf3dIM4d28Yv0WOtKBRR93E=;
+	b=UwwXgD9Uaam9Ybj4wH/+FRdmgZ8/KhwvEfNNLFF0fZa8qOEyDKRhnFr1dSj+F4DgQeDHuh
+	QqY32w32arlsTIlbz4AinPn5j8EZu74THo7PsNTqKWLFDradoNSz6jglWj2lslUGm6WYgf
+	GkEnqyO/YkdMXZ6UHYn3Ceb9OZFLC60CkI2FigPWb4m0c4cTdfS56vgab8JToThvU9fFBK
+	D0nxw/tzZMCOfM5IeNp0FgCLOBmvsi0TZ57929J4ezXrRyid8s10+4jZcNklfjAfvyc7wF
+	9igIBLR4zWndZd6U0Knz3jrLcOrxsFlGDDXsi5C/rC5blmQYXKxJwT6LOen+og==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744224867;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WvAiMyF7rx9J7jNxozNCGf3dIM4d28Yv0WOtKBRR93E=;
+	b=qmdwCcMjZaRzNPkNIIIh52RQvpfA6XflWYv9lHO8GgXHrQ71xZDLAUTIAGa9s5y3vtj7AO
+	1eHer5EkCwdhBkCg==
+From: "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/msi] genirq/msi: Rename msi_[un]lock_descs()
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+ Jonathan Cameron <Jonathan.Cameron@huwei.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250319105506.864699741@linutronix.de>
+References: <20250319105506.864699741@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <174422486256.31282.18049333911691421551.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-From: Brian Norris <briannorris@google.com>
+The following commit has been merged into the irq/msi branch of tip:
 
-It's possible to trigger use-after-free here by:
-(a) forcing rescan_work_func() to take a long time and
-(b) utilizing a pwrctrl driver that may be unloaded for some reason.
+Commit-ID:     9357e329cdeb6f2d27b431a22d4965700bec478a
+Gitweb:        https://git.kernel.org/tip/9357e329cdeb6f2d27b431a22d4965700bec478a
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Wed, 19 Mar 2025 11:57:01 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Wed, 09 Apr 2025 20:47:30 +02:00
 
-I'm unlucky to trigger both of these in development. It's likely much
-more difficult to hit this in practice.
+genirq/msi: Rename msi_[un]lock_descs()
 
-Anyway, we should ensure our work is finished before we allow our data
-structures to be cleaned up.
+Now that all abuse is gone and the legit users are converted to
+guard(msi_descs_lock), rename the lock functions and document them as
+internal.
 
-Fixes: 8f62819aaace ("PCI/pwrctl: Rescan bus on a separate thread")
-Cc: Konrad Dybcio <konradybcio@kernel.org>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Signed-off-by: Brian Norris <briannorris@google.com>
-Signed-off-by: Brian Norris <briannorris@chromium.org>
+No functional change.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huwei.com>
+Link: https://lore.kernel.org/all/20250319105506.864699741@linutronix.de
+
+
+
 ---
+ include/linux/msi.h |  8 ++++----
+ kernel/irq/msi.c    | 16 ++++++++++------
+ 2 files changed, 14 insertions(+), 10 deletions(-)
 
- drivers/pci/pwrctrl/core.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/pci/pwrctrl/core.c b/drivers/pci/pwrctrl/core.c
-index 9cc7e2b7f2b5..6bdbfed584d6 100644
---- a/drivers/pci/pwrctrl/core.c
-+++ b/drivers/pci/pwrctrl/core.c
-@@ -101,6 +101,8 @@ EXPORT_SYMBOL_GPL(pci_pwrctrl_device_set_ready);
+diff --git a/include/linux/msi.h b/include/linux/msi.h
+index 4e43991..8c0ec9f 100644
+--- a/include/linux/msi.h
++++ b/include/linux/msi.h
+@@ -229,11 +229,11 @@ struct msi_dev_domain {
+ 
+ int msi_setup_device_data(struct device *dev);
+ 
+-void msi_lock_descs(struct device *dev);
+-void msi_unlock_descs(struct device *dev);
++void __msi_lock_descs(struct device *dev);
++void __msi_unlock_descs(struct device *dev);
+ 
+-DEFINE_LOCK_GUARD_1(msi_descs_lock, struct device, msi_lock_descs(_T->lock),
+-		    msi_unlock_descs(_T->lock));
++DEFINE_LOCK_GUARD_1(msi_descs_lock, struct device, __msi_lock_descs(_T->lock),
++		    __msi_unlock_descs(_T->lock));
+ 
+ struct msi_desc *msi_domain_first_desc(struct device *dev, unsigned int domid,
+ 				       enum msi_desc_filter filter);
+diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
+index 5747d20..a8f7701 100644
+--- a/kernel/irq/msi.c
++++ b/kernel/irq/msi.c
+@@ -343,26 +343,30 @@ int msi_setup_device_data(struct device *dev)
+ }
+ 
+ /**
+- * msi_lock_descs - Lock the MSI descriptor storage of a device
++ * __msi_lock_descs - Lock the MSI descriptor storage of a device
+  * @dev:	Device to operate on
++ *
++ * Internal function for guard(msi_descs_lock). Don't use in code.
   */
- void pci_pwrctrl_device_unset_ready(struct pci_pwrctrl *pwrctrl)
+-void msi_lock_descs(struct device *dev)
++void __msi_lock_descs(struct device *dev)
  {
-+	cancel_work_sync(&pwrctrl->work);
-+
- 	/*
- 	 * We don't have to delete the link here. Typically, this function
- 	 * is only called when the power control device is being detached. If
--- 
-2.49.0.604.gff1f9ca942-goog
-
+ 	mutex_lock(&dev->msi.data->mutex);
+ }
+-EXPORT_SYMBOL_GPL(msi_lock_descs);
++EXPORT_SYMBOL_GPL(__msi_lock_descs);
+ 
+ /**
+- * msi_unlock_descs - Unlock the MSI descriptor storage of a device
++ * __msi_unlock_descs - Unlock the MSI descriptor storage of a device
+  * @dev:	Device to operate on
++ *
++ * Internal function for guard(msi_descs_lock). Don't use in code.
+  */
+-void msi_unlock_descs(struct device *dev)
++void __msi_unlock_descs(struct device *dev)
+ {
+ 	/* Invalidate the index which was cached by the iterator */
+ 	dev->msi.data->__iter_idx = MSI_XA_MAX_INDEX;
+ 	mutex_unlock(&dev->msi.data->mutex);
+ }
+-EXPORT_SYMBOL_GPL(msi_unlock_descs);
++EXPORT_SYMBOL_GPL(__msi_unlock_descs);
+ 
+ static struct msi_desc *msi_find_desc(struct msi_device_data *md, unsigned int domid,
+ 				      enum msi_desc_filter filter)
