@@ -1,107 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 476902B9CD;
-	Wed,  9 Apr 2025 09:15:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37F532594
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 09:18:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744190147; cv=none; b=tEbTe0wBRZsTVOySwZICVh9k/JZyBTqKqKN60zVcjfzsYSEcrulKnSoqeWE/0VSXaSdnuFwklXNyef/4iGGgIdz7IEIDVLR7QjrSaVW0U/skM6v4gDOs9zEDKHYQsE4V5yQUJhsnQX1fRqTs+o6QaMwHOC+duw+XC3KB0gD3PDc=
+	t=1744190302; cv=none; b=TnrDLiyEni1LQj3mgIAGdYZFoROTRwrK21469JEJoWbv/cj9ctejQn5wbczzOmfNlndQJ0/73oM2Axv3P46RN/BBiUn4kNa+BbVZnGBM47e7ofVelObZZLTbxv5P5mrAAEhV0N5nAEAo1EB6yM0F1MTRP9CzyfjqutCiBwsjYG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744190147; c=relaxed/simple;
-	bh=Ty1pwqrmShrkkSXMYJB/5FbS4/B1OSXP3/4mT9aAsdM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ka6/6ViYIYGJL4nprcB029WYYBqdlDIh7+3A6uXlIZaxOKNs0tD/EjKru/lPL9x9ITiG1eIwZ+GLoF6NRR0lZPmuzDvLA7ARRPjxzlqV0vP+uH6Me0gsdjmCmPJ0RYT+xc1SojNVUMqnDy0VLNRAt+4Up+mQ9j4uOsetXE5Dr60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U+JWoiGn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744190302; c=relaxed/simple;
+	bh=5nV6AaMR5RiEk2x2tAdJqgZhq7kkosJGZFIQ1iElUBk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=FZk4EoZ/r5FnMSxamDE+zuL3QB+N6TEydfcQElsHbPSxSm8Nz2wwTkiBtd7R7C4/MfMhc+Blor0+Os+Gb1xJ7EjWYyy+CQV/0ij+3EmKGCqroPi3CEoFmpijbMIKjjoNGqZRldgzHfCcl/kqFB4pGvlEcixPMCRB2mlApPRVku4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=wf58xGtL; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U+JWoiGn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3ACBC4CEEE;
-	Wed,  9 Apr 2025 09:15:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744190146;
-	bh=Ty1pwqrmShrkkSXMYJB/5FbS4/B1OSXP3/4mT9aAsdM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=U+JWoiGnB3Ltj1oq2Lf12BbJStduvwmmIbUpPwE46zLzraulDbpUgoHkBVVxSd8dR
-	 xOjYR3O0gjN793iX6J5SWUKGfn+DlCd+uaXBa+XFVfRJqxVnHQLRo7nKYLq9iVeXzp
-	 A/XArWDVpftzIr3pQVPG/eHPWRm3RpI0SJr9XSe0gl9SKO/KANIGVe8EcU5X7aFWTa
-	 RGiQ2+2WTb/xFNL+o/t7/fYw5Du7FdwDxlEPGS/tMcK8pzaxCTKqVFYH8LIx3xs4J/
-	 ErqqLr1eYv8y+gb3UwC3FHhHjttrF/dppMtlQcx4TZpLLNii5sUvwGx1x4OAmCwuw6
-	 uOEeyj0DSftjA==
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-549b159c84cso4589821e87.3;
-        Wed, 09 Apr 2025 02:15:46 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUgSzhF7Y3/gyKzFLL0DIAPu946Tfhx9pgySOUcWKcp6r9meUdZ8Vp7zd25RZWW/toXZmzRv5QMTbaN@vger.kernel.org, AJvYcCVCUlaSgUmr2jrTmLM+kEATKVQ/WbsNRiAuR85WbGmmQbBtk7mQYnJevWfqXBAMbN5Kc8MWY28yp3jjGsLjvWxh@vger.kernel.org, AJvYcCVLuk0NjYvcXlSNV/aOHWYRF3tXKOcCA2K8FfCWt4d0rlbaTJaTOuMHLCIStvd1XUp8kVpvoY8tcj5IG5l9@vger.kernel.org, AJvYcCVyzk5eztTdtqq6WdCgwGERRM1zD6Ka4JowOP8UR1oNx2MHnWRDqri2xoN9N8M2R6jfYFq1qVD1r+oVI5k=@vger.kernel.org, AJvYcCW7GIpvuMbbX7bmeLkv8aheWSGNVviCFWOunLp1RXDF19I2yyWp6rR2WWYwxR++Dqk5/sjYlg2gKlG6@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgYdVILBznhKsRZwTE0CVRjC2r9439bosqfwgJ6UiU78jr6/KY
-	/1t5TX95wzDcKQJpdtaW2VMvizyS5GggiSCFGJY/1AFMoJFs2uQRETKopT1F/GGxvgiCTGmC6j+
-	jb1PeeuCERB0ingq8YeaS6Ug4fHo=
-X-Google-Smtp-Source: AGHT+IGr6pJEooPeND2WPKwmKzqEYbai9tqpsiAki3uL4C9w+bT2D4fnGON4jq0ew7tRiFB4rDjlDOhGc1mfiwwy2OM=
-X-Received: by 2002:a05:6512:3981:b0:545:8a1:5379 with SMTP id
- 2adb3069b0e04-54c44561c19mr593775e87.43.1744190145154; Wed, 09 Apr 2025
- 02:15:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="wf58xGtL"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39c1ef4acf2so3975448f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 02:18:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744190298; x=1744795098; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CjbFshPOLZ36u3rr8owbx1Ylrac5EPr6guv06MB6egA=;
+        b=wf58xGtLznY+D2RpaH6NOgepQWhWUsQytUlbLI6dPNOiz0kDWeDYr8JAXDPepIPdCE
+         IUjS1le0BG6lTdCsNKwfKQxXLwomk+khUm2WFvELl6pS7sEQqQryqBoLWHzS1Wf6sXQL
+         kQxQ72ONGbF2vV6sLNv+Ipb47LcY9wgcC4rWK1Q/Zlqvyrhe9gPZATSpr+YR/OLARM6g
+         hdqGwEzyncLkjxTWWBd9U/gP3LmKLYNgkhGdHBspkN+V95hDPW3K+2JBIC3qDo6nNDNY
+         Lt3WMF0YwaUapqQrM/2qICijmzZFxbEsAJM/A9A2s1mxMQzLxAAY+DQHfRObvBFG07qg
+         kgAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744190298; x=1744795098;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CjbFshPOLZ36u3rr8owbx1Ylrac5EPr6guv06MB6egA=;
+        b=ponGIlV4XhO1vmm8gkIxA7uTJyo4vXL6SVCuFDui3D1tgpt8PsfjazM7QBoEakCCqj
+         EJCw5EysUtkmpfBdDr1e9cF6sVGQr61s4C8hSDHcPXd90Z0SUFEs1Tho0vQ2/4bYCKgx
+         qPlWbvH3a74gVTREtCt8zaxMM5Vv+W0OWBjkl4AanTYn0uJo3GS/N8K+PbG9hwlrqNIf
+         MsBBT6f+h0TvDR3LdnRPODAFHJRX6beEBLCF1zTFaMgAk29KYqoKL1Q26czEgQxzO2IG
+         WODAAW30qRrZjHe80vUNciAv8YLLaF5mpn/igepNbYAqOjjPw7dzInrUDYUcNYScEOIA
+         /h3w==
+X-Forwarded-Encrypted: i=1; AJvYcCVBI4iSzHjTFDMWQH8+q/l90u4B2QBAIbtVyTYOie1wpDeCSaN8SVW1MqwNswRhM8QxC6PK47EeRaOsmJM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZxnDsbYc+U2stBksRSdKO8VNUgaykPWd/qFOr1PPp6p+eNQB3
+	FXAWKObjIQlTYfQGdNJJPXECnEb92wCeGSUatkzp8/uezaHsVuzCr5WTq1S0lqM=
+X-Gm-Gg: ASbGncu8cny5XpIzZ/k6TOdhe7jVNWpqLGIZdVs4qC64L0gwUWqrisGaG+AQoq6j3HN
+	rbPsSYleqvDdj7MRjFFyVl2ituIdgRUR9Y/C0U2UWYdE8Y6BhqHc8BSHWkjeo10Dy3W1jddDx+Z
+	YDNabJS4G+yrkXXQ6kJ+AgJBXZLCB21lDDkaFfkL/6tlWiY7Ywm0wd+DQM59SZg/m3TU4dxHSjV
+	MLZmezrMbZ3T+2XipIK68pbl/RPCDsE+gQl1PcUOTDpMDW9svVT9BbuuLSlUX38hLp9MMYqGhlh
+	yRFXTaWmH8YMvz9Zp2YO23lAjxqND8Zg6O52DfvlFeXey8w75J5Q0eKikQg8tRV6MC8T4JYNiPl
+	j0GfnV3tDqmz/e1iGhc+91I20G2UB
+X-Google-Smtp-Source: AGHT+IHi23vmDgLwMyyQpTHJTKR3Z/3V+/no4ujLL3UXjNQtJYrM6pTheiHFqvmDzcGBZi4KvMNiRA==
+X-Received: by 2002:a05:6000:2ab:b0:39c:13fa:7b9 with SMTP id ffacd0b85a97d-39d87a64601mr2058783f8f.0.1744190298493;
+        Wed, 09 Apr 2025 02:18:18 -0700 (PDT)
+Received: from [192.168.0.2] (host-87-15-70-119.retail.telecomitalia.it. [87.15.70.119])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d8938b7afsm1069482f8f.58.2025.04.09.02.18.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 02:18:17 -0700 (PDT)
+From: Angelo Dureghello <adureghello@baylibre.com>
+X-Google-Original-From: Angelo Dureghello <adureghello@baylibre.org>
+Subject: [PATCH v2 0/2] iio: dac: adi-axi-dac: fix for wrong bus read
+Date: Wed, 09 Apr 2025 11:16:53 +0200
+Message-Id: <20250409-ad3552r-fix-bus-read-v2-0-34d3b21e8ca0@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250328230814.2210230-1-ross.philipson@oracle.com>
- <20250328230814.2210230-20-ross.philipson@oracle.com> <B41D3199-8054-4B2C-94D6-508D1DE4C8B3@zytor.com>
- <886145d3-a9f2-41f3-a754-253decdb1b4f@oracle.com> <Z_WkaJhel-BYxHeW@char.us.oracle.com>
-In-Reply-To: <Z_WkaJhel-BYxHeW@char.us.oracle.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Wed, 9 Apr 2025 11:15:34 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXEAZS+839zmpW3WfwvTRMZmRbPYGpEoY=Xj9qFch9J7BA@mail.gmail.com>
-X-Gm-Features: ATxdqUF80H-sehwytd1k_ZBdeFEl5wo_O_6zq2xvDwvr3fvlWsrlNSPU8VOuvPk
-Message-ID: <CAMj1kXEAZS+839zmpW3WfwvTRMZmRbPYGpEoY=Xj9qFch9J7BA@mail.gmail.com>
-Subject: Re: [PATCH v13 19/19] x86/efi: EFI stub DRTM launch support for
- Secure Launch
-To: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc: ross.philipson@oracle.com, hpa@zytor.com, linux-kernel@vger.kernel.org, 
-	x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, kexec@lists.infradead.org, 
-	linux-efi@vger.kernel.org, iommu@lists.linux.dev, 
-	dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com, 
-	bp@alien8.de, dave.hansen@linux.intel.com, mjg59@srcf.ucam.org, 
-	James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de, jarkko@kernel.org, 
-	jgg@ziepe.ca, luto@amacapital.net, nivedita@alum.mit.edu, 
-	herbert@gondor.apana.org.au, davem@davemloft.net, corbet@lwn.net, 
-	ebiederm@xmission.com, dwmw2@infradead.org, baolu.lu@linux.intel.com, 
-	kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com, 
-	trenchboot-devel@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAU79mcC/4WNQQ6CMBBFr0Jm7ZgyWCSuvIdh0dJBJlEgUyUS0
+ rtbuYDL93/++xtEVuEIl2ID5UWiTGMGOhTQDW68M0rIDGTImpNp0IXKWlLs5YP+HVHZBSwtUU3
+ U+0Ae8nRWzv2uvbWZB4mvSdf9ZSl/6R/hUqLB6uxCqGvH3jRX79aHeOVjNz2hTSl9ATUzdSS7A
+ AAA
+X-Change-ID: 20250408-ad3552r-fix-bus-read-1522622fbd2b
+To: Nuno Sa <nuno.sa@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+ Andy Shevchenko <andy@kernel.org>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ Angelo Dureghello <adureghello@baylibre.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1221;
+ i=adureghello@baylibre.com; h=from:subject:message-id;
+ bh=5nV6AaMR5RiEk2x2tAdJqgZhq7kkosJGZFIQ1iElUBk=;
+ b=owGbwMvMwCXGf3bn1e/btlsznlZLYkj/Zs3rumrZ9T3G1veYjs26qes822pX5bzrd2ce2/Hb/
+ dezLxlG5R2lLAxiXAyyYoosdYkRJqG3Q6WUFzDOhpnDygQyhIGLUwAm8qqB4X+yjO7yputSTdmm
+ Cc8vfxXxUUj71vXqXtr6DZf3WCxeV7CE4Z/C3D7F5FXHnJKd9wf3Ltg916RHnKfxadj0Pj8lo60
+ CBowA
+X-Developer-Key: i=adureghello@baylibre.com; a=openpgp;
+ fpr=703CDFAD8B573EB00850E38366D1CB9419AF3953
 
-On Wed, 9 Apr 2025 at 00:35, Konrad Rzeszutek Wilk
-<konrad.wilk@oracle.com> wrote:
->
-> ..snip..
-> > > > @@ -925,6 +1014,11 @@ void __noreturn efi_stub_entry(efi_handle_t handle,
-> > > >           goto fail;
-> > > >   }
-> > > >
-> > > > +#if (IS_ENABLED(CONFIG_SECURE_LAUNCH))
-> > > > + /* If a Secure Launch is in progress, this never returns */
-> > > > + efi_secure_launch(boot_params);
-> > > > +#endif
-> > > > +
-> > > >   /*
-> > > >    * Call the SEV init code while still running with the firmware's
-> > > >    * GDT/IDT, so #VC exceptions will be handled by EFI.
-> > >
-> > > efi_set_u64_form()?
-> > >
-> > > What the heck is that? If it actually involves two u32 packed into a 64 field, why not simply do two stores?
-> > >
-> >
-> > Well the story is this. The EFI maintainers asked me to use the
-> > efi_set_u64_split() type functions (this one splits a u64 into 2 u32). I
-> > went to look and there was no function that did the opposite action so I
-> > added it. The original function was called efi_set_u64_split() so
-> > efi_set_u64_form() was what I came up with. I can name it anything that is
-> > desired.
->
-> Hey Peter,
->
-> Is there anything in particular that needs to be done to this patch?
->
+This patchset is intended to fix a random wrong chip ID read, or a
+scratchpad test mismatch, tests done in the ad3552r-hs driver probe. The 
+bus "read" operation must always check for busy flag before reading.
 
-If anyone feels strongly enough about this, we can fix it in a
-follow-up patch. The code works as expected, so no need to derail this
-series even further.
+First patch reorganizes a bit the busy-wait polling code, second patch
+fixes the wrong bus read occurence. 
+
+NOTE: due to ongoing changes in adi-axi-dac.c, this patch is intended to be
+applied after the linked "ramp generator" patch.
+
+Link: https://lore.kernel.org/linux-iio/20250408-wip-bl-ad3552r-fixes-v4-0-b33c0264bd78@baylibre.com
+Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+---
+Changes in v2:
+- invert patch order, fix first.
+- Link to v1: https://lore.kernel.org/r/20250408-ad3552r-fix-bus-read-v1-0-37add66aeb08@baylibre.com
+
+---
+Angelo Dureghello (2):
+      iio: dac: adi-axi-dac: fix bus read
+      iio: dac: adi-axi-dac: use unique bus free check
+
+ drivers/iio/dac/adi-axi-dac.c | 40 +++++++++++++++++++++++++---------------
+ 1 file changed, 25 insertions(+), 15 deletions(-)
+---
+base-commit: 6fb85f14853ddde06d57030c753168402bf69cd9
+change-id: 20250408-ad3552r-fix-bus-read-1522622fbd2b
+
+Best regards,
+-- 
+Angelo Dureghello <adureghello@baylibre.com>
+
