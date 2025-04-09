@@ -1,95 +1,195 @@
-Received: from out203-205-221-205.mail.qq.com (out203-205-221-205.mail.qq.com [203.205.221.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FC7A1F5F6
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 01:31:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD1E94C81;
+	Wed,  9 Apr 2025 01:34:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744162287; cv=none; b=V4yo2g8RP2wG0GFw0tgk23sokflASoxQUORJ8R6gs4KaCrlG4zLx482+lIj0yVDEDF8/5HCd00T/IArapBHiLzVZVk8qymQlkhXtOfotcJX58v52x0iWmQl51gOAhS65aXe4sj1D7y7V7JV0kB7K6HMdOk684/TIoBbJLZNIuyE=
+	t=1744162486; cv=none; b=rXOcZYy1MxHI7/o6AHbMVEvbYVGK9MBH8tm3/uk94wKf8816/bKRUvlTijeDvU7ll01qCdmheoO0vmqp11ybK06BcITukPYyAcOATbAPz6qcfACMCSvKEBa6H7EhhoiTufYMUpoajtC9z+XufO5ZH36Z99E99wyNzjU5NsKPBf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744162287; c=relaxed/simple;
-	bh=MNqubeCDKTLai57rROoLQl6MXjA/yucUP5NQ3iaWGi0=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=jUd7KdYQxvPNy81Z8J0f4UaN9ij4O9IL78s7Jqvgf5NWFuhB9ZvJJrzDPIKyXs32mZBC44joztU4xW5AhcHvw+gD7Jv+3HCyCIs6kFWRYz/Rf999ZQEieo3+M57b51Qmf7KTXQD82MRHF3h/Tq1vUx/UQVNY/FWn8VO6h7fXo34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=TMiAeJ3W; arc=none smtp.client-ip=203.205.221.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1744162486; c=relaxed/simple;
+	bh=oeG+4HAagfYJR67bmiU5uGwhjpjwSraicPyYZz+OtWU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vEwYOacRXDg5kyRvKPGTWz6vhOK4IgJPNX5THY9NVPNoaGj4jGllMywEt9xX0tN+n+WstKPHJ35uLA3zo8uiVTsYUAyY0joaT9M+kgSJD85ig7CguJ0MNNhSwj6eG0e1a3YDRrAdQQALj9rdAMip5OgXIctsULo6Sg1dRtJcA4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l/+a6QJm; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="TMiAeJ3W"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1744161980; bh=8xG24UL2oD6sowBVKyUcqL6lu1Pxha72RIbpwlU2QqM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=TMiAeJ3W2CX+M4/QNKK79X5mWhS43FPBE/V97NuclFnwEUF/dXnUayK4xdaEVkGgS
-	 6Ooekgctwmd68SSPmM6nB2sRRUuKFUlk3/VAlot1yPTRBCaHed14EEqbaDhYZgrNqC
-	 o+ks5nZxo+BgPozrLxiX1qut8XLKN6PVmPZrl1uU=
-Received: from pek-lxu-l1.wrs.com ([114.244.57.157])
-	by newxmesmtplogicsvrsza36-0.qq.com (NewEsmtp) with SMTP
-	id 6923B6D0; Wed, 09 Apr 2025 09:26:18 +0800
-X-QQ-mid: xmsmtpt1744161978t0ur988bm
-Message-ID: <tencent_611BCC4B4F1B7A2556BA47BBBB33119E7108@qq.com>
-X-QQ-XMAILINFO: Nr4sKL92GIu+Mkb5twI0gKZ0Z5FTYhN+Ckdb4FiItO9LswPDoHyYRap7yjYuHX
-	 RRGou+llDxhf4EMPaugP/x8NJYyI78R1D+opjKzW4QiUERpZaIfI+Vi1z05Do71tT/yDrb/YTgPY
-	 G/MJxdYHhWaTLBBt6FzkNxuZ61Ipq+D6y44MxQaXVrv7OI3Nk8CZUcT4yazRKZqspA+5n11gsKqv
-	 FIxmJr5dUFINPP6qmBuX6NvHYQSDa3IotUEOo1d5mnx6Esmnd2+sPI/LKdGcI7iazVls2PYHN6ws
-	 oQ4cMvgcU2M1U70Vc6nL2PqjUeQKwhYC16q1iwE+if9Q1ake+MufeUoQ0mFQOBV+uHPe6laLP9Mr
-	 nqCHHK2dvISU2Efa4XhlJgOFCAyeojmRNXJJYChUZh6gqJGodt+FoCtBQbzR/CYJVq0oW6ASUAn+
-	 JJL/Z/72b89+n6FAuyFSPosfkb3gOC2yj7p9haF1o/aXZ59j9sNiBsHNUC04dFM5EhvY4Rw3TYjs
-	 XyOIDZaDzq85sWZyWXUg8Tqdop14MdERAd1iO8IfYuJRE7Cqllfv3cCGR1iJLCQ/z+xbeK6DCacQ
-	 7A5QT2aPHam4k+8AF4VCLCXvb5TgTShk/tAcGXuJaMA4DUmYlMG0LxE0duWgA1jQkEoIkug8AXTG
-	 c91YR1JTF6ndr4xWvUdQeL8WigzGBG3XFXC8puJsAQuHCCKkXlVkiqAHKxwkNTwZZfMdk7/SNkWB
-	 jif+QQkdDUsKKy3b9pwMXQakakzH/0Pf42OYY5FAzE8BxLfIxQ/02e5vYlPrurmKG4A3lRAFNxX/
-	 IHI49kuNjqHOypHcRYZAPkFMV4Je3pvoFcC6BC4J5PC8z2ZhsQ0yiK6v5lDAf5bAg2mu2ZKhl7BJ
-	 EPxLSy7pLG0ZThSi6qbM1YB/1+ZTtsNeC/uEdej0hPj+4s2Nj+bwAMYrIe0OctlVcv9rAFPTxKvG
-	 e0cHLYvFu0hZyoEXFzqg==
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+00778a9a557a2a5e1a33@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [wireless?] general protection fault in cfg80211_mlme_deauth
-Date: Wed,  9 Apr 2025 09:26:18 +0800
-X-OQ-MSGID: <20250409012617.1586212-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <67f50e3e.050a0220.396535.0561.GAE@google.com>
-References: <67f50e3e.050a0220.396535.0561.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l/+a6QJm"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-736ee709c11so5209487b3a.1;
+        Tue, 08 Apr 2025 18:34:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744162484; x=1744767284; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=3gWW7mQrB9d+AnX17ft9zAf82G6HqoBmSe5FjNlAnCs=;
+        b=l/+a6QJmg/zL0RCobLwv4lMWEmcaTXKWHHbh2/pYW2cbwQ1765bf3rH9R4w5RlMZYR
+         8jK2XECpEQW0vJMuE9Dc5bszg61DVbZieq6CeFvtRYwVSktN2WCOu3JMqUn3t0OUNcSl
+         B8+jmphv7YJd5dDcM2qyKAfwctqXJjo4jLaPOjj/q5OefnEbZRBZsKmiSxDSBYHG/gEp
+         GxeNt7zl4ab4d3/2RqlYlEOFs3GiVlYuvngDoTcQUGKNYxjAZhOjzIHe6k6oSf8GnQ2f
+         zmDiLXWb0reajXO4y/Ejc6Xf9WNspQc5H7A4q+0Iwur+Eljo/SUOAmEb2nDBAemEHtYg
+         BnTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744162484; x=1744767284;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3gWW7mQrB9d+AnX17ft9zAf82G6HqoBmSe5FjNlAnCs=;
+        b=mzz1KysGIJ6NmvaXZikiAj6/u1DHfn9ShYsdp3uEJsZhGrspCYKlY1748h5y7O2TUh
+         O1EyIc1KCtBbYbTfJF7aBm+DlOq5FbEdg/fVklu6CrUfTScKgk2U9eXIl/ML4Ukev3WX
+         tCaM5cKyWuPob+DSY0tTVF2S4EnR8joNvF8Xqdvx+ODm4tbgFcE6nuCYcvzSQQcnXzox
+         EiT+Crm0Mv6YfeDWQTQzO9x2rOwFOuNKDy6d7Fn/8xNsKbbedB09jCIPOczwF2i04TXn
+         Q7ddLJSv2QPVOvWOWGfMuDM8ANdry9esMJeALaSGppqimZ3BueB0Xo6evsf+evc1pGb+
+         onBw==
+X-Forwarded-Encrypted: i=1; AJvYcCWSrFyjRdPz2CFTDkppk+txJ/PrsAsrLQabrZ9EyC31PxD2/wTvkxQcnv1GktCAbvoQxfgXwWxm0JQ=@vger.kernel.org, AJvYcCXcdFQ1o0f5gGR3GAzEudxdg/Karecv8nURghGZOSCiiUpm3gtuqLnjVZsL3Fj2OjjCOnH8Tcxg2buYDyDcKw==@vger.kernel.org, AJvYcCXjC9AVDdoT/tzSP1NM1LlhX4/WIx/CeeqTdFrNbofdkG9bH8kd+21C5UwJbWiNUj5dgnfZxh7V367JoVDr@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCLCQYFTaz5XqW5QAM6QQyzqKEoI4vjECHNeG7Pi79R9c1qm9r
+	yYCDJXcoZ3SAdYtn/LeTXcZQT9kgC2/Q/DnTiPSiYL7YwyIXdwX0
+X-Gm-Gg: ASbGnctZDvt8xHjxy0GOm58XxhgFpV8hjzcQ8Vr0y2M4tD5rackhiAo7Cn/1whijMnt
+	zNq7Unr1aPyd7OVY/d0t2af0cR44bYYmPJwnHPx7rlXi1ESNqi+kzR0rW36O2EtXzlk5nNUQkpB
+	4N7x+9z7NFIant8Jqa3RifHGCwHi0TP9zRdiIFKnUz7SS5fonCMgXybGEklOSVtWFiLwHvcdl01
+	/Hj643Bq0vOAGvrscD1ygk0RwGoN+lQemipCadleN4OBp3AgvDHv0/bkkT2ZDFLMHS1B/1LtCbm
+	nEzUHRwc11xUO6d8nPvSTD8appSlf87DT9wglVPo1e9DoBycajmk5Zw=
+X-Google-Smtp-Source: AGHT+IE3yPMa/eAyrcIcKnygKFejo73k37164uoaXWheqCJIVO7kLvZ6j6r+yahYkE1fLzUTtnx2sQ==
+X-Received: by 2002:a05:6a00:1484:b0:736:4d44:8b77 with SMTP id d2e1a72fcca58-73bae4b3d15mr1532729b3a.8.1744162483721;
+        Tue, 08 Apr 2025 18:34:43 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1d2b108sm55039b3a.19.2025.04.08.18.34.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 18:34:42 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 0FFEF4236D23; Wed, 09 Apr 2025 08:34:39 +0700 (WIB)
+Date: Wed, 9 Apr 2025 08:34:39 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: David Howells <dhowells@redhat.com>,
+	Christian Brauner <brauner@kernel.org>
+Cc: Paulo Alcantara <pc@manguebit.com>, Jeff Layton <jlayton@kernel.org>,
+	Viacheslav Dubeyko <slava@dubeyko.com>,
+	Alex Markuze <amarkuze@redhat.com>, Timothy Day <timday@amazon.com>,
+	Jonathan Corbet <corbet@lwn.net>, netfs@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] netfs: Update main API document
+Message-ID: <Z_XOr4Ak4S0EOdrw@archie.me>
+References: <1565252.1744124997@warthog.procyon.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="cxzS9cWmxd0BSJ70"
+Content-Disposition: inline
+In-Reply-To: <1565252.1744124997@warthog.procyon.org.uk>
 
-#syz test
 
-diff --git a/net/wireless/sme.c b/net/wireless/sme.c
-index cf998500a965..b983faa5bbf1 100644
---- a/net/wireless/sme.c
-+++ b/net/wireless/sme.c
-@@ -269,6 +269,16 @@ void cfg80211_conn_work(struct work_struct *work)
- 			memcpy(bssid_buf, wdev->conn->params.bssid, ETH_ALEN);
- 			bssid = bssid_buf;
- 		}
-+
-+		if (wdev->conn->state == CFG80211_CONN_ASSOC_FAILED) {
-+			printk("bssid: %p, pbssid: %p, dis bssid: %p, connected: %d, %s\n",
-+				wdev->conn->bssid, wdev->conn->params.bssid,
-+				wdev->disconnect_bssid, wdev->connected, __func__);
-+			BUG_ON(!wdev->conn->bssid ||
-+			       !wdev->conn->params.bssid ||
-+			       !wdev->disconnect_bssid);
-+		}
-+
- 		treason = NL80211_TIMEOUT_UNSPECIFIED;
- 		if (cfg80211_conn_do_work(wdev, &treason)) {
- 			struct cfg80211_connect_resp_params cr;
-@@ -411,6 +421,8 @@ bool cfg80211_sme_rx_assoc_resp(struct wireless_dev *wdev, u16 status)
- 		return true;
- 	}
- 
-+	printk("bssid: %p, pbssid: %p, dis bssid: %p, %s\n",
-+		wdev->conn->bssid, wdev->conn->params.bssid, wdev->disconnect_bssid, __func__);
- 	wdev->conn->state = CFG80211_CONN_ASSOC_FAILED;
- 	schedule_work(&rdev->conn_work);
- 	return false;
+--cxzS9cWmxd0BSJ70
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Apr 08, 2025 at 04:09:57PM +0100, David Howells wrote:
+> + * For writeback, it is unknown how much there will be to write until the
+                                             "... will be written ..."
+> +   pagecache is walked, so no limit is set by the library.
+> <snipped>...
+> +Further, if a read from the cache fails, the library will ask the filesy=
+stem to
+> +do the read instead, renegotiating and retiling the subrequests as neces=
+sary.
+Read from the filesystem itself or direct read?
+
+> +When writeback occurs, folios that are so marked will only be written to=
+ the
+> +cache and not to the server.  Writeback handles mixed cache-only writes =
+and
+> +server-and-cache writes by using two streams, sending one to the cache a=
+nd one
+> +to the server.  The server stream will have gaps in it corresponding to =
+those
+"... and another to the server."
+> +folios.
+> +
+> <snipped>...
+> +Netfslib will pin resources on an inode for future writeback (such as pi=
+nning
+> +use of an fscache cookie) when an inode is dirtied.  However, this needs
+> +managing.  Firstly, a function is provided to unpin the writeback in
+inode management?
+> +``->write_inode()``::
+> =20
+> <snipped>...
+> +The fields generally of interest to a filesystem are::
+> =20
+>  	struct netfs_io_request {
+> +		enum netfs_io_origin	origin;
+>  		struct inode		*inode;
+>  		struct address_space	*mapping;
+> -		struct netfs_cache_resources cache_resources;
+> +		struct netfs_group	*group;
+> +		struct netfs_io_stream	io_streams[];
+>  		void			*netfs_priv;
+> -		loff_t			start;
+> -		size_t			len;
+> -		loff_t			i_size;
+> -		const struct netfs_request_ops *netfs_ops;
+> +		void			*netfs_priv2;
+> +		unsigned long long	start;
+> +		unsigned long long	len;
+> +		unsigned long long	i_size;
+>  		unsigned int		debug_id;
+> +		unsigned long		flags;
+>  		...
+>  	};
+> =20
+> -The above fields are the ones the netfs can use.  They are:
+> +They are:
+"These fields are, in detail:"
+> <snipped>...
+> +The stream struct looks like::
+"The stream struct is defined as::"
+> +
+> +	struct netfs_io_stream {
+> +		unsigned char		stream_nr;
+> +		bool			avail;
+> +		size_t			sreq_max_len;
+> +		unsigned int		sreq_max_segs;
+> +		unsigned int		submit_extendable_to;
+> +		...
+> +	};
+> +
+> <snipped>...
+> +The table starts with a pair of optional pointers to memory pools from w=
+hich
+> +requests and subrequests can be allocated.  If these are not given, netf=
+slib
+> +has default pools that it will use.  If the filesystem wraps the netfs s=
+tructs
+                     "... it will use instead."
+> +in its own larger structs, then it will need to use its own pools.  Netf=
+slib
+> +will allocate directly from the pools.
+> =20
+> <snipped>...
+> +   This is not permitted to return an error.  In the event of failure,
+> +   ``netfs_prepare_write_failed()`` must be called.
+"This method is not permitted to return an error. Instead, in the event of
+failure, ..."
+
+Thanks.
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--cxzS9cWmxd0BSJ70
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZ/XOqgAKCRD2uYlJVVFO
+oxwDAQCIp2Z67CrtkEI2vxhnwb/3m5aDgDDO7eFv+9qsvmRlTQD9GbhobtuuelYe
+u6w0SgAN6bt+eNQLl6cm97wW0cB66A8=
+=TxHk
+-----END PGP SIGNATURE-----
+
+--cxzS9cWmxd0BSJ70--
