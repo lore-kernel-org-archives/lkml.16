@@ -1,155 +1,63 @@
-Received: from 004.mia.mailroute.net (004.mia.mailroute.net [199.89.3.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 003D81C07C3;
-	Wed,  9 Apr 2025 21:08:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 809762116F2
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 21:08:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744232921; cv=none; b=JAl20rCczZdxfcVi5+83UyzjY7fbFCx0M2YgC19nJWV029TpD51+X3DqDTevXlmo0ft54AO0L6EOAo1AeswsdocsdcpaWLJ1rXDs1V93S3WkBsEQE89AQo6AJ11xP3tI29K+ihP2QjT8DABd/3nxXYRqkpXSpvpcaz+2/9Io/Mg=
+	t=1744232929; cv=none; b=erFVqnOssrEUcx8WiTe9wAcGqlNFYAGFxZkrKwAS1IuTeTegQeqTwoM6WtwIDIUyPkRbS5rzbv/OZgqzclNajAXWxaStnoso7qMvNCv+hYm3U4px8pizxWcgQr59UVM+RFSfQj86p06+Rs6Mc2cy2MILsU6RmIUDbKDSJvUyfKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744232921; c=relaxed/simple;
-	bh=+856jdLoLLEWWyhtLMynN+pZtUSFemOl6XgY4gF3HzI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MTuQSDwYZP3aX2ljQt3Sc4B4RM2xIayn74imiMo5XrV0qs8GvWqkXY8XvQTSoHHzO6G6jWAwT+KtObAUUxuSRPRcGUOLRhqGnk/N1RSUIC6Cdga18KOV3ivturcncQjj3g1vXEt3bLpdwsoaww5vmtnb2xYGhXh5KWn2Zwf7N5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=ssY7+9Wr; arc=none smtp.client-ip=199.89.3.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	s=arc-20240116; t=1744232929; c=relaxed/simple;
+	bh=rd/pyIQ7u8TrCNP+10m5jCKLnMkOGoR9Cho52eNqy9s=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=mYIl1tDGilV7V2V/bAxKe6lQCPMU6W8rDqbnFMW2Ohyfdo3qfTpxyJZ1ivqu/qvknnEErg2xxy1FGI/4ATZFX5+6g1IW7/WYACbUNKJ4NSvJTkxtF9DcpguM5dorJDtQCTHDgmBmW3H/DwqpD1ECvwsOeCxn36ieqRPUvMVfwrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=xkVPptkZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="ssY7+9Wr"
-Received: from localhost (localhost [127.0.0.1])
-	by 004.mia.mailroute.net (Postfix) with ESMTP id 4ZXwXk6Gy2zm0yTh;
-	Wed,  9 Apr 2025 21:08:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1744232916; x=1746824917; bh=BhvBwC5z/9Md8oVXDSlpI8ae
-	/9CWhxuq5tuzJzRJjFg=; b=ssY7+9WrKDiMCS7FMwgSBpVMfMv77FB29qiKeYYJ
-	/c0uVOXUtIMQwxCw8O9aoDU3slZR3TDewugWoSfW+O7ujkXMX5mx5uZEqJDfV+w0
-	oNEIeiACxNBHltzCsTtRC/6TNObLNdw7tjO5NpcBfAIuqEVWavn9q4Z8nDM+JPSX
-	ng3TljFWV3W3E55cWplWfzAVwPEcc8ekM+fi68omXFvMNaDHvMb5Pdx+lcYIsgU1
-	taI5GpVckB2yro5vZEu/yvSWVAJEw9nn6SJTl4pQu5LzxekyR4eBiZ7zzgJDN7Kl
-	dyuTa9iPZjj3yWvjhu4S8Ty8DWhfTmONETMgdEZfJ3znGg==
-X-Virus-Scanned: by MailRoute
-Received: from 004.mia.mailroute.net ([127.0.0.1])
- by localhost (004.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id AYpURVZjfLjP; Wed,  9 Apr 2025 21:08:36 +0000 (UTC)
-Received: from [100.66.154.22] (unknown [104.135.204.82])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 004.mia.mailroute.net (Postfix) with ESMTPSA id 4ZXwXY5bd8zm0ySJ;
-	Wed,  9 Apr 2025 21:08:28 +0000 (UTC)
-Message-ID: <15df00e9-d5d9-4d16-b334-e1b8cb96f654@acm.org>
-Date: Wed, 9 Apr 2025 14:08:27 -0700
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="xkVPptkZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4733C4CEE2;
+	Wed,  9 Apr 2025 21:08:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1744232928;
+	bh=rd/pyIQ7u8TrCNP+10m5jCKLnMkOGoR9Cho52eNqy9s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=xkVPptkZxljj/Owe9fPrhIOngMTWjFrVGka8k3lVp1Rr3ESsv3gikQSgHbGB1yDsh
+	 3Yzrbgp5CcTyYHqFOI78FvwE76aNnVjdZ8Yuka+/qoX+pWYBqwHXV9993Lrsh3JMwE
+	 CAWetidRrtzsSJfI2QNNC9WY+gmmr+M8djx+mpos=
+Date: Wed, 9 Apr 2025 14:08:48 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: "T.J. Mercier" <tjmercier@google.com>
+Cc: Suren Baghdasaryan <surenb@google.com>, Kent Overstreet
+ <kent.overstreet@linux.dev>, Janghyuck Kim <janghyuck.kim@samsung.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] alloc_tag: Handle incomplete bulk allocations in
+ vm_module_tags_populate
+Message-Id: <20250409140848.da67768ac1f5e79d7296de4d@linux-foundation.org>
+In-Reply-To: <20250409195448.3697351-1-tjmercier@google.com>
+References: <20250409195448.3697351-1-tjmercier@google.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V6 2/3] scsi: ufs-qcom: Add support to dump MCQ registers
-To: Manish Pandey <quic_mapa@quicinc.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org,
- linux-kernel@vger.kernel.org, quic_nitirawa@quicinc.com,
- quic_bhaskarv@quicinc.com, quic_rampraka@quicinc.com, quic_cang@quicinc.com,
- quic_nguyenb@quicinc.com
-References: <20250407142110.16925-1-quic_mapa@quicinc.com>
- <20250407142110.16925-3-quic_mapa@quicinc.com>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20250407142110.16925-3-quic_mapa@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 4/7/25 7:21 AM, Manish Pandey wrote:
-> +int ufs_qcom_dump_regs(struct ufs_hba *hba, size_t offset, size_t len,
-> +		     const char *prefix, enum ufshcd_res id)
-> +{
-> +	u32 *regs __free(kfree) = NULL;
-> +	size_t pos;
-> +
-> +	if (offset % 4 != 0 || len % 4 != 0)
-> +		return -EINVAL;
-> +
-> +	regs = kzalloc(len, GFP_ATOMIC);
-> +	if (!regs)
-> +		return -ENOMEM;
-> +
-> +	for (pos = 0; pos < len; pos += 4)
-> +		regs[pos / 4] = readl(hba->res[id].base + offset + pos);
-> +
-> +	print_hex_dump(KERN_ERR, prefix,
-> +			len > 4 ? DUMP_PREFIX_OFFSET : DUMP_PREFIX_NONE,
-> +				16, 4, regs, len, false);
+On Wed,  9 Apr 2025 19:54:47 +0000 "T.J. Mercier" <tjmercier@google.com> wrote:
 
-The indentation of the print_hex_dump() arguments is not compliant with
-the Linux kernel coding style.
+> alloc_pages_bulk_node may partially succeed and allocate fewer than the
+> requested nr_pages. There are several conditions under which this can
+> occur, but we have encountered the case where CONFIG_PAGE_OWNER is
+> enabled causing all bulk allocations to always fallback to single page
+> allocations due to commit 187ad460b841 ("mm/page_alloc: avoid page
+> allocator recursion with pagesets.lock held").
+> 
+> Currently vm_module_tags_populate immediately fails when
+> alloc_pages_bulk_node returns fewer than the requested number of pages.
+> This patch causes vm_module_tags_populate to retry bulk allocations for
+> the remaining memory instead.
 
-> +	return 0;
-> +}
-> +
-> +static void ufs_qcom_dump_mcq_hci_regs(struct ufs_hba *hba)
-> +{
-> +	/* voluntarily yield the CPU to prevent CPU hog during data dumps */
-> +	/* RES_MCQ_1 */
-> +	ufs_qcom_dump_regs(hba, 0x0, 256 * 4, "MCQ HCI 1da0000-1da03f0", RES_MCQ);
-> +	cond_resched();
-> +
-> +	/* RES_MCQ_2 */
-> +	ufs_qcom_dump_regs(hba, 0x400, 256 * 4, "MCQ HCI 1da0400-1da07f0", RES_MCQ);
-> +	cond_resched();
-> +
-> +	/*RES_MCQ_VS */
-> +	ufs_qcom_dump_regs(hba, 0x0, 5 * 4, "MCQ VS 1da4000-1da4010", RES_MCQ_VS);
-> +	cond_resched();
-> +
-> +	/* RES_MCQ_SQD_1 */
-> +	ufs_qcom_dump_regs(hba, 0x0, 256 * 4, "MCQ SQD 1da5000-1da53f0", RES_MCQ_SQD);
-> +	cond_resched();
-> +
-> +	/* RES_MCQ_SQD_2 */
-> +	ufs_qcom_dump_regs(hba, 0x400, 256 * 4, "MCQ SQD 1da5400-1da57f0", RES_MCQ_SQD);
-> +	cond_resched();
-> +
-> +	/* RES_MCQ_SQD_3 */
-> +	ufs_qcom_dump_regs(hba, 0x800, 256 * 4, "MCQ SQD 1da5800-1da5bf0", RES_MCQ_SQD);
-> +	cond_resched();
-> +
-> +	/* RES_MCQ_SQD_4 */
-> +	ufs_qcom_dump_regs(hba, 0xc00, 256 * 4, "MCQ SQD 1da5c00-1da5ff0", RES_MCQ_SQD);
-> +	cond_resched();
-> +
-> +	/* RES_MCQ_SQD_5 */
-> +	ufs_qcom_dump_regs(hba, 0x1000, 256 * 4, "MCQ SQD 1da6000-1da63f0", RES_MCQ_SQD);
-> +	cond_resched();
-> +
-> +	/* RES_MCQ_SQD_6 */
-> +	ufs_qcom_dump_regs(hba, 0x1400, 256 * 4, "MCQ SQD 1da6400-1da67f0", RES_MCQ_SQD);
-> +	cond_resched();
-> +
-> +	/* RES_MCQ_SQD_7 */
-> +	ufs_qcom_dump_regs(hba, 0x1800, 256 * 4, "MCQ SQD 1da6800-1da6bf0", RES_MCQ_SQD);
-> +	cond_resched();
-> +
-> +	/* RES_MCQ_SQD_8 */
-> +	ufs_qcom_dump_regs(hba, 0x1c00, 256 * 4, "MCQ SQD 1da6c00-1da6ff0", RES_MCQ_SQD);
-> +	cond_resched();
-> +}
-
-There is a lot of repetition in the ufs_qcom_dump_mcq_hci_regs()
-function. Has it been considered to move the cond_resched() call into
-ufs_qcom_dump_regs() such that it occurs only once in this patch?
-
-For the ufs_qcom_dump_mcq_hci_regs() function, a table-based approach
-may be appropriate since what that function does is to call
-ufs_qcom_dump_regs() repeatedly but each time with different arguments.
-
-Thanks,
-
-Bart.
+Please describe the userspace-visible runtime effects of this change.  In a way
+which permits a user who is experiencing some problem can recognize that this
+patch will address that problem.
