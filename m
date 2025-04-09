@@ -1,151 +1,113 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C98F41DEFE4;
-	Wed,  9 Apr 2025 08:33:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96EBC2505A7
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 08:35:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744187604; cv=none; b=iBd4TLKfI8P4rVlQJAJiTN0Cw6LWj1zco7Ronn2aK/QkjU3xNqPKhYNAZMNpxjecTsksIbrHvpJS2LZI/MR79Im0RFCVOMQh8gq6/c2jZ9D1fSEjr5upuSNT2p7s/9FmDTQPlIbtWtfxCs3ByqydSPn6BCwMy9s4eTzoaZ9R4u8=
+	t=1744187749; cv=none; b=pzWIv0/9aiAtx7E47y0FUU4gTxuCVUm8nKTHbPd28m3AbT/YGnezioqSvYhFAgXNGDkDeNGMeZ6vct2mdc47q0gGlCL26s11ygNUNUdaJWVx7oNLsMDjNL4r23Nk5CPOl21FCQOwfY+n0iEHXiyDS9ggAQl+WKCDbkwTJjwvZIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744187604; c=relaxed/simple;
-	bh=DBu10xqnRC55ZvjHYpZP6/MVuipQrl3KTWRj0IvtK7k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TuRhoLTVfErp+uZb7Sdsu+UBzK4aR+G7xZ5uIsLHCSrGvKQdPEzeFIl5nCj4vEzcma3Gp9L9ov7eMfGA0EGoAXZqhbDqPkUL52uxEsmLHSFcEhiFi+/xW9YMrFd4IwKvBcbVAls1HrZEs7m2ObN7YbiNhsC+Y2wFae0mRpgpm6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=BQC82+JG; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1744187749; c=relaxed/simple;
+	bh=ETDEyyHWHJEIKFXCApELl/R9sLYGdCkFQ8AFXJvJsQA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CRLSCtO/Bla9/DBuyc2TNprIHM0dPee40mIeqRvMNRVFakJoVCUbu3Qeos2bbkvlzc/WyLuLSwOPqlSUYg/OB32dwN2zMJMYYNJWXTaDaCq4rntlLGnJtz6wxTR7E+JuT7LHSvZdyJJj4ZE/7SZpwwRsLdiBgTpOmSw/Z28aIDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=BoJbaHJO; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="BQC82+JG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=94CRJ1QKEZIeOBN2yxEUCNifssJmO/x61XeP55dLjCw=; b=BQC82+JGLo6KyCxTGpLJKAzVzz
-	Ul4vyHS2IfHuiZDvVK1YA6k5hGdgdcVR3lxjfA9rZ99qpwU6wrGkZJ+eorXWUky8QWCBXjCSm9XFa
-	SUzoJnP/jkkTgEh89x6eUZRnHMiLfPyQTpkT/qwY3Ujiji+Nd1wbQjjexdcuEcn+yjX7hLUzgmvfK
-	X82Oq3QhS563o8HZpIkdCkqGqY78pxz8+3/+06WnAbvuGsvPw4hENrfpwDecAz/RWSHpX4uSCophH
-	5x5Us3NSikXebU8ZL5jRyzl4NOGJok6pklo/O+EfqFvsqtuUIJ9eyMpD9VYayI3/3buisFYYjogRx
-	BVllv0jA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:33850)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1u2Qrv-0000Fa-27;
-	Wed, 09 Apr 2025 09:33:11 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1u2Qrt-0002Pb-2C;
-	Wed, 09 Apr 2025 09:33:09 +0100
-Date: Wed, 9 Apr 2025 09:33:09 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: Simon Horman <horms@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH net-next v2 2/2] net: phy: Add Marvell PHY PTP support
-Message-ID: <Z_YwxYZc7IHkTx_C@shell.armlinux.org.uk>
-References: <20250407-feature_marvell_ptp-v2-0-a297d3214846@bootlin.com>
- <20250407-feature_marvell_ptp-v2-2-a297d3214846@bootlin.com>
- <20250408154934.GZ395307@horms.kernel.org>
- <Z_VdlGVJjdtQuIW0@shell.armlinux.org.uk>
- <20250409101808.43d5a17d@kmaincent-XPS-13-7390>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="BoJbaHJO"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so63639295e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 01:35:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744187746; x=1744792546; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=el1YoTqrU0Hduquq3XtvrhCcVlg8sd7EcPhPRkGv2hE=;
+        b=BoJbaHJOBwa0kbutOCB5Ug58bwkVPP7j4+L/+G/pTP1eX2IS5Na2y+MD46lKhW7o6q
+         4YDVWEiBAvC8RTYy699FOfe4LV6LSGBfwGC2VlCz/tuC8Mga8+H4JKo9E67mC3AE+bFR
+         HBtcHO4Ymx7bgoDlFAEcNj0Eh6aSEaLgWr9ggfJd129NF6O7pLFOGX7QFuUA0wJHHKqB
+         vp1GHHDjJsM00j0aOXs75WqREDEPOp1wpG0bzsVtGvLQqUffVGeKLT6MmRSsksS/nl/t
+         SsXZlJsMQ1JJ/gaWkqORcaApR5LgOQsyCMLBleAy8LWbHOKh3cy17X95ZmkmboZca+zB
+         6evQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744187746; x=1744792546;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=el1YoTqrU0Hduquq3XtvrhCcVlg8sd7EcPhPRkGv2hE=;
+        b=m5FEfVooLmT74TbQW69KkXzy1Cr5M0Jx8BDt4nct1bU6P192vqL4EPHK3xmRjqkTls
+         rxseNt9ED3wDWfNJiMS5nvJTjLhYsocNQ7yI0S8yvzKgx/dCnQuU/KzU+e3P/lVi33us
+         uBZYLXMb2yYywvvDeHh7eVNX+9RMpAFp4M9kTp1xLlBr6mV5qrTjIkAAHy+2T4FzGl7G
+         b2PDeV3edA0XSyY6+v3/PSkgA2Ymn/u8bGJEVnolpLg2/yXEegXeZIesq56dWZaiUQki
+         VL7SX3q90+ZEaxBFzB14T0tpyyo9iVvBC3UT9ar6cEvg882cMNIkg7Vfq5wVCYBPtitL
+         p+vA==
+X-Forwarded-Encrypted: i=1; AJvYcCVzPk5wFX6Get6iQAF5Mp50ER8iWkQp4panmFw7UOdm6XGfgy0NEzParrUYrGFMHqVZ2eiNuo1ceOwkB6s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwA3605R7rOThuwgdT+8Lh/9afKHBseMVA0zA0OydW/7jTnJcrP
+	wWegriQMxI+JEr1SKDezbb/2RbYeBEs9HUUDfJfo1ZMLJsAy35V/vwWnpQNNnmo=
+X-Gm-Gg: ASbGncvCzVBL3A9RUWg5/OPy66NsJUpWTlzvGdE05MCetHG2Ucap7jkhp1cK9GoV/AJ
+	WdJjYM+5gtX4BqH0EwXOnax/0eslXeTpzDFgsfyaDBPdbBO94VKLfg01+tnrqYIhE4J28semV8k
+	N0lR8xBMkplBCTSU9e0RG+6Yb/spkum9n/yI/7cVGY1Q+NBz91KMw5HyMhmUqBknGnsfDOxJ//g
+	Ta349X+GCNEjOHB639FWEb1RTzmb31p/5Y5VoqBPY8vU3jAX5F/UC8aHQ796MfKfqTE0kSlgmlc
+	ZFbTQv8+TbHt+3/56tgRvXHWupycNwvKA11bRbU/XlAadHyLxvo=
+X-Google-Smtp-Source: AGHT+IEVD2lslpaI/7rJdnAeqx3wViSVYCOrqXVSkQ27OLCHAfme1XR6nMNHEVQPwT+A6iaBHutElQ==
+X-Received: by 2002:a05:600c:c88:b0:43d:3df:42d8 with SMTP id 5b1f17b1804b1-43f1fdc3bf7mr13678815e9.6.1744187745673;
+        Wed, 09 Apr 2025 01:35:45 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:7880:1c3f:3ac3:7c62])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f205ecf30sm12557045e9.1.2025.04.09.01.35.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 01:35:45 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Andrew Lunn <andrew@lunn.ch>,
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+	Gregory Clement <gregory.clement@bootlin.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-samsung-soc@vger.kernel.org
+Subject: Re: [PATCH 0/4] ARM: convert board-file GPIO chips to using new value setters
+Date: Wed,  9 Apr 2025 10:35:44 +0200
+Message-ID: <174418774169.21152.4210389076223179557.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250407-gpiochip-set-rv-arm-v1-0-9e4a914c7fd4@linaro.org>
+References: <20250407-gpiochip-set-rv-arm-v1-0-9e4a914c7fd4@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250409101808.43d5a17d@kmaincent-XPS-13-7390>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 09, 2025 at 10:18:08AM +0200, Kory Maincent wrote:
-> On Tue, 8 Apr 2025 18:32:04 +0100
-> "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
+
+On Mon, 07 Apr 2025 09:09:17 +0200, Bartosz Golaszewski wrote:
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. We're in the process of
+> converting all GPIO drivers to using the new API. This series converts
+> all ARM board-file level controllers.
 > 
-> > On Tue, Apr 08, 2025 at 04:49:34PM +0100, Simon Horman wrote:
-> > > On Mon, Apr 07, 2025 at 04:03:01PM +0200, Kory Maincent wrote:  
-> > > > From: Russell King <rmk+kernel@armlinux.org.uk>
-> > > > 
-> > > > From: Russell King <rmk+kernel@armlinux.org.uk>
-> > > > 
-> > > > Add PTP basic support for Marvell 88E151x PHYs. These PHYs support
-> > > > timestamping the egress and ingress of packets, but does not support
-> > > > any packet modification.
-> > > > 
-> > > > The PHYs support hardware pins for providing an external clock for the
-> > > > TAI counter, and a separate pin that can be used for event capture or
-> > > > generation of a trigger (either a pulse or periodic).  This code does
-> > > > not support either of these modes.
-> > > > 
-> > > > The driver takes inspiration from the Marvell 88E6xxx DSA and DP83640
-> > > > drivers.  The hardware is very similar to the implementation found in
-> > > > the 88E6xxx DSA driver, but the access methods are very different,
-> > > > although it may be possible to create a library that both can use
-> > > > along with accessor functions.
-> > > > 
-> > > > Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-> > > > 
-> > > > Add support for interruption.
-> > > > Fix L2 PTP encapsulation frame detection.
-> > > > Fix first PTP timestamp being dropped.
-> > > > Fix Kconfig to depends on MARVELL_PHY.
-> > > > Update comments to use kdoc.
-> > > > 
-> > > > Co-developed-by: Kory Maincent <kory.maincent@bootlin.com>
-> > > > Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>  
-> > > 
-> > > Hi Kory,
-> > > 
-> > > Some minor feedback from my side.
-> > >   
-> > > > ---
-> > > > 
-> > > > Russell I don't know which email I should use, so I keep your old SOB.  
-> > > 
-> > > Russell's SOB seems to be missing.  
-> > 
-> > ... and anyway, I haven't dropped my patches, I'm waiting for the
-> > fundamental issue with merging Marvell PHY PTP support destroying the
-> > ability to use MVPP2 PTP support to be solved, and then I will post
-> > my patches.
-> > 
-> > They aren't dead, I'm just waiting for the issues I reported years ago
-> > with the PTP infrastructure to be resolved - and to be tested as
-> > resolved.
-> > 
-> > I'm still not convinced that they have been given Kory's responses to
-> > me (some of which I honestly don't understand), but I will get around
-> > to doing further testing to see whether enabling Marvell PHY PTP
-> > support results in MVPP2 support becoming unusable.
-> > 
-> > Kory's lack of communication with me has been rather frustrating.
 > 
-> You were in CC in all the series I sent and there was not a lot of review and
-> testing on your side. I know you seemed a lot busy at that time but I don't
-> understand what communication is missing here? 
 
-I don't spend much time at the physical location where the hardware that
-I need to test your long awaited code is anymore. That means the
-opportunities to test it are *rare*.
+Applied, thanks!
 
-So far, each time I've tested your code, it's been broken. This really
-doesn't help.
+[1/4] ARM: orion/gpio: use new line value setter callbacks
+      https://git.kernel.org/brgl/linux/c/6982e6b0bdd838fe71a6133cfc0f79645bc31a04
+[2/4] ARM: sa1100/gpio: use new line value setter callbacks
+      https://git.kernel.org/brgl/linux/c/9c3782118a57a6d7a17980115f46bcf2b85fdf29
+[3/4] ARM: scoop/gpio: use new line value setter callbacks
+      https://git.kernel.org/brgl/linux/c/dd8a6af45928871e5d9a04959ab8f97c3714264a
+[4/4] ARM: s3c/gpio: use new line value setter callbacks
+      https://git.kernel.org/brgl/linux/c/fb52f3226cab41b94f9e6ac92b1108bce324e700
 
-If you want me to do anything more in a timely manner, like test fixes,
-you need to get them to me by the end of this week, otherwise I won't
-again be able to test them for a while.
-
+Best regards,
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
