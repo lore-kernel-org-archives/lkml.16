@@ -1,63 +1,66 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22B091DE3A8
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 06:07:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61EAC1DE4F1
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 06:07:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744178875; cv=none; b=ugrKWzykzD9KqqIvQkr0XVKgKlZP6lfPjoxJzZmfcK4Xe/eeMLuMof1f5IlUxkGIaN8vtzvbtsgICcivsqtIPJzp+U6UCeXQACFGXMhXYD78EOZwKo/harq0CtNeYWkos1jWdBUvhx3ngqWbRkZuRM467oKIJAzUgFT81pqBqag=
+	t=1744178878; cv=none; b=eOPObOla/mDeTvQ2lDP5k3EOpX0uqtF4SGPEwzJb3gPZl5MvBFsAcuyMUmSU+/ks7Nw+amk2BTFw/uKQkYJOBDQaH3XnpIlrVu6kTgTQ1qI0JBoGRkTwp/4SgpNWrnj/mv60nFw+OhwfWU4XPh8Nqq5NFPaiKdYOwYQGcNAnkC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744178875; c=relaxed/simple;
-	bh=VOlrE0q1Dgt0/ufOq2NjQaIoTeL0CeB1PTgY3Vto+Q4=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=WDHObxmcVylXG3qwB9bFfxWiqDjQrx8rDnEUFtVXVJ2RMRdp6jF7Rg0l52urd0vPpndgTBRKkHS8ikLpqkfc6tGGBmgYrY90gOBR7y3K7VPDlZbncRCWVP7ZWLv+PLcqCcbWrP6o7Pd2Uhxthb1aNbCqprIHTrv2BO2qTAyMuvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ngfsJBiX; arc=none smtp.client-ip=209.85.215.201
+	s=arc-20240116; t=1744178878; c=relaxed/simple;
+	bh=oTGRBpcL/2sIHNUD+/BM6BV/LmnMI5XK3yo3xDS6KyQ=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Content-Type; b=QBrzShuTloXVHd81/LPGQ6J1zrM28LeBttW1Eb5jGxE8zMaiFx6KRJ/LxEzrZ9zso2Pyxmj8VrRXgq3Pw+tNzE0k2AkpwHQty1Qb5+58RGuiJcPgduCK/mJrXB68MiTeWfN1k0Fw2ZscsaE2nb30T1KEvLrxDbuFs0mVPC1IZug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FLXpEtnN; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ngfsJBiX"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-af54a9109f4so2720887a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 23:07:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FLXpEtnN"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-227ed471999so53483485ad.3
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 23:07:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744178873; x=1744783673; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=IQysTOtg9Kdj+LrUMGXjnelf/uERWnWmH3sm6GDGrDs=;
-        b=ngfsJBiXBIV7wcxP5XM6hFaphmGAKxVaqUm8TT8jtqcFVGrhvQb41w6nlTwHpjS6FR
-         wWp8CgU2iE/ydosf7H68IJXEzREJz/D9pETtle1Z+qnV7S780XXG9e7ntQsqROWr8WB/
-         4sRO1fWA/LyFGVnuUQGZKpBLzFfCKQcOWBmFebeiwf098rvqzHRyARk7NQzUtY7mXmCX
-         k6mRWM9dPH00v5xOwIoAI8fDdm/srrq2m2diRMqVHRWAZ6tLpSbrh6p0luqE+j5P61A4
-         Dbki+PTttopX086L20tNeTNEVJSHlDJHb+TIizSJ0SZFs8f6s2voYZmndPDoOQRgE+5r
-         vaug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744178873; x=1744783673;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+        d=google.com; s=20230601; t=1744178875; x=1744783675; darn=vger.kernel.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=IQysTOtg9Kdj+LrUMGXjnelf/uERWnWmH3sm6GDGrDs=;
-        b=nTvwK9wvf+VJ7EKpgUIvFAWtZTOnaRxK7kGej27mtgp55vrgSOw9yewzptA6slOCuj
-         rcBBOX5tLRDX0COAMJZxe8wvc0jXfVmxJg4/nNzddRsuELCVvU3AiICZz/B8sVgv/Bj7
-         77ZX1C6NdK8xrfY3und8THVkIdzkuKJB3J5d7jSuaeOqFqYl2xlxBOyO1p7BYu+bExXj
-         lz5k3qD2c+m4JNOl7JrSRzkS5C60tOlZ2ZNKyJJhnrE46muijHMd8jPt+8QQeqvLFa3J
-         w6uQ956G/wqDMprXcRbGxp+IZnaCbfowaOMtKOYbvXySZmLDD5qtLTnPhhz+hoMgvEb7
-         RvuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWYjEsYgzXWtCO3FwQWKpUxHbrfwyNyxMSoXBLzlD8xo/iZlbYpBk32LNmQpu+j4rBFzuBi0cCXXOHmuuk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNo4j65odidz6NmF0iY3xoCa0Z157rK1zP5jD6D5Eox2jd/c0m
-	sWXVvijERUZFNu8zxoNg8kA6KTFJeQJIVdVv3RB9DavMj5WUgFucpueRwvDjFnHQjDN3BGm03TA
-	BxbRcKg==
-X-Google-Smtp-Source: AGHT+IGuYfcr/8lN8n8ocPw+qJEdejKNXBFvT6qWMwOzhkrBpUs+ZreTH2w02P2FRgxW3y3tQvY3rhbGG4DT
-X-Received: from plbkp4.prod.google.com ([2002:a17:903:2804:b0:220:ca3c:96bc])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1b2c:b0:223:6657:5003
- with SMTP id d9443c01a7336-22ac2a27c95mr29924845ad.32.1744178873438; Tue, 08
- Apr 2025 23:07:53 -0700 (PDT)
-Date: Tue,  8 Apr 2025 23:07:27 -0700
+        bh=pClnDyLnT+OkOC5ziZK4pcS5wTXzmuK+3iocOmka5vs=;
+        b=FLXpEtnNxLWt9dne0GZ+mnmjKCStMKxSmJ3JmKswa9u6HCwj3Uct+1nufMxyQCzkyl
+         Gsi0iuh+HQV87F2Tzfv2HNjuboi0Skgt8y+2mF4yNmNL9U1ycEoFlvss7XKSQz4CyvhE
+         yim0ggSgMXPGgMoZhhw+Aqo/aF0MMVkvqhhhUT6OBHfKQ3Ddg99skoXJcYiwZqc2Q+/s
+         nQFSpA38f3RtZtjgB89JMLobIJPhn7yufd9BU1fKE3av6OGOyzOU+pUsPA/BzFu6Sq4s
+         FrDYKUN8oVKxUsm5ZwNA4eB33NqVcfzeg/NPkVo5/vVJlYrqUeJwIfs6HleHZQ+2lVx4
+         uFMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744178875; x=1744783675;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pClnDyLnT+OkOC5ziZK4pcS5wTXzmuK+3iocOmka5vs=;
+        b=Pt4dXUyzyXGqhXXKZ64UstnrC5mEDUzvYpkf5J4wtbCiQWKNxNZOaTD9/PRyh6etEv
+         G74oaNz17ZrtSpjk3plkhjRNpJ6dIQXboPyXwT70+T+CIDM50Y1HjAXChMk8OKzRL0bx
+         DnzPvPQaO7jJN3g230kFe43PK0f9HfXdlQASK1cOLa6BK68zB8XMiIoOJWzNWUsuX+gP
+         hxKW3ASBL9VEJ++JL2KdhwUdsUl6eYtpknfH4plJyaQWwm2wpuwXG+uectos/asW7iaR
+         PUqZPHH5iwGr5mVXlxXNJUlxh0hU+UIhFyjb2jO8Ynuhqb5y8P54ZmXl7Bn4Rjm6dj4Y
+         MM+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVZH6ru5jyv99l1MM0vtbzs5hOTLYINAqee5GyRaHi7YtvjobvoG48TyLfen5JYRDxP+E3l8aAD+aO4fXs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJtF4rDDah+/AvhmdkmDWJXD92W2tUpSHCqZ+YRHruzp32O71Y
+	UOLoR2ZKoCmDkWUuX+XPNkzi0OetPF5eQMtaKTZIe5X+eyuIGZEh50VqNlitbyMLyQ3HtdeNzMS
+	JcX7tzA==
+X-Google-Smtp-Source: AGHT+IEDzxJvPRvCwd5uXhzLPWUQoc2F9jgGiMHYHy0Yf4lHZZIfXolXPCitAeiMp1B24JA3k+LAWUYq2fij
+X-Received: from plg6.prod.google.com ([2002:a17:902:c246:b0:223:49f0:9077])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:187:b0:224:1c41:a4c0
+ with SMTP id d9443c01a7336-22ac296e5e3mr19605125ad.9.1744178875499; Tue, 08
+ Apr 2025 23:07:55 -0700 (PDT)
+Date: Tue,  8 Apr 2025 23:07:28 -0700
+In-Reply-To: <20250409060744.698511-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250409060744.698511-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250409060744.698511-1-irogers@google.com>
-Subject: [PATCH v4 00/16] Intel TPEBS min/max/mean/last support
+Message-ID: <20250409060744.698511-2-irogers@google.com>
+Subject: [PATCH v4 01/16] perf intel-tpebs: Cleanup header
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -71,71 +74,89 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-The patches add support to computing the min, max, mean or last
-retirement latency and then using that value as the basis for metrics.
-When values aren't available, support is added to use the retirement
-latency as recorded for an event in the perf json.
+Remove arch conditional compilation. Arch conditional compilation
+belongs in the arch/ directory.
 
-Support is added for reading the retirement latency from the forked
-perf command more than once. To avoid killing the process commands are
-sent through the control fd. Some name handling is changed to make it
-more robust.
+Tidy header guards to match other files. Remove unneeded includes and
+switch to forward declarations when necesary.
 
-Rather than retirement latency events having issues with perf record,
-make it so that the retirement latency modifier enables sample
-weights.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/Build         |  2 +-
+ tools/perf/util/intel-tpebs.c |  1 +
+ tools/perf/util/intel-tpebs.h | 30 ++++++------------------------
+ 3 files changed, 8 insertions(+), 25 deletions(-)
 
-v4: Don't use json min/max in retirement latency stats as they will
-    never update afterwards. Warn once if json data is used when TPEBS
-    recording was requested.
-
-v3: Two fixes from Kan Liang. Ensure min/max statistics don't vary
-    when real samples are encountered.
-
-v2: Addition of header cleanup patch originally posted:
-    https://lore.kernel.org/lkml/20241210191823.612631-1-irogers@google.com/
-    as there are no arch specific reasons not to build this code.
-    Fix bug in "perf pmu-events: Add retirement latency to JSON events
-    inside of perf" where "t->stats.n != 0" should have been
-    "t->stats.n == 0".
-    Add patch so that perf record of a retirement latency event
-    doesn't crash but instead enables sample weights for the event.
-
-Ian Rogers (16):
-  perf intel-tpebs: Cleanup header
-  perf intel-tpebs: Simplify tpebs_cmd
-  perf intel-tpebs: Rename tpebs_start to evsel__tpebs_open
-  perf intel-tpebs: Separate evsel__tpebs_prepare out of
-    evsel__tpebs_open
-  perf intel-tpebs: Move cpumap_buf out of evsel__tpebs_open
-  perf intel-tpebs: Reduce scope of tpebs_events_size
-  perf intel-tpebs: Inline get_perf_record_args
-  perf intel-tpebs: Ensure events are opened, factor out finding
-  perf intel-tpebs: Refactor tpebs_results list
-  perf intel-tpebs: Add support for updating counts in evsel__tpebs_read
-  perf intel-tpebs: Add mutex for tpebs_results
-  perf intel-tpebs: Don't close record on read
-  perf intel-tpebs: Use stats for retirement latency statistics
-  perf stat: Add mean, min, max and last --tpebs-mode options
-  perf pmu-events: Add retirement latency to JSON events inside of perf
-  perf record: Retirement latency cleanup in evsel__config
-
- tools/perf/Documentation/perf-stat.txt   |   7 +
- tools/perf/builtin-stat.c                |  29 +-
- tools/perf/pmu-events/empty-pmu-events.c | 216 +++----
- tools/perf/pmu-events/jevents.py         |   6 +
- tools/perf/pmu-events/pmu-events.h       |   3 +
- tools/perf/util/Build                    |   2 +-
- tools/perf/util/evlist.c                 |   1 -
- tools/perf/util/evsel.c                  |  22 +-
- tools/perf/util/evsel.h                  |   6 +
- tools/perf/util/intel-tpebs.c            | 682 ++++++++++++++---------
- tools/perf/util/intel-tpebs.h            |  40 +-
- tools/perf/util/parse-events.c           |   4 +
- tools/perf/util/pmu.c                    |  52 +-
- tools/perf/util/pmu.h                    |   3 +
- 14 files changed, 666 insertions(+), 407 deletions(-)
-
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index 946bce6628f3..815274b199fd 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -161,7 +161,7 @@ perf-util-y += clockid.o
+ perf-util-y += list_sort.o
+ perf-util-y += mutex.o
+ perf-util-y += sharded_mutex.o
+-perf-util-$(CONFIG_X86_64) += intel-tpebs.o
++perf-util-y += intel-tpebs.o
+ 
+ perf-util-$(CONFIG_LIBBPF) += bpf_map.o
+ perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf_counter.o
+diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpebs.c
+index 2c421b475b3b..3503da28a12f 100644
+--- a/tools/perf/util/intel-tpebs.c
++++ b/tools/perf/util/intel-tpebs.c
+@@ -19,6 +19,7 @@
+ #include "tool.h"
+ #include "cpumap.h"
+ #include "metricgroup.h"
++#include "stat.h"
+ #include <sys/stat.h>
+ #include <sys/file.h>
+ #include <poll.h>
+diff --git a/tools/perf/util/intel-tpebs.h b/tools/perf/util/intel-tpebs.h
+index 766b3fbd79f1..63c16e759a71 100644
+--- a/tools/perf/util/intel-tpebs.h
++++ b/tools/perf/util/intel-tpebs.h
+@@ -2,34 +2,16 @@
+ /*
+  * intel_tpebs.h: Intel TEPBS support
+  */
+-#ifndef INCLUDE__PERF_INTEL_TPEBS_H__
+-#define INCLUDE__PERF_INTEL_TPEBS_H__
++#ifndef __INTEL_TPEBS_H
++#define __INTEL_TPEBS_H
+ 
+-#include "stat.h"
+-#include "evsel.h"
+-
+-#ifdef HAVE_ARCH_X86_64_SUPPORT
++struct evlist;
++struct evsel;
+ 
+ extern bool tpebs_recording;
++
+ int tpebs_start(struct evlist *evsel_list);
+ void tpebs_delete(void);
+ int tpebs_set_evsel(struct evsel *evsel, int cpu_map_idx, int thread);
+ 
+-#else
+-
+-static inline int tpebs_start(struct evlist *evsel_list __maybe_unused)
+-{
+-	return 0;
+-}
+-
+-static inline void tpebs_delete(void) {};
+-
+-static inline int tpebs_set_evsel(struct evsel *evsel  __maybe_unused,
+-				int cpu_map_idx  __maybe_unused,
+-				int thread  __maybe_unused)
+-{
+-	return 0;
+-}
+-
+-#endif
+-#endif
++#endif /* __INTEL_TPEBS_H */
 -- 
 2.49.0.504.g3bcea36a83-goog
 
