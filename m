@@ -1,168 +1,273 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D51A11DE891;
-	Wed,  9 Apr 2025 16:03:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00FA71C4A13;
+	Wed,  9 Apr 2025 16:04:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744214599; cv=none; b=AkrugaXGCA9k4xbJYlTG2uL4h4GijofzaTaDubvVK4MY5HYONh7023E4NKd0Cz8X1n8PXX1enU4P+i1U+38m2R7VKwga0nvwTQiWF8NJ7X6oV4oeUEfs/iH8Vi/T7H+5/8+lzZXTG2YvNJ9OX6Te2MMJR5W6Y0tczXLeka5h+eY=
+	t=1744214658; cv=none; b=Lt3PGvmS1XZJeS+fyeuRSrZ3sdjiHZffgYj3RUhO/MLyp8hA+h23K96frKnR9L2cWsoiWnBfVimAnOcIn9zKa7kVCye4xsZBV7UG18OsjHnuZ+OMy9tODkoyOpEdqMJNu8csqBA7BhQwEIcTUKFw6meWfJS0MYlDnWgj9Zyf4ek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744214599; c=relaxed/simple;
-	bh=sxYP4nb4nfqQSxWXYMoiaKdALpRkbmawtaHGeWOAi7g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SgEkl3A4rTro2WxGIV+w5eI1BUVXFwROA3ZxQgw71+tA4SHunW5oHqMvwwTbbokThVEb71KHwy8gnkpdVAqftFDthSIshdYwhH0Ut74QkfKZKRSEZEIJMSgDO7pjd6bXjFCehkUNy9dVBSm2gqeqejK3lSW7ft9oxJy9R2CrNz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 52CC115A1;
-	Wed,  9 Apr 2025 09:03:15 -0700 (PDT)
-Received: from [10.57.72.20] (unknown [10.57.72.20])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2A4F93F59E;
-	Wed,  9 Apr 2025 09:03:07 -0700 (PDT)
-Message-ID: <0eb87302-fae8-4708-aaf8-d16e836e727f@arm.com>
-Date: Wed, 9 Apr 2025 17:03:05 +0100
+	s=arc-20240116; t=1744214658; c=relaxed/simple;
+	bh=TJCANtQVIfo4GCVzWxO30Axf7ECgxM5Mp41y//AoHeg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RWVSUag0PuuSKPRhpNRGduVe+lN410x1ldBaz/kItI3IOg7GlT5M8uVOK7beCPr5hsd3yFrk8OyIpz4r5recxmxQE865VxOLrV1jG7YJkFCKlacAkaDbGwOTGfK4inueTObKSe8sx91F0F4JDaC774YONChlY6iU5WD01yUB/jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bg4/ZZlH; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bg4/ZZlH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68539C4CEE2;
+	Wed,  9 Apr 2025 16:04:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744214654;
+	bh=TJCANtQVIfo4GCVzWxO30Axf7ECgxM5Mp41y//AoHeg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Bg4/ZZlHqXpmWb30IyVW8qT18Fl4GUtB46CH0ejPQ/oVkKccluYHx17Bcb84Be2HZ
+	 HXM/wDGSQAkncqtqymcHutro4+DSgDatFmzDAn3hoP/6oDdh+6gUC3Xk2Nznmbxwe/
+	 kDegbRDg5th8qDLpyDWbJuKAwTJwJupIj+LX3jWDfxIxCC8G3JgnxUQIaCAkea5UJS
+	 eu1zHSFsYwo5Os8EEbjWALokLAFXRzXIFGHxk1zDz5T/VxxNILK3XKj4iEoviSehn4
+	 o0aqIA6cRBPWeNznfSxXF6FBe7mf7o1A9cbt/V6kk4kxrUO2by5/WXKeXlqgfiBmPO
+	 0w6Nxl89D+ApQ==
+From: Kees Cook <kees@kernel.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Kees Cook <kees@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Chris Packham <chris.packham@alliedtelesis.co.nz>,
+	Douglas Anderson <dianders@chromium.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Andrew Davis <afd@ti.com>,
+	Seung-Woo Kim <sw0312.kim@samsung.com>,
+	Xin Li <xin3.li@intel.com>,
+	Jinjie Ruan <ruanjinjie@huawei.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-hardening@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	Eric Biggers <ebiggers@google.com>,
+	Yuntao Liu <liuyuntao12@huawei.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Dave Vasilevsky <dave@vasilevsky.ca>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] gcc-plugins: Remove ARM_SSP_PER_TASK plugin
+Date: Wed,  9 Apr 2025 09:04:10 -0700
+Message-Id: <20250409160409.work.168-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH hyperv-next 5/6] arch, drivers: Add device struct bitfield
- to not bounce-buffer
-To: Roman Kisel <romank@linux.microsoft.com>, aleksander.lobakin@intel.com,
- andriy.shevchenko@linux.intel.com, arnd@arndb.de, bp@alien8.de,
- catalin.marinas@arm.com, corbet@lwn.net, dakr@kernel.org,
- dan.j.williams@intel.com, dave.hansen@linux.intel.com, decui@microsoft.com,
- gregkh@linuxfoundation.org, haiyangz@microsoft.com, hch@lst.de,
- hpa@zytor.com, James.Bottomley@HansenPartnership.com,
- Jonathan.Cameron@huawei.com, kys@microsoft.com, leon@kernel.org,
- lukas@wunner.de, luto@kernel.org, m.szyprowski@samsung.com,
- martin.petersen@oracle.com, mingo@redhat.com, peterz@infradead.org,
- quic_zijuhu@quicinc.com, tglx@linutronix.de, wei.liu@kernel.org,
- will@kernel.org, iommu@lists.linux.dev, linux-arch@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
- linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-scsi@vger.kernel.org, x86@kernel.org
-Cc: apais@microsoft.com, benhill@microsoft.com, bperkins@microsoft.com,
- sunilmut@microsoft.com, Suzuki K Poulose <suzuki.poulose@arm.com>
-References: <20250409000835.285105-1-romank@linux.microsoft.com>
- <20250409000835.285105-6-romank@linux.microsoft.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20250409000835.285105-6-romank@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6865; i=kees@kernel.org; h=from:subject:message-id; bh=TJCANtQVIfo4GCVzWxO30Axf7ECgxM5Mp41y//AoHeg=; b=owGbwMvMwCVmps19z/KJym7G02pJDOnfZlU5fPV2ecRi2nNrao2GucRnz8q3LlmdtjzV77Q8T l8QWdjZUcrCIMbFICumyBJk5x7n4vG2Pdx9riLMHFYmkCEMXJwCcJOjGBluFVQtesY6K5D19JSN Z412qNX7M8pUFKuvDSsM3KtTfVuN4b+fsuKjB5xRxoFtTHKR9YeD3lx0OHv8L6M3c2nw7hMXb3I CAA==
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On 2025-04-09 1:08 am, Roman Kisel wrote:
-> Bounce-buffering makes the system spend more time copying
-> I/O data. When the I/O transaction take place between
-> a confidential and a non-confidential endpoints, there is
-> no other way around.
-> 
-> Introduce a device bitfield to indicate that the device
-> doesn't need to perform bounce buffering. The capable
-> device may employ it to save on copying data around.
+As part of trying to remove GCC plugins from Linux, drop the
+ARM_SSP_PER_TASK plugin. The feature is available upstream since GCC
+12, so anyone needing newer kernels with per-task ssp can update their
+compiler[1].
 
-It's not so much about bounce buffering, it's more fundamentally about 
-whether the device is trusted and able to access private memory at all 
-or not. And performance is hardly the biggest concern either - if you do 
-trust a device to operate on confidential data in private memory, then 
-surely it is crucial to actively *prevent* that data ever getting into 
-shared SWIOTLB pages where anyone else could also get at it. At worst 
-that means CoCo VMs might need an *additional* non-shared SWIOTLB to 
-support trusted devices with addressing limitations (and/or 
-"swiotlb=force" debugging, potentially).
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/all/08393aa3-05a3-4e3f-8004-f374a3ec4b7e@app.fastmail.com/ [1]
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc: Douglas Anderson <dianders@chromium.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Nicolas Schier <nicolas@fjasle.eu>
+Cc: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Andrew Davis <afd@ti.com>
+Cc: Seung-Woo Kim <sw0312.kim@samsung.com>
+Cc: Xin Li <xin3.li@intel.com>
+Cc: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-hardening@vger.kernel.org
+Cc: linux-kbuild@vger.kernel.org
+---
+ arch/arm/Kconfig                              |   3 +-
+ arch/arm/boot/compressed/Makefile             |   2 +-
+ scripts/Makefile.gcc-plugins                  |   6 -
+ scripts/gcc-plugins/Kconfig                   |   4 -
+ scripts/gcc-plugins/arm_ssp_per_task_plugin.c | 107 ------------------
+ 5 files changed, 2 insertions(+), 120 deletions(-)
+ delete mode 100644 scripts/gcc-plugins/arm_ssp_per_task_plugin.c
 
-Also whatever we do for this really wants to tie in with the nascent 
-TDISP stuff as well, since we definitely don't want to end up with more 
-than one notion of whether a device is in a trusted/locked/private/etc. 
-vs. unlocked/shared/etc. state with respect to DMA (or indeed anything 
-else if we can avoid it).
-
-Thanks,
-Robin.
-
-> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
-> ---
->   arch/x86/mm/mem_encrypt.c  | 3 +++
->   include/linux/device.h     | 8 ++++++++
->   include/linux/dma-direct.h | 3 +++
->   include/linux/swiotlb.h    | 3 +++
->   4 files changed, 17 insertions(+)
-> 
-> diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
-> index 95bae74fdab2..6349a02a1da3 100644
-> --- a/arch/x86/mm/mem_encrypt.c
-> +++ b/arch/x86/mm/mem_encrypt.c
-> @@ -19,6 +19,9 @@
->   /* Override for DMA direct allocation check - ARCH_HAS_FORCE_DMA_UNENCRYPTED */
->   bool force_dma_unencrypted(struct device *dev)
->   {
-> +	if (dev->use_priv_pages_for_io)
-> +		return false;
-> +
->   	/*
->   	 * For SEV, all DMA must be to unencrypted addresses.
->   	 */
-> diff --git a/include/linux/device.h b/include/linux/device.h
-> index 80a5b3268986..4aa4a6fd9580 100644
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -725,6 +725,8 @@ struct device_physical_location {
->    * @dma_skip_sync: DMA sync operations can be skipped for coherent buffers.
->    * @dma_iommu: Device is using default IOMMU implementation for DMA and
->    *		doesn't rely on dma_ops structure.
-> + * @use_priv_pages_for_io: Device is using private pages for I/O, no need to
-> + *		bounce-buffer.
->    *
->    * At the lowest level, every device in a Linux system is represented by an
->    * instance of struct device. The device structure contains the information
-> @@ -843,6 +845,7 @@ struct device {
->   #ifdef CONFIG_IOMMU_DMA
->   	bool			dma_iommu:1;
->   #endif
-> +	bool			use_priv_pages_for_io:1;
->   };
->   
->   /**
-> @@ -1079,6 +1082,11 @@ static inline bool dev_removable_is_valid(struct device *dev)
->   	return dev->removable != DEVICE_REMOVABLE_NOT_SUPPORTED;
->   }
->   
-> +static inline bool dev_priv_pages_for_io(struct device *dev)
-> +{
-> +	return dev->use_priv_pages_for_io;
-> +}
-> +
->   /*
->    * High level routines for use by the bus drivers
->    */
-> diff --git a/include/linux/dma-direct.h b/include/linux/dma-direct.h
-> index d7e30d4f7503..b096369f847e 100644
-> --- a/include/linux/dma-direct.h
-> +++ b/include/linux/dma-direct.h
-> @@ -94,6 +94,9 @@ static inline dma_addr_t phys_to_dma_unencrypted(struct device *dev,
->    */
->   static inline dma_addr_t phys_to_dma(struct device *dev, phys_addr_t paddr)
->   {
-> +	if (dev_priv_pages_for_io(dev))
-> +		return phys_to_dma_unencrypted(dev, paddr);
-> +
->   	return __sme_set(phys_to_dma_unencrypted(dev, paddr));
->   }
->   
-> diff --git a/include/linux/swiotlb.h b/include/linux/swiotlb.h
-> index 3dae0f592063..35ee10641b42 100644
-> --- a/include/linux/swiotlb.h
-> +++ b/include/linux/swiotlb.h
-> @@ -173,6 +173,9 @@ static inline bool is_swiotlb_force_bounce(struct device *dev)
->   {
->   	struct io_tlb_mem *mem = dev->dma_io_tlb_mem;
->   
-> +	if (dev_priv_pages_for_io(dev))
-> +		return false;
-> +
->   	return mem && mem->force_bounce;
->   }
->   
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 835b5f100e92..6f037edf0f41 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -1379,8 +1379,7 @@ config CC_HAVE_STACKPROTECTOR_TLS
+ config STACKPROTECTOR_PER_TASK
+ 	bool "Use a unique stack canary value for each task"
+ 	depends on STACKPROTECTOR && CURRENT_POINTER_IN_TPIDRURO && !XIP_DEFLATED_DATA
+-	depends on GCC_PLUGINS || CC_HAVE_STACKPROTECTOR_TLS
+-	select GCC_PLUGIN_ARM_SSP_PER_TASK if !CC_HAVE_STACKPROTECTOR_TLS
++	depends on CC_HAVE_STACKPROTECTOR_TLS
+ 	default y
+ 	help
+ 	  Due to the fact that GCC uses an ordinary symbol reference from
+diff --git a/arch/arm/boot/compressed/Makefile b/arch/arm/boot/compressed/Makefile
+index 945b5975fce2..d61369b1eabe 100644
+--- a/arch/arm/boot/compressed/Makefile
++++ b/arch/arm/boot/compressed/Makefile
+@@ -96,7 +96,7 @@ KBUILD_CFLAGS += -DDISABLE_BRANCH_PROFILING
+ 
+ ccflags-y := -fpic $(call cc-option,-mno-single-pic-base,) -fno-builtin \
+ 	     -I$(srctree)/scripts/dtc/libfdt -fno-stack-protector \
+-	     -I$(obj) $(DISABLE_ARM_SSP_PER_TASK_PLUGIN)
++	     -I$(obj)
+ ccflags-remove-$(CONFIG_FUNCTION_TRACER) += -pg
+ asflags-y := -DZIMAGE
+ 
+diff --git a/scripts/Makefile.gcc-plugins b/scripts/Makefile.gcc-plugins
+index 6da109d563a5..194122d969a8 100644
+--- a/scripts/Makefile.gcc-plugins
++++ b/scripts/Makefile.gcc-plugins
+@@ -36,12 +36,6 @@ ifdef CONFIG_GCC_PLUGIN_STACKLEAK
+ endif
+ export DISABLE_STACKLEAK_PLUGIN
+ 
+-gcc-plugin-$(CONFIG_GCC_PLUGIN_ARM_SSP_PER_TASK) += arm_ssp_per_task_plugin.so
+-ifdef CONFIG_GCC_PLUGIN_ARM_SSP_PER_TASK
+-    DISABLE_ARM_SSP_PER_TASK_PLUGIN += -fplugin-arg-arm_ssp_per_task_plugin-disable
+-endif
+-export DISABLE_ARM_SSP_PER_TASK_PLUGIN
+-
+ # All the plugin CFLAGS are collected here in case a build target needs to
+ # filter them out of the KBUILD_CFLAGS.
+ GCC_PLUGINS_CFLAGS := $(strip $(addprefix -fplugin=$(objtree)/scripts/gcc-plugins/, $(gcc-plugin-y)) $(gcc-plugin-cflags-y))
+diff --git a/scripts/gcc-plugins/Kconfig b/scripts/gcc-plugins/Kconfig
+index ba868d1eef3d..6b34ba19358d 100644
+--- a/scripts/gcc-plugins/Kconfig
++++ b/scripts/gcc-plugins/Kconfig
+@@ -36,8 +36,4 @@ config GCC_PLUGIN_LATENT_ENTROPY
+ 	   * https://grsecurity.net/
+ 	   * https://pax.grsecurity.net/
+ 
+-config GCC_PLUGIN_ARM_SSP_PER_TASK
+-	bool
+-	depends on GCC_PLUGINS && ARM
+-
+ endif
+diff --git a/scripts/gcc-plugins/arm_ssp_per_task_plugin.c b/scripts/gcc-plugins/arm_ssp_per_task_plugin.c
+deleted file mode 100644
+index 7328d037f975..000000000000
+--- a/scripts/gcc-plugins/arm_ssp_per_task_plugin.c
++++ /dev/null
+@@ -1,107 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-
+-#include "gcc-common.h"
+-
+-__visible int plugin_is_GPL_compatible;
+-
+-static unsigned int canary_offset;
+-
+-static unsigned int arm_pertask_ssp_rtl_execute(void)
+-{
+-	rtx_insn *insn;
+-
+-	for (insn = get_insns(); insn; insn = NEXT_INSN(insn)) {
+-		const char *sym;
+-		rtx body;
+-		rtx current;
+-
+-		/*
+-		 * Find a SET insn involving a SYMBOL_REF to __stack_chk_guard
+-		 */
+-		if (!INSN_P(insn))
+-			continue;
+-		body = PATTERN(insn);
+-		if (GET_CODE(body) != SET ||
+-		    GET_CODE(SET_SRC(body)) != SYMBOL_REF)
+-			continue;
+-		sym = XSTR(SET_SRC(body), 0);
+-		if (strcmp(sym, "__stack_chk_guard"))
+-			continue;
+-
+-		/*
+-		 * Replace the source of the SET insn with an expression that
+-		 * produces the address of the current task's stack canary value
+-		 */
+-		current = gen_reg_rtx(Pmode);
+-
+-		emit_insn_before(gen_load_tp_hard(current), insn);
+-
+-		SET_SRC(body) = gen_rtx_PLUS(Pmode, current,
+-					     GEN_INT(canary_offset));
+-	}
+-	return 0;
+-}
+-
+-#define PASS_NAME arm_pertask_ssp_rtl
+-
+-#define NO_GATE
+-#include "gcc-generate-rtl-pass.h"
+-
+-#if BUILDING_GCC_VERSION >= 9000
+-static bool no(void)
+-{
+-	return false;
+-}
+-
+-static void arm_pertask_ssp_start_unit(void *gcc_data, void *user_data)
+-{
+-	targetm.have_stack_protect_combined_set = no;
+-	targetm.have_stack_protect_combined_test = no;
+-}
+-#endif
+-
+-__visible int plugin_init(struct plugin_name_args *plugin_info,
+-			  struct plugin_gcc_version *version)
+-{
+-	const char * const plugin_name = plugin_info->base_name;
+-	const int argc = plugin_info->argc;
+-	const struct plugin_argument *argv = plugin_info->argv;
+-	int i;
+-
+-	if (!plugin_default_version_check(version, &gcc_version)) {
+-		error(G_("incompatible gcc/plugin versions"));
+-		return 1;
+-	}
+-
+-	for (i = 0; i < argc; ++i) {
+-		if (!strcmp(argv[i].key, "disable"))
+-			return 0;
+-
+-		/* all remaining options require a value */
+-		if (!argv[i].value) {
+-			error(G_("no value supplied for option '-fplugin-arg-%s-%s'"),
+-			      plugin_name, argv[i].key);
+-			return 1;
+-		}
+-
+-		if (!strcmp(argv[i].key, "offset")) {
+-			canary_offset = atoi(argv[i].value);
+-			continue;
+-		}
+-		error(G_("unknown option '-fplugin-arg-%s-%s'"),
+-		      plugin_name, argv[i].key);
+-		return 1;
+-	}
+-
+-	PASS_INFO(arm_pertask_ssp_rtl, "expand", 1, PASS_POS_INSERT_AFTER);
+-
+-	register_callback(plugin_info->base_name, PLUGIN_PASS_MANAGER_SETUP,
+-			  NULL, &arm_pertask_ssp_rtl_pass_info);
+-
+-#if BUILDING_GCC_VERSION >= 9000
+-	register_callback(plugin_info->base_name, PLUGIN_START_UNIT,
+-			  arm_pertask_ssp_start_unit, NULL);
+-#endif
+-
+-	return 0;
+-}
+-- 
+2.34.1
 
