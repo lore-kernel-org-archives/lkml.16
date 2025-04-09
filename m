@@ -1,182 +1,184 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2044.outbound.protection.outlook.com [40.107.93.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A694B25A627
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 07:59:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744185578; cv=none; b=VSXt62PXwnMdgnOY4R/RXFdclJvV6RdZrUoPSHDTJhSTs9T3L705Tb0v+/+zzeIYxJPTt/Z2pNlnBz3OSIbfIXj7uL+XEf68/w0b8p+Ru4Ix1FWp1mpZYKspX65uhm60B9ifNbD3HZGCoYCdW5RzgqUOp92npyXerdmsorcdOA4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744185578; c=relaxed/simple;
-	bh=O4/0h2fD+v/2WoxppgtWGiHs4q3dWjGQQNeMm8b4TDE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ph/ndO+zcIX0Q6twXJtOlF2cxKVKFBIVV+tohSWbP55LkGuR1qEAz93HQJaQJQOKC+nk6gL7xhU9KIq6Tf96I83yx8UMiOSCMQTcFDjspTOeg/cLNeFsStnmUGfOMfso9gygy0+cayhECSkLupCrRVYWAtMZaUiYOrrPAtzdq4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O++mKewz; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 223DB2AEE1;
+	Wed,  9 Apr 2025 08:00:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744185639; cv=fail; b=kyrHsBe0RDnNOs9QDZyGxjfUZFY9QdTBNVDrJYAXzQKKZ1LTCzmVn/NVvz6Ay1vqt3s6i9luQTqg7IaTuM8MXauYFZxSS6oJprGnjK2/snBEi/eXtAVz1BZk2rrYQg1SvKGHSEPfLcU/m8vxVFZlbXB0HHPiuh1v+3gFnqO1b7E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744185639; c=relaxed/simple;
+	bh=9gSKIKjUbUM7LoyMg/RtpJhGNlQ5hMKwBO46YGGsZbg=;
+	h=From:To:CC:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID:Date; b=SLT6gYvkPDUi4inCeuVX3zqiS7YfYtgWSBILrkBLEDYFcds15lodJUM0Qa3Pl624R3TioSm7BNSPqFrDjw1RAOvCH5jdSLlx1zvKDz5uMkj8mSWwC+DCRY7wPoq1PxIMO4wmrbZtNcR3LLtEZIUyv0mkEwqpdPEI7i5fZo9Ldew=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=kbZrX6xO; arc=fail smtp.client-ip=40.107.93.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O++mKewz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744185575;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dT/1hWKYGtk5tJHR2fAw0xNnMbEghxXKOJUzMLmSe3U=;
-	b=O++mKewzRp4OfcVuA6/hoouzBp1YlRoVKpYaEQhBu55tuD8y2QvlNo4eovafs/LU4WGZtk
-	8deg0ldsD2kaqs59jpeyfLQIwBhM9MK2Z+KyPq/1lmX1MJkYVUtnBBIjiw/KpGtF41oT1K
-	ePgpXCrd69I2oUMh7Sq4t6PMrCAA5wg=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-552-8_WVXnsxP7240gUHBV18rw-1; Wed, 09 Apr 2025 03:59:34 -0400
-X-MC-Unique: 8_WVXnsxP7240gUHBV18rw-1
-X-Mimecast-MFC-AGG-ID: 8_WVXnsxP7240gUHBV18rw_1744185573
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-abb9b2831b7so47194066b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 00:59:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744185573; x=1744790373;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dT/1hWKYGtk5tJHR2fAw0xNnMbEghxXKOJUzMLmSe3U=;
-        b=mjLTx6DcShdP+fkdnwX9tCaXMYmPMO68+OWAsYk3s4v2ozQ6S4JhzJK1n4KnaG2Hm8
-         5MEV8gbQZ3AldHu7sORLDpU7hdbtU1D7JTrQ8azWR4ddEUePIr7in00BiWr1nuZ7ejja
-         RfA1bWA77noaWuDXVJ+GiJ96fVJpW6NwJFz0QhYM9wIzKFAT5d7gGS8MUWFazpaqBrMt
-         VXlpGIU8DdxzohbjnlFfVuQpQpE1iRGNxLuTnfcvLi2aKMYPaIou/cAVvBc13/lGEzjM
-         UFlqItZ7rqrnB6HfzfyyWpduGzBznMkjE10r60yEITCFvvO/IPIatD58QyA0+yrs/o64
-         mgcA==
-X-Forwarded-Encrypted: i=1; AJvYcCWX8LNWqywksaW1SlL1mHQykSmqNjUMTRiS+M07q8VaJyGQ5RWSKGOQBmCqIoM1dYtAON88HTK35oGUKcI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxg+cgGXKy5LQlqR58D5IaAxdurhY4RRL/DsROOoWWqV1j15Vjw
-	6Inph2LzIQbDOAHqrOcJpGf1/CYv+avEsjKpY07AuNYG4IWrU2bsIXyduTDC+C7HoojpQ7BIbOW
-	qP/ehv3ClFVnngLhuh/gRyugZn4xLwCQiWfU4tJnxvsFxtJohRuJ/vBLgDPwmsw==
-X-Gm-Gg: ASbGncvJZFwjoJM9vnEuDoOZTdsPZYnJAS6G+CM8PAmmom53fPQJek9ONilyLXZzFdW
-	UDQi+i6mO3ycabmwTBeB+8OISN8JWe3aAbqJuoxd/R2nkU8jw21aWXLoMghluq7E/l3H5faGwO9
-	56RBFaL+9Z9bKEbEG+3MUD3fRPHTFlqHi++u7kx1Bb99T11XzQKywIJ8xZ8eeWmyVhAMdljx7QU
-	WAR7DXd5x8jma+K0YIYD86XXzPIxv/GdDls3Y4BVOvqYkpPE0QFYmLE+Z1P+vXoYVi7GpemwzTm
-	BoM7R4mAk4eyzHGGqdpHuLEkeX6TQf47xPcTwOcrGKNe/PJVBw+qfHx80WA2
-X-Received: by 2002:a17:907:2d89:b0:aca:95ed:b9d1 with SMTP id a640c23a62f3a-aca95edc220mr253162766b.21.1744185572795;
-        Wed, 09 Apr 2025 00:59:32 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFDGZE5I848zF3RheNhsp0sylIGxiaPLv5p9KJ9kMUR0mVwOrwhhqxo8Y8n3wVy8ROJPh9oSw==
-X-Received: by 2002:a17:907:2d89:b0:aca:95ed:b9d1 with SMTP id a640c23a62f3a-aca95edc220mr253159466b.21.1744185572086;
-        Wed, 09 Apr 2025 00:59:32 -0700 (PDT)
-Received: from sgarzare-redhat (host-79-53-30-213.retail.telecomitalia.it. [79.53.30.213])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1ce7322sm50505266b.164.2025.04.09.00.59.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 00:59:31 -0700 (PDT)
-Date: Wed, 9 Apr 2025 09:59:26 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, 
-	Nicolas Ferre <nicolas.ferre@microchip.com>, linux-kernel@vger.kernel.org, 
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>, linux-arm-kernel@lists.infradead.org, 
-	Jens Wiklander <jens.wiklander@linaro.org>, linuxppc-dev@lists.ozlabs.org, 
-	Michael Ellerman <mpe@ellerman.id.au>, Sumit Garg <sumit.garg@kernel.org>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, linux-integrity@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Naveen N Rao <naveen@kernel.org>, 
-	Nicholas Piggin <npiggin@gmail.com>, Peter Huewe <peterhuewe@gmx.de>, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>
-Subject: Re: [PATCH v2 2/4] tpm: support devices with synchronous send()
-Message-ID: <uhqvn5w5ziuzvp3u72kztkfbtkrb2g6ieejup4e2ufun4ywtko@4hcytxdrfues>
-References: <20250408083208.43512-1-sgarzare@redhat.com>
- <20250408083208.43512-3-sgarzare@redhat.com>
- <Z_VBUozuHvbxdyB3@kernel.org>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="kbZrX6xO"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=IvIz1sFmdrW2tqvDultqW9wRih4R9+MXUZFPo/J8IkxOaDpishvsghHQkICPg9cVLXAFnP4xbGM55c1Fcxt/w82L/AmKNeNkwwpj1NPmpLH9e75yLTXOT94rMu0OQGCRGZSeGcpcwZN/dtDozNyyG6g1//iq9WvbiIqFCHw1U+z3ffDwGjbrHmd69efPvdhtNlY+z9Wv0Lrncw1dxtMr/0hkBtc12gxJ+CiNJaWbelECVQOx6HvQFkF4drflaxKNFM4VMOGo5yohO6X8Reok7rFCWNeLg4Yp+sHIVj6pQWN9wqaNDUUwulcuLNQsGIOClFu+dCNVIXFAhvKgcpGXeQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=k3WLBOYzAOW4CAvDKQYIqLJeYawrqlsVblwOY/UaTFI=;
+ b=M/OCjTQoa4+lJB/GkZIB1w6PiD8dyABLoB5hyHJ4HeCKqZN4JRrmkLVLRoFXkrgEzY/yleRUOERs6jjPPn6HuNYnwf0ir1/UEvWDzyfuINfE5GpzoU93r0BmiAc8B+vOoln4dT9gp6mzK1KMzNFUw1Cmwdozd77cahqwDMtFAqP4nTNiUX0Tb9+EbDeZbNFeAdDJ2umIRUqWTxsPcqmpDgNLT96Rr94wi315l71K1QjKnhUoP0GmMQz60U5buQ/wB3EuqJC2LaLnIxvAIGR9sdTDtlO4p4vPnomN0AQJGL7KC9fUDrPglYhw1Ge7gKbiixbVd8Es0Z8VGuARRoZr1A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.233) smtp.rcpttodomain=linuxfoundation.org
+ smtp.mailfrom=nvidia.com; dmarc=pass (p=reject sp=reject pct=100) action=none
+ header.from=nvidia.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=k3WLBOYzAOW4CAvDKQYIqLJeYawrqlsVblwOY/UaTFI=;
+ b=kbZrX6xOc4yGjAr4vtzmAi9B6sDUODg+mveoVX3IqdJPBQH9dAO2tBEGUxcNt7VkgrfP5+ZgfH4V7BQKyfTvOhNOBWSfwzML1zvqc0rEf+9gqjj/BmP/x5u3ezQ/Zp2cIgdKMqVA/5vaKJG5xtK9x8AEmmQWT34ariO+oD+e21N4gmLXAy8QHsppJYQG/awwnTZLfx+EOzoCuaZ0lR2j8W+GLhrLjtmf+1l9TzLRwX1yFt2fU55me+q+0CZgd9ecmqu9Y5/eMOPvdnucNhWsZo+b1Eb+rbjcp4PsmbYofOC13CeB7I1nrmX3/+9kXMOayU2HQMtemXAM8OYD9gN6wg==
+Received: from PH7P223CA0023.NAMP223.PROD.OUTLOOK.COM (2603:10b6:510:338::21)
+ by CYXPR12MB9425.namprd12.prod.outlook.com (2603:10b6:930:dc::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.35; Wed, 9 Apr
+ 2025 08:00:35 +0000
+Received: from CY4PEPF0000EE3B.namprd03.prod.outlook.com
+ (2603:10b6:510:338:cafe::2f) by PH7P223CA0023.outlook.office365.com
+ (2603:10b6:510:338::21) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8606.34 via Frontend Transport; Wed,
+ 9 Apr 2025 08:00:34 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.233) by
+ CY4PEPF0000EE3B.mail.protection.outlook.com (10.167.242.14) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8606.22 via Frontend Transport; Wed, 9 Apr 2025 08:00:34 +0000
+Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
+ (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 9 Apr 2025
+ 01:00:13 -0700
+Received: from drhqmail201.nvidia.com (10.126.190.180) by
+ drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Wed, 9 Apr 2025 01:00:13 -0700
+Received: from jonathanh-vm-01.nvidia.com (10.127.8.9) by mail.nvidia.com
+ (10.126.190.180) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Wed, 9 Apr 2025 01:00:13 -0700
+From: Jon Hunter <jonathanh@nvidia.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	<patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+	<torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+	<linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+	<lkft-triage@lists.linaro.org>, <pavel@denx.de>, <jonathanh@nvidia.com>,
+	<f.fainelli@gmail.com>, <sudipm.mukherjee@gmail.com>, <srw@sladewatkins.net>,
+	<rwarsow@gmx.de>, <conor@kernel.org>, <hargar@microsoft.com>,
+	<broonie@kernel.org>, <linux-tegra@vger.kernel.org>, <stable@vger.kernel.org>
+Subject: Re: [PATCH 5.4 000/154] 5.4.292-rc1 review
+In-Reply-To: <20250408104815.295196624@linuxfoundation.org>
+References: <20250408104815.295196624@linuxfoundation.org>
+X-NVConfidentiality: public
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <Z_VBUozuHvbxdyB3@kernel.org>
+Message-ID: <c4c2e3ac-cf38-4888-b1ed-3686d7a08bd8@drhqmail201.nvidia.com>
+Date: Wed, 9 Apr 2025 01:00:13 -0700
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE3B:EE_|CYXPR12MB9425:EE_
+X-MS-Office365-Filtering-Correlation-Id: c8b5ff47-5b4c-483f-5ca4-08dd773c9b80
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|7416014|376014|36860700013|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SVMvcVY5MlBjZVVkeDg5T3F3UEJZalFtZUpUMmdjUmFrSjhHbGkwWmhQY2py?=
+ =?utf-8?B?Uy9TUzlBS0FzYTVrTGs5Zm9zNUw4NDl3OEU0R01ncXM5L2hOTGJKeGZqM2hr?=
+ =?utf-8?B?YUNqRFJkWVcxc2hSSFh4Vzh0UGdSR21kSlpZVDRJWnFTaGozd2NZZFhzVTZq?=
+ =?utf-8?B?VHVrQW5OOENiTDNudjZUZERPMW1VckNnSmRyVmZrRXVpWm00azVPcEk2anh1?=
+ =?utf-8?B?ckRHU2pnajVsMDM5eXdhNkVlUVBMR3VHUTBqWnMvOFpvK1ExSW0vZG4xR1VO?=
+ =?utf-8?B?SGU3ZkZ0Y2lWcUNuWXBDbTJzTWpsWUhxUXY0TFc0WlkyWklQR3pqRG9MTUZq?=
+ =?utf-8?B?YXlwTzdBaFhrVnp5WjcwWDJ1bGV2SUtDTS81anJCb0pqN1BOWE1sSTRoNjNZ?=
+ =?utf-8?B?YkxFaFBYM1FORXVNV0VrQjJwWVd6ejJ4Tk93b0hkZ1VuUGZiYVQzU2J1NEUy?=
+ =?utf-8?B?QzRaWXZSaVBlc2V5NjFkbnpTZUFnUnRrbHVkMGtRWUhQZXlRMHVJUmVWMmZ3?=
+ =?utf-8?B?TCtsTHgveHRkdGs4bEdKM3MrdDgyalJac1VzSHpKKzE2WHBQNjRINHRFLzhW?=
+ =?utf-8?B?NUY4M0ZXc3BCeXJNV3JKTzlDekdJQ29qbzFrYXk5RUd0a2pHcmE3Wmtrekht?=
+ =?utf-8?B?VEh4YWNwS3dTRFh4QWhGdnByRi9PczUvVXRHZ2l1blQ3aVF2R3dPOEtFYkF0?=
+ =?utf-8?B?Q0laQUl6TjBXTW91QUtHcGxWYnhHRis2M3pHV2FLRUhNZU04cEVBS3Bzd1Ra?=
+ =?utf-8?B?Rk96SVN0UVlZZ0xZUThIUk13Z240VE1xS3RmSU0yZ2V5MGlubTVXZ2tLMlI1?=
+ =?utf-8?B?NmxLODQ5enVlY0k0UDV0WkpQR0pSUHE3eGJZRDZrbnhTb0FhV05Zc1VhWlRt?=
+ =?utf-8?B?UG5OM1d1VlpCZVZybjJndjhHSm9zWjNYWlJQSlA2SXpSVnFueU96Q0twUXRN?=
+ =?utf-8?B?cElGMXZNanpINVY5STJWZ1I0Um5yd0RiTGlMc3hGbVJwcU1sTUlOck9rUy9F?=
+ =?utf-8?B?M0UvcmhHd3Y3S00xUk5yRHlNMkc4bkE4bUIyUm52cjVNTjM3bE1VU0szT3Fv?=
+ =?utf-8?B?ckZGTnpZNnRoc0kwMmNtOE5NeFE1V2U0SGhDZk9uRWltT0ltZ1pocUJPZ2Ns?=
+ =?utf-8?B?dzVpSjBtdkxIajhsV0NnQ1pvK1ZaS0dVcHF0bjV3WmhtNkNFZGxMSEx3UVNn?=
+ =?utf-8?B?QXI5TlNXNDlhT0ZqZkFpTzMzWTRuRkEvM2xtR2FGY3BETWVZOGFEVG5iNkdw?=
+ =?utf-8?B?VDE4WTdhQ3ZIQmJYeGNFSXBVTlVUaS9pNEhyVnpPaGQvNkd6TjNTS1BQaElQ?=
+ =?utf-8?B?aGFGYzZRQnRiZGs3alcrTzN6NVNEdzVUVGlVdlppSzYzNmRndWlScHBLY21Y?=
+ =?utf-8?B?THJYaHcvdkFLQmMxYzNycXYzWStjOFgyUVJjaWFMRDV1T2NSemZzWStJbCt3?=
+ =?utf-8?B?bEs1Um1zcTVCR0pWMjgzWFpaN3d6ckVrSVdGM2NYZDRiNVNudStXcm1OWUVH?=
+ =?utf-8?B?ckQzd21tMjdOaGJmbE1xY1REQzV2T3FGVE5yek9vZjdPaEJCdUY4TDc4UWdv?=
+ =?utf-8?B?MWRNSzdjNEVvdFdsMjZKUVQ4QTg0b2g2V3d0Z3g0TFRWVkFUbXpZalBsNnhH?=
+ =?utf-8?B?ZjBVeSsrRzBCYUpiVTl3ZWkzZEdjbVdtY2RnY1N6ek1UZTBEbGFiQ2NkMjE2?=
+ =?utf-8?B?amtIdmxzVWw1OTVwSVRja0xCbW11ZWU1YXZoK29NOGIzY2NDRXdBcnJxcWE5?=
+ =?utf-8?B?emJIUXFxbzBYMGhBTzZNQXY0aU90Sm9LbC9QWHZmUUtYME1UN0llbDRoUWc0?=
+ =?utf-8?B?Y01Tb3lOMllHU29GQkU1Vk5rMnRCbkh5bkd1SjlUUjY3TmgyWkl5aFR3aExG?=
+ =?utf-8?B?c3grYkRQa2dRYVJWK0pWRmo4eDFyU0lOMGovU1BrbWM0azFtVFZxYWRMUGc1?=
+ =?utf-8?B?YTEyTjBOTUVVVHZ6cndORjhJbDBWQkxlT2pYREtoeFU0OFdBejNJQTF4SDAw?=
+ =?utf-8?B?WFU3VTJaMUlzWFZjN0dqQUF3VnNnM1lOajZTQVh2S1RzWEQ0T2RrRzBwKzFl?=
+ =?utf-8?B?U3NqUi9KQ0VaWXZqOTlZek00dERQeVRkUlVXUT09?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(7416014)(376014)(36860700013)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 08:00:34.6164
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c8b5ff47-5b4c-483f-5ca4-08dd773c9b80
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000EE3B.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR12MB9425
 
-On Tue, Apr 08, 2025 at 06:31:30PM +0300, Jarkko Sakkinen wrote:
->On Tue, Apr 08, 2025 at 10:32:06AM +0200, Stefano Garzarella wrote:
->> From: Stefano Garzarella <sgarzare@redhat.com>
->>
->> Some devices do not support interrupts and provide a single synchronous
->> operation to send the command and receive the response on the same buffer.
->>
->> Currently, these types of drivers must use an internal buffer where they
->> temporarily store the response between .send() and recv() calls.
->>
->> Introduce a new flag (TPM_CHIP_FLAG_SYNC) to support synchronous send().
->> If that flag is set by the driver, tpm_try_transmit() will use the send()
->> callback to send the command and receive the response on the same buffer
->> synchronously. In that case send() return the number of bytes of the
->> response on success, or -errno on failure.
->>
->> Suggested-by: Jason Gunthorpe <jgg@ziepe.ca>
->> Suggested-by: Jarkko Sakkinen <jarkko@kernel.org>
->> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
->> ---
->>  include/linux/tpm.h              |  1 +
->>  drivers/char/tpm/tpm-interface.c | 18 +++++++++++++++---
->>  2 files changed, 16 insertions(+), 3 deletions(-)
->>
->> diff --git a/include/linux/tpm.h b/include/linux/tpm.h
->> index 2e38edd5838c..0e9746dc9d30 100644
->> --- a/include/linux/tpm.h
->> +++ b/include/linux/tpm.h
->> @@ -350,6 +350,7 @@ enum tpm_chip_flags {
->>  	TPM_CHIP_FLAG_SUSPENDED			= BIT(8),
->>  	TPM_CHIP_FLAG_HWRNG_DISABLED		= BIT(9),
->>  	TPM_CHIP_FLAG_DISABLE			= BIT(10),
->> +	TPM_CHIP_FLAG_SYNC			= BIT(11),
->>  };
->>
->>  #define to_tpm_chip(d) container_of(d, struct tpm_chip, dev)
->> diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
->> index 3b6ddcdb4051..9fbe84b5a131 100644
->> --- a/drivers/char/tpm/tpm-interface.c
->> +++ b/drivers/char/tpm/tpm-interface.c
->> @@ -114,8 +114,17 @@ static ssize_t tpm_try_transmit(struct tpm_chip *chip, void *buf, size_t bufsiz)
->>  		return rc;
->>  	}
->>
->> -	/* A sanity check. send() should just return zero on success e.g.
->> -	 * not the command length.
->> +	/* Synchronous devices return the response directly during the send()
->> +	 * call in the same buffer.
->> +	 */
->
->Nit:
->
->/*
-> * ...
->
->It's wrong in the existing comment.
+On Tue, 08 Apr 2025 12:49:01 +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.292 release.
+> There are 154 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 10 Apr 2025 10:47:53 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.292-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-Yep, I'll fix.
+All tests passing for Tegra ...
 
->
->> +	if (chip->flags & TPM_CHIP_FLAG_SYNC) {
->> +		len = rc;
->> +		rc = 0;
->> +		goto out_send_sync;
->> +	}
->> +
->> +	/* A sanity check. send() of asynchronous devices should just return
+Test results for stable-v5.4:
+    10 builds:	10 pass, 0 fail
+    24 boots:	24 pass, 0 fail
+    54 tests:	54 pass, 0 fail
 
-And I'll fix also this of course.
+Linux version:	5.4.292-rc1-g7a5af469195f
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra194-p2972-0000, tegra20-ventana,
+                tegra210-p2371-2180, tegra210-p3450-0000,
+                tegra30-cardhu-a04
 
->> +	 * zero on success e.g. not the command length.
->>  	 */
->>  	if (rc > 0) {
->>  		dev_warn(&chip->dev,
->> @@ -151,7 +160,10 @@ static ssize_t tpm_try_transmit(struct tpm_chip *chip, void *buf, size_t bufsiz)
->>  	if (len < 0) {
->>  		rc = len;
->>  		dev_err(&chip->dev, "tpm_transmit: tpm_recv: error %d\n", rc);
->> -	} else if (len < TPM_HEADER_SIZE || len != be32_to_cpu(header->length))
->> +		return rc;
->> +	}
->> +out_send_sync:
->
->out_sync would be sufficient
+Tested-by: Jon Hunter <jonathanh@nvidia.com>
 
-sure, I'll fix in v3.
-
-Thanks,
-Stefano
-
+Jon
