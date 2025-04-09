@@ -1,62 +1,63 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7AF827BF9F;
-	Wed,  9 Apr 2025 18:54:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4566327CCE2;
+	Wed,  9 Apr 2025 18:54:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744224875; cv=none; b=GefLD2g6NDYyISMluSZ9nEKej0Ae5S6V2xut43r5bBj0yFO7KHeP/2Zs6gsDWVGp9SS9Sb37GSkUkHzbvVAdHep0vjAuY8jgp+kcIpfRJ4nTn6hXKTM4VuE2s8mpGQQOj9hgbaJa2OMRaAfNvE0Mr7uYtibZ+hVPZumkq3KZr7I=
+	t=1744224875; cv=none; b=Ppr/+FAmHnH06ynSUXXEuvlT23hNCdYFeWOFIgkrMc4+dwH0fw7KodUqtnhqZrtgn7wWTP8FSlg/fduUnBqq6W72eH0kL97i0eZYpbEG0OiDuv9mNwN/Uwg3KHyIy4TV6eggCcL3JU1229KzOqGVt3pGmuPhH7uuE9J60XJYMQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744224875; c=relaxed/simple;
-	bh=QVHgjUuaEpJ7zm3OpDZGkAZ4eicGc53JeyBBixTbt9g=;
+	bh=SHAvWBgj2lWvatPpcUxZjtEds056dQed7/ZMREPJ2Ts=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=MI6QKJ3MNQ7skBK0h2tQDw2Sb2Fhpyw84ExMiRjWLRlMUaYbM6qyFEBxdGC9zdW1SzrHM8/qmkDgSsa4z1VOff4l7yWFZHIrZ99+6cTEe7fsYJ6PUcH+TrZiy6MYZbLamqSrxkkh2RZGfhGgbaQp8KijeF3pMHh9pNqhb0GIGmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=thg8VFzx; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ujsP77uo; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=LROfeWM2kYFEanjLf/6DUPjUnwStBlGx3Kcqoiepl5lOdb1baZEY4KVNDRxUpGu7/JgAKynIXRZM6KwFpDDyT1DSlyVLyVRsVhtTOw4/IB6n9szr5G6r51qUi0ahqxjzvM3JCPGw2zrHlbJG0x6Fz4NGc7u7IJ/S1B9agGnU6QE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fVTet/fD; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+rwFnv8p; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="thg8VFzx";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ujsP77uo"
-Date: Wed, 09 Apr 2025 18:54:31 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fVTet/fD";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+rwFnv8p"
+Date: Wed, 09 Apr 2025 18:54:30 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744224872;
+	s=2020; t=1744224871;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=/1v9DAkvxGeXKVhx9hJ5uphAJMMY8SrYG8jIp6JhlIk=;
-	b=thg8VFzxc1zG7VGOoJieqzkmyx4kDLqcJ+jhqRuDIVkvoAuYtmOUseF5TVgzB7fTc+MA9I
-	dNbAQ4xvfgASLUPzINEqpde45I88VcQhnkEI6GhwkiC9eiffBeyEhXjy0o9oIxbEzwBrl9
-	wClPWgAk8kjVboV/01xuVo1pI+35NoOf9s2T9m52e9Nq+ThBSGJmH9t9mBFbqNfBtDCVCD
-	Z7ZL/GlQWpueahGNwqQBbyiGY/7pe8mSmmPLCypHc2Yz7fyBP/y+E99K+PO12of0Z+isiM
-	o6virIhWow+HuQen77XK0lkkga8lExeC5NzmqsxbYBNVcdhAFGrTMvVYkeI12A==
+	bh=KbMi8SYQsEdhYvFBf7xKzai5yml9clQKoLZgGgrLZT8=;
+	b=fVTet/fDF0ar7wrXNiTgYH+CJLfE1BrtAYfzOzWO7bnEDYQ5IJunB+RQ8jcRE73ko9DcQH
+	+EhJmEuH4Jfyxh4dx9MOzk7kvJ0lB1KmQp1Tx0bd8gtAyZejmzFbQFBvokl9YQFEzEu9up
+	f2OLcV+cm1ic/wVLMm7w1FwOaeP8afsw6aSFLRBhGvu3xtksnOt0zkHXLKtNWMtx/lAtFx
+	kaUqDPjwHrok736SUJcWuZZR3059O0Eneg4DzD8uWaM7qSDzy7KlKcXr7bO0cLExZk0+EL
+	2KjXBpCGtanx4c6BMusu5a2BGQzJXwB6aHWWeZL0lLJRi1eAZ9i1driVieL0fg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744224872;
+	s=2020e; t=1744224871;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=/1v9DAkvxGeXKVhx9hJ5uphAJMMY8SrYG8jIp6JhlIk=;
-	b=ujsP77uoMLyTwjRgZU3XsCIAq7NA+KAGOdq3Qk7scDNCjh4O1Ndl2G8yoIPxB9jeRqXCDG
-	QQMYtD0gRhnnm3CA==
+	bh=KbMi8SYQsEdhYvFBf7xKzai5yml9clQKoLZgGgrLZT8=;
+	b=+rwFnv8piwuNkWS8tPJvUwYuPYL/SucJafSznP/klgBSzogcUFK7euoYZvHDQFeGv74EKR
+	rkGhio/wnMddSfDA==
 From: "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/msi] PCI/MSI: Use __free() for affinity masks
+Subject:
+ [tip: irq/msi] PCI/MSI: Switch msi_capability_init() to guard(msi_desc_lock)
 Cc: Thomas Gleixner <tglx@linutronix.de>, Bjorn Helgaas <bhelgaas@google.com>,
  x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250319105506.444764312@linutronix.de>
-References: <20250319105506.444764312@linutronix.de>
+In-Reply-To: <20250319105506.504992208@linutronix.de>
+References: <20250319105506.504992208@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174422487141.31282.14327737875444978155.tip-bot2@tip-bot2>
+Message-ID: <174422487075.31282.11644520359001594062.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -66,79 +67,122 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the irq/msi branch of tip:
 
-Commit-ID:     5c0ba4f9d25eb35a8ef882115c9f9c2084acc4e7
-Gitweb:        https://git.kernel.org/tip/5c0ba4f9d25eb35a8ef882115c9f9c2084acc4e7
+Commit-ID:     f11cc2af8f4b3d5e81dd9b8fb1a9185a6ca6e7db
+Gitweb:        https://git.kernel.org/tip/f11cc2af8f4b3d5e81dd9b8fb1a9185a6ca6e7db
 Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Wed, 19 Mar 2025 11:56:50 +01:00
+AuthorDate:    Wed, 19 Mar 2025 11:56:53 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Wed, 09 Apr 2025 20:47:30 +02:00
 
-PCI/MSI: Use __free() for affinity masks
+PCI/MSI: Switch msi_capability_init() to guard(msi_desc_lock)
 
-Let cleanup handle the freeing of the affinity mask. That prepares for
-switching the MSI descriptor locking to a guard().
+Split the lock protected functionality of msi_capability_init() out into a
+helper function and use guard(msi_desc_lock) to replace the lock/unlock
+pair.
 
-No functional change.
+No functional change intended.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Link: https://lore.kernel.org/all/20250319105506.444764312@linutronix.de
+Link: https://lore.kernel.org/all/20250319105506.504992208@linutronix.de
 
 ---
- drivers/pci/msi/msi.c | 13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
+ drivers/pci/msi/msi.c | 68 ++++++++++++++++++++++--------------------
+ 1 file changed, 36 insertions(+), 32 deletions(-)
 
 diff --git a/drivers/pci/msi/msi.c b/drivers/pci/msi/msi.c
-index c26e516..85c2aba 100644
+index 85c2aba..9987483 100644
 --- a/drivers/pci/msi/msi.c
 +++ b/drivers/pci/msi/msi.c
-@@ -350,7 +350,6 @@ static int msi_verify_entries(struct pci_dev *dev)
- static int msi_capability_init(struct pci_dev *dev, int nvec,
- 			       struct irq_affinity *affd)
+@@ -335,38 +335,13 @@ static int msi_verify_entries(struct pci_dev *dev)
+ 	return !entry ? 0 : -EIO;
+ }
+ 
+-/**
+- * msi_capability_init - configure device's MSI capability structure
+- * @dev: pointer to the pci_dev data structure of MSI device function
+- * @nvec: number of interrupts to allocate
+- * @affd: description of automatic IRQ affinity assignments (may be %NULL)
+- *
+- * Setup the MSI capability structure of the device with the requested
+- * number of interrupts.  A return value of zero indicates the successful
+- * setup of an entry with the new MSI IRQ.  A negative return value indicates
+- * an error, and a positive return value indicates the number of interrupts
+- * which could have been allocated.
+- */
+-static int msi_capability_init(struct pci_dev *dev, int nvec,
+-			       struct irq_affinity *affd)
++static int __msi_capability_init(struct pci_dev *dev, int nvec, struct irq_affinity_desc *masks)
  {
--	struct irq_affinity_desc *masks = NULL;
++	int ret = msi_setup_msi_desc(dev, nvec, masks);
  	struct msi_desc *entry, desc;
- 	int ret;
+-	int ret;
  
-@@ -361,8 +360,8 @@ static int msi_capability_init(struct pci_dev *dev, int nvec,
- 	/* Disable MSI during setup in the hardware to erase stale state */
- 	pci_msi_set_enable(dev, 0);
- 
--	if (affd)
--		masks = irq_create_affinity_masks(nvec, affd);
-+	struct irq_affinity_desc *masks __free(kfree) =
-+		affd ? irq_create_affinity_masks(nvec, affd) : NULL;
- 
- 	msi_lock_descs(&dev->dev);
- 	ret = msi_setup_msi_desc(dev, nvec, masks);
-@@ -402,7 +401,6 @@ err:
- 	pci_free_msi_irqs(dev);
- unlock:
- 	msi_unlock_descs(&dev->dev);
--	kfree(masks);
- 	return ret;
- }
- 
-@@ -661,12 +659,10 @@ static void msix_mask_all(void __iomem *base, int tsize)
- static int msix_setup_interrupts(struct pci_dev *dev, struct msix_entry *entries,
- 				 int nvec, struct irq_affinity *affd)
- {
--	struct irq_affinity_desc *masks = NULL;
-+	struct irq_affinity_desc *masks __free(kfree) =
-+		affd ? irq_create_affinity_masks(nvec, affd) : NULL;
- 	int ret;
- 
--	if (affd)
--		masks = irq_create_affinity_masks(nvec, affd);
+-	/* Reject multi-MSI early on irq domain enabled architectures */
+-	if (nvec > 1 && !pci_msi_domain_supports(dev, MSI_FLAG_MULTI_PCI_MSI, ALLOW_LEGACY))
+-		return 1;
 -
- 	msi_lock_descs(&dev->dev);
- 	ret = msix_setup_msi_descs(dev, entries, nvec, masks);
+-	/* Disable MSI during setup in the hardware to erase stale state */
+-	pci_msi_set_enable(dev, 0);
+-
+-	struct irq_affinity_desc *masks __free(kfree) =
+-		affd ? irq_create_affinity_masks(nvec, affd) : NULL;
+-
+-	msi_lock_descs(&dev->dev);
+-	ret = msi_setup_msi_desc(dev, nvec, masks);
  	if (ret)
-@@ -688,7 +684,6 @@ out_free:
+-		goto unlock;
++		return ret;
+ 
+ 	/* All MSIs are unmasked by default; mask them all */
+ 	entry = msi_first_desc(&dev->dev, MSI_DESC_ALL);
+@@ -394,16 +369,45 @@ static int msi_capability_init(struct pci_dev *dev, int nvec,
+ 
+ 	pcibios_free_irq(dev);
+ 	dev->irq = entry->irq;
+-	goto unlock;
+-
++	return 0;
+ err:
+ 	pci_msi_unmask(&desc, msi_multi_mask(&desc));
  	pci_free_msi_irqs(dev);
- out_unlock:
- 	msi_unlock_descs(&dev->dev);
--	kfree(masks);
+-unlock:
+-	msi_unlock_descs(&dev->dev);
  	return ret;
  }
  
++/**
++ * msi_capability_init - configure device's MSI capability structure
++ * @dev: pointer to the pci_dev data structure of MSI device function
++ * @nvec: number of interrupts to allocate
++ * @affd: description of automatic IRQ affinity assignments (may be %NULL)
++ *
++ * Setup the MSI capability structure of the device with the requested
++ * number of interrupts.  A return value of zero indicates the successful
++ * setup of an entry with the new MSI IRQ.  A negative return value indicates
++ * an error, and a positive return value indicates the number of interrupts
++ * which could have been allocated.
++ */
++static int msi_capability_init(struct pci_dev *dev, int nvec,
++			       struct irq_affinity *affd)
++{
++	/* Reject multi-MSI early on irq domain enabled architectures */
++	if (nvec > 1 && !pci_msi_domain_supports(dev, MSI_FLAG_MULTI_PCI_MSI, ALLOW_LEGACY))
++		return 1;
++
++	/*
++	 * Disable MSI during setup in the hardware, but mark it enabled
++	 * so that setup code can evaluate it.
++	 */
++	pci_msi_set_enable(dev, 0);
++
++	struct irq_affinity_desc *masks __free(kfree) =
++		affd ? irq_create_affinity_masks(nvec, affd) : NULL;
++
++	guard(msi_descs_lock)(&dev->dev);
++	return __msi_capability_init(dev, nvec, masks);
++}
++
+ int __pci_enable_msi_range(struct pci_dev *dev, int minvec, int maxvec,
+ 			   struct irq_affinity *affd)
+ {
