@@ -1,108 +1,129 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14C211C2324;
-	Wed,  9 Apr 2025 17:08:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA4133595C
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 17:09:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744218496; cv=none; b=LVoDu1rGnE+gRCLXr+odpkTKkjEAne5cLbwlI+/60LXkZQJLNTfpb5afTPt5QIYGSR1gxxdoPsty+C9Z11jAVXEEMYAVixSsZzpUdXcKdrNgphM6WXWfvU+dpCd8JsrUq/MQxB7ew9OdLAGbP/HAND7VhKbqS0gfEQOx4TDWu7s=
+	t=1744218544; cv=none; b=CGKmr6IrtQwW0TBcSGt9vAclKkU6bJHwHeHXI2n/kwyFE3HlMVRwCbOPJrYcR1lNMEAK8vUWhBXdDd1425cyIUrgy+0AaHkjDHA8md1yinwWgMcVWCLWzE6BlHLWlcUUs6jtB7s2MZlXT61scscntIqg0pAhyLdNc5hta4RSqEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744218496; c=relaxed/simple;
-	bh=iOeB+D7hHLfOumoiYclzkNLQWOZ6MxWqpBTCBAaYbHw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Bmba357mrufEcJp3d33i08aLvD2byElh860msFDJBsJEND+JHlubDJdCinIt4U//o3Di0qtByc23zbyg+5zHqiWpQCA7lJ/OOmJT5m/7gYICPF1ZRt0kJdtWb87aTYRvXa3BjEODWDaCOy+ljC1hEGgHqShOUKOdVLuzeINb3Cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-476af5479feso68667021cf.2;
-        Wed, 09 Apr 2025 10:08:13 -0700 (PDT)
+	s=arc-20240116; t=1744218544; c=relaxed/simple;
+	bh=Mev02kWb7K5qiFud07ATCV2nKnxOjc1jvqk3EpgXYIc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sZxdyJ7F0wEM/4rZNzAw0RRbiISVT0ys/OfAX5Epg1gdCa5lu0eCnj0TRlxocQlKpidQAaVnlKvG3QT4rIRUK5RF+KciLCJo3D0fue+i/h4eOGU5n71BUPes1GSFSuKJGQX3Od7FgxedS4Yz5Apu1IzSBxynmsjy2p4mr7FaKlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JJv8J2EK; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JJv8J2EK"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7396f13b750so7166692b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 10:09:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744218542; x=1744823342; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=mKY8PJec5kYg0iEFAd+4ifcsKowLyA7pbf6teQQhHX8=;
+        b=JJv8J2EKzbG2+i0t4EQY5QUWq9xrlF/h3+YfR2GOve93hnR6oA/awbgoB2WVQPX6Tq
+         tv3ONiO6xT0CJDnhZDWngzOac1EalA0pb0JA0BONp+Ics3yvK6azhdVJ4MiXHheIqwvn
+         XQbfnLjCm23Q3daX6YqTPNVAzdQf53vpwKV5nDCpPL9Sqwe3Ai/vAUfzyqk/W99MQy/w
+         Ohaq6S/6MGB1nEMhnXPT5X30qzMZLS8fSGOzgs05mblEvEmBENX1KgH48m2FrGOkex11
+         RIzHwF48ph7+HANVJczHh8TsI3ZrYT2cg+QNwzWAl7ccRw4LaQCPaKUyuLOa7Tt4wAkl
+         564g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744218491; x=1744823291;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oQY1o7SxIT4SK13jx8540K5lOFJCUfKlKKOAT7vzuN4=;
-        b=NwtgrvLYK/Jiue3ECzs0CDztukh+45ietjWYEADBG2bo3cbxsXQ+s15rcrJtsYHwxt
-         m980Eu+y3N+fGGpjJVvn67Ud3TsXqBDSvADhLrF4uI2Cu1LYVtE0C/ljIko0TmPxWZkb
-         8pjnFJR0vBz46D7aKfBAYX2bBMzzD9iA/KcT0k7r0lWH7sLkc7OJqGSWcKP3GKq2qF9X
-         107C0I0iLgrvAf8/7NwanFZi/Dogug865tI606yVSSNhL/ls9jP2wbTD2ZYjkaT8o7+h
-         HfpNJwoZAbFvoDwfFuXmRLKtJClBkAV1Hfonc6XXgG/dth7GI5rVtn+mCX9tgi9Q/BFe
-         Tpsg==
-X-Forwarded-Encrypted: i=1; AJvYcCWs/7f1M/GbpR9Pp4QfMRKP8ljm6o9uwRAfCYCVOrgvmK0oQ9pLXBso5lSa4buBG0rZ6Ks5oUytX1UVBNi4gTk=@vger.kernel.org, AJvYcCWvAkNFAbOSqwS+Lu+uf/91DjS82rk5JWXSk8fKll58uf+FyDJQaIxSgVYmy0ftPgfuSI9AFUZ8wKmMYXo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVwBn2tdQbwdQr9IBkjocw2ruXKKaKBHUwo2zU0WJknRtVeupW
-	RvLnKb6tYMmOoUaPFFVZ7Q0WHloJ2GW1q2IMEptwR7qYcg9wD8YNA5Nqmq1PukY=
-X-Gm-Gg: ASbGnctnWKY/jHuYjjzLPOgT/+PyG2kSxnWExyXxeV4vMu9Orrljg1kYxAQej8YhR9w
-	IofjsfzwTrORi7qdsJO39whlTY8sTtzpI0vbq7jhMsfN7YqP40DXFzs1EPSJmtJqNf1ck4gYMQy
-	gmm9SzyEgEdNGWOYR3XFaEAj2E1cygn2tWdxK1aGV/pNq0/2D+D8hWVZ7OfWLFRuh8sABDEgyTg
-	zufBlhwKaEVyvadwG8xNcIpGQLaVGN2n23435y8L7Bcaka1DL0mOnNso0l+5/9k4cQB3ecUEu4Q
-	8uYsBUuJ1bkQLDJaKiXq3owDKEL6W63Pz3FusMUGDbADGFMd3IGLlSOSNrNKM5nqtm295f2yEkS
-	LY1shGtE=
-X-Google-Smtp-Source: AGHT+IHqQhe9bvbGPb2d0plfGbID0qYrk67eoNDVlBSwmQZXe1wM8EhBVOuxYi7mxMNZPK7pciZ4Fw==
-X-Received: by 2002:ad4:4ea1:0:b0:6e8:fde9:5d07 with SMTP id 6a1803df08f44-6f0dd0ac556mr42405866d6.26.1744218490679;
-        Wed, 09 Apr 2025 10:08:10 -0700 (PDT)
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com. [209.85.222.170])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f0dea07ef3sm9500836d6.71.2025.04.09.10.08.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Apr 2025 10:08:10 -0700 (PDT)
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7c7913bab2cso290420085a.0;
-        Wed, 09 Apr 2025 10:08:09 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUWFDJBb3M60aUz3OKmtZ18HmV/GISzM8yUnQCKyRBdymtDN+caEvaCpOUX+F+b0XaL+Y46mQwM6ikU7kw=@vger.kernel.org, AJvYcCUicDLFsEbhN6XltiBw+QTfrq/tHxUW/meqlrtzh0JpHZ7B26qMSoZGxxQqDzkxx9xE1Z/woHIe6WWwM9shcus=@vger.kernel.org
-X-Received: by 2002:a05:620a:298e:b0:7c5:56c0:a8 with SMTP id
- af79cd13be357-7c79dd93ccemr445711285a.1.1744218489140; Wed, 09 Apr 2025
- 10:08:09 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744218542; x=1744823342;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mKY8PJec5kYg0iEFAd+4ifcsKowLyA7pbf6teQQhHX8=;
+        b=q4qdEH4YwetsmByV6F3vMARr6/2Mys7UlNS8Z36ZM6ctOxeA4UcWGNR0pdV41TweAZ
+         4ye3jUUzL4FRASQaUeKBLIRt+jQc4daNA/gQPO/zCzFsDGc2+0/6QAwbpWAm/wFQo05l
+         g4Qx0j7l2hAqLjpu70KMJPJ3+X7HVETpyuWtBAqnOQArsYSeFnpJjOKprod412sIV1wD
+         b+yA5TYSKgSKPIV8BNOCtufIbW52pcwL2k1U0YLYU1PXKXc5BzbzQ42TqafTFV/jnMBJ
+         RW9LB5Ss42dTaQUHyt0+WlOCW4zfRF02j5A9/aipFLwdTXYhC6NBey3WCIdPmOMnOHMn
+         y2Hg==
+X-Forwarded-Encrypted: i=1; AJvYcCUgqmAIAwULRikGRPTTZ3ngOgpeSWB4IurmoREUOlJJW2iW5Qiz8VSOWLnX/sDddcEpZoH9muF7eL/j23Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzdcaFxsR4bY7AVAwoKCJxiK+sXMfP0fEp04U+73sPwvQB0k/vn
+	fsDAdJvuwPwFbZeZRbiTB8sUnZA0JMdUhQZf6C3MH5iKj3y95QQ2XCUf6J/I5w==
+X-Gm-Gg: ASbGncsfEz6SGjDyqzQrT91FZD3H/h3ZWShN8CF6vVeHbZSP60a/aK2AfzC8iB66fTv
+	RWDdEzj29NuK5FInrVRv19e8wPxJEhhOspd54ElqCNjNfPndkECak+05sY2CC8rvDPpOVnXHiMQ
+	hSaYVH0Tkq0eMhU++peqIuipRpEp9Z5Ck96D6jBD1tiY6odgjmk17fgzPN0uBgYyQJoBcKWBJsF
+	fIOPPxYIsCUytmPH0MftYqjC9v6x2WDMSEF9mSTcT1LRLXIgLA9fZffaSqTkk2vLOnQCyDPCZhR
+	RU2wmm9GHmMh3SX47Eh+Mc+1QbruGwWZoYEZHSn9eNtkVtvXvqs=
+X-Google-Smtp-Source: AGHT+IFE7dJGIlhcT7iaEMxOXwREi/bb0FDuPpSx0oq/yJ3SzisseJeawE8+VL/qnpnlqMEk9OERFg==
+X-Received: by 2002:a05:6a00:801:b0:736:6d4d:ffa6 with SMTP id d2e1a72fcca58-73bae529f65mr3688249b3a.15.1744218542059;
+        Wed, 09 Apr 2025 10:09:02 -0700 (PDT)
+Received: from thinkpad ([120.56.198.53])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1d44c31sm1607891b3a.38.2025.04.09.10.08.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 10:09:01 -0700 (PDT)
+Date: Wed, 9 Apr 2025 22:38:56 +0530
+From: 
+	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>
+To: Manikandan Karunakaran Pillai <mpillai@cadence.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>, 
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com" <kw@linux.com>, 
+	"robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>, 
+	"conor+dt@kernel.org" <conor+dt@kernel.org>, Milind Parab <mparab@cadence.com>, 
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/7] Enhance the PCIe controller driver
+Message-ID: <5jc754dnrbytkwrhkj5qjmlxpqa4owhbpeimnr5d7k2aqueysn@uuqdauadlwak>
+References: <20250327105429.2947013-1-mpillai@cadence.com>
+ <CH2PPF4D26F8E1CA951AF03C17D11C7BEB3A2A12@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250409061129.136788-1-fujita.tomonori@gmail.com> <CANiq72mbci8kxEx5jrq=HVc6WKuJqq8NCLzNsjH1wFcJNoHm+w@mail.gmail.com>
-In-Reply-To: <CANiq72mbci8kxEx5jrq=HVc6WKuJqq8NCLzNsjH1wFcJNoHm+w@mail.gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 9 Apr 2025 19:07:56 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWtgSjxeGYJVNzeWPOCd9nUWeKQnCtFQaROQ1o=r_-QwQ@mail.gmail.com>
-X-Gm-Features: ATxdqUGA2zHq6_S5SB_qEsVdujtLoXOP8BLoi9G8SgAElmMjDh-OTkFg66-F8QM
-Message-ID: <CAMuHMdWtgSjxeGYJVNzeWPOCd9nUWeKQnCtFQaROQ1o=r_-QwQ@mail.gmail.com>
-Subject: Re: [PATCH v1] um: fix incompatible argument type in iounmap()
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: FUJITA Tomonori <fujita.tomonori@gmail.com>, richard@nod.at, 
-	anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net, 
-	linux-um@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>, 
-	Stephen Bates <sbates@raithlin.com>, Danilo Krummrich <dakr@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CH2PPF4D26F8E1CA951AF03C17D11C7BEB3A2A12@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
 
-Hi Miguel,
+On Thu, Mar 27, 2025 at 10:59:08AM +0000, Manikandan Karunakaran Pillai wrote:
+> Enhances the exiting Cadence PCIe controller drivers to support second
+> generation PCIe controller also referred as HPA(High Performance
+> Architecture) controllers.
+> 
+> The patch set enhances the Cadence PCIe driver for the new high
+> performance architecture changes. The "compatible" property in DTS
+> is added with  more strings to support the new platform architecture
+> and the register maps that change with it. The driver read register
+> and write register functions take the updated offset stored from the
+> platform driver to access the registers. The driver now supports
+> the legacy and HPA architecture, with the legacy code being changed 
+> minimal. The TI SoC continues to be supported with the changes 
+> incorporated. The changes are also in tune with how multiple platforms
+> are supported in related drivers.
+> 
+> Patch 1/7 - DTS related changes for property "compatible"
+> Patch 2/7 - Updates the header file with relevant register offsets and
+>             bit definitions
+> Patch 3/7 - Platform related code changes
+> Patch 4/7 - PCIe EP related code changes
+> Patch 5/7 - Header file is updated with register offsets and updated
+>             read and write register functions
+> Patch 6/7 - Support for multiple arch by using registered callbacks
+> Patch 7/7 - TIJ72X board is updated to use the new approach
 
-CC arnd
+This one line patch summary is not useful. We can look into individual patches.
 
-On Wed, 9 Apr 2025 at 16:48, Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
-> On Wed, Apr 9, 2025 at 8:16=E2=80=AFAM FUJITA Tomonori
-> <fujita.tomonori@gmail.com> wrote:
-> >
-> > Align iounmap() signature with other architectures.
->
-> Most indeed have `volatile`, but nios2 and m68k don't -- Cc'ing them
-> just in case.
+> 
 
-Indeed. Apparently the volatile keyword has not always been there...
-Why does iounmap() need the volatile keyword?
-Why does pci_iounmap() not have the volatile keyword?
+This series is v2. Please use version in the subject prefix and also include the
+changelog section.
 
-Gr{oetje,eeting}s,
+> Comments from the earlier patch submission on the same enhancements are
+> taken into consideration. The previous submitted patch links is
+> https://lore.kernel.org/lkml/CH2PPF4D26F8E1C205166209F012D4F3A81A2A42@CH2PPF4D26F8E1C.namprd07.prod.outlook.com/
+> 
 
-                        Geert
+This is not how you would add changelog in cover letter. Please read:
+Documentation/process/submitting-patches.rst
 
+- Mani
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+-- 
+மணிவண்ணன் சதாசிவம்
