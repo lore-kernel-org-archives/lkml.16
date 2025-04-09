@@ -1,49 +1,50 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E20A41BF33F;
-	Wed,  9 Apr 2025 17:12:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87645276030;
+	Wed,  9 Apr 2025 17:12:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744218735; cv=none; b=h2eLx/u7VG4kVWokFldKLLsrtc8D64uoZsI2Gmib2W8rKfj2pbg5CGMNXeorzSVK4YyzsdOhJ4PbiJ6ahLyXf9O3tlZg5zZLBG7nZ0d7Wj8YyRzdV0Pbp7SVCOLbmFUtAsm9asSJCF5QJBTVbIXuNVCNFfnItvZmuRw8i1ks7kc=
+	t=1744218740; cv=none; b=kFu6L+m8bdWs4WOUFS8HqPYU00p0SiXnlxbZGV+y3jagHJ0ftjS69ftOKRd8pBo6rjpdVWdVaD/1VrMRCRd1jvXSe0CvsVpuODz0ciuARC2aXL49m2WmYowB6Z86eTZYlrMimcq8Ia0Y5YAojn2eIwrOMBdzPxnYQGfkyAG4kn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744218735; c=relaxed/simple;
-	bh=NJ9nqQ/HqQW6VWoTACnv0h1lTMjSzqiuotglz3ecV5I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=LreMHgw+qUrilQ2tKOZ6huzsaXTxWmpbpsOXsYySHIlJtYRsHOUadhSXfdg2krAa1lnVavSq/u0sPSMRFlxAjZZpDF1bQJQEWyvRo9ELwb70R+eYv1DdV9H8hdQR6S0wnDtpaWk3Rchi0ITgO5uRm+ykEjWvk5ni4VD8MjqXJYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=rH4pr9On; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744218740; c=relaxed/simple;
+	bh=rMaFchJcz6j9TxgZxUNyUBffmSIxcvFjaUkyyQVtObU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bgxqwSm5Vl5XIHTzeLNIx8t2Z40ahTxpbqyBTkQAnooLExDpacAar0U+M3SuarOjghH+Fr6JSGbAdOv3oaMa2Kr31y57uTHqnwQuAuMVhiiy89quGn0WTwr95kOJbJZ91vbiJfx/J/RnkJDCx/89fm2UKjYqe3bU14cFINbeTvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bPvbKghH; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rH4pr9On"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 539HC0gs1039348
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 9 Apr 2025 12:12:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744218720;
-	bh=HbxbbpJvLSMYgoAwnYVbl8Z4STLCfUPAEMIdO8+NPWo=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=rH4pr9On7+jdfgCM6LGDnGpwcF9J3hp/+HjCVrI8Iheg3bZuAfUvkf5V0Jbk1/L0v
-	 zLU6s4FT5GF7pI5TvErYpQonILW20pgss+OY1xvcim02mtFVt10VA4pKUUeGp9upAP
-	 gFgF0S6gboQqxgTEZzfae3yFkDpecUy+Vsma3TOI=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 539HC0W1080987
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 9 Apr 2025 12:12:00 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 9
- Apr 2025 12:11:59 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 9 Apr 2025 12:11:59 -0500
-Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 539HBxKZ001640;
-	Wed, 9 Apr 2025 12:11:59 -0500
-Message-ID: <ceb7869a-2bdd-4a13-ad63-6f29bb8a2ab9@ti.com>
-Date: Wed, 9 Apr 2025 12:11:59 -0500
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bPvbKghH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744218738; x=1775754738;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=rMaFchJcz6j9TxgZxUNyUBffmSIxcvFjaUkyyQVtObU=;
+  b=bPvbKghHabBHc4+L6dn8WW7Y1uDNgBwiLS7MAevtK8uNT9WfRF6jME9S
+   hwT1tCVEvV2UGOi44ws88NVe+byxd2StEu6xcEWr5lelMLfdvOTwRQKVf
+   YS09i7nBgZmJ6imkH6p9OXKOdP+5rnaI0ZZhBjbzFKPs05+SPXm5QIwxT
+   Y2XxmWOi1qf3T6EVb5DxQ1ZIaajtM0bq4hkwc3Kd7OGfSmzbeyuVVtEF1
+   uygjCOaujdINW3+NGH3WPoNV12gBO7B74T0cXVPsYhGNj+ZeOv/6W4Hz0
+   OhsLf0e61URxHNQc0AumnN0ZElTIk2/E7oaE3L6+sgJreQkFjAx6/ypcH
+   w==;
+X-CSE-ConnectionGUID: 8y3mPrYQRyufkUMhMjEzzQ==
+X-CSE-MsgGUID: G6g7NUDyRZWFALXeSLT8Ag==
+X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="44952549"
+X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
+   d="scan'208";a="44952549"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 10:12:17 -0700
+X-CSE-ConnectionGUID: mi8o2LJPTq2WEbMiBYvzQQ==
+X-CSE-MsgGUID: i54YUDKXRgOeQ4aHOdozlw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
+   d="scan'208";a="129170078"
+Received: from sramkris-mobl1.amr.corp.intel.com (HELO [10.124.220.195]) ([10.124.220.195])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 10:12:14 -0700
+Message-ID: <a7713487-cbbc-430d-8028-ce9ab1f6f3e1@intel.com>
+Date: Wed, 9 Apr 2025 10:12:12 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,226 +52,89 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] PENDING: mmc: sdhci*: Add set_hs_ena to sdhci_ops
-To: Ulf Hansson <ulf.hansson@linaro.org>
-CC: Adrian Hunter <adrian.hunter@intel.com>, <linux-mmc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Josua Mayer <josua@solid-run.com>,
-        Moteen
- Shah <m-shah@ti.com>
-References: <20250407222702.2199047-1-jm@ti.com>
- <20250407222702.2199047-2-jm@ti.com>
- <CAPDyKFqx-G4NynanFWrspz7-uXXF74RfjcU-Sw2nq2JhL3LPuQ@mail.gmail.com>
+Subject: Re: [PATCH v3 13/14] mm: Unpoison pcpu chunks with base address tag
+To: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
+Cc: hpa@zytor.com, hch@infradead.org, nick.desaulniers+lkml@gmail.com,
+ kuan-ying.lee@canonical.com, masahiroy@kernel.org,
+ samuel.holland@sifive.com, mingo@redhat.com, corbet@lwn.net,
+ ryabinin.a.a@gmail.com, guoweikang.kernel@gmail.com, jpoimboe@kernel.org,
+ ardb@kernel.org, vincenzo.frascino@arm.com, glider@google.com,
+ kirill.shutemov@linux.intel.com, apopple@nvidia.com,
+ samitolvanen@google.com, kaleshsingh@google.com, jgross@suse.com,
+ andreyknvl@gmail.com, scott@os.amperecomputing.com, tony.luck@intel.com,
+ dvyukov@google.com, pasha.tatashin@soleen.com, ziy@nvidia.com,
+ broonie@kernel.org, gatlin.newhouse@gmail.com, jackmanb@google.com,
+ wangkefeng.wang@huawei.com, thiago.bauermann@linaro.org, tglx@linutronix.de,
+ kees@kernel.org, akpm@linux-foundation.org, jason.andryuk@amd.com,
+ snovitoll@gmail.com, xin@zytor.com, jan.kiszka@siemens.com, bp@alien8.de,
+ rppt@kernel.org, peterz@infradead.org, pankaj.gupta@amd.com,
+ thuth@redhat.com, andriy.shevchenko@linux.intel.com,
+ joel.granados@kernel.org, kbingham@kernel.org, nicolas@fjasle.eu,
+ mark.rutland@arm.com, surenb@google.com, catalin.marinas@arm.com,
+ morbo@google.com, justinstitt@google.com, ubizjak@gmail.com,
+ jhubbard@nvidia.com, urezki@gmail.com, dave.hansen@linux.intel.com,
+ bhe@redhat.com, luto@kernel.org, baohua@kernel.org, nathan@kernel.org,
+ will@kernel.org, brgerst@gmail.com, llvm@lists.linux.dev,
+ linux-mm@kvack.org, linux-doc@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, x86@kernel.org
+References: <cover.1743772053.git.maciej.wieczor-retman@intel.com>
+ <61033ef5b70277039ceeb8f6173e8b3fbc271c08.1743772053.git.maciej.wieczor-retman@intel.com>
+ <fb0d5f33-4636-4de0-82f4-93a9def63a26@intel.com>
+ <ynl7b325d5jo52n7cpy64v6bvqhzlbkphqsbs3jrgtji4v4yoz@cjpytwlwc6kt>
+From: Dave Hansen <dave.hansen@intel.com>
 Content-Language: en-US
-From: Judith Mendez <jm@ti.com>
-In-Reply-To: <CAPDyKFqx-G4NynanFWrspz7-uXXF74RfjcU-Sw2nq2JhL3LPuQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <ynl7b325d5jo52n7cpy64v6bvqhzlbkphqsbs3jrgtji4v4yoz@cjpytwlwc6kt>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hi Ulf,
+On 4/9/25 09:32, Maciej Wieczor-Retman wrote:
+> They don't seem to be virtuall contiguous. At least from testing on a live
+> system, QEMU and Simics I never saw any be contiguous. And I double checked
+> today too. But your version is nice, I'll just drop 2 and 3 and I think it still
+> will make sense, right?
 
-On 4/9/25 7:48 AM, Ulf Hansson wrote:
-> On Tue, 8 Apr 2025 at 00:27, Judith Mendez <jm@ti.com> wrote:
->>
->> This patch adds set_hs_ena call to sdhci_ops so that host
->> controller drivers have the option to implement a custom
->> callback for SDHCI_CTRL_HISPD control.
->>
->> On TI devices (for HS modes and legacy mode), timing was closed on
->> half cycle timing. If any of HIGH_SPEED_ENA, UHS_MODE_SELECT, or
->> V1P8_SIGNAL_ENA is set for these modes, host controller switches to
->> full cycle timing which may cause read/write failures and/or cqe error
->> logs.
->>
->> So add set_hs_ena() to sdhci_ops so each host controller driver
->> can implement their own .set_hs_ena callback.
->>
->> Also add sdhci_am654_set_hs_ena to sdhci_am654 driver and only set
->> HIGH_SPEED_ENA, for modes > MMC_TIMING_SD_HS.
->>
->> Signed-off-by: Judith Mendez <jm@ti.com>
-> 
-> What does "PENDING" mean or compared to "PATCH"? I guess you want some
-> review and test of this - or there anything else?
-
-So sorry, I meant to remove this PENDING tag, will remove for v2.
-Review would be just fine.
-
-> 
->> ---
->>   drivers/mmc/host/sdhci.c       | 55 +++++++++++++++++++++-------------
->>   drivers/mmc/host/sdhci.h       |  2 ++
->>   drivers/mmc/host/sdhci_am654.c | 16 ++++++++++
-> 
-> I think it would be better to split this up in two parts. One for
-> sdhci and one for sdhci_am654
-
-Sure no problem. Thanks
-.
-> 
-> Other than that I am going to defer to Adrian to see what he thinks about this.
-> 
-> Kind regards
-> Uffe
-> 
->>   3 files changed, 53 insertions(+), 20 deletions(-)
->>
->> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
->> index 5f78be7ae16d7..3a878cf0c59b9 100644
->> --- a/drivers/mmc/host/sdhci.c
->> +++ b/drivers/mmc/host/sdhci.c
->> @@ -2355,6 +2355,27 @@ static bool sdhci_presetable_values_change(struct sdhci_host *host, struct mmc_i
->>                 (sdhci_preset_needed(host, ios->timing) || host->drv_type != ios->drv_type);
->>   }
->>
->> +void sdhci_set_hs_ena(struct sdhci_host *host, unsigned char timing)
->> +{
->> +       u8 ctrl = sdhci_readb(host, SDHCI_HOST_CONTROL);
->> +
->> +       if (timing == MMC_TIMING_SD_HS ||
->> +           timing == MMC_TIMING_MMC_HS ||
->> +           timing == MMC_TIMING_MMC_HS400 ||
->> +           timing == MMC_TIMING_MMC_HS200 ||
->> +           timing == MMC_TIMING_MMC_DDR52 ||
->> +           timing == MMC_TIMING_UHS_SDR50 ||
->> +           timing == MMC_TIMING_UHS_SDR104 ||
->> +           timing == MMC_TIMING_UHS_DDR50 ||
->> +           timing == MMC_TIMING_UHS_SDR25)
->> +               ctrl |= SDHCI_CTRL_HISPD;
->> +       else
->> +               ctrl &= ~SDHCI_CTRL_HISPD;
->> +
->> +       sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
->> +}
->> +EXPORT_SYMBOL_GPL(sdhci_set_hs_ena);
->> +
->>   void sdhci_set_ios_common(struct mmc_host *mmc, struct mmc_ios *ios)
->>   {
->>          struct sdhci_host *host = mmc_priv(mmc);
->> @@ -2436,23 +2457,6 @@ void sdhci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
->>              !sdhci_presetable_values_change(host, ios))
->>                  return;
->>
->> -       ctrl = sdhci_readb(host, SDHCI_HOST_CONTROL);
->> -
->> -       if (!(host->quirks & SDHCI_QUIRK_NO_HISPD_BIT)) {
->> -               if (ios->timing == MMC_TIMING_SD_HS ||
->> -                    ios->timing == MMC_TIMING_MMC_HS ||
->> -                    ios->timing == MMC_TIMING_MMC_HS400 ||
->> -                    ios->timing == MMC_TIMING_MMC_HS200 ||
->> -                    ios->timing == MMC_TIMING_MMC_DDR52 ||
->> -                    ios->timing == MMC_TIMING_UHS_SDR50 ||
->> -                    ios->timing == MMC_TIMING_UHS_SDR104 ||
->> -                    ios->timing == MMC_TIMING_UHS_DDR50 ||
->> -                    ios->timing == MMC_TIMING_UHS_SDR25)
->> -                       ctrl |= SDHCI_CTRL_HISPD;
->> -               else
->> -                       ctrl &= ~SDHCI_CTRL_HISPD;
->> -       }
->> -
->>          if (host->version >= SDHCI_SPEC_300) {
->>                  u16 clk, ctrl_2;
->>
->> @@ -2468,7 +2472,12 @@ void sdhci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
->>                          sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
->>                  }
->>
->> -               sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
->> +               if (!(host->quirks & SDHCI_QUIRK_NO_HISPD_BIT)) {
->> +                       if (host->ops->set_hs_ena)
->> +                               host->ops->set_hs_ena(host, ios->timing);
->> +                       else
->> +                               sdhci_set_hs_ena(host, ios->timing);
->> +               }
->>
->>                  if (!host->preset_enabled) {
->>                          /*
->> @@ -2510,8 +2519,14 @@ void sdhci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
->>
->>                  /* Re-enable SD Clock */
->>                  host->ops->set_clock(host, host->clock);
->> -       } else
->> -               sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
->> +       } else {
->> +               if (!(host->quirks & SDHCI_QUIRK_NO_HISPD_BIT)) {
->> +                       if (host->ops->set_hs_ena)
->> +                               host->ops->set_hs_ena(host, ios->timing);
->> +                       else
->> +                               sdhci_set_hs_ena(host, ios->timing);
->> +               }
->> +       }
->>   }
->>   EXPORT_SYMBOL_GPL(sdhci_set_ios);
->>
->> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
->> index cd0e35a805427..ebecb49792ca1 100644
->> --- a/drivers/mmc/host/sdhci.h
->> +++ b/drivers/mmc/host/sdhci.h
->> @@ -704,6 +704,7 @@ struct sdhci_ops {
->>          void            (*set_timeout)(struct sdhci_host *host,
->>                                         struct mmc_command *cmd);
->>          void            (*set_bus_width)(struct sdhci_host *host, int width);
->> +       void            (*set_hs_ena)(struct sdhci_host *host, unsigned char timing);
->>          void (*platform_send_init_74_clocks)(struct sdhci_host *host,
->>                                               u8 power_mode);
->>          unsigned int    (*get_ro)(struct sdhci_host *host);
->> @@ -857,6 +858,7 @@ int sdhci_get_ro(struct mmc_host *mmc);
->>   void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq);
->>   int sdhci_request_atomic(struct mmc_host *mmc, struct mmc_request *mrq);
->>   void sdhci_set_bus_width(struct sdhci_host *host, int width);
->> +void sdhci_set_hs_ena(struct sdhci_host *host, unsigned char timing);
->>   void sdhci_reset(struct sdhci_host *host, u8 mask);
->>   bool sdhci_do_reset(struct sdhci_host *host, u8 mask);
->>   void sdhci_set_uhs_signaling(struct sdhci_host *host, unsigned timing);
->> diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
->> index f75c31815ab00..67a64de4972c9 100644
->> --- a/drivers/mmc/host/sdhci_am654.c
->> +++ b/drivers/mmc/host/sdhci_am654.c
->> @@ -429,6 +429,19 @@ static int sdhci_am654_execute_tuning(struct mmc_host *mmc, u32 opcode)
->>          return 0;
->>   }
->>
->> +static void sdhci_am654_set_hs_ena(struct sdhci_host *host, unsigned char timing)
->> +{
->> +       u8 ctrl = 0;
->> +
->> +       if (timing > MMC_TIMING_SD_HS) {
->> +               sdhci_set_hs_ena(host, timing);
->> +       } else {
->> +               ctrl = sdhci_readb(host, SDHCI_HOST_CONTROL);
->> +               ctrl &= ~SDHCI_CTRL_HISPD;
->> +               sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
->> +       }
->> +}
->> +
->>   static u32 sdhci_am654_cqhci_irq(struct sdhci_host *host, u32 intmask)
->>   {
->>          int cmd_error = 0;
->> @@ -578,6 +591,7 @@ static const struct sdhci_ops sdhci_am654_ops = {
->>          .get_timeout_clock = sdhci_pltfm_clk_get_max_clock,
->>          .set_uhs_signaling = sdhci_set_uhs_signaling,
->>          .set_bus_width = sdhci_set_bus_width,
->> +       .set_hs_ena = sdhci_am654_set_hs_ena,
->>          .set_power = sdhci_set_power_and_bus_voltage,
->>          .set_clock = sdhci_am654_set_clock,
->>          .write_b = sdhci_am654_write_b,
->> @@ -608,6 +622,7 @@ static const struct sdhci_ops sdhci_j721e_8bit_ops = {
->>          .get_timeout_clock = sdhci_pltfm_clk_get_max_clock,
->>          .set_uhs_signaling = sdhci_set_uhs_signaling,
->>          .set_bus_width = sdhci_set_bus_width,
->> +       .set_hs_ena = sdhci_am654_set_hs_ena,
->>          .set_power = sdhci_set_power_and_bus_voltage,
->>          .set_clock = sdhci_am654_set_clock,
->>          .write_b = sdhci_am654_write_b,
->> @@ -632,6 +647,7 @@ static const struct sdhci_ops sdhci_j721e_4bit_ops = {
->>          .get_timeout_clock = sdhci_pltfm_clk_get_max_clock,
->>          .set_uhs_signaling = sdhci_set_uhs_signaling,
->>          .set_bus_width = sdhci_set_bus_width,
->> +       .set_hs_ena = sdhci_am654_set_hs_ena,
->>          .set_power = sdhci_set_power_and_bus_voltage,
->>          .set_clock = sdhci_j721e_4bit_set_clock,
->>          .write_b = sdhci_am654_write_b,
->> --
->> 2.49.0
->>
-
+Yep, it still makes sense.
