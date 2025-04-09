@@ -1,70 +1,61 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAD4C1482F5;
-	Wed,  9 Apr 2025 15:18:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F69C17C219
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 15:18:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744211918; cv=none; b=ZAHdSFdg6xNVe9mDMdASGlHPlIBBIS+L4ZgLlMMhO0RoOAZlp5UFO3XV3vIa7uckHTsNRn88KluE2nsQgXb0pf0s/77h8iuvQq6zGrHErGUH8aGMczoLlpkOCJ8PzB0RBS8TyER3Iy21eFfPYI3zGgJ/n5GLocrT9ZHsaFm/ylE=
+	t=1744211919; cv=none; b=Sf2LemqW1jdYwMV7TANn5IOmJ2enyoq2ynWqGEbwy/lD/Upz1g11oRZJNE6/4sEpic1pnNKU6g71hLXmXLJfQV4Hn9iV2XjHNLQoCUcR4x78aSby4iGKb0VqesfGRJ2RAQ7818/VniF3zWTKV7LacYQvre9yXB1L4aXXxVgD43I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744211918; c=relaxed/simple;
-	bh=uViSNOAqAkmUraE/cJ3HBL1B127TQ8IrrZ680tfIqa0=;
+	s=arc-20240116; t=1744211919; c=relaxed/simple;
+	bh=0/GUd7KIUdb3mYt8s1VQqSnOzIrI5JBOORTjXr3okjk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jstc3qorrCrZt9qkEyx+jJ3ySlSxTjHy32hqBR6bd9ukQzpmKfZXGbAEH/c8tBYVjawK0qlqFYL3mRmnwFlw+3ejDB8QTCyTWqM05Pgw8j/GPcdS1K2SnfrloQuC6XFQMqBvQRzOYxJ5lqlfHN/iOTjbCPcBiZOpGut2J46jHDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jyh/lUEU; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pd6aljgv53fbMfzCG1h+p9cQ1MN9IFCCkuXjFW+5E9aDeNgGKe5DtgQukmhViOYfWEux7dzdFJ26f0IfLlgZ+2shCVxRwvqpuFzEfRpFZQeql2Z72+RO9kiseA0xds8GpbV062ZOTtLzcpYs+H32ro4s6DrEYnXj1aoxQlSf13A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=OabzkyIp; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jyh/lUEU"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-39ac56756f6so5814031f8f.2;
-        Wed, 09 Apr 2025 08:18:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744211915; x=1744816715; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lGKy6jggFaaAC/3IEsCxAnoHmSQ+hWKoUuhM5yojB78=;
-        b=jyh/lUEUMXjodMiPtgY7ZlrlZ5zeRkqbtV9XTnlT5KyBCnsWGk/emTJpDVf+sNwuGJ
-         KPp5FNJOlSIy45ciFBSWtHg0Ge0xaYQbHKQJ57V2DvldixxRilA7D4MGn3QUba62yxtI
-         ENKrME6gmPVv8V0esZ8Es9gByAskdXTrBy9SRqIiQLp1TbXlnKukpnA5ejbgAmp5Il5n
-         aNprz1C2FPz34ZTsT1KyiedkNjReTxPZZd/K5W6dTZl7Sk32REvF4C5uwl1FXopS6w1l
-         kS7XNRvRNS/2+CREW6TQDgGE8NmkuItHPOqm/giAT4QGSgLHboatRhLqzOtYBmwGfNGN
-         iRrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744211915; x=1744816715;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lGKy6jggFaaAC/3IEsCxAnoHmSQ+hWKoUuhM5yojB78=;
-        b=rvBP8LG4htj2rqf1x94TK1pGX2V3GSFFrmlGFuVKAe34UbyugYyt5OJ2+OfmtS18NE
-         HnTaeuQF4TY7Je1/0DF1P/jqbBWI1qV+AGHUoMxRQQkw1VH6kodcqmO4lF13lU4wOYmG
-         eYs8DxBh/nW6idrFjZU1CGYKiKlwde1cXIj/9WXwkusgHd3Uo8U7zTWCPVl9bR/Lrynd
-         Q76zyX0oKtX5Rb67nd+AFmWGACpM22TTEhcnyHq69HAN3gma2CcancYAvqOhO9o9+Kqz
-         rUsMJWcrO7MjvCQuo+7gCG8qBO3u/VezbJwBrlIcuFiBfcJ3sCo0+aU9+ypswK2Vj8Ad
-         ASFg==
-X-Forwarded-Encrypted: i=1; AJvYcCWel++a2OA7xxrHR7843PKborGbt0dGuzLi63p9pSnJZEHOiEXDlOiBv92LFlzEkyphx8G4cV6MwACOnpyp@vger.kernel.org, AJvYcCX0OVvzCMec4dhhR/tNPG+IliWfokSBIJHZaVOG2N7SaIgoajdFaydASIovaXr3Xl+RfmZ1nMG9BE2TFhtcguY=@vger.kernel.org, AJvYcCXQpRF2vF0LYhadjis22FfgMmgty3RtW6O1ISIQkWTz1UjX5WskxWjXOS3NHNkEsHx8dtYO4KqW5e5Rx03hew==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwyrkKFdaLaGzjfQxtf1mIbc0J9dDVRwyPVZJWaiieOdT3K0PIo
-	RQcQFXY7C5C9h+T8eKsNJvrBMc8P4yoNyfuPwL4V/CI8X5cAR3LH
-X-Gm-Gg: ASbGncs8TFBlPHbsFjBz8UOCRJ0ffdzb5rVQRK2V+CMZm4ORCsJCDjv/lyMEbjbgwDS
-	Imo2WpqCcRGcNA1OQgzna9E3pFG20uot/exdn+8PsFEhZLmeaPrK8KsDggwH+iqv1BHHA8z4tGo
-	K46RJCEPKSqOos3CS0D3Cw5g78ZjFMky3h7Ke7bNsW7cUCN0qhEvTQXVhQ5akXgrnie32MPMCIE
-	EEBTDXcb0chQ6kyGd1+0ym8LEjS7KKZlOCGPBT39nMFMddDueO8Gapz0Yy5cZG7zzAWwc2LTDM9
-	81rcF9QF+zT3zQVtYWLrr7VkRMFMRJr8U1KXm06dMAFCRdF1UE7hzxVZ
-X-Google-Smtp-Source: AGHT+IHrWEeUbn/ofyzKeGsGVmMQyyF7VSvjS6DBt2BYcu1AMBMUwUXtdCBz1agZtaaqRgeeGIh58g==
-X-Received: by 2002:a05:6000:2aa:b0:391:158f:3d59 with SMTP id ffacd0b85a97d-39d8852ecc6mr2918176f8f.15.1744211914798;
-        Wed, 09 Apr 2025 08:18:34 -0700 (PDT)
-Received: from f (cst-prg-17-207.cust.vodafone.cz. [46.135.17.207])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d89402a08sm1881192f8f.100.2025.04.09.08.18.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 08:18:34 -0700 (PDT)
-Date: Wed, 9 Apr 2025 17:18:26 +0200
-From: Mateusz Guzik <mjguzik@gmail.com>
-To: Colin Ian King <colin.i.king@gmail.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
-	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] select: do_pollfd: add unlikely branch hint return path
-Message-ID: <llt32u2qdjyu3giwhxesrahsh5a2ks6behzzkjky7fe7k6xync@pvixqbom73il>
-References: <20250409143138.568173-1-colin.i.king@gmail.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="OabzkyIp"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id DB79840E021C;
+	Wed,  9 Apr 2025 15:18:34 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 6GvdQe-hiZcF; Wed,  9 Apr 2025 15:18:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1744211910; bh=0eCERLH7lARhsuJmzpn5iKLMm4K7sr9eFVC5W+OiT4U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OabzkyIpiYtoTlrrZ21ObPBykj8tuQ08jQY11aL0proZOkukpiiTSFyytEuW80U1P
+	 kRRL7XlcOTPRmws5mOnDU0ODhM0NtVClnmZVpCZmd8OQDOCS+VO2/2oeNulUKyhW11
+	 5fprHN/EholMtLyY9Ni8DFLTxr5aI5ugEKgsOhj3yuztT4HOtfHPxdXfantnMc3fR5
+	 VG9xmUactbCDhHyPtMVB8yEWQ8t1mwMubZC6Pq4pBBpnL2mzm0CCRpXg6vU2QP20Qe
+	 RY1zjGBGc5Xsf0pgwp1sxpGGQp6WyV/5/JWXx9RU6JNeWWhdPgOapMckWvYHmQ1T4g
+	 Qx/uFHAotPtogtm/+BAQAf0It5EFs1MNi3+xuWm3czWOa4vJAncogvS3HfdEvYJH1O
+	 0uvlWE0NJ3aUl77Eu98sUH786cxZ4LPpZedGzl5/lo6NcebuCLukHYy5Fhy3RCsZuT
+	 uesno1F0k1TydfbyL47Iu2ijqRG7wiOYiO/ejF5XtG47Qr3B4SI1f36aYxX7K3Vy1u
+	 bihBNc0BQQwXvryT4i9tLHah5PA2ZNOai3n0jPA99jLKXlph+VKV/iWY5vv3udlyKH
+	 M7me3WbheHAk3LxQA/XsvKajuLiMeQUewSjH2sVicop6GVC6jCqk3DftIrQX9IJbQX
+	 554FSMbTipO9PlOdPvr0uxac=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BEFFD40E0169;
+	Wed,  9 Apr 2025 15:18:24 +0000 (UTC)
+Date: Wed, 9 Apr 2025 17:18:17 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Jiri Slaby <jirislaby@kernel.org>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>, linux-kernel@vger.kernel.org,
+	x86@kernel.org, tglx@linutronix.de, kan.liang@linux.intel.com
+Subject: Re: [v2][PATCH 4/5] x86/cpu: Move AMD erratum 1386 table over to
+ 'x86_cpu_id'
+Message-ID: <20250409151817.GAZ_aPueHsozDBe0sZ@fat_crate.local>
+References: <20241213185127.F38B6EE9@davehans-spike.ostc.intel.com>
+ <20241213185132.07555E1D@davehans-spike.ostc.intel.com>
+ <de04dc00-f01d-4c27-a6f8-873398bf8d4a@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,35 +64,17 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250409143138.568173-1-colin.i.king@gmail.com>
+In-Reply-To: <de04dc00-f01d-4c27-a6f8-873398bf8d4a@kernel.org>
 
-On Wed, Apr 09, 2025 at 03:31:38PM +0100, Colin Ian King wrote:
-> Adding an unlikely() hint on the fd < 0 comparison return path improves
-> run-time performance of the mincore system call. gcov based coverage
-> analysis shows that this path return path is highly unlikely.
-> 
-> Benchmarking on an Debian based Intel(R) Core(TM) Ultra 9 285K with
-> a 6.15-rc1 kernel and a poll of 1024 file descriptors with zero timeout
-> shows an call reduction from 32818 ns down to 32635 ns, which is a ~0.5%
-> performance improvement.
-> 
-> Results based on running 25 tests with turbo disabled (to reduce clock
-> freq turbo changes), with 30 second run per test and comparing the number
-> of poll() calls per second. The % standard deviation of the 25 tests
-> was 0.08%, so results are reliable.
-> 
+On Wed, Apr 09, 2025 at 01:13:53PM +0200, Jiri Slaby wrote:
+> If I am to tell, the {} is needed, otherwise you touch the array OOB (at
+> least with the "m->flags & X86_CPU_ID_FLAG_ENTRY_VALID" test -- if the bit
+> is set in the memory, then much more than that...).
 
-I don't think adding a branch hint warrants benchmarking of the sort.
+Send a patch pls.
 
-Instead the thing to do is to check if the prediction matches real world
-uses.
+-- 
+Regards/Gruss,
+    Boris.
 
-While it is impossible to check this for all programs out there, it
-should not be a significant time investment to look to check some of the
-popular ones out there. Normally I would do it with bpftrace, but this
-comes from a user-backed area instead of func args, so involved hackery
-may be needed which is not warranted the change. Perhaps running strace
-on a bunch of network progs would also do it (ssh, browser?).
-
-I have to say I did not even know one can legally pass a fd < 0 to poll
-and I never seen it in action, so I don't expect many users. ;)
+https://people.kernel.org/tglx/notes-about-netiquette
