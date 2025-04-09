@@ -1,159 +1,149 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC98E25C71C;
-	Wed,  9 Apr 2025 09:30:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8379221D98
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 09:30:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744191003; cv=none; b=JenV8HSkYPvZ3Tj8GydqnSqnVGoMRWPcjTiPACk/EFTsyzZUW1K1gNtkeOWZiidIu+MPynl4FQGHDOMTmTC4T7MdQ5NH8RmL+VTwnksXU8fwJomsqsmJaj+ZLwfRdCOKmL9QWiZNZ/oa80iygM0H65k4VoJjoIhawyW4z0GxR6g=
+	t=1744191040; cv=none; b=oM+HkPDbiXDhQNiQ/F44QGl9nXvzp9Iz0AMkKwqd6VTySvj67xLddon5Z7GkitP9kT8zExjAlhMu0hilpAO3DP2A2EFaahxPGm9ldoIcgGT19L+aF103WOOYFjJ3mILq1gfukR76SWgVQBq4f/y4uU6iSZb9hlPWygBYyd2FEMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744191003; c=relaxed/simple;
-	bh=E0B8NhfvLqtNMVjkYqNvgmPWecDZJNbo5NCqpvSDuzM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QJDS3ZaQsAK691KGeFFtOpU2eIaplpyaGiMRravCIRDh6Jc+O45QkjKQO8wx29QDhhpV6OYMpF2L+qQ+AJrVJH0p4VJC7gpw9mfPuK9CyV88mwl82YxbNxc8jzokDR2WlGD8BfD1x8mByiO5j2I3M1FECBRARfG/3CTZEpKKqXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=HZOYGHcW; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1744191040; c=relaxed/simple;
+	bh=4vxC+5eNcwZIu0PwTnXch0E3sKvKER5yxktwxbFDE6U=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=Q2OCrIb2hsHTo7ApK4bZiAG6DubhSdCmCNLkEcdFl7ZyvU1rrwR2SY3GhTJ2+JbEMo87Srl9XCyICxnaYNmHNIxnWL+YL3w6Xc/7dOH/lgTpIgZZyD03BOk5ydlqPAe1T9BixFUh+pWbLnwza7s2krLkTC6U0gUYaQRa2nJDIqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=UnBUVMvP; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="HZOYGHcW"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=2wkholla1Ti8t2pKiZhbvK6ikFjXur57L42DgenYivI=; b=HZOYGHcWwjHN+szmB2xRaw7dhn
-	xr42xl10nVlN3qyC5YlUdighZeQh7Y2GVHPDNg6AEtkcx3OHPbJgGCaJ8PKdHsPUpNPBJ86cShUTd
-	jFVJnjloT9CKkVwV59W95ybBLGEcTNUO4w++PZfmMKwH0TGIJ35KO8pthr34arCnrq02m3akANHmS
-	4gwy9A+syKVqI2WtKbaVYgNYqgqHCGzAn9QCjC7GcPhJDpLLkca+rdvLhOdAH3Zuw+6hnkdQ3Salx
-	zXPVgjMAr8xIsiVBgUyEZaxvPAhQcAQvETUMTqKdG6y/fSXVjpdJLkeymCAePP528/EOGvHogI/Yv
-	dImhlXRw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:47904)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1u2Rko-0000Jn-1C;
-	Wed, 09 Apr 2025 10:29:54 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1u2Rkn-0002SN-0H;
-	Wed, 09 Apr 2025 10:29:53 +0100
-Date: Wed, 9 Apr 2025 10:29:52 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	Vladimir Oltean <vladimir.oltean@nxp.com>
-Subject: Re: [PATCH net-next v2 0/2] Add Marvell PHY PTP support
-Message-ID: <Z_Y-ENUiX_nrR7VY@shell.armlinux.org.uk>
-References: <20250407-feature_marvell_ptp-v2-0-a297d3214846@bootlin.com>
- <Z_P3FKEhv1s0y4d7@shell.armlinux.org.uk>
- <20250407182028.75531758@kmaincent-XPS-13-7390>
- <Z_P-K7mEEH6ProlC@shell.armlinux.org.uk>
- <20250407183914.4ec135c8@kmaincent-XPS-13-7390>
- <Z_WJO9g5Al1Yr_LX@shell.armlinux.org.uk>
- <20250409103130.43ab4179@kmaincent-XPS-13-7390>
- <Z_Yxb6-qclDSWk01@shell.armlinux.org.uk>
- <20250409104637.37301e01@kmaincent-XPS-13-7390>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="UnBUVMvP"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250409093031euoutp01b225190baf6d6a5a4f11f0b7798a86a5~0nICH15GO0306403064euoutp01x
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 09:30:31 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250409093031euoutp01b225190baf6d6a5a4f11f0b7798a86a5~0nICH15GO0306403064euoutp01x
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1744191031;
+	bh=Y0arb6a2cUUbDBbem7ZVwaSlN4egRmPACY0ozOv7H2w=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=UnBUVMvPJQCsyrgqpMkYrX0AQwrOn875k7k+BfYO8WChGmr7KT8nknhUEO96uQlSc
+	 305ZPEV3zK/BYoStBjNyTnPBL4Q5HzJ2bjXWPcST1bymHufWk3DMx61PMBr1G3JKYX
+	 y5cxxyMqH8fNGL7LaPpBiQT43JH4pMnwPDzp1/fo=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+	20250409093031eucas1p18aeaff17a1a24ce28a96f976ab1644d1~0nIBv9TF62724127241eucas1p1S;
+	Wed,  9 Apr 2025 09:30:31 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+	eusmges2new.samsung.com (EUCPMTA) with SMTP id 2E.6D.20409.73E36F76; Wed,  9
+	Apr 2025 10:30:31 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250409093030eucas1p174de911d268d13d4aef336117d3c326f~0nIBLCLzq2501725017eucas1p1a;
+	Wed,  9 Apr 2025 09:30:30 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250409093030eusmtrp22036d8199d64ed5d39d4e9bd4a972ba7~0nIBKMh3h2888728887eusmtrp2T;
+	Wed,  9 Apr 2025 09:30:30 +0000 (GMT)
+X-AuditID: cbfec7f4-c0df970000004fb9-45-67f63e3775b4
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+	eusmgms2.samsung.com (EUCPMTA) with SMTP id 72.2D.19654.63E36F76; Wed,  9
+	Apr 2025 10:30:30 +0100 (BST)
+Received: from AMDC4942.home (unknown [106.210.136.40]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250409093029eusmtip28b871a7be9c1416042d89926617617a7~0nIAh6GCJ0408304083eusmtip2l;
+	Wed,  9 Apr 2025 09:30:29 +0000 (GMT)
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+To: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, drew@pdp7.com,
+	guoren@kernel.org, wefu@redhat.com, ulf.hansson@linaro.org,
+	p.zabel@pengutronix.de, m.szyprowski@samsung.com
+Cc: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-pm@vger.kernel.org, Michal Wilczynski <m.wilczynski@samsung.com>
+Subject: [PATCH v1 0/2] Add GPU clock/reset management for TH1520 in genpd
+Date: Wed,  9 Apr 2025 11:30:23 +0200
+Message-Id: <20250409093025.2917087-1-m.wilczynski@samsung.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250409104637.37301e01@kmaincent-XPS-13-7390>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrLKsWRmVeSWpSXmKPExsWy7djPc7rmdt/SDT5/YLFYs/cck8W9S1uY
+	LF7sbWSxeDnrHpvF5V1z2Cw+9x5htNj2uYXNYu2Ru+wW67/OZ7K4e+8Ei8X/PTvYLY6vDbdo
+	2T+FxYHXY9OqTjaPO9f2sHlsXlLv0bL2GJNH/18Dj/f7rrJ59G1ZxejxeZNcAEcUl01Kak5m
+	WWqRvl0CV8ahq2eYC77xVRw+9oexgfEUTxcjJ4eEgInEhOnPWboYuTiEBFYwSqy58okNwvnC
+	KPHz9gYmCOczo8TLO5MZYVq6f+6EalnOKHF81xNGCOcNo8TU37vYQKrYBIwkHiyfzwqSEBHY
+	yyjReeoDM4jDLNDNKLF22w1WkCphAS+JJ103wOayCKhKXJ90HqybV8Be4uKnVmaIffIS+w+e
+	ZYaIC0qcnPmEBcRmBoo3b50NNlRC4AGHREtnGztEg4tEx90eVghbWOLV8S1QcRmJ/zvnM0HY
+	+RIPtn6CWlAjsbPnOJRtLXHn3C+gIziAFmhKrN+lDxF2lHjy6Cg7SFhCgE/ixltBiBP4JCZt
+	m84MEeaV6GgTgqhWk5ja0wu39NyKbVBLPSQuHu4Fs4UEYiXeH3rPMoFRYRaSx2YheWwWwg0L
+	GJlXMYqnlhbnpqcWG+WllusVJ+YWl+al6yXn525iBKaw0/+Of9nBuPzVR71DjEwcjIcYJTiY
+	lUR43078ki7Em5JYWZValB9fVJqTWnyIUZqDRUmcd9H+1nQhgfTEktTs1NSC1CKYLBMHp1QD
+	k5b2+8kfraW1rXsa7k/ebMdeyc08vTBmZoCgvt7sw1XbhJ7Obs7cJX9Gcbukn/UzQV2pFYeE
+	ivf8LF2WPPdGlKBY7zX2/p7DcuKFMTd3bsvs3bR/Qc/Bs35b9QPN7ictXVu1kz/BZNdak/DH
+	oRkZh61zOe6mpX9kt7aU8NPg9ElZzB6YY7Dn002pPTtyj/t0fLZkyhaaWt9lVnjwbfeRjXze
+	t0+5H793M0z20J36cEbTiVk1zRrsh4ujbbY+bevUfFA3e4vBwn3M55l6ba6wesxt3udbv69w
+	23z33Ju9O4+Z1AWevlQx5+3L1/Y5WTf3clbZpGrrRl90sWW7y+afUtvEN/nX+Y33n2aoCvoo
+	sRRnJBpqMRcVJwIAGULQDtADAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMIsWRmVeSWpSXmKPExsVy+t/xe7pmdt/SDfoPS1us2XuOyeLepS1M
+	Fi/2NrJYvJx1j83i8q45bBafe48wWmz73MJmsfbIXXaL9V/nM1ncvXeCxeL/nh3sFsfXhlu0
+	7J/C4sDrsWlVJ5vHnWt72Dw2L6n3aFl7jMmj/6+Bx/t9V9k8+rasYvT4vEkugCNKz6Yov7Qk
+	VSEjv7jEVina0MJIz9DSQs/IxFLP0Ng81srIVEnfziYlNSezLLVI3y5BL+PQ1TPMBd/4Kg4f
+	+8PYwHiKp4uRk0NCwESi++dOli5GLg4hgaWMEttWzWGDSMhIXOt+yQJhC0v8udbFBlH0ilHi
+	1uYbrCAJNgEjiQfL54PZIgInGSXuvqoDKWIW6GeUmPrxClhCWMBL4knXDUYQm0VAVeL6pPNg
+	G3gF7CUufmplhtggL7H/4FlmiLigxMmZT8A2MwPFm7fOZp7AyDcLSWoWktQCRqZVjCKppcW5
+	6bnFRnrFibnFpXnpesn5uZsYgbGz7djPLTsYV776qHeIkYmD8RCjBAezkgjv24lf0oV4UxIr
+	q1KL8uOLSnNSiw8xmgLdN5FZSjQ5Hxi9eSXxhmYGpoYmZpYGppZmxkrivGxXzqcJCaQnlqRm
+	p6YWpBbB9DFxcEo1MEkvCg1R6U8O8VWo+mLpnVPXvq6n68i7V5M0mVtVfpc++/jcSK1qzh2X
+	VJaJm+wXHDQImfTTRG/6W5fQWs7KigMHzshERrxxE9pQUi3kdOQV2/7kvqQ+F22hUxF72Pc/
+	yXQMTOuYx7RLTPvXz5rTlzhraqW3iE79IT3x1+QNOlcqQ9+EXbRWe9B7fevrLLE/q4xdt3ra
+	LVGLjTv9rSztZIUDQ9bS/9knpZSeCM3hWvnmwsofBcUptS7zQ9d+F5O9uTjR4OBJe4mUNa8i
+	pp5YoeJ05bugiILL5Oqke1Vnep+fnN15derOg8vPcPydoHz56U8//k0r1M6/arevET6qLNHz
+	KFTJ/+PRrXdvZO+xyFBiKc5INNRiLipOBACHESraJgMAAA==
+X-CMS-MailID: 20250409093030eucas1p174de911d268d13d4aef336117d3c326f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250409093030eucas1p174de911d268d13d4aef336117d3c326f
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20250409093030eucas1p174de911d268d13d4aef336117d3c326f
+References: <CGME20250409093030eucas1p174de911d268d13d4aef336117d3c326f@eucas1p1.samsung.com>
 
-On Wed, Apr 09, 2025 at 10:46:37AM +0200, Kory Maincent wrote:
-> On Wed, 9 Apr 2025 09:35:59 +0100
-> "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
-> 
-> > On Wed, Apr 09, 2025 at 10:31:30AM +0200, Kory Maincent wrote:
-> > > On Tue, 8 Apr 2025 21:38:19 +0100
-> > > "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
-> > >   
-> > > > On Mon, Apr 07, 2025 at 06:39:14PM +0200, Kory Maincent wrote:  
-> >  [...]  
-> >  [...]  
-> >  [...]  
-> > > > 
-> > > > Okay, so I'm pleased to report that this now works on the Macchiatobin:
-> > > > 
-> > > > where phc 2 is the mvpp2 clock, and phc 0 is the PHY.  
-> > > 
-> > > Great, thank you for the testing!
-> > >   
-> > > > 
-> > > > # ethtool -T eth2
-> > > > Time stamping parameters for eth2:
-> > > > Capabilities:
-> > > >         hardware-transmit
-> > > >         software-transmit
-> > > >         hardware-receive
-> > > >         software-receive
-> > > >         software-system-clock
-> > > >         hardware-raw-clock
-> > > > PTP Hardware Clock: 2
-> > > > Hardware Transmit Timestamp Modes:
-> > > >         off
-> > > >         on
-> > > >         onestep-sync
-> > > >         onestep-p2p
-> > > > Hardware Receive Filter Modes:
-> > > >         none
-> > > >         all
-> > > > 
-> > > > So I guess that means that by default it's using PHC 2, and thus using
-> > > > the MVPP2 PTP implementation - which is good, it means that when we add
-> > > > Marvell PHY support, this won't switch to the PHY implementation.  
-> > > 
-> > > Yes.
-> > >   
-> > > > 
-> > > > Now, testing ethtool:
-> > > > 
-> > > > $ ./ethtool --get-hwtimestamp-cfg eth2
-> > > > netlink error: Operation not supported
-> > > > 
-> > > > Using ynl:
-> > > > 
-> > > > # ./ynl/cli.py --spec netlink/specs/ethtool.yaml --no-schema --dump
-> > > > tsconfig-get --json '{"header":{"dev-name":"eth2"}}' []
-> > > > 
-> > > > So, It's better, something still isn't correct as there's no
-> > > > configuration. Maybe mvpp2 needs updating first? If that's the case,
-> > > > then we're not yet in a position to merge PHY PTP support.  
-> > > 
-> > > Indeed mvpp2 has not been update to support the ndo_hwtstamp_get/set NDOs.
-> > > Vlad had made some work to update all net drivers to these NDOs but he never
-> > > send it mainline:
-> > > https://github.com/vladimiroltean/linux/commits/ndo-hwtstamp-v9
-> > > 
-> > > I have already try to ping him on this but without success.
-> > > Vlad any idea on when you could send your series upstream?  
-> > 
-> > Right, and that means that the kernel is not yet ready to support
-> > Marvell PHY PTP, because all the pre-requisits to avoid breaking
-> > mvpp2 have not yet been merged.
-> 
-> Still I don't understand how this break mvpp2.
-> As you just tested this won't switch to the PHY PTP implementation.
+This small patch series adds clock and reset support for the GPU in the
+T-HEAD TH1520 SoC through the generic power domain (genpd) framework.
 
-How do I know that from the output? Nothing in the output appears to
-tells me which PTP implementation will be used.
+The TH1520 GPU requires a special sequence involving multiple clocks and resets
+to safely bring it out of reset. Coordinating this sequence properly is
+necessary for correct GPU operation. Following discussions on the mailing list
+with kernel maintainers [1], the recommended approach is to model this
+complexity inside a power domain driver, keeping SoC-specific details out of
+the GPU driver, clock framework, and reset framework.
 
-Maybe you have some understanding that makes this obvious that I don't
-have.
+The first patch updates the AON firmware bindings to describe the clocks
+and resets that the PM domain needs to control.
+
+The second patch implements GPU-specific handling inside the TH1520 PM domain
+driver, using the genpd start/stop callbacks to sequence the clocks and resets
+at runtime.
+
+This approach aligns with recent efforts to treat PM domains as SoC-specific
+power management drivers, as presented at OSSEU 2024 [2].
+
+This patchset continues the work started in bigger series [3] by moving the GPU
+initialization sequence for the TH1520 SoC into a generic PM domain driver,
+specifically handling clock and reset management as part of GPU bring-up.
+
+[1] - https://lore.kernel.org/all/CAPDyKFqsJaTrF0tBSY-TjpqdVt5=6aPQHYfnDebtphfRZSU=-Q@mail.gmail.com/
+[2] - https://osseu2024.sched.com/event/1ej38/the-case-for-an-soc-power-management-driver-stephen-boyd-google
+[3] - https://lore.kernel.org/all/20250219140239.1378758-1-m.wilczynski@samsung.com/
+
+Michal Wilczynski (2):
+  dt-bindings: firmware: thead,th1520: Add clocks and resets
+  pmdomain: thead: Add GPU-specific clock and reset handling for TH1520
+
+ .../bindings/firmware/thead,th1520-aon.yaml   |  28 +++++
+ drivers/pmdomain/thead/th1520-pm-domains.c    | 119 ++++++++++++++++++
+ 2 files changed, 147 insertions(+)
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+2.34.1
+
