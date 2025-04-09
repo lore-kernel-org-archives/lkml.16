@@ -1,38 +1,38 @@
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4025269811;
-	Wed,  9 Apr 2025 13:13:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BAC1269B02;
+	Wed,  9 Apr 2025 13:13:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744204430; cv=none; b=KQSE4eL85ypS8zT01iRncLajaOok8Y5xuks2xMjtkoef7JOwUclOwByLrHHUjLbbuLjXCJesYLyoXXGOZww6UyTD+xF7Uf2R1piv54QG6a+B+pzdEnI47lzYSQCp8h89nrEdwpQrpW/LmVAqK7ZK+VRq4DqMuT2qA12KBsceQLE=
+	t=1744204433; cv=none; b=YWAZpDF9mCXrsWnJ/rQeGIaxV2ANYn1BiBi8EqX0cboE5FA8eaKFo2ZT7JkAavfAE6YE9nQmMUIGVzKeSh9/1/XqOZMHONIruEsUrN1gIYuufU0d2bCJcPsns9SSYN/1koUMX+7NZl3TUxzOV168ZtM0cE/Nca8Lrzc6USFezNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744204430; c=relaxed/simple;
-	bh=eqzljcI5k9NvlLrzPg4W0BEhMgRDDnz7WbvPijjWyH0=;
+	s=arc-20240116; t=1744204433; c=relaxed/simple;
+	bh=BdpJ0nrTJfY1TTC+C83zga2VjPuvzqwXB5IYLWsIW/s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=J/E44inLwnz+ommqsgozie4FKNMZItXq/PVCp5mk34v3GZnokkdlPXJ6aEe/Ed5B/q/a0hFVhAfMcmebmlRWxxw0HtwPw5hwloL0MS4DPB9cqVxJ6j5zuCiO1100wKxelD+DXer9cNwGuJALEcz16GZgmLPtQuWM8TQzDGAnrfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=WZiT39GC; arc=none smtp.client-ip=148.251.105.195
+	 MIME-Version; b=EOzX8a80v8jERn+vqJg0/4jb+4exUjHBFWFHwKctsMRUhUl5QTv7gVKQ7z75uz3wCHAvP/+nLCY6LjkvtEL3WDSW4ne2nUuZU4u2d1813php0oH5CpQxu/r6SQr329BTz/oBDPQzSVVA/QS4YXpzBTN+YFYH0MF0ndxUi64M3a0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=l4uyPLUy; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="WZiT39GC"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="l4uyPLUy"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1744204427;
-	bh=eqzljcI5k9NvlLrzPg4W0BEhMgRDDnz7WbvPijjWyH0=;
+	s=mail; t=1744204430;
+	bh=BdpJ0nrTJfY1TTC+C83zga2VjPuvzqwXB5IYLWsIW/s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WZiT39GCY5F0PlKbBR+cJVvsuWRrE+iU7z1dYv8v6YcJr/OmCfXZG2mNTqupylEXR
-	 4/r3ip3O8pMAvQRS6zcnKDtH4ZpGrnaxUEVnmpd8CTksQNsCcWd5cJfuYctHs1Jxo+
-	 30AuqmpWlpMyDa59yP+62EmmDbRbPlKmX6lpXX+He2uqh8kH++xLYmbFD4WTl9xJ0r
-	 S19JD15yGZhZozZA7PNidVS15aPmS+E8dE+pXzvsIzGfRIlohNhtBO0sxVUatYXThi
-	 ZmROqxww/1Iy5TmzRisx5DdSjOQyf/k/UPP6cEs969eI1wqv27dyqXfqYbo6eh4nWq
-	 t/FLrrW3oh9yA==
+	b=l4uyPLUyEqOihWx+6YANsk0P2cFHSk0pl1rTKZVDvktZV8MPW2poKH8LFP1OUAaJa
+	 YMYQwC2vzDCnOqvqHetneiSRZW38dodh7y1Zar/CFRXadcrxE7XyB365tfDF+L+vLs
+	 fMsLy0BruXGiiz+xLVQmW58W/vwBssXwVNiwE94cx7//MoV22kXIbfbJYzSkNGDFBr
+	 ogpjNr/ND4dYUzL7jeVgiek7WcGgQ0cmvS/stmfxBZF5w8Kq6IkMNKoCspeQ/1CTJm
+	 JjBXi+YiVJHkBOPcmraYKAZDmabK01QSRz8fr28n/GKJ8+BjCuN4aN1f6UG+FGlCMb
+	 02S76bG/4oM3Q==
 Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 997F617E35EB;
-	Wed,  9 Apr 2025 15:13:45 +0200 (CEST)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 0EF5F17E362C;
+	Wed,  9 Apr 2025 15:13:49 +0200 (CEST)
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 To: chunkuang.hu@kernel.org
 Cc: p.zabel@pengutronix.de,
@@ -61,9 +61,9 @@ Cc: p.zabel@pengutronix.de,
 	ives.chenjh@mediatek.com,
 	tommyyl.chen@mediatek.com,
 	jason-jh.lin@mediatek.com
-Subject: [PATCH v8 15/23] drm/mediatek: mtk_hdmi: Add HDMI IP version configuration to pdata
-Date: Wed,  9 Apr 2025 15:13:10 +0200
-Message-ID: <20250409131318.108690-16-angelogioacchino.delregno@collabora.com>
+Subject: [PATCH v8 17/23] drm/mediatek: mtk_hdmi_common: Make CEC support optional
+Date: Wed,  9 Apr 2025 15:13:12 +0200
+Message-ID: <20250409131318.108690-18-angelogioacchino.delregno@collabora.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250409131318.108690-1-angelogioacchino.delregno@collabora.com>
 References: <20250409131318.108690-1-angelogioacchino.delregno@collabora.com>
@@ -75,126 +75,58 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In preparation for adding a driver for the HDMIv2 IP and before
-moving the common bits out of this driver, add a new structure
-`mtk_hdmi_ver_conf`, holding pointers to HDMI IP version specific
-drm_bridge_funcs, hdmi_codec_ops and clock array used for probe,
-and nest it into the mtk_hdmi_conf platform data structure.
+In preparation for adding a new driver for HDMIv2, for which CEC
+is not strictly required, change the of_get_compatible_child()
+failure error to -ENOTSUPP to be able to differentiate between
+error conditions in mtk_hdmi_dt_parse_pdata().
 
-While at it, also convert all of the direct users of
-mtk_hdmi_bridge_funcs, mtk_hdmi_audio_codec_ops, mtk_hdmi_clk_names
-to use pointers from the ver_conf platform data.
+In that case, if -ENOTSUPP is returned, this driver will print
+an informative message saying that CEC support is unavailable,
+as the devicetree node for that was not found, but after that,
+function mtk_hdmi_dt_parse_pdata() will not return error to
+the caller.
 
-In order to do so, it was also necessary to fill a new version 1
-specific const `mtk_hdmi_v1_ver_conf` and assign it to all of the
-currently supported compatibles for this driver.
-
-This commit brings no functional change.
+This will not change functionality of the mtk_hdmi (v1) driver
+as that is still checking whether CEC is present and, if not,
+will fail probing with an error saying that CEC is required
+by HDMIv1.
 
 Reviewed-by: CK Hu <ck.hu@mediatek.com>
 Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 ---
- drivers/gpu/drm/mediatek/mtk_hdmi.c | 36 ++++++++++++++++++++++++-----
- 1 file changed, 30 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_hdmi_common.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-index 68f479ec34c7..8c213a8b49f7 100644
---- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-@@ -144,7 +144,15 @@ struct hdmi_audio_param {
- 	struct hdmi_codec_params codec_params;
- };
+diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_common.c b/drivers/gpu/drm/mediatek/mtk_hdmi_common.c
+index 3dfde63198e5..5ea45608921c 100644
+--- a/drivers/gpu/drm/mediatek/mtk_hdmi_common.c
++++ b/drivers/gpu/drm/mediatek/mtk_hdmi_common.c
+@@ -254,12 +254,11 @@ static int mtk_hdmi_get_cec_dev(struct mtk_hdmi *hdmi, struct device *dev, struc
+ 	/* The CEC module handles HDMI hotplug detection */
+ 	cec_np = of_get_compatible_child(np->parent, "mediatek,mt8173-cec");
+ 	if (!cec_np)
+-		return dev_err_probe(dev, -EINVAL, "Failed to find CEC node\n");
++		return dev_err_probe(dev, -ENOTSUPP, "Failed to find CEC node\n");
  
-+struct mtk_hdmi_ver_conf {
-+	const struct drm_bridge_funcs *bridge_funcs;
-+	const struct hdmi_codec_ops *codec_ops;
-+	const char * const *mtk_hdmi_clock_names;
-+	int num_clocks;
-+};
-+
- struct mtk_hdmi_conf {
-+	const struct mtk_hdmi_ver_conf *ver_conf;
- 	bool tz_disabled;
- 	bool cea_modes_only;
- 	unsigned long max_mode_clock;
-@@ -1604,7 +1612,7 @@ static int mtk_hdmi_register_audio_driver(struct device *dev)
- 	struct mtk_hdmi *hdmi = dev_get_drvdata(dev);
- 	struct hdmi_audio_param *aud_param = &hdmi->aud_param;
- 	struct hdmi_codec_pdata codec_data = {
--		.ops = &mtk_hdmi_audio_codec_ops,
-+		.ops = hdmi->conf->ver_conf->codec_ops,
- 		.max_i2s_channels = 2,
- 		.i2s = 1,
- 		.data = hdmi,
-@@ -1637,6 +1645,7 @@ static int mtk_hdmi_register_audio_driver(struct device *dev)
+ 	cec_pdev = of_find_device_by_node(cec_np);
+ 	if (!cec_pdev) {
+-		dev_err(hdmi->dev, "Waiting for CEC device %pOF\n",
+-			cec_np);
++		dev_err(hdmi->dev, "Waiting for CEC device %pOF\n", cec_np);
+ 		of_node_put(cec_np);
+ 		return -EPROBE_DEFER;
+ 	}
+@@ -323,7 +322,9 @@ static int mtk_hdmi_dt_parse_pdata(struct mtk_hdmi *hdmi, struct platform_device
+ 		return dev_err_probe(dev, -EINVAL, "Failed to get ddc i2c adapter by node\n");
  
- static int mtk_hdmi_probe(struct platform_device *pdev)
- {
-+	const struct mtk_hdmi_ver_conf *ver_conf;
- 	struct mtk_hdmi *hdmi;
- 	struct device *dev = &pdev->dev;
- 	const int num_clocks = MTK_HDMI_CLK_COUNT;
-@@ -1648,12 +1657,14 @@ static int mtk_hdmi_probe(struct platform_device *pdev)
- 
- 	hdmi->dev = dev;
- 	hdmi->conf = of_device_get_match_data(dev);
-+	ver_conf = hdmi->conf->ver_conf;
- 
--	hdmi->clk = devm_kcalloc(dev, num_clocks, sizeof(*hdmi->clk), GFP_KERNEL);
-+	hdmi->clk = devm_kcalloc(dev, ver_conf->num_clocks, sizeof(*hdmi->clk), GFP_KERNEL);
- 	if (!hdmi->clk)
- 		return -ENOMEM;
- 
--	ret = mtk_hdmi_dt_parse_pdata(hdmi, pdev, mtk_hdmi_clk_names, num_clocks);
-+	ret = mtk_hdmi_dt_parse_pdata(hdmi, pdev, ver_conf->mtk_hdmi_clock_names,
-+				      ver_conf->num_clocks);
- 	if (ret)
+ 	ret = mtk_hdmi_get_cec_dev(hdmi, dev, np);
+-	if (ret)
++	if (ret == -ENOTSUPP)
++		dev_info(dev, "CEC support unavailable: node not found\n");
++	else if (ret)
  		return ret;
  
-@@ -1670,7 +1681,7 @@ static int mtk_hdmi_probe(struct platform_device *pdev)
- 		return dev_err_probe(dev, ret,
- 				     "Failed to register audio driver\n");
- 
--	hdmi->bridge.funcs = &mtk_hdmi_bridge_funcs;
-+	hdmi->bridge.funcs = ver_conf->bridge_funcs;
- 	hdmi->bridge.of_node = pdev->dev.of_node;
- 	hdmi->bridge.ops = DRM_BRIDGE_OP_DETECT | DRM_BRIDGE_OP_EDID
- 			 | DRM_BRIDGE_OP_HPD;
-@@ -1715,19 +1726,32 @@ static __maybe_unused int mtk_hdmi_resume(struct device *dev)
- 
- static SIMPLE_DEV_PM_OPS(mtk_hdmi_pm_ops, mtk_hdmi_suspend, mtk_hdmi_resume);
- 
-+static const struct mtk_hdmi_ver_conf mtk_hdmi_v1_ver_conf = {
-+	.bridge_funcs = &mtk_hdmi_bridge_funcs,
-+	.codec_ops = &mtk_hdmi_audio_codec_ops,
-+	.mtk_hdmi_clock_names = mtk_hdmi_clk_names,
-+	.num_clocks = ARRAY_SIZE(mtk_hdmi_clk_names)
-+};
-+
- static const struct mtk_hdmi_conf mtk_hdmi_conf_mt2701 = {
- 	.tz_disabled = true,
-+	.ver_conf = &mtk_hdmi_v1_ver_conf
- };
- 
- static const struct mtk_hdmi_conf mtk_hdmi_conf_mt8167 = {
--	.max_mode_clock = 148500,
- 	.cea_modes_only = true,
-+	.max_mode_clock = 148500,
-+	.ver_conf = &mtk_hdmi_v1_ver_conf
-+};
-+
-+static const struct mtk_hdmi_conf mtk_hdmi_conf_mt8173 = {
-+	.ver_conf = &mtk_hdmi_v1_ver_conf
- };
- 
- static const struct of_device_id mtk_hdmi_of_ids[] = {
- 	{ .compatible = "mediatek,mt2701-hdmi", .data = &mtk_hdmi_conf_mt2701 },
- 	{ .compatible = "mediatek,mt8167-hdmi", .data = &mtk_hdmi_conf_mt8167 },
--	{ .compatible = "mediatek,mt8173-hdmi" },
-+	{ .compatible = "mediatek,mt8173-hdmi", .data = &mtk_hdmi_conf_mt8173 },
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, mtk_hdmi_of_ids);
+ 	return 0;
 -- 
 2.49.0
 
