@@ -1,124 +1,123 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DD3525EFBD;
-	Wed,  9 Apr 2025 14:11:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DCB729A0;
+	Wed,  9 Apr 2025 14:12:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744207903; cv=none; b=oKcDtcJ++IBdIF+BppGnJe/eHuxaMZEs3tek6iNtfQpgwWD3gcs9bAlKIfAyrh5nGVLHtVCf4l5MT84psbFS1uEJoxBT+H0qX9SiCavFULqh2UC12jWxkBauOLs3+EaqMr+5PgE9JzsW2tPSfZ/bnSZwfkARXo6M1AmDg5cBkZI=
+	t=1744207970; cv=none; b=pCoZbsDpPwJLj/GmwwSJS1Mcz0K0Wde8W6zSQg13QKL5A+Vth5J8BpLvs1b0NsktM9Yd0eSKAP4GR15u64rx7KiU5h8r6vAVxPvWlZ2NAF2tSBydtPzVhqxiUnX7QAqnIW39CH604R/auu6KLzvlj4fw49vyElACKzGeX4Z0JEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744207903; c=relaxed/simple;
-	bh=7PQYfFfvCRNIX65tpI4QKa4NR1Ha1vaEAgebWu62+kg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YhSi8HEbz9sVU8kjVnQaY01/+Wr8X9FUAmXXZpkT6HeeXXth1TFvUejqlmNg4uRsNBHOvgZrD+Q82ub08CYrmT6KCXJhW6ajYPxmUWw0dFnCbvbaxyY57fJsHrSrwO8TCs2A5EZMDAoSeBmmwtvLoC/5b+5aDqx6EYhjRAxMx2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CzeTAKDj; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744207970; c=relaxed/simple;
+	bh=Vw/9BbWr42/S2TmbmC0tAGAkxyiMzz+D7XbIESFVGBo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tXn4HZ/fud3I84Bk66GXWjh+ebF8UfbmZvVRKouDj8rEXm9DFmg5N4Ax7wkqt0pjQILwz5FSfU2zYfeUgRfz7/DlVM2ajE6ASEtbfGx5T4299tOFybZ06vML3KzhN/R18judw0o07XwW6qDoj+gAbP84T9sBo5khHS70BGnD1v4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IV/c4HiR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CzeTAKDj"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3978ef9a778so885558f8f.0;
-        Wed, 09 Apr 2025 07:11:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744207900; x=1744812700; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=79dRAhMX6hAzgdIihnfQk7TyjpU16Gt/P7A1hHpHnDM=;
-        b=CzeTAKDjUeS3wEk4TaNTVDH99uciL+p9pgX7aGcuwFO0tSjrBUuBeNxyfymwojZmS8
-         gC0T4b0ZfJ0hafkkWnQpGsNWcG345oqC1riNRWHM/FHYkUeEChE7bi0aOrbdt1jIvZiP
-         zxy0gpcttnriL2mWLGsHV8l3LQkE78869C/jxtazgPrfWpmOBh+w6MDpWvAAtsc6+m+F
-         mwt57J/39FR/WzDJDDgU0bVS6+N6abOUCfiwCK2PrDHBAVF0hdV1r53yZoMvcPyCRWnH
-         TZLkHLOWIuWcF9EaibKyDf2nUGTLEmHfA5V5zOWNbdMg00L0Gz5JvEdD2OVM+WLsoyTl
-         FcjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744207900; x=1744812700;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=79dRAhMX6hAzgdIihnfQk7TyjpU16Gt/P7A1hHpHnDM=;
-        b=kXhEGkLlzcCVz/1n57qQOMNXR7kvrKjE7TMavFfCvrdOsA4+d76M5/dar57xF5UOee
-         l4Pf2VX9YWOEi/OqQ/thjH45b/dZrLo3cvspo+xOuoBiCkJl3v0ZGjOdfkyfZdBvPjzT
-         Iv0aHPHONQI509HEjLeubz9+O9aq8k0CjgsoLv6+i5aaeODtrRnGydwFvSxajjwR4k4E
-         c4WdU80zo676z9DWzZGrDsfK9Vu1Sf50I5UN7JRg1C83aR9rPppwOln6YJmoJEbkn2UP
-         iVg90pkix2lfNq3r02G8TnP1KCnyQraXSX41D26NVkPTh3YmTlulIHmuxyvDeckl+mun
-         Ssgw==
-X-Forwarded-Encrypted: i=1; AJvYcCU+yKtiqpET5uS5TYlIzFQvfd6ml3nGGTHwRqMk18nK8G5VO4Hvo6wmwgccGMKBNHTpkDmqZSPfA4R8WmU=@vger.kernel.org, AJvYcCVSZq/Qx7pf/7zRvK70jY2HxNVtjokQFgVxC2bCKetZYFA1bRuW5gQnd4/nx8qWzjx26Pq6IHGMz5kHwQ==@vger.kernel.org, AJvYcCXZ1TjP9sq8eIAK3RGpqnPzlWtRxlHFgwtoMqRecBu5mYndVWok2cqyrIiXATa4XT91COP35s3X0/nyIQ==@vger.kernel.org, AJvYcCXg7SENH0cjSZ/ZHXjZyL3C4GumODf8xpgHSKLcx2IIB0wMGrcQQ5Ucbsb6Yy0GlRirYWclxfMx@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2WgB1faCCydZT6OcPJ+LUSFY6FxSAmHk+9XX7Rs8/R8qANtZz
-	lsUSPzX6hzwRWhYPpE3V3kEzrHzLzO83/1zB4zgor+JKeTth/+XF
-X-Gm-Gg: ASbGncvLeiLm6VF/j43LxXiVeinmCUu+Dwu4HrzHQzMpzvluAkbnHuG6tpsopfo+xp3
-	nXMdaiP6Tv0oao0fBjvZ6GQea6UlapD4YbibQg3K9QSxIOq9Pjj+SU8CFhh2ufw0SxHBeRCQW+J
-	y+JK64O1Qm6IsbCYN4QDwi68Sg5VjWpq7HagCDd0frNGEgtaR2y7c3E1R+fQu5zpgvZRvHqRGaK
-	4RG5u+Tk/chLtf0uHvGFpCShYfORsg7MC7HahkdiI7vViNTRg4u1Nio2oqkQIZcfOCupK2wM249
-	bIRNGbNJHE8DVyAa1X2DF9jOB7FPBikeDEJusaTf04kIRKW4nWUgP+QSUtb4NSdOZLWhSA==
-X-Google-Smtp-Source: AGHT+IHSANHfnsI22VvG7U6Add3MtuqdkHlNUqXmc+ZOIvDB4qPCFfsNQQmWuYIJe4cIBvlXQ9bdkg==
-X-Received: by 2002:a05:6000:2901:b0:391:2acc:aadf with SMTP id ffacd0b85a97d-39d87ab626emr1029141f8f.6.1744207899192;
-        Wed, 09 Apr 2025 07:11:39 -0700 (PDT)
-Received: from [172.27.52.232] (auburn-lo423.yndx.net. [93.158.190.104])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f235a5d31sm17305755e9.35.2025.04.09.07.11.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Apr 2025 07:11:38 -0700 (PDT)
-Message-ID: <3e245617-81a5-4ea3-843f-b86261cf8599@gmail.com>
-Date: Wed, 9 Apr 2025 16:10:58 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IV/c4HiR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BD98C4CEE8;
+	Wed,  9 Apr 2025 14:12:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744207969;
+	bh=Vw/9BbWr42/S2TmbmC0tAGAkxyiMzz+D7XbIESFVGBo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=IV/c4HiRJ1k4xHbzWqZebkS9cmZrW2MxrIfo8hk4SRuOZ9OmYXKFumnZ/6bXf/NP8
+	 zZpq2D5hvU4Fqw2zDQI0ZMMgUaogUdCJM25sCz8I3xLkO/QucaL+hbuRMAV7JK2r3e
+	 1Bu+xdI7qOqIwM182WRgwb0CFEaJR5l55cDXUseoX3AMueFSYueaPLaLYr1NxA/jVz
+	 E1BsE9ZVmHzzzdSxD5QAbea53PWbHiW9nokMyh0A5A/YXTFHbDIyKS/+nXVibjewhE
+	 xh46uaYeSai9iL/PnDY/EOFC6cpFME14udNWDODGVc1Q7w2JcnQDSmGx7LAqjs3lFU
+	 IiUPRoo/xAc5Q==
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-2c818343646so4022740fac.3;
+        Wed, 09 Apr 2025 07:12:49 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUJMF2EgxNyB5xvDLyIwF/7/I8Ml0tvZrz0SU/vsAbfOZwguvs0u7314L+9My948X9DBd4ED0bRCVAv@vger.kernel.org, AJvYcCWW0DMPLDh/kbcSnZJR//Gitw/ymytvszYPd3bcZGXXNBGw0pWSAtEUqrZALJBlYxTZw3sE1WBqIhSyag==@vger.kernel.org, AJvYcCX1VbqQ1T/31jyaRnv1gYgUHHOI6GTsuUWnZAMfVYOt5KjaOlz90sa4yTytrRXQObkqsI3cYKgUfF4CFDCI@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGkNaR23hNpqbuU92OFnm6rIKNcL2INri1ZcsCFH0UKETlJEHO
+	zUaykS1VSHsj3TWfWkedNHD5a1shOd024IP33N6FF5v5DwOeuejez+ouX7QITERVyVIUHtW29gf
+	5poZCIWmLbN5oaRRfedu8ZIVhugA=
+X-Google-Smtp-Source: AGHT+IEfbq1b6uZ6OUCvuexDfaJqZBDkEEa57XBGYlotEXlempsdj2+s4v7wD/x2wV4frJrZKXhB+Es/LZ+fKQADQ4Y=
+X-Received: by 2002:a05:6871:a112:b0:29d:c709:a76c with SMTP id
+ 586e51a60fabf-2d08dccf9e9mr1872958fac.4.1744207968972; Wed, 09 Apr 2025
+ 07:12:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] kasan: Avoid sleepable page allocation from atomic
- context
-To: Alexander Gordeev <agordeev@linux.ibm.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Hugh Dickins <hughd@google.com>, Nicholas Piggin <npiggin@gmail.com>,
- Guenter Roeck <linux@roeck-us.net>, Juergen Gross <jgross@suse.com>,
- Jeremy Fitzhardinge <jeremy@goop.org>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, kasan-dev@googlegroups.com, sparclinux@vger.kernel.org,
- xen-devel@lists.xenproject.org, linuxppc-dev@lists.ozlabs.org,
- linux-s390@vger.kernel.org, stable@vger.kernel.org
-References: <cover.1744128123.git.agordeev@linux.ibm.com>
- <2d9f4ac4528701b59d511a379a60107fa608ad30.1744128123.git.agordeev@linux.ibm.com>
-Content-Language: en-US
-From: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-In-Reply-To: <2d9f4ac4528701b59d511a379a60107fa608ad30.1744128123.git.agordeev@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250407183656.1503446-1-superm1@kernel.org>
+In-Reply-To: <20250407183656.1503446-1-superm1@kernel.org>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 9 Apr 2025 16:12:37 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0g0w58KDpAJZq1RkM=hDg5W3QcoDPJsCfT3kEKntJ1d0A@mail.gmail.com>
+X-Gm-Features: ATxdqUFO6iRoisnzTjoDivu2_kLVOfSVcGADUXAQj7WpXtpnpd_FrOi6U7v-kFg
+Message-ID: <CAJZ5v0g0w58KDpAJZq1RkM=hDg5W3QcoDPJsCfT3kEKntJ1d0A@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] ACPI: Add missing prototype for non
+ CONFIG_SUSPEND/CONFIG_X86 case
+To: Mario Limonciello <superm1@kernel.org>
+Cc: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Linus Walleij <linus.walleij@linaro.org>, 
+	"open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	linux-acpi@vger.kernel.org, Basavaraj Natikar <Basavaraj.Natikar@amd.com>, 
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Mario Limonciello <mario.limonciello@amd.com>, 
+	kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-
-On 4/8/25 6:07 PM, Alexander Gordeev wrote:
-> apply_to_page_range() enters lazy MMU mode and then invokes
-> kasan_populate_vmalloc_pte() callback on each page table walk
-> iteration. The lazy MMU mode may only be entered only under
-> protection of the page table lock. However, the callback can
-> go into sleep when trying to allocate a single page.
-> 
-> Change __get_free_page() allocation mode from GFP_KERNEL to
-> GFP_ATOMIC to avoid scheduling out while in atomic context.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 3c5c3cfb9ef4 ("kasan: support backing vmalloc space with real shadow memory")
-> Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+On Mon, Apr 7, 2025 at 9:02=E2=80=AFPM Mario Limonciello <superm1@kernel.or=
+g> wrote:
+>
+> From: Mario Limonciello <mario.limonciello@amd.com>
+>
+> acpi_register_lps0_dev() and acpi_unregister_lps0_dev() may be used
+> in drivers that don't require CONFIG_SUSPEND or compile on !X86.
+>
+> Add prototypes for those cases.
+>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202502191627.fRgoBwcZ-lkp@i=
+ntel.com/
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 > ---
->  mm/kasan/shadow.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/kasan/shadow.c b/mm/kasan/shadow.c
-> index 88d1c9dcb507..edfa77959474 100644
-> --- a/mm/kasan/shadow.c
-> +++ b/mm/kasan/shadow.c
-> @@ -301,7 +301,7 @@ static int kasan_populate_vmalloc_pte(pte_t *ptep, unsigned long addr,
->  	if (likely(!pte_none(ptep_get(ptep))))
->  		return 0;
->  
-> -	page = __get_free_page(GFP_KERNEL);
-> +	page = __get_free_page(GFP_ATOMIC);
->  	if (!page)
->  		return -ENOMEM;
->  
+> v3:
+>  * Add struct acpi_s2idle_dev_ops outside defines too
+> ---
+>  include/linux/acpi.h | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+>
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> index 3f2e93ed97301..fc372bbaa5476 100644
+> --- a/include/linux/acpi.h
+> +++ b/include/linux/acpi.h
+> @@ -1125,13 +1125,13 @@ void acpi_os_set_prepare_extended_sleep(int (*fun=
+c)(u8 sleep_state,
+>
+>  acpi_status acpi_os_prepare_extended_sleep(u8 sleep_state,
+>                                            u32 val_a, u32 val_b);
+> -#if defined(CONFIG_SUSPEND) && defined(CONFIG_X86)
+>  struct acpi_s2idle_dev_ops {
+>         struct list_head list_node;
+>         void (*prepare)(void);
+>         void (*check)(void);
+>         void (*restore)(void);
+>  };
+> +#if defined(CONFIG_SUSPEND) && defined(CONFIG_X86)
+>  int acpi_register_lps0_dev(struct acpi_s2idle_dev_ops *arg);
+>  void acpi_unregister_lps0_dev(struct acpi_s2idle_dev_ops *arg);
+>  int acpi_get_lps0_constraint(struct acpi_device *adev);
+> @@ -1140,6 +1140,13 @@ static inline int acpi_get_lps0_constraint(struct =
+device *dev)
+>  {
+>         return ACPI_STATE_UNKNOWN;
+>  }
+> +static inline int acpi_register_lps0_dev(struct acpi_s2idle_dev_ops *arg=
+)
+> +{
+> +       return -ENODEV;
+> +}
+> +static inline void acpi_unregister_lps0_dev(struct acpi_s2idle_dev_ops *=
+arg)
+> +{
+> +}
+>  #endif /* CONFIG_SUSPEND && CONFIG_X86 */
+>  void arch_reserve_mem_area(acpi_physical_address addr, size_t size);
+>  #else
+> --
 
-I think a better way to fix this would be moving out allocation from atomic context. Allocate page prior
-to apply_to_page_range() call and pass it down to kasan_populate_vmalloc_pte().
-
-Whenever kasan_populate_vmalloc_pte() will require additional page we could bail out with -EAGAIN,
-and allocate another one.
+Applied along with the [2/2] as 6.16 material, thanks!
