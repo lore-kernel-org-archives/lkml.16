@@ -1,114 +1,110 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22F45282FA;
-	Wed,  9 Apr 2025 05:43:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E03541D90C8;
+	Wed,  9 Apr 2025 05:43:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744177416; cv=none; b=YSVmZxPeMEllfztFvF87FWstfU+eya+KAu2uIEomUvT8H9Hz8B4B3TVkgtmc3GfUAmFhGWZWvVl9eQq56Mmn22H5d/Q4AafKRJlTfyS4CTlz1AhZuj1LURcFNaMDpdOSVWs1jLByYYp2VHqB7irckklTmpX31wbSILqO4XQwb9c=
+	t=1744177424; cv=none; b=mfEBb3bvLmqJbIViRqRYs22uK7Tbqu8V57l0b3AIKyqLjv/Ng19U5aGuDCUIvYcQ2VBiHEUp8q7zrQo+g1a7SL/OnpLr9MO3xGXqwCPW7gEvDXgc2rgnjwnxu7YyCJ2ddHcevL7a3cuyRa07OAnkusdh7OEtDo2HvjoL908Z+ug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744177416; c=relaxed/simple;
-	bh=J8LGMW7whhEgDF1kkORXiCUzQ4kiTZwBcZaIB8TG5Rs=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=KTLD9KXp1C8UWM4x3uKumThIw3So9Vy5LtmV/YNevrQqRDEOBqXZsbcXYdeqEbCzqBbfp+ISYaESrrshUMdiR+IxlCPv/+bIH1h2N1vnRElD2PHptb06koGnymgfOXA+k+f7uWM2LtvBYWtDGavn3mT6I/Zg/bV766R0NnMnC6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WMZz0b/0; arc=none smtp.client-ip=209.85.167.42
+	s=arc-20240116; t=1744177424; c=relaxed/simple;
+	bh=QsoIXU3R68W1HSWv2/JVUojsjXdbneDZX/yJ/K2kuwY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RsG5/y8eDOdzsWFZcgoZwZeBYJ9nSs/GVGgjAag/z42O2QZsnhOUcx7vVfEBsjBSIKX/1CyBaOVt97rgCWKA/dOsih0KlZy+nMpkCA2vaYD4tq5ePEskSv4v+uzOhp5ChzKz0ymrZYm07gWD8i+V1v3ckclTtQV73sMMI96OCKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hhLT9PEe; arc=none smtp.client-ip=209.85.215.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WMZz0b/0"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-54addb5a139so7062705e87.0;
-        Tue, 08 Apr 2025 22:43:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hhLT9PEe"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-af9925bbeb7so4797091a12.3;
+        Tue, 08 Apr 2025 22:43:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744177413; x=1744782213; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=In49OOnUnZvZAmK2s0fur5Q6IBBJkwDHf53+fdgFBOY=;
-        b=WMZz0b/05Pnhk8mU72IX0U/rTIKyqw7+F2cL8yduRkpWqzi5WG0tYgL3G8L4vtPSBv
-         A6E3DSG/ce3EAank5OJPnFCCNVc8+dipBaCMrL79Uof3vnW3Kod1zwk2yvkvPzesJ26C
-         81fRio5sFn3+aqbo3+PoZ7yCvVZNBwthcjleishSXekd/d67ePwMVVr320iU0tLjGjEW
-         pUt30Bdv6dbn0J5n5kkdPXzirmyse9PjY9zJ4XeDlwMhAIMDcKwUnpXCXW1SSOxPAyV0
-         Wz3bc0qXbPq5gicA3AonGFoeVfz8Ea9c84PGBGKbOZpGi4NWzNbVIYDiPVSS8OzucVhe
-         dFIw==
+        d=gmail.com; s=20230601; t=1744177422; x=1744782222; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=h0+8QrxIEMZCQLvXkMsmq3iISJHFTsUHU35F1UKNl04=;
+        b=hhLT9PEeU2q/oI9zI+bedzLllKwoUz24pLU+SrNUkzJ5PUe5Z8T1+XJcowY1B7a4e1
+         HARXf8rGxhFQubajX0qOWtLKMfT4o65/+D/aPCvk0BmXEmbCfiSog4co5QAI1adtZ36w
+         64QHuscj5QVRTcdMzzabZkYrOJ8kKsuPyEZi85fJEM1ySw+j08jebCKS+KhR418nbaLO
+         QUbMTu14FLkzVYhh9cOjM2WK7c4M3qb5JsTex7hDHDrT/mQPPWT/dy5kUkjyoZVqZg5w
+         W4dveLBqzjiGC11x9dPEubFztVIhdBWO8/m6sPzHz8wEiXvma3NvLo0OS2bwRLMwTjeD
+         UHVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744177413; x=1744782213;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=In49OOnUnZvZAmK2s0fur5Q6IBBJkwDHf53+fdgFBOY=;
-        b=xJ41INaSSFATFq8JFgsGRl2+c1LMaogckaEihfAu9CeF7cbJE2UL9Qhp3dxQO/qcXB
-         OanaaLTsfzznbva2vkPEEFPFEFIAjjxANlNNQVtOHdUu8PoRbEZMt0moq8Tk20JpenRw
-         tW94flQTf/AIMvfMO+vgZ/mQ2dKqNQ8JWvZBwFzAvasHukbr5rkDXtBxPDVQ9XzZgbaw
-         2i06QNz6l5qNgCtRQ6W/vWTk2baDzKJfn96ciiwg85E67FaI+gWlOeQCo0a26D4+f8GP
-         dFfx3dFe6P1ku3RQEJiy/0AEnkKc0mlLLuRapXjbOdwtBZ6sQULULshr8TKAv0jvNLYr
-         MvTw==
-X-Forwarded-Encrypted: i=1; AJvYcCVlzOkAl0yrfqQi5iOk+Y8G4PemEhf4YHUkEF2RQe4NxykpS1wWoikHKDE2fNb1W2EFA2QLB1N0Nrwnkr9v@vger.kernel.org, AJvYcCXSkvenY4J7+m0bUZ30okQCO1j7OaWhH/eMn5S4+f6wqWhu5yWozhuo9PVy+e7bGexyRWNlMP6TKCtf@vger.kernel.org
-X-Gm-Message-State: AOJu0YzivLG/7br0DOmKyWtWAylBo7eKABsFFdPJPYCJ+wMFozIVGRxs
-	UkrlLUEfHMkGARQtuSYVJ96500q1pmCWHDVcRIBKDPogduKwjRfxPu1ZVw==
-X-Gm-Gg: ASbGncu+RAcHDaeFmwbzNo+mQfKfA9uNuQ11+qzPMfMZ99rR5W/yHpvKXNTzxAUfIvK
-	eJGAT9py4Ix6/aSZfnQ9cG0E4qHsQZgi4sCfEBLsAJPWwY47421b/WbAyBu09hEf1Ig/m9aZi6t
-	mPVlY0l4yHGhnEo4WBOFI4tK2IxeJARZbUM9BIwXWM05xEYA5izwkrWZtuSFbthQKkoxYLMKjBb
-	/u2Gldxh/36zo8YptRvYp+S3MpzYAT9WqVW5ZJNO4fKHLcdWNcd+YyVjG/5ukkkeVPVq0zzCHl4
-	hlsEEUK1ExlU7j7PfpmK1myMUM8V28er0Y+cMiMjP0HYjhU3HeJho0xfhlAjiZ3FjT+TGFWhewP
-	W+xpXrHcWhOp3bOVI9j5oaA==
-X-Google-Smtp-Source: AGHT+IEjVOH0cbgp0Cn3BQSndRXT//QCFT+iAuFmZ0J4tEVy6BjhZuTDOKomi+NcIz3wdVSRuebPhA==
-X-Received: by 2002:a05:6512:1586:b0:54b:ed9:2cf6 with SMTP id 2adb3069b0e04-54c444fdc93mr383432e87.32.1744177412917;
-        Tue, 08 Apr 2025 22:43:32 -0700 (PDT)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54c455e5f2csm45868e87.58.2025.04.08.22.43.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Apr 2025 22:43:32 -0700 (PDT)
-Message-ID: <62f78786-f9db-4e05-9001-28b786df669b@gmail.com>
-Date: Wed, 9 Apr 2025 08:43:31 +0300
+        d=1e100.net; s=20230601; t=1744177422; x=1744782222;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=h0+8QrxIEMZCQLvXkMsmq3iISJHFTsUHU35F1UKNl04=;
+        b=jNgs9dDYshhcDMXgALBnS2dQyxDjoBH11S9wjHfUCXRckMEGMI7tycYbXRExxC4Wkp
+         rgtFMD5yy5lzRhDv4n4oH2qmS93coGfoxeEV6Srqcat9sF7duG7vYTZe4VX0fo1URYs8
+         ulc92BgFHfsp3+I1pdVth8EYgk4UKpNF9TWg8nWFNuOL/Vr3tm0X3qDld3DN2t4llrLU
+         ZxPx6Ayl63WoXGHWdMrqaTEVBJrqKAZEEVW3JCG3jFKKaHU8h+8EOm3q69tpClkcuJp7
+         8Qg/akY+59HEbBpezYouiAijvzHgxjHvGQMiv/8vJFQUAhf6/fJxMqYu/6xdOi9DA6q8
+         qR+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUGYPTPIfIJutwYt5d3+TH4z6OOhygFglXxI5vRI5QnsXNd9Wf/STdS4J0qPheH0zAFXYhoMECLKconRA0=@vger.kernel.org, AJvYcCWInofD7BycCrP2MuNHu7VKxm9Q7eYknXbgRex9iSAHSZBMec8zXaHzqGrJ85UXUV1L9k/JMPrK@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpZcFe75hJ3LpKUH6PDxl8VpWPa9rwHfgInkQF3Je+0QTo3m0j
+	mATiglEk6LJBDzIzZLJcrgWcdzK0K1uREQsodrKMPEz4MS3glcgt
+X-Gm-Gg: ASbGnctSt61k0bnmJv622bUjL/+8BA4sdEd2q4TG2slBAxuG2BleoLVo3OcAkd9V8cT
+	tHVmCdagbqmPfM9jCr97KwO5nTkKGSLhcfNJN39ikA01/sek5D9hnOuaHU+KeNSn2LBgTbYOXak
+	Vm/kURnDfU9hnfzq9iR+J0Mjg8Vj5sW6Soxc+nZpKUuafjTox3yXRINtJHgkh6ybSGM+ojFFwoq
+	aPl5fIZJqX6JOyqiKoLDiiUz7EKbj17CQ4tfaibFzTNefziwmWZhWMq48OksKYzWmMUKLmkTGO1
+	mMCV9YwEoTkdW4bBMpWDF7M/5KyR2/OtP7VfygUZDb467frA+zML
+X-Google-Smtp-Source: AGHT+IGKx3TUSZM6JYyNC5zESYyJS1sGFIz3I8qCoEYJ2ix9eYBl4TE/4p/f/SuiBZHe3Jm+/aDkMQ==
+X-Received: by 2002:a05:6a21:9104:b0:1f5:5807:13c7 with SMTP id adf61e73a8af0-2015aea8f13mr1902804637.17.1744177421971;
+        Tue, 08 Apr 2025 22:43:41 -0700 (PDT)
+Received: from nsys.iitm.ac.in ([103.158.43.24])
+        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-73bb1d68cb1sm395591b3a.75.2025.04.08.22.43.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 22:43:41 -0700 (PDT)
+From: Abdun Nihaal <abdun.nihaal@gmail.com>
+To: bharat@chelsio.com
+Cc: Abdun Nihaal <abdun.nihaal@gmail.com>,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	vishal@chelsio.com,
+	rahul.lakkireddy@chelsio.com,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next] cxgb4: fix memory leak in cxgb4_init_ethtool_filters() error path
+Date: Wed,  9 Apr 2025 11:13:21 +0530
+Message-ID: <20250409054323.48557-1-abdun.nihaal@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 01/14] dt-bindings: regulator: Add ROHM BD96802 PMIC
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-To: Conor Dooley <conor@kernel.org>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <cover.1744090658.git.mazziesaccount@gmail.com>
- <df7983e7c623041f14a4fbe409a2cff846e68a05.1744090658.git.mazziesaccount@gmail.com>
- <20250408-boogieman-underwent-968671653b3f@spud>
- <b233f08a-ac8a-4670-8b32-8afc8a7dfc0c@gmail.com>
-Content-Language: en-US, en-AU, en-GB, en-BW
-In-Reply-To: <b233f08a-ac8a-4670-8b32-8afc8a7dfc0c@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 09/04/2025 07:30, Matti Vaittinen wrote:
-> On 08/04/2025 19:16, Conor Dooley wrote:
->> On Tue, Apr 08, 2025 at 11:40:41AM +0300, Matti Vaittinen wrote:
->>> BD96802Qxx-C is an automotive grade configurable Power Management
->>> Integrated Circuit supporting Functional Safety features for application
->>> processors, SoCs and FPGAs. BD96802 is controlled via I2C, provides two
->>> interrupt lines and has two controllable buck regulators.
->>>
->>> The BD96802 belongs to the family of ROHM Scalable PMICs and is intended
->>> to be used as a companion PMIC for the BD96801.
->>>
->>> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
->>
->> I think I acked this one on v1, no?
->> https://lore.kernel.org/all/20250326-candy-endocrine-2e7b2182e53b@spud/
-> 
-> Sorry Conor!
-> Somehow I managed to drop your acks. Also from the other binding 
-> patches.
+In the for loop used to allocate the loc_array and bmap for each port, a
+memory leak is possible when the allocation for loc_array succeeds,
+but the allocation for bmap fails. This is because when the control flow
+goes to the label free_eth_finfo, only the allocations starting from
+(i-1)th iteration are freed.
 
-Oh, actually, I didn't drop acks from the other bindings. Seems like it 
-was just this one. Sorry for the confusion!
+Fix that by freeing the loc_array in the bmap allocation error path.
 
-Anyways, all should have acks now - Thanks again for the reviews!
+Fixes: d915c299f1da ("cxgb4: add skeleton for ethtool n-tuple filters")
+Signed-off-by: Abdun Nihaal <abdun.nihaal@gmail.com>
+---
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Yours,
-	-- Matti
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c
+index 7f3f5afa864f..1546c3db08f0 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c
+@@ -2270,6 +2270,7 @@ int cxgb4_init_ethtool_filters(struct adapter *adap)
+ 		eth_filter->port[i].bmap = bitmap_zalloc(nentries, GFP_KERNEL);
+ 		if (!eth_filter->port[i].bmap) {
+ 			ret = -ENOMEM;
++			kvfree(eth_filter->port[i].loc_array);
+ 			goto free_eth_finfo;
+ 		}
+ 	}
+-- 
+2.47.2
+
