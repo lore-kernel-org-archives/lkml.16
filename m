@@ -1,179 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DD461C5F23;
-	Wed,  9 Apr 2025 18:19:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3AD923ED5A
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 18:19:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744222762; cv=none; b=C0qjb/fVH0UKFqFsHLeEeysUhZF6NM28mjZ/qXPIsbHHubBy4gNtvZteB/792m84ax07qnwEFOda0pxKXKNhxVIJ7eJm9PbvJmWidVDei94H7v0eYCXEtUY39tw6PHJzELnvb3CbbRRIV49Bpc6cSeUyBq928SVYhH0oNyZgjUs=
+	t=1744222784; cv=none; b=iy2dPmvFW85PC2reg3Zcrs8NCS8y0SgU8+BXeArHrjUBnfIk6/D7YIWs7t6msIRTTYxI/gUEuyYBkZ4iy0uRLRlwJr7EzJoP9+bpP5kJjmVLGDsfLWRRHkMSlzyVq3zQw1qZmOUvWXhgBXyBAMuffjBQ2GG4y2iMbIXfUJdHeVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744222762; c=relaxed/simple;
-	bh=WejBdoRPjchDP+2aS+M1B7jTNfwEzrO0CEc9FW4eZTM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Gl2Jxg0SjFZqbQXAClY4oqbOVlNd3A/fE+6CQN7gTEY5y9BwGYqRkLTpVOyqLQLplYdO3XeCYSjcToINs0s/bKNgf+hXMFSksjT1z4UQsbUvpfIui5hmZstxxtUhVL5HqWk5SEOPNF6gqCfpK/IE/dahfWUsaS3zgAycSgsm+54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gXvVOBnn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744222784; c=relaxed/simple;
+	bh=Dk0oNqQlJsRC8fpG8QpHzgKezNBr3oi19rt+WnEfW+Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=brQRHZjY1u/hFuGbSGsSenj5Z+8z2bxUF7XLmj9Qg5rPzgGT/Bx8n+lsPJF5Wf/57DsCptm5JLNtLzJkZ6UmWZxoVi7M27gyMeytFZ+WoGfc++XdY5gpD8FVpH2zBTuMyfCqvWxJuroftV5nA5ApFJB/bs8UOHUlAxK1SdtyepM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KRCSofaR; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gXvVOBnn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BE47C4CEE2;
-	Wed,  9 Apr 2025 18:19:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744222761;
-	bh=WejBdoRPjchDP+2aS+M1B7jTNfwEzrO0CEc9FW4eZTM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gXvVOBnnQRSFuPSkraU8YZNo4LGZFwHc7t6a8QPOl7NHz3dr85Dqj4rJjwLW2gXl7
-	 6w6AulG4p58V4vAIF6MagI1AsPBIy2V1eviseTd8eksSdd07EkDbLEobMOmycglHMT
-	 WVzbLTQZDe8dWAEWFB/r0hbkBcPb68mHUpDjBE4SJbU3yD362ekZtpOVzqcNH+VXWM
-	 P4UqPoP9UXP9TM/RwKJdIIH39PFzEMClUUzS1UzUaD5Ug49j8vrN+bhHB/ZnPFgQfa
-	 WfGarRybZIXxjNCQ+xDSFsaqb92zfXSWyHh/rN7jNEgufaSN8iysCgW7SaF4xNQrEM
-	 FxwZzkaudzeVQ==
-From: Christian Brauner <brauner@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	linux-fsdevel@vger.kernel.org,
-	Jeff Layton <jlayton@kernel.org>,
-	Lennart Poettering <lennart@poettering.net>,
-	Daan De Meyer <daan.j.demeyer@gmail.com>,
-	Mike Yuan <me@yhndnzj.com>,
-	linux-kernel@vger.kernel.org,
-	Peter Ziljstra <peterz@infradead.org>
-Subject: [RFC PATCH] pidfs: ensure consistent ENOENT/ESRCH reporting
-Date: Wed,  9 Apr 2025 20:18:58 +0200
-Message-ID: <20250409-rohstoff-ungnade-d1afa571f32c@brauner>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250409-sesshaft-absurd-35d97607142c@brauner>
-References: <20250409-sesshaft-absurd-35d97607142c@brauner>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KRCSofaR"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-730517040a9so8809436b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 11:19:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744222782; x=1744827582; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZRkdAw/O8yrVTjU62SZ7m2qGSTADfRdfbRSj5I/AWsQ=;
+        b=KRCSofaRqnDnz3mJ/Du9bE8oHyD06TQdcapmU67l15lmej3THEIg+Uk7tda4mjqnJ0
+         bDZyJBqA8EfL35/f8nA/Ai2Qjk6Xy4WQMV4XJlra2wQQH4iUBJ5vqqTANwg6sAf2vUon
+         wHrJjdc6mogui8lRnSdZNvS/VK6b99nhmNBNQqpB+eM5AZSfXdpaqGbSEg28VXVl40JW
+         Abmz7NzMi5WhBilQ0g1/BmKrjQ/HOGVUeu9AqeOIUhLx4Qbke0IAF7RvBrUJBjY4uDOB
+         +IptN4SWnr09omwY9xI15f2H2jPshs1QCkrmn5+qzzhyXn6ybptCd6ifNC7wpaL0nS3q
+         Uvtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744222782; x=1744827582;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZRkdAw/O8yrVTjU62SZ7m2qGSTADfRdfbRSj5I/AWsQ=;
+        b=Pbirj5mmnr3LD51STCXA90zn6CX+ZKwqp/r0/oXDvGYK+e7zOlLoOrkpc4JXo8Ed0S
+         IHbtVhgWj+S8JyWezEvabexsbLyHEYCORk5bsj50Mrkip4nYPnNjnKqrNmixO8K0z4Vd
+         vSkYiSt5VZTNrRZnMKhzsCpCckFGPH0d8XhDlT1szBymwYaN/7opmo+MEzh2wuLIyAvH
+         Ai8ZxC4XgCBGxb2rZyBcm5qT2BaZejLO/GY3WR15pSurznQUQ0hvE99mH5Ox8dxl0mJv
+         ID+RUrJjBOIf5Kt6zAFt+OpohMx1GXMwO+EmzEI58jwGIzm1tqNFRUhMs8iA6FCEjpCU
+         XhCQ==
+X-Gm-Message-State: AOJu0Yyorv8GZ0IbUYKid3Z8KQE68VNNQjPi0tdZlklTOWAdHoucfhVF
+	07lwN20F6bZKKniLDk1BRAsfZ9ibByvA6v2SBO9o3CDJnvEnOGYq
+X-Gm-Gg: ASbGncsqj5TNMMQr8XdlVs0ZEBJH6mX0cMiMd8XOpgRggHi/X4opcYGHRhnzc3gSzX8
+	cVvRzpDwRRqN3ca+Wr6/TUqUZcp2cU7+TKU1C25fdZF+JRg/WVu9hcWb1FIiDt6uwKu7sM8WnQE
+	uJ+u7wTPHwJKX9IfAqc5sPNFaNWCSBVtoK987//wcaLzPSjbYwfUghJPkRqK4/3pN922bQTqNla
+	ThHSw77BPBfnUQKj5h05XNuDzZOrpQ0g+WGvk+YWlefITV5DUDKqS9ulxi5zmoKpmLHb5OA8i8d
+	txUzKBUGoYsfBpy8M6fCM8VoIk2zm4023HXTnak=
+X-Google-Smtp-Source: AGHT+IHuqCMwGTRZ+yF9I/abkMoPMuD6/UCG0kZznYiwYzeSe293GLaO0jKXZs52wL+/lth5VNRcKQ==
+X-Received: by 2002:a05:6a20:9f4b:b0:1f5:9208:3ac7 with SMTP id adf61e73a8af0-201695dc392mr42764637.41.1744222782166;
+        Wed, 09 Apr 2025 11:19:42 -0700 (PDT)
+Received: from jemmy.. ([223.167.142.48])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b02a0cf2571sm1564472a12.19.2025.04.09.11.19.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 11:19:41 -0700 (PDT)
+From: Jemmy Wong <jemmywong512@gmail.com>
+To: Willy Tarreau <w@1wt.eu>,
+	linux@weissschuh.net
+Cc: linux-kernel@vger.kernel.org,
+	Jemmy Wong <Jemmywong512@gmail.com>
+Subject: [PATCH] fix mismatched parentheses
+Date: Thu, 10 Apr 2025 02:19:34 +0800
+Message-ID: <20250409181934.5589-1-jemmywong512@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3895; i=brauner@kernel.org; h=from:subject:message-id; bh=WejBdoRPjchDP+2aS+M1B7jTNfwEzrO0CEc9FW4eZTM=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaR/2yUUafg74wtjSsKjTxY2resDlsfXLFzBrXFwl7FOq y6P5JM9HaUsDGJcDLJiiiwO7Sbhcst5KjYbZWrAzGFlAhnCwMUpABM5zcHIMOfvYZ6uJ0+VpbvZ W68y3q2u6Co4ayHvyPJlQvANv711JxkZ/u9jVotMzCib2phx7vXjT/O6Th1gSKye8f6SbuCLW7w zGQE=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 
-In a prior patch series we tried to cleanly differentiate between:
+Corrects an imbalance where opening parentheses exceed closing ones.
 
-(1) The task has already been reaped.
-(2) The caller requested a pidfd for a thread-group leader but the pid
-    actually references a struct pid that isn't used as a thread-group
-    leader.
+Signed-off-by: Jemmy Wong <Jemmywong512@gmail.com>
 
-as this was causing issues for non-threaded workloads.
-
-But there's cases where the current simple logic is wrong. Specifically,
-if the pid was a leader pid and the check races with __unhash_process().
-
-Stabilize this by using a sequence counter associated with tasklist_lock
-and retry while we're in __unhash_process(). The seqcounter might be
-useful independent of pidfs.
-
-Signed-off-by: Christian Brauner <brauner@kernel.org>
 ---
- include/linux/pid.h |  1 +
- kernel/exit.c       | 11 +++++++++++
- kernel/fork.c       | 22 ++++++++++++----------
- kernel/pid.c        |  1 +
- 4 files changed, 25 insertions(+), 10 deletions(-)
+ tools/include/nolibc/types.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/pid.h b/include/linux/pid.h
-index 311ecebd7d56..b54a4c1ef602 100644
---- a/include/linux/pid.h
-+++ b/include/linux/pid.h
-@@ -65,6 +65,7 @@ struct pid
- 	struct hlist_head inodes;
- 	/* wait queue for pidfd notifications */
- 	wait_queue_head_t wait_pidfd;
-+	seqcount_rwlock_t pid_seq;
- 	struct rcu_head rcu;
- 	struct upid numbers[];
- };
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 1b51dc099f1e..8050572fe682 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -133,17 +133,28 @@ struct release_task_post {
- static void __unhash_process(struct release_task_post *post, struct task_struct *p,
- 			     bool group_dead)
- {
-+	struct pid *pid;
-+
-+	lockdep_assert_held_write(&tasklist_lock);
-+
- 	nr_threads--;
-+
-+	pid = task_pid(p);
-+	raw_write_seqcount_begin(&pid->pid_seq);
- 	detach_pid(post->pids, p, PIDTYPE_PID);
- 	if (group_dead) {
- 		detach_pid(post->pids, p, PIDTYPE_TGID);
- 		detach_pid(post->pids, p, PIDTYPE_PGID);
- 		detach_pid(post->pids, p, PIDTYPE_SID);
-+	}
-+	raw_write_seqcount_end(&pid->pid_seq);
+diff --git a/tools/include/nolibc/types.h b/tools/include/nolibc/types.h
+index b26a5d0c417c..b57e054cca82 100644
+--- a/tools/include/nolibc/types.h
++++ b/tools/include/nolibc/types.h
+@@ -201,7 +201,7 @@ struct stat {
+ /* WARNING, it only deals with the 4096 first majors and 256 first minors */
+ #define makedev(major, minor) ((dev_t)((((major) & 0xfff) << 8) | ((minor) & 0xff)))
+ #define major(dev) ((unsigned int)(((dev) >> 8) & 0xfff))
+-#define minor(dev) ((unsigned int)(((dev) & 0xff))
++#define minor(dev) ((unsigned int)(((dev) & 0xff)))
  
-+	if (group_dead) {
- 		list_del_rcu(&p->tasks);
- 		list_del_init(&p->sibling);
- 		__this_cpu_dec(process_counts);
- 	}
-+
- 	list_del_rcu(&p->thread_node);
- }
- 
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 4a2080b968c8..1480bf6f5f38 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -2109,24 +2109,26 @@ static int __pidfd_prepare(struct pid *pid, unsigned int flags, struct file **re
- int pidfd_prepare(struct pid *pid, unsigned int flags, struct file **ret)
- {
- 	int err = 0;
-+	unsigned int seq;
- 
--	if (!(flags & PIDFD_THREAD)) {
-+	do {
-+		seq = raw_seqcount_begin(&pid->pid_seq);
- 		/*
- 		 * If this is struct pid isn't used as a thread-group
- 		 * leader pid but the caller requested to create a
- 		 * thread-group leader pidfd then report ENOENT to the
- 		 * caller as a hint.
- 		 */
--		if (!pid_has_task(pid, PIDTYPE_TGID))
-+		if (!(flags & PIDFD_THREAD) && !pid_has_task(pid, PIDTYPE_TGID))
- 			err = -ENOENT;
--	}
--
--	/*
--	 * If this wasn't a thread-group leader struct pid or the task
--	 * got reaped in the meantime report -ESRCH to userspace.
--	 */
--	if (!pid_has_task(pid, PIDTYPE_PID))
--		err = -ESRCH;
-+		/*
-+		 * If this wasn't a thread-group leader struct pid or
-+		 * the task got reaped in the meantime report -ESRCH to
-+		 * userspace.
-+		 */
-+		if (!pid_has_task(pid, PIDTYPE_PID))
-+			err = -ESRCH;
-+	} while (read_seqcount_retry(&pid->pid_seq, seq));
- 	if (err)
- 		return err;
- 
-diff --git a/kernel/pid.c b/kernel/pid.c
-index 4ac2ce46817f..bbca61f62faa 100644
---- a/kernel/pid.c
-+++ b/kernel/pid.c
-@@ -271,6 +271,7 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
- 	upid = pid->numbers + ns->level;
- 	idr_preload(GFP_KERNEL);
- 	spin_lock(&pidmap_lock);
-+	seqcount_rwlock_init(&pid->pid_seq, &tasklist_lock);
- 	if (!(ns->pid_allocated & PIDNS_ADDING))
- 		goto out_unlock;
- 	pidfs_add_pid(pid);
+ #ifndef offsetof
+ #define offsetof(TYPE, FIELD) ((size_t) &((TYPE *)0)->FIELD)
 -- 
-2.47.2
+2.43.0
 
