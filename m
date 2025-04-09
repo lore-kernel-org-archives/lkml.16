@@ -1,82 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C389326FD99;
-	Wed,  9 Apr 2025 16:47:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DBB926FD99;
+	Wed,  9 Apr 2025 16:48:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744217257; cv=none; b=RXRl+/BwY3bGm0BKGE5yzUfim6nh1LtHmMVlMlqMLm1m6vxTo5uRlvBnYeGGqF/DeIBDu6rIPsuTPanRdBKRqh53FXts/dRuRh28/2OsBlGzWv8peS6zHTCz1zNyJAsmUMOWrDjXM7sxMLQv2h9paQ/747eMUyf6pmxm8zdYgxc=
+	t=1744217294; cv=none; b=gEFpGXYHsQpsJAfNlWx1MCH31pteDpEy89FJmp/j/tM2I2zgl4ho43bSR5CcrlAL/Z1QV4g6jR+gQooPvirqPyK8Bo/2bhNNzfC7yWemdzmdvRfqxbkTFKP/35tJXUlHgHtxdOD1MtHzFkB1FBJ8HdbHCo7fMJ8auS4QuTe7Tvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744217257; c=relaxed/simple;
-	bh=Hjw4v5OLo085UBRbutbpnMjWuHi68TiVyARn066UPRg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MtwkTyAdhIl7ep3hGpffnVhBWQfVTr1e9zW9lOpsHU33SHon2He7EJWs5auu9j6wQ4i/X9NSqvv+Cg8JyXk0Yytps3GOWG6Ix5TAn4CTFpC8nNXSqJaUBlfo49Z5zUUjE/zAr5SUY1KfMEYKTVhdTq3BkAstAiikhLm9sL4QOGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C303C4CEE2;
-	Wed,  9 Apr 2025 16:47:36 +0000 (UTC)
-Date: Wed, 9 Apr 2025 12:48:55 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Ayush Jain <Ayush.jain3@amd.com>
-Cc: <mhiramat@kernel.org>, <mathieu.desnoyers@efficios.com>,
- <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
- <linux-kselftest@vger.kernel.org>, <Naveen.Rao@amd.com>,
- <Kalpana.Shetty@amd.com>, <Narasimhan.V@amd.com>, Shuah Khan
- <skhan@linuxfoundation.org>
-Subject: Re: [PATCH v2] selftests/ftrace: Convert poll to a gen_file
-Message-ID: <20250409124855.4dc8fd58@gandalf.local.home>
-In-Reply-To: <20250409044632.363285-1-Ayush.jain3@amd.com>
-References: <20250409044632.363285-1-Ayush.jain3@amd.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1744217294; c=relaxed/simple;
+	bh=vi1LQCaAJfP94bRltPYH+PzIpGzW6NDA4xBuvlrXDb0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ONXRLBqGsni+ZvP4vbPjIAt6NGMHfY0wx6FjOnjSa1x7hj+42RXnsQH/XTw+IV0kVVOpHtm+lvEwqNhVizKTfgISbHG0v0pG1cmwH541TR8d+KLYSmf2X93fq0jpHlmO8W7PcNzd1l/z9UeUkFjBkFYDbBsJ0nZVnQwwJr9YWvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lEYxxgUq; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lEYxxgUq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744217292; x=1775753292;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=vi1LQCaAJfP94bRltPYH+PzIpGzW6NDA4xBuvlrXDb0=;
+  b=lEYxxgUqAv1fel/oKGbfDNcHwFS4psQSJn8LQkoL12Evypz5Wl3f6wEx
+   csl8pOGj1tyYyNXG4iMw4/NJ/wdiifSyY7GV8VNt858GNqT5cniyBgNjm
+   kX3TrQN6YPBYm3xAvrrcMQcj5SXJaImqfM+w+mYjoNm6xPjqkR1v6nc/W
+   a6XhqHWu7LQUgPsv38ZG8ZPW6xpGsscfnbVx0s3u0Zrx1D38AWcdQKaUB
+   4niF9baWgkpBfyhDkSWS0r8mqJZhsF0NSH6juF9mSGEqPGG7p+OOYxtiA
+   Kfb6Tq597fS/Z0Ma/6IOovNdljtOBKianiBrs8Jd5qgBjElLFV8kD1noD
+   w==;
+X-CSE-ConnectionGUID: NNtBUsPlSNacpryvX/RrpQ==
+X-CSE-MsgGUID: APVOB/sWRoK+fdlm4dB6VA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="71082562"
+X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
+   d="scan'208";a="71082562"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 09:47:47 -0700
+X-CSE-ConnectionGUID: ck4eHUrLTDehlzYvH06edw==
+X-CSE-MsgGUID: 3MYIgIc6S0+ZyxLkwOC/0A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
+   d="scan'208";a="159607974"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 09:47:46 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1u2YaV-0000000Anbu-247i;
+	Wed, 09 Apr 2025 19:47:43 +0300
+Date: Wed, 9 Apr 2025 19:47:43 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Kent Gibson <warthog618@gmail.com>,
+	Matti Vaittinen <mazziesaccount@gmail.com>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH] gpiolib: don't allow setting values on input lines
+Message-ID: <Z_akr_b7wSQJSK3T@smile.fi.intel.com>
+References: <20250311-gpio-set-check-output-v1-1-d971bca9e6fa@linaro.org>
+ <CACRpkdYujYhF8VP-_6O4Bt2tWL-NO-GgQPr=DeqE9QwCq12gqg@mail.gmail.com>
+ <CAMRc=MdwQZMDaHn15n4zgCujtDRg=UUwz3A9ZUYY9Uv7FFgz2Q@mail.gmail.com>
+ <Z_aGZqsUXq2uyQfC@black.fi.intel.com>
+ <CAMRc=MdsRWNVT0XC1DvwBdhZFsVZO6DeMrVePKgiF4Mj_Ryykg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MdsRWNVT0XC1DvwBdhZFsVZO6DeMrVePKgiF4Mj_Ryykg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, 9 Apr 2025 04:46:32 +0000
-Ayush Jain <Ayush.jain3@amd.com> wrote:
+On Wed, Apr 09, 2025 at 06:43:47PM +0200, Bartosz Golaszewski wrote:
+> On Wed, Apr 9, 2025 at 4:38 PM Andy Shevchenko
+> <andriy.shevchenko@intel.com> wrote:
+> > On Fri, Mar 14, 2025 at 11:35:21AM +0100, Bartosz Golaszewski wrote:
+> > > On Fri, Mar 14, 2025 at 11:33 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+> > > > On Tue, Mar 11, 2025 at 3:20 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > > >
+> > > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > > >
+> > > > > Some drivers as well as the character device and sysfs code check
+> > > > > whether the line actually is in output mode before allowing the user to
+> > > > > set a value.
+> > > > >
+> > > > > However, GPIO value setters now return integer values and can indicate
+> > > > > failures. This allows us to move these checks into the core code.
+> > > > >
+> > > > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > >
+> > > > Makes sense, if there are regressions let's smoke them out
+> > > > in linux-next.
+> > > >
+> > > > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> > >
+> > > Thanks. I decided not to queue it for v6.15 for exactly that reason,
+> > > I'll pick it up early into the v6.16 cycle and let it sit in next for
+> > > several weeks.
+> >
+> > As far as I can tell from the reading of the code, this will break the open
+> > drain emulation. Am I mistaken?
+> 
+> Could you produce a call trace where this could result in a breakage?
 
-> Poll program is a helper to ftracetest, thus make it a
-> generic file and remove it from being run as a test.
-> 
-> Currently when executing tests using
->     $ make run_tests
->       CC       poll
->     TAP version 13
->     1..2
->     # timeout set to 0
->     # selftests: ftrace: poll
->     # Error: Polling file is not specified
->     not ok 1 selftests: ftrace: poll # exit=255
-> 
-> Fix this by using TEST_GEN_FILES to build the 'poll' binary as a helper
-> rather than as a test.
-> 
-> Fixes: 80c3e28528ff ("selftests/tracing: Add hist poll() support test")
-> 
-> Signed-off-by: Ayush Jain <Ayush.jain3@amd.com>
+I can't right now, my comment was based on the my (mis)understanding of
+the code flow.
 
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> I tested open-drain and open-source emulation but maybe I'm missing
+> something.
 
--- Steve
+I;m glad to know that you tested this! So, it means that I misunderstood
+something.
 
-> ---
->  tools/testing/selftests/ftrace/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/ftrace/Makefile b/tools/testing/selftests/ftrace/Makefile
-> index 49d96bb16355..7c12263f8260 100644
-> --- a/tools/testing/selftests/ftrace/Makefile
-> +++ b/tools/testing/selftests/ftrace/Makefile
-> @@ -6,6 +6,6 @@ TEST_PROGS := ftracetest-ktap
->  TEST_FILES := test.d settings
->  EXTRA_CLEAN := $(OUTPUT)/logs/*
->  
-> -TEST_GEN_PROGS = poll
-> +TEST_GEN_FILES := poll
->  
->  include ../lib.mk
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
