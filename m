@@ -1,38 +1,38 @@
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77ED5263C78
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 13:13:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77E75263C76
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 13:13:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744204400; cv=none; b=ecRXRsY/zdFEjCX68uu/9MwK5pwGKT4/HYAGLRvYXrd4UIYe2PB0gEr75Xqw73l1nRzu7NKGmpO4mkAljcPz0/2yJPqnWNh2Dzjyv6ylGJAvmExkIF21XUnqOW+GtdzULwMP6rueFXeAzS8uJZEVHPPZlx2EDyXR0mFIxDfajIs=
+	t=1744204400; cv=none; b=idH+wbgJ+70ruD8zxesH29BMmTz3TbHI2vwVSEOQ35E/28W2coZBK2igi2tTJri4fd5+X6/uGvtE6TEwqM8IT7QzWkYZ4VzT8WsoLjoQ88FrHf5lKYvIEENU237QaBqNxyNFGbD5X3ki3oLgS2DbHvkr1pPgvz19M9vzOo1nxOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744204400; c=relaxed/simple;
-	bh=CG25b6n9nGE5IFWaYyW41HSL8jKv0tYuhZeoxo8nyso=;
+	bh=pjKrGK2aEr7zkX+T3vxIp/LJ9TSuRWsNbfcccXAMTV4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NtSWm3umC1dfU0wDVIWFR7o7abkcRKRSW5nBwNHO4n4tIIQjSu0nrzm0ePw15aNjpnmla0tXrBc8GveTEz5SxX9eBZyQaIg8DPGChPDKfbXMV0zB6gCGYFLIOv9Gt3l061kT57pEfOwxIdUc9W6Y966UUdo5y2tRtK1+MSjii3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=BQ8IdTx/; arc=none smtp.client-ip=148.251.105.195
+	 MIME-Version; b=INXGtzrzTcOycVVgHDrQvZt4XFs7SA5UDbyIykm2Qghkyz4W/MGzyTfaoADzLjKbKV40KGBw/TcJkO+HSqJFNCcgKFSZ2efql+SRGYgJZtHlA4QqJ+IjKt/CEPb28vN2aOxwTc5qUTYsT+RPBEjHKyupwpcNN0sRj0vw7oaLY1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=gXCy5yl5; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="BQ8IdTx/"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="gXCy5yl5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1744204396;
-	bh=CG25b6n9nGE5IFWaYyW41HSL8jKv0tYuhZeoxo8nyso=;
+	s=mail; t=1744204395;
+	bh=pjKrGK2aEr7zkX+T3vxIp/LJ9TSuRWsNbfcccXAMTV4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BQ8IdTx/bzMVxrkWX9HLnu4rDqwHKJQYA4imHPW5DQjX66I/fl5HCsan8xLQAxCmq
-	 kenreOatWfPVLEAJgMRj7GPjUmTtq3mxLrPwLDLb5do2aITAOpix/vwvBpGJRV0kf1
-	 72G8CFSbx+sPds2SyO6AIB676JkHBjCpE6oBqHo8/ISb/tzNOnXDWVZZxVGQs12Jn4
-	 6vRxS/BCFs4iSCxkQ3DJPembhutsoj1Uj5TMYO40c7JsOVXxj0brYccqj/3l0LL/sI
-	 A/w3/tXdBT/8PyIGC47ct/4VzWtZXnqf1My0ge1vqjorFY3Q8nIpsQv7609tWtH9Xv
-	 hK/z3EkJOyi8Q==
+	b=gXCy5yl59A3Qjsx8C3KBLyS5J9WGi57d1p8L7g0tOwq4WkuzlHv2toE6mle+T1q6m
+	 f0Aw+ld54eC/U6vu7uIn0+b7P0707dbphVRUp/L2QyfhkGYymBht4UhAq9/SChDim8
+	 samN665teK77+WtZksjGaqlyBkPn1STL2I5BspOzP+eQE7EqVPxlieF+27lQCQYxWK
+	 LtdUw65fFG0Gb1QaycdnZJrsMYnkP2b6qAzGSlOdXdB3ORq2J5ZFVyYPYvwIRQwN0N
+	 Y69I7KO96BO+lK2S2b/sWmeDZc+HAoi8kJjx7cPvw+t7YnTLdVvAtiDPQAvkeF2/qT
+	 W9o4JXiMVapyQ==
 Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id C857D17E0F85;
-	Wed,  9 Apr 2025 15:13:15 +0200 (CEST)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id CC40917E0EB8;
+	Wed,  9 Apr 2025 15:13:14 +0200 (CEST)
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 To: chunkuang.hu@kernel.org
 Cc: p.zabel@pengutronix.de,
@@ -49,9 +49,9 @@ Cc: p.zabel@pengutronix.de,
 	ives.chenjh@mediatek.com,
 	tommyyl.chen@mediatek.com,
 	jason-jh.lin@mediatek.com
-Subject: [PATCH v1 4/5] drm/mediatek: mtk_dpi: Allow additional output formats on MT8195/88
-Date: Wed,  9 Apr 2025 15:13:05 +0200
-Message-ID: <20250409131306.108635-5-angelogioacchino.delregno@collabora.com>
+Subject: [PATCH v1 3/5] drm/mediatek: mtk_dpi: Add support for additional output formats
+Date: Wed,  9 Apr 2025 15:13:04 +0200
+Message-ID: <20250409131306.108635-4-angelogioacchino.delregno@collabora.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250409131306.108635-1-angelogioacchino.delregno@collabora.com>
 References: <20250409131306.108635-1-angelogioacchino.delregno@collabora.com>
@@ -63,68 +63,103 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Allow additional output formats in both DPI and DP_INTF blocks of
-the MT8195 and MT8188 SoCs (as the latter is fully compatible with,
-hence reuses, the former's platform data for both blocks) by adding:
+Add support for configuring the Display Parallel Interface block
+to output YUV444 8/10 bits, YUV422 10/12 bits (8 bits support is
+already present), BGR 8-bits, and RGB 10-bits.
 
-1. New formats to the `mt8195_output_fmts` array for dp_intf,
-   lacking YUV422 12-bits support, and adding RGB888 2X12_LE/BE
-   (8-bits), BGR888 (8-bits) RGB101010 1x30 (10-bits), and YUV
-   formats, including YUV422 8/10 bits, and YUV444 8/10 bits; and
-2. A new `mt8195_dpi_output_fmts` array for DPI only, with all of
-   for formats added to dp_intf and with the addition of the
-   YUYV12_1X24 (YUV422 12-bits) output format.
+The enablement of the various additional output formats in SoCs
+platform data will be done in a different change.
 
 Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 ---
- drivers/gpu/drm/mediatek/mtk_dpi.c | 24 ++++++++++++++++++++++--
- 1 file changed, 22 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_dpi.c | 33 ++++++++++++++++++++++++++++--
+ 1 file changed, 31 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
-index a9e8113a1618..9de537a77493 100644
+index 5a66dfe3ad40..a9e8113a1618 100644
 --- a/drivers/gpu/drm/mediatek/mtk_dpi.c
 +++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
-@@ -1093,9 +1093,29 @@ static const u32 mt8183_output_fmts[] = {
- 	MEDIA_BUS_FMT_RGB888_2X12_BE,
+@@ -59,7 +59,8 @@ enum mtk_dpi_out_channel_swap {
+ 
+ enum mtk_dpi_out_color_format {
+ 	MTK_DPI_COLOR_FORMAT_RGB,
+-	MTK_DPI_COLOR_FORMAT_YCBCR_422
++	MTK_DPI_COLOR_FORMAT_YCBCR_422,
++	MTK_DPI_COLOR_FORMAT_YCBCR_444
  };
  
-+static const u32 mt8195_dpi_output_fmts[] = {
-+	MEDIA_BUS_FMT_RGB888_1X24,
-+	MEDIA_BUS_FMT_RGB888_2X12_LE,
-+	MEDIA_BUS_FMT_RGB888_2X12_BE,
-+	MEDIA_BUS_FMT_RGB101010_1X30,
-+	MEDIA_BUS_FMT_YUYV8_1X16,
-+	MEDIA_BUS_FMT_YUYV10_1X20,
-+	MEDIA_BUS_FMT_YUYV12_1X24,
-+	MEDIA_BUS_FMT_BGR888_1X24,
-+	MEDIA_BUS_FMT_YUV8_1X24,
-+	MEDIA_BUS_FMT_YUV10_1X30,
-+};
-+
- static const u32 mt8195_output_fmts[] = {
- 	MEDIA_BUS_FMT_RGB888_1X24,
-+	MEDIA_BUS_FMT_RGB888_2X12_LE,
-+	MEDIA_BUS_FMT_RGB888_2X12_BE,
-+	MEDIA_BUS_FMT_RGB101010_1X30,
- 	MEDIA_BUS_FMT_YUYV8_1X16,
-+	MEDIA_BUS_FMT_YUYV10_1X20,
-+	MEDIA_BUS_FMT_BGR888_1X24,
-+	MEDIA_BUS_FMT_YUV8_1X24,
-+	MEDIA_BUS_FMT_YUV10_1X30,
- };
+ struct mtk_dpi {
+@@ -450,9 +451,15 @@ static void mtk_dpi_config_disable_edge(struct mtk_dpi *dpi)
+ static void mtk_dpi_config_color_format(struct mtk_dpi *dpi,
+ 					enum mtk_dpi_out_color_format format)
+ {
+-	mtk_dpi_config_channel_swap(dpi, MTK_DPI_OUT_CHANNEL_SWAP_RGB);
++	mtk_dpi_config_channel_swap(dpi, dpi->channel_swap);
  
- static const struct mtk_dpi_factor dpi_factor_mt2701[] = {
-@@ -1208,8 +1228,8 @@ static const struct mtk_dpi_conf mt8192_conf = {
+ 	switch (format) {
++	case MTK_DPI_COLOR_FORMAT_YCBCR_444:
++		mtk_dpi_config_yuv422_enable(dpi, false);
++		mtk_dpi_config_csc_enable(dpi, true);
++		if (dpi->conf->swap_input_support)
++			mtk_dpi_config_swap_input(dpi, false);
++		break;
+ 	case MTK_DPI_COLOR_FORMAT_YCBCR_422:
+ 		mtk_dpi_config_yuv422_enable(dpi, true);
+ 		mtk_dpi_config_csc_enable(dpi, true);
+@@ -743,10 +750,18 @@ static unsigned int mtk_dpi_bus_fmt_bit_num(unsigned int out_bus_format)
+ 	switch (out_bus_format) {
+ 	default:
+ 	case MEDIA_BUS_FMT_RGB888_1X24:
++	case MEDIA_BUS_FMT_BGR888_1X24:
+ 	case MEDIA_BUS_FMT_RGB888_2X12_LE:
+ 	case MEDIA_BUS_FMT_RGB888_2X12_BE:
+ 	case MEDIA_BUS_FMT_YUYV8_1X16:
++	case MEDIA_BUS_FMT_YUV8_1X24:
+ 		return MTK_DPI_OUT_BIT_NUM_8BITS;
++	case MEDIA_BUS_FMT_RGB101010_1X30:
++	case MEDIA_BUS_FMT_YUYV10_1X20:
++	case MEDIA_BUS_FMT_YUV10_1X30:
++		return MTK_DPI_OUT_BIT_NUM_10BITS;
++	case MEDIA_BUS_FMT_YUYV12_1X24:
++		return MTK_DPI_OUT_BIT_NUM_12BITS;
+ 	}
+ }
  
- static const struct mtk_dpi_conf mt8195_conf = {
- 	.max_clock_khz = 594000,
--	.output_fmts = mt8183_output_fmts,
--	.num_output_fmts = ARRAY_SIZE(mt8183_output_fmts),
-+	.output_fmts = mt8195_dpi_output_fmts,
-+	.num_output_fmts = ARRAY_SIZE(mt8195_dpi_output_fmts),
- 	.pixels_per_iter = 1,
- 	.is_ck_de_pol = true,
- 	.swap_input_support = true,
+@@ -757,8 +772,15 @@ static unsigned int mtk_dpi_bus_fmt_channel_swap(unsigned int out_bus_format)
+ 	case MEDIA_BUS_FMT_RGB888_1X24:
+ 	case MEDIA_BUS_FMT_RGB888_2X12_LE:
+ 	case MEDIA_BUS_FMT_RGB888_2X12_BE:
++	case MEDIA_BUS_FMT_RGB101010_1X30:
+ 	case MEDIA_BUS_FMT_YUYV8_1X16:
++	case MEDIA_BUS_FMT_YUYV10_1X20:
++	case MEDIA_BUS_FMT_YUYV12_1X24:
+ 		return MTK_DPI_OUT_CHANNEL_SWAP_RGB;
++	case MEDIA_BUS_FMT_BGR888_1X24:
++	case MEDIA_BUS_FMT_YUV8_1X24:
++	case MEDIA_BUS_FMT_YUV10_1X30:
++		return MTK_DPI_OUT_CHANNEL_SWAP_BGR;
+ 	}
+ }
+ 
+@@ -767,11 +789,18 @@ static unsigned int mtk_dpi_bus_fmt_color_format(unsigned int out_bus_format)
+ 	switch (out_bus_format) {
+ 	default:
+ 	case MEDIA_BUS_FMT_RGB888_1X24:
++	case MEDIA_BUS_FMT_BGR888_1X24:
+ 	case MEDIA_BUS_FMT_RGB888_2X12_LE:
+ 	case MEDIA_BUS_FMT_RGB888_2X12_BE:
++	case MEDIA_BUS_FMT_RGB101010_1X30:
+ 		return MTK_DPI_COLOR_FORMAT_RGB;
+ 	case MEDIA_BUS_FMT_YUYV8_1X16:
++	case MEDIA_BUS_FMT_YUYV10_1X20:
++	case MEDIA_BUS_FMT_YUYV12_1X24:
+ 		return MTK_DPI_COLOR_FORMAT_YCBCR_422;
++	case MEDIA_BUS_FMT_YUV8_1X24:
++	case MEDIA_BUS_FMT_YUV10_1X30:
++		return MTK_DPI_COLOR_FORMAT_YCBCR_444;
+ 	}
+ }
+ 
 -- 
 2.49.0
 
