@@ -1,220 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B231525F78B;
-	Wed,  9 Apr 2025 13:19:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBA1A264FBA
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 13:19:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744204756; cv=none; b=mze+2xhAkN62rLrRezJfiZF+TQL/uMEznMcwk/gnI6AR4IpfAxxhs1s4ziCWurTRkArFiKeSWizsJAMFiO5V4s4QbGq7/+A/H7EVEO28JY2IUmz52ENRmJG15NxQ0XgS1KNAYqIK9P2mZp9PwV5r2+tDBbVnNhV+1Iz7bTdURbE=
+	t=1744204777; cv=none; b=im71OpWYbPW1ObSDKexlE9B2ruVX85EQz29AnaZbMm34q6xTkVujKwQeT8t8XYsPuDIlMR6f/k/5gNkj5hhsckM2zBjncLOdBQKjhxrbsw5KONO5J+wMbH0ezES4hOFpRCG/T9qQst633EDOzotv+9Z6H69vjegJwhXGhgvlpBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744204756; c=relaxed/simple;
-	bh=ny9pPvFJ5Zid+zmKB7nDp5AE59k+FfvC0LsxKtkgDto=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OzALAsrtdVidekAl46nI+O/1CVAVFbDiUR+xDUfrhbdgwHkONImQfAkg1KCb0wjxYyo5/sw6/F8meN8ZPriEuUrQ7h8O+8ht1c/gtS8iQ+4mzt14THg+43t4Sv07FomAL/rB72ERg3EmPVQNjjj6UzqQnbAfz1lxVdn36uU/fdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oYiPNUPN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744204777; c=relaxed/simple;
+	bh=QnEbq81WG/G4uWQ0H7Xdkr/N+XKj9P55Wll6BVS07fE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=jMqqZVyQRapxwRQjbz/4a4X7f8BTKIhZY3ntAcqBXk9vNxOykvrajv4TAOKOGS+BH/fwkV31kPwi1jdhN9EzQxh5CHQlEw2h6EECrwliOa3tC3CKnTeAvhk8D9D6g9yH097YlKguU4OoyI98Xce/HPjBCm7GMQ3Cy5lXREdCVvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=partner.samsung.com; spf=pass smtp.mailfrom=partner.samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=WDoJkqId; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=partner.samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=partner.samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oYiPNUPN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F353CC4CEE7;
-	Wed,  9 Apr 2025 13:19:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744204754;
-	bh=ny9pPvFJ5Zid+zmKB7nDp5AE59k+FfvC0LsxKtkgDto=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oYiPNUPNRquxwDEcnEDR0gurvjOXJDwRrKViTi0bTN9MxKlniyZtOTGFdtzWnBV1N
-	 cxa7dyL3PCVMjnMAnkUQwFkXKbSDqstnaWgawP9OjCBvqdOZFKw4ZkBz6hPax0VboI
-	 A7T1OHaAOOXkXNB1CbHV1gxRb7JDlBHSCZQ6fuVw6tMJSbFWpB7TN208lKOod0eTA9
-	 pP7gU8drcOYoeLCgLTU8LZ3BdLL9gkJC/vEyM/tF/0WIwXIpAzNaSYzBvWZnTDDI8b
-	 dqX6UPu6kuS3f6ion31atJwZTjavkTM4EmHwnSgbRQspC6GP6JXrA5W6ULuQ/mxonY
-	 7T8sIy5WIw/dQ==
-Date: Wed, 9 Apr 2025 18:49:03 +0530
-From: Sumit Garg <sumit.garg@kernel.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: Jens Wiklander <jens.wiklander@linaro.org>, akpm@linux-foundation.org,
-	rppt@linux.ibm.com, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, op-tee@lists.trustedfirmware.org,
-	linux-arm-kernel@lists.infradead.org,
-	Olivier Masse <olivier.masse@nxp.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Yong Wu <yong.wu@mediatek.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
-	Brian Starkey <Brian.Starkey@arm.com>,
-	John Stultz <jstultz@google.com>,
-	"T . J . Mercier" <tjmercier@google.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	azarrabi@qti.qualcomm.com, Simona Vetter <simona.vetter@ffwll.ch>,
-	Daniel Stone <daniel@fooishbar.org>, linux-mm@kvack.org
-Subject: Re: [PATCH v6 09/10] optee: FF-A: dynamic restricted memory
- allocation
-Message-ID: <Z_Zzx8ixuCs2Ste1@sumit-X1>
-References: <20250305130634.1850178-1-jens.wiklander@linaro.org>
- <20250305130634.1850178-10-jens.wiklander@linaro.org>
- <Z-JePo6yGlUgrZkw@sumit-X1>
- <CAHUa44H1MzBLBM+Oeawca52C8PF3uAT0ggbL-zRdnBqj4LYrZg@mail.gmail.com>
- <Z-u8MWNVNy9lLbkK@sumit-X1>
- <561d6050-e24f-4643-806f-8a520e324d11@redhat.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="WDoJkqId"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250409131930euoutp02f0260dd9f48d352eb9755af9a8fc3a00~0qP90u03T2495024950euoutp02v
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 13:19:30 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250409131930euoutp02f0260dd9f48d352eb9755af9a8fc3a00~0qP90u03T2495024950euoutp02v
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1744204770;
+	bh=ajQR5ZKkUJJOfFz3DoIefpGG3D1hZOJkRQa0pPm8NGo=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=WDoJkqIdeW2rHSX7wPM5CfkOwQoriEzGKLW3Uw7g0IZizpvKOo+bbyNtKaWa0AGaa
+	 A1S08+tcUthHK5L26fGCz3wijy2TQE7A2I/7ovpsO8/gPL/pYsCrEyXw18vMqbnqHQ
+	 seVrUVG6mqFiQafE8lxpR5WTjNpkvW3T3nWSg738=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+	20250409131930eucas1p132940cb320ad36d80b90584e8937ac09~0qP9Y_IKW2055320553eucas1p1-;
+	Wed,  9 Apr 2025 13:19:30 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+	eusmges1new.samsung.com (EUCPMTA) with SMTP id 11.D1.20821.2E376F76; Wed,  9
+	Apr 2025 14:19:30 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250409131930eucas1p22b304bf5924a9b3bc43a442d738ebef3~0qP9FOWp70469704697eucas1p2C;
+	Wed,  9 Apr 2025 13:19:30 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250409131930eusmtrp2e2199d72fa0da5ec446bf2fe886b0e1a~0qP9ET3_l3273432734eusmtrp23;
+	Wed,  9 Apr 2025 13:19:30 +0000 (GMT)
+X-AuditID: cbfec7f2-b09c370000005155-4f-67f673e27c40
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+	eusmgms2.samsung.com (EUCPMTA) with SMTP id B2.42.19654.1E376F76; Wed,  9
+	Apr 2025 14:19:29 +0100 (BST)
+Received: from localhost.localdomain (unknown [106.210.135.126]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250409131929eusmtip20dcfc89f65c7cecb613cd2851acda8f5~0qP8qCftP1305413054eusmtip2K;
+	Wed,  9 Apr 2025 13:19:29 +0000 (GMT)
+From: "e.kubanski" <e.kubanski@partner.samsung.com>
+To: linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Cc: bjorn@kernel.org, magnus.karlsson@intel.com,
+	maciej.fijalkowski@intel.com, jonathan.lemon@gmail.com, "e.kubanski"
+	<e.kubanski@partner.samsung.com>
+Subject: [PATCH] xsk: Fix offset calculation in unaligned mode
+Date: Wed,  9 Apr 2025 15:19:13 +0200
+Message-Id: <20250409131913.65179-1-e.kubanski@partner.samsung.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <561d6050-e24f-4643-806f-8a520e324d11@redhat.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Se1BMcRSe3727d68dy20znEJYj5k8Nq/hei2GYVuNjEFEo5Vr7Wi35l4V
+	6zENabQTmm2mtNpph4yUFZu22iIteshbek4TjaLIK/JKabsM/33nfN93XnNIXHpC6E1q9XsZ
+	Vq8OlxFigaP8+4MZrVyPZma/ZTid/z5bQD8/cx6nnZfTcPqpM52gGypeCegsV6WILreOXCZS
+	FpmbRcpzJR2Y0p6dQCjL3pVgym67zzphsHjxTiZcG82wfopQ8e4b6Z+wSJto3wvTvFh0kjAi
+	kgRqLnS/DzaiIaSUykJga1hqROIB/BlB/JN0IR90I0h5XUu4VW5DU4mF4IkLCK73Nor44AuC
+	hDdtyK0iqDlw5GupwI1HUDTYz/YMlsIpM4LMEucg4Ukp4N3Pb7gbC6jJYD3VgrlnklAroO82
+	y3cbB6Vl9wclEsoDqtJeDlrxgfzR/DO4uyZQFhLKTXUYb1gJTb15OI89obPimojHY6C/KAPj
+	DUcRmNMSRHyQiODSsxrEX2MR2KqWuCFO+UKu04/3LgdXwXUhrxgG9V0e/AzDwORIxfm0BI7H
+	S3n1dKh//OpPV2/4mpYn4CVKuBL359IhYEqNJZLQePN/i5n/W8z8bwQrwrPRKCaK02kYbpae
+	iZFzah0XpdfIwyJ0djTwMdV9FZ8KkaXzo9yFMBK5EJC4bIQkSd+jkUp2qvcbGDZiOxsVznAu
+	NJoUyEZJzpYe00gpjXovs4dhIhn2L4uRQ7xjsS2JffJJARZrkNeyLqyxJa/QIJMFeK0oSGnX
+	ud545PYGbZjfmdQQE9psUcRUiVM3hIw9OGHa5tMK46GKk5OTw0z5K33uLdTObrT8KI7uCAFI
+	McqL1+6gH5Wt8u5/S1yc7Zi4acrqZ9G0sMn3xoHHhhOVB2riZa8dkV3t/rK8y4GEKieYsj+M
+	62gLPfIy43BH99CNlXMKFhg3X9jO5oTNZ7b6Vy+5WXvLOTFFV3x1bOSa44Wqu9rCO9uCVs3I
+	rPt4WhuXjGfoE23irG1+vqJf9RdzamdGBPg71t/StLFUK3c/MMGmUsUWbVRM37VnU5A1hOLa
+	q1WK3reGBR8MSk1/zVKZgNutnjUVZzn1b7JcnwmgAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrGLMWRmVeSWpSXmKPExsVy+t/xe7oPi7+lG8ybbG6x9f0qFosHs5cy
+	W+xaN5PZ4vKuOWwWN48/Z7FYcegEu8WxBWIO7B47Z91l91i85yWTx6ZVnWweB9/tYfL4vEku
+	gDVKz6Yov7QkVSEjv7jEVina0MJIz9DSQs/IxFLP0Ng81srIVEnfziYlNSezLLVI3y5BL2Pf
+	nE9MBWvZKx5OMmtg7GPrYuTkkBAwkbi9Zy6QzcUhJLCUUeL2oYVMEAkpiT/r/jBD2MISf651
+	QRV9ZpTYefk8WIJNwFii6ft+FhBbRMBK4sHtf8wgRcwC8xgl5uxazwqSEBawk3j3+wdYA4uA
+	qsSC/vtAGzg4eAWcJf4dKYJYIC+x/+BZsBJeAUGJkzOfgM1kBoo3b53NPIGRbxaS1CwkqQWM
+	TKsYRVJLi3PTc4uN9IoTc4tL89L1kvNzNzECA3zbsZ9bdjCufPVR7xAjEwfjIUYJDmYlEd4J
+	ed/ShXhTEiurUovy44tKc1KLDzGaAp03kVlKNDkfGGN5JfGGZgamhiZmlgamlmbGSuK8bFfO
+	pwkJpCeWpGanphakFsH0MXFwSjUwFd9a6LXdVOzIgp+uTKpx0W+3SfBN36Ax/2Sz4TwJFUeu
+	Z5ke2zdueZCpenJ61Rtn+c/1hcvdamw0zwk0PmC9rKSweMPf9K0c528387r8cv8iPadzRg2n
+	yOtHx+PKTi079+n3A/vTuaIng7baZKY75b1uXtrF/Uj6paJCtOG3rCumMlMOaVy+sXBhxGrO
+	GlGeUi/JBRvZn7sV2KyVvSg069KFiNuPJe9XSMkZ5rx0ZVPTPOek/+25mkHJmvfVdu0mnU+4
+	7098serFuhfzGY4U3vO05Hhs0qB91lyEu/5K7AEWhcRLd9ie9N3vNLy+a196y8oOtd3+mpe2
+	771yuHtO4PdYTV+umLCr/ec/b+F2VmIpzkg01GIuKk4EALRlnqn5AgAA
+X-CMS-MailID: 20250409131930eucas1p22b304bf5924a9b3bc43a442d738ebef3
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250409131930eucas1p22b304bf5924a9b3bc43a442d738ebef3
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20250409131930eucas1p22b304bf5924a9b3bc43a442d738ebef3
+References: <CGME20250409131930eucas1p22b304bf5924a9b3bc43a442d738ebef3@eucas1p2.samsung.com>
 
-Thanks David for your response.
+Offset calculation in unaligned mode didn't
+match previous behaviour.
 
-On Wed, Apr 09, 2025 at 12:01:21PM +0200, David Hildenbrand wrote:
-> On 01.04.25 12:13, Sumit Garg wrote:
-> > + MM folks to seek guidance here.
-> > 
-> > On Thu, Mar 27, 2025 at 09:07:34AM +0100, Jens Wiklander wrote:
-> > > Hi Sumit,
-> > > 
-> > > On Tue, Mar 25, 2025 at 8:42 AM Sumit Garg <sumit.garg@kernel.org> wrote:
-> > > > 
-> > > > On Wed, Mar 05, 2025 at 02:04:15PM +0100, Jens Wiklander wrote:
-> > > > > Add support in the OP-TEE backend driver dynamic restricted memory
-> > > > > allocation with FF-A.
-> > > > > 
-> > > > > The restricted memory pools for dynamically allocated restrict memory
-> > > > > are instantiated when requested by user-space. This instantiation can
-> > > > > fail if OP-TEE doesn't support the requested use-case of restricted
-> > > > > memory.
-> > > > > 
-> > > > > Restricted memory pools based on a static carveout or dynamic allocation
-> > > > > can coexist for different use-cases. We use only dynamic allocation with
-> > > > > FF-A.
-> > > > > 
-> > > > > Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
-> > > > > ---
-> > > > >   drivers/tee/optee/Makefile        |   1 +
-> > > > >   drivers/tee/optee/ffa_abi.c       | 143 ++++++++++++-
-> > > > >   drivers/tee/optee/optee_private.h |  13 +-
-> > > > >   drivers/tee/optee/rstmem.c        | 329 ++++++++++++++++++++++++++++++
-> > > > >   4 files changed, 483 insertions(+), 3 deletions(-)
-> > > > >   create mode 100644 drivers/tee/optee/rstmem.c
-> > > > > 
-> > 
-> > <snip>
-> > 
-> > > > > diff --git a/drivers/tee/optee/rstmem.c b/drivers/tee/optee/rstmem.c
-> > > > > new file mode 100644
-> > > > > index 000000000000..ea27769934d4
-> > > > > --- /dev/null
-> > > > > +++ b/drivers/tee/optee/rstmem.c
-> > > > > @@ -0,0 +1,329 @@
-> > > > > +// SPDX-License-Identifier: GPL-2.0-only
-> > > > > +/*
-> > > > > + * Copyright (c) 2025, Linaro Limited
-> > > > > + */
-> > > > > +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> > > > > +
-> > > > > +#include <linux/errno.h>
-> > > > > +#include <linux/genalloc.h>
-> > > > > +#include <linux/slab.h>
-> > > > > +#include <linux/string.h>
-> > > > > +#include <linux/tee_core.h>
-> > > > > +#include <linux/types.h>
-> > > > > +#include "optee_private.h"
-> > > > > +
-> > > > > +struct optee_rstmem_cma_pool {
-> > > > > +     struct tee_rstmem_pool pool;
-> > > > > +     struct gen_pool *gen_pool;
-> > > > > +     struct optee *optee;
-> > > > > +     size_t page_count;
-> > > > > +     u16 *end_points;
-> > > > > +     u_int end_point_count;
-> > > > > +     u_int align;
-> > > > > +     refcount_t refcount;
-> > > > > +     u32 use_case;
-> > > > > +     struct tee_shm *rstmem;
-> > > > > +     /* Protects when initializing and tearing down this struct */
-> > > > > +     struct mutex mutex;
-> > > > > +};
-> > > > > +
-> > > > > +static struct optee_rstmem_cma_pool *
-> > > > > +to_rstmem_cma_pool(struct tee_rstmem_pool *pool)
-> > > > > +{
-> > > > > +     return container_of(pool, struct optee_rstmem_cma_pool, pool);
-> > > > > +}
-> > > > > +
-> > > > > +static int init_cma_rstmem(struct optee_rstmem_cma_pool *rp)
-> > > > > +{
-> > > > > +     int rc;
-> > > > > +
-> > > > > +     rp->rstmem = tee_shm_alloc_cma_phys_mem(rp->optee->ctx, rp->page_count,
-> > > > > +                                             rp->align);
-> > > > > +     if (IS_ERR(rp->rstmem)) {
-> > > > > +             rc = PTR_ERR(rp->rstmem);
-> > > > > +             goto err_null_rstmem;
-> > > > > +     }
-> > > > > +
-> > > > > +     /*
-> > > > > +      * TODO unmap the memory range since the physical memory will
-> > > > > +      * become inaccesible after the lend_rstmem() call.
-> > > > > +      */
-> > > > 
-> > > > What's your plan for this TODO? I think we need a CMA allocator here
-> > > > which can allocate un-mapped memory such that any cache speculation
-> > > > won't lead to CPU hangs once the memory restriction comes into picture.
-> > > 
-> > > What happens is platform-specific. For some platforms, it might be
-> > > enough to avoid explicit access. Yes, a CMA allocator with unmapped
-> > > memory or where memory can be unmapped is one option.
-> > 
-> > Did you get a chance to enable real memory protection on RockPi board?
-> > This will atleast ensure that mapped restricted memory without explicit
-> > access works fine. Since otherwise once people start to enable real
-> > memory restriction in OP-TEE, there can be chances of random hang ups
-> > due to cache speculation.
-> > 
-> > MM folks,
-> > 
-> > Basically what we are trying to achieve here is a "no-map" DT behaviour
-> > [1] which is rather dynamic in  nature. The use-case here is that a memory
-> > block allocated from CMA can be marked restricted at runtime where we
-> > would like the Linux not being able to directly or indirectly (cache
-> > speculation) access it. Once memory restriction use-case has been
-> > completed, the memory block can be marked as normal and freed for
-> > further CMA allocation.
-> > 
-> > It will be apprciated if you can guide us regarding the appropriate APIs
-> > to use for un-mapping/mamping CMA allocations for this use-case.
-> 
-> Can we get some more information why that is even required, so we can decide
-> if that is even the right thing to do? :)
+Unaligned mode should pass offset only in
+upper 16 bits, lower 48 bits should pass
+only specific chunk location in umem.
 
-The main reason which I can see is for memory re-use. Although we should
-be able to carve out memory during boot and then mark it restricted for
-the entire boot cycle but without re-use. Especially for secure media
-pipeline use-case where the video buffers can be sufficiently large
-enough which will benefit from memory re-use.
+pool->headroom was duplicated into offset
+and address of the umem chunk.
 
-> 
-> Who would mark the memory block as restricted and for which purpose?
+Signed-off-by: Eryk Kubanski <e.kubanski@partner.samsung.com>
+---
+ include/net/xsk_buff_pool.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-It will be the higher privileged firmware/Trusted OS which can either be
-the running on same CPU with higher privileges like Arm TrustZone or a
-separate co-processor like AMD-TEE etc. The purpose is for secure media
-pipeline, trusted UI or secure crypto use-cases where essentially the
-motivation is that the Linux kernel shouldn't be able to access
-decrypted content or key material in plain format but rather only the
-allowed peripherals like media pipeline, crypto accelerators etc. able to
-access them.
+diff --git a/include/net/xsk_buff_pool.h b/include/net/xsk_buff_pool.h
+index 7f0a75d6563d..b3699a848844 100644
+--- a/include/net/xsk_buff_pool.h
++++ b/include/net/xsk_buff_pool.h
+@@ -232,8 +232,8 @@ static inline u64 xp_get_handle(struct xdp_buff_xsk *xskb,
+ 		return orig_addr;
+ 
+ 	offset = xskb->xdp.data - xskb->xdp.data_hard_start;
+-	orig_addr -= offset;
+ 	offset += pool->headroom;
++	orig_addr -= offset;
+ 	return orig_addr + (offset << XSK_UNALIGNED_BUF_OFFSET_SHIFT);
+ }
+ 
+-- 
+2.34.1
 
-> 
-> In arch/powerpc/platforms/powernv/memtrace.c we have some arch-specific code
-> to remove the directmap after alloc_contig_pages(). See
-> memtrace_alloc_node(). But it's very arch-specific ...
-
-Thanks for the reference, we are looking for something like that but
-with generic code along with capability to remap when the restricted
-memory block is freed and available for normal kernel usage.
-
--Sumit
