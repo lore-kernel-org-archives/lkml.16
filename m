@@ -1,142 +1,124 @@
-Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A97491E503C;
-	Wed,  9 Apr 2025 19:26:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E5C1E5018;
+	Wed,  9 Apr 2025 19:26:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744226767; cv=none; b=Cdq4940b9xoa/HhX1oiFu+0PNyttmXBGNhgaIrKFVVcRimHKca5kh1cj6H6v5UnzZwOOCnjooI7mSVZTqEgrm6165fNkX01MaeoljDcy3mI3W/P3DTLR0wO9HR4FrFUKQWuxmtyNMzVRQzy/1ZUKgMGNR0CUjZo7DyjDC+GwXks=
+	t=1744226797; cv=none; b=KPNKBPw5/XD1aTf67A2WEaNpC+215YIkKYcCbtsew8XfIxo6zs6AeKUeoFkQ9shMV8jBDAkywHhZ3rqyyfR90TQayzoFJkaW38KmtFOsNzgf8lh2hXLby79Sa7MhA5XGyQAmLqxsZ5LkpwcQlxYzuWEPj8XoJTdZkFj2fsrXPJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744226767; c=relaxed/simple;
-	bh=3SBEV8MZfMBjCqYFLD+ArNUi8Y61hUNgzgmis3D/R0U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hVO4i/Kg7nYFVmaHvthWe/qQeaCd6P0BTwFaUSwm0CtpC9mssVMR4SNdWMWcA3k/fHpotWIojQKKiGdDHzPUFnGBr3+E3LQKhpR0uixv6cmmbUOjC71QvuIAISNSX6LQW9kqjwgqL13z6JPdxlLCON8ZHLbjWF4doeLv0YRsADc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IU1I7nyd; arc=none smtp.client-ip=209.85.167.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744226797; c=relaxed/simple;
+	bh=X1SfMEfZvzUHxVnR6pOqX7AHRwOT8TnCctzXPRDQKLk=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=igYRKgYl9MQ6zBCMcD7phZLNm6kUcjMai7ReJmzcqr9fsZNtFvskMUcq4M5YZzyWOJqLa+WGAT9ccKYYcciejqEsSmhwniZW1R5L5z7X/g2rblJdsvOIfGCPaoqmU9i74LqdMVEjGZEL6bY2wzBiQUjfV4JzVfTdXP9GXE8ZChQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=COIQkGHh; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=HS/y6q1Q; arc=none smtp.client-ip=103.168.172.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IU1I7nyd"
-Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3f7f7b70aebso4267710b6e.2;
-        Wed, 09 Apr 2025 12:26:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744226765; x=1744831565; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=i8uCw6ZP/r7CK+ezW/oHT+okn6HNIqDAYmxKjHPCBPg=;
-        b=IU1I7nyd7YL4nibi1kYJ+jRq75Bt8owzVBp6LOOQlUivuh0QhB8wO06Vksw5fbfMKd
-         B8GxUoL7ywoyNQ9Nu3mHlW7m5jFzFnpyxQVbLVRYaZRfzNMhxebnbQx9tEMuOTs+jHKE
-         6o0hUropsKtZuhvd8BQAym/Z+mpQYSL4ZQfXMoLgyBLvBQoAAlX3/mrUKkpN8EaHnR3V
-         muhRmn8kJv+uTmkJt2vmSQJ2NEQ11x2TDxOv0qVjck6w8UvuP+9UQ6cN4tDPgjfhgNVM
-         Z7OePSEdbbIsqxtPrAeoVjufsL4RFhRxy8RJDpkuSpd4ZmaMSXWR8Uo6/3ZkeCuc3n/c
-         1rlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744226765; x=1744831565;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=i8uCw6ZP/r7CK+ezW/oHT+okn6HNIqDAYmxKjHPCBPg=;
-        b=EvUxk6T350Et0xWIjU5Xef7qNHrLP1E6xvT48d5eKZzXwognjuViYR9orCSxCxh442
-         Tji2k69FQjRuN7F6345Ekovfc/EEP5MDEe454LYEiJL8EhN1UE1PHNOGo+xFQsO3bPco
-         brwPK1HMoNBUkyRYAZhFL0jFlH+ZlKihsBWY2etM0UsBF0/fb7FoTd9Cy7XIu96o2uEq
-         K0l8KKsUycjujc7b7ad5lzlFR/kAMuR0y4lgf2KkEAM6Bsz525fjg5XSVfQeIUB6Pyfk
-         JmfsNvXMPzFhEwGU/TOc6J5tSmbRDUQe58qlN/zrSyONTf4InyuruA5B+EkCg8FUWhKe
-         0ZyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVR7V/w2kp//UQwkKIUHmAdixma39SwssYluDX10dLUExGnrut3YEdMweB92lr6YuTpw8Xx0kjo@vger.kernel.org, AJvYcCW/xQJll0BUpyn5Thbj8CfuBImT0RNbyC7/niYoo0HrksrgmkqOyfO3pkpCYHe/6/POkCyLvkNtfjbJ6ac=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz06GsBy7PeERUXdW811O7IDH9nKRMdnHuXBsgwz5A7gD0gyV8r
-	tfbAJMCjv//xSN7xfEHDXPwODQnjFy3Z7XxFCmQatTfc51bA76jh
-X-Gm-Gg: ASbGnctSXf/P7vBHsxtn4PEmQxZYOV3CVgk/k84j61Olm4YtYkHb1ZDiQOSLLZiG79c
-	gnyXpVTOh80F0AC3kY0Kc6Ea30Kaxq/JLd8fJf1QMYT9XVsr1bTIl/StVWh4sVwaO67u6ncG88k
-	88OlrTeXf0D4KyXC1gvn/2o6PJmD+rhO4uwK2gr1sn+cilQUXrc9wLje3Tzp66eqWcKvFr+ufic
-	7nhWXAPsgTo1ugbt5PWRsB7K+EPI101S5zis1iUd0v7ky11KAR0FBpSGuoq8rHMUf+jQvJT/JJk
-	axK6jOjDqZd9facaaTdtlL9CaXwTN8iQbVKgwMnBaOZrXlKM8DKN98FGY1DLxE5zfo/m
-X-Google-Smtp-Source: AGHT+IF9qtLTL7Dndec2tinFOG4yDv6dWa6r35oGFtyju8MgFEtnsBNPWP88QJSq7xaJtwUlJFiInQ==
-X-Received: by 2002:a05:6808:188a:b0:3f6:a6a8:d340 with SMTP id 5614622812f47-4007bcc3f63mr49436b6e.16.1744226764630;
-        Wed, 09 Apr 2025 12:26:04 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-40076282682sm276833b6e.3.2025.04.09.12.26.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Apr 2025 12:26:04 -0700 (PDT)
-Message-ID: <f43469f4-9a92-448f-84e9-66ee85127bce@gmail.com>
-Date: Wed, 9 Apr 2025 12:26:01 -0700
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="COIQkGHh";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HS/y6q1Q"
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id BEC7711401DD;
+	Wed,  9 Apr 2025 15:26:33 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-12.internal (MEProxy); Wed, 09 Apr 2025 15:26:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1744226793;
+	 x=1744313193; bh=ttmrteYlvyEshuI4BJblUw5d++ZbDVerZYrZVyNtdLQ=; b=
+	COIQkGHh5fvRVnMFnFjGz/DcmGmgVS+LK/tUjf+/XiIvNlXOgEdpI4YLFb8SNtNp
+	h8L3iFGO6CreCFn+MGuRsxoNq+v5Vv1gey6zPcP9DWYi2/Vr/hPwHLGZJFtPKyXF
+	0bCvkq65tKg49oE3vIs3Kzl/rgM288quqRbyifXhju4nMmfL7jhL6ou3/EHHgc9w
+	Umz5UGS/K0LqaeAHXC5f8cZmc/x2VyxN+idO69M5wG/BTs+V5JrGIcf4YJVTx1tg
+	zlZikYwCyXoeV0iG9WDOALbaMsDneDBbJbLsIZcLpIsIXLUpFuCeJtmv7AojECOL
+	V3I8xY235/cL81vlHa33vA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744226793; x=
+	1744313193; bh=ttmrteYlvyEshuI4BJblUw5d++ZbDVerZYrZVyNtdLQ=; b=H
+	S/y6q1QLydTA19jhLtCx9n9xl/as+Xm2ddC1saP1X2d7/EqfU0v7BWDBhgW9vPo7
+	QsdDZvbW+go11uUnBq7YfmuE25YiRz7uDRuSy4cQVQBDVrT/Xf4M1IzdeQVTdm0j
+	Kky2Sy2N+j6X+MFLKvOeKVuPAoKLybxuqUUJPj+jFsO0UIExlmpFzo/G4he0hA27
+	7P/2sBsYH1K8c6WO8nAh0ygQl6fT1DOy21epV6Gntn4VbLChIaRFv/e6UpFS4P4c
+	EYbeWMLiDnpoGDRHcZ7oTeFkryRDJGruspU65w4isHMApzqdYfXyfvDgTuLz4Os1
+	EVDgccLWoTmP3vs3oCIBA==
+X-ME-Sender: <xms:6cn2Z1LtdPSto2YqEf9fYuN6j3_uoU6xCoZB_urDFpRnamfMrOTiUw>
+    <xme:6cn2ZxLUjk7rUNRf5QPwH1XxTd_2sMmWIYCPr0MQY7aRk-Ay2UxhWfwEALpsaH-T7
+    OIo-SEKTop1yr_0Tq8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdeikeefucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
+    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
+    kedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmhhitgesughighhikhhougdrnh
+    gvthdprhgtphhtthhopehgnhhorggtkhesghhoohhglhgvrdgtohhmpdhrtghpthhtohep
+    sghrohhonhhivgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgvvghssehkvghrnh
+    gvlhdrohhrghdprhgtphhtthhopehtohhrvhgrlhgusheslhhinhhugidqfhhouhhnuggr
+    thhiohhnrdhorhhgpdhrtghpthhtoheplhhinhhugidqhhgrrhguvghnihhnghesvhhgvg
+    hrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhg
+    vghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhsvggtuhhrihhthi
+    dqmhhoughulhgvsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:6cn2Z9vPUNmhyu2XAMrgmvsqXs2T_Ua_IlQiq-8OLIB8fdAeb1zxMg>
+    <xmx:6cn2Z2au7u513ss2xv_dybWyNl98GaZIlxaDkA73CGhribHz3odJtA>
+    <xmx:6cn2Z8apm6La2l9U5REZnRRiI__0dF-6uLtPWBvVf6iHrQ02BrN-vA>
+    <xmx:6cn2Z6DJPc7_OsytJwJYrv2JunbkYFHWHrkKtXeYzjUjYhO8XC8pFA>
+    <xmx:6cn2Z8xLO1XmQQXRNfKKrhtE09ArOCDVMrWwo3YLvOGiJAUIHtTMx7bh>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 0703C2220075; Wed,  9 Apr 2025 15:26:33 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5.10 000/228] 5.10.236-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
- conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250409115831.755826974@linuxfoundation.org>
-Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- WlfRzlpjIPmdjgoicA==
-In-Reply-To: <20250409115831.755826974@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+X-ThreadId: T00187b92ccd5616f
+Date: Wed, 09 Apr 2025 21:24:15 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Mark Brown" <broonie@kernel.org>,
+ "Linus Torvalds" <torvalds@linux-foundation.org>
+Cc: "Kees Cook" <kees@kernel.org>,
+ =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+ =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>,
+ linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-security-module@vger.kernel.org
+Message-Id: <3c3365f2-96f8-40c1-ab8b-2bd17b9b7d87@app.fastmail.com>
+In-Reply-To: <815b2990-570a-4603-b33f-2af1f0851434@sirena.org.uk>
+References: 
+ <20250407-kbuild-disable-gcc-plugins-v1-1-5d46ae583f5e@kernel.org>
+ <202504081630.4CE88E855@keescook>
+ <db50faff-7290-4193-b861-f60e36f1d1e3@sirena.org.uk>
+ <CAHk-=wjc+piYyUw36s4ttEkY32jVkxhRtyrt431wew7XcDS2Qg@mail.gmail.com>
+ <a9a459c2-674d-43dc-9e27-41de0471f602@sirena.org.uk>
+ <CAHk-=whKEuQQh2JymabBQLrLs=pEfx0qYVmUnYZRq_tOFj90sA@mail.gmail.com>
+ <815b2990-570a-4603-b33f-2af1f0851434@sirena.org.uk>
+Subject: Re: [PATCH] gcc-plugins: Disable GCC plugins for compile test builds
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
-On 4/9/25 05:02, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.10.236 release.
-> There are 228 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri, 11 Apr 2025 11:57:56 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.10.236-rc2.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.10.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+On Wed, Apr 9, 2025, at 20:09, Mark Brown wrote:
+> On Wed, Apr 09, 2025 at 10:42:19AM -0700, Linus Torvalds wrote:
+>
+> Yeah.  The other problem we have is that AFAIK unlike clang we don't
+> really have people actively working on GCC coverage specifically,
+> everyone mostly just assumes everyone else is doing it since GCC is the
+> default (me being as guilty of that as everyone else here).  The work
+> Arnd's doing is the nearest thing I'm aware of but that's more
+> intermittent and I gather his toolchains don't have plugins enabled
+> which wouldn't help here.
 
-On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
-BMIPS_GENERIC:
+Right, I don't think there is any sensible way to support plugins
+with my cross compilers, because that requires building the plugin
+on a developer's machine and link it against the compiler I statically
+linked against a specific libstdc++ to avoid runtime compatibility
+problems.
 
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
+       Arnd
