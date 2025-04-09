@@ -1,121 +1,107 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C1B825D537;
-	Wed,  9 Apr 2025 10:21:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28F5725D210;
+	Wed,  9 Apr 2025 10:21:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744194113; cv=none; b=m9f7t4PyoWjOda2pxoMrK3WSdy5EQ8pfiRULD0XOCD/3EcnOlTrGfRei4fwThZnblOF0ALf02+abfry55Dd+AFg+4yEo3oGO9Bv9K/ABTZGdSS7kO0VXzG2OiwetcF3YsxlWYRh/qrWH7SITsOIpwAjXv2q8Uy1mdTMz3R0T8yk=
+	t=1744194113; cv=none; b=Hhq42Q1OcZj6uX86JjAph2IEw73sGVyU0KVfDnZRZgPvx6Ta6Lwj82egtKlqxgbwsjp0ZHCBXxpjP0myrNZ7wvbh17NIDJcMlyeSBv8gFTfetE0ou0ssdCj/REo9fiCboinnbr0sjtKwrv0l3c4rPCozE6DgybQsy6KST7F2GlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744194113; c=relaxed/simple;
-	bh=j/4jf77R0PebDQIN52aFR5oHc0HxZrYVC7puNNdigD8=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=AbeLh3tQoUlwGmojv5qMj02kQrrsoF8nb0eDAxNxWTTwYiuXUskvYnq81NNQiz81mazRrBVb7aXv5Cy5TAhzc9FRU795E/Bpws/l4++cRd9cv+j7WdnBFjQ/VeUNzB9eg6F0Gh/+5nysD6nDzIVqNsZdm5l7nq3qkn/3Ioie04M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=n7bbcThB; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZLbKptei; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	bh=Eii+L39OXwFZmZOHe9jC/ClgXBjhy46H/MkyPmQzbOo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HhoE9JpmI78Bn2i3TNTJfQoGmxGsZVB9428pJECgYIcH5qYAtlpqqftiXABEkPm5b7lw1119kcvs5KfB7SUybJpA/RABO9QITyv2L9sekYMcoWODaAEuEQXe9wO+sC+z3OLdAtp4vU+NOHwa2Vg2gP6/k9YHbADY/V1wUHxJqRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=S/m3II5g; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="n7bbcThB";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZLbKptei"
-Date: Wed, 09 Apr 2025 10:21:47 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744194109;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f/LXrH6QOy5Vp7GRM3jyiK+8jqSUek2ehoeMxwLSiz4=;
-	b=n7bbcThBhq58IeQM4VQBm0AvUV7uCVB+hAejuFAtYM+73w6Zh+FurufRt7cLsU/ZngMT8V
-	vJ3YyMvd9nxsFptg4bbaprYwmaPde5aVItRjRpkq5j/+4qIC80MTmV4Dv0tonuhpm4IlEI
-	cuRDAcZOQMc8irNbZh3dcWQsHTbqLVpYTJo+WWvB7NCQ8Yev7rCb/z80b6Pt+ywWVjJ+r+
-	zJl1KZ5LtUbpjM7rDqdMp9+RthCkWKWOQnqRylYQNJYVOeVmhmuPnhyFAIL4N0nXAD4S5Q
-	ff4WrcZcxKzJ0vxVUOyj7L10GlIaYaVHPjQy8hczhTXQ21fCJ0oBvMz16GvNPA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744194109;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f/LXrH6QOy5Vp7GRM3jyiK+8jqSUek2ehoeMxwLSiz4=;
-	b=ZLbKpteiCw916z/1P7X7uD581C5EFA0vcnl/SfDaULklHv7QGapZUyBX+XLqcG7P7sQ8hM
-	RnUHaOUHpta3h7AA==
-From: "tip-bot2 for Ard Biesheuvel" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/boot] x86/boot/startup: Disable objtool validation for library code
-Cc: Chaitanya Kumar Borah <chaitanya.kumar.borah@intel.com>,
- Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>,
- "H. Peter Anvin" <hpa@zytor.com>, Kees Cook <keescook@chromium.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- David Woodhouse <dwmw@amazon.co.uk>,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
- Len Brown <len.brown@intel.com>, Josh Poimboeuf <jpoimboe@redhat.com>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250408085254.836788-10-ardb+git@google.com>
-References: <20250408085254.836788-10-ardb+git@google.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="S/m3II5g"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 840DC40E0169;
+	Wed,  9 Apr 2025 10:21:48 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id IdPe1oU2-Z7K; Wed,  9 Apr 2025 10:21:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1744194104; bh=mUIFDVkMZzQeOD4l3VAvf4aBTKHL5pkr5q3kkCACSDw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=S/m3II5gHDo+pe5jAUtq+YgJYveWg5OoefZTIjCsOFyYN2oKvEqOxmqmZvi/zMnRj
+	 ChPyTzKud+GWhKDrwAEUd4toE4NqucDHjkg78iXxjbxJ1z2KxeMaqZTAMs3cJAaLDP
+	 rfsIUFEJFE4Ib+fqbVVs+pod++Oy9n/0lA9TkfVwLbLl2/RnjbMb2Xvj5+SS53Fdwy
+	 kOMljgsYTeiYJ+eXppPJUTIvqimNgUrDfY0Nyb4FnuhJkrnwK5ITRq56CnHK3uyHqn
+	 hQqQterNo3WG7EUcxvWabjGrMNbYGinGAbM4tMPhB1SK6YnLIBBZG4iuPc/OSXGhF8
+	 D5QR806GYC/CHnCOqAiCHnCs4JJisWaB7WBGjDRGaX6tIN1aT/0sNqqMhjgjvPvPEG
+	 zLXkjTB+dre/Wk2WAn2ncXz17iWnfe6+Xz58jLOYcNxDckrECG6AwH52fXZfc8PfVE
+	 DBLHKaZVpYG2J92HQzO6Q9avDWndOMG2sXDicM7bYhd7CykSuIKpwbWUYGTEFARSye
+	 T7gVR4pR17zJCbsCpJG6Ab937qmef9HIeHGJcLJczZ31uxSflpyVunLm3LoFkCG64Y
+	 7wg+Q9B7MkySq743hiMk0Z3J3U4+9bGA6W4rrdXNeHpUMNBqxov8cfWXgFC6vE+VJf
+	 RquYuR4xhdjSJfEB2h9iX2UE=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 740E440E01A3;
+	Wed,  9 Apr 2025 10:21:26 +0000 (UTC)
+Date: Wed, 9 Apr 2025 12:21:20 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: Jarkko Sakkinen <jarkko@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+	"H. Peter Anvin" <hpa@zytor.com>, linux-coco@lists.linux.dev,
+	linux-integrity@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+	x86@kernel.org, Tom Lendacky <thomas.lendacky@amd.com>,
+	Joerg Roedel <jroedel@suse.de>,
+	Dionna Glaze <dionnaglaze@google.com>,
+	Claudio Carvalho <cclaudio@linux.ibm.com>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	linux-kernel@vger.kernel.org, Dov Murik <dovmurik@linux.ibm.com>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v6 4/4] x86/sev: register tpm-svsm platform device
+Message-ID: <20250409102120.GCZ_ZKIJw9WkXpTz4u@fat_crate.local>
+References: <20250403100943.120738-1-sgarzare@redhat.com>
+ <20250403100943.120738-5-sgarzare@redhat.com>
+ <20250408110012.GFZ_UBvOcEfEcIM4mI@fat_crate.local>
+ <eqtiiphs6rtjo7nirkw7zcicew75wnl4ydenrt5vl6jdpqdgj6@2brjlyjbqhoq>
+ <20250408112820.GBZ_UIVPp-LuIiVrIV@fat_crate.local>
+ <o2u7p3wb64lcc4sziunr274hyubkgmspzdjcvihbpzkw6mkvpo@sjq3vi4y2qfl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174419410761.31282.16523291113363404371.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <o2u7p3wb64lcc4sziunr274hyubkgmspzdjcvihbpzkw6mkvpo@sjq3vi4y2qfl>
 
-The following commit has been merged into the x86/boot branch of tip:
+On Tue, Apr 08, 2025 at 01:54:07PM +0200, Stefano Garzarella wrote:
+> I see, so IIUC I can just apply the following change to this patch and avoid
+> to export snp_svsm_vtpm_probe() at all, right?
+> 
+> diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
+> index acbd9bc526b1..fa83e6c7f990 100644
+> --- a/arch/x86/coco/sev/core.c
+> +++ b/arch/x86/coco/sev/core.c
+> @@ -2702,8 +2702,10 @@ static int __init snp_init_platform_device(void)
+>         if (platform_device_register(&sev_guest_device))
+>                 return -ENODEV;
+> -       if (platform_device_register(&tpm_svsm_device))
+> -               return -ENODEV;
+> +       if (snp_svsm_vtpm_probe()) {
+> +               if (platform_device_register(&tpm_svsm_device))
+> +                       return -ENODEV;
+> +       }
+>         pr_info("SNP guest platform device initialized.\n");
+>         return 0;
 
-Commit-ID:     d9fa398fe82728ee703ad2bd9cf5247df9626470
-Gitweb:        https://git.kernel.org/tip/d9fa398fe82728ee703ad2bd9cf5247df9626470
-Author:        Ard Biesheuvel <ardb@kernel.org>
-AuthorDate:    Tue, 08 Apr 2025 10:52:56 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 09 Apr 2025 11:59:03 +02:00
+No, this should go in tpm_svsm_probe().
 
-x86/boot/startup: Disable objtool validation for library code
+-- 
+Regards/Gruss,
+    Boris.
 
-The library code built under arch/x86/boot/startup is not intended to be
-linked into vmlinux but only into the decompressor and/or the EFI stub.
-
-This means objtool validation is not needed here, and may result in
-false positive errors for things like missing retpolines.
-
-So disable it for all objects added to lib-y
-
-Tested-by: Chaitanya Kumar Borah <chaitanya.kumar.borah@intel.com>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: David Woodhouse <dwmw@amazon.co.uk>
-Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Cc: Len Brown <len.brown@intel.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Link: https://lore.kernel.org/r/20250408085254.836788-10-ardb+git@google.com
----
- arch/x86/boot/startup/Makefile | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/x86/boot/startup/Makefile b/arch/x86/boot/startup/Makefile
-index 73946a3..8919a1c 100644
---- a/arch/x86/boot/startup/Makefile
-+++ b/arch/x86/boot/startup/Makefile
-@@ -4,3 +4,9 @@ KBUILD_AFLAGS		+= -D__DISABLE_EXPORTS
- 
- lib-$(CONFIG_X86_64)		+= la57toggle.o
- lib-$(CONFIG_EFI_MIXED)		+= efi-mixed.o
-+
-+#
-+# Disable objtool validation for all library code, which is intended
-+# to be linked into the decompressor or the EFI stub but not vmlinux
-+#
-+$(patsubst %.o,$(obj)/%.o,$(lib-y)): OBJECT_FILES_NON_STANDARD := y
+https://people.kernel.org/tglx/notes-about-netiquette
