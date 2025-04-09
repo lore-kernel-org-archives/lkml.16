@@ -1,133 +1,214 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0990433AC;
-	Wed,  9 Apr 2025 11:13:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC5D125DAFC;
+	Wed,  9 Apr 2025 11:13:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744197230; cv=none; b=PvQ3IjiFa47bq6gSo1Ld3/7RCSuON2RxJpydk9v05xhQIjH1y4+jIqe4+XXtV67MMRGjPWYB4AxBj4k7jAWY8oRrQFCVGeek3C5wL0olC6YlkOBpQEntffSs3+QC8VpQY3tMbM5toW89hf+rRcMe92hcCXIZVyrD2XGxcs5dxrY=
+	t=1744197235; cv=none; b=KUAE9i8y8KQJTf1w3IEbGVg4HTfON4wzXYx8XCay5FQg0tqd+l16wxRDSoDfwxOIiGQJpNPtyNtSTsOWQl6EAKjB3JXPs8Cdkez+BsNpUi/AIRhMA65ZdRrm7GxMFYDdfkJr84wrceyqZe7kXnEE6zl1t5j43zVF/j6ekobDMFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744197230; c=relaxed/simple;
-	bh=qvZ41SeZUWTJUM2/0wOjudaZGd/o08OfWeoXOJTa5LQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=mlD54hVIctHwKpbRVqyAMhlgq/4M+stztxPpojLb11rb74qke890oRsR6plwTeOeONmEBJl0r9oU2jwpxpUn9Gpe74DpkhzA3ISxPFDccLwL0/CdxR5ceeM/JhpYd1w8RAijhuMA3MBPkDiv26F4BzWsCyKLNzPDfyRW8BU+ufY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ndkVFXp2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=T3ygFDei; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744197235; c=relaxed/simple;
+	bh=QQMSu1RCT898ArNxU5I0BXfdQk0esa4ZXQ/Zgtj8Ybc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GEuyNnPL+1gJ6sZXeGAK5EehhqUhwbK3JL9dBIrAw08V8LVX2mZP5St2rKKzKsnf19tr9MwXMVSKiyNlZkzQklqojWsIy+kS1DfooufwevabV2fkyaAuBczTcdeqziN385SgQ/zo0KRKBjEj+3p5ubUc65VDfer2J25DyMPL+A4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=lPwBvp7w; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ndkVFXp2";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="T3ygFDei"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744197226;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1UIP4ZGix9p5MaH9RHiON2iNZ1qNwydPjYtJFAn6h60=;
-	b=ndkVFXp2m4OiYv7D2NIsqsFhmpQaMrSMq4M/Fxl214eOX7BqCBLgBejQ21mYGWpaoi+Sed
-	fiChITipD81wOCRi1M013UAXtjJ8J6bKfMJYV1HWIIDrukJA6EYi75IbNO9Y3p0eGnjNJj
-	qxCEh2pnxJuTBIYoHrH09g6phqYuPdkGfnqjCf//lvjqIY2aU8etRxte3SLw7MEaCPoDkS
-	/l6+j6s0C5wQiifRFsEnK6u/w9o2aw+nK+fSQBlY7Ks9EIm0gFH4UHtBNWirDgvr6VqJKu
-	KS/1NxaCjEu+Vg4I1Y2I8mlQqJFIlJzoAhpOnOPOxI38446wm31YohyCasKkMA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744197226;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1UIP4ZGix9p5MaH9RHiON2iNZ1qNwydPjYtJFAn6h60=;
-	b=T3ygFDeiKIpY65OR/wfBjvG7m5xLPXI2LXSCfvJFe1hMWt2WW8vCSUQfhLAenBcfB8+5oZ
-	dJ6r7/B2gnhDWvBA==
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>, Marc Zyngier
- <maz@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: Sascha Bischoff <sascha.bischoff@arm.com>, Timothy Hayes
- <timothy.hayes@arm.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Lorenzo
- Pieralisi <lpieralisi@kernel.org>
-Subject: Re: [PATCH 22/24] irqchip/gic-v5: Add GICv5 ITS support
-In-Reply-To: <20250408-gicv5-host-v1-22-1f26db465f8d@kernel.org>
-References: <20250408-gicv5-host-v1-0-1f26db465f8d@kernel.org>
- <20250408-gicv5-host-v1-22-1f26db465f8d@kernel.org>
-Date: Wed, 09 Apr 2025 13:13:46 +0200
-Message-ID: <87tt6xtwnp.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="lPwBvp7w"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=nbWNq/RLzzKzZ2KkueCY6+uffxtwVhPAqo4sWOTuLvA=; b=lPwBvp7wDj1PjvkYVVZ1IJRzm3
+	eCXgydKqgou4/VGUKF3OWu35o1GIERWRV/09swmmLdLmF09GczekLL2ZCJtGCCUN08kbfBAsTfnSh
+	0N9p1v8dePu9GFUJk1Ubdvr5zcBPBTSQ+/guOJfhrLfYDbB6yepHCAy4XoyWqAsxOD66vum+aCEA3
+	1e6+9FJhx8vGXUp8w5RNFgNvm7R61YtGYnU4/1ESeOubSkvBEDZJOOFXHZSN6QA7gyMuc0mekUYX4
+	99X3rSUP0Qp2MFOejz3jXfZVY/132eI739bzjP3hsljRqHx/xg/LZMcvXBFTj7D2yXQvQjY18rmJn
+	IhD8R+Iw==;
+Received: from [223.233.71.56] (helo=[192.168.1.12])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1u2TNF-00E3lT-6J; Wed, 09 Apr 2025 13:13:41 +0200
+Message-ID: <e6a9f8fc-e816-2b23-a4e5-74d5e5b86e6f@igalia.com>
+Date: Wed, 9 Apr 2025 16:43:35 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH v2 1/3] exec: Dynamically allocate memory to store task's
+ full name
+Content-Language: en-US
+To: Yafang Shao <laoar.shao@gmail.com>
+Cc: Bhupesh <bhupesh@igalia.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, akpm@linux-foundation.org,
+ kernel-dev@igalia.com, linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com, pmladek@suse.com,
+ rostedt@goodmis.org, mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
+ alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com,
+ mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org,
+ david@redhat.com, viro@zeniv.linux.org.uk, keescook@chromium.org,
+ ebiederm@xmission.com, brauner@kernel.org, jack@suse.cz, mingo@redhat.com,
+ juri.lelli@redhat.com, bsegall@google.com, mgorman@suse.de,
+ vschneid@redhat.com
+References: <20250331121820.455916-1-bhupesh@igalia.com>
+ <20250331121820.455916-2-bhupesh@igalia.com>
+ <CALOAHbB51b-reG6+ypr43sBJ-QpQhF39r5WPjuEp5rgabgRmoA@mail.gmail.com>
+ <6beead5a-8c21-af57-0304-1bf825588481@igalia.com>
+ <CALOAHbDE3ToDc0knbUtGu0on9n9uUiWfKZEb-bgm1mW57VTZvg@mail.gmail.com>
+From: Bhupesh Sharma <bhsharma@igalia.com>
+In-Reply-To: <CALOAHbDE3ToDc0knbUtGu0on9n9uUiWfKZEb-bgm1mW57VTZvg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 08 2025 at 12:50, Lorenzo Pieralisi wrote:
->  
-> +void gicv5_irs_syncr(void)
-> +{
-> +	u32 syncr;
-> +	u32 statusr;
-> +	int ret;
-> +	struct gicv5_irs_chip_data *irs_data;
-> +
-> +	irs_data = list_first_entry_or_null(&irs_nodes,
-> +					    struct gicv5_irs_chip_data, entry);
-> +	if (WARN_ON(!irs_data))
-> +		return;
-> +
-> +	syncr = FIELD_PREP(GICV5_IRS_SYNCR_SYNC, 1);
-> +	irs_writel(irs_data, syncr, GICV5_IRS_SYNCR);
-> +
-> +	ret = readl_relaxed_poll_timeout_atomic(
-> +			irs_data->irs_base + GICV5_IRS_SYNC_STATUSR, statusr,
-> +			FIELD_GET(GICV5_IRS_SYNC_STATUSR_IDLE, statusr), 1,
-> +			USEC_PER_SEC);
-> +
-> +	if (ret == -ETIMEDOUT)
-> +		pr_err_ratelimited("SYNCR timeout...\n");
+Sorry for the delay in reply, I was out for a couple of days.
 
-This timeout poll thing looks very familiar by now. Third variant :)
+On 4/6/25 7:58 AM, Yafang Shao wrote:
+> On Fri, Apr 4, 2025 at 2:35 PM Bhupesh Sharma <bhsharma@igalia.com> wrote:
+>>
+>> On 4/1/25 7:37 AM, Yafang Shao wrote:
+>>> On Mon, Mar 31, 2025 at 8:18 PM Bhupesh <bhupesh@igalia.com> wrote:
+>>>> Provide a parallel implementation for get_task_comm() called
+>>>> get_task_full_name() which allows the dynamically allocated
+>>>> and filled-in task's full name to be passed to interested
+>>>> users such as 'gdb'.
+>>>>
+>>>> Currently while running 'gdb', the 'task->comm' value of a long
+>>>> task name is truncated due to the limitation of TASK_COMM_LEN.
+>>>>
+>>>> For example using gdb to debug a simple app currently which generate
+>>>> threads with long task names:
+>>>>     # gdb ./threadnames -ex "run info thread" -ex "detach" -ex "quit" > log
+>>>>     # cat log
+>>>>
+>>>>     NameThatIsTooLo
+>>>>
+>>>> This patch does not touch 'TASK_COMM_LEN' at all, i.e.
+>>>> 'TASK_COMM_LEN' and the 16-byte design remains untouched. Which means
+>>>> that all the legacy / existing ABI, continue to work as before using
+>>>> '/proc/$pid/task/$tid/comm'.
+>>>>
+>>>> This patch only adds a parallel, dynamically-allocated
+>>>> 'task->full_name' which can be used by interested users
+>>>> via '/proc/$pid/task/$tid/full_name'.
+>>>>
+>>>> After this change, gdb is able to show full name of the task:
+>>>>     # gdb ./threadnames -ex "run info thread" -ex "detach" -ex "quit" > log
+>>>>     # cat log
+>>>>
+>>>>     NameThatIsTooLongForComm[4662]
+>>>>
+>>>> Signed-off-by: Bhupesh <bhupesh@igalia.com>
+>>>> ---
+>>>>    fs/exec.c             | 21 ++++++++++++++++++---
+>>>>    include/linux/sched.h |  9 +++++++++
+>>>>    2 files changed, 27 insertions(+), 3 deletions(-)
+>>>>
+>>>> diff --git a/fs/exec.c b/fs/exec.c
+>>>> index f45859ad13ac..4219d77a519c 100644
+>>>> --- a/fs/exec.c
+>>>> +++ b/fs/exec.c
+>>>> @@ -1208,6 +1208,9 @@ int begin_new_exec(struct linux_binprm * bprm)
+>>>>    {
+>>>>           struct task_struct *me = current;
+>>>>           int retval;
+>>>> +       va_list args;
+>>>> +       char *name;
+>>>> +       const char *fmt;
+>>>>
+>>>>           /* Once we are committed compute the creds */
+>>>>           retval = bprm_creds_from_file(bprm);
+>>>> @@ -1348,11 +1351,22 @@ int begin_new_exec(struct linux_binprm * bprm)
+>>>>                    * detecting a concurrent rename and just want a terminated name.
+>>>>                    */
+>>>>                   rcu_read_lock();
+>>>> -               __set_task_comm(me, smp_load_acquire(&bprm->file->f_path.dentry->d_name.name),
+>>>> -                               true);
+>>>> +               fmt = smp_load_acquire(&bprm->file->f_path.dentry->d_name.name);
+>>>> +               name = kvasprintf(GFP_KERNEL, fmt, args);
+>>>> +               if (!name)
+>>>> +                       return -ENOMEM;
+>>>> +
+>>>> +               me->full_name = name;
+>>>> +               __set_task_comm(me, fmt, true);
+>>>>                   rcu_read_unlock();
+>>>>           } else {
+>>>> -               __set_task_comm(me, kbasename(bprm->filename), true);
+>>>> +               fmt = kbasename(bprm->filename);
+>>>> +               name = kvasprintf(GFP_KERNEL, fmt, args);
+>>>> +               if (!name)
+>>>> +                       return -ENOMEM;
+>>>> +
+>>>> +               me->full_name = name;
+>>>> +               __set_task_comm(me, fmt, true);
+>>>>           }
+>>>>
+>>>>           /* An exec changes our domain. We are no longer part of the thread
+>>>> @@ -1399,6 +1413,7 @@ int begin_new_exec(struct linux_binprm * bprm)
+>>>>           return 0;
+>>>>
+>>>>    out_unlock:
+>>>> +       kfree(me->full_name);
+>>>>           up_write(&me->signal->exec_update_lock);
+>>>>           if (!bprm->cred)
+>>>>                   mutex_unlock(&me->signal->cred_guard_mutex);
+>>>> diff --git a/include/linux/sched.h b/include/linux/sched.h
+>>>> index 56ddeb37b5cd..053b52606652 100644
+>>>> --- a/include/linux/sched.h
+>>>> +++ b/include/linux/sched.h
+>>>> @@ -1166,6 +1166,9 @@ struct task_struct {
+>>>>            */
+>>>>           char                            comm[TASK_COMM_LEN];
+>>>>
+>>>> +       /* To store the full name if task comm is truncated. */
+>>>> +       char                            *full_name;
+>>>> +
+>>> Adding another field to store the task name isn’t ideal. What about
+>>> combining them into a single field, as Linus suggested [0]?
+>>>
+>>> [0]. https://lore.kernel.org/all/CAHk-=wjAmmHUg6vho1KjzQi2=psR30+CogFd4aXrThr2gsiS4g@mail.gmail.com/
+>>>
+>> Thanks for sharing Linus's suggestion. I went through the suggested
+>> changes in the related threads and came up with the following set of points:
+>>
+>> 1. struct task_struct would contain both 'comm' and 'full_name',
+> Correct.
+>
+>> 2. Remove the task_lock() inside __get_task_comm(),
+> This has been implemented in the patch series titled "Improve the copy
+> of task comm". For details, please refer to:
+> https://lore.kernel.org/linux-mm/20240828030321.20688-1-laoar.shao@gmail.com/.
+>
+>> 3. Users of task->comm will be affected in the following ways:
+> Correct.
+>
+>>       (a). Printing with '%s' and tsk->comm would just continue to
+>> work,but will get a longer max string.
+>>       (b). For users of memcpy.*->comm\>', we should change 'memcpy()' to
+>> 'copy_comm()' which would look like:
+>>
+>>           memcpy(dst, src, TASK_COMM_LEN);
+>>           dst[TASK_COMM_LEN-1] = 0;
+>>
+>>      (c). Users which use "sizeof(->comm)" will continue to get the old value because of the hacky union.
+> Using a separate pointer rather than a union could simplify the
+> implementation. I’m open to introducing a new pointer if you believe
+> it’s the better approach.
 
-> +static int gicv5_its_wait_for_invalidation(struct gicv5_its_chip_data *its)
-> +{
-> +	int ret;
-> +	u32 statusr;
-> +
-> +	ret = readl_relaxed_poll_timeout_atomic(
-> +			its->its_base + GICV5_ITS_STATUSR, statusr,
-> +			FIELD_GET(GICV5_ITS_STATUSR_IDLE, statusr), 1,
-> +			USEC_PER_SEC);
-> +
-> +	if (ret == -ETIMEDOUT)
-> +		pr_err_ratelimited("STATUSR timeout...\n");
-> +
-> +	return ret;
-> +}
+Right, that's what I was thinking of earlier as well, i.e. having a new 
+pointer like tsk->full_name, however
+allocating it outside the exec() hot-path may be tricky.
 
-And number four follows suit :)
-
-> +
-> +static void gicv5_its_syncr(struct gicv5_its_chip_data *its,
-> +			    struct gicv5_its_dev *its_dev)
-> +{
-> +	int ret;
-> +	u64 syncr;
-> +	u32 statusr;
-> +
-> +	syncr = FIELD_PREP(GICV5_ITS_SYNCR_SYNC, 1) |
-> +		FIELD_PREP(GICV5_ITS_SYNCR_DEVICEID, its_dev->device_id);
-> +
-> +	its_writeq(its, syncr, GICV5_ITS_SYNCR);
-> +
-> +	ret = readl_relaxed_poll_timeout_atomic(
-> +			its->its_base + GICV5_ITS_SYNC_STATUSR, statusr,
-> +			FIELD_GET(GICV5_ITS_SYNC_STATUSR_IDLE, statusr), 1,
-> +			USEC_PER_SEC);
-> +
-> +	if (ret == -ETIMEDOUT)
-> +		pr_err_ratelimited("SYNCR timeout...\n");
-> +}
-
-Along with #5 
+Let me try that though and come up with a v3, that addresses (a), (b) as 
+mentioned above and (c) with a pointer instead of union.
 
 Thanks,
+Bhupesh
 
-        tglx
