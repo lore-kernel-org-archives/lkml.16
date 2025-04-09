@@ -1,112 +1,210 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A12214A81;
-	Wed,  9 Apr 2025 20:41:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 833072135A1
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 20:45:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744231289; cv=none; b=GHYhovihk524ZZcGN/m/fQR4XxS4sIA9O2Ky1xqekY70n2TaznIqRfPAReFRdy7MqtQjQEwc8V85TIrcZmmwKvpTnPmQPvnUFVXgUoXnCR9ekL3i9lpiczasp7uWQFahF1IhXLkQGcfIoK2op8FaKNDXISsy6c/ok7/vQgDMFdM=
+	t=1744231538; cv=none; b=A8mYV5V0pL4buIXmgnRFMxzTQcPhmxpp6rzq5nrtPcsluYRBprK/WX+dfsHjEiHEkhvDb9UtPRMVCtVBWwZwWQ8dAjz9PUtigKdVhOC2Lu9YeT4jvv5E5Mn42OWNzpArigf7y1JaMK31aI4vvbRFoV+1Ztuq+VunSwenwzvwDCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744231289; c=relaxed/simple;
-	bh=08M4Cu8f4/GZ76LZsMQ4KuG2gM4zTrxyaw5Ut0KXJPg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OCCveQIfNhQV0XGZij+YcS+moOa7E8gfQiTHZpDFXKuz1AS6XP+N+aQAIKumWWtXrZQPZ2OOQtf+J+1/p5Nl12uTw5jIq9crW41URV7yi6O/n74OefBAqYNW/ZeRjiEME7Ov4+aOl+qBaEf9P5gl2NQnWq3DtgnnG+z+4FNeg+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QIGnSedf; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744231538; c=relaxed/simple;
+	bh=xOp9DXsMQrw85PtagiwlHyz33EONNax0oXOrZSgcHHk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cuV1gGQcIhEgiWP5JnY1bEZDiE76pkxpzcV7XmZt3CSbs7OLPu+8WIdfJi/sNcrMjzvFRrdFYcBC7fYMhuiIgLfUeicZjX282/TRokqlUVcEA+Et5idBhf1PQOdtjK2GB3JS5gV1/YibSBij28Yk8PQGSQ/Ab9W8CBZOTtzg/Xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xC8aSKQf; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QIGnSedf"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-301a6347494so11041a91.3;
-        Wed, 09 Apr 2025 13:41:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744231287; x=1744836087; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=08M4Cu8f4/GZ76LZsMQ4KuG2gM4zTrxyaw5Ut0KXJPg=;
-        b=QIGnSedfWhoIMesXhDOKtuiTXd/2HHVPSpdjzgy7QDJcP/WrNnJKdethyWLDuRAh7d
-         Uau3ifxdiADswgO8DPtpKwmVdvd7zxEPOJsAu/5JmYCJs6kzI90mc8fLkz/1/DFbH6eC
-         Hn0YBn7ewc+aWwFiUggqJCSkSCB6konVZUeKLe+w0Uf68wkIeA5mNHLG/1Y0i+LcQ/x7
-         KUMalexSoBrecFLjjDmqQvWjvu0qq6EJ22cTloGMXycutO6LYE2OGdUv/i95lAm4wMGP
-         K0KxE/4jDknr2NcUY2pW9qEnGTKFynBMcWrHfOWLw3Oo5vSg8PuUgwvuBBoMwkKN6zYl
-         YxkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744231287; x=1744836087;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=08M4Cu8f4/GZ76LZsMQ4KuG2gM4zTrxyaw5Ut0KXJPg=;
-        b=ILF+jhmHemlWA6Yv4cCMSJlZGcwRaM+VgV3bWfhXqtDdEtIXN7PqHONk5p2N6l0gdG
-         SkUD/0OP+5sH4ULyO+SDxJoBwV/0dKQvb5Pk0u2fVCm3rou8XdM1Z9e99GBTqGz2hQNc
-         cc3cQM2+PB7DefHYQEVe3yQvaG1wrk3oJ8/Rjj0XMhRnbZCHJZKg81Nf9pfn4PbqAIzh
-         88OCu6B9wOp8BwlRbueGzs5YSg+pADqjVESunugVsrGa9XF/7D14fsJcgD8tdFWAzCfD
-         kBLFxZMi359C3fipY5WA2gtBqUPQ+qD1bpnV3z2LLTw9yE7gjBmqpt9fIrRQIdw6/JbQ
-         aPDw==
-X-Forwarded-Encrypted: i=1; AJvYcCU6NzXHjOI+hr1UYbUlLkuDIcUiXr/PXi9DKgluZnLSi+yxlUsr2jqMk3885XuaSzvvt7PKM05UZwpZ/s+v@vger.kernel.org, AJvYcCUPgronXCNTFhG1fomJ67Jg0snEZw54GhVXjnTP4YtXercNP28ZcxzQcSbyVKrzrcn74cEehbon59NBv9H71as=@vger.kernel.org, AJvYcCVHdzz3Tu0suDJySpZVLgQrT0UKSmXn/iD1oCewop5419G2WU2XLZ1WxoYigcpO6dffTE40tmmue7Y8sXA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YykO9AWGj91pgSOvVRAMw4WcCC35zQfZB6o9X4cj1jIq9LMJNIf
-	uhhjulg5liAIwugmBESoXWwadeNzo+pOHzMaH/Gl1OgjRdhvXvpgsf/YtKexwpuLX+NBg4THGf0
-	2Xh+cWnjS0nSnsMvEzdTJXJgBR+c=
-X-Gm-Gg: ASbGnctCCNpzloNRtq06tOJJ74M5n6e0poCunL9ydXd2/l+jkdJU6bMbtZSpE3vkONF
-	3G7oYj3/o64Z+1PmarBsOucsqa8WPhmeM2aStBOeBwU7Ti4HhriUNBCzFWafLyDl0iw/xhIZ6Xm
-	q8LO0fiyInZmNrmKW1id2S
-X-Google-Smtp-Source: AGHT+IFlUdAp7iMiSSgLlCglw5++ynmRK8YOdTyTyQRlrOIa5H/c9zmUX9o1zmMc1bgLsmOJg8/hInWZSh1WIL81/3w=
-X-Received: by 2002:a17:90b:4d05:b0:304:eacf:8bba with SMTP id
- 98e67ed59e1d1-306dbc0d00fmr2047978a91.4.1744231286958; Wed, 09 Apr 2025
- 13:41:26 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xC8aSKQf"
+Date: Wed, 9 Apr 2025 13:45:12 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744231523;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ENOcZPIItp2JvszVxj/GE2Qd8ZKfpfM4JflKxCvjNwk=;
+	b=xC8aSKQfjMqodNcjkUTLUjs/zqCFYnuOpjbh5P9WpT5NQV26kzbmBYXpCKWYi7kZGBKsxL
+	gZW41lEMVPwc0O3ZChQyXo3FcMfH90y50iz05hYThAcZmGJ8iVYi08BYw8+X5iWzs50Hx2
+	w3VkprowZiWZQ4RRthwlJQvvZgV2B04=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Oliver Upton <oliver.upton@linux.dev>
+To: Maxim Levitsky <mlevitsk@redhat.com>
+Cc: kvm@vger.kernel.org, Alexander Potapenko <glider@google.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	kvm-riscv@lists.infradead.org,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Jing Zhang <jingzhangos@google.com>,
+	Waiman Long <longman@redhat.com>, x86@kernel.org,
+	Kunkun Jiang <jiangkunkun@huawei.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Anup Patel <anup@brainfault.org>,
+	Albert Ou <aou@eecs.berkeley.edu>, kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>,
+	Borislav Petkov <bp@alien8.de>, Alexandre Ghiti <alex@ghiti.fr>,
+	Keisuke Nishimura <keisuke.nishimura@inria.fr>,
+	Sebastian Ott <sebott@redhat.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Atish Patra <atishp@atishpatra.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Randy Dunlap <rdunlap@infradead.org>, Will Deacon <will@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	linux-riscv@lists.infradead.org, Marc Zyngier <maz@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	Joey Gouly <joey.gouly@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Andre Przywara <andre.przywara@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sean Christopherson <seanjc@google.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v2 2/4] KVM: x86: move
+ sev_lock/unlock_vcpus_for_migration to kvm_main.c
+Message-ID: <Z_bcWBfhoUZfRzek@linux.dev>
+References: <20250409014136.2816971-1-mlevitsk@redhat.com>
+ <20250409014136.2816971-3-mlevitsk@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250319205141.3528424-1-gary@garyguo.net> <20250319205141.3528424-3-gary@garyguo.net>
- <CAH5fLgifMPxer5TcWUBUYKtGsPFryqPVwXT8-5qmmY6F3=nuBw@mail.gmail.com>
-In-Reply-To: <CAH5fLgifMPxer5TcWUBUYKtGsPFryqPVwXT8-5qmmY6F3=nuBw@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 9 Apr 2025 22:41:14 +0200
-X-Gm-Features: ATxdqUF2RSyMHln2rE54PHHogZqs6zCAKePrIc8_VSy9IDLlXknSuaNOZ6Lvaxg
-Message-ID: <CANiq72nc-A2WZn4xgfKyqr3GbgenhXjZztHqnf=12xY16ggHkg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] kbuild: rust: provide an option to inline C
- helpers into Rust
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Gary Guo <gary@garyguo.net>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
-	Andrew Morton <akpm@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
-	Tamir Duberstein <tamird@gmail.com>, Christian Brauner <brauner@kernel.org>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Dirk Behme <dirk.behme@de.bosch.com>, Daniel Xu <dxu@dxuuu.xyz>, 
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>, FUJITA Tomonori <fujita.tomonori@gmail.com>, 
-	"Rob Herring (Arm)" <robh@kernel.org>, Matt Gilbride <mattgilbride@google.com>, 
-	Paul Moore <paul@paul-moore.com>, Kees Cook <kees@kernel.org>, rust-for-linux@vger.kernel.org, 
-	llvm@lists.linux.dev, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409014136.2816971-3-mlevitsk@redhat.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Apr 9, 2025 at 10:18=E2=80=AFPM Alice Ryhl <aliceryhl@google.com> w=
-rote:
->
-> Is this compatible with DEBUG_INFO_BTF? I'm concerned that we have the
-> same issue as in commit 5daa0c35a1f0 ("rust: Disallow BTF generation
-> with Rust + LTO").
->
-> The commit message should either explain why we don't have the same
-> issue, or this patch should prevent configurations from enabling both.
+On Tue, Apr 08, 2025 at 09:41:34PM -0400, Maxim Levitsky wrote:
+> Move sev_lock/unlock_vcpus_for_migration to kvm_main and call the
+> new functions the kvm_lock_all_vcpus/kvm_unlock_all_vcpus
+> and kvm_lock_all_vcpus_nested.
+> 
+> This code allows to lock all vCPUs without triggering lockdep warning
+> about reaching MAX_LOCK_DEPTH depth by coercing the lockdep into
+> thinking that we release all the locks other than vcpu'0 lock
+> immediately after we take them.
+> 
+> No functional change intended.
+> 
+> Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
+> Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+> ---
+>  arch/x86/kvm/svm/sev.c   | 65 +++---------------------------------
+>  include/linux/kvm_host.h |  6 ++++
+>  virt/kvm/kvm_main.c      | 71 ++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 81 insertions(+), 61 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+> index 0bc708ee2788..7adc54b1f741 100644
+> --- a/arch/x86/kvm/svm/sev.c
+> +++ b/arch/x86/kvm/svm/sev.c
+> @@ -1889,63 +1889,6 @@ enum sev_migration_role {
+>  	SEV_NR_MIGRATION_ROLES,
+>  };
+>  
+> -static int sev_lock_vcpus_for_migration(struct kvm *kvm,
+> -					enum sev_migration_role role)
+> -{
+> -	struct kvm_vcpu *vcpu;
+> -	unsigned long i, j;
+> -
+> -	kvm_for_each_vcpu(i, vcpu, kvm) {
+> -		if (mutex_lock_killable_nested(&vcpu->mutex, role))
+> -			goto out_unlock;
+> -
+> -#ifdef CONFIG_PROVE_LOCKING
+> -		if (!i)
+> -			/*
+> -			 * Reset the role to one that avoids colliding with
+> -			 * the role used for the first vcpu mutex.
+> -			 */
+> -			role = SEV_NR_MIGRATION_ROLES;
+> -		else
+> -			mutex_release(&vcpu->mutex.dep_map, _THIS_IP_);
+> -#endif
+> -	}
+> -
+> -	return 0;
+> -
+> -out_unlock:
+> -
+> -	kvm_for_each_vcpu(j, vcpu, kvm) {
+> -		if (i == j)
+> -			break;
+> -
+> -#ifdef CONFIG_PROVE_LOCKING
+> -		if (j)
+> -			mutex_acquire(&vcpu->mutex.dep_map, role, 0, _THIS_IP_);
+> -#endif
+> -
+> -		mutex_unlock(&vcpu->mutex);
+> -	}
+> -	return -EINTR;
+> -}
+> -
+> -static void sev_unlock_vcpus_for_migration(struct kvm *kvm)
+> -{
+> -	struct kvm_vcpu *vcpu;
+> -	unsigned long i;
+> -	bool first = true;
+> -
+> -	kvm_for_each_vcpu(i, vcpu, kvm) {
+> -		if (first)
+> -			first = false;
+> -		else
+> -			mutex_acquire(&vcpu->mutex.dep_map,
+> -				      SEV_NR_MIGRATION_ROLES, 0, _THIS_IP_);
+> -
+> -		mutex_unlock(&vcpu->mutex);
+> -	}
+> -}
+> -
+>  static void sev_migrate_from(struct kvm *dst_kvm, struct kvm *src_kvm)
+>  {
+>  	struct kvm_sev_info *dst = to_kvm_sev_info(dst_kvm);
+> @@ -2083,10 +2026,10 @@ int sev_vm_move_enc_context_from(struct kvm *kvm, unsigned int source_fd)
+>  		charged = true;
+>  	}
+>  
+> -	ret = sev_lock_vcpus_for_migration(kvm, SEV_MIGRATION_SOURCE);
+> +	ret = kvm_lock_all_vcpus_nested(kvm, false, SEV_MIGRATION_SOURCE);
+>  	if (ret)
+>  		goto out_dst_cgroup;
+> -	ret = sev_lock_vcpus_for_migration(source_kvm, SEV_MIGRATION_TARGET);
+> +	ret = kvm_lock_all_vcpus_nested(source_kvm, false, SEV_MIGRATION_TARGET);
+>  	if (ret)
+>  		goto out_dst_vcpu;
+>  
+> @@ -2100,9 +2043,9 @@ int sev_vm_move_enc_context_from(struct kvm *kvm, unsigned int source_fd)
+>  	ret = 0;
+>  
+>  out_source_vcpu:
+> -	sev_unlock_vcpus_for_migration(source_kvm);
+> +	kvm_unlock_all_vcpus(source_kvm);
+>  out_dst_vcpu:
+> -	sev_unlock_vcpus_for_migration(kvm);
+> +	kvm_unlock_all_vcpus(kvm);
+>  out_dst_cgroup:
+>  	/* Operates on the source on success, on the destination on failure.  */
+>  	if (charged)
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index 1dedc421b3e3..30cf28bf5c80 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -1015,6 +1015,12 @@ static inline struct kvm_vcpu *kvm_get_vcpu_by_id(struct kvm *kvm, int id)
+>  
+>  void kvm_destroy_vcpus(struct kvm *kvm);
+>  
+> +int kvm_lock_all_vcpus_nested(struct kvm *kvm, bool trylock, unsigned int role);
+> +void kvm_unlock_all_vcpus(struct kvm *kvm);
+> +
+> +#define kvm_lock_all_vcpus(kvm, trylock) \
+> +	kvm_lock_all_vcpus_nested(kvm, trylock, 0)
+> +
 
-In addition, from what we discussed in the call, it would be nice to
-have some performance numbers compared to not enabling it, as well as
-compared to cross-language LTO.
+Can you instead add lock / trylock variants of this?
 
-It would also help to know which users out there need/want to have this.
+kvm_trylock_all_vcpus(kvm) seems a bit more obvious in the calling code.
 
-Thanks!
-
-Cheers,
-Miguel
+Thanks,
+Oliver
