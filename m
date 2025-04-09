@@ -1,152 +1,142 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D171E26B2D6
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 16:30:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E04431BF33F;
+	Wed,  9 Apr 2025 16:32:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744216247; cv=none; b=V64WLfjyHl12sS/VvKgY1AqBzq8lxx/cEaQTOyNDfhUr9VW0c+uvc3wx81s9KaOK+FN34iZVQKq1H/tReV4suyKp6Q6hRTT/wE0rBoyutqkdOaMvRFM5P4udVPQmpfJTdC65Jb5A993XJD3f3JOWOS4uHn+nkNPxamdTn8XbT5M=
+	t=1744216377; cv=none; b=A9YCH3TJ0ueyHHnnTfABdmtYg+Ge8N9+/G8ZHm1XdJGb5nMVPxl7z4UE2HrauUzJLXmyDs53luVy7LkB3OjW69daGrCXMPrZV2wqIsg5oUKUAdWcEgLtgnedLtEKFPhdHV5yU0iHGXhNfa6D49Sz1ArTFozSXiJf39BIApjw2sE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744216247; c=relaxed/simple;
-	bh=UeTrrZiGC4g6FG2Qnmk09OC7YXGPlzyFy/Av0RePg+M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hDOKi9wkRmxya2NJY1+WQlcSpuvPQ1AiOcQl7wEf3whOCwty9nP8b6dOnsZgR3PpRVJIZvA1POJOx9gZuR7CzrsRFZYTD6Qq1btcjonSwG+Qg42T575dYvKuE3Fx5NSsNiQ4ZZj8NgXLELCe5I9lMa4ZTquCG8D8tvKcjJGT2EA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=XRQjGNaA; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
+	s=arc-20240116; t=1744216377; c=relaxed/simple;
+	bh=W8tY3tRUdknEFyz0MF0lywcl3+JpL/f7H+wWhJecHYA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bA8Vc1AYF11aFxlvTQd0u8tPrGBrIXg9Qk4cGZvd8rKLhj/tRPGRpHO09eUOTLiO6vR2bbMvfd/6JGneHJfH+cjX2RIy59LPPbG7aFGA0b/7a4PW8+ztOaoNPbnFxv7nvYCKHjdqWd+yi8hdZKzlZI9WJ85f8Ub2OYslN9j98tA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RA9YVEII; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="XRQjGNaA"
-Received: from wse-pc.fritz.box (host-88-217-226-44.customer.m-online.net [88.217.226.44])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPA id 1F5742FC0052;
-	Wed,  9 Apr 2025 18:30:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1744216235;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sv1LGOUNmwh012y33sRSiC7ve03lgZzUYhRmkjBwcVA=;
-	b=XRQjGNaAsffNeMT1xzJZ/i2Bd7TmAdxH7TPzVC7w9SP+FIx+zgLwLELTfbNfohYTNpTpTA
-	gnaGqNlrxQNhyEW+m4BjBzxQ0UKgxStGUVVk2tOUofLxMllcEZUv2x0ELu2fCpM+FGUbTt
-	A8rOEcPJSZboiSdAByCdRk0kHXnUr2Y=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-From: Werner Sembach <wse@tuxedocomputers.com>
-To: harry.wentland@amd.com,
-	sunpeng.li@amd.com,
-	siqueira@igalia.com,
-	alexander.deucher@amd.com,
-	christian.koenig@amd.com,
-	airlied@gmail.com,
-	simona@ffwll.ch
-Cc: amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Werner Sembach <wse@tuxedocomputers.com>
-Subject: [PATCH 1/1] drm/amd/display: Add quirk to force backlight type on some TUXEDO devices
-Date: Wed,  9 Apr 2025 18:27:00 +0200
-Message-ID: <20250409163029.130651-2-wse@tuxedocomputers.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250409163029.130651-1-wse@tuxedocomputers.com>
-References: <20250409163029.130651-1-wse@tuxedocomputers.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RA9YVEII"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744216376; x=1775752376;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=W8tY3tRUdknEFyz0MF0lywcl3+JpL/f7H+wWhJecHYA=;
+  b=RA9YVEII/Yy3hesdE8bku/rhSoGn1IQoytIDdviPdtP9MXlaypkOosKF
+   3ikR2CSVHL3x9oCYwtc09WV0vS+qNPpnqx/GQyh2nIZdGdppIrg6d5oGC
+   m6mBDc/YgiorqK90uPuMDzANCTChwkAVrF+ng1+8CCzxpELZ97EpEyKGD
+   +uMwpZbkMtmkDNtc0GB7JHd5ATPfY0kaSyqhJGk7YQ/FGc5QarYO2NcS8
+   a7BUGqK8/ObXp7aqCH1oQqN+3hEVPmQcSrlb3OqeF5pnvQHLjwhJS0NrP
+   sCjfp5mQ8Ulm1T5XdyC9GnH3TlCU+oKHMk5/1UVanW27/zykfyUuM92Sv
+   Q==;
+X-CSE-ConnectionGUID: ASOlgxGbReOJ6ZGYM7YSDw==
+X-CSE-MsgGUID: eJFZGyNGQU2HGvw3j/z2hQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="45596632"
+X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
+   d="scan'208";a="45596632"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 09:32:55 -0700
+X-CSE-ConnectionGUID: WCZJo/tuTKuWtelR0Dhl+g==
+X-CSE-MsgGUID: qutLdoqjQLGAVwLSiWrRxg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
+   d="scan'208";a="165846281"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 09:32:49 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1u2YM2-0000000AnN8-1PJY;
+	Wed, 09 Apr 2025 19:32:46 +0300
+Date: Wed, 9 Apr 2025 19:32:46 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v6 03/12] pinctrl: Add MAX7360 pinctrl driver
+Message-ID: <Z_ahLqrMASFXbG5Q@smile.fi.intel.com>
+References: <20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com>
+ <20250409-mdb-max7360-support-v6-3-7a2535876e39@bootlin.com>
+ <D9276VFZ6GYJ.EO9D1V7C4JSI@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <D9276VFZ6GYJ.EO9D1V7C4JSI@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-The display backlight on TUXEDO Polaris AMD Gen2 and Gen3 with panels
-BOE 2420 and BOE 2423 must be forced to pwn controlled to be able to
-control the brightness.
+On Wed, Apr 09, 2025 at 05:03:02PM +0200, Mathieu Dubois-Briand wrote:
+> On Wed Apr 9, 2025 at 4:55 PM CEST, Mathieu Dubois-Briand wrote:
+> > Add driver for Maxim Integrated MAX7360 pinctrl on the PORT pins. Pins
+> > can be used either for GPIO, PWM or rotary encoder functionalities.
 
-This could already be archived via a module parameter, but this patch adds
-a quirk to apply this by default on the mentioned device + panel
-combinations.
+...
 
-Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
-Cc: stable@vger.kernel.org
----
- .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 32 ++++++++++++++++++-
- 1 file changed, 31 insertions(+), 1 deletion(-)
+The all the rest of the driver LGTM, but the below.
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index 39df45f652b32..2bad6274ad8ff 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -1625,11 +1625,13 @@ static bool dm_should_disable_stutter(struct pci_dev *pdev)
- struct amdgpu_dm_quirks {
- 	bool aux_hpd_discon;
- 	bool support_edp0_on_dp1;
-+	bool boe_2420_2423_bl_force_pwm;
- };
- 
- static struct amdgpu_dm_quirks quirk_entries = {
- 	.aux_hpd_discon = false,
--	.support_edp0_on_dp1 = false
-+	.support_edp0_on_dp1 = false,
-+	.boe_2420_2423_bl_force_pwm = false
- };
- 
- static int edp0_on_dp1_callback(const struct dmi_system_id *id)
-@@ -1644,6 +1646,12 @@ static int aux_hpd_discon_callback(const struct dmi_system_id *id)
- 	return 0;
- }
- 
-+static int boe_2420_2423_bl_force_pwm_callback(const struct dmi_system_id *id)
-+{
-+	quirk_entries.boe_2420_2423_bl_force_pwm = true;
-+	return 0;
-+}
-+
- static const struct dmi_system_id dmi_quirk_table[] = {
- 	{
- 		.callback = aux_hpd_discon_callback,
-@@ -1722,6 +1730,20 @@ static const struct dmi_system_id dmi_quirk_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "HP EliteBook 665 16 inch G11 Notebook PC"),
- 		},
- 	},
-+	{
-+		// TUXEDO Polaris AMD Gen2
-+		.callback = boe_2420_2423_bl_force_pwm_callback,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "GMxNGxx"),
-+		},
-+	},
-+	{
-+		// TUXEDO Polaris AMD Gen3
-+		.callback = boe_2420_2423_bl_force_pwm_callback,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_NAME, "GMxZGxx"),
-+		},
-+	},
- 	{}
- 	/* TODO: refactor this from a fixed table to a dynamic option */
- };
-@@ -3586,6 +3608,7 @@ static void update_connector_ext_caps(struct amdgpu_dm_connector *aconnector)
- 	struct amdgpu_device *adev;
- 	struct drm_luminance_range_info *luminance_range;
- 	int min_input_signal_override;
-+	u32 panel;
- 
- 	if (aconnector->bl_idx == -1 ||
- 	    aconnector->dc_link->connector_signal != SIGNAL_TYPE_EDP)
-@@ -3610,6 +3633,13 @@ static void update_connector_ext_caps(struct amdgpu_dm_connector *aconnector)
- 		caps->aux_support = false;
- 	else if (amdgpu_backlight == 1)
- 		caps->aux_support = true;
-+	else if (amdgpu_backlight == -1 &&
-+		 quirk_entries.boe_2420_2423_bl_force_pwm) {
-+		panel = drm_edid_get_panel_id(aconnector->drm_edid);
-+		if (panel == drm_edid_encode_panel_id('B', 'O', 'E', 0x0974) ||
-+		    panel == drm_edid_encode_panel_id('B', 'O', 'E', 0x0977))
-+			caps->aux_support = false;
-+	}
- 	if (caps->aux_support)
- 		aconnector->dc_link->backlight_control_type = BACKLIGHT_CONTROL_AMD_AUX;
- 
+> > +	device_set_of_node_from_dev(dev, dev->parent);
+> 
+> Ok, so this goes a bit against what I said I was going to do on my
+> previous series, let me explain why. Same reasoning applies for both
+> uses, in PWM and pinctrl drivers.
+> 
+> With my previous experiments, I came to the conclusion that:
+> - Either we should use device_set_of_node_from_dev() as I do here.
+> - Or we should add more subnodes in the device tree binding.
+
+> - Also, copying the fwnode with device_set_node() was not possible, as
+>   the kernel would then try to apply pinctrl on both the parent and
+>   child device.
+
+Hmm... I need to refresh my memory with the old discussions. Can you point out
+to the problem statement with that approach?
+
+> I previously said the second solution was probably the way to go, but I
+> changed my mind for two reasons.
+> 
+> First having more subnodes in the device tree was already rejected in
+> the past in the reviews of the dt-bindings patch. This do makes sense as
+> it would be describing device internals (which should not be made in
+> DT), just to ease one specific software implementation (which should
+> also be avoided). So I believe this change would again be rejected.
+> https://lore.kernel.org/lkml/58c80c2a-2532-4bc5-9c9f-52480b3af52a@kernel.org/
+> 
+> But the the second reason is, doing
+> 'git grep "device_set_of_node_from_dev.*parent"', I found several
+> drivers using device_set_of_node_from_dev() for a similar need. Some of
+> these uses are also for MFD child devices:
+> - gpio-adp5585.c / pwm-adp5585.c,
+> - pwm-ntxec.c,
+> - max77620-regulator.c / max77620_thermal.c.
+> 
+> So, based on this, I believe using device_set_of_node_from_dev() in
+> these two drivers is the way to go.
+
+The problem with this solution is that, It's OF-centric. Which shouldn't be
+done in a new code (and I don't see impediments to avoid it). Yes, it does
+the right thing for the case, but only on OF systems. Note, fwnode is a list
+of maximum of two entries (yeah, designed like that right now), can you utilise
+that somehow?
+
 -- 
-2.43.0
+With Best Regards,
+Andy Shevchenko
+
 
