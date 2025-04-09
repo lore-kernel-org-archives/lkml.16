@@ -1,248 +1,124 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF56265CA1
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 14:26:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEFA3264A73;
+	Wed,  9 Apr 2025 14:26:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744208778; cv=none; b=mgSNs7/IskI+M6k7rhYXu6D4OVgAb1PfJ0zGv0UVXICmy+UhggpgzLdzRIo1hWCH++t7goQRy2Mqn3t0ECdWtSH2QfRHyKL/umVdAyO9PobNWwiE71X+HUFqA5FbLjOCLVPtdUMZXBM8vOPJney5QPebLFvVnNh26L1r3P1Q7W8=
+	t=1744208788; cv=none; b=CvIaEeWaOae1Zjp9aZGEZxbqSkC6w2i9Uq6LPzuclLQzxrx4QQYoohqDzGQYFutZy8cP634BRoH2TeK4dmZ2JdYCNDeoD+RmZSMVjh8aiordIWb8h1UWtfABV3sgj/hv6Rkb2wTkItPTrgsZDHIFQspE43Ii62kcyy6TFX34SfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744208778; c=relaxed/simple;
-	bh=XzrQ0mp7WLZBCaR1QiDf7RGSn7Hx8B/2cG3auHEmO9A=;
+	s=arc-20240116; t=1744208788; c=relaxed/simple;
+	bh=vYTX8tELL6LOy8MbsHqYfZ69E8Dd5ec+eRNr9hHRKEE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VLxnlJlzapHBwgVmOP1Io6FH1i6nY4ufLquGKNKsA6DG3a2co98kp1jq2TfrBENXQDilP6q1qVR9hvLF2F4ErRySHZ2xiRsQS+90Ds8Dl1iX4rM0JQRVK0IseY4spyrM9g3pMfFnRwasUs6TI+1WFsv7HQLXSl+x9xpzm2kq2TY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=umQqvzTV; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=b08sAO5sFYCajrIMx6GS9o0sf9IDE//gzbLmzQ7aG13QIeFRI+yeGByEF+l34TRyaJh+1YnAMTnAIbne1CwmSPi7hy7u2eQOFGu4d896sAovL+haFEs/WnP9ueMzdh6Ao/xoNlAYwiSILzf+KvX7RjAjQlf/KfuUWAR5KigCOHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=IRgQg+p0; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="umQqvzTV"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-736b34a71a1so8011895b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 07:26:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1744208774; x=1744813574; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VWCFSwSJdWVyuiq1FZlofUemWkrK3y3F0Kcxx42yGpc=;
-        b=umQqvzTVILzhPynzAwi5LSrvh4hAJ6dAjyd8WMlFATXucc4vGYSGANwv1sIoGsv9Ag
-         QxpMMWyRhT1lbu7asOtH7joFr8NY0vj0RGMAWyNztZMKNdY3sSLYSaz/JFGFY6UYG+vo
-         6G4tZadO83UvhefAdvC+nDbItDx9Uv0NQx6rqOxvAxuTWUHaBuz0/JdQet30IEpFqqh7
-         HrLAbiCLj+nJHnoYaTGkwdM5DedcPbDHsEhXNZslw7gpU64Y9LinYhCQz1+VkIlXBkpn
-         DPQNEoVV/yts7C3SPaJYmHRvuFjaTWKRR/zPcvTTniYNkdiMGtFTwQkg+xHpf9RdXHC8
-         2L9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744208774; x=1744813574;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VWCFSwSJdWVyuiq1FZlofUemWkrK3y3F0Kcxx42yGpc=;
-        b=Our7qRoWwvxrpUWs71rDTcrro1H+MSC7B30w7ibWbLHEACCfWEbN8vnTqLX/JmGS9v
-         RiyqctVp+jaibWauZEg2QuAwE5y6YHDSBmYlCaGJLKovOnxyz54YsuNHBgMTc8M9lgV/
-         +DLSa6C6mjUnYC+B5DKGPJ4IVzX2toZDiYjQDvJEgcqBHQ64nNtSD5PZEmbKzETr3x7H
-         k+jT25rkfdEYzuvMAFGhNKQ5i+PWQG4YqybZQFcUsl2Ge0Tgkb/xHUhkUtOaU36lcW+v
-         9AEKY2IKcUCJ0MnwGv4WWGNl4++c0BL7VgwjRqDPgk79ONonwpKs9spu3LqBUn5Lb82v
-         YFnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVFGWMfSlgcWIA1OHRwYgkb06MC8AjGIzHDQVaZSb4HhaawHHbg1/FfE6e02DH5EIsWimXu0Gl/wR5QQYY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmBKJBb8Ob4YPesXjqx/h9BzwbBXC6vJZcsi7G3ZzLwqjzTrID
-	Z7wlKWX0JY7OzaZDEhnPv56L3EeFDu7lpP/pChucak5nUaiwpQrsAy/OrxNTrlw=
-X-Gm-Gg: ASbGncvsRy9cBzzz+nbrkR8THhw87x2iBLuLgXGNIrf0gZrOWMKEG3AuKC+7QSbhpt7
-	cR4ijh3YxcMZVX2nA+TeQw/BkqZXO5jVqK6sx6co5OtlSKIyYbieQRZRwLBnJYBl8Yra4ISMiDY
-	50wsvJ7wfrqaAFLuUMvOo7quItfu01B+pGOFgqnPlVVc9VcAapEs1THATQxnrPUZjspdPVwS/QS
-	GiXB4WabPHExEZUduDGXp+EJYa0zxED9RPz2Xq8Y844aBfKYY/UasRzpqCB+CgJ1wT/mQTCWJID
-	JmIkRqHAZf+YG6jYPTm+JEJEIKejxqaLGsqCVTosvSuSlewyF2U=
-X-Google-Smtp-Source: AGHT+IHFFMUtgc5GdaqhKowOEcwpQuVaNNQv/0+QvYg71I8MlHsNAHS1sjVjRx/1bLRC7yOHjj+PuA==
-X-Received: by 2002:a05:6a00:e12:b0:736:a973:748 with SMTP id d2e1a72fcca58-73bafd6a4a1mr3511930b3a.22.1744208774241;
-        Wed, 09 Apr 2025 07:26:14 -0700 (PDT)
-Received: from debug.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1d2b108sm1426136b3a.19.2025.04.09.07.26.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 07:26:13 -0700 (PDT)
-Date: Wed, 9 Apr 2025 07:26:10 -0700
-From: Deepak Gupta <debug@rivosinc.com>
-To: Alexandre Ghiti <alex@ghiti.fr>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Christian Brauner <brauner@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
-	Jann Horn <jannh@google.com>, Conor Dooley <conor+dt@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	alistair.francis@wdc.com, richard.henderson@linaro.org,
-	jim.shu@sifive.com, andybnac@gmail.com, kito.cheng@sifive.com,
-	charlie@rivosinc.com, atishp@rivosinc.com, evan@rivosinc.com,
-	cleger@rivosinc.com, alexghiti@rivosinc.com,
-	samitolvanen@google.com, broonie@kernel.org,
-	rick.p.edgecombe@intel.com
-Subject: Re: [PATCH v12 13/28] prctl: arch-agnostic prctl for indirect branch
- tracking
-Message-ID: <Z_aDgnfI3_LKHdfb@debug.ba.rivosinc.com>
-References: <20250314-v5_user_cfi_series-v12-0-e51202b53138@rivosinc.com>
- <20250314-v5_user_cfi_series-v12-13-e51202b53138@rivosinc.com>
- <fdf8f812-ae36-4327-b345-2df047b85e7a@ghiti.fr>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="IRgQg+p0"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5397HMTX003773;
+	Wed, 9 Apr 2025 14:25:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=dZ0mp0fbK09n1Ak/UvqxB1GCA8Znz4
+	UQv5qeUc3rPlA=; b=IRgQg+p0Df+Nfa6nCWz0aEmpIN27N+9MFzz7n1AyGBY2SS
+	cXs87tCxIwF0jtud5qNjSNgLlGskDd18xPUtz+/8MSJ/uSLwVcWXURJobKL9USL7
+	8EN7dKtn1kp0R6rIo4CDW/5JV5ErMnUDU9hiTGkoezgYSUuDWyh9D25PwHXGhYEU
+	GwDF8p5b+jp5ID0M4C+Y0j6hOMrzAaZiI9tILkqMv9kUPI6oMQCKz/g1dMx19Fy7
+	/Mi3mE2FTHiiz9sThs3WKUK09GhZCaCxCrNi4XcuR9sS8mYCsxH280QQ/YKbGiEv
+	weowmHYXdl2bXlIuZEv7vv+w3bod+XI/wwk/gkeQ==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45w7yxd3vs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 09 Apr 2025 14:25:59 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 539EB8On010066;
+	Wed, 9 Apr 2025 14:25:58 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45w7yxd3vq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 09 Apr 2025 14:25:58 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 539D3ElP011078;
+	Wed, 9 Apr 2025 14:25:58 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45uf7yr7wn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 09 Apr 2025 14:25:57 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 539EPthu51446068
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 9 Apr 2025 14:25:56 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E2E2B20043;
+	Wed,  9 Apr 2025 14:25:55 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A20A320040;
+	Wed,  9 Apr 2025 14:25:55 +0000 (GMT)
+Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.155.204.135])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed,  9 Apr 2025 14:25:55 +0000 (GMT)
+Date: Wed, 9 Apr 2025 16:25:54 +0200
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Hugh Dickins <hughd@google.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>, Juergen Gross <jgross@suse.com>,
+        Jeremy Fitzhardinge <jeremy@goop.org>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, kasan-dev@googlegroups.com,
+        sparclinux@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] kasan: Avoid sleepable page allocation from
+ atomic context
+Message-ID: <Z/aDckdBFPfg2h/P@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+References: <cover.1744128123.git.agordeev@linux.ibm.com>
+ <2d9f4ac4528701b59d511a379a60107fa608ad30.1744128123.git.agordeev@linux.ibm.com>
+ <3e245617-81a5-4ea3-843f-b86261cf8599@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <fdf8f812-ae36-4327-b345-2df047b85e7a@ghiti.fr>
+In-Reply-To: <3e245617-81a5-4ea3-843f-b86261cf8599@gmail.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: MHqebilzhsuhaERLi3oJf9wiQWwhiimV
+X-Proofpoint-GUID: uhQA63QGysorbXbRGqjCOxWiIF599GSi
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-09_05,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
+ spamscore=0 impostorscore=0 lowpriorityscore=0 priorityscore=1501
+ clxscore=1015 malwarescore=0 mlxscore=0 suspectscore=0 mlxlogscore=844
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504090086
 
-On Wed, Apr 09, 2025 at 10:03:05AM +0200, Alexandre Ghiti wrote:
->On 14/03/2025 22:39, Deepak Gupta wrote:
->>Three architectures (x86, aarch64, riscv) have support for indirect branch
->>tracking feature in a very similar fashion. On a very high level, indirect
->>branch tracking is a CPU feature where CPU tracks branches which uses
->>memory operand to perform control transfer in program. As part of this
->>tracking on indirect branches, CPU goes in a state where it expects a
->>landing pad instr on target and if not found then CPU raises some fault
->>(architecture dependent)
->>
->>x86 landing pad instr - `ENDBRANCH`
->>arch64 landing pad instr - `BTI`
->>riscv landing instr - `lpad`
->>
->>Given that three major arches have support for indirect branch tracking,
->>This patch makes `prctl` for indirect branch tracking arch agnostic.
->>
->>To allow userspace to enable this feature for itself, following prtcls are
->>defined:
->>  - PR_GET_INDIR_BR_LP_STATUS: Gets current configured status for indirect
->>    branch tracking.
->>  - PR_SET_INDIR_BR_LP_STATUS: Sets a configuration for indirect branch
->>    tracking.
->>    Following status options are allowed
->>        - PR_INDIR_BR_LP_ENABLE: Enables indirect branch tracking on user
->>          thread.
->>        - PR_INDIR_BR_LP_DISABLE; Disables indirect branch tracking on user
->>          thread.
->>  - PR_LOCK_INDIR_BR_LP_STATUS: Locks configured status for indirect branch
->>    tracking for user thread.
->>
->>Signed-off-by: Deepak Gupta <debug@rivosinc.com>
->>Reviewed-by: Mark Brown <broonie@kernel.org>
->>---
->>  include/linux/cpu.h        |  4 ++++
->>  include/uapi/linux/prctl.h | 27 +++++++++++++++++++++++++++
->>  kernel/sys.c               | 30 ++++++++++++++++++++++++++++++
->>  3 files changed, 61 insertions(+)
->>
->>diff --git a/include/linux/cpu.h b/include/linux/cpu.h
->>index 6a0a8f1c7c90..fb0c394430c6 100644
->>--- a/include/linux/cpu.h
->>+++ b/include/linux/cpu.h
->>@@ -204,4 +204,8 @@ static inline bool cpu_mitigations_auto_nosmt(void)
->>  }
->>  #endif
->>+int arch_get_indir_br_lp_status(struct task_struct *t, unsigned long __user *status);
->>+int arch_set_indir_br_lp_status(struct task_struct *t, unsigned long status);
->>+int arch_lock_indir_br_lp_status(struct task_struct *t, unsigned long status);
->>+
->>  #endif /* _LINUX_CPU_H_ */
->>diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
->>index 5c6080680cb2..6cd90460cbad 100644
->>--- a/include/uapi/linux/prctl.h
->>+++ b/include/uapi/linux/prctl.h
->>@@ -353,4 +353,31 @@ struct prctl_mm_map {
->>   */
->>  #define PR_LOCK_SHADOW_STACK_STATUS      76
->>+/*
->>+ * Get the current indirect branch tracking configuration for the current
->>+ * thread, this will be the value configured via PR_SET_INDIR_BR_LP_STATUS.
->>+ */
->>+#define PR_GET_INDIR_BR_LP_STATUS      77
->>+
->>+/*
->>+ * Set the indirect branch tracking configuration. PR_INDIR_BR_LP_ENABLE will
->>+ * enable cpu feature for user thread, to track all indirect branches and ensure
->>+ * they land on arch defined landing pad instruction.
->>+ * x86 - If enabled, an indirect branch must land on `ENDBRANCH` instruction.
->>+ * arch64 - If enabled, an indirect branch must land on `BTI` instruction.
->>+ * riscv - If enabled, an indirect branch must land on `lpad` instruction.
->>+ * PR_INDIR_BR_LP_DISABLE will disable feature for user thread and indirect
->>+ * branches will no more be tracked by cpu to land on arch defined landing pad
->>+ * instruction.
->>+ */
->>+#define PR_SET_INDIR_BR_LP_STATUS      78
->>+# define PR_INDIR_BR_LP_ENABLE		   (1UL << 0)
->
->
->Are we missing PR_INDIR_BR_LP_DISABLE definition here?
+On Wed, Apr 09, 2025 at 04:10:58PM +0200, Andrey Ryabinin wrote:
 
-PR_SET_INDIR_BR_LP_STATUS with parameter's bit0 clear will disable branch tracking.
-This is what arm and riscv settled on for shadow stack enable and disable as well.
->
->
->>+
->>+/*
->>+ * Prevent further changes to the specified indirect branch tracking
->>+ * configuration.  All bits may be locked via this call, including
->>+ * undefined bits.
->>+ */
->>+#define PR_LOCK_INDIR_BR_LP_STATUS      79
->>+
->>  #endif /* _LINUX_PRCTL_H */
->>diff --git a/kernel/sys.c b/kernel/sys.c
->>index cb366ff8703a..f347f3518d0b 100644
->>--- a/kernel/sys.c
->>+++ b/kernel/sys.c
->>@@ -2336,6 +2336,21 @@ int __weak arch_lock_shadow_stack_status(struct task_struct *t, unsigned long st
->>  	return -EINVAL;
->>  }
->>+int __weak arch_get_indir_br_lp_status(struct task_struct *t, unsigned long __user *status)
->>+{
->>+	return -EINVAL;
->>+}
->>+
->>+int __weak arch_set_indir_br_lp_status(struct task_struct *t, unsigned long status)
->>+{
->>+	return -EINVAL;
->>+}
->>+
->>+int __weak arch_lock_indir_br_lp_status(struct task_struct *t, unsigned long status)
->>+{
->>+	return -EINVAL;
->>+}
->>+
->>  #define PR_IO_FLUSHER (PF_MEMALLOC_NOIO | PF_LOCAL_THROTTLE)
->>  #ifdef CONFIG_ANON_VMA_NAME
->>@@ -2811,6 +2826,21 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
->>  			return -EINVAL;
->>  		error = arch_lock_shadow_stack_status(me, arg2);
->>  		break;
->>+	case PR_GET_INDIR_BR_LP_STATUS:
->>+		if (arg3 || arg4 || arg5)
->>+			return -EINVAL;
->>+		error = arch_get_indir_br_lp_status(me, (unsigned long __user *)arg2);
->>+		break;
->>+	case PR_SET_INDIR_BR_LP_STATUS:
->>+		if (arg3 || arg4 || arg5)
->>+			return -EINVAL;
->>+		error = arch_set_indir_br_lp_status(me, arg2);
->>+		break;
->>+	case PR_LOCK_INDIR_BR_LP_STATUS:
->>+		if (arg3 || arg4 || arg5)
->>+			return -EINVAL;
->>+		error = arch_lock_indir_br_lp_status(me, arg2);
->>+		break;
->>  	default:
->>  		trace_task_prctl_unknown(option, arg2, arg3, arg4, arg5);
->>  		error = -EINVAL;
->>
+Hi Andrey,
+
+> > @@ -301,7 +301,7 @@ static int kasan_populate_vmalloc_pte(pte_t *ptep, unsigned long addr,
+> >  	if (likely(!pte_none(ptep_get(ptep))))
+> >  		return 0;
+> >  
+> > -	page = __get_free_page(GFP_KERNEL);
+> > +	page = __get_free_page(GFP_ATOMIC);
+> >  	if (!page)
+> >  		return -ENOMEM;
+> >  
+> 
+> I think a better way to fix this would be moving out allocation from atomic context. Allocate page prior
+> to apply_to_page_range() call and pass it down to kasan_populate_vmalloc_pte().
+
+I think the page address could be passed as the parameter to kasan_populate_vmalloc_pte().
+
+> Whenever kasan_populate_vmalloc_pte() will require additional page we could bail out with -EAGAIN,
+> and allocate another one.
+
+When would it be needed? kasan_populate_vmalloc_pte() handles just one page.
+
+Thanks!
