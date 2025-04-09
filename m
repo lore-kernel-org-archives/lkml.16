@@ -1,48 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93CA725EFBC;
-	Wed,  9 Apr 2025 12:23:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 483DE25F965
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 12:23:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744201423; cv=none; b=cTJi8AcOY53NIUZI9stM3vCCAJ18wXXAtSNWQe6f8UlNEtMW5inge7xOtlSXNaLz87qYu4kqfoobzDO1Eb2V6WqNrBfZQtYi2duxXgzyd3hRopA0k0hQVhA4AOALXjNGMEFytFpBEn/JL+RpT9s0+SJy3VMCVZK31G++sqqymDE=
+	t=1744201429; cv=none; b=BZ8DY3H6vdHbyFvEFKBlKMQePC+1UKMnbNiyqupHKeX3Ot8E9vM3hQ3o6Sc3yix8rYx5wqrOJ5WlDJxiHRhMz0Y2D4noD+pmjo9osigK3e6Rz6sSkbFOe+gNaTtOanoBV1w13jGGuMXA1hyUJo2x/BJob/6QL7ZvjAY/IIIHDEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744201423; c=relaxed/simple;
-	bh=ndAoFBQiFkaWAC8OWaF8W+3qr9/sgyFXOJUizNVSs08=;
+	s=arc-20240116; t=1744201429; c=relaxed/simple;
+	bh=dw/Bs++PpsNCE3uNfxFPVQNMSdRGskgKYc917Yg+n60=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rVUwFiMfkz9Wwz0tf7FVoor6vAtBCIM4nBTq71Gy0T9Y0D4IgbF3HoM5NHlCWsmZXOpzmCzV50dR1uVxJinT953mLRXJw8M1kNFcF76+aXSvVxMRxNBOkRXmFBtd0o0mIfEZg3vlj0ofTdoZoX4nwnlCS0sieSiKLw3N6ZPYplU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ih9nkr9E; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=gyRxRpuXAm5mukA8RrKxOXhdd909B5WElVfexwF/lVZRw3NAJYNkDke/sgdS/9xzgKZkw/SvFZ9pHbdlmziYSm+w2w535Hdl6bvje9v1e8e7lbPKco5+TXqkzu6ILEbqszeSiI5vf9yi1mNKQs5vw9eILHi/pbBVQneRxiYKUuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IZI2v7HR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ih9nkr9E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FC35C4CEE3;
-	Wed,  9 Apr 2025 12:23:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IZI2v7HR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EF0AC4CEE3;
+	Wed,  9 Apr 2025 12:23:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744201423;
-	bh=ndAoFBQiFkaWAC8OWaF8W+3qr9/sgyFXOJUizNVSs08=;
+	s=k20201202; t=1744201428;
+	bh=dw/Bs++PpsNCE3uNfxFPVQNMSdRGskgKYc917Yg+n60=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ih9nkr9EK+GvVC1zn1vkzYS6i+GnRJQqGzU+CyioHyp721JLoTfNdARiWF52J7SOx
-	 nde/NDMXSJkHQBIgZryWvxl0UEaC2KT1a+DC9lwJwld8f+udb55yF7GldEgTyvpmhS
-	 JulpQKa7Oq4EHTuCmz3rqU86y1W52CG01cTcI2cIzdgLF35Jw7LjESz6l/CHlGO5IO
-	 OUMFHEiEKeiUVStSxL2xtivilWaWrQ0+3vTzt6esb2NR58/Udha3FPNPmMh6bRUprb
-	 ocYTIwL2/JPxNyFjMa9q44+po4nj8RHLaSCefvzEcly9Iv7SU6Zuvzz8/3dGBLVuf0
-	 5gAfcUqzyrNWw==
+	b=IZI2v7HRHhyKd64bG+U8K20qScoYcl4Mh3twNz29DjGkOjrpmGPOE4oKpldGLGzrf
+	 EP9vGFCVgEzlbKfHq4w8u6wVyw7K2dGVV0dMxyKVRrJzf8C32jWgym78Oz893aTpi8
+	 7J7mfrIuIFxRKkYgFQEJ1hSb4CFULuNc9BerQ/BdbOTp9AALz6jSVenJyUsoaqgwdI
+	 eQJ4tXSl36l2PrAmnI1Sey1r6LVQuNdge7tVBXvh1Mu1+bdf+1TsaGm2I/S1OVrNRH
+	 AsufL0Nv85RAnSfpmuJoMD/hqs2kWX3uLSV/Z3pYN0/ZO69+rmedFYU+iM0JcBo4Vc
+	 KTWGW+ajQRyyQ==
 From: Arnd Bergmann <arnd@kernel.org>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>
+To: Peter Rosin <peda@axentia.se>
 Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	Arnd Bergmann <arnd@arndb.de>,
-	Oliver Graute <oliver.graute@kococonnector.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	Yu Jiaoliang <yujiaoliang@vivo.com>,
-	linux-input@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 03/10] [v2] Input: stmpe-ts - use module alias instead of device table
-Date: Wed,  9 Apr 2025 14:22:55 +0200
-Message-Id: <20250409122314.2848028-3-arnd@kernel.org>
+Subject: [PATCH 04/10] [RESEND] mux: adg792a: remove incorrect of_match_ptr annotation
+Date: Wed,  9 Apr 2025 14:22:56 +0200
+Message-Id: <20250409122314.2848028-4-arnd@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250409122314.2848028-1-arnd@kernel.org>
 References: <20250409122131.2766719-1-arnd@kernel.org>
@@ -53,55 +45,34 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-When compile tested with W=1 on x86_64 with driver as built-in:
+Building with W=1 shows a warning about adg792a_of_match being unused
+when CONFIG_OF is disabled:
 
-  stmpe-ts.c:371:34: error: unused variable 'stmpe_ts_ids' [-Werror,-Wunused-const-variable]
+drivers/mux/adg792a.c:134:34: error: unused variable 'adg792a_of_match' [-Werror,-Wunused-const-variable]
 
-Ideally this would be referenced from the platform_driver, but since
-the compatible string is already matched by the mfd driver for its
-parent device, that would break probing.
-
-In this case, the of_device_id table just serves as a module alias
-for loading the driver, while the device itself is probed using
-the platform device name.
-
-Remove the table and instead use a module alias that reflects how
-the driver is actually probed.
-
-Link: https://lore.kernel.org/lkml/20240403080702.3509288-8-arnd@kernel.org/
-Link: https://lore.kernel.org/lkml/181dbdb8-c050-4966-8cb4-2f39495ff3f9@app.fastmail.com/
-Cc: Uwe Kleine-König" <u.kleine-koenig@baylibre.com>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Acked-by: Peter Rosin <peda@axentia.se>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
-v2: use a different approach, hopefully this makes more sense.
----
- drivers/input/touchscreen/stmpe-ts.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ drivers/mux/adg792a.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/input/touchscreen/stmpe-ts.c b/drivers/input/touchscreen/stmpe-ts.c
-index a94a1997f96b..af0fb38bcfdc 100644
---- a/drivers/input/touchscreen/stmpe-ts.c
-+++ b/drivers/input/touchscreen/stmpe-ts.c
-@@ -366,12 +366,7 @@ static struct platform_driver stmpe_ts_driver = {
- };
- module_platform_driver(stmpe_ts_driver);
- 
--static const struct of_device_id stmpe_ts_ids[] = {
--	{ .compatible = "st,stmpe-ts", },
--	{ },
--};
--MODULE_DEVICE_TABLE(of, stmpe_ts_ids);
--
-+MODULE_ALIAS("platform:stmpe-ts");
- MODULE_AUTHOR("Luotao Fu <l.fu@pengutronix.de>");
- MODULE_DESCRIPTION("STMPEXXX touchscreen driver");
- MODULE_LICENSE("GPL");
+diff --git a/drivers/mux/adg792a.c b/drivers/mux/adg792a.c
+index 4da5aecb9fc6..a5afe29e3cf1 100644
+--- a/drivers/mux/adg792a.c
++++ b/drivers/mux/adg792a.c
+@@ -141,7 +141,7 @@ MODULE_DEVICE_TABLE(of, adg792a_of_match);
+ static struct i2c_driver adg792a_driver = {
+ 	.driver		= {
+ 		.name		= "adg792a",
+-		.of_match_table = of_match_ptr(adg792a_of_match),
++		.of_match_table = adg792a_of_match,
+ 	},
+ 	.probe		= adg792a_probe,
+ 	.id_table	= adg792a_id,
 -- 
 2.39.5
 
