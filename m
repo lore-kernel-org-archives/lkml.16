@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D0F025E80B
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 12:24:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45FC725E80B
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 12:24:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744201455; cv=none; b=ZqH6TeSvruVYIArm1SV7xg80It+QD2i5C4OcHMbwXeq7s6gTzsrY2Czw68PQsvCyfZh0A6WuSOrgnX8Cu2K25cKYIZmfZKPdKhn/xXiS0L8nl7Otpu6+V48qMWUEgjvWdB/h5giaMYN0wwnC2wFFHF653mI9LZwBfQqyE1TtQR4=
+	t=1744201461; cv=none; b=GLQqRHgoHr4in/zHa3OonlXERZIiWe2nyidMYb6DL7LourVUQwyGW1ohBGGoGmLQwbwLy3BiFPll7SiBdF7U4go7Fl/kEf2alZF6GBSsltf3uf0loCYM3bevY3bLpp8Q0itfdEHdaxFLj650g0mGHKXn8dnpMqJS8kBRmgRSBhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744201455; c=relaxed/simple;
-	bh=XJj6XvkQZvZnU7KV6XAood8YWkTdHu5c0H1A7ovBxzA=;
+	s=arc-20240116; t=1744201461; c=relaxed/simple;
+	bh=4f3zqeUf2l96bOM8cmDyuUo+fnc4TY8/SVT6maVvOTU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=p720QJkvEvmEyXREPiQEIuYFfs+6beeAGCNb+0oo0WqFOnW2td39rxe/Ta7wW39cMXYImelAzBRz/Q2sWP8ckvTLOYG/aqL0KE5rV8itr7LJVfDDQo+z3lTLtQOZfVXYRKkVv1NOuHdtbZFMiyTaPJ+ZUgvl9sxyYKdnDZLSV2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sxjtqdOS; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=sDe61z8ihf+6IkyluT1igW7l2USH5NEeDqJaB/SdV8cRvty6rqftjFXftJD6EhJnLUtUbUgn0gLV4usFeDITInMNlPQRqO9TjNrcwXrqkq/sScZ6W9xO3gRrkdoX2bu5Ut/KeXlW5QiSojetSSgchIvJcA0OTQXSw2oqUGV3wWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cVJuMTIJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sxjtqdOS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F6EAC4CEE3;
-	Wed,  9 Apr 2025 12:24:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cVJuMTIJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20F79C4CEE7;
+	Wed,  9 Apr 2025 12:24:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744201454;
-	bh=XJj6XvkQZvZnU7KV6XAood8YWkTdHu5c0H1A7ovBxzA=;
+	s=k20201202; t=1744201460;
+	bh=4f3zqeUf2l96bOM8cmDyuUo+fnc4TY8/SVT6maVvOTU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sxjtqdOSL8gQo9pk7SGNQNxZ1USKpj5+Yb60+jIhvZbCOUYIUyA88o8l8lqpbdsWK
-	 cImwUtDd0rdcTiLUNpzPimLgwg2QKtBE4nDvfARDGB3cDQGiG9W4eJsaNANZGtu0XI
-	 UGlWeOqF6IOoSrANDCqqJX7pwel8+imi9xsqnnYi35cBB7h55BcpypcztP03M97gO7
-	 UHQDu56P8q3pWYCt/jMIDZpfW1i1vYp9ctiPsO6hQ9Mbxl3NWl25RvdB9PVin1xpKw
-	 lVbdZk0B9zekRXM4nOlWc6gx72hg4J992cY3LuA7SI5ll1CXeR23K9q2g3E/847CTn
-	 1eKvNqrB26dvQ==
+	b=cVJuMTIJ/Pnv1YUYnoSmuzXCXUPjfLGY3NsM+ComJejxAOSYH7xZe6xjP7YFL3Zwc
+	 L5MYHrCoxIMCVaaR6hnBhnIM286M33F+a7VKqYCa1JSy6J2FxCOyCxzzQh8Hv/rUk5
+	 XyofOcVjvRua+Lk58UmRHcFROz1fB4sBrzpGcs3oHIBQ5dvYJsMJNNkenywEl5mSFq
+	 jCqkCAXHxbmjC5asGvqfO6wnWwxiosTf9wMgubVHCWR4RLjm4GADCHbcy+gxKFXQ4f
+	 olBzl62clnJ7Le8LhqiplNT2cu9u9tdLfTtomiwvpQ7qFThMvbX40z+vRvd6eWHn5W
+	 nilFGJEhK5xiQ==
 From: Arnd Bergmann <arnd@kernel.org>
-To: Russell King <linux@armlinux.org.uk>
+To: Ian Abbott <abbotti@mev.co.uk>,
+	H Hartley Sweeten <hsweeten@visionengravers.com>
 Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	Arnd Bergmann <arnd@arndb.de>,
-	linux-arm-kernel@lists.infradead.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 07/10] [RESEND] ARM: fixmap: make __end_of_early_ioremap_region an enum value
-Date: Wed,  9 Apr 2025 14:22:59 +0200
-Message-Id: <20250409122314.2848028-7-arnd@kernel.org>
+Subject: [PATCH 08/10] [RESEND 2] comedi: ni_atmio: avoid warning for unused device_ids[] table
+Date: Wed,  9 Apr 2025 14:23:00 +0200
+Message-Id: <20250409122314.2848028-8-arnd@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250409122314.2848028-1-arnd@kernel.org>
 References: <20250409122131.2766719-1-arnd@kernel.org>
@@ -50,41 +51,34 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-Building with W=1 shows warnings for the __end_of_fixed_addresses
-definition:
+When the driver is built-in, it produces a W=1 warning:
 
-    In file included from mm/early_ioremap.c:18:
-    arch/arm/include/asm/fixmap.h:39:35: error: '__end_of_fixed_addresses' defined but not used [-Werror=unused-const-variable=]
+drivers/comedi/drivers/ni_atmio.c:209:35: error: 'device_ids' defined but not used [-Werror=unused-const-variable=]
+  209 | static const struct pnp_device_id device_ids[] = {
 
-Move the calculation slightly up in the file into the enum that
-contains __end_of_fixmap_region and __end_of_early_ioremap_region.
+The actual probe() function has a different way of identifying
+the hardware, so just mark this one as __maybe_unused so it
+can be dropped when built-in.
 
+Reviewed-by: Ian Abbott <abbotti@mev.co.uk>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/arm/include/asm/fixmap.h | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/comedi/drivers/ni_atmio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/include/asm/fixmap.h b/arch/arm/include/asm/fixmap.h
-index 707068f852c2..90e0bd79b180 100644
---- a/arch/arm/include/asm/fixmap.h
-+++ b/arch/arm/include/asm/fixmap.h
-@@ -33,12 +33,11 @@ enum fixed_addresses {
+diff --git a/drivers/comedi/drivers/ni_atmio.c b/drivers/comedi/drivers/ni_atmio.c
+index 330ae1c58800..b4e759e5703f 100644
+--- a/drivers/comedi/drivers/ni_atmio.c
++++ b/drivers/comedi/drivers/ni_atmio.c
+@@ -215,7 +215,7 @@ static const int ni_irqpin[] = {
  
- 	FIX_BTMAP_END = __end_of_permanent_fixed_addresses,
- 	FIX_BTMAP_BEGIN = FIX_BTMAP_END + TOTAL_FIX_BTMAPS - 1,
--	__end_of_early_ioremap_region
--};
-+	__end_of_early_ioremap_region,
+ #include "ni_mio_common.c"
  
--static const enum fixed_addresses __end_of_fixed_addresses =
--	__end_of_fixmap_region > __end_of_early_ioremap_region ?
--	__end_of_fixmap_region : __end_of_early_ioremap_region;
-+	__end_of_fixed_addresses = __end_of_fixmap_region > __end_of_early_ioremap_region ?
-+				   __end_of_fixmap_region : __end_of_early_ioremap_region,
-+};
- 
- #define FIXMAP_PAGE_COMMON	(L_PTE_YOUNG | L_PTE_PRESENT | L_PTE_XN | L_PTE_DIRTY)
- 
+-static const struct pnp_device_id device_ids[] = {
++static const struct pnp_device_id __maybe_unused device_ids[] = {
+ 	{.id = "NIC1900", .driver_data = 0},
+ 	{.id = "NIC2400", .driver_data = 0},
+ 	{.id = "NIC2500", .driver_data = 0},
 -- 
 2.39.5
 
