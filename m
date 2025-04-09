@@ -1,154 +1,119 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FCE61A315A
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 16:55:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988EC5D477
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 16:56:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744217744; cv=none; b=MJN7Zf8CLk/kzz7tHlhzcl20AA/2uxSOCb1IPJkkrU2ryV5e4TcVSKTl24bHvZ04w302VDcvzGtvij477IrZ9JFozgJT0odKRNZ6xaARSFo6xdPQCBYh12vmMh6Xa/dE9s4CR8FKn6VFJJoxFApvyRBLqkPW8ae7dMcuT1ipgVQ=
+	t=1744217783; cv=none; b=rwQvjN8QRQpc6MswM/mTOpzVhkn8kJmzNHK2U3tv2F9qn1tT+aaAri4bXJ/ZBAnPNYqnhidRatkEdsa9zClum8YTUNXYQHDGNK8JGyeKFsFuw6umjJiMxKPms5qFdXVcd/aAOJ8/FcEXAAwLDrzf791PDD1m7oSR6H4pvn211aY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744217744; c=relaxed/simple;
-	bh=4gBqLRCjG5WlF4pc12HR6xav3S0nBYhW+3KH2xBP+Ds=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-type; b=Z4u0YRjf9NTGUny1ndb3gjfgwEnmKimtM4sq7i7aO6KTGCufieC3QeRVtFtf/ISyvlBzP94jy53FKY1y2Rx/zmcjfp5BqdUiV0IuSzu9j9SfMouZq4I3gOGtqzDHClTJVbyKiDI2OTOvpV1lUPWN8WncvOSBG/QZkc82aPEcxN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZUh8R/aS; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744217783; c=relaxed/simple;
+	bh=CahJy6bgX2TLgx/3RS9Og1YqQekeZkWNYVidjSfotuY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rP5HSo7Pc8Sot/1a17uZYKB3FtYmw8tUVMxtQoOzlH0qyxw5u8GcXVOyR/zw8rkwTvvoUkkuNTLFuvwusmMYUnsqv0UIYqvVIceNp7sHnNwht2Oo0R0xpdbEVTPCdrkvf3SZiNi/xDPqTt7AQrJ/XzBKfu/35aqConZie9YPx6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Jaqj/Ea6; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZUh8R/aS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744217741;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=erfq7737JXLCXKwNvQFnodKJdhZsFHJKAqncod7mqSE=;
-	b=ZUh8R/aScKXlo1iw2ANIhXOxfI9YHdbfv47nBPq6TIRI5RqW4Z+t6KztnqIe0ZdWP9ZcU9
-	csVc4vrkmJhpH0yJbDzg1BOYDtjKed7+bG1T+ZqL2ktsH5C9T7omchLfwIhWfSkNO10GoQ
-	YANAipXcFepFP2OMlhsVWB3VS7Cciko=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-623-J8L3kIAyMeu2u__Y5JiTBA-1; Wed,
- 09 Apr 2025 12:55:37 -0400
-X-MC-Unique: J8L3kIAyMeu2u__Y5JiTBA-1
-X-Mimecast-MFC-AGG-ID: J8L3kIAyMeu2u__Y5JiTBA_1744217736
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A9FCA180035E;
-	Wed,  9 Apr 2025 16:55:35 +0000 (UTC)
-Received: from rules.brq.redhat.com (unknown [10.44.22.33])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5BE5618009BC;
-	Wed,  9 Apr 2025 16:55:31 +0000 (UTC)
-From: Vladis Dronov <vdronov@redhat.com>
-To: linux-sgx@vger.kernel.org,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	linux-kernel@vger.kernel.org,
-	Vladis Dronov <vdronov@redhat.com>
-Subject: [PATCH] selftests/sgx: Fix an enclave built with extended instructions
-Date: Wed,  9 Apr 2025 18:55:10 +0200
-Message-ID: <20250409165510.23066-1-vdronov@redhat.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Jaqj/Ea6"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3965c995151so3617236f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 09:56:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1744217780; x=1744822580; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=aCygb0R9J4//K5NBuySZGPAIajaz7uNogxidzxnmh7I=;
+        b=Jaqj/Ea66noBgWIMfDMKIPnxhOd4cUYDblRJcwIHZOhXg9UN7xSrpjMUrUuI8T3MIt
+         av69PYIG/o+nT38AiOIkek7OaSoE+hNmLaugqb6hYylJaG8nNXAyxVxnQM06uhOXpqp0
+         g1DYGmyNKCVxAskzpxNzb2Bh6U9NNfPXtmpg+6hOYpdt57zE++6nQqRRjvagNwpfEdwT
+         h133wfuS912UY1mSxcu1+u1ci8XD+iTxSifd+ggu31QHWRN/HIOa2W2sfkpkw1bJnbmq
+         uDwj+ylarVlQkNr8M8i4BF/gBDHg8vbdx/Kyrd5P2R84mYViqHgkkwHyKI9whV4kbCP2
+         NC3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744217780; x=1744822580;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aCygb0R9J4//K5NBuySZGPAIajaz7uNogxidzxnmh7I=;
+        b=Nd2+q811ZyjsZtxKsdw3BULdArb9hvyN4GxF/FZbw/vO3oA9ZABChICm003PKYkQs1
+         J1gC43VK9nuNaoru3XIV/vY9KNbLgMcOj0iSiUrr/AxvqAsYkk0XOkud/xQSQVf5NNzC
+         lPc6vQnecALsV5xFa+kMZdkoQdOFW4mXqf88HOMLcY8wJ/ohHDSVaY48TWKLhkgfo9xk
+         7i25tVgPzt4XgX5NpIuSnqMBdhpyYDQxruuOBC6qii8VrQffywiy2hFmNV5LXeXw/6V+
+         rnwePTgbZDvsc1Obi4U2ipihWBy1+I5TDCeSsEjdHQuN65dpVtSJoHcX0DkpmzT4zNsl
+         kk2A==
+X-Forwarded-Encrypted: i=1; AJvYcCWh/GAc8bK3hsq+QvAsGY3XpLegEV893OPxnV9jdmRUcwKQJ0mfuYYKQaOKd9Dagkf7LNV1B0IeS3b5qYQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7ykdrp9DrG/40bs3HwULpdyAxu8MbNEVfn62dYU9pZF0/EMF7
+	ooxDsNtov703o5bPVq93LPCe3En749HmWjJVBWz64i94/XkbshFJ2rCRUsSAvQs=
+X-Gm-Gg: ASbGncswVzvoSxCOvyHKIzTbVMpnRq6IF1VAzahS2cOhCmiXT/DsDPOOvWKaBIMW0xV
+	48GJrNc13QxXXexVMzxWT/G0s3qfuvrcCtN9uN3MagcEuGflJUCmg+NK6oIeNORChUliA4Gij3g
+	CZIgrqub+Nj+etyCE+PPWH1HT20W8emT9YLk3HabV8V3r4ac4MYS/aybHXGuEOXc6tPQwDq0M09
+	xroSCMYc58oXWb8+hkwmLWIv1vK9MDW8TOEtOy1gC6xLSB25O+2UtfrDgYb0eD2s8BnQGxE4KZ3
+	DKoLCNdFU0O3XaH2EAf2amg2D7iA8BAwLQ6SWRrlOOs=
+X-Google-Smtp-Source: AGHT+IHPxSpc27gK9gTsJW2IMf1ahXoIOaZfnAb9plx5JSVsHQKEzviSNHHXsGI8r7rx1qPcS3QdDQ==
+X-Received: by 2002:a05:6000:2901:b0:39a:c80b:8283 with SMTP id ffacd0b85a97d-39d87ab60f4mr3607872f8f.31.1744217779850;
+        Wed, 09 Apr 2025 09:56:19 -0700 (PDT)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d893fdf3bsm2083438f8f.83.2025.04.09.09.56.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 09:56:19 -0700 (PDT)
+Date: Wed, 9 Apr 2025 18:56:17 +0200
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Pablo Neira Ayuso <pablo@netfilter.org>
+Cc: netfilter-devel@vger.kernel.org, cgroups@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, coreteam@netfilter.org, netdev@vger.kernel.org, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	David Ahern <dsahern@kernel.org>, Tejun Heo <tj@kernel.org>, Eric Dumazet <edumazet@google.com>, 
+	"David S. Miller" <davem@davemloft.net>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Jakub Kicinski <kuba@kernel.org>, Jozsef Kadlecsik <kadlec@netfilter.org>
+Subject: Re: [PATCH v3 0/3] netfilter: Make xt_cgroup independent from net_cls
+Message-ID: <o4q7vxrdblnuoiqbiw6qvb52bg5kb33helpfynphbbgt4bjttq@7344qly6lv5f>
+References: <20250401115736.1046942-1-mkoutny@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-type: text/plain
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="we4mrug4rvo3n7yf"
+Content-Disposition: inline
+In-Reply-To: <20250401115736.1046942-1-mkoutny@suse.com>
 
-Creating an enclave with xfrm == 3 disables extended CPU states and instruction
-sets, like AVX2 and AVX512 inside the enclave. Thus the enclave code has to be
-built with a compiler which does not produce instructions from the extended
-instruction sets. Nevertheless certain Linux distributions confgure a compiler
-so it produces extended instructions by default ("--with-arch_64=x86-64-v3" for
-gcc). Thus an enclave code from test_encl.c is built with extended instructions
-and an enclave execution hits the #UD exception (note exception_vector == 6):
 
-    # ./test_sgx
-    ...
-    #  RUN           enclave.unclobbered_vdso_oversubscribed_remove ...
-    # main.c:481:unclobbered_vdso_oversubscribed_remove:Expected self->run.exception_vector (6) == 0 (0)
-    # main.c:485:unclobbered_vdso_oversubscribed_remove:Expected self->run.function (3) == EEXIT (4)
-    # unclobbered_vdso_oversubscribed_remove: Test terminated by assertion
-    #          FAIL  enclave.unclobbered_vdso_oversubscribed_remove
-    not ok 3 enclave.unclobbered_vdso_oversubscribed_remove
+--we4mrug4rvo3n7yf
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 0/3] netfilter: Make xt_cgroup independent from net_cls
+MIME-Version: 1.0
 
-Fix this by adding "-mno-avx" to ENCL_CFLAGS in Makefile. Add some comments
-about this to code locations where enclave's xfrm field is set.
+On Tue, Apr 01, 2025 at 01:57:29PM +0200, Michal Koutn=FD <mkoutny@suse.com=
+> wrote:
+> Changes from v2 (https://lore.kernel.org/r/20250305170935.80558-1-mkoutny=
+@suse.com):
+> - don't accept zero classid neither (Pablo N. A.)
+> - eliminate code that might rely on comparison against zero with
+>   !CONFIG_CGROUP_NET_CLASSID
 
-Suggested-by: Dave Hansen <dave.hansen@linux.intel.com>
-Signed-off-by: Vladis Dronov <vdronov@redhat.com>
----
-an out-of-commit-message note:
+Pablo, just to break possible dilemma with Tejun's routing [1], it makes
+sense to me to route this series together via net(filter) git(s).
 
-I would greatly appreciate if someone reviews and possibly fixes my wording
-of the commit message and the code comments.
+Also, let me (anyone) know should there be further remarks to this form.
 
- tools/testing/selftests/sgx/Makefile    | 2 +-
- tools/testing/selftests/sgx/load.c      | 8 +++++++-
- tools/testing/selftests/sgx/sigstruct.c | 6 ++++++
- 3 files changed, 14 insertions(+), 2 deletions(-)
+Thanks,
+Michal
 
-diff --git a/tools/testing/selftests/sgx/Makefile b/tools/testing/selftests/sgx/Makefile
-index 03b5e13b872b..ab2561b4456d 100644
---- a/tools/testing/selftests/sgx/Makefile
-+++ b/tools/testing/selftests/sgx/Makefile
-@@ -15,7 +15,7 @@ INCLUDES := -I$(top_srcdir)/tools/include
- HOST_CFLAGS := -Wall -Werror -g $(INCLUDES) -fPIC $(CFLAGS)
- HOST_LDFLAGS := -z noexecstack -lcrypto
- ENCL_CFLAGS += -Wall -Werror -static-pie -nostdlib -ffreestanding -fPIE \
--	       -fno-stack-protector -mrdrnd $(INCLUDES)
-+	       -fno-stack-protector -mrdrnd -mno-avx $(INCLUDES)
- ENCL_LDFLAGS := -Wl,-T,test_encl.lds,--build-id=none
- 
- ifeq ($(CAN_BUILD_X86_64), 1)
-diff --git a/tools/testing/selftests/sgx/load.c b/tools/testing/selftests/sgx/load.c
-index c9f658e44de6..79946ca8f1a5 100644
---- a/tools/testing/selftests/sgx/load.c
-+++ b/tools/testing/selftests/sgx/load.c
-@@ -88,10 +88,16 @@ static bool encl_ioc_create(struct encl *encl)
- 	memset(secs, 0, sizeof(*secs));
- 	secs->ssa_frame_size = 1;
- 	secs->attributes = SGX_ATTR_MODE64BIT;
--	secs->xfrm = 3;
- 	secs->base = encl->encl_base;
- 	secs->size = encl->encl_size;
- 
-+	/*
-+	 * Setting xfrm to 3 disables extended CPU states and instruction sets
-+	 * like AVX2 inside the enclave. Thus the enclave code has to be built
-+	 * without instructions from extended instruction sets (-mno-avx).
-+	 */
-+	secs->xfrm = 3;
-+
- 	ioc.src = (unsigned long)secs;
- 	rc = ioctl(encl->fd, SGX_IOC_ENCLAVE_CREATE, &ioc);
- 	if (rc) {
-diff --git a/tools/testing/selftests/sgx/sigstruct.c b/tools/testing/selftests/sgx/sigstruct.c
-index d73b29becf5b..f548392a2fee 100644
---- a/tools/testing/selftests/sgx/sigstruct.c
-+++ b/tools/testing/selftests/sgx/sigstruct.c
-@@ -331,6 +331,12 @@ bool encl_measure(struct encl *encl)
- 	sigstruct->header.header2[1] = header2[1];
- 	sigstruct->exponent = 3;
- 	sigstruct->body.attributes = SGX_ATTR_MODE64BIT;
-+
-+	/*
-+	 * Setting xfrm to 3 disables extended CPU states and instruction sets
-+	 * like AVX2 inside the enclave. Thus the enclave code has to be built
-+	 * without instructions from extended instruction sets (-mno-avx).
-+	 */
- 	sigstruct->body.xfrm = 3;
- 
- 	/* sanity check */
--- 
-2.49.0
+[1] https://lore.kernel.org/all/Z-zqvmJFI3PkNl6R@slm.duckdns.org/
 
+--we4mrug4rvo3n7yf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZ/amrQAKCRAt3Wney77B
+Sc39AP99KtNaZNwm4vEZCKRSGG9ggne9YFgWlu/J/1H6QhWHhwEAlOeJU05ieaCW
+NpbFj/MBd1Gk3x4gfipNegMDLyOinwA=
+=mfjY
+-----END PGP SIGNATURE-----
+
+--we4mrug4rvo3n7yf--
