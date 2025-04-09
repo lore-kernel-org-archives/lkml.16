@@ -1,125 +1,167 @@
-Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7DE51AAA1E
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 17:22:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C31DD270EDD;
+	Wed,  9 Apr 2025 17:24:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744219355; cv=none; b=Je3XasCBkhExJQTxlVh4CB7GFIQF4VR6+LVq7+1pf/006blcK6zgxBXPLx+CtrYRve8w8SSxk8bg46l0fjBHeoDzY7HPPM5Zlg4wKfVSA9psAgL8H3n1bypGII2LPfVHBBrC27/lkPigKr5De0QZFqibdhhwDKklE9T92UjR9ik=
+	t=1744219454; cv=none; b=sDWz+W2qMrFTUlhCRvbRqUVE1A6eRFGaZXYyn6jfZqV0LzvUJyjRxst5StOC02Wnz6bJg8cPiPWCmMPSHPvjX8DqDFrnn4xWNTTGsZ/iXzR/kQY1JVVLeGJdEegfD2k2vg1PV0g9Gs0mCwrCH+fH5FkTi1KQVcYlrk6NNGEv3xM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744219355; c=relaxed/simple;
-	bh=hgmZjl/0GFu7aV9zyA1pqvTUbV9/RCV8jgKjSe4y/j4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VihL/O+YoauOS7w1RvJSuVyhqgqxEQxr1W66Ei9ew72OtJR22cLZOtGmjrQxP3X6bgie2lFcijBN2CQfwjC0EXbUtGpKrOp4Jfs748zM0Q6D7302JzFWtcNFAXi2S/VREJwFGBMBFlaL+nurc1ehXjXZOEoi5FrLw/jexSNUDnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=axX/TkOn; arc=none smtp.client-ip=209.85.160.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1744219454; c=relaxed/simple;
+	bh=Rwe8Y5EY05DaVr5ui2bXVFwv20PZbqJqTEzIsURCcWY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L0obyshKdipmqxJB0t8bFD2hE6WBD1gG7lYo+Kyz4/aCAzO4QjCsoyG9Vf4F607IxbtPhnao+glTr7zu65SYsA8CkmUY/Zt04DZWQzo4pyOAPSa9sSZfEqCAmD/pXs5jNOpWPh1NKbZtXYsLRQ1KN3x6XsQpDmnkqeYPh/zBQaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YM4ERz/N; arc=none smtp.client-ip=209.85.215.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="axX/TkOn"
-Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-2d060c62b61so1321457fac.0
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 10:22:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YM4ERz/N"
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-af9065f0fc0so4891407a12.2;
+        Wed, 09 Apr 2025 10:24:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744219352; x=1744824152; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KUd3DRgpk7IUXe+BG1VM+vufDZdq+6SFGqAIEWolzZ4=;
-        b=axX/TkOn0RjSqi5z/NHPBF+rR6/5ih1p+OqpIyjTv491dGMUumA5enzLKFwgEyjCsq
-         t30tnVGUeIMhbHHrRAlYasF/BNbJEZNnMRCsUqwtH7E4uC6kPXVB3GeyIKNyRcqMTkCy
-         lcZyPNN/ZK+uk8uTismjcfFELQSySyxounFaIpnMP9dPOiwaOyg8RMVRh1z7CeCPD0lq
-         m51XYsyxxvl1XuRxsjubfWpdWazTcp7T0iD8Zt+xUoahHEykFjX+/peAxBx3MIlQhJS6
-         He/7+w2Be3JapwxfAs7Wxs/WpWL4zeqsrRTQ0AgZiK48tRKNOJ0FTn2L5OcY4XIdoAL8
-         AI7g==
+        d=gmail.com; s=20230601; t=1744219452; x=1744824252; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xd6xaUI5nv9NKBM15KV37XOGcT5rm8Sii0IDXetnYDU=;
+        b=YM4ERz/N4iiWyfXFSwRuCJamm6ZmD5oTqHQkiC1oVhjDPC1apcHC+WWgVSCFxI3leS
+         kBronCs7SXWwNTEBixCgHPRgA16ZDqeqryRdD8yBrecdVjdGexjt8IGakYsZO5dS1xAd
+         GT/si86FZO4pYkjNdk6ZfZH6n2s4SI6QTppAI/L3mLr03R+txDZ+hIYoDanyn36Ms84H
+         dGvD2KwdJZOKENu99P0liMSYDi/dSL3hLxGyvtTYtBMJsHhYPpAFVpZ/3Mu/NI2xg2/h
+         9wRN0pC0YorB241KFOq7IbbVBJ6jGmb6MsWAae95ir1j5HpYfiIgz004IWM9e+BxsnxW
+         6uTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744219352; x=1744824152;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KUd3DRgpk7IUXe+BG1VM+vufDZdq+6SFGqAIEWolzZ4=;
-        b=JjWkP944Ok+fw9Q+gwgi2EwQgnMm36jxMQW1OsltlILU4J31DFDMKG7ed0gR2sXDVe
-         +iM7s5kk2fIawHuwtJDOyje4JcnqHzZwQYSNlmZUv5DLLVPSCeJDWwe9bYqXe1ZbKStF
-         ZHkOXy0FHYvovKxL7W+3/HgFbX1Yetg1LYlsvF9hX7xELIgjflYAmz1P/jhcYS5SkVV2
-         o9FSOxB7uxN1pzRfoZ7S+V2xBMAfUKnLE/SoOBB5XB+639SgK+jp4VRTBCmHQDBcLty5
-         r/mYl4x63KBmhRulC7KNfW3L4axxamGL+SNnjQDz5ksITztDXN/Cs6r7iSmi0JhF41ge
-         4Ygg==
-X-Forwarded-Encrypted: i=1; AJvYcCX8mvqASm9dRTXrzb4JHVpy0rwrmTGY5DJ8tJ/HMTLPpa21bQR3lvGT0TVhzpH3+l372WapLWMNIE5Hqjc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+SL1kWG+g+PWXnnHuxYYZu94gEvOjKpCVDa1al1gE0XdHWKT3
-	90Mf6/Odj2373yv2pgc3EeH+0ch2op4AuiQvhHqXw6QOjs6DeBf+U0jcR51cd08=
-X-Gm-Gg: ASbGncs/Gi/LbAUZf4GATIS/qCBO+v8mAKGk5cmfaTJyD3c5m+LPdASDQKUjvluZryd
-	5ugfKbBoTxCQS+uAbRdy8c3tp8b78CBhUW+yhA5YZcKuJfduBWzjR3sB8gclelL6EKReZCPspXl
-	AbxR285hK6y0BaWIpKmVXxvJJigfOlMv+BtGNXSyKI9JRrw8GRyw8gJLatk6ociFSdUs/Pqtrhy
-	akzabn6wpWJxYVWYVjHw47dPqz+RergqcP5ZNDaxLVcPyh3J9MrEjJ6uoOJOv0rBjDxK2kb8Ta+
-	8hM2j/fexy75PUMfoTMhn7V/AnN/G92XCV1jiubQo4uob5LcNmTODkeEcsaAL2s6jpqlfPjHACJ
-	i2/w/vO0OKpms
-X-Google-Smtp-Source: AGHT+IFztP1mzeKLjJidViQDuyETBIHT+PXnlCCfiLa2H6qKas7z84dDHIdYm/LkCN3/HgD7fYGIwg==
-X-Received: by 2002:a05:6870:7093:b0:2c1:c10e:3230 with SMTP id 586e51a60fabf-2d091815336mr1861013fac.18.1744219351661;
-        Wed, 09 Apr 2025 10:22:31 -0700 (PDT)
-Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2d096cd25fesm295633fac.38.2025.04.09.10.22.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Apr 2025 10:22:31 -0700 (PDT)
-Message-ID: <97d0cc16-cdd4-449c-87f5-f62e0515de97@baylibre.com>
-Date: Wed, 9 Apr 2025 12:22:30 -0500
+        d=1e100.net; s=20230601; t=1744219452; x=1744824252;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xd6xaUI5nv9NKBM15KV37XOGcT5rm8Sii0IDXetnYDU=;
+        b=IRmZ/G46khvwF2kiQ33+3MbP7c8Mqf2prn3u1h9+wZ5TCv0kHIM7jRzisq6Ot+dYEF
+         A1lgV8RA8fOKA5nBg3HsI8BpJu/rFsoEovrMoM0t3lKr96nDak/Tn5XbiFhfDFC2wCD2
+         DCsVcvqETdsue+nDO8z8n4QlQxwuYIW+HEHEZfhJgRNMbenscoSeKRJ3PFfqjUiBHHeK
+         3T7O1yGyl7Rku1uyXex9at87rBTQrAPhsN1MzHOYKzjQXwSWaklfBJxSMFaWj17nW8/P
+         bKfUiRIcspdBlZclLkTKpbopACswpOVUCvDSHcitITmyKAJaj/Zo0rqxEucLrCDXoU2u
+         7F5A==
+X-Forwarded-Encrypted: i=1; AJvYcCV7SgshekNJiWthWrChV98Og98l5MmDMy7cii7AkcehpoOXMUOmyowuYS5YN3KYQqJGxN9SX4j79EdcM9/q@vger.kernel.org, AJvYcCVRaqIx0eUxrH3oP6wshX4slH31z4W/4jTO7afpExXxykV6ph5ca55eyDLdYExQhL1JGp2DHDNHoYM6K2c=@vger.kernel.org, AJvYcCVztw9ZynDLEqXuXl3aGPDPeuLti9gxQbIWoKUek3pHNi747jjbCh5KzdgH6S/XHgxzzS4=@vger.kernel.org, AJvYcCWJ2ufTIjaoWOMIhmHdil5v7sjWf/tdmWTiqmL2G+Rq5U4XCJ6RrCogzdYIJbL+Ggas+417/0f+RCgKEJle@vger.kernel.org, AJvYcCWmkb2+lc5ElaP+GDfCo7IQYK/lXMmX/y7W1MrJQl1j+Rc4ovK4OrkOmIMuPf/rS1clCc4/TF9EnhgGaKM=@vger.kernel.org, AJvYcCWsjMWS1wfFft4ZuUiA0daKJOy/4h1VVqaf7tTXZuoFemnfwQxSpl2XtNmQPF7EOdQoD5p6VyCb@vger.kernel.org, AJvYcCXfyv7SegsjPNDO4jryPe+okL+XIQ4Md0gUvMGcpAOo3eLM+aQNfntuOR80z3tBpCf7JSbfEtaafr5eKHc=@vger.kernel.org, AJvYcCXtpBH852Libf2Dm07oYdkjvZQwzh6TEZwyyxPNmkZLA73l52cAFYj/p21FZq4FcXtZkk4rD/DhfingVbQAXqg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/joGAohHW5EQGkIO5R0QEfKeL5PUYKf/YfKdwSbxhl5qZpZbp
+	3x7yy/4TXx9WJ6RM8waK6cpPv/u8ec18DMX1+6Op7ZDHCoj5xwy9
+X-Gm-Gg: ASbGncvQy47LH+SbbLhOODmJpf9KqAjnX1uJjE0R2CGyCui6gbbvobvukvN4lr1ZHNG
+	zbfjtjAvGaLs2rAYIoY8ZN/nFX0NFwLbvxtnn5vyGATnc5ilyZKqH69xl9gDOkcawWMA52RUMpr
+	ykbuoo4gQu7N3YlE5gyR/b6D8Zu42QjATa20v3ZpM//dYYyvvcs2lXZtV1CU/ODfKQLkjYBrSO1
+	FpTHKWYiobXVsCzUU4/A0czM8lf1YQshThOSDiHzPMmIWDLyU/44eszH9UxS7CYpbNf/5V45Ai3
+	zDUFs17LtjQfYOPX+x035SUXAZDWnS2oMb6XmThZ
+X-Google-Smtp-Source: AGHT+IELcovaPBJxMo6VlfeeTod3PlQVQYXafQRyaLUWNqmSnypRNDEVNTbdlgjgS5FV2ZA5ueCy6w==
+X-Received: by 2002:a17:90b:6ce:b0:301:1d03:93cd with SMTP id 98e67ed59e1d1-306dd556630mr5093919a91.24.1744219451960;
+        Wed, 09 Apr 2025 10:24:11 -0700 (PDT)
+Received: from localhost ([216.228.127.131])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306dd12b4d5sm2098089a91.25.2025.04.09.10.24.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 10:24:11 -0700 (PDT)
+Date: Wed, 9 Apr 2025 13:24:08 -0400
+From: Yury Norov <yury.norov@gmail.com>
+To: Kuan-Wei Chiu <visitorckw@gmail.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, jk@ozlabs.org,
+	joel@jms.id.au, eajames@linux.ibm.com, andrzej.hajda@intel.com,
+	neil.armstrong@linaro.org, rfoss@kernel.org,
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
+	dmitry.torokhov@gmail.com, mchehab@kernel.org,
+	awalls@md.metrocast.net, hverkuil@xs4all.nl,
+	miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+	louis.peens@corigine.com, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+	parthiban.veerasooran@microchip.com, arend.vanspriel@broadcom.com,
+	johannes@sipsolutions.net, gregkh@linuxfoundation.org,
+	jirislaby@kernel.org, akpm@linux-foundation.org, jdelvare@suse.com,
+	linux@roeck-us.net, alexandre.belloni@bootlin.com, pgaj@cadence.com,
+	hpa@zytor.com, alistair@popple.id.au, linux@rasmusvillemoes.dk,
+	Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+	jernej.skrabec@gmail.com, kuba@kernel.org,
+	linux-kernel@vger.kernel.org, linux-fsi@lists.ozlabs.org,
+	dri-devel@lists.freedesktop.org, linux-input@vger.kernel.org,
+	linux-media@vger.kernel.org, linux-mtd@lists.infradead.org,
+	oss-drivers@corigine.com, netdev@vger.kernel.org,
+	linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev,
+	brcm80211-dev-list.pdl@broadcom.com, linux-serial@vger.kernel.org,
+	bpf@vger.kernel.org, jserv@ccns.ncku.edu.tw, Frank.Li@nxp.com,
+	linux-hwmon@vger.kernel.org, linux-i3c@lists.infradead.org,
+	david.laight.linux@gmail.com, andrew.cooper3@citrix.com,
+	Yu-Chun Lin <eleanor15x@gmail.com>
+Subject: Re: [PATCH v4 05/13] serial: max3100: Replace open-coded parity
+ calculation with parity_odd()
+Message-ID: <Z_atODqZDkff5sjj@yury>
+References: <20250409154356.423512-1-visitorckw@gmail.com>
+ <20250409154356.423512-6-visitorckw@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/4] iio: adc: ad4000: Add support for SPI offload
-To: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: jic23@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com,
- corbet@lwn.net, marcelo.schmitt1@gmail.com
-References: <cover.1743110188.git.marcelo.schmitt@analog.com>
- <386ce043a0e3fc9e8ff71f17aef8de128ce5869e.1743110188.git.marcelo.schmitt@analog.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <386ce043a0e3fc9e8ff71f17aef8de128ce5869e.1743110188.git.marcelo.schmitt@analog.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409154356.423512-6-visitorckw@gmail.com>
 
-On 3/27/25 4:24 PM, Marcelo Schmitt wrote:
-> FPGA HDL projects can include a PWM generator in addition to SPI-Engine.
-> The PWM IP is used to trigger SPI-Engine offload modules that in turn set
-> SPI-Engine to execute transfers to poll data from the ADC. That allows data
-> to be read at the maximum sample rates. Also, it is possible to set a
-> specific sample rate by setting the proper PWM duty cycle and related state
-> parameters, thus allowing an adjustable ADC sample rate when a PWM (offload
-> trigger) is used in combination with SPI-Engine.
+On Wed, Apr 09, 2025 at 11:43:48PM +0800, Kuan-Wei Chiu wrote:
+> Refactor parity calculations to use the standard parity_odd() helper.
+> This change eliminates redundant implementations.
 > 
-> Add support for SPI offload.
-> 
-> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+> Co-developed-by: Yu-Chun Lin <eleanor15x@gmail.com>
+> Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
+> Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
 > ---
-
-I think I spotted a bug. With that fixed...
-
-Reviewed-by: David Lechner <dlechner@baylibre.com>
-
-> @@ -690,6 +942,15 @@ static int ad4000_prepare_3wire_mode_message(struct ad4000_state *st,
+>  drivers/tty/serial/max3100.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/tty/serial/max3100.c b/drivers/tty/serial/max3100.c
+> index f2dd83692b2c..36ed41eef7b1 100644
+> --- a/drivers/tty/serial/max3100.c
+> +++ b/drivers/tty/serial/max3100.c
+> @@ -16,6 +16,7 @@
+>  /* 4 MAX3100s should be enough for everyone */
+>  #define MAX_MAX3100 4
 >  
->  	xfers[1].rx_buf = &st->scan.data;
->  	xfers[1].len = BITS_TO_BYTES(chan->scan_type.storagebits);
-
-Now this needs to be:
-
-	xfer->len = chan->scan_type.realbits > 16 ? 4 : 2;
-
-Otherwise when there is SPI offload, this could read 2 words because
-storagebits is always == 32.
-
-> +
-> +	/*
-> +	 * If the device is set up for SPI offloading, IIO channel scan_type is
-> +	 * set to IIO_CPU. When that is the case, use larger SPI word sizes for
-> +	 * single-shot reads too. Thus, sample data can be correctly handled in
-> +	 * ad4000_single_conversion() according to scan_type endianness.
-> +	 */
-> +	if (chan->scan_type.endianness != IIO_BE)
-> +		xfers[1].bits_per_word = chan->scan_type.realbits;
->  	xfers[1].delay.value = st->time_spec->t_quiet2_ns;
->  	xfers[1].delay.unit = SPI_DELAY_UNIT_NSECS;
+> +#include <linux/bitops.h>
+>  #include <linux/container_of.h>
+>  #include <linux/delay.h>
+>  #include <linux/device.h>
+> @@ -133,7 +134,7 @@ static int max3100_do_parity(struct max3100_port *s, u16 c)
+>  	else
+>  		c &= 0xff;
 >  
+> -	parity = parity ^ (hweight8(c) & 1);
+> +	parity = parity ^ parity_odd(c);
 
+This can be simplified for more unless I misunderstand something...
+
+From: Yury Norov <yury.norov@gmail.com>
+Date:   Wed Apr 9 13:22:04 2025 -0400
+
+serial: max3100: Replace open-coded parity
+
+diff --git a/drivers/tty/serial/max3100.c b/drivers/tty/serial/max3100.c
+index f2dd83692b2c..07d332b8e87d 100644
+--- a/drivers/tty/serial/max3100.c
++++ b/drivers/tty/serial/max3100.c
+@@ -121,20 +121,12 @@ static DEFINE_MUTEX(max3100s_lock);		   /* race on probe */
+ 
+ static int max3100_do_parity(struct max3100_port *s, u16 c)
+ {
+-	int parity;
+-
+-	if (s->parity & MAX3100_PARITY_ODD)
+-		parity = 1;
+-	else
+-		parity = 0;
+-
+ 	if (s->parity & MAX3100_7BIT)
+ 		c &= 0x7f;
+ 	else
+ 		c &= 0xff;
+ 
+-	parity = parity ^ (hweight8(c) & 1);
+-	return parity;
++	return s->parity & MAX3100_PARITY_ODD ? !parity(c) : parity(c);
+ }
+ 
+ static int max3100_check_parity(struct max3100_port *s, u16 c)
