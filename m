@@ -1,124 +1,110 @@
-Received: from server.wki.vra.mybluehostin.me (server.wki.vra.mybluehostin.me [162.240.238.73])
+Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24B9625D556;
-	Wed,  9 Apr 2025 11:26:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.240.238.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2BAF25C6FB;
+	Wed,  9 Apr 2025 11:27:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744198021; cv=none; b=EPo7bj9dK9CnCbGD1owJMpbm4fK1Y5+5rV2ClksmUc5X1IAuQEK1AY6CJNUZ+XFGG8ufsBOJT/w43cMf2N2BJmNgaGdEFsNTL+aFs4Zd39/pFQ/aw0zONCo5/opBaYsY/sQJNttDuHh9ssDvY6Raf1LHpyY05IwSiyOH3qvC7N0=
+	t=1744198045; cv=none; b=FKizg8hbQgdVSyKdqwcke0TuigV15DaWBhfsjbLMjAZ38m11Cwm+MMPBOGphMx5+oGEB5JumnZ0BTPTt02n83dRkOng0EskFGI5ciE+amfKfP7X/GRQ0bdwHs4I7J9jXS+00/4R8DSX3Au05NfmRiXPXwjehKh9gAKt7g8yM7vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744198021; c=relaxed/simple;
-	bh=d5BtOjPPRFG910sk+qDsz+sS/QMq62FGUCQDk6Lox74=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=g5mlZ71ZLVUnX0XPKnQYQsGi7p7wvcK+fY7W/U3duuGM1CnmEqmCmQrBymSxPBqWypmhO2zZ9zzJMoH7Ok2Rru89pAog/RcciF4O7DbwCgcAPeD5F2QSbOWRyu5HB7d+ZE6ksHVzsngApXdYdQYr6IPvydHbKl86YW5/18kXJl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com; spf=pass smtp.mailfrom=couthit.com; dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b=EZiTOGN5; arc=none smtp.client-ip=162.240.238.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=couthit.com
+	s=arc-20240116; t=1744198045; c=relaxed/simple;
+	bh=+o22E5RcH+sglBGMSqX6O933OVxTfE119DlmXip/o50=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nzKUX7pYlGlTWhuYlqenljnCvOxJt+6yrtjeF0BjaDqB97o7q/b81/shL516aiARNbV6EnUCw3JDN4oTVy2uUG73K3NFFAfNPJgY4Y2kWiwhJOvqubN97Ci7pxJWQ3f5GRkLW8BKf4inEnGU9363E7N6oOWFHZXiL+FLlmD7420=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Stl/b+pz; arc=none smtp.client-ip=91.218.175.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b="EZiTOGN5"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=couthit.com
-	; s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:
-	References:In-Reply-To:Message-ID:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=A8OUMSsqyLIihlV/s3RjCMqd4+HGdZT4D0Danegj940=; b=EZiTOGN5QQPVhS/G4Z4pNruK7K
-	Lfv9vKeuYOP1u1erh9WoRg7nI1cSIKzxsHkncbTo8oKfM7F2pMbuG4ZTcgRRkQ8vx4BZcni338eCh
-	XIKPyYQeTfJ3aMPeDWr1JPZP9OehXPDOD5S3mTp9mYMalDEZwAGo9WBoBEDLjNi4LHK9q0BItJ70S
-	cJupGhxCNYFmNmk5ZLNovJABpuWcqmUiBWQdt9ldIGqiVfvEHqHyG1V+G//RoO9XaC/+8qDju3hHf
-	RAIwH/K/T4gzv6ZTwAwnljEsCfjbyKN9Sw6TRs0dS48JFmBtQaC+esYd7hKOjPMiQLUkod+2KGGh4
-	olE+CtdA==;
-Received: from [122.175.9.182] (port=6319 helo=zimbra.couthit.local)
-	by server.wki.vra.mybluehostin.me with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.1)
-	(envelope-from <parvathi@couthit.com>)
-	id 1u2Ta2-000000000OO-3638;
-	Wed, 09 Apr 2025 16:56:54 +0530
-Received: from zimbra.couthit.local (localhost [127.0.0.1])
-	by zimbra.couthit.local (Postfix) with ESMTPS id C2069178207F;
-	Wed,  9 Apr 2025 16:56:46 +0530 (IST)
-Received: from localhost (localhost [127.0.0.1])
-	by zimbra.couthit.local (Postfix) with ESMTP id 9F487178245B;
-	Wed,  9 Apr 2025 16:56:46 +0530 (IST)
-Received: from zimbra.couthit.local ([127.0.0.1])
-	by localhost (zimbra.couthit.local [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id emKaGm-byJBY; Wed,  9 Apr 2025 16:56:46 +0530 (IST)
-Received: from zimbra.couthit.local (zimbra.couthit.local [10.10.10.103])
-	by zimbra.couthit.local (Postfix) with ESMTP id 52C58178207F;
-	Wed,  9 Apr 2025 16:56:46 +0530 (IST)
-Date: Wed, 9 Apr 2025 16:56:46 +0530 (IST)
-From: Parvathi Pudi <parvathi@couthit.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: parvathi <parvathi@couthit.com>, danishanwar <danishanwar@ti.com>, 
-	rogerq <rogerq@kernel.org>, andrew+netdev <andrew+netdev@lunn.ch>, 
-	davem <davem@davemloft.net>, edumazet <edumazet@google.com>, 
-	kuba <kuba@kernel.org>, pabeni <pabeni@redhat.com>, 
-	robh <robh@kernel.org>, krzk+dt <krzk+dt@kernel.org>, 
-	conor+dt <conor+dt@kernel.org>, nm <nm@ti.com>, 
-	ssantosh <ssantosh@kernel.org>, tony <tony@atomide.com>, 
-	richardcochran <richardcochran@gmail.com>, 
-	glaroque <glaroque@baylibre.com>, schnelle <schnelle@linux.ibm.com>, 
-	m-karicheri2 <m-karicheri2@ti.com>, rdunlap <rdunlap@infradead.org>, 
-	diogo ivo <diogo.ivo@siemens.com>, basharath <basharath@couthit.com>, 
-	horms <horms@kernel.org>, jacob e keller <jacob.e.keller@intel.com>, 
-	m-malladi <m-malladi@ti.com>, 
-	javier carrasco cruz <javier.carrasco.cruz@gmail.com>, 
-	afd <afd@ti.com>, s-anna <s-anna@ti.com>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, 
-	netdev <netdev@vger.kernel.org>, 
-	devicetree <devicetree@vger.kernel.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	linux-omap <linux-omap@vger.kernel.org>, 
-	pratheesh <pratheesh@ti.com>, Prajith Jayarajan <prajith@ti.com>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, praneeth <praneeth@ti.com>, 
-	srk <srk@ti.com>, rogerq <rogerq@ti.com>, 
-	krishna <krishna@couthit.com>, pmohan <pmohan@couthit.com>, 
-	mohan <mohan@couthit.com>
-Message-ID: <890030824.1024606.1744198006152.JavaMail.zimbra@couthit.local>
-In-Reply-To: <64a3cd3b-feee-4414-8569-01642b127ac8@lunn.ch>
-References: <20250407102528.1048589-1-parvathi@couthit.com> <20250407113714.1050076-6-parvathi@couthit.com> <64a3cd3b-feee-4414-8569-01642b127ac8@lunn.ch>
-Subject: Re: [PATCH net-next v4 05/11] net: ti: prueth: Adds ethtool support
- for ICSSM PRUETH Driver
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Stl/b+pz"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744198037;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=dYki+8hZ1VIAcnV82v/klkogc/Iawb6YfIpaQ5C6q3k=;
+	b=Stl/b+pz4nWZWrB4ZorspouS2L3UN47q7kcQ8QaoOa3j2K2lS490bmEngmKNLDPqzcrOgU
+	pCDnginI67mJb8d5ZbCvcneL6MJ8bFqDDaUo2QDuMjezS9ogpOsd49vQ9YTqYdlXdAxxfx
+	C7un6NwtR/Y79Tq7Hpe9f0DR00t9uQ8=
+From: Jiayuan Chen <jiayuan.chen@linux.dev>
+To: kuba@kernel.org,
+	edumazet@google.com
+Cc: mrpre@163.com,
+	Jiayuan Chen <jiayuan.chen@linux.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Neal Cardwell <ncardwell@google.com>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	David Ahern <dsahern@kernel.org>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
+	Sabrina Dubroca <sd@queasysnail.net>,
+	Antony Antony <antony.antony@secunet.com>,
+	Christian Hopps <chopps@labn.net>,
+	netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v4 0/2] tcp: add a new TW_PAWS drop reason
+Date: Wed,  9 Apr 2025 19:26:03 +0800
+Message-ID: <20250409112614.16153-1-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.8.15_GA_3968 (ZimbraWebClient - FF113 (Linux)/8.8.15_GA_3968)
-Thread-Topic: prueth: Adds ethtool support for ICSSM PRUETH Driver
-Thread-Index: Id9woddb5lTowb7DJcpLv93q8Zy6wA==
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - server.wki.vra.mybluehostin.me
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - couthit.com
-X-Get-Message-Sender-Via: server.wki.vra.mybluehostin.me: authenticated_id: smtp@couthit.com
-X-Authenticated-Sender: server.wki.vra.mybluehostin.me: smtp@couthit.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi,
+Devices in the networking path, such as firewalls, NATs, or routers, which
+can perform SNAT or DNAT, use addresses from their own limited address
+pools to masquerade the source address during forwarding, causing PAWS
+verification to fail more easily under TW status.
 
->> +#define PRUETH_MODULE_VERSION "0.2"
-> 
->> +static void icssm_emac_get_drvinfo(struct net_device *ndev,
->> +				   struct ethtool_drvinfo *info)
->> +{
->> +	strscpy(info->driver, PRUETH_MODULE_DESCRIPTION, sizeof(info->driver));
->> +	strscpy(info->version, PRUETH_MODULE_VERSION, sizeof(info->version));
-> 
-> Driver version numbers are pointless, they never change, but the
-> kernel is changing all the time. Leave version blank, and the core
-> will fill in the kernel version, which is useful.
-> 
+Currently, packet loss statistics for PAWS can only be viewed through MIB,
+which is a global metric and cannot be precisely obtained through tracing
+to get the specific 4-tuple of the dropped packet. In the past, we had to
+use kprobe ret to retrieve relevant skb information from
+tcp_timewait_state_process().
 
-Understood. We will address this in the next version.
+We add a drop_reason pointer and a new counter.
+
+---
+v3 -> v4:
+1. Update commit message and make it more concise.
+2. Integrated Reviewed-by tag from v3.
+https://lore.kernel.org/netdev/20250407140001.13886-1-jiayuan.chen@linux.dev/T/#t
+
+v2 -> v3: Use new SNMP counter and drop reason suggested by Eric.
+https://lore.kernel.org/netdev/5cdc1bdd9caee92a6ae932638a862fd5c67630e8@linux.dev/T/#t
+
+I didn't provide a packetdrill script.
+I struggled for a long time to get packetdrill to fix the client port, but
+ultimately failed to do so...
+
+Instead, I wrote my own program to trigger PAWS, which can be found at
+https://github.com/mrpre/nettrigger/tree/main
+'''
+//assume nginx running on 172.31.75.114:9999, current host is 172.31.75.115
+iptables -t filter -I OUTPUT -p tcp --sport 12345 --tcp-flags RST RST -j DROP
+./nettrigger -i eth0 -s 172.31.75.115:12345 -d 172.31.75.114:9999 -action paws
+'''
 
 
-Thanks and Regards,
-Parvathi.
+Jiayuan Chen (2):
+  tcp: add TCP_RFC7323_TW_PAWS drop reason
+  tcp: add LINUX_MIB_PAWS_TW_REJECTED counter
+
+ Documentation/networking/net_cachelines/snmp.rst | 2 ++
+ include/net/dropreason-core.h                    | 7 +++++++
+ include/net/tcp.h                                | 3 ++-
+ include/uapi/linux/snmp.h                        | 1 +
+ net/ipv4/proc.c                                  | 1 +
+ net/ipv4/tcp_ipv4.c                              | 3 ++-
+ net/ipv4/tcp_minisocks.c                         | 9 ++++++---
+ net/ipv6/tcp_ipv6.c                              | 3 ++-
+ 8 files changed, 23 insertions(+), 6 deletions(-)
+
+-- 
+2.47.1
 
