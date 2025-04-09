@@ -1,59 +1,104 @@
-Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FE2C33EA
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 10:09:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14F6B25D208;
+	Wed,  9 Apr 2025 10:09:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744193360; cv=none; b=Wh2HAz3V6Rj587zREDvHcI9bl+hp3LOe1DyeTuDUnVQcGpf/2Cu6zTEiB/bdVyx4jXn6OYa9/rwhHtar5tNdbogWoBex1Gyp58wCnRgh7K/h9W/pHSueVzdNuiDbMwPbwHg0+q2ZqsKysoNHmQeRvSpr4/qfkOIieYpdntHxPDg=
+	t=1744193388; cv=none; b=Pq74pY3IHvGGGHgnULZLhfOPINskNODmTT5U4HtAhpWcDsfZ1HxZjlKUI4NoJESLs7PnmhQYonEpLE6NzYr+X1ePpCs7XvIwwZPgtiRAogMl9nz420K0A7uVeyTdkhlHu8cDXDLGwbrI8sd5RdxW+O0uevZEPTCBEYnlEtaPZmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744193360; c=relaxed/simple;
-	bh=c9DuTSaPjiO8StDDsOMg3WMYUwFIi3AqQOH/c0eCiCg=;
+	s=arc-20240116; t=1744193388; c=relaxed/simple;
+	bh=kc1qcLsVngK5MA1x/SDfInuUDccFMI4VtE0nArtN4nU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SGoDyToWF5TrUZTOHrequXv2LdydL1kpkfj++lHv5j0I7AUO/czxwdItIzrrFEUvgYk8AGNtDF3u+YSYcpP13AMLscyMt3y3cHNC0eu0i2zKMXUppLdVdhqZcwJomkh0ACRyIJfuZo6DML+eU7pGHTnjfU4VN2+6UHx3enoIKC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wvo+hPan; arc=none smtp.client-ip=95.215.58.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wvo+hPan"
-Message-ID: <b772404d-ef1f-4ca2-a7a8-e3fe7762dd8c@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744193355;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=r3Osk/xwKtmBgpfhItgZqw/w4soU25CKVKTCKayJfqo=;
-	b=wvo+hPanftHBPyAT/EJPxMtZa+uMbwcJauyG+wy5u7oNwXMj62DEhCO0B6k84VJyPr1hq2
-	pfeygywI1oBum0SKToM8q7RC9d8cIGN6Ko1Enc7YEgoOJ3qsBu+uiUCGKPdoLQbBOGolRs
-	8dVCC+T+WlkNWxpr2/RhMOwnUn5gdw4=
-Date: Wed, 9 Apr 2025 11:09:12 +0100
+	 In-Reply-To:Content-Type; b=ulkGdOMDpY1c33tbT7Za59vHC+AnzgXohCMKVKrZqflWeQ5sJBPKJiA8T42DC7RYWwJ4xgQZ8Eo89fAQeAVD0OY55t/AOdH12mdABvS/zoL91IL5WiDODHONU/vaiP0ATHTdfPYHu9nz/mBswFCcIZFcWqqcHG4HKJkbdG+i+I4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D0B2F106F;
+	Wed,  9 Apr 2025 03:09:46 -0700 (PDT)
+Received: from [10.162.42.12] (a077893.blr.arm.com [10.162.42.12])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7E1043F59E;
+	Wed,  9 Apr 2025 03:09:44 -0700 (PDT)
+Message-ID: <0ec536d2-4b82-4e97-9985-15cd431059ba@arm.com>
+Date: Wed, 9 Apr 2025 15:39:41 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v1] ptp: ocp: add irig and dcf NULL-check in
- __handle_signal functions
-To: Sagi Maimon <maimon.sagi@gmail.com>, jonathan.lemon@gmail.com,
- richardcochran@gmail.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-References: <20250409092446.64202-1-maimon.sagi@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] selftests/mm: Fix compiler -Wmaybe-uninitialized warning
+To: David Hildenbrand <david@redhat.com>, linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250409095006.1422620-1-anshuman.khandual@arm.com>
+ <9da46633-e9c1-42a7-b52b-16cf89836abc@redhat.com>
 Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-In-Reply-To: <20250409092446.64202-1-maimon.sagi@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <9da46633-e9c1-42a7-b52b-16cf89836abc@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 09/04/2025 10:24, Sagi Maimon wrote:
-> In __handle_signal_outputs and __handle_signal_inputs add
-> irig and dcf NULL-check
+
+
+On 4/9/25 15:27, David Hildenbrand wrote:
+> On 09.04.25 11:50, Anshuman Khandual wrote:
+>> Following build warning comes up for cow test as 'transferred' variable has
+>> not been initialized. Fix the warning via zero init for the variable.
+>>
+>>    CC       cow
+>> cow.c: In function ‘do_test_vmsplice_in_parent’:
+>> cow.c:365:61: warning: ‘transferred’ may be used uninitialized [-Wmaybe-uninitialized]
+>>    365 |                 cur = read(fds[0], new + total, transferred - total);
+>>        |                                                 ~~~~~~~~~~~~^~~~~~~
+>> cow.c:296:29: note: ‘transferred’ was declared here
+>>    296 |         ssize_t cur, total, transferred;
+>>        |                             ^~~~~~~~~~~
+>>    CC       compaction_test
+>>    CC       gup_longterm
+>>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Shuah Khan <shuah@kernel.org>
+>> Cc: linux-mm@kvack.org
+>> Cc: linux-kselftest@vger.kernel.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>>   tools/testing/selftests/mm/cow.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/tools/testing/selftests/mm/cow.c b/tools/testing/selftests/mm/cow.c
+>> index f0cb14ea8608..b6cfe0a4b7df 100644
+>> --- a/tools/testing/selftests/mm/cow.c
+>> +++ b/tools/testing/selftests/mm/cow.c
+>> @@ -293,7 +293,7 @@ static void do_test_vmsplice_in_parent(char *mem, size_t size,
+>>           .iov_base = mem,
+>>           .iov_len = size,
+>>       };
+>> -    ssize_t cur, total, transferred;
+>> +    ssize_t cur, total, transferred = 0;
+>>       struct comm_pipes comm_pipes;
+>>       char *old, *new;
+>>       int ret, fds[2];
 > 
-> Signed-off-by: Sagi Maimon <maimon.sagi@gmail.com>
+> 
+> if (before_fork) {
+>     transferred = vmsplice(fds[1], &iov, 1, 0);
+> ...
+> 
+> if (!before_fork) {
+>     transferred = vmsplice(fds[1], &iov, 1, 0);
+> ...
+> 
+> for (total = 0; total < transferred; total += cur) {
+> ...
+> 
+> 
+> And I don't see any jump label that could jump to code that would ve using transferred.
+> 
+> What am I missing?
 
-Reviewed-by: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-
+Probably because both those conditional statements are not mutually
+exclusive above with an if-else construct. Hence compiler flags it
+rather as a false positive ? Initializing with 0 just works around
+that false positive.
