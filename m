@@ -1,228 +1,107 @@
-Received: from dediextern.your-server.de (dediextern.your-server.de [85.10.215.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F5DA1DFFD;
-	Wed,  9 Apr 2025 15:17:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.10.215.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAD4C1482F5;
+	Wed,  9 Apr 2025 15:18:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744211881; cv=none; b=TWJ3Wk4eGuQnvlGqVqg+JfHSVKodJUGMB5lsZW48jGw9NLLjuollejdWzkKshuDRNGE6tLmCVjv+mqSjDxAp/GxHkmlGnaDp9H9rxBZEH56Mr6wtWlgm3qEIMW48wwl7Sd/JvwpGl4EXMqmwlcYvlaDYitmFrgwpxZ5zb1IOPJU=
+	t=1744211918; cv=none; b=ZAHdSFdg6xNVe9mDMdASGlHPlIBBIS+L4ZgLlMMhO0RoOAZlp5UFO3XV3vIa7uckHTsNRn88KluE2nsQgXb0pf0s/77h8iuvQq6zGrHErGUH8aGMczoLlpkOCJ8PzB0RBS8TyER3Iy21eFfPYI3zGgJ/n5GLocrT9ZHsaFm/ylE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744211881; c=relaxed/simple;
-	bh=fz9JUrz7Jcqv5zV5815euWKNMRBXwDy2+iRh8qVXsls=;
-	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=YLYj3K9xvK+iiL7h3JYBwKzWPes7wEKXoKwTBX6xaDKDbEUvfdo4gVg/aWbG/K1eCFO9ZQ/KAQH9GhC2rjGSbXdHGUPWH1H7hF4iebAV5UPugYI9tTrC1YDqvo2OaCNu6LAxFx0V8BTFkZFfLuMXzGqOIXQuYK7ls8/wpm8+Uh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hetzner-cloud.de; spf=pass smtp.mailfrom=hetzner-cloud.de; arc=none smtp.client-ip=85.10.215.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hetzner-cloud.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hetzner-cloud.de
-Received: from sslproxy01.your-server.de ([78.46.139.224])
-	by dediextern.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <marcus.wichelmann@hetzner-cloud.de>)
-	id 1u2XBX-000Dxr-88; Wed, 09 Apr 2025 17:17:51 +0200
-Received: from [2a0d:3344:1523:1f10:f118:b2d4:edbb:54af]
-	by sslproxy01.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <marcus.wichelmann@hetzner-cloud.de>)
-	id 1u2XBW-000HjF-34;
-	Wed, 09 Apr 2025 17:17:50 +0200
-Message-ID: <d33f0ab4-4dc4-49cd-bbd0-055f58dd6758@hetzner-cloud.de>
-Date: Wed, 9 Apr 2025 17:17:49 +0200
+	s=arc-20240116; t=1744211918; c=relaxed/simple;
+	bh=uViSNOAqAkmUraE/cJ3HBL1B127TQ8IrrZ680tfIqa0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jstc3qorrCrZt9qkEyx+jJ3ySlSxTjHy32hqBR6bd9ukQzpmKfZXGbAEH/c8tBYVjawK0qlqFYL3mRmnwFlw+3ejDB8QTCyTWqM05Pgw8j/GPcdS1K2SnfrloQuC6XFQMqBvQRzOYxJ5lqlfHN/iOTjbCPcBiZOpGut2J46jHDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jyh/lUEU; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jyh/lUEU"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-39ac56756f6so5814031f8f.2;
+        Wed, 09 Apr 2025 08:18:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744211915; x=1744816715; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=lGKy6jggFaaAC/3IEsCxAnoHmSQ+hWKoUuhM5yojB78=;
+        b=jyh/lUEUMXjodMiPtgY7ZlrlZ5zeRkqbtV9XTnlT5KyBCnsWGk/emTJpDVf+sNwuGJ
+         KPp5FNJOlSIy45ciFBSWtHg0Ge0xaYQbHKQJ57V2DvldixxRilA7D4MGn3QUba62yxtI
+         ENKrME6gmPVv8V0esZ8Es9gByAskdXTrBy9SRqIiQLp1TbXlnKukpnA5ejbgAmp5Il5n
+         aNprz1C2FPz34ZTsT1KyiedkNjReTxPZZd/K5W6dTZl7Sk32REvF4C5uwl1FXopS6w1l
+         kS7XNRvRNS/2+CREW6TQDgGE8NmkuItHPOqm/giAT4QGSgLHboatRhLqzOtYBmwGfNGN
+         iRrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744211915; x=1744816715;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lGKy6jggFaaAC/3IEsCxAnoHmSQ+hWKoUuhM5yojB78=;
+        b=rvBP8LG4htj2rqf1x94TK1pGX2V3GSFFrmlGFuVKAe34UbyugYyt5OJ2+OfmtS18NE
+         HnTaeuQF4TY7Je1/0DF1P/jqbBWI1qV+AGHUoMxRQQkw1VH6kodcqmO4lF13lU4wOYmG
+         eYs8DxBh/nW6idrFjZU1CGYKiKlwde1cXIj/9WXwkusgHd3Uo8U7zTWCPVl9bR/Lrynd
+         Q76zyX0oKtX5Rb67nd+AFmWGACpM22TTEhcnyHq69HAN3gma2CcancYAvqOhO9o9+Kqz
+         rUsMJWcrO7MjvCQuo+7gCG8qBO3u/VezbJwBrlIcuFiBfcJ3sCo0+aU9+ypswK2Vj8Ad
+         ASFg==
+X-Forwarded-Encrypted: i=1; AJvYcCWel++a2OA7xxrHR7843PKborGbt0dGuzLi63p9pSnJZEHOiEXDlOiBv92LFlzEkyphx8G4cV6MwACOnpyp@vger.kernel.org, AJvYcCX0OVvzCMec4dhhR/tNPG+IliWfokSBIJHZaVOG2N7SaIgoajdFaydASIovaXr3Xl+RfmZ1nMG9BE2TFhtcguY=@vger.kernel.org, AJvYcCXQpRF2vF0LYhadjis22FfgMmgty3RtW6O1ISIQkWTz1UjX5WskxWjXOS3NHNkEsHx8dtYO4KqW5e5Rx03hew==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyrkKFdaLaGzjfQxtf1mIbc0J9dDVRwyPVZJWaiieOdT3K0PIo
+	RQcQFXY7C5C9h+T8eKsNJvrBMc8P4yoNyfuPwL4V/CI8X5cAR3LH
+X-Gm-Gg: ASbGncs8TFBlPHbsFjBz8UOCRJ0ffdzb5rVQRK2V+CMZm4ORCsJCDjv/lyMEbjbgwDS
+	Imo2WpqCcRGcNA1OQgzna9E3pFG20uot/exdn+8PsFEhZLmeaPrK8KsDggwH+iqv1BHHA8z4tGo
+	K46RJCEPKSqOos3CS0D3Cw5g78ZjFMky3h7Ke7bNsW7cUCN0qhEvTQXVhQ5akXgrnie32MPMCIE
+	EEBTDXcb0chQ6kyGd1+0ym8LEjS7KKZlOCGPBT39nMFMddDueO8Gapz0Yy5cZG7zzAWwc2LTDM9
+	81rcF9QF+zT3zQVtYWLrr7VkRMFMRJr8U1KXm06dMAFCRdF1UE7hzxVZ
+X-Google-Smtp-Source: AGHT+IHrWEeUbn/ofyzKeGsGVmMQyyF7VSvjS6DBt2BYcu1AMBMUwUXtdCBz1agZtaaqRgeeGIh58g==
+X-Received: by 2002:a05:6000:2aa:b0:391:158f:3d59 with SMTP id ffacd0b85a97d-39d8852ecc6mr2918176f8f.15.1744211914798;
+        Wed, 09 Apr 2025 08:18:34 -0700 (PDT)
+Received: from f (cst-prg-17-207.cust.vodafone.cz. [46.135.17.207])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d89402a08sm1881192f8f.100.2025.04.09.08.18.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 08:18:34 -0700 (PDT)
+Date: Wed, 9 Apr 2025 17:18:26 +0200
+From: Mateusz Guzik <mjguzik@gmail.com>
+To: Colin Ian King <colin.i.king@gmail.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
+	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] select: do_pollfd: add unlikely branch hint return path
+Message-ID: <llt32u2qdjyu3giwhxesrahsh5a2ks6behzzkjky7fe7k6xync@pvixqbom73il>
+References: <20250409143138.568173-1-colin.i.king@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-From: Marcus Wichelmann <marcus.wichelmann@hetzner-cloud.de>
-Autocrypt: addr=marcus.wichelmann@hetzner-cloud.de; keydata=
- xsFNBGJGrHIBEADXeHfBzzMvCfipCSW1oRhksIillcss321wYAvXrQ03a9VN2XJAzwDB/7Sa
- N2Oqs6JJv4u5uOhaNp1Sx8JlhN6Oippc6MecXuQu5uOmN+DHmSLObKVQNC9I8PqEF2fq87zO
- DCDViJ7VbYod/X9zUHQrGd35SB0PcDkXE5QaPX3dpz77mXFFWs/TvP6IvM6XVKZce3gitJ98
- JO4pQ1gZniqaX4OSmgpHzHmaLCWZ2iU+Kn2M0KD1+/ozr/2bFhRkOwXSMYIdhmOXx96zjqFV
- vIHa1vBguEt/Ax8+Pi7D83gdMCpyRCQ5AsKVyxVjVml0e/FcocrSb9j8hfrMFplv+Y43DIKu
- kPVbE6pjHS+rqHf4vnxKBi8yQrfIpQqhgB/fgomBpIJAflu0Phj1nin/QIqKfQatoz5sRJb0
- khSnRz8bxVM6Dr/T9i+7Y3suQGNXZQlxmRJmw4CYI/4zPVcjWkZyydq+wKqm39SOo4T512Nw
- fuHmT6SV9DBD6WWevt2VYKMYSmAXLMcCp7I2EM7aYBEBvn5WbdqkamgZ36tISHBDhJl/k7pz
- OlXOT+AOh12GCBiuPomnPkyyIGOf6wP/DW+vX6v5416MWiJaUmyH9h8UlhlehkWpEYqw1iCA
- Wn6TcTXSILx+Nh5smWIel6scvxho84qSZplpCSzZGaidHZRytwARAQABzTZNYXJjdXMgV2lj
- aGVsbWFubiA8bWFyY3VzLndpY2hlbG1hbm5AaGV0em5lci1jbG91ZC5kZT7CwZgEEwEIAEIW
- IQQVqNeGYUnoSODnU2dJ0we/n6xHDgUCYkascgIbAwUJEswDAAULCQgHAgMiAgEGFQoJCAsC
- BBYCAwECHgcCF4AACgkQSdMHv5+sRw4BNxAAlfufPZnHm+WKbvxcPVn6CJyexfuE7E2UkJQl
- s/JXI+OGRhyqtguFGbQS6j7I06dJs/whj9fOhOBAHxFfMG2UkraqgAOlRUk/YjA98Wm9FvcQ
- RGZe5DhAekI5Q9I9fBuhxdoAmhhKc/g7E5y/TcS1s2Cs6gnBR5lEKKVcIb0nFzB9bc+oMzfV
- caStg+PejetxR/lMmcuBYi3s51laUQVCXV52bhnv0ROk0fdSwGwmoi2BDXljGBZl5i5n9wuQ
- eHMp9hc5FoDF0PHNgr+1y9RsLRJ7sKGabDY6VRGp0MxQP0EDPNWlM5RwuErJThu+i9kU6D0e
- HAPyJ6i4K7PsjGVE2ZcvOpzEr5e46bhIMKyfWzyMXwRVFuwE7erxvvNrSoM3SzbCUmgwC3P3
- Wy30X7NS5xGOCa36p2AtqcY64ZwwoGKlNZX8wM0khaVjPttsynMlwpLcmOulqABwaUpdluUg
- soqKCqyijBOXCeRSCZ/KAbA1FOvs3NnC9nVqeyCHtkKfuNDzqGY3uiAoD67EM/R9N4QM5w0X
- HpxgyDk7EC1sCqdnd0N07BBQrnGZACOmz8pAQC2D2coje/nlnZm1xVK1tk18n6fkpYfR5Dnj
- QvZYxO8MxP6wXamq2H5TRIzfLN1C2ddRsPv4wr9AqmbC9nIvfIQSvPMBx661kznCacANAP/O
- wU0EYkascgEQAK15Hd7arsIkP7knH885NNcqmeNnhckmu0MoVd11KIO+SSCBXGFfGJ2/a/8M
- y86SM4iL2774YYMWePscqtGNMPqa8Uk0NU76ojMbWG58gow2dLIyajXj20sQYd9RbNDiQqWp
- RNmnp0o8K8lof3XgrqjwlSAJbo6JjgdZkun9ZQBQFDkeJtffIv6LFGap9UV7Y3OhU+4ZTWDM
- XH76ne9u2ipTDu1pm9WeejgJIl6A7Z/7rRVpp6Qlq4Nm39C/ReNvXQIMT2l302wm0xaFQMfK
- jAhXV/2/8VAAgDzlqxuRGdA8eGfWujAq68hWTP4FzRvk97L4cTu5Tq8WIBMpkjznRahyTzk8
- 7oev+W5xBhGe03hfvog+pA9rsQIWF5R1meNZgtxR+GBj9bhHV+CUD6Fp+M0ffaevmI5Untyl
- AqXYdwfuOORcD9wHxw+XX7T/Slxq/Z0CKhfYJ4YlHV2UnjIvEI7EhV2fPhE4WZf0uiFOWw8X
- XcvPA8u0P1al3EbgeHMBhWLBjh8+Y3/pm0hSOZksKRdNR6PpCksa52ioD+8Z/giTIDuFDCHo
- p4QMLrv05kA490cNAkwkI/yRjrKL3eGg26FCBh2tQKoUw2H5pJ0TW67/Mn2mXNXjen9hDhAG
- 7gU40lS90ehhnpJxZC/73j2HjIxSiUkRpkCVKru2pPXx+zDzABEBAAHCwXwEGAEIACYWIQQV
- qNeGYUnoSODnU2dJ0we/n6xHDgUCYkascgIbDAUJEswDAAAKCRBJ0we/n6xHDsmpD/9/4+pV
- IsnYMClwfnDXNIU+x6VXTT/8HKiRiotIRFDIeI2skfWAaNgGBWU7iK7FkF/58ys8jKM3EykO
- D5lvLbGfI/jrTcJVIm9bXX0F1pTiu3SyzOy7EdJur8Cp6CpCrkD+GwkWppNHP51u7da2zah9
- CQx6E1NDGM0gSLlCJTciDi6doAkJ14aIX58O7dVeMqmabRAv6Ut45eWqOLvgjzBvdn1SArZm
- 7AQtxT7KZCz1yYLUgA6TG39bhwkXjtcfT0J4967LuXTgyoKCc969TzmwAT+pX3luMmbXOBl3
- mAkwjD782F9sP8D/9h8tQmTAKzi/ON+DXBHjjqGrb8+rCocx2mdWLenDK9sNNsvyLb9oKJoE
- DdXuCrEQpa3U79RGc7wjXT9h/8VsXmA48LSxhRKn2uOmkf0nCr9W4YmrP+g0RGeCKo3yvFxS
- +2r2hEb/H7ZTP5PWyJM8We/4ttx32S5ues5+qjlqGhWSzmCcPrwKviErSiBCr4PtcioTBZcW
- VUssNEOhjUERfkdnHNeuNBWfiABIb1Yn7QC2BUmwOvN2DsqsChyfyuknCbiyQGjAmj8mvfi/
- 18FxnhXRoPx3wr7PqGVWgTJD1pscTrbKnoI1jI1/pBCMun+q9v6E7JCgWY181WjxgKSnen0n
- wySmewx3h/yfMh0aFxHhvLPxrO2IEQ==
-To: Tony Nguyen <anthony.l.nguyen@intel.com>, Jay Vosburgh
- <jv@jvosburgh.net>, Przemek Kitszel <przemyslaw.kitszel@intel.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>
-Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
- bpf@vger.kernel.org, linux-kernel@vger.kernel.org, sdn@hetzner-cloud.de
-Subject: [BUG] ixgbe: Detected Tx Unit Hang (XDP)
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: marcus.wichelmann@hetzner-cloud.de
-X-Virus-Scanned: Clear (ClamAV 1.0.7/27603/Wed Apr  9 10:44:35 2025)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250409143138.568173-1-colin.i.king@gmail.com>
 
-Hi,
+On Wed, Apr 09, 2025 at 03:31:38PM +0100, Colin Ian King wrote:
+> Adding an unlikely() hint on the fd < 0 comparison return path improves
+> run-time performance of the mincore system call. gcov based coverage
+> analysis shows that this path return path is highly unlikely.
+> 
+> Benchmarking on an Debian based Intel(R) Core(TM) Ultra 9 285K with
+> a 6.15-rc1 kernel and a poll of 1024 file descriptors with zero timeout
+> shows an call reduction from 32818 ns down to 32635 ns, which is a ~0.5%
+> performance improvement.
+> 
+> Results based on running 25 tests with turbo disabled (to reduce clock
+> freq turbo changes), with 30 second run per test and comparing the number
+> of poll() calls per second. The % standard deviation of the 25 tests
+> was 0.08%, so results are reliable.
+> 
 
-in a setup where I use native XDP to redirect packets to a bonding interface
-that's backed by two ixgbe slaves, I noticed that the ixgbe driver constantly
-resets the NIC with the following kernel output:
+I don't think adding a branch hint warrants benchmarking of the sort.
 
-  ixgbe 0000:01:00.1 ixgbe-x520-2: Detected Tx Unit Hang (XDP)
-    Tx Queue             <4>
-    TDH, TDT             <17e>, <17e>
-    next_to_use          <181>
-    next_to_clean        <17e>
-  tx_buffer_info[next_to_clean]
-    time_stamp           <0>
-    jiffies              <10025c380>
-  ixgbe 0000:01:00.1 ixgbe-x520-2: tx hang 19 detected on queue 4, resetting adapter
-  ixgbe 0000:01:00.1 ixgbe-x520-2: initiating reset due to tx timeout
-  ixgbe 0000:01:00.1 ixgbe-x520-2: Reset adapter
+Instead the thing to do is to check if the prediction matches real world
+uses.
 
-This only occurs in combination with a bonding interface and XDP, so I don't
-know if this is an issue with ixgbe or the bonding driver.
-I first discovered this with Linux 6.8.0-57, but kernel 6.14.0 and 6.15.0-rc1
-show the same issue.
+While it is impossible to check this for all programs out there, it
+should not be a significant time investment to look to check some of the
+popular ones out there. Normally I would do it with bpftrace, but this
+comes from a user-backed area instead of func args, so involved hackery
+may be needed which is not warranted the change. Perhaps running strace
+on a bunch of network progs would also do it (ssh, browser?).
 
-
-I managed to reproduce this bug in a lab environment. Here are some details
-about my setup and the steps to reproduce the bug:
-
-NIC: Intel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection (rev 01)
-
-CPU: Ampere(R) Altra(R) Processor Q80-30 CPU @ 3.0GHz
-     Also reproduced on:
-     - Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
-     - Intel(R) Xeon(R) CPU E5-2620 v4 @ 2.10GHz
-
-Kernel: 6.15.0-rc1 (built from mainline)
-
-  # ethtool -i ixgbe-x520-1
-  driver: ixgbe
-  version: 6.15.0-rc1
-  firmware-version: 0x00012b2c, 1.3429.0
-  expansion-rom-version: 
-  bus-info: 0000:01:00.0
-  supports-statistics: yes
-  supports-test: yes
-  supports-eeprom-access: yes
-  supports-register-dump: yes
-  supports-priv-flags: yes
-
-The two ports of the NIC (named "ixgbe-x520-1" and "ixgbe-x520-2") are directly
-connected with each other using a DAC cable. Both ports are configured to be
-slaves of a bonding with mode balance-rr.
-Neither the direct connection of  both ports nor the round-robin bonding mode
-are a requirement to reproduce the issue. This setup just allows it to be easier
-reproduced in an isolated environment. The issue is also visible with a regular
-802.3ad link aggregation with a switch on the other side.
-
-  # modprobe bonding
-  # ip link set dev ixgbe-x520-1 down
-  # ip link set dev ixgbe-x520-2 down
-  # ip link add bond0 type bond mode balance-rr
-  # ip link set dev ixgbe-x520-1 master bond0
-  # ip link set dev ixgbe-x520-2 master bond0
-  # ip link set dev ixgbe-x520-1 up
-  # ip link set dev ixgbe-x520-2 up
-  # ip link set dev bond0 up
-        
-  # cat /proc/net/bonding/bond0
-  Ethernet Channel Bonding Driver: v6.15.0-rc1
-
-  Bonding Mode: load balancing (round-robin)
-  MII Status: up
-  MII Polling Interval (ms): 0
-  Up Delay (ms): 0
-  Down Delay (ms): 0
-  Peer Notification Delay (ms): 0
-
-  Slave Interface: ixgbe-x520-1
-  MII Status: up
-  Speed: 10000 Mbps
-  Duplex: full
-  Link Failure Count: 0
-  Permanent HW addr: 6c:b3:11:08:5c:3c
-  Slave queue ID: 0
-
-  Slave Interface: ixgbe-x520-2
-  MII Status: up
-  Speed: 10000 Mbps
-  Duplex: full
-  Link Failure Count: 0
-  Permanent HW addr: 6c:b3:11:08:5c:3e
-  Slave queue ID: 0
-
-  # ethtool -l ixgbe-x520-1
-  Channel parameters for ixgbe-x520-1:
-  Pre-set maximums:
-  RX:             n/a
-  TX:             n/a
-  Other:          1
-  Combined:       63
-  Current hardware settings:
-  RX:             n/a
-  TX:             n/a
-  Other:          1
-  Combined:       63
-  (same for ixgbe-x520-2)
-
-In the following the xdp-tools from https://github.com/xdp-project/xdp-tools/
-are used.
-
-Enable XDP on the bonding and make sure all received packets will be dropped:
-  # xdp-tools/xdp-bench/xdp-bench drop -e -i 1 bond0
-
-Redirect a batch of packets to the bonding interface:
-  # xdp-tools/xdp-trafficgen/xdp-trafficgen udp --dst-mac <mac of bond0>
-    --src-port 5000 --dst-port 6000 --threads 16 --num-packets 1000000 bond0
-
-Shortly after that (3-4 seconds), one or more "Detected Tx Unit Hang" errors
-(see above) will show up in the kernel log.
-
-The high number of packets and thread count (--threads 16) is not required to
-trigger the issue but greatly improves the probability.
-
-
-Do you have any ideas what may be causing this issue or what I can do to
-diagnose this further?
-
-Please let me know when I should provide any more information.
-
-
-Thanks!
-Marcus
+I have to say I did not even know one can legally pass a fd < 0 to poll
+and I never seen it in action, so I don't expect many users. ;)
