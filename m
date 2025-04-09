@@ -1,141 +1,242 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2083.outbound.protection.outlook.com [40.107.236.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5252725A2AF;
-	Wed,  9 Apr 2025 07:29:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744183759; cv=none; b=B66P+FE4YwWhKQ0Fruu2/CvYL8qUVG+YP9PLehRBGePm0Ut053+yE9jq6Zf0xJtWCzLZP6asoEbVpr5EAwwrDSWyLM1/0gPyXhR57w6RPWex+kBfbHldu28wmjZfFKIE5taB1541tY0XniWEEUOC9ATJXW1MILxEiSw+KDiiK0w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744183759; c=relaxed/simple;
-	bh=SGfNYxf1SFuOxndDllT2akQb3PF8/MAIXy5zK8FRPFk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MQzzPWSf/UcYHMdBuWN1792STMfStMvUbX4Yf/FZfhYZwa6t2C00PeVPPjW7wlSDIC/ITq27YDRnqukRhLlYpJJsPKHocgpyGDZCz0uc9fuyNOkPt3GQ/2/IVTB8NhrMb2HGrdSWvNSyBr0ph4JZggDe3FE/jzm9GzHQlnolGTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Rm3YTr4z; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B1915A85E
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 07:29:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.83
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744183798; cv=fail; b=KgWf9bKHusukdv4DUdH1AQsudrDXLNd28+qvWVJxG0dzPeE8VI1SRVrKDumQdGqrxXKwIrNcTvsytGMStNQI34sxOrc0FS2Wa5LVshIykNqGfkl3hum4zZA020jUCcbzEkLRfJb3ZoGE7okx9sK+ihXJS2OKzQq227yJnQlwd5Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744183798; c=relaxed/simple;
+	bh=JK8B6Pde6vC5wEECxh3WcSVSAi9vdV4glWk7Nmn+Gqc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=TdUCktuayw9tTVzYF/rj6aVC1mfBFzq67gdIJuzYGUM0fnUVoUWLCO78ObT2jMjb8Co7co9PkpZSTAuMawSzLTGKr9x4DlXHUqhVqjVq9UD9a5MNTpBWuU76yNH9WRxL+pruNANE/zU0H1zSjy2yDXYd4AUP2KP/jbvaFAcUxAM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=zxO3w5+z; arc=fail smtp.client-ip=40.107.236.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rm3YTr4z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744183758; x=1775719758;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=SGfNYxf1SFuOxndDllT2akQb3PF8/MAIXy5zK8FRPFk=;
-  b=Rm3YTr4zX7jrsW3HdK/2QJVwuds63NoPsnJs0PSkOHj290rWCVwhjJrM
-   0x3I83sGOO3DkXdkZX/mvI5i+sd3v20Dbfbb5FM5cWUmVufAGM8/AFvcg
-   fJpnPk3H/s7I4nHcwab+fbNWy8igJgz71G7XQLlmpaQSCJ33Sc8C/AsN9
-   LI2xFEyjAjhE0T0hqwvHrrAYxqUrM509rbc/dHYDn+jPZ4iEOQj4+sx/D
-   O8TSgR95HVY/ZOrMNm3QU0SeVNvhg4+28O83SDu9Gd7u6RigNgj7P8JOU
-   uf3AwCJYPfgyuPzpAoj4autqb2d2kK+k7Ms1ho7v2Soq1dDefqJgm+DTZ
-   g==;
-X-CSE-ConnectionGUID: 61PDVKtITjey4Br80ruInw==
-X-CSE-MsgGUID: 09pfA6+WR2Ky87QnZbZUJA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="33248826"
-X-IronPort-AV: E=Sophos;i="6.15,200,1739865600"; 
-   d="scan'208";a="33248826"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 00:29:16 -0700
-X-CSE-ConnectionGUID: Sov2QirNQMyY4Sg8LTP0bw==
-X-CSE-MsgGUID: g5S/97v6QbiG4KufX4Wc1g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,200,1739865600"; 
-   d="scan'208";a="129331858"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 00:29:08 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u2Prs-0000000AeQj-2FRX;
-	Wed, 09 Apr 2025 10:29:04 +0300
-Date: Wed, 9 Apr 2025 10:29:04 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Alex Elder <elder@riscstar.com>
-Cc: gregkh@linuxfoundation.org, jirislaby@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org,
-	benjamin.larsson@genexis.eu, bastien.curutchet@bootlin.com,
-	u.kleine-koenig@baylibre.com, lkundrak@v3.sk,
-	devicetree@vger.kernel.org, linux-serial@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] serial: 8250_of: add support for an optional bus
- clock
-Message-ID: <Z_YhwJ1ZGSodMcMH@smile.fi.intel.com>
-References: <20250408175146.979557-1-elder@riscstar.com>
- <20250408175146.979557-3-elder@riscstar.com>
- <Z_V-aKBOFHt-0RKz@smile.fi.intel.com>
- <2b322564-10c0-4bbd-89d9-bc9da405f831@riscstar.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="zxO3w5+z"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=EFEgYl4s4635V+N4ihqdji7tuJNJY14qfoZQkeVHCQ8mzjTR7cKjIHBHB189twfrlOb5gB8Zd5DQyZ9oSbGxvoyI6zjAv1aLP9I6EAJ95cnrsI1ifEMdBKr35sTBmaxV+WUKuKECEPztR2IJSL63An7JcosPslPhgVTKXzBBPvPzsUaVuPrBHGletDThM0Pd84GfAx5afuBW7/WALWZC9HQLQMEwEAfo2aKsUKzyamGibxtB1q0OAsF2Gf4lb+3sdnf56ocbadCwMX8CX/5C9ntu6KmAcJ7Gzvtn514rtIoLFnInWsVvwyz4DDEFU74Mn1NAb1+bPBEt26ghLOvEkA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=N6ol8ki9ithBZEHJXS4NpsWfI0rlDRXp8wPfSrkn3eg=;
+ b=vpgaM9UhqisdU9Rq2v+dEPvQAb7/4jk4LzUh/uD69QzpeRhowp7F9bUNJhGdybEznh2UMLdk84nXoHdfAP9md3fbQossgIErWyLyDY2znGG9ieNw1fxTQoavKkphK1AQ0L8tzt5kP7VE2DBVYjL4ArYINGsSXp8XeyeBSggwFyZZ5+qAx9KCOpaF3qNZustahSWqGl9D1zV4AEKi/hzWIlZgEWleoGD7W7lztfe8YxO9YI8dRKZL5nBHundLYdm1iI/HsNq7K1AQ4xo+PbXPm4Pj0W+NF/mdDhf3uWD2TP2FWFIzoLACTY9Mplol639aAPYZcsGR9Vyif4eKpiis0Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=N6ol8ki9ithBZEHJXS4NpsWfI0rlDRXp8wPfSrkn3eg=;
+ b=zxO3w5+zI3PjbFVb5jao8t+X+SwOLpgxX2LCNZB1jWCHt9oXOPHaQwAOdTZcYcft8I2uZHcOdw6WcgGHb2eDXL6C3jnGu48lDj6RKNQQadD0n2kUswWeYdY3ONCE8xA2c5ui/8bywAh6yGk7ffS7pebTq9WmDlvKJ3+BIEM2Ifo=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
+ by MN2PR12MB4141.namprd12.prod.outlook.com (2603:10b6:208:1d5::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.22; Wed, 9 Apr
+ 2025 07:29:52 +0000
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5%5]) with mapi id 15.20.8632.021; Wed, 9 Apr 2025
+ 07:29:52 +0000
+Message-ID: <437e12e2-ac0d-4a97-bd55-39ee03979526@amd.com>
+Date: Wed, 9 Apr 2025 09:29:47 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [lvc-project] [PATCH] drm/amdgpu: check a user-provided number of
+ BOs in list
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+ Fedor Pchelkin <pchelkin@ispras.ru>
+Cc: Denis Arefev <arefev@swemel.ru>, Alex Deucher
+ <alexander.deucher@amd.com>, Simona Vetter <simona@ffwll.ch>,
+ lvc-project@linuxtesting.org, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+ David Airlie <airlied@gmail.com>
+References: <20250408091755.10074-1-arefev@swemel.ru>
+ <e6ccef21-3ca5-4b5a-b18a-3ba45859569c@amd.com>
+ <bmdour3gw4tuwqgvvw764p4ot3nnltqm4e7n3edlbtpfazvp5c@cqe5dwgc66uy>
+ <f8810b13-01d1-4615-b6e2-2e791c48b466@amd.com>
+ <qc72y52kt7vuwox4lhk42zligy5bslttselfoexse42mywtpps@ebqijs2tap2t>
+ <edc08eb4-63dd-402c-82df-af6898d499a9@amd.com>
+ <pmby7iowvxuomsbuxebttosz245j7ngw5enbl72dq675nrgvve@ugkvzeihbtut>
+ <CAHk-=whLixL8-iYt1qH0-YvEnVsYtryZaN5Da0qoBBhKsBnumw@mail.gmail.com>
+Content-Language: en-US
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+In-Reply-To: <CAHk-=whLixL8-iYt1qH0-YvEnVsYtryZaN5Da0qoBBhKsBnumw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FRYP281CA0009.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10::19)
+ To PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2b322564-10c0-4bbd-89d9-bc9da405f831@riscstar.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|MN2PR12MB4141:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1d0ef98a-ceac-43a0-feec-08dd77385157
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?TElqYzkvWHdZQ2FuZXFldFVWSE5pYnJqNGxoVW1VRzlxMEJ4WVZRZDJtRG4y?=
+ =?utf-8?B?bUp6Szhia00yY0RJRnZKMktIM3RhUXJPUW1pSDM5MjJNY2FRc1FzN0ZXMlFN?=
+ =?utf-8?B?d0E0TE1zM2RtZFFDMktJNHhwQVZVanBuNk85RzZacGQzejJFZEEvOGNWRGds?=
+ =?utf-8?B?bzBWbzRBZDNHamVDVUZFWTdMZFlSUWxzbDRjcURLMGVHeG1walg0a3daNTJq?=
+ =?utf-8?B?MUd0SzhHRTJ5RFRyVW05S1EvaS84YWFhYk9qRDh0S25xV0JLZDQzcXNERWJk?=
+ =?utf-8?B?ckV4Z0oyS1VKRElVNUh0bU1MNGR3RmZaOVNmc3BaZ0hRTW52d0tNT1RvbEtE?=
+ =?utf-8?B?Mnd5VytHbWJNSHhZazFINzRwcGM5OHBJbm15TlJoNFh6L0d0cjN5UStkbnhy?=
+ =?utf-8?B?eFVvNTh2KzZTRElibTJ0NkpNMHV0eHNkbXlDMkdraVRQdUlFeTU0VllVSFpS?=
+ =?utf-8?B?ZnlKR25vMXY0dGZKVWcwRG1sMG5XYk1PNFNnc1l6c2RxZjVZS2R1UkNjSlJP?=
+ =?utf-8?B?VUpJV1VVU2FsOHluZXRsdUJPeHgyU2dJWWNncGdaaHpjazg2Y2pFZWQvZjNE?=
+ =?utf-8?B?NlA4QXFOR3Z4SSttYllnVG15ZzEvNkFHditBZ0VabUlCSExSekZFcjdXT2dO?=
+ =?utf-8?B?UWZNMzRROGJiNXFZYzJpVGxsUjg4amJ6Z1R1NUdxYjVZN0lvTmtFVHROVkgz?=
+ =?utf-8?B?U0tiemVmTkZYSkVGbkRyTDdvc2hucGFrWGJWSHloQWR6WnpoWEJod0p5MWla?=
+ =?utf-8?B?YTFud3pvZ2pPK3hENzlyRkxQSUV3dWZyNDREUW04cHlIVGhXOXBaSWlMczE2?=
+ =?utf-8?B?NnRKbjkrTkQvUFlmYWdHSnpXc04xWTBOZFZ5aEZSaFdBTW10VTlhSG9laU1E?=
+ =?utf-8?B?QzE1VmcwdUsxR0doK1B5a3JtRXZXcjg5UmUzUm12UDA3MVRGVnBtcGNqRVdz?=
+ =?utf-8?B?Q0w4dit1WWpMK0J4K0JYUlRRaGVPTUJoalozQ3h6aEVYZG8vTmo1bXo0SmdI?=
+ =?utf-8?B?NmFOem9RRUhmYXh4UmpnV1YzSDcySnBWRGwvT2F6QlNUMTNjVXlScy9EQzl2?=
+ =?utf-8?B?TmQySXEyaUprbTRPblRaajU1TnFHOTFicDJwWjE5bnUzaHBjVGpUOXkzNmVH?=
+ =?utf-8?B?WXlOek51NmFVaVFPS2RrSUdBb1hQVUd4YTBWU0ZCODBKWjJoUU9ER3p3RnM3?=
+ =?utf-8?B?YUptT28vSEFhRXIvNzAxaDcyTVZoR3dQdUs2aktIRzNDanZ2SGxZbzYyei8r?=
+ =?utf-8?B?NWV5VG5SNXhzT05lU3VrUVFxYisybFFMcHZsazlyMWc2Tk5vM3ZRUUlVaEZM?=
+ =?utf-8?B?K09Kd3RDR2R6MzNlRk0zVVhVNDQ0RVNreXBDQXV4QWpIaE90aWt1by91bVZL?=
+ =?utf-8?B?ZFp0NUtycDd4L0xmVWVUMWhGSldaWDJTbUNYcjV5S1lJczJNelEvOWhFbmx1?=
+ =?utf-8?B?aVVTYnBEMTZDOUJXQXF6SnVtdHBvViszb3BIVEhMVFI0Ymd5bVlUNS8xSUdk?=
+ =?utf-8?B?T3M1dDBQMkVpTng5enhUVEU5aUdHUXRGZWlHWStXWVg2R21mNWFENXlvYXZP?=
+ =?utf-8?B?WGNocktxOTE5YkFQbmU0TzBMekRhZTNOWUN3OU53Zm5sQXpvelZ1dVJWM1dz?=
+ =?utf-8?B?NWpSNGJENXpObCs5NmZBK1dzMVF4SjZBc2Rwd3JrU0ErTDVyby90LytyeVhC?=
+ =?utf-8?B?azRQR3huZXBYZllBVmVuWnlkTStqZTNGZldEVmExanAxQ3pzR1F4elN5aDBq?=
+ =?utf-8?B?Z2wybFMyY3FDN1hINXBybnBqL1JkaUFYSEkwSk9RRW9sZjJKbUdDUVBUZndx?=
+ =?utf-8?B?QnR4M1dWVUZhWjQ1UzBBaTNkUDdOU2NzUWxiYWZSVDE4UFlQd1ZHMmhQbFFo?=
+ =?utf-8?B?Y0JwTWRyOFlNS3JKNXJKYjBsOHFucnNzSThOMWVaN1ZyMmJjQk9ReHFESmdq?=
+ =?utf-8?Q?+XW5kZqcCc4=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Znl5QnRya3U1cFdDOEFVOWxncktvVG4za2VGQmRJaGVhRU5wR2pONXd5VHBR?=
+ =?utf-8?B?M1lHbkRGL1RnVzQwSnpzdzVWdTgyQWszQUpFdE1yNWRLcWlPNmhzSDVlTlFi?=
+ =?utf-8?B?Y2tib3g4THFCbG9mTWY4Nzl1UHJTTkNzdm1ENUJkOVFKMk9uVW9LOTVsQ0hR?=
+ =?utf-8?B?Vk8wQVc5LzkraldJbUNxL0pMdHd4VC8wVjVmQ3NOL2srRUMzNnBFV3JuR21M?=
+ =?utf-8?B?ZnoxSUdSYVJMRERMSCtBQ0FDc1o3cWxyYzV0c0Roam5JZVowMFhpMFVRK0dS?=
+ =?utf-8?B?TmlIb0g4YkptSTRkamNnL1V0a01DRXlvQ3ZhZWljWTQzTGhJZ0VjL0FYYkI2?=
+ =?utf-8?B?VlRYMjBzQ1ByQlp5YVdtZFJHdmxXblF3OGljQ1NVM1BlU1RHRTZuMnVyNGR3?=
+ =?utf-8?B?UkFiV3R6dlA5YWZRNjJOVCtGUVcvR2UzSC94OUZLdURkZ0xPZ3JlWHVMUUxa?=
+ =?utf-8?B?RTFPdnQ4ZUFBa1IzOEdtd1ZGdUMxS3NsZ2ExcERhNlQ5ZllaWDBybm14T1BM?=
+ =?utf-8?B?RTZURzZwYXpOTndodmVCQzZTZVF2UlF6eVQ5UHhRMnlIWkRCZUdMS1FDWU1C?=
+ =?utf-8?B?NS9ML1FyWEswRnp4RDBqbjFCemlZK3BXVE9UVnpxVmtaRWpOZ2trKzdSeDFh?=
+ =?utf-8?B?OUhwM2ZZSzl5dFdMSzNjRHdiU0NMSFhPTCtVZmNGS1BuVDVZa0sxTk5HTG0v?=
+ =?utf-8?B?dVNBYlJDenRLWjVWQU1kRDlSbnI2VEU0RHFEcE5FbU5adVk4U2ZYT0tIYU5l?=
+ =?utf-8?B?K3ZCSktMRTgreWdmNTFQUDhPZG13Q1ptWnp3T1QvRmFVc29NeVVFUjhiNzFs?=
+ =?utf-8?B?U05kWFZEN1Y5UDJvWnNDcGE1czlLSkZsSmZuNGpBVGV0akJpMHR4OXdwTUlw?=
+ =?utf-8?B?dExNN21Fbm8xTXVkQ3loYmRSTGNpZEJVcDNjUTVFeGRjdlltYkl6ZGhJY3hS?=
+ =?utf-8?B?ZE1sUVc4cnFwV2tvc0w3SnduL0t6aXNTNm8wMmZRY3NhRUFKUElpQlVJSmgw?=
+ =?utf-8?B?VzYvS0NyZ1loRlkrTyt3cTVvYlBsWXZTMmI5QThjakdOcjlENVg3dWRuSVJW?=
+ =?utf-8?B?b2dsV0g5MWhSNnpCYmFweitUZHBtTjIxY3loVXg4RFhNdTVha00wblZJRE5s?=
+ =?utf-8?B?dVFic0VyNCtzNGhsZ0NHaEhidmVpbGl6QXc1OUg1TGQ2K1dXTUhHVWg3RzBL?=
+ =?utf-8?B?WWxFSzJsQkFQeUVIZ25BN0UyVGVrR3Z0SHFNSmdDclFlTDRpMmp5dHNpUWl4?=
+ =?utf-8?B?NXRxQ096OUhmdis2ZklsL2pjdHdyS0xYM3VpNkptb2xhR1JFbmtRRGxINXR4?=
+ =?utf-8?B?ZitueWJMbXBLdFRPcUY3Y2hiOW5rSDVoeDJpc2h6OVhsSHVINlVRZmFWaXFh?=
+ =?utf-8?B?QmI5WXFSWFo1OGE3cFBqWFcwWVBSNlNVNkxORGVIOEdQRDk3bEUzZDVpOGRo?=
+ =?utf-8?B?R09hMXNQTFA1UUJxOWFQNFVtaTBoTFZlUk0zbDFBRG8ycVJWcHM2b1FraGp5?=
+ =?utf-8?B?cFdESStqZjUwTVg1T29BbGs3NXltS3FEYmNDQkJRWHZxZ3lCUDZ4aGJoV1ZD?=
+ =?utf-8?B?VU5lRWw0RHdxS0VtQjZvVGFoTElncWhZR3JKNUxST21nMmFNYmZOalhCYmxa?=
+ =?utf-8?B?R3grSFlrV1NwT0JXVnV4WVV3Q0o4ZVJkUW5aM2p4S29vYXJGNFIwVkVPMm4r?=
+ =?utf-8?B?ZUprbVBpSlZhL3lKTVJJNnBXd3Nrc3BlcWFSemN5VEZIRmNaYTNuL0p5TVZu?=
+ =?utf-8?B?WlFhNzVSbC9WaEtaZHlSelk3MlFRTFpiWTc4Z2hocThyWEEvN01hbk9UYlV4?=
+ =?utf-8?B?cFpsSlZpQVJaV05Qb1k5RTVmNnlqb0dhdVYrc1dSWnd6dnVZMnRuYXpaTitX?=
+ =?utf-8?B?cWVEbXVWSWdRcWY2TzhSeFVCMk1zODVFcnhMdDRSNWt2RzRpd041bTF5S216?=
+ =?utf-8?B?dVZmZ1AxYWdYZldOZ0M5amdxaS92a3phQkJlQUgzdW9zTG5mVXpqUDh5VGpB?=
+ =?utf-8?B?Y0JqNUlQYW9SNzNhRFpINEZOWVh0aTVHUDNyMVRIQXk0OXJDZnBYRUxUYU9C?=
+ =?utf-8?B?dWJhNTgzOWptZDFnb0xwQkRxbmc5RkJmSzZUaGhKQ0RuSHNLUkdHVTdVM1FY?=
+ =?utf-8?Q?2cl7xyy/ir7m28WwYcKoUHqjV?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1d0ef98a-ceac-43a0-feec-08dd77385157
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 07:29:52.4242
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: QnioJq8FfdoMA0IGVm2N8kkXx0Wk5D/BGmVZgS3QJrwciwK35gklh0TC/sklII37
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4141
 
-On Tue, Apr 08, 2025 at 03:11:10PM -0500, Alex Elder wrote:
-> On 4/8/25 2:52 PM, Andy Shevchenko wrote:
-> > On Tue, Apr 08, 2025 at 12:51:43PM -0500, Alex Elder wrote:
+Am 09.04.25 um 04:39 schrieb Linus Torvalds:
+> On Tue, 8 Apr 2025 at 09:07, Fedor Pchelkin <pchelkin@ispras.ru> wrote:
+>>> Linus comment is about kvmalloc(), but the code here is using
+>>> kvmalloc_array() which as far as I know is explicitly made to safely
+>>> allocate arrays with parameters provided by userspace.
+> No.
+>
+> ABSOLUTELY NOTHING CAN ALLOCATE ARRAYS WITH PARAMETERS PROVIDED BY USER SPACE.
+>
+> All kvmalloc_array() does is to check for overflow on the multiplication.
+>
+> That does *not* mean that you can then just blindly take user space
+> input and pass it to kvmalloc_array().
+>
+> That could easily cause the machine to run out of memory immediately,
+> for example. Or just cause huge latency issues. Or any number of other
+> things.
+>
+>> [27651.163361] WARNING: CPU: 3 PID: 183060 at mm/util.c:657 __kvmalloc_node_noprof+0xc1/0xd0
+>> [27651.163411] CPU: 3 UID: 0 PID: 183060 Comm: a.out Not tainted 6.13.9-200.fc41.x86_64 #1
+>> [27651.163412] Hardware name: ASUS System Product Name/PRIME X670E-PRO WIFI, BIOS 3035 09/05/2024
+>> [27651.163413] RIP: 0010:__kvmalloc_node_noprof+0xc1/0xd0
+>> [27651.163424] Call Trace:
+>> That's just
+>>
+>>     union drm_amdgpu_bo_list bo_list;
+>>     int fd, ret;
+>>
+>>     memset(&bo_list, 0, sizeof(bo_list));
+>>
+>>     fd = open(DEVICE_PATH, O_RDWR);
+>>
+>>     bo_list.in.bo_number = 1 << 31;
+>>     ret = ioctl(fd, DRM_IOCTL_AMDGPU_BO_LIST, &bo_list);
+> Yes, exactly, and that's bogus code in the DRM layer to just blindly
+> trust user space.
+>
+> User space input absolutely has to be validated for sanity.
 
-> > > The SpacemiT UART requires a bus clock to be enabled, in addition to
-> > > it's "normal" core clock.  Look up the core clock by name, and if
-> > > that's found, look up the bus clock.  If named clocks are used, both
-> > > are required.
-> > > 
-> > > Supplying a bus clock is optional.  If no bus clock is needed, the clocks
-> > > aren't named and we only look up the first clock.
-> > 
-> > Code and description are not aligned. And What you are described above make
-> > more sense to me than what's done below.
-> 
-> I want to do this the right way.
-> 
-> My explanation says:
-> - look up the core clock by name
->     - if that is found, look up the bus clock
->     - both clocks are required in this case (error otherwise)
-> - If the "core" clock is not found:
->     - look up the first clock.
-> 
-> And my code does:
-> - look up the core clock by name (not found is OK)
->     - if it is found, look up the bus clock by name
->     - If that is not found or error, it's an error
-> - if the "core" clock is not found
->     - look up the first clock
-> 
-> What is not aligned?
+That's what I totally agree on. My question is rather is it better to do this in a centralized function or spread out over tons of different use cases?
 
-That you are telling that bus is optional and core is not, the code does the
-opposite (and yes, I understand the logic behind, but why not doing the same in
-the code, i.e. check for the *optional* bus clock first?
+I mean open coding the limit checks everywhere certainly works, but as far as I can see it would be more defensive if we do that inside kvmalloc_array().
 
-> > Also can we simply not not touch this conditional at all, but just add
-> > a new one before? Like
-> > 
-> > 	/* Get clk rate through clk driver if present */
-> > 
-> > 	/* Try named clock first */
-> > 	if (!port->uartclk) {
-> > 		...
-> > 	}
-> > 
-> > 	/* Try unnamed core clock */
-> > // the below is just an existing code.
-> 
-> That's easy enough.  I think it might be a little more code
-> but I have no problem with that.
+Or maybe a separate function which takes a maximum as parameter?
 
-I;m fine with a little more code, but it will be much cleaner in my point of
-view and as a bonus the diff will be easier to review.
+BTW we have been running into the kvmalloc() check on valid use cases as well. For example on a system with a >256TiB of system memory having a single descriptor array >4GiB is perfectly valid. It's just not valid in any possible way if you only have 8GiB in total.
 
-> > 	if (!port->uartclk) {
-> > 		...
-> > 	}
+In the past we worked around that by switching to multiple smaller allocations or different container types, but that is actually not the most optimal way of doing it.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Regards,
+Christian.
 
+>
+> There's a very real reason why we have things like PATH_MAX.
+>
+> Could we allocate any amount of memory for user paths, with the
+> argument that path length shouldn't be limited to some (pretty small)
+> number?
+>
+> Sure. We *could* do that.
+>
+> And that would be a huge mistake. Limiting and sanity-checking user
+> space arguments isn't just a good idea - it's an absolute requirement.
+>
+> So that kvmalloc warning exists *exactly* so that you will get a
+> warning if you do something stupid like just blindly trust user space.
+>
+> Because no, "doesn't overflow" isn't even remotely a valid limit. A
+> real limit on memory allocations - and most other things, for that
+> matter - needs to be about practical real issues, not about something
+> like  "this doesn't overflow".
+>
+>             Linus
 
