@@ -1,129 +1,107 @@
-Received: from mail.parknet.co.jp (mail.parknet.co.jp [210.171.160.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9C7F278140
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 18:53:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.171.160.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6C9277801
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 18:53:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744224792; cv=none; b=SIKCYg4CItL91UHrexwjC2tmf4Lvmr7YZSZaAMx1kXXpFhDZScb04RGM2AicA2MfXoYlxi43X4PlwzYoDlq/lBEvp2htgTj9mU076HyL7aipR9kY3HxSDReK+/7dzS/So3j/Lan1TMbdZHDOWS1e6vOyQEuYhpRjXEwLa8JK+xQ=
+	t=1744224794; cv=none; b=Yv22wOk0gzju1z6MaFKbXZokmjOpF+AQbGsHrfSTizo1qc64eDS6Bb3cPpUSJUu0XyikVjXYMAi2KZ2DOmj27oGQNuQTI3uA8i9B0yKauha4saizqTE7B5uaIeXt0DLYRsaI3MooFSu9o8+DKKf8q3ZJQ3ykYboF6riF9tDuUNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744224792; c=relaxed/simple;
-	bh=USRS4wXWLcDKkhK4mkjsSrXPe6B7j5v1nJuLH4cX3kU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=DlZJy85EAMGaiEimzQGE0O2z6gWfjYAw0wA0uyryICAmbMsBnYjqGFZJL+dssQoZhmkRwTidA7YxFLG1Br4WhaUyCpQhw3V7fmgLuFJGo6GSS2ADZB9qeJi20YUu9DYtqx8jAAX4FBKb3BQfRLKDWckofbf+iAr+MFoaqwsGBzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mail.parknet.co.jp; spf=pass smtp.mailfrom=parknet.co.jp; dkim=pass (2048-bit key) header.d=parknet.co.jp header.i=@parknet.co.jp header.b=L/bDD6OG; dkim=permerror (0-bit key) header.d=parknet.co.jp header.i=@parknet.co.jp header.b=/1sOTn8c; arc=none smtp.client-ip=210.171.160.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mail.parknet.co.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=parknet.co.jp
+	s=arc-20240116; t=1744224794; c=relaxed/simple;
+	bh=ev34B4BdC9WbGNJUDSR2Oo2ko6MrEuWxcqh2POvhMM4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r6cSozr1b5XCLuyQb5Q09JnG5k11ItZoDBUr3/ivmZTT7EIdQ+nanpQDidKuuDutjPL152Nv51eox6/zxSkRkAKf8dsa/SFSWX+S/DwBF4dSEpPyyGtyVwTjzERgNqBwbEYBlH1I/G1APeJAfPvBQLfbqm6O4rWb4ZN9Lse0mgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=cfIimZFQ; arc=none smtp.client-ip=209.85.167.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=parknet.co.jp header.i=@parknet.co.jp header.b="L/bDD6OG";
-	dkim=permerror (0-bit key) header.d=parknet.co.jp header.i=@parknet.co.jp header.b="/1sOTn8c"
-Received: from ibmpc.myhome.or.jp (server.parknet.ne.jp [210.171.168.39])
-	by mail.parknet.co.jp (Postfix) with ESMTPSA id 6AB2C209655C;
-	Thu, 10 Apr 2025 03:53:00 +0900 (JST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=parknet.co.jp;
-	s=20250114; t=1744224780;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4rcO17bW8NJaT2k8cKsyyvRm19hYN8aGVm03wy1oM8E=;
-	b=L/bDD6OGhi8vW3zWIe+z+lJQ345pThHVOaBDkkVY9kmCky7QDRRqXDwURrU4dbisB5Nm4f
-	acuHY2VZGSL4TeC+Rys0FBxVNeS/41bEjFWPH0Ym1dtqZwmr9xHRCImpWpq+hPSOv6pfuS
-	RGeWiTSmfWhR56YtKg0YiCfu8s1N+kODiG0L/PeReGX7G3w4rliFYeUoB4oyPjoNiLZNaL
-	oBdacH2xPo7cwKWDgrH9TKirHd6TFlaQvgxTbZ84K7ihMl3drkBkS/V66gDLRbCrKF5VRK
-	X2j8bIrSg/C0kAfLTetifJImit4G4s47XZFDubZfQ4lHgjtZHZeSBmB8CqUxNw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=parknet.co.jp;
-	s=20250114-ed25519; t=1744224780;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4rcO17bW8NJaT2k8cKsyyvRm19hYN8aGVm03wy1oM8E=;
-	b=/1sOTn8cSHRjmzP80+IDm9FW9oxBTQUB80fF+kWdgElNmUeAHzQQwdjhr7g7uXXR4N0l4d
-	/r6Zuehr0GA7GaBw==
-Received: from devron.myhome.or.jp (foobar@devron.myhome.or.jp [192.168.0.3])
-	by ibmpc.myhome.or.jp (8.18.1/8.18.1/Debian-6) with ESMTPS id 539Iqwrm533622
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Thu, 10 Apr 2025 03:52:59 +0900
-Received: from devron.myhome.or.jp (foobar@localhost [127.0.0.1])
-	by devron.myhome.or.jp (8.18.1/8.18.1/Debian-6) with ESMTPS id 539IqwhK1425205
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Thu, 10 Apr 2025 03:52:58 +0900
-Received: (from hirofumi@localhost)
-	by devron.myhome.or.jp (8.18.1/8.18.1/Submit) id 539IqwOB1425204;
-	Thu, 10 Apr 2025 03:52:58 +0900
-From: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-To: zhoumin <teczm@foxmail.com>
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fat: Optimized FAT bad char check
-In-Reply-To: <tencent_A8520B8C5C017A6C86DAD38B120D1B4D2905@qq.com>
-References: <tencent_A8520B8C5C017A6C86DAD38B120D1B4D2905@qq.com>
-Date: Thu, 10 Apr 2025 03:52:58 +0900
-Message-ID: <87ecy16ub9.fsf@mail.parknet.co.jp>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="cfIimZFQ"
+Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-3f8d2f8d890so3996376b6e.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 11:53:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1744224792; x=1744829592; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uprOTrpUfog8eVjEhCIqe4mihJSdQCDY4xj+acLb2lY=;
+        b=cfIimZFQwaR/6uJN5YEUoEDS181WmG+MXHHlskBDii9T8w49dJvp9brLNUDLkRKO87
+         BdPFsABJM0Ihw4dYO0Y2Sl6qLxTutywHh8mY+FpvkhfVBVPop76TGvdR8tD4rXCHtuH/
+         AnLrZu9TIqe7/2MWW1zpcXMCPp59A0CGlwhio=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744224792; x=1744829592;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uprOTrpUfog8eVjEhCIqe4mihJSdQCDY4xj+acLb2lY=;
+        b=EeSQt+iRP7WCN8Auvmde95RIL2Pu1scdvOvQgKxoIqze8X2tNLjKwI5F9BuWMPmgDM
+         o6JxqUjHc5HDqlefpk/3PbcpzCol4Vt6YJ0aWx0pce/nr6ahJJkrL6W2BLBhYVrkHeCD
+         garsFDtEUbDs4eRLeoXn1NP9FJApelBumapaulaLW52AmccfI3wpqq97PzJcwjMUM++s
+         YdQRMbPfgx/rfUTMZcK8GrpcVtsl0wAATZ6RSB6F5Dyw7yHAjkbAZevLw7M+oxImdOSI
+         g1lmaw9BJVl6Bxu8vxgytg49vXSXBFIdU75g+4TEdeizdFsQS+ZEnoCLh946/xGXJKKr
+         p92A==
+X-Forwarded-Encrypted: i=1; AJvYcCWxb2SJs1I0DQKEOaDmJKunMvYyUh+5XuTcR5ExzrY0u4IaPKLvr8VjRQJQnIuM/6tEUz60saBDuJ8defw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJn61ZMaC1DHHr0TRsMUxa7LIOD1eMAAta2Jrc0jfDZ6PCjozP
+	qe/IQd7tSVQNfY0boYjH9SrsBWLR0qNUAGsWynHCV9uSXc+MaRU9q5M1gCRX5nI=
+X-Gm-Gg: ASbGncvk44JYnhaU0EZg6SzuOocgAUUro1saD1ikOwtWswHE8SyQx9GgGIi3CNuyVCF
+	6nCnN0g9f6/N3ISYyXjJU8AAIdai9dN4c7oE9E1qNE85YHd9PScK/u71kU2Q32GtPpoyxUznYCl
+	FbS1uN90zqcF2BH9xACBdLj2xQH359HuV4nykwImSexdYvTyBLW6OB0RqAYbk9mew3BUQs6OhLC
+	Ll545pcJttTV1IUmSnf/mh7X4UKNVQdg+ipbJ9NzA/ivwIFv3LhAqBHb3PwKaoll1tJHEMwJ0FQ
+	SxEiurTH0fo9/8YEFRCo1VHlDpEF+2QN8dRsU63JYXPRVG/4Ts4=
+X-Google-Smtp-Source: AGHT+IFogSAftN0uvxAUx3F88QuzGur+Ouhi5sC7Ds4Nb4RZ5YSZlk1EYlRWrYgi5Mtw/kI0xiptgA==
+X-Received: by 2002:a05:6808:2a8c:b0:3f9:3c2a:e40 with SMTP id 5614622812f47-400740a0265mr1871379b6e.26.1744224792049;
+        Wed, 09 Apr 2025 11:53:12 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-400762d4861sm259007b6e.23.2025.04.09.11.53.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Apr 2025 11:53:11 -0700 (PDT)
+Message-ID: <84e6a13c-1dc0-4405-ad56-442e5f288aa7@linuxfoundation.org>
+Date: Wed, 9 Apr 2025 12:53:08 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5.15 000/281] 5.15.180-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20250409115832.538646489@linuxfoundation.org>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20250409115832.538646489@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-zhoumin <teczm@foxmail.com> writes:
+On 4/9/25 06:02, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.15.180 release.
+> There are 281 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri, 11 Apr 2025 11:58:00 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.180-rc2.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-> 1. Add first-Character Validation based on FAT Spec 6.1 ->
-> Note the following -> 2
-> 2. Add check for 0x7F (DEL character) even though the specification
-> does not explicitly mention it
+Compiled and booted on my test system. No dmesg regressions.
 
-Why do you need this change?
+Tested-by: Shuah Khan <skhan@linuxfoundation.org>
 
-Thanks.
-
-> Signed-off-by: zhoumin <teczm@foxmail.com>
-> ---
->  fs/fat/namei_vfat.c | 23 ++++++++++-------------
->  1 file changed, 10 insertions(+), 13 deletions(-)
->
-> diff --git a/fs/fat/namei_vfat.c b/fs/fat/namei_vfat.c
-> index dd910edd2404..d264057f32aa 100644
-> --- a/fs/fat/namei_vfat.c
-> +++ b/fs/fat/namei_vfat.c
-> @@ -195,16 +195,6 @@ static const struct dentry_operations vfat_dentry_ops = {
->  	.d_compare	= vfat_cmp,
->  };
->  
-> -/* Characters that are undesirable in an MS-DOS file name */
-> -
-> -static inline bool vfat_bad_char(wchar_t w)
-> -{
-> -	return (w < 0x0020)
-> -	    || (w == '*') || (w == '?') || (w == '<') || (w == '>')
-> -	    || (w == '|') || (w == '"') || (w == ':') || (w == '/')
-> -	    || (w == '\\');
-> -}
-> -
->  static inline bool vfat_replace_char(wchar_t w)
->  {
->  	return (w == '[') || (w == ']') || (w == ';') || (w == ',')
-> @@ -220,10 +210,17 @@ static inline int vfat_is_used_badchars(const wchar_t *s, int len)
->  {
->  	int i;
->  
-> -	for (i = 0; i < len; i++)
-> -		if (vfat_bad_char(s[i]))
-> -			return -EINVAL;
-> +	for (i = 0; i < len; i++) {
-> +		if (i == 0 && s[0] == 0x05)
-> +			continue;
->  
-> +		/* Characters that are undesirable in an MS-DOS file name */
-> +		if ((s[i] < 0x0020) || (s[i] == '*') || (s[i] == '?') ||
-> +			(s[i] == '<') || (s[i] == '>') || (s[i] == '|')
-> +			|| (s[i] == '"') || (s[i] == ':') || (s[i] == '/')
-> +			|| (s[i] == '\\') || (s[i] == 0x7f))
-> +			return -EINVAL;
-> +	}
->  	if (s[i - 1] == ' ') /* last character cannot be space */
->  		return -EINVAL;
-
--- 
-OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+thanks,
+-- Shuah
