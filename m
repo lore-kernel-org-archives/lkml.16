@@ -1,243 +1,370 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2056.outbound.protection.outlook.com [40.107.22.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 963C825DCE6;
-	Wed,  9 Apr 2025 15:35:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.56
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744212938; cv=fail; b=Kwukl7wjJAoZ+EjnjWKTFtT2WPP14SEcL+BtgMD3Wd1XXDyVuaMJDute7yU34bZ/+w+w61KtoFGT80BzIKgygELovwAfWB320o7J9RgI1jI7brYKy1e4GaQWxZcVFnzw20+bWP5ZZ6hdCdf61y4jHrffe52AuQqYtkX8lH0uidY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744212938; c=relaxed/simple;
-	bh=cAcTYBcFEONkOvhJW+jujZ/YX/oASJ9fHPslYKpzvYI=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=kUKVi236WiyODhOf71lzyIizkUb0mv9HWR7BpIpRvDA//k77uYy36nT4vtbqCQwML7seNOiPCy06PoDOzjE5MVDnFAgOSnqc00kEf22lNSzsq8sdVOchH95zJrEEhJCAow8EtQjXPwOO3+JJQuLOMsCbidK3u8+6NWXpY7k/SQg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=lMwSm79d; arc=fail smtp.client-ip=40.107.22.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D09B2146A68;
+	Wed,  9 Apr 2025 15:36:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744212999; cv=none; b=N4U5FPn3jvC1zD5pfbdMyh0OWHFVu1g4lI7VH/UDb5E3J0h/xsPUpQLY2wB+Ox9/oVSOV8OzcigZFPsTYwv7AX/DwR8KbfqQoNcOxTVsuZvMtfg8B4+6WJWe8B2Di3IqUEjhQ3cCTUIQH+VVZEqjOVoMKROG5Hek3nemL/wlGTE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744212999; c=relaxed/simple;
+	bh=nBgTW6kzyLoNKk+mjoVnZLJgm9YbzS4rnSblOAg3/vo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Ohfx5LTR1xentYZ68G8J81QfF4aVx28B3tZQztyF7maKfyWoqfKj+S5C1s2CfJwvWYfy9qfJRNRo7wdB9QIu6p2AGq5UP5d/fUes3wa3KxitMPFLQV0xjy9XPcncGOvip3gh32yc+Q3ZHEmtZOTiU6CDqmVwOomkFm51IrgWHOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BoEMSKV1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="lMwSm79d"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=v791GgKLs4C+XXrJYlPdkGL0kx2Ahn/SUGGQKgqigllFR+daIT2vg/z4ZSfKgQwQrKnDhhHPFnFYbPU0d3XELA0iZIzepZBFkFpMXOgwRVGMkD1PwizwyIrsOvV0JQLFkCsJWVKaFieqndCTS957k8b5tjJ4kfAt9gOvisCF6Oz4g+I7M4C6/c7b9rOPURiXE2rWY1TYm+i9geYVkJDNDJEo/eatm6Q2DO9HOtSGGpBoiomGnF3yhNN/tBVhl9YvHeEoq/BSMZEmUe3VsrkHGO2cVlj0fVxuRvdxmtktycf1AdaZQIdMDmfUo4AFMqYj5u/TrgEGqkjMOKAxwPwMpA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pc+tlFVQY7L+y+6uxvolXrEzDyZFImXl/Wda6ws2u/w=;
- b=IEM2l/9pMXNQypRugAhWO9NEM3NzrIT+NZ1uCha+DhQsp9xDLDpxnbh+PjQUa1pexEQiQtdRNUay2/ly/HPJupNhCqXEuvr2pX3ZBfNEQnSz1xYBgqMqsPw8U0083Y9F0W1g8DKButKhMJcWhqMu8EfsWnD6D8pZio3/wLcf5YARHi0T88yoGX4KYKiWXx8LqbRBLEpzB0/4lEwpeNu7Cw87kzckYdUdq6/lqRYMy+z0AUs6l4A07wmrmm+8C1YJLvf9T0j71K9tT/Ks38mmVjobdIoE1o1n5tMoz5iG/NJw7kw0EmpbRsBjFINteStoxDidTN/1HMlHwIUXfO5UDg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pc+tlFVQY7L+y+6uxvolXrEzDyZFImXl/Wda6ws2u/w=;
- b=lMwSm79dAFoQj8jHuUAbxHC/qwmFpyBMJqA1JtuBy73HmvgJ9vUXhQF3iK5AZvMWsbdCgvWqcSX4OY/PhGXUY3Yi3awwfqRl3mO3Qvvde1siXSl40/tCQ7Dq73OsEPRiJm3QnUf6G5fX2cGetoErDh+Ss4Wydb1UYcXkm7aeE01QwdF9luEq4eyUjTMx/4vNXMr8gvRxlOdVa7SudMIiZgfI4ENqLEpdy5SVo/dVWnDdxSTe9+FX0LHn/h1XcWrvTBqGNIkktQaID8PnS/lMV/LbgT/3QJKPapJSZf9AIuPNjKp3hOZAGOHZoW1UxgdQ2ihqxMOfJVJOxEJwqQRdBA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AS8PR04MB7973.eurprd04.prod.outlook.com (2603:10a6:20b:28b::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Wed, 9 Apr
- 2025 15:35:34 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8606.029; Wed, 9 Apr 2025
- 15:35:33 +0000
-From: Frank Li <Frank.Li@nxp.com>
-To: s-vadapalli@ti.com
-Cc: Frank.Li@nxp.com,
-	bhelgaas@google.com,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	krzk+dt@kernel.org,
-	kw@linux.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-omap@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	lpieralisi@kernel.org,
-	manivannan.sadhasivam@linaro.org,
-	robh@kernel.org,
-	tony@atomide.com,
-	vigneshr@ti.com
-Subject: [PATCH 1/1] Revert "ARM: dts: Update pcie ranges for dra7"
-Date: Wed,  9 Apr 2025 11:35:18 -0400
-Message-Id: <20250409153518.3068176-1-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: PH8P222CA0026.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:510:2d7::10) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BoEMSKV1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75CE5C4CEE2;
+	Wed,  9 Apr 2025 15:36:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744212999;
+	bh=nBgTW6kzyLoNKk+mjoVnZLJgm9YbzS4rnSblOAg3/vo=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=BoEMSKV13gDHXoLcX0/gpGD6uIrFZ5DFhDQg2uTZZRhSjrqTqyW7ATYwx31qH/VEM
+	 RcEFi0tqjVI85fenIibSLI7w9hpDTjuMi4OEb+0EJzB9V7TpU2bg4RZeJ2IsGmgnG4
+	 +So+v+fNnjnpG/oSVg6ygnb0o4iNcCTexDp6ASV9P7lhcoLr6vlcY67U2X1cCRsn88
+	 MwBIgF48sK90Ofd3sESX4bRBeG7AONrmMy/0nMghmhlz0aARoHD3U0XpeyCpQv5hFJ
+	 O4MTmBmAuSu32HiHtIt4QIj/MNIcVSEDT6JHXMCmxZrGqMk3A7gWr/kpAVtHGTwhrm
+	 +MSCZ4xGcnjCg==
+Message-ID: <11d5010fbe14e21b614d7cc56bae1805b35f3a31.camel@kernel.org>
+Subject: Re: [PATCH v2 06/12] nfsd: add tracepoints around nfsd_create events
+From: Jeff Layton <jlayton@kernel.org>
+To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, Olga
+ Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom
+ Talpey <tom@talpey.com>, Trond Myklebust <trondmy@kernel.org>, Anna
+ Schumaker <anna@kernel.org>
+Cc: Sargun Dillon <sargun@sargun.me>, linux-nfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Wed, 09 Apr 2025 11:36:37 -0400
+In-Reply-To: <078a639b-1f19-48e2-a0cc-f861b67f34c9@oracle.com>
+References: <20250409-nfsd-tracepoints-v2-0-cf4e084fdd9c@kernel.org>
+	 <20250409-nfsd-tracepoints-v2-6-cf4e084fdd9c@kernel.org>
+	 <078a639b-1f19-48e2-a0cc-f861b67f34c9@oracle.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS8PR04MB7973:EE_
-X-MS-Office365-Filtering-Correlation-Id: dc5661d9-f77a-40cf-2355-08dd777c2ad8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|7416014|376014|52116014|366016|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?SyrZafYZKkKN7SRO7Wsg4wjR2e2WI1IJMBM73JL6DF9Hpqy728s7p7WbrMrO?=
- =?us-ascii?Q?Bxkr6dzp0zqZHWZtNRmhKOm1zfimIPLX3MY2GAeA93MfEZsu9LvPKVvAOTyU?=
- =?us-ascii?Q?7LjZwRi/8AbVtYk8bhiYWIAFaKEuNyx10E9wiwncgonKbPLP+P8mBgb1PeJL?=
- =?us-ascii?Q?8r8xueWkmQSH4ILAcz2KA/ceLuaLv8oVcabFlFHOikY8/0KNfD7csXDQ/MmD?=
- =?us-ascii?Q?EbP5aTt+nnsXmt8GpbOH5Mq5BK3PGQjb6r7hoYgIVp5RND1cJieXQ/nW5xqH?=
- =?us-ascii?Q?mOTy7UoAlX77Y4Jlny8vKXiJykch7ZNIU7j5sgWIXvmCaeEuytLDAFhsjNI4?=
- =?us-ascii?Q?2dsqqHtitDX6dirvIllaEKXaMc00BZwC7/Ta7AQZ5Jxec9sz8XiuMMiP5sHK?=
- =?us-ascii?Q?stmn5bSbH/HRNXZBE/85qNKZMS/Hz2KPPq266fvi3m5uzBZrs2mV1pAhjRlQ?=
- =?us-ascii?Q?RukIKxsK2/n0S8HPg6P/lodoatdqeuE6bG7y9f1Pm4ZruP1Un1CkzJOYFhSj?=
- =?us-ascii?Q?KjXQfpm1RRu38SjC+Q5tsht4wNkGEaQD8vfzbVZZvMaHaTOkDMbt1V+Qr7R/?=
- =?us-ascii?Q?z/q5mFC7UJ0diDolEqAqZ9JFhQmjQqzek7M2oc9dW7UGjMtudvtkQ68AZm4K?=
- =?us-ascii?Q?KNOwqR3w+mUT5GS+qljBlsNl59nsdSHh2e6t4q8QPTYiF3+kQmeEqla9ihdK?=
- =?us-ascii?Q?RiVCfP44HklX7AiGWAOQXLWPvgIMf2wsRqNjeZjdQYmBpgVoqZPGeU2KeMP5?=
- =?us-ascii?Q?Qv3MmOOtmxt1EnjbyFtQZi+pKWa3jU+L3n77/kdNe/t5EIaEiWewzC2V3xNU?=
- =?us-ascii?Q?FktRUvsGvMfhUdG+cQ+6lxtKmDq6hCb4XDESHl6Y/1S5YiKocgsS/QOgfbiM?=
- =?us-ascii?Q?3qQ48+/GWWFQRrx6yTaTzVCfbJwLPRWYC2MmSJqKEOzt81wpC5zfnMBFVIDK?=
- =?us-ascii?Q?gmJiLENvlFZWxzuP/R5QhOUBHiSI8FEOru7cgrvkRRszMql7RokR1Vru944a?=
- =?us-ascii?Q?vYGszzFlNJxjoD5aC1medK9Z3ySJzXR14n6ZJi/54XL4GMjMt7oViw6Yc6JD?=
- =?us-ascii?Q?ceSlO3o262fe1kDYKQnapyV5M+cpJuAKfWhMvUyLhVHzJXfgn7hASM4dxIdP?=
- =?us-ascii?Q?wd4NFwM4K5tuRZSQwuFsPsxYAIpytdns5oMmrzFwn2CHuTH5ij/dWnYAS2Mk?=
- =?us-ascii?Q?UOjL9SFSy6ta0xwoag2NbUFx/Lr0lMSdfTG/hvpx1RmiwO9ir6EFjvlAH7Mt?=
- =?us-ascii?Q?9+4j2RMBp6zK56OOmwrbK3FFSNlIdnqeFrrgiWC14DadTVS1CWTnr3akQ3m1?=
- =?us-ascii?Q?iyhc2Bx3RP4FJCEGpstWw7IohZ5BXqaICk1AlKcKiY7Xv80N1olnzbaHEya/?=
- =?us-ascii?Q?p/AbZUUJkZfISDKDnlQXpNyKp2TzXjL1zPEemNTMM4KCxjCw84fqH4O6XTu3?=
- =?us-ascii?Q?wuFxDVtVSxqZOSlQ+4umgAmQOy7O2J8pLQF/fZQkxtkhbmny+06gzQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(52116014)(366016)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?NI0WiECNJSOPEEHmJ4teCD5t3ngSL4LHaSx+kSg0SpNbUnPIc4kCm3N5HvDJ?=
- =?us-ascii?Q?TjyUdaHl1bSfaeBbkCVSNxdlYY7GoesLesIzk6+vxXw/0AK8xs9h2mBdc7eJ?=
- =?us-ascii?Q?NAYcv0mGm21sdzoz4m7z9r61+o3rh3IqxDnx+36Chmns4leKFlQ2Wod1l9tX?=
- =?us-ascii?Q?MXVdYLQJTBjwEcEGxFwDsnEpyyq5lqk1HaA5tS9uAwa0OITBXlPUOl7yUExS?=
- =?us-ascii?Q?DZLoytNZOpyNmSc/CLqT4sJkTFYEyjgKXWUJvRBdUiRBLdOphh2X+3QNPI5V?=
- =?us-ascii?Q?G/tR0dcSAb//QkFkL47bM0nAfucFDiduAl4e3RZa4Sv16tCRJ/7psrW/58H2?=
- =?us-ascii?Q?179QB8mPrMmrqHMKdkbRd3ITdkJK7RZpx2TbW+gd6lopXk6f3iqhTAPsATwi?=
- =?us-ascii?Q?6icni9gc+4lCoDrV0iqWdtwDgSiVAQHxf3LTfFMuYEWoy+AhSyuATfZtXipd?=
- =?us-ascii?Q?9E+cNtnxvSImFxl27cp41+NBjQBBdW6KegeCirKsfRu5Z3NOTVD1AYscf01C?=
- =?us-ascii?Q?2CjZoCKKzWKrt80QmtchIKKWuxWCxSrWaJ9VkMZ/zt+PK79JfEaRtlvfC1fI?=
- =?us-ascii?Q?amRkyqTd2LVlWTaUZb1gaiwaPPlnHGIGhizWT8PDIQxxraWFH9Xnm6UDEVxe?=
- =?us-ascii?Q?4ObPWxgnwXE955Ayq6wj9g7X1nnVdEWpuDNxRxBZxPIOCVIZYfhbfcaDsBJ6?=
- =?us-ascii?Q?2eLW+/1kNaCXTqcAFDH0fAONsoieSyjseXhumynChKu/a7iuAzekdhPXhMbk?=
- =?us-ascii?Q?n9XRyWO+yIVtoaIVv2bOPFcoZGAZeg6lcCtQzOebaqJ2btrxNJOSb2ZwDpOa?=
- =?us-ascii?Q?PJJIhAKUt9GF5Xv+Zz0t/vF5lhqXZG4nOMFM2qtZMxbRvTnz86uvfunVsWch?=
- =?us-ascii?Q?jwXyDkdyaCEN/iPs29QuRquMSrSKx2NLhiWNh28vg5Ce2wrEsjiOU9XUq15q?=
- =?us-ascii?Q?BSG7V2pc148xNJbDl7R2WGK+vkFc1//9YEPWSNrkECtrSE2TRgvMMhRrN+DJ?=
- =?us-ascii?Q?XAPqDyKVsIet4qfdShd8/p3TQncX6wTfKdX7udmJBPvg1dTuoq7mHDsaDRsb?=
- =?us-ascii?Q?XboBxYzr2SBmRAIOjpiIPSNuN8CHQmqlXCqeheZVshsH/0bcoUv1P8H+yG7y?=
- =?us-ascii?Q?ln3aW6t2CMsezTCoJCE8iYAkGRU5NZwlg0dBdI5VGUultlS21odADHoGi1hg?=
- =?us-ascii?Q?BlivlGBqELlFCcuM2K9Z4Yv/br/M3x2OUjyB4bY0FzxTzTsX8FhtphifCBXY?=
- =?us-ascii?Q?kmrUNVu7ezg+NDZRBZCIEJ5019iQ7FZfMH8LCbs9VTUK6sj7MlmHpzg4qhmi?=
- =?us-ascii?Q?xOZsTOCHQ/sa9gcL2dIakWiygzf9JnUbP8iyXgKgS2evOjiJ9EQfheZS+Y/N?=
- =?us-ascii?Q?/DyWe9P7T6BL5++CILQwy+wjg0nOADWnXwDuIqP8MScWgSEmnXLzUdOvJqZ5?=
- =?us-ascii?Q?q0cSVIaqSjMJJPNWwjuaduAvB9UvjWEncwo3e0S2/oy/XeN5h1IjkJ0C7Ks0?=
- =?us-ascii?Q?xD7yhoL7Btbas/dV8ldKLiTN1dbXKU7kkyi3aHkPEPhTWScy+KKMn+Ul8j9C?=
- =?us-ascii?Q?0CrJL6xXuE5NGN+ukRQQLf9p1NINXBZQ4EInfzQt?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dc5661d9-f77a-40cf-2355-08dd777c2ad8
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 15:35:33.7650
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BEaT63I6npnYNEvQc6pBly4T+VZqxP73o78ZBhMndp/1JAPbXmWuRQViUTc26P7EbiLA24q7fkwUkbEh6ndMqQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB7973
 
-This reverts commit c761028ef5e27f477fe14d2b134164c584fc21ee.
+On Wed, 2025-04-09 at 11:09 -0400, Chuck Lever wrote:
+> On 4/9/25 10:32 AM, Jeff Layton wrote:
+> > ...and remove the legacy dprintks.
+> >=20
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > ---
+> >  fs/nfsd/nfs3proc.c | 18 +++++-------------
+> >  fs/nfsd/nfs4proc.c | 29 +++++++++++++++++++++++++++++
+> >  fs/nfsd/nfsproc.c  |  6 +++---
+> >  fs/nfsd/trace.h    | 39 +++++++++++++++++++++++++++++++++++++++
+> >  4 files changed, 76 insertions(+), 16 deletions(-)
+> >=20
+> > diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
+> > index 372bdcf5e07a5c835da240ecebb02e3576eb2ca6..ea1280970ea11b2a82f0de8=
+8ad0422eef7063d6d 100644
+> > --- a/fs/nfsd/nfs3proc.c
+> > +++ b/fs/nfsd/nfs3proc.c
+> > @@ -14,6 +14,7 @@
+> >  #include "xdr3.h"
+> >  #include "vfs.h"
+> >  #include "filecache.h"
+> > +#include "trace.h"
+> > =20
+> >  #define NFSDDBG_FACILITY		NFSDDBG_PROC
+> > =20
+> > @@ -380,10 +381,7 @@ nfsd3_proc_create(struct svc_rqst *rqstp)
+> >  	struct nfsd3_diropres *resp =3D rqstp->rq_resp;
+> >  	svc_fh *dirfhp, *newfhp;
+> > =20
+> > -	dprintk("nfsd: CREATE(3)   %s %.*s\n",
+> > -				SVCFH_fmt(&argp->fh),
+> > -				argp->len,
+> > -				argp->name);
+> > +	trace_nfsd3_proc_create(rqstp, &argp->fh, S_IFREG, argp->name, argp->=
+len);
+> > =20
+> >  	dirfhp =3D fh_copy(&resp->dirfh, &argp->fh);
+> >  	newfhp =3D fh_init(&resp->fh, NFS3_FHSIZE);
+> > @@ -405,10 +403,7 @@ nfsd3_proc_mkdir(struct svc_rqst *rqstp)
+> >  		.na_iattr	=3D &argp->attrs,
+> >  	};
+> > =20
+> > -	dprintk("nfsd: MKDIR(3)    %s %.*s\n",
+> > -				SVCFH_fmt(&argp->fh),
+> > -				argp->len,
+> > -				argp->name);
+> > +	trace_nfsd3_proc_mkdir(rqstp, &argp->fh, S_IFDIR, argp->name, argp->l=
+en);
+> > =20
+> >  	argp->attrs.ia_valid &=3D ~ATTR_SIZE;
+> >  	fh_copy(&resp->dirfh, &argp->fh);
+> > @@ -471,13 +466,10 @@ nfsd3_proc_mknod(struct svc_rqst *rqstp)
+> >  	struct nfsd_attrs attrs =3D {
+> >  		.na_iattr	=3D &argp->attrs,
+> >  	};
+> > -	int type;
+> > +	int type =3D nfs3_ftypes[argp->ftype];
+> >  	dev_t	rdev =3D 0;
+> > =20
+> > -	dprintk("nfsd: MKNOD(3)    %s %.*s\n",
+> > -				SVCFH_fmt(&argp->fh),
+> > -				argp->len,
+> > -				argp->name);
+> > +	trace_nfsd3_proc_mknod(rqstp, &argp->fh, type, argp->name, argp->len)=
+;
+> > =20
+> >  	fh_copy(&resp->dirfh, &argp->fh);
+> >  	fh_init(&resp->fh, NFS3_FHSIZE);
+> > diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+> > index 6e23d6103010197c0316b07c189fe12ec3033812..2c795103deaa4044596bd07=
+d90db788169a32a0c 100644
+> > --- a/fs/nfsd/nfs4proc.c
+> > +++ b/fs/nfsd/nfs4proc.c
+> > @@ -250,6 +250,8 @@ nfsd4_create_file(struct svc_rqst *rqstp, struct sv=
+c_fh *fhp,
+> >  	__be32 status;
+> >  	int host_err;
+> > =20
+> > +	trace_nfsd4_create_file(rqstp, fhp, S_IFREG, open->op_fname, open->op=
+_fnamelen);
+> > +
+> >  	if (isdotent(open->op_fname, open->op_fnamelen))
+> >  		return nfserr_exist;
+> >  	if (!(iap->ia_valid & ATTR_MODE))
+> > @@ -807,6 +809,29 @@ nfsd4_commit(struct svc_rqst *rqstp, struct nfsd4_=
+compound_state *cstate,
+> >  	return status;
+> >  }
+> > =20
+> > +static umode_t nfs_type_to_vfs_type(enum nfs_ftype4 nfstype)
+> > +{
+> > +	switch (nfstype) {
+> > +	case NF4REG:
+> > +		return S_IFREG;
+> > +	case NF4DIR:
+> > +		return S_IFDIR;
+> > +	case NF4BLK:
+> > +		return S_IFBLK;
+> > +	case NF4CHR:
+> > +		return S_IFCHR;
+> > +	case NF4LNK:
+> > +		return S_IFLNK;
+> > +	case NF4SOCK:
+> > +		return S_IFSOCK;
+> > +	case NF4FIFO:
+> > +		return S_IFIFO;
+> > +	default:
+> > +		break;
+> > +	}
+> > +	return 0;
+> > +}
+> > +
+>=20
+> Wondering what happens when trace points are disabled in the kernel
+> build. Maybe this helper belongs in fs/nfsd/trace.h instead as a
+> macro wrapper for __print_symbolic(). But see below.
+>=20
 
-The previous device tree correctly reflects the hardware behavior.
-The reverted commit introduced a fake address translation at pcie's parent
-bus node.
+If tracepoints are disabled, then the only caller of this static
+function would go away, so it should get optimized out. I don't see how
+you'd make this a wrapper around __print_symbolic(), since the point is
+to pass in a NFS version-independent constant that the tracepoint class
+can use as a type.
 
-Reverting this change prepares for the cleanup of the driver's
-cpu_addr_fixup() hook.
+>=20
+> >  static __be32
+> >  nfsd4_create(struct svc_rqst *rqstp, struct nfsd4_compound_state *csta=
+te,
+> >  	     union nfsd4_op_u *u)
+> > @@ -822,6 +847,10 @@ nfsd4_create(struct svc_rqst *rqstp, struct nfsd4_=
+compound_state *cstate,
+> >  	__be32 status;
+> >  	dev_t rdev;
+> > =20
+> > +	trace_nfsd4_create(rqstp, &cstate->current_fh,
+> > +			   nfs_type_to_vfs_type(create->cr_type),
+> > +			   create->cr_name, create->cr_namelen);
+> > +
+> >  	fh_init(&resfh, NFS4_FHSIZE);
+> > =20
+> >  	status =3D fh_verify(rqstp, &cstate->current_fh, S_IFDIR, NFSD_MAY_NO=
+P);
+> > diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
+> > index 6dda081eb24c00b834ab0965c3a35a12115bceb7..33d8cbf8785588d38d4ec5e=
+fd769c1d1d06c6a91 100644
+> > --- a/fs/nfsd/nfsproc.c
+> > +++ b/fs/nfsd/nfsproc.c
+> > @@ -10,6 +10,7 @@
+> >  #include "cache.h"
+> >  #include "xdr.h"
+> >  #include "vfs.h"
+> > +#include "trace.h"
+> > =20
+> >  #define NFSDDBG_FACILITY		NFSDDBG_PROC
+> > =20
+> > @@ -292,8 +293,7 @@ nfsd_proc_create(struct svc_rqst *rqstp)
+> >  	int		hosterr;
+> >  	dev_t		rdev =3D 0, wanted =3D new_decode_dev(attr->ia_size);
+> > =20
+> > -	dprintk("nfsd: CREATE   %s %.*s\n",
+> > -		SVCFH_fmt(dirfhp), argp->len, argp->name);
+> > +	trace_nfsd_proc_create(rqstp, dirfhp, S_IFREG, argp->name, argp->len)=
+;
+> > =20
+> >  	/* First verify the parent file handle */
+> >  	resp->status =3D fh_verify(rqstp, dirfhp, S_IFDIR, NFSD_MAY_EXEC);
+> > @@ -548,7 +548,7 @@ nfsd_proc_mkdir(struct svc_rqst *rqstp)
+> >  		.na_iattr	=3D &argp->attrs,
+> >  	};
+> > =20
+> > -	dprintk("nfsd: MKDIR    %s %.*s\n", SVCFH_fmt(&argp->fh), argp->len, =
+argp->name);
+> > +	trace_nfsd_proc_mkdir(rqstp, &argp->fh, S_IFDIR, argp->name, argp->le=
+n);
+> > =20
+> >  	if (resp->fh.fh_dentry) {
+> >  		printk(KERN_WARNING
+> > diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+> > index 382849d7c321d6ded8213890c2e7075770aa716c..c6aff23a845f06c87e701d5=
+7ec577c2c5c5a743c 100644
+> > --- a/fs/nfsd/trace.h
+> > +++ b/fs/nfsd/trace.h
+> > @@ -2391,6 +2391,45 @@ TRACE_EVENT(nfsd_lookup_dentry,
+> >  	TP_printk("xid=3D0x%08x fh_hash=3D0x%08x name=3D%s",
+> >  		  __entry->xid, __entry->fh_hash, __get_str(name))
+> >  );
+> > +
+> > +DECLARE_EVENT_CLASS(nfsd_vfs_create_class,
+> > +	TP_PROTO(struct svc_rqst *rqstp,
+> > +		 struct svc_fh *fhp,
+> > +		 umode_t type,
+> > +		 const char *name,
+> > +		 unsigned int len),
+> > +	TP_ARGS(rqstp, fhp, type, name, len),
+> > +	TP_STRUCT__entry(
+> > +		SVC_RQST_ENDPOINT_FIELDS(rqstp)
+> > +		__field(u32, fh_hash)
+> > +		__field(umode_t, type)
+> > +		__string_len(name, name, len)
+> > +	),
+> > +	TP_fast_assign(
+> > +		SVC_RQST_ENDPOINT_ASSIGNMENTS(rqstp);
+> > +		__entry->fh_hash =3D knfsd_fh_hash(&fhp->fh_handle);
+> > +		__entry->type =3D type;
+> > +		__assign_str(name);
+> > +	),
+> > +	TP_printk("xid=3D0x%08x fh_hash=3D0x%08x type=3D%s name=3D%s",
+> > +		  __entry->xid, __entry->fh_hash,
+> > +		  show_fs_file_type(__entry->type), __get_str(name))
+> > +);
+> > +
+> > +#define DEFINE_NFSD_VFS_CREATE_EVENT(__name)						\
+> > +	DEFINE_EVENT(nfsd_vfs_create_class, __name,					\
+> > +		     TP_PROTO(struct svc_rqst *rqstp, struct svc_fh *fhp,		\
+> > +			      umode_t type, const char *name, unsigned int len),	\
+> > +		     TP_ARGS(rqstp, fhp, type, name, len))
+> > +
+> > +DEFINE_NFSD_VFS_CREATE_EVENT(nfsd_proc_create);
+> > +DEFINE_NFSD_VFS_CREATE_EVENT(nfsd_proc_mkdir);
+> > +DEFINE_NFSD_VFS_CREATE_EVENT(nfsd3_proc_create);
+> > +DEFINE_NFSD_VFS_CREATE_EVENT(nfsd3_proc_mkdir);
+> > +DEFINE_NFSD_VFS_CREATE_EVENT(nfsd3_proc_mknod);
+> > +DEFINE_NFSD_VFS_CREATE_EVENT(nfsd4_create);
+> > +DEFINE_NFSD_VFS_CREATE_EVENT(nfsd4_create_file);
+>=20
+> I think we would be better off with one or two new trace points in
+> nfsd_create() and nfsd_create_setattr() instead of all of these...
+>=20
+> Unless I've missed what you are trying to observe...?
+>
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
-Previous disscusion at
-https://lore.kernel.org/linux-pci/20250314064642.fyf3jqylmc6meft7@uda0492258/
----
- arch/arm/boot/dts/ti/omap/dra7.dtsi | 29 +++++++++++------------------
- 1 file changed, 11 insertions(+), 18 deletions(-)
+I'll look into doing it that way.
 
-diff --git a/arch/arm/boot/dts/ti/omap/dra7.dtsi b/arch/arm/boot/dts/ti/omap/dra7.dtsi
-index b709703f6c0d4..711ce4c31bb1f 100644
---- a/arch/arm/boot/dts/ti/omap/dra7.dtsi
-+++ b/arch/arm/boot/dts/ti/omap/dra7.dtsi
-@@ -195,24 +195,22 @@ axi0: target-module@51000000 {
- 			clock-names = "fck", "phy-clk", "phy-clk-div";
- 			#size-cells = <1>;
- 			#address-cells = <1>;
--			ranges = <0x51000000 0x51000000 0x3000>,
--				 <0x20000000 0x20000000 0x10000000>;
-+			ranges = <0x51000000 0x51000000 0x3000
-+				  0x0	     0x20000000 0x10000000>;
- 			dma-ranges;
- 			/**
- 			 * To enable PCI endpoint mode, disable the pcie1_rc
- 			 * node and enable pcie1_ep mode.
- 			 */
- 			pcie1_rc: pcie@51000000 {
--				reg = <0x51000000 0x2000>,
--				      <0x51002000 0x14c>,
--				      <0x20001000 0x2000>;
-+				reg = <0x51000000 0x2000>, <0x51002000 0x14c>, <0x1000 0x2000>;
- 				reg-names = "rc_dbics", "ti_conf", "config";
- 				interrupts = <0 232 0x4>, <0 233 0x4>;
- 				#address-cells = <3>;
- 				#size-cells = <2>;
- 				device_type = "pci";
--				ranges = <0x81000000 0 0x00000000 0x20003000 0 0x00010000>,
--					 <0x82000000 0 0x20013000 0x20013000 0 0x0ffed000>;
-+				ranges = <0x81000000 0 0          0x03000 0 0x00010000
-+					  0x82000000 0 0x20013000 0x13000 0 0xffed000>;
- 				bus-range = <0x00 0xff>;
- 				#interrupt-cells = <1>;
- 				num-lanes = <1>;
-@@ -235,10 +233,7 @@ pcie1_intc: interrupt-controller {
- 			};
- 
- 			pcie1_ep: pcie_ep@51000000 {
--				reg = <0x51000000 0x28>,
--				      <0x51002000 0x14c>,
--				      <0x51001000 0x28>,
--				      <0x20001000 0x10000000>;
-+				reg = <0x51000000 0x28>, <0x51002000 0x14c>, <0x51001000 0x28>, <0x1000 0x10000000>;
- 				reg-names = "ep_dbics", "ti_conf", "ep_dbics2", "addr_space";
- 				interrupts = <0 232 0x4>;
- 				num-lanes = <1>;
-@@ -269,21 +264,19 @@ axi1: target-module@51800000 {
- 			reset-names = "rstctrl";
- 			#size-cells = <1>;
- 			#address-cells = <1>;
--			ranges = <0x51800000 0x51800000 0x3000>,
--				 <0x30000000 0x30000000 0x10000000>;
-+			ranges = <0x51800000 0x51800000 0x3000
-+				  0x0	     0x30000000 0x10000000>;
- 			dma-ranges;
- 			status = "disabled";
- 			pcie2_rc: pcie@51800000 {
--				reg = <0x51800000 0x2000>,
--				      <0x51802000 0x14c>,
--				      <0x30001000 0x2000>;
-+				reg = <0x51800000 0x2000>, <0x51802000 0x14c>, <0x1000 0x2000>;
- 				reg-names = "rc_dbics", "ti_conf", "config";
- 				interrupts = <0 355 0x4>, <0 356 0x4>;
- 				#address-cells = <3>;
- 				#size-cells = <2>;
- 				device_type = "pci";
--				ranges = <0x81000000 0 0x00000000 0x30003000 0 0x00010000>,
--					 <0x82000000 0 0x30013000 0x30013000 0 0x0ffed000>;
-+				ranges = <0x81000000 0 0          0x03000 0 0x00010000
-+					  0x82000000 0 0x30013000 0x13000 0 0xffed000>;
- 				bus-range = <0x00 0xff>;
- 				#interrupt-cells = <1>;
- 				num-lanes = <1>;
--- 
-2.34.1
+>=20
+> > +
+> >  #endif /* _NFSD_TRACE_H */
+> > =20
+> >  #undef TRACE_INCLUDE_PATH
+> >=20
+>=20
+>=20
 
+--=20
+Jeff Layton <jlayton@kernel.org>
