@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 439CE1E7C20
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 20:29:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA13218AD1
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 20:29:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744230585; cv=none; b=W0gQO7XUGh0uA1GUu7xwlDzbCzO9DX+5grvu2OUA/u5d4ClH05BsWermJlWFWdWRCbm21E6kDO/Jy7ewn124TlTl7t3cqpr+9Yau+2bAYYoMHQ+Esr890tHNRl2ywFLng8DARUZR+56T3XPmu2C/1b6BjfNcKu+FUWrQtqAt48s=
+	t=1744230588; cv=none; b=pkd8/6FnbgDRdsxg/ROlNQMFFSye2TnnxUs5tGpXs8jAoE9KD1JUSUqyFJNB4vXwzJzANgJhJ2/fLXc7dUi5QwPgMHDzF0OIvpbg4w28ywf18l8hFhBO5x7WQQMX85p9jWKIef4eFOu/fvnVdKSzqAo4b7X/NesnGq0eja9KJJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744230585; c=relaxed/simple;
-	bh=F+EQduTZw2oWRgRmf26+UiaMidczkQICOihVDSDZ+pE=;
+	s=arc-20240116; t=1744230588; c=relaxed/simple;
+	bh=LqKl9GMcHRQZghtbRXaflNO6MSkEBXPmwWvrfQk5DuI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VstApW8nRXJCiXH32JWovVSTd/Ibg41qrQrhDmMRrnhPpnjv/HKwb5c9K6YpZNLvmiiOKFw0CS19RjT2q9k1BZKrhpr5/HpGUpss75eA2ZqCZ0tEepqtheqdCNr+kzqWquQTbanqFGIOJ7+HTsifWDqVT1LrZ57utRedOhn21X0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kDaU3uJZ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ByrUJv7XoXvUait9GBWZaQoXVQ2t6iU5MVlEb7vSnh5TI3aM8Qjev1EJfaihabb7zcp1yVNvqxPrGXq/dz7+BQgs2pmDxmFFfx5hf30N4wAkVPpJKN3/KaQix6/WuX0NGmhd18ecPMU0r0LTQGErFGnGJ+gjZws0TheDMCtePU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NoNkOBQ4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kDaU3uJZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE856C4CEE8;
-	Wed,  9 Apr 2025 20:29:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NoNkOBQ4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 940D6C4CEEB;
+	Wed,  9 Apr 2025 20:29:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744230585;
-	bh=F+EQduTZw2oWRgRmf26+UiaMidczkQICOihVDSDZ+pE=;
+	s=k20201202; t=1744230587;
+	bh=LqKl9GMcHRQZghtbRXaflNO6MSkEBXPmwWvrfQk5DuI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kDaU3uJZDi67NZxrztQQTEnk5JTzuS6tPAMc9O7xFHtCDWtdeD3wPHtXW7hiDxXxs
-	 BLK2JCJSMooIWSr3NZBtFVY1g5E5y74bQV1AMnJN/twQ2HO4nDvIV5e4qpRqwn6drC
-	 0FRhR/K1D4szSHCc1qtO5aLWXN4ZmJ/qCUu54EanoMWiRiCRVDeky5y97yIUGGAWVm
-	 JvFeIKGGOZnhp1eTWITYtQ9uu7tu+8ORsjo5vXyFOS4MNPBSCHZfcYdM2fbY0eYQFL
-	 zCY0Pxgo8s+sv4lH4JUazMuGiQR43KguXiF+eV7xVIHo1hv3VXjGGXkjlBa9lvQ5AD
-	 AYP4apss5U4qg==
+	b=NoNkOBQ43zYYRUaSJGQpFpQg1z5m9YKlMIrpCC8EBWkigL7QDzAiRAqXtG/ev5A1y
+	 R/KUKmVaCqkN0ce6KDpm/GKPPigSZlvhWsEF1UhggPJ0BesYe6PlIuovOxTZOJB8MY
+	 9JPE6YQsaq1IC+J9Gsl9Kkvz6YJqyIJR+DqamvqYEFsPYIacVWECKieFasPmqAYSd8
+	 CgeJHrjZUMGZdFRxg4OsEhSu2GA9ixDrMAVSTR1MU4vV6vW+lAqDNF+IxQserYxBP+
+	 Zbyjcvp5IbJGl/WAy1JG9qdx9Qhd6oaahE5b6D1F3wFMeqAPdbLIfLSuBjHjNcG4C5
+	 1Hqmbp5KTlcIw==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Juergen Gross <jgross@suse.com>,
@@ -37,9 +37,9 @@ Cc: Juergen Gross <jgross@suse.com>,
 	Borislav Petkov <bp@alien8.de>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 10/20] x86/msr: Rename 'wrmsrl_safe()' to 'wrmsrq_safe()'
-Date: Wed,  9 Apr 2025 22:28:57 +0200
-Message-ID: <20250409202907.3419480-11-mingo@kernel.org>
+Subject: [PATCH 11/20] x86/msr: Rename 'rdmsrl_safe_on_cpu()' to 'rdmsrq_safe_on_cpu()'
+Date: Wed,  9 Apr 2025 22:28:58 +0200
+Message-ID: <20250409202907.3419480-12-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250409202907.3419480-1-mingo@kernel.org>
 References: <20250409202907.3419480-1-mingo@kernel.org>
@@ -58,449 +58,186 @@ Cc: Dave Hansen <dave.hansen@intel.com>
 Cc: Xin Li <xin@zytor.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 ---
- arch/x86/events/core.c                                   |  2 +-
- arch/x86/events/intel/core.c                             |  8 ++++----
- arch/x86/events/intel/knc.c                              |  4 ++--
- arch/x86/events/intel/lbr.c                              |  2 +-
- arch/x86/events/intel/p4.c                               | 16 ++++++++--------
- arch/x86/events/intel/p6.c                               |  4 ++--
- arch/x86/include/asm/msr.h                               |  4 ++--
- arch/x86/kernel/cpu/amd.c                                |  6 +++---
- arch/x86/kernel/cpu/bus_lock.c                           |  2 +-
- arch/x86/kernel/cpu/common.c                             | 14 +++++++-------
- arch/x86/kernel/cpu/mce/inject.c                         |  4 ++--
- arch/x86/kernel/cpu/mce/intel.c                          |  2 +-
- arch/x86/kernel/cpu/resctrl/core.c                       |  2 +-
- arch/x86/kvm/svm/sev.c                                   |  2 +-
- arch/x86/kvm/x86.c                                       |  6 +++---
- arch/x86/lib/msr.c                                       |  2 +-
- drivers/cpufreq/intel_pstate.c                           |  2 +-
- .../platform/x86/intel/speed_select_if/isst_if_common.c  |  2 +-
- drivers/platform/x86/intel/turbo_max_3.c                 |  2 +-
- drivers/powercap/intel_rapl_msr.c                        |  2 +-
- drivers/thermal/intel/therm_throt.c                      |  2 +-
- 21 files changed, 45 insertions(+), 45 deletions(-)
+ arch/x86/events/intel/pt.c                                  | 2 +-
+ arch/x86/include/asm/msr.h                                  | 4 ++--
+ arch/x86/kernel/acpi/cppc.c                                 | 6 +++---
+ arch/x86/lib/msr-smp.c                                      | 4 ++--
+ drivers/cpufreq/amd-pstate-ut.c                             | 2 +-
+ drivers/cpufreq/amd-pstate.c                                | 2 +-
+ drivers/cpufreq/intel_pstate.c                              | 6 +++---
+ drivers/platform/x86/intel/speed_select_if/isst_if_common.c | 2 +-
+ drivers/powercap/intel_rapl_msr.c                           | 2 +-
+ 9 files changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 5a2eda65db0a..85b55c1dc162 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -317,7 +317,7 @@ bool check_hw_exists(struct pmu *pmu, unsigned long *cntr_mask,
- 	if (rdmsrq_safe(reg, &val))
- 		goto msr_fail;
- 	val ^= 0xffffUL;
--	ret = wrmsrl_safe(reg, val);
-+	ret = wrmsrq_safe(reg, val);
- 	ret |= rdmsrq_safe(reg, &val_new);
- 	if (ret || val != val_new)
- 		goto msr_fail;
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 1e8c89f5f6ed..394fa83b537b 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -2976,13 +2976,13 @@ static void intel_pmu_reset(void)
- 	pr_info("clearing PMU state on CPU#%d\n", smp_processor_id());
+diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
+index a645b0993d83..d579f1092357 100644
+--- a/arch/x86/events/intel/pt.c
++++ b/arch/x86/events/intel/pt.c
+@@ -1839,7 +1839,7 @@ static __init int pt_init(void)
+ 	for_each_online_cpu(cpu) {
+ 		u64 ctl;
  
- 	for_each_set_bit(idx, cntr_mask, INTEL_PMC_MAX_GENERIC) {
--		wrmsrl_safe(x86_pmu_config_addr(idx), 0ull);
--		wrmsrl_safe(x86_pmu_event_addr(idx),  0ull);
-+		wrmsrq_safe(x86_pmu_config_addr(idx), 0ull);
-+		wrmsrq_safe(x86_pmu_event_addr(idx),  0ull);
+-		ret = rdmsrl_safe_on_cpu(cpu, MSR_IA32_RTIT_CTL, &ctl);
++		ret = rdmsrq_safe_on_cpu(cpu, MSR_IA32_RTIT_CTL, &ctl);
+ 		if (!ret && (ctl & RTIT_CTL_TRACEEN))
+ 			prior_warn++;
  	}
- 	for_each_set_bit(idx, fixed_cntr_mask, INTEL_PMC_MAX_FIXED) {
- 		if (fixed_counter_disabled(idx, cpuc->pmu))
- 			continue;
--		wrmsrl_safe(x86_pmu_fixed_ctr_addr(idx), 0ull);
-+		wrmsrq_safe(x86_pmu_fixed_ctr_addr(idx), 0ull);
- 	}
- 
- 	if (ds)
-@@ -5621,7 +5621,7 @@ static bool check_msr(unsigned long msr, u64 mask)
- 	if (is_lbr_from(msr))
- 		val_tmp = lbr_from_signext_quirk_wr(val_tmp);
- 
--	if (wrmsrl_safe(msr, val_tmp) ||
-+	if (wrmsrq_safe(msr, val_tmp) ||
- 	    rdmsrq_safe(msr, &val_new))
- 		return false;
- 
-diff --git a/arch/x86/events/intel/knc.c b/arch/x86/events/intel/knc.c
-index afb7801bdece..425f6e6eed89 100644
---- a/arch/x86/events/intel/knc.c
-+++ b/arch/x86/events/intel/knc.c
-@@ -182,7 +182,7 @@ knc_pmu_disable_event(struct perf_event *event)
- 	val = hwc->config;
- 	val &= ~ARCH_PERFMON_EVENTSEL_ENABLE;
- 
--	(void)wrmsrl_safe(hwc->config_base + hwc->idx, val);
-+	(void)wrmsrq_safe(hwc->config_base + hwc->idx, val);
- }
- 
- static void knc_pmu_enable_event(struct perf_event *event)
-@@ -193,7 +193,7 @@ static void knc_pmu_enable_event(struct perf_event *event)
- 	val = hwc->config;
- 	val |= ARCH_PERFMON_EVENTSEL_ENABLE;
- 
--	(void)wrmsrl_safe(hwc->config_base + hwc->idx, val);
-+	(void)wrmsrq_safe(hwc->config_base + hwc->idx, val);
- }
- 
- static inline u64 knc_pmu_get_status(void)
-diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-index b55c59ab53d2..48894f7a099f 100644
---- a/arch/x86/events/intel/lbr.c
-+++ b/arch/x86/events/intel/lbr.c
-@@ -1602,7 +1602,7 @@ void __init intel_pmu_arch_lbr_init(void)
- 		goto clear_arch_lbr;
- 
- 	/* Apply the max depth of Arch LBR */
--	if (wrmsrl_safe(MSR_ARCH_LBR_DEPTH, lbr_nr))
-+	if (wrmsrq_safe(MSR_ARCH_LBR_DEPTH, lbr_nr))
- 		goto clear_arch_lbr;
- 
- 	x86_pmu.lbr_depth_mask = eax.split.lbr_depth_mask;
-diff --git a/arch/x86/events/intel/p4.c b/arch/x86/events/intel/p4.c
-index 36d4cd23182c..24d811a9608a 100644
---- a/arch/x86/events/intel/p4.c
-+++ b/arch/x86/events/intel/p4.c
-@@ -897,8 +897,8 @@ static void p4_pmu_disable_pebs(void)
- 	 * So at moment let leave metrics turned on forever -- it's
- 	 * ok for now but need to be revisited!
- 	 *
--	 * (void)wrmsrl_safe(MSR_IA32_PEBS_ENABLE, 0);
--	 * (void)wrmsrl_safe(MSR_P4_PEBS_MATRIX_VERT, 0);
-+	 * (void)wrmsrq_safe(MSR_IA32_PEBS_ENABLE, 0);
-+	 * (void)wrmsrq_safe(MSR_P4_PEBS_MATRIX_VERT, 0);
- 	 */
- }
- 
-@@ -911,7 +911,7 @@ static inline void p4_pmu_disable_event(struct perf_event *event)
- 	 * state we need to clear P4_CCCR_OVF, otherwise interrupt get
- 	 * asserted again and again
- 	 */
--	(void)wrmsrl_safe(hwc->config_base,
-+	(void)wrmsrq_safe(hwc->config_base,
- 		p4_config_unpack_cccr(hwc->config) & ~P4_CCCR_ENABLE & ~P4_CCCR_OVF & ~P4_CCCR_RESERVED);
- }
- 
-@@ -944,8 +944,8 @@ static void p4_pmu_enable_pebs(u64 config)
- 
- 	bind = &p4_pebs_bind_map[idx];
- 
--	(void)wrmsrl_safe(MSR_IA32_PEBS_ENABLE,	(u64)bind->metric_pebs);
--	(void)wrmsrl_safe(MSR_P4_PEBS_MATRIX_VERT,	(u64)bind->metric_vert);
-+	(void)wrmsrq_safe(MSR_IA32_PEBS_ENABLE,	(u64)bind->metric_pebs);
-+	(void)wrmsrq_safe(MSR_P4_PEBS_MATRIX_VERT,	(u64)bind->metric_vert);
- }
- 
- static void __p4_pmu_enable_event(struct perf_event *event)
-@@ -979,8 +979,8 @@ static void __p4_pmu_enable_event(struct perf_event *event)
- 	 */
- 	p4_pmu_enable_pebs(hwc->config);
- 
--	(void)wrmsrl_safe(escr_addr, escr_conf);
--	(void)wrmsrl_safe(hwc->config_base,
-+	(void)wrmsrq_safe(escr_addr, escr_conf);
-+	(void)wrmsrq_safe(hwc->config_base,
- 				(cccr & ~P4_CCCR_RESERVED) | P4_CCCR_ENABLE);
- }
- 
-@@ -1398,7 +1398,7 @@ __init int p4_pmu_init(void)
- 	 */
- 	for_each_set_bit(i, x86_pmu.cntr_mask, X86_PMC_IDX_MAX) {
- 		reg = x86_pmu_config_addr(i);
--		wrmsrl_safe(reg, 0ULL);
-+		wrmsrq_safe(reg, 0ULL);
- 	}
- 
- 	return 0;
-diff --git a/arch/x86/events/intel/p6.c b/arch/x86/events/intel/p6.c
-index 6a1fdbc6d20f..35917a776bec 100644
---- a/arch/x86/events/intel/p6.c
-+++ b/arch/x86/events/intel/p6.c
-@@ -163,7 +163,7 @@ p6_pmu_disable_event(struct perf_event *event)
- 	struct hw_perf_event *hwc = &event->hw;
- 	u64 val = P6_NOP_EVENT;
- 
--	(void)wrmsrl_safe(hwc->config_base, val);
-+	(void)wrmsrq_safe(hwc->config_base, val);
- }
- 
- static void p6_pmu_enable_event(struct perf_event *event)
-@@ -180,7 +180,7 @@ static void p6_pmu_enable_event(struct perf_event *event)
- 	 * to actually enable the events.
- 	 */
- 
--	(void)wrmsrl_safe(hwc->config_base, val);
-+	(void)wrmsrq_safe(hwc->config_base, val);
- }
- 
- PMU_FORMAT_ATTR(event,	"config:0-7"	);
 diff --git a/arch/x86/include/asm/msr.h b/arch/x86/include/asm/msr.h
-index 58554b5e7911..231757554236 100644
+index 231757554236..c86814c35dec 100644
 --- a/arch/x86/include/asm/msr.h
 +++ b/arch/x86/include/asm/msr.h
-@@ -316,7 +316,7 @@ static __always_inline void wrmsrns(u32 msr, u64 val)
+@@ -335,7 +335,7 @@ void rdmsr_on_cpus(const struct cpumask *mask, u32 msr_no, struct msr __percpu *
+ void wrmsr_on_cpus(const struct cpumask *mask, u32 msr_no, struct msr __percpu *msrs);
+ int rdmsr_safe_on_cpu(unsigned int cpu, u32 msr_no, u32 *l, u32 *h);
+ int wrmsr_safe_on_cpu(unsigned int cpu, u32 msr_no, u32 l, u32 h);
+-int rdmsrl_safe_on_cpu(unsigned int cpu, u32 msr_no, u64 *q);
++int rdmsrq_safe_on_cpu(unsigned int cpu, u32 msr_no, u64 *q);
+ int wrmsrl_safe_on_cpu(unsigned int cpu, u32 msr_no, u64 q);
+ int rdmsr_safe_regs_on_cpu(unsigned int cpu, u32 regs[8]);
+ int wrmsr_safe_regs_on_cpu(unsigned int cpu, u32 regs[8]);
+@@ -379,7 +379,7 @@ static inline int wrmsr_safe_on_cpu(unsigned int cpu, u32 msr_no, u32 l, u32 h)
+ {
+ 	return wrmsr_safe(msr_no, l, h);
+ }
+-static inline int rdmsrl_safe_on_cpu(unsigned int cpu, u32 msr_no, u64 *q)
++static inline int rdmsrq_safe_on_cpu(unsigned int cpu, u32 msr_no, u64 *q)
+ {
+ 	return rdmsrq_safe(msr_no, q);
+ }
+diff --git a/arch/x86/kernel/acpi/cppc.c b/arch/x86/kernel/acpi/cppc.c
+index 77bfb846490c..6a10d73cb88b 100644
+--- a/arch/x86/kernel/acpi/cppc.c
++++ b/arch/x86/kernel/acpi/cppc.c
+@@ -49,7 +49,7 @@ int cpc_read_ffh(int cpunum, struct cpc_reg *reg, u64 *val)
+ {
+ 	int err;
+ 
+-	err = rdmsrl_safe_on_cpu(cpunum, reg->address, val);
++	err = rdmsrq_safe_on_cpu(cpunum, reg->address, val);
+ 	if (!err) {
+ 		u64 mask = GENMASK_ULL(reg->bit_offset + reg->bit_width - 1,
+ 				       reg->bit_offset);
+@@ -65,7 +65,7 @@ int cpc_write_ffh(int cpunum, struct cpc_reg *reg, u64 val)
+ 	u64 rd_val;
+ 	int err;
+ 
+-	err = rdmsrl_safe_on_cpu(cpunum, reg->address, &rd_val);
++	err = rdmsrq_safe_on_cpu(cpunum, reg->address, &rd_val);
+ 	if (!err) {
+ 		u64 mask = GENMASK_ULL(reg->bit_offset + reg->bit_width - 1,
+ 				       reg->bit_offset);
+@@ -147,7 +147,7 @@ int amd_get_highest_perf(unsigned int cpu, u32 *highest_perf)
+ 	int ret;
+ 
+ 	if (cpu_feature_enabled(X86_FEATURE_CPPC)) {
+-		ret = rdmsrl_safe_on_cpu(cpu, MSR_AMD_CPPC_CAP1, &val);
++		ret = rdmsrq_safe_on_cpu(cpu, MSR_AMD_CPPC_CAP1, &val);
+ 		if (ret)
+ 			goto out;
+ 
+diff --git a/arch/x86/lib/msr-smp.c b/arch/x86/lib/msr-smp.c
+index acd463d887e1..0360ce20aae8 100644
+--- a/arch/x86/lib/msr-smp.c
++++ b/arch/x86/lib/msr-smp.c
+@@ -220,7 +220,7 @@ int wrmsrl_safe_on_cpu(unsigned int cpu, u32 msr_no, u64 q)
+ }
+ EXPORT_SYMBOL(wrmsrl_safe_on_cpu);
+ 
+-int rdmsrl_safe_on_cpu(unsigned int cpu, u32 msr_no, u64 *q)
++int rdmsrq_safe_on_cpu(unsigned int cpu, u32 msr_no, u64 *q)
+ {
+ 	u32 low, high;
+ 	int err;
+@@ -230,7 +230,7 @@ int rdmsrl_safe_on_cpu(unsigned int cpu, u32 msr_no, u64 *q)
+ 
+ 	return err;
+ }
+-EXPORT_SYMBOL(rdmsrl_safe_on_cpu);
++EXPORT_SYMBOL(rdmsrq_safe_on_cpu);
+ 
  /*
-  * 64-bit version of wrmsr_safe():
-  */
--static inline int wrmsrl_safe(u32 msr, u64 val)
-+static inline int wrmsrq_safe(u32 msr, u64 val)
- {
- 	return wrmsr_safe(msr, (u32)val,  (u32)(val >> 32));
- }
-@@ -385,7 +385,7 @@ static inline int rdmsrl_safe_on_cpu(unsigned int cpu, u32 msr_no, u64 *q)
- }
- static inline int wrmsrl_safe_on_cpu(unsigned int cpu, u32 msr_no, u64 q)
- {
--	return wrmsrl_safe(msr_no, q);
-+	return wrmsrq_safe(msr_no, q);
- }
- static inline int rdmsr_safe_regs_on_cpu(unsigned int cpu, u32 regs[8])
- {
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index 3c49a92931e8..8937923c9f81 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -612,7 +612,7 @@ static void early_init_amd(struct cpuinfo_x86 *c)
- 	if (!cpu_has(c, X86_FEATURE_HYPERVISOR) && !cpu_has(c, X86_FEATURE_IBPB_BRTYPE)) {
- 		if (c->x86 == 0x17 && boot_cpu_has(X86_FEATURE_AMD_IBPB))
- 			setup_force_cpu_cap(X86_FEATURE_IBPB_BRTYPE);
--		else if (c->x86 >= 0x19 && !wrmsrl_safe(MSR_IA32_PRED_CMD, PRED_CMD_SBPB)) {
-+		else if (c->x86 >= 0x19 && !wrmsrq_safe(MSR_IA32_PRED_CMD, PRED_CMD_SBPB)) {
- 			setup_force_cpu_cap(X86_FEATURE_IBPB_BRTYPE);
- 			setup_force_cpu_cap(X86_FEATURE_SBPB);
- 		}
-@@ -790,7 +790,7 @@ static void init_amd_bd(struct cpuinfo_x86 *c)
- 	if ((c->x86_model >= 0x02) && (c->x86_model < 0x20)) {
- 		if (!rdmsrq_safe(MSR_F15H_IC_CFG, &value) && !(value & 0x1E)) {
- 			value |= 0x1E;
--			wrmsrl_safe(MSR_F15H_IC_CFG, value);
-+			wrmsrq_safe(MSR_F15H_IC_CFG, value);
- 		}
- 	}
+  * These variants are significantly slower, but allows control over
+diff --git a/drivers/cpufreq/amd-pstate-ut.c b/drivers/cpufreq/amd-pstate-ut.c
+index 4a1f5b1fbd84..707fa81c749f 100644
+--- a/drivers/cpufreq/amd-pstate-ut.c
++++ b/drivers/cpufreq/amd-pstate-ut.c
+@@ -137,7 +137,7 @@ static int amd_pstate_ut_check_perf(u32 index)
+ 			lowest_nonlinear_perf = cppc_perf.lowest_nonlinear_perf;
+ 			lowest_perf = cppc_perf.lowest_perf;
+ 		} else {
+-			ret = rdmsrl_safe_on_cpu(cpu, MSR_AMD_CPPC_CAP1, &cap1);
++			ret = rdmsrq_safe_on_cpu(cpu, MSR_AMD_CPPC_CAP1, &cap1);
+ 			if (ret) {
+ 				pr_err("%s read CPPC_CAP1 ret=%d error!\n", __func__, ret);
+ 				return ret;
+diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
+index b7caaa83a649..16a3fe2207ba 100644
+--- a/drivers/cpufreq/amd-pstate.c
++++ b/drivers/cpufreq/amd-pstate.c
+@@ -391,7 +391,7 @@ static int msr_init_perf(struct amd_cpudata *cpudata)
+ 	union perf_cached perf = READ_ONCE(cpudata->perf);
+ 	u64 cap1, numerator;
  
-@@ -840,7 +840,7 @@ void init_spectral_chicken(struct cpuinfo_x86 *c)
- 	if (!cpu_has(c, X86_FEATURE_HYPERVISOR)) {
- 		if (!rdmsrq_safe(MSR_ZEN2_SPECTRAL_CHICKEN, &value)) {
- 			value |= MSR_ZEN2_SPECTRAL_CHICKEN_BIT;
--			wrmsrl_safe(MSR_ZEN2_SPECTRAL_CHICKEN, value);
-+			wrmsrq_safe(MSR_ZEN2_SPECTRAL_CHICKEN, value);
- 		}
- 	}
- #endif
-diff --git a/arch/x86/kernel/cpu/bus_lock.c b/arch/x86/kernel/cpu/bus_lock.c
-index 18bd8a876bb8..a18d0f2ea832 100644
---- a/arch/x86/kernel/cpu/bus_lock.c
-+++ b/arch/x86/kernel/cpu/bus_lock.c
-@@ -101,7 +101,7 @@ static bool split_lock_verify_msr(bool on)
- 		ctrl |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
- 	else
- 		ctrl &= ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
--	if (wrmsrl_safe(MSR_TEST_CTRL, ctrl))
-+	if (wrmsrq_safe(MSR_TEST_CTRL, ctrl))
- 		return false;
- 	rdmsrq(MSR_TEST_CTRL, tmp);
- 	return ctrl == tmp;
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index dfccea1f120b..bb986ba8b90c 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -158,7 +158,7 @@ static void ppin_init(struct cpuinfo_x86 *c)
- 
- 	/* If PPIN is disabled, try to enable */
- 	if (!(val & 2UL)) {
--		wrmsrl_safe(info->msr_ppin_ctl,  val | 2UL);
-+		wrmsrq_safe(info->msr_ppin_ctl,  val | 2UL);
- 		rdmsrq_safe(info->msr_ppin_ctl, &val);
- 	}
- 
-@@ -2114,15 +2114,15 @@ static inline void idt_syscall_init(void)
- 		 * This does not cause SYSENTER to jump to the wrong location, because
- 		 * AMD doesn't allow SYSENTER in long mode (either 32- or 64-bit).
- 		 */
--		wrmsrl_safe(MSR_IA32_SYSENTER_CS, (u64)__KERNEL_CS);
--		wrmsrl_safe(MSR_IA32_SYSENTER_ESP,
-+		wrmsrq_safe(MSR_IA32_SYSENTER_CS, (u64)__KERNEL_CS);
-+		wrmsrq_safe(MSR_IA32_SYSENTER_ESP,
- 			    (unsigned long)(cpu_entry_stack(smp_processor_id()) + 1));
--		wrmsrl_safe(MSR_IA32_SYSENTER_EIP, (u64)entry_SYSENTER_compat);
-+		wrmsrq_safe(MSR_IA32_SYSENTER_EIP, (u64)entry_SYSENTER_compat);
- 	} else {
- 		wrmsrl_cstar((unsigned long)entry_SYSCALL32_ignore);
--		wrmsrl_safe(MSR_IA32_SYSENTER_CS, (u64)GDT_ENTRY_INVALID_SEG);
--		wrmsrl_safe(MSR_IA32_SYSENTER_ESP, 0ULL);
--		wrmsrl_safe(MSR_IA32_SYSENTER_EIP, 0ULL);
-+		wrmsrq_safe(MSR_IA32_SYSENTER_CS, (u64)GDT_ENTRY_INVALID_SEG);
-+		wrmsrq_safe(MSR_IA32_SYSENTER_ESP, 0ULL);
-+		wrmsrq_safe(MSR_IA32_SYSENTER_EIP, 0ULL);
- 	}
- 
- 	/*
-diff --git a/arch/x86/kernel/cpu/mce/inject.c b/arch/x86/kernel/cpu/mce/inject.c
-index 75ff605c8acc..5226f8f7fc98 100644
---- a/arch/x86/kernel/cpu/mce/inject.c
-+++ b/arch/x86/kernel/cpu/mce/inject.c
-@@ -747,9 +747,9 @@ static void check_hw_inj_possible(void)
- 
- 		toggle_hw_mce_inject(cpu, true);
- 
--		wrmsrl_safe(mca_msr_reg(bank, MCA_STATUS), status);
-+		wrmsrq_safe(mca_msr_reg(bank, MCA_STATUS), status);
- 		rdmsrq_safe(mca_msr_reg(bank, MCA_STATUS), &status);
--		wrmsrl_safe(mca_msr_reg(bank, MCA_STATUS), 0);
-+		wrmsrq_safe(mca_msr_reg(bank, MCA_STATUS), 0);
- 
- 		if (!status) {
- 			hw_injection_possible = false;
-diff --git a/arch/x86/kernel/cpu/mce/intel.c b/arch/x86/kernel/cpu/mce/intel.c
-index 9b9ef7d421dc..efcf21e9552e 100644
---- a/arch/x86/kernel/cpu/mce/intel.c
-+++ b/arch/x86/kernel/cpu/mce/intel.c
-@@ -463,7 +463,7 @@ static void intel_imc_init(struct cpuinfo_x86 *c)
- 		if (rdmsrq_safe(MSR_ERROR_CONTROL, &error_control))
- 			return;
- 		error_control |= 2;
--		wrmsrl_safe(MSR_ERROR_CONTROL, error_control);
-+		wrmsrq_safe(MSR_ERROR_CONTROL, error_control);
- 		break;
- 	}
- }
-diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
-index 6d408f78873c..280d6900726b 100644
---- a/arch/x86/kernel/cpu/resctrl/core.c
-+++ b/arch/x86/kernel/cpu/resctrl/core.c
-@@ -145,7 +145,7 @@ static inline void cache_alloc_hsw_probe(void)
- 	struct rdt_resource *r  = &hw_res->r_resctrl;
- 	u64 max_cbm = BIT_ULL_MASK(20) - 1, l3_cbm_0;
- 
--	if (wrmsrl_safe(MSR_IA32_L3_CBM_BASE, max_cbm))
-+	if (wrmsrq_safe(MSR_IA32_L3_CBM_BASE, max_cbm))
- 		return;
- 
- 	rdmsrq(MSR_IA32_L3_CBM_BASE, l3_cbm_0);
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index 0bc708ee2788..a4aabd666665 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -3119,7 +3119,7 @@ static void sev_flush_encrypted_page(struct kvm_vcpu *vcpu, void *va)
- 	 * back to WBINVD if this faults so as not to make any problems worse
- 	 * by leaving stale encrypted data in the cache.
- 	 */
--	if (WARN_ON_ONCE(wrmsrl_safe(MSR_AMD64_VM_PAGE_FLUSH, addr | asid)))
-+	if (WARN_ON_ONCE(wrmsrq_safe(MSR_AMD64_VM_PAGE_FLUSH, addr | asid)))
- 		goto do_wbinvd;
- 
- 	return;
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 134c4a186e9c..b922428236aa 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -593,7 +593,7 @@ static int kvm_probe_user_return_msr(u32 msr)
- 	ret = rdmsrq_safe(msr, &val);
+-	int ret = rdmsrl_safe_on_cpu(cpudata->cpu, MSR_AMD_CPPC_CAP1,
++	int ret = rdmsrq_safe_on_cpu(cpudata->cpu, MSR_AMD_CPPC_CAP1,
+ 				     &cap1);
  	if (ret)
- 		goto out;
--	ret = wrmsrl_safe(msr, val);
-+	ret = wrmsrq_safe(msr, val);
- out:
- 	preempt_enable();
- 	return ret;
-@@ -644,7 +644,7 @@ int kvm_set_user_return_msr(unsigned slot, u64 value, u64 mask)
- 	value = (value & mask) | (msrs->values[slot].host & ~mask);
- 	if (value == msrs->values[slot].curr)
- 		return 0;
--	err = wrmsrl_safe(kvm_uret_msrs_list[slot], value);
-+	err = wrmsrq_safe(kvm_uret_msrs_list[slot], value);
- 	if (err)
- 		return 1;
- 
-@@ -13654,7 +13654,7 @@ int kvm_spec_ctrl_test_value(u64 value)
- 
- 	if (rdmsrq_safe(MSR_IA32_SPEC_CTRL, &saved_value))
- 		ret = 1;
--	else if (wrmsrl_safe(MSR_IA32_SPEC_CTRL, value))
-+	else if (wrmsrq_safe(MSR_IA32_SPEC_CTRL, value))
- 		ret = 1;
- 	else
- 		wrmsrq(MSR_IA32_SPEC_CTRL, saved_value);
-diff --git a/arch/x86/lib/msr.c b/arch/x86/lib/msr.c
-index d533881ce9a0..4ef7c6dcbea6 100644
---- a/arch/x86/lib/msr.c
-+++ b/arch/x86/lib/msr.c
-@@ -58,7 +58,7 @@ static int msr_read(u32 msr, struct msr *m)
-  */
- static int msr_write(u32 msr, struct msr *m)
- {
--	return wrmsrl_safe(msr, m->q);
-+	return wrmsrq_safe(msr, m->q);
- }
- 
- static inline int __flip_bit(u32 msr, u8 bit, bool set)
+ 		return ret;
 diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
-index a57f494f1032..83a43c64c404 100644
+index 83a43c64c404..6f6c14e31795 100644
 --- a/drivers/cpufreq/intel_pstate.c
 +++ b/drivers/cpufreq/intel_pstate.c
-@@ -1894,7 +1894,7 @@ void notify_hwp_interrupt(void)
- 	return;
+@@ -2106,13 +2106,13 @@ static int core_get_tdp_ratio(int cpu, u64 plat_info)
+ 		int err;
  
- ack_intr:
--	wrmsrl_safe(MSR_HWP_STATUS, 0);
-+	wrmsrq_safe(MSR_HWP_STATUS, 0);
- 	raw_spin_unlock_irqrestore(&hwp_notify_lock, flags);
- }
+ 		/* Get the TDP level (0, 1, 2) to get ratios */
+-		err = rdmsrl_safe_on_cpu(cpu, MSR_CONFIG_TDP_CONTROL, &tdp_ctrl);
++		err = rdmsrq_safe_on_cpu(cpu, MSR_CONFIG_TDP_CONTROL, &tdp_ctrl);
+ 		if (err)
+ 			return err;
+ 
+ 		/* TDP MSR are continuous starting at 0x648 */
+ 		tdp_msr = MSR_CONFIG_TDP_NOMINAL + (tdp_ctrl & 0x03);
+-		err = rdmsrl_safe_on_cpu(cpu, tdp_msr, &tdp_ratio);
++		err = rdmsrq_safe_on_cpu(cpu, tdp_msr, &tdp_ratio);
+ 		if (err)
+ 			return err;
+ 
+@@ -2149,7 +2149,7 @@ static int core_get_max_pstate(int cpu)
+ 		return tdp_ratio;
+ 	}
+ 
+-	err = rdmsrl_safe_on_cpu(cpu, MSR_TURBO_ACTIVATION_RATIO, &tar);
++	err = rdmsrq_safe_on_cpu(cpu, MSR_TURBO_ACTIVATION_RATIO, &tar);
+ 	if (!err) {
+ 		int tar_levels;
  
 diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-index 1ebf5624139a..4368d598beac 100644
+index 4368d598beac..46b96f1aa522 100644
 --- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
 +++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-@@ -211,7 +211,7 @@ static void isst_restore_msr_local(int cpu)
- 		hash_for_each_possible(isst_hash, sst_cmd, hnode,
- 				       punit_msr_white_list[i]) {
- 			if (!sst_cmd->mbox_cmd_type && sst_cmd->cpu == cpu)
--				wrmsrl_safe(sst_cmd->cmd, sst_cmd->data);
-+				wrmsrq_safe(sst_cmd->cmd, sst_cmd->data);
- 		}
- 	}
- 	mutex_unlock(&isst_hash_lock);
-diff --git a/drivers/platform/x86/intel/turbo_max_3.c b/drivers/platform/x86/intel/turbo_max_3.c
-index c411ec53145e..7e538bbd5b50 100644
---- a/drivers/platform/x86/intel/turbo_max_3.c
-+++ b/drivers/platform/x86/intel/turbo_max_3.c
-@@ -41,7 +41,7 @@ static int get_oc_core_priority(unsigned int cpu)
- 	value = cmd << MSR_OC_MAILBOX_CMD_OFFSET;
- 	/* Set the busy bit to indicate OS is trying to issue command */
- 	value |=  BIT_ULL(MSR_OC_MAILBOX_BUSY_BIT);
--	ret = wrmsrl_safe(MSR_OC_MAILBOX, value);
-+	ret = wrmsrq_safe(MSR_OC_MAILBOX, value);
- 	if (ret) {
- 		pr_debug("cpu %d OC mailbox write failed\n", cpu);
- 		return ret;
+@@ -535,7 +535,7 @@ static long isst_if_msr_cmd_req(u8 *cmd_ptr, int *write_only, int resume)
+ 	} else {
+ 		u64 data;
+ 
+-		ret = rdmsrl_safe_on_cpu(msr_cmd->logical_cpu,
++		ret = rdmsrq_safe_on_cpu(msr_cmd->logical_cpu,
+ 					 msr_cmd->msr, &data);
+ 		if (!ret) {
+ 			msr_cmd->data = data;
 diff --git a/drivers/powercap/intel_rapl_msr.c b/drivers/powercap/intel_rapl_msr.c
-index 9100300ff868..c7f15b01fad8 100644
+index c7f15b01fad8..6d5853db17ad 100644
 --- a/drivers/powercap/intel_rapl_msr.c
 +++ b/drivers/powercap/intel_rapl_msr.c
-@@ -123,7 +123,7 @@ static void rapl_msr_update_func(void *info)
- 	val &= ~ra->mask;
- 	val |= ra->value;
+@@ -103,7 +103,7 @@ static int rapl_cpu_down_prep(unsigned int cpu)
  
--	ra->err = wrmsrl_safe(ra->reg.msr, val);
-+	ra->err = wrmsrq_safe(ra->reg.msr, val);
- }
- 
- static int rapl_msr_write_raw(int cpu, struct reg_action *ra)
-diff --git a/drivers/thermal/intel/therm_throt.c b/drivers/thermal/intel/therm_throt.c
-index c4f3f13cd9e8..debc94e2dc16 100644
---- a/drivers/thermal/intel/therm_throt.c
-+++ b/drivers/thermal/intel/therm_throt.c
-@@ -643,7 +643,7 @@ static void notify_thresholds(__u64 msr_val)
- 
- void __weak notify_hwp_interrupt(void)
+ static int rapl_msr_read_raw(int cpu, struct reg_action *ra)
  {
--	wrmsrl_safe(MSR_HWP_STATUS, 0);
-+	wrmsrq_safe(MSR_HWP_STATUS, 0);
- }
- 
- /* Thermal transition interrupt handler */
+-	if (rdmsrl_safe_on_cpu(cpu, ra->reg.msr, &ra->value)) {
++	if (rdmsrq_safe_on_cpu(cpu, ra->reg.msr, &ra->value)) {
+ 		pr_debug("failed to read msr 0x%x on cpu %d\n", ra->reg.msr, cpu);
+ 		return -EIO;
+ 	}
 -- 
 2.45.2
 
