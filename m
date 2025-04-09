@@ -1,292 +1,131 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCDC922DFA2
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 09:45:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B7AF25522F;
+	Wed,  9 Apr 2025 09:45:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744191945; cv=none; b=dVsRBIQmVvakI5YPwDhH2qwRQbpONGBu+x12HNmcsy4qGsqw/ZG05OtS7P4WNVHGP1eBb8QHEuLa1I8twUCUTfUGoSDVwJZFDgm62iph2qin0kWz18PDcNDPmcEImBZEp7l2idv5yO0vs6m8y+pMw91qzZPJ9/nE6pILzgnFtJc=
+	t=1744191948; cv=none; b=keSlLKMPUTE4S0EOswwo478jeBiFlUn8rplFylI7kWVMtb4Og8MKX4x3xbLb7SgKKfSbXjtqkdQJ2scVzbXZNsT+9RXsQHOtAfR/rinIwrJJPMWb491ENiP8eRaVpE2FWc/aSR1ylJ02R/Uc/ZgopgQwDfcrqF/R5RA7AEIOa8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744191945; c=relaxed/simple;
-	bh=XjjUhTS9VJr1Zufc1xdYWqFTAUH4jrHIaqx6RaRNeG4=;
+	s=arc-20240116; t=1744191948; c=relaxed/simple;
+	bh=U7X30dmS1Fsg8OD383bJkqAVWwjWEApCOe5B+eDDT74=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bPsn+Tu1C/60JxFV64TMZR4N0liiQIitBtnzb0PFiqiy0I2XL276qHcrezCshcxCAZHy8VQowO1TN6q2I3m7WTWAckQE4Tl+oVdXBTtWRjceTGEmcLbtPLNT9+2QN1FNeD2/KjPEWOgh6LyL/j3f8wcgTyh9m0xkDRdl4Kma1nA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Nc1/Pnru; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 To:Cc:Content-Type; b=lAYa/VlA2/cpvbLpSOrf6qeCFLSl14jTvOyCMf8afPg0kSgAs2XC2lVBWPPSZRhc5t7p7mT/1dDZVieWv3hoxcORFbZgH/2woWjEMOHXaKBw/MUEt6qct75udHQEWc7xtbDzA0oARUMzsEmZn4byuqL7FepoolLhN8fWrCJeuzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mi1Gt42H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Nc1/Pnru"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744191942;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TKVfH0bP0xouirfCCs2OtGdx4KFsMNg0TzzFUxvnY5M=;
-	b=Nc1/Pnru0Q2vRkygUH0aBo2xE5dlwILU175urZQ4oECsC6hmrXmIUu9ij1UubV7kK9XH6z
-	AfDuDhaualQCusAzLS90iZtCgJ/PDGbnQ1ondiR1AARH3TfLHFCuqOgKGGoEgY3wkpobcM
-	QT4qeQz3YA0SQLaKvG2oJ8HlHKSVlzA=
-Received: from mail-yw1-f197.google.com (mail-yw1-f197.google.com
- [209.85.128.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-480-RCMLfWnKP0muQjHDnpHOIw-1; Wed, 09 Apr 2025 05:45:39 -0400
-X-MC-Unique: RCMLfWnKP0muQjHDnpHOIw-1
-X-Mimecast-MFC-AGG-ID: RCMLfWnKP0muQjHDnpHOIw_1744191938
-Received: by mail-yw1-f197.google.com with SMTP id 00721157ae682-6ef85037f3bso8782337b3.1
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 02:45:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744191938; x=1744796738;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TKVfH0bP0xouirfCCs2OtGdx4KFsMNg0TzzFUxvnY5M=;
-        b=Pkd0e+lBrE/ehjWKVBrYskfmaTrLa5t/2Il494Lh2qDv9QVsV47YaiEP5KE1uOz8aW
-         r8IV8qoiK8bFAdzegRwNqy2at3t50alEuZQgi1oEfG5UNdSt17mSHYAr6ZcbgluW7oOK
-         EPiG8Vex9k44ubDRL5fbG2DPpEgLEXTeEFAH0QW039WyR/r11fKwqmADu4QhR0blNkmh
-         Iu5ePANCloCRjNxWlP3ZjTjgrKnht83onUCXjq8eOcAJpGaDiiavt4Mpr1GgAkc/vKzn
-         3sc6yPJtdDbtcak3eTa4qi3xNd38g9YngZ8yGBxtvMEK7N4hi7cZ9aI0gKvNLP8sICOy
-         HeoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVrGCYJQ34tn3R17DdZPoHihBHzKpE3jnBkoHZBGZ8P2kCh2eBrsz/FQbcg+XPnyGouX1lJS7RI+zFVM5g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRKR6D0XWvhuBVxTGafAv76gHtLfc/bFsRTfwfVxw5SkI4fnvG
-	np60yXktxCPF2zGd30GWUNts5U7vayoXdgOteZMxTYs3jtqxzw0C7RRdO8nKR1s18RMmR26DLlq
-	J4dxM8k0pOeYjiuJF0mrA7qfwX+HxfNPzHh8MnRkVU8RERjGBA/QBio7/qVOJnphKD2aS5mum8I
-	mBdd2dpQGeDSbkXamMWjjYcSGtrAePhRM3mu5U
-X-Gm-Gg: ASbGncu5+bM5Tu/bM+xZyFji7LKDWZqzoMeiv+fCW4/5NCvHxCk2HXXc+tyx0UymurI
-	OuCIEPGztWzqD76rQ6re9ZiDsyMPeWmrTE0r3gGbRz1Q84OsTFDwdWkov4YCHTDIupUc=
-X-Received: by 2002:a05:6902:228e:b0:e6b:7e33:b637 with SMTP id 3f1490d57ef6-e702e26d5a7mr3856599276.14.1744191938554;
-        Wed, 09 Apr 2025 02:45:38 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHisCB7623SUDNdsp8qFrjYJi4J8Do54OWEhkmaIUaKl/L0t4PRuH343+79GsCY6oG9Gt8oA6rIXzIcnfJq5EU=
-X-Received: by 2002:a05:6902:228e:b0:e6b:7e33:b637 with SMTP id
- 3f1490d57ef6-e702e26d5a7mr3856573276.14.1744191938238; Wed, 09 Apr 2025
- 02:45:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mi1Gt42H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 201F1C4CEEC;
+	Wed,  9 Apr 2025 09:45:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744191948;
+	bh=U7X30dmS1Fsg8OD383bJkqAVWwjWEApCOe5B+eDDT74=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=mi1Gt42HsmQjtXUxbADreN46HyTc+Cm3YU7Umphm8Irmc/RXs4qWjbzJ2BwVuSRGp
+	 PWrnwJYNLAeeK/77weHVm7YIG9Z88l1ZQbBkwZlvJ09GsA2HC91/SpBknq86yRSZz3
+	 FZPhg38lCa+jcpYet1K9H8tW5w5acXWr28bWwWeWTLDd4e0lNCa1yZcWlirVFqvxXu
+	 Cr7NRy28Xib0lRqifgsVNhfltA8iI3c6P81UagBNl5yVCUfBMgd6jWVnZOVW7ZDcEl
+	 e5jinigYR6ZoPYRgOv2p+9OHLqLvBj5LjKrr/0JwXiQ7+mgZYlFzQ2hQvy3mxctAuD
+	 PKYg+lWlVoGMA==
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ac3b12e8518so1193846066b.0;
+        Wed, 09 Apr 2025 02:45:48 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUR2qtW9Pbunmowe1ZiaaG5ysZw7mabm7vzDxkbnE5ZgMkXwOIM9UCnjGkazwG/wg5B/SEaje/FMz2KAH/U@vger.kernel.org, AJvYcCX7jKFXtZJWlgw5CLb6TEaN4h0P+n9Kddpr/Qpcg//QKWwfqDy3/WIVFJF39NCnhcO8yYlqFQj1hgNRgA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGrB3D2VSzRMMHwgADGtR11wcSKSLFSowANNuHBsCpMwfKgLt8
+	u1f5b3zrlGrPeoDkeXlRMelBYz5T9SsD5iraxCgpAop5wMjKPhBTzNWsHaNtJjCT57O7RFQMq6n
+	zMiC/aZGh4oDuHAF/zRQTPykqw94=
+X-Google-Smtp-Source: AGHT+IG8iVTaKGJydkJy62ivtt+8m9F1Rw+6YluVf0P9U4TepkF99CocRhQfZ1VIdmnaLGWs1tNyo/pneweaUOh4Eao=
+X-Received: by 2002:a17:906:4fcc:b0:ac7:6222:4869 with SMTP id
+ a640c23a62f3a-aca9d6f4aaamr149043966b.37.1744191946668; Wed, 09 Apr 2025
+ 02:45:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403100943.120738-1-sgarzare@redhat.com> <20250403100943.120738-4-sgarzare@redhat.com>
- <CAAH4kHYcRm1TpcgbtryJAtc6sjeh3hXzW7ApXY4WhcfZ3HEpVw@mail.gmail.com>
- <CAGxU2F4Zf7Khfqy5UjjPJ096kHHPjhFMN+oxvRTfG1knKca9gA@mail.gmail.com> <CAAH4kHZhsUoxNdJ0F3GeRPhC_JpB4suUA1z44bQ=RpGoR2oHkA@mail.gmail.com>
-In-Reply-To: <CAAH4kHZhsUoxNdJ0F3GeRPhC_JpB4suUA1z44bQ=RpGoR2oHkA@mail.gmail.com>
-From: Stefano Garzarella <sgarzare@redhat.com>
-Date: Wed, 9 Apr 2025 11:45:27 +0200
-X-Gm-Features: ATxdqUEHc0oIxvcOqNXD1IH1Pn8Q_A7cyhZV-Uk3hwANcZdEi5U4ok4pB4uuUD0
-Message-ID: <CAGxU2F7NDvHPhyHbN+dBjVta2NLstyoV2SQ6VkwDTf2FiKLasA@mail.gmail.com>
-Subject: Re: [PATCH v6 3/4] tpm: add SNP SVSM vTPM driver
-To: Dionna Amalie Glaze <dionnaglaze@google.com>
-Cc: Jarkko Sakkinen <jarkko@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>, "H. Peter Anvin" <hpa@zytor.com>, 
-	linux-coco@lists.linux.dev, linux-integrity@vger.kernel.org, 
-	Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, x86@kernel.org, 
-	Tom Lendacky <thomas.lendacky@amd.com>, Joerg Roedel <jroedel@suse.de>, 
-	Claudio Carvalho <cclaudio@linux.ibm.com>, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, linux-kernel@vger.kernel.org, 
-	Dov Murik <dovmurik@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>
+References: <20250408122933.121056-1-frank.li@vivo.com> <20250408224749.GD13292@twin.jikos.cz>
+In-Reply-To: <20250408224749.GD13292@twin.jikos.cz>
+From: Filipe Manana <fdmanana@kernel.org>
+Date: Wed, 9 Apr 2025 10:45:09 +0100
+X-Gmail-Original-Message-ID: <CAL3q7H6sYN_nmqwJb861qm08Fb5hBr_4QrxJCzeq6Quwh04bjA@mail.gmail.com>
+X-Gm-Features: ATxdqUGDRMWD7iTqMUuJo2rKdKpU9xkiE-BQebVMAV6ihrJKizLPNzex5SJ3EbI
+Message-ID: <CAL3q7H6sYN_nmqwJb861qm08Fb5hBr_4QrxJCzeq6Quwh04bjA@mail.gmail.com>
+Subject: Re: [PATCH 1/4] btrfs: use BTRFS_PATH_AUTO_FREE in insert_balance_item()
+To: dsterba@suse.cz
+Cc: Yangtao Li <frank.li@vivo.com>, clm@fb.com, josef@toxicpanda.com, dsterba@suse.com, 
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 4 Apr 2025 at 20:59, Dionna Amalie Glaze <dionnaglaze@google.com> w=
-rote:
+On Tue, Apr 8, 2025 at 11:50=E2=80=AFPM David Sterba <dsterba@suse.cz> wrot=
+e:
 >
-> On Fri, Apr 4, 2025 at 11:37=E2=80=AFAM Stefano Garzarella <sgarzare@redh=
-at.com> wrote:
+> On Tue, Apr 08, 2025 at 06:29:30AM -0600, Yangtao Li wrote:
+> > All cleanup paths lead to btrfs_path_free so we can define path with th=
+e
+> > automatic free callback.
 > >
-> > On Fri, 4 Apr 2025 at 19:32, Dionna Amalie Glaze <dionnaglaze@google.co=
-m> wrote:
-> > >
-> > > On Thu, Apr 3, 2025 at 3:10=E2=80=AFAM Stefano Garzarella <sgarzare@r=
-edhat.com> wrote:
-> > > >
-> > > > From: Stefano Garzarella <sgarzare@redhat.com>
-> > > >
-> > > > Add driver for the vTPM defined by the AMD SVSM spec [1].
-> > > >
-> > > > The specification defines a protocol that a SEV-SNP guest OS can us=
-e to
-> > > > discover and talk to a vTPM emulated by the Secure VM Service Modul=
-e (SVSM)
-> > > > in the guest context, but at a more privileged level (VMPL0).
-> > > >
-> > > > The new tpm-svsm platform driver uses two functions exposed by x86/=
-sev
-> > > > to verify that the device is actually emulated by the platform and =
-to
-> > > > send commands and receive responses.
-> > > >
-> > > > The device cannot be hot-plugged/unplugged as it is emulated by the
-> > > > platform, so we can use module_platform_driver_probe(). The probe
-> > > > function will only check whether in the current runtime configurati=
-on,
-> > > > SVSM is present and provides a vTPM.
-> > > >
-> > > > This device does not support interrupts and sends responses to comm=
-ands
-> > > > synchronously. In order to have .recv() called just after .send() i=
-n
-> > > > tpm_try_transmit(), the .status() callback returns 0, and both
-> > > > .req_complete_mask and .req_complete_val are set to 0.
-> > > >
-> > > > [1] "Secure VM Service Module for SEV-SNP Guests"
-> > > >     Publication # 58019 Revision: 1.00
-> > > >
-> > > > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> > > > ---
-> > > > v6:
-> > > > - removed the `locality` field (set to 0) and the FIXME comment [Ja=
-rkko]
-> > > > v5:
-> > > > - removed cancel/status/req_* ops after rebase on master that cotai=
-ns
-> > > >   commit 980a573621ea ("tpm: Make chip->{status,cancel,req_canceled=
-} opt")
-> > > > v4:
-> > > > - moved "asm" includes after the "linux" includes [Tom]
-> > > > - allocated buffer separately [Tom/Jarkko/Jason]
-> > > > v3:
-> > > > - removed send_recv() ops and followed the ftpm driver implementing=
- .status,
-> > > >   .req_complete_mask, .req_complete_val, etc. [Jarkko]
-> > > > - removed link to the spec because those URLs are unstable [Borisla=
-v]
-> > > > ---
-> > > >  drivers/char/tpm/tpm_svsm.c | 128 ++++++++++++++++++++++++++++++++=
-++++
-> > > >  drivers/char/tpm/Kconfig    |  10 +++
-> > > >  drivers/char/tpm/Makefile   |   1 +
-> > > >  3 files changed, 139 insertions(+)
-> > > >  create mode 100644 drivers/char/tpm/tpm_svsm.c
-> > > >
-> > > > diff --git a/drivers/char/tpm/tpm_svsm.c b/drivers/char/tpm/tpm_svs=
-m.c
-> > > > new file mode 100644
-> > > > index 000000000000..b9242c9eab87
-> > > > --- /dev/null
-> > > > +++ b/drivers/char/tpm/tpm_svsm.c
-> > > > @@ -0,0 +1,128 @@
-> > > > +// SPDX-License-Identifier: GPL-2.0-only
-> > > > +/*
-> > > > + * Copyright (C) 2025 Red Hat, Inc. All Rights Reserved.
-> > > > + *
-> > > > + * Driver for the vTPM defined by the AMD SVSM spec [1].
-> > > > + *
-> > > > + * The specification defines a protocol that a SEV-SNP guest OS ca=
-n use to
-> > > > + * discover and talk to a vTPM emulated by the Secure VM Service M=
-odule (SVSM)
-> > > > + * in the guest context, but at a more privileged level (usually V=
-MPL0).
-> > > > + *
-> > > > + * [1] "Secure VM Service Module for SEV-SNP Guests"
-> > > > + *     Publication # 58019 Revision: 1.00
-> > > > + */
-> > > > +
-> > > > +#include <linux/module.h>
-> > > > +#include <linux/kernel.h>
-> > > > +#include <linux/platform_device.h>
-> > > > +#include <linux/tpm_svsm.h>
-> > > > +
-> > > > +#include <asm/sev.h>
-> > > > +
-> > > > +#include "tpm.h"
-> > > > +
-> > > > +struct tpm_svsm_priv {
-> > > > +       void *buffer;
-> > > > +};
-> > > > +
-> > > > +static int tpm_svsm_send(struct tpm_chip *chip, u8 *buf, size_t le=
-n)
-> > > > +{
-> > > > +       struct tpm_svsm_priv *priv =3D dev_get_drvdata(&chip->dev);
-> > > > +       int ret;
-> > > > +
-> > > > +       ret =3D svsm_vtpm_cmd_request_fill(priv->buffer, 0, buf, le=
-n);
-> > > > +       if (ret)
-> > > > +               return ret;
-> > > > +
-> > > > +       /*
-> > > > +        * The SVSM call uses the same buffer for the command and f=
-or the
-> > > > +        * response, so after this call, the buffer will contain th=
-e response
-> > > > +        * that can be used by .recv() op.
-> > > > +        */
-> > > > +       return snp_svsm_vtpm_send_command(priv->buffer);
-> > > > +}
-> > > > +
-> > > > +static int tpm_svsm_recv(struct tpm_chip *chip, u8 *buf, size_t le=
-n)
-> > > > +{
-> > > > +       struct tpm_svsm_priv *priv =3D dev_get_drvdata(&chip->dev);
-> > > > +
-> > > > +       /*
-> > > > +        * The internal buffer contains the response after we send =
-the command
-> > > > +        * to SVSM.
-> > > > +        */
-> > > > +       return svsm_vtpm_cmd_response_parse(priv->buffer, buf, len)=
-;
-> > > > +}
-> > > > +
-> > > > +static struct tpm_class_ops tpm_chip_ops =3D {
-> > > > +       .flags =3D TPM_OPS_AUTO_STARTUP,
-> > > > +       .recv =3D tpm_svsm_recv,
-> > > > +       .send =3D tpm_svsm_send,
-> > > > +};
-> > > > +
-> > > > +static int __init tpm_svsm_probe(struct platform_device *pdev)
-> > > > +{
-> > > > +       struct device *dev =3D &pdev->dev;
-> > > > +       struct tpm_svsm_priv *priv;
-> > > > +       struct tpm_chip *chip;
-> > > > +       int err;
-> > > > +
-> > > > +       if (!snp_svsm_vtpm_probe())
-> > > > +               return -ENODEV;
-> > > > +
-> > > > +       priv =3D devm_kmalloc(dev, sizeof(*priv), GFP_KERNEL);
-> > > > +       if (!priv)
-> > > > +               return -ENOMEM;
-> > > > +
-> > > > +       /*
-> > > > +        * The maximum buffer supported is one page (see SVSM_VTPM_=
-MAX_BUFFER
-> > > > +        * in tpm_svsm.h).
-> > > > +        */
-> > > > +       priv->buffer =3D (void *)devm_get_free_pages(dev, GFP_KERNE=
-L, 0);
-> > > > +       if (!priv->buffer)
-> > > > +               return -ENOMEM;
-> > > > +
-> > > > +       chip =3D tpmm_chip_alloc(dev, &tpm_chip_ops);
-> > > > +       if (IS_ERR(chip))
-> > > > +               return PTR_ERR(chip);
-> > > > +
-> > > > +       dev_set_drvdata(&chip->dev, priv);
-> > > > +
-> > > > +       err =3D tpm2_probe(chip);
-> > >
-> > > Our testing is showing that tpm2_probe is hitting a null pointer dere=
-f
-> > > in tpm_transmit.
+> > Signed-off-by: Yangtao Li <frank.li@vivo.com>
+> > ---
+> >  fs/btrfs/volumes.c | 7 ++-----
+> >  1 file changed, 2 insertions(+), 5 deletions(-)
 > >
-> > Next time, please share a backtrace.
+> > diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
+> > index c8c21c55be53..a962efaec4ea 100644
+> > --- a/fs/btrfs/volumes.c
+> > +++ b/fs/btrfs/volumes.c
+> > @@ -3730,7 +3730,7 @@ static int insert_balance_item(struct btrfs_fs_in=
+fo *fs_info,
+> >       struct btrfs_trans_handle *trans;
+> >       struct btrfs_balance_item *item;
+> >       struct btrfs_disk_balance_args disk_bargs;
+> > -     struct btrfs_path *path;
+> > +     BTRFS_PATH_AUTO_FREE(path);
+> >       struct extent_buffer *leaf;
+> >       struct btrfs_key key;
+> >       int ret, err;
+> > @@ -3740,10 +3740,8 @@ static int insert_balance_item(struct btrfs_fs_i=
+nfo *fs_info,
+> >               return -ENOMEM;
+> >
+> >       trans =3D btrfs_start_transaction(root, 0);
+> > -     if (IS_ERR(trans)) {
+> > -             btrfs_free_path(path);
+> > +     if (IS_ERR(trans))
+> >               return PTR_ERR(trans);
+> > -     }
+> >
+> >       key.objectid =3D BTRFS_BALANCE_OBJECTID;
+> >       key.type =3D BTRFS_TEMPORARY_ITEM_KEY;
+> > @@ -3767,7 +3765,6 @@ static int insert_balance_item(struct btrfs_fs_in=
+fo *fs_info,
+> >       btrfs_set_balance_sys(leaf, item, &disk_bargs);
+> >       btrfs_set_balance_flags(leaf, item, bctl->flags);
+> >  out:
+> > -     btrfs_free_path(path);
 >
-> Right, my bad.
-> >
-> > BTW I suspect you're not using Linus' tree, so be sure to backport
-> > also commit 980a573621ea ("tpm: Make
-> > chip->{status,cancel,req_canceled} opt").
-> >
-> > Without that, you will have a null ptr dereference since .status() is
-> > NULL from v5 of this series (as specified in the changelog).
+> The pattern where btrfs_free_path() is not called at the end and is
+> followed by other code is probably not worth converting. It would be
+> possible to replace it by
 >
-> Thanks, I missed that detail. Will report back.
+>         btrfs_release_path(path);
+>         path =3D NULL;
 
-I'm preparing v7, is your issue solved or do we need to investigate
-better before sending a v7?
+Should be btrfs_free_path() instead, otherwise it leaks memory.
+Or just do the release without setting the path to NULL and leaving
+the path auto free.
 
-Thanks,
-Stefano
-
+>
+> that drops the locks and refs from the path but this does not save us
+> much compared to the straightforward BTRFS_PATH_AUTO_FREE() conversions.
+> Also release will still keep the object allocated although we don't need
+> it. As a principle, resources, locks and critical sections should be as
+> short as possible.
+>
+> Unfortunatelly I've probably fished all the trivial and almost-trivial
+> conversions, we don't want 100% use of BTRFS_PATH_AUTO_FREE(), only when
+> it improves the code.
+>
+> You may still find cases worth converting, the typical pattern is
+> btrfs_path_alloc() somewhere near top of the function and
+> btrfs_free_path() called right before a return.
+>
