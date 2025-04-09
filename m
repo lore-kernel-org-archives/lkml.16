@@ -1,97 +1,193 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3AD923ED5A
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 18:19:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EA0B276040;
+	Wed,  9 Apr 2025 18:19:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744222784; cv=none; b=iy2dPmvFW85PC2reg3Zcrs8NCS8y0SgU8+BXeArHrjUBnfIk6/D7YIWs7t6msIRTTYxI/gUEuyYBkZ4iy0uRLRlwJr7EzJoP9+bpP5kJjmVLGDsfLWRRHkMSlzyVq3zQw1qZmOUvWXhgBXyBAMuffjBQ2GG4y2iMbIXfUJdHeVU=
+	t=1744222791; cv=none; b=q2H/+aqm9Pc6bKjvUdKhUTg/+rz4A6CNXemzavCebLV99ClTKhkuhZUb/7sFGryfzF5GUDUbKnfhYeogt/RAj63y5DFlbin0r+c4y7uPa8gqYGfEH3JL4fwe8d3VCs12GHfbrdKfQDve4+qa98QvAPpqFsceMGgN435ZDFf8rys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744222784; c=relaxed/simple;
-	bh=Dk0oNqQlJsRC8fpG8QpHzgKezNBr3oi19rt+WnEfW+Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=brQRHZjY1u/hFuGbSGsSenj5Z+8z2bxUF7XLmj9Qg5rPzgGT/Bx8n+lsPJF5Wf/57DsCptm5JLNtLzJkZ6UmWZxoVi7M27gyMeytFZ+WoGfc++XdY5gpD8FVpH2zBTuMyfCqvWxJuroftV5nA5ApFJB/bs8UOHUlAxK1SdtyepM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KRCSofaR; arc=none smtp.client-ip=209.85.210.177
+	s=arc-20240116; t=1744222791; c=relaxed/simple;
+	bh=CiUXsDTkyIepg9q0LVYKmGp89q68e5F5CZNEXrM1bQw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AiHu/1isR6U0tQj2VY0o8cEu3y9LJOCj7L0TmTO0lG1G/TRJLeLxeEQksMc9CGt6YeccVUbAGVJZy+5DGMAPvc1H5o4Js/sPbjQNwWdVvx4uf74D2LyzX74wOgAAfQsN1yerOnF5+khVmWMuRSazS/mmKYuYCagEmSfb7SRMXgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ip+45C5X; arc=none smtp.client-ip=209.85.214.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KRCSofaR"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-730517040a9so8809436b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 11:19:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ip+45C5X"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2254e0b4b79so91841025ad.2;
+        Wed, 09 Apr 2025 11:19:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744222782; x=1744827582; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZRkdAw/O8yrVTjU62SZ7m2qGSTADfRdfbRSj5I/AWsQ=;
-        b=KRCSofaRqnDnz3mJ/Du9bE8oHyD06TQdcapmU67l15lmej3THEIg+Uk7tda4mjqnJ0
-         bDZyJBqA8EfL35/f8nA/Ai2Qjk6Xy4WQMV4XJlra2wQQH4iUBJ5vqqTANwg6sAf2vUon
-         wHrJjdc6mogui8lRnSdZNvS/VK6b99nhmNBNQqpB+eM5AZSfXdpaqGbSEg28VXVl40JW
-         Abmz7NzMi5WhBilQ0g1/BmKrjQ/HOGVUeu9AqeOIUhLx4Qbke0IAF7RvBrUJBjY4uDOB
-         +IptN4SWnr09omwY9xI15f2H2jPshs1QCkrmn5+qzzhyXn6ybptCd6ifNC7wpaL0nS3q
-         Uvtw==
+        d=gmail.com; s=20230601; t=1744222789; x=1744827589; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Lj2pdvd0SPlmcQ64DOUFkCqLGht2nTzMPaNLIIAOzV0=;
+        b=ip+45C5X3hJP1Y15j1v0TA05uHv2z8tCGdPncQXaev2PF4ZwkiQyQbPugX4zZ/gLrB
+         A2mMMKG9bdKPd5LL+eRM1OvegSv/Q5c5eW0INzJoGW2OaD2NoVwDBABqgnfiP4HwTDiN
+         WFYjuPxxBfFOhwqhsddFu3/gII+AgvrtTHTKGbPdYl3nCZuFSgRbtxHPA2wJkDOX0eLO
+         Qa1ROU+mSU3qQ0hIuT6g/zvjhnFrG0NK60Ppugr4gOaJWSHNmwTm37jXW1ZzRWrAqdbA
+         k6qJ8nRGDEhUL68nRa9BjoqUFABlWvOnkspJiPIAXr+seVSb0uciix6Pt4HBhEUt7L+v
+         h4qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744222782; x=1744827582;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZRkdAw/O8yrVTjU62SZ7m2qGSTADfRdfbRSj5I/AWsQ=;
-        b=Pbirj5mmnr3LD51STCXA90zn6CX+ZKwqp/r0/oXDvGYK+e7zOlLoOrkpc4JXo8Ed0S
-         IHbtVhgWj+S8JyWezEvabexsbLyHEYCORk5bsj50Mrkip4nYPnNjnKqrNmixO8K0z4Vd
-         vSkYiSt5VZTNrRZnMKhzsCpCckFGPH0d8XhDlT1szBymwYaN/7opmo+MEzh2wuLIyAvH
-         Ai8ZxC4XgCBGxb2rZyBcm5qT2BaZejLO/GY3WR15pSurznQUQ0hvE99mH5Ox8dxl0mJv
-         ID+RUrJjBOIf5Kt6zAFt+OpohMx1GXMwO+EmzEI58jwGIzm1tqNFRUhMs8iA6FCEjpCU
-         XhCQ==
-X-Gm-Message-State: AOJu0Yyorv8GZ0IbUYKid3Z8KQE68VNNQjPi0tdZlklTOWAdHoucfhVF
-	07lwN20F6bZKKniLDk1BRAsfZ9ibByvA6v2SBO9o3CDJnvEnOGYq
-X-Gm-Gg: ASbGncsqj5TNMMQr8XdlVs0ZEBJH6mX0cMiMd8XOpgRggHi/X4opcYGHRhnzc3gSzX8
-	cVvRzpDwRRqN3ca+Wr6/TUqUZcp2cU7+TKU1C25fdZF+JRg/WVu9hcWb1FIiDt6uwKu7sM8WnQE
-	uJ+u7wTPHwJKX9IfAqc5sPNFaNWCSBVtoK987//wcaLzPSjbYwfUghJPkRqK4/3pN922bQTqNla
-	ThHSw77BPBfnUQKj5h05XNuDzZOrpQ0g+WGvk+YWlefITV5DUDKqS9ulxi5zmoKpmLHb5OA8i8d
-	txUzKBUGoYsfBpy8M6fCM8VoIk2zm4023HXTnak=
-X-Google-Smtp-Source: AGHT+IHuqCMwGTRZ+yF9I/abkMoPMuD6/UCG0kZznYiwYzeSe293GLaO0jKXZs52wL+/lth5VNRcKQ==
-X-Received: by 2002:a05:6a20:9f4b:b0:1f5:9208:3ac7 with SMTP id adf61e73a8af0-201695dc392mr42764637.41.1744222782166;
-        Wed, 09 Apr 2025 11:19:42 -0700 (PDT)
-Received: from jemmy.. ([223.167.142.48])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b02a0cf2571sm1564472a12.19.2025.04.09.11.19.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 11:19:41 -0700 (PDT)
-From: Jemmy Wong <jemmywong512@gmail.com>
-To: Willy Tarreau <w@1wt.eu>,
-	linux@weissschuh.net
-Cc: linux-kernel@vger.kernel.org,
-	Jemmy Wong <Jemmywong512@gmail.com>
-Subject: [PATCH] fix mismatched parentheses
-Date: Thu, 10 Apr 2025 02:19:34 +0800
-Message-ID: <20250409181934.5589-1-jemmywong512@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1744222789; x=1744827589;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Lj2pdvd0SPlmcQ64DOUFkCqLGht2nTzMPaNLIIAOzV0=;
+        b=jooLs3e7dBlODJXl9Aa0zKgBa9N36OrqHkIGIArkfl//Rd+8B6f/ezQ3GNIQZfhzZz
+         31n7zpYjx+3tbIU/6T1l2QN+cRnBW9GoDaJzZrxSuOWqlYMKusTXB06TP43tvRF/5nh6
+         ru/SHfiGM5b+Hu8QJ0hYJBqxEyigswPZy/EW+MiOyMYTgxc+Z/+5oYJKzd894TRx68zm
+         5rU6mWYgh+p3dR0P183H3q4LEwGKTe3T4Qj/3giXhlfh8MfC7TeuqjAAxjrmQrkzQ84X
+         gJjxtmvkprVgGbamZShGLCnW/OeLrAPU7mBlEOch8C0tI61rxvQpzhUgUc5Qj6wK8tBT
+         hrrw==
+X-Forwarded-Encrypted: i=1; AJvYcCU93Xz9lCXMwENNM/p9HtzM4TPa/dR7/IWVZdRbR9OGbqcl4NdXqAlHi2vLmTStN7rSJboIoI+KsCNf4P6Jok1uGDHC@vger.kernel.org, AJvYcCX/YC5Szou2ltADOsCxMvqNgz4kUXxHTtvupBIUj9yXrHT/XbaqVm3ZQH/cmaUPmevtk4M=@vger.kernel.org, AJvYcCXV+hIjphG5flpGvPNBnTt/AwNreVfcHAFM5sciKvGotwcLx6AfENm6xQeRzYLmH3yvR+bHCcpXueRyrIw/@vger.kernel.org
+X-Gm-Message-State: AOJu0YwoHlUOGpd+uVtr9tya8JapOyF990o7RUGmQL+r28wl+fwvPvmS
+	GdBTvEtfoG+hMJ99Iw1l/RYGt0mfxmZ9Uy2tZPCIsxPodTuvZ4LVgMCzzDI/81pQeMd/gXYMIvX
+	gbWSdee9kJZ+d0XJlye4G5h9pkCg=
+X-Gm-Gg: ASbGncsS5+osq82V2GAVYZcB8hq8e3L7BXFfF/9eEyzq7VlkHFFMm0CIRFuH/kmBfO2
+	O+1AkNzS2OyBJ7mPPD/4cd9bPyCE7f1kuNZfvzqAbJimRHqlYOwvw8lGhRc1T1y2Oq+icK2KTyB
+	eoGvono/8HJec/4KnhYF4qx68swhfOinO2CmXzmw==
+X-Google-Smtp-Source: AGHT+IFXf3OXjpp1bAbtieu4tH51zXmjNjFzAg0ttv8og4VaLQHya+wB+tZu8pzUjXHO5nrszkIQxdBrBOAN9wFmvtI=
+X-Received: by 2002:a17:902:e78f:b0:224:179a:3b8f with SMTP id
+ d9443c01a7336-22ac29a97ecmr58322535ad.23.1744222789505; Wed, 09 Apr 2025
+ 11:19:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250320114200.14377-1-jolsa@kernel.org> <20250320114200.14377-11-jolsa@kernel.org>
+ <CAEf4BzY8z8r5uGEFjtNVm0L2JBwQ1ZPP2gqgsVqheqBkPiJ-9g@mail.gmail.com>
+ <Z_Ox7ibkULkJ_2Lx@krava> <Z_WFZT3rZtjts3u-@krava>
+In-Reply-To: <Z_WFZT3rZtjts3u-@krava>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Wed, 9 Apr 2025 11:19:36 -0700
+X-Gm-Features: ATxdqUHS_5Yyi_chN455DBi3vtOfUgKg8FdWzgpPJ84Ricjb7dycy7aYQdQjWsY
+Message-ID: <CAEf4BzZRe8qEjd1KjwV9y25QhDwkfTd7mnknLNm2pR7ArnAhMQ@mail.gmail.com>
+Subject: Re: [PATCH RFCv3 10/23] uprobes/x86: Add support to emulate nop5 instruction
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Alan Maguire <alan.maguire@oracle.com>, David Laight <David.Laight@aculab.com>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Corrects an imbalance where opening parentheses exceed closing ones.
+On Tue, Apr 8, 2025 at 1:22=E2=80=AFPM Jiri Olsa <olsajiri@gmail.com> wrote=
+:
+>
+> On Mon, Apr 07, 2025 at 01:07:26PM +0200, Jiri Olsa wrote:
+> > On Fri, Apr 04, 2025 at 01:33:11PM -0700, Andrii Nakryiko wrote:
+> > > On Thu, Mar 20, 2025 at 4:43=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> =
+wrote:
+> > > >
+> > > > Adding support to emulate nop5 as the original uprobe instruction.
+> > > >
+> > > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > > > ---
+> > > >  arch/x86/kernel/uprobes.c | 16 ++++++++++++++++
+> > > >  1 file changed, 16 insertions(+)
+> > > >
+> > >
+> > > This optimization is independent from the sys_uprobe, right? Maybe
+> > > send it as a stand-alone patch and let's land it sooner?
+> >
+> > ok, will send it separately
+> >
+> > > Also, how hard would it be to do the same for other nopX instructions=
+?
+> >
+> > will check, might be easy
+>
+> we can't do all at the moment, nop1-nop8 are fine, but uprobe won't
+> attach on nop9/10/11 due unsupported prefix.. I guess insn decode
+> would need to be updated first
+>
+> I'll send the nop5 emulation change, because of above and also I don't
+> see practical justification to emulate other nops
+>
 
-Signed-off-by: Jemmy Wong <Jemmywong512@gmail.com>
+Well, let me counter this approach: if we had nop5 emulation from the
+day one, then we could have just transparently switched USDT libraries
+to use nop5 because they would work well both before and after your
+sys_uprobe changes. But we cannot, and that WILL cause problems and
+headaches to work around that limitation.
 
----
- tools/include/nolibc/types.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+See where I'm going with this? I understand the general "don't build
+feature unless you have a use case", but in this case it's just a
+matter of generality and common sense: we emulate nop1 and nop5, what
+reasons do we have to not emulate all the other nops? Within reason,
+of course. If it's hard to do some nopX, then it would be hard to
+justify without a specific use case. But it doesn't seem so, at least
+for nop1-nop8, so why not?
 
-diff --git a/tools/include/nolibc/types.h b/tools/include/nolibc/types.h
-index b26a5d0c417c..b57e054cca82 100644
---- a/tools/include/nolibc/types.h
-+++ b/tools/include/nolibc/types.h
-@@ -201,7 +201,7 @@ struct stat {
- /* WARNING, it only deals with the 4096 first majors and 256 first minors */
- #define makedev(major, minor) ((dev_t)((((major) & 0xfff) << 8) | ((minor) & 0xff)))
- #define major(dev) ((unsigned int)(((dev) >> 8) & 0xfff))
--#define minor(dev) ((unsigned int)(((dev) & 0xff))
-+#define minor(dev) ((unsigned int)(((dev) & 0xff)))
- 
- #ifndef offsetof
- #define offsetof(TYPE, FIELD) ((size_t) &((TYPE *)0)->FIELD)
--- 
-2.43.0
+tl;dr, let's add all the nops we can emulate now, in one go, instead
+of spoon-feeding this support through the years (with lots of
+unnecessary backwards compatibility headaches associated with that
+approach).
 
+
+> jirka
+>
+>
+> ---
+> diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+> index 9194695662b2..6616cc9866cc 100644
+> --- a/arch/x86/kernel/uprobes.c
+> +++ b/arch/x86/kernel/uprobes.c
+> @@ -608,6 +608,21 @@ static void riprel_post_xol(struct arch_uprobe *aupr=
+obe, struct pt_regs *regs)
+>                 *sr =3D utask->autask.saved_scratch_register;
+>         }
+>  }
+> +
+> +static bool emulate_nop_insn(struct arch_uprobe *auprobe)
+> +{
+> +       unsigned int i;
+> +
+> +       /*
+> +        * Uprobe is only allowed to be attached on nop1 through nop8. Fu=
+rther nop
+> +        * instructions have unsupported prefix and uprobe fails to attac=
+h on them.
+> +        */
+> +       for (i =3D 1; i < 9; i++) {
+> +               if (!memcmp(&auprobe->insn, x86_nops[i], i))
+> +                       return true;
+> +       }
+> +       return false;
+> +}
+>  #else /* 32-bit: */
+>  /*
+>   * No RIP-relative addressing on 32-bit
+> @@ -621,6 +636,10 @@ static void riprel_pre_xol(struct arch_uprobe *aupro=
+be, struct pt_regs *regs)
+>  static void riprel_post_xol(struct arch_uprobe *auprobe, struct pt_regs =
+*regs)
+>  {
+>  }
+> +static bool emulate_nop_insn(struct arch_uprobe *auprobe)
+> +{
+> +       return false;
+> +}
+>  #endif /* CONFIG_X86_64 */
+>
+>  struct uprobe_xol_ops {
+> @@ -840,6 +859,9 @@ static int branch_setup_xol_ops(struct arch_uprobe *a=
+uprobe, struct insn *insn)
+>         insn_byte_t p;
+>         int i;
+>
+> +       if (emulate_nop_insn(auprobe))
+> +               goto setup;
+> +
+>         switch (opc1) {
+>         case 0xeb:      /* jmp 8 */
+>         case 0xe9:      /* jmp 32 */
