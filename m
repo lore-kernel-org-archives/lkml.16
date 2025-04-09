@@ -1,61 +1,48 @@
-Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C452278148
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 18:44:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EC801C5F23;
+	Wed,  9 Apr 2025 18:44:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744224260; cv=none; b=bf2lQBakp3kfqiF9zJVYL7+2BITvns9+CvrWoQNXb+64d+XLR16YyM6H/7fzfSJSyZ7Q3O7UK9+BlrPoTrnUOuV9tf7FkT4FsEEj+PJwQENiKL19jPDcD1dtV8yHuJAELto9cnl1YBh7IOx3YpNP42+vc2BYmlh2seenRa/U4Sc=
+	t=1744224277; cv=none; b=SxtXgxzqUmrRXVz8z4L9nyOUUi0qySS9d+OamP9DYTXilCxC38JhO9KKMxDz09pKMTpwaDpbpfeCTvokyaeKpWCWgXEDPYY8xP4KKC1XxH2QGSvS2SVh2ggD7X/peTITnGgM/l7arj12fjMnBatyasLm7XnuxU0kY+isz6xpMQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744224260; c=relaxed/simple;
-	bh=cLRXd2ba2CeeSosufDG2CuR6OG3+lGXoinJjPTZG6jA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j8mpu0BrmxEefhyG5C4isAWJDxLmgeSMuyOcLuleapooHlZV2XiVWsFbfH9fEG1NLgoOZSxLD9lvMEt11wwdODRCj6cjGLnrvsgND63EhItJ4JiRQ/m+gZRk7nQE/R1jkYhzHOtjSQoUzUm4ViCjn+hH2S/2KW8jqoHdSAsT5X0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=S9s1jBhP; arc=none smtp.client-ip=209.85.166.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1744224277; c=relaxed/simple;
+	bh=SsOVTIymYW0rbKzadjR3LPmscl8wGqMHGgYE1NNeHZ8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=DQfx6vljP17CdUuO090x2MOFIetGmd2zN6w5+e2M+dBG9J5JSarrqnwPGBTeGkyGp4i3RSRj66fsx7tiuuWA6LsW/+5+m4iM5Y0xnT2NNm8htfkdXi+wgQpNsPNkZhxFsCjGv9JXxMD0RztK7B3FBsls9aHYsNyOcZPmYBt4Tyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=iZglN0FM; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="S9s1jBhP"
-Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-85e15dc801aso3104439f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 11:44:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1744224256; x=1744829056; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wXLBtWFo1iG4jl/4yzD55CgxaVLgw5GIoTATgzYBQvE=;
-        b=S9s1jBhPM9x0rJXYsw7ombzjkm8hWpkxtvse9piBqmAZu/yotvxo0uvAibPCvtC8sH
-         1brKzqcYaoDlcfAfqIp8CTfWeHVzhC2unkRNgevpLCnf5AHlrz2CPJ34lCfioTijnAIz
-         Aj6s5bVqyqq78W66E+1IaPr9ANToFLL/jKPiY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744224256; x=1744829056;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wXLBtWFo1iG4jl/4yzD55CgxaVLgw5GIoTATgzYBQvE=;
-        b=eOwlEYacCy+Q/u8JHBXb+/fR8qREra0A5uORanL2bgo/KkUL+Y9emvsqH9KrK+18vr
-         Sca5uXFuGZ9cdY0HTQ7oQb5GXCjNaxP8y5GlynJ1/lnQ7z085kY7cClbIYbVuQawnDyu
-         FjQdxzDw1nx74pj+ICw2s+zKPDcxN25ompMcyk4Rfb5p4xwoONArXUwXtx/rZS0ctO9K
-         IvJvUWej2jcBsBQyA/a1e/Ema3GaHVTw/uri3J2qPRZU5IdTt8NPXvr4QByd5OsxHAo4
-         I91CAdVfpquvXW/HDN/cxBYBeklUBX2tFgymis2E2bHUfohfR4hdxm1j89awIgAKcKmh
-         S3Og==
-X-Forwarded-Encrypted: i=1; AJvYcCUFdMdSuMsUfzrzwC1wJjBaNfkLRmwsIm4AjfD+sOTaB5pP2oUbsGWGbpOM71oFQ3bM2ZM6hN8vZt5fYbs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuF1udxllfyhPY+OQcSlERGrvZyaP6V6JwKwNTYzg5+/HYrxkE
-	Yi3ahXp0unVIqUOoD+l8JN/acP6EvgEtfrFg4SzUOu3FFoNPUEQO1z0j9wcdJLw=
-X-Gm-Gg: ASbGncvOXQNv32AO8biJxBKmpUZS3Ja0InZAGa5hDPoSX1KXFQXkY2aLuW1jUJ2HJ5W
-	szD6SrLyYrems/zx0T+USGLYgNJ2+y/hL6LPlZ7gTYwNq11qXaFRG00+Kboa2syG6gMtyMn+Vxg
-	ZpTpTT6koh23e4ah5nF3tGQShfLX+4MzxMpHWhFt7JPfXlNdqJDFoZS9tJGSi8WewrUDBGHBHSS
-	Swu62u9KgdCZ9VmAxCVNnKPLsMTg4/ZEfbynk186SAcW6sr29TJbYVgClrinnUX8RaZgDEBVsc5
-	8pl3JayDfv8TeOW9Dx+WJkgoU8OXBwy6MiZhzktfgi65RhqVHNef3KM7rkq8OQ==
-X-Google-Smtp-Source: AGHT+IGO28kEay463v+HtpsW5QZR5xULtav+EFlWbau8kOYwbqxV37888Qg1KR8L2HGq5JcQPyhIkQ==
-X-Received: by 2002:a05:6602:394a:b0:85e:17c5:bb94 with SMTP id ca18e2360f4ac-86161188b7bmr497863839f.1.1744224256359;
-        Wed, 09 Apr 2025 11:44:16 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-861656c8808sm28468639f.37.2025.04.09.11.44.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Apr 2025 11:44:15 -0700 (PDT)
-Message-ID: <4f0ac0d1-9c75-4be7-ba3c-3daec2fdc91a@linuxfoundation.org>
-Date: Wed, 9 Apr 2025 12:44:13 -0600
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="iZglN0FM"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 539HGwMu016747;
+	Wed, 9 Apr 2025 18:44:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	7DuW50LDJP2LvdpQYzrMBw8Dy7yzEyqrEuV9zAPb5DY=; b=iZglN0FMxooe7vuj
+	q2u6yzA+T04ZIKSruBUyuz4Pslgx7/FQsSDnZanGLw0WHjROCPYxVUqIYq8LUdTT
+	5CvtMNkSCtboB0q0S14fa7EP7FOkpMshBv/gK9pBrygQaL3ITSZnpojEzrxJOkiF
+	cBimmS5LvuNhIZwmTH0NOsuSG2p/hlbGGcsl4ugRSKVj252gTY1Xq4GbaSfvao7j
+	7YD+dujWshQap1Kp4SfM1mZ3PCldYYCZerZ+O1h7ijMzsWUpOha7xGMPIzMbou8p
+	5ALVvpEYnYX9ecO1qgj3CLv37V0Op0XSHkzgLaXELDIMmbr+AFKJELU+3flYD9+Y
+	A05KZg==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twd2vdmh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 09 Apr 2025 18:44:30 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 539IiUFH005869
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 9 Apr 2025 18:44:30 GMT
+Received: from [10.216.43.112] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 9 Apr 2025
+ 11:44:27 -0700
+Message-ID: <93e6ae6d-0573-4475-b004-52dd24906ff0@quicinc.com>
+Date: Thu, 10 Apr 2025 00:14:25 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,45 +50,65 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.14 000/726] 6.14.2-rc4 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20250409115934.968141886@linuxfoundation.org>
+Subject: Re: [PATCH next] spi: spi_amd: Fix an IS_ERR() vs NULL check in probe
+To: Dan Carpenter <dan.carpenter@linaro.org>,
+        Raju Rangoju
+	<Raju.Rangoju@amd.com>
+CC: Mark Brown <broonie@kernel.org>,
+        Akshata MukundShetty
+	<akshata.mukundshetty@amd.com>,
+        Krishnamoorthi M <krishnamoorthi.m@amd.com>,
+        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+References: <0e0f5ede-8993-4fac-967c-51e46b095416@stanley.mountain>
 Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20250409115934.968141886@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+In-Reply-To: <0e0f5ede-8993-4fac-967c-51e46b095416@stanley.mountain>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 9bwc96xrjpM1x_ECg4c68V7atLK00waH
+X-Proofpoint-GUID: 9bwc96xrjpM1x_ECg4c68V7atLK00waH
+X-Authority-Analysis: v=2.4 cv=NaLm13D4 c=1 sm=1 tr=0 ts=67f6c00f cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=fVdgpoan2q-YNdFqOm0A:9
+ a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-09_06,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
+ priorityscore=1501 adultscore=0 malwarescore=0 suspectscore=0
+ lowpriorityscore=0 bulkscore=0 mlxlogscore=999 clxscore=1011 phishscore=0
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504090123
 
-On 4/9/25 06:03, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.14.2 release.
-> There are 726 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri, 11 Apr 2025 11:58:08 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.14.2-rc4.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.14.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+Looks good to me.
 
-Compiled and booted on my test system. No dmesg regressions.
-
-Tested-by: Shuah Khan <skhan@linuxfoundation.org>
-
-thanks,
--- Shuah
+On 4/9/2025 4:30 PM, Dan Carpenter wrote:
+> The devm_ioremap() function returns NULL on error, it doesn't
+> return error pointers.  Update the error checking to match.
+> 
+> Fixes: b644c2776652 ("spi: spi_amd: Add PCI-based driver for AMD HID2 SPI controller")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> ---
+>   drivers/spi/spi-amd-pci.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/spi/spi-amd-pci.c b/drivers/spi/spi-amd-pci.c
+> index e1ecab755fe9..e5faab414c17 100644
+> --- a/drivers/spi/spi-amd-pci.c
+> +++ b/drivers/spi/spi-amd-pci.c
+> @@ -46,8 +46,8 @@ static int amd_spi_pci_probe(struct pci_dev *pdev,
+>   	io_base_addr = (io_base_addr & AMD_SPI_BASE_ADDR_MASK) + AMD_HID2_PCI_BAR_OFFSET;
+>   	amd_spi->io_remap_addr = devm_ioremap(dev, io_base_addr, AMD_HID2_MEM_SIZE);
+>   
+> -	if (IS_ERR(amd_spi->io_remap_addr))
+> -		return dev_err_probe(dev, PTR_ERR(amd_spi->io_remap_addr),
+> +	if (!amd_spi->io_remap_addr)
+> +		return dev_err_probe(dev, -ENOMEM,
+>   				"ioremap of SPI registers failed\n");
+>   
+>   	dev_dbg(dev, "io_remap_address: %p\n", amd_spi->io_remap_addr);
+Acked-by: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
