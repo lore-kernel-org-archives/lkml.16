@@ -1,274 +1,143 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D94DA1E0DE2
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 22:07:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A74E61C3F02
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 22:11:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744236476; cv=none; b=W7N7VtmhXTO+aPQPoWzgrIdXmdpR1kVYr0DHPesIXkzYFFcLFoaqqARGlp9EzvEks10WPNEqD/Wk0l3RtXAm5eg1c4TX5Em6h546diM/nvR647BDO4G50B+EIvZwasL8kAhneKoPRMBgxN8yP3iCrLwbtI2TAVs6YKvnTvLjvTY=
+	t=1744236668; cv=none; b=reS/3ZNiTPMgWa9izpZ6JH9WTj3e99/mQuq8iTEY7JKklmLp/aUyQkQxjb5Evjq1GI7BL8yIhVZg5cgjEq15IxxrPqxCX7NrOUH67mC8JKhX92k8czaFdAeoA9/LrLxKtPCjtcWqJneKyjvmI9JMljEo4ieBSIbk1IQ/W+vOfqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744236476; c=relaxed/simple;
-	bh=zerBjadAhDYjeqo3yYEho7XphY0tGd/Ug0KS+3Sm2iE=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KNfizn30JRl+kHK7YOiHamAYO3y/O5RckxbIT+IQ7/u9xbOnyG8lokrYg/KEWdcHENzFexTRaepCvFZRbqUS8b3OLgRJYjXYA344guFX/cHdk+Ic/2zqtc2SZJ81VDjglokn+SLzta9p+7rPYi25LswPZcqOmdvpbWcIE1ngpAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aYs7e/bT; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744236668; c=relaxed/simple;
+	bh=zyumJ8jwP8t9pasnZ8TVG+cN4bptk+lO+R2dpOPidP4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cEuIqc/Hwchz2NeCYM0EG9MMgqlHlRCK9zaTl309tPmo2TsA7HCjhTsFp7kUIOs31BX40/bVwmYBYn09EptogmC/VVUYeTdeikW97mNkbFaP3lI3dlJPG2ss9PDwG9QkxaCkN9iPdbEfc2McV/aaSFG6L3nf7VBR+IJuoPgnxBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Q0bRD4wq; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aYs7e/bT"
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-6f74b78df93so2768497b3.0
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 15:07:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q0bRD4wq"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43d5f10e1aaso23625e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 15:11:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744236474; x=1744841274; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=KIOAufFGfzvsiWIx0kg6chyCPXkxwvpFYvwyJCLyIhw=;
-        b=aYs7e/bTBUq6vCJFaE/t7Dai/pg0WCtzhPUsnyBMCq+aGJ8CwC2Ji1kdQZGB8aajmj
-         snZtPCQmeW+jCIFyxnPQaGvX8yHWCPpEus9wVmUe7ZRgVpQ+ZOLKXfz4Q4XrgyJKjX5y
-         Ysx+IhDJ81QcySZW7oNBkP6aUyEfyAaPf+CtqiGSt4kllXlhxo7pJJiTD3fQUsy1tnzu
-         oMFAx1YmOehpUA8lglCcE6lq4eWN7g7C7Myfj1GHos+/4uedrNdBl8AqfqiBL25UZztc
-         k+7whD3eGeeb3QWaYBOeQCrnNjHu9Jub+wzfAxovfTwfCYyhvPh9ssbo3/Zh5JD9yGnJ
-         MJzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744236474; x=1744841274;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1744236665; x=1744841465; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KIOAufFGfzvsiWIx0kg6chyCPXkxwvpFYvwyJCLyIhw=;
-        b=piriEz20eOL5Vkun89umGWjmaZyI40rOZGBv3okB056Er0DquIXvQ9w5W+1k8Eppgt
-         +M26wXtqnvS3+rqjVsjX4UWKe/IEWhkw/2NaXUSQmpuWJVkJ61S6nQ40Tg2mmJQDt0y4
-         Wem7iYU6KvH9A0j06DXjyZtq2Vv2IY0NRmVG4FENpuZEC28p8r+7f30VmVd/91bbf53J
-         o1CACXm4Icj04GqdFKAZ7Qo210yTT5mHmkULCiqoEhCWZhYuDDI3moAJF+oTHnypdLQF
-         Lp62ZwArvAIFGgtMlDwaGY3r8Z1SgzJawvGugln5Tozxmv7ro+k008OOqcVvIvFgU2mJ
-         apwA==
-X-Forwarded-Encrypted: i=1; AJvYcCWg5DpgXqFKnRaWlECwLy7QAtgG8BfUZCHhpaHKwA4wf9KpzeIuvJBscGVDbKXlVwLJz8URPz1PtR9NRg4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzoQ1J/C1Q1/IkP+b/g2G9RMv4foCm57rr74pGImzoCML/kSOPR
-	bsXkANvkD1/vKBDaENXn6drvJrj9AULkjW5HI6pgw8SMqCeLiMdlRrAgiQ==
-X-Gm-Gg: ASbGncu//0V/X4wzhK5H6sTRFOKSxOcTtuIwUCDuiZNEvppL9b9INolg2oV7Qa8J9+P
-	+YH1bm/t03HKFBfihxIc3GtPj+kBlMxp1C+X6uV513ir2Wr0xg0uPMzauLJ7E9z3ShZ8gCDhAF6
-	WRvlG3inqzPhpZSQAMQQAirr0ltrWl8sgocD1oMT6nHH17mqK/vP+4lo/NCBxdNfiLRv+LgylTp
-	x2lhg8EoGCEEsDgSzVUeRxyLtI2RwMgQVez7TnWnH/yATOJgb5slp1+24CAIZe5opdVKrl7Xr9w
-	sIiL2oFFzAuWkm4BykfxK78XhMJ62JNd2Wqns3CS
-X-Google-Smtp-Source: AGHT+IGi6jXn92yv38JH3Zmq59oA3rL8jNYUD6UXdxnrzc1t/Yyzmf0exmbDDhLrnFJjM6qa9uhH6w==
-X-Received: by 2002:a05:690c:c09:b0:6fb:9495:1650 with SMTP id 00721157ae682-70549e9c89cmr8685617b3.11.1744236473747;
-        Wed, 09 Apr 2025 15:07:53 -0700 (PDT)
-Received: from debian ([50.205.20.42])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-7053e3be5f5sm4690107b3.122.2025.04.09.15.07.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 15:07:53 -0700 (PDT)
-From: Fan Ni <nifan.cxl@gmail.com>
-X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
-Date: Wed, 9 Apr 2025 15:07:50 -0700
-To: Matthew Wilcox <willy@infradead.org>
-Cc: nifan.cxl@gmail.com, muchun.song@linux.dev, mcgrof@kernel.org,
-	a.manzanares@samsung.com, dave@stgolabs.net,
-	akpm@linux-foundation.org, david@redhat.com, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/hugetlb: Convert &folio->page to folio_page(folio, 0)
-Message-ID: <Z_bvtonNQJ6HIPSA@debian>
-References: <20250409004937.634713-1-nifan.cxl@gmail.com>
- <Z_XmUrbxKtYmzmJ6@casper.infradead.org>
+        bh=1WeMoI07MGM7m41ZJQjcw0OZDaYzBhtEXKaYLAMP5Fc=;
+        b=Q0bRD4wqZAitJ67P7+94h8KBvnPLm9ry2uDuQiTvolLfn0tyx9JWNxcffMpqceh4PS
+         8/EqXWuUSwjj80vv4oDMe29jVFI0Gy2xJ1lNqyI76n62MSAcUj5iT3CwSHXz4KKjN2jy
+         U85LLpANutTsmtEfXJEBejUXtIdZGrGqgOYYrUpwwtsxOkQ7PfVqpGnjolxKOsSO8VGe
+         O8DwsShkeWb1uI8anrxRIrIG3USlFU44N+CfckyDLtwSHeWNzNzHJQmEb/Pu/b5+cP34
+         pxjoIgPUDpt6Uj66Bw9nchUuOuEtPf/AmOJkW4/3itHUMnW53evjqikhHpWrSOJ7nvfe
+         cf1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744236665; x=1744841465;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1WeMoI07MGM7m41ZJQjcw0OZDaYzBhtEXKaYLAMP5Fc=;
+        b=HQntmJDKddjl6bc/qliC2DhDXF+G8DeBPuQDvqTZXuW70yrz0kk8BOJt/TiBb1YbtP
+         7SjpzBTUNOe2MJdCJZvQmamnTRDUY9jtslAW/aoqiK6VHAf2b9ZiOUf8qjkPPMILKibo
+         /F4CLusq57GpW9FQ6aTqI2phXJ7GV8iqsY63C6SyJ2h42xU1J2PCOgPBP2gPhuwzD2cO
+         74ZoIvRfCHFkGLUW1ZX5hzuTHScVFXJwV78EfauflpbN0DVm/2HstXjpQHFW73Bg7Udi
+         nX+9uBHSSuLA+V/AQ2gCfz/ldqlwnUx4Bgy9/Gz9RJXZqiD1retDE/ysvHYgPDbW9VeV
+         NCtw==
+X-Forwarded-Encrypted: i=1; AJvYcCVvtOoxrvyKQ1MOMtyfmkYxWxT534UrG1Y0hLqn801e215PTXBSPhNAK5Gg60azlZQxN6TssLW39XxmDgg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyIngJWz23izUzJecjAKxU+JUZBCKJf/Df8ZKKkgpnfP7usCJRR
+	xOVjVuGc7bOWPCDMVB6EyTmaskErr8NesBAUyksgZBZ8Od+5fXMxCHcwYv30N/CEAaJAaJxtH0O
+	kHfqtHHqShbjn+neCRcrdZH8ExuW0RqVEK3Jc
+X-Gm-Gg: ASbGncvyRzE2OgsRl/AbLc7gKdws0Sy4QrDPYtvezEScn35WLsU7z//HPthdGCdyjZM
+	0k/sbqiCz5kgWSqNgpbrPSjX8JFYcUOLagVP92/C26lRHAnYeHgvzpZTpbbZS1IULhESxN6x7AS
+	yTTKGZlbRkXvhI4o8xPzZyauXhjb4uyQ0sd2I/rJBz8NCtQEm6+RM=
+X-Google-Smtp-Source: AGHT+IEsJ8CCoy1fpsu/63E7U9CaB6UWoIs5FAuxTzGAsoy+kQFfpjcbCaX9O4ryUbCd712o+KPaQMApElvTdzca8rA=
+X-Received: by 2002:a05:600c:3d8d:b0:43b:bfe9:8b43 with SMTP id
+ 5b1f17b1804b1-43f2df42953mr309915e9.4.1744236664648; Wed, 09 Apr 2025
+ 15:11:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_XmUrbxKtYmzmJ6@casper.infradead.org>
+References: <20250409195448.3697351-1-tjmercier@google.com>
+ <20250409140848.da67768ac1f5e79d7296de4d@linux-foundation.org>
+ <20250409141131.bd67f6b19ea7e770dce40ac7@linux-foundation.org>
+ <CABdmKX3D-iCwkuAXLsFyyJD7LikoR0rygR6CnR4Fv-u9+OjnZg@mail.gmail.com> <kamspewougkeipnlpdhbzyhu63ildqmfpuw46loqcjohrbr6bf@enpp5occ33eo>
+In-Reply-To: <kamspewougkeipnlpdhbzyhu63ildqmfpuw46loqcjohrbr6bf@enpp5occ33eo>
+From: "T.J. Mercier" <tjmercier@google.com>
+Date: Wed, 9 Apr 2025 15:10:51 -0700
+X-Gm-Features: ATxdqUGQ4NDgYljRmh8RkqWTri1UizwS_iIrkWzRlXDyd4XZqN2xYBpQHGLQ3Qw
+Message-ID: <CABdmKX149kZUHpjM8CUb-eyJtkFxp04DngcAunuZZxaAM5Uwng@mail.gmail.com>
+Subject: Re: [PATCH] alloc_tag: Handle incomplete bulk allocations in vm_module_tags_populate
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Janghyuck Kim <janghyuck.kim@samsung.com>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 09, 2025 at 04:15:30AM +0100, Matthew Wilcox wrote:
-> On Tue, Apr 08, 2025 at 05:49:10PM -0700, nifan.cxl@gmail.com wrote:
-> > From: Fan Ni <fan.ni@samsung.com>
-> > 
-> > Convert the use of &folio->page to folio_page(folio, 0) where struct
-> > filio fits in. This is part of the efforts to move some fields out of
-> > struct page to reduce its size.
-> 
-> Thanks for sending the patch.  You've mixed together quite a few things;
-> I'd suggest focusing on one API at a time.
- 
-...
-> >  		 */
-> > -		free_page_and_swap_cache(&new_folio->page);
-> > +		free_page_and_swap_cache(folio_page(new_folio, 0));
-> >  	}
-> 
-> free_page_and_swap_cache() should be converted to be
-> free_folio_and_swap_cache().
-
-While looking into this function, I see it is defined as a macro in
-swap.h as below,
-#define free_page_and_swap_cache(page) \
-        put_page(page) 
-
-While checking put_page() in include/linux.mm.h, it always converts page
-to folio, is there a reason why we do not take "folio" directly?
-
-static inline void put_page(struct page *page)
- {
-     struct folio *folio = page_folio(page);
-
-     if (folio_test_slab(folio))
-         return;
-
-     folio_put(folio);
- }
-
-Fan
-
+On Wed, Apr 9, 2025 at 2:57=E2=80=AFPM Kent Overstreet
+<kent.overstreet@linux.dev> wrote:
 >
-> 
-> >  
-> > -	return __folio_split(folio, new_order, &folio->page, page, list, true);
-> > +	return __folio_split(folio, new_order, folio_page(folio, 0), page,
-> > +			     list, true);
-> >  }
-> 
-> Probably right.
-> 
-> >  {
-> > -	return __folio_split(folio, new_order, split_at, &folio->page, list,
-> > -			false);
-> > +	return __folio_split(folio, new_order, split_at, folio_page(folio, 0),
-> > +			     list, false);
-> >  }
-> 
-> Ditto.
-> 
-> >  
-> > -	return split_huge_page_to_list_to_order(&folio->page, list, ret);
-> > +	return split_huge_page_to_list_to_order(folio_page(folio, 0), list,
-> > +						ret);
-> >  }
-> 
-> Ditto.
-> 
-> >  
-> > -		if (is_migrate_isolate_page(&folio->page))
-> > +		if (is_migrate_isolate_page(folio_page(folio, 0)))
-> >  			continue;
-> 
-> I think we need an is_migrate_isolate_folio() instead of this.
-> 
-> >  	if (folio_test_anon(folio))
-> > -		__ClearPageAnonExclusive(&folio->page);
-> > +		__ClearPageAnonExclusive(folio_page(folio, 0));
-> >  	folio->mapping = NULL;
-> 
-> ... David.
-> 
-> >  
-> > -		split_page_owner(&folio->page, huge_page_order(src), huge_page_order(dst));
-> > +		split_page_owner(folio_page(folio, 0), huge_page_order(src),
-> > +				 huge_page_order(dst));
-> 
-> See earlier.
-> 
-> >  	if (folio_mapcount(old_folio) == 1 && folio_test_anon(old_folio)) {
-> > -		if (!PageAnonExclusive(&old_folio->page)) {
-> > +		if (!PageAnonExclusive(folio_page(old_folio, 0))) {
-> >  			folio_move_anon_rmap(old_folio, vma);
-> > -			SetPageAnonExclusive(&old_folio->page);
-> > +			SetPageAnonExclusive(folio_page(old_folio, 0));
-> >  		}
-> 
-> David.
-> 
-> >  	}
-> >  	VM_BUG_ON_PAGE(folio_test_anon(old_folio) &&
-> > -		       PageAnonExclusive(&old_folio->page), &old_folio->page);
-> > +		       PageAnonExclusive(folio_page(old_folio, 0)),
-> > +		       folio_page(old_folio, 0));
-> 
-> The PageAnonExclusive() part of this change is for David to comment on,
-> but this should be a VM_BUG_ON_FOLIO() instead of calling folio_page()
-> to keep this a VM_BUG_ON_PAGE().
-> 
-> >  
-> > -			unmap_ref_private(mm, vma, &old_folio->page,
-> > -					vmf->address);
-> > +			unmap_ref_private(mm, vma, folio_page(old_folio, 0),
-> > +					  vmf->address);
-> 
-> unmap_ref_private() only has one caller (this one), so make that take a
-> folio.  This is a whole series, all by itself.
-> 
-> >  	hugetlb_cgroup_migrate(old_folio, new_folio);
-> > -	set_page_owner_migrate_reason(&new_folio->page, reason);
-> > +	set_page_owner_migrate_reason(folio_page(new_folio, 0), reason);
-> >  
-> 
-> See earlier about page owner being folio or page based.
-> 
-> >  	int ret;
-> > -	unsigned long vmemmap_start = (unsigned long)&folio->page, vmemmap_end;
-> > +	unsigned long vmemmap_start = (unsigned long)folio_page(folio, 0), vmemmap_end;
-> >  	unsigned long vmemmap_reuse;
-> 
-> Probably right.
-> 
-> >  	int ret = 0;
-> > -	unsigned long vmemmap_start = (unsigned long)&folio->page, vmemmap_end;
-> > +	unsigned long vmemmap_start = (unsigned long)folio_page(folio, 0), vmemmap_end;
-> >  	unsigned long vmemmap_reuse;
-> 
-> Ditto.
-> 
-> > -	unsigned long vmemmap_start = (unsigned long)&folio->page, vmemmap_end;
-> > +	unsigned long vmemmap_start = (unsigned long)folio_page(folio, 0), vmemmap_end;
-> >  	unsigned long vmemmap_reuse;
-> 
-> Ditto.
-> 
-> >  			 */
-> > -			spfn = (unsigned long)&folio->page;
-> > +			spfn = (unsigned long)folio_page(folio, 0);
-> 
-> Ditto.
-> 
-> >  			register_page_bootmem_memmap(pfn_to_section_nr(spfn),
-> > -					&folio->page,
-> > -					HUGETLB_VMEMMAP_RESERVE_SIZE);
-> > +						     folio_page(folio, 0),
-> > +						     HUGETLB_VMEMMAP_RESERVE_SIZE);
-> 
-> Don't change the indentation, but looks right.
-> 
-> >  		result = SCAN_SUCCEED;
-> > -		trace_mm_collapse_huge_page_isolate(&folio->page, none_or_zero,
-> > -						    referenced, writable, result);
-> > +		trace_mm_collapse_huge_page_isolate(folio_page(folio, 0),
-> > +						    none_or_zero, referenced,
-> > +						    writable, result);
-> >  		return result;
-> 
-> trace_mm_collapse_huge_page_isolate() should take a folio.
-> 
-> >  	release_pte_pages(pte, _pte, compound_pagelist);
-> > -	trace_mm_collapse_huge_page_isolate(&folio->page, none_or_zero,
-> > -					    referenced, writable, result);
-> > +	trace_mm_collapse_huge_page_isolate(folio_page(folio, 0),
-> > +					    none_or_zero, referenced,
-> > +					    writable, result);
-> >  	return result;
-> 
-> ditto.
-> 
-> >  out:
-> > -	trace_mm_khugepaged_scan_pmd(mm, &folio->page, writable, referenced,
-> > -				     none_or_zero, result, unmapped);
-> > +	trace_mm_khugepaged_scan_pmd(mm, folio_page(folio, 0), writable,
-> > +				     referenced, none_or_zero, result,
-> > +				     unmapped);
-> >  	return result;
-> 
-> ditto,
-> 
-> >  	result = install_pmd
-> > -			? set_huge_pmd(vma, haddr, pmd, &folio->page)
-> > +			? set_huge_pmd(vma, haddr, pmd, folio_page(folio, 0))
-> >  			: SCAN_SUCCEED;
-> 
-> I feel that set_huge_pmd() should take a folio.
+> On Wed, Apr 09, 2025 at 02:51:18PM -0700, T.J. Mercier wrote:
+> > On Wed, Apr 9, 2025 at 2:11=E2=80=AFPM Andrew Morton <akpm@linux-founda=
+tion.org> wrote:
+> > >
+> > > On Wed, 9 Apr 2025 14:08:48 -0700 Andrew Morton <akpm@linux-foundatio=
+n.org> wrote:
+> > >
+> > > > On Wed,  9 Apr 2025 19:54:47 +0000 "T.J. Mercier" <tjmercier@google=
+.com> wrote:
+> > > >
+> > > > > alloc_pages_bulk_node may partially succeed and allocate fewer th=
+an the
+> > > > > requested nr_pages. There are several conditions under which this=
+ can
+> > > > > occur, but we have encountered the case where CONFIG_PAGE_OWNER i=
+s
+> > > > > enabled causing all bulk allocations to always fallback to single=
+ page
+> > > > > allocations due to commit 187ad460b841 ("mm/page_alloc: avoid pag=
+e
+> > > > > allocator recursion with pagesets.lock held").
+> > > > >
+> > > > > Currently vm_module_tags_populate immediately fails when
+> > > > > alloc_pages_bulk_node returns fewer than the requested number of =
+pages.
+> > > > > This patch causes vm_module_tags_populate to retry bulk allocatio=
+ns for
+> > > > > the remaining memory instead.
+> > > >
+> > > > Please describe the userspace-visible runtime effects of this chang=
+e.  In a way
+> > > > which permits a user who is experiencing some problem can recognize=
+ that this
+> > > > patch will address that problem.
+> > > >
+> > > > ...
+> > > >
+> > > > Reported-by: Janghyuck Kim <janghyuck.kim@samsung.com>
+> > >
+> > > A Closes: link will presumably help with the above info.  checkpatch
+> > > now warns about the absence of a Closes:
+> >
+> > Hi Andrew, This was reported on our internal bug tracker so there is
+> > no public link I can provide here. If it's better not to add a
+> > Reported-by in this case, then I will do that in the future.
+>
+> In that case perhaps cut and paste the info from your internal bug
+> tracker?
+>
+> Commit messages can include quite a bit more than just a short
+> description of the commit, when it's relevant - e.g. I try to include
+> the literal log of the oops being fixed when appropriate.
+>
+> It really helps when looking at things weeks or months later and trying
+> to remember "ok, exactly what was that code path I need to watch out
+> for?"
+
+Agreed, it would have been better to include this. I think the
+modprobe errors I followed up with would be good to append to the
+commit message.
+
+Shall I send a v2?
