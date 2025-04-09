@@ -1,73 +1,73 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0BBC228CA5
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 09:52:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF3F6155389
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 09:53:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744192373; cv=none; b=Jh73mhlJyuUG66LXuzGAlHMMlNJvofun9t7LwEF5yiUFG6FWpRLD6nR28XI/7hNMiy37QTCFfb4xohf1SGd8gmi6NzOeltkIlV/JIjgu50++pWtChoOMc+shII7y2yjzaLlKjIDltWoNKqn0rb6hcRhpV2liTNWe+M5hXvwzhy4=
+	t=1744192401; cv=none; b=a6VnuuYC2UTFmFXtImhyMS/T5ZP4yXrI6I1o/hriv0D01HpiAr7uH/q07uSkzADrWZjtHRod3JnBu5aa3dVfjBVjY8B9AIP/eLzsRtzpaELf6eLewTIckWEtR9tFymQXiL6ihNBlEErlVB17N2chF96Vq4RuI1gFYja/TVOMKbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744192373; c=relaxed/simple;
-	bh=eeCo0sMmdR8i/Iu4RG5CjC5RNSolfENtViEP36b7Wag=;
+	s=arc-20240116; t=1744192401; c=relaxed/simple;
+	bh=tDcRVBYMmBGKFLLhH7S5pV5N14VJ2/DnFeJ4DfOqcpg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XsTc4KdcPMQ69lvpGp26srvy1OpeErSMG94WKJsqtyKhDVCvjW1yYTwty16R2hTczxZX31THe5k8fk6pz4OGdpdeCEj+L3k0roUsJ1OnHFuwTUXirnGOgLYV0ZvAJ2ZEvOJwZTlBfFr6k7cDu8GJsBLDT9sEatUx5VASA3p1Mn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CkSqg3iI; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=YRtODh04ryQEjAtaOPF69+E7ZENdQahnGrPlsBIp09epUWHc5lRnNIq1CkOTQCvYh3Gl//UDjZuf5A3u1XZAtQCHmd1W6nQHajO0vNN3QEyURUg+PsgS8Ezd291Qz5Bnqj2KvaQ8XzHF/uDnhvB3zRETdVOE5+cIS+bKJWPOrUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ESV7o8er; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CkSqg3iI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ESV7o8er"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744192370;
+	s=mimecast20190719; t=1744192398;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=AgOPvhz1Bm1GCeL39ng6pkGLakXCK+cbKOAvDwFeABA=;
-	b=CkSqg3iIlm+TMXw4bY0HBvZh2DVVUIqSTYJIZOUtAqXLRDlcQ0BQ1YaBdvbzrqdq+VMwi3
-	q0T+Uqmst3oNWcsus1NOSPKTrDfwieQcpznooT/d/d5/D/CqMGG5E876ftiDViKWUxU9mX
-	vSsgCMnYYjrzbGHItdJJIgL8La0On04=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=AZlXGl5Aeyi6Ph72XFKY4HqVnc7Wvslh3i9yLyL0btk=;
+	b=ESV7o8erLYiVCZuDpmuMtkXKwugFW4WlSw7ZtfVxI/R5uK8zz7hWiYDdzDx/2HEPGOrZIB
+	DwkBqAIQEGAR6IhlexQ88tt8m88hHU1s6QilTbwhGmTN+om6ijiiRT07ocOMRkR6WQ9boF
+	7zNWOsjSHpbWSshQjTEAzJAuVi3RuMw=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-592-slqOYxVdOc-0rgAcSP19sg-1; Wed, 09 Apr 2025 05:52:47 -0400
-X-MC-Unique: slqOYxVdOc-0rgAcSP19sg-1
-X-Mimecast-MFC-AGG-ID: slqOYxVdOc-0rgAcSP19sg_1744192366
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3912fe32a30so2672634f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 02:52:46 -0700 (PDT)
+ us-mta-477-IhB4XruWPkqYCom0F3dYUw-1; Wed, 09 Apr 2025 05:53:16 -0400
+X-MC-Unique: IhB4XruWPkqYCom0F3dYUw-1
+X-Mimecast-MFC-AGG-ID: IhB4XruWPkqYCom0F3dYUw_1744192396
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43d51bd9b41so56340135e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 02:53:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744192366; x=1744797166;
+        d=1e100.net; s=20230601; t=1744192396; x=1744797196;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=AgOPvhz1Bm1GCeL39ng6pkGLakXCK+cbKOAvDwFeABA=;
-        b=ZqX6M207dzltxlXAs0kcVWhVCbUhHaWsz+eEWDOAssg8rgiNkYuzXdUVM1yjtWoU+/
-         0u5NbHEivcrfD9FfyMNOHfVIk7BJbNoSJKPa+KRs0ljbvVgxnyK1hD/zCiHNAd9NBX4+
-         UoN/0tjCbi7XqcY62GKg8r5RYE6zDyHYXAtsanusfzaPy5QDHOmpMSnOQyIk7UN4pcFI
-         6+cDciE0qPJp30dUbJMmPSBvGrk+H1bTSTo5AxiwPxW50avGgWnJenaDdN/vOwl59ojn
-         FkT4hqsCj0JqGuKWmDYUEDU4e0YScX3pfzwDEUfQt29kxU/Vi1J7QQRp6ZZtQfmvA84q
-         hZ8g==
-X-Forwarded-Encrypted: i=1; AJvYcCUmnYL+Z559yAN/xy927Zsvmm8/Xw6vHk29qZN8h4WaHDfQz0SiF9UulNLXAQdUeVoE+a+Zs1ttjj7BaTo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIyBbSe6G73dXJ52BWCtlLhZdfTOiyXPWWgVopzSL3JPlesEjD
-	ovA9EoeHGaizkpJjy4/w8EDXtiOusAivy1BBfVGYz6y52YBHcJICdN/ERNrM0gWTlMTt/N+O/Cp
-	o0onNNayXYW7EHqK99pptm7cxp7WbEiwkYQn8eu6thkgwd5o0doemsc+95dRu2Q==
-X-Gm-Gg: ASbGncuD+ABPNYKXwMsCe/BeRjkXLljqNQvGs27ydTI1YigfqXn2m5z2ORWJcrA6OUH
-	N4faWKkPJ5kgioMgYm5SrPifXZROryKlwMehTFTcf3cx1uO5UTaoYxXgzpBS4hGIsETGR/0aM+k
-	P6KCcUZhAkfpAnhM44ANH2hGjAqUtKHP9xRdhtrlu2TOOgr0yVfxPlkYQXEn+/iKtgpSYZm2ae9
-	w/EXx+hNgArb9wIOB9MY02turS+Vb2xrH28H5lSSTE4J14ZfmBS8g6LB1l5yLGiaovxDv+VEBUa
-	+ycJjVx2i7HeolqklislwhKHOYp2GCFXQRT02B6jSr/17w6GIMhJ4BF+xAt4pvF+nyNmm2D9/4V
-	HLoZ3LF500IJp3sASHxp9vt3kGs4Qr1DsRg==
-X-Received: by 2002:a05:6000:1883:b0:391:13ef:1b1b with SMTP id ffacd0b85a97d-39d87acf243mr2008552f8f.30.1744192365733;
-        Wed, 09 Apr 2025 02:52:45 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHx9GrICGi81uP1xDkomZUSWBX9fsD54soYQUm/gxbsAhKoxt9FjFNAo72hvshuK7hA7PCmDQ==
-X-Received: by 2002:a05:6000:1883:b0:391:13ef:1b1b with SMTP id ffacd0b85a97d-39d87acf243mr2008536f8f.30.1744192365381;
-        Wed, 09 Apr 2025 02:52:45 -0700 (PDT)
+        bh=AZlXGl5Aeyi6Ph72XFKY4HqVnc7Wvslh3i9yLyL0btk=;
+        b=Cc4qjmunm76x2btH495+se+W3LRqUJK5NOqpj16HBjRtmK4vKpSEGaH0HEswj2Rkwr
+         d/chscXSc/I7ki2Y0JVPFlA9DJC3AftoUADEonPsOL2Dgo+V8zpwI5jf+lpPI9E1jfUa
+         ajPzAeDPi9HiAqFu5YwhjHzIxQHLAr5rN0x4FiBgmzAFx96eNRTrvOCCSUMrLuxjsZqD
+         oFVWv+jMLQaehvDMcC7xrgs3c3+HpBsxcFyMcj4rNjb2+Zq+QYCuy5H9L6pPKIS68ejr
+         OcTXS91/ne8aif3kkvajnzHP+wuQchp+2iawlY36rNrGR4R3/CQLzkwY5Zlva4i3gVzi
+         5dHA==
+X-Forwarded-Encrypted: i=1; AJvYcCVJV+og8ZA3wL3tpEBM/EraXsapymXLB2qWZxLJqxSY39RY9Iik4gdwTUb77J8iMtGbpxHhokfVA4kgo/8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwENC87gASkoDyWXYCJqQqaWC91eCZWvr73hwx0CPsfp3I4Pz+L
+	z6S7a/Kti6TZEsRE11Nhxp5gskwxY4MuBoCULODX/0Z1Cv7t6No46XSL4lKdFQBa0iYC8P/eWUr
+	EvOJ0uQFP7GzAEqUHjFUlRQoNKftEmtqAnmrIjR4ywRXSHGGhqAcJJFoapMDi+Q==
+X-Gm-Gg: ASbGncsCPMXo/wFuew7prjKsihYHSVP+xN5htutrOziXbhf5gYXZNh3QbDNE5Ti40AY
+	1YvCz0q1Xhj+w4aQ+R3/cNQ482O0Ccf0GzJIcBzh2Y1J03TXvTWQ4HzqM41rBlkEfdBUSvhqgyk
+	uju2WfFG71s1MI5mzg7VyAvWnB/AtEGiOXApsIOZlsolV+RbCTfN3JTXyHzimONRaxD33Y5SWHM
+	DStnP4fhMAD589z97dJti7ZY+zQFkrHqD5Dvttg2Ad4LfI9kJK3lx+SFMvRSrKqUJvFmtoLqCQi
+	c/R9wk79wXro67mPc2NVdBmQxq/sy/qWXYJwDTgkIQW229/Z1wFUfKD/M4xjZcOCsZbFaItza87
+	bOYyip6t1aghvsQ5lgJ1LeYIQJirT2J8sdg==
+X-Received: by 2002:a05:600c:4f4f:b0:43c:fe5e:f03b with SMTP id 5b1f17b1804b1-43f1ed4d93cmr24376145e9.30.1744192395776;
+        Wed, 09 Apr 2025 02:53:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEs+6zHtnYJwGSOuzb/4Xnp7XP4mgSOdIliGWk/qv+sy0a3Gd4ZZZfy5ZGVG33b67NVrNXNFw==
+X-Received: by 2002:a05:600c:4f4f:b0:43c:fe5e:f03b with SMTP id 5b1f17b1804b1-43f1ed4d93cmr24375845e9.30.1744192395422;
+        Wed, 09 Apr 2025 02:53:15 -0700 (PDT)
 Received: from ?IPV6:2003:cb:c70d:8400:ed9b:a3a:88e5:c6a? (p200300cbc70d8400ed9b0a3a88e50c6a.dip0.t-ipconnect.de. [2003:cb:c70d:8400:ed9b:a3a:88e5:c6a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d893fdf9asm1112253f8f.84.2025.04.09.02.52.44
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f20625592sm14523295e9.10.2025.04.09.02.53.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Apr 2025 02:52:44 -0700 (PDT)
-Message-ID: <00a37819-b2ae-4399-b21d-86339059c46a@redhat.com>
-Date: Wed, 9 Apr 2025 11:52:43 +0200
+        Wed, 09 Apr 2025 02:53:14 -0700 (PDT)
+Message-ID: <cb8fee50-4dd2-4362-b716-bf1e921bdfa2@redhat.com>
+Date: Wed, 9 Apr 2025 11:53:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,12 +75,15 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm: fix apply_to_existing_page_range()
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, Daniel Axtens <dja@axtens.net>
-References: <20250409094043.1629234-1-kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH] mm: huge_memory: add folio_mark_accessed() when zapping
+ file THP
+To: Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org
+Cc: willy@infradead.org, hannes@cmpxchg.org, 21cnbao@gmail.com,
+ ryan.roberts@arm.com, ziy@nvidia.com, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <fc117f60d7b686f87067f36a0ef7cdbc3a78109c.1744190345.git.baolin.wang@linux.alibaba.com>
+ <39176ab9-33d5-4919-b368-2fd2467f08fe@redhat.com>
+ <0e294c56-d924-4d40-aa24-584235e8c923@linux.alibaba.com>
 From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
 Autocrypt: addr=david@redhat.com; keydata=
@@ -128,58 +131,70 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <20250409094043.1629234-1-kirill.shutemov@linux.intel.com>
+In-Reply-To: <0e294c56-d924-4d40-aa24-584235e8c923@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 09.04.25 11:40, Kirill A. Shutemov wrote:
-> In the case of apply_to_existing_page_range(), apply_to_pte_range() is
-> reached with 'create' set to false. When !create, the loop over the PTE
-> page table is broken.
+On 09.04.25 11:49, Baolin Wang wrote:
 > 
-> apply_to_pte_range() will only move to the next PTE entry if 'create' is
-> true or if the current entry is not pte_none().
 > 
-> This means that the user of apply_to_existing_page_range() will not have
-> 'fn' called for any entries after the first pte_none() in the PTE page
-> table.
+> On 2025/4/9 17:46, David Hildenbrand wrote:
+>> On 09.04.25 11:38, Baolin Wang wrote:
+>>> When investigating performance issues during file folio unmap, I
+>>> noticed some
+>>> behavioral differences in handling non-PMD-sized folios and PMD-sized
+>>> folios.
+>>> For non-PMD-sized file folios, it will call folio_mark_accessed() to
+>>> mark the
+>>> folio as having seen activity, but this is not done for PMD-sized folios.
+>>>
+>>> This might not cause obvious issues, but a potential problem could be
+>>> that,
+>>> it might lead to reclaim hot file folios under memory pressure, as quoted
+>>> from Johannes:
+>>>
+>>> "
+>>> Sometimes file contents are only accessed through relatively short-lived
+>>> mappings. But they can nevertheless be accessed a lot and be hot. It's
+>>> important to not lose that information on unmap, and end up kicking out a
+>>> frequently used cache page.
+>>> "
+>>>
+>>> Therefore, we should also add folio_mark_accessed() for PMD-sized file
+>>> folios when unmapping.
+>>>
+>>> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+>>> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+>>> Acked-by: Zi Yan <ziy@nvidia.com>
+>>> ---
+>>> Changes from RFC:
+>>>    - Update the commit message, per Johannes.
+>>>    - Collect Acked tags from Johannes and Zi. Thanks.
+>>> ---
+>>>    mm/huge_memory.c | 4 ++++
+>>>    1 file changed, 4 insertions(+)
+>>>
+>>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+>>> index 2a47682d1ab7..955781b4e946 100644
+>>> --- a/mm/huge_memory.c
+>>> +++ b/mm/huge_memory.c
+>>> @@ -2260,6 +2260,10 @@ int zap_huge_pmd(struct mmu_gather *tlb, struct
+>>> vm_area_struct *vma,
+>>>                    zap_deposited_table(tlb->mm, pmd);
+>>>                add_mm_counter(tlb->mm, mm_counter_file(folio),
+>>>                           -HPAGE_PMD_NR);
+>>> +
+>>> +            if (flush_needed && pmd_young(orig_pmd) &&
+>>> +                likely(vma_has_recency(vma)))
+>>> +                folio_mark_accessed(folio);
+>>
+>> So the flush_needed check is really just a pmd_present() check. (the
+>> latter would be clearer, but I don't mind)
 > 
-> Fix the loop logic in apply_to_pte_range().
-> 
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Fixes: be1db4753ee6 ("mm/memory.c: add apply_to_existing_page_range() helper")
-> Cc: Daniel Axtens <dja@axtens.net>
-> ---
->   mm/memory.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/mm/memory.c b/mm/memory.c
-> index fb7b8dc75167..2094564f4dfb 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -2907,11 +2907,11 @@ static int apply_to_pte_range(struct mm_struct *mm, pmd_t *pmd,
->   	if (fn) {
->   		do {
->   			if (create || !pte_none(ptep_get(pte))) {
-> -				err = fn(pte++, addr, data);
-> +				err = fn(pte, addr, data);
->   				if (err)
->   					break;
->   			}
-> -		} while (addr += PAGE_SIZE, addr != end);
-> +		} while (pte++, addr += PAGE_SIZE, addr != end);
->   	}
->   	*mask |= PGTBL_PTE_MODIFIED;
->   
+> Yes, we've already checked pmd_present() before, so I assume the
+> flush_needed check is cheaper:)
 
-LGTM. just curious, did you run into any actual issues that are worth 
-describing?
-
-It should affect apply_to_existing_page_range() users where 
-create==false. There are not many, and likely most PTEs in the range 
-they are passing are all non-none.
-
-Acked-by: David Hildenbrand <david@redhat.com>
+Maybe :)
 
 -- 
 Cheers,
