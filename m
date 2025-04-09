@@ -1,62 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C889A277002;
-	Wed,  9 Apr 2025 17:29:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEC051A9B32;
+	Wed,  9 Apr 2025 17:30:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744219758; cv=none; b=e8uN/fy3ycHsGFJyUnHI8FHB1u86MX2feYoZK7N1PN4nAoX+1beUUnmNjJp6QOvq7ScaIRknRxDTRC/CwxcWlBVxdIza8PafGNaNTvYYv0TAqna3BCDFcXgU2WuQysHmVrv6YQlXozOA+Jxdym5Nu68ByTXhmiGEPfkSERsP6y8=
+	t=1744219826; cv=none; b=awYhJ6abhfisiPF+cweMvWc3lFVppTbPUMiwVdhorZNxHXZKlrffKIr2/8tIJyiM5JGHFpmuK+xZ9bvjCAYfjRmhOdh/W6PnBHrlX8eG2PjoR/vEVz+/AsoI7YPl6cfQtcN8Izrc2GgArnQBmpjJsYGgHj63EV5pR65CZY8MII0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744219758; c=relaxed/simple;
-	bh=A+bB1DZsszr3mEMdSanadJ8r7dtLodals5XrsqQKGH8=;
+	s=arc-20240116; t=1744219826; c=relaxed/simple;
+	bh=QtbLIEpxQbl34x26pYfR01C9eSJ1C0HEyNuuXfp4D3Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iZ2Dp4UlDcMCy6rN9RVr6rZWzFRP+MAkDay7Bo7JE63PzVh82oHR9QwtZSssICkBLc1+VcEodxGhjmH8FrbVBY1BbONqVq2G4iYNmWmERP3Vnu+k4DtJNCWsi2lIpB39/qIgAhdKVnEp86pog5N5YkWKpua/fnPSvoO9LYTxfkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ERtOeort; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=eI17Js7FXZTYJBwlDdAVdFRqEFDUO2C+/pfslMKtgfSX8K0gkBH5vD0Z/KS8qC91bv/Q0z3O9qNAfXDKgXVioGI2mRSuvpeQYFiq8L0a1gAPXU31e9LkyS+QlYbko3XeTaRp+F1ywWvW4LwxNUs0Z+5qegC5hTd2u3c0xQGLr4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XKfCNkxv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ERtOeort"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A3E6C4CEE7;
-	Wed,  9 Apr 2025 17:29:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XKfCNkxv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EB47C4CEE2;
+	Wed,  9 Apr 2025 17:30:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744219757;
-	bh=A+bB1DZsszr3mEMdSanadJ8r7dtLodals5XrsqQKGH8=;
+	s=k20201202; t=1744219825;
+	bh=QtbLIEpxQbl34x26pYfR01C9eSJ1C0HEyNuuXfp4D3Q=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ERtOeorti1ay22wP0CyVuM7noG1ao/vanSSBcKqGlK3xlsRn1EMiJ8WpadVPRxtPi
-	 dM+gYJF6brwVKELfHDNx3nRLOvfL+MtRJkze6+Jcdb5gsudDdBfbn0N3DkZFBv0aoH
-	 xlUX2+++9NlK6UztUFManDSSPobCztmAeiCsdwVQE9SsMGAyPbJ2+OqReyf2uH9ndn
-	 mneNAqcx9fwRmPSk3Ne8GQWQtQZgqRc0OizIGYvScjWNAy4BdQfroL6370K0GZsbpl
-	 vNBneqw2BSS6MByoagD84XiQS2LGa8ihTX1o+x4hZcZdwLNJJfQvejyZjg9GzcvRhy
-	 Ws4SgJvgRZMcA==
-Date: Wed, 9 Apr 2025 10:29:14 -0700
-From: Kees Cook <kees@kernel.org>
-To: Joel Granados <joel.granados@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Shuah Khan <shuah@kernel.org>, John Sperbeck <jsperbeck@google.com>,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 4/4] sysctl: Close test ctl_headers with a for loop
-Message-ID: <202504091029.BC5258A58@keescook>
-References: <20250321-jag-test_extra_val-v1-0-a01b3b17dc66@kernel.org>
- <20250321-jag-test_extra_val-v1-4-a01b3b17dc66@kernel.org>
+	b=XKfCNkxvxks330i4tmhVvAYNvT/3zmyJBu8PNd1asnopvitwFiQNTaa7FPQ0e+7Qf
+	 Pwrac4lcstH6fvQzID0xWRXscDYU+tfieiOAN2MxBQHx1WTR+jZEg1ArzOgabHEv5T
+	 S1bRVZyPqooXP6yzHjbz5awfGo9zWc3sromP+Ku0/X0tTCvwLSEOxRwC+49IMkID24
+	 cSnd5tZLhf27kNcXfchgs+cqK56ohz/so9FCQZJgcMpsVrIYEGmzwYJPBpzmYO6g6k
+	 PIXJq/Dd7JQC67JhyIxg5uOKGXGZRjeOoYLyKmzdpnjneFmKgnC2qa00Pi0TIFvg4T
+	 4s42utE4mNMyg==
+Date: Wed, 9 Apr 2025 19:30:19 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, richard@nod.at,
+	anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
+	linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Stephen Bates <sbates@raithlin.com>,
+	Dinh Nguyen <dinguyen@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v1] um: fix incompatible argument type in iounmap()
+Message-ID: <Z_auq9XEUxMwKVoN@cassiopeiae>
+References: <20250409061129.136788-1-fujita.tomonori@gmail.com>
+ <CANiq72mbci8kxEx5jrq=HVc6WKuJqq8NCLzNsjH1wFcJNoHm+w@mail.gmail.com>
+ <CAMuHMdWtgSjxeGYJVNzeWPOCd9nUWeKQnCtFQaROQ1o=r_-QwQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250321-jag-test_extra_val-v1-4-a01b3b17dc66@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMuHMdWtgSjxeGYJVNzeWPOCd9nUWeKQnCtFQaROQ1o=r_-QwQ@mail.gmail.com>
 
-On Fri, Mar 21, 2025 at 01:47:27PM +0100, Joel Granados wrote:
-> As more tests are added, the exit function gets longer than it should
-> be. Condense the un-register calls into a for loop to make it easier to
-> add/remove tests.
+On Wed, Apr 09, 2025 at 07:07:56PM +0200, Geert Uytterhoeven wrote:
+> Hi Miguel,
 > 
-> Signed-off-by: Joel Granados <joel.granados@kernel.org>
+> CC arnd
+> 
+> On Wed, 9 Apr 2025 at 16:48, Miguel Ojeda
+> <miguel.ojeda.sandonis@gmail.com> wrote:
+> > On Wed, Apr 9, 2025 at 8:16 AM FUJITA Tomonori
+> > <fujita.tomonori@gmail.com> wrote:
+> > >
+> > > Align iounmap() signature with other architectures.
+> >
+> > Most indeed have `volatile`, but nios2 and m68k don't -- Cc'ing them
+> > just in case.
+> 
+> Indeed. Apparently the volatile keyword has not always been there...
+> Why does iounmap() need the volatile keyword?
+> Why does pci_iounmap() not have the volatile keyword?
 
-Much cleaner too. :)
+I think none of the functions within rust/helpers/io.c need volatile, since they
+just defer to the corresponding C function / macro.
 
-Reviewed-by: Kees Cook <kees@kernel.org>
+This probably has been a copy/paste mistake of the function signatures and
+should be removed instead.
 
--- 
-Kees Cook
+- Danilo
