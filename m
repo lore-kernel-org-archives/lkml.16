@@ -1,87 +1,124 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87FF9266590
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 15:20:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D3B425E816
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 15:21:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744212034; cv=none; b=UH1v0FqT58cmcspqytmLDeofjdkb5FnMm1qpfENCuTFkb4awuA1HQ3yNi8WVTuVln9m/TFSpgNZ2u50TgHzGT/n0yJrnWrVl9CiPFSOtI6HUejSsSFNhTeQtS/kkHy0S37fABsy82V95TW4je+jhlni8rGTeqzTTuvZAFjVnCkE=
+	t=1744212080; cv=none; b=i1V0IgwcXaRsgJb2FNwa2ZLW5Qp/I93hxSbALkuVSVLT3mytD0s7uAxBQ+dFhpJtDjSMwj6p/X96YndDX10X1j9ilFG3qCFeYiJIiZ2ORYk1mUIzs3sSt2CVjcyv8cEh6XSEzQoghcaH5sNWEpp0sA0VevrO0936TQlQaV4ElBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744212034; c=relaxed/simple;
-	bh=wvxh8lwoLsyUbbz4RwtGZ5qYbKVzbyQ1oKpLckjWKCo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J8CV5UPYUcYoqHRJv2UpUxSE83k1Rx2zkzK3m3Tv7I5eFcPOfVeSXNQcszL243NguFI4UzUgK2X7ixjF/DH8oj6PCdLpbhYfJARv8Om2eUCdoZLgE/X0FFDtewBt2NuWBvl40RW5jLrwnUdqAImzook9JPeieXP8xmo65bn1TeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=FK2pdF+r; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1744212080; c=relaxed/simple;
+	bh=lx7odDBD/mTsEfbf1AHvitwNgVwosuD3OtaLDPOOVWw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=F7HAhqQG+XzeRmTTDtAJESMv4DY8fqRurJJy9yk5llwUT9f2mppmOOPlfD3jatMpnuc1ZEMvtRt0fdOwG4OgdoFAdJX3J7l3OmQIsff6Hu5dD21Wd4JS8txbhaOteYH9BL4oyvkrZf3ZKqo+YJs/OCHy543cLlpxv4Yw3KBH6eU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SXhuzfa9; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FK2pdF+r"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=gshT9vClu0C9NalEwM3sCiZY65lnHDMp99yP0jkhTiE=; b=FK2pdF+rxcaCs98eDT57ylJ8lZ
-	NUXwUrO709u/Gp5I4I9QUWH8OhUrLIUJY4vHtlwPhLDtASqjxjiea4XIBiAJqCNB82BsvJrzxtptN
-	LAlQ9elOT5+GXXkYZVxmcWiND0FdyEX8+MXdl2Jko4YVpvPFQQZfcVqsBP+cLYWdxfuAO4EiFKlX7
-	fWrPEJQu4UYfDX2WTFLg3jKq+kwb7O9D/EwsQAUvKWZm6BCkVoN694p6SAh/AjE0ItTem9aFee+YM
-	mciCCAPhHIXpJq/iTO54UHf6ziJ7iUgUV/IpJmNj6+nrFWOd5vATp7XsqmXp8FSvb39jBDQ0o4j+r
-	Y4LRjXWQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u2XE1-00000008duw-205n;
-	Wed, 09 Apr 2025 15:20:25 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 167353003AF; Wed,  9 Apr 2025 17:20:25 +0200 (CEST)
-Date: Wed, 9 Apr 2025 17:20:25 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>, linux-mm@kvack.org,
-	Ingo Molnar <mingo@redhat.org>, Shuah Khan <shuah@kernel.org>
-Subject: Re: [PATCH v12 2/3] sched: Move task_mm_cid_work to mm work_struct
-Message-ID: <20250409152025.GK9833@noisy.programming.kicks-ass.net>
-References: <20250311062849.72083-1-gmonaco@redhat.com>
- <20250311062849.72083-3-gmonaco@redhat.com>
- <20250409140303.GA9833@noisy.programming.kicks-ass.net>
- <c0df7480-1c18-421f-9348-2d39b7bebb49@efficios.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SXhuzfa9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744212079; x=1775748079;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=lx7odDBD/mTsEfbf1AHvitwNgVwosuD3OtaLDPOOVWw=;
+  b=SXhuzfa9exU1JLYUZlzRkctuqHZGG+1qELMzEgOV/gneTbjvkLaXPv5M
+   7PUNVrK7gILLn6kOtzN+tPBM611718+uBttBdbHg7CONAvmkJHSHQD4iJ
+   u/UCk+6H2xHUnrTic0ByJi5I7WD/aaOLJHZxhozx4UnFUtPyA+pnUpzQv
+   EicAnspwT5mn1cVno90YBdZsAb/rtnJUK9+Lvr7YyJWFTYQXcYDKtjKgq
+   IMr748H7KdMYSWRUj9GOOYk94K8lIGgMoFjBFxbrIlOcTRQPVoD9QUDMP
+   yYklPaE59++ObAC4SAvj3ZAg2xxcwLTY4K8QzN5HJmYEd5TXtkmEQjvCK
+   A==;
+X-CSE-ConnectionGUID: P06DT5xbRASNn3zdBQkoUw==
+X-CSE-MsgGUID: rcnXo/yoRw2tJ28l9CUzvQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="68172370"
+X-IronPort-AV: E=Sophos;i="6.15,200,1739865600"; 
+   d="scan'208";a="68172370"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 08:21:17 -0700
+X-CSE-ConnectionGUID: ZYvmP3MBSQKhiF4G7tWKzA==
+X-CSE-MsgGUID: 71X2dg/gSYiErQY27BXhIw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,200,1739865600"; 
+   d="scan'208";a="159605562"
+Received: from sramkris-mobl1.amr.corp.intel.com (HELO [10.124.220.195]) ([10.124.220.195])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 08:21:17 -0700
+Message-ID: <9cbd7ada-9083-433d-afd7-ea3242068faf@intel.com>
+Date: Wed, 9 Apr 2025 08:21:14 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c0df7480-1c18-421f-9348-2d39b7bebb49@efficios.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v2][PATCH 4/5] x86/cpu: Move AMD erratum 1386 table over to
+ 'x86_cpu_id'
+To: Borislav Petkov <bp@alien8.de>, Jiri Slaby <jirislaby@kernel.org>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org, tglx@linutronix.de, kan.liang@linux.intel.com
+References: <20241213185127.F38B6EE9@davehans-spike.ostc.intel.com>
+ <20241213185132.07555E1D@davehans-spike.ostc.intel.com>
+ <de04dc00-f01d-4c27-a6f8-873398bf8d4a@kernel.org>
+ <20250409151817.GAZ_aPueHsozDBe0sZ@fat_crate.local>
+Content-Language: en-US
+From: Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250409151817.GAZ_aPueHsozDBe0sZ@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 09, 2025 at 10:15:42AM -0400, Mathieu Desnoyers wrote:
-> On 2025-04-09 10:03, Peter Zijlstra wrote:
-> > On Tue, Mar 11, 2025 at 07:28:45AM +0100, Gabriele Monaco wrote:
-> > > +static inline void rseq_preempt_from_tick(struct task_struct *t)
-> > > +{
-> > > +	u64 rtime = t->se.sum_exec_runtime - t->se.prev_sum_exec_runtime;
-> > > +
-> > > +	if (rtime > RSEQ_UNPREEMPTED_THRESHOLD)
-> > > +		rseq_preempt(t);
-> > > +}
-> > 
-> > This confused me.
-> > 
-> > The goal seems to be to tickle __rseq_handle_notify_resume() so it'll
-> > end up queueing that work thing. But why do we want to set PREEMPT_BIT
-> > here?
-> 
-> In that scenario, we trigger (from tick) the fact that we may recompact the
-> mm_cid, and thus need to update the rseq mm_cid field before returning to
-> userspace.
-> 
-> Changing the value of the mm_cid field while userspace is within a rseq
-> critical section should abort the critical section, because the rseq
-> critical section should be able to expect the mm_cid to be invariant
-> for the whole c.s..
+On 4/9/25 08:18, Borislav Petkov wrote:
+> On Wed, Apr 09, 2025 at 01:13:53PM +0200, Jiri Slaby wrote:
+>> If I am to tell, the {} is needed, otherwise you touch the array OOB (at
+>> least with the "m->flags & X86_CPU_ID_FLAG_ENTRY_VALID" test -- if the bit
+>> is set in the memory, then much more than that...).
+> Send a patch pls.
 
-But, if we run that compaction in a worker, what guarantees the
-compaction is done and mm_cid is stable, but the time this task returns
-to userspace again?
+I'm compiling this as we speak:
+
+> https://git.kernel.org/pub/scm/linux/kernel/git/daveh/devel.git/commit/?h=testme&id=d41cad0e49200c1d812daa8a40600405888b666f
+
+I'll throw it in x86/urgent in a bit.
