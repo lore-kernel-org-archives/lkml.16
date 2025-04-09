@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D48F2144CE
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 20:30:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65F141E47B7
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 20:30:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744230606; cv=none; b=U6OK4t566N1vgxERohQ401baa/xO4oqV8c4Bz45KiuyfZxt/VnqFXlrSyT8XqtGBbWPKcZg9FQxhZ9aLV0NcH0jRuRjtJLraoIhBN5cn7mk5DsFPKTpMOX8VgdNaTrRSkJlkX6DIxcVgQ9TUYJi0imXd8hraCOefBSCVrO6Ztjg=
+	t=1744230607; cv=none; b=edstIdSoQ8kK0iK/MovJ7uGMgUpW8hEvsHVb8wTFs1pZF6lrEWk5eJRsli8e5oqBIV2djkmg8+QDKMnxRULI6hFmB/JhS6Uus1pZpv6s/bkbJjY9bVoKh6tbeeKGek1TQ63stP+HPOzJAsvMhp6VS45mPf5BF4I7uui4cG867LU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744230606; c=relaxed/simple;
-	bh=RftBqIIl8lR6WHu6LqWA1bNchIhsxk7EQktxcdo8gD8=;
+	s=arc-20240116; t=1744230607; c=relaxed/simple;
+	bh=pSeoDTBd1OH7UwJWFmo3t2mqxBTXN7ALeSJ4YNVPHx0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fVr5i3b0TwTIyx5s1SzdxC5vLEerzJC0IVPo6pO9wZa5JQtm7qRHcdv6QZpu8Pq2KEbfX/Wt0xwikU36Sna/vpdX1bu/xro5lxq1g0bUFUCI80TAyEUShel4T5tOxTcKruccGMmwZEa+FXt61p3/DZhzucnMyuZR8f3dThzNWmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=euX+sC9/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=YUvPypP0Q9qGUWNs1TqDausjxQoxCsjK380niCfPPJ1+AH9DPLx3W8ovMENwSicdzSxIJr8JAgH0/tWI+OHKktPdUmbT5c10u5nuDW/NsccnQHdnM4ctEUuSZj8hkRMHziUj0G/pqvYLUxfreIy/MgLdgvBkd4WsWQZfUn0Jay0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FLdasfWZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="euX+sC9/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 373F0C4CEE8;
-	Wed,  9 Apr 2025 20:30:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FLdasfWZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 017EFC4CEE9;
+	Wed,  9 Apr 2025 20:30:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744230604;
-	bh=RftBqIIl8lR6WHu6LqWA1bNchIhsxk7EQktxcdo8gD8=;
+	s=k20201202; t=1744230607;
+	bh=pSeoDTBd1OH7UwJWFmo3t2mqxBTXN7ALeSJ4YNVPHx0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=euX+sC9/Crwt4mi3qBvdi0MlyXHpm9PSSAWcNft6fe3CFnrh4slXgG3TjHvrMQLAY
-	 I97IJCGUnP62aNhzqsqf+H2tUd7zSaQ3X6ZG2cHLrtIzR5cfl0k+4H3LEJQ3Up5Xa7
-	 Wp3AfdBnPjVuDWX5mh/VIWiZ14uvHMfOFyvbuhHut+sjGvRE2pMFj0uQwQpfdPofPf
-	 TNxlBI1gfwckqy/+lU8V8yH26H4e65CGvEcxg/RRdF0pEXtnXf2FijG6SFRZpwANNX
-	 cAcRjT41WSmdZSyyxnsycfySpB+76TxXSJq+iq2Xtv3NeRVtyn9pSBZ7QMZy/Ipls5
-	 twC+B2SzaFF/g==
+	b=FLdasfWZEl6nXuc6VJa8jCpLdKHoHEgdfJhZBlp1TL/2IFfY4pkY54CdY3L/S72iM
+	 qghBNTyI9yTn2+CEdd/gcwywtEVQsESPGYGWrhKKQLai0HIRiCU3WyzR/zDZuCIL2R
+	 Aq79xk3f8F51rC6vMhADvPfSE9huAN3fu1uP3UIP0VAyhzszRkh/hmmmj19kKReY6U
+	 vPFp8jtZvhBMIiLZNCkE4DFWtMLM9kMdD7T2b/EvCFiBqPc5sANw08K80L1O+WkOXm
+	 A1mtdWGMFrO4iJyzoQ7HJ1MH3Nqs+jUBN+T0NYwVgfjlUOgsBuQGVcDWQaHqxEljo9
+	 IthLB3uoKvm6g==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Juergen Gross <jgross@suse.com>,
@@ -37,9 +37,9 @@ Cc: Juergen Gross <jgross@suse.com>,
 	Borislav Petkov <bp@alien8.de>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 17/20] x86/msr: Rename 'rdmsrl_amd_safe()' to 'rdmsrq_amd_safe()'
-Date: Wed,  9 Apr 2025 22:29:04 +0200
-Message-ID: <20250409202907.3419480-18-mingo@kernel.org>
+Subject: [PATCH 18/20] x86/msr: Rename 'wrmsrl_amd_safe()' to 'wrmsrq_amd_safe()'
+Date: Wed,  9 Apr 2025 22:29:05 +0200
+Message-ID: <20250409202907.3419480-19-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250409202907.3419480-1-mingo@kernel.org>
 References: <20250409202907.3419480-1-mingo@kernel.org>
@@ -62,27 +62,27 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index 8937923c9f81..0aefa41f1209 100644
+index 0aefa41f1209..0bbe79862aa6 100644
 --- a/arch/x86/kernel/cpu/amd.c
 +++ b/arch/x86/kernel/cpu/amd.c
-@@ -31,7 +31,7 @@
+@@ -49,7 +49,7 @@ static inline int rdmsrq_amd_safe(unsigned msr, u64 *p)
+ 	return err;
+ }
  
- u16 invlpgb_count_max __ro_after_init;
- 
--static inline int rdmsrl_amd_safe(unsigned msr, u64 *p)
-+static inline int rdmsrq_amd_safe(unsigned msr, u64 *p)
+-static inline int wrmsrl_amd_safe(unsigned msr, u64 val)
++static inline int wrmsrq_amd_safe(unsigned msr, u64 val)
  {
  	u32 gprs[8] = { 0 };
- 	int err;
-@@ -636,7 +636,7 @@ static void init_amd_k8(struct cpuinfo_x86 *c)
- 	 */
- 	if (c->x86_model < 0x14 && cpu_has(c, X86_FEATURE_LAHF_LM) && !cpu_has(c, X86_FEATURE_HYPERVISOR)) {
+ 
+@@ -638,7 +638,7 @@ static void init_amd_k8(struct cpuinfo_x86 *c)
  		clear_cpu_cap(c, X86_FEATURE_LAHF_LM);
--		if (!rdmsrl_amd_safe(0xc001100d, &value)) {
-+		if (!rdmsrq_amd_safe(0xc001100d, &value)) {
+ 		if (!rdmsrq_amd_safe(0xc001100d, &value)) {
  			value &= ~BIT_64(32);
- 			wrmsrl_amd_safe(0xc001100d, value);
+-			wrmsrl_amd_safe(0xc001100d, value);
++			wrmsrq_amd_safe(0xc001100d, value);
  		}
+ 	}
+ 
 -- 
 2.45.2
 
