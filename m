@@ -1,66 +1,68 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37F532594
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 09:18:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDB2E1DF749
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 09:18:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744190302; cv=none; b=TnrDLiyEni1LQj3mgIAGdYZFoROTRwrK21469JEJoWbv/cj9ctejQn5wbczzOmfNlndQJ0/73oM2Axv3P46RN/BBiUn4kNa+BbVZnGBM47e7ofVelObZZLTbxv5P5mrAAEhV0N5nAEAo1EB6yM0F1MTRP9CzyfjqutCiBwsjYG0=
+	t=1744190303; cv=none; b=u5b9ixmqgcHUqO2toX6BqNd7HiSfisq1Rv3We1ANdzJoc0PVgPzG2qLeZiFrX7ui16adJe9HgA4IAem3Vndpvc6UFO49UgwxkO0aU9XdMjqPnhU1LEE43yA9jNr2mzfKADGGiHZhMfxCWIxohzMHCgOGe3mWY8+tNx+5Rz7lmII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744190302; c=relaxed/simple;
-	bh=5nV6AaMR5RiEk2x2tAdJqgZhq7kkosJGZFIQ1iElUBk=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=FZk4EoZ/r5FnMSxamDE+zuL3QB+N6TEydfcQElsHbPSxSm8Nz2wwTkiBtd7R7C4/MfMhc+Blor0+Os+Gb1xJ7EjWYyy+CQV/0ij+3EmKGCqroPi3CEoFmpijbMIKjjoNGqZRldgzHfCcl/kqFB4pGvlEcixPMCRB2mlApPRVku4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=wf58xGtL; arc=none smtp.client-ip=209.85.221.46
+	s=arc-20240116; t=1744190303; c=relaxed/simple;
+	bh=VGmVlLv/g0NSChA5cTCx5HI2+YgjvT8aXwQeEVYqWkw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=lXmufX9g0SREfiVlZ+QZxEvDoqhKl1EIVGe1Xtj107VA9eH1Bu8QM0je/OpdSI047kXQzo8XEoMDFz8RSv77Reg6drt+sqgCNMbDYJizSN4cA1cUGVaPpXsrS7Gt8fpEtHQwz2jE1lrLxfe6q3H7QVbrxedJs8jQCunJTmGehKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=yFcxRibb; arc=none smtp.client-ip=209.85.221.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="wf58xGtL"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39c1ef4acf2so3975448f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 02:18:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="yFcxRibb"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-39d83782ef6so292749f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 02:18:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744190298; x=1744795098; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CjbFshPOLZ36u3rr8owbx1Ylrac5EPr6guv06MB6egA=;
-        b=wf58xGtLznY+D2RpaH6NOgepQWhWUsQytUlbLI6dPNOiz0kDWeDYr8JAXDPepIPdCE
-         IUjS1le0BG6lTdCsNKwfKQxXLwomk+khUm2WFvELl6pS7sEQqQryqBoLWHzS1Wf6sXQL
-         kQxQ72ONGbF2vV6sLNv+Ipb47LcY9wgcC4rWK1Q/Zlqvyrhe9gPZATSpr+YR/OLARM6g
-         hdqGwEzyncLkjxTWWBd9U/gP3LmKLYNgkhGdHBspkN+V95hDPW3K+2JBIC3qDo6nNDNY
-         Lt3WMF0YwaUapqQrM/2qICijmzZFxbEsAJM/A9A2s1mxMQzLxAAY+DQHfRObvBFG07qg
-         kgAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744190298; x=1744795098;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744190300; x=1744795100; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=CjbFshPOLZ36u3rr8owbx1Ylrac5EPr6guv06MB6egA=;
-        b=ponGIlV4XhO1vmm8gkIxA7uTJyo4vXL6SVCuFDui3D1tgpt8PsfjazM7QBoEakCCqj
-         EJCw5EysUtkmpfBdDr1e9cF6sVGQr61s4C8hSDHcPXd90Z0SUFEs1Tho0vQ2/4bYCKgx
-         qPlWbvH3a74gVTREtCt8zaxMM5Vv+W0OWBjkl4AanTYn0uJo3GS/N8K+PbG9hwlrqNIf
-         MsBBT6f+h0TvDR3LdnRPODAFHJRX6beEBLCF1zTFaMgAk29KYqoKL1Q26czEgQxzO2IG
-         WODAAW30qRrZjHe80vUNciAv8YLLaF5mpn/igepNbYAqOjjPw7dzInrUDYUcNYScEOIA
-         /h3w==
-X-Forwarded-Encrypted: i=1; AJvYcCVBI4iSzHjTFDMWQH8+q/l90u4B2QBAIbtVyTYOie1wpDeCSaN8SVW1MqwNswRhM8QxC6PK47EeRaOsmJM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZxnDsbYc+U2stBksRSdKO8VNUgaykPWd/qFOr1PPp6p+eNQB3
-	FXAWKObjIQlTYfQGdNJJPXECnEb92wCeGSUatkzp8/uezaHsVuzCr5WTq1S0lqM=
-X-Gm-Gg: ASbGncu8cny5XpIzZ/k6TOdhe7jVNWpqLGIZdVs4qC64L0gwUWqrisGaG+AQoq6j3HN
-	rbPsSYleqvDdj7MRjFFyVl2ituIdgRUR9Y/C0U2UWYdE8Y6BhqHc8BSHWkjeo10Dy3W1jddDx+Z
-	YDNabJS4G+yrkXXQ6kJ+AgJBXZLCB21lDDkaFfkL/6tlWiY7Ywm0wd+DQM59SZg/m3TU4dxHSjV
-	MLZmezrMbZ3T+2XipIK68pbl/RPCDsE+gQl1PcUOTDpMDW9svVT9BbuuLSlUX38hLp9MMYqGhlh
-	yRFXTaWmH8YMvz9Zp2YO23lAjxqND8Zg6O52DfvlFeXey8w75J5Q0eKikQg8tRV6MC8T4JYNiPl
-	j0GfnV3tDqmz/e1iGhc+91I20G2UB
-X-Google-Smtp-Source: AGHT+IHi23vmDgLwMyyQpTHJTKR3Z/3V+/no4ujLL3UXjNQtJYrM6pTheiHFqvmDzcGBZi4KvMNiRA==
-X-Received: by 2002:a05:6000:2ab:b0:39c:13fa:7b9 with SMTP id ffacd0b85a97d-39d87a64601mr2058783f8f.0.1744190298493;
-        Wed, 09 Apr 2025 02:18:18 -0700 (PDT)
+        bh=uNsJvlRDFjThPSOtGOteiq+PCHwiQFN7KKK0wuA2YaI=;
+        b=yFcxRibbiRPLTEKr8P7PzYqJSta1PzmE/3EvV9ZUgMQNN55yg9RyIDzfekoyR8jiNh
+         E4ePOnN7eKcw0GoC/yLyioGTzKLa29DsZeFarpYCRt1bJdLG929RQA7Av8VOpV/Q04/A
+         mmvWPBE0iWgTRIjdNgLGhZ26S784FGqaZVCoZdyjInqF1KXhl7qGKhJLCKILy/Ae+Fh4
+         c94gFfvpwcKGyo1XaSE0azu0PzxU3Qmu4hYjntjhdpkLIsrmq06hC9/yNKsGBsgd4fpd
+         cilVfRWZF7WTlwr4g4LV11gbg6fTfyxodXFNufgsIj2jIvEP4SZA+YbUcrEaQyykc8dC
+         tLAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744190300; x=1744795100;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uNsJvlRDFjThPSOtGOteiq+PCHwiQFN7KKK0wuA2YaI=;
+        b=Wqwkkajoo+U+4tR94vvNVZZwH7HbW48f8ITbvwVO+L14xd0JJg12nrStTukXbIDP2l
+         /8Mc5cSzTdY/E8J/nk6AJCq9tYcZ/eIGLAyffBgogZZpft4c7qDaSgFoYqNOuQoyDs+9
+         nrMugryH+Sa9I9OGlaJ0sa9Qj3T0hhPrlkppqg26TMQl4Fdv9UZLFKE3YtASv+O2OLEB
+         otZzehPYwOqqKrbmIA+rCStnbS00YQArrxRiPTPc4bum+fNqy/kjYgGPggiLo6dIc+pc
+         nNhkfD29bp8NfSIxI9XMF3VtveIE3aZEwwgMrzYnZm83GQMG2c+lZbYHvBEmhj63sADa
+         iPEg==
+X-Forwarded-Encrypted: i=1; AJvYcCX/qaa6oSTG5Rt0iTlIrC4HDWy+NcxpqFMUGfbnv3Ld2IPXJYF9lYfwXIcPhMBR0e1Gzr2jufd2XsneVhc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWc4mlMdREuWzIp8RVRptwVDVQ4fNUgzd7/MEO1SWxR0ITeNXc
+	8/U5xbehSkU4YYipylEY4JmghqBt0/bHUAvI3mwefwC5XXzGIszroc+UEQT71YFDU/x9F75c7F2
+	Z
+X-Gm-Gg: ASbGnctTH5vvZpTTg76hdxbzLpAjmbAG1/18RLDEdjfRN4udllcUrydqmu2EM2LqGsa
+	rhYHVt+nrSI8s6BOP7two54NnEEiAj5W8VuEVKzxopHjITBEn0bZGinfqVjiOP6v152AgL1ie8b
+	32SZaEfdgIT3d76i8CxlyS91tVtxDNuyUux9eNYSLUFfA8kTQrySU8jwkMPdZUneUqmtFeSpEVI
+	bLoIN7syw57rsbs/CmKMjDeRUo9NwIgrr22Gt3qTHSTvodKCaQsD0YKbdpzTrbXlNXhPY14tFW6
+	qGT6Rv8Ev5MkVSzqYkA1o0DCy6fN1Yp6zbFDCKOPGOzDnM04SCY9DQfw49S1azYzOnSeNRuwNX4
+	wWL6ii4KAUtoHwKZDWA==
+X-Google-Smtp-Source: AGHT+IFT9E4x39vToBiKUhyXzFBNHuX1M+gngkWvQuAa7nVGL2fuwhZZLclr4C7DEzRMZaVvnYJ7CA==
+X-Received: by 2002:a5d:5f93:0:b0:38d:e0a9:7e5e with SMTP id ffacd0b85a97d-39d820a3dc6mr4896719f8f.6.1744190299971;
+        Wed, 09 Apr 2025 02:18:19 -0700 (PDT)
 Received: from [192.168.0.2] (host-87-15-70-119.retail.telecomitalia.it. [87.15.70.119])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d8938b7afsm1069482f8f.58.2025.04.09.02.18.17
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d8938b7afsm1069482f8f.58.2025.04.09.02.18.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 02:18:17 -0700 (PDT)
+        Wed, 09 Apr 2025 02:18:19 -0700 (PDT)
 From: Angelo Dureghello <adureghello@baylibre.com>
 X-Google-Original-From: Angelo Dureghello <adureghello@baylibre.org>
-Subject: [PATCH v2 0/2] iio: dac: adi-axi-dac: fix for wrong bus read
-Date: Wed, 09 Apr 2025 11:16:53 +0200
-Message-Id: <20250409-ad3552r-fix-bus-read-v2-0-34d3b21e8ca0@baylibre.com>
+Date: Wed, 09 Apr 2025 11:16:54 +0200
+Subject: [PATCH v2 1/2] iio: dac: adi-axi-dac: fix bus read
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,11 +71,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAU79mcC/4WNQQ6CMBBFr0Jm7ZgyWCSuvIdh0dJBJlEgUyUS0
- rtbuYDL93/++xtEVuEIl2ID5UWiTGMGOhTQDW68M0rIDGTImpNp0IXKWlLs5YP+HVHZBSwtUU3
- U+0Ae8nRWzv2uvbWZB4mvSdf9ZSl/6R/hUqLB6uxCqGvH3jRX79aHeOVjNz2hTSl9ATUzdSS7A
- AAA
-X-Change-ID: 20250408-ad3552r-fix-bus-read-1522622fbd2b
+Message-Id: <20250409-ad3552r-fix-bus-read-v2-1-34d3b21e8ca0@baylibre.com>
+References: <20250409-ad3552r-fix-bus-read-v2-0-34d3b21e8ca0@baylibre.com>
+In-Reply-To: <20250409-ad3552r-fix-bus-read-v2-0-34d3b21e8ca0@baylibre.com>
 To: Nuno Sa <nuno.sa@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, 
  Michael Hennerich <Michael.Hennerich@analog.com>, 
  Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
@@ -82,45 +82,58 @@ Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
  Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
  Angelo Dureghello <adureghello@baylibre.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1221;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1333;
  i=adureghello@baylibre.com; h=from:subject:message-id;
- bh=5nV6AaMR5RiEk2x2tAdJqgZhq7kkosJGZFIQ1iElUBk=;
- b=owGbwMvMwCXGf3bn1e/btlsznlZLYkj/Zs3rumrZ9T3G1veYjs26qes822pX5bzrd2ce2/Hb/
- dezLxlG5R2lLAxiXAyyYoosdYkRJqG3Q6WUFzDOhpnDygQyhIGLUwAm8qqB4X+yjO7yputSTdmm
- Cc8vfxXxUUj71vXqXtr6DZf3WCxeV7CE4Z/C3D7F5FXHnJKd9wf3Ltg916RHnKfxadj0Pj8lo60
- CBowA
+ bh=9pHPKsKzptvjYiQOA8UzTeuM77FIRRsobVc0fiDL1Ac=;
+ b=owGbwMvMwCXGf3bn1e/btlsznlZLYkj/Zs13fbkTy0wpduvtApn7d1hVtBbc/ivRrvDYkGF6y
+ cR+qaU7O0pZGMS4GGTFFFnqEiNMQm+HSikvYJwNM4eVCWQIAxenAExknxbD/xAO1WMX3uZO9Da8
+ 08VTts92WebTEwul8oTa5724+2ZhWirDPwtvq6+bT9hWZ9pbXcxe03hY2f3bOTvFxftqDAXca2Y
+ 94QQA
 X-Developer-Key: i=adureghello@baylibre.com; a=openpgp;
  fpr=703CDFAD8B573EB00850E38366D1CB9419AF3953
 
-This patchset is intended to fix a random wrong chip ID read, or a
-scratchpad test mismatch, tests done in the ad3552r-hs driver probe. The 
-bus "read" operation must always check for busy flag before reading.
+From: Angelo Dureghello <adureghello@baylibre.com>
 
-First patch reorganizes a bit the busy-wait polling code, second patch
-fixes the wrong bus read occurence. 
+Fix bus read function.
 
-NOTE: due to ongoing changes in adi-axi-dac.c, this patch is intended to be
-applied after the linked "ramp generator" patch.
+Testing the driver, on a random basis, wrong reads was detected, mainly
+by a wrong DAC chip ID read at first boot.
+Before reading the expected value from the AXI regmap, need always to
+wait for busy flag to be cleared.
 
-Link: https://lore.kernel.org/linux-iio/20250408-wip-bl-ad3552r-fixes-v4-0-b33c0264bd78@baylibre.com
+Fixes: e61d7178429a ("iio: dac: adi-axi-dac: extend features")
 Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
 ---
-Changes in v2:
-- invert patch order, fix first.
-- Link to v1: https://lore.kernel.org/r/20250408-ad3552r-fix-bus-read-v1-0-37add66aeb08@baylibre.com
+ drivers/iio/dac/adi-axi-dac.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
----
-Angelo Dureghello (2):
-      iio: dac: adi-axi-dac: fix bus read
-      iio: dac: adi-axi-dac: use unique bus free check
+diff --git a/drivers/iio/dac/adi-axi-dac.c b/drivers/iio/dac/adi-axi-dac.c
+index 8ed5ad1fa24cef649056bc5f4ca80abbf28b9323..5ee077c58d7f9730aec8a9c9dff5b84108b3a47e 100644
+--- a/drivers/iio/dac/adi-axi-dac.c
++++ b/drivers/iio/dac/adi-axi-dac.c
+@@ -760,6 +760,7 @@ static int axi_dac_bus_reg_read(struct iio_backend *back, u32 reg, u32 *val,
+ {
+ 	struct axi_dac_state *st = iio_backend_get_priv(back);
+ 	int ret;
++	u32 ival;
+ 
+ 	guard(mutex)(&st->lock);
+ 
+@@ -772,6 +773,13 @@ static int axi_dac_bus_reg_read(struct iio_backend *back, u32 reg, u32 *val,
+ 	if (ret)
+ 		return ret;
+ 
++	ret = regmap_read_poll_timeout(st->regmap,
++				AXI_DAC_UI_STATUS_REG, ival,
++				FIELD_GET(AXI_DAC_UI_STATUS_IF_BUSY, ival) == 0,
++				10, 100 * KILO);
++	if (ret)
++		return ret;
++
+ 	return regmap_read(st->regmap, AXI_DAC_CUSTOM_RD_REG, val);
+ }
+ 
 
- drivers/iio/dac/adi-axi-dac.c | 40 +++++++++++++++++++++++++---------------
- 1 file changed, 25 insertions(+), 15 deletions(-)
----
-base-commit: 6fb85f14853ddde06d57030c753168402bf69cd9
-change-id: 20250408-ad3552r-fix-bus-read-1522622fbd2b
-
-Best regards,
 -- 
-Angelo Dureghello <adureghello@baylibre.com>
+2.49.0
 
