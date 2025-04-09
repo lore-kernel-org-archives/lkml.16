@@ -1,72 +1,99 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43595DDBC
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 00:51:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E708AD5E;
+	Wed,  9 Apr 2025 00:54:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744159867; cv=none; b=XZOo1FfD0mNMiEgt0zmiHR2gFvjXRAjERZvnw9gooWHhEHrI2U+Ui4LBhVjV0tTDyw7KmAL4lPDVAyONdN8cR0qE/moO29GFD2P4qsEoP2825I9seMbTjrW7hyD9UWpwmTrwzEaAnIZixm37epx9j3Jpb4InVpa8iAzP3QQojp8=
+	t=1744160054; cv=none; b=uDsbdzf5dKgKidC3bYiWI0I1h+Cs+539ivncXpXNadb+slUOPq8Mqsj0j91j1Q/RBef3PfqPcjmNx4mAVB2am+H23nMDDtuix1vrOVErGGkqNNxIbfmFoG3FWb7wEexOXi9gSO/odtHqP6uRnzSqKaohb9AXcor0ad7fBPpzj5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744159867; c=relaxed/simple;
-	bh=TydRVdPn+p6hylClZuMmzrQoXaa/p+EK3FiKnsrOQRM=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=eqW1nQ5VTRqiEJrgCk61BW7Kd/4k9jHWj4KrfotsvwrNcgYFgHOVFlK9Ph4kZyerwOUAN6nSjHgcexb68v13TWWQZ6wIx+J8hMHosRg/3IrdaIRaajYWJoqNrV0oy5q7p20/q5Czbo/1CVMlSVGtQJQZjQvzdibO+liDDhNXiA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3d43d1df18bso66443035ab.0
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 17:51:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744159863; x=1744764663;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pSzNwONIWh5y6FDtc3cWxp0nEsJS5BN4r4vz+IUgfpU=;
-        b=wSc6AIPdG0wlkzFoxYRTX8pSVNazYB2/BF7+P7U0oB3pL7UHVmtEv0+kGNJ9wSzNUC
-         OchhPmJdnshqq/Rkmm0CtVtVz2GkVjLyP+UJX2HKsmWmoYBkHSb2pp4AlaCzlB/ad/uO
-         kbTst85QHPGEHX1xxmMO66eJUvEmUMPig6uaGIF8ovyiFzEW92ZXYmvmoaIvYnkA80l0
-         Pg5DhpG5sQM36NPdQot07EmkEAE46dPH4Gap9Miw93wuCfT5sT9IRTHXHRP83c1d9ebN
-         d8fZBhRrkMIkYbGVBk7OQ12oHx6erBpsr3MTlqaQ5yeKLeY3sIsYgcsVWi3oYRkHQID8
-         pkPA==
-X-Forwarded-Encrypted: i=1; AJvYcCVsDUbADqOCYl3l28fMzSdu/5HdLURUopfihUjdTmrQpWj6OSG3jXPDfiXGNvRo+EkgCRDw9JBmFw7MxDM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFfL9r4O6kxhf3N7qi2lA3XEVV3mS2MrPVHx7fywGHDLftS3rY
-	NlF2oIo4CdcsBNTZzKqeb2t8GF37/auGGrr+NgJLC8a5Ku8hU37Rup/4iefKimy42T37HQpw2FO
-	dLvi9CEGp6HuhXsnwZaKi2NCHqEYS/1bi22107DOUsXNJ8WV8JEjchi8=
-X-Google-Smtp-Source: AGHT+IGP3SHGjP4CEscrYMBDEv2pt/DiAlII8XgEtwQLWd9ajzXsCEylkgmUCYsXFNDl6Ke3TjVsURm3qIa7TEqGyctboH+/nKuw
+	s=arc-20240116; t=1744160054; c=relaxed/simple;
+	bh=JfGlzv69zGEFl+qcZZ+KUNCb7tdC5fCLE2Jm5rMMsJM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=fw05a75/obWsWHMedbvtDeOVD8xiiNNp1rs0ssDTrZOJ5xm8Ou0bNn+ERPwPNZMsaOsW97FVkkVmHZKUhO3a55596TFfht/HNQcXppuVMwX/3XDmtoUFIrzsxm7WyMkSbMstoNy91rM+8FEc38EKE5IgYPRvrcTalE1wg0OeXQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=oz2NEWkq; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="oz2NEWkq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1744160049;
+	bh=oPaeGjMrA95apBWIScB3znZQ9syVg3xIAXQXCPMbO84=;
+	h=Date:From:To:Cc:Subject:From;
+	b=oz2NEWkqx7GG27bR2Rm1c/d6lgVO05lljh+T9sPxZz9Tt6j1vDu4zPE3phMoLOaoB
+	 F2qDb032fcvkSw7/VBEB3NDeMq/MwLfpYwUCxNSVe8fYPEor+Lc3LLY8ia298gr+IS
+	 LkpHwbqzoUOC14/ZQiA8WhtgRZJYypKRzdl/RSLuA5Jji4VTfsGy7xZ8+znGb9cxVE
+	 P2b8FcPq/AWN/jLvGKlZ5gar+msF/2IJWjLJCbGMROm8UJ0lBELMQ20OPS4mh3xsqn
+	 CqfGMsRHwDTVMRWt8lYLVxJ+VZj/0tJA2wc3fzOhSoR2HVcqQSDMfCH9Ci5erHjfPt
+	 /SwNDSYON3hyQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZXPbN5s44z4wby;
+	Wed,  9 Apr 2025 10:54:08 +1000 (AEST)
+Date: Wed, 9 Apr 2025 10:54:08 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Alex Deucher <alexdeucher@gmail.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>, Ingo Molnar
+ <mingo@kernel.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>
+Subject: linux-next: manual merge of the amdgpu tree with Linus' tree
+Message-ID: <20250409105408.6ca50fb5@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1529:b0:3d3:dece:3dab with SMTP id
- e9e14a558f8ab-3d776c8075dmr9286035ab.1.1744159863337; Tue, 08 Apr 2025
- 17:51:03 -0700 (PDT)
-Date: Tue, 08 Apr 2025 17:51:03 -0700
-In-Reply-To: <tencent_8AC8BB0933599E021BCA4B351B8B252FBA08@qq.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67f5c477.050a0220.258fea.0004.GAE@google.com>
-Subject: Re: [syzbot] [wireless?] general protection fault in cfg80211_mlme_deauth
-From: syzbot <syzbot+00778a9a557a2a5e1a33@syzkaller.appspotmail.com>
-To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/uNRuILqIDPQ6VGZ1yoWVk/l";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Hello,
+--Sig_/uNRuILqIDPQ6VGZ1yoWVk/l
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-unregister_netdevice: waiting for DEV to become free
+Hi all,
 
-unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
+Today's linux-next merge of the amdgpu tree got a conflict in:
 
+  drivers/gpu/drm/amd/amdgpu/amdgpu_mes.c
 
-Tested on:
+between commit:
 
-commit:         a2458824 Merge tag 'linux_kselftest-kunit-6.15-rc2' of..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1269b74c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=eecd7902e39d7933
-dashboard link: https://syzkaller.appspot.com/bug?extid=00778a9a557a2a5e1a33
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=1549b74c580000
+  8fa7292fee5c ("treewide: Switch/rename to timer_delete[_sync]()")
 
+from Linus' tree and commit:
+
+  cb17fff3a254 ("drm/amdgpu/mes: remove unused functions")
+
+from the amdgpu tree.
+
+I fixed it up (I just used the latter since it removed the lines that
+the former updated) and can carry the fix as necessary. This is now fixed
+as far as linux-next is concerned, but any non trivial conflicts should
+be mentioned to your upstream maintainer when your tree is submitted for
+merging.  You may also want to consider cooperating with the maintainer
+of the conflicting tree to minimise any particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/uNRuILqIDPQ6VGZ1yoWVk/l
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmf1xTAACgkQAVBC80lX
+0Gyilgf8Cksfjt1Tn8yFZjKzicWTQSOm9wVRs2SB/X0hoYhSf1Plxnw7K6f1Ggy2
+QAz9pIeEQ7me/NMSwhHvi6Evv2VjKu539wQL7sbMRp5YtDYE/Ag+uvFo3/mzWmos
+JB1+ew/5P6Fj74O1grFHVA6m8OcDEkN0DrxqIE2sRaYcGc6wXsQI3njph90Ubf9b
+tlfBJNQBEa29rYe4PNLomNBVNpTg22hXkHaTRX3JXcNQq2YDWK926S9DZc8ipMKh
+4xQXT/po4pc8ZOEdjDKmHQe05zq79GFFmc6tJ26wx+LDxIWGZLytrn42RbLqlRU4
+sucBk1bkSQ1qdeap/XV5dgswuzRlvg==
+=sdzi
+-----END PGP SIGNATURE-----
+
+--Sig_/uNRuILqIDPQ6VGZ1yoWVk/l--
