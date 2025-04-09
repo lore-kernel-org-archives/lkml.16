@@ -1,196 +1,166 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 859F2250EC;
-	Wed,  9 Apr 2025 15:12:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCC841482F5;
+	Wed,  9 Apr 2025 15:12:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744211565; cv=none; b=o4MCXBdLU+AlLuyUXC5yNFaXAysY5o4w1tguCVgGnHPFD464e9gGUsiaEW/bhn558Vb0Wu7EG+3fx00ZSnyPY+dIAeI6zDw0JMay7LaSuV2gVvGSvsHOfve4EGhAPfYKGCB2PFiOykQyTe7pE6A3hpwToySdNalmX/mVP89ILMw=
+	t=1744211566; cv=none; b=ZiG/rimj/lz9rjXYWqpA/plMfHqPAclvyemrdySfMnvfPj8raxv5qEWs+rTYuQKI+1bxP8bN5FXUB1tQYgFu4axqECFBLiXn1eZLxitq0xCzV2+R7xzAtWtJgL82mKVaYsVlUPLaDz6ygZtWS55RZPulZGtkeb2Ujdw7QRXw59Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744211565; c=relaxed/simple;
-	bh=9140GaBgy6fgn/QI0/uafqxMKXjHWrEbDczt/LhuP1g=;
+	s=arc-20240116; t=1744211566; c=relaxed/simple;
+	bh=vu2exUFThJwbvoVqWPV9NMmJKB0SNuLELwxV1uAi9N0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u90sZhNnLZsZuea6wO2wUt5HtRyzBegapqZDNzIfUS42AFrEZEeajmsbTKvCyUZdwk6UD+iIjAUa52u9xCar8XjBxsAgA/Rm5XlXzp3vHB4GgyPZtq4T4mkLYDLgp4OdTZuYnTU957WQGr4OwIEmf8wwm+EerGurm1f5HALA3EA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jYDdJ7MF; arc=none smtp.client-ip=209.85.219.174
+	 To:Cc:Content-Type; b=OgqUFdQbBRl2M36iTy5sKYD6z/AxpEAbppYjuGojWALYuYEiTIOI6iKZba3SwsIBUCDk7sUmJx8JKhbimCNYg+qB2dyJ9eljvs+cbH4YMxYXgF7c0QFEyc4RXCYLHRPm52gN2NdTt0mul9hMCsMNMKczRnoOhWookXg24ABOkqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RTdF9M8r; arc=none smtp.client-ip=209.85.210.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jYDdJ7MF"
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e6deb3eb7dbso5696911276.0;
-        Wed, 09 Apr 2025 08:12:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RTdF9M8r"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-7373aa99e2cso636611b3a.0;
+        Wed, 09 Apr 2025 08:12:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744211562; x=1744816362; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744211564; x=1744816364; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=U3t5xZS49XjT5IHZqDdWvkf/l+hWK8lS0z1Xx2S6w7M=;
-        b=jYDdJ7MFtwOZ2z7qdHtvoLabAgYseclf3xAxtw11CpTjC8W80W42Nm87rGBOPx9uDW
-         FE8iodRtsQS2AIJ47WBL+MyIiMYq4mgtg5Fmy768ncLh6ERIKbh4Lug7KHaVKwPCav48
-         N0v25rnLqfI8Ks+73TCSb6qLJDV9aHdII89qey3RyZjJaKGeH2TzQ7eE9ItjUlCLToKq
-         xTNv6uGah2Fix9dKf7/c0INUx9oGlKmUOVniokEmE9sjltZDxDYdbysrDfJ5KWGrun3P
-         kvnVXLy6BcdbJ1oxxL17vYWTCrOxRrS2ksRYfySlxaNDCDe6ReHIQOooh9hP4KRrBG1j
-         JZZA==
+        bh=spXIMkoF1Z09BVLFL9QdSknj0ntJh/yAq4L0FidyZ90=;
+        b=RTdF9M8rqk8EtRykJWwbrhflSXRWPCVk/F0iHzSuJXsoVk2CYUJE2pP8A4uXlbdb+h
+         qUqAWvc4Z1DDBx4obYB3nNwS3cSAIM8Kd+BZHaJKVxhCfPXs6glY0tUh8oDU4LkVsX7L
+         sORUb9Vrttkc9xhHg/KMO2vpVJLBVZwS58pAsQAMTAyERQLRYf/+2wuIXBUiyWZqDjb6
+         N4P4h/tQ+nvET9V6jF7mI/6lstYWLTOJyKXJ9rxY1seQm2h3KpwDf5ASeE0hgGq/xfkU
+         BM0cOZmUQgyrDFJUGJd0asRry7+E40Y8FpMcj/S3BDrKxa22Cmg+3VW/1SS159IfOYlQ
+         yEgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744211562; x=1744816362;
+        d=1e100.net; s=20230601; t=1744211564; x=1744816364;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=U3t5xZS49XjT5IHZqDdWvkf/l+hWK8lS0z1Xx2S6w7M=;
-        b=MXb4CrFiSZJRUMoq/iqUOVqKeEGE7Js3AUJZXpCZJpXiMTUfO2HtNGkcb1Y3D3qKRU
-         5xBwjoJopwDhvw7+dNxvAWnlJG7z0RXWldHqTD8jFko3WsgO0UvYFfpsDV8IMcvXVK1M
-         QdywnbQRKpKotUnuxEos8ZLRkmsLPVOVEW8hb+Gq6b1SsgF9V8eSKqUTMhsnabKfLZ+l
-         iwCy7NfRENb1eUEn1l/JapHP2YKMowcM8z9/JIGxdAKMtZrNhx1GdfK+Rz2GEqOX65h5
-         ZwbSiiC6MqeO2+bGxaLfX3Ng0CFSQlvnbqeZsirqHyfuYmtbS+f8PHZcRD1fbPAru9I3
-         xb4A==
-X-Forwarded-Encrypted: i=1; AJvYcCU5iEYeRxas3a5LOUMnbG/5AuBuHDt11mUlLL33WeYxUH0kQRsARKOOsnTvxTnDpsbG7Yf/6URupryAHsC6@vger.kernel.org, AJvYcCUDcK5SnogB2sLkb5FmF1aXWGns1gRAGIqD/RwPmF7+vSL2fguAw+EUjCCXhJx12NGx2pKyDDGlNnLt@vger.kernel.org
-X-Gm-Message-State: AOJu0YxO9PkSqfQ+xu5seULa0ZHeRqTH/up0B3eb1lNDu360AaRCwS/k
-	LkUgF8sIH74kav7FVro6j2GANOp0YQIiFmvWjmBB4oeX+jWmbGdb9fvTdM3nZqSJTqsXEOM4JRZ
-	HhqEVvsv/iOx1EeMEwYaoZHZg3QegEYSw
-X-Gm-Gg: ASbGnctAHNltKF5Fsaiw9gqLx7FZ1A/BHZ7QZ/7jHRNvhwCgvNGBrMXyNhGhzkhFqzZ
-	hIC3Tx93kdbCIIVmyMtaLF2IKHJ+Oitb7uZLSpkBwImcRSIfJe6BsDYSwvZtw3JLIu+Oyp+GXeu
-	OjJ22euoK9ut8igIh4PRxCbLk=
-X-Google-Smtp-Source: AGHT+IEtbvGJrrFXv25Gz57HIgc1gLvZRGhMj8AoGDVCzx3Fj69chrAsSUhsTsd9FbtyZvKBVg6n7dOfUO6WzMaeVGQ=
-X-Received: by 2002:a05:6902:490a:b0:e6d:f3ca:3e0b with SMTP id
- 3f1490d57ef6-e702eefaa45mr5087126276.5.1744211562312; Wed, 09 Apr 2025
- 08:12:42 -0700 (PDT)
+        bh=spXIMkoF1Z09BVLFL9QdSknj0ntJh/yAq4L0FidyZ90=;
+        b=uRoY8TqETWJEZU8KLRoZvRxoxrgobsY2FkyygOdELDmK9u/Fa+ZrugulDyzVtN8usN
+         5oktAp9WJNWPvw8mRWJeg7uP9iiXup2EwY83ISQpJU+JFjHyDiFChP7Gg6MAmA7MtYsm
+         JL7V8WtQAwtNAQ2iPS8V3Iqt2OKtHaVpE5GLhudiJQE9dc2EUGhl4Vww8VaX04SOtilD
+         Qe10k8wYWKlgd+mNe6+Of1W2EUgsTEW2MdqQkCO95S2hqkwxy1aEn/YbZTqsB1g90J99
+         ozinZ8dnyrUm8JhNGJkcHQBopNAdr+G1sTaNoUmdTUB7STq4AhYGuFOl+d0+vH+ihAXc
+         fswA==
+X-Forwarded-Encrypted: i=1; AJvYcCU+7ej9mnPvDUzD+qCpmvADmreGE1OMokwxYwVpNkToAvbPEi/5bQDeEYiUAG9V0m5NaO0sKszuASAlxyrMxujd@vger.kernel.org, AJvYcCUhanjA7ZZUp4oE4LykdBBpZ2uzF4Sj/S9KZtfPqyNHsZJGLh6CV0aiYclWuWM61i36j+WR5AAB8T0Z+uEc@vger.kernel.org, AJvYcCXMvNEgNybanVVp+Abk7jJ9Hes36/m5w/FBRZenqU8z0t9xgFN6owsezA/TAtorQqzKIQFMYJPm3rhkLeck@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCL2yAEaCGC/vkeKPOyn/6S02BBay8aggmjq02zEQeT5UrwxdT
+	ID3fXA+7ZLHJatXnFE/IjkEFmDfYdq4hIZj6ev80oa6Fgj7OMOQzWtbVu6FOwDMGuQcRc7vO9l6
+	HLJmiEiPkAQpG9H81S05ut/jfQtk=
+X-Gm-Gg: ASbGnctTp67n5n5eRWRKWU8D6Y/IQnEKAUjFhompe+BWWfXgJ6Fdpz8R8q5VECIKum3
+	8m065KPm76kNvq1N98pHSOw66T2N27sSkCHuWeMFcHoVTmNrWWdl3zxd1Kd8QZEECQt9WEV/hwg
+	wyXdMz82TYfKS8hlJyfovaMQ==
+X-Google-Smtp-Source: AGHT+IGmvjw/CZ0ahGJko3AXY/wq4QVFoHwj3QvuU8T+/npoxIO1lkE99naDDV8VaKBZcMlrX9YQHA07xRRq12EhXRk=
+X-Received: by 2002:a05:6a00:3c96:b0:730:8526:5db2 with SMTP id
+ d2e1a72fcca58-73bae54fb51mr1430135b3a.5.1744211563880; Wed, 09 Apr 2025
+ 08:12:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250408231823.826163-1-robertcnelson@gmail.com>
- <20250408231823.826163-2-robertcnelson@gmail.com> <CAOCHtYhFKO=LRN8qp-w+rkTGKJ8t-LnqgqbQW9P6CO3=EeuufA@mail.gmail.com>
- <20250409130918.d3cyzv3to65oktv2@vision>
-In-Reply-To: <20250409130918.d3cyzv3to65oktv2@vision>
-From: Robert Nelson <robertcnelson@gmail.com>
-Date: Wed, 9 Apr 2025 10:12:14 -0500
-X-Gm-Features: ATxdqUEC0KlsZO8TP_kymKqCuyolVUFgP7e-PUwC17eiA6gRnsKRAKv1w5DZHMo
-Message-ID: <CAOCHtYgpkBXZmZEDz6gUCO2x+WGA_paKHFHS-Br=ypo+AFrBmw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] arm64: dts: ti: Add k3-am62-pocketbeagle2
-To: Nishanth Menon <nm@ti.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, Andrew Davis <afd@ti.com>, Roger Quadros <rogerq@kernel.org>, 
-	Siddharth Vadapalli <s-vadapalli@ti.com>, Judith Mendez <jm@ti.com>, Andrei Aldea <a-aldea@ti.com>, 
-	Dhruva Gole <d-gole@ti.com>, Jason Kridner <jkridner@beagleboard.org>, 
-	Deepak Khatri <lorforlinux@beagleboard.org>, Ayush Singh <ayush@beagleboard.org>
+References: <20250409-topic-smem_dramc-v1-0-94d505cd5593@oss.qualcomm.com> <20250409-topic-smem_dramc-v1-3-94d505cd5593@oss.qualcomm.com>
+In-Reply-To: <20250409-topic-smem_dramc-v1-3-94d505cd5593@oss.qualcomm.com>
+From: Connor Abbott <cwabbott0@gmail.com>
+Date: Wed, 9 Apr 2025 11:12:31 -0400
+X-Gm-Features: ATxdqUHV6LVmuZ52LZQ7mUM3HFrIL30_gejAbDkXbhXaGiKJi8H-XzjJ57AVTyE
+Message-ID: <CACu1E7GMf0Mx2ZX_t76h+b1CPin49LGix7c5uvoWaJZC3dKyOw@mail.gmail.com>
+Subject: Re: [PATCH 3/4] drm/msm/a6xx: Get HBB dynamically, if available
+To: Konrad Dybcio <konradybcio@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Dmitry Baryshkov <lumag@kernel.org>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 9, 2025 at 8:09=E2=80=AFAM Nishanth Menon <nm@ti.com> wrote:
+On Wed, Apr 9, 2025 at 10:48=E2=80=AFAM Konrad Dybcio <konradybcio@kernel.o=
+rg> wrote:
 >
-> On 18:19-20250408, Robert Nelson wrote:
-> > On Tue, Apr 8, 2025 at 6:18=E2=80=AFPM Robert Nelson <robertcnelson@gma=
-il.com> wrote:
-> > >
-> > > BeagleBoard.org PocketBeagle 2 is an upgraded version of the popular
-> > > PocketBeagle.  It is based on Texas Instruments AM6232 or AM6254 SoC.
-> > > Its dual or quad A53 cores can provide higher performance than classi=
-c
-> > > PocketBeagle. The new design comes with pre-soldered headers, a 3-pin
-> > > JST-SH 1.00mm UART debug port, a USB-C port, Texas Instruments
-> > > MSPM0L1105 Cortex-M0+ MCU for ADC, 512MB RAM, and a LiPo Battery char=
-ger.
-> > >
-> > > https://www.beagleboard.org/boards/pocketbeagle-2
-> > > https://openbeagle.org/pocketbeagle/pocketbeagle-2
-> >
-> > dmesg:
-> >
-> > https://gist.github.com/RobertCNelson/c68c96a8a1dc6e4d39d8c48fc13ca1c1
-> >
+> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 >
+> The Highest Bank address Bit value can change based on memory type used.
 >
+> Attempt to retrieve it dynamically, and fall back to a reasonable
+> default (the one used prior to this change) on error.
 >
-> Any idea why we are crashing?
-> https://gist.github.com/RobertCNelson/c68c96a8a1dc6e4d39d8c48fc13ca1c1#fi=
-le-gistfile1-txt-L311
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> ---
+>  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 22 ++++++++++++++++------
+>  1 file changed, 16 insertions(+), 6 deletions(-)
 >
-> I don't see the same crash in beagleplay:
-> https://gist.github.com/nmenon/5709a8714d3ab31cac5c00b515d04752
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/=
+adreno/a6xx_gpu.c
+> index 06465bc2d0b4b128cddfcfcaf1fe4252632b6777..0cc397378c99db35315209d02=
+65ad9223e8b55c7 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/firmware/qcom/qcom_scm.h>
+>  #include <linux/pm_domain.h>
+>  #include <linux/soc/qcom/llcc-qcom.h>
+> +#include <linux/soc/qcom/smem.h>
+>
+>  #define GPU_PAS_ID 13
+>
+> @@ -669,17 +670,22 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu=
+ *gpu)
+>  static void a6xx_set_ubwc_config(struct msm_gpu *gpu)
+>  {
+>         struct adreno_gpu *adreno_gpu =3D to_adreno_gpu(gpu);
+> +       u32 hbb =3D qcom_smem_dram_get_hbb();
+> +       u32 ubwc_mode =3D adreno_gpu->ubwc_config.ubwc_swizzle & 1;
+> +       u32 level2_swizzling_dis =3D !(adreno_gpu->ubwc_config.ubwc_swizz=
+le & 2);
+> +       u32 hbb_hi, hbb_lo;
+> +
+>         /*
+>          * We subtract 13 from the highest bank bit (13 is the minimum va=
+lue
+>          * allowed by hw) and write the lowest two bits of the remaining =
+value
+>          * as hbb_lo and the one above it as hbb_hi to the hardware.
+>          */
+> -       BUG_ON(adreno_gpu->ubwc_config.highest_bank_bit < 13);
+> -       u32 hbb =3D adreno_gpu->ubwc_config.highest_bank_bit - 13;
+> -       u32 hbb_hi =3D hbb >> 2;
+> -       u32 hbb_lo =3D hbb & 3;
+> -       u32 ubwc_mode =3D adreno_gpu->ubwc_config.ubwc_swizzle & 1;
+> -       u32 level2_swizzling_dis =3D !(adreno_gpu->ubwc_config.ubwc_swizz=
+le & 2);
+> +       if (hbb < 0)
+> +               hbb =3D adreno_gpu->ubwc_config.highest_bank_bit;
 
-On 6.14.x i have a little more, info...
+No. The value we expose to userspace must match what we program.
+You'll break VK_EXT_host_image_copy otherwise.
 
-I've got all the CRYPTO stuff enabled, pretty sure that comes from
-CONFIG_CRYPTO_MANAGER
+Connor
 
-CONFIG_CRYPTO_MANAGER=3Dy
-CONFIG_CRYPTO_MANAGER2=3Dy
-CONFIG_CRYPTO_USER=3Dy
-# CONFIG_CRYPTO_MANAGER_DISABLE_TESTS is not set
-# CONFIG_CRYPTO_MANAGER_EXTRA_TESTS is not set
-
-https://openbeagle.org/RobertCNelson/arm64-multiplatform/-/blob/v6.15.x-arm=
-64-k3/patches/defconfig?ref_type=3Dheads#L9578
-
-[    2.940076] alg: aead: authenc(hmac(sha256),cbc(aes))-sa2ul
-encryption test failed (wrong result) on test vector 0, cfg=3D"uneven
-misaligned splits, may sleep"
-[    2.940183] alg: self-tests for authenc(hmac(sha256),cbc(aes))
-using authenc(hmac(sha256),cbc(aes))-sa2ul failed (rc=3D-22)
-[    2.940191] ------------[ cut here ]------------
-[    2.940194] alg: self-tests for authenc(hmac(sha256),cbc(aes))
-using authenc(hmac(sha256),cbc(aes))-sa2ul failed (rc=3D-22)
-[    2.940276] WARNING: CPU: 1 PID: 207 at crypto/testmgr.c:6026
-alg_test+0x4f8/0x610
-[    2.940303] Modules linked in:
-[    2.940317] CPU: 1 UID: 0 PID: 207 Comm: cryptomgr_test Not tainted
-6.14.0-arm64-k3-r10 #1bookworm
-[    2.940328] Hardware name: BeagleBoard.org PocketBeagle2 (DT)
-[    2.940334] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=
-=3D--)
-[    2.940343] pc : alg_test+0x4f8/0x610
-[    2.940351] lr : alg_test+0x4f8/0x610
-[    2.940359] sp : ffff800083e13d10
-[    2.940363] x29: ffff800083e13d10 x28: 000000000000000e x27: 00000000000=
-0000d
-[    2.940375] x26: 0000000000000000 x25: ffff80008151ce08 x24: ffff8000826=
-25e40
-[    2.940386] x23: 000000000000000e x22: 0000000000001183 x21: ffff000004e=
-37880
-[    2.940397] x20: ffff000004e37800 x19: 000000000000000d x18: 00000000fff=
-ffffe
-[    2.940408] x17: 636e656874756120 x16: 676e697375202929 x15: ffff800083e=
-13900
-[    2.940419] x14: 0000000000000000 x13: ffff8000825c3ad2 x12: 65742d666c6=
-57320
-[    2.940430] x11: 0000000000000001 x10: 0000000000000029 x9 : ffff8000801=
-4d9e4
-[    2.940441] x8 : 0000000000000029 x7 : 0000000000000002 x6 : 00000000000=
-00029
-[    2.940452] x5 : ffff00001da6c508 x4 : 0000000000000000 x3 : 00000000000=
-00027
-[    2.940462] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff000004e=
-e4a00
-[    2.940475] Call trace:
-[    2.940480]  alg_test+0x4f8/0x610 (P)
-[    2.940492]  cryptomgr_test+0x2c/0x50
-[    2.940502]  kthread+0x138/0x220
-[    2.940518]  ret_from_fork+0x10/0x20
-[    2.940531] ---[ end trace 0000000000000000 ]---
-
-Maybe enable iwd support will trigger it, as iwd needs built-in kernel
-support: https://git.kernel.org/pub/scm/network/wireless/iwd.git/
-
-#iwd
-./scripts/config --enable CONFIG_CRYPTO_USER_API_SKCIPHER
-./scripts/config --enable CONFIG_CRYPTO_USER_API_HASH
-./scripts/config --enable CONFIG_CRYPTO_HMAC
-./scripts/config --enable CONFIG_CRYPTO_CMAC
-./scripts/config --enable CONFIG_CRYPTO_MD4
-./scripts/config --enable CONFIG_CRYPTO_MD5
-./scripts/config --enable CONFIG_CRYPTO_SHA256
-./scripts/config --enable CONFIG_CRYPTO_SHA512
-./scripts/config --enable CONFIG_CRYPTO_AES
-./scripts/config --enable CONFIG_CRYPTO_ECB
-./scripts/config --enable CONFIG_CRYPTO_DES
-./scripts/config --enable CONFIG_CRYPTO_CBC
-./scripts/config --enable CONFIG_KEY_DH_OPERATIONS
-
-Regards,
-
---=20
-Robert Nelson
-https://rcn-ee.com/
+> +       hbb -=3D 13;
+> +       BUG_ON(hbb < 0);
+> +       hbb_hi =3D hbb >> 2;
+> +       hbb_lo =3D hbb & 3;
+>
+>         gpu_write(gpu, REG_A6XX_RB_NC_MODE_CNTL,
+>                   level2_swizzling_dis << 12 |
+> @@ -2467,6 +2473,10 @@ struct msm_gpu *a6xx_gpu_init(struct drm_device *d=
+ev)
+>         bool is_a7xx;
+>         int ret;
+>
+> +       /* We need data from SMEM to retrieve HBB in set_ubwc_config() */
+> +       if (!qcom_smem_is_available())
+> +               return ERR_PTR(-EPROBE_DEFER);
+> +
+>         a6xx_gpu =3D kzalloc(sizeof(*a6xx_gpu), GFP_KERNEL);
+>         if (!a6xx_gpu)
+>                 return ERR_PTR(-ENOMEM);
+>
+> --
+> 2.49.0
+>
