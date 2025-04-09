@@ -1,30 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE5A21E520E;
-	Wed,  9 Apr 2025 20:50:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2DB72116F5;
+	Wed,  9 Apr 2025 20:50:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744231845; cv=none; b=lCYpmejYqJ5/lrYZ+cvMIvET/MTlY5ivCMZQJkLW7oPhUNaGxqihmSzpO8J69YV0cx4WKGN5Q2YQmfHdx/YJgEWhpr4WGwewqQ6x5UycCeynrGnLWcjJoy8x9WhfqznvIbHL4g8NuGb/cIKFukT4VgkOKkMu0sTVAxNVJHxNUss=
+	t=1744231852; cv=none; b=Uo1RbYeDo4MnSNQ+iWHGyMPqTDDBG/v/xTsIHsaWrTQ281f+A86eE44YzgLHatH2b+oRYPVfeNL5o5axZX93zpcOA2y6bV2gcvPyoftTgWXBYjtnX5PtMlBdNibvdWyoYMqA62jtIpeqIzKOBfMzuNMkV3F1P/cl2/7tCgjxUwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744231845; c=relaxed/simple;
-	bh=Wqa2f3x1lOF/ugiGuTwsKbMT387qF5klTG4m2uLqmRE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VIs0tU7YTyjG8uL7Zca5HRTHvIEVbQa8wpfPT13/Rp4sLD8mve0mADzRGCuWvY+pvOMnu5cYvHm/roGEIZFuuJNoyrwzgmuLBPghV3epg+YeEB3JzdJGk0ZTHnLyzptoOcZuYjIc9XlSYcSAN2RRZqIskBBmYAhOPm0GvjFLjvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JlxrWCjW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744231852; c=relaxed/simple;
+	bh=su9Uh7Pi40fxFZ7vHnTKRixkxjUDpywPMqGDrqPiOAU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=puLo58iMkpHioa7AXSeexIFPX4UBK6Yi5vnspnra31UMHu9v06jJJUO7StUX+O7bRbBnTGBT/MXycDWUQ28YME2BibR1tNIPG/F1t2KTwQfKF8Fx/DreV6vulUxI7UmXmT4B3BNlFqmvxzlB9FleJ6c9BRX6x8xdDR3gFnkypTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jm406k92; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JlxrWCjW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E8BDC4CEE2;
-	Wed,  9 Apr 2025 20:50:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jm406k92"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D81CC4CEE2;
+	Wed,  9 Apr 2025 20:50:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744231844;
-	bh=Wqa2f3x1lOF/ugiGuTwsKbMT387qF5klTG4m2uLqmRE=;
+	s=k20201202; t=1744231851;
+	bh=su9Uh7Pi40fxFZ7vHnTKRixkxjUDpywPMqGDrqPiOAU=;
 	h=From:To:Cc:Subject:Date:From;
-	b=JlxrWCjWuSXOIr6nM9F2Oxh1+hASbgsgKhL3N03TDhBIWDb0P5ZqwMgloDE2m7Mox
-	 QDwJvcA8L7pT6pcjdYq1MOJiE6h+w6/yBtG2T9u/i4K8ioUN9/7ISooymsnOhV6HbM
-	 jr11ivgHswWJ0bZSufsFUPJdp8VvLthDNqswmlx/rz/BY+z2H7pwG8tkxQnuaG0gAB
-	 Yn4et6TZonBYz2wAs8EbncMhIUa5+nsaY+jd9vHl7RCyMqwfEvqYHkOu6p8wosqYn7
-	 Y2ivXhzMP0OdJ+5VHd/Zyv5jxhN9dR+uf2Z1f8LgSUJYeBb8XFloX7IW8wORPBN3vj
-	 kk7CimkM9D2eQ==
+	b=Jm406k92ZdDOT1gPRSkmNrzswkzv/1WU2CYxnhW1ns6PpUTt2flHEkckgd92ceiF4
+	 I91AmhUC0gXAGcgI2eKqmnFX5epOd50vseeznsxiuac5Cn3RqEHjhsSyJIprPUQSTe
+	 M+5VhG0jHdyuakEhzGdUyIeYwG0sdVEJvnyKOrSO5DyqyW+yhKNEWqUQYqgwIsadYK
+	 DZy9aeDFUrD1SOljbjrkb7Zqmbc8DH8zxVp0qw+0BP1XA4/t/qPTCmzoiCdy2krU6w
+	 kr060D8IaiFUvJKA6HPJy0apYv0M84QZ+8N5wNK0dW0Na/M/X4HI9AXPILS2bVXMyh
+	 4zn1pgeUDO27g==
 From: "Rob Herring (Arm)" <robh@kernel.org>
 To: Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
@@ -33,9 +33,9 @@ Cc: devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-rockchip@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: rockchip: rock-pi-4: Fix mmc-pwrseq clock name
-Date: Wed,  9 Apr 2025 15:50:39 -0500
-Message-ID: <20250409205040.1522754-1-robh@kernel.org>
+Subject: [PATCH] arm64: dts: rockchip: px30-engicam: Use "regulator-fixed" for vcc3v3-btreg
+Date: Wed,  9 Apr 2025 15:50:46 -0500
+Message-ID: <20250409205047.1522943-1-robh@kernel.org>
 X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -45,26 +45,61 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The defined name for "mmc-pwrseq-simple" clock is "ext_clock".
+The vcc3v3-btreg regulator only has 1 state and no state gpios defined,
+so "regulator-gpio" is not the correct binding to use. "regulator-fixed"
+is the correct binding to use. It supports an enable GPIO which is
+needed in this case.
 
 Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/rockchip/px30-engicam-common.dtsi          | 3 +--
+ arch/arm64/boot/dts/rockchip/px30-engicam-ctouch2.dtsi         | 2 +-
+ .../boot/dts/rockchip/px30-engicam-px30-core-edimm2.2.dts      | 2 +-
+ 3 files changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi
-index 541dca12bf1a..046dbe329017 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dtsi
-@@ -43,7 +43,7 @@ led-0 {
- 	sdio_pwrseq: sdio-pwrseq {
- 		compatible = "mmc-pwrseq-simple";
- 		clocks = <&rk808 1>;
--		clock-names = "lpo";
-+		clock-names = "ext_clock";
+diff --git a/arch/arm64/boot/dts/rockchip/px30-engicam-common.dtsi b/arch/arm64/boot/dts/rockchip/px30-engicam-common.dtsi
+index 1edfd643b25a..a334ef0629d1 100644
+--- a/arch/arm64/boot/dts/rockchip/px30-engicam-common.dtsi
++++ b/arch/arm64/boot/dts/rockchip/px30-engicam-common.dtsi
+@@ -31,7 +31,7 @@ sdio_pwrseq: sdio-pwrseq {
+ 	};
+ 
+ 	vcc3v3_btreg: vcc3v3-btreg {
+-		compatible = "regulator-gpio";
++		compatible = "regulator-fixed";
+ 		enable-active-high;
  		pinctrl-names = "default";
- 		pinctrl-0 = <&wifi_enable_h>;
- 		reset-gpios = <&gpio0 RK_PB2 GPIO_ACTIVE_LOW>;
+ 		pinctrl-0 = <&bt_enable_h>;
+@@ -39,7 +39,6 @@ vcc3v3_btreg: vcc3v3-btreg {
+ 		regulator-min-microvolt = <3300000>;
+ 		regulator-max-microvolt = <3300000>;
+ 		regulator-always-on;
+-		states = <3300000 0x0>;
+ 	};
+ 
+ 	vcc3v3_rf_aux_mod: regulator-vcc3v3-rf-aux-mod {
+diff --git a/arch/arm64/boot/dts/rockchip/px30-engicam-ctouch2.dtsi b/arch/arm64/boot/dts/rockchip/px30-engicam-ctouch2.dtsi
+index 80db778c9684..b60e68faa83a 100644
+--- a/arch/arm64/boot/dts/rockchip/px30-engicam-ctouch2.dtsi
++++ b/arch/arm64/boot/dts/rockchip/px30-engicam-ctouch2.dtsi
+@@ -26,5 +26,5 @@ &sdio_pwrseq {
+ };
+ 
+ &vcc3v3_btreg {
+-	enable-gpios = <&gpio1 RK_PC3 GPIO_ACTIVE_HIGH>;
++	gpios = <&gpio1 RK_PC3 GPIO_ACTIVE_HIGH>;
+ };
+diff --git a/arch/arm64/boot/dts/rockchip/px30-engicam-px30-core-edimm2.2.dts b/arch/arm64/boot/dts/rockchip/px30-engicam-px30-core-edimm2.2.dts
+index 165d09ccb942..5886b802c520 100644
+--- a/arch/arm64/boot/dts/rockchip/px30-engicam-px30-core-edimm2.2.dts
++++ b/arch/arm64/boot/dts/rockchip/px30-engicam-px30-core-edimm2.2.dts
+@@ -39,5 +39,5 @@ &sdio_pwrseq {
+ };
+ 
+ &vcc3v3_btreg {
+-	enable-gpios = <&gpio1 RK_PC2 GPIO_ACTIVE_HIGH>;
++	gpios = <&gpio1 RK_PC2 GPIO_ACTIVE_HIGH>;
+ };
 -- 
 2.47.2
 
