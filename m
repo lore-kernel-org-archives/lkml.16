@@ -1,44 +1,92 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD315B676
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 11:05:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744196754; cv=none; b=QUhw7dxnYhcG1XbJNmZ9sq+8a3VUGfjRPYJ5EZoPwLk4k6UTL2N5vEXPTEczZVx1Mb0AUx4pBQZtnG2DPsBGbZkYume/O8vv4fFiRiD3nAOpVbMxzXFBhuxKcwQf/qMlRLAU8OaDEaP80iTLcTrqGencCxzbsa/HrwpwyuNqVZo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744196754; c=relaxed/simple;
-	bh=J1VKQkf4zBdasI8ClqzDj/voMdjzkxPW2GOzgtjMwZY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QKLv7dIAXYR/U5z2YcEcy720GEP2wKTl2xe4DYPny48gKT1UwqdbJMEL9Qr76WsQhxzVhhrF7x/f61WT+hDnX12OwoYljP37rO6w6jN5SQ8TbKl+E5RESZVaHrS+4zsGJKEWhy9s34fW0AtOCZcd9arGtfGQ/2UX3BHc6Gxjo4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id BFDCB68AA6; Wed,  9 Apr 2025 13:05:47 +0200 (CEST)
-Date: Wed, 9 Apr 2025 13:05:47 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Daniel Wagner <wagi@kernel.org>
-Cc: James Smart <james.smart@broadcom.com>, Christoph Hellwig <hch@lst.de>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Chaitanya Kulkarni <kch@nvidia.com>, Jens Axboe <axboe@kernel.dk>,
-	Hannes Reinecke <hare@suse.de>, James Smart <jsmart2021@gmail.com>,
-	linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/8] nvmet-fcloop: bunch of fixes and cleanups
-Message-ID: <20250409110547.GA6059@lst.de>
-References: <20250408-nvmet-fcloop-part-one-v1-0-382ec97ab7eb@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA84F4E2;
+	Wed,  9 Apr 2025 11:07:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744196837; cv=pass; b=XN1zSkoPTOKOY21pVUwYUrHz2GgtquwSgwM8n6BSwfpwQmy3OUgyJUfuxxnuWDieuaPHerQ35yQ4VymNGlEHehCZ8Z3wb0UYgTpROVBaF9dXhf3f8XtQJr7sEbUXPEK4BaUe5F1u6zopB6b8OH1JtvUej5R8Bpp7xspZuayaMOc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744196837; c=relaxed/simple;
+	bh=2kVs8LDqqakchwzmyNag2tzPPlIh9j76cycJyxtacPI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WW48vwp0KZuH9q4oyniKwuZUmdhx+DONpuHR1H1Tm1zcos2KNvzIWyyNOabGDomIMHFFt4z2ofDPSBeRJlxwGIYAI1vysKxYYYSA9VjjG2d5D9LzdFKVI1JZDqcmCKrE+OX6lVsYCIN77Lv6OoP6arotElmJs0hggQeD4oR5CZg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=lD0Mqw2M; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="lD0Mqw2M"
+ARC-Seal: i=1; a=rsa-sha256; t=1744196811; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Gtc+4LD8RTfe0yWyp7bqxkis/LbteYRGIAXs05ukcIR321fh1FFzJwhUzWZEGLnpYsZ07h2hxpX4mp7NOSe2STSRMnxAzjaoy+QIdVQhXkrzEY6nGBuQXTFpU51Z2vQZHatkwsTbgWBC0XSB1e/Yu3OGbZEb99ZpzWyOx7r6Hho=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1744196811; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=zG30n2f/aRteVWgqjxF1osyq1V5F5L32v16dl9hXPTk=; 
+	b=C60x3XSqtlLDM1/hzCaZMpWQ+1DCTxPhC6TBttCvqiQpnDaBIuyw2Aii2ewZHKSWsfJMf+sxb51GYYnyC2w+FfnNGY0eIDi2mDHq2PSMLgoo9sg0/7cTWKUm8Pqe7YWKaKAGBjye6gDYQN2M0Xm4gNTjfSCAjpCjPp+xYFVD5Ug=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
+	dmarc=pass header.from=<usama.anjum@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744196811;
+	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=zG30n2f/aRteVWgqjxF1osyq1V5F5L32v16dl9hXPTk=;
+	b=lD0Mqw2M2QnDu5pxa88W/n3q7kF5e/RTOTbO2yWMgf9Fe5+wg9L83xPtWizh065r
+	/v41XTBmgYEHVc+Cb/JpKuioKCp/JWcl1kFDXWM5PLCbiyWQxeSBPi9oWzL+zMzhHUn
+	Qn/88lS0u3ofjgCLW2qWE+l3JoxLBUKMx/LoexQo=
+Received: by mx.zohomail.com with SMTPS id 1744196809321647.8101420390714;
+	Wed, 9 Apr 2025 04:06:49 -0700 (PDT)
+Message-ID: <bda7ee48-70db-4ee4-9f90-e267e48ba2c3@collabora.com>
+Date: Wed, 9 Apr 2025 16:06:41 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250408-nvmet-fcloop-part-one-v1-0-382ec97ab7eb@kernel.org>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] bus: mhi: host: don't free bhie tables during power
+ off
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Jeff Hugo <jeff.hugo@oss.qualcomm.com>,
+ Youssef Samir <quic_yabdulra@quicinc.com>,
+ Matthew Leung <quic_mattleun@quicinc.com>, Yan Zhen <yanzhen@vivo.com>,
+ Qiang Yu <quic_qianyu@quicinc.com>, Kunwu Chan <chentao@kylinos.cn>,
+ Carl Vanderlip <quic_carlv@quicinc.com>, Sumit Garg <sumit.garg@kernel.org>,
+ mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250409082444.582295-1-usama.anjum@collabora.com>
+ <2025040918-preflight-elliptic-7046@gregkh>
+Content-Language: en-US
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <2025040918-preflight-elliptic-7046@gregkh>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-Thanks,
+Hi Greg,
 
-I've added the entire series to the nvme-6.15 branch.
+Hope you are doing well.
 
+On 4/9/25 3:43 PM, Greg Kroah-Hartman wrote:
+> On Wed, Apr 09, 2025 at 01:24:26PM +0500, Muhammad Usama Anjum wrote:
+>> Tested-on: QCNFA765 WLAN.HSP.1.1-03926.13-QCAHSPSWPL_V2_SILICONZ_CE-2.52297.6
+> 
+> This is not a valid tag in the kernel, please remove.
+I'd added this tag as previous ath11k patches had such tag [1]:
+
+I'll move the tag to description in v2. Probably that would be the
+correct approach.
+> 
+> thanks,
+> 
+> greg k-h
+
+[1]
+https://lore.kernel.org/all/20250328-ath11k-bring-hibernation-back-v3-4-23405ae23431@quicinc.com
+
+
+-- 
+Regards,
+Usama
