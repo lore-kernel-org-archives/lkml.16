@@ -1,148 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6CFF25DD17
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 11:13:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E80E525DB19;
+	Wed,  9 Apr 2025 11:14:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744197237; cv=none; b=ubOwraH2XGGw5sadYjKcoyRQbLcBz+oTrgQKLPjf7jcVx14IXc01d7oZkzehd0CjbeiAHLo4Zaa2caW7tXyqdyIZIC20U25zALRp/3AHSDQ4D/1OkbX6kHGA/CBAsancf1O82to8xFdIkXlvRx32/lKGz7dab7Acqml2M6F4YSo=
+	t=1744197246; cv=none; b=p8sxDnZSkEVCGeKZ1qn5IruOSwlYccXUPJOmSG7rkeFLtJBvLgJqsTr521KaKsxnS0t+zlOOk2rDHDfG5a4HNvKRBMW8jN+HiCo2WiNNTpjaxd7/0Cw1WeaZFe1bU/qWFCNjC69tJbW7i1xsujabEQM9uYmA+4PSegiFoVVBKOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744197237; c=relaxed/simple;
-	bh=irPkddcl4pFObPk7qkg7MigXFgzvZCovZUOJcpGQdDs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PHNIfZ+mLPQYzv2IgGi0KFWRR4w5Rc30x817fqde/s2y0F7mzn0WAKX7TLbOGTq2c5O70CR78TbZlUnp1ySMgaal5J8xy2e/iaz9q0Vmc6TMmx6X/AhKZUNwlmO6gLcjp9P1n/D2xq63p/7X8L1g5rcLm9q4WyYk6PRICjBYnjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ul2sa/bm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744197246; c=relaxed/simple;
+	bh=jqo5HxxGhvzTzgubMoInNzjOBMJ67bIXYB7bcU/dgHg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dGusjZv7CGn/umcuvMF8JBuvkMg2DLpkKwLd+Xgx2T0mIV7uflFRU7oqrBaSr/FsLTNZ5Fj1T/btSMVzudM0Ws99dkuQkGCgk2edRAJfQOUhCXd32/INaFneSZDY8jQ5kAfRh8lLMCb6Mevpt+4m39vPVq2wC6rPDQtlhZcA8HI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=M/pSLXX0; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ul2sa/bm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 275F9C4CEE3;
-	Wed,  9 Apr 2025 11:13:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744197236;
-	bh=irPkddcl4pFObPk7qkg7MigXFgzvZCovZUOJcpGQdDs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ul2sa/bmReApoaPP+p5rT3iJ9yU/ytY58lZKc49bC9qMsIP3zD2h7Pwwq+M2plsxb
-	 b9UnKv2vmXI8BhWv6WAQc6i6CP/CRqjSRUzMvWG0sGHNGexSxa9tpEzqFLUn6oRCJs
-	 4jOwi3sjQBoximySG2LB9O7aI/qgHZfXBqwcYyQ1MLWE+CKyUm1qH1A/BR2wJ/yAu2
-	 j8MGKP0iHe3RRScIutOtKLPwhrNrab3Fx0QXiNadawJruhVyZG/P5iKxnpjnsG3ZqS
-	 ySBVsThLZMhrBpc4KCV56bbyRfwMcxi4meSaPGN+h/D1qEB/wIDkNbQaZONTYcizzL
-	 NZMJDwDxiQQ1Q==
-Message-ID: <de04dc00-f01d-4c27-a6f8-873398bf8d4a@kernel.org>
-Date: Wed, 9 Apr 2025 13:13:53 +0200
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="M/pSLXX0"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 7F3DC40E021D;
+	Wed,  9 Apr 2025 11:14:00 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id h6FXT82fAaNf; Wed,  9 Apr 2025 11:13:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1744197235; bh=Z+kdrJw5u0x8UOKXCbftptPKteCCCY2ZN7JQDeXz64g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M/pSLXX03o7RlfCjM0a0d60z+uslg9vb2bmKjWNowzOMYOzLJK7R4FkiONPwZBKyv
+	 0TK4inJABZF6pyxhwbvfLM7ppPs4ySM/vsbFnyoKrJSpgCKZt9guv7yNdYm7LNZXUH
+	 TktdO4REClguIsZHEswUFuoCGAywSdsDW3OVot/HqvxPtmEf3Qad0+Yg0MgYFeTF/L
+	 Fq3671G3Ab/ncJfW/l7EiB8EMlWXvRsdYsz8C2n9dKDxfB01UU3sQV+Il2ttv407iH
+	 zkJ0xagCdhOkU3m+SDrDPGsE/uCrBFYGVWaIL42lSk+oj9Txgso8wO6e90V1RfISOM
+	 AeR7DcdnGlJLrtYTzoRX1EkU2MURwI5i98yK1DbU27lWzTDd2E+6zMtDsE9WIHzDdi
+	 RIrgtmAVHh3MMEJSbz9/ncHt0SwE0t8AS/pUTnP5OtQOQWh2kCy+ECI1Nepf1L8O/6
+	 fWCRV27Iu5xdKZCfJcaz8vUmyOmESGRIFsoIIM31tQY/e2I+kAleZXHU9U2dOIhTrV
+	 mtuWqkbHmMjLzpoSRoluhJuB5Nws510Ij0y3EKcmBLfKxh3IknFFv/45WqchOoX6A/
+	 KvimvoI16NuUORA0upvD9qNYFX4OWqXOc2a5WWHj0CYgbavuz7vY9jEdjznBWi+h50
+	 X+0hzc4+kl/ZPo11MFzpsBLA=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7366D40E01A3;
+	Wed,  9 Apr 2025 11:13:47 +0000 (UTC)
+Date: Wed, 9 Apr 2025 13:13:41 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Naveen N Rao <naveen@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Jonathan Corbet <corbet@lwn.net>, x86@kernel.org
+Subject: [PATCH 1/2] Documentation/x86: Update the naming of CPU features for
+ /proc/cpuinfo
+Message-ID: <20250409111341.GDZ_ZWZS4LckBcirLE@fat_crate.local>
+References: <20250403094308.2297617-1-naveen@kernel.org>
+ <20250403121727.GFZ-58VzYwaTBv4rbu@fat_crate.local>
+ <4uxkf5riuv66kdxa7zteubdfsjy4vac6td5z6cckilyiqjceft@zk3mzmfv3lgk>
+ <20250403132121.GJZ-6LUVmn5S2BMF-A@fat_crate.local>
+ <en5nisgiq2in7sjj2ysovxrqcuqh6ruhi32nsfrwamrt6odftc@jehodnirqa64>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v2][PATCH 4/5] x86/cpu: Move AMD erratum 1386 table over to
- 'x86_cpu_id'
-To: Dave Hansen <dave.hansen@linux.intel.com>, linux-kernel@vger.kernel.org
-Cc: x86@kernel.org, tglx@linutronix.de, bp@alien8.de,
- kan.liang@linux.intel.com
-References: <20241213185127.F38B6EE9@davehans-spike.ostc.intel.com>
- <20241213185132.07555E1D@davehans-spike.ostc.intel.com>
-Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <20241213185132.07555E1D@davehans-spike.ostc.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <en5nisgiq2in7sjj2ysovxrqcuqh6ruhi32nsfrwamrt6odftc@jehodnirqa64>
 
-I noted this on IRC...
+From: "Naveen N Rao (AMD)" <naveen@kernel.org>
+Date: Wed, 9 Apr 2025 12:42:45 +0200
 
-On 13. 12. 24, 19:51, Dave Hansen wrote:
-> From: Dave Hansen <dave.hansen@linux.intel.com>
-> 
-> The AMD erratum 1386 detection code uses and old style 'x86_cpu_desc'
-> table. Replace it with 'x86_cpu_id' so the old style can be removed.
-> 
-> I did not create a new helper macro here. The new table is certainly
-> more noisy than the old and it can be improved on. But I was hesitant
-> to create a new macro just for a single site that is only two ugly
-> lines in the end.
-> 
-> Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-> ---
-> 
->   b/arch/x86/kernel/cpu/amd.c |    9 ++++-----
->   1 file changed, 4 insertions(+), 5 deletions(-)
-> 
-> diff -puN arch/x86/kernel/cpu/amd.c~amd-x86_cpu_id arch/x86/kernel/cpu/amd.c
-> --- a/arch/x86/kernel/cpu/amd.c~amd-x86_cpu_id	2024-12-13 10:47:55.714076132 -0800
-> +++ b/arch/x86/kernel/cpu/amd.c	2024-12-13 10:47:55.718076292 -0800
-> @@ -795,10 +795,9 @@ static void init_amd_bd(struct cpuinfo_x
->   	clear_rdrand_cpuid_bit(c);
->   }
->   
-> -static const struct x86_cpu_desc erratum_1386_microcode[] = {
-> -	AMD_CPU_DESC(0x17,  0x1, 0x2, 0x0800126e),
-> -	AMD_CPU_DESC(0x17, 0x31, 0x0, 0x08301052),
-> -	{},
+Commit
 
-If I am to tell, the {} is needed, otherwise you touch the array OOB (at 
-least with the "m->flags & X86_CPU_ID_FLAG_ENTRY_VALID" test -- if the 
-bit is set in the memory, then much more than that...).
+  78ce84b9e0a5 ("x86/cpufeatures: Flip the /proc/cpuinfo appearance logic")
 
-> +static const struct x86_cpu_id erratum_1386_microcode[] = {
-> +	X86_MATCH_VFM_STEPS(VFM_MAKE(X86_VENDOR_AMD, 0x17, 0x01), 0x2, 0x2, 0x0800126e),
-> +	X86_MATCH_VFM_STEPS(VFM_MAKE(X86_VENDOR_AMD, 0x17, 0x31), 0x0, 0x0, 0x08301052),
->   };
->   
->   static void fix_erratum_1386(struct cpuinfo_x86 *c)
-> @@ -814,7 +813,7 @@ static void fix_erratum_1386(struct cpui
->   	 * Clear the feature flag only on microcode revisions which
->   	 * don't have the fix.
->   	 */
-> -	if (x86_cpu_has_min_microcode_rev(erratum_1386_microcode))
-> +	if (x86_match_min_microcode_rev(erratum_1386_microcode))
->   		return;
->   
->   	clear_cpu_cap(c, X86_FEATURE_XSAVES);
+changed how CPU feature names should be specified. Update document to
+reflect the same.
 
-thanks,
+Signed-off-by: Naveen N Rao (AMD) <naveen@kernel.org>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+---
+ Documentation/arch/x86/cpuinfo.rst | 28 ++++++++++++----------------
+ 1 file changed, 12 insertions(+), 16 deletions(-)
+
+diff --git a/Documentation/arch/x86/cpuinfo.rst b/Documentation/arch/x86/cpuinfo.rst
+index 6ef426a52cdc..7114f34ba3e6 100644
+--- a/Documentation/arch/x86/cpuinfo.rst
++++ b/Documentation/arch/x86/cpuinfo.rst
+@@ -130,14 +130,18 @@ x86_cap/bug_flags[] arrays in kernel/cpu/capflags.c. The names in the
+ resulting x86_cap/bug_flags[] are used to populate /proc/cpuinfo. The naming
+ of flags in the x86_cap/bug_flags[] are as follows:
+ 
+-a: The name of the flag is from the string in X86_FEATURE_<name> by default.
+-----------------------------------------------------------------------------
+-By default, the flag <name> in /proc/cpuinfo is extracted from the respective
+-X86_FEATURE_<name> in cpufeatures.h. For example, the flag "avx2" is from
+-X86_FEATURE_AVX2.
+-
+-b: The naming can be overridden.
+---------------------------------
++a: Flags do not appear by default in /proc/cpuinfo
++--------------------------------------------------
++
++Feature flags are omitted by default from /proc/cpuinfo as it does not make
++sense for the feature to be exposed to userspace in most cases. For example,
++X86_FEATURE_ALWAYS is defined in cpufeatures.h but that flag is an internal
++kernel feature used in the alternative runtime patching functionality. So the
++flag does not appear in /proc/cpuinfo.
++
++b: Specify a flag name if absolutely needed
++-------------------------------------------
++
+ If the comment on the line for the #define X86_FEATURE_* starts with a
+ double-quote character (""), the string inside the double-quote characters
+ will be the name of the flags. For example, the flag "sse4_1" comes from
+@@ -148,14 +152,6 @@ needed. For instance, /proc/cpuinfo is a userspace interface and must remain
+ constant. If, for some reason, the naming of X86_FEATURE_<name> changes, one
+ shall override the new naming with the name already used in /proc/cpuinfo.
+ 
+-c: The naming override can be "", which means it will not appear in /proc/cpuinfo.
+-----------------------------------------------------------------------------------
+-The feature shall be omitted from /proc/cpuinfo if it does not make sense for
+-the feature to be exposed to userspace. For example, X86_FEATURE_ALWAYS is
+-defined in cpufeatures.h but that flag is an internal kernel feature used
+-in the alternative runtime patching functionality. So, its name is overridden
+-with "". Its flag will not appear in /proc/cpuinfo.
+-
+ Flags are missing when one or more of these happen
+ ==================================================
+ 
 -- 
-js
-suse labs
+2.43.0
 
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
