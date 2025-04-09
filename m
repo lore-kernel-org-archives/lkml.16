@@ -1,224 +1,443 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04F04267721
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 15:40:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744213225; cv=none; b=XdxNyRhtLgG+1Mlka50uHNzR1DODv7hHZAQtwietQKd6t9U0YydQH5ADsYhXDStleOFN7+3vboD/9Co99rDbaUpvmVBFeP/Um/wqtkrsUVIYZS1d956f7s7jUp8W+Aq+qUj0xCmcGFPe/MFJqAdg87iBhm3ywAnhfSvVZc7EEUI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744213225; c=relaxed/simple;
-	bh=sr5q1zh9NSGY7PcWnFatTToY1SiCtDSZEZ2M8GV9h0o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q4dwqlLR4Yb8Y1wqDPpbipcILIPShvTMFgbneXLU1uRP79/vIYod+n1gi2qkDnUsXwsP7iBNMH0tLIiL3Kp+EB+NlG6zBVNAxa3GJ8S+nsgzpwBauRB8FNrr0cuEiVxNte14SQQ/4ioEHZk93jmCJXzLx6S1Jjp9LlG9IXgCr0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ObUY/g/I; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A2D425E47E;
+	Wed,  9 Apr 2025 15:40:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744213243; cv=fail; b=i/i2ge2H4gandda3jZWpQrKHh+c/C0lO+BTBEQF8Gr1IP3q9hA5Q3K0Av8MWhdvOc8nc7iJ+uDtIw0iCUHNok2uHb2BLWKXV42exOlK1/+2oRT9LAptZmvLdg/WNU3Lmwi+ztXdN9ifzjhHY6X+H9gB5DG/M+gRVjNYS3N4NHF8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744213243; c=relaxed/simple;
+	bh=3M4qecxComrBtBwkH+FMq94Lh6dckKjYaMODrQ3BU7w=;
+	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=R4nFGxkAwKEBMeErko0doVW2d4q+9ZXvLxdbaoDQTQG5WAzmDpFj6ySEo5h792YWwa6+Ilc/x5n6fy+gACzykwq/HjJPPi0e0pCevtONyLPpwIYW7hOBHiX+H+CH+FtyDlmExvLcz6XcHfUaOqPYkOkx3BwRrVJKE+3vWT+fNhs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=KPXzS9py; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=CnVa/9pv; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ObUY/g/I"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5398Alou027501
-	for <linux-kernel@vger.kernel.org>; Wed, 9 Apr 2025 15:40:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	K9BPk28PAc9fisqkhvrEcPgWYuoMztzSJu7m7KRysU8=; b=ObUY/g/IZ0oO6wDD
-	z6B3BmhNGOD2unIq3FYwV22xMwQXQmQgA7dbEF3FgKdNBj77UpJ7/LF3IYR+lVxD
-	uDxkDFLyUrSvm0ON0ukXup0Sxv606DVfH8SaZOPa7wVRFFBsvrrTcyL3scT1mXLg
-	qkZfYYHZkrSQQeCexNGm/Jfq2eC1CZjJmwmTcwFdQvT9bGwUQ/4R/SfKK6I9Qyjm
-	QEtTImpBUop7Grl/3EH9lL0irgqgKcfLbgkmXIYKjV8bIUdpuRClO78Mgc2encsm
-	Mk4z4hSgvgF9QHUR18j6xJ1NT7jF8IlJTMI8nrGU+MPm20mS5oGzZKvGR1QyYTjv
-	dT53Qw==
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twcrkygg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 15:40:22 +0000 (GMT)
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6ece59c3108so15096106d6.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 08:40:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744213222; x=1744818022;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=K9BPk28PAc9fisqkhvrEcPgWYuoMztzSJu7m7KRysU8=;
-        b=CWHxtaOZFK/oAIOpaM47U7rw75LPg1+dpcFLEVAS3oWq/42lHG7V260jfLWmw1EDAq
-         z2eJJzqyQyuz+lXO9/e5Lz1Gfvmn8c4Wiv1qmD+RqAYCHMXkEGXYpkNihRR6WmZobQE3
-         aqMYfCDaLyDoQWpSEEjQHW+fiu3W+PYQa7vpLin6f6h2VMmbkYyYRZQro95hmYTzb3Z6
-         bYP2m3J3rDxnWYLfTbfP490tj0aVyYpiEaVma3AMy7UdlxFZcFWr2Pvnm8yKPfLZhu0q
-         h0LwRKSxuJVIhm2pX/6gAKvfphHEDptCZMt7hoFX/XjEo1poO+MotGG4Wgy9O+TrSAIT
-         RA7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXABOcTyzpqnTU9X3otzaL6mpS1OnP8lWPiCGajkKh540dQJA7Om6ttz+VeWMOddkWcV3TaHsNZt0JfWs4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz30/ORejIQxuM3IsSGDrTDREfUToQIGMdL5ih4VEqXVt93jgts
-	qBbsngEXdSUxAK+WSEtE7ihTagyRHbN3Wu14e+xgxrgn75QLF4OBIMIlQ4XKHTtcKdidlQK2frO
-	9pbHK7mVw/VFuOcyeR8x8BSNnlHX6B4SIVrZ4Im70Ep5lmHFGjvT+LOE9YslVqmk=
-X-Gm-Gg: ASbGncv0guRqtMJUweaGnOz8hX+DdxE/I7qPRV0Im1V1Ci7cXUPJirWO2Q+UVeHgqeV
-	KzJn7ww7CqhbHLqpVP5OlG8O+eEKzhJf6tSu5G+4n2cN7wBcKyOX0TOtKo6DmuWe4AQ1/VdpfuK
-	Z0CFo1QvQqvBSWc5FDrlF9y+d8NFfk3lUnTyoUbtIhlaEayLXPlSll6XFfV7IQxcD/5aohzKeti
-	q4dtWJHxuJ0Wg9iej5Wu7kODm4TWi3gClYd9YezvV5SBgkaWsNRSo4PqgflDXANAQ3Tb1fFFzlj
-	ORwDTp9ovQ9EOImVy/2f+qaF582lUFFYhT0YEa2dj7D9HkuaZyosY7gWoeXotiBuaA==
-X-Received: by 2002:a05:620a:2845:b0:7c0:9ac5:7f96 with SMTP id af79cd13be357-7c79cb32476mr192357585a.0.1744213221729;
-        Wed, 09 Apr 2025 08:40:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF0y2JAYIsBZUZsxYlHzS9wyRxq0XZG+P+f9vATezBrv2Np+gMPt+9chspODJu7JrDLBQu+kA==
-X-Received: by 2002:a05:620a:2845:b0:7c0:9ac5:7f96 with SMTP id af79cd13be357-7c79cb32476mr192355385a.0.1744213221343;
-        Wed, 09 Apr 2025 08:40:21 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f2fbd34dbcsm922827a12.66.2025.04.09.08.40.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Apr 2025 08:40:20 -0700 (PDT)
-Message-ID: <9a12e042-487b-4937-a583-709f0c37ab12@oss.qualcomm.com>
-Date: Wed, 9 Apr 2025 17:40:18 +0200
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="KPXzS9py";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="CnVa/9pv"
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 539EPuaQ023706;
+	Wed, 9 Apr 2025 15:40:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=+xr0o7MZCdy90eYSxP4E+bbbLpaLRHv8LGxAzaBDiPI=; b=
+	KPXzS9pywFSQ3073k62BqAhinmyiirBbqkqZpxVfgPzhRCmZ5zXadwQoaJQLR4lo
+	GZTjMN/mwkRL1/wf8B8AWLM1gCsQF9S8FnY5a5J+vzeJN7PdS1d2wvCSpM9rWgag
+	9UErjtEjRkKAtkFNV1IRrIn4XNKzsfPcnPyxNYMV/e1cMvFZrBz54mnnNsSGMdD9
+	1AgjP9eG6Xk63F7oZ6rjYpLV2WCFa+ZWbxm26OFsSy0jAqU1An20BhhYGBpbf59V
+	s/sRpnci5DWqyuP4448rwpSrEr0cpgP8wc6iVCbanRUgqHmuQV0ye0p7e4Z5zV/U
+	57h0uAlBOln3BJ2LMUXq2A==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45tuebqgrd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 09 Apr 2025 15:40:31 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 539El83c022161;
+	Wed, 9 Apr 2025 15:40:30 GMT
+Received: from dm5pr21cu001.outbound.protection.outlook.com (mail-centralusazlp17011030.outbound.protection.outlook.com [40.93.13.30])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 45ttybpxej-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 09 Apr 2025 15:40:30 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=DyZy5MVFPHQbD8MI2VGG/5sQfOwvjVYy1V+RSiHwcTtFncYQKZEv6xrFjAn5BRXMregj/s/3OlJeggwWotbzWGuQWdJsY9+Acw75d/DOFfGysCyqc25EKg1PtVFLA65L3NJ6dMh6wrwG6AiE9s3jIxhKtxbw2jJCw9hm7XLSgs76WhKNm+9Xj2qA5icxyOKQ3JTCDn9672e9sqzVYO3J1tBiC2CyCo3GwmWcdiJKGcCfUClHwpjotnSaMJ1X/4No0MWiaMtvemmDeARnv0SxTjsr0gQWxy8mtv/9M3ilI90sTer+xZuAqE7nmIDjf3MgPa5LU9XTQmFQyBWhWVPsPg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+xr0o7MZCdy90eYSxP4E+bbbLpaLRHv8LGxAzaBDiPI=;
+ b=tgGPe/3DJoPcAeKkH963N6pQXTDMiB+HiLYyVKr0XJgn7vYqe6cM8d5Wdo0J13L+HDndmAgbO72Oza4Wp0vzboY+BeAJ/xOOFHOK+pSwunlNz1LgjD449H7/veOP9CdYkzws2w04YvSNTYBFIHGHzUd/fFqMNZv/D5j+aK1TClR69JeN+jxxnziTU8z8IV5dvOmbeJMuCCP2NL+woVch2bvBs95QnFo3b+F0s1XfqUT4upUsvXi+9PzuIaaQ1euLwBmW7iMZolv3tbSWxNmdIAdUMbGF+jaOH1xoJUscJ3fKkycM8RgqgVW1Jg1Ecm6GOBE1xw23tSlcRiGHfwMcWw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+xr0o7MZCdy90eYSxP4E+bbbLpaLRHv8LGxAzaBDiPI=;
+ b=CnVa/9pvTBKGxZZhSElUbaBCUUmhdiH9Sa+lRiDb+KFXEP8Z/FTQ3AlQI/J/o/yni79KMjY3fCHHnwHnaq4ISszaX6yb4yenMvI0cFggg6ro7zhm/20rBGxgvkUGJR+TLlATm2RJCN3GgIlVYLUbnlvLqGX/LH0WgUy+M5JxjSE=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by SA1PR10MB7683.namprd10.prod.outlook.com (2603:10b6:806:386::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.22; Wed, 9 Apr
+ 2025 15:40:27 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90%7]) with mapi id 15.20.8632.017; Wed, 9 Apr 2025
+ 15:40:27 +0000
+Message-ID: <1225505a-262e-4d4e-9cf0-3b14fbc26878@oracle.com>
+Date: Wed, 9 Apr 2025 11:40:24 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 06/12] nfsd: add tracepoints around nfsd_create events
+From: Chuck Lever <chuck.lever@oracle.com>
+To: Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
+        Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+        Tom Talpey <tom@talpey.com>, Trond Myklebust <trondmy@kernel.org>,
+        Anna Schumaker <anna@kernel.org>
+Cc: Sargun Dillon <sargun@sargun.me>, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20250409-nfsd-tracepoints-v2-0-cf4e084fdd9c@kernel.org>
+ <20250409-nfsd-tracepoints-v2-6-cf4e084fdd9c@kernel.org>
+ <078a639b-1f19-48e2-a0cc-f861b67f34c9@oracle.com>
+ <11d5010fbe14e21b614d7cc56bae1805b35f3a31.camel@kernel.org>
+ <d0c0f6e0-ad8d-4f5e-a24e-700df88e3ec5@oracle.com>
+Content-Language: en-US
+In-Reply-To: <d0c0f6e0-ad8d-4f5e-a24e-700df88e3ec5@oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CH5P222CA0024.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:610:1ee::9) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] drm/msm/a6xx: Get HBB dynamically, if available
-To: Connor Abbott <cwabbott0@gmail.com>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Konrad Dybcio <konradybcio@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Dmitry Baryshkov <lumag@kernel.org>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org
-References: <20250409-topic-smem_dramc-v1-0-94d505cd5593@oss.qualcomm.com>
- <20250409-topic-smem_dramc-v1-3-94d505cd5593@oss.qualcomm.com>
- <CACu1E7GMf0Mx2ZX_t76h+b1CPin49LGix7c5uvoWaJZC3dKyOw@mail.gmail.com>
- <c2dac38b-bbe5-4cd1-9d33-b4bba629d54b@oss.qualcomm.com>
- <CACu1E7F71M0Z5KUdArRYbLEMXoS3jQEtp=0-4LEYFRysOsYZfA@mail.gmail.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <CACu1E7F71M0Z5KUdArRYbLEMXoS3jQEtp=0-4LEYFRysOsYZfA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: c5KT6jbE4Al61YKIGlEvb0RX7wWjewqd
-X-Authority-Analysis: v=2.4 cv=QuVe3Uyd c=1 sm=1 tr=0 ts=67f694e6 cx=c_pps a=oc9J++0uMp73DTRD5QyR2A==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=VwQbUJbxAAAA:8 a=RexmrgqQAhuxw17nEtEA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=iYH6xdkBrDN1Jqds4HTS:22
-X-Proofpoint-GUID: c5KT6jbE4Al61YKIGlEvb0RX7wWjewqd
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|SA1PR10MB7683:EE_
+X-MS-Office365-Filtering-Correlation-Id: e66f4a5f-8178-4750-4c4e-08dd777cd9d2
+X-LD-Processed: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+ =?utf-8?B?Z3JiR01QbXlMYVIrMHQyMWwyYUt2Z1NwMTEvUmdiTExvTnpvanhkNm5mZkhy?=
+ =?utf-8?B?VGU1SkE2Qy93a3NUMVZ0ZVMrZlU5TEVLZ1RWT09TRXNhTit4R2lnb1A1UGdX?=
+ =?utf-8?B?Z0hENUh4eDhDcjBVOHoybEVPTGlWcU53dVpnZ1hjWVhIWU9JRkhjd3RIUmpU?=
+ =?utf-8?B?UDlFT290S3JJZDBKckpCRnc5NFFnQkxobEJrSldLNFVBeiszRmFDaTVaR3Bj?=
+ =?utf-8?B?VlVrWTdITUlRTzRKazlyVUQ3SXFUNjlGanRjaXFtbGM1UTczOXc1cjdoS0dy?=
+ =?utf-8?B?UzFqdGtGaGd2ZkNUWUd3MU5PWDNOSklmZUtlaTliSUt1bnJic09Vem5yTStG?=
+ =?utf-8?B?TGJzQ1oxVW9GaG51VnBXazJBM0pRYnQyQm1ISWw1RmtQdHhZWGk3c2Z6ZmJS?=
+ =?utf-8?B?QzNycTV3cTM0TmQ3YjI4SmhwbkVRTDN2bWdaaFdlRnpORDVnMUpYQ0E4SjBM?=
+ =?utf-8?B?Ri9iWFJwa2h0MXBxaEQ0UDZ4TnVPb2swMGFxQVZTb1JQZHBOOFlpa05jbHNB?=
+ =?utf-8?B?TzVmYlArRXRrekJ4QmpjN2htK2FCUmN6N2kxSlBQOElCM28wdmZBMXJwbU1n?=
+ =?utf-8?B?QTJkbUZLT1RQR0FORU1iV2VEbmJXamJFQXBoM0ZVVDhIQ1RGN3p6aTFSVTZr?=
+ =?utf-8?B?WkhZNjJEMWtRQzhaT3BPRmxJcHQwRGlXUkxIREFjcUlRVzJmbnoxNkVaRkFm?=
+ =?utf-8?B?UU5PNmw2WHM0bG9aQURQK25Sak5xazFRRTMrT2s0aXFrUnBtcWsvMHhVL2xQ?=
+ =?utf-8?B?akVSNFd1cjRLS1l0L2c2ckl0QUZ0M2pMeVZqaEZWMzArQkNTRkNaNUtrRnEv?=
+ =?utf-8?B?ak5wRERtZlBhaFlNamg1VUJuMnh0REdXUXpmWHYyYmlwaGFmL1krTk5vUm5H?=
+ =?utf-8?B?VCsyVllMYUxwS0NQclU1MjN4UzhlYzVONnRqdnczUmN3bFdxK3MrY2gvZllr?=
+ =?utf-8?B?OUt1VzZsYnZwYXJscVBWNEh2dWNBc2piTGxVU2Q0SllsSXJsOUlLNGZmR3N2?=
+ =?utf-8?B?T2N0VUlBRVBTMHpTV1VvYmRxMGM2NDcyMnNHZ2h6Q0t2NUg2WlIzK2k4UTZm?=
+ =?utf-8?B?WnNvSmVSVE05MWc5bk41cHdhRzhXWUpxMFlEeDB3LzVJNFRBVlI3cjc5WmlN?=
+ =?utf-8?B?T3FQOUJyMG1ZM3VxZ3ppZVhud3FkSE8wU3lGcEFzQzcycXlIbTZ0UUVJbWF3?=
+ =?utf-8?B?YkFyUmw5VUZxcEo1RlRiQ2ZBZGc0bCszS04wcDUybFdaeDNPRkdGeFIzQVZa?=
+ =?utf-8?B?bndGSUtXM2lTV1VuYUdPYkMvT1FmZE9IYUk0WmRGSFlxK0c0MmZGamVseFdW?=
+ =?utf-8?B?dDR1K2RZMll5bWh2Tmd1N3NBa3dTK3JhV0t3YVBselNYSElraXlxMGZqVFlS?=
+ =?utf-8?B?VzJJM0hTN2J2U2picE1CUzhldFEzWS9nNnh6VXM0SDZqeDhxUjFnakxTb1d0?=
+ =?utf-8?B?M2FvdncyVGd0eHQyVE1EVUJsQ1dkaTVmSjUxeUMwYXJaTE1yd1pBakV5ZXlv?=
+ =?utf-8?B?K3JrZ2RsSldDS2VrRzFWT01EbUF1Ky9OUXNIcXE3R3FCdC8rZThsM3pOeURq?=
+ =?utf-8?B?OWp1ZTVNN004dUtSUFE2bEZLRks1dDRYam5BUVBXcWxkUXBoN0Z5NzZTY2JC?=
+ =?utf-8?B?Qy8zSTlvSVZmR01IT3VkL3RVaWpVYVRRUGFKb25ZNTdXS3k0WTdNZVNOWnJn?=
+ =?utf-8?B?OUZpYlN3UmFOM28vR0l4YkdlbEVPV0g1YmFUNkMxR0V5ZTNWbWRSTDU1WGsw?=
+ =?utf-8?B?Z01HVHZ2cDgxYnRPVFZRV2o5S3Z0SHVUMDV1WWs2ZzNBSk9haGlpL3ZWZkVY?=
+ =?utf-8?B?NHFaVDBCUERmTno0NG80eW80YXR4VDhoRFVFV2Q2VDMrTUQ1cE5Ua2RpTXR6?=
+ =?utf-8?Q?hGup0oxS3tGho?=
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?utf-8?B?Mk94d3JqUUZNcitFK3FSaVl4dFNiNzVUK3lMb2FnSXRKMWNucDRCT1hYdFNX?=
+ =?utf-8?B?MksxRW5aZUV0bHU3N0hsNTFmVDUxRjBkcTBYa1NBU0s1SXhIQUZ1UmdFUlEw?=
+ =?utf-8?B?aTI2L0h3V0R4d3ZPVnI0cEtBdmpVcy9GYkNXWXlGaUc5dlBvaDZuMFBRV0ZL?=
+ =?utf-8?B?K2M1UGJxdjhvbnZ3aENIZHpzSklsSDJSZjR1bDVjMzY5SkpPOHZXY1VZN3F0?=
+ =?utf-8?B?aUxJblFPRk1qazd3V0s2T3hvcHNQc29CRExNeDk1ZlNsNEZhOXJzTTFtWkhl?=
+ =?utf-8?B?YVptUGFxV3VLclB4d04veWFSZHVXSk51SjBxdWFvelNEYnh1Wm1mdXh0bmhj?=
+ =?utf-8?B?ckd6eTArd1I0TlVvMDJCaU1DK2ZUbUtvNFNFNEtROHlIbFdZWG1HdXJ1RW9H?=
+ =?utf-8?B?OUNydFNMNThob2hCRmhDblRibE1YeGdFQUk4eFRXdGZoczB6cUNGdUwwSGZI?=
+ =?utf-8?B?MFZTUm1uUmozazhpS3lYMmV4SzVWTmhBazVXaDlSSjVGMklVTjNheTArbzlN?=
+ =?utf-8?B?NWd0dkF4cXJpRElwYWZndE82M2d1YTB5Uk5KQXlUbW9FY3dmU3hGMXk5K3R0?=
+ =?utf-8?B?blNYRXpQYXFrNFIvNTFTeUxuMjRpbXJSZm14RGUwUUdFVkI1cjhXaVNJZXdM?=
+ =?utf-8?B?QlNPdnNCZ1RVaDJGa0hvdWl4SVdML2poeVYxZGdDUWJkbXdWcDFLM1QyUFow?=
+ =?utf-8?B?Tit0amQ1c3Y5R3preTNOTlFZeDJiWTFvaE9LU25iZXpqclRuRzcvL3BYQjE2?=
+ =?utf-8?B?djdBQmdTMktLRGJ0U0RSOWRwZ2hHdEQ0Z1JWK05uRS80NGJsWDBIa05vNDlV?=
+ =?utf-8?B?T2luUStBTUdPUUJXNWluZk9JZnZ4dTQycEl0SHBOWEo3REdIMFRjaWFMekMz?=
+ =?utf-8?B?ZThMUEtCVHBOU1hjS3YvYURxbUxqcGJyeEZWbVJPUGtXUnV6NGFNVm1EM3lR?=
+ =?utf-8?B?THFnaWpnSktkN1o1c3dWWFZoa2E3L3J2Q3pLN0ZTRjk3NnZHTklBWGNZaFZC?=
+ =?utf-8?B?TFJGYjdzandQcXV3aEIxRnJTMkNDbUJWcDc4K3ltVTFPeSttdzVvZTdqQlRO?=
+ =?utf-8?B?TnNyU3pwRGdaYnVlWkRDNE1UK0MzcHpEdVdtNXB5WHJRRWt6ZEtjNWwwaFR4?=
+ =?utf-8?B?L2U5cEh4ZHNEanlHZjUwZ1ZrbDZpanEydXNEMDdqUTQxYlcyM3FqYXN5bWVm?=
+ =?utf-8?B?SDdNbVB4R29ERURubjYwTzlCL1YveFdPV3FuZ1ZXUVVPdUF6NmN5d1c0aUZt?=
+ =?utf-8?B?ZUkyaHVYeWgyejhjdDF0S3JSYUNPaDR4bjk0M2VrVno1elhGckJPZVZiQ2o4?=
+ =?utf-8?B?QytQd2Y5QzU1bjVUUkoxWnZISS9UZmk1ZkoyTElKRXVlMXRzZ3FMdW45VzQ3?=
+ =?utf-8?B?WkJXa2JBaXcxRVpVWWs4Q0o0aHdPRzV1a2xnMkZmeWZweGQ0aXIrNW0vWTl2?=
+ =?utf-8?B?QjZ2dFdLQTJoN2YwbHplTitvaGs1bTFrRVVGV3BMM3dQRE1OS2JyK2MyVTgr?=
+ =?utf-8?B?ejRkOUV4WjRxT3dRODBaZkkybFE4REtyc25uTGdqTzdiSkg3SGVnVU5FUE01?=
+ =?utf-8?B?cjZXdHZPbktmdldZYU1jQUxHY0pXY1d1OHQzK2xGcEErQnNWVi84c3EzR0Vv?=
+ =?utf-8?B?MFRjTnl1WG41RHdudlM3b1puekY5enE4REpSZ1Z3MEVzeFAyM1BWWlI4ZVpi?=
+ =?utf-8?B?eEh6R3ptdEw2NDVOLzMzNzZ6dDk3WmMyaEd2QndUa1ZLWVVFUlVFelNZSHVr?=
+ =?utf-8?B?SU5xaTZWaldCY0tzZWhFa1RpM01IVy92TnV5UERMM2l1aHg1UDBTa2lPOEhE?=
+ =?utf-8?B?MGlVNldoaDYwUDl4QURWZjZBTUZrckd3ZjhkVHNmdTJKa243WVRkeURHOGJj?=
+ =?utf-8?B?QXBCbExsWVFpalRON2ZtSVJ6MFJvSFU5L2tvdXYyMys3N24zUjV5NldUVFJC?=
+ =?utf-8?B?YURLMXNaQlNCRC8raTVTNDd5WU9LUkhOUDQxZHpHVFRiQlZveGx1bDM0QUFV?=
+ =?utf-8?B?YVZES2QyN3l6QzdLQWtUODJ0a3Rrb3hkUzVNeDdGZlVhN3N2QXhNdDlMUXRn?=
+ =?utf-8?B?UjJnczhXYVpJVi9YenRWRyt1MzBxWmdkSzd6TlpJRlpQUTROaWZvUEhMZlF6?=
+ =?utf-8?B?Yi82Qk1rTmlNRG96SEcrWW1NcXVjZGNYMHVRdmxVc1Q3dDgvWTc1M0ViV1Iy?=
+ =?utf-8?B?Rnc9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	NnOCnSYobHcMJ0IJayinRObdAhjYQxa3I5EOlPB1liS8uyiO5/pJakZ7sOI3m+bXni2b7XtPkwkX3bzovbhM8G3yHh3YyGMmaCx+QZF1tcCD3h7jYkeoniW9EEHvC2tDYlyWyxi0HkkTQRO/59AtV5n5iH/uZMp8zdefyP/iUdldLeO7MpBrW5aerqBHRF7n8y1qZO4BIhHAuTJk+VKz71AXqv0XoDb/tfv6iagPenVHb3QHaqfHPEZ4MjYMe1V/wkNyhoi6cpAeQOK+X48ITlQU9QoBz8YYSQHdHu1bFG94o3y9fdGUX5iVNUQZBxfXEFa9T70k5Dzjo56exs+ci0EYzMpbYlQtn3J8HLe7VA9s+9rFQlHFHQRwrp7e1XD54iZzr2beIHf71Kg5og2uBs7TokpmtXNdltqkXEQar0p8KHf4VkyIyui8allAMeRW6dpkO74hui0OeK3Ur1xPfrSSX4u9ikjjx1TLBefkq2kr9/BSu2+EIHrMNpiGBtw1suZ3qLRfoWMh3GkTVkjEgmEhg5VO7QjdrpmseYnMTtItEdoNCt0RdTAjxX/+FALp46NYBRwAW6WLISq8OFN4LPvWqaKLs0lW4UyGlf7mSaY=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e66f4a5f-8178-4750-4c4e-08dd777cd9d2
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 15:40:27.1938
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1jxqnERos/p9yWLOirogIYIj4eMnd06/94ZhGxFFoPlcmH+pVMjlIH1QuDr/qALjJoYw0znpMlkso/JcGzkgew==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB7683
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-04-09_05,2025-04-08_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- spamscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0 priorityscore=1501
- clxscore=1015 phishscore=0 impostorscore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 spamscore=0
+ adultscore=0 phishscore=0 malwarescore=0 suspectscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
  definitions=main-2504090099
+X-Proofpoint-GUID: elX9cFUzwDdUXGae0KvtJp5QF6XdV6Bg
+X-Proofpoint-ORIG-GUID: elX9cFUzwDdUXGae0KvtJp5QF6XdV6Bg
 
-On 4/9/25 5:30 PM, Connor Abbott wrote:
-> On Wed, Apr 9, 2025 at 11:22 AM Konrad Dybcio
-> <konrad.dybcio@oss.qualcomm.com> wrote:
->>
->> On 4/9/25 5:12 PM, Connor Abbott wrote:
->>> On Wed, Apr 9, 2025 at 10:48 AM Konrad Dybcio <konradybcio@kernel.org> wrote:
+On 4/9/25 11:38 AM, Chuck Lever wrote:
+> On 4/9/25 11:36 AM, Jeff Layton wrote:
+>> On Wed, 2025-04-09 at 11:09 -0400, Chuck Lever wrote:
+>>> On 4/9/25 10:32 AM, Jeff Layton wrote:
+>>>> ...and remove the legacy dprintks.
 >>>>
->>>> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
->>>>
->>>> The Highest Bank address Bit value can change based on memory type used.
->>>>
->>>> Attempt to retrieve it dynamically, and fall back to a reasonable
->>>> default (the one used prior to this change) on error.
->>>>
->>>> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+>>>> Signed-off-by: Jeff Layton <jlayton@kernel.org>
 >>>> ---
->>>>  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 22 ++++++++++++++++------
->>>>  1 file changed, 16 insertions(+), 6 deletions(-)
+>>>>  fs/nfsd/nfs3proc.c | 18 +++++-------------
+>>>>  fs/nfsd/nfs4proc.c | 29 +++++++++++++++++++++++++++++
+>>>>  fs/nfsd/nfsproc.c  |  6 +++---
+>>>>  fs/nfsd/trace.h    | 39 +++++++++++++++++++++++++++++++++++++++
+>>>>  4 files changed, 76 insertions(+), 16 deletions(-)
 >>>>
->>>> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
->>>> index 06465bc2d0b4b128cddfcfcaf1fe4252632b6777..0cc397378c99db35315209d0265ad9223e8b55c7 100644
->>>> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
->>>> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
->>>> @@ -13,6 +13,7 @@
->>>>  #include <linux/firmware/qcom/qcom_scm.h>
->>>>  #include <linux/pm_domain.h>
->>>>  #include <linux/soc/qcom/llcc-qcom.h>
->>>> +#include <linux/soc/qcom/smem.h>
->>>>
->>>>  #define GPU_PAS_ID 13
->>>>
->>>> @@ -669,17 +670,22 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
->>>>  static void a6xx_set_ubwc_config(struct msm_gpu *gpu)
->>>>  {
->>>>         struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
->>>> +       u32 hbb = qcom_smem_dram_get_hbb();
->>>> +       u32 ubwc_mode = adreno_gpu->ubwc_config.ubwc_swizzle & 1;
->>>> +       u32 level2_swizzling_dis = !(adreno_gpu->ubwc_config.ubwc_swizzle & 2);
->>>> +       u32 hbb_hi, hbb_lo;
+>>>> diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
+>>>> index 372bdcf5e07a5c835da240ecebb02e3576eb2ca6..ea1280970ea11b2a82f0de88ad0422eef7063d6d 100644
+>>>> --- a/fs/nfsd/nfs3proc.c
+>>>> +++ b/fs/nfsd/nfs3proc.c
+>>>> @@ -14,6 +14,7 @@
+>>>>  #include "xdr3.h"
+>>>>  #include "vfs.h"
+>>>>  #include "filecache.h"
+>>>> +#include "trace.h"
+>>>>  
+>>>>  #define NFSDDBG_FACILITY		NFSDDBG_PROC
+>>>>  
+>>>> @@ -380,10 +381,7 @@ nfsd3_proc_create(struct svc_rqst *rqstp)
+>>>>  	struct nfsd3_diropres *resp = rqstp->rq_resp;
+>>>>  	svc_fh *dirfhp, *newfhp;
+>>>>  
+>>>> -	dprintk("nfsd: CREATE(3)   %s %.*s\n",
+>>>> -				SVCFH_fmt(&argp->fh),
+>>>> -				argp->len,
+>>>> -				argp->name);
+>>>> +	trace_nfsd3_proc_create(rqstp, &argp->fh, S_IFREG, argp->name, argp->len);
+>>>>  
+>>>>  	dirfhp = fh_copy(&resp->dirfh, &argp->fh);
+>>>>  	newfhp = fh_init(&resp->fh, NFS3_FHSIZE);
+>>>> @@ -405,10 +403,7 @@ nfsd3_proc_mkdir(struct svc_rqst *rqstp)
+>>>>  		.na_iattr	= &argp->attrs,
+>>>>  	};
+>>>>  
+>>>> -	dprintk("nfsd: MKDIR(3)    %s %.*s\n",
+>>>> -				SVCFH_fmt(&argp->fh),
+>>>> -				argp->len,
+>>>> -				argp->name);
+>>>> +	trace_nfsd3_proc_mkdir(rqstp, &argp->fh, S_IFDIR, argp->name, argp->len);
+>>>>  
+>>>>  	argp->attrs.ia_valid &= ~ATTR_SIZE;
+>>>>  	fh_copy(&resp->dirfh, &argp->fh);
+>>>> @@ -471,13 +466,10 @@ nfsd3_proc_mknod(struct svc_rqst *rqstp)
+>>>>  	struct nfsd_attrs attrs = {
+>>>>  		.na_iattr	= &argp->attrs,
+>>>>  	};
+>>>> -	int type;
+>>>> +	int type = nfs3_ftypes[argp->ftype];
+>>>>  	dev_t	rdev = 0;
+>>>>  
+>>>> -	dprintk("nfsd: MKNOD(3)    %s %.*s\n",
+>>>> -				SVCFH_fmt(&argp->fh),
+>>>> -				argp->len,
+>>>> -				argp->name);
+>>>> +	trace_nfsd3_proc_mknod(rqstp, &argp->fh, type, argp->name, argp->len);
+>>>>  
+>>>>  	fh_copy(&resp->dirfh, &argp->fh);
+>>>>  	fh_init(&resp->fh, NFS3_FHSIZE);
+>>>> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+>>>> index 6e23d6103010197c0316b07c189fe12ec3033812..2c795103deaa4044596bd07d90db788169a32a0c 100644
+>>>> --- a/fs/nfsd/nfs4proc.c
+>>>> +++ b/fs/nfsd/nfs4proc.c
+>>>> @@ -250,6 +250,8 @@ nfsd4_create_file(struct svc_rqst *rqstp, struct svc_fh *fhp,
+>>>>  	__be32 status;
+>>>>  	int host_err;
+>>>>  
+>>>> +	trace_nfsd4_create_file(rqstp, fhp, S_IFREG, open->op_fname, open->op_fnamelen);
 >>>> +
->>>>         /*
->>>>          * We subtract 13 from the highest bank bit (13 is the minimum value
->>>>          * allowed by hw) and write the lowest two bits of the remaining value
->>>>          * as hbb_lo and the one above it as hbb_hi to the hardware.
->>>>          */
->>>> -       BUG_ON(adreno_gpu->ubwc_config.highest_bank_bit < 13);
->>>> -       u32 hbb = adreno_gpu->ubwc_config.highest_bank_bit - 13;
->>>> -       u32 hbb_hi = hbb >> 2;
->>>> -       u32 hbb_lo = hbb & 3;
->>>> -       u32 ubwc_mode = adreno_gpu->ubwc_config.ubwc_swizzle & 1;
->>>> -       u32 level2_swizzling_dis = !(adreno_gpu->ubwc_config.ubwc_swizzle & 2);
->>>> +       if (hbb < 0)
->>>> +               hbb = adreno_gpu->ubwc_config.highest_bank_bit;
+>>>>  	if (isdotent(open->op_fname, open->op_fnamelen))
+>>>>  		return nfserr_exist;
+>>>>  	if (!(iap->ia_valid & ATTR_MODE))
+>>>> @@ -807,6 +809,29 @@ nfsd4_commit(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+>>>>  	return status;
+>>>>  }
+>>>>  
+>>>> +static umode_t nfs_type_to_vfs_type(enum nfs_ftype4 nfstype)
+>>>> +{
+>>>> +	switch (nfstype) {
+>>>> +	case NF4REG:
+>>>> +		return S_IFREG;
+>>>> +	case NF4DIR:
+>>>> +		return S_IFDIR;
+>>>> +	case NF4BLK:
+>>>> +		return S_IFBLK;
+>>>> +	case NF4CHR:
+>>>> +		return S_IFCHR;
+>>>> +	case NF4LNK:
+>>>> +		return S_IFLNK;
+>>>> +	case NF4SOCK:
+>>>> +		return S_IFSOCK;
+>>>> +	case NF4FIFO:
+>>>> +		return S_IFIFO;
+>>>> +	default:
+>>>> +		break;
+>>>> +	}
+>>>> +	return 0;
+>>>> +}
+>>>> +
 >>>
->>> No. The value we expose to userspace must match what we program.
->>> You'll break VK_EXT_host_image_copy otherwise.
+>>> Wondering what happens when trace points are disabled in the kernel
+>>> build. Maybe this helper belongs in fs/nfsd/trace.h instead as a
+>>> macro wrapper for __print_symbolic(). But see below.
+>>>
 >>
->> I didn't know that was exposed to userspace.
->>
->> The value must be altered either way - ultimately, the hardware must
->> receive the correct information. ubwc_config doesn't seem to be const,
->> so I can edit it there if you like it better.
->>
->> Konrad
+>> If tracepoints are disabled, then the only caller of this static
+>> function would go away, so it should get optimized out.
 > 
-> Yes, you should be calling qcom_smem_dram_get_hbb() in
-> a6xx_calc_ubwc_config(). You can already see there's a TODO there to
-> plug it in.
+> AIUI, the compiler will complain in that case. If we need to keep this
+> function here, then this is a legitimate use for "inline".
 
-Does this look good instead?
-
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-index 0cc397378c99..ae8dbc250e6a 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-@@ -588,6 +588,8 @@ static void a6xx_set_cp_protect(struct msm_gpu *gpu)
- 
- static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
- {
-+       u8 hbb;
-+
-        gpu->ubwc_config.rgb565_predicator = 0;
-        gpu->ubwc_config.uavflagprd_inv = 0;
-        gpu->ubwc_config.min_acc_len = 0;
-@@ -636,7 +638,6 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
-            adreno_is_a690(gpu) ||
-            adreno_is_a730(gpu) ||
-            adreno_is_a740_family(gpu)) {
--               /* TODO: get ddr type from bootloader and use 2 for LPDDR4 */
-                gpu->ubwc_config.highest_bank_bit = 16;
-                gpu->ubwc_config.amsbc = 1;
-                gpu->ubwc_config.rgb565_predicator = 1;
-@@ -665,6 +666,13 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
-                gpu->ubwc_config.highest_bank_bit = 14;
-                gpu->ubwc_config.min_acc_len = 1;
-        }
-+
-+       /* Attempt to retrieve HBB data from SMEM, keep the above defaults in case of error */
-+       hbb = qcom_smem_dram_get_hbb();
-+       if (hbb < 0)
-+               return;
-+
-+       gpu->ubwc_config.highest_bank_bit = hbb;
- }
- 
- static void a6xx_set_ubwc_config(struct msm_gpu *gpu)
+or maybe_unused.
 
 
-Konrad
+>> I don't see how
+>> you'd make this a wrapper around __print_symbolic(), since the point is
+>> to pass in a NFS version-independent constant that the tracepoint class
+>> can use as a type.
+>>
+>>>
+>>>>  static __be32
+>>>>  nfsd4_create(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+>>>>  	     union nfsd4_op_u *u)
+>>>> @@ -822,6 +847,10 @@ nfsd4_create(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+>>>>  	__be32 status;
+>>>>  	dev_t rdev;
+>>>>  
+>>>> +	trace_nfsd4_create(rqstp, &cstate->current_fh,
+>>>> +			   nfs_type_to_vfs_type(create->cr_type),
+>>>> +			   create->cr_name, create->cr_namelen);
+>>>> +
+>>>>  	fh_init(&resfh, NFS4_FHSIZE);
+>>>>  
+>>>>  	status = fh_verify(rqstp, &cstate->current_fh, S_IFDIR, NFSD_MAY_NOP);
+>>>> diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
+>>>> index 6dda081eb24c00b834ab0965c3a35a12115bceb7..33d8cbf8785588d38d4ec5efd769c1d1d06c6a91 100644
+>>>> --- a/fs/nfsd/nfsproc.c
+>>>> +++ b/fs/nfsd/nfsproc.c
+>>>> @@ -10,6 +10,7 @@
+>>>>  #include "cache.h"
+>>>>  #include "xdr.h"
+>>>>  #include "vfs.h"
+>>>> +#include "trace.h"
+>>>>  
+>>>>  #define NFSDDBG_FACILITY		NFSDDBG_PROC
+>>>>  
+>>>> @@ -292,8 +293,7 @@ nfsd_proc_create(struct svc_rqst *rqstp)
+>>>>  	int		hosterr;
+>>>>  	dev_t		rdev = 0, wanted = new_decode_dev(attr->ia_size);
+>>>>  
+>>>> -	dprintk("nfsd: CREATE   %s %.*s\n",
+>>>> -		SVCFH_fmt(dirfhp), argp->len, argp->name);
+>>>> +	trace_nfsd_proc_create(rqstp, dirfhp, S_IFREG, argp->name, argp->len);
+>>>>  
+>>>>  	/* First verify the parent file handle */
+>>>>  	resp->status = fh_verify(rqstp, dirfhp, S_IFDIR, NFSD_MAY_EXEC);
+>>>> @@ -548,7 +548,7 @@ nfsd_proc_mkdir(struct svc_rqst *rqstp)
+>>>>  		.na_iattr	= &argp->attrs,
+>>>>  	};
+>>>>  
+>>>> -	dprintk("nfsd: MKDIR    %s %.*s\n", SVCFH_fmt(&argp->fh), argp->len, argp->name);
+>>>> +	trace_nfsd_proc_mkdir(rqstp, &argp->fh, S_IFDIR, argp->name, argp->len);
+>>>>  
+>>>>  	if (resp->fh.fh_dentry) {
+>>>>  		printk(KERN_WARNING
+>>>> diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+>>>> index 382849d7c321d6ded8213890c2e7075770aa716c..c6aff23a845f06c87e701d57ec577c2c5c5a743c 100644
+>>>> --- a/fs/nfsd/trace.h
+>>>> +++ b/fs/nfsd/trace.h
+>>>> @@ -2391,6 +2391,45 @@ TRACE_EVENT(nfsd_lookup_dentry,
+>>>>  	TP_printk("xid=0x%08x fh_hash=0x%08x name=%s",
+>>>>  		  __entry->xid, __entry->fh_hash, __get_str(name))
+>>>>  );
+>>>> +
+>>>> +DECLARE_EVENT_CLASS(nfsd_vfs_create_class,
+>>>> +	TP_PROTO(struct svc_rqst *rqstp,
+>>>> +		 struct svc_fh *fhp,
+>>>> +		 umode_t type,
+>>>> +		 const char *name,
+>>>> +		 unsigned int len),
+>>>> +	TP_ARGS(rqstp, fhp, type, name, len),
+>>>> +	TP_STRUCT__entry(
+>>>> +		SVC_RQST_ENDPOINT_FIELDS(rqstp)
+>>>> +		__field(u32, fh_hash)
+>>>> +		__field(umode_t, type)
+>>>> +		__string_len(name, name, len)
+>>>> +	),
+>>>> +	TP_fast_assign(
+>>>> +		SVC_RQST_ENDPOINT_ASSIGNMENTS(rqstp);
+>>>> +		__entry->fh_hash = knfsd_fh_hash(&fhp->fh_handle);
+>>>> +		__entry->type = type;
+>>>> +		__assign_str(name);
+>>>> +	),
+>>>> +	TP_printk("xid=0x%08x fh_hash=0x%08x type=%s name=%s",
+>>>> +		  __entry->xid, __entry->fh_hash,
+>>>> +		  show_fs_file_type(__entry->type), __get_str(name))
+>>>> +);
+>>>> +
+>>>> +#define DEFINE_NFSD_VFS_CREATE_EVENT(__name)						\
+>>>> +	DEFINE_EVENT(nfsd_vfs_create_class, __name,					\
+>>>> +		     TP_PROTO(struct svc_rqst *rqstp, struct svc_fh *fhp,		\
+>>>> +			      umode_t type, const char *name, unsigned int len),	\
+>>>> +		     TP_ARGS(rqstp, fhp, type, name, len))
+>>>> +
+>>>> +DEFINE_NFSD_VFS_CREATE_EVENT(nfsd_proc_create);
+>>>> +DEFINE_NFSD_VFS_CREATE_EVENT(nfsd_proc_mkdir);
+>>>> +DEFINE_NFSD_VFS_CREATE_EVENT(nfsd3_proc_create);
+>>>> +DEFINE_NFSD_VFS_CREATE_EVENT(nfsd3_proc_mkdir);
+>>>> +DEFINE_NFSD_VFS_CREATE_EVENT(nfsd3_proc_mknod);
+>>>> +DEFINE_NFSD_VFS_CREATE_EVENT(nfsd4_create);
+>>>> +DEFINE_NFSD_VFS_CREATE_EVENT(nfsd4_create_file);
+>>>
+>>> I think we would be better off with one or two new trace points in
+>>> nfsd_create() and nfsd_create_setattr() instead of all of these...
+>>>
+>>> Unless I've missed what you are trying to observe...?
+>>>
+>>
+>> I'll look into doing it that way.
+>>
+>>>
+>>>> +
+>>>>  #endif /* _NFSD_TRACE_H */
+>>>>  
+>>>>  #undef TRACE_INCLUDE_PATH
+>>>>
+>>>
+>>>
+>>
+> 
+> 
+
+
+-- 
+Chuck Lever
