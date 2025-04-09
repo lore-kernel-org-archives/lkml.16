@@ -1,77 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 617B72940F;
-	Wed,  9 Apr 2025 01:58:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBC9A8F49;
+	Wed,  9 Apr 2025 02:02:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744163934; cv=none; b=oGOK3t/yqYxoCXbxTrRUZbGyxo5g5L6RD6l7EYH3Zw48w+piTBfXjhLckfFRyWHrGrUHqLUHfSs7jvbKMHTrUORLOJJJ+mlmZVznTgBS4kQT7p4DZABQQiLHGcOSfXuG/duGIoR4qKrtxUTFB/1BVLq4ldDZvUjM/oFkXkR9NF0=
+	t=1744164125; cv=none; b=jwTb5VKaD/aOomAhGXMavjFmfm2N2nXSlZkxciNXPlIRMP/29LXO2v8iVlUNky/MOZQem6TrWhSsXuPUGSd0jwbQyCRH0KAhRAP6V2Z4CArqPl85CGe9JpDWPnmgaPB8yxS9adG3qU7Ck/vjlpUDQWtp24gcNeqcYVOYX8c0qJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744163934; c=relaxed/simple;
-	bh=PtgBP6zEsA6YsxYnc/Q4fIwjwx+7QJDP4Jr2jAjNwos=;
+	s=arc-20240116; t=1744164125; c=relaxed/simple;
+	bh=Jrj5fZbgGabxF7m+FWjZuY30NsAWAz1JlNS6WxgVs+o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oUAXzF1iSXmnbGXJ++c+mummWtcaNHIbmhO8JSfP3UfDcpUybvJNUObQPSEv4YoofDlgqazv0nIai2hWQM7kfNqY/RGlsiqKzQtG0kwK/7yfGgrdCM7XY0BKQQBnrpdmNyB6SfxPhBKQSDrzoi6AxELBrVoq2AI5CQ9PRgz/REM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cYus8xA7; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ibmXF2rTkHfih0l9mQWG5GKJXz3k6QNDBWnTnxfZxXLZRG7KL+PmJ9u7gEc3WMiQqI9HmB880KzuGmSPqHDCu7qI9WR93KErOlntWmGGdG0UoU6LntqrICIrNiuznkJfIduFmqAehRkwDoQ7aiijS3kDREVq/7saVGXV9hSq3VI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MJRoggCy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cYus8xA7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5550BC4CEE5;
-	Wed,  9 Apr 2025 01:58:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MJRoggCy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E535C4CEE5;
+	Wed,  9 Apr 2025 02:02:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744163933;
-	bh=PtgBP6zEsA6YsxYnc/Q4fIwjwx+7QJDP4Jr2jAjNwos=;
+	s=k20201202; t=1744164124;
+	bh=Jrj5fZbgGabxF7m+FWjZuY30NsAWAz1JlNS6WxgVs+o=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cYus8xA7LMm0lmkGqzebV49qB9QFBm4rUS6aWxfo+HX7wpZ8lmS5l1FqtZohBc/6s
-	 HGB2nUuh4AMD0jvW3f9fOTI9wU/+TfloctiIkxHIoxGdONE6C2vivk6o4yYS3Da8+b
-	 3r+2yvhHd6+BDyjD563pimFhwg3jkDTGuAh1A/4UFb29CQ5yUn3Vgd/i7eiL88qq66
-	 q6+8k5bVEujoAtEV1F8FlrSZq9qyjgJwkAg60fC1eAx4drmS/F2Qsw5Iy+hd3CEY16
-	 UnMen7sKOW4AMMcOQIphJA3/mb7fxDWRqpkQuIoqS+Ty3OQJe6Gocu1g/SF5dJ2mH6
-	 CDo7NML7KpDsA==
-Date: Tue, 8 Apr 2025 18:58:49 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Rae Moar <rmoar@google.com>, 
-	Shuah Khan <skhan@linuxfoundation.org>, 
-	Sergio =?utf-8?B?R29uesOhbGV6?= Collado <sergio.collado@gmail.com>, David Gow <davidgow@google.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	Mostafa Saleh <smostafa@google.com>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH] scripts/mksysmap: skip objtool __pfx_ symbols
-Message-ID: <ycgbf7jcq7nc62ndqiynogt6hkabgl3hld4uyelgo7rksylf32@oysq7jpchtp4>
-References: <20250328112156.2614513-1-arnd@kernel.org>
+	b=MJRoggCygojmuW8hLObxvCWXCt0t1n1lP70E2My1stQzAg0mZR4pFM1JmMdysqxWp
+	 xiUc/iti5Ucdg561qHqJEyFhWTfDXxuPpXJVrNb8gFLXktNlxfvQZGR3UDf7yp3GjF
+	 lUqfCfSsMAqIEz3Wv3pDoJgi5Dqwq7jC+NXiNNx2fCvg60VjTNdnupWEFPezvrNjM9
+	 WEPRNsjvHWJkp8V1KpYjip+8ZlYjqTV5/cjLe46L/fCTzoQTEAslv8qS3Kf8+CPKhL
+	 CSvTDnWqT5fyNbJtjLaaRRpoilLmDJsbzc+YOSkmWZ+HliR1rstzi7MU254m2vEPpN
+	 AYn5N8jfvcyzg==
+Date: Tue, 8 Apr 2025 19:02:03 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: John Garry <john.g.garry@oracle.com>
+Cc: brauner@kernel.org, hch@lst.de, viro@zeniv.linux.org.uk, jack@suse.cz,
+	cem@kernel.org, linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
+	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
+	linux-block@vger.kernel.org, catherine.hoang@oracle.com
+Subject: Re: [PATCH v6 03/12] xfs: rename xfs_inode_can_atomicwrite() ->
+ xfs_inode_can_hw_atomicwrite()
+Message-ID: <20250409020203.GI6283@frogsfrogsfrogs>
+References: <20250408104209.1852036-1-john.g.garry@oracle.com>
+ <20250408104209.1852036-4-john.g.garry@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250328112156.2614513-1-arnd@kernel.org>
+In-Reply-To: <20250408104209.1852036-4-john.g.garry@oracle.com>
 
-On Fri, Mar 28, 2025 at 11:48:19AM +0100, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+On Tue, Apr 08, 2025 at 10:42:00AM +0000, John Garry wrote:
+> In future we will want to be able to check if specifically HW offload-based
+> atomic writes are possible, so rename xfs_inode_can_atomicwrite() ->
+> xfs_inode_can_hw_atomicwrite().
 > 
-> The recently added testcase for overly long symbols triggers when
-> CONFIG_FUNCTION_PADDING_CFI is set:
+> Signed-off-by: John Garry <john.g.garry@oracle.com>
+
+Looks ok,
+Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
+
+--D
+
+> ---
+>  fs/xfs/xfs_file.c  | 2 +-
+>  fs/xfs/xfs_inode.h | 2 +-
+>  fs/xfs/xfs_iops.c  | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
 > 
-> Symbol __pfx_snnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nnng1h2i3j4k5l6m7ng1h2i3j4k5l6m7nng1h2i3j4k5l6m7ng1h2i3j4k5l6m7n too long for kallsyms (517 >= 512).
-> Please increase KSYM_NAME_LEN both in kernel and kallsyms.c
+> diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
+> index 84f08c976ac4..653e42ccc0c3 100644
+> --- a/fs/xfs/xfs_file.c
+> +++ b/fs/xfs/xfs_file.c
+> @@ -1488,7 +1488,7 @@ xfs_file_open(
+>  	if (xfs_is_shutdown(XFS_M(inode->i_sb)))
+>  		return -EIO;
+>  	file->f_mode |= FMODE_NOWAIT | FMODE_CAN_ODIRECT;
+> -	if (xfs_inode_can_atomicwrite(XFS_I(inode)))
+> +	if (xfs_inode_can_hw_atomicwrite(XFS_I(inode)))
+>  		file->f_mode |= FMODE_CAN_ATOMIC_WRITE;
+>  	return generic_file_open(inode, file);
+>  }
+> diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
+> index eae0159983ca..cff643cd03fc 100644
+> --- a/fs/xfs/xfs_inode.h
+> +++ b/fs/xfs/xfs_inode.h
+> @@ -357,7 +357,7 @@ static inline bool xfs_inode_has_bigrtalloc(const struct xfs_inode *ip)
+>  		(ip)->i_mount->m_rtdev_targp : (ip)->i_mount->m_ddev_targp)
+>  
+>  static inline bool
+> -xfs_inode_can_atomicwrite(
+> +xfs_inode_can_hw_atomicwrite(
+>  	struct xfs_inode	*ip)
+>  {
+>  	struct xfs_mount	*mp = ip->i_mount;
+> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+> index f0e5d83195df..d324044a2225 100644
+> --- a/fs/xfs/xfs_iops.c
+> +++ b/fs/xfs/xfs_iops.c
+> @@ -608,7 +608,7 @@ xfs_report_atomic_write(
+>  {
+>  	unsigned int		unit_min = 0, unit_max = 0;
+>  
+> -	if (xfs_inode_can_atomicwrite(ip))
+> +	if (xfs_inode_can_hw_atomicwrite(ip))
+>  		unit_min = unit_max = ip->i_mount->m_sb.sb_blocksize;
+>  	generic_fill_statx_atomic_writes(stat, unit_min, unit_max, 0);
+>  }
+> -- 
+> 2.31.1
 > 
-> Change the mksymtab table so the prefixed symbols are not included
-> in kallsyms.
 > 
-> Fixes: c104c16073b7 ("Kunit to check the longest symbol length")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-
-I'm not sure we want to remove the __pfx_ symbols from kallsyms. There
-can be actual code there.
-
-For example, FineIBT writes code in the __pfx area which can trigger an
-#UD.  And we'd want a sane backtrace for that.
-
-Maybe objtool should error out when trying to prefix a function with a
-name longer than (KSYM_NAME_LEN - 6).  And the kunit test could be
-adjusted accordingly for CONFIG_PREFIX_SYMBOLS.
-
--- 
-Josh
