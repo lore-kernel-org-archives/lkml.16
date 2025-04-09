@@ -1,116 +1,140 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A072202C44
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 19:55:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF80202C44;
+	Wed,  9 Apr 2025 19:56:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744228502; cv=none; b=QXTv5g/yiAHmIVTsOp5ppQ5iM/8mbZBB5Gf1y093lGD3QVkOnNwG7nI/8F2b+G4pELqbVP5zz8RzAV4J++18f1RU8AQfyaXVygSCkWDbuR+dCJeRGayt2D+Q9qMruhADSOx9YVfPSvKBMJFlnScGowr21AonCBbpp3tN5FnXfD0=
+	t=1744228572; cv=none; b=dyZ3Wd2HbqzgmKMAwSw/kbpuXPRRfdaOA18lomxG9aiEsurrbgtnJXM3zXMfV4w+aakSefHSeH0Diks7saeKoVLdi4WrDKScOQxKwP/YZxqgADi925Ltvl+hzkx4wcjQWe3R9fwhYzyzOorWOwJsEfwLcsVLcOogFrk2OoM8TXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744228502; c=relaxed/simple;
-	bh=xn68JtN4Qk06N0r1rRh9xofitl+E4BHuD3TI27fRFfs=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=gdJ/k+LRqaFt+7RZcDk7EpncK8T7xwBSxmJOXii8CEObHtjTCNb50p6WpCPbZ3Nl/yePyStQ6qPGpIRur1KNxxvk6NRZnVZnMGjS9+TeQdqpHl45Olc8wwZDdjB8FgEEmcCwDReT8LtkALg4Jy4f4GmSZiKCfzJWHZKzve8kkK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--tjmercier.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZCxfOvJ9; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--tjmercier.bounces.google.com
+	s=arc-20240116; t=1744228572; c=relaxed/simple;
+	bh=3grsrl9RZSBBBvFXyMe95JHInK+q/SBFqiK5jQb49GU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=naQejA2ZBoFbDPcru6CU8peJsbkPkd4or++L3VM9AFsjgIBLOd2fvekuoRqnNr25XgZ40feuuotuo9FkmDADoDK398yIKSP2KfM2+bbcb0wxO1nUG+GZoOnfX9QkhDSgY+AHrB4KZ3BA4Pecg/ohfm8LneI6sHPLlsNnAUVl5L8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LGXHTrN0; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZCxfOvJ9"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-73009f59215so7556b3a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 12:55:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744228500; x=1744833300; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=0Cxlom7LaqSTPNZq2xmK4+ieYxW2eyaqpLd90fUc9Os=;
-        b=ZCxfOvJ9TKKPij5ol67bpHIKIN4ocgS+jlyjWabJe8rXDb7dM8omjhhxvwYxlWRr6E
-         JIzw6ekXdJnOU2mOBKpne10r/Qkv7Asz8xse2pRvFjqNwexGmJcUME6MWjd8ICEGhLKB
-         zaFHWxbzT4grejh044ZTkQjeRnWZLVkxOTp+K7epeWHGeHjhG/7XOrPXafSKwyxQq3+u
-         +QE4r7Uo+HthUF69Y/vSQUOq+ak5SWi6Ix6svcpia1HFtuRcl0vSPUuhg4GkbHELIXmH
-         6N6D3JUEauqJvcOyrF/t/w6S6+OquM6H7REDjcfWmOklshz/K9MwIsrHhBmWcRXgi9Q9
-         PXpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744228500; x=1744833300;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0Cxlom7LaqSTPNZq2xmK4+ieYxW2eyaqpLd90fUc9Os=;
-        b=HaZDXSg9D1CG2wTX3VHtFXqhaInxb6c2DfNv7YqVeLxHT8dxxH8/UwjEqIp/L3ySaM
-         piMe+PC93RF4DnP7r9qIz32WF6hw9yC3ZOjY61ymiiA6ksu96EWX1//QjXvedeT5amEB
-         V8yYfjet2HjKHpHHRareHSMhVw+2MWirbqtn2tGTouZZUsPvajNZ2buBZY+B6RlQbHYz
-         ckd5q+fQBxDb6EDVJ3i1U4s9nk9cO3w1Vi75wOq746qi8kTVOyUbxlgf6XjaDoK7OyVT
-         sXib2gxJfAX6CsCvnlXvasKXFr0a7EmGdUby1QvmRP3sE0NHxNN3XBXbWbi54xLW+NrE
-         IpDw==
-X-Forwarded-Encrypted: i=1; AJvYcCXM6Ux1Xc8XK9U/ZgqIf5Goz5pCB4fgzvXCl6fMsGFivUzZfsGuk0PgkPSIiMGez62FZs5akf4FJHgf+Lo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrPwDSVEBRIMkXKkDVtJEEN1uQdNh03o27TBeOUbkF7wDKXYk2
-	yB1tuvwJGQ2WMCqKpBYlkFQIF5V96YErIzBCoe6Wi5O5FcuGNeG1CjbVz0WN9+/CJsYjgLF42db
-	PAKB008f95Dv3Xw==
-X-Google-Smtp-Source: AGHT+IE+v/JVOzdWcyI0nV5rZ7/P1D+Fevt3cx+6ulg9GOA2p6sFNANwQH15D7aywnU+YXm3dQlH5ywEzddm+mE=
-X-Received: from pfix12.prod.google.com ([2002:aa7:9a8c:0:b0:736:86e0:8dee])
- (user=tjmercier job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a20:7287:b0:1fe:5e67:21af with SMTP id adf61e73a8af0-201695c7b73mr609078637.30.1744228500266;
- Wed, 09 Apr 2025 12:55:00 -0700 (PDT)
-Date: Wed,  9 Apr 2025 19:54:47 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LGXHTrN0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744228570; x=1775764570;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=3grsrl9RZSBBBvFXyMe95JHInK+q/SBFqiK5jQb49GU=;
+  b=LGXHTrN0SwXCRdQI6jNo/XBB69a69KPtMWkGacKBA7XGoqrUSKQ2a+mI
+   kyGFPtPj7ksCSiAKg6g/dKe5BxF5Rh25kGKi9/XcETsbWy7KR7PWlSdLs
+   0ZnF3dTNyfcBRwdsP5M9lGSODcQzsOgTm2tUBaWC0MtqexSK00mBpHiHu
+   V0aCWGigZ4K8MuyTMooyi9l17vOX26A6xvjn1skcDKCfnF99iy+uXY0TI
+   897HDoLNn1cFliQQCEjKDfVyKtAxi+agLEs2AEeDBwSSOfJwWW4OjG2oS
+   uLpsTpmVd4rPEtmk3D9zXytAEk8MWqkCeZgYpBMYfxhAQdkj9fwgsZ0ew
+   A==;
+X-CSE-ConnectionGUID: zvYW/ZoGQAy/CeaIbyiZAA==
+X-CSE-MsgGUID: X8DiXHWGQfiyEmcOLHFgcg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="49566739"
+X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
+   d="scan'208";a="49566739"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 12:56:09 -0700
+X-CSE-ConnectionGUID: nHikWXMBThOMkcTjRkRv+A==
+X-CSE-MsgGUID: MXkjaIXHS0SCTiVGQFjm6g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
+   d="scan'208";a="128651763"
+Received: from sramkris-mobl1.amr.corp.intel.com (HELO [10.124.220.195]) ([10.124.220.195])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 12:56:07 -0700
+Message-ID: <29ad84a6-b40c-456a-9eed-9887c87dfb38@intel.com>
+Date: Wed, 9 Apr 2025 12:56:04 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250409195448.3697351-1-tjmercier@google.com>
-Subject: [PATCH] alloc_tag: Handle incomplete bulk allocations in vm_module_tags_populate
-From: "T.J. Mercier" <tjmercier@google.com>
-To: Suren Baghdasaryan <surenb@google.com>, Kent Overstreet <kent.overstreet@linux.dev>, 
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: "T.J. Mercier" <tjmercier@google.com>, Janghyuck Kim <janghyuck.kim@samsung.com>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v1 01/15] x86/msr: Replace __wrmsr() with
+ native_wrmsrl()
+To: Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>
+Cc: Xin Li <xin@zytor.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
+ virtualization@lists.linux.dev, linux-edac@vger.kernel.org,
+ kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
+ linux-ide@vger.kernel.org, linux-pm@vger.kernel.org, bpf@vger.kernel.org,
+ llvm@lists.linux.dev, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, jgross@suse.com,
+ andrew.cooper3@citrix.com, peterz@infradead.org, acme@kernel.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com, wei.liu@kernel.org,
+ ajay.kaher@broadcom.com, alexey.amakhalov@broadcom.com,
+ bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+ pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+ luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+ haiyangz@microsoft.com, decui@microsoft.com
+References: <20250331082251.3171276-1-xin@zytor.com>
+ <20250331082251.3171276-2-xin@zytor.com> <Z-pruogreCuU66wm@gmail.com>
+ <9D15DE81-2E68-4FCD-A133-4963602E18C9@zytor.com>
+ <a0254e73-bf7c-4876-b64e-b08e96044666@zytor.com>
+ <e5770add-9d18-40e1-929d-df7c40f3c7d1@intel.com>
+ <ADCFB190-A89A-460D-81A6-80E20AEFBFBC@zytor.com> <Z_bQV2oOnJlwbxnk@gmail.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <Z_bQV2oOnJlwbxnk@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-alloc_pages_bulk_node may partially succeed and allocate fewer than the
-requested nr_pages. There are several conditions under which this can
-occur, but we have encountered the case where CONFIG_PAGE_OWNER is
-enabled causing all bulk allocations to always fallback to single page
-allocations due to commit 187ad460b841 ("mm/page_alloc: avoid page
-allocator recursion with pagesets.lock held").
+On 4/9/25 12:53, Ingo Molnar wrote:
+>>> What would folks think about "wrmsr64()"? It's writing a 64-bit 
+>>> value to an MSR and there are a lot of functions in the kernel that 
+>>> are named with the argument width in bits.
+>> Personally, I hate the extra verbosity, mostly visual, since numerals 
+>> are nearly as prominent as capital letters they tend to attract the 
+>> eye. There is a reason why they aren't used this way in assembly 
+>> languages.
+> So what's the consensus here? Both work for me, but I have to pick one. 🙂
 
-Currently vm_module_tags_populate immediately fails when
-alloc_pages_bulk_node returns fewer than the requested number of pages.
-This patch causes vm_module_tags_populate to retry bulk allocations for
-the remaining memory instead.
-
-Reported-by: Janghyuck Kim <janghyuck.kim@samsung.com>
-Signed-off-by: T.J. Mercier <tjmercier@google.com>
----
- lib/alloc_tag.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
-
-diff --git a/lib/alloc_tag.c b/lib/alloc_tag.c
-index 1d893e313614..25ecc1334b67 100644
---- a/lib/alloc_tag.c
-+++ b/lib/alloc_tag.c
-@@ -422,11 +422,20 @@ static int vm_module_tags_populate(void)
- 		unsigned long old_shadow_end = ALIGN(phys_end, MODULE_ALIGN);
- 		unsigned long new_shadow_end = ALIGN(new_end, MODULE_ALIGN);
- 		unsigned long more_pages;
--		unsigned long nr;
-+		unsigned long nr = 0;
- 
- 		more_pages = ALIGN(new_end - phys_end, PAGE_SIZE) >> PAGE_SHIFT;
--		nr = alloc_pages_bulk_node(GFP_KERNEL | __GFP_NOWARN,
--					   NUMA_NO_NODE, more_pages, next_page);
-+		while (nr < more_pages) {
-+			unsigned long allocated;
-+
-+			allocated = alloc_pages_bulk_node(GFP_KERNEL | __GFP_NOWARN,
-+				NUMA_NO_NODE, more_pages - nr, next_page + nr);
-+
-+			if (!allocated)
-+				break;
-+			nr += allocated;
-+		}
-+
- 		if (nr < more_pages ||
- 		    vmap_pages_range(phys_end, phys_end + (nr << PAGE_SHIFT), PAGE_KERNEL,
- 				     next_page, PAGE_SHIFT) < 0) {
--- 
-2.49.0.504.g3bcea36a83-goog
-
+I don't feel strongly about it. You're not going to hurt my feelings if
+you pick the "q" one, so go for "q" unless you have a real preference.
