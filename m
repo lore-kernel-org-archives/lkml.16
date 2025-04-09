@@ -1,115 +1,142 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09573155389
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 09:13:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD24B25C6FA
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 09:14:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744190007; cv=none; b=Ot9tI01cqR5+ktIa6d+e9L5A2hcrYaFj8XhkVvZLnFFVfX6SFzXuiP4hzM3aBoxTDQLlTIF4jWCMcNxNuNyWQ90XmgIY+yU6AMk9qmzJ9OhdaOq8Amko3nno70M0ywobJisZ1/Bwr8fH5aCus21QPF50XfsA7YeqSG7ju9DZtc8=
+	t=1744190062; cv=none; b=nyt6EPjh9F4rat0UJqonaki8DkdBN3jEHz0rzNySfUq5t1uv4R+gGhsO2XCcJaDBvgZmH+KRWWirZn05VdHdEUL1Eugy3GtubpFfQZ3notP3g88WC241wvu69aOsrp2j27AcTGjSxkEN8uCBcLHCCIIcImbOt6IdsAucU0tzTyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744190007; c=relaxed/simple;
-	bh=w8jM+kjNpQwYUHFIVj+21LsNdXWV4iKMqaSnGVehs7c=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=dhDuAsiX2vsYyn+Nx7fF7NYTe1QFdNyePAE62LIXBg7CPqJSYGoS4zBE02E6Vz89ls0sE2uJ7vzjjXBns5E/vGEzKs1S6Ujy+Pkujrv2c44qyGj1Hl9TASlWQZ/G5McF8s9MHB0QqExHRBZZIfxPp2FSoKB5R6/s5ByF9eQPLMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=IP7Wimv0; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1744190062; c=relaxed/simple;
+	bh=KPrSjQFz6RDMLvo3Gr/vxAHo3CF4mjppfNm8W6oMQVw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NQvw6PK77nyOGLTiU7bc+tN83SZraIF7ACLYJ4WpLDnR3cQAD6Bi+m8ZN54ESt2Y2B/zbEu361x9KPJHH68FNJX1nqgOl9jt4ndUHlDhoSaGdi+EeSQDbPRuOXQW45CNhSDch+I7YzYaiq+9Gs1K1h/CFfO7LU3t3WfsiY2l1gc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=APcPPBQd; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IP7Wimv0"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-306bf444ba2so3025527a91.1
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 02:13:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="APcPPBQd"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-47663aeff1bso59460021cf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 02:14:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1744190004; x=1744794804; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=BaNms8AAHYU6+Lu110JwWuCHuNcKevGY2uAR6UWGQNE=;
-        b=IP7Wimv0+4lMP02bu2jDuBGVXZS7Y0PuCUYtYQeKWoEvcrAeFQRpmnubsCOhcIHL4u
-         R9G9YZq5lwvDEMELvAWCQkokl2aS2fKt2BUaQnPXBlaM+GJ2YnbiJw85X9FhLXuWyiMT
-         f85gli5YSFazGR4wFm6WTc9hhjR41Pvg6Cey0=
+        d=gmail.com; s=20230601; t=1744190059; x=1744794859; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LuSuDtNF61PvgQQchQkid6uP+93V9BVfdt5rCLmmpzU=;
+        b=APcPPBQdD2cTL4lpxEZFyhbXatPqS151moiFmWQ7Ma3w64nWkQQ4/rG2R0YVPpQU4M
+         poD19MXMVx+lwrGNeLTOi9/mDwbJO2tgFB5A4+hFwpsnDsKNW12ZCA2pJOsCCn3qOy3y
+         DLWnwBgSjXiwF8dX72X9IpntXXmw+Ad41QgAXudYqhlbO1GzmRQbwJNhESLJEyoaGZXg
+         srB0Q01dmjTgqyofONcF6QsRoGbHUu88pbHVmOUkAc3XTOnJAqoBnrBTJ8hjcXqunhLG
+         rG2UjGUYNJPGuOdBvCT8zTIxOpvDPTMis7m+y6364vE+7C7Z2//zqC4lNlbOgK8wdBv+
+         O9/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744190004; x=1744794804;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1744190059; x=1744794859;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=BaNms8AAHYU6+Lu110JwWuCHuNcKevGY2uAR6UWGQNE=;
-        b=kjn7N391am40M3jQUzfgFs9YiE9HbQ1Me53UoUpfUs9kwYyawiLBK+bov6o4mIC6DG
-         AivbhOK00noCXyNWTtaTw6eHdngy68ibbD+ZRsMkCBgJcQ9UY5gqUBopuLHe7e0OFjsJ
-         nTfUqHZReZOph7m38Z3Dkq9l1lkmAH5/hvSoiI4kWcUE0LE2SKLqKCuJAazlBQ9xZT52
-         OgL3qfqn4MuGQzogxux/OYHui9otqfgehVLJm7N2v4F/iNo3Lt7pWty6N3iNULMDZ8Q8
-         493KclHOldG03tnTienkZgb3l7E84Lz2SGClIHuHCLCjCVabxQc25sXJYSdkFrgsK7el
-         x5Ag==
-X-Forwarded-Encrypted: i=1; AJvYcCWPDrqohFwV1C3f8JxOP/tgPk/pa+x2fGMAO+UBP7yPidxIu4Cn51eacaMxejHwyQOlYRsYJYZxrR02kKg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQz1yDFGvbe4QIC/+VvyULDVXb1MuIo3orW2tXOgOgQqmBPyQj
-	qC3tFkVL/1YdpcTYDPRW56/Heby6O0VR1JAeTuANMPOdGiOxM5AGIPQ7tgoZGQ==
-X-Gm-Gg: ASbGncvoTgyGsEZXkrxJTkiiLi199pxs/W/oIiOc5rY/ZIUmdWbKtnVGq3GRpc6Csje
-	8yBOEAtHW38qx6rSA1aWzZSY+Hd6yyNUfvnbpBbpe5v/IlCcBOpD+C8+rd7zkQJfiQ8BEE/U++Q
-	hNRy+18Rz4lBITAGEK8XFG7FQwAfoAY8pIf+IKd0E3xDiMX/Wx8yPGqtLtTujWNh4/0hZDRV4xZ
-	rYdvm9VRlg+9AAo5cXFwSak1wxbTxAv3kYWda+aqVv90RYCWCgNGa/jh1ksBGnFJtYpApGEDCME
-	/NNfyk/GJVZUHvLYFDnRDk4+shElTlJU8/zW3xveYcSIwnkP2d9PnXOBm07HiclRrJlM4dROZFE
-	/xYOEOz9C32UYU8S9E4dt0IU+rqKT
-X-Google-Smtp-Source: AGHT+IG2BgqZHSIHI8aYAkVrTJn/SDbhHGgzVIz93kwK2lBJoxcfDzl64PMZYZKZH2NJ1T9ptVPhUw==
-X-Received: by 2002:a17:90a:d644:b0:306:b78a:e22d with SMTP id 98e67ed59e1d1-306dbbc2ce6mr2970209a91.20.1744190004299;
-        Wed, 09 Apr 2025 02:13:24 -0700 (PDT)
-Received: from yuanhsinte.c.googlers.com (95.147.221.35.bc.googleusercontent.com. [35.221.147.95])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306dd10dc40sm1182551a91.9.2025.04.09.02.13.22
+        bh=LuSuDtNF61PvgQQchQkid6uP+93V9BVfdt5rCLmmpzU=;
+        b=Z9ZG89R7O3IdYJ7EmA07lJRdijsb2x8cs7rEegENWpTiKhVpU0KVazxSz8jwIV8VK1
+         y7IH2lByNXExZL3qdIRQyYFh7i7zhjDaTGNeq56sCcI5vZl7xwQOuN9whl2VigwWiux7
+         EDnDJ3alYVO7ECSrUcIYmJ5RkVX1yBb/bwHfpfriIdsJon6v/+bjAvBWiw79X/Eah44x
+         DOW6xbogCMf7BOYbffVE3cuUcVPDZreWxAWBG0I8lYFV08mtCghDFQ6SBoBrpg8I8/IQ
+         cNjyAmgRyzPta0UWk5PCvDjJ4mx2oba2IXszHBZ1hCj2cyGKpfhR8ANcfCVsInipEDcq
+         mjpA==
+X-Forwarded-Encrypted: i=1; AJvYcCWblutdcJPGo4M+qKagjrvgLhoD79R3V6dqe50JUjtVRpSXjskO19p95e/s3wrGK9Vt7c4Oo6Q5r+unfFc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZ2cVBL4qKpJW6D/dsmUKuvjf6blMtslPWnoTSJyrNoLkzhadO
+	M8MHxKUS61VMyo1F3uzbc7jXYgn+FOcd2JifLCbivkInLx5n1VDa
+X-Gm-Gg: ASbGnctepAjHmDod7hO6X4niHM5/UG0wSzqJbDTQW7cnfOnPJUy1g7KsJSMHbil/bjN
+	Z8Gu6w117HjbTkPoVlB2cg2WJuidmCjFKznJ1bsaFoQvTY+V1SlOorsvkVlsDLWfMcRKe7RTf6g
+	gmCzFDBKeMrhFhcKTginIRnBHYnlREbraFzXzN3z4wCeIw0SYC7VSbMGm6V8tgBcVzWtBgiMjy1
+	fuBUV0naYTGE6+q8QB33eiMR9nGZl3peAphbIUpQeJ8ZD+bhulphrEoSjzzVrEqeE0ufHyE2o/B
+	Reh2yWO0pPieiIvORv4fqx5MdJBzdaUGoXr63CpI8bzrSA==
+X-Google-Smtp-Source: AGHT+IHROIfff9EygQflh2Ny77Q7Q9H1hfUvsrr1DY/l79I/KwXjFhlSR1X4Vw9Pm8MnS2NAuG8V5A==
+X-Received: by 2002:a05:622a:50f:b0:474:e3e8:1a58 with SMTP id d75a77b69052e-4795f2d0919mr25813461cf.16.1744190059511;
+        Wed, 09 Apr 2025 02:14:19 -0700 (PDT)
+Received: from ubuntu ([105.112.112.184])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47964ef728esm4631941cf.73.2025.04.09.02.14.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 02:13:23 -0700 (PDT)
-From: Hsin-Te Yuan <yuanhsinte@chromium.org>
-Date: Wed, 09 Apr 2025 09:13:11 +0000
-Subject: [PATCH] thermal: sysfs: Return ENODATA instead of EAGAIN for reads
+        Wed, 09 Apr 2025 02:14:19 -0700 (PDT)
+From: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
+To: outreachy@lists.linux.dev,
+	julia.lawall@inria.fr
+Cc: gregkh@linuxfoundation.org,
+	linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	david.laight.linux@gmail.com,
+	dan.carpenter@linaro.org,
+	andy@kernel.org,
+	Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
+Subject: [PATCH v9 0/2] staging: rtl8723bs: Improve readability and clarity of sequence number wrapping
+Date: Wed,  9 Apr 2025 09:12:53 +0000
+Message-Id: <cover.1744189500.git.abrahamadekunle50@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250409-temp-v1-1-9a391d8c60fd@chromium.org>
-X-B4-Tracking: v=1; b=H4sIACc69mcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDEwNL3ZLU3AJds9SkFEPjxBSDlKQUJaDSgqLUtMwKsDHRsbW1AHYO/vd
- WAAAA
-X-Change-ID: 20250409-temp-6ebd13ad0dbd
-To: "Rafael J. Wysocki" <rafael@kernel.org>, 
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
- Lukasz Luba <lukasz.luba@arm.com>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Hsin-Te Yuan <yuanhsinte@chromium.org>
-X-Mailer: b4 0.15-dev-7be4f
+Content-Transfer-Encoding: 8bit
 
-When userspace nonblocking reads temperature via sysfs, EAGAIN error
-returned by thermal driver will confuse user from the usual meaning of
-EAGAIN, the read would block. Change to throw ENODATA instead of EAGAIN
-to userspace. Also, ENODATA more accurately reflects that data is not
-currently available.
+The patchset adds spaces around binary operators, breaks long lines to enhance readability
+and provides clarity on sequence number wrapping by using a modulo operation % 4096u, in
+place of the bitwise AND(&) operation & 0xfff.
+The patches are required to be applied in sequence.
 
-Signed-off-by: Hsin-Te Yuan <yuanhsinte@chromium.org>
----
- drivers/thermal/thermal_sysfs.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Changes in v8:
+* PATCH 1:
+	- Added Reviewed-by tag to commit message.
+* PATCH 2:
+	- Added Reviewed-by tag to commit message.
+Changes in v7:
+* PATCH 1:
+	- Added blank line to enhance readability
+* PATCH 2:
+	- Changed `power of 2` to `power-of-2` in commit message.
+Changes in v6:
+	- Modified cover letter BLURB to reference newly added line breaks.
+* PATCH 1:
+	- Added line breaks to long lines to improve readability.
+	- Changed commit message to include the information about the broken
+	  lines added to the patch.
+	- Changed subject line title to also include the newly added line breaks.
+* PATCH 2:
+	- Changed instances of `& 0xfff` to `% 4096u` which were now in the broken lines
+	  after the broken lines have been done in PATCH 1.
+Changes in v5:
+	- Converted the patch with the subject "Use % 4096 instead of & 0xfff"
+	  patch to a patchset.
+	- Added a patch to add spaces around binary operator.
+Changes in v4:
+	- Corrected patch to use '%' instead of '&'.
+	- To ensure this change does not affect the functional
+	behaviour, I compared the generated object files before and
+	after the change using the `cmp` which compares the two
+	object files byte by byte as shown below:
 
-diff --git a/drivers/thermal/thermal_sysfs.c b/drivers/thermal/thermal_sysfs.c
-index 24b9055a0b6c515b865e0d7e2db1d0de176ff767..3d1713e053dfb867933d95131f1f2491d2ecd07e 100644
---- a/drivers/thermal/thermal_sysfs.c
-+++ b/drivers/thermal/thermal_sysfs.c
-@@ -40,8 +40,11 @@ temp_show(struct device *dev, struct device_attribute *attr, char *buf)
- 
- 	ret = thermal_zone_get_temp(tz, &temperature);
- 
--	if (ret)
-+	if (ret) {
-+		if (ret == -EAGAIN)
-+			return -ENODATA;
- 		return ret;
-+	}
- 
- 	return sprintf(buf, "%d\n", temperature);
- }
+	$ make drivers/staging/rtl8723bs/core/rtw_xmit.o
+	$ cmp rtw_xmit_before.o rtw_xmit_after.o
 
----
-base-commit: a24588245776dafc227243a01bfbeb8a59bafba9
-change-id: 20250409-temp-6ebd13ad0dbd
+	No differences were found in the output, confirming that the
+	change does not alter the compiled output.
+Changes in v3:
+	- Added more description to the commit message.
+	- Removed blank line in the tag block.
+	- Added more patch recipients.
+Changes in v2:
+	- Changed the commit message t a more descriptive message which
+	makes it clear why the patch does the change.
+	- changed the subject title to include `4096u` to show that an
+	unsigned module is used.
+Changes in v1:
+	- Added more patch recipients.
 
-Best regards,
+Abraham Samuel Adekunle (2):
+  staging: rtl8723bs: Add spaces and line breaks to improve readability
+  staging: rtl8723bs: Use % 4096 instead of & 0xfff
+
+ drivers/staging/rtl8723bs/core/rtw_xmit.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
 -- 
-Hsin-Te Yuan <yuanhsinte@chromium.org>
+2.34.1
 
