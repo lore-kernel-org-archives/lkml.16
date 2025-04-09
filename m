@@ -1,72 +1,72 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45C921F8743
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 05:59:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C83020298A
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 05:59:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744178367; cv=none; b=L6chrJyB01cF4oOp5VIPtmOYRKFEHmQPUJNZ8M6H7DzGj4QzHrY6ThhQnHA2jsutnHwgLsiHmu2wI+Ob9hFp1AC5kx1X+wOKcZ/IZmtONjmcgwq9mk2N6Meoh0WxZgAEA5czgUtAlDBEaK9E+mre5eh2t+igO1g+qui25FN3b8s=
+	t=1744178368; cv=none; b=UNYFWcD5d439YU75KxYJScYRvgErv2wYoI9GR+gfcNsW3rzpR4CqSsOTjNSYEy3HKdJQHfEpq3XOl56g0MpfTPnARnyWKVJIaE/0YqL927/eQyixe2aoYef4AwslKoyKkaEm8yNf2rh9bi5eGjzBsltkPBqbpod1B4YT9WjUer0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744178367; c=relaxed/simple;
-	bh=7fDnNZyWVelA2uVBKDQ3RFhfWQv6oGCEmBupTouNOMg=;
+	s=arc-20240116; t=1744178368; c=relaxed/simple;
+	bh=ccn7QRhDw+EYEW/P1wa8yWPi9uhOx/Hha/iN87ywVSc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kyjx0l9zbWV3BEqa+TXfNhD79h4MWdiY1qlciEhkjTrJHjqVBZuEd86fwT6M44BM/otLru3ccP/vFs8S/Gv6OPHcDNLFhkiCnES70fJ0u5+J80vlxbC3y4b6VRqpXk0qb+8+jpKSrLNrjQx2SjV6QnZjzJevn5V23oO98ajhf0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org; spf=pass smtp.mailfrom=neverthere.org; dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b=lUjpOFEH; arc=none smtp.client-ip=209.85.215.179
+	 MIME-Version; b=Aai9FMc1c1y1f5UMQ7UiGpUkuyLWxDyVJgY8kGSoIfCBl8gph8h0udsALQjh7S1qgzozWzJ1p+fL9WoxWNJ7kFzYUV1voxw+LsVsGycKsmQrUbgxUM2DktGKCElXTNwHs8nvFWhHTy2Zb1JwZenvayWvpCnokA+LTLBRQ3ihgyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org; spf=pass smtp.mailfrom=neverthere.org; dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b=ZsjdCE7O; arc=none smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neverthere.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b="lUjpOFEH"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-af19b9f4c8cso4237005a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 22:59:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b="ZsjdCE7O"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2279915e06eso61096355ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 22:59:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=neverthere.org; s=google; t=1744178365; x=1744783165; darn=vger.kernel.org;
+        d=neverthere.org; s=google; t=1744178366; x=1744783166; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qxE4gWwYLPsvJrRpHDQz1czRhA/+OUvd2xG6gTlogF0=;
-        b=lUjpOFEHssXrV0I89T6XBSMrSl2XP82r9ByQaGUF5iiLQ7/bwnSBcgFiHmnL9mXXzD
-         mk0Uvitx3GBNCd6AQGmGxrZqwgan00anQE1xjCYR2SBXnCdX1T18TWs2EA53ztx1/Ye/
-         eRejMSWSe6N4UQ165ptkbx2EMRT+IY5mFzE6jYAk9wCqFoAlbZn7vPlE5uw7deSKKoYP
-         qhxB8rzE3wnsIBFz5z+Bo3wlm8Vd1LmY+K6uwcO7+hUzFtlkpHbnd7wO3FhU35IX7Tpm
-         91wOrpmkKcZZYE7w4H9XZm1YjqF2WbOn0tUFrJyMpJPDVxEiO5uSgL8p3AArbQiY6SpX
-         LXOQ==
+        bh=y6aph6kY1Q0JnGg/8+NqO1BgZ3KPQfNwkBZFJNtVp08=;
+        b=ZsjdCE7OLV9Ta1+do2r9iU/2KlTCy0/rzC5/tJF6h2xSBG9Pz3uVJrJ4SBk6zKTYuE
+         fJrimjwS8aOV/FOy7KqJIV9cShxJESVBOB/eONNV+tUPV90dx60hw9jJZ21pO6L6o9xg
+         i1YBLEL7AWsmNgetoh3B8N8oHZvUIl+zhpDrHNq3X+9R62vW0clVP8jto5Ccl3Z3LVcX
+         7qQkxkkFdBZ9qpRBhs/c37jggnA/2Qqk6DRQlp5yKJIHPBuCGdR8DkRpyGEX7nuV2jKu
+         1agrRN9Z9JitGy8v/PKMuchp/WdsqSUc/hVEiQypd8SAqSsE2fkOgd7bBSygC2wVFbUF
+         sV9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744178365; x=1744783165;
+        d=1e100.net; s=20230601; t=1744178366; x=1744783166;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qxE4gWwYLPsvJrRpHDQz1czRhA/+OUvd2xG6gTlogF0=;
-        b=T4l7icbgdl2Hn5kB40USvkdc4tgcTkBJGQJUI7HCnt0cGXJ87/YkMVskcMeKmIlDdr
-         urCGeVT54gxRiuWkyxlnvSWegqfl1eeYwaXZCDCbAEHrE8tlIX75DkAHrG+gF0KfPLIt
-         uMTNKs+I3Deq9c6zBB90ggKcKkkVHU1SQNMtkJuazSgR/hLizIs8hMC1wohXdnf9Zfts
-         jr4DVBukJX9r03FBvDzAZ5iTm2gIgty2FPqt4oeAacee/zGcxq77uthDg955+mXCZDP9
-         Gbx5eYiA0bmuItK3LD6UgL+IrJ0FQLkIL3L3E1QMRokC7C2I3oObXgUxP+GzwKyJTbHI
-         t/9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWx5jYlRXh/EkOxSrQDkaGhoVZ/sn2D8P2M85BIzQpNUHQ1Xfc3bWN/mgRoMm5TSEAlnxHlIzTrPCO6LWk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyr9NZfaRNqx7uBeJfuQ2FYgun2RgR9EfKmT4bmT3Am2Bezstxh
-	LDQUICXK2cuD3D5yTGeBmXM69T1/yR7a9Mb2IJ0uRG1bMShNkTL+Q1XU+ba7KA==
-X-Gm-Gg: ASbGncu82hnq6U76m07RD8nW5ZJfHZTSJhEKfCzShSmZaLB/ognHPYwTF1mP0nBFEFw
-	SqNBGRZBpodOj+ztQ1dAhhrOP4CPMmPKo4D4ywK+oY754bhZ2IrrfSZP7gpOIOaREb9doi5w99Y
-	6awIiefUAyvfXH//Wndg2IoN2n4uH4si2KGg9dQkxovd+5azr2inUOB6qlSbWF8OcFyd3e+jYYL
-	o4FVdPDSKmooLLOUucSCOrakinwqS9yfoGggqQlc48vkRaZ+3U/2Fc9kSdw2B7bCHAAmkne/15l
-	S5Bx3pUWzEYxShU/BH2XKhjgBIAckZyhjMUp5x8JPhQkNxosc/PDKr+AU0ENPOsar98ZodjXF7Q
-	fQfdQkw==
-X-Google-Smtp-Source: AGHT+IEaAD7oH8MI6x/a+Fqozx/FFggtmkkKHuw2dYqZ2L3Em4TjIRajw7UDOLoU6kxqquxnH2IbkQ==
-X-Received: by 2002:a17:902:c40e:b0:220:c34c:5760 with SMTP id d9443c01a7336-22ac2c36606mr22391615ad.51.1744178365469;
-        Tue, 08 Apr 2025 22:59:25 -0700 (PDT)
+        bh=y6aph6kY1Q0JnGg/8+NqO1BgZ3KPQfNwkBZFJNtVp08=;
+        b=AMXGd3dcYELsqFugKjI2AK+ysHoVF6AauzEPG3UKO0cIiqt2rQ993a0ybnFKUh8qTd
+         cesgqc4IGLn3B2rusKQc0Csds0E5HHJMTS9v/iV9iQgf+Tyg98nAte2aqKqzrjXHArpg
+         w158jYi7Fqu4IJwkLdZoU2/gwG9GZFmjLkDr3dDrYZbyDezMVGU7AgVqidAPDu1dKxOJ
+         CiAPf9BI7eE03clQfMO7K/rrN8MYQQslWa1vcH3nFeSaULu0k/airitSMtdlCLXyiNf4
+         6eP3hGOyTpu0GfFtAHmTV8xMF+aS0EJVgS9/5ce8CHB4dExSyqDr6G21SO6Lg+oRdsB0
+         mFxg==
+X-Forwarded-Encrypted: i=1; AJvYcCWdIuhKZ6e9pWrEhQBttsMoauVIV3sw+1zJAhdkjQPEiNl7znVpQNvk0O2fT1If9vivYeelC9GP+89/Vog=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwoQIxC2E/wEBT1Be3o0RC/XgVWHw97TYX49kVzwIG9dTHarnRc
+	eZcXooZiibH0ETRwijEAp+B4wm6+3I4gKCCfY0gdMAfFP/TIE37UUVtsfTzhsw==
+X-Gm-Gg: ASbGncvbwwjwfAzS8RQ/xx0zZ8hQrf7Ci7CoQjBB25jeH0iEuicNCF4wwKoRt+VdqTH
+	IJ/4w0cWWB4WVR8BFqMkL0vHwVVvDgKD7sgymyL3Y6QgCIJpawdgJH+IhFLSB4UpWobSggGtwAE
+	hTF5xsgT3bQRX7ri6JLuYMV/BsJV73j8WN947b3L5ki1OJjvDYgNf5lwr3CUhYAdtFjqHKeFUwX
+	qVGX5n62ADWgqEbjPOwKC7cnLGUpTHPO4wJ7Nq72pmHhNCtsSwk89zmFZMGccYSWGKERKV63LnH
+	ktS2zaJNYe0cnCIsvDr1TzHmTBZY5FnE1fgmItS2KWpFNRyW40uhXKGDl7Vu4OrJa/CNmcJNz6w
+	jDhXvHsKd+2JW43y7
+X-Google-Smtp-Source: AGHT+IGGch8yL1pVWBFhHfO0hEOL9qHn2F0AElXSWwJ2Ijm2w1ytVe0bvHcbM1ZTM3Yu+6dAMy4qwg==
+X-Received: by 2002:a17:902:fc4f:b0:21f:68ae:56e3 with SMTP id d9443c01a7336-22ac3fee048mr21606935ad.39.1744178366661;
+        Tue, 08 Apr 2025 22:59:26 -0700 (PDT)
 Received: from tiamat (c-69-181-214-135.hsd1.ca.comcast.net. [69.181.214.135])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b8b158sm3476475ad.84.2025.04.08.22.59.25
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7ccafa4sm3372725ad.235.2025.04.08.22.59.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 22:59:25 -0700 (PDT)
+        Tue, 08 Apr 2025 22:59:26 -0700 (PDT)
 From: Michael Rubin <matchstick@neverthere.org>
 To: gregkh@linuxfoundation.org,
 	dpenkler@gmail.com
 Cc: linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	Michael Rubin <matchstick@neverthere.org>
-Subject: [Patch v1 16/21] staging: gpib: Using struct gpib_request_service2
-Date: Wed,  9 Apr 2025 05:58:58 +0000
-Message-ID: <20250409055903.321438-17-matchstick@neverthere.org>
+Subject: [Patch v1 17/21] staging: gpib: event_ioctl_t now short
+Date: Wed,  9 Apr 2025 05:58:59 +0000
+Message-ID: <20250409055903.321438-18-matchstick@neverthere.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250409055903.321438-1-matchstick@neverthere.org>
 References: <20250409055903.321438-1-matchstick@neverthere.org>
@@ -78,65 +78,54 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Using Linux code style for 'struct gpib_request_service2' to remove typedef.
+Using Linux code style to replace typedef event_ioctl_t with type short.
 
 Adhering to Linux code style.
 
 Reported by checkpatch.pl
 
-In general, a pointer, or a struct that has elements that can reasonably be
-directly accessed should never be a typedef.
+WARNING: do not add new typedefs
 
 Signed-off-by: Michael Rubin <matchstick@neverthere.org>
 ---
- drivers/staging/gpib/common/gpib_os.c  | 4 ++--
- drivers/staging/gpib/uapi/gpib_ioctl.h | 6 +++---
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/staging/gpib/common/gpib_os.c  | 2 +-
+ drivers/staging/gpib/uapi/gpib_ioctl.h | 3 +--
+ 2 files changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/staging/gpib/common/gpib_os.c b/drivers/staging/gpib/common/gpib_os.c
-index 71c379c22be0..446827701399 100644
+index 446827701399..72a9b660f124 100644
 --- a/drivers/staging/gpib/common/gpib_os.c
 +++ b/drivers/staging/gpib/common/gpib_os.c
-@@ -1532,11 +1532,11 @@ static int request_service_ioctl(struct gpib_board *board, unsigned long arg)
+@@ -1951,7 +1951,7 @@ int pop_gpib_event(struct gpib_board *board, struct gpib_event_queue *queue, sho
  
- static int request_service2_ioctl(struct gpib_board *board, unsigned long arg)
+ static int event_ioctl(struct gpib_board *board, unsigned long arg)
  {
--	request_service2_t request_service2_cmd;
-+	struct gpib_request_service2 request_service2_cmd;
+-	event_ioctl_t user_event;
++	short user_event;
  	int retval;
- 
- 	retval = copy_from_user(&request_service2_cmd, (void __user *)arg,
--				sizeof(request_service2_t));
-+				sizeof(struct gpib_request_service2));
- 	if (retval)
- 		return -EFAULT;
+ 	short event;
  
 diff --git a/drivers/staging/gpib/uapi/gpib_ioctl.h b/drivers/staging/gpib/uapi/gpib_ioctl.h
-index 473b09d4efaa..eea169a0ba40 100644
+index eea169a0ba40..e9baa6724fb4 100644
 --- a/drivers/staging/gpib/uapi/gpib_ioctl.h
 +++ b/drivers/staging/gpib/uapi/gpib_ioctl.h
-@@ -114,10 +114,10 @@ typedef short autospoll_ioctl_t;
- typedef short local_ppoll_mode_ioctl_t;
- 
- // update status byte and request service
--typedef struct {
-+struct gpib_request_service2 {
- 	uint8_t status_byte;
- 	int new_reason_for_service;
--} request_service2_t;
-+};
- 
- /* Standard functions. */
- enum gpib_ioctl {
-@@ -163,7 +163,7 @@ enum gpib_ioctl {
- 	IBPP2_GET = _IOR(GPIB_CODE, 41, local_ppoll_mode_ioctl_t),
- 	IBSELECT_DEVICE_PATH = _IOW(GPIB_CODE, 43, struct gpib_select_device_path_ioctl),
- 	// 44 was IBSELECT_SERIAL_NUMBER
--	IBRSV2 = _IOW(GPIB_CODE, 45, request_service2_t)
-+	IBRSV2 = _IOW(GPIB_CODE, 45, struct gpib_request_service2)
+@@ -107,7 +107,6 @@ struct gpib_select_device_path_ioctl {
+ 	char device_path[0x1000];
  };
  
- #endif	/* _GPIB_IOCTL_H */
+-typedef short event_ioctl_t;
+ typedef int rsc_ioctl_t;
+ typedef unsigned int t1_delay_ioctl_t;
+ typedef short autospoll_ioctl_t;
+@@ -152,7 +151,7 @@ enum gpib_ioctl {
+ 
+ 	IBQUERY_BOARD_RSV = _IOR(GPIB_CODE, 31, int),
+ 	IBSELECT_PCI = _IOWR(GPIB_CODE, 32, struct gpib_select_pci_ioctl),
+-	IBEVENT = _IOR(GPIB_CODE, 33, event_ioctl_t),
++	IBEVENT = _IOR(GPIB_CODE, 33, short),
+ 	IBRSC = _IOW(GPIB_CODE, 34, rsc_ioctl_t),
+ 	IB_T1_DELAY = _IOW(GPIB_CODE, 35, t1_delay_ioctl_t),
+ 	IBLOC = _IO(GPIB_CODE, 36),
 -- 
 2.43.0
 
