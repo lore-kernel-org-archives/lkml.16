@@ -1,191 +1,410 @@
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B9E62AC17
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 21:41:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9349821421A
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 21:42:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744234915; cv=none; b=TNdLzFZY2kQQf6EQqlJd5LZmqdxEuHviyHymNVKiYPk88ZE4Vrq0BUZ4S48vkM01ui/F39zTYeIJejgTUXRpdBQc0c14XxvESkEU19XudFiVsI+sbuujx7Z1PTEvfyo3/2AQ6OH6uVLcubaGk0Tx/KWXyIR56fJRmRoZVKvYFBM=
+	t=1744234953; cv=none; b=VdGICmN2AMVcASWwySaK8nk5ofW8zPg6SqkTykomOQpIzebt97ftvacDJa8x0zNADSsem7Vl4i+5IE1TfQyyGA30aR/FjrBUbJbPhHbYA1U2keXGYooPoPFDsgVRRw4E68GvZinh9A3mUA6I05PhG9sKPz0+rEOKCZ1XYH5qdE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744234915; c=relaxed/simple;
-	bh=vDepLo67fCgM7EaoQDf0lNDhGaiPl4ZU8kLeOKG5zzM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gwkaq60L3NslPDap82Rw8huDwRjysAKrTT0CieL3gFlZssEkhOLuD2Ujf3DrBMpmADD9k7n0dmo2n8f5ic+p8n2bi11lnm/CoAOVxstntkpUZQHBK4r4nw4SKkf30r+bSnX0W9C21AwVM9BJhab9yPCNRHHylzg63UkWOvMxKlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=h1wddYgi; arc=none smtp.client-ip=209.85.166.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1744234953; c=relaxed/simple;
+	bh=cfJPQ2csCV/nOg33ipaPN6bsrYIHeDxIzO5gVFkRRmI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YpJ2gUacRj6q0bwWBQJhDMjpQ+VHJZSO6Iqb4PCFmYmn8xDnRQF70jwnJtdgdsi1AFKtgHegW/k2aBrXHumi7mfOTrnHIUcqqZ4I3wzoQpS0nKE5RfDVZrOiKVaVZhkva4H9qobw2TC/ZQUjXc0xZGrr676LRmRXOjjDOcAdItM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=hgn7ZW8J; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="h1wddYgi"
-Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-86117e5adb3so7334639f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 14:41:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="hgn7ZW8J"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-72d3b48d2ffso80232b3a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 14:42:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1744234912; x=1744839712; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qNvoT2pNA5tulehhl/Q180fpctljW6A4B1umhnN+kMk=;
-        b=h1wddYgipJYOxOB9VK/2BnT3DA7hwBQd3DgC6J1+X/1yDosWrBS6tJXHGQPY1NaNem
-         HDxGwE61AJbeo7t+qrwMJmfH5gSkCKW9pcsiTGnqgsGwXbzyP9CUQnEghPwChgW8qYT/
-         cQ5GsjGMh5SgbZCVPLE9ixQOBdjvvCBuqVi5g=
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744234950; x=1744839750; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PSDf8jS5yD0Drp3/LuCz3kudLOGiq/80jWmpcNRXqNw=;
+        b=hgn7ZW8JgijVkOVYgE66WvtMh+ImSW1Fc0Fx4ibIkbCipABWVRC4K4Am0itYJAdrN5
+         +Yhwsu8llaUXgg6fmArilgAdHjcUvNi0GnP8YOe/BA9DJRT0J3cUliNZHyleXImBfYUC
+         v9gRIJt56J8u9yjzb9bcNbp4yx0oUOrpfnoEktMCnbr4+g2snRMn5X+i1ng1D8SZNkms
+         6GfXEJsefor6OLaRaffXGr8OkSRPq/nIrRw+B/wUbMwSKQQRFhju95G6PYmlbOMrXFmd
+         TVAOh424q1bCqJ2g6qj3XzK2sj5z1J5h4o9NBcUax0/AOGm02bCqua9lbb7Vg1xDqGYg
+         tnMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744234912; x=1744839712;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qNvoT2pNA5tulehhl/Q180fpctljW6A4B1umhnN+kMk=;
-        b=eKf0XlvmAjH4Hlln+LCoygYSAJeeNKpCgNv6R7t3MVAmfutyND+gkfyRjFmWlPShSK
-         sxELR0zGaa+B3xDTwPhcJRazW/YAk5KwRHmKau3qlOh8gCGrcebWn9ZHnkQFErDpbZpF
-         wr7CX01kVz5qu9yBKzUn1Uqq7hd4VEQ6N4Y9Lq3xou8WN/6ZLFsee+ytcpzILQo/+mDH
-         CL+VGRrhqOoTdHvsO694jIPlUDV2wiaQhSIzmpXmEb4ToZr2TNKDOf0EbW4Uik18uG4Q
-         jRyLtzp5Pjt/tHq5qoz3l1ejv6MKda4zeiq8kHLiSU4MjDwOT7oqdC5/S53RyXB3OeKB
-         iqQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVZ1rLdoqUp0Y15YsiCYmyd8L67W7pZsvo4IBoxOpreqRFlRYBYqmBQYUuMdlcQZ41UkYf061CaRu7d05E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAk0WpeLy21hwyIiFviHcnpDqkwpGqq7juC/v3Sg3sc2xCk82S
-	MKZS6iSEwGswxiUPOvJnHQziOcz0wEg11VYue8wQkk8ghpaoxN5lAmSza/D8c5hj/t+QUnpMlsB
-	0
-X-Gm-Gg: ASbGncuC5yVwOj0vCDlwRdkjQNMOJZTyWbtLsaPeUbGxIEwqtTril5NG4T/OepPzFUn
-	NqGKpwuZP2vX4VXzzT32DAYMRXsaiqNFzNBLtdlOFo8+/GEd53kMb6Qw6xPNHD6zzm0JD0vM8Cv
-	4fQRiAF+uvRAcYcS6nhTIKExkbvrLNCzJ/+YEZxuokXbQrehqNjJ3bC5XhJ6U9Km6uvTi7QOkLk
-	YXGj/HI/uzHz0HHOa1CXYLA00tfGVmFm0FrmHI90Zl9+PlZzXbYfs3xPe5Yr6yK+UZprGrCEFCy
-	jgof/OChMvJwh+0+C/gbX2Ik/67SrKzL7K17rwCOI2SF7luXZn8=
-X-Google-Smtp-Source: AGHT+IELr4jfqHRtQxojFHm3kKSCMKpeGx1hcvh2nll8x0kQyYQAO1c2FpamK66P0wipeOw1sZrzFQ==
-X-Received: by 2002:a05:6e02:160a:b0:3d4:3a45:d889 with SMTP id e9e14a558f8ab-3d7e475e4a2mr6989965ab.14.1744234912262;
-        Wed, 09 Apr 2025 14:41:52 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f505dfd731sm431971173.88.2025.04.09.14.41.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Apr 2025 14:41:51 -0700 (PDT)
-Message-ID: <e0842dd0-71d3-4de0-a2ee-e83493df890b@linuxfoundation.org>
-Date: Wed, 9 Apr 2025 15:41:51 -0600
+        d=1e100.net; s=20230601; t=1744234950; x=1744839750;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PSDf8jS5yD0Drp3/LuCz3kudLOGiq/80jWmpcNRXqNw=;
+        b=RpCdQwhXA32wFUviIUUhVf0cbACvGoP5pWOlG/WGQNvWqzgga/qn2No8INAFnt1WCl
+         vNOxl5KyEcxB9ECrB8jWkjJpAvDgdrjSemIBnG/P61s/nAWvFi9M8Ipj0+jJrFQhbGx6
+         +/QUXdUAHp4YuKsAhFYiSTGKclOW5sxBtjHGX2NdYJFIb6wQ5q33ukLyog4QGWPuzfqO
+         5jp8EsK5nYLuZkSkGTmyxCjmxog1DQW2JRjD8cNTFtyxmjH+4WaIMQPheB8G4b+0QisF
+         12q3wc5gqpJPPpfkfiVxxPngOGAWokV6s9I34NRmNFH8fvYU65boZkspWiz3GPSLnw3s
+         t/Xw==
+X-Forwarded-Encrypted: i=1; AJvYcCUcGyxwMTrIRdoELIP2rYU5UN3h5ZId877aZDdZEQLHUh/7dsA8t/2PBR5mHkSmbnGKnjqTDk/t+kMA8+U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUJGDL8Uq34TXjz0wQIm5tKyjqwZOkRy6+JaUshfhIy/+3eXpH
+	ylrcoz4jYPc4JM2dFqt1Fn/KBnSJxVQBOmBczdhqROBRJYWhP0raSnYZP1DMTNLSjRMwjumpG0d
+	M
+X-Gm-Gg: ASbGncswaWRHXYQB37e516S+I4LO9dmJV5vjo0t2QH6xW2lqWFjzS815q8SEVd/81oE
+	gUA4095QpjDMEQGERJrqYfa4U00tLywkY8qwiHvZrH/JDFggNwWJ6uW3CX6UBDiigEW0G7BVLy9
+	kTggEjnIt9WmrIDV6F3p6oLiNWDN+8brB3o/UqiUKgMo7qNtCVQNs6vYq96Uol0Yu6UyRLuIHVi
+	j3WAMnsXRR8g5H3706Aix2+Vg854wLVul9/XFJr0cHBSFvSMvMMjVVxPgTFODvVOb33dqpFxw6Z
+	r6pv8z5LOLQCArEqEK4+SqJFRjpB0DVHJX1GKq+ieVAntdKuZKkeebME3VzMIaULaM4OReV1PoL
+	4WFUL5b4Cue0=
+X-Google-Smtp-Source: AGHT+IH21z3+gRyC6UEn+n4zbaJfKLGfAM719YHE8Kw8mV7/twG26me6iN7MJkg2sySpsZTxa/N0aA==
+X-Received: by 2002:a05:6a00:1152:b0:736:54c9:df2c with SMTP id d2e1a72fcca58-73bbefa53edmr484440b3a.15.1744234949597;
+        Wed, 09 Apr 2025 14:42:29 -0700 (PDT)
+Received: from dev-linux (syn-076-088-115-008.res.spectrum.com. [76.88.115.8])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1e51f48sm1925155b3a.147.2025.04.09.14.42.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 14:42:29 -0700 (PDT)
+Date: Wed, 9 Apr 2025 14:42:26 -0700
+From: Sukrut Bellary <sbellary@baylibre.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Angelo Compagnucci <angelo.compagnucci@gmail.com>,
+	Nishanth Menon <nm@ti.com>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] iio: adc: ti-adc128s052: Add lower resolution
+ devices support
+Message-ID: <Z/bpwq/i91+Xlljf@dev-linux>
+References: <20250408132120.836461-1-sbellary@baylibre.com>
+ <20250408132120.836461-3-sbellary@baylibre.com>
+ <25291cca-a456-4f6c-8aac-466cd6124683@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/Kconfig: Fix dependency for X86_DEBUG_FPU
-To: Ingo Molnar <mingo@kernel.org>
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, linux-kernel@vger.kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>, hpa@zytor.com
-References: <20250407231057.328010-1-skhan@linuxfoundation.org>
- <Z_TIMh7UsWQiSkqg@gmail.com>
- <f9642a9f-27d4-4f84-818c-390194b898bf@linuxfoundation.org>
- <Z_bnzs3IPyhVIYaT@gmail.com>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <Z_bnzs3IPyhVIYaT@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <25291cca-a456-4f6c-8aac-466cd6124683@baylibre.com>
 
-On 4/9/25 15:34, Ingo Molnar wrote:
+On Tue, Apr 08, 2025 at 03:57:32PM -0500, David Lechner wrote:
+> On 4/8/25 8:21 AM, Sukrut Bellary wrote:
+> > The adcxx4s communicates with a host processor via an SPI/Microwire Bus
+> > interface. The device family responds with 12-bit data, of which the LSB
+> > bits are transmitted by the lower resolution devices as 0.
+> > The unavailable bits are 0 in LSB.
+> > Shift is calculated per resolution and used in scaling and
+> > raw data read.
 > 
-> * Shuah Khan <skhan@linuxfoundation.org> wrote:
-> 
->> On 4/8/25 00:54, Ingo Molnar wrote:
->>>
->>> * Shuah Khan <skhan@linuxfoundation.org> wrote:
->>>
->>>> Compile fails when X86_DEBUG_FPU is enabled and X86_REQUIRED_FEATURE_FPU is
->>>> disabled. Add explicit dependency on X86_REQUIRED_FEATURE_FPU to fix it.
->>>>
->>>> ../arch/x86/kernel/fpu/regset.c:411:(.text+0x4cf2f): undefined reference to `fpregs_soft_get'
->>>> ld: vmlinux.o: in function `fpregs_set':
->>>> ../arch/x86/kernel/fpu/regset.c:445:(.text+0x4d0da): undefined reference to `fpregs_soft_set'
->>>> ld: vmlinux.o: in function `copy_fpstate_to_sigframe':
->>>> ../arch/x86/kernel/fpu/signal.c:197:(.text+0x4da98): undefined reference to `fpregs_soft_get'
->>>>
->>>
->>> So I cannot reproduce this build failure on either v6.14 or v6.15-rc1:
->>>
->>>     starship:~/tip> git describe
->>>     v6.15-rc1
->>>
->>>     starship:~/tip> grep -E 'X86_32=|M486SX=|X86_REQUIRED_FEATURE|X86_DEBUG_FPU' .config
->>>     CONFIG_X86_32=y
->>>     CONFIG_M486SX=y
->>>     CONFIG_X86_REQUIRED_FEATURE_ALWAYS=y
->>>     CONFIG_X86_DEBUG_FPU=y
->>>
->>>     starship:~/tip> make -j128 ARCH=i386 bzImage modules
->>>
->>>     ...
->>>     Kernel: arch/x86/boot/bzImage is ready  (#5)
->>>
->>>> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
->>>> ---
->>>> 6.14 compile worked without X86_REQUIRED_FEATURE_FPU enabled. Might be a
->>>> new dependency. Enabling X86_REQUIRED_FEATURE_FPU fixed it for me on my
->>>> test system.
+> Could improve the line wrapping in the commit message if there is a v4.
 
-Right. That is what I meant by new dependency
+Thanks for the review.
+Ok, I will improve in v4.
 
->>>
->>> So vanilla v6.14 does not have X86_REQUIRED_FEATURE Kconfig flags, at
->>> all:
->>>
->>>     starship:~/tip> grep FPU .config
->>>     CONFIG_ARCH_HAS_KERNEL_FPU_SUPPORT=y
->>>     CONFIG_X86_DEBUG_FPU=y
->>>     # CONFIG_TEST_FPU is not set
->>>
->>> Because X86_REQUIRED_FEATURE_FPU is a new v6.15-rc1 feature, introduced
->>> via:
->>>
->>>     3d37d9396eb3 ("x86/cpufeatures: Add {REQUIRED,DISABLED} feature configs")
->>>
->>> I have no doubt you are seeing this build failure - but I think there
->>> might be some other .config detail required to reproduce it, not
->>> mentioned in your changelog. Could you please send the config you used?
->>>
->>
->> Config attached.
->>
->> grep _FPU /boot/config-6.14.0+
->> CONFIG_ARCH_HAS_KERNEL_FPU_SUPPORT=y
->> CONFIG_X86_DEBUG_FPU=y
->> # CONFIG_TEST_FPU is not set
->>
->> I noticed you are building ARCH=i386 - can you reproduce this
->> with x86_64? That is what I am building.
->>
->> thanks,
->> -- Shuah
+> > 
+> > Lets reuse the driver to support the family of devices with name
+> > ADC<bb><c>S<sss>, where
+> > * bb is the resolution in number of bits (8, 10, 12)
+> > * c is the number of channels (1, 2, 4, 8)
+> > * sss is the maximum conversion speed (021 for 200 kSPS, 051 for 500 kSPS
+> > and 101 for 1 MSPS)
+> > 
+> > Complete datasheets are available at TI's website here:
+> > https://www.ti.com/lit/gpn/adc<bb><c>s<sss>.pdf
+> > 
+> > Tested only with ti-adc102s051 on BegalePlay SBC.
+> > https://www.beagleboard.org/boards/beagleplay
+> > 
+> > Co-developed-by: Nishanth Menon <nm@ti.com>
+> > Signed-off-by: Nishanth Menon <nm@ti.com>
+> > Signed-off-by: Sukrut Bellary <sbellary@baylibre.com>
+> > ---
 > 
->> #
->> # Automatically generated file; DO NOT EDIT.
->> # Linux/x86 6.14.0 Kernel Configuration
->> #
->> CONFIG_CC_VERSION_TEXT="gcc (Debian 14.2.0-17) 14.2.0"
+> I didn't see any serious issues, just some room for more polish...
 > 
-> Is this a vanilla v6.14 kernel? Because on upstream v6.14 'make
-> oldconfig' gives me:
+> > Changes in v3: 
+> >         - used be16_to_cpu() for the endian conversion.
+> >         - used config index enum while setting up the adc128_config[]
+> > 
+> > - Link to v2: 
+> >         https://lore.kernel.org/lkml/20231022031203.632153-1-sukrut.bellary@linux.com/
+> > 
+> > Changes in v2:
+> >         - Arranged of_device_id and spi_device_id in numeric order.
+> >         - Used enum to index into adc128_config.
+> >         - Reorder adc128_config in alphabetical.
+> >         - Include channel resolution information.
+> >         - Shift is calculated per resolution and used in scaling and 
+> >         raw data read.
+> > 
+> > - Link to v1: https://lore.kernel.org/all/20220701042919.18180-1-nm@ti.com/
+> > ---
+> >  drivers/iio/adc/ti-adc128s052.c | 149 ++++++++++++++++++++++++--------
+> >  1 file changed, 112 insertions(+), 37 deletions(-)
+> > 
+> > diff --git a/drivers/iio/adc/ti-adc128s052.c b/drivers/iio/adc/ti-adc128s052.c
+> > index a456ea78462f..d4b76fd85abd 100644
+> > --- a/drivers/iio/adc/ti-adc128s052.c
+> > +++ b/drivers/iio/adc/ti-adc128s052.c
+> > @@ -7,6 +7,22 @@
+> >   * https://www.ti.com/lit/ds/symlink/adc128s052.pdf
+> >   * https://www.ti.com/lit/ds/symlink/adc122s021.pdf
+> >   * https://www.ti.com/lit/ds/symlink/adc124s021.pdf
+> > + *
+> > + * The adcxx4s communicates with a host processor via an SPI/Microwire Bus
+> > + * interface. This driver supports the whole family of devices with a name
+> > + * ADC<bb><c>S<sss>, where
+> > + * bb is the resolution in number of bits (8, 10, 12)
+> > + * c is the number of channels (1, 2, 4, 8)
+> > + * sss is the maximum conversion speed (021 for 200 kSPS, 051 for 500 kSPS
+> > + * and 101 for 1 MSPS)
 > 
->    Generate BTF type information (DEBUG_INFO_BTF) [N/y/?] (NEW)
-> 
-> Maybe different build environment?
-> 
-> ... and after answering that with 'N' the build succeeds:
-> 
->    LD      arch/x86/boot/setup.elf
->    OBJCOPY arch/x86/boot/setup.bin
->    BUILD   arch/x86/boot/bzImage
-> Kernel: arch/x86/boot/bzImage is ready  (#3)
+> Looks like odd line wrapping. I assume bullet points were meant here?
 
-Yes it is vanilla
+* were part of comments. I will fix line wrapping.
 
+> * ... where:
+> * - bb is ...
+> * - c is ...
+> * - sss is ...
 > 
-> More importantly, X86_REQUIRED_FEATURE_FPU *does not exist* in the
-> vanilla v6.14 kernel, it's a new v6.15 feature. So this part of your
-> changelog totally doesn't apply to a v6.14 kernel:
+> > + *
+> > + * Complete datasheets are available at TI's website here:
+> > + *   https://www.ti.com/lit/gpn/adc<bb><c>s<sss>.pdf
+> > + *
+> > + * 8, 10, and 12 bits converters send 12-bit data with
+> > + * unavailable bits set to 0 in LSB.
+> > + * Shift is calculated per resolution and used in scaling and
+> > + * raw data read.
+> >   */
+> >  
+> >  #include <linux/err.h>
+> > @@ -53,7 +69,7 @@ static int adc128_adc_conversion(struct adc128 *adc, u8 channel)
+> >  	if (ret < 0)
+> >  		return ret;
+> >  
+> > -	return ((adc->buffer[0] << 8 | adc->buffer[1]) & 0xFFF);
+> > +	return be16_to_cpu(*((__be16 *)adc->buffer));
+> >  }
+> >  
+> >  static int adc128_read_raw(struct iio_dev *indio_dev,
+> > @@ -70,7 +86,8 @@ static int adc128_read_raw(struct iio_dev *indio_dev,
+> >  		if (ret < 0)
+> >  			return ret;
+> >  
+> > -		*val = ret;
+> > +		*val = (ret >> channel->scan_type.shift) &
+> > +			GENMASK(channel->scan_type.realbits - 1, 0);
+> 
+> It's a bit odd to do this here instead of in the helper function since
+> the helper function is doing some rearranging of bits already.
+> 
+> Could pass scan_type to the helper function and do it all in one
+> place.
 
-I started with vanilla 6.14 kernel running oldconfig on it.
-In this case if X86_DEBUG_FPU is enabled in the oldconfig,
-should the config generated for 6.15 add X86_REQUIRED_FEATURE_FPU.
+Ok, I will try with helper in v4.
 
-It appears there is a dependency between X86_DEBUG_FPU and
-the newly added X86_REQUIRED_FEATURE_FPU
+> >  		return IIO_VAL_INT;
+> >  
+> >  	case IIO_CHAN_INFO_SCALE:
+> > @@ -80,7 +97,7 @@ static int adc128_read_raw(struct iio_dev *indio_dev,
+> >  			return ret;
+> >  
+> >  		*val = ret / 1000;
+> > -		*val2 = 12;
+> > +		*val2 = channel->scan_type.realbits;
+> >  		return IIO_VAL_FRACTIONAL_LOG2;
+> >  
+> >  	default:
+> > @@ -89,24 +106,34 @@ static int adc128_read_raw(struct iio_dev *indio_dev,
+> >  
+> >  }
+> >  
+> > -#define ADC128_VOLTAGE_CHANNEL(num)	\
+> > -	{ \
+> > -		.type = IIO_VOLTAGE, \
+> > -		.indexed = 1, \
+> > -		.channel = (num), \
+> > -		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW), \
+> > -		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE) \
+> > +#define _ADC128_VOLTAGE_CHANNEL(num, real_bits, store_bits)		\
+> > +	{								\
+> > +		.type = IIO_VOLTAGE,					\
+> > +		.indexed = 1,						\
+> > +		.channel = (num),					\
+> > +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
+> > +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
+> > +		.scan_index = (num),					\
+> > +		.scan_type = {						\
+> > +			.sign = 'u',					\
+> > +			.realbits = (real_bits),			\
+> > +			.storagebits = (store_bits),			\
+> 
+> It looks like storagebits is always 16, so we could drop that parameter.
 
-thanks,
--- Shuah
+Sure, I will drop storagebits.
+
+> > +			.shift = (12 - real_bits),			\
+> > +		},							\
+> >  	}
+> >  
+> > -static const struct iio_chan_spec adc128s052_channels[] = {
+> > -	ADC128_VOLTAGE_CHANNEL(0),
+> > -	ADC128_VOLTAGE_CHANNEL(1),
+> > -	ADC128_VOLTAGE_CHANNEL(2),
+> > -	ADC128_VOLTAGE_CHANNEL(3),
+> > -	ADC128_VOLTAGE_CHANNEL(4),
+> > -	ADC128_VOLTAGE_CHANNEL(5),
+> > -	ADC128_VOLTAGE_CHANNEL(6),
+> > -	ADC128_VOLTAGE_CHANNEL(7),
+> > +#define ADC082_VOLTAGE_CHANNEL(num) _ADC128_VOLTAGE_CHANNEL(num, 8, 16)
+> > +#define ADC102_VOLTAGE_CHANNEL(num) _ADC128_VOLTAGE_CHANNEL(num, 10, 16)
+> > +#define ADC128_VOLTAGE_CHANNEL(num) _ADC128_VOLTAGE_CHANNEL(num, 12, 16)
+> > +
+> > +static const struct iio_chan_spec adc082s021_channels[] = {
+> > +	ADC082_VOLTAGE_CHANNEL(0),
+> > +	ADC082_VOLTAGE_CHANNEL(1),
+> > +};
+> > +
+> > +static const struct iio_chan_spec adc102s021_channels[] = {
+> > +	ADC102_VOLTAGE_CHANNEL(0),
+> > +	ADC102_VOLTAGE_CHANNEL(1),
+> >  };
+> >  
+> >  static const struct iio_chan_spec adc122s021_channels[] = {
+> > @@ -121,10 +148,46 @@ static const struct iio_chan_spec adc124s021_channels[] = {
+> >  	ADC128_VOLTAGE_CHANNEL(3),
+> >  };
+> >  
+> > +static const struct iio_chan_spec adc128s052_channels[] = {
+> > +	ADC128_VOLTAGE_CHANNEL(0),
+> > +	ADC128_VOLTAGE_CHANNEL(1),
+> > +	ADC128_VOLTAGE_CHANNEL(2),
+> > +	ADC128_VOLTAGE_CHANNEL(3),
+> > +	ADC128_VOLTAGE_CHANNEL(4),
+> > +	ADC128_VOLTAGE_CHANNEL(5),
+> > +	ADC128_VOLTAGE_CHANNEL(6),
+> > +	ADC128_VOLTAGE_CHANNEL(7),
+> > +};
+> > +
+> > +enum adc128_configuration_index {
+> > +	ADC128_CONFIG_INDEX_082S,
+> > +	ADC128_CONFIG_INDEX_102S,
+> > +	ADC128_CONFIG_INDEX_122S,
+> > +	ADC128_CONFIG_INDEX_124S,
+> > +	ADC128_CONFIG_INDEX_128S,
+> > +};
+> > +
+> >  static const struct adc128_configuration adc128_config[] = {
+> 
+> I would have rather removed the array here. Adding the enum just
+> makes lots more code to read without any technical benefit.
+> 
+> > -	{ adc128s052_channels, ARRAY_SIZE(adc128s052_channels) },
+> > -	{ adc122s021_channels, ARRAY_SIZE(adc122s021_channels) },
+> > -	{ adc124s021_channels, ARRAY_SIZE(adc124s021_channels) },
+> > +	[ADC128_CONFIG_INDEX_082S] = {
+> > +		.channels = adc082s021_channels,
+> > +		.num_channels = ARRAY_SIZE(adc082s021_channels)
+> > +	},
+> > +	[ADC128_CONFIG_INDEX_102S] = {
+> > +		.channels = adc102s021_channels,
+> > +		.num_channels = ARRAY_SIZE(adc102s021_channels)
+> > +	},
+> > +	[ADC128_CONFIG_INDEX_122S] = {
+> > +		.channels = adc122s021_channels,
+> > +		.num_channels = ARRAY_SIZE(adc122s021_channels)
+> > +	},
+> > +	[ADC128_CONFIG_INDEX_124S] = {
+> > +		.channels = adc124s021_channels,
+> > +		.num_channels = ARRAY_SIZE(adc124s021_channels)
+> > +	},
+> > +	[ADC128_CONFIG_INDEX_128S] = {
+> > +		.channels = adc128s052_channels,
+> > +		.num_channels = ARRAY_SIZE(adc128s052_channels)
+> > +	},
+> >  };
+> 
+> I.e. instead:
+> 
+> static const struct adc128_configuration adc08s021_config = {
+> 	.channels = adc082s021_channels,
+> 	.num_channels = ARRAY_SIZE(adc082s021_channels),
+> };
+> 
+> static const struct adc128_configuration adc10s021_config = {
+> 	.channels = adc102s021_channels,
+> 	.num_channels = ARRAY_SIZE(adc102s021_channels)
+> };
+> 
+> ...
+
+OK, I will remove enum.
+
+> >  
+> >  static const struct iio_info adc128_info = {
+> > @@ -177,31 +240,43 @@ static int adc128_probe(struct spi_device *spi)
+> >  }
+> >  
+> >  static const struct of_device_id adc128_of_match[] = {
+> > -	{ .compatible = "ti,adc128s052", .data = &adc128_config[0] },
+> > -	{ .compatible = "ti,adc122s021", .data = &adc128_config[1] },
+> > -	{ .compatible = "ti,adc122s051", .data = &adc128_config[1] },
+> > -	{ .compatible = "ti,adc122s101", .data = &adc128_config[1] },
+> > -	{ .compatible = "ti,adc124s021", .data = &adc128_config[2] },
+> > -	{ .compatible = "ti,adc124s051", .data = &adc128_config[2] },
+> > -	{ .compatible = "ti,adc124s101", .data = &adc128_config[2] },
+> > +	{ .compatible = "ti,adc082s021", .data = &adc128_config[ADC128_CONFIG_INDEX_082S] },
+> > +	{ .compatible = "ti,adc082s051", .data = &adc128_config[ADC128_CONFIG_INDEX_082S] },
+> > +	{ .compatible = "ti,adc082s101", .data = &adc128_config[ADC128_CONFIG_INDEX_082S] },
+> > +	{ .compatible = "ti,adc102s021", .data = &adc128_config[ADC128_CONFIG_INDEX_102S] },
+> > +	{ .compatible = "ti,adc102s051", .data = &adc128_config[ADC128_CONFIG_INDEX_102S] },
+> > +	{ .compatible = "ti,adc102s101", .data = &adc128_config[ADC128_CONFIG_INDEX_102S] },
+> > +	{ .compatible = "ti,adc122s021", .data = &adc128_config[ADC128_CONFIG_INDEX_122S] },
+> > +	{ .compatible = "ti,adc122s051", .data = &adc128_config[ADC128_CONFIG_INDEX_122S] },
+> > +	{ .compatible = "ti,adc122s101", .data = &adc128_config[ADC128_CONFIG_INDEX_122S] },
+> > +	{ .compatible = "ti,adc124s021", .data = &adc128_config[ADC128_CONFIG_INDEX_124S] },
+> > +	{ .compatible = "ti,adc124s051", .data = &adc128_config[ADC128_CONFIG_INDEX_124S] },
+> > +	{ .compatible = "ti,adc124s101", .data = &adc128_config[ADC128_CONFIG_INDEX_124S] },
+> > +	{ .compatible = "ti,adc128s052", .data = &adc128_config[ADC128_CONFIG_INDEX_128S] },
+> >  	{ /* sentinel */ },
+> >  };
+> >  MODULE_DEVICE_TABLE(of, adc128_of_match);
+> 
+> It would be easier to see what is new and what is changed if we split out the
+> "cleanup" to a separate patch.
+
+This is not a cleanup. Addressed the review comments on v1 i.e., to
+arrange of_device_id and spi_device_id in a numeric order. And added
+more device ids used enum.
+
+> >  
+> >  static const struct spi_device_id adc128_id[] = {
+> > -	{ "adc128s052", (kernel_ulong_t)&adc128_config[0] },
+> > -	{ "adc122s021",	(kernel_ulong_t)&adc128_config[1] },
+> > -	{ "adc122s051",	(kernel_ulong_t)&adc128_config[1] },
+> > -	{ "adc122s101",	(kernel_ulong_t)&adc128_config[1] },
+> > -	{ "adc124s021", (kernel_ulong_t)&adc128_config[2] },
+> > -	{ "adc124s051", (kernel_ulong_t)&adc128_config[2] },
+> > -	{ "adc124s101", (kernel_ulong_t)&adc128_config[2] },
+> > +	{ "adc082s021", (kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_082S] },
+> > +	{ "adc082s051", (kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_082S] },
+> > +	{ "adc082s101", (kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_082S] },
+> > +	{ "adc102s021", (kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_102S] },
+> > +	{ "adc102s051", (kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_102S] },
+> > +	{ "adc102s101", (kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_102S] },
+> > +	{ "adc122s021",	(kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_122S] },
+> > +	{ "adc122s051",	(kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_122S] },
+> > +	{ "adc122s101",	(kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_122S] },
+> > +	{ "adc124s021", (kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_124S] },
+> > +	{ "adc124s051", (kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_124S] },
+> > +	{ "adc124s101", (kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_124S] },
+> > +	{ "adc128s052", (kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_128S] },
+> >  	{ }
+> >  };
+> >  MODULE_DEVICE_TABLE(spi, adc128_id);
+> >  
+> >  static const struct acpi_device_id adc128_acpi_match[] = {
+> > -	{ "AANT1280", (kernel_ulong_t)&adc128_config[2] },
+> > +	{ "AANT1280", (kernel_ulong_t)&adc128_config[ADC128_CONFIG_INDEX_124S] },
+> >  	{ }
+> >  };
+> >  MODULE_DEVICE_TABLE(acpi, adc128_acpi_match);
+> 
