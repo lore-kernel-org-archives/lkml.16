@@ -1,116 +1,112 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 834E21C5F39;
-	Wed,  9 Apr 2025 17:34:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF4B926FDB0
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 17:35:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744220093; cv=none; b=DZOo+/CEDQ7uqsfuHx71roHDN4OLeKSNYwEFM8Kccb55QpjyxaDFHgR6MovmM0Y2YrzO8R5jIlp20tr2ie9wILRmxlbF+gD9lpHPeNlXeCYWJJLqU1Q9OJEpbf6G4wAqZW3Kv512LcUp9MZxWDT1+lsxIggQ0bRR5/3CFLi10OE=
+	t=1744220121; cv=none; b=ViOvMXuQ7gAi5EMDIfEojTZ8iGMfN4Aj1tIteDyqTYvmstSiRF4LIi3ES0RuFxyk7suut79Khu1Sg9c/jDKlU3HncwmAtaJifU5/3yzHmon/VtcAWHob5iR7M/+AxXoK02t3iNLb40eP015lhUy4SVYKcc4Sp8fO07Prj6zmdKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744220093; c=relaxed/simple;
-	bh=fet8ZDtq4y7709qBrhbHF3MVZJQgOOyKdqtHqZFuodY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kBaK6Z7xpOuJjijz1DD5dgsQK0wnEKqeO3etHJdvMDRmMhDgn1DXRnLD3fIU+IYsTBYKHkSr02k6wY1M/N4GxfOHsye7rrqKfzypGn/yUqHWOM+Z55JIStDTRVoyNmq0sEhcLxoJerhCQARECgO4Ld82oI+tVl+wFptg+604E8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=q1z/Ws0U; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1744220121; c=relaxed/simple;
+	bh=U+ehWLSaRSK6X6F/UDLucuBn9urzPkl9KrBmPNVyMwY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=huqSXId82IVzFJ9v7kYO5mqscmKjnsviVeBCpGDKYUwUILtq/K1RDMWHSNFn0kyy5GYa41F3/eoidUtRqyd/+Ag9WyONcVc0OS2QcETUk1ZHoDudvFaeuhALqhTe3g4V2cSTw87VIPSXkgOhdMVLNmLoKm5HqyEyDmdH2TV+8Fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org; spf=pass smtp.mailfrom=neverthere.org; dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b=WinMl4CX; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neverthere.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="q1z/Ws0U"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=N4LvEMvJcaYh0O8lvXByJBpLV2ZXxaE8V3ig6rTCot4=; b=q1z/Ws0U8HQkJ8A0FVo0+SD6wW
-	nCIJ7xqhEgAD3e8YQLdIWQsMS+VqgeofonnAW2zIDSCqqk4n1HVE+zoO7DrfRBmiecyvhWLeKjdXg
-	fYQSDBGAPhYHyzmLwfpANsEaLccKZY1tzTohGKthR59/tCTcnTEoHheVWL2DHOzu/tX0Wpe8SN3w6
-	OGjEtuwIwrRYfvRL9Ct2FhYLm+9VbQNypN6WjYJv7o+L0zL7BJgjId4DgMs7md8fdpDUd3rg/bylv
-	e8wjmOlxU/UuaWoxSes6YpK5A+DW6o2VsOpeC9i8Q9wuYHjRzfiQD/fdtb2TNpciXK0uilJTpFzAE
-	XLzpXu2A==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:52476)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1u2ZJu-0000qm-1N;
-	Wed, 09 Apr 2025 18:34:38 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1u2ZJr-0002kM-1F;
-	Wed, 09 Apr 2025 18:34:35 +0100
-Date: Wed, 9 Apr 2025 18:34:35 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: Simon Horman <horms@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH net-next v2 2/2] net: phy: Add Marvell PHY PTP support
-Message-ID: <Z_avqyOX2bi44sO9@shell.armlinux.org.uk>
-References: <20250407-feature_marvell_ptp-v2-2-a297d3214846@bootlin.com>
- <20250408154934.GZ395307@horms.kernel.org>
- <Z_VdlGVJjdtQuIW0@shell.armlinux.org.uk>
- <20250409101808.43d5a17d@kmaincent-XPS-13-7390>
- <Z_YwxYZc7IHkTx_C@shell.armlinux.org.uk>
- <20250409104858.2758e68e@kmaincent-XPS-13-7390>
- <Z_ZlDLzvu_Y2JWM8@shell.armlinux.org.uk>
- <20250409143820.51078d31@kmaincent-XPS-13-7390>
- <Z_Z3lchknUpZS1UP@shell.armlinux.org.uk>
- <20250409180414.19e535e5@kmaincent-XPS-13-7390>
+	dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b="WinMl4CX"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-226185948ffso74994635ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 10:35:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=neverthere.org; s=google; t=1744220119; x=1744824919; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zLfeIRA8tBnw8zdIQ4nzT54/RyV8f9HMbjY3r3rNPLQ=;
+        b=WinMl4CXplZWPGsNSjuEtYbGcYIxgonPb3nG6ZXvHjNpfekf0K8UpY67YyNVZs0ABq
+         jUDqokhU0+stHqPftKyVY3fopl8T/8oMDE61sB6v03Q7rawTDTVbvmJGLi7jMcfaHZ+E
+         0OS1Xk++lhHGGSbpTX17e6HhbTa3BR7BMp/yU1ZIPikC1xhkzNZisRy5jlljdhSkDqNT
+         AFwmyiCp1VvZA+DFdyJlme1H8SSrkTaocpsjoKfB8kcyi+X8xy22YRgCI4ADtxGKjqhj
+         EeEUyd4vdTJGvlQnP4mI4PhVDt8NbNbigDD2rgP3V81Hb7Pa6yHzegvZpls+seYYi4VL
+         31/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744220119; x=1744824919;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zLfeIRA8tBnw8zdIQ4nzT54/RyV8f9HMbjY3r3rNPLQ=;
+        b=rl/ZD9J6EgAUTC4oANwQts/lNDJhn2ytJiUIgLAldv4HI86J/Iu6yEbWEyIll/Xbqd
+         QgOBwTCmCkH4I71XRaPJJmNPRuxST9knwigoN7kDH+yHRy2iAhkkxhhMZtaqbDRbsLrF
+         AkDj6mAOS5fDXR6K2olxXEr0lXPzNZeARAH4CuEBu1KIwSt5q+tGA/+NyAm3wyPhcmDz
+         tu6PMTe7TrQn3qqjMTyZJLt1uELYeVSO65WySrY31ExVmqYK3NGYdrhXcGyfm15VTLuD
+         9wfMTx0+td/9r2U06QeuvT3I7R5D0MK5SbN3IG87heBEaeZo5B/qhVZ5bpgoIunMRwR4
+         oadg==
+X-Forwarded-Encrypted: i=1; AJvYcCU8RE9/XU52vfNvZPd7daLgc6L8+6XLa0jMR0211oGwRAjUmtekqnoerZX4s2SwJnYvy6xOHAjbwe9tiRg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzY+QWBhY1SmiNh2wLVJ0TQOn1D9fGhDQ/Byr5O/Nn1WZH2CJQk
+	9iTC7feB/1yvdKlLKKxODcaq0fIvy3OeWFEZXQQAbhHKR3P8csNcig40w1bJZ5rFD3NxERRY7R0
+	=
+X-Gm-Gg: ASbGncv42mFyG28lhDWmPDjMOG7TgTPMEovluiOKhpE2M5bRVPYo/RQgQbtiNsuWGzf
+	of2beXDEN1/qbrEN3W0qjgQqnhY7Fg81cRM7Y4Wwhx6Fupy24PNVgs5GWFoXkM7ltDZagGAQaH5
+	qKp2oTFYAJloOwS++MpSxVxWvPNHyrJpXg7x/HPNiEV4QM4FAhP+ZAxbtLTtY0cAtlXo8vHn9Np
+	gmL60b/3ISulb71Veor4i1HzK2wxDzPJOyFMRgAfDktn5Ncgr9NAKnbdfV9boyHmvjcRPLidO/N
+	L+UxHgEzHc8qax6hsT+13btkue0thKgnpHLZD7GljWhpr+oaYyFtvSjs2hDKVoNMkN9yNo2GUOs
+	307B3bA==
+X-Google-Smtp-Source: AGHT+IFcgdkrxNVEeEhkEg7JnH0hPXgiQiSK7a4tnmQYQuz7yC29z/6DzMpXot7Z959OjLMQDlC+LQ==
+X-Received: by 2002:a17:903:1c7:b0:223:5ada:88ff with SMTP id d9443c01a7336-22ac29be057mr66409385ad.24.1744220118923;
+        Wed, 09 Apr 2025 10:35:18 -0700 (PDT)
+Received: from tiamat (c-69-181-214-135.hsd1.ca.comcast.net. [69.181.214.135])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b62895sm14927945ad.5.2025.04.09.10.35.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 10:35:18 -0700 (PDT)
+From: Michael Rubin <matchstick@neverthere.org>
+To: gregkh@linuxfoundation.org,
+	dpenkler@gmail.com,
+	dan.carpenter@linaro.org
+Cc: linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Michael Rubin <matchstick@neverthere.org>
+Subject: [PATCH v2 01/18] staging: gpib: struct typing for gpib_interface
+Date: Wed,  9 Apr 2025 17:35:15 +0000
+Message-ID: <20250409173515.386725-1-matchstick@neverthere.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250409180414.19e535e5@kmaincent-XPS-13-7390>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 09, 2025 at 06:04:14PM +0200, Kory Maincent wrote:
-> On Wed, 9 Apr 2025 14:35:17 +0100
-> "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
-> 
-> > On Wed, Apr 09, 2025 at 02:38:20PM +0200, Kory Maincent wrote:
-> > > Ok, thanks for the tests and these information.
-> > > Did you run ptp4l with this patch applied and did you switch to Marvell PHY
-> > > PTP source?  
-> > 
-> > This was using mvpp2, but I have my original patch as part of my kernel
-> > rather than your patch.
-> 
-> So you are only testing the mvpp2 PTP. It seems there is something broken with
-> it. I don't think it is related to my work.
+"Having the word "_struct" in the name of the struct doesn't add any
+information so rename "struct gpib_interface_struct" to
+"struct gpib_interface".
 
-Yes, and it has worked - but probably was never tested with PTPDv2 but
-with linuxptp. As it was more than five years ago when I worked on this
-stuff, I just can't remember the full details of the test setup I used.
+Signed-off-by: Michael Rubin <matchstick@neverthere.org>
+---
+ drivers/staging/gpib/include/gpib_types.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I think the reason I gave up running PTP on my network is the problems
-that having the NIC bound into a Linux bridge essentially means that
-you can't participate in PTP on that machine. That basically means a
-VM host machine using a bridge device for the guests can't use PTP
-to time sync itself.
-
-Well, it looks like the PHY based timestamping also isn't working -
-ptp4l says its failing to timestamp transmitted packets, but having
-added debug, the driver _is_ timestamping them, so the timestamps
-are getting lost somewhere in the networking layer, or are too late
-for ptp4l, which only waits 1ms, and the schedule_delayed_work(, 2) 
-will be about 20ms at HZ=100. Increasing the wait in ptp4l to 100ms
-still doesn't appear to get a timestamp. According to the timestamps
-on the debug messages, it's only taking 10ms to return the timestamp.
-
-So, at the moment, ptp looks entirely non-functional. Or the userspace
-tools are broken.
-
+diff --git a/drivers/staging/gpib/include/gpib_types.h b/drivers/staging/gpib/include/gpib_types.h
+index 2d9b9be683f8..10d8776ef425 100644
+--- a/drivers/staging/gpib/include/gpib_types.h
++++ b/drivers/staging/gpib/include/gpib_types.h
+@@ -22,7 +22,7 @@
+ #include <linux/timer.h>
+ #include <linux/interrupt.h>
+ 
+-typedef struct gpib_interface_struct gpib_interface_t;
++typedef struct gpib_interface gpib_interface_t;
+ struct gpib_board;
+ 
+ /* config parameters that are only used by driver attach functions */
+@@ -51,7 +51,7 @@ typedef struct {
+ 	char *serial_number;
+ } gpib_board_config_t;
+ 
+-struct gpib_interface_struct {
++struct gpib_interface {
+ 	/* name of board */
+ 	char *name;
+ 	/* attach() initializes board and allocates resources */
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+2.43.0
+
