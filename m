@@ -1,122 +1,263 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03C30253B46;
-	Wed,  9 Apr 2025 19:07:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACB4E278177
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 19:07:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744225624; cv=none; b=hkq9tAd8PY+uUcrnBpRdQ+1mnDM/n1g/bPmTn9e5tTksp+2UzzgrqnPA+NI7tq3fkhY7XC6zLtbwQlez1LlG4OQ+HTFDMfSDqQWYzelYDdVdE/riiB1E93QyhKbvF/BuGtOgQtTZjY38QO6L2P9x6oueB+LJA/1eNlx+qKSBrQE=
+	t=1744225628; cv=none; b=tsP/MaMQcMxPmBPRkOuJDIk9VfHfVjAD+MGDEbkHhCmWDlhYSx61Nj8yAdOuiYD6/61jcvNNsAmKwUILaI0wDnpyoCi5InC5xRf9jvS6sFTGWDr4TK41f38SeeyxTKOmvQ8XUB82nSxZldcBH7KjZ1IE+6pRTDzkQdJpXV3SBDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744225624; c=relaxed/simple;
-	bh=zIMufi1pfOGJfgv3IG37PKRPOjR+foHGW/ZRMqh25oo=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=GnyJnPl09YHmxhHSuUuP7JE13C+X5teqIMg4WCxRj+NkhH1gnc3kydPe/RFuBhbSf5BS/uqsvBKONV+0bjwJXM8k0Spj++6I/yEuWLj8H4CMuSn9vtK0W2YccQzx2/mtB38mxG1FXTg21RBXchJExLXIMPj0h1bvn28Pcj4fato=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XtPWL4Yk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZIC40b8w; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744225628; c=relaxed/simple;
+	bh=MbzWTXW5L7DFIiFhxP4aesccCXvPbYgV4IJeoiJbcaI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lmL6Y5hghpJFTV/z16Vq/lUAbN0HnH71D/yl5PEkVaKdeNfjRQb8WoGft7pj9hWSQr3KGjK08G6lgfRIz16w+0LbJkNhzxWS+cUy0kC2Dt50cQVmrZ95s3XSoveiWs+z3oc4LN+kU1KlEsi4XPawLaxIJz9DSgX6qG0bi9KeanY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=Tis/M4lt; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XtPWL4Yk";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZIC40b8w"
-Date: Wed, 09 Apr 2025 19:06:57 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744225620;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BuDP/EVbH11rcxXyzzva+s7aNZK+w/uOWpaXPhLmzIg=;
-	b=XtPWL4YkaLVVBLnheKle0GghklSbT3jRNFj4gt6pceuc+RdvJ9o22sHvX7iMQqwbk9lxmt
-	MpTs9qK0Dtb3pxXNdKOOjULFfH/1OEM2E3mHYg58DR1Qhs+AiAfPAqCdY49U184kMR/1cJ
-	N6KU8zpfzj5eoz66jRG9xY8K/yGSfPS08Id70UdsAeNXyyJaUxGt+RM/o9m8xiMEK9mRNV
-	4lq8COfs3yJPu87ivl0mRRut4cXACET62sj+5otoxMLmvOkdXNlSTudBipRoRejIZJ9EzH
-	J/Vt88hzT5PCxYBIz0/aHQQXcFHTNkEMTmLhn084ct0b10x1748WcHC7KjxDsA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744225620;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BuDP/EVbH11rcxXyzzva+s7aNZK+w/uOWpaXPhLmzIg=;
-	b=ZIC40b8wdb5frL3n1zQJZBH0EtnNvgGYnRq2dzJ7i8PFtsLWl6SHRPegSvlbsfE5k/In65
-	j7rsPa1k5E/nPRCQ==
-From: "tip-bot2 for Nam Cao" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/urgent] hrtimer: Add missing ACCESS_PRIVATE() for
- hrtimer::function
-Cc: kernel test robot <lkp@intel.com>, Nam Cao <namcao@linutronix.de>,
- Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250408103854.1851093-1-namcao@linutronix.de>
-References: <20250408103854.1851093-1-namcao@linutronix.de>
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Tis/M4lt"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3914bc3e01aso4288592f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 12:07:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1744225625; x=1744830425; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BDpH5Cg2hroK2o4IDN554HJ3Fr5FbZsmDQ5bD2HXl6Y=;
+        b=Tis/M4ltCBkSDb7/lsw7F9nnWh/glF9tg3kc3b/0HRBLuRY0qPmaWW/fjKcf8TIlQH
+         L6ct18r+6bDgXY0XYXQwJ9EfMP6BVsc5UMzWQwI7xg+Gp+XiJN4XL/r6BHvj6C5sKWja
+         JOjwL6aN0I9rePWe1cwmvPihV95l4WIpkFl1Yr5YGDNiuH+Y72OMLN2wg74N2EFi6b2B
+         A5VgAAGvH2UxLwfZ5L7fly/ktth+7ibAbyuDD8u/9/0X2N+mNJ6UIotgpeE3Q3ukkWzx
+         KISEVvrBICv8WJR9aB9qgozK+zJNd/xkFwlaNmOKI58nCgnwiOqTrcgiRxtsFC71aKpz
+         TMjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744225625; x=1744830425;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BDpH5Cg2hroK2o4IDN554HJ3Fr5FbZsmDQ5bD2HXl6Y=;
+        b=rcqhbNdOC7zorZhhCTkYREes6XqzORu7vvaHSVTB3MtyUn1vo8pFa01nKbNI67/bXO
+         kDYI0Vrkc5VOMFh1vA1Cnwg8B8dyjM14gcU2Gi5RoJY4UwnhRsoR7iIJDFXomrtP2Rp/
+         XMQQV+8kKvo9hz7lAgJiIRQmW2vtlwTpKIRvT+fRKI/Fcs9ZwdL7ACkQO9gXjPrfvI7a
+         EdnGRVxM3yWZykDp2Mfdtzc/rExSaE/Eg8YZjBk0DD6N7aAMixgviYWK70T1fSt1vHxv
+         jcx1Qr8BZ2ojGvTnwJbHHc3DYTsGjspLjBknAVypqK0OE2aaK/9Lpiy+7VocUXGrmdVU
+         ArnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUw2l6hmikpYIB57rV9jMuzUr4WtIUWWcVVgNOAzRvXFLEbgjED0K7Cvp0MlpIRxwBJXsezLGp4eTEj7i8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYO13onHDhQAt9J0hL66HQwv7BgBJ/zcTG6w2hewoltegpCoCi
+	hca6EmK95KOEyS/BCOVHI32GiBvGYrebKW/S8nmEJzolvK3YISXgN46cm/PMp+WVjYm1eDqjHPo
+	z
+X-Gm-Gg: ASbGncuDrIBCJhRaYtRU9owlxhgYdSMIwbwEyQp36V03I4fh9WWKstrRM+8c97/1/Zj
+	XDx0np/q+4hTASFLSvdERqFaAkv01cs4ThR4BqChmNzGnGkBT9uN/ahJUxm9ua4Av/VAni06wsh
+	hhmNxWpiuvMON2WkCqOzyO1xt0nueZ5Z4EAwVUuOvwxtJ0qiwYy/VpwAGt6lsvWFrHerqoMJxWK
+	MD37RiOOsCqxkwf7+DQMmA6FLkGmbrQ/Mw2ZTTcXi8giO9obq5otAu4a46QUbnBIc39sGPd565O
+	jJeskPJA7yEx7wajxJMzivmfUrzTzVIHmUkj9iU0skg05AWL2bdmlKGRsgUUOJXUff5oBw==
+X-Google-Smtp-Source: AGHT+IGk1b2UhjU3Mst8QhR0QOkZwD6JG8okUMrRHSg9d1x+fnRHwWKeJm3fk035+4iF+CJXDmapXQ==
+X-Received: by 2002:a5d:5847:0:b0:391:4674:b136 with SMTP id ffacd0b85a97d-39d87ac2fdamr3386517f8f.29.1744225624948;
+        Wed, 09 Apr 2025 12:07:04 -0700 (PDT)
+Received: from localhost (cst2-173-28.cust.vodafone.cz. [31.30.173.28])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f205ecac8sm28928715e9.4.2025.04.09.12.07.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 12:07:04 -0700 (PDT)
+Date: Wed, 9 Apr 2025 21:07:03 +0200
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Samuel Holland <samuel.holland@sifive.com>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>, 
+	linux-riscv@lists.infradead.org, Pinkesh Vaghela <pinkesh.vaghela@einfochips.com>, 
+	Pritesh Patel <pritesh.patel@einfochips.com>, Darshan Prajapati <darshan.prajapati@einfochips.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] riscv: module: Optimize PLT/GOT entry counting
+Message-ID: <20250409-aa536deeef59c7a2862d906f@orel>
+References: <20250409171526.862481-1-samuel.holland@sifive.com>
+ <20250409171526.862481-3-samuel.holland@sifive.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174422561796.31282.2133089235929784026.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409171526.862481-3-samuel.holland@sifive.com>
 
-The following commit has been merged into the timers/urgent branch of tip:
+On Wed, Apr 09, 2025 at 10:14:51AM -0700, Samuel Holland wrote:
+> perf reports that 99.63% of the cycles from `modprobe amdgpu` are spent
+> inside module_frob_arch_sections(). This is because amdgpu.ko contains
+> about 300000 relocations in its .rela.text section, and the algorithm in
+> count_max_entries() takes quadratic time.
+> 
+> Apply two optimizations from the arm64 code, which together reduce the
+> total execution time by 99.58%. First, sort the relocations so duplicate
+> entries are adjacent. Second, reduce the number of relocations that must
+> be sorted by filtering to only relocations that need PLT/GOT entries, as
+> done in commit d4e0340919fb ("arm64/module: Optimize module load time by
+> optimizing PLT counting").
+> 
+> Unlike the arm64 code, here the filtering and sorting is done in a
+> scratch buffer, because the HI20 relocation search optimization in
+> apply_relocate_add() depends on the original order of the relocations.
+> This allows accumulating PLT/GOT relocations across sections so sorting
+> and counting is only done once per module.
+> 
+> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
+> ---
+> 
+> Changes in v2:
+>  - Include R_RISCV_PLT32 relocations when computing the PLT size
+>  - Accumulate PLT/GOT relocations across relocation sections
+> 
+>  arch/riscv/kernel/module-sections.c | 81 +++++++++++++++++++++++------
+>  1 file changed, 65 insertions(+), 16 deletions(-)
+> 
+> diff --git a/arch/riscv/kernel/module-sections.c b/arch/riscv/kernel/module-sections.c
+> index 91d0b355ceef..75551ac6504c 100644
+> --- a/arch/riscv/kernel/module-sections.c
+> +++ b/arch/riscv/kernel/module-sections.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/moduleloader.h>
+> +#include <linux/sort.h>
+>  
+>  unsigned long module_emit_got_entry(struct module *mod, unsigned long val)
+>  {
+> @@ -55,44 +56,70 @@ unsigned long module_emit_plt_entry(struct module *mod, unsigned long val)
+>  	return (unsigned long)&plt[i];
+>  }
+>  
+> -static int is_rela_equal(const Elf_Rela *x, const Elf_Rela *y)
+> +#define cmp_3way(a, b)	((a) < (b) ? -1 : (a) > (b))
+> +
+> +static int cmp_rela(const void *a, const void *b)
+>  {
+> -	return x->r_info == y->r_info && x->r_addend == y->r_addend;
+> +	const Elf_Rela *x = a, *y = b;
+> +	int i;
+> +
+> +	/* sort by type, symbol index and addend */
+> +	i = cmp_3way(x->r_info, y->r_info);
+> +	if (i == 0)
+> +		i = cmp_3way(x->r_addend, y->r_addend);
+> +	return i;
+>  }
+>  
+>  static bool duplicate_rela(const Elf_Rela *rela, int idx)
+>  {
+> -	int i;
+> -	for (i = 0; i < idx; i++) {
+> -		if (is_rela_equal(&rela[i], &rela[idx]))
+> -			return true;
+> -	}
+> -	return false;
+> +	/*
+> +	 * Entries are sorted by type, symbol index and addend. That means
+> +	 * that, if a duplicate entry exists, it must be in the preceding slot.
+> +	 */
+> +	return idx > 0 && cmp_rela(rela + idx, rela + idx - 1) == 0;
+>  }
+>  
+> -static void count_max_entries(Elf_Rela *relas, int num,
+> +static void count_max_entries(const Elf_Rela *relas, size_t num,
+>  			      unsigned int *plts, unsigned int *gots)
+>  {
+> -	for (int i = 0; i < num; i++) {
+> +	for (size_t i = 0; i < num; i++) {
+> +		if (duplicate_rela(relas, i))
+> +			continue;
+> +
+>  		switch (ELF_R_TYPE(relas[i].r_info)) {
+>  		case R_RISCV_CALL_PLT:
+>  		case R_RISCV_PLT32:
+> -			if (!duplicate_rela(relas, i))
+> -				(*plts)++;
+> +			(*plts)++;
+>  			break;
+>  		case R_RISCV_GOT_HI20:
+> -			if (!duplicate_rela(relas, i))
+> -				(*gots)++;
+> +			(*gots)++;
+>  			break;
+> +		default:
+> +			unreachable();
+>  		}
+>  	}
+>  }
+>  
+> +static bool rela_needs_plt_got_entry(const Elf_Rela *rela)
+> +{
+> +	switch (ELF_R_TYPE(rela->r_info)) {
+> +	case R_RISCV_CALL_PLT:
+> +	case R_RISCV_GOT_HI20:
+> +	case R_RISCV_PLT32:
+> +		return true;
+> +	default:
+> +		return false;
+> +	}
+> +}
+> +
+>  int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+>  			      char *secstrings, struct module *mod)
+>  {
+> +	size_t num_scratch_relas = 0;
+>  	unsigned int num_plts = 0;
+>  	unsigned int num_gots = 0;
+> +	Elf_Rela *scratch = NULL;
+> +	size_t scratch_size = 0;
+>  	int i;
+>  
+>  	/*
+> @@ -122,9 +149,10 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+>  
+>  	/* Calculate the maxinum number of entries */
+>  	for (i = 0; i < ehdr->e_shnum; i++) {
+> +		size_t num_relas = sechdrs[i].sh_size / sizeof(Elf_Rela);
+>  		Elf_Rela *relas = (void *)ehdr + sechdrs[i].sh_offset;
+> -		int num_rela = sechdrs[i].sh_size / sizeof(Elf_Rela);
+>  		Elf_Shdr *dst_sec = sechdrs + sechdrs[i].sh_info;
+> +		size_t scratch_size_needed;
+>  
+>  		if (sechdrs[i].sh_type != SHT_RELA)
+>  			continue;
+> @@ -133,7 +161,28 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+>  		if (!(dst_sec->sh_flags & SHF_EXECINSTR))
+>  			continue;
+>  
+> -		count_max_entries(relas, num_rela, &num_plts, &num_gots);
+> +		/*
+> +		 * apply_relocate_add() relies on HI20 and LO12 relocation pairs being
+> +		 * close together, so sort a copy of the section to avoid interfering.
+> +		 */
+> +		scratch_size_needed = (num_scratch_relas + num_relas) * sizeof(*scratch);
+> +		if (scratch_size_needed > scratch_size) {
+> +			scratch_size = scratch_size_needed;
 
-Commit-ID:     2424e146bee00ddb4d4f79d3224f54634ca8d2bc
-Gitweb:        https://git.kernel.org/tip/2424e146bee00ddb4d4f79d3224f54634ca8d2bc
-Author:        Nam Cao <namcao@linutronix.de>
-AuthorDate:    Tue, 08 Apr 2025 12:38:54 +02:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Wed, 09 Apr 2025 21:00:42 +02:00
+Maybe not worth it, but when i is less than ehdr->e_shnum - 1 (we still
+have more sections to look at) we could use scratch_size_needed * 2, or
+something, in order to hopefully reduce the number of times kvrealloc()
+is called.
 
-hrtimer: Add missing ACCESS_PRIVATE() for hrtimer::function
+> +			scratch = kvrealloc(scratch, scratch_size, GFP_KERNEL);
+> +			if (!scratch)
+> +				return -ENOMEM;
+> +		}
+> +
+> +		for (size_t j = 0; j < num_relas; j++)
+> +			if (rela_needs_plt_got_entry(&relas[j]))
+> +				scratch[num_scratch_relas++] = relas[j];
+> +	}
+> +
+> +	if (scratch) {
+> +		/* sort the accumulated PLT/GOT relocations so duplicates are adjacent */
+> +		sort(scratch, num_scratch_relas, sizeof(*scratch), cmp_rela, NULL);
+> +		count_max_entries(scratch, num_scratch_relas, &num_plts, &num_gots);
+> +		kvfree(scratch);
+>  	}
+>  
+>  	mod->arch.plt.shdr->sh_type = SHT_NOBITS;
+> -- 
+> 2.47.0
+>
 
-The "function" field of struct hrtimer has been changed to private, but
-two instances have not been converted to use ACCESS_PRIVATE().
+Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
 
-Convert them to use ACCESS_PRIVATE().
-
-Fixes: 04257da0c99c ("hrtimers: Make callback function pointer private")
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Nam Cao <namcao@linutronix.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250408103854.1851093-1-namcao@linutronix.de
-Closes: https://lore.kernel.org/oe-kbuild-all/202504071931.vOVl13tt-lkp@intel.com/
-Closes: https://lore.kernel.org/oe-kbuild-all/202504072155.5UAZjYGU-lkp@intel.com/
----
- include/linux/hrtimer.h | 2 +-
- kernel/time/hrtimer.c   | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/hrtimer.h b/include/linux/hrtimer.h
-index 1adcba3..1ef867b 100644
---- a/include/linux/hrtimer.h
-+++ b/include/linux/hrtimer.h
-@@ -345,7 +345,7 @@ static inline void hrtimer_update_function(struct hrtimer *timer,
- 	if (WARN_ON_ONCE(!function))
- 		return;
- #endif
--	timer->function = function;
-+	ACCESS_PRIVATE(timer, function) = function;
- }
- 
- /* Forward a hrtimer so it expires after now: */
-diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-index 517ee25..30899a8 100644
---- a/kernel/time/hrtimer.c
-+++ b/kernel/time/hrtimer.c
-@@ -366,7 +366,7 @@ static const struct debug_obj_descr hrtimer_debug_descr;
- 
- static void *hrtimer_debug_hint(void *addr)
- {
--	return ((struct hrtimer *) addr)->function;
-+	return ACCESS_PRIVATE((struct hrtimer *)addr, function);
- }
- 
- /*
+Thanks,
+drew
