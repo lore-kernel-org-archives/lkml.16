@@ -1,207 +1,176 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52C7325D210;
-	Wed,  9 Apr 2025 10:11:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33D111DF247;
+	Wed,  9 Apr 2025 10:11:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744193486; cv=none; b=MeAYwSxusO70EalrM9LKe9WZIGHo7xfee7PGrH1YX+cItDFZ7drHhCPG2gl7NWUdOIavNbh83ktmuQYqkTFM9oF5zAXPsO55k5v9h2bKeJXhAE5lgtEI5eIoc92mEj9Ae0Cm8ZF6WzUMz6SR9Jf12eatrGsEXILCpJcB6g1B75s=
+	t=1744193516; cv=none; b=qTx9vuNF/g0fXfjVRnSlldlJl1iwzh8vK7g7LmO6cgJ7TjDKeVm6zAiNoEpvfwBvVFyoKJc1+rwH48fFJ7WtYYve0ZxO5W2Orn8Qlu0F2Ji+a/cY1aP2X9t2XQrYp73VKr776p/Tdbe1LSRpIPDZSNS4XUlcmXUpfvVRKa6498E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744193486; c=relaxed/simple;
-	bh=HycmIH8ELSyYNHTekUH6sixLxrKN1sNEq+/zcLa9awA=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=eurcGBkWFF9uKFtebTbW0SBAMAj+gyVIGMWPasNhPz4wSIVZRXmnx3D+0YSX70zWBr1Aljmn3YM18NkXZ6Obzltg16ARLWeiDn8aHRsMR4Eh565Y3vu5s0kPhYWT6VV2FLt2z6xvL/9UGRAqthH3dBBkAXU55iwW0cEV1oO3T8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=O3X5d0SI; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fmzh+oet; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744193516; c=relaxed/simple;
+	bh=RGF42t7ba2gAeFKFDl+Vmbdg5+GzN+Zs2MtQQeMaOzA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SuTzgfXM/M+YDHbo//wgU5eZZDmGoOIP/3hRdVduYTPX4XxWJQGlG/Hi9sPVpeDHYExBQwn+T9XDgavtGUFBuWPECKh9T3KlyACUFlse+tDvumW8EtktWMQn3SCLz9FZ6KwqeOugjshgipHB7XTlkViLPXhdH+7Ca+s0oyxcvV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fwUeGYpD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="O3X5d0SI";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fmzh+oet"
-Date: Wed, 09 Apr 2025 10:11:15 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744193482;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ILqKcrGsm0LWQWFN/ADMSJ/XmwDnPGIgtuo3oUEpjHs=;
-	b=O3X5d0SIefwoU12y5bD24kPqQ7tWeS+mupTBAGZmz+NkJiIBLpU7YQMcqlluHexAVoOgbo
-	wZLm5CmaQ4yoiM4Xus4F2gQSfgVMtqTnIUdh2GH/4lEdDIW1X2zszvlx4sAh1CAPY2wOqI
-	CJ8Hy29QeBWrbMNHpQCLG6HdjL/aKR5Te5hF7t0lLh7d5XdlFu7eH/Wu92GhKqjGpPKj8G
-	DWvl3cW2kngSFJ+pQ6HC/N5/xlpQtWn2blIaggq4DyanRWJ3SLsBAa4eGwJ2D15spqWV/Z
-	HvG7OY30+oEtqF5ZN492UIacWRt8vbzOymJHx6JOcnk0nr7JSn8HqsW1RLWJZw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744193482;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ILqKcrGsm0LWQWFN/ADMSJ/XmwDnPGIgtuo3oUEpjHs=;
-	b=fmzh+oett2MHKS+e62v4Dag2aeuokeGFprAGxeatoRm2iU/yjSWbNKbWQbQGztL57SXPMv
-	32xOPfiR2mdVQmCA==
-From: "tip-bot2 for James Morse" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/resctrl: Fix rdtgroup_mkdir()'s unlocked use of
- kernfs_node::name
-Cc: James Morse <james.morse@arm.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
- Reinette Chatre <reinette.chatre@intel.com>, Ingo Molnar <mingo@kernel.org>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250407124637.2433230-1-james.morse@arm.com>
-References: <20250407124637.2433230-1-james.morse@arm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fwUeGYpD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3749AC4CEE3;
+	Wed,  9 Apr 2025 10:11:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744193515;
+	bh=RGF42t7ba2gAeFKFDl+Vmbdg5+GzN+Zs2MtQQeMaOzA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fwUeGYpDLFK+5BGx2AbhI3UnKi4pDLqO80mF/ZArkv9w4uEn25194kz+ZQVL5Yfbq
+	 1I2aYAqMrSfMogQbOKTS2P1eWRbIbsxujxh8wVKFsRDFefIzGt2yfVELOKkvb1peGc
+	 ty4vT5Nqe7KmZQj+zTOyiPKansiizzmZMyEGr9vr6Yi0ms1BS0F4LKhc18kSO3Gxu6
+	 oZfVrlAQKrHLsbcwlqWxtS+1pAgS8GgLzn9ZTrO/qJz/BZoJ4Pwr2ERQZlpyYFN03b
+	 uVRedj9uJ57K+3l5aSvN3dazHwV1Jd8+Odd2YWOC8XeIS4kf5DIh88q5GbHR2VZpdT
+	 pZ/4NmFqEm3RA==
+Date: Wed, 9 Apr 2025 12:11:48 +0200
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Sascha Bischoff <sascha.bischoff@arm.com>,
+	Timothy Hayes <timothy.hayes@arm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH 20/24] irqchip/gic-v5: Add GICv5 LPI/IPI support
+Message-ID: <Z/ZH5IBQAZ8rc9Cz@lpieralisi>
+References: <20250408-gicv5-host-v1-0-1f26db465f8d@kernel.org>
+ <20250408-gicv5-host-v1-20-1f26db465f8d@kernel.org>
+ <ed63bb91-e9ac-409a-a9a0-25b233fe2e15@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174419347599.31282.1068342026111511089.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ed63bb91-e9ac-409a-a9a0-25b233fe2e15@app.fastmail.com>
 
-The following commit has been merged into the x86/urgent branch of tip:
+On Wed, Apr 09, 2025 at 10:23:57AM +0200, Arnd Bergmann wrote:
+> On Tue, Apr 8, 2025, at 12:50, Lorenzo Pieralisi wrote:
+> > @@ -22,12 +25,346 @@ static u32 irs_readl(struct gicv5_irs_chip_data 
+> > *irs_data, const u64 reg_offset)
+> >  	return readl_relaxed(irs_data->irs_base + reg_offset);
+> >  }
+> > 
+> > +static u64 irs_readq(struct gicv5_irs_chip_data *irs_data, const u64 
+> > reg_offset)
+> > +{
+> > +	return readq_relaxed(irs_data->irs_base + reg_offset);
+> > +}
+> > +
+> >  static void irs_writel(struct gicv5_irs_chip_data *irs_data, const u32 
+> > val,
+> >  		       const u64 reg_offset)
+> >  {
+> >  	writel_relaxed(val, irs_data->irs_base + reg_offset);
+> >  }
+> > 
+> > +static void irs_writeq(struct gicv5_irs_chip_data *irs_data, const u64 
+> > val,
+> > +		       const u64 reg_offset)
+> > +{
+> > +	writeq_relaxed(val, irs_data->irs_base + reg_offset);
+> > +}
+> 
+> I think the use of _relaxed memory accessors needs some code
+> comments here. The definition of these is that you don't care
+> about ordering relative to DMA master accesses, yet you seem to
+> very much have accesses to the 'ist' from the GIC, as well as
+> DMA accesses from an MSI device, and I would expect both to
+> require ordering.
 
-Commit-ID:     45c2e30bbd64d75559b99f3a5c455129a7a34b06
-Gitweb:        https://git.kernel.org/tip/45c2e30bbd64d75559b99f3a5c455129a7a34b06
-Author:        James Morse <james.morse@arm.com>
-AuthorDate:    Mon, 07 Apr 2025 13:46:37 +01:00
-Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Wed, 09 Apr 2025 11:35:08 +02:00
+For the 1-level (linear) IST we allocate it in one go, write
+the base address through relaxed access (that sets the IST
+valid) and poll completion with a relaxed access. Memory is
+cleaned and invalidated from the cache (if the IRS is not
+coherent) before the MMIO sequence above, which implies a
+dsb().
 
-x86/resctrl: Fix rdtgroup_mkdir()'s unlocked use of kernfs_node::name
+After that memory is handed over to the GIC.
 
-Since
+For a 2-level IST, the code that updates L1 entries already add
+a dma_rmb() barrier (ie gicv5_irs_iste_alloc()) to make sure we
+order MMIO wait completion with the subsequent cache invalidate
+(again, in the yet hypothetical case where the IRS is not coherent).
 
-  741c10b096bc ("kernfs: Use RCU to access kernfs_node::name.")
+I think I can add comments where the sequence to initialize the
+tables is executed more than here, given that these helpers are
+used for other purposes too.
 
-a helper rdt_kn_name() that checks that rdtgroup_mutex is held has been used
-for all accesses to the kernfs node name.
+> > +/* Wait for completion of an IST change */
+> > +static int gicv5_irs_ist_wait_for_idle(struct gicv5_irs_chip_data 
+> > *irs_data)
+> > +{
+> > +	int ret;
+> > +	u32 val;
+> > +
+> > +	ret = readl_relaxed_poll_timeout_atomic(
+> > +			irs_data->irs_base + GICV5_IRS_IST_STATUSR, val,
+> > +			FIELD_GET(GICV5_IRS_IST_STATUSR_IDLE, val), 1,
+> > +			USEC_PER_SEC);
+> > +
+> 
+> What is the significance of the 1 second timeout? This is probably
+> a million times longer than I would expect any hardware interaction
+> to be specified to take. Are you waiting for another thread here?
 
-rdtgroup_mkdir() uses the name to determine if a valid monitor group is being
-created by checking the parent name is "mon_groups". This is done without
-holding rdtgroup_mutex, and now triggers the following warning:
+It is arbitrary, agreed.
 
-  | WARNING: suspicious RCU usage
-  | 6.15.0-rc1 #4465 Tainted: G            E
-  | -----------------------------
-  | arch/x86/kernel/cpu/resctrl/internal.h:408 suspicious rcu_dereference_check() usage!
-  [...]
-  | Call Trace:
-  |  <TASK>
-  |  dump_stack_lvl
-  |  lockdep_rcu_suspicious.cold
-  |  is_mon_groups
-  |  rdtgroup_mkdir
-  |  kernfs_iop_mkdir
-  |  vfs_mkdir
-  |  do_mkdirat
-  |  __x64_sys_mkdir
-  |  do_syscall_64
-  |  entry_SYSCALL_64_after_hwframe
+> > +	l2istsz = BIT(n + 1);
+> > +	if (l2istsz > KMALLOC_MAX_SIZE) {
+> > +		u8 lpi_id_cap = ilog2(KMALLOC_MAX_SIZE) - 2 + istsz;
+> > +
+> > +		pr_warn("Limiting LPI ID bits from %u to %u\n",
+> > +			lpi_id_bits, lpi_id_cap);
+> > +		lpi_id_bits = lpi_id_cap;
+> > +		l2istsz = KMALLOC_MAX_SIZE;
+> > +	}
+> 
+> The use of KMALLOC_MAX_SIZE seem arbitrary here. I remember discussing
+> this in the past and concluding that this is fine for all cases
+> that may be relevant, but it would be good to explain the reasoning
+> in a comment.
 
-Creating a control or monitor group calls mkdir_rdt_prepare(), which uses
-rdtgroup_kn_lock_live() to take the rdtgroup_mutex.
+We need contiguous physical memory that can be < PAGE_SIZE or larger.
 
-To avoid taking and dropping the lock, move the check for the monitor group
-name and position into mkdir_rdt_prepare() so that it occurs under
-rdtgroup_mutex. Hoist is_mon_groups() earlier in the file.
+For allocations larger than the allocator caches kmalloc hands over to
+the page allocator, MAX_ORDER is reflected into KMALLOC_MAX_SIZE AFAIU.
 
-  [ bp: Massage. ]
+That's the reasoning. Does it make sense ?
 
-Fixes: 741c10b096bc ("kernfs: Use RCU to access kernfs_node::name.")
-Signed-off-by: James Morse <james.morse@arm.com>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
-Acked-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20250407124637.2433230-1-james.morse@arm.com
----
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 48 ++++++++++++++-----------
- 1 file changed, 27 insertions(+), 21 deletions(-)
+> > +	if (irs_data->flags & IRS_FLAGS_NON_COHERENT)
+> > +		dcache_clean_inval_poc((unsigned long)ist,
+> > +				       (unsigned long)ist + l2istsz);
+> > +	else
+> > +		dsb(ishst);
+> ...
+> > +	baser = (virt_to_phys(ist) & GICV5_IRS_IST_BASER_ADDR_MASK) |
+> > +		FIELD_PREP(GICV5_IRS_IST_BASER_VALID, 0x1);
+> 
+> Here it seems like you are open-coding the DMA mapping interface
+> details, in particular the mapping of the 'ist' memory area into
+> the gic's DMA master space, the coherency and the barrier that is
+> normally part of a (non-relaxed) writeq().  Is there a reason
+> you can't use the normal interfaces here, using dma_alloc_coherent()
+> or dma_alloc_noncoherent()?
 
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index 93ec829..cc4a541 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -3553,6 +3553,22 @@ static void mkdir_rdt_prepare_rmid_free(struct rdtgroup *rgrp)
- 		free_rmid(rgrp->closid, rgrp->mon.rmid);
- }
- 
-+/*
-+ * We allow creating mon groups only with in a directory called "mon_groups"
-+ * which is present in every ctrl_mon group. Check if this is a valid
-+ * "mon_groups" directory.
-+ *
-+ * 1. The directory should be named "mon_groups".
-+ * 2. The mon group itself should "not" be named "mon_groups".
-+ *   This makes sure "mon_groups" directory always has a ctrl_mon group
-+ *   as parent.
-+ */
-+static bool is_mon_groups(struct kernfs_node *kn, const char *name)
-+{
-+	return (!strcmp(rdt_kn_name(kn), "mon_groups") &&
-+		strcmp(name, "mon_groups"));
-+}
-+
- static int mkdir_rdt_prepare(struct kernfs_node *parent_kn,
- 			     const char *name, umode_t mode,
- 			     enum rdt_group_type rtype, struct rdtgroup **r)
-@@ -3568,6 +3584,15 @@ static int mkdir_rdt_prepare(struct kernfs_node *parent_kn,
- 		goto out_unlock;
- 	}
- 
-+	/*
-+	 * Check that the parent directory for a monitor group is a "mon_groups"
-+	 * directory.
-+	 */
-+	if (rtype == RDTMON_GROUP && !is_mon_groups(parent_kn, name)) {
-+		ret = -EPERM;
-+		goto out_unlock;
-+	}
-+
- 	if (rtype == RDTMON_GROUP &&
- 	    (prdtgrp->mode == RDT_MODE_PSEUDO_LOCKSETUP ||
- 	     prdtgrp->mode == RDT_MODE_PSEUDO_LOCKED)) {
-@@ -3751,22 +3776,6 @@ out_unlock:
- 	return ret;
- }
- 
--/*
-- * We allow creating mon groups only with in a directory called "mon_groups"
-- * which is present in every ctrl_mon group. Check if this is a valid
-- * "mon_groups" directory.
-- *
-- * 1. The directory should be named "mon_groups".
-- * 2. The mon group itself should "not" be named "mon_groups".
-- *   This makes sure "mon_groups" directory always has a ctrl_mon group
-- *   as parent.
-- */
--static bool is_mon_groups(struct kernfs_node *kn, const char *name)
--{
--	return (!strcmp(rdt_kn_name(kn), "mon_groups") &&
--		strcmp(name, "mon_groups"));
--}
--
- static int rdtgroup_mkdir(struct kernfs_node *parent_kn, const char *name,
- 			  umode_t mode)
- {
-@@ -3782,11 +3791,8 @@ static int rdtgroup_mkdir(struct kernfs_node *parent_kn, const char *name,
- 	if (resctrl_arch_alloc_capable() && parent_kn == rdtgroup_default.kn)
- 		return rdtgroup_mkdir_ctrl_mon(parent_kn, name, mode);
- 
--	/*
--	 * If RDT monitoring is supported and the parent directory is a valid
--	 * "mon_groups" directory, add a monitoring subdirectory.
--	 */
--	if (resctrl_arch_mon_capable() && is_mon_groups(parent_kn, name))
-+	/* Else, attempt to add a monitoring subdirectory. */
-+	if (resctrl_arch_mon_capable())
- 		return rdtgroup_mkdir_mon(parent_kn, name, mode);
- 
- 	return -EPERM;
+The GIC IRS must be brought up early, it is not a struct device.
+
+> Do you expect actual implementation to not be cache-coherent?
+
+It is allowed by the architecture - I don't have a crystal ball
+but if I want to add support for a non-coherent IRS the DMA mapping
+like sequence above has to be there - alternatives are welcome.
+
+Thanks a lot for reviewing.
+
+Lorenzo
