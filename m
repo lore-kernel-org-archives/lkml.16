@@ -1,138 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E0F125EF80
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 12:23:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6178C25F7B3
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 12:23:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744201409; cv=none; b=OoLrxOp0LSxLU5rSrRbOsqHk+4SzXsWxNoDSXWL9BsSmN/OzQx9p7ZExA2bWFEhbyICfB8WgIf6zNMWMZg45YtfIfuxNr8RqtwmdGa8ATAi6YQkDCJhVZrtofbnKFTGckO2LGUPUT9tClHVOb4PaqL6vw1P0yxxaN0eWcBApN10=
+	t=1744201414; cv=none; b=eZyz1a0trhGKNKu0kYnP8rnVK92Xvd0W9/KYuLtRHgt/QmA5lRDinnlpyUkFK30sGHB9G/qSMvHcavGrSRr6yDkM8nEmvxs4ELpq01ej6Tv7HXCPtf63deluivlWVYOTDBlwqg3p65V4Yk5jyb11EUY/G31jDR2en5Bbnmi6UEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744201409; c=relaxed/simple;
-	bh=vxHQZ3DXPVolZSGM5QSjA4upyIcrsxp7pynHAqIHr2I=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=h803cR/VNx3lBGUbaS+0Ce6qVgzuM07vv7kI70obCo+q8VDJo84i5uTbtLgl2as/g0mxWAJFV0Jmzw4oYNVuWOb3C8Finm5HdDnZ/UfhX777OmSrhCwVwARzMyEedornX3VdhzkqMVzHGWi+ZDbF6gHrUwAw0KN0yl3X80buwMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qKackW6x; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744201414; c=relaxed/simple;
+	bh=Fgr7R5b+ulQnIXmOIM1WAgaF0kERi+EgqOoyjhbfzzA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZTxZ10xBc5AwZ7aGst0qlApdPMN9C7OrCoTezMWWWt/PbVllbi4cC7WQMfStUz8Q1MavmBFVTrCVotj6gUyH0uu42bAVap91VtxvXX/Uc14G/M9MOO09OkZuP0GYyNmJvzbf2+xVqiEzFUbLu76ls9atULUbDSiDKE1yEAlB/V8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=EDprO00/; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=23eBSpA/; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=EDprO00/; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=23eBSpA/; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qKackW6x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CB69C4CEE3;
-	Wed,  9 Apr 2025 12:23:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744201408;
-	bh=vxHQZ3DXPVolZSGM5QSjA4upyIcrsxp7pynHAqIHr2I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qKackW6x79hPogCNQE9yr6P14+tltBlYVB1j2uguSKJ17jueb85dYfbq+jg4O3rbT
-	 ldxrcX/DkfWG9/6dyzVegmnouE/jELg6PhDzN1DYwUsCkWB6WaB4KuNsXNbzCinS3H
-	 mCtQm5y14l2f21Qo4/ZuMf55bdZy8TUwjYayioNuL87Wqg+eIFemia4s4EzCtTM6sD
-	 zyzXFAV1FoHCs9mk7idgc36MiD1XJgmWIblYLsL1ntzlKfxvM504YkzKPGLRTaq0We
-	 khbKHoev09931Z/Hg5SIb6r2Yka7XsQYxNB7dl6xJHwXwnXIcqm593joLOjCfTcfnG
-	 eg9TcVAC0w2Fg==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Frank Binns <frank.binns@imgtec.com>,
-	Matt Coster <matt.coster@imgtec.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Jani Nikula <jani.nikula@intel.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Alessio Belle <alessio.belle@imgtec.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 01/10] drm/imagination: avoid unused-const-variable warning
-Date: Wed,  9 Apr 2025 14:22:53 +0200
-Message-Id: <20250409122314.2848028-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250409122131.2766719-1-arnd@kernel.org>
-References: <20250409122131.2766719-1-arnd@kernel.org>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="EDprO00/";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="23eBSpA/";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="EDprO00/";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="23eBSpA/"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 3CEBF1F395;
+	Wed,  9 Apr 2025 12:23:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744201407; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=35vhnK1QcBnFpxT7JcUr3Qul61NTqzLzG46OhW8fdm4=;
+	b=EDprO00/3+viqpN3KchYLp16WLLxHQnZ2MOQlaYsdGrdcP6RAlf9sDIP6FPHlOYkva8Gwo
+	vrFm6Hwbd7ZfSscaRmJh4PYBvaZbqy/Cm7fDdpcfSG9cTw9uRteoEZgQJGlTzMHqjO4cGl
+	JmqVrkRrKSqoPXPbGI5ielEcdtXl0Y0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744201407;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=35vhnK1QcBnFpxT7JcUr3Qul61NTqzLzG46OhW8fdm4=;
+	b=23eBSpA/dhmmWdsuf2zdm3SRRQOcZFr7g+Nk5PmLS61Wz/yaNBFec9OEfer0/EUMRQW3jY
+	n3cmwyoVrDSjMtDQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="EDprO00/";
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b="23eBSpA/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744201407; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=35vhnK1QcBnFpxT7JcUr3Qul61NTqzLzG46OhW8fdm4=;
+	b=EDprO00/3+viqpN3KchYLp16WLLxHQnZ2MOQlaYsdGrdcP6RAlf9sDIP6FPHlOYkva8Gwo
+	vrFm6Hwbd7ZfSscaRmJh4PYBvaZbqy/Cm7fDdpcfSG9cTw9uRteoEZgQJGlTzMHqjO4cGl
+	JmqVrkRrKSqoPXPbGI5ielEcdtXl0Y0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744201407;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=35vhnK1QcBnFpxT7JcUr3Qul61NTqzLzG46OhW8fdm4=;
+	b=23eBSpA/dhmmWdsuf2zdm3SRRQOcZFr7g+Nk5PmLS61Wz/yaNBFec9OEfer0/EUMRQW3jY
+	n3cmwyoVrDSjMtDQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2A262137AC;
+	Wed,  9 Apr 2025 12:23:27 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Snj8Cb9m9mdJKgAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Wed, 09 Apr 2025 12:23:27 +0000
+Message-ID: <c2b10e1b-2914-48be-8818-863d8c3e5e3f@suse.cz>
+Date: Wed, 9 Apr 2025 14:23:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm: kvmalloc: make kmalloc fast path real fast path
+To: Michal Hocko <mhocko@suse.com>
+Cc: Dave Chinner <david@fromorbit.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Yafang Shao <laoar.shao@gmail.com>,
+ Harry Yoo <harry.yoo@oracle.com>, Kees Cook <kees@kernel.org>,
+ joel.granados@kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+ linux-mm@kvack.org
+References: <Z-y50vEs_9MbjQhi@harry>
+ <CALOAHbBSvMuZnKF_vy3kGGNOCg5N2CgomLhxMxjn8RNwMTrw7A@mail.gmail.com>
+ <Z-0gPqHVto7PgM1K@dread.disaster.area> <Z-0sjd8SEtldbxB1@tiehlicka>
+ <zeuszr6ot5qdi46f5gvxa2c5efy4mc6eaea3au52nqnbhjek7o@l43ps2jtip7x>
+ <Z-43Q__lSUta2IrM@tiehlicka> <Z-48K0OdNxZXcnkB@tiehlicka>
+ <Z-7m0CjNWecCLDSq@tiehlicka> <Z_YjKs5YPk66vmy8@tiehlicka>
+ <0f2091ba-0a43-4dd3-aa48-fe284530044a@suse.cz> <Z_ZmKcA2CvMiZnSG@tiehlicka>
+Content-Language: en-US
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <Z_ZmKcA2CvMiZnSG@tiehlicka>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 3CEBF1F395
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[fromorbit.com,linux-foundation.org,linux.dev,gmail.com,oracle.com,kernel.org,vger.kernel.org,toxicpanda.com,kvack.org];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -3.01
+X-Spam-Flag: NO
 
-From: Arnd Bergmann <arnd@arndb.de>
+On 4/9/25 2:20 PM, Michal Hocko wrote:
+> On Wed 09-04-25 11:11:37, Vlastimil Babka wrote:
+>> On 4/9/25 9:35 AM, Michal Hocko wrote:
+>>> On Thu 03-04-25 21:51:46, Michal Hocko wrote:
+>>>> Add Andrew
+>>>
+>>> Andrew, do you want me to repost the patch or can you take it from this
+>>> email thread?
+>>
+>> I'll take it as it's now all in mm/slub.c
+> 
+> Thanks that will work as well.
 
-When CONFIG_DEBUG_FS is disabled, the stid_fmts[] array is not referenced
-anywhere, causing a W=1 warning with gcc:
+It's now in slab/for-next with Shakeel's ack and the updated comment you
+discussed:
 
-In file included from drivers/gpu/drm/imagination/pvr_fw_trace.c:7:
-drivers/gpu/drm/imagination/pvr_rogue_fwif_sf.h:75:39: error: 'stid_fmts' defined but not used [-Werror=unused-const-variable=]
-   75 | static const struct rogue_km_stid_fmt stid_fmts[] = {
-      |                                       ^~~~~~~~~
-
-Rather than adding more #ifdef blocks, address this by changing the
-existing #ifdef into equivalent IS_ENABLED() checks so gcc can see
-where the symbol is used but still eliminate it from the object file.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/gpu/drm/imagination/pvr_fw_trace.c | 8 ++++----
- drivers/gpu/drm/imagination/pvr_fw_trace.h | 2 --
- 2 files changed, 4 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/gpu/drm/imagination/pvr_fw_trace.c b/drivers/gpu/drm/imagination/pvr_fw_trace.c
-index 5dbb636d7d4f..93269299d6a4 100644
---- a/drivers/gpu/drm/imagination/pvr_fw_trace.c
-+++ b/drivers/gpu/drm/imagination/pvr_fw_trace.c
-@@ -122,8 +122,6 @@ void pvr_fw_trace_fini(struct pvr_device *pvr_dev)
- 	pvr_fw_object_unmap_and_destroy(fw_trace->tracebuf_ctrl_obj);
- }
- 
--#if defined(CONFIG_DEBUG_FS)
--
- /**
-  * update_logtype() - Send KCCB command to trigger FW to update logtype
-  * @pvr_dev: Target PowerVR device
-@@ -447,7 +445,7 @@ static const struct file_operations pvr_fw_trace_fops = {
- void
- pvr_fw_trace_mask_update(struct pvr_device *pvr_dev, u32 old_mask, u32 new_mask)
- {
--	if (old_mask != new_mask)
-+	if (IS_ENABLED(CONFIG_DEBUG_FS) && old_mask != new_mask)
- 		update_logtype(pvr_dev, new_mask);
- }
- 
-@@ -457,6 +455,9 @@ pvr_fw_trace_debugfs_init(struct pvr_device *pvr_dev, struct dentry *dir)
- 	struct pvr_fw_trace *fw_trace = &pvr_dev->fw_dev.fw_trace;
- 	u32 thread_nr;
- 
-+	if (!IS_ENABLED(CONFIG_DEBUG_FS))
-+		return;
-+
- 	static_assert(ARRAY_SIZE(fw_trace->buffers) <= 10,
- 		      "The filename buffer is only large enough for a single-digit thread count");
- 
-@@ -469,4 +470,3 @@ pvr_fw_trace_debugfs_init(struct pvr_device *pvr_dev, struct dentry *dir)
- 				    &pvr_fw_trace_fops);
- 	}
- }
--#endif
-diff --git a/drivers/gpu/drm/imagination/pvr_fw_trace.h b/drivers/gpu/drm/imagination/pvr_fw_trace.h
-index 0074d2b18da0..1d0ef937427a 100644
---- a/drivers/gpu/drm/imagination/pvr_fw_trace.h
-+++ b/drivers/gpu/drm/imagination/pvr_fw_trace.h
-@@ -65,7 +65,6 @@ struct pvr_fw_trace {
- int pvr_fw_trace_init(struct pvr_device *pvr_dev);
- void pvr_fw_trace_fini(struct pvr_device *pvr_dev);
- 
--#if defined(CONFIG_DEBUG_FS)
- /* Forward declaration from <linux/dcache.h>. */
- struct dentry;
- 
-@@ -73,6 +72,5 @@ void pvr_fw_trace_mask_update(struct pvr_device *pvr_dev, u32 old_mask,
- 			      u32 new_mask);
- 
- void pvr_fw_trace_debugfs_init(struct pvr_device *pvr_dev, struct dentry *dir);
--#endif /* defined(CONFIG_DEBUG_FS) */
- 
- #endif /* PVR_FW_TRACE_H */
--- 
-2.39.5
-
+https://git.kernel.org/pub/scm/linux/kernel/git/vbabka/slab.git/commit/?h=slab/for-6.16/fixes&id=bfedb6b93bc8d1dc02627beb43ceb466f42a4ed9
