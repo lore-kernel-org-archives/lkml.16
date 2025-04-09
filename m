@@ -1,366 +1,130 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-b5-smtp.messagingengine.com (fout-b5-smtp.messagingengine.com [202.12.124.148])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C702D27702E;
-	Wed,  9 Apr 2025 14:51:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F390A266B5D
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 14:52:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744210292; cv=none; b=BTRXXzw3Mo3UA8WJOXDrMRM2eiy5mzVwvCvHbPO52PUfwgj64YUKUaQ1Wfl/HoH/a3OPSOMDBYpjbCHrcdGKF+vBSm4jcW9RUaUZXysEmBXq4QTbbmM2uWh++61BWodkbkPesgLxrrnR3kOrLS7VBIPJhJNmK4BazHcBIy0pixc=
+	t=1744210325; cv=none; b=bidkW1IHewi63TRhb8RHAySkrZYn34ToQOKlAO94skYZwheWwzAJV2I+SXs9C0ppMrP97njmC3Tn6JQegeTf7TvoMrSleJzo/wUdaReDbb6Jm76dD1bdSRpnJW2i29EFA+2emEpRowjh3AfTW/D26hKrQyGyL19GB9K1HLH9uwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744210292; c=relaxed/simple;
-	bh=QAraSClmc7xPwjtsN9qdACIwGCQfVwxdg6lXrbuDb0c=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=KrbMQEISn3ZXUWHAz+w3DLYdcOmdi3SosGDDEWxcDmxI7MQZxxKyPq8IbanjsotRR6GqEZcALLQM639SjOtTpy54ueAcnWlnTQgJ1shcLTY5JD5rHZW93D6wP5Fv3jT3TkbPmXvw6iqQ+mNB5s6QaM6z6oSYqdz1j7BKH9nyxxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iGvoNRIz; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744210325; c=relaxed/simple;
+	bh=llgPJEXjCJy6+OUBquEX9KlfCwayZHNIKLx7BNesWG8=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=oz3J8b2fOz6DiAsquDFo4BnkMZlvLDrUrOhnTLX+n/dtDjbRiMq3SKh+GYOdbaEcVnaNVzV1HwZI8/QkMhWFY50ZRmtWvMpEoSeNbjk6SOVxCEumjGcxSI0GTsjUVu/bOqlRgv/8AfV6pTsB6rAnky08F9SmCeAgVNk6NyxlFYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=l94rsPaM; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=NEwoMKJz; arc=none smtp.client-ip=202.12.124.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iGvoNRIz"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6eaf1b6ce9aso75505406d6.2;
-        Wed, 09 Apr 2025 07:51:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744210289; x=1744815089; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mX/zVGLacBNtzH1Co9YrakQoJNZpEVypxiF7+Yiskio=;
-        b=iGvoNRIzLA22yzh3pnz2Jb1ZN/cElLBRZHKpwCUjlh+LqjvtphXg0zyZQvYzJfa1tE
-         LuOq0Bs0SotKw+TMFUpYDICoHq1n8Lv5ZRj7xevzLOR6t7s15uzWEI8LnR0BEodsUpdx
-         6EWLXnX+zYyQ1TcwPf61mXLeALkwlrGUTjwkBe/KyanBCjeSzpkTl8JhSVCsIasSYnaY
-         WEDhs2U4pOeXW0Zn6mIaAtzM5HxBgAZD3STDuAy/DgeBZC3ObRYuLnmdV/5qxkX5/w1h
-         L2zQeS65KwkLwiphEU2hihqwYq+ZLg7eo/LtdXYL0BmchQCwlDQqCSZ5xIBLjTMG/bD4
-         UxAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744210289; x=1744815089;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mX/zVGLacBNtzH1Co9YrakQoJNZpEVypxiF7+Yiskio=;
-        b=F3Rv4LchS+ui7AmPXrMIf65vyBUYYSSgq54i01LETie/pzRQ1fBdSnjGhDMqMo43sE
-         s4fHHJXli3rro6bbp5wK/wlOTlDmKIVSxucj7dIciIq80Ypn7q8tvx/c24Lnxxuu/oUc
-         wUVaJhQve1gjo++OrwCXwEoORfttk7m4mH7w9f7SxPqxSZWCn7SSERMKtwnfwo/kVWNU
-         XBsEktPfPysYpilC7oOh7Idhbvq8VmtT6Y33RpKirsr7ekfbpSt+enFGPz6F8GKLbWpN
-         9Mk72orhNrB9f8QSwEq9RD2mT8e4LqXeTSEbC7Ox+QyJ1e4pp2vzsFdUBavPGsf5ifT2
-         x5YQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUoOjPpq/lvwCy2YQYzejXUTHEFerT6tWayRKBQHeYDmXHszJ5Ggkr/4YClp8BUe6JUsuzqhM4yRMeS1oQ=@vger.kernel.org, AJvYcCXx+TPkqq81a/S4B2EYjMKQSupamXVelNuSE9iS9wYUgaGD1nbgQNqi2hzXm8ZhGtnmy3slGGZ5vPva@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywmkk8NZLEVFTaO6EorGOnjI4MuLEdfa3+VGGsCn1nBrC5XBn3W
-	6FxdBLo22udGfvCgzanvt9x3lB3ucgtMcoLQicmPr6gj/pB+rqmu
-X-Gm-Gg: ASbGncvIh8/rN0FF23RvC/z6UZMKlMlYaD4W4ivgBbd0nfeayqpOQyGpMidDOHVaOtJ
-	XyFL3h2huSguo+We5JduNdF4MWuJwBawURef6ec+jUIE94spmraPSfjxQXcrxjNieVbhJv8jOy6
-	4ndSBPiXSnys55iiE8dQnfRsTlCZ6DKIjQjCvwLB/Cq/BCeQe8BXmWha5QJGTYRkcsq5tKI9xlY
-	QSSbAuFCVFaHvctebnC6dXhX7+Py1YVh+4m/eY7vQIoZI1f9dl+jldeYMXlTnUEL2KujuZ5g2RB
-	BilSshPsnwiLpxybm/GM1gkiW9yY9Q0/IUnQKHtAxmyeRhysxqqkLLpOnkprwYq+BVIihBLfMw9
-	T/I0QUkPg8hAb3ssWT/Mn789xKOhtlUwP49FRT0K4eLxFUnSA78WW12M=
-X-Google-Smtp-Source: AGHT+IH2vXb0WkovZiy7D9/YH7RRtFDAXGJMU4MkwyF8t1LWoxRX7ev+T3Umg5SjxUjsTmpbsIFvIg==
-X-Received: by 2002:a05:6214:19eb:b0:6e6:6599:edf6 with SMTP id 6a1803df08f44-6f0dbc6b8acmr52819376d6.34.1744210289334;
-        Wed, 09 Apr 2025 07:51:29 -0700 (PDT)
-Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([2620:10d:c091:600::1:3298])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f0de95fa89sm8229876d6.6.2025.04.09.07.51.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 07:51:28 -0700 (PDT)
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Wed, 09 Apr 2025 10:51:21 -0400
-Subject: [PATCH v2 4/4] rust: list: remove OFFSET constants
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="l94rsPaM";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NEwoMKJz"
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfout.stl.internal (Postfix) with ESMTP id E72AC1140133;
+	Wed,  9 Apr 2025 10:52:01 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-12.internal (MEProxy); Wed, 09 Apr 2025 10:52:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1744210321;
+	 x=1744296721; bh=UqUyvWXf42+ShfCStTQPwTm+Gc+NVPPqoJJBRXTGY6Q=; b=
+	l94rsPaMZ2AIzwAmPVkpk1ySlIyY27Cf0nrywFMqS+Smy6lUHPumfQXJtUjUG9QI
+	s4RfCf3/pyybFllENoNX+CaOd8SarzlCpXvd3+Cb1LDRYwtaPqeGCVR3aOU3kYka
+	ZFI5QUoDnRWXbnEv7cwzTsvdNnuzkMnn/O2OnHpi7NxXbgpReANl4lJOMFzI7bBh
+	AjSErXjP+1o+YmRElNiNdmJX5cJNw6EMmRD6nN2PAisNUbYGpKB8VGE9VawIw2HP
+	OiV49WKMUeoqPuHvtlBOlirnu9jjtcliPVmQD22UBx+QFv9bTUoR62oF6Ifg+RTF
+	5STkTIEl4M+3XMDsbVuUIw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744210321; x=
+	1744296721; bh=UqUyvWXf42+ShfCStTQPwTm+Gc+NVPPqoJJBRXTGY6Q=; b=N
+	EwoMKJz7ETYWrNLi/AnnHwvwGlK5wPAsZel54zY8PZN2uagaqHkHjjJAAhvZojjD
+	v/81Dk5aq8Bgo7sjE8N5QYK6atXb/NbMjGvIQrvgKKiOizn/pO0RR5HpqkCI3ADM
+	XjeCSYE8wwDKZsYcB/DFLN5fo2gPr4Ma2G+ciVZNbjlAJ5zpo9GcrMWFpebT4uML
+	JzC4eglezDAy4LB/6VgrVQPZlD7lDN6HH/+qdLKdE8+ySmptwZAm6YQuk3ifxgJz
+	sPFwwOOAZJzK8Y2Lql/9q1BNvTjCGfqusT+wQX9X5eM4dRlpwpT10RgvCPI/dUnx
+	/yYTvvclIShoyty2NQh5Q==
+X-ME-Sender: <xms:kIn2Z_jmVAsC8ajcYggXrY04szHM-ezk7W_Rme9AOr_kJrImM3xxaA>
+    <xme:kIn2Z8BDP1_WyILQNJNleVnUoR86S6txFFugkm-ygEmWi9Zp6BOicBte_9BKHK3kp
+    kO70ON2m52gzS9O1pg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdeivdekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
+    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
+    ledpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprhhosghinhdrmhhurhhphhihse
+    grrhhmrdgtohhmpdhrtghpthhtoheprghrnhgusehkvghrnhgvlhdrohhrghdprhgtphht
+    thhopehkrhiihihsiihtohhfrdhkohiilhhofihskhhisehlihhnrghrohdrohhrghdprh
+    gtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghl
+    rdgtohhmpdhrtghpthhtohepihhomhhmuheslhhishhtshdrlhhinhhugidruggvvhdprh
+    gtphhtthhopehmihhnrgekieesmhhinhgrkeeirdgtohhmpdhrtghpthhtohepkhihuhhn
+    ghhmihhnrdhprghrkhesshgrmhhsuhhnghdrtghomhdprhgtphhtthhopehmrdhsiiihph
+    hrohifshhkihesshgrmhhsuhhnghdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghr
+    nhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:kIn2Z_GwLlGnou0aAPMMHcqHmg6naU49QTiNB-d9wmFN-CuoOWb-Mw>
+    <xmx:kIn2Z8RI6eR0QYmQTfuc59LK8HPxFNdhev5Yk4lCg7q-zkpqDqMYEQ>
+    <xmx:kIn2Z8zXp1fu2xoNHvQvkExkXOAdqGFZMXO4NQHiOegc9_7NH_SLzw>
+    <xmx:kIn2Zy7GTndunjsAd2d74KO-03kJD1iXSKVipE6N39Q6RpfIAFDtqg>
+    <xmx:kYn2Z_7NjnrIy8kiB_HGXP46R8ZQkCFSQEwqr2bQx-fT4QwdMAvnp_TI>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id B068F2220075; Wed,  9 Apr 2025 10:52:00 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+X-ThreadId: Tf610c2eb90ac91dc
+Date: Wed, 09 Apr 2025 16:51:40 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+ "Marek Szyprowski" <m.szyprowski@samsung.com>
+Cc: "Arnd Bergmann" <arnd@kernel.org>,
+ "Michal Nazarewicz" <mina86@mina86.com>,
+ "Kyungmin Park" <kyungmin.park@samsung.com>,
+ "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>,
+ "Robin Murphy" <robin.murphy@arm.com>, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+Message-Id: <3f3ed85e-187b-4b06-812b-fe34e23511d9@app.fastmail.com>
+In-Reply-To: <Z_aHdH7Ei_cffeIL@smile.fi.intel.com>
+References: <20250409122131.2766719-1-arnd@kernel.org>
+ <CGME20250409122452eucas1p2fd6f06f30de0c6b37b510a10081b724a@eucas1p2.samsung.com>
+ <20250409122441.2875424-1-arnd@kernel.org>
+ <59af67fa-ca0d-48f6-8b78-b1c694af9dfd@samsung.com>
+ <Z_aHdH7Ei_cffeIL@smile.fi.intel.com>
+Subject: Re: [PATCH 10/10] [RESEND 3] dma/contiguous: avoid warning about unused
+ size_bytes
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250409-list-no-offset-v2-4-0bab7e3c9fd8@gmail.com>
-References: <20250409-list-no-offset-v2-0-0bab7e3c9fd8@gmail.com>
-In-Reply-To: <20250409-list-no-offset-v2-0-0bab7e3c9fd8@gmail.com>
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
- Bjorn Helgaas <bhelgaas@google.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-pci@vger.kernel.org, Tamir Duberstein <tamird@gmail.com>
-X-Mailer: b4 0.15-dev
 
-Replace `ListLinksSelfPtr::LIST_LINKS_SELF_PTR_OFFSET` with `unsafe fn
-raw_get_self_ptr` which returns a pointer to the field rather than
-requiring the caller to do pointer arithmetic.
+On Wed, Apr 9, 2025, at 16:43, Andy Shevchenko wrote:
+> On Wed, Apr 09, 2025 at 04:35:57PM +0200, Marek Szyprowski wrote:
+>> On 09.04.2025 14:24, Arnd Bergmann wrote:
+>> > From: Arnd Bergmann <arnd@arndb.de>
+>> >
+>> > When building with W=1, this variable is unused for configs with
+>> > CONFIG_CMA_SIZE_SEL_PERCENTAGE=y:
+>> >
+>> > kernel/dma/contiguous.c:67:26: error: 'size_bytes' defined but not used [-Werror=unused-const-variable=]
+>> >
+>> > Change this to a macro to avoid the warning.
+>
+>> > -static const phys_addr_t size_bytes __initconst =
+>> > -	(phys_addr_t)CMA_SIZE_MBYTES * SZ_1M;
+>> > +#define size_bytes (CMA_SIZE_MBYTES * SZ_1M)
+>
+> This had phys_addr_t type before, do we still have the platforms when it can be
+> bigger than 32-bit integer?
 
-Implement `HasListLinks::raw_get_list_links` in `impl_has_list_links!`,
-narrowing the interface of `HasListLinks` and replacing pointer
-arithmetic with `container_of!`.
+It can certainly be larger on 64-bit systems, I think I messed it
+up. Marek, can you fix this to put back the cast, or should I
+send a patch on top?
 
-Modify `impl_list_item` to also invoke `impl_has_list_links!` or
-`impl_has_list_links_self_ptr!`. This is necessary to allow
-`impl_list_item` to see more of the tokens used by
-`impl_has_list_links{,_self_ptr}!`.
-
-A similar API change was discussed on the hrtimer series[1].
-
-Link: https://lore.kernel.org/all/20250224-hrtimer-v3-v6-12-rc2-v9-1-5bd3bf0ce6cc@kernel.org/ [1]
-Signed-off-by: Tamir Duberstein <tamird@gmail.com>
----
- rust/kernel/list.rs                    |  18 +++---
- rust/kernel/list/impl_list_item_mod.rs | 100 +++++++++++++++------------------
- 2 files changed, 56 insertions(+), 62 deletions(-)
-
-diff --git a/rust/kernel/list.rs b/rust/kernel/list.rs
-index a335c3b1ff5e..f370a8c1df98 100644
---- a/rust/kernel/list.rs
-+++ b/rust/kernel/list.rs
-@@ -212,9 +212,6 @@ unsafe impl<T: ?Sized + Send, const ID: u64> Send for ListLinksSelfPtr<T, ID> {}
- unsafe impl<T: ?Sized + Sync, const ID: u64> Sync for ListLinksSelfPtr<T, ID> {}
- 
- impl<T: ?Sized, const ID: u64> ListLinksSelfPtr<T, ID> {
--    /// The offset from the [`ListLinks`] to the self pointer field.
--    pub const LIST_LINKS_SELF_PTR_OFFSET: usize = core::mem::offset_of!(Self, self_ptr);
--
-     /// Creates a new initializer for this type.
-     pub fn new() -> impl PinInit<Self> {
-         // INVARIANT: Pin-init initializers can't be used on an existing `Arc`, so this value will
-@@ -229,6 +226,16 @@ pub fn new() -> impl PinInit<Self> {
-             self_ptr: Opaque::uninit(),
-         }
-     }
-+
-+    /// Returns a pointer to the self pointer.
-+    ///
-+    /// # Safety
-+    ///
-+    /// The provided pointer must point at a valid struct of type `Self`.
-+    pub unsafe fn raw_get_self_ptr(me: *mut Self) -> *const Opaque<*const T> {
-+        // SAFETY: The caller promises that the pointer is valid.
-+        unsafe { ptr::addr_of!((*me).self_ptr) }
-+    }
- }
- 
- impl<T: ?Sized + ListItem<ID>, const ID: u64> List<T, ID> {
-@@ -603,14 +610,11 @@ fn next(&mut self) -> Option<ArcBorrow<'a, T>> {
- ///     }
- /// }
- ///
--/// kernel::list::impl_has_list_links! {
--///     impl HasListLinks<0> for ListItem { self.links }
--/// }
- /// kernel::list::impl_list_arc_safe! {
- ///     impl ListArcSafe<0> for ListItem { untracked; }
- /// }
- /// kernel::list::impl_list_item! {
--///     impl ListItem<0> for ListItem { using ListLinks; }
-+///     impl ListItem<0> for ListItem { using ListLinks { self.links }; }
- /// }
- ///
- /// // Use a cursor to remove the first element with the given value.
-diff --git a/rust/kernel/list/impl_list_item_mod.rs b/rust/kernel/list/impl_list_item_mod.rs
-index d79bebb363ce..24489996d11b 100644
---- a/rust/kernel/list/impl_list_item_mod.rs
-+++ b/rust/kernel/list/impl_list_item_mod.rs
-@@ -6,21 +6,18 @@
- 
- use crate::list::ListLinks;
- 
--/// Declares that this type has a `ListLinks<ID>` field at a fixed offset.
-+/// Declares that this type has a [`ListLinks<ID>`] field.
- ///
--/// This trait is only used to help implement `ListItem` safely. If `ListItem` is implemented
-+/// This trait is only used to help implement [`ListItem`] safely. If [`ListItem`] is implemented
- /// manually, then this trait is not needed. Use the [`impl_has_list_links!`] macro to implement
- /// this trait.
- ///
- /// # Safety
- ///
--/// All values of this type must have a `ListLinks<ID>` field at the given offset.
-+/// The methods on this trait must have exactly the behavior that the definitions given below have.
- ///
--/// The behavior of `raw_get_list_links` must not be changed.
-+/// [`ListItem`]: crate::list::ListItem
- pub unsafe trait HasListLinks<const ID: u64 = 0> {
--    /// The offset of the `ListLinks` field.
--    const OFFSET: usize;
--
-     /// Returns a pointer to the [`ListLinks<T, ID>`] field.
-     ///
-     /// # Safety
-@@ -28,14 +25,7 @@ pub unsafe trait HasListLinks<const ID: u64 = 0> {
-     /// The provided pointer must point at a valid struct of type `Self`.
-     ///
-     /// [`ListLinks<T, ID>`]: ListLinks
--    // We don't really need this method, but it's necessary for the implementation of
--    // `impl_has_list_links!` to be correct.
--    #[inline]
--    unsafe fn raw_get_list_links(ptr: *mut Self) -> *mut ListLinks<ID> {
--        // SAFETY: The caller promises that the pointer is valid. The implementer promises that the
--        // `OFFSET` constant is correct.
--        unsafe { (ptr as *mut u8).add(Self::OFFSET) as *mut ListLinks<ID> }
--    }
-+    unsafe fn raw_get_list_links(ptr: *mut Self) -> *mut ListLinks<ID>;
- }
- 
- /// Implements the [`HasListLinks`] trait for the given type.
-@@ -48,14 +38,11 @@ macro_rules! impl_has_list_links {
-     )*) => {$(
-         // SAFETY: The implementation of `raw_get_list_links` only compiles if the field has the
-         // right type.
--        //
--        // The behavior of `raw_get_list_links` is not changed since the `addr_of_mut!` macro is
--        // equivalent to the pointer offset operation in the trait definition.
-         unsafe impl$(<$($generics)*>)? $crate::list::HasListLinks$(<$id>)? for $self {
--            const OFFSET: usize = ::core::mem::offset_of!(Self, $($field).*) as usize;
--
-             #[inline]
-             unsafe fn raw_get_list_links(ptr: *mut Self) -> *mut $crate::list::ListLinks$(<$id>)? {
-+                const _: usize = ::core::mem::offset_of!($self, $($field).*);
-+
-                 // SAFETY: The caller promises that the pointer is not dangling. We know that this
-                 // expression doesn't follow any pointers, as the `offset_of!` invocation above
-                 // would otherwise not compile.
-@@ -66,12 +53,15 @@ unsafe fn raw_get_list_links(ptr: *mut Self) -> *mut $crate::list::ListLinks$(<$
- }
- pub use impl_has_list_links;
- 
--/// Declares that the `ListLinks<ID>` field in this struct is inside a `ListLinksSelfPtr<T, ID>`.
-+/// Declares that the [`ListLinks<ID>`] field in this struct is inside a
-+/// [`ListLinksSelfPtr<T, ID>`].
- ///
- /// # Safety
- ///
--/// The `ListLinks<ID>` field of this struct at the offset `HasListLinks<ID>::OFFSET` must be
--/// inside a `ListLinksSelfPtr<T, ID>`.
-+/// The [`ListLinks<ID>`] field of this struct at [`HasListLinks<ID>::raw_get_list_links`] must be
-+/// inside a [`ListLinksSelfPtr<T, ID>`].
-+///
-+/// [`ListLinksSelfPtr<T, ID>`]: crate::list::ListLinksSelfPtr
- pub unsafe trait HasSelfPtr<T: ?Sized, const ID: u64 = 0>
- where
-     Self: HasListLinks<ID>,
-@@ -91,8 +81,6 @@ macro_rules! impl_has_list_links_self_ptr {
-         unsafe impl$(<$($generics)*>)? $crate::list::HasSelfPtr<$item_type $(, $id)?> for $self {}
- 
-         unsafe impl$(<$($generics)*>)? $crate::list::HasListLinks$(<$id>)? for $self {
--            const OFFSET: usize = ::core::mem::offset_of!(Self, $field) as usize;
--
-             #[inline]
-             unsafe fn raw_get_list_links(ptr: *mut Self) -> *mut $crate::list::ListLinks$(<$id>)? {
-                 // SAFETY: The caller promises that the pointer is not dangling.
-@@ -115,9 +103,13 @@ unsafe fn raw_get_list_links(ptr: *mut Self) -> *mut $crate::list::ListLinks$(<$
- macro_rules! impl_list_item {
-     (
-         $(impl$({$($generics:tt)*})? ListItem<$num:tt> for $self:ty {
--            using ListLinks;
-+            using ListLinks { self$(.$field:ident)* };
-         })*
-     ) => {$(
-+        $crate::list::impl_has_list_links! {
-+            impl$({$($generics:tt)*})? HasListLinks<$num> for $self { self$(.$field)* }
-+        }
-+
-         // SAFETY: See GUARANTEES comment on each method.
-         unsafe impl$(<$($generics)*>)? $crate::list::ListItem<$num> for $self {
-             // GUARANTEES:
-@@ -133,20 +125,19 @@ unsafe fn view_links(me: *const Self) -> *mut $crate::list::ListLinks<$num> {
-             }
- 
-             // GUARANTEES:
--            // * `me` originates from the most recent call to `prepare_to_insert`, which just added
--            //   `offset` to the pointer passed to `prepare_to_insert`. This method subtracts
--            //   `offset` from `me` so it returns the pointer originally passed to
--            //   `prepare_to_insert`.
-+            // * `me` originates from the most recent call to `prepare_to_insert`, which calls
-+            //   `raw_get_list_link`, which is implemented using `addr_of_mut!((*self).$field)`.
-+            //   This method uses `container_of` to perform the inverse operation, so it returns the
-+            //   pointer originally passed to `prepare_to_insert`.
-             // * The pointer remains valid until the next call to `post_remove` because the caller
-             //   of the most recent call to `prepare_to_insert` promised to retain ownership of the
-             //   `ListArc` containing `Self` until the next call to `post_remove`. The value cannot
-             //   be destroyed while a `ListArc` reference exists.
-             unsafe fn view_value(me: *mut $crate::list::ListLinks<$num>) -> *const Self {
--                let offset = <Self as $crate::list::HasListLinks<$num>>::OFFSET;
-                 // SAFETY: `me` originates from the most recent call to `prepare_to_insert`, so it
--                // points at the field at offset `offset` in a value of type `Self`. Thus,
--                // subtracting `offset` from `me` is still in-bounds of the allocation.
--                unsafe { (me as *const u8).sub(offset) as *const Self }
-+                // points at the field `$field` in a value of type `Self`. Thus, reversing that
-+                // operation is still in-bounds of the allocation.
-+                $crate::container_of!(me, Self, $($field)*)
-             }
- 
-             // GUARANTEES:
-@@ -163,25 +154,28 @@ unsafe fn prepare_to_insert(me: *const Self) -> *mut $crate::list::ListLinks<$nu
-             }
- 
-             // GUARANTEES:
--            // * `me` originates from the most recent call to `prepare_to_insert`, which just added
--            //   `offset` to the pointer passed to `prepare_to_insert`. This method subtracts
--            //   `offset` from `me` so it returns the pointer originally passed to
--            //   `prepare_to_insert`.
-+            // * `me` originates from the most recent call to `prepare_to_insert`, which calls
-+            //   `raw_get_list_link`, which is implemented using `addr_of_mut!((*self).$field)`.
-+            //   This method uses `container_of` to perform the inverse operation, so it returns the
-+            //   pointer originally passed to `prepare_to_insert`.
-             unsafe fn post_remove(me: *mut $crate::list::ListLinks<$num>) -> *const Self {
--                let offset = <Self as $crate::list::HasListLinks<$num>>::OFFSET;
-                 // SAFETY: `me` originates from the most recent call to `prepare_to_insert`, so it
--                // points at the field at offset `offset` in a value of type `Self`. Thus,
--                // subtracting `offset` from `me` is still in-bounds of the allocation.
--                unsafe { (me as *const u8).sub(offset) as *const Self }
-+                // points at the field `$field` in a value of type `Self`. Thus, reversing that
-+                // operation is still in-bounds of the allocation.
-+                $crate::container_of!(me, Self, $($field)*)
-             }
-         }
-     )*};
- 
-     (
-         $(impl$({$($generics:tt)*})? ListItem<$num:tt> for $self:ty {
--            using ListLinksSelfPtr;
-+            using ListLinksSelfPtr { self$(.$field:ident)* };
-         })*
-     ) => {$(
-+        $crate::list::impl_has_list_links_self_ptr! {
-+            impl$({$($generics:tt)*})? HasListLinks<$num> for $self { self$(.$field)* }
-+        }
-+
-         // SAFETY: See GUARANTEES comment on each method.
-         unsafe impl$(<$($generics)*>)? $crate::list::ListItem<$num> for $self {
-             // GUARANTEES:
-@@ -196,13 +190,10 @@ unsafe fn prepare_to_insert(me: *const Self) -> *mut $crate::list::ListLinks<$nu
-                 // SAFETY: The caller promises that `me` points at a valid value of type `Self`.
-                 let links_field = unsafe { <Self as $crate::list::ListItem<$num>>::view_links(me) };
- 
--                let spoff = $crate::list::ListLinksSelfPtr::<Self, $num>::LIST_LINKS_SELF_PTR_OFFSET;
--                // Goes via the offset as the field is private.
--                //
--                // SAFETY: The constant is equal to `offset_of!(ListLinksSelfPtr, self_ptr)`, so
--                // the pointer stays in bounds of the allocation.
--                let self_ptr = unsafe { (links_field as *const u8).add(spoff) }
--                    as *const $crate::types::Opaque<*const Self>;
-+                // SAFETY: By the same reasoning above, `links_field` is a valid pointer.
-+                let self_ptr = unsafe {
-+                    $crate::list::ListLinksSelfPtr::<Self, $num>::raw_get_self_ptr(links_field)
-+                };
-                 let cell_inner = $crate::types::Opaque::raw_get(self_ptr);
- 
-                 // SAFETY: This value is not accessed in any other places than `prepare_to_insert`,
-@@ -241,11 +232,10 @@ unsafe fn view_links(me: *const Self) -> *mut $crate::list::ListLinks<$num> {
-             //   `ListArc` containing `Self` until the next call to `post_remove`. The value cannot
-             //   be destroyed while a `ListArc` reference exists.
-             unsafe fn view_value(links_field: *mut $crate::list::ListLinks<$num>) -> *const Self {
--                let spoff = $crate::list::ListLinksSelfPtr::<Self, $num>::LIST_LINKS_SELF_PTR_OFFSET;
--                // SAFETY: The constant is equal to `offset_of!(ListLinksSelfPtr, self_ptr)`, so
--                // the pointer stays in bounds of the allocation.
--                let self_ptr = unsafe { (links_field as *const u8).add(spoff) }
--                    as *const ::core::cell::UnsafeCell<*const Self>;
-+                // SAFETY: By the same reasoning above, `links_field` is a valid pointer.
-+                let self_ptr = unsafe {
-+                    $crate::list::ListLinksSelfPtr::<Self, $num>::raw_get_self_ptr(links_field)
-+                };
-                 let cell_inner = ::core::cell::UnsafeCell::raw_get(self_ptr);
-                 // SAFETY: This is not a data race, because the only function that writes to this
-                 // value is `prepare_to_insert`, but by the safety requirements the
-
--- 
-2.49.0
-
+      Arnd
