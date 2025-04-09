@@ -1,227 +1,312 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7359E184F
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 10:48:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67F092459E8;
+	Wed,  9 Apr 2025 10:49:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744195711; cv=none; b=FM8FPPLGZK0Y+/HNjMll2QvCgyTisaiRryBsyFr30EL4hlf0mRlaeJqqzR/fhkqw5ewnVTesTM4tdnZnPBIlzZQNlQyuHXhOOX1er26odcQu7K+GOx/nMu2LfMZ9gLctDDMDpwEhdZyuvjF0L4HcAIzXU9vFcDZFYojrf4l7C9M=
+	t=1744195783; cv=none; b=bFee0bM9o8cPhMolesewIEp5MxO39MJOhjw24BPsosAGd9CXJadaCFvIumhbE/JF4eZmVH6pNXQQwe6iQdrgRCcDYO85EXzJYb1DMYd0m/IeYRUsZ8TAnar0c+RbsGVi3NlzXMFK3C9/XJzo2WI6xTyJXJYcYcgBaI4EJb/L9yE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744195711; c=relaxed/simple;
-	bh=HKvlKvSt24CDqpSjG5iF1rL0NDXN34ff0tmWvXkw3oY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JriEYCNCWSjOcb+JGhTJ3bwg9r5cqZCkIT/IuKav7rgwhtmWS2fficMJalFzUg5sfg6ALI4Ffs+iwty1VqkFp7qXKedanvBCyIUGBe7wTw96b5dn+rWaS8K1nLVYQWQDoZlmio+5waKSDr7ZQVDFsBMPls67vy7+5Z9cc/U75j4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=aoAWlHrv; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1744195783; c=relaxed/simple;
+	bh=w32SsEaKlEQpm6UMGftuPul+F8Oi53F9xCFCLV0Dw1w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OLI7J2A1iBbusNLo0oJSLJSg+plf4+5k2X0WPA/0Gu/hlgThatpFJNJLiNvNBlNtl0xvBgbaVMp1Vu5RhbrH9Ls4xix9b7GbMxUesEeqLbmpCATT2FIqljl6DcsxXDHiMsXuxvbia5c/85+j1XrqFkciCrABPI/2i14VYnYZUnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ET9WNO1q; arc=none smtp.client-ip=209.85.221.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="aoAWlHrv"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-39c13fa05ebso3853456f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 03:48:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ET9WNO1q"
+Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-523de538206so2921864e0c.2;
+        Wed, 09 Apr 2025 03:49:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1744195708; x=1744800508; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zB6DOhsNP54p+LWQrH/LyPAGXFe/doVAQelM4hY0fbY=;
-        b=aoAWlHrvHlZT2V0NRIre8kE0jGtl9G4ZyVoB4ii/tmn1NJIXcsOhM75U0rvWcBw27h
-         NyHir7KsCNadNtE/9YSX6EJPT0xdXIcIzGs1kJDsCvMhFDk13VaiQC3v39RVyIj9fYU6
-         goni4n2TfVULPjOwMbRmDKbySYEukKCs5tQxJfRdEGPtDdR4DS5+sx/hLX3IgT/HZA5d
-         /0x72VvNZwiyKIT8vqJHgSYIfYqCR7XLY+4mC46dQJIjWosWGvGSZxZAnnv9O3UPuzsV
-         bku//x9Z86kRBL7mRR/eZqlTK30+UMlhxaguzWz5uxDBwui+nlej5Sc0uAfcqWUmfcLT
-         kgXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744195708; x=1744800508;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1744195780; x=1744800580; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zB6DOhsNP54p+LWQrH/LyPAGXFe/doVAQelM4hY0fbY=;
-        b=VnsXk5XDja4zk96bccCIz1ds31VKsm08lheeKOHHq1+YWxQX15RlW1ar4ySy3loXkv
-         6BNsgA0HcsYJMOHa1zzh7a320spwFpIzqrMoIvjjWcSAF0sWHBN6y+gThDg1sk/9wgFn
-         WAI056pUh6eczWDbPqtb8TJ5K/T1soYqVgbvZXG8fwEshPZI5I6AD69xan/fdLrrUjJ/
-         pZgeRMy4gEo5S72/UA98JeZ0C5FwPe4PRYH0sdiOBrA55xknPGf9mZnKoNrdE4XJiN6R
-         b9gE2Y9jP8uRzEWwYmno9HucgG2V+hNnVo2d/dpWWkhHeo8rDW90IcJtXF0ECviaJO8O
-         h25g==
-X-Forwarded-Encrypted: i=1; AJvYcCWUpGYN4ui95uKmCgRM83o76h4SfMLStEXJhxMNPBUSYUdLHRkyYMrGy9UEE8zhIpUrsDoIoEt3NXOaoJ8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAZ/FHc9YQIUItBLMq+DnWB9nAIHxdZOl66XFeoe51eOUZf1x6
-	qqUTgDFzd6KsdHZVyKevdVuMW2IO9MH2pevO/YMOWCeD4IvSiiVbWtu35sec8pU=
-X-Gm-Gg: ASbGncsgkyo5ao2T6c6ZBqxNJRcpsSxDVHVVc4nM4wKMdVNnYW5mh2RHioeZM4z4ixn
-	fT/hdTEbK27HhgQULa8ZIKf8D8RgPSccNhCkyvRXADIxrpdsfF9eDJoghv7mCAH+BMsVH1b8F7H
-	+cnNYIY93p0/U2EZuOVxfG7/uM09hKM78uDFniT5BJTnjOk6UncK7UyXZXzKTfezBBlzE26qSWD
-	WquKIko6/lZ+66OmwShZr1g/VeRDbjWGzBmOnPagmSFAR0Gh5RXOG32Ayye6VUFzWfrsKF+ebbK
-	CAh/AY8tR33JrmehgosO0MeGHGxa
-X-Google-Smtp-Source: AGHT+IGYvUOkSdoe9+ZVfiFebJdaAtnsamOW1nCOk2I6rvSJl8ZT6oEiqCQdu/VJ4IJELPU1LDC7wQ==
-X-Received: by 2002:a05:6000:1849:b0:391:31f2:b998 with SMTP id ffacd0b85a97d-39d88522729mr1855776f8f.6.1744195707253;
-        Wed, 09 Apr 2025 03:48:27 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200::31af])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d893f0a80sm1289556f8f.68.2025.04.09.03.48.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 03:48:26 -0700 (PDT)
-Date: Wed, 9 Apr 2025 12:48:25 +0200
-From: Andrew Jones <ajones@ventanamicro.com>
-To: Samuel Holland <samuel.holland@sifive.com>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>, 
-	linux-riscv@lists.infradead.org, Albert Ou <aou@eecs.berkeley.edu>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, linux-kernel@vger.kernel.org, charlie@rivosinc.com
-Subject: Re: [PATCH] riscv: module: Optimize PLT/GOT entry counting
-Message-ID: <20250409-c5cdd1190c498e9b594cf7d7@orel>
-References: <20250409024519.454828-1-samuel.holland@sifive.com>
+        bh=XNGvRaAZMVr4T3k6hFZv4PdckrXPBaij0SOEf1k4UB4=;
+        b=ET9WNO1q/o6o5Bm3RFS+EWOTGBpYKpjmDEaS8lrgf8M5N34g2r8VXcO93cG2aRJchh
+         WzZLnAMq3x/6hNzkmaVUQkJh4+vE5rFVZeU8pIGfef2EYRkhBtDB9K2+zdDWOyWWYUth
+         u1L9Y0nAedR5QUA5e3OVDqxgdzu/LwzUGlmYpnfvtbzTQvc1Pb9nWMrUS5qFamlX4qbb
+         wKYMSJiis9Ouk+c9F9n15KN0ity/s1u7/5qcpdSlMI53LfRMEYwTugQOg4l9nOy8FD8X
+         eOEyTS6h3WNf1Y9JeR/xNFL+G2NfxoOskagXL/lcC9MF++DxJIsvQs8UT33gIb5nskkv
+         abGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744195780; x=1744800580;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XNGvRaAZMVr4T3k6hFZv4PdckrXPBaij0SOEf1k4UB4=;
+        b=foWZzBtSJVoZirubgPQavbSlTUVOxTGf/kUKWhyb6gNmECCzE8tV8EdukzZAJbyF/N
+         WFJG88vYNSWbbjkmPq7Yx+ngf3kNctaJQE8WiqtDnXhbGAUH9v2Xd47h8GAQ1QMi6d+Q
+         gJr33u051OeulU5iet/X4G+r3XBiXI6lQSbJEs+HMV0QWGxtQodU4krns/S9HrB5cwbj
+         BsDSCG/hnQef4yjzlXx9zygj75XN7/VUgbLB36YoaOCw93WIW5AS7ZWhCYqqC1wu9B4A
+         oyV7WOhXj1vt+bIwQKmxavZ1l7GuPeLHZJtJ+dT9xdmqhMGwr0C/RN0ELvWAljyutzTr
+         SbuA==
+X-Forwarded-Encrypted: i=1; AJvYcCUj6VuVit9a9fEpIumFjwoK9pM+b6m+pESb19VOW/AjNjqNf4XYvIsNV9kofSDF3/CBv4QEHfX30nFNKwu2@vger.kernel.org, AJvYcCVEEHX81SOUVwYvw30gWq9RDstgHra2y4pIx6oc0BN9KFYvBbSByv8I07jqqrfdwffPMbcv8I8KEizJ0Eo6fPuv+JY=@vger.kernel.org, AJvYcCWIZ7dsCSW/B597ovISHGgoAx0jHLO5XxOhfmXAFTzrgK+qkw9OkM/0KB2ypM0LgvK40iBxE4IG2g0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywa5alft12BXUFKCsuX4UvWkdL423qk6RWTxUbeCxycnUGHB378
+	jZHXxoqbTuia65cPgfPjZTNkVTxjWfjtuA4BeLIpeE6UF3/KYwX2IHmjmnpvpw8PzYtcsdkQWhG
+	KSyHfPDYXE0dSTyvQFJ87jUgAiCM=
+X-Gm-Gg: ASbGncuhvtPO/iu+2rcfbKy8RKpz8iATVcCDgTf+uLocN0qt2H3s0ncgFxNkMQM3CTL
+	NwtfD3GhZPHheYoXnWqgbsc2evjInJS8C5T5KsB4/4Vh19w6J7qieYy4fT7Dli5Is+nB7qgUPqj
+	5j0X/Sffrg9VjLYMlhFpiJEcoWAaaM63amg0/zywGrKejGhF0vYr+5ugc=
+X-Google-Smtp-Source: AGHT+IE2tClcPTkBEdbETFB4rwFWJhoUpMUywIKdSu05hnStxOtkbA7VwxBMST8iE92G2v0/D+AGMRPtN0RCJ2ZVcY0=
+X-Received: by 2002:a05:6122:a20:b0:523:7316:7f31 with SMTP id
+ 71dfb90a1353d-527a9d08806mr953133e0c.5.1744195780186; Wed, 09 Apr 2025
+ 03:49:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250409024519.454828-1-samuel.holland@sifive.com>
+References: <20250305002112.5289-1-fabrizio.castro.jz@renesas.com> <20250305002112.5289-6-fabrizio.castro.jz@renesas.com>
+In-Reply-To: <20250305002112.5289-6-fabrizio.castro.jz@renesas.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Wed, 9 Apr 2025 11:49:13 +0100
+X-Gm-Features: ATxdqUEjKSnKp5Gtgir4z-Z4Hk-t1cbZXAGS1p85gZQ-VNEwPKl2R6cPZnLloKU
+Message-ID: <CA+V-a8vjONgKaWuaN7whQOcr0Rk3FVkyz=FKEwZ_Uep3vMvUpA@mail.gmail.com>
+Subject: Re: [PATCH v5 5/6] dmaengine: sh: rz-dmac: Add RZ/V2H(P) support
+To: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Magnus Damm <magnus.damm@gmail.com>, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
+	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 08, 2025 at 07:45:16PM -0700, Samuel Holland wrote:
-> perf reports that 99.63% of the cycles from `modprobe amdgpu` are spent
-> inside module_frob_arch_sections(). This is because amdgpu.ko contains
-> about 300000 relocations in its .rela.text section, and the algorithm in
-> count_max_entries() takes quadratic time.
-> 
-> Apply two optimizations from the arm64 code, which together reduce the
-> total execution time by 99.57%. First, sort the relocations so duplicate
-> entries are adjacent. Second, reduce the number of relocations that must
-> be sorted by filtering to only relocations that need PLT/GOT entries, as
-> done in commit d4e0340919fb ("arm64/module: Optimize module load time by
-> optimizing PLT counting").
-> 
-> Unlike the arm64 code, here the filtering and sorting is done in a
-> scratch buffer, because the HI20 relocation search optimization in
-> apply_relocate_add() depends on the original order of the relocations.
-> 
-> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
-> ---
-> 
->  arch/riscv/kernel/module-sections.c | 66 +++++++++++++++++++++++++----
->  1 file changed, 57 insertions(+), 9 deletions(-)
-> 
-> diff --git a/arch/riscv/kernel/module-sections.c b/arch/riscv/kernel/module-sections.c
-> index e264e59e596e..91d4f0fbd0af 100644
-> --- a/arch/riscv/kernel/module-sections.c
-> +++ b/arch/riscv/kernel/module-sections.c
-> @@ -9,6 +9,7 @@
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/moduleloader.h>
-> +#include <linux/sort.h>
->  
->  unsigned long module_emit_got_entry(struct module *mod, unsigned long val)
->  {
-> @@ -55,19 +56,27 @@ unsigned long module_emit_plt_entry(struct module *mod, unsigned long val)
->  	return (unsigned long)&plt[i];
->  }
->  
-> -static int is_rela_equal(const Elf_Rela *x, const Elf_Rela *y)
-> +#define cmp_3way(a, b)	((a) < (b) ? -1 : (a) > (b))
-> +
-> +static int cmp_rela(const void *a, const void *b)
->  {
-> -	return x->r_info == y->r_info && x->r_addend == y->r_addend;
-> +	const Elf_Rela *x = a, *y = b;
-> +	int i;
-> +
-> +	/* sort by type, symbol index and addend */
-> +	i = cmp_3way(x->r_info, y->r_info);
-> +	if (i == 0)
-> +		i = cmp_3way(x->r_addend, y->r_addend);
-> +	return i;
->  }
->  
->  static bool duplicate_rela(const Elf_Rela *rela, int idx)
->  {
-> -	int i;
-> -	for (i = 0; i < idx; i++) {
-> -		if (is_rela_equal(&rela[i], &rela[idx]))
-> -			return true;
-> -	}
-> -	return false;
-> +	/*
-> +	 * Entries are sorted by type, symbol index and addend. That means
-> +	 * that, if a duplicate entry exists, it must be in the preceding slot.
-> +	 */
-> +	return idx > 0 && cmp_rela(rela + idx, rela + idx - 1) == 0;
->  }
->  
->  static void count_max_entries(Elf_Rela *relas, int num,
-> @@ -87,11 +96,33 @@ static void count_max_entries(Elf_Rela *relas, int num,
->  	}
->  }
->  
-> +static bool rela_needs_plt_got(const Elf_Rela *rela)
-> +{
-> +	unsigned int type = ELF_R_TYPE(rela->r_info);
-> +
-> +	return type == R_RISCV_CALL_PLT || type == R_RISCV_GOT_HI20;
-
-I see these two are sufficient to support count_max_entries(), but Charlie
-also added support for R_RISCV_PLT32. I don't know enough about relocation
-types to know if we need to consider that one here and in
-count_max_entries(), so I'm just pointing it out in case it was
-overlooked.
-
-> +}
-> +
-> +/* Copy PLT and GOT relas to the scratch array. */
-> +static unsigned int partition_plt_got_relas(const Elf_Rela *relas, Elf_Rela *scratch,
-> +					    unsigned int num_rela)
-> +{
-> +	int j = 0;
-> +
-> +	for (int i = 0; i < num_rela; i++)
-> +		if (rela_needs_plt_got(&relas[i]))
-> +			scratch[j++] = relas[i];
-> +
-> +	return j;
-> +}
-> +
->  int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
->  			      char *secstrings, struct module *mod)
->  {
->  	unsigned int num_plts = 0;
->  	unsigned int num_gots = 0;
-> +	Elf_Rela *scratch = NULL;
-> +	size_t scratch_size = 0;
->  	int i;
->  
->  	/*
-> @@ -132,9 +163,26 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
->  		if (!(dst_sec->sh_flags & SHF_EXECINSTR))
->  			continue;
->  
-> -		count_max_entries(relas, num_rela, &num_plts, &num_gots);
-> +		/*
-> +		 * apply_relocate_add() relies on HI20 and LO12 relocation pairs being
-> +		 * close together, so sort a copy of the section to avoid interfering.
-> +		 */
-> +		if (sechdrs[i].sh_size > scratch_size) {
-> +			scratch_size = sechdrs[i].sh_size;
-> +			scratch = kvrealloc(scratch, scratch_size, GFP_KERNEL);
-> +			if (!scratch)
-> +				return -ENOMEM;
-> +		}
-> +
-> +		/* sort relocations requiring a PLT or GOT entry so duplicates are adjacent */
-> +		num_rela = partition_plt_got_relas(relas, scratch, num_rela);
-> +		sort(scratch, num_rela, sizeof(Elf_Rela), cmp_rela, NULL);
-> +		count_max_entries(scratch, num_rela, &num_plts, &num_gots);
->  	}
->  
-> +	if (scratch)
-> +		kvfree(scratch);
-> +
->  	mod->arch.plt.shdr->sh_type = SHT_NOBITS;
->  	mod->arch.plt.shdr->sh_flags = SHF_EXECINSTR | SHF_ALLOC;
->  	mod->arch.plt.shdr->sh_addralign = L1_CACHE_BYTES;
-> -- 
-> 2.47.0
+On Wed, Mar 5, 2025 at 12:33=E2=80=AFAM Fabrizio Castro
+<fabrizio.castro.jz@renesas.com> wrote:
 >
+> The DMAC IP found on the Renesas RZ/V2H(P) family of SoCs is
+> similar to the version found on the Renesas RZ/G2L family of
+> SoCs, but there are some differences:
+> * It only uses one register area
+> * It only uses one clock
+> * It only uses one reset
+> * Instead of using MID/IRD it uses REQ No
+> * It is connected to the Interrupt Control Unit (ICU)
+> * On the RZ/G2L there is only 1 DMAC, on the RZ/V2H(P) there are 5
+>
+> Add specific support for the Renesas RZ/V2H(P) family of SoC by
+> tackling the aforementioned differences.
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> ---
+> v4->v5:
+> * Reused RZ/G2L cell specification (with REQ No in place of MID/RID).
+> * Dropped ACK No.
+> * Removed mid_rid/req_no/ack_no union and reused mid_rid for REQ No.
+> * Other small improvements.
+> v3->v4:
+> * Fixed an issue with mid_rid/req_no/ack_no initialization
+> v2->v3:
+> * Dropped change to Kconfig.
+> * Replaced rz_dmac_type with has_icu flag.
+> * Put req_no and ack_no in an anonymous struct, nested under an
+>   anonymous union with mid_rid.
+> * Dropped data field of_rz_dmac_match[], and added logic to determine
+>   value of has_icu flag from DT parsing.
+> v1->v2:
+> * Switched to new macros for minimum values.
+> ---
+>  drivers/dma/sh/rz-dmac.c | 81 ++++++++++++++++++++++++++++++++++++----
+>  1 file changed, 74 insertions(+), 7 deletions(-)
+>
+Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Besides my question above,
+Cheers,
+Prabhakar
 
-Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
-
-Thanks,
-drew
+> diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c
+> index d7a4ce28040b..1f687b08d6b8 100644
+> --- a/drivers/dma/sh/rz-dmac.c
+> +++ b/drivers/dma/sh/rz-dmac.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/dmaengine.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/iopoll.h>
+> +#include <linux/irqchip/irq-renesas-rzv2h.h>
+>  #include <linux/list.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+> @@ -89,8 +90,14 @@ struct rz_dmac_chan {
+>
+>  #define to_rz_dmac_chan(c)     container_of(c, struct rz_dmac_chan, vc.c=
+han)
+>
+> +struct rz_dmac_icu {
+> +       struct platform_device *pdev;
+> +       u8 dmac_index;
+> +};
+> +
+>  struct rz_dmac {
+>         struct dma_device engine;
+> +       struct rz_dmac_icu icu;
+>         struct device *dev;
+>         struct reset_control *rstc;
+>         void __iomem *base;
+> @@ -99,6 +106,8 @@ struct rz_dmac {
+>         unsigned int n_channels;
+>         struct rz_dmac_chan *channels;
+>
+> +       bool has_icu;
+> +
+>         DECLARE_BITMAP(modules, 1024);
+>  };
+>
+> @@ -167,6 +176,9 @@ struct rz_dmac {
+>  #define RZ_DMAC_MAX_CHANNELS           16
+>  #define DMAC_NR_LMDESC                 64
+>
+> +/* RZ/V2H ICU related */
+> +#define RZV2H_MAX_DMAC_INDEX           4
+> +
+>  /*
+>   * ---------------------------------------------------------------------=
+--------
+>   * Device access
+> @@ -324,7 +336,13 @@ static void rz_dmac_prepare_desc_for_memcpy(struct r=
+z_dmac_chan *channel)
+>         lmdesc->chext =3D 0;
+>         lmdesc->header =3D HEADER_LV;
+>
+> -       rz_dmac_set_dmars_register(dmac, channel->index, 0);
+> +       if (dmac->has_icu) {
+> +               rzv2h_icu_register_dma_req(dmac->icu.pdev, dmac->icu.dmac=
+_index,
+> +                                          channel->index,
+> +                                          RZV2H_ICU_DMAC_REQ_NO_DEFAULT)=
+;
+> +       } else {
+> +               rz_dmac_set_dmars_register(dmac, channel->index, 0);
+> +       }
+>
+>         channel->chcfg =3D chcfg;
+>         channel->chctrl =3D CHCTRL_STG | CHCTRL_SETEN;
+> @@ -375,7 +393,13 @@ static void rz_dmac_prepare_descs_for_slave_sg(struc=
+t rz_dmac_chan *channel)
+>
+>         channel->lmdesc.tail =3D lmdesc;
+>
+> -       rz_dmac_set_dmars_register(dmac, channel->index, channel->mid_rid=
+);
+> +       if (dmac->has_icu) {
+> +               rzv2h_icu_register_dma_req(dmac->icu.pdev, dmac->icu.dmac=
+_index,
+> +                                          channel->index, channel->mid_r=
+id);
+> +       } else {
+> +               rz_dmac_set_dmars_register(dmac, channel->index, channel-=
+>mid_rid);
+> +       }
+> +
+>         channel->chctrl =3D CHCTRL_SETEN;
+>  }
+>
+> @@ -647,7 +671,13 @@ static void rz_dmac_device_synchronize(struct dma_ch=
+an *chan)
+>         if (ret < 0)
+>                 dev_warn(dmac->dev, "DMA Timeout");
+>
+> -       rz_dmac_set_dmars_register(dmac, channel->index, 0);
+> +       if (dmac->has_icu) {
+> +               rzv2h_icu_register_dma_req(dmac->icu.pdev, dmac->icu.dmac=
+_index,
+> +                                          channel->index,
+> +                                          RZV2H_ICU_DMAC_REQ_NO_DEFAULT)=
+;
+> +       } else {
+> +               rz_dmac_set_dmars_register(dmac, channel->index, 0);
+> +       }
+>  }
+>
+>  /*
+> @@ -824,6 +854,38 @@ static int rz_dmac_chan_probe(struct rz_dmac *dmac,
+>         return 0;
+>  }
+>
+> +static int rz_dmac_parse_of_icu(struct device *dev, struct rz_dmac *dmac=
+)
+> +{
+> +       struct device_node *np =3D dev->of_node;
+> +       struct of_phandle_args args;
+> +       uint32_t dmac_index;
+> +       int ret;
+> +
+> +       ret =3D of_parse_phandle_with_fixed_args(np, "renesas,icu", 1, 0,=
+ &args);
+> +       if (ret =3D=3D -ENOENT)
+> +               return 0;
+> +       if (ret)
+> +               return ret;
+> +
+> +       dmac->has_icu =3D true;
+> +
+> +       dmac->icu.pdev =3D of_find_device_by_node(args.np);
+> +       of_node_put(args.np);
+> +       if (!dmac->icu.pdev) {
+> +               dev_err(dev, "ICU device not found.\n");
+> +               return -ENODEV;
+> +       }
+> +
+> +       dmac_index =3D args.args[0];
+> +       if (dmac_index > RZV2H_MAX_DMAC_INDEX) {
+> +               dev_err(dev, "DMAC index %u invalid.\n", dmac_index);
+> +               return -EINVAL;
+> +       }
+> +       dmac->icu.dmac_index =3D dmac_index;
+> +
+> +       return 0;
+> +}
+> +
+>  static int rz_dmac_parse_of(struct device *dev, struct rz_dmac *dmac)
+>  {
+>         struct device_node *np =3D dev->of_node;
+> @@ -840,7 +902,7 @@ static int rz_dmac_parse_of(struct device *dev, struc=
+t rz_dmac *dmac)
+>                 return -EINVAL;
+>         }
+>
+> -       return 0;
+> +       return rz_dmac_parse_of_icu(dev, dmac);
+>  }
+>
+>  static int rz_dmac_probe(struct platform_device *pdev)
+> @@ -874,9 +936,11 @@ static int rz_dmac_probe(struct platform_device *pde=
+v)
+>         if (IS_ERR(dmac->base))
+>                 return PTR_ERR(dmac->base);
+>
+> -       dmac->ext_base =3D devm_platform_ioremap_resource(pdev, 1);
+> -       if (IS_ERR(dmac->ext_base))
+> -               return PTR_ERR(dmac->ext_base);
+> +       if (!dmac->has_icu) {
+> +               dmac->ext_base =3D devm_platform_ioremap_resource(pdev, 1=
+);
+> +               if (IS_ERR(dmac->ext_base))
+> +                       return PTR_ERR(dmac->ext_base);
+> +       }
+>
+>         /* Register interrupt handler for error */
+>         irq =3D platform_get_irq_byname(pdev, irqname);
+> @@ -991,9 +1055,12 @@ static void rz_dmac_remove(struct platform_device *=
+pdev)
+>         reset_control_assert(dmac->rstc);
+>         pm_runtime_put(&pdev->dev);
+>         pm_runtime_disable(&pdev->dev);
+> +
+> +       platform_device_put(dmac->icu.pdev);
+>  }
+>
+>  static const struct of_device_id of_rz_dmac_match[] =3D {
+> +       { .compatible =3D "renesas,r9a09g057-dmac", },
+>         { .compatible =3D "renesas,rz-dmac", },
+>         { /* Sentinel */ }
+>  };
+> --
+> 2.34.1
+>
+>
