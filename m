@@ -1,71 +1,85 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF3371D5147;
-	Wed,  9 Apr 2025 18:30:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13DB1276050
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 18:30:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744223413; cv=none; b=NyND5QJjx8bPSv3px7qP3s291xXs3gWI1qccjul/ms/ePPZvvcmlamBhA8ughUBnKqKkiVNSw24NIiwkfuszF73o09Z0NvcR0VDHbzlRC0UP+ezWOzlM8njiLwTlGpqXQPDd7s+ujIOuE52DEuCiYcbUu0hsHHcx4tzaVstzyLY=
+	t=1744223428; cv=none; b=oHwPJuxKpzUagxa3bk0T5+A4AGm17lccW2DbkAMt65eh/Me3maFl4ep+lZ1RabZuAda3EghgYoGzPalccPAU7NA9amgkaT4G65l8XqsMEBPi2jV+/gx6zbhVH9w2YnhGUQL7T0nRVO2BBcfrPETz4CzKT6Bv48BV083qcImSYOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744223413; c=relaxed/simple;
-	bh=tGFsw14h5OeAVPFvddaRLvoSsBytpqgiiZL6EnjAReI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=F1v2QgPdQVOl9+yL4s8/W7748RS97PLEOicUa2noo1v/AVbyWNUx1vY/X7WYFjy51n3ytpUCPfwuVrhCF+yh63kS+ugVB8JWCk3TxO5R53eeZEayxloW9Ojt5Yn85VCGNInbdQVQVJEKCL4c8ZUZZkNkkmy6unW3pLVcczm+1z0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=fK0d6nCx; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1744223428; c=relaxed/simple;
+	bh=04rOBKhcjCW+RhY80oosYuyxIou3ZD3wjiMDthrhvGA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZkFHh40uJaSGLrFTDqcIz3JPFKYezRUkLslnFBmmXIRBccNS24AxKue3xiu0jaVxcDMYBgy9giHS9o3DQhPTX3n3jbI2WuxdfpiI4eD+vr/RD32XBnoJk3RMTE/O1EbiBmH5zFfv392Gzc0GrmH2peY7RtalD5xnJuDTXijGfok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=tZG1ZEsx; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="fK0d6nCx"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 7A4D941062
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1744223401; bh=YNhDsA6EC7tTNuxyu13gmMdxXJtGkKEH8Eh077Q3IuU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=fK0d6nCxjR0dClz3TBGivw/S3vHppeH5H/vI2WJBnaEGTcwMO9ZZomxQ+gIv+djxz
-	 kr7J3dc6Pf6WOv6CPOlDaxoL40xyyeo7htCPr5mOZW1mZGwlnR57jFY9yFkBdywDWU
-	 MToPyOFQcS+KfxUvZaFG5Tsi5hv9oI8OEzU3iNG3c87wVpbyFgV+i+S3wcGl+amb/R
-	 J85GtZfTip67TgHXfW+j7sUWi8RLDWCyJ15+bLgC+s3IB6TdWXesbYN5VlzWIqADxR
-	 605K9QQMZQ7sbRGO325QLb1mPgx4Xb9UrOmIGLXcxHi1tol7AQa37sksBWPjtGKbOT
-	 hbwhEHwKlTgsQ==
-Received: from localhost (unknown [IPv6:2601:280:4600:2da9:67c:16ff:fe81:5f9b])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 7A4D941062;
-	Wed,  9 Apr 2025 18:30:01 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Linux Doc Mailing
- List <linux-doc@vger.kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
- linux-kernel@vger.kernel.org, "Gustavo A. R. Silva"
- <gustavoars@kernel.org>, Kees Cook <kees@kernel.org>, Russell King
- <linux@armlinux.org.uk>, linux-hardening@vger.kernel.org,
- netdev@vger.kernel.org
-Subject: Re: [PATCH v3 00/33] Implement kernel-doc in Python
-In-Reply-To: <cover.1744106241.git.mchehab+huawei@kernel.org>
-References: <cover.1744106241.git.mchehab+huawei@kernel.org>
-Date: Wed, 09 Apr 2025 12:30:00 -0600
-Message-ID: <871pu1193r.fsf@trenco.lwn.net>
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="tZG1ZEsx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1744223415;
+	bh=04rOBKhcjCW+RhY80oosYuyxIou3ZD3wjiMDthrhvGA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tZG1ZEsxUrf4+rAZp8doWpyR1PQEGNCEIOqbl1O+t91BttcODgHFItV5yNduylvl1
+	 Wy6SHxjHA+ICCc9wllC7518RkpgpFLn9/YdeUKH/pqO2DJpVxBNU4OcrwRHnNOFZLr
+	 1wv7TrSvZeEEgzH2SAx1MPbNOnAtOCBKMPJSL+Ag=
+Date: Wed, 9 Apr 2025 20:30:14 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Jemmy Wong <jemmywong512@gmail.com>
+Cc: Willy Tarreau <w@1wt.eu>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fix mismatched parentheses
+Message-ID: <bb44ee43-b08f-4a4a-bdde-dda785756680@t-8ch.de>
+References: <20250409181934.5589-1-jemmywong512@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409181934.5589-1-jemmywong512@gmail.com>
 
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+Hi Jemmy,
 
-> This changeset contains the kernel-doc.py script to replace the verable
-> kernel-doc originally written in Perl. It replaces the first version and the
-> second series I sent on the top of it.
+good catch and thanks for your patch!
+There are some small formal issues with it, though.
+Could you fix those and send a v2?
 
-OK, I've applied it, looked at the (minimal) changes in output, and
-concluded that it's good - all this stuff is now in docs-next.  Many
-thanks for doing this!
+The patch subject should start with "tools/nolibc: ", and could be a bit
+more specific: "fix mismatched parenthesis in minor()"
 
-I'm going to hold off on other documentation patches for a day or two
-just in case anything turns up.  But it looks awfully good.
+(more below)
 
-Thanks,
+On 2025-04-10 02:19:34+0800, Jemmy Wong wrote:
+> Corrects an imbalance where opening parentheses exceed closing ones.
 
-jon
+Use imperative language: "Correct an ..."
+
+As this is a bugfix, a Fixes tag would be great.
+In this case:
+
+Fixes: eba6d00d38e7 ("tools/nolibc/types: move makedev to types.h and make it a macro")
+
+> Signed-off-by: Jemmy Wong <Jemmywong512@gmail.com>
+> 
+> ---
+>  tools/include/nolibc/types.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/include/nolibc/types.h b/tools/include/nolibc/types.h
+> index b26a5d0c417c..b57e054cca82 100644
+> --- a/tools/include/nolibc/types.h
+> +++ b/tools/include/nolibc/types.h
+> @@ -201,7 +201,7 @@ struct stat {
+>  /* WARNING, it only deals with the 4096 first majors and 256 first minors */
+>  #define makedev(major, minor) ((dev_t)((((major) & 0xfff) << 8) | ((minor) & 0xff)))
+>  #define major(dev) ((unsigned int)(((dev) >> 8) & 0xfff))
+> -#define minor(dev) ((unsigned int)(((dev) & 0xff))
+> +#define minor(dev) ((unsigned int)(((dev) & 0xff)))
+>  
+>  #ifndef offsetof
+>  #define offsetof(TYPE, FIELD) ((size_t) &((TYPE *)0)->FIELD)
+
+
+Thomas
