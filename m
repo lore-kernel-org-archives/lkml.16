@@ -1,254 +1,276 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0554C277002;
-	Wed,  9 Apr 2025 17:11:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E20A41BF33F;
+	Wed,  9 Apr 2025 17:12:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744218690; cv=none; b=LvVu9i55x0gDwbBDZ9kNprY9F8vBnuxU7ZNGetYIlhznSLlHgOYzI1swME66/m7F/xqtBN8LbE/vV/lYHX5PUiiCogOC/v87dfFl2M4pGmDHpo4BtwHRyujwQlL+h6mujfReAOa7lTLgqCocipES3WbROBBK4s6lNPvZ876uFRA=
+	t=1744218735; cv=none; b=h2eLx/u7VG4kVWokFldKLLsrtc8D64uoZsI2Gmib2W8rKfj2pbg5CGMNXeorzSVK4YyzsdOhJ4PbiJ6ahLyXf9O3tlZg5zZLBG7nZ0d7Wj8YyRzdV0Pbp7SVCOLbmFUtAsm9asSJCF5QJBTVbIXuNVCNFfnItvZmuRw8i1ks7kc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744218690; c=relaxed/simple;
-	bh=D6BVn03W4IKZEe/MCFk1MNoxK/IQ47mQ0uyL6OtZ8EM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IfvPtX9wPeCnXHNztRESiqz66Q+yOnpgIh6a9HnDAxj9C4/NRKA5Bj+a/6JaHOljvcfgdR2Zvy/52cwsSkcZlW099TLSVVv2h/I82sxUHo6l8iw8n+xg8XJDjd1EtW97RMH8O9v8SNhJHSJzkhmF1ZoYqJd7EcmgoZnzL6l6uMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bG4C8JoY; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744218735; c=relaxed/simple;
+	bh=NJ9nqQ/HqQW6VWoTACnv0h1lTMjSzqiuotglz3ecV5I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=LreMHgw+qUrilQ2tKOZ6huzsaXTxWmpbpsOXsYySHIlJtYRsHOUadhSXfdg2krAa1lnVavSq/u0sPSMRFlxAjZZpDF1bQJQEWyvRo9ELwb70R+eYv1DdV9H8hdQR6S0wnDtpaWk3Rchi0ITgO5uRm+ykEjWvk5ni4VD8MjqXJYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=rH4pr9On; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bG4C8JoY"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5e677f59438so10561528a12.2;
-        Wed, 09 Apr 2025 10:11:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744218687; x=1744823487; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ylDrT2YMOpwFaEsR9XQfKs+Xj9kBsGYPmtVt1tViWc0=;
-        b=bG4C8JoYVWzQfa6Wd/tW0V5CwqsDxplduCEKphvj67I8h6plCvYmgZ+yLKjtWExy+i
-         oKTi7InIhTlCwgsD+DGOEzSWU9tpeq2TeK3zxg/Ex6hit7CdpakiBvgDyOri+ghe+83+
-         1+fl+jx79nhCMeKbWxSt8fZ6itTZRX/RY+ZVoCI1BGLKK5VbwQlnUS67yI7yZJ/GMqDN
-         4C3daq/pN2yAvwpfDw42AW3z8vMln2ii8UC05m9PY3V5GWbqPD4sTr/21mOVAfu7KyPL
-         xKTxDeocJ84RMFQrleol/J6w6oqbLD+5TXUkqF/1YX0jalEKQhus/BIc+O5gq5fSoPNX
-         2mNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744218687; x=1744823487;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ylDrT2YMOpwFaEsR9XQfKs+Xj9kBsGYPmtVt1tViWc0=;
-        b=chVd2AtfJlw7kSnb9evTL+nwJkKvdbP+0WxkIIdbPfw0/Rja8JbqvKVLIC1Alag8U4
-         VJPkYjGg8qUB2NzJoWnlaILtKr+65HE5vEFG3gnr0REWoD6VU8oiJk8ve/Zgks8s9oIL
-         2cs25AcqkMfHLI80C7BSO21gKTvlqrLYw9XoRkvC8b5lUeBQ8VJ856NeBLs8Vmh+N5Md
-         O//jVN/ZBYOqy6nuGcr/Z8YSF4+GBj2y5JPoJ9r/EyvZg1b+IyobfPapz2pQYndmae9o
-         376zxAzWr+eMKFBgYxpgsxhP8b6UbT8berWW0+3u5oKWrxYGqS2/dqB65YPsjcbeKLmI
-         fE/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWz/oy5G2WpqBaQUYPuPOo0CCh80p7FrLkrQtFQezetTQufYuMRoO/ooxAPxJvRHw0blcLBk23z6tGxy5n8@vger.kernel.org, AJvYcCXN8razJURZ8G92Ligv4Vw3qMjlI5fMkHPz+0HfJA2bMPSeE1qgzwsxOr5yiIgW/OurvHgufXFzAB3L98qCmQ==@vger.kernel.org, AJvYcCXOPfvGi4G5rdQahvO312yeO9ShGbxTyduomIDigcbejkTp3DP55OIbWQcaSkE1Vwi9D7Ll94ppvINmlkjy@vger.kernel.org
-X-Gm-Message-State: AOJu0YworAU9BxzN1WZpJPJy4TbfhBLRMc8WOWBFedD6Ic+ULu+le2W9
-	k+c0oeznCAYIpPAsdEJXV9Prt3r5WFVq+4s0W/aY83Hc9Q7pqG0gkSKlz9XNwioa4ORfl6QZo2X
-	0ZpoHvxenHNrpqm7n0BVVTPiEgW8=
-X-Gm-Gg: ASbGncsbvLtdaFMv1Q4kLuBxuG1jl5a2S8ZUzZuwE9A+kVo95Ci09160DmXjHP7Vt8L
-	zD0jioZNBia4jHqmN3f9uLr7x1UTNF7E61fSMpZavGj3/d6U2lkEkSVQ7xbU5dlOhrnOG5LXiZz
-	ksLJtzrwRmjF6SRiRio36lJA==
-X-Google-Smtp-Source: AGHT+IFMi4DahhOFJeO26fMjVb7AIcnezeeOJc4AEg+4JuObcPNLWYHgjpzjbSOdAbAL7OA5hICBd/vdP9/YgryTi1o=
-X-Received: by 2002:a05:6402:1e96:b0:5ee:497:67d6 with SMTP id
- 4fb4d7f45d1cf-5f2f77573e3mr3606997a12.33.1744218686735; Wed, 09 Apr 2025
- 10:11:26 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rH4pr9On"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 539HC0gs1039348
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 9 Apr 2025 12:12:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744218720;
+	bh=HbxbbpJvLSMYgoAwnYVbl8Z4STLCfUPAEMIdO8+NPWo=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=rH4pr9On7+jdfgCM6LGDnGpwcF9J3hp/+HjCVrI8Iheg3bZuAfUvkf5V0Jbk1/L0v
+	 zLU6s4FT5GF7pI5TvErYpQonILW20pgss+OY1xvcim02mtFVt10VA4pKUUeGp9upAP
+	 gFgF0S6gboQqxgTEZzfae3yFkDpecUy+Vsma3TOI=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 539HC0W1080987
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 9 Apr 2025 12:12:00 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 9
+ Apr 2025 12:11:59 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 9 Apr 2025 12:11:59 -0500
+Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 539HBxKZ001640;
+	Wed, 9 Apr 2025 12:11:59 -0500
+Message-ID: <ceb7869a-2bdd-4a13-ad63-6f29bb8a2ab9@ti.com>
+Date: Wed, 9 Apr 2025 12:11:59 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250409-tonyk-overlayfs-v1-0-3991616fe9a3@igalia.com> <20250409-tonyk-overlayfs-v1-2-3991616fe9a3@igalia.com>
-In-Reply-To: <20250409-tonyk-overlayfs-v1-2-3991616fe9a3@igalia.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Wed, 9 Apr 2025 19:11:15 +0200
-X-Gm-Features: ATxdqUErSC32zqmZdURY7CsPA7SOb5uoyIOnGn5UfJAupYrKAMpX0onYca1Dqm0
-Message-ID: <CAOQ4uxit5nYeGPN1_uB7c37=eKQi_T-0LtoQaTZHVisAUDoBsg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] ovl: Make ovl_dentry_weird() accept casefold dentries
-To: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
-Cc: Miklos Szeredi <miklos@szeredi.hu>, Theodore Tso <tytso@mit.edu>, 
-	Gabriel Krisman Bertazi <krisman@kernel.org>, linux-unionfs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	kernel-dev@igalia.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] PENDING: mmc: sdhci*: Add set_hs_ena to sdhci_ops
+To: Ulf Hansson <ulf.hansson@linaro.org>
+CC: Adrian Hunter <adrian.hunter@intel.com>, <linux-mmc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Josua Mayer <josua@solid-run.com>,
+        Moteen
+ Shah <m-shah@ti.com>
+References: <20250407222702.2199047-1-jm@ti.com>
+ <20250407222702.2199047-2-jm@ti.com>
+ <CAPDyKFqx-G4NynanFWrspz7-uXXF74RfjcU-Sw2nq2JhL3LPuQ@mail.gmail.com>
+Content-Language: en-US
+From: Judith Mendez <jm@ti.com>
+In-Reply-To: <CAPDyKFqx-G4NynanFWrspz7-uXXF74RfjcU-Sw2nq2JhL3LPuQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Wed, Apr 9, 2025 at 5:01=E2=80=AFPM Andr=C3=A9 Almeida <andrealmeid@igal=
-ia.com> wrote:
->
-> ovl_dentry_weird() is used to avoid problems with filesystems that has
-> their d_hash and d_compare implementations. Create an exception for this
-> function, where only casefold filesystems are eligible to use their own
-> d_hash and d_compare functions, allowing to support casefold
-> filesystems.
+Hi Ulf,
 
-What do you mean by this sentence?
-Any casefold fs can be on any layer?
-All layers on the same casefold sb? same casefold fstype?
+On 4/9/25 7:48 AM, Ulf Hansson wrote:
+> On Tue, 8 Apr 2025 at 00:27, Judith Mendez <jm@ti.com> wrote:
+>>
+>> This patch adds set_hs_ena call to sdhci_ops so that host
+>> controller drivers have the option to implement a custom
+>> callback for SDHCI_CTRL_HISPD control.
+>>
+>> On TI devices (for HS modes and legacy mode), timing was closed on
+>> half cycle timing. If any of HIGH_SPEED_ENA, UHS_MODE_SELECT, or
+>> V1P8_SIGNAL_ENA is set for these modes, host controller switches to
+>> full cycle timing which may cause read/write failures and/or cqe error
+>> logs.
+>>
+>> So add set_hs_ena() to sdhci_ops so each host controller driver
+>> can implement their own .set_hs_ena callback.
+>>
+>> Also add sdhci_am654_set_hs_ena to sdhci_am654 driver and only set
+>> HIGH_SPEED_ENA, for modes > MMC_TIMING_SD_HS.
+>>
+>> Signed-off-by: Judith Mendez <jm@ti.com>
+> 
+> What does "PENDING" mean or compared to "PATCH"? I guess you want some
+> review and test of this - or there anything else?
 
+So sorry, I meant to remove this PENDING tag, will remove for v2.
+Review would be just fine.
 
->
-> Signed-off-by: Andr=C3=A9 Almeida <andrealmeid@igalia.com>
-> ---
->  fs/overlayfs/namei.c     | 11 ++++++-----
->  fs/overlayfs/overlayfs.h |  2 +-
->  fs/overlayfs/params.c    |  3 ++-
->  fs/overlayfs/util.c      | 12 +++++++-----
->  4 files changed, 16 insertions(+), 12 deletions(-)
->
-> diff --git a/fs/overlayfs/namei.c b/fs/overlayfs/namei.c
-> index be5c65d6f8484b1fba6b3fee379ba1d034c0df8a..140bc609ffebe00151cbb4467=
-20f5106dbeb2ef2 100644
-> --- a/fs/overlayfs/namei.c
-> +++ b/fs/overlayfs/namei.c
-> @@ -192,7 +192,7 @@ struct dentry *ovl_decode_real_fh(struct ovl_fs *ofs,=
- struct ovl_fh *fh,
->                 return real;
->         }
->
-> -       if (ovl_dentry_weird(real)) {
-> +       if (ovl_dentry_weird(real, ofs)) {
->                 dput(real);
->                 return NULL;
->         }
-> @@ -244,7 +244,7 @@ static int ovl_lookup_single(struct dentry *base, str=
-uct ovl_lookup_data *d,
->                 goto out_err;
->         }
->
-> -       if (ovl_dentry_weird(this)) {
-> +       if (ovl_dentry_weird(this, ofs)) {
->                 /* Don't support traversing automounts and other weirdnes=
-s */
->                 err =3D -EREMOTE;
->                 goto out_err;
-> @@ -365,6 +365,7 @@ static int ovl_lookup_data_layer(struct dentry *dentr=
-y, const char *redirect,
->                                  struct path *datapath)
->  {
->         int err;
-> +       struct ovl_fs *ovl =3D OVL_FS(layer->fs->sb);
+> 
+>> ---
+>>   drivers/mmc/host/sdhci.c       | 55 +++++++++++++++++++++-------------
+>>   drivers/mmc/host/sdhci.h       |  2 ++
+>>   drivers/mmc/host/sdhci_am654.c | 16 ++++++++++
+> 
+> I think it would be better to split this up in two parts. One for
+> sdhci and one for sdhci_am654
 
-ofs please
+Sure no problem. Thanks
+.
+> 
+> Other than that I am going to defer to Adrian to see what he thinks about this.
+> 
+> Kind regards
+> Uffe
+> 
+>>   3 files changed, 53 insertions(+), 20 deletions(-)
+>>
+>> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+>> index 5f78be7ae16d7..3a878cf0c59b9 100644
+>> --- a/drivers/mmc/host/sdhci.c
+>> +++ b/drivers/mmc/host/sdhci.c
+>> @@ -2355,6 +2355,27 @@ static bool sdhci_presetable_values_change(struct sdhci_host *host, struct mmc_i
+>>                 (sdhci_preset_needed(host, ios->timing) || host->drv_type != ios->drv_type);
+>>   }
+>>
+>> +void sdhci_set_hs_ena(struct sdhci_host *host, unsigned char timing)
+>> +{
+>> +       u8 ctrl = sdhci_readb(host, SDHCI_HOST_CONTROL);
+>> +
+>> +       if (timing == MMC_TIMING_SD_HS ||
+>> +           timing == MMC_TIMING_MMC_HS ||
+>> +           timing == MMC_TIMING_MMC_HS400 ||
+>> +           timing == MMC_TIMING_MMC_HS200 ||
+>> +           timing == MMC_TIMING_MMC_DDR52 ||
+>> +           timing == MMC_TIMING_UHS_SDR50 ||
+>> +           timing == MMC_TIMING_UHS_SDR104 ||
+>> +           timing == MMC_TIMING_UHS_DDR50 ||
+>> +           timing == MMC_TIMING_UHS_SDR25)
+>> +               ctrl |= SDHCI_CTRL_HISPD;
+>> +       else
+>> +               ctrl &= ~SDHCI_CTRL_HISPD;
+>> +
+>> +       sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
+>> +}
+>> +EXPORT_SYMBOL_GPL(sdhci_set_hs_ena);
+>> +
+>>   void sdhci_set_ios_common(struct mmc_host *mmc, struct mmc_ios *ios)
+>>   {
+>>          struct sdhci_host *host = mmc_priv(mmc);
+>> @@ -2436,23 +2457,6 @@ void sdhci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
+>>              !sdhci_presetable_values_change(host, ios))
+>>                  return;
+>>
+>> -       ctrl = sdhci_readb(host, SDHCI_HOST_CONTROL);
+>> -
+>> -       if (!(host->quirks & SDHCI_QUIRK_NO_HISPD_BIT)) {
+>> -               if (ios->timing == MMC_TIMING_SD_HS ||
+>> -                    ios->timing == MMC_TIMING_MMC_HS ||
+>> -                    ios->timing == MMC_TIMING_MMC_HS400 ||
+>> -                    ios->timing == MMC_TIMING_MMC_HS200 ||
+>> -                    ios->timing == MMC_TIMING_MMC_DDR52 ||
+>> -                    ios->timing == MMC_TIMING_UHS_SDR50 ||
+>> -                    ios->timing == MMC_TIMING_UHS_SDR104 ||
+>> -                    ios->timing == MMC_TIMING_UHS_DDR50 ||
+>> -                    ios->timing == MMC_TIMING_UHS_SDR25)
+>> -                       ctrl |= SDHCI_CTRL_HISPD;
+>> -               else
+>> -                       ctrl &= ~SDHCI_CTRL_HISPD;
+>> -       }
+>> -
+>>          if (host->version >= SDHCI_SPEC_300) {
+>>                  u16 clk, ctrl_2;
+>>
+>> @@ -2468,7 +2472,12 @@ void sdhci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
+>>                          sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
+>>                  }
+>>
+>> -               sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
+>> +               if (!(host->quirks & SDHCI_QUIRK_NO_HISPD_BIT)) {
+>> +                       if (host->ops->set_hs_ena)
+>> +                               host->ops->set_hs_ena(host, ios->timing);
+>> +                       else
+>> +                               sdhci_set_hs_ena(host, ios->timing);
+>> +               }
+>>
+>>                  if (!host->preset_enabled) {
+>>                          /*
+>> @@ -2510,8 +2519,14 @@ void sdhci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
+>>
+>>                  /* Re-enable SD Clock */
+>>                  host->ops->set_clock(host, host->clock);
+>> -       } else
+>> -               sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
+>> +       } else {
+>> +               if (!(host->quirks & SDHCI_QUIRK_NO_HISPD_BIT)) {
+>> +                       if (host->ops->set_hs_ena)
+>> +                               host->ops->set_hs_ena(host, ios->timing);
+>> +                       else
+>> +                               sdhci_set_hs_ena(host, ios->timing);
+>> +               }
+>> +       }
+>>   }
+>>   EXPORT_SYMBOL_GPL(sdhci_set_ios);
+>>
+>> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+>> index cd0e35a805427..ebecb49792ca1 100644
+>> --- a/drivers/mmc/host/sdhci.h
+>> +++ b/drivers/mmc/host/sdhci.h
+>> @@ -704,6 +704,7 @@ struct sdhci_ops {
+>>          void            (*set_timeout)(struct sdhci_host *host,
+>>                                         struct mmc_command *cmd);
+>>          void            (*set_bus_width)(struct sdhci_host *host, int width);
+>> +       void            (*set_hs_ena)(struct sdhci_host *host, unsigned char timing);
+>>          void (*platform_send_init_74_clocks)(struct sdhci_host *host,
+>>                                               u8 power_mode);
+>>          unsigned int    (*get_ro)(struct sdhci_host *host);
+>> @@ -857,6 +858,7 @@ int sdhci_get_ro(struct mmc_host *mmc);
+>>   void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq);
+>>   int sdhci_request_atomic(struct mmc_host *mmc, struct mmc_request *mrq);
+>>   void sdhci_set_bus_width(struct sdhci_host *host, int width);
+>> +void sdhci_set_hs_ena(struct sdhci_host *host, unsigned char timing);
+>>   void sdhci_reset(struct sdhci_host *host, u8 mask);
+>>   bool sdhci_do_reset(struct sdhci_host *host, u8 mask);
+>>   void sdhci_set_uhs_signaling(struct sdhci_host *host, unsigned timing);
+>> diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
+>> index f75c31815ab00..67a64de4972c9 100644
+>> --- a/drivers/mmc/host/sdhci_am654.c
+>> +++ b/drivers/mmc/host/sdhci_am654.c
+>> @@ -429,6 +429,19 @@ static int sdhci_am654_execute_tuning(struct mmc_host *mmc, u32 opcode)
+>>          return 0;
+>>   }
+>>
+>> +static void sdhci_am654_set_hs_ena(struct sdhci_host *host, unsigned char timing)
+>> +{
+>> +       u8 ctrl = 0;
+>> +
+>> +       if (timing > MMC_TIMING_SD_HS) {
+>> +               sdhci_set_hs_ena(host, timing);
+>> +       } else {
+>> +               ctrl = sdhci_readb(host, SDHCI_HOST_CONTROL);
+>> +               ctrl &= ~SDHCI_CTRL_HISPD;
+>> +               sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
+>> +       }
+>> +}
+>> +
+>>   static u32 sdhci_am654_cqhci_irq(struct sdhci_host *host, u32 intmask)
+>>   {
+>>          int cmd_error = 0;
+>> @@ -578,6 +591,7 @@ static const struct sdhci_ops sdhci_am654_ops = {
+>>          .get_timeout_clock = sdhci_pltfm_clk_get_max_clock,
+>>          .set_uhs_signaling = sdhci_set_uhs_signaling,
+>>          .set_bus_width = sdhci_set_bus_width,
+>> +       .set_hs_ena = sdhci_am654_set_hs_ena,
+>>          .set_power = sdhci_set_power_and_bus_voltage,
+>>          .set_clock = sdhci_am654_set_clock,
+>>          .write_b = sdhci_am654_write_b,
+>> @@ -608,6 +622,7 @@ static const struct sdhci_ops sdhci_j721e_8bit_ops = {
+>>          .get_timeout_clock = sdhci_pltfm_clk_get_max_clock,
+>>          .set_uhs_signaling = sdhci_set_uhs_signaling,
+>>          .set_bus_width = sdhci_set_bus_width,
+>> +       .set_hs_ena = sdhci_am654_set_hs_ena,
+>>          .set_power = sdhci_set_power_and_bus_voltage,
+>>          .set_clock = sdhci_am654_set_clock,
+>>          .write_b = sdhci_am654_write_b,
+>> @@ -632,6 +647,7 @@ static const struct sdhci_ops sdhci_j721e_4bit_ops = {
+>>          .get_timeout_clock = sdhci_pltfm_clk_get_max_clock,
+>>          .set_uhs_signaling = sdhci_set_uhs_signaling,
+>>          .set_bus_width = sdhci_set_bus_width,
+>> +       .set_hs_ena = sdhci_am654_set_hs_ena,
+>>          .set_power = sdhci_set_power_and_bus_voltage,
+>>          .set_clock = sdhci_j721e_4bit_set_clock,
+>>          .write_b = sdhci_am654_write_b,
+>> --
+>> 2.49.0
+>>
 
->
->         err =3D vfs_path_lookup(layer->mnt->mnt_root, layer->mnt, redirec=
-t,
->                         LOOKUP_BENEATH | LOOKUP_NO_SYMLINKS | LOOKUP_NO_X=
-DEV,
-> @@ -376,7 +377,7 @@ static int ovl_lookup_data_layer(struct dentry *dentr=
-y, const char *redirect,
->                 return err;
->
->         err =3D -EREMOTE;
-> -       if (ovl_dentry_weird(datapath->dentry))
-> +       if (ovl_dentry_weird(datapath->dentry, ovl))
->                 goto out_path_put;
->
->         err =3D -ENOENT;
-> @@ -767,7 +768,7 @@ struct dentry *ovl_get_index_fh(struct ovl_fs *ofs, s=
-truct ovl_fh *fh)
->
->         if (ovl_is_whiteout(index))
->                 err =3D -ESTALE;
-> -       else if (ovl_dentry_weird(index))
-> +       else if (ovl_dentry_weird(index, ofs))
->                 err =3D -EIO;
->         else
->                 return index;
-> @@ -815,7 +816,7 @@ struct dentry *ovl_lookup_index(struct ovl_fs *ofs, s=
-truct dentry *upper,
->                 dput(index);
->                 index =3D ERR_PTR(-ESTALE);
->                 goto out;
-> -       } else if (ovl_dentry_weird(index) || ovl_is_whiteout(index) ||
-> +       } else if (ovl_dentry_weird(index, ofs) || ovl_is_whiteout(index)=
- ||
->                    inode_wrong_type(inode, d_inode(origin)->i_mode)) {
->                 /*
->                  * Index should always be of the same file type as origin
-> diff --git a/fs/overlayfs/overlayfs.h b/fs/overlayfs/overlayfs.h
-> index 6f2f8f4cfbbc177fbd5441483395d7ff72efe332..f3de013517598c44c15ca9f95=
-0f6c2f0a5c2084b 100644
-> --- a/fs/overlayfs/overlayfs.h
-> +++ b/fs/overlayfs/overlayfs.h
-> @@ -445,7 +445,7 @@ void ovl_dentry_init_reval(struct dentry *dentry, str=
-uct dentry *upperdentry,
->                            struct ovl_entry *oe);
->  void ovl_dentry_init_flags(struct dentry *dentry, struct dentry *upperde=
-ntry,
->                            struct ovl_entry *oe, unsigned int mask);
-> -bool ovl_dentry_weird(struct dentry *dentry);
-> +bool ovl_dentry_weird(struct dentry *dentry, struct ovl_fs *ovl);
->  enum ovl_path_type ovl_path_type(struct dentry *dentry);
->  void ovl_path_upper(struct dentry *dentry, struct path *path);
->  void ovl_path_lower(struct dentry *dentry, struct path *path);
-> diff --git a/fs/overlayfs/params.c b/fs/overlayfs/params.c
-> index 6759f7d040c89d3b3c01572579c854a900411157..459e8bddf1777c12c9fa0bdfc=
-150e2ea22eaafc3 100644
-> --- a/fs/overlayfs/params.c
-> +++ b/fs/overlayfs/params.c
-> @@ -277,6 +277,7 @@ static int ovl_mount_dir_check(struct fs_context *fc,=
- const struct path *path,
->                                enum ovl_opt layer, const char *name, bool=
- upper)
->  {
->         struct ovl_fs_context *ctx =3D fc->fs_private;
-> +       struct ovl_fs *ovl =3D fc->s_fs_info;
-
-ofs pls
-
->
->         if (!d_is_dir(path->dentry))
->                 return invalfc(fc, "%s is not a directory", name);
-> @@ -290,7 +291,7 @@ static int ovl_mount_dir_check(struct fs_context *fc,=
- const struct path *path,
->         if (sb_has_encoding(path->mnt->mnt_sb))
->                 return invalfc(fc, "case-insensitive capable filesystem o=
-n %s not supported", name);
->
-> -       if (ovl_dentry_weird(path->dentry))
-> +       if (ovl_dentry_weird(path->dentry, ovl))
->                 return invalfc(fc, "filesystem on %s not supported", name=
-);
->
->         /*
-> diff --git a/fs/overlayfs/util.c b/fs/overlayfs/util.c
-> index 0819c739cc2ffce0dfefa84d3ff8f9f103eec191..4dd523a1a13ab0a6cf51d967d=
-0b712873e6d8580 100644
-> --- a/fs/overlayfs/util.c
-> +++ b/fs/overlayfs/util.c
-> @@ -200,15 +200,17 @@ void ovl_dentry_init_flags(struct dentry *dentry, s=
-truct dentry *upperdentry,
->         spin_unlock(&dentry->d_lock);
->  }
->
-> -bool ovl_dentry_weird(struct dentry *dentry)
-> +bool ovl_dentry_weird(struct dentry *dentry, struct ovl_fs *ovl)
-
-ovl_fs *ofs as first argument please
-
->  {
-> +       int flags =3D DCACHE_NEED_AUTOMOUNT | DCACHE_MANAGE_TRANSIT;
-> +
-> +       if (!ovl->casefold)
-> +               flags |=3D DCACHE_OP_HASH | DCACHE_OP_COMPARE;
-> +
->         if (!d_can_lookup(dentry) && !d_is_file(dentry) && !d_is_symlink(=
-dentry))
->                 return true;
->
-> -       return dentry->d_flags & (DCACHE_NEED_AUTOMOUNT |
-> -                                 DCACHE_MANAGE_TRANSIT |
-> -                                 DCACHE_OP_HASH |
-> -                                 DCACHE_OP_COMPARE);
-> +       return dentry->d_flags & flags;
->  }
->
->  enum ovl_path_type ovl_path_type(struct dentry *dentry)
->
-> --
-> 2.49.0
->
