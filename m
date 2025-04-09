@@ -1,84 +1,84 @@
-Received: from smtp-fw-9102.amazon.com (smtp-fw-9102.amazon.com [207.171.184.29])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24F6D1DE884;
-	Wed,  9 Apr 2025 20:20:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.184.29
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D312512CDAE;
+	Wed,  9 Apr 2025 20:22:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744230048; cv=none; b=hWa7T35xKrA1BfK0dicfYGmbyllMARv523NzB+c5NNpQCm3DPaBmzoNCYDZJeaGTR7l20U5WSBQLHEksjCo+aeUFb+QhpB/BtdmLR3cHsJuH+2szxhZa0Wy66FF4/3ChbR6d9P9YZnjjxT2G8+008X9in+CsptXUCltpnVb8y+A=
+	t=1744230124; cv=none; b=eTTANAAVcyIV05X+qckcJKq1xd3Z2dFeCO+vaaMWqzFn0J6YfqImlXPzgHjvtkIPOKkJvyMwlx9JhKxAWNPuXsR3la9+SEnKoOkus1VlHuI5CoEtbHcanGnIDRKcdoJf75WSxEIQh9C5iKzd2Fltu+YaZnwZbehPrNzCtpV+7ZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744230048; c=relaxed/simple;
-	bh=1WrEWfpFHEmFTxy1AVRfKmrCHZ+R+S8KOv66hp8ygFk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qaNmtwM1TRg9NyypphN3ATXwMS2sNXT2btxwEqmL5nXgrHTzRko/+po8n5PXtJozZq/ndxF4YlOhJUeUn1AgtlUQnGG6hfUO0afhsJF0wnXiW/9KASHz0iQpZDsy0oFe257gWIxhGyTZn08YIal0uiS48d7gFe1CKC8gLUHONiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=DQFNj3bj; arc=none smtp.client-ip=207.171.184.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1744230124; c=relaxed/simple;
+	bh=MMRz+vb2BOjUdmlOeFEN6bQcotKDYU5qJMLFpB9ja5A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j640I2JBTVlrmZiJFD+Adce5QdTg+/+FF16BgH+1BY1srI+MyGRM2hIHfPzNB6k4lS44XLFCgO4S/ODkSDuGaMfnIvP7DkDtu7vq38RMKX9dqffa6iHx9W5v33giKsz5J/6zsXypYVYxn6DVFu1n13X2At7um40bWTvvzJJwhqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nFWm9V9/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="DQFNj3bj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1744230044; x=1775766044;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=BFKlNYVEHNJdeCxI8d7yxB4qk1YN6ZpSI2mPtyL+/tk=;
-  b=DQFNj3bjP9XFoC18ZRzauNe4f3Js7loUt3djd9rXbN/1wM4DfyDoTvdv
-   ybutBoQY2MrNBhubGzbvdfK/g7gZ60eKdgThm0+1CcfLEu18VDxciA7/6
-   Eh/PyrAfEAK+22eNEAQR3FuYmNhsAZDpEDMiyienz/3aw3+R5gZFoF1+9
-   I=;
-X-IronPort-AV: E=Sophos;i="6.15,201,1739836800"; 
-   d="scan'208";a="510240796"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-9102.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 20:20:36 +0000
-Received: from EX19MTAUWC002.ant.amazon.com [10.0.38.20:21857]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.62.147:2525] with esmtp (Farcaster)
- id 8d194daa-eab1-490c-b425-30f481a950b4; Wed, 9 Apr 2025 20:20:35 +0000 (UTC)
-X-Farcaster-Flow-ID: 8d194daa-eab1-490c-b425-30f481a950b4
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Wed, 9 Apr 2025 20:20:34 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.187.170.41) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Wed, 9 Apr 2025 20:20:32 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <mhal@rbox.co>
-CC: <bpf@vger.kernel.org>, <davem@davemloft.net>, <edumazet@google.com>,
-	<horms@kernel.org>, <kuba@kernel.org>, <kuniyu@amazon.com>,
-	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>, <pabeni@redhat.com>
-Subject: Re: [PATCH net-next] af_unix: Remove unix_unhash()
-Date: Wed, 9 Apr 2025 13:20:15 -0700
-Message-ID: <20250409202018.54638-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250409-cleanup-drop-unix-unhash-v1-1-1659e5b8ee84@rbox.co>
-References: <20250409-cleanup-drop-unix-unhash-v1-1-1659e5b8ee84@rbox.co>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nFWm9V9/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4306FC4CEE2;
+	Wed,  9 Apr 2025 20:22:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744230123;
+	bh=MMRz+vb2BOjUdmlOeFEN6bQcotKDYU5qJMLFpB9ja5A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nFWm9V9/vljEHrS7yFn71GZuBhNtsIXQ7+61FViNslTyatO8/0Z/PYGhsEHXovUeB
+	 gzcX7FVGJcRsZHh0vkr/fMylokgBA4WvVxLNfemgVJZKsNXx3clbhKwjEukBPKTvCM
+	 NI9Fm+6Z+HO2VvQfolN5BpO1S+cc+sx38gQ095iRAtRTQeIzgn9FkPE4Ksj9pc/reS
+	 egS1kF9BVqxdry7cc+Yr2E8bhe24S3lXFmFurRS/DPk6CIFW2iPIVe9bUINzEnmrzZ
+	 LhRzysJnA0DtFDgfCOMHh1IngaNELcKaTOuSQ1O4MERJl8YWSW5jvBOBvmBnjUCnGf
+	 fpZiRJcaDTGkA==
+Date: Wed, 9 Apr 2025 13:21:58 -0700
+From: Kees Cook <kees@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	linux-kbuild@vger.kernel.org, linux-hardening@vger.kernel.org,
+	kasan-dev@googlegroups.com, Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH] gcc-plugins: Remove SANCOV plugin
+Message-ID: <202504091321.2B7E95FE@keescook>
+References: <20250409160251.work.914-kees@kernel.org>
+ <32bb421a-1a9e-40eb-9318-d8ca1a0f407f@app.fastmail.com>
+ <202504090919.6DE21CFA7A@keescook>
+ <6f7e3436-8ae8-473d-be64-c962366ca5c8@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D040UWB003.ant.amazon.com (10.13.138.8) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6f7e3436-8ae8-473d-be64-c962366ca5c8@app.fastmail.com>
 
-From: Michal Luczaj <mhal@rbox.co>
-Date: Wed, 09 Apr 2025 14:50:58 +0200
-> Dummy unix_unhash() was introduced for sockmap in commit 94531cfcbe79
-> ("af_unix: Add unix_stream_proto for sockmap"), but there's no need to
-> implement it anymore.
+On Wed, Apr 09, 2025 at 09:28:22PM +0200, Arnd Bergmann wrote:
+> On Wed, Apr 9, 2025, at 18:19, Kees Cook wrote:
+> > On Wed, Apr 09, 2025 at 06:16:58PM +0200, Arnd Bergmann wrote:
+> >> On Wed, Apr 9, 2025, at 18:02, Kees Cook wrote:
+> >> 
+> >> >  config KCOV
+> >> >  	bool "Code coverage for fuzzing"
+> >> >  	depends on ARCH_HAS_KCOV
+> >> > -	depends on CC_HAS_SANCOV_TRACE_PC || GCC_PLUGINS
+> >> > +	depends on CC_HAS_SANCOV_TRACE_PC
+> >> 
+> >> So this dependency would also disappear. I think either way is fine.
+> >> 
+> >> The rest of the patch is again identical to my version.
+> >
+> > Ah! How about you keep the patch as part of your gcc-8.1 clean up, then?
+> > That seems more clear, etc.
 > 
-> ->unhash() is only called conditionally: in unix_shutdown() since commit
-> d359902d5c35 ("af_unix: Fix NULL pointer bug in unix_shutdown"), and in BPF
-> proto's sock_map_unhash() since commit 5b4a79ba65a1 ("bpf, sockmap: Don't
-> let sock_map_{close,destroy,unhash} call itself").
+> Sure, I can probably keep that all in a branch of the asm-generic
+> tree, or alternatively send it through the kbuild tree.
 > 
-> Remove it.
-> 
-> Signed-off-by: Michal Luczaj <mhal@rbox.co>
+> Shall I include the patch to remove the structleak plugin as well?
 
-Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+No, structleak needs to stay for now.
 
-
+-- 
+Kees Cook
