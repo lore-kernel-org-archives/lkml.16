@@ -1,43 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAFC4263C88;
-	Wed,  9 Apr 2025 13:35:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8468254B09;
+	Wed,  9 Apr 2025 13:37:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744205735; cv=none; b=LM6HSOOtjE4B2HUFRGiHp+ycxJFmfskI8koRfTEITka8ILg325AHoc3eKxeEQnaCVrmh51q1j7lu8LUiwBHAUC/Kvg6ZzvzcRYB7ogHqAZClZlGFaKaTpZYU6RdXT+FwbP1Sc1376AF6v4WmIK+FalVVSsYgtDW0EnhR26PiEbo=
+	t=1744205831; cv=none; b=dQeqgfjSzWK2zm6GShulXf72bzwQaj9Yqeb20Y90KAk39mP+dmTqUheu8Xcq7wUWUHY8VLAXsYjQmBoAi8bJha0n5xVYXf/ZSAfRYSNYAaeqqm23DBxNLQOyu6gAc9MIHBeXj4//M563cePOxEVqFeTvDEL0ITYRWp5sC5GAnMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744205735; c=relaxed/simple;
-	bh=ppKQBnSErD0/u0/gZkEC8eunlb+MMHTwKrkVtk5VMPU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Z5/GGDKyknzKhk/oE8HqjBMkGpQNQlhiUQnO7BFH/pCMY5JUlHUrhJokp+rpVES3sBQW94v3c4taV6OLR8rVwjaFE8BFbAWUyCUsvc8hLhOkJdvCvY9sW17FPfdhxITR8/kjITKnIm7LlkRl58ZsPqVASmPA41EAba4PR+oVeRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QH03iG4O; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744205831; c=relaxed/simple;
+	bh=UlHnIINK3hXAnc8dnyHTZc+hOC/0RUhg2HMmsTBNBvQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r1rb7CFGAEk9RHkscvrWikmBlIGJcwAQIQv9La6gXOv/NBXvhuVTkoPMU965cDxf6gUaaAsJUCtKBtKa6oC4vdSvP9SneZHh0ohLTn2ZZKi9wof0SaMYEQZHjnKbpfphJye/tw5PeASBX2iYliRvSVpg5b5wHa4KsNbA+LrhP1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ILIPoAv/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QH03iG4O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B52D9C4CEE3;
-	Wed,  9 Apr 2025 13:35:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ILIPoAv/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38C86C4CEE3;
+	Wed,  9 Apr 2025 13:37:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744205734;
-	bh=ppKQBnSErD0/u0/gZkEC8eunlb+MMHTwKrkVtk5VMPU=;
-	h=Date:From:To:Cc:Subject:From;
-	b=QH03iG4OIWAIrsxVDmqy27E/IdlvYOx2XBsEhPF0IzbGagUGr24twZ1wHu/uylC1Z
-	 kJoNnBtlH4MUHpn+qYMQb2gbior54U5n8REbI7dV3hJ3hoeOBc+R2OcWZHIwm2JmHY
-	 490pBrcTLLNLv3W+qWoOb2oogmvHr8z1/xz1LtZmtwowW5krsUyJ4l2QJVe6EgC3JO
-	 MZORVEV5zCfqiee0q/0LDQCHRWvVHuTDujlTjnHMNG5b/Dt88kbBkli+UOEnmAFSrE
-	 1lISCPfFQtzlNL404gLIXXUirGs9G/YUK8sZhZyy3CO6QTStn1EKeLvXrimBKdiS3x
-	 k70bsNjG4gXww==
-Date: Wed, 9 Apr 2025 10:35:31 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 1/1 v6.15-rc1] perf libunwind arm64: Fix missing close parens
- in an if statement
-Message-ID: <Z_Z3o8KvB2i5c6ab@x1>
+	s=k20201202; t=1744205831;
+	bh=UlHnIINK3hXAnc8dnyHTZc+hOC/0RUhg2HMmsTBNBvQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ILIPoAv/k7LqaCUhdE9DT97eKEnh8gzljrWqTZUEgt0Zqrm26HXMPSSMaHBp8g58D
+	 VWtvrXZTpUiTYt50lvqCct3gyKyXfqeNckgRPROtWqSfpEEczJgwVuDXRCdFbNMcXm
+	 cqNLqTSAK9Gsuvo9NfAecngtROsehcrPMbKvAfZ0MdmRAh2xiCEC9vTAE2MhQOw2nu
+	 Uw6XFf+iXXOtt4bj4cPwimB/7bw9CVluBI+xYZ6Soige28t6Pih25LtEHuPsY/K9qC
+	 tE0w+jXQJDZh/z/rydjNp3R5Ae7yVWlQH3t6ZO3GKwOJVtGr8M760vpBN04ATZdCyO
+	 ya6oReDMOGCjw==
+Date: Wed, 9 Apr 2025 15:37:04 +0200
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Marc Zyngier <maz@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Sascha Bischoff <sascha.bischoff@arm.com>,
+	Timothy Hayes <timothy.hayes@arm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH 22/24] irqchip/gic-v5: Add GICv5 ITS support
+Message-ID: <Z/Z4AFYNQmxTApYi@lpieralisi>
+References: <20250408-gicv5-host-v1-0-1f26db465f8d@kernel.org>
+ <20250408-gicv5-host-v1-22-1f26db465f8d@kernel.org>
+ <87tt6xtwnp.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,36 +51,82 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <87tt6xtwnp.ffs@tglx>
 
-While testing building with libunwind (using LIBUNWIND=1) in various
-arches I noticed a problem on arm64, on an rpi5 system, a missing close
-parens in a change related to dso__data_get_fd() usage, fix it.
+On Wed, Apr 09, 2025 at 01:13:46PM +0200, Thomas Gleixner wrote:
+> On Tue, Apr 08 2025 at 12:50, Lorenzo Pieralisi wrote:
+> >  
+> > +void gicv5_irs_syncr(void)
+> > +{
+> > +	u32 syncr;
+> > +	u32 statusr;
+> > +	int ret;
+> > +	struct gicv5_irs_chip_data *irs_data;
+> > +
+> > +	irs_data = list_first_entry_or_null(&irs_nodes,
+> > +					    struct gicv5_irs_chip_data, entry);
+> > +	if (WARN_ON(!irs_data))
+> > +		return;
+> > +
+> > +	syncr = FIELD_PREP(GICV5_IRS_SYNCR_SYNC, 1);
+> > +	irs_writel(irs_data, syncr, GICV5_IRS_SYNCR);
+> > +
+> > +	ret = readl_relaxed_poll_timeout_atomic(
+> > +			irs_data->irs_base + GICV5_IRS_SYNC_STATUSR, statusr,
+> > +			FIELD_GET(GICV5_IRS_SYNC_STATUSR_IDLE, statusr), 1,
+> > +			USEC_PER_SEC);
+> > +
+> > +	if (ret == -ETIMEDOUT)
+> > +		pr_err_ratelimited("SYNCR timeout...\n");
+> 
+> This timeout poll thing looks very familiar by now. Third variant :)
+> 
+> > +static int gicv5_its_wait_for_invalidation(struct gicv5_its_chip_data *its)
+> > +{
+> > +	int ret;
+> > +	u32 statusr;
+> > +
+> > +	ret = readl_relaxed_poll_timeout_atomic(
+> > +			its->its_base + GICV5_ITS_STATUSR, statusr,
+> > +			FIELD_GET(GICV5_ITS_STATUSR_IDLE, statusr), 1,
+> > +			USEC_PER_SEC);
+> > +
+> > +	if (ret == -ETIMEDOUT)
+> > +		pr_err_ratelimited("STATUSR timeout...\n");
+> > +
+> > +	return ret;
+> > +}
+> 
+> And number four follows suit :)
+> 
+> > +
+> > +static void gicv5_its_syncr(struct gicv5_its_chip_data *its,
+> > +			    struct gicv5_its_dev *its_dev)
+> > +{
+> > +	int ret;
+> > +	u64 syncr;
+> > +	u32 statusr;
+> > +
+> > +	syncr = FIELD_PREP(GICV5_ITS_SYNCR_SYNC, 1) |
+> > +		FIELD_PREP(GICV5_ITS_SYNCR_DEVICEID, its_dev->device_id);
+> > +
+> > +	its_writeq(its, syncr, GICV5_ITS_SYNCR);
+> > +
+> > +	ret = readl_relaxed_poll_timeout_atomic(
+> > +			its->its_base + GICV5_ITS_SYNC_STATUSR, statusr,
+> > +			FIELD_GET(GICV5_ITS_SYNC_STATUSR_IDLE, statusr), 1,
+> > +			USEC_PER_SEC);
+> > +
+> > +	if (ret == -ETIMEDOUT)
+> > +		pr_err_ratelimited("SYNCR timeout...\n");
+> > +}
+> 
+> Along with #5 
 
-Fixes: 5ac22c35aa8519f1 ("perf dso: Use lock annotations to fix asan deadlock")
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/unwind-libunwind-local.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+No question about it, I will consolidate them as much as I can, I
+noticed while implementing them then focused on getting the driver
+functionality in place and forgot to create a single function,
+apologies.
 
-diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
-index 9fb2c1343c7fe205..0b037e7389a009f5 100644
---- a/tools/perf/util/unwind-libunwind-local.c
-+++ b/tools/perf/util/unwind-libunwind-local.c
-@@ -371,7 +371,7 @@ static int read_unwind_spec_debug_frame(struct dso *dso,
- 	 *    has to be pointed by symsrc_filename
- 	 */
- 	if (ofs == 0) {
--		if (dso__data_get_fd(dso, machine, &fd) {
-+		if (dso__data_get_fd(dso, machine, &fd)) {
- 			ofs = elf_section_offset(fd, ".debug_frame");
- 			dso__data_put_fd(dso);
- 		}
--- 
-2.48.1
-
+Thanks,
+Lorenzo
