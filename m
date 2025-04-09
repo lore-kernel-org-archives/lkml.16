@@ -1,245 +1,154 @@
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9042226157E
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 13:52:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE6FD172767;
+	Wed,  9 Apr 2025 13:53:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744206771; cv=none; b=eGmVtNJrdMgw1TzYzQYIA8T8CrIn6sMJqYM05aNduZlMPaqZStOhKZzDBVYd1+7DqqTkIARofOUKxRjxcycgXWNsv81zjkHh6hiIK0IiVu+lZw25d+tPmliX5RltgKaCSwVnHK5Gm7ubAzK+VkJwldiRW10s6Zu1wp91M86JdtA=
+	t=1744206833; cv=none; b=tHl1VO1Gtm0+YlhK9uMIFEoqcxX0W4Vf5FXHzD5lGp3qC9Op4hZvT61Tc7g8X5+1S6WbYJ63QtIX1mAzZTzxDtz+i1WRaEU9V0HzNeb8KUnZ5VhUvUDW9w3badLGZq8KWJR9zMofLMAP/1OpuPRWNs+720JSCxTNpX4O2/Vf/is=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744206771; c=relaxed/simple;
-	bh=5h/5sj/ZKlG0LCQgwee6czUsmgrNzjlgmfYLZt7pkew=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gdA/tbQktu4yqnIEL0TWGmFPw++GzXz46iFdhcdqViy42MuKqxSU5CvEm20nhNbJfPd7LaPq+SfjIKLxSz3DwbAvgXbaX29vYSHVsNoIAYCG4bra0Iz/qvEiWnvlWg0lJqoetyHeX0aGHPKKUL2E6mbbU10DZawwpwH7vxs6sy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=C3w2lJO9; arc=none smtp.client-ip=209.85.166.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1744206833; c=relaxed/simple;
+	bh=VvSiDUAiwgB4XqDAXPRunK7EgXcqQUjeMPsiC8XGV3k=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=qpDyGgSHsd1es5nrkAYJHpKJqRtlHpr/wp+hYnJXFK5abNU2hO3WJzre0H50vsuWgMIdJ1PHhlR9WGDEwNzU5sDLlcURA6iEK+L/oMcOVY+Utxs9dozGDp+2swASexlPF+wDsy9bOmLSvR+7atw2Nh8Unvcgb9rETCZ6aT19SSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jeSqpKCy; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="C3w2lJO9"
-Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-85b41281b50so185689739f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 06:52:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jeSqpKCy"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-22928d629faso70217465ad.3;
+        Wed, 09 Apr 2025 06:53:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1744206768; x=1744811568; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=e5pHe1ifA0DjRS4425Ek+vcz8cFHb7AV6SGKAGlf8Hs=;
-        b=C3w2lJO9tQIYyc+DBq3wfGZ+KxgefjAJH6LXkkVQquEsdI8/JKSYz5psUaetp7HsIN
-         xGI/WtBV7ZbEZopOUAE0PlnEr8bZcmKwaAm855/OHX8RpX/NcQhtGtB8qDAwC+CsNvs5
-         a/4IFEhaZF5TOfSXQAw2TTmNOTU4Iu6L2pAxBsYsn2JHnSTxP/tMXt0daTXrvrBMZaBj
-         NNa/VeRidZuAhuOqi6SuZbohM3AEdRWvhTSZ8WTYjQgQrTkzEp5IDPAz8ScJQ4xeYUlI
-         XGLvxB0/vuUKD6ppc+vmDQsUzrIa099ifLne6E9DSa4pC/nyoaJAUWpZG5fSDN99iJTh
-         efsQ==
+        d=gmail.com; s=20230601; t=1744206831; x=1744811631; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NXYmIewHBQZHKjz0TG7FwEVxtA+dONvTtnb2TiEKr9I=;
+        b=jeSqpKCyUXqBa0KEAE64fn9QmTsob/ZEOheFw6ZzRuti9jZhJpoaumooOlplwXq5UY
+         HOfzOahKGcI2H7aHBT800NdjZ5Gda8EyYGg6hzvH6Z93FaUN/SjTZqCCH9yASZM3Epow
+         v63T+pvrkPFV1ja6mz35ljLeb1Db0EDDTofhvFVW2kln+XFynMKi4dmFyvi7FmwEPXOU
+         E98QWFMcnqTTiwMGSv3WR+apI4c1HY5YU0eafUMqdSWStMAI0u+VTNoB++dTj3aua+W1
+         1e/+e4iSeA4swQEtTPx6omnFwisodOIpfpSx6dgDUaLI/3crbcGTIKPYjkOHFhYAavcS
+         j2pA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744206768; x=1744811568;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=e5pHe1ifA0DjRS4425Ek+vcz8cFHb7AV6SGKAGlf8Hs=;
-        b=nlT5Ynt0lsfhUle8lFFEVPft71DFAsR8HnPVHnw5xFyOcpE1UugeqIGB3B+lMyqG//
-         XfSUpcF5t5HYnlZb++ttxECf6SxoAnTmAx+ra6Fmx/Sqmkmt/8EWQWqc3UAobPwHkPi/
-         MQzOk6yI8Tc3qoyi/0pEm9QPmv32rbBhHnDl/H/AoREE5UznR33T1eTZhn4P+TLHFCNL
-         lFb4H4bSk51mx5Q3c5lL+qw2LG6wDaVZ7nJzQKC67kyu8LJQlL87zO4q7VNEwAj7z2Vc
-         aF828aE/emVZUdrDNaXzkcZ75AXnlPw8v/hdtKTK7JMGG70VU81dt9J9FT4CZ3Ei30YV
-         d7ew==
-X-Forwarded-Encrypted: i=1; AJvYcCWUwEeD62rjKoXqjm1RoVgFpBL7IvMvU3DHAoiXNCHDmN/ITU4yJmkpC+3imFVOIjbMcLJPC3NAz1n5T1g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzB01+0YV4pPRjssOne78hiWymFGjXCiA5wS9+BKEKgweNYn0NS
-	pTS6fjSSpY8oiDxcte7ia2uUzOirDGuzGh/b41o2d7KW12UVkmHLuIEMfhqMBIM=
-X-Gm-Gg: ASbGncsgQo33zWb8lWLAECCwgxaX0vHI6Hk8g0LCeimh/cpxWGx16Ujv950U9xG2Q6I
-	Pw4T+Ewo7xFHg1vYG0eXZdoZoJha5rc/QzqroswYm/wg6H/yIhtnnIzSQsc0YZhdGIGfZm3vsyB
-	gReHLZO+ZesND7nk2CtcwiPB16lCaIXOttYvljWRNS6fneR2/emAHCgFMo7VOPrdKYiQhnY1/bd
-	j7hkn9/oMqC2hK8aX/6DQRFdtLks++TGG9qrp/zMrsq1vYi1By7mIvM7OireP7+Hr5CkKy+s7tb
-	0kgvipr8J6K/9yJQ6wUXoQNvIHjM0HCLrWPB7WQCZgpoOwDi3jwoeelV6xra3ctMt1Jy
-X-Google-Smtp-Source: AGHT+IFWMoiTCjfnnzOhOhySi4L+SxY0UNNFxZHU8GLNuh8bo1Scfv/bNOSgJ7kJVRu0Vb2WaqVVyQ==
-X-Received: by 2002:a05:6602:4802:b0:85b:538e:1faf with SMTP id ca18e2360f4ac-861611cc84dmr338497739f.7.1744206768541;
-        Wed, 09 Apr 2025 06:52:48 -0700 (PDT)
-Received: from [100.64.0.1] ([170.85.6.166])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f505d173c4sm248241173.36.2025.04.09.06.52.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Apr 2025 06:52:48 -0700 (PDT)
-Message-ID: <cd48101d-cbb0-4fe0-88de-efda693e43e8@sifive.com>
-Date: Wed, 9 Apr 2025 08:52:47 -0500
+        d=1e100.net; s=20230601; t=1744206831; x=1744811631;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NXYmIewHBQZHKjz0TG7FwEVxtA+dONvTtnb2TiEKr9I=;
+        b=bLKlt/WgK6UZmn9qcxwCqsFiGJvJ5bHX0PcQXWFaneDXmhxyfe+rG2T662qSIOOqpq
+         QMsTxHvC5ZrROqLecg1bMWBAmCUzwebm+4BjleBy/nh0BQnTnZPoOXW+rHAqmVimkr6o
+         06i0yH/dZgZjH6TYHttf/GHkF45PIrfYHf+3K5WyOQ1fN6v1q5Tp2ILKOebTQVixuYC1
+         qxK2ZQSx+nQAgRbFMy38M6Bne//d+Ue6tAT84Sl9O8D4w0uM3Egza2z/hFxR9IEJRl1g
+         RHnk5Wrj9yKsWKnczmcz95l7T0H+VJKMpZyqlSJV/evzQ2ZxX9xGZFVcQwdWw7DnTx7e
+         j2xg==
+X-Forwarded-Encrypted: i=1; AJvYcCUNaDs0y9bs2aPwETZkvkDbTZsRCRO0e6s62ZjG7/1Y23RqsJIf8ZodG+twyNWQifVfwyHhiwA3M2jEVeSnAkGc@vger.kernel.org, AJvYcCXnKlSTp4TVE0xKXAsy0OpivyPUnS/tBAMxclUb0C2YGB2S3UReWzEZTNITxtghFKPwPAYFl/7nfvxzG44=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGtMcR7jSCprezP4Pqjn8v0erMnhElVmYfQIWu7Cff/P9ZcnNk
+	Rbtr1ftd2TJ0kKLPDFu4QmaZsWwXnX5qFAVCa8T3CvVvqxzsSXQW
+X-Gm-Gg: ASbGncs/lyHPUCm0H6YVCSRPL2U5xcDdXztefZxJ6+WGjKhuRiUO8RpXL8sEanmaLlI
+	lqUnlygZqPysQXolIB8bytPggUq75lak7O8piv6F2zoW4HvYfedAviVdMiAkLI782q/5ZcQg3Ol
+	uIdmdDSiDDdnH3BvFFLbpERp7J8KPwl8ZcJrjXPIZlpvMG4078lzt3JDQbaPoFz0yYvnjXB7Buy
+	TJ6iUArO2RPDzHufVwyTGLiUFR8NieobtmzHpoI5p6bev9GbjY2AC7agwQt0y3yZZR0/o/d2+Xx
+	Lc5zQ7of3HL3mPM+KCarqTW+u2wetW3iM2x9Vdf3C/NbnCT48oB9nSBYjEVuVEWJ4LQRNlgPmKm
+	c0weWXw75gmogB9tEGjkZKd0=
+X-Google-Smtp-Source: AGHT+IFPIJX376JBLYKWCutXbXeV2+24Pg77r5/57Ico+fCcKK5FSAt/gRjZUndiM8xAT6rQSA2uKA==
+X-Received: by 2002:a17:903:124c:b0:224:1781:a950 with SMTP id d9443c01a7336-22ac29916demr44398175ad.14.1744206830738;
+        Wed, 09 Apr 2025 06:53:50 -0700 (PDT)
+Received: from malayaVM.mrout-thinkpadp16vgen1.punetw6.csb ([103.133.229.222])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7cb531csm11798545ad.185.2025.04.09.06.53.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 06:53:50 -0700 (PDT)
+From: Malaya Kumar Rout <malayarout91@gmail.com>
+To: mingo@kernel.org
+Cc: Malaya Kumar Rout <malayarout91@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Shuah Khan <shuah@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH v4] selftests/x86/lam: fix resource leak in do_uring() and allocate_dsa_pasid()
+Date: Wed,  9 Apr 2025 19:23:37 +0530
+Message-ID: <20250409135341.28987-1-malayarout91@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <Z_WDEJdIFLLCpZ-2@gmail.com>
+References: <Z_WDEJdIFLLCpZ-2@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] riscv: module: Optimize PLT/GOT entry counting
-To: Andrew Jones <ajones@ventanamicro.com>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>,
- linux-riscv@lists.infradead.org, Albert Ou <aou@eecs.berkeley.edu>,
- Paul Walmsley <paul.walmsley@sifive.com>, linux-kernel@vger.kernel.org,
- charlie@rivosinc.com
-References: <20250409024519.454828-1-samuel.holland@sifive.com>
- <20250409-c5cdd1190c498e9b594cf7d7@orel>
-From: Samuel Holland <samuel.holland@sifive.com>
-Content-Language: en-US
-In-Reply-To: <20250409-c5cdd1190c498e9b594cf7d7@orel>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Drew,
+This patch resolves resource leaks reported by cppcheck in lam.c.
+Specifically, the 'file_fd' and 'fd' were not closed in do_uring()
+and allocate_dsa_pasid() functions, respectively.
 
-On 2025-04-09 5:48 AM, Andrew Jones wrote:
-> On Tue, Apr 08, 2025 at 07:45:16PM -0700, Samuel Holland wrote:
->> perf reports that 99.63% of the cycles from `modprobe amdgpu` are spent
->> inside module_frob_arch_sections(). This is because amdgpu.ko contains
->> about 300000 relocations in its .rela.text section, and the algorithm in
->> count_max_entries() takes quadratic time.
->>
->> Apply two optimizations from the arm64 code, which together reduce the
->> total execution time by 99.57%. First, sort the relocations so duplicate
->> entries are adjacent. Second, reduce the number of relocations that must
->> be sorted by filtering to only relocations that need PLT/GOT entries, as
->> done in commit d4e0340919fb ("arm64/module: Optimize module load time by
->> optimizing PLT counting").
->>
->> Unlike the arm64 code, here the filtering and sorting is done in a
->> scratch buffer, because the HI20 relocation search optimization in
->> apply_relocate_add() depends on the original order of the relocations.
->>
->> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
->> ---
->>
->>  arch/riscv/kernel/module-sections.c | 66 +++++++++++++++++++++++++----
->>  1 file changed, 57 insertions(+), 9 deletions(-)
->>
->> diff --git a/arch/riscv/kernel/module-sections.c b/arch/riscv/kernel/module-sections.c
->> index e264e59e596e..91d4f0fbd0af 100644
->> --- a/arch/riscv/kernel/module-sections.c
->> +++ b/arch/riscv/kernel/module-sections.c
->> @@ -9,6 +9,7 @@
->>  #include <linux/kernel.h>
->>  #include <linux/module.h>
->>  #include <linux/moduleloader.h>
->> +#include <linux/sort.h>
->>  
->>  unsigned long module_emit_got_entry(struct module *mod, unsigned long val)
->>  {
->> @@ -55,19 +56,27 @@ unsigned long module_emit_plt_entry(struct module *mod, unsigned long val)
->>  	return (unsigned long)&plt[i];
->>  }
->>  
->> -static int is_rela_equal(const Elf_Rela *x, const Elf_Rela *y)
->> +#define cmp_3way(a, b)	((a) < (b) ? -1 : (a) > (b))
->> +
->> +static int cmp_rela(const void *a, const void *b)
->>  {
->> -	return x->r_info == y->r_info && x->r_addend == y->r_addend;
->> +	const Elf_Rela *x = a, *y = b;
->> +	int i;
->> +
->> +	/* sort by type, symbol index and addend */
->> +	i = cmp_3way(x->r_info, y->r_info);
->> +	if (i == 0)
->> +		i = cmp_3way(x->r_addend, y->r_addend);
->> +	return i;
->>  }
->>  
->>  static bool duplicate_rela(const Elf_Rela *rela, int idx)
->>  {
->> -	int i;
->> -	for (i = 0; i < idx; i++) {
->> -		if (is_rela_equal(&rela[i], &rela[idx]))
->> -			return true;
->> -	}
->> -	return false;
->> +	/*
->> +	 * Entries are sorted by type, symbol index and addend. That means
->> +	 * that, if a duplicate entry exists, it must be in the preceding slot.
->> +	 */
->> +	return idx > 0 && cmp_rela(rela + idx, rela + idx - 1) == 0;
->>  }
->>  
->>  static void count_max_entries(Elf_Rela *relas, int num,
->> @@ -87,11 +96,33 @@ static void count_max_entries(Elf_Rela *relas, int num,
->>  	}
->>  }
->>  
->> +static bool rela_needs_plt_got(const Elf_Rela *rela)
->> +{
->> +	unsigned int type = ELF_R_TYPE(rela->r_info);
->> +
->> +	return type == R_RISCV_CALL_PLT || type == R_RISCV_GOT_HI20;
-> 
-> I see these two are sufficient to support count_max_entries(), but Charlie
-> also added support for R_RISCV_PLT32. I don't know enough about relocation
-> types to know if we need to consider that one here and in
-> count_max_entries(), so I'm just pointing it out in case it was
-> overlooked.
+cppcheck output before this patch:
+tools/testing/selftests/x86/lam.c:685:3: error: Resource leak: file_fd [resourceLeak]
+tools/testing/selftests/x86/lam.c:693:3: error: Resource leak: file_fd [resourceLeak]
+tools/testing/selftests/x86/lam.c:1195:2: error: Resource leak: fd [resourceLeak]
 
-Yes, R_RISCV_PLT32 should be included. Today if a module were to include a
-R_RISCV_PLT32 relocation against a unique symbol, it would hit a BUG_ON in
-module_emit_plt_entry() because there would be no space in the PLT. If there was
-also a R_RISCV_CALL_PLT relocation against the same symbol, the code would
-silently succeed.
+cppcheck output after this patch:
+No resource leaks found
 
-Regards,
-Samuel
+Signed-off-by: Malaya Kumar Rout <malayarout91@gmail.com>
+---
+ tools/testing/selftests/x86/lam.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
->> +}
->> +
->> +/* Copy PLT and GOT relas to the scratch array. */
->> +static unsigned int partition_plt_got_relas(const Elf_Rela *relas, Elf_Rela *scratch,
->> +					    unsigned int num_rela)
->> +{
->> +	int j = 0;
->> +
->> +	for (int i = 0; i < num_rela; i++)
->> +		if (rela_needs_plt_got(&relas[i]))
->> +			scratch[j++] = relas[i];
->> +
->> +	return j;
->> +}
->> +
->>  int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
->>  			      char *secstrings, struct module *mod)
->>  {
->>  	unsigned int num_plts = 0;
->>  	unsigned int num_gots = 0;
->> +	Elf_Rela *scratch = NULL;
->> +	size_t scratch_size = 0;
->>  	int i;
->>  
->>  	/*
->> @@ -132,9 +163,26 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
->>  		if (!(dst_sec->sh_flags & SHF_EXECINSTR))
->>  			continue;
->>  
->> -		count_max_entries(relas, num_rela, &num_plts, &num_gots);
->> +		/*
->> +		 * apply_relocate_add() relies on HI20 and LO12 relocation pairs being
->> +		 * close together, so sort a copy of the section to avoid interfering.
->> +		 */
->> +		if (sechdrs[i].sh_size > scratch_size) {
->> +			scratch_size = sechdrs[i].sh_size;
->> +			scratch = kvrealloc(scratch, scratch_size, GFP_KERNEL);
->> +			if (!scratch)
->> +				return -ENOMEM;
->> +		}
->> +
->> +		/* sort relocations requiring a PLT or GOT entry so duplicates are adjacent */
->> +		num_rela = partition_plt_got_relas(relas, scratch, num_rela);
->> +		sort(scratch, num_rela, sizeof(Elf_Rela), cmp_rela, NULL);
->> +		count_max_entries(scratch, num_rela, &num_plts, &num_gots);
->>  	}
->>  
->> +	if (scratch)
->> +		kvfree(scratch);
->> +
->>  	mod->arch.plt.shdr->sh_type = SHT_NOBITS;
->>  	mod->arch.plt.shdr->sh_flags = SHF_EXECINSTR | SHF_ALLOC;
->>  	mod->arch.plt.shdr->sh_addralign = L1_CACHE_BYTES;
->> -- 
->> 2.47.0
->>
-> 
-> Besides my question above,
-> 
-> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
-> 
-> Thanks,
-> drew
+diff --git a/tools/testing/selftests/x86/lam.c b/tools/testing/selftests/x86/lam.c
+index 18d736640ece..0873b0e5f48b 100644
+--- a/tools/testing/selftests/x86/lam.c
++++ b/tools/testing/selftests/x86/lam.c
+@@ -682,7 +682,7 @@ int do_uring(unsigned long lam)
+ 		return 1;
+ 
+ 	if (fstat(file_fd, &st) < 0)
+-		return 1;
++		goto cleanup;
+ 
+ 	off_t file_sz = st.st_size;
+ 
+@@ -690,7 +690,7 @@ int do_uring(unsigned long lam)
+ 
+ 	fi = malloc(sizeof(*fi) + sizeof(struct iovec) * blocks);
+ 	if (!fi)
+-		return 1;
++		goto cleanup;
+ 
+ 	fi->file_sz = file_sz;
+ 	fi->file_fd = file_fd;
+@@ -698,7 +698,7 @@ int do_uring(unsigned long lam)
+ 	ring = malloc(sizeof(*ring));
+ 	if (!ring) {
+ 		free(fi);
+-		return 1;
++		goto cleanup;
+ 	}
+ 
+ 	memset(ring, 0, sizeof(struct io_ring));
+@@ -729,6 +729,8 @@ int do_uring(unsigned long lam)
+ 	}
+ 
+ 	free(fi);
++cleanup:
++	close(file_fd);
+ 
+ 	return ret;
+ }
+@@ -1189,6 +1191,7 @@ void *allocate_dsa_pasid(void)
+ 
+ 	wq = mmap(NULL, 0x1000, PROT_WRITE,
+ 			   MAP_SHARED | MAP_POPULATE, fd, 0);
++	close(fd);
+ 	if (wq == MAP_FAILED)
+ 		perror("mmap");
+ 
+-- 
+2.43.0
 
