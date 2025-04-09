@@ -1,81 +1,73 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64F2E1A8F68;
-	Wed,  9 Apr 2025 15:42:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10FE4267B00;
+	Wed,  9 Apr 2025 15:42:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744213327; cv=none; b=r1D5WqqSQAIa82NIvhgMHCaQQkJj2+J5mAU/IkMizHijo6scS+YiMEuFoO00aG1l6c9nTsbwrXopBr1CMkF3xi0mx41pXw+dsGo9LQMQhI8iCE4d9ylen01W9dXOzTDnc3vP2Il11bt1BNTZKQnf8mUpeMfd108MyJzzNQT0Nxk=
+	t=1744213333; cv=none; b=D0d40ubzWXrrZnrrA3WSai+20j+jg/9DBCzAa52SZ+nDV2qOXbUnbRAp0vMhQ5gtWTLzuNN+DzJ3zuO1dK949tYEQk40bmQ8fD2W+egouCr40WIFPPLKY+Ue/krm6mEmDxsXlDspwPO6r1HqojtbGLxA2n+LNN8GYULsu7LLVaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744213327; c=relaxed/simple;
-	bh=elt1729OMFG3MyDsDxWsdrT3EfbovhSmungsHV+AHN0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tK9zvoFVf8JSzb5LnHCV/9pzeHO5zMeMbkvrjJkJpH9RJpLjbwNfZkbfrfmEV9UHVdosgPPuqJ/67Cj+ByQiqE7a3U0PLirVu/HWLi2LMOD8Fhb56uAxHLInZcfGrWvmdsZGuFi5cUU6KgSqTfdUj5/33PxFNuOAFwFXKb9W6x8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oOSdnjid; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oOSdnjid"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24B8FC4CEE7;
-	Wed,  9 Apr 2025 15:42:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744213326;
-	bh=elt1729OMFG3MyDsDxWsdrT3EfbovhSmungsHV+AHN0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oOSdnjidmSa7TsdajaHdkVipM3TJI8+pVfJKmPWxzMXJ/dsJOxJAIZyfCHH6/JCPO
-	 ZqTpU1DX56CilyQtnMyZnLp1ps2SyG+eR7WTnmA4U2qUbbCFr/nO2wIaO6DNAeTH7F
-	 m5ohAphau/oXvzLYjNYXVCYvc70c4f0lahusgcfZmv2solEF/Aqb7HctihR2bAryKB
-	 od2ZFELJztsL7Ti52iAnkMSqlXhxAVozc4IYrzX5n7BTvGlg1nSKBnNWfVaV9lZcnh
-	 AfVq0xWTsH6JLJYSFUr0FGeqBJgo/uzWKgDBtoUSNDXbH+U/VT+oVNCMK3WpJwLltp
-	 BoocmFRwav1sA==
-From: Miguel Ojeda <ojeda@kernel.org>
-To: gregkh@linuxfoundation.org
-Cc: akpm@linux-foundation.org,
-	broonie@kernel.org,
-	conor@kernel.org,
-	f.fainelli@gmail.com,
-	hargar@microsoft.com,
-	jonathanh@nvidia.com,
-	linux-kernel@vger.kernel.org,
-	linux@roeck-us.net,
-	lkft-triage@lists.linaro.org,
-	patches@kernelci.org,
-	patches@lists.linux.dev,
-	pavel@denx.de,
-	rwarsow@gmx.de,
-	shuah@kernel.org,
-	srw@sladewatkins.net,
-	stable@vger.kernel.org,
-	sudipm.mukherjee@gmail.com,
-	torvalds@linux-foundation.org,
-	Miguel Ojeda <ojeda@kernel.org>
-Subject: Re: [PATCH 6.14 000/726] 6.14.2-rc4 review
-Date: Wed,  9 Apr 2025 17:41:53 +0200
-Message-ID: <20250409154154.1232949-1-ojeda@kernel.org>
-In-Reply-To: <20250409115934.968141886@linuxfoundation.org>
-References: <20250409115934.968141886@linuxfoundation.org>
+	s=arc-20240116; t=1744213333; c=relaxed/simple;
+	bh=WC1VfsSLvnSOjUPL0QpZTEJJPqGDT0zFmkUzfy8MhBE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FTYC7X4tCEKM3CFyE8ZrP54x0mlzPBYY1R3iOYNV32uahwss18VuT+QyaIijHduUv1YgUGOp6jU1WUqrnHARkhC/RuwqCKNk+I+dDmcHs3aiQQsyNAfoW7HUNROlAsVyePnghT2W0xBiN9fb/dzPVo+OtgXuU755LLtvPhxNOuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 314AEC4CEE7;
+	Wed,  9 Apr 2025 15:42:11 +0000 (UTC)
+Date: Wed, 9 Apr 2025 11:43:30 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Clark Williams
+ <clrkwllms@kernel.org>, Tejun Heo <tj@kernel.org>, David Vernet
+ <dvernet@meta.com>, Barret Rhoden <brho@google.com>, Josh Don
+ <joshdon@google.com>, Crystal Wood <crwood@redhat.com>,
+ linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev, Juri Lelli
+ <juri.lelli@redhat.com>, lclaudio00@gmail.com
+Subject: Re: [PATCH] sched: do not call __put_task_struct() on rt if
+ pi_blocked_on is set
+Message-ID: <20250409114330.1444221e@gandalf.local.home>
+In-Reply-To: <Z_W-i-ya0Q6fkXRh@uudg.org>
+References: <Z_W-i-ya0Q6fkXRh@uudg.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, 09 Apr 2025 14:03:36 +0200 Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.14.2 release.
-> There are 726 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 11 Apr 2025 11:58:08 +0000.
-> Anything received after that time might be too late.
+On Tue, 8 Apr 2025 21:27:37 -0300
+"Luis Claudio R. Goncalves" <lgoncalv@redhat.com> wrote:
 
-Boot-tested under QEMU for Rust x86_64, arm64 and riscv64; built-tested
-for loongarch64:
+>  {
+> +	bool defer = false;
+> +
+>  	if (!refcount_dec_and_test(&t->usage))
+>  		return;
+>  
+>  	/*
+>  	 * In !RT, it is always safe to call __put_task_struct().
+> -	 * Under RT, we can only call it in preemptible context.
+> +	 * Under RT, we can only call it in preemptible context,
+> +	 * when not blocked on a PI chain.
+>  	 */
+> -	if (!IS_ENABLED(CONFIG_PREEMPT_RT) || preemptible()) {
+> +#ifdef CONFIG_PREEMPT_RT
+> +	if (!preemptible() || current->pi_blocked_on)
+> +		defer = true;
+> +#endif
 
-Tested-by: Miguel Ojeda <ojeda@kernel.org>
+Why add the ugly #ifdef back?
 
-Thanks!
+	if (!IS_ENABLED(CONFIG_PREEMPT_RT) ||
+	    (preemptible() && !current->pi_blocked_on)) {
 
-Cheers,
-Miguel
+-- Steve
+
+> +
+> +	if (!defer) {
+>  		static DEFINE_WAIT_OVERRIDE_MAP(put_task_map, LD_WAIT_SLEEP);
+>  
+>  
