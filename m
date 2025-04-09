@@ -1,107 +1,164 @@
-Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 515C12066DE
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 18:47:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B278F2066DE
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 18:48:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744224439; cv=none; b=NTBxv+r5mfk8ECefgxZWAwyk22MpSPSr8tJ+BdOUNKA5AS4agTpQ+1iyeNGj9Zt8EopPrVNhzbtvEGy9C5uUQdetL6UMosm1K377tNMxOa+FkPU1ap1+xm0x9PLnJskrDvFq/uT0uZxYHNURFTUVemdzyW7kdyb2+6v8QtHow7U=
+	t=1744224489; cv=none; b=VocFmiDeTBMcTHkbNZYv1kjATJ9KcC7HFwcWHhlflK6uwsRZVMS+0OxOrlgldcr15frHeEPxEQANdWa2C2NrfNS1PWfU8wqA9b4HjeU/0tORmN2rlbzVhQT0E26n697rZ/ndQ5NEmPAcQaTaVVrBZas/s8z73Auy1v/7ugCQ5Og=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744224439; c=relaxed/simple;
-	bh=9uGR+HlNTOhrXA095hQNTm97hB/TKjBwj210dxqNyc4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=msCNj+cBxdaVJxSo5QjOInM9fkERA5kOvaPimH5r0FcdPfgnihsBCAKoFQHVK/xbjKPsnDhJVieVy5TzWeqn8rCQSldHxWkxkA4dT9TknJrBmXRfoN8AadwqNpxqrYLpbp36OHadlSz9FXz0p7Aj5Tnm7OGQyU6XSVhVvFHv8uQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Y7yGeB3Q; arc=none smtp.client-ip=209.85.166.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1744224489; c=relaxed/simple;
+	bh=1H4eNwZl+2uYtagyQSgjMNSg+hVnARPITcSVUtNRMzA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=V+lQT7Dn4QfZqJX8Qqamgr73qX5ZLd4VFJ8Kpv4kS2HG15Gvi2OfXfJVIHyk71xfEMqNGNHtRo2LmctQDjSmNySmdLtZUQjLbDG4QwyDBK347DaH19TAhU/B6G4IijXOcmBlCb1cOqLPe8VyU7a37Wu6UbPP9aGcJHhg6F9lG+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fXI6Ceef; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Y7yGeB3Q"
-Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3d46fddf357so183775ab.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 11:47:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fXI6Ceef"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5e5cded3e2eso51292a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 11:48:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1744224435; x=1744829235; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=gmail.com; s=20230601; t=1744224486; x=1744829286; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=a31MfxrWak0Tuq7rl1lgBguffZPL2d36CVBR6DtahIk=;
-        b=Y7yGeB3QK1itttb1RNQt+PAe9oH/2mNoTh3QKaHrCZY4/6KUUwIAGkfMn7EsNvWKk9
-         3lb6Qf1oRiFgdJxnJyNZjXQhWCr6rsPT2PPE8DtKSR6dDSrd54ATvFnRcT6XXsuVOkIQ
-         JYyrrciOtJI9mlyXUarGfJepz44fV+U/XIm6w=
+        bh=lnX1vda44PaMJmaZeQb8qZYsmPHm6NwVHNkMrOpfUIo=;
+        b=fXI6Ceeflzv7k7PwShTEbtkFb7ALjFtYIEN9VuoCoQkciaeAWpCZsbLqsBe0itwsdo
+         gCs/mmUMaaeI/Lrdtzwd6F1pq99UfoF1Rdy+8+M4hyOwR6ZZwjNOwRWhN+u6eZcKYH8m
+         jlIFKHcFvubdqaz+wAOQDBzSQzlUjadPfasYCBRXLvRRUK+TKSdl1m0hzJJplg4E3gBt
+         oYL355UVeP0SfnfRmRnD5nx3JGtkP2OvJn1xnFF78USPZwU6OSmk7hdwvJCw3iMYI8+c
+         U7gcDEQ4bukwUWtMzCBEDDkkbalFGVJ2DJjf7TAFpoUm4nh2wZ9sWt6I9suqFo/pmHLJ
+         4mBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744224435; x=1744829235;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1744224486; x=1744829286;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=a31MfxrWak0Tuq7rl1lgBguffZPL2d36CVBR6DtahIk=;
-        b=nw8L40sd3ldP3DVOlaOo9bOGygdFoMdCKvq+dGtlbDOQndiSxRXUPmub26RxuMaxTZ
-         6GfJaDmgW5w0HrwBpzQ3grUrk1fA4M+03nH2M7pHEjnRBFDacvOJhUU2JOxRFZl/CPCc
-         oqxbGuArL8LzNX1qHrqjNp7aoWCAV7sojBFB5yIrmWCFdONeftEeIEL/f2Swqybf0jFD
-         V4XRdeMSqu2jv3sm1XPKXFPRdbRD5ED5iygQPDygZOMdMGhLO8Y6laOQyog4UFgNCK4f
-         3bjHxF8gHOLWQqzr6TMn0SBeXuSbFtOuh/nMq0V4bWX2AYTGXdKsuequbHUstM/9J/DE
-         SpXA==
-X-Forwarded-Encrypted: i=1; AJvYcCWWQSQSq+KzeXquzy+sGx1i2McKvK7FGycBrwTUAr8Qfmj/0JWUJc6VX36YlAy/6WDBtarOGzxIYWp6E4o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzo2hHULXSOJ41XRX4ipfhg6bdFOz3aS92FkzULGSVbCAkEs+yZ
-	ESEoW9+OMvLKjC8Es4ruSzwh5jbwRrW1kbr5T2LyOYakp/74xAKuuR5l1Sa+Dcg=
-X-Gm-Gg: ASbGnctqxB1s6+4ZqQH6sUPGT6UlzrljQRJz65ttY/SAq/lidbpu7kRt93oTzmX7rmG
-	yfSiz9en7HZUEW8HOUoDGfVZ7HSwFjXsr8+kzGA5CKbJG1vNyCiuPLPaT2hEPFlbrnCD5jXwCay
-	ebFMjDOtdIh0k5vK0meqTZEhD+/f6Qf4re/n/kdrrvY8wtmtOyY9rJAUxFNFqqgnF8MQepQ6Ga0
-	j9ucLEtXdocDYDjrV+abVhoSqYha00bCYcXi/UcnWOVqjvKY71g/Hz147gCOhoxEiY8x0cGwGmS
-	k+/iilVI7pll00x0MSmPpED+QK99t4fT9jk1TloUb8xfuPWsjSc=
-X-Google-Smtp-Source: AGHT+IE1GYrAa2BVgNVP9u5xF/JM4y9iYhKK1RMzet910nVc/m6SR/0Qfa9Lmpa3lh20JCyNmvbQxA==
-X-Received: by 2002:a05:6e02:2281:b0:3d3:dece:3dab with SMTP id e9e14a558f8ab-3d7e46e42d0mr2327065ab.1.1744224435402;
-        Wed, 09 Apr 2025 11:47:15 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d7dc5828cesm3913995ab.47.2025.04.09.11.47.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Apr 2025 11:47:15 -0700 (PDT)
-Message-ID: <2dee54f1-e333-4466-beff-c4b202c9644d@linuxfoundation.org>
-Date: Wed, 9 Apr 2025 12:47:14 -0600
+        bh=lnX1vda44PaMJmaZeQb8qZYsmPHm6NwVHNkMrOpfUIo=;
+        b=us65WM9iMdLPGQ9OA/DTIvcFMwbEHAqCdjQ6Om/s2UYhw9wQwUI+44G1FTdEJ8ujnf
+         MSNLnqgxmrJXSAmI7fm/IDP5hyNkHmL4O+jTReU4t/hLpwvvedrquqMntqf/gJ2yMNgP
+         LyXTZc+49bEb0EjXZH1Fq9x9aMrxxH/fig9tvq5EwOHJGt3+JY7tx6JtkcBodQpqBMQE
+         XzAsBjJe6fnPLlexhKek1zwQr2vf+fKHVhETi80iCfjuSWUwHFZ666Sok1I4O41XjYlv
+         Z8udM6OJ85vdrEWmwZUnm3bDVrYbi5xI+jqyLfc+qM7a2+5LN6oosROKVDg7rOtKyUR8
+         cbpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVMvmUZtl6VJ62dl1MSjObILZsyzkUnIABz7cBngtHndUL8bU5weC4Nj1TqxrOI1PaVEqyzFzrAIipmUC0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwelmjtuIk85lmeVhCKOpJeBobNmnVsFSk37nOKoaQy1ex1P4cT
+	xoTxLOMYnPJBPZqS46DJKCWOjh8TPQCb0hoB/Ys1RJWOQbPTvN4v
+X-Gm-Gg: ASbGnctwn69vHzhJMzPQ2OPwSlsUVMNFC5czhrucy9Js7Rj8iorx3zPzvjvWxFXRMe2
+	Ic/76iHtd+Nm55KAF411/rl/3GhQSDqCYDEWlez7xF4CwVMQXEyT5czkIdge2d/5oeVFwKYl9Pp
+	578ffiiEXTrf20r5rgLk3INe10bvat6AmRdf5fa6qE3to/IrWSDDmGN7dM7GOGMtKM09JsO8Dab
+	OEjSttItZF63jJENa5S9UReks1jdgVBh+KnfJPQyngoOtKfo7pI1Mi3fatb8oOrV7xeePWt8Szp
+	TBE6WCIAu61L2JBs0MJ9G9D3+Lim6zf7480GgbBBVa/vBw==
+X-Google-Smtp-Source: AGHT+IEMEJ+hDivWwYiY7mrjTZW5ePRCHfloRQGu/cGtiSz94x8ChLNbbLPeAY94qm2w4gF8WXnwTQ==
+X-Received: by 2002:a05:6402:35d2:b0:5e4:a88a:64e with SMTP id 4fb4d7f45d1cf-5f2f769cb6amr3380822a12.5.1744224485652;
+        Wed, 09 Apr 2025 11:48:05 -0700 (PDT)
+Received: from ubuntu ([105.112.112.184])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f2fbc0851asm1135294a12.23.2025.04.09.11.48.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 11:48:05 -0700 (PDT)
+Date: Wed, 9 Apr 2025 18:48:02 +0000
+From: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
+To: outreachy@lists.linux.dev, julia.lawall@inria.fr
+Cc: gregkh@linuxfoundation.org, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org, david.laight.linux@gmail.com,
+	dan.carpenter@linaro.org, andy@kernel.org
+Subject: [PATCH] staging: rtl8723bs: Replace `& 0xfff` with `% 4096u`
+Message-ID: <Z/bA4tMF5uKLe55p@ubuntu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.12 000/423] 6.12.23-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20250408154121.378213016@linuxfoundation.org>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20250408154121.378213016@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 4/8/25 09:53, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.12.23 release.
-> There are 423 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 10 Apr 2025 15:40:31 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.23-rc2.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+The sequence number is constrained to a range of [0, 4095], which
+is a total of 4096 values. The bitmask operation using `& 0xfff` is
+used to perform this wrap-around. While this is functionally correct,
+it obscures the intended semantic of a 4096-based wrap.
 
-Compiled and booted on my test system. No dmesg regressions.
+Using a modulo operation `% 4096u` makes the wrap-around logic
+explicit and easier to understand. It clearly signals that the
+sequence number cycles through a range of 4096 values.
+It also makes the code robust against potential changes of the 4096
+upper limit, especially when it becomes a non power-of-2 value while
+the AND(&) works solely for power-of-2 values.
 
-Tested-by: Shuah Khan <skhan@linuxfoundation.org>
+The use of `% 4096u` also guarantees that the modulo operation is
+performed with unsigned arithmetic, preventing potential issues with
+the signed types.
 
-thanks,
--- Shuah
+Found by Coccinelle.
+
+Suggested by Andy Shevchenko <andy@kernel.org>
+Signed-off-by: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
+---
+Coccinelle semantic patch used to find cases:
+@@
+expression e;
+
+@@
+* e & 0xfff
+
+To ensure this change does not affect the functional
+behaviour, I compared the generated object files before and
+after the change using the `cmp` which compares the two
+object files byte by byte as shown below:
+
+$ make drivers/staging/rtl8723bs/core/rtw_xmit.o
+$ cmp rtw_xmit_before.o rtw_xmit_after.o
+
+No differences were found in the output, confirming that the
+change does not alter the compiled output.
+
+drivers/staging/rtl8723bs/core/rtw_mlme_ext.c | 2 +-
+drivers/staging/rtl8723bs/core/rtw_recv.c     | 6 +++---
+2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
+index 952ce6dd5af9..f712ea0cabee 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
++++ b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
+@@ -3511,7 +3511,7 @@ void issue_action_BA(struct adapter *padapter, unsigned char *raddr, unsigned ch
+ 			/* if ((psta = rtw_get_stainfo(pstapriv, pmlmeinfo->network.mac_address)) != NULL) */
+ 			psta = rtw_get_stainfo(pstapriv, raddr);
+ 			if (psta) {
+-				start_seq = (psta->sta_xmitpriv.txseq_tid[status & 0x07]&0xfff) + 1;
++				start_seq = (psta->sta_xmitpriv.txseq_tid[status & 0x07] % 4096u) + 1;
+ 
+ 				psta->BA_starting_seqctrl[status & 0x07] = start_seq;
+ 
+diff --git a/drivers/staging/rtl8723bs/core/rtw_recv.c b/drivers/staging/rtl8723bs/core/rtw_recv.c
+index a389ba5ecc6f..25411cc5c738 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_recv.c
++++ b/drivers/staging/rtl8723bs/core/rtw_recv.c
+@@ -1641,7 +1641,7 @@ static int check_indicate_seq(struct recv_reorder_ctrl *preorder_ctrl, u16 seq_n
+ 	struct dvobj_priv *psdpriv = padapter->dvobj;
+ 	struct debug_priv *pdbgpriv = &psdpriv->drv_dbg;
+ 	u8 wsize = preorder_ctrl->wsize_b;
+-	u16 wend = (preorder_ctrl->indicate_seq + wsize - 1) & 0xFFF;/*  4096; */
++	u16 wend = (preorder_ctrl->indicate_seq + wsize - 1) % 4096u;
+ 
+ 	/*  Rx Reorder initialize condition. */
+ 	if (preorder_ctrl->indicate_seq == 0xFFFF)
+@@ -1657,7 +1657,7 @@ static int check_indicate_seq(struct recv_reorder_ctrl *preorder_ctrl, u16 seq_n
+ 	/*  2. Incoming SeqNum is larger than the WinEnd => Window shift N */
+ 	/*  */
+ 	if (SN_EQUAL(seq_num, preorder_ctrl->indicate_seq)) {
+-		preorder_ctrl->indicate_seq = (preorder_ctrl->indicate_seq + 1) & 0xFFF;
++		preorder_ctrl->indicate_seq = (preorder_ctrl->indicate_seq + 1) % 4096u;
+ 
+ 	} else if (SN_LESS(wend, seq_num)) {
+ 		/*  boundary situation, when seq_num cross 0xFFF */
+@@ -1772,7 +1772,7 @@ static int recv_indicatepkts_in_order(struct adapter *padapter, struct recv_reor
+ 			list_del_init(&(prframe->u.hdr.list));
+ 
+ 			if (SN_EQUAL(preorder_ctrl->indicate_seq, pattrib->seq_num))
+-				preorder_ctrl->indicate_seq = (preorder_ctrl->indicate_seq + 1) & 0xFFF;
++				preorder_ctrl->indicate_seq = (preorder_ctrl->indicate_seq + 1) % 4096u;
+ 
+ 			/* Set this as a lock to make sure that only one thread is indicating packet. */
+ 			/* pTS->RxIndicateState = RXTS_INDICATE_PROCESSING; */
+-- 
+2.34.1
+
