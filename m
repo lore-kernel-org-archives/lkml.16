@@ -1,156 +1,211 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79FE725E81F;
-	Wed,  9 Apr 2025 12:21:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744201307; cv=none; b=SUDKNRyQz3y6VmL7hgAN9Jq4FOB7fdNATDLpwzJiofctui8j3r1gkY5/4z0w7gJwMSQYrLujwfdTBlbXqzxU4fNRPmkdh35H6xOx6B420ijmYw6mVKLFTr/9FpjVrwNGA/xOiLq6cgLOtbA2dm8UmdskI5GERRsrRCx4e8ybloY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744201307; c=relaxed/simple;
-	bh=4t4Wq5bMUS44d/UJ61XjcweeMUI0dgxkR3h8v0acrhI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=CTPo6uEaasCSxvc/gAR1uubigatZrjckVd3QJ9L1QN5mzpOmYTpLWa8AvIdZ+cHavbRu8ZUqfnFYezwa+YnVFy6sRBWqHY5WmmNStTN6b0sYv9kf9D8U8Gv9QuMgqSB9Fd+ba97FacsFSgrzu6nQwa0Osm/81eCk1eMYfUVElVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l2vDAyU7; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAD2D253B47;
+	Wed,  9 Apr 2025 12:22:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744201344; cv=pass; b=OviZH8GePRoNQtxu4KJ7gFmaVR0f93LbUDE8Qe0ojOPSZvTasjDSgSc1XHkeSWzXkgV8SFDcx3s7Ds+rGjnqs7qfxddNb5/ReTS2Ame6ZRCQuBv2nrA/ZGtYCe0ZqfGiBKNEP1UGgrX/Zsc6TIk/acM3Snj/HkhvVWyW3bYvD/I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744201344; c=relaxed/simple;
+	bh=6yBf8W8vO2hACh1SC+eLkO+C14WaO1cr6vh8aqgfWO0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YiwGwR7oS17769p+4iefU3tRhkNIatqpdVVQpoz+DQGtgWni6GEcbE9LJWaJNPfbHCsNKJNwsxMq2xxoE/wM+ZT1jCnGGkGqlTaRjXeLR1D13BSy17zqoAiUN8VV9r1uMy205lnFvKv9zxerks9h029VyeTvGlK8EOOjXBNebXI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=MF6636WL; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l2vDAyU7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C74ABC4CEE3;
-	Wed,  9 Apr 2025 12:21:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744201306;
-	bh=4t4Wq5bMUS44d/UJ61XjcweeMUI0dgxkR3h8v0acrhI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=l2vDAyU7JVulITVyTZqYR1Pj8WUo/5DgHVTiooGnrvirjqxu+CDAVux+rqjtFMR5j
-	 vFcg9KmzA8x7AUxwcZcdmYUTnbugXXdYK5A9Ebq06Rdr5fy3jnnM7rK1lYd5t93rru
-	 F+BY7RbPTG13EpGd3f1bEOnoLqra8nmNXresuF90QazZARU+OlsiJt33DsgcfsUEyr
-	 CxB6rYRae5Hv5vXHqY1gnkks/fS5k04Aa5NY873rE/NUyIqjo1ADwxEwktbxJAjzFO
-	 diLG3vQwwIE8ZZlCATWo+T16oYgxm2kF85ifEqATMlwVhDeB7gbS2XG+i4LYHkHq7E
-	 sl9g4tGHgM3Ag==
-From: Arnd Bergmann <arnd@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Russell King <linux@armlinux.org.uk>,
-	Jiri Kosina <jikos@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ian Abbott <abbotti@mev.co.uk>,
-	H Hartley Sweeten <hsweeten@visionengravers.com>,
-	Frank Binns <frank.binns@imgtec.com>,
-	Matt Coster <matt.coster@imgtec.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Peter Rosin <peda@axentia.se>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Waiman Long <longman@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	linux-arm-kernel@lists.infradead.org,
-	dri-devel@lists.freedesktop.org,
-	linux-input@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	iommu@lists.linux.dev
-Subject: [PATCH 00/10] -Wunused-const-variable warning fixes
-Date: Wed,  9 Apr 2025 14:21:31 +0200
-Message-Id: <20250409122131.2766719-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="MF6636WL"
+ARC-Seal: i=1; a=rsa-sha256; t=1744201319; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=kpWWeEwnHlweCrW89qn+jAQTjQVGZhvmP8/cFimLLascz97YoI3FxPQVZXG6LBoIfPHmGosGzXluJgXr2HrvBosTm1z5/LENKx6Pj1bmgC+kEO+ACF+uDjFhP5b9eBvLgo3FhIvHbP50EgmKOeTHe78KJOxBMpXRLScC9tCl238=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1744201319; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=0sj+DuIzdkG+cv5QyQfQu6z2szFxnb+cJQRXL5LW4yI=; 
+	b=mk9LFpWj6grcuOh2VEn/wiC0tp18XA+XwOahS+fleFd5AeqKOvxRb2IiJQwztBj9uiQ8nh/3D+Jdo/U0D6gfUw0iFvnnqxE9g6MoIoB2ubJFnCEtoPHxfWdfaujVVc0YYzKi97Mng0u2WBRLQRnDzUfwRcJV2mgO1pdwqjy9Z8g=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
+	dmarc=pass header.from=<usama.anjum@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744201318;
+	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=0sj+DuIzdkG+cv5QyQfQu6z2szFxnb+cJQRXL5LW4yI=;
+	b=MF6636WLv1EvVDc9ZrjCcq7EnD1Nmm0Kuc3uZwnwuDv/CkRPgDTS6aonR5rMX5/r
+	QXmPRg2O7+FqF9UrvCl9WUThMPW4jZrxtbTTghezOuC8lP0IHGSlUcMkMkR2E71d73P
+	FR1E3ZwQhRGi5owN/AYfHmTd4rfsmwKifs3rOqJ8=
+Received: by mx.zohomail.com with SMTPS id 1744201317620751.9922453113006;
+	Wed, 9 Apr 2025 05:21:57 -0700 (PDT)
+Message-ID: <08e71d7d-5da6-4dfe-a504-190e7633df12@collabora.com>
+Date: Wed, 9 Apr 2025 17:21:49 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] bus: mhi: host: don't free bhie tables during power
+ off
+To: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Jeff Hugo <jeff.hugo@oss.qualcomm.com>,
+ Youssef Samir <quic_yabdulra@quicinc.com>,
+ Matthew Leung <quic_mattleun@quicinc.com>, Yan Zhen <yanzhen@vivo.com>,
+ Qiang Yu <quic_qianyu@quicinc.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Kunwu Chan <chentao@kylinos.cn>
+Cc: Carl Vanderlip <quic_carlv@quicinc.com>,
+ Sumit Garg <sumit.garg@kernel.org>, mhi@lists.linux.dev,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250409082444.582295-1-usama.anjum@collabora.com>
+ <56f4b9fc-69ba-c867-653b-7ea28ad8ab0b@quicinc.com>
+Content-Language: en-US
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <56f4b9fc-69ba-c867-653b-7ea28ad8ab0b@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-From: Arnd Bergmann <arnd@arndb.de>
+Hi Krishna,
 
-Most patches I sent during the previous kernel cycle have made it in, these 
-ten still remain for the moment. Please apply.
+Thank you for reviewing.
 
-Arnd Bergmann (10):
-  drm/imagination: avoid unused-const-variable warning
-  [v2] clocksource: atmel_tcb: fix kconfig dependency
-  [v2] Input: stmpe-ts - use module alias instead of device table
-  [RESEND] mux: adg792a: remove incorrect of_match_ptr annotation
-  [RESEND] sched: open-code max_rt_runtime definition
-  [RESEND] lockdep: change 'static const' variables to enum values
-  [RESEND] ARM: fixmap: make __end_of_early_ioremap_region an enum value
-  [RESEND 2] comedi: ni_atmio: avoid warning for unused device_ids[] table
-  [RESEND 2] apm-emulation: hide an unused variable
-  [RESEND 3] dma/contiguous: avoid warning about unused size_bytes
+On 4/9/25 4:25 PM, Krishna Chaitanya Chundru wrote:
+> 
+> 
+> On 4/9/2025 1:54 PM, Muhammad Usama Anjum wrote:
+>> Fix dma_direct_alloc() failure at resume time during bhie_table
+>> allocation. There is a crash report where at resume time, the memory
+>> from the dma doesn't get allocated and MHI fails to re-initialize.
+>> There may be fragmentation of some kind which fails the allocation
+>> call.
+>>
+>> To fix it, don't free the memory at power down. Use the same allocated
+>> memory again and again after every resume/hibernation. This patch has
+>> been tested with resume and hibernation both.
+> How do you handle the mhi un-register case, in that case all the MHI
+> memory needs to be freed.
+I'm working on fixing it. I'll post a v2.
 
- arch/arm/include/asm/fixmap.h              |  9 ++++-----
- drivers/char/apm-emulation.c               |  5 ++---
- drivers/clocksource/Kconfig                |  4 ++--
- drivers/comedi/drivers/ni_atmio.c          |  2 +-
- drivers/gpu/drm/imagination/pvr_fw_trace.c |  8 ++++----
- drivers/gpu/drm/imagination/pvr_fw_trace.h |  2 --
- drivers/input/touchscreen/stmpe-ts.c       |  7 +------
- drivers/mux/adg792a.c                      |  2 +-
- kernel/dma/contiguous.c                    |  3 +--
- kernel/locking/lockdep_internals.h         | 18 ++++++++++--------
- kernel/sched/rt.c                          |  6 ++----
- 11 files changed, 28 insertions(+), 38 deletions(-)
+>>
+>> Here are the crash logs:
+>>
+>> [ 3029.338587] mhi mhi0: Requested to power ON
+>> [ 3029.338621] mhi mhi0: Power on setup success
+>> [ 3029.668654] kworker/u33:8: page allocation failure: order:7,
+>> mode:0xc04(GFP_NOIO|GFP_DMA32), nodemask=(null),cpuset=/,mems_allowed=0
+>> [ 3029.668682] CPU: 4 UID: 0 PID: 2744 Comm: kworker/u33:8 Not tainted
+>> 6.11.11-valve10-1-neptune-611-gb69e902b4338
+>> #1ed779c892334112fb968aaa3facf9686b5ff0bd7
+>> [ 3029.668690] Hardware name: Valve Galileo/Galileo, BIOS F7G0112
+>> 08/01/2024
+>> [ 3029.668694] Workqueue: mhi_hiprio_wq mhi_pm_st_worker [mhi]
+>> [ 3029.668717] Call Trace:
+>> [ 3029.668722]  <TASK>
+>> [ 3029.668728]  dump_stack_lvl+0x4e/0x70
+>> [ 3029.668738]  warn_alloc+0x164/0x190
+>> [ 3029.668747]  ? srso_return_thunk+0x5/0x5f
+>> [ 3029.668754]  ? __alloc_pages_direct_compact+0xaf/0x360
+>> [ 3029.668761]  __alloc_pages_slowpath.constprop.0+0xc75/0xd70
+>> [ 3029.668774]  __alloc_pages_noprof+0x321/0x350
+>> [ 3029.668782]  __dma_direct_alloc_pages.isra.0+0x14a/0x290
+>> [ 3029.668790]  dma_direct_alloc+0x70/0x270
+>> [ 3029.668796]  mhi_alloc_bhie_table+0xe8/0x190 [mhi
+>> faa917c5aa23a5f5b12d6a2c597067e16d2fedc0]
+>> [ 3029.668814]  mhi_fw_load_handler+0x1bc/0x310 [mhi
+>> faa917c5aa23a5f5b12d6a2c597067e16d2fedc0]
+>> [ 3029.668830]  mhi_pm_st_worker+0x5c8/0xaa0 [mhi
+>> faa917c5aa23a5f5b12d6a2c597067e16d2fedc0]
+>> [ 3029.668844]  ? srso_return_thunk+0x5/0x5f
+>> [ 3029.668853]  process_one_work+0x17e/0x330
+>> [ 3029.668861]  worker_thread+0x2ce/0x3f0
+>> [ 3029.668868]  ? __pfx_worker_thread+0x10/0x10
+>> [ 3029.668873]  kthread+0xd2/0x100
+>> [ 3029.668879]  ? __pfx_kthread+0x10/0x10
+>> [ 3029.668885]  ret_from_fork+0x34/0x50
+>> [ 3029.668892]  ? __pfx_kthread+0x10/0x10
+>> [ 3029.668898]  ret_from_fork_asm+0x1a/0x30
+>> [ 3029.668910]  </TASK>
+>>
+>> Tested-on: QCNFA765 WLAN.HSP.1.1-03926.13-
+>> QCAHSPSWPL_V2_SILICONZ_CE-2.52297.6
+>> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+>> ---
+>>   drivers/bus/mhi/host/boot.c | 11 +++++++----
+>>   drivers/bus/mhi/host/init.c | 15 +++------------
+>>   2 files changed, 10 insertions(+), 16 deletions(-)
+>>
+>> diff --git a/drivers/bus/mhi/host/boot.c b/drivers/bus/mhi/host/boot.c
+>> index efa3b6dddf4d2..8b3d2b9d239c3 100644
+>> --- a/drivers/bus/mhi/host/boot.c
+>> +++ b/drivers/bus/mhi/host/boot.c
+>> @@ -323,6 +323,7 @@ void mhi_free_bhie_table(struct mhi_controller
+>> *mhi_cntrl,
+>>                     mhi_buf->buf, mhi_buf->dma_addr);
+>>         kfree(image_info->mhi_buf);
+>> +    image_info->mhi_buf = NULL;
+> image_info is getting freed in the next line. why do we need this?
+I'll remove this line.
+
+> 
+> - Krishna Chaitanya.
+>>       kfree(image_info);
+>>   }
+>>   @@ -584,10 +585,12 @@ void mhi_fw_load_handler(struct mhi_controller
+>> *mhi_cntrl)
+>>        * device transitioning into MHI READY state
+>>        */
+>>       if (fw_load_type == MHI_FW_LOAD_FBC) {
+>> -        ret = mhi_alloc_bhie_table(mhi_cntrl, &mhi_cntrl->fbc_image,
+>> fw_sz);
+>> -        if (ret) {
+>> -            release_firmware(firmware);
+>> -            goto error_fw_load;
+>> +        if (!mhi_cntrl->fbc_image) {
+>> +            ret = mhi_alloc_bhie_table(mhi_cntrl, &mhi_cntrl-
+>> >fbc_image, fw_sz);
+>> +            if (ret) {
+>> +                release_firmware(firmware);
+>> +                goto error_fw_load;
+>> +            }
+>>           }
+>>             /* Load the firmware into BHIE vec table */
+>> diff --git a/drivers/bus/mhi/host/init.c b/drivers/bus/mhi/host/init.c
+>> index 13e7a55f54ff4..3c20e4541357e 100644
+>> --- a/drivers/bus/mhi/host/init.c
+>> +++ b/drivers/bus/mhi/host/init.c
+>> @@ -1173,8 +1173,9 @@ int mhi_prepare_for_power_up(struct
+>> mhi_controller *mhi_cntrl)
+>>           /*
+>>            * Allocate RDDM table for debugging purpose if specified
+>>            */
+>> -        mhi_alloc_bhie_table(mhi_cntrl, &mhi_cntrl->rddm_image,
+>> -                     mhi_cntrl->rddm_size);
+>> +        if (!mhi_cntrl->rddm_image)
+>> +            mhi_alloc_bhie_table(mhi_cntrl, &mhi_cntrl->rddm_image,
+>> +                         mhi_cntrl->rddm_size);
+>>           if (mhi_cntrl->rddm_image) {
+>>               ret = mhi_rddm_prepare(mhi_cntrl,
+>>                              mhi_cntrl->rddm_image);
+>> @@ -1202,16 +1203,6 @@ EXPORT_SYMBOL_GPL(mhi_prepare_for_power_up);
+>>     void mhi_unprepare_after_power_down(struct mhi_controller *mhi_cntrl)
+>>   {
+>> -    if (mhi_cntrl->fbc_image) {
+>> -        mhi_free_bhie_table(mhi_cntrl, mhi_cntrl->fbc_image);
+>> -        mhi_cntrl->fbc_image = NULL;
+>> -    }
+>> -
+>> -    if (mhi_cntrl->rddm_image) {
+>> -        mhi_free_bhie_table(mhi_cntrl, mhi_cntrl->rddm_image);
+>> -        mhi_cntrl->rddm_image = NULL;
+>> -    }
+>> -
+>>       mhi_cntrl->bhi = NULL;
+>>       mhi_cntrl->bhie = NULL;
+>>   
+
 
 -- 
-2.39.5
-
-Cc: Russell King <linux@armlinux.org.uk> (maintainer:ARM PORT)
-Cc: Jiri Kosina <jikos@kernel.org> (maintainer:APM DRIVER)
-Cc: Arnd Bergmann <arnd@arndb.de> (maintainer:CHAR and MISC DRIVERS,commit_signer:2/2=100%,authored:2/2=100%,added_lines:8/8=100%,removed_lines:10/10=100%,commit_signer:2/3=67%,authored:2/3=67%,added_lines:2/11=18%,removed_lines:2/2=100%,commit_signer:2/4=50%,blamed_fixes:1/1=100%)
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org> (maintainer:CHAR and MISC DRIVERS,commit_signer:1/3=33%)
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org> (maintainer:CLOCKSOURCE, CLOCKEVENT DRIVERS)
-Cc: Thomas Gleixner <tglx@linutronix.de> (maintainer:CLOCKSOURCE, CLOCKEVENT DRIVERS)
-Cc: Ian Abbott <abbotti@mev.co.uk> (maintainer:COMEDI DRIVERS,commit_signer:1/3=33%,authored:1/3=33%,added_lines:9/11=82%)
-Cc: H Hartley Sweeten <hsweeten@visionengravers.com> (maintainer:COMEDI DRIVERS)
-Cc: Frank Binns <frank.binns@imgtec.com> (maintainer:IMGTEC POWERVR DRM DRIVER)
-Cc: Matt Coster <matt.coster@imgtec.com> (maintainer:IMGTEC POWERVR DRM DRIVER)
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com> (maintainer:DRM DRIVERS AND MISC GPU PATCHES)
-Cc: Maxime Ripard <mripard@kernel.org> (maintainer:DRM DRIVERS AND MISC GPU PATCHES)
-Cc: Thomas Zimmermann <tzimmermann@suse.de> (maintainer:DRM DRIVERS AND MISC GPU PATCHES)
-Cc: David Airlie <airlied@gmail.com> (maintainer:DRM DRIVERS)
-Cc: Simona Vetter <simona@ffwll.ch> (maintainer:DRM DRIVERS)
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com> (maintainer:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)...,commit_signer:2/4=50%)
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com> (maintainer:ARM/STM32 ARCHITECTURE)
-Cc: Alexandre Torgue <alexandre.torgue@foss.st.com> (maintainer:ARM/STM32 ARCHITECTURE)
-Cc: Peter Rosin <peda@axentia.se> (maintainer:MULTIPLEXER SUBSYSTEM)
-Cc: Marek Szyprowski <m.szyprowski@samsung.com> (maintainer:DMA MAPPING HELPERS,blamed_fixes:1/1=100%)
-Cc: Robin Murphy <robin.murphy@arm.com> (reviewer:DMA MAPPING HELPERS)
-Cc: Peter Zijlstra <peterz@infradead.org> (maintainer:LOCKING PRIMITIVES)
-Cc: Ingo Molnar <mingo@redhat.com> (maintainer:LOCKING PRIMITIVES)
-Cc: Will Deacon <will@kernel.org> (maintainer:LOCKING PRIMITIVES)
-Cc: Boqun Feng <boqun.feng@gmail.com> (maintainer:LOCKING PRIMITIVES)
-Cc: Waiman Long <longman@redhat.com> (reviewer:LOCKING PRIMITIVES)
-Cc: Juri Lelli <juri.lelli@redhat.com> (maintainer:SCHEDULER)
-Cc: Vincent Guittot <vincent.guittot@linaro.org> (maintainer:SCHEDULER)
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com> (reviewer:SCHEDULER)
-Cc: Steven Rostedt <rostedt@goodmis.org> (reviewer:SCHEDULER)
-Cc: Ben Segall <bsegall@google.com> (reviewer:SCHEDULER)
-Cc: Mel Gorman <mgorman@suse.de> (reviewer:SCHEDULER)
-Cc: Valentin Schneider <vschneid@redhat.com> (reviewer:SCHEDULER)
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> (commit_signer:2/4=50%,authored:2/4=50%,added_lines:2/5=40%,removed_lines:2/5=40%)
-Cc: linux-arm-kernel@lists.infradead.org (moderated list:ARM PORT)
-Cc: linux-kernel@vger.kernel.org (open list)
-Cc: dri-devel@lists.freedesktop.org (open list:DRM DRIVERS)
-Cc: linux-input@vger.kernel.org (open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)...)
-Cc: linux-stm32@st-md-mailman.stormreply.com (moderated list:ARM/STM32 ARCHITECTURE)
-Cc: iommu@lists.linux.dev (open list:DMA MAPPING HELPERS)
-
-
+Regards,
+Usama
