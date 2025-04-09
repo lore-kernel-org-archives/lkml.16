@@ -1,444 +1,144 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8215E15A85E
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 04:06:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1444A139D1B;
+	Wed,  9 Apr 2025 04:08:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744171582; cv=none; b=UTEwF6oL4gCOVSzSHdvQQcUNyJ6FGb1Za3VbVPI0n/MSCBx1KAeFE0wgF6T+lAWSVJdPUg6bfjQh/uVi9GEznZb1Ef0Vz/nWyUoQEuMbOnF3R4kkjzWqDvjEKP5r6Lq4+lpRKBtdp+U+o/j4zQdZbsLRuEhYSiym5tSSBVP0rUQ=
+	t=1744171745; cv=none; b=EutLshhTQY5bwVpKJq2xfMJyJGuiHAHh9xKx/pJe7yQNeBRmk+xfOQ7WcBz/yWCkcggsw+WDoabpfU5IUW/p0Z3G4ywTZLOsQPAMKHSQMllfM99kkiefyV1UX0euWqu6XfiY5MN9eY/54kpaU82FNwxL6fJyt03qAmc5GILHVME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744171582; c=relaxed/simple;
-	bh=2SPu6xhCzaCLCR5+l+uGkKQYmu6+IrftMrFP4K2kLbw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qNlEQXkOB9FxMuB4C+uE7Y5fOxKcbMdJTHRt/ymHrLpBM2tGlkv9tJkIvkyGMdOf4GubdR6zkmmtuvvQBI39kp+Zgkf2OXeeVQ128V1Bfnm1aM9jUGBS+AJZn9G6Rs2XaHWvdrHZwWl2oo+cNqJTxwbWhA9D4baRAeliZt219fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BSL9KHcz; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BSL9KHcz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744171579;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ijXIXd8h6SmnPWZmcUGFMLkscl1xkFT8sup908yrvUs=;
-	b=BSL9KHczsbgUNyyO+PNZ2+10aP1tUd9svhbn/uWCP5s/ziwXdvdzLhXkRmlfBTgSLmpNPg
-	XWbDZE2meSp7R1Pzi4ZDMX64ZsR6OK1t2WXOghgOVOtsTI1o3nZBVhKPhShhE+94jJMUXo
-	MW8NCSLBgM6FP4fo+zZWOGg8dBi/ZlU=
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com
- [209.85.210.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-369-29njx_NHP7-eYiuZTYfZDA-1; Wed, 09 Apr 2025 00:06:16 -0400
-X-MC-Unique: 29njx_NHP7-eYiuZTYfZDA-1
-X-Mimecast-MFC-AGG-ID: 29njx_NHP7-eYiuZTYfZDA_1744171575
-Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-7395d07a3dcso4704689b3a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 21:06:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744171575; x=1744776375;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ijXIXd8h6SmnPWZmcUGFMLkscl1xkFT8sup908yrvUs=;
-        b=gisz/x7EtGlCBSnCytXJueGq11OHOn+ycMr5CFjo5GvHqTIC/tsCH7MNZwzdgADjN2
-         HsHOA89UQ0Fnh0QntY+nqhOgyEqetiPoOtXg39J5C1jTMjOEDzJBsjZ6KAqSVSJjDZcb
-         Uz1JkkGGPsw1tEwN6QW9MOWczrxiRkcg2UTmsii1U8i8mukeFSZFdOAjKKBOqPKC+FTu
-         g9VSa907X1eCede4/tr+ap+j3RVDsxwmOpM8fOogzm+dHJniUVZm5tdeArX5mzZ2JPwU
-         eYAkrlcQYIJnjvhYqjhQHw9m19sOP22UFK2LIxi6E8qyfw2PM88U5a2acfAc4xdi0Tih
-         Kd+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXknuQfxv9NPSYu4zUNEGZOFriZz3DYAR0AWDVc27YzWw1qDn5jl22jpMrgvrDwBISCzwsCmyMO4qgrb5Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YysM1uqs+sCdGJxySQArEbYl8YSpv0GVl+XhdpNpFyirpHGmt4I
-	HHLN3ee6DcojM5sV17EpaNAK6LxyxCmbMc2Uo8TgHA2Vklakh99/vvetzDm0xol/vd48B2PH/Hc
-	OhoK5xjotaGnfbOMq8YQMZvQnNMNYdcVDD1ZJedIS7uchABS8NX+dgCd/+7t/Q/zNnwinpN4eaA
-	9zKwsyeA5C0vvlp0eO76Lf+01yPBr1UVQ8NiJl
-X-Gm-Gg: ASbGncsuJ0hV2c6SWy8EXOGbS0VXZ/wIjlG4e2k2zGX46lETXy/YXnEge5s9pOgRQyv
-	1JXL0N84056MS5GY5vGqtveflcRMathEIe71av/o+zSUYePn7DfnE7PzXfEdecqwjTIVk2PNZqg
-	==
-X-Received: by 2002:a05:6a00:1909:b0:735:d89c:4b9f with SMTP id d2e1a72fcca58-73bae30a7e1mr1792443b3a.0.1744171575259;
-        Tue, 08 Apr 2025 21:06:15 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF/GK37bglV1sRPs94dgS0EbzNjik/y4s/SyGHaLzsB9g0rDHlXisULL3q2KkdRzji4u9G49VZszDpcHBWQRFQ=
-X-Received: by 2002:a05:6a00:1909:b0:735:d89c:4b9f with SMTP id
- d2e1a72fcca58-73bae30a7e1mr1792422b3a.0.1744171574710; Tue, 08 Apr 2025
- 21:06:14 -0700 (PDT)
+	s=arc-20240116; t=1744171745; c=relaxed/simple;
+	bh=eA4MU4IKWkfQPtThiL78Dw2fPKO8XkGHH4PRDaNqEUg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=nXHcwThcre4W6FP2bB70jMV+0HwDkEu+idbmiuBI55g4Wx9bGGduKyN7Ob0ghOKCTfROFj73Oas5bwsjVzFIsotroNXVdoznuTOeqLxIbEqpmLkmFiwqPUSLTWSANfYE6nJfhjPm0yJ2MoPfycTYQNGpPVJ4kB5B4VSY0PhCWwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=129.150.39.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
+Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
+	by hzbj-icmmx-6 (Coremail) with SMTP id AQAAfwDX3AzW8vVnRADrEw--.29393S2;
+	Wed, 09 Apr 2025 12:08:54 +0800 (CST)
+Received: from wangyuquan1236$phytium.com.cn ( [218.76.62.144] ) by
+ ajax-webmail-mail (Coremail) ; Wed, 9 Apr 2025 12:08:50 +0800 (GMT+08:00)
+Date: Wed, 9 Apr 2025 12:08:50 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From: "Yuquan Wang" <wangyuquan1236@phytium.com.cn>
+To: "Dan Williams" <dan.j.williams@intel.com>
+Cc: "kernel test robot" <lkp@intel.com>, Jonathan.Cameron@huawei.com,
+	rppt@kernel.org, rafael@kernel.org, lenb@kernel.org,
+	akpm@linux-foundation.org, alison.schofield@intel.com,
+	rrichter@amd.com, bfaccini@nvidia.com, haibo1.xu@intel.com,
+	david@redhat.com, oe-kbuild-all@lists.linux.dev,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, chenbaozi@phytium.com.cn,
+	linux-cxl@vger.kernel.org, loongarch@lists.linux.dev,
+	chenhuacai@kernel.org, kernel@xen0n.name
+Subject: Re: [PATCH v2] mm: numa_memblks: introduce numa_add_reserved_memblk
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version 2024.1-cmXT6 build
+ 20240812(cfb32469) Copyright (c) 2002-2025 www.mailtech.cn
+ mispb-4edfefde-e422-4ddc-8a36-c3f99eb8cd32-icoremail.net
+In-Reply-To: <67eef72411bec_464ec29434@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20250328092132.2695299-1-wangyuquan1236@phytium.com.cn>
+ <202503282026.QNaOAK79-lkp@intel.com>
+ <67eef72411bec_464ec29434@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Transfer-Encoding: base64
+X-CM-CTRLDATA: IEHbj2Zvb3Rlcl90eHQ9Mzk4NDozODM=
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250324054333.1954-1-jasowang@redhat.com> <20250324060127.2358-1-jasowang@redhat.com>
- <20250407041729-mutt-send-email-mst@kernel.org> <CACGkMEv-=V0a7jpR9e-i=Oe+PE9pN_cH3yDBmyOYhwPcJXOHPQ@mail.gmail.com>
- <20250408073317-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20250408073317-mutt-send-email-mst@kernel.org>
-From: Jason Wang <jasowang@redhat.com>
-Date: Wed, 9 Apr 2025 12:06:03 +0800
-X-Gm-Features: ATxdqUF4O39qPwC7K414J9bQVl-02bUVSNUMKHYcCzPivVN_iNHqERNtrjFk_ZY
-Message-ID: <CACGkMEtmDM4_ZbAi4O8OUwZaPZnGLKEhnXkQGStFmeXETJtpkA@mail.gmail.com>
-Subject: Re: [PATCH 13/19] virtio_ring: introduce virtqueue ops
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: xuanzhuo@linux.alibaba.com, eperezma@redhat.com, 
-	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <54b74f06.68e1.19618bc860e.Coremail.wangyuquan1236@phytium.com.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:AQAAfwDHzYnS8vVn3SxkAA--.9751W
+X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAPAWf1gRgDF
+	gACsT
+Authentication-Results: hzbj-icmmx-6; spf=neutral smtp.mail=wangyuquan
+	1236@phytium.com.cn;
+X-Coremail-Antispam: 1Uk129KBjvJXoW3Jr48JFWftF48Aw13XFW7CFg_yoWDGw1fpa
+	18A34UAw1UKw1xK3yfKw18Ary8G3y5Wr47Jw4Iy39Iyw47JrsxXwnrKFW7J3Wjga4Yqrs8
+	tw13Zws0qr1jywUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
+	UUUUU
 
-On Tue, Apr 8, 2025 at 7:37=E2=80=AFPM Michael S. Tsirkin <mst@redhat.com> =
-wrote:
->
-> On Tue, Apr 08, 2025 at 03:02:35PM +0800, Jason Wang wrote:
-> > On Mon, Apr 7, 2025 at 4:20=E2=80=AFPM Michael S. Tsirkin <mst@redhat.c=
-om> wrote:
-> > >
-> > > On Mon, Mar 24, 2025 at 02:01:21PM +0800, Jason Wang wrote:
-> > > > This patch introduces virtqueue ops which is a set of the callbacks
-> > > > that will be called for different queue layout or features. This wo=
-uld
-> > > > help to avoid branches for split/packed and will ease the future
-> > > > implementation like in order.
-> > > >
-> > > > Signed-off-by: Jason Wang <jasowang@redhat.com>
-> > >
-> > >
-> > >
-> > >
-> > > > ---
-> > > >  drivers/virtio/virtio_ring.c | 96 +++++++++++++++++++++++++-------=
-----
-> > > >  1 file changed, 67 insertions(+), 29 deletions(-)
-> > > >
-> > > > diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_r=
-ing.c
-> > > > index a2884eae14d9..ce1dc90ee89d 100644
-> > > > --- a/drivers/virtio/virtio_ring.c
-> > > > +++ b/drivers/virtio/virtio_ring.c
-> > > > @@ -159,9 +159,30 @@ struct vring_virtqueue_packed {
-> > > >       size_t event_size_in_bytes;
-> > > >  };
-> > > >
-> > > > +struct vring_virtqueue;
-> > > > +
-> > > > +struct virtqueue_ops {
-> > > > +     int (*add)(struct vring_virtqueue *_vq, struct scatterlist *s=
-gs[],
-> > > > +                unsigned int total_sg, unsigned int out_sgs,
-> > > > +                unsigned int in_sgs, void *data,
-> > > > +                void *ctx, bool premapped, gfp_t gfp);
-> > > > +     void *(*get)(struct vring_virtqueue *vq, unsigned int *len, v=
-oid **ctx);
-> > > > +     bool (*kick_prepare)(struct vring_virtqueue *vq);
-> > > > +     void (*disable_cb)(struct vring_virtqueue *vq);
-> > > > +     bool (*enable_cb_delayed)(struct vring_virtqueue *vq);
-> > > > +     unsigned int (*enable_cb_prepare)(struct vring_virtqueue *vq)=
-;
-> > > > +     bool (*poll)(const struct vring_virtqueue *vq, u16 last_used_=
-idx);
-> > > > +     void *(*detach_unused_buf)(struct vring_virtqueue *vq);
-> > > > +     bool (*more_used)(const struct vring_virtqueue *vq);
-> > > > +     int (*resize)(struct vring_virtqueue *vq, u32 num);
-> > > > +     void (*reset)(struct vring_virtqueue *vq);
-> > > > +};
-> > >
-> > > I like it that it's organized but
-> > > I worry about the overhead of indirect calls here.
-> >
-> > We can switch to use INDIRECT_CALL_X() here
->
-> If you think it's cleaner.. but INDIRECT_CALL is all chained
-
-Yes, and it would be problematic as the number of ops increased.
-
-> while a switch can do a binary search.
->
-
-Do you mean a nested switch?
-
->
-> > (but I'm not sure we
-> > should worry about it too much as ndo_ops or qdiscs doesn't use that).
->
->
-> And that's why we ended up with xdp, no? the stack's too heavy ...
->
-> > > How about a switch statement instead?
-> > >
-> > > struct vring_virtqueue {
-> > >         enum vring_virtqueue_ops ops;
-> > >
-> > > }
-> > >
-> > >
-> > > @@ -2248,10 +2303,8 @@ static inline int virtqueue_add(struct virtque=
-ue *_vq,
-> > >  {
-> > >       struct vring_virtqueue *vq =3D to_vvq(_vq);
-> > >
-> > >         switch (vq->ops) {
-> > >          VQ_PACKED:
-> > >          VQ_SPLIT:
-> > >          VQ_IN_ORDER:
-> > >         }
-> > >
-> > >
-> > > }
-> > >
-> > >
-> > > What do you think?
-> >
-> > Actually, the matrix will be 2*2:
-> >
-> > PACKED, SPLIT, PACKED_IN_ORDER, SPLIT_IN_ORDER
->
-> Confused. Same amount of enums as ops structures in your approach, no?
-
-I meant in this series, we will have 4 ops not 3.
-
->
->
-> > And will be doubled if a new layout is implemented.
-> >
-> > If we open them such a switch will spread in a lot of places in the cod=
-e.
-> >
-> > Thanks
-
-Thanks
-
-> >
-> > >
-> > >
-> > >
-> > > > +
-> > > >  struct vring_virtqueue {
-> > > >       struct virtqueue vq;
-> > > >
-> > > > +     struct virtqueue_ops *ops;
-> > > > +
-> > > >       /* Is this a packed ring? */
-> > > >       bool packed_ring;
-> > > >
-> > > > @@ -1116,6 +1137,8 @@ static int vring_alloc_queue_split(struct vri=
-ng_virtqueue_split *vring_split,
-> > > >       return 0;
-> > > >  }
-> > > >
-> > > > +struct virtqueue_ops split_ops;
-> > > > +
-> > > >  static struct virtqueue *__vring_new_virtqueue_split(unsigned int =
-index,
-> > > >                                              struct vring_virtqueue=
-_split *vring_split,
-> > > >                                              struct virtio_device *=
-vdev,
-> > > > @@ -1134,6 +1157,7 @@ static struct virtqueue *__vring_new_virtqueu=
-e_split(unsigned int index,
-> > > >               return NULL;
-> > > >
-> > > >       vq->packed_ring =3D false;
-> > > > +     vq->ops =3D &split_ops;
-> > > >       vq->vq.callback =3D callback;
-> > > >       vq->vq.vdev =3D vdev;
-> > > >       vq->vq.name =3D name;
-> > > > @@ -2076,6 +2100,8 @@ static void virtqueue_reset_packed(struct vri=
-ng_virtqueue *vq)
-> > > >       virtqueue_vring_init_packed(&vq->packed, !!vq->vq.callback);
-> > > >  }
-> > > >
-> > > > +struct virtqueue_ops packed_ops;
-> > > > +
-> > > >  static struct virtqueue *__vring_new_virtqueue_packed(unsigned int=
- index,
-> > > >                                              struct vring_virtqueue=
-_packed *vring_packed,
-> > > >                                              struct virtio_device *=
-vdev,
-> > > > @@ -2107,6 +2133,7 @@ static struct virtqueue *__vring_new_virtqueu=
-e_packed(unsigned int index,
-> > > >       vq->broken =3D false;
-> > > >  #endif
-> > > >       vq->packed_ring =3D true;
-> > > > +     vq->ops =3D &packed_ops;
-> > > >       vq->dma_dev =3D dma_dev;
-> > > >       vq->use_dma_api =3D vring_use_dma_api(vdev);
-> > > >
-> > > > @@ -2194,6 +2221,34 @@ static int virtqueue_resize_packed(struct vr=
-ing_virtqueue *vq, u32 num)
-> > > >       return -ENOMEM;
-> > > >  }
-> > > >
-> > > > +struct virtqueue_ops split_ops =3D {
-> > > > +     .add =3D virtqueue_add_split,
-> > > > +     .get =3D virtqueue_get_buf_ctx_split,
-> > > > +     .kick_prepare =3D virtqueue_kick_prepare_split,
-> > > > +     .disable_cb =3D virtqueue_disable_cb_split,
-> > > > +     .enable_cb_delayed =3D virtqueue_enable_cb_delayed_split,
-> > > > +     .enable_cb_prepare =3D virtqueue_enable_cb_prepare_split,
-> > > > +     .poll =3D virtqueue_poll_split,
-> > > > +     .detach_unused_buf =3D virtqueue_detach_unused_buf_split,
-> > > > +     .more_used =3D more_used_split,
-> > > > +     .resize =3D virtqueue_resize_split,
-> > > > +     .reset =3D virtqueue_reset_split,
-> > > > +};
-> > > > +
-> > > > +struct virtqueue_ops packed_ops =3D {
-> > > > +     .add =3D virtqueue_add_packed,
-> > > > +     .get =3D virtqueue_get_buf_ctx_packed,
-> > > > +     .kick_prepare =3D virtqueue_kick_prepare_packed,
-> > > > +     .disable_cb =3D virtqueue_disable_cb_packed,
-> > > > +     .enable_cb_delayed =3D virtqueue_enable_cb_delayed_packed,
-> > > > +     .enable_cb_prepare =3D virtqueue_enable_cb_prepare_packed,
-> > > > +     .poll =3D virtqueue_poll_packed,
-> > > > +     .detach_unused_buf =3D virtqueue_detach_unused_buf_packed,
-> > > > +     .more_used =3D more_used_packed,
-> > > > +     .resize =3D virtqueue_resize_packed,
-> > > > +     .reset =3D virtqueue_reset_packed,
-> > > > +};
-> > > > +
-> > > >  static int virtqueue_disable_and_recycle(struct virtqueue *_vq,
-> > > >                                        void (*recycle)(struct virtq=
-ueue *vq, void *buf))
-> > > >  {
-> > > > @@ -2248,10 +2303,8 @@ static inline int virtqueue_add(struct virtq=
-ueue *_vq,
-> > > >  {
-> > > >       struct vring_virtqueue *vq =3D to_vvq(_vq);
-> > > >
-> > > > -     return vq->packed_ring ? virtqueue_add_packed(vq, sgs, total_=
-sg,
-> > > > -                                     out_sgs, in_sgs, data, ctx, p=
-remapped, gfp) :
-> > > > -                              virtqueue_add_split(vq, sgs, total_s=
-g,
-> > > > -                                     out_sgs, in_sgs, data, ctx, p=
-remapped, gfp);
-> > > > +     return vq->ops->add(vq, sgs, total_sg,
-> > > > +                         out_sgs, in_sgs, data, ctx, premapped, gf=
-p);
-> > > >  }
-> > > >
-> > > >  /**
-> > > > @@ -2437,8 +2490,7 @@ bool virtqueue_kick_prepare(struct virtqueue =
-*_vq)
-> > > >  {
-> > > >       struct vring_virtqueue *vq =3D to_vvq(_vq);
-> > > >
-> > > > -     return vq->packed_ring ? virtqueue_kick_prepare_packed(vq) :
-> > > > -                              virtqueue_kick_prepare_split(vq);
-> > > > +     return vq->ops->kick_prepare(vq);
-> > > >  }
-> > > >  EXPORT_SYMBOL_GPL(virtqueue_kick_prepare);
-> > > >
-> > > > @@ -2508,8 +2560,7 @@ void *virtqueue_get_buf_ctx(struct virtqueue =
-*_vq, unsigned int *len,
-> > > >  {
-> > > >       struct vring_virtqueue *vq =3D to_vvq(_vq);
-> > > >
-> > > > -     return vq->packed_ring ? virtqueue_get_buf_ctx_packed(vq, len=
-, ctx) :
-> > > > -                              virtqueue_get_buf_ctx_split(vq, len,=
- ctx);
-> > > > +     return vq->ops->get(vq, len, ctx);
-> > > >  }
-> > > >  EXPORT_SYMBOL_GPL(virtqueue_get_buf_ctx);
-> > > >
-> > > > @@ -2531,10 +2582,7 @@ void virtqueue_disable_cb(struct virtqueue *=
-_vq)
-> > > >  {
-> > > >       struct vring_virtqueue *vq =3D to_vvq(_vq);
-> > > >
-> > > > -     if (vq->packed_ring)
-> > > > -             virtqueue_disable_cb_packed(vq);
-> > > > -     else
-> > > > -             virtqueue_disable_cb_split(vq);
-> > > > +     return vq->ops->disable_cb(vq);
-> > > >  }
-> > > >  EXPORT_SYMBOL_GPL(virtqueue_disable_cb);
-> > > >
-> > > > @@ -2557,8 +2605,7 @@ unsigned int virtqueue_enable_cb_prepare(stru=
-ct virtqueue *_vq)
-> > > >       if (vq->event_triggered)
-> > > >               vq->event_triggered =3D false;
-> > > >
-> > > > -     return vq->packed_ring ? virtqueue_enable_cb_prepare_packed(v=
-q) :
-> > > > -                              virtqueue_enable_cb_prepare_split(vq=
-);
-> > > > +     return vq->ops->enable_cb_prepare(vq);
-> > > >  }
-> > > >  EXPORT_SYMBOL_GPL(virtqueue_enable_cb_prepare);
-> > > >
-> > > > @@ -2579,8 +2626,7 @@ bool virtqueue_poll(struct virtqueue *_vq, un=
-signed int last_used_idx)
-> > > >               return false;
-> > > >
-> > > >       virtio_mb(vq->weak_barriers);
-> > > > -     return vq->packed_ring ? virtqueue_poll_packed(vq, last_used_=
-idx) :
-> > > > -                              virtqueue_poll_split(vq, last_used_i=
-dx);
-> > > > +     return vq->ops->poll(vq, last_used_idx);
-> > > >  }
-> > > >  EXPORT_SYMBOL_GPL(virtqueue_poll);
-> > > >
-> > > > @@ -2623,8 +2669,7 @@ bool virtqueue_enable_cb_delayed(struct virtq=
-ueue *_vq)
-> > > >       if (vq->event_triggered)
-> > > >               vq->event_triggered =3D false;
-> > > >
-> > > > -     return vq->packed_ring ? virtqueue_enable_cb_delayed_packed(v=
-q) :
-> > > > -                              virtqueue_enable_cb_delayed_split(vq=
-);
-> > > > +     return vq->ops->enable_cb_delayed(vq);
-> > > >  }
-> > > >  EXPORT_SYMBOL_GPL(virtqueue_enable_cb_delayed);
-> > > >
-> > > > @@ -2640,14 +2685,13 @@ void *virtqueue_detach_unused_buf(struct vi=
-rtqueue *_vq)
-> > > >  {
-> > > >       struct vring_virtqueue *vq =3D to_vvq(_vq);
-> > > >
-> > > > -     return vq->packed_ring ? virtqueue_detach_unused_buf_packed(v=
-q) :
-> > > > -                              virtqueue_detach_unused_buf_split(vq=
-);
-> > > > +     return vq->ops->detach_unused_buf(vq);
-> > > >  }
-> > > >  EXPORT_SYMBOL_GPL(virtqueue_detach_unused_buf);
-> > > >
-> > > >  static inline bool more_used(const struct vring_virtqueue *vq)
-> > > >  {
-> > > > -     return vq->packed_ring ? more_used_packed(vq) : more_used_spl=
-it(vq);
-> > > > +     return vq->ops->more_used(vq);
-> > > >  }
-> > > >
-> > > >  /**
-> > > > @@ -2785,10 +2829,7 @@ int virtqueue_resize(struct virtqueue *_vq, =
-u32 num,
-> > > >       if (recycle_done)
-> > > >               recycle_done(_vq);
-> > > >
-> > > > -     if (vq->packed_ring)
-> > > > -             err =3D virtqueue_resize_packed(vq, num);
-> > > > -     else
-> > > > -             err =3D virtqueue_resize_split(vq, num);
-> > > > +     err =3D vq->ops->resize(vq, num);
-> > > >
-> > > >       return virtqueue_enable_after_reset(_vq);
-> > > >  }
-> > > > @@ -2822,10 +2863,7 @@ int virtqueue_reset(struct virtqueue *_vq,
-> > > >       if (recycle_done)
-> > > >               recycle_done(_vq);
-> > > >
-> > > > -     if (vq->packed_ring)
-> > > > -             virtqueue_reset_packed(vq);
-> > > > -     else
-> > > > -             virtqueue_reset_split(vq);
-> > > > +     vq->ops->reset(vq);
-> > > >
-> > > >       return virtqueue_enable_after_reset(_vq);
-> > > >  }
-> > > > --
-> > > > 2.42.0
-> > >
->
+Cj4gW2FkZCBsb29uZ2FyY2ggZm9sa3MsIGNjIGxpbnV4LWN4bCBdCj4gCj4ga2VybmVsIHRlc3Qg
+cm9ib3Qgd3JvdGU6Cj4gPiBIaSBZdXF1YW4sCj4gPiAKPiA+IGtlcm5lbCB0ZXN0IHJvYm90IG5v
+dGljZWQgdGhlIGZvbGxvd2luZyBidWlsZCBlcnJvcnM6Cj4gPiAKPiA+IFthdXRvIGJ1aWxkIHRl
+c3QgRVJST1Igb24gYWtwbS1tbS9tbS1ldmVyeXRoaW5nXQo+ID4gCj4gPiB1cmw6ICAgIGh0dHBz
+Oi8vZ2l0aHViLmNvbS9pbnRlbC1sYWItbGtwL2xpbnV4L2NvbW1pdHMvWXVxdWFuLVdhbmcvbW0t
+bnVtYV9tZW1ibGtzLWludHJvZHVjZS1udW1hX2FkZF9yZXNlcnZlZF9tZW1ibGsvMjAyNTAzMjgt
+MTcyNDI4Cj4gPiBiYXNlOiAgIGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9r
+ZXJuZWwvZ2l0L2FrcG0vbW0uZ2l0IG1tLWV2ZXJ5dGhpbmcKPiA+IHBhdGNoIGxpbms6ICAgIGh0
+dHBzOi8vbG9yZS5rZXJuZWwub3JnL3IvMjAyNTAzMjgwOTIxMzIuMjY5NTI5OS0xLXdhbmd5dXF1
+YW4xMjM2JTQwcGh5dGl1bS5jb20uY24KPiA+IHBhdGNoIHN1YmplY3Q6IFtQQVRDSCB2Ml0gbW06
+IG51bWFfbWVtYmxrczogaW50cm9kdWNlIG51bWFfYWRkX3Jlc2VydmVkX21lbWJsawo+ID4gY29u
+ZmlnOiBsb29uZ2FyY2gtcmFuZGNvbmZpZy0wMDItMjAyNTAzMjggKGh0dHBzOi8vZG93bmxvYWQu
+MDEub3JnLzBkYXktY2kvYXJjaGl2ZS8yMDI1MDMyOC8yMDI1MDMyODIwMjYuUU5hT0FLNzktbGtw
+QGludGVsLmNvbS9jb25maWcpCj4gPiBjb21waWxlcjogbG9vbmdhcmNoNjQtbGludXgtZ2NjIChH
+Q0MpIDE0LjIuMAo+ID4gcmVwcm9kdWNlICh0aGlzIGlzIGEgVz0xIGJ1aWxkKTogKGh0dHBzOi8v
+ZG93bmxvYWQuMDEub3JnLzBkYXktY2kvYXJjaGl2ZS8yMDI1MDMyOC8yMDI1MDMyODIwMjYuUU5h
+T0FLNzktbGtwQGludGVsLmNvbS9yZXByb2R1Y2UpCj4gPiAKPiA+IElmIHlvdSBmaXggdGhlIGlz
+c3VlIGluIGEgc2VwYXJhdGUgcGF0Y2gvY29tbWl0IChpLmUuIG5vdCBqdXN0IGEgbmV3IHZlcnNp
+b24gb2YKPiA+IHRoZSBzYW1lIHBhdGNoL2NvbW1pdCksIGtpbmRseSBhZGQgZm9sbG93aW5nIHRh
+Z3MKPiA+IHwgUmVwb3J0ZWQtYnk6IGtlcm5lbCB0ZXN0IHJvYm90IDxsa3BAaW50ZWwuY29tPgo+
+ID4gfCBDbG9zZXM6IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL29lLWtidWlsZC1hbGwvMjAyNTAz
+MjgyMDI2LlFOYU9BSzc5LWxrcEBpbnRlbC5jb20vCj4gPiAKPiA+IEFsbCBlcnJvcnMgKG5ldyBv
+bmVzIHByZWZpeGVkIGJ5ID4+KToKPiA+IAo+ID4gICAgSW4gZmlsZSBpbmNsdWRlZCBmcm9tIGlu
+Y2x1ZGUvbGludXgvYnVpbGRfYnVnLmg6NSwKPiA+ICAgICAgICAgICAgICAgICAgICAgZnJvbSBp
+bmNsdWRlL2xpbnV4L2NvbnRhaW5lcl9vZi5oOjUsCj4gPiAgICAgICAgICAgICAgICAgICAgIGZy
+b20gaW5jbHVkZS9saW51eC9saXN0Lmg6NSwKPiA+ICAgICAgICAgICAgICAgICAgICAgZnJvbSBp
+bmNsdWRlL2xpbnV4L21vZHVsZS5oOjEyLAo+ID4gICAgICAgICAgICAgICAgICAgICBmcm9tIGRy
+aXZlcnMvYWNwaS9udW1hL3NyYXQuYzoxMDoKPiA+ICAgIGRyaXZlcnMvYWNwaS9udW1hL3NyYXQu
+YzogSW4gZnVuY3Rpb24gJ2FjcGlfcGFyc2VfY2Ztd3MnOgo+ID4gPj4gZHJpdmVycy9hY3BpL251
+bWEvc3JhdC5jOjQ2MToxMzogZXJyb3I6IGltcGxpY2l0IGRlY2xhcmF0aW9uIG9mIGZ1bmN0aW9u
+ICdudW1hX2FkZF9yZXNlcnZlZF9tZW1ibGsnIFstV2ltcGxpY2l0LWZ1bmN0aW9uLWRlY2xhcmF0
+aW9uXQo+ID4gICAgICA0NjEgfCAgICAgICAgIGlmIChudW1hX2FkZF9yZXNlcnZlZF9tZW1ibGso
+bm9kZSwgc3RhcnQsIGVuZCkgPCAwKSB7Cj4gPiAgICAgICAgICB8ICAgICAgICAgICAgIF5+fn5+
+fn5+fn5+fn5+fn5+fn5+fn5+fgo+IAo+IFNvIGl0IGxvb2tzIGxpa2UgbG9vbmdhcmNoIHdhcyBs
+ZWZ0IG91dCBvZiB0aGUgbnVtYV9tZW1ibGtzIGNvbnZlcnNpb246Cj4gODc0ODI3MDgyMTBmICgi
+bW06IGludHJvZHVjZSBudW1hX21lbWJsa3MiKQo+IAo+IEkgdGhpbmsgdGhlIHVwZGF0ZSBuZWVk
+ZWQgaXMgc29tZXRoaW5nIGxpa2UgdGhpcyAodW50ZXN0ZWQpOgo+IAo+IGRpZmYgLS1naXQgYS9h
+cmNoL2xvb25nYXJjaC9LY29uZmlnIGIvYXJjaC9sb29uZ2FyY2gvS2NvbmZpZwo+IGluZGV4IDJi
+OGJkMjdhODUyZi4uY2FjMTZjODI3MTU5IDEwMDY0NAo+IC0tLSBhL2FyY2gvbG9vbmdhcmNoL0tj
+b25maWcKPiArKysgYi9hcmNoL2xvb25nYXJjaC9LY29uZmlnCj4gQEAgLTE4Myw2ICsxODMsNyBA
+QCBjb25maWcgTE9PTkdBUkNICj4gICBzZWxlY3QgTU9EVUxFU19VU0VfRUxGX1JFTEEgaWYgTU9E
+VUxFUwo+ICAgc2VsZWN0IE5FRURfUEVSX0NQVV9FTUJFRF9GSVJTVF9DSFVOSwo+ICAgc2VsZWN0
+IE5FRURfUEVSX0NQVV9QQUdFX0ZJUlNUX0NIVU5LCj4gKyBzZWxlY3QgTlVNQV9NRU1CTEtTCj4g
+ICBzZWxlY3QgT0YKPiAgIHNlbGVjdCBPRl9FQVJMWV9GTEFUVFJFRQo+ICAgc2VsZWN0IFBDSQo+
+IGRpZmYgLS1naXQgYS9hcmNoL2xvb25nYXJjaC9pbmNsdWRlL2FzbS9udW1hLmggYi9hcmNoL2xv
+b25nYXJjaC9pbmNsdWRlL2FzbS9udW1hLmgKPiBpbmRleCBiNWY5ZGU5ZjEwMmUuLmJiZjlmNzBi
+ZDI1ZiAxMDA2NDQKPiAtLS0gYS9hcmNoL2xvb25nYXJjaC9pbmNsdWRlL2FzbS9udW1hLmgKPiAr
+KysgYi9hcmNoL2xvb25nYXJjaC9pbmNsdWRlL2FzbS9udW1hLmgKPiBAQCAtMjIsMjAgKzIyLDYg
+QEAgZXh0ZXJuIGludCBudW1hX29mZjsKPiAgZXh0ZXJuIHMxNiBfX2NwdWlkX3RvX25vZGVbQ09O
+RklHX05SX0NQVVNdOwo+ICBleHRlcm4gbm9kZW1hc2tfdCBudW1hX25vZGVzX3BhcnNlZCBfX2lu
+aXRkYXRhOwo+ICAKPiAtc3RydWN0IG51bWFfbWVtYmxrIHsKPiAtIHU2NCBzdGFydDsKPiAtIHU2
+NCBlbmQ7Cj4gLSBpbnQgbmlkOwo+IC19Owo+IC0KPiAtI2RlZmluZSBOUl9OT0RFX01FTUJMS1Mg
+KE1BWF9OVU1OT0RFUyoyKQo+IC1zdHJ1Y3QgbnVtYV9tZW1pbmZvIHsKPiAtIGludCBucl9ibGtz
+Owo+IC0gc3RydWN0IG51bWFfbWVtYmxrIGJsa1tOUl9OT0RFX01FTUJMS1NdOwo+IC19Owo+IC0K
+PiAtZXh0ZXJuIGludCBfX2luaXQgbnVtYV9hZGRfbWVtYmxrKGludCBub2RlaWQsIHU2NCBzdGFy
+dCwgdTY0IGVuZCk7Cj4gLQo+ICBleHRlcm4gdm9pZCBfX2luaXQgZWFybHlfbnVtYV9hZGRfY3B1
+KGludCBjcHVpZCwgczE2IG5vZGUpOwo+ICBleHRlcm4gdm9pZCBudW1hX2FkZF9jcHUodW5zaWdu
+ZWQgaW50IGNwdSk7Cj4gIGV4dGVybiB2b2lkIG51bWFfcmVtb3ZlX2NwdSh1bnNpZ25lZCBpbnQg
+Y3B1KTsKPiBkaWZmIC0tZ2l0IGEvYXJjaC9sb29uZ2FyY2gva2VybmVsL251bWEuYyBiL2FyY2gv
+bG9vbmdhcmNoL2tlcm5lbC9udW1hLmMKPiBpbmRleCA4NGZlN2Y4NTQ4MjAuLjU3YjIxMDgyZTg5
+MyAxMDA2NDQKPiAtLS0gYS9hcmNoL2xvb25nYXJjaC9rZXJuZWwvbnVtYS5jCj4gKysrIGIvYXJj
+aC9sb29uZ2FyY2gva2VybmVsL251bWEuYwo+IEBAIC0xOCw2ICsxOCw3IEBACj4gICNpbmNsdWRl
+IDxsaW51eC9lZmkuaD4KPiAgI2luY2x1ZGUgPGxpbnV4L2lycS5oPgo+ICAjaW5jbHVkZSA8bGlu
+dXgvcGNpLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9udW1hX21lbWJsa3MuaD4KPiAgI2luY2x1ZGUg
+PGFzbS9ib290aW5mby5oPgo+ICAjaW5jbHVkZSA8YXNtL2xvb25nc29uLmg+Cj4gICNpbmNsdWRl
+IDxhc20vbnVtYS5oPgo+IAo+IENvdWxkIHNvbWVvbmUgZnJvbSB0aGUgbG9vbmdhcmNoIHNpZGUg
+cHJvcG9zZSB0aGUgZml4dXBzIG5lZWRlZCBoZXJlIHNvCj4gWXVxdWFuIGNhbiBsYW5kIHRoaXMg
+cGF0Y2g/CgpIaSwgRGFuCgpTaG91bGQgSSB3YWl0IGZvciBMb29uZ2FyY2ggZm9sa3MncyByZXBs
+aWVzIG9yIGRyYWZ0IGEgbmV3IHBhdGNoIGZvciBMb29uZ2FyY2gKdG8gaW50cm9kdWNlIG51bWFf
+bWVtYmxrcyBhY2NvcmRpbmcgdG8geW91ciBzdWdnZXN0ZWQgY29kZT8KCll1cXVhbgoKDQoNCuS/
+oeaBr+WuieWFqOWjsOaYju+8muacrOmCruS7tuWMheWQq+S/oeaBr+W9kuWPkeS7tuS6uuaJgOWc
+qOe7hOe7h+aJgOaciSzlj5Hku7bkurrmiYDlnKjnu4Tnu4flr7nor6Xpgq7ku7bmi6XmnInmiYDm
+nInmnYPliKnjgILor7fmjqXmlLbogIXms6jmhI/kv53lr4Ys5pyq57uP5Y+R5Lu25Lq65Lmm6Z2i
+6K645Y+vLOS4jeW+l+WQkeS7u+S9leesrOS4ieaWuee7hOe7h+WSjOS4quS6uumAj+mcsuacrOmC
+ruS7tuaJgOWQq+S/oeaBr+OAgg0KSW5mb3JtYXRpb24gU2VjdXJpdHkgTm90aWNlOiBUaGUgaW5m
+b3JtYXRpb24gY29udGFpbmVkIGluIHRoaXMgbWFpbCBpcyBzb2xlbHkgcHJvcGVydHkgb2YgdGhl
+IHNlbmRlcidzIG9yZ2FuaXphdGlvbi5UaGlzIG1haWwgY29tbXVuaWNhdGlvbiBpcyBjb25maWRl
+bnRpYWwuUmVjaXBpZW50cyBuYW1lZCBhYm92ZSBhcmUgb2JsaWdhdGVkIHRvIG1haW50YWluIHNl
+Y3JlY3kgYW5kIGFyZSBub3QgcGVybWl0dGVkIHRvIGRpc2Nsb3NlIHRoZSBjb250ZW50cyBvZiB0
+aGlzIGNvbW11bmljYXRpb24gdG8gb3RoZXJzLg==
 
