@@ -1,139 +1,228 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dediextern.your-server.de (dediextern.your-server.de [85.10.215.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C473267395
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 15:17:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F5DA1DFFD;
+	Wed,  9 Apr 2025 15:17:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.10.215.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744211880; cv=none; b=pt6OMUGx0h5QQMtYCONmc+X8howZ4E+M2Yiy0i7dhuqh3sYxnSGILE2wkoV/j4v238rhvWl5CB81xlPEdY+Qr07LBdfp4moIaH80l42QoYdGTwQhFKDoJKPW3d2ADEpGm7guDAhWtgOEXSul4abpKI8XLhkfZz1T3kdbNajV3bI=
+	t=1744211881; cv=none; b=TWJ3Wk4eGuQnvlGqVqg+JfHSVKodJUGMB5lsZW48jGw9NLLjuollejdWzkKshuDRNGE6tLmCVjv+mqSjDxAp/GxHkmlGnaDp9H9rxBZEH56Mr6wtWlgm3qEIMW48wwl7Sd/JvwpGl4EXMqmwlcYvlaDYitmFrgwpxZ5zb1IOPJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744211880; c=relaxed/simple;
-	bh=L05GeTPpsVwGei1PRLQ+qItaPjTFR+kADeT9SbaA8AM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WluxmtHUJLjRkYR9wQyvxsQ17iMiOZvqmGQnDPPs3tzF0fK3VgeR1AoSte0gmCNcMGN/eDgVVdruC77ifUDuGl4NVOyup3FgLVay8xg3gFdM+0FXI29g+ivzh7SYGOomywBO/Siam3yEdzsUdP9dZ05fbDUT2CDH/J0OOLq75ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=ttQN+AIr; arc=none smtp.client-ip=209.85.219.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="ttQN+AIr"
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-6e8f6970326so66872396d6.0
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 08:17:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rowland.harvard.edu; s=google; t=1744211877; x=1744816677; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZSz4oGBczB4s7QzN4sMG6IGoZmYK3gCdR0YSP1AReVY=;
-        b=ttQN+AIrpWeQeVj+ZHxZxFOzdBrB/wi7yXNpTiqFNZ25ZDGiTwxFvDg026gSHMsDr9
-         4p3xPVj6tcCWn9ySCpqZ80+xtIPphShVotBxsRZtunIqGmnZsoJjLaCGHAn/b7DT8Vpe
-         AFd/UKhhRT9xHN87YU8OCL3x4JsHUhwR2QszgXy0GyOozLRRbqmydYYa1KINEqOjiSAD
-         cidmjZ6BdlQHJCNgprjEDow/qXV/rU7uPf+CumBAgwoflykP7oMtq0bbe3GzaryqWC0i
-         t1JwKzf9qhqxHBnwK770RhA8qq6UWYKEPpFWIVQY2ceTmhNzEgS51V2pZ7ul3abiabae
-         0s0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744211877; x=1744816677;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZSz4oGBczB4s7QzN4sMG6IGoZmYK3gCdR0YSP1AReVY=;
-        b=hOZxUowa/SA0iQ9i9Zn2nML7c1mqZy5BFctJfLPA8ogALvpTzArbsQSsLAsklatkVK
-         zkYhHfvJqJCClJjJqa0jADKr2314B0iByEbUrL0Mk4WH+CcoHceoimg3QczvhXYJtQV1
-         B1ciWxa1M02Pu9Kv51qVd8ugKL1LwSyCMPOYwhru99gSWCLXdqhnkwtJJB+at1MX9KwD
-         Y+AELLCnYxBDFvhFA1KbalHLJlkwlu0XZEF7vknDp4W9MZkqeJRvwzjyYAUvwa5tQf2i
-         FXabpTIty1SUjkretipcXIDGi0L/deIKSlPHR3gAn/IHhHdsdnyF3Az+8DTasLS7+SnR
-         UiXw==
-X-Forwarded-Encrypted: i=1; AJvYcCUKTUxOWFDFaqHgSrNRA2wFTUoG1ebFAUQSp9GoL0eaxdcSQ1v3Cah2mCd/nTNKdWOMkiTMFpbsxl2kIDE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yym/pimbSd+v02zLxpyL4fhh+ISfAAtM80yLHMWIi1nHpR7dn4c
-	6jTLceXOLEmURcutLli8HCfBzmfl0eTxs7/uSpuGtoBXBG0YQ2CpY1n4dxLymw==
-X-Gm-Gg: ASbGncs3YIWTyeBWyliM70nCHSzJm70GB8ez9TUVa6v+Z8RPo2rP1i44vfj71CmuIjE
-	S7mlND5E0eHvW+ddhQfCMEj0VML1hYDue9Y/ZUapopjVtUJ/P55VGeUkzmMUYIQ64FL0PfRanoF
-	zwaXFBEX1uDvsdByZ9q25/826fcSdvPiJTK6htz8fnqY6Avg8KQHsKqiSPudA+2cROIYagx4kOq
-	BtQfx2qE5igrFX8gRahZnGkclJ2PRAqqVC/Y4Qoe/aE4XiNctlgX+lQu1TOQ8NKYwx/vlZ7Tdzo
-	cvCej5qpurwsoreQiADhnom92aBgXdXlVL1dInjr4Z8Wd/Vhs6rBHYbeTlyV7NmIoJYaSQ==
-X-Google-Smtp-Source: AGHT+IHjwyEnZ98boe3bPSpo46Gy/YwX3wb//6rfyBN5Ja9ijCITZ3UxvTOSgqs8SVsosirRXDfodg==
-X-Received: by 2002:a05:6214:409:b0:6e8:f464:c9a0 with SMTP id 6a1803df08f44-6f0dbbc0972mr55539716d6.13.1744211876980;
-        Wed, 09 Apr 2025 08:17:56 -0700 (PDT)
-Received: from rowland.harvard.edu ([140.247.181.15])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f0de95fdfbsm8457386d6.1.2025.04.09.08.17.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 08:17:56 -0700 (PDT)
-Date: Wed, 9 Apr 2025 11:17:53 -0400
-From: Alan Stern <stern@rowland.harvard.edu>
-To: Guan-Yu Lin <guanyulin@google.com>
-Cc: gregkh@linuxfoundation.org, mathias.nyman@intel.com,
-	gargaditya08@live.com, kekrby@gmail.com,
-	jeff.johnson@oss.qualcomm.com, elder@kernel.org,
-	quic_zijuhu@quicinc.com, ben@decadent.org.uk,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v11 4/4] usb: host: enable USB offload during system sleep
-Message-ID: <adc03a95-baa0-4a2a-9b00-39a644bab426@rowland.harvard.edu>
-References: <20250408035833.844821-1-guanyulin@google.com>
- <20250408035833.844821-5-guanyulin@google.com>
+	s=arc-20240116; t=1744211881; c=relaxed/simple;
+	bh=fz9JUrz7Jcqv5zV5815euWKNMRBXwDy2+iRh8qVXsls=;
+	h=Message-ID:Date:MIME-Version:From:To:Cc:Subject:Content-Type; b=YLYj3K9xvK+iiL7h3JYBwKzWPes7wEKXoKwTBX6xaDKDbEUvfdo4gVg/aWbG/K1eCFO9ZQ/KAQH9GhC2rjGSbXdHGUPWH1H7hF4iebAV5UPugYI9tTrC1YDqvo2OaCNu6LAxFx0V8BTFkZFfLuMXzGqOIXQuYK7ls8/wpm8+Uh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hetzner-cloud.de; spf=pass smtp.mailfrom=hetzner-cloud.de; arc=none smtp.client-ip=85.10.215.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hetzner-cloud.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hetzner-cloud.de
+Received: from sslproxy01.your-server.de ([78.46.139.224])
+	by dediextern.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <marcus.wichelmann@hetzner-cloud.de>)
+	id 1u2XBX-000Dxr-88; Wed, 09 Apr 2025 17:17:51 +0200
+Received: from [2a0d:3344:1523:1f10:f118:b2d4:edbb:54af]
+	by sslproxy01.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <marcus.wichelmann@hetzner-cloud.de>)
+	id 1u2XBW-000HjF-34;
+	Wed, 09 Apr 2025 17:17:50 +0200
+Message-ID: <d33f0ab4-4dc4-49cd-bbd0-055f58dd6758@hetzner-cloud.de>
+Date: Wed, 9 Apr 2025 17:17:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250408035833.844821-5-guanyulin@google.com>
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+From: Marcus Wichelmann <marcus.wichelmann@hetzner-cloud.de>
+Autocrypt: addr=marcus.wichelmann@hetzner-cloud.de; keydata=
+ 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
+ wySmewx3h/yfMh0aFxHhvLPxrO2IEQ==
+To: Tony Nguyen <anthony.l.nguyen@intel.com>, Jay Vosburgh
+ <jv@jvosburgh.net>, Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>
+Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+ bpf@vger.kernel.org, linux-kernel@vger.kernel.org, sdn@hetzner-cloud.de
+Subject: [BUG] ixgbe: Detected Tx Unit Hang (XDP)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: marcus.wichelmann@hetzner-cloud.de
+X-Virus-Scanned: Clear (ClamAV 1.0.7/27603/Wed Apr  9 10:44:35 2025)
 
-On Tue, Apr 08, 2025 at 03:57:24AM +0000, Guan-Yu Lin wrote:
-> Sharing a USB controller with another entity via xhci-sideband driver
-> creates power management complexities. To prevent the USB controller
-> from being inadvertently deactivated while in use by the other entity, a
-> usage-count based mechanism is implemented. This allows the system to
-> manage power effectively, ensuring the controller remains available
-> whenever needed.
-> In order to maintain full functionality of an offloaded USB devices,
-> several changes are made within the suspend flow of such devices:
-> - skip usb_suspend_device() so that the port/hub are still active for
->   USB transfers via offloaded path.
-> - not suspending the endpoints which are used by USB interfaces marked
->   with needs_remote_wakeup. Namely, skip usb_suspend_interface() and
->   usb_hcd_flush_endpoint() on associated USB interfaces. This reserves a
->   pending interrupt urb during system suspend for handling the interrupt
->   transfer, which is necessary since remote wakeup doesn't apply in the
->   offloaded USB devices when controller is still active.
-> - not flushing the endpoints of actively offloaded USB devices. Given
->   that the USB devices is used by another entity, unilaterally flush the
->   endpoint might lead to unexpected behavior on another entity.
-> - not suspending the xhci controller. This is done by skipping the
->   suspend/resume callbacks in the xhci platform driver.
-> 
-> Signed-off-by: Guan-Yu Lin <guanyulin@google.com>
-> ---
->  drivers/usb/core/driver.c    | 43 +++++++++++++++++++++++++++++++-----
->  drivers/usb/host/xhci-plat.c | 19 ++++++++++++++++
->  drivers/usb/host/xhci-plat.h |  1 +
->  include/linux/usb.h          |  2 ++
->  4 files changed, 59 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/usb/core/driver.c b/drivers/usb/core/driver.c
-> index 316526a05250..59b33e5e9a87 100644
-> --- a/drivers/usb/core/driver.c
-> +++ b/drivers/usb/core/driver.c
-> @@ -1420,11 +1420,25 @@ static int usb_suspend_both(struct usb_device *udev, pm_message_t msg)
->  			udev->state == USB_STATE_SUSPENDED)
->  		goto done;
->  
-> +	if (msg.event == PM_EVENT_SUSPEND && usb_offload_check(udev)) {
-> +		dev_dbg(&udev->dev, "device offload active, skip suspend.\n");
-> +		udev->offload_at_suspend = 1;
-> +	}
-> +
->  	/* Suspend all the interfaces and then udev itself */
->  	if (udev->actconfig) {
->  		n = udev->actconfig->desc.bNumInterfaces;
->  		for (i = n - 1; i >= 0; --i) {
->  			intf = udev->actconfig->interface[i];
-> +			/*
-> +			 * Don't suspend interfaces with remote wakeup while the controller is
-> +			 * active. This preserves pending interrupt urbs, allowing interrupt
-> +			 * events to be handled during system suspend.
-> +			 */
+Hi,
 
-Here and below, please try to limit the line lengths to below 80 
-columns, even in comments.
+in a setup where I use native XDP to redirect packets to a bonding interface
+that's backed by two ixgbe slaves, I noticed that the ixgbe driver constantly
+resets the NIC with the following kernel output:
 
-Alan Stern
+  ixgbe 0000:01:00.1 ixgbe-x520-2: Detected Tx Unit Hang (XDP)
+    Tx Queue             <4>
+    TDH, TDT             <17e>, <17e>
+    next_to_use          <181>
+    next_to_clean        <17e>
+  tx_buffer_info[next_to_clean]
+    time_stamp           <0>
+    jiffies              <10025c380>
+  ixgbe 0000:01:00.1 ixgbe-x520-2: tx hang 19 detected on queue 4, resetting adapter
+  ixgbe 0000:01:00.1 ixgbe-x520-2: initiating reset due to tx timeout
+  ixgbe 0000:01:00.1 ixgbe-x520-2: Reset adapter
+
+This only occurs in combination with a bonding interface and XDP, so I don't
+know if this is an issue with ixgbe or the bonding driver.
+I first discovered this with Linux 6.8.0-57, but kernel 6.14.0 and 6.15.0-rc1
+show the same issue.
+
+
+I managed to reproduce this bug in a lab environment. Here are some details
+about my setup and the steps to reproduce the bug:
+
+NIC: Intel Corporation 82599ES 10-Gigabit SFI/SFP+ Network Connection (rev 01)
+
+CPU: Ampere(R) Altra(R) Processor Q80-30 CPU @ 3.0GHz
+     Also reproduced on:
+     - Intel(R) Xeon(R) Gold 5218 CPU @ 2.30GHz
+     - Intel(R) Xeon(R) CPU E5-2620 v4 @ 2.10GHz
+
+Kernel: 6.15.0-rc1 (built from mainline)
+
+  # ethtool -i ixgbe-x520-1
+  driver: ixgbe
+  version: 6.15.0-rc1
+  firmware-version: 0x00012b2c, 1.3429.0
+  expansion-rom-version: 
+  bus-info: 0000:01:00.0
+  supports-statistics: yes
+  supports-test: yes
+  supports-eeprom-access: yes
+  supports-register-dump: yes
+  supports-priv-flags: yes
+
+The two ports of the NIC (named "ixgbe-x520-1" and "ixgbe-x520-2") are directly
+connected with each other using a DAC cable. Both ports are configured to be
+slaves of a bonding with mode balance-rr.
+Neither the direct connection of  both ports nor the round-robin bonding mode
+are a requirement to reproduce the issue. This setup just allows it to be easier
+reproduced in an isolated environment. The issue is also visible with a regular
+802.3ad link aggregation with a switch on the other side.
+
+  # modprobe bonding
+  # ip link set dev ixgbe-x520-1 down
+  # ip link set dev ixgbe-x520-2 down
+  # ip link add bond0 type bond mode balance-rr
+  # ip link set dev ixgbe-x520-1 master bond0
+  # ip link set dev ixgbe-x520-2 master bond0
+  # ip link set dev ixgbe-x520-1 up
+  # ip link set dev ixgbe-x520-2 up
+  # ip link set dev bond0 up
+        
+  # cat /proc/net/bonding/bond0
+  Ethernet Channel Bonding Driver: v6.15.0-rc1
+
+  Bonding Mode: load balancing (round-robin)
+  MII Status: up
+  MII Polling Interval (ms): 0
+  Up Delay (ms): 0
+  Down Delay (ms): 0
+  Peer Notification Delay (ms): 0
+
+  Slave Interface: ixgbe-x520-1
+  MII Status: up
+  Speed: 10000 Mbps
+  Duplex: full
+  Link Failure Count: 0
+  Permanent HW addr: 6c:b3:11:08:5c:3c
+  Slave queue ID: 0
+
+  Slave Interface: ixgbe-x520-2
+  MII Status: up
+  Speed: 10000 Mbps
+  Duplex: full
+  Link Failure Count: 0
+  Permanent HW addr: 6c:b3:11:08:5c:3e
+  Slave queue ID: 0
+
+  # ethtool -l ixgbe-x520-1
+  Channel parameters for ixgbe-x520-1:
+  Pre-set maximums:
+  RX:             n/a
+  TX:             n/a
+  Other:          1
+  Combined:       63
+  Current hardware settings:
+  RX:             n/a
+  TX:             n/a
+  Other:          1
+  Combined:       63
+  (same for ixgbe-x520-2)
+
+In the following the xdp-tools from https://github.com/xdp-project/xdp-tools/
+are used.
+
+Enable XDP on the bonding and make sure all received packets will be dropped:
+  # xdp-tools/xdp-bench/xdp-bench drop -e -i 1 bond0
+
+Redirect a batch of packets to the bonding interface:
+  # xdp-tools/xdp-trafficgen/xdp-trafficgen udp --dst-mac <mac of bond0>
+    --src-port 5000 --dst-port 6000 --threads 16 --num-packets 1000000 bond0
+
+Shortly after that (3-4 seconds), one or more "Detected Tx Unit Hang" errors
+(see above) will show up in the kernel log.
+
+The high number of packets and thread count (--threads 16) is not required to
+trigger the issue but greatly improves the probability.
+
+
+Do you have any ideas what may be causing this issue or what I can do to
+diagnose this further?
+
+Please let me know when I should provide any more information.
+
+
+Thanks!
+Marcus
