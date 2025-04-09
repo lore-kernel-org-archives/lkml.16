@@ -1,131 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B7AF25522F;
-	Wed,  9 Apr 2025 09:45:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49C8B25D219
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 09:45:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744191948; cv=none; b=keSlLKMPUTE4S0EOswwo478jeBiFlUn8rplFylI7kWVMtb4Og8MKX4x3xbLb7SgKKfSbXjtqkdQJ2scVzbXZNsT+9RXsQHOtAfR/rinIwrJJPMWb491ENiP8eRaVpE2FWc/aSR1ylJ02R/Uc/ZgopgQwDfcrqF/R5RA7AEIOa8I=
+	t=1744191958; cv=none; b=qNa5elSVt1Ge2joMCgRS64clhEg+Crh0AA3qS8bpCD632g4nrOkT4YPDl9lv5DmirdJ+kZPV0JtfrXns1zA2JDCGp4bquULyD4pCCp1uMgB39g/ehJWF5AntGbzlNg6idmiAsks7BYRkKSpW3+n9JTwQndbo6Uy+tAa1uxckRYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744191948; c=relaxed/simple;
-	bh=U7X30dmS1Fsg8OD383bJkqAVWwjWEApCOe5B+eDDT74=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lAYa/VlA2/cpvbLpSOrf6qeCFLSl14jTvOyCMf8afPg0kSgAs2XC2lVBWPPSZRhc5t7p7mT/1dDZVieWv3hoxcORFbZgH/2woWjEMOHXaKBw/MUEt6qct75udHQEWc7xtbDzA0oARUMzsEmZn4byuqL7FepoolLhN8fWrCJeuzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mi1Gt42H; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744191958; c=relaxed/simple;
+	bh=jbY8OFRGtCS3qGB2dY7IOuwbUBWjbDPtzPyd0O8E/WA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ixWZR2WaGsB/9PjRISn9k0uD7aPmPxP0zR1fOBSQsIL+6sfQ3URfrv1K93wV6Wt1TRvjeuVkBS/AqP3mawys69MWII+TKCeJL4Hl6BYL1P/qA4gTnSbQJAFOQeKrdIcINPRlzI6y7OdbTB/5uAOQ7+fUscL08orWbjD51SvEEn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=r8aO4zvm; arc=none smtp.client-ip=209.85.221.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mi1Gt42H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 201F1C4CEEC;
-	Wed,  9 Apr 2025 09:45:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744191948;
-	bh=U7X30dmS1Fsg8OD383bJkqAVWwjWEApCOe5B+eDDT74=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=mi1Gt42HsmQjtXUxbADreN46HyTc+Cm3YU7Umphm8Irmc/RXs4qWjbzJ2BwVuSRGp
-	 PWrnwJYNLAeeK/77weHVm7YIG9Z88l1ZQbBkwZlvJ09GsA2HC91/SpBknq86yRSZz3
-	 FZPhg38lCa+jcpYet1K9H8tW5w5acXWr28bWwWeWTLDd4e0lNCa1yZcWlirVFqvxXu
-	 Cr7NRy28Xib0lRqifgsVNhfltA8iI3c6P81UagBNl5yVCUfBMgd6jWVnZOVW7ZDcEl
-	 e5jinigYR6ZoPYRgOv2p+9OHLqLvBj5LjKrr/0JwXiQ7+mgZYlFzQ2hQvy3mxctAuD
-	 PKYg+lWlVoGMA==
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ac3b12e8518so1193846066b.0;
-        Wed, 09 Apr 2025 02:45:48 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUR2qtW9Pbunmowe1ZiaaG5ysZw7mabm7vzDxkbnE5ZgMkXwOIM9UCnjGkazwG/wg5B/SEaje/FMz2KAH/U@vger.kernel.org, AJvYcCX7jKFXtZJWlgw5CLb6TEaN4h0P+n9Kddpr/Qpcg//QKWwfqDy3/WIVFJF39NCnhcO8yYlqFQj1hgNRgA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGrB3D2VSzRMMHwgADGtR11wcSKSLFSowANNuHBsCpMwfKgLt8
-	u1f5b3zrlGrPeoDkeXlRMelBYz5T9SsD5iraxCgpAop5wMjKPhBTzNWsHaNtJjCT57O7RFQMq6n
-	zMiC/aZGh4oDuHAF/zRQTPykqw94=
-X-Google-Smtp-Source: AGHT+IG8iVTaKGJydkJy62ivtt+8m9F1Rw+6YluVf0P9U4TepkF99CocRhQfZ1VIdmnaLGWs1tNyo/pneweaUOh4Eao=
-X-Received: by 2002:a17:906:4fcc:b0:ac7:6222:4869 with SMTP id
- a640c23a62f3a-aca9d6f4aaamr149043966b.37.1744191946668; Wed, 09 Apr 2025
- 02:45:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r8aO4zvm"
+Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-39c2da64df9so4365309f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 02:45:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744191954; x=1744796754; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jbY8OFRGtCS3qGB2dY7IOuwbUBWjbDPtzPyd0O8E/WA=;
+        b=r8aO4zvmzxwWaruksoc0zgn83lutnuIMskxjEAoafYbf/yG5XzD82W4K/ESlugpz2H
+         sfpgLEa5qdi0SdCzUyOcGodp3trJ3WpKd/kQ6aMXUcVxDqH1+D/FfTxm9lDxrPEOuaTf
+         yfysVF8uv87aI7CTTiSOodxdGdYzraoFnxm4hj2l43KNAEav2RT5EzBolLmdqB+uuodf
+         tCvg6EP5/3QpVPzVKQ/VVMNlG1f85K7IINkRxlfhE/SORvGdvm69UH2RUcf9zYJlejiy
+         EJv+FVXE0eMO2EJhQ1CZ2yzRZzIdoB10qvY5HfbKIe1WcmfHWx2I1zUSalsnGSTcliAw
+         /mWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744191954; x=1744796754;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=jbY8OFRGtCS3qGB2dY7IOuwbUBWjbDPtzPyd0O8E/WA=;
+        b=nIUeuNkXw7D3O0GTw0n3N13lnkXV7eDOq7y1yVlDcJRBeMcRy8nf5zgSQnXl7Z4AVD
+         iAf1KpYQRFkjkqx8u6H92K4bSpCykw/OdoTX8eXEhBv18tz5wZjC0jZR0+rqYt/Dovh1
+         cc57XoMn2oqRVrfatiPq54pVBIQJ0KUY3MHyDkWtz7mGysVp30Kb2vW0c7ExBIqwLG+u
+         EDXZlNypydrYNKktfn3gPaqdZqc82fRf3gy/10ut665AxSxS91Yshx/32ODIJWmpprSW
+         F4qVZq2O2GCTZdHh1aN4Eui51oInRnU2hcc3a5dEyaGXbad4Ym0gq9ZkdnaU2shoP40i
+         XQNg==
+X-Forwarded-Encrypted: i=1; AJvYcCW6p7TbxkJlveDjlw4leDvLQ2AoYJdaO4OGSY/945GJlZHWxfTtPx++fuEtuUFo0L/rB0ebsscr6VBualU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhDsHb2gwWsbB0X5eSwDlIIhPuMSMEMULk7iTBNDLbCfjnoF5z
+	9KMzS/FqsuJUO429+9JVHBRiJ7ji6jxPoQdsQ0+FUS5H4ez+qK+k+k0hzS1bhFpKgRBiOlg+EAM
+	zMec7dh+PunwaTQ==
+X-Google-Smtp-Source: AGHT+IFU5PtqYzywsfZTZnvn0+eGgwmBOUG2VhP8fojRJNHYDCxKaO4/6DkqMYUH/KrEpuJdW/spl9clwX6DMWQ=
+X-Received: from wrbdi7.prod.google.com ([2002:a05:6000:ac7:b0:39a:bed5:1512])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6000:2ca:b0:39c:30cd:352c with SMTP id ffacd0b85a97d-39d88525afamr1619648f8f.8.1744191954414;
+ Wed, 09 Apr 2025 02:45:54 -0700 (PDT)
+Date: Wed, 9 Apr 2025 09:45:52 +0000
+In-Reply-To: <CAJ-ks9njZbqRFVXTFkG1ms2UxsHtym+gP6Od-Hz+=sj+VeTX3g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250408122933.121056-1-frank.li@vivo.com> <20250408224749.GD13292@twin.jikos.cz>
-In-Reply-To: <20250408224749.GD13292@twin.jikos.cz>
-From: Filipe Manana <fdmanana@kernel.org>
-Date: Wed, 9 Apr 2025 10:45:09 +0100
-X-Gmail-Original-Message-ID: <CAL3q7H6sYN_nmqwJb861qm08Fb5hBr_4QrxJCzeq6Quwh04bjA@mail.gmail.com>
-X-Gm-Features: ATxdqUGDRMWD7iTqMUuJo2rKdKpU9xkiE-BQebVMAV6ihrJKizLPNzex5SJ3EbI
-Message-ID: <CAL3q7H6sYN_nmqwJb861qm08Fb5hBr_4QrxJCzeq6Quwh04bjA@mail.gmail.com>
-Subject: Re: [PATCH 1/4] btrfs: use BTRFS_PATH_AUTO_FREE in insert_balance_item()
-To: dsterba@suse.cz
-Cc: Yangtao Li <frank.li@vivo.com>, clm@fb.com, josef@toxicpanda.com, dsterba@suse.com, 
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+References: <20250307-no-offset-v1-0-0c728f63b69c@gmail.com>
+ <20250307-no-offset-v1-2-0c728f63b69c@gmail.com> <Z9gIvLY1uubS6OX-@google.com>
+ <CAJ-ks9njZbqRFVXTFkG1ms2UxsHtym+gP6Od-Hz+=sj+VeTX3g@mail.gmail.com>
+Message-ID: <Z_ZB0BZuugdjsBR3@google.com>
+Subject: Re: [PATCH 2/2] rust: workqueue: remove HasWork::OFFSET
+From: Alice Ryhl <aliceryhl@google.com>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 8, 2025 at 11:50=E2=80=AFPM David Sterba <dsterba@suse.cz> wrot=
-e:
->
-> On Tue, Apr 08, 2025 at 06:29:30AM -0600, Yangtao Li wrote:
-> > All cleanup paths lead to btrfs_path_free so we can define path with th=
+On Mon, Mar 17, 2025 at 07:35:55AM -0400, Tamir Duberstein wrote:
+> On Mon, Mar 17, 2025 at 7:34=E2=80=AFAM Alice Ryhl <aliceryhl@google.com>=
+ wrote:
+> >
+> > Overall looks good to me, but please CC the WORKQUEUE maintainers on th=
 e
-> > automatic free callback.
-> >
-> > Signed-off-by: Yangtao Li <frank.li@vivo.com>
-> > ---
-> >  fs/btrfs/volumes.c | 7 ++-----
-> >  1 file changed, 2 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
-> > index c8c21c55be53..a962efaec4ea 100644
-> > --- a/fs/btrfs/volumes.c
-> > +++ b/fs/btrfs/volumes.c
-> > @@ -3730,7 +3730,7 @@ static int insert_balance_item(struct btrfs_fs_in=
-fo *fs_info,
-> >       struct btrfs_trans_handle *trans;
-> >       struct btrfs_balance_item *item;
-> >       struct btrfs_disk_balance_args disk_bargs;
-> > -     struct btrfs_path *path;
-> > +     BTRFS_PATH_AUTO_FREE(path);
-> >       struct extent_buffer *leaf;
-> >       struct btrfs_key key;
-> >       int ret, err;
-> > @@ -3740,10 +3740,8 @@ static int insert_balance_item(struct btrfs_fs_i=
-nfo *fs_info,
-> >               return -ENOMEM;
-> >
-> >       trans =3D btrfs_start_transaction(root, 0);
-> > -     if (IS_ERR(trans)) {
-> > -             btrfs_free_path(path);
-> > +     if (IS_ERR(trans))
-> >               return PTR_ERR(trans);
-> > -     }
-> >
-> >       key.objectid =3D BTRFS_BALANCE_OBJECTID;
-> >       key.type =3D BTRFS_TEMPORARY_ITEM_KEY;
-> > @@ -3767,7 +3765,6 @@ static int insert_balance_item(struct btrfs_fs_in=
-fo *fs_info,
-> >       btrfs_set_balance_sys(leaf, item, &disk_bargs);
-> >       btrfs_set_balance_flags(leaf, item, bctl->flags);
-> >  out:
-> > -     btrfs_free_path(path);
->
-> The pattern where btrfs_free_path() is not called at the end and is
-> followed by other code is probably not worth converting. It would be
-> possible to replace it by
->
->         btrfs_release_path(path);
->         path =3D NULL;
+> > next version.
+>=20
+> Thanks! Does there need to be another version? No changes have been reque=
+sted.
 
-Should be btrfs_free_path() instead, otherwise it leaks memory.
-Or just do the release without setting the path to NULL and leaving
-the path auto free.
+Yes, it needs a new version to fix conflicts with commit 7b948a2af6b5
+("rust: pci: fix unrestricted &mut pci::Device") that landed in the
+merge window just now. More generally, a new version is also recommended
+if maintainers are missing in the CC list.
 
->
-> that drops the locks and refs from the path but this does not save us
-> much compared to the straightforward BTRFS_PATH_AUTO_FREE() conversions.
-> Also release will still keep the object allocated although we don't need
-> it. As a principle, resources, locks and critical sections should be as
-> short as possible.
->
-> Unfortunatelly I've probably fished all the trivial and almost-trivial
-> conversions, we don't want 100% use of BTRFS_PATH_AUTO_FREE(), only when
-> it improves the code.
->
-> You may still find cases worth converting, the typical pattern is
-> btrfs_path_alloc() somewhere near top of the function and
-> btrfs_free_path() called right before a return.
->
+As an FYI, I'm looking to do some additional work on the workqueue
+abstractions to support delayed work items for use by GPU drivers. Since
+I agree with this change, I'll base my work on top of your series.
+
+Alice
