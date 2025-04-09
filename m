@@ -1,242 +1,157 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EADB025D556;
-	Wed,  9 Apr 2025 15:44:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 741F52690F0
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 15:44:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744213473; cv=none; b=F+k5zeGWqO6XobqXfGpziRvzdRFr5SmdcNvJUK0AZqbFNxLxzgHJn3gqm3VooKISDLN/pMw+O9RTjgfjUnOeUGn4EWYyKJ367HxoHQNoCga8vNlpIJ7W0qSz5rarxyuqHt8tGe5/R0wMNPKH1wgDOhnOkxorJlEZQUpd4M5YkDE=
+	t=1744213478; cv=none; b=LeHLeY1stfDgME+sSSSsHiVLaYG4NprpPkRxrfGoJCR9GlUo+dBlOOEEO03XR4rtMlAU7KAHHJMf+AA244JTMH/z9qc8HihppRJFZDsj/gZD7HXmYtm+NbRS3PAf2enWFnSinluotA/7a67/NsxLbWZAF5WqXNmJxJPfSNswYls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744213473; c=relaxed/simple;
-	bh=Dh2iCy49AlSFY/9nHd6Unte6BCO4NJ7RSIG0FCrmwLQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FeZLPmpmC8D9uUjx5P2+6tguray0g50sPc6/U9WGxEFRh1gcrAGsp0D/LpP2wnad8NRroBpjU3M4xHpfTqDSqF4TxdFJejrS/EerufpEW6R6w4+0M2pAgwbQzXxPmn+HPhmPssooPWzm6iyEdA2LwNBNrU35e0lZh+i0arZT5ak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P3grMWA+; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744213478; c=relaxed/simple;
+	bh=UeuCyXLhXUjc128ilY+JpuRORw7wF28aBCmlfY8BXsQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GWn8bwm/ZPE8T8vT+M2Xj4xyGsym2WhH/yQGEUeSWRTCCPygEkz4A3AbUhbB0jR4Ke1Pa2TkyZ3HMPraNIOqUB+87ju+Tra3JfmT9obxt8nEUQ4dvtYt4ppjnCcOEqjYK8xU79uygo0rjX2aHMjI63qqr09KDF1hP3KiNKncty0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=TWRAM9wL; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P3grMWA+"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-af50f56b862so4885734a12.1;
-        Wed, 09 Apr 2025 08:44:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744213471; x=1744818271; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=MUUuTxOiF/e6pFbiGJ55Vd+VaZOP/yQaXFZJe/XlPzE=;
-        b=P3grMWA+e1iHD/x8gmr9RZaGKL+y35ts6TeeIjR2IueDnvP00TrdUPrUdzulmMe1xq
-         Q5L6qoBA7p8tXyuUmSoZmbDWbPp2eccSytVL7WRGeIdRW0bE1Ko+uo3Nb9WPC4l3zNlI
-         t17XGTYTHVabMOIbz8E77PKG95PQSXiNVe5Aa2/OvTh+OM0HkUxDiuyIX4bpZ0daU5nw
-         3tHcwqltaImNumjvXoztsSYqsjaCd5toL7ilw3auvhdm6cE8X0pVo7gg4UFU/34lbpvG
-         bJVdk81DGhBCOvRXN7RzyCp//oHgsklZjh0q8Uv3ToDWNT6XaaLgaCOw+cA6RGaTfwfv
-         PWpQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="TWRAM9wL"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53985FVT015731
+	for <linux-kernel@vger.kernel.org>; Wed, 9 Apr 2025 15:44:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	jf9Ry+p2QQQupfgw9vOlP3Ifvgj581gqI0fqXPxyhMg=; b=TWRAM9wLBxqUMUOp
+	936fUT/TBvmCbxUFWKW/cG7VqA8rE+UhFA/ur7uT0cj7S+cipzBvhPb/KBmwrU36
+	TQLv6z1O2ntFSPaxOXgRIJ+B36Die/6n8xZ/Rg3PbRA8+xz+KRglopxtYQPQfgze
+	wXNtWUFaQi9pwbA0fo0GsPNuvD+YLiRfF3KhO0IL/4qPvo3ezADfziS7dr+Pky2l
+	8comIh1oY3UbvXJxx6Uw9UHMr0OvSZ0a+dqBf6YsULlZzLj+850W8VHIpYNxSmvs
+	E8ywtn6Xnk8wvyXYf3BHhJ3fNzvtqQ4xjo++qhO8bS0N1bZmRO5OBx2iambMT7YN
+	goH6SQ==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twd2uua4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 15:44:36 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c549ea7166so1111823385a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 08:44:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744213471; x=1744818271;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MUUuTxOiF/e6pFbiGJ55Vd+VaZOP/yQaXFZJe/XlPzE=;
-        b=ezqe8+pyKUqnc+U7I4MsmixHZ/N62IHgLEqYlseKrBC0Sk7iR6zB45gFt7BgFK5a6i
-         SlSjkiQYIUApV5GBg+BuqzMUZCKqaU98mG9iiaZ9p8uWsLloAYlDdhkbNDYiplBLKDHD
-         4YU2aACzOw2DpLdC5X6+QAeshCPcA5icNfJSCcAmN2YzKBBH7zU/Lq1flvdHgdpr9zaA
-         Tf0AbgyIsORSWgzwMtrOBuciPwmOxYcctVOM6sFC/gIEOm9tbnq0yf4fnaL2J4jGvShm
-         sSaldz6GsCsJT23rA08oLMIJSd1hwijTyLceLyM5ut112rzKP1ZuOtAAS5ElBAx1ZnOk
-         WerA==
-X-Forwarded-Encrypted: i=1; AJvYcCV5Rkn4zKLojuF+En+gCnkt7gnvUEwbig8/nXjd43ZEHWwFSLZk5AQeu/WPOvEd8AF6eM8=@vger.kernel.org, AJvYcCVVQI3aGGedKFxdxgGuSwwcDF7dQuqBIkBH3kz2rqNTfHTCkLxBFMezKczODU1Z2xQXnJ9djtHSP722oNg=@vger.kernel.org, AJvYcCVbWCGtfoH09WTi/NT7ZM0mmr/BjbwywlW1sD8VUuagcR1NoU9vLRta5StAsnO/EQZ9FdnIaQIV@vger.kernel.org, AJvYcCVt+xlNsSzhjRCzuxojTpKGdLWm2pO5n+Obb9nmffh0lIePo6CIuOnEM2H3lfPyPzsWNDEygonAjF06b3RX@vger.kernel.org, AJvYcCW1MpgD++n9SKyqcFIhRlZ4ZxXpP19nXWgGVc4nxw5ytQBjr7s6TlG+2RxtUN2tKa5NCz0kvIDbuFi1T30=@vger.kernel.org, AJvYcCW5KvcnBShGwAdqpTKairRWKZLSUXjGARoyHsF786h8xuxcanLGPzyWY+WibXG795HK3rCz1SGhrTcWxPzKP2c=@vger.kernel.org, AJvYcCX0ebyTyZ5rFwbJOV5zf12p6QcxlRVb2nT5psEFWReaqaVXL/Assea5FL22YLFv5xn6ODy4izCvnl6TqxE=@vger.kernel.org, AJvYcCXb/E3Bfte9scP4x81Ru3Bu953vgtfS3YbKzXsJypAy881Zu39OqareJY1w/8/nc9m4C2xURHmnSFbHOjZj@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8fQ2h9tmGG0TTbeTc9aCQDUC8VTVQBjvJpzjMxIWVN/pkC3tV
-	l0F9gCb7Pf70zeuWWM4ZxEEVxFV4iOzLPthzyKGheK0T/hTbrmuh
-X-Gm-Gg: ASbGnctIjBmpRRcrd3OJMiFcbxMMMyahV5tvXuLqykimg08JBYIbJ6p1BRj/gtEZemT
-	5Z4S8QApXGlW9SoHRuBw50AUK3ycBpb5yFRSm/KKs6i8J1yPxN958EDXbuJtRLIYDc5DJP4h0NB
-	LQFX4mFIXN4CagYZtDuvEtlypC7vXc9/K/zPTbPSPH20Hp0Y7PD6SDbccyYsGRFJSBAJY3vTvPB
-	15zJAyrItCiXfSlVH1C9kzfWeGk+69QMUTVcQuEGEaU9kSVF3CtI86Kn25vcID62xd6AibmkVqj
-	qRKfetp7Dmdzy7zsBJpMOPOkwOw288afsfcGgDFJiSgcM90QSJhlNye6lnS8q4aUiJ8Llpk=
-X-Google-Smtp-Source: AGHT+IGnoEozOknyoC6We3L6wSu5LW5c8+l3K2S+PrKsnw7nWoi0Lt21fMnvhITP0Puz6RwfcrL34g==
-X-Received: by 2002:a17:90a:d884:b0:2f9:cf97:56ac with SMTP id 98e67ed59e1d1-306dd1719cfmr5116718a91.0.1744213470998;
-        Wed, 09 Apr 2025 08:44:30 -0700 (PDT)
-Received: from visitorckw-System-Product-Name.. ([140.113.216.168])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306dd171991sm1952304a91.37.2025.04.09.08.44.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 08:44:30 -0700 (PDT)
-From: Kuan-Wei Chiu <visitorckw@gmail.com>
-To: tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	jk@ozlabs.org,
-	joel@jms.id.au,
-	eajames@linux.ibm.com,
-	andrzej.hajda@intel.com,
-	neil.armstrong@linaro.org,
-	rfoss@kernel.org,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	dmitry.torokhov@gmail.com,
-	mchehab@kernel.org,
-	awalls@md.metrocast.net,
-	hverkuil@xs4all.nl,
-	miquel.raynal@bootlin.com,
-	richard@nod.at,
-	vigneshr@ti.com,
-	louis.peens@corigine.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	parthiban.veerasooran@microchip.com,
-	arend.vanspriel@broadcom.com,
-	johannes@sipsolutions.net,
-	gregkh@linuxfoundation.org,
-	jirislaby@kernel.org,
-	yury.norov@gmail.com,
-	akpm@linux-foundation.org,
-	jdelvare@suse.com,
-	linux@roeck-us.net,
-	alexandre.belloni@bootlin.com,
-	pgaj@cadence.com
-Cc: hpa@zytor.com,
-	alistair@popple.id.au,
-	linux@rasmusvillemoes.dk,
-	Laurent.pinchart@ideasonboard.com,
-	jonas@kwiboo.se,
-	jernej.skrabec@gmail.com,
-	kuba@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-fsi@lists.ozlabs.org,
-	dri-devel@lists.freedesktop.org,
-	linux-input@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	linux-mtd@lists.infradead.org,
-	oss-drivers@corigine.com,
-	netdev@vger.kernel.org,
-	linux-wireless@vger.kernel.org,
-	brcm80211@lists.linux.dev,
-	brcm80211-dev-list.pdl@broadcom.com,
-	linux-serial@vger.kernel.org,
-	bpf@vger.kernel.org,
-	jserv@ccns.ncku.edu.tw,
-	Frank.Li@nxp.com,
-	linux-hwmon@vger.kernel.org,
-	linux-i3c@lists.infradead.org,
-	david.laight.linux@gmail.com,
-	andrew.cooper3@citrix.com,
-	Kuan-Wei Chiu <visitorckw@gmail.com>,
-	Yu-Chun Lin <eleanor15x@gmail.com>
-Subject: [PATCH v4 00/13] Introduce parity_odd() and refactor redundant parity code
-Date: Wed,  9 Apr 2025 23:43:43 +0800
-Message-Id: <20250409154356.423512-1-visitorckw@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1744213475; x=1744818275;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jf9Ry+p2QQQupfgw9vOlP3Ifvgj581gqI0fqXPxyhMg=;
+        b=ZPToZT9BPVjscJM10jsNoCeoQ2KtMdO1i7wuogeEcmMRo+cPArWe8TNHYSQeksdQTO
+         /o/BMyw/0I+FKoA7HY1JvHeKyRGdqC98DOKPpmPRLW0sEIu5qA0ODOLzhxbJ+yoBR540
+         KmC2VtGAyi4kiaiaKPWafczkhGcWE6QSOf6DrnDjdG9A7ueXOVE45YemkGeUJJKXaD5Q
+         Gsdcenlve1vAInCcTsSRPrzhcFRsWaoSOc0+b33IqQLNxbx+R1pMtV0I96BVHCvHhjjA
+         d3zipLL2q8kvlV3kaFa8MEHe6nxatkTMzZUEoUpXS4uxs+crIXCi+eUl74YDBM2oYHJH
+         5Ofg==
+X-Forwarded-Encrypted: i=1; AJvYcCVfaa7tlvtwxcaHGO8PpCiwKt9RID+XuqEQId++RasvHij6abfdLaUKOhQ0IdwaWMahpnye4K6YTLu0MLk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyovy4Vqr0PWT8QHgSi6OCgQfVmqRNGyfZAYRrq8XAho8NXI21J
+	idXOXaAiTABUUn6cSp/Uuczt6V5oEkETMESQBgFB3w6VqaYEcQ09JNr/ZEpm/innEYbwg7jRNHi
+	ye8EE8jeQilnL+OHu3dSBzjlpirkWziPNPCzuJysM/KwuWFD+eRX9Pd6r0Sy1I+s=
+X-Gm-Gg: ASbGncsF4Nl5iCh3kONqA+iWoI6DRCw330grjd3anQo4ZOk20FOh4ojFCr4ILYurTDd
+	WDB0htCZd8ELrfoXzKZ2xc0rZxxm8fbJx8KkvATrhuOxa4X2C9bGJfL8VnEMclegkwdcl325r16
+	Rq6ADQxo0hQnQ9C+W/mPWxxY30R3KctjN/qYMCunsHBm+ENuXvMtcvTqJnPfjZpuan53N2eC7Le
+	bND91olTpVv3fNVlOQPuaFhj+S6nZOcYMSZeblWSyg1jg/AamWNNyxOaPKDV5IMmdfeBJFC2/h8
+	Ctp1Qy2/ovsnSy+S7sgMisw1fE8CmTlIBMuo05AzxGU776HsrtWMz1eSJRPuTOTiJSU=
+X-Received: by 2002:a05:620a:6223:b0:7c7:a212:d1e7 with SMTP id af79cd13be357-7c7a212d215mr251122385a.32.1744213475098;
+        Wed, 09 Apr 2025 08:44:35 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFR79I/nR+rW+zjtLRr7uRkQezm/LzIKrYmKHQlSC0gniwNCOb3Sxvl8FOipevKYywu+GxHkQ==
+X-Received: by 2002:a05:620a:6223:b0:7c7:a212:d1e7 with SMTP id af79cd13be357-7c7a212d215mr251120085a.32.1744213474747;
+        Wed, 09 Apr 2025 08:44:34 -0700 (PDT)
+Received: from [10.187.209.180] (37-33-188-210.bb.dnainternet.fi. [37.33.188.210])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f465f7b0asm2007281fa.98.2025.04.09.08.44.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Apr 2025 08:44:34 -0700 (PDT)
+Message-ID: <685e784c-3f36-4cd1-9c34-7f98c64d50f2@oss.qualcomm.com>
+Date: Wed, 9 Apr 2025 18:44:36 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/4] Retrieve information about DDR from SMEM
+To: Konrad Dybcio <konradybcio@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Dmitry Baryshkov <lumag@kernel.org>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+References: <20250409-topic-smem_dramc-v1-0-94d505cd5593@oss.qualcomm.com>
+Content-Language: en-US
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+In-Reply-To: <20250409-topic-smem_dramc-v1-0-94d505cd5593@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: jiKk-YsAszCpdRntsgRoVXXXjMgDOU1K
+X-Proofpoint-GUID: jiKk-YsAszCpdRntsgRoVXXXjMgDOU1K
+X-Authority-Analysis: v=2.4 cv=NaLm13D4 c=1 sm=1 tr=0 ts=67f695e4 cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=gh1egkeLKbPt9jDVRuYeUQ==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=9wHiH3TPsHwm208gvmQA:9 a=QEXdDO2ut3YA:10
+ a=bTQJ7kPSJx9SKPbeHEYW:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-09_05,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
+ priorityscore=1501 adultscore=0 malwarescore=0 suspectscore=0
+ lowpriorityscore=0 bulkscore=0 mlxlogscore=703 clxscore=1015 phishscore=0
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504090100
 
-Several parts of the kernel contain open-coded and redundant
-implementations of parity calculation. This patch series introduces
-a unified helper, parity_odd(), to simplify and standardize these
-cases.
+On 09/04/2025 17:47, Konrad Dybcio wrote:
+> SMEM allows the OS to retrieve information about the DDR memory.
+> Among that information, is a semi-magic value called 'HBB', or Highest
+> Bank address Bit, which multimedia drivers (for hardware like Adreno
+> and MDSS) must retrieve in order to program the IP blocks correctly.
+> 
+> This series introduces an API to retrieve that value, uses it in the
+> aforementioned programming sequences and exposes available DDR
+> frequencies in debugfs (to e.g. pass to aoss_qmp debugfs). More
+> information can be exposed in the future, as needed.
 
-The first patch renames parity8() to parity_odd(), changes its argument
-type from u8 to u64 for broader applicability, and updates its return
-type from int to bool to make its usage and return semantics more
-intuitive-returning true for odd parity and false for even parity. It
-also adds __attribute_const__ to enable compiler optimizations.
+I know that for some platforms HBB differs between GPU and DPU (as it's 
+being programmed currently). Is there a way to check, which values are 
+we going to program:
 
-While more efficient implementations may exist, further optimization is
-postponed until a use case in performance-critical paths arises.
+- SM6115, SM6350, SM6375 (13 vs 14)
+- SC8180X (15 vs 16)
+- QCM2290 (14 vs 15)
 
-Subsequent patches refactor various kernel components to replace
-open-coded parity logic with the new helper, reducing code duplication
-and improving consistency.
 
-Co-developed-by: Yu-Chun Lin <eleanor15x@gmail.com>
-Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
-Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
----
+> 
+> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> ---
+> Konrad Dybcio (4):
+>        soc: qcom: Expose DDR data from SMEM
+>        drm/msm/a5xx: Get HBB dynamically, if available
+>        drm/msm/a6xx: Get HBB dynamically, if available
+>        drm/msm/mdss: Get HBB dynamically, if available
+> 
+>   drivers/gpu/drm/msm/adreno/a5xx_gpu.c |  13 +-
+>   drivers/gpu/drm/msm/adreno/a6xx_gpu.c |  22 ++-
+>   drivers/gpu/drm/msm/msm_mdss.c        |  35 ++++-
+>   drivers/soc/qcom/Makefile             |   3 +-
+>   drivers/soc/qcom/smem.c               |  14 +-
+>   drivers/soc/qcom/smem.h               |   9 ++
+>   drivers/soc/qcom/smem_dramc.c         | 287 ++++++++++++++++++++++++++++++++++
+>   include/linux/soc/qcom/smem.h         |   4 +
+>   8 files changed, 371 insertions(+), 16 deletions(-)
+> ---
+> base-commit: 46086739de22d72319e37c37a134d32db52e1c5c
+> change-id: 20250409-topic-smem_dramc-6467187ac865
+> 
+> Best regards,
 
-To H. Peter:
-I understand your preference for a parity8/16/32/64() style interface,
-and I agree that such a design would better accommodate potential
-arch-specific implementations. However, I suspect there are very few,
-if any, users who care about the performance of parity calculations
-enough to warrant such optimizations. So my inclination is to defer any
-arch-specific or optimized implementations until we see parity_odd()
-being used in hot paths.
-
-Changes in v4:
-- Rename parity8() to parity_odd().
-- Change the argument type from u8 to u64.
-- Use a single parity_odd() function.
-
-Changes in v3:
-- Avoid using __builtin_parity.
-- Change return type to bool.
-- Drop parity() macro.
-- Change parityXX() << y to !!parityXX() << y.
-
-Changes in v2:
-- Provide fallback functions for __builtin_parity() when the compiler
-  decides not to inline it
-- Use __builtin_parity() when no architecture-specific implementation
-  is available
-- Optimize for constant folding when val is a compile-time constant
-- Add a generic parity() macro
-- Drop the x86 bootflag conversion patch since it has been merged into
-  the tip tree
-
-v3: https://lore.kernel.org/lkml/20250306162541.2633025-1-visitorckw@gmail.com/
-v1: https://lore.kernel.org/lkml/20250223164217.2139331-1-visitorckw@gmail.com/
-v2: https://lore.kernel.org/lkml/20250301142409.2513835-1-visitorckw@gmail.com/
-
-Kuan-Wei Chiu (13):
-  bitops: Change parity8() to parity_odd() with u64 input and bool
-    return type
-  media: media/test_drivers: Replace open-coded parity calculation with
-    parity_odd()
-  media: pci: cx18-av-vbi: Replace open-coded parity calculation with
-    parity_odd()
-  media: saa7115: Replace open-coded parity calculation with
-    parity_odd()
-  serial: max3100: Replace open-coded parity calculation with
-    parity_odd()
-  lib/bch: Replace open-coded parity calculation with parity_odd()
-  Input: joystick - Replace open-coded parity calculation with
-    parity_odd()
-  net: ethernet: oa_tc6: Replace open-coded parity calculation with
-    parity_odd()
-  wifi: brcm80211: Replace open-coded parity calculation with
-    parity_odd()
-  drm/bridge: dw-hdmi: Replace open-coded parity calculation with
-    parity_odd()
-  mtd: ssfdc: Replace open-coded parity calculation with parity_odd()
-  fsi: i2cr: Replace open-coded parity calculation with parity_odd()
-  nfp: bpf: Replace open-coded parity calculation with parity_odd()
-
- arch/x86/kernel/bootflag.c                    |  4 +--
- drivers/fsi/fsi-master-i2cr.c                 | 20 +++------------
- .../drm/bridge/synopsys/dw-hdmi-ahb-audio.c   |  8 ++----
- drivers/hwmon/spd5118.c                       |  2 +-
- drivers/i3c/master/dw-i3c-master.c            |  2 +-
- drivers/i3c/master/i3c-master-cdns.c          |  2 +-
- drivers/i3c/master/mipi-i3c-hci/dat_v1.c      |  2 +-
- drivers/input/joystick/grip_mp.c              | 17 ++-----------
- drivers/input/joystick/sidewinder.c           | 25 ++++---------------
- drivers/media/i2c/saa7115.c                   | 12 ++-------
- drivers/media/pci/cx18/cx18-av-vbi.c          | 12 ++-------
- .../media/test-drivers/vivid/vivid-vbi-gen.c  |  8 ++----
- drivers/mtd/ssfdc.c                           | 20 +++------------
- drivers/net/ethernet/netronome/nfp/nfp_asm.c  |  7 +-----
- drivers/net/ethernet/oa_tc6.c                 | 19 +++-----------
- .../broadcom/brcm80211/brcmsmac/dma.c         | 18 ++-----------
- drivers/tty/serial/max3100.c                  |  3 ++-
- include/linux/bitops.h                        | 19 ++++++++------
- lib/bch.c                                     | 14 +----------
- 19 files changed, 49 insertions(+), 165 deletions(-)
 
 -- 
-2.34.1
-
+With best wishes
+Dmitry
