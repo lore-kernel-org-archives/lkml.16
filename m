@@ -1,55 +1,55 @@
 Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01D0F1C8FB5;
-	Wed,  9 Apr 2025 03:34:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1F841D5CFE;
+	Wed,  9 Apr 2025 03:34:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744169684; cv=none; b=Er5rw0QsIm+hskrhOlfezL6CZLC0hTWAbk0t2jueGBBxfYQDftI5vuok+/2UYGjg0YH/8ScPPkh0EfOZsA6EbNx2haH77ai+tNGZXTvFbeLWssHTnfCMCzMWHKrEhVgt+6+PhePQJP3ubajphrk0tGihCLpbQWaOH8nFCvzWaSA=
+	t=1744169688; cv=none; b=UyRsoqjiDF++8a1aBhyIbHLkz3o9/ZGFmMpmdc8Ni47JRRSvDFCJClrJdGmz6XX50CX25pkuq6b505wgXQ+hgGj/+LTPZ1BI+SxkBUpv5OVL5IuRwYPcdSGxKFIi6qfIR//BMyNciH0fOZ3co6Q3dc7g53P+uqX2g76RAM6Ev6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744169684; c=relaxed/simple;
-	bh=WwB/iLj+kr+uR4r3HljA27uS98rQcwljoakqTDQY3QM=;
+	s=arc-20240116; t=1744169688; c=relaxed/simple;
+	bh=RIZppefsU+3autn4NmcSi1RoSkrIV7WO4c4Uuqi9okg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=joY1VLrtRObPU/wAL1OjtyMzDf4eN9Xih0u5AtII3kBKVxs8Miw+bDFRtWUuLT/spK5+GWJq2xlFD5XZ5iRErG/wLXKzKKD1V/aHx5+FU18/agUN6B5snmt3uHNMzBnWs+ZmIgvBlC2qxh8Ey4tnGiYDraEZWKYXPZ7ZgvoL4NM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz; spf=pass smtp.mailfrom=dxuuu.xyz; dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b=kfqzsDZs; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Qer5rAQL; arc=none smtp.client-ip=103.168.172.155
+	 MIME-Version; b=MoXK2XK9UUygDNWZ1hKZiyPSkg07/CLYcfynj7y5yQ6SjXiZooA1zaxFrqmy4DAjtV7vzq6+o13L0/FhlDtsAETk1QnaByxKCcdcy82Knd6e9p44kOz0iCX5xRShvAlZ7aGJ2YcbCJ9745y+EFWmQ1s7r7MH0jI6fEFSxB2funE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz; spf=pass smtp.mailfrom=dxuuu.xyz; dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b=M5QaLNvZ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ljteCJ2o; arc=none smtp.client-ip=103.168.172.155
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dxuuu.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="kfqzsDZs";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Qer5rAQL"
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 102CB1140252;
-	Tue,  8 Apr 2025 23:34:42 -0400 (EDT)
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="M5QaLNvZ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ljteCJ2o"
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id E845A1140255;
+	Tue,  8 Apr 2025 23:34:45 -0400 (EDT)
 Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-02.internal (MEProxy); Tue, 08 Apr 2025 23:34:42 -0400
+  by phl-compute-11.internal (MEProxy); Tue, 08 Apr 2025 23:34:45 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=cc
 	:cc:content-transfer-encoding:content-type:date:date:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm1; t=1744169682; x=
-	1744256082; bh=2PzkHPaQng3j4OQOLko7zULD6UngdArPhuztPcHfJP0=; b=k
-	fqzsDZsKIyr6TLxTmQHKMcqFskvC/rv1W3PVYYwjAQe+inFhezSAfnZ8vydOlqxH
-	KGPOePD+By4SHRR2J8l/uSjwJmRG5bm/QSQI1/xsXBnEgDRmfeqv4Mxty2gFWBLc
-	ZYmG+DrokwY2GEkZmcdLw8yCGFkcL5qnWjU9nV87jfgS+HhAAxhEXaIqJcvq2EcH
-	O0AwdYB+xHP+uYLpEXDq2dRd3US4zquSfacFFqX93pYa30j5I/5SVAnA1MLscXWw
-	sKQa2z5QpvNmvIWb+qE8q2IDjz/STxSR5c9iCbXHWsbtiw/p1jvId+11X/9eiolI
-	DBWrupm4he+ZxCvogTLjA==
+	:reply-to:subject:subject:to:to; s=fm1; t=1744169685; x=
+	1744256085; bh=PveBnY5/PTuYnXShL2+88mWJUuaL+VGQS4W+0t445Kc=; b=M
+	5QaLNvZAM7C8IHrA4QhTpe+73lSPTrfmzYYHIiMuSPefmQharaAXlTKd1OQUHPi/
+	GRznDJfaWrTZXPHcm8Dp96Gx56oen3Q+YVasekLv9dmOF0pbf+0g9Rg2WgHb6Tzr
+	wieozc9DtdA9a3rBil0PG5d7I02keFTn6GRXQg2wx90OriRSZx4BRFE42f5l4Og6
+	x+aRsh00KlbkwBb9u0uwodOAphopH/LPW8eVCsEkksfWFmdDvT4qmJLIY7Hld/f+
+	n0UooSpR/72RHAVEj988cF3VkmEl9pVJgtfKu8K7O1F0K3JwmgTTiqQW9AbSGWWD
+	DFiK6/1NogzitEisqTOZA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
 	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm2; t=1744169682; x=1744256082; bh=2
-	PzkHPaQng3j4OQOLko7zULD6UngdArPhuztPcHfJP0=; b=Qer5rAQLrg4GVv9hY
-	UOryhemJ+pAsPGWNpq6ur3hRiKmpfCrXPIM1clcCj0XC8yKEXj47uld8RN9E1ws3
-	xM9+ObFGvCl3g+K1SU4CuDNdqZgIz7C9DQOJybL5nHw7FFPSW7+rwSZviYKVPS8a
-	5Ltdxh7x2pe/xnzsGO4OF/ki23/KQ3BfI6iPNAYEsA9CMOatmO+/muK4xMvj52Q2
-	xlZACcWF36UG5nuxr33LhQxJj1rCDGWv9yY7cAhwBuR+84qvXAANGgsXkBcAt8Av
-	fiUYtGsYPwLsWd58zCUsxbfdGGLSk//V0WXY3BhZ7npXGhwA+htrK9a9D/6oM9pB
-	MpcEA==
-X-ME-Sender: <xms:0er1Z7QDsbbnosZTODv0e4Hnd1OEvQafYX8XH3ObquyWueC_GTN5Aw>
-    <xme:0er1Z8xnmJx7LHTRx9KaMaDf260ZxdHVG4h7z5caYlIZinWYsb2v_IRpyYMq5g6ef
-    FYHAnmTEPHsNatBXA>
-X-ME-Received: <xmr:0er1Zw3SlSno0BEW1bYx66NPvxeSCoTW8IFNKdJmj6XCLddLeSw3eayHuzHteT4N99kMv7DpS9WrVKa4L_LdEtlVmEi7Pbl4m63rtCeYAFIlgABKB8bf>
+	:x-me-sender:x-sasl-enc; s=fm2; t=1744169685; x=1744256085; bh=P
+	veBnY5/PTuYnXShL2+88mWJUuaL+VGQS4W+0t445Kc=; b=ljteCJ2oIWGqZqEQF
+	HslpAjejrnlDOxexj1LPXE2gmcnQKP+iqfawNSwoAud5cQH4iLVjSBYDqpjBcgXu
+	mAFRFvdNJVJUmF/zR/rjilI5mVBMFfj62S9pBJdLYQaoVCufugFaXEoTuhEPbAKD
+	D9+O1msNT/L9sM3/K/tGNTlHZ/rILYc6k7+JMg7H/rTTTGqGQO5RioJ0vrpFAzrT
+	cFXN2jO7HL541dwqpgVAkhbeCMWn5lwHWXRSIPjlCxBhOVagQTkCYWPAdmlHWFLO
+	aNsTDe6N/xt6ebCrUw4GVFxdDkJzGEVMtYiKhZuNBwFcYuwOpYQzn2hPFglCXc4H
+	6e0aw==
+X-ME-Sender: <xms:1er1Z6UAedeTrlAbNvieiYHSpXyiV5ozTPUHy6301GbgGm-ftz2yrw>
+    <xme:1er1Z2mgK2uPe60vcuUIa3vXH5s9dS3lJfNSRa9l2N1FlCeKOBh_Bf0a95mTh95Qm
+    P8YfOIZL19Tfxu6bw>
+X-ME-Received: <xmr:1er1Z-b63blm4Qj9Hu_-L6ZyW2vUvBs79Whe4RCkqW0fTyab7pwjNtupSjofg331Jbju96ucOtYIq8S4P9ceEodqyqeCF1WiV4wQpE_5da-f6fWJwY2l>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdegledvucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
     pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucgfrhhlucfvnfffuc
@@ -65,14 +65,14 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdegledvucetufdote
     thhtohepvgguugihiiekjeesghhmrghilhdrtghomhdprhgtphhtthhopehsohhngheskh
     gvrhhnvghlrdhorhhgpdhrtghpthhtohephihonhhghhhonhhgrdhsohhngheslhhinhhu
     gidruggvvhdprhgtphhtthhopehkphhsihhnghhhsehkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:0er1Z7CJYX5_-cRmB8r4-DaAuPv4Kwn2WV1fV7Jk42Oa2Iern6YhXA>
-    <xmx:0er1Z0iEvzu4RotEbXmi42lM2pm-GzS18LWmJC7_nRs0sP7jvwJpHA>
-    <xmx:0er1Z_qeqmR9kxdVBpOLJP47WM_VimtIIjqLN4E8uLs3NRvuv9clOw>
-    <xmx:0er1Z_jdj_Twr7qlDH4IZucb2PF5BC-G7gop_2-xLglgADddzQihfw>
-    <xmx:0ur1Z6tQTlN_UjDdS92k3rteJvty1n9t5lFUftBP4VYedFAklGLalw1a>
+X-ME-Proxy: <xmx:1er1ZxXk2ZdiDNHZ_DWb-I0P1c9BW-P8DT5CcaynAVKnatnqYa3kpA>
+    <xmx:1er1Z0m_UCAX_OZCy5xlXtyRKos2eXWmN_xdYWwFwBOSyw1mXeLtHA>
+    <xmx:1er1Z2ekb3R_fXUy8oXmyecwnpPMnSyW5-5-knyIA_tTHa-pZtQf-w>
+    <xmx:1er1Z2EbzzS-e4_7w0ppijYfpyVkvoVeVM8e2PZ8zppv0JLuJrfuIA>
+    <xmx:1er1ZxSwQjKpgyfbZhSsC0711LqQQDs1i2mqTASoj2e2kTFIAxnlBb9A>
 Feedback-ID: i6a694271:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 8 Apr 2025 23:34:40 -0400 (EDT)
+ 8 Apr 2025 23:34:44 -0400 (EDT)
 From: Daniel Xu <dxu@dxuuu.xyz>
 To: andrii@kernel.org,
 	ast@kernel.org,
@@ -88,9 +88,9 @@ Cc: john.fastabend@gmail.com,
 	jolsa@kernel.org,
 	bpf@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [RFC bpf-next 03/13] bpf: Move percpu memory allocator definition into core
-Date: Tue,  8 Apr 2025 21:33:58 -0600
-Message-ID: <20016bd97ab4aa47c4c49f9e46bf6ac0b4c4a124.1744169424.git.dxu@dxuuu.xyz>
+Subject: [RFC bpf-next 05/13] bpf: Remove map_set_for_each_callback_args callback for maps
+Date: Tue,  8 Apr 2025 21:34:00 -0600
+Message-ID: <21ca9709216aac7b7ab47e650f3491b8801613dd.1744169424.git.dxu@dxuuu.xyz>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <cover.1744169424.git.dxu@dxuuu.xyz>
 References: <cover.1744169424.git.dxu@dxuuu.xyz>
@@ -102,60 +102,109 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The BPF percpu memory allocator is used from multiple places. So move it
-into the core and have verifier.c simply consume it.
+Currently all iteratable maps (maps that define map_for_each_callback)
+use the default callback. In an effort to reduce the number of incoming
+references to verifier.c, just remove this level of indirection, as it's
+unused.
 
 Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
 ---
- include/linux/bpf.h   | 2 +-
- kernel/bpf/core.c     | 6 ++++++
- kernel/bpf/verifier.c | 3 ---
- 3 files changed, 7 insertions(+), 4 deletions(-)
+ include/linux/bpf.h   | 3 ---
+ kernel/bpf/arraymap.c | 2 --
+ kernel/bpf/hashtab.c  | 4 ----
+ kernel/bpf/verifier.c | 5 ++---
+ 4 files changed, 2 insertions(+), 12 deletions(-)
 
 diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index f1c5356dc099..8e26141f3e7e 100644
+index e0bd78ff1540..1785901330b2 100644
 --- a/include/linux/bpf.h
 +++ b/include/linux/bpf.h
-@@ -64,7 +64,7 @@ extern struct idr btf_idr;
- extern spinlock_t btf_idr_lock;
- extern struct kobject *btf_kobj;
- extern struct bpf_mem_alloc bpf_global_ma, bpf_global_percpu_ma;
--extern bool bpf_global_ma_set;
-+extern bool bpf_global_ma_set, bpf_global_percpu_ma_set;
+@@ -169,9 +169,6 @@ struct bpf_map_ops {
+ 			       const struct bpf_map *meta1);
  
- typedef u64 (*bpf_callback_t)(u64, u64, u64, u64, u64);
- typedef int (*bpf_iter_init_seq_priv_t)(void *private_data,
-diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-index ba6b6118cf50..80ba83cb6350 100644
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -68,6 +68,12 @@
- struct bpf_mem_alloc bpf_global_ma;
- bool bpf_global_ma_set;
  
-+struct bpf_mem_alloc bpf_global_percpu_ma;
-+EXPORT_SYMBOL_GPL(bpf_global_percpu_ma);
-+
-+bool bpf_global_percpu_ma_set;
-+EXPORT_SYMBOL_GPL(bpf_global_percpu_ma_set);
-+
- /* No hurry in this branch
-  *
-  * Exported for the bpf jit load helper.
+-	int (*map_set_for_each_callback_args)(struct bpf_verifier_env *env,
+-					      struct bpf_func_state *caller,
+-					      struct bpf_func_state *callee);
+ 	long (*map_for_each_callback)(struct bpf_map *map,
+ 				     bpf_callback_t callback_fn,
+ 				     void *callback_ctx, u64 flags);
+diff --git a/kernel/bpf/arraymap.c b/kernel/bpf/arraymap.c
+index eb28c0f219ee..e12224d479d0 100644
+--- a/kernel/bpf/arraymap.c
++++ b/kernel/bpf/arraymap.c
+@@ -800,7 +800,6 @@ const struct bpf_map_ops array_map_ops = {
+ 	.map_check_btf = array_map_check_btf,
+ 	.map_lookup_batch = generic_map_lookup_batch,
+ 	.map_update_batch = generic_map_update_batch,
+-	.map_set_for_each_callback_args = map_set_for_each_callback_args,
+ 	.map_for_each_callback = bpf_for_each_array_elem,
+ 	.map_mem_usage = array_map_mem_usage,
+ 	.map_btf_id = &array_map_btf_ids[0],
+@@ -822,7 +821,6 @@ const struct bpf_map_ops percpu_array_map_ops = {
+ 	.map_check_btf = array_map_check_btf,
+ 	.map_lookup_batch = generic_map_lookup_batch,
+ 	.map_update_batch = generic_map_update_batch,
+-	.map_set_for_each_callback_args = map_set_for_each_callback_args,
+ 	.map_for_each_callback = bpf_for_each_array_elem,
+ 	.map_mem_usage = array_map_mem_usage,
+ 	.map_btf_id = &array_map_btf_ids[0],
+diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
+index 5a5adc66b8e2..a91f08306682 100644
+--- a/kernel/bpf/hashtab.c
++++ b/kernel/bpf/hashtab.c
+@@ -2265,7 +2265,6 @@ const struct bpf_map_ops htab_map_ops = {
+ 	.map_delete_elem = htab_map_delete_elem,
+ 	.map_gen_lookup = htab_map_gen_lookup,
+ 	.map_seq_show_elem = htab_map_seq_show_elem,
+-	.map_set_for_each_callback_args = map_set_for_each_callback_args,
+ 	.map_for_each_callback = bpf_for_each_hash_elem,
+ 	.map_mem_usage = htab_map_mem_usage,
+ 	BATCH_OPS(htab),
+@@ -2287,7 +2286,6 @@ const struct bpf_map_ops htab_lru_map_ops = {
+ 	.map_delete_elem = htab_lru_map_delete_elem,
+ 	.map_gen_lookup = htab_lru_map_gen_lookup,
+ 	.map_seq_show_elem = htab_map_seq_show_elem,
+-	.map_set_for_each_callback_args = map_set_for_each_callback_args,
+ 	.map_for_each_callback = bpf_for_each_hash_elem,
+ 	.map_mem_usage = htab_map_mem_usage,
+ 	BATCH_OPS(htab_lru),
+@@ -2460,7 +2458,6 @@ const struct bpf_map_ops htab_percpu_map_ops = {
+ 	.map_delete_elem = htab_map_delete_elem,
+ 	.map_lookup_percpu_elem = htab_percpu_map_lookup_percpu_elem,
+ 	.map_seq_show_elem = htab_percpu_map_seq_show_elem,
+-	.map_set_for_each_callback_args = map_set_for_each_callback_args,
+ 	.map_for_each_callback = bpf_for_each_hash_elem,
+ 	.map_mem_usage = htab_map_mem_usage,
+ 	BATCH_OPS(htab_percpu),
+@@ -2480,7 +2477,6 @@ const struct bpf_map_ops htab_lru_percpu_map_ops = {
+ 	.map_delete_elem = htab_lru_map_delete_elem,
+ 	.map_lookup_percpu_elem = htab_lru_percpu_map_lookup_percpu_elem,
+ 	.map_seq_show_elem = htab_percpu_map_seq_show_elem,
+-	.map_set_for_each_callback_args = map_set_for_each_callback_args,
+ 	.map_for_each_callback = bpf_for_each_hash_elem,
+ 	.map_mem_usage = htab_map_mem_usage,
+ 	BATCH_OPS(htab_lru_percpu),
 diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 6ed302dab08b..322c1674b626 100644
+index 2b5e29ee8310..d3bb65f721c9 100644
 --- a/kernel/bpf/verifier.c
 +++ b/kernel/bpf/verifier.c
-@@ -44,9 +44,6 @@ static const struct bpf_verifier_ops * const bpf_verifier_ops[] = {
- #undef BPF_LINK_TYPE
- };
+@@ -10638,13 +10638,12 @@ static int set_map_elem_callback_state(struct bpf_verifier_env *env,
  
--struct bpf_mem_alloc bpf_global_percpu_ma;
--static bool bpf_global_percpu_ma_set;
--
- /* bpf_check() is a static code analyzer that walks eBPF program
-  * instruction by instruction and updates register/stack state.
-  * All paths of conditional branches are analyzed until 'bpf_exit' insn.
+ 	/* valid map_ptr and poison value does not matter */
+ 	map = insn_aux->map_ptr_state.map_ptr;
+-	if (!map->ops->map_set_for_each_callback_args ||
+-	    !map->ops->map_for_each_callback) {
++	if (!map->ops->map_for_each_callback) {
+ 		verbose(env, "callback function not allowed for map\n");
+ 		return -ENOTSUPP;
+ 	}
+ 
+-	err = map->ops->map_set_for_each_callback_args(env, caller, callee);
++	err = map_set_for_each_callback_args(env, caller, callee);
+ 	if (err)
+ 		return err;
+ 
 -- 
 2.47.1
 
