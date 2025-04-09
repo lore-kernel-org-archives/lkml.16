@@ -1,200 +1,90 @@
-Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DF202620F5
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 12:48:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15BD625A2D1;
+	Wed,  9 Apr 2025 12:49:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744202910; cv=none; b=Ii9uOtpnDYnk60geG+WXQHk98QjctjtCBAdHW4E6Ox8qxhoBUT6aha5qnlpYYSWlrg7WSYtJa9Wr0AeaR2xHQBwIUBcHQ7+qWw9Ve2aklRcV8DMa3/D4q47TTQlxAQAQBW5ytYUymfzYX3MKFDTJyeOzBbzU7Ytl6p9NVBe9SxI=
+	t=1744202956; cv=none; b=LIElfp0BuGkB13gsfsbySzmac1jUEoCE0CJnONNdvvHdlGlAztUFm2tesgqCiYrCuHUxrDh6tgWreEB9WHkL+QN65DIrRQm88ACbV5MAu2EhLAksJ7egN7Othv6iTdwFRDZHeJdq8RzyarcaEckD9ZZNwcsMSa2HOWAM9EwiK4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744202910; c=relaxed/simple;
-	bh=Hp1aMvB2P2HlCnLz/nFvNLwZgXBFJFItXCEwHjLm2LM=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Bk+a+3gfc1/ZiACFr7O95pACUvrgHkknTsSKPBVgL+943rU6rJwTHHjvjlcCH5lUnxybYyuK80IcxJ4fnqVj5LCHBRhIMyF6Z6d2Uuhcv41BAv9zFPUvuOuIHVfGYf/e+VkFtSOuU9RIuoE40/Reqpfr7LEuvAmLEJC8rEup8cI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3d43541a706so66688475ab.1
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 05:48:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744202908; x=1744807708;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MVbJDbW6DnvYqnD/sT2e+c92Ee4xPt8hlnH5eChnEWU=;
-        b=g/Ljg4zFf9Fr+vvAdj51wwm++sNiWqQBod8eu4zUlaxREPrwN+wk2K7duXPlRHz4tx
-         U1DpNWgEQPC/76luZWGCMEOZUg5lVSACd6dmZ8mLuoY6XFN4jNApkUEIXx9LFdWM9pQH
-         6X7tzaiOGXViP9NjRt2clsFCEYRS2pyAaQC1CzWtsM4DRilWIm5R4rpMwZwlJB5UD+PX
-         YvShbgP8IeP9dQ9KuBFNQypbRz1Lk15GcFI1YLt2RBo3M9wHM5UvG1G9zX7YQb0Mc9nE
-         uFeieHht5doTMLWq84ndeUA/+hx2yonzGYQ1fWB8yaQ2GQEmh4kIX09W3UScbaJKn/iE
-         SRMA==
-X-Forwarded-Encrypted: i=1; AJvYcCXGJY2tExX2xoTxk/S7BMTzZuG3f370zCWzjutvYZ0/yxrFmQSf/3OmgBUw/Yhx88LWuuZVWG/TT3Ux15Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwX1QT1l8jVMEJjmM2/eAUk1rsd71W7YWrkjULDFmpEME0Xc2/
-	zfb210Yy+YU7xgnVVxKJbtM6oFbZaufAJz7t1XYKACohmEugQoE9Fg/2KtWlEm5O8e1PspAP5PR
-	zYMe5fwWcwP1f0BXduQlW3BGTJK14fcUyykSo23YEwtY1liC9TAjB0Lk=
-X-Google-Smtp-Source: AGHT+IG1xOPYxQlgSNbRi4NE3ESwXRr35/x8vqwedb9O3tFKHkfPk17amflPw5DRDHccLTDf7AJukZgD/8UFcqGc7coCXOGiczin
+	s=arc-20240116; t=1744202956; c=relaxed/simple;
+	bh=9RjTlDLJSCH3b7ynqZMemdni72rzr9OdXMNy8A1iW7o=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=eP3nzbXNVa85bfg0f7/DexlDfTPEJ/Dseq4WbeJffc0GHW+UqdMsn3fTiz1JSczFyw8mFrKFmGIS5K1eAJ49CjIWonFI6+zZasrpggnWyxtkgyZ9FOBI9oZJWNyx7kFLc+AtSeVPwannsjpaYuxSLovAAVS2wjJfIWVAIDxv4ac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=CestigJR; arc=none smtp.client-ip=198.37.111.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="CestigJR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1744202953;
+	bh=9RjTlDLJSCH3b7ynqZMemdni72rzr9OdXMNy8A1iW7o=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=CestigJRNMn0qD0vTAMYBYy8NiAvRcZvNFXNnE9LZoG0jO3Y1VE/8dxPUvUIA5nnp
+	 XrbK0NXd4V+ag6rShzvRdcTCug8tNyLr2Ig3YmKOs4r5Bs0n5MYbsfkWSMx7nwEEwU
+	 FmLeEWBFJba0plDNX4+mq3s3Q8GLkWJf6QDR0jK4=
+Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::a774])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id 191F21C001A;
+	Wed, 09 Apr 2025 08:49:13 -0400 (EDT)
+Message-ID: <00f865af59f3bc3b31164d9105a75c01666a8f55.camel@HansenPartnership.com>
+Subject: Re: commit 7b025f3f85ed causes NULL pointer dereference
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Bert Karwatzki <spasswolf@web.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org, 
+ Jonathan.Cameron@huawei.com, allenbh@gmail.com, d-gole@ti.com, 
+ dave.jiang@intel.com, haiyangz@microsoft.com, jdmason@kudzu.us,
+ kristo@kernel.org,  linux-hyperv@vger.kernel.org,
+ linux-pci@vger.kernel.org,  linux-scsi@vger.kernel.org,
+ logang@deltatee.com,  manivannan.sadhasivam@linaro.org,
+ martin.petersen@oracle.com, maz@kernel.org,  mhklinux@outlook.com,
+ nm@ti.com, ntb@lists.linux.dev, peterz@infradead.org,  ssantosh@kernel.org,
+ wei.huang2@amd.com, wei.liu@kernel.org
+Date: Wed, 09 Apr 2025 08:49:12 -0400
+In-Reply-To: <87a58qv0tn.ffs@tglx>
+References: <20250408120446.3128-1-spasswolf@web.de> <87iknevgfb.ffs@tglx>
+	 <87friivfht.ffs@tglx>
+	 <f303b266172050f2ec0dc5168b23e0cea9138b01.camel@web.de>
+	 <87a58qv0tn.ffs@tglx>
+Autocrypt: addr=James.Bottomley@HansenPartnership.com;
+ prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:cda7:0:b0:3d3:dfb6:2203 with SMTP id
- e9e14a558f8ab-3d77c2b287emr27400545ab.19.1744202908146; Wed, 09 Apr 2025
- 05:48:28 -0700 (PDT)
-Date: Wed, 09 Apr 2025 05:48:28 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67f66c9c.050a0220.25d1c8.0003.GAE@google.com>
-Subject: [syzbot] [net?] KASAN: null-ptr-deref Write in rcuref_put (4)
-From: syzbot <syzbot+27d7cfbc93457e472e00@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
-	kuba@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+On Tue, 2025-04-08 at 22:46 +0200, Thomas Gleixner wrote:
+[...]
+> -	retain_ptr(dev);
+> =C2=A0	msix_update_entries(dev, entries);
+> +	retain_ptr(dev);
+> =C2=A0	return 0;
 
-syzbot found the following issue on:
+Heh, well, that scores -6 on the Rusty scale "the name tells you how
+not to use it" because retain_ptr would commonly be read to mean the
+pointer retains its value.  It would be nice if KASAN had compile time
+markers that would cause a use after free build failure for this, but,
+apparently, it doesn't.  The cleanup annotations don't let us remove
+the scope free function, which would otherwise let us match the use to
+the name, so I think the name might have to change to something like
+retain_and_null_ptr().
 
-HEAD commit:    a52a3c18cdf3 Merge tag 'ntb-6.15' of https://github.com/jo..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15764be4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=695196aa2bd08d99
-dashboard link: https://syzkaller.appspot.com/bug?extid=27d7cfbc93457e472e00
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+Regards,
 
-Unfortunately, I don't have any reproducer for this issue yet.
+James
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/326c7eeab15a/disk-a52a3c18.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/10c3ccb3546c/vmlinux-a52a3c18.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/0bd8832c1d9c/bzImage-a52a3c18.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+27d7cfbc93457e472e00@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: null-ptr-deref in instrument_atomic_read_write include/linux/instrumented.h:96 [inline]
-BUG: KASAN: null-ptr-deref in atomic_sub_return_release include/linux/atomic/atomic-instrumented.h:326 [inline]
-BUG: KASAN: null-ptr-deref in __rcuref_put include/linux/rcuref.h:89 [inline]
-BUG: KASAN: null-ptr-deref in rcuref_put+0x1a1/0x240 include/linux/rcuref.h:153
-Write of size 4 at addr 0000000000000041 by task udevd/6807
-
-CPU: 1 UID: 0 PID: 6807 Comm: udevd Not tainted 6.14.0-syzkaller-13389-ga52a3c18cdf3 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- print_report+0xe3/0x5b0 mm/kasan/report.c:524
- kasan_report+0x143/0x180 mm/kasan/report.c:634
- check_region_inline mm/kasan/generic.c:-1 [inline]
- kasan_check_range+0x28f/0x2a0 mm/kasan/generic.c:189
- instrument_atomic_read_write include/linux/instrumented.h:96 [inline]
- atomic_sub_return_release include/linux/atomic/atomic-instrumented.h:326 [inline]
- __rcuref_put include/linux/rcuref.h:89 [inline]
- rcuref_put+0x1a1/0x240 include/linux/rcuref.h:153
- dst_release+0x24/0x1b0 net/core/dst.c:167
- dst_cache_reset_now+0x1b0/0x220 net/core/dst_cache.c:183
- wg_socket_clear_peer_endpoint_src+0x40/0x50 drivers/net/wireguard/socket.c:312
- wg_expired_retransmit_handshake+0xd3/0x2d0 drivers/net/wireguard/timers.c:73
- call_timer_fn+0x189/0x650 kernel/time/timer.c:1789
- expire_timers kernel/time/timer.c:1840 [inline]
- __run_timers kernel/time/timer.c:2414 [inline]
- __run_timer_base+0x66e/0x8e0 kernel/time/timer.c:2426
- run_timer_base kernel/time/timer.c:2435 [inline]
- run_timer_softirq+0xb7/0x170 kernel/time/timer.c:2445
- handle_softirqs+0x2d6/0x9b0 kernel/softirq.c:579
- __do_softirq kernel/softirq.c:613 [inline]
- invoke_softirq kernel/softirq.c:453 [inline]
- __irq_exit_rcu+0xfb/0x220 kernel/softirq.c:680
- irq_exit_rcu+0x9/0x30 kernel/softirq.c:696
- instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1049 [inline]
- sysvec_apic_timer_interrupt+0xa6/0xc0 arch/x86/kernel/apic/apic.c:1049
- </IRQ>
- <TASK>
- asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
-RIP: 0010:__raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:152 [inline]
-RIP: 0010:_raw_spin_unlock_irqrestore+0xd9/0x140 kernel/locking/spinlock.c:194
-Code: 9c 8f 44 24 20 42 80 3c 2b 00 74 08 4c 89 f7 e8 3d bd ff f5 f6 44 24 21 02 75 55 41 f7 c7 00 02 00 00 74 01 fb bf 01 00 00 00 <e8> 32 58 65 f5 65 8b 05 0b 1e 3a 07 85 c0 74 46 48 c7 04 24 0e 36
-RSP: 0018:ffffc90003f97280 EFLAGS: 00000206
-RAX: ba8754475f048600 RBX: 1ffff920007f2e54 RCX: ffffffff81cb37bc
-RDX: 0000000000000000 RSI: ffffffff8e687288 RDI: 0000000000000001
-RBP: ffffc90003f97310 R08: ffffffff905eac77 R09: 1ffffffff20bd58e
-R10: dffffc0000000000 R11: fffffbfff20bd58f R12: 1ffff920007f2e50
-R13: dffffc0000000000 R14: ffffc90003f972a0 R15: 0000000000000246
- __debug_check_no_obj_freed lib/debugobjects.c:1108 [inline]
- debug_check_no_obj_freed+0x572/0x590 lib/debugobjects.c:1129
- free_pages_prepare mm/page_alloc.c:1269 [inline]
- free_unref_folios+0x576/0x17e0 mm/page_alloc.c:2737
- folios_put_refs+0x70a/0x800 mm/swap.c:992
- folio_batch_release include/linux/pagevec.h:101 [inline]
- shmem_undo_range+0x595/0x1820 mm/shmem.c:1125
- shmem_truncate_range mm/shmem.c:1237 [inline]
- shmem_evict_inode+0x29d/0xa80 mm/shmem.c:1365
- evict+0x4f9/0x9b0 fs/inode.c:810
- __dentry_kill+0x20d/0x630 fs/dcache.c:660
- dput+0x19f/0x2b0 fs/dcache.c:902
- __fput+0x60b/0x9f0 fs/file_table.c:473
- task_work_run+0x251/0x310 kernel/task_work.c:227
- resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
- exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
- exit_to_user_mode_prepare include/linux/entry-common.h:329 [inline]
- __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
- syscall_exit_to_user_mode+0x13f/0x340 kernel/entry/common.c:218
- do_syscall_64+0x100/0x230 arch/x86/entry/syscall_64.c:100
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f8f833170a8
-Code: 48 8b 05 83 9d 0d 00 64 c7 00 16 00 00 00 83 c8 ff 48 83 c4 20 5b c3 64 8b 04 25 18 00 00 00 85 c0 75 20 b8 03 00 00 00 0f 05 <48> 3d 00 f0 ff ff 76 5b 48 8b 15 51 9d 0d 00 f7 d8 64 89 02 48 83
-RSP: 002b:00007ffc3678eaf8 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
-RAX: 0000000000000000 RBX: 00007f8f83761ae0 RCX: 00007f8f833170a8
-RDX: 00005574fff315c8 RSI: 00007ffc3678e2f8 RDI: 0000000000000008
-RBP: 00005571a8e7a620 R08: 0000000000000006 R09: cd47be37b8f960f8
-R10: 000000000000010f R11: 0000000000000246 R12: 0000000000000002
-R13: 00005571a8e8a890 R14: 0000000000000008 R15: 00005571a8e73910
- </TASK>
-==================================================================
-----------------
-Code disassembly (best guess):
-   0:	9c                   	pushf
-   1:	8f 44 24 20          	pop    0x20(%rsp)
-   5:	42 80 3c 2b 00       	cmpb   $0x0,(%rbx,%r13,1)
-   a:	74 08                	je     0x14
-   c:	4c 89 f7             	mov    %r14,%rdi
-   f:	e8 3d bd ff f5       	call   0xf5ffbd51
-  14:	f6 44 24 21 02       	testb  $0x2,0x21(%rsp)
-  19:	75 55                	jne    0x70
-  1b:	41 f7 c7 00 02 00 00 	test   $0x200,%r15d
-  22:	74 01                	je     0x25
-  24:	fb                   	sti
-  25:	bf 01 00 00 00       	mov    $0x1,%edi
-* 2a:	e8 32 58 65 f5       	call   0xf5655861 <-- trapping instruction
-  2f:	65 8b 05 0b 1e 3a 07 	mov    %gs:0x73a1e0b(%rip),%eax        # 0x73a1e41
-  36:	85 c0                	test   %eax,%eax
-  38:	74 46                	je     0x80
-  3a:	48                   	rex.W
-  3b:	c7                   	.byte 0xc7
-  3c:	04 24                	add    $0x24,%al
-  3e:	0e                   	(bad)
-  3f:	36                   	ss
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
