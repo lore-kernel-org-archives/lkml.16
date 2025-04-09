@@ -1,191 +1,196 @@
-Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
+Received: from PNYPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19010008.outbound.protection.outlook.com [52.103.68.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D8F326657D;
-	Wed,  9 Apr 2025 14:34:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.152.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 641E425F7AE;
+	Wed,  9 Apr 2025 14:35:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.8
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744209291; cv=fail; b=TdJ1l46SG7Q9SOu+9qzIBmGSGMknrpwaD+SnC8Q5S8VHgSybTyOn/TMDd0jLuC7V8oAufiKOrTaM6TaXYIzxPfxqD2uZGmhQOrco4x4bMchku9lxi6azcKjVHACF/PVWhT4XZNsJtWj/9HaKYxDh42EbhhtkF5oz5y3BYxPdO88=
+	t=1744209352; cv=fail; b=EcxJJuO5FpPsPUWtu/rdQgzfz+Af7vKKfTSLtD7jsGkPeP4uha8HJddva+0bI1qSf6giwcFzdfIPo11qd5WAtIDZ2Czp8Gd4NkpBI9wFDSNURDR27BTfX4BF3nnJp0yo+DtxTNJDKn+UwgdQ1ErhPs+9kNmFGdYB8UbV+hgBVwo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744209291; c=relaxed/simple;
-	bh=SWMC6krOjxAI5OCfZoK7B/XTZ0fpcq3biHzW0kV/3os=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mLuOd5+4jL+OLL4ZoGV9no9k9iVb98pRJwuT8ISVyf0DRVM9fx/8plxMebtnTtik+WAy1wfClcMLTbtvCvdZ4TYCRoR4+iWYyF31PiipfzHphPITQpD8KZuu/E3GM+qahBZ5XA+T62bIACM/LgCkhW+0dkOsqBYjZHVo2NePXU0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=Yyn47/Mz; dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b=FzlOcEtt; arc=fail smtp.client-ip=67.231.152.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cirrus.com
+	s=arc-20240116; t=1744209352; c=relaxed/simple;
+	bh=XXsp8J1DDcS6xRtdcHjdZ2bEfZRGLNqT98ClGch/81c=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=IZtEiuBYZUhTOAu8bTB8+9MW9I69x+xVhe+nG8WdHJSX94kR69S7LJvso9KAPmYAIq+wey2rK5cx4fD92q3IndHyrrTQBKw/Qj2hbdtZ29f+OPk9TSDB6c4vJiKB3HdNVJnhEvLMcScfDq9s8Ag9wkSTFg7RCRM2A6pwMcV8GkY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=jWttGV8w; arc=fail smtp.client-ip=52.103.68.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="Yyn47/Mz";
-	dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b="FzlOcEtt"
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5395t5sX008875;
-	Wed, 9 Apr 2025 09:34:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	PODMain02222019; bh=btEdQB1SHL7orEIt4p8Mdh1HPGDS7IXRMLaMYSw7uME=; b=
-	Yyn47/MzSGHs75RnH4zR3g7sA9w6xXTUGa1FkL3pGtLNJOJH/Dke+7Z7csWfHZgA
-	IItngeBSrTHZKhPkxwPiplz8zaMJaKaKLIgb6p3wHUAq7NPkUZrAFRnSKN7yUk7d
-	NjZNYI4vDQ7Y0AeH8cqJRmB+mJmF3N2GLBEyufKNdq7R9q67c38dYpbGQzyR4s33
-	0leAL1GHEXuQiNSE14nsnFgNBojqohr1XkF1f1CmD5EjVdKJzp/H6krZP/Twt3Fb
-	3ydFWWTwhK7VMrTCfr+/p95zzyUGhObFAe3+FqyJe1LOMrPTtexN0sULYmGTaot0
-	W8DFQP1J7xe2VhCQ2YDjKw==
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2042.outbound.protection.outlook.com [104.47.58.42])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 45wf0grsjt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 09 Apr 2025 09:34:33 -0500 (CDT)
+	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="jWttGV8w"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wx9FdMmbjwyIV+pA0fERR+1WM1vsAG1C+TW2T4MHN34+1NJcJGDvjgfKLPmcJXQk3mSrXkQXKPtriQ5R6MWiMHbMQDx2vaM3lOFQt+o6NJz2BtjPmnx3hsdB5Knv5WclGHeA9ll4/EmdX/Q79XIqkOBOhlFTpYj9i8yl6WQkwxTE1GvI6UDbyqRYNlNzhClsqUnd268nf37m4Oe3/vjH1FXlxDK3qXlN0D3WLbnaIyKw1wJEft0ttumEGcUSytnpPygkLhf2hdigTyC14fqARMTbjyghCbL72YbABOsaZ6QYI+yKgncw68tAjJNbIJS/6X8ZilGFokgaGWDCUaAt8g==
+ b=mbaBX4y2/oSL/KwW0XhlhI6VdKpLGrteATqrFsYKBm+8APYc8npdNafU1KX39iEsf5UmcQMB7IgJEu7a0BWM6M/upRfiLQHJvbet1XzQmIjWyT3v7wGWDaiQSeYWMGrk9jhu5V9GDq55kv4aRRxNQ0y7F4kip9ncoGfhNBk7zQG9Z283RhLckTFfPr7WdGOvNc9dSTTlHdUE+peq/MTisxZ7JN2Kn7PIUr26w/AbtSywMaYhq6NSRiOxSRvB4LOrmAWOSjQFRlxSe/cG672HlwouhEWR1PEHzqm8s+kTVzCX5oMkzRzoIj0LAfm88hsYI9R+dZokDRhJK5z+1USx+A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=btEdQB1SHL7orEIt4p8Mdh1HPGDS7IXRMLaMYSw7uME=;
- b=Hny/7I9u03cuJ0DsdjLDjU7ZL2FzjgTJvtSjWq7jiwyiTZtOb5Y3OaKyzu/2dOSngZdAyfz3+/+P/yy2fTlwjjiau0MyxsdFnNsbbwR5DcwwEQotEo7XA54qgJ5FCa5zQ+8HKGNvEUvoDIytL66GA7MWypRF3AmzqR7lk0aOJeiYZ50qvL2PB3n4dCDPovqIpkAZ29Jnk6DePYcDTFdZIRaom6mbb1Dr4Eix33GE3BnR5A5lh9opKxyq+boIPssPMHHoRcilTaoVdx85a0VmjZwaCpaNB/k92zlDQzakdCCOn941fBnX6azPb+6XWuW4CR7FImK5ujC21YomYuH3Rw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 84.19.233.75) smtp.rcpttodomain=cirrus.com smtp.mailfrom=cirrus.com;
- dmarc=fail (p=reject sp=reject pct=100) action=oreject
- header.from=opensource.cirrus.com; dkim=none (message not signed); arc=none
- (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=cirrus4.onmicrosoft.com; s=selector2-cirrus4-onmicrosoft-com;
+ bh=zXvoazKEDGu35pzyZVVtgxCgmvPaAqG8xSrVbyuikwM=;
+ b=U1H2wwTuO6/DU75ORLT4IX+ZRaa0quCuV+ugOC+3xjrkdStIBPmV4EYKA9V+yH9XqKlAS94XKl4faAryK+ADDxRGLFModZJRCP32aQYWczwZIQxd4N4nHb90I97zu/bX8UFiqmNIDn85icAxvWK8nGlxGKwXxWDeVAzWSs4wBl2SqicxLHW0SHriMt3lX1emQJIkk0RrOZtdUYVzWl9WgEsK2ZnoxMWi3qjavYXEPjfAWd3mAdrekKF3ds3xD+MuBmY24+BS9SkAGSke7XMc8FBWcGkM3+sCP7yhe88D0/89wYrM/PTIakjcBG1ngvRmaOuXYD4QK1pdekoFFm4pDg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=btEdQB1SHL7orEIt4p8Mdh1HPGDS7IXRMLaMYSw7uME=;
- b=FzlOcEttdkZIsuxlWF7fumFlsGhkM90lGOErOEHn6q/+hsNIrhjWm1n1BEjbCSmSS6Zh76rvssAoPm1/QBOfVB6mFG0WC2ObNORZEgm/V3a6hUm2aRCH0+1j7dzwTWeZ5swanPdGkHNwfgdhgWgpIGgKembd7259cO4ZXeoudEA=
-Received: from PH1PEPF000132E6.NAMP220.PROD.OUTLOOK.COM (2603:10b6:518:1::26)
- by SJ4PPFCDF0C5BAF.namprd19.prod.outlook.com (2603:10b6:a0f:fc02::a52) with
+ bh=zXvoazKEDGu35pzyZVVtgxCgmvPaAqG8xSrVbyuikwM=;
+ b=jWttGV8wj5FXtQXKv5zDSQ7+fwLB+/ZWdsmgPMijEESSyBD05AKiba5TOZ5YBb5m/R/SsLHrzyI0uxDzYckhPzlv5B5VHH2voQoSaCneODynpkg/dwPThlhh3xj8cke52G2thfRL/h4QLvAVjpTQ5mDHhk8f+9axfMH0mTDP/w45FDX6oz9DIZO/swOW01/JJW33KBZtgKRZJhe1ZZKgIhlY7vrIKEV/80QeTt/RUeYlm5FL6f/O0mRaSoZD+Ou50DAz+jd5wAUg2MQhffx5A8osIx9PG4xUTTP4IUDXqbjbk5LKfMKwKLBCs9c3bx2wwlfk0XlnVwwlxIf35d8tcQ==
+Received: from PN0PR01MB9588.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:10c::9)
+ by MAZPR01MB8872.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a01:d1::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.31; Wed, 9 Apr
- 2025 14:34:30 +0000
-Received: from CY4PEPF0000EE37.namprd05.prod.outlook.com
- (2a01:111:f403:f912::2) by PH1PEPF000132E6.outlook.office365.com
- (2603:1036:903:47::3) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.20 via Frontend Transport; Wed,
- 9 Apr 2025 14:34:29 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 84.19.233.75)
- smtp.mailfrom=cirrus.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=oreject header.from=opensource.cirrus.com;
-Received-SPF: Fail (protection.outlook.com: domain of cirrus.com does not
- designate 84.19.233.75 as permitted sender) receiver=protection.outlook.com;
- client-ip=84.19.233.75; helo=edirelay1.ad.cirrus.com;
-Received: from edirelay1.ad.cirrus.com (84.19.233.75) by
- CY4PEPF0000EE37.mail.protection.outlook.com (10.167.242.43) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.13
- via Frontend Transport; Wed, 9 Apr 2025 14:34:29 +0000
-Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
-	by edirelay1.ad.cirrus.com (Postfix) with ESMTPS id D8509406542;
-	Wed,  9 Apr 2025 14:34:27 +0000 (UTC)
-Received: from [198.90.208.23] (ediswws06.ad.cirrus.com [198.90.208.23])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id B5F73820259;
-	Wed,  9 Apr 2025 14:34:27 +0000 (UTC)
-Message-ID: <5feaca10-f3bc-49bb-8e5b-9d9efa918e16@opensource.cirrus.com>
-Date: Wed, 9 Apr 2025 15:34:27 +0100
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.21; Wed, 9 Apr
+ 2025 14:35:45 +0000
+Received: from PN0PR01MB9588.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::5b05:29d:5646:39aa]) by PN0PR01MB9588.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::5b05:29d:5646:39aa%3]) with mapi id 15.20.8606.033; Wed, 9 Apr 2025
+ 14:35:45 +0000
+Message-ID:
+ <PN0PR01MB95889912BB81D1B1B579C7FEB8B42@PN0PR01MB9588.INDPRD01.PROD.OUTLOOK.COM>
+Date: Wed, 9 Apr 2025 20:05:33 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] HID: HID_APPLETB_BL and HID_APPLETB_KBD should depend on
+ X86
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+ Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
+ Kerem Karabay <kekrby@gmail.com>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <4b046ce1cae2170453037c7ea006c91c12383dab.1744190441.git.geert+renesas@glider.be>
+Content-Language: en-US
+From: Aditya Garg <gargaditya08@live.com>
+In-Reply-To: <4b046ce1cae2170453037c7ea006c91c12383dab.1744190441.git.geert+renesas@glider.be>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN4PR01CA0045.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:279::11) To PN0PR01MB9588.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:10c::9)
+X-Microsoft-Original-Message-ID:
+ <6e9866c7-038e-40aa-a56f-479647f3509d@live.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ASoC: cs-amp-lib-test: Don't select SND_SOC_CS_AMP_LIB
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
-        patches@opensource.cirrus.com, kunit-dev@googlegroups.com,
-        linux-kselftest@vger.kernel.org
-References: <20250409104544.878475-1-rf@opensource.cirrus.com>
- <a47c2074-2e28-43e6-a7a1-c3ac662723cf@sirena.org.uk>
-Content-Language: en-GB
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-In-Reply-To: <a47c2074-2e28-43e6-a7a1-c3ac662723cf@sirena.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
+X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE37:EE_|SJ4PPFCDF0C5BAF:EE_
-X-MS-Office365-Filtering-Correlation-Id: 03f21567-cfbe-4bbb-58fb-08dd7773a2dd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
+X-MS-TrafficTypeDiagnostic: PN0PR01MB9588:EE_|MAZPR01MB8872:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2927db22-b66e-4f39-2271-08dd7773ce75
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|61400799027|82310400026|376014;
+	BCL:0;ARA:14566002|19110799003|8060799006|8022599003|15080799006|6090799003|461199028|5072599009|7092599003|1602099012|440099028|10035399004|4302099013|3412199025;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NVpuU3FSejdGbWpCTU5UMkROY0tkdWM4QXBvWGVHMWdVRjRjUnF1VnlBYkRy?=
- =?utf-8?B?ZHQ1SWJlTjhjUEJoa3N4OVdaS2RLUHBaQk40N01VanJuTmZsb3NSK1FOdzhY?=
- =?utf-8?B?UThRYXpsbmlZeHNCMU5TZmYveVdtUkRxVHJiN3BUOGhIcHFydFpvOUhlR3ZY?=
- =?utf-8?B?NDVJTmYwMU5Vc09CSmdwTU5xbURFMVE2OUpKcEw5TlhPdURGYitNb2NhdFFM?=
- =?utf-8?B?MzRlVTJ6RVRBS0pNK3BBYWJCU1Z3b3FYL3lSaCtmRUZNNXZadzd6NnlsNzZC?=
- =?utf-8?B?cHJYcWRLeUVvSjlsdjc0bTc1aU41UlFrVE4raVl3Q2VFQ2kzYkVVVEtGc3dk?=
- =?utf-8?B?bk5kOUFJU2hSWldrbno1MUcxQTNwMVd4L01nNk5OMW1mR1pVdDEyUXduOHAz?=
- =?utf-8?B?QjdwQTljNHZjaCtnekl6SzBZQ096dEZlb3BWQlRqeGo4a09NcWNXLzEva2tl?=
- =?utf-8?B?WE1aM1dHTDVjZ1R1RHRrQjMvQWJ4M2hRUmVpTUt1Qk1aTFFaKzZOeEpScE5V?=
- =?utf-8?B?Y241Y0VraUJTM3pONlQ4S0pBS2tESFNLWFZ0bGVmQWdXeUt0ZU5XVGdhTk84?=
- =?utf-8?B?T0t6dVcxb21SNHZFQ3NlUFVYNGp0TStOeGEyTm5RdktGcWtmaHBEbVpEZ2hV?=
- =?utf-8?B?dm9Tc0FIVTlDOGJrOE1zTnV5RE5YKzlPZ2NZcFBMOCtXSEF0emxjY2M4YmJS?=
- =?utf-8?B?RHhpVk9neTduOGRIRWRNeTFEem1WVUpqRjE3bWpUdFdwZ2hhRFpVeWpSMU43?=
- =?utf-8?B?ZXhRQm0waUxXVWdvTExLTGp3YVpyNlBpVTNUMWdwVWhic0J5b0dZV0ZtOEJh?=
- =?utf-8?B?eTN0bTRDdWIxWE90QXByRURPZXNhcndPNHRwTEhRS0thTVREL2JDaE45WEl1?=
- =?utf-8?B?djBJNE44TzlmaUxzZnJGNm9kVS8zajR5WWJvcXF6NG43UGg2U0NjTUQxaGF0?=
- =?utf-8?B?RStvM0xTUlhPbFVDNWN0QWF3cHBUajVSVzdORlZVZ2Nrd0VUY25pdzBUS0pS?=
- =?utf-8?B?eHBWNGFUcDBQMElFOFppK3p3aVJmWnVuSmhhQ0poaFRMdkw1ODAwckplbzM5?=
- =?utf-8?B?VkxvRnVQN01vN1NlNy85WkY2ZWYxdzB1eVQwUHpQbTg0MkRUTW1NRnZETk4x?=
- =?utf-8?B?Q0NMNmpURGUyY2xNK1VyNU1ibHJCL2xSMlN3Tkx2dXF5eWI3bSt6OEJ6emIy?=
- =?utf-8?B?ajZQSFhkeEtYM1E3Z0g0R1FDUW1MT2hRQnFmSDRVbThOaFlmV1VZeldjRTR6?=
- =?utf-8?B?UDVRR0h6b0ZhdGswaGpacFpNK2xCMHdQVU1zaVJzMjZTdEVocjJxVU0zM2Y3?=
- =?utf-8?B?T0xxd1BraVNzd2FvRkRmV2xoaVA5RnFNTmhWdXJHRTA0ckxXUUZXYXJtSkJl?=
- =?utf-8?B?dDBseTBPbFg5eGJxaEtZY0daTVpYWUg0U0NYVGgxMGt1alRSZVFwSlJNNUds?=
- =?utf-8?B?UjJxaUdWeTE4NTVidjZDb1FHTkJJZVc3T082VExNOE9WUy9PTFVMMFBFaTln?=
- =?utf-8?B?eEFIYUJ2THJCcE03WHUyZUlDT1JkL25QZkMzdjdZdzZKYmpTbjdncXNVZHcz?=
- =?utf-8?B?YXhXWGN5WDFUM3l2RzVKb2h0SWNTVC9YVFVGRFF5QlpJaStGMDFxYnJBc1lU?=
- =?utf-8?B?YnI3K0Z0TklYVFQvTzNPTDB5T3VOejhDdkJTZzhhMW5acUtSbXRpK3JQTFlU?=
- =?utf-8?B?S2Q3ZmtsSHlTSXdLV1pNRnZjcllKSzVsYTU1Q3d3Z0M1ck11T3dNNU80enpE?=
- =?utf-8?B?QUYycm9sRnpNeGhLd1ZFUkEyajFrMVNPaVNQdUpubC85cnlTK2o4ZGxXUzVM?=
- =?utf-8?B?bFZHR0ZueVEwTURPbXJaWUZIekxFUTZaNzFtclBBa1dMRkttdEhMU2VRc1RF?=
- =?utf-8?B?RmR0dmJ3eGVhREVTNXlpam85Q2xjUDBMeVJ4RkFQZVp0eHN2WjRNOXhZTys0?=
- =?utf-8?B?RXNqaGRzNEszOWhsdThoNEtCWWE2NnEwL21oRWVPMXc0MkFKMUxiaVh4VWFa?=
- =?utf-8?B?V1BDb3AvMzBRPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:84.19.233.75;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edirelay1.ad.cirrus.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(61400799027)(82310400026)(376014);DIR:OUT;SFP:1102;
-X-OriginatorOrg: opensource.cirrus.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 14:34:29.0869
+	=?utf-8?B?NHdiMkRKaXdDd2tvQS9ENFl5bkx0WWZIR0FxREhYNGlaYThLQU1EamdzZ0di?=
+ =?utf-8?B?L2dkQ3h3THhxSVdxNEppZk9BTDBCUkZYKy9xSXdDQlVXR0l3UTBsMHdMOGp2?=
+ =?utf-8?B?cnIxaFZkdGc2dkhtdjUvVjMzWVZ2ZXFDdUU4eUlnSzlrR0dFTlArdHNoYU9L?=
+ =?utf-8?B?UThjdGY4bXVXQ2tOZVRZVlcwV1YwZ0hneElDZzBsSTdGdHVTNndEMmVHVy9a?=
+ =?utf-8?B?d0NkdVJ4eERvYWpyeTFLZ1JuT2JNZUtBTkF5Vkd2S3F1WnNPZnRKZkFHeWRM?=
+ =?utf-8?B?MmtFbU0yYlU2OTJva05MTVNHckZ4SEJwTDFHRE5ZbnB6NzNBaUNsaXp1WThx?=
+ =?utf-8?B?SjVRcEpmRWVyRU9VVEhVTzlKVHBwT0s5TCt1UmNjbzFKK0JjV3JISjZ6Nm1M?=
+ =?utf-8?B?OVJLWlhpQXI4eXVjdzRSTGZKUG9va3ZpMFE5TDhlcUo4SWE5MVpMNmhxZ0Rp?=
+ =?utf-8?B?RnYyVHpsR0g2NkZsd3lkbVlDNCtTWnhQQ3hYdXZqTDFrY1QvZTNtQVBOSHA3?=
+ =?utf-8?B?WTl6UWV1YTc5MUlHV2c2RFJWbys4VWh2SlUyanVnMmZzTGRPOC9EbXd6dkow?=
+ =?utf-8?B?ZHdBejhUNHZ3VEFjV3JFOEwwQTJkUXp2c2I3Y0Y3cUk3emNtWVE2c3RtQXJE?=
+ =?utf-8?B?MEdxaC83Qll6SDRrVE80bzFQTVd1RVRMQ2tYdnNzeElkZ1I0SXhGRmZDclRs?=
+ =?utf-8?B?SkIyZWUvT0M5SUNBVFpFM0NpaURhWjhJck9YM3g0Ym9HcUNWQTM1c1p1b2Zt?=
+ =?utf-8?B?dXZtcXB6aHJ2RDlSVjR0Mm9rNWd2Vjh3UG9aU2tXN2lJRnpxU0o5cWtsNk9N?=
+ =?utf-8?B?RUdEbG9wS2Ztalk5Qkp4RXgzcjE1SmtIbWJvUlBLbVdjakdUVkZGczJ2VURG?=
+ =?utf-8?B?VlNpRUZyZlJvYTFzOWNSOWRhbk9hZjI1cVd0Y1lwT25rMVE5NURPMVoxeEtz?=
+ =?utf-8?B?U0lod05MUUlHWFBCVzR6dEk5bU16a0wyUVpmbFZvbzVwS3U3ZnNiWTMxeDNU?=
+ =?utf-8?B?a1RpNEZnVUxUUHYvN3BTTzVMcHV4K2I1M0JtYXQ5NmdSdmFqbHN1L2J5VWZL?=
+ =?utf-8?B?WnVTNEdCR0l0ZHJNK3hQU25iMVgzWkVRdnBEU1pKNWwwMWNBWHNpZFFNLzFq?=
+ =?utf-8?B?YlR4K0UxMm9vQkhKaDYwWDFibFpuVk9pcklaQnE0a0lPbDFjVWVCREdWbXVm?=
+ =?utf-8?B?RjZvdml0QVl0S3VVSDBYeDBSQkF6SzRxaUtPOGhjbjQwWkh1MHJ1NDd1NllC?=
+ =?utf-8?B?OHNKdzdWSStRckpxYUtXSmR5dm5aL1FpVWhrSVZiZlMwQytTN3VqdEhSTUN4?=
+ =?utf-8?B?L1pjS0lvcy9WRSt6Sm41ak1rNVZVN2JvNW1FbEdGRU10TEt1RUJFUGg3c21o?=
+ =?utf-8?B?NzZDRndSR0d6T3RMaGF5eDFZc25VQ0hwUUY1SFVUWi9XbG85akp1MmEvcTZa?=
+ =?utf-8?B?bnNoaDFTeWNudzIvRnpmV0NNV1pDMmtIcThKMTROeDFnbVo1eWFEMlZwM0FJ?=
+ =?utf-8?B?clBOMnp2Nzd4dWZUblIrSUF5c29uYmxMdm84dXlCVUR6Yk43QVhHKys4eVR5?=
+ =?utf-8?B?aWxWT0lPWllQZmlDMHgxU2tUWU5YaDFsZkdpZDlIUzhnRTRUOTlEZUZUUnRH?=
+ =?utf-8?B?ZG5GVDk5cXUyUG0vRUJKaFNieS9wUER6STlLeXMyZjRXdDZuTFliazQvUUdU?=
+ =?utf-8?B?UkZZdmxZUXI1ZGNBc3pBaGx4eXNNTGZkallmSVl5MTNHcVcwUlZ5TnhtVWYv?=
+ =?utf-8?B?LzgzanVySXZqVlE2aExGcnV5bG5BK1ppM1RBb0VMTEp1TTB4bXdsNEpYQzlw?=
+ =?utf-8?B?N0gwYjNkRmlkdlBuekJNUT09?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?V3BTWmMyd2JXNytxYXpvY29pd1U2ZXZlT3NJZFZGekdtL0xjb0l2YkpMUjFm?=
+ =?utf-8?B?b1dCOXJuT1NRY2Q4VGRRQmJMcE5zTlR3U3huM2lORXdnREpGaEVuQXYvSE9I?=
+ =?utf-8?B?emlWc1BWMUxKNEw4aEZ3b1RwYTdCZzFyLzdRZzRIL2JCdVNJR3lteE9lNUln?=
+ =?utf-8?B?d1Q1MDJpNmoxeThvYS9XV2lXVy9FSHZCRGFlTVhYRzBmeEVoVW5zMTlSOUU4?=
+ =?utf-8?B?R1lzNG95NzBVT2RCbS9Xd1JHbHN0K2dsajVSZkNwSjZYRWd0OEJ4Tk9KKzdN?=
+ =?utf-8?B?SThoU1lwV0hMRDA0Q2xwbmJiNHZlRXM4NVdVd2lFc0w5VDg3a2lFZVRuYjlG?=
+ =?utf-8?B?Zkt2TXNOb3VxVzBGazJiazc5ZzFGdFRzNFlabWQ2TW96Z25TWFVxQjcxblRQ?=
+ =?utf-8?B?V2M5VlVrdk5kMWM3cGdhSXlFWDV4cVp1bFZwL3FyemZMTFZocXREMkpBUEZP?=
+ =?utf-8?B?S2xjWkxoeFpRQ0lZSlVuZm50OXN4TlpFSVUvNW1tQnJ3LzhEeDgraDlremdn?=
+ =?utf-8?B?SytjVjE2R0lqdnNzZ2hpcFFCNCtGdkhYMWFJcEtOSmNaTTJ4dWVza3Z6WUdB?=
+ =?utf-8?B?ZVJFQVFGWXhXTHpOSkpWTUtmbG9lZTEvclk2Ymt3WWNnYnBnU01jY3lUOG9z?=
+ =?utf-8?B?eWhVSUM0eUxHalRNZ2Rjc3lWN3c0aGFuN2FWYklRbm1kYXhFaGtKblAvSkFx?=
+ =?utf-8?B?NVczU0doSFBJQXFGdFFVTUcyWFBZRURTK0YwejhGT3I3RVpieVdTcGt0ZmFp?=
+ =?utf-8?B?eFNhMUtBc2E4WVVFcDR3UDRLYjh5MGl6NjRxemNGb0xNYWZpR1dFV3UxajFz?=
+ =?utf-8?B?aXBZdVprQ2pUS2QyYURtU0N0c3dvWnhOVnFyUUY3K0xPTjBrTWQ1Um9GeE9T?=
+ =?utf-8?B?aHpTM2JUTWJkMGF1NS93dGtmZldJMTRwbkh2K0VtZWV3SHVRem5qdWlES2tU?=
+ =?utf-8?B?SDdEQXZBR3VQODFRV242RktCYWNQaCtjWjcyUVZHeGpUMmhjVWVFQVUwRWli?=
+ =?utf-8?B?WVlmREV3Y2JCMCt3bDRmN0ZuMDFuaVd4S0tqRytEMjh2YUIyTTB5a09hczNt?=
+ =?utf-8?B?cCtwSTk5T1FmZVRWcjR3cXdmTDR6QzZKUnZWQUNiVUVIM3g2WENXL1loNC9B?=
+ =?utf-8?B?cHVvb2NEeHlYa1EzUUZrczJhcFRrYy90VDFXWFZSRkk3K3Vnbmd1QXNPL2sv?=
+ =?utf-8?B?Z1cwKzBkQjZNU21EcVNINmpsU0pvMGdYN0N6THJLbjN5aytxdTJjaklKTm81?=
+ =?utf-8?B?aGxCdUVTL0h0aEcwL2hYWFZzejZSZ1dLK3RrWlNLeFB6Z3lOcWthYVFaTUhn?=
+ =?utf-8?B?WXFmRkVrZWtVamY5bDhTMHFZQ3lKTlc5Z01SVnNZTkpvOGpGNDFaVjlSTzMr?=
+ =?utf-8?B?a1p6blRsUFd5QzV0Y25zTkFKWlVhTXlsTUovRGhzUGljRy91TU1nanNjZWJz?=
+ =?utf-8?B?bnlVemNkOEVnY2JQZGN4WVVJMkNIOTNsanVGZ0lKVTVRckdnckxkMXpJaDA4?=
+ =?utf-8?B?K1FMc1dvMTNMTFE0SU1ZTjlzQVE0SXZld3ZuckJXTzVOcGJIUG9GczF1Q1hO?=
+ =?utf-8?B?TnQ2ZGpYVDZRNG5ucmJUbmI4U3Jnc25Eb2phamhFVkdqODNyaWZpeXdhSFNB?=
+ =?utf-8?B?QVZHWmRQRkI3ZHpNOVZHL3U2WERRUnJnV0Y1ZHNmemtFaGFXSlZqT1A5dDU2?=
+ =?utf-8?B?NzVEOE9pQVluM21UWWd3L1FSTERNSmIxTnl2YXM3cjlYakRoZHZiNEFWWHpI?=
+ =?utf-8?Q?U3T6juwqzKDrtrIQvOl8BfA3NnvCtraC/UUPKym?=
+X-OriginatorOrg: sct-15-20-7719-20-msonline-outlook-ae5c4.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2927db22-b66e-4f39-2271-08dd7773ce75
+X-MS-Exchange-CrossTenant-AuthSource: PN0PR01MB9588.INDPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 14:35:45.3347
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 03f21567-cfbe-4bbb-58fb-08dd7773a2dd
-X-MS-Exchange-CrossTenant-Id: bec09025-e5bc-40d1-a355-8e955c307de8
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bec09025-e5bc-40d1-a355-8e955c307de8;Ip=[84.19.233.75];Helo=[edirelay1.ad.cirrus.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000EE37.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ4PPFCDF0C5BAF
-X-Proofpoint-ORIG-GUID: THg_YVy9gFdm97SM2c8zZQ7XZeVn5UQv
-X-Proofpoint-GUID: THg_YVy9gFdm97SM2c8zZQ7XZeVn5UQv
-X-Authority-Analysis: v=2.4 cv=A71sP7WG c=1 sm=1 tr=0 ts=67f68579 cx=c_pps a=mEL9+5ifO1KfKUNINL6WGg==:117 a=h1hSm8JtM9GN1ddwPAif2w==:17 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10
- a=s63m1ICgrNkA:10 a=RWc_ulEos4gA:10 a=mX3FmPPBFbbKS_jtFSwA:9 a=QEXdDO2ut3YA:10 a=BGLuxUZjE2igh1l4FkT-:22
-X-Proofpoint-Spam-Reason: safe
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MAZPR01MB8872
 
-On 09/04/2025 3:24 pm, Mark Brown wrote:
-> On Wed, Apr 09, 2025 at 11:45:44AM +0100, Richard Fitzgerald wrote:
->> Depend on SND_SOC_CS_AMP_LIB instead of selecting it.
->>
->> KUNIT_ALL_TESTS should only build tests for components that are
->> already being built, it should not cause other stuff to be added
->> to the build.
-> 
->>   config SND_SOC_CS_AMP_LIB_TEST
->> -	tristate "KUnit test for Cirrus Logic cs-amp-lib"
->> -	depends on KUNIT
->> +	tristate "KUnit test for Cirrus Logic cs-amp-lib" if !KUNIT_ALL_TESTS
->> +	depends on SND_SOC_CS_AMP_LIB && KUNIT
->>   	default KUNIT_ALL_TESTS
->> -	select SND_SOC_CS_AMP_LIB
->>   	help
->>   	  This builds KUnit tests for the Cirrus Logic common
->>   	  amplifier library.
-> 
-> This by itself results in the Cirrus tests being removed from a kunit
-> --alltests run which is a regression in coverage.  I'd expect to see
-> some corresponding updates in the KUnit all_tests.config to keep them
-> enabled.
 
-That's the defined behaviour of KUNIT_ALL_TESTS. It shouldn't have been
-running as part of an alltests if nothing had selected it. That seems to
-make people angry. Probably the same people who would complain if there
-was a bug in the code that they didn't want to test.
+
+On 09-04-2025 02:51 pm, Geert Uytterhoeven wrote:
+> The Apple Touch Bar is only present on x86 MacBook Pros.  Hence add a
+> dependency on X86, to prevent asking the user about this driver when
+> configuring a kernel for a different architecture.
+> 
+> Fixes: 1fd41e5e3d7cc556 ("HID: hid-appletb-bl: add driver for the backlight of Apple Touch Bars")
+> Fixes: 93a0fc48948107e0 ("HID: hid-appletb-kbd: add support for automatic brightness control while using the touchbar")
+
+Nit:
+
+The commit SHA should have only the first 12 characters.
+
+https://docs.kernel.org/process/submitting-patches.html#using-reported-by-tested-by-reviewed-by-suggested-by-and-fixes
+
+Also, hid-appletb-kbd fix should be:
+
+Fixes: 8e9b9152cfbd ("HID: hid-appletb-kbd: add driver for the keyboard mode of Apple Touch Bars")
+
+I would also prefer having them as 2 separate patches.
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  drivers/hid/Kconfig | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
+> index a503252702b7b43c..43859fc757470caf 100644
+> --- a/drivers/hid/Kconfig
+> +++ b/drivers/hid/Kconfig
+> @@ -151,6 +151,7 @@ config HID_APPLEIR
+>  config HID_APPLETB_BL
+>  	tristate "Apple Touch Bar Backlight"
+>  	depends on BACKLIGHT_CLASS_DEVICE
+> +	depends on X86 || COMPILE_TEST
+>  	help
+>  	  Say Y here if you want support for the backlight of Touch Bars on x86
+>  	  MacBook Pros.
+> @@ -163,6 +164,7 @@ config HID_APPLETB_KBD
+>  	depends on USB_HID
+>  	depends on BACKLIGHT_CLASS_DEVICE
+>  	depends on INPUT
+> +	depends on X86 || COMPILE_TEST
+>  	select INPUT_SPARSEKMAP
+>  	select HID_APPLETB_BL
+>  	help
 
