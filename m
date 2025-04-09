@@ -1,87 +1,156 @@
-Received: from mail-m49197.qiye.163.com (mail-m49197.qiye.163.com [45.254.49.197])
+Received: from spam.asrmicro.com (asrmicro.com [210.13.118.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9E2825A2D3;
-	Wed,  9 Apr 2025 08:01:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CEDC25B669
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 08:01:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.13.118.86
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744185689; cv=none; b=IO54+oPxecPYWfuqD2Yf9DM356QCIIGxpIbsjZRelAliKyehQYBvNzh5mcaA57l2iF+TnomswsexaWURUWcIzE81RAJuCik6gdmrve2WaOmfTGwzTR0/P7UYYbWh5i+hxHILEOR+lQdeNuhnOva09Eo4TyuFoBlaqb2RQbaxPQs=
+	t=1744185700; cv=none; b=hLS4n2jWy9QbhsWohsB5Uz0NHD+/qj5MBGgkLcjzYNafQXMSJB04EuLgcu9QJS7p+Yu9REOiz4TIu8KOd9qxkr1zGc/itF9mvC1wjyzgRHHJ+INx60VmRFXwEnGCI7oTJijtc5y66EIW/KaVT1FG2dSnyJ87i6Rw4XwYohYeaMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744185689; c=relaxed/simple;
-	bh=ievrKbhc+/kCMJgRKegGmufHgF677ZHOuyPhMkd2aeg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Exu5BK44CRnsaUGs1SbbOxKoISYpRUy6jrUim3O0DAiEWnW+WjP13ZjIqmd1cvuwM+saD5+riMr1+qK7JGgyjaAEGvq7+mfb7i76oZOajadHMMF5jhcpZ2DQhUIo0D/3YvwtgrvytrHwf27iF8Y1MZ31RtfXfIV9MVg9HrgzALc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn; spf=pass smtp.mailfrom=whut.edu.cn; arc=none smtp.client-ip=45.254.49.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=whut.edu.cn
-Received: from [198.18.0.1] (gy-adaptive-ssl-proxy-2-entmail-virt205.gy.ntes [27.18.106.237])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 1133fc98e;
-	Wed, 9 Apr 2025 16:01:09 +0800 (GMT+08:00)
-Message-ID: <2a862d73-2aaf-48ad-8e01-2138241d9bea@whut.edu.cn>
-Date: Wed, 9 Apr 2025 16:01:09 +0800
+	s=arc-20240116; t=1744185700; c=relaxed/simple;
+	bh=uB80WfCPadHDQNF1Ma8F2Btk9k5iSpMqhcGgLwl8MCg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=eF6jUwulEn0GCX1DSdEVHfq7Dc7i5KFE58fLOe7KK4EUeL0GrMAx1CR6YQnE9DGcxqGD1ERJJeScWmyco+eVRrUBhRz8VwXIkhG09NyjcHjpih+02j/Od6qleRJz8do/VjyIr6TrKb80lAG/gKOEuIzpYaXxMl6u0thUSeR3YSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=asrmicro.com; spf=pass smtp.mailfrom=asrmicro.com; arc=none smtp.client-ip=210.13.118.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=asrmicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=asrmicro.com
+Received: from spam.asrmicro.com (localhost [127.0.0.2] (may be forged))
+	by spam.asrmicro.com with ESMTP id 5397Xwcr002996
+	for <linux-kernel@vger.kernel.org>; Wed, 9 Apr 2025 15:33:58 +0800 (GMT-8)
+	(envelope-from huajianyang@asrmicro.com)
+Received: from exch03.asrmicro.com (exch03.asrmicro.com [10.1.24.118])
+	by spam.asrmicro.com with ESMTPS id 5397Xk2e002977
+	(version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=FAIL);
+	Wed, 9 Apr 2025 15:33:46 +0800 (GMT-8)
+	(envelope-from huajianyang@asrmicro.com)
+Received: from localhost (10.26.128.141) by exch03.asrmicro.com (10.1.24.118)
+ with Microsoft SMTP Server (TLS) id 15.0.847.32; Wed, 9 Apr 2025 15:33:49
+ +0800
+From: Huajian Yang <huajianyang@asrmicro.com>
+To: <pablo@netfilter.org>
+CC: <kadlec@netfilter.org>, <razor@blackwall.org>, <idosch@nvidia.com>,
+        <davem@davemloft.net>, <dsahern@kernel.org>, <edumazet@google.com>,
+        <kuba@kernel.org>, <pabeni@redhat.com>, <horms@kernel.org>,
+        <netfilter-devel@vger.kernel.org>, <coreteam@netfilter.org>,
+        <bridge@lists.linux.dev>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Huajian Yang <huajianyang@asrmicro.com>
+Subject: [PATCH] net: Expand headroom to send fragmented packets in bridge fragment forward
+Date: Wed, 9 Apr 2025 15:33:36 +0800
+Message-ID: <20250409073336.31996-1-huajianyang@asrmicro.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/7] dt-bindings: phy: spacemit: add K1 USB2 PHY
-To: Krzysztof Kozlowski <krzk@kernel.org>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>
-Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
- linux-riscv@lists.infradead.org, spacemit@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-References: <20250407-b4-k1-usb3-v3-2-v1-0-bf0bcc41c9ba@whut.edu.cn>
- <20250407-b4-k1-usb3-v3-2-v1-1-bf0bcc41c9ba@whut.edu.cn>
- <02157e96-9524-4590-9ca6-e4390176d74e@kernel.org>
-Content-Language: en-US
-From: Ze Huang <huangze@whut.edu.cn>
-In-Reply-To: <02157e96-9524-4590-9ca6-e4390176d74e@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCGhkfVktMSkJIQxhPT0gYHVYeHw5VEwETFhoSFy
-	QUDg9ZV1kYEgtZQVlJTFVKQ1VKS01VSUhMWVdZFhoPEhUdFFlBWU9LSFVKS0hKTkxOVUpLS1VKQk
-	tLWQY+
-X-HM-Tid: 0a9619913a0703a1kunm1133fc98e
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PU06Thw5EDJCPD0DMD8PLlEU
-	ViFPCVFVSlVKTE9PSkNOTUxMSUxJVTMWGhIXVRMOGhUcAR47DBMOD1UeHw5VGBVFWVdZEgtZQVlJ
-	TFVKQ1VKS01VSUhMWVdZCAFZQUpDQkI3Bg++
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: exch03.asrmicro.com (10.1.24.118) To exch03.asrmicro.com
+ (10.1.24.118)
+X-DNSRBL: 
+X-SPAM-SOURCE-CHECK: pass
+X-MAIL:spam.asrmicro.com 5397Xwcr002996
 
-On 4/7/25 9:18 PM, Krzysztof Kozlowski wrote:
-> On 07/04/2025 14:38, Ze Huang wrote:
->> +
->> +properties:
->> +  compatible:
->> +    const: spacemit,k1-usb2-phy
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    maxItems: 1
->> +
->> +  "#phy-cells":
->> +    const: 0
->> +
-> No supplies? No resets? Are you sure hardware does not use them?
+The config NF_CONNTRACK_BRIDGE will change the way fragments are processed.
+Bridge does not know that it is a fragmented packet and forwards it
+directly, after NF_CONNTRACK_BRIDGE is enabled, function nf_br_ip_fragment
+will check and fraglist this packet.
 
-No resets are used for the USB 2.0 PHY, but there is a VBUS supply, which
-I included in the DWC3 glue nodes.
+Some network devices that would not able to ping large packet under bridge,
+but large packet ping is successful if not enable NF_CONNTRACK_BRIDGE.
 
->
-> Best regards,
-> Krzysztof
->
->
+In function nf_br_ip_fragment, checking the headroom before sending is
+undoubted, but it is unreasonable to directly drop skb with insufficient
+headroom.
+
+Using skb_copy_expand to expand the headroom of skb instead of dropping
+it.
+
+Signed-off-by: Huajian Yang <huajianyang@asrmicro.com>
+---
+ net/bridge/netfilter/nf_conntrack_bridge.c | 14 ++++++++++++--
+ net/ipv6/netfilter.c                       | 14 ++++++++++++--
+ 2 files changed, 24 insertions(+), 4 deletions(-)
+
+diff --git a/net/bridge/netfilter/nf_conntrack_bridge.c b/net/bridge/netfilter/nf_conntrack_bridge.c
+index 816bb0fde718..b8fb81a49377 100644
+--- a/net/bridge/netfilter/nf_conntrack_bridge.c
++++ b/net/bridge/netfilter/nf_conntrack_bridge.c
+@@ -62,7 +62,7 @@ static int nf_br_ip_fragment(struct net *net, struct sock *sk,
+ 
+ 		if (first_len - hlen > mtu ||
+ 		    skb_headroom(skb) < ll_rs)
+-			goto blackhole;
++			goto expand_headroom;
+ 
+ 		if (skb_cloned(skb))
+ 			goto slow_path;
+@@ -70,7 +70,7 @@ static int nf_br_ip_fragment(struct net *net, struct sock *sk,
+ 		skb_walk_frags(skb, frag) {
+ 			if (frag->len > mtu ||
+ 			    skb_headroom(frag) < hlen + ll_rs)
+-				goto blackhole;
++				goto expand_headroom;
+ 
+ 			if (skb_shared(frag))
+ 				goto slow_path;
+@@ -97,6 +97,16 @@ static int nf_br_ip_fragment(struct net *net, struct sock *sk,
+ 
+ 		return err;
+ 	}
++
++expand_headroom:
++	struct sk_buff *expand_skb;
++
++	expand_skb = skb_copy_expand(skb, ll_rs, skb_tailroom(skb), GFP_ATOMIC);
++	if (unlikely(!expand_skb))
++		goto blackhole;
++	kfree_skb(skb);
++	skb = expand_skb;
++
+ slow_path:
+ 	/* This is a linearized skbuff, the original geometry is lost for us.
+ 	 * This may also be a clone skbuff, we could preserve the geometry for
+diff --git a/net/ipv6/netfilter.c b/net/ipv6/netfilter.c
+index 581ce055bf52..619d4b97581b 100644
+--- a/net/ipv6/netfilter.c
++++ b/net/ipv6/netfilter.c
+@@ -166,7 +166,7 @@ int br_ip6_fragment(struct net *net, struct sock *sk, struct sk_buff *skb,
+ 
+ 		if (first_len - hlen > mtu ||
+ 		    skb_headroom(skb) < (hroom + sizeof(struct frag_hdr)))
+-			goto blackhole;
++			goto expand_headroom;
+ 
+ 		if (skb_cloned(skb))
+ 			goto slow_path;
+@@ -174,7 +174,7 @@ int br_ip6_fragment(struct net *net, struct sock *sk, struct sk_buff *skb,
+ 		skb_walk_frags(skb, frag2) {
+ 			if (frag2->len > mtu ||
+ 			    skb_headroom(frag2) < (hlen + hroom + sizeof(struct frag_hdr)))
+-				goto blackhole;
++				goto expand_headroom;
+ 
+ 			/* Partially cloned skb? */
+ 			if (skb_shared(frag2))
+@@ -208,6 +208,16 @@ int br_ip6_fragment(struct net *net, struct sock *sk, struct sk_buff *skb,
+ 		kfree_skb_list(iter.frag);
+ 		return err;
+ 	}
++
++expand_headroom:
++	struct sk_buff *expand_skb;
++
++	expand_skb = skb_copy_expand(skb, ll_rs, skb_tailroom(skb), GFP_ATOMIC);
++	if (unlikely(!expand_skb))
++		goto blackhole;
++	kfree_skb(skb);
++	skb = expand_skb;
++
+ slow_path:
+ 	/* This is a linearized skbuff, the original geometry is lost for us.
+ 	 * This may also be a clone skbuff, we could preserve the geometry for
+-- 
+2.48.1
 
