@@ -1,70 +1,33 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D7D521B9DA
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 23:25:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6EA421D587
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 23:26:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744241160; cv=none; b=Y2ynFNELgaY82qNmRXZLcG2dq09xWHKzChCse704MkCP2Ss+tPd+iPpExHzJ4opvsT859onsvF5cjSYZ436VvLhB4Spr7c78plCHjaS/dynh/w2+mcmusojZQKL+MoeEbN88ib00QIQBrUNPFZccIIYnx6dgfZyXHVVsALR9F/I=
+	t=1744241164; cv=none; b=QbpCedDiFn87V6TmJs1PHt5UChLdqlmbscEiRrseee9gysn2oNRP8CTQs8Elu26YeXbkknbm/uShdrAGqSuxCsfIYxnPqVSvDLLjhIbXcRElf+zkB2fCZ+c6WLea4Kv43od5gbTCQo1g+RMLkilwS25MJBRNoQGDjpPYTORKKjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744241160; c=relaxed/simple;
-	bh=ukrjupH5egcWjPIrYEOXsnCeUeOpJ1/OzRvd7wSeBYw=;
+	s=arc-20240116; t=1744241164; c=relaxed/simple;
+	bh=k5o7fS+i8T+QcFuWSe/nMJvcJbDBrIItRZD96KmBbus=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o2RsRcxpybFvml9Yujp0C7zHhugHh8LdX4CTeoXsHGjQwtkqtoPaG9jSoEjcYR1U6TSQHj4DC1NZgaEHQm3cxK1EqmPRgbtKllt1jHtSsOR3lxz7AD6rhDxNTtd9CsLuW9RWX9Vznj95bRQ0sZ5lrsNU1X+qoajV86/wucD//G0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jsxM91CR; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jsxM91CR"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-730517040a9so175338b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 16:25:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744241158; x=1744845958; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=B5T7Kq+JsezAl05ddJh0OEYqxPcCvamnm3AWczPZJNs=;
-        b=jsxM91CRzc8iheC6kl+ee/Cd9odEmxmvsRMjceARdbGhyxz2t98nWKGrkDYDt7IEPs
-         /ojWvrCaKcNHtTJLo80oc351DJIWQyCNCdTTS4vjpisYqsxBHwYjDxJYPlE6oj1SR/7N
-         spfOgYW4LOSo4bEUT0TjS+mxJjsLMm7RFVX7mRlp7V9bdDu1eqxfLhRmzgqDyMpnx9sy
-         hv3FWeBtKHxKzQNE/oIS94vJDTTr/aSGLqC4asVqdQ7J0zIyuOK1gRwRckxrVsRLQOVp
-         QRZSvXDvm5VxMr+NqIilMhMpf2684JLYKBFtg4gdjfTauKN3B+XLafnyiwO7L4QkNuIA
-         Ch6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744241158; x=1744845958;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=B5T7Kq+JsezAl05ddJh0OEYqxPcCvamnm3AWczPZJNs=;
-        b=ao00bEBPrIWJJkPYkPTKdphgHgYHxJXpD2mfNoUstmFf7e76L09m5Codrury9B+UyH
-         f5VTgizs09vIENsYg+ObATTf2lwyEvpHqTzVpE4hlmJhzcElF25TKgAbDBLBBj4Q9zAb
-         gbvQVUiJ7+HvnlFK1ouB2JfSHbDv1+q/3hOEhBksph4E5Ott2HSTedWJcOR6HRv6i4TY
-         icnkph/IG+NdddmDkxQP06bC48pxDSSSVfzfxW3aRe3gGv1N8sTS5S0hjTMgcTI0Vz1J
-         Le6bMpo/XdfGkuCpdm3g1SvPPyPtzS7x4oxB1klWf4beFaJw6YIB4hFeb6CExI8Ppp0n
-         5Otg==
-X-Gm-Message-State: AOJu0YxGEeTZPqKga6Stm7cJVBw9DXzCaOMuuN4GjymhjUDFZ2XOa2Zt
-	RGAtsyki5QFTdClLrTL9SIBkKRzlErxxI/uijXbJZxKdL2Hsonf+pTiP0lDd0w==
-X-Gm-Gg: ASbGncv7wakwH4pMXjImO02ckgEmXBFq117NnaGw5KBvwpRl0rJUtTHgU6+Bdregk7J
-	o9GwRf3EJcfuynMbSEskSfJtmOhVjE4x8+vSFs0mInN15/L+X1XlrLA5CZ4Vivif3ojyuj2h8rO
-	S70sG3YDoFumK+oevi3JsPBahUOu5H7wmT7VlvoKWE8taHTerx/Hms1M3IzBYZWm1zYqPC7KRHq
-	ukQedA5hAx9XeK5/jKIAHpK2TJAaTTcx5Dkg6brkbew0GdA4eodF80cx/P8WkPgw8JVsnT6gE2T
-	5uyJDv9UizwZGIZ8zdvPXL6duxME6BcG2E0=
-X-Google-Smtp-Source: AGHT+IEMzFEpbKhzggyTFKKB85VjCgHWSEXWQpQeollmLsyxwUqUjZkxvTzRUd/ogQVz1sI3xUGNkA==
-X-Received: by 2002:a05:6a21:3394:b0:1f5:8e94:2e81 with SMTP id adf61e73a8af0-20169450f3emr1291592637.9.1744241158222;
-        Wed, 09 Apr 2025 16:25:58 -0700 (PDT)
-Received: from google.com ([2620:15c:2c5:11:b49d:1682:e317:e4f5])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b02a11d2f78sm1810783a12.44.2025.04.09.16.25.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 16:25:57 -0700 (PDT)
-Date: Wed, 9 Apr 2025 16:25:52 -0700
-From: Chun-Tse Shao <ctshao@google.com>
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, acme@kernel.org,
-	namhyung@kernel.org, irogers@google.com, agordeev@linux.ibm.com,
-	gor@linux.ibm.com, sumanthk@linux.ibm.com, hca@linux.ibm.com
-Subject: Re: [PATCH v2] perf test: Allow tolerance for leader sampling test
-Message-ID: <Z_cCACiCzF-2-6GI@google.com>
-References: <20250408074641.1471473-1-tmricht@linux.ibm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=gAZKE2V812ytl4leZ1UVUgAOOWHxPNVE7mA/IZxfStkba804KgMngS8Q5qfDKvheGx4sqZzvSwrhxuQ9D/9sOOVtaxFeTtaBsfCm4A6VBxYtJLXLldAAt4NiZMDljXXhoi3dIhzYumSyzQhAquzPxupbTTqEqjLRFMbzSfzO6xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+	by vmicros1.altlinux.org (Postfix) with ESMTP id E506372C8CC;
+	Thu, 10 Apr 2025 02:26:00 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+	id D38F47CCB3A; Thu, 10 Apr 2025 02:26:00 +0300 (IDT)
+Date: Thu, 10 Apr 2025 02:26:00 +0300
+From: "Dmitry V. Levin" <ldv@strace.io>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Charlie Jenkins <charlie@rivosinc.com>, Kees Cook <kees@kernel.org>,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] riscv: Avoid fortify warning in syscall_get_arguments()
+Message-ID: <20250409232600.GB31728@strace.io>
+References: <20250409-riscv-avoid-fortify-warning-syscall_get_arguments-v1-1-7853436d4755@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,92 +36,76 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250408074641.1471473-1-tmricht@linux.ibm.com>
+In-Reply-To: <20250409-riscv-avoid-fortify-warning-syscall_get_arguments-v1-1-7853436d4755@kernel.org>
 
-On Tue, Apr 08, 2025 at 09:46:41AM +0200, Thomas Richter wrote:
-> V2: Changed bc invocation to return 0 on success and 1 on error.
->
-> There is a known issue that the leader sampling is inconsistent, since
-> throttle only affect leader, not the slave. The detail is in [1]. To
-> maintain test coverage, this patch sets a tolerance rate of 80% to
-> accommodate the throttled samples and prevent test failures due to
-> throttling.
->
-> [1] lore.kernel.org/20250328182752.769662-1-ctshao@google.com
->
-> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-> Suggested-by: Ian Rogers <irogers@google.com>
-> Suggested-by: Thomas Richter <tmricht@linux.ibm.com>
-> Tested-by: Thomas Richter <tmricht@linux.ibm.com>
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+On Wed, Apr 09, 2025 at 02:24:46PM -0700, Nathan Chancellor wrote:
+> When building with CONFIG_FORTIFY_SOURCE=y and W=1, there is a warning
+> because of the memcpy() in syscall_get_arguments():
+> 
+>   In file included from include/linux/string.h:392,
+>                    from include/linux/bitmap.h:13,
+>                    from include/linux/cpumask.h:12,
+>                    from arch/riscv/include/asm/processor.h:55,
+>                    from include/linux/sched.h:13,
+>                    from kernel/ptrace.c:13:
+>   In function 'fortify_memcpy_chk',
+>       inlined from 'syscall_get_arguments.isra' at arch/riscv/include/asm/syscall.h:66:2:
+>   include/linux/fortify-string.h:580:25: error: call to '__read_overflow2_field' declared with attribute warning: detected read beyond size of field (2nd parameter); maybe use struct_group()? [-Werror=attribute-warning]
+>     580 |                         __read_overflow2_field(q_size_field, size);
+>         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>   cc1: all warnings being treated as errors
+> 
+> The fortified memcpy() routine enforces that the source is not overread
+> and the destination is not overwritten if the size of either field and
+> the size of the copy are known at compile time. The memcpy() in
+> syscall_get_arguments() intentionally overreads from a1 to a5 in
+> 'struct pt_regs' but this is bigger than the size of a1.
+> 
+> Normally, this could be solved by wrapping a1 through a5 with
+> struct_group() but there was already a struct_group() applied to these
+> members in commit bba547810c66 ("riscv: tracing: Fix
+> __write_overflow_field in ftrace_partial_regs()").
+> 
+> Just avoid memcpy() altogether and write the copying of args from regs
+> manually, which clears up the warning at the expense of three extra
+> lines of code.
+> 
+> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
 > ---
->  tools/perf/tests/shell/record.sh | 26 ++++++++++++++++++++------
->  1 file changed, 20 insertions(+), 6 deletions(-)
->
-> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-> index ba8d873d3ca7..b17e8b0680e2 100755
-> --- a/tools/perf/tests/shell/record.sh
-> +++ b/tools/perf/tests/shell/record.sh
-> @@ -238,22 +238,36 @@ test_leader_sampling() {
->      err=1
->      return
->    fi
-> +  perf script -i "${perfdata}" | grep brstack > $script_output
-> +  # Check if the two instruction counts are equal in each record.
-> +  # However, the throttling code doesn't consider event grouping. During throttling, only the
-> +  # leader is stopped, causing the slave's counts significantly higher. To temporarily solve this,
-> +  # let's set the tolerance rate to 80%.
-> +  # TODO: Revert the code for tolerance once the throttling mechanism is fixed.
->    index=0
-> -  perf script -i "${perfdata}" > $script_output
-> +  valid_counts=0
-> +  invalid_counts=0
-> +  tolerance_rate=0.8
->    while IFS= read -r line
->    do
-> -    # Check if the two instruction counts are equal in each record
->      cycles=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="cycles:") print $(i-1)}')
->      if [ $(($index%2)) -ne 0 ] && [ ${cycles}x != ${prev_cycles}x ]
->      then
-> -      echo "Leader sampling [Failed inconsistent cycles count]"
-> -      err=1
-> -      return
-> +      invalid_counts=$(($invalid_counts+1))
-> +    else
-> +      valid_counts=$(($valid_counts+1))
->      fi
->      index=$(($index+1))
->      prev_cycles=$cycles
->    done < $script_output
-> -  echo "Basic leader sampling test [Success]"
-
-Would you like to add an simple division by 0 check?
-
-  total_counts=$(bc <<< "$invalid_counts+$valid_counts")
-  if (( $(bc <<< "$total_counts <= 0") ))
-  then
-    echo "Leader sampling [No sample generated]"
-    err=1
-    return
-  fi
-
-And then `$invalid_counts+$valid_counts` can be replaced by
-$total_counts
-
-Thanks,
-CT
-
-> +  isok=$(echo "scale=2; val=$invalid_counts/($invalid_counts+$valid_counts); if (val < (1-$tolerance_rate)) { 0 } else { 1 };" | bc -q)
-> +  if [ $isok -eq 1 ]
-> +  then
-> +     echo "Leader sampling [Failed inconsistent cycles count]"
-> +     err=1
-> +  else
-> +    echo "Basic leader sampling test [Success]"
-> +  fi
+> I omitted a Fixes tag because I think this has always been an overread
+> if I understand correctly but it is only the addition of the checks from
+> commit f68f2ff91512 ("fortify: Detect struct member overflows in
+> memcpy() at compile-time") that it becomes a noticeable issue.
+> 
+> This came out of a discussion from the addition of
+> syscall_set_arguments(), where the same logic causes a more noticeable
+> fortify warning because it happens without W=1, as it is an overwrite:
+> https://lore.kernel.org/20250408213131.GA2872426@ax162/
+> ---
+>  arch/riscv/include/asm/syscall.h | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/riscv/include/asm/syscall.h b/arch/riscv/include/asm/syscall.h
+> index 121fff429dce66b31fe79b691b8edd816c8019e9..eceabf59ae482aa1832b09371ddb3ba8cd65f91d 100644
+> --- a/arch/riscv/include/asm/syscall.h
+> +++ b/arch/riscv/include/asm/syscall.h
+> @@ -62,8 +62,11 @@ static inline void syscall_get_arguments(struct task_struct *task,
+>  					 unsigned long *args)
+>  {
+>  	args[0] = regs->orig_a0;
+> -	args++;
+> -	memcpy(args, &regs->a1, 5 * sizeof(args[0]));
+> +	args[1] = regs->a1;
+> +	args[2] = regs->a2;
+> +	args[3] = regs->a3;
+> +	args[4] = regs->a4;
+> +	args[5] = regs->a5;
 >  }
->
->  test_topdown_leader_sampling() {
-> --
-> 2.49.0
->
+>  
+>  static inline int syscall_get_arch(struct task_struct *task)
+
+Reviewed-by: Dmitry V. Levin <ldv@strace.io>
+
+
+-- 
+ldv
