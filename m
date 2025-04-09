@@ -1,62 +1,76 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72E431C3314
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 17:02:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 589421BF33F;
+	Wed,  9 Apr 2025 17:02:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744218158; cv=none; b=WOmqqjTx/1IdKQDzk5MhnTn2AOAJ8+h650jsTJDMDdnzHBLP6KFTkPBg2oDNVfekaEguGi/tT6Bxoa1A4WOdSts1NteL1LHDKUblo7N3GIs3T+gMUTySqPKDN4Y6uCaXb8fm7gj+sYStUaaQIhyFClqiXrg3SJJYJg+NLvrwwQk=
+	t=1744218158; cv=none; b=Tq2xPNrdhwgf7v5uGnY+XwL5mUozNyY57HczmK1bGJNk4/6PCt2l9OyEZ/9d+SPoYGlg5ikxiOYGd8rNASF3IGFkS+txTNQhBu//nMGJq27gbOLY4powVEvwrxJhzqrfrv62XTcB+MLHxF+8qIIDuXEoff77sBQKQQwIPo7z1rc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744218158; c=relaxed/simple;
-	bh=8Woo7zONtTGlS+vR4tnAD9QERZsc8c39ch7Sp73TTfk=;
+	bh=2fgrXbl7XmK/1Sd1jXkY+WL8zQcGEPJy1lFAiX+4sZ8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EFfH0V3tKwkBYgCN0YX9DmwUPk1lZu3SfEbFYKoLF/m4MGzYEYGODUZZAhCZgILzhqgr0BDTsKmRlN+y+nO3L9WfqA28S7NknOmo0F1itm0j0S1bik0iM21KqVA9ZVVwfek+Hm/RctjNJgEgDEmlCVoUI4vqDbcrYY+S1nQYOWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BjUnZhX2; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=kdhM1p711p3RjbWYEEPqxO07RBgk/00bjucnJ+vafOG7c3mgCTz1nuyvmeIs9J/oA9rwDeYbAw6p6rQwOCJzbuspYqoJLV/2McaYHpfIANGOJMocm4SppjmwrIh1r1UZ/7YPT6kHRfIWjOSZWbcPxhPgo2dIWqdUucvkShN/CUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YorHfPsw; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BjUnZhX2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744218154;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=50r+s/P904+CGfzLh0ycHBDHZFcTaMXvlcTYX7DyJ60=;
-	b=BjUnZhX2IDZ63/iIne/UPOCnNzYVA0gcnzr8bWC1XDcINBN3WDJ4dYkzzi68DNKq3gWDTi
-	6gWcnEdsnHR3Q6/IkvJs3vmaX8Sty/nTku6uCk/ZGMWImlZm1ZjSf6TTZdhyQAl1qzkd6M
-	Km4+ruTlWVpXvvmJVXNQ0a6lSJJ06jQ=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-344-J9jIKsrSM2qUPL-NgUtTjg-1; Wed,
- 09 Apr 2025 13:02:30 -0400
-X-MC-Unique: J9jIKsrSM2qUPL-NgUtTjg-1
-X-Mimecast-MFC-AGG-ID: J9jIKsrSM2qUPL-NgUtTjg_1744218148
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 29F111800EC5;
-	Wed,  9 Apr 2025 17:02:28 +0000 (UTC)
-Received: from localhost (unknown [10.22.88.189])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2EB921808882;
-	Wed,  9 Apr 2025 17:02:26 +0000 (UTC)
-Date: Wed, 9 Apr 2025 14:02:25 -0300
-From: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Clark Williams <clrkwllms@kernel.org>, Tejun Heo <tj@kernel.org>,
-	David Vernet <dvernet@meta.com>, Barret Rhoden <brho@google.com>,
-	Josh Don <joshdon@google.com>, Crystal Wood <crwood@redhat.com>,
-	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
-	Juri Lelli <juri.lelli@redhat.com>
-Subject: Re: [PATCH] sched: do not call __put_task_struct() on rt if
- pi_blocked_on is set
-Message-ID: <Z_aoIY7GwPFUqMNb@uudg.org>
-References: <Z_W-i-ya0Q6fkXRh@uudg.org>
- <20250409114330.1444221e@gandalf.local.home>
- <Z_af4PF18ocF0bBW@uudg.org>
- <20250409123944.15df8714@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YorHfPsw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744218157; x=1775754157;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2fgrXbl7XmK/1Sd1jXkY+WL8zQcGEPJy1lFAiX+4sZ8=;
+  b=YorHfPswphdkLiFGma5xKFUegX859r1uhBAmLx8EoItV3byLy9iUgAlh
+   lIOzn3F4msczkCbikjpsC+obLV1P8lsxnku0j37XCC1r6ANSZ8dPoTlPN
+   nD8biAdVgUQgUATuW+kAxXyD8w5FkmreBMlkjHp5UK/Hxb1CydpvKHeUU
+   spYFEhRjK9idFxOIMoA5g2YeQD95FWr2KArQA2/ObUod5Y5cA83t2rq1b
+   yzqAjZPncysEDRfPzWskPNv7s4YqdHeM7ds6c6TX5CsFsiYE4BdpHAECl
+   Q5Wob842ljx27ZGOViplno6/RDHPhv28QOyVGegiIuqDCEektn5c1pCBO
+   Q==;
+X-CSE-ConnectionGUID: TO0ssnPUToyKhYl5rsBlwA==
+X-CSE-MsgGUID: SSCNnrpIQEWGcEHYZRWyEw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="56371745"
+X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
+   d="scan'208";a="56371745"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 10:02:35 -0700
+X-CSE-ConnectionGUID: paFj+VcoTGiDSdzXaUP6mA==
+X-CSE-MsgGUID: CqqqKux0Sve0pXbYVxqIcw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
+   d="scan'208";a="151822353"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 10:02:31 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u2Yol-0000000Anq8-2VfQ;
+	Wed, 09 Apr 2025 20:02:27 +0300
+Date: Wed, 9 Apr 2025 20:02:27 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v6 08/12] gpio: regmap: Allow to provide init_valid_mask
+ callback
+Message-ID: <Z_aoI2n5v0TyJhb3@smile.fi.intel.com>
+References: <20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com>
+ <20250409-mdb-max7360-support-v6-8-7a2535876e39@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,57 +79,17 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250409123944.15df8714@gandalf.local.home>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+In-Reply-To: <20250409-mdb-max7360-support-v6-8-7a2535876e39@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Apr 09, 2025 at 12:39:44PM -0400, Steven Rostedt wrote:
-> On Wed, 9 Apr 2025 13:27:12 -0300
-> "Luis Claudio R. Goncalves" <lgoncalv@redhat.com> wrote:
-> 
-> > > > -	if (!IS_ENABLED(CONFIG_PREEMPT_RT) || preemptible()) {
-> > > > +#ifdef CONFIG_PREEMPT_RT
-> > > > +	if (!preemptible() || current->pi_blocked_on)
-> > > > +		defer = true;
-> > > > +#endif  
-> > > 
-> > > Why add the ugly #ifdef back?
-> > > 
-> > > 	if (!IS_ENABLED(CONFIG_PREEMPT_RT) ||
-> > > 	    (preemptible() && !current->pi_blocked_on)) {  
-> > 
-> > I had to add the #ifdef to avoid the build failing if CONFIG_RT_MUTEXES is
-> > not set. I do know SMP, FUTEX, I2C, PSTORE and a few more things depend on
-> > CONFIG_RT_MUTEXES being enabled, but I opted for being thorough.
-> > 
-> > I would be more than glad getting rid of the #ifdef and simplifying the patch
-> > if that possible build failure is not a case to worry about, if RT_MUTEXES are
-> > always enabled nowadays.
-> > 
-> 
-> Because pi_blocked_on is only defined when CONFIG_RT_MUTEXES is enabled?
-> 
-> OK, then perhaps we should add in sched.h:
-> 
-> #ifdef CONFIG_RT_MUTEXES
-> static inline bool tsk_is_pi_blocked_on(struct task_struct *tsk)
-> {
-> 	return tsk->pi_blocked_on != NULL;
-> }
-> #else
-> static inline bool tsk_is_pi_blocked_on(strut task_struct *tsk)
-> {
-> 	return false;
-> }
-> #endif
-> 
-> ??
+On Wed, Apr 09, 2025 at 04:55:55PM +0200, Mathieu Dubois-Briand wrote:
+> Allows to populate the gpio_regmap_config structure with
+> init_valid_mask() callback to set on the final gpio_chip structure.
 
-Thank you for the suggestion! I will rework the patch with that and send v2
-after basic testing.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Luis
- 
-> -- Steve
-> 
----end quoted text---
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
