@@ -1,105 +1,156 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98F06253B47
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 12:20:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79FE725E81F;
+	Wed,  9 Apr 2025 12:21:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744201261; cv=none; b=GVuGsOilfPofbP60Yi8dPoOh85MAbZk7+UopGSw6soo43saQHVbgYTKSYe0HGz21lBVUAb1JamJjZGSnsfi8/oxeeGRfKCg+19qrioIGJW/0lilaXly/+UTUYOgnuMfPiXH9lj31yOxYVkuMddFtObtKtpdS4p8F5j+785xaoqE=
+	t=1744201307; cv=none; b=SUDKNRyQz3y6VmL7hgAN9Jq4FOB7fdNATDLpwzJiofctui8j3r1gkY5/4z0w7gJwMSQYrLujwfdTBlbXqzxU4fNRPmkdh35H6xOx6B420ijmYw6mVKLFTr/9FpjVrwNGA/xOiLq6cgLOtbA2dm8UmdskI5GERRsrRCx4e8ybloY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744201261; c=relaxed/simple;
-	bh=F8E53MMpOVzOsej7NjcLqtRiFyu+Wm3a327Y/mYBGu0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lCi7V8t5AwfB8nzAjIyPXEMZ5DBTrn4d/8fsGk8aHa2/25poHll0KBOqjGdCP7tJoNMu281dxXfHAYjtjYXikRyvrM8J3mVBsKCIWN4VYk/MW/nEtaRMogKdUv6FKHB6mErYfZeiQ5M+ns6brJ/fSwrMj7i8+2CcJupShk5ACSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=MVriHJ0t; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1744201307; c=relaxed/simple;
+	bh=4t4Wq5bMUS44d/UJ61XjcweeMUI0dgxkR3h8v0acrhI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=CTPo6uEaasCSxvc/gAR1uubigatZrjckVd3QJ9L1QN5mzpOmYTpLWa8AvIdZ+cHavbRu8ZUqfnFYezwa+YnVFy6sRBWqHY5WmmNStTN6b0sYv9kf9D8U8Gv9QuMgqSB9Fd+ba97FacsFSgrzu6nQwa0Osm/81eCk1eMYfUVElVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l2vDAyU7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="MVriHJ0t"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e61375c108so9436758a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 05:20:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1744201258; x=1744806058; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6dvih7wvfynVrebiFBdW92QzhqAPsR5BNAa5PflLdh8=;
-        b=MVriHJ0tECKyDnWE0ksBLJXdjOFKqaPkn2DeAa2YSXDmqFVKEjKvgWXj9PbMOjy7J6
-         NUPH1mKwUYNr6Vnjwz5rUUtG8elftzaEyMBxswGMa4N5H1tkow27ygWFCK2knDAu0MaU
-         fEyrGYL4ekuG6L/TxOMTbfjZjacS0OIynfFbFwkMtHDr6kwt1ofDttOm86WfJd6Dndlb
-         ZuLYcEr5EWVqb4LKF8t4mVFj7PkRmebyZeELs0++VfGXMaCww6LY6edQ3xqutC0RhvQ0
-         bAbuiS2nhk59ZqAAxO91iuZXrGVEap+mu8g7HixkWWmPcbEcttYeGhhltRtu7sHWY8Tc
-         /Flg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744201258; x=1744806058;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6dvih7wvfynVrebiFBdW92QzhqAPsR5BNAa5PflLdh8=;
-        b=ddgLqK+1W4kdm7k4gv1j+1VtpRSjXeeYbEPgmHO2PPf7yBu8WPNjoRu76+X41PbQt5
-         cRN399oxpwazKn2wHeZFxIECd+d1XgXr/5Ej88DbYgeMqd+MUFiaZXTgnG5Cdz3brnIS
-         Kv4n5v3st1E1M5SuO+XD4oy/Jz8kIMvLoGyY3yH5sd6Fzs30YNdrHalUDFxoe7h/11VC
-         R5NhS7aMqA9KKCmh6xOKErcqKt/m+2J6/bNn7eyMpDrJ5V24YeC4UgOwdjy05e+DDvQm
-         WLPUBdLH921MIKIJ/oMYwuanFLydJd4bkIsvbGeGrPbvXdaavKj/t/EEH/5gkT+jgSgk
-         cBHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUu0/IFO1s8X8fHbgv9TIX2nHfPLgtDqJ7pDu7mZDLwKPm/cyLToeuK1gWB28veEIcrBoWWGQcGABt/Bsg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLUVbCMHDZABLrxlmVxvtM9WgCuNWT+he3cb5Igorkr2oTSEra
-	vpu4eunwGgc48tq05TZPMSe878vp5UsE4n2Eiv14PM0DrGMSShZ24e13g4BXLBI=
-X-Gm-Gg: ASbGncuLWMBnPUlSRwCCku1/W0F5PdJE2+papFUR1FQg7CyYH0jNE1XpUgWX+yht5Ft
-	9YoX7ABnejZUebw+Iv5g0FSD6XuKPIrZvFDyHA58cWiw5iUzmMlya37fx23RAvPuEmrMRMx/iSt
-	KjZoz4qg614XiAOmGL2kSmNAGsSf4oXk05+JdMR22pnQ7om9TXdvA+o+ct6MiSsnDM7I2V5qakq
-	6Eb7kgeEfZ2IW+gDiFyrAOfxDZllkpKKyrebm32CfvaJHYBCmIECtA6dLCElkqvIFIrjT13oCAU
-	6sCqFay7bl1nOTumiYnITRyNNhSeIaE=
-X-Google-Smtp-Source: AGHT+IHcrfDARD/MHD5XsauPp3j7VEdQ5ZRLkRjXHq7l1FQPMOUEjrzGco+PCPpFDVA8lCBV/861Vw==
-X-Received: by 2002:a17:907:3cc3:b0:ac2:47f7:4ad7 with SMTP id a640c23a62f3a-aca9b6c1498mr315806266b.36.1744201257862;
-        Wed, 09 Apr 2025 05:20:57 -0700 (PDT)
-Received: from localhost ([193.86.92.181])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-acaa1cb4104sm88487366b.99.2025.04.09.05.20.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 05:20:57 -0700 (PDT)
-Date: Wed, 9 Apr 2025 14:20:57 +0200
-From: Michal Hocko <mhocko@suse.com>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Dave Chinner <david@fromorbit.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Yafang Shao <laoar.shao@gmail.com>,
-	Harry Yoo <harry.yoo@oracle.com>, Kees Cook <kees@kernel.org>,
-	joel.granados@kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-	linux-mm@kvack.org
-Subject: Re: [PATCH] mm: kvmalloc: make kmalloc fast path real fast path
-Message-ID: <Z_ZmKcA2CvMiZnSG@tiehlicka>
-References: <Z-y50vEs_9MbjQhi@harry>
- <CALOAHbBSvMuZnKF_vy3kGGNOCg5N2CgomLhxMxjn8RNwMTrw7A@mail.gmail.com>
- <Z-0gPqHVto7PgM1K@dread.disaster.area>
- <Z-0sjd8SEtldbxB1@tiehlicka>
- <zeuszr6ot5qdi46f5gvxa2c5efy4mc6eaea3au52nqnbhjek7o@l43ps2jtip7x>
- <Z-43Q__lSUta2IrM@tiehlicka>
- <Z-48K0OdNxZXcnkB@tiehlicka>
- <Z-7m0CjNWecCLDSq@tiehlicka>
- <Z_YjKs5YPk66vmy8@tiehlicka>
- <0f2091ba-0a43-4dd3-aa48-fe284530044a@suse.cz>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l2vDAyU7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C74ABC4CEE3;
+	Wed,  9 Apr 2025 12:21:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744201306;
+	bh=4t4Wq5bMUS44d/UJ61XjcweeMUI0dgxkR3h8v0acrhI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=l2vDAyU7JVulITVyTZqYR1Pj8WUo/5DgHVTiooGnrvirjqxu+CDAVux+rqjtFMR5j
+	 vFcg9KmzA8x7AUxwcZcdmYUTnbugXXdYK5A9Ebq06Rdr5fy3jnnM7rK1lYd5t93rru
+	 F+BY7RbPTG13EpGd3f1bEOnoLqra8nmNXresuF90QazZARU+OlsiJt33DsgcfsUEyr
+	 CxB6rYRae5Hv5vXHqY1gnkks/fS5k04Aa5NY873rE/NUyIqjo1ADwxEwktbxJAjzFO
+	 diLG3vQwwIE8ZZlCATWo+T16oYgxm2kF85ifEqATMlwVhDeB7gbS2XG+i4LYHkHq7E
+	 sl9g4tGHgM3Ag==
+From: Arnd Bergmann <arnd@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Russell King <linux@armlinux.org.uk>,
+	Jiri Kosina <jikos@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ian Abbott <abbotti@mev.co.uk>,
+	H Hartley Sweeten <hsweeten@visionengravers.com>,
+	Frank Binns <frank.binns@imgtec.com>,
+	Matt Coster <matt.coster@imgtec.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Peter Rosin <peda@axentia.se>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Waiman Long <longman@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	linux-arm-kernel@lists.infradead.org,
+	dri-devel@lists.freedesktop.org,
+	linux-input@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	iommu@lists.linux.dev
+Subject: [PATCH 00/10] -Wunused-const-variable warning fixes
+Date: Wed,  9 Apr 2025 14:21:31 +0200
+Message-Id: <20250409122131.2766719-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0f2091ba-0a43-4dd3-aa48-fe284530044a@suse.cz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed 09-04-25 11:11:37, Vlastimil Babka wrote:
-> On 4/9/25 9:35 AM, Michal Hocko wrote:
-> > On Thu 03-04-25 21:51:46, Michal Hocko wrote:
-> >> Add Andrew
-> > 
-> > Andrew, do you want me to repost the patch or can you take it from this
-> > email thread?
-> 
-> I'll take it as it's now all in mm/slub.c
+From: Arnd Bergmann <arnd@arndb.de>
 
-Thanks that will work as well.
+Most patches I sent during the previous kernel cycle have made it in, these 
+ten still remain for the moment. Please apply.
+
+Arnd Bergmann (10):
+  drm/imagination: avoid unused-const-variable warning
+  [v2] clocksource: atmel_tcb: fix kconfig dependency
+  [v2] Input: stmpe-ts - use module alias instead of device table
+  [RESEND] mux: adg792a: remove incorrect of_match_ptr annotation
+  [RESEND] sched: open-code max_rt_runtime definition
+  [RESEND] lockdep: change 'static const' variables to enum values
+  [RESEND] ARM: fixmap: make __end_of_early_ioremap_region an enum value
+  [RESEND 2] comedi: ni_atmio: avoid warning for unused device_ids[] table
+  [RESEND 2] apm-emulation: hide an unused variable
+  [RESEND 3] dma/contiguous: avoid warning about unused size_bytes
+
+ arch/arm/include/asm/fixmap.h              |  9 ++++-----
+ drivers/char/apm-emulation.c               |  5 ++---
+ drivers/clocksource/Kconfig                |  4 ++--
+ drivers/comedi/drivers/ni_atmio.c          |  2 +-
+ drivers/gpu/drm/imagination/pvr_fw_trace.c |  8 ++++----
+ drivers/gpu/drm/imagination/pvr_fw_trace.h |  2 --
+ drivers/input/touchscreen/stmpe-ts.c       |  7 +------
+ drivers/mux/adg792a.c                      |  2 +-
+ kernel/dma/contiguous.c                    |  3 +--
+ kernel/locking/lockdep_internals.h         | 18 ++++++++++--------
+ kernel/sched/rt.c                          |  6 ++----
+ 11 files changed, 28 insertions(+), 38 deletions(-)
+
 -- 
-Michal Hocko
-SUSE Labs
+2.39.5
+
+Cc: Russell King <linux@armlinux.org.uk> (maintainer:ARM PORT)
+Cc: Jiri Kosina <jikos@kernel.org> (maintainer:APM DRIVER)
+Cc: Arnd Bergmann <arnd@arndb.de> (maintainer:CHAR and MISC DRIVERS,commit_signer:2/2=100%,authored:2/2=100%,added_lines:8/8=100%,removed_lines:10/10=100%,commit_signer:2/3=67%,authored:2/3=67%,added_lines:2/11=18%,removed_lines:2/2=100%,commit_signer:2/4=50%,blamed_fixes:1/1=100%)
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org> (maintainer:CHAR and MISC DRIVERS,commit_signer:1/3=33%)
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org> (maintainer:CLOCKSOURCE, CLOCKEVENT DRIVERS)
+Cc: Thomas Gleixner <tglx@linutronix.de> (maintainer:CLOCKSOURCE, CLOCKEVENT DRIVERS)
+Cc: Ian Abbott <abbotti@mev.co.uk> (maintainer:COMEDI DRIVERS,commit_signer:1/3=33%,authored:1/3=33%,added_lines:9/11=82%)
+Cc: H Hartley Sweeten <hsweeten@visionengravers.com> (maintainer:COMEDI DRIVERS)
+Cc: Frank Binns <frank.binns@imgtec.com> (maintainer:IMGTEC POWERVR DRM DRIVER)
+Cc: Matt Coster <matt.coster@imgtec.com> (maintainer:IMGTEC POWERVR DRM DRIVER)
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com> (maintainer:DRM DRIVERS AND MISC GPU PATCHES)
+Cc: Maxime Ripard <mripard@kernel.org> (maintainer:DRM DRIVERS AND MISC GPU PATCHES)
+Cc: Thomas Zimmermann <tzimmermann@suse.de> (maintainer:DRM DRIVERS AND MISC GPU PATCHES)
+Cc: David Airlie <airlied@gmail.com> (maintainer:DRM DRIVERS)
+Cc: Simona Vetter <simona@ffwll.ch> (maintainer:DRM DRIVERS)
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com> (maintainer:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)...,commit_signer:2/4=50%)
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com> (maintainer:ARM/STM32 ARCHITECTURE)
+Cc: Alexandre Torgue <alexandre.torgue@foss.st.com> (maintainer:ARM/STM32 ARCHITECTURE)
+Cc: Peter Rosin <peda@axentia.se> (maintainer:MULTIPLEXER SUBSYSTEM)
+Cc: Marek Szyprowski <m.szyprowski@samsung.com> (maintainer:DMA MAPPING HELPERS,blamed_fixes:1/1=100%)
+Cc: Robin Murphy <robin.murphy@arm.com> (reviewer:DMA MAPPING HELPERS)
+Cc: Peter Zijlstra <peterz@infradead.org> (maintainer:LOCKING PRIMITIVES)
+Cc: Ingo Molnar <mingo@redhat.com> (maintainer:LOCKING PRIMITIVES)
+Cc: Will Deacon <will@kernel.org> (maintainer:LOCKING PRIMITIVES)
+Cc: Boqun Feng <boqun.feng@gmail.com> (maintainer:LOCKING PRIMITIVES)
+Cc: Waiman Long <longman@redhat.com> (reviewer:LOCKING PRIMITIVES)
+Cc: Juri Lelli <juri.lelli@redhat.com> (maintainer:SCHEDULER)
+Cc: Vincent Guittot <vincent.guittot@linaro.org> (maintainer:SCHEDULER)
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com> (reviewer:SCHEDULER)
+Cc: Steven Rostedt <rostedt@goodmis.org> (reviewer:SCHEDULER)
+Cc: Ben Segall <bsegall@google.com> (reviewer:SCHEDULER)
+Cc: Mel Gorman <mgorman@suse.de> (reviewer:SCHEDULER)
+Cc: Valentin Schneider <vschneid@redhat.com> (reviewer:SCHEDULER)
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> (commit_signer:2/4=50%,authored:2/4=50%,added_lines:2/5=40%,removed_lines:2/5=40%)
+Cc: linux-arm-kernel@lists.infradead.org (moderated list:ARM PORT)
+Cc: linux-kernel@vger.kernel.org (open list)
+Cc: dri-devel@lists.freedesktop.org (open list:DRM DRIVERS)
+Cc: linux-input@vger.kernel.org (open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)...)
+Cc: linux-stm32@st-md-mailman.stormreply.com (moderated list:ARM/STM32 ARCHITECTURE)
+Cc: iommu@lists.linux.dev (open list:DMA MAPPING HELPERS)
+
+
