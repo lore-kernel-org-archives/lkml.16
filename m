@@ -1,92 +1,87 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F3E669D2B;
-	Wed,  9 Apr 2025 15:27:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BEFF265CB5;
+	Wed,  9 Apr 2025 15:27:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744212437; cv=none; b=tbQh3Dfb6CIoK01Po6NwTRp0iQTt+3M4Tff6H/l4BTdYPIrWfMjebxdAp1E7xEtoqenVsZHshgcDUN9wZNT4yHMuGW7ttcAVoONVY0vrL2KWbiR1hY/8I43IGGTjNVj2p6PSsunyx0PHynmk5dRofraxB7xQCk5xzxKF+SreQD8=
+	t=1744212445; cv=none; b=NvDyPNo/8fnmvT3zfYye2iarSV530za+YXyHBe1gcjH3GU+33jw7DfIvfpr3A6kHaUeXlxx7vmXL2f171wJLHZJEMaugKcvEyfmCpGDAhz4/tC7+//GfYDGsfpse1y2EWRZRnWuESSLJfPK7jnVBYyCx82MhpBSE8oPF9BGG/b0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744212437; c=relaxed/simple;
-	bh=qbv5VX98vIcIPOUSeR4TxxKkhB/UgpxzgMbNDUt70To=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c0V/suLaxdKs9dSo/DRQCePDMgOLtGf8eYHjknyLccM5j1+46gMHkWqugM1RkYYaRRmvyJlzlmPQhcY7XAO9fT9P9oCWeig0j5IrY49CM+XdpYPFrmrBYqrLcvxOUzQ/4tJcvDeGnMulj9Ck0mFibwGb1/gFkALCw4u/HJDDffI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=elsCI4RL; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1744212445; c=relaxed/simple;
+	bh=X3NxPrh/Dg6zmeDRgnBwY1KySOioOX8BKWZl/rmzgB4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CFMLnP+b4A9yvlRv5bbePu/bYATYdOjM5l5ano+QTK8W36yNAg19LQg2VUyCJ5FdV6L9A9H2SHbd+GtAKObF0+VyRhDVp/7aaQvejHQqtlIi+NKTn8dumGeSGncc5aWCflMT8nk2NfsvGnxTHnLOPNpTy9jv463lSdUfpkGmI/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=HiVZXeJW; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="elsCI4RL"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=wbzNcKaI2Ju+NUurCd+43BqDXaBMvMUrjcEfBIbcm6c=; b=elsCI4RLVTbXJh8m6jf0fPfoZB
-	YWu/Wj9wFWmML48QzkNpHnYgD3fXpjA8vnc54ftkdU+DpTaS6kfXY1sAPZxiLc2Rp62zxKwDWlwP+
-	edtCHwAy8x3yz6AfLhI64+2FnKYbwiFP+1jeHbBIWBTDq5l0Xil0cv/XLy6GeiwWfYo/LruUln3hk
-	hYOOMxXIkKhcRvxMsoAScZsy0j7FJBERghBSBDrwNGP2KtrnUa6iN8rlmffRYQd+UamqlpsQ/pV5F
-	MRbjWWUc2TeMH+GHIhGA6zbSCZugfXYbBNUiLVkvynJR2mbctO6B9tl7USrPw2JGuDBV/aVcpDPP7
-	NbpbArNA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u2XKR-00000008dy8-3x7H;
-	Wed, 09 Apr 2025 15:27:04 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 7D8A83003FA; Wed,  9 Apr 2025 17:27:03 +0200 (CEST)
-Date: Wed, 9 Apr 2025 17:27:03 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Rik van Riel <riel@surriel.com>
-Cc: Pat Cody <pat@patcody.io>, mingo@redhat.com, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	vschneid@redhat.com, linux-kernel@vger.kernel.org, patcody@meta.com,
-	kernel-team@meta.com, stable@vger.kernel.org,
-	Breno Leitao <leitao@debian.org>
-Subject: Re: [PATCH] sched/fair: Add null pointer check to pick_next_entity()
-Message-ID: <20250409152703.GL9833@noisy.programming.kicks-ass.net>
-References: <20250320205310.779888-1-pat@patcody.io>
- <20250324115613.GD14944@noisy.programming.kicks-ass.net>
- <9d38c61098b426777c1a748cf1baf8e57c41c334.camel@surriel.com>
- <20250402180734.GX5880@noisy.programming.kicks-ass.net>
- <b40f830845f1f97aa4b686c5c1333ff1bf5d59b3.camel@surriel.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="HiVZXeJW"
+Received: from [10.137.184.60] (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 0A0262114D8A;
+	Wed,  9 Apr 2025 08:27:23 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0A0262114D8A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1744212443;
+	bh=UjQX7nAQGu8VWkUrRyRpYAcZbBxisvkDjd3TARXNRv0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=HiVZXeJWF7w0t2l/4IF8J5ryv6/ZPUKUQ5aYykBziIutp4bcub2znNWPE/Y1Dh/Ge
+	 wPcrUU54yJBi/OX2udWa8QfGVA5UwpUJ3rEDsQtkbu2LYD/m1xFmP6y1gt8crnOdXG
+	 kECFhb2Vi1RaczcV6Pkxw/I1DktSimbBtg4Gwcdg=
+Message-ID: <b56eef68-367d-4b7b-98c4-f5d1291d7993@linux.microsoft.com>
+Date: Wed, 9 Apr 2025 08:27:22 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b40f830845f1f97aa4b686c5c1333ff1bf5d59b3.camel@surriel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH hyperv-next 5/6] arch, drivers: Add device struct bitfield
+ to not bounce-buffer
+To: Christoph Hellwig <hch@lst.de>
+Cc: aleksander.lobakin@intel.com, andriy.shevchenko@linux.intel.com,
+ arnd@arndb.de, bp@alien8.de, catalin.marinas@arm.com, corbet@lwn.net,
+ dakr@kernel.org, dan.j.williams@intel.com, dave.hansen@linux.intel.com,
+ decui@microsoft.com, gregkh@linuxfoundation.org, haiyangz@microsoft.com,
+ hpa@zytor.com, James.Bottomley@HansenPartnership.com,
+ Jonathan.Cameron@huawei.com, kys@microsoft.com, leon@kernel.org,
+ lukas@wunner.de, luto@kernel.org, m.szyprowski@samsung.com,
+ martin.petersen@oracle.com, mingo@redhat.com, peterz@infradead.org,
+ quic_zijuhu@quicinc.com, robin.murphy@arm.com, tglx@linutronix.de,
+ wei.liu@kernel.org, will@kernel.org, iommu@lists.linux.dev,
+ linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-doc@vger.kernel.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, x86@kernel.org,
+ apais@microsoft.com, benhill@microsoft.com, bperkins@microsoft.com,
+ sunilmut@microsoft.com
+References: <20250409000835.285105-1-romank@linux.microsoft.com>
+ <20250409000835.285105-6-romank@linux.microsoft.com>
+ <20250409105229.GA5721@lst.de>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <20250409105229.GA5721@lst.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 09, 2025 at 10:29:43AM -0400, Rik van Riel wrote:
-> On Wed, 2025-04-02 at 20:07 +0200, Peter Zijlstra wrote:
-> > 
-> > Anyway, seeing how your min_vruntime is weird, let me ask you to try
-> > the
-> > below; it removes the old min_vruntime and instead tracks zero
-> > vruntime
-> > as the 'current' avg_vruntime. We don't need the monotinicity filter,
-> > all we really need is something 'near' all the other vruntimes in
-> > order
-> > to compute this relative key so we can preserve order across the
-> > wrap.
-> > 
-> > This *should* get us near minimal sized keys. If you can still
-> > reproduce, you should probably add something like that patch I send
-> > you
-> > privately earlier, that checks the overflows.
-> 
-> Our trouble workload still makes the scheduler crash
-> with this patch.
-> 
-> I'll go put the debugging patch on our kernel.
-> 
-> Should I try to get debugging data with this patch
-> part of the mix, or with the debugging patch just
-> on top of what's in 6.13 already?
 
-Whatever is more convenient I suppose.
 
-If you can dump the full tree that would be useful. Typically the
-se::{vruntime,weight} and cfs_rq::{zero_vruntime,avg_vruntime,avg_load}
-such that we can do full manual validation of the numbers.
+On 4/9/2025 3:52 AM, Christoph Hellwig wrote:
+> On Tue, Apr 08, 2025 at 05:08:34PM -0700, Roman Kisel wrote:
+>> Bounce-buffering makes the system spend more time copying
+>> I/O data. When the I/O transaction take place between
+>> a confidential and a non-confidential endpoints, there is
+>> no other way around.
+>>
+>> Introduce a device bitfield to indicate that the device
+>> doesn't need to perform bounce buffering. The capable
+>> device may employ it to save on copying data around.
+> 
+> I have no idea what this is supposed to mean, you need to explain it
+> much better.
+
+Thanks for reviewing! I'll fix the description.
+
+> 
+
+-- 
+Thank you,
+Roman
+
