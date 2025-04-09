@@ -1,113 +1,120 @@
-Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f195.google.com (mail-lj1-f195.google.com [209.85.208.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D3FA2627EA;
-	Wed,  9 Apr 2025 12:52:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F23261591;
+	Wed,  9 Apr 2025 12:52:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744203137; cv=none; b=RtAC1GBlN0VZJhQ5k3BNTHmmDoDt3OW5EBZylK24mXNDtDwKzMwbs2/t4OaAuiFy9zEbSTLter3NXG4Efd3Hvk+OXElkf9OI8M40sxgTqUctFjRQbfTIXRpx+LWMtM0eVcNi0dL0cWmE6YgQbC2VL3ogRu1WRqDQ/qykYKC7BUI=
+	t=1744203142; cv=none; b=l44z33nUx2vnbKE7E5pUrH/SNrQjiMG/u6+wJ8/D2XyO/n9830sfsDrZYy9Kag6wOc96ho6o7u7XQH/iN0MwX5oUakVuzpzaKmlDHU82W547PB0MFLEOZakBeMFKegG/JpAZGb2aUeZzhJc0y1AebWRljpwGO5PNAKjQOcMdgSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744203137; c=relaxed/simple;
-	bh=Wga7NfE5EOLKXNPpGWNCl75SXWhKLrcAiVKGdRIqwI8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=S6IymdbBbA8bjiE5/n/WKSqxwf+K4gfbW+fd7oAaCSEdbrWHwA+yV5JScwO+G3BxxmBnLFBqFFaxfK3HNA1bKFR5ox1t5vdE9Vv8r49PkWYI0KzFb3VH820Dvl0VB9qiabVyj6Nmuj51s9LqA7sZUdDzFvdsId19qPACHqWc5Rw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=bO3gSMGV; arc=none smtp.client-ip=185.226.149.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
+	s=arc-20240116; t=1744203142; c=relaxed/simple;
+	bh=9j3BQXuTcVLq021FDJpbkiN8Ic00H5PJHGa7XG4Be3o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uPa06Xfbm0PVUviEnam/Iq/BCOFBp+hdTw1+/co0yMeYreIjQmrSK0t22gAT6dyCqmkHl2PEAK0HqBkE5A3qM+chHE2GRB/lCdNCLiKMWu5SaIDNtnAZKoUbQ/+SdkrYoVuFLi7OvSLqpN7xm3QU6DFWMbqCO5CPRI+kpL7/BMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fy/e8tBw; arc=none smtp.client-ip=209.85.208.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="bO3gSMGV"
-Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
-	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.93)
-	(envelope-from <mhal@rbox.co>)
-	id 1u2UuO-0009cr-7G; Wed, 09 Apr 2025 14:52:00 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
-	s=selector1; h=Cc:To:Message-Id:Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Subject:Date:From;
-	bh=f8y5kARShR5ZLHXs9fSAYU7oghihWo6U0sGdj42AVuw=; b=bO3gSMGVQs62Kc9g60sAUfmuGj
-	yV5w2IXK7bndM+9Q9OgJCsQbMWEJK55eaWfCdXoPtodwc2+Prh/ud1GqN09+2Qkamzo/h+Ej9w0zk
-	Z9HfRv0DBHzzhENH64a65Ho9pkhWzhR9U4BwKBq1Ni95KLsEXHhf4ISDuLCK7dB+4tczkZ1BKcbjU
-	kSFmpUXTfNqzUHSclNEbrl2dNDyRBEhm7N+pF1P9RZdx0hbi3z5nURjKRSwGC5VFlR8qlelWyni32
-	bhIXGcgT4akapkAg+PubdrNyaWsMzLyyy/SI95MjvGystZpnOlVMVDB0ywiOKycPJQ8opLpFnB1H5
-	k6YwmlZw==;
-Received: from [10.9.9.73] (helo=submission02.runbox)
-	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
-	(envelope-from <mhal@rbox.co>)
-	id 1u2UuD-0003GE-PE; Wed, 09 Apr 2025 14:51:54 +0200
-Received: by submission02.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.93)
-	id 1u2Uts-0021Ze-Ld; Wed, 09 Apr 2025 14:51:28 +0200
-From: Michal Luczaj <mhal@rbox.co>
-Date: Wed, 09 Apr 2025 14:50:58 +0200
-Subject: [PATCH net-next] af_unix: Remove unix_unhash()
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fy/e8tBw"
+Received: by mail-lj1-f195.google.com with SMTP id 38308e7fff4ca-30db1bd3bebso59253571fa.2;
+        Wed, 09 Apr 2025 05:52:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744203139; x=1744807939; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vnbe48AO71vHxLIqa6wKoIQjII3SgOedEce7jQxnB1c=;
+        b=fy/e8tBwN5lipwDSirRS7p3toisWDrWdarqxBsBijOL9xLOyYUJWLpY+wz0ISuLdJp
+         ygmudUVUv/qY5wGxoDTK6qEQdSl6HA4iQTFuF3ECLGWzLAsEfTHFubEQKDgcu1HW2z0P
+         qKv/6hlKolu42y6MHZ0er9TJZSpnVwewZ+fNqCxffI666Oy16dsMF5IINUYKUCDBJtf3
+         i10ljPb5GJ8vLjrmWStFzQ4tYwxtfKVMVfSQ8Gy2wwCESjqWiM3dqVAz7lLCif9S1pOR
+         rm7nwd8qxShsEcIFfcn9eMALrhuiMavAa412k0t+4ULF1G6/GlemLk8M3hnLUDnlBWn+
+         9o6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744203139; x=1744807939;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vnbe48AO71vHxLIqa6wKoIQjII3SgOedEce7jQxnB1c=;
+        b=CgLZQ0SsDgOs3VlXARRCqvNXCPBt/0g7I7tn1QgsKBEinwyVP/MRn+TkGxcyBxyBsI
+         FuuMytKWCthoRXlgq53fmxMoVR2taOeVWvICI79IEnRlEYrm3GN7oMMfHJZ1/EdXkh2P
+         JMdOb6CKYBlvS7RcL1cG9RzDXoWceymia9t8XphdXHXrAynsdLkf7tCYwmYMXZ0DSt1f
+         lHf9dPSS9yx9cONxuQ2S+ojgO9ktOmtP5zFR7eNUDGsap3YhzExV0kKk2EH6I/hpc9mf
+         8nFN6jHMqbye0673bIevvjMXO1h9Bh5Kdkc07Q/Us8Zx9l5y8JmI5l/X0FiNtti/4tRC
+         kBdg==
+X-Forwarded-Encrypted: i=1; AJvYcCUsuqS0/6PihxJLrBYj1Pvnqu4SfMwh5jLUVty7lTFHNN91lQAGBJUxt0L/hdxoz7c/1KLngu0hGjM=@vger.kernel.org, AJvYcCXnldRQwZCu+0p5Stztpk1i/4WmwNZyEMLMcMgiOZnh/OKTXZe2YFp6uhwpPkqN4JjWurhulDPOhdrEA0s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1kzgiGU8u0qAVtwLpgLNoeABLcCRXJde6KDqn7saX+m/p1YGu
+	yCOMOkx8o6tFOMJC+13F4XGhQDcDyM+WVDeEpobzDETwkQMgIaLF2C/BoshsAtluyIfLeUjyl78
+	5HDXKIi5IqnwK3QN18bWWKp4oEpY=
+X-Gm-Gg: ASbGncs4wEIZhHzhU6i+q4nVQK6/64KQcXQ25KnaBTZPPenaolXwxjviodvSXr3u15U
+	DhNZ56t88V1fNWiZGlROMJD8i8z0YAG/xsvOSJCG7uYTSNgjskTVsaJcJgCNixiJrx53TR5u59M
+	Zi5j1boB5QP8Z1eNsLL83Prg==
+X-Google-Smtp-Source: AGHT+IGdHNOtvdCerY9pg8Q3eWXZ6Xsli0U3CirBEEFOA4oaaLZ/9WuOnbKqs9UCWS6SuAwXiGwGa9XbIxRoeJv+6i8=
+X-Received: by 2002:a05:651c:54f:b0:30d:e104:a942 with SMTP id
+ 38308e7fff4ca-30f45078046mr7055251fa.38.1744203138983; Wed, 09 Apr 2025
+ 05:52:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250409-cleanup-drop-unix-unhash-v1-1-1659e5b8ee84@rbox.co>
-X-B4-Tracking: v=1; b=H4sIADFt9mcC/x2MQQqDMBAAvyJ77kKMNtB+RXpIs1uzIGtItATEv
- xu8DMxh5oDCWbjAuzsg81+KrNqkf3QQoteZUag5WGOfZjQOw8Je94SU14S7Sm2IvkR0diAavoF
- eo4OWp8w/qfd6AuUNlesGn/O8ACHfB5J0AAAA
-X-Change-ID: 20250406-cleanup-drop-unix-unhash-623dd3bcd946
-To: Kuniyuki Iwashima <kuniyu@amazon.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- bpf@vger.kernel.org, Michal Luczaj <mhal@rbox.co>
-X-Mailer: b4 0.14.2
+References: <20250409124542.47166-1-bsdhenrymartin@gmail.com>
+In-Reply-To: <20250409124542.47166-1-bsdhenrymartin@gmail.com>
+From: henry martin <bsdhenrymartin@gmail.com>
+Date: Wed, 9 Apr 2025 20:52:08 +0800
+X-Gm-Features: ATxdqUHAqov07ZrNPtI7qo4io2YYdsdoXQrB8Z46RMN6AaIBAh08vSDcMkMStwY
+Message-ID: <CAEnQdOoMBvm_T813t_1uuNsQxqro=zXwM6d2b=NOiihicUNHcg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] cpufreq: scpi: Fix null-ptr-deref in scpi_cpufreq_get_rate()
+To: sven@svenpeter.dev, j@jannau.net, alyssa@rosenzweig.io, neal@gompa.dev, 
+	rafael@kernel.org, viresh.kumar@linaro.org
+Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Dummy unix_unhash() was introduced for sockmap in commit 94531cfcbe79
-("af_unix: Add unix_stream_proto for sockmap"), but there's no need to
-implement it anymore.
+Sorry for the noise - please disregard this patch as it was sent in error.
 
-->unhash() is only called conditionally: in unix_shutdown() since commit
-d359902d5c35 ("af_unix: Fix NULL pointer bug in unix_shutdown"), and in BPF
-proto's sock_map_unhash() since commit 5b4a79ba65a1 ("bpf, sockmap: Don't
-let sock_map_{close,destroy,unhash} call itself").
-
-Remove it.
-
-Signed-off-by: Michal Luczaj <mhal@rbox.co>
----
- net/unix/af_unix.c | 8 --------
- 1 file changed, 8 deletions(-)
-
-diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
-index f78a2492826f9cc1e302ee6f8ca93c367656670a..2ab20821d6bb244a09e0364e1c649042360e23b1 100644
---- a/net/unix/af_unix.c
-+++ b/net/unix/af_unix.c
-@@ -950,13 +950,6 @@ static void unix_close(struct sock *sk, long timeout)
- 	 */
- }
- 
--static void unix_unhash(struct sock *sk)
--{
--	/* Nothing to do here, unix socket does not need a ->unhash().
--	 * This is merely for sockmap.
--	 */
--}
--
- static bool unix_bpf_bypass_getsockopt(int level, int optname)
- {
- 	if (level == SOL_SOCKET) {
-@@ -987,7 +980,6 @@ struct proto unix_stream_proto = {
- 	.owner			= THIS_MODULE,
- 	.obj_size		= sizeof(struct unix_sock),
- 	.close			= unix_close,
--	.unhash			= unix_unhash,
- 	.bpf_bypass_getsockopt	= unix_bpf_bypass_getsockopt,
- #ifdef CONFIG_BPF_SYSCALL
- 	.psock_update_sk_prot	= unix_stream_bpf_update_proto,
-
----
-base-commit: 420aabef3ab5fa743afb4d3d391f03ef0e777ca8
-change-id: 20250406-cleanup-drop-unix-unhash-623dd3bcd946
-
-Best regards,
--- 
-Michal Luczaj <mhal@rbox.co>
-
+Henry Martin <bsdhenrymartin@gmail.com> =E4=BA=8E2025=E5=B9=B44=E6=9C=889=
+=E6=97=A5=E5=91=A8=E4=B8=89 20:45=E5=86=99=E9=81=93=EF=BC=9A
+>
+> cpufreq_cpu_get_raw() can return NULL when the target CPU is not present
+> in the policy->cpus mask. scpi_cpufreq_get_rate() does not check for
+> this case, which results in a NULL pointer dereference.
+>
+> Fixes: 343a8d17fa8d ("cpufreq: scpi: remove arm_big_little dependency")
+> Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+> ---
+> V1 -> V2: Use `if (unlikely(!policy))` instead of `if (!policy)`
+>
+>  drivers/cpufreq/scpi-cpufreq.c | 13 ++++++++++---
+>  1 file changed, 10 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/cpufreq/scpi-cpufreq.c b/drivers/cpufreq/scpi-cpufre=
+q.c
+> index 17cda84f00df..dcbb0ae7dd47 100644
+> --- a/drivers/cpufreq/scpi-cpufreq.c
+> +++ b/drivers/cpufreq/scpi-cpufreq.c
+> @@ -29,9 +29,16 @@ static struct scpi_ops *scpi_ops;
+>
+>  static unsigned int scpi_cpufreq_get_rate(unsigned int cpu)
+>  {
+> -       struct cpufreq_policy *policy =3D cpufreq_cpu_get_raw(cpu);
+> -       struct scpi_data *priv =3D policy->driver_data;
+> -       unsigned long rate =3D clk_get_rate(priv->clk);
+> +       struct cpufreq_policy *policy;
+> +       struct scpi_data *priv;
+> +       unsigned long rate;
+> +
+> +       policy =3D cpufreq_cpu_get_raw(cpu);
+> +       if (unlikely(!policy))
+> +               return 0;
+> +
+> +       priv =3D policy->driver_data;
+> +       rate =3D clk_get_rate(priv->clk);
+>
+>         return rate / 1000;
+>  }
+> --
+> 2.34.1
+>
