@@ -1,120 +1,171 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5956325F98E;
-	Wed,  9 Apr 2025 12:51:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC70D2627EA;
+	Wed,  9 Apr 2025 12:51:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744203093; cv=none; b=nIERvPnm6d/xdUA2aaScrzkeXLYw6G/d2aBQxjS2Z4S9jNMGxiqVDF0BxzC6ixdOsdSCWbXiA/Orf0xD/DXtLPRI5iVbWNjgZ4lW0C2hmnKB3Co2ZBMTIievgEYUtpevbWp2G1Rdlnlxl3p3HOfPA7bGlpOioZ4IWXeaaX7c7Pk=
+	t=1744203115; cv=none; b=V+3VYrwVrv7qBCioQW2VNeMGysL5b7XJQDSgHHF6AArDiDQYWOPu6TRoIA1YwUxCkTTvOI1BKW8PQESg4EE0TzvPO9DovcLWz/1YUvMgzuyw30MhwYhLiBjMfM/Jj+r2zZ1Pbs4YrXRyuC7zmMk6SI65UNwsOJ321HgzHmOHeHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744203093; c=relaxed/simple;
-	bh=xpH/jYiVkemK9LZOFBBqirqOj2aBQtHKu1Zu8KigTmI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XpAUWM+qsPL38C1Q/jSEIFH79n8lFQsnKwwB9XHnUEaU5ON4OrYPvo0Bk+PLvl+ogEnNVnFblnpw6GmikpdJUOhlXD2xWSBKxnfXU3eLkX6t8X7s3uB1/BdT4yWic6r4H8qnJrA0poalNpw+bxXAHI1ynPHgmKj7AqQXfZk/HYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IZOxXxBD; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744203115; c=relaxed/simple;
+	bh=y1KOsl3bM2Nc82jWkBpwB9pBWedP0INipQprBLc0j5o=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=cLb5nm0NhBQqIKXEeQL7VefSo0IeahXHuB6CSgw0U0lAkXKQXjlU6g5hpKPVECNaccp98gAiwHf0E8lScLEhws7FJRzqbFq4Nzuv8r02lKTcZu5bxiFiVT2QShjTzrNqvlS7shIeMkrSwPnkCjrK1EVSw0IHVHrVk9JfE0Q+s7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=qoq0l8CR; arc=none smtp.client-ip=80.241.56.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IZOxXxBD"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ac34257295dso1347645666b.2;
-        Wed, 09 Apr 2025 05:51:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744203089; x=1744807889; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Gks++X53IVJa2PrSdYu1o6vHIrQtu/OYElJM2FQDItE=;
-        b=IZOxXxBDx6kNwB9pmqpzUS6hV6vzua5U3B7qelpRVb5Zss4wZkL38oLV40o/K+ERnC
-         RuvdLMUx9vF0HLg2bY6jzWxPGsNMbZnGaya7vRzCvX0urGn7nz7IFaVrCrRZgBCEgg7P
-         ay0AAssBRNmET1lykDv0YnXXV9LZ/MaZ9Mf/495jArDhNewITBAe55w/1L3WNbp7L3G3
-         GrV1dn1SWA/L2aMKKU4IcefxkMkDzcOgWb3xL47pBzr8ArFaUOdAyH5oCVmrBlqOW51u
-         0DjSkoDJqjfQcCuX+42qtxpSenXpSu5YNYo/WVRtdS8jj9X8xp25ErRYecqM1wBQpeNn
-         lawA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744203089; x=1744807889;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Gks++X53IVJa2PrSdYu1o6vHIrQtu/OYElJM2FQDItE=;
-        b=XXuDrcnROG8yh/YySiDr4RLGHAYAFb2qOxuuBumqNJxqeEWWB2w3zNGd1rmRPpj+Kn
-         UXliuoTSwgI+lUSAlccmdWVdCxuuND1HYJiMTsg+1TxBRyRfm76E0iwjTYn5oNToeA1g
-         EfXwTeaXP0blMoPu4AQFEwMZmI6JxRtR3wzBc6bD5aUH630ebKGSEfOeqaJXqPUirA22
-         pvnUD2s60JhWCrsd8WSsEaFLxlVjZHHOWLgZlT4u17JFqCUvxMSmHaGpT8yg0peiy4oj
-         3lvxGuuwq3bwo+USnElQriXsSJWDPpuP6omlStMmvvbWMuvdi5cUnirgbW7vpSeyRB40
-         Jn4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUiOsTsDklbwsLvmldBupnXAo1IARaQ7bZcFqMoHjGEHvvBVnHPfOOF/5MOTLLYXgwq8mRm8LRrBgbZuQ==@vger.kernel.org, AJvYcCXo+H7X6pfwWKyGOdN+VCN6FSy8z4XAX7riue0fg0OkFguuifKrK6GS8qMw0d3W07kLbLo7lMDbU/0JnOI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGGy6ajaUOP8ERnzRrbbu1TKFTsFwEQ6JH9CaMrcSwOijyjj/5
-	qQ6xqvtw8QWaqw29loupMHaIZSKe7YhJaMBU+1bco1xmpnrpceqPEn8KMw==
-X-Gm-Gg: ASbGnctILObVyGVNQxSyIjcYAUiQovJ/mfxLLPhBPSc/eRDsr6G+UMCTJYkv18mt8zw
-	5m3uw6zJWC4MKYr9Igu+jgdB3hueOZN1gCndtnTcklxAFWSTX+Ri6xoafkKt7vDV8qzVVQWdSC/
-	i6Q0ec4wnPlc5jVNi++Gn/Xh1+1lihBA6SoRe1V/68vHfrSOV3AOz3zhi2L4w+SkWFSMroPbeSw
-	sT1m5+6l0N4VcQptgYVJmHSPQNm22l562oeh9lGz95T+wy3wK2V6DHaWJM3p2b/cGU5MyMZa+Xl
-	PF+aTk4hMua75okIBA9xUDGgQ0QJfywuNvW6u6So
-X-Google-Smtp-Source: AGHT+IFD7daTevsT5nt48BUqOknp+9ntwOoKI8U6ZrkPBPjkcnKqBAlleXU547QxwJ/c0MpNNQ+gUw==
-X-Received: by 2002:a17:907:7b88:b0:ac7:684c:25ca with SMTP id a640c23a62f3a-aca9b745c3amr266597866b.51.1744203089433;
-        Wed, 09 Apr 2025 05:51:29 -0700 (PDT)
-Received: from pc ([196.235.3.239])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1ce7317sm91884366b.177.2025.04.09.05.51.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 05:51:28 -0700 (PDT)
-Date: Wed, 9 Apr 2025 13:51:25 +0100
-From: Salah Triki <salah.triki@gmail.com>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>, sparclinux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sparc: pci: Fix memory leak in pci_bus_slot_names()
-Message-ID: <Z_ZtTeaHpJeVH-lN@pc>
-References: <Z_Ox0qp7uuKNUo2U@pc>
- <e2a4e693-46db-4b1f-87c2-2867a4cb196d@wanadoo.fr>
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="qoq0l8CR"
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4ZXjWR652Hz9sn9;
+	Wed,  9 Apr 2025 14:51:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1744203109; h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=y1KOsl3bM2Nc82jWkBpwB9pBWedP0INipQprBLc0j5o=;
+	b=qoq0l8CRDL+UCLVS3PHrT3P1vR961xDbvNHjxml9bfKWX4A8AKek0gxWwmdmbupugwQeUa
+	Or+iNbsFczg2uc1qjLHcrFuRpL+GzZagbMm58iileZJozNcIGY1Wxql/PZKK+5bG8ZsWq2
+	2YoNz9CTr+r/TtXKi8y1ULJZxxI6uQrf97iP25KM8X3lfdIHeDBuYN1kXSv4fCXzbScnTT
+	yLuadRHPxEojfM+iEAtJ0zGXkOO/SSAIQW6CFfEy729P3TxL/gTXnIHf4mkGow540KskXM
+	nrcgR++I+jzbqfsLLSFAJ5yiAQoZy2b6Yx0KmrVsiTq4Af3cCbXv1hYpqyHV5w==
+Message-ID: <73d41cd84c73b296789b654e45125bfce88e0dbf.camel@mailbox.org>
+Subject: Re: [PATCH 1/2] dma-fence: Rename dma_fence_is_signaled()
+From: Philipp Stanner <phasta@mailbox.org>
+Reply-To: phasta@kernel.org
+To: Boris Brezillon <boris.brezillon@collabora.com>, Philipp Stanner
+	 <phasta@kernel.org>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>, Gustavo Padovan
+ <gustavo@padovan.org>, Christian =?ISO-8859-1?Q?K=F6nig?=
+ <christian.koenig@amd.com>, Felix Kuehling <Felix.Kuehling@amd.com>, Alex
+ Deucher <alexander.deucher@amd.com>, Xinhui Pan <Xinhui.Pan@amd.com>, David
+ Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>,  Thomas Zimmermann <tzimmermann@suse.de>, Lucas Stach
+ <l.stach@pengutronix.de>, Russell King <linux+etnaviv@armlinux.org.uk>,
+ Christian Gmeiner <christian.gmeiner@gmail.com>,  Jani Nikula
+ <jani.nikula@linux.intel.com>, Joonas Lahtinen
+ <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Tvrtko Ursulin <tursulin@ursulin.net>, Frank Binns
+ <frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>, Qiang Yu
+ <yuq825@gmail.com>, Rob Clark <robdclark@gmail.com>, Sean Paul
+ <sean@poorly.run>,  Konrad Dybcio <konradybcio@kernel.org>, Abhinav Kumar
+ <quic_abhinavk@quicinc.com>, Dmitry Baryshkov
+ <dmitry.baryshkov@linaro.org>, Marijn Suijten
+ <marijn.suijten@somainline.org>,  Lyude Paul <lyude@redhat.com>, Danilo
+ Krummrich <dakr@kernel.org>, Rob Herring <robh@kernel.org>,  Steven Price
+ <steven.price@arm.com>, Dave Airlie <airlied@redhat.com>, Gerd Hoffmann
+ <kraxel@redhat.com>,  Matthew Brost <matthew.brost@intel.com>, Huang Rui
+ <ray.huang@amd.com>, Matthew Auld <matthew.auld@intel.com>,  Melissa Wen
+ <mwen@igalia.com>, =?ISO-8859-1?Q?Ma=EDra?= Canal <mcanal@igalia.com>, Zack
+ Rusin <zack.rusin@broadcom.com>, Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Lucas De Marchi
+ <lucas.demarchi@intel.com>, Thomas =?ISO-8859-1?Q?Hellstr=F6m?=
+ <thomas.hellstrom@linux.intel.com>, Bas Nieuwenhuizen
+ <bas@basnieuwenhuizen.nl>,  Yang Wang <kevinyang.wang@amd.com>, Jesse Zhang
+ <jesse.zhang@amd.com>, Tim Huang <tim.huang@amd.com>,  Sathishkumar S
+ <sathishkumar.sundararaju@amd.com>, Saleemkhan Jamadar
+ <saleemkhan.jamadar@amd.com>, Sunil Khatri <sunil.khatri@amd.com>, Lijo
+ Lazar <lijo.lazar@amd.com>, Hawking Zhang <Hawking.Zhang@amd.com>, Ma Jun
+ <Jun.Ma2@amd.com>, Yunxiang Li <Yunxiang.Li@amd.com>, Eric Huang
+ <jinhuieric.huang@amd.com>, Asad Kamal <asad.kamal@amd.com>, Srinivasan
+ Shanmugam <srinivasan.shanmugam@amd.com>,  Jack Xiao <Jack.Xiao@amd.com>,
+ Friedrich Vock <friedrich.vock@gmx.de>, Michel =?ISO-8859-1?Q?D=E4nzer?=
+ <mdaenzer@redhat.com>, Geert Uytterhoeven <geert@linux-m68k.org>,
+ Anna-Maria Behnsen <anna-maria@linutronix.de>, Thomas Gleixner
+ <tglx@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, Dan
+ Carpenter <dan.carpenter@linaro.org>,  linux-media@vger.kernel.org,
+ dri-devel@lists.freedesktop.org,  linaro-mm-sig@lists.linaro.org,
+ linux-kernel@vger.kernel.org,  amd-gfx@lists.freedesktop.org,
+ etnaviv@lists.freedesktop.org,  intel-gfx@lists.freedesktop.org,
+ lima@lists.freedesktop.org,  linux-arm-msm@vger.kernel.org,
+ freedreno@lists.freedesktop.org,  nouveau@lists.freedesktop.org,
+ virtualization@lists.linux.dev,  spice-devel@lists.freedesktop.org,
+ intel-xe@lists.freedesktop.org
+Date: Wed, 09 Apr 2025 14:51:14 +0200
+In-Reply-To: <20250409143917.31303d22@collabora.com>
+References: <20250409120640.106408-2-phasta@kernel.org>
+	 <20250409120640.106408-3-phasta@kernel.org>
+	 <20250409143917.31303d22@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e2a4e693-46db-4b1f-87c2-2867a4cb196d@wanadoo.fr>
+X-MBO-RS-META: 7iy136p8m6py4oeaepzr7ogfmahipjtt
+X-MBO-RS-ID: b1321202fe5ffc9b996
 
-On Mon, Apr 07, 2025 at 09:49:08PM +0200, Christophe JAILLET wrote:
-> Le 07/04/2025 à 13:06, Salah Triki a écrit :
-> > prop is a local pointer in pci_bus_slot_names(). It is initialized
-> > by calling of_get_property() so the caller must free prop when done
-> > using it.
-> 
-> Hi,
-> 
-> can you elaborate why?
-> 
-> It does not look needed to me, and the places using of_get_property() that
-> I've checked don't have such a kfree().
-> 
-> CJ
+On Wed, 2025-04-09 at 14:39 +0200, Boris Brezillon wrote:
+> Hi Philipp,
+>=20
+> On Wed,=C2=A0 9 Apr 2025 14:06:37 +0200
+> Philipp Stanner <phasta@kernel.org> wrote:
+>=20
+> > dma_fence_is_signaled()'s name strongly reads as if this function
+> > were
+> > intended for checking whether a fence is already signaled. Also the
+> > boolean it returns hints at that.
+> >=20
+> > The function's behavior, however, is more complex: it can check
+> > with a
+> > driver callback whether the hardware's sequence number indicates
+> > that
+> > the fence can already be treated as signaled, although the
+> > hardware's /
+> > driver's interrupt handler has not signaled it yet. If that's the
+> > case,
+> > the function also signals the fence.
+> >=20
+> > (Presumably) this has caused a bug in Nouveau (unknown commit),
+> > where
+> > nouveau_fence_done() uses the function to check a fence, which
+> > causes a
+> > race.
+> >=20
+> > Give the function a more obvious name.
+>=20
+> This is just my personal view on this, but I find the new name just
+> as
+> confusing as the old one. It sounds like something is checked, but
+> it's
+> clear what, and then the fence is forcibly signaled like it would be
+> if
+> you call drm_fence_signal(). Of course, this clarified by the doc,
+> but
+> given the goal was to make the function name clearly reflect what it
+> does, I'm not convinced it's significantly better.
+>=20
+> Maybe dma_fence_check_hw_state_and_propagate(), though it might be
+> too long of name. Oh well, feel free to ignore this comments if a
+> majority is fine with the new name.
 
-Hi, 
+Yoa, the name isn't perfect (the perfect name describing the whole
+behavior would be
+dma_fence_check_if_already_signaled_then_check_hardware_state_and_propa
+gate() ^^'
 
-Sorry for disturbing, I was wrong about that.
+My intention here is to have the reader realize "watch out, the fence
+might get signaled here!", which is probably the most important event
+regarding fences, which can race, invoke the callbacks and so on.
 
-ST
-> 
-> > 
-> > Signed-off-by: Salah Triki <salah.triki@gmail.com>
-> > ---
-> >   arch/sparc/kernel/pci.c | 2 ++
-> >   1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/arch/sparc/kernel/pci.c b/arch/sparc/kernel/pci.c
-> > index ddac216a2aff..fa0da8f45723 100644
-> > --- a/arch/sparc/kernel/pci.c
-> > +++ b/arch/sparc/kernel/pci.c
-> > @@ -971,6 +971,8 @@ static void pci_bus_slot_names(struct device_node *node, struct pci_bus *bus)
-> >   		mask &= ~this_bit;
-> >   		i++;
-> >   	}
-> > +
-> > +	kfree(prop);
-> >   }
-> >   static int __init of_pci_slot_init(void)
-> 
+For details readers will then check the documentation.
+
+But I'm of course open to see if there's a majority for this or that
+name.
+
+P.
+
+
+>=20
+> Regards,
+>=20
+> Boris
+
