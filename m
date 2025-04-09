@@ -1,126 +1,84 @@
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-9102.amazon.com (smtp-fw-9102.amazon.com [207.171.184.29])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F268F1E8342
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 20:19:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24F6D1DE884;
+	Wed,  9 Apr 2025 20:20:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.184.29
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744229986; cv=none; b=D3d0yD4qY7gLVZ6sICFE7WXCl2LoaEzTLlyfwpMm5XiLK+SLLhb1iAD3Fnc0zFklC6zNRk8CRT65Bp0qLvAoC5N+4A4vXZjAAYwyWDlmqG39NMhN5EYWDaZBOZyLa+TDorPyzp6yDnul4mRSfehRfOJ/BHk1eAK2EGipAgdEYv4=
+	t=1744230048; cv=none; b=hWa7T35xKrA1BfK0dicfYGmbyllMARv523NzB+c5NNpQCm3DPaBmzoNCYDZJeaGTR7l20U5WSBQLHEksjCo+aeUFb+QhpB/BtdmLR3cHsJuH+2szxhZa0Wy66FF4/3ChbR6d9P9YZnjjxT2G8+008X9in+CsptXUCltpnVb8y+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744229986; c=relaxed/simple;
-	bh=vFYL2A2m4BVqGIUPwG+SJe8Wi/rBo/+xMXvF158DHXI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=E4CVVjzFgrPPTOsfRsAvgx0h856QGNpV0m/Mcjw7kS3s5XkmyoChZqr86pN1rFxXEQw/1aghzZtBaHwTTmCjRmx0fMzrPCG9WFBpo4Segsqu4cOXfh/s+K7EHXeXTDooUXp5VUFouyGK0JE7w5YRc+XrGBjnko0y8+n5AO3TzRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=Wn+nA0JZ; arc=none smtp.client-ip=209.85.219.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1744230048; c=relaxed/simple;
+	bh=1WrEWfpFHEmFTxy1AVRfKmrCHZ+R+S8KOv66hp8ygFk=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qaNmtwM1TRg9NyypphN3ATXwMS2sNXT2btxwEqmL5nXgrHTzRko/+po8n5PXtJozZq/ndxF4YlOhJUeUn1AgtlUQnGG6hfUO0afhsJF0wnXiW/9KASHz0iQpZDsy0oFe257gWIxhGyTZn08YIal0uiS48d7gFe1CKC8gLUHONiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=DQFNj3bj; arc=none smtp.client-ip=207.171.184.29
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="Wn+nA0JZ"
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e6e1cd3f1c5so78970276.0
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 13:19:42 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="DQFNj3bj"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1744229982; x=1744834782; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VsHh17W+bDIV1e4xVUO/JwjeRPH7cOalB9Js2vjnhrU=;
-        b=Wn+nA0JZQAGWXBbLIKOsOUEp6QNQFXHFfl8D9NHSUQH82ABaXlAr50iV+7HSk/LZ5q
-         qx83eELju83YbCI2XWoyLlB3SZVZaRWjw7YEbQZvdLPyWG9MCMlD6X6v+VCg+pKiPCte
-         kUtBSXZZ2Qo+odi9Y5zgSmAy3ErlpXgwOmQ9U3Q5ixc9brwQnG+lulMQO98V0WBFWMsJ
-         +fGiXrx641WxrozoR1GTYX+VQbUBJPGqYtgyHbMIDVOcR/PIYFLtUkmWwz/UvLzO1AA7
-         WV+ouudBXgaa3eo00UmsD2TVEcyoT8t+QffxgHPg06ODRAFr2u/5dz69btPw7PUcr7gY
-         Q3NQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744229982; x=1744834782;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VsHh17W+bDIV1e4xVUO/JwjeRPH7cOalB9Js2vjnhrU=;
-        b=NJdxb8vrT1O/fY5xvyHll/ymEsEi93qD6201+Gj4tPqKbaj2IZ0E26oeUfmdYOtaIt
-         w9X83MXlLSaH4V4/JyI00BhurHjx9aF9Cq3xk16N4HUA8F8JtBpXU4xh78c08PQh6RLU
-         UbGH/3gsYyQ1mrpbj2PnitHe6m/d1mLziXYZbkQvkBVe4hAQ8/H0FNkaH/1AxNLJXUEw
-         WuTHQu078i6dmIonwMVBjrvnqRC4hTqFEzPwefxYuehd0jfavhk/2PvnUTXkCLmsEsF2
-         w9VxenHVU/AA2yZifGhtqqWFe6FESFsD6laLo/GENcGZi2EjIni533rF3WnKzW5qIYma
-         zV3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWDYziiqXJXJdojrRSGDXl43G4kj5mHJb538jT+KzhAWvL24UqXwSyxfd0DrSNhdg9mZ78YLcPMZySCRBs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNeQjf/ZAE9x4IPlxkOlgXpJm9Z3ycbVRJJax4H3AFmhakb+dR
-	puUbvFDVV3DIBjUmz4ocZ9QksvyGnk3EQFoEgormHCncOejIGiZFfN/e4Bqf46O4tpQN8w2GE6b
-	A+SxM2pDBxpLeiYQmExr5z36Y0qAgCfXDJP/4
-X-Gm-Gg: ASbGncvAd5KWEJ7qWrcD2Y+75rXOYSigU7iBNYAKR5gAiEWcI6NoVEj2AFAsOvUN1rz
-	7PDJVXPLRzXXPDKJ+LRKf6nEBqbB6AbnlR3WWlkC2zNb2CpJ8jmUs8wdB1fsMWdudBhQjeS4Kqg
-	rlkpn9NE5D9WZlZIcmkjo1zQ==
-X-Google-Smtp-Source: AGHT+IEGCJR9IA5jDMT2Of/TaTFQ6Kl+jhMbbHqtWzPYG+QuFj2lKMDW1yD44Tl3NdNB6jTiuM59Ql0Ux2XWfYO9+PU=
-X-Received: by 2002:a05:6902:1b90:b0:e6d:f3ca:3e15 with SMTP id
- 3f1490d57ef6-e703e0ecf38mr658467276.3.1744229981817; Wed, 09 Apr 2025
- 13:19:41 -0700 (PDT)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1744230044; x=1775766044;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=BFKlNYVEHNJdeCxI8d7yxB4qk1YN6ZpSI2mPtyL+/tk=;
+  b=DQFNj3bjP9XFoC18ZRzauNe4f3Js7loUt3djd9rXbN/1wM4DfyDoTvdv
+   ybutBoQY2MrNBhubGzbvdfK/g7gZ60eKdgThm0+1CcfLEu18VDxciA7/6
+   Eh/PyrAfEAK+22eNEAQR3FuYmNhsAZDpEDMiyienz/3aw3+R5gZFoF1+9
+   I=;
+X-IronPort-AV: E=Sophos;i="6.15,201,1739836800"; 
+   d="scan'208";a="510240796"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
+  by smtp-border-fw-9102.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 20:20:36 +0000
+Received: from EX19MTAUWC002.ant.amazon.com [10.0.38.20:21857]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.62.147:2525] with esmtp (Farcaster)
+ id 8d194daa-eab1-490c-b425-30f481a950b4; Wed, 9 Apr 2025 20:20:35 +0000 (UTC)
+X-Farcaster-Flow-ID: 8d194daa-eab1-490c-b425-30f481a950b4
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 9 Apr 2025 20:20:34 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.187.170.41) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 9 Apr 2025 20:20:32 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <mhal@rbox.co>
+CC: <bpf@vger.kernel.org>, <davem@davemloft.net>, <edumazet@google.com>,
+	<horms@kernel.org>, <kuba@kernel.org>, <kuniyu@amazon.com>,
+	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>, <pabeni@redhat.com>
+Subject: Re: [PATCH net-next] af_unix: Remove unix_unhash()
+Date: Wed, 9 Apr 2025 13:20:15 -0700
+Message-ID: <20250409202018.54638-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250409-cleanup-drop-unix-unhash-v1-1-1659e5b8ee84@rbox.co>
+References: <20250409-cleanup-drop-unix-unhash-v1-1-1659e5b8ee84@rbox.co>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250408112402.181574-1-shivankg@amd.com> <20250408112402.181574-4-shivankg@amd.com>
-In-Reply-To: <20250408112402.181574-4-shivankg@amd.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Wed, 9 Apr 2025 16:19:31 -0400
-X-Gm-Features: ATxdqUEUOdbJE1FR-JWrcEMUFKxoL7rqK5e8WWf2cXUgc2Yd72xDgueuEkSahFw
-Message-ID: <CAHC9VhRFBOC=cZB+Dm00cshwBSBaK6amv+=XFLPF0Bub0gHN+Q@mail.gmail.com>
-Subject: Re: [PATCH RFC v7 3/8] security: Export security_inode_init_security_anon
- for KVM guest_memfd
-To: Shivank Garg <shivankg@amd.com>
-Cc: seanjc@google.com, david@redhat.com, vbabka@suse.cz, willy@infradead.org, 
-	akpm@linux-foundation.org, shuah@kernel.org, pbonzini@redhat.com, 
-	ackerleytng@google.com, jmorris@namei.org, serge@hallyn.com, pvorel@suse.cz, 
-	bfoster@redhat.com, tabba@google.com, vannapurve@google.com, 
-	chao.gao@intel.com, bharata@amd.com, nikunj@amd.com, michael.day@amd.com, 
-	yan.y.zhao@intel.com, Neeraj.Upadhyay@amd.com, thomas.lendacky@amd.com, 
-	michael.roth@amd.com, aik@amd.com, jgg@nvidia.com, kalyazin@amazon.com, 
-	peterx@redhat.com, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-coco@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D040UWB003.ant.amazon.com (10.13.138.8) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-On Tue, Apr 8, 2025 at 7:25=E2=80=AFAM Shivank Garg <shivankg@amd.com> wrot=
-e:
->
-> KVM guest_memfd is implementing its own inodes to store metadata for
-> backing memory using a custom filesystem. This requires the ability to
-> initialize anonymous inode using security_inode_init_security_anon().
->
-> As guest_memfd currently resides in the KVM module, we need to export thi=
-s
-> symbol for use outside the core kernel. In the future, guest_memfd might =
-be
-> moved to core-mm, at which point the symbols no longer would have to be
-> exported. When/if that happens is still unclear.
+From: Michal Luczaj <mhal@rbox.co>
+Date: Wed, 09 Apr 2025 14:50:58 +0200
+> Dummy unix_unhash() was introduced for sockmap in commit 94531cfcbe79
+> ("af_unix: Add unix_stream_proto for sockmap"), but there's no need to
+> implement it anymore.
+> 
+> ->unhash() is only called conditionally: in unix_shutdown() since commit
+> d359902d5c35 ("af_unix: Fix NULL pointer bug in unix_shutdown"), and in BPF
+> proto's sock_map_unhash() since commit 5b4a79ba65a1 ("bpf, sockmap: Don't
+> let sock_map_{close,destroy,unhash} call itself").
+> 
+> Remove it.
+> 
+> Signed-off-by: Michal Luczaj <mhal@rbox.co>
 
-Can you help me understand the timing just a bit more ... do you
-expect the move to the core MM code to happen during the lifetime of
-this patchset, or is it just some hand-wavy "future date"?  No worries
-either way, just trying to understand things a bit better.
+Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
 
-> Signed-off-by: Shivank Garg <shivankg@amd.com>
-> ---
->  security/security.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/security/security.c b/security/security.c
-> index fb57e8fddd91..097283bb06a5 100644
-> --- a/security/security.c
-> +++ b/security/security.c
-> @@ -1877,6 +1877,7 @@ int security_inode_init_security_anon(struct inode =
-*inode,
->         return call_int_hook(inode_init_security_anon, inode, name,
->                              context_inode);
->  }
-> +EXPORT_SYMBOL(security_inode_init_security_anon);
->
->  #ifdef CONFIG_SECURITY_PATH
->  /**
-> --
-> 2.34.1
 
---=20
-paul-moore.com
