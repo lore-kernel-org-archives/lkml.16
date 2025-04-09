@@ -1,40 +1,50 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0834265631;
-	Wed,  9 Apr 2025 15:23:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB0001DFFD;
+	Wed,  9 Apr 2025 15:24:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744212242; cv=none; b=t7H8azMflwksrSbCMvsSnuY1QiD14VgkYRietEHNmYnA2Yw02+/j4zv+1kg9ze4AdwHb4AkyiZCm/sF7igsJ4vFnUftnL5yGBjy0xAnwbedzrnmlHoFWIjg47AMuYXzT022fBSahpt/XlqniAjPWb9LCqbnBtLAIsURSjG4/J1A=
+	t=1744212260; cv=none; b=SFpiWzav0eP1Mk+sZm2e3EyOuvf8h4R9btf84S/HR96UQEkujbmK+fA02eaguWux8RT4nwW/C3lk5YNuMWBrwELyfF6D6jipq6XYXTDq/2SgSM9O2OzdEHeMLnieeYO0QnHx+vWm52HT1wu0DkzWi09q3uhoW24izgkQCiitHnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744212242; c=relaxed/simple;
-	bh=UIKs6oiDDGVT6GBVwmjJhm9dBlDygaMvkduIBBllUMc=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=nkCBAGLlW3Wo5ZaQgRNDPP3elD/ZJ0eN9eg3yW8LDy60dCFgaDIVmCyWzUzaI6TepsZs4oREWfs4TicD0RX5wmcBinPPCkJoYgixWwzvwY80SVveJpiaNzA8gyTdSlzg5lVnvPUfT3vwaX9ENOHNtIpvlMdmsPxAIwLKi9EW0HI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=HyWfPfGx; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1744212260; c=relaxed/simple;
+	bh=sIIpfXuBk1MC8hc55Mz681lzegKE5XjPEjM6JSmS6wg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pfN1OQuydfD80QcVk3C6ev7heqYIKUwducHThOsj7U5fpBK6lih8bDKFBmKfJs6a+0ltpYnWXVre062XSvvMIy2HSP3zquHnuQBCjwGK/mIg0eabLf/2Fnr4nTfSvf8oBIWoQ+G+x3qoX7bsE7twXFHIhJLGMsZBtdiReRw0ynw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MrLAR2j2; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="HyWfPfGx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1744212226; x=1744817026; i=markus.elfring@web.de;
-	bh=UIKs6oiDDGVT6GBVwmjJhm9dBlDygaMvkduIBBllUMc=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=HyWfPfGxJSbZ1tb0BFrEoFRldCHcbGpoxSGgyZZclxRW/bTdVkI1bKHG15q+7a4V
-	 dJGxA6bLhL/qx26KmfqT5d83+gYxDxQrjr7/d13WBM5xEsoaS6QzZa64zZ8CVmpLS
-	 0aQksS1k5SZDgDN1Rmsv5hwMEw/OXbp/remPfYugH4G1TdGZV7TsNIT7Fs5emdKPk
-	 Z9W6XdDJwp9SrOERb6dNPLyi/iHvhVJ7TytDkGn9SE1lcVLUmm2EpvH39qa3mQdyU
-	 FtMJ5AX3M5P+ypaR0LHwFvYI/3pyHoAsGPyl/peCGlN3co8xoSIpOucSvM3cmy5Mk
-	 ixphjsTEzCXYyRoIuQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.27]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MLRUV-1tkjRZ1VFj-00T2Wt; Wed, 09
- Apr 2025 17:23:46 +0200
-Message-ID: <7ff3877b-1a76-45a1-ad03-922582679397@web.de>
-Date: Wed, 9 Apr 2025 17:23:39 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MrLAR2j2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744212259; x=1775748259;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=sIIpfXuBk1MC8hc55Mz681lzegKE5XjPEjM6JSmS6wg=;
+  b=MrLAR2j24AjvLMoCbuOzshguSBehqJc2buNJ61eGwkCCEXwy9Dy1W+pK
+   zKnCM0VXcybKDaZnrcl6Z0jfs7Y0fjORRvY19iyRUDrU59wjHh4IX71jl
+   Dso+Gk15CBifGkn9rRTrVjiF4jKz3IbGNrwdxWFqd4h5TtNUQvBrRHp2e
+   BL5pXKo0bc5ZRr2siPAmbplgJZZgziV2I34Llo3zxGHYuRYSI1/VxN2zY
+   1DZFemSEjeyMHbBTQBhu2oD4VtUyBwb68SIZAInw8hnutVPGC+woBPdDY
+   gpeaL5cWfRpe/+oao496GrvY05Cwm+miq4gMAAvDLQ7vmah62lCTuH0fW
+   g==;
+X-CSE-ConnectionGUID: TgvWkDpJRr2MdRR7QYZ6gQ==
+X-CSE-MsgGUID: rEqQ1yTAQ1SVtdkDXJp5CA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="71071412"
+X-IronPort-AV: E=Sophos;i="6.15,200,1739865600"; 
+   d="scan'208";a="71071412"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 08:24:16 -0700
+X-CSE-ConnectionGUID: djvQwLdiSIOUrXyaz6HO3w==
+X-CSE-MsgGUID: GE/MdNfoTNa8pIrfVyB5NQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,200,1739865600"; 
+   d="scan'208";a="151793818"
+Received: from sramkris-mobl1.amr.corp.intel.com (HELO [10.124.220.195]) ([10.124.220.195])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 08:24:14 -0700
+Message-ID: <0770a3d4-c8ff-4172-9eda-c9debfee6d03@intel.com>
+Date: Wed, 9 Apr 2025 08:24:11 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,62 +52,98 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: Abdun Nihaal <abdun.nihaal@gmail.com>, netdev@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Edward Cree
- <ecree.xilinx@gmail.com>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Jiawen Wu <jiawenwu@trustnetic.com>,
- Mengyuan Lou <mengyuanlou@net-swift.com>, Paolo Abeni <pabeni@redhat.com>,
- Sai Krishna <saikrishnag@marvell.com>, Simon Horman <horms@kernel.org>
-References: <20250409053804.47855-1-abdun.nihaal@gmail.com>
-Subject: Re: [PATCH net-next] net: ngbe: fix memory leak in ngbe_probe() error
- path
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250409053804.47855-1-abdun.nihaal@gmail.com>
+Subject: Re: [PATCH v3 09/14] x86: Minimal SLAB alignment
+To: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
+Cc: hpa@zytor.com, hch@infradead.org, nick.desaulniers+lkml@gmail.com,
+ kuan-ying.lee@canonical.com, masahiroy@kernel.org,
+ samuel.holland@sifive.com, mingo@redhat.com, corbet@lwn.net,
+ ryabinin.a.a@gmail.com, guoweikang.kernel@gmail.com, jpoimboe@kernel.org,
+ ardb@kernel.org, vincenzo.frascino@arm.com, glider@google.com,
+ kirill.shutemov@linux.intel.com, apopple@nvidia.com,
+ samitolvanen@google.com, kaleshsingh@google.com, jgross@suse.com,
+ andreyknvl@gmail.com, scott@os.amperecomputing.com, tony.luck@intel.com,
+ dvyukov@google.com, pasha.tatashin@soleen.com, ziy@nvidia.com,
+ broonie@kernel.org, gatlin.newhouse@gmail.com, jackmanb@google.com,
+ wangkefeng.wang@huawei.com, thiago.bauermann@linaro.org, tglx@linutronix.de,
+ kees@kernel.org, akpm@linux-foundation.org, jason.andryuk@amd.com,
+ snovitoll@gmail.com, xin@zytor.com, jan.kiszka@siemens.com, bp@alien8.de,
+ rppt@kernel.org, peterz@infradead.org, pankaj.gupta@amd.com,
+ thuth@redhat.com, andriy.shevchenko@linux.intel.com,
+ joel.granados@kernel.org, kbingham@kernel.org, nicolas@fjasle.eu,
+ mark.rutland@arm.com, surenb@google.com, catalin.marinas@arm.com,
+ morbo@google.com, justinstitt@google.com, ubizjak@gmail.com,
+ jhubbard@nvidia.com, urezki@gmail.com, dave.hansen@linux.intel.com,
+ bhe@redhat.com, luto@kernel.org, baohua@kernel.org, nathan@kernel.org,
+ will@kernel.org, brgerst@gmail.com, llvm@lists.linux.dev,
+ linux-mm@kvack.org, linux-doc@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, x86@kernel.org
+References: <cover.1743772053.git.maciej.wieczor-retman@intel.com>
+ <173d99afea37321e76e9380b49bd5966be8db849.1743772053.git.maciej.wieczor-retman@intel.com>
+ <ceade208-c585-48e7-aafe-4599b1a06b81@intel.com>
+ <czzcsmwaf42v47arvmwgrh4p7h3misoarremtc7r2cme2ceuud@yya5jfuqhuye>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <czzcsmwaf42v47arvmwgrh4p7h3misoarremtc7r2cme2ceuud@yya5jfuqhuye>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:g3j450taXfQDtq/hsbrkfVMU6HlxQxRNqP+/E+1gL0IhaFGw6H3
- 4KVSAAva7cQCQZ/QIKxeGEbpmLjntZ7GDS+8bqmgZuCjT1vuAEfYHIyA2PIkBZUjgPiDcuB
- gb6DsZEE0HzJA6aWNyRNN8WqNHQsmKMs19dYe+l0srf3QcZmwltaIJHsj8hSHQ7YH4c+Gii
- b8gtPuuJRVtzzMpMqdGcA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:GULwdO+BOtQ=;ud4alpcL+R5jhs1ZPcYUz3bBZdZ
- VuZ04wqRjVtS/clCaoIDYocqQut0UHvns3jDz+BxJzDr4r2vzTDTdqQlEm43Pp79zm0Z4MqJ6
- O716d491EY+zAui4StKy5Jm+JkBRVuV0EHwktZrIujmyC1reEFQ7wcZde1xf/FijCOZnXE9UM
- rozcpGqYYiT0mD1SoIMz/1AJPm8cJoQnvw3L0usI11rsmrWWvEG+NARmCNntXwlmaM+ZqFWb0
- R576hAot8naCAdjAOejHBZGXinIiwjZVIUTf/O8haB+aiWxjWp2m5QjnRAvkkyv2X7NtYKtYX
- +ry5m0ykYaPmjwT2rfcbdNBu9IvG6DOiQa0XtHQPQlnLNm8c1KXqJRZMIEmky9TSFrPuYZI6i
- J0dhiNV6lcjJxkmkBJOM2qLscN13O2EZd2jZnl64u9qa1ut/fM5YWIw4MP0CcTLlPkt/ZKyGA
- OkoQadjXI/KNNrXYdFYiR2amP5gsLqJoRx2CpnXQ9RgxF4PKoh3xSiiX1bwDQvD/8gyCQBVAO
- SvNygbhGXRGx0zsYFc+5aJyA3AQIJurADT9guo+YcHsF2cSA33o1s62oiYaYjaPKAUR/qCSmg
- aYD7LGyo6DUl9k6ATxgp/hU/tVOMvaT/lzRcpoCaevAwDpGIWk3bxPZqenmNViRMsC2c9jQr/
- OXcrGB4de/XygFwnOmc6icuA90iazpccrLP7uppX4xxPrpQXVC8U0C1od0wDq5EdTqHBqM3ZP
- hH+vfL6bety+nKlaB09nf/Gj0aknxMljB0hvwIc37bVnvNOmvO5ykgFXZI3S0AG2GItvJu8vP
- Zl3nEiSE6r5s2PwGLBfedFo/mcOPslZoF9eoIxA6F1UusCSAmTI7IXwdkLqJUEtmPXNkH8yI0
- XseRIXUCY23ydxJCcUzQ3xbeOHB4+YRc4YQCgwoAgNVtwSq9X7pu6iCY//YLzpy/ob+Lhnx1I
- aZOQ5UMrB4No2A3l6cg2OFNvxmTd4usfVVcmldvObjyyj8lpgpaXD55bbtrKN2GgjyaLH330p
- /ae1ypuCjuAb2sXoVctPdrDwxB9t7q/YSoWsTgFWS473rq4/tKkWhTQrXwQv5es/Ad4kL/hZU
- CM44Scg3xr+mGhG2JfmFxN7nCb15wsLz6HLjTqUulykhrNkz0waQ1Xs75vhZXisJMQgPTSQjT
- BalyTYciQITa9yyzABb9xIYGnOXQSYhy3LsIlbzRc/CPcdkZGRRTv4YfRg/ZVEzpj09VgZZCn
- fcdC1u+5m+j0rsiJI0Le9MVGP0KcvU1aQEJPQMsrXS3ujGZO/ozvV80rh23EgoqfotTsCA5KY
- ya+Kl5B5/PrKygPfhBJYnArYZ09n1oTHPEOrB25WEmPbmLg97PRVdWNjKnGisTmrhz453ZMha
- A0eOM2lSyg1DmdHIW0R57ebaXrgqu53vS7lpRnXOXADBL7qqrrQLmR9vQLWPoZjjQG5SAhifs
- l32/FgtQArPfY1Rgcvt6PE6CjkOE7s2IKrMU/URHk3f3069HC7Mr1r4I/C8V5Qqk6G5dRCA==
+Content-Transfer-Encoding: 7bit
 
-> When ngbe_sw_init() is called, memory is allocated for wx->rss_key
-> in wx_init_rss_key(). However, in ngbe_probe() function, the subsequent
-> error paths after ngbe_sw_init() don't free the rss_key. Fix that by
-> freeing it in error path along with wx->mac_table.
->
-> Also change the label to which execution jumps when ngbe_sw_init()
-> fails, because otherwise, it could lead to a double free for rss_key,
-> when the mac_table allocation fails in wx_sw_init().
+On 4/9/25 05:49, Maciej Wieczor-Retman wrote:
+> The differences looked mostly like noise, sometimes the higher alignment would
+> use up a little bit less memory, sometimes a little bit more. I looked at all
+> values in "cat /proc/meminfo".
+> 
+> Is there some slab/slub benchmark for the kernel that would make sense to
+> checkout here?
 
-How do you think about to add any tags (like =E2=80=9CFixes=E2=80=9D and =
-=E2=80=9CCc=E2=80=9D) accordingly?
-https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
-e/Documentation/process/submitting-patches.rst?h=3Dv6.15-rc1#n145
+You don't need to benchmark anything. Just mention that it will waste
+memory and also give *some* ballpark estimate on how much. Just looking
+at your laptop's /proc/slabinfo would be a good start.
 
-Regards,
-Markus
+Oh, and it wouldn't hurt to find out when and why the minimal slab
+alignment got dropped down to 8 bytes. I _thought_ it was higher at some
+point. Presumably there was a good reason for it and you're now undoing
+part of it.
