@@ -1,97 +1,158 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 672E31C5F23;
-	Wed,  9 Apr 2025 18:22:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FAB221129A;
+	Wed,  9 Apr 2025 18:23:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744222947; cv=none; b=nbotkosqamANMcICYl63/pMjBTLeUmM8pTSZ2+HcItmDZuI0hIkzn9dgGMUmYmn9DVFCC+5a8sGFZqoI/HTQ4zMEZoITyAlnqmeDmv7q2s+vPI+3w1GNAQgczZ1h7br82bpXReofgcYdNP1FJ18/jaAlbiyHU/QcWCY9FvBv4uw=
+	t=1744223002; cv=none; b=CghZv6QJ2ndYnfmZ8WMVM5lmgKz0uyhiF2jSnahZWh2Bgf7LilorFP7y2AzqdNIksebO5swgNEHyfR1ZRoulo9E1BYnv8umWma+kgT6Wn72kATpk2l1+cuV5QTANMfCioF0XSgnGjnnnScE/GSvAhCbRz6f/O6WyhZwZQEuV1uE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744222947; c=relaxed/simple;
-	bh=w+j8lu1r0xwnw+RjG9AetU0PtQlqSbWDZeToiORrs0k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AjIX6jIWxF1qfM9aQSsnNPEBCmhpTfFqpYUn2m2//FzhSECGDsyY/3YlkoXk+OeF4wZm9qLiBWopY6j0MAaDjpTjtBM984mjuTUFyYUQB9AhEYf/P5UbMVNsXDTWmzwfpZF7sDGhnlS72wLX40J/SLwYf/vUs0bwLCaE0u0+9X4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GXCyWM4u; arc=none smtp.client-ip=209.85.208.176
+	s=arc-20240116; t=1744223002; c=relaxed/simple;
+	bh=Y9V6lanhSq3xKkI3cq5cXSbzBJnJbbBkpk0mUILhY3A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RKqn0m4UmgMaHmgRuXyMipNEp4b2PDxCUxML6+LH28lEdbmPjTaWz9sU+0Ju8GqozrWxkNYgg8Ol/i4h4TrjrcCzFobHabUsnHhvw67ewDzMfp3HerQSfXB78vly9KKZfPnz2qot6KyigKts2YydUYS4A63gDCoSAcqoqehc5Pk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kfCjsbVc; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GXCyWM4u"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30beedb99c9so65078761fa.3;
-        Wed, 09 Apr 2025 11:22:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kfCjsbVc"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-22435603572so71198555ad.1;
+        Wed, 09 Apr 2025 11:23:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744222943; x=1744827743; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=w+j8lu1r0xwnw+RjG9AetU0PtQlqSbWDZeToiORrs0k=;
-        b=GXCyWM4uO3Fqdu9EWR0SkIfOlXAqzYliCwGjuKLx8k3+JjlXd9qgS5nvidv4E8aK1L
-         fbui3Yy/KZQH8TmTwWyBGq/GaFDvAHkCjxK4CB5tIsI8qMUmFy0UL+dUOhH5GP18fzLe
-         f30kjVoUlct35V54pglOWqWU2jgqkfA6PJ0OqYE2ehCe5SC72rkW8za9RUOUGFDDxtMs
-         +dyqrYAxDnNim3lKVb601QhBWKnELMgLBYjzJz8k0UAXmWi/1gxhCplVuiLgd1z4ll2B
-         CaNxhW7n7sdjXZBVD08vkXCvs8maqGwd6yYaFS+GK5ipO82Dglt1HhwPCpv9YNMZ8LpZ
-         uISw==
+        d=gmail.com; s=20230601; t=1744223000; x=1744827800; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WYzoH1Uwhcqg2+qDINtEMV7dZsf/NWh1BI5tm3o/1uQ=;
+        b=kfCjsbVc7iLolc9sXHGweoevKsYSGHNsUy6IF8TvEwcR3F25aoP7zncBcWiK8URVF/
+         0SVmKaauJ0GjsSmc//rYpz8yKjNh6WROPQWdY/3WyCngPxARWX2xqm9b/WdP1lGJzGY5
+         ZoCuthIFBLehdwpGyWToUGJWs11IH3uQ8sZ/ne+mpxmuebR/xRjxql/Tb/RWoLtWpVdN
+         IapZxdRjG3sd52/7anmDvIhU4n5bSho5UN6qNKTX1GqFA+bh434FOT9IbWymsKeDZFv1
+         0W0JYvLiKLxFdj9s0q2pZZNlyziuTS5kGgWoOGmUAsIKziOqaZEfq6yKJS5JgnDDq92V
+         UYFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744222943; x=1744827743;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=w+j8lu1r0xwnw+RjG9AetU0PtQlqSbWDZeToiORrs0k=;
-        b=kg8CgsbITsKN8bZoVP+TVxokZAZz/R+EtuQ9Bfu8HuctYh+FtoQVRHl/rW7bu2Nfh3
-         VLKIW5CehSmZbCA+uSVEj0Xm7PEp3Wh8GdalYBjRIwigm29lRPfueKNfRszdPfjaxpR0
-         4HwFHfZP1G7TBfaK+m3SpqxvsZxwmwMYT6oNfF/jt1rBye101IeFfjWDAzwMaGRF5/i2
-         Tm9xh+RqWMWgYWpwRNWH3XyvY22Cqu6xdyWi5+BKG3gzY1luJxgDHpmD49NFb2KXRNZS
-         129K1+aMLWjnqsYVmvmbcS4uCnJDZlZz8onlEIhBY3MgXqxmHPhDmHQ0sbPQ8f8MYHFK
-         VyXA==
-X-Forwarded-Encrypted: i=1; AJvYcCVDI8e8EL5trfq9C0iEB2qrBwoOJdd40IQSrbO8SZVORljWF+fD/mtUiEHuQKHtf7LVUI6xB+KVS0V/Oms=@vger.kernel.org, AJvYcCVyKP57Zr09kdTJo770v1TemUtt4En8ly8YhETpDI/VmJDOKu7Ky5Z6eo6SITymLsC8fjnI4y2BNiTlz7RgbQ==@vger.kernel.org, AJvYcCXEw5kuCh+hHhYtxJnywLYXNy9rOT0lS3qabc98P8GVvvgPCTn851d1knE/JFxX0+mTSasOmJ/RLMjv/h4o@vger.kernel.org
-X-Gm-Message-State: AOJu0YxD+p40+qPKEgiPWEBDBk8ysuoQ83TUDUruSD49DKC4kvb3WbMx
-	XXR1pLqQQlAAULebRT8mw30qlAnQQZUIaYdb4zDFgoa/M3+gFDByOaexsUSlTN+GlWTqqJVDhXK
-	UcGhRaJXGvOxopEVX8+imf1r+25M=
-X-Gm-Gg: ASbGncu/qwoKFfNetu2TRhrKeqLFnxGN+6k/xVme18HJ4hE0ad8BaQ9MbPrj0bVWkXa
-	0TbmKogyKR1enqXBM7JkHLdvmpSOD26ABSmg9v1fT8UbOyMGlmS7dRUC+X7PVgm9BVkdNfa54J0
-	Ge+aefgkT6ED4K0fSFRgKRiQ==
-X-Google-Smtp-Source: AGHT+IFsB9benurawG81+pvnZhZj9jumXPvVrvbkEkLVqi891fTMsPJbJSjcP8kZ9f0nWfiqMJ2a0Hmv4Nd8ZMIVsAo=
-X-Received: by 2002:a05:651c:1b11:b0:30a:448a:467 with SMTP id
- 38308e7fff4ca-30facc1fae8mr199711fa.21.1744222943258; Wed, 09 Apr 2025
- 11:22:23 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744223000; x=1744827800;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WYzoH1Uwhcqg2+qDINtEMV7dZsf/NWh1BI5tm3o/1uQ=;
+        b=cfESCGjLU3OXrhrXuj4Dghn07swcoMPhkZJHp8ghFka58/CucpXGjtIKZcXxRu46pe
+         7b8bTM56LV+a1Yb7KVzRWsDrMtO5lwqIxvIDqvQ1c56Bh8/1GA/M3u79BCTnOO+Sj1eJ
+         sB38KALy3yqT7cY8O1A0EHtU3yFmyFh3yQT4Jr3MJG4yHZYgqIYRhJ58BhwxYRq2zvfC
+         jDPYcGkZ4h/nqrmNAptlMeinNi5HsLisZ7ZUG/00fPwnkz7V2U6T38cxMLiWpSUaxmjC
+         UFB1w1z4GyuuMnj6USwZo3Iq8EY5OYxH+V7Etyu4IMPq0cG2EhLjoa0qPq2roNfoa5wp
+         odtg==
+X-Forwarded-Encrypted: i=1; AJvYcCV7FpQ+X4FvH5DTJX4TevF17KJfbkudXo845xRbjvTlo7EU5TPa1o4gj2jg48qe7E+c0A5BLil5@vger.kernel.org, AJvYcCVs2XjDp5D7v/hLTSJXxX9rfvsA0MrJIPcCf5O6AlzT1HzcDhrUa7blwnzIYCvtTeCtMLnISESyr6uCJ58=@vger.kernel.org, AJvYcCWKR+V1IuDIv3/e81qhpfvQmFPBJNFxMtzU11Q/keRmYiXES2TKKIV3f0tTuts8CZSnX/vJqP1YdTKYkKwI@vger.kernel.org, AJvYcCWZDyiIs/fVCGzXXcpwuwrY2NMu1gxdFlvPD2AJ44UTvDFaRBy6Tyb+hs6Y4C+iYVrCNoUpClmAsOCsmJ64@vger.kernel.org, AJvYcCWhUIqjSxMbYGh5dhwG8sR43OTcZMcygVmQr9W5yswbuaTS5G5zvGnpgdJAt2BsjjybZEBWVpbhtbu7Bws=@vger.kernel.org, AJvYcCWjsl8gdmdsavs4EnDroLIoty5B7OQmtNUJxK7nZNPMRtDCj8Kf6Sc3Hg94zCTLkQySPzg=@vger.kernel.org, AJvYcCX05yjWMwTPrbz2bZgQv8ZVt9F1wg/Dd1zsesCOy3vZnI5a2kg18TfY/8uASfb3/fDRhlzbe/dn7DQmiYg=@vger.kernel.org, AJvYcCX2eyCU+NPU+GZkiAc0TeWm0sN37gvpzAwhthLe2lmxwHCyaGUv3Cx10ESRuW6hHQn0ByS+EIQJ45Pu466LOUQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6R1vGl+J/Z4mNIi0BFbHcfVmyt+qkfQcWgLoTwC01TaUNL9ae
+	hCnevURGj14FVjUQCKN4bq7dzMUMdmpSGzyKZ1rtjuknKpanZElU
+X-Gm-Gg: ASbGnctIGbJSUnvCRMtxsR9mlD42miJJPdnu/OwMpciHDvwlnaX33CaHsnu0wt1L391
+	SzvVh/nzXBW9BQE6I7vp3hXCeJS9B5KvnsTXcTqyfy/RIhBTazFoeaya43c1FmIdW9Rj1/jc6sF
+	qOS8Th5eCPXS3WuRCNBzWYZ3GsdMgxYjgKO/7fsRoEwycqQ1bRONDmEfg+20uOvNDqMZdB01ltJ
+	vT2OWybZdkGMhtpr7LMlDK5V/rT2R2H0kk1iqY/B4rb3gsyl5TRjo4sPLznFodY//q1Gxbe1rL2
+	PrxdhLufpVBbwr4o8K8wlmalXQnE10fRycdeegxk6Khr6M2a+BAgDqfDHO0yu1cS6SH+
+X-Google-Smtp-Source: AGHT+IFJTXcO6iff2D3m6F14Oejj60CpisJRfAo2/LdtyKFQF1rTvBeD9sWDrAGl2dH2tL/2lZXd/A==
+X-Received: by 2002:a17:903:2441:b0:223:2361:e855 with SMTP id d9443c01a7336-22ac2a1aefemr59522875ad.39.1744223000437;
+        Wed, 09 Apr 2025 11:23:20 -0700 (PDT)
+Received: from visitorckw-System-Product-Name ([140.113.216.168])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1e6b8ebsm1679194b3a.180.2025.04.09.11.23.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 11:23:19 -0700 (PDT)
+Date: Thu, 10 Apr 2025 02:23:09 +0800
+From: Kuan-Wei Chiu <visitorckw@gmail.com>
+To: Yury Norov <yury.norov@gmail.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, jk@ozlabs.org,
+	joel@jms.id.au, eajames@linux.ibm.com, andrzej.hajda@intel.com,
+	neil.armstrong@linaro.org, rfoss@kernel.org,
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
+	dmitry.torokhov@gmail.com, mchehab@kernel.org,
+	awalls@md.metrocast.net, hverkuil@xs4all.nl,
+	miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+	louis.peens@corigine.com, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+	parthiban.veerasooran@microchip.com, arend.vanspriel@broadcom.com,
+	johannes@sipsolutions.net, gregkh@linuxfoundation.org,
+	jirislaby@kernel.org, akpm@linux-foundation.org, jdelvare@suse.com,
+	linux@roeck-us.net, alexandre.belloni@bootlin.com, pgaj@cadence.com,
+	hpa@zytor.com, alistair@popple.id.au, linux@rasmusvillemoes.dk,
+	Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+	jernej.skrabec@gmail.com, kuba@kernel.org,
+	linux-kernel@vger.kernel.org, linux-fsi@lists.ozlabs.org,
+	dri-devel@lists.freedesktop.org, linux-input@vger.kernel.org,
+	linux-media@vger.kernel.org, linux-mtd@lists.infradead.org,
+	oss-drivers@corigine.com, netdev@vger.kernel.org,
+	linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev,
+	brcm80211-dev-list.pdl@broadcom.com, linux-serial@vger.kernel.org,
+	bpf@vger.kernel.org, jserv@ccns.ncku.edu.tw, Frank.Li@nxp.com,
+	linux-hwmon@vger.kernel.org, linux-i3c@lists.infradead.org,
+	david.laight.linux@gmail.com, andrew.cooper3@citrix.com,
+	Yu-Chun Lin <eleanor15x@gmail.com>
+Subject: Re: [PATCH v4 02/13] media: media/test_drivers: Replace open-coded
+ parity calculation with parity_odd()
+Message-ID: <Z/a7DecDljuLtKeS@visitorckw-System-Product-Name>
+References: <20250409154356.423512-1-visitorckw@gmail.com>
+ <20250409154356.423512-3-visitorckw@gmail.com>
+ <Z_aobrK3t7zdwZRK@yury>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250404102535.705090-1-ubizjak@gmail.com> <CAK7LNATO1RfACvWhHJuLi-FYWMnSn6+Tp67-EZtVWNk+RCSTVQ@mail.gmail.com>
- <CAFULd4bx9BGKo_4kn14rsVr44otpdjpjn_o6=zMp8iu98f9Upg@mail.gmail.com>
- <CAK7LNATnactfA2U0CB2VcoE1eDc+bj=Jjye-Khsc3xG-iZ2XVQ@mail.gmail.com>
- <CAFULd4b25r5wf31DJputSOZhhMTrejQ_3-2P5rpeOL8H=4_mcA@mail.gmail.com>
- <CAK7LNAQVbwnnX5TJLmEShtmUtLCwr=rnZgwX9NoAke+PqzsqiA@mail.gmail.com>
- <CAFULd4b2azU-oBOTTXgQ6ahkVeYWHTJrnmJ97vtLm3P6jMOeug@mail.gmail.com>
- <20250409152812.GGZ_aSDEaLEOVUf3YX@fat_crate.local> <CAFULd4avYC6V=-ewBcTGHA5GjuTBh++-wLNOH=M68u1rwNsAmg@mail.gmail.com>
- <20250409153819.GHZ_aUayZlfOd7TTq4@fat_crate.local>
-In-Reply-To: <20250409153819.GHZ_aUayZlfOd7TTq4@fat_crate.local>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Wed, 9 Apr 2025 20:22:11 +0200
-X-Gm-Features: ATxdqUE-C1Kv9b5K2r0cnaqqZQfpFR1Cncv9OTwGH9yN-dFDPcpf4fvukunwpnc
-Message-ID: <CAFULd4Y=BbAwrQdCY5sO8WuUo1wi4h-BiqywoKBu50ir6f_XHw@mail.gmail.com>
-Subject: Re: [PATCH] compiler.h: Avoid the usage of __typeof_unqual__() when
- __GENKSYMS__ is defined
-To: Borislav Petkov <bp@alien8.de>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, linux-modules@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Paul Menzel <pmenzel@molgen.mpg.de>, Sami Tolvanen <samitolvanen@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_aobrK3t7zdwZRK@yury>
 
-On Wed, Apr 9, 2025 at 5:38=E2=80=AFPM Borislav Petkov <bp@alien8.de> wrote=
-:
+On Wed, Apr 09, 2025 at 01:03:42PM -0400, Yury Norov wrote:
+> On Wed, Apr 09, 2025 at 11:43:45PM +0800, Kuan-Wei Chiu wrote:
+> > Refactor parity calculations to use the standard parity_odd() helper.
+> > This change eliminates redundant implementations.
+> > 
+> > Co-developed-by: Yu-Chun Lin <eleanor15x@gmail.com>
+> > Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
+> > Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
+> > ---
+> >  drivers/media/test-drivers/vivid/vivid-vbi-gen.c | 8 ++------
+> >  1 file changed, 2 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/media/test-drivers/vivid/vivid-vbi-gen.c b/drivers/media/test-drivers/vivid/vivid-vbi-gen.c
+> > index 70a4024d461e..5e1b7b1742e4 100644
+> > --- a/drivers/media/test-drivers/vivid/vivid-vbi-gen.c
+> > +++ b/drivers/media/test-drivers/vivid/vivid-vbi-gen.c
+> > @@ -5,6 +5,7 @@
+> >   * Copyright 2014 Cisco Systems, Inc. and/or its affiliates. All rights reserved.
+> >   */
+> >  
+> > +#include <linux/bitops.h>
+> >  #include <linux/errno.h>
+> >  #include <linux/kernel.h>
+> >  #include <linux/ktime.h>
+> > @@ -165,12 +166,7 @@ static const u8 vivid_cc_sequence2[30] = {
+> >  
+> >  static u8 calc_parity(u8 val)
+> >  {
+> > -	unsigned i;
+> > -	unsigned tot = 0;
+> > -
+> > -	for (i = 0; i < 7; i++)
+> > -		tot += (val & (1 << i)) ? 1 : 0;
+> > -	return val | ((tot & 1) ? 0 : 0x80);
+> > +	return val | (parity_odd(val) ? 0 : 0x80);
+> 
+> So, if val == 0 than parity_odd(val) is also 0, and this can be
+> simplified just to:
+>         return parity(val) ? 0 : 0x80;
+> Or I miss something?
 >
-> On Wed, Apr 09, 2025 at 05:32:39PM +0200, Uros Bizjak wrote:
-> > The workaround is posted to the list. It should be committed to the
-> > mainline until genksyms is fixed.
->
-> I'll take it through tip.
+If val == 0x01, the return value of calc_parity() will remain 0x01.
+If changed to return parity_odd(val) ? 0 : 0x80;, the return value will
+be changed to 0x00.
 
-Thanks!
+Regards,
+Kuan-Wei
 
-Best regards,
-Uros.
+> >  }
+> >  
+> >  static void vivid_vbi_gen_set_time_of_day(u8 *packet)
+> > -- 
+> > 2.34.1
