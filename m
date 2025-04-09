@@ -1,130 +1,139 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE76B1F130A
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 07:06:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 079092153C1
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 07:06:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744182382; cv=none; b=Z9A8Mr518jcrRy6Lanf4Zqb13JLXpcX7xRtBv0+1bhqW6F47TurbPT9YD3Wae5cfwOLoVDQl/WZHBnmoTlD4rtKmLHi5owJz1Kc3rZjlX3y1jaPgc2+UTkOOO+x4d11SKQECpzXrABOs6fOha1BxIrloRR6D4oESc3/v9PbnQHM=
+	t=1744182412; cv=none; b=PSIKgHeW7967g9tI8Lanuz061+Ua+Dh+f8LJW/7GpbZE3pD16ln5cJb7HfurQ6iQ53yXqU8xn2Bktm4nM2xTz0LmJL6pJpTOpBP4A20ER5ycT9cX4ZEqAyTjQgznd5wZRs342D9rivbLSQYjb5IU+uciMqeSN2f9xJFExWS2PnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744182382; c=relaxed/simple;
-	bh=yS+f3fqEzIoMXoYigNyYL1iRCbrDvUkMQNrAccauF30=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QCMQDQyl0tQ2c8HO6ixRLIQHReENaTRSRnVQOlwvPz1dwoiW2B5gzurFXWtTjHEqNmUlNds9dHolP7wOgdfsWpIgK/ZfCe0lAi37B27bOXvuJqP0DeoIxSo2jNlEXhz37hKJ6guRgNoTF4s//eUzgowuFRcqucBN+dmY6mfiElA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PrD1SWNd; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744182412; c=relaxed/simple;
+	bh=pPQEZi4Qcqv11U9FEmI0COFFsJwH60kqrPCUcqf6tbE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=miU6DMOGYbXE43YUX7S+DHB/96h+z60mKXqALNPzAMiBUQbGgxkhcUwbmNqDc1fgHAvyTldmjilskrL1rFeX2GXHNY1KikGa6gAWnEG6QzK3GQQdfmH/l0Y1tmdXSobbJFYcRv5nwNFWhx9VITMct/ZrYopoBaSDLd35rXmxbR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=kcgEAjS/; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PrD1SWNd"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-22438c356c8so61990925ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 00:06:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="kcgEAjS/"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2264aefc45dso82087925ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 00:06:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744182379; x=1744787179; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Nm7nG2cOghl5We3pl16VQKS1/9Lv238uk1E4idOp5vQ=;
-        b=PrD1SWNdTtPZUgQjRNif2ls9MubJr9v7WpJMbQBGMplnDg/ESsiWZdjv3qFwkjXX84
-         lONLGQro2/xnruJpKObbR0aS2CwXuG+xYN7mEDe6swzRcwdKYHIsV0Tdsf7qulqmhtGs
-         Cc8rW41SvaR0djm60tukZRnm7/UJwVxZfwxkgxrg3Tr655x/wfxsO4clFVrmI7HuSYf/
-         de5vws9DkS4T4CONHe/9F/zIFWKLZezzppEir0ux2e3BT9qXb+QxEmfcGt7X0//8ObMG
-         o9xHdnnb1H9q0Krb0GTqrwVDZp/zBjXN+7WsSUD+qKjqcbBhQI5bcyCIkorcYa4Wfe0y
-         Ch+g==
+        d=bytedance.com; s=google; t=1744182409; x=1744787209; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=THZYEJIp0OpQWutbU1ZY1t2ANQ29WhjxUWkhn4aAs5o=;
+        b=kcgEAjS/aw6GeNMAK0i08Z9vLU9+QPlCcHf/Bz+9TKZ7oJqSJeuI2CEG9TieETxqgy
+         TYCSxFa//iYlqLnKXxHn2DloLt7v140OSf2gbz7AqOXlqgOycqn0wg49llTi3Vep4IZx
+         WbnGwojy0BlmnpaMB3kKf7q3VePKFnlwNwDSTWTcY/f7KcqPc5b4WZqxvLhdB3ht5Q+t
+         pni1FyXZmrHegGgMMQAjRNVforFdqZ7Ghujl8rEjzOITkIp3UGRsH0I9n95JnB8fkBnM
+         pe+QChw6nA+OnEPo5yLHNcsU1sz9qOeEkW5qvs0jEQJx6uJLWPYCZwBRuctYc++0eR95
+         O7fQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744182379; x=1744787179;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Nm7nG2cOghl5We3pl16VQKS1/9Lv238uk1E4idOp5vQ=;
-        b=oHGCcJLnCLU8nM0nLogANIh17NpbWFdlmxPWIcMrd54LuM7Jpa6fK/IJz9TNm8WG+J
-         XxtfMcjeMJHJqoIdQbTUzq8Lk0sNLzvrebFvcmhMTe86dJUME/NI2LEE7tn1RvL2EOzQ
-         bcwPii0tZ1i9nJSgiwwcutr9D+n3W3iqtdAikaUWnZ0IKCIdBOdXuEzafnbqBREuIpcS
-         aCqf/UEs3M2RbJ2Nl8Gu9/zlPw7V/7kJSKbUxgAbVZKW3SlptGyICaDN89W2g5eFP1Tu
-         rExR///4LtFlt4n0h6O83M9jkaowogwxVwtpvi+W4CAYiEQWS4XIZV7E+9fOGWtKEZfr
-         4ZgA==
-X-Forwarded-Encrypted: i=1; AJvYcCXvE6wzu7y0X9okNCl2ohoky0J5Lia4JEw9OJmIwfhg3HQ5R2Z6iKTWVQYuWjVKnBmVb47IBHDorTrB5Kw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDDYBC024mfAG/TItfMEV4CzvWh1KlmJu2ZilxgZE5n13HIGY6
-	LDJ4hoBP6JUT33XkwDBSMaoTTv3n+SWG4CS9MHEnjmWsGdsBnrDYAVTDaZmlVQ==
-X-Gm-Gg: ASbGncuRQI0pY3o1u2D8ixYjpO0iJY1xYIE3MIMe9PVznb6KYeY7W4Iuh7dE2L0r7ze
-	hIuLdsDAWFlMqiXKLWPyyquVl/j4U0FJy/fou3XcCiTJ07o8ZDf7w3REQfBYcXPqu1VrJWZ3zde
-	BzIvFXO/IWZ0W97vr74x2h/YDdRfh7PXw+bNclM38xilkbjuHBUS6aZiY9suZyVUlHKUll7ciyy
-	uYUa0KsQYQRCeA+iy84NdJQ27PHtxPn6DalM54ZWiDf1FH23Pm+Nb6plKbyl393LibbBT9UYJLV
-	ftU5MeCpyITVUyc3nOlzjLW/jeA+EOSBV64Y/i7DeyZ6sjhpErU=
-X-Google-Smtp-Source: AGHT+IG2IBbUsP4jpyoBsAQl7I0S2iGdcUbnYfvvANGYcDIZAtyYHJ27CyPFx40ttshkAUckDfLO7g==
-X-Received: by 2002:a17:903:3bc6:b0:224:10a2:cad9 with SMTP id d9443c01a7336-22ac2a2991bmr35596635ad.41.1744182379003;
-        Wed, 09 Apr 2025 00:06:19 -0700 (PDT)
-Received: from thinkpad ([120.56.198.53])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7cb5047sm4544815ad.170.2025.04.09.00.06.11
+        d=1e100.net; s=20230601; t=1744182409; x=1744787209;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=THZYEJIp0OpQWutbU1ZY1t2ANQ29WhjxUWkhn4aAs5o=;
+        b=Ux3yvQxjhhQbmmRc8nAfTy2UpNKc9vepU7ZASNgvyu/E2UKiAfPYFkIHTcIuN2J18t
+         mYdZYAjRJMtsHJSa+QbzBRJRzmHhjtb4/egIJ97s1cVYppqiyq/k+7FEeDD8Ed2sfH7K
+         KB134EhFCfRorKuSckwEdmOzROaVPcAOm+nlaTEA1ctreK9mc6M3zR5ADzHfmipZOQyC
+         5baWAvE0+75Z6r/MVNBm4LBteAynO9qelwjvFSU2E9L1OpOmHCzGXomFctYCzo2sofAO
+         2Z6/teypVTZBssgrzcE7h101AX2+4fMTFyRGbslBUbJ8Mlsn8lfq9K+6ZcS3futPQPnb
+         oMoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXQJDSfsxQwIp8+8ivaaSWWTCmdW4bqDsh3hdqlb/HAmCxFiwuJYoSsVbxOPpiYotXvT9cnWM2vDIbU+04=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/mNToFX1z+Z5RgDzSLzgkv3VfTWDI8vPUxN0qcLhpb4BEm013
+	XUbO9m030xk1tS+Vpsap6ad7x9BRWSO16Uuvy9+GbQdLV51QPRdzzz5Gfq8rkZw=
+X-Gm-Gg: ASbGnctlf/Hq+mAIPINdkEXFGyq68+oYa3g8sRFLsyh6Lw1uTHoyrmqVS5P44Lim2Kk
+	Sa4cUGIppUt8RRF+eevhhY+WdLnWMquIH1W/KzF18JFkHQ72VFPiEhSg7Ycqa0j03P5q2GU7C+3
+	cw8WCVVcjkAyRVx+6AJNhPtnBCHiCx1TCGFAKwNupi6cupiNNz+7oe2snHTebH18PbNFB+LGUPv
+	5cJZixNzDrvWt8ZCIPgkNqvDamIfIR4AXXZjCm39Z518YTwCPmqq2AdZj6BBC9UffPLtSxpAbJw
+	2LIr25IOcfUpw+YrY6U477LQF+R/j8N7Vh+kBEBXyWGJIApcv5iDkyFToSe9jqee1g==
+X-Google-Smtp-Source: AGHT+IEcMLhqJwNuZeTBrvnjdTznoQyj3Rul1pM8+mw8l/1evuhlt9DvAXXnUDrqBMc7KQTj0Vx0XA==
+X-Received: by 2002:a17:903:1a23:b0:223:26da:4b6f with SMTP id d9443c01a7336-22ac298f941mr33009615ad.14.1744182409178;
+        Wed, 09 Apr 2025 00:06:49 -0700 (PDT)
+Received: from n37-069-081.byted.org ([115.190.40.13])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1d44800sm565754b3a.37.2025.04.09.00.06.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 00:06:18 -0700 (PDT)
-Date: Wed, 9 Apr 2025 12:36:08 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Jim Quinlan <jim2101024@gmail.com>, 
-	Nicolas Saenz Julienne <nsaenz@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring <robh@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Srikanth Thokala <srikanth.thokala@intel.com>, 
-	Daire McNamara <daire.mcnamara@microchip.com>, Marek Vasut <marek.vasut+renesas@gmail.com>, 
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Greentime Hu <greentime.hu@sifive.com>, Samuel Holland <samuel.holland@sifive.com>, 
-	Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>, Michal Simek <michal.simek@amd.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
-	Tom Joseph <tjoseph@cadence.com>, Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, linux-rpi-kernel@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 2/2] dt-bindings: PCI: sifive,fu740-pcie: Fix include
- placement in DTS example
-Message-ID: <3cfkeludmigojzadrgyxyidiydb3mx6yqjcvmgpbhdk75cflog@66i4zpvjcwzv>
-References: <20250324125202.81986-1-krzysztof.kozlowski@linaro.org>
- <20250324125202.81986-2-krzysztof.kozlowski@linaro.org>
+        Wed, 09 Apr 2025 00:06:48 -0700 (PDT)
+From: Zhongkun He <hezhongkun.hzk@bytedance.com>
+To: akpm@linux-foundation.org
+Cc: hannes@cmpxchg.org,
+	mhocko@suse.com,
+	yosry.ahmed@linux.dev,
+	muchun.song@linux.dev,
+	yuzhao@google.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Zhongkun He <hezhongkun.hzk@bytedance.com>
+Subject: [PATCH V3 0/3] add max arg to swappiness in memory.reclaim and lru_gen
+Date: Wed,  9 Apr 2025 15:06:17 +0800
+Message-Id: <cover.1744169302.git.hezhongkun.hzk@bytedance.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250324125202.81986-2-krzysztof.kozlowski@linaro.org>
 
-On Mon, Mar 24, 2025 at 01:52:02PM +0100, Krzysztof Kozlowski wrote:
-> Coding style and common logic dictates that headers should not be
-> included in device nodes.  No functional impact.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+This patchset add max arg to swappiness in memory.reclaim and lru_gen
+for anon only proactive memory reclaim.
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+With the patch 'commit <68cd9050d871> ("mm: add swappiness= arg to
+memory.reclaim")', we can submit an additional swappiness=<val> argument
+to memory.reclaim. It is very useful because we can dynamically adjust
+the reclamation ratio based on the anonymous folios and file folios of
+each cgroup. For example,when swappiness is set to 0, we only reclaim
+from file folios. But we can not relciam memory just from anon folios.
 
-- Mani
+This patch introduces a new macro, SWAPPINESS_ANON_ONLY, defined as
+MAX_SWAPPINESS + 1, represent the max arg semantics. It specifically
+indicates that reclamation should occur only from anonymous pages.
 
-> ---
->  Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml b/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
-> index 844fc7142302..d35ff807936b 100644
-> --- a/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
-> @@ -81,10 +81,10 @@ unevaluatedProperties: false
->  
->  examples:
->    - |
-> +    #include <dt-bindings/clock/sifive-fu740-prci.h>
->      bus {
->          #address-cells = <2>;
->          #size-cells = <2>;
-> -        #include <dt-bindings/clock/sifive-fu740-prci.h>
->  
->          pcie@e00000000 {
->              compatible = "sifive,fu740-pcie";
-> -- 
-> 2.43.0
-> 
+Patch 1 add swappiness=max arg to memory.reclaim
+suggested-by: Yosry Ahmed
+
+Patch 2 add max arg to lru_gen for proactie memory reclaim in MGLRU.
+The MGLRU already supports reclaiming exclusively from anonymous pages.
+This patch formalizes that behavior by introducing a max parameter to
+represent the corresponding semantics, and explicitly uses the
+SWAPPINESS_ANON_ONLY macro in the code to denote this logic.
+
+Patch 3 add more comments for cache_trim_mode from
+Johannes Weiner in [1].
+
+[1]:
+https://lore.kernel.org/all/20250314141833.GA1316033@cmpxchg.org/
+
+Here is the previous discussion:
+https://lore.kernel.org/all/20250314033350.1156370-1-hezhongkun.hzk@bytedance.com/
+https://lore.kernel.org/all/20250312094337.2296278-1-hezhongkun.hzk@bytedance.com/
+https://lore.kernel.org/all/20250318135330.3358345-1-hezhongkun.hzk@bytedance.com/
+
+V3:
+In MGLRU, add max swappiness arg to lru_gen for proactive memory reclaim. 
+Add the use of SWAPPINESS_ANON_ONLY in place of 'MAX_SWAPPINESS + 1' to
+improves code clarity and makes the intention more explicit.
+
+Add more comments about cache_trim_mode.
+
+V2:
+Add max arg to swappiness as the mode of reclaim from anon memory only
+in memory.reclaim.
+
+Zhongkun He (3):
+  mm: add swappiness=max arg to memory.reclaim for only anon reclaim
+  mm: add max swappiness arg to lru_gen for anonymous memory only
+  mm: vmscan: add more comments about cache_trim_mode
+
+ Documentation/admin-guide/cgroup-v2.rst       |  3 ++
+ Documentation/admin-guide/mm/multigen_lru.rst |  5 +--
+ include/linux/swap.h                          |  4 +++
+ mm/memcontrol.c                               |  5 +++
+ mm/vmscan.c                                   | 36 ++++++++++++++-----
+ 5 files changed, 43 insertions(+), 10 deletions(-)
 
 -- 
-மணிவண்ணன் சதாசிவம்
+2.39.5
+
