@@ -1,291 +1,142 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFD6D165F1A
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 19:24:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A97491E503C;
+	Wed,  9 Apr 2025 19:26:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744226661; cv=none; b=QsTBFW60UYPPFT1FCGfuWRCOsY6d75CvDoPyyzDOoa9xSbwf9bV/AZEjfVyEuDAsHgxbyHFCeQHXxUdCkWpgPuamHrB8UM0buYw9Ht5OdFEylDYqqzmD0dlMyD44tEtCQiJ+fDlSwlhhiTwA9/te32i75VBUYL2/OmREt8QTzYE=
+	t=1744226767; cv=none; b=Cdq4940b9xoa/HhX1oiFu+0PNyttmXBGNhgaIrKFVVcRimHKca5kh1cj6H6v5UnzZwOOCnjooI7mSVZTqEgrm6165fNkX01MaeoljDcy3mI3W/P3DTLR0wO9HR4FrFUKQWuxmtyNMzVRQzy/1ZUKgMGNR0CUjZo7DyjDC+GwXks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744226661; c=relaxed/simple;
-	bh=FWKmhEPZuvSURm+fK3L5t96Qx1CC8rkepbs4NN1x4Sc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JhbgHHaUZd1kX9ZlBiNeYtVjqEfm7oor8y0k0RN3NHtJHYQ31YGHHWc03z3tINXpGIFZZoM0Z0DniOlCNMO0SogxGSOy/erGbdC8EcXEMvj1SwQzm0z95pQmwNGbHacHMUTFV3eSaFQntSF3S70kbaXJ96RTZ+D68l2Gv2V3yzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=n4+n21jz; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1744226767; c=relaxed/simple;
+	bh=3SBEV8MZfMBjCqYFLD+ArNUi8Y61hUNgzgmis3D/R0U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hVO4i/Kg7nYFVmaHvthWe/qQeaCd6P0BTwFaUSwm0CtpC9mssVMR4SNdWMWcA3k/fHpotWIojQKKiGdDHzPUFnGBr3+E3LQKhpR0uixv6cmmbUOjC71QvuIAISNSX6LQW9kqjwgqL13z6JPdxlLCON8ZHLbjWF4doeLv0YRsADc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IU1I7nyd; arc=none smtp.client-ip=209.85.167.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="n4+n21jz"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cf628cb14so8216355e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 12:24:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IU1I7nyd"
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3f7f7b70aebso4267710b6e.2;
+        Wed, 09 Apr 2025 12:26:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1744226656; x=1744831456; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=v8FxhE3NP9+CvB5k4cj29sIhuHMLfRzDVwZlEFBnlow=;
-        b=n4+n21jz3jIKrD5DPoYsUuHy5O0wMSVb8/Ec//qGcg4/2YVrs7QGKLFO6xitylVkz/
-         NNGhZ4Xc3EmLD9PG0Oo9VItkbRqvBBG2sQEFYyGnQhtcTOD9UPe2EW6lYhdN+YnKfu5d
-         qPsgRPCHXlDn1b8jPOivr++PY09QKH4/7s8jpFY4iNbhp9/D2EaMJEA4N2q2ccXR9Ka/
-         Sp6OWprgncgrntTli5jclbo66vhwqq8GPFDl8m4KNnhz+PkaQSLJsSWmdz9+78RvVKlH
-         vVL9D6TYHh40hCloe7oaJhgcedlcQYVF6f0eR6aY4bcmMcG/S1Aj/g3RhbfVW8tTUi5b
-         LpKg==
+        d=gmail.com; s=20230601; t=1744226765; x=1744831565; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=i8uCw6ZP/r7CK+ezW/oHT+okn6HNIqDAYmxKjHPCBPg=;
+        b=IU1I7nyd7YL4nibi1kYJ+jRq75Bt8owzVBp6LOOQlUivuh0QhB8wO06Vksw5fbfMKd
+         B8GxUoL7ywoyNQ9Nu3mHlW7m5jFzFnpyxQVbLVRYaZRfzNMhxebnbQx9tEMuOTs+jHKE
+         6o0hUropsKtZuhvd8BQAym/Z+mpQYSL4ZQfXMoLgyBLvBQoAAlX3/mrUKkpN8EaHnR3V
+         muhRmn8kJv+uTmkJt2vmSQJ2NEQ11x2TDxOv0qVjck6w8UvuP+9UQ6cN4tDPgjfhgNVM
+         Z7OePSEdbbIsqxtPrAeoVjufsL4RFhRxy8RJDpkuSpd4ZmaMSXWR8Uo6/3ZkeCuc3n/c
+         1rlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744226656; x=1744831456;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1744226765; x=1744831565;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=v8FxhE3NP9+CvB5k4cj29sIhuHMLfRzDVwZlEFBnlow=;
-        b=LjEz6062aLbUnSKhN3fBsEO3hiFOrRm7kClo6cpDeiKklicDb5jUMhuTxn8v2w1pPF
-         96eBnXrNHFcOWqnyYxlpgFJ11wSBBmFrqo751NC4Digmpsfplajcfd3FnBIFrXEpyeFv
-         imXuy1aps4ZQNdwx4c607F8AbEN9z4JP7AHlsgAcmd1jFeVrrkYO9rN+uoVt+fI/9zS2
-         o4QjJVZsH2uN6n/OkQbmNwo96unGwQUKaWoP4u5Y54g0e56ORpRSX4u/Uyn5RVCsKNMX
-         S0XQx1D8vHaZfWrzl+M6X2DjUwfN1XPRGGfvQgFSh50kFdIQ5utA9oMfYWfR4YlR3KfH
-         5Gzw==
-X-Forwarded-Encrypted: i=1; AJvYcCWJge64kN+B+mtRl9zMym6r16xoEIJtIdP8LGPJrsW4dmmLvmZL0DRYovgaUnt5vLzpu2Fw4hrfvSWiUnA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYjLU36G4Gml9YOnC4OFfeVVhfSdMqosbnT6DwBR+7S3beiloN
-	LmdIIzcOAJwK9aD/jXMlLk+M9nEfrpJJmJdYT016XdpcbKlcLmI/LQUyIQCZBfg=
-X-Gm-Gg: ASbGncs8VkR8rdu1Y+sSVMhVlLtPneH+3nAiwGiMhP5ot27dLw1rqS8dALq4uhoJOia
-	RjakbKiXklbp6lRGmPls7RPS3201tJvKDMTcucRpyZh5ZZkt2kqPOYJRM5y3lHGidc/1+3Cmxhd
-	cZw/ZImENkwA7E9/qHLm226gICzo40hy/Ul2yu7JNq9LrNDAntHrGt+XLu8TD+5mQwu1Qx+vOZW
-	1Ls1/bSsSSznt8+Iht6ABT4kp7dLRWIUf4fK3d7SqbZbvpbKh0ZTMhuMOcEXsDS+S23uw8AaJB0
-	KU++vqoCsL60H7E16pyEiOLBTq0Nr4iUqDOoBDi8suIVAFnQMh6JDxshfITfkqq9FCF5aQ==
-X-Google-Smtp-Source: AGHT+IFSZzhJ9866tYSp/eoyfPKaCAcmw7qQUIkxrlVQcA7QgprWbn2wLiKEhQi9YPH+OPNL4mZ+Sw==
-X-Received: by 2002:a05:600c:1e17:b0:439:4c1e:d810 with SMTP id 5b1f17b1804b1-43f2c5d6fd9mr6034695e9.9.1744226655978;
-        Wed, 09 Apr 2025 12:24:15 -0700 (PDT)
-Received: from localhost (cst2-173-28.cust.vodafone.cz. [31.30.173.28])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f2075a65dsm30249435e9.31.2025.04.09.12.24.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 12:24:15 -0700 (PDT)
-Date: Wed, 9 Apr 2025 21:24:14 +0200
-From: Andrew Jones <ajones@ventanamicro.com>
-To: Samuel Holland <samuel.holland@sifive.com>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>, 
-	linux-riscv@lists.infradead.org, Pinkesh Vaghela <pinkesh.vaghela@einfochips.com>, 
-	Pritesh Patel <pritesh.patel@einfochips.com>, Darshan Prajapati <darshan.prajapati@einfochips.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] riscv: module: Optimize PLT/GOT entry counting
-Message-ID: <20250409-2341cb315aa65a258ecb268a@orel>
-References: <20250409171526.862481-1-samuel.holland@sifive.com>
- <20250409171526.862481-3-samuel.holland@sifive.com>
- <20250409-aa536deeef59c7a2862d906f@orel>
- <64d11a0f-dbae-41dd-a156-cda8a83a2fa4@sifive.com>
+        bh=i8uCw6ZP/r7CK+ezW/oHT+okn6HNIqDAYmxKjHPCBPg=;
+        b=EvUxk6T350Et0xWIjU5Xef7qNHrLP1E6xvT48d5eKZzXwognjuViYR9orCSxCxh442
+         Tji2k69FQjRuN7F6345Ekovfc/EEP5MDEe454LYEiJL8EhN1UE1PHNOGo+xFQsO3bPco
+         brwPK1HMoNBUkyRYAZhFL0jFlH+ZlKihsBWY2etM0UsBF0/fb7FoTd9Cy7XIu96o2uEq
+         K0l8KKsUycjujc7b7ad5lzlFR/kAMuR0y4lgf2KkEAM6Bsz525fjg5XSVfQeIUB6Pyfk
+         JmfsNvXMPzFhEwGU/TOc6J5tSmbRDUQe58qlN/zrSyONTf4InyuruA5B+EkCg8FUWhKe
+         0ZyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVR7V/w2kp//UQwkKIUHmAdixma39SwssYluDX10dLUExGnrut3YEdMweB92lr6YuTpw8Xx0kjo@vger.kernel.org, AJvYcCW/xQJll0BUpyn5Thbj8CfuBImT0RNbyC7/niYoo0HrksrgmkqOyfO3pkpCYHe/6/POkCyLvkNtfjbJ6ac=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz06GsBy7PeERUXdW811O7IDH9nKRMdnHuXBsgwz5A7gD0gyV8r
+	tfbAJMCjv//xSN7xfEHDXPwODQnjFy3Z7XxFCmQatTfc51bA76jh
+X-Gm-Gg: ASbGnctSXf/P7vBHsxtn4PEmQxZYOV3CVgk/k84j61Olm4YtYkHb1ZDiQOSLLZiG79c
+	gnyXpVTOh80F0AC3kY0Kc6Ea30Kaxq/JLd8fJf1QMYT9XVsr1bTIl/StVWh4sVwaO67u6ncG88k
+	88OlrTeXf0D4KyXC1gvn/2o6PJmD+rhO4uwK2gr1sn+cilQUXrc9wLje3Tzp66eqWcKvFr+ufic
+	7nhWXAPsgTo1ugbt5PWRsB7K+EPI101S5zis1iUd0v7ky11KAR0FBpSGuoq8rHMUf+jQvJT/JJk
+	axK6jOjDqZd9facaaTdtlL9CaXwTN8iQbVKgwMnBaOZrXlKM8DKN98FGY1DLxE5zfo/m
+X-Google-Smtp-Source: AGHT+IF9qtLTL7Dndec2tinFOG4yDv6dWa6r35oGFtyju8MgFEtnsBNPWP88QJSq7xaJtwUlJFiInQ==
+X-Received: by 2002:a05:6808:188a:b0:3f6:a6a8:d340 with SMTP id 5614622812f47-4007bcc3f63mr49436b6e.16.1744226764630;
+        Wed, 09 Apr 2025 12:26:04 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-40076282682sm276833b6e.3.2025.04.09.12.26.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Apr 2025 12:26:04 -0700 (PDT)
+Message-ID: <f43469f4-9a92-448f-84e9-66ee85127bce@gmail.com>
+Date: Wed, 9 Apr 2025 12:26:01 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <64d11a0f-dbae-41dd-a156-cda8a83a2fa4@sifive.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5.10 000/228] 5.10.236-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250409115831.755826974@linuxfoundation.org>
+Content-Language: en-US
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ WlfRzlpjIPmdjgoicA==
+In-Reply-To: <20250409115831.755826974@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 09, 2025 at 02:18:29PM -0500, Samuel Holland wrote:
-> Hi Drew,
+On 4/9/25 05:02, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.10.236 release.
+> There are 228 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Thanks for the review again!
+> Responses should be made by Fri, 11 Apr 2025 11:57:56 +0000.
+> Anything received after that time might be too late.
 > 
-> On 2025-04-09 2:07 PM, Andrew Jones wrote:
-> > On Wed, Apr 09, 2025 at 10:14:51AM -0700, Samuel Holland wrote:
-> >> perf reports that 99.63% of the cycles from `modprobe amdgpu` are spent
-> >> inside module_frob_arch_sections(). This is because amdgpu.ko contains
-> >> about 300000 relocations in its .rela.text section, and the algorithm in
-> >> count_max_entries() takes quadratic time.
-> >>
-> >> Apply two optimizations from the arm64 code, which together reduce the
-> >> total execution time by 99.58%. First, sort the relocations so duplicate
-> >> entries are adjacent. Second, reduce the number of relocations that must
-> >> be sorted by filtering to only relocations that need PLT/GOT entries, as
-> >> done in commit d4e0340919fb ("arm64/module: Optimize module load time by
-> >> optimizing PLT counting").
-> >>
-> >> Unlike the arm64 code, here the filtering and sorting is done in a
-> >> scratch buffer, because the HI20 relocation search optimization in
-> >> apply_relocate_add() depends on the original order of the relocations.
-> >> This allows accumulating PLT/GOT relocations across sections so sorting
-> >> and counting is only done once per module.
-> >>
-> >> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
-> >> ---
-> >>
-> >> Changes in v2:
-> >>  - Include R_RISCV_PLT32 relocations when computing the PLT size
-> >>  - Accumulate PLT/GOT relocations across relocation sections
-> >>
-> >>  arch/riscv/kernel/module-sections.c | 81 +++++++++++++++++++++++------
-> >>  1 file changed, 65 insertions(+), 16 deletions(-)
-> >>
-> >> diff --git a/arch/riscv/kernel/module-sections.c b/arch/riscv/kernel/module-sections.c
-> >> index 91d0b355ceef..75551ac6504c 100644
-> >> --- a/arch/riscv/kernel/module-sections.c
-> >> +++ b/arch/riscv/kernel/module-sections.c
-> >> @@ -9,6 +9,7 @@
-> >>  #include <linux/kernel.h>
-> >>  #include <linux/module.h>
-> >>  #include <linux/moduleloader.h>
-> >> +#include <linux/sort.h>
-> >>  
-> >>  unsigned long module_emit_got_entry(struct module *mod, unsigned long val)
-> >>  {
-> >> @@ -55,44 +56,70 @@ unsigned long module_emit_plt_entry(struct module *mod, unsigned long val)
-> >>  	return (unsigned long)&plt[i];
-> >>  }
-> >>  
-> >> -static int is_rela_equal(const Elf_Rela *x, const Elf_Rela *y)
-> >> +#define cmp_3way(a, b)	((a) < (b) ? -1 : (a) > (b))
-> >> +
-> >> +static int cmp_rela(const void *a, const void *b)
-> >>  {
-> >> -	return x->r_info == y->r_info && x->r_addend == y->r_addend;
-> >> +	const Elf_Rela *x = a, *y = b;
-> >> +	int i;
-> >> +
-> >> +	/* sort by type, symbol index and addend */
-> >> +	i = cmp_3way(x->r_info, y->r_info);
-> >> +	if (i == 0)
-> >> +		i = cmp_3way(x->r_addend, y->r_addend);
-> >> +	return i;
-> >>  }
-> >>  
-> >>  static bool duplicate_rela(const Elf_Rela *rela, int idx)
-> >>  {
-> >> -	int i;
-> >> -	for (i = 0; i < idx; i++) {
-> >> -		if (is_rela_equal(&rela[i], &rela[idx]))
-> >> -			return true;
-> >> -	}
-> >> -	return false;
-> >> +	/*
-> >> +	 * Entries are sorted by type, symbol index and addend. That means
-> >> +	 * that, if a duplicate entry exists, it must be in the preceding slot.
-> >> +	 */
-> >> +	return idx > 0 && cmp_rela(rela + idx, rela + idx - 1) == 0;
-> >>  }
-> >>  
-> >> -static void count_max_entries(Elf_Rela *relas, int num,
-> >> +static void count_max_entries(const Elf_Rela *relas, size_t num,
-> >>  			      unsigned int *plts, unsigned int *gots)
-> >>  {
-> >> -	for (int i = 0; i < num; i++) {
-> >> +	for (size_t i = 0; i < num; i++) {
-> >> +		if (duplicate_rela(relas, i))
-> >> +			continue;
-> >> +
-> >>  		switch (ELF_R_TYPE(relas[i].r_info)) {
-> >>  		case R_RISCV_CALL_PLT:
-> >>  		case R_RISCV_PLT32:
-> >> -			if (!duplicate_rela(relas, i))
-> >> -				(*plts)++;
-> >> +			(*plts)++;
-> >>  			break;
-> >>  		case R_RISCV_GOT_HI20:
-> >> -			if (!duplicate_rela(relas, i))
-> >> -				(*gots)++;
-> >> +			(*gots)++;
-> >>  			break;
-> >> +		default:
-> >> +			unreachable();
-> >>  		}
-> >>  	}
-> >>  }
-> >>  
-> >> +static bool rela_needs_plt_got_entry(const Elf_Rela *rela)
-> >> +{
-> >> +	switch (ELF_R_TYPE(rela->r_info)) {
-> >> +	case R_RISCV_CALL_PLT:
-> >> +	case R_RISCV_GOT_HI20:
-> >> +	case R_RISCV_PLT32:
-> >> +		return true;
-> >> +	default:
-> >> +		return false;
-> >> +	}
-> >> +}
-> >> +
-> >>  int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
-> >>  			      char *secstrings, struct module *mod)
-> >>  {
-> >> +	size_t num_scratch_relas = 0;
-> >>  	unsigned int num_plts = 0;
-> >>  	unsigned int num_gots = 0;
-> >> +	Elf_Rela *scratch = NULL;
-> >> +	size_t scratch_size = 0;
-> >>  	int i;
-> >>  
-> >>  	/*
-> >> @@ -122,9 +149,10 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
-> >>  
-> >>  	/* Calculate the maxinum number of entries */
-> >>  	for (i = 0; i < ehdr->e_shnum; i++) {
-> >> +		size_t num_relas = sechdrs[i].sh_size / sizeof(Elf_Rela);
-> >>  		Elf_Rela *relas = (void *)ehdr + sechdrs[i].sh_offset;
-> >> -		int num_rela = sechdrs[i].sh_size / sizeof(Elf_Rela);
-> >>  		Elf_Shdr *dst_sec = sechdrs + sechdrs[i].sh_info;
-> >> +		size_t scratch_size_needed;
-> >>  
-> >>  		if (sechdrs[i].sh_type != SHT_RELA)
-> >>  			continue;
-> >> @@ -133,7 +161,28 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
-> >>  		if (!(dst_sec->sh_flags & SHF_EXECINSTR))
-> >>  			continue;
-> >>  
-> >> -		count_max_entries(relas, num_rela, &num_plts, &num_gots);
-> >> +		/*
-> >> +		 * apply_relocate_add() relies on HI20 and LO12 relocation pairs being
-> >> +		 * close together, so sort a copy of the section to avoid interfering.
-> >> +		 */
-> >> +		scratch_size_needed = (num_scratch_relas + num_relas) * sizeof(*scratch);
-> >> +		if (scratch_size_needed > scratch_size) {
-> >> +			scratch_size = scratch_size_needed;
-> > 
-> > Maybe not worth it, but when i is less than ehdr->e_shnum - 1 (we still
-> > have more sections to look at) we could use scratch_size_needed * 2, or
-> > something, in order to hopefully reduce the number of times kvrealloc()
-> > is called.
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.10.236-rc2.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.10.y
+> and the diffstat can be found below.
 > 
-> I tried to keep the code as simple as possible, so I suppose it's not obvious
-> what's going on here. The current code takes advantage of the fact that one of
-> the relocation sections (.rela.text) is generally an order of magnitude or more
-> larger than the others, is usually the first section processed, and much fewer
-> than half of the relocations require a PLT/GOT entry. So in the common case:
+> thanks,
 > 
->   num_relas (.rela.text) > num_scratch_relas (all sections) + num_relas (any
-> other section)
-> 
-> and there will only be one allocation, for .rela.text.
+> greg k-h
 
-Sounds good.
+On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
+BMIPS_GENERIC:
 
-Thanks,
-drew
-
-> 
-> Regards,
-> Samuel
-> 
-> >> +			scratch = kvrealloc(scratch, scratch_size, GFP_KERNEL);
-> >> +			if (!scratch)
-> >> +				return -ENOMEM;
-> >> +		}
-> >> +
-> >> +		for (size_t j = 0; j < num_relas; j++)
-> >> +			if (rela_needs_plt_got_entry(&relas[j]))
-> >> +				scratch[num_scratch_relas++] = relas[j];
-> >> +	}
-> >> +
-> >> +	if (scratch) {
-> >> +		/* sort the accumulated PLT/GOT relocations so duplicates are adjacent */
-> >> +		sort(scratch, num_scratch_relas, sizeof(*scratch), cmp_rela, NULL);
-> >> +		count_max_entries(scratch, num_scratch_relas, &num_plts, &num_gots);
-> >> +		kvfree(scratch);
-> >>  	}
-> >>  
-> >>  	mod->arch.plt.shdr->sh_type = SHT_NOBITS;
-> >> -- 
-> >> 2.47.0
-> >>
-> > 
-> > Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
-> > 
-> > Thanks,
-> > drew
-> 
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
