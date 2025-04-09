@@ -1,125 +1,107 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF9125EFBD;
-	Wed,  9 Apr 2025 14:05:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C56C2192F5
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 14:07:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744207515; cv=none; b=SOPdIssmktLoEVTrprROpBdNBVG394JyFV6q+Yrzxnp/LEuIC0JqcJhtmBRt7s7WLBO7F96eAEmRx1VO+pKbICSu6j1Nl494BW8/eGe5r07xyZwAAGNhVj5wJqmOYR2AqtKLFoE6CwrtYwwTLCS5FVavzuTzzko68cKRtOZgS6s=
+	t=1744207630; cv=none; b=PeldaVnIDJyB2eNi6rnwUUaDdSSY0LSBrg40h7jIjBCKusviu6XDsUaqujXYHF3EqszjSWjzJ3fm60UgWyvaijeW2U8GkT3iArZ5Mc3cRdhpWqBCizbbzD4D98j4zZ78WcXV99LP2+FfYGAWBNOJpS75ZrKAPMp3bnffXY3vxX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744207515; c=relaxed/simple;
-	bh=1zxJ8FlpEDWTpG1LhWvZ8iky5X8X0noSUVYhOcaGa5g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HD6zbrxbQs1HsNkK9X6RfPJT479XOkU9x3hp92atrZXc2CpUbcwy+gHzxHaIOppq/KQWoyRHdBbS0CBLJrsJHeKqxQ9WWoCaMh70QppiLz+28qnP+Mnlbyn89IrdB0y7IQRo+uhAxU/nHIpE9YTIH2B3TUEJCwExt9YUUepV1rI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=yBepZVg6; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1744207630; c=relaxed/simple;
+	bh=PqduoJbYDtzqUC58ESv/YEoJVbnqv595vRc7J7Cqtps=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 Cc:Content-Type; b=b6gFz0oqPL6iQCiNAOezrrA8StLvZI7D+gj91b9nUVHo50AqrXtyRo+fPjTmvsPw03DWMe9cLUb/XsZskDkX403Eo8OMKd5WL7bqb/i3MJcwvxFeAC0yo84scttI/GANSB9ZMrk9mu/F8HkfSWloxCOX3XaGcFDHzqbWKLGcAEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nluz7D5m; arc=none smtp.client-ip=209.85.221.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="yBepZVg6"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=q7xRr3QSSwnlul0m9c8hFHt5n9S9DhzWdZMloEm5X+g=; b=yBepZVg63xLWBP9suUlELw0jRh
-	dzTENsuehAIPX9k9rcYdtfrwvLaBkEKMUO4zbNrKeNMvn4gEtXLDky0ZwL+2WPQxHnqrPCs84/tkm
-	1swrTD+AUn+64uY5OQJp1X+y1Tfns9TyAELEhS3cRLtIsFLevGcm9mRjcK1rpq3AOGkU=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u2W2t-008Y8t-JI; Wed, 09 Apr 2025 16:04:51 +0200
-Date: Wed, 9 Apr 2025 16:04:51 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc: Herve Codina <herve.codina@bootlin.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Peter Rosin <peda@axentia.se>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Wolfram Sang <wsa@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>
-Subject: Re: [PATCH 15/16] misc: lan966x_pci: Add dtso nodes in order to
- support SFPs
-Message-ID: <b1b33000-4c10-43cd-bcf4-d24fc73902b1@lunn.ch>
-References: <20250407145546.270683-1-herve.codina@bootlin.com>
- <20250407145546.270683-16-herve.codina@bootlin.com>
- <19f1a382-1b6b-42bd-a548-a1a5644c9a1b@lunn.ch>
- <20250408162603.02d6c3a1@bootlin.com>
- <D91CSNC07NYM.3KC467K0OZ4GG@bootlin.com>
- <c14dd5c6-2dae-4398-89a9-342e7a25bb30@lunn.ch>
- <D91XV1I4CY37.20T12FMZ5QLQ5@bootlin.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nluz7D5m"
+Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-52413efd0d3so2954921e0c.2
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 07:07:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744207627; x=1744812427; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PqduoJbYDtzqUC58ESv/YEoJVbnqv595vRc7J7Cqtps=;
+        b=Nluz7D5m/eF123QASuYRrpNCh5cWD77cD29eLMmJG8v67lMjGfPvpAdgKcGO48EfG6
+         yV0qHNRaZBWsucb+Q1z4TPkI1XGHp9j7CP1L+kAGEwM2Mov6qc9KKYFbdc2ioaNqgmiD
+         Y3WBilOlgrJWXEVan+eRUtlI3HsRJzMqEkuCPDti1f+G8l8AUpzphT3eMPOcGBY9k072
+         TJAWM/2DimLcJvOgza4p17zJY8igvagFr4ZgZdyktWjA4Hn0evzWeDilHtR8te2/RAhU
+         6zN8K0zLadr97rEwr+gL+sXGN/Gttn9/hS/LMZSxJrGaDR/pKVKRFVwIer+07bUbnAZR
+         1XdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744207627; x=1744812427;
+        h=content-transfer-encoding:cc:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PqduoJbYDtzqUC58ESv/YEoJVbnqv595vRc7J7Cqtps=;
+        b=OQL6lkyDiAp0wtPt8vCHSv0V0FrdOl/lPHFRdJpqiVrbylOnym7pS51mNC3+8l2uQu
+         ENZmQiG/4/2AWbmYtliM7vGzG+2ybcvhKRRYVBW+Bkd0MEzxXx1bZM9w+VlRIK2xGpjm
+         ZaA9XFAWe9U/w4auGNs+l45AwLXWjA4C8Nv27YczO0GjwdnYuwOqEfew/0dy4SFGQgMC
+         yB4t446x3+iEtzkCgxoSvtJsdEBcMSsQ7uO0c46P0IWFAWGQqBI3+celYFLhBHa7FfsG
+         v/aYb4/PjL4QH4C33RPrCI2NKIN2xH46pkWF1LN2nK18nnergpaH2BSFPetj3cqcsgHw
+         Cocw==
+X-Forwarded-Encrypted: i=1; AJvYcCVsRyjjEZcFg+jOPeL5Oae14qJPg52WKcxdHTkxc9FCG3ab+qv4mmL9YuDU8J2TbNdbT+5s/X5naB/IUrI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwM8PNw0z4oetYMXEmGWNEZxDb3JVhGgk0If+/2G5rJX9ufLamR
+	StAilV2PBB5TEOi7RyByL6idlXXRauM8yNwmnqeAK6IQXZ7izzNm2Gzr0mqbTwaTzrzEx5/NOwZ
+	rgNqwDK4oXqbAVP9pdx1hPWgbybg=
+X-Gm-Gg: ASbGncvCX4UqhGvkLow9AeXcW1ex4EJfKTm+b8+ejHEGJM0GCkKRZUmYBQeaO01hCBq
+	KcpBY/wuAHIIZZNx6vW1HpZomszZX2b5EKuQbKTqOgkW6NJms9T08nPZWD3svwwARjaAQaxD/3t
+	KfFCvwWEcE/1pBe/CHDV+ECDOD
+X-Received: by 2002:a05:6122:6588:b0:51f:4154:c1b2 with SMTP id
+ 71dfb90a1353d-527a9cc8fc0mt1747773e0c.2.1744207627185; Wed, 09 Apr 2025
+ 07:07:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D91XV1I4CY37.20T12FMZ5QLQ5@bootlin.com>
+References: <Z/PyMXTjCHduOhKX@HP-650> <CAHp75VdtUhUBL5d103RunY5EvgmTQVH48S21N1-1KmDM0q44Aw@mail.gmail.com>
+In-Reply-To: <CAHp75VdtUhUBL5d103RunY5EvgmTQVH48S21N1-1KmDM0q44Aw@mail.gmail.com>
+From: Samuel Abraham <abrahamadekunle50@gmail.com>
+Date: Wed, 9 Apr 2025 15:06:58 +0100
+X-Gm-Features: ATxdqUHsbnK795wVxw9QVhafe2Y6kUO7YKAlKUo58tUZnSRiPWCXFv7dunVORH4
+Message-ID: <CADYq+fbbA+K6qsPSa73s94+Whe-_gZ0-ZquYjyx0S4RXFq1W-A@mail.gmail.com>
+Subject: Re: [PATCH v5] staging: rtl8723bs: Use % 4096u instead of & 0xfff
+Cc: gregkh@linuxfoundation.org, julia.lawall@inria.fr, 
+	outreachy@lists.linux.dev, linux-staging@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, david.laight.linux@gmail.com, andy@kernel.org, 
+	dan.carpenter@linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 09, 2025 at 09:44:25AM +0200, Thomas Petazzoni wrote:
-> On Tue Apr 8, 2025 at 5:38 PM CEST, Andrew Lunn wrote:
-> 
-> > "HW blocks inside an SoC." That would be the SoC .dtsi file. Anything
-> > outside of the SoC is in the .dts file. OEM vendors take the SoC,
-> > build a board around it, and name there .dts file after the board,
-> > describing how the board components are connected to the SoC.
+On Mon, Apr 7, 2025 at 5:17=E2=80=AFPM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Mon, Apr 7, 2025 at 6:54=E2=80=AFPM Abraham Samuel Adekunle
+> <abrahamadekunle50@gmail.com> wrote:
 > >
-> > So..
+> > The sequence number is constrained to a range of [0, 4095], which
+> > is a total of 4096 values. The bitmask operation using `& 0xfff` is
+> > used to perform this wrap-around. While this is functionally correct,
+> > it obscures the intended semantic of a 4096-based wrap.
 > >
-> > So by PCI endpoint, you mean the PCIe chip? So it sounds like there
-> > should be a .dtsi file describing the chip.
+> > Using a modulo operation `% 4096u` makes the wrap-around logic
+> > explicit and easier to understand. It clearly signals that the
+> > sequence number cycles through a range of 4096 values.
+> > It also makes the code robust against potential changes of the 4096
+> > upper limit, especially when it becomes a non power of 2 value while
+> > the AND(&) works solely for power of 2 values.
 > >
-> > Everything outside of the chip, like the SFP cages, are up to the
-> > vendor building the board. I would say that should be described in a
-> > .dtso file, which describes how the board components are connected to
-> > the PCIe chip? And that .dtso file should be named after the board,
-> > since there are going to many of them, from different OEM vendors.
-> 
-> Indeed, that makes sense. So if I get correctly your suggestion,
-> instead of having a .dtso that describes everything, it should be
-> split between:
-> 
->  - A .dtsi that describes what's inside the LAN996x when used in PCI
->    endpoint mode
-> 
->  - A .dtso that includes the above .dtsi, and that describes what on
->    the PCI board around the LAN966x.
-> 
-> Correct?
+> ...
+>
+> Besides that I haven't found in the changelog if you have looked at
+> the entire driver code and checked that all usages of this field is
+> done in the same / similar way and no need to convert anything more
+> that these.
 
-Yes.
+I have found more cases using a small Coccinelle semantic patch.
+There were also cases in the media driver, but I did not touch those since =
+it is
+not allowed for an outreachy applicant.
+I will send a patchset soon.
 
-And you need some way to map the PCI ID to the correct .dtso file.
-Maybe that is just a lookup table in the driver, or maybe you can pack
-the .dtso file into a kernel module with the correct
-MODULE_DEVICE_TABLE(pci, ...) so that PCI probing pulls in the
-specific driver module with the .dtso, which via dependencies pulls in
-the core driver which can actually make use of the .dtso?
-
-    Andrew
+Thanks
+Adekunle
