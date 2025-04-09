@@ -1,97 +1,75 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from HK3PR03CU002.outbound.protection.outlook.com (mail-eastasiaazon11021076.outbound.protection.outlook.com [52.101.129.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E7251DA3D;
-	Wed,  9 Apr 2025 01:55:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26EAE41C64;
+	Wed,  9 Apr 2025 01:56:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.129.76
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744163717; cv=fail; b=jMf3INOU6oGLqNylEoiPZIUyfrjXFGobChLQgTTw3TeYm7j7un2Wy6gmks3v92Rl5cI7t1aCMK0aj+IK9kNy71+sSbHX7G1JLMx/IDFcRpJqVmbaOvv0icB3CIvCQIn4U1ZI5peWQk/pLpY+QYM49uRx5tSImKRoZRQkyx83z18=
+	t=1744163790; cv=fail; b=NcdjHK06frgtIAhNWEhHneGPbFP/WqtlZ06aFobD0of7NCH1JSGmrLDzoKH2Ja5G+oFKJOClBIMxydRnTeCdswaVCLNrOlEURSpQgQ/gsxAicK4ZaTuqINRuULWkk5oqzhjYOaB0dT1BOTIPzd4tt4If/OI6GBiaU5XWHqkl7gs=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744163717; c=relaxed/simple;
-	bh=kvWSGq1/DH6XLp8Q1/ya9Yv5hqlRT3zKyviBtX+6k6U=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=dBxPjgvkhzF3tBmsjk7JQyz8D7x42jO/znaKk8U+xhIt3L9bTkg6AJSNyt6Gku8p0cYuXGvyaskFw6wlfQ+AAyWaHHEEHT5HiwxNdY+EkdsxS5RNQK2PZdooHPyvl5Dx71q6yewuFO2KMTIW/xnrhSKg9Fw00Mxwn9z6qAyeD4c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l54YLDoB; arc=fail smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744163790; c=relaxed/simple;
+	bh=EKmsVvG6iMevMGzRoiHTlP53Gp5tjQ06pRcYNqqAYwM=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=nChwz8oDAaz4agoeKzZSFVBtVLveSdWEoMV9Bl/8Dy8Y2oWocxFZly4HbUxu5AUsepObERQcCJQkUjCiq/pp7FpJxRwH7FcCbcAJPv+Mu44un5W2kBwA6FZLY+nc+ZMiV0lZSG2UFnymLf95nhR4jDNuqmmTzrbHhgms/pI/Ho8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b=nKu0A00d; arc=fail smtp.client-ip=52.101.129.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l54YLDoB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744163716; x=1775699716;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=kvWSGq1/DH6XLp8Q1/ya9Yv5hqlRT3zKyviBtX+6k6U=;
-  b=l54YLDoBgYLywPvWznVguprBi6jg75JqW4iafCDWHrckut/mD33t/C/W
-   akmIuog/ZfkiRSaF9646Fbwiikrs/T6PK/aFpxH/d/fEFE+lRI+zLsUza
-   Ja51XkEFqttOKXvZOAQ0n/XcgKUA8hsuQy+IGZ2RuB4iWEegWzPP0Wl1S
-   AVEflPIwQSIiuJtqgXJji+4upR8X32hK1uokAZFNUllyCzZ3LsnRDElBe
-   KJcdhwXrodj4MUfDM0PnONWcuuWPVSCVAK7Kn6bIANwvYeG0PaKnwmQam
-   B7fzMM7Oq1hqhu+rvn66SjqjtuyLrrsBi3fBXjuvzbAl0u4hBD60CgArn
-   g==;
-X-CSE-ConnectionGUID: szHVlTEdT3qKYR92NsPsMQ==
-X-CSE-MsgGUID: dAU/96dkQRizAJPW9gfmJQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="49415836"
-X-IronPort-AV: E=Sophos;i="6.15,199,1739865600"; 
-   d="scan'208";a="49415836"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 18:55:16 -0700
-X-CSE-ConnectionGUID: HVGcGD+oS2CYUgDCrz3SDg==
-X-CSE-MsgGUID: Kk3QQif8SV2WUC6u95oLNA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,199,1739865600"; 
-   d="scan'208";a="165669735"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 18:55:16 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Tue, 8 Apr 2025 18:55:15 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Tue, 8 Apr 2025 18:55:15 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.46) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Tue, 8 Apr 2025 18:55:13 -0700
+	dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b="nKu0A00d"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xJGWsuo7Kqj1HqXlNEA9+iAasiP9zcoosZxJRSuJXVegFyZzJ6AgWzkTazdiEafmc9ekjcviAQgceWxhHJUzvPL4iBJCL+qyFkv7rtNfOmiELhYTjPBNlHEc9EDRLmQXo12Pf79YRUl4YS5uRyaFyMdHyo5q2Dlaurvot4pcQpMxlF8pOVsy+Yh+1MsObSFtiAnxEnp/TA7H8MCAyNzwd9rrDAEdxyJ7UJNL5zRE/VtRzYu94kNq7/S00zlxSpFENeGAv7Y3J3vfZQaKVv/8Og1ZsO/lPs01rLaX+rls8RSaXNniohfS3nfNuEgC8KoWLv5dwhAFbS0mVqG3+CtkPA==
+ b=rsJRvDVnwhDvshpHuZlght814Tjx3yFzFNsKqo/mG+FJj6gAYwU950nNOZr4nOCnDMqz7If5iau85KOCc0ghOpwQ75ED1LwvEsHTUgX/k7D8i17ps/guOys8r/8pjBXvliR1Hf5evQ+pRgkFEJo6nFK7Q4wc8394ztF8w//Qa0yta6e+dejKPu+oMZNxb14e0EDeYQEB1WMN91Lu1/vEoGg4YKKg8hZyTA91IcVojyoSil3YF4RzZnmCcU3DYEYq6237SBV7WvRvp6U73qT+I+7+XhDajzvmm/TUEIDAMhpqspVI2HsjgZ3HAWhxY1Xc1zHv3FLnHQY38HZInu3HsQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4wKIqv/1LqNGJhnYJ0zwFOk3D+9iGfpQtk/iKke5AbA=;
- b=dodfQiZA7hO0+G+IhQ4a+DrT539/9C1yxpMk1j3VFU5SHZS3EnLKV+9xPpbRT3e/32GPPFIz0VWrHEbxmaaLo8Q3HY32KR6/Ov5SIBc56U+/ioj/pHzQOxT/GA1vkSt5XVwHK0ldklWWtJmceXIBuQ2fulB/x6WE4YjDMkVWtxg11KnKa0YahZHc/I8hHYEpip6pCDkhsqjDnoByoouMsoQ8RwuTKNPwwa7dA19v7i40jzgzjpEMnY2oMDlzj7nJxpwhLvjizT/mBpU/1DuIJvfAZ/aVvVBngDEv9ivOGeW9vXv5JWkLp+WS2pwIPkIkhvGXIVfEZqL7rlNweU6a9Q==
+ bh=4fv1lKwEP7uv8AXaS1ZzJKuqtXYDmMv7I4d0/PdJE4Y=;
+ b=ucn976GyZY9q2HuMRhqn5i3Kolx4s0amLeOW1SGN+gjMnRIposmbt81QxK4Dh4lvmxmiWumuT07Q9jk5z4eR/ttLCGdaFwpDloThgQL3AkOEDh1mWwnsBjAnr91z0bk+XnIopA+KhILMQLy5zvYRev38OtexhcOznLohfKMHdhBJfxFUJqFlT4S/pGIhYV1m+n2VHWnuO5FmNwlIi+0p1zpE+AZfSFZFM+h6OHNpaFFbgg/PJvOM79GhFvLBDmhG2Gx2Is7LhHU15iNWd5j/wE/fCDy/KAmIuMSA878Z19OH0p5v7zbih21ypQW+VCPhfcbjPFgLMemqYFtOEOUWIA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
+ smtp.mailfrom=amlogic.com; dmarc=pass action=none header.from=amlogic.com;
+ dkim=pass header.d=amlogic.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amlogic.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4fv1lKwEP7uv8AXaS1ZzJKuqtXYDmMv7I4d0/PdJE4Y=;
+ b=nKu0A00dsVpjqHZLINsYBO8DnspcjTu1GX/DWGNiqBp7hOocjvBNIU/C7PvseRDtr4O+pBhK6Y4vnKV8ilZC1yrdQVneEm9hbYe1Cf2GIAfrYQpxBU2q7wwCsKyrj8YkorEP9ovBJZ82qotytODizGxTHSVAm25LBv30he7k6Ht0M//eJF6+9Y4v5XnCiN326mHxzg4YzpwOGqqIMrmoLaJ2KtXjwFN1Wh8jtQShyqDrC8e2e6jFohPDXwPopWArhtnTBCTuIqZLK3++UwyZDaDuJYvplkOY+fOkZdGrixQfOz9lQ34PwuUe8zrsW8IDol/ZYy0twzflZziKlQormg==
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB8794.namprd11.prod.outlook.com (2603:10b6:806:46a::5)
- by SA1PR11MB8254.namprd11.prod.outlook.com (2603:10b6:806:251::9) with
+ header.d=none;dmarc=none action=none header.from=amlogic.com;
+Received: from TYZPR03MB6896.apcprd03.prod.outlook.com (2603:1096:400:289::14)
+ by SEYPR03MB8228.apcprd03.prod.outlook.com (2603:1096:101:1b4::5) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.42; Wed, 9 Apr
- 2025 01:55:11 +0000
-Received: from SA1PR11MB8794.namprd11.prod.outlook.com
- ([fe80::a3d4:9d67:2f5d:6720]) by SA1PR11MB8794.namprd11.prod.outlook.com
- ([fe80::a3d4:9d67:2f5d:6720%4]) with mapi id 15.20.8606.029; Wed, 9 Apr 2025
- 01:55:11 +0000
-Date: Tue, 8 Apr 2025 18:55:07 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Li Zhijian <lizhijian@fujitsu.com>
-CC: <linux-cxl@vger.kernel.org>, Jonathan Cameron
-	<jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, "Vishal
- Verma" <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, "Dan
- Williams" <dan.j.williams@intel.com>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] cxl/acpi: Verify CHBS length for CXL2.0
-Message-ID: <Z_XTe8r7Syn9Y4cf@aschofie-mobl2.lan>
-References: <20250407080217.76117-1-lizhijian@fujitsu.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250407080217.76117-1-lizhijian@fujitsu.com>
-X-ClientProxiedBy: MW4PR04CA0156.namprd04.prod.outlook.com
- (2603:10b6:303:85::11) To SA1PR11MB8794.namprd11.prod.outlook.com
- (2603:10b6:806:46a::5)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.35; Wed, 9 Apr
+ 2025 01:56:22 +0000
+Received: from TYZPR03MB6896.apcprd03.prod.outlook.com
+ ([fe80::ac4e:718:3b03:3123]) by TYZPR03MB6896.apcprd03.prod.outlook.com
+ ([fe80::ac4e:718:3b03:3123%5]) with mapi id 15.20.8606.027; Wed, 9 Apr 2025
+ 01:56:22 +0000
+Message-ID: <6db52910-00c9-45b1-8212-eb826f406750@amlogic.com>
+Date: Wed, 9 Apr 2025 09:56:12 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 06/10] pinctrl: amlogic-a4: use new GPIO line value setter
+ callbacks
+Content-Language: en-US
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+ Ludovic Desroches <ludovic.desroches@microchip.com>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ Patrick Rudolph <patrick.rudolph@9elements.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20250408-gpiochip-set-rv-pinctrl-part1-v1-0-c9d521d7c8c7@linaro.org>
+ <20250408-gpiochip-set-rv-pinctrl-part1-v1-6-c9d521d7c8c7@linaro.org>
+From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+In-Reply-To: <20250408-gpiochip-set-rv-pinctrl-part1-v1-6-c9d521d7c8c7@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SI1PR02CA0041.apcprd02.prod.outlook.com
+ (2603:1096:4:1f6::18) To TYZPR03MB6896.apcprd03.prod.outlook.com
+ (2603:1096:400:289::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -99,121 +77,150 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB8794:EE_|SA1PR11MB8254:EE_
-X-MS-Office365-Filtering-Correlation-Id: efb87d73-8c82-4f57-1f53-08dd77098fff
+X-MS-TrafficTypeDiagnostic: TYZPR03MB6896:EE_|SEYPR03MB8228:EE_
+X-MS-Office365-Filtering-Correlation-Id: e7b9ce0e-4895-422c-5a42-08dd7709ba6d
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?mVkFCPVAB0UHC3uFEWmVcx2xJVCl/PFx5OoswqsnL32/AqMHnzDh802Tw2FK?=
- =?us-ascii?Q?XfKPtJjyH0tm7O420Kb5v081m9Vh8H9+I4oIGhZMhQ56K6OsMADs2Q2H9bdk?=
- =?us-ascii?Q?wRNFHIh7R1eAXgOKBxrOoYTOQ5e1gxnJJ0bYrwtybQP9i9BDi6QHyvcoGsJ1?=
- =?us-ascii?Q?4R8m6SLscdu59Z50UkcSZVZ7FvDatu8wpnvK5PxGSD46ok1KqzJATQgHk965?=
- =?us-ascii?Q?GzbHgwSgVqLEwq2x89QUP1lfYyWOtyQUizvVhvNsj2cx5yzv3iddVSWWxYVZ?=
- =?us-ascii?Q?s+iJnFxhVgyXEWCulEqr+F2Sh2hcYQLh1j9zcjS/EY1astUwg4F40nfwwPqs?=
- =?us-ascii?Q?NXxJ0Z+myWj6Tui8gaYZMchl2PpHFq3rV0M83/Jgn6zLz8BPaW39B1AXdyfb?=
- =?us-ascii?Q?tyckUrs9aiMw3HXZEsyw8I9b20Kf+eqzk8SrxTtcPtK7W1dc0fr62iiISmc1?=
- =?us-ascii?Q?Lk/9haB/oVE3gYXOy9GRlhJIlHO7cCGKqZdNknDnl9J9rjVJELWbzep4eX3X?=
- =?us-ascii?Q?be/4e1qZbSxImz63TcrUN0b5wjSbMyxkSEsnSUB+7Do3FFao4lumGGhhdVrc?=
- =?us-ascii?Q?VnQld+G21KTuLcwh+BbF0uJz/NKCkZUE5l+hN02T4xhw+f2pBjtMRZC5peuQ?=
- =?us-ascii?Q?xVCJxVzVimpQN7JNVso76+qZO612jNQfaQ4qxtGs8lyTR/krk/tU0I+3MEt1?=
- =?us-ascii?Q?xG2LhfAl+TtsCmuaXG+5IOlM/nyTH9wL7SsbFfBVzhweTQm4VYMwZE97x2zq?=
- =?us-ascii?Q?B09K3ei0eGSee2SWZEbLuHpcvdU3g1ig3I/W8v+rmyJy/+Gj104nayrfIJZr?=
- =?us-ascii?Q?YD5wp4LOLDzsSo2LlmsHjYGwNfs4Iba0yq1AQdmdt57MrXLyNWl8FQdwAmw0?=
- =?us-ascii?Q?8Tz5dmy7fHoc/YhHbu2AvZyd5kUKLLFZXrGE3SygQ7kpOxTaa8xnHZ3lwWot?=
- =?us-ascii?Q?may4mTRhAYPoOsYgIdzbvaBZfVO4uslI0Te2fUJsWBPuMmVkv4sSAGgdpiMY?=
- =?us-ascii?Q?Clyv5mfRtRagPrhXHtN1ec34Vw4k2Mv7t0ocyFoAQHzp0ueCKdRtoQx1dTrX?=
- =?us-ascii?Q?95pyIk9MXjGTYxCCT4uUddCaqE9FGIdCb3U3ysTk3TwKIOPvYbBp58hEdTMG?=
- =?us-ascii?Q?hxZeTttsc/YgOoZ0eRAaNICYlQb/n9E65KHCZz7Cyq5GlfHKifeAabiEdzui?=
- =?us-ascii?Q?WvgsaqsZKArfrjvBGQzxomCk30BcBLSWF/O2HmW9LQMHALTeGt2V9ib07LDF?=
- =?us-ascii?Q?+WFvFzfxKwjdcIUGfgrXqaLYrR3cKLaNXviq8zYEAhvVy5Ju3xyVXBDTpIU7?=
- =?us-ascii?Q?d4A0pfUSHSBYCo9JbObegMfqiWaAxu7rj4eJ7IDxLJXp3SFDHDtgq0hl1JMh?=
- =?us-ascii?Q?xaBiuWY+c3DZ00Ms0frezc6JzUCfOyRtDOaQD7zfY90qY0HB2ZFp6pLQz7/D?=
- =?us-ascii?Q?A3YNqmfe35Y=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB8794.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|366016|1800799024|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?R3JKd001R0NyeEdGUHNsT2Q4cGJWZWpDcGlrZXlDRXdqekdEckFKTTIwdDI1?=
+ =?utf-8?B?ZE5QUk5TQm1QTktsZWJWVkFJb3VqTXBSYm9oRy9xekVXUUIwNW5tUU1mdXJK?=
+ =?utf-8?B?eDZkKzB6OWM5cTQ5aENEbFhPUitTaUdSWmNsOHc3YVFBNW9YODNsWGw0U3Mr?=
+ =?utf-8?B?UlBXeG9hbGhQOWJtcjI2UEx0N3lXVXNwTTZzTFZ1cGhoU0JqL3JqRC9ycGpW?=
+ =?utf-8?B?eVhubDZ5UEE4Mm5FQktDZTF1empvdjVOTFRDQTdyclJ6cTMwU0dJWXlkQ2VE?=
+ =?utf-8?B?bERqK3BKYnI1YXkzejhrZnpncjN2N3Z1MUEvVm9wd3NiTjdEUlZUdGhUVnNN?=
+ =?utf-8?B?TTJxams3dWI1SmdhWTV0MW1TSVN2aC84UVlTMHBneVI4T3ZHQ2VLZHlhTUlx?=
+ =?utf-8?B?bXBsbXFVRFpLRG16dzdURG43Zm5vK3lnZTg0aW9qdGR0eTFOYUxLTlNGNWNM?=
+ =?utf-8?B?ZkRKTmR6bWJoQlZJdWh6aHdyTXZQRzRKdFlNNHdXdXRLMS84NUt6cEFveWVF?=
+ =?utf-8?B?WXR4d3ovTEt2QWdKbU9aeGNmVU54VkxObnVaN0FIMFlpQTdWUC9zV1JKalNn?=
+ =?utf-8?B?L3QwRVprRzl1SEQrT2RSajdWWThlcXIzbDgzbXM1QnU2T3RTODEwS0VWYWlz?=
+ =?utf-8?B?TzAyelh2RERaM0Zua01DZHppVERFMGRXRnFjMmFvWm1DRjFPZjF5TzdZMHBZ?=
+ =?utf-8?B?ZGxwQWNHYkRDZ0l5RGNFTVo3TWRQNG5oMWZ5dHNSUHNjVVVmb2VFNXk0Wmhs?=
+ =?utf-8?B?anZYR1Ztc1F5MlBEQnk4MHlDZ0ZvdlFPRHQxMjJmNkhzNGF0K1pPRjhwUEJY?=
+ =?utf-8?B?aDRiYlJaT29CdlRyYTg5cGJzMjZjVXJZUE5IWVpzY1RHS3NCMnJodFp1eFJU?=
+ =?utf-8?B?ZmxoS0Z0TmIzbHRGdndTbmhidGttSVZVNUROSnp6dmpaMGNlbm10dk8rb0tE?=
+ =?utf-8?B?TDRmQnpEeFNQeVArTEJLTHRhQWd0a2ZpMjI4RUxNOGtzRjc1eFZYd0JEVTB3?=
+ =?utf-8?B?WnlaQXROQ1BHcUJXU1NzYkdKdTJJQ0s3OTV0dlZ3dVMwcjZiZ2J3czBNbk5y?=
+ =?utf-8?B?NWR6UWFZcVVZZ1RzMU5jUCtVazV1UW53MG5JcFk0WlNubkFheWJkamdVYUQv?=
+ =?utf-8?B?RU9xQnlCcUZZOGQ3RlN6WnhDVUFqV0hITEV0aHc0ckJGOGpHdWduVHpGTm8v?=
+ =?utf-8?B?bWd0S25zL0ZnVDBobGtjcEdCd1p1QTBrbU1Ic2N2R3F5d1EvQVhQUXJ1b09H?=
+ =?utf-8?B?QXFWWU5kL0g0KzdOaXZsK29oUUhYRVRNMkZrVitINWhITzhvb2hhb1RuVVpt?=
+ =?utf-8?B?VmdkbDRiclBpNUQxa1NsUVdUeXpOTDk0THpPbVREK3ZRZURDaUZ4dzczY0xW?=
+ =?utf-8?B?bStraG0xekJlNENIa3hJd2podlVyejUrbDNxeGJ6eitpSEY0VmhsMGZGTFFs?=
+ =?utf-8?B?N0pOaVdLZ2k5SlJ1Q2F3b2dqWWtRRmRZdWxMN3dtNUlNc0J4N3NkSjl2aUJZ?=
+ =?utf-8?B?dTUrL0E1Ykc5Y2VsRHVHNnJ3L0NYNzZESnhsQW85dlVJclNWLzlObVBwekNq?=
+ =?utf-8?B?Z2pidGJ3U2RNK1BUYU5WcGRISldBbVRKODk1ckVmOGE5K2hkY2g5SExzNWVR?=
+ =?utf-8?B?NENETWFzWHBDeUJTZVYyeUgzY0U0a2kybGVXbS85d1R4Q0JFWFdXbVlCUERs?=
+ =?utf-8?B?ZzhJNzE5ejZ1b3AzNmRsU0VmcGdjcDNwMjZxRWZBcUNrcURkUnJQZjFoRXVt?=
+ =?utf-8?B?ejBmZnRvNDNCTGVWaHJCUndnMERWVThibjlsNWNhZS9yWjQvTUpPQUwvZUJW?=
+ =?utf-8?B?STZGSzlEcTNFbmdhZkJHVVVnaXRYdjZoc1BOOWVFU2ZkL2llR2lPOUhSaC9E?=
+ =?utf-8?B?Y01qUjVuamV4Rm9zcUR5dGJpUWJLeGoxNDJ4RVVpL3J2aENDb0ZZQXFXV2ps?=
+ =?utf-8?B?dEZkb0FKMW9Eb2VuZ2p2VGcwQUppN0tSVjc5bFRicU14a0xMVmJ6aS82WWdx?=
+ =?utf-8?B?R1N5ZTVvL3BRPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB6896.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(921020);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?PXmfe82In4g/rzc2sChm50Bn0OpjOxyXjOPsDk+2iJnXPct6gsU8iNKwXfW7?=
- =?us-ascii?Q?o+j+z6pRKbu16heBXeIUiQeMNebE+7Zb7JCfKraM4hNeeQaye4EQbGyDuYt/?=
- =?us-ascii?Q?RioATnBgeIgArDUeFC8oP5eS7/8mUqNgWmA7tPymTUGJ6hxga8ED+LlRP+Rq?=
- =?us-ascii?Q?AdiP7tK5PmchE3eznolZSNvyXm8OjQlCEPs2mjUTlR91vMIJ5iYyYfjAJuSN?=
- =?us-ascii?Q?GnHhni7XCZih8ZwWc4OPXmjdplWiWobMRYTlPhy0f9FHXuyFK/8xVRGnh2lC?=
- =?us-ascii?Q?imSvFkPlZDeoJc/D77HKXTHjfN2mK/BijRq1yEL91OCBgKnbUOAnuawowPXA?=
- =?us-ascii?Q?sewK8VKB1u7g9MZ6kOkrKFdTYprMy1n7fAWfbf5cku4t5VPnIcHKEfXCwiqv?=
- =?us-ascii?Q?HowmJKfTlN1XK8tbMacT4rzzSwyknIBmxNJLRA5yZ/U+7u9QMWLDVaiK3Ppb?=
- =?us-ascii?Q?H1AUdbHCH4HSu2+0oCgsHOXsk6Nrh/RuWKHN4ZjXrsRowcOn1LgqyXmp5U+l?=
- =?us-ascii?Q?gkLofLCpuawUuIqqV480Bk8G63QjSOk7Nxx2bxpjVR8XxLFxIZuWCE3L1OdT?=
- =?us-ascii?Q?cX+6lNoHpXkA2t1Nf8MAfTwbtmuMKX31j3HM4MXIx8HwiigfXcamdsLA+ng7?=
- =?us-ascii?Q?zTkOTshYT4yfTmuje0oeElk6y8zlRJDUm2fjN/Ivnn9QDBZbvPBTmKPo+tFF?=
- =?us-ascii?Q?eMTzCwfKVAfcl/0H9lMiDDx4zTmGN52yfobFP6L2NApKg8X+n7+s3FsJGP+Y?=
- =?us-ascii?Q?oFcg4oHh/nBl0zN45ekK13oxE6mOvyjN8Gn3qu58lqQeecPVMHkSAqHmMSgU?=
- =?us-ascii?Q?2O9QncIwhMWoWcteK9xsdaURXQ0umK9D/EPdr2qoPaoZUOci0QWY9y6CAagI?=
- =?us-ascii?Q?NShpXfB28i9z3eOuCoQh7Yyjy27MrapT6XrSpxqiUzfg47KhRSdaynMhchRX?=
- =?us-ascii?Q?6ZvirtgxNpvHvywGrUdzXzti4lan5t6YIkYSQ8EKwdhzrUjo1XLZ880Z9IzQ?=
- =?us-ascii?Q?vQi/xpJR3dbRvV+pKRilkrWmOONwZOrXi7kaxMaF+i7O/RNZ/LCQqVSfMfQR?=
- =?us-ascii?Q?6dC1mpONhx+c1+nnD4yM1tY6TzCjDZR+aWcl8TX2KVZL0hoaAj3tPm8iBEpf?=
- =?us-ascii?Q?T4uozaRPvCh7haYlEmcW4liDNJrauCIuWcLIWGwNYH2/UGV/CX2+Sy6PTaA+?=
- =?us-ascii?Q?7fAriJtTJJubxurQ28CkMnhUojeIc+3zMlFjsTuIT/u9XugnsiI9EBZY5v0l?=
- =?us-ascii?Q?DaruNNR7+gq1NNZ7cQxWDyVe0tOfMxko1JbRef9hch2joeW254KAqDhMxpIW?=
- =?us-ascii?Q?XJkECREy75ASRTEiN2mQ3ssuInEJMpXBehjZ4d+gKH53jzxbLTU2b4Mj+oMZ?=
- =?us-ascii?Q?beoCXUz/NuS/FRlz6qXG0gE8rl+GgVNg8kw7ZpjeJsEWJt57dZXdsvxzpINe?=
- =?us-ascii?Q?72DP7DPoC3IgaG32bloU9fYbe4zg7oFAzi99ewXfjxFylo0lHwi1yDUhUOb3?=
- =?us-ascii?Q?EAcVeJc4SrEX0CM4vZFAOFgIsKp1EJB9i9P71GYesukrSRrkKxQyvlm25rX0?=
- =?us-ascii?Q?XvHN1L5W5CPKOEuTK6xgH2fAdwcJc4qoKsIjlaz2LvCNvXiWn44O+s68LuiD?=
- =?us-ascii?Q?qw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: efb87d73-8c82-4f57-1f53-08dd77098fff
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB8794.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?aFY2V2pNbFpBNC80YjBicjRIaE04aHZJTzBpakc3cXlwWVJ3MGdLVm9STGpI?=
+ =?utf-8?B?UXRDSFp5eUFJVm5hNUJ4Nk9QMzRWakp6RDRVcXN2aUZGR21NM0xOZURPUlVq?=
+ =?utf-8?B?YjZmOXpUdnQ3MytKcHBub2hxOUVVVCt5YkFFZnlJbjJvWGlGVGlrcEdtTjh5?=
+ =?utf-8?B?MDJxR0pBM0ZwY2lHNGdTM1hWZVBxaXphc2NLa1ZYTlQ4SGZKTDRwYjdQQlg5?=
+ =?utf-8?B?K3FxQXJqak81U2U2dFBxZVltb1lqN3RhVXdGUlk2QmlDWEpzcy9obFJNL09M?=
+ =?utf-8?B?ODNaWDE4Q1gvRmRNRzdvenJuRHM4bXVYVTVWRDVVdEV2QnZLNDJ4VDhTSU5K?=
+ =?utf-8?B?MXFSWjRMVzdXcG1sOEYzN1NscStFZjJNWUlFUHVXOFhVZiswQlh6eFA4VTFG?=
+ =?utf-8?B?R1lieUM0UWhsRTFLeHFTNERVZVhNbktyWDNuY2NSVTM4SHR1aFRqeDlQdllQ?=
+ =?utf-8?B?TkJXZ1NnaUtET0xQeS9Od2tFT1pHZVg5T3dPb2JNM1lWUElmYVRBTHhsTWJ3?=
+ =?utf-8?B?WDIzY0dSVzNyUEtqZXI0Q0pnM0ZkQndOVUFlWWRkb2wvTkFhekREZ0YxVngw?=
+ =?utf-8?B?WlVYQTU1aEpCVzJodUd1eGUzdGU3SENOZVArVHVVc3VlaVpTeDBtVS9GdzFt?=
+ =?utf-8?B?bXNJbnlMRnNDK3JrUWdnRUZxUXZIWVU0Vlg5eU1oMWEwWXJaejZlTU9qN3Zm?=
+ =?utf-8?B?cFZOa28zbTJLOGpjdjVSbC9xSzFWdC9ya25GU0RMa3crWitYQTNnNFdvamJt?=
+ =?utf-8?B?dkc1aU95RFJwb3dHU2ZtM0d4dUJ6Lzl3d0JZMjRhRXhsVWR4UkZTcE9FZ2g3?=
+ =?utf-8?B?YjhOVHoxMWRBNlg0UTcrT1NQZU82REROb3lYWnR4SVdaOTBtQWlTbDBXSUg5?=
+ =?utf-8?B?SmN5ZS9vQXNMdmNXRThDZURnYUcrNWZWVzAxeEIrVlJEZkhPZVJBUmREZ1JV?=
+ =?utf-8?B?RlF1NWh1NUx1amNrL1RIcG9KRVoxNFl3Y05VRVMvNmM0bm42K2x5TzlxSFZE?=
+ =?utf-8?B?aGR3RUJMUFRTWS8vdk9IQlg1NFpDSEJvbGhlM1ZTREpXbGUwdUJlMnFQRWtl?=
+ =?utf-8?B?NmlISWhiSVkzSk9aMlY2aFFBajJSK0VwNGJPN0tJcXhrOXNVLy9RbXJ0bTlL?=
+ =?utf-8?B?TWZ2VkZ0TGp5dXN6MjRyaktaUVN0dnZ0elVqN3U4U016SDFPM3BEWkNnZ0Rp?=
+ =?utf-8?B?NEMyUERtZ3N0cTFPdFFwdzNjUFMwQk1kS0U3U1RrZEhKcFROK2hYTDcwV0tS?=
+ =?utf-8?B?QXF2L3NRSVdIY2pGczhqYy9OREdta1BQdTdIWHlNMmZtakl4b0s5aUdvdVBV?=
+ =?utf-8?B?OWxmNzBEWGg2ajg1R2FoRjZXOFRKdUZTWWh0TnhSZllpWTNLYjhxQ0NMbFFz?=
+ =?utf-8?B?RFo5UHdrRzVOSG40KzdPVFVaYytnZ0p1eHhEdzNKMi9Qb052M3lzeFIrWnFs?=
+ =?utf-8?B?bmZRSThVUFAyckFhRmZJS1MxTjNMd3FZdXI5aFRaVHAvYk0vVEVMcS9KVG1E?=
+ =?utf-8?B?bnc3THEwaGovK3kvQjFuSmp2QjBaeW94cGhYbVIxWWYwYjZZNXZiNDVQR3hF?=
+ =?utf-8?B?dFJIdHVGQk9SODIvNlJoWEhRd2FReGY4R2kxVmRjL01oaGM0eHFBMWM2akd0?=
+ =?utf-8?B?S3hMMHdIWDFWRHNmT054QkZHR3pic0FCaDMxcU90ZHdHQ0luYWdDY2NoZWNK?=
+ =?utf-8?B?ajF3d3dCeW9rZXlvNGxuKzJIU1RYRWFkYUNIelFwbnlyZDZBa054czE5a2wr?=
+ =?utf-8?B?aThIQ0duMU55Ui9teW1COEVSYkEyUVljaUpGZ2JrZDVNbmdyeWQrOWlDaC9s?=
+ =?utf-8?B?eXlPNDc5SWFIc1ljR0ZQdTFFbWdybFBGTTFMaXpDNWdxZHEzSHFIa1RIOTNV?=
+ =?utf-8?B?QmhlUmxSWUh0eGdJbWszRCswTDhEK0VFTnRzY1hMemMyZ1hwZnFPbjhhUU1m?=
+ =?utf-8?B?UHZHOUZzVTZmTTI5OU1Ed0VNdVh2UitPcW5WOGNocElqcUgyY1JiZDFGNTg1?=
+ =?utf-8?B?VTcwWnd0a2JzWWlNVHcyTzNVRzlZc2c4cDdOb0ZCdXR2T0ZYSVVMSkhZSktE?=
+ =?utf-8?B?RWZ5b1NIVjgzOVZ5amFDTXFId1lEM3pYZlJWdTJhR1ZzbDJJL1g3a1BJc1Ex?=
+ =?utf-8?B?MWs1ckcrU1dUcWlWT2xra0hpTTljb1E2WU9ITUZYRU5kTVlzY3BjWHI0cnMw?=
+ =?utf-8?B?RFE9PQ==?=
+X-OriginatorOrg: amlogic.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e7b9ce0e-4895-422c-5a42-08dd7709ba6d
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB6896.apcprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 01:55:11.3415
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 01:56:22.4757
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-Id: 0df2add9-25ca-4b3a-acb4-c99ddf0b1114
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kVBZGHVvRBWUILELfcM/4wZrwYwWSsoVH25RiYf8PKuW0QVwFS5qRx6OKV+fQk4+Bp7S/IDrMBdqdQ+iVj9swTQYPBWGepAVWXrYSBN2YSQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB8254
-X-OriginatorOrg: intel.com
-
-On Mon, Apr 07, 2025 at 04:02:17PM +0800, Li Zhijian wrote:
-> Per CXL Spec r3.1 Table 9-21, both CXL1.1 and CXL2.0 have defined their
-> own length, verify it to avoid an invalid CHBS.
-
-Can you comment on removing the comparison to CXL_RCRB_SIZE. At some
-point someone thought that was useful. As you remove it, please
-explain.
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0W+1Xw6aI0sDoDzpB3VFJprbU6JjNRcEJDt8q+nT9KE6vwtn4QvIzOZ/EGp8lK7oD7Sy/SRQDMvB8G+nVJ9g4Wm8LR/OuO9PSG8XRsYgEO8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR03MB8228
 
 
+
+On 2025/4/8 15:17, Bartosz Golaszewski wrote:
+> [ EXTERNAL EMAIL ]
 > 
-> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. Convert the driver to using
+> them.
+> 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > ---
-> V2: don't factor out, just validate # Dan
-> ---
->  drivers/cxl/acpi.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+>   drivers/pinctrl/meson/pinctrl-amlogic-a4.c | 8 ++++----
+>   1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> index cb14829bb9be..2e63e50b2c40 100644
-> --- a/drivers/cxl/acpi.c
-> +++ b/drivers/cxl/acpi.c
-> @@ -11,8 +11,6 @@
->  #include "cxlpci.h"
->  #include "cxl.h"
->  
-> -#define CXL_RCRB_SIZE	SZ_8K
-> -
->  struct cxl_cxims_data {
->  	int nr_maps;
->  	u64 xormaps[] __counted_by(nr_maps);
-> @@ -478,8 +476,10 @@ static int cxl_get_chbs_iter(union acpi_subtable_headers *header, void *arg,
->  
->  	chbs = (struct acpi_cedt_chbs *) header;
->  
-> -	if (chbs->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL11 &&
-> -	    chbs->length != CXL_RCRB_SIZE)
-> +	if ((chbs->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL11 &&
-> +	    chbs->length != ACPI_CEDT_CHBS_LENGTH_CXL11) ||
-> +	   (chbs->cxl_version == ACPI_CEDT_CHBS_VERSION_CXL20 &&
-> +	    chbs->length != ACPI_CEDT_CHBS_LENGTH_CXL20))
->  		return 0;
->  
->  	if (!chbs->base)
-> -- 
-> 2.47.0
+> diff --git a/drivers/pinctrl/meson/pinctrl-amlogic-a4.c b/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
+> index ee7bbc72f9b3..a76f266b4b94 100644
+> --- a/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
+> +++ b/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
+> @@ -806,15 +806,15 @@ static int aml_gpio_direction_output(struct gpio_chip *chip, unsigned int gpio,
+>                                    value ? BIT(bit) : 0);
+>   }
 > 
+> -static void aml_gpio_set(struct gpio_chip *chip, unsigned int gpio, int value)
+> +static int aml_gpio_set(struct gpio_chip *chip, unsigned int gpio, int value)
+>   {
+>          struct aml_gpio_bank *bank = gpiochip_get_data(chip);
+>          unsigned int bit, reg;
+> 
+>          aml_gpio_calc_reg_and_bit(bank, AML_REG_OUT, gpio, &reg, &bit);
+> 
+> -       regmap_update_bits(bank->reg_gpio, reg, BIT(bit),
+> -                          value ? BIT(bit) : 0);
+> +       return regmap_update_bits(bank->reg_gpio, reg, BIT(bit),
+> +                                 value ? BIT(bit) : 0);
+>   }
+> 
+>   static int aml_gpio_get(struct gpio_chip *chip, unsigned int gpio)
+> @@ -832,7 +832,7 @@ static const struct gpio_chip aml_gpio_template = {
+>          .request                = gpiochip_generic_request,
+>          .free                   = gpiochip_generic_free,
+>          .set_config             = gpiochip_generic_config,
+> -       .set                    = aml_gpio_set,
+> +       .set_rv                 = aml_gpio_set,
+>          .get                    = aml_gpio_get,
+>          .direction_input        = aml_gpio_direction_input,
+>          .direction_output       = aml_gpio_direction_output,
+> 
+> --
+> 2.45.2
+> 
+Reviewed-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
