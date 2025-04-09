@@ -1,87 +1,69 @@
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60FFB21CC6A
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 21:17:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DF321E0DF5
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 21:19:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744233477; cv=none; b=Js0+NX/XjvHl8T+/qMxG00Hrsh97T0yBtyk2scOo08Ifi4X2haL3h1QStxRH64F6oG5+NY9AUymCWPEX49sgfbumeuVjb56NFzVROijMhiaNbU00M6fYi/X8hdYq8x4pUiiFkT+qz+D7SNv9gYacyxdlippc0ZiNSsLYdACzoCQ=
+	t=1744233591; cv=none; b=K8OEOjMdR1TxcMgD1fxIpuzrYZUlBRkrf0CkCOl4pZlDRhdEpjnGhYDcbT9S0V/KADqvAYJgjx889PqcXerg8y74nyr3q/wr23yhpVrCJg07wExAo9E4UGmPTNsKQkGu3u017tllVE2FTSmZYu9bMlaXh+COiS16+XQpR7N6PPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744233477; c=relaxed/simple;
-	bh=2wkF3pIspsBICKC2HLHsuT/AUDwllqmRkvg4pojS36g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jaowjBfZyj52RIFA+bDnm/9tsLAZSrFlq3+MpIYaWHl/11kY/1xSwyYuhD2t7hHjnyX0Bb5sPyLDbLt3kK/4KgKBhl97kvzyg5Sj65ykLsVnCpHuZREhqzB1lI5m3xOfIg+Q1mN8ePpOVzuDlSXyankmQJeFotBysr9mUzH4kII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=Wgd9dG67; arc=none smtp.client-ip=209.85.166.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+	s=arc-20240116; t=1744233591; c=relaxed/simple;
+	bh=9jgIc8odPmLwleRRLhSYJbBvDm/yujcv95xLW+4xoPo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=U9piYPYkSq17hLjlIselJIrrn3mjaC3k4YZVgjWQyHi8Ho0YHTWQg8aKGl+M5cGCRllSQ3zVNCWFxUGrRorLi8ORrBLQYNsfoKRh3u04kibHFGMe2za0kxNZReviHiqVQSP3ro7CoUIt3BFjj4482p/Wn9MyNyFCnhah/LqB4SI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IsffU4IS; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="Wgd9dG67"
-Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-86135ac9542so5645439f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 14:17:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IsffU4IS"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-736dd9c4b40so1117275b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 14:19:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1744233474; x=1744838274; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eoPF+bCrpMBavT+34w02cPZ0ktfHw7A1w/wlErW18/c=;
-        b=Wgd9dG67O3b9KQcZIiyez7vBcybE31TYpwb9KDtT2l6EBd2KwQ5Qaof1p7yUgUlVIp
-         gOXmwFAT8pML8Km2DfmORUb/XHxgjYOzpoZeRkSNcKTsOds4iKIKjixMxXUj6O3Mjrmc
-         cmWJGliaKFnF3btdoP++HblYfbh+bJJyhiBfJO9OaI/AScocpFuzzB+1GZZIgsDTycnY
-         VOIyzpnUnHtU9L5m1/iipLv2o0F+1UPe5RorGXh4imwPyzfFwsTpDPpm3guEKHVGCfo/
-         6rrpLqcdchMpX6JHgPsD/slYlYomK0kC6HBjpYuw1WYI3Dnoc1Y1jMphvvJrHCWEd2qn
-         YhHg==
+        d=gmail.com; s=20230601; t=1744233589; x=1744838389; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ki9mtn0tVPTscazqm7mAr0e9kxsmptzCyYhKL9xUgro=;
+        b=IsffU4ISP8zg+rbMQbhsHRHCsaG5e5UEJ/iJOK5sUF2LqiVbzaIuzgvFqVDkKbsWkv
+         8R9OWzn51SfF6x/gSJttjUEx8V60oRuDdXihTVNmz7bMU9FNLqNqVRbCZAOGijw6cWaT
+         ywUx32hJoCo2LLFZ19xJ96i10obgqzKzVI/3ZdULi2lGFyZVmJqQgTqe44O5e2hZJJwQ
+         f/v0uPo7gcS/ZVitsGiWP0zolqpiGyasGNRNtxt/mDVDmsIym1ge7EXiTF3waCGZL/a8
+         bHseQY+I6VJV4W4rKwWkwiVkekZUphZ11NJ4riTpi8bE+BnMgweeqbyd7KfCCquOykA/
+         8Fww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744233474; x=1744838274;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eoPF+bCrpMBavT+34w02cPZ0ktfHw7A1w/wlErW18/c=;
-        b=gw+ZjMjfGaRBdIlEUVlo2tR0G8nZoc94YVoW+f/3ElKDc+H2HGC9uWD2/39znmiFVd
-         nJcOlYdb6e5A85WxT/GOanaxbva+ALGUb8jDh7fLKpYkkXukfqD2RAwaSwUQZ742ZHgW
-         HZx7Ggoje2ZP0cirNUWZ2pt+wFM0JSUn/TRt+E/G1zR94yYN6WfdsjSAQp0u0CLcji4i
-         O+iKZUxuS7zCmzwk3xx/qrdzqb3X+CWlMY5c9NsWJzetn9ypW9dusSzhKJA+0uEzJdCC
-         5ffxkx2Kt5WWySTDhowACNm0lmXAmXQ/eOf36PRdUJBx8cVbaWExs+oSQRNbN6Xefc8j
-         GJhg==
-X-Forwarded-Encrypted: i=1; AJvYcCX1VltP/db2NOmrR41F+xYoCF7W07ZuEbHAzP6vcCrcSOTXaWuKUVzgeFMf7qWXYeWbbzLfKCh7/I0ylW4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDxo2zsdZBvMenN7y55CI5cTH56GvbFWWvOzlaUim1D7cinLsB
-	Rmb9m74gtpo8l2boGy5Yv4UH8UZLSGg06XXwiM3JQAlkrtlRmmvG8BLfziwFKXs=
-X-Gm-Gg: ASbGncvC/zIyoKfA6gUaPwGnulELBu/1fG2TSQpisi2vskBYp1Bj9YsU8nsDa0/9epq
-	NA13RmxolINjALB9uO0y+xc3wGGMS2YfqSDfpUyBsONiE5wROatgnyA6zYTFGDzom4kRAn4RmsK
-	moVgxBFUYYPePb4CEnL6EIWgIroclEwv/0/1uED3H2DfzPig9p0ZU3ap36jmG7r0eNFiacI7gh8
-	wP6viiIMtwjCSB7IQXOyEjCyi9JY5FSPw4FXwVtnKgYqzb0j4UmWUyvz7ryxFyt2nMR3gjDqDwJ
-	9k+QK1qpBUyV9XLa7gtlTNmjcJ0MOawo+UDvXbNsWM52Ep1S0uolxByglkZ1K9Cm7ZBEgVg6oWv
-	CuBctySsVEakxPA==
-X-Google-Smtp-Source: AGHT+IE2EFUaAUGzZqdq2RH+minAxPrbtolq6/W/NBIYcCuS8He5fK97oLjQC2cX1JOUkUtoZzh2cA==
-X-Received: by 2002:a05:6602:6e8e:b0:85e:16e9:5e8d with SMTP id ca18e2360f4ac-8616f206ec2mr29618639f.7.1744233474607;
-        Wed, 09 Apr 2025 14:17:54 -0700 (PDT)
-Received: from localhost.localdomain (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f505cf8e91sm420735173.6.2025.04.09.14.17.53
+        d=1e100.net; s=20230601; t=1744233589; x=1744838389;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ki9mtn0tVPTscazqm7mAr0e9kxsmptzCyYhKL9xUgro=;
+        b=EbAmYjVWkAZSBV4QwI9T2HXlwHYK5Wc9BmCLDGpzfKCj/DKjHiqPqBdmmE2j4ELrZU
+         tk3JDkkfEB6UKD2j1TdzTBkNncJCWg4C+aYk1wD4vc3g5Ps4j85hfq4JEf3sqzT69IRD
+         o7YRaA2l/KWs79LppCNsj4c4bmHTpQc8jyJdtGaHgsaFYD3NVU5UJ6Ysm1vFcnYnAAAV
+         YHY6rhQiOSeFXSUFCiUaPuUDBDJM9eNCoHXelkDY5StwkUXZX1Pr+xBirsQMCS8TCjda
+         5E3xfYWyoBVbTdO+MeGJC0yHR7ZbXqEg2ZkWK6VjEJfLcZ+c1oss6k6GjWyFW8cp7TEj
+         9VqQ==
+X-Gm-Message-State: AOJu0Yz2zhrVYkIdEtKNzBqdQdW174D3KhZhJzuelozvd+Z1BZAdJPlh
+	do01xdm3OU2C+0zvOd49rvQ6fm0MPOD3gxp+VWxwDKmoiJekJ47933YWW0x+
+X-Gm-Gg: ASbGncus0VNrdnwPznC4egtkpON4+80+pOpRgA7da095cvLgnU2o3ylA0qHHLQ7T0yD
+	t6WgY5wSjWUFebDm1s2ULAddOto231RBF5qZ3EGBmTAAkNoRddW7Lvja0nC3dM0Dufkf0YRvLFq
+	VqL5rcQzUhvzzIiMy4mXoPnPIqtMKPShCNH0hl4fWbWaUL6mauMYrMyS1JfqB5as4M+5i5KARn7
+	xrjCs4XauIz774EFsV3U3ZtoFCyADj4g+naaSb6jGfey0Ga803bCq4cC8YZJhrVcbS4yylWZJCs
+	dgXbwFzsL69ge7sU5/zsYL4Dj0Mw5ADlyh0UUm7xcHjldqgXNpReyjB7BU5fhYX5kHBciViI9Q=
+	=
+X-Google-Smtp-Source: AGHT+IHDzgkBQtIx5ux3286qyuvLaw5sTWxiECcsQ8FsHZi79X9fSIeNJan8YvBotEHKfHRkGW4ZTA==
+X-Received: by 2002:a05:6a20:c320:b0:1ee:a410:4aa5 with SMTP id adf61e73a8af0-2016a64f2c7mr326009637.17.1744233589310;
+        Wed, 09 Apr 2025 14:19:49 -0700 (PDT)
+Received: from purva-IdeaPad-Gaming-3-15IHU6.. ([2409:4080:204:a537:9312:7e1:b2cb:ef99])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b02a2d3ab88sm1697136a12.61.2025.04.09.14.19.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 14:17:54 -0700 (PDT)
-From: Alex Elder <elder@riscstar.com>
-To: robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	mturquette@baylibre.com,
-	sboyd@kernel.org
-Cc: p.zabel@pengutronix.de,
-	dlan@gentoo.org,
-	heylenay@4d2.org,
-	guodong@riscstar.com,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	spacemit@lists.linux.dev,
-	devicetree@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 7/7] riscv: dts: spacemit: add reset support for the K1 SoC
-Date: Wed,  9 Apr 2025 16:17:40 -0500
-Message-ID: <20250409211741.1171584-8-elder@riscstar.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250409211741.1171584-1-elder@riscstar.com>
-References: <20250409211741.1171584-1-elder@riscstar.com>
+        Wed, 09 Apr 2025 14:19:48 -0700 (PDT)
+From: Purva Yeshi <purvayeshi550@gmail.com>
+To: arnd@arndb.de,
+	gregkh@linuxfoundation.org
+Cc: linux-kernel@vger.kernel.org,
+	Purva Yeshi <purvayeshi550@gmail.com>
+Subject: [PATCH] char: mwave: smapi: Make usSmapiOK signed to fix warning
+Date: Thu, 10 Apr 2025 02:49:29 +0530
+Message-Id: <20250409211929.213360-1-purvayeshi550@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -90,50 +72,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Define syscon nodes for the RCPU, RCPU2, and APBC2 SpacemiT CCUS, which
-currently support resets but not clocks in the SpacemiT K1.
+Fix Smatch-detected warning:
+drivers/char/mwave/smapi.c:69 smapi_request() warn:
+assigning (-5) to unsigned variable 'usSmapiOK'
 
-Signed-off-by: Alex Elder <elder@riscstar.com>
+Assigning a negative value (-EIO, which is -5) to an unsigned short
+(usSmapiOK) causes a Smatch warning because negative values cannot
+be correctly represented in an unsigned type, leading to unexpected
+behavior.
+
+Change the type of usSmapiOK from unsigned short to short to allow
+storing negative values like -EIO without causing a type mismatch or
+logic error.
+
+Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
 ---
- arch/riscv/boot/dts/spacemit/k1.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/char/mwave/smapi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
-index 584f0dbc60f5b..491ab891788b8 100644
---- a/arch/riscv/boot/dts/spacemit/k1.dtsi
-+++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
-@@ -346,6 +346,18 @@ soc {
- 		dma-noncoherent;
- 		ranges;
- 
-+		syscon_rcpu: system-controller@c0880000 {
-+			compatible = "spacemit,k1-syscon-rcpu";
-+			reg = <0x0 0xc0880000 0x0 0x2048>;
-+			#reset-cells = <1>;
-+		};
-+
-+		syscon_rcpu2: system-controller@c0888000 {
-+			compatible = "spacemit,k1-syscon-rcpu2";
-+			reg = <0x0 0xc0888000 0x0 0x28>;
-+			#reset-cells = <1>;
-+		};
-+
- 		syscon_apbc: system-control@d4015000 {
- 			compatible = "spacemit,k1-syscon-apbc";
- 			reg = <0x0 0xd4015000 0x0 0x1000>;
-@@ -514,6 +526,12 @@ clint: timer@e4000000 {
- 					      <&cpu7_intc 3>, <&cpu7_intc 7>;
- 		};
- 
-+		syscon_apbc2: system-controller@f0610000 {
-+			compatible = "spacemit,k1-syscon-apbc2";
-+			reg = <0x0 0xf0610000 0x0 0x20>;
-+			#reset-cells = <1>;
-+		};
-+
- 		sec_uart1: serial@f0612000 {
- 			compatible = "spacemit,k1-uart", "intel,xscale-uart";
- 			reg = <0x0 0xf0612000 0x0 0x100>;
+diff --git a/drivers/char/mwave/smapi.c b/drivers/char/mwave/smapi.c
+index f8d79d393b69..37da1339357e 100644
+--- a/drivers/char/mwave/smapi.c
++++ b/drivers/char/mwave/smapi.c
+@@ -66,7 +66,7 @@ static int smapi_request(unsigned short inBX, unsigned short inCX,
+ 	unsigned short myoutDX = 5, *pmyoutDX = &myoutDX;
+ 	unsigned short myoutDI = 6, *pmyoutDI = &myoutDI;
+ 	unsigned short myoutSI = 7, *pmyoutSI = &myoutSI;
+-	unsigned short usSmapiOK = -EIO, *pusSmapiOK = &usSmapiOK;
++	short usSmapiOK = -EIO, *pusSmapiOK = &usSmapiOK;
+ 	unsigned int inBXCX = (inBX << 16) | inCX;
+ 	unsigned int inDISI = (inDI << 16) | inSI;
+ 	int retval = 0;
 -- 
-2.45.2
+2.34.1
 
