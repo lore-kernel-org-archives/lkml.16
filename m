@@ -1,269 +1,227 @@
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07DA42620D1
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 12:49:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744202959; cv=none; b=aYKCLp1d9Dlkoi4EbFMFJKm1YllWUcCtHu3HAmxPqK6nXimRbanSpKbJt7hVad0fxcXMlxJTU41FNX+Wlvz5TAaPEywuwLlxolgwEUSop3OapBLLhz/vTju4VhZYdUxke38HUnM40fF8pcs2Xhh8KtsUboZ4gd7URWBlbqFaaJ4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744202959; c=relaxed/simple;
-	bh=114xrRYfMDpqZbVsu61+eeWndUu4dIUnfdi6ZWw8+JE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OTriLv8F00a9LrXB/DfjTMoVrk9ohd6D8K56wzeZIr8vvaeJS/4msJ2+P+4NNvxPBZIeOFE2p8LvWNFujhHCjzHkwgDhN8Ny6zoZsL0vLZj7YtyTTyDsMPysFOSQuNztNSe3ejp33zTOj7fzGEE31uHhew8jfLFkME1vTHusHkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=b82oRnuF; arc=none smtp.client-ip=209.85.128.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA82725F97B;
+	Wed,  9 Apr 2025 12:50:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744203006; cv=fail; b=S9VvOZtEFWR1c1DoO2IYkjwKeQXFPrtn4Mj8vQHdlQd6UUeDQFUz0RYc3HJ6r3XNOj1TMAR+Ag8+2pesOZyJPNRXjyIiwCvaEGnd8NbK3G0MULypMTpUgbIpqT7mmYmcI/xutV8zLulKYMLYfU/hgW3mE0+2gnE+X9vJeLhO+Lo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744203006; c=relaxed/simple;
+	bh=yG8q1dJ1DkdySBzXpE9ZD1OIOMwOsYLgCtvyoz/SVwk=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=kwqiXZvypnjSBJIVxyKYZt0rAhQCItbhI6W0z/uwZn0Gjew+GVddH863N0FcvIMpHEeTi/6xKSwdBuZFtWBHnHvaj6p+jpXvFt2fVvE9pQjj0Rq1xidkpBbBicXU3GdnFa85eFE8DeIWoovV/P26y0kmfmE9+n8+HuFrrNboUEY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f2iMraLy; arc=fail smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b82oRnuF"
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-70427fb838cso24441697b3.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 05:49:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744202957; x=1744807757; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=EeYTwgoKGzk2F10OwjsE7wT2TnLkZjym1rp+v2jZcv0=;
-        b=b82oRnuFxlfjR+2Q19rNe9xwhwSMDaJLh6hXqos3QDjArCmXCSem5Ap1ElzE2tcrV2
-         OLnpMCLnsk3bI5f0S7yHVIbzWfQQVnIgRuJWY4tquaSGY4cLRKWN4F5sk02pAzqt0EHV
-         Y9Z0Gw+fk2nj8iB+xVGUQk4pK3rjoBFcPiQ2ffeDIHt8IwYn4gKbdYVrMggDh2Kv0O4W
-         Dca0gSO8+XKtPtkX1jpDqNR/UcKUc/kDPSUSL178rPU0yL0Gs/Wo+kLDDcqjiUh+KlFQ
-         fVv9qX7WBpj6JIZGEKgD3CWSrDSxuUXdZ1t/8J+SEAJkElP3YFINfZQzUft5hm5pTHsR
-         oQ4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744202957; x=1744807757;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EeYTwgoKGzk2F10OwjsE7wT2TnLkZjym1rp+v2jZcv0=;
-        b=bvFpcOSvTMy2w1jv3XsvrNcR2PsuprsEba8wXnc9WPzfJvDK454ys107Z87tHqKyB7
-         saKkQO6EEX+Mep6tbvYOBReq/oZQj957gM4VoFyKsbEX8VEza0LYQBzvKTUPq3Ks6Q+O
-         XmwqX/56G0HNrrLRIzCjkbIbn4x6U7TmT3dQtp97eDVKmejJNH43WQseIzR+JMKW8pF2
-         Qo3l8sioODkwOoIG2d5v6mOvR1BDnet+N1urwTJHnPDDaKFgKYE7wzbKcoYwTDWtd1HC
-         wZPD9TCSo9ULlgPJbcGx94Shuqn9V9TDONAv4BI1o+AzZzbVfdxM2fomAZXOBm7Vp+eE
-         GMfg==
-X-Forwarded-Encrypted: i=1; AJvYcCVsCRZ22ApZe+nk+XmeEtzdR2T8h4Ks3GrFg2i2/nS7E1DqL0J+8W/zCn9B7U5OthxKSffNlaqevtk77HQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyhfa8K1mI/M5+mvJJuE5NOr+AE0lZUNvATdTPNQJJcegSAB9B9
-	MbF/FiR2Uz3bgbPyr15/N6uKgyvjCMz3wxUeK3FVQzsnAdX5bqs6DAK4Ow527H1bBjXYbOhDeZg
-	tNmJKDa2rhVSlnHqwHDpF0jJ378WVDaBt8vSf2w==
-X-Gm-Gg: ASbGncu8ndkGYqDoGgneb9Qjpkg9dRvfBHhMWWr9vI/GRwCakdnzp8HQyouCE9vt/p2
-	2Drb3UUjnjUgd1p763AtmvZ7BYL4yMdY7MjgDt1xYLs8Nb4W5sKl22KUmiyOwv/MFqko7f0WN97
-	bY0vucB/y/S0JQvar0ZPGVXrU=
-X-Google-Smtp-Source: AGHT+IFFrOM5iQ+syWdBk4gtlvAAaRcdg0F4uOku/70K/G81PVazqAESRvcwZBLhcBGLw9VTHa6/7U780dqRDiooazU=
-X-Received: by 2002:a05:690c:480a:b0:6fd:346f:97ba with SMTP id
- 00721157ae682-70538806353mr52669847b3.11.1744202956829; Wed, 09 Apr 2025
- 05:49:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f2iMraLy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744203005; x=1775739005;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=yG8q1dJ1DkdySBzXpE9ZD1OIOMwOsYLgCtvyoz/SVwk=;
+  b=f2iMraLybMJ2LIFBbUx5NPgBh63I3aqH+TKmPiGQbH0Zmkh8+0UhEp1q
+   +nqd1ZPR8UOP9zMQW5xRBZIgzgVrKwqGKYwK4IhVoU3mEiDc419EaeFUj
+   pPqskSfrvPa91O6ULh2oEmR4s2JSfx0lf+1Qiu/BCWyRLS5GTMxaGtZTI
+   cdt+Ayk1PEgKYZu7pjUxmUmi6L5fqbgcYtTyg+OSBMcSI+eDPoEoqfQoa
+   rWM3Isl0mpolKcfphw6zflwbNRKLidpszlltflyChkv1KJKNYKEU36fXB
+   l/ikhwtyIpgb+G5DawYI8Zo394LabE6Q8K/kUr4PcZ45xfEXqOBn3NcpT
+   g==;
+X-CSE-ConnectionGUID: CrXgOEmBQnCVjpmMVM9Gug==
+X-CSE-MsgGUID: V6S1V69jRG+t2Yuydv6YMQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="55854828"
+X-IronPort-AV: E=Sophos;i="6.15,200,1739865600"; 
+   d="scan'208";a="55854828"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 05:50:03 -0700
+X-CSE-ConnectionGUID: 2bMoJDOSRRyxFoCNtLlzOA==
+X-CSE-MsgGUID: oxAEaM2CQ+OOtr05NpBUCA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,200,1739865600"; 
+   d="scan'208";a="129536587"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 05:50:03 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Wed, 9 Apr 2025 05:50:03 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Wed, 9 Apr 2025 05:50:02 -0700
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (104.47.51.45) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Wed, 9 Apr 2025 05:50:02 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=kHvpabmDuO5vqv0+ZJifpnfC7KHnuiaZo3+7GGYsr1r9+b8yhIQKEbkUFv3xEAP+BTMMsMR7iL0m69sHzfei8JzehBzim/cbNbinNC1f2pjjhvUQihmAHBIldCPoLSRXNGbvnESOUjdPRQQHeDpYYPaasoMkv0Y+fZ+T/tctcHHmJT567KF/+xy22Ss+/UQfTBEHm+q1M+lSI+McXBSvoHbRfuFP94yKmdfmgrbQ96y5Zc8xnCOCXr/IukF1UBQA09exl7xAHHO/IIit8/uJrpeULufKeR5B+uI0Mj0h8Nrj9ajrbrRYjrSkJ/pPDb1XDBgyUTOvr1z22LTWPihSZA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=G+wSjB6qIKOKMH5DHKNoY4F0zc/b5aOTn1rW5CT5AbM=;
+ b=XVsaYt/Xah+W2vr8VXPjVLI7mLqXazOpi9U322moAUWTaV91uFX+jd1yvUBJH5Skc43xfPavJizmF6ufM1ErJoToLFuXEASai0dstuGD7cHqWFf5i5fYIrke/LyfGUNu09eXhuikWSKGHhnBLYluSaJbT4ziUmFJRmlfg0Ms8EUsQeDzqCUi0Mc/CmuiIOgneF7O3h97bl9718hkSrr7aT/X+/JMeN/IWoJyR+uTebLTDGSr7LV9Ciwxti06e19tsaB7bOs82j1wWLqgooAFd6vPSR2or6nm3gSx4DWD4W6Augg5uZ61aACUcZaP2Bcf5GQuPtXjM0DPj0lof2MfEw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MN0PR11MB6231.namprd11.prod.outlook.com (2603:10b6:208:3c4::15)
+ by IA0PR11MB7742.namprd11.prod.outlook.com (2603:10b6:208:403::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Wed, 9 Apr
+ 2025 12:49:45 +0000
+Received: from MN0PR11MB6231.namprd11.prod.outlook.com
+ ([fe80::a137:ffd0:97a3:1db4]) by MN0PR11MB6231.namprd11.prod.outlook.com
+ ([fe80::a137:ffd0:97a3:1db4%4]) with mapi id 15.20.8606.029; Wed, 9 Apr 2025
+ 12:49:45 +0000
+Date: Wed, 9 Apr 2025 14:49:02 +0200
+From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
+To: Dave Hansen <dave.hansen@intel.com>
+CC: <hpa@zytor.com>, <hch@infradead.org>, <nick.desaulniers+lkml@gmail.com>,
+	<kuan-ying.lee@canonical.com>, <masahiroy@kernel.org>,
+	<samuel.holland@sifive.com>, <mingo@redhat.com>, <corbet@lwn.net>,
+	<ryabinin.a.a@gmail.com>, <guoweikang.kernel@gmail.com>,
+	<jpoimboe@kernel.org>, <ardb@kernel.org>, <vincenzo.frascino@arm.com>,
+	<glider@google.com>, <kirill.shutemov@linux.intel.com>, <apopple@nvidia.com>,
+	<samitolvanen@google.com>, <kaleshsingh@google.com>, <jgross@suse.com>,
+	<andreyknvl@gmail.com>, <scott@os.amperecomputing.com>,
+	<tony.luck@intel.com>, <dvyukov@google.com>, <pasha.tatashin@soleen.com>,
+	<ziy@nvidia.com>, <broonie@kernel.org>, <gatlin.newhouse@gmail.com>,
+	<jackmanb@google.com>, <wangkefeng.wang@huawei.com>,
+	<thiago.bauermann@linaro.org>, <tglx@linutronix.de>, <kees@kernel.org>,
+	<akpm@linux-foundation.org>, <jason.andryuk@amd.com>, <snovitoll@gmail.com>,
+	<xin@zytor.com>, <jan.kiszka@siemens.com>, <bp@alien8.de>, <rppt@kernel.org>,
+	<peterz@infradead.org>, <pankaj.gupta@amd.com>, <thuth@redhat.com>,
+	<andriy.shevchenko@linux.intel.com>, <joel.granados@kernel.org>,
+	<kbingham@kernel.org>, <nicolas@fjasle.eu>, <mark.rutland@arm.com>,
+	<surenb@google.com>, <catalin.marinas@arm.com>, <morbo@google.com>,
+	<justinstitt@google.com>, <ubizjak@gmail.com>, <jhubbard@nvidia.com>,
+	<urezki@gmail.com>, <dave.hansen@linux.intel.com>, <bhe@redhat.com>,
+	<luto@kernel.org>, <baohua@kernel.org>, <nathan@kernel.org>,
+	<will@kernel.org>, <brgerst@gmail.com>, <llvm@lists.linux.dev>,
+	<linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kbuild@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <kasan-dev@googlegroups.com>,
+	<x86@kernel.org>
+Subject: Re: [PATCH v3 09/14] x86: Minimal SLAB alignment
+Message-ID: <czzcsmwaf42v47arvmwgrh4p7h3misoarremtc7r2cme2ceuud@yya5jfuqhuye>
+References: <cover.1743772053.git.maciej.wieczor-retman@intel.com>
+ <173d99afea37321e76e9380b49bd5966be8db849.1743772053.git.maciej.wieczor-retman@intel.com>
+ <ceade208-c585-48e7-aafe-4599b1a06b81@intel.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ceade208-c585-48e7-aafe-4599b1a06b81@intel.com>
+X-ClientProxiedBy: DU7P191CA0020.EURP191.PROD.OUTLOOK.COM
+ (2603:10a6:10:54e::30) To MN0PR11MB6231.namprd11.prod.outlook.com
+ (2603:10b6:208:3c4::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407222702.2199047-1-jm@ti.com> <20250407222702.2199047-2-jm@ti.com>
-In-Reply-To: <20250407222702.2199047-2-jm@ti.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Wed, 9 Apr 2025 14:48:41 +0200
-X-Gm-Features: ATxdqUEoNFFtpo1c0F2wJLOIYQ9yffuIdmomLfFFB1bdHGETwhIu47n14gQF_YU
-Message-ID: <CAPDyKFqx-G4NynanFWrspz7-uXXF74RfjcU-Sw2nq2JhL3LPuQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] PENDING: mmc: sdhci*: Add set_hs_ena to sdhci_ops
-To: Judith Mendez <jm@ti.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, linux-mmc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Josua Mayer <josua@solid-run.com>, 
-	Moteen Shah <m-shah@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR11MB6231:EE_|IA0PR11MB7742:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4e18844b-ba91-402b-9155-08dd77650102
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
+X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?imjJxwCpI+TuynxPLBMNDqmrizIGQls6YCqn+64TwlAOa1FJFjDqVk1GXs?=
+ =?iso-8859-1?Q?ex39CwCM9mO2boqn6LifdHRu8lpis/pT2MOyjFod2n3azZklLEnfoXTzcC?=
+ =?iso-8859-1?Q?DStWIj4jcQ7r+e0G5gnIQ9eZQ9QofHVOgmMJS7tKRfW5qy3MGxXxK8mDRX?=
+ =?iso-8859-1?Q?f+q4MFOokIo9Ej5Ba3TJvF9g8/KhfmV6yo4K0uNtYtAQW9XwKYnFnaw5TE?=
+ =?iso-8859-1?Q?GJU3yHqYGqwADVyNhlgruB8Tc10SBJVsqZ0aIY/fw9mxCFOcvTzdU69qxC?=
+ =?iso-8859-1?Q?zBj5xcLZ033VTnPhgTOR3nAv1O/s9YO3soSXcV8vvdxSZ/z0SEj9ubgKj2?=
+ =?iso-8859-1?Q?fwwlxhDt++8I98lal4lKik9gxawa/OV7OOaGhDgD4UgkXR03SGcWDa5QnO?=
+ =?iso-8859-1?Q?mGA2PBkqLah8UFifanijT53PZMmmuapNfvJ2fYI31/VFXrkOhtHwNvFKXZ?=
+ =?iso-8859-1?Q?D7r1seWPWTg+TzPWhU1cVqpQf926oR+qBEUKZzswe+wnr0BZpLN+HqMYr1?=
+ =?iso-8859-1?Q?2rHlFEYZBhkOwHQT2XRargHazjhEzg9MpUZDHagxIAdqjpNHJjHJ3nQSlO?=
+ =?iso-8859-1?Q?hzPb04h9jggs1B6n0AdP5h4e68diUce7gcY7vUJ/EkNjpK6cG+6M7ItQOK?=
+ =?iso-8859-1?Q?ZjOnEO56zpUzGUnw9pFwtAhB3P86ktE1oSFSEvaV6XVJk/gHndFikGWchF?=
+ =?iso-8859-1?Q?HCKmucUZfT7Jet7Yy9LT+IECpWzZvkG40boy0b+7I/zd41dR12/rzvyPOI?=
+ =?iso-8859-1?Q?UjmHJpojjlZ7oOJHcB5Atp+IHd/9Su0QyLguqInKiUDdgN9KCV9TI4R3kH?=
+ =?iso-8859-1?Q?Dbugg/C2niLvIA/IdizNtpeCvb35ztptmK6pVdyUZSajP6cXQMJIbOSlH3?=
+ =?iso-8859-1?Q?T2tfeNB5f+nSD/Y0DgnJt2RAaVrkjBgGdXLp2wOIiTZpUEvZtW7za50+Jl?=
+ =?iso-8859-1?Q?++AqV5QqU7sODnc7EmJiDERAJZP4O/bUa3ZzNmTOHW16mTboXhCfUtb4lP?=
+ =?iso-8859-1?Q?hH/m8eeo4Rpt4PfZhDW5Kdw8UZlSNo3pcxGh6dJgryKfW/0lj3or2yzH1L?=
+ =?iso-8859-1?Q?lZdI5crYcgvC1pvCZwlS6vPHi8hGqQ4SFPVCN9dIu3k1XtffyMev6dHdr0?=
+ =?iso-8859-1?Q?Z0vf8ToCqcnJTG8JNjWaIqzDsBpcucEuvGm86nzmJ0NF70QHh08452zyRK?=
+ =?iso-8859-1?Q?XvqQe2yAy4x11QQes5W/gQmgyEkWrU+mBSMLtLREp3aoSOKBs6cQP7OvG+?=
+ =?iso-8859-1?Q?hhwsK6z3qz2Tl7mWY9c6u0tvrAmUHF8S9jSHkX0y5FloN/vClsytDkVDTL?=
+ =?iso-8859-1?Q?i7n4isWSM3RIGYbwdxi7ov4kQyWZs+jpV3LPpzHUNOoovvsSjQy2u5ieP2?=
+ =?iso-8859-1?Q?Jkk68It7Jje0p4UFEiqqMoocehJ2zEHCaDstxcKW5spw4VEXFkhZaVJXOc?=
+ =?iso-8859-1?Q?NOqw8A23mkcDUKek0EKUhSz17toMtgZ+AiqinGVzgXty/JNxKGyDnhsHyb?=
+ =?iso-8859-1?Q?g=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB6231.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?nxGd/wXidfYHDVO3dk6ZKuvFe2kdk2malkHzj199WFo3GFWHhNnyTmfbj9?=
+ =?iso-8859-1?Q?jzGARqv2Q3wLy7SH+0ERDlxNWssRaix/Y34aaBk34jhU6flvRoZGub31If?=
+ =?iso-8859-1?Q?SuwzzZvEn3adUEm3d+R8xBdmyI8xnQAN90ITrJyxiuP2dCCZ3XuUnLVOZW?=
+ =?iso-8859-1?Q?fZkOaKqUpfQ/VEqHoN5gt0XLy/H59/X8HlAL992xhqTMqWcDKMY57IjlQP?=
+ =?iso-8859-1?Q?y/wv/cKn/uLowwycbgVpCeCVLl0yJ0CGROCBNMK+gGhyXL+J1zIUpju020?=
+ =?iso-8859-1?Q?n5UFe80IfXmUjMKO82ITlvfdsgb3EChS6V/mxLRfLTThcNoJc/2V9iep+c?=
+ =?iso-8859-1?Q?gGR70WLLS3mvqhDCFWGYLVFwzEVqboBArU7kxK3EFXIajdavHvkXMMfdk4?=
+ =?iso-8859-1?Q?eFnKvzHnNNn97IxxOmcnZksegckrZ7iKgq+feMTAOrexPo7pjXuyNA5OV+?=
+ =?iso-8859-1?Q?EvLGK3nBmZDiuRCE8oDwkEZ3DKyzUpomnq/ol/daPehI/8jHARnsdPWG1H?=
+ =?iso-8859-1?Q?zv1HFJM0uEo8xfTOJjVDFTscIQzYTwIZqMeTsaOmnOg86XY4EymOZvg4K/?=
+ =?iso-8859-1?Q?/RE9bld1azPULq8fL/Pi6YggA44gypv+W+rIJnQCEAz1FoX6e2qd2sTJg6?=
+ =?iso-8859-1?Q?HAG8LOGISLCashMwKKZY1480bC40rJtlcQmytLBPjVLBJO960Mm1Pe+LaM?=
+ =?iso-8859-1?Q?DIBd9WnnHqQNqIrhaEory8Z3cR+yj9n86N1NC9OkkDER4zcJ91VgVEOajw?=
+ =?iso-8859-1?Q?nLg+IVXDFAXXzC0r4c9dlCGZH+6OBnn9a4fxHBRFqUfeaSYWcJYtFa9VZd?=
+ =?iso-8859-1?Q?Uq1Y8RD5lB80Rqt/nY0zl1VMD//MEL48BLBpcwqUvmx1jOAsNkvk7wD/7R?=
+ =?iso-8859-1?Q?R5BqfoeLqanmU8ppyUNGB8AMUibyaGoqnSGpZr7KaRZAVc6rhaxdf9zHQ1?=
+ =?iso-8859-1?Q?2GzEVOL7sVFPnhamLGfZO9W3rcsXjDhByY73MdacwRHEjl+GyiGodWW0/B?=
+ =?iso-8859-1?Q?YPNqBGJCqb8CuZ/FEboiLbx1CCkkWDfQrYxerODTgU/C5/p6JJqJRI8Cev?=
+ =?iso-8859-1?Q?qqtoBZuM+NTVc7QLP5qAmdCf6iijhmCEDk+lLdBbdn8DfxzmzEJsupD8zx?=
+ =?iso-8859-1?Q?tEMpGrgXqfi3FEJOSyTIaNAlOTkYL1wLNrBTl4PFkmympDIgK+8kpFlenv?=
+ =?iso-8859-1?Q?pnk9cJ3TX1WCZChhP2nMrGK7BwvqWuh+Ln/B8oWae668GWLUbaD+UxQH6I?=
+ =?iso-8859-1?Q?7xeu6GwCAM5q87AKolUHScJyBHPqgFDFPe7ycK1tbYc5eYagdTSWgG9akX?=
+ =?iso-8859-1?Q?h8Mz7gDlliDb7WQ/q98A+8PR2FbY5CzXFq2D3fQxQrSltIJFZOFYGvxY5x?=
+ =?iso-8859-1?Q?WgKuNt5Ed9VaSVE5J2a938LPCAVPa5JFvXbAwWibCCwl9ggitv2ykU+a5S?=
+ =?iso-8859-1?Q?Mfoj20lBqoZHYK+O07NUmwuF0HkAmDnPwIL0EDfnOFOzfGFPW2Pzdzpne1?=
+ =?iso-8859-1?Q?go2t230NBBebwhTRKgCuwsWXBiFVppG7SrIwJirUmfNsOcCUHzBpj3x7hk?=
+ =?iso-8859-1?Q?LqQcevO//qt3SvPd9eZ7UiYBbb9asDsBf+PtS1wslnFXz/WY/M1s2tenGT?=
+ =?iso-8859-1?Q?zbQIXyE+gZB1fKMu92+5g3sC3XQe5hC/9nDX1rYuEe5CdB87Z7vVKQgouY?=
+ =?iso-8859-1?Q?7FbhCNVMcmQCXht1b+Y=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4e18844b-ba91-402b-9155-08dd77650102
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB6231.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 12:49:45.0939
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +R/rhFy7+NQzkPQhm3au0nWsO1sdgR8yNy12I90g3/24yJYnMqhI2sBFCc9xMGGggwMzy40IiGW4cWPCK7BQh2MV7/KCR7kDhpDVsA2riyQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB7742
+X-OriginatorOrg: intel.com
 
-On Tue, 8 Apr 2025 at 00:27, Judith Mendez <jm@ti.com> wrote:
+On 2025-04-04 at 09:59:49 -0700, Dave Hansen wrote:
+>On 4/4/25 06:14, Maciej Wieczor-Retman wrote:
+>> Adjust x86 minimal SLAB alignment to match KASAN granularity size. In
+>> tag-based mode the size changes to 16 bytes so the value needs to be 16.
 >
-> This patch adds set_hs_ena call to sdhci_ops so that host
-> controller drivers have the option to implement a custom
-> callback for SDHCI_CTRL_HISPD control.
+>I feel like we need a _bit_ of a discussion of the impact here. We are,
+>after all, trying to get this feature into shape so that it can be used
+>more widely outside of just debugging environments.
 >
-> On TI devices (for HS modes and legacy mode), timing was closed on
-> half cycle timing. If any of HIGH_SPEED_ENA, UHS_MODE_SELECT, or
-> V1P8_SIGNAL_ENA is set for these modes, host controller switches to
-> full cycle timing which may cause read/write failures and/or cqe error
-> logs.
->
-> So add set_hs_ena() to sdhci_ops so each host controller driver
-> can implement their own .set_hs_ena callback.
->
-> Also add sdhci_am654_set_hs_ena to sdhci_am654 driver and only set
-> HIGH_SPEED_ENA, for modes > MMC_TIMING_SD_HS.
->
-> Signed-off-by: Judith Mendez <jm@ti.com>
+>What's the impact of this in a production environment?
 
-What does "PENDING" mean or compared to "PATCH"? I guess you want some
-review and test of this - or there anything else?
+I tried booting a fedora 41 on a Sierra Forest system with KASAN disabled
+(disabled only the reports so the 8 byte alignment doesn't cause a wall of debug
+information). Did so for both 8 byte alignment (default) and 16 byte alignment
+(added by the series).
 
-> ---
->  drivers/mmc/host/sdhci.c       | 55 +++++++++++++++++++++-------------
->  drivers/mmc/host/sdhci.h       |  2 ++
->  drivers/mmc/host/sdhci_am654.c | 16 ++++++++++
+The differences looked mostly like noise, sometimes the higher alignment would
+use up a little bit less memory, sometimes a little bit more. I looked at all
+values in "cat /proc/meminfo".
 
-I think it would be better to split this up in two parts. One for
-sdhci and one for sdhci_am654.
+Is there some slab/slub benchmark for the kernel that would make sense to
+checkout here?
 
-Other than that I am going to defer to Adrian to see what he thinks about this.
-
+-- 
 Kind regards
-Uffe
-
->  3 files changed, 53 insertions(+), 20 deletions(-)
->
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index 5f78be7ae16d7..3a878cf0c59b9 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -2355,6 +2355,27 @@ static bool sdhci_presetable_values_change(struct sdhci_host *host, struct mmc_i
->                (sdhci_preset_needed(host, ios->timing) || host->drv_type != ios->drv_type);
->  }
->
-> +void sdhci_set_hs_ena(struct sdhci_host *host, unsigned char timing)
-> +{
-> +       u8 ctrl = sdhci_readb(host, SDHCI_HOST_CONTROL);
-> +
-> +       if (timing == MMC_TIMING_SD_HS ||
-> +           timing == MMC_TIMING_MMC_HS ||
-> +           timing == MMC_TIMING_MMC_HS400 ||
-> +           timing == MMC_TIMING_MMC_HS200 ||
-> +           timing == MMC_TIMING_MMC_DDR52 ||
-> +           timing == MMC_TIMING_UHS_SDR50 ||
-> +           timing == MMC_TIMING_UHS_SDR104 ||
-> +           timing == MMC_TIMING_UHS_DDR50 ||
-> +           timing == MMC_TIMING_UHS_SDR25)
-> +               ctrl |= SDHCI_CTRL_HISPD;
-> +       else
-> +               ctrl &= ~SDHCI_CTRL_HISPD;
-> +
-> +       sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
-> +}
-> +EXPORT_SYMBOL_GPL(sdhci_set_hs_ena);
-> +
->  void sdhci_set_ios_common(struct mmc_host *mmc, struct mmc_ios *ios)
->  {
->         struct sdhci_host *host = mmc_priv(mmc);
-> @@ -2436,23 +2457,6 @@ void sdhci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
->             !sdhci_presetable_values_change(host, ios))
->                 return;
->
-> -       ctrl = sdhci_readb(host, SDHCI_HOST_CONTROL);
-> -
-> -       if (!(host->quirks & SDHCI_QUIRK_NO_HISPD_BIT)) {
-> -               if (ios->timing == MMC_TIMING_SD_HS ||
-> -                    ios->timing == MMC_TIMING_MMC_HS ||
-> -                    ios->timing == MMC_TIMING_MMC_HS400 ||
-> -                    ios->timing == MMC_TIMING_MMC_HS200 ||
-> -                    ios->timing == MMC_TIMING_MMC_DDR52 ||
-> -                    ios->timing == MMC_TIMING_UHS_SDR50 ||
-> -                    ios->timing == MMC_TIMING_UHS_SDR104 ||
-> -                    ios->timing == MMC_TIMING_UHS_DDR50 ||
-> -                    ios->timing == MMC_TIMING_UHS_SDR25)
-> -                       ctrl |= SDHCI_CTRL_HISPD;
-> -               else
-> -                       ctrl &= ~SDHCI_CTRL_HISPD;
-> -       }
-> -
->         if (host->version >= SDHCI_SPEC_300) {
->                 u16 clk, ctrl_2;
->
-> @@ -2468,7 +2472,12 @@ void sdhci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
->                         sdhci_writew(host, clk, SDHCI_CLOCK_CONTROL);
->                 }
->
-> -               sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
-> +               if (!(host->quirks & SDHCI_QUIRK_NO_HISPD_BIT)) {
-> +                       if (host->ops->set_hs_ena)
-> +                               host->ops->set_hs_ena(host, ios->timing);
-> +                       else
-> +                               sdhci_set_hs_ena(host, ios->timing);
-> +               }
->
->                 if (!host->preset_enabled) {
->                         /*
-> @@ -2510,8 +2519,14 @@ void sdhci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
->
->                 /* Re-enable SD Clock */
->                 host->ops->set_clock(host, host->clock);
-> -       } else
-> -               sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
-> +       } else {
-> +               if (!(host->quirks & SDHCI_QUIRK_NO_HISPD_BIT)) {
-> +                       if (host->ops->set_hs_ena)
-> +                               host->ops->set_hs_ena(host, ios->timing);
-> +                       else
-> +                               sdhci_set_hs_ena(host, ios->timing);
-> +               }
-> +       }
->  }
->  EXPORT_SYMBOL_GPL(sdhci_set_ios);
->
-> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> index cd0e35a805427..ebecb49792ca1 100644
-> --- a/drivers/mmc/host/sdhci.h
-> +++ b/drivers/mmc/host/sdhci.h
-> @@ -704,6 +704,7 @@ struct sdhci_ops {
->         void            (*set_timeout)(struct sdhci_host *host,
->                                        struct mmc_command *cmd);
->         void            (*set_bus_width)(struct sdhci_host *host, int width);
-> +       void            (*set_hs_ena)(struct sdhci_host *host, unsigned char timing);
->         void (*platform_send_init_74_clocks)(struct sdhci_host *host,
->                                              u8 power_mode);
->         unsigned int    (*get_ro)(struct sdhci_host *host);
-> @@ -857,6 +858,7 @@ int sdhci_get_ro(struct mmc_host *mmc);
->  void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq);
->  int sdhci_request_atomic(struct mmc_host *mmc, struct mmc_request *mrq);
->  void sdhci_set_bus_width(struct sdhci_host *host, int width);
-> +void sdhci_set_hs_ena(struct sdhci_host *host, unsigned char timing);
->  void sdhci_reset(struct sdhci_host *host, u8 mask);
->  bool sdhci_do_reset(struct sdhci_host *host, u8 mask);
->  void sdhci_set_uhs_signaling(struct sdhci_host *host, unsigned timing);
-> diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
-> index f75c31815ab00..67a64de4972c9 100644
-> --- a/drivers/mmc/host/sdhci_am654.c
-> +++ b/drivers/mmc/host/sdhci_am654.c
-> @@ -429,6 +429,19 @@ static int sdhci_am654_execute_tuning(struct mmc_host *mmc, u32 opcode)
->         return 0;
->  }
->
-> +static void sdhci_am654_set_hs_ena(struct sdhci_host *host, unsigned char timing)
-> +{
-> +       u8 ctrl = 0;
-> +
-> +       if (timing > MMC_TIMING_SD_HS) {
-> +               sdhci_set_hs_ena(host, timing);
-> +       } else {
-> +               ctrl = sdhci_readb(host, SDHCI_HOST_CONTROL);
-> +               ctrl &= ~SDHCI_CTRL_HISPD;
-> +               sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
-> +       }
-> +}
-> +
->  static u32 sdhci_am654_cqhci_irq(struct sdhci_host *host, u32 intmask)
->  {
->         int cmd_error = 0;
-> @@ -578,6 +591,7 @@ static const struct sdhci_ops sdhci_am654_ops = {
->         .get_timeout_clock = sdhci_pltfm_clk_get_max_clock,
->         .set_uhs_signaling = sdhci_set_uhs_signaling,
->         .set_bus_width = sdhci_set_bus_width,
-> +       .set_hs_ena = sdhci_am654_set_hs_ena,
->         .set_power = sdhci_set_power_and_bus_voltage,
->         .set_clock = sdhci_am654_set_clock,
->         .write_b = sdhci_am654_write_b,
-> @@ -608,6 +622,7 @@ static const struct sdhci_ops sdhci_j721e_8bit_ops = {
->         .get_timeout_clock = sdhci_pltfm_clk_get_max_clock,
->         .set_uhs_signaling = sdhci_set_uhs_signaling,
->         .set_bus_width = sdhci_set_bus_width,
-> +       .set_hs_ena = sdhci_am654_set_hs_ena,
->         .set_power = sdhci_set_power_and_bus_voltage,
->         .set_clock = sdhci_am654_set_clock,
->         .write_b = sdhci_am654_write_b,
-> @@ -632,6 +647,7 @@ static const struct sdhci_ops sdhci_j721e_4bit_ops = {
->         .get_timeout_clock = sdhci_pltfm_clk_get_max_clock,
->         .set_uhs_signaling = sdhci_set_uhs_signaling,
->         .set_bus_width = sdhci_set_bus_width,
-> +       .set_hs_ena = sdhci_am654_set_hs_ena,
->         .set_power = sdhci_set_power_and_bus_voltage,
->         .set_clock = sdhci_j721e_4bit_set_clock,
->         .write_b = sdhci_am654_write_b,
-> --
-> 2.49.0
->
+Maciej Wieczór-Retman
