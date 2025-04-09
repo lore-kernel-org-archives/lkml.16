@@ -1,338 +1,402 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2052.outbound.protection.outlook.com [40.107.21.52])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 768621DA60F
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 13:01:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.52
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744203675; cv=fail; b=p43NPct65W40xupckSjtoX8IZIF9umMaWSzg5W6FaXHC+DtdnIoyJJC+fAHgBxtcYq5FwLNbaS5RBcci/o8GC1r3iq/7l1zLwpGghX7PMV8ZCnVsW6OsQ6Qd5JJu6YIL85GhmdUWMb3+sOL/FKQHYLgk+9CApzdrWrSxFMi85n4=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744203675; c=relaxed/simple;
-	bh=0eU2dagCdik/LFWsT2pemLXu+zV3Vl7zdKkK/xeQV0I=;
-	h=Message-ID:Date:Subject:To:Cc:References:In-Reply-To:From:
-	 Content-Type:MIME-Version; b=ZIKb1odGuh/NP4uwkQoVVt35SIdWTacQ8229v51REK7BqaFSNJh3vm8FSE0bV3RoqGBMZBEWY2Mjwl3yU/Ewc38KBd4tORiGW18eZhSQK8jjul5H8fK6BAf/Jk+AtTn3x8oX++6FWbvJx0jTqDrIaU2W9SsJyC/tgs95uh0U03s=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=DdObzhBm; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=DdObzhBm; arc=fail smtp.client-ip=40.107.21.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18DC625634;
+	Wed,  9 Apr 2025 13:02:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744203741; cv=pass; b=kKrY3jqQ8N1JA/DpuWVepVm/7fSuDim1sjjS/JebNPyP8Qr+IiwJaRG4uC5l0mUE6D9aRCCi7Nr2y9KKBD8gYTH3l5CjTkHZ7LGOhPjQhzq1u4XMX5hOWPT2aGIH3Mj0nqBu6AXeU8CLJAnT8jX+EycQSasjt9VApiID8eOQEcs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744203741; c=relaxed/simple;
+	bh=fJCRIdvfNIin7h3bUErme7A3yqHBqeHhSkc/RmGxjxk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RazT1BjFI4heaabuUwyEWZrwbQAyDtPEQp7l03Dn34LvxHkhKu0k/e0T0Ut0Y9nEDH2OFOLGKYFEqqnsilxov98Bdsey50Wn59/hPxs8mRlarQI5Dfn97zvoFS1LpUqV/pWDVjFmVf3Tb6yd+fB4WsTJeB9K+wXxSNqpcZbxp1Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=U5Ze5L32; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="DdObzhBm";
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="DdObzhBm"
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=wwy7cHbnIDfgWSwIAdRK9tEnMSfBW6Bp8Qf4egM6oPcOJV51i/HKSBH32ju+d+RAIF2+X4WhiZ2eX9EOfqlL4DavnXwT6a26NsEDQKuqWMwTwhYKFhrgAUGs6sHvHAWABJhx8LWfsE3884Kn9buz2uHeZsiU428jokna0Bq95lnhuiu8El0JF6W2q1Wroy8v8uIKw79hhsffaVq2j6tdWKQtEIvnXFGAaEfX78c7EmIx+PLTu0wc+leu2GFJ4a7Whpki+gE7NNFzh7vKLhMBy2C6GHVnbU0kURQDpCmuP7E4YaFk/im87bwjeCS54+LfxpH3HwAlOQVYL2+3MOVTNw==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=U48QCf6J0sJ88rueHdNT5wJWJy9QoUixwu3+PHnpEaM=;
- b=NCwl29JtMme5qDCV7guFEPnCMH5d5H4joqF8gf62itEcw78+6w5PzTfcUcCzpkB77wq/B1EVIbNJ/5kLMyzcPySekNA0MsFF8MS92OjoiZHCaBKT28EiF64wBceHcBAyuopcCH4ibTFuqtKNA0DyO1nlglMuwfliyXNuHE/K6xg37JwNKR7yxQ4CskydOCLxcnNyuoPwyov0ycFgOP71SYKmgjkdyQyMUcEC946dkGhTB+Y7qq8BAtv/7ekxQUJr98bn/dfOqVATN3C7qDjKZbrwjA4O9FxdiOFB7W5D5X5UTIqFVyWNQaNLwO62KKL4UMNxaxjdluh1pugbGEn29w==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 63.35.35.123) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=arm.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=arm.com;
- dkim=pass (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
- spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=U48QCf6J0sJ88rueHdNT5wJWJy9QoUixwu3+PHnpEaM=;
- b=DdObzhBmQDfwJ9naVHFzhK0YtIqMhibtbzoJRQdQyfAPdoB5cUUYEy36hHY0nLHJhWq/FqUflFs/zjye/MT2V6QCa2D2R4GzTd5SWXffzoGQT0NULF4+i/QrvuISdFoH/KqMS7reMmpwQO3r8tTz9a0rGoXDhdZhhGoTw0i/dmE=
-Received: from DB7PR03CA0085.eurprd03.prod.outlook.com (2603:10a6:10:72::26)
- by DBAPR08MB5590.eurprd08.prod.outlook.com (2603:10a6:10:1aa::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.22; Wed, 9 Apr
- 2025 13:01:07 +0000
-Received: from DB1PEPF00039230.eurprd03.prod.outlook.com
- (2603:10a6:10:72:cafe::4c) by DB7PR03CA0085.outlook.office365.com
- (2603:10a6:10:72::26) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8606.36 via Frontend Transport; Wed,
- 9 Apr 2025 13:01:07 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=arm.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
- pr=C
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- DB1PEPF00039230.mail.protection.outlook.com (10.167.8.103) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8606.22
- via Frontend Transport; Wed, 9 Apr 2025 13:01:07 +0000
-Received: ("Tessian outbound f9fef7c7dc50:v605"); Wed, 09 Apr 2025 13:01:06 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: 9576ba688fa7dded
-X-TessianGatewayMetadata: H7beHD+xZNPQ3vLT8S+E876puQAtKSuL045yB+CUMfeTnM6ZnLYTZ+qlH7+GO6oxR6V1fp8MtEcguf+lLRj7hDlINw1mAqJi00zIokUanv2bY62VkKNWFlHFDeIWGWTt04pZ9UslP+ESwBYxAPcgRVztSOnCvMQ0GYV4UtMDPDQ=
-X-CR-MTA-TID: 64aa7808
-Received: from L867b2692dca8.2
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id FC9A3ABF-1D35-424E-A0C2-B645D32872A0.1;
-	Wed, 09 Apr 2025 13:01:00 +0000
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id L867b2692dca8.2
-    (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
-    Wed, 09 Apr 2025 13:01:00 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=u/ddyp3NwWGqPNobf4YTCcdcbSbxvmyBkb18rmk8nJOLgkKKx+Ob7PaqKb6oQe9CpiBN0eg3Y2g9OmMhSyWp5SvemNxX1q5vpg6QVt3a15qs3iifWnLu4A5Du4niY3v+Od3tu8+kkrpFHI7eSjwZ6kHalHK7ukhdiuioXBXr0iLb+OWGaIjSa8GBSmp0Qup8mWmIhGW7FxMqXRQgNTFz6fGy22f89WGKMOVWtr3OA1OjO30jWVJ8N4KvamjaRr6fOEbb5oJVQxFiizYwI1ZctJS7887MhUaHk+QObesAOTABRfjFZXn7QPtQQw+aSrg7OF7p+Mt9EcSMEj4mtgEREg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=U48QCf6J0sJ88rueHdNT5wJWJy9QoUixwu3+PHnpEaM=;
- b=OqUOMq4/dcqCl5ZnlOwikIQ2v+p9acv1bUDdqRGt9uhFM/DPy636/SbKbr+uuoB2lx1ooSU8Q6xxWN2rdaAigoDuMwyiEAhWCR4Nrxqfz283pmB8jV7EbqmVSc374591fmNDBpWhIbTu8Ra1QGmKSSQwr54rkBFgpKTzeOZY2KC0FCToIZXuY7lKEYjnjMeUw5FPDBYQUcergM+AQc8SbpSZTjZLE64qgNeoeoB2LH9IvSHTx//J2YgANasod4/lpSnUtB+EwBEQxj2oNF3CUqeYXZIcPAudRQL4ImdfiDYzB/gtQzwiaGXWs+ZZdC6h+6o73BKZ6lKUYB7Wmv72VQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=U48QCf6J0sJ88rueHdNT5wJWJy9QoUixwu3+PHnpEaM=;
- b=DdObzhBmQDfwJ9naVHFzhK0YtIqMhibtbzoJRQdQyfAPdoB5cUUYEy36hHY0nLHJhWq/FqUflFs/zjye/MT2V6QCa2D2R4GzTd5SWXffzoGQT0NULF4+i/QrvuISdFoH/KqMS7reMmpwQO3r8tTz9a0rGoXDhdZhhGoTw0i/dmE=
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-Received: from VI0PR08MB11200.eurprd08.prod.outlook.com
- (2603:10a6:800:257::18) by AM8PR08MB6594.eurprd08.prod.outlook.com
- (2603:10a6:20b:36a::7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.22; Wed, 9 Apr
- 2025 13:00:58 +0000
-Received: from VI0PR08MB11200.eurprd08.prod.outlook.com
- ([fe80::d594:64a:dfc:db74]) by VI0PR08MB11200.eurprd08.prod.outlook.com
- ([fe80::d594:64a:dfc:db74%5]) with mapi id 15.20.8606.033; Wed, 9 Apr 2025
- 13:00:57 +0000
-Message-ID: <d9a4aa99-2f00-4da9-9f7e-26729f7f8fda@arm.com>
-Date: Wed, 9 Apr 2025 14:00:54 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/9] drm/panthor: Add 64-bit and poll register
- accessors
-Content-Language: en-GB
-To: Boris Brezillon <boris.brezillon@collabora.com>
-Cc: dri-devel@lists.freedesktop.org, nd@arm.com,
- Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- linux-kernel@vger.kernel.org
-References: <20250320111741.1937892-1-karunika.choo@arm.com>
- <20250320111741.1937892-2-karunika.choo@arm.com>
- <20250321084809.5f217049@collabora.com>
-In-Reply-To: <20250321084809.5f217049@collabora.com>
-From: Karunika Choo <karunika.choo@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P123CA0262.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:194::15) To VI0PR08MB11200.eurprd08.prod.outlook.com
- (2603:10a6:800:257::18)
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="U5Ze5L32"
+ARC-Seal: i=1; a=rsa-sha256; t=1744203700; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=nqF/dZ/ZJmPpsF+zuJVRYR6v2/GGtjr42uD+/aZQ5PBrWi4fN4jt5b3N153fLgHPfgx1BvhY/byBv97VIiwsLqk8qi6+i2SzydnS4uLfbC4VGeusoW/SbVftEhLqzWZopJOOHLibYUzih3oCFaPerXsYs0Vj4rltpA5xXRuItJE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1744203700; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=U+QoT2IyJTsl4lBDNM3YDzV0X1IfFE9Y/W4KVU4CS7M=; 
+	b=EuUSJEljX7eD5WlXjT8V4urpU/ITkOC8USzXoNUyoG0xjE+3fPBWv2E5BbhiAYP/oSlnrw/oLpDBM1PrWPv2teaDhHaL4DVsiL8zDJeFd/W533RcNMIGOQTNtSbBzary/SlqUY7laO/W9boVOA4+rwnqnuq7nLHqxdZ2zfAiVlI=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744203699;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=U+QoT2IyJTsl4lBDNM3YDzV0X1IfFE9Y/W4KVU4CS7M=;
+	b=U5Ze5L32qzWPB68f4ekcTdFf4WLdofjD58DI3WZnba5Ow9rWxutxMt9YWA5ryDMn
+	u56NCov5U2ZhbEqPz6wfNCw/9Zobon98zd+phh7947BLHn/q+NIkN73PYtxE5idfZ0F
+	zN7RhFi3GmkCT/bwq8MqfUKmbAmJdMvBn2LZg270=
+Received: by mx.zohomail.com with SMTPS id 1744203697644149.25126288812328;
+	Wed, 9 Apr 2025 06:01:37 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>,
+ William Breathitt Gray <wbg@kernel.org>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Kever Yang <kever.yang@rock-chips.com>,
+ Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+ linux-iio@vger.kernel.org, kernel@collabora.com,
+ Jonas Karlman <jonas@kwiboo.se>,
+ Detlev Casanova <detlev.casanova@collabora.com>
+Subject: Re: [PATCH 4/7] soc: rockchip: add mfpwm driver
+Date: Wed, 09 Apr 2025 15:01:30 +0200
+Message-ID: <3362145.mvXUDI8C0e@workhorse>
+In-Reply-To: <5559308.Sb9uPGUboI@diego>
+References:
+ <20250408-rk3576-pwm-v1-0-a49286c2ca8e@collabora.com>
+ <20250408-rk3576-pwm-v1-4-a49286c2ca8e@collabora.com>
+ <5559308.Sb9uPGUboI@diego>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic:
-	VI0PR08MB11200:EE_|AM8PR08MB6594:EE_|DB1PEPF00039230:EE_|DBAPR08MB5590:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5618ed1e-f164-4717-57b1-08dd776697be
-X-LD-Processed: f34e5979-57d9-4aaa-ad4d-b122a662184d,ExtAddr
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info-Original:
- =?utf-8?B?VExHTVNKTndRYmlRUU1GY3JiT2ZkNm4xZjdkajBVcGp4ZUVGZ3pQa2hJa1RT?=
- =?utf-8?B?WlNmWHBCL2xNWXhzZEY3cWN2RllKSjdyemxkR2FQODRxbnlkdlcyeTRJaThT?=
- =?utf-8?B?SCtsYmFpU2pQdmVJTUg0d0tGZm8yVVlPSFY2STN1T0hKSCs0Sm9OamFMeUxY?=
- =?utf-8?B?T2N2cTdteXlTUUFqVVpuRTIrUjhCaWhDTnNValhjNFRxbHMxb1dJRjl3M1Av?=
- =?utf-8?B?bVlQYnhzMnV5UXU5MUdjZWZsRUZrQXBheXFWK2xsR2Q4dmlveFQ1bENFTFpN?=
- =?utf-8?B?d1NIaUF2bHdWc1JNWkxlb1g3SzhodTNwWjFIZFd3UVJ2VnZ3WGVLMUNpZmsz?=
- =?utf-8?B?bkdDcnMxRkRYMGRiTW1pMjJHeHU1QW9hd2xLc2haZHgvQ1FycWVnQXhZdkR2?=
- =?utf-8?B?aGZKMHR6c2ViT0ZhWWw1cjd0MVJQcmpPVnJsTERONGsxbzVOajFWUis2b2kz?=
- =?utf-8?B?ZVhNVklMbU9vMU9JZEZrMVpkbHRHNi9tMTRUam15dnRsNzR3aHVCNVdyK3Jz?=
- =?utf-8?B?bHJiSzlpTUhYajdHRHVPUkRxa1phL0llc0REZTd5aEdtaE5oTThrYi9SaFRF?=
- =?utf-8?B?MWpNY3Bac29WSEFqUHgyT3dPZUcwUE9zZnJwT0NQZEJiRXVidjRLejRTZmlm?=
- =?utf-8?B?SVhKTGJHWjlRVTlrRCtqNTVrN3ZQaFVkQk9hQi9NRWlWVzI3ay9LZ1lOcGlX?=
- =?utf-8?B?OGJLM3ZTRVRBZi95alQ5dTFSbytqbzBna3hwTXVqU05pRi9YTVRKSFZGZHdJ?=
- =?utf-8?B?SUhrNTJwY0RVSXNxeE1EWkpuOVVJUy9jZFJmNWh1Mm91alZwMStYeEQyM3g0?=
- =?utf-8?B?b2MwdFU0ZkExMEo2QUpVZE1zTGIvU2FhdWhpYnlMbGRkaUw4d3BQS1Rhb3Nr?=
- =?utf-8?B?RktYOWorWVRmeWFqVDkxQS9UR1FjT3ptYXQrcmNnMjQwQ0IrQkRULzlJK0JF?=
- =?utf-8?B?azVEYUswclVEV085L1lJNDFadlByM2N6WXhQTzQzOGJPUTRvZG10UkZQVDlm?=
- =?utf-8?B?UlN5YXVqRDd3TXJpanVGdXBxVHk3aWtIUVY3VnJVMGtqMmlPU2h5K25JeHhN?=
- =?utf-8?B?Tk5RVWRQSlErcEcwblZseE9IcWlMQzVEb0VkWHdPMDZaTDFISVdpdU45M2Fo?=
- =?utf-8?B?L1NYS1JSalo3L1NwaXNuVHc1R2Q1WkFPT1FONklkVWhVcklxMVVYRVhUMURQ?=
- =?utf-8?B?bElOaEhYYWlOLy9KcXFCODNXSkYxOFhVVldhdDNydi92MllWaFhma3BzUnov?=
- =?utf-8?B?c1NOSmxpcDJ6YklFQ1hqc3ZSSkdtUEtZK1N1VndRaHJ6Zkd5aWtVdDVzK0pl?=
- =?utf-8?B?ZGU0N2JySENqZ1RUUDZ1M2RUdXdlM203YVFqOEgxRm1nclFZYTRIVXY0Q3ZM?=
- =?utf-8?B?bUEzbmE2MGtaUkUyWHhwN0JoUkpBVXJOU3EvNDNNQ3Jac1RmODQ2eCtLS3A2?=
- =?utf-8?B?SHpzTUZ6K21VZUxNNnQ3d1N6RWQxZHRueWhsWkhUQzNQaW5FUEZ1dlBxS1BF?=
- =?utf-8?B?Mk9VaGVqMWtMT2xiby9FMGtFem5xRTJwd1pZUThJdFBEZGQ4eDJXajgzdjNs?=
- =?utf-8?B?QWRiK09HRzcvRTI4a3JkdUxJVVYyUFlhYmRSWW15ZEFlcGI4ZVhjRWZWQzRM?=
- =?utf-8?B?OExlS1U3OGJyTHUzaHlBRlh1bklra0JyNFhDUm03QldtWDAzZlpud2VGQks1?=
- =?utf-8?B?a0FpNStDaFlQSHRqeG9HWitzNmZ5M2V0akFXbVVvT2hHRjBwdWJFWXk4ODc0?=
- =?utf-8?B?RmN5QTlGUHZ4VlhKOWVNeTJqNHU3d0JXR1hVcjl4MjduNFVuTm5mQnpEQTBt?=
- =?utf-8?B?aFRDMVY4WDJuS25xOU5pSjJmd0tBSkM2MXFSSmhUN2lLbmMwT016L0pYam5w?=
- =?utf-8?Q?9Uq59/nB7V+nT?=
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI0PR08MB11200.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR08MB6594
-Original-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-X-EOPAttributedMessage: 0
-X-MS-Exchange-SkipListedInternetSender:
- ip=[2603:10a6:800:257::18];domain=VI0PR08MB11200.eurprd08.prod.outlook.com
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- DB1PEPF00039230.eurprd03.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	5bdce8b6-1e70-4732-7684-08dd776691ac
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|35042699022|376014|1800799024|14060799003;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TXJibWRtZXBZWkJkY0VFQ2JLZURiOFBnd3ZJY3F0Q0tiNTFaZ0dRUEFkWXJ6?=
- =?utf-8?B?MCtDeDVDTngwc29QTGxOR0hTcmZrMDlQQVIyeWpVNG00NnZEOEVPYUgrdUYy?=
- =?utf-8?B?QXk3YW9MWk40SHRXY0NnaEU1Q0RjV3ZoWExpZS9WVlVxMk1pNHpXRG5KbVlS?=
- =?utf-8?B?Nm14ZGpxVzZNWlRERnp0SWF5RUM3RCtPYXVZbXJ4YVkvNUhGc0pUYXlnQ2VZ?=
- =?utf-8?B?MVRleTNZa2Y4TVB3SjhlTkVXNHJHakcyVHorQlVrQXRZNVpQRCtuK2k0RGVC?=
- =?utf-8?B?MG1tQ1F0djZZcFE0ai9OVVlYUU5rVlZycklKdXlHZmwyRHRVTk1EWXFXM3g1?=
- =?utf-8?B?SWtQVUQxUXFiUDBHblZzVXIrbnFOYVFRN2NtWFZ5S3hlQnJoRDFMK0JqWFhu?=
- =?utf-8?B?QjBHRm5RTUw5aXdobWdQRmIrTG4yMGxIVmpsbTFudExwUFRlT3NndHF2Yk9x?=
- =?utf-8?B?REFHakZya0tiYVN3SnFFNDZkTlZvdG8vNmZYM2pEOHMvSklwNjd3RndacmlP?=
- =?utf-8?B?Z3cyazZSUXlsSnpBWG5QUXJUWWwzc1lramVCemxrbGsxbW91aWJRbFBpbXFr?=
- =?utf-8?B?Sk5yWUJ0eVhhMTRVV3J2NXZ5WWF0ZmtFdWM4ei9QdlFZRzlNYzR5eS9FOE13?=
- =?utf-8?B?WXJCdlBNdUlYcGphVzkrZ0xaNG96eG94WURpdjNwS1N1REE5b25UTHJjWFB2?=
- =?utf-8?B?K3NDeE5DOGJjQ0p5R21pc2hUZzI3RXVrblZQd0JEbDF1QnZDU2FaMTdCdW82?=
- =?utf-8?B?Z21neEhYNFdtTVZ6OVBuY2dwVmtuSFhoVjFNY0NMU2tvYUtzLy9Jd3BkbVF2?=
- =?utf-8?B?YnVGUFNndUVnY2lIQlhEQmVVbmFaTW9nbFFBczUzQk5VeC9vNHpBQ09Qbm05?=
- =?utf-8?B?UXdaTkY4SDM5U2RyRVZxMWpWTkhNOTJWTFJDdTJpbkZYSXZjK2NiQ2t0dW1a?=
- =?utf-8?B?UXZGSko0a0JMTEFzSkFad25hYlNEdGdzNVJIQUZmeW00bWZuVTByYXBDeURB?=
- =?utf-8?B?QjVCYjRPQmQvcURrLzdGSWJ5WG8wK3JwWFo1Y213MnZzblAzVEw1YmxjNmZl?=
- =?utf-8?B?N0hBMVJMcFIvNTVRb2VSTUtyNmlHbTBRUWJNejYxL0Q0aHJjNGZZdTVXV2VZ?=
- =?utf-8?B?cWIvemJ2eTlGeFBNdDJUZXV3SVhJVDhXMnZkZGN6SlN5UDNqUE5hTWt1ZjBw?=
- =?utf-8?B?RWV2YjVKUlpYeDBLZkk4S1IxN2RwNGZqcCtXRUpSRGdIejU0NkJWSmRsNnVJ?=
- =?utf-8?B?YUxRZGlMYVQzMnh5cVZxR1NtOHdMcW5DanpBWFF1cWdjK210YUJyRnBTZkxi?=
- =?utf-8?B?OUlXVmhZdjVLVEdWamtMTk92Sy84K3NTcjh6TG1odDlselhRYXk3U0pnR21Y?=
- =?utf-8?B?NHdrM0VWLzFzMG9BVEgyR0FKdXFVMlhJeWdVcmUvL1R6bjdUdEJRYkNtTmhK?=
- =?utf-8?B?bnlmSy9PS3IvenlyU2o0cEgxTHdKbnljS0t6ZEkwTVd3RTVhdUpuWFI1bkhG?=
- =?utf-8?B?V29YV0plZGN2bjZMeWNuR1V4R3kyRU5pL3Fic3NYMk5sNloxNjNjVTJJZ1px?=
- =?utf-8?B?WGFaSEVUVkp1dmJ5YTlIcVBuMjZYeUx2WW5kRTJSLy8zakpDL05QRHBxa25N?=
- =?utf-8?B?bjcyUldmczZsbVlMWUl5V2w3MnBsYVk0eElrbWE0N3R3Qzh5VGt2aGVHbGRB?=
- =?utf-8?B?aVpnalY3Mkl6Q21TQlYwdWVBSENERVhuWk5rbXA1UlFLWnNVTUgvOTRHRWk2?=
- =?utf-8?B?S3d0TmZ0SGg5TVU0UXdRKyt0RDlES2k0ejBubllVc2tKbExzWTBldTBFYnZn?=
- =?utf-8?B?bm9URGFSS0dkQ2FmeGdGRVpDN1BNWHlqUnRISjdqeUdVNitvUDFqWURaREhB?=
- =?utf-8?B?SDFnU05tOEJDU1hRdFZWZWNHWkVLeDBMbVkzeG1sMGVnTE4rZk5oL3pCYlBx?=
- =?utf-8?B?NnJ2eGR6RVVTMk1kUG1IV0t2UFJHaDdLT0ZRM0FsN2pISmJlS0s3ekZaNTlv?=
- =?utf-8?B?K25uaHZWWk5VT0tLT0VGWi9mczdRUHRVNUN2akFJZ2tYM24yTEdOcDZCNzh1?=
- =?utf-8?Q?GAf7Zu?=
-X-Forefront-Antispam-Report:
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:64aa7808-outbound-1.mta.getcheckrecipient.com;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(35042699022)(376014)(1800799024)(14060799003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 13:01:07.2525
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5618ed1e-f164-4717-57b1-08dd776697be
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DB1PEPF00039230.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR08MB5590
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-On 21/03/2025 07:48, Boris Brezillon wrote:
-> On Thu, 20 Mar 2025 11:17:33 +0000
-> Karunika Choo <karunika.choo@arm.com> wrote:
->
->> This patch adds 64-bit register accessors to simplify register access in
->> Panthor. It also adds 32-bit and 64-bit variants for read_poll_timeout.
->>
->> Signed-off-by: Karunika Choo <karunika.choo@arm.com>
->> ---
->>  drivers/gpu/drm/panthor/panthor_regs.h | 55 ++++++++++++++++++++++++++
->>  1 file changed, 55 insertions(+)
->>
->> diff --git a/drivers/gpu/drm/panthor/panthor_regs.h
-b/drivers/gpu/drm/panthor/panthor_regs.h
->> index 42dc3fedb0d4..7ec4a1d04e20 100644
->> --- a/drivers/gpu/drm/panthor/panthor_regs.h
->> +++ b/drivers/gpu/drm/panthor/panthor_regs.h
->> @@ -238,4 +238,59 @@
->>  #define gpu_read(dev, reg) \
->>  	readl((dev)->iomem + (reg))
->>
->> +#define gpu_read_relaxed(dev, reg) readl_relaxed((dev)->iomem + (reg))
->> +
->> +#define gpu_write64(dev, reg, data)                            \
->> +	do {                                                   \
->> +		u64 __val = (u64)(data);                       \
->> +		gpu_write(dev, reg, lower_32_bits(__val));     \
->> +		gpu_write(dev, reg + 4, upper_32_bits(__val)); \
->> +	} while (0)
->
-> We're not doing funky name concatenation in these macros, so I'd rather
-> have them defined as static inline funcs in panthor_device.h. We
-> probably want to move the gpu_read/write definitions there as well if
-> we do that.
+On Tuesday, 8 April 2025 22:03:01 Central European Summer Time Heiko St=C3=
+=BCbner wrote:
+> Hi,
+>=20
+> not a full review, just me making a first pass.
+>=20
+> > +unsigned long mfpwm_clk_get_rate(struct rockchip_mfpwm *mfpwm)
+> > +{
+> > +	if (!mfpwm || !mfpwm->chosen_clk)
+> > +		return 0;
+> > +
+> > +	return clk_get_rate(mfpwm->chosen_clk);
+> > +}
+> > +EXPORT_SYMBOL_NS_GPL(mfpwm_clk_get_rate, "ROCKCHIP_MFPWM");
+>=20
+> aren't you just re-implemeting a clk-mux with the whole chosen-clk
+> mechanism? See drivers/clk/clk-mux.c, so in theory you should be
+> able to just do a clk_register_mux(...) similar to for example
+> sound/soc/samsung/i2s.c .
 
-I see where you're coming from, and it makes sense. I was thinking it
-might be better to keep it in panthor_regs.h since that's the file we
-include when accessing GPU registers. That said, we could certainly
-convert them to static inline functions if you prefer.
+Probably yes. I didn't know clk-mux was a thing. If I do decide to keep the
+clock switching at all (more on that below), then I'll rewrite it around
+clk-mux.
 
->> +
->> +#define gpu_read64(dev, reg) \
->> +	(gpu_read(dev, reg) | ((u64)gpu_read(dev, reg + 4) << 32))
->> +
->> +#define gpu_read64_relaxed(dev, reg)  \
->> +	(gpu_read_relaxed(dev, reg) | \
->> +	 ((u64)gpu_read_relaxed(dev, reg + 4) << 32))
->> +
->> +#define gpu_read64_sync(dev, reg)                     \
->> +	({                                            \
->> +		u32 lo, hi1, hi2;                     \
->> +		do {                                  \
->> +			hi1 = gpu_read(dev, reg + 4); \
->> +			lo = gpu_read(dev, reg);      \
->> +			hi2 = gpu_read(dev, reg + 4); \
->> +		} while (hi1 != hi2);                 \
->> +		lo | ((u64)hi2 << 32);                \
->> +	})
->
-> I would name that one gpu_read64_counter and make it a static inline
-> function. Note that we already have panthor_gpu_read_64bit_counter()
-> which does the same thing, so maybe move it there and rename it along
-> the way.
+> > +
+> > +__attribute__((nonnull))
+> > +static int mfpwm_do_acquire(struct rockchip_mfpwm_func *pwmf)
+> > +{
+> > +	struct rockchip_mfpwm *mfpwm =3D pwmf->parent;
+> > +	unsigned int cnt;
+> > +
+> > +	if (mfpwm->active_func && pwmf->id !=3D mfpwm->active_func->id)
+> > +		return -EBUSY;
+> > +
+> > +	if (!mfpwm->active_func)
+> > +		mfpwm->active_func =3D pwmf;
+> > +
+> > +	if (!check_add_overflow(mfpwm->acquire_cnt, 1, &cnt)) {
+> > +		mfpwm->acquire_cnt =3D cnt;
+> > +	} else {
+> > +		WARN(1, "prevented acquire counter overflow in %s\n", __func__);
+>=20
+> dev_warn, as you have the mfpwm pointing to a pdev?
 
-Happy to rename this to gpu_read64_counter in v3, if you're okay with
-us keeping the macros/functions in this file.
+Will do.
+
+> > +		return -EOVERFLOW;
+> > +	}
+> > +
+> > +	dev_dbg(&mfpwm->pdev->dev, "%d acquired mfpwm, acquires now at %u\n",
+> > +		pwmf->id, mfpwm->acquire_cnt);
+> > +
+> > +	return clk_enable(mfpwm->pclk);
+> > +}
+>=20
+> > +/**
+> > + * mfpwm_get_clk_src - read the currently selected clock source
+> > + * @mfpwm: pointer to the driver's private &struct rockchip_mfpwm inst=
+ance
+> > + *
+> > + * Read the device register to extract the currently selected clock so=
+urce,
+> > + * and return it.
+> > + *
+> > + * Returns:
+> > + * * the numeric clock source ID on success, 0 <=3D id <=3D 2
+> > + * * negative errno on error
+> > + */
+> > +static int mfpwm_get_clk_src(struct rockchip_mfpwm *mfpwm)
+> > +{
+> > +	u32 val;
+> > +
+> > +	clk_enable(mfpwm->pclk);
+> > +	val =3D mfpwm_reg_read(mfpwm->base, PWMV4_REG_CLK_CTRL);
+> > +	clk_disable(mfpwm->pclk);
+> > +
+> > +	return (val & PWMV4_CLK_SRC_MASK) >> PWMV4_CLK_SRC_SHIFT;
+> > +}
+> > +
+> > +static int mfpwm_choose_clk(struct rockchip_mfpwm *mfpwm)
+> > +{
+> > +	int ret;
+> > +
+> > +	ret =3D mfpwm_get_clk_src(mfpwm);
+> > +	if (ret < 0) {
+> > +		dev_err(&mfpwm->pdev->dev, "couldn't get current clock source: %pe\n=
+",
+> > +			ERR_PTR(ret));
+> > +		return ret;
+> > +	}
+> > +	if (ret =3D=3D PWMV4_CLK_SRC_CRYSTAL) {
+> > +		if (mfpwm->osc_clk) {
+> > +			mfpwm->chosen_clk =3D mfpwm->osc_clk;
+> > +		} else {
+> > +			dev_warn(&mfpwm->pdev->dev, "initial state wanted 'osc' as clock so=
+urce, but it's unavailable. Defaulting to 'pwm'.\n");
+> > +			mfpwm->chosen_clk =3D mfpwm->pwm_clk;
+> > +		}
+> > +	} else {
+> > +		mfpwm->chosen_clk =3D mfpwm->pwm_clk;
+> > +	}
+> > +
+> > +	return clk_rate_exclusive_get(mfpwm->chosen_clk);
+> > +}
+> >
+> > +/**
+> > + * mfpwm_switch_clk_src - switch between PWM clock sources
+> > + * @mfpwm: pointer to &struct rockchip_mfpwm driver data
+> > + * @clk_src: one of either %PWMV4_CLK_SRC_CRYSTAL or %PWMV4_CLK_SRC_PLL
+> > + *
+> > + * Switch between clock sources, ``_exclusive_put``ing the old rate,
+> > + * ``clk_rate_exclusive_get``ing the new one, writing the registers and
+> > + * swapping out the &struct_rockchip_mfpwm->chosen_clk.
+> > + *
+> > + * Returns:
+> > + * * %0        - Success
+> > + * * %-EINVAL  - A wrong @clk_src was given or it is unavailable
+> > + * * %-EBUSY   - Device is currently in use, try again later
+> > + */
+> > +__attribute__((nonnull))
+> > +static int mfpwm_switch_clk_src(struct rockchip_mfpwm *mfpwm,
+> > +					  unsigned int clk_src)
+> > +{
+> > +	struct clk *prev;
+> > +	int ret =3D 0;
+> > +
+> > +	scoped_cond_guard(spinlock_try, return -EBUSY, &mfpwm->state_lock) {
+> > +		/* Don't fiddle with any of this stuff if the PWM is on */
+> > +		if (mfpwm->active_func)
+> > +			return -EBUSY;
+> > +
+> > +		prev =3D mfpwm->chosen_clk;
+> > +		ret =3D mfpwm_get_clk_src(mfpwm);
+> > +		if (ret < 0)
+> > +			return ret;
+> > +		if (ret =3D=3D clk_src)
+> > +			return 0;
+> > +
+> > +		switch (clk_src) {
+> > +		case PWMV4_CLK_SRC_PLL:
+> > +			mfpwm->chosen_clk =3D mfpwm->pwm_clk;
+> > +			break;
+> > +		case PWMV4_CLK_SRC_CRYSTAL:
+> > +			if (!mfpwm->osc_clk)
+> > +				return -EINVAL;
+> > +			mfpwm->chosen_clk =3D mfpwm->osc_clk;
+> > +			break;
+> > +		default:
+> > +			return -EINVAL;
+> > +		}
+> > +
+> > +		clk_enable(mfpwm->pclk);
+> > +
+> > +		mfpwm_reg_write(mfpwm->base, PWMV4_REG_CLK_CTRL,
+> > +				PWMV4_CLK_SRC(clk_src));
+> > +		clk_rate_exclusive_get(mfpwm->chosen_clk);
+> > +		if (prev)
+> > +			clk_rate_exclusive_put(prev);
+> > +
+> > +		clk_disable(mfpwm->pclk);
+> > +	}
+> > +
+> > +	return ret;
+> > +}
+>=20
+> ok, the relevant part might be the=20
+> 	/* Don't fiddle with any of this stuff if the PWM is on */
+> thing, which will require special set_rate operation, but in general I
+> think, if it ticks like a clock, it probably should be a real clock ;-) .
+
+I agree; we can guarantee it doesn't get changed after all by just marking =
+it
+as exclusive instead of marking either pwm_clk or osc_clk as exclusive.
+
+> > +static ssize_t chosen_clock_show(struct device *dev,
+> > +				 struct device_attribute *attr, char *buf)
+> > +{
+> > +	struct rockchip_mfpwm *mfpwm =3D dev_get_drvdata(dev);
+> > +	unsigned long clk_src =3D 0;
+> > +
+> > +	/*
+> > +	 * Why the weird indirection here? I have the suspicion that if we
+> > +	 * emitted to sysfs with the lock still held, then a nefarious program
+> > +	 * could hog the lock by somehow forcing a full buffer condition and
+> > +	 * then refusing to read from it. Don't know whether that's feasible
+> > +	 * to achieve in reality, but I don't want to find out the hard way
+> > +	 * either.
+> > +	 */
+> > +	scoped_guard(spinlock, &mfpwm->state_lock) {
+> > +		if (mfpwm->chosen_clk =3D=3D mfpwm->pwm_clk)
+> > +			clk_src =3D PWMV4_CLK_SRC_PLL;
+> > +		else if (mfpwm->osc_clk && mfpwm->chosen_clk =3D=3D mfpwm->osc_clk)
+> > +			clk_src =3D PWMV4_CLK_SRC_CRYSTAL;
+> > +		else
+> > +			return -ENODEV;
+> > +	}
+> > +
+> > +	if (clk_src =3D=3D PWMV4_CLK_SRC_PLL)
+> > +		return sysfs_emit(buf, "pll\n");
+> > +	else if (clk_src =3D=3D PWMV4_CLK_SRC_CRYSTAL)
+> > +		return sysfs_emit(buf, "crystal\n");
+> > +
+> > +	return -ENODEV;
+> > +}
+>=20
+> which brings me to my main point of contention. Why does userspace
+> need to select a clock source for the driver via sysfs.
+
+It doesn't need to. Basically, this is a weird hardware feature. Downstream=
+ did
+not bother implementing it at all, and I found out through the TRM's regist=
+er
+listing and thought "that's weird, I wonder if it even works", and lo and b=
+ehold
+it does. At that point, like two rewrites ago, I was committed to ensuring =
+that
+the driver can handle this edge case of the PWM clock being changed. As I l=
+acked
+the imagination as to why someone would change it and the knowledge as to w=
+hich
+kernel interfaces exist to change it, sysfs offered itself as a natural dum=
+ping
+ground for switches that probably shouldn't exist.
+
+> Neither the commit message nor the code does seem to explain that,
+> or I'm just blind - which is also a real possibility.
+>=20
+> In general I really think, userspace should not need to care about if
+> a PLL or directly the oscillator is used a clock input.
+> I assume which is needed results from some runtime factor, so the
+> driver should be able to select the correct one?
+>=20
+> A mux-clock could ust use clk_mux_determine_rate_flags() to select
+> the best parent depending on a requested rate instead.
+
+Yeah, the only use-case I can come up with is that we really want to use an
+either 100 MHz or 50 MHz clock on one chip, but have a channel hit a precise
+timing with the 24 MHz clock on the same chip. If the fixed crystal oscilla=
+tor
+were 25 MHz instead of 24 MHz, this would be entirely pointless, as they're=
+ all
+multiples of it.
+
+Thanks for the hint about clk_mux_determine_rate_flags, it doesn't appear t=
+o be
+documented (classic) but it looks to do at least half of what a proper solu=
+tion
+would need to do. The other half is figuring out what ideal target rate we
+actually want to optimise for for a given e.g. waveform consisting of period
+and duty cycle in nanoseconds. There's some logic to think about regarding =
+where
+rounding errors are acceptable, e.g. a long period with a low duty cycle is
+probably better off using the 100-50-24 mux with 100 MHz as the rate. I'm n=
+ot
+sure if 50 MHz is ever a sensible option since it is a dividend of 100 MHz,=
+ and
+I'm not about to reason about imagined power draw of the PWM hardware witho=
+ut
+laboratory grade test equipment.
+
+=46or what it's worth, this is a niche enough hardware feature that if it c=
+auses
+too much friction getting it supported in a driver, I'll just drop it entir=
+ely
+instead. I tried to preemptively combat technical debt by supporting this in
+some way, but instead managed to introduce scope creep.
+
+One option is to always just choose the PLL muxed clock and then always set=
+ it
+to 100 MHz, because it's probably the best option unless there are specific
+PWM-based applications that make heavy use of 24-derived timings (maybe the=
+ IR
+stuff?)
+
+>=20
+> > +static ssize_t chosen_clock_store(struct device *dev,
+> > +				  struct device_attribute *attr,
+> > +				  const char *buf, size_t count)
+> > +{
+> > +	struct rockchip_mfpwm *mfpwm =3D dev_get_drvdata(dev);
+> > +	int ret;
+> > +
+> > +	if (sysfs_streq(buf, "pll")) {
+> > +		ret =3D mfpwm_switch_clk_src(mfpwm, PWMV4_CLK_SRC_PLL);
+> > +		if (ret)
+> > +			return ret;
+> > +		return count;
+> > +	} else if (sysfs_streq(buf, "crystal")) {
+> > +		ret =3D mfpwm_switch_clk_src(mfpwm, PWMV4_CLK_SRC_CRYSTAL);
+> > +		if (ret)
+> > +			return ret;
+> > +		return count;
+> > +	} else {
+> > +		return -EINVAL;
+> > +	}
+> > +}
+> > +
+> > +static DEVICE_ATTR_RW(chosen_clock);
+> > +
+> > +static ssize_t available_clocks_show(struct device *dev,
+> > +				     struct device_attribute *attr, char *buf)
+> > +{
+> > +	struct rockchip_mfpwm *mfpwm =3D dev_get_drvdata(dev);
+> > +	ssize_t size =3D 0;
+> > +
+> > +	size +=3D sysfs_emit_at(buf, size, "pll\n");
+> > +	if (mfpwm->osc_clk)
+> > +		size +=3D sysfs_emit_at(buf, size, "crystal\n");
+> > +
+> > +	return size;
+> > +}
+> > +
+> > +static DEVICE_ATTR_RO(available_clocks);
+> > +
+> > +static struct attribute *mfpwm_attrs[] =3D {
+> > +	&dev_attr_available_clocks.attr,
+> > +	&dev_attr_chosen_clock.attr,
+> > +	NULL,
+> > +};
+>=20
+> Not understanding the need for the sysfs stuff was my main point this
+> evening :-)
+>=20
+> Heiko
+>=20
+
+Thank you for your quick preliminary review! This already gives me some good
+points to look into for a v2.
 
 Kind regards,
-Karunika
+Nicolas Frattaroli
 
->> +
->> +#define gpu_read_poll_timeout(dev, reg, val, cond, delay_us,
-timeout_us)    \
->> +	read_poll_timeout(gpu_read, val, cond, delay_us, timeout_us, false, \
->> +			  dev, reg)
->> +
->> +#define gpu_read_poll_timeout_atomic(dev, reg, val, cond, delay_us,
-       \
->> +				     timeout_us)                            \
->> +	read_poll_timeout_atomic(gpu_read, val, cond, delay_us, timeout_us, \
->> +				 false, dev, reg)
->> +
->> +#define gpu_read64_poll_timeout(dev, reg, val, cond, delay_us,
-timeout_us)    \
->> +	read_poll_timeout(gpu_read64, val, cond, delay_us, timeout_us, false, \
->> +			  dev, reg)
->> +
->> +#define gpu_read64_poll_timeout_atomic(dev, reg, val, cond,
-delay_us,         \
->> +				       timeout_us)                            \
->> +	read_poll_timeout_atomic(gpu_read64, val, cond, delay_us, timeout_us, \
->> +				 false, dev, reg)
->> +
->> +#define gpu_read_relaxed_poll_timeout_atomic(dev, reg, val, cond,
-delay_us, \
->> +					     timeout_us)                    \
->> +	read_poll_timeout_atomic(gpu_read_relaxed, val, cond, delay_us,     \
->> +				 timeout_us, false, dev, reg)
->> +
->> +#define gpu_read64_relaxed_poll_timeout(dev, reg, val, cond,
-delay_us,         \
->> +					timeout_us)                            \
->> +	read_poll_timeout(gpu_read64_relaxed, val, cond, delay_us,
-timeout_us, \
->> +			  false, dev, reg)
->> +
->>  #endif
->
+
