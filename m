@@ -1,134 +1,157 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D28CF1DFFC;
-	Wed,  9 Apr 2025 17:04:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADFBC26FDA4
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 17:05:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744218292; cv=none; b=eAHMeB6ryfmLaY9rNilxOPmaOUMdsBcs/UC9renNmbCJuM0Ea5l+dCXlRM6zs3bOYSSgXbv7Wl81ZKTgSS5Ig7cQEmgMSG6m/t6SQaqAkDegnP5cy52B1ITm9FcqvGcagf518RWx+WS/O1W3SkgsFdZFlX61/2pUL6n8ledyAIA=
+	t=1744218304; cv=none; b=T8hNDIUnb5caYILt7zCwEtPEEuDp+YDF/+uKMKSinn/1WosacIHnY8TtnxM+KEjSK6f22dKZhkFBmuWtPSY9Ghowop0DhZbdbfNkJvVXRvW2Jw51ZbsfXeycCLoiCt32g9MmxhQMZPmwBrlVKozpkUq6GC4hLXtfqzlvwDvR3U0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744218292; c=relaxed/simple;
-	bh=AK63bXsws5LI+IIQAeopP/uy2WwZqDIcj/MXMgiB7g0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I2Faq7RvFhNxgV818WlRfWH3Sdgz/1WEAh+vYucPaECv1HG9nmT4XrfEVR+PsVBtVvoCA3YoYdjSlyeTSSL355Dd9CN5ogQiPs0B6y2zuQxbAhNyWvnsO5LpSWGiVZ0JJOknFMfFObv2NZJDxfT0d1dghPQGk+Ai4hOaPZrjZFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bIwpPEVa; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744218304; c=relaxed/simple;
+	bh=i8Zg1guA//+lhxQK2uTFZZPpwn6JYVZCVdGXPvWgvFc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=VBf7DEOZw9DDCm5vycOQ++rMNMf9w+UNDOJ2lQoV3ujN0PcPFuZs6PJZOQJRT+gHwkdOJIz3eKJvp39e7718r3iPtvat18YCx9i6p/EcChyD9QjMMryU6Djoeq7waJ8KehX2K7Rnz8peEMRYkxtf6FlkAIP087Aj76s+e62MKzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0IsSIN+f; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bIwpPEVa"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-3014ae35534so5852672a91.0;
-        Wed, 09 Apr 2025 10:04:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0IsSIN+f"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3032f4eca83so6422980a91.3
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 10:05:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744218290; x=1744823090; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=klGbrW2mzbCdR+XeXsx1uph/j4tkgJ+FLETarobmc34=;
-        b=bIwpPEVaIA51//rxdBCYippJnNQhm/GjFU6gUHN/+VytrjZLHXlOQfvYvKx1L2ab2y
-         xozRRwpe+QZ0W3tCLM3LwIpjlN+Tw3du1HlFQRCTLcHaeo8ZSCQlLTyNstt24NjDnymG
-         UkqdgwiryiZPOw4Ypb/iHvlEMpgdEgY/ay0TrXUwHlI+TkvsHLo+X5WcIKuZVmdAcfg8
-         n4J68y9+ZdY1fRe/hvrH8xRkayfk7p+O+rZ/TUovLoV/E34Ps4c/LPPQqmqnA2IJmCY6
-         REIt4RX/6DN8aGyRrV87WX3h+v07Zw5n3jl9vsfbrZNeOPdnABeQUJ3wCPLInhh0v3F6
-         HYyw==
+        d=google.com; s=20230601; t=1744218302; x=1744823102; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=oX5AQF1CWc875K1riqzQPEOYHtRRRjW13afP6TGJ4O4=;
+        b=0IsSIN+foHLBkITJENDX/YJAi9MUPbipmO/Erfw8eJc3MdYMcX20am2zMClvksq+80
+         rNRDHrt8qHn3dOoufQWyxQBngufLqPPfW12kMCpl4P0av6ZFt+94srxwEvhmSyXv2tdI
+         xxsjvACiF6u8sAiT6twwjG1RwpplCq2WdIAHtN6onRsr9OCpQDisYqWyrGe08/Vt7qBn
+         C39Y0NXcjziMYmb7icAszXryAihzbHS3RMaAwxmIHGnA/LjFQjP/0CTlBHgTKxDDhsiN
+         Dbs1x2XD5KLxDs41GGeCk9424ssbLjg7DCxe8gJAHhAAxpB44nHu4qrPrY1zKr/ogSiB
+         UdKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744218290; x=1744823090;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=klGbrW2mzbCdR+XeXsx1uph/j4tkgJ+FLETarobmc34=;
-        b=Cbwh7HyFoCa7Yr7wLz0iurkYgjoAArboYbPtHIY/Uxy6+nijjQdvLEuelUBajZljjk
-         P2mW6Pgym7JMIeCFiZ3pEdvEt6k6+70dOuN4nyy+NuzrT158IKz89h0Ws2AYiTTiEddR
-         VBBx9kyQZ0m5jrwaj041QV1GQwZkD7W8c4ZEfYiZrmT4e4PdMDTxqMRYDSnDWpwXcq5J
-         ElNIiVxHpVKA04bxDuOhO6L9q7lqXpFWiGF80cd9nWloviPMc9K3Y+DvD0xaCWGVS3Ut
-         Hcv5li3hGKiy/+3iq3w3oXaaynJIySmjNwdeKfY9t4x5zeKkMq2JcCXslRClCbvku6js
-         zJkw==
-X-Forwarded-Encrypted: i=1; AJvYcCU8LpF3GdalMpQkcaN4V++V97VgUxueorm4UbbG7HkO8SfXBZlVfEOV0MXcUKkEfLSeV0Y87RpJ@vger.kernel.org, AJvYcCWeQ1jY6uzjC7cgFrJt3e8G9iAjRe5Bg14iRnJ3XTA+uGuv6BC7qcCrwuP+rKAE+qe7kwBM/3Xp6wdYmWg=@vger.kernel.org, AJvYcCX3I1D9UcPXXnbq6igSTp53d7BEmajLHQOPqtSkhGGEofDsTQCeuCOHFR4PMyBlpY+uSXvxyybDpxy6J6Fj6HloIgac@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyIpYxWeRQQS9SdefBeFxnoyxtGtKZPss4lNQu43VbIwTqpAY0
-	Mg+0+A5CmybW1xm4D+S5RJtu4EnzLj02YZoJN+24ZtG2wT8E3r2E
-X-Gm-Gg: ASbGncszd5PvgNbxPh62UtE/LThZQGdSABVG+/al/fHrZlQNy8PJjqqSXWjRQlyu8zW
-	mEH+bXwCXXRzC6zQwbH+x4RuM0RdklQUL5rj28IJEg81h9cPFwZwvH27LzlHw+78ieTKW2Pv9jo
-	l8ZrqNKzjW/J64jMC10OCM4GZGBjrdEV9862chdPFwtXdfZTxektIThyJaiSowuHV2hIK1CSdJ6
-	Qq5TTOw8mq57zSySQRPjv/nGoxjhmaCVlVJ5idLhQs4A/VFHc1YTnRBTQCbXKEdqdLypBjeWgMZ
-	8FKHDElc5NVZeFXZa2cL1x5zoE30OHSWPk6I0YVxIjM1
-X-Google-Smtp-Source: AGHT+IH1GJQRsQdL8vsxW2i6J/AcLPmhbW7dGfFqiXayketC4IAZW8FIee9qDIlr5sPY9tyxW/kMew==
-X-Received: by 2002:a17:90b:270b:b0:301:1bce:c26f with SMTP id 98e67ed59e1d1-306dd324830mr3507098a91.3.1744218289915;
-        Wed, 09 Apr 2025 10:04:49 -0700 (PDT)
-Received: from localhost ([129.210.115.104])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306df06a767sm1890018a91.6.2025.04.09.10.04.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 10:04:49 -0700 (PDT)
-Date: Wed, 9 Apr 2025 10:04:48 -0700
-From: Cong Wang <xiyou.wangcong@gmail.com>
-To: Jiayuan Chen <jiayuan.chen@linux.dev>
-Cc: bpf@vger.kernel.org, mrpre@163.com, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Jakub Sitnicki <jakub@cloudflare.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next v1] bpf, sockmap: Introduce tracing capability
- for sockmap
-Message-ID: <Z/aosJ3uvzTZTEXS@pop-os.localdomain>
-References: <20250409102937.15632-1-jiayuan.chen@linux.dev>
+        d=1e100.net; s=20230601; t=1744218302; x=1744823102;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oX5AQF1CWc875K1riqzQPEOYHtRRRjW13afP6TGJ4O4=;
+        b=w+5koUv1L7Iosignuun77JHsq/1Jtc42ZUhBpm1vKagts2Xes3ibVY4TL9ZVYpSEgh
+         1X1xF8aoTlUGT7ItCFGNBeme1FNYnViFyalVLiVwpc+e3Lsffyy+wc1rsiLSAokuxKkh
+         yahbW77U6qWm4YUEQ0v4dQoByeCQ0pouCJjpLlj+PuTr+VnxQ9R7gAB7Bm/t65w7PZOx
+         CrcZJYL/u6PPUVRxO1qKdesHvArd6SQuUcc1jcbCgF6ddyVRQw5R3h1Bwq2uGetv5FMv
+         p5doh1430oO20C94hxT0qS+S3ERSbIQYV/NFK5DOqN9bFkz6o2bFn75yiFp5LGcMDcx3
+         vKyw==
+X-Forwarded-Encrypted: i=1; AJvYcCX5EAZZiKUYF68qwqgGI+/O36a9pMj+bZYe90rwjEUtZ3yMvqOACH2QBk6VTGjxFaUFBrZ+g9t9VdonbiA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMX+mcaUjD/I1vCl0a+XzgSaVa9pSy8MsDvTh6SVdhR2+6s0dP
+	lKGmFjuAKV7n15SDbi4kRaD/0USKJUCdHhUXOmEFSZuFr83SA0+tLOr635xgxJpo0Kkj+dvCwmI
+	5Kg==
+X-Google-Smtp-Source: AGHT+IEem0Cj1DZoksj+te/q+i7fjk/ApWH/IZlQdD3zb/NnN621mHgFseqow65YuvbIXi3Fri1358Ay9cM=
+X-Received: from pjbqn13.prod.google.com ([2002:a17:90b:3d4d:b0:2ff:5752:a78f])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2704:b0:2ff:52e1:c4b4
+ with SMTP id 98e67ed59e1d1-306dd5789d1mr3720511a91.32.1744218302030; Wed, 09
+ Apr 2025 10:05:02 -0700 (PDT)
+Date: Wed, 9 Apr 2025 10:05:00 -0700
+In-Reply-To: <Z_VUswFkWiTYI0eD@do-x1carbon>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250409102937.15632-1-jiayuan.chen@linux.dev>
+Mime-Version: 1.0
+References: <Z_VUswFkWiTYI0eD@do-x1carbon>
+Message-ID: <Z_aovIbwdKIIBMuq@google.com>
+Subject: Re: kvm guests crash when running "perf kvm top"
+From: Sean Christopherson <seanjc@google.com>
+To: Seth Forshee <sforshee@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Paolo Bonzini <pbonzini@redhat.com>, x86@kernel.org, 
+	linux-perf-users@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On Wed, Apr 09, 2025 at 06:29:33PM +0800, Jiayuan Chen wrote:
-> Sockmap has the same high-performance forwarding capability as XDP, but
-> operates at Layer 7.
+On Tue, Apr 08, 2025, Seth Forshee wrote:
+> A colleague of mine reported kvm guest hangs when running "perf kvm top"
+> with a 6.1 kernel. Initially it looked like the problem might be fixed
+> in newer kernels, but it turned out to be perf changes which must avoid
+> triggering the issue. I was able to reproduce the guest crashes with
+> 6.15-rc1 in both the host and the guest when using an older version of
+> perf. A bisect of perf landed on 7b100989b4f6 "perf evlist: Remove
+> __evlist__add_default", but this doesn't look to be fixing any kind of
+> issue like this.
 > 
-> Introduce tracing capability for sockmap, similar to XDP, to trace the
-> execution results of BPF programs without modifying the programs
-> themselves, similar to the existing trace_xdp_redirect{_map}.
+> This box has an Ice Lake CPU, and we can reproduce on other Ice Lakes
+> but could not reproduce on another box with Broadwell. On Broadwell
+> guests would crash with older kernels in the host, but this was fixed by
+> 971079464001 "KVM: x86/pmu: fix masking logic for
+> MSR_CORE_PERF_GLOBAL_CTRL". That does not fix the issues we see on Ice
+> Lake.
 > 
-> It is crucial for debugging BPF programs, especially in production
-> environments.
-> 
-> Additionally, a header file was added to bpf_trace.h to automatically
-> generate tracepoints.
-> 
-> Test results:
-> $ echo "1" > /sys/kernel/tracing/events/sockmap/enable
-> 
-> skb:
-> sockmap_redirect: sk=00000000d3266a8d, type=skb, family=2, protocol=6, \
-> prog_id=73, length=256, action=PASS
-> 
-> msg:
-> sockmap_redirect: sk=00000000528c7614, type=msg, family=2, protocol=6, \
-> prog_id=185, length=5, action=REDIRECT
-> 
-> tls:
-> sockmap_redirect: sk=00000000d04d2224, type=skb, family=2, protocol=6, \
-> prog_id=143, length=35, action=PASS
-> 
-> strparser:
-> sockmap_skb_strp_parse: sk=00000000ecab0b30, family=2, protocol=6, \
-> prog_id=170, size=5
+> When the guests crash we aren't getting any output on the serial
+> console, but I got this from a memory dump:
 
-Nice work!
+...
 
-While you are on it, could we also trace skb->_sk_redir bits too? It is
-very useful to distinguish, at least, ingress from egress redirection.
+> Oops: 0000 [#1] PREEMPT SMP NOPTI
+> BUG: kernel NULL pointer dereference, address: 000000000000002828
 
-Thanks!
+FWIW, this is probably slightly corrupted.  When I run with EPT disabled, to force
+KVM to intercept #PFs, the reported CR2 is 0x28.  Which is consistent with the
+guest having DS_AREA=0.  I.e. the CPU is attempting to store into the DS/PEBS
+buffer.
+
+As suspected, the issue is PEBS.  After adding a tracepoint to capture the MSRs
+that KVM loads as part of the perf transition, it's easy to see that PEBS_ENABLE
+gets loaded with a non-zero value immediate before death, doom, and destruction.
+
+  CPU 0: kvm_entry: vcpu 0, rip 0xffffffff81000aa0 intr_info 0x80000b0e error_code 0x00000000
+  CPU 0: kvm_perf_msr: MSR 38f: host 1000f000000fe guest 1000f000000ff
+  CPU 0: kvm_perf_msr: MSR 600: host fffffe57186af000 guest 0
+  CPU 0: kvm_perf_msr: MSR 3f2: host 0 guest 0
+  CPU 0: kvm_perf_msr: MSR 3f1: host 0 guest 1
+  CPU 0: kvm_exit: vcpu 0 reason EXCEPTION_NMI rip 0xffffffff81000aa0 info1 0x0000000000000028 intr_info 0x80000b0e error_code 0x00000000
+
+The underlying issue is that KVM's current PMU virtualization uses perf_events
+to proxy guest events, i.e. piggybacks intel_ctrl_guest_mask, which is also used
+by host userspace to communicate exclude_host/exclude_guest.  And so perf's
+intel_guest_get_msrs() allows using PEBS for guest events, but only if perf isn't
+using PEBS for host events.
+
+I didn't actually verify that "perf kvm top" generates for events, but I assuming
+it's creating a precise, a.k.a. PEBS, event that measures _only_ guest, i.e.
+excludes host.  That causes a false positive of sorts in intel_guest_get_msrs(),
+and ultimately results in KVM running the guest with a PEBS event enabled, even
+though the guest isn't using the (virtual) PMU.
+
+Pre-ICX CPUs don't isolate PEBS events across the guest/host boundary, and so
+perf/KVM hard disable PEBS on VM-Enter.  And a simple (well, simple for perf)
+precise event doesn't cause problems, because perf/KVM will disable PEBS events
+that are counting the host.  I.e. if a PEBS event counts host *and* guest, it's
+"fine".
+
+Long story short, masking PEBS_ENABLE with the guest's value (in addition to
+what perf allows) fixes the issue on my end.  Assuming testing goes well, I'll
+post this as a proper patch.
+
+--
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index cdb19e3ba3aa..1d01fb43a337 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -4336,7 +4336,7 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
+        arr[pebs_enable] = (struct perf_guest_switch_msr){
+                .msr = MSR_IA32_PEBS_ENABLE,
+                .host = cpuc->pebs_enabled & ~cpuc->intel_ctrl_guest_mask,
+-               .guest = pebs_mask & ~cpuc->intel_ctrl_host_mask,
++               .guest = pebs_mask & ~cpuc->intel_ctrl_host_mask & kvm_pmu->pebs_enable,
+        };
+ 
+        if (arr[pebs_enable].host) {
+--
+
+
+> Let me know if I can provide any additional information or testing.
+
+Uber nit: in the future, explicitly state whether a command is being run in the
+guest or host.  I had a brain fart and it took me an embarrasingly long time to
+grok that running "perf kvm top" in the guest would be nonsensical.
