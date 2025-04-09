@@ -1,101 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B925A213E77
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 19:51:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D1992063FA
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 19:53:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744228313; cv=none; b=DQ8550UpPDVtTLl0vsj8bClSNNlYPVXG0Y+cwqnx+/s8J6hhDo9haRL981K6fW8fHrbRG/tLkL/DCq+uGpvjKteJvLsA7MstXmmhvc40Xco+yrY7Ln19tiHHYh+osnet6eaKidQH0IiS3kLpHCT553OY+G3sRE8Lv3e7Gt+S43g=
+	t=1744228432; cv=none; b=kpwT57WRGTeNFK/z+jppULfDgEnGBDgXVwZcMg3saCYshzx2RXYU7+wWNpg63GQDpiP4/XdGJrEdZZCc+LqlUg8PBi6Q3IrhdvtyNwEcNLLT9bEHOxKs8OTpA05pESFkSWHYs7AuPAq5oby4876bDgJS0DP0l9CE6LzVibrUlC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744228313; c=relaxed/simple;
-	bh=xUUsFbA8OabnMgSAkK1pSmdYIwuCe2BU6DsspI9RfN0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K9eC9GBF5gdMLpHY5kcZBBrXos8TjquiEVuoPH7SGgXcjlwBbHvpiMPIUrp+LTdu04LWU5iB6kDt4V3Z3F+WEFnUMzHOt0LfEyDN3UyZGCMm11H8ea5l8hwq5yZhpb082LkpzqaM/1U9Q54cRiOkahS9SvpyJFvjjEkmP3gfk+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NbIDQJns; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744228432; c=relaxed/simple;
+	bh=rv4mMwuG4jkn773xC8sA0ToKXoLaQgRn7SHaoclVUrY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=WXA7QcFwjfCtKy2gaTy+oBglVGOHlFYCPe656Jgp1Lxa8dIWkr0mGSsWRRu//2phH0+UrXKsSMVLfxEfUAzCU1WvPJV40vN0EhajfmarAqjlyevbe89Mc5hCLgHtZL8tBv2gCiFvauYDYpmZhY8ZaeAbNU3Mq9nm1lLFPom8Jvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aI9teiPp; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NbIDQJns"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E1C8C4CEE2;
-	Wed,  9 Apr 2025 19:51:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744228312;
-	bh=xUUsFbA8OabnMgSAkK1pSmdYIwuCe2BU6DsspI9RfN0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NbIDQJnsAThrfZZDBRu047vyVIg+P8+JGtyX0gl+soKBC2Kae16OYWU/BwkkfiF4S
-	 U2xCagDDn/W3ZVLqun7/o4Em0uhAU6XmwZW2r0STKxQdEGuLAc6gM+gUa8ZpvcM1eM
-	 KS3eE+N3rsWdYpchdNq6Qo3xaJDkAOogBpGCOhjNwk/UB6KLt3socXDJWUSAdYpeGm
-	 a/7svu2dhLRUGdU51kYf/p+q5nx2b1ZMZAmfyGRmO2iDriJROHU8MJVXG1sGd2EkNQ
-	 +jcAvsx/743s41zHox+h3Z7doe4hIoULEI64aBJmEaKttjiE2FQ1aYVlZZfVdLCp4o
-	 SYYcUNsmXqDxg==
-Date: Wed, 9 Apr 2025 12:51:49 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, x86@kernel.org, 
-	linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH RFC 4/5] x86/alternative: Improve code generation
- readability
-Message-ID: <qik3dltarxj5trsbgzoifhf545nss4vwnabhql7i2b7qiowq52@y3d5pirwd4ni>
-References: <cover.1744098446.git.jpoimboe@kernel.org>
- <35ae5c17e8cc88506b5ae8f3b06d9491f7ef319c.1744098446.git.jpoimboe@kernel.org>
- <20250409143821.GE9833@noisy.programming.kicks-ass.net>
- <4q77jakv67gmglrcbzojngyutbfi3pzgsjayrymkg7dhkxo4hl@mczk3gots764>
- <CAHk-=whAtuMohKpzrzt0HFLP0RdU=KB-_4fu25gG6O4R=+PXvg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aI9teiPp"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-736c7d0d35aso7918b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 12:53:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744228429; x=1744833229; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=B/LBm3aV4zfAmxi92/BK6RmsqnpaBnCdXpzKq52/Foc=;
+        b=aI9teiPp4IOAdU9GBsw2c5UUNtJjfzYDo5oOlVpoK02KZbfJDi4/BUpMOgjUTDDP77
+         Zo1cFX/mi1CVaa7zifjJZefTiSM4bKVOBRbxcHWDsR4ra5zIy6Q8gxph2QBBXdTfWPR0
+         5OQe5GpPbqiVQys+My9WQ6FIq3wGpo5XZ/aX/6wj+SeZn0pkfDwDGx1345vl3dMMVxH9
+         XNN9BcliriZjlo6Nu9bsZMO7F7TC8FUiDzYlGA2mNiW7XM6g2jB0KjlK3q1zQA8WX7QA
+         IvmRm67Z5XfxmOWM6F9ibvqDxN6Uam9M7Va/UcIZ8+KdMP9uVdgncS5xeXVLnTkaWbTL
+         dP/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744228429; x=1744833229;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=B/LBm3aV4zfAmxi92/BK6RmsqnpaBnCdXpzKq52/Foc=;
+        b=ILCrx65vzAyoB6eCURM6btiwGVUpSDWVsHURy7YuKt/zk5WklY/Xh9Q7XgfrCGEFMu
+         a2ld7vm3Y1IrI6t8EOBTpUr3SkQJcQQpvSQdD59bBJ4L3XZzcyABd6Gb0n6rF8YkOvCr
+         iKHRB8aSyVgLZJMCQtZ2b+oFBXvLuS779HAt4kukipjVxdlojmOyZbTwm0HZn04IPZLf
+         qaLYxwMSI3RS1HerjsEjYkra8RjL3lyJuGCjWEM6duSHahMJR1Ueq6WHyruPGb+95TsI
+         PAomoZOqh1BKXaNT/hux/pceVAcMvFzZLElAcyHNkpSIShoEpEKtDDyEqZDgRGVqpmmx
+         tL/A==
+X-Forwarded-Encrypted: i=1; AJvYcCWI9TnAv+NWxi6UbzpAjDan5kqUBz9E6b2lF2CUPMhLqzgdEhNW6eYjhQbM7D7puYsblOhvq6zwJjpFTRU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCoI2ZwdxBXEX1jVMQcC6u7LMBV5FS3GOfX5yJmg06YjzWLvzu
+	Ji3MozYKNx8wUlJbWItddTi6ZRDUw0SJBhnlki8mBUNcdlcQ/zRxWPNH6AvpxTjDjqpXcSL6PKK
+	QQA==
+X-Google-Smtp-Source: AGHT+IEeESm/upruWypiAiAFjj3gqiD2FWPZpn5Oi58JT7YjI+D2LtDvdvxhwdzcKYcXLoDvWUFBt/R8XtU=
+X-Received: from pfkq6.prod.google.com ([2002:a05:6a00:846:b0:737:6e43:8e34])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:130c:b0:736:bfc4:ef2c
+ with SMTP id d2e1a72fcca58-73bbec49ac8mr221785b3a.0.1744228428902; Wed, 09
+ Apr 2025 12:53:48 -0700 (PDT)
+Date: Wed, 9 Apr 2025 12:53:47 -0700
+In-Reply-To: <20250409014136.2816971-1-mlevitsk@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHk-=whAtuMohKpzrzt0HFLP0RdU=KB-_4fu25gG6O4R=+PXvg@mail.gmail.com>
+Mime-Version: 1.0
+References: <20250409014136.2816971-1-mlevitsk@redhat.com>
+Message-ID: <Z_bQS63A2bd-LzgQ@google.com>
+Subject: Re: [PATCH v2 0/4] KVM: extract lock_all_vcpus/unlock_all_vcpus
+From: Sean Christopherson <seanjc@google.com>
+To: Maxim Levitsky <mlevitsk@redhat.com>
+Cc: kvm@vger.kernel.org, Alexander Potapenko <glider@google.com>, 
+	"H. Peter Anvin" <hpa@zytor.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, kvm-riscv@lists.infradead.org, 
+	Oliver Upton <oliver.upton@linux.dev>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Jing Zhang <jingzhangos@google.com>, Waiman Long <longman@redhat.com>, x86@kernel.org, 
+	Kunkun Jiang <jiangkunkun@huawei.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Anup Patel <anup@brainfault.org>, Albert Ou <aou@eecs.berkeley.edu>, kvmarm@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>, 
+	Borislav Petkov <bp@alien8.de>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Keisuke Nishimura <keisuke.nishimura@inria.fr>, Sebastian Ott <sebott@redhat.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Atish Patra <atishp@atishpatra.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Randy Dunlap <rdunlap@infradead.org>, 
+	Will Deacon <will@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, linux-riscv@lists.infradead.org, 
+	Marc Zyngier <maz@kernel.org>, linux-arm-kernel@lists.infradead.org, 
+	Joey Gouly <joey.gouly@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Andre Przywara <andre.przywara@arm.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Adrian Hunter <adrian.hunter@intel.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Wed, Apr 09, 2025 at 11:02:29AM -0700, Linus Torvalds wrote:
-> On Wed, 9 Apr 2025 at 10:41, Josh Poimboeuf <jpoimboe@kernel.org> wrote:
-> >
-> > I actually think the compactness of putting the entry on a single line
-> > is really nice.
++Adrian
+
+On Tue, Apr 08, 2025, Maxim Levitsky wrote:
+> Implement Paolo's suggestion of reusing
+
+Ha!  I *knew* this felt familiar when I suggested extracting (un)lock_all_vcpus()
+to common code in the context of the TDX series.
+
+https://lore.kernel.org/all/Z-V0qyTn2bXdrPF7@google.com
+
+> sev_lock/unlock_vcpus_for_migration in arm and riscv code
+> for the purpose of taking vcpu->mutex of all vcpus of a VM.
 > 
-> Yeah, I think the noise with size calculations in particular is stuff
-> that I never look at, and making it one long line is better than
-> multiple lines, I think.
+> Because sev_lock/unlock_vcpus_for_migration already have a workaround
+> for lockdep max lock depth, this fixes the lockdep warnings on arm
+> which were the inspiration for this refactoring.
 > 
-> That said, for some of the alternatives, it would be even nicer if we
-> could make the noise more compact by just hardcoding sizes. Our
-> generic alternatives macros do result in some *very* verbose output
-> that is entirely illegible to humans.
-
-What if we were to use a global asm() to define an alternative .macro
-whenever "alternative.h" gets included?
-
-e.g.:
-
-asm(".macro alternative oldinstr, newinstr, ft_flags\n"
-    "771:\t\\oldinstr\n"
-    "772:\t.skip -(((" alt_rlen ")-(" alt_slen ")) > 0) * "
-		  "((" alt_rlen ")-(" alt_slen ")),0x90\n"
-    "773:\n"
-    ".pushsection .altinstructions,\"a\"\n\t"
-    ".long 771b - .\n\t"			/* label           */
-    ".long 774f - .\n\t "			/* new instruction */
-    ".4byte \\ft_flags\n\t"			/* feature + flags */
-    ".byte " alt_total_slen "\n\t"		/* source len      */
-    ".byte " alt_rlen "\n\t"			/* replacement len */
-    ".popsection\n"
-    ".pushsection .altinstr_replacement, \"ax\"\n"
-    "774:\t\\newinstr\n"
-    "775:\n"
-    ".popsection\n"
-    ".endm");
-
-#define ALTERNATIVE(oldinstr, newinstr, ft_flags)			\
-	"alternative \"" oldinstr "\", \"" newinstr "\", \"" __stringify(ft_flags) "\"; "
-
-Then it becomes extremely readable:
-
-  alternative "", "stac", "( 9*32+20)";
-
-Of course the downside is the macro gets generated even if it's never
-used.
-
--- 
-Josh
+> This patch series was only compile tested on all 3 architectures.
+> 
+> V2: added trylock option to kvm_lock_all_vcpus to be better compatible
+> with the orginal code.
+> 
+> Best regards,
+> 	Maxim Levitsky
+> 
+> Maxim Levitsky (4):
+>   locking/mutex: implement mutex_trylock_nested
+>   KVM: x86: move sev_lock/unlock_vcpus_for_migration to kvm_main.c
+>   KVM: arm64: switch to using kvm_lock/unlock_all_vcpus
+>   RISC-V: KVM: switch to kvm_lock/unlock_all_vcpus
+> 
+>  arch/arm64/include/asm/kvm_host.h     |  3 --
+>  arch/arm64/kvm/arch_timer.c           |  4 +-
+>  arch/arm64/kvm/arm.c                  | 43 ----------------
+>  arch/arm64/kvm/vgic/vgic-init.c       |  4 +-
+>  arch/arm64/kvm/vgic/vgic-its.c        |  8 +--
+>  arch/arm64/kvm/vgic/vgic-kvm-device.c | 12 ++---
+>  arch/riscv/kvm/aia_device.c           | 34 +------------
+>  arch/x86/kvm/svm/sev.c                | 65 ++----------------------
+>  include/linux/kvm_host.h              |  6 +++
+>  include/linux/mutex.h                 |  8 +++
+>  kernel/locking/mutex.c                | 14 ++++--
+>  virt/kvm/kvm_main.c                   | 71 +++++++++++++++++++++++++++
+>  12 files changed, 116 insertions(+), 156 deletions(-)
+> 
+> -- 
+> 2.26.3
+> 
+> 
