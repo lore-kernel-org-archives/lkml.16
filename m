@@ -1,97 +1,42 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C31DD270EDD;
-	Wed,  9 Apr 2025 17:24:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA56926E143;
+	Wed,  9 Apr 2025 17:26:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744219454; cv=none; b=sDWz+W2qMrFTUlhCRvbRqUVE1A6eRFGaZXYyn6jfZqV0LzvUJyjRxst5StOC02Wnz6bJg8cPiPWCmMPSHPvjX8DqDFrnn4xWNTTGsZ/iXzR/kQY1JVVLeGJdEegfD2k2vg1PV0g9Gs0mCwrCH+fH5FkTi1KQVcYlrk6NNGEv3xM=
+	t=1744219619; cv=none; b=PdYmtuvVHt9Xkb3jXguOa3da51jZFDXrPU3SwoJSgPtFke9p/VtP9jOBYBgV/eGz2565+92rKPKlbREdrZCVA6DZz1Oegr57rZaYh/4fTIH0y4btT54s61GFSxA5pQaesuCqaP4fwVC/SshW2tDhvbSByZvpDNOPWN4LLH43I6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744219454; c=relaxed/simple;
-	bh=Rwe8Y5EY05DaVr5ui2bXVFwv20PZbqJqTEzIsURCcWY=;
+	s=arc-20240116; t=1744219619; c=relaxed/simple;
+	bh=4cE3ikxzQkLEyV7rkhTFdWv+Qyfv6keFT8/eBBjAhZI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L0obyshKdipmqxJB0t8bFD2hE6WBD1gG7lYo+Kyz4/aCAzO4QjCsoyG9Vf4F607IxbtPhnao+glTr7zu65SYsA8CkmUY/Zt04DZWQzo4pyOAPSa9sSZfEqCAmD/pXs5jNOpWPh1NKbZtXYsLRQ1KN3x6XsQpDmnkqeYPh/zBQaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YM4ERz/N; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=d/F97R6nUrjaCLQImHXu2Dl/gFu/vviSDTtyemPf4xHlYgpGfaM1QaDjT4DFmPzISAvN384DrdUpee5YZ3FjTBCfhGsIoxODdV2aW1BOCG99/FFDZq+rk5TOhesHgX3sCy6SYZVPTxCz8eDqCL77WTOeGNlT1YymhzGVSZ4u9Ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DYC6KdqJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YM4ERz/N"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-af9065f0fc0so4891407a12.2;
-        Wed, 09 Apr 2025 10:24:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744219452; x=1744824252; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xd6xaUI5nv9NKBM15KV37XOGcT5rm8Sii0IDXetnYDU=;
-        b=YM4ERz/N4iiWyfXFSwRuCJamm6ZmD5oTqHQkiC1oVhjDPC1apcHC+WWgVSCFxI3leS
-         kBronCs7SXWwNTEBixCgHPRgA16ZDqeqryRdD8yBrecdVjdGexjt8IGakYsZO5dS1xAd
-         GT/si86FZO4pYkjNdk6ZfZH6n2s4SI6QTppAI/L3mLr03R+txDZ+hIYoDanyn36Ms84H
-         dGvD2KwdJZOKENu99P0liMSYDi/dSL3hLxGyvtTYtBMJsHhYPpAFVpZ/3Mu/NI2xg2/h
-         9wRN0pC0YorB241KFOq7IbbVBJ6jGmb6MsWAae95ir1j5HpYfiIgz004IWM9e+BxsnxW
-         6uTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744219452; x=1744824252;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xd6xaUI5nv9NKBM15KV37XOGcT5rm8Sii0IDXetnYDU=;
-        b=IRmZ/G46khvwF2kiQ33+3MbP7c8Mqf2prn3u1h9+wZ5TCv0kHIM7jRzisq6Ot+dYEF
-         A1lgV8RA8fOKA5nBg3HsI8BpJu/rFsoEovrMoM0t3lKr96nDak/Tn5XbiFhfDFC2wCD2
-         DCsVcvqETdsue+nDO8z8n4QlQxwuYIW+HEHEZfhJgRNMbenscoSeKRJ3PFfqjUiBHHeK
-         3T7O1yGyl7Rku1uyXex9at87rBTQrAPhsN1MzHOYKzjQXwSWaklfBJxSMFaWj17nW8/P
-         bKfUiRIcspdBlZclLkTKpbopACswpOVUCvDSHcitITmyKAJaj/Zo0rqxEucLrCDXoU2u
-         7F5A==
-X-Forwarded-Encrypted: i=1; AJvYcCV7SgshekNJiWthWrChV98Og98l5MmDMy7cii7AkcehpoOXMUOmyowuYS5YN3KYQqJGxN9SX4j79EdcM9/q@vger.kernel.org, AJvYcCVRaqIx0eUxrH3oP6wshX4slH31z4W/4jTO7afpExXxykV6ph5ca55eyDLdYExQhL1JGp2DHDNHoYM6K2c=@vger.kernel.org, AJvYcCVztw9ZynDLEqXuXl3aGPDPeuLti9gxQbIWoKUek3pHNi747jjbCh5KzdgH6S/XHgxzzS4=@vger.kernel.org, AJvYcCWJ2ufTIjaoWOMIhmHdil5v7sjWf/tdmWTiqmL2G+Rq5U4XCJ6RrCogzdYIJbL+Ggas+417/0f+RCgKEJle@vger.kernel.org, AJvYcCWmkb2+lc5ElaP+GDfCo7IQYK/lXMmX/y7W1MrJQl1j+Rc4ovK4OrkOmIMuPf/rS1clCc4/TF9EnhgGaKM=@vger.kernel.org, AJvYcCWsjMWS1wfFft4ZuUiA0daKJOy/4h1VVqaf7tTXZuoFemnfwQxSpl2XtNmQPF7EOdQoD5p6VyCb@vger.kernel.org, AJvYcCXfyv7SegsjPNDO4jryPe+okL+XIQ4Md0gUvMGcpAOo3eLM+aQNfntuOR80z3tBpCf7JSbfEtaafr5eKHc=@vger.kernel.org, AJvYcCXtpBH852Libf2Dm07oYdkjvZQwzh6TEZwyyxPNmkZLA73l52cAFYj/p21FZq4FcXtZkk4rD/DhfingVbQAXqg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/joGAohHW5EQGkIO5R0QEfKeL5PUYKf/YfKdwSbxhl5qZpZbp
-	3x7yy/4TXx9WJ6RM8waK6cpPv/u8ec18DMX1+6Op7ZDHCoj5xwy9
-X-Gm-Gg: ASbGncvQy47LH+SbbLhOODmJpf9KqAjnX1uJjE0R2CGyCui6gbbvobvukvN4lr1ZHNG
-	zbfjtjAvGaLs2rAYIoY8ZN/nFX0NFwLbvxtnn5vyGATnc5ilyZKqH69xl9gDOkcawWMA52RUMpr
-	ykbuoo4gQu7N3YlE5gyR/b6D8Zu42QjATa20v3ZpM//dYYyvvcs2lXZtV1CU/ODfKQLkjYBrSO1
-	FpTHKWYiobXVsCzUU4/A0czM8lf1YQshThOSDiHzPMmIWDLyU/44eszH9UxS7CYpbNf/5V45Ai3
-	zDUFs17LtjQfYOPX+x035SUXAZDWnS2oMb6XmThZ
-X-Google-Smtp-Source: AGHT+IELcovaPBJxMo6VlfeeTod3PlQVQYXafQRyaLUWNqmSnypRNDEVNTbdlgjgS5FV2ZA5ueCy6w==
-X-Received: by 2002:a17:90b:6ce:b0:301:1d03:93cd with SMTP id 98e67ed59e1d1-306dd556630mr5093919a91.24.1744219451960;
-        Wed, 09 Apr 2025 10:24:11 -0700 (PDT)
-Received: from localhost ([216.228.127.131])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306dd12b4d5sm2098089a91.25.2025.04.09.10.24.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 10:24:11 -0700 (PDT)
-Date: Wed, 9 Apr 2025 13:24:08 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Kuan-Wei Chiu <visitorckw@gmail.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, jk@ozlabs.org,
-	joel@jms.id.au, eajames@linux.ibm.com, andrzej.hajda@intel.com,
-	neil.armstrong@linaro.org, rfoss@kernel.org,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
-	dmitry.torokhov@gmail.com, mchehab@kernel.org,
-	awalls@md.metrocast.net, hverkuil@xs4all.nl,
-	miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-	louis.peens@corigine.com, andrew+netdev@lunn.ch,
-	davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
-	parthiban.veerasooran@microchip.com, arend.vanspriel@broadcom.com,
-	johannes@sipsolutions.net, gregkh@linuxfoundation.org,
-	jirislaby@kernel.org, akpm@linux-foundation.org, jdelvare@suse.com,
-	linux@roeck-us.net, alexandre.belloni@bootlin.com, pgaj@cadence.com,
-	hpa@zytor.com, alistair@popple.id.au, linux@rasmusvillemoes.dk,
-	Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-	jernej.skrabec@gmail.com, kuba@kernel.org,
-	linux-kernel@vger.kernel.org, linux-fsi@lists.ozlabs.org,
-	dri-devel@lists.freedesktop.org, linux-input@vger.kernel.org,
-	linux-media@vger.kernel.org, linux-mtd@lists.infradead.org,
-	oss-drivers@corigine.com, netdev@vger.kernel.org,
-	linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev,
-	brcm80211-dev-list.pdl@broadcom.com, linux-serial@vger.kernel.org,
-	bpf@vger.kernel.org, jserv@ccns.ncku.edu.tw, Frank.Li@nxp.com,
-	linux-hwmon@vger.kernel.org, linux-i3c@lists.infradead.org,
-	david.laight.linux@gmail.com, andrew.cooper3@citrix.com,
-	Yu-Chun Lin <eleanor15x@gmail.com>
-Subject: Re: [PATCH v4 05/13] serial: max3100: Replace open-coded parity
- calculation with parity_odd()
-Message-ID: <Z_atODqZDkff5sjj@yury>
-References: <20250409154356.423512-1-visitorckw@gmail.com>
- <20250409154356.423512-6-visitorckw@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DYC6KdqJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21365C4CEE2;
+	Wed,  9 Apr 2025 17:26:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744219619;
+	bh=4cE3ikxzQkLEyV7rkhTFdWv+Qyfv6keFT8/eBBjAhZI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DYC6KdqJt4RFGGFPtu/ik51HXgvpTIVHF34pbK/3XtcwcHmcs5YSmjrJouHQGQrc+
+	 MmsK5WUVNAwXkS7mYUYMhHjZaRlEQEgIcVcYdek5BaeB++qKPFAx9MupiOY/x04NZg
+	 6gioCrKWH5/rUgo4FSEshEFNl8njFmqwB2BQswAgHYWZhzr4rRq8n/ttEmvSB3qXsm
+	 MbrUCqGdQ3IrPO+qcqouLbeY2jdgu2JJCVxrDDNs3a+Og7qmDpWXh15uxxf52T3GMx
+	 awp0Ask9g31o7fusZTOuk9lKstDC81qBY4hqvtzpEy9os3n1QKl4SojY743RitVeig
+	 xx3LTZWv9DJEQ==
+Date: Wed, 9 Apr 2025 10:26:56 -0700
+From: Kees Cook <kees@kernel.org>
+To: Joel Granados <joel.granados@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Shuah Khan <shuah@kernel.org>, John Sperbeck <jsperbeck@google.com>,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 1/4] sysctl: move u8 register test to lib/test_sysctl.c
+Message-ID: <202504091020.3A06E6C548@keescook>
+References: <20250321-jag-test_extra_val-v1-0-a01b3b17dc66@kernel.org>
+ <20250321-jag-test_extra_val-v1-1-a01b3b17dc66@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -100,68 +45,60 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250409154356.423512-6-visitorckw@gmail.com>
+In-Reply-To: <20250321-jag-test_extra_val-v1-1-a01b3b17dc66@kernel.org>
 
-On Wed, Apr 09, 2025 at 11:43:48PM +0800, Kuan-Wei Chiu wrote:
-> Refactor parity calculations to use the standard parity_odd() helper.
-> This change eliminates redundant implementations.
+On Fri, Mar 21, 2025 at 01:47:24PM +0100, Joel Granados wrote:
+> If the test added in commit b5ffbd139688 ("sysctl: move the extra1/2
+> boundary check of u8 to sysctl_check_table_array") is run as a module, a
+> lingering reference to the module is left behind, and a 'sysctl -a'
+> leads to a panic.
 > 
-> Co-developed-by: Yu-Chun Lin <eleanor15x@gmail.com>
-> Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
-> Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
-> ---
->  drivers/tty/serial/max3100.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> To reproduce
+>     CONFIG_KUNIT=y
+>     CONFIG_SYSCTL_KUNIT_TEST=m
 > 
-> diff --git a/drivers/tty/serial/max3100.c b/drivers/tty/serial/max3100.c
-> index f2dd83692b2c..36ed41eef7b1 100644
-> --- a/drivers/tty/serial/max3100.c
-> +++ b/drivers/tty/serial/max3100.c
-> @@ -16,6 +16,7 @@
->  /* 4 MAX3100s should be enough for everyone */
->  #define MAX_MAX3100 4
->  
-> +#include <linux/bitops.h>
->  #include <linux/container_of.h>
->  #include <linux/delay.h>
->  #include <linux/device.h>
-> @@ -133,7 +134,7 @@ static int max3100_do_parity(struct max3100_port *s, u16 c)
->  	else
->  		c &= 0xff;
->  
-> -	parity = parity ^ (hweight8(c) & 1);
-> +	parity = parity ^ parity_odd(c);
+> Then run these commands:
+>     modprobe sysctl-test
+>     rmmod sysctl-test
+>     sysctl -a
+> 
+> The panic varies but generally looks something like this:
+> 
+>     BUG: unable to handle page fault for address: ffffa4571c0c7db4
+>     #PF: supervisor read access in kernel mode
+>     #PF: error_code(0x0000) - not-present page
+>     PGD 100000067 P4D 100000067 PUD 100351067 PMD 114f5e067 PTE 0
+>     Oops: Oops: 0000 [#1] SMP NOPTI
+>     ... ... ...
+>     RIP: 0010:proc_sys_readdir+0x166/0x2c0
+>     ... ... ...
+>     Call Trace:
+>      <TASK>
+>      iterate_dir+0x6e/0x140
+>      __se_sys_getdents+0x6e/0x100
+>      do_syscall_64+0x70/0x150
+>      entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> 
+> Move the test to lib/test_sysctl.c where the registration reference is
+> handled on module exit
+> 
+> 'Fixes: b5ffbd139688 ("sysctl: move the extra1/2 boundary check of u8 to
 
-This can be simplified for more unless I misunderstand something...
+Typoe: drop leading '
 
-From: Yury Norov <yury.norov@gmail.com>
-Date:   Wed Apr 9 13:22:04 2025 -0400
+> sysctl_check_table_array")'
 
-serial: max3100: Replace open-coded parity
+And avoid wrapping this line for the field.
 
-diff --git a/drivers/tty/serial/max3100.c b/drivers/tty/serial/max3100.c
-index f2dd83692b2c..07d332b8e87d 100644
---- a/drivers/tty/serial/max3100.c
-+++ b/drivers/tty/serial/max3100.c
-@@ -121,20 +121,12 @@ static DEFINE_MUTEX(max3100s_lock);		   /* race on probe */
- 
- static int max3100_do_parity(struct max3100_port *s, u16 c)
- {
--	int parity;
--
--	if (s->parity & MAX3100_PARITY_ODD)
--		parity = 1;
--	else
--		parity = 0;
--
- 	if (s->parity & MAX3100_7BIT)
- 		c &= 0x7f;
- 	else
- 		c &= 0xff;
- 
--	parity = parity ^ (hweight8(c) & 1);
--	return parity;
-+	return s->parity & MAX3100_PARITY_ODD ? !parity(c) : parity(c);
- }
- 
- static int max3100_check_parity(struct max3100_port *s, u16 c)
+> 
+> Signed-off-by: Joel Granados <joel.granados@kernel.org>
+
+Otherwise looks good to me.
+
+Reviewed-by: Kees Cook <kees@kernel.org>
+
+(And I should  note that there is a push to move kunit tests into a
+"/tests/" subdir, but that's separate from this series.)
+
+-- 
+Kees Cook
