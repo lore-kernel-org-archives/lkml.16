@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AED3121421A
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 20:29:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72CEA2144B6
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 20:29:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744230565; cv=none; b=A4x8RXeh0CMpmD7ro7KFxhuq/sv8XiLJZF/Gcfeu01+O4IAzFTUALksaL5T+GjvIrBvtTRxN2KTem/XTLC6RCmZ6ugB+iLAHCIhbob4aVcK7lRQ5vn/11RQF5IMf9XXfqMxuxJ/PddNWWAbGjLwn5/bmfNdqFSIFsNL7XCSWY0Q=
+	t=1744230568; cv=none; b=GGUUofvq0pDL9eze6nGNdM6ffOc+V+bub4ATGRtGx5zgG8gnu8QvZM28elaKq6gqAHqXztmyi4dJ5hQVKn++HZK8Awq3sLEWp5pNeTD4I3a+xmygi1sdENrpFKA0fjldD+EgIqBmejGj8SgmUH7f+fMH10ssLuoqH+MOnRgaNGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744230565; c=relaxed/simple;
-	bh=1epFW2JgoDcxUAgVOgIpZ7+Uo7W19iDq3c6pvdh5vJQ=;
+	s=arc-20240116; t=1744230568; c=relaxed/simple;
+	bh=yipjOyzmBSZ7V2iWhmnuivyq5uPoOKOJUFIKj9yOP/s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=l1LWMb0WRHyXzA/C2upixD9d64Y4Es7aEdlKFxaGvpcO6T63OrmyJONKttOKqExH2H7maHh5akwFTqWItHs38t7r+WjBThgMTsP0ok4b/bKhKd4tc4S13IE+Z4AWbUCP/47hlJ9p/b73i9mU+wgVbAmc9KZERzPRfI+aF4Vs724=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U4LVcIzn; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=rPiscb2+lurgPYY3EHQoZvWl1Nx6RZt+I+D5RP66hmExETWpc/2T9jS8GsrKpMncoVPkUCUPyroqupPbUqCsAU0inFh23fvlQ2h9ghDESm/PGGPA6ccQcpD0FwwcHqN8KThsdKT/6psM49S7yHDhAhPyw0ZnKa21gQrq9RrRRag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tpKZSXmZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U4LVcIzn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D367DC4CEEB;
-	Wed,  9 Apr 2025 20:29:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tpKZSXmZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 996C9C4CEE8;
+	Wed,  9 Apr 2025 20:29:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744230565;
-	bh=1epFW2JgoDcxUAgVOgIpZ7+Uo7W19iDq3c6pvdh5vJQ=;
+	s=k20201202; t=1744230567;
+	bh=yipjOyzmBSZ7V2iWhmnuivyq5uPoOKOJUFIKj9yOP/s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=U4LVcIznWVLIcnHJtG6ubtLAFUnB7/92+brJGHNjTT5zxYQO0AjYXzjyMPE/3I9NU
-	 ndlsJosr/D+xZ3eV1qbLiNF4aLZ1s53HAtvKmsTqoZOZCRhNPjy/jsPeuV8TFI1wxm
-	 b6JlcttaLPsVZNH+7P0Xa1vmD/hmUBLVizjJFfum7KARQrHc3x/dYBHRDkMVGZVCwU
-	 vekRgL4amkUQf/miIzh7ubzEh20HnaPT9mtggJOZAJrXFulJC0+mndZgy1aS6uUBc3
-	 yjlclkNo2W/hzfe91PN/Dqivr89pTH4plAoZN8Hc2tedz9HaKDtyOBK2LguSPGAE0h
-	 2yNfeRNvHNzrQ==
+	b=tpKZSXmZBjJ4wkcS6G9nXzfgfc8q0EeKC8mII1dvFBQAW5QzzHJFhDmE/gdcsnLBO
+	 GA2WqYdwTiAvZ9ztRpmelVio4bpVoB2TIISuqmnqC2zeEnWtxBRcS6SKYVNsZiCAOi
+	 ntfivOQyb7ZjzmMOBinpNIoesjT+pA+xWgJj5tl0enmwQQmRGYCqmeYsEFHXlvHJbF
+	 j0zGmFsfCzdpHEtjFp8kHkxUu2EaGQr6Em9lliBHNFhQWynbCj5onGbrPNIv0BgQ/6
+	 64uq0UNgeRc4PFnCvBV3TRA55K+w/KNfCX5zhzG91hWuPsvT+avhZlehcIF/N3nZta
+	 g89OekGXzTNbw==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Juergen Gross <jgross@suse.com>,
@@ -37,9 +37,9 @@ Cc: Juergen Gross <jgross@suse.com>,
 	Borislav Petkov <bp@alien8.de>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 03/20] x86/msr: Use u64 in rdmsrl_amd_safe() and wrmsrl_amd_safe()
-Date: Wed,  9 Apr 2025 22:28:50 +0200
-Message-ID: <20250409202907.3419480-4-mingo@kernel.org>
+Subject: [PATCH 04/20] x86/msr: Use u64 in rdmsrl_safe() and paravirt_read_pmc()
+Date: Wed,  9 Apr 2025 22:28:51 +0200
+Message-ID: <20250409202907.3419480-5-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250409202907.3419480-1-mingo@kernel.org>
 References: <20250409202907.3419480-1-mingo@kernel.org>
@@ -51,6 +51,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
+The paravirt_read_pmc() result is in fact only loaded into an u64 variable.
+
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: Juergen Gross <jgross@suse.com>
 Cc: H. Peter Anvin <hpa@zytor.com>
@@ -58,31 +60,31 @@ Cc: Dave Hansen <dave.hansen@intel.com>
 Cc: Xin Li <xin@zytor.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 ---
- arch/x86/kernel/cpu/amd.c | 4 ++--
+ arch/x86/include/asm/paravirt.h | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index 79569f72b8ee..b2ab2369c9cb 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -31,7 +31,7 @@
+diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
+index c4c23190925c..c270ca050781 100644
+--- a/arch/x86/include/asm/paravirt.h
++++ b/arch/x86/include/asm/paravirt.h
+@@ -231,7 +231,7 @@ static inline void wrmsrl(unsigned msr, u64 val)
+ 	_err;						\
+ })
  
- u16 invlpgb_count_max __ro_after_init;
- 
--static inline int rdmsrl_amd_safe(unsigned msr, unsigned long long *p)
-+static inline int rdmsrl_amd_safe(unsigned msr, u64 *p)
+-static inline int rdmsrl_safe(unsigned msr, unsigned long long *p)
++static inline int rdmsrl_safe(unsigned msr, u64 *p)
  {
- 	u32 gprs[8] = { 0 };
  	int err;
-@@ -49,7 +49,7 @@ static inline int rdmsrl_amd_safe(unsigned msr, unsigned long long *p)
+ 
+@@ -239,7 +239,7 @@ static inline int rdmsrl_safe(unsigned msr, unsigned long long *p)
  	return err;
  }
  
--static inline int wrmsrl_amd_safe(unsigned msr, unsigned long long val)
-+static inline int wrmsrl_amd_safe(unsigned msr, u64 val)
+-static inline unsigned long long paravirt_read_pmc(int counter)
++static inline u64 paravirt_read_pmc(int counter)
  {
- 	u32 gprs[8] = { 0 };
- 
+ 	return PVOP_CALL1(u64, cpu.read_pmc, counter);
+ }
 -- 
 2.45.2
 
