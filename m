@@ -1,108 +1,238 @@
-Received: from send54.i.mail.ru (send54.i.mail.ru [89.221.237.149])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84F5927817E
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 19:11:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.221.237.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CC4E27BF7A
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 19:12:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744225909; cv=none; b=UJuqSsoS9h9WdFTrTlqHOgDWXx66p9IZVz3F1uevydSBgv09c6DyHcXQ/O8S7h6jyq9SWu8b/X6GIMlUdp8Mt86yVAN2CllCmZL9J6I0/yIind1OITY6mDb1MeWEWEfFeyjpkxkv9bWFLFE8hqq3Df5bsNgxOLVD8hbLTLkw7s8=
+	t=1744225923; cv=none; b=ALjpOgkeFN3GSw1MNn2Y9WPsSFOI4GTem3ysSfK4TxYI+Nip0RXRR7P3ZzB7tH+qOyLAF1YmqjYoTuQjtSA1dmUL+q1BMplwZyQVzBikJv+UWgRlkewlPvxx/nWGkRRlTo1o9/rhZM4LBZKbKf8C8cG+jVM0IMDWTLHrdfCiW1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744225909; c=relaxed/simple;
-	bh=D1QIXXR7l+l9GdMtWaIDbyAaCgToOndwYS4HMT8d7Js=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mTeg9dRQ16ZBjGwnrTjQzrMDWhMHyrrsWcGSN2koOA6B/O96CYfjFEP403Sj4WrCjxiadlDlUzm3QLH136QIODO89xQAyZVWvr0ihzIlR8+ECPXnisDMGT8FANqbqYxuprgqDZtxcuYNAlANQujvZWje/y0od6vm7e+GAMy9igY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=inbox.ru; spf=pass smtp.mailfrom=inbox.ru; dkim=pass (2048-bit key) header.d=inbox.ru header.i=@inbox.ru header.b=gVX0ydxn; dkim=pass (2048-bit key) header.d=inbox.ru header.i=@inbox.ru header.b=Y/z0hXg8; arc=none smtp.client-ip=89.221.237.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=inbox.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inbox.ru
+	s=arc-20240116; t=1744225923; c=relaxed/simple;
+	bh=rJVQDauQEjZj0g6jxReYpgMbOkc7rgwaKyOHe56V6g0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HcupPs2IuMfyLmkuezWKP/va+kOj/VniTOpUZnJkh2i+xDhFlCMAh7NYMzbycpXGV02zVlBMtrXWoxRt9hXYLdVxFIxfrhp82TG0vhQ7a2UqhhNilG3wVmnR5aNsoyJ0FEbwnLKhDA1KKoeZdd02r/lZA/UkKphj0M0cNAIqNgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hdCSHuc9; arc=none smtp.client-ip=209.85.222.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=inbox.ru header.i=@inbox.ru header.b="gVX0ydxn";
-	dkim=pass (2048-bit key) header.d=inbox.ru header.i=@inbox.ru header.b="Y/z0hXg8"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=inbox.ru;
-	s=mail4; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References
-	:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive:X-Cloud-Ids;
-	bh=84UBC03hNCb13+HyRaHqv/Gf1Qk28Q4O2obKNbI4KFY=; t=1744225905; x=1744315905; 
-	b=gVX0ydxn4sLZvrjL9F01FJspFb0l4ozbtmGX4dDUn3/3NvK4H+6EFpePe6aGn+wt+41umC4N407
-	t1FNy1tGvVfzy/NA1bjBW2z08ERRmzAQLr4q9rh1jFF+g7PxFhk3/2rClXao5lom+Mwk27rT5MVdl
-	s6nFkWt+WTmCF/HJn5zqbbd1BDcPsxlpPNh0MtEeRJI314cPKMtYcSKUbKyB754OggBN/jBaZIMYU
-	6RySU6vgPbKLBmfe1bRMS11WzBC2PoRioFcp8vwdxYjThCV8nPqxveZblBjlC3YNWcarJmgOjm3Vi
-	arXrAjwPCuDGrJHxiuwzA3koRQFUojQ4crIg==;
-Received: from [10.113.18.11] (port=56498 helo=send266.i.mail.ru)
-	by exim-fallback-84c6bcc6b7-rvrz8 with esmtp (envelope-from <fido_max@inbox.ru>)
-	id 1u2apk-00000000HlL-1wTc
-	for linux-kernel@vger.kernel.org; Wed, 09 Apr 2025 22:11:36 +0300
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=inbox.ru;
-	s=mail4; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References
-	:Cc:To:Subject:MIME-Version:Date:Message-ID:From:Sender:Reply-To:To:Cc:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-	List-Archive:X-Cloud-Ids:Disposition-Notification-To;
-	bh=84UBC03hNCb13+HyRaHqv/Gf1Qk28Q4O2obKNbI4KFY=; t=1744225896; x=1744315896; 
-	b=Y/z0hXg8Pz0k++Xyc+31sbSDFCZXVquz536yyIxj2jF0wz67XioAGgduv5S7NuRRHqQzD3OmJpG
-	Bs6/7Ogmrj0Srj1NJH3yd6HK47qV5UoUYCHM4K/x8p/CVTGM77SVJhz49Lh5HAwiDg4HZIXNRF+RZ
-	jjzLpvp2zs6NGGiZexmxI8lt3o3qx5Ch8oFEtLNDyrkuG2Vq2PMQqGEbRvUKNbg8+4nAvUX3B4tVg
-	mUcP9oSir+WQ3CfhsRrFSe68oPeFbkuelfESQSOcwx7V7Tb687ndZvC//p2MJavITFxysObUGXTYM
-	uVQ4zgE4c54W/cEgVOiXZ5m4LTY7wfGID8OA==;
-Received: by exim-smtp-85ff495cfc-pbccc with esmtpa (envelope-from <fido_max@inbox.ru>)
-	id 1u2apT-000000002uu-1LK8; Wed, 09 Apr 2025 22:11:20 +0300
-Message-ID: <c11d39bb-cdb8-45f0-95cd-283e7cc6aff4@inbox.ru>
-Date: Wed, 9 Apr 2025 22:11:16 +0300
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hdCSHuc9"
+Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-86d377306ddso3064671241.2
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 12:12:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744225919; x=1744830719; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=wi3/JxnteRx/5BMoOtb3JvQUUrvrHRfi+TmZ/LdTJGI=;
+        b=hdCSHuc90MzvGVeO4lZNKSJyPEYfY/D+pJbE+brGQS8ItufP8Jpiuz/DvYlwgoc+Ea
+         owWRBUEfRiBU6Xdb61tm2POFbTsedUEvq762UUyFIPSgw4Ai806GrFfIg2LWocNkbdjA
+         I7Iuzslxd7FHgdA+3G/5G8Sa29rHYDPizBDUJI8uxxtZ2bbkMtXtOt0hr3qvdY4yth5W
+         klV5reWJZ/Hyae/+S3a6EQsTOWj1Xb+0XruhmQEU6Bvv4i8Zl4jXna3w8OZC1hD0sRAz
+         F36fX0qK4EXTnER2kRePff9NANBusOKL3M8676a9Bs+AJp82G+haKI9S6lB5+6N2IGlH
+         LSlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744225919; x=1744830719;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wi3/JxnteRx/5BMoOtb3JvQUUrvrHRfi+TmZ/LdTJGI=;
+        b=mOHXfktNC1lb2JI4c23YDZYqGXubHnw4YQSz4W0zHzLywyrW5s5E89rBHvXAs5hsIY
+         2k899ogCej4z44xo5i4ts8f9vq+BWLYlIlEI6DIJdEcXEQ2X0Tg3SBVYstGXMyst27tr
+         VwEnRlVl1Q/HlCLBHSvZEeUvStDokj28qV2SEJfZMUiE+Z0FZtaJDtZ+wQZRlWqmocDW
+         t+ACIBO2v9N3E9yA4mbRgDHDZaCCQxxBAiQVZL3BIPMgY1cMT63yl1ViyU7Zd8SXAIGN
+         IGLi2dClUYrXGnFm2P3rdlatMzoBm2gcymcU+JgOn31bpAvXjH/WZ3nX7+7jmfoHz4jK
+         imig==
+X-Forwarded-Encrypted: i=1; AJvYcCV2+sas/QBNbH2RpMs52dmS9L/1uaohR1UXHZSncXf9852I/+p6M+xxr2W8/C3j7tsD263mWSjRfV6T398=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy25k+kSNUALKPEtj8eS6hhavJ5y7vbV1kOUW+FLfvjh9jpzd3V
+	+Ix/O4Ckpnmg6WC3/huGLwDtUXBpo6T/KPnQqudocjeY3xxlx7hnuTdOxbakSkpEiWtKDjwL7Ic
+	qle+vu1fVfpJ5D9gm8HdQWtZiMKzpxjg8QVIgzg==
+X-Gm-Gg: ASbGncs/T6QdwEbiboVgQyWRf8Wfcfppuf+/R9nZplP2enbjtnA7SMa3cehXcPXRPm+
+	BsvHhwE361eAsgZg4Ls2BBhoBvfAL8xBQC8Usyj8Et7a4VE27ItJjwhR2UCymtTyYpZyBeo0ctQ
+	9sojsf4WWWRk2WfE4O7rMW6ga8VZxQrGJO4z7+AxLZvO59bzgmU0tiBSg=
+X-Google-Smtp-Source: AGHT+IGquHRVV8Iwo0UImEXO1PZ149S8v0mbw+LbHunLj+Ma11Z53jzf53nmAhS3dfI8tSSV0Gz8MnVOHEj4TciTaV4=
+X-Received: by 2002:a05:6102:5549:b0:4bb:c24b:b644 with SMTP id
+ ada2fe7eead31-4c9d36ad092mr112527137.20.1744225919161; Wed, 09 Apr 2025
+ 12:11:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] riscv: module: Fix out-of-bounds relocation access
-To: Samuel Holland <samuel.holland@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>,
- linux-riscv@lists.infradead.org
-Cc: Andrew Jones <ajones@ventanamicro.com>,
- Pinkesh Vaghela <pinkesh.vaghela@einfochips.com>,
- Pritesh Patel <pritesh.patel@einfochips.com>,
- Darshan Prajapati <darshan.prajapati@einfochips.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Amma Lee <lixiaoyun@binary-semi.com>,
- Charlie Jenkins <charlie@rivosinc.com>, =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?=
- <cleger@rivosinc.com>, Jinjie Ruan <ruanjinjie@huawei.com>,
- Luis Chamberlain <mcgrof@kernel.org>, "Mike Rapoport (IBM)"
- <rppt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
- linux-kernel@vger.kernel.org
-References: <20250409171526.862481-1-samuel.holland@sifive.com>
-Content-Language: en-US
-From: Maxim Kochetkov <fido_max@inbox.ru>
-In-Reply-To: <20250409171526.862481-1-samuel.holland@sifive.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Mailru-Src: smtp
-X-4EC0790: 10
-X-7564579A: EEAE043A70213CC8
-X-77F55803: 4F1203BC0FB41BD96AB534CA17E18E8F0A3910F3FACDD3ABE247BFD61724D6D6182A05F5380850404C228DA9ACA6FE27F559D9661971D0633DE06ABAFEAF6705B516B0159FFEB1245581499C14029E4892B1A6A82314B74A
-X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE7D9C4478D0B876341EA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F79006373768BF035B57E5168638F802B75D45FF914D58D5BE9E6BC1A93B80C6DEB9DEE97C6FB206A91F05B2C264463944ADC3AF2E070BE324C7D3C4737E40CF06D14244BB0A4F435E46E6718B35066C979671628AA50765F79006370BDD70ABAC747F53389733CBF5DBD5E913377AFFFEAFD269176DF2183F8FC7C04A3B2F4BA56A4D558941B15DA834481FCF19DD082D7633A0EF3E4896CB9E6436389733CBF5DBD5E9D5E8D9A59859A8B605A8BD9291DE3CBBCC7F00164DA146DA6F5DAA56C3B73B237318B6A418E8EAB86D1867E19FE14079C09775C1D3CA48CF3D321E7403792E342EB15956EA79C166A417C69337E82CC275ECD9A6C639B01B78DA827A17800CE7588D3C263EAE74EA731C566533BA786AA5CC5B56E945C8DA
-X-C1DE0DAB: 0D63561A33F958A5D2C5362076D858755002B1117B3ED696EC201ACD4C4FE43D957033528158102E823CB91A9FED034534781492E4B8EEAD2B25D9E4C92BC8ACBDAD6C7F3747799A
-X-C8649E89: 1C3962B70DF3F0ADBF74143AD284FC7177DD89D51EBB7742424CF958EAFF5D571004E42C50DC4CA955A7F0CF078B5EC49A30900B95165D34A08F09726D78E07B05CE5DE609FFDC6A1A883DA2B18F73D5BC77801A7008F6053FCBC04C6AF4AC4E1D7E09C32AA3244CEF0E5157C137FD2077DD89D51EBB77427457E7BBCDCF6C79EA455F16B58544A239EFC82C7514BDDC5DA084F8E80FEBD3498BCAF62EB65D490083D0702184784583DB18EBE73F7D69
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu53w8ahmwBjZKM/YPHZyZHvz5uv+WouB9+ObcCpyrx6l7KImUglyhkEat/+ysWwi0gdhEs0JGjl6ggRWTy1haxBpVdbIX1nthFXMZebaIdHP2ghjoIc/363UZI6Kf1ptIMVS2bpaGes9W5t2eaDMAwOw4=
-X-Mailru-Sender: 689FA8AB762F7393FE9E42A757851DB6139DF3AADA6965A8B4E9B47FDAE4E847BBFB7C714878DA8290DE4A6105A3658D481B2AED7BCCC0A49AE3A01A4DD0D55C6C99E19F044156F45FEEDEB644C299C0ED14614B50AE0675
-X-Mras: Ok
-X-Mailru-Src: fallback
-X-7564579A: B8F34718100C35BD
-X-77F55803: 6242723A09DB00B42C873DBEF56FA202667A580FD6CABA1DE1B0B2FC19EC507D049FFFDB7839CE9EAA34CF5C6B6AE4ADCA2DE81BFCD9F3BAA7FAFDA73B9E49C193EA71A8D200491DBFA8D37B0E9A9100
-X-7FA49CB5: 0D63561A33F958A58B7F1C8D9B898E925002B1117B3ED696E1D6070841965061393D891B5189421702ED4CEA229C1FA827C277FBC8AE2E8BADDA55AA3FEC6D35
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu53w8ahmwBjZKM/YPHZyZHvz5uv+WouB9+OYcBso8Zm+oliTz8oZwnDrFsY77LZRcHyw5ht0smWrfSeTW5FiI8avd9v29gUBslpEZ9wIMwqVP4jLQVQ+dVm7x9BpDHadBV9RMjI809PraZHseEjuITRoiaFR8K1qqU5A==
-X-Mailru-MI: 20000000000000800
-X-Mras: Ok
+References: <20250409115934.968141886@linuxfoundation.org>
+In-Reply-To: <20250409115934.968141886@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 10 Apr 2025 00:41:47 +0530
+X-Gm-Features: ATxdqUFkjZ7UUrX4iO9RrF97-ijUSvahOPsHLqjGxDqg8TdQn2H2ls89xcSQVFc
+Message-ID: <CA+G9fYtnTU1KAuXnzt29x2CW8bxGcC5MzjNEYXkdwt3Y-G89gw@mail.gmail.com>
+Subject: Re: [PATCH 6.14 000/726] 6.14.2-rc4 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org, Juri Lelli <juri.lelli@redhat.com>, 
+	Ran Xiaokai <ran.xiaokai@zte.com.cn>
+Content-Type: text/plain; charset="UTF-8"
 
-09.04.2025 20:14, Samuel Holland пишет:
-> The current code allows rel[j] to access one element past the end of the
-> relocation section. Simplify to num_relocations which is equivalent to
-> the existing size expression.
-> 
-> Fixes: 080c4324fa5e ("riscv: optimize ELF relocation function in riscv")
-> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
+On Wed, 9 Apr 2025 at 17:35, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.14.2 release.
+> There are 726 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Fri, 11 Apr 2025 11:58:08 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.14.2-rc4.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.14.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Reviewed-by: Maxim Kochetkov <fido_max@inbox.ru>
+Regression on Dragaonboard 845c and Dragonboard 410c the intermittent
+failures noticed,
 
+cpuhotplug03 1 TFAIL: No cpuhotplug_do_spin_loop processes found on CPU1
 
+Regression Analysis:
+- New regression? Yes
+- Reproducibility? Intermittent
+
+Test regression: cpuhotplug03 intermittent failures on Dragonboard
+845c and 410c devices
+
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+Links
+ - https://lkft.validation.linaro.org/scheduler/job/8211196#L4101
+ - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.14.y/build/v6.14.1-727-g2cc38486a844/testrun/27996013/suite/ltp-cpuhotplug/test/cpuhotplug03/log
+ - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.14.y/build/v6.14.1-727-g2cc38486a844/testrun/27996013/suite/ltp-cpuhotplug/test/cpuhotplug03/history/
+ - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.14.y/build/v6.14.1-727-g2cc38486a844/testrun/27996013/suite/ltp-cpuhotplug/test/cpuhotplug03/details/
+
+## Build
+* kernel: 6.14.2-rc4
+* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+* git commit: 2cc38486a8443cdeaab34c7ece4e5600fe5d7645
+* git describe: v6.14.1-727-g2cc38486a844
+* test details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.14.y/build/v6.14.1-727-g2cc38486a844
+
+## Test Regressions (compared to v6.14-rc6-492-g8dba5209f1d8)
+  * Dragaonboard 845c and Dragonboard 410c
+    * ltp-cpuhotplug/cpuhotplug03
+
+## Metric Regressions (compared to v6.14-rc6-492-g8dba5209f1d8)
+
+## Test Fixes (compared to v6.14-rc6-492-g8dba5209f1d8)
+
+## Metric Fixes (compared to v6.14-rc6-492-g8dba5209f1d8)
+
+## Test result summary
+total: 103967, pass: 79606, fail: 7152, skip: 16873, xfail: 336
+
+## Build Summary
+* arc: 5 total, 5 passed, 0 failed
+* arm: 139 total, 136 passed, 3 failed
+* arm64: 57 total, 56 passed, 1 failed
+* i386: 18 total, 18 passed, 0 failed
+* mips: 34 total, 33 passed, 1 failed
+* parisc: 4 total, 4 passed, 0 failed
+* powerpc: 40 total, 35 passed, 5 failed
+* riscv: 25 total, 22 passed, 3 failed
+* s390: 22 total, 18 passed, 4 failed
+* sh: 5 total, 5 passed, 0 failed
+* sparc: 4 total, 3 passed, 1 failed
+* x86_64: 49 total, 48 passed, 1 failed
+
+## Test suites summary
+* boot
+* commands
+* kselftest-arm64
+* kselftest-breakpoints
+* kselftest-capabilities
+* kselftest-cgroup
+* kselftest-clone3
+* kselftest-core
+* kselftest-cpu-hotplug
+* kselftest-cpufreq
+* kselftest-efivarfs
+* kselftest-exec
+* kselftest-fpu
+* kselftest-ftrace
+* kselftest-futex
+* kselftest-gpio
+* kselftest-intel_pstate
+* kselftest-ipc
+* kselftest-kcmp
+* kselftest-kvm
+* kselftest-livepatch
+* kselftest-membarrier
+* kselftest-memfd
+* kselftest-mincore
+* kselftest-mqueue
+* kselftest-net
+* kselftest-net-mptcp
+* kselftest-openat2
+* kselftest-ptrace
+* kselftest-rseq
+* kselftest-rtc
+* kselftest-rust
+* kselftest-seccomp
+* kselftest-sigaltstack
+* kselftest-size
+* kselftest-tc-testing
+* kselftest-timers
+* kselftest-tmpfs
+* kselftest-tpm2
+* kselftest-user_events
+* kselftest-vDSO
+* kselftest-x86
+* kunit
+* kvm-unit-tests
+* libgpiod
+* libhugetlbfs
+* log-parser-boot
+* log-parser-build-clang
+* log-parser-build-gcc
+* log-parser-test
+* ltp-capability
+* ltp-commands
+* ltp-containers
+* ltp-controllers
+* ltp-cpuhotplug
+* ltp-crypto
+* ltp-cve
+* ltp-dio
+* ltp-fcntl-locktests
+* ltp-fs
+* ltp-fs_bind
+* ltp-fs_perms_simple
+* ltp-hugetlb
+* ltp-ipc
+* ltp-math
+* ltp-mm
+* ltp-nptl
+* ltp-pty
+* ltp-sched
+* ltp-smoke
+* ltp-syscalls
+* ltp-tracing
+* perf
+* rcutorture
+* rt-tests-cyclicdeadline
+* rt-tests-pi-stress
+* rt-tests-pmqtest
+* rt-tests-rt-migrate-test
+* rt-tests-signaltest
+
+--
+Linaro LKFT
+https://lkft.linaro.org
