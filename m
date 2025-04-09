@@ -1,133 +1,131 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25EDB26A087;
-	Wed,  9 Apr 2025 14:51:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27025277803
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 14:51:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744210290; cv=none; b=ENKZi9VzJFKynQp6fvn+QMrWvMQbsJN7RSxMD3Klux8EIyEdYthEhYdmWhFW5LT779nZYhaj3CUPqqxNeVHx73kDaP5aPTHbD63IraQzflNH1hSZWL2JSfBMfkQYRZeBMtUTKNpDmUem/iWXuKbIZ2Vh3NyZarhFEcNwh6rdOtM=
+	t=1744210294; cv=none; b=BkonTHKbuiHl5LF65Dlu9LPa2tRqVP/d/AmzKuBDRpTmAhI3/yE9/n4xrvfyzUzSCyo7nbdPWUUJNRE6zk5zGsLc1j4xIFr7zzVyAs1v2Z6i+rEUkCqoLnJqql/3Wx0hcqa1WZow2xM0I+h9UnFFRpQ/Dvki04zTjaHAOV4jB58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744210290; c=relaxed/simple;
-	bh=I3LhX3RHJuENzMWjOlJ7uQw/9Iqe+uTziMBBRl5iv9Q=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fgs7ELBiF4G2JYQD8opqI+6JC3Md+CDoppim12/FrikR6qvYTqc/9Pwb/+pvCtXK6cNjd3jPqPPmrKKQ9OhVVQFwo74nn0UI1YNYOUQYyKdF3aZMGfxju/QPZZ8CkfDpedhFp8aUxRB+GRMr5j5Zg4HRUiQWL+v0egDXhjGidUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X8wIdtlx; arc=none smtp.client-ip=209.85.219.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744210294; c=relaxed/simple;
+	bh=4DUob6+eMdIz5RoHjq05jW8GZiksk7IQ/Wo8KKlT220=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gv4W+4WX2Jrci0zCKTpafafQEzjfu4NFkfqdvuSUukoGvIjCUhZPlgNC1lyycC9p+hqZ4rXaDsYe/JmZCsz9jt8lOaCm7OSLEScnD4vnl83GwDrR1YK8HTPnK/x30kRFEuBUNNwQPehwwA6xPGC1QLX6gJTVcKyd6c79TOpfk7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gS3C6qk7; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X8wIdtlx"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6e8f05acc13so76537126d6.2;
-        Wed, 09 Apr 2025 07:51:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744210288; x=1744815088; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=R6KDpG33HnsnAHaUls9M6YMElozMNYMw1uYDLkzYs8I=;
-        b=X8wIdtlxhuXQk95NRVha/rITRGjvWDnKdnxTRxOtnLs8ZxOX+jtYZcL53tYPRdqFsF
-         tzp/ncHG7uUV7GX+ulF3t1/nnQM3CUVORlncKh1cXPK6/ZxbjF1+NTRTBJ4sRAty8906
-         8wrnXfRAXpj1wwMyeLk8gUzPsdAIkyXde23zhmKdqZAY120sHCdPWHAp6PgOrPxbHAaM
-         9Y/WSl5MFirzzU63VijCj2M9IORK9bRy5y6xSiaPU6sp+7p26Mp1yfNLMGSQD1y1v/Be
-         K3Bp9CVzwDdZfLwRNIBvAUKiGRB/rWZUN876BE7xCsgl+xC5grrsPDGIktSybVAB1f19
-         cWzA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gS3C6qk7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744210292;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=WBh/oxXtw+maKeUB3gFYpOwHzm3sbyiLyYnxbG7BaBM=;
+	b=gS3C6qk7rlYeiJALHCldKpwWgNmjol5hhHiq9tjX7j72Z5fIk7aTkENCCEOLdKFKNTVTId
+	NK8HWdFx2ES5tx1q2O5LkPH+HniIpmtM8GhiWp3DLiqhCJmahZmjZxqNJmiXLlEDOUF7Ym
+	dGWmMa6zEk84zRb2QU3HdC25NoxYou4=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-650-9c1vqYOtPfStxVuUDRWfWg-1; Wed, 09 Apr 2025 10:51:31 -0400
+X-MC-Unique: 9c1vqYOtPfStxVuUDRWfWg-1
+X-Mimecast-MFC-AGG-ID: 9c1vqYOtPfStxVuUDRWfWg_1744210290
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-ac293748694so158334366b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 07:51:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744210288; x=1744815088;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=R6KDpG33HnsnAHaUls9M6YMElozMNYMw1uYDLkzYs8I=;
-        b=YL0Yc4OmUsKFHgD04UpGgp4nveObcoVKUkCSy0ZxbWQRfGSWZWSgrID3ROQbLHspy0
-         Ht9CFf+GZNG05Zy6p/SCRIqD4gfQoNNQa3KyGKixxzpohgWDiM1M/CLLk0uLIg3gMbfl
-         eY9fMQLHX2d2w4tjyvwkN5ycW5tFjQilD3BYWezw0iqxgde8FTq2AZIF0b6PMn5ROgou
-         nO612iONK9cvV4/d5jtCaDzFFYPHtV4GauKQHrudEC+pn7fa8ZrPFgV6gBtpEtKqjphJ
-         1AeLFy/8A9TPSI6zkpkSH0nrmfGwbfRYDSBrj37mQAxg61SxBzcFwhT8OSs9p34hVK4o
-         0iHg==
-X-Forwarded-Encrypted: i=1; AJvYcCVrm72LVdheXMhlTbzGY5OnOnWePpzAxRdG3O4o387va8xnflxEdjutWg4WmEmA3Ilb33Ig2Ct2es7i@vger.kernel.org, AJvYcCVtj8Wp+HnxVArameiKHatdURuyCNHGlOksY5QyjW5zeON8UwQpKP3/ekmL6yBqGxOfEYjG9sC4KUva+r4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsB7FE3pQrS+6uh860xBBpIWkUyypoSacW9sn05SwTekXwjZx4
-	mY5f5y8dzNY8Sqs5VN1PtD7MRNmtiOLpJGYYHoCeV0ktKu6VrhWa
-X-Gm-Gg: ASbGncu9liCAz8auY93Vm6eSFPXZiF3zK6Ysw8SxErGGz98v4L+t2OnlexI74XNguyG
-	cD2MP5I+MDEk0Cbxyf+EIjFg5UQXy+JX96GM+nHxQsRAfjuS9swQVQClNo6jtHdXLeL/S8RfBsM
-	vAOQaHKENTVgC3hJbF1y9uj/FAZlcXEbbunlxxSN6347gxeEjbYjKNuAY/dw4SzHtelMQXHQbFf
-	/iH1wbwKDd12ptxfWvMWrlk7s1oUaoqtR7F1eLphCKxuY+PN971ZyJOd70HIGJBNX/TZa7Wi8B9
-	B8JF7t+w5moVxgojPcrMfu8UI2C+iOkydZM2dQDP92E7LAmrsJIjRNGg9IukDzz/H8fevMqeZyo
-	0HWtokiHOzCBC77Nv7INrNripcuVMT9mCEDSaFTlQZCDF
-X-Google-Smtp-Source: AGHT+IEj6a/gTtE+8rEv6HGebDehanM2D4q9D2jv4HBP6KvgQF0IBOofx/wC7IRXnPFtdnSjPyqYbg==
-X-Received: by 2002:a05:6214:2343:b0:6e8:f3ec:5406 with SMTP id 6a1803df08f44-6f0dd0a3a40mr43823346d6.19.1744210287776;
-        Wed, 09 Apr 2025 07:51:27 -0700 (PDT)
-Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([2620:10d:c091:600::1:3298])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f0de95fa89sm8229876d6.6.2025.04.09.07.51.26
+        d=1e100.net; s=20230601; t=1744210289; x=1744815089;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WBh/oxXtw+maKeUB3gFYpOwHzm3sbyiLyYnxbG7BaBM=;
+        b=na19KZPp2l9LqqxdvVzQ+LOPCH+WzRJcEkTw1hn1J9xkndVyF2vuLz1AFkKtnD9BRQ
+         CyfzxPidmgh3WUt+C/h/8lZaw4fMaA3d2bvikhaEap/YNCWAwNXZJw/VzcMjBA+aIZvS
+         m8a/uO3dSvLc/aC3OMlVNn4F7USqcXJ3Tm5RUUx+1mwXFoKEijuRYkwdmAx5Q5BQrd4n
+         CSzUg1I0vVcnSxCqgdRlYsNIJaor6wl6SSfYEYsyqAt7rBzk7CYtbqvezODd9VeDe0Kn
+         TctNUwoLpzTqPLe2WW0L6vnN1jodYRDUTpI9rvQuKEwp17H39d6yVeBjDyinLaszUdDB
+         LM5w==
+X-Gm-Message-State: AOJu0YyYArtHMUfOHTTThHz2YvVMkRmqKYFM7EEQewHSb+gPwF6jR6vP
+	6/Wsx2VPAySiZ9Ighmsva7SuzHphbDSYdDbW7UbIh1rvvMcN0qOoIYvnbqFDRhoADeXnHs57Syn
+	+NKGFHhHx8ZmaVndZBZ/Nrg2D8M2+m+kIhpV0gSqoJzv0X1lERiiQWOEwPpO1OQ==
+X-Gm-Gg: ASbGncvSciThWXA+fiqklnYZqq613B6RoXE26Vbrv9fKucI2uUOIhuVoRJyR6zqqJ+1
+	Y1vFnFUIv948sg3/inuejFFVpe6El+JxpZAJjLpBp18nhAYKucpUSoFjW6oCcQzUBl7LtGRQvgL
+	WwCLYgMecvhxqzVenFH0ZkF+MeqGZxGWSRuyedylbDKl9SbOjPvixD4eWc6PrzyGmjtgauMFFmt
+	zIZZ51UunMI6NdizRcQKKnHiiPoEtb5S6ras2wlY/AmSfKp4u8txsufI6r5iG9/9nf+zjWsznsN
+	T7Ctfb6l+ahGQdw0+L2L5bcybG7tIz8Pd8fC
+X-Received: by 2002:a17:907:706:b0:ac7:95b0:d0fb with SMTP id a640c23a62f3a-aca9b6bc5f3mr342547866b.34.1744210289579;
+        Wed, 09 Apr 2025 07:51:29 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFy9g+DIrOAE96RAAhVeZY/4RHlv/rCrPjYfagAafONsEIrunVZvC7JorsmpzIoJdHOpPNMcw==
+X-Received: by 2002:a17:907:706:b0:ac7:95b0:d0fb with SMTP id a640c23a62f3a-aca9b6bc5f3mr342545466b.34.1744210289199;
+        Wed, 09 Apr 2025 07:51:29 -0700 (PDT)
+Received: from alrua-x1.borgediget.toke.dk ([45.145.92.2])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1be9632sm112413866b.66.2025.04.09.07.51.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 07:51:26 -0700 (PDT)
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Wed, 09 Apr 2025 10:51:20 -0400
-Subject: [PATCH v2 3/4] rust: list: use consistent self parameter name
+        Wed, 09 Apr 2025 07:51:28 -0700 (PDT)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+	id 6C98F19920EC; Wed, 09 Apr 2025 16:51:27 +0200 (CEST)
+From: =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+	Jamal Hadi Salim <jhs@mojatatu.com>,
+	Cong Wang <xiyou.wangcong@gmail.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Shuah Khan <shuah@kernel.org>,
+	netdev@vger.kernel.org
+Subject: [PATCH net] selftests/tc-testing: Add test for echo of big TC filters
+Date: Wed,  9 Apr 2025 16:51:22 +0200
+Message-ID: <20250409145123.163446-1-toke@redhat.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250409-list-no-offset-v2-3-0bab7e3c9fd8@gmail.com>
-References: <20250409-list-no-offset-v2-0-0bab7e3c9fd8@gmail.com>
-In-Reply-To: <20250409-list-no-offset-v2-0-0bab7e3c9fd8@gmail.com>
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
- Bjorn Helgaas <bhelgaas@google.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-pci@vger.kernel.org, Tamir Duberstein <tamird@gmail.com>
-X-Mailer: b4 0.15-dev
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Refer to the self parameter of `impl_list_item!` by the same name used
-in `impl_has_list_links{,_self_ptr}!`.
+Add a selftest that checks whether the kernel can successfully echo a
+big tc filter, to test the fix introduced in commit:
 
-Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+369609fc6272 ("tc: Ensure we have enough buffer space when sending filter netlink notifications")
+
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
 ---
- rust/kernel/list/impl_list_item_mod.rs | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ .../tc-testing/tc-tests/filters/u32.json      | 22 +++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/rust/kernel/list/impl_list_item_mod.rs b/rust/kernel/list/impl_list_item_mod.rs
-index 49f5af12e796..d79bebb363ce 100644
---- a/rust/kernel/list/impl_list_item_mod.rs
-+++ b/rust/kernel/list/impl_list_item_mod.rs
-@@ -114,12 +114,12 @@ unsafe fn raw_get_list_links(ptr: *mut Self) -> *mut $crate::list::ListLinks$(<$
- #[macro_export]
- macro_rules! impl_list_item {
-     (
--        $(impl$({$($generics:tt)*})? ListItem<$num:tt> for $t:ty {
-+        $(impl$({$($generics:tt)*})? ListItem<$num:tt> for $self:ty {
-             using ListLinks;
-         })*
-     ) => {$(
-         // SAFETY: See GUARANTEES comment on each method.
--        unsafe impl$(<$($generics)*>)? $crate::list::ListItem<$num> for $t {
-+        unsafe impl$(<$($generics)*>)? $crate::list::ListItem<$num> for $self {
-             // GUARANTEES:
-             // * This returns the same pointer as `prepare_to_insert` because `prepare_to_insert`
-             //   is implemented in terms of `view_links`.
-@@ -178,12 +178,12 @@ unsafe fn post_remove(me: *mut $crate::list::ListLinks<$num>) -> *const Self {
-     )*};
- 
-     (
--        $(impl$({$($generics:tt)*})? ListItem<$num:tt> for $t:ty {
-+        $(impl$({$($generics:tt)*})? ListItem<$num:tt> for $self:ty {
-             using ListLinksSelfPtr;
-         })*
-     ) => {$(
-         // SAFETY: See GUARANTEES comment on each method.
--        unsafe impl$(<$($generics)*>)? $crate::list::ListItem<$num> for $t {
-+        unsafe impl$(<$($generics)*>)? $crate::list::ListItem<$num> for $self {
-             // GUARANTEES:
-             // This implementation of `ListItem` will not give out exclusive access to the same
-             // `ListLinks` several times because calls to `prepare_to_insert` and `post_remove`
-
+diff --git a/tools/testing/selftests/tc-testing/tc-tests/filters/u32.json b/tools/testing/selftests/tc-testing/tc-tests/filters/u32.json
+index b2ca9d4e991b..67117f86fef0 100644
+--- a/tools/testing/selftests/tc-testing/tc-tests/filters/u32.json
++++ b/tools/testing/selftests/tc-testing/tc-tests/filters/u32.json
+@@ -353,5 +353,27 @@
+         "teardown": [
+             "$TC qdisc del dev $DEV1 parent root drr"
+         ]
++    },
++    {
++        "id": "33f4",
++        "name": "Check echo of big filter command",
++        "category": [
++            "filter",
++            "u32"
++        ],
++        "plugins": {
++            "requires": "nsPlugin"
++        },
++        "setup": [
++            "$TC qdisc add dev $DEV1 parent root handle 10: fq_codel"
++        ],
++        "cmdUnderTest": "bash -c '$TC -echo filter add dev $DEV1 parent 10: u32 match u32 0 0 $(for i in $(seq 32); do echo action pedit munge ip dport set 22; done) | grep \"added filter\"'",
++        "verifyCmd": "",
++        "expExitCode": "0",
++        "matchCount": "0",
++        "matchPattern": "",
++        "teardown": [
++            "$TC qdisc del dev $DEV1 parent root fq_codel"
++        ]
+     }
+ ]
 -- 
 2.49.0
 
