@@ -1,122 +1,167 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2E3215689A;
-	Wed,  9 Apr 2025 13:04:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4734C25A625
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 13:05:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744203898; cv=none; b=qzl7IT4Bse9lmTTKzsOzUeUWxt3pkn3juBGM0Ixw6CWXMQW1RbWpsRa6WFwXD4+frIqcvfjw8Gw0ALkJFqU4m19QR7/rw3MWpRnrkL4LgZ7hJDWNw87r7hply7gJ2OWi2qFlNSD76gFtmBcr+rjIPqbEWeDyVlAhR+I9xY4aMv0=
+	t=1744203916; cv=none; b=pu9jqFeKvsks3ellCPRoAKExgKl7/qb9FZ9/ZvayUW6It2OglJSk7oW2U7r3oinBxyu5J64fQkkAN4EvphkafIWoLNxjou3rtdnuVqp8W6TC2Md8xmkzhTAYoZoeA9mNaYd7vaT3uUsKvnLw7j5ON2QOf5ZrznkAG6T9WQD6BjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744203898; c=relaxed/simple;
-	bh=366rSGqKDSaNaqnzuXgMVPDEcnVkkx0y3VLfHOXvzWM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i8AdsBBzl4xj/9ckwPH2MoL4RbA9zt35WQrKKqGMAYPEObcGx/xQS/iouKNd05xyoBXnxJVjkePjpt8NF9Hn61W5/QGCYb0Jgur0KkkMqLnuNhW1EaSKvm/ZJD4lEYjXxDpr6ghybCh9ikP26tjHN178fCxija1egGCg+CZUfwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OauyPCFu; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744203916; c=relaxed/simple;
+	bh=8qftagvfjmoYt1+fDk9WXpvjMtDWwgn0O2decNVAM3Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mtON0NtiI00VPVOhBK7hPPqZNbxvIdwS+jeVZ3ur+ezsJs+dGCz1UP2Kk3IE5g1t/jHtU4XdJ3My2ndZ+JCHJ3bZ8j0asNOnkQ7lK7kse43NOGXrQFVffyp8i/rC/6HnuoeLRPbmjnfFMPik2qrnPPLOPzOO7nbRhLahiIIu0lg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=O8I8sRHb; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OauyPCFu"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cfebc343dso44997845e9.2;
-        Wed, 09 Apr 2025 06:04:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O8I8sRHb"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-6ff27ad48beso63022627b3.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 06:05:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744203895; x=1744808695; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2cS0lrW0iOQVVCSI2Cp6NCF74CvixMtSANH/SVtlGds=;
-        b=OauyPCFuqu+RY2Th9IWlnhOrCZ/fa3LMlbUn/FVyFJG+AjKa2PS6qk8X4cU44OAT/S
-         VDJpcTSZJBvwMY8EZqXfeNGhUe9m7BDyzBPdSBsO+S2MNlzVxoipOVSZHedmp9K8/cmN
-         OrWy5lhdEzvFocCa8aU9WkhzcUGyh4FPT6vqH4x+e2AnnyJZ4I+QN0PNQ2yNlVShT9TW
-         Jpmi9HHyMSAOzOJWPSRCJPex9aRN6k01GDV6ErVou0z/VScLtYlExIMeP0gmQCtwC4dc
-         tvl2Q9cJbsXqjrHyolN772f+19qsm/DcDs9eW6vtqvWCrWu/Hk70atZ9X8Ks32l3DcD1
-         zQ5g==
+        d=linaro.org; s=google; t=1744203913; x=1744808713; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=1d4Kj/+jBoQ/lsWd2+1iruPICBj1Kd2s6XSogc2V8og=;
+        b=O8I8sRHboUes3ol5Jp//pRoUSmigdJdhN9DDk2mhfdvStKr0VZdCGU625E9e4z61Eh
+         lQ7xf2D0uFz9jYwJS05l/MeakDRmYIvDs9D8JzTjHG6hoFhsx+kPz4+g1x9d4PwglWEf
+         Sm2unEdOIOi+b8xQZa/7P6FcYKH52/7nU9e3acGBk0OUEqfRs4ZfEjo2OJKRnYuWuhRX
+         n9zsiPQTdDi1Owm0Zn7I12/LjG6onMnIhB2M6ucRXcA/AvKX6aPGa6QdzKtV5z4zEKaB
+         NT9vyFpHUiihUv9wUJzHy2DFf5pcGuvitohtH+UZtm5Qkgk/tWHnLid7n0KIJqczIDSi
+         nrSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744203895; x=1744808695;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2cS0lrW0iOQVVCSI2Cp6NCF74CvixMtSANH/SVtlGds=;
-        b=fszFiUzaqqofXRbuMplmkuyh3Og+MO7cnJbISrcUJJ/u0sXHRMF2qvVm+1F+ln6Gtw
-         CKHcUKRFvDaM0iL7R6WW99+e+VQm0TE/iG0c7gtHvq1F5RsfmszoGRRNnTsf8nwITlw+
-         gtis9xWtvNtvs9rOcgX6dbTHJ8i7sYUsDPUpmu2NMGGo3/wI9P2rofhwmiNTwAexiVho
-         5fa7WUWmx77yNn3fLLaWG4ytsoGU+5j78WtlZvJ8tQiFesL2qHMGy7YZd82r91243lPi
-         gCZdKN5M7IOC/n5hZG22neSQr/v1R5vfEMbzcTaTwlOQwx6kyBfJ93UOZbht0FFTcca3
-         E1EQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUJ92ISC8pVbVeczQFkRtDpFoOIsH+cBZxHcfvKWqhxfjnfygsP/0SZh1oLOD91P27g6zKuA8DccPKguALl@vger.kernel.org, AJvYcCWh8ycx4+pW6D6IVFm9ZWIYamUAITxAmIgXqvuSPpLqOG+FDE6V9mO+h4dhWhZK5dtCreQ4gliuwvForHob@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8f5D+5ajYnVH6ZvimFxV3FSJoNbYQC4Z3oipP8bf2Huk33TtZ
-	+k/y+EAVkUTYH6Od5zC5oEnaTYvOc81R4RG9RG7kQS11FoXdPOK1
-X-Gm-Gg: ASbGnculn7HbRqQeMTKxDOu1/hmsj7lF1HOTse7ABh/et7HM4rGugU9uCixyYZGiZxT
-	Q//p/6aG39ncwjMSNEkEXywMm31iGhZS+etXt/zhFhAisGh11K9KNTa6GOdkbcorudEeudoX37v
-	9e2Rl0IBJ2joVZCctMu1NfKhY64eYM8qYUXLHy6Krh8INOZmGQ5jjm6sopbNmZbYXY+aXp3t54R
-	tdv6DViT9bOTWotWmYJeNWIMFCcSbUhl3lQgU3+VuKRTZJUm79FReX8d2BeOYJXNbNbc4TwPczr
-	fyxWZbDlqW/Z8hZGfyQm8k63s5OcW62HC5wxCZ+dbH6le1I+a8xDg7+7
-X-Google-Smtp-Source: AGHT+IHze8vgtp89EBfanMiJMagv6hp47UulZJ9+q1wuQnRxXIQjwicF431hKSZALOTX5DVhgOYcig==
-X-Received: by 2002:a05:600c:1d86:b0:43d:7588:66a5 with SMTP id 5b1f17b1804b1-43f1ed671d7mr29495825e9.31.1744203894700;
-        Wed, 09 Apr 2025 06:04:54 -0700 (PDT)
-Received: from f (cst-prg-17-207.cust.vodafone.cz. [46.135.17.207])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f207aeaccsm19257355e9.33.2025.04.09.06.04.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 06:04:53 -0700 (PDT)
-Date: Wed, 9 Apr 2025 15:04:43 +0200
-From: Mateusz Guzik <mjguzik@gmail.com>
-To: Eric Chanudet <echanude@redhat.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Clark Williams <clrkwllms@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ian Kent <ikent@redhat.com>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev, 
-	Alexander Larsson <alexl@redhat.com>, Lucas Karpinski <lkarpins@redhat.com>
-Subject: Re: [PATCH v4] fs/namespace: defer RCU sync for MNT_DETACH umount
-Message-ID: <mey7l4rm7r5fxndlg72jfjjwwctyoimjg35jetrnv5gbee4qll@w5ldyvm6h22a>
-References: <20250408210350.749901-12-echanude@redhat.com>
+        d=1e100.net; s=20230601; t=1744203913; x=1744808713;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1d4Kj/+jBoQ/lsWd2+1iruPICBj1Kd2s6XSogc2V8og=;
+        b=RoFDYe0vHGCMJrfZ+Pc0iwPZaQEwY22OYm0zVk4V8xLO2TRrVhgM4ZXgQp+v2tJq/u
+         sK3YTS0QLhu8PriejpMi0pvzE9koZpKlxX7gAx0xpFkYpilts2FTrDObB7p1qPo6XYpD
+         MwrdJ+HWeYuIj7Z/XGhFp320joX8VCaJgNSkORMuSolYi4JWvq80dYUThJt2g2BOLOYg
+         y+u7jkgT+Qq1JC6QAzq3v4PTyw0jmLGNbQZKnoae44lF5xLWvwlSR+di2ZlVl/YZ13Ku
+         mwlluDLbYUN2jLOPoEt0CC2jRM+h9lcqHeCV8o67Boe71DIKoDMTkLt4HFQMk3NyROXd
+         aw1w==
+X-Gm-Message-State: AOJu0Yx8dduHzC6zsbBgfD5l4UFDi7ybf/9sO92iokESrx9YcecpuNys
+	LfoAFpY84Al4RAgweplpGN9vLhKi5trnTciD4CyEh0T+jroepATSyDVMe71K444BiA7FZ3L5j9N
+	H1LsO+JhVB3gCPjubiNF5YnzbKDPZGHxWfuJ1rQ==
+X-Gm-Gg: ASbGncvqvr0yE3ZLXFSBi6ajC3/Ng9pr/V47ZQzCmYqErOq4329CcEocCIbhdthqXWx
+	mx+RLo3ThnKxwxA5QlV9eOSGik+3iNoiLOVejl2GVEYc1M78MpDB5Wavqt3Svg/d/6m8l9DlsVA
+	jysCFtHCw7mMtcAotNcdNhTwY=
+X-Google-Smtp-Source: AGHT+IEkEr688RqWZk/UFW+aFLhEVhnfHLhnS63mtOdasqviB60kL6L24sWq99KSc0ZiD+dQHcM2wGgQ6T0FmR5eTuw=
+X-Received: by 2002:a05:690c:6711:b0:6fb:b524:48bc with SMTP id
+ 00721157ae682-705388d5192mr58242347b3.35.1744203913024; Wed, 09 Apr 2025
+ 06:05:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250408210350.749901-12-echanude@redhat.com>
+References: <20250401025123.895307-1-ricky_wu@realtek.com>
+In-Reply-To: <20250401025123.895307-1-ricky_wu@realtek.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Wed, 9 Apr 2025 15:04:37 +0200
+X-Gm-Features: ATxdqUFnxqtQgEeY9G3rMVrdTwVyrrp85v3mAMPpR_PXa_Z9J8dJz3PUBElpDoY
+Message-ID: <CAPDyKFpn5xB50eTomNM=4LbFDX4r154iY2Qk8GBiYb+vor0kbA@mail.gmail.com>
+Subject: Re: [PATCH] mmc: rtsx: usb add 74 clocks in poweron flow
+To: Ricky Wu <ricky_wu@realtek.com>
+Cc: linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, 
+	viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Apr 08, 2025 at 04:58:34PM -0400, Eric Chanudet wrote:
-> Defer releasing the detached file-system when calling namespace_unlock()
-> during a lazy umount to return faster.
-> 
-> When requesting MNT_DETACH, the caller does not expect the file-system
-> to be shut down upon returning from the syscall. Calling
-> synchronize_rcu_expedited() has a significant cost on RT kernel that
-> defaults to rcupdate.rcu_normal_after_boot=1. Queue the detached struct
-> mount in a separate list and put it on a workqueue to run post RCU
-> grace-period.
-> 
-> w/o patch, 6.15-rc1 PREEMPT_RT:
-> perf stat -r 10 --null --pre 'mount -t tmpfs tmpfs mnt' -- umount mnt
->     0.02455 +- 0.00107 seconds time elapsed  ( +-  4.36% )
-> perf stat -r 10 --null --pre 'mount -t tmpfs tmpfs mnt' -- umount -l mnt
->     0.02555 +- 0.00114 seconds time elapsed  ( +-  4.46% )
-> 
-> w/ patch, 6.15-rc1 PREEMPT_RT:
-> perf stat -r 10 --null --pre 'mount -t tmpfs tmpfs mnt' -- umount mnt
->     0.026311 +- 0.000869 seconds time elapsed  ( +-  3.30% )
-> perf stat -r 10 --null --pre 'mount -t tmpfs tmpfs mnt' -- umount -l mnt
->     0.003194 +- 0.000160 seconds time elapsed  ( +-  5.01% )
-> 
+On Tue, 1 Apr 2025 at 04:51, Ricky Wu <ricky_wu@realtek.com> wrote:
+>
+> SD spec definition:
+> "Host provides at least 74 Clocks before issuing first command"
+> After 1ms for the voltage stable then start issuing the Clock signals
+>
+> add if statement to issue/stop the clock signal to card:
+> The power state from POWER_OFF to POWER_UP issue the signal to card,
+> POWER_UP to POWER_ON stop the signal
+>
+> add 100ms delay in power_on to make sure the power cycle complete
 
-Christian wants the patch done differently and posted his diff, so I'm
-not going to comment on it.
+Why 100ms? That sounds a lot to me?
 
-I do have some feedback about the commit message though.
+Is this fixing a real problem or is just trying to better follow the spec?
 
-In v1 it points out a real user which runs into it, while this one does
-not. So I would rewrite this and put in bench results from the actual
-consumer -- as it is one is left to wonder why patching up lazy unmount
-is of any significance.
+>
+> Signed-off-by: Ricky Wu <ricky_wu@realtek.com>
+> ---
+>  drivers/mmc/host/rtsx_usb_sdmmc.c | 28 +++++++++++++++++++++++++---
+>  1 file changed, 25 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/mmc/host/rtsx_usb_sdmmc.c b/drivers/mmc/host/rtsx_usb_sdmmc.c
+> index d229c2b83ea9..e5820b2bb380 100644
+> --- a/drivers/mmc/host/rtsx_usb_sdmmc.c
+> +++ b/drivers/mmc/host/rtsx_usb_sdmmc.c
+> @@ -48,7 +48,7 @@ struct rtsx_usb_sdmmc {
+>         bool                    ddr_mode;
+>
+>         unsigned char           power_mode;
+> -
+> +       unsigned char           prev_power_mode;
+>  #ifdef RTSX_USB_USE_LEDS_CLASS
+>         struct led_classdev     led;
+>         char                    led_name[32];
+> @@ -952,6 +952,8 @@ static int sd_power_on(struct rtsx_usb_sdmmc *host)
+>         struct rtsx_ucr *ucr = host->ucr;
+>         int err;
+>
+> +       msleep(100);
+> +
+>         dev_dbg(sdmmc_dev(host), "%s\n", __func__);
+>         rtsx_usb_init_cmd(ucr);
+>         rtsx_usb_add_cmd(ucr, WRITE_REG_CMD, CARD_SELECT, 0x07, SD_MOD_SEL);
+> @@ -1014,6 +1016,16 @@ static int sd_set_power_mode(struct rtsx_usb_sdmmc *host,
+>                 unsigned char power_mode)
+>  {
+>         int err;
+> +       int power_mode_temp;
+> +       struct rtsx_ucr *ucr = host->ucr;
+> +
+> +       power_mode_temp = power_mode;
+> +
+> +       if ((power_mode == MMC_POWER_ON) && (host->power_mode == MMC_POWER_ON) &&
+> +                       (host->prev_power_mode == MMC_POWER_UP)) {
+> +               host->prev_power_mode = MMC_POWER_ON;
+> +               rtsx_usb_write_register(ucr, SD_BUS_STAT, SD_CLK_TOGGLE_EN, 0x00);
+> +       }
+>
+>         if (power_mode != MMC_POWER_OFF)
+>                 power_mode = MMC_POWER_ON;
+> @@ -1029,9 +1041,18 @@ static int sd_set_power_mode(struct rtsx_usb_sdmmc *host,
+>                 err = sd_power_on(host);
+>         }
+>
+> -       if (!err)
+> -               host->power_mode = power_mode;
+> +       if (!err) {
+> +               if ((power_mode_temp == MMC_POWER_UP) && (host->power_mode == MMC_POWER_OFF)) {
+> +                       host->prev_power_mode = MMC_POWER_UP;
+> +                       rtsx_usb_write_register(ucr, SD_BUS_STAT, SD_CLK_TOGGLE_EN,
+> +                                       SD_CLK_TOGGLE_EN);
+> +               }
+> +
+> +               if ((power_mode_temp == MMC_POWER_OFF) && (host->power_mode == MMC_POWER_ON))
+> +                       host->prev_power_mode = MMC_POWER_OFF;
+>
+> +               host->power_mode = power_mode;
+> +       }
+>         return err;
+>  }
+>
+> @@ -1316,6 +1337,7 @@ static void rtsx_usb_init_host(struct rtsx_usb_sdmmc *host)
+>         mmc->max_req_size = 524288;
+>
+>         host->power_mode = MMC_POWER_OFF;
+> +       host->prev_power_mode = MMC_POWER_OFF;
+>  }
+>
+>  static int rtsx_usb_sdmmc_drv_probe(struct platform_device *pdev)
+> --
+> 2.25.1
+>
 
-I had to look up what rcupdate.rcu_normal_after_boot=1 is. Docs claim it
-makes everyone use normal grace-periods, which explains the difference.
-But without that one is left to wonder if perhaps there is a perf bug in
-RCU instead where this is taking longer than it should despite the
-option. Thus I would also denote how the delay shows up.
-
-v1 for reference:
-> v1: https://lore.kernel.org/all/20230119205521.497401-1-echanude@redhat.com/
+Kind regards
+Uffe
