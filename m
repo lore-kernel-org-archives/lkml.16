@@ -1,61 +1,75 @@
-Received: from out203-205-221-164.mail.qq.com (out203-205-221-164.mail.qq.com [203.205.221.164])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A38AE25D206;
-	Wed,  9 Apr 2025 09:56:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.164
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E5B25B67E;
+	Wed,  9 Apr 2025 09:57:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744192611; cv=none; b=ahxXmXz/BiLt6e1ZsHNjpk8bzE+nw/Mn2G2esz/XIss18376S7b137tpQ+1QQ6eOIamr9BBsgzwTisnQetztpTQ+RCiHRTt742/rWuwYeIt3wFvsXUlXx6AQGVTqT0bGhhNp4gvBnXhlzuWgkldLbk3aJcSSf/GextZb3L5HMZY=
+	t=1744192641; cv=none; b=petsJ6bwwftdRR+vkaU8ktNR1mgidjosT/+E7O1Tv2jFCo9SZpuhTeMjq9h7eFkZ/jgQEv+IBHyM23ZT0GvT9qU5eXlv/45LyNyMA6XbcVbLfPEiv5tYWKA9gXbZPYrfDhKZ834EVXf5h3A/50QfBKNu7x2piPthf41IRffTI8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744192611; c=relaxed/simple;
-	bh=wK1y6dHPy4sbGssX93eGO5NCjBNTcZms0HLXlXqdmeM=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=jtv11MKwsNwKkb1Sa+YJd6JoRktsBib6m3n5wpwSfWzjAQ/OnaKGvbZvj49SBD8LvsvGMzmgDWOVg1M+b/Oqeteqpl0JItVyMyRhzLJPv4qncfBstTlz+dwYsaAcqT6rmZG1L+21Iv9reO3JJkc7OO2WSGEPQbxANKNOCgVNLAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=uQDWmYB2; arc=none smtp.client-ip=203.205.221.164
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1744192641; c=relaxed/simple;
+	bh=C4LvSLwfHxGG+LmOO+Hpl1aLG1vB5gD8OXyfnJnLO1M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ngvp2qLyvwkobLOu2leA/Nf7ycacqKg1Ody+ykzw8icI1nO5yGH3sHX5eRo9wCUm58/Q3NJIlNqXZKEl66dUG4DQCGk7KkexAW1Ki3ze4CdOZyxpfwAYt3H+JUQPGs/KfbjsKSmP7yjeRnHneBg5egaYBdg6LSJ/pkK9JkJ9k14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Ye2+qP4p; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="uQDWmYB2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1744192304; bh=7Y4Q2wgqKIpLG/t08yDgQVZzMfyRABq6eyXLD9OhCis=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=uQDWmYB2tfWuwCCZsRlCVj4aTl+da6p3nlEofHUzzk2CrS7ds5gks04Q65pcDUDhy
-	 WiELwRIPqxWSQKPxjSIxazBDaoe4Yunoz6qlArOBVaMyRTXkCvv/dMRr1VKhbIHvLM
-	 ejc+Co1WifnhhvkJSDBvmB+KeJPJpjtLyq13WPkg=
-Received: from localhost.localdomain ([116.128.244.169])
-	by newxmesmtplogicsvrszb21-0.qq.com (NewEsmtp) with SMTP
-	id CEB04603; Wed, 09 Apr 2025 17:51:43 +0800
-X-QQ-mid: xmsmtpt1744192303tvp8i7h6x
-Message-ID: <tencent_C797B88F7509E18C70E48CD99275BAFD1E0A@qq.com>
-X-QQ-XMAILINFO: Mg/13mbJq/Ru6Y7pf9rnxlFchTWPyEfj/S7AIffDwpj/H3SURotqVEM0ta4n4o
-	 ZtdnahsYqyYJQJPtQtsf81LRHSRFKgO2Dj+sVSh+karuWL2kVQXDdRZimbIHkMVWraPzcPTx2Qil
-	 bdVQrfGSrwza+eTwNvLP1jJDB4Tey/GJLKkspk6YU6lysjskwbb1ECNP8w2q0B/zDqgbfcPYFVOP
-	 7trh+3dEOe+rgNoSllQOJJa5su2sWN8qCxUT649mCf/irsowHNNatTcMm6hLWJSrpO675SZ/2Lnd
-	 uMlAY8/bcxY+u1lzb5pkgMbjDu15Dx+NLmejAxHB7fSuA+5xdX2ODVHdendZ1plUrQMgnl29808H
-	 prWJUXBecvGmi+QuOjMnbD2l2bE/VP0nMAWsdW5hJVBYvwG72nAOCi38Zx8bz0bybIMPBkPsmpHZ
-	 UNIMAz7UuojB80IptKuedAcJ6zfBoazA6qYuooGVsWGQNypi3lU4GJF0Hqn3TdUN0xxZsVrW4Cvg
-	 PLodkWCUJcfWvY9SGZoNKXnzgU9C5xPX7JFZFOp5ee6bmEiCP4gFvBbkKQkzyAUrt1vNvbXQZKZK
-	 RXJIVg48NkltijSl2RzHvDNPeu+SfPw3cpRpMC+SjDV4vXvAVEFK839Kn9arNEWXaFQqyL269wj8
-	 0Nf9dqjRc4dF3REMRGWJ3Mf0LCLlX8IAJLWDKg6JyqMrVQpQQgcNTAH6z1QHcFdJw4HHFSapvlVb
-	 XYBv4mLYfL5voJivFH1bf2lxe/OW+533BNTsUbmYm8Mdp+V7GV2k2blvRNcbPni9dMIGijuLf3+c
-	 V46QHZ5SsduccyktGbi0FBjLKtbk9smm7fjdMKgetkfxCGMzh6VFejEbTm8wdZQsH+i1FLKKPAEW
-	 PF5Q4jVOdImlujCKr6hicre872nrZZWU6oyfyJ4GTa0+SGSuo0vhDb32ZjOcf65WJpULIEipUEsi
-	 KY7zC6agAZI08t5lH3oN06jxYC+TdVWCfdzqwdGttuMTx/Jf1xx+aoc9fiQJJS0dz358MXu/0OXP
-	 tlNFIBXw==
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-From: Yaxiong Tian <iambestgod@qq.com>
-To: rafael@kernel.org,
-	viresh.kumar@linaro.org,
-	Pierre.Gondois@arm.com
-Cc: linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yaxiong Tian <tianyaxiong@kylinos.cn>
-Subject: [PATCH 1/2] cpufreq: cppc: Update and opt comment for cost calculation method
-Date: Wed,  9 Apr 2025 17:51:41 +0800
-X-OQ-MSGID: <20250409095141.1691685-1-iambestgod@qq.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <tencent_D6C4728C5C687C042BA7C156B0F3ECF7AE05@qq.com>
-References: <tencent_D6C4728C5C687C042BA7C156B0F3ECF7AE05@qq.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Ye2+qP4p"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5393kBAE008172;
+	Wed, 9 Apr 2025 09:56:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=4IR01w7c6IYyecb9RKBfcm9aMGadajgq/bwfVU/wi
+	ao=; b=Ye2+qP4pv/lSf/aJtBdatJTpTYUpjm2AWThgYGvADEZ1BXydQ06s9mcZH
+	zPHNoNxxGekMffFxzm0XkxcrxKQ+R3aI7VW8m84/VMeKD8NEzIXOp0T6X7QYKfZu
+	EiH2ZPlMYW/vraGxmZzF8I7MUIzw1NZI8CClLlp6ac+7R7dBBMXlbZmdihZph0HF
+	+hiMekLaXHIlwe6B7beIUWyCHyFmf0074EFOO4CX6jqDvetHIZ2q/APWnSJpnRaQ
+	aykP5XxHho3zdEuIShIXbsP2pYyXo5yXO9tTssPaz0Od77pwU7jutPOuRqd7AWk2
+	F1bxCwsM70KdKZYlyXZQQqkI61Pow==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45wh99hhx9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 09 Apr 2025 09:56:54 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5399nf86007566;
+	Wed, 9 Apr 2025 09:56:54 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45wh99hhue-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 09 Apr 2025 09:56:54 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5398VO7d024610;
+	Wed, 9 Apr 2025 09:56:42 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 45ueutfa3p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 09 Apr 2025 09:56:42 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5399ueB112517822
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 9 Apr 2025 09:56:40 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8A52520071;
+	Wed,  9 Apr 2025 09:56:40 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 244BC20073;
+	Wed,  9 Apr 2025 09:56:36 +0000 (GMT)
+Received: from li-621bac4c-27c7-11b2-a85c-c2bf7c4b3c07.ibm.com.com (unknown [9.43.46.171])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  9 Apr 2025 09:56:35 +0000 (GMT)
+From: Saket Kumar Bhaskar <skb99@linux.ibm.com>
+To: bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc: ast@kernel.org, hbathini@linux.ibm.com, andrii@kernel.org,
+        daniel@iogearbox.net, mykolal@fb.com, martin.lau@linux.dev,
+        song@kernel.org, yonghong.song@linux.dev, john.fastabend@gmail.com,
+        kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com,
+        jolsa@kernel.org, shuah@kernel.org
+Subject: [PATCH] selftests/bpf: Fix bpf_nf selftest failure
+Date: Wed,  9 Apr 2025 15:26:33 +0530
+Message-ID: <20250409095633.33653-1-skb99@linux.ibm.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,44 +77,46 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: _7bzi4MxnXVnTmd88qLeJOkXEz8b-KVA
+X-Proofpoint-ORIG-GUID: PCihOu802yJC6FMZmplOTIec5oujlP-z
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-09_03,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
+ impostorscore=0 spamscore=0 priorityscore=1501 mlxscore=0 malwarescore=0
+ phishscore=0 mlxlogscore=716 bulkscore=0 lowpriorityscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504090054
 
-From: Yaxiong Tian <tianyaxiong@kylinos.cn>
+For systems with missing iptables-legacy tool, this selftest fails.
 
-commit <1b600da510735a> ("PM: EM: Optimize em_cpu_energy() and remove division")
-updated the energy calculation method, so the original comment needs to be updated
-and opt.
+Add check to find if iptables-legacy tool is available and skip the
+test if the tool is missing.
 
-Signed-off-by: Yaxiong Tian  <tianyaxiong@kylinos.cn>
+Fixes: de9c8d848d90 ("selftests/bpf: S/iptables/iptables-legacy/ in the bpf_nf and xdp_synproxy test")
+Signed-off-by: Saket Kumar Bhaskar <skb99@linux.ibm.com>
 ---
- drivers/cpufreq/cppc_cpufreq.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ tools/testing/selftests/bpf/prog_tests/bpf_nf.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufreq.c
-index b3d74f9adcf0..756034b21682 100644
---- a/drivers/cpufreq/cppc_cpufreq.c
-+++ b/drivers/cpufreq/cppc_cpufreq.c
-@@ -379,9 +379,18 @@ static unsigned int get_perf_level_count(struct cpufreq_policy *policy)
- 	return 1 + max_cap / CPPC_EM_CAP_STEP - min_cap / CPPC_EM_CAP_STEP;
- }
+diff --git a/tools/testing/selftests/bpf/prog_tests/bpf_nf.c b/tools/testing/selftests/bpf/prog_tests/bpf_nf.c
+index dbd13f8e42a7..dd6512fa652b 100644
+--- a/tools/testing/selftests/bpf/prog_tests/bpf_nf.c
++++ b/tools/testing/selftests/bpf/prog_tests/bpf_nf.c
+@@ -63,6 +63,12 @@ static void test_bpf_nf_ct(int mode)
+ 		.repeat = 1,
+ 	);
  
--/*
-- * The cost is defined as:
-- *   cost = power * max_frequency / frequency
-+/**
-+ * compute_cost - Calculate the cost for a given CPU and performance level step
-+ * @cpu:  Target CPU
-+ * @step: Performance level step
-+ *
-+ * CPPC uses a linear cost model since it only provides relative efficiency ratios:
-+ *   Base cost (per CPU):    CPPC_EM_COST_GAP * efficiency_class
-+ *   Step cost (per level):  step * CPPC_EM_COST_STEP
-+ *
-+ * Lower cost implies higher efficiency. The model ensures:
-+ *   1. Higher efficiency CPUs (low efficiency_class) always have lower cost.
-+ *   2. Higher performance levels (larger step) linearly increase cost.
-  */
- static inline unsigned long compute_cost(int cpu, int step)
- {
++	if (SYS_NOFAIL("iptables-legacy --version")) {
++		fprintf(stdout, "Missing required iptables-legacy tool\n");
++		test__skip();
++		return;
++	}
++
+ 	skel = test_bpf_nf__open_and_load();
+ 	if (!ASSERT_OK_PTR(skel, "test_bpf_nf__open_and_load"))
+ 		return;
 -- 
-2.25.1
+2.43.5
 
