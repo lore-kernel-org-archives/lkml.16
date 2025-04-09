@@ -1,72 +1,81 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB791482F5
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 15:09:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2908266B56
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 15:09:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744211344; cv=none; b=ZQ2Y3ve3P12kCipIO1K6LYwKMKDATyIzxIC0zYTXwx6MMpc/ZT9j7CY7DcR0PssCVpfOci5u1+BL7DbSXx2Xie1GE97RQIH1tRAfraosYmS/E+0wf0+VZi9v6fF7DHqoSM5e8NXj7S3gyfSDvjymMQ/UDoI6NzaqRDzHQWHyFJo=
+	t=1744211351; cv=none; b=L1GJW7KXfmU9QLj50QN3sMSUru2W/7PYAAVL1nTRmc7nVIXE+2Jn+rPsudC/P6JDJSZuRk/v5cgyecoY48BnGqtJ0vRMgr9/ZYYAyHyO6jCGVLXK9q9bi/1HIK4o3v5+MfHJ/4qoPq9VJh+8RJwIRBpQb6A0YxdG5kMyNi0qJRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744211344; c=relaxed/simple;
-	bh=zcGWZwy+nuORNV+F/ThZjfFW0lE2rDvhpV1x9HexZ5w=;
+	s=arc-20240116; t=1744211351; c=relaxed/simple;
+	bh=dccumOqzcotHIcSTHMQVxrHHRSWZwdakiBo+SRB27Cs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pzh6nci6wS0i/SIIJxBxQMzQOV4kfs05K2XirOqOdYwitkCNZvvWZcCGx1yjnB2oYiAXljdHfPi6A90zXswKiolHRro71YQQPM443bAFhFsn6gX7mVxYc8z9/Y0eHc9/7S3IY0mbJsuRbwh0RSX+RvkKsqOp6vfzEM4pxVBWzMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=EfpnjdFK; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 In-Reply-To:Content-Type; b=UnvbxeoaVu1iHqXazjGGBdEXAaM8Xtk7oXMENVYluraMKAx8BpbA5e69uQlWnWT4o3dZSHpzdzmnDwZbNtfc/d6uC53zl2mefbps8rScPwMzCAdHH2S5gIMK0ET1sR3UWmOpoywD0lT/4HnnoEUIAsFUqWAlCBTvIbE29jHxB74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=lHeHIBXB; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=CL0zlLRp; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=lHeHIBXB; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=CL0zlLRp; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="EfpnjdFK"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5398NZ3f022898
-	for <linux-kernel@vger.kernel.org>; Wed, 9 Apr 2025 15:09:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ZM49O2ioHcxPJFgz0BW7OWFv9D0F8HSwleBnH7gV14s=; b=EfpnjdFKzGCqHJEN
-	Ma/mOBmSYSbE/oWDxhUGfjgKLsaLrT7haeMHc6DuaLFAaUTf1Rgmfr4kGnwJMNZp
-	iIQxKlLT0tzeg8Qton673zuoj8X8AsnHcbwsDyXDdQG68/zAkephLqY/V1Yur2g+
-	y1TBsGfnEznmvp/YydzaD0uxRqkpIiG7OG+qX/SPY3rXuoWCFbzky0bfRQBW8pfJ
-	AJH327Xmon8PrmBGBoK0rLCOKaa9NDumDOv2TLVL8ipaiJQsWiWfx34CwiAvAgE2
-	BPCcRA2Cbq9Bc/G7a4L00twnwaVQ93L2sLu4SQ2I0XSxMO67tiUMtBMC6PyuSJET
-	0MTMeg==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twd03vef-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 15:09:01 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c54734292aso162619485a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 08:09:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744211340; x=1744816140;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZM49O2ioHcxPJFgz0BW7OWFv9D0F8HSwleBnH7gV14s=;
-        b=DBQRfM0dTJmSzu/2dkpn1n2g0th4M5J4LEBy1f2clivHIXE0R9PP6TMw1vFPcBJv4G
-         lDGZ1KauNNY4V7VbbfCjGKRtHrB7ZLDYBRL04lpEqgzhvMaVrF/KFuAQEy7zHNXihJfb
-         U75cONng5KEg80HMGKyQ5sucoUfqXKNeqZ4Q3gfxaw5Nrv0Pti2xgQOhBls41PYOTI9y
-         9dQXHR8dxwQs/1Qogku5VR2NsKqhQE7UUvNuSaKLjAO8FeevnwnhsNT2qow7CEJf3/+9
-         XpHtd31UwQJDRSiL83//Um+enSdObIimboNpBm0HJL0rMDEVGVEdPBW9F4m4atgBKxNE
-         bxcA==
-X-Forwarded-Encrypted: i=1; AJvYcCXSi66f4DxG9PS6cOoITeJS2k5MLO8jzzSN9DjEERBFMGcXzTAN2IjSxBTVoeLdAxfdOCnfJOh+6JMi5mQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyu5Kvj6HzZmLT35qWwD889iCseULQwQDwJYv+tr7tpCQwv87x3
-	i5Xg+65uq7mhj851WwHGrnt4m9cRqH3l/p+eE9hgN9ZOI2ueWt6uV52onV805aFEvDUF1FqX4al
-	YiD1zlDWz1gfneg/VQkkXl7tfdB+WjptOQaPIvDmlvREDV3AiW0gQB0VUq25mlTg=
-X-Gm-Gg: ASbGncuxavY18FMbfGXtA/hczwmfTuiSeS4PWLc2p/cthTBtHQItAM5WdWI+HEyhuRl
-	CUWDmqdInZXb7TEdbKL64grRGd6z4zRhgHf/GuZ6stgkMgU7goTrvYSVTs5iB3n2O8CXUpn12B0
-	YLbOgWEkRzoMbylPSlswEwRQ0duA9CFxksWfYAXbG7JxTiWB/oNlTAsKPFP17YPPU1hU+ZUxz7n
-	I3vggBBgMEtpcozO2O706D0DpGUZwSAqTL9u7SvnmuEC4s3RvqHPjvydZY3pAvt2IxJZIosJTQ4
-	9uFGMbPDiM995TstUTwMiekHHodBK8ToLuNStvbdtPXmvqw81tZaIhga7O6IKYB7uA==
-X-Received: by 2002:a05:620a:2805:b0:7c0:bb63:536c with SMTP id af79cd13be357-7c79cbd8ad2mr156919485a.4.1744211340663;
-        Wed, 09 Apr 2025 08:09:00 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHKqxp7rcrINyn8M6wMLr3P4dzZIUo2PduztsqFYTGLMrH5xZk1qXZ1BhuOXgUr9MLv4mhnXA==
-X-Received: by 2002:a05:620a:2805:b0:7c0:bb63:536c with SMTP id af79cd13be357-7c79cbd8ad2mr156916885a.4.1744211340304;
-        Wed, 09 Apr 2025 08:09:00 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1cb425csm110988066b.104.2025.04.09.08.08.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Apr 2025 08:08:59 -0700 (PDT)
-Message-ID: <0d1aaba8-7736-497e-8424-84489c637914@oss.qualcomm.com>
-Date: Wed, 9 Apr 2025 17:08:55 +0200
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="lHeHIBXB";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="CL0zlLRp";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="lHeHIBXB";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="CL0zlLRp"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id B04151F445;
+	Wed,  9 Apr 2025 15:09:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744211347; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GzjR4oQ2qzzHMq50duuwsOgZ3sY0afnl6ZVMYTeN7mQ=;
+	b=lHeHIBXB9K0yN22hxOlp/aqyN035ygY/uCteI0u4BeP5R/23NHblkxtNz1t4tB5o77tZNI
+	qDImqWPRzPPT8H26XeMYXfrGOwWMuUEE5xg+oo2zFpoiUOENSa1VuqGnVBHLdv8mi6blJo
+	SkqpYQed5XnESE7yfxX97Q58ATupaYM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744211347;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GzjR4oQ2qzzHMq50duuwsOgZ3sY0afnl6ZVMYTeN7mQ=;
+	b=CL0zlLRpfL/PdyHX/n/HeVuT/po0VWiPjAV/2Gaz4tOBc6Sp78vd1uEKMhyrTJYcTpjxxU
+	gm12g6kK96UYLoAA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=lHeHIBXB;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=CL0zlLRp
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744211347; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GzjR4oQ2qzzHMq50duuwsOgZ3sY0afnl6ZVMYTeN7mQ=;
+	b=lHeHIBXB9K0yN22hxOlp/aqyN035ygY/uCteI0u4BeP5R/23NHblkxtNz1t4tB5o77tZNI
+	qDImqWPRzPPT8H26XeMYXfrGOwWMuUEE5xg+oo2zFpoiUOENSa1VuqGnVBHLdv8mi6blJo
+	SkqpYQed5XnESE7yfxX97Q58ATupaYM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744211347;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GzjR4oQ2qzzHMq50duuwsOgZ3sY0afnl6ZVMYTeN7mQ=;
+	b=CL0zlLRpfL/PdyHX/n/HeVuT/po0VWiPjAV/2Gaz4tOBc6Sp78vd1uEKMhyrTJYcTpjxxU
+	gm12g6kK96UYLoAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8D34B13691;
+	Wed,  9 Apr 2025 15:09:07 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id +D25IZON9mfPYAAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Wed, 09 Apr 2025 15:09:07 +0000
+Message-ID: <4f4adc4c-72fd-481f-8b41-f107f2b91ef8@suse.cz>
+Date: Wed, 9 Apr 2025 17:09:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,67 +83,77 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/7] Support for GPU ACD feature on Adreno X1-85
-To: Anthony Ruhier <aruhier@mailbox.org>,
-        Akhil P Oommen <quic_akhilpo@quicinc.com>
-Cc: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Maya Matuszczyk <maccraft123mc@gmail.com>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org
-References: <20250109-gpu-acd-v4-0-08a5efaf4a23@quicinc.com>
- <dj256lrkc4s5ylqkqdrak6a6p3v62ckkd3orsg7ykz2w6ugllg@rbfkojacklvx>
+Subject: Re: [PATCH RFC v3 3/8] slab: add sheaf support for batching
+ kfree_rcu() operations
+To: Harry Yoo <harry.yoo@oracle.com>
+Cc: Suren Baghdasaryan <surenb@google.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Christoph Lameter
+ <cl@linux.com>, David Rientjes <rientjes@google.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Uladzislau Rezki <urezki@gmail.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+ maple-tree@lists.infradead.org
+References: <20250317-slub-percpu-caches-v3-0-9d9884d8b643@suse.cz>
+ <20250317-slub-percpu-caches-v3-3-9d9884d8b643@suse.cz>
+ <Z_XScomDqU_Dke17@harry>
 Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <dj256lrkc4s5ylqkqdrak6a6p3v62ckkd3orsg7ykz2w6ugllg@rbfkojacklvx>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <Z_XScomDqU_Dke17@harry>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: LgdZo8jTVil3sc86FMSTZ5AKVRZ9lTTT
-X-Authority-Analysis: v=2.4 cv=Q4vS452a c=1 sm=1 tr=0 ts=67f68d8d cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=vjlbkFh1sCUApBijkyAA:9 a=QEXdDO2ut3YA:10 a=bTQJ7kPSJx9SKPbeHEYW:22
-X-Proofpoint-GUID: LgdZo8jTVil3sc86FMSTZ5AKVRZ9lTTT
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-09_05,2025-04-08_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 lowpriorityscore=0 spamscore=0 clxscore=1015 phishscore=0
- bulkscore=0 adultscore=0 malwarescore=0 mlxscore=0 suspectscore=0
- mlxlogscore=888 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504090095
+X-Rspamd-Queue-Id: B04151F445
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[google.com,oracle.com,linux.com,linux.dev,gmail.com,kvack.org,vger.kernel.org,lists.infradead.org];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.cz:dkim,suse.cz:mid]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
+X-Spam-Flag: NO
 
-On 3/18/25 2:12 PM, Anthony Ruhier wrote:
-> Using this patch serie on 6.14-rc (tested over multiple RCs, up to rc7) on a
-> Yoga Slim 7x (x1e80100), I often get a video output freeze a few seconds after
-> my wayland compositor loads. I can still ssh into the laptop. I get these
-> kernel errors in loop:
+On 4/9/25 3:50 AM, Harry Yoo wrote:
+> On Mon, Mar 17, 2025 at 03:33:04PM +0100, Vlastimil Babka wrote:
 > 
-> 	msm_dpu ae01000.display-controller: [drm:hangcheck_handler [msm]] *ERROR* 67.5.12.1: hangcheck detected gpu lockup rb 0!
-> 	msm_dpu ae01000.display-controller: [drm:hangcheck_handler [msm]] *ERROR* 67.5.12.1:     completed fence: 777
-> 	msm_dpu ae01000.display-controller: [drm:hangcheck_handler [msm]] *ERROR* 67.5.12.1:     submitted fence: 778
+> Hmm this hunk in v3 is fine, but on your slub-percpu-shaves-v4r0 branch
+> it's calling local_unlock() twice. Probably a rebase error?
+
+Yeah, thanks a lot for catching that! I've just pushed
+https://git.kernel.org/pub/scm/linux/kernel/git/vbabka/linux.git/log/?h=slub-percpu-sheaves-v4r1
+
+with this fixed, and fixups for 2/8 to the points you made, plus a
+proper strict_numa handling in 2/8, and an extra patch for better NUMA
+locality
+
+> Otherwise looks good to me.
 > 
-> Rob Clark recommended to me to remove the higher GPU frequencies added by this
-> patch (1.25Ghz and 1.175 Ghz). The lockups happen then less often, but are
-> still present. It is easily reproducible.
+> When you address this, please feel free to add:
 > 
-> A way to mitigate the problem is by constantly moving my cursor during a few
-> seconds after my wayland session starts, then no freeze happens. Reverting this
-> patch serie fixes the problem.
+> Reviewed-by: Harry Yoo <harry.yoo@oracle.com>
+> 
+> Thanks!
+> 
 
-What firmware files are you using? ZAP surely comes from the Windows
-package, but what about GMU and SQE? Linux-firmware?
-
-Specifically, please provide the GMU version which is printed to dmesg
-on first GPU open
-
-Konrad
