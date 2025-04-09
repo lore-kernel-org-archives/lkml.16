@@ -1,84 +1,59 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C8F23D76
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 08:25:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744187109; cv=none; b=G66q0MMj/Iai7JXZwLNUQKbuFKMiztIUW6SZ6Epun2u19UeoU5TThQXH85rEdqxZJt0ngyYQbc/2gSAU9nzfNZOAGJHXPQ8Y2AaInwOKPnEVBhR/+qXfXb0IK9NYHCaW7Iq9VG/5XVNCBGRhcYR69s+Hv82R70v70Wa/X1TK3A4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744187109; c=relaxed/simple;
-	bh=//oS1YcihLm6+UDH4b/efcQo+DFpCSrps1srpVso6wM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UIMEVOj3S07Zjv6uDv0UcDFHLZVMpUEspt6KoZGfyx+rTmc7L5P77PbhmlIWwoiH/6iH4yPZxwCEMFhEUKke5j0Oq5zPxV5mW3/o9F0zXgelD1E+cwEXhA9Hpq/0B8u6zs7IDp79mGl0ac/68ej3h5ZaRjScLzuEoH/6Ta1kwAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nnhMnUyw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=yMI3/CmL; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nnhMnUyw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=yMI3/CmL; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DE9B25B68C;
+	Wed,  9 Apr 2025 08:25:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744187126; cv=pass; b=T108OJ1ERf9LT36SAW5CSAOimtOGz50QEMyUYRjUQNbHMefr1iopi7DXwfeVW1ivskJ6+ELmjUG2h97FfN2WxbEeMvQassDXsHaQSvNbpkoRyb0Z4ODnvJU1tjV2cTf2W0kJHCpyLH7Bt6E1rZqHGBXyWMc+zS8lnWhxYSKHetA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744187126; c=relaxed/simple;
+	bh=8UrwX46Ocp72It3PbNl4PTRyMJT3wPsUyp2d1M9RVS0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CaWQ5cRzWDUXBjt0HLNwekVBvC7XKUkcJWWguunKU/bqFELEE/hjpEQpqYoFSW9oQ3qW7dH4hVTvuNgLg6yfwtfJIObkBZ7r3cMlxCoDposwhoJPCZnn3AvVB5H2NYHA2Df6OEm3HuT6nnKJl9PD/iYJWOyk8xQ1328bDYpiqVc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=E4jU7UFR; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="nnhMnUyw";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="yMI3/CmL";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="nnhMnUyw";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="yMI3/CmL"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 3F20E21168;
-	Wed,  9 Apr 2025 08:25:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744187105; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=EbZZFyww48V6ig4dM/PI70UmVckszKfIjZnLFoz8yuY=;
-	b=nnhMnUywwQIukhYbFuxUz0Ah7tJeCURfqT4lxEkMSqi7ssvZIq6TWRo/G6ppZBtySbj3MH
-	ue3jvS6lAZf7whxxytlH9iT9S/6BI21XP001mohQQ55wmrp3A46DgjvFDb1DDSJ9ITCRVb
-	jIElIH0OPcz72oKfKNhRQOq1kPeQmfU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744187105;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=EbZZFyww48V6ig4dM/PI70UmVckszKfIjZnLFoz8yuY=;
-	b=yMI3/CmLgB5+CvfwGQy1YQ5pN2byGOMdd4AVSThgZ+ycgHupe+bqhIiGxaklYVYDPX4VNg
-	9ykHEkySZ9mYlhDw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=nnhMnUyw;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="yMI3/CmL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744187105; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=EbZZFyww48V6ig4dM/PI70UmVckszKfIjZnLFoz8yuY=;
-	b=nnhMnUywwQIukhYbFuxUz0Ah7tJeCURfqT4lxEkMSqi7ssvZIq6TWRo/G6ppZBtySbj3MH
-	ue3jvS6lAZf7whxxytlH9iT9S/6BI21XP001mohQQ55wmrp3A46DgjvFDb1DDSJ9ITCRVb
-	jIElIH0OPcz72oKfKNhRQOq1kPeQmfU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744187105;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=EbZZFyww48V6ig4dM/PI70UmVckszKfIjZnLFoz8yuY=;
-	b=yMI3/CmLgB5+CvfwGQy1YQ5pN2byGOMdd4AVSThgZ+ycgHupe+bqhIiGxaklYVYDPX4VNg
-	9ykHEkySZ9mYlhDw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A3AB6137AC;
-	Wed,  9 Apr 2025 08:25:04 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id v/0WJeAu9mcBXQAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Wed, 09 Apr 2025 08:25:04 +0000
-From: Oscar Salvador <osalvador@suse.de>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Muchun Song <muchun.song@linux.dev>,
-	David Hildenbrand <david@redhat.com>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Peter Xu <peterx@redhat.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Michal Hocko <mhocko@suse.com>,
-	Oscar Salvador <osalvador@suse.de>
-Subject: [PATCH] MAINTAINERS: Update HUGETLB reviewers
-Date: Wed,  9 Apr 2025 10:24:52 +0200
-Message-ID: <20250409082452.269180-1-osalvador@suse.de>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="E4jU7UFR"
+ARC-Seal: i=1; a=rsa-sha256; t=1744187098; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=K9Rhiiiok+mdXUDDaYtCQGfL4Gt76o5nYAaNDvpFIeQKWkRB1Fc6SuKndIvy8kwEbQucS0juA8z94/lmNCPAbyi0FMxK4ky8uUgrl9P2b4z2dvaZ9MnzDXbXHV0VzNz6/g1fqROa7fTiqFYq7Udl4FswT7LnOSaZ0u188EUrIRw=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1744187098; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=gj2kV+wt8S2Y4pLqmUJgQHSVfSyy5Lw/0M6Y/S4SF4M=; 
+	b=GJG0to3QksSyoJl9jhVeqRwdjXijjkeQwdVVlIxJVzblKiwyOuX4ByiPbBomrWb0s6WFQH/XocFpuoOgaVuzPnHpcbKB0DhNwLQfzYvpTArV1456jGfs/TtcPUAK8V7LjjleE7eTzyJmkBfSguvQIVk391SI4AHve+X9Ez803EY=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
+	dmarc=pass header.from=<usama.anjum@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744187098;
+	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=gj2kV+wt8S2Y4pLqmUJgQHSVfSyy5Lw/0M6Y/S4SF4M=;
+	b=E4jU7UFRQ9WEzXcpcUqYGtM7aPqeGhjrUQH4Q9nNoZHc+OxFsZ6c7cFfk7NRHFIc
+	Zg1sm7Ynd46TonP+e/QTfTeAKGvPfozCJctZCz+uWeuHbt9cvARICRu+uD3884rg6WT
+	9g9V7AEz145ivmE892XYrVHpqg5Fi5EFXqVCBb1E=
+Received: by mx.zohomail.com with SMTPS id 1744187097015753.044433887251;
+	Wed, 9 Apr 2025 01:24:57 -0700 (PDT)
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Jeff Hugo <jeff.hugo@oss.qualcomm.com>,
+	Youssef Samir <quic_yabdulra@quicinc.com>,
+	Matthew Leung <quic_mattleun@quicinc.com>,
+	Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	Yan Zhen <yanzhen@vivo.com>,
+	Qiang Yu <quic_qianyu@quicinc.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Kunwu Chan <chentao@kylinos.cn>
+Cc: Carl Vanderlip <quic_carlv@quicinc.com>,
+	Sumit Garg <sumit.garg@kernel.org>,
+	mhi@lists.linux.dev,
+	linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] bus: mhi: host: don't free bhie tables during power off
+Date: Wed,  9 Apr 2025 13:24:26 +0500
+Message-ID: <20250409082444.582295-1-usama.anjum@collabora.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,61 +61,119 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 3F20E21168
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_TLS_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -3.01
-X-Spam-Flag: NO
+X-ZohoMailClient: External
 
-I have done quite some review on hugetlb code over the years, and some
-work on it as well, the latest being the hugetlb pagewalk unification which
-is a work in progress, and touches hugetlb code to great lengths.
+Fix dma_direct_alloc() failure at resume time during bhie_table
+allocation. There is a crash report where at resume time, the memory
+from the dma doesn't get allocated and MHI fails to re-initialize.
+There may be fragmentation of some kind which fails the allocation
+call.
 
-HugeTLB does not have many reviewers, so I would like to help out by
-offering myself as an official Reviewer.
+To fix it, don't free the memory at power down. Use the same allocated
+memory again and again after every resume/hibernation. This patch has
+been tested with resume and hibernation both.
 
-Signed-of-by: Oscar Salvador <osalvador@suse.de>
+Here are the crash logs:
+
+[ 3029.338587] mhi mhi0: Requested to power ON
+[ 3029.338621] mhi mhi0: Power on setup success
+[ 3029.668654] kworker/u33:8: page allocation failure: order:7, mode:0xc04(GFP_NOIO|GFP_DMA32), nodemask=(null),cpuset=/,mems_allowed=0
+[ 3029.668682] CPU: 4 UID: 0 PID: 2744 Comm: kworker/u33:8 Not tainted 6.11.11-valve10-1-neptune-611-gb69e902b4338 #1ed779c892334112fb968aaa3facf9686b5ff0bd7
+[ 3029.668690] Hardware name: Valve Galileo/Galileo, BIOS F7G0112 08/01/2024
+[ 3029.668694] Workqueue: mhi_hiprio_wq mhi_pm_st_worker [mhi]
+[ 3029.668717] Call Trace:
+[ 3029.668722]  <TASK>
+[ 3029.668728]  dump_stack_lvl+0x4e/0x70
+[ 3029.668738]  warn_alloc+0x164/0x190
+[ 3029.668747]  ? srso_return_thunk+0x5/0x5f
+[ 3029.668754]  ? __alloc_pages_direct_compact+0xaf/0x360
+[ 3029.668761]  __alloc_pages_slowpath.constprop.0+0xc75/0xd70
+[ 3029.668774]  __alloc_pages_noprof+0x321/0x350
+[ 3029.668782]  __dma_direct_alloc_pages.isra.0+0x14a/0x290
+[ 3029.668790]  dma_direct_alloc+0x70/0x270
+[ 3029.668796]  mhi_alloc_bhie_table+0xe8/0x190 [mhi faa917c5aa23a5f5b12d6a2c597067e16d2fedc0]
+[ 3029.668814]  mhi_fw_load_handler+0x1bc/0x310 [mhi faa917c5aa23a5f5b12d6a2c597067e16d2fedc0]
+[ 3029.668830]  mhi_pm_st_worker+0x5c8/0xaa0 [mhi faa917c5aa23a5f5b12d6a2c597067e16d2fedc0]
+[ 3029.668844]  ? srso_return_thunk+0x5/0x5f
+[ 3029.668853]  process_one_work+0x17e/0x330
+[ 3029.668861]  worker_thread+0x2ce/0x3f0
+[ 3029.668868]  ? __pfx_worker_thread+0x10/0x10
+[ 3029.668873]  kthread+0xd2/0x100
+[ 3029.668879]  ? __pfx_kthread+0x10/0x10
+[ 3029.668885]  ret_from_fork+0x34/0x50
+[ 3029.668892]  ? __pfx_kthread+0x10/0x10
+[ 3029.668898]  ret_from_fork_asm+0x1a/0x30
+[ 3029.668910]  </TASK>
+
+Tested-on: QCNFA765 WLAN.HSP.1.1-03926.13-QCAHSPSWPL_V2_SILICONZ_CE-2.52297.6
+Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
 ---
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/bus/mhi/host/boot.c | 11 +++++++----
+ drivers/bus/mhi/host/init.c | 15 +++------------
+ 2 files changed, 10 insertions(+), 16 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 193d7e216d79..7b32498a42cb 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10963,6 +10963,7 @@ F:	include/linux/platform_data/huawei-gaokun-ec.h
+diff --git a/drivers/bus/mhi/host/boot.c b/drivers/bus/mhi/host/boot.c
+index efa3b6dddf4d2..8b3d2b9d239c3 100644
+--- a/drivers/bus/mhi/host/boot.c
++++ b/drivers/bus/mhi/host/boot.c
+@@ -323,6 +323,7 @@ void mhi_free_bhie_table(struct mhi_controller *mhi_cntrl,
+ 				  mhi_buf->buf, mhi_buf->dma_addr);
  
- HUGETLB SUBSYSTEM
- M:	Muchun Song <muchun.song@linux.dev>
-+R:	Oscar Salvador <osalvador@suse.de>
- L:	linux-mm@kvack.org
- S:	Maintained
- F:	Documentation/ABI/testing/sysfs-kernel-mm-hugepages
+ 	kfree(image_info->mhi_buf);
++	image_info->mhi_buf = NULL;
+ 	kfree(image_info);
+ }
+ 
+@@ -584,10 +585,12 @@ void mhi_fw_load_handler(struct mhi_controller *mhi_cntrl)
+ 	 * device transitioning into MHI READY state
+ 	 */
+ 	if (fw_load_type == MHI_FW_LOAD_FBC) {
+-		ret = mhi_alloc_bhie_table(mhi_cntrl, &mhi_cntrl->fbc_image, fw_sz);
+-		if (ret) {
+-			release_firmware(firmware);
+-			goto error_fw_load;
++		if (!mhi_cntrl->fbc_image) {
++			ret = mhi_alloc_bhie_table(mhi_cntrl, &mhi_cntrl->fbc_image, fw_sz);
++			if (ret) {
++				release_firmware(firmware);
++				goto error_fw_load;
++			}
+ 		}
+ 
+ 		/* Load the firmware into BHIE vec table */
+diff --git a/drivers/bus/mhi/host/init.c b/drivers/bus/mhi/host/init.c
+index 13e7a55f54ff4..3c20e4541357e 100644
+--- a/drivers/bus/mhi/host/init.c
++++ b/drivers/bus/mhi/host/init.c
+@@ -1173,8 +1173,9 @@ int mhi_prepare_for_power_up(struct mhi_controller *mhi_cntrl)
+ 		/*
+ 		 * Allocate RDDM table for debugging purpose if specified
+ 		 */
+-		mhi_alloc_bhie_table(mhi_cntrl, &mhi_cntrl->rddm_image,
+-				     mhi_cntrl->rddm_size);
++		if (!mhi_cntrl->rddm_image)
++			mhi_alloc_bhie_table(mhi_cntrl, &mhi_cntrl->rddm_image,
++					     mhi_cntrl->rddm_size);
+ 		if (mhi_cntrl->rddm_image) {
+ 			ret = mhi_rddm_prepare(mhi_cntrl,
+ 					       mhi_cntrl->rddm_image);
+@@ -1202,16 +1203,6 @@ EXPORT_SYMBOL_GPL(mhi_prepare_for_power_up);
+ 
+ void mhi_unprepare_after_power_down(struct mhi_controller *mhi_cntrl)
+ {
+-	if (mhi_cntrl->fbc_image) {
+-		mhi_free_bhie_table(mhi_cntrl, mhi_cntrl->fbc_image);
+-		mhi_cntrl->fbc_image = NULL;
+-	}
+-
+-	if (mhi_cntrl->rddm_image) {
+-		mhi_free_bhie_table(mhi_cntrl, mhi_cntrl->rddm_image);
+-		mhi_cntrl->rddm_image = NULL;
+-	}
+-
+ 	mhi_cntrl->bhi = NULL;
+ 	mhi_cntrl->bhie = NULL;
+ 
 -- 
-2.49.0
+2.43.0
 
