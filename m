@@ -1,127 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8472F29D0E;
-	Wed,  9 Apr 2025 02:32:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D90057DA6C;
+	Wed,  9 Apr 2025 02:33:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744165962; cv=none; b=Dvab4xnqeOLxBtlJdGVwBWp5A2FlnyMiXWd2ONSvZrvb/nD0knEvEn6Rf/gvRYca/RWQbBiRxQ0kFmwTyzQUTsjwSdYvzKvzRnoKpEYftqjTH0Cm9RQZojgW2+SsqaWx040tdUHI19Kp3wR1QQ7XIYCRF3SbV7BCndnCqdaDol0=
+	t=1744165988; cv=none; b=T0q2DaOxHxhruSa5toC+Ldc+KcMbzN5jOlCJ9HigvTPpNfUIPi7Ln74MeGx6bS28hbbiSiYyC+T51dWJrYGD1kht6oHn26/5GOTlkculdilgnBjkPvYemO06961jE/8S8o3rPhL8/GHo66NXc/QJnEOOomHLi4n3NzVt7K1kYhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744165962; c=relaxed/simple;
-	bh=vnaDNkCLPpmH76yQp56KQf7WqL8mrYB+8sRUh34dcGc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fI5WYNHXTVJzqVe10LJinmQ2gREX5zi5uzxTVkBwBXtK8Ar6lyQ5H9B0S8f499QRtOiAGiJmae5/gM6DR0RICrGa66MF3mmlf2NmCu7q2ak47ZdT41L0uQNvOzmVFonRXlxEXezfCvdhWVPr7bs9LGWKoqwqmdVSh2ckxV8ywS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P6qgTGza; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744165988; c=relaxed/simple;
+	bh=wAk+PdHN2S7CGB528X6cqziEvvrh4na/F7Q81dYFCn0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=AOCTNa+hRVb0kTtk9vmPaxhy9eBShsEAZ3rSl5V5e5UwrxEn4OdD8/L74TG0XcRRSL+vlqxxwioCJXorb787f3DSIxkbKtMAsHUx/qyDYsVtU8CEGEh9TXUTmOLaa40IEiRW5YsFlFSrcsJD/Kr3gm6kCx0wImVoCnDuqyNXNJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hjuRHpXW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P6qgTGza"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744165960; x=1775701960;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vnaDNkCLPpmH76yQp56KQf7WqL8mrYB+8sRUh34dcGc=;
-  b=P6qgTGzaq1oFnypmWHPMeDDkPCphjrDRqSnBygJic0NXVwZiFiTlMVIP
-   OYSr5l+Ak81jM90K9L6KQoZ7j7FL9U988ifUynMJaIphqKz0oKpuxaROz
-   nPdXs2P0im5KMjqiLqpPhpkmrR+nabXS4gpZMjXKevq8zErGV02cvgDak
-   8uu4bjs3rQuqPZ0/iCbrBsV2OvXlIPB+G+e3pHMwOdEEUOcPL4I3OYla5
-   K1MhfH00k0xhydT6K7rx8ESzZEDdtZm93gXrPP9c2UPtiZIuAMRCeddnE
-   fe+5RzQqOTqwXZ4uDqCnjkW31GNP4w8YuXZf7FegC4ZhOTSthIJdRzrWL
-   w==;
-X-CSE-ConnectionGUID: c1jEaNKlSgekA1mR5WPwkw==
-X-CSE-MsgGUID: 7xa7UVUrQBWVizrYkZk1kg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="49465359"
-X-IronPort-AV: E=Sophos;i="6.15,199,1739865600"; 
-   d="scan'208";a="49465359"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 19:32:37 -0700
-X-CSE-ConnectionGUID: thhpgLzqTnyYqgpIXkTxAQ==
-X-CSE-MsgGUID: 9HlMwltuT7uIdLoQ6jkFpA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,199,1739865600"; 
-   d="scan'208";a="151634018"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 08 Apr 2025 19:32:33 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u2LEt-0008CT-07;
-	Wed, 09 Apr 2025 02:32:31 +0000
-Date: Wed, 9 Apr 2025 10:32:03 +0800
-From: kernel test robot <lkp@intel.com>
-To: Sean Anderson <sean.anderson@linux.dev>, netdev@vger.kernel.org,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Russell King <linux@armlinux.org.uk>
-Cc: oe-kbuild-all@lists.linux.dev, Heiner Kallweit <hkallweit1@gmail.com>,
-	upstream@airoha.com, Kory Maincent <kory.maincent@bootlin.com>,
-	Christian Marangi <ansuelsmth@gmail.com>,
-	linux-kernel@vger.kernel.org, Michal Simek <monstr@monstr.eu>,
-	Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>,
-	Robert Hancock <robert.hancock@calian.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Sean Anderson <sean.anderson@linux.dev>
-Subject: Re: [net-next PATCH v2 11/14] net: axienet: Convert to use PCS
- subsystem
-Message-ID: <202504091007.RSwPrfcI-lkp@intel.com>
-References: <20250407232058.2317056-1-sean.anderson@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hjuRHpXW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EA32C4CEE5;
+	Wed,  9 Apr 2025 02:33:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744165987;
+	bh=wAk+PdHN2S7CGB528X6cqziEvvrh4na/F7Q81dYFCn0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=hjuRHpXWxzKWgJapgfWjo0zSUCZsQb8Ox37o40n/+swDPM9inFDys5nNREni8sGyh
+	 2FQl+VXFnbVAr4zKRJN4O76q9ZHEo8me2TO6Cy/xwJyVTeZ/MoUjuN/rKDqah+/Hrc
+	 l2QVLz+8lptAd9pqILotp+dSZPCLfSTIYyEVpiFclI5LOk4vxxdAG7ZcsITU7Uho3F
+	 XaqI1qrATg0wlyJpbmkB8/YHId/UQHWPUdhp45FwJRpgR4qltYyonfYsXk4OryhN9l
+	 4hQGx5xFRJ11lYHqLNnUZsF8gVCqV69Lb+dbibqmfrkFBpQnoqwkdCA+TMaYMoJViJ
+	 LpOA65F02hPIw==
+From: SeongJae Park <sj@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: SeongJae Park <sj@kernel.org>,
+	stable@vger.kernel.org,
+	patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org,
+	akpm@linux-foundation.org,
+	linux@roeck-us.net,
+	shuah@kernel.org,
+	patches@kernelci.org,
+	lkft-triage@lists.linaro.org,
+	pavel@denx.de,
+	jonathanh@nvidia.com,
+	f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net,
+	rwarsow@gmx.de,
+	conor@kernel.org,
+	hargar@microsoft.com,
+	broonie@kernel.org,
+	damon@lists.linux.dev
+Subject: Re: [PATCH 6.13 000/500] 6.13.11-rc2 review
+Date: Tue,  8 Apr 2025 19:33:04 -0700
+Message-Id: <20250409023304.70192-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250408154123.083425991@linuxfoundation.org>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407232058.2317056-1-sean.anderson@linux.dev>
+Content-Transfer-Encoding: 8bit
 
-Hi Sean,
+Hello,
 
-kernel test robot noticed the following build warnings:
+On Tue,  8 Apr 2025 17:54:00 +0200 Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
 
-[auto build test WARNING on net-next/main]
+> This is the start of the stable review cycle for the 6.13.11 release.
+> There are 500 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 10 Apr 2025 15:40:28 +0000.
+> Anything received after that time might be too late.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Sean-Anderson/dt-bindings-net-Add-Xilinx-PCS/20250408-072650
-base:   net-next/main
-patch link:    https://lore.kernel.org/r/20250407232058.2317056-1-sean.anderson%40linux.dev
-patch subject: [net-next PATCH v2 11/14] net: axienet: Convert to use PCS subsystem
-config: arm-randconfig-001-20250409 (https://download.01.org/0day-ci/archive/20250409/202504091007.RSwPrfcI-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 7.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250409/202504091007.RSwPrfcI-lkp@intel.com/reproduce)
+This rc kernel passes DAMON functionality test[1] on my test machine.
+Attaching the test results summary below.  Please note that I retrieved the
+kernel from linux-stable-rc tree[2].
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504091007.RSwPrfcI-lkp@intel.com/
+Tested-by: SeongJae Park <sj@kernel.org>
 
-All warnings (new ones prefixed by >>):
+[1] https://github.com/damonitor/damon-tests/tree/next/corr
+[2] 45ef829b9715 ("Linux 6.13.11-rc2")
 
-   In file included from drivers/net/ethernet/xilinx/xilinx_axienet_main.c:38:0:
-   include/linux/pcs.h: In function 'pcs_get':
->> include/linux/pcs.h:165:9: warning: return makes pointer from integer without a cast [-Wint-conversion]
-     return -EOPNOTSUPP;
-            ^
-   include/linux/pcs.h: In function 'pcs_get_by_fwnode':
-   include/linux/pcs.h:178:9: warning: return makes pointer from integer without a cast [-Wint-conversion]
-     return -EOPNOTSUPP;
-            ^
-   include/linux/pcs.h: In function 'pcs_get_by_dev':
-   include/linux/pcs.h:191:9: warning: return makes pointer from integer without a cast [-Wint-conversion]
-     return -EOPNOTSUPP;
-            ^
+Thanks,
+SJ
 
+[...]
 
-vim +165 include/linux/pcs.h
+---
 
-b7da98b4ee6f2f Sean Anderson 2025-04-07  162  
-b7da98b4ee6f2f Sean Anderson 2025-04-07  163  static inline struct phylink_pcs *pcs_get(struct device *dev, const char *id)
-b7da98b4ee6f2f Sean Anderson 2025-04-07  164  {
-b7da98b4ee6f2f Sean Anderson 2025-04-07 @165  	return -EOPNOTSUPP;
-b7da98b4ee6f2f Sean Anderson 2025-04-07  166  }
-b7da98b4ee6f2f Sean Anderson 2025-04-07  167  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+ok 9 selftests: damon: damos_tried_regions.py
+ok 10 selftests: damon: damon_nr_regions.py
+ok 11 selftests: damon: reclaim.sh
+ok 12 selftests: damon: lru_sort.sh
+ok 13 selftests: damon: debugfs_empty_targets.sh
+ok 14 selftests: damon: debugfs_huge_count_read_write.sh
+ok 15 selftests: damon: debugfs_duplicate_context_creation.sh
+ok 16 selftests: damon: debugfs_rm_non_contexts.sh
+ok 17 selftests: damon: debugfs_target_ids_read_before_terminate_race.sh
+ok 18 selftests: damon: debugfs_target_ids_pid_leak.sh
+ok 19 selftests: damon: sysfs_update_removed_scheme_dir.sh
+ok 20 selftests: damon: sysfs_update_schemes_tried_regions_hang.py
+ok 1 selftests: damon-tests: kunit.sh
+ok 2 selftests: damon-tests: huge_count_read_write.sh
+ok 3 selftests: damon-tests: buffer_overflow.sh
+ok 4 selftests: damon-tests: rm_contexts.sh
+ok 5 selftests: damon-tests: record_null_deref.sh
+ok 6 selftests: damon-tests: dbgfs_target_ids_read_before_terminate_race.sh
+ok 7 selftests: damon-tests: dbgfs_target_ids_pid_leak.sh
+ok 8 selftests: damon-tests: damo_tests.sh
+ok 9 selftests: damon-tests: masim-record.sh
+ok 10 selftests: damon-tests: build_i386.sh
+ok 11 selftests: damon-tests: build_arm64.sh # SKIP
+ok 12 selftests: damon-tests: build_m68k.sh # SKIP
+ok 13 selftests: damon-tests: build_i386_idle_flag.sh
+ok 14 selftests: damon-tests: build_i386_highpte.sh
+ok 15 selftests: damon-tests: build_nomemcg.sh
+ [33m
+ [92mPASS [39m
