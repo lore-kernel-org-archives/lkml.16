@@ -1,137 +1,108 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3479A26ACB
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 23:12:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CC981B6CE4;
+	Wed,  9 Apr 2025 23:13:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744240362; cv=none; b=Fh+4kMw3pdhj8pa2R6BEbB1Iq7FVXOKpKyKBLCM+b3x3HclWAz+W70rGuVKcFfLVR4PCWtHkohRnfo1Kpk84jb+gI04znOo3g6hdiU2KChVLFfBhX+H3jego38y4zz3dhaf01kXrVVOI3UUzGi/RXh9i0Ui+sLEUPXGTZfxYc7I=
+	t=1744240416; cv=none; b=IsvvZY9+BlUnvYj9mWT2EzApOUjUXvCVmo0Lr6oliMDfIwFsMhdAkRKAZHbC60J0oG4Sc79jdgX11jGq3ih1mbOpF96YavaWwqwindb6ztggPrJp2+pSYmBU3ZsDumUFXCCqHiCNasHfCjsEWpQdQFDkGezMD4LJIEpQgy7K5QE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744240362; c=relaxed/simple;
-	bh=WIA49+TKtPo0Cw/Pzw0xYETN11R/ZSK/Jj6AtKvIyJc=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=fPB8kZ2WdIjKe4RRpOyhtgTTBiREl39ve5oz5w8pdCrNYOno90yrMA6Guouy0oIhiV63mPSCG28x4zCnZiYKvij14HDqLQlggZJpLR3/6XKIwRGoJcZ4RyoiIvRm9ljv62EavzE93HWnmANKY8jJqmUoyMlszqWPDy/KnzauVvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uuHwXCRC; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
+	s=arc-20240116; t=1744240416; c=relaxed/simple;
+	bh=gwk9OrycqkKVdhpm87tobsijpdGkykWCrAcP3S79gRU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kHUKDfv4TBkDrdOlnousKMteizWNTeBY77pCnbRg482JGVxmHyIEfYpwW2RF7RkIpHAOjfwac451DpDT0yCbtgH3wZ3M4FAJ19qdhqwUqQNKwSt5/gTz14i/SpzSDUkAu3XLFw/GGmUCtwHMXK0AFg+jF+0uOQymEgkzaAxgPnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=HB6hMWN2; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uuHwXCRC"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-736b431ee0dso107956b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 16:12:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="HB6hMWN2"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cfe574976so1503205e9.1;
+        Wed, 09 Apr 2025 16:13:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744240360; x=1744845160; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=hQy2Z6G5chmLGArkdaIBDoxGpfcNVyaQUKkExyNr838=;
-        b=uuHwXCRCOpyc2+PR66raRyHhMm4LNcAvdPifIKvrGUkVIP30s4ftl6DGjvAvb/hd4x
-         +bQw6eo9hYCRLcu7run0kKwQnANjUIUmkZLPZoDqY5MkB0JNTZYXLeCIYUkVq8ehYHNG
-         kU/5Y4zDrKGLEJZ2geLj/zX93fTbNQbGzPGmZaq8OZiU5wb7L14tCu2roz4vzGkJY9yB
-         SNcFFDyFFsfANafHJB017aJg64nGmnhNkdJE+mAM3WkDlm6etzBlEMXEHG0HndAezEHj
-         F7fgIWTpwy277hIsNeedEv5Yk5NUB9fWnpIapfkcoqmsRUpk1qjoEs3veVWLMFOeX1Z4
-         5dxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744240360; x=1744845160;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+        d=googlemail.com; s=20230601; t=1744240413; x=1744845213; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=hQy2Z6G5chmLGArkdaIBDoxGpfcNVyaQUKkExyNr838=;
-        b=QPURsjaThmdc1wXCVf5HGro3ZyJ7u3EcF9F0F+Aj7mYKSYfZ4+LGKqW9kS4xvQVzOz
-         3+XtILyWuy8Ues9lqgFjyof82JinGAVUJUBdUjm2Of+eKJ6UrUSq3yYOZI4po9k0BOBd
-         CpzhWyQdYMnzA1d/hn1FBEnBUNVqpLeQQs7/fUJjRCjbru2Z+0hPQjF3IdsZw+TkDxPU
-         TVVlZoqj3tQJavS+c+1nFUXodgK/uFBdsU/ookAy5c/FDd/4g+qK8+kcDDnq3V7KR0HP
-         QDqBQyhP/G6SFfOmrVjBA+da9JkKz2cAWYtKG0qMKWVGIaW+LXOPqqV/I+H28ZPidlpN
-         0xtw==
-X-Gm-Message-State: AOJu0YwwLu3uCjsJfVuQkwLr8OEbdtTnCKbfnmmuw8cIGNiJjY7qZcRM
-	Usgr77AZjBzgWaiaLX66+91nhUiwo9i6gKdkKoMi7dLh2ffCltyz88kp5r8Y2oUOiuGIFhmRJ1S
-	9ihY9GiPu36ioVRSutPRRQgoul/L+0VbtqJMLAbAvgUC24tMq4S2i+KiT/ILc8r4BunG3s3eRNY
-	4gEM6/NckYYIgA9q8zi2V/bfZIi8DlxCbMNIc+hWAV
-X-Google-Smtp-Source: AGHT+IEMiE4nRjncWxQA1pYrSlI10L6gQJX9h+opY9uU6dmtwNxQEFInA5eHScgXeegRJyJ6ePIaiikHJGM=
-X-Received: from pge9.prod.google.com ([2002:a05:6a02:2d09:b0:af2:7f61:e1d4])
- (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:ce4a:b0:1fd:f8dc:833e
- with SMTP id adf61e73a8af0-201695c31c3mr1457564637.30.1744240360348; Wed, 09
- Apr 2025 16:12:40 -0700 (PDT)
-Date: Wed,  9 Apr 2025 16:12:08 -0700
+        bh=JW74z6cHpNu60kU9OE2aazhTFE9YDkFOWDJkNNru92Q=;
+        b=HB6hMWN21r3OPO7HiiCWqlUpWPcOv8rfNMA6mXhaDk27IjinAYPLFqZ2EVWjlr+kGV
+         h2TKOY4xxmDxubvdB5Bff66TLcatKA/PAXc6WONmbkAat0NpvaKZYKnnwej9LeJkT797
+         TZerTYyVMvk7v8rluR8QerybEnsYjQ7aPcMl05ve9u0kNFqysE/QFmBXua6hSbYY+JHy
+         NaSrJ8bV9AoCO4jmWawjQNI5DnjeJwNfkCXStC3BUj21BSk4X4XMHjgzdgj8Gj92cKtK
+         8arm2divHhW/XYV3JCQ4bmGP7/nRL/FlJBVTMVQOAcpWuXHtbeOIuNWMia5AFmKn1wev
+         b9Ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744240413; x=1744845213;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JW74z6cHpNu60kU9OE2aazhTFE9YDkFOWDJkNNru92Q=;
+        b=SuzP2QlCeY3S3wxCsfSH9ODPInlwjy5QJLqxhlFEYLICnOQK5NnnFPi/Y/FTFnOc8X
+         cg+j65eMzp5hgqC9PhlOSpO25xm4JDFmsur6o2Zoga7V/4uhDQUJ1huE69Q/WLa5M73N
+         RFgjiG5lUoRyJ1l73sGlQNKcrCIg8f6xgqffqysusgSjrrTKVJPcUUGrXojOKgrZwHoN
+         dR/O0vRP4bRuG3zCt8AhcIUVtC4yA0sjjwsMo4jppnjnwgDoGfsDDwJE+7E6U/a+nA8r
+         oW8RDLv2KNRFzc8g++u6E1I/UlHFQZIXxAOYibaOh5IY1J4/EdJkzEtQkSOsnhL2pznP
+         ADEA==
+X-Forwarded-Encrypted: i=1; AJvYcCUu42yH/tKug5Yo73i6GmbtCtnxAh9tvVlwwt6/gWmknW9PH17m6PPxpzJLYukGqhcVKGVgdFiKCQL6hLw=@vger.kernel.org, AJvYcCVcZ7TguVSTAGYm9w2Mcnes70ki7Jr31blnQDPWHksRhDZYIQYYuStCJNWDH1BAkqChP2yi80gH@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8ipVAVzIeezSpC9lHUzM5uFsVWOxa4LU2djnHQ6hzJiysVz4m
+	YVN/YM/dcF4UbNpn0RDL/MhxF5z9IXBoL8892h5sx+rLelV1Diw=
+X-Gm-Gg: ASbGncstI1DMDRBWtrIDK4h8H2hkmUKKiAzzkm2RJyGuvd5n6I0NxLUzTuwoIOQPAlU
+	M8T8E/yMEymSGXl8FrP2C7JdSUNxLpLtSWF/Lyq4FgH2bAFyYqv1a8YLSN9GlEgyMozOZv3SjwO
+	RS87mvJsZ9y6FQA8udDmiRd+Lxz9OYRzQbGurUhBpA1OCvSKj0Rim8MMWkoYoD3NDD88LWwgogW
+	FHSTd+0gue2bWUpfkeqrWDc/sdd6mIgWqCs224VjCgO5gvOGFRIfWbXtY3OwN+bzcGbnTI/CD4+
+	n4qXEB0D4bWaTBInsqT63V5g4UB/2dbHZMgFzwhCwyPAO7/GRGWqxYyYq7xvjY4vasxn+LjNzm8
+	WveR4IKnOVdS88liuvAtu/IZbArA=
+X-Google-Smtp-Source: AGHT+IECp8SZn0v3pCPADW9jULXwJGPBFrCS/fIc9I+DpPyMRE88HI4kqXtXrTxOosCltUSPuXtrYQ==
+X-Received: by 2002:a05:6000:2586:b0:391:39fb:59c8 with SMTP id ffacd0b85a97d-39d8f4744a3mr335672f8f.25.1744240413129;
+        Wed, 09 Apr 2025 16:13:33 -0700 (PDT)
+Received: from [192.168.1.3] (p5b057855.dip0.t-ipconnect.de. [91.5.120.85])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f23572ce4sm31128885e9.30.2025.04.09.16.13.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Apr 2025 16:13:31 -0700 (PDT)
+Message-ID: <5e8d7416-3666-4a2b-bdc9-8cbc2a761b8a@googlemail.com>
+Date: Thu, 10 Apr 2025 01:13:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
-Message-ID: <20250409231230.1678358-1-ctshao@google.com>
-Subject: [PATCH v2] perf test: Allow tolerance for leader sampling test
-From: Chun-Tse Shao <ctshao@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: Chun-Tse Shao <ctshao@google.com>, Ian Rogers <irogers@google.com>, 
-	Thomas Richter <tmricht@linux.ibm.com>, peterz@infradead.org, mingo@redhat.com, 
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, james.clark@linaro.org, dapeng1.mi@linux.intel.com, 
-	vmolnaro@redhat.com, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH 6.14 000/726] 6.14.2-rc4 review
+Content-Language: de-DE
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250409115934.968141886@linuxfoundation.org>
+From: Peter Schneider <pschneider1968@googlemail.com>
+In-Reply-To: <20250409115934.968141886@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-There is a known issue that the leader sampling is inconsistent, since
-throttle only affect leader, not the slave. The detail is in [1]. To
-maintain test coverage, this patch sets a tolerance rate of 80% to
-accommodate the throttled samples and prevent test failures due to
-throttling.
+Am 09.04.2025 um 14:03 schrieb Greg Kroah-Hartman:
+> This is the start of the stable review cycle for the 6.14.2 release.
+> There are 726 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-[1] lore.kernel.org/20250328182752.769662-1-ctshao@google.com
+Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
+oddities or regressions found.
 
-Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-Suggested-by: Ian Rogers <irogers@google.com>
-Suggested-by: Thomas Richter <tmricht@linux.ibm.com>
-Tested-by: Thomas Richter <tmricht@linux.ibm.com>
----
- tools/perf/tests/shell/record.sh | 28 ++++++++++++++++++++++++----
- 1 file changed, 24 insertions(+), 4 deletions(-)
+Tested-by: Peter Schneider <pschneider1968@googlemail.com>
 
-diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-index ba8d873d3ca7..06a718e80121 100755
---- a/tools/perf/tests/shell/record.sh
-+++ b/tools/perf/tests/shell/record.sh
-@@ -240,19 +240,39 @@ test_leader_sampling() {
-   fi
-   index=0
-   perf script -i "${perfdata}" > $script_output
-+  # Check if the two instruction counts are equal in each record.
-+  # However, the throttling code doesn't consider event grouping. During throttling, only the
-+  # leader is stopped, causing the slave's counts significantly higher. To temporarily solve this,
-+  # let's set the tolerance rate to 80%.
-+  # TODO: Revert the code for tolerance once the throttling mechanism is fixed.
-+  valid_counts=0
-+  invalid_counts=0
-+  tolerance_rate=0.8
-   while IFS= read -r line
-   do
--    # Check if the two instruction counts are equal in each record
-     cycles=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="cycles:") print $(i-1)}')
-     if [ $(($index%2)) -ne 0 ] && [ ${cycles}x != ${prev_cycles}x ]
-     then
--      echo "Leader sampling [Failed inconsistent cycles count]"
--      err=1
--      return
-+      invalid_counts=$(($invalid_counts+1))
-+    else
-+      valid_counts=$(($valid_counts+1))
-     fi
-     index=$(($index+1))
-     prev_cycles=$cycles
-   done < $script_output
-+  total_counts=$(bc <<< "$invalid_counts+$valid_counts")
-+  if (( $(bc <<< "$total_counts <= 0") ))
-+  then
-+      echo "Leader sampling [No sample generated]"
-+      err=1
-+      return
-+  fi
-+  if (( $(bc <<< "scale=3; $invalid_counts/$total_counts > 1-$tolerance_rate") ))
-+  then
-+      echo "Leader sampling [Failed inconsistent cycles count]"
-+      err=1
-+      return
-+  fi
-   echo "Basic leader sampling test [Success]"
- }
 
---
-2.49.0.504.g3bcea36a83-goog
+Beste Grüße,
+Peter Schneider
 
+-- 
+Climb the mountain not to plant your flag, but to embrace the challenge,
+enjoy the air and behold the view. Climb it so you can see the world,
+not so the world can see you.                    -- David McCullough Jr.
+
+OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
+Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
