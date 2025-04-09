@@ -1,106 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5583A1A3159;
-	Wed,  9 Apr 2025 15:55:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 028CB4C9D;
+	Wed,  9 Apr 2025 15:56:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744214138; cv=none; b=Sm1z2vFpJGqio5tWWxW8W77NMYM7byHaUeZG+DXa9Fyv3yIHabVR8kW6uAhsr9OkSbQK5jpUNobBINdeNmL5/+b6Jv0bLx5UQivHDlkZjo2o/XtH/kALKuS2cz2KQ64lp7EX6MAqVz9cpFvzplLwzxwPCu7zwPtUl3DgIVMyO7s=
+	t=1744214177; cv=none; b=CrKTotFEU/ZIEJ5L81FhIh8osGeb6Fse9THOiZcPniDKwO7J5xDjPT5Iq4XfMpuzsoTCEHr+RY/xOIWRW7ZnKz2ciT8BoUdx5T0gBmut3qlUQhZZbmwhkvXuuoi0EOX65wjZAWBRHQBcZVzidDpedDFcy3XSPQATDK4c8o2K6uA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744214138; c=relaxed/simple;
-	bh=WW1N/1DaqI87EqtkhE04HgTwYLpLakjaAuM2yUvrwPQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tFObxeila99h3ZLMo015v86JYi5zIak9RjYJ02LBNhl/V13QVaLwWF8hbYT7qh91e1E5NDYcdTf1KDuHd4NCNG79zWNjam3jCKJImsPEUZGgKU+O2bSyxRqoliPb186NM8eUcKjndmidOC0jOdCcwidYk3NIz8e1pdiFQCjo5K8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ns4iX0OS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744214177; c=relaxed/simple;
+	bh=Zs0jaTexTm2u6cUXt75+V1sMJtA/LRlBeeMT1No2U7o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e0BT3W9fY6KldHYqHdISh9FK7cAxgSCcRPQd5xOQPn2CDcmfnY6lJ6O3cAJ3pRVQUKk8IA5OnSTcRmb7sMR3QY+QYoNtlAc9cjfjgbBqpuBB7/s+pJR/JhCfn0nrHWKiCtej3D69iA5ztg0DehNqJHVCljB8vTj5quKfH2SfKvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=az88w5tV; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ns4iX0OS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67B56C4CEE2;
-	Wed,  9 Apr 2025 15:55:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744214137;
-	bh=WW1N/1DaqI87EqtkhE04HgTwYLpLakjaAuM2yUvrwPQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Ns4iX0OSppovqb9VC+Y4d9RlZ0wyE9soo85cb4ockpsqwokaEmE19h84RHZyd41Uz
-	 5tV4jYnThZWoz81jB7iCYeWD0XYeWQik7OkaqxWP33hB6sqcWCGnfzt3Yv4IsH9RVH
-	 GUe8v5kBk8sTYGRs+iO3dmu76UBh2BNo7KeojQBuxc8vhOQpXcVYc7rC4kl2DZ6/eg
-	 yLMyVYpogA4NqufayXttjfNnv37npJ5l1EH8LOR7RH+57fSFqrWCje7uGTSruP3JSI
-	 r9EcV652v3SpsQd1yAuy5enjLTC8lXIhIY+YM33uuhP1lXdR5Em06IlOuF3t2AY9BW
-	 rFKW0bm9oav/g==
-Date: Wed, 9 Apr 2025 08:55:36 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: Stanislav Fomichev <sdf@fomichev.me>, netdev@vger.kernel.org,
- davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
- paulmck@kernel.org, joel@joelfernandes.org, steven.price@arm.com,
- akpm@linux-foundation.org, anshuman.khandual@arm.com,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH net-next] configs/debug: run and debug PREEMPT
-Message-ID: <20250409085536.245acdf1@kernel.org>
-In-Reply-To: <3f5ff26b-9904-462e-ac22-84b5d212e9ff@kernel.org>
-References: <20250402172305.1775226-1-sdf@fomichev.me>
-	<df253016-81df-4cc9-8a8c-f92fd1cb8aea@kernel.org>
-	<20250408120318.65125876@kernel.org>
-	<3f5ff26b-9904-462e-ac22-84b5d212e9ff@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="az88w5tV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744214175; x=1775750175;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Zs0jaTexTm2u6cUXt75+V1sMJtA/LRlBeeMT1No2U7o=;
+  b=az88w5tVUbHieg1JukNOmRmK77rwzjl3kSHiWWLGuskPrwc9mC5nqI19
+   q7BxJBdIOg8YlfyoCgudg3UlEsnaGDLg4/9iAjB/5NDcocHzsModV6/U2
+   r+JBuH+bBwaiBI+VYHhXGfiHVqOOt0k67/oqgRmzgsTJYwI8XRdNZTkHT
+   eCWjarvwMU/wk9Ces5oVuPQe1ejUUj7ksOQzxt0iujqSLWV3RiZ1XPnTe
+   zolMYt0tc1JjaN6j7+G/25Z9ccItisnjMWKsse8TrS+ds2HBSIZJAoW7m
+   xwUqEHQHHNUcjDjT3TDwEo3+XzAlkq33HSRPc1MG53P7ePjbBPUw3R21R
+   Q==;
+X-CSE-ConnectionGUID: O345ttWnTT+2GpEc1Y2zUg==
+X-CSE-MsgGUID: 5RMYws5vRAmsLgx2ML88Mw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="44841472"
+X-IronPort-AV: E=Sophos;i="6.15,200,1739865600"; 
+   d="scan'208";a="44841472"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 08:56:14 -0700
+X-CSE-ConnectionGUID: VvEk0XIxRtePac4orJ/hLQ==
+X-CSE-MsgGUID: dLuw43uiR5SApZ5FV+Y8cw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,200,1739865600"; 
+   d="scan'208";a="159595494"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 08:56:09 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1u2XmY-0000000Amkj-3Ozw;
+	Wed, 09 Apr 2025 18:56:06 +0300
+Date: Wed, 9 Apr 2025 18:56:06 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>,
+	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Walle <mwalle@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v6 05/12] regmap: irq: Remove unreachable goto
+Message-ID: <Z_aYlrjWE6-fdltT@smile.fi.intel.com>
+References: <20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com>
+ <20250409-mdb-max7360-support-v6-5-7a2535876e39@bootlin.com>
+ <1b280408-888e-48e1-8e6b-de4e7a913e74@sirena.org.uk>
+ <Z_aUeKm0k1zReS_D@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_aUeKm0k1zReS_D@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, 9 Apr 2025 13:58:13 +0200 Matthieu Baerts wrote:
-> On 08/04/2025 21:03, Jakub Kicinski wrote:
-> > On Tue, 8 Apr 2025 20:18:26 +0200 Matthieu Baerts wrote:  
-> >> On 02/04/2025 19:23, Stanislav Fomichev wrote:  
-> >>> Recent change [0] resulted in a "BUG: using __this_cpu_read() in
-> >>> preemptible" splat [1]. PREEMPT kernels have additional requirements
-> >>> on what can and can not run with/without preemption enabled.
-> >>> Expose those constrains in the debug kernels.    
-> >>
-> >> Good idea to suggest this to find more bugs!
-> >>
-> >> I did some quick tests on my side with our CI, and the MPTCP selftests
-> >> seem to take a bit more time, but without impacting the results.
-> >> Hopefully, there will be no impact in slower/busy environments :)  
+On Wed, Apr 09, 2025 at 06:38:33PM +0300, Andy Shevchenko wrote:
+> On Wed, Apr 09, 2025 at 04:19:27PM +0100, Mark Brown wrote:
+> > On Wed, Apr 09, 2025 at 04:55:52PM +0200, Mathieu Dubois-Briand wrote:
+> > > BUG() never returns, so code after it is unreachable: remove it.
 > > 
-> > What kind of slow down do you see? I think we get up to 50% more time
-> > spent in the longer tests.  
+> > BUG() can be compiled out, CONFIG_BUG.
 > 
-> That's difficult to measure in our CI because we have a majority of
-> tests either creating test envs with random parameters (latency, losses,
-> etc.), or waiting for a transfer at a limited speed to finish. Plus, we
-> don't control the host running our tests. But if we omit that, our
-> packetdrill tests take ~20% longer on the CI, and our 2 mini KUnit tests
-> took ~10% longer (275ms -> 305ms). Globally, our test suite took maybe
-> ~10-20% longer, and that's acceptable.
-> 
-> So not 50%. Is this difference acceptable for NIPA? Even when some tests
-> are restarted automatically in case of instabilities?
+> Yes, and it's still has unreachable() there. So, this change is correct.
+> See include/asm-generic/bug.h for the details of the implementation.
+> And yes, if we have an architecture that does not do this way, it has to
+> be fixed.
 
-We also see 10%+ on most cases, the 50% was the worst one I glanced.
-The worst offenders in terms of runtime only increased by 10% so still
-within the guidelines.
+FWIW, I just have briefly checked the architectures and all of them include
+asm-generic/bug.h independently on the configuration option, some of them
+even define BUG() despite the configuration option (e.g. arc).
 
-> One last thing, Stanislav's patch has been shared during Linus' merge
-> window: perhaps something else could also impact the time?
-> 
-> > Not sure how bad is too bad..  
-> 
-> Did you observe more instabilities? Maybe the individual results should
-> be omitted, and only debug specific issues (calltraces, kmemleak, etc.)
-> should be looked at?
+-- 
+With Best Regards,
+Andy Shevchenko
 
-A couple but unclear at this stage whether that was just the merge
-window or enabling preempt debug. Now patchwork is super unstable
-so again, hard to judge the source of the problems :(
 
-> > I'm leaning
-> > towards applying this to net-next and we can see if people running
-> > on linux-next complain?  
-> 
-> Good idea! But I do wonder how run **and monitor** the selftests in
-> linux-next with a debug kernel :)
-
-One way to find out :)
