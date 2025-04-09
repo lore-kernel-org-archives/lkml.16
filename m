@@ -1,100 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 551B126157E;
-	Wed,  9 Apr 2025 12:54:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 880A826157C
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 12:55:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744203269; cv=none; b=YfQzCgfR7iDQaE7I0qcXs0O1zX8rR/vOxq3BQfkDl91d50H7yZqpD5g76t69fG1XkUPZqjeXpozemBS3/fsXwD4JAygpooiIKnVtf6vc49odqSPWZmzZKOMJ5tCauknpjTAh172FD7FYxUA4oaHbIzwyv0jWj5HDOp5MrbThtVU=
+	t=1744203313; cv=none; b=ly+QMVhjE4TVWY7FsX3O1sZYzLpR/xsnSgpeMFzOqWBg0BZeA4FgPCjKC3ELlc1yLpNSGi+HRS/zY5c7h/5cWJFfMX39KYZDu0lawDeJff+HRf1byyUCjJ5XJFJcdFiSVJZ3PSh9w2G0yxZ0mIdfyc+NiGL8agJ+y7MLLLPJPzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744203269; c=relaxed/simple;
-	bh=5cjw3hniuS5c3kOgjuPKIqsfz6OH0LbiKTbZY3HNO0Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SljSS6DnuTcNTNMV+aALUts3f2Er/jWvb3SvX+9urUslyFnTBwBiRQA9HJc5sM6Zfc08l9JHrZ3n/pwJ5QgzV7d48yV5P71UhvDW1PpyCs6w/td19BQlJpLUsNBtnxJgKAVPj/CqQ05ZFm1qzLltnZN98TaEpg+Gt4m9RzpLKbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lyEH997M; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744203313; c=relaxed/simple;
+	bh=ef4d6/HEa7DyxMUqfBHtxsCFTuuCFXymPUY8RbWqyx4=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JowNFuAbT1V/yH/REcL1O9MNllwJq26WuJWoZ+pG5QMPnA1Xz8BqB2X+OLii1wfu+e3birW/7G+mCrCeuLdffz9daVKL86SWeFpeDZVcSjmjg4ZUXjGVbx6mQsnwEPjM1MsuSLYEPg/5aE89FpjDKQIfBzy4Jn/X3nHQRWfmezQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ya+evipc; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=O3n+GTUU; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ya+evipc; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=O3n+GTUU; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lyEH997M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C02B7C4CEEC;
-	Wed,  9 Apr 2025 12:54:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744203268;
-	bh=5cjw3hniuS5c3kOgjuPKIqsfz6OH0LbiKTbZY3HNO0Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=lyEH997MDF/YGs2ecKpNMIJsYSl91ea8N6V9wcZTLxRIZFukKbGKbHs0uZ+WOSogx
-	 AHQa7KRuR7fZgwGGUWjrjLhZYBpIFl8zY+ARByPxvnk9aow0yZykZ5MKic6vlv4nXN
-	 RtCObxO4P2ohETRUm9ov3VLel70p7G8BfnD9pHHA7ZMrc0nFpVb8vAaEOV1wJBg8UP
-	 zwYj2OdRsUwvSdQ0cI7OwF95gZT1Wfkjh3EpOKeD65mNk2kZXq9+FCLEMFeS8N0MNO
-	 dx8lMkwSb4z8bskzphfMistkgRbxwfXArc8dHOvkPn8WboXAiHNPZJhfu9W4iRrtMB
-	 p6QwhwNNJXsPA==
-Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-60288fd4169so3402310eaf.3;
-        Wed, 09 Apr 2025 05:54:28 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUwQBpVg3oPtS4m0vnX5biOr72BixlKPnpfvpMpRO4Jvocplox2wdr+KvYk7UphQpD9/j7U9iNBrvqjjAol@vger.kernel.org, AJvYcCWevv/QoFDK0xjK6TVGSSH3QtvsKd9BypPCo2PwtXZbdNcimHzauPeaJfqXK06z30qDvAFp9Buoz52p@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCtedBG35jzOwJX6a+x/GNXoENAEQHPFGqJwfBrkkmVam6eIH3
-	VlIYmXC7EqQkI7wICYSwKy4kmGYhJy8tsAFHuAxRlWwmYkjVlK4wZ6ApNI1/5vYRuIkuU8CjX2B
-	ZXbKOaIHdin+Qi0OEwjw9cXmGJxg=
-X-Google-Smtp-Source: AGHT+IFVhR+NI8Q625FD1y6jfu8AWqdmxMqx5ND6/p58CuOaU4O4cuOfkDi0Tts9pcEs8NAdJFX45dy//gA9DXkrUxM=
-X-Received: by 2002:a05:6871:aa03:b0:2b3:55b3:e38 with SMTP id
- 586e51a60fabf-2d08de0f73bmr1518549fac.21.1744203268071; Wed, 09 Apr 2025
- 05:54:28 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ya+evipc";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="O3n+GTUU";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ya+evipc";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="O3n+GTUU"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 80E9D21166;
+	Wed,  9 Apr 2025 12:55:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744203309; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=U54D/g0/zmQ5bmlxq3Nx4k4L9Z2e9uKdzGzgMnmW/w4=;
+	b=ya+evipcW9IbMpS/qgwAnQvh2sYPDHHW4E8ABAy1olyuMBWQkl3wbS+6k5147G6ZTqGMv+
+	By5QngGq08vI2Uh7Hr7u4i+2yM2T+zV17FQqkzD5H8Yg/kNUACilQnFUdj78ctQKi0UX5a
+	nhA59vub1PMPMuCuv2Bfve6X6GMjszk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744203309;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=U54D/g0/zmQ5bmlxq3Nx4k4L9Z2e9uKdzGzgMnmW/w4=;
+	b=O3n+GTUUCyiKGfiiLoKawIJsOfTkNJK7eAn4tatj4RyOhcMtjHXJhgGtcqeZLe4kvfmCh1
+	o+Vj10WLBcIEjMAg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1744203309; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=U54D/g0/zmQ5bmlxq3Nx4k4L9Z2e9uKdzGzgMnmW/w4=;
+	b=ya+evipcW9IbMpS/qgwAnQvh2sYPDHHW4E8ABAy1olyuMBWQkl3wbS+6k5147G6ZTqGMv+
+	By5QngGq08vI2Uh7Hr7u4i+2yM2T+zV17FQqkzD5H8Yg/kNUACilQnFUdj78ctQKi0UX5a
+	nhA59vub1PMPMuCuv2Bfve6X6GMjszk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1744203309;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=U54D/g0/zmQ5bmlxq3Nx4k4L9Z2e9uKdzGzgMnmW/w4=;
+	b=O3n+GTUUCyiKGfiiLoKawIJsOfTkNJK7eAn4tatj4RyOhcMtjHXJhgGtcqeZLe4kvfmCh1
+	o+Vj10WLBcIEjMAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5AF1D13691;
+	Wed,  9 Apr 2025 12:55:09 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id BpUIFS1u9mdfNQAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Wed, 09 Apr 2025 12:55:09 +0000
+Date: Wed, 09 Apr 2025 14:55:09 +0200
+Message-ID: <87h62xze8i.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Richard Fitzgerald <rf@opensource.cirrus.com>
+Cc: tiwai@suse.com,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	patches@opensource.cirrus.com
+Subject: Re: [PATCH] ALSA: hda/cirrus_scodec_test: Don't select dependencies
+In-Reply-To: <20250409114520.914079-1-rf@opensource.cirrus.com>
+References: <20250409114520.914079-1-rf@opensource.cirrus.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250328143040.9348-1-ggherdovich@suse.cz> <20250328143040.9348-2-ggherdovich@suse.cz>
- <b29519a2da5b85f484b0f402062df2b58ec38afe.camel@intel.com>
-In-Reply-To: <b29519a2da5b85f484b0f402062df2b58ec38afe.camel@intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 9 Apr 2025 14:54:15 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iwzoqg939Kx2pwRbKo3CS--tU=+w+1cpHL35gd=3-yTQ@mail.gmail.com>
-X-Gm-Features: ATxdqUG3ZYhJlSIdVt73T05FStiWHfkpSBrgWK4bhFvJZAI83WDC-7ULwh4-Pn8
-Message-ID: <CAJZ5v0iwzoqg939Kx2pwRbKo3CS--tU=+w+1cpHL35gd=3-yTQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] ACPI: processor: idle: Remove obsolete comment
-To: "Zhang, Rui" <rui.zhang@intel.com>, "ggherdovich@suse.cz" <ggherdovich@suse.cz>
-Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "lenb@kernel.org" <lenb@kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Score: -3.30
+X-Spamd-Result: default: False [-3.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid,cirrus.com:email]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Wed, Apr 9, 2025 at 2:54=E2=80=AFAM Zhang, Rui <rui.zhang@intel.com> wro=
-te:
->
-> On Fri, 2025-03-28 at 15:30 +0100, Giovanni Gherdovich wrote:
-> > Since commit 496121c02127e9c460b436244c38260b044cc45a ("ACPI:
-> > processor:
-> > idle: Allow probing on platforms with one ACPI C-state"), the comment
-> > doesn't reflect the code anymore; remove it.
-> >
-> > Signed-off-by: Giovanni Gherdovich <ggherdovich@suse.cz>
->
-> This is a standalone cleanup, and further cleanups are posted in a
-> separate patch set on top of this one, so
->
-> Acked-by: Zhang Rui <rui.zhang@intel.com>
+On Wed, 09 Apr 2025 13:45:20 +0200,
+Richard Fitzgerald wrote:
+> 
+> Depend on SND_HDA_CIRRUS_SCODEC and GPIOLIB instead of selecting them.
+> 
+> KUNIT_ALL_TESTS should only build tests that have satisfied dependencies
+> and test components that are already being built. It must not cause
+> other stuff to be added to the build.
+> 
+> Fixes: 2144833e7b41 ("ALSA: hda: cirrus_scodec: Add KUnit test")
+> Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
 
-Applied as 6.16 material, thanks!
+Thanks, applied now.
 
-> > ---
-> >  drivers/acpi/processor_idle.c | 4 ----
-> >  1 file changed, 4 deletions(-)
-> >
-> > diff --git a/drivers/acpi/processor_idle.c
-> > b/drivers/acpi/processor_idle.c
-> > index b181f7fc2090..2a076c7a825a 100644
-> > --- a/drivers/acpi/processor_idle.c
-> > +++ b/drivers/acpi/processor_idle.c
-> > @@ -482,10 +482,6 @@ static int acpi_processor_get_cstate_info(struct
-> > acpi_processor *pr)
-> >
-> >       pr->power.count =3D acpi_processor_power_verify(pr);
-> >
-> > -     /*
-> > -      * if one state of type C2 or C3 is available, mark this
-> > -      * CPU as being "idle manageable"
-> > -      */
-> >       for (i =3D 1; i < ACPI_PROCESSOR_MAX_POWER; i++) {
-> >               if (pr->power.states[i].valid) {
-> >                       pr->power.count =3D i;
->
+
+Takashi
