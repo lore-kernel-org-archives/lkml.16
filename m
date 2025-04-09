@@ -1,134 +1,141 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 406011C5D63
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 19:08:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 967DB1C5D63;
+	Wed,  9 Apr 2025 19:11:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744225725; cv=none; b=RKPXgaarL92oWkxee6P5r4JTETF+fFTuPHOI1MDgp8mM9QjzGCBb6nA1ZVD+LEIIhqhxcJhHt0cSV2Us5av8LUU2LYDdpHs76X+mVQg2qZV2c+jYK2XKzgQOdRVQ7NFvS8apMfr0MguPMnxeWePsH+AnkQTYkVG6f8Czd5X4g+Y=
+	t=1744225864; cv=none; b=BJaZj4McLzz16rNKI0FjSM+ZTEH++d6D4xYvdFuhYZCmO8U+tOG1SvM6NJy2RDGgiDrsoCewPM5XlpiLgvMZ0fzhdwD/xaqoo/wneWDQ8PYaCGd3Da83WoO/n0dxo/jNDZ3Qev5vMts2ySDHaBEvA60tVMAE0ztMhgxBZIsEDO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744225725; c=relaxed/simple;
-	bh=C5KMsG8hLiNkhMG2R2yhs8GG0soJXSaxFUn+sWzM15g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DA9u62KLfuxjSZ+xefT19CJyCemCLivuSjd9jGfotMaUcS2C4wdDqK7mdk/uHyiInoH4DK3h7j9LEaZJ6bwvrXX00sF5Ue5IY0O1DBA+i0OdebhaKMhijaELu/3vt6yPH+w5KnBMlcdB+N78txA69zn9MEvoNQxNWxoy09dYIjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Ublz1CXm; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1744225864; c=relaxed/simple;
+	bh=6mMrDo9Cf49gvw6bR1Szma/66Mi5qs3+DiyVk29NokQ=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Y06FhLNqZhb7tgvwcSy9KfiVrZr/GeoOL9hx+5Oj2PyXvnrAyp+tdjcVP/moe4YBjULilF88eSljGbym6K9LOw4rQVALe5Bw0WkJkv3Y9db4x/bFFKZ5s+ju+snMMbMJHBSWg3wbsuNW36yK0ChahC5pxqIiOJRacGVRUI2Vf4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CsWfKANM; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ublz1CXm"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=MWq7+ZDeu6lqJHXnARaq7nLRtV46HbSzyx3OJzyzJMY=; b=Ublz1CXmy2JM4TN48lLyQmk0YA
-	eEteI5fUkemxJXiM1OpYItcz6MZbTTauiv+DwjvwOMjyGEzk0hzOUgyDN8GWPLtxewu3UgZA7eJQH
-	XbbARf5uXjuPkBI/LhOlJZIc258rEQNWjCjAOJq2czH77zsq7wmp3HRbZXQS/CEQ0LZs0N5l+Ufws
-	7cHS35b3l77Bvfgc6dTl90k/iq2K0ZVhDbKqtDXMXtk5+43k4JyxfmoA/KZmFjvT1mS4uy+mw5+LG
-	0/YgOFTV0y8rc3hxid5KNiudKvVSrcdYNYkCVmNCn74/5OVloO2WTN01HVwxWq/BjHXJMm01wbOC6
-	PWxUfIFg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u2amo-00000008ffB-25gk;
-	Wed, 09 Apr 2025 19:08:34 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 153713003FF; Wed,  9 Apr 2025 21:08:34 +0200 (CEST)
-Date: Wed, 9 Apr 2025 21:08:34 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>, linux-mm@kvack.org,
-	Ingo Molnar <mingo@redhat.org>, Shuah Khan <shuah@kernel.org>
-Subject: Re: [PATCH v12 2/3] sched: Move task_mm_cid_work to mm work_struct
-Message-ID: <20250409190834.GQ9833@noisy.programming.kicks-ass.net>
-References: <20250311062849.72083-1-gmonaco@redhat.com>
- <20250311062849.72083-3-gmonaco@redhat.com>
- <20250409140303.GA9833@noisy.programming.kicks-ass.net>
- <c0df7480-1c18-421f-9348-2d39b7bebb49@efficios.com>
- <20250409152025.GK9833@noisy.programming.kicks-ass.net>
- <e916f393-b18c-4641-ace7-cf23b7508e09@efficios.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CsWfKANM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744225862; x=1775761862;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=6mMrDo9Cf49gvw6bR1Szma/66Mi5qs3+DiyVk29NokQ=;
+  b=CsWfKANM58Rl1Gk0KmKbVYtV075y/BiOlQXebKFDyuVEN7FqdKgapxoB
+   6pK4UW1I/UsbXQHsP4uigkElu4yGGrWJU3br+wQ7/Kk5BmWFch/3JkLOA
+   v/j2p72cKn0Tf5E8G/eytwJDYi5BQABWPl5mmEnSsKoL+kQVVZkICt4wU
+   dE2zK5idNDlR79CiRGG2oVLAMbfPSXECKp8LW5VJwERQOVjC4bXYZ/div
+   5jjvPr/Gpq+pBBeua68pq7iDGe5zXWd+UBBEtPDwDxZW0GdDb0LbZVOG6
+   +EXI8+8126JL4JinUi6vRTzH/6FFVy2Tz3CM+m9dE8xTXI812tRbNuEa/
+   A==;
+X-CSE-ConnectionGUID: s7ckzIDwR7qMQMCJv1U8EA==
+X-CSE-MsgGUID: shpQjbBqQsuhGUh8re3q/A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="56386757"
+X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
+   d="scan'208";a="56386757"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 12:11:01 -0700
+X-CSE-ConnectionGUID: HrgKuIVSR+qqy9C+3g+XqA==
+X-CSE-MsgGUID: UUiZdih+RXSrjJ28o7kipw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
+   d="scan'208";a="133401205"
+Received: from mdroper-mobl2.amr.corp.intel.com (HELO xpardee-desk.intel.com) ([10.124.220.250])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 12:11:00 -0700
+From: Xi Pardee <xi.pardee@linux.intel.com>
+To: xi.pardee@linux.intel.com,
+	irenic.rajneesh@gmail.com,
+	david.e.box@linux.intel.com,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: [PATCH v3 0/8] Create Intel PMC SSRAM Telemetry driver
+Date: Wed,  9 Apr 2025 12:10:42 -0700
+Message-ID: <20250409191056.15434-1-xi.pardee@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e916f393-b18c-4641-ace7-cf23b7508e09@efficios.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 09, 2025 at 11:53:05AM -0400, Mathieu Desnoyers wrote:
-> On 2025-04-09 11:20, Peter Zijlstra wrote:
-> > On Wed, Apr 09, 2025 at 10:15:42AM -0400, Mathieu Desnoyers wrote:
-> > > On 2025-04-09 10:03, Peter Zijlstra wrote:
-> > > > On Tue, Mar 11, 2025 at 07:28:45AM +0100, Gabriele Monaco wrote:
-> > > > > +static inline void rseq_preempt_from_tick(struct task_struct *t)
-> > > > > +{
-> > > > > +	u64 rtime = t->se.sum_exec_runtime - t->se.prev_sum_exec_runtime;
-> > > > > +
-> > > > > +	if (rtime > RSEQ_UNPREEMPTED_THRESHOLD)
-> > > > > +		rseq_preempt(t);
-> > > > > +}
-> > > > 
-> > > > This confused me.
-> > > > 
-> > > > The goal seems to be to tickle __rseq_handle_notify_resume() so it'll
-> > > > end up queueing that work thing. But why do we want to set PREEMPT_BIT
-> > > > here?
-> > > 
-> > > In that scenario, we trigger (from tick) the fact that we may recompact the
-> > > mm_cid, and thus need to update the rseq mm_cid field before returning to
-> > > userspace.
-> > > 
-> > > Changing the value of the mm_cid field while userspace is within a rseq
-> > > critical section should abort the critical section, because the rseq
-> > > critical section should be able to expect the mm_cid to be invariant
-> > > for the whole c.s..
-> > 
-> > But, if we run that compaction in a worker, what guarantees the
-> > compaction is done and mm_cid is stable, but the time this task returns
-> > to userspace again?
-> 
-> So let's say we have a task which is running and not preempted by any
-> other task on a cpu for a long time.
-> 
-> The idea is to have the tick do two things:
-> 
-> A) trigger the mm_cid recompaction,
-> 
-> B) trigger an update of the task's rseq->mm_cid field at some point
->    after recompaction, so it can get a mm_cid value closer to 0.
-> 
-> So in its current form this patch will indeed trigger rseq_preempt()
-> for *every tick* after the task has run for more than 100ms, which
-> I don't think is intended. This should be fixed.
-> 
-> Also, doing just an rseq_preempt() is not the correct approach, as
-> AFAIU it won't force the long running task to release the currently
-> held mm_cid value.
-> 
-> I think we need something that looks like the following based on the
-> current patch:
-> 
-> - rename rseq_preempt_from_tick() to rseq_tick(),
-> 
-> - modify rseq_tick() to ensure it calls rseq_set_notify_resume(t)
->   rather than rseq_preempt().
-> 
-> - modify rseq_tick() to ensure it only calls it once every
->   RSEQ_UNPREEMPTED_THRESHOLD, rather than every tick after
->   RSEQ_UNPREEMPTED_THRESHOLD.
-> 
-> - modify rseq_tick() so at some point after the work has
->   compacted mm_cids, we do the same things as switch_mm_cid()
->   does, namely to release the currently held cid and get a likely
->   smaller one (closer to 0). If the value changes, then we should
->   trigger rseq_preempt() so the task updates the mm_cid field before
->   returning to userspace and restarts ongoing rseq critical section.
-> 
-> Thoughts ?
+This patch series removes the SSRAM support from Intel PMC Core driver
+and creates a separate PCI driver for SSRAM device. The new Intel PMC
+SSRAM driver provides the following functionalities:
+ 
+1. Search and store the PMC information in a structure, including PWRMBASE
+address and devid for each available PMC. Then Intel PMC Core driver
+achieves the PMC information using the API provided by the new driver.
+ 
+2. Search and register Intel Platform Monitoring Techology telemetry
+regions so they would by available for read through sysfs and Intel PMT
+API. Intel PMC Core driver can achieve Low Power Mode requirement
+information from a telemetry region registered by the new driver.
 
-Yes, that seems better. Also be sure there's a comment around there
-somewhere that explains this. Because I'm sure I'll have forgotten all
-about this in a few months time :-)
+The above functionalities was previously handled by Intel PMC Core
+driver. Intel PMC Core driver returns -EPROBE_DEFER when trying to read
+data from a telem region that is not available yet. This setup may
+result in an infinite loop of .probe() calls as Intel PMC Core driver
+creates child devices. Creating a separate PCI driver avoids the infinite
+loop possibility.
+
+v3->v2:
+- Add memory barriers to the new driver to ensure write/read order of
+  device_probed variable.
+- Minor grammar changes: add needed white space and end of life new line.
+- Add patch to move error handling to init function.
+- Remove patch to enable SSRAM support of LNL platforms. This patch will be
+  included in a separate series. 
+
+v2->v1:
+- Rearrange and restructure patches completely based on feedback from v1
+- Here are the patches:
+
+Preparation for the new SSRAM Telemetry driver:
+  platform/x86:intel/pmc: Move PMC Core related functions
+  platform/x86:intel/pmc: Rename core_ssram to ssram_telemetry
+  platform/x86:intel/pmc: Move PMC devid to core.h
+
+Minor bug fix:
+  platform/x86:intel/pmc: Convert index variables to be unsigned
+  platform/x86:intel/pmc: Remove unneeded h file inclusion
+  platform/x86:intel/pmc: Remove unneeded io operations
+
+Create new driver and convert PMC Core to use the API:
+  platform/x86:intel/pmc: Create Intel PMC SSRAM Telemetry driver
+
+Enhancement:
+  platform/x86:intel/pmc: Move error handling to init function
+
+Xi Pardee (8):
+  platform/x86:intel/pmc: Move PMC Core related functions
+  platform/x86:intel/pmc: Rename core_ssram to ssram_telemetry
+  platform/x86:intel/pmc: Move PMC devid to core.h
+  platform/x86:intel/pmc: Convert index variables to be unsigned
+  platform/x86:intel/pmc: Remove unneeded header file inclusion
+  platform/x86:intel/pmc: Remove unneeded io operations
+  platform/x86:intel/pmc: Create Intel PMC SSRAM Telemetry driver
+  platform/x86:intel/pmc: Move error handling to init function
+
+ drivers/platform/x86/intel/pmc/Kconfig        |  14 +
+ drivers/platform/x86/intel/pmc/Makefile       |   8 +-
+ drivers/platform/x86/intel/pmc/arl.c          |  13 +-
+ drivers/platform/x86/intel/pmc/core.c         | 238 ++++++++++++-
+ drivers/platform/x86/intel/pmc/core.h         |  22 +-
+ drivers/platform/x86/intel/pmc/core_ssram.c   | 332 ------------------
+ drivers/platform/x86/intel/pmc/mtl.c          |  10 +-
+ .../platform/x86/intel/pmc/ssram_telemetry.c  | 195 ++++++++++
+ .../platform/x86/intel/pmc/ssram_telemetry.h  |  35 ++
+ 9 files changed, 501 insertions(+), 366 deletions(-)
+ delete mode 100644 drivers/platform/x86/intel/pmc/core_ssram.c
+ create mode 100644 drivers/platform/x86/intel/pmc/ssram_telemetry.c
+ create mode 100644 drivers/platform/x86/intel/pmc/ssram_telemetry.h
+
+-- 
+2.43.0
+
