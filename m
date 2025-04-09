@@ -1,81 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99D971388
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 10:32:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B9A51D6DBC;
+	Wed,  9 Apr 2025 10:33:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744194734; cv=none; b=f2LeC7+TFBgP4QzfCdIUDv0xly5B16nWGReWlXHZ8Q12JY48ftoqWBEBNJRbvomRJmETld5/Q4VX/Mc2Yp2i+ASP2EKsXoOExm+r72o0HonSCqg0q7Gs4nqJ4MiQHaDS+jXbe8QXdaagMtvc2VLyGdJfH8EeO8kjtvmHF2ekv0w=
+	t=1744194794; cv=none; b=Er3kc2trdgw97E1Yu5IXzlQsxUc82uIXAOM6nJkrblx7NMChuwaGPHHCIbyMR5fcAIZx8iOf+6Xka6oeevFLIlOOtNtyfNgWe/70Np1ZGh4Q7G5IxPmQDKNsnmoSY9tNtY2b9sN+cIhFhidBMSKgJKXf3WIRDwPGxWW1cXwI3ko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744194734; c=relaxed/simple;
-	bh=DpCDEQ0tC11b+rcdxyonTa9Cs3pQdisZcLFTXwhkVPs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KN+7ZUEmH8pApeOjwysfOYaLYuHy4hFAVq0X548r5d8Ftx7SlAyfomVEU9JpHgDd8xkJQG6TSNpmgJql4b6lQn8vJL5su6PH8c7b0uDj56wz0MGJqpptiOPYgQodjtxdOtQgtStBOIUSAPuYVd7bcGC3FZPypq6OKBG8JXmv5tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hw6odN15; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744194794; c=relaxed/simple;
+	bh=guJicpg/4k5uOCkjPe1EAqL0hgKOVRpZ8dBsfp2VknI=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rXpM6EJjYL831vaLGv1auGfxLf4GG0a2nXD4HyrJ25xKCd8u/lfOG23er3P9faDvZH5z0LyJL1eyK8NLBQwnfxg5NxKPGu368gtSS5wHVGNnciysa3VJ0SVAiKCtO7iyeeBNpADe7Oih1fpkQybJ7BFYPkI+OOOW5udg5QXAPUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=npCcLBSE; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hw6odN15"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBBBDC4CEE3;
-	Wed,  9 Apr 2025 10:32:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744194734;
-	bh=DpCDEQ0tC11b+rcdxyonTa9Cs3pQdisZcLFTXwhkVPs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hw6odN15H4JbpY1u2IQdFmT0j+doxFqhpXWblnrJKjT0cbGo8OQ5hNIv/bfmQCRuO
-	 j9EWgpKNtlGV5pHlXE7QV4dZBizURUeSrHJXFiiIPMIbofjzUhJUAVpGGXngL4dK29
-	 klLkXaJId5ybfrK4tzhlMu0sBeNAeIGkyEu/xqT+ImD1/ePyNwiCzMKQpucU28osrx
-	 TjZ5TgzW71ShzmHconzi9by5KJKbzFQCGic8MfUr7FNXm/hLd4vq9QlrfvelAP6qV7
-	 SFKTfjbwTLvoDZ6h6tV4fDgsnko+Z6TMTPB4T9t425F3kOSkILxgro7+eELs4pntSQ
-	 trEmDGUIueIpA==
-Date: Wed, 9 Apr 2025 12:32:08 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
-	kernel test robot <lkp@intel.com>,
-	Dan Carpenter <error27@gmail.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Rik van Riel <riel@surriel.com>, "H. Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2] x86/mm/pat: (un)track_pfn_copy() fix + doc
- improvements
-Message-ID: <Z_ZMqPvQTxsyhCa9@gmail.com>
-References: <20250408085950.976103-1-david@redhat.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="npCcLBSE"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 539AX57Y953872
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 9 Apr 2025 05:33:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744194785;
+	bh=XfJBdscMAuy5EECJZSerJxBpkDTViYEqbsATQalfosg=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=npCcLBSEFWz4wtrE6nTraC7XfFfo6JTsKc9LjoUpIkuthwzoCXpb+MVSiMPU97sSr
+	 bnBoi9STFfjYSD5W0s6pgr2cU1HStCmC9nIuIE0Bzd/7CX6BSG9tyw1lBBgzg18dIC
+	 8Nih9YBBgJCY5nD776dTh+WbAgtmh3UMVbGVKm/A=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 539AX5ih094021
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 9 Apr 2025 05:33:05 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 9
+ Apr 2025 05:33:04 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 9 Apr 2025 05:33:04 -0500
+Received: from localhost (uda0497581-hp.dhcp.ti.com [172.24.227.253])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 539AX45A026841;
+	Wed, 9 Apr 2025 05:33:04 -0500
+Date: Wed, 9 Apr 2025 16:03:03 +0530
+From: Manorit Chawdhry <m-chawdhry@ti.com>
+To: Michael Walle <mwalle@kernel.org>
+CC: "Kumar, Udit" <u-kumar1@ti.com>, Nishanth Menon <nm@ti.com>,
+        Vignesh
+ Raghavendra <vigneshr@ti.com>,
+        Tero Kristo <kristo@kernel.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] arm64: dts: ti: k3-am62p-j722s: add rng node
+Message-ID: <20250409103303.dkrrvp7mdctx32pd@uda0497581-HP>
+References: <20250313144155.2382316-1-mwalle@kernel.org>
+ <837cba5f-f49e-4cbf-9cbe-2b25f7c9d4b8@ti.com>
+ <D8UECOJ2NMCU.3ALYIKSODJ479@kernel.org>
+ <1ad2d8c2-6a0d-419d-984d-4974adb0e1f0@ti.com>
+ <D8V323NBB32P.3P8H103L83HZK@kernel.org>
+ <e2a37e72-d9c8-4329-8a5a-f2c9865cdb5d@ti.com>
+ <ea82dc29e93d53b659916f2fed10982b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Disposition: inline
-In-Reply-To: <20250408085950.976103-1-david@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ea82dc29e93d53b659916f2fed10982b@kernel.org>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
+Hi Michael,
 
-* David Hildenbrand <david@redhat.com> wrote:
-
-> We got a late smatch warning and some additional review feedback.
+On 13:09-20250401, Michael Walle wrote:
+> Hi Udit,
 > 
-> 	smatch warnings:
-> 	mm/memory.c:1428 copy_page_range() error: uninitialized symbol 'pfn'.
+> > > > > > > --- a/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi
+> > > > > > > [..]
+> > > > > > For completeness , this is ok to add this node but
+> > > > > > should be kept disabled
+> > > > > Shouldn't it be "reserved" then, see [1].
+> > > > yes, should be reserved.
+> > > > 
+> > > > With marking status as reserved.
+> > > > 
+> > > > Please use Reviewed-by: Udit Kumar <u-kumar1@ti.com>
+> > > Thanks.
+> > > 
+> > > > > > similar to
+> > > > > > 
+> > > > > > https://github.com/torvalds/linux/blob/master/arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi#L662
+> > > > > j784s4, j721e and j721s2 have them enabled. What is the rule here?
+> > > > J784s4, j721e and j721s2 SOCs has two TRNG blocks,
+> > > > 
+> > > > example for j721e, one is used by kernel [0] and another by
+> > > > optee [1].
+> > > > 
+> > > > 
+> > > > > You also disable the hwrng in optee in your evm according to [2]:
+> > > > > CFG_WITH_SOFTWARE_PRNG=y
+> > > > We are planning to use this hardware block by secure firmware.
+> > > > 
+> > > > Therefore request not to use by optee as well
+> > > How will you be able to access the RNG from linux and u-boot? I'm
+> > > asking because I'll need it in u-boot for the lwip stack and the
+> > > HTTPS protocol.
+> > 
+> > For now,  If you need TRNG then I can suggest to use optee TRNG (ie
+> > build
+> > optee with HW TRNG).
 > 
-> We actually use the pfn only when it is properly initialized; however,
-> we may pass an uninitialized value to a function -- although it will not
-> use it that likely still is UB in C.
+> I'll be using an uboot TRNG driver. But how will that work in
+> the future if the RNG is used by the secure firmware?
+
+Wondering if this would be of interest to you [0]. I think since this
+device only has one TRNG, there has to be a master around and we can
+mitigate that from OP-TEE as of now, incase anything changes in future
+then the communication channel between OP-TEE and the secure firmware
+can be established but currently it's still at work. I think the best
+way to go forward is to get the numbers from OP-TEE atm IMHO.
+
+[0]: https://github.com/u-boot/u-boot/blob/master/drivers/rng/optee_rng.c
+
+Regards,
+Manorit
+
 > 
-> So let's just fix it by always initializing pfn in the caller of
-> track_pfn_copy(), and improving the documentation of track_pfn_copy().
-> 
-> While at it, clarify the doc of untrack_pfn_copy(), that internal checks
-> make sure if we actually have to untrack anything.
-
-Note that the title isn't accurate anymore, it's not an 'x86/mm/pat' 
-patch, but an 'mm' patch.
-
-Thanks,
-
-	Ingo
+> -michael
