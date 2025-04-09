@@ -1,108 +1,70 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702D726562C;
-	Wed,  9 Apr 2025 14:02:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30EF425F788
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 14:03:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744207364; cv=none; b=T0mDV59EQOChbTtaFZpyxJ//7K1Ucj88+yJoIhwoFLFsbecJ9h8wYZntYd+iHQKjzWyehrIlBzt6YWTdq8scvEdWcshXJ7f4oYl5E+tshmUhRRpYb3V0Kdp2ihnhOvwANMRLOIVcbeb1uNMgryzAt5Ap9XlEog66U//o0PGzgfQ=
+	t=1744207395; cv=none; b=chMcxt2/gI5dmt/TCdffmzQKLenuzSxbQGhkV8QW2TkWcEvJ8FDMbD1CarB+1tXQTzLxkJFQtbrfvPM8wmhrjJv1yt05qnQY5jIdt0aWHYRqpiVSvbMfhOjWs6l75QM7L/qSPFKiX/Dh8kbQS9aFwm99L7dRCS0+mWrhrdl0SD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744207364; c=relaxed/simple;
-	bh=JRIrYSvIxXTm+pb4gvvJehPRD2NURTieCgUGjektsv4=;
+	s=arc-20240116; t=1744207395; c=relaxed/simple;
+	bh=Xzn04fYIgH4XAznn2NkXUEsV3TK9MfILaqPt7yhLHv8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q+jUNuI66hdaVmikVwGG1fJTECL5p3w8x1PXbA8MtmLoqeJ8l0ejYEwrAhkFUMVDfiENAg+7Lgb8gWD4gmKLXG+y0qe9VzwgCeD4MJY46ec1x3zoJydsRxMF2L8z6lYjOp++3GoHM/Frf1s8BFGM0oNt6ZpzoQfwwO7dVGL7LEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JY6X6USE; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=SwJSlmAWd44e97RdhrszqE/kZoNgepugE31RxZ434OGigpkE4+52YRQM+wDfP1xyEVZWJVnPy+ZcBG20EIulIlSGoc8+3WfVK2O6rV0ht2fuDBEHlcUSm+605lnVtX0y5m/pl+dhSlJmfips2NH0CBSG899cQlXLbv85sGnTGHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=kmM8nGSt; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JY6X6USE"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-39c1ef4ae3aso529459f8f.1;
-        Wed, 09 Apr 2025 07:02:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744207361; x=1744812161; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=eWkSRo+s8E+NVFcYoRe4I5C9QjyjskzPyPuoXhbSgfo=;
-        b=JY6X6USEY0XKjx3OW4AfLZjBEOzCd/n+PEAKVFHap7tvSigMXhG6F9KmLg0+EFnLil
-         WmoFlKwRg2r3PYGD3RzcOTkG5A3BqdOTMQLVvNcKS0sCewYnWviOQgMxFPv75wRnQiYj
-         Fa4LDcUB4rzdUoPygfMBxrkHyRqVz5sOsluCgohI8wj0HXeWxBQXQyw7uuclXsbZK21D
-         TjUVqeg1tJXem+lh39MyS0JBnoD/oktruzMOMxKIKu1bxu9QUbTBA6IJ8qYVbJAFJ4bz
-         xLfHaQYWy9PUVXUDDh63Lrtk39NZas9LK+KGOEqaO6rztFcL6GL8o4rDSTuHeq40O2wl
-         68Ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744207361; x=1744812161;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eWkSRo+s8E+NVFcYoRe4I5C9QjyjskzPyPuoXhbSgfo=;
-        b=SxJVflZ+8tRmkFa9SqAHuFIwRRJbzXFHTW0mMs2rIA2veginRNp9Fl60vifKPv3uhd
-         6Q86eX/fxSPj4xgTaeESaD36qfeAtnvOxRbJoW3DtNe6jgAaLEOY4JwIIoddVjUaDJSy
-         nPBPO810gk8ms8TPMkt2OXhXYKswcgM5d11lJaSZhpfVmh8HLV6rbYnhmUccOlKeYN6H
-         50ShDp+64VcGBWm2IU6qNi1wWCLwsHOG19wXeDtDIkXrtgboC7HSKlRoElIvHFbSk5kk
-         grl4RVNClR/Gqz0oC85d8sSUU/l210l34LIUsjw4HXFZIJXXO4VdvVAIoL/mVblRGfay
-         6qeg==
-X-Forwarded-Encrypted: i=1; AJvYcCUZmZeHoPb/0mqpeId4HLqds894BXRY+uN7KUX4nKCVqIg4dZw15NcaWn8h1Nw/uZvKOVgzrY+MKjdSiy81@vger.kernel.org, AJvYcCW56Y/Tp16em9LvIa7yUwvhTS+Uwl9CUle+88YsRBmUGNIe2uP19NHRviiHsam/r8/DQj77kq8SwLjTj1SK@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWNYUE9MWzKmiD58eNKnTiw1xobeVbvKDUiMoxPbsUD43Ogh0Q
-	xjGgBY+cJk5IYB8DyYfcBlJ7l2boep0CQMLIZJCgZXFiuvKHPI7h
-X-Gm-Gg: ASbGncs2EXnNduJld0g9q+YHRxdgjiZg4wWNzI7qBIbOqs54NSJh5xIMRhRAz8BqIeN
-	3vBal0pFk1eXE3xInDtZohi2n6uGurEfvAgbds44AUc46JTtFCjm8Dd3V0LiQpYji4wgFFBbqC1
-	racQpjCvC9VV/Zfa9hRNLatCeenRZu33+vK+lZkeKbkMrfvgnO3beOymKF6GN0KZp0MZoy5ISaM
-	Ys4td/R/gzCWsHZRtLkI9G4VuC0GzgVvEL8tKlkF5NdiqkTDmEI6cfAXo3vhUOYBsoGduTw+El3
-	R7dU8fCHGXYe4X4/sGQcOqHPUfee3TzpiZ36Z+9e2IYIK++DL6t6LL6C
-X-Google-Smtp-Source: AGHT+IF049ubS5HdXQTc8n0xRJ+vhzdOB+ReFA0a6AeS7aGfjHRQyQyoNcgumkbEH6FOJaXvkv0ctw==
-X-Received: by 2002:a05:6000:22c7:b0:39b:fa24:9523 with SMTP id ffacd0b85a97d-39d820acaf4mr6568070f8f.7.1744207359981;
-        Wed, 09 Apr 2025 07:02:39 -0700 (PDT)
-Received: from f (cst-prg-17-207.cust.vodafone.cz. [46.135.17.207])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f205ecb8dsm21327535e9.7.2025.04.09.07.02.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 07:02:39 -0700 (PDT)
-Date: Wed, 9 Apr 2025 16:02:29 +0200
-From: Mateusz Guzik <mjguzik@gmail.com>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Christian Brauner <brauner@kernel.org>, 
-	Eric Chanudet <echanude@redhat.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Jan Kara <jack@suse.cz>, Clark Williams <clrkwllms@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ian Kent <ikent@redhat.com>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev, 
-	Alexander Larsson <alexl@redhat.com>, Lucas Karpinski <lkarpins@redhat.com>
-Subject: Re: [PATCH v4] fs/namespace: defer RCU sync for MNT_DETACH umount
-Message-ID: <4qyflnhrml2gvnvtguj5ee7ewrz3ejhgdb2lfihifzjscc5orh@6ah6qxppgk5n>
-References: <20250408210350.749901-12-echanude@redhat.com>
- <20250409-egalisieren-halbbitter-23bc252d3a38@brauner>
- <20250409131444.9K2lwziT@linutronix.de>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kmM8nGSt"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=WgC7apt66Yz1l8rnuSd1IOWppntzQHHRtIGlSbwyHq8=; b=kmM8nGStJ9MkFXEn48fe7anjfv
+	o5bzu7sk4x3zNVkoEdfaP5wwaJzuSe7pVDGYcvESN1iiRNeoE7DgMaVjklAewf/NUK3Vv1P03aY0Q
+	4pZWyFgWqfdvOqMlDGPzPc0Nvl9wEl0Ng7Cc8xdWfjItC3THCk2nbmD/D8yiQ5E4bG9QbayqFkX2g
+	nxKTJgwHfGUqgyC2SwjD5UxVAFKXMXZl0IKOtnYj/YaKHGftWvbmNROhvgRFchHCBahKosXchi38E
+	3SIdCzYJyBloHD7FHwG6BBfN/j30hmm5FFVDRebXjgaDRriFRoYQ2BzVkwWG9CNgYU4MZTwzrUbxX
+	CkE/WBcg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u2W19-00000008dDM-4B8r;
+	Wed, 09 Apr 2025 14:03:04 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 4A764300288; Wed,  9 Apr 2025 16:03:03 +0200 (CEST)
+Date: Wed, 9 Apr 2025 16:03:03 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>, linux-mm@kvack.org,
+	Ingo Molnar <mingo@redhat.org>, Shuah Khan <shuah@kernel.org>
+Subject: Re: [PATCH v12 2/3] sched: Move task_mm_cid_work to mm work_struct
+Message-ID: <20250409140303.GA9833@noisy.programming.kicks-ass.net>
+References: <20250311062849.72083-1-gmonaco@redhat.com>
+ <20250311062849.72083-3-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250409131444.9K2lwziT@linutronix.de>
+In-Reply-To: <20250311062849.72083-3-gmonaco@redhat.com>
 
-On Wed, Apr 09, 2025 at 03:14:44PM +0200, Sebastian Andrzej Siewior wrote:
-> One question: Do we need this lazy/ MNT_DETACH case? Couldn't we handle
-> them all via queue_rcu_work()?
-> If so, couldn't we have make deferred_free_mounts global and have two
-> release_list, say release_list and release_list_next_gp? The first one
-> will be used if queue_rcu_work() returns true, otherwise the second.
-> Then once defer_free_mounts() is done and release_list_next_gp not
-> empty, it would move release_list_next_gp -> release_list and invoke
-> queue_rcu_work().
-> This would avoid the kmalloc, synchronize_rcu_expedited() and the
-> special-sauce.
-> 
+On Tue, Mar 11, 2025 at 07:28:45AM +0100, Gabriele Monaco wrote:
+> +static inline void rseq_preempt_from_tick(struct task_struct *t)
+> +{
+> +	u64 rtime = t->se.sum_exec_runtime - t->se.prev_sum_exec_runtime;
+> +
+> +	if (rtime > RSEQ_UNPREEMPTED_THRESHOLD)
+> +		rseq_preempt(t);
+> +}
 
-To my understanding it was preferred for non-lazy unmount consumers to
-wait until the mntput before returning.
+This confused me.
 
-That aside if I understood your approach it would de facto serialize all
-of these?
-
-As in with the posted patches you can have different worker threads
-progress in parallel as they all get a private list to iterate.
-
-With your proposal only one can do any work.
-
-One has to assume with sufficient mount/unmount traffic this can
-eventually get into trouble.
+The goal seems to be to tickle __rseq_handle_notify_resume() so it'll
+end up queueing that work thing. But why do we want to set PREEMPT_BIT
+here?
