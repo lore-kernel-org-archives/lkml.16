@@ -1,118 +1,138 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92F8F2550D9;
-	Wed,  9 Apr 2025 08:16:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C09818FC75;
+	Wed,  9 Apr 2025 08:18:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744186622; cv=none; b=V31DTYjhhstiR2Qe06ATQanRNi/e6VR2VevciZRpYLbUYXGLje+ZdmyscOsw0ARhxbk59RzHQIbGjL3zeBj5xZqkBKK99yFg1QDlMgIMa883nQDRZYqpRjICF231XvvCIn7eLpUCA1m685Qioq2ZQrsfW0XV5TE19pLiZxafayw=
+	t=1744186695; cv=none; b=ubOpkhR8FJwBjYKveeTVVwrauI/r9nGfKVd4ZCffhNR3ZX7lwaehiXSrSCJcHZb0Yn7EIfNARRsuRaGNfyhtkDO3YahFoFpmd8r7ppL+VWLXYucdKsU3MLmgydFGnimx/t4kJVNzoutOgsLBXaRccVQ+ew5pemMj6CtJqAlgiOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744186622; c=relaxed/simple;
-	bh=h6CgCYyKE/mzMr9eg+tCZEt2jzGIbosM23RT+DB8mr8=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=GiDqChqsYCjS+2+FH/dn8sdcdsPdED++ANqPzFg3mteuilQrAObOqytJ8/VJd2R4h2i7clOAj1GNSrZy/2FgeEfP3l4IhpJCJ4yhddIPMykg9iq1kG/NUT+Kp2XKVX7EhyJCzjF7s+4WWxRC8v4P+ZCQAKKWVK1ESQv+KkPAd1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=uuzKgUkG; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1744186695; c=relaxed/simple;
+	bh=ZWg+mSGoUBjLS3Iq/MflbPPUiI1DmKUlohQQrKNWe58=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gGvLl8i33Mxpf8wIuQrKg8uFAG7B0y1Y1QoBFED9chGJl1IOqft7AWbh1t0iO3B3b0Ksv4SL6YFH3l9bmzvBZ1lqLjTVo/ek9Fo650bMgRPmoP2Kdmk7K8B4sjv/nIz4hGLH7FmorItTZ3sZIrq5H+IFkitVO+jn682K9aHIGdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=SXbU84yx; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="uuzKgUkG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1744186612; x=1744791412; i=markus.elfring@web.de;
-	bh=1YJHp6epgREJ9ryf8kdlCCnU4DSI6UznrnADAXME3CU=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=uuzKgUkGQVyPs66fE+1IhkN2AQ5w40Jz30r1M00YWgg4PR/3gKeg2+fsvH/M5jp2
-	 6jbQubNyoyjOgQHq0PZYKLrcSEEHNPHjd8XmHgMVDVEYPa05CWIvz3dj7/1oiA62f
-	 ganqsHhwsIgPtN5zJNlgGnWNA8If9rMMIV/VmCo8ZOVRlGHwBXb7T5BHYKVGNi4tl
-	 jbNctl8B8XSdp+Utqk38mxTkKdMQZEFEJEL9lSvNTex86KTz8+KvKE6BawO6iNip6
-	 xpqVXkqF8oJNbRwLL9RFi9dk4WyZYsgY0/mdMUTWyjlbTUpqF0lK1V7psu3mchRje
-	 YTr2EPWIXByz4uK4ww==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.27]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1M7Nmq-1tz8I41iQe-00F7Sz; Wed, 09
- Apr 2025 10:16:52 +0200
-Message-ID: <8cf4d7d5-e9f8-4c10-810b-5c7da72db1c8@web.de>
-Date: Wed, 9 Apr 2025 10:16:34 +0200
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="SXbU84yx"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3F4F543281;
+	Wed,  9 Apr 2025 08:18:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744186691;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=F7/sUB4NKSKcBZ2AS73T3m/vvUDAL6vhtK3n+glPbSU=;
+	b=SXbU84yxeIjUgNSlnWszEPbWrUZATdskY+g4qvNrroLs1qbcM8ARdcwmCKSmsWt2iyLHN1
+	AO79A+BH1KPUDvrtlOboJzCPsv1k5PkNqLWrcarzrUj9jkpdryFXYYOp6sWFruPKYpCTle
+	7Mi23qPgvKrRfyf8oCr+yfRsZ4kYcUJPluUe3NmrRw9QCVEen0R1itge0OA7HnTUdCYgWA
+	e+XKhxZIwOdQ3HlOWfudaKaKKNdQTQ7Gl+1Y6Wg8FnqBbjHy1S7Fith32wu1IncEedV8O7
+	P9KjNiuMWhE7K9j4HPyR0V9Df30QpiKTdjo8S/EHMCnb3j4dUQFk9/XXseSIqw==
+Date: Wed, 9 Apr 2025 10:18:08 +0200
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Simon Horman <horms@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Heiner
+ Kallweit <hkallweit1@gmail.com>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>,
+ Richard Cochran <richardcochran@gmail.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, Maxime Chevallier
+ <maxime.chevallier@bootlin.com>, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org
+Subject: Re: [PATCH net-next v2 2/2] net: phy: Add Marvell PHY PTP support
+Message-ID: <20250409101808.43d5a17d@kmaincent-XPS-13-7390>
+In-Reply-To: <Z_VdlGVJjdtQuIW0@shell.armlinux.org.uk>
+References: <20250407-feature_marvell_ptp-v2-0-a297d3214846@bootlin.com>
+	<20250407-feature_marvell_ptp-v2-2-a297d3214846@bootlin.com>
+	<20250408154934.GZ395307@horms.kernel.org>
+	<Z_VdlGVJjdtQuIW0@shell.armlinux.org.uk>
+Organization: bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: vulab@iscas.ac.cn, brcm80211-dev-list.pdl@broadcom.com,
- brcm80211@lists.linux.dev, linux-wireless@vger.kernel.org
-Cc: stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Arend van Spriel <arend.vanspriel@broadcom.com>,
- Christophe Jaillet <christophe.jaillet@wanadoo.fr>,
- Kalle Valo <kvalo@kernel.org>, =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megi@xff.cz>,
- Sai Krishna <saikrishnag@marvell.com>
-References: <20250406081930.2909-1-vulab@iscas.ac.cn>
-Subject: Re: [PATCH] brcm80211: fmac: Add error check for brcmf_usb_dlneeded()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250406081930.2909-1-vulab@iscas.ac.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:yMPQ9G5ZsbpKYU067fpj1wYqk1uW/OnPvh6SXiN2B7pwB5kHnXT
- AOlBTXLf8JMQFbiIZoCU26LjvgCIJ32cd0eamP9twA/+MLzo8hwcCYVp31RtCAJrsnwF7uZ
- M7A2Imz2lYbajLG5/I66n+mV1HhgESfzqL+x8EFY1TMI6awlgMAowjYzl4YbPknKssAwOHs
- SB9NjgRm1PC6YSDxpEs8A==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:/QrlraN5r0k=;iZ33Kw0PCBy1LINLZzn/xnbJ0Zh
- g5xcTMqUz3kS9YQZtAQ507pA4VC5YiS5dExWcU5I9bkUBZRTZ+zshPEDYaPKMdtfJm/xbvFpt
- Iv8mP2lX+g/oIGhziOldg/kLwq67h9xq7zhB34AyyL0vBQ+8QOABmUtf7u+XJLbsIyzm9kroY
- XbwERg6HrHJKelvPaPl5LdbxrUS7DMsp7fn/68Rkiha16WZa3Tzbd3qfemYWswrX5UEzLQew+
- qX+GmtzuJmiq+rBl8E0BQw4X8v/i1kjqS0JJxhTaIfJC+O0Aisr1z8hiyAKYpGovFcs39Z/GC
- aO/1RC40/TtsJEVJceVzBPN1pl90EyS73k3EsLd8rfg9r2W2IfqSK0qOlKhhmYVAD+Y3KfvA6
- YmqACZddDF4/bIfGNcKg2qBrDHNzPpxmYNDw18ftwqeGZoZ4LHyxj78Nm+E4RH3WxuM0dAlZl
- 4d+UKEoXX2U6aipayfwchW5FhNIVViUdgzLJZJr3M9jMnnn7YbSNTRdClQcL4I+BGEllfDniA
- VTqrgdKaxGP49TjTbCffUygQPG9CQoX8eFRiX7qV9MH20XwLrwpaIJS9YAHVORnWnsmyjZBb2
- rjTQdmAC9mASZ0JR669n6jORj6nyXdouydsfdYd5HrMBGzv/hBGyHvULGMxLSGs9sDQHnzkyO
- wmhjPqT9ezbaqF4IV/YEWJZX4CtGyHKli3mM+wqadxnboV80Whc+i2rnXArvuOstM3W53Drdl
- 1mJNJm2kxLMaVTF8fEkMYVj2Is5WZETgo4Drc1xXr+1iI4dCpPFptNOrhVbTPmjM3lI2IO07p
- xxUt1FYCO5WtbO8a+0U2P74UZ5k2+5nq0z8/CHZuv/LS3Fu0zZA2ckRrMDxcHFnxUkJTJVU6x
- Lc8ZbUW/1N+QldL9YKyL7BB4SUTAYMUl8Dh/WfLJ3OM54+VHrf7xXs3lh7qHT0a4WLA2yJY0s
- wsZ3rap9uHXX9tfhmqgJpfmsVj+hx9TcpWgXqm7cGR+O2Em5vt9FAhnukpOiWmx6qJbtPQ6mC
- XMbk/HpBAiY/9XzVZX9vbzLiOWoQW/vCFEvo0sZ4TRoCEP1PAx1Nx7Lgau80QAXu61Vayi7sM
- 4RJ19dLBA0ZBuaOLk+U4hrblL6Wm47Xg2MqbxMF2lYTs4ezolE2uclZ4F5A3DudZYlHmoaU8m
- 3VCkO3oZx/cMV2zuvHC1l1/bBiDguU2VW5cgshJGdBlvkpfx2xNcTeMR/yIKJ46VNelYz4mLK
- u/UaCJhgNuRNjvzZtbvdDSgML3Fwlp686ioFPTtdLWzwJvkhjCQyfXsCkaMsku+kzP/3NkiMd
- 6diezPdeUdJ/y7ZGa0ThIaFC2aVdzVuow9T1aRao8BsishaXOBZiqcUzur9l+zxEEK4GxHu4f
- 17nPPQ5zIsZ+KCmEkAWOOP2PFwX01Mq6bs9ekJ5GtDtq04gMvGwceH8kw3CWatI7hUjXUupMi
- bvIKx4PCiejdhulZTY8Nj8JJvOQEneeF+c3eTnUoonS8t/f52Kbs6rMqZOD1q0oHdP+ukCg==
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdehgeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgfdutdefvedtudegvefgvedtgfdvhfdtueeltefffefffffhgfetkedvfeduieeinecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehkmhgrihhntggvnhhtqdgirffuqddufedqjeefledtpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudehpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopehhohhrmhhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehhkhgrlhhlfigvihhtudesghhmrghilhdrtghomhdprhgtphhtthhopegurghvvghms
+ egurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomh
+X-GND-Sasl: kory.maincent@bootlin.com
 
-=E2=80=A6
-> Add error handling for brcmf_usb_dl_cmd() to return the function if the
-> 'id.chiprev' is uninitialized.
+On Tue, 8 Apr 2025 18:32:04 +0100
+"Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
 
-* Please reconsider the offered conclusion once more.
+> On Tue, Apr 08, 2025 at 04:49:34PM +0100, Simon Horman wrote:
+> > On Mon, Apr 07, 2025 at 04:03:01PM +0200, Kory Maincent wrote: =20
+> > > From: Russell King <rmk+kernel@armlinux.org.uk>
+> > >=20
+> > > From: Russell King <rmk+kernel@armlinux.org.uk>
+> > >=20
+> > > Add PTP basic support for Marvell 88E151x PHYs. These PHYs support
+> > > timestamping the egress and ingress of packets, but does not support
+> > > any packet modification.
+> > >=20
+> > > The PHYs support hardware pins for providing an external clock for the
+> > > TAI counter, and a separate pin that can be used for event capture or
+> > > generation of a trigger (either a pulse or periodic).  This code does
+> > > not support either of these modes.
+> > >=20
+> > > The driver takes inspiration from the Marvell 88E6xxx DSA and DP83640
+> > > drivers.  The hardware is very similar to the implementation found in
+> > > the 88E6xxx DSA driver, but the access methods are very different,
+> > > although it may be possible to create a library that both can use
+> > > along with accessor functions.
+> > >=20
+> > > Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+> > >=20
+> > > Add support for interruption.
+> > > Fix L2 PTP encapsulation frame detection.
+> > > Fix first PTP timestamp being dropped.
+> > > Fix Kconfig to depends on MARVELL_PHY.
+> > > Update comments to use kdoc.
+> > >=20
+> > > Co-developed-by: Kory Maincent <kory.maincent@bootlin.com>
+> > > Signed-off-by: Kory Maincent <kory.maincent@bootlin.com> =20
+> >=20
+> > Hi Kory,
+> >=20
+> > Some minor feedback from my side.
+> >  =20
+> > > ---
+> > >=20
+> > > Russell I don't know which email I should use, so I keep your old SOB=
+. =20
+> >=20
+> > Russell's SOB seems to be missing. =20
+>=20
+> ... and anyway, I haven't dropped my patches, I'm waiting for the
+> fundamental issue with merging Marvell PHY PTP support destroying the
+> ability to use MVPP2 PTP support to be solved, and then I will post
+> my patches.
+>=20
+> They aren't dead, I'm just waiting for the issues I reported years ago
+> with the PTP infrastructure to be resolved - and to be tested as
+> resolved.
+>=20
+> I'm still not convinced that they have been given Kory's responses to
+> me (some of which I honestly don't understand), but I will get around
+> to doing further testing to see whether enabling Marvell PHY PTP
+> support results in MVPP2 support becoming unusable.
+>=20
+> Kory's lack of communication with me has been rather frustrating.
 
-* I propose to replace the word =E2=80=9Cfor=E2=80=9D by =E2=80=9Cin=E2=80=
-=9D (before function names)
-  in some summary phrases.
-
-
-=E2=80=A6
-> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-=E2=80=A6
-> @@ -798,7 +799,11 @@ brcmf_usb_dlneeded(struct brcmf_usbdev_info *devinf=
-o)
->
->  	/* Check if firmware downloaded already by querying runtime ID */
->  	id.chip =3D cpu_to_le32(0xDEAD);
-> -	brcmf_usb_dl_cmd(devinfo, DL_GETVER, &id, sizeof(id));
-> +	err =3D brcmf_usb_dl_cmd(devinfo, DL_GETVER, &id, sizeof(id));
-> +	if (err) {
-> +		brcmf_err("DL_GETID Failed\n");
-> +		return false;
-> +	}
-=E2=80=A6
-
-Would an error hint like =E2=80=9CDL_GETVER failed\n=E2=80=9D be more appr=
-opriate here?
+You were in CC in all the series I sent and there was not a lot of review a=
+nd
+testing on your side. I know you seemed a lot busy at that time but I don't
+understand what communication is missing here?=20
 
 Regards,
-Markus
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
