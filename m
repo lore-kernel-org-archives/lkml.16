@@ -1,189 +1,163 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2070.outbound.protection.outlook.com [40.107.236.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 462CA1448F2;
-	Wed,  9 Apr 2025 04:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744173493; cv=none; b=kf0jilSZycSzo5F7k/ZUim0MPEBxjJzzBQBgzZzsPnIu5zeve2pfqmhaYG8+IOk9x6lqtfsp3Rk2LeDq2I5l5EIY19rdRvdK5oSUm/kFFJ80B/qtk/UlDagyl4Wy0y5RyvVI9hLp5asgYpjanvjRS1oOSoE4TVMUp3MRj44TETs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744173493; c=relaxed/simple;
-	bh=yja7eVXE/w/8yVg/IBLKYrzWII7G8Z6nPJ+5nLBJvNo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UfcrK2fBQxXB6CSutqmBEsMiZ1pJat4n53WrrfJURTDDY1WyPrvnEiYq3HKwQT/xirjTRsvixRz/eh9Q5hJgB7rKzRVEmlcsMLi4JGvM4o1YCwEPpgQoHQGgTarSaryiZE/KBQA5v1Xta430USJ9DUgpZnFAQ1IA3qSM4WLHHIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=apK/tWg8; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 334F1259C;
+	Wed,  9 Apr 2025 04:46:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.70
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744174018; cv=fail; b=TWzbAVTMo24Yt2IaIP/NWlpLX1bfXpzemoejkzYb11sTQVHBX3P6qwuZxfkz4tTC4KY/9HnoXft+h+nUOMJVxtIpqwNCOjDA9qmaKwSGGSdS83YuWEfTWOUo78d4Jz9Nbnnse56ph7SyxRJn6tv769MmwJZCd7Fbvup1KX9Knbw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744174018; c=relaxed/simple;
+	bh=VQQM1fJ6c2J0J6fW9ZV1Z879+4kH5DLYrMFQAn2ujTQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=S5zrhOlFq+jmWwk/oJuyqmgbIbPBoPoFfm70uyGWXtkuDuPoDtvGPAAxhV+yWEb18e53QMlakFVrGp4YzEFUtq3XWAx3fivG5dk5jqtZQRo5etRO3sJGn94HnM2oaPXB1qzadtz3XXC4rsfFvh2WBSOtfZHNiOZBQsb8FQFvwyI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=B45mN0dL; arc=fail smtp.client-ip=40.107.236.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="apK/tWg8"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-54b10956398so421228e87.0;
-        Tue, 08 Apr 2025 21:38:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744173489; x=1744778289; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=y+B9j0B+3bS2wkUTXIXFl6jfFAid+CYvzBEBZpVfO4g=;
-        b=apK/tWg8f7jTkYAo9oXyRWqxoAqLgasF68v8TFUO6B/9CGK8qfcohWsm85nJPVxJl0
-         bE2iS7N5DZ+U0fmXNFxC6dGXcn2PkmvFq6k8Hpw/uOzfsWZeXol0Aiqh2+bNl58MoBGf
-         r46Tosyr/YanKdyolwIhWT8bIVoPdhD93hLQJa2gU/d5Mxtr/dYC/kvERy7rwvrtu3tY
-         4jLepm5xcP4Ofg9gJ95IEfbW7cViWkKf5hwd/TBgMxqoPkZL5sPbFgHOpACb5/nTwJ0M
-         MIiH+ojq0i9740za93YjskyctL84gw4ktJ1ghpqvjCYjE1NCQxWUuHgH7iO9mqU4b1o9
-         g/nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744173489; x=1744778289;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=y+B9j0B+3bS2wkUTXIXFl6jfFAid+CYvzBEBZpVfO4g=;
-        b=DpMTvXbqt/L/TfbFaWdIZArIRMQL9n2/nngfxyOdfBJXUW53VChJNbeUbFQFkbs9U2
-         sQMIRAeuRtf59nqPL3Xu3wir3vXrPAQdajAxOVR2AJ/bBO5lg5AG7r3fXboF/YlhXkcE
-         1qoci6z7UWEeAKzLd9z6v56bQu6Af5XuYZ7Aq8mokQ86olpkrOpm1yMM9bf9e6I80CGP
-         4x4OuwHrtkMYtDz8uk/STHVUQNdXoSj2TgxzAY/TMu/7lyyjkjA/Cy/L+CGPqi6R55CL
-         QN36GQ1rqJ6f+00QVImIQ/oureI8YSFoYWUngL2JxIVSLK0uktsMuGP7ln+D2x36npPo
-         HOXg==
-X-Forwarded-Encrypted: i=1; AJvYcCV+nrSPJTAkEC0dh9vA+SD6QZ2V/8PvP6CdFy5tVr9KUnEolpqNoT6jO0tzWsaxZfpQTxMN5XhhQ4F0@vger.kernel.org, AJvYcCXnskgtuLMrqCADhNwe6F8JBPAlP5vvBYAtHqzAe5zqxUUncClYUhIHcPtkwTmgGrReMwyYvU3vA75zOrC3@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/ZJoqtzYgsIKbVICKCNac5/lz2LL54JCkMcaWdyPaIgvwk3nd
-	4JvrDGlL9tNn4W1sU0ut2uxzZ0wePxab4xGNjm+5D749RwJ9cXZr
-X-Gm-Gg: ASbGncvD16elvL23oymQM3kxPxGz882SMtDK9vBy0yJIo4INCc9h5t79Df2kMRjuTMp
-	QI49D1Z24Xw5btofH0JcjkpmXfsAT4fKqUAySK3CBt1t6Ke0zEtq9JB7tKUqbIoCi21USnKmm0G
-	qFeTMAzLTiKk8yLuGgBc41waQ2lkH1kAfWEPeBx9T3zjjrKFx1zvjwHDsXlUq5E5QnRllheYJ9D
-	Kj+uoTHqP9Tr0KVaDbrW2dKVBmKHgOMyg8UgH3765rVG43sX+fPkFWt2ArpPlrFDXTZxYT2NxxU
-	nje4BGVQurAxYnNGQeHmaUhck9WiFIpEe39sE5WbA+NzBJ95WwDfxXzy8qTZ1A9ilJVEMgl8ezE
-	tysLzVAg91UHKtA15a4Fyw2oeLw==
-X-Google-Smtp-Source: AGHT+IF18UpeVIVOwB6F9sl1oa0T8amO49pxC9bggCcRxblKl72lMW2PeXfAbXqk6XOTfjRv9hn+rw==
-X-Received: by 2002:a05:6512:2384:b0:549:4ca4:504a with SMTP id 2adb3069b0e04-54c43649bd1mr412795e87.4.1744173489002;
-        Tue, 08 Apr 2025 21:38:09 -0700 (PDT)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54c45680001sm32106e87.244.2025.04.08.21.38.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Apr 2025 21:38:07 -0700 (PDT)
-Message-ID: <2380773f-7735-4a65-96c4-04931cfc9185@gmail.com>
-Date: Wed, 9 Apr 2025 07:38:05 +0300
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="B45mN0dL"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=yHIKSyX4jvn9/7RbD/a+j3gv8TajkMx10mbVK7EflV+uMJiI/EBLmQ/4nOM5kCZPRYC9ZgwCb/wF4RxH+mlny6jqUOEpvX1lOzb/yX0QH8bGeEuODEtMnwRL5Fc35/RLCne4aPhAVJvdDLjVdj8Ng4wJ5L+tfNJo1Wz592f5WhSchkFIaT/l+AvD1c6fJWAuoRW+TOBQIp3hsZ7ghrYsuSeJbPHHyrapP0TTAXahL25/z4TeopyI4NP181bzfcR5kFSR2EJ2IrERiA3Y4+0XYjWb0KS4sxw0RFCAqBTisfaf6ctwv/LipPzvPSOLrHE8TpyBiQi0KCWXSAxMwAiYig==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=iPTaBtUbn4d+fDCbqvosbx/WF2lCxqCgAz1U+tWVQSI=;
+ b=I0bN2PTOhYg/aK7IrmUbJkg5fx+HM0qShpLz4Lc6zMzk48p1+Oj20cKzFQH52tB8dwtWkEsG3qfZqeITo6P9G7Fwokj3r2TdoauB8tVYaZEjShbkLnquzFLjRui7NOKEkqTBiR+cC/M6McfWdcwK3I6tGOgOLNdeL0EWmUCBOGJOiWOU1cmNAW727TZDxtoxHIo8e7OmzXvZdWX5Mpzz/Mwu5m9rX57PYVOvyih1LwYYB4bwDHUeWlwN8FGuUkfrgP762ENp0N0lih+sxaurOnnuJ+tP8jftlKjXTEhunmvUE00bB5hUU1RIF7LVMGDSWpt7r8FHX4J0/XUfAM12/A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=goodmis.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iPTaBtUbn4d+fDCbqvosbx/WF2lCxqCgAz1U+tWVQSI=;
+ b=B45mN0dLj6wPwBXbdzMSsG25I/fMVrp5JhbKsc3U+7+jewO7gPmHP78cQ6Aqn4Vn/3sbcMCAdBZrnCQkH33YwuP1/PZgSs3KUDnP4BACQz1Ba5X1lgdqRcN+x1Ay4ezU8slhSeDn24N68NyAYEwdsa+Y46vFRBSEvYY6P0NZifM=
+Received: from DS7PR03CA0162.namprd03.prod.outlook.com (2603:10b6:5:3b2::17)
+ by IA0PPF8CAB220A1.namprd12.prod.outlook.com (2603:10b6:20f:fc04::bd9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.21; Wed, 9 Apr
+ 2025 04:46:52 +0000
+Received: from DS1PEPF0001708F.namprd03.prod.outlook.com
+ (2603:10b6:5:3b2:cafe::d3) by DS7PR03CA0162.outlook.office365.com
+ (2603:10b6:5:3b2::17) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8606.36 via Frontend Transport; Wed,
+ 9 Apr 2025 04:46:52 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS1PEPF0001708F.mail.protection.outlook.com (10.167.17.139) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8606.22 via Frontend Transport; Wed, 9 Apr 2025 04:46:52 +0000
+Received: from dellg853host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 8 Apr
+ 2025 23:46:50 -0500
+From: Ayush Jain <Ayush.jain3@amd.com>
+To: <rostedt@goodmis.org>, <mhiramat@kernel.org>,
+	<mathieu.desnoyers@efficios.com>, <linux-kernel@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
+CC: <Naveen.Rao@amd.com>, <Kalpana.Shetty@amd.com>, <Narasimhan.V@amd.com>,
+	Ayush Jain <Ayush.jain3@amd.com>
+Subject: [PATCH v2] selftests/ftrace: Convert poll to a gen_file
+Date: Wed, 9 Apr 2025 04:46:32 +0000
+Message-ID: <20250409044632.363285-1-Ayush.jain3@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 00/14] Support ROHM Scalable PMIC family
-To: Lee Jones <lee@kernel.org>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <cover.1742802856.git.mazziesaccount@gmail.com>
- <20250404154355.GH372032@google.com>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <20250404154355.GH372032@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS1PEPF0001708F:EE_|IA0PPF8CAB220A1:EE_
+X-MS-Office365-Filtering-Correlation-Id: 56e49e43-fab2-4c04-e27b-08dd77218bf8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|82310400026|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?03nc5xIBz4Z1yZips5ccpk8I28+dZO/hWJFz48ocLGihLZGDWCOVan5eJOW+?=
+ =?us-ascii?Q?NxxB7gcneJsqS4Iq6ORyT+lSTxV6rfJo9ua485PRSvsoF064THjcId+5kj9z?=
+ =?us-ascii?Q?uUDNNMU/5c27Voibbx8ByReE3SqTEW0f7iaGfAkgzSjgZ238+cOUlyqWkB/B?=
+ =?us-ascii?Q?W6+yVwL4K7f9waWDI7c4VXFY7UPwB3v7Tm8Qem8JmTYxjS1ObHweEDRSHdRW?=
+ =?us-ascii?Q?cWrKlQ5yseYrUjrGvD4gNpta8IoJyhTt/mrRAMYgUI9Rty/AEevDPIi1WEVn?=
+ =?us-ascii?Q?NIfoMRJfqk9LIONSPxjriXQy3dqWcMhTcaZLwiVDKW6tok5yNJ9MdtV2xWjm?=
+ =?us-ascii?Q?9KrYWvBHm+v1JSz9osy0VeohztsRfrvuiSrrmPB9VM3XlPORmI4EFRyC8f0X?=
+ =?us-ascii?Q?g7gOAIGQKJu8IZYclfwMV/WzrJtKIpxvzLf1pQNMGji/0Kfhw/Y4dTf7Lr8H?=
+ =?us-ascii?Q?K5N2flZc5J7G0AhG5k/GTSfQowTjHXVCDrYUs70iAmDfTMpjgJW0l9BlcADe?=
+ =?us-ascii?Q?kXBTVsBmDb/o6Vin1TauGCCBHjzJUpjDmYrwmPMuM2Iv1bePH9gYjdHa7Nzl?=
+ =?us-ascii?Q?ejauwvq1j8XnyM/AatNOef4P91qcYFpyUtmSWZSGS65xilyksY1JZgI5dw1+?=
+ =?us-ascii?Q?m9kzw1fFhaYcPdL7FRYn0flSKpDQn6f+vcfym0fdtYSia3U1tFkxQ49b3LHH?=
+ =?us-ascii?Q?R1Sl48O4wQMfmflOHmeiGIR76NtuXaZKK5gqp3XBQK5J/FHowsJFHMHGkQFf?=
+ =?us-ascii?Q?TXsvphR5MXOwRxQm7KnR7RjOcyBDj0mNT534zVYoT6s+PijgyS6FnU7LBgaG?=
+ =?us-ascii?Q?FIRHcDhUV4LdCt8R7vWP8V9Z2gcoYinoMu8kpQ50x5iWy4vT70yBaElnS/aS?=
+ =?us-ascii?Q?6WofYLtzE/UwWER2pkK6dOH4zlPj6voJOeny3NH8HFi/9CXuGu3GQFVqwTec?=
+ =?us-ascii?Q?e8Y86CPjLW4rDZLFeIt/i7HLck5VeM5wSyORdARNe9ageQO/UazcJ5x2M3K6?=
+ =?us-ascii?Q?aa7G5amIcjOrwbBPzVkkNmzHSXE3YchXx09fdA+3S8ggmAeekTDtgaSKQSbq?=
+ =?us-ascii?Q?qoeFMBxdsbOn5AEq5glM3Zl6gtJMZNHXinlT3bjXwtYN8n0WeiE0F6vkkTHv?=
+ =?us-ascii?Q?nWItI07vVt84KZAmqD7feAWjbpWOpcxYMmeTpeQfcSudbkwcvvJSPJSxP6pZ?=
+ =?us-ascii?Q?UJOc6/guFgGpz3w0Ox3wZ/JnRJ2YcOeMd08nadtVCNUy3INgrURDPYaQhKu1?=
+ =?us-ascii?Q?It4gjeOQS7d2YS1oVxdWxrFd/0rosoZICgO3bE7yjlgauxAXCfSvyf3LiPN2?=
+ =?us-ascii?Q?vt0auEqq6rgEwXIWykUijMYIVhPzEUL44oQlNGXFT4I396KDm8gnNAmuWN6V?=
+ =?us-ascii?Q?sHdoliG9ABQqg+lJ/2oqipk7ZjEFfjjywUW7A57odWu5T6hJVAWF9DzmxG3n?=
+ =?us-ascii?Q?WhesfSvblBgX/XgZt8HjKoSMbQb9YXVogpsVeJQu6wN3cxuY3/AIexK2S95y?=
+ =?us-ascii?Q?95t7cq1bNPg9wwzeN6K4B5AITi1eSK1FviFN?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 04:46:52.1667
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 56e49e43-fab2-4c04-e27b-08dd77218bf8
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS1PEPF0001708F.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PPF8CAB220A1
 
-On 04/04/2025 18:43, Lee Jones wrote:
-> On Mon, 24 Mar 2025, Matti Vaittinen wrote:
-> 
->> Support ROHM BD96802, BD96805 and BD96806 PMICs
->>
->> The ROHM BD96801 [1] and BD96805 [2] are almost identical PMICs what comes
->> to the digital interface. Main difference is voltage tuning range.
->> Supporting BD96805 with BD96801 drivers is mostly just a matter of being
->> able to differentiate the PMICs (done based on the devicetree
->> compatible) and then providing separate voltage tables.
->>
->> The ROHM BD96802 [3] is a companion PMIC which is intended to be used to
->> provide more capacity on systems where the BD96801 alone is not
->> sufficient. Startup sequence of these PMICs can be synchronized in
->> hardware level, and there seems to be some mechanisms which allow
->> delivering the companion PMIC (BD96802) status to the main PMIC
->> (BD96801/BD96805). This patch series does treat the companion PMIC(s) as
->> individual PMICs and allows using them from software point of view as a
->> stand alone ICs. From the digital point of view, the BD96802 is a subset
->> of BD96801, providing only buck1 and buck2 regulators. Please see the
->> data sheet
->>
->> The ROHM BD96806 [4] is similar to the BD96802, except that it does also
->> provide different voltage tuning ranges.
->>
->> This series adds basic voltage monitoring and control as well as a
->> watchdog support for these PMICs using the BD96801 drivers.
->>
->> Similarly to the BD96801, these PMICs too have a few configurations
->> which can only be done when the PMIC is in STBY state. Similarly to the
->> BD96801, doing these configurations isn't supported by the driver. The
->> original BD96801 RFC [5] driver should be able to cover those
->> configurations, if modified to support these models.
->>
->> [1]: ROHM BD96801 data sheet:
->> https://fscdn.rohm.com/en/products/databook/datasheet/ic/power/switching_regulator_system/product_brief_bd96801qxx-c-e.pdf
->> [2]: ROHM BD96805 data sheet:
->> https://fscdn.rohm.com/en/products/databook/datasheet/ic/power/switching_regulator_system/product_brief_bd96805qxx-c-e.pdf
->> [3]: ROHM BD96802 data sheet:
->> https://fscdn.rohm.com/en/products/databook/datasheet/ic/power/switching_regulator_system/product_brief_bd96802qxx-c-e.pdf
->> [4]: ROHM BD96806 data sheet:
->> https://fscdn.rohm.com/en/products/databook/datasheet/ic/power/switching_regulator_system/product_brief_bd96806qxx-c-e.pdf
->> [5]: Original BD96801 RFC:
->> https://lore.kernel.org/all/cover.1712058690.git.mazziesaccount@gmail.com/
->>
->> Revision history:
->>
->> v1 => v2: MFD driver changes after review by Lee
->>   - Use enum for chip type instead of picking the data directly from the
->>     of_match_data.
->>   - rename "chip data" variable 'cd' to more widely used 'ddata'.
->>   link to v1:
->>    https://lore.kernel.org/all/cover.1741864404.git.mazziesaccount@gmail.com/
->>
->> ---
->>
->> Matti Vaittinen (14):
->>    dt-bindings: regulator: Add ROHM BD96802 PMIC
->>    dt-bindings: mfd: Add ROHM BD96802 PMIC
->>    dt-bindings: mfd: bd96801: Add ROHM BD96805
->>    dt-bindings: mfd: bd96802: Add ROHM BD96806
->>    mfd: rohm-bd96801: Add chip info
->>    mfd: bd96801: Drop IC name from the regulator IRQ resources
->>    regulator: bd96801: Drop IC name from the IRQ resources
->>    mfd: rohm-bd96801: Support ROHM BD96802
->>    regulator: bd96801: Support ROHM BD96802
->>    mfd: bd96801: Support ROHM BD96805
->>    regulator: bd96801: Support ROHM BD96805 PMIC
->>    mfd: bd96801: Support ROHM BD96806
->>    regulator: bd96801: Support ROHM BD96806 PMIC
->>    MAINTAINERS: Add BD96802 specific header
-> 
-> Adding support for 3 new devices in one set!
-> 
-> You don't like making things easy for yourself (or us) do you!  =:-)
-> 
->>   .../bindings/mfd/rohm,bd96801-pmic.yaml       |  10 +-
->>   .../bindings/mfd/rohm,bd96802-pmic.yaml       | 101 ++++
->>   .../regulator/rohm,bd96802-regulator.yaml     |  44 ++
->>   MAINTAINERS                                   |   1 +
->>   drivers/mfd/rohm-bd96801.c                    | 565 ++++++++++++++----
->>   drivers/regulator/bd96801-regulator.c         | 447 ++++++++++++--
->>   include/linux/mfd/rohm-bd96801.h              |   2 +
->>   include/linux/mfd/rohm-bd96802.h              |  74 +++
->>   include/linux/mfd/rohm-generic.h              |   3 +
->>   9 files changed, 1065 insertions(+), 182 deletions(-)
->>   create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd96802-pmic.yaml
->>   create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd96802-regulator.yaml
->>   create mode 100644 include/linux/mfd/rohm-bd96802.h
-> 
-> The MFD stuff looks okay to me now.
-> 
-> Let me know when everything else is ready to go.
+Poll program is a helper to ftracetest, thus make it a
+generic file and remove it from being run as a test.
 
-Hi Lee,
+Currently when executing tests using
+    $ make run_tests
+      CC       poll
+    TAP version 13
+    1..2
+    # timeout set to 0
+    # selftests: ftrace: poll
+    # Error: Polling file is not specified
+    not ok 1 selftests: ftrace: poll # exit=255
 
-The v3 (link below) should be good to go now. Regulator parts are 
-reviewed by Mark and bindings are acked by Conor.
-Please note that I translated your 'Ok' above to ACKs - I hope that was 
-the right thing to do...
+Fix this by using TEST_GEN_FILES to build the 'poll' binary as a helper
+rather than as a test.
 
-https://lore.kernel.org/all/cover.1744090658.git.mazziesaccount@gmail.com/
+Fixes: 80c3e28528ff ("selftests/tracing: Add hist poll() support test")
 
-Yours
-	-- Matti
+Signed-off-by: Ayush Jain <Ayush.jain3@amd.com>
+---
+ tools/testing/selftests/ftrace/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/ftrace/Makefile b/tools/testing/selftests/ftrace/Makefile
+index 49d96bb16355..7c12263f8260 100644
+--- a/tools/testing/selftests/ftrace/Makefile
++++ b/tools/testing/selftests/ftrace/Makefile
+@@ -6,6 +6,6 @@ TEST_PROGS := ftracetest-ktap
+ TEST_FILES := test.d settings
+ EXTRA_CLEAN := $(OUTPUT)/logs/*
+ 
+-TEST_GEN_PROGS = poll
++TEST_GEN_FILES := poll
+ 
+ include ../lib.mk
+-- 
+2.34.1
+
