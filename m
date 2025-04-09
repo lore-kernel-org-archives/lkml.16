@@ -1,314 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD1A86347;
-	Wed,  9 Apr 2025 02:25:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA83086347;
+	Wed,  9 Apr 2025 02:27:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744165551; cv=none; b=dHPdI0zGMp1K5tXXT1oX9vz2AWub8C/I0BKNQeicTHRhDhZetlISllwPpQgQJi3HeBkeD6zPZleDnkUOXZEp+1jodfQzJzOWIwN603zFYbSZVwFQtg0p0P1RRZMiKgTe9/J/511bXMdPtNlhLT/El+kjT+8b/A07Y+GGOGErxCQ=
+	t=1744165642; cv=none; b=TISlbLIJfJGnodwgQ+S6KI9BUapnSCISby8ovnksvTGKNgw7uCz7T4bKxzBB9OujPhIsjxoen4HXwm81XKZgRzwoNvMKBdkDxy5xpVh+13c6RPdJjLisg0Rp8w1CS4sm1gj9ktNRkmX7hYm+nVtwbSxLOffNhYwiEHGAv+jSegg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744165551; c=relaxed/simple;
-	bh=ikSFbdx1k6x9wOlRvuqes78WmgYkyOgciTGApzavE3Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CkClG5e7nFcXme1jl6uyVbHHWLViTGzia9jrCHQPdKcs1Tllvt2Rtg3AdoPPedjD5XlMdnCJF2rEVTNJ/MkIlIJxvbhKxhool6JyKfJnvcnholnlVblJFoc9K00OD5xwCcNJ/CDkVPEsEqxWlqo8KHlVcRwt9vxmXzkn7UkJPEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XedzIwDv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744165642; c=relaxed/simple;
+	bh=cOQKJJUN0ZUxztgM0eKlTKhYfUoWSTxU9xmqweYIUcI=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=HG+Q2dgetMSzvkFWMJE0R+icp6F2YXlOWOMSrbOVsY99PJY0RRmZfwDRR+CyW72hFPxK1FdMzFq4nU5O74RvTy8FcdMA8RvFOZxWUCgxHzzNfXCafP5NsjZAcwpiepp61QfbX3ZwVHq6w2xOyOU4oafRxkqOLyWwAEvzLm9vZOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JtWFgiU1; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XedzIwDv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E526DC4CEE5;
-	Wed,  9 Apr 2025 02:25:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744165551;
-	bh=ikSFbdx1k6x9wOlRvuqes78WmgYkyOgciTGApzavE3Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XedzIwDv4UzELyb5Fn3/pbZYtjAHKP7t2DuzgLCo6ng1NaktkMFdPNSbP7aT9mlAd
-	 x1YWcm1xAn0R9noKjMdM2gAIqXWwyvZjHcu7Gg7XGlXbCQjQ/R49lp7/XXQZ3dvjQp
-	 k5YgyddMkYXFu8LrC1AdueklQ74MIn2+Xdxvm+uGX6dlkydnaoGThypNikRrrOgJAA
-	 iREIpgzoi4NkU8k89GKl4WMGQk17eBvxDupD5+TZC8YdLF3j2PuAhG6uRnQBjqTxqJ
-	 B8/J/bWha4NBKvQwr2X3ISYH3Bj6TOR8gnMFlLLw9gBigAduttoX4p7SzUzeDg40Ad
-	 //pLgleiwESwQ==
-Date: Tue, 8 Apr 2025 19:25:50 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: John Garry <john.g.garry@oracle.com>
-Cc: brauner@kernel.org, hch@lst.de, viro@zeniv.linux.org.uk, jack@suse.cz,
-	cem@kernel.org, linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
-	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
-	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
-	linux-block@vger.kernel.org, catherine.hoang@oracle.com
-Subject: [PATCH v6.1 RFC 02.1/12] xfs: add helpers to compute transaction
- reservation for finishing intent items
-Message-ID: <20250409022550.GL6283@frogsfrogsfrogs>
-References: <20250408104209.1852036-1-john.g.garry@oracle.com>
- <20250408104209.1852036-3-john.g.garry@oracle.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JtWFgiU1"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 538JYwbf015755;
+	Wed, 9 Apr 2025 02:27:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=7V4DAPO81kQa2KrxRoWP3B
+	yu/nrWhYhVsqeLtvyh9SY=; b=JtWFgiU1yH1velhJQsOc2phK/hrMj2mWCopPMT
+	XtY5MXWJdO0QZ6NVyBAaWuHiPUcvQSs9DVqyvPXXZ9oTRSXQhj1XuKMRb7FEsIf9
+	kqe9F3vrxLOGyXJ+RVb5Sr9aOckYeksNoAETWOP+0u8/JBQhRVTd6O1U8Qw1vGIz
+	ELII7eYgKydCi6vZJJ2RR5stXLX4C9F/kfKcIvPK4Xt2tYLaPxWPhXEWz3IMbtrt
+	WUDHO/vJNkkbXLMncZnnGGXzDtT5eA5JdOWz3WRAh79wKspwed1ZLSlhdvqmdSFi
+	yefvwSsO5qWN7/0DYt7aAJoc2E16kqs8NZ2pDCadJ+twsKDw==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twd2ssma-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 09 Apr 2025 02:27:11 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5392RB8u000881
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 9 Apr 2025 02:27:11 GMT
+Received: from [127.0.1.1] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 8 Apr 2025
+ 19:27:08 -0700
+From: Baochen Qiang <quic_bqiang@quicinc.com>
+Subject: [PATCH ath-next v2 0/9] wifi: ath12k: support MLO for WCN7850
+Date: Wed, 9 Apr 2025 10:26:33 +0800
+Message-ID: <20250409-ath12k-wcn7850-mlo-support-v2-0-3801132ca2c3@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250408104209.1852036-3-john.g.garry@oracle.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANra9WcC/43NzWrDMBAE4FcJOnfLSrKzdk55j9KDfta1aCM5k
+ uOmBL97hS8hFEqOwzDf3EThHLiIw+4mMi+hhBRrUC874UYTPxiCr1koVC1qRWDmUapP+HaRuhb
+ h9JWgXKYp5RnswL7tlZe6t6ICU+YhXDf8TdQdRL7O4r02Yyhzyj/b60Jb/8zBQoCA+0GbHpnI2
+ +P5ElyI7tWl0wYv3fNYVzHTW91oYiv37V9M3rEG1b+YrJg1viE3IBI2j9i6rr+ObOTWagEAAA=
+ =
+X-Change-ID: 20250327-ath12k-wcn7850-mlo-support-bfed592d139b
+To: Johannes Berg <johannes@sipsolutions.net>,
+        Jeff Johnson
+	<jjohnson@kernel.org>
+CC: <linux-wireless@vger.kernel.org>, <ath12k@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Baochen Qiang <quic_bqiang@quicinc.com>
+X-Mailer: b4 0.14.2
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: XuOXCbZeLa9vstrAXzMSmcihv9AaQI4d
+X-Proofpoint-GUID: XuOXCbZeLa9vstrAXzMSmcihv9AaQI4d
+X-Authority-Analysis: v=2.4 cv=NaLm13D4 c=1 sm=1 tr=0 ts=67f5daff cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=S8qQzX23J8qjeTGorjwA:9
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-09_01,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
+ priorityscore=1501 adultscore=0 malwarescore=0 suspectscore=0
+ lowpriorityscore=0 bulkscore=0 mlxlogscore=891 clxscore=1015 phishscore=0
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504090002
 
-From: Darrick J. Wong <djwong@kernel.org>
+WCN7850 firmware uses API-1 so it can not advertise MLO support via
+firmware IE, but instead it uses single_chip_mlo_support flag in QMI
+message, the first three patches serve for this purpose.
 
-In the transaction reservation code, hoist the logic that computes the
-reservation needed to finish one log intent item into separate helper
-functions.  These will be used in subsequent patches to estimate the
-number of blocks that an online repair can commit to reaping in the same
-transaction as the change committing the new data structure.
+Currently ml_arg->assoc_link flag is not set in
+WMI_VDEV_START_REQUEST_CMDID, this result in WCN7850 firmware crash
+in MLO case, so patch [04/9] sets it for assoc link.
 
-Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
+Patch [05/9] makes sure we do assoc for assoc link before any other
+links, as requested by WCN7850 firmware.
+
+Patch [08/9] change to send REO queue configuration to firmware
+for all links including non-primary link. For that purpose, preparation
+is done in patch [06,07/9].
+
+The last patch increases number of different channels to 2 for single
+pdev device, to avoid failing in bringup the second link.
+
+Signed-off-by: Baochen Qiang <quic_bqiang@quicinc.com>
 ---
- fs/xfs/libxfs/xfs_trans_resv.h |   18 ++++
- fs/xfs/libxfs/xfs_trans_resv.c |  165 ++++++++++++++++++++++++++++++++--------
- 2 files changed, 152 insertions(+), 31 deletions(-)
+Changes in v2:
+- rebase on ToT
+- Link to v1: https://lore.kernel.org/r/20250402-ath12k-wcn7850-mlo-support-v1-0-bad47cf00704@quicinc.com
 
-diff --git a/fs/xfs/libxfs/xfs_trans_resv.h b/fs/xfs/libxfs/xfs_trans_resv.h
-index 0554b9d775d269..d9d0032cbbc5d4 100644
---- a/fs/xfs/libxfs/xfs_trans_resv.h
-+++ b/fs/xfs/libxfs/xfs_trans_resv.h
-@@ -98,6 +98,24 @@ struct xfs_trans_resv {
- void xfs_trans_resv_calc(struct xfs_mount *mp, struct xfs_trans_resv *resp);
- uint xfs_allocfree_block_count(struct xfs_mount *mp, uint num_ops);
- 
-+unsigned int xfs_calc_finish_bui_reservation(struct xfs_mount *mp,
-+		unsigned int nr_ops);
-+
-+unsigned int xfs_calc_finish_efi_reservation(struct xfs_mount *mp,
-+		unsigned int nr_ops);
-+unsigned int xfs_calc_finish_rt_efi_reservation(struct xfs_mount *mp,
-+		unsigned int nr_ops);
-+
-+unsigned int xfs_calc_finish_rui_reservation(struct xfs_mount *mp,
-+		unsigned int nr_ops);
-+unsigned int xfs_calc_finish_rt_rui_reservation(struct xfs_mount *mp,
-+		unsigned int nr_ops);
-+
-+unsigned int xfs_calc_finish_cui_reservation(struct xfs_mount *mp,
-+		unsigned int nr_ops);
-+unsigned int xfs_calc_finish_rt_cui_reservation(struct xfs_mount *mp,
-+		unsigned int nr_ops);
-+
- unsigned int xfs_calc_itruncate_reservation_minlogsize(struct xfs_mount *mp);
- unsigned int xfs_calc_write_reservation_minlogsize(struct xfs_mount *mp);
- unsigned int xfs_calc_qm_dqalloc_reservation_minlogsize(struct xfs_mount *mp);
-diff --git a/fs/xfs/libxfs/xfs_trans_resv.c b/fs/xfs/libxfs/xfs_trans_resv.c
-index 13d00c7166e178..580d00ae28573d 100644
---- a/fs/xfs/libxfs/xfs_trans_resv.c
-+++ b/fs/xfs/libxfs/xfs_trans_resv.c
-@@ -263,6 +263,42 @@ xfs_rtalloc_block_count(
-  * register overflow from temporaries in the calculations.
-  */
- 
-+/*
-+ * Finishing a data device refcount updates (t1):
-+ *    the agfs of the ags containing the blocks: nr_ops * sector size
-+ *    the refcount btrees: nr_ops * 1 trees * (2 * max depth - 1) * block size
-+ */
-+inline unsigned int
-+xfs_calc_finish_cui_reservation(
-+	struct xfs_mount	*mp,
-+	unsigned int		nr_ops)
-+{
-+	if (!xfs_has_reflink(mp))
-+		return 0;
-+
-+	return xfs_calc_buf_res(nr_ops, mp->m_sb.sb_sectsize) +
-+	       xfs_calc_buf_res(xfs_refcountbt_block_count(mp, nr_ops),
-+			       mp->m_sb.sb_blocksize);
-+}
-+
-+/*
-+ * Realtime refcount updates (t2);
-+ *    the rt refcount inode
-+ *    the rtrefcount btrees: nr_ops * 1 trees * (2 * max depth - 1) * block size
-+ */
-+inline unsigned int
-+xfs_calc_finish_rt_cui_reservation(
-+	struct xfs_mount	*mp,
-+	unsigned int		nr_ops)
-+{
-+	if (!xfs_has_rtreflink(mp))
-+		return 0;
-+
-+	return xfs_calc_inode_res(mp, 1) +
-+	       xfs_calc_buf_res(xfs_rtrefcountbt_block_count(mp, nr_ops),
-+				     mp->m_sb.sb_blocksize);
-+}
-+
- /*
-  * Compute the log reservation required to handle the refcount update
-  * transaction.  Refcount updates are always done via deferred log items.
-@@ -280,19 +316,10 @@ xfs_calc_refcountbt_reservation(
- 	struct xfs_mount	*mp,
- 	unsigned int		nr_ops)
- {
--	unsigned int		blksz = XFS_FSB_TO_B(mp, 1);
--	unsigned int		t1, t2 = 0;
-+	unsigned int		t1, t2;
- 
--	if (!xfs_has_reflink(mp))
--		return 0;
--
--	t1 = xfs_calc_buf_res(nr_ops, mp->m_sb.sb_sectsize) +
--	     xfs_calc_buf_res(xfs_refcountbt_block_count(mp, nr_ops), blksz);
--
--	if (xfs_has_realtime(mp))
--		t2 = xfs_calc_inode_res(mp, 1) +
--		     xfs_calc_buf_res(xfs_rtrefcountbt_block_count(mp, nr_ops),
--				     blksz);
-+	t1 = xfs_calc_finish_cui_reservation(mp, nr_ops);
-+	t2 = xfs_calc_finish_rt_cui_reservation(mp, nr_ops);
- 
- 	return max(t1, t2);
- }
-@@ -379,6 +406,96 @@ xfs_calc_write_reservation_minlogsize(
- 	return xfs_calc_write_reservation(mp, true);
- }
- 
-+/*
-+ * Finishing an EFI can free the blocks and bmap blocks (t2):
-+ *    the agf for each of the ags: nr * sector size
-+ *    the agfl for each of the ags: nr * sector size
-+ *    the super block to reflect the freed blocks: sector size
-+ *    worst case split in allocation btrees per extent assuming nr extents:
-+ *		nr exts * 2 trees * (2 * max depth - 1) * block size
-+ */
-+inline unsigned int
-+xfs_calc_finish_efi_reservation(
-+	struct xfs_mount	*mp,
-+	unsigned int		nr)
-+{
-+	return xfs_calc_buf_res((2 * nr) + 1, mp->m_sb.sb_sectsize) +
-+	       xfs_calc_buf_res(xfs_allocfree_block_count(mp, nr),
-+			       mp->m_sb.sb_blocksize);
-+}
-+
-+/*
-+ * Or, if it's a realtime file (t3):
-+ *    the agf for each of the ags: 2 * sector size
-+ *    the agfl for each of the ags: 2 * sector size
-+ *    the super block to reflect the freed blocks: sector size
-+ *    the realtime bitmap:
-+ *		2 exts * ((XFS_BMBT_MAX_EXTLEN / rtextsize) / NBBY) bytes
-+ *    the realtime summary: 2 exts * 1 block
-+ *    worst case split in allocation btrees per extent assuming 2 extents:
-+ *		2 exts * 2 trees * (2 * max depth - 1) * block size
-+ */
-+inline unsigned int
-+xfs_calc_finish_rt_efi_reservation(
-+	struct xfs_mount	*mp,
-+	unsigned int		nr)
-+{
-+	if (!xfs_has_realtime(mp))
-+		return 0;
-+
-+	return xfs_calc_buf_res((2 * nr) + 1, mp->m_sb.sb_sectsize) +
-+	       xfs_calc_buf_res(xfs_rtalloc_block_count(mp, nr),
-+			       mp->m_sb.sb_blocksize) +
-+	       xfs_calc_buf_res(xfs_allocfree_block_count(mp, nr),
-+			       mp->m_sb.sb_blocksize);
-+}
-+
-+/*
-+ * Finishing an RUI is the same as an EFI.  We can split the rmap btree twice
-+ * on each end of the record, and that can cause the AGFL to be refilled or
-+ * emptied out.
-+ */
-+inline unsigned int
-+xfs_calc_finish_rui_reservation(
-+	struct xfs_mount	*mp,
-+	unsigned int		nr)
-+{
-+	if (!xfs_has_rmapbt(mp))
-+		return 0;
-+	return xfs_calc_finish_efi_reservation(mp, nr);
-+}
-+
-+/*
-+ * Finishing an RUI is the same as an EFI.  We can split the rmap btree twice
-+ * on each end of the record, and that can cause the AGFL to be refilled or
-+ * emptied out.
-+ */
-+inline unsigned int
-+xfs_calc_finish_rt_rui_reservation(
-+	struct xfs_mount	*mp,
-+	unsigned int		nr)
-+{
-+	if (!xfs_has_rtrmapbt(mp))
-+		return 0;
-+	return xfs_calc_finish_rt_efi_reservation(mp, nr);
-+}
-+
-+/*
-+ * In finishing a BUI, we can modify:
-+ *    the inode being truncated: inode size
-+ *    dquots
-+ *    the inode's bmap btree: (max depth + 1) * block size
-+ */
-+inline unsigned int
-+xfs_calc_finish_bui_reservation(
-+	struct xfs_mount	*mp,
-+	unsigned int		nr)
-+{
-+	return xfs_calc_inode_res(mp, 1) + XFS_DQUOT_LOGRES +
-+	       xfs_calc_buf_res(XFS_BM_MAXLEVELS(mp, XFS_DATA_FORK) + 1,
-+			       mp->m_sb.sb_blocksize);
-+}
-+
- /*
-  * In truncating a file we free up to two extents at once.  We can modify (t1):
-  *    the inode being truncated: inode size
-@@ -411,16 +528,8 @@ xfs_calc_itruncate_reservation(
- 	t1 = xfs_calc_inode_res(mp, 1) +
- 	     xfs_calc_buf_res(XFS_BM_MAXLEVELS(mp, XFS_DATA_FORK) + 1, blksz);
- 
--	t2 = xfs_calc_buf_res(9, mp->m_sb.sb_sectsize) +
--	     xfs_calc_buf_res(xfs_allocfree_block_count(mp, 4), blksz);
--
--	if (xfs_has_realtime(mp)) {
--		t3 = xfs_calc_buf_res(5, mp->m_sb.sb_sectsize) +
--		     xfs_calc_buf_res(xfs_rtalloc_block_count(mp, 2), blksz) +
--		     xfs_calc_buf_res(xfs_allocfree_block_count(mp, 2), blksz);
--	} else {
--		t3 = 0;
--	}
-+	t2 = xfs_calc_finish_efi_reservation(mp, 4);
-+	t3 = xfs_calc_finish_rt_efi_reservation(mp, 2);
- 
- 	/*
- 	 * In the early days of reflink, we included enough reservation to log
-@@ -501,9 +610,7 @@ xfs_calc_rename_reservation(
- 	     xfs_calc_buf_res(2 * XFS_DIROP_LOG_COUNT(mp),
- 			XFS_FSB_TO_B(mp, 1));
- 
--	t2 = xfs_calc_buf_res(7, mp->m_sb.sb_sectsize) +
--	     xfs_calc_buf_res(xfs_allocfree_block_count(mp, 3),
--			XFS_FSB_TO_B(mp, 1));
-+	t2 = xfs_calc_finish_efi_reservation(mp, 3);
- 
- 	if (xfs_has_parent(mp)) {
- 		unsigned int	rename_overhead, exchange_overhead;
-@@ -611,9 +718,7 @@ xfs_calc_link_reservation(
- 	overhead += xfs_calc_iunlink_remove_reservation(mp);
- 	t1 = xfs_calc_inode_res(mp, 2) +
- 	     xfs_calc_buf_res(XFS_DIROP_LOG_COUNT(mp), XFS_FSB_TO_B(mp, 1));
--	t2 = xfs_calc_buf_res(3, mp->m_sb.sb_sectsize) +
--	     xfs_calc_buf_res(xfs_allocfree_block_count(mp, 1),
--			      XFS_FSB_TO_B(mp, 1));
-+	t2 = xfs_calc_finish_efi_reservation(mp, 1);
- 
- 	if (xfs_has_parent(mp)) {
- 		t3 = resp->tr_attrsetm.tr_logres;
-@@ -676,9 +781,7 @@ xfs_calc_remove_reservation(
- 
- 	t1 = xfs_calc_inode_res(mp, 2) +
- 	     xfs_calc_buf_res(XFS_DIROP_LOG_COUNT(mp), XFS_FSB_TO_B(mp, 1));
--	t2 = xfs_calc_buf_res(4, mp->m_sb.sb_sectsize) +
--	     xfs_calc_buf_res(xfs_allocfree_block_count(mp, 2),
--			      XFS_FSB_TO_B(mp, 1));
-+	t2 = xfs_calc_finish_efi_reservation(mp, 2);
- 
- 	if (xfs_has_parent(mp)) {
- 		t3 = resp->tr_attrrm.tr_logres;
+---
+Baochen Qiang (9):
+      wifi: ath12k: introduce ath12k_fw_feature_supported()
+      wifi: ath12k: use fw_features only when it is valid
+      wifi: ath12k: support MLO as well if single_chip_mlo_support flag is set
+      wifi: ath12k: identify assoc link vif in station mode
+      wifi: ath12k: make assoc link associate first
+      wifi: ath12k: group REO queue buffer parameters together
+      wifi: ath12k: alloc REO queue per station
+      wifi: ath12k: don't skip non-primary links for WCN7850
+      wifi: ath12k: support 2 channels for single pdev device
+
+ drivers/net/wireless/ath/ath12k/core.c  |  23 ++---
+ drivers/net/wireless/ath/ath12k/core.h  |  15 +++
+ drivers/net/wireless/ath/ath12k/dp_rx.c | 178 ++++++++++++++++++--------------
+ drivers/net/wireless/ath/ath12k/dp_rx.h |   4 +-
+ drivers/net/wireless/ath/ath12k/fw.c    |   9 +-
+ drivers/net/wireless/ath/ath12k/fw.h    |   3 +-
+ drivers/net/wireless/ath/ath12k/hw.c    |   8 ++
+ drivers/net/wireless/ath/ath12k/hw.h    |   3 +
+ drivers/net/wireless/ath/ath12k/mac.c   |  62 ++++++++++-
+ drivers/net/wireless/ath/ath12k/pci.c   |   4 +-
+ drivers/net/wireless/ath/ath12k/qmi.c   |   6 +-
+ 11 files changed, 213 insertions(+), 102 deletions(-)
+---
+base-commit: ac17b1211841c98a9b4c2900ba2a7f457c80cf90
+change-id: 20250327-ath12k-wcn7850-mlo-support-bfed592d139b
+
+Best regards,
+-- 
+Baochen Qiang <quic_bqiang@quicinc.com>
+
