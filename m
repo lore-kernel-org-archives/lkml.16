@@ -1,142 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C16482147E3
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 21:12:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F912147F7;
+	Wed,  9 Apr 2025 21:12:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744233127; cv=none; b=iGfaRYD59fXWcDr99C7rzeEnS6AG+AwLQTLjcRWD8M4ES2q4xyYEDK1knYH2EvgKepCT4WATOnSI/FTT7wJZz1GXrwx1nYnxaXe8Fo4zWyEQSdR/n+GIIlGOkslqxRYcWRtG/THJgwRsCLxq0vO3RqBXR2u4HQauaZBNSX0auSI=
+	t=1744233142; cv=none; b=PMlPBp5v4cEmpHHFbEFlEMhq4E2svv2i74mhQISYcBimbZeePG8HbwjeRJ870eg/+qLochY7gIYfNugAi9JdGPZ7QzIZA9xs69lCTfxy/trf7uzWvuWldoHb5ltDiPoaltG5VAoOSPrWcbNK02Iw9FCeOJolctQE/IXz5LohQhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744233127; c=relaxed/simple;
-	bh=KyxwRkCpc0W3aXEsLcSVXCo0y6WnzNVBnEHVFD/JCvA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Cbs6ArWHrjqrDU0WhxoUrvzE6UVnFVYH0VSizFZzjD+WmLOoFuYKCUV5dAY1bzvtnUNlmhg1PPFt/jT4/tWLn8TN52O9qU/OUQWD3WU3eUiZBt9vO9gymrqUc1+DKVISFZnsFYfHah0IFoXJ0exrk9/4tv/KEvgmIpm+bkQZEnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H1KD3/g0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744233142; c=relaxed/simple;
+	bh=CIcEj47j7D9sJ6Vfzua7+dlSs0YPaM4cccnDm1gu3xo=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=JJQuIr/fWhpiXpIyRf0lruwNGqyCqsAiH35I4j97bjCPApSjm1pvDc6SHpH1B/m/xJl+Ag6LRH9B+HDPkPDuvJ7cscD+RYZzSaeDrAgpECZ56nNHptT6l5n602IAqTx7q3oD+sgE4wcwWd5uC+PwbbmNk1iTOmcSugoAlNd+PRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OmtFaNPb; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Mj60UDye; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H1KD3/g0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84ED5C4CEE9;
-	Wed,  9 Apr 2025 21:12:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744233126;
-	bh=KyxwRkCpc0W3aXEsLcSVXCo0y6WnzNVBnEHVFD/JCvA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=H1KD3/g04K6xRjD6iZt64mse9KSCnND6c2vS995TLgo1wPT4YQxMxWnuFo1ig7NWn
-	 G+0MWIkgRiOdwjyDDUdxuvOAtSABF4fhmYwf+LT/z0JS/+AVfSB4kV/yO+ZvJex1AP
-	 g81CtR/JiP8c8cPQjrSMoKDwxkfk3Og2RMw3x+XBKsZz8wK1Vqw0V9Vdfq2ZXVi5Kb
-	 lUSLmf0ebmhOvCEVnlRGuUj83USJ9Kr5uZIvj6cvq+J3P1rMf0RswndCjssUD014t+
-	 CRiwHXcYHOoTp8ZgDczCVDvjiryvujJTC9evWnpj78bIQqdaLkoUXfGMMQhgYg17zY
-	 xwSY1GAgtKErg==
-From: Ingo Molnar <mingo@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Andy Lutomirski <luto@amacapital.net>,
-	Dave Hansen <dave@sr71.net>,
-	Brian Gerst <brgerst@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Borislav Petkov <bp@alien8.de>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Chang S . Bae" <chang.seok.bae@intel.com>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 8/8] x86/fpu: Use 'fpstate' variable names consistently
-Date: Wed,  9 Apr 2025 23:11:27 +0200
-Message-ID: <20250409211127.3544993-9-mingo@kernel.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250409211127.3544993-1-mingo@kernel.org>
-References: <20250409211127.3544993-1-mingo@kernel.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OmtFaNPb";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Mj60UDye"
+Date: Wed, 09 Apr 2025 21:12:11 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744233136;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mZcQYVb/1gtOZBb+Bo9eTmIOgqSQzQz4ZcTZVzAUOCQ=;
+	b=OmtFaNPbxklxga3hQ0t72WuCO8hBRRgI8La2oxqqVoPVWLkDHtkrOTdJA/Oda0hPq0QDhx
+	2nX9RJo1pc6uChtPjhCGQ5ybbdJzNZyxtR4FUQe+nFRH/C6LQVSL+VxZMZ1nlE+t9sWwA5
+	xyiDTN4aa2+jjwDlgQwKtiH1zD3fqVtks5fnHIYcNTw2a/tTKBXcGsVBQbOX/uIEFlaaEQ
+	DGBZskVE/wM3aZ2M6j15w6xnOB2nCFkdPHo8xd5oedCCbflXCtqkaEWrDl7VqWHsdstg2h
+	XqBisLBFyIYCfFgshE1YHe5JAUc2s8SvLL6/DwzqLsXXZrYcYaqeEIMh4LUtTg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744233136;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mZcQYVb/1gtOZBb+Bo9eTmIOgqSQzQz4ZcTZVzAUOCQ=;
+	b=Mj60UDyeD7qQCUkNFsoUsQpkDieLVQpdsrQloBVIASDr8MIYWagHusNHn0TjqJA+gORP5Z
+	6BizbF/gmDWngSCg==
+From: "tip-bot2 for Sebastian Andrzej Siewior" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: timers/urgent] timekeeping: Add a lockdep override in tick_freeze()
+Cc: Borislav Petkov <bp@alien8.de>,
+ Chris Bainbridge <chris.bainbridge@gmail.com>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250404133429.pnAzf-eF@linutronix.de>
+References: <20250404133429.pnAzf-eF@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <174423313221.31282.12756480935760918765.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-A few uses of 'fps' snuck in, which is rather confusing
-(to me) as it suggests frames-per-second. ;-)
+The following commit has been merged into the timers/urgent branch of tip:
 
-Rename them to the canonical 'fpstate' name.
+Commit-ID:     92e250c624ea37fde64bfd624fd2556f0d846f18
+Gitweb:        https://git.kernel.org/tip/92e250c624ea37fde64bfd624fd2556f0d846f18
+Author:        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+AuthorDate:    Fri, 04 Apr 2025 15:34:29 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Wed, 09 Apr 2025 22:30:39 +02:00
 
-No change in functionality.
+timekeeping: Add a lockdep override in tick_freeze()
 
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+tick_freeze() acquires a raw spinlock (tick_freeze_lock). Later in the
+callchain (timekeeping_suspend() -> mc146818_avoid_UIP()) the RTC driver
+acquires a spinlock which becomes a sleeping lock on PREEMPT_RT.  Lockdep
+complains about this lock nesting.
+
+Add a lockdep override for this special case and a comment explaining
+why it is okay.
+
+Reported-by: Borislav Petkov <bp@alien8.de>
+Reported-by: Chris Bainbridge <chris.bainbridge@gmail.com>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lore.kernel.org/all/20250404133429.pnAzf-eF@linutronix.de
+Closes: https://lore.kernel.org/all/20250330113202.GAZ-krsjAnurOlTcp-@fat_crate.local/
+Closes: https://lore.kernel.org/all/CAP-bSRZ0CWyZZsMtx046YV8L28LhY0fson2g4EqcwRAVN1Jk+Q@mail.gmail.com/
 ---
- arch/x86/include/asm/fpu/api.h |  2 +-
- arch/x86/kernel/fpu/core.c     | 14 +++++++-------
- arch/x86/kernel/fpu/xstate.c   |  4 ++--
- 3 files changed, 10 insertions(+), 10 deletions(-)
+ kernel/time/tick-common.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/arch/x86/include/asm/fpu/api.h b/arch/x86/include/asm/fpu/api.h
-index f42de5f05e7e..8e6848f55dcd 100644
---- a/arch/x86/include/asm/fpu/api.h
-+++ b/arch/x86/include/asm/fpu/api.h
-@@ -136,7 +136,7 @@ static inline void fpstate_free(struct fpu *fpu) { }
- #endif
+diff --git a/kernel/time/tick-common.c b/kernel/time/tick-common.c
+index a47bcf7..9a38594 100644
+--- a/kernel/time/tick-common.c
++++ b/kernel/time/tick-common.c
+@@ -509,6 +509,7 @@ void tick_resume(void)
  
- /* fpstate-related functions which are exported to KVM */
--extern void fpstate_clear_xstate_component(struct fpstate *fps, unsigned int xfeature);
-+extern void fpstate_clear_xstate_component(struct fpstate *fpstate, unsigned int xfeature);
+ #ifdef CONFIG_SUSPEND
+ static DEFINE_RAW_SPINLOCK(tick_freeze_lock);
++static DEFINE_WAIT_OVERRIDE_MAP(tick_freeze_map, LD_WAIT_SLEEP);
+ static unsigned int tick_freeze_depth;
  
- extern u64 xstate_get_guest_group_perm(void);
- 
-diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
-index 4d1a205b7ce2..d0a45f6492cb 100644
---- a/arch/x86/kernel/fpu/core.c
-+++ b/arch/x86/kernel/fpu/core.c
-@@ -273,16 +273,16 @@ EXPORT_SYMBOL_GPL(fpu_alloc_guest_fpstate);
- 
- void fpu_free_guest_fpstate(struct fpu_guest *gfpu)
- {
--	struct fpstate *fps = gfpu->fpstate;
-+	struct fpstate *fpstate = gfpu->fpstate;
- 
--	if (!fps)
-+	if (!fpstate)
- 		return;
- 
--	if (WARN_ON_ONCE(!fps->is_valloc || !fps->is_guest || fps->in_use))
-+	if (WARN_ON_ONCE(!fpstate->is_valloc || !fpstate->is_guest || fpstate->in_use))
- 		return;
- 
- 	gfpu->fpstate = NULL;
--	vfree(fps);
-+	vfree(fpstate);
- }
- EXPORT_SYMBOL_GPL(fpu_free_guest_fpstate);
- 
-@@ -333,12 +333,12 @@ EXPORT_SYMBOL_GPL(fpu_update_guest_xfd);
-  */
- void fpu_sync_guest_vmexit_xfd_state(void)
- {
--	struct fpstate *fps = x86_task_fpu(current)->fpstate;
-+	struct fpstate *fpstate = x86_task_fpu(current)->fpstate;
- 
- 	lockdep_assert_irqs_disabled();
- 	if (fpu_state_size_dynamic()) {
--		rdmsrl(MSR_IA32_XFD, fps->xfd);
--		__this_cpu_write(xfd_state, fps->xfd);
-+		rdmsrl(MSR_IA32_XFD, fpstate->xfd);
-+		__this_cpu_write(xfd_state, fpstate->xfd);
+ /**
+@@ -528,9 +529,22 @@ void tick_freeze(void)
+ 	if (tick_freeze_depth == num_online_cpus()) {
+ 		trace_suspend_resume(TPS("timekeeping_freeze"),
+ 				     smp_processor_id(), true);
++		/*
++		 * All other CPUs have their interrupts disabled and are
++		 * suspended to idle. Other tasks have been frozen so there
++		 * is no scheduling happening. This means that there is no
++		 * concurrency in the system at this point. Therefore it is
++		 * okay to acquire a sleeping lock on PREEMPT_RT, such as a
++		 * spinlock, because the lock cannot be held by other CPUs
++		 * or threads and acquiring it cannot block.
++		 *
++		 * Inform lockdep about the situation.
++		 */
++		lock_map_acquire_try(&tick_freeze_map);
+ 		system_state = SYSTEM_SUSPEND;
+ 		sched_clock_suspend();
+ 		timekeeping_suspend();
++		lock_map_release(&tick_freeze_map);
+ 	} else {
+ 		tick_suspend_local();
  	}
- }
- EXPORT_SYMBOL_GPL(fpu_sync_guest_vmexit_xfd_state);
-diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
-index 00e87afa876d..79ad768647f8 100644
---- a/arch/x86/kernel/fpu/xstate.c
-+++ b/arch/x86/kernel/fpu/xstate.c
-@@ -1395,9 +1395,9 @@ void xrstors(struct xregs_state *xstate, u64 mask)
- }
+@@ -552,8 +566,16 @@ void tick_unfreeze(void)
+ 	raw_spin_lock(&tick_freeze_lock);
  
- #if IS_ENABLED(CONFIG_KVM)
--void fpstate_clear_xstate_component(struct fpstate *fps, unsigned int xfeature)
-+void fpstate_clear_xstate_component(struct fpstate *fpstate, unsigned int xfeature)
- {
--	void *addr = get_xsave_addr(&fps->regs.xsave, xfeature);
-+	void *addr = get_xsave_addr(&fpstate->regs.xsave, xfeature);
- 
- 	if (addr)
- 		memset(addr, 0, xstate_sizes[xfeature]);
--- 
-2.45.2
-
+ 	if (tick_freeze_depth == num_online_cpus()) {
++		/*
++		 * Similar to tick_freeze(). On resumption the first CPU may
++		 * acquire uncontended sleeping locks while other CPUs block on
++		 * tick_freeze_lock.
++		 */
++		lock_map_acquire_try(&tick_freeze_map);
+ 		timekeeping_resume();
+ 		sched_clock_resume();
++		lock_map_release(&tick_freeze_map);
++
+ 		system_state = SYSTEM_RUNNING;
+ 		trace_suspend_resume(TPS("timekeeping_freeze"),
+ 				     smp_processor_id(), false);
