@@ -1,116 +1,100 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45CC329A2;
-	Wed,  9 Apr 2025 03:29:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA45A15ECD7
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 03:29:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744169356; cv=none; b=SL2PRWWIvwCuKatD6eYWJpDxYpVZ+khzf0n4XjEbs3E6gDYpsJ8pw/lshedMJ/7O4wkJNmYc3kXBzkaYIujTs/rE4fTovuGSQjzA14WQ2iAcDY0QgklYEHMWh8ke2ogHnzt75DVkn6Up6Da0xEM11ajm435kMA4voCqK2Gv9iZ4=
+	t=1744169368; cv=none; b=dNUD5lAGfIS42heFRanrA49612JL6rO9r4LQsxy+cbfltLE3blrMLiSNCzjLSRZhnUsZL31ncfKnXnQHrIO3t5oJ2SM/BHRjF2bO2pTWUModXkTh5TJyxanZ5QSXBQgQciaSymYQvyiTfi6vjDWI6dXjO1XEAVi+gix0ROqneLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744169356; c=relaxed/simple;
-	bh=4p/IbFEezQpWXPH8NofazJ6FUPVgXzJL0rqHzdQx3QQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IpyHj2UNG7NyAKV/+wFBExRfLCsaxk5xVwdzjuQimWx4W/sYVTtTZ7qrRjAc2E9L5XHrrwOVJXvFaOSLphKFk30euEXiA3m0JXQNCiYu7t2mr/Pr6pPBBp/AfXz+gQhla6xWt4rQoHfOotXeSC/FYtFAiRIZJ3eX1ugXuvSCDXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=D2D/ELRP; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1744169368; c=relaxed/simple;
+	bh=OaV2nZps2HP5eYw6vUrmrGpMskBsu5LdwZT5VfvVF9c=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=E+s5EoWjjoE0Mh8WwRcmCK7vcgBqVjUDKGc7+RKjM1SX/i+zWsb+EvaGdkcRuneYTN4mM3NOIGIMmueSgB0E7PP+C0k/Mu+u6wVruwJx04ax0wRwZFrEOq1/DNSaEBCb++ReRQqKbCjvT5CXy1aVkctMKa4RgceSex3ciJufyk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=J0/TFlWo; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="D2D/ELRP"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=BEXCXXMNkXzsQ7EhgQi62ODf9OaSN7AbBYwpyLCGWxA=; b=D2D/ELRPPBU6u3pEkRJ602uyPP
-	/hri3nu/1gCHhMSocAYMMSWKnjSDY8vrA5nKY9HpBXpqGcvbIzPkTg8ByzDcTGWmY81eiGN87Zup3
-	3aHiwJMw146hdpOkVI+7xlxW/iLfLOSp6ZrVWYTEEorFZxoY3xjYvLM5WyF3aXPC+uhFzolKuCz+i
-	kJjrUiqxSMY8pxVdDX9wO7puTZu1pYN8bq6uXHSMXzKihjUQfQL0Ehh6yTQdS8k7OVqtstdco+pbr
-	SmmV0V4RBLX+RsX5bjeP28JJeBaeBV7rv4Sbwz46vUDa0rPVMiMJoGSK9Xe5SppzSN1e+tGwb+iMA
-	I0/tqI3A==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1u2M7b-00E6NS-1f;
-	Wed, 09 Apr 2025 11:29:04 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 09 Apr 2025 11:29:03 +0800
-Date: Wed, 9 Apr 2025 11:29:03 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Sean Anderson <sean.anderson@linux.dev>
-Cc: Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>,
-	Pankaj Gupta <pankaj.gupta@nxp.com>,
-	Gaurav Jain <gaurav.jain@nxp.com>, linux-crypto@vger.kernel.org,
-	"David S. Miller" <davem@davemloft.net>,
-	linux-kernel@vger.kernel.org,
-	Valentin Ciocoi Radulescu <valentin.ciocoi@nxp.com>
-Subject: [PATCH] crypto: api - Allow delayed algorithm destruction
-Message-ID: <Z_XpfyPaoZ6Y8u6z@gondor.apana.org.au>
-References: <17f9af67-de10-4b96-99ef-3c5cd78124c0@linux.dev>
- <Z_SxYFdyBJTYe_7G@gondor.apana.org.au>
- <e3dd2f83-8451-47b0-a774-a697b861ceb3@linux.dev>
- <Z_XiPLmSVs8PGTZD@gondor.apana.org.au>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="J0/TFlWo"
+X-UUID: d37feb0414f211f08eb9c36241bbb6fb-20250409
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=/ldIfw+IopvBD+8WtZqHSYb8hrJIJMbhoye5hb+79cI=;
+	b=J0/TFlWoPiF7AcKLYkuJgpkA7U0DRzQd+w/yx3GdBK2A9QeeKJfz6ptT07OHix7+DwxatVwqvpmjlfHk8KkUClIIDsI+f7tUrj19eFVGjpWYI3ck/oIRWFt/2jnPBn4/WMin4U6BjboEe0hJ6TYNFupbSPicpDtk8Ma5aqOLj1U=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.1,REQID:9b6b14f8-8046-4540-af96-2bf1e52366c2,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:0ef645f,CLOUDID:fefcd9a5-c619-47e3-a41b-90eedbf5b947,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
+	l,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: d37feb0414f211f08eb9c36241bbb6fb-20250409
+Received: from mtkmbs10n1.mediatek.inc [(172.21.101.34)] by mailgw02.mediatek.com
+	(envelope-from <yiru.zhang@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1452954279; Wed, 09 Apr 2025 11:29:21 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Wed, 9 Apr 2025 11:29:19 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.39 via Frontend Transport; Wed, 9 Apr 2025 11:29:19 +0800
+From: yiru zhang <yiru.zhang@mediatek.com>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+	<mike.leach@linaro.org>, James Clark <james.clark@linaro.org>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Matthias Brugger
+	<matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>
+CC: <coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <linux-mediatek@lists.infradead.org>, yiru
+ zhang <yiru.zhang@mediatek.com>
+Subject: [PATCH] [Patch v2]Add ETE devarch condition in etm4_init_iomem_access
+Date: Wed, 9 Apr 2025 11:29:12 +0800
+Message-ID: <20250409032917.7580-1-yiru.zhang@mediatek.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_XiPLmSVs8PGTZD@gondor.apana.org.au>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Wed, Apr 09, 2025 at 10:58:04AM +0800, Herbert Xu wrote:
->
-> What I'll do is make the crypto_unregister call wait for the users
-> to go away.  That matches how the network device unregistration works
-> and hopefully should solve this problem.  But keep your eyes for
-> dead locks that used to plague netdev unregistration :)
+Due to ETE supported, so add ETE devarch condition in etm4_init_iomem_access.
+Signed-off-by: yiru zhang <yiru.zhang@mediatek.com>
 
-That was a dumb idea.  All it would do is make the shutdown hang.
-So here is a different tack.  Let the algorithms stick around,
-by allocating them dynamically instead.  Then we could simply
-kfree them when the user finally disappears (if ever).
+v1->v2: use switch case way
+---
+ drivers/hwtracing/coresight/coresight-etm4x-core.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-Note to make this work, caam needs to be modified to allocate the
-algorithms dynamically (kmemdup should work), and add a cra_destroy
-function to kfree the memory.
-
----8<---
-The current algorithm unregistration mechanism originated from
-software crypto.  The code relies on module reference counts to
-stop in-use algorithms from being unregistered.  Therefore if
-the unregistration function is reached, it is assumed that the
-module reference count has hit zero and thus the algorithm reference
-count should be exactly 1.
-
-This is completely broken for hardware devices, which can be
-unplugged at random.
-
-Fix this by allowing algorithms to be destroyed later if a destroy
-callback is provided.
-
-Reported-by: Sean Anderson <sean.anderson@linux.dev>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-
-diff --git a/crypto/algapi.c b/crypto/algapi.c
-index 5b8a4c787387..f368c0dc0d6d 100644
---- a/crypto/algapi.c
-+++ b/crypto/algapi.c
-@@ -481,10 +481,10 @@ void crypto_unregister_alg(struct crypto_alg *alg)
- 	if (WARN(ret, "Algorithm %s is not registered", alg->cra_driver_name))
- 		return;
- 
--	if (WARN_ON(refcount_read(&alg->cra_refcnt) != 1))
--		return;
+diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+index 2b8f10463840..366d11e038de 100644
+--- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
++++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+@@ -1135,11 +1135,15 @@ static bool etm4_init_iomem_access(struct etmv4_drvdata *drvdata,
+ 	 * with MMIO. But we cannot touch the OSLK until we are
+ 	 * sure this is an ETM. So rely only on the TRCDEVARCH.
+ 	 */
+-	if ((devarch & ETM_DEVARCH_ID_MASK) != ETM_DEVARCH_ETMv4x_ARCH) {
+-		pr_warn_once("TRCDEVARCH doesn't match ETMv4 architecture\n");
++	switch (devarch & ETM_DEVARCH_ID_MASK) {
++	case ETM_DEVARCH_ETMv4x_ARCH:
++	case ETM_DEVARCH_ETE_ARCH:
++		break;
++	default:
++		pr_warn_once("Unknown ETM architecture: %x\n",
++			     devarch & ETM_DEVARCH_ID_MASK);
+ 		return false;
+ 	}
 -
--	if (alg->cra_type && alg->cra_type->destroy)
-+	if (alg->cra_destroy)
-+		crypto_alg_put(alg);
-+	else if (!WARN_ON(refcount_read(&alg->cra_refcnt) != 1) &&
-+		 alg->cra_type && alg->cra_type->destroy)
- 		alg->cra_type->destroy(alg);
- 
- 	crypto_remove_final(&list);
+ 	drvdata->arch = etm_devarch_to_arch(devarch);
+ 	*csa = CSDEV_ACCESS_IOMEM(drvdata->base);
+ 	return true;
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.46.0
+
