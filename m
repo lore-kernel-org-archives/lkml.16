@@ -1,84 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB5717A319;
-	Wed,  9 Apr 2025 15:43:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C52817A319;
+	Wed,  9 Apr 2025 15:43:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744213400; cv=none; b=B4MnAjWC4botPH3ThPHF9PtLvTup1DTccwr4OpsPd2CmkCKpYUpLjjjAyoT7topZPdcJQXSgAci5i327QnF8p8q+WuXHBsAW38sBwjiJP2rBO1veDsbRq72uECd69iYX5eyltVYv40rsjuk9Xlp8qzAGs2WJv0MYN3p5lnZRmNw=
+	t=1744213406; cv=none; b=rxgMlwb3mpJUmn2rG9GEzwdtrRdk2fLnLAsoSaTKSfvCBMSG8jFRDTvZZeh+9LZaEhhIkFqSHo2nBB4DpWsdT79wZqv6+lVBVVthQY46m1I+b2XQQiT6O08WtjUq0xWBbetH3yJZrbt4o6KpNqfnj2BWwmbRZP8Pr8SI5O5CGL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744213400; c=relaxed/simple;
-	bh=k2miXl1ondWrQPYCbSibfKxqRNlBY3ts+SvGry/cRgk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ah/iVhnGGIzlh/NuqUYdDZoORyIwxCIu2jduF9BqE6/6nf9cC7uQ7vV8TXaDl58CwlajABSZ5c4B4UVR5m+fbWw/bqN9nEQkzRaaxVRxzNFlm3zTyV/85/gOxP6mcGBf2B0zOULVyvtA1jbAnPk+0iVzmNWW1bvbTS35bavKpbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EgKl4Y8u; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EgKl4Y8u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A787C4CEED;
-	Wed,  9 Apr 2025 15:43:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744213400;
-	bh=k2miXl1ondWrQPYCbSibfKxqRNlBY3ts+SvGry/cRgk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=EgKl4Y8uJ+s5Gz5sent1TRwKfM8y2q6rYNnkUISndsVOhcV5LpclHSAOkCTqvQE38
-	 bEdrWzlSUkQdYAWhZMRX4wGhQjtBToSEUuePU93eTJtlS40XgWyC85SO768NhPlaFr
-	 CFKFBzHlI+d0jtv9QX2Hu2/Lql3iyhn7H93xc0zGY+bhPVC1js3JkZQfOVLM7cSRkp
-	 jdsD8Lt4Sbc1iVHom025Jp91jw1191YzRdK7p1B7fHV9BoTAAX4UXnHm7FH2v3NV8n
-	 sQqzaetf34PQVDUxa9U0w1GkF/eRiXEtSX/xg9wScjXmaOmtmjobAQNEnmx8te7813
-	 OwQr6mEreRP2Q==
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-2c764f2c223so2306692fac.0;
-        Wed, 09 Apr 2025 08:43:20 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUyPA/jmyvXL7XRrAOXNVN2OPFEu8LHkZG8dZkFIfJjvbPveSfme0MlHJlthhCG4zvcByqJyCKxXxrb@vger.kernel.org, AJvYcCX5FtqQAKLHoq/5wbsp64rBfeYEVM992tsZmS+8q9H3i+fVjvz992VqNH7jViQBUl03NtHoc1rKdjWU+jmF@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5O3x+jtg4G/NTVgWx7NYZAzo2bDmB4svuTn0ZXmvyuuCk9CgR
-	BTpBns3g3Y3ZPx9SMs79g+N3obC/teirae4Eo34qQ1DA/mPuCp5li86ZYb639lzvf3rLU0DQ7gJ
-	2wD+0pp/PE6cdcWbZq2DBPWNv5Y4=
-X-Google-Smtp-Source: AGHT+IHPfE7dSRIjUYkW2+C2sa2qSFLVGvgXTJUA6F0Mi8pbopsKWhs/TqIWlOIiHcyTG8p1i7bwABRt1Z+JrILnmHE=
-X-Received: by 2002:a05:6870:2dc3:b0:29e:7a13:1341 with SMTP id
- 586e51a60fabf-2d0916bbd32mr1573160fac.8.1744213399488; Wed, 09 Apr 2025
- 08:43:19 -0700 (PDT)
+	s=arc-20240116; t=1744213406; c=relaxed/simple;
+	bh=y9uebcKW8YvKkKHt4Ltu6yUEyYoT0rCBCLeMKwit3eM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e1LHJc0mICJSmKfo4rRy03rLUeDkSCraxXHHSCDrZ293tWHedFgMcyStL98ZAr1XpVCSX/QPSt/Ov46Qt2PSBOkIQFS/nWoL68SCmfVPGRv7P+FPCEw+2AhhnO0kPr/EqQujgtrHIDDmspd6fKLzXf/VovaxXCGR21W46AqYoGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: z09WTXwoSD6gInyYwOsg3w==
+X-CSE-MsgGUID: qBZiBJvZShqOzDg+fyM8rg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="56330918"
+X-IronPort-AV: E=Sophos;i="6.15,200,1739865600"; 
+   d="scan'208";a="56330918"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 08:43:23 -0700
+X-CSE-ConnectionGUID: jBz6NS4OR62aMwAXaezCtA==
+X-CSE-MsgGUID: Ckj9YI5xSyu3GY5GKOussQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,200,1739865600"; 
+   d="scan'208";a="128540658"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 08:43:19 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1u2Xa8-0000000AmY0-3UpM;
+	Wed, 09 Apr 2025 18:43:16 +0300
+Date: Wed, 9 Apr 2025 18:43:16 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Ivan Vecera <ivecera@redhat.com>
+Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Prathosh Satish <Prathosh.Satish@microchip.com>,
+	Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 03/14] mfd: Add Microchip ZL3073x support
+Message-ID: <Z_aVlIiT07ZDE2Kf@smile.fi.intel.com>
+References: <20250409144250.206590-1-ivecera@redhat.com>
+ <20250409144250.206590-4-ivecera@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250331163227.280501-1-andriy.shevchenko@linux.intel.com>
- <CAJZ5v0ib46bqNkJ9em9GKbUhJpCOjDqgLOyDQmqO1n8LMWJpyQ@mail.gmail.com> <Z_aIUokzC0eD-Uw-@smile.fi.intel.com>
-In-Reply-To: <Z_aIUokzC0eD-Uw-@smile.fi.intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 9 Apr 2025 17:43:07 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0j3e0j=ZGxa3C5pWpL6-fOcFORGZKRG9jhmo4wCZpoD7Q@mail.gmail.com>
-X-Gm-Features: ATxdqUHtH2lSvDOr3ZxfU0yUHCQhcz0XkxwEBoMwEN8JjU_WlQo_X1RURciyf_M
-Message-ID: <CAJZ5v0j3e0j=ZGxa3C5pWpL6-fOcFORGZKRG9jhmo4wCZpoD7Q@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] device property: Add a note to the fwnode.h
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Zijun Hu <quic_zijuhu@quicinc.com>, 
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Len Brown <lenb@kernel.org>, Daniel Scally <djrscally@gmail.com>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409144250.206590-4-ivecera@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Apr 9, 2025 at 4:46=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Wed, Apr 09, 2025 at 04:19:03PM +0200, Rafael J. Wysocki wrote:
-> > On Mon, Mar 31, 2025 at 6:32=E2=80=AFPM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > >
-> > > Add a note to the fwnode.h that the header should not be used
-> > > directly in the leaf drivers, they all should use the higher
-> > > level APIs and the respective headers.
-> > >
-> > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> >
-> > Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->
-> Thank you, but you already commented on this and proposed the better word=
-ing
-> which is in v2. So, what should I do now?
+On Wed, Apr 09, 2025 at 04:42:39PM +0200, Ivan Vecera wrote:
+> Add base MFD driver for Microchip Azurite ZL3073x chip family.
+> These chips provide DPLL and PHC (PTP) functionality and they can
+> be connected over I2C or SPI bus.
+> 
+> The MFD driver provide basic communication and synchronization
+> over the bus and common functionality that are used by the DPLL
+> driver (later in this series) and by the PTP driver (will be
+> added later).
+> 
+> The chip family is characterized by following properties:
+> * 2 separate DPLL units (channels)
+> * 5 synthesizers
+> * 10 input pins (references)
+> * 10 outputs
+> * 20 output pins (output pin pair shares one output)
+> * Each reference and output can act in differential or single-ended
+>   mode (reference or output in differential mode consumes 2 pins)
+> * Each output is connected to one of the synthesizers
+> * Each synthesizer is driven by one of the DPLL unit
 
-The tag is for the v2, sorry.  Let me add it there.
+...
+
+> +/*
+> + * Regmap ranges
+> + */
+> +#define ZL3073x_PAGE_SIZE	128
+> +#define ZL3073x_NUM_PAGES	16
+> +#define ZL3073x_PAGE_SEL	0x7F
+> +
+> +/*
+> + * Regmap range configuration
+> + *
+> + * The device uses 7-bit addressing and has 16 register pages with
+> + * range 0x00-0x7f. The register 0x7f in each page acts as page
+> + * selector where bits 0-3 contains currently selected page.
+> + */
+> +static const struct regmap_range_cfg zl3073x_regmap_ranges[] = {
+> +	{
+> +		.range_min	= 0,
+
+This still has the same issue, you haven't given a chance to me to reply
+in v1 thread. I'm not going to review this as it's not settled down yet.
+Let's first discuss the questions you have in v1.
+
+> +		.range_max	= ZL3073x_NUM_PAGES * ZL3073x_PAGE_SIZE,
+> +		.selector_reg	= ZL3073x_PAGE_SEL,
+> +		.selector_mask	= GENMASK(3, 0),
+> +		.selector_shift	= 0,
+> +		.window_start	= 0,
+> +		.window_len	= ZL3073x_PAGE_SIZE,
+> +	},
+> +};
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
