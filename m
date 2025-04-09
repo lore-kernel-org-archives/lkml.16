@@ -1,82 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD938BEA;
-	Wed,  9 Apr 2025 20:09:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBAD4211261;
+	Wed,  9 Apr 2025 20:11:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744229356; cv=none; b=ajuHNqgvlD0QJDrhTtQA8hNAgwX+9hctYz9skokKW1E0O5OhSLk3487d7VIPUpzQl1V+UfmF5cBAqQjmMwnf7N49iE3A4dYKzhfD9APoGHI8MyawQsXay/buD4bq1iiMjPZFaeKEMnSOU/IOT0IQ4T4eycPJAlFW8Hp53BLvJ0w=
+	t=1744229467; cv=none; b=mSO9P++ELY8ardbvFJhkHO7uoCT6NZ2SlNOm2cvlqnI/TwozYUJKFfGh1UgE92XFgvyhLehVoF71KZHFc0/gTU4LUMKFZmNEUqeqfg4hKwpqzkrYUDKJoWxyJtPtn15sJa4KkmV3D9A7I5vCn7iG/7z3alkdrL1qrZFS/1+CJt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744229356; c=relaxed/simple;
-	bh=AL9UFcokgjfPELHcJzM5JZxaLe75v0m/iB0h3XQL16g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q3c49UA0Mldm/g6k/xw8wMpEY94ZEhb2iGTdr5XAvYmlNggXPQEEFiw8PlEDS9Nq/S0vqiqMYHgivP7LG6I+a12Hr4LWNIz2W4OoQZ2z+pwvVYrvID7+VRTFiidLE2BGsKjBbWfwusD4Fauu85wpRhLgFNl0d0ypRvopyGoin0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IGsM4yUB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744229467; c=relaxed/simple;
+	bh=0e4FkhqyEYt7yqEDX5mzHFyo+DedyZnaA98fEUnVjQI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=hwWi5LqmcRXg2I4KL41o/ClzB+uPLlcm77T1+C6W5lIDUIi2HS1vNZMSqJYu8URCjUZ/Er14XFWRoRxkHKXtt4OxBbaArXBjrlGh5+7tx6K6Hvgu3PCEnNjr69q/PREYbeKsnfcWEeuQR76xrrwO4sdNOOV37cDCtRYCpYNIbsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ra99G1Pf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IGsM4yUB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9404EC4CEE2;
-	Wed,  9 Apr 2025 20:09:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ra99G1Pf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 178BAC4CEE8;
+	Wed,  9 Apr 2025 20:11:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744229355;
-	bh=AL9UFcokgjfPELHcJzM5JZxaLe75v0m/iB0h3XQL16g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IGsM4yUB8Sw7wv0Wm0L2XLM/dOWadtw/1f7WTdD8dZTBmcB/n4A6A5uv7HBfKfD6O
-	 rgmwINSMBpQVfATKF76ZO6w0uJxvT9ySc8NlHiJT7gnVjlBMHRgZfmYiamC6VPFkTe
-	 SfAMwKj7EnjiXItM8IyMvLtf1s5Rf7ZCqsKpbe9coFNc0nDl5xhtEnYKGVJEXUz8OJ
-	 khHYzjj0Pl7IMUvPpY1f8oLngWbIJNPSHH+U7WLWT6d3FGwc1ly408a/bWPmsH1Fkr
-	 weuzqGHHJJt+BEOQT4w30zPw5X2C4fJyIsg6ywKtweBcG39IFds43h4WbHnP52OCHh
-	 tBn5cyp5wsVCA==
-Date: Wed, 9 Apr 2025 21:09:08 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com
-Subject: Re: [PATCH 6.14 000/726] 6.14.2-rc4 review
-Message-ID: <e7901b34-01af-4d44-b46a-6c667ac61e84@sirena.org.uk>
-References: <20250409115934.968141886@linuxfoundation.org>
+	s=k20201202; t=1744229466;
+	bh=0e4FkhqyEYt7yqEDX5mzHFyo+DedyZnaA98fEUnVjQI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=Ra99G1PfH0mlQl/VvEl7lYnGVufgYLzq9Zt9O6BLMeY1V4NySIUGR6y/NiQr8ZLYW
+	 N69ZO91wXYEbLNtWPY8wxT7AuXEAzO78u9G+0psZ1kMSKYKKxcaMXJfnEwelHhlH9m
+	 dRh8uznYDtXA6yGSe2/veKd6CDf9UzAOieEYzwbgVmcAsLEaJvfRnP7ZzN6A6UyQmI
+	 mMZlDun1fLrYbU/Q14hat91MBSASXC7An31Bo8dNANFOhT16ssBDj5pgYsdom7rygK
+	 7W5qS0Ncj+/pgKC2pc8axYwJKdkQxO+gZ1qfdS4l4KYCnQADF1P1jftCxmNmNPpRD3
+	 9laeGltrrdgog==
+Date: Wed, 9 Apr 2025 15:11:04 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Manikandan Karunakaran Pillai <mpillai@cadence.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kw@linux.com" <kw@linux.com>,
+	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+	"robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	Milind Parab <mparab@cadence.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/7] Enhance the PCIe controller driver
+Message-ID: <20250409201104.GA295084@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="0x4lunevLq9vpRKD"
-Content-Disposition: inline
-In-Reply-To: <20250409115934.968141886@linuxfoundation.org>
-X-Cookie: Words must be weighed, not counted.
-
-
---0x4lunevLq9vpRKD
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <CH2PPF4D26F8E1CA951AF03C17D11C7BEB3A2A12@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
 
-On Wed, Apr 09, 2025 at 02:03:36PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.14.2 release.
-> There are 726 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Thu, Mar 27, 2025 at 10:59:08AM +0000, Manikandan Karunakaran Pillai wrote:
+> Enhances the exiting Cadence PCIe controller drivers to support second
+> generation PCIe controller also referred as HPA(High Performance
+> Architecture) controllers.
 
-Tested-by: Mark Brown <broonie@kernel.org>
+Usual convention is to include a space before "(" in English text.
+Apply throughout this series in commit logs and comments.
 
---0x4lunevLq9vpRKD
-Content-Type: application/pgp-signature; name="signature.asc"
+Others have mentioned the fact that we can't easily extract the
+patches from this posting because of the Outlook series.  That also
+makes it harder to review because we can't apply the series and see
+the changes in context.
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmf20+MACgkQJNaLcl1U
-h9ChEAf/R3PWm7LCy8kvqSTjTcGkE8hJ/QmsxtMItruK9s4hRPif4oI2JTPj7nF/
-z+IfTioX/7I/sXcUEPq1In1qR1oMtPKHvU74dZwCKiB2XlxXlNU6LmRCs3gG4lOA
-rOrCoTqcEj3TVrRM9fFQ4fhP51psUUMYixAOmfycDrlp2seKXwmVdzJhTLMn1onn
-DyjeiZ+FbJci3DkUV7faZKzPG/TFiUbNkUK57sLsD/xel7xUJcSoT1dsNQ6JmPfR
-qNOfnYqBZP0zX/I6ln7FuqRBBcSPCiBF1ETGX7D6mcG8Zxh+67ndZ/A5GNokJ+Tf
-pU7J5vtli7GtJVdwKMBkSdgxUZzOGQ==
-=oqop
------END PGP SIGNATURE-----
-
---0x4lunevLq9vpRKD--
+Bjorn
