@@ -1,67 +1,69 @@
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC8691E3DFC
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 19:22:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64DF01E51F2
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 19:22:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744226541; cv=none; b=kCAuxjw25rxpgi5Z2JHl7xqcX9KuwQOJ0wKL66hwN0z4DvH4GsWIVV1RkWXAt5TgG27/ABlM+cLok3pXuRqBxKVBPSTPevtuAnIX2otLF0ZegzEWkM0f1CwXgRS30EoqD55eTacQUtUiOHOfOdF/qwFXyIFznJKdIeO9ZMAJcw8=
+	t=1744226542; cv=none; b=S/I387jPn2anSeDzJHu/2os3pzujJNTQWIGF1oLkf3cpRkPEmgIUopgDYbojT457v+DvML1iuWaVnlUtbfoww403jphcTfl3Aimo1NYsbQHTt8GlZ2oCq+BtQ5D5z0NRCefQZLYu18Y51H6jgk/vAyRXCg2/UVQ2FQ8xoKnmbTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744226541; c=relaxed/simple;
-	bh=cmNctPgE5CTHw/tO9Zr51B/dhnA9zRrqJS02ywdELvc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rgsycPM64DCXamSqmXGmvMtPvkEnm4N+g3O/YN6j7uLTXZYmysCqxNa2NncURrnv0UPu1Kz9LPOUYnB94XfZ5MZYpgJuRYgZMOMQR7weHjkaRXKJiwVTaL52YFJV6ILM0LnKu4y5N0xg8ykLAg6FPLD1Nk5vyVIcGgyZYCwfTdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=TwCQYgO4; arc=none smtp.client-ip=209.85.166.46
+	s=arc-20240116; t=1744226542; c=relaxed/simple;
+	bh=he9IA1+sEmtGpV+RfD/yvwaHIPJw7FZcA+CsPKHLNsY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=mbdB5dRPf0enbUU66vKbKU4MwDKpkNMF3t9zFT22ijah+IJOgOrPxz/dtyFpx8CCdTy8ZP4f3JIRHQijeXNVLWEVxTZSm98bcqE9j8NiWBiSBG/brysOUwrCHpPKsgNaTbwNGN3s3y+qpPZgkDZLWM+ZR9usOW7h1c9rUjYPUpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=lut8q8Ni; arc=none smtp.client-ip=209.85.166.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="TwCQYgO4"
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-85b40a5120eso3033539f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 12:22:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="lut8q8Ni"
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3d5e43e4725so319605ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 12:22:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1744226538; x=1744831338; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RpmhxAFcMMXA3ewYDfoakLRc7cttBGIU/Z/F5aA9aBU=;
-        b=TwCQYgO4jiAJYKPKOYVkWwyHzgY07PbApO/vuPDHe67VdgC+gjstcmXmm7bV1ByEo4
-         7koxdgONZlbBiDVdP6amSXsR+tqG/T3SC5bRvDQTT4UrTgamSMEXnk/SrJopJx1sWYx7
-         QndNfvqPUwWx2aMrcCMEv6wDoBzqK916sapi7JEqFrpk+GG7eIUOVHxlNdSDwH1pv4+t
-         nEjick0WVMilIlUkuQWuM+zPVTqeOMMN/59/xEgJ6QcrlWgBHKKDGklOQSgYbg2Hhzdx
-         wxrhIugZPrea6Bo753xVbXPWe7r0cR4O7casjRRa7KgRjK9pSNnCUmrPfM24VvwFcqXN
-         D/CA==
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1744226539; x=1744831339; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bAZLFz1IGr5iGWJpnMiF/uKgFNwzC6PY6kuRk72SglQ=;
+        b=lut8q8Ni1hbyZx9cevMEU3YqMOUhsQhPKqmJAgDc6cYYex6kdQ/QLfIU60sQNgD7g8
+         JimgNl640PCTK+FpDRplBPvlvuKDdRe6DUfPxjQSM+hsymxq8POEfX7A2Jf0n5YkrxKn
+         f2ybj/ajrmfvuGMqT49IAmXdrgFnKaf59WioJQUSS8Ps2mHdslboQOxOGOsLfx2ib2G4
+         GVt2GgaIfyRLLfRPSkfyytr0BVe2WYI104UkkYW8TaVcTvJ2koBiG1++5uepyrKQeNvB
+         7o9kqfqEWR5pfcB7Qu+7/dlXSkLuGLwauXtrcZ6AVTn3XRwcK6hI3E7fnIAQSLvRMEWC
+         pKFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744226538; x=1744831338;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RpmhxAFcMMXA3ewYDfoakLRc7cttBGIU/Z/F5aA9aBU=;
-        b=fsvfUP8uiwwMfbB8MBWILWUvh24E6m4wmHFI2zY3bWUtEZkaTxHmngar27rZ6uBken
-         aPb4wCnWG9nwVu4F2KJWRDFEtjeox9vgk4tkFuua4W2mxR7bZAIDcAfcnG32V/uRwbvv
-         prmLHa1yDxECCudMLzqtMFbRzVavwStFsd5PNSOTKgyyKAngp5xJ9BKNReYeJLoZYmJ/
-         FNnqe0MkJW5+yQ4S1LF3jXb/lvt4dSD5XqVrEH4nGfRNte3ZDG8wOCMoQlQxMkVgjrra
-         g3ONufDEBvR2XOMyE0cR2jKQiteC9T4hHb/JMfVDBEMUNDVhNV9b8YmjEhnH5olOw/RM
-         ejTw==
-X-Forwarded-Encrypted: i=1; AJvYcCVmiz8O6Xcur83fmWfk89XSJ4gcybAIRru4ChmYBQYc8/sVfNQWaCGdVTdEhLlULfjsOggK6umZXiuIlko=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfSaKTXr23JTqGZglfF1QlPtVK1eeW3LdrDU50VTw1uIMjaPR7
-	0R2TjfrQhpGvtiJNmRljHwQzHf5lEfXPt0rQJf2FiV0MxeuE1aH7LTRTT+zsbA8=
-X-Gm-Gg: ASbGncv6vMG5PXRbE3DcU/PqZG8sqbNW863QEDPGovKO0DiMBLBbxzxwFl8x/738djc
-	7/x8TiFVB7y2xLIowTsjVGmCmXC3OuK1BKFGwrBeEMxQ42KX+SC1GT6hfct6H5pwmk8Klrufpp3
-	jfAaVu3wraDIJ8GKKvkodHLYnn0NqxwvvB6ccs9csxR2xiIaccNHSyw5+DYXxAN3cwO0gy8RsC/
-	dNPykWo3Ppp3z9zsDS5g/PxW9oU1sAtkDYQjH34wfxX+nbOiS/7mELgdmp7CIf+t26czC3Chr78
-	GvKE/iE8oT+0FlovbATGemy0/Vmkoed80JRv4ArygNYq5aVXVhUJUpP+WqMRbUmyonEKhCMYc/o
-	otVEwbkfXnVCzWQ==
-X-Google-Smtp-Source: AGHT+IHBIdM0sFVSXLsUHTwEjKCRbcHIGbDh+GVFxWpuuQ8TjUX92cXZCZ725TWzNK6m0iuJUoVS1w==
-X-Received: by 2002:a05:6602:481a:b0:85b:45c4:571e with SMTP id ca18e2360f4ac-8616edbb21cmr9242139f.9.1744226538068;
-        Wed, 09 Apr 2025 12:22:18 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744226539; x=1744831339;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bAZLFz1IGr5iGWJpnMiF/uKgFNwzC6PY6kuRk72SglQ=;
+        b=LaGa7QfxNAgBPTHMMXsGe7R9rn1Yr2J1kI4tYQYGkgQX0PywU6s6QAaq2WIU1BPHFV
+         xoqTcHDemM5MdaCBoB17dWLv/teytRrqCy3tPXc0yksfL9e0kkGEhsEfOb7NqEvrVWdg
+         HX7JjIHt70KVRmhQCSEYu7zDjY5OyzlmE4mF0k7k6fjTxSZpBr9ECmtsJPuiYwJLHK9e
+         Omq1BgmpMgZSywwvdv8gEy1pQVLgagTRbawR9AdXvwehxcUpv+COnq1X1NPzNVHwsATc
+         3CT1i6YhDaG+J4mLmn3IflzwbUNB2f1qDuAnbHQU+1wjBA9XO6pPi8VvAvFOBAwIxmRs
+         lvLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXxEBBwTe5hpuIfKKaPJvwXGiQIA4rDb4FiyKmz5rv1iP4DNzY+0mtaXjgdEIDIHIe0Cn9HuM1tgg1z/DA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEaSobNmbUsIYiIds9d5P8A2hT6m8cBKtKqh0fOeOrt01k/U54
+	FzUO04uMfsu+8/oCgc4B5SapQtfWudfy8plFBPyWdPTey6sGU1vJ7LjjpetdXxg=
+X-Gm-Gg: ASbGncvq8uyVRRVzOvFwQh/EhFHSmC240sKeBVmzmpmoU22Jijj2KOvFMGIT58YzmzH
+	QgWfHbAVVXCc3Q9DVHdTLNDKJzUL78JWuUHjpwqgl6+1A3BMiZJDNkil03GvDr6gq7zojJiVG+N
+	1fU2lmLEgyOfr1B+009JFEQUYLfsSJC2yLFImUjqvM0/szjURpGF7LoDD5oCWMSuyGrsmNidxRL
+	qZIImQQH9jP7icSf5KAFkjI0lvQ9uMZN7K5bEJYHdOupEpc26m0iD90niMuYxS3vP4HTW/KTDKJ
+	IlTrLamXv7MXTSu1JFD1FWJRRC0dShp9K+gC1OWpPb9Ml+6J9BoIBIh0C28MMGRknkqYINH7aFs
+	gS0UyP8iGwL6ApQ==
+X-Google-Smtp-Source: AGHT+IEGuxmewmQbb75m5X7vBqHuIXERuCuTlAE6AMgAdiu3tfh0rm83MqrIv2yAApon5oQTbElRjA==
+X-Received: by 2002:a05:6e02:1446:b0:3d0:4b3d:75ba with SMTP id e9e14a558f8ab-3d7e46e082cmr3195055ab.4.1744226539359;
+        Wed, 09 Apr 2025 12:22:19 -0700 (PDT)
 Received: from localhost.localdomain (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f505cf81bcsm373459173.10.2025.04.09.12.22.16
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f505cf81bcsm373459173.10.2025.04.09.12.22.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 12:22:17 -0700 (PDT)
+        Wed, 09 Apr 2025 12:22:19 -0700 (PDT)
 From: Alex Elder <elder@riscstar.com>
-To: gregkh@linuxfoundation.org,
-	jirislaby@kernel.org,
-	robh@kernel.org,
+To: robh@kernel.org,
 	krzk+dt@kernel.org,
-	conor+dt@kernel.org
+	conor+dt@kernel.org,
+	gregkh@linuxfoundation.org,
+	jirislaby@kernel.org
 Cc: dlan@gentoo.org,
 	benjamin.larsson@genexis.eu,
 	bastien.curutchet@bootlin.com,
@@ -72,10 +74,12 @@ Cc: dlan@gentoo.org,
 	linux-serial@vger.kernel.org,
 	spacemit@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/2] serial: 8250_of: support an optional bus clock
-Date: Wed,  9 Apr 2025 14:22:10 -0500
-Message-ID: <20250409192213.1130181-1-elder@riscstar.com>
+Subject: [PATCH v2 1/2] dt-bindings: serial: 8250: support an optional second clock
+Date: Wed,  9 Apr 2025 14:22:11 -0500
+Message-ID: <20250409192213.1130181-2-elder@riscstar.com>
 X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250409192213.1130181-1-elder@riscstar.com>
+References: <20250409192213.1130181-1-elder@riscstar.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,34 +88,66 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The SpacemiT UART hardware requires a bus clock to be enabled in addition
-to the primary function clock.
+The SpacemiT UART driver requires a bus clock to be enabled in addition
+to the primary function clock.  Add the option to specify two clocks
+for an 8250-compatible UART, named "core" and "bus".  If both are needed,
+require them to be named.
 
-This series makes it possible to specify both clocks via DTS.  If a
-bus clock is required, it and the primary clock are fetched by name.
-
-Since the first version, the DT binding (which had errors) was updated
-to properly define the number of clocks and clock names, dependent on
-the compatible string as suggested by Rob Herring.
-
-The logic that looks up the optional bus clock has also been changed, as
-requested by Andy Shevchenko.  In addition, the bus clock pointer (which
-was never used after it was enabled) is no longer stored in the
-of_serial_info structure.
-
-Here is the first version of this series:
-  https://lore.kernel.org/lkml/20250408175146.979557-1-elder@riscstar.com/
-
-					-Alex
-
-Alex Elder (2):
-  dt-bindings: serial: 8250: support an optional second clock
-  serial: 8250_of: add support for an optional bus clock
+Signed-off-by: Alex Elder <elder@riscstar.com>
+---
+v2: Require both clocks to be specified with names for SpacemiT
 
  .../devicetree/bindings/serial/8250.yaml      | 30 ++++++++++++++++++-
- drivers/tty/serial/8250/8250_of.c             | 11 ++++++-
- 2 files changed, 39 insertions(+), 2 deletions(-)
+ 1 file changed, 29 insertions(+), 1 deletion(-)
 
+diff --git a/Documentation/devicetree/bindings/serial/8250.yaml b/Documentation/devicetree/bindings/serial/8250.yaml
+index dc0d52920575f..33d2016b65090 100644
+--- a/Documentation/devicetree/bindings/serial/8250.yaml
++++ b/Documentation/devicetree/bindings/serial/8250.yaml
+@@ -135,7 +135,16 @@ properties:
+   clock-frequency: true
+ 
+   clocks:
+-    maxItems: 1
++    minItems: 1
++    items:
++      - description: The core function clock
++      - description: An optional bus clock
++
++  clock-names:
++    minItems: 1
++    items:
++      - const: core
++      - const: bus
+ 
+   resets:
+     maxItems: 1
+@@ -224,6 +233,25 @@ required:
+   - reg
+   - interrupts
+ 
++if:
++  properties:
++    compatible:
++      contains:
++        const: spacemit,k1-uart
++then:
++  required: [clock-names]
++  properties:
++    clocks:
++      minItems: 2
++    clock-names:
++      minItems: 2
++else:
++  properties:
++    clocks:
++      maxItems: 1
++    clock-names:
++      maxItems: 1
++
+ unevaluatedProperties: false
+ 
+ examples:
 -- 
 2.45.2
 
