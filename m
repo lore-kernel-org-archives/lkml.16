@@ -1,104 +1,115 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9F3225E80F;
-	Wed,  9 Apr 2025 12:46:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D4E725D918;
+	Wed,  9 Apr 2025 12:46:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744202807; cv=none; b=sCQa9OfTF4IXhegZI4N16xSE+1cdF+ZlM6H91ypT5VOmiMeKP5LXJDsjWRaDTTFLZ7XT7eOrJMplEeSpTruWBKEv0KyrVNSCvqxvbnOQoGHHtkze93hcA9xaj/KhAfdqLu8/JQUi7h9k2KMFx7lEW7cWlJcRX7dVOvBUfjFQiEQ=
+	t=1744202820; cv=none; b=cJMswp86pAPEE7FrQnBtU1C6kPgKcsvrRiL6rsyoUWKNjlfFt/fdzm2cxaChqz8jAYfKGBZR6VDubiR6iBGDcsADz4GEz3zBrMMXzkk+CvDvk3TlzGZnb+mXqotrxRurBaK+SIMs1Vln5jbR3vRFWBY5M/upESwvDhclKQD7PqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744202807; c=relaxed/simple;
-	bh=MeWWBGTjlUvvFQ2dwgcDW5DN0xlT820wyIW0MjZrGlE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TR0r1ovHqKLXh1wbpVzUK4I91VEQNx23Inl0dxD+FE575We8IZGS3zW2lJayrY8VMt0yPaFRMNC+V7hbSfFOP84czMxo/Y51+4vEfMdm7TSHmlRBOnICweZM6o6kX2sfpq+evwQRvuNpKxoeDLAj62KwiiIlDC/CbakzC+ehemg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=KOC8Czrk; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1744202820; c=relaxed/simple;
+	bh=rIgXyEvLCLwUur3A9mieiCA636AMIEFJdwhc2bTEPXw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bcdtqaRS6CAJklS40l9ooTIZBHj8IWI/rDI4jCkwJYFAlLBHrMdVC20PIufvoWhbuZDYQgyf1YpG3EFuvgindOGenpWvxbG+PEIsb4yPk8RcM34Vg+/DgmpTz+8MDZPX8F0yemH65/jt74QUG2sZI3wixNgoHLwVi5flM1qTfE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CiCTfqev; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="KOC8Czrk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1744202790; x=1744807590; i=markus.elfring@web.de;
-	bh=MeWWBGTjlUvvFQ2dwgcDW5DN0xlT820wyIW0MjZrGlE=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=KOC8Czrkj4FVNXeoWnAAhjtN367USJpwt1kZYmG/65l3/Ew+NnabXSYJLN36/ZJB
-	 SZafwzsNrP02DPMfY23b5IZ5Y3XkwESHF3ONKvGvQzC23Z/zoQfBvldxf7NaeTNXJ
-	 UKgUwpcaen4U/liTzUZAi8lJP8/f5f+fPx4771cbdhF0F8UGxgnIhNVD2ikymPiVC
-	 bIHL58LaMAFAQUGArD9Plkygfa2JHjkh7ohjgjhxoKiASOMBZ2goAgFa3F4FnamFl
-	 U2/ymC8IQbGSb9cWRlIkLZIzm2hWqVJbm0wASgaxusPLZJ0GUYc1T6RVhT1eiov53
-	 B4dXTWCNSP35fhAS4w==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.27]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MW9ra-1tZFvQ36Mc-00Lc4g; Wed, 09
- Apr 2025 14:46:30 +0200
-Message-ID: <e10ecbe1-d8c3-444d-92cb-647a1c54675f@web.de>
-Date: Wed, 9 Apr 2025 14:46:28 +0200
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CiCTfqev"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 5C2BB44154;
+	Wed,  9 Apr 2025 12:46:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744202816;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FF4tLOudDlWUyIhsXqvwgxpBbK+Z9OKBA6LBsPGjCio=;
+	b=CiCTfqevfqWVKVVsNSc630QYRe0CXD+59RQore3LY3/DmxCWQhp0dmoGYdQACE1ijRNVMy
+	lD7agIJCvsLuMH7/i/oAs9yERneJJZQs0CH8jmuQayQsCQvFCIt/sC5ZRglnQZVoNBcIcw
+	V5lioze/0CccaS38sn6JxRpnhFgSsh/wQjx++8Wtii4hXRxV1tN8pFHLGYrAE9zdFuvQp+
+	Cqjeqpsi9bmu3O+8HmCWzIjUeXRk65yrGO1klr314kDTV/25HGNXcb5hY4f1fFbYvhGwRr
+	FYwIoZ5XWdkfxVJto/50d5ASlX2S7GrYb8pQv7lAC6lMrKGPShcrHPIf/nkIiA==
+Date: Wed, 9 Apr 2025 14:46:54 +0200
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>, Andrew Lunn
+ <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Marek =?UTF-8?B?QmVo?=
+ =?UTF-8?B?w7pu?= <kabel@kernel.org>, Richard Cochran
+ <richardcochran@gmail.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, Vladimir Oltean <vladimir.oltean@nxp.com>
+Subject: Re: [PATCH net-next v2 0/2] Add Marvell PHY PTP support
+Message-ID: <20250409144654.67fae016@fedora.home>
+In-Reply-To: <20250409142309.45cdd62f@kmaincent-XPS-13-7390>
+References: <20250407-feature_marvell_ptp-v2-0-a297d3214846@bootlin.com>
+	<Z_P3FKEhv1s0y4d7@shell.armlinux.org.uk>
+	<20250407182028.75531758@kmaincent-XPS-13-7390>
+	<Z_P-K7mEEH6ProlC@shell.armlinux.org.uk>
+	<20250407183914.4ec135c8@kmaincent-XPS-13-7390>
+	<Z_WJO9g5Al1Yr_LX@shell.armlinux.org.uk>
+	<20250409103130.43ab4179@kmaincent-XPS-13-7390>
+	<Z_Yxb6-qclDSWk01@shell.armlinux.org.uk>
+	<20250409104637.37301e01@kmaincent-XPS-13-7390>
+	<Z_Y-ENUiX_nrR7VY@shell.armlinux.org.uk>
+	<20250409142309.45cdd62f@kmaincent-XPS-13-7390>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: crypto: sun8i-ce-hash - Refine exception handling in
- sun8i_ce_hash_run()
-To: Andre Przywara <andre.przywara@arm.com>,
- Ovidiu Panait <ovidiu.panait.oss@gmail.com>, linux-sunxi@lists.linux.dev,
- linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Chen-Yu Tsai <wens@csie.org>, Corentin Labbe <clabbe.montjoie@gmail.com>,
- "David S. Miller" <davem@davemloft.net>,
- Herbert Xu <herbert@gondor.apana.org.au>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>, LKML <linux-kernel@vger.kernel.org>,
- Julia Lawall <julia.lawall@inria.fr>
-References: <3727de04-7993-4b81-80c0-adb40b847307@web.de>
- <20250409133610.59d42bec@donnerap.manchester.arm.com>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250409133610.59d42bec@donnerap.manchester.arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:fGRJhLFb/+v0O2mafP9QCc0EviHzvpX5ikoqmmYcIiWSJhKDnDY
- fjojfNZCKBcliE5Cmge9pM4cqDNVFNDHzBofT//KsNmyshdeZPDLItuLsHCvUVWc5cZ3G1L
- CaUjYAi2hu2A37x9JQTjlm9d1152fqk24dPLQFMnYSyV/f7pSncretj0sJdj5thPnr+uJue
- EWh45MonlU0WyMkJT5X8g==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:2PalMa3QEWk=;gLr3Yt97VScssGDAYWAG6YNzSG1
- 8QkarCyeTXM9UGR3C4b8kQiGX7QN9CLLSJoZa31hEhIc/WpFat1dMp51bwZ8In4f7TEhJIk+6
- lDqousHP2E5M6YP1chKxQa2vDyLIQeS2ZvmrwUVJtsE7OHpXDbLo9/lon6GCjQs0Fs8nokXWI
- i1oYak0FYJanAx7gtDgrZfeqt4g04RqxuhS1Qb6C9aU85nbkFaKCLpxd70Wdph1xh916zkE0n
- xLMvP23xXJcoP5AKie1j4N2sXkiwSNHCCmM2bS0s6BI8l9FIhdbznWAlr7CdmAMPxtLE+9NQX
- UBH2lGVX38QXskZ8li5EmyzxLGIprh0JBxERToxZon66z6CTHxfYx1UFFkByD8UUkWzltxr5j
- ZbQSj2uvptUIOfOLEIw2FJbsQjPgbFhqYx98AsCE4P3COjKDP+i98d39JzApMTt2a9XcFKEU5
- zXMBM0TdSY/gTFPOZccfPEXOAMb5OsBAh6ICtGvLBOIlMDolk9PmuVIPAGZGjOLxlZ0+d2KZm
- jeKbsvuxkvA737dOS5IF1GoEIqKZCuxoG+L4P12bWGyKtURmLZXiLB2pevRCmcmtq4I+vsq+J
- q6RMzE4xXtYzyJoi86LJuLOgvvXPpHfaOnvV0HXsKondRNOv8VBk5QUMqywL5fkEygaNBZtK8
- S2Y4JeiCE+aa+QWjrZ+eRtmLA0Q001UNULWBH30kLclzkSeOG9nQw4b9EMMW+0wGHKXVtwdN9
- 1vK5bUFLcGFHvZqut+gNv4mZAF38Fki48GwLfbeFD8pHC+GRBHI4M3ej+raH9o4HGtjq5vU3v
- eY4APlCk8OZgFOMSvW8WPO+7dX9OD9eRIJ0yyTZH/PsfKhaPI1oSMp2Ml37ETGxPtdTTaNpmk
- OJyRh+Qo973VajckcNMeU/jEuOAKvgmh+nBleGJvogSIFZt+h41BBGPFtLub55ZpB4uKDkRjL
- vCogFtoAs9PvwY+AqMVUbfNEjdUgKThgh4MQKaYk7z35a2gnrGGiyTJER8/KqoyQ7wjCvK8Ua
- zVsKQYtkjUN49WD8IO47NY7/xD7h1zPzWTb+dhSVzvHuVCYbd0sBWRtpf/B7ZQ+izDfCwMUSU
- +SfQKcGI5+FFt16oSHMPnvWFobp/QEZNouXfxn/F5kyIi/QCVddxVV5Abu1oNrD2n+VNCoR4E
- YZTjxGnGVMsa6RpGB0CvhmBPMBAuApFTYf3EhaSHskeZ7Og8sWT1JTSojzpOonDtnMOh/pump
- Iytgv/pKSQsqPsqWrpjZykzGl4w9kKJWaFqKQQOs4GgwwMtJ84h1lrbuBVoqO+8NP52rWwZRd
- sDqBd6xEOoahcmZOpFe4xIH/yZDpnAaQnI6GeUzi/n5vmp+c7vav9qLE4sb3PRf9jWcpGURmo
- J+sJr7TC6WBjAmuaf7oUJBuc8nDc+qbpawoC98NszBB1slMhhbiSDSGNGFNMc/Sa3/h7Ahz7y
- 68vdnKhJgrhJcdk3B3lp1d99it1pmjb5+nCMuKIQYpsRB7D/IJ+XapwyMmcu9CGQG/Sc29whU
- 4j2msyib3Ks2uSfAyBM=
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdeitdefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeevledtvdevueehhfevhfelhfekveeftdfgiedufeffieeltddtgfefuefhueeknecukfhppedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjedphhgvlhhopehfvgguohhrrgdrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudegpdhrtghpthhtohepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrt
+ ghhpdhrtghpthhtohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhm
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
->> Two if branches contained duplicate source code.
->> Thus avoid the specification of repeated error code assignments by usin=
-g
->> additional labels instead.
-=E2=80=A6
-> Now there is one rather opaque label it goes to, so a reader doesn't see
-> the error code immediately. And it really just saves one line per case
-> here. =E2=80=A6
-I imagine that such a code refinement can occasionally matter.
+On Wed, 9 Apr 2025 14:23:09 +0200
+Kory Maincent <kory.maincent@bootlin.com> wrote:
 
-Regards,
-Markus
+> On Wed, 9 Apr 2025 10:29:52 +0100
+> "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
+> 
+> > On Wed, Apr 09, 2025 at 10:46:37AM +0200, Kory Maincent wrote:  
+> > > On Wed, 9 Apr 2025 09:35:59 +0100
+> > > "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:  
+> 
+> > > > Right, and that means that the kernel is not yet ready to support
+> > > > Marvell PHY PTP, because all the pre-requisits to avoid breaking
+> > > > mvpp2 have not yet been merged.    
+> > > 
+> > > Still I don't understand how this break mvpp2.
+> > > As you just tested this won't switch to the PHY PTP implementation.    
+> > 
+> > How do I know that from the output? Nothing in the output appears to
+> > tells me which PTP implementation will be used.
+> > 
+> > Maybe you have some understanding that makes this obvious that I don't
+> > have.  
+> 
+> You are right there is no report of the PTP source device info in ethtool.
+> With all the design change of the PTP series this has not made through my brain
+> that we lost this information along the way.
+> 
+> You can still know the source like that but that's not the best.
+> # ls -l /sys/class/ptp
+> 
+> It will be easy to add the source name support in netlink but which names are
+> better report to the user?
+> - dev_name of the netdev->dev and phydev->mdio.dev?
+>   Maybe not the best naming for the phy PTP source
+>   (ff0d0000.ethernet-ffffffff:01)
+> - "PHY" + the PHY ID and "MAC" string?
+
+How about an enum instead of a string indicating the device type, and if
+PHY, the phy_index ? (phy ID has another meaning :) )
+
+Maxime
+
