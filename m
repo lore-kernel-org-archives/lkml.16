@@ -1,147 +1,130 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96954158218
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 13:58:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C270C26560D
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 13:58:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744207123; cv=none; b=bWnkk/pCPd+uLip+gXHI9aYKDl6t/XC6OivCu7iDvp7d3LKqct5feoJnyCVfOT1gH61++P1WPQ2NYuvo8A7jVQ5qgMEm1FMUFkLL20W2PObvjZbzSVXr9fS5jVCEv85Fvn1sxNoxWauBCTGe3a9SFQ8WKO7M3WdvA1QSHIs9DP4=
+	t=1744207128; cv=none; b=Mh+Ow7k6XSHEBuCc63aotms+hEXRxGE76BYzFqlAeKxJJIxm9Ym/Iv+qlO8OpRipE+79ESrJvIh35piS/fAhkscmyzPBs65euDClhukWgbtI2lHMDqfJQWu93FoMHWAP8UMCnnOffROnvTshQ3bxspoJ1y1551Ib1TFVkWgsALo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744207123; c=relaxed/simple;
-	bh=t/S97uM0OQzmLF1RsSm3zSU9KoV3Eb8EMj9maBmFYT0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RuwbUU1JVbNkTkO3oftssLE0J8LiWH0dC9oSUSIKk61ICSZmoD9KdpfAughzNLYUB6TBhGte+9eVJmfeiZt/6CzflsyN5YJoWFs6QV4hZjDgn0bU87F1ubHR4pcOIRhkoOOmDCOVHZKJIKZPIaUsaQWNgqZxu/z0Csj9VXxegRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DWToxUgi; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744207128; c=relaxed/simple;
+	bh=kqJ/vzdi+4pD3l7Oie2qrj02zzEjykMDOwyt0xCoIfY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=QM+Hw9EW+TUSZoI2ibPXXqSxqRJ9e2BSbmWGUzimh5Icl7TV6zTFRpshsHurnXUcOEnEKbsK3SdujcyRcpLviVZCNdQrNInjtRjqrTMdFtvGjdRFpynpfwZiJe/pb3YyYizVJjcbKQpAIIeVz/Mf3xUiUUfqHswImzyXvMtW7C4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DDf5TEUN; arc=none smtp.client-ip=209.85.128.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DWToxUgi"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-38f2f391864so3793327f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 06:58:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DDf5TEUN"
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-700b17551cdso67588697b3.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 06:58:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744207119; x=1744811919; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7Azu3AUAQUy2/C9fS6Ba25nQGoxL9rV4VIY4SgkwNTA=;
-        b=DWToxUgiR+18kCPRp41F6mZiPkpUj8CNiieboDZw7bXfwJA2qJ75YyxQryfK2/Zy/Z
-         qpjJSIgbCAreVBFstI/FZ6ErJbCrGpElEi5/ADia3utkjXyG5txqCnLOi2df4rBE+epQ
-         k5TvH9sUOdR7bm+ttD4s0T2osWzOExGAndq8QVVfpB5BjYbQb5aj3exdBjPufSqFNMpG
-         5Vd7YihIWrG5NmX6WZ+zzkgdMmIx9/euw6UqrSU2gc+SM0EXZRcCiYQmvIklG0YUPEYg
-         q1vQJjjX8hZd8wMPUxh7g0lqCxWUDumsXXLmYJoiInFYtOFln3BHJcPEs4vupAHc0WQJ
-         jBzw==
+        d=gmail.com; s=20230601; t=1744207126; x=1744811926; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IFkzRRjGlfniqiiK4NmzxF6T91eKT4uib6F/VnX4S4U=;
+        b=DDf5TEUN7/7DNzZ3CU+jsDcTtQbgvPsi0PHMpWi9aCYaLlIoPdt1vNEvRZs2eJnKsd
+         gKpneRnr7lgJyL+w8la2sqmNazd69WYVqlps0eA54JM350w8kPfuO4SVF41Vy7PfeEut
+         Ophy7PXrI3Rk70F+oEF7usx6Rw37Nk0x+LN1qPDiMc0rfzSJJhjJmqi614gWsByDxTDB
+         G8bIy0nW0EZwjSHkal8VuEIgN0bjH80M5dghdfvckWnjuDe6oa2Tzx/ah08p0DB+c7Ti
+         QKdgDzhG2PMw1f+sByp8s0fg5dw0gyc/i4ENcflJNhEnsw4oV1rwCqLTLiikAD9DK/yH
+         9+eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744207119; x=1744811919;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7Azu3AUAQUy2/C9fS6Ba25nQGoxL9rV4VIY4SgkwNTA=;
-        b=kX9ixgdV2Hob4BH/kXcoOUZ8kRfwJPZKsrYZTik8Xw0Vje9Mhp/OIFG1d/yzeEh87x
-         SeU3vzfmwfRW8vKIqLfzpa/iproby85C9PfRxeyNj3vwMVFJWqTzRluWpk59PmKGdzvb
-         lC5H9BjyUiZD2iby113yQDQZMZYleQn2uzxBivbZJXntIHYprQkGeMCLFxKJhoxeN1nm
-         qiRI33xvuHwnXQPBefS26+ougPx98TS3KbGfw6m75jt4E9IWSVsl7Ki2QQSqxSNiJb4t
-         tldkt8Xk2hkcpHqUgyCfIGbtowhTQeigI+O3qIEXDnVqj3d/d8ccC7/A+p+aPN9D5gfe
-         tkQA==
-X-Forwarded-Encrypted: i=1; AJvYcCVqS0Nwk3t2JXFcsdBFZ3CyaCIy5UJvKPoflpEkONGE/9VjkNrjnk/WasRoTRXyv7oSspCJ/VTrDdoOpZw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYqmsXPSsZCAHftCIoAZrsl9ZcFA25IM9gad5oi0OIRUbVJZ2U
-	IAPE9yAqH1eMBOixb37rKY9hgDbd/Neh7EVYAAUOmtfVz8IPfxXsoUqLZxa2SGc=
-X-Gm-Gg: ASbGncth35XwZk7+OvRRpFSrEuNvtrelJqGWzQDN+RVmfQVAddBsXzBAtiYuGF2wIjq
-	e59+Bv5AJz+oLGCXHaGjQApRs1Ju5qY62/TNrBV4/cdfF0tuVl/wNsGcwADISYULRrkSh5W1jZo
-	PR2mv9XgQ34cp1WNjY1uPU209Jc1z6x7F2UB/mUiY/vPklo0DZ7vviK9QvlGmoZ8QVkQPbB9V2z
-	fQEdNemjVYglWWph69sFo0mj0BBK6LvcKn1+tbJfGgkV4zclJmMsAlhvLyErbPz3H89NwRrfy7/
-	BU9LnWE8KiOnJGlz32f9gfCQrgBeEq9QAJ6qJC3cHUJlNisufQcxDL9ebJnty+uYVEzCu013Lpz
-	9ELihfg==
-X-Google-Smtp-Source: AGHT+IHCLRyj5tGrglz7jGGJhi77SKkVODo7Bo744HBiNUOuH1yjjm2d3tWnAZzawQD4MlZx8yyBRA==
-X-Received: by 2002:a05:6000:1ac7:b0:391:23de:b19a with SMTP id ffacd0b85a97d-39d87ac48c4mr2967406f8f.31.1744207118882;
-        Wed, 09 Apr 2025 06:58:38 -0700 (PDT)
-Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f235a5d82sm17370525e9.37.2025.04.09.06.58.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Apr 2025 06:58:38 -0700 (PDT)
-Message-ID: <48eb2db1-094c-41e2-be93-e713e67f8cb7@linaro.org>
-Date: Wed, 9 Apr 2025 14:58:37 +0100
+        d=1e100.net; s=20230601; t=1744207126; x=1744811926;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IFkzRRjGlfniqiiK4NmzxF6T91eKT4uib6F/VnX4S4U=;
+        b=B6OBKvCXwh+OKLUROYhg7POw83pwobWaraEKiUQ9MiFmTm1wuaetcnsuGOJ9V+zZLZ
+         HJgrrmyE7px4iV8iJdVQrFogLquEH5/vhNTj6MLVifWj6Cp90BL4XKFmXdP0gvmbkyfI
+         zimXieqnayaggHV1B1YAtD0dS2u+QqxFAPrD8+PYz9r/LA8ALlwdz0rgrdO2XHaP65p/
+         5MmG/bxHMmmsd+xjBLltxm+jcY6sEA9u60l7pcC9NbEW++UCSbDNEumBmaJSKnSz09Ij
+         zGW8BE5KLAAtWlzQgJNKRTrQ9Tkf1MOt8L0P6u3iGlGoLGi091G3AX3uyoNWCS8PZrJr
+         cR2A==
+X-Forwarded-Encrypted: i=1; AJvYcCUQpGsWQ/27zB5tRtBZV8sLozNvHkydrFN/uH28hb7uQeTPp51YQXBaIrWyEwL0vwshSfIS4g/9VtYdVgo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyO/zRgKtiCbKHNKB60reunnRa8vR2yaJ4lq418LCNRKRdbaSXF
+	nZeqDYF55LCgztsB5+u13ACdLbaoq6dGMO1OlVeVeTEcsiqLTNNh
+X-Gm-Gg: ASbGnct95tDNK6PADM/ixelF5n6xHJNHMsT4Qfz95XBDZpnV6V8s2HE0fdLc1cmsmsP
+	uM6mNPfFDjq2tTW1xaNh/cqYP8gNLdST6scVjc21TC7CGMw972gOck7udbtTVRQpmtqccfKLzit
+	63L8vCll3PxHT1Yk329R2ybeBLf9GzDylymGf4jknDfdaADYVpXoreT2QZX6AdqjNZSO/zSGloY
+	6fQzi10HI8jMhNPB1ODC+B/Uwftkd/4plNRF2NUGsm1d6yh6bymDaPs6N0vNaqupdshI+7Z5EZa
+	pQdK+zKy7QxNiHvwmK0Rf7hA1plbsqFc6np9rLsG2UFnOszZjQ==
+X-Google-Smtp-Source: AGHT+IHgPEjLwXOKG3kfB9pqA9r0caEyN2w2YfhQl5CfbDz2Qdkbj+qyNa/RbQvICrjyM89E/6a6fA==
+X-Received: by 2002:a05:690c:6f87:b0:6f9:88ba:aa5d with SMTP id 00721157ae682-7053ad6c3bfmr40470387b3.9.1744207125590;
+        Wed, 09 Apr 2025 06:58:45 -0700 (PDT)
+Received: from localhost ([2a03:2880:25ff:1::])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-7053e372ed0sm2728577b3.93.2025.04.09.06.58.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 06:58:45 -0700 (PDT)
+From: Joshua Hahn <joshua.hahnjy@gmail.com>
+To: Wupeng Ma <mawupeng1@huawei.com>
+Cc: akpm@linux-foundation.org,
+	mike.kravetz@oracle.com,
+	david@redhat.com,
+	muchun.song@linux.dev,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] mm: hugetlb: Fix incorrect fallback for subpool
+Date: Wed,  9 Apr 2025 06:58:43 -0700
+Message-ID: <20250409135843.2012726-1-joshua.hahnjy@gmail.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250325061634.2118202-1-mawupeng1@huawei.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/5] media: qcom: iris: add support for SM8650
-To: Neil Armstrong <neil.armstrong@linaro.org>,
- Vikash Garodia <quic_vgarodia@quicinc.com>,
- Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250407-topic-sm8x50-iris-v10-v3-0-63569f6d04aa@linaro.org>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20250407-topic-sm8x50-iris-v10-v3-0-63569f6d04aa@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 07/04/2025 16:24, Neil Armstrong wrote:
-> Add support for the IRIS accelerator for the SM8650
-> platform, which uses the iris33 hardware.
+On Tue, 25 Mar 2025 14:16:34 +0800 Wupeng Ma <mawupeng1@huawei.com> wrote:
+
+> During our testing with hugetlb subpool enabled, we observe that
+> hstate->resv_huge_pages may underflow into negative values. Root cause
+> analysis reveals a race condition in subpool reservation fallback handling
+> as follow:
 > 
-> The vpu33 requires a different reset & poweroff sequence
-> in order to properly get out of runtime suspend.
+> hugetlb_reserve_pages()
+>     /* Attempt subpool reservation */
+>     gbl_reserve = hugepage_subpool_get_pages(spool, chg);
 > 
-> Based on the downstream implementation at:
-> - https://git.codelinaro.org/clo/la/platform/vendor/opensource/video-driver/
->    branch video-kernel.lnx.4.0.r4-rel
+>     /* Global reservation may fail after subpool allocation */
+>     if (hugetlb_acct_memory(h, gbl_reserve) < 0)
+>         goto out_put_pages;
 > 
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> out_put_pages:
+>     /* This incorrectly restores reservation to subpool */
+>     hugepage_subpool_put_pages(spool, chg);
+> 
+> When hugetlb_acct_memory() fails after subpool allocation, the current
+> implementation over-commits subpool reservations by returning the full
+> 'chg' value instead of the actual allocated 'gbl_reserve' amount. This
+> discrepancy propagates to global reservations during subsequent releases,
+> eventually causing resv_huge_pages underflow.
+> 
+> This problem can be trigger easily with the following steps:
+> 1. reverse hugepage for hugeltb allocation
+> 2. mount hugetlbfs with min_size to enable hugetlb subpool
+> 3. alloc hugepages with two task(make sure the second will fail due to
+>    insufficient amount of hugepages)
+> 4. with for a few seconds and repeat step 3 which will make
+>    hstate->resv_huge_pages to go below zero.
+> 
+> To fix this problem, return corrent amount of pages to subpool during the
+> fallback after hugepage_subpool_get_pages is called.
+> 
+> Fixes: 1c5ecae3a93f ("hugetlbfs: add minimum size accounting to subpools")
+> Signed-off-by: Wupeng Ma <mawupeng1@huawei.com>
 > ---
-> Changes in v3:
-> - Collected review tags
-> - Removed bulky reset_controller ops
-> - Removed iris_vpu_power_off_controller split
-> - Link to v2: https://lore.kernel.org/r/20250305-topic-sm8x50-iris-v10-v2-0-bd65a3fc099e@linaro.org
-> 
-> Changes in v2:
-> - Collected bindings review
-> - Reworked rest handling by adding a secondary optional table to be used by controller poweroff
-> - Reworked power_off_controller to be reused and extended by vpu33 support
-> - Removed useless and unneeded vpu33 init
-> - Moved vpu33 into vpu3x files to reuse code from vpu3
-> - Moved sm8650 data table into sm8550
-> - Link to v1: https://lore.kernel.org/r/20250225-topic-sm8x50-iris-v10-v1-0-128ef05d9665@linaro.org
-> 
-> ---
-> Neil Armstrong (5):
->        dt-bindings: media: qcom,sm8550-iris: document SM8650 IRIS accelerator
->        media: platform: qcom/iris: add power_off_controller to vpu_ops
->        media: platform: qcom/iris: introduce optional controller_rst_tbl
->        media: platform: qcom/iris: rename iris_vpu3 to iris_vpu3x
->        media: platform: qcom/iris: add sm8650 support
-> 
->   .../bindings/media/qcom,sm8550-iris.yaml           |  33 ++-
->   drivers/media/platform/qcom/iris/Makefile          |   2 +-
->   drivers/media/platform/qcom/iris/iris_core.h       |   1 +
->   .../platform/qcom/iris/iris_platform_common.h      |   3 +
->   .../platform/qcom/iris/iris_platform_sm8550.c      |  64 +++++
->   drivers/media/platform/qcom/iris/iris_probe.c      |  43 +++-
->   drivers/media/platform/qcom/iris/iris_vpu2.c       |   1 +
->   drivers/media/platform/qcom/iris/iris_vpu3.c       | 122 ---------
->   drivers/media/platform/qcom/iris/iris_vpu3x.c      | 277 +++++++++++++++++++++
->   drivers/media/platform/qcom/iris/iris_vpu_common.c |   4 +-
->   drivers/media/platform/qcom/iris/iris_vpu_common.h |   5 +
->   11 files changed, 413 insertions(+), 142 deletions(-)
-> ---
-> base-commit: 0d6ed9e013fcc33da9676ed870454d2a014a5aee
-> change-id: 20250225-topic-sm8x50-iris-v10-a219b8a8b477
-> 
-> Best regards,
 
-For the series
+Hi Wupeng,
 
-Tested-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org> # x1e Dell 
-Inspiron14p
+I hope you are doing well! It's been a while since this fix was sent in, and
+there hasn't been any comments on the test either. Would you consider sending
+this patch again without the RFC tag? I think that might help in the way of
+moving this patch forward : -)
 
----
-bod
+Thank you again for this fix! Have a great day!
+Joshua
