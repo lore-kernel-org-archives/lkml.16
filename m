@@ -1,157 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28A3326FD86
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 17:41:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6C781C84CF
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 17:42:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744220504; cv=none; b=QvaMvI1Sxa7nDGPxS/3ODHbHUWGhbSzDkZxtivueG1g6avh4b+mNf1ehAjGsL4zYwysosksZ2OzmPu+laQ1L0+gMV8/Yo1Tnli6sxdtDy0FL60Z3YNgWgRZJJv2LI0QSK02D4eO5XKO2CMgdCrh4Hc19vpOalvPTcwyLwP1YyF4=
+	t=1744220563; cv=none; b=Vgt9NyxkHLXx4g3MCBxGtWaRuXQHWUZKMLgp1EhPDIWN+aeapTU6gKwDVGYCKAXti9hfJpd7NUS9pVw/wTechA1n9LOr/4zYHEIV0y7CeNQN/xh6K/hW/tbRE2EaEuZ47wlZLf5ys5KGfNckguVhIGaVjmb/OGuz/iY2ZUlNWo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744220504; c=relaxed/simple;
-	bh=uWFpB4S8aqcJqUgMUrkcXOwnj/tmWpw4ViGFpgFTyRQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hXIFk3LwTKeKizJBKln/QNoGvhMUMrNIOknDd8oCB3QJPs2ktOmy83Gc5gLvVqDHQIt09gI5ydCCoS+NlmTxdvI6IUJmZVgkdMylAZJI4zNwZt2IBWzPDeaZ0aPSRicQIhEvKenmfMey2o5DCjf11LzgNTrEqPb0qqYPV6tYMTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hdIMgoV0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744220563; c=relaxed/simple;
+	bh=6nNQatqaorKzv92tvaje0/GNGx2i/9tcg23Gb8LTF+E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=N4AvfIskVXlIs0XXZNm3Ia1cXvB+Jx3lsCTXhJdTo7Ffrgm/9yeXeIpqmwMz+SbqggHTqaXpCHzdLJEedrEYI/Yqrs3Tl+y2KUjUEkXu28Lptbsp2RyZD5RwomGcH0D/0T0akGpc063WJEegnZHnJj/3QiFAMX6zerRFOLjdpfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=dheEA5P6; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hdIMgoV0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99DF7C4CEE2;
-	Wed,  9 Apr 2025 17:41:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744220503;
-	bh=uWFpB4S8aqcJqUgMUrkcXOwnj/tmWpw4ViGFpgFTyRQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hdIMgoV0kXEcNVfsaSNxS3YL3BaBO9jo3pDHrNTE8C6D/MAAkuhA1hW7MuKcfGR8v
-	 qMfAFLWJ8IYWwep9ws0rd5tnYPM8aitTnwfz6siVmrefvFKE8sD/lQfj+zayV1wwVA
-	 lzGr3CfXDpiNbGqrdXwznCH5wow8gG3eauCZUhW0NPON5kzqf4HypEFzbxAvwn86vp
-	 ONUEJT8Z1ikKWsgnC+MppYYcrDVIdemoa+KVebB8bIiiXojw5o8nfAXu63IhvleBwz
-	 0S8YkJC5uoiFk5HBlSo7kqTr5JFZWdIkoDECwN+mHrZUPp4+Dt52TxPAPpH1npjL5k
-	 uUNnqZafMRGDw==
-Date: Wed, 9 Apr 2025 10:41:40 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH RFC 4/5] x86/alternative: Improve code generation
- readability
-Message-ID: <4q77jakv67gmglrcbzojngyutbfi3pzgsjayrymkg7dhkxo4hl@mczk3gots764>
-References: <cover.1744098446.git.jpoimboe@kernel.org>
- <35ae5c17e8cc88506b5ae8f3b06d9491f7ef319c.1744098446.git.jpoimboe@kernel.org>
- <20250409143821.GE9833@noisy.programming.kicks-ass.net>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="dheEA5P6"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e5e0caa151so12307929a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 10:42:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1744220559; x=1744825359; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=qoBR+vDT5PVn2pWN/hnunYWhxqisiDADqelTleC033g=;
+        b=dheEA5P6ud67PKRq8WjAQEOSGhc7/Aoj3rEwgFyI4YeQemuR3QY/HHtred2aTBICvg
+         XgjaJW2nVB2vtYLc3HQGdRPfYf5oW8btOxGthgj/IQn7qEbUBtEi7RiLpzsM5E79sJpz
+         rGmut3QubtgInrpvzCCyXsbzVE9PjtDlw4WiM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744220559; x=1744825359;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qoBR+vDT5PVn2pWN/hnunYWhxqisiDADqelTleC033g=;
+        b=N8+t6BjCrquFfCOaYv7JUS34hlrV1zVN4E6c9E2/O4OQp6v5Fuj5pxd8WxjRdLOE39
+         0dz4HKwvkq6cdQ6nPR7kww8IIyan0aLemJz7f8Bf4mYJ0btVRFUKYEBMRgrWHlQNCryz
+         1CHTtEKeZ9wTDBlKiMxMAV+VvjC7HRiCTBr94m+E13ZTZ2rUBLOvfI4r1wcahhGjykSz
+         vpt6vzhXY/lCd0njfyN1Z5Iefz0si0Rr48LNQJESorFL4mx1XUUz+3yT4hZPVou2Hl1e
+         CLeSN9hi7cSRy+5rLI0FOxLNzrBV1OIsJo5V/y5uKhmSvoIGxysTGofYzbOYRATt1lPN
+         mTIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXiYMU4dAkLOO11i0wFiTfv9iT3W1ukmZtxDhQJUi281DXLKJg/RvoHg0HC/ARmDkKxSJr4mHh3SIVOzTs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzoTpjPBj3IRm42IZ3FilvAXpTOChT2vbbO2F7J2qVt8NCHf9Vj
+	w/2uMSar63q8oNlc53upYDbQX3aJCUnDGN6JAU5q+FclQvZ3jRTQlzEQ6OT5Eg/3Kozosl01ngZ
+	klv0=
+X-Gm-Gg: ASbGncv+NLOi/j11v03kc8RXWh2ecW09VrARFLjn3tUhOPIid1lSiEsIauHZlng9GbV
+	EkzaDIF1hN7TVJ/jDHx1sbVmJrEfY/iIRkCGY5Y9IxjigFxWREFxjTwD2e9cHs64BjuA3he0ovU
+	qB60K9e5bOeDD1s/B4iZ/XofypbUTQznOVFsmzpjHVWAfHCwiu8VpEcyjouo7s4SGxUPQJ40fXW
+	p7hjbyL7gKlDZX7RAQTajUXo4n1Ta6xnYY0j6+EszK8Nk9DZHz+0a5qfcsEqX8rXU+D+ZAwpTRo
+	hVj52ywh2fdXWLSvhqHdiF+h/JLeSCwX33+D5r/WI4x2udyRodEH+bSat8qsK76Q+9VR9KqX9qS
+	+OkavKlA3+tSG6Vk=
+X-Google-Smtp-Source: AGHT+IHCfpm0ncDaWg+VH81qLMR7q/WX7w6ZTBqpezICa56Y9kx52uJDMxhQAwmJ0XWEI5HBNsbnUQ==
+X-Received: by 2002:a05:6402:1ecc:b0:5ec:cc28:1a78 with SMTP id 4fb4d7f45d1cf-5f2f76e4cccmr3807958a12.20.1744220558768;
+        Wed, 09 Apr 2025 10:42:38 -0700 (PDT)
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f2fbd35099sm1048370a12.68.2025.04.09.10.42.37
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Apr 2025 10:42:37 -0700 (PDT)
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac2ab99e16eso1340326466b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 10:42:37 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWrXt2DvmAaduYRPWCv2a2VJ5AGNN4MqIsd4rGEwxNX7aqLOYfipfeMXtnTSRRE6aHV0XP9uu0jqiev6HY=@vger.kernel.org
+X-Received: by 2002:a17:906:6a1d:b0:ac6:e20f:fa48 with SMTP id
+ a640c23a62f3a-aca9b697344mr478182666b.33.1744220557177; Wed, 09 Apr 2025
+ 10:42:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250409143821.GE9833@noisy.programming.kicks-ass.net>
+References: <20250407-kbuild-disable-gcc-plugins-v1-1-5d46ae583f5e@kernel.org>
+ <202504081630.4CE88E855@keescook> <db50faff-7290-4193-b861-f60e36f1d1e3@sirena.org.uk>
+ <CAHk-=wjc+piYyUw36s4ttEkY32jVkxhRtyrt431wew7XcDS2Qg@mail.gmail.com> <a9a459c2-674d-43dc-9e27-41de0471f602@sirena.org.uk>
+In-Reply-To: <a9a459c2-674d-43dc-9e27-41de0471f602@sirena.org.uk>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 9 Apr 2025 10:42:19 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whKEuQQh2JymabBQLrLs=pEfx0qYVmUnYZRq_tOFj90sA@mail.gmail.com>
+X-Gm-Features: ATxdqUG-Bs73VX2eSGz8XZIzzueOW3xC6j3KpNJoIRi6w4YuDwZR8xbIvrtKvKY
+Message-ID: <CAHk-=whKEuQQh2JymabBQLrLs=pEfx0qYVmUnYZRq_tOFj90sA@mail.gmail.com>
+Subject: Re: [PATCH] gcc-plugins: Disable GCC plugins for compile test builds
+To: Mark Brown <broonie@kernel.org>
+Cc: Kees Cook <kees@kernel.org>, =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
+	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
+	Arnd Bergmann <arnd@arndb.de>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Apr 09, 2025 at 04:38:21PM +0200, Peter Zijlstra wrote:
-> On Tue, Apr 08, 2025 at 01:21:17AM -0700, Josh Poimboeuf wrote:
-> > Improve the readability and compactness of alternatives code.
-> > 
-> > ---------------------
-> > ALTERNATIVE() before:
-> > ---------------------
-> > 
-> >   	# ALT: oldinstr
-> >   771:
-> >   	rep movsb
-> >   772:
-> >   # ALT: padding
-> >   .skip -(((775f-774f)-(772b-771b)) > 0) * ((775f-774f)-(772b-771b)),0x90
-> >   773:
-> >   .pushsection .altinstructions,"a"
-> >    .long 771b - .
-> >    .long 774f - .
-> >    .4byte (((1 << 0) << 16) | ((18*32+ 4)))
-> >    .byte 773b-771b
-> >    .byte 775f-774f
-> >   .popsection
-> >   .pushsection .altinstr_replacement, "ax"
-> >   # ALT: replacement
-> >   774:
-> >   	call rep_movs_alternative
-> >   775:
-> >   .popsection
-> > 
-> > --------------------
-> > ALTERNATIVE() after:
-> > --------------------
-> > 
-> >  # <ALTERNATIVE>
-> >  771:	rep movsb
-> >  772:	.skip -(((775f-774f)-(772b-771b)) > 0) * ((775f-774f)-(772b-771b)),0x90
-> >  773:
-> >  # ALT ENTRY:
-> >  .pushsection .altinstructions,"a";  .long 771b - .;  .long 774f - .;  .4byte (((1 << 0) << 16) | ((18*32+ 4)));  .byte 773b-771b;  .byte 775f-774f; .popsection
-> 
-> I find this very hard to read. I prefer the multi line form it had
-> before.
+On Wed, 9 Apr 2025 at 10:29, Mark Brown <broonie@kernel.org> wrote:
+>
+> Sadly it seems like the build bots didn't find it, or at least if they
+> found it they didn't identify it well enough to end up with reporting
+> the issue to someone who'd fix it.
 
-I actually think the compactness of putting the entry on a single line
-is really nice.
+I wouldn't be entirely surpised if a lot of the build bots end up
+running old distros (because "enterprise").
 
-We're usually more interested in reading the code *around* the
-alternatives, rather than the alternatives themselves.
+So this is presumably only happening with certain compiler versions,
+and I expect the build bots have a fairly small set of compilers they
+end up testing.
 
-Making the alt entry a big sprawling mess, for what typically resolves
-to just a few instructions, makes that a LOT harder.  And it's *really*
-bad for ALTERNATIVE_2() and ALTERNATIVE_3().
-
-Also, 99% of the time, we're not going to be debugging the alternatives
-themselves.  Spreading out the alt entry directives across multiple
-lines is way overkill.  It wastes space and cognitive load.
-
-That's what the comments are for.  All you really need to care about are
-the original instructions, the replacement instructions, and potentially
-what feature+flags.
-
-We could even print the feature by adding the '(((1 << 0) << 16) |
-((18*32+ 4)))' to one of the comments.
-
-Or even better, we can just show the actual human readable feature:
-ALT_NOT(X86_FEATURE_FSRM).
-
-Something like:
-
- # <ALTERNATIVE>
- 771:	rep movsb
- 772:	.skip -(((775f-774f)-(772b-771b)) > 0) * ((775f-774f)-(772b-771b)),0x90
- 773:
- # ALT ENTRY:
- .pushsection .altinstructions,"a";  .long 771b - .;  .long 774f - .;  .4byte (((1 << 0) << 16) | ((18*32+ 4)));  .byte 773b-771b;  .byte 775f-774f; .popsection
- # ALT REPLACEMENT: ALT_NOT(X86_FEATURE_FSRM):
- .pushsection .altinstr_replacement, "ax"
- 774:	call rep_movs_alternative
- 775:
- .popsection
- # </ALTERNATIVE>
-
-Then with all the relevant information in the comments, there's no
-reason to make the alt entry directives themselves very readable, right?
-Unless alternatives are broken and you're debugging it.  Which should
-very much be the exception rather than the rule.
-
-One thing that does bother me slightly is the asymmetry of having the
-.pushsection and .popsection on the same line, whereas the replacement
-has them on separate lines.  We could just put the .popsection on its
-own line:
-
- # <ALTERNATIVE>
- 771:	rep movsb
- 772:	.skip -(((775f-774f)-(772b-771b)) > 0) * ((775f-774f)-(772b-771b)),0x90
- 773:
- # ALT ENTRY:
- .pushsection .altinstructions,"a";  .long 771b - .;  .long 774f - .;  .4byte (((1 << 0) << 16) | ((18*32+ 4)));  .byte 773b-771b;  .byte 775f-774f
- .popsection
- # ALT REPLACEMENT: ALT_NOT(X86_FEATURE_FSRM):
- .pushsection .altinstr_replacement, "ax"
- 774:	call rep_movs_alternative
- 775:
- .popsection
- # </ALTERNATIVE>
-
--- 
-Josh
+            Linus
