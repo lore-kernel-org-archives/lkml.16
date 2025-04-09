@@ -1,38 +1,39 @@
 Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9709267F5F;
-	Wed,  9 Apr 2025 14:50:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9707D25EF85;
+	Wed,  9 Apr 2025 14:50:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744210254; cv=none; b=ddXp2WSqpx7bQV56Rg4hDvnYXN1u3AEh39kbIe15iT17cRF5YtGLIFfaHtX+XVezevp0cml1Vsh0bVwsEwz8x2+pT/58C7JtTm0FtYpJ8z8RP5Y9oHXgJIS1qZC2d8nZSKbEKHLsISo//yS6YQM7wr5HPV1IikRbnvs1fDtJ33o=
+	t=1744210256; cv=none; b=k0YQCud9jzAxZnPvDrQ3o9SdGVVfUiFNdyyiP//LcCqFdm4/kwr85zH+r4BURkyjCcwGi/0ftQN78fVAfLRmQP2yDeQyd/bJYPBs0NHUBGx50MSJ2RKzjnHbdUpfH8NSaNOS1fFjntH7MhlIK90Lb0dkCBhO3vRdKMpBOdp9FqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744210254; c=relaxed/simple;
-	bh=NMWyW4mqpoveMNXaP68AqQDCA/roDvJERCuSx5UrrwU=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=srbx3AsiiV+P7bzFr1CYbeww1Qz4RzY07V5ALBu/jFhDg21vA5C+Afe4Enx1101H5w/SnzEx7wPia+OGpxiacSJdXVQBmV9F0ykGsaAikMWeztt+8khrs0K7PnuPMeoI3uPfuT/K0jkiPQXuhLdnl6ayPFpCAKAGJylSqc1xNsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=OTFvKWJV; arc=none smtp.client-ip=217.70.183.198
+	s=arc-20240116; t=1744210256; c=relaxed/simple;
+	bh=u6g5brnFv1TFE3DyYtnsYXrNMc4P3CJ84FcIW04VmMA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=O5diaqAAYFhNwKTLOfgailm6cCwYeE+axdYwPenbVwqP8PKu812bp+kYOwAE429PwuR5MsPgvzM3M14dTteYWHEA/fbir28sawi/otYWbfAZ01Ep1ryQwwG09EJMlS5sijR/ka9sW5a7K2GAuwhdD/WSOhkBzCsYhO4Bb97ZPGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=oxbfpY5d; arc=none smtp.client-ip=217.70.183.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OTFvKWJV"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E633144280;
-	Wed,  9 Apr 2025 14:50:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="oxbfpY5d"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 9D19E44282;
+	Wed,  9 Apr 2025 14:50:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744210245;
+	t=1744210247;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=zZPITvEi1v51AvKlOUwPqkkBC0vzA2H3Mxb/j3In2cg=;
-	b=OTFvKWJVBXSdWfVzgUI2dvBb0pgR4Qr0Wg7ObninKw2Yemv+a3v0IbSzVHnA5yy1XUHab1
-	Nw44w/QDpOIJdtqutfRWPdWiK5mjuDE/12mGoheQTUomNjkozjXC2k6xF7eeVF9hkrttXE
-	B726BZr04Od0Xfj2P4hrsQFDjPgJuLh17JBajhvQf7UoYT1S4GvmKPIlJ2M+1kdmjW82zI
-	n/fZL1p92TLyHTe+giHtRSsYycjMfM2eR7ipXzUhaP5NfPJz5veb/oxe7bOrfz1yogQY/T
-	K1aCQucic5L4qz8KJnlqiSHBifOjtylGujv7iBxOq7Gi5VMb/N2JeujFDWdwkg==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KEmrM0VCU/J7ievAToNUp1p2V609oJSHGiAFe/2zZVo=;
+	b=oxbfpY5dUtHCfmiSZUJRPZhC7MQhoIcZO80cG6DM6IRXATITV5jtCO2kv1+TjPCMGu9pnS
+	f4CRqoyhzKukNQV1CRr7QmImhUhmOBwVts/npK4qxw2rNiJH9EZM+lt32/a/cHMhKX0PE5
+	Fl/tNJhC4u+vNj3hH4++3Rjv5XYOY7keVTNx1+jaJ2CQshTbtKNiNCFYNhjvw4edJ7qwc/
+	b6vUx3zgwRGZzyEFzNQHZhvThiX3Fvv5/gYtQzD0aYgtJiT70geAik+CDgHbB6JiAaGGoO
+	7bSJzOygCisM5MLX9FXSZHaOFjSIrkvYIrfxFeS+Xth8rZPDknywUGBfsXlyLA==
 From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Subject: [PATCH v7 0/2] drm/bridge: add docs and kunit test for
- devm_drm_bridge_alloc()
-Date: Wed, 09 Apr 2025 16:50:33 +0200
-Message-Id: <20250409-drm-bridge-alloc-doc-test-v7-0-a3ca4b97597f@bootlin.com>
+Date: Wed, 09 Apr 2025 16:50:34 +0200
+Subject: [PATCH v7 1/2] drm/bridge: documentat bridge allocation and
+ lifecycle
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,11 +41,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIADmJ9mcC/x2MQQqDQAxFryJZGwiD1aFXKS6mJmMDViUzlIJ4d
- 4OLt3g8/j+giKkUeDYHmPy06La6DG0D0yets6CyOwQKD+ooItsX36bsJS3LNiE7VUrF0A+ciSX
- HSOD73STr//5+jed5AUCqwy1rAAAA
-X-Change-ID: 20250408-drm-bridge-alloc-doc-test-267df0def880
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250409-drm-bridge-alloc-doc-test-v7-1-a3ca4b97597f@bootlin.com>
+References: <20250409-drm-bridge-alloc-doc-test-v7-0-a3ca4b97597f@bootlin.com>
+In-Reply-To: <20250409-drm-bridge-alloc-doc-test-v7-0-a3ca4b97597f@bootlin.com>
 To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
  Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
  David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
@@ -62,50 +62,136 @@ Cc: Anusha Srivatsa <asrivats@redhat.com>,
 X-Mailer: b4 0.14.2
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdeivdelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhufffkfggtgfgvfevofesthekredtredtjeenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeejjefhgfffleevhefhfeduhedtfedttedtkefgkeeuieehtdeifeduveejffevgeenucffohhmrghinhepfhhrvggvuggvshhkthhophdrohhrghdpkhgvrhhnvghlrdhorhhgnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegludelvddrudeikedrudejkedruddukegnpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddvpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnfgruhhrvghnthdrphhinhgthhgrrhhts
- ehiuggvrghsohhnsghorghrugdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhgpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurgesihhnthgvlhdrtghomhdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopefjuhhirdfruhesghgvhhgvrghlthhhtggrrhgvrdgtohhmpdhrtghpthhtoheplhhumhgrgheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhfohhssheskhgvrhhnvghlrdhorhhg
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdeivdelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeiieeuvdfftefgueduleehueetgffgjeeitedtteetkeeuueeuueekveevvdeuveenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvpdhhvghloheplgduledvrdduieekrddujeekrdduudekngdpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopefnrghurhgvnhhtrdhpihhntghhrghrthesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtohepnhgvihhlrdgrrhhms
+ hhtrhhonhhgsehlihhnrghrohdrohhrghdprhgtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepjfhuihdrrfhusehgvghhvggrlhhthhgtrghrvgdrtghomhdprhgtphhtthhopehluhhmrghgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrfhhoshhssehkvghrnhgvlhdrohhrgh
 X-GND-Sasl: luca.ceresoli@bootlin.com
 
-This small series adds documentation and a simple kunit test for the new
-DRM bridge allocation flow, based on the recently introduced
-devm_drm_bridge_alloc() [0].
-
-This work was formerly a part of my v6 DRM bridge hotplug series [1], now
-split as a standalone series, hence the "v7" version number.
-
-The overall goal is supporting Linux devices with a DRM pipeline whose
-final components can be hot-plugged and hot-unplugged, including one or
-more bridges. For more details see the big picture [0].
-
-Current plan and status of the DRM bridge refcounting work:
-
- A. ✔ add new alloc API and refcounting -> (now in drm-misc-next)
- B. convert all bridge drivers to new API (v1 under review [2])
- C. ➜ documentation, kunit tests (this series)
- D. after (B), add get/put to drm_bridge_add/remove() + attach/detech()
- E. after (B), convert accessors; this is a large work and can be done
-    in chunks
- F. debugfs improvements
-
-[0] https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/0cc6aadd7fc1e629b715ea3d1ba537ef2da95eec
-[1] https://lore.kernel.org/dri-devel/20250206-hotplug-drm-bridge-v6-0-9d6f2c9c3058@bootlin.com/
-[2] https://lore.kernel.org/lkml/20250407-drm-bridge-convert-to-alloc-api-v1-0-42113ff8d9c0@bootlin.com/
+Document in detail the DRM bridge allocation and refcounting process based
+on the recently introduced devm_drm_bridge_alloc().
 
 Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
----
-Luca Ceresoli (2):
-      drm/bridge: documentat bridge allocation and lifecycle
-      drm/tests: bridge: add a KUnit test for devm_drm_bridge_alloc()
 
- Documentation/gpu/drm-kms-helpers.rst   |  6 +++
- drivers/gpu/drm/drm_bridge.c            | 73 +++++++++++++++++++++++++++++++++
- drivers/gpu/drm/tests/drm_bridge_test.c | 60 +++++++++++++++++++++++++++
- 3 files changed, 139 insertions(+)
 ---
-base-commit: e8bf4a1bdaeadb28d13b9a2bcfd5910fda06eede
-change-id: 20250408-drm-bridge-alloc-doc-test-267df0def880
 
-Best regards,
+Changes in v7:
+ - remove mention of "legacy mode", we now support only refcounted
+   bridges
+ - rename patch title from "drm/bridge: add documentation of refcounted
+   bridges", we now support only refcounted bridges
+
+Changes in v6:
+ - update to the new devm_drm_bridge_alloc() API
+ - rewrite and improve various sentences for clarity
+ - fix typos (Randy Dunlap)
+
+This patch was added in v5.
+---
+ Documentation/gpu/drm-kms-helpers.rst |  6 +++
+ drivers/gpu/drm/drm_bridge.c          | 73 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 79 insertions(+)
+
+diff --git a/Documentation/gpu/drm-kms-helpers.rst b/Documentation/gpu/drm-kms-helpers.rst
+index 5139705089f200b189876a5a61bf2a935cec433a..393cd0e4cb5af3fe98674e7a96c853ffb2556c97 100644
+--- a/Documentation/gpu/drm-kms-helpers.rst
++++ b/Documentation/gpu/drm-kms-helpers.rst
+@@ -151,6 +151,12 @@ Overview
+ .. kernel-doc:: drivers/gpu/drm/drm_bridge.c
+    :doc: overview
+ 
++Bridge allocation and lifecycle
++-------------------------------
++
++.. kernel-doc:: drivers/gpu/drm/drm_bridge.c
++   :doc: bridge lifecycle
++
+ Display Driver Integration
+ --------------------------
+ 
+diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
+index b4c89ec01998b849018ce031c7cd84614e65e710..b7e1ad761dad52bdb2ec09d425e69ee23a18fd36 100644
+--- a/drivers/gpu/drm/drm_bridge.c
++++ b/drivers/gpu/drm/drm_bridge.c
+@@ -61,6 +61,79 @@
+  * encoder chain.
+  */
+ 
++/**
++ * DOC: bridge lifecycle
++ *
++ * In some use cases such as hot-plugging a DRM bridge device can
++ * physically disappear and reappear at runtime. To handle such cases
++ * without destroying and recreating the entire DRM pipeline, DRM bridge
++ * lifetime is managed using reference counting:
++ *
++ * - each &struct drm_bridge is reference counted since its allocation
++ * - any code taking a pointer to a bridge has APIs to get a reference and
++ *   put it when done, to ensure the memory allocated for the bridge won't
++ *   be deallocated while there is still a reference to it
++ * - the driver implementing the bridge also holds a reference, but the
++ *   allocated struct can survive the driver in case other references still
++ *   exist
++ * - deallocation is done when the last put happens, dropping the refcount
++ *   to zero
++ *
++ * Usage of refcounted bridges happens in two sides: the bridge *provider*
++ * and the bridge *consumers*. The bridge provider is the driver
++ * implementing the bridge. The bridge consumers are all parts of the
++ * kernel taking a &struct drm_bridge pointer, including other bridges,
++ * encoders and the DRM core.
++ *
++ * For bridge **providers**, the bridge driver declares a driver-specific
++ * struct embedding a &struct drm_bridge. E.g.::
++ *
++ *   struct my_bridge {
++ *       ...
++ *       struct drm_bridge bridge;
++ *       ...
++ *   };
++ *
++ * The driver must allocate and initialize ``struct my_bridge`` using
++ * devm_drm_bridge_alloc(), as in this example::
++ *
++ *     static int my_bridge_probe(...)
++ *     {
++ *         struct device *dev = ...;
++ *         struct my_bridge *mybr;
++ *
++ *         mybr = devm_drm_bridge_alloc(dev, struct my_bridge, bridge, &my_bridge_funcs);
++ *         if (IS_ERR(mybr))
++ *             return PTR_ERR(mybr);
++ *
++ *         // Get resources, initialize my_bridge members...
++ *         drm_bridge_add(&mybr->bridge);
++ *         ...
++ *     }
++ *
++ *     static void my_bridge_remove(...)
++ *     {
++ *         struct my_bridge *mybr = ...;
++ *
++ *         drm_bridge_remove(&mybr->bridge);
++ *         // Free resources
++ *         // ... NO kfree here!
++ *     }
++ *
++ * Bridge **consumers** need to handle the case of a bridge being removed
++ * while they have a pointer to it. As this can happen at any time, such
++ * code can incur in use-after-free. To avoid that, consumers have to call
++ * drm_bridge_get() when taking a pointer and drm_bridge_put() after they
++ * are done using it. This will extend the allocation lifetime of the
++ * bridge struct until the last reference has been put, potentially a long
++ * time after the bridge device has been removed from the kernel.
++ *
++ * Functions that return a pointer to a bridge, such as
++ * of_drm_find_bridge(), internally call drm_bridge_get() on the bridge
++ * they are about to return, so users using such functions to get a bridge
++ * pointer only have to take care of calling drm_bridge_put().
++ */
++
+ /**
+  * DOC:	display driver integration
+  *
+
 -- 
-Luca Ceresoli <luca.ceresoli@bootlin.com>
+2.49.0
 
