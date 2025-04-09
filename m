@@ -1,104 +1,107 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F0D279332;
-	Wed,  9 Apr 2025 18:52:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32AF5278140;
+	Wed,  9 Apr 2025 18:52:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744224764; cv=none; b=hZICPHzIdAOAoeMrD3ek2+LWLUkOB5oPv7oNjKHbOoailF/BiZuc5UPHXyA6lx+Mc/iloY6JayMqArfHqk/1XeP1dKEv/RT0+3MW2U8nI6X1Kr5egg9NnOxk+kjQGaSHnwwSFVrYFTVzMMbMf9SfGO2LpiQSMlGClS8wbyHLnZs=
+	t=1744224777; cv=none; b=TzaVo/C3gs4FKK5kKunZWw1RoDWWF5z3MF7UUyoOD5rAzv0AV0KYiAN5hWnH1YyZEUeaweKbk4q8PvvFJAIe3HINaUS+hjmdFN/ZcPatqg7pLNhiQZ6jpqNpmkau4GUNoO/qMY+B1Sz60nGOIUWRbtInTKlEQC0GMYF4MRVOXWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744224764; c=relaxed/simple;
-	bh=BSUmpdOQLiDXhEbmUHBtxJH6Dq1anrYbjkezVFE3k+c=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=NH3axQDowqgkGHUQCH/QrUP8z4B289ZCuZDBVJ1Om5rtsP+YzVQ6A53nazJ2qY907oPQ0ACrO0E67VHoKwlzER6FUCJlAFu+jnCx14ucTc6VBa/+OT2XxQcaxbwjdUvyDjMzsQCptebLb95Stc2f35589butf3MZzKlGX9YVATQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lrKiPbJW; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Xcsa7lo8; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744224777; c=relaxed/simple;
+	bh=5i1oMW/PxJo8IGsBtUHGwIqfWeGBp5ZC4nCXduHQAdI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LUwi69aJup2bcgBA1EG+KUf+zTjNT23rwiOTHiM9ugJKdvlyDDi8Q0o8dMjraZVNR7rhNPcONQDXRmGfbMi5gdTn5y1ekMP8mky3HUvMv7cN2cGqkhkpLRjYm8ZGTCPx6/s6uEKqks5Bvx5316vxG99Iqoe96nQDpzs0+s+kkTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oOfyG7PD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lrKiPbJW";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Xcsa7lo8"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744224761;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Xz45tyDLtvOyOUuJdgYcFYGxgqi+8xDlZvb7hCeMYoA=;
-	b=lrKiPbJWfb49gcZW6Um62l+nwOQe2w8Anmmd8kxSjATSOXFYi1cQdppVooSOPgvQ3NpryO
-	G284H/HY6cvd+rZZsFNjBpoTBD2tkCbve/9EurQ3+Xd6XM6nH91jbi1cgnVtmqlfKUJ89B
-	QzTSkFrQOrKa5Of/z+Ae4XZk7pc+PWzAoGVD/vL4kGrxgN49xJgeNYhI3P4asfwjzVq17G
-	BEKU5p/sAR6/8acLbZXCI+6JcEFaD0+c4hif/ExXNSq0NVQHyh+kAwBeM9xecb//Rv96Ez
-	rZLHuRqumUsy+qOYCUumUmINXALoPPbQHHIqbztIkIEUIk6e1YLNKERSYYkKrg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744224761;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Xz45tyDLtvOyOUuJdgYcFYGxgqi+8xDlZvb7hCeMYoA=;
-	b=Xcsa7lo8AWIUXlp14grUnxpJvCfO5SlhON1U3dVIwQ+2t7/FtYhJj/bNURJgXZ399+iFHb
-	qJMstcea9mXV5QDQ==
-To: Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto
- <inochiama@gmail.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- sophgo@lists.linux.dev, Yixun Lan <dlan@gentoo.org>, Longbin Li
- <looong.bin@gmail.com>
-Subject: Re: [PATCH v3 4/4] irqchip/sg2042-msi: Add the Sophgo SG2044 MSI
- interrupt controller
-In-Reply-To: <MA0P287MB2262DBC84878347B78CA50ECFEB42@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
-References: <20250408050147.774987-1-inochiama@gmail.com>
- <20250408050147.774987-5-inochiama@gmail.com>
- <MA0P287MB2262DBC84878347B78CA50ECFEB42@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
-Date: Wed, 09 Apr 2025 20:52:40 +0200
-Message-ID: <87o6x5tbev.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oOfyG7PD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88AC2C4CEE2;
+	Wed,  9 Apr 2025 18:52:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744224777;
+	bh=5i1oMW/PxJo8IGsBtUHGwIqfWeGBp5ZC4nCXduHQAdI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oOfyG7PDBZX3we7FQFstC56mPPXAykM+j5NntmYBOMqa8g5iwCPLLoE8pvkrwTRsG
+	 DbjErxAL+c/aVy+9xgBfbSYYICzttEkmh8rdbvxzBVDFYmnqE8VdSvdI+g0c8mNZse
+	 FBVisHsQgQ5egKob3v4SshMvSYOMophejaWbaA0Qgnm0ZRibtPzW4x1tileqXOYPHi
+	 pUviOvWlV7DSS40ewBSdXq8DxMctZBf2AFccvlzL80XBj1IIrT6j+ikMC5eD1Kvn39
+	 116CB8cK1KyV5xcg7JaTNA1WUYnMFLhSBnbFnImGbWQ2KHz2Y7tcR3YYWaKULJh/Ee
+	 tHo9iBJrJeQ5w==
+Date: Wed, 9 Apr 2025 20:52:51 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: "Ahmed S. Darwish" <darwi@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	John Ogness <john.ogness@linutronix.de>, x86@kernel.org,
+	x86-cpuid@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] x86/cacheinfo: Properly parse CPUID(0x80000005)
+ L1d/L1i associativity
+Message-ID: <Z_bCA8788lrr-NdB@gmail.com>
+References: <20250409122233.1058601-1-darwi@linutronix.de>
+ <20250409122233.1058601-2-darwi@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409122233.1058601-2-darwi@linutronix.de>
 
-On Wed, Apr 09 2025 at 15:53, Chen Wang wrote:
 
-> On 2025/4/8 13:01, Inochi Amaoto wrote:
->> Add support for Sophgo SG2044 MSI interrupt controller.
->>
->> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
->> Reviewed-by: Chen Wang <unicorn_wang@outlook.com>
->> ---
->>   drivers/irqchip/irq-sg2042-msi.c | 61 ++++++++++++++++++++++++++++++--
->>   1 file changed, 58 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/irqchip/irq-sg2042-msi.c b/drivers/irqchip/irq-sg2042-msi.c
->> index 30a1d2bfd474..2935ca213306 100644
->> --- a/drivers/irqchip/irq-sg2042-msi.c
->> +++ b/drivers/irqchip/irq-sg2042-msi.c
->> @@ -19,8 +19,6 @@
->>   
->>   #include "irq-msi-lib.h"
->>   
->> -#define SG2042_MAX_MSI_VECTOR	32
->> -
->>   struct sg204x_msi_chip_info {
->>   	const struct irq_chip		*irqchip;
->>   	const struct msi_parent_ops	*parent_ops;
->> @@ -44,7 +42,7 @@ struct sg204x_msi_chipdata {
->>   	u32					irq_first;
->>   	u32					num_irqs;
->>   
->> -	DECLARE_BITMAP(msi_map, SG2042_MAX_MSI_VECTOR);
->> +	unsigned long				*msi_map;
->
-> Regarding the common parts of SG2042 and SG2044, I noticed that you 
-> changed DECLARE_BITMAP back to dynamic application. If there is a next 
-> version, I suggest you mention it in the commit information.
+* Ahmed S. Darwish <darwi@linutronix.de> wrote:
 
-Actually that should be part of the previous patch which prepares for
-configurable initialization. Then this one just adds the new variant.
+> For the AMD CPUID(4) emulation cache info logic, the same associativity
+> mapping array, assocs[], is used for both CPUID(0x80000005) and
+> CPUID(0x80000006).
+> 
+> This is incorrect since per the AMD manuals, the mappings for
+> CPUID(0x80000005) L1d/L1i associativity is:
+> 
+>    n = 0x1 -> 0xfe	n
+>    n = 0xff		fully associative
+> 
+> while assocs[] maps these values to:
+> 
+>    n = 0x1, 0x2, 0x4	n
+>    n = 0x3, 0x7, 0x9	0
+>    n = 0x6		8
+>    n = 0x8		16
+>    n = 0xa		32
+>    n = 0xb		48
+>    n = 0xc		64
+>    n = 0xd		96
+>    n = 0xe		128
+>    n = 0xf		fully associative
+> 
+> which is only valid for CPUID(0x80000006).
+> 
+> Parse CPUID(0x80000005) L1d/L1i associativity values as shown in the AMD
+> manuals.  Since the 0xffff literal is used to denote full associativity
+> at the AMD CPUID(4)-emulation logic, define AMD_CPUID4_FULLY_ASSOCIATIVE
+> for it instead of spreading that literal in more places.
+> 
+> Mark the assocs[] mapping array as only valid for CPUID(0x80000006) L2/L3
+> cache information.
+> 
+> Fixes: a326e948c538 ("x86, cacheinfo: Fixup L3 cache information for AMD multi-node processors")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
+
+Yeah, so a Cc: stable tag is usually reserved for recent regressions, 
+or critical fixes - but this is a bug from 2009, ~16 years old. This 
+bug is old enough to receive a driving license in the US, and can 
+legally buy beer or wine in Germany.
+
+So I've removed the tags from the two commits in tip:x86/cpu, but note 
+that the Fixes tag itself will give backporters enough information so 
+they can decide on whether to backport. Greg's -stable process 
+typically processes all Fixes tags for example, once Linus pulls this 
+into v6.16-to-be.
 
 Thanks,
 
-        tglx
-
-
+	Ingo
