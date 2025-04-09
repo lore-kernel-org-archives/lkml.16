@@ -1,150 +1,136 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A93125E81A;
-	Wed,  9 Apr 2025 11:44:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 310C825E46F;
+	Wed,  9 Apr 2025 11:44:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744199048; cv=none; b=MVcFXpdGauQDJKaH8E/+DVPwXZTOWIKwXxpbwgsqT1VTCjw3/lJUmiZzZ1/EMAJIzHzVskmqv0A6TGhlYFOPuETW36zJOFf0qcktwgjHYGaov0csUxwRWQfr/aC0ZJ7m1d3JTwGxumhGbnYonJ5c2V9R0Ar/2rg1irBT968Bk4M=
+	t=1744199067; cv=none; b=ttT0Wv5JyzdwtLJ4Je/kvGLt9M+z5uFd6TMtABS0/+7+tEIxh5eayqmT31V1SComww0q4rq32xUuQrLNXZyd1i2o6xSKMELtCSEU12UxDUUARjEyp+CXSxp1acUK2dEBqyA54cyrsHluIC1/6eQvxOUF6VMaGA/d2aMifiPBr1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744199048; c=relaxed/simple;
-	bh=1cPrVQ7kf4CjzELcx2r3Mt/clhzq06BtS1bl+mQBAbc=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=DD2hdH/ja8NiBXpGk/ES4H5KNvWDsihFFo+C84eR8IY4fhWvLUZdKCGXr2QhFIPG6OYLMEnFrnnaHyaSrvga7OsjCu7fBzFYWGkm/fmK6RJhLJjaBHo4OCLyfmyHv+TQ42IOAdf9IuK++ZuUv67IMEsjLCin3cVmLQ5NJrKSjeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=HHQyIUCH; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1744199067; c=relaxed/simple;
+	bh=1zuuKfq8Fb2gUxCOT5nm7PjF4ClnVz1Kne9wx5wdnT0=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=udYVg2zSoK+q9h+IQk6vfMb+c/W4ZB2IfbtPVYQ/t2erHMxglPAaV5M9tECdb3v/uIVkwiGhjcVI/CFf0LjH63dsevKVL0P0Otqe//G/kUUlWeYWchg9gqmqVs6eyJhl24Jzezzn2Y5ivOa77NXTN+JyxlTkJ/jrTp0LReMblPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Y232yHbM; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vAAqV43m; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="HHQyIUCH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1744199024; x=1744803824; i=markus.elfring@web.de;
-	bh=ZcboPvUR5IHm0tuhCfo0KhbP/W6yUMqtAc0Ziq24U7U=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
-	 Subject:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=HHQyIUCH2tXvFr1A9+pq3qpGYQJ58DNhx0SvwG3ZcnAQEInuolYwItp6q8aHQxVg
-	 9hEl7g83CAsnsLDxLy4+Zgi4Df4Y52kd3Zpx0PZyPYXvqp795SEd0YmCe7oLPBHv9
-	 tgO0IAfSBqan6RYKvkp6oSpmviw4XgDD2c7l4cjiEt6HqZsTNIgBRPMOlR0+9NBJ2
-	 RUBPJuCX1DNTjQklZjsYcrc3H1fgU3BMzSgGUGMjgYqHkF8acEhUTCZgapXHaL+Ha
-	 2tUxHRSJmhrGhnVHowTMdo1uRY1wpnvW7olHQU6ik0AW+4o3dsQsObvMtINTV7Alf
-	 pX6+q01rCHUk9xptsQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.27]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1N30dV-1t4LfG3KqT-00xgZ1; Wed, 09
- Apr 2025 13:43:43 +0200
-Message-ID: <3727de04-7993-4b81-80c0-adb40b847307@web.de>
-Date: Wed, 9 Apr 2025 13:43:39 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Y232yHbM";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vAAqV43m"
+Date: Wed, 09 Apr 2025 11:44:24 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744199064;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aNLd30xIMik6LI+ehTepOf+SXmSqYObNycz8f+vXaSs=;
+	b=Y232yHbM85VIXm1W2J/wuLZVh7K+mXVEW0jNxFbzU6rJ/B3F2xc4P0dPbOwkVllcsKD0Rq
+	Rk1SbwTULgfoBwHQsH8lCaI6TtZLTMDEqUGDW/+sn/3ehTuwjR4JHU9ojBEeYF1yY2woE9
+	sHgbNJQcRpaVgFBV2KUjKrMHkEhC5EdZTtNr3Y0iBGHrmEOuIQXpFOL6tBK6ftujYoo3Vd
+	By11TEP1IcRAjDEF7jkxO9SzX9lkv8qoKq5nQGiHGHYSjfbLk59dQa7bJIYIeEVW4lQjgk
+	tJdxPW35wYoQOe01x+ucgP1pMdkdqCFAlWYIhnSbeQsOfklnGjIxwOpUF+Fa+Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744199064;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aNLd30xIMik6LI+ehTepOf+SXmSqYObNycz8f+vXaSs=;
+	b=vAAqV43mrKlQPRdNS43ODnevcrAKb+oq8Biy6PHdWmiyDukNqnPJDB6jL0oFekzdbbZJn4
+	Bx4ZQ4Iae8y6C/AQ==
+From: "tip-bot2 for Josh Poimboeuf" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/urgent] x86/bugs: Don't fill RSB on VMEXIT with eIBRS+retpoline
+Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+ Amit Shah <amit.shah@amd.com>, Nikolay Borisov <nik.borisov@suse.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, Vitaly Kuznetsov <vkuznets@redhat.com>,
+ Sean Christopherson <seanjc@google.com>,
+ David Woodhouse <dwmw2@infradead.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To:
+ <84a1226e5c9e2698eae1b5ade861f1b8bf3677dc.1744148254.git.jpoimboe@kernel.org>
+References:
+ <84a1226e5c9e2698eae1b5ade861f1b8bf3677dc.1744148254.git.jpoimboe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: linux-sunxi@lists.linux.dev, linux-crypto@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, Andre Przywara
- <andre.przywara@arm.com>, Chen-Yu Tsai <wens@csie.org>,
- Corentin Labbe <clabbe.montjoie@gmail.com>,
- "David S. Miller" <davem@davemloft.net>,
- Herbert Xu <herbert@gondor.apana.org.au>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Ovidiu Panait <ovidiu.panait.oss@gmail.com>,
- Samuel Holland <samuel@sholland.org>
-Content-Language: en-GB
-Cc: LKML <linux-kernel@vger.kernel.org>, Julia Lawall <julia.lawall@inria.fr>
-From: Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] crypto: sun8i-ce-hash - Refine exception handling in
- sun8i_ce_hash_run()
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:jEGNiMKs8nAQw2qIQjUCQq/KWOsVvdlxMimxs5ulT7dkC8Jy8vn
- sjvXtDkHx1NdmMR2lfMzvk9aLWGt6cUsQAf4s4emy/sWUqdg3UOLtEjqk17QN47SO7dFcJb
- AXUoI3lNiWi1QxGCvZBv3C1zvrsuJNDxfKbgyudePrBW8wI9qmNQ4IeqhC27tyOSa3ZpB6i
- 1sbNZMcwz1m1/XdJa+Dgw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:xNwPz1kyRa4=;mhac4w7rrkZIUH0v2PZOyYFCNiY
- JyzmGclW/6PQvJJ45Nz42p+6+B9uGh+XKN1ZwSDZpqjHJ5OimogrHASfjWlyFI14Hh0YYUOol
- ZkUJknhX4uAv5J+cFMubYlTZGUG/Bo++ZnvSGmGnF70rAcMsxeAMHcAVrBD8L2ujzwCsu8Nqe
- 4JB3h+oEyfqn9FfS5GOfCXVPcf4+EDFGoQ8QvUd+qjCzbD0dtLan5W5QV7m8loLKGao52gnhI
- FPfJYsA++FkB+UbSCAlBRw7Xm+gZv01E7L3fPOLV/2lrIhXxhNjiGO3svor4dTetQW5vXW5HR
- 8fTBaqSwwVxuFLK/1bACOSrkbyo8WTEoeUzI8GZHaui31Z/XXFBKUzdEody1ymjEVGlMDdTrB
- epPne+q0z0xzaIWBJyBAIjZFBYogkQZ4dxc5BdI4kdH5keHGGptYQlAoLBChZhWrQQ/uhUJK8
- TzxmOn/KSiIhwLOUUo/mG1bh9emuXe14PRzcl/nugKDccjefIYJ+0Dq8+/gKyvKyXXRGZyD1q
- okI2wmDTI3VGUiHjZQI0fjdleH1QJqkR9B986Mu1aw+3DMv2czXTuMI8Ac7+63pJxuK/RWys/
- MQzG9ZhH6fx8HNTraJBRgH3J006Tze/vLmPqGhZjdGIqhANJPp+I8IuMLQju9yme3Y4wCQ3WZ
- qOR2embihPCMKfrba+MTqjHe5FOLEXqgyeRFRL3isO0gPaQAiHNZ8Klk5PlgMIrRGS509nvFM
- I+5enqjNqKWdUcj9AjZRG20o+4d8hKYJBRS0UVCrscp44yGgG8aW2M5BlWk9faqnicr7Kz1tS
- J2QbvRCUcAr2DBHu82vCmCbhWeL8dvRRzOIYc/Ljoya4rNX3A9EG8sbvcccOhLyth3mS29lIl
- 08m+rEr/FPMIuI/GKUqALXQpa2tlbFMizemDSUJ3dNUsgwhiXZ57OtlZRx582WVHUUyxjEb4u
- 3Oe6kQvxD/soNWmJC2ESsC6OzZWcIPvqfwXlEzkUcw8K1gJxGcg1Lq0vfxCFeiq3vEMDCNv7l
- 4R3tkXylq+wgilTD8HgWiKsGtM3rRPufDeD3jKunDbAwhQMDeOpcGeCjAb7YuixPJzGru9m5Y
- l1hVZfZvuNN6tjfgEljjut8M49BAwGWByQ6uWpkk2yGySY+82oOo8otShveK2kS38P5GzsRFx
- 2i1/j2BzovByq9gGjlz5llgCv92MpDkwPpt9QkzA2J7/baSD1tcoVPSVbfwqRYRVZpIJLs6Gr
- cHtSBZikXE8fIQC2liW+EtsF+sALU5F5FMujb4W3+pqqrQakTozhzTUrvwIeWKixNi+VGuxc+
- YYxy35wkU0EPEoMUeji3co3tbLllbFWCeGWyUQis0S8lxv0NXhThkW59OqfliT9sn217/IJxN
- kRxcwoW+UFf+a44sfTstf4N36E1XsLqTFkxemtsKQ/gej5PECPnTs2a20VBDGZuVWqlTstS/J
- fz61JGNz42bJBhKTE7MNA9yRm6vdHnT4o9Yi9lW3tCK44ZDyt4SnI2F3fValD3iGEAf0ewnUA
- l5CXOLI5PhcXDfZoi08=
+Message-ID: <174419906403.31282.6211937821580800684.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Wed, 9 Apr 2025 13:26:55 +0200
+The following commit has been merged into the x86/urgent branch of tip:
 
-Two if branches contained duplicate source code.
-Thus avoid the specification of repeated error code assignments by using
-additional labels instead.
+Commit-ID:     18bae0dfec15b24ec14ca17dc18603372f5f254f
+Gitweb:        https://git.kernel.org/tip/18bae0dfec15b24ec14ca17dc18603372f5f254f
+Author:        Josh Poimboeuf <jpoimboe@kernel.org>
+AuthorDate:    Tue, 08 Apr 2025 14:47:33 -07:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Wed, 09 Apr 2025 12:41:55 +02:00
 
-This issue was transformed by using the Coccinelle software.
+x86/bugs: Don't fill RSB on VMEXIT with eIBRS+retpoline
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/crypto/allwinner/sun8i-ce/sun8i-ce-hash.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+eIBRS protects against guest->host RSB underflow/poisoning attacks.
+Adding retpoline to the mix doesn't change that.  Retpoline has a
+balanced CALL/RET anyway.
 
-diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-hash.c b/drivers/c=
-rypto/allwinner/sun8i-ce/sun8i-ce-hash.c
-index ba13fb75c05d..7d31e190bb6a 100644
-=2D-- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-hash.c
-+++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-hash.c
-@@ -399,14 +399,14 @@ int sun8i_ce_hash_run(struct crypto_engine *engine, =
-void *breq)
+So the current full RSB filling on VMEXIT with eIBRS+retpoline is
+overkill.  Disable it or do the VMEXIT_LITE mitigation if needed.
+
+Suggested-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Reviewed-by: Amit Shah <amit.shah@amd.com>
+Reviewed-by: Nikolay Borisov <nik.borisov@suse.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: Sean Christopherson <seanjc@google.com>
+Cc: David Woodhouse <dwmw2@infradead.org>
+Link: https://lore.kernel.org/r/84a1226e5c9e2698eae1b5ade861f1b8bf3677dc.1744148254.git.jpoimboe@kernel.org
+---
+ arch/x86/kernel/cpu/bugs.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index 9926509..a10b37b 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -1617,20 +1617,20 @@ static void __init spectre_v2_determine_rsb_fill_type_at_vmexit(enum spectre_v2_
+ 	case SPECTRE_V2_NONE:
+ 		return;
+ 
+-	case SPECTRE_V2_EIBRS_LFENCE:
+ 	case SPECTRE_V2_EIBRS:
++	case SPECTRE_V2_EIBRS_LFENCE:
++	case SPECTRE_V2_EIBRS_RETPOLINE:
+ 		if (boot_cpu_has_bug(X86_BUG_EIBRS_PBRSB)) {
+-			setup_force_cpu_cap(X86_FEATURE_RSB_VMEXIT_LITE);
+ 			pr_info("Spectre v2 / PBRSB-eIBRS: Retire a single CALL on VMEXIT\n");
++			setup_force_cpu_cap(X86_FEATURE_RSB_VMEXIT_LITE);
+ 		}
+ 		return;
+ 
+-	case SPECTRE_V2_EIBRS_RETPOLINE:
+ 	case SPECTRE_V2_RETPOLINE:
+ 	case SPECTRE_V2_LFENCE:
+ 	case SPECTRE_V2_IBRS:
+-		setup_force_cpu_cap(X86_FEATURE_RSB_VMEXIT);
+ 		pr_info("Spectre v2 / SpectreRSB : Filling RSB on VMEXIT\n");
++		setup_force_cpu_cap(X86_FEATURE_RSB_VMEXIT);
+ 		return;
  	}
- 	if (len > 0) {
- 		dev_err(ce->dev, "remaining len %d\n", len);
--		err =3D -EINVAL;
--		goto err_unmap_src;
-+		goto e_inval_src;
- 	}
- 	addr_res =3D dma_map_single(ce->dev, result, digestsize, DMA_FROM_DEVICE=
-);
- 	cet->t_dst[0].addr =3D desc_addr_val_le32(ce, addr_res);
- 	cet->t_dst[0].len =3D cpu_to_le32(digestsize / 4);
- 	if (dma_mapping_error(ce->dev, addr_res)) {
- 		dev_err(ce->dev, "DMA map dest\n");
-+e_inval_src:
- 		err =3D -EINVAL;
- 		goto err_unmap_src;
- 	}
-@@ -428,16 +428,15 @@ int sun8i_ce_hash_run(struct crypto_engine *engine, =
-void *breq)
- 		j =3D hash_pad(bf, 2 * bs, j, byte_count, false, bs);
- 		break;
- 	}
--	if (!j) {
--		err =3D -EINVAL;
--		goto err_unmap_result;
--	}
-+	if (!j)
-+		goto e_inval_result;
-
- 	addr_pad =3D dma_map_single(ce->dev, buf, j * 4, DMA_TO_DEVICE);
- 	cet->t_src[i].addr =3D desc_addr_val_le32(ce, addr_pad);
- 	cet->t_src[i].len =3D cpu_to_le32(j);
- 	if (dma_mapping_error(ce->dev, addr_pad)) {
- 		dev_err(ce->dev, "DMA error on padding SG\n");
-+e_inval_result:
- 		err =3D -EINVAL;
- 		goto err_unmap_result;
- 	}
-=2D-
-2.49.0
-
+ 
