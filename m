@@ -1,154 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E056C276033;
-	Wed,  9 Apr 2025 14:48:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 399C8266B47;
+	Wed,  9 Apr 2025 14:49:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744210088; cv=none; b=hrdV6BzMai8F3cVngkl9zxc0tZNem3ys6Jd/SZ6SnG10v3SVaUCBQyw0D2BR5V4NtFJZTLfcSsZa1eRLKrOAoR5Y4JXjWy712lJCZaLBaL5U4texbqdSPwVrXbWraZh/Py5sSvW+aNQwz1zf04LP/Gu2InccGnMTKBt5iY5tJwE=
+	t=1744210164; cv=none; b=kKMkOYRLc69UpPB6+IQZBp1dgfpF6Xwifb4KbVJKQBZgy1K8fKbdDw381wqNfBpAPlCbNDU0CmK5OwNiPRW4RgtaGlTHnn0ThiZkpk1UxVAdzXdGkdwddBcIBt73NMP2zmXcvWiPF6ap/DgoZVmB6Le4NwDhJfzSUJx6ALMO4cc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744210088; c=relaxed/simple;
-	bh=rQBB6jbnrS8Sm508XLIWz1L1qf5uNl92Y7dQesXjv3k=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Zt0Ir9qECjEh0tfYr4HO6MwM4D47oqRLEKrYEpVdZpPzLJeZq1Cwc40zmf5caMb+gz4r3xJ+gcu4roqh7+owPWZXukZJr7JADNEOFac6r5XEcWhz+Km6D6FaCr6dZk2to54S0vs06dozRxsMEqZC+mQzjs4nXdFd+v2wMjFb0wY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WV0dZW4C; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744210164; c=relaxed/simple;
+	bh=xhjEV056H9FYdTOEcIjULpX+6vmWA46duA0byZ/I/c8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ma+h4C1xXLCjW5fZMsDu+6QZsezXvMBtBOIvxNZEDgGOrJHHgaLgUFakjeVYtmuoQax+vdjCgvChW5pKP4XMHVc7bm8tzsqjYprNuWAg0jylb7wRIC556gsM0H/aamFnhVjQSe2jpQXt3xxke9kXuNjrwlYugnV9X+S9jZ5ALRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ln3deWoU; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WV0dZW4C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1408AC4CEE7;
-	Wed,  9 Apr 2025 14:48:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744210087;
-	bh=rQBB6jbnrS8Sm508XLIWz1L1qf5uNl92Y7dQesXjv3k=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=WV0dZW4CSd0AuRUJv0RUpzEH0MXFmfeLxiNdP3cvjgGNBxRndAsyi+4UKAtb3dqnx
-	 sKEB4iyR0FicQQGORRInrAsMAUNyleQCu9bPQ3njRkoI8tJWJpnGE+HBMTBfwOHS+b
-	 6BRF1cjnqroZ0B7FaWOYyBzds4od2K7NG6ag8RnzK05nVEiX9cHMYv+PNP+FMRMQzt
-	 51tvSyJPz0F/npR9jhrjuB3PD4lpsHIoA6mSJt8g6Dkcb20nvA+cJrNpBIlTbLdU5x
-	 xj/tCWPxN5PSAIyg8WAdonw4abN6SIS5LuLAn6SKKwzeFgaqLnR1WuBslAekCx6mr8
-	 P5uZb8U7MnGrQ==
-From: Konrad Dybcio <konradybcio@kernel.org>
-Date: Wed, 09 Apr 2025 16:47:32 +0200
-Subject: [PATCH 4/4] drm/msm/mdss: Get HBB dynamically, if available
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ln3deWoU"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-307325f2436so69549131fa.0;
+        Wed, 09 Apr 2025 07:49:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744210160; x=1744814960; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xhjEV056H9FYdTOEcIjULpX+6vmWA46duA0byZ/I/c8=;
+        b=Ln3deWoUhwBq3UwRSKwVj1GS/gfo8sm0NCTgAkf5cwjDmbHNib9xFEvbIj1VP7hcx1
+         aktbvAu8SP9ZUv2cDlVKAN2o1Wr4mQiCo8iBQZUVo/nOiujvYwZmTttXwJCun/YPXOev
+         y/yx7t7Nte0+VzC9cs5JjpAeOiDFRQNpGH9JSpjgtaRWwJRyRrPFQMz3l7SwU7aKMlSS
+         D9+K7LZc2Onwc25Bc7jGfqb/Q66cXfOUnuncGjiYOgvj5IDTJghW29WZkFb9gCbkcIZt
+         2okcqdf/tvaJkn/JR54fVjWa/z1UtYJmfF1bMprFKVHvDr+mGCEF9zzOSelc9+cnr1I3
+         jH5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744210160; x=1744814960;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xhjEV056H9FYdTOEcIjULpX+6vmWA46duA0byZ/I/c8=;
+        b=VDMD9zwQ3cSNKH1PNCOmQzWI95H0x8aoZ+OChaMW4YMbfO6H7g0SP204qNXf3Bq5c4
+         QOvXQrv9pX1OkRfeYKVRf050qp2pHgRwZGeeWfVrJUnWPWFh9hguaNSWPOgC1LsIl4/h
+         W6U0yRokxgKFwUc3DIuTQvqT1ebwc2uRmFzNyj3BtKiZkNqJlTMWTxzK0TKyDwVCssc9
+         C0XyANjrwsGpgZpEJ5eP4pJUG2w9Lh2AeTj83YAW0l3niXuOIEoRenhMAJHw2YV+3FWJ
+         HMRY4QrDrdupQ+6nqQRyOCNMnp1e4jpYpeD7axUTWcABkfG1ETxpRS0NVKe2sdFtMYQQ
+         enNw==
+X-Forwarded-Encrypted: i=1; AJvYcCXGPgRkCy3Dc1QbR+3KOIkjq+RfBEr2H5sEhOeaZicfeKbMCCO4rcs+B1CLQATJXdgnjXD6gyOAqhBlPps=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0J8oNbuzuzzcueeVHsWV8lE9vr+oRLMZM2QEcCHydPKw5IHGn
+	SDUVCc0VdlzMfCZTZM9LCqeFImUNsggNYwEE8S/mjVzBRljUjVg+r0KMx7Kx9NG5kBG39RxLiTr
+	JHXFQFy8jEia7npJSyjuzo+Ti+Nk=
+X-Gm-Gg: ASbGnctNJq7HTxQgc9bzDjHpWN6twxTyDiHA7h/psrk71kKOsxourcocp0ofhnE/Xoo
+	A82759JT/4xOh/OCrcwZr70qYYGr03SLcb50D7aeXnPD3nQoWl2kuzeBlrVi4MyiGIZp5Q+UsJu
+	o1hxpbkVzkbN+ZrFLTXR27WFE+m/NzTWuClSpweA==
+X-Google-Smtp-Source: AGHT+IE0OjJcLvewU6kRwfbIBnQJ6RvnEQwoJX/+dBHs52WJ/p2RPdESFV141biUeNxPOtMWMCMq/ccZek2tCqQK804=
+X-Received: by 2002:a2e:be9c:0:b0:308:fbd5:9d2d with SMTP id
+ 38308e7fff4ca-30f438b6750mr10897051fa.37.1744210160026; Wed, 09 Apr 2025
+ 07:49:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250409-topic-smem_dramc-v1-4-94d505cd5593@oss.qualcomm.com>
-References: <20250409-topic-smem_dramc-v1-0-94d505cd5593@oss.qualcomm.com>
-In-Reply-To: <20250409-topic-smem_dramc-v1-0-94d505cd5593@oss.qualcomm.com>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Kees Cook <kees@kernel.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
- Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Dmitry Baryshkov <lumag@kernel.org>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- freedreno@lists.freedesktop.org, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744210063; l=3179;
- i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
- bh=KAQqkKm/ZpU7QkabKJNN+6New53pE5zJNqI4Pg3sAhM=;
- b=5+hWG/GPJdQC6qZafGnzY1Y5DEOaRiytTwCA4reEDXK9gFZgHVE5c+Y1lKnKc7oFT/56MK5em
- ekBsY4I9fiMCQivNW6orLRhBfAHUyQQYjU1IGx/WmWy04i1dKtvC/Pr
-X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
- pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
+References: <20250409-container-of-mutness-v1-1-64f472b94534@gmail.com>
+In-Reply-To: <20250409-container-of-mutness-v1-1-64f472b94534@gmail.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Wed, 9 Apr 2025 10:48:43 -0400
+X-Gm-Features: ATxdqUFC-VpChO_A1OyOXTVwtBpWe4runp8t2SxRqzsNxltH0wOFvEYcx4OFsy8
+Message-ID: <CAJ-ks9mVs6+S6pgz9JEUWTjLNKuRzm45fWP4b+2kbUEeDY4pYQ@mail.gmail.com>
+Subject: Re: [PATCH] rust: retain pointer mut-ness in `container_of!`
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+On Wed, Apr 9, 2025 at 10:43=E2=80=AFAM Tamir Duberstein <tamird@gmail.com>=
+ wrote:
+>
+> Avoid casting the input pointer to `*const _`, allowing the output
+> pointer to be `*mut` if the input is `*mut`. This allows a number of
+> `*const` to `*mut` conversions to be removed at the cost of slightly
+> worse ergonomics when the macro is used with a reference rather than a
+> pointer; the only example of this was in the macro's own doctest.
+>
+> Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> ---
+> This patch is extracted from 3 other series to reduce duplication.
 
-The Highest Bank address Bit value can change based on memory type used.
+Oops, forgot to include
 
-Attempt to retrieve it dynamically, and fall back to a reasonable
-default (the one used prior to this change) on error.
+Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
 
-Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
----
- drivers/gpu/drm/msm/msm_mdss.c | 35 +++++++++++++++++++++++++++++------
- 1 file changed, 29 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/msm_mdss.c b/drivers/gpu/drm/msm/msm_mdss.c
-index dcb49fd30402b80edd2cb5971f95a78eaad6081f..c9b05c7cad9fcf3140ff994c1572c4f4cd508206 100644
---- a/drivers/gpu/drm/msm/msm_mdss.c
-+++ b/drivers/gpu/drm/msm/msm_mdss.c
-@@ -15,6 +15,7 @@
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
- #include <linux/reset.h>
-+#include <linux/soc/qcom/smem.h>
- 
- #include "msm_mdss.h"
- #include "msm_kms.h"
-@@ -166,8 +167,14 @@ static int _msm_mdss_irq_domain_add(struct msm_mdss *msm_mdss)
- static void msm_mdss_setup_ubwc_dec_20(struct msm_mdss *msm_mdss)
- {
- 	const struct msm_mdss_data *data = msm_mdss->mdss_data;
--	u32 value = MDSS_UBWC_STATIC_UBWC_SWIZZLE(data->ubwc_swizzle) |
--		    MDSS_UBWC_STATIC_HIGHEST_BANK_BIT(data->highest_bank_bit);
-+	u32 hbb = qcom_smem_dram_get_hbb() - 13;
-+	u32 value;
-+
-+	if (hbb < 0)
-+		hbb = data->highest_bank_bit;
-+
-+	value = MDSS_UBWC_STATIC_UBWC_SWIZZLE(data->ubwc_swizzle) |
-+		MDSS_UBWC_STATIC_HIGHEST_BANK_BIT(hbb);
- 
- 	if (data->ubwc_bank_spread)
- 		value |= MDSS_UBWC_STATIC_UBWC_BANK_SPREAD;
-@@ -181,8 +188,14 @@ static void msm_mdss_setup_ubwc_dec_20(struct msm_mdss *msm_mdss)
- static void msm_mdss_setup_ubwc_dec_30(struct msm_mdss *msm_mdss)
- {
- 	const struct msm_mdss_data *data = msm_mdss->mdss_data;
--	u32 value = MDSS_UBWC_STATIC_UBWC_SWIZZLE(data->ubwc_swizzle & 0x1) |
--		    MDSS_UBWC_STATIC_HIGHEST_BANK_BIT(data->highest_bank_bit);
-+	u32 hbb = qcom_smem_dram_get_hbb() - 13;
-+	u32 value;
-+
-+	if (hbb < 0)
-+		hbb = data->highest_bank_bit;
-+
-+	value = MDSS_UBWC_STATIC_UBWC_SWIZZLE(data->ubwc_swizzle & 0x1) |
-+		MDSS_UBWC_STATIC_HIGHEST_BANK_BIT(hbb);
- 
- 	if (data->macrotile_mode)
- 		value |= MDSS_UBWC_STATIC_MACROTILE_MODE;
-@@ -199,8 +212,14 @@ static void msm_mdss_setup_ubwc_dec_30(struct msm_mdss *msm_mdss)
- static void msm_mdss_setup_ubwc_dec_40(struct msm_mdss *msm_mdss)
- {
- 	const struct msm_mdss_data *data = msm_mdss->mdss_data;
--	u32 value = MDSS_UBWC_STATIC_UBWC_SWIZZLE(data->ubwc_swizzle) |
--		    MDSS_UBWC_STATIC_HIGHEST_BANK_BIT(data->highest_bank_bit);
-+	u32 hbb = qcom_smem_dram_get_hbb() - 13;
-+	u32 value;
-+
-+	if (hbb < 0)
-+		hbb = data->highest_bank_bit;
-+
-+	value = MDSS_UBWC_STATIC_UBWC_SWIZZLE(data->ubwc_swizzle) |
-+		MDSS_UBWC_STATIC_HIGHEST_BANK_BIT(hbb);
- 
- 	if (data->ubwc_bank_spread)
- 		value |= MDSS_UBWC_STATIC_UBWC_BANK_SPREAD;
-@@ -538,6 +557,10 @@ static int mdss_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	int ret;
- 
-+	/* We need data from SMEM to retrieve HBB in _setup_ubwc_dec_() */
-+	if (!qcom_smem_is_available())
-+		return -EPROBE_DEFER;
-+
- 	mdss = msm_mdss_init(pdev, is_mdp5);
- 	if (IS_ERR(mdss))
- 		return PTR_ERR(mdss);
-
--- 
-2.49.0
-
+from https://lore.kernel.org/all/87semhbncg.fsf@kernel.org/. I hope
+this is proper form!
