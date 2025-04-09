@@ -1,164 +1,235 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 813C725DAFD
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 10:56:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17DB450FE;
+	Wed,  9 Apr 2025 10:57:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744196192; cv=none; b=RFGMj7DTAqrYIYPRnWmz5tO4G4otC23uLEGoAU9i6fKCdPfQw1BV1w/ZnMKllMTYKCIluTGC2Nj4Y4Pi0el+SSGFpcm0/n4O/cmNF9AlzdkoL2Ss5jt7oJPBEZIWvZ/tk9+yQmETzAf8r666YN6BatUnkSccgQhUlR8ygBNSyMI=
+	t=1744196239; cv=none; b=pSchdPQbHQp9+Fz6mwuxkZ+PI5Ya1jZcwXQsC1qouI625UIvfG0H29JRb4ehluySPNZ1A9y+Cz6jvzObhWRNHk1q01dGN0aSDLcUusa/jeNAumniCrmyss4B9iadzC8XKoL7S65rNxqO5aHFxfCxGf1dvdxps++hUl7m/OHXNg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744196192; c=relaxed/simple;
-	bh=LTCwaImwKuvWXY2scLkUXgWwOFI49yWpZ+qPbyisx2U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S0W1FJqG7boQzTa2DkBspXqee2U4BS6MKdFEESVJzL9MuRyU3vqd3+5EGOAIan3CWtKudwB4K467RAuvuPyI3A6IVWBsotxfx9T0tXDkM/i+CrkM6BVcT8ePDw2xc2NK2ChIXDqpb8dZtTzf+Q80Ts4Ude6KbE5Ona7FIWa5+mQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PjYRgYEj; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744196239; c=relaxed/simple;
+	bh=2LytKNIoCuhhtB6sio3aMmi90kofWNCfL4cxq3uWT+4=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=p9OfNCmUVwQXXsgjIuh9WxRWG7RBc5glPIeuxQQivOm3TLFTQVBzcZE8AqTE0fUAbY6N34SxapDRh+doB6OgmorMnbyoRnTj4BDNwEVdffilE6QEp9GlWlUtfZVwKoInc2J529VXUva66NZQwFOLlt2sSAA3Vqn9iy1k52qtCSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=OFkm2Wy7; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=dPBKFJ4z; arc=none smtp.client-ip=103.168.172.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PjYRgYEj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744196186;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Giukvq1XMekOaAYyLauP2qjMQgVPWM9Bad3lqnf3cCw=;
-	b=PjYRgYEjPLQ3Hv6vJTN6jvBjyelsbi9wCn9op2y3na42j5AZ/HEsU8CH/Td6iewOW9azei
-	FpEdsaAz41ATZtnnoZ2mrQfuhaZ9HTaErL6DYpoFZg1Pb4NPUIRUnZdDloPjQL+g/OU/xb
-	KynFppiCwHt36KDQJs5r8VAV7a0yA/w=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-357-kA3Zanz7PHKGOcA6JlFtcg-1; Wed, 09 Apr 2025 06:56:23 -0400
-X-MC-Unique: kA3Zanz7PHKGOcA6JlFtcg-1
-X-Mimecast-MFC-AGG-ID: kA3Zanz7PHKGOcA6JlFtcg_1744196182
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43cf172ff63so38172545e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 03:56:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744196182; x=1744800982;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Giukvq1XMekOaAYyLauP2qjMQgVPWM9Bad3lqnf3cCw=;
-        b=XHGNIHC+nrt5ykQHjsX3rqJB4wiXIdEOc9KzZaDNf15G2YIqOuH1bGDsWxGL+XXOMO
-         4Mbs2cZhU/z+eEqBfCVGKsLoMQ+IHjwjuDam6eix1DMNSfrKdIy4ewOAJ9GS/dcWSpaC
-         1qxBwDnsU/o7H6jMfanU1d0vmFpchlYb8fzWD73dX+fytbUWGQbY9lBgDQL/nz+IhYEc
-         tWOcT628x3sboK1hebK29Wbb1f0LMHnn1qLRaFlEOV7v75eoQF3MbDD3/KB5g9tfexl6
-         8LFwxQfJbsZ3sdQeL2n+v0sMTUAkodV81iNeZFxj3hwmaS/lKmn9r4IBTaht/tNubCMy
-         tt4w==
-X-Forwarded-Encrypted: i=1; AJvYcCXdmU73XQWdMPql5p4KGICsCparWg/sYtuUmBw+nR2C0nkvkqDQc3xArEp/F9awhHRdezVwUNv/GIOD6hQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFKtjk+NxIQPPUzxOKDdz0iGZLu6Eh+EiDh/n8px77tNaJDp0w
-	tEZ5iRSgB5Jd63vtc/hXPqes26wapEumro9FXYRpTq8pcgxAI+A3+G3LgFQR/bZRI4RChEVTNHZ
-	9wFJdYBiyZX2YqhWa5TOlS9VaDR7x2WrvLc1JHmrvqMzGu73o2+p7yCs7KGT3LA==
-X-Gm-Gg: ASbGnctl5GG1HNuYzJqjFCvlrc0tZ0Hlv6QjCijji1vBDhogTyepwDCuI9HYfA5K+js
-	8WjK5jQAn0h+QWicpevKafPHa6KlIVKV3xq0/yqOU9So45j2wvqfupuqLYx7VPiB8QiTNPGeBxX
-	msNeSXGYUNET/uirvBCpVMPGQsbiTbnVukg47zecgVP9tL2QkUVfOFQp/Ty2TGoI1PWV2texsjC
-	rRxrN2FKbHnWF0D5zEg4ANtEgwdbJZ/WbxXJGZJchN9LDVFE8WhfNwuOdDYbUgwkg+Pprxh+cLl
-	0UOirg==
-X-Received: by 2002:a05:600c:3b0d:b0:43b:b756:f0a9 with SMTP id 5b1f17b1804b1-43f1eca7da6mr24601095e9.11.1744196182103;
-        Wed, 09 Apr 2025 03:56:22 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGNLH4SJp0xl9ym+oA6t+X06BpgXTrGstDaDUYdeGqpHCubYFfAQEql88GLYD8pGId9XSYpMw==
-X-Received: by 2002:a05:600c:3b0d:b0:43b:b756:f0a9 with SMTP id 5b1f17b1804b1-43f1eca7da6mr24600885e9.11.1744196181679;
-        Wed, 09 Apr 2025 03:56:21 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f20625eeesm16142845e9.11.2025.04.09.03.56.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 03:56:20 -0700 (PDT)
-Date: Wed, 9 Apr 2025 06:56:17 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Daniel Verkamp <dverkamp@chromium.org>,
-	Halil Pasic <pasic@linux.ibm.com>, linux-kernel@vger.kernel.org,
-	linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
-	kvm@vger.kernel.org, Chandra Merla <cmerla@redhat.com>,
-	Stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
-	Thomas Huth <thuth@redhat.com>, Eric Farman <farman@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Wei Wang <wei.w.wang@intel.com>
-Subject: Re: [PATCH v1] s390/virtio_ccw: don't allocate/assign airqs for
- non-existing queues
-Message-ID: <20250409065216-mutt-send-email-mst@kernel.org>
-References: <20250407044743-mutt-send-email-mst@kernel.org>
- <b331a780-a9db-4d76-af7c-e9e8e7d1cc10@redhat.com>
- <20250407045456-mutt-send-email-mst@kernel.org>
- <a86240bc-8417-48a6-bf13-01dd7ace5ae9@redhat.com>
- <33def1b0-d9d5-46f1-9b61-b0269753ecce@redhat.com>
- <88d8f2d2-7b8a-458f-8fc4-c31964996817@redhat.com>
- <CABVzXAmMEsw70Tftg4ZNi0G4d8j9pGTyrNqOFMjzHwEpy0JqyA@mail.gmail.com>
- <3bbad51d-d7d8-46f7-a28c-11cc3af6ef76@redhat.com>
- <20250407170239-mutt-send-email-mst@kernel.org>
- <440de313-e470-4afa-9f8a-59598fe8dc21@redhat.com>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="OFkm2Wy7";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="dPBKFJ4z"
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id D60F5114002D;
+	Wed,  9 Apr 2025 06:57:15 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-12.internal (MEProxy); Wed, 09 Apr 2025 06:57:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1744196235;
+	 x=1744282635; bh=uWm2NE/IuMCfn/DQORBBNK2WOS92lOJvjTCw/zxxtHA=; b=
+	OFkm2Wy7p07VJ0jHAgwUbZ1WqR2AT10rZ2moBuYAcqAWCsWPwsVwWO73mP4KRaeV
+	BnnwhOmh7s1fCHEObRoY500jEVTkQVyTdsufpPaeDGcugCq9d0vG5y9GQK0LR4k7
+	Hm6Qr0xPu3UPe3V5FYySP7od4JyFEQ4eVxsySmw9i+6W3qpuO1VPo6D+PknS6JuJ
+	IXnLA/5qF2tP9Ygi8JkCjwXxVtEirGdWzLIG0wsDlL36+4PCw9iMeEmFcBUPoSxZ
+	EXNgp/t+fD6zYaMC8SmETSKsiDkI4gAgV7AYuAzKnlF/HHeoTvL2WphFzwe7dyPo
+	M5cmOoMXVsu5E/0rzvp8/A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744196235; x=
+	1744282635; bh=uWm2NE/IuMCfn/DQORBBNK2WOS92lOJvjTCw/zxxtHA=; b=d
+	PBKFJ4zjIxK/rtsgaUGu82JGMk1gQ6GOOdO/eJSWvgiGcq6Bx/zqOLgaCw2L2LIy
+	KPbJeHcMtebgEnqr2DNP9Ddb+zYesi8UKyo8n4md8QSTensmh7BUpOt16AybMn5L
+	xrm3cd3kBYKfYvBvdCUziAYVMiv07vsZv7DkxvLfoh36SzpfoVgTf8lFeWIi/hsi
+	xJqPuEqf5eTwpFEjiYEDtBaup5Pu5BiiCJIgyftHCLcntUrNLjnrBiXF6ZTs4iLb
+	I0U/WjMpkdY9CNE2zou2vO5Fz5PvSezORPkcA6o3OoDEE7SwTpnfMHvFFaZI3Zmt
+	muHaq2nHzcWKtDWR/vE4g==
+X-ME-Sender: <xms:i1L2Z1HCHzGQT13IRupI9t1a4tSG2cUwXxCcjvahFjxCzQpH1McToQ>
+    <xme:i1L2Z6WevBv7h8kw8DO9g-k2quKOjikdF_S7xWGLMk7igtWQeYnjwJdMahB3Vkgt1
+    wGkAkKseVnwvEFSPoM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdehkeduucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
+    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
+    udefpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegtrghtrghlihhnrdhmrghrih
+    hnrghssegrrhhmrdgtohhmpdhrtghpthhtohepshgrshgthhgrrdgsihhstghhohhffhes
+    rghrmhdrtghomhdprhgtphhtthhopehtihhmohhthhihrdhhrgihvghssegrrhhmrdgtoh
+    hmpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthho
+    pehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlphhivghrrghlih
+    hsiheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgriieskhgvrhhnvghlrdhorhhg
+    pdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopeifihhllh
+    eskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:i1L2Z3IiVJP-N-x9HB5gq2ubKKGUv2n_Xl2zeM0wytbi0tReHMXbxA>
+    <xmx:i1L2Z7GCwDPglZxkaouRtfLqXrnVo26z_G0kgpi1QpotBZg59GIwWg>
+    <xmx:i1L2Z7Vv0jMlEJ4Vga8HQKVgyhvG6C9fM2R4mwBxP2cjAbXj6JSAiA>
+    <xmx:i1L2Z2PKuJICfQge-i7dIThPzjCRg3fGNDul7WF8DGrrzoeBiQ0ItQ>
+    <xmx:i1L2Z7BFFsTNsp4ZounQ-w-YcwJ-BIi5OQ4zdzB7zpegWfAgQDzGXTA2>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 6226A2220073; Wed,  9 Apr 2025 06:57:15 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <440de313-e470-4afa-9f8a-59598fe8dc21@redhat.com>
+X-ThreadId: T274101974a25e0dd
+Date: Wed, 09 Apr 2025 12:56:52 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Lorenzo Pieralisi" <lpieralisi@kernel.org>
+Cc: "Marc Zyngier" <maz@kernel.org>, "Thomas Gleixner" <tglx@linutronix.de>,
+ "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+ "Conor Dooley" <conor+dt@kernel.org>,
+ "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
+ "Sascha Bischoff" <sascha.bischoff@arm.com>,
+ "Timothy Hayes" <timothy.hayes@arm.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+Message-Id: <e7e4e9f0-a9e4-48d4-9bed-a4c52453ee8e@app.fastmail.com>
+In-Reply-To: <Z/ZH5IBQAZ8rc9Cz@lpieralisi>
+References: <20250408-gicv5-host-v1-0-1f26db465f8d@kernel.org>
+ <20250408-gicv5-host-v1-20-1f26db465f8d@kernel.org>
+ <ed63bb91-e9ac-409a-a9a0-25b233fe2e15@app.fastmail.com>
+ <Z/ZH5IBQAZ8rc9Cz@lpieralisi>
+Subject: Re: [PATCH 20/24] irqchip/gic-v5: Add GICv5 LPI/IPI support
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 09, 2025 at 12:46:41PM +0200, David Hildenbrand wrote:
-> On 07.04.25 23:20, Michael S. Tsirkin wrote:
-> > On Mon, Apr 07, 2025 at 08:47:05PM +0200, David Hildenbrand wrote:
-> > > > In my opinion, it makes the most sense to keep the spec as it is and
-> > > > change QEMU and the kernel to match, but obviously that's not trivial
-> > > > to do in a way that doesn't break existing devices and drivers.
-> > > 
-> > > If only it would be limited to QEMU and Linux ... :)
-> > > 
-> > > Out of curiosity, assuming we'd make the spec match the current QEMU/Linux
-> > > implementation at least for the 3 involved features only, would there be a
-> > > way to adjust crossvm without any disruption?
-> > > 
-> > > I still have the feeling that it will be rather hard to get that all
-> > > implementations match the spec ... For new features+queues it will be easy
-> > > to force the usage of fixed virtqueue numbers, but for free-page-hinting and
-> > > reporting, it's a mess :(
-> > 
-> > 
-> > Still thinking about a way to fix drivers... We can discuss this
-> > theoretically, maybe?
-> 
-> Yes, absolutely. I took the time to do some more digging; regarding drivers
-> only Linux seems to be problematic.
-> 
-> virtio-win, FreeBSD, NetBSD and OpenBSD and don't seem to support
-> problematic features (free page hinting, free page reporting) in their
-> virtio-balloon implementations.
-> 
-> So from the known drivers, only Linux is applicable.
-> 
-> reporting_vq is either at idx 4/3/2
-> free_page_vq is either at idx 3/2
-> statsq is at idx2 (only relevant if the feature is offered)
-> 
-> So if we could test for the existence of a virtqueue at an idx easily, we
-> could test from highest-to-smallest idx.
-> 
-> But I recall that testing for the existance of a virtqueue on s390x resulted
-> in the problem/deadlock in the first place ...
-> 
-> -- 
-> Cheers,
-> 
-> David / dhildenb
+On Wed, Apr 9, 2025, at 12:11, Lorenzo Pieralisi wrote:
+> On Wed, Apr 09, 2025 at 10:23:57AM +0200, Arnd Bergmann wrote:
+>> On Tue, Apr 8, 2025, at 12:50, Lorenzo Pieralisi wrote:
+>> > +static void irs_writeq(struct gicv5_irs_chip_data *irs_data, const u64 
+>> > val,
+>> > +		       const u64 reg_offset)
+>> > +{
+>> > +	writeq_relaxed(val, irs_data->irs_base + reg_offset);
+>> > +}
+>> 
+>> I think the use of _relaxed memory accessors needs some code
+>> comments here. The definition of these is that you don't care
+>> about ordering relative to DMA master accesses, yet you seem to
+>> very much have accesses to the 'ist' from the GIC, as well as
+>> DMA accesses from an MSI device, and I would expect both to
+>> require ordering.
+>
+> For the 1-level (linear) IST we allocate it in one go, write
+> the base address through relaxed access (that sets the IST
+> valid) and poll completion with a relaxed access. Memory is
+> cleaned and invalidated from the cache (if the IRS is not
+> coherent) before the MMIO sequence above, which implies a
+> dsb().
+>
+> After that memory is handed over to the GIC.
+>
+> For a 2-level IST, the code that updates L1 entries already add
+> a dma_rmb() barrier (ie gicv5_irs_iste_alloc()) to make sure we
+> order MMIO wait completion with the subsequent cache invalidate
+> (again, in the yet hypothetical case where the IRS is not coherent).
+>
+> I think I can add comments where the sequence to initialize the
+> tables is executed more than here, given that these helpers are
+> used for other purposes too.
 
-So let's talk about a new feature bit?
+Usually my recommendation is to have abstractions like this
+provide both relaxed and normal variants, and then only
+use the relaxed ones where it really matters for performance.
 
-Since vqs are probed after feature negotiation, it looks like
-we could have a feature bit trigger sane behaviour, right?
+That way you can keep relatively short explanations where
+you call irs_writeq_relaxed() and use irs_writeq() without
+any code comments any place that doesn't care about saving
+a few cycles per call.
 
-I kind of dislike it that we have a feature bit for bugs though.
-What would be a minimal new feature to add so it does not
-feel wrong?
+>> > +/* Wait for completion of an IST change */
+>> > +static int gicv5_irs_ist_wait_for_idle(struct gicv5_irs_chip_data 
+>> > *irs_data)
+>> > +{
+>> > +	int ret;
+>> > +	u32 val;
+>> > +
+>> > +	ret = readl_relaxed_poll_timeout_atomic(
+>> > +			irs_data->irs_base + GICV5_IRS_IST_STATUSR, val,
+>> > +			FIELD_GET(GICV5_IRS_IST_STATUSR_IDLE, val), 1,
+>> > +			USEC_PER_SEC);
+>> > +
+>> 
+>> What is the significance of the 1 second timeout? This is probably
+>> a million times longer than I would expect any hardware interaction
+>> to be specified to take. Are you waiting for another thread here?
+>
+> It is arbitrary, agreed.
 
-Maybe it's in the field of psychology though ...
+Can you make either much shorter, or non-atomic then?
 
+>> > +	l2istsz = BIT(n + 1);
+>> > +	if (l2istsz > KMALLOC_MAX_SIZE) {
+>> > +		u8 lpi_id_cap = ilog2(KMALLOC_MAX_SIZE) - 2 + istsz;
+>> > +
+>> > +		pr_warn("Limiting LPI ID bits from %u to %u\n",
+>> > +			lpi_id_bits, lpi_id_cap);
+>> > +		lpi_id_bits = lpi_id_cap;
+>> > +		l2istsz = KMALLOC_MAX_SIZE;
+>> > +	}
+>> 
+>> The use of KMALLOC_MAX_SIZE seem arbitrary here. I remember discussing
+>> this in the past and concluding that this is fine for all cases
+>> that may be relevant, but it would be good to explain the reasoning
+>> in a comment.
+>
+> We need contiguous physical memory that can be < PAGE_SIZE or larger.
+>
+> For allocations larger than the allocator caches kmalloc hands over to
+> the page allocator, MAX_ORDER is reflected into KMALLOC_MAX_SIZE AFAIU.
+>
+> That's the reasoning. Does it make sense ?
 
--- 
-MST
+I'm more worried about what happens when KMALLOC_MAX_SIZE is
+really small -- did you show that the allocation is still
+going to work, or is this likely to cause runtime problems?
 
+>> > +	if (irs_data->flags & IRS_FLAGS_NON_COHERENT)
+>> > +		dcache_clean_inval_poc((unsigned long)ist,
+>> > +				       (unsigned long)ist + l2istsz);
+>> > +	else
+>> > +		dsb(ishst);
+>> ...
+>> > +	baser = (virt_to_phys(ist) & GICV5_IRS_IST_BASER_ADDR_MASK) |
+>> > +		FIELD_PREP(GICV5_IRS_IST_BASER_VALID, 0x1);
+>> 
+>> Here it seems like you are open-coding the DMA mapping interface
+>> details, in particular the mapping of the 'ist' memory area into
+>> the gic's DMA master space, the coherency and the barrier that is
+>> normally part of a (non-relaxed) writeq().  Is there a reason
+>> you can't use the normal interfaces here, using dma_alloc_coherent()
+>> or dma_alloc_noncoherent()?
+>
+> The GIC IRS must be brought up early, it is not a struct device.
+
+Right, that is rather unfortunate.
+
+>> Do you expect actual implementation to not be cache-coherent?
+>
+> It is allowed by the architecture - I don't have a crystal ball
+> but if I want to add support for a non-coherent IRS the DMA mapping
+> like sequence above has to be there - alternatives are welcome.
+
+I see that we have a few GICv3 implementations that are marked
+as non-coherent in DT. I don't understand why they'd do that,
+but I guess there is not much to be done about it.
+
+The only other idea I have would be to use an uncached allocation
+for the non-coherent case, the same way that dma_alloc_coherent()
+or maybe dma_alloc_wc() does. This still has the same problem
+with bypassing the dma-mapping.h interface because of the lack
+of a device pointer, but it would at least avoid the cache flushes
+at runtime. If I read this code right, the data in here is only
+written by the CPU and read by the GIC, so a WC buffer wouldn't
+be more expensive, right?
+
+       Arnd
