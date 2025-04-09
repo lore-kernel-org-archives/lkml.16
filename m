@@ -1,86 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FD912566CB;
-	Wed,  9 Apr 2025 11:40:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3057A2566CB
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 11:40:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744198805; cv=none; b=Zsts/Ti2ZvMH/RkRviYn3hHBBUwQMRmeS6Ila+4dzb8swbxf1Mt3b/xWkhnhpPNRv2joytUmIILwMJiJQR2uQh3hfTbHpYRKHiI8SBZtjyzFxBZh/CnEtY2gbGAL9tLy11OGLL4crUoSN9E+fs+1QlzuVZ6OBeWc1u0O8QvER9M=
+	t=1744198837; cv=none; b=qcttL66sP9quo7BKUr4gw4XlZ37va4ja6ZojdAl3ypOlNpMncWIHVEPtirXsPSj+VIiJhaDxm/fRzDJkqkYDbndOwfxXA2H12XK3fU/Ywj73nyRded2x3bYYit7RMa9F08V396bKOT6FoLBwVMDzT3gdk8SucSM1kk/kocpWSEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744198805; c=relaxed/simple;
-	bh=DLBwwNWnA+fgJ6dwEkWaa43c/CIIIb95epf0rVpyE1U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nsIshFPboshawOxpih09d2ZVedJRUF/1MRpGs/zsgPrQ9bNN4ECclcWspCYPZgNN8xMgaq4Ti/lhiU7vq6HFWmQBM/hK9JVCKGElTKoy1R06KTqp4/hM82UeJXHknXqJebVTyhMqjAuywTzX8obvKfI0xNe7itfKpV/Ge6MagG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m7Pybuc9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744198837; c=relaxed/simple;
+	bh=D1baVT2feSX1Er3+kGpb+OJGmiYzuo+g9ncKFVOLPvg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Y690cuhX1brshzvW7Dn7omTWOoBEI8rv5waQzzQFycor/mk/Fif7w8/C6rNcjRBMaNeH4N1F99I89vn/PLwoPP0u7n93aYzQfBw0+iYlYw6dvqI4KeuuM5RTL3oFhofWrxeAnuZHr2nIWDM89t4lmDiRiRqdku9hL73O42JcAXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hI8z9orv; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m7Pybuc9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0025C4CEE3;
-	Wed,  9 Apr 2025 11:40:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744198804;
-	bh=DLBwwNWnA+fgJ6dwEkWaa43c/CIIIb95epf0rVpyE1U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m7Pybuc9nNJOmvYGtlFb+aAVj+YgJCFhfVZHHSlqC998vKiRcZPKIb+HM0Rch09jw
-	 +qVUrbTkCzmnpv1B71Ue1/uT4u/UcxlUWtnRINGSk8vf5fzpzWndfuHmeEuXsKITLZ
-	 J8bXKGgJT8gO60BR+UizPc9GM/xRa99aBZX2VXl+Hpj89W+ChnZZkOif5s70tuU1o3
-	 RybfJeijLs5vbrBeRk3do0aUDpSaaKYQQVRyw9Tsf16FSjRWmPFk7dRCVOiz1WXWhl
-	 zG1l68R8IeLd8j5voAJmdysMwcZZEpGia7W9U+Rk8z92c9PO+8QI/q2OkwbJGenWDa
-	 HM/uWIW85/8Ag==
-Date: Wed, 9 Apr 2025 13:39:58 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: mark.barnett@arm.com
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	namhyung@kernel.org, irogers@google.com, ben.gainey@arm.com,
-	deepak.surti@arm.com, ak@linux.intel.com, will@kernel.org,
-	james.clark@arm.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	adrian.hunter@intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 1/5] perf: Record sample last_period before updating
-Message-ID: <Z_ZcjvdC0W3Kq2kq@gmail.com>
-References: <20250408171530.140858-1-mark.barnett@arm.com>
- <20250408171530.140858-2-mark.barnett@arm.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hI8z9orv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744198834;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=NDGqQlp6vdT92i39nxBBA+m8Gk2WrTTGk7njr1zr+XA=;
+	b=hI8z9orvigT94nQJfV5hAG8LOIsMwO4PZwo1jdDOt/cb9Y1gp0g7LTFf7aJEB3w5ttwO9g
+	6/tgwWtwjkwjlpr2EfbRkJ/0Wh5t7O5LqUMUY8yAql1a8EQIYL+UZmHCEQyp5AWRJ72Cjy
+	erXSr+7tsabBQuckHmJWTbRGCjkyipI=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-360-C_kpjkuYNIWr8O6Am3WJfw-1; Wed,
+ 09 Apr 2025 07:40:32 -0400
+X-MC-Unique: C_kpjkuYNIWr8O6Am3WJfw-1
+X-Mimecast-MFC-AGG-ID: C_kpjkuYNIWr8O6Am3WJfw_1744198831
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 841F7180025A;
+	Wed,  9 Apr 2025 11:40:31 +0000 (UTC)
+Received: from f39.redhat.com (unknown [10.45.225.54])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DCC0A1955BEF;
+	Wed,  9 Apr 2025 11:40:29 +0000 (UTC)
+From: Eder Zulian <ezulian@redhat.com>
+To: Basavaraj.Natikar@amd.com,
+	vkoul@kernel.org,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Eder Zulian <ezulian@redhat.com>
+Subject: [PATCH] dmaengine: ptdma: Remove unused pointer dma_cmd_cache
+Date: Wed,  9 Apr 2025 13:40:19 +0200
+Message-ID: <20250409114019.42026-1-ezulian@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250408171530.140858-2-mark.barnett@arm.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
+The pointer 'struct kmem_cache *dma_cmd_cache' was introduced in commit
+b0b4a6b10577 ("dmaengine: ptdma: register PTDMA controller as a DMA
+resource") but it was never used.
 
-* mark.barnett@arm.com <mark.barnett@arm.com> wrote:
+Signed-off-by: Eder Zulian <ezulian@redhat.com>
+---
+ drivers/dma/amd/ptdma/ptdma-dmaengine.c | 3 ---
+ drivers/dma/amd/ptdma/ptdma.h           | 1 -
+ 2 files changed, 4 deletions(-)
 
-> From: Mark Barnett <mark.barnett@arm.com>
-> 
-> This change alters the PowerPC and x86 driver implementations to record
-> the last sample period before the event is updated for the next period.
-> 
-> A common pattern in PMU driver implementations is to have a
-> "*_event_set_period" function which takes care of updating the various
-> period-related fields in a perf_event structure. In most cases, the
-> drivers choose to call this function after initializing a sample data
-> structure with perf_sample_data_init. The x86 and PowerPC drivers
-> deviate from this, choosing to update the period before initializing the
-> sample data. When using an event with an alternate sample period, this
-> causes an incorrect period to be written to the sample data that gets
-> reported to userspace.
-> 
-> Link: https://lore.kernel.org/r/20240515193610.2350456-4-yabinc@google.com
-> Signed-off-by: Mark Barnett <mark.barnett@arm.com>
-> ---
->  arch/powerpc/perf/core-book3s.c  | 3 ++-
->  arch/powerpc/perf/core-fsl-emb.c | 3 ++-
->  arch/x86/events/core.c           | 4 +++-
->  arch/x86/events/intel/core.c     | 5 ++++-
->  arch/x86/events/intel/knc.c      | 4 +++-
->  5 files changed, 14 insertions(+), 5 deletions(-)
+diff --git a/drivers/dma/amd/ptdma/ptdma-dmaengine.c b/drivers/dma/amd/ptdma/ptdma-dmaengine.c
+index 715ac3ae067b..3f7f6da05142 100644
+--- a/drivers/dma/amd/ptdma/ptdma-dmaengine.c
++++ b/drivers/dma/amd/ptdma/ptdma-dmaengine.c
+@@ -656,8 +656,6 @@ int pt_dmaengine_register(struct pt_device *pt)
+ 	kmem_cache_destroy(pt->dma_desc_cache);
+ 
+ err_cache:
+-	kmem_cache_destroy(pt->dma_cmd_cache);
+-
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(pt_dmaengine_register);
+@@ -669,5 +667,4 @@ void pt_dmaengine_unregister(struct pt_device *pt)
+ 	dma_async_device_unregister(dma_dev);
+ 
+ 	kmem_cache_destroy(pt->dma_desc_cache);
+-	kmem_cache_destroy(pt->dma_cmd_cache);
+ }
+diff --git a/drivers/dma/amd/ptdma/ptdma.h b/drivers/dma/amd/ptdma/ptdma.h
+index 0a7939105e51..ef3f55632107 100644
+--- a/drivers/dma/amd/ptdma/ptdma.h
++++ b/drivers/dma/amd/ptdma/ptdma.h
+@@ -254,7 +254,6 @@ struct pt_device {
+ 	/* Support for the DMA Engine capabilities */
+ 	struct dma_device dma_dev;
+ 	struct pt_dma_chan *pt_dma_chan;
+-	struct kmem_cache *dma_cmd_cache;
+ 	struct kmem_cache *dma_desc_cache;
+ 
+ 	wait_queue_head_t lsb_queue;
+-- 
+2.49.0
 
-I've picked up this patch into tip:perf/core, because I think it makes 
-sense standalone as well.
-
-Thanks,
-
-	Ingo
