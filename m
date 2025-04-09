@@ -1,119 +1,185 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFDAA25A2A9
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 07:23:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B49021D618E;
+	Wed,  9 Apr 2025 07:24:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744183414; cv=none; b=VdPcgFa32Qp4iunBBDJB9fwRIyCB02/1gj6srkzjCmZ7KBLGfK06ZdDTXI4rJqcWzZEC6DJh/5ddaXOwXEzT18EJH7gUnXhctbFmAcz+RpkgfxPpdXVuPKJ8iEVWs8cF99Y8aas2sKvXihdQLi1iFOMKFdL7tjIV6hdNkUYReOk=
+	t=1744183461; cv=none; b=BrBwJaRrDqE14edhtHwEIyQDM69WTaVF/QWFZhHhaJgAtWvDwcYxS94nS46ZELoi9YQuYV6CTZjw8pGqaTxxrahTB2R1zwmTi0SkAv84qfRiJaSKiUGnhXLLAbj+4T1xd5Tmh6dMUKl/K8w2LpW1PFlB6ZKLLnH9l1g4V9q3msI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744183414; c=relaxed/simple;
-	bh=TbCJOIFZxOuGyD8oWXw8Z6jUczKbN8HoYWk4bAX9skc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bFRtYSp/DJ6h2xfB7ww2JvAFyodA00BhS2fkJnVWvlzH6IvNv2A/nHJHx0lhg5rUTYGfp90/2o2O8jyLkODrw6p2JaEj6Hq38kdmD0BYbf9yG95xSOQa+Tpv7CfbXAR3Kszo2YYRXpf7XuIvSyT5OM+BIPhDVplmnw+RmmTGbOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=mdIUS0XT; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1744183461; c=relaxed/simple;
+	bh=ArnVJjgtEXQreZlof1n4klVL4Al+j0YMxwGKjs+jRVw=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kTo8d8ncX4msz0ViP0uPc9LHlFlIM9Fxdv02Xq12DBS6DFmYAp/uTiQlcSTFo85BK1S+fcRMHTcIrjb940lzsKlFdCP6cDogc1oaHntAnbZMfstPXAFK0cVszM78+d3ADAkIxFE9zAkNmRUwX2vaCqsjB0FdulJUSZ5dQNQudDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L6VLy1Ai; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="mdIUS0XT"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 538JZ1sP006872
-	for <linux-kernel@vger.kernel.org>; Wed, 9 Apr 2025 07:23:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	gGopHc8M8UiNAurUBT8tbmUjbBdi9nDkUm7yBzqMldo=; b=mdIUS0XTGKVtMDDZ
-	H3rvzGmwgrXrm0T+Ydx0KIFg4NI2TDT+27Tbt9YZPKsjs9KVZefnbr+ncxFBDT8v
-	FYtXZhJst6HFgzfiA2ivQcYdB1j/kmdwU8ddd/nB9kqqhZCvCWTYT4rOajx1rSAc
-	engn+O6tC1NNQN8/fFVjvIWWQtmgaFPfIjdUmpkp/MNAvyC2PgdwsgMKL2tr/GzS
-	VZ04VabI3LwSQkl7TwFovkANnzI+50ONEVzBgLrd+lgV5/QiObXdjeCMvFB9DTeL
-	lbTZdkCKvCDGCm8IG9WgMBPZODiNe0YZIOYhpSBEEAT8c7WNGKbbLRBBQHJHeVxP
-	uyLWFw==
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twg3jdct-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 07:23:31 +0000 (GMT)
-Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-736b22717f1so333910b3a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 00:23:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L6VLy1Ai"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43d04ea9d9aso30721995e9.3;
+        Wed, 09 Apr 2025 00:24:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744183458; x=1744788258; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=aZXtjZfZaiKjV8pxyq15n6Y19W+V1TF7wJPTAdWOpVU=;
+        b=L6VLy1AiP5b+i+Lw874nqiE3j9a9azy0MT1yCFzjLNMpWnXQWPytDX+IFZt6LqZ36s
+         SY0eFFrMP6ru0ZS7uoJSsngb2Etw/DrvIVs34f85juynD9CVEXk8/q449CAGayYYtkcN
+         saz9XuAs2YgJBueFQQcWwYXZ88hB19vYF++hb9TFpGY2XBy5II7xPpbPs/hUlAiWFuVw
+         VmKLYOmB/LSCgrP+2HAE9+JOXMdevLULxS04F0B2c8dxFZcGUVVxI5j0RN5FcMeiJvvN
+         qwhm7wTns0zmgHnOLLGMSy7aYL5hu0yUi0nUw4YjlvAt1Tgse5nEbj2dt4aBRMhAo5LY
+         mxHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744183410; x=1744788210;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gGopHc8M8UiNAurUBT8tbmUjbBdi9nDkUm7yBzqMldo=;
-        b=DmZ9VEc2VSyht5XVBl31QOwC/ccQ4r4bQDcAxo4tSi7lTwpqRkasZRKyt3CxxKon2v
-         im/8nVnrhMqBc4kyCnQq+Ig1wJJ84SE+iCk7h3rrhtNz6Gw7trTKV5wILPE/ZHqBLJfs
-         ifucHs3IY23P7eMo2Xxj5eCIEVaokxNXkTRv89+bsQHP+HBgqhUk2QZIS3sdzgnsSuAJ
-         /VY/UWFSpdF8Qx0wBPGcbb8oPgKsChoiW+yyoz/PkbOVGv1N66Hgk/4PoOO5Z8vPevIz
-         ldezx6z6aVt3JpBBmt8sIelpK2UH6sNIYy2doikbcU3gogt59P9pvRbnSw54RhmI66+8
-         +CPA==
-X-Forwarded-Encrypted: i=1; AJvYcCVZqzre1Y/RKfy3gbBt4UJzMblkPleF0ZlfWo3PJuX6Dy//4SkStD842Q3s6e3SVMI/vj+h1CLUeWCgmog=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyA+v0kPMpqb6EcpcK1mV1pNMVY2+iPKGTVT5zILa/R6jN2TyNa
-	1ewFxQxGIFOnvT539pvHKL+DTjypLiPS5yzqb0HBKa/RbkdVPmjcuAG/O1mg75Ym6z2oVk3jmyc
-	8rbkTCgkDDfeC7GEo31cttPU4Zga9kk3MvrMx6bZGFypnWuShwEXwlICcZF+S7eQ=
-X-Gm-Gg: ASbGncuADfKR2j8jZBFrnmOh6SkcgS/qbFl7DhUxhXSoC9TSvAlGtbodb7qpmQt21iy
-	ik/3iRwqimqfErmV5pDYh+Xsr+WX3z9LPA2tv6GnfitY1TQVgMu0bAwR8z46t/vTls3ai5cTE4F
-	WAC5PkwqtCkhQdyaZd1pR9C2oJ+LLzGb4zfQy2ILsTLud+8/rzu535y2DYQYGE4/siBeFaYPRVY
-	8mBXS85c48ndnhSRYwjoe2MNxc8QHFvsRpqdqKqSxrSKlOnNi7o4a4PHJCIGfOVv9RRbY7Me2g0
-	ZrQpoHwO4hM73TkS51RNO9p1PJNrq7D3joSXEAJqiovx0oW2J9gOjA==
-X-Received: by 2002:a05:6a00:18a5:b0:736:3ea8:4813 with SMTP id d2e1a72fcca58-73bae3ff744mr3170243b3a.2.1744183410020;
-        Wed, 09 Apr 2025 00:23:30 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHPtgVisc7CCOafLf1M/gX+5QZW2iaobdlIZE4fEYvLA2WNor2YEuBrLxps+jQ8y/aA3Q6YcQ==
-X-Received: by 2002:a05:6a00:18a5:b0:736:3ea8:4813 with SMTP id d2e1a72fcca58-73bae3ff744mr3170201b3a.2.1744183409441;
-        Wed, 09 Apr 2025 00:23:29 -0700 (PDT)
-Received: from [10.152.204.0] ([202.46.23.19])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1d2afefsm619328b3a.16.2025.04.09.00.23.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Apr 2025 00:23:29 -0700 (PDT)
-Message-ID: <7378fa5d-5495-ec0e-9f15-6aa7e63d204e@oss.qualcomm.com>
-Date: Wed, 9 Apr 2025 12:53:25 +0530
+        d=1e100.net; s=20230601; t=1744183458; x=1744788258;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aZXtjZfZaiKjV8pxyq15n6Y19W+V1TF7wJPTAdWOpVU=;
+        b=LASGSm9/lOgAy9p0afqHs0+/24BRO8DoVzjZaIdXrLqpLEmXvc29zFIr5Ms3u2hMMV
+         pkbmgqC+El2xCd1LTDvMV8n5rWnnJBNVnjqGN/ntFNfgtGcr0+SKDuTdxXdyYKnCtWY5
+         bhEgndldjkyPoXI3wU9EfqCdDYRzgfGbMB98V5xWzrFrmq2+u4rJJMAsMFz/ho1I/mts
+         QhGMuxwXbjQ6eidQUgoFa/CSfMxE2O/wS1HELEofHn5TG97g4Tjpl3eqJyCufevmjgR0
+         9OVs8592gBaNtDUUlFZWJVWeqey0JwDsBPwhVGsm5QyK3YxWjGLMk7lnENDr6WusG9Fn
+         U2EA==
+X-Forwarded-Encrypted: i=1; AJvYcCU2Bb5E8excsyy8gnuW95LJ64MQS1H/fNjTwUUshNDIV3EIs+vVnuYg9I/bQM2Z46cbIUmeGDn4qGRYac3G@vger.kernel.org, AJvYcCVL4U7/MnhJYWaOIv+oWs0QotlPiCVcJkhRMN7XW5H8+FFJZCORD9TcslF7px/pPrvxxbXJP3cb@vger.kernel.org, AJvYcCWPONnkwhR0IoamAncI9xjm7SL8hlOE1A0Ei5Z4DBPRnhNb2mT9k49ukA7mGv+yC93+hoU0vq+Trdn2@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMo++6CX1zk6tAbhrOijKq51DljEDBpgUmgZO5UT0TTDpb2Dxf
+	PlyOZhL8U90OOoJCXjs1hmDrRhDQSXG9yznZ0nXBKt+17S6UOjp8
+X-Gm-Gg: ASbGncu2aMLjeLYlCgx0L9YA4kepQ/XS2OD44fEL4D2T2knRVIM+ZDYolAeEsDr3ntw
+	OQin5rvo9kK9QvL0sB3DDDhtG6bW3UXe4mLsI+MYdCYIysX3BSiaAPJ28vVTZdu5Lodq/27Txvp
+	p6yd6KV4P/j3pVCFGWj8ZPf7eUReA4KgRyz4aICOFl3EY4j1dSt+zzSNAWMqdU1RGEKoijYfKdZ
+	WPNDOJ33HgtWmKAm13V33tACuZw+Zel57GZ3GawyIhZp5wv5naC/GwwTostiSbmYrZNP+luMRgl
+	GGLdA7bI5UzE6eKfLof8hyoAy5qKV0TyNc7prOJMUZfOYReykaoA2dl5E/NmGqTkWtBKHWte
+X-Google-Smtp-Source: AGHT+IGmE5yR1RN6Y7itWh5Vm0T8GjGIHHBkIqnzUxoL1+oe6xxmSqm3+M+hIS7IhsxEa2DRXkctcg==
+X-Received: by 2002:a05:600c:a0a:b0:43c:e7a7:1e76 with SMTP id 5b1f17b1804b1-43f1fdc3f1emr12061765e9.1.1744183457625;
+        Wed, 09 Apr 2025 00:24:17 -0700 (PDT)
+Received: from Ansuel-XPS. (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f233c8224sm6776875e9.22.2025.04.09.00.24.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 00:24:17 -0700 (PDT)
+Message-ID: <67f620a1.050a0220.347fc7.1fee@mx.google.com>
+X-Google-Original-Message-ID: <Z_YgnQEv2i8n3uA2@Ansuel-XPS.>
+Date: Wed, 9 Apr 2025 09:24:13 +0200
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"Chester A. Unal" <chester.a.unal@arinc9.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	DENG Qingfang <dqfext@gmail.com>,
+	Sean Wang <sean.wang@mediatek.com>, Simon Horman <horms@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	upstream@airoha.com
+Subject: Re: [net-next PATCH v14 07/16] net: mdio: regmap: add support for
+ C45 read/write
+References: <20250408095139.51659-1-ansuelsmth@gmail.com>
+ <20250408095139.51659-8-ansuelsmth@gmail.com>
+ <20250409090751.6bc42b5b@fedora.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH ath-next] wifi: ath12k: fix cleanup path after mhi init
-Content-Language: en-US
-To: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Jeff Johnson
- <jjohnson@kernel.org>, Kalle Valo <kvalo@kernel.org>,
-        Kang Yang <quic_kangyang@quicinc.com>
-Cc: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-        linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20250403-ath12k-cleanup-v1-1-ad8f67b0e9cf@quicinc.com>
-From: Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>
-In-Reply-To: <20250403-ath12k-cleanup-v1-1-ad8f67b0e9cf@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: detTh1poJC3sEZN0ydtnGQdMziIR8uem
-X-Proofpoint-ORIG-GUID: detTh1poJC3sEZN0ydtnGQdMziIR8uem
-X-Authority-Analysis: v=2.4 cv=I/9lRMgg c=1 sm=1 tr=0 ts=67f62073 cx=c_pps a=mDZGXZTwRPZaeRUbqKGCBw==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=QRlmjJKdkydlmUMDs2wA:9 a=QEXdDO2ut3YA:10
- a=zc0IvFSfCIW2DFIPzwfm:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-09_02,2025-04-08_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- phishscore=0 suspectscore=0 mlxlogscore=999 lowpriorityscore=0 spamscore=0
- clxscore=1015 malwarescore=0 adultscore=0 priorityscore=1501
- impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504090032
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409090751.6bc42b5b@fedora.home>
 
-
-
-On 4/3/2025 3:34 PM, Raj Kumar Bhagat wrote:
-> Currently, the 'err_pci_msi_free' label is misplaced, causing the cleanup
-> sequence to be incorrect. Fix this by moving the 'err_pci_msi_free' label
-> to the correct position after 'err_irq_affinity_cleanup'.
+On Wed, Apr 09, 2025 at 09:07:51AM +0200, Maxime Chevallier wrote:
+> Hi Christian,
 > 
-> Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.3.1-00209-QCAHKSWPL_SILICONZ-1
+> On Tue,  8 Apr 2025 11:51:14 +0200
+> Christian Marangi <ansuelsmth@gmail.com> wrote:
 > 
-> Fixes: a3012f206d07 ("wifi: ath12k: set IRQ affinity to CPU0 in case of one MSI vector")
-> Signed-off-by: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+> > Add support for C45 read/write for mdio regmap. This can be done
+> > by enabling the support_encoded_addr bool in mdio regmap config and by
+> > using the new API devm_mdio_regmap_init to init a regmap.
+> > 
+> > To support C45, additional info needs to be appended to the regmap
+> > address passed to regmap OPs.
+> > 
+> > The logic applied to the regmap address value:
+> > - First the regnum value (20, 16)
+> > - Second the devnum value (25, 21)
+> > - A bit to signal if it's C45 (26)
+> > 
+> > devm_mdio_regmap_init MUST be used to register a regmap for this to
+> > correctly handle internally the encode/decode of the address.
+> > 
+> > Drivers needs to define a mdio_regmap_init_config where an optional regmap
+> > name can be defined and MUST define C22 OPs (mdio_read/write).
+> > To support C45 operation also C45 OPs (mdio_read/write_c45).
+> > 
+> > The regmap from devm_mdio_regmap_init will internally decode the encoded
+> > regmap address and extract the various info (addr, devnum if C45 and
+> > regnum). It will then call the related OP and pass the extracted values to
+> > the function.
+> > 
+> > Example for a C45 read operation:
+> > - With an encoded address with C45 bit enabled, it will call the
+> >   .mdio_read_c45 and addr, devnum and regnum will be passed.
+> >   .mdio_read_c45 will then return the val and val will be stored in the
+> >   regmap_read pointer and will return 0. If .mdio_read_c45 returns
+> >   any error, then the regmap_read will return such error.
+> > 
+> > With support_encoded_addr enabled, also C22 will encode the address in
+> > the regmap address and .mdio_read/write will called accordingly similar
+> > to C45 operation.
+> 
+> This driver's orginal goal is to address the case where we have a
+> PHY-like device that has the same register layout and behaviour as a
+> C22 PHY, but where the registers are not accesses through MDIO (MMIO
+> for example, as in altera-tse or dwmac-socfpga, or potentially SPI even
+> though  there's no example upstream).
+> 
+> What is done here is quite different, I guess it could work if we have
+> MMIO C45 phys that understand the proposed encoding, but I don't really
+> understand the dance where C45 accesses are wrapped by this mdio-regmap
+> driver into regmap accesss, but the regmap itself converts it back to
+> C45 accesses. Is it just so that it fits well with MFD ?
 
-Reviewed-by: Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>
+The main task of this wrapping is to remove from the dev side having to
+handle the encode/decode part. regmap address is still a single value
+but if a phy is mmio mapped is difficult to support c45 since you need 3
+different values (phy id, mmd and addr)
+
+With this implementation a c45 that is mmio mapped can implement
+whatever way he wants to configure each parameter for read/write
+operation.
+
+Example the ecoding might be on different mask and with the additional
+function it can be reorganized following the specific mask.
+
+> 
+> I'm not really against that, it still converts mdio access to regmap so
+> there's that, but is there a way to elaborate or document somewhere why
+> we need to do go through C45 -> regmap -> C45 instead of just
+> writing a mii_bus driver in the first place ?
+
+This was askek to prevent creating additional ""trivial"" mdio driver
+that would all do the same task. Since mdio-regmap was already in place
+it could have been extended with a more generic approach.
+
+Any hint on where to better document this?
+
+> 
+> As I said, I think this could work and even be re-used in other places,
+> so I'm ok with that, it's just not really clear from the commit log what
+> problem this solves.
+> 
+> Maxime
+
+-- 
+	Ansuel
