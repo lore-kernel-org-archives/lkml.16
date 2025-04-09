@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E3C92144B4
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 21:12:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C16482147E3
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 21:12:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744233123; cv=none; b=C3paliFKD7b3l8rxPmeoOZvm6O0E4lQM82JHl1i2mlmkJqJfw1/WzPeC5jkV8x0JJNsTKcHgyDoFNPCVCrluxY9SJod9Snmy1mEPAL1I2810QgJF97df+vUJE06HwWhyE6ZUvtMiV4PY/WpPR2zz+u6mIkYLMSW+0rTaJEyZK4Q=
+	t=1744233127; cv=none; b=iGfaRYD59fXWcDr99C7rzeEnS6AG+AwLQTLjcRWD8M4ES2q4xyYEDK1knYH2EvgKepCT4WATOnSI/FTT7wJZz1GXrwx1nYnxaXe8Fo4zWyEQSdR/n+GIIlGOkslqxRYcWRtG/THJgwRsCLxq0vO3RqBXR2u4HQauaZBNSX0auSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744233123; c=relaxed/simple;
-	bh=+zdko4ltFn0osG/aK0C6R4EHXLADPKkqIWLi0Kot1ow=;
+	s=arc-20240116; t=1744233127; c=relaxed/simple;
+	bh=KyxwRkCpc0W3aXEsLcSVXCo0y6WnzNVBnEHVFD/JCvA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=L27Sn5zDSYxx4osZqf3mBtmOTCbh6CZkpwYwzlYZJK6iM0+FuAo/gvG9YZaQO21SGQZ2SktuV9g2BQjGALfQfy4DtwXp32HbPKPr2WLO3fq03z076VtaV1HTY9HA7cSJzEEwAF27vp5hF7BN0M4Qm9aAoggVoIeADwFun1cadcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qqbDe4bv; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Cbs6ArWHrjqrDU0WhxoUrvzE6UVnFVYH0VSizFZzjD+WmLOoFuYKCUV5dAY1bzvtnUNlmhg1PPFt/jT4/tWLn8TN52O9qU/OUQWD3WU3eUiZBt9vO9gymrqUc1+DKVISFZnsFYfHah0IFoXJ0exrk9/4tv/KEvgmIpm+bkQZEnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H1KD3/g0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qqbDe4bv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 909B4C4CEEB;
-	Wed,  9 Apr 2025 21:11:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H1KD3/g0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84ED5C4CEE9;
+	Wed,  9 Apr 2025 21:12:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744233123;
-	bh=+zdko4ltFn0osG/aK0C6R4EHXLADPKkqIWLi0Kot1ow=;
+	s=k20201202; t=1744233126;
+	bh=KyxwRkCpc0W3aXEsLcSVXCo0y6WnzNVBnEHVFD/JCvA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qqbDe4bv38gERWdXxkT0tiD3thc/eflafvO6WizpzYbOl4O4UsVczsFPvaLtdmJT+
-	 80uyFckHh0MO6+ExXtIRJy3Y3ExGI/PqFBN62q3dufenk74JCWV5kZkjKJraCgTvQz
-	 bxi6FqwMjpn5+EZJcgVNr0SDhELNn3l25LeMUxJDPmh40QYd/u+xyMG0htHIse2xen
-	 l1m6uHaBRxCCkt/17dJk2K9ZxtpgfTrd0aM81ZLMGOj8c8GzbxqioMAzyAjhncG2mA
-	 jJ5Uo0AyeHUV/pAoCWDhRBwT3M78ZAShPPD0Ny/Fo8/IMR60q/eUsP/aa2IOQGbk5a
-	 pbqP0gAm6wnrA==
+	b=H1KD3/g04K6xRjD6iZt64mse9KSCnND6c2vS995TLgo1wPT4YQxMxWnuFo1ig7NWn
+	 G+0MWIkgRiOdwjyDDUdxuvOAtSABF4fhmYwf+LT/z0JS/+AVfSB4kV/yO+ZvJex1AP
+	 g81CtR/JiP8c8cPQjrSMoKDwxkfk3Og2RMw3x+XBKsZz8wK1Vqw0V9Vdfq2ZXVi5Kb
+	 lUSLmf0ebmhOvCEVnlRGuUj83USJ9Kr5uZIvj6cvq+J3P1rMf0RswndCjssUD014t+
+	 CRiwHXcYHOoTp8ZgDczCVDvjiryvujJTC9evWnpj78bIQqdaLkoUXfGMMQhgYg17zY
+	 xwSY1GAgtKErg==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Andy Lutomirski <luto@amacapital.net>,
@@ -38,14 +38,10 @@ Cc: Andy Lutomirski <luto@amacapital.net>,
 	Oleg Nesterov <oleg@redhat.com>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	"Chang S . Bae" <chang.seok.bae@intel.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Fenghua Yu <fenghua.yu@intel.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Uros Bizjak <ubizjak@gmail.com>
-Subject: [PATCH 7/8] x86/fpu: Remove init_task FPU state dependencies, add debugging warning for PF_KTHREAD tasks
-Date: Wed,  9 Apr 2025 23:11:26 +0200
-Message-ID: <20250409211127.3544993-8-mingo@kernel.org>
+	Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 8/8] x86/fpu: Use 'fpstate' variable names consistently
+Date: Wed,  9 Apr 2025 23:11:27 +0200
+Message-ID: <20250409211127.3544993-9-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250409211127.3544993-1-mingo@kernel.org>
 References: <20250409211127.3544993-1-mingo@kernel.org>
@@ -57,148 +53,90 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-init_task's FPU state initialization was a bit of a hack:
+A few uses of 'fps' snuck in, which is rather confusing
+(to me) as it suggests frames-per-second. ;-)
 
-		__x86_init_fpu_begin = .;
-		. = __x86_init_fpu_begin + 128*PAGE_SIZE;
-		__x86_init_fpu_end = .;
+Rename them to the canonical 'fpstate' name.
 
-But the init task isn't supposed to be using the FPU context
-in any case, so remove the hack and add in some debug warnings.
-
-As Linus noted in the discussion, the init task (and other
-PF_KTHREAD tasks) *can* use the FPU via kernel_fpu_begin()/_end(),
-but they don't need the context area because their FPU use is not
-preemptible or reentrant, and they don't return to user-space.
+No change in functionality.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Uros Bizjak <ubizjak@gmail.com>
-Link: https://lore.kernel.org/r/20240605083557.2051480-4-mingo@kernel.org
 ---
- arch/x86/include/asm/processor.h |  6 +++++-
- arch/x86/kernel/fpu/core.c       | 15 +++++++++++----
- arch/x86/kernel/fpu/init.c       |  3 +--
- arch/x86/kernel/fpu/xstate.c     |  3 ---
- arch/x86/kernel/vmlinux.lds.S    |  4 ----
- 5 files changed, 17 insertions(+), 14 deletions(-)
+ arch/x86/include/asm/fpu/api.h |  2 +-
+ arch/x86/kernel/fpu/core.c     | 14 +++++++-------
+ arch/x86/kernel/fpu/xstate.c   |  4 ++--
+ 3 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index b7f7c9c83409..eaa7214d6953 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -516,7 +516,11 @@ struct thread_struct {
+diff --git a/arch/x86/include/asm/fpu/api.h b/arch/x86/include/asm/fpu/api.h
+index f42de5f05e7e..8e6848f55dcd 100644
+--- a/arch/x86/include/asm/fpu/api.h
++++ b/arch/x86/include/asm/fpu/api.h
+@@ -136,7 +136,7 @@ static inline void fpstate_free(struct fpu *fpu) { }
  #endif
- };
  
--#define x86_task_fpu(task)	((struct fpu *)((void *)(task) + sizeof(*(task))))
-+#ifdef CONFIG_X86_DEBUG_FPU
-+extern struct fpu *x86_task_fpu(struct task_struct *task);
-+#else
-+# define x86_task_fpu(task)	((struct fpu *)((void *)(task) + sizeof(*(task))))
-+#endif
+ /* fpstate-related functions which are exported to KVM */
+-extern void fpstate_clear_xstate_component(struct fpstate *fps, unsigned int xfeature);
++extern void fpstate_clear_xstate_component(struct fpstate *fpstate, unsigned int xfeature);
  
- /*
-  * X86 doesn't need any embedded-FPU-struct quirks:
+ extern u64 xstate_get_guest_group_perm(void);
+ 
 diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
-index 4a2193892e5d..4d1a205b7ce2 100644
+index 4d1a205b7ce2..d0a45f6492cb 100644
 --- a/arch/x86/kernel/fpu/core.c
 +++ b/arch/x86/kernel/fpu/core.c
-@@ -51,6 +51,16 @@ static DEFINE_PER_CPU(bool, in_kernel_fpu);
-  */
- DEFINE_PER_CPU(struct fpu *, fpu_fpregs_owner_ctx);
+@@ -273,16 +273,16 @@ EXPORT_SYMBOL_GPL(fpu_alloc_guest_fpstate);
  
-+#ifdef CONFIG_X86_DEBUG_FPU
-+struct fpu *x86_task_fpu(struct task_struct *task)
-+{
-+	if (WARN_ON_ONCE(task->flags & PF_KTHREAD))
-+		return NULL;
-+
-+	return (void *)task + sizeof(*task);
-+}
-+#endif
-+
- /*
-  * Can we use the FPU in kernel mode with the
-  * whole "kernel_fpu_begin/end()" sequence?
-@@ -599,11 +609,9 @@ int fpu_clone(struct task_struct *dst, unsigned long clone_flags, bool minimal,
- 	 *
- 	 * This is safe because task_struct size is a multiple of cacheline size.
- 	 */
--	struct fpu *src_fpu = x86_task_fpu(current);
--	struct fpu *dst_fpu = x86_task_fpu(dst);
-+	struct fpu *dst_fpu = (void *)dst + sizeof(*dst);
+ void fpu_free_guest_fpstate(struct fpu_guest *gfpu)
+ {
+-	struct fpstate *fps = gfpu->fpstate;
++	struct fpstate *fpstate = gfpu->fpstate;
  
- 	BUILD_BUG_ON(sizeof(*dst) % SMP_CACHE_BYTES != 0);
--	BUG_ON(!src_fpu);
+-	if (!fps)
++	if (!fpstate)
+ 		return;
  
- 	/* The new task's FPU state cannot be valid in the hardware. */
- 	dst_fpu->last_cpu = -1;
-@@ -666,7 +674,6 @@ int fpu_clone(struct task_struct *dst, unsigned long clone_flags, bool minimal,
- 	if (update_fpu_shstk(dst, ssp))
- 		return 1;
+-	if (WARN_ON_ONCE(!fps->is_valloc || !fps->is_guest || fps->in_use))
++	if (WARN_ON_ONCE(!fpstate->is_valloc || !fpstate->is_guest || fpstate->in_use))
+ 		return;
  
--	trace_x86_fpu_copy_src(src_fpu);
- 	trace_x86_fpu_copy_dst(dst_fpu);
- 
- 	return 0;
-diff --git a/arch/x86/kernel/fpu/init.c b/arch/x86/kernel/fpu/init.c
-index da41a1d2c40f..16b6611634c3 100644
---- a/arch/x86/kernel/fpu/init.c
-+++ b/arch/x86/kernel/fpu/init.c
-@@ -38,7 +38,7 @@ static void fpu__init_cpu_generic(void)
- 	/* Flush out any pending x87 state: */
- #ifdef CONFIG_MATH_EMULATION
- 	if (!boot_cpu_has(X86_FEATURE_FPU))
--		fpstate_init_soft(&x86_task_fpu(current)->fpstate->regs.soft);
-+		;
- 	else
- #endif
- 		asm volatile ("fninit");
-@@ -207,7 +207,6 @@ static void __init fpu__init_system_xstate_size_legacy(void)
- 	fpu_kernel_cfg.default_size = size;
- 	fpu_user_cfg.max_size = size;
- 	fpu_user_cfg.default_size = size;
--	fpstate_reset(x86_task_fpu(current));
+ 	gfpu->fpstate = NULL;
+-	vfree(fps);
++	vfree(fpstate);
  }
+ EXPORT_SYMBOL_GPL(fpu_free_guest_fpstate);
  
- /*
+@@ -333,12 +333,12 @@ EXPORT_SYMBOL_GPL(fpu_update_guest_xfd);
+  */
+ void fpu_sync_guest_vmexit_xfd_state(void)
+ {
+-	struct fpstate *fps = x86_task_fpu(current)->fpstate;
++	struct fpstate *fpstate = x86_task_fpu(current)->fpstate;
+ 
+ 	lockdep_assert_irqs_disabled();
+ 	if (fpu_state_size_dynamic()) {
+-		rdmsrl(MSR_IA32_XFD, fps->xfd);
+-		__this_cpu_write(xfd_state, fps->xfd);
++		rdmsrl(MSR_IA32_XFD, fpstate->xfd);
++		__this_cpu_write(xfd_state, fpstate->xfd);
+ 	}
+ }
+ EXPORT_SYMBOL_GPL(fpu_sync_guest_vmexit_xfd_state);
 diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
-index ab2588b8f17f..00e87afa876d 100644
+index 00e87afa876d..79ad768647f8 100644
 --- a/arch/x86/kernel/fpu/xstate.c
 +++ b/arch/x86/kernel/fpu/xstate.c
-@@ -834,9 +834,6 @@ void __init fpu__init_system_xstate(unsigned int legacy_size)
- 	if (err)
- 		goto out_disable;
+@@ -1395,9 +1395,9 @@ void xrstors(struct xregs_state *xstate, u64 mask)
+ }
  
--	/* Reset the state for the current task */
--	fpstate_reset(x86_task_fpu(current));
--
- 	/*
- 	 * Update info used for ptrace frames; use standard-format size and no
- 	 * supervisor xstates:
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index d9ca2d1754da..ccdc45e5b759 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -181,10 +181,6 @@ SECTIONS
- 		/* equivalent to task_pt_regs(&init_task) */
- 		__top_init_kernel_stack = __end_init_stack - TOP_OF_KERNEL_STACK_PADDING - PTREGS_SIZE;
+ #if IS_ENABLED(CONFIG_KVM)
+-void fpstate_clear_xstate_component(struct fpstate *fps, unsigned int xfeature)
++void fpstate_clear_xstate_component(struct fpstate *fpstate, unsigned int xfeature)
+ {
+-	void *addr = get_xsave_addr(&fps->regs.xsave, xfeature);
++	void *addr = get_xsave_addr(&fpstate->regs.xsave, xfeature);
  
--		__x86_init_fpu_begin = .;
--		. = __x86_init_fpu_begin + 128*PAGE_SIZE;
--		__x86_init_fpu_end = .;
--
- #ifdef CONFIG_X86_32
- 		/* 32 bit has nosave before _edata */
- 		NOSAVE_DATA
+ 	if (addr)
+ 		memset(addr, 0, xstate_sizes[xfeature]);
 -- 
 2.45.2
 
