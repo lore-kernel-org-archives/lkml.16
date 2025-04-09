@@ -1,202 +1,233 @@
-Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2074.outbound.protection.outlook.com [40.107.223.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B709D8C1E;
-	Wed,  9 Apr 2025 02:58:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.178.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B247F4FA;
+	Wed,  9 Apr 2025 03:00:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.74
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744167530; cv=fail; b=TA/khUQvxBYnCaMSHmrpCtfnAgtDd85plBWNk7vLYrHwjChnT2p4dhqg20PXfqz/g/m43DMdakPIVd6jv0WVOkJldVwu/64WDY/9PnWL/syYT6d2GbW55XM32Pdqz2YmXDkoFRPYoYqN1u0qWzAbLdlZ6fj/G/7nKac8VaTaHyU=
+	t=1744167639; cv=fail; b=CkwAStIYPm06gobGNaMahfl8zf9fwghz0IcHfA+gh6YfOk9Tg2yWAcX/mQmN9u9jHk17+QM9Dbs353dYBZHcKkC/ur/Zagi7xQ9xAxJJsXeOzDrr38fXmQeB7V9XPbULJcXdo9bdbpmwINRmSLVYgVDYIVNrmteEacAEcul8rZQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744167530; c=relaxed/simple;
-	bh=T9sUtgvT903fFE1ebvwWQmq8PW1z6kp4WnPdJmr+AUs=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=npUh7UU/erZvKKyKzp4fbA78VvRpyfw2jPnFAceVTOfInt5f62NH5+LTrtIpjhllZfBjDVe8zjR3xjeHGMtxzp7nlkRSoKhaaAkFFAkgH6Emoq62ZhpP4Mw4b6qDSiogDEsTNe9C7sPZXqwsnXVADrjxbhvqfhZXRdQDPctRoHw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=eng.windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=fail smtp.client-ip=205.220.178.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=eng.windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5391VfCC020515;
-	Wed, 9 Apr 2025 02:58:29 GMT
-Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam02lp2046.outbound.protection.outlook.com [104.47.51.46])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 45tug8mvyc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 09 Apr 2025 02:58:29 +0000 (GMT)
+	s=arc-20240116; t=1744167639; c=relaxed/simple;
+	bh=90T+wFxv2C2KtyvItgqtrTLVOMXOqLRe81BeieG31Wg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ibdu4waGR+0vVxyGxSBRitAjEJ7iEYgao1IKWQ5FQ2YLJn41blBQiCkTNddGZmnfWJF6m44QpcHkUiJZ2cnvJrP7dn71U3T1HJm9LAW/0FAiHujtm5HctPEfBOVKxwccxs7qd2f0Yaya21LmJPduqPUuTt47LugDkg3b0l4f+f4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=tdw0ORnK; arc=fail smtp.client-ip=40.107.223.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="tdw0ORnK"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QXsjJZgQU14YQDFS6gB65L7Ko1oNapIT/ff948uitkXGZmfPy7qVLWrG1Hwwp5SSqG0ulu0x/LfRc8Fr5d+3DhdWS+Ax/T0jxdfdanDIf/7Rh1VLq9XceHJpMg80StChf0R5YQFmIU4kTN523Zgay/97pnGSOj5OeSvOWgsP64yyxzzpRL2kPXyvitUnekJiMnwCrdxEIhgXFgwCbpc8mGuCO6HEY4t5nuS78Q+se29M5BqVY2uwGT3Usox5z8TfUtjlMfQ/ePfKGmWefyxlBEn3/Proqw8zeyzJ1l+e7Nt/BIdzoktHQIHfKqMWR170RmXIkjPcs5lTSK3yuPSikA==
+ b=dDKSR2HIQ+VIsDLTzNULJkKw3tkv756DZJYdsALjOiA2V0JIWYOldCrzrnIe2q1q2j0gv/hqj7gfgl7QmwaZOvxQdbAhRGCGqPhEv4ET3oxQjB06WT4EXfdNX+qBOEIvT8i40IUhul13ijlJ4LDh4pHdlZRG9UsWyPQgGTkr23OguK/FvRCmbAykp3u+WumjuhC5YytKF1WOySyZckuPp+L8XUUZK59NEpwwT1EXuaAq72gLJlOboOBgX9lD8tm9wD7fMV1/iAcWQhZ+z6eWaw+BhdON87ItxMcsVPXBC3QR00njfRS/SqrBY6B9miV02QafDEkpnf9nQNklW54QAg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SLYiN8UVElOJ1vuNq4gH2mMqrN+Hjh95TLGq7bXWoDU=;
- b=cd3p269PWNazaAzl7WAdKL9pZWi7+fJ9pzWeKb9H4Q5JponuxfzAIKiIDKfiShJ+QEQOMju1+eXxSoFIYWvhEJieDidQlukp/ImvjZF3BaWfr6ls6ftDdGM6mM9FzkBfL5jmpeUgixbvpGYYXN+CmmnShyDTcHiOntSA/+6DaNYhRYhqJzCVuUAAdUnQey/ZaAtooI8aLzDQqxHGc2dsxZgHOAbyQ35YZKavmCuL6xK1j1dgL+RxTyzEdlRdOItzmJ71ry56OvyABn/VVK1s5nvhs/a4MQUo9XkpsoBXe9NzsujYA1C/wfFtzojGmliINfnChd6gcj6JhEDm0p+HkQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=eng.windriver.com; dkim=pass header.d=eng.windriver.com; arc=none
-Received: from DM6PR11MB3324.namprd11.prod.outlook.com (2603:10b6:5:59::15) by
- DM3PPF31D2DA56C.namprd11.prod.outlook.com (2603:10b6:f:fc00::f18) with
+ bh=ZeWuLAqsiYFUwqQqXKwaP0nUV6MhZTCyUaW4Uof4IRQ=;
+ b=XZFFd1ox39lSbGVHZzs0zNGeAh35Mnynvx0J47GB6HjkoIg5niqdn+jV5ozrlcRAEoqtMK4CoFgBqIlU7AbQYo5gN5XRkN/WygNjs3HqA7ApK8XhtB4mf4E6CWy2QBK5BS0hBmTUHSUDzepIem8n9D+M3Uex7fDToRH+mpX/KfDSzIIh785dve3PBwzTmgbI9zIcKW2JvjA0jaeijWlKPb4KGbqluFSenUECdBfeZwPP6VAJdOuwMuC3TBSWbGrwdTurQXCMMWPAG2xDG3ZDDDyOnv3lzRQMKCFUMR+J3bYcCFCNFjGMGPaKNmoTDv/eFm87en8lzXwSJASjHrbRlA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZeWuLAqsiYFUwqQqXKwaP0nUV6MhZTCyUaW4Uof4IRQ=;
+ b=tdw0ORnK/eXaWmLP/1d7vn5iC0Mn/XBOk+21ULojwPrRg5qIbXnIwbVR8Hpls4rl+zEaVdZZlzobpObKsNXaK3MO9PPmuy6Pqei5qjtg6ieb433FQGlr79WcvLNxj5FFdu0mjGTXLYlVsqKx57SAFzQcSRGPZ2OQP78WwqlUxHs=
+Received: from DM6PR04CA0025.namprd04.prod.outlook.com (2603:10b6:5:334::30)
+ by MN0PR12MB5787.namprd12.prod.outlook.com (2603:10b6:208:376::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.21; Wed, 9 Apr
- 2025 02:58:25 +0000
-Received: from DM6PR11MB3324.namprd11.prod.outlook.com
- ([fe80::fd0:4a9d:56d7:c039]) by DM6PR11MB3324.namprd11.prod.outlook.com
- ([fe80::fd0:4a9d:56d7:c039%4]) with mapi id 15.20.8606.028; Wed, 9 Apr 2025
- 02:58:24 +0000
-From: Zhi Yang <Zhi.Yang@eng.windriver.com>
-To: stable@vger.kernel.org, chris.p.wilson@intel.com
-Cc: xiangyu.chen@windriver.com, zhe.he@windriver.com,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
-        matthew.d.roper@intel.com, Zhi.Yang@windriver.com,
-        janusz.krzysztofik@linux.intel.com, intel-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 5.10.y] drm/i915/gt: Cleanup partial engine discovery failures
-Date: Wed,  9 Apr 2025 10:58:09 +0800
-Message-Id: <20250409025809.2812082-1-Zhi.Yang@eng.windriver.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: TYWPR01CA0004.jpnprd01.prod.outlook.com
- (2603:1096:400:a9::9) To DM6PR11MB3324.namprd11.prod.outlook.com
- (2603:10b6:5:59::15)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.35; Wed, 9 Apr
+ 2025 03:00:31 +0000
+Received: from DS1PEPF0001709A.namprd05.prod.outlook.com
+ (2603:10b6:5:334:cafe::bb) by DM6PR04CA0025.outlook.office365.com
+ (2603:10b6:5:334::30) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8606.35 via Frontend Transport; Wed,
+ 9 Apr 2025 03:00:31 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS1PEPF0001709A.mail.protection.outlook.com (10.167.18.104) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8632.13 via Frontend Transport; Wed, 9 Apr 2025 03:00:31 +0000
+Received: from BLRKPRNAYAK.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 8 Apr
+ 2025 22:00:27 -0500
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+To: "Gautham R. Shenoy" <gautham.shenoy@amd.com>, Mario Limonciello
+	<mario.limonciello@amd.com>, "Rafael J. Wysocki" <rafael@kernel.org>, "Viresh
+ Kumar" <viresh.kumar@linaro.org>, <linux-pm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>, Huang Rui
+	<ray.huang@amd.com>, Perry Yuan <perry.yuan@amd.com>, Meng Li
+	<li.meng@amd.com>
+Subject: [PATCH] cpufreq/amd-pstate: Enable ITMT support after initializing core rankings
+Date: Wed, 9 Apr 2025 03:00:04 +0000
+Message-ID: <20250409030004.23008-1-kprateek.nayak@amd.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR11MB3324:EE_|DM3PPF31D2DA56C:EE_
-X-MS-Office365-Filtering-Correlation-Id: ac9bfe9f-0b1a-4238-7f25-08dd77126516
+X-MS-TrafficTypeDiagnostic: DS1PEPF0001709A:EE_|MN0PR12MB5787:EE_
+X-MS-Office365-Filtering-Correlation-Id: e5b460d4-03b3-4c00-3234-08dd7712b0ab
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|52116014|376014|7416014|366016|38350700014;
+	BCL:0;ARA:13230040|376014|36860700013|1800799024|82310400026;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?iugkXE0UhlyZ457Z5NojukUU0RtHHfziE0jLA1K8LTZt96cMLlu3rT94SUmu?=
- =?us-ascii?Q?7YHfPA3wjPJuGTYLEWqQuIIKDBVbjTU1LHav/2ZUGr9vSqSEiARCoM56FZk0?=
- =?us-ascii?Q?2rV3/khB2dZzGHwhPSHKPPU2I4iIOIPUngLU6LqApwapOGxPzRQXMUrkhz0t?=
- =?us-ascii?Q?R953jSBby3dmL0ZaM6tCJsmaPs9IgSHpQMehmckikm6Pm8O74nBki464f41+?=
- =?us-ascii?Q?5FMwM2KoUA3RV9EgEGxAtso/E3tELs7IWVjqB8Cslf3DSbKtav/PrCj79QxF?=
- =?us-ascii?Q?dmmYgOuP7Iybp1gttrRkJU7rQ8wdUVEDChiDufSgRbil2Jj/P8OG4b5456qo?=
- =?us-ascii?Q?yPHLxANqOA6AFxRn62vxnwTuc8a/mmY4yUfPIUinDLSdwr77sQBviHyRsx2L?=
- =?us-ascii?Q?aPGG1oNwjny7E2j9+fYNHfpCNQ3aNKwOFqwal19Zf1NVSjSOs7gvyMX8saOw?=
- =?us-ascii?Q?QwtEMdAf9tjLMNeIo7gK+zlqXCruZRenCb1I01vwyVQzvIIzz873JpDP7tJs?=
- =?us-ascii?Q?DZcbtKScTEYRdbHJ4wog57wwsCRJIPifJ8r4f++1ObHnIEd7jygDgacYEzmT?=
- =?us-ascii?Q?QNoU2p88KS90hWweFE40H/eHM2t+YyqRThKETeEqUt1rXhIPhoem6PdvveSb?=
- =?us-ascii?Q?uG/sviTDoImoCaU56PqfbD3EbgCQ3C6Px005kdzIy85xTz9dCiTjgNJlfTUu?=
- =?us-ascii?Q?750ii0Vl0ZAcZG4Eft3rb4W223mCQD6MqvbMmGxb6+5Oi1DmmxrdYL0IGcio?=
- =?us-ascii?Q?5/iqP/oKTAVBiELHTSbqwmtHK3+13y7lr+Doa9RUALTfsJFz5c1nol/Zk1WB?=
- =?us-ascii?Q?FEDY62I9G9JEOQcLjXONUY/7jun/hZA10Gb5hQCl2sgLdo2hKW2XMAFeJ8at?=
- =?us-ascii?Q?cnSgQkCl44DuKHs4UMmqSnja4Fi7vdBfIry9kn9TSVv84fVzdtTIWBl+0lcg?=
- =?us-ascii?Q?TdyhNdeHdQb3bCyNlw+CCvxFMQh/JyJRnFUdYl5gc+kKNiplO7W77198DSfc?=
- =?us-ascii?Q?QlAVoEKsMruRiK8fERL+Yw0DxJW2/k+SHjpxmWJk2kjU6aeo+jbkdni7L92p?=
- =?us-ascii?Q?qUsVGWa/X0oFU2TIzGCZLNJhh/rZ1cDl7wlDXCZW1CC4mUsl9WFprE/rZza6?=
- =?us-ascii?Q?vVmOJlP0zrpToEcCoKMyi57xU69qCaRS8btuAO++KCUF9I60gtmPbZQJc/56?=
- =?us-ascii?Q?L3aAz45rpDgDQDPXrnxfBonETElW+8xFmOJ9/VGZy7w2nucRMjLRwoPLHD2H?=
- =?us-ascii?Q?4W3yHX340dE3/DWUu+AyxvigQ2TGizMpC2HNVNTzKidIU4l9F5/3qeibV5CL?=
- =?us-ascii?Q?xrNjUkH+Sef1Rsg5yupb4r7rLUSiCalHt97uIVOFP0icwCJSGOaPEQEOub4b?=
- =?us-ascii?Q?KDgUPVtmw3uFz19SExm3Zss1CPaMDq1gfiP/r1a2osh9Z5TENVXFylf5++ga?=
- =?us-ascii?Q?HsPzgVScuBE=3D?=
+	=?us-ascii?Q?zw+hizmaEB88RqArBIGUgw+z62fC+XYgm6DCnvywdazSCnYWaRKrSnuXGa7Z?=
+ =?us-ascii?Q?X2vX5VTlwOhFq+iY0LHU/Y2r7w5eCN8atOJJ7IRwdADrWw9UsfiUrjxBCdWm?=
+ =?us-ascii?Q?Gc0+c6pd+wWoALslhraiDt8hJmIyRsG8BIzK0aFKYrXQEhkf+npj9msCPpJv?=
+ =?us-ascii?Q?jq1NaH7+1Bylxs/pvAS3CdptVgSuz+3WKjj7yIvRRjs2AT7P2+jYgFWEMYSF?=
+ =?us-ascii?Q?OwO9cS4/VTeIT47rfZoIxhDv0h1CznK6gr5h+uswghtiihHnKoLijb0NQPsE?=
+ =?us-ascii?Q?wQEwq8B+LohXDQRfgKCLQZRlWZ/QnQr3laTN99syc7o5uveouZEbm+sQ3xhN?=
+ =?us-ascii?Q?kjOO/yrHEBpIOyK+XS7v5u5729hscE9uQ+TMevWq74BJWJBPVI5J4OMNHC6P?=
+ =?us-ascii?Q?2d5PF6x4bYRXDGXWtAZkCEgO8E+8L6d1EoM9nF44R9xBenpiC+28eIYUVuFq?=
+ =?us-ascii?Q?s2BquexoCePPC3BxAIzQrL+Bye3jeaN917kno/UJWSxW5Qwtj/HTz1rIfpKg?=
+ =?us-ascii?Q?XW37SAPTn5YfWknIMVclVgkmB0dfyX5aDwgETcU0OINfXb8KKahJ1xBofhW+?=
+ =?us-ascii?Q?4W2moXfmTxRmH6KO+M8ebzuxSFK+maHiYnYG/+oDxbjQQNpH6JEIJxBVoyxL?=
+ =?us-ascii?Q?bATub3UVY1ElE3qxW0ZcqJGXgnWAFUxDvxouEpITlQnFzqvAH38skt7B5YGj?=
+ =?us-ascii?Q?3M4pAkdPQ9TatPy+N4k4cekgfj+9KJep8a4RyZ2i93yea9LuIVgho9qZ1Gb5?=
+ =?us-ascii?Q?EYKnHeFqx/ngwHNnn+J6nAp6y6mptPAqGoQFJ/yqzuE70w+WNSV7gWC3iXdq?=
+ =?us-ascii?Q?tk08rmFkdVo6eLNn9J2YGODIhbY7pRRcyBzRiR6BGN/CaAV1Z66/1batn2Nz?=
+ =?us-ascii?Q?1ERo1EmBjfcBfz/NPOlZdGcfLSKC7/TiwaaY8uyIcL8+pHHfA0DiwVU9R7ca?=
+ =?us-ascii?Q?fXDZste6X9kK27gvwBGdGcTK0+C7cmVrerSzniDRmOMIM6fz6PCpe3lvOyL4?=
+ =?us-ascii?Q?8VpZIXkbNa/25Hfgk7cL4SzB5OSV/PKwl098VCuYFICBBcS9lqc/ep46UkLU?=
+ =?us-ascii?Q?G1nAD0FeLyOZ/5BUy1YrYB/P6jwshTdp7C2PZ0r1U08L3ommYlJAkFGNH1Hh?=
+ =?us-ascii?Q?F0RpCPx3BQH1ZlMBOKWtkgnIF+9/OX9e1X9w9H4Wpw7VYzow72HC8VnBTZMB?=
+ =?us-ascii?Q?jfWQ1IwKC3C9gcLETBzjgkZls/h0r5UTgIY5IX4iFMp+aQWQefI+wGvZJK2K?=
+ =?us-ascii?Q?0Bm7XPeCAole6OtPbO13sA3KdB67WodZy6Q2icM+wne+CkTVqKfQrIxF9nz/?=
+ =?us-ascii?Q?FR9iynmv/STGdQcQCmiHIc1K/Cvsb3WGmo4iSOLk1X3cDM0BY1DP4TdX3prG?=
+ =?us-ascii?Q?8UjyqjaLI0vLHT+R3HxRHUPDa6jkgD4Pt1F3bBAazYxnrUJBSNdPUKD0YsrZ?=
+ =?us-ascii?Q?AenTLWpiWMQ4sjb58rRywS9sONKEo8JT7X1HPnA30yp5LLp4+1Cs6xLbbIXb?=
+ =?us-ascii?Q?IEwkcKoNga6t0nU=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3324.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(52116014)(376014)(7416014)(366016)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?GKbt108OHFbmu3k7pigZxTj8oFMHL7I3bNNuVCSZQKy7Pu7vj9nYt/TGd3SR?=
- =?us-ascii?Q?i+r4sgZmYnuOGHa86sts4he0q4dR9WQ6MA/AsFCEplqB8WnreV9rmcADX3f/?=
- =?us-ascii?Q?KOAZOE5Ncs6EDs7xZ2fKwwxjgf90W4evUKj8TfnkviaiSURBldzVCbC3JD2F?=
- =?us-ascii?Q?Q3o9wNvi3pqgzMJ7m//1j24d7QgZRREDDVf3tRBop8ffZzVZk7j3KonB5TWt?=
- =?us-ascii?Q?EJFxPXjHehpSjH/M3yHp4LDkd6ESUdn7xCZp35gulYQqzal1BRXTNB26AMup?=
- =?us-ascii?Q?8emsqsjXbgpu2RAW4GIGSpl0TdAgPsY3FN3afzFknOYADxgeB79ZrCiXhTEZ?=
- =?us-ascii?Q?Rf0VS0IOBj0kg/7JxEvHeLKgIa+Ts5C3tbAudNs97yJi0mlIi3CYUxYC5SON?=
- =?us-ascii?Q?Ea6pKWTXXgdL3yb/90mdX8CLnuHeVBma7Ca3X4YI2miSzr5qESAl0sOZ/9Cv?=
- =?us-ascii?Q?X/wTXsWRR/f3Tc2ALS+XVpRYEOIwes7RU5Jzq4hnyXb7LTltEoQqhkz5vCOc?=
- =?us-ascii?Q?taf38xp8j6cEUE48OjYuX9YEEWuaqDMuW28cEpyrxc649i8lErEODU809yGM?=
- =?us-ascii?Q?lOs+o4zSqwoYWV0PpG44rd4YkFvQkp7Joz6l6w3QQvpBoftBJKwp3+cC1iZT?=
- =?us-ascii?Q?FN+A+K0mubazcFpshTlMDCaIAtt0gLTSHzInzN6s7+T0RzTV1utkq9+UrB/4?=
- =?us-ascii?Q?fuyNUai2mEsXAJEVbaunUf3RUT5MPP1hNTL5mPCbe/DQouPW+FsviprPzbjg?=
- =?us-ascii?Q?hY6yzFN+KqOnNmHv5rBCQ4SRgy6/wFj0GKWaKoGVum0NJezRC0i2Or528sR9?=
- =?us-ascii?Q?ONG+LGB1iTlCZbSFhcjSNKQmO2ETPRJbhKcuuuuwaCTQHOK1LHMhsZEDl7+c?=
- =?us-ascii?Q?lf5XKWTdFgz7YIU/wVK7QhWODTA9c2qtBWuaolym6GK2JovxCPs6pfkM2gxq?=
- =?us-ascii?Q?WUwyascBI1ny4fSa5dipbauxe6aqBpndGqk0I0DTdFy1ttmsqdZTgzoLjLpY?=
- =?us-ascii?Q?svb8FBLnmccpg8Hr9nL7yfk5C5AJNBfWjk81/xUP5QMKoDD7awDQPANQDanw?=
- =?us-ascii?Q?15kvnGsORu7iX4Ulc5X/SOJVlWwN+8njMmIM+TlPDrAEqvVGl/aBCqbY+o2B?=
- =?us-ascii?Q?f5M546yI+RNi7SHEFCkvyAvlwUuV+we+wh+28FIgGaK6FgHAY/tFVxU2PT3H?=
- =?us-ascii?Q?wBxJmUyl4wnvXA5SzJFckeCTEBVIAlyu8Oy/Rbxf6enjuHVr0KAHlH1b5gMW?=
- =?us-ascii?Q?C+ycfy++voABqM7hr2rdLHCRhW+YamCV825DlBoQczKrgGU1ZZ337luXaxIG?=
- =?us-ascii?Q?spv5HgsLcRBMINpGcbSo/be2xd2AGROpKS94rkDGNQU6LJtGxCBuSFjA1Sfy?=
- =?us-ascii?Q?tr/LgNGnaU7CQf/akJ8D5sXGAZxfmj8jU2mwlPiu5NivqTkq3/j7mxJdiyAd?=
- =?us-ascii?Q?UkFrLaUtUQ31V2dEllJv7YSUgUkzpSN39bb7qK2QMUVLZi9mdNoJfitWR00M?=
- =?us-ascii?Q?tKVWye3vNVmNXdvyi1BDMeVhykYwn5wdwYE4BaDSbXPi/jIZ5ys8qEaNEukO?=
- =?us-ascii?Q?GoDdOKLLyTdsv0nfIQhH41Q89ggeqtQ5cw5uMOIH?=
-X-OriginatorOrg: eng.windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ac9bfe9f-0b1a-4238-7f25-08dd77126516
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3324.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 02:58:24.7586
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700013)(1800799024)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 03:00:31.2667
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /Z22uXPj0pO0UrJIzT+T5FFpZ8N3pe0eC4TGEzdKBoRFjLDkbvOpDdAlyli2N7lUolGLoAEb33CSpb+Va1gG3w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PPF31D2DA56C
-X-Proofpoint-GUID: UJQQVHeo023lbeEBvfKnCbH9nRzPx4hu
-X-Authority-Analysis: v=2.4 cv=YJefyQGx c=1 sm=1 tr=0 ts=67f5e255 cx=c_pps a=yfraj20uO1EtZH+TM7jpHA==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=XR8D0OoHHMoA:10
- a=e5mUnYsNAAAA:8 a=QyXUC8HyAAAA:8 a=t7CeM3EgAAAA:8 a=5jjrFKfR0PwuKcLNdasA:9 a=Vxmtnl_E_bksehYqCbjh:22 a=FdTzh2GWekK77mhwV6Dw:22 a=Omh45SbU8xzqK50xPoZQ:22
-X-Proofpoint-ORIG-GUID: UJQQVHeo023lbeEBvfKnCbH9nRzPx4hu
-X-Sensitive_Customer_Information: Yes
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-09_01,2025-04-08_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 bulkscore=0 mlxlogscore=999 adultscore=0 lowpriorityscore=0
- mlxscore=0 clxscore=1015 impostorscore=0 phishscore=0 spamscore=0
- suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2502280000
- definitions=main-2504090006
+X-MS-Exchange-CrossTenant-Network-Message-Id: e5b460d4-03b3-4c00-3234-08dd7712b0ab
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS1PEPF0001709A.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5787
 
-From: Chris Wilson <chris.p.wilson@intel.com>
+When working on dynamic asym priority support, it was observed that
+"asym_prefer_cpu" on AMD systems supporting Preferred Core ranking
+was always the first CPU in the sched group after boot even though it
+was not the CPU with the highest asym priority.
 
-commit 78a033433a5ae4fee85511ee075bc9a48312c79e upstream.
+"asym_prefer_cpu" is cached when the sched domain hierarchy is
+constructed. On AMD systems that support Preferred Core rankings, sched
+domains are rebuilt when ITMT support is enabled for the first time from
+amd_pstate*_cpu_init().
 
-If we abort driver initialisation in the middle of gt/engine discovery,
-some engines will be fully setup and some not. Those incompletely setup
-engines only have 'engine->release == NULL' and so will leak any of the
-common objects allocated.
+Since amd_pstate*_cpu_init() is called to initialize the cpudata for
+each CPU, the ITMT support is enabled after the first CPU initializes
+its asym priority but this is too early since other CPUs have not yet
+initialized their asym priorities and the sched domain is rebuilt when
+the ITMT support is toggled on for the first time.
 
-v2:
- - Drop the destroy_pinned_context() helper for now.  It's not really
-   worth it with just a single callsite at the moment.  (Janusz)
+Initialize the asym priorities first in amd_pstate*_cpu_init() and then
+enable ITMT support only after amd_pstate_register_driver() is finished
+to ensure all CPUs have correctly initialized their asym priorities
+before sched domain hierarchy is rebuilt and "asym_prefer_cpu" is
+cached.
 
-Signed-off-by: Chris Wilson <chris.p.wilson@intel.com>
-Cc: Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
-Signed-off-by: Matt Roper <matthew.d.roper@intel.com>
-Reviewed-by: Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20220915232654.3283095-2-matthew.d.roper@intel.com
-Signed-off-by: Zhi Yang <Zhi.Yang@windriver.com>
-Signed-off-by: He Zhe <zhe.he@windriver.com>
+Remove the delayed work mechanism now that ITMT support is only toggled
+from the driver init path which is outside the cpuhp critical section.
+
+Fixes: f3a052391822 ("cpufreq: amd-pstate: Enable amd-pstate preferred core support")
+Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
 ---
-Build test passed.
----
- drivers/gpu/drm/i915/gt/intel_engine_cs.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/cpufreq/amd-pstate.c | 28 ++++++++--------------------
+ 1 file changed, 8 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/gt/intel_engine_cs.c b/drivers/gpu/drm/i915/gt/intel_engine_cs.c
-index a19537706ed1..eb6f4d7f1e34 100644
---- a/drivers/gpu/drm/i915/gt/intel_engine_cs.c
-+++ b/drivers/gpu/drm/i915/gt/intel_engine_cs.c
-@@ -904,8 +904,13 @@ int intel_engines_init(struct intel_gt *gt)
- 			return err;
+diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
+index c54c031939c8..ee638589f5f9 100644
+--- a/drivers/cpufreq/amd-pstate.c
++++ b/drivers/cpufreq/amd-pstate.c
+@@ -794,19 +794,9 @@ static void amd_perf_ctl_reset(unsigned int cpu)
+ 	wrmsrl_on_cpu(cpu, MSR_AMD_PERF_CTL, 0);
+ }
  
- 		err = setup(engine);
--		if (err)
-+		if (err) {
-+			intel_engine_cleanup_common(engine);
- 			return err;
-+		}
+-/*
+- * Set amd-pstate preferred core enable can't be done directly from cpufreq callbacks
+- * due to locking, so queue the work for later.
+- */
+-static void amd_pstste_sched_prefcore_workfn(struct work_struct *work)
+-{
+-	sched_set_itmt_support();
+-}
+-static DECLARE_WORK(sched_prefcore_work, amd_pstste_sched_prefcore_workfn);
+-
+ #define CPPC_MAX_PERF	U8_MAX
+ 
+-static void amd_pstate_init_prefcore(struct amd_cpudata *cpudata)
++static void amd_pstate_init_asym_prio(struct amd_cpudata *cpudata)
+ {
+ 	/* user disabled or not detected */
+ 	if (!amd_pstate_prefcore)
+@@ -814,14 +804,8 @@ static void amd_pstate_init_prefcore(struct amd_cpudata *cpudata)
+ 
+ 	cpudata->hw_prefcore = true;
+ 
+-	/*
+-	 * The priorities can be set regardless of whether or not
+-	 * sched_set_itmt_support(true) has been called and it is valid to
+-	 * update them at any time after it has been called.
+-	 */
++	/* The priorities must be initialized before ITMT support can be toggled on. */
+ 	sched_set_itmt_core_prio((int)READ_ONCE(cpudata->prefcore_ranking), cpudata->cpu);
+-
+-	schedule_work(&sched_prefcore_work);
+ }
+ 
+ static void amd_pstate_update_limits(unsigned int cpu)
+@@ -974,7 +958,7 @@ static int amd_pstate_cpu_init(struct cpufreq_policy *policy)
+ 	if (ret)
+ 		goto free_cpudata1;
+ 
+-	amd_pstate_init_prefcore(cpudata);
++	amd_pstate_init_asym_prio(cpudata);
+ 
+ 	ret = amd_pstate_init_freq(cpudata);
+ 	if (ret)
+@@ -1450,7 +1434,7 @@ static int amd_pstate_epp_cpu_init(struct cpufreq_policy *policy)
+ 	if (ret)
+ 		goto free_cpudata1;
+ 
+-	amd_pstate_init_prefcore(cpudata);
++	amd_pstate_init_asym_prio(cpudata);
+ 
+ 	ret = amd_pstate_init_freq(cpudata);
+ 	if (ret)
+@@ -1780,6 +1764,10 @@ static int __init amd_pstate_init(void)
+ 		}
+ 	}
+ 
++	/* Enable ITMT support once all CPUs have initialized their asym priorities. */
++	if (amd_pstate_prefcore)
++		sched_set_itmt_support();
 +
-+		/* The backend should now be responsible for cleanup */
-+		GEM_BUG_ON(engine->release == NULL);
+ 	return ret;
  
- 		err = engine_init_common(engine);
- 		if (err)
+ global_attr_free:
+
+base-commit: 56a49e19e1aea1374e9ba58cfd40260587bb7355
 -- 
 2.34.1
 
