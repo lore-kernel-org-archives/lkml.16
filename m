@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAC04219A93
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 20:29:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E83521ABB6
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 20:29:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744230590; cv=none; b=eDGmks2lzyISJApoxQzCCH2azCvdX1cC3ZgeAEOao4jQtLeLCtO3ASYHqMzz3GjR9W14OZRPjeZiCwfOtUwhNvZDIxdQBqTFsZaAvosqBuXRp7MiVesF6oAIx15ln13WwsVbbGWGMC9v2cJeuEVK7/g3VRqIeE7hKvAsJsoo2NQ=
+	t=1744230593; cv=none; b=pVkrGt85uoGmUOdQeDC9uvFbClObq2ixI6+ocEV77rUHgK0nejyj5QyHifdLvNoNJ4FVyJ5fKZifTHXXm1GoiESeH1xEePRKlBrI6fq+RSDxHBNdcIS2ySpGqBxlKM7tE5JR+gZ5QX8qJHNLervMWWb6mgLYS2pev4od/RiQDbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744230590; c=relaxed/simple;
-	bh=5BGZ4GxszY+czBKkfYoJb6RS0gGNvmKNBR/F5w46/yY=;
+	s=arc-20240116; t=1744230593; c=relaxed/simple;
+	bh=HocDaJV9ocg69kJPgGyzsZWj0m5u40SOuSkD2IkPKuI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lKUIPe8XLVwIWuLR5s4aYCx2q7wDMqCWAUlFwl1ukoLYaA0SH9ToG6oVKDC2pWKH4zWxXPRaC/p8PCULgPcAMah+XVC3o0bDm0P3MWH53BIe8rGmEMrD8XTp00v73353OWLnKmOxe0u6RIqUiv3rnvmuPMD/7XoZ7ZGB4krgweY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q06cx4ez; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=WcFNNIbF6kfdDu1wW4v70i88S8AfCYIV9bKWLcD/PdJX060r/3wr3vHXtfBX6JUpQzxGjDWh0EXkehnmzbqyMCu8dKCF4CY7nky67TfQnrGDnYCw8UZBNVFhQQuvlDmOno48VSAy9qdrlMEyNgK3PzQVnAC5z/VZeJdcDuTSeKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=szXmZ2VG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q06cx4ez"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DEECC4CEE2;
-	Wed,  9 Apr 2025 20:29:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="szXmZ2VG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27170C4CEEA;
+	Wed,  9 Apr 2025 20:29:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744230590;
-	bh=5BGZ4GxszY+czBKkfYoJb6RS0gGNvmKNBR/F5w46/yY=;
+	s=k20201202; t=1744230593;
+	bh=HocDaJV9ocg69kJPgGyzsZWj0m5u40SOuSkD2IkPKuI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Q06cx4ezD8GFDOoz3sfiqMOUkeOa8efhXRkALNzfLyBtTAvs7oG1jcbXEsOBbCPu+
-	 HuZItaDMPtF2/o0re6tlzybc5GMcKgiyOEFNmk9PsiZmmsnHqFz+lCYRhfMqtEFe/5
-	 /PG8VmAFyIkvRkzseoKLV1DZtXpXxRKgvdFV3tfaQAyk9z8WHQohzCqI6lbX7FNmGr
-	 BKhzMuJvokJ/pGO25B//iXCf+N5kjhRneO/oprLupmTO9FWY+ewxMtX82A28t2lgC7
-	 pgwL3sSi8yefv3ziZuDHdTVH9dpRUM/FvT8EfY7js7rJuoqIESE1duwEdmQ4L056W1
-	 3YBDQVnfV6/9Q==
+	b=szXmZ2VGnqGpL/5Ss74AGnxUg8CfTBVs2LpbKJcxzgOKKHpdoo8dn295MA+UVV/yD
+	 hgSmbgxiBIpibgECjt3Jr3plg5zlPMbyEKm9zMJQC7aBwuycoLL6A31lYY8vvHZAPy
+	 4E0nBrkieGw/CLFuZTAV4Sa40B62WiLBO6weKn2nhwL6jM4R+hVjbI5qo39e1kXW/S
+	 ZGX8WabSFrQnqbUdHg1/Diyw3r8QuHbfNzlMMFd1wDSudy7H1OlkCijbXldmyvZ25w
+	 iCq7sup8CpWdb6aPAMLlqfCu/A4zrPcNLJzWZ08yRPnQx5befixpsJtqbHzdoAMJps
+	 5IqLPjdmXkbaA==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Juergen Gross <jgross@suse.com>,
@@ -37,9 +37,9 @@ Cc: Juergen Gross <jgross@suse.com>,
 	Borislav Petkov <bp@alien8.de>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 12/20] x86/msr: Rename 'wrmsrl_safe_on_cpu()' to 'wrmsrq_safe_on_cpu()'
-Date: Wed,  9 Apr 2025 22:28:59 +0200
-Message-ID: <20250409202907.3419480-13-mingo@kernel.org>
+Subject: [PATCH 13/20] x86/msr: Rename 'rdmsrl_on_cpu()' to 'rdmsrq_on_cpu()'
+Date: Wed,  9 Apr 2025 22:29:00 +0200
+Message-ID: <20250409202907.3419480-14-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250409202907.3419480-1-mingo@kernel.org>
 References: <20250409202907.3419480-1-mingo@kernel.org>
@@ -58,105 +58,310 @@ Cc: Dave Hansen <dave.hansen@intel.com>
 Cc: Xin Li <xin@zytor.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 ---
- arch/x86/include/asm/msr.h                                  | 4 ++--
- arch/x86/kernel/acpi/cppc.c                                 | 2 +-
- arch/x86/lib/msr-smp.c                                      | 4 ++--
- drivers/cpufreq/amd-pstate.c                                | 2 +-
- drivers/platform/x86/intel/speed_select_if/isst_if_common.c | 4 ++--
- 5 files changed, 8 insertions(+), 8 deletions(-)
+ arch/x86/events/intel/uncore_snbep.c               |  2 +-
+ arch/x86/include/asm/msr.h                         |  4 ++--
+ arch/x86/kernel/cpu/intel_epb.c                    |  4 ++--
+ arch/x86/kernel/cpu/mce/inject.c                   |  4 ++--
+ arch/x86/lib/msr-smp.c                             |  4 ++--
+ drivers/cpufreq/acpi-cpufreq.c                     |  4 ++--
+ drivers/cpufreq/amd-pstate.c                       |  6 +++---
+ drivers/cpufreq/intel_pstate.c                     | 24 +++++++++++-----------
+ .../x86/intel/uncore-frequency/uncore-frequency.c  |  6 +++---
+ 9 files changed, 29 insertions(+), 29 deletions(-)
 
+diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
+index 756dd11742ad..dd53dd87cdec 100644
+--- a/arch/x86/events/intel/uncore_snbep.c
++++ b/arch/x86/events/intel/uncore_snbep.c
+@@ -3765,7 +3765,7 @@ static int skx_msr_cpu_bus_read(int cpu, u64 *topology)
+ {
+ 	u64 msr_value;
+ 
+-	if (rdmsrl_on_cpu(cpu, SKX_MSR_CPU_BUS_NUMBER, &msr_value) ||
++	if (rdmsrq_on_cpu(cpu, SKX_MSR_CPU_BUS_NUMBER, &msr_value) ||
+ 			!(msr_value & SKX_MSR_CPU_BUS_VALID_BIT))
+ 		return -ENXIO;
+ 
 diff --git a/arch/x86/include/asm/msr.h b/arch/x86/include/asm/msr.h
-index c86814c35dec..52983279c953 100644
+index 52983279c953..850793b381c6 100644
 --- a/arch/x86/include/asm/msr.h
 +++ b/arch/x86/include/asm/msr.h
-@@ -336,7 +336,7 @@ void wrmsr_on_cpus(const struct cpumask *mask, u32 msr_no, struct msr __percpu *
- int rdmsr_safe_on_cpu(unsigned int cpu, u32 msr_no, u32 *l, u32 *h);
- int wrmsr_safe_on_cpu(unsigned int cpu, u32 msr_no, u32 l, u32 h);
- int rdmsrq_safe_on_cpu(unsigned int cpu, u32 msr_no, u64 *q);
--int wrmsrl_safe_on_cpu(unsigned int cpu, u32 msr_no, u64 q);
-+int wrmsrq_safe_on_cpu(unsigned int cpu, u32 msr_no, u64 q);
- int rdmsr_safe_regs_on_cpu(unsigned int cpu, u32 regs[8]);
- int wrmsr_safe_regs_on_cpu(unsigned int cpu, u32 regs[8]);
- #else  /*  CONFIG_SMP  */
-@@ -383,7 +383,7 @@ static inline int rdmsrq_safe_on_cpu(unsigned int cpu, u32 msr_no, u64 *q)
+@@ -329,7 +329,7 @@ int msr_clear_bit(u32 msr, u8 bit);
+ #ifdef CONFIG_SMP
+ int rdmsr_on_cpu(unsigned int cpu, u32 msr_no, u32 *l, u32 *h);
+ int wrmsr_on_cpu(unsigned int cpu, u32 msr_no, u32 l, u32 h);
+-int rdmsrl_on_cpu(unsigned int cpu, u32 msr_no, u64 *q);
++int rdmsrq_on_cpu(unsigned int cpu, u32 msr_no, u64 *q);
+ int wrmsrl_on_cpu(unsigned int cpu, u32 msr_no, u64 q);
+ void rdmsr_on_cpus(const struct cpumask *mask, u32 msr_no, struct msr __percpu *msrs);
+ void wrmsr_on_cpus(const struct cpumask *mask, u32 msr_no, struct msr __percpu *msrs);
+@@ -350,7 +350,7 @@ static inline int wrmsr_on_cpu(unsigned int cpu, u32 msr_no, u32 l, u32 h)
+ 	wrmsr(msr_no, l, h);
+ 	return 0;
+ }
+-static inline int rdmsrl_on_cpu(unsigned int cpu, u32 msr_no, u64 *q)
++static inline int rdmsrq_on_cpu(unsigned int cpu, u32 msr_no, u64 *q)
  {
- 	return rdmsrq_safe(msr_no, q);
- }
--static inline int wrmsrl_safe_on_cpu(unsigned int cpu, u32 msr_no, u64 q)
-+static inline int wrmsrq_safe_on_cpu(unsigned int cpu, u32 msr_no, u64 q)
- {
- 	return wrmsrq_safe(msr_no, q);
- }
-diff --git a/arch/x86/kernel/acpi/cppc.c b/arch/x86/kernel/acpi/cppc.c
-index 6a10d73cb88b..78b4e4b40985 100644
---- a/arch/x86/kernel/acpi/cppc.c
-+++ b/arch/x86/kernel/acpi/cppc.c
-@@ -74,7 +74,7 @@ int cpc_write_ffh(int cpunum, struct cpc_reg *reg, u64 val)
- 		val &= mask;
- 		rd_val &= ~mask;
- 		rd_val |= val;
--		err = wrmsrl_safe_on_cpu(cpunum, reg->address, rd_val);
-+		err = wrmsrq_safe_on_cpu(cpunum, reg->address, rd_val);
- 	}
- 	return err;
- }
+ 	rdmsrq(msr_no, *q);
+ 	return 0;
+diff --git a/arch/x86/kernel/cpu/intel_epb.c b/arch/x86/kernel/cpu/intel_epb.c
+index 01d81b78d09e..54236defb666 100644
+--- a/arch/x86/kernel/cpu/intel_epb.c
++++ b/arch/x86/kernel/cpu/intel_epb.c
+@@ -135,7 +135,7 @@ static ssize_t energy_perf_bias_show(struct device *dev,
+ 	u64 epb;
+ 	int ret;
+ 
+-	ret = rdmsrl_on_cpu(cpu, MSR_IA32_ENERGY_PERF_BIAS, &epb);
++	ret = rdmsrq_on_cpu(cpu, MSR_IA32_ENERGY_PERF_BIAS, &epb);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -157,7 +157,7 @@ static ssize_t energy_perf_bias_store(struct device *dev,
+ 	else if (kstrtou64(buf, 0, &val) || val > MAX_EPB)
+ 		return -EINVAL;
+ 
+-	ret = rdmsrl_on_cpu(cpu, MSR_IA32_ENERGY_PERF_BIAS, &epb);
++	ret = rdmsrq_on_cpu(cpu, MSR_IA32_ENERGY_PERF_BIAS, &epb);
+ 	if (ret < 0)
+ 		return ret;
+ 
+diff --git a/arch/x86/kernel/cpu/mce/inject.c b/arch/x86/kernel/cpu/mce/inject.c
+index 5226f8f7fc98..338aeee95bd2 100644
+--- a/arch/x86/kernel/cpu/mce/inject.c
++++ b/arch/x86/kernel/cpu/mce/inject.c
+@@ -589,7 +589,7 @@ static int inj_bank_set(void *data, u64 val)
+ 	u64 cap;
+ 
+ 	/* Get bank count on target CPU so we can handle non-uniform values. */
+-	rdmsrl_on_cpu(m->extcpu, MSR_IA32_MCG_CAP, &cap);
++	rdmsrq_on_cpu(m->extcpu, MSR_IA32_MCG_CAP, &cap);
+ 	n_banks = cap & MCG_BANKCNT_MASK;
+ 
+ 	if (val >= n_banks) {
+@@ -613,7 +613,7 @@ static int inj_bank_set(void *data, u64 val)
+ 	if (cpu_feature_enabled(X86_FEATURE_SMCA)) {
+ 		u64 ipid;
+ 
+-		if (rdmsrl_on_cpu(m->extcpu, MSR_AMD64_SMCA_MCx_IPID(val), &ipid)) {
++		if (rdmsrq_on_cpu(m->extcpu, MSR_AMD64_SMCA_MCx_IPID(val), &ipid)) {
+ 			pr_err("Error reading IPID on CPU%d\n", m->extcpu);
+ 			return -EINVAL;
+ 		}
 diff --git a/arch/x86/lib/msr-smp.c b/arch/x86/lib/msr-smp.c
-index 0360ce20aae8..434fdc21a86e 100644
+index 434fdc21a86e..b6081fc2217f 100644
 --- a/arch/x86/lib/msr-smp.c
 +++ b/arch/x86/lib/msr-smp.c
-@@ -204,7 +204,7 @@ int wrmsr_safe_on_cpu(unsigned int cpu, u32 msr_no, u32 l, u32 h)
+@@ -47,7 +47,7 @@ int rdmsr_on_cpu(unsigned int cpu, u32 msr_no, u32 *l, u32 *h)
  }
- EXPORT_SYMBOL(wrmsr_safe_on_cpu);
+ EXPORT_SYMBOL(rdmsr_on_cpu);
  
--int wrmsrl_safe_on_cpu(unsigned int cpu, u32 msr_no, u64 q)
-+int wrmsrq_safe_on_cpu(unsigned int cpu, u32 msr_no, u64 q)
+-int rdmsrl_on_cpu(unsigned int cpu, u32 msr_no, u64 *q)
++int rdmsrq_on_cpu(unsigned int cpu, u32 msr_no, u64 *q)
  {
  	int err;
  	struct msr_info rv;
-@@ -218,7 +218,7 @@ int wrmsrl_safe_on_cpu(unsigned int cpu, u32 msr_no, u64 q)
+@@ -60,7 +60,7 @@ int rdmsrl_on_cpu(unsigned int cpu, u32 msr_no, u64 *q)
  
- 	return err ? err : rv.err;
+ 	return err;
  }
--EXPORT_SYMBOL(wrmsrl_safe_on_cpu);
-+EXPORT_SYMBOL(wrmsrq_safe_on_cpu);
+-EXPORT_SYMBOL(rdmsrl_on_cpu);
++EXPORT_SYMBOL(rdmsrq_on_cpu);
  
- int rdmsrq_safe_on_cpu(unsigned int cpu, u32 msr_no, u64 *q)
+ int wrmsr_on_cpu(unsigned int cpu, u32 msr_no, u32 l, u32 h)
  {
+diff --git a/drivers/cpufreq/acpi-cpufreq.c b/drivers/cpufreq/acpi-cpufreq.c
+index d19867cf816a..8bc08f3b0d5d 100644
+--- a/drivers/cpufreq/acpi-cpufreq.c
++++ b/drivers/cpufreq/acpi-cpufreq.c
+@@ -79,11 +79,11 @@ static bool boost_state(unsigned int cpu)
+ 	case X86_VENDOR_INTEL:
+ 	case X86_VENDOR_CENTAUR:
+ 	case X86_VENDOR_ZHAOXIN:
+-		rdmsrl_on_cpu(cpu, MSR_IA32_MISC_ENABLE, &msr);
++		rdmsrq_on_cpu(cpu, MSR_IA32_MISC_ENABLE, &msr);
+ 		return !(msr & MSR_IA32_MISC_ENABLE_TURBO_DISABLE);
+ 	case X86_VENDOR_HYGON:
+ 	case X86_VENDOR_AMD:
+-		rdmsrl_on_cpu(cpu, MSR_K7_HWCR, &msr);
++		rdmsrq_on_cpu(cpu, MSR_K7_HWCR, &msr);
+ 		return !(msr & MSR_K7_HWCR_CPB_DIS);
+ 	}
+ 	return false;
 diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
-index 16a3fe2207ba..0615c73306cf 100644
+index 0615c73306cf..e987486cbb34 100644
 --- a/drivers/cpufreq/amd-pstate.c
 +++ b/drivers/cpufreq/amd-pstate.c
-@@ -371,7 +371,7 @@ static int shmem_set_epp(struct cpufreq_policy *policy, u8 epp)
+@@ -197,7 +197,7 @@ static u8 msr_get_epp(struct amd_cpudata *cpudata)
+ 	u64 value;
+ 	int ret;
  
- static inline int msr_cppc_enable(struct cpufreq_policy *policy)
+-	ret = rdmsrl_on_cpu(cpudata->cpu, MSR_AMD_CPPC_REQ, &value);
++	ret = rdmsrq_on_cpu(cpudata->cpu, MSR_AMD_CPPC_REQ, &value);
+ 	if (ret < 0) {
+ 		pr_debug("Could not retrieve energy perf value (%d)\n", ret);
+ 		return ret;
+@@ -769,7 +769,7 @@ static int amd_pstate_init_boost_support(struct amd_cpudata *cpudata)
+ 		goto exit_err;
+ 	}
+ 
+-	ret = rdmsrl_on_cpu(cpudata->cpu, MSR_K7_HWCR, &boost_val);
++	ret = rdmsrq_on_cpu(cpudata->cpu, MSR_K7_HWCR, &boost_val);
+ 	if (ret) {
+ 		pr_err_once("failed to read initial CPU boost state!\n");
+ 		ret = -EIO;
+@@ -1491,7 +1491,7 @@ static int amd_pstate_epp_cpu_init(struct cpufreq_policy *policy)
+ 	}
+ 
+ 	if (cpu_feature_enabled(X86_FEATURE_CPPC)) {
+-		ret = rdmsrl_on_cpu(cpudata->cpu, MSR_AMD_CPPC_REQ, &value);
++		ret = rdmsrq_on_cpu(cpudata->cpu, MSR_AMD_CPPC_REQ, &value);
+ 		if (ret)
+ 			return ret;
+ 		WRITE_ONCE(cpudata->cppc_req_cached, value);
+diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+index 6f6c14e31795..8ce9d54ea32e 100644
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -620,7 +620,7 @@ static s16 intel_pstate_get_epb(struct cpudata *cpu_data)
+ 	if (!boot_cpu_has(X86_FEATURE_EPB))
+ 		return -ENXIO;
+ 
+-	ret = rdmsrl_on_cpu(cpu_data->cpu, MSR_IA32_ENERGY_PERF_BIAS, &epb);
++	ret = rdmsrq_on_cpu(cpu_data->cpu, MSR_IA32_ENERGY_PERF_BIAS, &epb);
+ 	if (ret)
+ 		return (s16)ret;
+ 
+@@ -637,7 +637,7 @@ static s16 intel_pstate_get_epp(struct cpudata *cpu_data, u64 hwp_req_data)
+ 		 * MSR_HWP_REQUEST, so need to read and get EPP.
+ 		 */
+ 		if (!hwp_req_data) {
+-			epp = rdmsrl_on_cpu(cpu_data->cpu, MSR_HWP_REQUEST,
++			epp = rdmsrq_on_cpu(cpu_data->cpu, MSR_HWP_REQUEST,
+ 					    &hwp_req_data);
+ 			if (epp)
+ 				return epp;
+@@ -659,7 +659,7 @@ static int intel_pstate_set_epb(int cpu, s16 pref)
+ 	if (!boot_cpu_has(X86_FEATURE_EPB))
+ 		return -ENXIO;
+ 
+-	ret = rdmsrl_on_cpu(cpu, MSR_IA32_ENERGY_PERF_BIAS, &epb);
++	ret = rdmsrq_on_cpu(cpu, MSR_IA32_ENERGY_PERF_BIAS, &epb);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -916,7 +916,7 @@ static ssize_t show_base_frequency(struct cpufreq_policy *policy, char *buf)
+ 	if (ratio <= 0) {
+ 		u64 cap;
+ 
+-		rdmsrl_on_cpu(policy->cpu, MSR_HWP_CAPABILITIES, &cap);
++		rdmsrq_on_cpu(policy->cpu, MSR_HWP_CAPABILITIES, &cap);
+ 		ratio = HWP_GUARANTEED_PERF(cap);
+ 	}
+ 
+@@ -1088,7 +1088,7 @@ static void __intel_pstate_get_hwp_cap(struct cpudata *cpu)
  {
--	return wrmsrl_safe_on_cpu(policy->cpu, MSR_AMD_CPPC_ENABLE, 1);
-+	return wrmsrq_safe_on_cpu(policy->cpu, MSR_AMD_CPPC_ENABLE, 1);
+ 	u64 cap;
+ 
+-	rdmsrl_on_cpu(cpu->cpu, MSR_HWP_CAPABILITIES, &cap);
++	rdmsrq_on_cpu(cpu->cpu, MSR_HWP_CAPABILITIES, &cap);
+ 	WRITE_ONCE(cpu->hwp_cap_cached, cap);
+ 	cpu->pstate.max_pstate = HWP_GUARANTEED_PERF(cap);
+ 	cpu->pstate.turbo_pstate = HWP_HIGHEST_PERF(cap);
+@@ -1162,7 +1162,7 @@ static void intel_pstate_hwp_set(unsigned int cpu)
+ 	if (cpu_data->policy == CPUFREQ_POLICY_PERFORMANCE)
+ 		min = max;
+ 
+-	rdmsrl_on_cpu(cpu, MSR_HWP_REQUEST, &value);
++	rdmsrq_on_cpu(cpu, MSR_HWP_REQUEST, &value);
+ 
+ 	value &= ~HWP_MIN_PERF(~0L);
+ 	value |= HWP_MIN_PERF(min);
+@@ -2084,7 +2084,7 @@ static int core_get_min_pstate(int cpu)
+ {
+ 	u64 value;
+ 
+-	rdmsrl_on_cpu(cpu, MSR_PLATFORM_INFO, &value);
++	rdmsrq_on_cpu(cpu, MSR_PLATFORM_INFO, &value);
+ 	return (value >> 40) & 0xFF;
  }
  
- static int shmem_cppc_enable(struct cpufreq_policy *policy)
-diff --git a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-index 46b96f1aa522..44dcd165b4c0 100644
---- a/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-+++ b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-@@ -191,7 +191,7 @@ void isst_resume_common(void)
- 			if (cb->registered)
- 				isst_mbox_resume_command(cb, sst_cmd);
- 		} else {
--			wrmsrl_safe_on_cpu(sst_cmd->cpu, sst_cmd->cmd,
-+			wrmsrq_safe_on_cpu(sst_cmd->cpu, sst_cmd->cmd,
- 					   sst_cmd->data);
- 		}
- 	}
-@@ -524,7 +524,7 @@ static long isst_if_msr_cmd_req(u8 *cmd_ptr, int *write_only, int resume)
- 		if (!capable(CAP_SYS_ADMIN))
- 			return -EPERM;
+@@ -2092,7 +2092,7 @@ static int core_get_max_pstate_physical(int cpu)
+ {
+ 	u64 value;
  
--		ret = wrmsrl_safe_on_cpu(msr_cmd->logical_cpu,
-+		ret = wrmsrq_safe_on_cpu(msr_cmd->logical_cpu,
- 					 msr_cmd->msr,
- 					 msr_cmd->data);
- 		*write_only = 1;
+-	rdmsrl_on_cpu(cpu, MSR_PLATFORM_INFO, &value);
++	rdmsrq_on_cpu(cpu, MSR_PLATFORM_INFO, &value);
+ 	return (value >> 8) & 0xFF;
+ }
+ 
+@@ -2137,7 +2137,7 @@ static int core_get_max_pstate(int cpu)
+ 	int tdp_ratio;
+ 	int err;
+ 
+-	rdmsrl_on_cpu(cpu, MSR_PLATFORM_INFO, &plat_info);
++	rdmsrq_on_cpu(cpu, MSR_PLATFORM_INFO, &plat_info);
+ 	max_pstate = (plat_info >> 8) & 0xFF;
+ 
+ 	tdp_ratio = core_get_tdp_ratio(cpu, plat_info);
+@@ -2169,7 +2169,7 @@ static int core_get_turbo_pstate(int cpu)
+ 	u64 value;
+ 	int nont, ret;
+ 
+-	rdmsrl_on_cpu(cpu, MSR_TURBO_RATIO_LIMIT, &value);
++	rdmsrq_on_cpu(cpu, MSR_TURBO_RATIO_LIMIT, &value);
+ 	nont = core_get_max_pstate(cpu);
+ 	ret = (value) & 255;
+ 	if (ret <= nont)
+@@ -2198,7 +2198,7 @@ static int knl_get_turbo_pstate(int cpu)
+ 	u64 value;
+ 	int nont, ret;
+ 
+-	rdmsrl_on_cpu(cpu, MSR_TURBO_RATIO_LIMIT, &value);
++	rdmsrq_on_cpu(cpu, MSR_TURBO_RATIO_LIMIT, &value);
+ 	nont = core_get_max_pstate(cpu);
+ 	ret = (((value) >> 8) & 0xFF);
+ 	if (ret <= nont)
+@@ -3256,7 +3256,7 @@ static int intel_cpufreq_cpu_init(struct cpufreq_policy *policy)
+ 
+ 		intel_pstate_get_hwp_cap(cpu);
+ 
+-		rdmsrl_on_cpu(cpu->cpu, MSR_HWP_REQUEST, &value);
++		rdmsrq_on_cpu(cpu->cpu, MSR_HWP_REQUEST, &value);
+ 		WRITE_ONCE(cpu->hwp_req_cached, value);
+ 
+ 		cpu->epp_cached = intel_pstate_get_epp(cpu, value);
+diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
+index 40bbf8e45fa4..5295cd1483f4 100644
+--- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
++++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c
+@@ -51,7 +51,7 @@ static int uncore_read_control_freq(struct uncore_data *data, unsigned int *valu
+ 	if (data->control_cpu < 0)
+ 		return -ENXIO;
+ 
+-	ret = rdmsrl_on_cpu(data->control_cpu, MSR_UNCORE_RATIO_LIMIT, &cap);
++	ret = rdmsrq_on_cpu(data->control_cpu, MSR_UNCORE_RATIO_LIMIT, &cap);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -76,7 +76,7 @@ static int uncore_write_control_freq(struct uncore_data *data, unsigned int inpu
+ 	if (data->control_cpu < 0)
+ 		return -ENXIO;
+ 
+-	ret = rdmsrl_on_cpu(data->control_cpu, MSR_UNCORE_RATIO_LIMIT, &cap);
++	ret = rdmsrq_on_cpu(data->control_cpu, MSR_UNCORE_RATIO_LIMIT, &cap);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -105,7 +105,7 @@ static int uncore_read_freq(struct uncore_data *data, unsigned int *freq)
+ 	if (data->control_cpu < 0)
+ 		return -ENXIO;
+ 
+-	ret = rdmsrl_on_cpu(data->control_cpu, MSR_UNCORE_PERF_STATUS, &ratio);
++	ret = rdmsrq_on_cpu(data->control_cpu, MSR_UNCORE_PERF_STATUS, &ratio);
+ 	if (ret)
+ 		return ret;
+ 
 -- 
 2.45.2
 
