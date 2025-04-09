@@ -1,95 +1,101 @@
-Received: from out162-62-57-64.mail.qq.com (out162-62-57-64.mail.qq.com [162.62.57.64])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 665812B2DA;
-	Wed,  9 Apr 2025 09:58:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4360E1DC991
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 10:00:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744192720; cv=none; b=TScFuIkjUfZJVogwKF4ghfVfVl+za/qbl51D6kvCm5njf7fQBTcyy7+zAYod/MhQ0obzWQSprJh//sJdkoyR9wO81I5mRIvZuJu/NgHbpvxLs44zIgQQuZq+nWGOqEr7Sd3XvAPshvVZmvw2OYPinscX0oZT8wamHVUuT433rno=
+	t=1744192803; cv=none; b=XNj5NUxI4w5Vco+RbP42MeTCA7UI6QGLQp9pmFkrSlxyKqi9436KVnv+6igU/7rMgK2zln0pP1Obz5jaW2+7whXGWYMW7GiIGYiVRY863dCs3gZWUd7XwC7oU4kKseTgo0X8hM0WtuYTgudJurJxQxLHHoALJVMSpKahMiEgxS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744192720; c=relaxed/simple;
-	bh=+3JfXT1Xs5fV6IP12sI9JzAAOim7iJsMfyQ6w0e5gxA=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=X77FfHmXB+fYSTfJyYNdwj9ixWGgh/K3TIl6y0cgzjeuRNq95umvQZfBEwLo/sdn33mBMuVrijXnv5kn5l5s2CkpNkDo2OOPBlpv9gfVtB+JOqfpaTdAxCO4i2QjWFmvfF12QuSSsX4kw0JDRXcWdAfqIRzRxqC3/DKhooyvi3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=cwrItvD6; arc=none smtp.client-ip=162.62.57.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1744192803; c=relaxed/simple;
+	bh=JbConos7mjcfP3FYJsI0LP/QcnEV6gac33lIOBxoVwo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=B+97v92e39fcqLVnejkb/3n4EceUmqVMiF0qykP4j0NpEwIbT2somMe82HC4qmW8M6Jmn4I1qd5w5Y0bQgmh+YWaBhxOiBZP5LGaleurrp4EWrpQG4xjyb2jOZlr2jRaFSydJT+rJ7wYeFqInBZyLo2s3JWa5MIF67bUG6Biqx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=NuefhDuZ; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="cwrItvD6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1744192706; bh=+lyAfonLE1WC9lkwgR5fNnzG/kCwzKlfRCzS5ujqlpw=;
-	h=From:To:Cc:Subject:Date;
-	b=cwrItvD6FrtHAYm0SuOuDYeuj5NWQs5VI52utkSpmpBwYd3dTvnOlac3ARXKUhApE
-	 ayt31MIt0qZtTLm4tCfFHuKkOtmszFWcRFwFyPLlgKXGRleK/iUHVd0QYM5TaiMzhp
-	 ore0gNQja84Z6QW8NlZsLP6PNqUZky0lFUpaLaIc=
-Received: from localhost.localdomain ([116.128.244.169])
-	by newxmesmtplogicsvrsza29-0.qq.com (NewEsmtp) with SMTP
-	id C71194AE; Wed, 09 Apr 2025 17:49:49 +0800
-X-QQ-mid: xmsmtpt1744192189tzh3ku7q2
-Message-ID: <tencent_D6C4728C5C687C042BA7C156B0F3ECF7AE05@qq.com>
-X-QQ-XMAILINFO: MLQF5pNkQhvxiqkx6mdELVKIwLq3+oG8ZVIOq2Njw6DkGw45tjnxQoLppcwGyC
-	 kX2Vy+O/6O/hEEL5PHfSDLMsNvDkvpP6gY59SRTODlsmX5aHEsakNUonbkva2xj+6te53r7OhkwB
-	 3t8Q993M5iU7iBO9Fv7TyN9CFBM6X2v4o5s3LDHLjj5uL9q9A2hVu2VfSKs8WtZsyItJflyOPSOO
-	 JpT4lC3PUy11nC59brIj8nlCsRp13g1swZQ6wYFEu1Mm3po+E5oR327UxAz8LQJAEzoFnWcW29ha
-	 YJyz/jaVYxROdRSXTDBeVriXxuhHLEcDz7muziNqeVEqO/5Z5fv0T3a6PUULYD6hxhFU9ub0rzoA
-	 ByTMCm1GpiKGObCPRi8yc83aW0NDegFqINhG/S8diTbruYYGipiVuFOj6erAifJX8cK/nteSIOzp
-	 tWwkEm+fVh58xKtISGm281HM/XmqEzjoH16HmkvNG2UjzHFnQq/2hAqC17H4B14OcS4QAJJCl9Qy
-	 j9LPpaA0WT9htPGUbbQTKlGyxJlryVoLeWuD1KE37un53DfuRhATbVBqPeIr++rk61Jon08aeTMH
-	 NT94fqnPG1FdIVRo/cxPSV1OJ5kGwObNMAMVbMxKZdGziaxAtT++7NdUtTyCg0uO3MMSEZVOIguV
-	 sWazrMy7lMhigpm2DeBzA4MiAT8AMLD3gz9HlyjaNPnPsMwumxNtbWTvhIqKKNyg211NqNelMG6b
-	 GdldoKbojB2iAPxzrKToFi1b13LCZXyUpivo+EP2rdSmUGGw+BdoToavO3pF74xPBXVKlMRjlSxC
-	 49NhYV8VA84WLsJDnQ5m/eaYUIFfBxKKPcnxz1HOdmhXV9vo61ypceiw9eJ3r70+8+S+lyVEZyVG
-	 EDgJv8mqxACW0shN2ta0XWjSOHAazrzRpQGVtlycQwjkzL4Qj8kSlAdgSCWygXYSaxNwwDh3nzHN
-	 9R6ttKlcebFZt7ny8umA==
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-From: Yaxiong Tian <iambestgod@qq.com>
-To: rafael@kernel.org,
-	viresh.kumar@linaro.org,
-	Pierre.Gondois@arm.com
-Cc: linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yaxiong Tian <tianyaxiong@kylinos.cn>
-Subject: [PATCH 0/2]  Fix and optimize some comments in the CPCC EM model 
-Date: Wed,  9 Apr 2025 17:49:48 +0800
-X-OQ-MSGID: <20250409094948.1684994-1-iambestgod@qq.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="NuefhDuZ"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 90F6344387;
+	Wed,  9 Apr 2025 09:59:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744192799;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JbConos7mjcfP3FYJsI0LP/QcnEV6gac33lIOBxoVwo=;
+	b=NuefhDuZ58M7ukgd0rEHcn7PjJC6ysu1fg9mQd0y0l0GoJcRc/078oc/pL16kVQZDXAEH4
+	D8QtJCGqZF7lR9IOWpc46o2qMi+21f+63j2e2draKsgyvACU6QCOSvH2jXUGyJl8itCr1W
+	dVJdNr0h07DqUE4ZKLboyDk7vqdVGbp/znB7aQ6Nsa2o3dIeAEmfwS/gOx+iaKLOwjWpmB
+	00NL2c2kGo/gjhC4+NU5sgSjPj6KTXzlQmnnoddnqnP8kGNcij5LYTF5jmkv7jskxYoWvI
+	D7XmkCKtDHwAD5Zf98ReHNfTeIO530Z8Spx76f1JoETuMuJtG29Jyw4zWku5NQ==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: "Usyskin, Alexander" <alexander.usyskin@intel.com>
+Cc: Richard Weinberger <richard@nod.at>,  Vignesh Raghavendra
+ <vigneshr@ti.com>,  "De Marchi, Lucas" <lucas.demarchi@intel.com>,  Thomas
+ =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,  "Vivi,
+ Rodrigo"
+ <rodrigo.vivi@intel.com>,  Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>,  Maxime Ripard <mripard@kernel.org>,
+  Thomas Zimmermann <tzimmermann@suse.de>,  David Airlie
+ <airlied@gmail.com>,  Simona Vetter <simona@ffwll.ch>,  Jani Nikula
+ <jani.nikula@linux.intel.com>,  Joonas Lahtinen
+ <joonas.lahtinen@linux.intel.com>,  Tvrtko Ursulin <tursulin@ursulin.net>,
+  "Poosa, Karthik" <karthik.poosa@intel.com>,  "Abliyev, Reuven"
+ <reuven.abliyev@intel.com>,  "Weil, Oren jer" <oren.jer.weil@intel.com>,
+  "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+  "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+  "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+  "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 01/12] mtd: core: always create master device
+In-Reply-To: <CY5PR11MB63661044DCB37577A12B5DF9EDAA2@CY5PR11MB6366.namprd11.prod.outlook.com>
+	(Alexander Usyskin's message of "Mon, 7 Apr 2025 12:47:07 +0000")
+References: <20250326152623.3897204-1-alexander.usyskin@intel.com>
+	<20250326152623.3897204-2-alexander.usyskin@intel.com>
+	<87ecycrko4.fsf@bootlin.com>
+	<CY5PR11MB63661044DCB37577A12B5DF9EDAA2@CY5PR11MB6366.namprd11.prod.outlook.com>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Wed, 09 Apr 2025 11:59:57 +0200
+Message-ID: <87zfgpejtu.fsf@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdehjedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhgffffkgggtgfesthhqredttderjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeffgefhjedtfeeigeduudekudejkedtiefhleelueeiueevheekvdeludehiedvfeenucfkphepvddttddumeekiedumedvtdgtfeemsggufhdtmegvgehftdemfhejudhfmehfsggrvdemkegufhejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumedvtdgtfeemsggufhdtmegvgehftdemfhejudhfmehfsggrvdemkegufhejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvuddprhgtphhtthhopegrlhgvgigrnhguvghrrdhushihshhkihhnsehinhhtvghlrdgtohhmpdhrtghpthhtoheprhhitghhrghrugesnhhougdrrghtpdhrtghpthhtohepvhhighhnvghshhhrsehtihdrtghomhdprhgtphhtthhopehluhgtrghsrdguvghmrghrt
+ ghhihesihhnthgvlhdrtghomhdprhgtphhtthhopehthhhomhgrshdrhhgvlhhlshhtrhhomheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehrohgurhhighhordhvihhvihesihhnthgvlhdrtghomhdprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-From: Yaxiong Tian <tianyaxiong@kylinos.cn>
+Hello,
 
-Commit <740fcdc2c20ec> ("cpufreq: CPPC: Register EM based on efficiency 
-class information") introduced a very good feature. However, since commit
-<1b600da510735a> ("PM: EM: Optimize em_cpu_energy() and remove division"), 
-the energy calculation formula in the EM model has changed. Therefore, some
-comments need to be updated and corrected to avoid misunderstandings.
+> The mtd_master is completely different class to avoid mtd tree disturbanc=
+es.
+> It is real kernel device object, I'm not sure how we can do 'link to'
+> magic here.
 
-I carefully analyzed the code theoretically and found that the new energy 
-calculation formula doesn't affect the current code - in fact, it has brought 
-some improvements. For example, consider four efficiency classes (1, 2, 3, 4). 
-Under the old logic, there were cases where tasks would be scheduled to class 4 
-CPUs instead of class 3 CPUs. This happened because the old energy calculation 
-formula divided by CPU capacity, and since class 3 CPUs have lower capacity than 
-class 4, it sometimes went against the original intention.
+Maybe we can add that later if someone needs.
 
-Considering that the comments about CPPC_EM_COST_GAP might be confusing, I've 
-added some analytical comments before CPPC_EM_COST_GAP in the latest code to 
-help other developers better understand. 
+> About MTD_PARTITIONED_MASTER - we can treat it as another partition and=20
+> create master device plus whole device partition as it's child with all o=
+ther
+> partitions as children of master device.
+> For unpartitioned device this mean that we create master device and parti=
+tion
+> regardless of MTD_PARTITIONED_MASTER flag.
 
-Of course, this is just my personal understanding - please point out if 
-there are any mistakes.
+I am not sure I follow you. I am proposing to create the mtd_master
+device in all cases. I believe this is the future-proof approach. Can
+you make this change?
 
-Yaxiong Tian (2):
-  cpufreq: cppc: Update and opt comment for cost calculation method
-  cpufreq: cppc: Add comments for CPPC_EM_COST_GAP calculation
+Regarding the hierarchy, I indeed agree with what you propose:
+mtd_master parent of whole partition device (if any) parent of
+partitions.
 
- drivers/cpufreq/cppc_cpufreq.c | 44 ++++++++++++++++++++++++++++++----
- 1 file changed, 40 insertions(+), 4 deletions(-)
-
--- 
-2.25.1
-
+Thanks,
+Miqu=C3=A8l
