@@ -1,155 +1,132 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE09B3D76;
-	Wed,  9 Apr 2025 08:31:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A017A25D1ED;
+	Wed,  9 Apr 2025 08:31:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744187505; cv=none; b=Bi/ORIZaCCIXZ3MTsrrdwjSKfm+9tsg6myefCdVNduCFTnsN7ASkj5xFAeS3enSc6VAh8IGXmdwewliP6R6NV3PFDUKmRwChefvglBCd8cUmdCdIcLIARbScxi4hYdufW8nds154hHDD96iJcEaMO2CSzj6jEmhtpajGxQy4qCo=
+	t=1744187513; cv=none; b=lkOD+PqtOggTWL9pWaDADquFV4UGN5vppGh0XDQ9694pfYer6yXsFEB9U5zMKynW8Zp130t7L8DhLGRqlNeD+/jclDrE03lDkrQxWoSPSpMyy1sPObyCwq7PrNNJ7rpgHoa9fQb0wJAOMew58dHIeXaqAm09dvWw4hs85v22EYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744187505; c=relaxed/simple;
-	bh=flmCLpSGOvwvlim3TEhlpkEBZpLrsv+Lm2Xaao4j+DU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=a1NTW5hQnmTnkQfxwpGs9DbpxWa6iWOQWurkryy3033s65xfuVOJq2H+ajb11U7lIrFYt1e4YAjdzE/6qb2+XG5O6zPojJdmVc54JDTnU70eo5gJ1m16lP0Fcn9Z3zm9nItNnAir1mgh4hlKL+CajH4mFSv/Cl16fDmGzG+hIms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=C+3QWfdj; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744187513; c=relaxed/simple;
+	bh=PCpZpdhmfkrQTn04uXQxa/ZIWBVgIJf/v0Z5cgyr0h4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=piAVuDp15CMpzMk96vRcqIndKUSae1BF7604VWmIl2SZ6fxOOn0rAuXiJK+Ak1PczCvtDTKopSDwnFFRanDDuq4yB7hatiwAikkJcdaVtgWTGfH+tDboC9SNcxFqetSt+5sm84TinanCgclNCtETdd7iTd90TDDlXANNHBasbwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.fm; spf=pass smtp.mailfrom=fastmail.fm; dkim=pass (2048-bit key) header.d=fastmail.fm header.i=@fastmail.fm header.b=gL6oXoGf; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Cpj7yjcI; arc=none smtp.client-ip=103.168.172.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.fm
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.fm
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="C+3QWfdj"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 05F6E432F5;
-	Wed,  9 Apr 2025 08:31:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744187494;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Q6UDxOkI9c5sQpM50GzmrBvmyVrY4RBV9cIKIJIWKuY=;
-	b=C+3QWfdjtlFQNnVELMFszi8TbpV2UkoRnPldE0Hxbu48ZmUxeL0lPgY5XPdMKOPu9DqeNb
-	x1Pfg/FVSdbd/UBEcy6RhOjZr65aZ8MtBLHOZkakCReoBiTRxn3yudjAi39a+F50Tf9pIe
-	wCKvUfiN/t/dmvFxk4rv+qkV0DJ69VdGdyfXNMk7xE/3VZMvdOJb1VDki+fCbFEcFg90zq
-	EUSs0daLA7y226iCtDP4o8UlilB4SWbfrI1a85J6K4Y7Sjit21RkzbKCel6ku9S2lIGa4J
-	KSJjlDaTOR1VN1YEDF+grSdKbB40NEthEonGCKAwh3SFyytKyzf4sZ2dso/SOQ==
-Date: Wed, 9 Apr 2025 10:31:30 +0200
-From: Kory Maincent <kory.maincent@bootlin.com>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>, Richard
- Cochran <richardcochran@gmail.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, Maxime Chevallier
- <maxime.chevallier@bootlin.com>, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, Vladimir Oltean <vladimir.oltean@nxp.com>
-Subject: Re: [PATCH net-next v2 0/2] Add Marvell PHY PTP support
-Message-ID: <20250409103130.43ab4179@kmaincent-XPS-13-7390>
-In-Reply-To: <Z_WJO9g5Al1Yr_LX@shell.armlinux.org.uk>
-References: <20250407-feature_marvell_ptp-v2-0-a297d3214846@bootlin.com>
-	<Z_P3FKEhv1s0y4d7@shell.armlinux.org.uk>
-	<20250407182028.75531758@kmaincent-XPS-13-7390>
-	<Z_P-K7mEEH6ProlC@shell.armlinux.org.uk>
-	<20250407183914.4ec135c8@kmaincent-XPS-13-7390>
-	<Z_WJO9g5Al1Yr_LX@shell.armlinux.org.uk>
-Organization: bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=fastmail.fm header.i=@fastmail.fm header.b="gL6oXoGf";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Cpj7yjcI"
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfout.phl.internal (Postfix) with ESMTP id AAC6C1380140;
+	Wed,  9 Apr 2025 04:31:49 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-09.internal (MEProxy); Wed, 09 Apr 2025 04:31:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.fm; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1744187509;
+	 x=1744273909; bh=t6lmhI9lGDXs0/ghIIQ/kwihxBN774g27lMjQXgy508=; b=
+	gL6oXoGf8RA2NAuc6yg4i0HZCWKp+C7wmCvwdmuAjKrWYqZt7OCbpj1E3onC5vrI
+	/BUIcoHoABC1zTD4VBhrUeo5WzI/kFk1b8H+4kjSSTlH2k8tBoTij8WN/DbHbsqO
+	I71yaMiSWBAk7VAufXboL1AVG7DSNVMNzE9obm7PnYm4Zq2QimAm7lFp4SCcHbnn
+	y6tXwXmuzXQX3YvSHgn+UFJ8hqUehs1o9jEyD3OJtCj74PC7dPjMlKJPxs2Hv+kh
+	ZDbqJPQ24/n3/oxtod52a9Ah1KOHGJG724n6pCPT8L3B17aZd6oj5Osk7apEuIwd
+	OTQwruEQ21cjoAUtz+irPA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744187509; x=
+	1744273909; bh=t6lmhI9lGDXs0/ghIIQ/kwihxBN774g27lMjQXgy508=; b=C
+	pj7yjcIBC8YIAc6moPAM1lFW36hWc4haPuYtauOO5XShSMc/RAp1oyM+C+ztD8he
+	2SH/15Rz4tcdLPTDAV4EMQKZqj0FUFbIQ9or3iziqjDBTe8SONL5cO2zaSlgBKUG
+	cmzQ8J7MaaBbfn38KQZ3Mrpa+cxiHV80qg+UDx1PcHdzcf/fqpXUAcPs+/c80RX1
+	PcoeA/6wF/4eOJaQzkcNsINJsQ7rvS+tUFsIMOGKnFpMnERh15POMLJKnrah2Ck3
+	HENppBffRdHrvS5sP1swa39/pJJtJ/lEJTyiZiHRDovAg4JHb20H/nWNgRGiwUoT
+	Q5OF50louOGwDSus+lImw==
+X-ME-Sender: <xms:dDD2Z0bAUbbjrewj5RTiNixKojhJaH2uFdZCOh7IBeyBA5LDpIx94w>
+    <xme:dDD2Z_bdC1DJFbe8JSQNRVQ1jw_G0EWKAHYxgZjB72XovapxEWZEMkcxCeiOPwwap
+    yGOiivw9pRbTdmf>
+X-ME-Received: <xmr:dDD2Z-_doKjDgXPcwkbEbtNas1LKD5p9miK3-6MqEOjhKS5zQXacpw360zYrgwIwT5UfWAykZ9Uo58Kh5qYXfeUkFHzZ-fHgI00khCq508Pk2_IqyDC2>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdehhedvucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddt
+    vdejnecuhfhrohhmpeeuvghrnhguucfutghhuhgsvghrthcuoegsvghrnhgurdhstghhuh
+    gsvghrthesfhgrshhtmhgrihhlrdhfmheqnecuggftrfgrthhtvghrnheptddugefgjeef
+    kedtgefhheegvddtfeejheehueeufffhfeelfeeuheetfedutdeinecuffhomhgrihhnpe
+    hgihhthhhusgdrtghomhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgr
+    ihhlfhhrohhmpegsvghrnhgurdhstghhuhgsvghrthesfhgrshhtmhgrihhlrdhfmhdpnh
+    gspghrtghpthhtohepledpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepjhgrtgho
+    sehulhhsrdgtohdriigrpdhrtghpthhtohepmhhikhhlohhssehsiigvrhgvughirdhhuh
+    dprhgtphhtthhopehlihhnuhigqdhfshguvghvvghlsehvghgvrhdrkhgvrhhnvghlrdho
+    rhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrd
+    horhhgpdhrtghpthhtoheptghhrhhishhtohhphhgvrdhjrghilhhlvghtseifrghnrggu
+    ohhordhfrhdprhgtphhtthhopehjohgrnhhnvghlkhhoohhnghesghhmrghilhdrtghomh
+    dprhgtphhtthhopehrughunhhlrghpsehinhhfrhgruggvrggurdhorhhgpdhrtghpthht
+    ohepthhrrghpvgigihhtsehsphgrfihnrdhlihhnkhdprhgtphhtthhopegurghvihgurd
+    hlrghighhhthdrlhhinhhugiesghhmrghilhdrtghomh
+X-ME-Proxy: <xmx:dDD2Z-qkGnN7oduFT9PCvNZ28g_dmqU3jWLFWdQCxIthLPEcP4FKaQ>
+    <xmx:dDD2Z_o3fiL9VPyUfvw55J1bHiIWQlxB8Uxp4uQgT0Ed_BbFUDrpWQ>
+    <xmx:dDD2Z8QNZ_06GZK-7QVi22GEHQEToWI3Du_vgxz7Ty8gS7vjAOAZzQ>
+    <xmx:dDD2Z_qFjJaETK89aVToW6M8JuZQIeFAnQwcMjA3DTF4-fCtTfJIlQ>
+    <xmx:dTD2Z8RJG-6HmAEoUiTqIvWTdEju_svnxnZ_HH-fYCp9xdtE3dy1UFKL>
+Feedback-ID: id8a24192:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 9 Apr 2025 04:31:47 -0400 (EDT)
+Message-ID: <e8659104-54de-4155-bac1-f45df440e468@fastmail.fm>
+Date: Wed, 9 Apr 2025 10:31:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] fuse: Adjust readdir() buffer to requesting buffer
+ size.
+To: Jaco Kroon <jaco@uls.co.za>, Miklos Szeredi <miklos@szeredi.hu>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ christophe.jaillet@wanadoo.fr, joannelkoong@gmail.com,
+ rdunlap@infradead.org, trapexit@spawn.link, david.laight.linux@gmail.com
+References: <20250314221701.12509-1-jaco@uls.co.za>
+ <20250401142831.25699-1-jaco@uls.co.za>
+ <20250401142831.25699-3-jaco@uls.co.za>
+ <CAJfpegtOGWz_r=7dbQiCh2wqjKh59BqzqJ0ruhtYtsYBB+GG2Q@mail.gmail.com>
+ <19df312f-06a2-4e71-960a-32bc952b0ed2@uls.co.za>
+ <CAJfpegseKMRLpu3-yS6PeU2aTmh_qKyAvJUWud_SLz1aCHY_tw@mail.gmail.com>
+ <d42dec00-513c-49d4-b4f3-d7a6ae387a6b@fastmail.fm>
+ <b812fec3-8736-4005-918e-318e955c1902@uls.co.za>
+From: Bernd Schubert <bernd.schubert@fastmail.fm>
+Content-Language: en-US, de-DE, fr
+In-Reply-To: <b812fec3-8736-4005-918e-318e955c1902@uls.co.za>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdehheduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepheevueefveffvdfgjefhleetueefgfdutddugfeiudefteekgfduhffgleehvdffnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpghhithhhuhgsrdgtohhmpdgsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehkmhgrihhntggvnhhtqdgirffuqddufedqjeefledtpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudehpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehhkhgrlhhlfigvihhtudesghhmrghilhdrtghomhdprhgtphhtthhopegurghvvghmsegur
- ghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehkrggsvghlsehkvghrnhgvlhdrohhrgh
-X-GND-Sasl: kory.maincent@bootlin.com
+Content-Transfer-Encoding: 7bit
 
-On Tue, 8 Apr 2025 21:38:19 +0100
-"Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
+Hi Jaco,
 
-> On Mon, Apr 07, 2025 at 06:39:14PM +0200, Kory Maincent wrote:
-> > On Mon, 7 Apr 2025 17:32:43 +0100
-> > "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
-> > > I'm preferring to my emails in connection with:
-> > >=20
-> > > https://lore.kernel.org/r/ZzTMhGDoi3WcY6MR@shell.armlinux.org.uk
-> > >=20
-> > > when I tested your work last time, it seemed that what was merged had=
-n't
-> > > even been tested. In the last email, you said you'd look into it, but=
- I
-> > > didn't hear anything further. Have the problems I reported been
-> > > addressed? =20
-> >=20
-> > It wasn't merged it was 19th version and it worked and was tested, but =
-not
-> > with the best development design. I have replied to you that I will do =
-some
-> > change in v20 to address this.
-> > https://lore.kernel.org/all/20241113171443.697ac278@kmaincent-XPS-13-73=
-90/
-> >=20
-> > It gets finally merged in v21. =20
->=20
-> Okay, so I'm pleased to report that this now works on the Macchiatobin:
->=20
-> where phc 2 is the mvpp2 clock, and phc 0 is the PHY.
+On 4/9/25 09:12, Jaco Kroon wrote:
+> Hi Bernd,
+> 
+> You sure you're looking at the newest version?
+> 
+> Or where does the below need to get applied?
+> 
+> I'm not seeing that in the patch to which you replied.
 
-Great, thank you for the testing!
 
->=20
-> # ethtool -T eth2
-> Time stamping parameters for eth2:
-> Capabilities:
->         hardware-transmit
->         software-transmit
->         hardware-receive
->         software-receive
->         software-system-clock
->         hardware-raw-clock
-> PTP Hardware Clock: 2
-> Hardware Transmit Timestamp Modes:
->         off
->         on
->         onestep-sync
->         onestep-p2p
-> Hardware Receive Filter Modes:
->         none
->         all
->=20
-> So I guess that means that by default it's using PHC 2, and thus using
-> the MVPP2 PTP implementation - which is good, it means that when we add
-> Marvell PHY support, this won't switch to the PHY implementation.
+I just applied Miklos' patch that uses vmalloc. It applies
+to the repo without your patch
 
-Yes.
+I also
+pushed to a branch
 
->=20
-> Now, testing ethtool:
->=20
-> $ ./ethtool --get-hwtimestamp-cfg eth2
-> netlink error: Operation not supported
->=20
-> Using ynl:
->=20
-> # ./ynl/cli.py --spec netlink/specs/ethtool.yaml --no-schema --dump
-> tsconfig-get --json '{"header":{"dev-name":"eth2"}}' []
->=20
-> So, It's better, something still isn't correct as there's no
-> configuration. Maybe mvpp2 needs updating first? If that's the case,
-> then we're not yet in a position to merge PHY PTP support.
+https://github.com/bsbernd/linux/commit/2b5ca68656a4a47e35b8cf1dfcf39c4335066497
 
-Indeed mvpp2 has not been update to support the ndo_hwtstamp_get/set NDOs.
-Vlad had made some work to update all net drivers to these NDOs but he never
-send it mainline:
-https://github.com/vladimiroltean/linux/commits/ndo-hwtstamp-v9
+In this branch: https://github.com/bsbernd/linux/tree/fuse-large-readdir
 
-I have already try to ping him on this but without success.
-Vlad any idea on when you could send your series upstream?
 
-Regards,
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+Cheers,
+Bernd
