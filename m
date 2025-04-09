@@ -1,62 +1,62 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D15DC25D536
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 09:14:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12DC325D904
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 09:14:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744190065; cv=none; b=BQHjqIf0uyzuz+eZFETzqtMggbzijAeaS9xjDKFGg9mCa74Fx5EFqgxo9825ii31uyWOY6ce0V3slDddJmGiRK1YD8vPeexFPpBwdtzuRI5QwJ/sD0x1NU31pv9ct5lHz6GB1xN73dSmSGv3fMBprea5CrShe6HchwgCnfLT7Gg=
+	t=1744190068; cv=none; b=SiuDPKnkecg2PUyIx+11+8SYSyO+Ht/m9tewI4OlkQVpuQhFRUWdOCoMsbBtr34jY+8uOVtYeNw7kAu24qgUIbN6nbbg5yDOhHqT5vm2m/0ZgZm9kJyJTQbpbuxpzS3xe9jmeF5pxBXCzD6GzQYcBJENPdchl8qWNm1T7We8mVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744190065; c=relaxed/simple;
-	bh=7tuF8mS/RBiXqmBPIHQCKgLB4C5lh2LqoT+PdNMhZKU=;
+	s=arc-20240116; t=1744190068; c=relaxed/simple;
+	bh=1D5iZVjmIKarwRYdGD7MtKz/UH9NKBv0KmWvvei4cMw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bxazwhYbDnkBDrLgyOg7ssXKR9fXjnpg15Yqug91jkjC2PxL+OJmZJJnHa4SqB+hSI9Q+H5pBI8bUpWiD7czxFJ/jurXPhEv+VFTA8Mbum0d82qNjZSDj9zx/kbX+kLuNrZnRyC9ELnbgR1JQ8jfXqwLTCjYetkvXsxs6yjFRc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ResvGiNr; arc=none smtp.client-ip=209.85.160.179
+	 MIME-Version; b=bYKHeT/tbC2OezV15O18QuxTKmzqMXlWui/GB4i2zd+H+7RP29TdZnFw96PbSSe9ZJCWY6QKYaFUMVTicACydrbc1RnACYfiwrXUzKFuWrTnL30CfrT1NqS3OY9XPYElovYuuSaPQ72Z7E3UzRBrda8sHmbNJhxHZiyIfSlyAI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YoYwVDrW; arc=none smtp.client-ip=209.85.219.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ResvGiNr"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-476af5479feso63990721cf.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 02:14:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YoYwVDrW"
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6e8f8657f29so53597296d6.3
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 02:14:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744190063; x=1744794863; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744190066; x=1744794866; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7n9MYWIYdQKtlJKSmxfHZ9iLzwcGKDDGvLn3OqdhaMc=;
-        b=ResvGiNrhe20jPMU1rxx6BS3XQnSrPre9RNMRKfM6QSBgmwmIpD8WuEapdYnPLGGib
-         R9O17e8WO4dtBA1v+1f5C6PHaSmzrruMG+Mf0FbHRUe6RXWIweY2pfUotzMD6CaBglBX
-         7b4CMKKEt/1XONXvkufC7U/2hfywwEl/yoOSUVsMbzOFi02xT0qWtCtYTq+b1OzJTf5+
-         KEPGAp9v6NrLKl25tOlqi3nl06hqP/lPz9laZ4ctjBBAANyH458Ua+3ORyGehCuJvKoP
-         f2quG5apCtsMU9pbjNleKV6nOxBeBN/ja7aT9agKd9dtOTFvvD/uZRjmIdGIApsUkhVs
-         ZSLg==
+        bh=sJ4R9s+Smn1DtIHoE8sXkA1kzL8Ka1xkN88DpPb5/Eg=;
+        b=YoYwVDrW2iEMirBt77NlownLR8qiSTWNt7CvcgJzG7WBnR882LKIdGJMGxlfhFa+i0
+         F0T0UOricDhTe2sTwaVgmMZ7T3gf+59t06soW8A8LyiKszpudctDXd3GXyUN6mrBYvWK
+         qupvqacjHOJ4g6+YtzZmh8jj0/bWRhQFSz3ZgBm0KGGCCEcbay0Q3R5LZj/vbVbeO5zJ
+         XjU2++7+/5MtdEFVA/KysLBPgsQnUPOkCpDFNvXLuq88IG36pomMDUhkf94gtQksQPo7
+         vWtPE9HBME/yaMSvmdb17RGX14n/Yp9GzgVVjiuVQO6dIFHk6GnhNeAJBWlS5690n8lP
+         iePQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744190063; x=1744794863;
+        d=1e100.net; s=20230601; t=1744190066; x=1744794866;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7n9MYWIYdQKtlJKSmxfHZ9iLzwcGKDDGvLn3OqdhaMc=;
-        b=NJtB7Z0K4mt2f6gk/pqnaoRIq2cSZtMDiIngOQSs0RTugJhmEjYqmnXwLkiJkuQKob
-         de4XC8uPHY5y3n75Bl1WFq1hicOv/d6Y7FzMirMTKi1yK3Ejk6IP8+qyHoIp8o11SSzn
-         8j/JdXOso8W4I3rPXUrmxt4vo2BktHSdWNI/MpELa2bvchnSfJXxhxrdYaqN9MQFMyKs
-         BC0oi3zZCF7dPZxw2/cvxyvosdyRMo/7/NVMe7jTK1T97iEFmvOvglbsgLUX/z5PsT4m
-         nhwC+l5XkATaY61W1BZO549P2Tqf2CSeLTEJSAhyj3eJe3Se1iJWuVhKHrrj7yapRIyp
-         idDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX89LuXQq5njm5AM/NY1h/Giw89xzFfBwUgefmQhMVWJZNWOCzL15Who3+knYRYSD5tWzvLcfPEG9SYy4I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBqhLK7meQQmAq6QOgoAHrIeYeMvLiNoNqegqUKSrWzDVJV1gA
-	vNyfMvq1Z3v7s5NZUZiHlZF5PY/QHCtb512Bxw9rrzsNIKwTjRm4
-X-Gm-Gg: ASbGnctb46H2ieOU+DebX0JwJufcU8bUw7/P2ll8gyb0ovFO4xz+6g+CnqIWT+PHDKT
-	oQ2m4CNqH74A+BuAcZy6KSDpHIu0jOAshWlriMnrpktnZneI2y0dHjOb6kxwSm+BiXNsNaGG1/O
-	5Ava3thMgrseFWZaqcyKpCxSw4AUKA0aiJxCFvhCS/Et0WXzR9rztW1xvsY1n09LCr2imMmG1Qw
-	r2HRUYlaxhM8JA9DNtFBEQcPhuhbKXIYawsfVJcdh6SrHON7jhNxvqc9jqsfAGnvKsoc/n7zYtw
-	v85gXlaDSsEukkXROXFttSkHZBFjNQOmh3knCliHBgYn3gSo7iv9WMR3
-X-Google-Smtp-Source: AGHT+IGxXACYCWd8q0QSUfwe2C7F/fvpjaUMq7LuvpgmQ5wyXh+jaW1cXxA555291Gn8JmKjg23lmg==
-X-Received: by 2002:a05:622a:1a0d:b0:474:fc9b:d2a7 with SMTP id d75a77b69052e-47960079a98mr21007151cf.6.1744190062709;
-        Wed, 09 Apr 2025 02:14:22 -0700 (PDT)
+        bh=sJ4R9s+Smn1DtIHoE8sXkA1kzL8Ka1xkN88DpPb5/Eg=;
+        b=iGpOH0UAiAoywqNXK153FOKyIxJjIYEm1kqtV6xirfJmf/5p9s5rgm861tzGfQwbUn
+         DXbGtXzShLn8IMw9NaX8Fq1biz9uPlW7hOd1tt27jbTO3KxVDY+axZIaBPrAG2XC3foo
+         2bSqn4fgr7VETn+njJmtwTdom20hT40kAZeI1eDy0oQgw6IcRmFXrB2h+5BlhZoh5HaR
+         EmwKwhwzltiNBd5XWXBW53MmoPPX3GeSl+FLDwS80CbcALiznKM6KzL+m23guVwe2e5M
+         ZAm3pIoeU+9NhFHfQRn2rmRHu4Oyga+Kp0a3mg61ByTjTnu/7E75kI30tHuT0g7JvfkY
+         KXKw==
+X-Forwarded-Encrypted: i=1; AJvYcCX6zphfSpQyM7749hhsldrVpItqEZfayx+wiIHnRxHOr2pDKXOaoMDFwRi8Bt2dq0EiTeabTGFln8U/YU8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9xpklYfsDbwalUW3QkIE2OehFfcepOyze9+TtWqXQfaumZAU/
+	v/vb8mKmXmNvQh7S1ivBcw76kfmUk2T6N8w2W/REOQCNUCw3vUhq
+X-Gm-Gg: ASbGncuJw/d378tob3nDxLlHHfOFyXshgoa7laihKLphH8+1QjmihZLABLRgDalpIYi
+	o7wAORLymplzM889XVmwuuJKIeEotKOW/R7FIcs+d1LJbjMJEjAtmgimCLOdXr1A/Nkx5+dKXK5
+	ljU2W42h5uWG8J+q2PHKLc1len6NQfglvLNs9eXfFCC/KEVmNk+GlcjQe2RYQ70RwBEBHRFRpmV
+	fQuhcQa6MChX/4Cf5SVQbYJQhOvTicrXQSwMn69FQ5+VMv0o2QBRrmUPV2aAWBroaqpe1Q0VWTx
+	p5cfq3Xx39MlM1g3waR00QK/ceTHdgy/fNng0GZn8ZN4SQ==
+X-Google-Smtp-Source: AGHT+IEt+/uef1nd1EUQSOIdciPRgiNmmp4psQdY7P6wpuKI3PKyWfXaaQtxpAU+m9n/rZsfa7iUZg==
+X-Received: by 2002:a05:6214:40b:b0:6e8:9e8f:cfb with SMTP id 6a1803df08f44-6f0dd0ad2fbmr20136336d6.24.1744190065911;
+        Wed, 09 Apr 2025 02:14:25 -0700 (PDT)
 Received: from ubuntu ([105.112.112.184])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47964eb99cfsm4677911cf.52.2025.04.09.02.14.21
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f0dea07c50sm5073136d6.77.2025.04.09.02.14.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 02:14:22 -0700 (PDT)
+        Wed, 09 Apr 2025 02:14:25 -0700 (PDT)
 From: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
 To: outreachy@lists.linux.dev,
 	julia.lawall@inria.fr
@@ -67,9 +67,9 @@ Cc: gregkh@linuxfoundation.org,
 	dan.carpenter@linaro.org,
 	andy@kernel.org,
 	Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
-Subject: [PATCH v9 1/2] staging: rtl8723bs: Add spaces and line breaks to improve readability
-Date: Wed,  9 Apr 2025 09:12:54 +0000
-Message-Id: <3b9a0572ad56699b095642fc169c9603e08616e9.1744189500.git.abrahamadekunle50@gmail.com>
+Subject: [PATCH v9 2/2] staging: rtl8723bs: Use % 4096 instead of & 0xfff
+Date: Wed,  9 Apr 2025 09:12:55 +0000
+Message-Id: <c590448d7cdef06dbc5af06090581523f8247212.1744189500.git.abrahamadekunle50@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <cover.1744189500.git.abrahamadekunle50@gmail.com>
 References: <cover.1744189500.git.abrahamadekunle50@gmail.com>
@@ -81,42 +81,58 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The code contains no spaces around binary operators with long lines
-which reduces readability thereby not adhering to Linux kernel coding
-style.
+The sequence number is constrained to a range of [0, 4095], which
+is a total of 4096 values. The bitmask operation using `& 0xfff` is
+used to perform this wrap-around. While this is functionally correct,
+it obscures the intended semantic of a 4096-based wrap.
 
-Add white spaces around the binary operators and use line breaks to
-increase readability and ensure adherence to Linux kernel coding
-styles.
+Using a modulo operation `% 4096u` makes the wrap-around logic
+explicit and easier to understand. It clearly signals that the
+sequence number cycles through a range of 4096 values.
+It also makes the code robust against potential changes of the 4096
+upper limit, especially when it becomes a non power-of-2 value while
+the AND(&) works solely for power-of-2 values.
+
+The use of `% 4096u` also guarantees that the modulo operation is
+performed with unsigned arithmetic, preventing potential issues with
+the signed types.
 
 Suggested-by: Andy Shevchenko <andy@kernel.org>
+Suggested-by: David Laight <david.laight.linux@gmail.com>
 Signed-off-by: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
 Reviewed-by: Andy Shevchenko <andy@kernel.org>
 ---
- drivers/staging/rtl8723bs/core/rtw_xmit.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/staging/rtl8723bs/core/rtw_xmit.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/staging/rtl8723bs/core/rtw_xmit.c b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-index 297c93d65315..5def2467f42b 100644
+index 5def2467f42b..76f25ab6a779 100644
 --- a/drivers/staging/rtl8723bs/core/rtw_xmit.c
 +++ b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-@@ -963,11 +963,14 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
- 					if (SN_LESS(pattrib->seqnum, tx_seq)) {
+@@ -943,7 +943,7 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
+ 
+ 			if (psta) {
+ 				psta->sta_xmitpriv.txseq_tid[pattrib->priority]++;
+-				psta->sta_xmitpriv.txseq_tid[pattrib->priority] &= 0xFFF;
++				psta->sta_xmitpriv.txseq_tid[pattrib->priority] %= 4096u;
+ 				pattrib->seqnum = psta->sta_xmitpriv.txseq_tid[pattrib->priority];
+ 
+ 				SetSeqNum(hdr, pattrib->seqnum);
+@@ -964,12 +964,12 @@ s32 rtw_make_wlanhdr(struct adapter *padapter, u8 *hdr, struct pkt_attrib *pattr
  						pattrib->ampdu_en = false;/* AGG BK */
  					} else if (SN_EQUAL(pattrib->seqnum, tx_seq)) {
--						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (tx_seq+1)&0xfff;
-+						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] =
-+							(tx_seq + 1) & 0xfff;
+ 						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] =
+-							(tx_seq + 1) & 0xfff;
++							(tx_seq + 1) % 4096u;
  
  						pattrib->ampdu_en = true;/* AGG EN */
  					} else {
--						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] = (pattrib->seqnum+1)&0xfff;
-+						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] =
-+							(pattrib->seqnum + 1) & 0xfff;
-+
+ 						psta->BA_starting_seqctrl[pattrib->priority & 0x0f] =
+-							(pattrib->seqnum + 1) & 0xfff;
++							(pattrib->seqnum + 1) % 4096u;
+ 
  						pattrib->ampdu_en = true;/* AGG EN */
  					}
- 				}
 -- 
 2.34.1
 
