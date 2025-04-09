@@ -1,128 +1,222 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01FF625D210;
-	Wed,  9 Apr 2025 10:10:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B42A25D21E;
+	Wed,  9 Apr 2025 10:10:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744193424; cv=none; b=GiYSy9dLfqMm5iGyla7LrPX6kqsrjz87dV/1HgS5OuFYgzlM+x+hxi7SDK3G6sJE7oIFzMBBBjqiPnS9faF1FqbTkFrbAn6QQOMMHZdjTTJEgJWeD3fI7rH3q1MD4C5UoZ2wmL3nkmcLjQq4SC1PhXRAY1xHZjU5pijeXFwj9nM=
+	t=1744193447; cv=none; b=t8lTxrxCIFab9cclkSb+5TTsrYevuBk023/GSOvjPc2HGXyJ3dVhzvUL2k6NEuRRxj1d2keJ+BAXgocTolNlwUgtBVX8+iLR9Okzem1jzISHwJY30xMY57cLJe1KK8Ho3UFsTgIeyac24+dYEwmQ9FGw0zQZwHLcVDDltL7s7mQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744193424; c=relaxed/simple;
-	bh=4ztBQyoanieoKs9OTTceiNvpf/RWS8ZPBb//xn5jov8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Iw4npBHPaRDdd9tmVp8c31ubb0wkWZ9Cyz+z5QwtVDh6L5ZrMj43lL3PUQ+lypJEnTbtqtseHtTeNZKlmjtRxefKoctbGZVDkLtvzo3XS8aaLidHAp5wzuUY7CPcWCCgL0+eloi7UYeCkrOP071pxjJYXJAXqwSlsp2W6+AtG6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dFID15ZN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744193447; c=relaxed/simple;
+	bh=hNrJ/ccAQlLCeeRpKoQJKKWsRNyGqVchdeOfcX/ZiDk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Grt8WeKuKtULQIU1dgPLcTYR4CXtImKrUeydsLz1oIGFWuLVZwT6t7up5UEtFxFD/x3BrKcmiZb6dnAUuSi/IZiPML5NsvRL4n1tpT94nGiVttg53OCnkOLzxJUk2XPEBuqTgX2MunpE2j3Jr2WmVOgpCY+Jj0l+TcUt5KjHqOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KehurZTR; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dFID15ZN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5DCAC4CEE3;
-	Wed,  9 Apr 2025 10:10:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744193423;
-	bh=4ztBQyoanieoKs9OTTceiNvpf/RWS8ZPBb//xn5jov8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dFID15ZNeiCoJdac35gYsEbpDFHxZtnxup0htMt2eLG0vVVoCHGx4dD6IFoAxiBeT
-	 WH1x43zrXfi6Cheassia6Yf+XpyC4rBnFn8uGIuvnCIAfRWHf9vXkaE0AI/wTfESn4
-	 sppKrvIvtK4+fheWn/u8h/4VFo+DAWIroO/N9ZdWbDcwIL5xcjDU1BC7Adoz8TJARK
-	 73xHEYSQ1gT3CitgU5oGMq18AAAbt8w8s9YLsWXOfV5qK4yAGSl1YXKHEojErm3JEi
-	 S+5xrp2yJXa+C0XGk9U4oocnF8Cwm7zcQLxkiQaS9VVM5YOu9ECWiELzPJXf/ysEFG
-	 +8Hn7ehGqv+vg==
-Message-ID: <21698603-2780-4f23-8a77-7be98fdd3ab3@kernel.org>
-Date: Wed, 9 Apr 2025 12:10:16 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KehurZTR"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-730517040a9so7997502b3a.0;
+        Wed, 09 Apr 2025 03:10:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744193445; x=1744798245; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=cHa1lD9OM2siXZI+Fk8h37HkF70Jc4GeVcg8Hqzei70=;
+        b=KehurZTRFyVmRQSTAD9xxCCuEIa/B6dkluzswbke0+8sZAhPdxBDN3oeswdhlwV8UE
+         OQY7Tu4tS3KrF8LzuWvOVZsAu9ha6WB7dh7BQRIrDaGX6SvuzsSO6AYoDAdbMFsCwGiU
+         +j6kDHY2ikigxVtAsPCf+AqKgUi8sywdk6Kt504Xmbq1nB96aj8H64FNpdjSIKAsmRji
+         mwY4M26Weva+eCYgHUf0xuXc3Gw1NNW23x+aHGM73hH558XaFDKhG5z16w4H8Q1GIRBG
+         SiEGH8QfX+s5wAaJlBeOZ16Q3uutEC4gvPNL0W2b49fJ0aEHQe1gPnmS4Z4P3vgEnLzs
+         10Wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744193445; x=1744798245;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cHa1lD9OM2siXZI+Fk8h37HkF70Jc4GeVcg8Hqzei70=;
+        b=gyDywwsCQMY8gKPdlR53HSzLOqdo8C2I3ovL2Hcu+UGJzGi6vyES2VWtxw+47AEMn3
+         newpTZ/U7vYhirT8sclWgyz362ujbvyiYXlWInLY6LF6C5LDrgxNvb2UDr/wUOIKPItl
+         XyHHLedZ2V/ZCXQ8/t7nkVhKmZjx8i/CyDRKuhvNX+FQpZ7kF6MEVjhg/UZKbtmtIEQK
+         tvJFHAK1x2LFejkppenlbBdvGJhNm1fBu1SmuOOGqVuwJTK/0hbgSAA37DDDmKjUKxsn
+         pr4VbUgyG7qSJ3xGlbO30pClpk1+WEhVbrU+DQ+YNXDAnNIX8qcgOqkncJln8U6nSxyK
+         8tMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUh0cH04D0SNFh9sACJB0rIunl11JMRRBZILXM818POczb80FCIQePrxLSAmiU7UJzPsc/2HOLu69k=@vger.kernel.org, AJvYcCWMvww1iF0N4I+z8mC7M+CBYTbD/IM8R46DQrYaRKZUKHpVsdt0QZKB9tHKWakDStIY3MI75zh2jRrEqvv0ag==@vger.kernel.org, AJvYcCWkRe5xaMihd/xpHQrfUNrYUktn9ij1pkWKXgu7OXba+Usi4xd2RCXf9XoJVchxf3p2vJYN7JWnwMb8eArY@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3Xo7lsyffuNhWPG7ZliAalZch2mslHN8dRg4MXz++J+d3GRSv
+	DFWFBY3YI7S+8zT441nbW211oPRkTjSFvuE5nDxXyvtn7gCF1gKj
+X-Gm-Gg: ASbGncuOJOZ9L1dhv5h68QqYDXxUMxtm4P8M1a59D6M4HFoCk1Cdt1Btu408+ueId3m
+	MrXWwsO0mpqLTeMeT2rfAtjUwuydy4aYFdTU19MXhoBOu+bZDQU8fxJ0fvaECaHnas9QUWO0n2P
+	EqvJ6OS3NwU2Wh/l44qvDkJt5OllrAMgdf0abvpFMq0cF0E/+AQGaxBZbxtfpw4bBwuR9vFLkwV
+	DFueRiC1v+ZwhaxHPRp0KjF7PBIP2mhQVCyy05VvgoOP9gcZnxbgzJvK7hSV9BdtWYWa39rmCJY
+	dA6+NQo8PfC8iaT4pw6ys6bk3kCz4wrogAoXaTnA
+X-Google-Smtp-Source: AGHT+IHQAF/RGnL8ythIUl3544itvHiQ4tndYDfavVjoYnzvbTxExsWO+GFwKENdwurwiQE/DaSyOg==
+X-Received: by 2002:a05:6a21:9106:b0:1f5:535c:82dc with SMTP id adf61e73a8af0-2015b00f776mr2580775637.42.1744193444326;
+        Wed, 09 Apr 2025 03:10:44 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1e4d8e8sm899059b3a.126.2025.04.09.03.10.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 03:10:43 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id A57404236D23; Wed, 09 Apr 2025 17:10:40 +0700 (WIB)
+Date: Wed, 9 Apr 2025 17:10:40 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: David Howells <dhowells@redhat.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Paulo Alcantara <pc@manguebit.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Viacheslav Dubeyko <slava@dubeyko.com>,
+	Alex Markuze <amarkuze@redhat.com>, Timothy Day <timday@amazon.com>,
+	Jonathan Corbet <corbet@lwn.net>, netfs@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] netfs: Update main API document
+Message-ID: <Z_ZHoCgi2BY5lVjN@archie.me>
+References: <Z_XOr4Ak4S0EOdrw@archie.me>
+ <1565252.1744124997@warthog.procyon.org.uk>
+ <1657441.1744189529@warthog.procyon.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/7] phy: spacemit: add USB3 support for K1 PCIe/USB3
- combo PHY
-To: Ze Huang <huangze@whut.edu.cn>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>
-Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
- linux-riscv@lists.infradead.org, spacemit@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-References: <20250407-b4-k1-usb3-v3-2-v1-0-bf0bcc41c9ba@whut.edu.cn>
- <20250407-b4-k1-usb3-v3-2-v1-5-bf0bcc41c9ba@whut.edu.cn>
- <74770bec-eeda-4823-b494-bea177fe26b0@kernel.org>
- <a71f45fc-d266-447d-8fb0-1ff0897f5bff@whut.edu.cn>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <a71f45fc-d266-447d-8fb0-1ff0897f5bff@whut.edu.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="KOQW9OuYN0wKoufu"
+Content-Disposition: inline
+In-Reply-To: <1657441.1744189529@warthog.procyon.org.uk>
 
-On 09/04/2025 11:43, Ze Huang wrote:
->>> +	priv->phy = devm_phy_create(dev, NULL, &spacemit_combphy_ops);
->>> +	if (IS_ERR(priv->phy))
->>> +		return dev_err_probe(dev, PTR_ERR(priv->phy),
->>> +				     "failed to create combphy\n");
->>> +
->>> +	dev_set_drvdata(dev, priv);
->>> +	phy_set_drvdata(priv->phy, priv);
->> Both make no sense. Look what this function does.
-> 
-> It does seem redundant at first glance, but pdev->dev is the parent of 
-> phy->dev.
-> pdev->dev->driver_data will be used in spacemit_combphy_xlate()
-> phy->dev->driver_data  will be used in phy_ops functions
-> 
-> I've checked some other drivers that did the same:
->      - phy-zynqmp.c at lines 990 and 1026
->      - phy-rockchip-samsung-hdptx.c at lines 1989 and 2000
 
-Indeed, right. It's fine.
+--KOQW9OuYN0wKoufu
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Best regards,
-Krzysztof
+On Wed, Apr 09, 2025 at 10:05:29AM +0100, David Howells wrote:
+> Bagas Sanjaya <bagasdotme@gmail.com> wrote:
+>=20
+> > > + * For writeback, it is unknown how much there will be to write unti=
+l the
+> >                                              "... will be written ..."
+> > > +   pagecache is walked, so no limit is set by the library.
+>=20
+> No, I mean "how much there will be to write" - ie. how much dirty data th=
+ere
+> is in the pagecache.
+
+OK.
+
+>=20
+> > > +Further, if a read from the cache fails, the library will ask the fi=
+lesystem to
+> > > +do the read instead, renegotiating and retiling the subrequests as n=
+ecessary.
+> > Read from the filesystem itself or direct read?
+>=20
+> I'm not sure what you mean.  Here, I'm talking about read subrequests - i=
+=2Ee. a
+> subrequest that corresponds to a BIO issued to the cache or a single RPC
+> issued to the server.  Things like DIO and pagecache are at a higher leve=
+l and
+> not directly exposed to the filesystem.
+>=20
+> Maybe I should amend the text to read:
+>=20
+> 	Further, if one or more subrequests issued to read from the cache
+> 	fail, the library will issue them to the filesystem instead,
+> 	renegotiating and retiling the subrequests as necessary.
+
+That one sounds better to me.
+
+>=20
+> > > +Netfslib will pin resources on an inode for future writeback (such a=
+s pinning
+> > > +use of an fscache cookie) when an inode is dirtied.  However, this n=
+eeds
+> > > +managing.  Firstly, a function is provided to unpin the writeback in
+> > inode management?
+> > > +``->write_inode()``::
+>=20
+> Is "inode management" meant to be a suggested insertion or an alternative=
+ for
+> the subsection title?
+
+I mean "However, this needs managing the inode (inode management)". Is it
+correct to you?
+
+>=20
+> > > -The above fields are the ones the netfs can use.  They are:
+> > > +They are:
+> > "These fields are, in detail:"
+>=20
+> It feels unnecessarily repetitive to say "these fields", but "they are" a=
+lso
+> sounds stilted.  How about I rearrange things a little.
+>=20
+>     The request structure manages the request as a whole, holding some re=
+sources
+>     and state on behalf of the filesystem and tracking the collection of =
+results::
+>=20
+> 	    struct netfs_io_request {
+> 		    enum netfs_io_origin	origin;
+> 		    struct inode		*inode;
+> 		    struct address_space	*mapping;
+> 		    struct netfs_group	*group;
+> 		    struct netfs_io_stream	io_streams[];
+> 		    void			*netfs_priv;
+> 		    void			*netfs_priv2;
+> 		    unsigned long long	start;
+> 		    unsigned long long	len;
+> 		    unsigned long long	i_size;
+> 		    unsigned int		debug_id;
+> 		    unsigned long		flags;
+> 		    ...
+> 	    };
+>=20
+>     Many of the fields are for internal use, but the fields shown here ar=
+e of
+>     interest to the filesystem:
+>=20
+>      * ``origin``
+>     ...
+>=20
+> And then put the bit about wrapping the struct after the field explanatio=
+n:
+>    =20
+>     If the filesystem wants more private data than is afforded by this st=
+ructure,
+>     then it should wrap it and provide its own allocator.
+
+Looks OK.
+
+>=20
+> > > +   This is not permitted to return an error.  In the event of failur=
+e,
+> > > +   ``netfs_prepare_write_failed()`` must be called.
+> > "This method is not permitted to return an error. Instead, in the event=
+ of
+> > failure, ..."
+>=20
+> Seems superfluous, but okay.
+>=20
+> (Btw, can you put a blank line before your "> <snipped>..." to make it ea=
+sier
+> to go through your reply?)
+
+OK, thanks!
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--KOQW9OuYN0wKoufu
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZ/ZHlgAKCRD2uYlJVVFO
+o3SfAP4ky3mQ4SL3aFrNICEAhPDaiLmNTwZVUKj0hCDGGB4v2gEAu82AiCi2iPt7
+KCtYDhPrYatH491Cs2azUBWzbpO+wg8=
+=2vDf
+-----END PGP SIGNATURE-----
+
+--KOQW9OuYN0wKoufu--
