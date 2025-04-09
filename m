@@ -1,96 +1,118 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 329361E489;
-	Wed,  9 Apr 2025 14:46:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10AA82673BE
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 14:46:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744210010; cv=none; b=k2iLwhxmkUc6uaJ+7JVDbHi27YNjrF0/BSWDsOJk7A9eT3Twjq4qZCOdlovHN2dbnarkszUgl2a/p1rGmrkDqdTr/ISegLtvdimC9DqTMFhyIwUo0htIRVv7KbEZ55PA3IFsnBv/gsCRFiXncAkRVWDNtCKpvKxgpoDeOmTo9VU=
+	t=1744210022; cv=none; b=PzCBVC9GEzlBQDUekC/HItfhrIRxgq7MiuoVICmJ6lgN4Jt1o+oOlSgGlWcb/LbgNqlA0YhK0KCdV0emwkWAQH3hw7sgieB//kIyCt6/9+LIssx6qyWvzJ/VFTzQ1HkRPXQbC4X3oEkVaYzCzKYsH4ne9l4aS6RqNHpwlnk+3mY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744210010; c=relaxed/simple;
-	bh=hZ5i2Uwnm/s61cw4a8JHV9Vst+P0EI/n8809SKyHvqs=;
+	s=arc-20240116; t=1744210022; c=relaxed/simple;
+	bh=7IE7CzLlGIEDeDzFBbeZ7na5KMhV6xKbJ1Xr3DGJmvI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ShHFOlxLUIZFRVzml3oGQD59vg2ka7rJMx/tWdQYnOc5XMKIEFmDE25EkKfoDtF5XYudalpPDz9qzg0tdnUea5T8b9U44QFIeg3QWbfg/IFnBjFrmGkb52HpvuUhRb67lX+hXP77wJIWk1j1rd3zJ6V5tAsZYpmSRplQK9rw5wQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fMxoCxvR; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=J7l+L8TfO9pGlIoravmwvLMNxFCeF2B93uuBS3R26mZq6wDoqoiWL9WoMsLxMsvDygwAPelxgmm2r83abaLLk6yuVwhVkuQ2f06tFrbCgQuqfkdqbhcQvJZiKFvaAD2BK3c9yua9/q4shxWBSfX0mudUuUa/F8yLUQsf5biDGK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=GoEoS2jW; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fMxoCxvR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744210009; x=1775746009;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=hZ5i2Uwnm/s61cw4a8JHV9Vst+P0EI/n8809SKyHvqs=;
-  b=fMxoCxvR1gEB044Ewf19wfqO6ejQOj0MU5mBY5BeNu0o0aqt7Mt25zX6
-   edNUXQXZzTm337HlmVVy8y62v6Rc+dUvEC1aTQtGCGko+KIeNHwvPkT6L
-   s+yHi4OcT8yA9E1Ex3bb+MecPgBxO/tVSJ72DoCo/50rk4YUSXi4DbOK0
-   R6Rep0SdNAVos+z4WLM5IzfCUsbzPc2ORD1lfjNGPjn/u5/JKv9EVUvUC
-   esz6r8QeomFB7lS9v+w60Iu0XbRbWdGRmKKxtfFVEhh7jmXi5voqFUesp
-   aZlp/g40rX6c0DcqPhrOTH5xLNEkoRcyPxPkEoqYCfsjgKCtKcvs8zSub
-   w==;
-X-CSE-ConnectionGUID: FtI4+OVuQmSZAWtNGIMYXQ==
-X-CSE-MsgGUID: WRTAoLJpRECL9aXZy9lJtg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="45576936"
-X-IronPort-AV: E=Sophos;i="6.15,200,1739865600"; 
-   d="scan'208";a="45576936"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 07:46:49 -0700
-X-CSE-ConnectionGUID: j0xrEPWdSxulCWrX/Mtl7A==
-X-CSE-MsgGUID: siqXL73TQEuTKFLU8sieJw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,200,1739865600"; 
-   d="scan'208";a="133596999"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 07:46:46 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u2WhO-0000000AlaQ-3RUf;
-	Wed, 09 Apr 2025 17:46:42 +0300
-Date: Wed, 9 Apr 2025 17:46:42 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Zijun Hu <quic_zijuhu@quicinc.com>, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Len Brown <lenb@kernel.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v1 1/1] device property: Add a note to the fwnode.h
-Message-ID: <Z_aIUokzC0eD-Uw-@smile.fi.intel.com>
-References: <20250331163227.280501-1-andriy.shevchenko@linux.intel.com>
- <CAJZ5v0ib46bqNkJ9em9GKbUhJpCOjDqgLOyDQmqO1n8LMWJpyQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="GoEoS2jW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=SCOp
+	cFk7gHQHs1OFxzg4QWFbV6H3YTRCYuLWl97bTiE=; b=GoEoS2jWAbTXXMf7hE/L
+	SViTjzR0do75YYGNNKfrf6BaUhDpi3MAfSJrQgJM/gxBZXbkw93NavIUDBTOa5gH
+	QdncMgGkFCPxh52yNqLV2RmqCfDLQs0ZU7EwU0lzuXN/unTYSWycu3hT9lhlwUfZ
+	YYCaHiAVLDO4JqdtQO/xNPavKAqMH+cWJBbcQwHFpnEBeBiVm4qttNsTvJKDrx5y
+	K2fwzPRpAZ7ccFSv4+aiGG4zavhMJP6ak2zJlXXv1QdP7LsUnJQm7pZvJO00F7CM
+	rDyk/9gk/gfKfMUh+s9shbPfcUCouPWWqBNIptIWSEDpk6gXpiNPBVpitG1bb0gw
+	iQ==
+Received: (qmail 499862 invoked from network); 9 Apr 2025 16:46:55 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 9 Apr 2025 16:46:55 +0200
+X-UD-Smtp-Session: l3s3148p1@rg9ailky2oogAwDPXyfYALbiJ46yNPq3
+Date: Wed, 9 Apr 2025 16:46:54 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: linux-mmc@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Avri Altman <Avri.Altman@sandisk.com>,
+	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/5] mmc: core: Further avoid re-storing power to the
+ eMMC before a shutdown
+Message-ID: <Z_aIXqdWh8n-4LKo@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Avri Altman <Avri.Altman@sandisk.com>,
+	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250407152759.25160-1-ulf.hansson@linaro.org>
+ <20250407152759.25160-3-ulf.hansson@linaro.org>
+ <Z_TZxXORT8H99qv4@shikoro>
+ <CAPDyKFoOfNWa6b0jF0-a-imKqdDJQrdJe65OaOj3D0upmS7VXw@mail.gmail.com>
+ <Z_U7ogPkzZY9IVBB@shikoro>
+ <CAPDyKFooWDpmfJoCFwjED_Utw6HppjAN5JjBL9vcZW1LsKeOFg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="IVp1hCCYVUUOWp80"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0ib46bqNkJ9em9GKbUhJpCOjDqgLOyDQmqO1n8LMWJpyQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-
-On Wed, Apr 09, 2025 at 04:19:03PM +0200, Rafael J. Wysocki wrote:
-> On Mon, Mar 31, 2025 at 6:32 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > Add a note to the fwnode.h that the header should not be used
-> > directly in the leaf drivers, they all should use the higher
-> > level APIs and the respective headers.
-> >
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> 
-> Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
-Thank you, but you already commented on this and proposed the better wording
-which is in v2. So, what should I do now?
-
--- 
-With Best Regards,
-Andy Shevchenko
+In-Reply-To: <CAPDyKFooWDpmfJoCFwjED_Utw6HppjAN5JjBL9vcZW1LsKeOFg@mail.gmail.com>
 
 
+--IVp1hCCYVUUOWp80
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+
+> I understand what you are saying and I agree. However, the problem is
+> that your concern applies to a lot more code in the mmc core, but this
+> condition.
+
+We can easily agree on that :)
+
+> Don't get me wrong, I don't mind useful comments and good
+> documentation, but perhaps what we are really missing is a general mmc
+> documentation that describes how the core is working and in particular
+> the power-management  part of it.
+
+That would be the ideal solution, no doubt.
+
+> Unfortunately, I don't think I will have the bandwidth currently to
+> work on this.
+
+Same here. Plus, I don't have a complete understanding of it. Obtaining
+this understanding and then write some docs about my findings would be
+awesome, of course. But -EBUSY, too...
+
+> That said, I am going to apply the $subject patch as is - but feel
+
+I still think that having the comment is better than not having it, but
+I accept your decision and will still be happy that we finally solved
+the power-off-notification issue \o/
+
+
+--IVp1hCCYVUUOWp80
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmf2iFoACgkQFA3kzBSg
+Kbb9yA/+K5nHnWkfdYzIQRtvVmq8BjP0yiApA6X2179mDo/DKGGd3K926JlTWfo0
+92Oe5vl1ldv8qIx1BuAGaBUWM4GIjolvwZw8skqOqKccti+JxodH3n6NIlytKxl6
+P4lUJsBNIWiS8l1xshj2/J9/BpE0u0CfmtzcBy5NOCNLWVrOJ3kCLUhc2bmWCru9
+HjGe/1BhYmonusL5JB7NtU9xfB4G6q+qdJy163oNqxIuqJpMPEw0pyv4f2t7+HTs
+UnEAnUEJJgzrkaw35QDFO10FltBh3zZ4UrJ+g3KeG4OJUTw/Ffz3tfBw2bRPmcBf
+NJy/qzIIh0fJv0Oz+5C7VPgP0UZddacMjdVbeZeY7FfGr/jZ4asxvATm7uWnkTik
+fiITvolagnx7gpMMGDEyIjzzRpL0oAwHvdju/wkgaC4bYTNg/kXpCoGfauzBPLAb
+IXHlzWpLHfjiU8llW9igMnIn3yTQ7tocx/aw28BXD1Ep5pom0flcrzZWY2g+NtEW
+PFxigTjPYz8D1vWQ9Q6zudTEGO27rZ8YB6pgSjHWIxYgwaEzjVyW2qG4e/a80Wmr
+EyDUFGPQQA713O1sD9cG/yHbUUy2ibqWo7lwx9yJU3wTKVUjRcrryq+Fa/9axKR5
+L1Wd+YewW7QMD8NgKny9tZbY23sWYODovEywk4qsoCrEwp19f68=
+=pjtg
+-----END PGP SIGNATURE-----
+
+--IVp1hCCYVUUOWp80--
