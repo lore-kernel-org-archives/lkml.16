@@ -1,174 +1,119 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3865A267706
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 16:43:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 036FD267B1F
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 16:43:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744217024; cv=none; b=C2t6bzZYeFjhBSjLge1C+EzLsL7N0H/Oos1PXL0yedWzi/CNGNi/CAjbNyDUGsErLXxdeD5NkVuuZGppb8v8BUydl/HYfGdvmPagy11cVb8cMIiZdY11ze6mB13IWTFPXDjD5XNcIzio3OksBwiJdmAOS6jk26FTllS58Ohiay0=
+	t=1744217041; cv=none; b=KdGwvM0+xvLxf8gA9PnTFlqSbnkF0L1qI+CvKXn5qW/h2M1uJh8eZnV+ERVVZoZYPOsm7n7vi4/SeUdV5wzb2q0BETxc/EWajsSA6/GZA1TSdljEWCr6t5qJDzmvPLEPt44qzqTMh7SRD6/0B2TELfywPBGJvU552iMFev7W9qU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744217024; c=relaxed/simple;
-	bh=5eUj6yBdJ8a0mINwGc3NfXDTNv0qkC5CznahgFCyhNE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bjrzEN0j23dPIHuWVbUOpJ2AxUSrGdnRVTJf84MwLa3ckyBd5xZBKe4eyTnJz6pAqZhmTjK4MoA6ZSI3YT+5VdnH16A5rwtqjLJbVEESahj5rvjgRNP6RQVHJYLc5tBVyoLQ4aWf8TlpnQWcBZnpfgM2m3vgwE4qZLJRVwbFBbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xlr6WSs0; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744217041; c=relaxed/simple;
+	bh=T1UOxjhpPsPhSQtw6G+iRKDta4RLFuAj7TRD1IXXveo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hQlTdy9AbzVR+E+8aU3WDYKfhQPhtVGTi4rqryIgfxX3+dkaoFujwkgEr+tD3zhnYIKrdQX8aXoP35MLk3fj8QgB1tBuZTPgo8v0NhLOhajexmqvFRV0g2o99t5W+EafFrb2znehguhe+afl0dVW/EOwm657FQIKc+swdpwIRMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=gd7VRII0; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xlr6WSs0"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2243803b776so101032125ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 09:43:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="gd7VRII0"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-54acc0cd458so8381563e87.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 09:43:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744217022; x=1744821822; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=vY1cCwOeuEYKDsSiTLX+gpvDg+AadEDeAOXISK1ljl4=;
-        b=xlr6WSs0UFPT1X4QuKinBAVQbl/EgJxxa7ghRyYYeDc9oHeBO4lJXxTaEvv+gcg1sk
-         lcT1X9cQtxrxFPQA2oDC1PKQRANIs9xyVkF4pNdrxeZE3wtMqSpvslunVctvNYpCQkSg
-         6d7PIK+OMsN3ELAyWUyrb5rGAEqVZlo4mWs2GPBUXCXSx8YnqkoO9Z0TjCD/mQsPxLK6
-         y/1n6GZ5pC0d8jhYqrXTm929ikAqoUYbz1mWkwOQT6s5ebGWkEle2qPFp7zVJsJeA/Vc
-         IgsltZGvJyTH7WRc/RhZ+NtrLJuawttKKWqfOXcg6X4u8mhqNCyF8tek4DBOwpXHrrT4
-         DNVA==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744217038; x=1744821838; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=T1UOxjhpPsPhSQtw6G+iRKDta4RLFuAj7TRD1IXXveo=;
+        b=gd7VRII0VB7hhUaD5AsdkLlob5qBs++5+9ziNzuGUGwjY1pRVRWACIYmEOhf5IYPVO
+         HpOZJD1xz7OKZ4bYktpPdUHmht+HQfjc21ulmYEQBB8MRdutCPpDdJb8cNNC/WglbELF
+         isCCisr8HMV94sHYsv/37Y0Xdq85SwJ5UJPgfCjI36m0LVUfsPQoj/qeG0bFpP7qp0yq
+         DtmdHYSJzcQkjmNnbwDP4HXHbzBmnut/7NSTR0FAcCvN0iu2uFrTiE7tO8075SqwydcP
+         jCezFrrGzF7B/xZ8x2Bjoe3VH6d2bF0RSAheUpeag/jopILjjpdxRWHIi2MfZE7NxxSj
+         O51w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744217022; x=1744821822;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vY1cCwOeuEYKDsSiTLX+gpvDg+AadEDeAOXISK1ljl4=;
-        b=YGazC8v8hv6PJMuNaudA/OuWyrl87V0MX7xDywr8jKAqlOdFrZU5LVlf1NfQc9dUKx
-         eTNWojydpXOfVexzpHqrfk9PG03U4515GJaRBr/+zzJKISpX0JJKfTFBAohx2BYPnL4P
-         8CwMho8R2oHUTJFwHC7njjagNFJdY4osTXkVtj74emfZf+nHILgu9znnTmZqYZ7oPbgO
-         Z9qijGqysbHKREOW83x7F6ZP2wGDEb+47IgbOsg1doBhHJtA+/Kc8Syn0yuVax6wU95N
-         O7sqDuyYYD74APMQDlArBrxPkCNs0mtccqidXIr/stI7fttpRdq7fBKtpd/w8SrggZML
-         Y3Fg==
-X-Forwarded-Encrypted: i=1; AJvYcCX7QZXWm9ubPqtG0HFqDQOz4qCOGfs9zdIZdQZ3ocQKS/yhePhDSejJ/bqKV+2hII6SNZfl4m6OoKb47jY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJBP5jDCo148H8ig9/3S1LBVV45Rpkf8lcZ7IYNM5K9votj6Kh
-	/ApqKHufmAkH4/4WvhjNy0FEIzwiYlMHWUyNScfksWFQRKW7xDRQJxnRh7dVVA==
-X-Gm-Gg: ASbGncvyPGQJvGhL4OSvpdLGhLRjfzN3hZ9RctAuzBJyxQDr9ZXf2FPqP/ZX0SFXXKu
-	2z9ESpwfhuHVhgK8taKBuq7A//RkoCPOq+OihQELpYWUyZFa61Q5LLwPwqoOk8xo0FCRqJQvPvy
-	7/xztZz24yP3IH0HSNxhtELxv8DCif/UenSIA0iXsy0GwMleq01i0NgTxh931s0Hfb6F7FiYj/G
-	eSqMd29pPUkNxx5bFbHr6IUOei/HvaOuVRRMTV9rA5CxI+wR51LcnndsDmXTATfpYUJ+vBD+0XF
-	JAwGZPYETg0X4u04iEAPHPWz9yIpEWWHnueHjXztGTreb+1/6EdBWIMpJCYv0w==
-X-Google-Smtp-Source: AGHT+IGmox3LqV854DFPIki4F+4Ez1MkIE7qgsYtzCRr9m1FgmnFh+N3/PD/p2Tx05KbHuOZaTpH7A==
-X-Received: by 2002:a17:903:32ce:b0:224:7a4:b2a with SMTP id d9443c01a7336-22ac297c916mr55618525ad.11.1744217022535;
-        Wed, 09 Apr 2025 09:43:42 -0700 (PDT)
-Received: from thinkpad ([120.56.198.53])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b642besm14327585ad.46.2025.04.09.09.43.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 09:43:41 -0700 (PDT)
-Date: Wed, 9 Apr 2025 22:13:36 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Hongxing Zhu <hongxing.zhu@nxp.com>
-Cc: Frank Li <frank.li@nxp.com>, 
-	"l.stach@pengutronix.de" <l.stach@pengutronix.de>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>, 
-	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>, 
-	"bhelgaas@google.com" <bhelgaas@google.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, 
-	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, 
-	"festevam@gmail.com" <festevam@gmail.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 3/6] PCI: imx6: Workaround i.MX95 PCIe may not exit
- L23 ready
-Message-ID: <4qrfkx3ckywcbk7qbjplal5j7v6sjs3zebeehe5dnrgjz2ej2t@krdwjb4xm2sx>
-References: <20250328030213.1650990-1-hongxing.zhu@nxp.com>
- <20250328030213.1650990-4-hongxing.zhu@nxp.com>
- <ovaomfvo7b3uxoss3tzhrkgdy6cvxi4kr2zxmqsfjxds5qfohl@t6kc4rswq6gp>
- <AS8PR04MB8676687332C78840B927E7568CAF2@AS8PR04MB8676.eurprd04.prod.outlook.com>
- <rqgl5jjauppyudgmugp34fillkeli3qkwf4uf2djghi6nslebg@pyi6rbwyduxd>
- <AS8PR04MB8676BB3EDFCF3E5A490AC0628CAE2@AS8PR04MB8676.eurprd04.prod.outlook.com>
- <AS8PR04MB8676C5D0DB84975D34C4C65A8CB52@AS8PR04MB8676.eurprd04.prod.outlook.com>
+        d=1e100.net; s=20230601; t=1744217038; x=1744821838;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=T1UOxjhpPsPhSQtw6G+iRKDta4RLFuAj7TRD1IXXveo=;
+        b=krYPLYg17jIbYCYbESbtkyVoNOEZJeINBMO0dcaHNELP2RhL8GzhCKMP/Q7Zvp3N4d
+         7TfXtAXztCYvTacge8t//7eCc+M0HWDOVQmpOHjknkqOCJvW95eLMp0Iv/RL4kJPBhfT
+         1NSrk4P3mnUSXnarSh+4ONKLutX4LbCdctDZTvJgeMWrW+6qv6DOY4Tb6ZaaIIEgbOW3
+         mPAHYKJcSsRyJ8EghOlr40jdcX5XUVeKaKYWuSo7004V3yTk/6oGnwCG8JXfaZV5UKY/
+         HoiwII4o7CP4QxkBxKvnhrZh6QsHTP2teSJ1QGUhSleQSLNFgVk8jTiNtiN9t1vNObi1
+         6RsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU8voJIlZweExdzHSSGmlxNR5JMIX0CGEpa+B+qbOHTiwkzkdkSncWq6XTS/5BD3P+K7XGyAVZID3X6+9A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzM4NFds70vIaBws5a9vjTQeI1vaAgDIsLyPO3LP9E1qyVz2cTx
+	GoN6Awb/D/m6TA21jxvuIBkvlp0ThDlnXlwQ0i4EQRXViswv5A5mDvGppQhOUC3R/I1oQwk0FOK
+	8UHk8miUug7gznBfngX5hzOZwF6KK2FYu5+OwRA==
+X-Gm-Gg: ASbGncu1Y6nDUS0fHI/dYCpap8DvZlQwX0x19iuy9miOvR0MI3aADjIiJoAyZ7N5PMo
+	0kE52mMESINj8gMxD4idHCjmYoEqEVoD1yTmx0QiXnyMXnSejV5UrL7yA7wZrIvhcKtVCvSynea
+	ocq8eDZNWTxJ7MzJBK/iEI+0WScS6cK7qrKmFlKGaZPwkS4aBfrIrH2Q==
+X-Google-Smtp-Source: AGHT+IHhkAgu3QjROCGUJXTB4kW4wwAYSm8J2vtOKbqbIo+dJ2n+TEanaH7n1VTiK2H21P/9SxUOmXw5m8Let4mT4vQ=
+X-Received: by 2002:a05:6512:3d92:b0:545:2f0d:8836 with SMTP id
+ 2adb3069b0e04-54c437b480emr1159242e87.40.1744217037919; Wed, 09 Apr 2025
+ 09:43:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AS8PR04MB8676C5D0DB84975D34C4C65A8CB52@AS8PR04MB8676.eurprd04.prod.outlook.com>
+References: <20250311-gpio-set-check-output-v1-1-d971bca9e6fa@linaro.org>
+ <CACRpkdYujYhF8VP-_6O4Bt2tWL-NO-GgQPr=DeqE9QwCq12gqg@mail.gmail.com>
+ <CAMRc=MdwQZMDaHn15n4zgCujtDRg=UUwz3A9ZUYY9Uv7FFgz2Q@mail.gmail.com> <Z_aGZqsUXq2uyQfC@black.fi.intel.com>
+In-Reply-To: <Z_aGZqsUXq2uyQfC@black.fi.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 9 Apr 2025 18:43:47 +0200
+X-Gm-Features: ATxdqUFMPhXHk7lQUf3DMlzg5Y5WXAkfdazwddpm-cxwT2Q6grS3dEAYZSF1S4A
+Message-ID: <CAMRc=MdsRWNVT0XC1DvwBdhZFsVZO6DeMrVePKgiF4Mj_Ryykg@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: don't allow setting values on input lines
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Kent Gibson <warthog618@gmail.com>, 
+	Matti Vaittinen <mazziesaccount@gmail.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 08, 2025 at 03:02:42AM +0000, Hongxing Zhu wrote:
-> > -----Original Message-----
-> > From: Hongxing Zhu
-> > Sent: 2025年4月3日 11:23
-> > To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > Cc: Frank Li <frank.li@nxp.com>; l.stach@pengutronix.de; lpieralisi@kernel.org;
-> > kw@linux.com; robh@kernel.org; bhelgaas@google.com;
-> > shawnguo@kernel.org; s.hauer@pengutronix.de; kernel@pengutronix.de;
-> > festevam@gmail.com; linux-pci@vger.kernel.org;
-> > linux-arm-kernel@lists.infradead.org; imx@lists.linux.dev;
-> > linux-kernel@vger.kernel.org
-> > Subject: RE: [PATCH v3 3/6] PCI: imx6: Workaround i.MX95 PCIe may not exit
-> > L23 ready
-> > 
-> > > -----Original Message-----
-> > > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > Sent: 2025年4月2日 23:18
-> > > To: Hongxing Zhu <hongxing.zhu@nxp.com>
-> > > Cc: Frank Li <frank.li@nxp.com>; l.stach@pengutronix.de;
-> > > lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
-> > > bhelgaas@google.com; shawnguo@kernel.org; s.hauer@pengutronix.de;
-> > > kernel@pengutronix.de; festevam@gmail.com; linux-pci@vger.kernel.org;
-> > > linux-arm-kernel@lists.infradead.org; imx@lists.linux.dev;
-> > > linux-kernel@vger.kernel.org
-> > > Subject: Re: [PATCH v3 3/6] PCI: imx6: Workaround i.MX95 PCIe may not
-> > > exit L23 ready
+On Wed, Apr 9, 2025 at 4:38=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@intel.com> wrote:
+>
+> On Fri, Mar 14, 2025 at 11:35:21AM +0100, Bartosz Golaszewski wrote:
+> > On Fri, Mar 14, 2025 at 11:33=E2=80=AFAM Linus Walleij <linus.walleij@l=
+inaro.org> wrote:
+> > > On Tue, Mar 11, 2025 at 3:20=E2=80=AFPM Bartosz Golaszewski <brgl@bgd=
+ev.pl> wrote:
 > > >
-> > > On Wed, Apr 02, 2025 at 07:59:26AM +0000, Hongxing Zhu wrote:
-> > > > > -----Original Message-----
-> > > > > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > > Sent: 2025年4月2日 15:08
-> > > > > To: Hongxing Zhu <hongxing.zhu@nxp.com>
-> > > > > Cc: Frank Li <frank.li@nxp.com>; l.stach@pengutronix.de;
-> > > > > lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
-> > > > > bhelgaas@google.com; shawnguo@kernel.org; s.hauer@pengutronix.de;
-> > > > > kernel@pengutronix.de; festevam@gmail.com;
-> > > > > linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> > > > > imx@lists.linux.dev; linux-kernel@vger.kernel.org
-> > > > > Subject: Re: [PATCH v3 3/6] PCI: imx6: Workaround i.MX95 PCIe may
-> > > > > not exit L23 ready
-> > > > >
-> > > > > On Fri, Mar 28, 2025 at 11:02:10AM +0800, Richard Zhu wrote:
-> > > > > > ERR051624: The Controller Without Vaux Cannot Exit L23 Ready
-> > > > > > Through Beacon or PERST# De-assertion
-> > > > >
-> > > > > Is it possible to share the link to the erratum?
-> > > > >
-> > > > Sorry, the erratum document isn't ready to be published yet.
-> > > > > >
-> > > > > > When the auxiliary power is not available, the controller cannot
-> > > > > > exit from
-> > > > > > L23 Ready with beacon or PERST# de-assertion when main power is
-> > > > > > not removed.
-> > > > > >
-> > > > >
-> > > > > I don't understand how the presence of Vaux affects the controller.
-> > > > > Same goes for PERST# deassertion. How does that relate to Vaux? Is
-> > > > > this erratum for a specific endpoint behavior?
-> > > > IMHO I don't know the exact details of the power supplies in this IP design.
-> > > > Refer to my guess , maybe the beacon detect or wake-up logic in
-> > > > designs is  relied on the status of SYS_AUX_PWR_DET signals in this case.
+> > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > >
+> > > > Some drivers as well as the character device and sysfs code check
+> > > > whether the line actually is in output mode before allowing the use=
+r to
+> > > > set a value.
+> > > >
+> > > > However, GPIO value setters now return integer values and can indic=
+ate
+> > > > failures. This allows us to move these checks into the core code.
+> > > >
+> > > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > > >
-> > > Can you please try to get more details? I couldn't understand the errata.
+> > > Makes sense, if there are regressions let's smoke them out
+> > > in linux-next.
 > > >
-> > Sure. Will contact designer and try to get more details.
-> Hi Mani:
-> Get some information from designs, the internal design logic is relied on the
->  status of SYS_AUX_PWR_DET signal to handle the low power stuff.
-> So, the SYS_AUX_PWR_DET is required to be 1b'1 in the SW workaround.
-> 
+> > > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> >
+> > Thanks. I decided not to queue it for v6.15 for exactly that reason,
+> > I'll pick it up early into the v6.16 cycle and let it sit in next for
+> > several weeks.
+>
+> As far as I can tell from the reading of the code, this will break the op=
+en
+> drain emulation. Am I mistaken?
+>
 
-Ok. So due to the errata, when the link enters L23 Ready state, it cannot
-transition to L3 when Vaux is not available. And the workaround requires setting
-SYS_AUX_PWR_DET bit?
+Could you produce a call trace where this could result in a breakage?
+I tested open-drain and open-source emulation but maybe I'm missing
+something.
 
-IIUC, the issue here is that the controller is not able to detect the presence
-of Vaux in the L23 Ready state. So it relies on the SYS_AUX_PWR_DET bit. But
-even in that case, how would you support the endpoint *with* Vaux?
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+Bartosz
