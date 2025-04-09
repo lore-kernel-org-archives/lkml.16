@@ -1,212 +1,151 @@
-Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58DDE3D76;
-	Wed,  9 Apr 2025 08:32:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.166.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C98F41DEFE4;
+	Wed,  9 Apr 2025 08:33:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744187565; cv=none; b=M7wpbdYxSAnru2hSSK9V8EFT7XjqhUyTFC7kdoTms+WOzRbCZhktHlINe9g/jN5JmRU5gY6Gq4DFd6fXtBKFS9WZAB/E3sygEtx7nUhUQ6IvFs6PNSnTIjDrWxP8w5JnI0AlgtysWPnljcjA9r2eyR+R3FZNPGtEUeKTT5HOHpI=
+	t=1744187604; cv=none; b=iBd4TLKfI8P4rVlQJAJiTN0Cw6LWj1zco7Ronn2aK/QkjU3xNqPKhYNAZMNpxjecTsksIbrHvpJS2LZI/MR79Im0RFCVOMQh8gq6/c2jZ9D1fSEjr5upuSNT2p7s/9FmDTQPlIbtWtfxCs3ByqydSPn6BCwMy9s4eTzoaZ9R4u8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744187565; c=relaxed/simple;
-	bh=06i03/eW88kNMSyIQpnLFojEQBRVBRiIZ5NKVcOuDbQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=b2qM1u3K1xf2XBr663HwvV0oRHMqv8pAfzF9Kbz75BUBYXdyiP4UIcrWYWqP1k7XwxoXn0K3zM08wmPzE0GRWQwC5Nqf8Kdkv4sbKzP2ZdU8Gx5HulsIpS9Xqw7tepiGHP9Wbs5kwg5praLN5MNIYMg62xGVbNTR8IPCJrAX6aA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.166.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250810.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53960GmG025473;
-	Wed, 9 Apr 2025 01:32:32 -0700
-Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 45tyt4cxqa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Wed, 09 Apr 2025 01:32:31 -0700 (PDT)
-Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.43; Wed, 9 Apr 2025 01:32:30 -0700
-Received: from pek-lpd-ccm5.wrs.com (147.11.136.210) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
- 15.1.2507.43 via Frontend Transport; Wed, 9 Apr 2025 01:32:29 -0700
-From: Yun Zhou <yun.zhou@windriver.com>
-To: <mturquette@baylibre.com>, <sboyd@kernel.org>, <dianders@chromium.org>
-CC: <linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] clk: fix slab-use-after-free when clk_core_populate_parent_map failed
-Date: Wed, 9 Apr 2025 16:32:28 +0800
-Message-ID: <20250409083228.2944917-1-yun.zhou@windriver.com>
-X-Mailer: git-send-email 2.27.0
+	s=arc-20240116; t=1744187604; c=relaxed/simple;
+	bh=DBu10xqnRC55ZvjHYpZP6/MVuipQrl3KTWRj0IvtK7k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TuRhoLTVfErp+uZb7Sdsu+UBzK4aR+G7xZ5uIsLHCSrGvKQdPEzeFIl5nCj4vEzcma3Gp9L9ov7eMfGA0EGoAXZqhbDqPkUL52uxEsmLHSFcEhiFi+/xW9YMrFd4IwKvBcbVAls1HrZEs7m2ObN7YbiNhsC+Y2wFae0mRpgpm6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=BQC82+JG; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="BQC82+JG"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=94CRJ1QKEZIeOBN2yxEUCNifssJmO/x61XeP55dLjCw=; b=BQC82+JGLo6KyCxTGpLJKAzVzz
+	Ul4vyHS2IfHuiZDvVK1YA6k5hGdgdcVR3lxjfA9rZ99qpwU6wrGkZJ+eorXWUky8QWCBXjCSm9XFa
+	SUzoJnP/jkkTgEh89x6eUZRnHMiLfPyQTpkT/qwY3Ujiji+Nd1wbQjjexdcuEcn+yjX7hLUzgmvfK
+	X82Oq3QhS563o8HZpIkdCkqGqY78pxz8+3/+06WnAbvuGsvPw4hENrfpwDecAz/RWSHpX4uSCophH
+	5x5Us3NSikXebU8ZL5jRyzl4NOGJok6pklo/O+EfqFvsqtuUIJ9eyMpD9VYayI3/3buisFYYjogRx
+	BVllv0jA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:33850)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1u2Qrv-0000Fa-27;
+	Wed, 09 Apr 2025 09:33:11 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1u2Qrt-0002Pb-2C;
+	Wed, 09 Apr 2025 09:33:09 +0100
+Date: Wed, 9 Apr 2025 09:33:09 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: Simon Horman <horms@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH net-next v2 2/2] net: phy: Add Marvell PHY PTP support
+Message-ID: <Z_YwxYZc7IHkTx_C@shell.armlinux.org.uk>
+References: <20250407-feature_marvell_ptp-v2-0-a297d3214846@bootlin.com>
+ <20250407-feature_marvell_ptp-v2-2-a297d3214846@bootlin.com>
+ <20250408154934.GZ395307@horms.kernel.org>
+ <Z_VdlGVJjdtQuIW0@shell.armlinux.org.uk>
+ <20250409101808.43d5a17d@kmaincent-XPS-13-7390>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: coc-3x-werZjsYlDDhKWyece3W9ZaQKf
-X-Authority-Analysis: v=2.4 cv=RMSzH5i+ c=1 sm=1 tr=0 ts=67f6309f cx=c_pps a=K4BcnWQioVPsTJd46EJO2w==:117 a=K4BcnWQioVPsTJd46EJO2w==:17 a=XR8D0OoHHMoA:10 a=t7CeM3EgAAAA:8 a=eLMzZ2F9_icGV3DWmJ0A:9 a=FdTzh2GWekK77mhwV6Dw:22
-X-Proofpoint-GUID: coc-3x-werZjsYlDDhKWyece3W9ZaQKf
-X-Sensitive_Customer_Information: Yes
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-09_03,2025-04-08_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
- lowpriorityscore=0 mlxscore=0 malwarescore=0 suspectscore=0
- mlxlogscore=999 spamscore=0 priorityscore=1501 adultscore=0 clxscore=1011
- bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.21.0-2502280000
- definitions=main-2504090042
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409101808.43d5a17d@kmaincent-XPS-13-7390>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-If clk_core_populate_parent_map() fails, core->parents will be immediately
-released within clk_core_populate_parent_map(). Therefore it is can't be
-released in __clk_release() again.
+On Wed, Apr 09, 2025 at 10:18:08AM +0200, Kory Maincent wrote:
+> On Tue, 8 Apr 2025 18:32:04 +0100
+> "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
+> 
+> > On Tue, Apr 08, 2025 at 04:49:34PM +0100, Simon Horman wrote:
+> > > On Mon, Apr 07, 2025 at 04:03:01PM +0200, Kory Maincent wrote:  
+> > > > From: Russell King <rmk+kernel@armlinux.org.uk>
+> > > > 
+> > > > From: Russell King <rmk+kernel@armlinux.org.uk>
+> > > > 
+> > > > Add PTP basic support for Marvell 88E151x PHYs. These PHYs support
+> > > > timestamping the egress and ingress of packets, but does not support
+> > > > any packet modification.
+> > > > 
+> > > > The PHYs support hardware pins for providing an external clock for the
+> > > > TAI counter, and a separate pin that can be used for event capture or
+> > > > generation of a trigger (either a pulse or periodic).  This code does
+> > > > not support either of these modes.
+> > > > 
+> > > > The driver takes inspiration from the Marvell 88E6xxx DSA and DP83640
+> > > > drivers.  The hardware is very similar to the implementation found in
+> > > > the 88E6xxx DSA driver, but the access methods are very different,
+> > > > although it may be possible to create a library that both can use
+> > > > along with accessor functions.
+> > > > 
+> > > > Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+> > > > 
+> > > > Add support for interruption.
+> > > > Fix L2 PTP encapsulation frame detection.
+> > > > Fix first PTP timestamp being dropped.
+> > > > Fix Kconfig to depends on MARVELL_PHY.
+> > > > Update comments to use kdoc.
+> > > > 
+> > > > Co-developed-by: Kory Maincent <kory.maincent@bootlin.com>
+> > > > Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>  
+> > > 
+> > > Hi Kory,
+> > > 
+> > > Some minor feedback from my side.
+> > >   
+> > > > ---
+> > > > 
+> > > > Russell I don't know which email I should use, so I keep your old SOB.  
+> > > 
+> > > Russell's SOB seems to be missing.  
+> > 
+> > ... and anyway, I haven't dropped my patches, I'm waiting for the
+> > fundamental issue with merging Marvell PHY PTP support destroying the
+> > ability to use MVPP2 PTP support to be solved, and then I will post
+> > my patches.
+> > 
+> > They aren't dead, I'm just waiting for the issues I reported years ago
+> > with the PTP infrastructure to be resolved - and to be tested as
+> > resolved.
+> > 
+> > I'm still not convinced that they have been given Kory's responses to
+> > me (some of which I honestly don't understand), but I will get around
+> > to doing further testing to see whether enabling Marvell PHY PTP
+> > support results in MVPP2 support becoming unusable.
+> > 
+> > Kory's lack of communication with me has been rather frustrating.
+> 
+> You were in CC in all the series I sent and there was not a lot of review and
+> testing on your side. I know you seemed a lot busy at that time but I don't
+> understand what communication is missing here? 
 
-This fixes the following KASAN reported issue:
+I don't spend much time at the physical location where the hardware that
+I need to test your long awaited code is anymore. That means the
+opportunities to test it are *rare*.
 
-==================================================================
-BUG: KASAN: slab-use-after-free in __clk_release+0x80/0x160
-Read of size 8 at addr ffffff8043fd0980 by task kworker/u6:0/27
+So far, each time I've tested your code, it's been broken. This really
+doesn't help.
 
-CPU: 1 PID: 27 Comm: kworker/u6:0 Tainted: G        W          6.6.69-yocto-standard+ #7
-Hardware name: Raspberry Pi 4 Model B (DT)
-Workqueue: events_unbound deferred_probe_work_func
-Call trace:
- dump_backtrace+0x98/0xf8
- show_stack+0x20/0x38
- dump_stack_lvl+0x48/0x60
- print_report+0xf8/0x5d8
- kasan_report+0xb4/0x100
- __asan_load8+0x9c/0xc0
- __clk_release+0x80/0x160
- __clk_register+0x6dc/0xfb8
- devm_clk_hw_register+0x70/0x108
- bcm2835_register_clock+0x284/0x358
- bcm2835_clk_probe+0x2c4/0x438
- platform_probe+0x98/0x110
- really_probe+0x1e4/0x3e8
- __driver_probe_device+0xc0/0x1a0
- driver_probe_device+0x110/0x1e8
- __device_attach_driver+0xf0/0x1a8
- bus_for_each_drv+0xf8/0x178
- __device_attach+0x120/0x240
- device_initial_probe+0x1c/0x30
- bus_probe_device+0xdc/0xe8
- deferred_probe_work_func+0xe8/0x130
- process_one_work+0x2a4/0x698
- worker_thread+0x53c/0x708
- kthread+0x1b4/0x1c8
- ret_from_fork+0x10/0x20
+If you want me to do anything more in a timely manner, like test fixes,
+you need to get them to me by the end of this week, otherwise I won't
+again be able to test them for a while.
 
-Allocated by task 27:
- kasan_save_stack+0x3c/0x68
- kasan_set_track+0x2c/0x40
- kasan_save_alloc_info+0x24/0x38
- __kasan_kmalloc+0xd4/0xd8
- __kmalloc+0x74/0x238
- __clk_register+0x718/0xfb8
- devm_clk_hw_register+0x70/0x108
- bcm2835_register_clock+0x284/0x358
- bcm2835_clk_probe+0x2c4/0x438
- platform_probe+0x98/0x110
- really_probe+0x1e4/0x3e8
- __driver_probe_device+0xc0/0x1a0
- driver_probe_device+0x110/0x1e8
- __device_attach_driver+0xf0/0x1a8
- bus_for_each_drv+0xf8/0x178
- __device_attach+0x120/0x240
- device_initial_probe+0x1c/0x30
- bus_probe_device+0xdc/0xe8
- deferred_probe_work_func+0xe8/0x130
- process_one_work+0x2a4/0x698
- worker_thread+0x53c/0x708
- kthread+0x1b4/0x1c8
- ret_from_fork+0x10/0x20
-
-Freed by task 27:
- kasan_save_stack+0x3c/0x68
- kasan_set_track+0x2c/0x40
- kasan_save_free_info+0x38/0x60
- __kasan_slab_free+0x100/0x170
- slab_free_freelist_hook+0xcc/0x218
- __kmem_cache_free+0x158/0x210
- kfree+0x88/0x140
- __clk_register+0x9d0/0xfb8
- devm_clk_hw_register+0x70/0x108
- bcm2835_register_clock+0x284/0x358
- bcm2835_clk_probe+0x2c4/0x438
- platform_probe+0x98/0x110
- really_probe+0x1e4/0x3e8
- __driver_probe_device+0xc0/0x1a0
- driver_probe_device+0x110/0x1e8
- __device_attach_driver+0xf0/0x1a8
- bus_for_each_drv+0xf8/0x178
- __device_attach+0x120/0x240
- device_initial_probe+0x1c/0x30
- bus_probe_device+0xdc/0xe8
- deferred_probe_work_func+0xe8/0x130
- process_one_work+0x2a4/0x698
- worker_thread+0x53c/0x708
- kthread+0x1b4/0x1c8
- ret_from_fork+0x10/0x20
-
-The buggy address belongs to the object at ffffff8043fd0800
- which belongs to the cache kmalloc-512 of size 512
-The buggy address is located 384 bytes inside of
- freed 512-byte region [ffffff8043fd0800, ffffff8043fd0a00)
-
-The buggy address belongs to the physical page:
-page:fffffffe010ff400 refcount:1 mapcount:0 mapping:0000000000000000 index:0xffffff8043fd0e00 pfn:0x43fd0
-head:fffffffe010ff400 order:3 entire_mapcount:0 nr_pages_mapped:0 pincount:0
-flags: 0x4000000000000840(slab|head|zone=1)
-page_type: 0xffffffff()
-raw: 4000000000000840 ffffff8040002f40 ffffff8040000a50 ffffff8040000a50
-raw: ffffff8043fd0e00 0000000000150002 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffffff8043fd0880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffffff8043fd0900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffffff8043fd0980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                   ^
- ffffff8043fd0a00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffffff8043fd0a80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-==================================================================
-
-Fixes: 9d05ae531c2c ("clk: Initialize struct clk_core kref earlier")
-Signed-off-by: Yun Zhou <yun.zhou@windriver.com>
----
- drivers/clk/clk.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index 0565c87656cf..3f89ed51d4a4 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -4242,7 +4242,6 @@ static int clk_core_populate_parent_map(struct clk_core *core,
- 	 * having a cache of names/clk_hw pointers to clk_core pointers.
- 	 */
- 	parents = kcalloc(num_parents, sizeof(*parents), GFP_KERNEL);
--	core->parents = parents;
- 	if (!parents)
- 		return -ENOMEM;
- 
-@@ -4283,6 +4282,8 @@ static int clk_core_populate_parent_map(struct clk_core *core,
- 		}
- 	}
- 
-+	core->parents = parents;
-+
- 	return 0;
- }
- 
-@@ -4290,7 +4291,7 @@ static void clk_core_free_parent_map(struct clk_core *core)
- {
- 	int i = core->num_parents;
- 
--	if (!core->num_parents)
-+	if (!core->parents)
- 		return;
- 
- 	while (--i >= 0) {
 -- 
-2.27.0
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
