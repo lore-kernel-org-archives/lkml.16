@@ -1,133 +1,136 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC1E1264FA5;
-	Wed,  9 Apr 2025 14:07:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B39D264FA5;
+	Wed,  9 Apr 2025 14:07:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744207631; cv=none; b=L0kpsGOL4cmsrBmslDgX8IQjtvIEUYAJBaZzFT3vjaKQm5ETD8E8x8mahwPxpBmI5ebuhwTdR33aibwVz/a0BmncpIgNfpFHoGRV8/8iLET91bC9BSCZ+Bs7eBmUYEXExQEtO3bPNZE3Kdjq4NNhbaKeK7/9aomDBIbsIoaRjBE=
+	t=1744207666; cv=none; b=NlFlhBXrUb1bDbXvE5+d+v5E2d6qAjWG479mXC+GfYsxncElB3BS823Q/5vKoPOJpqOc5smh5RckRcIRsAyIGIL3ylfZnAnIApXLi+233kUHJl99gUkstBOaslEdjO8Jtqrg1phFELYK4am13hMHAaYKJad9rCTvKY59JiutCko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744207631; c=relaxed/simple;
-	bh=UgktLFzb+e+eJV8h1xhP+4y4L19Zt2j1W5TFzLZ3fAk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BqG5KAYvYdL7EUovdutqz4bs00+MTb0jIZqBFu8CyD/ihmlyOD77b5IRZJuuJNgKnStP25AbtRBkNoKzSJLnbkitwAqp3r4LmpobLrQTs+CsoB3/V9U5LcavwQ9Ok3AjOqVNDx/eu/BOcL9dStiqAWjMSpV9qADyBevO2nBIH0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=q7JuOWiq; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1744207666; c=relaxed/simple;
+	bh=XZBwGz84oz5gY/BVxkIjEz6jrXTDq3RAuIKk6QEQegs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=afW/wBRNG6SPIhlkaVmj0G6BTGaU3g18XT5nrsNvFJsnON2Qe5vu+HZ12wRhffwjGUgFngqJZU6eECUr+TXIYr2U8v3ufjZi5zNzpueBXOvWDqfX9nf6evMHgQmKgg/bFQpwWyGvswrPjaWf0XQCPpgNqOOFm/11AE2TS4y1n7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bZw/mxHW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="q7JuOWiq"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=3Ro2fPi/15BsTrXL3Ti3RuIwgl6WKvf6SctPhYlhK8k=; b=q7JuOWiqNBR44LFThNc7ttAMJA
-	dqNFuO3RvQssM9X5n3aWR6EV7Y5ue9p2Yg79PwTq6LxMN98dZMpvSKVqib9omN94DtUk3hgZajiXc
-	OItud1HbcwWnIvviDf1AvjOD5pcEEC6i3F2nCiwxwKC2ZmlmbnLVwLq0ZvE6ugE+jYl6iloVBbjba
-	P9H/U1ScMwugRgj91aiKazNHeH/keaHYvLK6d8+HRtnH8LdwVxFY05d7qQU+APvzEIrc9qDODUQ3t
-	Y8pruiEOPJSq7uSl1CLn1gnNmfG8hphtHv33WlWK9xcY4bNMBj7i3jd5YeJ91eljLTh0sKseX4ify
-	S/dXoX8Q==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u2W52-00000001YbP-05FQ;
-	Wed, 09 Apr 2025 14:07:04 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 9A4F33003FA; Wed,  9 Apr 2025 16:07:03 +0200 (CEST)
-Date: Wed, 9 Apr 2025 16:07:03 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: linux-kernel@vger.kernel.org
-Cc: linux-tip-commits@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>, Brian Gerst <brgerst@gmail.com>,
-	Juergen Gross <jgross@suse.com>, "H. Peter Anvin" <hpa@zytor.com>,
-	Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org
-Subject: Re: [tip: perf/core] uprobes/x86: Add support to emulate NOP5
- instruction
-Message-ID: <20250409140703.GB9833@noisy.programming.kicks-ass.net>
-References: <20250408211310.51491-1-jolsa@kernel.org>
- <174419899905.31282.16125441491898382603.tip-bot2@tip-bot2>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bZw/mxHW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D36FC4CEE2;
+	Wed,  9 Apr 2025 14:07:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744207666;
+	bh=XZBwGz84oz5gY/BVxkIjEz6jrXTDq3RAuIKk6QEQegs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=bZw/mxHWwnx25jKL/1vo+xxH9LpShsURClxuY2VX0P4bP6XDreB/WfU7gqjlItL4n
+	 LbILmIGt9d91a0cFpGQ4SPaQKtyim0vU1+nyaZpUXHNq7LY70kxHYvKOEACRjC9+/r
+	 tZLh7YGbrzUHT0E5Fhz7j3TS51QBpubK6nVmL8z/4fenDqdO69l1Fv/cQ7URn8uXir
+	 wOc+X4vzkBi407wFjEl+M9ykCwi14egO0OlflFJVOobS8qLAAxtGfFCQNHtVQhgaTX
+	 WDe7AsmWyW5tt4ALFnGVULQH9MZsyHqK69Rf9nMTmJA4O0fGMMuUUhP351QWoIwGrT
+	 9vkt/BIDUb96g==
+Message-ID: <125f9c26-4e01-4478-8f68-6fddea69e136@kernel.org>
+Date: Wed, 9 Apr 2025 16:07:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <174419899905.31282.16125441491898382603.tip-bot2@tip-bot2>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 24/24] arm64: Kconfig: Enable GICv5
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ kernel test robot <lkp@intel.com>
+Cc: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+ Sascha Bischoff <sascha.bischoff@arm.com>,
+ Timothy Hayes <timothy.hayes@arm.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20250408-gicv5-host-v1-24-1f26db465f8d@kernel.org>
+ <202504092127.YaPW3UWk-lkp@intel.com> <Z/Z+VtK96h1yezE7@lpieralisi>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <Z/Z+VtK96h1yezE7@lpieralisi>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 09, 2025 at 11:43:19AM -0000, tip-bot2 for Jiri Olsa wrote:
-> The following commit has been merged into the perf/core branch of tip:
+On 09/04/2025 16:04, Lorenzo Pieralisi wrote:
+> On Wed, Apr 09, 2025 at 09:44:42PM +0800, kernel test robot wrote:
+>> Hi Lorenzo,
+>>
+>> kernel test robot noticed the following build errors:
+>>
+>> [auto build test ERROR on 0af2f6be1b4281385b618cb86ad946eded089ac8]
+>>
+>> url:    https://github.com/intel-lab-lkp/linux/commits/Lorenzo-Pieralisi/Documentation-devicetree-bindings-Add-GICv5-DT-bindings/20250408-190630
+>> base:   0af2f6be1b4281385b618cb86ad946eded089ac8
+>> patch link:    https://lore.kernel.org/r/20250408-gicv5-host-v1-24-1f26db465f8d%40kernel.org
+>> patch subject: [PATCH 24/24] arm64: Kconfig: Enable GICv5
+>> config: arm64-randconfig-001-20250409 (https://download.01.org/0day-ci/archive/20250409/202504092127.YaPW3UWk-lkp@intel.com/config)
+>> compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 92c93f5286b9ff33f27ff694d2dc33da1c07afdd)
+>> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250409/202504092127.YaPW3UWk-lkp@intel.com/reproduce)
+>>
+>> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+>> the same patch/commit), kindly add following tags
+>> | Reported-by: kernel test robot <lkp@intel.com>
+>> | Closes: https://lore.kernel.org/oe-kbuild-all/202504092127.YaPW3UWk-lkp@intel.com/
+>>
+>> All errors (new ones prefixed by >>):
+>>
+>>>> drivers/irqchip/irq-gic-v5-iwb.c:298:3: error: cannot jump from this goto statement to its label
+>>      298 |                 goto out_free;
+>>          |                 ^
+>>    drivers/irqchip/irq-gic-v5-iwb.c:300:2: note: jump bypasses initialization of variable with __attribute__((cleanup))
+>>      300 |         guard(mutex)(&its->dev_alloc_lock);
 > 
-> Commit-ID:     38440aebd4acc7bb3721eea77829bdb724d2551a
-> Gitweb:        https://git.kernel.org/tip/38440aebd4acc7bb3721eea77829bdb724d2551a
-> Author:        Jiri Olsa <jolsa@kernel.org>
-> AuthorDate:    Tue, 08 Apr 2025 23:13:09 +02:00
-> Committer:     Ingo Molnar <mingo@kernel.org>
-> CommitterDate: Wed, 09 Apr 2025 12:35:17 +02:00
-> 
-> uprobes/x86: Add support to emulate NOP5 instruction
-> 
-> Adding support to emulate NOP5 as the original uprobe instruction.
-> 
-> This change speeds up uprobe on top of NOP5 and is a preparation for
-> usdt probe optimization, that will be done on top of NOP5 instruction.
-> 
-> With this change the usdt probe on top of NOP5 won't take the performance
-> hit compared to usdt probe on top of standard NOP instruction.
-> 
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Brian Gerst <brgerst@gmail.com>
-> Cc: Juergen Gross <jgross@suse.com>
-> Cc: H. Peter Anvin <hpa@zytor.com>
-> Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-> Link: https://lore.kernel.org/r/20250408211310.51491-1-jolsa@kernel.org
-> ---
->  arch/x86/kernel/uprobes.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-> index 9194695..63cc68e 100644
-> --- a/arch/x86/kernel/uprobes.c
-> +++ b/arch/x86/kernel/uprobes.c
-> @@ -608,6 +608,16 @@ static void riprel_post_xol(struct arch_uprobe *auprobe, struct pt_regs *regs)
->  		*sr = utask->autask.saved_scratch_register;
->  	}
->  }
-> +
-> +static int is_nop5_insn(uprobe_opcode_t *insn)
-> +{
-> +	return !memcmp(insn, x86_nops[5], 5);
-> +}
-> +
-> +static bool emulate_nop5_insn(struct arch_uprobe *auprobe)
-> +{
-> +	return is_nop5_insn((uprobe_opcode_t *) &auprobe->insn);
-> +}
->  #else /* 32-bit: */
->  /*
->   * No RIP-relative addressing on 32-bit
-> @@ -621,6 +631,10 @@ static void riprel_pre_xol(struct arch_uprobe *auprobe, struct pt_regs *regs)
->  static void riprel_post_xol(struct arch_uprobe *auprobe, struct pt_regs *regs)
->  {
->  }
-> +static bool emulate_nop5_insn(struct arch_uprobe *auprobe)
-> +{
-> +	return false;
-> +}
->  #endif /* CONFIG_X86_64 */
->  
->  struct uprobe_xol_ops {
-> @@ -852,6 +866,8 @@ static int branch_setup_xol_ops(struct arch_uprobe *auprobe, struct insn *insn)
->  		break;
->  
->  	case 0x0f:
-> +		if (emulate_nop5_insn(auprobe))
-> +			goto setup;
->  		if (insn->opcode.nbytes != 2)
->  			return -ENOSYS;
->  		/*
+> This is clearly wrong, will update code in the IWB (if we are keeping
+> the current IWB driver) and ITS by removing the guard where misused and
+> keeping the mutex_lock/unlock().
 
-This is still very weird code. See the comment here:
+Just remember to build your code with clang and W=1. Especially if you
+use anything from cleanup.
 
-https://lkml.kernel.org/r/20241213104536.GZ35539@noisy.programming.kicks-ass.net
+Best regards,
+Krzysztof
