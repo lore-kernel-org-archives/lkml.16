@@ -1,231 +1,258 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9571B1FC8
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 05:17:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744175868; cv=fail; b=ATROSAzxTOtnrEkigc5q6K9Q4du0U3Bi+57VM0iscaRF5GL2J0Htpj9HtkTbV7/yOpez3hpSgsFevVQyLVrkDSYtyNQHHIafjtTeEab/9c4lz/k8xK6DOMCXbOrqJ9dKFbuLjaoAz2o8pfbms87X9iHWKu1bfJA58v/tGENy7c0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744175868; c=relaxed/simple;
-	bh=L2IiQgRjG7OmFC/k3s1RsoJphBkrorouXkd+UV8g9Ss=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=UGsWwXe02NfPeKGETuEYOFsKGqajwq1ryh6IjJ5rqFMMlOQf8TPOtvy2lDijQX6Y83baOpUBKbGcaExAEWfPBc/vtqwqj1kpwcH6r2tq7zCMGq2Hak7dIkgPh8Vi5U8bw4fEXrAHo7KBdakmZQJcU/Urvvmgbbx5gqavMT/12e8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=cllgJa5y; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=Rt/sZuIK; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3284F158DAC
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 05:20:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744176056; cv=none; b=BDk6BjSyq/NwQCMXinLGsVY+W787qxDO4QGM6oInYquaK1zW5o92gaNdNpqeC2feIkVA9v6ik9fDKq8V7Kbc2+C855Yo67YLH5/HsG69noW9ZWNpKkq0JtONDqHt0/ANHsytbMy5UNTa6eDHXH3OF3J6Eb31JQpipXFXiNI+9Ko=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744176056; c=relaxed/simple;
+	bh=qEER/RgVCOioJPbMmsKJ72fps24z+FpHP98LKMZRgy8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RKPcX2naDzt4ffe3Biq6o8Llnd8BchXVes5f+LXT2gP+/vT/fO9rs9mzDGYHmOXzUfrd6QsOSO9a4Ch1yV1w6n13wly51mf+sCUp2XTtYwjLAPZIRgg3qT5WjDzqHStfP4JmYGg0lTxappa1anAK9Pb6TeOzD0tK+gByXGVH6+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Tz0oNzNh; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cllgJa5y";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="Rt/sZuIK"
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 538L9r2n019437;
-	Wed, 9 Apr 2025 05:17:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=AaIV2JXadzSze6LI4/IJ8AftGG2IBXm47WZ4TO2dmsA=; b=
-	cllgJa5y39nrRgYZQF+RpE0srGDd25Q1RYXcISanb91J20gKBBEdgGoqVfAMMZiI
-	42bJNu8oszxe0iwQ+HSDt3Is+t8EVbBINRxPqlnOtmBXgTMpWQLy3zSkgAjYu9GM
-	GP6TDT/mnUSLbmwcMI65Cb3//rH6iELzd4cT+oPc20A15JNNR7FoSIgfohzXV8Y0
-	eflPp0tvyu/nk4m+Ej3C1yr0djtAI29hlLmZ0krGA44R+5rUzzEen81KbY0X1xVf
-	6lGBcgQg/sMukUa5UKkwgGGRC4QngCUtkVux+bP7sK7HOaxDkMfGFKCfn2nkk2TN
-	MwZuehX5E2FZfYH0YoYh1A==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45tu41eb49-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 09 Apr 2025 05:17:28 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5393sfIx001428;
-	Wed, 9 Apr 2025 05:17:27 GMT
-Received: from dm5pr21cu001.outbound.protection.outlook.com (mail-centralusazlp17011031.outbound.protection.outlook.com [40.93.13.31])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 45ttya9y13-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 09 Apr 2025 05:17:27 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=alMnRkExg27s0TlYnRvtPBeSTTvPFDSyV/wouZUa216AW7J9AcYujSAeNVSREBInT5GnanqKfIkO4fgfMY37MqZTtiDr9Wxnks21nlt9vumOMz90+oRQXjKaJ7C5FvRYDNzN2dgCs0T5kCwOA2wvgiyhqhMRa6Vuq/gpPKE8oxlPWhNlzc8Dxz9PipJZih0f8QAHH75AuLiOLBdnAZUh8EDnQTCXNUtkf8xXn5GQkPq5+LWskFiNn8lHk9FX8Q3b1A6Kf6W//kyvH7/RUr66wppCZKDd0gPZfZl3/jqwmXpGWQfJQdUAj1o33eHWMggu2jjIsnk0UBrltRJdf2jVcw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AaIV2JXadzSze6LI4/IJ8AftGG2IBXm47WZ4TO2dmsA=;
- b=Csh57aXJITf8YKtrfwmWzWEGE1nTw7phNxAfXefQN8hrOwWfZVN6moiSirfzuhclvBlY6TR4mS5q3QCULSgEcOrGGhobgO1K22/XELF8+FG3g3zg7ZZvhfYsJIyomfxq/Knjm+Vf6zyHx4jo2mD5U3nOhllUAl9loZhs5Xx45KOOhk++Q++QFtDF/7nfOCETKvatJbAQC5B/LYKoqSEXy7gCvzbUei1MBEB+aZJfNq7AfzPZpdslu5YB5tG42CtWMXXO2G2mIBtLpa/HFinOwdYOiZUy33IbGUbsRPBHsMsfGSPMjXjyT66aq9i8RytEpdspEYa4LUsnnzZti/9WBQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AaIV2JXadzSze6LI4/IJ8AftGG2IBXm47WZ4TO2dmsA=;
- b=Rt/sZuIKUe3hqHl8oUV1kQLqQ9y+fDZIz2Uc7wyNaVo29Sp3lkedy46txIwEe7xL1kWlTjunb5x5BN4BajfcAH7ixSXOiHYnG6otfQyNypT5AgXX9R0C7SKSHwM46DHh1Y9cclu2MehpXybt7JoaJRswEvGReQNTNQzUu0kAooU=
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by SJ5PPFC322FD87E.namprd10.prod.outlook.com (2603:10b6:a0f:fc02::7c9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.21; Wed, 9 Apr
- 2025 05:17:24 +0000
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2%4]) with mapi id 15.20.8632.017; Wed, 9 Apr 2025
- 05:17:24 +0000
-Date: Wed, 9 Apr 2025 06:17:21 +0100
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: Jann Horn <jannh@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: add memory advice section
-Message-ID: <4c085979-0f6c-463d-86c4-456634a1bb89@lucifer.local>
-References: <20250408161105.156350-1-lorenzo.stoakes@oracle.com>
- <CAG48ez1duuiePx2pFnTuQK8WEEdKGM4AYCYjDb0XLpJBzNT1=A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAG48ez1duuiePx2pFnTuQK8WEEdKGM4AYCYjDb0XLpJBzNT1=A@mail.gmail.com>
-X-ClientProxiedBy: LO4P265CA0093.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:2bc::18) To DM4PR10MB8218.namprd10.prod.outlook.com
- (2603:10b6:8:1cc::16)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Tz0oNzNh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744176055; x=1775712055;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=qEER/RgVCOioJPbMmsKJ72fps24z+FpHP98LKMZRgy8=;
+  b=Tz0oNzNhrbSsbpX9baFOciG05kkYmROvnzZGZygIOLrOBV6Xk5AnNnGp
+   BOfixlSSgSs77rAjanB3uHe6VTgZiME4uD/Nfkxla63RA/LD9C7Sjcptj
+   XXE5G38E2SQVjFBoRf/HWsDCfz+kIoZ5xBVkZi9NxOwgRKpl0Of20qoHF
+   ThAkKqNAuvIaeDUD+/pDS6ry1pIF8zmfRZdg/8fAwUK8uREPVAUyJmTOs
+   KFdtug1bcyVgI2OKxYPPYJb1kVAIe9ZrdPW4AHrqV7foBU0JRDuEsO+5k
+   p8e2Ay3EgkWTUH05lqM6xLjjMXqeAkxTvv+qR9xaHF30aQOCm5yKbJhRQ
+   Q==;
+X-CSE-ConnectionGUID: yWsE7uKhQ72yRN5Cy3a6Kw==
+X-CSE-MsgGUID: 8eY862peS0GaeFXYBPeoTQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="45348889"
+X-IronPort-AV: E=Sophos;i="6.15,199,1739865600"; 
+   d="scan'208";a="45348889"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 22:20:54 -0700
+X-CSE-ConnectionGUID: 5otkT78iTxWk/lUttB9mag==
+X-CSE-MsgGUID: 3fmEncnOSRSVDKK+BN7tWA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,199,1739865600"; 
+   d="scan'208";a="133601185"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 08 Apr 2025 22:20:49 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u2Nri-0008H5-1s;
+	Wed, 09 Apr 2025 05:20:46 +0000
+Date: Wed, 9 Apr 2025 13:20:45 +0800
+From: kernel test robot <lkp@intel.com>
+To: Wentao Liang <vulab@iscas.ac.cn>, harry.wentland@amd.com,
+	sunpeng.li@amd.com, Rodrigo.Siqueira@amd.com,
+	alexander.deucher@amd.com, christian.koenig@amd.com,
+	Xinhui.Pan@amd.com, airlied@gmail.com, simona@ffwll.ch
+Cc: oe-kbuild-all@lists.linux.dev, hamza.mahfooz@amd.com,
+	chiahsuan.chung@amd.com, sunil.khatri@amd.com, alex.hung@amd.com,
+	aurabindo.pillai@amd.com, hersenxs.wu@amd.com,
+	mario.limonciello@amd.com, mwen@igalia.com,
+	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, Wentao Liang <vulab@iscas.ac.cn>
+Subject: Re: [PATCH v2] drm/amd/display: Add error check for avi and vendor
+ infoframe setup function
+Message-ID: <202504091230.CXdkQbvK-lkp@intel.com>
+References: <20250408022018.2786-1-vulab@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|SJ5PPFC322FD87E:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5d9aa17e-d60a-47d7-897f-08dd7725cfb6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?YS9jc05EYzRhaXhLTU1nZlZWRjg2cFpHdEN0UldlaWt3UGs0TkJNTy9zbWZW?=
- =?utf-8?B?OW92Y3NWdDVMRHlvUUFKcDg4OGR6SldNTVVVT3dGWE03YnYvUWo0UXd0NDF5?=
- =?utf-8?B?d2xFd0dOSGhjYXdKSmdtRVFmRUlvQldrZXlFZmh1dm1ERjQyU3pBemd0WkhR?=
- =?utf-8?B?YUF0cHlSMlI0bGY4MTdUeHUzNTNyNEdTdWFrR1pKbFpPeTBWOXJBYktnRlIz?=
- =?utf-8?B?NG9LNW5VWTB1dEVkam9xRjZQWWxSU25tLzluUmQ0VjhoaGM1d0VzNXZQM2ln?=
- =?utf-8?B?R3ZGdmlhS25rVlNyNFFYSmNGOEZQM2xJZ2g5RE5WdzkxWDAzQlZ0VkxBY2RU?=
- =?utf-8?B?UVhoMkZ5Sys0R3AzbTR2OWNma2FHKy9kOWhnZXdmTEMzcTJ4Y0dSZEhwSCtp?=
- =?utf-8?B?VnZsVjhvRkF1SytHdFAwYnA4MFkyT1plSFNpRTNCUnBUanNoVDFaRXFkNmxB?=
- =?utf-8?B?OGg3MENkWlo3cU5sMnZBQ0RnZXpVMG92aFFTZ3B3MHUwMGFiTXBuZ0gzRVNn?=
- =?utf-8?B?bDE4ZGIzNGFNRmFQblFCRTVrOWlwWiswYlJTK0lON3dUQmlGRXBFQkZuNWdH?=
- =?utf-8?B?bEdkaDZraW1nVnFpY2RQSXpSKy9oZmg0VDdGRjV6dFNLY0xMNlM3MTNmbjRD?=
- =?utf-8?B?NkJ3clhLTW8raURZTkxxeE45Q1JjUGdRR3pPN0cyQ2ZZS3d2SktjYlNzWW95?=
- =?utf-8?B?TWVLU0U1OTFGakxieWpmdGdpT0s5UW43RDVRYXhPNjlvZkxLSFk0SjdsQ0x6?=
- =?utf-8?B?cjByZVJyL2NyZTlFN3drY0ZBbUEyTkhpS0NTSERaY2dvN29MeHB4UWRKSkRR?=
- =?utf-8?B?MkpGNXRHMFR1RU9xUEV2ckU1ZCt6Z2szb0V4UEl2UmdVTy91c0NGb21rS05S?=
- =?utf-8?B?cmJyeDl2RGlkbDRyQnlaVXFaWThObGZ0SjJXWmwrQ3R5UTdaTnV6UzdzT3dy?=
- =?utf-8?B?ZVp1dEEyQWgwSFlRN3l2R0pveHFlTDVTZUFlNEZvQjU0NGFRejJBWFRPVTVm?=
- =?utf-8?B?WlZXTVBPVlRsZnVRK0tPQkVqVEpJWm5MZ0RlekJTMjVPU0N5R3JoaUhERnFT?=
- =?utf-8?B?N203TWxBaHUvd1g3M2RJeWc1NCszT2hiWWZ0UFF0ZHExNTFiNi9rZlB5aTBH?=
- =?utf-8?B?QUNrc2V2YW4vVEt6bHpjbmtNYmd3Z2pTMFRpeW8yU0FMZFFsbGhaSUVwYmpI?=
- =?utf-8?B?M25YaHJiUTIvRzJGdDNxNGVJVUQvdTJFYmhhTmpNVU4vWDhBSFhsU3dZV2RU?=
- =?utf-8?B?dFpGYmhJS2ZXYWtlZ0J0ZkY5SXhnYVJibHA2SUxiU3RkTGtGUUlJNEdBUUpK?=
- =?utf-8?B?ck5maERxWFRQeDZpSTJRdHBhdVNDbmQxMCtWNmR6SHBLa29DWm9ZVy9hOGox?=
- =?utf-8?B?Z0xudGw0SEF3c2doN2kwbWNYdTdpQ1dOaEZ4Yzl3NHFiRGw4enNDeU5DSGtl?=
- =?utf-8?B?VjNSc2xmRzRjNWpJQlpyM1BUV1R1SEM3Vmc3WTVab0lraWhrK2orUVhoY3V5?=
- =?utf-8?B?aGo3WlY2Sndma2dOQXdzRXR0aVpaalpNNXZ6ekFwd1RNcEpZTHhlSjNGaE4z?=
- =?utf-8?B?UFdXemdNcEtsQ1Z5d1RnZS9RRXJNM0Ewb2F0SnBQRnNDN0MzTzA4Nk9sa0o5?=
- =?utf-8?B?cUw3R3FmZ1U0KzU1dXZtcWNLdHZYcFlGSUxMTlJpMGRXMmk3K1VSOHdJL0tm?=
- =?utf-8?B?VFYzcHRJZUthVXV4M2IzQUwxUlFOUjdwL1MwOVh0NmZmenFzakJOQmVXNHV1?=
- =?utf-8?B?TGFITm1GYWd4NGtWbHNZM25YZ2hQbzAremF2bHhmMTZsRGo2TGNpVWk3YjNU?=
- =?utf-8?Q?YD5c9/BdHqScVM1jFC//2ckyKTgKCyVYybyHM=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SFB1b3R0QkN4bERqNEp2RDU4SUlTWXdzMjZZT0dxNXdCd2hHTjNpQ1VBYS9M?=
- =?utf-8?B?SFFYdzd4TGU5QmFXOGE1bExpQURvb3puZXpyZFdXMENiNWlNNzVlVmllV0ZC?=
- =?utf-8?B?cXByN005SVNkN1N3QlEyUDM3OGhMZHVLNXBEQmlMR3JOdEZ4MHJYNGdQQm4z?=
- =?utf-8?B?NHBRbUtMdEdIRkt3eVlQcFdXeXFhZDVOSjRscUFXZ2pzMDI1bitjZnI4dVA3?=
- =?utf-8?B?bU92RkMxUzR2d3B6d25haURVckp5a3cxRmZ6Q0wvd2VYcytsZVhCNWN3c3FR?=
- =?utf-8?B?WmhlTDJsZ3NySGRZVURBdUpUQzJBcEhjVjNmSUFUY3MyWm9LRVhJUnp4WDgv?=
- =?utf-8?B?ZmRlaHpKenJXV25ESnI0L3V1S1o2blJ3M0Y2UHZpTllWbXYrSGVuSlQ3M2RP?=
- =?utf-8?B?UlNqS1h3M05KMVdjQ3FCeEpJYnY3K2VvdkdGVXlLazlPU0lhOUI5cVhwS1VB?=
- =?utf-8?B?YU96Wnc3OGFrRGVMa1Z1a3h3UklwOFI5V2U0OE5HUWsxTkVxcWlobXBtWFF0?=
- =?utf-8?B?MVBrSkZCUGhhR3MreDFxRmdqSUZDN0lGNVZoc2ZLZDU0d0NndjQyNVNJaGNt?=
- =?utf-8?B?cDFJZkw1NFpxRVQzUnJ0RkZCR25TNnNuVnFOQmFNcUtiQXVhc0d4ZkZwU1hK?=
- =?utf-8?B?TUxndmR1MjRSejVkZEpXVjhZQkZjS0pXdC83TmJpZ1d0RXh5azBJU0d1S0cw?=
- =?utf-8?B?SE9rODYyYjRLYlVDZCt1NEJhRU1KOW9NUlZsVlJLbk9Yb2FZNE83Q3ZYSEh2?=
- =?utf-8?B?Umttb2RhSHZaZk05RGVTd3RORnJTVDVjRGN4Sk9mcTVDeVBjRXdhdzB0Zi9Z?=
- =?utf-8?B?L3hwN2MrS0I3bGFGSXU5MFNvNEhmakx3TXZIWlNxdEtwVFBuNmxRbWFvaFFP?=
- =?utf-8?B?Q3dSRlBQbGhDY3MrcDdlK282Vnh1SVd3VTJTMTRONi82Y2tOMGlrYmpHUys4?=
- =?utf-8?B?WVBjZjZhZTNXaWk4eElHaEJ1alZndGUrZDlISHZXcE9IMVhBZWE5NUJCeFFT?=
- =?utf-8?B?b002MVlkSklkTWNYV2RFdTR2VUxsTDk2THNSSGhCOXRsVWJ5eVdZKzZqWHJV?=
- =?utf-8?B?TFJsYzNQb2tYazRJQ2tWVDNiblNxOWU5SGRkZUwvV0VJUngrd0MzTXF3VUF6?=
- =?utf-8?B?N0RuclBydFhpeEdrT1dJNWlac2Mwc21VN1BCeFZyL3JkWVZ4cDNuckVXN1Jv?=
- =?utf-8?B?SXo1cWRyb01ydmFyYmNQUnp0ZkY5L1VUU0hhdi9mZFpONVViOGxSUXBSZGho?=
- =?utf-8?B?MThnNDRGaFVMQU94NVNUYXROWDJQOSttV2E0d0tjZ3ZKVVRKaUxheG4wWEQz?=
- =?utf-8?B?UkNhbnlRWVBHWjZ6K2xWaE4zVkFnVnEvZ1hvRnpGZFJTMDFDMFIwM3ZqdXRW?=
- =?utf-8?B?NDZ4aGZxTGNZOEpnbGhYLzhoWG04SXgydFpjVXZoZXl2K25lem41bkZ1TE02?=
- =?utf-8?B?c1B6a0VWSUhweTBUdHR4cllrOUsrS0tLL2FmY053LzlBM3BuNE1ZUjBHMXZG?=
- =?utf-8?B?cExCUVpma29lZ2MxaHhzQklYTlJnVUNXdkpGQitRaEdhUHl1YnlUWWd4bWR1?=
- =?utf-8?B?MmNtSGh6TTNraGNEdWwwMnhGdng5UzdtUk9oUDhLdDdhSGl2aUx6M09PV2o5?=
- =?utf-8?B?bkhKbmRxNHNtYndUUzlOb1Z0Y3YrenpPRVZZTVFrYnFLSCs2T3l6dmJScnBz?=
- =?utf-8?B?ZjRyaUhmMm5jakZkSFVTVUxrQnFtbXVkMmMzZzNUS1kyNnVQZG1JMUNTZml4?=
- =?utf-8?B?bS9qQjVZUWpTcGtqZGk2ZGxpOFJTeFpjRENrazVEVEQrRFZTUEtBK0V5T0RG?=
- =?utf-8?B?SWtCSFlBZWZHa1ozYzk3bXR1UVUzeG95WUpRRnVtUGdzWEVCeWRmOWpoekhL?=
- =?utf-8?B?UEEyWENuc0taakIvcGtjbVBHQ1NpUHcxN2NiMTRrYTJ1SG5aZmlKc2pKemJ2?=
- =?utf-8?B?V1c2MTliU2Q3K2h1ZzlUREFJKzM2RE5jSm8wUVNISlV5SFQ3NzJvRXZFS0Fl?=
- =?utf-8?B?UnhBVnZMZXFzWXpTVm9mMDJIWGczMGNxZUxGTHdpc0I0Z3orVUJiVGJ3MEMw?=
- =?utf-8?B?Rkc4c3hFRmxXcEx3Q2lKb3h3VFNhQmMzaG9IUnBKZ1ZPeTErejFXSEovQ3Fr?=
- =?utf-8?B?dDY0cURjZDl6dys1SUJEMWV3RGtPV0VrK1YrMHlmZVRhcm5NWmM2Y1NVVEdn?=
- =?utf-8?B?bXc9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	/8sOMsDaomJ4ryfoAC44Cu5/xVzKK6lEYNsiPtD6lgWJfFm0G2dS2WWXyjZdHsmYi8bID7zMtBuvIwImxyVva2JChhpqv6FDn7V45qz7P6KIeUeJOV4i0brzCnBIynGAyx2csk8KGYqI8jW3Lk0hP7fVoOc78KlUgMmW0qPqWE/Tzoq7v0A+3oCtgR1fqlqjj0I5dFAh7/hVhNN3jOc6J+ZL/4tut0BoYIaJcZduPsI6/QuKO/XODLOGqBEOEKToKIpq0Irsv/2+BJNw0OWmisgi/ExfouLlAbmOHG6y/ksKALa3aCCPsZAWWn8Iika+xr30IjRpCVAMQuZ34IgsFwYi1oBXuscsoP5WGvWJHoM1zmARDClUts0Si4WaQE6EFm2oJSxQCkZNpKotqAwcTCoJEfHZh9sEWwskbTdeq8n13CEzqdyXKgtQwa6oY9kyt1LAZpPpv0pSJWWQ9uQEix/k37XLT9KXEoswxArNo93t+ZRHHo40u8i89NUy78+9s8hHFjN/YDV6fVkqDcYL53yagABthCRYl+hWJ8XZs/zSpXXiK/Te1TsY1+PAXtPCzqFPBI7WCaw5EPWSK7GcHiyl08dMFBpFQsLWevuNjLA=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5d9aa17e-d60a-47d7-897f-08dd7725cfb6
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 05:17:23.9691
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: q/8tzsw1M0XgBQaYXxm+HG7dVj5DRChfbA4JuUTPR7RfGgFvcjtAPdAxsZNGdybwdDk9veCF7EPH9auHT0ZcnCWfsO5mLZwi24enxpjT64Q=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPFC322FD87E
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-09_02,2025-04-08_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=886
- suspectscore=0 adultscore=0 bulkscore=0 mlxscore=0 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2502280000 definitions=main-2504090019
-X-Proofpoint-ORIG-GUID: g4N-CW2BbUno2AT3BVWT2SvVpSs_TsqP
-X-Proofpoint-GUID: g4N-CW2BbUno2AT3BVWT2SvVpSs_TsqP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250408022018.2786-1-vulab@iscas.ac.cn>
 
-On Tue, Apr 08, 2025 at 08:56:30PM +0200, Jann Horn wrote:
-> On Tue, Apr 8, 2025 at 6:11 PM Lorenzo Stoakes
-> <lorenzo.stoakes@oracle.com> wrote:
-> > The madvise code straddles both VMA and page table manipulation. As a
-> > result, separate it out into its own section and add maintainers/reviewers
-> > as appropriate.
-> >
-> > We additionally include the mman-common.h file as this contains the shared
-> > madvise flags and it is important we maintain this alongside madvise.c.
-> >
-> > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
->
-> Acked-by: Jann Horn <jannh@google.com>
+Hi Wentao,
 
-Thanks!
+kernel test robot noticed the following build errors:
 
->
-> > +MEMORY MAPPING - MEMORY ADVICE
-> > +M:     Andrew Morton <akpm@linux-foundation.org>
-> > +M:     Liam R. Howlett <Liam.Howlett@oracle.com>
-> > +M:     Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> > +M:     David Hildenbrand <david@redhat.com>
-> > +R:     Vlastimil Babka <vbabka@suse.cz>
-> > +R:     Jann Horn <jannh@google.com>
-> > +S:     Maintained
-> > +W:     http://www.linux-mm.org
-> > +T:     git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
-> > +F:     include/uapi/asm-generic/mman-common.h
-> > +F:     mm/madvise.c
->
-> Is it intentional that this one, unlike "MEMORY MAPPING", has no
-> explicit "L: linux-mm@kvack.org" and relies on the inheritance from
-> the overall "MEMORY MANAGEMENT" entry for that?
+[auto build test ERROR on drm-exynos/exynos-drm-next]
+[also build test ERROR on linus/master v6.15-rc1 next-20250408]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-No, was a mistake, have asked Andrew to fix in a fixpatch! Good
-spot... whoops!
+url:    https://github.com/intel-lab-lkp/linux/commits/Wentao-Liang/drm-amd-display-Add-error-check-for-avi-and-vendor-infoframe-setup-function/20250408-102113
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/daeinki/drm-exynos.git exynos-drm-next
+patch link:    https://lore.kernel.org/r/20250408022018.2786-1-vulab%40iscas.ac.cn
+patch subject: [PATCH v2] drm/amd/display: Add error check for avi and vendor infoframe setup function
+config: csky-randconfig-001-20250409 (https://download.01.org/0day-ci/archive/20250409/202504091230.CXdkQbvK-lkp@intel.com/config)
+compiler: csky-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250409/202504091230.CXdkQbvK-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504091230.CXdkQbvK-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from include/linux/device.h:15,
+                    from include/linux/acpi.h:14,
+                    from include/linux/i2c.h:13,
+                    from include/drm/display/drm_dp_helper.h:27,
+                    from drivers/gpu/drm/amd/amdgpu/../display/dc/os_types.h:37,
+                    from drivers/gpu/drm/amd/amdgpu/../display/dc/dm_services_types.h:29,
+                    from drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm.c:29:
+   drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm.c: In function 'fill_stream_properties_from_drm_display_mode':
+>> drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm.c:6221:42: error: passing argument 1 of '_dev_err' from incompatible pointer type [-Wincompatible-pointer-types]
+    6221 |                         dev_err(connector->dev, "Failed to setup avi infoframe: %zd\n", err);
+         |                                 ~~~~~~~~~^~~~~
+         |                                          |
+         |                                          struct drm_device *
+   include/linux/dev_printk.h:110:25: note: in definition of macro 'dev_printk_index_wrap'
+     110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
+         |                         ^~~
+   drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm.c:6221:25: note: in expansion of macro 'dev_err'
+    6221 |                         dev_err(connector->dev, "Failed to setup avi infoframe: %zd\n", err);
+         |                         ^~~~~~~
+   include/linux/dev_printk.h:86:36: note: expected 'const struct device *' but argument is of type 'struct drm_device *'
+      86 | void _dev_err(const struct device *dev, const char *fmt, ...)
+         |               ~~~~~~~~~~~~~~~~~~~~~^~~
+   drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm.c:6227:42: error: passing argument 1 of '_dev_err' from incompatible pointer type [-Wincompatible-pointer-types]
+    6227 |                         dev_err(connector->dev, "Failed to setup vendor infoframe: %zd\n", err);
+         |                                 ~~~~~~~~~^~~~~
+         |                                          |
+         |                                          struct drm_device *
+   include/linux/dev_printk.h:110:25: note: in definition of macro 'dev_printk_index_wrap'
+     110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
+         |                         ^~~
+   drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm.c:6227:25: note: in expansion of macro 'dev_err'
+    6227 |                         dev_err(connector->dev, "Failed to setup vendor infoframe: %zd\n", err);
+         |                         ^~~~~~~
+   include/linux/dev_printk.h:86:36: note: expected 'const struct device *' but argument is of type 'struct drm_device *'
+      86 | void _dev_err(const struct device *dev, const char *fmt, ...)
+         |               ~~~~~~~~~~~~~~~~~~~~~^~~
+
+
+vim +/_dev_err +6221 drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm.c
+
+  6156	
+  6157	static void fill_stream_properties_from_drm_display_mode(
+  6158		struct dc_stream_state *stream,
+  6159		const struct drm_display_mode *mode_in,
+  6160		const struct drm_connector *connector,
+  6161		const struct drm_connector_state *connector_state,
+  6162		const struct dc_stream_state *old_stream,
+  6163		int requested_bpc)
+  6164	{
+  6165		struct dc_crtc_timing *timing_out = &stream->timing;
+  6166		const struct drm_display_info *info = &connector->display_info;
+  6167		struct amdgpu_dm_connector *aconnector = NULL;
+  6168		struct hdmi_vendor_infoframe hv_frame;
+  6169		struct hdmi_avi_infoframe avi_frame;
+  6170		ssize_t err;
+  6171	
+  6172		if (connector->connector_type != DRM_MODE_CONNECTOR_WRITEBACK)
+  6173			aconnector = to_amdgpu_dm_connector(connector);
+  6174	
+  6175		memset(&hv_frame, 0, sizeof(hv_frame));
+  6176		memset(&avi_frame, 0, sizeof(avi_frame));
+  6177	
+  6178		timing_out->h_border_left = 0;
+  6179		timing_out->h_border_right = 0;
+  6180		timing_out->v_border_top = 0;
+  6181		timing_out->v_border_bottom = 0;
+  6182		/* TODO: un-hardcode */
+  6183		if (drm_mode_is_420_only(info, mode_in)
+  6184				&& stream->signal == SIGNAL_TYPE_HDMI_TYPE_A)
+  6185			timing_out->pixel_encoding = PIXEL_ENCODING_YCBCR420;
+  6186		else if (drm_mode_is_420_also(info, mode_in)
+  6187				&& aconnector
+  6188				&& aconnector->force_yuv420_output)
+  6189			timing_out->pixel_encoding = PIXEL_ENCODING_YCBCR420;
+  6190		else if ((connector->display_info.color_formats & DRM_COLOR_FORMAT_YCBCR444)
+  6191				&& stream->signal == SIGNAL_TYPE_HDMI_TYPE_A)
+  6192			timing_out->pixel_encoding = PIXEL_ENCODING_YCBCR444;
+  6193		else
+  6194			timing_out->pixel_encoding = PIXEL_ENCODING_RGB;
+  6195	
+  6196		timing_out->timing_3d_format = TIMING_3D_FORMAT_NONE;
+  6197		timing_out->display_color_depth = convert_color_depth_from_display_info(
+  6198			connector,
+  6199			(timing_out->pixel_encoding == PIXEL_ENCODING_YCBCR420),
+  6200			requested_bpc);
+  6201		timing_out->scan_type = SCANNING_TYPE_NODATA;
+  6202		timing_out->hdmi_vic = 0;
+  6203	
+  6204		if (old_stream) {
+  6205			timing_out->vic = old_stream->timing.vic;
+  6206			timing_out->flags.HSYNC_POSITIVE_POLARITY = old_stream->timing.flags.HSYNC_POSITIVE_POLARITY;
+  6207			timing_out->flags.VSYNC_POSITIVE_POLARITY = old_stream->timing.flags.VSYNC_POSITIVE_POLARITY;
+  6208		} else {
+  6209			timing_out->vic = drm_match_cea_mode(mode_in);
+  6210			if (mode_in->flags & DRM_MODE_FLAG_PHSYNC)
+  6211				timing_out->flags.HSYNC_POSITIVE_POLARITY = 1;
+  6212			if (mode_in->flags & DRM_MODE_FLAG_PVSYNC)
+  6213				timing_out->flags.VSYNC_POSITIVE_POLARITY = 1;
+  6214		}
+  6215	
+  6216		if (stream->signal == SIGNAL_TYPE_HDMI_TYPE_A) {
+  6217			err = drm_hdmi_avi_infoframe_from_display_mode(&avi_frame,
+  6218								       (struct drm_connector *)connector,
+  6219								       mode_in);
+  6220			if (err < 0)
+> 6221				dev_err(connector->dev, "Failed to setup avi infoframe: %zd\n", err);
+  6222			timing_out->vic = avi_frame.video_code;
+  6223			err = drm_hdmi_vendor_infoframe_from_display_mode(&hv_frame,
+  6224									  (struct drm_connector *)connector,
+  6225									  mode_in);
+  6226			if (err < 0)
+  6227				dev_err(connector->dev, "Failed to setup vendor infoframe: %zd\n", err);
+  6228			timing_out->hdmi_vic = hv_frame.vic;
+  6229		}
+  6230	
+  6231		if (aconnector && is_freesync_video_mode(mode_in, aconnector)) {
+  6232			timing_out->h_addressable = mode_in->hdisplay;
+  6233			timing_out->h_total = mode_in->htotal;
+  6234			timing_out->h_sync_width = mode_in->hsync_end - mode_in->hsync_start;
+  6235			timing_out->h_front_porch = mode_in->hsync_start - mode_in->hdisplay;
+  6236			timing_out->v_total = mode_in->vtotal;
+  6237			timing_out->v_addressable = mode_in->vdisplay;
+  6238			timing_out->v_front_porch = mode_in->vsync_start - mode_in->vdisplay;
+  6239			timing_out->v_sync_width = mode_in->vsync_end - mode_in->vsync_start;
+  6240			timing_out->pix_clk_100hz = mode_in->clock * 10;
+  6241		} else {
+  6242			timing_out->h_addressable = mode_in->crtc_hdisplay;
+  6243			timing_out->h_total = mode_in->crtc_htotal;
+  6244			timing_out->h_sync_width = mode_in->crtc_hsync_end - mode_in->crtc_hsync_start;
+  6245			timing_out->h_front_porch = mode_in->crtc_hsync_start - mode_in->crtc_hdisplay;
+  6246			timing_out->v_total = mode_in->crtc_vtotal;
+  6247			timing_out->v_addressable = mode_in->crtc_vdisplay;
+  6248			timing_out->v_front_porch = mode_in->crtc_vsync_start - mode_in->crtc_vdisplay;
+  6249			timing_out->v_sync_width = mode_in->crtc_vsync_end - mode_in->crtc_vsync_start;
+  6250			timing_out->pix_clk_100hz = mode_in->crtc_clock * 10;
+  6251		}
+  6252	
+  6253		timing_out->aspect_ratio = get_aspect_ratio(mode_in);
+  6254	
+  6255		stream->out_transfer_func.type = TF_TYPE_PREDEFINED;
+  6256		stream->out_transfer_func.tf = TRANSFER_FUNCTION_SRGB;
+  6257		if (stream->signal == SIGNAL_TYPE_HDMI_TYPE_A) {
+  6258			if (!adjust_colour_depth_from_display_info(timing_out, info) &&
+  6259			    drm_mode_is_420_also(info, mode_in) &&
+  6260			    timing_out->pixel_encoding != PIXEL_ENCODING_YCBCR420) {
+  6261				timing_out->pixel_encoding = PIXEL_ENCODING_YCBCR420;
+  6262				adjust_colour_depth_from_display_info(timing_out, info);
+  6263			}
+  6264		}
+  6265	
+  6266		stream->output_color_space = get_output_color_space(timing_out, connector_state);
+  6267		stream->content_type = get_output_content_type(connector_state);
+  6268	}
+  6269	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
