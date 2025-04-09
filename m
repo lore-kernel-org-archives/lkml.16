@@ -1,126 +1,190 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BAA81E5018;
-	Wed,  9 Apr 2025 20:58:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DB7B2116F1;
+	Wed,  9 Apr 2025 21:00:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744232302; cv=none; b=lOs3m1FFP9K1C7FUPfeCtRRHyTRwSD8X4Zc8XRwSJ8x3vrbCmRUqEYORzx+s05i16fNadTyctC93nXBpz6u3HC1GhcWIjuZsDrXI/MzhweQ80A7MlyfKxbbcg8A8o8KD1Y9IuH3zfd1bMeIHLhMUIBk0ceBgUr69kJlVe3FGB70=
+	t=1744232411; cv=none; b=UiHemmyoO726BwWaNhTj3VJ8Ssl4r685JUGTpcAXk1bui2QObghxBUAYiN93yrVZcQrZPpgsWynuCSEktAndZseky1RMjOFkQNTnC0PjW0Q5TTyICP2pab73gIZgcsH2CV17JexvxhgkbMdNSaYP5eq+SVRKa145ap7owbPhwmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744232302; c=relaxed/simple;
-	bh=6ec0alS8XiULM/vgWxWgwfHpG7Je0oApq0VdXu9F0v4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iN0ZWi7qTMQSzlh0yu/4cX42feD/wZzLZnOwfAIg1/LeuvlrJM632V8rJ/LRTGI7krlHUwuhWbbVS4j+CpLqLZmlVyO40WDYgCD/VLTqONUSNaYvNuf2LSfMWTjk35qeOy8GrtMx2e7bOblNe6gkYBgKorVZm5Kog6jJSIn5k8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mwyy8DdU; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mwyy8DdU"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b03bc416962so35332a12.0;
-        Wed, 09 Apr 2025 13:58:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744232300; x=1744837100; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0anQ+IpqWVzDF/uK9u1Pq2W1Y/RyglC7ZuUoWh/6VYc=;
-        b=mwyy8DdUym2PNXB10h67fTadWN5VgDr4mhCoJJNNZ4s5FflNklIzbw95RZVFVSMhLt
-         2MLBQMgaXWjVbCpzlxI7aCrbdJjL4bAghLqCN7q+w9F7iGNM4mz135O0mPwDUpoN1v4b
-         qrfGockCdOiGVXfQLxryNGGuCAmvYvKRHWIPIg1BNsxaxefNdS5tx/M5eAKfakiWWXp7
-         qrfOSU3+1d/nCKIkRyeilRS7irC8XN0p/dpfg3i6+YFQ1tdLOc8QIeaG9hIUq6WYlZ1j
-         rZOLZvmfYE9/ZZXiyqgvsHL9f09rHhM6MxIYquZYayZfUDFpVYzljjv2yxZ/CVCM1v9B
-         cIjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744232300; x=1744837100;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0anQ+IpqWVzDF/uK9u1Pq2W1Y/RyglC7ZuUoWh/6VYc=;
-        b=nGYhDfEnsky7RKNmTwyFkB/21rLXy1PTg5jUG8xDPr80bSjue+2keOFa1n70bNLQhZ
-         vOTBdAMtnQqncPH4L0++xt4E9z46+OL387OInED5Sf8JvHOOlOqicTORFgI7RONM2zuj
-         dB3xVINDqd1AffmkEzf31C7hAlmR+MIxZuZcb+evgfXMwHa2XF3Lsdp6Kf9S0hltRuEr
-         bUHtuj9WZDh7b84hORDvCOS0Pgan+NJy/Qk8S3yKu6SesrUS12wybDF/q8/KFv3IZETf
-         LWMx3cnWxs0IVZEDSSPFWerpyt5aZBEnOJbTyyuOKxsjzdyEt/W3DKtqYaQHLnL2RVZf
-         mAFw==
-X-Forwarded-Encrypted: i=1; AJvYcCVCYhxoe5EHqHp2WZoI9vkMk32pmFll3aBPMCMV2IPKfuUsc2MWIDcJinUQo8bvmbs21wfmeQUyGz92Jw==@vger.kernel.org, AJvYcCVWD36u5hxYWPSTC8aDqblTveZR/QmkjnCgko8XEsIP7ej1Np4kQm7R6lwLgtnWN8DN8XMWRY2MuEfEnn+G@vger.kernel.org, AJvYcCVzaUIRo6+8u3dHBuoCvfpmohqE+jP71bMHj2r7vWJL376iYIp2Tdmv5BYWxTmwOPEmQoquGMzh3irA@vger.kernel.org, AJvYcCWEBAYghVCr/gZCdahZlwcV1s4ghAHxmwjXYt7w6uyJgGH2xrfOKlnrcBQAqqTBI4URslzf1pWngoczXZA=@vger.kernel.org, AJvYcCX3PXCEjeIUDZ2Ag/GVKb4S7mjlHeXAjnLb6bdbRzUByHLk/q7GasPBIm1KPV/vGv5J93Fz1bSaq3d8@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzqwrDNodHemZHSabqWdPiSq59WgiKTQ717fxMPe6I8m1vm3+f
-	0HXLlbDqoxSC7VsDotjXx3g3EvD9gR2MUDL92idJwb5tLJpFm/yE
-X-Gm-Gg: ASbGncvvdOqd3BHZcnXBoGPIpSW2T9V57FSAe/aoMXujNUp4K8nJIsVBWFizN4R8FFG
-	XXL5/5S1+7uYSXvAoro+YRdK8RncqkUWEPR+JVxOQsZ+zaaUm8uIMAZtftnBVLXXCFtD5z6mr/d
-	33zAMh3CoAdYmB8/TD81/57ojol37M57Tt9Bm7FAN43BqvVaxFg39fhCL6rS3eouAVxb2+OHMSG
-	S656+l8jqhEwCvzFxBVehmSPLG0bev1W1/q4+0UWlvNsp/xH9YFZD4FnrfmaQhDBrBucQ/Ii8fy
-	uYxKxHMk2Q1LgMYIe4tOH0ITfAIhrc1MQzykqv+W+g==
-X-Google-Smtp-Source: AGHT+IFpzhH7we9mCqBfCUsctssS5nONXoCjPZ/7FgmxJonyD7BwRkw3BofxA9xAGU2028ValekKbA==
-X-Received: by 2002:a17:90b:4a81:b0:2ff:6fc3:79c4 with SMTP id 98e67ed59e1d1-3072ba14733mr497341a91.27.1744232300372;
-        Wed, 09 Apr 2025 13:58:20 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:cff4:8871:54bb:4c97])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306df08f63bsm1990940a91.24.2025.04.09.13.58.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 13:58:19 -0700 (PDT)
-Date: Wed, 9 Apr 2025 13:58:16 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Kamel Bouhara <kamel.bouhara@bootlin.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
-	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	andriy.shevchenko@intel.com, =?utf-8?Q?Gr=C3=A9gory?= Clement <gregory.clement@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v6 01/12] dt-bindings: mfd: gpio: Add MAX7360
-Message-ID: <triuq2rqofk4psfauemu6uikizvphnqg7om5x4b6sjc3tjg2a4@5fvv5l4kollo>
-References: <20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com>
- <20250409-mdb-max7360-support-v6-1-7a2535876e39@bootlin.com>
+	s=arc-20240116; t=1744232411; c=relaxed/simple;
+	bh=pslv7qHnpWWSRmp/rvaXp+wXQ6pjICYbC6fyVrMo6QY=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=lHjvXblVl+VnnYle+ZPBP1oKrwMOnmqeVJAFp3qPuC7vT35/fPvqec3fMIe2UtRvGtgp0LcW5srEsEQ2XemRjtr6E5YuEilIWWNY9og7Ob/Ashsinf2XQqwJqf/PDgwuico/efut67RqfZQDAwwDWMEkMqFnUfYhJuQVrF15bn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+	id 962DB92009C; Wed,  9 Apr 2025 22:59:59 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by angie.orcam.me.uk (Postfix) with ESMTP id 8EF1392009B;
+	Wed,  9 Apr 2025 21:59:59 +0100 (BST)
+Date: Wed, 9 Apr 2025 21:59:59 +0100 (BST)
+From: "Maciej W. Rozycki" <macro@orcam.me.uk>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+cc: Arnd Bergmann <arnd@arndb.de>, 
+    Linus Torvalds <torvalds@linux-foundation.org>, 
+    Richard Henderson <richard.henderson@linaro.org>, 
+    Ivan Kokshaysky <ink@unseen.parts>, Matt Turner <mattst88@gmail.com>, 
+    John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+    Magnus Lindholm <linmag7@gmail.com>, 
+    "Paul E. McKenney" <paulmck@kernel.org>, 
+    Alexander Viro <viro@zeniv.linux.org.uk>, linux-alpha@vger.kernel.org, 
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Alpha: Emulate unaligned LDx_L/STx_C for data
+ consistency
+In-Reply-To: <87v7rd8h99.fsf@email.froward.int.ebiederm.org>
+Message-ID: <alpine.DEB.2.21.2504092019200.18515@angie.orcam.me.uk>
+References: <alpine.DEB.2.21.2502181912230.65342@angie.orcam.me.uk> <CAHk-=wgBZk1FFOyiTKLnz4jNe-eZtYsrztcYRRXZZxF8evk1Rw@mail.gmail.com> <alpine.DEB.2.21.2502202106200.65342@angie.orcam.me.uk> <alpine.DEB.2.21.2504072042350.29566@angie.orcam.me.uk>
+ <CAHk-=whKa0-myNkpq2aMCQ=o7S+Sqj--TQEM8wfC9b2C04jidA@mail.gmail.com> <e1356a60-525b-4405-ad5b-eb6e93de8fef@app.fastmail.com> <87v7rd8h99.fsf@email.froward.int.ebiederm.org>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250409-mdb-max7360-support-v6-1-7a2535876e39@bootlin.com>
+Content-Type: text/plain; charset=US-ASCII
 
-Hi Mathieu,
+On Wed, 9 Apr 2025, Eric W. Biederman wrote:
 
-On Wed, Apr 09, 2025 at 04:55:48PM +0200, Mathieu Dubois-Briand wrote:
-> Add device tree bindings for Maxim Integrated MAX7360 device with
-> support for keypad, rotary, gpios and pwm functionalities.
+> >> So unless you actually *see* the unaligned faults, I really think you
+> >> shouldn't emulate them.
+> >>
+> >> And I'd like to know where they are if you do see them
 > 
-> +
-> +    i2c {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      io-expander@38 {
-> +        compatible = "maxim,max7360";
-> +        reg = <0x38>;
-> +
-> +        interrupt-parent = <&gpio1>;
-> +        interrupts = <23 IRQ_TYPE_LEVEL_LOW>,
-> +                     <24 IRQ_TYPE_LEVEL_LOW>;
-> +        interrupt-names = "inti", "intk";
-> +
-> +        keypad,num-rows = <8>;
-> +        keypad,num-columns = <4>;
-> +        linux,keymap = <
-> +          MATRIX_KEY(0x00, 0x00, KEY_F5)
-> +          MATRIX_KEY(0x01, 0x00, KEY_F4)
-> +          MATRIX_KEY(0x02, 0x01, KEY_F6)
-> +          >;
-> +        keypad-debounce-delay-ms = <10>;
-> +        autorepeat;
-> +
-> +        rotary-debounce-delay-ms = <2>;
-> +        linux,axis = <0>; /* REL_X */
+> I was nerd sniped by this so I took a look.
+> 
+> I have a distinct memory that even the ipv4 stack can generate unaligned
+> loads.  Looking at the code in net/ipv4/ip_input.c:ip_rcv_finish_core
+> there are several unprotected accesses to iph->daddr.
+> 
+> Which means that if the lower layers ever give something that is not 4
+> byte aligned for ipv4 just reading the destination address will be an
+> unaligned read.
+> 
+> There are similar unprotected accesses to the ipv6 destination address
+> but it is declared as an array of bytes.  So that address can not
+> be misaligned.
+> 
+> There is a theoretical path through 802.2 that adds a 3 byte sap
+> header that could cause problems.  We have LLC_SAP_IP defined
+> but I don't see anything calling register_8022_client that would
+> be needed to hook that up to the ipv4 stack.
+> 
+> As long as the individual ethernet drivers have the hardware deliver
+> packets 2 bytes into an aligned packet buffer the 14 byte ethernet
+> header will end on a 16 byte aligned location, I don't think there
+> is a way to trigger unaligned behavior with ipv4 or ipv6.
+> 
+> Hmm.  Looking appletalk appears to be built on top of SNAP.
+> So after the ethernet header processing the code goes through
+> net/llc/llc_input.c:llc_rcv and then net/802/snap_rcv before
+> reaching any of the appletalk protocols.
+> 
+> I think the common case for llc would be 3 bytes + 5 bytes for snap,
+> for 8 bytes in the common case.  But the code seems to be reading
+> 4 or 5 bytes for llc so I am confused.  In either case it definitely
+> appears there are cases where the ethernet headers before appletalk
+> can be an odd number of bytes which has the possibility of unaligning
+> everything.
+> 
+> Both of the appletalk protocols appear to make unguarded 16bit reads
+> from their headers.  So having a buffer that is only 1 byte aligned
+> looks like it will definitely be a problem.
 
-Probably this has been already discussed, but shouldn't keyboard and
-rotary encoder be represented as sub-nodes here, similar to how GPIO
-block is represented?
+ Thank you for your analysis, really insightful.
 
-Thanks.
+> > FWIW, all the major architectures that have variants without
+> > unaligned load/store (arm32, mips, ppc, riscv) trap and emulate
+> > them for both user and kernel access for normal memory, but
+> > they don't emulate it for atomic ll/sc type instructions.
+> > These instructions also trap and kill the task on the
+> > architectures that can do hardware unaligned access (x86
+> > cmpxchg8b being a notable exception).
 
--- 
-Dmitry
+ But all those architectures have 1-byte and 2-byte memory access machine 
+instructions as well, and consequently none requires an RMW sequence to 
+update such data quantities that implies the data consistency issue that 
+we have on non-BWX Alpha.
+
+> I don't see anything that would get atomics involved in the networking
+> stack.  No READ_ONCE on packet data or anything like that.  I believe
+> that is fairly fundamental as well.  Whatever is processing a packet is
+> the only code processing that packet.
+> 
+> So I would be very surprised if the kernel needed emulation of any
+> atomics, just emulation of normal unaligned reads.  I haven't looked to
+> see if the transmission paths do things that will result in unaligned
+> writes.
+
+ The problem we have on the non-BWX Alpha target is that hardware has no 
+memory access instructions narrower than 4 bytes.  Consequently to write a 
+1- or 2-byte quantity an RMW instruction sequence is required, in the way 
+of reading the whole 4-byte quantity, inserting the bytes to be modified, 
+and writing the whole 4-byte quantity back to memory.  However such a 
+sequence is not safe for concurrent writes, as described below.
+
+ A pair of concurrent RMW sequences targetting the same part of an aligned 
+4-byte data quantity is not an issue: it's just an execution race and 
+software may be prepared for it (or otherwise either prevent the race via 
+a mutex or alternatively use an atomic data type along with the associated 
+accessors, which will move data locations in memory suitably apart).
+
+ The issue is a pair of concurrent RMW sequences targetting different 
+parts of the same aligned 4-byte data quantity: software can legitimately 
+expect that writes to disjoint memory locations (e.g. adjacent struct 
+members, except for bit-fields) won't affect each other.  But here where a 
+pair of such RMW sequences runs interleaved, the later write to one 
+location will clobber the value written previously to the other.  So we 
+have a data race.  Note that no atomicity is concerned here, we are 
+talking plain memory writes, such as with ordinary assignments to regular 
+variables in C code.
+
+ So I have come up with a solution where such RMW sequences are actually 
+emitted by GCC as an LDL_L/STL_C atomic access loop which ensures that no 
+intervening write has changed the aligned 4-byte data quantity containing 
+the 1- or 2-byte quantity accessed.  This guarantees consistency of the 
+part(s) of the aligned 4-byte data quantity *outside* the 1- or 2-byte 
+quantity written.  Atomicity is guaranteed by hardware as a side effect, 
+but not a part of this Alpha/Linux psABI extension (i.e. not in our 
+contract).
+
+ For known-unaligned 2-byte quantities (such as packed structure members) 
+the compiler knows that they may span 2 aligned 4-byte data quantities and 
+produces two LDL_L/STL_C loops with suitable address adjustments and data 
+masking.  This still guarantess consistency of data *outside* the 2-byte 
+quantity written.  No atomicity is guaranteed, because parts of the 2-byte 
+quantity may be stored by pieces (if the 2-byte quantity is in the middle 
+of an aligned 4-byte quantity, then it'll be written twice).
+
+ The problem is with the case where the compiler has been told to produce 
+code to write an aligned 2-byte quantity, but at run time it turns out 
+unaligned.  Now we have to emulate the LDL_L and STL_C instructions of the 
+atomic access loop or otherwise the code will crash.
+
+ My approach for this scenario is simple: LDL_L emulation remembers the 
+address accessed and data present in the 2 aligned 4-byte data quantities 
+spanned, and STL_C emulation returns failure in the case of an address 
+mismatch and otherwise uses two LDL_L/STL_C loops to load the the 2 
+aligned 4-byte data quantities by piece, compare each with data retrieved 
+previously at LDL_L emulation time, returning failure in the case of a 
+mismatch, insert the requested value and then store the resulting 
+quantity.  Again this guarantees consistency of the parts of the 2 aligned 
+4-byte data quantities *outside* the unaligned 2-byte quantity written.  
+And again, no atomicity is guaranteed.
+
+ So while there are no atomic operations in our code at the C language 
+level, we get them sneaked in by the compiler under our feet to solve the 
+data consistency issue.  Now if we can ascertain the code paths concerned 
+won't ever exercise concurrency, we could tell the compiler not to produce 
+these atomics for 1-byte and 2-byte accesses, on a file-by-file or even 
+function-by-function basis, but it seems to me like the very maintenance 
+effort we want to avoid for a legacy platform.  Whereas if we build the 
+kernel with the atomics enabled universally, we won't have to be bothered 
+with analysing individual cases (at performance cost, but that's assumed).
+
+ I've left 8-byte data quantities out for clarity from the consideration 
+above; they're used by the compiler as suitable and handled accordingly.
+
+ Let me know if you find anything here unclear.
+
+  Maciej
