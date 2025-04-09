@@ -1,101 +1,314 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06410193079;
-	Wed,  9 Apr 2025 02:25:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744165551; cv=pass; b=H5abUYBoYbRZee55/6IsiQV2aYmMjgBrs8oe4QA5UjiSN7ahQxfoWD3puoNp8tGNeD3eCSYt2eCRl84MCRugVwtoNJAI/5yZYrAVyoNqAkpp6ThE1YJ0oSdJbKQCSluqVAl3R7MXq4gjYxeybpeqjVcCubBMzo22ZJy4bJgFDCo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD1A86347;
+	Wed,  9 Apr 2025 02:25:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744165551; cv=none; b=dHPdI0zGMp1K5tXXT1oX9vz2AWub8C/I0BKNQeicTHRhDhZetlISllwPpQgQJi3HeBkeD6zPZleDnkUOXZEp+1jodfQzJzOWIwN603zFYbSZVwFQtg0p0P1RRZMiKgTe9/J/511bXMdPtNlhLT/El+kjT+8b/A07Y+GGOGErxCQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744165551; c=relaxed/simple;
-	bh=pXJWppTx1qdMzBMYsUHzNiBfUBrIPFVR39HuYWFXJzY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hO+MHOCkiKW08OXf5Sy9rSW4e8DyfFTooORxl4UaVBhckJXkW0n/BHBUDQVsjNRmg8rJ6lI9s+HO0tWDYJEc/rKIGh5G09Qq69ffSmcji5T4qZARsSCT6UM0yQrQDReAy9QGHX7cO6hVGld/Y1g9niZlwcaM52NXgZmSYxID7d4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=BTNl+YNP; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	bh=ikSFbdx1k6x9wOlRvuqes78WmgYkyOgciTGApzavE3Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CkClG5e7nFcXme1jl6uyVbHHWLViTGzia9jrCHQPdKcs1Tllvt2Rtg3AdoPPedjD5XlMdnCJF2rEVTNJ/MkIlIJxvbhKxhool6JyKfJnvcnholnlVblJFoc9K00OD5xwCcNJ/CDkVPEsEqxWlqo8KHlVcRwt9vxmXzkn7UkJPEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XedzIwDv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="BTNl+YNP"
-ARC-Seal: i=1; a=rsa-sha256; t=1744165538; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=JMPhTC+BzCxDFPJh6PB7IrEVhcWAh/FpoEs4/OgEFwc49FGByWWuPQA7fHOOvCLY8WXkDL4JZ//3BC5pkpRHq4A2ht3n6fpCMfnPlOrNDYHuhgVWC1+u25+l6wb0guGAiFMSR9GPH16obaR+4A6Y2iF00FxakaNhXSSahJjnYtk=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1744165538; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=c2Q/LbaNcF/uKuVERnCxl3mlpMxwx5vDNL9Cl5zk4kQ=; 
-	b=a5odCl3NzNvH94JBpYlRdulCPkuHshtfF0/YmNrfrcJuzuswWm+R/Xw/FNrRShcj17Z5RAfKqiYfzAozhswsBZd5PBr3rui+GRXlRdQGJV5vSpBf73FM9K4lw5W5PTbMvOs5q+Rk0bR/MF0K6A2lTYRUmaCB7vcKUuQ9H5/IHMA=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744165538;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
-	bh=c2Q/LbaNcF/uKuVERnCxl3mlpMxwx5vDNL9Cl5zk4kQ=;
-	b=BTNl+YNPQrtOFM6JsqD1xzbOhLl2mHFKIlVSnqlggpME1t8jE2Dx8pcZ9KxZ2Gdj
-	UhKn/bsWW6c3F1LBpK/z3Q+19ceWNBIYOS09oNCoiVikbST3HkoY9QAp8SqTKj9eBnP
-	fDLr5ilaZ5ptzkS5iIxND/nNIvdseTyqffD3/KwU=
-Received: by mx.zohomail.com with SMTPS id 1744165536186156.31004439157994;
-	Tue, 8 Apr 2025 19:25:36 -0700 (PDT)
-From: Li Ming <ming.li@zohomail.com>
-To: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Li Ming <ming.li@zohomail.com>
-Subject: [PATCH v2 1/1] cxl/feature: Update out_len in set feature failure case
-Date: Wed,  9 Apr 2025 10:25:21 +0800
-Message-Id: <20250409022521.510146-1-ming.li@zohomail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XedzIwDv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E526DC4CEE5;
+	Wed,  9 Apr 2025 02:25:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744165551;
+	bh=ikSFbdx1k6x9wOlRvuqes78WmgYkyOgciTGApzavE3Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XedzIwDv4UzELyb5Fn3/pbZYtjAHKP7t2DuzgLCo6ng1NaktkMFdPNSbP7aT9mlAd
+	 x1YWcm1xAn0R9noKjMdM2gAIqXWwyvZjHcu7Gg7XGlXbCQjQ/R49lp7/XXQZ3dvjQp
+	 k5YgyddMkYXFu8LrC1AdueklQ74MIn2+Xdxvm+uGX6dlkydnaoGThypNikRrrOgJAA
+	 iREIpgzoi4NkU8k89GKl4WMGQk17eBvxDupD5+TZC8YdLF3j2PuAhG6uRnQBjqTxqJ
+	 B8/J/bWha4NBKvQwr2X3ISYH3Bj6TOR8gnMFlLLw9gBigAduttoX4p7SzUzeDg40Ad
+	 //pLgleiwESwQ==
+Date: Tue, 8 Apr 2025 19:25:50 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: John Garry <john.g.garry@oracle.com>
+Cc: brauner@kernel.org, hch@lst.de, viro@zeniv.linux.org.uk, jack@suse.cz,
+	cem@kernel.org, linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
+	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
+	linux-block@vger.kernel.org, catherine.hoang@oracle.com
+Subject: [PATCH v6.1 RFC 02.1/12] xfs: add helpers to compute transaction
+ reservation for finishing intent items
+Message-ID: <20250409022550.GL6283@frogsfrogsfrogs>
+References: <20250408104209.1852036-1-john.g.garry@oracle.com>
+ <20250408104209.1852036-3-john.g.garry@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Feedback-ID: rr080112270e58f87a54bd8b96edbc74880000dd8eeec944b7144b8d5f4089687c9f5eb2537c27b2a2161ce1:zu080112276d123e7c2186ffe047fd6d1800006dada48baddf763acaa0733b60fa564208b0cbc03cc035e46e:rf0801122d8d790992f2626579a09f1f650000061ad1921e6dafea777d50a6c7037e3709db4bd6d21e09babf597b1bae2e7f:ZohoMail
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250408104209.1852036-3-john.g.garry@oracle.com>
 
-CXL subsystem supports userspace to configure features via fwctl
-interface, it will configure features by using Set Feature command.
-Whatever Set Feature succeeds or fails, CXL driver always needs to
-return a structure fwctl_rpc_cxl_out to caller, and returned size is
-updated in a out_len parameter. The out_len should be updated not only
-when the set feature succeeds, but also when the set feature fails.
+From: Darrick J. Wong <djwong@kernel.org>
 
-Signed-off-by: Li Ming <ming.li@zohomail.com>
+In the transaction reservation code, hoist the logic that computes the
+reservation needed to finish one log intent item into separate helper
+functions.  These will be used in subsequent patches to estimate the
+number of blocks that an online repair can commit to reaping in the same
+transaction as the change committing the new data structure.
+
+Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
 ---
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8 v6.15-rc1
+ fs/xfs/libxfs/xfs_trans_resv.h |   18 ++++
+ fs/xfs/libxfs/xfs_trans_resv.c |  165 ++++++++++++++++++++++++++++++++--------
+ 2 files changed, 152 insertions(+), 31 deletions(-)
 
-v2:
-- Adjust changelog
----
- drivers/cxl/core/features.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
-index f4daefe3180e..066dfc29a3dd 100644
---- a/drivers/cxl/core/features.c
-+++ b/drivers/cxl/core/features.c
-@@ -528,13 +528,13 @@ static void *cxlctl_set_feature(struct cxl_features_state *cxlfs,
- 	rc = cxl_set_feature(cxl_mbox, &feat_in->uuid,
- 			     feat_in->version, feat_in->feat_data,
- 			     data_size, flags, offset, &return_code);
-+	*out_len = sizeof(*rpc_out);
- 	if (rc) {
- 		rpc_out->retval = return_code;
- 		return no_free_ptr(rpc_out);
- 	}
+diff --git a/fs/xfs/libxfs/xfs_trans_resv.h b/fs/xfs/libxfs/xfs_trans_resv.h
+index 0554b9d775d269..d9d0032cbbc5d4 100644
+--- a/fs/xfs/libxfs/xfs_trans_resv.h
++++ b/fs/xfs/libxfs/xfs_trans_resv.h
+@@ -98,6 +98,24 @@ struct xfs_trans_resv {
+ void xfs_trans_resv_calc(struct xfs_mount *mp, struct xfs_trans_resv *resp);
+ uint xfs_allocfree_block_count(struct xfs_mount *mp, uint num_ops);
  
- 	rpc_out->retval = CXL_MBOX_CMD_RC_SUCCESS;
--	*out_len = sizeof(*rpc_out);
++unsigned int xfs_calc_finish_bui_reservation(struct xfs_mount *mp,
++		unsigned int nr_ops);
++
++unsigned int xfs_calc_finish_efi_reservation(struct xfs_mount *mp,
++		unsigned int nr_ops);
++unsigned int xfs_calc_finish_rt_efi_reservation(struct xfs_mount *mp,
++		unsigned int nr_ops);
++
++unsigned int xfs_calc_finish_rui_reservation(struct xfs_mount *mp,
++		unsigned int nr_ops);
++unsigned int xfs_calc_finish_rt_rui_reservation(struct xfs_mount *mp,
++		unsigned int nr_ops);
++
++unsigned int xfs_calc_finish_cui_reservation(struct xfs_mount *mp,
++		unsigned int nr_ops);
++unsigned int xfs_calc_finish_rt_cui_reservation(struct xfs_mount *mp,
++		unsigned int nr_ops);
++
+ unsigned int xfs_calc_itruncate_reservation_minlogsize(struct xfs_mount *mp);
+ unsigned int xfs_calc_write_reservation_minlogsize(struct xfs_mount *mp);
+ unsigned int xfs_calc_qm_dqalloc_reservation_minlogsize(struct xfs_mount *mp);
+diff --git a/fs/xfs/libxfs/xfs_trans_resv.c b/fs/xfs/libxfs/xfs_trans_resv.c
+index 13d00c7166e178..580d00ae28573d 100644
+--- a/fs/xfs/libxfs/xfs_trans_resv.c
++++ b/fs/xfs/libxfs/xfs_trans_resv.c
+@@ -263,6 +263,42 @@ xfs_rtalloc_block_count(
+  * register overflow from temporaries in the calculations.
+  */
  
- 	return no_free_ptr(rpc_out);
++/*
++ * Finishing a data device refcount updates (t1):
++ *    the agfs of the ags containing the blocks: nr_ops * sector size
++ *    the refcount btrees: nr_ops * 1 trees * (2 * max depth - 1) * block size
++ */
++inline unsigned int
++xfs_calc_finish_cui_reservation(
++	struct xfs_mount	*mp,
++	unsigned int		nr_ops)
++{
++	if (!xfs_has_reflink(mp))
++		return 0;
++
++	return xfs_calc_buf_res(nr_ops, mp->m_sb.sb_sectsize) +
++	       xfs_calc_buf_res(xfs_refcountbt_block_count(mp, nr_ops),
++			       mp->m_sb.sb_blocksize);
++}
++
++/*
++ * Realtime refcount updates (t2);
++ *    the rt refcount inode
++ *    the rtrefcount btrees: nr_ops * 1 trees * (2 * max depth - 1) * block size
++ */
++inline unsigned int
++xfs_calc_finish_rt_cui_reservation(
++	struct xfs_mount	*mp,
++	unsigned int		nr_ops)
++{
++	if (!xfs_has_rtreflink(mp))
++		return 0;
++
++	return xfs_calc_inode_res(mp, 1) +
++	       xfs_calc_buf_res(xfs_rtrefcountbt_block_count(mp, nr_ops),
++				     mp->m_sb.sb_blocksize);
++}
++
+ /*
+  * Compute the log reservation required to handle the refcount update
+  * transaction.  Refcount updates are always done via deferred log items.
+@@ -280,19 +316,10 @@ xfs_calc_refcountbt_reservation(
+ 	struct xfs_mount	*mp,
+ 	unsigned int		nr_ops)
+ {
+-	unsigned int		blksz = XFS_FSB_TO_B(mp, 1);
+-	unsigned int		t1, t2 = 0;
++	unsigned int		t1, t2;
+ 
+-	if (!xfs_has_reflink(mp))
+-		return 0;
+-
+-	t1 = xfs_calc_buf_res(nr_ops, mp->m_sb.sb_sectsize) +
+-	     xfs_calc_buf_res(xfs_refcountbt_block_count(mp, nr_ops), blksz);
+-
+-	if (xfs_has_realtime(mp))
+-		t2 = xfs_calc_inode_res(mp, 1) +
+-		     xfs_calc_buf_res(xfs_rtrefcountbt_block_count(mp, nr_ops),
+-				     blksz);
++	t1 = xfs_calc_finish_cui_reservation(mp, nr_ops);
++	t2 = xfs_calc_finish_rt_cui_reservation(mp, nr_ops);
+ 
+ 	return max(t1, t2);
  }
--- 
-2.34.1
-
+@@ -379,6 +406,96 @@ xfs_calc_write_reservation_minlogsize(
+ 	return xfs_calc_write_reservation(mp, true);
+ }
+ 
++/*
++ * Finishing an EFI can free the blocks and bmap blocks (t2):
++ *    the agf for each of the ags: nr * sector size
++ *    the agfl for each of the ags: nr * sector size
++ *    the super block to reflect the freed blocks: sector size
++ *    worst case split in allocation btrees per extent assuming nr extents:
++ *		nr exts * 2 trees * (2 * max depth - 1) * block size
++ */
++inline unsigned int
++xfs_calc_finish_efi_reservation(
++	struct xfs_mount	*mp,
++	unsigned int		nr)
++{
++	return xfs_calc_buf_res((2 * nr) + 1, mp->m_sb.sb_sectsize) +
++	       xfs_calc_buf_res(xfs_allocfree_block_count(mp, nr),
++			       mp->m_sb.sb_blocksize);
++}
++
++/*
++ * Or, if it's a realtime file (t3):
++ *    the agf for each of the ags: 2 * sector size
++ *    the agfl for each of the ags: 2 * sector size
++ *    the super block to reflect the freed blocks: sector size
++ *    the realtime bitmap:
++ *		2 exts * ((XFS_BMBT_MAX_EXTLEN / rtextsize) / NBBY) bytes
++ *    the realtime summary: 2 exts * 1 block
++ *    worst case split in allocation btrees per extent assuming 2 extents:
++ *		2 exts * 2 trees * (2 * max depth - 1) * block size
++ */
++inline unsigned int
++xfs_calc_finish_rt_efi_reservation(
++	struct xfs_mount	*mp,
++	unsigned int		nr)
++{
++	if (!xfs_has_realtime(mp))
++		return 0;
++
++	return xfs_calc_buf_res((2 * nr) + 1, mp->m_sb.sb_sectsize) +
++	       xfs_calc_buf_res(xfs_rtalloc_block_count(mp, nr),
++			       mp->m_sb.sb_blocksize) +
++	       xfs_calc_buf_res(xfs_allocfree_block_count(mp, nr),
++			       mp->m_sb.sb_blocksize);
++}
++
++/*
++ * Finishing an RUI is the same as an EFI.  We can split the rmap btree twice
++ * on each end of the record, and that can cause the AGFL to be refilled or
++ * emptied out.
++ */
++inline unsigned int
++xfs_calc_finish_rui_reservation(
++	struct xfs_mount	*mp,
++	unsigned int		nr)
++{
++	if (!xfs_has_rmapbt(mp))
++		return 0;
++	return xfs_calc_finish_efi_reservation(mp, nr);
++}
++
++/*
++ * Finishing an RUI is the same as an EFI.  We can split the rmap btree twice
++ * on each end of the record, and that can cause the AGFL to be refilled or
++ * emptied out.
++ */
++inline unsigned int
++xfs_calc_finish_rt_rui_reservation(
++	struct xfs_mount	*mp,
++	unsigned int		nr)
++{
++	if (!xfs_has_rtrmapbt(mp))
++		return 0;
++	return xfs_calc_finish_rt_efi_reservation(mp, nr);
++}
++
++/*
++ * In finishing a BUI, we can modify:
++ *    the inode being truncated: inode size
++ *    dquots
++ *    the inode's bmap btree: (max depth + 1) * block size
++ */
++inline unsigned int
++xfs_calc_finish_bui_reservation(
++	struct xfs_mount	*mp,
++	unsigned int		nr)
++{
++	return xfs_calc_inode_res(mp, 1) + XFS_DQUOT_LOGRES +
++	       xfs_calc_buf_res(XFS_BM_MAXLEVELS(mp, XFS_DATA_FORK) + 1,
++			       mp->m_sb.sb_blocksize);
++}
++
+ /*
+  * In truncating a file we free up to two extents at once.  We can modify (t1):
+  *    the inode being truncated: inode size
+@@ -411,16 +528,8 @@ xfs_calc_itruncate_reservation(
+ 	t1 = xfs_calc_inode_res(mp, 1) +
+ 	     xfs_calc_buf_res(XFS_BM_MAXLEVELS(mp, XFS_DATA_FORK) + 1, blksz);
+ 
+-	t2 = xfs_calc_buf_res(9, mp->m_sb.sb_sectsize) +
+-	     xfs_calc_buf_res(xfs_allocfree_block_count(mp, 4), blksz);
+-
+-	if (xfs_has_realtime(mp)) {
+-		t3 = xfs_calc_buf_res(5, mp->m_sb.sb_sectsize) +
+-		     xfs_calc_buf_res(xfs_rtalloc_block_count(mp, 2), blksz) +
+-		     xfs_calc_buf_res(xfs_allocfree_block_count(mp, 2), blksz);
+-	} else {
+-		t3 = 0;
+-	}
++	t2 = xfs_calc_finish_efi_reservation(mp, 4);
++	t3 = xfs_calc_finish_rt_efi_reservation(mp, 2);
+ 
+ 	/*
+ 	 * In the early days of reflink, we included enough reservation to log
+@@ -501,9 +610,7 @@ xfs_calc_rename_reservation(
+ 	     xfs_calc_buf_res(2 * XFS_DIROP_LOG_COUNT(mp),
+ 			XFS_FSB_TO_B(mp, 1));
+ 
+-	t2 = xfs_calc_buf_res(7, mp->m_sb.sb_sectsize) +
+-	     xfs_calc_buf_res(xfs_allocfree_block_count(mp, 3),
+-			XFS_FSB_TO_B(mp, 1));
++	t2 = xfs_calc_finish_efi_reservation(mp, 3);
+ 
+ 	if (xfs_has_parent(mp)) {
+ 		unsigned int	rename_overhead, exchange_overhead;
+@@ -611,9 +718,7 @@ xfs_calc_link_reservation(
+ 	overhead += xfs_calc_iunlink_remove_reservation(mp);
+ 	t1 = xfs_calc_inode_res(mp, 2) +
+ 	     xfs_calc_buf_res(XFS_DIROP_LOG_COUNT(mp), XFS_FSB_TO_B(mp, 1));
+-	t2 = xfs_calc_buf_res(3, mp->m_sb.sb_sectsize) +
+-	     xfs_calc_buf_res(xfs_allocfree_block_count(mp, 1),
+-			      XFS_FSB_TO_B(mp, 1));
++	t2 = xfs_calc_finish_efi_reservation(mp, 1);
+ 
+ 	if (xfs_has_parent(mp)) {
+ 		t3 = resp->tr_attrsetm.tr_logres;
+@@ -676,9 +781,7 @@ xfs_calc_remove_reservation(
+ 
+ 	t1 = xfs_calc_inode_res(mp, 2) +
+ 	     xfs_calc_buf_res(XFS_DIROP_LOG_COUNT(mp), XFS_FSB_TO_B(mp, 1));
+-	t2 = xfs_calc_buf_res(4, mp->m_sb.sb_sectsize) +
+-	     xfs_calc_buf_res(xfs_allocfree_block_count(mp, 2),
+-			      XFS_FSB_TO_B(mp, 1));
++	t2 = xfs_calc_finish_efi_reservation(mp, 2);
+ 
+ 	if (xfs_has_parent(mp)) {
+ 		t3 = resp->tr_attrrm.tr_logres;
