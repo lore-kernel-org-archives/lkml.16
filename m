@@ -1,47 +1,40 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C4142253E4;
-	Wed,  9 Apr 2025 12:01:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21BC945009;
+	Wed,  9 Apr 2025 12:01:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744200071; cv=none; b=lk2hjM6mfbTlC+GtnMG69LpTnPCwiyLDfihkyygYKJI/n+AHKUb8bx1Wsnqhnthluzp5BkZ0DdYlnBzPnEjDnlZvDt/cJTJ6QMeqN2A5lcIvqvytkjww1gwtLNT4trmZV61yWzSk8NXXRMylvqduLiGIwIX9UO1N8flm8TroIoE=
+	t=1744200120; cv=none; b=UDjLX25ZkPKgGk+9AwXk20kweQaqleJCb56Bn7K/TNiA5GKzeWAu0oQfHfrDjK4fBU6/5PH1kDkhBopUr7YnKOc3QGsro6K0MgQCXGZoXMlXtv+LNspl0uwuRYqqQdVUSff2nm8b3/tyf2/bXT4q+ofZZmxFnt3S71Nep9+q0a8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744200071; c=relaxed/simple;
-	bh=pUe0pgLGEmQZd+5lmbVqR6aUjhDeprWINrzKqoVQ5lE=;
+	s=arc-20240116; t=1744200120; c=relaxed/simple;
+	bh=rPUV8FgJegitXiVQUTfiLM1o0/uBOnP4q0gwO7/J0sw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=raT6uBZFdxCGju2e4vBp9NQs3WdUd+rnBoQSx5Mh3uudH5xom2juRu/zalqk2oNn+7fkLx85utm/chMlgnSQ/8qaCOeXh6ogCy6rn9z7+Rr8fYs3RrWvrgM3er7MS5M/1yYQkfDjPcy2OC1yElUl3xJ9cJP5yhiMeTss6Dfx8og=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EE8vaj0Q; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EE8vaj0Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB571C4CEE3;
-	Wed,  9 Apr 2025 12:01:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744200070;
-	bh=pUe0pgLGEmQZd+5lmbVqR6aUjhDeprWINrzKqoVQ5lE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EE8vaj0Q8BG93uovigDIohTc0+GnWrUrajONCFVl3wrw+uJSxBvQ2TErStCi9N5MV
-	 wV3c5OOqaJePYxFBwBMtdHg+riOt0s9QlAwhKQ4LDPh2SUlXoG+a1MtcF8wU4F4Lqf
-	 DjfRcTN6NduWclVyfz19/MPV5TRsdbNRjC4BnFFWdkn54mypNZB+Rw3ITIyv32qt08
-	 0W98szmrLpwFEUtDN1nCZKxeMimIWsKXGyNm6gvEMCKJmC5f5v/8zomx8UgDcye5jj
-	 kqfsc/WjQt0S8NV72HbGzh3neVbhGf7gk1So7a6IHNbVhBy9bq0d8CBXS6+fggKLfH
-	 uZsCm1kR7dezw==
-Date: Wed, 9 Apr 2025 14:01:06 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-efi@vger.kernel.org,
-	x86@kernel.org, linux-kernel@vger.kernel.org,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Dionna Amalie Glaze <dionnaglaze@google.com>,
-	Kevin Loughlin <kevinloughlin@google.com>
-Subject: Re: [PATCH v3 3/7] x86/boot: Move the early GDT/IDT setup code into
- startup/
-Message-ID: <Z_ZhglTgGStO8K5O@gmail.com>
-References: <20250408085254.836788-9-ardb+git@google.com>
- <20250408085254.836788-12-ardb+git@google.com>
- <Z_ZGbVXOTPbGXleS@gmail.com>
- <Z_ZG7pAZavKDgFDK@gmail.com>
- <CAMj1kXHPg7NxFwyT6jNp5FunnGbWRW7Kd2FG5UPntLb-sxB03Q@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=sBpUlTtmYmfY3Rajj0BtMy4P9mzQ9jSjOW/2jT4MeQTI053dBGAsMeG0E5LYaAMk+IdNxp/K2IPcWONXb4YR7JQX+f0NqJZyyWENhCGZk0EGeIx1UZWkneixhVdUl3asvcETmAyL/1M1ihhpBPKPbmEL2Tk+55+ZXdcuMbUfXXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B351715A1;
+	Wed,  9 Apr 2025 05:01:57 -0700 (PDT)
+Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 81AC03F59E;
+	Wed,  9 Apr 2025 05:01:55 -0700 (PDT)
+Date: Wed, 9 Apr 2025 13:01:43 +0100
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: Sudeep Holla <sudeep.holla@arm.com>,
+	Henry Martin <bsdhenrymartin@gmail.com>, arm-scmi@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v2 0/2] cpufreq: scmi/scpi: Fix NULL pointer dereference
+ in get_rate()
+Message-ID: <Z_Zhp38o9KiicPVw@pluto>
+References: <20250408150354.104532-1-bsdhenrymartin@gmail.com>
+ <0558b7f7-8c69-4664-afc6-bae4fdc6f071@web.de>
+ <20250409-merry-gay-lemur-8288cf@sudeepholla>
+ <52aa52a5-7081-41ee-872e-f1728c06daf1@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,52 +44,22 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMj1kXHPg7NxFwyT6jNp5FunnGbWRW7Kd2FG5UPntLb-sxB03Q@mail.gmail.com>
+In-Reply-To: <52aa52a5-7081-41ee-872e-f1728c06daf1@web.de>
 
+On Wed, Apr 09, 2025 at 01:48:33PM +0200, Markus Elfring wrote:
+> >> Can any other summary phrase variants become more desirable accordingly?
 
-* Ard Biesheuvel <ardb@kernel.org> wrote:
+I agree with Sudeep, the above sentence is completely incomprehensible
+to me
 
-> On Wed, 9 Apr 2025 at 12:07, Ingo Molnar <mingo@kernel.org> wrote:
 > >
-> >
-> > * Ingo Molnar <mingo@kernel.org> wrote:
-> >
-> > >
-> > > * Ard Biesheuvel <ardb+git@google.com> wrote:
-> > >
-> > > > From: Ard Biesheuvel <ardb@kernel.org>
-> > > >
-> > > > Move the early GDT/IDT setup code that runs long before the kernel
-> > > > virtual mapping is up into arch/x86/boot/startup/, and build it in a way
-> > > > that ensures that the code tolerates being called from the 1:1 mapping
-> > > > of memory. The code itself is left unchanged by this patch.
-> > > >
-> > > > Also tweak the sed symbol matching pattern in the decompressor to match
-> > > > on lower case 't' or 'b', as these will be emitted by Clang for symbols
-> > > > with hidden linkage.
-> > > >
-> > > > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > > > ---
-> > > >  arch/x86/boot/compressed/Makefile |  2 +-
-> > > >  arch/x86/boot/startup/Makefile    | 15 ++++
-> > > >  arch/x86/boot/startup/gdt_idt.c   | 83 ++++++++++++++++++++
-> > > >  arch/x86/kernel/head64.c          | 73 -----------------
-> > > >  4 files changed, 99 insertions(+), 74 deletions(-)
-> > >
-> > > This causes the following build failure on x86-64-defconfig:
-> > >
-> > >    arch/x86/boot/startup/gdt_idt.c:67:55: error: cast to generic address space pointer from disjoint ‘__seg_gs’ address space pointer [-Werror]
-> >
-> > Caused by the previous patch:
-> >
-> >   x86/asm: Make rip_rel_ptr() usable from fPIC code
-> >
-> 
-> Oops, sorry about that. I saw that error and thought I had fixed it
-> with the (__force void*) cast.
+> > This is meaningless, sorry can't parse. Ignoring it as others in the
+> > community are doing already.
+> Do you care if the term “null pointer dereference” would be used in consistent ways?
+>
 
-NP, caught it early enough.
+...this is more comprehensible, but again I cannot grasp what's yor advice
+specifically on this commit message.
 
 Thanks,
-
-	Ingo
+Cristian
