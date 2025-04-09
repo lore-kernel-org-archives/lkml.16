@@ -1,63 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B21CF268FE7;
-	Wed,  9 Apr 2025 16:19:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05C38266568;
+	Wed,  9 Apr 2025 16:20:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744215586; cv=none; b=dnuCQ5xxKnoq7kMeNQQynTngdASWmfHfPkoW1jMLSHf30TP7tKO8Pvv+F7Y5xX4e+TXRlj9dQQRPdNTgDiBjxmuQc6XDinjjDo/hOhRLJu5gVmc12g67JpuM9K4C6QHM4YrNqyGBye3h7nDwPRMpM5zWQD2ABRWOtyckzzQoPq8=
+	t=1744215601; cv=none; b=liZsAsn4Uxa67WHRNPBmDDBrVGDn+nVQWv7wn2R2Sa3vc45g0hDDgnFF087kp7vHBpgOCJApBJs01SupCB3VrT2MD6dLthOKIUzvUwVYqX/fRMxVZ1E+JS+x6qWZhve6iWuZS5hMUGnvxKuKpjhpoezuDxZGtkJ4D8Yxnt0q53w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744215586; c=relaxed/simple;
-	bh=O547vvi8wN4fNcefZC+j8pm7sBawXkTtl7ULJh5r69Y=;
+	s=arc-20240116; t=1744215601; c=relaxed/simple;
+	bh=K9Fh4c1ptFxtu8YB5uU351deS5benh9uQbou+nvpZL8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f4GxxW1+Eex79vFzKxkIGD3W5HXQnKiIhh0F70Tq/JXetQN/eVSgUCNaSPwaizwWwWCc3lRFTTHCLglFBXoAwYYsPzKoEBYCnBOzMrrDSYXvi/bhnMcPb2mTJ4kfrh1y90wZOOE7a1+Bz/mnoq1P7AU3i2YJ7aglN1uH1KaGkgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VztxvMqX; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=q4ip/WRmD8pRBQNCVyqzVmAdZ7cYoxFgHuBQvFovNy0tXPHlKpS/hWecz+5k+2D7iH+o5IdmTRsmE15yCNeY30zG8Ujc9k0Gx7itfK45gY+ueCGlrUEdq1pmImLl2J/Mey8pOrjYVDJ/0LJKDIRZ8cr8RQ1VGBK5EP0D2+cB41Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hTLMojkk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VztxvMqX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6114CC4CEE7;
-	Wed,  9 Apr 2025 16:19:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hTLMojkk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 708EDC4CEE2;
+	Wed,  9 Apr 2025 16:20:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744215586;
-	bh=O547vvi8wN4fNcefZC+j8pm7sBawXkTtl7ULJh5r69Y=;
+	s=k20201202; t=1744215600;
+	bh=K9Fh4c1ptFxtu8YB5uU351deS5benh9uQbou+nvpZL8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VztxvMqXxrpm841YCPlRs5HxRWtyQCzteRRbsExjaVh5HQZx45QxpYyiLBSJuv3X2
-	 MN7vgPzgclauypOQrUuLMro0cb2A0r82+RdvOdFbdWLfEEJnlIKYXhzyYcrWqjWDQY
-	 Q2bNXiFlR1BufsnZpfyjBbXsf215Q3IWHCFYnUYB2UaCy9B+xsxoGFnRP/J8guSrrR
-	 tE+UzMvqzhuoQsiyE/Fb8/shQw2OD0K6GR+ygi9Kvnxt8ywUgCPvZUdDJ+rdXobs4P
-	 AmIZmTueujQ0kDezDalKcjSW/fDLL+xKB1kEOBg1cCPtZwRGJQ0wI8e45idxGkET1w
-	 JGcNybozD2e9A==
-Date: Wed, 9 Apr 2025 19:19:30 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Pratyush Yadav <ptyadav@amazon.de>,
-	Changyuan Lyu <changyuanl@google.com>, linux-kernel@vger.kernel.org,
-	graf@amazon.com, akpm@linux-foundation.org, luto@kernel.org,
-	anthony.yznaga@oracle.com, arnd@arndb.de, ashish.kalra@amd.com,
-	benh@kernel.crashing.org, bp@alien8.de, catalin.marinas@arm.com,
-	dave.hansen@linux.intel.com, dwmw2@infradead.org,
-	ebiederm@xmission.com, mingo@redhat.com, jgowans@amazon.com,
-	corbet@lwn.net, krzk@kernel.org, mark.rutland@arm.com,
-	pbonzini@redhat.com, pasha.tatashin@soleen.com, hpa@zytor.com,
-	peterz@infradead.org, robh+dt@kernel.org, robh@kernel.org,
-	saravanak@google.com, skinsburskii@linux.microsoft.com,
-	rostedt@goodmis.org, tglx@linutronix.de, thomas.lendacky@amd.com,
-	usama.arif@bytedance.com, will@kernel.org,
-	devicetree@vger.kernel.org, kexec@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-	linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH v5 09/16] kexec: enable KHO support for memory
- preservation
-Message-ID: <Z_aeEn7hKqGOG3Cf@kernel.org>
-References: <Z-_kSXrHWU5Bf3sV@kernel.org>
- <20250404143031.GB1336818@nvidia.com>
- <Z_KnovvW7F2ZyzhX@kernel.org>
- <20250407141626.GB1557073@nvidia.com>
- <Z_P92UCbNCV0TbiA@kernel.org>
- <20250407170305.GI1557073@nvidia.com>
- <Z_Y4k4rDO-BbMjqs@kernel.org>
- <20250409125630.GI1778492@nvidia.com>
- <Z_Z8-BLWMkiWpaDY@kernel.org>
- <20250409153714.GK1778492@nvidia.com>
+	b=hTLMojkkY9qbJ01p7tUhNlkGWC/6IajFrfjhIpsfZGB6ihtlgZ04yi50br+tvURKH
+	 5lW2NIDdHWKhu7LAyTI2ub5LFluyvwTy2LmxfxCwSwLz9BNDeOQEd3wYCM7HnpeLFk
+	 hZP9uIHipg8b/L/KschjLiPN2T3DE0Uo2+46bRhwXbA+dujnys6cD6AfXisqRtbHhg
+	 X7msTqx0aaGwOCiWVWeLERHN+QEakG0W3kOuLI9bFO72icJU01cc5Ru3sX8YmpkwVG
+	 VDBMJZn6981OiTJnkEa1Q2ausHsjq60+lO+mJTHN9AUeGjGGxrZyIKqKG8TDXrLLca
+	 6BWKH/WG7laOg==
+Date: Wed, 9 Apr 2025 09:19:57 -0700
+From: Kees Cook <kees@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	linux-kbuild@vger.kernel.org, linux-hardening@vger.kernel.org,
+	kasan-dev@googlegroups.com, Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH] gcc-plugins: Remove SANCOV plugin
+Message-ID: <202504090919.6DE21CFA7A@keescook>
+References: <20250409160251.work.914-kees@kernel.org>
+ <32bb421a-1a9e-40eb-9318-d8ca1a0f407f@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,67 +51,47 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250409153714.GK1778492@nvidia.com>
+In-Reply-To: <32bb421a-1a9e-40eb-9318-d8ca1a0f407f@app.fastmail.com>
 
-On Wed, Apr 09, 2025 at 12:37:14PM -0300, Jason Gunthorpe wrote:
-> On Wed, Apr 09, 2025 at 04:58:16PM +0300, Mike Rapoport wrote:
-> > >
-> > > I think we still don't really know what will be needed, so I'd stick
-> > > with folio only as that allows building the memfd and a potential slab
-> > > preservation system.
+On Wed, Apr 09, 2025 at 06:16:58PM +0200, Arnd Bergmann wrote:
+> On Wed, Apr 9, 2025, at 18:02, Kees Cook wrote:
+> > There are very few users of this plugin[1], and since it's features
+> > are available in GCC 6 and later (and Clang), users can update their
+> > compilers if they need support on newer kernels.
+> >
+> > Suggested-by: Arnd Bergmann <arnd@arndb.de>
+> > Link: 
+> > https://lore.kernel.org/all/08393aa3-05a3-4e3f-8004-f374a3ec4b7e@app.fastmail.com/ 
+> > [1]
+> > Signed-off-by: Kees Cook <kees@kernel.org>
+> >
+> > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> > index 1af972a92d06..e7347419ffc5 100644
+> > --- a/lib/Kconfig.debug
+> > +++ b/lib/Kconfig.debug
+> > @@ -2135,15 +2135,13 @@ config ARCH_HAS_KCOV
+> >  config CC_HAS_SANCOV_TRACE_PC
+> >  	def_bool $(cc-option,-fsanitize-coverage=trace-pc)
 > > 
-> > void * seems to me much more reasonable than folio one as the starting
-> > point because it allows preserving folios with the right order but it's not
-> > limited to it. 
 > 
-> It would just call kho_preserve_folio() under the covers though.
-
-How that will work for memblock and 1G pages?
- 
-> > I don't mind having kho_preserve_folio() from day 1 and even stretching the
-> > use case we have right now to use it to preserve FDT memory.
-> > 
-> > But kho_preserve_folio() does not make sense for reserve_mem and it won't
-> > make sense for vmalloc.
+> My version removed CC_HAS_SANCOV_TRACE_PC as well, as I planned
+> to have this on top of my patch to require gcc-8.1 as the
+> minimum version.
 > 
-> It does for vmalloc too, just stop thinking about it as a
-> folio-for-pagecache and instead as an arbitary order handle to buddy
-> allocator memory that will someday be changed to a memdesc :|
-
-But we have memdesc today, it's struct page. It will be shrinked and maybe
-renamed, it will contain a pointer rather than data, but that's what basic
-memdesc is.
-And when the data structure that memdesc points to will be allocated
-separately folios won't make sense for order-0 allocations.
- 
-> > The weird games slab does with casting back and forth to folio also seem to
-> > me like transitional and there won't be that folios in slab later.
+> >  config KCOV
+> >  	bool "Code coverage for fuzzing"
+> >  	depends on ARCH_HAS_KCOV
+> > -	depends on CC_HAS_SANCOV_TRACE_PC || GCC_PLUGINS
+> > +	depends on CC_HAS_SANCOV_TRACE_PC
 > 
-> Yes transitional, but we are at the transitional point and KHO should
-> fit in.
+> So this dependency would also disappear. I think either way is fine.
 > 
-> The lowest allocator primitive returns folios, which can represent any
-> order, and the caller casts to their own memdesc.
+> The rest of the patch is again identical to my version.
 
-The lowest allocation primitive returns pages. 
+Ah! How about you keep the patch as part of your gcc-8.1 clean up, then?
+That seems more clear, etc.
 
-struct folio *__folio_alloc_noprof(gfp_t gfp, unsigned int order, int preferred_nid,
-		nodemask_t *nodemask)
-{
-	struct page *page = __alloc_pages_noprof(gfp | __GFP_COMP, order,
-					preferred_nid, nodemask);
-	return page_rmappable_folio(page);
-}
-EXPORT_SYMBOL(__folio_alloc_noprof);
-
-And page_rmappable_folio() clues about folio-for-pagecache very clearly.
-
-And I don't think folio will be a lowest primitive buddy returns anytime
-soon if ever.
- 
-> Jason
-> 
+-Kees
 
 -- 
-Sincerely yours,
-Mike.
+Kees Cook
