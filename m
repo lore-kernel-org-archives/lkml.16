@@ -1,177 +1,197 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40C0820297E
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 20:52:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F5321DDC04;
+	Wed,  9 Apr 2025 20:54:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744231976; cv=none; b=ud9g0kZlFRpYQDqe43HlGtavkCNVoPjesvrBgF8ripObI7gekqOaYG2wcZ9Yl4KmgU3BzZ80s5AKVEB+9JVLJwJbHEaEU+e6nX4a5+5JTknFf91cqe9h+uDe9srqI+JIOzy+4ev/DNpTJQVNNIduNFW8gfnc3aNcDeWZ0fFv2m8=
+	t=1744232096; cv=none; b=YuelhCaX0DwGjvmcGXlQNiy8tAkFzTUUXhoexWSQjeZzjorXGA0uz8eVlsvpB/sF7wG3w9NtB7yCEmTb2mzXTPsBMpGChrVqea5Hg+mGEIcQ2BuBRNANaTzstTpDoTM+dOzT+0dvGJaO39n9JG8USR19oanZmu7vrVJHArQdBqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744231976; c=relaxed/simple;
-	bh=JvO8apHjlhclIbQx/gRDzmFM+JJoJVlhgncErTZaOgw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=LMwuuWovEVi9sdvIllR2eqvigsVQeVgzUys7JcrmblIlz2ffHwY5PDrvW1kTN5Ac3GBOEKsbEU9mLMzfjWuHqlMMZICYhdrEgK1ZTmD8rZC4Gfw1gYfzto8j/cH3bmgQ8d2UL9wgR80zziGP7mfwWEhAbirffAtw57vcEl1HFaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ERMDXbJ3; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744232096; c=relaxed/simple;
+	bh=4oSZZwhw7PQhTzXV7fjqEVHEgheLJg48XzbYnFxp19A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g3yed8oJqxBLV5x53NAbPhbt1LQ/9dvJyHOYuZkyuGVRQpOCZcgwNCLelYLapYB+SdYZXciqzeAoBZtbqLyetaDCBVCiyq4gLaCSvPI1aJIeIpDNhwP/dhL80YBOBp1/Fr4egUy9C3z4dxxlMDKMawAJVGgLaI1q3UnEis7UJqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=mGstyAOy; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ERMDXbJ3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744231972;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CwwVdMIzXzZhcHVHa5dTX3xLMXj/2he6DFDzqhP+Y1s=;
-	b=ERMDXbJ37QVs38HxJnrLB4Eh1VKtYMF+i6kxOpWYKgJtT2msbJKGMCwd0YCvwqfdnFM7bE
-	bZX1P324ApHECVnEMb3GODkcNpn+IH+82zCuhp4ULJyBcmfD4FS/2LJb3lnnZCdJ8mEWj4
-	kskwDEFEumIFfuW0apMonHiqYc0zhY0=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-346-akA59-qvNQu-Gwb2MD--TQ-1; Wed, 09 Apr 2025 16:52:51 -0400
-X-MC-Unique: akA59-qvNQu-Gwb2MD--TQ-1
-X-Mimecast-MFC-AGG-ID: akA59-qvNQu-Gwb2MD--TQ_1744231971
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4766afee192so1575151cf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 13:52:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744231971; x=1744836771;
-        h=content-transfer-encoding:mime-version:user-agent:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=CwwVdMIzXzZhcHVHa5dTX3xLMXj/2he6DFDzqhP+Y1s=;
-        b=C0ZiCcsP3Z9qMknmszBoAVlc06l3clBTa6VdR/V3qUkVcP3th4xi6s6oyTKg8Suo2t
-         1uTmAmW1qiCjE0n99rqhaHPwiHKTi+EbdJ+gAGPVm5LYZBflM/ilS1069AVNCstkkPVV
-         Vl4qRektgny0+FjKKoHO427K/DtcvwBOV/Gzp2Wz1nSGbWnffGyoAxjSAY3i65NnMPpG
-         0msQfk2XMCtkzyO9Rt354i4sRMzTHRcvZXWW/DO7M1hv6LtKvRZMiooEvQcjfj1Q7GEZ
-         zypBDG/t78vlWPqnruranKPybeGfiiId+MTe51AciwPt2b0Yrbm4VPxSXjw3U06AhPfA
-         taBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXmHOUJFh5jy4m6RJdSHS+ryCxxwikTJIK+TMuIOrearvIUFC8VziE8vlHzxx0jnbATueOg62NFuOKmGKQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEfyNJbXeST26JFgU5xkoQniPPK6tF/rbp/RUJyIxNXAXjkJ08
-	rKRSWgXIeS5WIz/3jEaEK31AaCselMeD8IgCmP3QwQF3SLyGooRwCaonavkUMQCJHh2yDqb1sYo
-	dseluo7OQ3ozSVh2uVQ4XTUznbizGCpPAXv9333JOobLesY6F15fLY2jLX71vOQ==
-X-Gm-Gg: ASbGncvRR0rutd7dB4Qqeo3lDOvXSxUnwThhp2CuLqDJ6uVivIdj1UZ3B2m48YPNj/6
-	qpuYtJIxCtEoRJ/1kZ/lg727UWAqOK7qYys1yt9ReG2THD3FPuiFvnuzxpWgsiL4YxVynqKw8co
-	z2euw3wXuf08cTlYxBtYIMchVRz3z3hoUUYNI3TU+UDSPFPrzXeuI1wMGJtj9w6tJSac2SomsuI
-	OoFJmCyTASN39U882aLptVhhqZABtRG1vwDv6/9q/Gsolk0qX3lM/vrsor9ZGM1iyQGjND0aYwq
-	kN9DXquizCc=
-X-Received: by 2002:ac8:7fcf:0:b0:476:9296:80a9 with SMTP id d75a77b69052e-4796cbc570amr4106451cf.25.1744231971154;
-        Wed, 09 Apr 2025 13:52:51 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEMbuLqvSU6RQLdoc67Ywsz5HftBP1YKDQQ3FM3W1T9eNt155wj0aVoxDILQuMOzmxl5HT0Qg==
-X-Received: by 2002:ac8:7fcf:0:b0:476:9296:80a9 with SMTP id d75a77b69052e-4796cbc570amr4106271cf.25.1744231970858;
-        Wed, 09 Apr 2025 13:52:50 -0700 (PDT)
-Received: from starship ([2607:fea8:fc01:8d8d:6adb:55ff:feaa:b156])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47964d75625sm11431951cf.14.2025.04.09.13.52.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 13:52:50 -0700 (PDT)
-Message-ID: <ed9f56b684a95352462ddfcf10d1075494a5776a.camel@redhat.com>
-Subject: Re: [PATCH v3 0/6] KVM: SVM: Fix DEBUGCTL bugs
-From: Maxim Levitsky <mlevitsk@redhat.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Ravi Bangoria <ravi.bangoria@amd.com>,
- Xiaoyao Li <xiaoyao.li@intel.com>, rangemachine@gmail.com, whanos@sergal.fun
-Date: Wed, 09 Apr 2025 16:52:49 -0400
-In-Reply-To: <Z_WmdAZ9E2dxHpBE@google.com>
-References: <20250227222411.3490595-1-seanjc@google.com>
-	 <1b0fbad5b2be164da13034fe486c207d8a19f5e7.camel@redhat.com>
-	 <Z_WmdAZ9E2dxHpBE@google.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5 (3.36.5-2.fc32) 
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="mGstyAOy"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id E407C9CE;
+	Wed,  9 Apr 2025 22:52:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1744231974;
+	bh=4oSZZwhw7PQhTzXV7fjqEVHEgheLJg48XzbYnFxp19A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mGstyAOyr2ER8aIjbnelGwUaEIXExrU8SkzTl0SiFDCR0/0Vpxyyh111y7QRl5KP+
+	 BuBRnjR/iYwYjDiDNRhSwRgunXVbwt+mU9jCORSjzqJEIWMh6DS2m29h6w7jgNd1sO
+	 +RUq2Nlqioxr+PKJ6tkx7LtbmxPDcR9tuCG+PzFw=
+Date: Wed, 9 Apr 2025 23:54:26 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Cc: Ricardo Ribalda <ribalda@chromium.org>, hdegoede@redhat.com,
+	mchehab@kernel.org, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	syzbot+701fc9cc0cb44e2b0fe9@syzkaller.appspotmail.com,
+	skhan@linuxfoundation.org, kernelmentees@lists.linuxfoundation.org
+Subject: Re: [PATCH] media: Fix invalid link creation when source entity has
+ 0 pads
+Message-ID: <20250409205426.GA12162@pendragon.ideasonboard.com>
+References: <67e26157.0c0a0220.36adcd.506e@mx.google.com>
+ <CANiDSCsvEke31SAgXhs_sXEN7d6fXrwuhJFsi2mzESq1Jc8pxA@mail.gmail.com>
+ <CAKUZ0zJjdSDH3cw=8iKJauU5dmcq9TFhAaJX4yS5UQoiCUaguA@mail.gmail.com>
+ <20250326001336.GA23984@pendragon.ideasonboard.com>
+ <CAKUZ0zKDy47cQ0ZQo-=1c7wmazbutF=VF3qX09DfZFBz01hh-g@mail.gmail.com>
+ <20250402002948.GC4845@pendragon.ideasonboard.com>
+ <CAKUZ0z+V0pBvAf1VRGcWf_QcROZFsTUcHmNM1T1=DpBw56yi8A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKUZ0z+V0pBvAf1VRGcWf_QcROZFsTUcHmNM1T1=DpBw56yi8A@mail.gmail.com>
 
-On Tue, 2025-04-08 at 15:43 -0700, Sean Christopherson wrote:
-> On Tue, Apr 01, 2025, Maxim Levitsky wrote:
-> > On Thu, 2025-02-27 at 14:24 -0800, Sean Christopherson wrote:
-> > > Fix a long-lurking bug in SVM where KVM runs the guest with the host's
-> > > DEBUGCTL if LBR virtualization is disabled.  AMD CPUs rather stupidly
-> > > context switch DEBUGCTL if and only if LBR virtualization is enabled (not
-> > > just supported, but fully enabled).
-> > > 
-> > > The bug has gone unnoticed because until recently, the only bits that
-> > > KVM would leave set were things like BTF, which are guest visible but
-> > > won't cause functional problems unless guest software is being especially
-> > > particular about #DBs.
-> > > 
-> > > The bug was exposed by the addition of BusLockTrap ("Detect" in the kernel),
-> > > as the resulting #DBs due to split-lock accesses in guest userspace (lol
-> > > Steam) get reflected into the guest by KVM.
-> > > 
-> > > Note, I don't love suppressing DEBUGCTL.BTF, but practically speaking that's
-> > > likely the behavior that SVM guests have gotten the vast, vast majority of
-> > > the time, and given that it's the behavior on Intel, it's (hopefully) a safe
-> > > option for a fix, e.g. versus trying to add proper BTF virtualization on the
-> > > fly.
-> > > 
-> > > v3:
-> > >  - Suppress BTF, as KVM doesn't actually support it. [Ravi]
-> > >  - Actually load the guest's DEBUGCTL (though amusingly, with BTF squashed,
-> > >    it's guaranteed to be '0' in this scenario). [Ravi]
-> > > 
-> > > v2:
-> > >  - Load the guest's DEBUGCTL instead of simply zeroing it on VMRUN.
-> > >  - Drop bits 5:3 from guest DEBUGCTL so that KVM doesn't let the guest
-> > >    unintentionally enable BusLockTrap (AMD repurposed bits). [Ravi]
-> > >  - Collect a review. [Xiaoyao]
-> > >  - Make bits 5:3 fully reserved, in a separate not-for-stable patch.
-> > > 
-> > > v1: https://lore.kernel.org/all/20250224181315.2376869-1-seanjc@google.com
-> > > 
-> > 
-> > Hi,
-> > 
-> > Amusingly there is another DEBUGCTL issue, which I just got to the bottom of.
-> > (if I am not mistaken of course).
-> > 
-> > We currently don't let the guest set DEBUGCTL.FREEZE_WHILE_SMM and neither
-> > set it ourselves in GUEST_IA32_DEBUGCTL vmcs field, even when supported by the host
-> > (If I read the code correctly, I didn't verify this in runtime)
-> 
-> Ugh, SMM.  Yeah, KVM doesn't propagate DEBUGCTLMSR_FREEZE_IN_SMM to the guest
-> value.  KVM intercepts reads and writes to DEBUGCTL, so it should be easy enough
-> to shove the bit in on writes, and drop it on reads.
-> 
-> > This means that the host #SMIs will interfere with the guest PMU.  In
-> > particular this causes the 'pmu' kvm-unit-test to fail, which is something
-> > that our CI caught.
-> > 
-> > I think that kvm should just set this bit, or even better, use the host value
-> > of this bit, and hide it from the guest, because the guest shouldn't know
-> > about host's smm, and we AFAIK don't really support freezing perfmon when the
-> > guest enters its own emulated SMM.
-> 
-> Agreed.  Easy thing is to use the host's value, so that KVM doesn't need to check
-> for its existence.  I can't think of anything that would go sideways by freezing
-> perfmon if the host happens to take an SMI.
-> 
-> > What do you think? I'll post patches if you think that this is a good idea.
-> > (A temp hack to set this bit always in GUEST_IA32_DEBUGCTL fixed the problem for me)
-> > 
-> > I also need to check if AMD also has this feature, or if this is Intel specific.
-> 
-> Intel only.  I assume/think/hope AMD's Host/Guest Only field in the event selector
-> effectively hides SMM from the guest.
-> 
+Hi Gabriel,
 
-Hi,
+On Tue, Apr 08, 2025 at 01:35:00AM -0400, Gabriel Shahrouzi wrote:
+> On Tue, Apr 1, 2025 at 8:30 PM Laurent Pinchart wrote:
+> > On Sat, Mar 29, 2025 at 01:50:00PM -0400, Gabriel wrote:
+> > > Hi Laurent,
+> > >
+> > > I’ve analyzed the bug report, and the root cause of the
+> > > "WARNING-media_create_pad_link" issue is a mismatch in terminal
+> > > references in the USB descriptor.
+> > >
+> > > The format type descriptor references terminal ID 6, while the audio
+> > > streaming interface descriptor points to terminal ID 5. This
+> > > discrepancy triggers the warning: "No streaming interface found for
+> > > terminal 6", followed by the media pad link warning.
+> >
+> > Can you share the USB descriptors.
+>
+> The USB descriptors via the Syzkaller reproducer:
+>          "\x12\x01\x00\x00\xfb\x5d\x7d\x08\x6d\x04\xc3\x08\x16\x6b\x01\x02\x03"
+>          "\x01\x09\x02\x50\x00\x01\x00\x00\x00\x00\x09\x04\x1f\x00\x00\xff\x01"
+>          "\x00\x00\x0a\x24\x02\x00\x00\x05\x02\x01\x02\x07\x24\x07\x05\x00\x00"
+>          "\x18\xc2\x24\x08\x05\x04\x00\x04\x96\x0d\x24\x06\x01\x01\x03\x02\x00"
+>          "\x01\x00\x06\x00\x06\x09\x24\x03\x05\x05\x03\x06\x05\x81\x09\x24\x03"
+>          "\x06\x01\x01\x04\x05\x05\x07\x24\x04\x05\x01\x00\x9c\xbd\x89"
 
-I will post a patch soon then. I just got my hands on the CI machine where the test failed
-and yes, the machine receives about 8 #SMIs per second on each core. Oh well...
+If I haven't made any mistake in the manual decode process (is there any
+Linux tool that can decode a binary descriptors dump the same way lsusb
+decodes descriptors from a device ?), the relevant UVC descriptors there
+are
 
-BTW pmu_counters_test selftest is also affected since it counts # of retired instructions.
-With #SMI getting in the way, the number of course soars.
+0x0a		bLength
+0x24		bDescriptorType USB_DT_CS_INTERFACE
+0x02		bDescriptorSubtype VC_INPUT_TERMINAL
+0x00		bTerminalID 0 (invalid)
+0x00, 0x05	bTerminalType 0x0500 (invalid)
+0x02		bAssocTerminal 2 (invalid)
+0x01		iTerminal 1 
+0x02, 0x07
 
-It doesn't fail often at this rate but it does when the test test is done for sufficient
-number or times or you just get lucky.
+0x09		bLength
+0x24		bDescriptorType USB_DT_CS_INTERFACE
+0x03		bDescriptorSubtype VC_OUTPUT_TERMINAL 
+0x06		bTerminalID 6 
+0x01, 0x01	bTerminalType TT_STREAMING
+0x04		bAssocTerminal 4 (invalid)
+0x05		bSourceID 5 
+0x05		iTerminal 5
 
+0x07		bLength
+0x24		bDescriptorType USB_DT_CS_INTERFACE
+0x04		bDescriptorSubtype VC_SELECTOR_UNIT 
+0x05		bUnitID 5 
+0x01		bNrInPins 1 
+0x00		baSourceID(1) 0 
+0x9c		iSelector 156
 
-Best regards,
-	Maxim Levitsky
+Ignoring a few invalid values (bTerminalID shouldb't be 0, bTerminalType
+0x0500 is defined by the specification, and the two bAssocTerminal ids
+are also invalid), this creates the following chain:
 
+VC_INPUT_TERMINAL (0) -> VC_SELECTOR_UNIT (5) -> VC_OUTPUT_TERMINAL (6)
 
+Looking at uvc_mc_init_entity() where the media_entity->num_pads field
+gets assigned by calling media_entity_pads_init(), a media entity is
+only initialized when the entity type is not TT_STREAMING (so it's a
+subdev), or when the entity has an associated video device. I think
+that what is happening here is that the second entity in the above list
+(VC_OUTPUT_TERMINAL, id 6) fails to initialize properly in
+uvc_register_terms() is there is no corresponding streaming interface in
+the device. This is confirmed by the
+
+usb 1-1: No streaming interface found for terminal 6.
+
+message in the syzbot kernel log. No video device is created for the
+terminal, and no media_entity is initialized. Trying to later link the
+entity in uvc_mc_create_links() then fails.
+
+I don't want to address this in uvc_mc_create_links() as the invalid
+terminal in the chain means we could have other issues elsewhere. One
+option is to fail turn the missing streaming interface check in a hard
+failure, at least for the chain being registered. The driver could still
+proceed to registering other chains.
+
+There's a small risk of regression for buggy devices. If that's a
+problem, we could instead remove invalid terminals from the device
+entities list before we proceed to scanning chains.
+
+> > > I confirmed this by changing the terminal ID in the format descriptor
+> > > from 6 to 5, which eliminates both warnings. This shows the warning is
+> > > correctly identifying an invalid descriptor configuration, not a
+> > > kernel bug.
+> >
+> > There's still something not quite right. uvc_entity->num_pads should
+> > always be equal to the corresponding media_entity->num_pads. That's not
+> > the case here, and I think it indicates a bug.
+>
+> Ah ok - the mismatch itself shouldn't happen regardless of the descriptor
+>
+> > > Since the USB descriptor is invalid, I believe the warning is
+> > > necessary and should remain. The code should stay as is.
+> >
+> > There should be a warning, but I think it needs to be caught in a
+> > different place, earlier.
+>
+> Got it.
+>
+> > > On Tue, Mar 25, 2025 at 8:13 PM Laurent Pinchart wrote:
+> > > > On Tue, Mar 25, 2025 at 06:05:00PM -0400, Gabriel wrote:
+> > > > > Hi Ricardo,
+> > > > >
+> > > > > > I cannot reach that URL
+> > > > > I was unable to access the URL from my email client when I initially
+> > > > > sent the email, but a couple of hours later, I was able to. Initially,
+> > > > > copying and pasting the URL into the browser provided a workaround.
+> > > > >
+> > > > > > Shouldn't it be?:
+> > > > > > Fixes: 4ffc2d89f38a ("[media] uvcvideo: Register subdevices for each entity")
+> > > > > You're right, I incorrectly referenced the wrong commit. However, I’m
+> > > > > not certain if it should reference a96aa5342d57 (Fixes: a96aa5342d57 -
+> > > > > '[media] uvcvideo: Ignore entities for terminals with no supported
+> > > > > format') as it's the latest commit affecting the line I'm changing or
+> > > > > the one you mentioned.
+> > > > >
+> > > > > > Shouldn't source->num_pads be the same as remote->num_pads?
+> > > > > The fuzzer (Syzkaller) that triggered the warning appears to have
+> > > > > encountered a case where source->num_pads and remote->num_pads were
+> > > > > different. When analyzing the case in GDB, remote->num_pads was 1,
+> > > > > while source->num_pads was 0.
+> > > >
+> > > > This seems like the real bug that should be fixed.
+> > > >
+> > > > > > Are you sure that your kernel does not contain?
+> > > > > > https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/media/usb/uvc/uvc_entity.c?id=41ddb251c68ac75c101d3a50a68c4629c9055e4c
+> > > > > Yes, it should be included since I am running the upstream kernel.
+
+-- 
+Regards,
+
+Laurent Pinchart
