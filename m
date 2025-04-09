@@ -1,86 +1,112 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FCA021018F;
-	Wed,  9 Apr 2025 20:40:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A12214A81;
+	Wed,  9 Apr 2025 20:41:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744231202; cv=none; b=k/wn4lfQTIyyYdczxaAujrh+wq0H0BQl73OKalQD+Bv7d8VqnGRVJhxyXdpZtD5PhWA3lWBiG0h6izzRvt7xdgD2iXtWmdoNym5sEYNLEIDLicsj4LQeLOc3efe6LxiDi7NxiC7zzlhFEnv70xsqIN0KxXcaO0AMht8voFlCv6s=
+	t=1744231289; cv=none; b=GHYhovihk524ZZcGN/m/fQR4XxS4sIA9O2Ky1xqekY70n2TaznIqRfPAReFRdy7MqtQjQEwc8V85TIrcZmmwKvpTnPmQPvnUFVXgUoXnCR9ekL3i9lpiczasp7uWQFahF1IhXLkQGcfIoK2op8FaKNDXISsy6c/ok7/vQgDMFdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744231202; c=relaxed/simple;
-	bh=9BKAHqis+X5kWtEvZvUWZC8z/kchZX2ryYpVwrL7c9w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nMjZzINopr2N/+WXAPhiaoEnDALu5qs5qD+hhJCwTqGaGbyN57BolHTO4Y+SstW4ZkWMbB5qZWr+JStCRZCh9UDbuygcsPxr5UUJDTUq1i/B0NVmYC0x+CnneD3rUlxmpX0I96WZWEljEdFg9KVe7QUl5MPR6trKI9olvMN/qnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kb0TuXLJ; arc=none smtp.client-ip=209.85.208.42
+	s=arc-20240116; t=1744231289; c=relaxed/simple;
+	bh=08M4Cu8f4/GZ76LZsMQ4KuG2gM4zTrxyaw5Ut0KXJPg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OCCveQIfNhQV0XGZij+YcS+moOa7E8gfQiTHZpDFXKuz1AS6XP+N+aQAIKumWWtXrZQPZ2OOQtf+J+1/p5Nl12uTw5jIq9crW41URV7yi6O/n74OefBAqYNW/ZeRjiEME7Ov4+aOl+qBaEf9P5gl2NQnWq3DtgnnG+z+4FNeg+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QIGnSedf; arc=none smtp.client-ip=209.85.216.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kb0TuXLJ"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e5e1a38c1aso132629a12.2;
-        Wed, 09 Apr 2025 13:40:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QIGnSedf"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-301a6347494so11041a91.3;
+        Wed, 09 Apr 2025 13:41:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744231199; x=1744835999; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9BKAHqis+X5kWtEvZvUWZC8z/kchZX2ryYpVwrL7c9w=;
-        b=kb0TuXLJ4QaoloIwncO5UwKkoH9SIHvCSX/4FCX94YccNwU/2EES4FxzEDoq44zES8
-         jzOBt66BxO8eIUJw2wEe8nUVwfu7CBhpHYt5hMlR1vCIPlVEgqD37+fXGfxp4LFdskBk
-         PYO7hbp7Hai776HHCg3bVzimVcyTLepM9tb392h7J3PsMZhABCbm43ycePjMxJysJpOU
-         t9nCALEBrCoUNVh51ittX19vsA0ULHFudBvaLxINaa1kTyUCdRypCTKTaJTk0+uU8YMx
-         3uPOvVaN6itSnrMNxcV3pFD8zDHopEcBr7YI8ztRXqPw1VMziRNpMZ8MjniJm4We4uC7
-         HKaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744231199; x=1744835999;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1744231287; x=1744836087; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9BKAHqis+X5kWtEvZvUWZC8z/kchZX2ryYpVwrL7c9w=;
-        b=JdHrAyr8kvAq0Ddgk/cY51iwyta9JDJMX+oSwUdlYjTVnYhmBXLDCHcfmABegAfIiR
-         fV25ZBkWg7Mndl0et96wwyB+Ffwr/ssa53BDq06Xif605JLKWHuzhZR9EB3OFBrD+sHx
-         CnmUe+qUSg5BqlKiXqPP41NN+5OJQBDCyOEmikj1NsejZgqutKzfMBH2rduZGzG6GF5Z
-         rabiatVGe2c1eb1Y6Lyo51I3VHJ3MwH61Sfjdou/WDxqrl7miog+E6HS5cQzelsikadx
-         6UjGlj8xBLh4yM4KHc5dfh4mODFUH8spp8ZwORjV52zbSF5hIQBa1mrOSdQSM73Zm6a5
-         41Dg==
-X-Forwarded-Encrypted: i=1; AJvYcCUvtkYYt/yWflPeicmJU7/950wXqOavq5FqpOvRLUdyYgaJ6LRvLwRJ37/sYlVSBixesaf/eV6HMluyF0w=@vger.kernel.org, AJvYcCXo7QNMlfR+m51qfUHWWavvAc19GZl0Riio2UYnC7TU6QPn0JCEgIbdZIChzYMxh0UAwuxT8cedLIFc8A==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNTBSilcaeWq2S329aGRfLMOXKmeTwen3eFbLXnW1ZlGfoPG14
-	Eo3TmgiIIgHcOHIgB7AB9ZNK5kjk0HGhLw8dpTN0XtslcaiG3UNr
-X-Gm-Gg: ASbGnctHnjb7JpMRVDNIrpbF6naf80DM7pPh6qnIRVgApiglCopLBAf+7OGMSvIrmvM
-	4I32hgEdNy0CZJ7/yYn6gTCeEiO3+dKHY30uQ2eAcgDR07wpz+AsLVa7xZg2vsSEd78BL/961fK
-	zdQfEYwIAB0fC7+Xl9W4ymgzb6HQdGpK03QNeELGUz4jOu1iU2ypmt1P2v5Ij1rxSLWGjNHN/gQ
-	Suo6g+RNtm3y9aucVNkLG3M4kuUBDF9LkttyggbAVQoIFpnGj9xX03vaaVcT/qJSIaFLA3m4WVl
-	sw9ZCDXs5XSM9VEPKzTcTGgbmyeeGrZW/PbkJg==
-X-Google-Smtp-Source: AGHT+IE7tTpDQvqjbIuxq7dP2LnTwsZbQB6Q0L/sFtb7HJ2jpYLO0kXHgS+k3I+2itIeJ8/rcJDfWw==
-X-Received: by 2002:a17:906:1c51:b0:ac8:17a1:e42 with SMTP id a640c23a62f3a-acabd194d27mr9509066b.22.1744231198508;
-        Wed, 09 Apr 2025 13:39:58 -0700 (PDT)
-Received: from pampelmuse ([2a02:810d:a1:6000:959d:6b59:1561:d2b4])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1ce70ebsm148831366b.178.2025.04.09.13.39.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 13:39:58 -0700 (PDT)
-Date: Wed, 9 Apr 2025 22:39:56 +0200
-From: Gon Solo <gonsolo@gmail.com>
-To: Ricardo Ribalda <ribalda@chromium.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-spdx@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Duje =?utf-8?Q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Subject: Re: [PATCH v2] scripts/spdxcheck: Limit the scope of git.Repo
-Message-ID: <Z_bbHP3JeRh2hLe2@pampelmuse>
-References: <20250409-spx-v2-1-168115798db2@chromium.org>
+        bh=08M4Cu8f4/GZ76LZsMQ4KuG2gM4zTrxyaw5Ut0KXJPg=;
+        b=QIGnSedfWhoIMesXhDOKtuiTXd/2HHVPSpdjzgy7QDJcP/WrNnJKdethyWLDuRAh7d
+         Uau3ifxdiADswgO8DPtpKwmVdvd7zxEPOJsAu/5JmYCJs6kzI90mc8fLkz/1/DFbH6eC
+         Hn0YBn7ewc+aWwFiUggqJCSkSCB6konVZUeKLe+w0Uf68wkIeA5mNHLG/1Y0i+LcQ/x7
+         KUMalexSoBrecFLjjDmqQvWjvu0qq6EJ22cTloGMXycutO6LYE2OGdUv/i95lAm4wMGP
+         K0KxE/4jDknr2NcUY2pW9qEnGTKFynBMcWrHfOWLw3Oo5vSg8PuUgwvuBBoMwkKN6zYl
+         YxkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744231287; x=1744836087;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=08M4Cu8f4/GZ76LZsMQ4KuG2gM4zTrxyaw5Ut0KXJPg=;
+        b=ILF+jhmHemlWA6Yv4cCMSJlZGcwRaM+VgV3bWfhXqtDdEtIXN7PqHONk5p2N6l0gdG
+         SkUD/0OP+5sH4ULyO+SDxJoBwV/0dKQvb5Pk0u2fVCm3rou8XdM1Z9e99GBTqGz2hQNc
+         cc3cQM2+PB7DefHYQEVe3yQvaG1wrk3oJ8/Rjj0XMhRnbZCHJZKg81Nf9pfn4PbqAIzh
+         88OCu6B9wOp8BwlRbueGzs5YSg+pADqjVESunugVsrGa9XF/7D14fsJcgD8tdFWAzCfD
+         kBLFxZMi359C3fipY5WA2gtBqUPQ+qD1bpnV3z2LLTw9yE7gjBmqpt9fIrRQIdw6/JbQ
+         aPDw==
+X-Forwarded-Encrypted: i=1; AJvYcCU6NzXHjOI+hr1UYbUlLkuDIcUiXr/PXi9DKgluZnLSi+yxlUsr2jqMk3885XuaSzvvt7PKM05UZwpZ/s+v@vger.kernel.org, AJvYcCUPgronXCNTFhG1fomJ67Jg0snEZw54GhVXjnTP4YtXercNP28ZcxzQcSbyVKrzrcn74cEehbon59NBv9H71as=@vger.kernel.org, AJvYcCVHdzz3Tu0suDJySpZVLgQrT0UKSmXn/iD1oCewop5419G2WU2XLZ1WxoYigcpO6dffTE40tmmue7Y8sXA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YykO9AWGj91pgSOvVRAMw4WcCC35zQfZB6o9X4cj1jIq9LMJNIf
+	uhhjulg5liAIwugmBESoXWwadeNzo+pOHzMaH/Gl1OgjRdhvXvpgsf/YtKexwpuLX+NBg4THGf0
+	2Xh+cWnjS0nSnsMvEzdTJXJgBR+c=
+X-Gm-Gg: ASbGnctCCNpzloNRtq06tOJJ74M5n6e0poCunL9ydXd2/l+jkdJU6bMbtZSpE3vkONF
+	3G7oYj3/o64Z+1PmarBsOucsqa8WPhmeM2aStBOeBwU7Ti4HhriUNBCzFWafLyDl0iw/xhIZ6Xm
+	q8LO0fiyInZmNrmKW1id2S
+X-Google-Smtp-Source: AGHT+IFlUdAp7iMiSSgLlCglw5++ynmRK8YOdTyTyQRlrOIa5H/c9zmUX9o1zmMc1bgLsmOJg8/hInWZSh1WIL81/3w=
+X-Received: by 2002:a17:90b:4d05:b0:304:eacf:8bba with SMTP id
+ 98e67ed59e1d1-306dbc0d00fmr2047978a91.4.1744231286958; Wed, 09 Apr 2025
+ 13:41:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250409-spx-v2-1-168115798db2@chromium.org>
+References: <20250319205141.3528424-1-gary@garyguo.net> <20250319205141.3528424-3-gary@garyguo.net>
+ <CAH5fLgifMPxer5TcWUBUYKtGsPFryqPVwXT8-5qmmY6F3=nuBw@mail.gmail.com>
+In-Reply-To: <CAH5fLgifMPxer5TcWUBUYKtGsPFryqPVwXT8-5qmmY6F3=nuBw@mail.gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Wed, 9 Apr 2025 22:41:14 +0200
+X-Gm-Features: ATxdqUF2RSyMHln2rE54PHHogZqs6zCAKePrIc8_VSy9IDLlXknSuaNOZ6Lvaxg
+Message-ID: <CANiq72nc-A2WZn4xgfKyqr3GbgenhXjZztHqnf=12xY16ggHkg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] kbuild: rust: provide an option to inline C
+ helpers into Rust
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Gary Guo <gary@garyguo.net>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Masahiro Yamada <masahiroy@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
+	Andrew Morton <akpm@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
+	Tamir Duberstein <tamird@gmail.com>, Christian Brauner <brauner@kernel.org>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Dirk Behme <dirk.behme@de.bosch.com>, Daniel Xu <dxu@dxuuu.xyz>, 
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>, FUJITA Tomonori <fujita.tomonori@gmail.com>, 
+	"Rob Herring (Arm)" <robh@kernel.org>, Matt Gilbride <mattgilbride@google.com>, 
+	Paul Moore <paul@paul-moore.com>, Kees Cook <kees@kernel.org>, rust-for-linux@vger.kernel.org, 
+	llvm@lists.linux.dev, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Am Wed, Apr 09, 2025 at 08:04:19PM +0000 schrieb Ricardo Ribalda:
-> Changes in v2:
-> - Make repo a local variable
-> - Link to v1: https://lore.kernel.org/r/20250225-spx-v1-1-e935b27eb80d@chromium.org
+On Wed, Apr 9, 2025 at 10:18=E2=80=AFPM Alice Ryhl <aliceryhl@google.com> w=
+rote:
+>
+> Is this compatible with DEBUG_INFO_BTF? I'm concerned that we have the
+> same issue as in commit 5daa0c35a1f0 ("rust: Disallow BTF generation
+> with Rust + LTO").
+>
+> The commit message should either explain why we don't have the same
+> issue, or this patch should prevent configurations from enabling both.
 
-This is not necessary as it was Python's fault and is fixed by 3.13.3
-which came out yesterday. I just checked.
+In addition, from what we discussed in the call, it would be nice to
+have some performance numbers compared to not enabling it, as well as
+compared to cross-language LTO.
 
+It would also help to know which users out there need/want to have this.
+
+Thanks!
+
+Cheers,
+Miguel
