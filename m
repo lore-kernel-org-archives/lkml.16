@@ -1,114 +1,107 @@
-Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E45E2D600
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 06:47:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 583A18BEA;
+	Wed,  9 Apr 2025 06:47:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744181252; cv=none; b=hJFLWYOVJpcKgr0Mrqc9chqiE5/pqXY/59RuAff97dxwz2iPz6Se/YD1vT0dJKqOw48emOrZrEBkmxtP5tbNNR+OH2kwcLpKxo2OxvbmyawaWHXxLUYDL5uVO+98Q5pK9Ihwk0rcqercQtWUDfrsqtwZRvbmgW8ZZayV2XOJkzo=
+	t=1744181280; cv=none; b=Efmc6yKpNTL2UyE3dULIWptP2eV+TShy/HTw8zBgpafIOyrTZ1UZnj/UjmUwCgpV960i+J/9eifKs6FyEoLpN4rmViQIoSDjrZxtCqpy8/uqZZTTmoxLQqTlEg4lkf94BlmZkfAeh5BdNB7GZmkZzbULVd55ZTixHORblH+1z54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744181252; c=relaxed/simple;
-	bh=dSuhNbiaWYrVPStkGfZ4mDD4EmWjCfc/hB+7hG057p4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SVOmnjhnEe8QLRnseym9ZUBKWtpZotjZTIgBg2Hl08wGYb3W4yFZhX0jCVQVgM9mfRFVHpFbVyDj5d7NM8T9/RPLcr6r+cjk42vSMbDTSsBn00uxmiJ3oDaFoqf0MyLa1dt3JHvprV7+i9bf8eQ11VPyqi0mx4dLkApqyIFFFKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=hYEm43Gw; arc=none smtp.client-ip=44.202.169.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
+	s=arc-20240116; t=1744181280; c=relaxed/simple;
+	bh=tAnhuqPwFhasG0wT5tgPZa+RdUWE8xN1d4wMwMHYA6k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bHkj25gXxWmO04JkyY03C9ge1xhQpRuMWcdORo5DM0aqP0UJTTo20IU4BpIoBrf+oXfljJpaUZy8SXBTYSW7f4xe6kMQ/NJDZisLaSPruZKDXYjulIlanWwOshKq/eOpsJI/7fNThXpukDgl9vnVpRiz3OaoeSfrsT0VDVrehzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q/199WpV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="hYEm43Gw"
-Received: from eig-obgw-5003a.ext.cloudfilter.net ([10.0.29.159])
-	by cmsmtp with ESMTPS
-	id 2N7juSIUwiuzS2PDdubrMy; Wed, 09 Apr 2025 06:47:29 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id 2PDcud7FQrsgD2PDcuToi7; Wed, 09 Apr 2025 06:47:29 +0000
-X-Authority-Analysis: v=2.4 cv=TNGOSEla c=1 sm=1 tr=0 ts=67f61801
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=49j0FZ7RFL9ueZfULrUA:9 a=QEXdDO2ut3YA:10
- a=nmWuMzfKamIsx3l42hEX:22 a=hTR6fmoedSdf3N0JiVF8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=WIYjIZka4Koev1rTlkF0ZS+CFjn6vZFVHi4ABUumf54=; b=hYEm43GwVKwUfaDlFbJ/uUvTfK
-	eg6k8wlPh4xZ6lshE5G/nu8u4WHqLxDmT+xJBaP4H+7QFT0vc50dRK8o9rwG7Iq3y8DxxJK8Eb2Wf
-	bI5FnJOBpYV4TqiUgykBje9ByfvOH/UZPRJPZ4de06z47iC9oavlZYdOyaAVuEkCqTei2lJbc0Y0B
-	hqMemSFc8bd/VgTpdOwLIycHwx/GRmXBN+H/rn/os7u+qbCjLNSz7tru5NU02Z6YWJUkRSQnXdRXA
-	VJT5idoGOg0oBVTlECIzD9n+gsbPlisntTorB6bF/2g+wjB+U9tM97mkcCvwhttuubo7hOm3gT/0U
-	hIlL0OQA==;
-Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:49620 helo=[10.0.1.116])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <re@w6rz.net>)
-	id 1u2PDa-00000000LZT-2EAL;
-	Wed, 09 Apr 2025 00:47:26 -0600
-Message-ID: <633cd6e8-6802-4a70-914c-d1207bf9d7e4@w6rz.net>
-Date: Tue, 8 Apr 2025 23:47:22 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q/199WpV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2B97C4CEEB;
+	Wed,  9 Apr 2025 06:47:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744181279;
+	bh=tAnhuqPwFhasG0wT5tgPZa+RdUWE8xN1d4wMwMHYA6k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Q/199WpVdHsY33vUNd5Hh++7N3B0UV9HpFGS5Ktk5+lJquSoVVFgZhmXWm5boORWl
+	 iHy44jqygDTDOixjcvYCtGpsuwkqLk5hM/hnrqcFRup0DFiWFXTd+s/tb1u/nve3Nn
+	 UwD+hoqtuDPDi29En9Ou0C2dw2xqR9FRwNqOKwCxRxL/eJOw/E3Eqi0yQAV3JM4u01
+	 /uCHk+8/HOesueebcn3JKJJ7uHtvQkrkOtlBca24G5e5TWe1YwQEuBlEPeaYNkKUre
+	 xHmSH1j4Wmtj/eigsc7YYyoGwBv4EbQzBNWTxZ04T2msqNqVj4WfIaGSZ6Oh3cQR0w
+	 6OLo+hbYtrLVw==
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30613802a04so68575781fa.2;
+        Tue, 08 Apr 2025 23:47:59 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVJzMLv/hCb9zghxkGobCkiT+7XARVANC4LxFGa5KS9H+3fD0nDkFRsNrG8WWs9bulT/dkIbprU3DhAZf4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeqLKBROVMSQfdaiHvjrtbI2o+//0jvgRcjmat2q3wkbJ6L49L
+	+9qu6kym5YNuEiga/j2+5j06bY2nUKfN8MyHmoSrvecUqAUHks45xKelWzeIJpwfFfP4FIHqpNj
+	gjn3PiPXOg0hH3M140ZWylkKOAIQ=
+X-Google-Smtp-Source: AGHT+IG0CPbkpvw2SR+BfGdZlFXcfdRseL9cpyZw4rMnMy/+KdLECAwPFKuImDonFnTB1bG5LG20V0Cvkq2+G79UCGg=
+X-Received: by 2002:a2e:a992:0:b0:30b:d5ed:55c7 with SMTP id
+ 38308e7fff4ca-30f438c92aemr5453441fa.36.1744181278102; Tue, 08 Apr 2025
+ 23:47:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.6 000/268] 6.6.87-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250408104828.499967190@linuxfoundation.org>
-Content-Language: en-US
-From: Ron Economos <re@w6rz.net>
-In-Reply-To: <20250408104828.499967190@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 73.223.253.157
-X-Source-L: No
-X-Exim-ID: 1u2PDa-00000000LZT-2EAL
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:49620
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 73
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfByZAJu16WtN5W3qjUNVaqZDOy7cTwJ7zR86AdXDlq15LNGC945MyKsK27MmoUNYYFF8Xqno6jC27NpPDr+IzBXzFPHgYE3Iyuokcc7IHpntYyy8zJXr
- 6zIIRc3W59k+bXodFtNyU9bevGowps2TcDg3cEVJ9A38BKkPFAr6x1fg7OUhQes6HDqnO6S0cGQyYVlwx6KdZf1g8zL5K2u2pZ0=
+References: <20250408085254.836788-9-ardb+git@google.com> <CAMzpN2hrmNhiT8Ppb_fSGW2XtCDY1aiR=2x6Fcv2gzD87r-Akg@mail.gmail.com>
+In-Reply-To: <CAMzpN2hrmNhiT8Ppb_fSGW2XtCDY1aiR=2x6Fcv2gzD87r-Akg@mail.gmail.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Wed, 9 Apr 2025 08:47:45 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXEbLAUMSHe9uYGdtorTr7UBFiU6DHBhfzQjMs1QGLXXwQ@mail.gmail.com>
+X-Gm-Features: ATxdqUGEyNldwUaPnAQotbzawBn_YuVxHEF7pih8b9QnYj7UWY3NmtUhIilgOjw
+Message-ID: <CAMj1kXEbLAUMSHe9uYGdtorTr7UBFiU6DHBhfzQjMs1QGLXXwQ@mail.gmail.com>
+Subject: Re: [PATCH v3 0/7] x86: Refactor and consolidate startup code
+To: Brian Gerst <brgerst@gmail.com>
+Cc: linux-efi@vger.kernel.org, x86@kernel.org, mingo@kernel.org, 
+	linux-kernel@vger.kernel.org, Tom Lendacky <thomas.lendacky@amd.com>, 
+	Dionna Amalie Glaze <dionnaglaze@google.com>, Kevin Loughlin <kevinloughlin@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/8/25 03:46, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.6.87 release.
-> There are 268 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Tue, 8 Apr 2025 at 20:16, Brian Gerst <brgerst@gmail.com> wrote:
 >
-> Responses should be made by Thu, 10 Apr 2025 10:47:53 +0000.
-> Anything received after that time might be too late.
+> On Tue, Apr 8, 2025 at 5:01=E2=80=AFAM Ard Biesheuvel <ardb+git@google.co=
+m> wrote:
+> >
+> > From: Ard Biesheuvel <ardb@kernel.org>
+> >
+> > Reorganize C code that is used during early boot, either in the
+> > decompressor/EFI stub or the kernel proper, but before the kernel
+> > virtual mapping is up.
+> >
+> > v3:
+> > - keep rip_rel_ptr() around in PIC code - sadly, it is still needed in
+> >   some cases
+> > - remove RIP_REL_REF() uses in separate patches
+> > - keep __head annotations for now, they will all be removed later
+> > - disable objtool validation for library objects (i.e., pieces that are
+> >   not linked into vmlinux)
+> >
+> > I will follow up with a series that gets rid of .head.text altogether,
+> > as it will no longer be needed at all once the startup code is checked
+> > for absolute relocations.
+> >
+> > The SEV startup code needs to be moved first, though, and this is a bit
+> > more complicated, so I will decouple that effort from this series, also
+> > because there is a known issue that needs to be fixed first related to
+> > memory acceptance from the EFI stub.
 >
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.87-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-> and the diffstat can be found below.
+> Is there anything to verify that the compiler doesn't do something
+> unexpected with PIC code generation like create GOT references?
 >
-> thanks,
->
-> greg k-h
 
-Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
+I will propose something along the lines of what is already being done
+for the EFI stub:
 
-Tested-by: Ron Economos <re@w6rz.net>
+------%<------
 
+STUBCOPY_RELOC-$(CONFIG_X86_64) :=3D R_X86_64_64
+
+quiet_cmd_stubcopy =3D STUBCPY $@
+      cmd_stubcopy =3D                                                    \
+        $(STRIP) --strip-debug -o $@ $<;                                \
+        if $(OBJDUMP) -r $@ | grep $(STUBCOPY_RELOC-y); then            \
+                echo "$@: absolute symbol references not allowed in
+the EFI stub" >&2; \
+                /bin/false;                                             \
+        fi;                                                             \
+        $(OBJCOPY) $(STUBCOPY_FLAGS-y) $< $@
