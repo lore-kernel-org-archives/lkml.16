@@ -1,50 +1,57 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1502412CDAE;
-	Wed,  9 Apr 2025 15:29:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A52B215DBBA
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 15:30:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744212562; cv=none; b=EDUKzTswluR/gndZtquUgGaWoD0sJzAWwrD3WBLxzfW4d724uU/z5YXPCa5+OxKrOsmjk8KU7QgTclRnJOwvCIM4UgmtSgT8NbW0+UoASgZpqEhGEt/ODz9aXI084kPH3DgnsDe2urUbsUgJNWiKCRjuoz/5JNhrdbZhF0Q7UIk=
+	t=1744212603; cv=none; b=lkun63G//vgpBlc5oF3+0G7o8TIw8Db2z3wx87sAOxgEPwCpOgKUd0XNmB3xrKpFDKGvrvIWQKrkUpir33QmBQ9PFb3OIEZBa5hR8HL8frlbBRZjmO/4TMIMItgTo80uqHpFQNUs2E1vLb+GAP9Hk0iuWZMfVDFoU0HsQcuCFh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744212562; c=relaxed/simple;
-	bh=/1SbtZj8beAyfhwz2+xNoWN7WktXt/kcKxlWjhv26yU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=lhSa1l1wufV0MjPtCo4GWyBtVU3FGI9P7L/Nx9rvkXIdJLlSl+yKPZncg6RA8OHWqpq5VrzuowM6wxom/1Fdo9E8MnS7LTP5RMnStJnridFtUBooue72x+S1gRYQtMzSIHdEzu/eXhmXBxcG+N6ZBZzHpfFN0iUk0HZNX7DcJRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=eiayKayA; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1744212603; c=relaxed/simple;
+	bh=7ammzMgtsA5awXQq4UPk8mbvXIdjRXw5ww7TtoQg/L4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=l/6X/CxcsBj1KfqCiBSbYAYKoYJPsep9hKwogniF5+f2/XLjsSbcaTbBBOCpzCXuSgWfNnKppdcOM9+Pu3Wo3nR9zDlgD5MktLta4kz1lOEURmC2ZKaPiU+gaW2esqj7NqqPsWx5LgxYa3GR1bawHred4dvpzjOmKD3bDUJCRpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=vSfbzYsw; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="eiayKayA"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 539D8icv003194;
-	Wed, 9 Apr 2025 17:29:02 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	hpa9K+wNh4oJ2LRlmAIjHvhW9aEqVDhXK75Pfw8BenY=; b=eiayKayAVUwlt269
-	w+8CDjJhSdvdAl2e4z82UayeCMnxMHjC9y3JxI8djkY99/rCKCIkm2ndQfxFV6QI
-	tx+3xbuYMDDYjrhzhVrDqT6Jhmpz6IEYNalUQYxWRirRh5IHmBXBA6ShcV0G/TA6
-	4qZK3CzlgMVdh69aRZ/1y+po1pyxwD3L2gfus2KF32H1D0qMxo8jGFntOWDf8t6/
-	E/vrkVpH8ERbFRNeRxo2q7VWMf1TZAwQ8lyVcR+TG9NN/J89QhlaXcoV8Y9c857Z
-	OrhyJnx/yrd0Lc+HCONwox+XHHWkr1uaUVxD1ZJ/3CxrCCwgI3EcyYRos0cXV1yd
-	K5/v7Q==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45tw5gbutv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 09 Apr 2025 17:29:02 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 8F28640052;
-	Wed,  9 Apr 2025 17:27:57 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 337489FE57A;
-	Wed,  9 Apr 2025 17:27:08 +0200 (CEST)
-Received: from [10.48.87.62] (10.48.87.62) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 9 Apr
- 2025 17:27:07 +0200
-Message-ID: <cfa0826d-92b4-4cf5-9f24-737ed1fd16ed@foss.st.com>
-Date: Wed, 9 Apr 2025 17:27:06 +0200
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="vSfbzYsw"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250409152958euoutp01f67296f123d584a8a9a7001171435eb5~0sB3506h12148721487euoutp01E
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 15:29:58 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250409152958euoutp01f67296f123d584a8a9a7001171435eb5~0sB3506h12148721487euoutp01E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1744212598;
+	bh=ul03oSv4pyZS+HSpbQ9I5MY9es9yGM9SGJkg+qohyNs=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=vSfbzYswfp8l1tx9lhcgpbjc+7l6PpAOUa79990tWvNoiDDzxaoWY9KDg4sGQQi1q
+	 ycYpaHTZx7+MPwdK1JXs+/HHGaP5r9uYglUMQzm7DCaic1gSVtKkBprYG+O59PCpaA
+	 sWV020oNcyliWRtOq1ATaDY1mySnKbmN5NHLy6H0=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+	20250409152958eucas1p2a824e7ff30453a67b524a18556764d17~0sB3s3A7q0925809258eucas1p2Z;
+	Wed,  9 Apr 2025 15:29:58 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+	eusmges2new.samsung.com (EUCPMTA) with SMTP id AB.07.20409.67296F76; Wed,  9
+	Apr 2025 16:29:58 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250409152957eucas1p27f59b1452aa3e9b3aa0b2cc98c5a99fc~0sB3WYg7e0956309563eucas1p2D;
+	Wed,  9 Apr 2025 15:29:57 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250409152957eusmtrp1f75476af527f9f945de78d01ff4c9049~0sB3V01k11007810078eusmtrp1-;
+	Wed,  9 Apr 2025 15:29:57 +0000 (GMT)
+X-AuditID: cbfec7f4-c0df970000004fb9-4b-67f69276a3fb
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+	eusmgms2.samsung.com (EUCPMTA) with SMTP id D1.77.19654.57296F76; Wed,  9
+	Apr 2025 16:29:57 +0100 (BST)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250409152956eusmtip1c210070b9e71c88426ba2634c970e62c~0sB2Wubt70379603796eusmtip1R;
+	Wed,  9 Apr 2025 15:29:56 +0000 (GMT)
+Message-ID: <208140cb-dc22-4e7d-9f1f-7d5ed30d16dc@samsung.com>
+Date: Wed, 9 Apr 2025 17:29:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,448 +59,100 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 3/7] memory: Add STM32 Octo Memory Manager driver
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-        Maxime
- Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Catalin Marinas
-	<catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, <christophe.kerello@foss.st.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20250407-upstream_ospi_v6-v8-0-7b7716c1c1f6@foss.st.com>
- <20250407-upstream_ospi_v6-v8-3-7b7716c1c1f6@foss.st.com>
- <20250408-shiny-whimsical-pigeon-4e2c9a@shite>
+Subject: Re: [PATCH] [v4] dma/contiguous: avoid warning about unused
+ size_bytes
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Robin Murphy <robin.murphy@arm.com>,
+	Michal Nazarewicz <mina86@mina86.com>, Kyungmin Park
+	<kyungmin.park@samsung.com>, iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org
 Content-Language: en-US
-From: Patrice CHOTARD <patrice.chotard@foss.st.com>
-In-Reply-To: <20250408-shiny-whimsical-pigeon-4e2c9a@shite>
-Content-Type: text/plain; charset="UTF-8"
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+In-Reply-To: <20250409151557.3890443-1-arnd@kernel.org>
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-09_05,2025-04-08_04,2024-11-22_01
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrBKsWRmVeSWpSXmKPExsWy7djP87plk76lG3zdzmnxd9IxdottWzax
+	Wvz6YmFxtukNu8XlXXPYLBYcb2G1OPjhCasDu8eaeWsYPX7/msTosWlVJ5vHi80zGT3W/XnF
+	5NG3ZRWjx+dNcgHsUVw2Kak5mWWpRfp2CVwZb27tYS44w10x7/Jm1gbG/ZxdjJwcEgImEo8+
+	nGHsYuTiEBJYwSix6theNgjnC6PE/NkvmCGcz4wSu39cYIJpmTfvLytEYjmjxI8NX1kgnI+M
+	EvdW9bKAVPEK2El8aLsE1sEioCLRt/4RG0RcUOLkzCdgNaIC8hL3b81g72Lk4BAWCJR4e40D
+	JCwioCxx/dscsJuYBS4zSkx5NQFsDrOAuMStJ/PBbDYBQ4mut11gMzkFzCU+HHrLAlEjL7H9
+	7RywsyUEPnBIHO3eyA5xtovE4f0XoGxhiVfHt0DZMhKnJ/ewQDS0M0os+H2fCcKZwCjR8PwW
+	I0SVtcSdc7/YQE5lFtCUWL9LHyLsKPF11l5WkLCEAJ/EjbeCEEfwSUzaNp0ZIswr0dEmBFGt
+	JjHr+Dq4tQcvXGKewKg0CylYZiF5cxaSd2Yh7F3AyLKKUTy1tDg3PbXYKC+1XK84Mbe4NC9d
+	Lzk/dxMjMDGd/nf8yw7G5a8+6h1iZOJgPMQowcGsJMI7Ie9buhBvSmJlVWpRfnxRaU5q8SFG
+	aQ4WJXHeRftb04UE0hNLUrNTUwtSi2CyTBycUg1MM9ed+twcYmK+yk/Vf8WCT3IzHzgHmB9Q
+	18h3C76udpbnrNOW1WIhvlv/bD++SrPvR/jctWqfP5maTPGqn52Z3lTgobrMc0GXjEfD7VCH
+	rBsqOtcu8GzP3CJ54fkxHx899lP/U1KsJ5f5aPDdtso2PPHxrVVUqWGB6Nflk9YkZ2/Y3mGy
+	m/noy2lhnv2v70QHbD8347zks+rSGYaRM1S8jcN8V7/xl3RymsYoKtHD0PGYPyhzvYVB260v
+	igXzdvk5xL6Qf3Kq7JheYLPn/c6Y2dye4u3OAlcf5Hr1JXUe0f5Zzzpvrymjethb0wMcXGsj
+	0mTlv146+ir97JtL9/JlGsovLWKoS7WZKDtvqZoSS3FGoqEWc1FxIgA1lrgzuwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFIsWRmVeSWpSXmKPExsVy+t/xu7qlk76lG7SsN7b4O+kYu8W2LZtY
+	LX59sbA42/SG3eLyrjlsFguOt7BaHPzwhNWB3WPNvDWMHr9/TWL02LSqk83jxeaZjB7r/rxi
+	8ujbsorR4/MmuQD2KD2bovzSklSFjPziElulaEMLIz1DSws9IxNLPUNj81grI1MlfTublNSc
+	zLLUIn27BL2MN7f2MBec4a6Yd3kzawPjfs4uRk4OCQETiXnz/rJ2MXJxCAksZZTYPnk+C0RC
+	RuLktAZWCFtY4s+1LjaIoveMEme2zWEGSfAK2El8aLvEBGKzCKhI9K1/xAYRF5Q4OfMJ2CBR
+	AXmJ+7dmsHcxcnAICwRKvL3GARIWEVCWuP5tDiPITGaBy4wSjRNeMkMs6GKU6H27HWwzs4C4
+	xK0n88EWsAkYSnS97QJbwClgLvHh0FsWiBozia6tXYwQtrzE9rdzmCcwCs1CcscsJKNmIWmZ
+	haRlASPLKkaR1NLi3PTcYiO94sTc4tK8dL3k/NxNjMBI3Hbs55YdjCtffdQ7xMjEwXiIUYKD
+	WUmEd0Let3Qh3pTEyqrUovz4otKc1OJDjKbAwJjILCWanA9MBXkl8YZmBqaGJmaWBqaWZsZK
+	4rxsV86nCQmkJ5akZqemFqQWwfQxcXBKNTAp56u1PnToOCs85ZVf7d1374QYVaqOfxfy/mu4
+	6L327qaFh2KYHk/zmlAuXnLq9lW5lN3M2U2Tudo4HS44X7r6ec7ZC2YahdwsDva+E3bl/Z7q
+	92TR3/Ly7NlGM6ecFLu+YF0uz4ZX+XXOFxIyp/ckZsqZHlTd8Kd7/53vfhkSxzXmc10Ry6m+
+	kyB+/MxTqXDd9JQw0ST7209+pgk+V53z+t0z9k0szGmrn841YEy2U/km1XvEoLc66fq77+/v
+	xvY+uljWdH3luYK1mywSa5VaHrqf/ezZ+5bX9dPqzlLRbX7VH6NurOHxb623v5q7eaXB+UmN
+	6xcZTVm27t6q+uu3W7O/WYZOMX+yZHGdyPVFSizFGYmGWsxFxYkA4b1y+k0DAAA=
+X-CMS-MailID: 20250409152957eucas1p27f59b1452aa3e9b3aa0b2cc98c5a99fc
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250409151611eucas1p299f54f1a61fb8412e515129c82021cd5
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20250409151611eucas1p299f54f1a61fb8412e515129c82021cd5
+References: <CGME20250409151611eucas1p299f54f1a61fb8412e515129c82021cd5@eucas1p2.samsung.com>
+	<20250409151557.3890443-1-arnd@kernel.org>
+
+On 09.04.2025 17:15, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+>
+> When building with W=1, this variable is unused for configs with
+> CONFIG_CMA_SIZE_SEL_PERCENTAGE=y:
+>
+> kernel/dma/contiguous.c:67:26: error: 'size_bytes' defined but not used [-Werror=unused-const-variable=]
+>
+> Change this to a macro to avoid the warning.
+>
+> Fixes: c64be2bb1c6e ("drivers: add Contiguous Memory Allocator")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
 
-
-On 4/8/25 09:00, Krzysztof Kozlowski wrote:
-> On Mon, Apr 07, 2025 at 03:27:34PM GMT, Patrice Chotard wrote:
->> +	for (i = 0; i < omm->nb_child; i++) {
->> +		idx = of_property_match_string(dev->of_node,
->> +					       "memory-region-names",
->> +					       mm_name[i]);
->> +		if (idx < 0)
->> +			continue;
->> +
->> +		/* res1 only used on second loop iteration */
->> +		res1.start = res.start;
->> +		res1.end = res.end;
->> +
->> +		node = of_parse_phandle(dev->of_node, "memory-region", idx);
->> +		if (!node)
->> +			continue;
->> +
->> +		ret = of_address_to_resource(node, 0, &res);
->> +		if (ret) {
->> +			dev_err(dev, "unable to resolve memory region\n");
-> 
-> Where do you drop reference to node?
-
-right, will add of_node_put() here
-
-> 
->> +			return ret;
->> +		}
->> +
->> +		/* check that memory region fits inside OMM memory map area */
->> +		if (!resource_contains(omm->mm_res, &res)) {
->> +			dev_err(dev, "%s doesn't fit inside OMM memory map area\n",
->> +				mm_name[i]);
->> +			dev_err(dev, "%pR doesn't fit inside %pR\n", &res, omm->mm_res);
->> +
->> +			return -EFAULT;
->> +		}
->> +
->> +		if (i == 1) {
->> +			mm_ospi2_size = resource_size(&res);
->> +
->> +			/* check that OMM memory region 1 doesn't overlap memory region 2 */
->> +			if (resource_overlaps(&res, &res1)) {
->> +				dev_err(dev, "OMM memory-region %s overlaps memory region %s\n",
->> +					mm_name[0], mm_name[1]);
->> +				dev_err(dev, "%pR overlaps %pR\n", &res1, &res);
->> +
->> +				return -EFAULT;
->> +			}
->> +		}
->> +	}
->> +
->> +	syscfg_regmap = syscon_regmap_lookup_by_phandle(dev->of_node, "st,syscfg-amcr");
->> +	if (IS_ERR(syscfg_regmap))
->> +		return dev_err_probe(dev, PTR_ERR(syscfg_regmap),
->> +				     "Failed to get st,syscfg-amcr property\n");
->> +
->> +	ret = of_property_read_u32_index(dev->of_node, "st,syscfg-amcr", 1,
->> +					 &amcr_base);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = of_property_read_u32_index(dev->of_node, "st,syscfg-amcr", 2,
->> +					 &amcr_mask);
->> +	if (ret)
->> +		return ret;
->> +
->> +	amcr = mm_ospi2_size / SZ_64M;
->> +
->> +	if (set)
->> +		regmap_update_bits(syscfg_regmap, amcr_base, amcr_mask, amcr);
->> +
->> +	/* read AMCR and check coherency with memory-map areas defined in DT */
->> +	regmap_read(syscfg_regmap, amcr_base, &read_amcr);
->> +	read_amcr = read_amcr >> (ffs(amcr_mask) - 1);
->> +
->> +	if (amcr != read_amcr) {
->> +		dev_err(dev, "AMCR value not coherent with DT memory-map areas\n");
->> +		ret = -EINVAL;
->> +	}
->> +
->> +	return ret;
->> +}
->> +
->> +static int stm32_omm_toggle_child_clock(struct device *dev, bool enable)
->> +{
->> +	/* As there is only 2 children, remember first child in case of error */
->> +	struct clk *first_child_clk = NULL;
->> +	struct stm32_omm *omm = dev_get_drvdata(dev);
->> +	u8 i;
-> 
-> iterations are always unsigned ints (or ints), not other types.
-
-ok
-
-> 
->> +	int ret;
->> +
->> +	for (i = 0; i < omm->nb_child; i++) {
->> +		if (enable) {
->> +			ret = clk_prepare_enable(omm->clk_bulk[i + 1].clk);
->> +			if (ret) {
->> +				if (first_child_clk)
->> +					clk_disable_unprepare(first_child_clk);
->> +
->> +				dev_err(dev, "Can not enable clock\n");
-> 
-> That's unnecessary complicated. Instead create error handling label,
-> goto it and unwind iterating from last position of 'i'.
-
-ok
-
-> 
->> +				return ret;
->> +			}
->> +		} else {
->> +			clk_disable_unprepare(omm->clk_bulk[i + 1].clk);
->> +		}
->> +
->> +		first_child_clk = omm->clk_bulk[i + 1].clk;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int stm32_omm_disable_child(struct device *dev)
->> +{
->> +	static const char * const resets_name[] = {"ospi1", "ospi2"};
->> +	struct stm32_omm *omm = dev_get_drvdata(dev);
->> +	struct reset_control *reset;
->> +	int ret;
->> +	u8 i;
->> +
->> +	ret = stm32_omm_toggle_child_clock(dev, true);
->> +	if (!ret)
->> +		return ret;
->> +
->> +	for (i = 0; i < omm->nb_child; i++) {
->> +		reset = reset_control_get_exclusive(dev, resets_name[i]);
->> +		if (IS_ERR(reset)) {
->> +			dev_err(dev, "Can't get %s reset\n", resets_name[i]);
-> 
-> You should acquire resources in the probe, not on every suspend/resume.
-> Then you can use `return dev_err_probe`.
-
-ok
-
-> 
->> +			return PTR_ERR(reset);
->> +		};
->> +
->> +		/* reset OSPI to ensure CR_EN bit is set to 0 */
->> +		reset_control_assert(reset);
->> +		udelay(2);
->> +		reset_control_deassert(reset);
->> +
->> +		reset_control_put(reset);
->> +	}
->> +
->> +	return stm32_omm_toggle_child_clock(dev, false);
->> +}
->> +
->> +static int stm32_omm_configure(struct device *dev)
->> +{
->> +	static const char * const clocks_name[] = {"omm", "ospi1", "ospi2"};
->> +	struct stm32_omm *omm = dev_get_drvdata(dev);
->> +	unsigned long clk_rate_max = 0;
->> +	u32 mux = 0;
->> +	u32 cssel_ovr = 0;
->> +	u32 req2ack = 0;
->> +	struct reset_control *rstc;
->> +	unsigned long clk_rate;
->> +	int ret;
->> +	u8 i;
->> +
->> +	for (i = 0; i < OMM_CLK_NB; i++)
->> +		omm->clk_bulk[i].id = clocks_name[i];
->> +
->> +	/* retrieve OMM, OSPI1 and OSPI2 clocks */
->> +	ret = devm_clk_bulk_get(dev, OMM_CLK_NB, omm->clk_bulk);
->> +	if (ret)
->> +		return dev_err_probe(dev, ret, "Failed to get OMM/OSPI's clocks\n");
->> +
->> +	/* Ensure both OSPI instance are disabled before configuring OMM */
->> +	ret = stm32_omm_disable_child(dev);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = pm_runtime_resume_and_get(dev);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	/* parse children's clock */
->> +	for (i = 1; i <= omm->nb_child; i++) {
->> +		clk_rate = clk_get_rate(omm->clk_bulk[i].clk);
->> +		if (!clk_rate) {
->> +			dev_err(dev, "Invalid clock rate\n");
->> +			goto err_clk_disable;
-> 
-> That's a confusing label - it jumps to PM put, not clk disable. It
-> isn't matching the source of error either (get rate, not clock disable).
-
-ok
-
-> 
->> +		}
->> +
->> +		if (clk_rate > clk_rate_max)
->> +			clk_rate_max = clk_rate;
->> +	}
->> +
->> +	rstc = devm_reset_control_get_exclusive(dev, "omm");
->> +	if (IS_ERR(rstc))
->> +		return dev_err_probe(dev, PTR_ERR(rstc), "reset get failed\n");
->> +
->> +	reset_control_assert(rstc);
->> +	udelay(2);
->> +	reset_control_deassert(rstc);
->> +
->> +	omm->cr = readl_relaxed(omm->io_base + OMM_CR);
->> +	/* optional */
->> +	ret = of_property_read_u32(dev->of_node, "st,omm-mux", &mux);
->> +	if (!ret) {
->> +		if (mux & CR_MUXEN) {
->> +			ret = of_property_read_u32(dev->of_node, "st,omm-req2ack-ns",
->> +						   &req2ack);
->> +			if (!ret && !req2ack) {
->> +				req2ack = DIV_ROUND_UP(req2ack, NSEC_PER_SEC / clk_rate_max) - 1;
->> +
->> +				if (req2ack > 256)
->> +					req2ack = 256;
->> +			}
->> +
->> +			req2ack = FIELD_PREP(CR_REQ2ACK_MASK, req2ack);
->> +
->> +			omm->cr &= ~CR_REQ2ACK_MASK;
->> +			omm->cr |= FIELD_PREP(CR_REQ2ACK_MASK, req2ack);
->> +
->> +			/*
->> +			 * If the mux is enabled, the 2 OSPI clocks have to be
->> +			 * always enabled
->> +			 */
->> +			ret = stm32_omm_toggle_child_clock(dev, true);
->> +			if (ret)
->> +				goto err_clk_disable;
->> +		}
->> +
->> +		omm->cr &= ~CR_MUXENMODE_MASK;
->> +		omm->cr |= FIELD_PREP(CR_MUXENMODE_MASK, mux);
->> +	}
->> +
->> +	/* optional */
->> +	ret = of_property_read_u32(dev->of_node, "st,omm-cssel-ovr", &cssel_ovr);
->> +	if (!ret) {
->> +		omm->cr &= ~CR_CSSEL_OVR_MASK;
->> +		omm->cr |= FIELD_PREP(CR_CSSEL_OVR_MASK, cssel_ovr);
->> +		omm->cr |= CR_CSSEL_OVR_EN;
->> +	}
->> +
->> +	omm->restore_omm = true;
->> +	writel_relaxed(omm->cr, omm->io_base + OMM_CR);
->> +
->> +	ret = stm32_omm_set_amcr(dev, true);
->> +
->> +err_clk_disable:
->> +	pm_runtime_put_sync_suspend(dev);
->> +
->> +	return ret;
->> +}
->> +
->> +static int stm32_omm_check_access(struct device_node *np)
->> +{
->> +	struct stm32_firewall firewall;
->> +	int ret;
->> +
->> +	ret = stm32_firewall_get_firewall(np, &firewall, 1);
->> +	if (ret)
->> +		return ret;
->> +
->> +	return stm32_firewall_grant_access(&firewall);
->> +}
->> +
->> +static int stm32_omm_probe(struct platform_device *pdev)
->> +{
->> +	struct device *dev = &pdev->dev;
->> +	u8 child_access_granted = 0;
->> +	struct stm32_omm *omm;
->> +	int ret;
->> +
->> +	omm = devm_kzalloc(dev, sizeof(*omm), GFP_KERNEL);
->> +	if (!omm)
->> +		return -ENOMEM;
->> +
->> +	omm->io_base = devm_platform_ioremap_resource_byname(pdev, "regs");
->> +	if (IS_ERR(omm->io_base))
->> +		return PTR_ERR(omm->io_base);
->> +
->> +	omm->mm_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "memory_map");
->> +	if (IS_ERR(omm->mm_res))
->> +		return PTR_ERR(omm->mm_res);
->> +
->> +	/* check child's access */
->> +	for_each_child_of_node_scoped(dev->of_node, child) {
->> +		if (omm->nb_child >= OMM_CHILD_NB) {
->> +			dev_err(dev, "Bad DT, found too much children\n");
->> +			return -E2BIG;
->> +		}
->> +
->> +		if (!of_device_is_compatible(child, "st,stm32mp25-ospi"))
->> +			return -EINVAL;
-> 
-> continue;
-> 
-> or better just drop the code - you are not supposed to validate the DTB.
-> DT schema's job is for that.
-
-ok
-
-> 
->> +
->> +		ret = stm32_omm_check_access(child);
->> +		if (ret < 0 && ret != -EACCES)
->> +			return ret;
->> +
->> +		if (!ret)
->> +			child_access_granted++;
->> +
->> +		omm->nb_child++;
->> +	}
->> +
->> +	if (omm->nb_child != OMM_CHILD_NB)
->> +		return -EINVAL;
->> +
->> +	platform_set_drvdata(pdev, omm);
->> +
->> +	pm_runtime_enable(dev);
->> +
->> +	/* check if OMM's resource access is granted */
->> +	ret = stm32_omm_check_access(dev->of_node);
->> +	if (ret < 0 && ret != -EACCES)
->> +		goto error;
->> +
->> +	if (!ret && child_access_granted == OMM_CHILD_NB) {
->> +		ret = stm32_omm_configure(dev);
->> +		if (ret)
->> +			goto error;
->> +	} else {
->> +		dev_dbg(dev, "Octo Memory Manager resource's access not granted\n");
->> +		/*
->> +		 * AMCR can't be set, so check if current value is coherent
->> +		 * with memory-map areas defined in DT
->> +		 */
->> +		ret = stm32_omm_set_amcr(dev, false);
->> +		if (ret)
->> +			goto error;
->> +	}
->> +
->> +	ret = of_platform_populate(dev->of_node, NULL, NULL, dev);
->> +	if (ret) {
->> +		dev_err(dev, "Failed to create Octo Memory Manager child\n");
->> +		of_platform_depopulate(dev);
-> 
-> That's odd. Why do you depopulate if populate did not happen? Anyway,
-> don't mix devm with standard error paths, so this all should be handled
-> by devm.
-
-ok
-
-> 
->> +		ret = -EINVAL;
->> +		goto error;
->> +	}
->> +
->> +	return ret;
->> +
->> +error:
->> +	pm_runtime_disable(dev);
-> 
-> This as well
+Thanks, applied to dma-mapping-fixes branch.
 
 
-ok
-> 
->> +
->> +	return ret;
->> +
->> +}
->> +
->> +static void stm32_omm_remove(struct platform_device *pdev)
->> +{
->> +	struct stm32_omm *omm = platform_get_drvdata(pdev);
->> +
->> +	of_platform_depopulate(&pdev->dev);
->> +	if (omm->cr & CR_MUXEN)
->> +		stm32_omm_toggle_child_clock(&pdev->dev, false);
-> 
-> This as well, via devm calback.
+> ---
+> v4: fix type mistake from v3
+> v3: use a macro instead of constant
+> v2: fix spelling mistake.
+> ---
+>   kernel/dma/contiguous.c | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
+> index 055da410ac71..8df0dfaaca18 100644
+> --- a/kernel/dma/contiguous.c
+> +++ b/kernel/dma/contiguous.c
+> @@ -64,8 +64,7 @@ struct cma *dma_contiguous_default_area;
+>    * Users, who want to set the size of global CMA area for their system
+>    * should use cma= kernel parameter.
+>    */
+> -static const phys_addr_t size_bytes __initconst =
+> -	(phys_addr_t)CMA_SIZE_MBYTES * SZ_1M;
+> +#define size_bytes ((phys_addr_t)CMA_SIZE_MBYTES * SZ_1M)
+>   static phys_addr_t  size_cmdline __initdata = -1;
+>   static phys_addr_t base_cmdline __initdata;
+>   static phys_addr_t limit_cmdline __initdata;
 
-ok
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
-> 
->> +
->> +	pm_runtime_disable(&pdev->dev);
->> +}
->> +
->> +static const struct of_device_id stm32_omm_of_match[] = {
->> +	{ .compatible = "st,stm32mp25-omm", },
->> +	{}
->> +};
->> +MODULE_DEVICE_TABLE(of, stm32_omm_of_match);
-> 
-> Best regards,
-> Krzysztof
-> 
