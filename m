@@ -1,131 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0165D3FFD;
-	Wed,  9 Apr 2025 06:07:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22B091DE3A8
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 06:07:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744178870; cv=none; b=SWU+NcCg6QZdlJAWoD+90u5/jo8LOglIodCcrLu7QQqV1nxU1WUokoeX1HuC9d1zoKmTzzdrJdHzdiPYiZfb6S0SkAvPJH0D5A5IayoRPLcYa/5oKI5uvPOIZUIEIcRrYuMJRdSD24E4nIj1abr9j3ZZQaLOTRB137q4zgJ1VFk=
+	t=1744178875; cv=none; b=ugrKWzykzD9KqqIvQkr0XVKgKlZP6lfPjoxJzZmfcK4Xe/eeMLuMof1f5IlUxkGIaN8vtzvbtsgICcivsqtIPJzp+U6UCeXQACFGXMhXYD78EOZwKo/harq0CtNeYWkos1jWdBUvhx3ngqWbRkZuRM467oKIJAzUgFT81pqBqag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744178870; c=relaxed/simple;
-	bh=jznKGqM7OIKIRDaNKhp41YBmLqZQSYOXFvzxAVG7FO0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KJRnNm9M23vuTYhq7+QkLDXdz14zG3UoKvxqZOY9rtZ6sxM3Y75IWFN8a1fsDN1EaOYjXnZdn4k0UQZaDZi/a/efPsDiiOcoStnDYpuZtVCwgDwZwDLaG7rvZmYKM4A1eAAWnQvfVnWMsZ+u0NaqlZZdTwmIpx5ElKz0/9SRbzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mXTT4SHt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744178875; c=relaxed/simple;
+	bh=VOlrE0q1Dgt0/ufOq2NjQaIoTeL0CeB1PTgY3Vto+Q4=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=WDHObxmcVylXG3qwB9bFfxWiqDjQrx8rDnEUFtVXVJ2RMRdp6jF7Rg0l52urd0vPpndgTBRKkHS8ikLpqkfc6tGGBmgYrY90gOBR7y3K7VPDlZbncRCWVP7ZWLv+PLcqCcbWrP6o7Pd2Uhxthb1aNbCqprIHTrv2BO2qTAyMuvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ngfsJBiX; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mXTT4SHt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90F16C4CEE3;
-	Wed,  9 Apr 2025 06:07:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744178869;
-	bh=jznKGqM7OIKIRDaNKhp41YBmLqZQSYOXFvzxAVG7FO0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mXTT4SHt7doPyaQJmaWnbL1EpL2VKZeGI/rDqQRXcxrjdN+WChlQLY0HEFjJxdnVw
-	 40YaB15751jFS94DbV7e18v+B9E3Y1ojwrh2WM3E1ypcHRz7CJQfRhc9iOiheNQ4j4
-	 jc+tPwIC0MujHZa8T4/+ppyRz0u4pjbbnwLzp3opNLrkp1jRBeiL9hLPBgesYm0Uqa
-	 6GyCcIcde88s4aAsltLQbVSb8DTMz4TG4X0FWyDPSC/COqA79zPRVtpv/W/v+Cq89T
-	 6rNFkDLT/0PNUrw/WFovUYm/AsUGC4pXe7hkxubnNhzNd8cz+FgbRBJSCbR+kc8i6T
-	 sqPDqj0PbTFEQ==
-Message-ID: <04d90c1b-1b73-4b6a-b7fc-351754fbb16b@kernel.org>
-Date: Wed, 9 Apr 2025 08:07:42 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ngfsJBiX"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-af54a9109f4so2720887a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 23:07:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744178873; x=1744783673; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=IQysTOtg9Kdj+LrUMGXjnelf/uERWnWmH3sm6GDGrDs=;
+        b=ngfsJBiXBIV7wcxP5XM6hFaphmGAKxVaqUm8TT8jtqcFVGrhvQb41w6nlTwHpjS6FR
+         wWp8CgU2iE/ydosf7H68IJXEzREJz/D9pETtle1Z+qnV7S780XXG9e7ntQsqROWr8WB/
+         4sRO1fWA/LyFGVnuUQGZKpBLzFfCKQcOWBmFebeiwf098rvqzHRyARk7NQzUtY7mXmCX
+         k6mRWM9dPH00v5xOwIoAI8fDdm/srrq2m2diRMqVHRWAZ6tLpSbrh6p0luqE+j5P61A4
+         Dbki+PTttopX086L20tNeTNEVJSHlDJHb+TIizSJ0SZFs8f6s2voYZmndPDoOQRgE+5r
+         vaug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744178873; x=1744783673;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=IQysTOtg9Kdj+LrUMGXjnelf/uERWnWmH3sm6GDGrDs=;
+        b=nTvwK9wvf+VJ7EKpgUIvFAWtZTOnaRxK7kGej27mtgp55vrgSOw9yewzptA6slOCuj
+         rcBBOX5tLRDX0COAMJZxe8wvc0jXfVmxJg4/nNzddRsuELCVvU3AiICZz/B8sVgv/Bj7
+         77ZX1C6NdK8xrfY3und8THVkIdzkuKJB3J5d7jSuaeOqFqYl2xlxBOyO1p7BYu+bExXj
+         lz5k3qD2c+m4JNOl7JrSRzkS5C60tOlZ2ZNKyJJhnrE46muijHMd8jPt+8QQeqvLFa3J
+         w6uQ956G/wqDMprXcRbGxp+IZnaCbfowaOMtKOYbvXySZmLDD5qtLTnPhhz+hoMgvEb7
+         RvuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWYjEsYgzXWtCO3FwQWKpUxHbrfwyNyxMSoXBLzlD8xo/iZlbYpBk32LNmQpu+j4rBFzuBi0cCXXOHmuuk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNo4j65odidz6NmF0iY3xoCa0Z157rK1zP5jD6D5Eox2jd/c0m
+	sWXVvijERUZFNu8zxoNg8kA6KTFJeQJIVdVv3RB9DavMj5WUgFucpueRwvDjFnHQjDN3BGm03TA
+	BxbRcKg==
+X-Google-Smtp-Source: AGHT+IGuYfcr/8lN8n8ocPw+qJEdejKNXBFvT6qWMwOzhkrBpUs+ZreTH2w02P2FRgxW3y3tQvY3rhbGG4DT
+X-Received: from plbkp4.prod.google.com ([2002:a17:903:2804:b0:220:ca3c:96bc])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1b2c:b0:223:6657:5003
+ with SMTP id d9443c01a7336-22ac2a27c95mr29924845ad.32.1744178873438; Tue, 08
+ Apr 2025 23:07:53 -0700 (PDT)
+Date: Tue,  8 Apr 2025 23:07:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 03/10] dt-bindings: display: msm: document DSI
- controller and phy on SA8775P
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Ayushi Makhija <quic_amakhija@quicinc.com>,
- linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
- freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, robdclark@gmail.com,
- dmitry.baryshkov@linaro.org, sean@poorly.run, marijn.suijten@somainline.org,
- andersson@kernel.org, robh@kernel.org, robh+dt@kernel.org,
- krzk+dt@kernel.org, konradybcio@kernel.org, conor+dt@kernel.org,
- andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org,
- Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
- jernej.skrabec@gmail.com, quic_abhinavk@quicinc.com,
- quic_rajeevny@quicinc.com, quic_vproddut@quicinc.com,
- quic_jesszhan@quicinc.com
-References: <20250311122445.3597100-1-quic_amakhija@quicinc.com>
- <20250311122445.3597100-4-quic_amakhija@quicinc.com>
- <20250312-calm-steadfast-cricket-fe9dd8@krzk-bin>
- <654d409e-2325-46e7-a064-ed9e64277e69@quicinc.com>
- <a168a473-c363-4041-8e3e-84fa44e92b10@kernel.org>
- <zpmr6cpiixyu2sj7r7oqpqsge6dcqw6xszldf7ugznmcrxqsme@efiwnggcn5qx>
- <a654d62e-502a-4a47-96c4-a44c14860e54@kernel.org>
- <767e11cd-e338-4e00-a8e7-2e15f3da84b4@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <767e11cd-e338-4e00-a8e7-2e15f3da84b4@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
+Message-ID: <20250409060744.698511-1-irogers@google.com>
+Subject: [PATCH v4 00/16] Intel TPEBS min/max/mean/last support
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Weilin Wang <weilin.wang@intel.com>, 
+	James Clark <james.clark@linaro.org>, Xu Yang <xu.yang_2@nxp.com>, 
+	John Garry <john.g.garry@oracle.com>, Howard Chu <howardchu95@gmail.com>, 
+	Levi Yun <yeoreum.yun@arm.com>, Dominique Martinet <asmadeus@codewreck.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 08/04/2025 22:26, Dmitry Baryshkov wrote:
->>>>>>> +          - const: qcom,sa8775p-dsi-ctrl
->>>>>>> +          - const: qcom,mdss-dsi-ctrl
->>>>>>
->>>>>> Drop fallback
->>>>>>
->>>>>   
->>>>> Hi Krzysztof,
->>>>>
->>>>> I couldn't understand the meaning of "Drop fallback", could please elaborate it ?
->>>> Look at SM8750 example on the lists. Keep only front compatible.
->>>
->>> Why?
->>
->> To make things simpler and shorter.
-> 
-> I'd prefer consistency. Previous platforms use qcom,mdss-dsi-ctrl.
-Then you should have objected month(s) ago when Rob asked for dropping
-fallback and since then we consistently drop it.
+The patches add support to computing the min, max, mean or last
+retirement latency and then using that value as the basis for metrics.
+When values aren't available, support is added to use the retirement
+latency as recorded for an event in the perf json.
 
-Best regards,
-Krzysztof
+Support is added for reading the retirement latency from the forked
+perf command more than once. To avoid killing the process commands are
+sent through the control fd. Some name handling is changed to make it
+more robust.
+
+Rather than retirement latency events having issues with perf record,
+make it so that the retirement latency modifier enables sample
+weights.
+
+v4: Don't use json min/max in retirement latency stats as they will
+    never update afterwards. Warn once if json data is used when TPEBS
+    recording was requested.
+
+v3: Two fixes from Kan Liang. Ensure min/max statistics don't vary
+    when real samples are encountered.
+
+v2: Addition of header cleanup patch originally posted:
+    https://lore.kernel.org/lkml/20241210191823.612631-1-irogers@google.com/
+    as there are no arch specific reasons not to build this code.
+    Fix bug in "perf pmu-events: Add retirement latency to JSON events
+    inside of perf" where "t->stats.n != 0" should have been
+    "t->stats.n == 0".
+    Add patch so that perf record of a retirement latency event
+    doesn't crash but instead enables sample weights for the event.
+
+Ian Rogers (16):
+  perf intel-tpebs: Cleanup header
+  perf intel-tpebs: Simplify tpebs_cmd
+  perf intel-tpebs: Rename tpebs_start to evsel__tpebs_open
+  perf intel-tpebs: Separate evsel__tpebs_prepare out of
+    evsel__tpebs_open
+  perf intel-tpebs: Move cpumap_buf out of evsel__tpebs_open
+  perf intel-tpebs: Reduce scope of tpebs_events_size
+  perf intel-tpebs: Inline get_perf_record_args
+  perf intel-tpebs: Ensure events are opened, factor out finding
+  perf intel-tpebs: Refactor tpebs_results list
+  perf intel-tpebs: Add support for updating counts in evsel__tpebs_read
+  perf intel-tpebs: Add mutex for tpebs_results
+  perf intel-tpebs: Don't close record on read
+  perf intel-tpebs: Use stats for retirement latency statistics
+  perf stat: Add mean, min, max and last --tpebs-mode options
+  perf pmu-events: Add retirement latency to JSON events inside of perf
+  perf record: Retirement latency cleanup in evsel__config
+
+ tools/perf/Documentation/perf-stat.txt   |   7 +
+ tools/perf/builtin-stat.c                |  29 +-
+ tools/perf/pmu-events/empty-pmu-events.c | 216 +++----
+ tools/perf/pmu-events/jevents.py         |   6 +
+ tools/perf/pmu-events/pmu-events.h       |   3 +
+ tools/perf/util/Build                    |   2 +-
+ tools/perf/util/evlist.c                 |   1 -
+ tools/perf/util/evsel.c                  |  22 +-
+ tools/perf/util/evsel.h                  |   6 +
+ tools/perf/util/intel-tpebs.c            | 682 ++++++++++++++---------
+ tools/perf/util/intel-tpebs.h            |  40 +-
+ tools/perf/util/parse-events.c           |   4 +
+ tools/perf/util/pmu.c                    |  52 +-
+ tools/perf/util/pmu.h                    |   3 +
+ 14 files changed, 666 insertions(+), 407 deletions(-)
+
+-- 
+2.49.0.504.g3bcea36a83-goog
+
