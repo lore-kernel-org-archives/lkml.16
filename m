@@ -1,138 +1,121 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C761325D8E3;
-	Wed,  9 Apr 2025 10:18:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C1B825D537;
+	Wed,  9 Apr 2025 10:21:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744193907; cv=none; b=FUhmlh5C0nD9zPSvzfloOOYbZ35IZJvfn2/rcoC4NcHwYJeSxZzPle4mmxFKrPC3d7oxYkQTbWbvR/091HixEvP0wgU8DEJtqhuNE3XNyryBNfPOnxWNHOfpfbl4GUQGZOaPR2H2+gtU/apHm4Y8fwW1QlD22A1ckz66JqOZgv4=
+	t=1744194113; cv=none; b=m9f7t4PyoWjOda2pxoMrK3WSdy5EQ8pfiRULD0XOCD/3EcnOlTrGfRei4fwThZnblOF0ALf02+abfry55Dd+AFg+4yEo3oGO9Bv9K/ABTZGdSS7kO0VXzG2OiwetcF3YsxlWYRh/qrWH7SITsOIpwAjXv2q8Uy1mdTMz3R0T8yk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744193907; c=relaxed/simple;
-	bh=fC6Hu988itxJobHVjIyl2N25uYpfG2R9GTAajm0H80A=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NLuUqx1QtSFetdKKzg2r4lfaL4J0Zp76FlGFmu/iyABik7lvzit7/vDsjSqE8BnRJXCEPkdoH2uY6j29cMEgs1ZU7bi6cQDl0m79XliyLusdsdPGcU4B4AS8DjhsRJLvNsKbLhOXTE40BwLI8aj2RG6RfjuDkirHMbhzgtYTLk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k0gaoH7q; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744194113; c=relaxed/simple;
+	bh=j/4jf77R0PebDQIN52aFR5oHc0HxZrYVC7puNNdigD8=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=AbeLh3tQoUlwGmojv5qMj02kQrrsoF8nb0eDAxNxWTTwYiuXUskvYnq81NNQiz81mazRrBVb7aXv5Cy5TAhzc9FRU795E/Bpws/l4++cRd9cv+j7WdnBFjQ/VeUNzB9eg6F0Gh/+5nysD6nDzIVqNsZdm5l7nq3qkn/3Ioie04M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=n7bbcThB; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZLbKptei; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k0gaoH7q"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54acc04516cso7642108e87.1;
-        Wed, 09 Apr 2025 03:18:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744193904; x=1744798704; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zS7Ack0Y5Rf82PolP7CbpVR9ELTjfJ8a0j6nVSCIVEs=;
-        b=k0gaoH7qREiwZzkd8i7o7sGkTIr2dQnG2DtxnEQ2xFyfVgfP8b8CiLL/5v9gtfQYzH
-         VfSWK18rjSavheelDbzXy4JtA1+rKc0oY6ls4ZQIqpgP2+YXbtc0Dxde7QpJuqOalxdi
-         sOp9kzgsl0gWqcdx1jJlji6O6/NlSaEkG0Xn1UL+5LA2t96qWsKRnzILNvf2N12EXNdI
-         L8dotuNHc4I3EZM3Ibdf+JmOsjSvp4AVuww7BxIS+NAz8UJWU38QZiJPG5bMR0i56w0c
-         49gtm1yDE4NHKeVJc9jyrx6Puqzt0vc2ugkc5cRrTVcgIONWNuaD7ww9xpp0DQT5uTSC
-         cysA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744193904; x=1744798704;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zS7Ack0Y5Rf82PolP7CbpVR9ELTjfJ8a0j6nVSCIVEs=;
-        b=euSNyQSRjAnzOIsWOVdeQ4QJrrawwmnYSjJp7tLdOj3b4/u8Hn52DCW9EeBkdlhDfJ
-         NnTTz8hxZV2CgQfJ57/HhYYVtJpodU+DRnrJh73HXCkIhClvMB8r3yYbzC1Lpi/tBMhF
-         o4QIBNRaYQoVMZ/bZylc+Y0buyEGi6OXopoilVurjw2x3si2ejZo9ffoCsiqZknHieAX
-         2SejIx/OjWsS167hRw9ZhrscGZYBXoEZ5HHyri4htKFDMS62gWBHRg3DTWNYjqPriL1i
-         MZGGICf39B0/AaTY0LywntG8JrQ6u/WWizC9WY1jRU7MOQ+OT/pz4cktL15W/gfYJxnA
-         4qQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVmpbVNas1umw/vQcbLdG2B9wyzMrXpRWWi7SYTtPalDPuUAfiYkHiG3KcPTWjkwny362ZSGDx9FFdY7TM=@vger.kernel.org, AJvYcCWJGfJ6QHFfCF45EqkrFXo8JYYevxIma38ykWhpdjFLYBlP3sTByjzZ7lx/efxga+5fmG9brEhOI4Yy@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJJ/8PpdKia79kskhCpCRfng7eeCzMp5rOVzoIdH3dnuRODzpI
-	jBFYzgQaKgo86I5huU5tveKeqahdXP3RErwFr0yxa5hNt2W0sKLWl0XIxg==
-X-Gm-Gg: ASbGncsDHufSBa2SEGJ07/+hXa9g+E7sZxnkuRZyfkgPUC0eQfF3Z4pTvKqYZhM2SuL
-	EGmr8AVD+Ha1QHsbIyZhWcW/tDmBZDsKHb90tdnIc4T2qpmCz1zqfsWnIvzE6KGLg5bfkv2jX1O
-	Tw+OYR8yeI4/mSTgwcmSZ9g4glj6oRzwZqZJCaF14bHxw63gDgIEtIV+5Vv2QLP9V3E7P8wg3oW
-	zAjXLAMsXRvlDd1IUtt8jKblwsffQdnUFHbcF0/JnQDR1TtGDkURCxJ66vInHEkZF0QFz4l+LsP
-	Kr9DI549a8+9Xhzuh+qv6TDKqt0G68uYNkA3chehRsq6ktgA9R+pzStLxYT8pGA3JCRM
-X-Google-Smtp-Source: AGHT+IF56XODRGoGorCF28z0pxYiO8EdSzRH3NU1mlnYnutfK4P2r4ExRLOtmZ8IkLeM73uJyohhpw==
-X-Received: by 2002:a05:651c:12c8:b0:30b:f924:3565 with SMTP id 38308e7fff4ca-30f438be86dmr7349781fa.37.1744193903460;
-        Wed, 09 Apr 2025 03:18:23 -0700 (PDT)
-Received: from foxbook (adtq195.neoplus.adsl.tpnet.pl. [79.185.228.195])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f465d50fbsm1174151fa.80.2025.04.09.03.18.22
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Wed, 09 Apr 2025 03:18:23 -0700 (PDT)
-Date: Wed, 9 Apr 2025 12:18:19 +0200
-From: =?UTF-8?B?TWljaGHFgg==?= Pecio <michal.pecio@gmail.com>
-To: Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc: Alan Stern <stern@rowland.harvard.edu>, Mathias Nyman
- <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Paul Menzel <pmenzel@molgen.mpg.de>, linux-usb@vger.kernel.org, LKML
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC RFT] usb: hcd: Add a usb_device argument to
- hc_driver.endpoint_reset()
-Message-ID: <20250409121819.64db23a0@foxbook>
-In-Reply-To: <357368ff-0c49-4f22-a03d-fd9560c22dae@linux.intel.com>
-References: <c279bd85-3069-4841-b1be-20507ac9f2d7@molgen.mpg.de>
-	<b356f743-44b5-4f48-a289-fae0afe106ff@linux.intel.com>
-	<84b400f8-2943-44e0-8803-f3aac3b670af@molgen.mpg.de>
-	<20250406002311.2a76fc64@foxbook>
-	<ade0d77a-651a-4b03-bf21-00369fdc22f8@rowland.harvard.edu>
-	<20250406095008.0dbfd586@foxbook>
-	<20250406175032.12b7d284@foxbook>
-	<14197657-0a0f-45a8-ac36-dd37b16a1565@rowland.harvard.edu>
-	<20250407074905.2d236fb9@foxbook>
-	<3efb52b8-0974-4125-a344-00f459fbe4e4@rowland.harvard.edu>
-	<20250408121817.6ae8defd@foxbook>
-	<357368ff-0c49-4f22-a03d-fd9560c22dae@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="n7bbcThB";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZLbKptei"
+Date: Wed, 09 Apr 2025 10:21:47 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744194109;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=f/LXrH6QOy5Vp7GRM3jyiK+8jqSUek2ehoeMxwLSiz4=;
+	b=n7bbcThBhq58IeQM4VQBm0AvUV7uCVB+hAejuFAtYM+73w6Zh+FurufRt7cLsU/ZngMT8V
+	vJ3YyMvd9nxsFptg4bbaprYwmaPde5aVItRjRpkq5j/+4qIC80MTmV4Dv0tonuhpm4IlEI
+	cuRDAcZOQMc8irNbZh3dcWQsHTbqLVpYTJo+WWvB7NCQ8Yev7rCb/z80b6Pt+ywWVjJ+r+
+	zJl1KZ5LtUbpjM7rDqdMp9+RthCkWKWOQnqRylYQNJYVOeVmhmuPnhyFAIL4N0nXAD4S5Q
+	ff4WrcZcxKzJ0vxVUOyj7L10GlIaYaVHPjQy8hczhTXQ21fCJ0oBvMz16GvNPA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744194109;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=f/LXrH6QOy5Vp7GRM3jyiK+8jqSUek2ehoeMxwLSiz4=;
+	b=ZLbKpteiCw916z/1P7X7uD581C5EFA0vcnl/SfDaULklHv7QGapZUyBX+XLqcG7P7sQ8hM
+	RnUHaOUHpta3h7AA==
+From: "tip-bot2 for Ard Biesheuvel" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/boot] x86/boot/startup: Disable objtool validation for library code
+Cc: Chaitanya Kumar Borah <chaitanya.kumar.borah@intel.com>,
+ Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+ "H. Peter Anvin" <hpa@zytor.com>, Kees Cook <keescook@chromium.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ David Woodhouse <dwmw@amazon.co.uk>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+ Len Brown <len.brown@intel.com>, Josh Poimboeuf <jpoimboe@redhat.com>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250408085254.836788-10-ardb+git@google.com>
+References: <20250408085254.836788-10-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Message-ID: <174419410761.31282.16523291113363404371.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-On Tue, 8 Apr 2025 16:55:24 +0300, Mathias Nyman wrote:
-> 1. driver->reset_device will free all xhci endpoint rings, and lose
-> td_list head, but keep cancelled_td_list and ep->ep_state flags. xHC
-> issues reset device command setting all internal ep states in xci to
-> "disabled".
-> 
-> 2. usb hcd_alloc_bandwith will drop+add xhci endpoints for this
-> configuration, allocate new endpoint rings, and inits new td_list
-> head. Old cancelled_td_list and ep_state flags are still set, not
-> matching ring.
-> 
-> 3. usb_disable_interface() will flush all pending URBs calling
-> xhci_urb_dequeue(). xhci_urb_dequeue() makes decision based on stale
-> ep_state flags. May start to cancel/giveback urbs in old
-> cancelled_td_list for tds that existed on old freed ring. will also
-> set host_ep->hcpriv to null
-> 
-> 4. usb_enable_interface() calls xhci_endpoint_reset() that finally
-> clears the EP_STALLED flag (udev now found thanks to this patch)
-> 
-> Disabling endpoints, like calling usb_disable_interface() in step 3
-> should be done before calling  usb_hcd_alloc_bandwith().
-> This was fixed in other places such as usb_set_interface() and
-> usb_reset_config()
+The following commit has been merged into the x86/boot branch of tip:
 
-I haven't thought about it, but you are right. This means that my
-commit message is wrong to suggest that the problem occurs after
-altsetting changes, it is apparently unique to device reset case.
+Commit-ID:     d9fa398fe82728ee703ad2bd9cf5247df9626470
+Gitweb:        https://git.kernel.org/tip/d9fa398fe82728ee703ad2bd9cf5247df9626470
+Author:        Ard Biesheuvel <ardb@kernel.org>
+AuthorDate:    Tue, 08 Apr 2025 10:52:56 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Wed, 09 Apr 2025 11:59:03 +02:00
 
-> We might need to clean up ep_state flags and give back cancelled URBs
-> in xhci_discover_or_reset_device() after the reset device xhci
-> command completion.
+x86/boot/startup: Disable objtool validation for library code
 
-I guess it wouldn't be strictly necessary if core flushed all endpoints
-before resetting. I frankly always assumed that it does so, because it
-also makes sense for other HCDs which don't even define reset_device().
+The library code built under arch/x86/boot/startup is not intended to be
+linked into vmlinux but only into the decompressor and/or the EFI stub.
 
-There seems to be nothing stopping them from talking to a device while
-it is undergoing a reset and re-configuration, seems a little risky
-given that HW isn't exactly free of its own bugs.
+This means objtool validation is not needed here, and may result in
+false positive errors for things like missing retpolines.
 
-Speaking of xhci, I wonder if this could also be responsible for some
-xHC crashes during enumeration. I recall that those Etron quirk patches
-mentioned events for a disabled endpoint and "HC died" in some cases.
+So disable it for all objects added to lib-y
 
-Regards,
-Michal
+Tested-by: Chaitanya Kumar Borah <chaitanya.kumar.borah@intel.com>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: David Woodhouse <dwmw@amazon.co.uk>
+Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: Len Brown <len.brown@intel.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Link: https://lore.kernel.org/r/20250408085254.836788-10-ardb+git@google.com
+---
+ arch/x86/boot/startup/Makefile | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/arch/x86/boot/startup/Makefile b/arch/x86/boot/startup/Makefile
+index 73946a3..8919a1c 100644
+--- a/arch/x86/boot/startup/Makefile
++++ b/arch/x86/boot/startup/Makefile
+@@ -4,3 +4,9 @@ KBUILD_AFLAGS		+= -D__DISABLE_EXPORTS
+ 
+ lib-$(CONFIG_X86_64)		+= la57toggle.o
+ lib-$(CONFIG_EFI_MIXED)		+= efi-mixed.o
++
++#
++# Disable objtool validation for all library code, which is intended
++# to be linked into the decompressor or the EFI stub but not vmlinux
++#
++$(patsubst %.o,$(obj)/%.o,$(lib-y)): OBJECT_FILES_NON_STANDARD := y
