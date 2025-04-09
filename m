@@ -1,44 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 011E026770E;
-	Wed,  9 Apr 2025 15:38:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CA3C262811;
+	Wed,  9 Apr 2025 15:38:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744213092; cv=none; b=W4wWBr2BU2lerwCR/DiW3GCpD2d8wi+KygnT2HcKUC/qCHWPTIb9m6QV34FwOSsryAFJbiPzWhj9sxZAWt1P90IGdTL4gpLga6AVM4BJjEbseIxZ8YVxApayOgPad5UDtJ0h/ORuImPkQOGwDz0UIHvgccuQTkOUakCsKOB/LVk=
+	t=1744213121; cv=none; b=ZePAaieVxFW3K/zAuYeCrJJl0MG/XEkCDLAeXoE5dTBUAcY6Wnx7GloU6INLmqh89mHIuYon9n2VJigGHn0zNRUIQai/gRD2mhVX6zc601Bo/N/DXcZneRm4VInNB6kvJiSiHhFXbHFj32SbH1M9DS8zYjaO+SC8Elbvf+YQfN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744213092; c=relaxed/simple;
-	bh=fqfH1kvrY0NprE4Wf6dbWb0UT2mQUYVQx6Gs7AkqODg=;
+	s=arc-20240116; t=1744213121; c=relaxed/simple;
+	bh=IOMjHfxBYGcUZJveBDmau45ZQjzYvAvvpPX2rlPLdD8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rV0NzyfqbzcIv3jnaJ43/lcvr28/YHJl8W8x7pxAtoFEwsH6CBvkzS9sHuuGzuviCYvcQ0+bRLqRjKPosyHtOutotyV4pQgjyh50x2LYAwI+gZj07AM5wbM/ddQEduEZ+Q7P2Rc8egX3qrruEk5IbFJqrZhxdGriDw4U+XNIMXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VzPDUykg; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=cjJeSdyMgpANfJTKQlLG2kjEaILUPQu2jmFJXwy9tMEMWHNIiO9GTah8ql9WVWdvuBgMeAzDM7vRs2KXIt88yGEedyv7rZO8MokPXev9fJ1oojNNhGfIc2wVIGQ5kjFE1gXs+HFXgqWAd4+UlZ2VgObnCEPjQHXLRfDUFoxtT/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=hjyDH8D7; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VzPDUykg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79A34C4CEE2;
-	Wed,  9 Apr 2025 15:38:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744213091;
-	bh=fqfH1kvrY0NprE4Wf6dbWb0UT2mQUYVQx6Gs7AkqODg=;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="hjyDH8D7"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 52CDF40E021D;
+	Wed,  9 Apr 2025 15:38:37 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id HS0GJrRt_Tau; Wed,  9 Apr 2025 15:38:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1744213113; bh=/pEuj1pEo+DngRY1u3NIkINdnDeK8Jv6l/fvUOZ1n+w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VzPDUykgYlNJ9VEOYJEoxdfu6RVmeanMWYFbIEtNmKYLRtebJrUstrCN/ItySJLx1
-	 iTrG/qxrLQy33IHXySaYWxl4X4XIxz9btWkwjrTe+mE3bOEhCcEXI/kgCn7091qSZp
-	 uz8paIAFq1AqvpooGWnCMRDPXdMPSCCI2V1uvCGVxdxYFasuG0HkDscVOl8VuWLXJJ
-	 ACGXaSTxVURARgJYwG1G6ZKrSiZCLdkGXjZf9TgFWU2TbqtOKjHnkMJ6uz3SGHaldl
-	 cWclysuAKuxG7b9j3NG1/GenKh0zPVx5EhCPcm3HUgWzx0iAT/rVGVpsdEqg5ApYbm
-	 ulAHyhy1crTmA==
-Date: Wed, 9 Apr 2025 17:38:06 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: linux-fsdevel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>, 
-	Lennart Poettering <lennart@poettering.net>, Daan De Meyer <daan.j.demeyer@gmail.com>, 
-	Mike Yuan <me@yhndnzj.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 3/4] pidfd: improve uapi when task isn't found
-Message-ID: <20250409-sesshaft-absurd-35d97607142c@brauner>
-References: <20250403-work-pidfd-fixes-v1-0-a123b6ed6716@kernel.org>
- <20250403-work-pidfd-fixes-v1-3-a123b6ed6716@kernel.org>
- <20250404123737.GC3720@redhat.com>
- <20250404-roben-zoodirektor-13cb8d1acefe@brauner>
- <20250404145323.GE3720@redhat.com>
+	b=hjyDH8D7J2l1q5vFmmbL8ZNU9saEYECOANpVnBJm9w0hNVxSA8uIQguZbQEZ9cVYq
+	 LS38zYH2qTTADrpzY1gmbroSVrd+ayzR3RiHX30dXk9Qu7OLVkSoip8RpBN1i3rxl3
+	 2o6Zd/J8CPN0sAsN61Jx7zxnPvqEwsXShmw4y18OiiPHSwSBcM1e7UiOWvKJXdnXz5
+	 /V3Nn6LwDx2jGb+j9Zr9NSTRRcxJsha14qAftN4Uf8jiya7NRz6wI8DJhUteOIBCkX
+	 aHEhZYo6DoS1yrBP4V73FqE2pTvuWPQbsLq+cOfNSVceNtdi3yIB+bihTcBlIuTI3e
+	 Oslvw+n/Kq1XaeLbxTs/dtlP+028Qz88cygbsJqITGSuN+ECxGOYanId5GAxTZgjrG
+	 FrBYkkJZfOMtPTgMaGMvcFWBhkawWA24XP4p4VKZabDkhrMm93ibld5aAWH141hh+u
+	 01NjD87sc+r887RiX0oyLP+6rA8lUyFuD5s1bONeF6CFwc2ssxvDszw5nkbFQ0Guqj
+	 9y0l6iWr++8Lwi26h9Q/nC5+LEwMtnJA12fmZO+wfj0YgsZrzrbbTg1PwKHQFtdnyj
+	 Ql6NN1M1d2GuWil7a6hiaO4uv4u1RyVm6CvQfZfDBZieeATNZ553C9W/H9g88G5Qqy
+	 0QujQm5p1/l5bxN3KgX6oHbk=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DBEA540E0169;
+	Wed,  9 Apr 2025 15:38:24 +0000 (UTC)
+Date: Wed, 9 Apr 2025 17:38:19 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Uros Bizjak <ubizjak@gmail.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, linux-modules@vger.kernel.org,
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Paul Menzel <pmenzel@molgen.mpg.de>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] compiler.h: Avoid the usage of __typeof_unqual__() when
+ __GENKSYMS__ is defined
+Message-ID: <20250409153819.GHZ_aUayZlfOd7TTq4@fat_crate.local>
+References: <20250404102535.705090-1-ubizjak@gmail.com>
+ <CAK7LNATO1RfACvWhHJuLi-FYWMnSn6+Tp67-EZtVWNk+RCSTVQ@mail.gmail.com>
+ <CAFULd4bx9BGKo_4kn14rsVr44otpdjpjn_o6=zMp8iu98f9Upg@mail.gmail.com>
+ <CAK7LNATnactfA2U0CB2VcoE1eDc+bj=Jjye-Khsc3xG-iZ2XVQ@mail.gmail.com>
+ <CAFULd4b25r5wf31DJputSOZhhMTrejQ_3-2P5rpeOL8H=4_mcA@mail.gmail.com>
+ <CAK7LNAQVbwnnX5TJLmEShtmUtLCwr=rnZgwX9NoAke+PqzsqiA@mail.gmail.com>
+ <CAFULd4b2azU-oBOTTXgQ6ahkVeYWHTJrnmJ97vtLm3P6jMOeug@mail.gmail.com>
+ <20250409152812.GGZ_aSDEaLEOVUf3YX@fat_crate.local>
+ <CAFULd4avYC6V=-ewBcTGHA5GjuTBh++-wLNOH=M68u1rwNsAmg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,58 +73,18 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250404145323.GE3720@redhat.com>
+In-Reply-To: <CAFULd4avYC6V=-ewBcTGHA5GjuTBh++-wLNOH=M68u1rwNsAmg@mail.gmail.com>
 
-On Fri, Apr 04, 2025 at 04:53:24PM +0200, Oleg Nesterov wrote:
-> On 04/04, Christian Brauner wrote:
-> >
-> > On Fri, Apr 04, 2025 at 02:37:38PM +0200, Oleg Nesterov wrote:
-> > > And... the code looks a bit overcomplicated to me, why not simply
-> > >
-> > > 	int pidfd_prepare(struct pid *pid, unsigned int flags, struct file **ret)
-> > > 	{
-> > > 		if (!pid_has_task(pid, PIDTYPE_PID))
-> > > 			return -ESRCH;
-> > >
-> > > 		if (!(flags & PIDFD_THREAD) && !pid_has_task(pid, PIDTYPE_TGID))
-> > > 			return -ENOENT;
-> >
-> > I thought that checking PIDTYPE_PID first could cause misleading results
-> > where we report ENOENT where we should report ESRCH: If the task was
-> > released after the successful PIDTYPE_PID check for a pid that was never
-> > a thread-group leader we report ENOENT.
-> 
-> Hmm... but the code above can only return ENOENT if !(flags & PIDFD_THREAD),
-> so in this case -ENOENT is correct?
-> 
-> I guess -ENOENT would be wrong if this pid _was_ a leader pid and we
-> race with __unhash_process() which does
-> 
-> 	detach_pid(post->pids, p, PIDTYPE_PID);
-> 	if (group_dead)
-> 		detach_pid(post->pids, p, PIDTYPE_TGID);
+On Wed, Apr 09, 2025 at 05:32:39PM +0200, Uros Bizjak wrote:
+> The workaround is posted to the list. It should be committed to the
+> mainline until genksyms is fixed.
 
-Yes, exactly.
+I'll take it through tip.
 
-> 
-> but without tasklist_lock (or additional barries in both pidfd_prepare() and
-> __unhash_process() pidfd_prepare() can see the result of these 2 detach_pid()'s
-> in any order anyway. So I don't think the code above is "more" racy.
+Thx.
 
-Right... Hm, I don't like the inherent raciness of this. I think we
-should fix this. I'm playing with something. I'll try to get it out
-today.
+-- 
+Regards/Gruss,
+    Boris.
 
-> 
-> Although perhaps we can rely on the fact the the 1st detach_pid(PIDTYPE_PID)
-> does wake_up(pid->wait_pidfd) and use pid->wait_pidfd->lock to avoid the
-> races, not sure...
-> 
-> But,
-> 
-> > But I can adapt that to you scheme.
-> 
-> Again, up to you, whatever you prefer.
-> 
-> Oleg.
-> 
+https://people.kernel.org/tglx/notes-about-netiquette
