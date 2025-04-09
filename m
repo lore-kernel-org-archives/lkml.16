@@ -1,48 +1,49 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E76A21DF751;
-	Wed,  9 Apr 2025 06:44:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 969E31E1023
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 06:45:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744181092; cv=none; b=unrdiq1mVTHalw6UVbW63wU+KCDzWdaUYdoX//4ctqsPQaOhcXuYc3aMqhaANyxr0wyeivybPOE8BDU/M+KjWtpCYl8pbynA36l8Ezf9QKHufsha5MIgYt9yyhxmV69iFBGL+yGJxXT7S/D8n1jbU4vUh1rGw3gx8Ti2KW4/F14=
+	t=1744181103; cv=none; b=K9moaEkVVX2X6CRx4gB/R/88Gxw0T2BTUGT5tnwzDu9DqNv7s4oefVnQki3c5GbtYO/uIxS8Kbc2MVqIV/UN8puCurKHTSeKLqwCQdhx2FtwBsKRu0vUOdbffXLxbXya561dKXP7ypLOeCtdxSPjlsqQTCuYkYIONlgI0WqEwh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744181092; c=relaxed/simple;
-	bh=/yLqIi4ei+1rxxZwU9HgqOKbkEgzjwW32t0OMobPk08=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ttzwLps/5inb8u2epYT9jXsDp9770mspndY2FkPLFbPfffb9tRIVP/AEzSh30jMdkFw9KO0XaW4lT7/uw5PClGG4IokeMFTkTuW1986kPhpcpvlF9KTsXOeUjYLVutX07aMWk2S8tGFD6KpcHk2QAiyqT12pDGzs8XrFuhpHT30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=FS0up6cH; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1744181103; c=relaxed/simple;
+	bh=Lk/nerQuXwCVaG1hZ0KR4U4tdyw6/FXCBoB6hXRgscQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SiqQZRaWMdKYsOi3s4CBiM+ALK8sAtf72uLWsBFv78jO4vu9nPArdF7Ublw3Xee6xKd3mg21WpfNluBIfHQrHZRuYxqXBSTF1rfmDJlp581F8l9nhbZavhd/3oPXvkno1x3kMsX6LdNVAiS2EzIx1YSLiOZIjFLnlcjI93fT6P8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FJqxQ0tl; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="FS0up6cH"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 538JZRFo002911;
-	Wed, 9 Apr 2025 06:44:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	MjxU9Wzug3C1/bpJyyVdvYu7XHV8AaWbS5sG+EoQisg=; b=FS0up6cHnaMXRdel
-	9xohDLWDiERagrmdD2sjPcXzDCYYzas/GQ8E5gDevQsgaeS4pGIdmRlvYxpUlSuZ
-	R5BaoHMcje/gf+9X47yjBQlf7B9coFlPEU+JD2S7yKW7K/bJDLlylxueQhKbjL+a
-	ejQUHdbnw22TleULY/joUcPkNlU1vZfFR1JcwM9VqjYmAxCGmCl3DvJFvOs6ETT+
-	b0lDwrXz+wUImMQcsoSR75LjNY091FoECm9LAbUF6GjKtReWJiXfeQk0zRjatBGm
-	Du5t8lxpC4yreAJvAioOeHJxATtqHr/bhi0GPcj3+UjjCGsITrdwx8bVvTAduiI0
-	S4v5Tg==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twc1j7tq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 09 Apr 2025 06:44:40 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5396idmU014141
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 9 Apr 2025 06:44:39 GMT
-Received: from [10.217.219.207] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 8 Apr 2025
- 23:44:36 -0700
-Message-ID: <c4994d69-a8f6-40ca-96e6-6cd9ed2081ae@quicinc.com>
-Date: Wed, 9 Apr 2025 12:14:33 +0530
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FJqxQ0tl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744181099;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Xyyyv7/mfJ9H0zBbyj9vD5vCWrDye2V05E9brkG1H0g=;
+	b=FJqxQ0tlb2yCd5CtizmWFzTbySj2YFqlDidAPfbCc0/84s9Nj4nR7YYtPvyi+RiSeKWRCz
+	HBmw1iXprfGYfqFkC+dKQsEnFq9zARGPrcUDVPyLez7eiWzKV4UlvFC60I6+SDWCszFmgb
+	LYgezhQiY4uiyIw4XT4j+8d9yQbT5a8=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-675-m6XxHO3uPn6SB5zNQuCBSg-1; Wed,
+ 09 Apr 2025 02:44:55 -0400
+X-MC-Unique: m6XxHO3uPn6SB5zNQuCBSg-1
+X-Mimecast-MFC-AGG-ID: m6XxHO3uPn6SB5zNQuCBSg_1744181093
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CA7321955DCD;
+	Wed,  9 Apr 2025 06:44:52 +0000 (UTC)
+Received: from [10.44.32.72] (unknown [10.44.32.72])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 521C43001D0E;
+	Wed,  9 Apr 2025 06:44:47 +0000 (UTC)
+Message-ID: <22b9f197-2f98-43c7-9cc9-c748e80078b0@redhat.com>
+Date: Wed, 9 Apr 2025 08:44:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,166 +51,103 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/3] i3c: master: Add Qualcomm I3C controller driver
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: <alexandre.belloni@bootlin.com>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <jarkko.nikula@linux.intel.com>,
-        <linux-i3c@lists.infradead.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <andersson@kernel.org>, <konradybcio@kernel.org>
-References: <20250403134644.3935983-1-quic_msavaliy@quicinc.com>
- <20250403134644.3935983-3-quic_msavaliy@quicinc.com>
- <20250404-provocative-mayfly-of-drama-eeddc1@shite>
- <4fe9f898-63bf-4815-a493-23bdee93481e@quicinc.com>
- <e93c50ce-30dd-45ef-b945-019e703bd7c3@kernel.org>
- <6ab62bb9-2758-4a12-aec3-6de9efc3075a@quicinc.com>
- <7bbe235d-be3a-4851-b9db-c3c9e956a9fd@kernel.org>
+Subject: Re: [PATCH 05/28] mfd: zl3073x: Add components versions register defs
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: netdev@vger.kernel.org, Michal Schmidt <mschmidt@redhat.com>,
+ Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+ Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
+ Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
+ Andy Shevchenko <andy@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20250407172836.1009461-1-ivecera@redhat.com>
+ <20250407172836.1009461-6-ivecera@redhat.com>
+ <a5d2e1eb-7b98-4909-9505-ec93fe0c3aac@lunn.ch>
 Content-Language: en-US
-From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-In-Reply-To: <7bbe235d-be3a-4851-b9db-c3c9e956a9fd@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+From: Ivan Vecera <ivecera@redhat.com>
+In-Reply-To: <a5d2e1eb-7b98-4909-9505-ec93fe0c3aac@lunn.ch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: RcLhxEaQ9o46zmtvil6I3QMZoz8pGOz3
-X-Authority-Analysis: v=2.4 cv=KtdN2XWN c=1 sm=1 tr=0 ts=67f61758 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=yBufkzId0ZbioYoeXs0A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: RcLhxEaQ9o46zmtvil6I3QMZoz8pGOz3
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-09_02,2025-04-08_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
- priorityscore=1501 phishscore=0 bulkscore=0 suspectscore=0 spamscore=0
- malwarescore=0 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=706 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504090025
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Thanks Krzysztof !
-
-On 4/9/2025 11:40 AM, Krzysztof Kozlowski wrote:
-> On 09/04/2025 07:48, Mukesh Kumar Savaliya wrote:
->> Hi Krzysztof,
+On 07. 04. 25 11:09 odp., Andrew Lunn wrote:
+> On Mon, Apr 07, 2025 at 07:28:32PM +0200, Ivan Vecera wrote:
+>> Add register definitions for components versions and report them
+>> during probe.
 >>
->> On 4/9/2025 12:11 AM, Krzysztof Kozlowski wrote:
->>> On 08/04/2025 15:23, Mukesh Kumar Savaliya wrote:
->>>>>> +
->>>>>> +static int i3c_geni_runtime_get_mutex_lock(struct geni_i3c_dev *gi3c)
->>>>>> +{
->>>>>
->>>>> You miss sparse/lockdep annotations.
->>>>>
->>>> This is called in pair only, but to avoid repeated code in caller
->>>> functions, we have designed this wrapper.
->>>> i3c_geni_runtime_get_mutex_lock()
->>>> i3c_geni_runtime_put_mutex_unlock().
->>>>
->>>> caller function maintains the parity. e.g. geni_i3c_master_priv_xfers().
->>>>
->>>> Does a comment help here ? Then i can write up to add.
->>>
->>> I do not see how this is relevant to my comment at all.
->>>
->> What i understood is you suspect about lock/unlock imbalance right ?
->> I know that Lockdep annotations will be used to check if locks are
->> acquired and released in a proper order.
+>> Reviewed-by: Michal Schmidt <mschmidt@redhat.com>
+>> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+>> ---
+>>   drivers/mfd/zl3073x-core.c | 35 +++++++++++++++++++++++++++++++++++
+>>   1 file changed, 35 insertions(+)
 >>
->> You want me to add below code in both the functions mentioned ?
->>       lockdep_assert_held(&gi3c->lock);
->>
->> What exact sparse/attribute can be added ? I am not sure about that.
+>> diff --git a/drivers/mfd/zl3073x-core.c b/drivers/mfd/zl3073x-core.c
+>> index 39d4c8608a740..b3091b00cffa8 100644
+>> --- a/drivers/mfd/zl3073x-core.c
+>> +++ b/drivers/mfd/zl3073x-core.c
+>> @@ -1,10 +1,19 @@
+>>   // SPDX-License-Identifier: GPL-2.0-only
+>>   
+>> +#include <linux/bitfield.h>
+>>   #include <linux/module.h>
+>>   #include <linux/unaligned.h>
+>>   #include <net/devlink.h>
+>>   #include "zl3073x.h"
+>>   
+>> +/*
+>> + * Register Map Page 0, General
+>> + */
+>> +ZL3073X_REG16_DEF(id,			0x0001);
+>> +ZL3073X_REG16_DEF(revision,		0x0003);
+>> +ZL3073X_REG16_DEF(fw_ver,		0x0005);
+>> +ZL3073X_REG32_DEF(custom_config_ver,	0x0007);
+>> +
+>>   /*
+>>    * Regmap ranges
+>>    */
+>> @@ -159,10 +168,36 @@ EXPORT_SYMBOL_NS_GPL(zl3073x_dev_alloc, "ZL3073X");
+>>   
+>>   int zl3073x_dev_init(struct zl3073x_dev *zldev)
+>>   {
+>> +	u16 id, revision, fw_ver;
+>>   	struct devlink *devlink;
+>> +	u32 cfg_ver;
+>> +	int rc;
+>>   
+>>   	devm_mutex_init(zldev->dev, &zldev->lock);
+>>   
+>> +	scoped_guard(zl3073x, zldev) {
 > 
-> I don't think you tried enough.
-> 
-> git grep sparse -- Documentation/
-> which gives you the file name, so:
-> git grep lock -- Documentation/dev-tools/sparse.rst
-> 
-Thanks ! it seems little more deep to go for me. Appreciate your 
-pointers here.
-> Use sparse instead of lockdep.
-> 
->>>>
->>>>>> +	int ret;
->>>>>> +
->>>>>> +	mutex_lock(&gi3c->lock);
->>>>>> +	reinit_completion(&gi3c->done);
->>>>>> +	ret = pm_runtime_get_sync(gi3c->se.dev);
->>>>>> +	if (ret < 0) {
->>>>>> +		dev_err(gi3c->se.dev, "error turning on SE resources:%d\n", ret);
->>>>>> +		pm_runtime_put_noidle(gi3c->se.dev);
->>>>>> +		/* Set device in suspended since resume failed */
->>>>>> +		pm_runtime_set_suspended(gi3c->se.dev);
->>>>>> +		mutex_unlock(&gi3c->lock);
->>>>>
->>>>> Either you lock or don't lock, don't mix these up.
->>>>>
->>>> Caller is taking care of not calling i3c_geni_runtime_put_mutex_unlock()
->>>> if this failed.
->>>
->>>
->>> I do not see how this is relevant to my comment at all.
->>>
->> same as above
-> 
-> 
->>>>>> +		return ret;
->>>>>> +	}
->>>>>> +
->>>>>> +	return 0;
->>>>>> +}
->>>>>> +
->>>>>> +static void i3c_geni_runtime_put_mutex_unlock(struct geni_i3c_dev *gi3c)
->>>>>> +{
->>>>>
->>>>> Missing annotations.
->>>>>
->>>> Shall i add a comment here ?
->>>
->>> Do you understand what is sparse? And lockdep?
->>>
->> Little but not clear on exact sparse attribute to be added. please help
->> me. if you can help with some clear comment and sample, will be easier
->> if you can.
-> 
-> You did not even bother to grep for simple term.
-> 
-No, mine was quick research, what i got is below from my search and i 
-mentioned in crisp. What you pointed above 
-Documentation/dev-tools/sparse.rst looks great.
+> Why the scoped_guard? The locking scheme you have seems very opaque.
 
-===
-Sparse and Lockdep are tools used in the Linux kernel development to 
-help with code analysis and debugging.
+We are read the HW registers in this block and the access is protected 
+by this device lock. Regmap locking will be disabled in v2 as this is 
+not sufficient.
 
-Sparse
-Sparse is a static code analyzer specifically designed for the Linux 
-kernel. It helps developers find potential issues in their code by 
-performing checks that are not typically done by the compiler. Sparse 
-annotations are special comments or attributes added to the code to 
-guide Sparse in its analysis. Some common Sparse annotations include:
-
-__attribute__((noderef)): Indicates that a pointer should not be 
-dereferenced.
-__attribute__((address_space(x))): Specifies the address space of a pointer.
-__attribute__((force)): Forces a type conversion that Sparse would 
-normally warn about.
-Lockdep
-Lockdep is a runtime lock validator used in the Linux kernel to detect 
-potential deadlocks. It records information about the order in which 
-locks are acquired and checks for inconsistencies that could lead to 
-deadlocks. Lockdep annotations are used to perform runtime checks on 
-locking correctness. Some common Lockdep annotations include:
-
-lockdep_assert_held(&lock): Asserts that a particular lock is held at a 
-certain time and generates a warning if it is not.
-lockdep_pin_lock(&lock): Prevents accidental unlocking of a lock.
-These tools are crucial for maintaining the stability and reliability of 
-the kernel by catching potential issues early in the development process.
-===
-
+>> +		rc = zl3073x_read_id(zldev, &id);
+>> +		if (rc)
+>> +			return rc;
+>> +		rc = zl3073x_read_revision(zldev, &revision);
+>> +		if (rc)
+>> +			return rc;
+>> +		rc = zl3073x_read_fw_ver(zldev, &fw_ver);
+>> +		if (rc)
+>> +			return rc;
+>> +		rc = zl3073x_read_custom_config_ver(zldev, &cfg_ver);
+>> +		if (rc)
+>> +			return rc;
 > 
-> Best regards,
-> Krzysztof
+> Could a parallel operation change the ID? Upgrade the firmware
+> version?
+> 
+> 	Andrew
+
+No, but register access functions require the device lock to be held. 
+See above.
+
+Thanks,
+Ivan
 
