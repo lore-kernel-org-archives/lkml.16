@@ -1,53 +1,43 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 066C83595C;
-	Wed,  9 Apr 2025 17:07:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5ED31C2324;
+	Wed,  9 Apr 2025 17:07:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744218471; cv=none; b=AFIF/He7wm+/G8saP4lnoubopReE0Q3kELjVPwiFjYLFHNlZUGHG3t/XArVHt6rVJuDtN8y3a3ys8qNtI2Iz+iRX62NfQjg2F/NmKyTOYpmhNKKbNgA4hAcf6a2u7Cgub4DnZQhzEYtA3GajkVd/a3LT0E6bKSaWMOn1ivCZ7nM=
+	t=1744218470; cv=none; b=mPcOTSYwyFA5gQ5R9UUF/z2QM9AM66WZGAFDh1awhK1MQRFb14F2CXVHdW2gPhFNc3I4TMc+o64MTdz9AqXR8SSk7lubDgLe4dh6zA7bvlzgGJsR5sPUSZu89EaHCu3FNEv6snBYUdbwvSQnxddDi82O0YpHGQHw53PhGVmwxbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744218471; c=relaxed/simple;
-	bh=5KdC9UJi/G+Mbx+/YKkMbJ5CpyMBOiyE15pwvCv36as=;
+	s=arc-20240116; t=1744218470; c=relaxed/simple;
+	bh=PcqRDQbAzwE809Lz8qtd+AbOW+ahMuiblP3wSIQB8Ss=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bps/F4mK+WheeS0/amzqAIV8YT+TTS0F8cQ+szG8tEysPryb6ipi4Ht1H5ADXs+n76GjRflds/d3garqE5c7vn6dbpbe0UqjYCG8pSF2om0mmf0Hd5CJ99bJVQpjxzlZS8kNBrkcXecVxRUsMaWLhk58o+y805JNvveqH6VpU3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: HhqECDI+TMCLK8l9AzpW7A==
-X-CSE-MsgGUID: 2D8M2a0zRDuua/+M/nowWw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="56372545"
-X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
-   d="scan'208";a="56372545"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 10:07:49 -0700
-X-CSE-ConnectionGUID: yGr5e5YxSkKbytzGsMXyrA==
-X-CSE-MsgGUID: 9eyaHSfMSKq6x3B9l9oeBQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
-   d="scan'208";a="128625028"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 10:07:47 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy@kernel.org>)
-	id 1u2Yts-0000000AnwL-088Z;
-	Wed, 09 Apr 2025 20:07:44 +0300
-Date: Wed, 9 Apr 2025 20:07:43 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: jean-baptiste.maneyrol@tdk.com
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] iio: imu: inv_icm42600: switch to use generic
- name irq get
-Message-ID: <Z_apXw_HoD0EHHY-@smile.fi.intel.com>
-References: <20250409-iio-imu-inv-icm42600-rework-interrupt-using-names-v3-0-dab85a0a7c2b@tdk.com>
- <20250409-iio-imu-inv-icm42600-rework-interrupt-using-names-v3-2-dab85a0a7c2b@tdk.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=LlA9f9umQPvMTOTrCoyiFaq8ebOI/dx9U75BhjigqU6WJJfydkCtdT89ep3AdRnF2NH8+mxEOwejeXqFgItiOi4sbb/co2UY1GtWLAYmXkHY3qMVez9Ln6JlxVaPlQsPnYIAQ87VZY45Ag0125jJgEYMqoP6BPtwlH1WlrBd0z0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a57XR0c4; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a57XR0c4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E47FC4CEE2;
+	Wed,  9 Apr 2025 17:07:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744218470;
+	bh=PcqRDQbAzwE809Lz8qtd+AbOW+ahMuiblP3wSIQB8Ss=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=a57XR0c43AffaWmAz1Ed7S/TRdn57sZL7pBF3H7tCtXQAUM2KXRXXq6ioEJRw5WVw
+	 rpZDto+ddqJoC6HYDwcWVYHBOy79rwxs7Lo+qeu7/U+OUyZFeO/IjzNAUZCsvGTmAi
+	 fQ8PBep3dK71lPOvym3o3tj3kDYtLE5xU0IByVZsRh1vq8rNBs3LpGVhh5ps/OZbbl
+	 941G4LCV9sfUzJoOwzupdnuEjfbug7GmjcD2iKk4+DfvcHLJiIuFPOWxPGeFnusMNz
+	 TN8SRDnQsLHWL5SCoiYntMb46wkdnnmGnUv8WiEY4vj/FCiMYFYXbzrvQUrH8YgQTN
+	 HOLsk9c8VGjag==
+Date: Wed, 9 Apr 2025 18:07:45 +0100
+From: Simon Horman <horms@kernel.org>
+To: Shannon Nelson <shannon.nelson@amd.com>
+Cc: andrew+netdev@lunn.ch, brett.creeley@amd.com, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	michal.swiatkowski@linux.intel.com, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: Re: [PATCH net 4/6] pds_core: Remove unnecessary check in
+ pds_client_adminq_cmd()
+Message-ID: <20250409170745.GO395307@horms.kernel.org>
+References: <20250407225113.51850-1-shannon.nelson@amd.com>
+ <20250407225113.51850-5-shannon.nelson@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,76 +46,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250409-iio-imu-inv-icm42600-rework-interrupt-using-names-v3-2-dab85a0a7c2b@tdk.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20250407225113.51850-5-shannon.nelson@amd.com>
 
-On Wed, Apr 09, 2025 at 05:14:32PM +0200, Jean-Baptiste Maneyrol via B4 Relay wrote:
-> From: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
+On Mon, Apr 07, 2025 at 03:51:11PM -0700, Shannon Nelson wrote:
+> From: Brett Creeley <brett.creeley@amd.com>
 > 
-> Use generic fwnode_irq_get_byname() for getting interrupt pin using
-> interrupt name. Only INT1 is supported by the driver currently.
+> When the pds_core driver was first created there were some race
+> conditions around using the adminq, especially for client drivers.
+> To reduce the possibility of a race condition there's a check
+> against pf->state in pds_client_adminq_cmd(). This is problematic
+> for a couple of reasons:
 > 
-> If not found fallback to first defined interrupt to keep compatibility.
+> 1. The PDSC_S_INITING_DRIVER bit is set during probe, but not
+>    cleared until after everything in probe is complete, which
+>    includes creating the auxiliary devices. For pds_fwctl this
+>    means it can't make any adminq commands until after pds_core's
+>    probe is complete even though the adminq is fully up by the
+>    time pds_fwctl's auxiliary device is created.
+> 
+> 2. The race conditions around using the adminq have been fixed
+>    and this path is already protected against client drivers
+>    calling pds_client_adminq_cmd() if the adminq isn't ready,
+>    i.e. see pdsc_adminq_post() -> pdsc_adminq_inc_if_up().
+> 
+> Fix this by removing the pf->state check in pds_client_adminq_cmd()
+> because invalid accesses to pds_core's adminq is already handled by
+> pdsc_adminq_post()->pdsc_adminq_inc_if_up().
+> 
+> Fixes: 10659034c622 ("pds_core: add the aux client API")
 
-...
+I'm assuming that backporting this patch that far only
+makes sense if other fixes have been backported too.
+And that their fixes tags should enable that happening.
 
-> -int inv_icm42600_core_probe(struct regmap *regmap, int chip, int irq,
-> +int inv_icm42600_core_probe(struct regmap *regmap, int chip,
->  			    inv_icm42600_bus_setup bus_setup);
+If so, this seems fine to me.
 
-If you use 100 limit, it fits now on one line.
+> Signed-off-by: Brett Creeley <brett.creeley@amd.com>
+> Signed-off-by: Shannon Nelson <shannon.nelson@amd.com>
 
-...
-
-> -int inv_icm42600_core_probe(struct regmap *regmap, int chip, int irq,
-> +int inv_icm42600_core_probe(struct regmap *regmap, int chip,
->  			    inv_icm42600_bus_setup bus_setup)
-
-Ditto.
-
-...
-
-> +	struct fwnode_handle *fwnode;
-
-Do you need to include property.h?
-
-...
-
-> +	/* get INT1 only supported interrupt or fallback to first interrupt */
-> +	fwnode = dev_fwnode(dev);
-
-> +	if (!fwnode)
-> +		return -ENODEV;
-
-Unneeded check, the below will do it for you,
-
-> +	irq = fwnode_irq_get_byname(fwnode, "INT1");
-> +	if (irq < 0 && irq != -EPROBE_DEFER) {
-> +		dev_info(dev, "no INT1 interrupt defined, fallback to first interrupt\n");
-> +		irq = fwnode_irq_get(fwnode, 0);
-> +	}
-> +	if (irq < 0)
-> +		return dev_err_probe(dev, irq, "error missing INT1 interrupt\n");
-
-...
-
-> -	return inv_icm42600_core_probe(regmap, chip, client->irq,
-> +	return inv_icm42600_core_probe(regmap, chip,
->  				       inv_icm42600_i2c_bus_setup);
-
-This is now one line (81 characters which is fine independently on your choice
-of the limit).
-
-...
-
-> -	return inv_icm42600_core_probe(regmap, chip, spi->irq,
-> +	return inv_icm42600_core_probe(regmap, chip,
->  				       inv_icm42600_spi_bus_setup);
-
-One line.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Reviewed-by: Simon Horman <horms@kernel.org>
