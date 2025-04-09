@@ -1,103 +1,187 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C17C07D07D
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 18:18:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D68EB7D07D;
+	Wed,  9 Apr 2025 18:18:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744222695; cv=none; b=jCoPUNA2g3R3UXUzR+6KmHAf2YqlT6BhfvN7MdOnyO2LyfVMPs5/kEujQjgP/5pYOFMeumzqjjYapnTgIiEiAJP7ldf1JvGUcALQ6Pnc173FjEJc0yxdsYVZ5bdhxeiPkjfptiXTx84X04iY9q51dQxsKYf46xPvsgE6BQC55XE=
+	t=1744222726; cv=none; b=uQi9Gsdsa+OW37A/Izf8nD8a37iAYnbSIuKDq9Eqk7vGxD30oC0MnyfqYJ83rD3Ydyb1eGMIZZARZZ/p0Gir4RM0+gbu2vmvwYTUTVwXAeP2YtJFz7r2Xi8mU5AdUjZx0plITh2MKTA/f1yy09UplfNpy6vasB4jtjobyS4Yfl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744222695; c=relaxed/simple;
-	bh=4CmxrQz1pG2CKAvpdKstkQyARIpmzfZ1LOKGQOkWcYM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N/QBNlR+deTnPnyox1SRIpVNqeZVGcONb5bqFj9hDJtq6hZ462H/2kJMKxmvIgTlSgicsg1DpF9bApDGffnDkHfy6T1uBtOPOa1pRw5e9nCqglwZZ+zaUFfpRo6bjEGG1tmwvDFv4s2Fo+NrDkxspyZYlXclQCV3PKIi2SW/0vA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org; spf=pass smtp.mailfrom=neverthere.org; dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b=PsbQQ2SK; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neverthere.org
+	s=arc-20240116; t=1744222726; c=relaxed/simple;
+	bh=kS45Som1nQBGihKb4m+Yz52zHGLbvveA2auK4XolUsU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IItVid5oaXd14uXRqRIf8CU155OG3eQ9nwP4dGZP6Os+fm5mFcuiozVFhE8elCgFC4ANT8uj1Pe5o8pxGmdkR0uh/HkozMPnP7sjsagZKRoZT8OpqNIOPhTdiP6xWKI5WQdStc66WOsUSZmvZoq8W8Cu8hLyRFxT0qIgtsytd0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eeUMfn95; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b="PsbQQ2SK"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso9505124b3a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 11:18:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=neverthere.org; s=google; t=1744222693; x=1744827493; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=fCFGfuy6JO8coiSlMwlp4uAr22QSVYGIY2uQAoexHHg=;
-        b=PsbQQ2SKCaY0FpJbihQLFXosxsVH8ZH7VcYpMkY6KMqR+KNHjC6MTYsGlvDLFWcPk2
-         iZ4uYrIdyG7SFYfxXe4bH88fMpfKTVu1oL3ScIXSRQv8mEVT+Y2LiKLT+lel5mWQexv6
-         ULpkQAEAdVUf9NGtYANmvv0UygV8Cor8VzYvG5fHKCcUaX7b6DnZtwqeNXuDvhdZ//aR
-         hiAwrKMZ64n1r+xtcBxL8kbPkUboREKsaqNvuHGiRsCXUO8ZsAlpvgi8EVuipY1I+/S/
-         TmMmbp6vRkpTqysfp4saFT5FcHj7X5np+ZFinyjvlYaTfBelpVyuxvyd0D1OIAfDQoia
-         hXpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744222693; x=1744827493;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fCFGfuy6JO8coiSlMwlp4uAr22QSVYGIY2uQAoexHHg=;
-        b=t2uqD7ykUPewtHY7S90rGVUDNzxsh8KDdNbHAVsDKSrOpr17fJYNbehyKocCIX8chO
-         5RGCyHfBNkKjQfpH1n1mCWLQam2GjEjHiTH3bnNCVnqCbDkuMfZxVHUuHUDPsHEhzgSJ
-         tPWvr2JmYLbHI78X/buf98DyGHZn3qR+e8AfbBW7KJhTyT2a0lSq+w1ROeu/VcY8qR1X
-         dJmtKibh4RSJWxj54PSDX7kLTm6gM6PBOYswRfSsFWNUw2PBrfiLpdns9x5sGE0CB3ce
-         sAvbjc60XJleKpYVNo5T1BA8oK3sAEVhaDzRzq59KPUjf6aBoUgIkN/XR51LSohZsSJ9
-         dwNg==
-X-Forwarded-Encrypted: i=1; AJvYcCWfv8qZ7/ZjfvWj9DYo2+54kG+N/3ZZhCL5y4fF5Iv5b60yqUA2r9Ww6dBat/HopPbunmf8rOnZP9ol9HI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzorWcbT7OvkodvyGaM9F78gpUwrVsSN0JI6xL1tSu75QFv8B6D
-	9ujmaMP12Ui2503i4osqmAyQKmua//kw8gjWxsTikNLPPOIRz+egwWQOoR+P5g==
-X-Gm-Gg: ASbGncutkGpjUcxsf0QjU6W8/5shKAtRW4pK9TnIqCvODOGvS/rWxEDuCUQ9P919dVI
-	CKOPPa8IFnUDkfOsT+JuUQ6mcgBbsscI9f+MYlPdlVEmjU8h91fO5KqJHSou7eSnS6od8AqPjID
-	FEG1uqUPMq6pSghHJbsZBZWRo7kP8obrhIbESzGKfWhoIwx7rzvig4sPAlfsqWmtmeno1WVIofk
-	JDBY88cU1TayP1ne0fsIO/cLlwOL/kR27TplUAhjbKzp6ofEV8gdE7aiYuIi4NQROOLlIYrwxnX
-	Akyr4X1grgkkhhCEC3KllGCuCsseNc3uLEwxsD2VD8aSJZc9CYQ6EQvEXHzBs66aV0t+2FRpbKX
-	dsoDKbg==
-X-Google-Smtp-Source: AGHT+IE7sR5POVuJYVdqVa+AS4fS8UWyJ3iPy25M3/xq1EeIPiN0TAEy0j6sGsd7vhBWoEBUf8auow==
-X-Received: by 2002:a05:6a00:18a6:b0:736:3d7c:236c with SMTP id d2e1a72fcca58-73bafc170a0mr3912696b3a.14.1744222692563;
-        Wed, 09 Apr 2025 11:18:12 -0700 (PDT)
-Received: from tiamat (c-69-181-214-135.hsd1.ca.comcast.net. [69.181.214.135])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1e517a7sm1716316b3a.146.2025.04.09.11.18.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 11:18:12 -0700 (PDT)
-From: Michael Rubin <matchstick@neverthere.org>
-To: gregkh@linuxfoundation.org,
-	dpenkler@gmail.com
-Cc: linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Michael Rubin <matchstick@neverthere.org>
-Subject: [PATCH v1] staging: gpib: Removing unused function CFGn
-Date: Wed,  9 Apr 2025 18:18:09 +0000
-Message-ID: <20250409181809.401724-1-matchstick@neverthere.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eeUMfn95"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F0AEC4CEEB;
+	Wed,  9 Apr 2025 18:18:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744222726;
+	bh=kS45Som1nQBGihKb4m+Yz52zHGLbvveA2auK4XolUsU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=eeUMfn95uaG5C5IilivfI9p5eeu/mIMvSUGWwDmQcHPWG63MxghGIq5PHcgkwjygM
+	 Lfo61l/2ibYR9MBksYYE/acHRfgcsIDc5Eb8UXjoYle/uQ6Fl3nwGAg5OcOHnVcVL8
+	 t04Zq0KbTf2tZGDz8ggfoDjRQB5WLbC2P/ISOIrx1OrZtDglvnpbKR1bv/ExybTpRT
+	 k9yPCzWUZoGCoAlezxMf2NCfdSRbyStQDGTQYj+lP++GQb2qtC+TMGsIwKUwYbnFSo
+	 7vglvOf4x1c4NsJbNXvnwjZpxurG/6Zq/YLekMDBcib24dSqPojUOXWrJ0/5w2ZvCw
+	 AhpOCmdm/Hxzg==
+Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-2c818343646so4180725fac.3;
+        Wed, 09 Apr 2025 11:18:46 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUFIdzFVkqeNn40GUEzhYhkU6IQcmlZb4sb+auvWODp6RAbiKzcNaH1/HZ44369QBV38Dc8DoGZes3L@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyo7vifWXxh89agkeUvzxhMyjQ1RWAhLMfTp1dHm/MP91Nkckhc
+	TafO8fwTAKx8iVMD+RR44SBnYB5SBYBJZmUiJE4vuXz6zQ98SHbsUnDFmZizBTBo7JiIsCSm6fw
+	XT41ReeJIKgx1uNMvbpiUU8o9HQ4=
+X-Google-Smtp-Source: AGHT+IHwp9tbK9hLs3eNIFuS7kjTKxjOsLtIE74r9zz5HtuDMjoP8TpEVRI+vifRRrUsUFJTigpgXMCy68JE9Il4B04=
+X-Received: by 2002:a05:6870:b9c8:b0:2a7:d345:c0bb with SMTP id
+ 586e51a60fabf-2d08df8338fmr2268080fac.27.1744222725516; Wed, 09 Apr 2025
+ 11:18:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250318-plat2faux_dev-v2-0-e6cc73f78478@arm.com> <20250318-plat2faux_dev-v2-7-e6cc73f78478@arm.com>
+In-Reply-To: <20250318-plat2faux_dev-v2-7-e6cc73f78478@arm.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 9 Apr 2025 20:18:34 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jV1iHiq_2oNWDja0deQy0JDVp9-R=qi3GeivbY7rSo1A@mail.gmail.com>
+X-Gm-Features: ATxdqUHnURzSuZwT-yGfrawR5yDEbBioLJxgm86RUcNIp0FKm8SxQW5lCfDECm4
+Message-ID: <CAJZ5v0jV1iHiq_2oNWDja0deQy0JDVp9-R=qi3GeivbY7rSo1A@mail.gmail.com>
+Subject: Re: [PATCH v2 7/8] ACPI: APEI: EINJ: Transition to the faux device interface
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: linux-kernel@vger.kernel.org, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Borislav Petkov <bp@alien8.de>, linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Removing CFGn since it is not called by kernel code nor any of the gpib
-drivers.
+On Tue, Mar 18, 2025 at 6:02=E2=80=AFPM Sudeep Holla <sudeep.holla@arm.com>=
+ wrote:
+>
+> The APEI error injection driver does not require the creation of a
+> platform device. Originally, this approach was chosen for simplicity
+> when the driver was first implemented.
+>
+> With the introduction of the lightweight faux device interface, we now
+> have a more appropriate alternative. Migrate the driver to utilize the
+> faux bus, given that the platform device it previously created was not
+> a real one anyway. This will simplify the code, reducing its footprint
+> while maintaining functionality.
+>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: linux-acpi@vger.kernel.org
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 
-Signed-off-by: Michael Rubin <matchstick@neverthere.org>
----
- drivers/staging/gpib/uapi/gpib_user.h | 5 -----
- 1 file changed, 5 deletions(-)
+This causes 0-day to complain when applied on top of 6.15-rc1:
 
-diff --git a/drivers/staging/gpib/uapi/gpib_user.h b/drivers/staging/gpib/uapi/gpib_user.h
-index eaf7399a164a..1cb6b6219e67 100644
---- a/drivers/staging/gpib/uapi/gpib_user.h
-+++ b/drivers/staging/gpib/uapi/gpib_user.h
-@@ -192,11 +192,6 @@ static inline __u8 PPE_byte(unsigned int dio_line, int sense)
- 	return cmd;
- }
- 
--static inline __u8 CFGn(unsigned int meters)
--{
--	return 0x6 | (meters & 0xf);
--}
--
- /* mask of bits that actually matter in a command byte */
- enum {
- 	gpib_command_mask = 0x7f,
--- 
-2.43.0
+https://lore.kernel.org/linux-acpi/202504100128.AjbVDQgK-lkp@intel.com/
 
+> ---
+>  drivers/acpi/apei/einj-core.c | 51 +++++--------------------------------=
+------
+>  1 file changed, 6 insertions(+), 45 deletions(-)
+>
+> diff --git a/drivers/acpi/apei/einj-core.c b/drivers/acpi/apei/einj-core.=
+c
+> index 04731a5b01faaba534bad853d0acc4c8a873a53b..5fddd01074bafab2f7b23fd7e=
+f9f863c0856637b 100644
+> --- a/drivers/acpi/apei/einj-core.c
+> +++ b/drivers/acpi/apei/einj-core.c
+> @@ -21,7 +21,7 @@
+>  #include <linux/nmi.h>
+>  #include <linux/delay.h>
+>  #include <linux/mm.h>
+> -#include <linux/platform_device.h>
+> +#include <linux/device/faux.h>
+>  #include <linux/unaligned.h>
+>
+>  #include "apei-internal.h"
+> @@ -749,7 +749,7 @@ static int einj_check_table(struct acpi_table_einj *e=
+inj_tab)
+>         return 0;
+>  }
+>
+> -static int __init einj_probe(struct platform_device *pdev)
+> +static int __init einj_probe(struct faux_device *fdev)
+>  {
+>         int rc;
+>         acpi_status status;
+> @@ -838,6 +838,8 @@ static int __init einj_probe(struct platform_device *=
+pdev)
+>
+>         pr_info("Error INJection is initialized.\n");
+>
+> +       einj_initialized =3D true;
+> +
+>         return 0;
+>
+>  err_release:
+> @@ -851,7 +853,7 @@ static int __init einj_probe(struct platform_device *=
+pdev)
+>         return rc;
+>  }
+>
+> -static void __exit einj_remove(struct platform_device *pdev)
+> +static void __exit einj_remove(struct faux_device *fdev)
+>  {
+>         struct apei_exec_context ctx;
+>
+> @@ -872,48 +874,7 @@ static void __exit einj_remove(struct platform_devic=
+e *pdev)
+>         acpi_put_table((struct acpi_table_header *)einj_tab);
+>  }
+>
+> -static struct platform_device *einj_dev;
+> -/*
+> - * einj_remove() lives in .exit.text. For drivers registered via
+> - * platform_driver_probe() this is ok because they cannot get unbound at
+> - * runtime. So mark the driver struct with __refdata to prevent modpost
+> - * triggering a section mismatch warning.
+> - */
+> -static struct platform_driver einj_driver __refdata =3D {
+> -       .remove =3D __exit_p(einj_remove),
+> -       .driver =3D {
+> -               .name =3D "acpi-einj",
+> -       },
+> -};
+> -
+> -static int __init einj_init(void)
+> -{
+> -       struct platform_device_info einj_dev_info =3D {
+> -               .name =3D "acpi-einj",
+> -               .id =3D -1,
+> -       };
+> -       int rc;
+> -
+> -       einj_dev =3D platform_device_register_full(&einj_dev_info);
+> -       if (IS_ERR(einj_dev))
+> -               return PTR_ERR(einj_dev);
+> -
+> -       rc =3D platform_driver_probe(&einj_driver, einj_probe);
+> -       einj_initialized =3D rc =3D=3D 0;
+> -
+> -       return 0;
+> -}
+> -
+> -static void __exit einj_exit(void)
+> -{
+> -       if (einj_initialized)
+> -               platform_driver_unregister(&einj_driver);
+> -
+> -       platform_device_unregister(einj_dev);
+> -}
+> -
+> -module_init(einj_init);
+> -module_exit(einj_exit);
+> +module_faux_driver(acpi_einj, einj_probe, __exit_p(einj_remove), true);
+>
+>  MODULE_AUTHOR("Huang Ying");
+>  MODULE_DESCRIPTION("APEI Error INJection support");
+>
+> --
+> 2.34.1
+>
+>
