@@ -1,63 +1,64 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBC0C2777EA
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 18:10:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1BFD27CB25
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 18:10:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744222220; cv=none; b=XF2WZL+DpDL17vpqmGxPIovpyn5xBzHb056Z76QkTKKP5I2dry0Zev+EVmcW4nD8Q2YUA1GJ7eW5LFH+CabclRm82HHwWA8BiRMfbkorO4gB+VnwaxMG2JUu2+dnBFaOInSKsJ3uB4MqZM2dBnocI3n2dIyas+ZdYie/prOcg7U=
+	t=1744222220; cv=none; b=b2k6cor83U56sANJUnWeIVnftCl+FeQzwe7xvwnbI35+fpUDBcW9wb+T3oE9wpmnjtSBjjEzR7xiDspwZ/RIjUB4IdFTKUeCVGbLY+Qt3ovemkzZoosNT1aiAR8bGmXpMI1KTuoFvAxMQtup3ifsTYWPWXiWkUM4wifNy3KmXvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744222220; c=relaxed/simple;
-	bh=w2YzpdWlDBDV9vUBM5jDBBVZIFC1lTCI/u5LtobYl/A=;
+	bh=7K/Ey0gHYN42qnHgygKczjLg5EqGKk8ytvPGlUSZALE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SJOlll+wUAhlyEFfVDDkXSPuIzPSbG6+RniFyvKdlImWKexyfRRe9NM1Cln1ubxb3VeBJ2TiVvXHca/HcCuJ02H5dwwCvHZmteSdWQIHqhhAUzk977s1MC01W5wXBP9VZpLTEehKU40kHYLaMAXvJL1+p2IIyRJYbtPHKmSagR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org; spf=pass smtp.mailfrom=neverthere.org; dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b=ZrWGrZk2; arc=none smtp.client-ip=209.85.214.171
+	 MIME-Version; b=t6eHTh4h36373ptdGpNbzgsS2R/KIselnfRg383kQ4pZKkSMwUN58Ql2X7r4GAHhrYZtAdrwv8NasDZ7QYIIIs5S8ZyyIbWY/ZGRqULMKhWBqC2rKBqcX+jL1WcFhNc8X5UOLOBMQiSDp3A1HW7Gi0BwfbuHnyPUDOLjqIBAYB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org; spf=pass smtp.mailfrom=neverthere.org; dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b=AxKgDb6q; arc=none smtp.client-ip=209.85.210.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neverthere.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b="ZrWGrZk2"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-227b828de00so72059185ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 11:10:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b="AxKgDb6q"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-739be717eddso5633038b3a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 11:10:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=neverthere.org; s=google; t=1744222216; x=1744827016; darn=vger.kernel.org;
+        d=neverthere.org; s=google; t=1744222217; x=1744827017; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5jJtvIiGmaqv063/TYbeDFEuemkLKlqs8hde2cOBC8k=;
-        b=ZrWGrZk28JPvLiPS41RZcSoMf64wQV8Eo81CosbCvnxy6RtGFPsG/x7Paj6oBrVoW4
-         SabJHGooEavyxoc516bpxzZDwiJilD1mExOi5yuUL1n5HQlw87/LedN5ekTDMsfI0qMK
-         QTFt9PZJQXwQwLd9PSci7oP8qsIiVynBsVrrO7pj3pAzrlTzeaS+B8qr53HcoT/KbsLV
-         SV7HFqn/4OE2gR9REtcevfp+ZMxN34eDjKMpDMOwo+jt3pnBA982x15Nv//lw3Bew2I4
-         zDYKVcdrvBXtETq33Qa4oqJbXZdp+Fb+wKdjSPpAe7N2ljd0sTF4wymDWTh6F3ERZLvr
-         UX2Q==
+        bh=NCUDjguyHlhjk06kpVPD65mb7rJ1QHXPUgq+Tlq7pMU=;
+        b=AxKgDb6qT5MFb67SoE4yScMerG8J116dws7/PMTiDQnxbwfdaTbmyqJEfEzFRdCS5I
+         MD78svRVb08QARRCK/XNI9/06OKPEcwziwxYjBW7BmA89VWbn0Ej66AztgE323fOTfs2
+         wk9Z0uxcCvH89eVqxMJDV8RNIOxPie6kkY5B9W2PLMcaQ8LrWiYlueGsC3ow/OoZLfu7
+         Jmb/X1tcqzasDP/6I/64ioSpqBxLf7E9z9FrMa5sxiIVCoUvE8bzxxhdIlclEmYs+1Uy
+         bHhYQkc1b9sRkwnQIAR4yNZiZvdqBjRZQIlS1ttI6Z2smctocU6HQAe/sqlbpSyegw7i
+         /wdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744222216; x=1744827016;
+        d=1e100.net; s=20230601; t=1744222217; x=1744827017;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5jJtvIiGmaqv063/TYbeDFEuemkLKlqs8hde2cOBC8k=;
-        b=MG5VHHS65XCzpTp1ns3PtrplywnLSXj3oSpTBIXat+VvsNXcIXuzAfvtyu/L2VWX2y
-         +EV03WjwBFbE3mk5EjDyuDs2OBT5PeZwAcMD4JNPTrwNqu4dA0oiZKj9fRwDSL/UTtz+
-         5ea1/1kqzj7TNImMjLQPCbex+djTS5PpP4HBILovFz9j+Jif3+Bla+yEgtt4pJOJ2aDB
-         IcK54Zaqi5f9IZyF31NXBcOwqSYThyFXgedE+qupplOett4HuyKlPD7o1URNrZMsQUEZ
-         MCfok+ah9EdTKBK0ZkoDIDROVTs3Hjm4Wl59qeb4dGHthDX4QZupOrVqVmFBT21yoE9F
-         OSSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVGDxGXe1llKZ/s/e2VfZVK9LCav5eMQA2K0F9uFFlE23SzLVOlmxwXWGijoFUYR5/uoPTs2RD+jghEKEQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzK4eEZqbtplhNo6JQ2D/yB/J65kTI0ahW9RhFSVBN7QP2igzeu
-	yWZ2+Y5FC4QOQhMzDYM4nA90cOYNApmEYJ+OqZ7cleif0Wh/kq9wO1rSVvsGfQ==
-X-Gm-Gg: ASbGncsupiVcibusNSQbIU4nwpkG85M6+caUf05Zfu+XjayPhzQbVeZn40jLBH1123k
-	gwQBv2xbNak3ntsI5k2VIKPJDcMm5k0Vr+sXdcX08QbirK/Nonpg1gc7VSv4pErpdpQaf+3Bdcx
-	qPfUYS+wpJr80gFfbvmJi0URkgjxuyqKBx2zzET9iPW8CXf0pADtFLcCP5XFvebwyxY+NMhT0Kj
-	klKZ30HAUOg7Zt76VkU8OgkX8XTScdUIx+zaXfLEgqOr5Y6SEwLg+SSfL0XZnxM4q+18FjYmv+U
-	7j87o2QtBqkGGgCHVhzdauKgSdZ6F2TK4a1CdlkTQmoXyndV9F3YvimUsVoWyddTWk+x2c9Cz8R
-	qraDpHQ==
-X-Google-Smtp-Source: AGHT+IGB/0bIECaDIXnib5X73HwOOL+qMK7CDMDksWIM6RbyaIUKObzVvYfnCaDEiPhA+ErrdWoC8A==
-X-Received: by 2002:a17:902:f644:b0:224:c46:d167 with SMTP id d9443c01a7336-22ac29a7d25mr57633465ad.16.1744222216056;
-        Wed, 09 Apr 2025 11:10:16 -0700 (PDT)
+        bh=NCUDjguyHlhjk06kpVPD65mb7rJ1QHXPUgq+Tlq7pMU=;
+        b=r4q5V7PgGA+qQJuEmawJNqtTisz015qr41FbfpKg/+xnrSU4AC7bwWgS+cChaTg1Xs
+         nKrIGBZGOoNMY/al26MesfirrWjHthq1KVVMRYDhO/VuoXPAYa1YxUuaenj1E1HKKnxc
+         lFftl4wX/jv1FTAFUZKTwPn5a4mQQsP4FF3FbOOePc8nz7y64t9VFHVz8X4G8KNlEC4w
+         FTxGvE19Be+rd+TFzbRBfBUAvhdSMtOiMT0jKK4E/NbYGDAAjc07GChNObU5jO/9JR+r
+         B0jX7MfhpZRrmLCN2XhjXtF2lY8jo1+1/Lp9TvFPzx+zWWuJvu5cU2eA/OHafy9w/NtW
+         uAdg==
+X-Forwarded-Encrypted: i=1; AJvYcCUi8XXcgBfma5SJrtZYdw07qBz7DfhB35uF4mHyr3+1ZjhkvDYDbW7wAIxtSqJZMQHfRLRutSNuosJoDV0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLB9vIr5HpChIIQveali2849EDX3TALsWcA5NIhAXPakSUlvj6
+	PDJJVMMmQ++77C8Sg1PivS6PXq8ihPXSMmoBsmteTQpRGFeckpStDLEZ1oMcW1htwf3bzZxwDUs
+	=
+X-Gm-Gg: ASbGnctk4T6YpvoP7lrvYwKgUmu43iG+Y7h7mVCP+IGgtAXrhl+TQpgugKNgFTxFUUW
+	e0N4n+t2eWDX/DdJF42reYDbq4KUMKaA76cW1Vt0HJAbpF4p+2IFXgNqYoV3czGUvNSmm41N3dZ
+	Xe3awm7N4NXYXOu25MITjLuzh/hG4WJE5gZgryhARbRFt60hgqlpsOHlrkUQERbV/9/QA+DkwIo
+	w4Aa805B6qzg4HmcdT8uyiQGwvL5PZVp463WTVprAFcMHSvnZqrbXvUF5gyjrZ5aCUBKx1s8sFl
+	jTa8nDHelr2cohl672edhlah1GSXhQwmzqQ/jVt/rKA1C+JElX1cnQ91pmSxLUwQhL3w1FIGSui
+	dK+IOLA==
+X-Google-Smtp-Source: AGHT+IF0pXpoY52fqhA3oW8On3xQ2utlN6BtI/CBDPXt++Fm3oLlC6tIO8ZtVEag++ICgiy4SZcHMg==
+X-Received: by 2002:a05:6a00:a91:b0:736:32d2:aa8e with SMTP id d2e1a72fcca58-73bae4b9158mr4829808b3a.6.1744222217327;
+        Wed, 09 Apr 2025 11:10:17 -0700 (PDT)
 Received: from tiamat (c-69-181-214-135.hsd1.ca.comcast.net. [69.181.214.135])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1e5171dsm1653480b3a.153.2025.04.09.11.10.15
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1e69505sm1655899b3a.168.2025.04.09.11.10.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 11:10:15 -0700 (PDT)
+        Wed, 09 Apr 2025 11:10:17 -0700 (PDT)
 From: Michael Rubin <matchstick@neverthere.org>
 To: gregkh@linuxfoundation.org,
 	dpenkler@gmail.com,
@@ -65,9 +66,9 @@ To: gregkh@linuxfoundation.org,
 Cc: linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	Michael Rubin <matchstick@neverthere.org>
-Subject: [PATCH v1 17/23] staging: gpib: hp_82335: u8 over uint8_t
-Date: Wed,  9 Apr 2025 18:09:47 +0000
-Message-ID: <20250409180953.398686-18-matchstick@neverthere.org>
+Subject: [PATCH v1 18/23] staging: gpib: hp_82341: u8 over uint8_t
+Date: Wed,  9 Apr 2025 18:09:48 +0000
+Message-ID: <20250409180953.398686-19-matchstick@neverthere.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250409180953.398686-1-matchstick@neverthere.org>
 References: <20250409180953.398686-1-matchstick@neverthere.org>
@@ -85,97 +86,120 @@ CHECK: Prefer kernel type 'u8' over 'uint8_t'
 
 Signed-off-by: Michael Rubin <matchstick@neverthere.org>
 ---
- drivers/staging/gpib/hp_82335/hp82335.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ drivers/staging/gpib/hp_82341/hp_82341.c | 26 ++++++++++++------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/staging/gpib/hp_82335/hp82335.c b/drivers/staging/gpib/hp_82335/hp82335.c
-index 32b3aba673d9..1ef85a54626b 100644
---- a/drivers/staging/gpib/hp_82335/hp82335.c
-+++ b/drivers/staging/gpib/hp_82335/hp82335.c
-@@ -29,7 +29,7 @@ static void hp82335_detach(struct gpib_board *board);
- static irqreturn_t hp82335_interrupt(int irq, void *arg);
+diff --git a/drivers/staging/gpib/hp_82341/hp_82341.c b/drivers/staging/gpib/hp_82341/hp_82341.c
+index f2306245ce4c..fc0c4e45eb4f 100644
+--- a/drivers/staging/gpib/hp_82341/hp_82341.c
++++ b/drivers/staging/gpib/hp_82341/hp_82341.c
+@@ -25,11 +25,11 @@ MODULE_DESCRIPTION("GPIB driver for hp 82341a/b/c/d boards");
+ static unsigned short read_and_clear_event_status(struct gpib_board *board);
+ static void set_transfer_counter(struct hp_82341_priv *hp_priv, int count);
+ static int read_transfer_counter(struct hp_82341_priv *hp_priv);
+-static int hp_82341_write(struct gpib_board *board, uint8_t *buffer, size_t length, int send_eoi,
++static int hp_82341_write(struct gpib_board *board, u8 *buffer, size_t length, int send_eoi,
+ 			  size_t *bytes_written);
+ static irqreturn_t hp_82341_interrupt(int irq, void *arg);
+ 
+-static int hp_82341_accel_read(struct gpib_board *board, uint8_t *buffer, size_t length, int *end,
++static int hp_82341_accel_read(struct gpib_board *board, u8 *buffer, size_t length, int *end,
+ 			       size_t *bytes_read)
+ {
+ 	struct hp_82341_priv *hp_priv = board->private_data;
+@@ -172,7 +172,7 @@ static int restart_write_fifo(struct gpib_board *board, struct hp_82341_priv *hp
+ 	return 0;
+ }
+ 
+-static int hp_82341_accel_write(struct gpib_board *board, uint8_t *buffer, size_t length,
++static int hp_82341_accel_write(struct gpib_board *board, u8 *buffer, size_t length,
+ 				int send_eoi, size_t *bytes_written)
+ {
+ 	struct hp_82341_priv *hp_priv = board->private_data;
+@@ -255,7 +255,7 @@ static int hp_82341_attach(struct gpib_board *board, const struct gpib_board_con
+ static void hp_82341_detach(struct gpib_board *board);
  
  // wrappers for interface functions
--static int hp82335_read(struct gpib_board *board, uint8_t *buffer, size_t length,
-+static int hp82335_read(struct gpib_board *board, u8 *buffer, size_t length,
- 			int *end, size_t *bytes_read)
+-static int hp_82341_read(struct gpib_board *board, uint8_t *buffer, size_t length, int *end,
++static int hp_82341_read(struct gpib_board *board, u8 *buffer, size_t length, int *end,
+ 			 size_t *bytes_read)
  {
- 	struct hp82335_priv *priv = board->private_data;
-@@ -37,7 +37,7 @@ static int hp82335_read(struct gpib_board *board, uint8_t *buffer, size_t length
+ 	struct hp_82341_priv *priv = board->private_data;
+@@ -263,7 +263,7 @@ static int hp_82341_read(struct gpib_board *board, uint8_t *buffer, size_t lengt
  	return tms9914_read(board, &priv->tms9914_priv, buffer, length, end, bytes_read);
  }
  
--static int hp82335_write(struct gpib_board *board, uint8_t *buffer, size_t length, int send_eoi,
-+static int hp82335_write(struct gpib_board *board, u8 *buffer, size_t length, int send_eoi,
- 			 size_t *bytes_written)
+-static int hp_82341_write(struct gpib_board *board, uint8_t *buffer, size_t length, int send_eoi,
++static int hp_82341_write(struct gpib_board *board, u8 *buffer, size_t length, int send_eoi,
+ 			  size_t *bytes_written)
  {
- 	struct hp82335_priv *priv = board->private_data;
-@@ -45,7 +45,7 @@ static int hp82335_write(struct gpib_board *board, uint8_t *buffer, size_t lengt
+ 	struct hp_82341_priv *priv = board->private_data;
+@@ -271,7 +271,7 @@ static int hp_82341_write(struct gpib_board *board, uint8_t *buffer, size_t leng
  	return tms9914_write(board, &priv->tms9914_priv, buffer, length, send_eoi, bytes_written);
  }
  
--static int hp82335_command(struct gpib_board *board, uint8_t *buffer, size_t length,
-+static int hp82335_command(struct gpib_board *board, u8 *buffer, size_t length,
- 			   size_t *bytes_written)
+-static int hp_82341_command(struct gpib_board *board, uint8_t *buffer, size_t length,
++static int hp_82341_command(struct gpib_board *board, u8 *buffer, size_t length,
+ 			    size_t *bytes_written)
  {
- 	struct hp82335_priv *priv = board->private_data;
-@@ -88,7 +88,7 @@ static void hp82335_remote_enable(struct gpib_board *board, int enable)
+ 	struct hp_82341_priv *priv = board->private_data;
+@@ -319,7 +319,7 @@ static void hp_82341_remote_enable(struct gpib_board *board, int enable)
  	tms9914_remote_enable(board, &priv->tms9914_priv, enable);
  }
  
--static int hp82335_enable_eos(struct gpib_board *board, uint8_t eos_byte, int compare_8_bits)
-+static int hp82335_enable_eos(struct gpib_board *board, u8 eos_byte, int compare_8_bits)
+-static int hp_82341_enable_eos(struct gpib_board *board, uint8_t eos_byte, int compare_8_bits)
++static int hp_82341_enable_eos(struct gpib_board *board, u8 eos_byte, int compare_8_bits)
  {
- 	struct hp82335_priv *priv = board->private_data;
+ 	struct hp_82341_priv *priv = board->private_data;
  
-@@ -123,14 +123,14 @@ static int hp82335_secondary_address(struct gpib_board *board, unsigned int addr
+@@ -354,14 +354,14 @@ static int hp_82341_secondary_address(struct gpib_board *board, unsigned int add
  	return tms9914_secondary_address(board, &priv->tms9914_priv, address, enable);
  }
  
--static int hp82335_parallel_poll(struct gpib_board *board, uint8_t *result)
-+static int hp82335_parallel_poll(struct gpib_board *board, u8 *result)
+-static int hp_82341_parallel_poll(struct gpib_board *board, uint8_t *result)
++static int hp_82341_parallel_poll(struct gpib_board *board, u8 *result)
  {
- 	struct hp82335_priv *priv = board->private_data;
+ 	struct hp_82341_priv *priv = board->private_data;
  
  	return tms9914_parallel_poll(board, &priv->tms9914_priv, result);
  }
  
--static void hp82335_parallel_poll_configure(struct gpib_board *board, uint8_t config)
-+static void hp82335_parallel_poll_configure(struct gpib_board *board, u8 config)
+-static void hp_82341_parallel_poll_configure(struct gpib_board *board, uint8_t config)
++static void hp_82341_parallel_poll_configure(struct gpib_board *board, u8 config)
  {
- 	struct hp82335_priv *priv = board->private_data;
+ 	struct hp_82341_priv *priv = board->private_data;
  
-@@ -144,14 +144,14 @@ static void hp82335_parallel_poll_response(struct gpib_board *board, int ist)
+@@ -375,14 +375,14 @@ static void hp_82341_parallel_poll_response(struct gpib_board *board, int ist)
  	tms9914_parallel_poll_response(board, &priv->tms9914_priv, ist);
  }
  
--static void hp82335_serial_poll_response(struct gpib_board *board, uint8_t status)
-+static void hp82335_serial_poll_response(struct gpib_board *board, u8 status)
+-static void hp_82341_serial_poll_response(struct gpib_board *board, uint8_t status)
++static void hp_82341_serial_poll_response(struct gpib_board *board, u8 status)
  {
- 	struct hp82335_priv *priv = board->private_data;
+ 	struct hp_82341_priv *priv = board->private_data;
  
  	tms9914_serial_poll_response(board, &priv->tms9914_priv, status);
  }
  
--static uint8_t hp82335_serial_poll_status(struct gpib_board *board)
-+static u8 hp82335_serial_poll_status(struct gpib_board *board)
+-static uint8_t hp_82341_serial_poll_status(struct gpib_board *board)
++static u8 hp_82341_serial_poll_status(struct gpib_board *board)
  {
- 	struct hp82335_priv *priv = board->private_data;
+ 	struct hp_82341_priv *priv = board->private_data;
  
-@@ -226,12 +226,12 @@ static inline unsigned int tms9914_to_hp82335_offset(unsigned int register_num)
- 	return 0x1ff8 + register_num;
+@@ -479,12 +479,12 @@ static void hp_82341_free_private(struct gpib_board *board)
+ 	board->private_data = NULL;
  }
  
--static uint8_t hp82335_read_byte(struct tms9914_priv *priv, unsigned int register_num)
-+static u8 hp82335_read_byte(struct tms9914_priv *priv, unsigned int register_num)
+-static uint8_t hp_82341_read_byte(struct tms9914_priv *priv, unsigned int register_num)
++static u8 hp_82341_read_byte(struct tms9914_priv *priv, unsigned int register_num)
  {
- 	return tms9914_iomem_read_byte(priv, tms9914_to_hp82335_offset(register_num));
+ 	return inb(priv->iobase + register_num);
  }
  
--static void hp82335_write_byte(struct tms9914_priv *priv, uint8_t data, unsigned int register_num)
-+static void hp82335_write_byte(struct tms9914_priv *priv, u8 data, unsigned int register_num)
+-static void hp_82341_write_byte(struct tms9914_priv *priv, uint8_t data, unsigned int register_num)
++static void hp_82341_write_byte(struct tms9914_priv *priv, u8 data, unsigned int register_num)
  {
- 	tms9914_iomem_write_byte(priv, data, tms9914_to_hp82335_offset(register_num));
+ 	outb(data, priv->iobase + register_num);
  }
 -- 
 2.43.0
