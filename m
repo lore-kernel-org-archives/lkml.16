@@ -1,192 +1,64 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F302459CB
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 16:58:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16DD75D477;
+	Wed,  9 Apr 2025 16:59:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744217898; cv=none; b=p6THD7k/65opRrn6gmSBhaNOGuQOQ2RmplJRrz5UzdrOxRlyVRqRxavb6BpfFBsvxZfSTGPAWUW9nWBB+nVje4XA/WdwWTbGVPKotTgAyxgwhAWlMwE2tONXnNU0Qsd7qb0n04rqO13AwmaQtHYMndV4hI2auUa/Q5ei1ii31Rw=
+	t=1744217946; cv=none; b=mYYsVhq9esqtFZXHt6LEwWMV/xdjdAiq7UD2zJ7n+Z6V+y51Zf0FSLSOTDTh+pqr+XANNNKeZeA2B2O/FuIo1ST1nlDwayZo5qEoIjfBbNp75j/DNXFWkvBIYtidvwjQzQgJ3ZQWJuTv2YK/sw8DHI6M0gyDTNqESDGgn4e1QnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744217898; c=relaxed/simple;
-	bh=mnW2GFg4IqkS6SgY7SxVfv2bb9ReIjviHkGL/NPqNjw=;
+	s=arc-20240116; t=1744217946; c=relaxed/simple;
+	bh=+t6xw7m0q6WPq2Jw3j13KPOpZzbLg3nbPA2/0Hrlzo0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R+3L/okgLMonwuipDH4kLPsrFbsN0GBrNUW8921BHE2sm1fgq/2bvRj67RnbrfjuWtcNr56CZ8DGdTTqNi18JaPFcckevwLJ/OeMVCSFXxqjzqj5+LdGta4rMqYmNw8g5vUWSjvrU55iaSMzTX/h7qPnV2LXw86A1iv4vB66GYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nG/KNcwD; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=VryLfxF4; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nG/KNcwD; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=VryLfxF4; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZqW+8Sjy/p+gdrM0q41QtBHanl9p4APCgVvcHUE/0fvq9bUzpx9dQyGREBykm5AerfSmSkD3iMY5IvV9I3nhfvT3GfgIgs8Jy1Mg6NseznpD8cu8LuAYc1+J+1bCN/MXpBRJqMRtmMMnYZhJ4eyIQ4C3pJ45smyPg8/6Uh4YdmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dbJKORGg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="nG/KNcwD";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="VryLfxF4";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="nG/KNcwD";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="VryLfxF4"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id B38D31F38D;
-	Wed,  9 Apr 2025 16:58:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744217894; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+/yNPsqF0kJWQivUHk1FCQy7nHAfxv9twVK6iPfPrdA=;
-	b=nG/KNcwDcIsW/uK7FgBg9uFMxMMbMdgKZGFJqQD7g3wxCWGMXFZwgwtXesBnup+RsqLqjh
-	+FRG1uXjzuimm+0liQYvoojNFFIlZIhM5CCcAkay3Uy8mKpTc2m0Xqef4ONihrRIASiy1X
-	WUddoKC3bIXYV2Cf4/3E38RbkMLK8IM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744217894;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+/yNPsqF0kJWQivUHk1FCQy7nHAfxv9twVK6iPfPrdA=;
-	b=VryLfxF4k3vzxpwJSDcYomsatCSdfnOM2r12zx8StboxFOFWYF5/aLUivSLmH8VjfTuPrH
-	PIRVX/TDQI4iRkBw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="nG/KNcwD";
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=VryLfxF4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744217894; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+/yNPsqF0kJWQivUHk1FCQy7nHAfxv9twVK6iPfPrdA=;
-	b=nG/KNcwDcIsW/uK7FgBg9uFMxMMbMdgKZGFJqQD7g3wxCWGMXFZwgwtXesBnup+RsqLqjh
-	+FRG1uXjzuimm+0liQYvoojNFFIlZIhM5CCcAkay3Uy8mKpTc2m0Xqef4ONihrRIASiy1X
-	WUddoKC3bIXYV2Cf4/3E38RbkMLK8IM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744217894;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+/yNPsqF0kJWQivUHk1FCQy7nHAfxv9twVK6iPfPrdA=;
-	b=VryLfxF4k3vzxpwJSDcYomsatCSdfnOM2r12zx8StboxFOFWYF5/aLUivSLmH8VjfTuPrH
-	PIRVX/TDQI4iRkBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 15B9013691;
-	Wed,  9 Apr 2025 16:58:14 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ot2VAian9mfLAwAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Wed, 09 Apr 2025 16:58:14 +0000
-Date: Wed, 9 Apr 2025 18:58:04 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: kernel test robot <lkp@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, llvm@lists.linux.dev,
-	oe-kbuild-all@lists.linux.dev,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-	Vlastimil Babka <vbabka@suse.cz>, Harry Yoo <harry.yoo@oracle.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] mm,memory_hotplug: Implement numa node notifier
-Message-ID: <Z_anHMHgQQM3y-w2@localhost.localdomain>
-References: <20250408084153.255762-3-osalvador@suse.de>
- <202504092104.MyHeSV43-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dbJKORGg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD96DC4CEE2;
+	Wed,  9 Apr 2025 16:59:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744217945;
+	bh=+t6xw7m0q6WPq2Jw3j13KPOpZzbLg3nbPA2/0Hrlzo0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dbJKORGgWX0gptcxrSltnrxMTzoGdG4u7DKDbvduF1bNz3HWt+F9qNWQXZuL27MqB
+	 zV8r/NcJdOMfQ2yWC0t6m7Z1DNgdjDCFkuuJedRmUPe7qIBbAEd3l68BzN16088awZ
+	 P+s2gr2eEOC8zmkmLII6J9zr+kFgcz2SBkSGo5/lOdEznKw+JzXHXkHrwwnJkQ8ZMs
+	 7p/C1IHoU3P+ezEHCtEwi7xcMPMcYl0ifHyWHjaZkalJad12qDiA1lHlDKbq4R5Rmr
+	 p0NVINgzhdpeau6nPbk73znjjTXt9OjTNy0xEaUpecU6kfCgcyJuDfjmXAU/ZbFoov
+	 tYp3PSpu7dohA==
+Date: Wed, 9 Apr 2025 19:58:59 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Mustafa Ismail <mustafa.ismail@intel.com>,
+	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Christian Benvenuti <benve@cisco.com>,
+	Nelson Escobar <neescoba@cisco.com>,
+	Bernard Metzler <bmt@zurich.ibm.com>, linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] RDMA: Don't use %pK through printk
+Message-ID: <20250409165859.GM199604@unreal>
+References: <20250407-restricted-pointers-infiniband-v1-1-22b20504b84d@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <202504092104.MyHeSV43-lkp@intel.com>
-X-Rspamd-Queue-Id: B38D31F38D
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	TO_DN_SOME(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.51
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250407-restricted-pointers-infiniband-v1-1-22b20504b84d@linutronix.de>
 
-On Wed, Apr 09, 2025 at 09:44:52PM +0800, kernel test robot wrote:
-> Hi Oscar,
-> 
-> kernel test robot noticed the following build errors:
-... 
-> >> drivers/base/node.c:115:5: error: redefinition of 'register_node_notifier'
->      115 | int register_node_notifier(struct notifier_block *nb)
->          |     ^
->    include/linux/memory.h:172:19: note: previous definition is here
->      172 | static inline int register_node_notifier(struct notifier_block *nb)
->          |                   ^
-> >> drivers/base/node.c:121:6: error: redefinition of 'unregister_node_notifier'
->      121 | void unregister_node_notifier(struct notifier_block *nb)
->          |      ^
->    include/linux/memory.h:176:20: note: previous definition is here
->      176 | static inline void unregister_node_notifier(struct notifier_block *nb)
->          |                    ^
-> >> drivers/base/node.c:127:5: error: redefinition of 'node_notify'
->      127 | int node_notify(unsigned long val, void *v)
->          |     ^
->    include/linux/memory.h:179:19: note: previous definition is here
->      179 | static inline int node_notify(unsigned long val, void *v)
->          |                   ^
->    3 errors generated.
+On Mon, Apr 07, 2025 at 10:25:09AM +0200, Thomas Weißschuh wrote:
+> In the past %pK was preferable to %p as it would not leak raw pointer
+> values into the kernel log.
+> Since commit ad67b74d2469 ("printk: hash addresses printed with %p")
+> the regular %p has been improved to avoid this issue.
+> Furthermore, restricted pointers ("%pK") were never meant to be used
+> through printk(). 
 
-Ah, I see. When CONFIG_MEMORY_HOTPLUG=n those come into play.
-That is not a problem for the memory-notify thing because drivers/base/memory.c
-gets compiled IFF CONFIG_MEMORY_HOTPLUG=y.
-I am thinking two ways to fix this:
+Just for the record, this clarification was added in commit:
+a48849e2358e ("printk: clarify the documentation for plain pointer printing"), in 2021.
 
- 1) Move the code for node-notify to drivers/base/memory.c
- 2) Surround those functions within a
- #ifdef CONFIG_MEMORY_HOTPLUG
- ...
- #endif
-
-Thoughts? I lean towards option #2 as it looks cleaner to me:
-
- diff --git a/drivers/base/node.c b/drivers/base/node.c
- index 182c71dfb5b8..3b084d71888a 100644
- --- a/drivers/base/node.c
- +++ b/drivers/base/node.c
- @@ -110,6 +110,7 @@ static const struct attribute_group *node_access_node_groups[] = {
-         NULL,
-  };
-  
- +#ifdef CONFIG_MEMORY_HOTPLUG
-  static BLOCKING_NOTIFIER_HEAD(node_chain);
-  
-  int register_node_notifier(struct notifier_block *nb)
- @@ -128,6 +129,7 @@ int node_notify(unsigned long val, void *v)
-  {
-         return blocking_notifier_call_chain(&node_chain, val, v);
-  }
- +#endif
-  
-  static void node_remove_accesses(struct node *node)
-  {
-
-
-
--- 
-Oscar Salvador
-SUSE Labs
+Thanks
