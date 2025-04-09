@@ -1,156 +1,172 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8020925DAF8
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 08:40:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118E125D1E7
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 08:41:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744188058; cv=none; b=dwBQ2M/A9zWgBkylgnH2wyhsjlAnaRnXhFd7nTbWFt2dvmyiHmbWXzSrFM9UiP+FSy3gRxTLsszP9m82BqFSLBJn8zHrYS3KtHfna/66WsRbh3baa+SrzNySDhLLLzHzd6vLgKcrXOXYkPmkDCIq2ljr8dhnlnUkn5bKhOMjSFQ=
+	t=1744188098; cv=none; b=thLzl0U3DMiGoNAuuZmC7Lotv/EGfnj9kEvA0Nx4V2WWgCAC8gEJxuSRc0PkFgxDaPp8mrPlzvsu0bmFBjgdP6NFh3EITI2+S1KwUm8xjAH1bTgXyV0BM3X8RQg3k8dkDsdbS2jGy1gF8G5vAwDKA7gRLr48prmcwMbMTVfSdHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744188058; c=relaxed/simple;
-	bh=5kdF5oVUy/yps6X9BImufh8OuKxxdQ4BjJ7Qv2H6pxc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=BCqMbiR3vmO3bqSECtvzNM+VpNipqZI6Y6hZ29M8Zd6/wUo2TTsXMsmhQr9FY3rl5y+dLv+f5Nb78UkKxYVlrym7I2c0f7IJq6xsFYilUrZzUCoYpMgh0kHaqHT8VAKMHNSvgzFJ5El13elpp7rDeatANjjSWVkzXzhDzfkrVg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=a7DwWriq; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1744188098; c=relaxed/simple;
+	bh=ykrjLAWwRkI657MTOJTHD9gPFn+F7dJf31R6fHhnorc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q/N+iXBxhprfdAn4inaFM+QGjpUeFriYgT04Dx9CFUkUfkoBn+LSkeOV9bo3OGaWOliNAl9V683NfBAShNHX2u2yNIPnEzJUGNIqU/fjxgHiFbbYFcnkKaeyxqNMM80dredLK7hm6T4Qw5HJsY0kMZLqWx0SvkgrdZ4uFSQVV/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KP50S4RI; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="a7DwWriq"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso59835165e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 01:40:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744188054; x=1744792854; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=K/lQSP02uZhzaqZfFDZ+bFMWR2NaVs5b5QtoM2HpE7Y=;
-        b=a7DwWriq7SA9IP07wBkGlbj2ecfCCciZhMRHFI9RnVowC/12yGyANaSrGpPFiIaB2c
-         RdJb5gGQ6UvpVm/6oFukZSYJNHXOnAM4dHx5XNrZmH2LGULyuer4pDD9WT9k0wX1AuV+
-         Zo/x6C0Z0wKPTweyOs5yhFfsRb6teyRSBGH+vx02q+hsJAqP+iox9lsYjJpM7H1zlWvA
-         TddcvvX9Std4TraFeCSRuh22Id4rTjYn/fdyjhDzcyJmif/gqADKQyeGpUbfQbqYPzhR
-         p0M7z0uWNEyX9blmJXGb+iN9F5PLevQ8Oa05GLkPn3jBCL6c3tsdgHfeRPRfJNJS9QXg
-         yTMw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KP50S4RI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744188094;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=lcU1dMAvpChtGIJQUrQPKwz+6tZ2DlMGYvtyjmj3LFo=;
+	b=KP50S4RIkMUvpJy3Vc84a0JAWskB0LWL1dVhDy1mIDhTE/OentiWGB3mJR4tIKY6U05fQT
+	wPuhjKDn1+7Tu/byWGFcvQJ5zfhOzJBUM+TCtOmhV7WVxw1bx3nyHcVcYZVA2p5RlITJGS
+	/3HkkfeMJeaOUhfevK89E+AmRPQUvzo=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-496-Hz5pDYCoM5-Pz5khoR621g-1; Wed, 09 Apr 2025 04:41:33 -0400
+X-MC-Unique: Hz5pDYCoM5-Pz5khoR621g-1
+X-Mimecast-MFC-AGG-ID: Hz5pDYCoM5-Pz5khoR621g_1744188092
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43cf327e9a2so54505555e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 01:41:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744188054; x=1744792854;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=K/lQSP02uZhzaqZfFDZ+bFMWR2NaVs5b5QtoM2HpE7Y=;
-        b=Taf+AB1cwxW4PJ4I/5VezC9iz9Rjy5Vl8bXZMZBcG7JUuDI4OVI2uRETrnKgyTSmwF
-         TQ0eGxLXyL0YZMm/FECVxy3gWgVm9Jujflo1CWbDXdck0AMjEWrZ5u1ND9zFiGiovvSY
-         UYCesZ09zUAdJ8v0ZLwRa+oRrrp4FIFhSWbZgmubSUg9KqaTwfbF42NNo4Z5M6fcV8jJ
-         aux1XFndQ03ViOUDXPZMkjsCQexlgW6D1xZ4nx9Itaywhsu9sgy0wz4UXwnQIiKLeBBY
-         H9WvUva8z51R0xNDzRLDdC4I4a4LEq195/YN4gXlL5uPzBV9oqB1D2gpit5LwD1cFu2u
-         l3jQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWCZzvIJpNNeUfgKB718PEPD+xw9lSl6cphpNrNR3iw18xd2Zp2GqiPSX3kHWNxMhkTgBuR5IGrfx/3qKc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIVXNEjdhw09YZyaOTGkZcR4J2HYrH6lJt8pnlSf1+n9TCI8jt
-	X38P6mrhQDzRAexjEZ/zuCxxodg+DWFfQMVZqxv7ojCY/GAFhSEUPvKnsSXR6ms=
-X-Gm-Gg: ASbGnctGhAlbq1uJbrFRURRk4LS1W9NZGNd/W3nYffoK3kpGScc1oGD8wL8kjuzy0x3
-	5E3JhT9U0VGC5zJ0Kih75Fk+KFv/BWvMF6ZMMcSoFu5buEQVBHlstzsb9KZSAre2gQGUnRIi0Rd
-	JVqldwFtxHpoH+Cd7/0AsJAYBTBwdbVqXZwDMlGCBc9DOT545lXjApDcJGFrjxlshKCxxziC26C
-	qe+ch9Tno9cCZ18yJyGfRWKzoBJTUHERyNuvOTK1amSJAa+Feh7kIh6JilYLnLjHC8VB1rV4RMI
-	7pdOED7Tb5h3MPVrZcGmIcWFlO/yoHM0cQ==
-X-Google-Smtp-Source: AGHT+IG8LQlB/qJ4dprLDxOBQIbHnBXUqk5P+Akfq9rXwsoYQVM14BJpyBXYL2o8LGSSr/sh82IgJg==
-X-Received: by 2002:a05:600c:3b8f:b0:43c:ec28:d31b with SMTP id 5b1f17b1804b1-43f1fe16c7dmr15845665e9.10.1744188053670;
-        Wed, 09 Apr 2025 01:40:53 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:7880:1c3f:3ac3:7c62])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f233c8219sm8726235e9.21.2025.04.09.01.40.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 01:40:53 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 09 Apr 2025 10:40:45 +0200
-Subject: [PATCH v2 7/7] iio: addac: ad74115: use new GPIO line value setter
- callbacks
+        d=1e100.net; s=20230601; t=1744188092; x=1744792892;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=lcU1dMAvpChtGIJQUrQPKwz+6tZ2DlMGYvtyjmj3LFo=;
+        b=sI2JnMVI6cwFicFyHyBigH0TnUmOL235lF+jQkjYHfO8gYhj80pWP3MAO7XMIHpYkn
+         MqOjCMpGgGR5rBhW9ib9KAX4ooVg5Dlz59k7EMEb62JDPYtIqjORTgwP36GHslvyMkvM
+         rG87bZBgRRrDhiNunevSAYP67toblhHlNu6YZTXthHshtqpYjoj8no51A9DKQFlJ4qmD
+         Rg4Zjk+IRGL/X/6/iWYSlqB4hJHus+J3JbuN2T8Lg7An9qF35woRqXcr8tzI0y8rxMpz
+         fMyErLOhNG9nIsaaULdXl6/Rx+p5vQOkUEoRg5+zJ7janPxnSXV8LFK3Xj+9INSTnTXr
+         8HJA==
+X-Forwarded-Encrypted: i=1; AJvYcCUIk0cGn4AztgTIc4JzwCeLOxSbYhPhCoHaSYSYXqAItVCRy/6fPBa3FkpmieINZzjMavb9XizNmAEIGfg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yya62l341inHsih8LmprKOT1ZkMaBx6+O/W30XYieITcbJwVbAf
+	v1AR7CuJgqQpUgmUmooz7tQeEGh318sR+1rfs0mmOuDBdrqR7nhgbtkzrBl/3z/q37zqjFaCLxv
+	WCuN8s4R0IqLdYhSODXfzTx0WxDSRpGUXCFbG+z2R5I+WVKgNnJITZjiXz7Y+0g==
+X-Gm-Gg: ASbGncvVGflvcAxTjBOwu1M68E+K8R2Oydd8/2oo/ZIaYxiRPz7gzHTZ9DjvKhcUfvm
+	qRrSf1+/c2yhAIrpgsvBnqPTj2/Gx4ztfkrxuiWDNoYxNeYkl9oEbVGyYp0Ojswh+jiSvn+uVf0
+	x9fxQPgtT4/8pZ3n/KE2cdORkWTn9pQ7rUEH75KdVNkCxWWX8TI0y+t/skKKpVAh9ItnBszG6rW
+	7cRAPDHbS5BmGcb+8ldkYOaa3mWBncaAQEVIkVMTZ/+rOsPcyDau6szSYT3hgOZsjERGdcTWKgB
+	8aRCloN9SdV+3UM9C5rFGWb18vRA2xDHHo/L1rHOFdYI8AvJ9XUzDhXBNMYvk5nkxJxLojwnMsQ
+	ogpK9qg598r9B1MEsNrGZmI62FAhiJHTlZw==
+X-Received: by 2002:a05:600c:35c7:b0:43c:efed:733e with SMTP id 5b1f17b1804b1-43f1eca80f3mr15977955e9.14.1744188092254;
+        Wed, 09 Apr 2025 01:41:32 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEl9WL/SfH2EOqqSuxrHJDDqgcHQy7+sAbW3ps3u9XYsFemw8VQuRCP7qynP/IkrwyWObgUjA==
+X-Received: by 2002:a05:600c:35c7:b0:43c:efed:733e with SMTP id 5b1f17b1804b1-43f1eca80f3mr15977725e9.14.1744188091842;
+        Wed, 09 Apr 2025 01:41:31 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c70d:8400:ed9b:a3a:88e5:c6a? (p200300cbc70d8400ed9b0a3a88e50c6a.dip0.t-ipconnect.de. [2003:cb:c70d:8400:ed9b:a3a:88e5:c6a])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d89363066sm945398f8f.7.2025.04.09.01.41.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Apr 2025 01:41:31 -0700 (PDT)
+Message-ID: <4d9bdd44-a4fc-440b-8a4f-586d4cea65d7@redhat.com>
+Date: Wed, 9 Apr 2025 10:41:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] MAINTAINERS: Update HUGETLB reviewers
+To: Oscar Salvador <osalvador@suse.de>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Muchun Song <muchun.song@linux.dev>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, Peter Xu <peterx@redhat.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Michal Hocko <mhocko@suse.com>
+References: <20250409082452.269180-1-osalvador@suse.de>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250409082452.269180-1-osalvador@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250409-gpiochip-set-rv-iio-v2-7-4b36428f39cb@linaro.org>
-References: <20250409-gpiochip-set-rv-iio-v2-0-4b36428f39cb@linaro.org>
-In-Reply-To: <20250409-gpiochip-set-rv-iio-v2-0-4b36428f39cb@linaro.org>
-To: Lars-Peter Clausen <lars@metafoo.de>, 
- Michael Hennerich <Michael.Hennerich@analog.com>, 
- Jonathan Cameron <jic23@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Cosmin Tanislav <cosmin.tanislav@analog.com>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1869;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=GM/OUTdtJwVfHBffPnM20PvdLToT9f+xlEL0CqiIT9o=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn9jKM+RDKnpk08jf6biIZ3iU+KYy4c1FpPVE9g
- ineY3ogU3uJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ/YyjAAKCRARpy6gFHHX
- crtWEADCEy9Fkv2WE4tKZ2plfQHL2JiepslTEmt6QhUmz6So59x/5RxyKgDu3LK85ixCUqiitQL
- 3q7lufL7DXD2EX3Ai9owJsTIH+YHHC9pgD3o596P6gInTNQxn9derv4ukwZJOYhQ5IgAhzjzmpG
- ZT/fYog8HvtoUXTOYtZlmXKVoI23GIDf820V72btz1yz4Pp4HVspy3HALtUylwZpvLG7OvwpsCa
- oVkHg3j4j40BBqmkd7fWTCaNz6c0EdWVvtwL0VUEpuv5fWiL1kVtzznvCM7b7meTNE1lXjjS2hT
- 4TLznQ3WjhVdFjmA329GHu9GBtPb2Y51r968yrfBQ7QcZiK+TjWq6+M5QRntMY/rMEkLN6uMzEC
- tzVRhY9HMzT5Gey6tto8zePpE03bgOdn2nkvV7M5PqbATGnKWKXda7Z4rd1lrANcU9ZyDklLAmf
- AokMsuxUbKxKpP9RfAjZKxZtZ5TcOroNFZTLY7qJWV6flXC4+Kglxe0Jd2Ook91qkuVtKBmSS3+
- QU7+Kcol9RRZV3pO+VABQvztImX3amgSer2m1HXZb/3yCutPB1PfnAbguPOGHbiWnETKr69q7nc
- vHr6TCmvDKeYRdTxJkZrgwLQ76O7CLQVK2pcJmwvKeGIBFLdeq3VTJjO8siiK/8+tTGwogsTiob
- Z55amYSelPNeVUQ==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On 09.04.25 10:24, Oscar Salvador wrote:
+> I have done quite some review on hugetlb code over the years, and some
+> work on it as well, the latest being the hugetlb pagewalk unification which
+> is a work in progress, and touches hugetlb code to great lengths.
+> 
+> HugeTLB does not have many reviewers, so I would like to help out by
+> offering myself as an official Reviewer.
+> 
+> Signed-of-by: Oscar Salvador <osalvador@suse.de>
+> ---
+>   MAINTAINERS | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 193d7e216d79..7b32498a42cb 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -10963,6 +10963,7 @@ F:	include/linux/platform_data/huawei-gaokun-ec.h
+>   
+>   HUGETLB SUBSYSTEM
+>   M:	Muchun Song <muchun.song@linux.dev>
+> +R:	Oscar Salvador <osalvador@suse.de>
+>   L:	linux-mm@kvack.org
+>   S:	Maintained
+>   F:	Documentation/ABI/testing/sysfs-kernel-mm-hugepages
 
-struct gpio_chip now has callbacks for setting line values that return
-an integer, allowing to indicate failures. Convert the driver to using
-them.
+Thanks, I barely have capacity to review all in that area, and focus 
+only on things that affect page migration, hotplug, hvo, ... so having 
+another "official" reviewer that can help Muchun will be quite nice!
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/iio/addac/ad74115.c | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/iio/addac/ad74115.c b/drivers/iio/addac/ad74115.c
-index a7e480f2472d..2a809e07526b 100644
---- a/drivers/iio/addac/ad74115.c
-+++ b/drivers/iio/addac/ad74115.c
-@@ -542,18 +542,16 @@ static int ad74115_gpio_get(struct gpio_chip *gc, unsigned int offset)
- 	return FIELD_GET(AD74115_GPIO_CONFIG_GPI_DATA, val);
- }
- 
--static void ad74115_gpio_set(struct gpio_chip *gc, unsigned int offset, int value)
-+static int ad74115_gpio_set(struct gpio_chip *gc, unsigned int offset,
-+			    int value)
- {
- 	struct ad74115_state *st = gpiochip_get_data(gc);
--	struct device *dev = &st->spi->dev;
--	int ret;
- 
--	ret = regmap_update_bits(st->regmap, AD74115_GPIO_CONFIG_X_REG(offset),
--				 AD74115_GPIO_CONFIG_GPO_DATA,
--				 FIELD_PREP(AD74115_GPIO_CONFIG_GPO_DATA, value));
--	if (ret)
--		dev_err(dev, "Failed to set GPIO %u output value, err: %d\n",
--			offset, ret);
-+	return regmap_update_bits(st->regmap,
-+				  AD74115_GPIO_CONFIG_X_REG(offset),
-+				  AD74115_GPIO_CONFIG_GPO_DATA,
-+				  FIELD_PREP(AD74115_GPIO_CONFIG_GPO_DATA,
-+					     value));
- }
- 
- static int ad74115_set_comp_debounce(struct ad74115_state *st, unsigned int val)
-@@ -1580,7 +1578,7 @@ static int ad74115_setup_gpio_chip(struct ad74115_state *st)
- 		.direction_input = ad74115_gpio_direction_input,
- 		.direction_output = ad74115_gpio_direction_output,
- 		.get = ad74115_gpio_get,
--		.set = ad74115_gpio_set,
-+		.set_rv = ad74115_gpio_set,
- 	};
- 
- 	return devm_gpiochip_add_data(dev, &st->gc, st);
+Acked-by: David Hildenbrand <david@redhat.com>
 
 -- 
-2.45.2
+Cheers,
+
+David / dhildenb
 
