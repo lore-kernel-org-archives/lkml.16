@@ -1,166 +1,123 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F8F682899;
-	Wed,  9 Apr 2025 02:14:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55EFE7083A
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 02:17:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744164873; cv=none; b=lFuXuvB52dHGzJdQWNi6lJPcHN+qILNhwyJ8UGQqcDnxaqcdvRrynf6apU2LpGdcblXJJYBEiqe16TNEp3Jd9ppxtqmtsQPkdKBGHQUrRQgM7FjbdDzIt/hOJPHTy32uJaTluV17rZwVHjiCLU1i0+fiVdrzCUHQr32zLMbbeMc=
+	t=1744165044; cv=none; b=bqpnWHFfAfWC3Hryhhr+tV3m/tytnPvz4IGcsLVB/I3objSHetbGRXsaAFkZ3u8vsjy7Dtur7grmculRqUPI8+wO/VrhVjbZA8+15ScT+Qc4mINv2+HDBdrAqa2ZnHL6unv3jx2X0pfBOGPH/Ih2xTszLaPsdgmSn3sjFi1fEu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744164873; c=relaxed/simple;
-	bh=UP0FQR/n1zwynJlG9G02mJ86TJ3qtx96xbpDMqupU8w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ha9igYX405sTAIJVBuctF5TAIJSUXHp4hnNY5nCRqQkn2i4WK1CBx7bW/CBL2WGJaWzkwgtSIfOeom1EqZPJvOy2Re4fQYJPYwLbo03MQs8YHySH+yd6FnY5nevbtFudpVriHurYWQFrpsikllnY5wgofoEwhZY42LoskfA7q4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hUcNOP08; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hUcNOP08"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-af19b9f4c8cso4146455a12.2;
-        Tue, 08 Apr 2025 19:14:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744164870; x=1744769670; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cpDgCF4RC4kIU1sVwLFc1hmL/y8zp2nauAmOE/PaU40=;
-        b=hUcNOP08LJvaROQDnfBSCBnw4s44wle04hHq6eyXMpYoYgxAPNSGflvZWGt79S4P9B
-         3kt6ZTQ3qweI7As/N+YxLp2E9vtn5jE5xcggRszRNJxe3GJKmqbPLiMUVT0tRuAntO7O
-         XjHbpPqHyALUheeXTQH942OqkOH78ox6Ywql+eekf+n9ZmplCVoBzDfYrQcIyifxRdTU
-         vwteHbuUo0XlTDO0ZnEbEbIFmh/IXiXRwxeI/ecwpf9tZJbj8YRhVy1wpVvuLxUWu3Vn
-         OVzlEUofSjI64s1a5Zjb/ltK6I3aWd09tR7D9N3ILi3crgKFBsZ8nO9xd57+dU2ozTX3
-         Un0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744164870; x=1744769670;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cpDgCF4RC4kIU1sVwLFc1hmL/y8zp2nauAmOE/PaU40=;
-        b=pC5qgnE15E9xj/25HHjFtbcGej81U72ree8gr0oZQ46J9nYZuORGqw/snngxNeNql4
-         7wXywxwTxd2Bl5oVDrhok21PDozshKiRS2XMVOryLiWYsqUr/JDPhtYvDjPdfdjevWA1
-         YQAOcJdV6LZ7lsXjcB2JXYfk311NCiSAonUSsZAOeX1jGVvP4ivmZ0FgQVj4yiypRtiZ
-         2o9WqpKVhf7UZs2wUwPCta5uGptRWbljBHQ2kdEQU5v7BJyr/ljCGEWw3LhpIrPlOqFY
-         j5EAYugWn6/mVY6//sv/U84hT57y7RzoMvDAVjWILggzgbvpQO8HZxqAIHxHa82TSTI6
-         fhAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWHtX7DyuNL6iUSoS/oDoCqiVHkXJNNOh1UB5LgBTjdEsNmdqlHbN38+N76EdWT8UmGdTgSkm8W1JDsQJwc@vger.kernel.org, AJvYcCWNZACbUJ95+nPqHWNZ77d9UIgo7lKDMZm1pMh2pGGnt0lGeHshCJDtI7V6ZnbrDz8G2vx4sw2V2K0Mxg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzT3kduSbIFF8TQBmF4fNkchLP3aTHdy3kNdTkAVuLzoWivR/7
-	8d4h+KM0mGOxJY/gcyJlP5NrW5eLcPSs2SdI8hhoFsp25joSKOmt
-X-Gm-Gg: ASbGncvSPR3KVvTM34VrTgLBkuMX7Ty0maPil3OvcenfratTt3X9/xtWGhiLH+MbXio
-	cCbTTDNCcLKhGhtuCtSwCefSVQAkM3K1Wo6RHQ4fN4WVUqxbYxO4/F27LmtaEBpbuKm5ES2tZZs
-	sBR56pGr6S0VZtYxuo3ye9N6BS/Uq/5Wm7PeDea1Oic7v/nE9y90zAv48yPtISeqTNt/Gmi6zn3
-	ty7dhro3mIDVe22EZt4EomuZ6J4UQNhLxx23xK06JZIoIZYtjM8k5azG3I6pnJyT2De7q2Gy7d+
-	2gvkyyJCwNjp29LOtRHraT3S1ftS0mCwrxGnMJ9fIWLtZu+QWx+vR2mF4g==
-X-Google-Smtp-Source: AGHT+IHSZ14NomQz3hALXnGcow5TBpBzj55daEIsWeRV7i8LA3ITmKaDqDlVX3vcaOOZLZG55FAXGg==
-X-Received: by 2002:a05:6a21:3a48:b0:1f5:81bc:c72e with SMTP id adf61e73a8af0-201592ad38fmr1515616637.33.1744164870250;
-        Tue, 08 Apr 2025 19:14:30 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1e69b2csm83128b3a.166.2025.04.08.19.14.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 19:14:29 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Tue, 8 Apr 2025 19:14:28 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Eugene Shalygin <eugene.shalygin@gmail.com>
-Cc: Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hwmon: (asus-ec-sensors) sort sensor definition arrays
-Message-ID: <faefe6df-8e2c-426a-a22c-7cc0eeba3387@roeck-us.net>
-References: <20250408204505.11412-1-eugene.shalygin@gmail.com>
+	s=arc-20240116; t=1744165044; c=relaxed/simple;
+	bh=WDqMBd92k2n/VhyZDze6xnRKCm6vD/2kvmn85px7pIA=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=YH4hDgmG8eorZBmrLc7RVBlszgbjaT858C3tkzQN7OsJQGa/OzC2jVrD0WE5VmTHzMdN4L0Em4e1z6pqgWl7zi6fdcO661jlK881PUsJMCi+yR4pEObCxbunTJA+pel/wZKMwuwr3oTlxypCp4YFILBd1cqNFpeqnenG/2vnMnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [111.9.175.10])
+	by gateway (Coremail) with SMTP id _____8CxvnKr2PVnYKy1AA--.40691S3;
+	Wed, 09 Apr 2025 10:17:15 +0800 (CST)
+Received: from [10.136.12.26] (unknown [111.9.175.10])
+	by front1 (Coremail) with SMTP id qMiowMCxPsep2PVnbb91AA--.26584S3;
+	Wed, 09 Apr 2025 10:17:15 +0800 (CST)
+Subject: Re: [PATCH] LoongArch: Enhance robust of kprobe
+To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250408092756.22339-1-yangtiezhu@loongson.cn>
+From: Jinyang He <hejinyang@loongson.cn>
+Message-ID: <f83d1048-93f6-6c11-2c2a-98c1e1ea7e9d@loongson.cn>
+Date: Wed, 9 Apr 2025 10:17:13 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250408204505.11412-1-eugene.shalygin@gmail.com>
+In-Reply-To: <20250408092756.22339-1-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowMCxPsep2PVnbb91AA--.26584S3
+X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxWrWkAw13WFWfJFWxAF17XFc_yoW5GFy8pF
+	s7C3yrtrW8XFy0va4UAw15uryFy3yUJ3yxWw1UAa43tws8Cw1qqr1xWrWq9Fn8Gr4rtr1S
+	vF18Kry0vF1UGFgCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
+	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
+	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
+	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
+	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
+	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU70PfDUUU
+	U
 
-On Tue, Apr 08, 2025 at 10:44:57PM +0200, Eugene Shalygin wrote:
-> The arrays have to be sorted by the sensor register bank and index
-> because this is what the sensor reading function expects. So sort them
-> and leave a comment for future contributors.
-> 
-> Signed-off-by: Eugene Shalygin <eugene.shalygin@gmail.com>
+On 2025-04-08 17:27, Tiezhu Yang wrote:
+
+> Currently, interrupts need to be disabled before single-step mode is set,
+> it requires that the CSR_PRMD_PIE must be cleared in save_local_irqflag()
+> which is called by setup_singlestep(), this is reasonable.
+>
+> But in the first kprobe breakpoint exception, if the irq is enabled at the
+> beginning of do_bp(), it will not be disabled at the end of do_bp() due to
+> the CSR_PRMD_PIE has been cleared in save_local_irqflag(). For this case,
+> it may corrupt exception context when restoring exception after do_bp() in
+> handle_bp(), this is not reasonable.
+>
+> Based on the above analysis, in order to make sure the irq is disabled at
+> the end of do_bp() for the first kprobe breakpoint exception, it is proper
+> to disable irq first before clearing CSR_PRMD_PIE in save_local_irqflag().
+>
+> Fixes: 6d4cc40fb5f5 ("LoongArch: Add kprobes support")
+> Co-developed-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 > ---
->  drivers/hwmon/asus-ec-sensors.c | 20 ++++++++++++--------
->  1 file changed, 12 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/hwmon/asus-ec-sensors.c b/drivers/hwmon/asus-ec-sensors.c
-> index 006ced5ab6e6..ec428c5e97d4 100644
-> --- a/drivers/hwmon/asus-ec-sensors.c
-> +++ b/drivers/hwmon/asus-ec-sensors.c
-> @@ -169,7 +169,10 @@ enum board_family {
->  	family_intel_600_series
->  };
->  
-> -/* All the known sensors for ASUS EC controllers */
-> +/* All the known sensors for ASUS EC controllers. These arrays have to be sorted
-> + * by the full ((bank << 8) + index) register index (see asus_ec_block_read() as
-> + * to why).
-> +*/
+>   arch/loongarch/kernel/kprobes.c | 1 +
+>   1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/loongarch/kernel/kprobes.c b/arch/loongarch/kernel/kprobes.c
+> index 8ba391cfabb0..6eab97636e6b 100644
+> --- a/arch/loongarch/kernel/kprobes.c
+> +++ b/arch/loongarch/kernel/kprobes.c
+> @@ -113,6 +113,7 @@ NOKPROBE_SYMBOL(set_current_kprobe);
+>   static void save_local_irqflag(struct kprobe_ctlblk *kcb,
+>   			       struct pt_regs *regs)
+>   {
+> +	local_irq_disable();
+>   	kcb->saved_status = regs->csr_prmd;
+>   	regs->csr_prmd &= ~CSR_PRMD_PIE;
+>   }
 
-WARNING: Block comments should align the * on each line
-#123: FILE: drivers/hwmon/asus-ec-sensors.c:175:
-+ * to why).
-+*/
+Hi, Tiezhu,
 
-I'll fix that up and apply the patch, but _please_ run checkpatch on your patches.
+I think the carsh is caused by "irq-triggered re-re-enter" clear
+the previous_kprobe status. An example things like,
 
-Also, this is not the network subsystem. Please use standard multi-line comments.
+...
+   static void setup_singlestep(struct kprobe *p, struct pt_regs *regs,
+                    struct kprobe_ctlblk *kcb, int reenter)
+   {
+       union loongarch_instruction insn;
 
-Guenter
+       if (reenter) {
+           save_previous_kprobe(kcb);
+  ===================   <- irq and trigger re-re-enter in its handler
+           set_current_kprobe(p);
+           kcb->kprobe_status = KPROBE_REENTER;
+       } else {
+           kcb->kprobe_status = KPROBE_HIT_SS;
+       }
+...
 
->  static const struct ec_sensor_info sensors_family_amd_400[] = {
->  	[ec_sensor_temp_chipset] =
->  		EC_SENSOR("Chipset", hwmon_temp, 1, 0x00, 0x3a),
-> @@ -183,10 +186,10 @@ static const struct ec_sensor_info sensors_family_amd_400[] = {
->  		EC_SENSOR("VRM", hwmon_temp, 1, 0x00, 0x3e),
->  	[ec_sensor_in_cpu_core] =
->  		EC_SENSOR("CPU Core", hwmon_in, 2, 0x00, 0xa2),
-> -	[ec_sensor_fan_cpu_opt] =
-> -		EC_SENSOR("CPU_Opt", hwmon_fan, 2, 0x00, 0xbc),
->  	[ec_sensor_fan_vrm_hs] =
->  		EC_SENSOR("VRM HS", hwmon_fan, 2, 0x00, 0xb2),
-> +	[ec_sensor_fan_cpu_opt] =
-> +		EC_SENSOR("CPU_Opt", hwmon_fan, 2, 0x00, 0xbc),
->  	[ec_sensor_fan_chipset] =
->  		/* no chipset fans in this generation */
->  		EC_SENSOR("Chipset", hwmon_fan, 0, 0x00, 0x00),
-> @@ -194,10 +197,10 @@ static const struct ec_sensor_info sensors_family_amd_400[] = {
->  		EC_SENSOR("Water_Flow", hwmon_fan, 2, 0x00, 0xb4),
->  	[ec_sensor_curr_cpu] =
->  		EC_SENSOR("CPU", hwmon_curr, 1, 0x00, 0xf4),
-> -	[ec_sensor_temp_water_in] =
-> -		EC_SENSOR("Water_In", hwmon_temp, 1, 0x01, 0x0d),
->  	[ec_sensor_temp_water_out] =
->  		EC_SENSOR("Water_Out", hwmon_temp, 1, 0x01, 0x0b),
-> +	[ec_sensor_temp_water_in] =
-> +		EC_SENSOR("Water_In", hwmon_temp, 1, 0x01, 0x0d),
->  };
->  
->  static const struct ec_sensor_info sensors_family_amd_500[] = {
-> @@ -239,19 +242,20 @@ static const struct ec_sensor_info sensors_family_amd_500[] = {
->  
->  static const struct ec_sensor_info sensors_family_amd_600[] = {
->  	[ec_sensor_temp_cpu] = EC_SENSOR("CPU", hwmon_temp, 1, 0x00, 0x30),
-> -	[ec_sensor_temp_cpu_package] = EC_SENSOR("CPU Package", hwmon_temp, 1, 0x00, 0x31),
-> +	[ec_sensor_temp_cpu_package] =
-> +		EC_SENSOR("CPU Package", hwmon_temp, 1, 0x00, 0x31),
->  	[ec_sensor_temp_mb] =
->  	EC_SENSOR("Motherboard", hwmon_temp, 1, 0x00, 0x32),
->  	[ec_sensor_temp_vrm] =
->  		EC_SENSOR("VRM", hwmon_temp, 1, 0x00, 0x33),
->  	[ec_sensor_temp_t_sensor] =
->  		EC_SENSOR("T_Sensor", hwmon_temp, 1, 0x00, 0x36),
-> +	[ec_sensor_fan_cpu_opt] =
-> +		EC_SENSOR("CPU_Opt", hwmon_fan, 2, 0x00, 0xb0),
->  	[ec_sensor_temp_water_in] =
->  		EC_SENSOR("Water_In", hwmon_temp, 1, 0x01, 0x00),
->  	[ec_sensor_temp_water_out] =
->  		EC_SENSOR("Water_Out", hwmon_temp, 1, 0x01, 0x01),
-> -	[ec_sensor_fan_cpu_opt] =
-> -		EC_SENSOR("CPU_Opt", hwmon_fan, 2, 0x00, 0xb0),
->  };
->  
->  static const struct ec_sensor_info sensors_family_intel_300[] = {
+We should assure the previous_kprobe status not be changed after re-enter.
+So this `local_irq_disable` should be set in reenter block begin.
+And for !reenter block, `local_irq_disable` may be not needed.
+
+Jinyang
+
