@@ -1,114 +1,169 @@
-Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0E901DEFE7
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 06:40:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
+Received: from vmicros1.altlinux.org (vmicros1.altlinux.org [194.107.17.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F3F51DE8A8
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 06:40:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744180813; cv=none; b=JPNlBRpoqBBQZzkLJeeFmtMRK98xZ1a7FruHaTEoGz/7nb0dpr6SvYPJMIG23c8RVrgKneJl89A2KLMnyNJ4cTw2x7ZCsQ5U3cSGej0QQ+i8eLNUGAb/zteZqRgTQwn7+DcUEjKdXGLppM6WBZN6TPRjgKVNh+tQtMa2jfTs5Cc=
+	t=1744180823; cv=none; b=SLac67e5e/hEzZ4wXnkOFsa3Y18cBVOKFlqT2cl6LTvI1zuk7+x4Ov9wLtvhNla9Hp4fqB46H02gAK/mtCFWsAmiaDc+D3fvczyLb0OiEu1AG2cvp/5CZ8UJcdcgtdpj0RrCznVGsPyDYvW7q9b1PX0eSGYB5UG7+wuSgbdkvvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744180813; c=relaxed/simple;
-	bh=EA4R1E+05gtL01yoBf9zEwuEj63laa4tf7bpqq0eQhU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I0DXyiVJUI06FZtP+ReDEpFO3EJ1ymUBuRpV+iiGzLyNMW7S0acquEWYdn3nn/JKGdOMFh2JD2mw4mH43iIRo0m0cC9Nxm5RyAc6OJuvsIM6dqBhkz1orRetNgNtqzGNxK63RsRbfvYy1gfK9GvjxwX7lb/sUXhsSDq2blx1M1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=xikLMr6k; arc=none smtp.client-ip=44.202.169.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="xikLMr6k"
-Received: from eig-obgw-5004a.ext.cloudfilter.net ([10.0.29.221])
-	by cmsmtp with ESMTPS
-	id 2KjXuRnARiuzS2P6Xubp8d; Wed, 09 Apr 2025 06:40:09 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id 2P6XusGP3jrgq2P6XuPzCP; Wed, 09 Apr 2025 06:40:09 +0000
-X-Authority-Analysis: v=2.4 cv=PK7E+uqC c=1 sm=1 tr=0 ts=67f61649
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=49j0FZ7RFL9ueZfULrUA:9 a=QEXdDO2ut3YA:10
- a=nmWuMzfKamIsx3l42hEX:22 a=hTR6fmoedSdf3N0JiVF8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=qpm6j0JhOIFKcdxChBMhu3xTAdJvNiLceWDGvFN+pFQ=; b=xikLMr6kwELm3gep0qnGf5GqzI
-	JAE6i5oDYASi2Owvm9B0QWLx8TAryzPa99z1unsiJv6/CsF7qmCj4d3ghaGTfgWeNvJ/gjJMMenc/
-	9x0Sw3rxvlMcJUBzqvZPrR+WcWFs7ALibc/neD18LxieXlyqHIVKKanPwFzlNmE3UU+ySBbEbqieU
-	xD1Bp7gY3PAF4n90SCOpCfsHXow1oXkS7qkiih9/nFh3LDWNqyeqSXOxLEJQ2tFM5gOX4YDKOMNxv
-	JVcnhbCfUfcVbWOrWCP6stJpGepCeSW7vnozvPG7W8MS/2Kiyvk6wIADz0jeH3nlNHZj6ikKcT2+B
-	5BrrC2Ew==;
-Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:58032 helo=[10.0.1.116])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <re@w6rz.net>)
-	id 1u2P6V-00000000J2N-0zEQ;
-	Wed, 09 Apr 2025 00:40:07 -0600
-Message-ID: <696e8945-3343-4cf7-b5aa-b39051db3911@w6rz.net>
-Date: Tue, 8 Apr 2025 23:40:03 -0700
+	s=arc-20240116; t=1744180823; c=relaxed/simple;
+	bh=7YXqZkra420AM/seBf1ejW/4HUlOaPX4UlzKxGysi3w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T2P5UxJavFmN+zkU/ueGnYXathYgbfUMTwEQsTGzZKrJImoyh+QdtftNIi4OalJmwiNQPFPv0zXPPJsdFtkxSvU9gFbGHqk9gvTIR1vY0I4Vv2Q3C2GR1RwAe83FzFU1OyRxFokMtXLaTHzInjwliR6DP9V7NUrOVZUprzUjbvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strace.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+	by vmicros1.altlinux.org (Postfix) with ESMTP id 319C872C8CC;
+	Wed,  9 Apr 2025 09:40:18 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+	id 0B9697CCB3A; Wed,  9 Apr 2025 09:40:18 +0300 (IDT)
+Date: Wed, 9 Apr 2025 09:40:18 +0300
+From: "Dmitry V. Levin" <ldv@strace.io>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Charlie Jenkins <charlie@rivosinc.com>,
+	Arnd Bergmann <arnd@arndb.de>, strace-devel@lists.strace.io,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v7 2/6] syscall.h: add syscall_set_arguments()
+Message-ID: <20250409064017.GA30836@strace.io>
+References: <20250303111910.GA24170@strace.io>
+ <20250303112009.GC24170@strace.io>
+ <20250408213131.GA2872426@ax162>
+ <20250408223611.GA26876@strace.io>
+ <20250409003803.GA2876360@ax162>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.12 000/423] 6.12.23-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250408154121.378213016@linuxfoundation.org>
-Content-Language: en-US
-From: Ron Economos <re@w6rz.net>
-In-Reply-To: <20250408154121.378213016@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 73.223.253.157
-X-Source-L: No
-X-Exim-ID: 1u2P6V-00000000J2N-0zEQ
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:58032
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 54
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfNvtPz1wJ/woTkPnunwB8cbUyNHUSe4vUjIIyreJSf5g+Z1lTdQmadvQBUx6z+O2EDb+CWkFMqGjRVfH8Shr2SiKx/I9v7yj2JB0+xX0RObCZD6Bl0ko
- RUm7yD5Rcfq7HgeSoRTOBZn9v+0BBxjnOAFf1qMow5jThxPipIACYr1v+hQRBPbGlFryGuGaheKMCAqI2Y2t1MVj+YbxU4l5oIo=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409003803.GA2876360@ax162>
 
-On 4/8/25 08:53, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.12.23 release.
-> There are 423 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 10 Apr 2025 15:40:31 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.23-rc2.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Tue, Apr 08, 2025 at 05:38:03PM -0700, Nathan Chancellor wrote:
+> On Wed, Apr 09, 2025 at 01:36:11AM +0300, Dmitry V. Levin wrote:
+> > On Tue, Apr 08, 2025 at 02:31:31PM -0700, Nathan Chancellor wrote:
+> > > On Mon, Mar 03, 2025 at 01:20:09PM +0200, Dmitry V. Levin wrote:
+> > > > +static inline void syscall_set_arguments(struct task_struct *task,
+> > > > +					 struct pt_regs *regs,
+> > > > +					 const unsigned long *args)
+> > > > +{
+> > > > +	regs->orig_a0 = args[0];
+> > > > +	args++;
+> > > > +	memcpy(&regs->a1, args, 5 * sizeof(regs->a1));
+> > > > +}
+> > > 
+> > > This upsets the compiletime fortify checks, as I see a warning after
+> > > syscall_set_arguments() starts being used in kernel/ptrace.c later in
+> > > the series.
+> > > 
+> > >   $ make -skj"$(nproc)" ARCH=riscv CROSS_COMPILE=riscv64-linux- allmodconfig kernel/ptrace.o
+> > >   In file included from include/linux/string.h:392,
+> > >                    from include/linux/bitmap.h:13,
+> > >                    from include/linux/cpumask.h:12,
+> > >                    from arch/riscv/include/asm/processor.h:55,
+> > >                    from include/linux/sched.h:13,
+> > >                    from kernel/ptrace.c:13:
+> > >   In function 'fortify_memcpy_chk',
+> > >       inlined from 'syscall_set_arguments.isra' at arch/riscv/include/asm/syscall.h:82:2:
+> > >   include/linux/fortify-string.h:571:25: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]
+> > >     571 |                         __write_overflow_field(p_size_field, size);
+> > >         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > >   cc1: all warnings being treated as errors
+> > 
+> > I certainly tested the series on riscv64, but somehow I haven't seen this
+> > compiler diagnostics before.
+> 
+> Maybe CONFIG_FORTIFY_SOURCE was not enabled? This comes from the
+> kernel's fortified memcpy checking function, fortify_memcpy_chk(), not
+> necessarily the compiler itself.
+> 
+> > > diff --git a/arch/riscv/include/asm/syscall.h b/arch/riscv/include/asm/syscall.h
+> > > index a5281cdf2b10..70ec19dc8506 100644
+> > > --- a/arch/riscv/include/asm/syscall.h
+> > > +++ b/arch/riscv/include/asm/syscall.h
+> > > @@ -78,8 +78,11 @@ static inline void syscall_set_arguments(struct task_struct *task,
+> > >                                          const unsigned long *args)
+> > >  {
+> > >         regs->orig_a0 = args[0];
+> > > -       args++;
+> > > -       memcpy(&regs->a1, args, 5 * sizeof(regs->a1));
+> > > +       regs->a1 = args[1];
+> > > +       regs->a2 = args[2];
+> > > +       regs->a3 = args[3];
+> > > +       regs->a4 = args[4];
+> > > +       regs->a5 = args[5];
+> > >  }
+> > 
+> > I don't mind eliminating the memcpy() altogether, but
+> > I'd like to note that syscall_set_arguments() is an exact mirror
+> > of syscall_get_arguments(), so if the intentional overwrite in
+> > syscall_set_arguments() is not acceptable, then the intentional
+> > overread in syscall_get_arguments() shouldn't be acceptable either.
+> 
+> Yes, I noticed the symmetry too but I was only looking at it from the
+> overwrite perspective, not the overread one. That reminded me to double
+> check what fortify_memcpy_chk() actually checks for and I remembered
+> that the overread version of this warning is hidden under W=1 (I guess
+> because it happens more frequently).
+> 
+>   $ make -skj"$(nproc)" ARCH=riscv CROSS_COMPILE=riscv64-linux- W=1 allmodconfig kernel/ptrace.o
+>   In file included from include/linux/string.h:392,
+>                    from include/linux/bitmap.h:13,
+>                    from include/linux/cpumask.h:12,
+>                    from arch/riscv/include/asm/processor.h:55,
+>                    from include/linux/sched.h:13,
+>                    from kernel/ptrace.c:13:
+>   In function 'fortify_memcpy_chk',
+>       inlined from 'syscall_get_arguments.isra' at arch/riscv/include/asm/syscall.h:73:2:
+>   include/linux/fortify-string.h:580:25: error: call to '__read_overflow2_field' declared with attribute warning: detected read beyond size of field (2nd parameter); maybe use struct_group()? [-Werror=attribute-warning]
+>     580 |                         __read_overflow2_field(q_size_field, size);
+>         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>   cc1: all warnings being treated as errors
+> 
+> So memcpy() should indeed be eliminated from both, which obviously
+> clears up the warnings.
+> 
+> Cheers,
+> Nathan
+> 
+> diff --git a/arch/riscv/include/asm/syscall.h b/arch/riscv/include/asm/syscall.h
+> index a5281cdf2b10..34313387f977 100644
+> --- a/arch/riscv/include/asm/syscall.h
+> +++ b/arch/riscv/include/asm/syscall.h
+> @@ -69,8 +69,11 @@ static inline void syscall_get_arguments(struct task_struct *task,
+>  					 unsigned long *args)
+>  {
+>  	args[0] = regs->orig_a0;
+> -	args++;
+> -	memcpy(args, &regs->a1, 5 * sizeof(args[0]));
+> +	args[1] = regs->a1;
+> +	args[2] = regs->a2;
+> +	args[3] = regs->a3;
+> +	args[4] = regs->a4;
+> +	args[5] = regs->a5;
+>  }
+>  
+>  static inline void syscall_set_arguments(struct task_struct *task,
+> @@ -78,8 +81,11 @@ static inline void syscall_set_arguments(struct task_struct *task,
+>  					 const unsigned long *args)
+>  {
+>  	regs->orig_a0 = args[0];
+> -	args++;
+> -	memcpy(&regs->a1, args, 5 * sizeof(regs->a1));
+> +	regs->a1 = args[1];
+> +	regs->a2 = args[2];
+> +	regs->a3 = args[3];
+> +	regs->a4 = args[4];
+> +	regs->a5 = args[5];
+>  }
+>  
+>  static inline int syscall_get_arch(struct task_struct *task)
 
-Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
+Looks good, thanks.  How do we proceed from this point?
 
-Tested-by: Ron Economos <re@w6rz.net>
 
+-- 
+ldv
