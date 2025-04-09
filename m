@@ -1,62 +1,61 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB98625EF83
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 12:08:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F28525EFBB
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 12:08:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744200520; cv=none; b=XsCav74L9Ga6ORzGWv+1LG3j8h35cum30OW9auO0P6rTy8PZH/92QNb+becq/vbDG8HPObip+za1Ob04Q1LtVseF9BSg4bHRq4AHjcspENS0ZNJVXOuZOKBrYtcDcviV4MuQ3NXWQk+bWDWrXPN9FDj1ATtbni3TyYbF26PE0nw=
+	t=1744200526; cv=none; b=U0bFJUbGbebfUsnODyRCucBvSJmGfgWYw6uKt2BjTd7AjUB12y24wgGOAXEp2Y0v8Lra3hFgYxoK8exAqOYMLzb7W+429c+efAuRcseO/WspxV+Jw8+QdNxBE/jDeEc0V7iL7PesUE+KKpdkBCZih8icKJ1t5+/FgQ41MzYW0Gg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744200520; c=relaxed/simple;
-	bh=QVVAyUMw1GYU2eQ9MgmKJr6JmFovcIE9h4ZutUBXYDg=;
+	s=arc-20240116; t=1744200526; c=relaxed/simple;
+	bh=VHD94vTP3h36PXRN9S/T2DGKvXNCp6OibQRG2wjgNhM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RZ7oFm9AMANwj0JF5xloyU8mQWKSTNR//eNWzWakME1l7akgXZjp25RZrWtaAUGe9pk/HnLmTxvo3qdw1P/yxBlB5SSsddxpACOXuHc869w4dyaz4vIbTdyTDEsBN8xxPtbGh3qBO/17i6GkcCmUR3bFbdBXxeApvRTUc6angcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=QnzJC5+O; arc=none smtp.client-ip=209.85.215.176
+	 MIME-Version; b=QXBCheol6YgkOBtlsPG2aDL7e2jc3xDrd+9apFxaV07nZ7LnUhMZ0LoL+gIVk3F8eplyr8iCCbgmL+gtkFO5GVY1Euy4vWgJn3BBOCQwzzzspPsgI+pRiPM7r11aFPD5iOoNpGHIdw7QPZodV09VcDPk9tvljwkRxEuHL6xODpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=exVHbkSb; arc=none smtp.client-ip=209.85.214.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="QnzJC5+O"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-af19b9f4c8cso4426054a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 05:08:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="exVHbkSb"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-224019ad9edso85667595ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 05:08:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1744200518; x=1744805318; darn=vger.kernel.org;
+        d=bytedance.com; s=google; t=1744200524; x=1744805324; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nKAlGwjYFaaJe+h1c6LhiwkGgAd8UZrNATBWfFhiu04=;
-        b=QnzJC5+OXfviyWFPL8qxF608pvCLLFd3L8OAgzgWrO+wi3rm3kZ8z/jhjMbl1VO7YK
-         8NJfnWwYy8OFpJlz9iEIhO8HlME7NOAN5Q5T6styUZcW3crumGpoP3ehYgIiLqgWkdIH
-         zWpZIqgyyRPTNxVPEJVyhB5j0fKvUhW8kUtbd+Kjn3O0ToPKgz/eoKM1Jg6tVJc4oK5s
-         Q2zpYtiCUspHQ3cW6MZ7QUpoQkEznNWaZbGeKeLZzwFWWeuO/5aY09MeIHKfMh8cZ36m
-         4iXDsimmulkbB/c2tefSfMSIHsVIJmLrczAnWAz3gZBWXE3tXFp2Rer6mo4yhJFV6Ly1
-         wsOw==
+        bh=PbSUkVrVD3xkDETpxNaGhOsnTSGzGK+aEYnf85XWEQg=;
+        b=exVHbkSb3WUVLSDC9QJHaaeBvZRgn2HWoflZNTwCc7ZQomeZ05KB9Mvs3ORWcd5A3d
+         wrLaOTdQIpWtZC0ZqjshVpbbImRL1oBlHyzeHdwZEB8Q1qMsxjB2RJaecy6a2zbQVb8e
+         2E80U1/FoPCbahf4SAy5HTXXSARcX/BZkPXSTXSUETaX7gmRSeCFv95S4tVoG1DyC6Xw
+         XBW6mg+Ppjt+gc+3FYpc/AgPxtYvcjygSwrzF8GCEkGFJpENjCoGCaRavb2syV2zsVId
+         v5/XB2evxykSJpUagjkrdtg95OagWNQKsxUjP+DwvotXobMJiwExkUNSMI2xfiXmweAL
+         hSVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744200518; x=1744805318;
+        d=1e100.net; s=20230601; t=1744200524; x=1744805324;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nKAlGwjYFaaJe+h1c6LhiwkGgAd8UZrNATBWfFhiu04=;
-        b=aWWhbAkBjVrpjK3wRZmbuTVsYqqdWQo6P+0nHS3/A3s5Um5nAdqC/RErn1L/RDkEWb
-         gqgCmne6OzsYcU1H+ilkciDMf29LPZQp5rqaT5viKY6muSYEC4LzRzmGoqg641hdsLVl
-         c29p1HCVZXCUvdTw9Oe3N/+mSL4yg/TEvdxj6TvrdqXdC5tHcI3WCuluJEunjhMSgtp0
-         cU3SvXPuyg5D58iIVvaf3Br0j9DSReuSns+EVcOt3m3AwNTe4HjkM2dN0473VhNc7OGG
-         zz2ZKy6Ll5uBL72WLO0mdlfOMH3F+7p3dgbmFEPuHVOO1kNSB5JNrkg8D0GNwzKCsuao
-         rx3g==
-X-Gm-Message-State: AOJu0YzJaCJv7OyqyEcPbwrP9Nsw1SHACQpFzzRyyxESRAkKsUykUcna
-	MnaNVqVqjOebvkgjVw5omeNaWyWFkudgy78TkW9WEebK2SoHLdI2bO445lq6cleDydlcZpke5Z4
-	Ecw==
-X-Gm-Gg: ASbGnctmgil8mQKyB+3p54TwN4nEL09F5wu7dM2hHd3gz2RaAbd1mGvnd3XiuDjn3Nv
-	tyLcni1l6adI/ApFvR5buzok1v/kk5X4BDAT/1aTjZdVICZuvJjIZTjTtWeF8MiAW4Ww6R2OVks
-	m9KXxuO7zyq76tyKYUpEpn9FDv3wnUFfXl0C+SroNXV+/YdEhGR+5soNIc0WT8nvXjeM93PEI8O
-	qagBHOJqM5CrhlB065rZf1/AFDRyOnmKU3Ubg01woDp8rP4m7OyCw32lOUD+Cu1w9qu4XigEUPF
-	zbRzYH6Sy9Invmn1TIcjV2pHx4zInwus2qLFaYFWM60+dQGnwsd5AGjK
-X-Google-Smtp-Source: AGHT+IGtU6qYiL2dkf63bw15nUQfC7L6vqwL8vIVcUfsdB/xRER/gUmRWJbjS855B6fDinrEWskrbA==
-X-Received: by 2002:a17:90b:6ce:b0:2ff:4bac:6fba with SMTP id 98e67ed59e1d1-306dbc29851mr4471254a91.24.1744200518008;
-        Wed, 09 Apr 2025 05:08:38 -0700 (PDT)
+        bh=PbSUkVrVD3xkDETpxNaGhOsnTSGzGK+aEYnf85XWEQg=;
+        b=BTvd2CzrzXWYtmACOKLRhme2mjfCOZelOmvRU8VozyVw8AzN8snwyui66kPEcBiS24
+         BX7LjfVjQDvJqmti4nTK5EPR7suEOlmQBly4NlQ6LIP9eli9/Y02o4DYDvHOx7bt8V3d
+         tAUqx5TchpEbulCZ/F36RlKK7uh51ieYerhj/ge95ra1yZ2s/fvL9ntOEWm+z300hrf8
+         /yc/KC1GuzzD/eNvx3NKJXtYCy2JfGftToA6Bw43RPiV8YqyS2Pz9zARfAvYUdQE2Q0L
+         k5LTkiF1f7jN2X1KAAt9yTGxjTSDwsnNrljU/NHqDbCeh08RW2xfP25SYMfjOmpqM32Q
+         ujcA==
+X-Gm-Message-State: AOJu0YxrX9x7DxxhTLZydfNDEz3IomAPqHspEZQJgHGfstrihMhNtKY0
+	IePAAVKoVsDVQAKt7qDtyc3kmQH991bafT/ZrMOyHDXCxufqoQi9RgpqvMXJxg==
+X-Gm-Gg: ASbGnctWpbsu/QfMnqs6a/7+W5DnSGkBNJZ/nk9HVC3wRPxhNQUZk1VgMPsRrf3471h
+	R+Sy3SKOHf4GOV+oJmkuHifkjS5X2ipr/giSNbbKzunfYdf+oOCi4nmJG0Dve4LewkMNaDvtJ9G
+	oi06nukfSYzXLfTnpix8OC8hfm2dyVH6ukAt33+yXHzyIoBRWec+7miZIx6h4jZ3v613R/1YvPA
+	9ymbBSv1d7uEGZaT+swM6u9Vj9W5qXM/J71ulIY1SkQ49XKud8IfXPDdM3YxY81vSY07GXK73DD
+	VFWkGJK7y6dFeFp1e1S5LpYwSsgXZOvFuNiueRxNj6bGsQ4vKkeET0+F
+X-Google-Smtp-Source: AGHT+IFGi48zBlxcV6VWNk6dcWklyh3y8HBTbpxff65QH9XfTXe4esKetVuI3F8se06ilEs9xXpCaA==
+X-Received: by 2002:a17:903:1905:b0:223:6744:bfb9 with SMTP id d9443c01a7336-22ac2a20495mr50055855ad.41.1744200524548;
+        Wed, 09 Apr 2025 05:08:44 -0700 (PDT)
 Received: from n37-107-136.byted.org ([115.190.40.11])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b8c62dsm10017875ad.95.2025.04.09.05.08.31
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b8c62dsm10017875ad.95.2025.04.09.05.08.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 05:08:37 -0700 (PDT)
+        Wed, 09 Apr 2025 05:08:44 -0700 (PDT)
 From: Aaron Lu <ziqianlu@bytedance.com>
 To: Valentin Schneider <vschneid@redhat.com>,
 	Ben Segall <bsegall@google.com>,
@@ -74,9 +73,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Chengming Zhou <chengming.zhou@linux.dev>,
 	Chuyi Zhou <zhouchuyi@bytedance.com>,
 	Jan Kiszka <jan.kiszka@siemens.com>
-Subject: [RFC PATCH v2 5/7] sched/fair: get rid of throttled_lb_pair()
-Date: Wed,  9 Apr 2025 20:07:44 +0800
-Message-Id: <20250409120746.635476-6-ziqianlu@bytedance.com>
+Subject: [RFC PATCH v2 6/7] sched/fair: fix h_nr_runnable accounting with per-task throttle
+Date: Wed,  9 Apr 2025 20:07:45 +0800
+Message-Id: <20250409120746.635476-7-ziqianlu@bytedance.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250409120746.635476-1-ziqianlu@bytedance.com>
 References: <20250409120746.635476-1-ziqianlu@bytedance.com>
@@ -88,78 +87,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Now that throttled tasks are dequeued and can not stay on rq's cfs_tasks
-list, there is no need to take special care of these throttled tasks
-anymore in load balance.
+Task based throttle does not adjust cfs_rq's h_nr_runnable on throttle
+anymore but relies on standard en/dequeue_entity(), so there is no need
+to take special care of h_nr_runnable in delayed dequeue operations.
 
-Suggested-by: K Prateek Nayak <kprateek.nayak@amd.com>
 Signed-off-by: Aaron Lu <ziqianlu@bytedance.com>
 ---
- kernel/sched/fair.c | 33 +++------------------------------
- 1 file changed, 3 insertions(+), 30 deletions(-)
+ kernel/sched/fair.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 76b8a5ffcbdd2..ff4252995d677 100644
+index ff4252995d677..20471a3aa35e6 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -5808,23 +5808,6 @@ static inline int throttled_hierarchy(struct cfs_rq *cfs_rq)
- 	return cfs_bandwidth_used() && cfs_rq->throttle_count;
+@@ -5406,8 +5406,6 @@ static void set_delayed(struct sched_entity *se)
+ 		struct cfs_rq *cfs_rq = cfs_rq_of(se);
+ 
+ 		cfs_rq->h_nr_runnable--;
+-		if (cfs_rq_throttled(cfs_rq))
+-			break;
+ 	}
  }
  
--/*
-- * Ensure that neither of the group entities corresponding to src_cpu or
-- * dest_cpu are members of a throttled hierarchy when performing group
-- * load-balance operations.
-- */
--static inline int throttled_lb_pair(struct task_group *tg,
--				    int src_cpu, int dest_cpu)
--{
--	struct cfs_rq *src_cfs_rq, *dest_cfs_rq;
--
--	src_cfs_rq = tg->cfs_rq[src_cpu];
--	dest_cfs_rq = tg->cfs_rq[dest_cpu];
--
--	return throttled_hierarchy(src_cfs_rq) ||
--	       throttled_hierarchy(dest_cfs_rq);
--}
--
- static inline bool task_is_throttled(struct task_struct *p)
- {
- 	return !list_empty(&p->throttle_node);
-@@ -6742,12 +6725,6 @@ static inline int throttled_hierarchy(struct cfs_rq *cfs_rq)
- 	return 0;
+@@ -5428,8 +5426,6 @@ static void clear_delayed(struct sched_entity *se)
+ 		struct cfs_rq *cfs_rq = cfs_rq_of(se);
+ 
+ 		cfs_rq->h_nr_runnable++;
+-		if (cfs_rq_throttled(cfs_rq))
+-			break;
+ 	}
  }
  
--static inline int throttled_lb_pair(struct task_group *tg,
--				    int src_cpu, int dest_cpu)
--{
--	return 0;
--}
--
- #ifdef CONFIG_FAIR_GROUP_SCHED
- void init_cfs_bandwidth(struct cfs_bandwidth *cfs_b, struct cfs_bandwidth *parent) {}
- static void init_cfs_rq_runtime(struct cfs_rq *cfs_rq) {}
-@@ -9377,17 +9354,13 @@ int can_migrate_task(struct task_struct *p, struct lb_env *env)
- 	/*
- 	 * We do not migrate tasks that are:
- 	 * 1) delayed dequeued unless we migrate load, or
--	 * 2) throttled_lb_pair, or
--	 * 3) cannot be migrated to this CPU due to cpus_ptr, or
--	 * 4) running (obviously), or
--	 * 5) are cache-hot on their current CPU.
-+	 * 2) cannot be migrated to this CPU due to cpus_ptr, or
-+	 * 3) running (obviously), or
-+	 * 4) are cache-hot on their current CPU.
- 	 */
- 	if ((p->se.sched_delayed) && (env->migration_type != migrate_load))
- 		return 0;
- 
--	if (throttled_lb_pair(task_group(p), env->src_cpu, env->dst_cpu))
--		return 0;
--
- 	/*
- 	 * We want to prioritize the migration of eligible tasks.
- 	 * For ineligible tasks we soft-limit them and only allow
 -- 
 2.39.5
 
