@@ -1,77 +1,47 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A21CA25A2AF
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 07:40:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B6A2AE89;
+	Wed,  9 Apr 2025 07:40:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744184430; cv=none; b=nymA4aFF6tRSub1qzODZjdOrzLip2vwdh6hPAYj/mBGKZWCmxw6VpBgy6DbdrF1xpn1dvOSH6O4N2FOYThRxqQy+2rD+PX4UKrJj53PKIweo4k4dh0J4egM28v+Ul4BOKJ+81dEB+xCA5YtC7hLUjmpAjczGHrZZVlazuhgC5Js=
+	t=1744184460; cv=none; b=WviXqo0NH4TwDAmu2GZdXYWKFQF+l7/AkdIfNSrXmVH2b6jwtEmXqQR7ntKgWEkW4mhjRSuqDbeVez4aXOC8F+0sUCVnV9xm/wLq8BbqyDxvzQ1IxxDG87L1izGV7VDfBcALz9mgAtAZbEPfx6r7IRiij9VBJdIRaolBJxfv+3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744184430; c=relaxed/simple;
-	bh=gQPkNht8vfqHsb3RfK+g47uQNFlXBo79zKmQ92Okk68=;
+	s=arc-20240116; t=1744184460; c=relaxed/simple;
+	bh=qVnRcibZsKZayn6OQD1ZHThuYI/D6rlvvaIk20DSsq8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fti7SiZ7un4iiDG3n3C/hdFhngWcg8VPELkcfOS+WtE2K7osDGdHHZQQHmvgbofSgKbXl1wN3Lzj2TIHr8XNFMUkqayvLR/Nc4OokqC6/W9Gfod5Rq5Ti9dxF04QRVeLYIwprNrpZIlGokPQlaFo6SJ+S84xbLRpNZ0ZJm68QhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZWZgXYt0; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=T3RTZti+PmWn2JmPVaeaK8eKUumtStzgKKY7+fRxEMVKDo+lQTndTnqoxv586KRq2tIUyO/95U9lSsW085K8ylfZ2pql5svYPFF0CKVku6PlI1omQqvFk/xkdH7/M2jrkEC/YwqIGU3VKgShpyqr5Wr6ufgaI+D9hGEflzRcMro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FHvg3aQ6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZWZgXYt0"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-30332dfc820so6861668a91.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 00:40:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744184427; x=1744789227; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=+oFe8u9FxKBuH4K/iHPol/vApb7aiLAQIa3mJ+POQHI=;
-        b=ZWZgXYt0buL62+6MrI9AfVeKtaCmH5F3GsgHkuDqLcgSOiSMi0PY3Z9XYdCjuEoqV1
-         HPXShJmJoZOgdWdB9Rs80daxI/0QXx/b1028Mpi15T1A62b73fkVTRF8B/NAkEl9cipM
-         77OatpmIPQIPbiYkgPoGvKPoMNpGS5ElR4YjWOqZvcZhEuloVYHTOI++EPqdh+dnpxpv
-         rpFNxUquZhPJP9yXuRdtsFz9LuSfLPN2dHB2NqbRdygWSdRbYKGtG/rCBxeP4HuQuRfc
-         5uM/C21xDJEpYB2BiETRHNbeYV9hiP4kiS4yQJpf0R8paqpmIqtrpaNAH1Mp29a/WrkX
-         JTgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744184427; x=1744789227;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+oFe8u9FxKBuH4K/iHPol/vApb7aiLAQIa3mJ+POQHI=;
-        b=J/j/UC2pcLMz1cYcP+3CwsaCzLRyVoIzRevRBWwHeMxZNOLqS7LwYYfhLXYint09L7
-         plmgoxUzsqnxfCrvrBTVfG4ds0rCR2TBzGuX5La27jrhguIBevefunv0FXGI6KjzbZLN
-         Rxp+9nXRBJXt5TuoUVOXRTlZjQs86NgLYf395pxKonDSsePe14NyvAUHNQPXbVZntaud
-         blQ1TrFher7A6WirgWasy/nkdxPQe7aGx890dVpbWwfxF+8Iblm1gucN2yExkyHkIpX1
-         k0LDSi9JIQmhTLP+5tY/cYF/7UgHEOYPXnzrIpH+m6UHwoin5YRxnIv4V3ECVpT5Tr4i
-         V4CA==
-X-Forwarded-Encrypted: i=1; AJvYcCUJ+nS6ueGuMVP7iGTGgNoL88+XN2dtr07aF+d/PAlPdlyolL90WKdoX9CeRHqduTYVef2DYrdYhIHiE/4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVAl3798kPCjBk8hGZuac3s/DWYUI8tMCgfVjBbtUbi/t9OL/E
-	FQtZpduoyCwYfu5i4eW08qRXYZShNtObt8mXq6QmaTL7kFyp26fCd+vHeX3wrg==
-X-Gm-Gg: ASbGncvgOawYwX/HMskwdJFDbToxW5GdnOczxfkPe/AWHexGKdqcxyhzeoZAftTXlC0
-	GmIaVs4UuyfadJnI8DHL8ZfIwxD6ejjv5m1J8hBroS/CZCESWdxZJitkYjVxgJvKYEOToawYNr3
-	Azlv2s4UqxJPPztrYwFgUSw9hk3NThFAgk4kYz7Pjv7TMBx+GLC2oXvvwCQIO3GWfmKpaZA+II2
-	mA2oc0YxlJQK1+JkPbVtV3SWAyRsnfgqz/c917aoqtflFKVp81qcfw1cZjrSEFczKUECZ40txvS
-	ey0Ho5DXd4wJZqGPldiRg8u515SAN71mbFpm0hsAZ4n1hXPw6mw=
-X-Google-Smtp-Source: AGHT+IFzdnJzxhvhrD0BDt0+1Tqyf41zBSU8dtNoZbiYIb/yvsvm6G4GtmJ26GxqNSWOJa1ka3OoZQ==
-X-Received: by 2002:a17:90b:2811:b0:2ea:bf1c:1e3a with SMTP id 98e67ed59e1d1-306dbbb0b9bmr3596481a91.12.1744184426800;
-        Wed, 09 Apr 2025 00:40:26 -0700 (PDT)
-Received: from thinkpad ([120.56.198.53])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306dd11e79fsm880237a91.19.2025.04.09.00.40.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 00:40:25 -0700 (PDT)
-Date: Wed, 9 Apr 2025 13:10:17 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Christian Bruel <christian.bruel@foss.st.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, 
-	bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com, p.zabel@pengutronix.de, 
-	johan+linaro@kernel.org, cassel@kernel.org, quic_schintav@quicinc.com, 
-	fabrice.gasnier@foss.st.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 2/9 RESEND] PCI: stm32: Add PCIe host support for
- STM32MP25
-Message-ID: <bfwrsby7okn3huuwijfkeurtldr2xszfkpvzzc5m72bzj3mdmj@ypcwl5chipbx>
-References: <20250325065935.908886-1-christian.bruel@foss.st.com>
- <20250325065935.908886-3-christian.bruel@foss.st.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FHvg3aQ6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB1EAC4CEE7;
+	Wed,  9 Apr 2025 07:40:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744184459;
+	bh=qVnRcibZsKZayn6OQD1ZHThuYI/D6rlvvaIk20DSsq8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FHvg3aQ6W+swrUHodTyOzNNm4f68YiYNP9idAp4WfEEa57ZAjCqB59bhu4bMPIm2b
+	 tzH6vYqbyWuHO0FRiGjNQtLFt4cG0LD1BJ150E1AJ2d1B+DFhnuQz5Jl4j6thTcUlh
+	 93L7dJsUMyx0fp2FCVCEzWGN9U0Hu56FtN4lraN7JLIKFAj0DgMUEyJdDqai9vxO3r
+	 z+yVuH3pKVzl/iXfZNy25m8yYr2mdTcTaGlrx1BBfKrNW82D3sn+rlFiVjyrPN6qj2
+	 ZwUroPsMUp5Yyz0NieigyHa7axNWlLDwnhpWyeIkCAdtxw7A5jyeq01grUNtMP39h1
+	 PFGG5yYkcSeiQ==
+Date: Wed, 9 Apr 2025 09:40:52 +0200
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Marc Zyngier <maz@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Sascha Bischoff <sascha.bischoff@arm.com>,
+	Timothy Hayes <timothy.hayes@arm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH 19/24] irqchip/gic-v5: Add GICv5 IRS/SPI support
+Message-ID: <Z/YkhDpUOXKOpIOo@lpieralisi>
+References: <20250408-gicv5-host-v1-19-1f26db465f8d@kernel.org>
+ <87zfgpu89p.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,263 +51,169 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250325065935.908886-3-christian.bruel@foss.st.com>
+In-Reply-To: <87zfgpu89p.ffs@tglx>
 
-On Tue, Mar 25, 2025 at 07:59:28AM +0100, Christian Bruel wrote:
-> Add driver for the STM32MP25 SoC PCIe Gen1 2.5 GT/s and Gen2 5GT/s
-> controller based on the DesignWare PCIe core.
+On Wed, Apr 09, 2025 at 09:02:58AM +0200, Thomas Gleixner wrote:
+> On Tue, Apr 08 2025 at 12:50, Lorenzo Pieralisi wrote:
+> > +struct iaffid_entry {
+> > +	u16 iaffid;
+> > +	bool valid;
+> > +};
 > 
-> Supports MSI via GICv2m, Single Virtual Channel, Single Function
+> See the previous documentation link and search for struct definitions on
+> that page.
+
+Right, will fix.
+
+> > +static int gicv5_irs_wait_for_spi_op(struct gicv5_irs_chip_data *irs_data)
+> > +{
+> > +	int ret;
+> > +	u32 statusr;
 > 
-> Supports WAKE# GPIO.
+> See documentaion...
 > 
-> Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
-> ---
->  drivers/pci/controller/dwc/Kconfig      |  12 +
->  drivers/pci/controller/dwc/Makefile     |   1 +
->  drivers/pci/controller/dwc/pcie-stm32.c | 367 ++++++++++++++++++++++++
->  drivers/pci/controller/dwc/pcie-stm32.h |  15 +
->  4 files changed, 395 insertions(+)
->  create mode 100644 drivers/pci/controller/dwc/pcie-stm32.c
->  create mode 100644 drivers/pci/controller/dwc/pcie-stm32.h
+> > +	ret = readl_relaxed_poll_timeout_atomic(
+> > +			irs_data->irs_base + GICV5_IRS_SPI_STATUSR, statusr,
+> > +			FIELD_GET(GICV5_IRS_SPI_STATUSR_IDLE, statusr), 1,
+> > +			USEC_PER_SEC);
 > 
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index b6d6778b0698..0c18879b604c 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -389,6 +389,18 @@ config PCIE_SPEAR13XX
->  	help
->  	  Say Y here if you want PCIe support on SPEAr13XX SoCs.
->  
-> +config PCIE_STM32
+> See previous mail about how to make stuff like this readable. My eyes
+> bleed already.
+> 
+> > +	if (ret == -ETIMEDOUT) {
+> 
+> unlikely(ret == ...) perhaps?
 
-PCIE_STM32_HOST since you are adding the PCIE_STM32_EP Kconfig.
+Will change it.
 
-> +	tristate "STMicroelectronics STM32MP25 PCIe Controller (host mode)"
-> +	depends on ARCH_STM32 || COMPILE_TEST
-> +	depends on PCI_MSI
-> +	select PCIE_DW_HOST
-> +	help
-> +	  Enables support for the DesignWare core based PCIe host controller
-> +	  found in STM32MP25 SoC.
-> +
-> +	  This driver can also be built as a module. If so, the module
-> +	  will be called pcie-stm32.
-> +
->  config PCI_DRA7XX
->  	tristate
->  
-> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-> index a8308d9ea986..576d99cb3bc5 100644
-> --- a/drivers/pci/controller/dwc/Makefile
-> +++ b/drivers/pci/controller/dwc/Makefile
-> @@ -28,6 +28,7 @@ obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
->  obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
->  obj-$(CONFIG_PCIE_VISCONTI_HOST) += pcie-visconti.o
->  obj-$(CONFIG_PCIE_RCAR_GEN4) += pcie-rcar-gen4.o
-> +obj-$(CONFIG_PCIE_STM32) += pcie-stm32.o
->  
->  # The following drivers are for devices that use the generic ACPI
->  # pci_root.c driver but don't support standard ECAM config access.
-> diff --git a/drivers/pci/controller/dwc/pcie-stm32.c b/drivers/pci/controller/dwc/pcie-stm32.c
-> new file mode 100644
-> index 000000000000..3937777d9eb9
-> --- /dev/null
-> +++ b/drivers/pci/controller/dwc/pcie-stm32.c
-> @@ -0,0 +1,367 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * STMicroelectronics STM32MP25 PCIe root complex driver.
-> + *
-> + * Copyright (C) 2025 STMicroelectronics
-> + * Author: Christian Bruel <christian.bruel@foss.st.com>
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/pinctrl/devinfo.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/pm_wakeirq.h>
-> +#include <linux/regmap.h>
-> +#include <linux/reset.h>
-> +#include "pcie-designware.h"
-> +#include "pcie-stm32.h"
-> +#include "../../pci.h"
-> +
-> +struct stm32_pcie {
-> +	struct dw_pcie pci;
-> +	struct regmap *regmap;
-> +	struct reset_control *rst;
-> +	struct phy *phy;
-> +	struct clk *clk;
-> +	struct gpio_desc *perst_gpio;
-> +	struct gpio_desc *wake_gpio;
-> +};
-> +
-> +static void stm32_pcie_deassert_perst(struct stm32_pcie *stm32_pcie)
-> +{
+> > +		pr_err_ratelimited("Time out waiting for IRS SPI to be configured\n");
+> 
+> > +static int __init gicv5_irs_init_bases(struct gicv5_irs_chip_data *irs_data,
+> > +				       void __iomem *irs_base,
+> > +				       struct fwnode_handle *handle)
+> > +{
+> > +	u32 cr0, cr1;
+> > +	struct device_node *np = to_of_node(handle);
+> 
+> Sigh
+> 
+> > +static int __init gicv5_irs_of_init_affinity(struct device_node *node,
+> > +				      struct gicv5_irs_chip_data *irs_data,
+> > +				      u8 iaffid_bits)
+> 
+> Moar random coding style choices.
+> 
+> > +{
+> > +	/*
+> > +	 * Detect IAFFID<->CPU mappings from the device tree and
+> > +	 * record IRS<->CPU topology information.
+> > +	 */
+> > +	int ret, i, ncpus, niaffids;
+> > +	u16 *iaffids;
+> > +	u16 iaffid_mask = GENMASK(iaffid_bits - 1, 0);
+> > +
+> > +	ncpus = of_property_count_elems_of_size(node, "cpus", sizeof(u32));
+> > +	if (WARN_ON(ncpus < 0))
+> > +		return -EINVAL;
+> 
+> Do you really need all these warnings?
 
-You should add a delay of PCIE_T_PVPERL_MS to satisfy the PERST# deassertion
-requirement as per the spec.
+I will review them.
 
-> +	gpiod_set_value(stm32_pcie->perst_gpio, 0);
-> +
-> +	if (stm32_pcie->perst_gpio)
-> +		msleep(PCIE_T_RRS_READY_MS);
-> +}
-> +
-> +static void stm32_pcie_assert_perst(struct stm32_pcie *stm32_pcie)
-> +{
-> +	gpiod_set_value(stm32_pcie->perst_gpio, 1);
-> +}
-> +
-> +static int stm32_pcie_start_link(struct dw_pcie *pci)
-> +{
-> +	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
-> +
-> +	return regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR,
-> +				  STM32MP25_PCIECR_LTSSM_EN,
-> +				  STM32MP25_PCIECR_LTSSM_EN);
-> +}
-> +
-> +static void stm32_pcie_stop_link(struct dw_pcie *pci)
-> +{
-> +	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
-> +
-> +	regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR,
-> +			   STM32MP25_PCIECR_LTSSM_EN, 0);
-> +}
-> +
-> +static int stm32_pcie_suspend_noirq(struct device *dev)
-> +{
-> +	struct stm32_pcie *stm32_pcie = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	ret = dw_pcie_suspend_noirq(&stm32_pcie->pci);
-> +	if (ret) {
-> +		stm32_pcie_deassert_perst(stm32_pcie);
-> +		return ret;
-> +	}
-> +
-> +	stm32_pcie_assert_perst(stm32_pcie);
-> +	
-> +	clk_disable_unprepare(stm32_pcie->clk);
-> +
-> +	if (!device_wakeup_path(dev))
-> +		phy_exit(stm32_pcie->phy);
-> +
-> +	return pinctrl_pm_select_sleep_state(dev);
-> +}
-> +
-> +static int stm32_pcie_resume_noirq(struct device *dev)
-> +{
-> +	struct stm32_pcie *stm32_pcie = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	/*
-> +	 * The core clock is gated with CLKREQ# from the COMBOPHY REFCLK,
-> +	 * thus if no device is present, must force it low with an init pinmux
-> +	 * to be able to access the DBI registers.
-> +	 */
-> +	if (!IS_ERR(dev->pins->init_state))
-> +		ret = pinctrl_select_state(dev->pins->p, dev->pins->init_state);
-> +	else
-> +		ret = pinctrl_pm_select_default_state(dev);
-> +
-> +	if (ret) {
-> +		dev_err(dev, "Failed to activate pinctrl pm state: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	if (!device_wakeup_path(dev)) {
-> +		ret = phy_init(stm32_pcie->phy);
-> +		if (ret) {
-> +			pinctrl_pm_select_default_state(dev);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	ret = clk_prepare_enable(stm32_pcie->clk);
-> +	if (ret)
-> +		goto err_phy_exit;
-> +
-> +	stm32_pcie_deassert_perst(stm32_pcie);
-> +
-> +	ret = dw_pcie_resume_noirq(&stm32_pcie->pci);
-> +	if (ret)
-> +		goto err_disable_clk;
-> +
-> +	pinctrl_pm_select_default_state(dev);
-> +
-> +	return 0;
-> +
-> +err_disable_clk:
-> +	stm32_pcie_assert_perst(stm32_pcie);
-> +	clk_disable_unprepare(stm32_pcie->clk);
-> +
-> +err_phy_exit:
-> +	phy_exit(stm32_pcie->phy);
-> +	pinctrl_pm_select_default_state(dev);
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct dev_pm_ops stm32_pcie_pm_ops = {
-> +	NOIRQ_SYSTEM_SLEEP_PM_OPS(stm32_pcie_suspend_noirq,
-> +				  stm32_pcie_resume_noirq)
-> +};
-> +
-> +static const struct dw_pcie_host_ops stm32_pcie_host_ops = {
-> +};
-> +
-> +static const struct dw_pcie_ops dw_pcie_ops = {
-> +	.start_link = stm32_pcie_start_link,
-> +	.stop_link = stm32_pcie_stop_link
-> +};
-> +
-> +static int stm32_add_pcie_port(struct stm32_pcie *stm32_pcie,
-> +			       struct platform_device *pdev)
-> +{
-> +	struct device *dev = stm32_pcie->pci.dev;
-> +	unsigned int wake_irq;
-> +	int ret;
-> +
-> +	/* Start to enable resources with PERST# asserted from GPIO */
-> +
+> > +
+> > +	niaffids = of_property_count_elems_of_size(node, "arm,iaffids",
+> > +						   sizeof(u16));
+> > +	if (WARN_ON(niaffids != ncpus))
+> > +		return -EINVAL;
+> > +
+> > +	iaffids = kcalloc(niaffids, sizeof(*iaffids), GFP_KERNEL);
+> > +	if (!iaffids)
+> > +		return -ENOMEM;
+> > +
+> > +	ret = of_property_read_u16_array(node, "arm,iaffids", iaffids, niaffids);
+> > +	if (ret)
+> > +		return ret;
+> 
+> Leaks iaffids. Please use
+> 
+>       u16 *iaffids __free(kfree) = kcalloc(...);
+> 
+> and the compiler will take care of that.
 
-'Start to enable resources with PERST# asserted'
+Yes, that's silly.
 
-> +	ret = phy_set_mode(stm32_pcie->phy, PHY_MODE_PCIE);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = phy_init(stm32_pcie->phy);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR,
-> +				 STM32MP25_PCIECR_TYPE_MASK,
-> +				 STM32MP25_PCIECR_RC);
-> +	if (ret)
-> +		goto err_phy_exit;
-> +
-> +	stm32_pcie_deassert_perst(stm32_pcie);
-> +
-> +	if (stm32_pcie->wake_gpio) {
-> +		wake_irq = gpiod_to_irq(stm32_pcie->wake_gpio);
-> +		ret = dev_pm_set_dedicated_wake_irq(dev, wake_irq);
-> +		if (ret) {
-> +			dev_info(dev, "Failed to enable wake# %d\n", ret);
-> +			goto err_disable_clk;
+> > +static int __init gicv5_irs_init(struct device_node *node)
+> > +{
+> > +	void __iomem *irs_base;
+> > +	struct gicv5_irs_chip_data *irs_data;
+> > +	int ret;
+> > +	u32 idr;
+> > +	u8 iaffid_bits;
+> > +
+> > +	irs_data = kzalloc(sizeof(*irs_data), GFP_KERNEL);
+> 
+> __free(kfree)
 
-err_assert_perst
+Will do.
 
-Reset LGTM!
+> > +	if (!irs_data)
+> > +		return -ENOMEM;
+> 
+> > +	if (irs_data->spi_range)
+> > +		pr_info("%s detected SPI range [%u-%u]\n",
+> > +						of_node_full_name(node),
+> > +						irs_data->spi_min,
+> > +						irs_data->spi_min +
+> > +						irs_data->spi_range - 1);
+> 
+> Please put those _five_ lines into brackets. It's not required by the
+> compiler, but for reading. Brackets should be omitted only if the
+> statement which follows ‘if’, ‘for’, ‘while’ etc. is truly a single
+> line.
 
-- Mani
+Ok.
 
--- 
-மணிவண்ணன் சதாசிவம்
+> > +static int gicv5_iri_irq_get_irqchip_state(struct irq_data *d,
+> > +					   enum irqchip_irq_state which,
+> > +					   bool *val, u8 hwirq_type)
+> > +{
+> > +	u64 icsr, cdrcfg = d->hwirq | FIELD_PREP(GICV5_GIC_CDRCFG_TYPE_MASK,
+> > +						 hwirq_type);
+> > +
+> > +	preempt_disable();
+> 
+> That's required because the calling contexts protection (raw spinlock
+> held and interrupts disabled) is not enough, right?
+
+Yes it is useless, I will remove it.
+
+> > +	gic_insn(cdrcfg, GICV5_OP_GIC_CDRCFG);
+> > +	isb();
+> > +	icsr = read_sysreg_s(SYS_ICC_ICSR_EL1);
+> > +	preempt_enable();
+> 
+> > +static int gicv5_irq_spi_domain_translate(struct irq_domain *d,
+> > +					  struct irq_fwspec *fwspec,
+> > +					  irq_hw_number_t *hwirq,
+> > +					  unsigned int *type)
+> > +{
+> > +	if (is_of_node(fwspec->fwnode)) {
+> > +		if (fwspec->param_count < 3)
+> > +			return -EINVAL;
+> > +
+> > +		if (fwspec->param[0] != GICV5_HWIRQ_TYPE_SPI)
+> > +			return -EINVAL;
+> > +
+> > +		*hwirq = fwspec->param[1];
+> > +		*type = fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
+> > +
+> > +		return 0;
+> > +	}
+> 
+> The only difference between this and the ppi variant is the type check
+> of param[0]. Common helper perhaps?
+
+Definitely.
+
+Thanks a lot,
+Lorenzo
