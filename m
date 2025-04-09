@@ -1,152 +1,153 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11B6625DD13
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 11:27:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F13D1FF5F7
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 11:29:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744198065; cv=none; b=sg3fKOCUmH6tIyqIwolTzgF77DRrmeAE5tAHmccDp605RuDOTyDmmUvht2YQTWEECT8t2a0nUvL1/MtviXrDQ/MlsiuG0n329DviIY1efLgTqB03R/vbbUXCSkYKYtR50FjJymrHIrAMSQzpP3ymAEUnk4sFnYSjAhfyD4QkVsA=
+	t=1744198170; cv=none; b=evyguxPcDfIC+selzmZsSbOe+F4vmOzbJDU62DdPNYnHxREX7yu12a4k/FU7p0DNFvFt4jI3yViFRulL5EWu89eO5Pkw3glV/Njs1IF7i1AbE0WydBFnk66Zu8Oo9LKY9wrfBMnzFUr+8jbjY4/HoAgGHESURVtushgwnHng+KM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744198065; c=relaxed/simple;
-	bh=HVeE+COPPGrNk6VAYW0mohrUVpc18vBtkM7XtNBy+ag=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VyQ6Xx+qH0axKq8TYol8zT8XjAHkpu7GHItOLJForeBNjrsOCgADxm6ONYo1EWrV5KbvIvISoreuO+Qdt+CvIfGT0ylpyBkcFumh8um027/XeZtI1QWCJCqI0Oovp7UPuWPWMlVrjQFMQUC+ZEfTnRa+pLBOIPApAu+nTKO3AzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dJTY4Zoo; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744198170; c=relaxed/simple;
+	bh=zXYaCCk7Xexl/noIb6OuPUIMVrNTYDA8ydr6oeZbr1Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LN5iISKDrpxQy7k9fRjxO4i6R4c4vi/XcdMDj7CGiDK76SPL9cgKLj8GSFVbSfsx5Hr1SZJ6Hj3UjptuLvEuEdADSP6jQEkG2FwVW2MrhkBJEE1SqCrlXD17Dm7lsMymz7MRuVnxqSSoKGQ8CfPJd0tsBFfuVAOPLYGAdhaMqiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q8VIeEx1; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dJTY4Zoo"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744198060;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q8VIeEx1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744198167;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=aiPsVK0LkzRJOqwrU5xUDBr/zxLKWQSqjXIEjy0OgOc=;
-	b=dJTY4ZoooaZLYwLvqEqa3Q4cEYbyqCwmtK3sU7ljZEacvUIv4X4hvyhQ+bzQc5RfnANxPB
-	eVsj/YvE1Y9JzNhOFRUx87mcOx7aPqcDv134i87bwthMH1xvPVSZMd9ZC+L4SjhkYnZtpE
-	sVIauf00Vu+0cn3AeppMXOaZ7kqWx0k=
-From: Jiayuan Chen <jiayuan.chen@linux.dev>
-To: kuba@kernel.org,
-	edumazet@google.com
-Cc: mrpre@163.com,
-	Jiayuan Chen <jiayuan.chen@linux.dev>,
-	"David S. Miller" <davem@davemloft.net>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Neal Cardwell <ncardwell@google.com>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	David Ahern <dsahern@kernel.org>,
-	Sabrina Dubroca <sd@queasysnail.net>,
-	Steffen Klassert <steffen.klassert@secunet.com>,
-	Antony Antony <antony.antony@secunet.com>,
-	Christian Hopps <chopps@labn.net>,
-	netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v4 2/2] tcp: add LINUX_MIB_PAWS_TW_REJECTED counter
-Date: Wed,  9 Apr 2025 19:26:05 +0800
-Message-ID: <20250409112614.16153-3-jiayuan.chen@linux.dev>
-In-Reply-To: <20250409112614.16153-1-jiayuan.chen@linux.dev>
-References: <20250409112614.16153-1-jiayuan.chen@linux.dev>
+	bh=L9Of+gzTbsEE9FaHMGyGpxjiy7YHu1Oa9tXAD/zDQnY=;
+	b=Q8VIeEx10rgi9nE38iOPrX0WC1XVU/dkQ9u9oLKyMWIYv599Qc7woGFEVG0rOv5G8XQFek
+	EEXf8Mum9P3prkX+GxEFjsxh9YA4Z1t1v58jXb0GoR2HPFENVSZRkSp3JrbHWpwc9sw28G
+	Xa/HjGWFQQt4F2GI/ZW/7osbo07YRz0=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-547-2Sb6ZC_POsi-lpR4UKm0UQ-1; Wed,
+ 09 Apr 2025 07:29:23 -0400
+X-MC-Unique: 2Sb6ZC_POsi-lpR4UKm0UQ-1
+X-Mimecast-MFC-AGG-ID: 2Sb6ZC_POsi-lpR4UKm0UQ_1744198161
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 06B321800257;
+	Wed,  9 Apr 2025 11:29:21 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.34.54])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 18DE1180B487;
+	Wed,  9 Apr 2025 11:29:15 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed,  9 Apr 2025 13:28:45 +0200 (CEST)
+Date: Wed, 9 Apr 2025 13:28:39 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Alan Maguire <alan.maguire@oracle.com>
+Subject: Re: [PATCH 1/2] uprobes/x86: Add support to emulate nop5 instruction
+Message-ID: <20250409112839.GA32748@redhat.com>
+References: <20250408211310.51491-1-jolsa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250408211310.51491-1-jolsa@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-When TCP is in TIME_WAIT state, PAWS verification uses
-LINUX_PAWSESTABREJECTED, which is ambiguous and cannot be distinguished
-from other PAWS verification processes.
+On 04/08, Jiri Olsa wrote:
+>
+> --- a/arch/x86/kernel/uprobes.c
+> +++ b/arch/x86/kernel/uprobes.c
+> @@ -608,6 +608,16 @@ static void riprel_post_xol(struct arch_uprobe *auprobe, struct pt_regs *regs)
+>  		*sr = utask->autask.saved_scratch_register;
+>  	}
+>  }
+> +
+> +static int is_nop5_insn(uprobe_opcode_t *insn)
+> +{
+> +	return !memcmp(insn, x86_nops[5], 5);
+> +}
+> +
+> +static bool emulate_nop5_insn(struct arch_uprobe *auprobe)
+> +{
+> +	return is_nop5_insn((uprobe_opcode_t *) &auprobe->insn);
+> +}
 
-We added a new counter, like the existing PAWS_OLD_ACK one.
+Why do we need 2 functions? Can't branch_setup_xol_ops() just use
+is_nop5_insn(insn->kaddr) ?
 
-Also we update the doc with previously missing PAWS_OLD_ACK.
+>  #else /* 32-bit: */
+>  /*
+>   * No RIP-relative addressing on 32-bit
+> @@ -621,6 +631,10 @@ static void riprel_pre_xol(struct arch_uprobe *auprobe, struct pt_regs *regs)
+>  static void riprel_post_xol(struct arch_uprobe *auprobe, struct pt_regs *regs)
+>  {
+>  }
+> +static bool emulate_nop5_insn(struct arch_uprobe *auprobe)
+> +{
+> +	return false;
+> +}
 
-usage:
-'''
-nstat -az | grep PAWSTimewait
-TcpExtPAWSTimewait              1                  0.0
-'''
+Hmm, why? I mean, why we can't emulate x86_nops[5] if !CONFIG_X86_64 ?
 
-Suggested-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
+OTOH. What if the kernel is 64-bit, but the probed task is 32-bit and it
+uses the 64-bit version of BYTES_NOP5?
+
+Perhaps this is fine, I simply don't know, so let me ask...
+
+> @@ -852,6 +866,8 @@ static int branch_setup_xol_ops(struct arch_uprobe *auprobe, struct insn *insn)
+>  		break;
+>
+>  	case 0x0f:
+> +		if (emulate_nop5_insn(auprobe))
+> +			goto setup;
+
+I think this will work, but if we want to emulate nop5, then perhaps
+we can do the same for other nops?
+
+For the moment, lets forget about compat tasks on a 64-bit kernel, can't
+we simply do something like below?
+
+Oleg.
 ---
- Documentation/networking/net_cachelines/snmp.rst | 2 ++
- include/net/dropreason-core.h                    | 1 +
- include/uapi/linux/snmp.h                        | 1 +
- net/ipv4/proc.c                                  | 1 +
- net/ipv4/tcp_minisocks.c                         | 2 +-
- 5 files changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/networking/net_cachelines/snmp.rst b/Documentation/networking/net_cachelines/snmp.rst
-index bc96efc92cf5..bd44b3eebbef 100644
---- a/Documentation/networking/net_cachelines/snmp.rst
-+++ b/Documentation/networking/net_cachelines/snmp.rst
-@@ -37,6 +37,8 @@ unsigned_long  LINUX_MIB_TIMEWAITKILLED
- unsigned_long  LINUX_MIB_PAWSACTIVEREJECTED
- unsigned_long  LINUX_MIB_PAWSESTABREJECTED
- unsigned_long  LINUX_MIB_TSECR_REJECTED
-+unsigned_long  LINUX_MIB_PAWS_OLD_ACK
-+unsigned_long  LINUX_MIB_PAWS_TW_REJECTED
- unsigned_long  LINUX_MIB_DELAYEDACKLOST
- unsigned_long  LINUX_MIB_LISTENOVERFLOWS
- unsigned_long  LINUX_MIB_LISTENDROPS
-diff --git a/include/net/dropreason-core.h b/include/net/dropreason-core.h
-index 9701d7f936f6..bea77934a235 100644
---- a/include/net/dropreason-core.h
-+++ b/include/net/dropreason-core.h
-@@ -287,6 +287,7 @@ enum skb_drop_reason {
- 	/**
- 	 * @SKB_DROP_REASON_TCP_RFC7323_TW_PAWS: PAWS check, socket is in
- 	 * TIME_WAIT state.
-+	 * Corresponds to LINUX_MIB_PAWS_TW_REJECTED.
- 	 */
- 	SKB_DROP_REASON_TCP_RFC7323_TW_PAWS,
- 	/**
-diff --git a/include/uapi/linux/snmp.h b/include/uapi/linux/snmp.h
-index ec47f9b68a1b..1d234d7e1892 100644
---- a/include/uapi/linux/snmp.h
-+++ b/include/uapi/linux/snmp.h
-@@ -188,6 +188,7 @@ enum
- 	LINUX_MIB_PAWSESTABREJECTED,		/* PAWSEstabRejected */
- 	LINUX_MIB_TSECRREJECTED,		/* TSEcrRejected */
- 	LINUX_MIB_PAWS_OLD_ACK,			/* PAWSOldAck */
-+	LINUX_MIB_PAWS_TW_REJECTED,		/* PAWSTimewait */
- 	LINUX_MIB_DELAYEDACKS,			/* DelayedACKs */
- 	LINUX_MIB_DELAYEDACKLOCKED,		/* DelayedACKLocked */
- 	LINUX_MIB_DELAYEDACKLOST,		/* DelayedACKLost */
-diff --git a/net/ipv4/proc.c b/net/ipv4/proc.c
-index 10cbeb76c274..ea2f01584379 100644
---- a/net/ipv4/proc.c
-+++ b/net/ipv4/proc.c
-@@ -191,6 +191,7 @@ static const struct snmp_mib snmp4_net_list[] = {
- 	SNMP_MIB_ITEM("PAWSEstab", LINUX_MIB_PAWSESTABREJECTED),
- 	SNMP_MIB_ITEM("TSEcrRejected", LINUX_MIB_TSECRREJECTED),
- 	SNMP_MIB_ITEM("PAWSOldAck", LINUX_MIB_PAWS_OLD_ACK),
-+	SNMP_MIB_ITEM("PAWSTimewait", LINUX_MIB_PAWS_TW_REJECTED),
- 	SNMP_MIB_ITEM("DelayedACKs", LINUX_MIB_DELAYEDACKS),
- 	SNMP_MIB_ITEM("DelayedACKLocked", LINUX_MIB_DELAYEDACKLOCKED),
- 	SNMP_MIB_ITEM("DelayedACKLost", LINUX_MIB_DELAYEDACKLOST),
-diff --git a/net/ipv4/tcp_minisocks.c b/net/ipv4/tcp_minisocks.c
-index 27511bf58c0f..43d7852ce07e 100644
---- a/net/ipv4/tcp_minisocks.c
-+++ b/net/ipv4/tcp_minisocks.c
-@@ -248,7 +248,7 @@ tcp_timewait_state_process(struct inet_timewait_sock *tw, struct sk_buff *skb,
+diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+index 9194695662b2..76d2cceca6c4 100644
+--- a/arch/x86/kernel/uprobes.c
++++ b/arch/x86/kernel/uprobes.c
+@@ -840,12 +840,16 @@ static int branch_setup_xol_ops(struct arch_uprobe *auprobe, struct insn *insn)
+ 	insn_byte_t p;
+ 	int i;
  
- 	if (paws_reject) {
- 		*drop_reason = SKB_DROP_REASON_TCP_RFC7323_TW_PAWS;
--		__NET_INC_STATS(twsk_net(tw), LINUX_MIB_PAWSESTABREJECTED);
-+		__NET_INC_STATS(twsk_net(tw), LINUX_MIB_PAWS_TW_REJECTED);
- 	}
++	/* prefix* + nop[i]; same as jmp with .offs = 0 */
++	for (i = 1; i <= ASM_NOP_MAX; ++i) {
++		if (!memcmp(insn->kaddr, x86_nops[i], i))
++			goto setup;
++	}
++
+ 	switch (opc1) {
+ 	case 0xeb:	/* jmp 8 */
+ 	case 0xe9:	/* jmp 32 */
+ 		break;
+-	case 0x90:	/* prefix* + nop; same as jmp with .offs = 0 */
+-		goto setup;
  
- 	if (!th->rst) {
--- 
-2.47.1
+ 	case 0xe8:	/* call relative */
+ 		branch_clear_offset(auprobe, insn);
 
