@@ -1,113 +1,120 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f193.google.com (mail-pg1-f193.google.com [209.85.215.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5250625E80F
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 12:47:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6CA625DCE9;
+	Wed,  9 Apr 2025 12:48:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744202834; cv=none; b=lLzf5cZACBrJvLf70sXFz5G7iPoyo8PteuNIu6ezF0bQBrQ3hCzVUCuiXfanz8SmXi0Hn/j12eKozYdPQX74I9bI8qOo04x9vCn1fFa1h8RLDYxnryk+j5G0jwm441hoXh8IwfUDrgPowNwNRLvTzWxLR/MWbeCJABYrwj/U2lg=
+	t=1744202905; cv=none; b=Zfln+EeprVCbJ3lAYFIFI0J1DZllCUrp5rZPiby6cRgNj2VnjNowjSjYtIiy5p7yqC/+GHOKQzZPxdQmUpwTRUP0P4bgsw44IW4S0RapDLwyLDCeLiEtxWRFXzOyDvtcGnjyCeh5okBwr3xQQ1DUdlGMFyYXU8Mn+ZuUigexQz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744202834; c=relaxed/simple;
-	bh=2sxTchRu1XQdJGmWVI1yN9QSLWL909ueauOjYWjX7lY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=maVJSC0Em7T2IXLyV3JFxCMn/5hd1ADti4AlwmJICIx8/E53rCHrrnlztrtczZKTNNqtXA9mmucxSUs4APumdxRtg7HcQoqVtCBS3X0/FqwSZpgZGEAWvUcrB0i1nHXooou2EhwJDccWp655F+LXSAih3thSj1zGQE1CY8TnJZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=dLiMPFgs; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744202905; c=relaxed/simple;
+	bh=EY+MCYO6+/Do1rVBG7o49cZhvEu9A77dcSJzw6meaMY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IrcN9a33efFBtfw03nwi/t/cDvYIrQLS5RHHr5KqLe06+QEw4D02YzZZbUuAstzUxDgqvx/5Q0J9M4aZFa8MtQYT+2q8kPn+NjDDcdK3FL4V4XT8HHNvNX4vHuhdFlaOH2IZ7PxvT3FggSbNXpo5gIr55a7EDVay5jC3UZX/L5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NyvYcbr2; arc=none smtp.client-ip=209.85.215.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="dLiMPFgs"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 1214D44281;
-	Wed,  9 Apr 2025 12:47:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744202829;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0p6IL4xM543LamQB5lij8MdpPeDMo1EXZtv42MQAlC8=;
-	b=dLiMPFgsbn3tCkIA8vPeKMYpXLpXH5jdsmhO3t0lmA39qw+RZ1jk1EclOP6xmalZpdcAzx
-	fvTwilPdp1+c105Hfm8244MXDAmVvZukE+YnyMhyzL75NBlt3pOkE2eyP8KZr9zvWjScH6
-	e33pxifzCbxMZ+ndY1TXZH10m95A4nWBAcf60OBVJYXl45kMll0BRCDV2lUQ6Q4dBDByan
-	KdQAw7X7P1tSVqSzUixqZebf2xNv6dA1T5WQguvf9HXvH0/hVn4zc6idWOc7fcX2IPvdxU
-	2pMfzgrR9PfKha93z7GyfhlCEVshg8Uf4A9GCEYToVQz2hgRmknuVffmw/Qp9Q==
-Date: Wed, 9 Apr 2025 14:47:07 +0200
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-	Markus Stockhausen <markus.stockhausen@gmx.de>,
-	Chris Packham <chris.packham@alliedtelesis.co.nz>,
-	Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/10] [v2] clocksource: atmel_tcb: fix kconfig dependency
-Message-ID: <20250409124707fb2456b9@mail.local>
-References: <20250409122131.2766719-1-arnd@kernel.org>
- <20250409122314.2848028-1-arnd@kernel.org>
- <20250409122314.2848028-2-arnd@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NyvYcbr2"
+Received: by mail-pg1-f193.google.com with SMTP id 41be03b00d2f7-ad51f427054so4514424a12.1;
+        Wed, 09 Apr 2025 05:48:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744202903; x=1744807703; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3gcS051l6b/8O+Is0vrcSeaFJGvMI4gz5XJTgTf8jE8=;
+        b=NyvYcbr2axzf/tNhZdie40oLFLQLBnamI8puS9xetKMiTPhRzqn46+Cd/5hJIYme08
+         eyR6VnWUe+Kr6wxzlGS1zZMSfMpElRzULDREdlrmkFgdOQ6PKLHZTCPu/G267cZ3BZRg
+         9xgTBTlqalpiwRYYDDY7R9NOsQQOLKA5XswJ+iCosxehZ5zjfBjj9FD+HiUKhydDwTij
+         8Sx8GzERGysNZZQps9Mor2bfXVkClxW/JCPZlAGduPB++pMO6bwateiqw2yVZItDzNAx
+         /agPXjiDIhC/tHiFDpXt02EfSuHCZpRFgLN44kNTxBdo8J0ReXKxZGU/+GW8aurGloSS
+         YhBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744202903; x=1744807703;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3gcS051l6b/8O+Is0vrcSeaFJGvMI4gz5XJTgTf8jE8=;
+        b=r+z8+V1AfSJ6lIeubyP48kNKBWEVDOnXRsAohDmdi+2S3VOvYiaDKvn3LX6VdwF74B
+         vB1ePEROQig8wXCzBdaLxEI9wUnQOUluHSiyAAJl0fZ2pHLEvDMEYIvkRUMTufn7SLW4
+         hM3Vi8b8DYL7T5egFV2nQZUxNW74wXE8Evd+/H611suxvePSQSf/5jB0O6H6LfJ3/D56
+         ldfRPtNQOFC7DEMXHJUG1oGd28l+i5k3w8IOfTO/TZC8Jvy08qlFr5Jk+JWTtQZHcTwZ
+         W0W+EOTi9JMfaTl+C4XmpSjSMR1au55qCzWhoW6tJZPWjKz+RJ72PdnAbbolylgV47Gu
+         b+eg==
+X-Forwarded-Encrypted: i=1; AJvYcCV2+Gs598GIqGuQabZaeF4kmMwIt9anE06P+eW1omqYXYcHX2tRNNlDlyEceyk2/wWjv1PZD57tI5M=@vger.kernel.org, AJvYcCV6RoBWUYfl90paV86w2W+Y+jSz1eC/nz0ekHo03F1Z9BVR98L+x+mqplisSKvoUYvapbv//KONFVtKCb4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3EhvI0p8qOyMiJZ1bv0Z1IF+xgtUPys3E+62qJ4q6vfdJllb8
+	WKjuzqpYRurX612OGN0g/ToXuFIX82H1HebGeeHFX6ViSh3CJ9jL
+X-Gm-Gg: ASbGncsBzzTU1R3COGOF36yJgdEig9uC7+nuzFEEUHg/F8AKOoUZRaDelfEQsTTbZrv
+	naUKTptPE0TjlnyX+VmP18F94sleAJvJSktcl0X5v+JSFIq/C6TxoXNvwYOnDQemQpAXqHy4LNA
+	J1BLzR97vMZXyQfwjRplVfQiHKEUMNRKsDgOPT6OWk+9nS/Fkmhuys9a8CZErEbrwIFKtfKbG6u
+	kGP0MdVw0KbzczBa3Fh5hvFyljAZNIfB+lq5r6CkxGJAaB4dFoQyC/8E83AUrgnkK8hlziBmL5j
+	4KpU+QryDN2MghNyps5V0qStkmP7epzrN9V6kK8KBYMC6FjlVgqb8ZzHsRHSQngbqeU=
+X-Google-Smtp-Source: AGHT+IFsp1KO7SpkI4Baqzu+PaivIakGq5Ke0rYEIizxnBYl7OLpEKVhaHzNjOfd00JduABwQS6jww==
+X-Received: by 2002:a05:6a20:d490:b0:1f0:e3df:fe1 with SMTP id adf61e73a8af0-2015ae8f37amr3086206637.4.1744202902625;
+        Wed, 09 Apr 2025 05:48:22 -0700 (PDT)
+Received: from henry.localdomain ([111.202.148.133])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b02a11d2654sm1103588a12.35.2025.04.09.05.48.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 05:48:22 -0700 (PDT)
+From: Henry Martin <bsdhenrymartin@gmail.com>
+To: sven@svenpeter.dev,
+	j@jannau.net,
+	alyssa@rosenzweig.io,
+	neal@gompa.dev,
+	rafael@kernel.org,
+	viresh.kumar@linaro.org
+Cc: asahi@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Henry Martin <bsdhenrymartin@gmail.com>
+Subject: [PATCH v2] cpufreq: apple-soc: Fix null-ptr-deref in apple_soc_cpufreq_get_rate()
+Date: Wed,  9 Apr 2025 20:48:13 +0800
+Message-Id: <20250409124813.47193-1-bsdhenrymartin@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250409122314.2848028-2-arnd@kernel.org>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdeitdefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeetlhgvgigrnhgurhgvuceuvghllhhonhhiuceorghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeeiudeuteehhfekgeejveefhfeiudejuefhgfeljefgjeegkeeujeeugfehgefgnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemrggutdefmeegfheltgemfeefjehfmehffeefugenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemrggutdefmeegfheltgemfeefjehfmehffeefugdphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomheprghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudefpdhrtghpthhtoheprghrnhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghnihgvlhdrlhgviigtrghnoheslhhinhgrrhhordhorhhgpdhrtghpthhtohepthhglhigs
- ehlihhnuhhtrhhonhhigidruggvpdhrtghpthhtohepkhhriiihshiithhofhdrkhhoiihlohifshhkiheslhhinhgrrhhordhorhhgpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopegrrhhnugesrghrnhgusgdruggvpdhrtghpthhtohepnhhitgholhgrshdrfhgvrhhrvgesmhhitghrohgthhhiphdrtghomhdprhgtphhtthhopegtlhgruhguihhurdgsvgiinhgvrgesthhugihonhdruggvvh
-X-GND-Sasl: alexandre.belloni@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-On 09/04/2025 14:22:54+0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> Build-testing this driver on arm without CONFIG_OF produces a warning:
-> 
-> drivers/clocksource/timer-atmel-tcb.c:368:34: error: 'atmel_tcb_of_match' defined but not used [-Werror=unused-const-variable=]
->   368 | static const struct of_device_id atmel_tcb_of_match[] = {
->       |                                  ^~~~~~~~~~~~~~~~~~
-> 
-> Change the dependency to allow build-testing on all architectures but
-> instead require CONFIG_OF to be present.
-> 
-> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Cc: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+cpufreq_cpu_get_raw() can return NULL when the target CPU is not present
+in the policy->cpus mask. apple_soc_cpufreq_get_rate() does not check
+for this case, which results in a NULL pointer dereference.
 
-Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Fixes: 6286bbb40576 ("cpufreq: apple-soc: Add new driver to control Apple SoC CPU P-states")
+Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+---
+V1 -> V2: Use `if (unlikely(!policy))` instead of `if (!policy)`
 
-> ---
-> v2: fix build regression from dropped CONFIG_ARM dependency
-> ---
->  drivers/clocksource/Kconfig | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-> index 487c85259967..a7d5a465100e 100644
-> --- a/drivers/clocksource/Kconfig
-> +++ b/drivers/clocksource/Kconfig
-> @@ -437,8 +437,8 @@ config ATMEL_ST
->  
->  config ATMEL_TCB_CLKSRC
->  	bool "Atmel TC Block timer driver" if COMPILE_TEST
-> -	depends on ARM && HAS_IOMEM
-> -	select TIMER_OF if OF
-> +	depends on ARM && OF && HAS_IOMEM
-> +	select TIMER_OF
->  	help
->  	  Support for Timer Counter Blocks on Atmel SoCs.
->  
-> -- 
-> 2.39.5
-> 
+ drivers/cpufreq/apple-soc-cpufreq.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/cpufreq/apple-soc-cpufreq.c b/drivers/cpufreq/apple-soc-cpufreq.c
+index 4994c86feb57..b1d29b7af232 100644
+--- a/drivers/cpufreq/apple-soc-cpufreq.c
++++ b/drivers/cpufreq/apple-soc-cpufreq.c
+@@ -134,11 +134,17 @@ static const struct of_device_id apple_soc_cpufreq_of_match[] __maybe_unused = {
+ 
+ static unsigned int apple_soc_cpufreq_get_rate(unsigned int cpu)
+ {
+-	struct cpufreq_policy *policy = cpufreq_cpu_get_raw(cpu);
+-	struct apple_cpu_priv *priv = policy->driver_data;
++	struct cpufreq_policy *policy;
++	struct apple_cpu_priv *priv;
+ 	struct cpufreq_frequency_table *p;
+ 	unsigned int pstate;
+ 
++	policy = cpufreq_cpu_get_raw(cpu);
++	if (unlikely(!policy))
++		return 0;
++
++	priv = policy->driver_data;
++
+ 	if (priv->info->cur_pstate_mask) {
+ 		u32 reg = readl_relaxed(priv->reg_base + APPLE_DVFS_STATUS);
+ 
 -- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.34.1
+
