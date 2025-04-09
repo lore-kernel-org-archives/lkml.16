@@ -1,107 +1,103 @@
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3BD81C5F25
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 18:45:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A1C71C5F25;
+	Wed,  9 Apr 2025 18:45:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744224322; cv=none; b=Y/khUsC+k7uzRgiluLCDjQVIBltnEQ+Qcy7CWROogTWppWCmv/JUKn4cOLygCOO6T6J8ViXkvpfvQEQmLaScsu6fUI8Y2u8EBnlxjNYjnx5eOt0crhH7cgE8Ccxg3LGRX2J0qfMhbxUZY/gnSSGMTyF2uBmqneuY6umvqGjH4Y4=
+	t=1744224335; cv=none; b=KXlG4AuaYr7kaJn/CtkwE1rWlsJ/gP+ciIfsxlhYR6cDxAHWZBXl8vUXTvgujvPUsS6h2Jru8L09Fx6XT7LQxrLs9v4hTB4B9csJ16WGF+iYPyKA56/gAJRoaGHpB9XeWsHwYcfLQnY1xjC6VdoLiLCDa6lFSYvD82QRry83mkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744224322; c=relaxed/simple;
-	bh=DE94AF+o8GAnUH4MVceaHQSwr76zM1gbMHM/bt4QTz4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p14ftYGnIequiLi3ftkz9Q7rgOBhjWZltolced4lZVAvIklmsiOuuebrnK3XoMtxNWA200M+XYPLGRZ7EUx7T6aIrGRibjkmot/VqzOX9+tIaXQtFWp4+K0g7TKRE+ng8+dlgESzz434hhggAvV9gqsByj7XQgF8TAJ4lnOV+5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=GKMEDyiq; arc=none smtp.client-ip=209.85.166.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1744224335; c=relaxed/simple;
+	bh=/ZlVDpYIBpkIkscgi0Zebagev49/nValyxmXsDgheCg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qWROnk2cn6kTbma2Y+HOq2eMfQyokC3Uj2JwRS4IpIOT6wUbuEIFanFz1X6yC88mEq0pXJGc7QSE864sfB41fhYbRSMwQKhxloVdymU/Bfk6y4hZxR2wFSVHogGAyr1moyGsS+dYobltnOiHJBA/pWx7wfye4CMjgB6vL9h5ZTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=P5nJCRX0; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="GKMEDyiq"
-Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3ce87d31480so174095ab.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 11:45:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1744224319; x=1744829119; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=SovPoqcq00HkS54A0arEix/uaJanWscLaN21MAd/PrQ=;
-        b=GKMEDyiqddNw7n/PoowaEB/HtzAGonpt0OtZlRwnPpVFqUlzW5yLtNMjnrvTm1bwyF
-         vJc1AnXMDw8aaGh3z4gv22ZJUrixQf6gmPLFU1AoQqYaDtHlVLPS8rBjCtbtROwFlfB8
-         ITjPacSJPs374FSBWSeGkLOQnr0SHPdeXuQ00=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744224319; x=1744829119;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SovPoqcq00HkS54A0arEix/uaJanWscLaN21MAd/PrQ=;
-        b=GnXJqCaRK83SVjclCz1cvxHJlzY5obp7DYoevFIZ1dv2m9qbW/ImrPbR7wWoKRNKow
-         cw0snLT6P2VtMK8jFoCPxi6R4nM+i0azUNBkwZyuE3CX5xxfkvNNHhTu1SbPP3v/qmQ5
-         yv+36jAWgVg8m51tNeJosvXBYMKyUIOKldI9rSDPZZV2DWwXs/HMwYJ9h/CiA8pzrN2J
-         SeZiiUpBVJ8fweMOstLMMyX74br2cHCW0YLh0Ky9cPOwEiOatE192yl3HrxqcRf2Hke+
-         /+7iVTjHa9CrC6kW8UJPPtAXgZqhDgkYwV486W7ulggr2o7tp2AHhPJxQSoJamA9I9Ap
-         92Pg==
-X-Forwarded-Encrypted: i=1; AJvYcCXXsFrbefA1CmTB0ibwk5lehVhB65rAb1UHAaDpbQHQ5mrQ2j4UeSOv/g5nGUmSI5HVwUmxJ7CR7e4s8GY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEi8UkU3ja6YA1mc97uKk0epe2r146sMv7bfUt7jt6ecyVT7EE
-	Tg6Ade9eqqFHi2tg7AW8M/AKu82hriFR7g4B50nkeXwj+6G7oIu2y4kPamPMjIM=
-X-Gm-Gg: ASbGncuLY8EZmLN7GMtPx9N2dl2RCk0qouhFZKDqebzB3+Ezaf5dFnxoxcNzru5JShh
-	8nhUsOwe46yxaJobqt8el20lqeBQexoJAcXF19MBlg4IjwOwRymaNUyxFldaeuc6nHL2rvctwap
-	U4CAdtz9+LQd3opjzvhovW6gVp7d27XuSDTiI4VbmiZKeYn1LqfjHrKMMaOgIf5jDgWnubY36zf
-	7RZ3CmeQZ2jA/bEoIdBiONvtJhid2SdyYPFvxuKWn4pKpgj7wIY9nDFv2B4ukot8e0Xp8/1+jk5
-	ReQMffm6eKZPYWdpvPrEQv0PuyGw+578VT58SVxE33znebCYuBimX/xVJ0CCag==
-X-Google-Smtp-Source: AGHT+IFt7sGM71TKjQg4Zk+NkDUv8HxSgsY1JlES7yCnZRK+kvYxcZDFPFxB0ZS7tX5AtgSmKJPbcQ==
-X-Received: by 2002:a05:6e02:3c86:b0:3d4:36c3:7fe3 with SMTP id e9e14a558f8ab-3d7e46f8e7bmr1712175ab.9.1744224318764;
-        Wed, 09 Apr 2025 11:45:18 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d7dc594eb2sm3769065ab.70.2025.04.09.11.45.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Apr 2025 11:45:18 -0700 (PDT)
-Message-ID: <4455cd1a-cb95-4a8a-81ad-ff2cfb6c96ac@linuxfoundation.org>
-Date: Wed, 9 Apr 2025 12:45:16 -0600
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="P5nJCRX0"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 07B7340E0243;
+	Wed,  9 Apr 2025 18:45:31 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id JFxxW92qANam; Wed,  9 Apr 2025 18:45:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1744224326; bh=HdVXctVtqz3LSAVj5XmOBaYDJycOSuDUr7WDPj+9VzA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=P5nJCRX0qcS0/GkVh+4s2Gv6S0CMFZR1ihrDPFLNGTXrcLJOwVFpnxRHG7nMdhge3
+	 iykXlVU6kLyaQVT6AeJfwhIu/GxD+Y9EmiUMxRiCVMg3BxGmUD7Yr+9AfqO4f+bDPV
+	 eSsihhrI3GU+kTfqisXpaV1mnxSiQq6uDUE/6/bKKrU0euogAwMk17s09NMekHYmUo
+	 LjKVX4zw3Rn3Q/mMf32Chrn12v7dA5sn8SJcpNTSPl3BuYLYJT6q9ctg18aSxAzbd3
+	 ibeTD11wi6ewU7Rb5YhQQCxPZ3QjyoycT7lXvmUp3dHM8LuW0YIPGp5p7Bs63dy+w1
+	 XvWcJ0mSY/zet0cZHL57A93coRf9IRrwGGjWjn7x5kwId0UIW1NCx7C8v4X1fv9sgn
+	 +zcVmOomOx2Ih8u4gxuDHAD3gwcglDjmtqBzVDNbQAG6zZJ3uS1L6PDLoh6fREciOJ
+	 W2hQgFzdMXjZzry1GG1rfV+nUOWFvFmlnTaFPDWZ5sKZFPyCELpsO7sy9ctMMlzmuP
+	 xRCeEafNKBuGxmbLspMrvDXenxIE2sHjmL40n9cpd7rwgDORbUcQm8m1EbXYYjyAEP
+	 2gnrimZ0jtXACTBVAopTLk4s1gIvm963dS7zzxZI6DAhxbX+OKsblRLjSZlV4yA+Ls
+	 49SPox/Op4idhVd0qFaP9eHE=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 95F6340E0242;
+	Wed,  9 Apr 2025 18:45:08 +0000 (UTC)
+Date: Wed, 9 Apr 2025 20:45:07 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Stefano Garzarella <sgarzare@redhat.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+	"H. Peter Anvin" <hpa@zytor.com>, linux-coco@lists.linux.dev,
+	linux-integrity@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+	x86@kernel.org, Joerg Roedel <jroedel@suse.de>,
+	Dionna Glaze <dionnaglaze@google.com>,
+	Claudio Carvalho <cclaudio@linux.ibm.com>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	linux-kernel@vger.kernel.org, Dov Murik <dovmurik@linux.ibm.com>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v6 4/4] x86/sev: register tpm-svsm platform device
+Message-ID: <20250409184507.GLZ_bAM8LCPXKn9xU1@fat_crate.local>
+References: <20250403100943.120738-1-sgarzare@redhat.com>
+ <20250403100943.120738-5-sgarzare@redhat.com>
+ <20250408110012.GFZ_UBvOcEfEcIM4mI@fat_crate.local>
+ <eqtiiphs6rtjo7nirkw7zcicew75wnl4ydenrt5vl6jdpqdgj6@2brjlyjbqhoq>
+ <20250408112820.GBZ_UIVPp-LuIiVrIV@fat_crate.local>
+ <o2u7p3wb64lcc4sziunr274hyubkgmspzdjcvihbpzkw6mkvpo@sjq3vi4y2qfl>
+ <20250409102120.GCZ_ZKIJw9WkXpTz4u@fat_crate.local>
+ <CAGxU2F7r_fWgr2YRmCvh2iQ1vPg30f-+W6FXyuidbakZkwhw2w@mail.gmail.com>
+ <20250409113154.GGZ_ZaqgfRrrMij_Zm@fat_crate.local>
+ <6e5bf479-ee95-a996-5845-1f76730e2488@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.13 000/500] 6.13.11-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20250408154123.083425991@linuxfoundation.org>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20250408154123.083425991@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <6e5bf479-ee95-a996-5845-1f76730e2488@amd.com>
 
-On 4/8/25 09:54, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.13.11 release.
-> There are 500 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Wed, Apr 09, 2025 at 11:07:49AM -0500, Tom Lendacky wrote:
+> So the vTPM driver wouldn't change, just snp_init_platform_device():
 > 
-> Responses should be made by Thu, 10 Apr 2025 15:40:28 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.13.11-rc2.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.13.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+> 	if (snp_vmpl && platform_device_register(&tpm_svsm_device))
 
-Compiled and booted on my test system. No dmesg regressions.
+So this basically says that the SVSM is always sporting a vTPM emulation. But
+you can build the cocont-svsm thing without it AFAICT.
 
-Tested-by: Shuah Khan <skhan@linuxfoundation.org>
+So I'm guessing Stefano's suggestion here might make more sense:
 
-thanks,
--- Shuah
+https://lore.kernel.org/r/o2u7p3wb64lcc4sziunr274hyubkgmspzdjcvihbpzkw6mkvpo@sjq3vi4y2qfl
+
+considering it all...
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
