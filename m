@@ -1,278 +1,213 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 129FEEC5;
-	Wed,  9 Apr 2025 11:25:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3846725C6FB;
+	Wed,  9 Apr 2025 11:25:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744197925; cv=none; b=jiLwvzxbmJUYL/jHOzOEeVTz4zrSYu22azMHwcgszylsjpe9p7PAQaHXRxmNNQlouEx340AB5yyu1AsAVwS5ntALn+4dMs6xT2JDrVv9d/Q9IsS/arG70XzAfdy5BJ4AIuTjSjiyTr71fwXUueYv5sjO8yIIZMg5Sv2ZUOG9XOA=
+	t=1744197958; cv=none; b=Pc/5aA93Rdu3gjvfjFmfKik/3VouUsR3BCfE1e0g7YSFUJqqONOuOLdgGMnpKIMz0v3ZSCM+7xfzwP7msftGonmTIzBsIg4HlUC0Q+aJGXUbYzGJj2WWcBdGz6PKXtPizoWQfHrQermpCEFYiH7V2Bg+BxDSn0E7pG2cA9OoKr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744197925; c=relaxed/simple;
-	bh=RcNU03lrtQuhmutMROPCRXVWbRhoFLtCjP17Vu0QoVI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SQA21fErupzYvXw4cw7o0MGTbU96LuAAfbaLyIhWaj4ME8mZ45V6hxcJPHh1CIJSD555YArgQCJ3e0Wml6k9HRCvbEPyQzxM+Fn6LyjImh6sf5mNUUtaQaeALk436JL+F5xx14P1x8uKL0t3d66mbNSdqj2ZeBFgMrAClFVQqL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nTlNcUDW; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744197958; c=relaxed/simple;
+	bh=w6c6I7F4/kq2lo1XICyiL03Xhslm9Ta8M6qRWacDPt0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Lklghn3t4QRo0Xe7Iuao1C25DUFA0jj/eWJGJGuG/AOtV/yNSANsvpcivEI8C62Hzl9MDT+88tkNkXyRcjGRUMCvH6eqmmrwe+Axlh06eaSuiea1/+nXZV83mjPWs6/VUmqm4pa/e4ftKasRVf3w+OsNOCKICBhxz6zYJ/ESlMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Q0oVOZol; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nTlNcUDW"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4774d68c670so90331361cf.0;
-        Wed, 09 Apr 2025 04:25:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744197923; x=1744802723; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qnyLqtBTNJZVUdoCJvAQWi3Um+ZI5CcOSV6TWLhi+rY=;
-        b=nTlNcUDWPt5X2s4boA7bmzBYydDvo3RvadpZmq3ZqxzjwqAOgWsqTDOr3aosNMsMJx
-         QKSWWDItB9obuuwnbXIe5LfTdiwi5OwzB4PeeP8a+33qwjjWFjOyBmPPMf65CmbYX5kU
-         LkgFe76hg/ZziSfVwStT2HeUPkD0qR/2Eyp6KIztNze0T1d+BTT8YxG0fVP7+sW0lciP
-         BTp4rNXIx0Awb3lGC9As1yzg00rqi11z+jLf/O4b/5Het3Uf0SeW6XnzqVN4KWGKmXK8
-         BZWzsnUCKfhDvjWatAtNe132I+JMecKoefUQzySKehqgajxB64448HRGZDpl6Dkwpx35
-         Cxvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744197923; x=1744802723;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qnyLqtBTNJZVUdoCJvAQWi3Um+ZI5CcOSV6TWLhi+rY=;
-        b=V6oHX5H0qtoBkBLH0qt9AGtOYEqOuh/L45GwbumvtCjJij0sU6Gg/ylK0bNfDfrjqv
-         FpeK50dOu6P1ApeJFaAubFxqDFR+iEM/vZN1jEyymUBGcrbaq9Gc4Q8qhYJUffu2ERi7
-         yxdVX7+7dPLXikVCloGoXl2wI6xn0Mqlf5BJ/Hd2GQwHOzcxk6l33ML/VVlKOuzhUYmJ
-         lwasKCFH0GKuaizz2izMjwdfCyMPKifGIezt9vHI+4alG5g2xS9cUyJs/a9YBOgoyhwv
-         LeH/QZJrzrl+EWagPN0QphWW3NEkjOW1jUvh94BhgMhi6DYHTKUph3nFLMjK1PtR7ZX6
-         UTjw==
-X-Forwarded-Encrypted: i=1; AJvYcCUeVH/ge6lgl8AsLvWwNz7DaQzy2yWZ0UMH7m3by9wIXs+hN9ta+NGGPTytfrgaHMreb7AA6Ncv13Q=@vger.kernel.org, AJvYcCUtBhQLFhH6D76mhw7GqgK2BRtGHtlqttqo7NE9HZu3NlUcGRNwF3MtFhst6W6tzYrcxjJ1Fx/DIop/FaU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvCfDKt+/ccyyBEvZ156sptNItPuxSuAWHK5IQcbzgIrHulwi0
-	8lX6U7s7YXFW6WO+8lXHIhcZInd7zI0HzM3v9IlTWGVYoy/3MgqlczENijdKs4PSoBcB3JA/GFe
-	bpeGJ87cBfL98nEO10mTEZmJDQz+weuzy
-X-Gm-Gg: ASbGncs6u7nrJsQnGUrKg5xumB+aq7pO7/0g5aEEmdT4HR0bhpVhsVqolnaygy0tAUW
-	/6+5jrb+xDWOpoL81LCr70sIQqrN6MmBmD+t5s9NVSmtRoM5hnJz+NqEbi790po4+2nGFEDTymL
-	lCgfmCPTgTOPQ9OzdiQf1cyKI=
-X-Google-Smtp-Source: AGHT+IGdiIrEZJnGuWVnUKG4etRiEutplJRSBSm9MCLkg2DuvhKn3FBarw29Ide8aUJcGksVXizG9+RfvLzOTuWj2BA=
-X-Received: by 2002:ac8:5dd1:0:b0:477:dcc:6c18 with SMTP id
- d75a77b69052e-479600a2faamr27545171cf.14.1744197922803; Wed, 09 Apr 2025
- 04:25:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Q0oVOZol"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5398kWmj028991;
+	Wed, 9 Apr 2025 11:25:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	DKNuZYUgqfSY2QPjFRQxGDipKqsuAa5YHnQ0M50S7To=; b=Q0oVOZol3drRdodi
+	gQJvbyVyF7jQ6lOS5HnkW61hU7HExfC95rsGtwBjLnXlHvUbd9GHViMEFrT3m3Ye
+	mtuV1Civ4FfQmDFBWZdLHX/te4cYDUPsJFBq+LgY2fgE6uS58AEBMeQTijlfzg/f
+	puSgALW/R8IVTtUshxglJKiPcaKTNunN0seYFlT7euz+84ywS/zuuwozkS6biUEX
+	vbrQUlGbbc8arBzNIN2qgoqOCsCsA3WBy/IgcO9HiSF7U1NgJqUVR6M7I909s/p6
+	hmNfBg8jg2ODdo6SZAyus0VZN8JtcVKvGPt7+bQdH2ujEgKAqF49ITquRhT+/fwF
+	AALKvA==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twpmb2b1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 09 Apr 2025 11:25:47 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 539BPksH006621
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 9 Apr 2025 11:25:46 GMT
+Received: from [10.216.8.212] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 9 Apr 2025
+ 04:25:41 -0700
+Message-ID: <56f4b9fc-69ba-c867-653b-7ea28ad8ab0b@quicinc.com>
+Date: Wed, 9 Apr 2025 16:55:39 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241212015734.41241-1-sultan@kerneltoast.com>
- <20241212015734.41241-2-sultan@kerneltoast.com> <Z_Tlc6Qs-tYpxWYb@linaro.org>
- <Z_U_LN0AtH_n4YtE@sultan-box.localdomain> <Z_VTRspvmOUfrawh@linaro.org>
-In-Reply-To: <Z_VTRspvmOUfrawh@linaro.org>
-From: Xuewen Yan <xuewen.yan94@gmail.com>
-Date: Wed, 9 Apr 2025 19:25:10 +0800
-X-Gm-Features: ATxdqUHOE1vmAS5iu3NM1Du1EdGsUY0tFO7YrFDtFnHMDS5wAjZf84trNC65A3g
-Message-ID: <CAB8ipk8ARRdR8UPgLqJ3EcAzuE4KNEO=cmLNJLk6thTxdBSHWw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] cpufreq: schedutil: Fix superfluous updates caused by need_freq_update
-To: Stephan Gerhold <stephan.gerhold@linaro.org>
-Cc: Sultan Alsawaf <sultan@kerneltoast.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Ingo Molnar <mingo@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Valentin Schneider <vschneid@redhat.com>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev, 
-	Johan Hovold <johan@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH 1/1] bus: mhi: host: don't free bhie tables during power
+ off
+Content-Language: en-US
+To: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+        Manivannan Sadhasivam
+	<manivannan.sadhasivam@linaro.org>,
+        Jeff Hugo <jeff.hugo@oss.qualcomm.com>,
+        Youssef Samir <quic_yabdulra@quicinc.com>,
+        Matthew Leung
+	<quic_mattleun@quicinc.com>,
+        Yan Zhen <yanzhen@vivo.com>, Qiang Yu
+	<quic_qianyu@quicinc.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kunwu Chan <chentao@kylinos.cn>
+CC: Carl Vanderlip <quic_carlv@quicinc.com>,
+        Sumit Garg
+	<sumit.garg@kernel.org>, <mhi@lists.linux.dev>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250409082444.582295-1-usama.anjum@collabora.com>
+From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+In-Reply-To: <20250409082444.582295-1-usama.anjum@collabora.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: knL68Z-Nnzc8sK_UkEfcgiCTyPwikSZn
+X-Proofpoint-ORIG-GUID: knL68Z-Nnzc8sK_UkEfcgiCTyPwikSZn
+X-Authority-Analysis: v=2.4 cv=MpRS63ae c=1 sm=1 tr=0 ts=67f6593b cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=QX4gbG5DAAAA:8 a=NlJ2bC5Jul0cl-557kgA:9 a=QEXdDO2ut3YA:10
+ a=AbAUZ8qAyYyZVLSsDulk:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-09_04,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ mlxlogscore=999 clxscore=1011 priorityscore=1501 impostorscore=0
+ spamscore=0 bulkscore=0 suspectscore=0 malwarescore=0 adultscore=0
+ phishscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504090067
 
-Hi Sultan,
 
-On Wed, Apr 9, 2025 at 12:50=E2=80=AFAM Stephan Gerhold
-<stephan.gerhold@linaro.org> wrote:
->
-> Hi Sultan,
->
-> On Tue, Apr 08, 2025 at 08:22:20AM -0700, Sultan Alsawaf wrote:
-> > On Tue, Apr 08, 2025 at 10:59:31AM +0200, Stephan Gerhold wrote:
-> > > On Wed, Dec 11, 2024 at 05:57:32PM -0800, Sultan Alsawaf wrote:
-> > > > From: "Sultan Alsawaf (unemployed)" <sultan@kerneltoast.com>
-> > > >
-> > > > A redundant frequency update is only truly needed when there is a p=
-olicy
-> > > > limits change with a driver that specifies CPUFREQ_NEED_UPDATE_LIMI=
-TS.
-> > > >
-> > > > In spite of that, drivers specifying CPUFREQ_NEED_UPDATE_LIMITS rec=
-eive a
-> > > > frequency update _all the time_, not just for a policy limits chang=
-e,
-> > > > because need_freq_update is never cleared.
-> > > >
-> > > > Furthermore, ignore_dl_rate_limit()'s usage of need_freq_update als=
-o leads
-> > > > to a redundant frequency update, regardless of whether or not the d=
-river
-> > > > specifies CPUFREQ_NEED_UPDATE_LIMITS, when the next chosen frequenc=
-y is the
-> > > > same as the current one.
-> > > >
-> > > > Fix the superfluous updates by only honoring CPUFREQ_NEED_UPDATE_LI=
-MITS
-> > > > when there's a policy limits change, and clearing need_freq_update =
-when a
-> > > > requisite redundant update occurs.
-> > > >
-> > > > This is neatly achieved by moving up the CPUFREQ_NEED_UPDATE_LIMITS=
- test
-> > > > and instead setting need_freq_update to false in sugov_update_next_=
-freq().
-> > > >
-> > > > Signed-off-by: Sultan Alsawaf (unemployed) <sultan@kerneltoast.com>
-> > > > ---
-> > > >  kernel/sched/cpufreq_schedutil.c | 4 ++--
-> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufre=
-q_schedutil.c
-> > > > index 28c77904ea74..e51d5ce730be 100644
-> > > > --- a/kernel/sched/cpufreq_schedutil.c
-> > > > +++ b/kernel/sched/cpufreq_schedutil.c
-> > > > @@ -83,7 +83,7 @@ static bool sugov_should_update_freq(struct sugov=
-_policy *sg_policy, u64 time)
-> > > >
-> > > >   if (unlikely(sg_policy->limits_changed)) {
-> > > >           sg_policy->limits_changed =3D false;
-> > > > -         sg_policy->need_freq_update =3D true;
-> > > > +         sg_policy->need_freq_update =3D cpufreq_driver_test_flags=
-(CPUFREQ_NEED_UPDATE_LIMITS);
-> > > >           return true;
-> > > >   }
-> > > >
-> > > > @@ -96,7 +96,7 @@ static bool sugov_update_next_freq(struct sugov_p=
-olicy *sg_policy, u64 time,
-> > > >                              unsigned int next_freq)
-> > > >  {
-> > > >   if (sg_policy->need_freq_update)
-> > > > -         sg_policy->need_freq_update =3D cpufreq_driver_test_flags=
-(CPUFREQ_NEED_UPDATE_LIMITS);
-> > > > +         sg_policy->need_freq_update =3D false;
-> > > >   else if (sg_policy->next_freq =3D=3D next_freq)
-> > > >           return false;
-> > > >
-> > >
-> > > This patch breaks cpufreq throttling (e.g. for thermal cooling) for
-> > > cpufreq drivers that:
-> > >
-> > >  - Have policy->fast_switch_enabled/fast_switch_possible set, but
-> > >  - Do not have CPUFREQ_NEED_UPDATE_LIMITS flag set
-> > >
-> > > There are several examples for this in the tree (search for
-> > > "fast_switch_possible"). Of all those drivers, only intel-pstate and
-> > > amd-pstate (sometimes) set CPUFREQ_NEED_UPDATE_LIMITS.
-> > >
-> > > I can reliably reproduce this with scmi-cpufreq on a Qualcomm X1E
-> > > laptop:
-> > >
-> > >  1. I added some low temperature trip points in the device tree,
-> > >     together with passive cpufreq cooling.
-> > >  2. I run a CPU stress test on all CPUs and monitor the temperatures
-> > >     and CPU frequencies.
-> > >
-> > > When using "performance" governor instead of "schedutil", the CPU
-> > > frequencies are being throttled as expected, as soon as the temperatu=
-re
-> > > trip points are reached.
-> > >
-> > > When using "schedutil", the CPU frequencies stay at maximum as long a=
-s
-> > > the stress test is running. No throttling happens, so the device heat=
-s
-> > > up far beyond the defined temperature trip points. Throttling is appl=
-ied
-> > > only after stopping the stress test, since this forces schedutil to
-> > > re-evaluate the CPU frequency.
-> > >
-> > > Reverting this commit fixes the problem.
-> > >
-> > > Looking at the code, I think the problem is that:
-> > >  - sg_policy->limits_changed does not result in
-> > >    sg->policy->need_freq_update without CPUFREQ_NEED_UPDATE_LIMITS
-> > >    anymore, and
-> > >  - Without sg->policy->need_freq_update, get_next_freq() skips callin=
-g
-> > >    cpufreq_driver_resolve_freq(), which would normally apply the poli=
-cy
-> > >    min/max constraints.
-> > >
-> > > Do we need to set CPUFREQ_NEED_UPDATE_LIMITS for all cpufreq drivers
-> > > that set policy->fast_switch_possible? If I'm reading the documentati=
-on
-> > > comment correctly, that flag is just supposed to enable notifications=
- if
-> > > the policy min/max changes, but the resolved target frequency is stil=
-l
-> > > the same. This is not the case here, the target frequency needs to be
-> > > throttled, but schedutil isn't applying the new limits.
-> > >
-> > > Any suggestions how to fix this? I'm happy to test patches with my
-> > > setup.
-> >
-> > Thank you for reporting this. As I see it, sg_policy->need_freq_update =
-is
-> > working correctly now; however, sg_policy->limits_changed relied on the=
- broken
-> > behavior of sg_policy->need_freq_update and therefore sg_policy->limits=
-_changed
-> > needs to be fixed.
->
-> Thanks for the quick reply and the patch!
->
-> >
-> > Can you try this patch:
-> >
-> > diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_sc=
-hedutil.c
-> > index 1a19d69b91ed3..f37b999854d52 100644
-> > --- a/kernel/sched/cpufreq_schedutil.c
-> > +++ b/kernel/sched/cpufreq_schedutil.c
-> > @@ -82,7 +82,6 @@ static bool sugov_should_update_freq(struct sugov_pol=
-icy *sg_policy, u64 time)
-> >               return false;
-> >
-> >       if (unlikely(sg_policy->limits_changed)) {
-> > -             sg_policy->limits_changed =3D false;
-> >               sg_policy->need_freq_update =3D cpufreq_driver_test_flags=
-(CPUFREQ_NEED_UPDATE_LIMITS);
-> >               return true;
-> >       }
-> > @@ -171,9 +170,11 @@ static unsigned int get_next_freq(struct sugov_pol=
-icy *sg_policy,
-> >       freq =3D get_capacity_ref_freq(policy);
-> >       freq =3D map_util_freq(util, freq, max);
-> >
-> > -     if (freq =3D=3D sg_policy->cached_raw_freq && !sg_policy->need_fr=
-eq_update)
-> > +     if (freq =3D=3D sg_policy->cached_raw_freq && !sg_policy->limits_=
-changed &&
-> > +         !sg_policy->need_freq_update)
 
-We also should add the limits_changed in the sugov_update_single_freq().
+On 4/9/2025 1:54 PM, Muhammad Usama Anjum wrote:
+> Fix dma_direct_alloc() failure at resume time during bhie_table
+> allocation. There is a crash report where at resume time, the memory
+> from the dma doesn't get allocated and MHI fails to re-initialize.
+> There may be fragmentation of some kind which fails the allocation
+> call.
+> 
+> To fix it, don't free the memory at power down. Use the same allocated
+> memory again and again after every resume/hibernation. This patch has
+> been tested with resume and hibernation both.
+How do you handle the mhi un-register case, in that case all the MHI
+memory needs to be freed.
+> 
+> Here are the crash logs:
+> 
+> [ 3029.338587] mhi mhi0: Requested to power ON
+> [ 3029.338621] mhi mhi0: Power on setup success
+> [ 3029.668654] kworker/u33:8: page allocation failure: order:7, mode:0xc04(GFP_NOIO|GFP_DMA32), nodemask=(null),cpuset=/,mems_allowed=0
+> [ 3029.668682] CPU: 4 UID: 0 PID: 2744 Comm: kworker/u33:8 Not tainted 6.11.11-valve10-1-neptune-611-gb69e902b4338 #1ed779c892334112fb968aaa3facf9686b5ff0bd7
+> [ 3029.668690] Hardware name: Valve Galileo/Galileo, BIOS F7G0112 08/01/2024
+> [ 3029.668694] Workqueue: mhi_hiprio_wq mhi_pm_st_worker [mhi]
+> [ 3029.668717] Call Trace:
+> [ 3029.668722]  <TASK>
+> [ 3029.668728]  dump_stack_lvl+0x4e/0x70
+> [ 3029.668738]  warn_alloc+0x164/0x190
+> [ 3029.668747]  ? srso_return_thunk+0x5/0x5f
+> [ 3029.668754]  ? __alloc_pages_direct_compact+0xaf/0x360
+> [ 3029.668761]  __alloc_pages_slowpath.constprop.0+0xc75/0xd70
+> [ 3029.668774]  __alloc_pages_noprof+0x321/0x350
+> [ 3029.668782]  __dma_direct_alloc_pages.isra.0+0x14a/0x290
+> [ 3029.668790]  dma_direct_alloc+0x70/0x270
+> [ 3029.668796]  mhi_alloc_bhie_table+0xe8/0x190 [mhi faa917c5aa23a5f5b12d6a2c597067e16d2fedc0]
+> [ 3029.668814]  mhi_fw_load_handler+0x1bc/0x310 [mhi faa917c5aa23a5f5b12d6a2c597067e16d2fedc0]
+> [ 3029.668830]  mhi_pm_st_worker+0x5c8/0xaa0 [mhi faa917c5aa23a5f5b12d6a2c597067e16d2fedc0]
+> [ 3029.668844]  ? srso_return_thunk+0x5/0x5f
+> [ 3029.668853]  process_one_work+0x17e/0x330
+> [ 3029.668861]  worker_thread+0x2ce/0x3f0
+> [ 3029.668868]  ? __pfx_worker_thread+0x10/0x10
+> [ 3029.668873]  kthread+0xd2/0x100
+> [ 3029.668879]  ? __pfx_kthread+0x10/0x10
+> [ 3029.668885]  ret_from_fork+0x34/0x50
+> [ 3029.668892]  ? __pfx_kthread+0x10/0x10
+> [ 3029.668898]  ret_from_fork_asm+0x1a/0x30
+> [ 3029.668910]  </TASK>
+> 
+> Tested-on: QCNFA765 WLAN.HSP.1.1-03926.13-QCAHSPSWPL_V2_SILICONZ_CE-2.52297.6
+> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+> ---
+>   drivers/bus/mhi/host/boot.c | 11 +++++++----
+>   drivers/bus/mhi/host/init.c | 15 +++------------
+>   2 files changed, 10 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/bus/mhi/host/boot.c b/drivers/bus/mhi/host/boot.c
+> index efa3b6dddf4d2..8b3d2b9d239c3 100644
+> --- a/drivers/bus/mhi/host/boot.c
+> +++ b/drivers/bus/mhi/host/boot.c
+> @@ -323,6 +323,7 @@ void mhi_free_bhie_table(struct mhi_controller *mhi_cntrl,
+>   				  mhi_buf->buf, mhi_buf->dma_addr);
+>   
+>   	kfree(image_info->mhi_buf);
+> +	image_info->mhi_buf = NULL;
+image_info is getting freed in the next line. why do we need this?
 
-> >               return sg_policy->next_freq;
-> >
-> > +     sg_policy->limits_changed =3D false;
-
-Maybe this should be add in the sugov_update_next_freq()=EF=BC=8Cbecause, b=
-oth
-sugov_update_single_freq() and sugov_update_shared(),
-the sugov_update_next_freq() is after the freq check.
-
-> >       sg_policy->cached_raw_freq =3D freq;
-> >       return cpufreq_driver_resolve_freq(policy, freq);
-> >  }
-> >
->
-> This is working correctly for me, CPU frequency is being throttled again
-> when the temperature trip points are reached. If you send this, feel
-> free to add:
->
-> Tested-by: Stephan Gerhold <stephan.gerhold@linaro.org>
->
-> Thanks!
-> Stephan
->
+- Krishna Chaitanya.
+>   	kfree(image_info);
+>   }
+>   
+> @@ -584,10 +585,12 @@ void mhi_fw_load_handler(struct mhi_controller *mhi_cntrl)
+>   	 * device transitioning into MHI READY state
+>   	 */
+>   	if (fw_load_type == MHI_FW_LOAD_FBC) {
+> -		ret = mhi_alloc_bhie_table(mhi_cntrl, &mhi_cntrl->fbc_image, fw_sz);
+> -		if (ret) {
+> -			release_firmware(firmware);
+> -			goto error_fw_load;
+> +		if (!mhi_cntrl->fbc_image) {
+> +			ret = mhi_alloc_bhie_table(mhi_cntrl, &mhi_cntrl->fbc_image, fw_sz);
+> +			if (ret) {
+> +				release_firmware(firmware);
+> +				goto error_fw_load;
+> +			}
+>   		}
+>   
+>   		/* Load the firmware into BHIE vec table */
+> diff --git a/drivers/bus/mhi/host/init.c b/drivers/bus/mhi/host/init.c
+> index 13e7a55f54ff4..3c20e4541357e 100644
+> --- a/drivers/bus/mhi/host/init.c
+> +++ b/drivers/bus/mhi/host/init.c
+> @@ -1173,8 +1173,9 @@ int mhi_prepare_for_power_up(struct mhi_controller *mhi_cntrl)
+>   		/*
+>   		 * Allocate RDDM table for debugging purpose if specified
+>   		 */
+> -		mhi_alloc_bhie_table(mhi_cntrl, &mhi_cntrl->rddm_image,
+> -				     mhi_cntrl->rddm_size);
+> +		if (!mhi_cntrl->rddm_image)
+> +			mhi_alloc_bhie_table(mhi_cntrl, &mhi_cntrl->rddm_image,
+> +					     mhi_cntrl->rddm_size);
+>   		if (mhi_cntrl->rddm_image) {
+>   			ret = mhi_rddm_prepare(mhi_cntrl,
+>   					       mhi_cntrl->rddm_image);
+> @@ -1202,16 +1203,6 @@ EXPORT_SYMBOL_GPL(mhi_prepare_for_power_up);
+>   
+>   void mhi_unprepare_after_power_down(struct mhi_controller *mhi_cntrl)
+>   {
+> -	if (mhi_cntrl->fbc_image) {
+> -		mhi_free_bhie_table(mhi_cntrl, mhi_cntrl->fbc_image);
+> -		mhi_cntrl->fbc_image = NULL;
+> -	}
+> -
+> -	if (mhi_cntrl->rddm_image) {
+> -		mhi_free_bhie_table(mhi_cntrl, mhi_cntrl->rddm_image);
+> -		mhi_cntrl->rddm_image = NULL;
+> -	}
+> -
+>   	mhi_cntrl->bhi = NULL;
+>   	mhi_cntrl->bhie = NULL;
+>   
