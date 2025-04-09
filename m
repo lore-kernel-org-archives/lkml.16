@@ -1,127 +1,132 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2B37158218
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 13:58:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76832158218;
+	Wed,  9 Apr 2025 13:58:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744207097; cv=none; b=tKpA/O4kUh8ZRL7foC1pJP3ToZu7fRGtW7cYoszU8pQUIKBOK2SDBkAxjbJTdrtCT+R0JGqbpoAkrvqCfUTgfGHReCPR9KjLD4AacE3dmca4855UivC8KjtouCQhlJIT3c5aO0HRbTFQPWZepLW+FtxAGPwSj7JQeisbFkx2FgQ=
+	t=1744207112; cv=none; b=ptnsTnJ//3ryXm/DlF0pgU4Zmn7cTYhp0u17Gy7I2rOruzSkPFxHMH1lxwWMeAMQmbhdL67F4mZXySNpwuverrCXDz/h9qd6qpmAjf6sTUWWJjHGiPWQrjJITDZ9N8CukscVd2VZBsX9V9B5MB4mx3yLHlR+FXYt2uXlzvHVBYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744207097; c=relaxed/simple;
-	bh=4wiG1oWsFDNXV9hkIUq/KfIYAJEAjN3PQIPKRD55XsA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OdoVnCGmzmODFKhGAOmQYpOpOZRRCTod1Vv7pxVEckkFG1rRUPTorE+qyvbP8DTeuOvSjXcAn6pLzdunMDU1WWIqxkArzrI/63rvQqEqLAgrmMVnOozI9oE0fwLSE2rPrMHPFHekUMMFPZ0DqAlw/wTc6hGCk9ELQaRrQ8GrdNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=dHlXrdwz; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1744207112; c=relaxed/simple;
+	bh=gIkLtXkAowaebWcKuGF3J/51U/7JSeR5c3yViLJLL4o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AK0Cthb54ln4LncjTjCTczExiqoDQnjEFxV2sDkxK7Co3/17l+FlIJAA4UCyXAxbQ3WCiQ/cZfgByzDtdqjUuh1BhDutO90UYQeMf6z1JIipN9ApSXZuSPaMPN5BH44fMsDF0My1GQPe2xB5kshOJNugy8I0Z5bRpQ/LbCKkKDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T1VeRjHX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="dHlXrdwz"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39c1ef4acf2so4213320f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 06:58:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744207093; x=1744811893; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wqNDGbtGLo2t+c/K/+WxlFYfgefVNdcRkPfKSN2QwBU=;
-        b=dHlXrdwzjercwMVdpSmXID0fO6ArYPCEEeF4ZyCT7iP6Yr8c72Ya6u2XrWLDoilLvT
-         FxiMJAYaTocj/0qbVqrjNbhnR4GRr3gLtmpZqJQCihGU97z6al1JKJvZEQ0ttp4XbreX
-         Fq398AC1RvQaMo+aZzGQuGRhT1IUlNI5HLfsluqI51i2yisNHNY9puQ+AfRqDdaLF8Q8
-         df/gTa0kQRB34Dm7AmjKgizCCjSpMhidE9rdFV1yG6Wjkn+GVNdsENDaUZnd/beK3T9A
-         7lnmjVjNYGcJvMqUILp16LzOEv3ccW1Dz7oipHRI6xhduSQ5wcUdhYe3kVfWgCUcIfKf
-         hXUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744207093; x=1744811893;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wqNDGbtGLo2t+c/K/+WxlFYfgefVNdcRkPfKSN2QwBU=;
-        b=INQu/ob1icdhLIPxgEG6CPi6Ri7tzjHB0HF55x+m1YDfhWdNCIDSFBlFGqnzICxzYj
-         1W9ui/iNlZit/awKrsd4iwU023c/Uq+eV6rssIJh/Ak6s7/0v1dn1HK2aGcKJK+LBYc7
-         P/VtxlzrauWLngGten41pcgrWKXEGjbF/D0cTI/yQ/qwq2cy5IXhVt8TaVhg5ZNlWaAY
-         KWt0MBWiCjtVGQZEQf5DYb6Fdfh5pwdaKXq+UkH/9ZcvxXBlTBR7rUuEIVWQV7Gbf4HW
-         eyXr0Y72V6AqH8El5eR4ZN6iH1xcYGdQhx5SRmS7Qv9PYPjT1e7KcMcVZpt/doWvxHGc
-         tLMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUbuILsl12ZWj92yKlq4yzczqE1yQxLSYpZy6vtSibQUnj5qkSQac7JB+LY9i8m8DlEjK53+EqAF2tObCc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3wjj+2p9XCeDe9MJh7AbH6i6UE/RC379UFcLgisxjAa8TSmm1
-	3d0WorE+UveWYZim+v+7rBuMJRSXgJbMDtmvt/6nXiGg00g+4HycXhlq1Y33ajA=
-X-Gm-Gg: ASbGncvOBR+D9XH2R/RE5NI4tT/Jzgvf+hsZ5c+zQKk23hNcBxqH9aSq5rWIwnnGjsQ
-	IIOQyib+VnEmS0EauOY9Jb+HzfBBBFBJ8z6IWeqNuNehKYr+EqpJGzT7r1rIykJOdWs9zSZTvl2
-	D7XfX6bk5b6B6E0zZd6Dw0dxqULxOySIAXHO08LsX70Cz1ol3GQSnTD+jJMevO0WKYCDX3YK3J4
-	ohELXhW3qKZol8VLFJsQkGp7e/di0S/ykRGFw79pRpk6BLY1EGDC+Od6fsYFoJgjCeKFMuTYKRR
-	aYGXk9ixUizaQmiWr1x6rvD2SGwU67ZqnnIT9rms
-X-Google-Smtp-Source: AGHT+IHIVX12DG4UJMD+npbr7T0nRY9vFkjh96NzqxVpkK8HbCN57Cr3fp13NFCMVTQ558A+SUwSQw==
-X-Received: by 2002:a05:6000:1888:b0:39c:2688:6904 with SMTP id ffacd0b85a97d-39d87cd34afmr2909304f8f.39.1744207092923;
-        Wed, 09 Apr 2025 06:58:12 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:7880:1c3f:3ac3:7c62])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d893f0a80sm1768025f8f.68.2025.04.09.06.58.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 06:58:12 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: linux-gpio@vger.kernel.org,
-	Koichiro Den <koichiro.den@canonical.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	brgl@bgdev.pl,
-	geert+renesas@glider.be,
-	linus.walleij@linaro.org,
-	maciej.borzecki@canonical.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 0/9] Introduce configfs-based interface for gpio-aggregator
-Date: Wed,  9 Apr 2025 15:58:10 +0200
-Message-ID: <174420708545.59017.7631940211921310879.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250407043019.4105613-1-koichiro.den@canonical.com>
-References: <20250407043019.4105613-1-koichiro.den@canonical.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T1VeRjHX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50B3DC4CEE3;
+	Wed,  9 Apr 2025 13:58:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744207112;
+	bh=gIkLtXkAowaebWcKuGF3J/51U/7JSeR5c3yViLJLL4o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=T1VeRjHXhAndr2FEdfdTBw7zDINMDJBNTNJsqgRB/P4dNoIRMJkjhIpi+Ndt+VKbl
+	 5knulbs8t68ZJQHEp3hJv5wnnKxfXT2xpJgI4Y01LoSQ6J0O9ODJHFL+a6ZB2fD/7Y
+	 XyYJQLnlRpI4+S5i695i7kjZgppq3h65TarholFW8Mm48fbw7ydwLNF5J0ihqwKrUw
+	 MzbENnQOyp5QuEtSgrfp/kQGFSwq7IGGzquR7XDOt5FCpPnHUlRpXON38mlmlRyT5X
+	 UlXxUCxhI1fUM5v/ElnapHBZclh8oC1FD4nKTc/xqaush+YDOdYrH0o/nPxRtcfmEZ
+	 kywhG25Ha9vWQ==
+Date: Wed, 9 Apr 2025 16:58:16 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Pratyush Yadav <ptyadav@amazon.de>,
+	Changyuan Lyu <changyuanl@google.com>, linux-kernel@vger.kernel.org,
+	graf@amazon.com, akpm@linux-foundation.org, luto@kernel.org,
+	anthony.yznaga@oracle.com, arnd@arndb.de, ashish.kalra@amd.com,
+	benh@kernel.crashing.org, bp@alien8.de, catalin.marinas@arm.com,
+	dave.hansen@linux.intel.com, dwmw2@infradead.org,
+	ebiederm@xmission.com, mingo@redhat.com, jgowans@amazon.com,
+	corbet@lwn.net, krzk@kernel.org, mark.rutland@arm.com,
+	pbonzini@redhat.com, pasha.tatashin@soleen.com, hpa@zytor.com,
+	peterz@infradead.org, robh+dt@kernel.org, robh@kernel.org,
+	saravanak@google.com, skinsburskii@linux.microsoft.com,
+	rostedt@goodmis.org, tglx@linutronix.de, thomas.lendacky@amd.com,
+	usama.arif@bytedance.com, will@kernel.org,
+	devicetree@vger.kernel.org, kexec@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+	linux-mm@kvack.org, x86@kernel.org
+Subject: Re: [PATCH v5 09/16] kexec: enable KHO support for memory
+ preservation
+Message-ID: <Z_Z8-BLWMkiWpaDY@kernel.org>
+References: <Z--sUYCvP3Q8nT8e@kernel.org>
+ <20250404124729.GH342109@nvidia.com>
+ <Z-_kSXrHWU5Bf3sV@kernel.org>
+ <20250404143031.GB1336818@nvidia.com>
+ <Z_KnovvW7F2ZyzhX@kernel.org>
+ <20250407141626.GB1557073@nvidia.com>
+ <Z_P92UCbNCV0TbiA@kernel.org>
+ <20250407170305.GI1557073@nvidia.com>
+ <Z_Y4k4rDO-BbMjqs@kernel.org>
+ <20250409125630.GI1778492@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409125630.GI1778492@nvidia.com>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-
-
-On Mon, 07 Apr 2025 13:30:10 +0900, Koichiro Den wrote:
-> This patch series introduces a configfs-based interface to gpio-aggregator
-> to address limitations in the existing 'new_device' interface.
+On Wed, Apr 09, 2025 at 09:56:30AM -0300, Jason Gunthorpe wrote:
+> On Wed, Apr 09, 2025 at 12:06:27PM +0300, Mike Rapoport wrote:
 > 
-> The existing 'new_device' interface has several limitations:
+> > Now we've settled with terminology, and given that currently memdesc ==
+> > struct page, I think we need kho_preserve_folio(struct *folio) for actual
+> > struct folios and, apparently other high order allocations, and
+> > kho_preserve_pages(struct page *, int nr) for memblock, vmalloc and
+> > alloc_pages_exact.
 > 
->   Issue#1. No way to determine when GPIO aggregator creation is complete.
->   Issue#2. No way to retrieve errors when creating a GPIO aggregator.
->   Issue#3. No way to trace a GPIO line of an aggregator back to its
->            corresponding physical device.
->   Issue#4. The 'new_device' echo does not indicate which virtual
->            gpiochip<N> was created.
->   Issue#5. No way to assign names to GPIO lines exported through an
->            aggregator.
+> I'm not sure that is consistent with what Matthew is trying to build,
+> I think we are trying to remove 'struct page' usage, especially for
+> compound pages. Right now, though it is confusing, folio is the right
+> word to encompass both page cache memory and random memdescs from
+> other subsystems.
+
+A disagree about random memdescs, just take a look at struct folio.
+ 
+> Maybe next year we will get a memdesc API that will clarify this
+> substantially.
 > 
-> [...]
+> > On the restore path kho_restore_folio() will recreate multi-order thingy by
+> > doing parts of what prep_new_page() does. And kho_restore_pages() will
+> > recreate order-0 pages as if they were allocated from buddy.
+> 
+> I don't see we need two functions, folio should handle 0 order pages
+> just fine, and callers should generally be either not using struct
+> page at all or using their own memdesc/folio.
 
-Applied, thanks!
+struct folio is 4 struct pages. I don't see it suitable for order-0 pages
+at all. 
+ 
+> If we need a second function it would be a void * function that is for
+> things that need memory but have no interest in the memdesc. Arguably
+> this should be slab preservation. There is a corner case of preserving
+> slab allocations >= PAGE_SIZE that is much simpler than general slab
+> preservation, maybe that would be interesting..
+> 
+> I think we still don't really know what will be needed, so I'd stick
+> with folio only as that allows building the memfd and a potential slab
+> preservation system.
 
-[1/9] gpio: aggregator: reorder functions to prepare for configfs introduction
-      https://git.kernel.org/brgl/linux/c/7a56efeabffd13a162073068b8e29113c65f9e64
-[2/9] gpio: aggregator: unify function naming
-      https://git.kernel.org/brgl/linux/c/7616dd97ae22e5f69b24774455673d183d4191c9
-[3/9] gpio: aggregator: add gpio_aggregator_{alloc,free}()
-      https://git.kernel.org/brgl/linux/c/88fe1d1a646b3b01dcc335c44e7b33ea510f620e
-[4/9] gpio: aggregator: introduce basic configfs interface
-      https://git.kernel.org/brgl/linux/c/2b72a5399eae25ee2cfd447efa3012f1d9d7257d
-[5/9] gpio: aggregator: rename 'name' to 'key' in gpio_aggregator_parse()
-      https://git.kernel.org/brgl/linux/c/26ec717c3b160d00a91e647c8ecfa33eaf645b05
-[6/9] gpio: aggregator: expose aggregator created via legacy sysfs to configfs
-      https://git.kernel.org/brgl/linux/c/09708f2b1cee33d585606932fb0ff5bb4c49f48d
-[7/9] gpio: aggregator: cancel deferred probe for devices created via configfs
-      https://git.kernel.org/brgl/linux/c/62cf750f23a8905be5cf4471087068c1fe2e2d5b
-[8/9] Documentation: gpio: document configfs interface for gpio-aggregator
-      https://git.kernel.org/brgl/linux/c/017ae62c1d0bb4b3c29c8a15dc7c130e3c4783b8
-[9/9] selftests: gpio: add test cases for gpio-aggregator
-      https://git.kernel.org/brgl/linux/c/93ada5ce07889271aefb22147280cfd9cf3da5d8
+void * seems to me much more reasonable than folio one as the starting
+point because it allows preserving folios with the right order but it's not
+limited to it. 
 
-Best regards,
+I don't mind having kho_preserve_folio() from day 1 and even stretching the
+use case we have right now to use it to preserve FDT memory.
+
+But kho_preserve_folio() does not make sense for reserve_mem and it won't
+make sense for vmalloc.
+
+The weird games slab does with casting back and forth to folio also seem to
+me like transitional and there won't be that folios in slab later.
+ 
+> Then we can see where we get to with further patches doing
+> serialization of actual things.
+> 
+> Jason
+
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Sincerely yours,
+Mike.
