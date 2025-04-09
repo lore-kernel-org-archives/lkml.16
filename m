@@ -1,30 +1,30 @@
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3FBB258A;
-	Wed,  9 Apr 2025 00:08:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8ABCA930;
+	Wed,  9 Apr 2025 00:08:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744157327; cv=none; b=r6kc5AJOI0ch2yIzU+k32+ZYBvf7V89nbpRmtmlJUyesGqj9kIufCgezKp8ILLB6Le3l6d7E9nTcsqec8JozvUpJ5VM6EKxToIK4xUuMRm3K0n1bQUw7Q3Jjfz1DiYL6jHbyWT69O6i0Xg8gW0bdgyaNXDwOYrIy520YPCsU0tA=
+	t=1744157328; cv=none; b=aPvaSlFG9tW5uzV24nzj/53l/jkQdkFpTL7ehMPpoKc6T4tAn7uVL875cbvpL4rS86CcAL0tbomVuGAy7pCMo5tawFoii3hmymo8vAFWv4+/ce2TnA3BCnhZERRDQ9JBRqTMhR0fyvQ9NiNy8CZ1TWRXjlkPDDVIktzFCrh59fs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744157327; c=relaxed/simple;
-	bh=TzegTHBmX8xpxC1koWbRZZ7J4AlrlbwynYjvHGR+LTg=;
+	s=arc-20240116; t=1744157328; c=relaxed/simple;
+	bh=ET0ZoDUatD+fIJZqkawbH9nsPAnlPh6a5FaEfcrsqL4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dEj6/BB6qOslQClsJJUtVmoza/JtSEe633DUNO1IYOkNAtCZp+keRIe6Rlyf/2RVCU2AxvudIaUwaJG+piZpjFj7CXMk/l/WWFCEDQtitV7Z3h1deWbnrjzx4WKUvCbAE2qGDg1zrEi2SS+b+MAvIADMhkdkQuRZe/KkJ2rI4SA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=iDjCyAcd; arc=none smtp.client-ip=13.77.154.182
+	 MIME-Version; b=BVZB9eEraRfVVnJbWM41FMXfTKR8vj/o2cV6QJaF7SGJap/1v1HFc+LcpNsih0TM1S53mOKbRwib7ccx7h3Go2pzjXkFOU0bMqaQ34PGojnpWRDhotDrkhqSpV/mHsmQnt32hBvr17uz+IHNAHVW9Kk24V1fZFBOJvCmDxCYiQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Of+UYZp2; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="iDjCyAcd"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Of+UYZp2"
 Received: from romank-3650.corp.microsoft.com (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id DB55B2113E9A;
-	Tue,  8 Apr 2025 17:08:38 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DB55B2113E9A
+	by linux.microsoft.com (Postfix) with ESMTPSA id 06D292113E9F;
+	Tue,  8 Apr 2025 17:08:40 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 06D292113E9F
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1744157319;
-	bh=Sg3mxreQaraq/1ciAx/jhCP/Bmu4VLiaIgfdf0GaDc8=;
+	s=default; t=1744157320;
+	bh=8ek7c/V4tEPRnWDg9ne0X3d57G2QR4Kt93BNCHQvtsg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iDjCyAcdNbtLj7uwkih4ucfZviBCOPhMRJni3A2gBEGdAzqiBG9+Z045qKKz4haZo
-	 M+wg8LJ1F/RcW9TIpph1TemnfMJKPAVhHFbRUPRWMeSznV+HOQqS5bCe10gHFqiNLq
-	 kWbG3kEoYK/oYBnSVN3185sYekG5BnB01Osmt+sg=
+	b=Of+UYZp2I4weN3I81NEdoIr6gHMQsX3CjbNKnmmILmhtmUf4OHR93sp3AhZBtJ2pd
+	 p1p+jiVB2MOUPwfNzvia/zk8pDwYavj+M98l9VP+2iQjxvMKZGei/TzEdRpNb6jH7A
+	 QZU2sGxZRVpouYt/yXPi/sDcuyn3Lg+7XMI11FP0=
 From: Roman Kisel <romank@linux.microsoft.com>
 To: aleksander.lobakin@intel.com,
 	andriy.shevchenko@linux.intel.com,
@@ -67,9 +67,9 @@ Cc: apais@microsoft.com,
 	benhill@microsoft.com,
 	bperkins@microsoft.com,
 	sunilmut@microsoft.com
-Subject: [PATCH hyperv-next 3/6] arch: hyperv: Get/set SynIC synth.registers via paravisor
-Date: Tue,  8 Apr 2025 17:08:32 -0700
-Message-ID: <20250409000835.285105-4-romank@linux.microsoft.com>
+Subject: [PATCH hyperv-next 6/6] drivers: SCSI: Do not bounce-bufffer for the confidential VMBus
+Date: Tue,  8 Apr 2025 17:08:35 -0700
+Message-ID: <20250409000835.285105-7-romank@linux.microsoft.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250409000835.285105-1-romank@linux.microsoft.com>
 References: <20250409000835.285105-1-romank@linux.microsoft.com>
@@ -81,114 +81,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The confidential VMBus is built on the guest talking to the
-paravisor only.
+The device bit that indicates that the device is capable of I/O
+with private pages lets avoid excessive copying in the Hyper-V
+SCSI driver.
 
-Provide functions that allow manipulating the SynIC registers
-via paravisor.
+Set that bit equal to the confidential external memory one to
+not bounce buffer
 
 Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
 ---
- arch/arm64/hyperv/mshyperv.c      | 19 +++++++++++++++++++
- arch/arm64/include/asm/mshyperv.h |  3 +++
- arch/x86/include/asm/mshyperv.h   |  3 +++
- arch/x86/kernel/cpu/mshyperv.c    | 28 ++++++++++++++++++++++++++++
- 4 files changed, 53 insertions(+)
+ drivers/scsi/storvsc_drv.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/hyperv/mshyperv.c b/arch/arm64/hyperv/mshyperv.c
-index 4e27cc29c79e..1647a57a3379 100644
---- a/arch/arm64/hyperv/mshyperv.c
-+++ b/arch/arm64/hyperv/mshyperv.c
-@@ -91,3 +91,22 @@ bool hv_is_hyperv_initialized(void)
- 	return hyperv_initialized;
- }
- EXPORT_SYMBOL_GPL(hv_is_hyperv_initialized);
-+
-+/*
-+ * Not supported yet.
-+ */
-+u64 hv_pv_get_synic_register(unsigned int reg, int *err)
-+{
-+	*err = -ENODEV;
-+	return !0ULL;
-+}
-+EXPORT_SYMBOL_GPL(hv_pv_get_synic_register);
-+
-+/*
-+ * Not supported yet.
-+ */
-+int hv_pv_set_synic_register(unsigned int reg, u64 val)
-+{
-+	return -ENODEV;
-+}
-+EXPORT_SYMBOL_GPL(hv_pv_set_synic_register);
-diff --git a/arch/arm64/include/asm/mshyperv.h b/arch/arm64/include/asm/mshyperv.h
-index b721d3134ab6..bce37a58dff0 100644
---- a/arch/arm64/include/asm/mshyperv.h
-+++ b/arch/arm64/include/asm/mshyperv.h
-@@ -53,6 +53,9 @@ static inline u64 hv_get_non_nested_msr(unsigned int reg)
- 	return hv_get_msr(reg);
- }
+diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+index a8614e54544e..f647f8fc2f8f 100644
+--- a/drivers/scsi/storvsc_drv.c
++++ b/drivers/scsi/storvsc_drv.c
+@@ -686,6 +686,8 @@ static void handle_sc_creation(struct vmbus_channel *new_sc)
+ 	struct vmstorage_channel_properties props;
+ 	int ret;
  
-+u64 hv_pv_get_synic_register(unsigned int reg, int *err);
-+int hv_pv_set_synic_register(unsigned int reg, u64 val);
++	dev->use_priv_pages_for_io = new_sc->confidential_external_memory;
 +
- /* SMCCC hypercall parameters */
- #define HV_SMCCC_FUNC_NUMBER	1
- #define HV_FUNC_ID	ARM_SMCCC_CALL_VAL(			\
-diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-index 07aadf0e839f..5650a16cc5e8 100644
---- a/arch/x86/include/asm/mshyperv.h
-+++ b/arch/x86/include/asm/mshyperv.h
-@@ -307,6 +307,9 @@ static __always_inline u64 hv_raw_get_msr(unsigned int reg)
- 	return __rdmsr(reg);
- }
- 
-+u64 hv_pv_get_synic_register(unsigned int reg, int *err);
-+int hv_pv_set_synic_register(unsigned int reg, u64 val);
-+
- #else /* CONFIG_HYPERV */
- static inline void hyperv_init(void) {}
- static inline void hyperv_setup_mmu_ops(void) {}
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index 3e2533954675..4f6e3d02f730 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -89,6 +89,34 @@ void hv_set_non_nested_msr(unsigned int reg, u64 value)
- }
- EXPORT_SYMBOL_GPL(hv_set_non_nested_msr);
- 
-+/*
-+ * Not every paravisor supports getting SynIC registers, and
-+ * this function may fail. The caller has to make sure that this function
-+ * runs on the CPU of interest.
-+ */
-+u64 hv_pv_get_synic_register(unsigned int reg, int *err)
-+{
-+	if (!hv_is_synic_msr(reg)) {
-+		*err = -ENODEV;
-+		return !0ULL;
-+	}
-+	return native_read_msr_safe(reg, err);
-+}
-+EXPORT_SYMBOL_GPL(hv_pv_get_synic_register);
-+
-+/*
-+ * Not every paravisor supports setting SynIC registers, and
-+ * this function may fail. The caller has to make sure that this function
-+ * runs on the CPU of interest.
-+ */
-+int hv_pv_set_synic_register(unsigned int reg, u64 val)
-+{
-+	if (!hv_is_synic_msr(reg))
-+		return -ENODEV;
-+	return wrmsrl_safe(reg, val);
-+}
-+EXPORT_SYMBOL_GPL(hv_pv_set_synic_register);
-+
- u64 hv_get_msr(unsigned int reg)
- {
- 	if (hv_nested)
+ 	stor_device = get_out_stor_device(device);
+ 	if (!stor_device)
+ 		return;
 -- 
 2.43.0
 
