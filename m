@@ -1,180 +1,105 @@
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
+Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF7F1E489
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 14:30:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F8D32AE8C;
+	Wed,  9 Apr 2025 14:30:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744209061; cv=none; b=ZNkThjqJ9ag4IbsCjZI85dwBm/0YW+HLWj2czXhNcSehfSx6UErYQhIvWo6FB1W3qgeJsJUo+CLMcchMMYE0k4RPsQHrPIdpr3kerJfh5ZmYSvi1WXBg4NWsjdY2llygUQWKi9P5s9/67wjLAcMCHQDTBihCXUrBijAPcmghQgA=
+	t=1744209064; cv=none; b=nFTGjtIgUXjQy177NvLaxGNHVLZml4k59DWdaJVVJRq8r1fVMB0dgRNIIzCcDcc6DZHjmZh/FTjbCj67dlXZeyjMzfviTjqBurwGPACKRb2lHTtWMqfO5infy43KL06Hwj+Da0D0khdV+00w/MzXLLKMkwsvUBRiP7Fo1I3gMfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744209061; c=relaxed/simple;
-	bh=mHey3h+TEg6dq4o4dgbZ8oTDFx2sBKyBM5ZujWXlMsk=;
+	s=arc-20240116; t=1744209064; c=relaxed/simple;
+	bh=s0NzUKVb7lb9yEmHu5yIFqmjEb9Je27PNTYazyFZHXE=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VTEYr+gnd+v80hbIgD54LIf7k7ZZ9GRqYne006YZsJSGs79V7lWXGxD4AvKAofCuSq5qYVOP50V9J7FURjQWyDq7Ny49uHeIJi7mbyL6u5Y3BB9Hm2QhoQKvb8v/qTBvSPVsdZtbuin9G2DG1AaeoYaDsDzozu8UrJ45wuBZ0+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=XHpfG1+6; arc=none smtp.client-ip=185.67.36.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="XHpfG1+6"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id 439AA240027
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 16:30:51 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
-	t=1744209051; bh=mHey3h+TEg6dq4o4dgbZ8oTDFx2sBKyBM5ZujWXlMsk=;
-	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:
-	 Content-Transfer-Encoding:MIME-Version:From;
-	b=XHpfG1+6KSDNgYut5HQ8/iua90DxNiaYSQzVELbJXh6QFv64ZPpab7z7JHEhWe+g7
-	 kQBX6W1b/abA8xx/n0yyeD22AuNJ9RlprPTno/l4a2MQU5l69ShWDV/78hGA200MeY
-	 jn3CIsz7wltempVMev3fKekX4KgV6LqnlR9E7M20t0ZIa50OqkqyYDWVQopIlR+x4c
-	 A0QNBk7MTmW9QvrA5CxXKxa7vegkz8Omgxi1pM+nD82T7FY2QsdBaYagy/1bYQX8h7
-	 M78/B85vgeCLvCRrKLRY9Nzt27kOuPOQIR9E8irg3LEJ/JDQKF2/xUIqCf+1NKH0YL
-	 zTIERQ6Fa1Y3g==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4ZXljk0f4Wz6tm8;
-	Wed,  9 Apr 2025 16:30:50 +0200 (CEST)
-Message-ID: <6114c4ed1f0145ca6deb96bccd0ebde145fcf68f.camel@posteo.de>
-Subject: Re: [PATCH] Input: pegasus-notetaker - fix slab-out-of-bounds in
- pegasus_irq
-From: Martin Kepplinger-Novakovic <martink@posteo.de>
-To: Vasiliy Kovalev <kovalev@altlinux.org>, Dmitry Torokhov
- <dmitry.torokhov@gmail.com>, Javier Carrasco
- <javier.carrasco.cruz@gmail.com>,  linux-input@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: lvc-project@linuxtesting.org
-Date: Wed, 09 Apr 2025 14:30:49 +0000
-In-Reply-To: <20250402154745.399226-1-kovalev@altlinux.org>
-References: <20250402154745.399226-1-kovalev@altlinux.org>
+	 Content-Type:MIME-Version; b=f/zljqDbNQx+XPhgY99qrybGuCoOn+tom1TWisJSN4gWnZ9MUoxFTXnsjSDZH0BNuxAYxxImGLau4rZ/Jf3YXVwrItvEUYcWtp+sf83hy3zU8LJOK1kwSb35c1+xxFOar0DxtiMMroPr6fPe8Ijym4L2UTLw9ABqeyIR+DP31wE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
+Received: from fangorn.home.surriel.com ([10.0.13.7])
+	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <riel@shelob.surriel.com>)
+	id 1u2WQx-000000001hz-2Yjl;
+	Wed, 09 Apr 2025 10:29:43 -0400
+Message-ID: <b40f830845f1f97aa4b686c5c1333ff1bf5d59b3.camel@surriel.com>
+Subject: Re: [PATCH] sched/fair: Add null pointer check to pick_next_entity()
+From: Rik van Riel <riel@surriel.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Pat Cody <pat@patcody.io>, mingo@redhat.com, juri.lelli@redhat.com, 
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org, 
+	bsegall@google.com, mgorman@suse.de, vschneid@redhat.com, 
+	linux-kernel@vger.kernel.org, patcody@meta.com, kernel-team@meta.com, 
+	stable@vger.kernel.org, Breno Leitao <leitao@debian.org>
+Date: Wed, 09 Apr 2025 10:29:43 -0400
+In-Reply-To: <20250402180734.GX5880@noisy.programming.kicks-ass.net>
+References: <20250320205310.779888-1-pat@patcody.io>
+	 <20250324115613.GD14944@noisy.programming.kicks-ass.net>
+	 <9d38c61098b426777c1a748cf1baf8e57c41c334.camel@surriel.com>
+	 <20250402180734.GX5880@noisy.programming.kicks-ass.net>
+Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
+ keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
+ eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
+ Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
+ lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
+ dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
+ mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
+ gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
+ r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
+ WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
+ 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
+ Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
+ +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
+ g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
+ KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
+ fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
+ 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
+ G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
+ okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
+ TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
+ cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
+ omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
+ QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
+ c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Sender: riel@surriel.com
 
-Am Mittwoch, dem 02.04.2025 um 18:47 +0300 schrieb Vasiliy Kovalev:
-> Fix a slab-out-of-bounds error in pegasus_irq reported by KASAN,
-> caused by insufficient packet size validation. The driver relied
-> on usb_maxpacket() to set the data length, which could be smaller
-> than the 6 bytes expected by pegasus_parse_packet(), leading to
-> oob reads at le16_to_cpup() calls when accessing coordinates.
+On Wed, 2025-04-02 at 20:07 +0200, Peter Zijlstra wrote:
 >=20
-> Introduce NOTETAKER_PKGLEN_SIZE define with a value of 6 bytes,
-> reflecting the typical interrupt IN endpoint packet format for this
-> device family. Add a check in pegasus_probe() to ensure the data
-> length is at least this size, logging an info message if
-> usb_maxpacket()
-> returns a smaller value and adjusting it accordingly. This prevents
-> buffer under-allocation while accommodating devices that might send
-> shorter packets, as various brandings (e.g., Pegasus Mobile
-> Notetaker,
-> IRISnotes Express) may differ in implementation.
+> Anyway, seeing how your min_vruntime is weird, let me ask you to try
+> the
+> below; it removes the old min_vruntime and instead tracks zero
+> vruntime
+> as the 'current' avg_vruntime. We don't need the monotinicity filter,
+> all we really need is something 'near' all the other vruntimes in
+> order
+> to compute this relative key so we can preserve order across the
+> wrap.
 >=20
-> KASAN report:
-> BUG: KASAN: slab-out-of-bounds in pegasus_irq (little_endian.h:67
-> pegasus_notetaker.c:153 pegasus_notetaker.c:183)
-> Read of size 2 at addr ffff888009a01da2 by task (udev-worker)/985
-> CPU: 0 PID: 985 Comm: (udev-worker) Tainted: G OE 6.14.0-un-def-
-> alt0.rc6.kasan #1
-> Hardware: QEMU Standard PC (Q35 + ICH9, 2009)
-> Call Trace:
-> =C2=A0<IRQ>
-> =C2=A0 dump_stack_lvl (lib/dump_stack.c:122)
-> =C2=A0 print_report (mm/kasan/report.c:521)
-> =C2=A0 kasan_report (mm/kasan/report.c:636)
-> =C2=A0 pegasus_irq (little_endian.h:67 pegasus_notetaker.c:153
-> pegasus_notetaker.c:183)
-> =C2=A0 __usb_hcd_giveback_urb (drivers/usb/core/hcd.c:1650)
-> =C2=A0 usb_hcd_giveback_urb (drivers/usb/core/hcd.c:1735)
-> =C2=A0 dummy_timer (drivers/usb/gadget/udc/dummy_hcd.c:1995)
-> =C2=A0 __hrtimer_run_queues (kernel/time/hrtimer.c:1865)
-> =C2=A0 hrtimer_run_softirq (kernel/time/hrtimer.c:1884)
-> =C2=A0 handle_softirqs (kernel/softirq.c:561)
-> =C2=A0 __irq_exit_rcu (kernel/softirq.c:662)
-> =C2=A0 irq_exit_rcu (kernel/softirq.c:680)
-> =C2=A0 sysvec_apic_timer_interrupt (arch/x86/kernel/apic/apic.c:1049)
-> =C2=A0</IRQ>
->=20
-> Found by Linux Verification Center (linuxtesting.org) with
-> "USB Gadget Tests"[1]:
->=20
-> $ make input-tab-pegasus
-> $ sudo ./src/input-tab-pegasus/input-tab-pegasus --invalid_ep_int_len
->=20
-> [1] Link: https://github.com/kovalev0/usb-gadget-tests
-> Fixes: 1afca2b66aac ("Input: add Pegasus Notetaker tablet driver")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Vasiliy Kovalev <kovalev@altlinux.org>
-> ---
-> =C2=A0drivers/input/tablet/pegasus_notetaker.c | 19 +++++++++++++++++++
-> =C2=A01 file changed, 19 insertions(+)
->=20
-> diff --git a/drivers/input/tablet/pegasus_notetaker.c
-> b/drivers/input/tablet/pegasus_notetaker.c
-> index 8d6b71d5979316..e578720585c2c8 100644
-> --- a/drivers/input/tablet/pegasus_notetaker.c
-> +++ b/drivers/input/tablet/pegasus_notetaker.c
-> @@ -70,6 +70,15 @@
-> =C2=A0#define PEN_BUTTON_PRESSED=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0BIT(1)
-> =C2=A0#define PEN_TIP=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0BIT(0)
-> =C2=A0
-> +/* Minimum packet size for interrupt IN endpoint.
-> + * Packet format=C2=A0 (expected 6 bytes, though some devices may send
-> less):
-> + *=C2=A0 - Byte 0: Packet type (command or status)
-> + *=C2=A0 - Byte 1: Button/tip state
-> + *=C2=A0 - Bytes 2-3: X coordinate (16-bit, little-endian)
-> + *=C2=A0 - Bytes 4-5: Y coordinate (16-bit, little-endian)
-> + */
-> +#define NOTETAKER_PKGLEN_SIZE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A06
-> +
-> =C2=A0struct pegasus {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0unsigned char *data;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0u8 data_len;
-> @@ -311,6 +320,16 @@ static int pegasus_probe(struct usb_interface
-> *intf,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
-> =C2=A0
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pegasus->data_len =3D usb=
-_maxpacket(dev, pipe);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* Ensure buffer is at least N=
-OTETAKER_PKGLEN_SIZE to avoid
-> oob
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * access in pegasus_parse_pac=
-ket(). Adjust if endpoint
-> reports a
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * smaller size, as some devic=
-es might send shorter packets.
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (pegasus->data_len < NOTETA=
-KER_PKGLEN_SIZE) {
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0dev_info(&intf->dev,
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "Int in =
-endpoint data_len adjusted from %d
-> to minimum %d\n",
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pegasus-=
->data_len, NOTETAKER_PKGLEN_SIZE);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0pegasus->data_len =3D NOTETAKER_PKGLEN_SIZE;
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
-> =C2=A0
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pegasus->data =3D usb_all=
-oc_coherent(dev, pegasus->data_len,
-> GFP_KERNEL,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 &pegasus->data_dma);
+> This *should* get us near minimal sized keys. If you can still
+> reproduce, you should probably add something like that patch I send
+> you
+> privately earlier, that checks the overflows.
 
+Our trouble workload still makes the scheduler crash
+with this patch.
 
-Tested-by: Martin Kepplinger-Novakovic <martink@posteo.de>
+I'll go put the debugging patch on our kernel.
 
-thank you
+Should I try to get debugging data with this patch
+part of the mix, or with the debugging patch just
+on top of what's in 6.13 already?
+
+Digging through our kernel crash history, this
+particular crash seems to go back at least to
+6.11. They just happen much more frequently on
+6.13 for some (as of yet unknown) reason.
+
+--=20
+All Rights Reversed.
