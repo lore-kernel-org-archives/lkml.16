@@ -1,275 +1,187 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4BBB21A451
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 22:32:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88E6426ACB;
+	Wed,  9 Apr 2025 22:34:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744237955; cv=none; b=cyCD+UDOjBuomkDT1nDtVnSIPxH37yLbpo0DH4D8NmpVaq3eTcLpv3DyCj57sMjwakyTdafnvf9HW5eu871vQL7rzL7enkDXqnAlqKV0Jq16pNQAmS4061z1niT8ykbNQp2bZs029IJpbvBGlNAW+D2Lxwigfs+Od5/6/9oEXXQ=
+	t=1744238062; cv=none; b=TH7v6CrjgGerfxOm5E59EsX/WywDivuAS69EaxZHJOE9flUjx6hgZe7GbD5EHBd6+jmvwCRJbvJcRZ0NLHiiZnHOkf0cJEQJoUMlUows+PhqpjYv44fzpWID/FRn3YDHlSxG4HEnLpkgZFakzLurtvO7atdQkhUmuf8il8VG4bY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744237955; c=relaxed/simple;
-	bh=By8viJdoAUoJoi7XSd3M03yuIGRREsQtuwL88PTCdwY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FGs4a/X+YOol8mdjVrxXGehFa8KbxGozsUSOgasu6orPZ2c0LdETrFx5YgquR9uAU+8OrIyzB/RlTpLM8QBaPn/nnqOyLFWIntxbysSz4bF9teo0wYnUzMehw9RUtmByxMm9umD84cl5BgHFf/+nm11Lk4XEVGM7othRNVOlYHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tc1qAQXY; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1744238062; c=relaxed/simple;
+	bh=gmOYp4s9nc5Kx5WbhVn4dgwRNBQqeNH3HhdTyYK58YY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tb2XfL9LNHWaac00yu59TNkNSn/P0xIOHawTuCeWXsRykO33IkBgE1oakqMOfQ8XWyiklMzpbJfSqnyA0BvdbXwPe/Lr4vrDwklMqLdbVhpwizPwmWFwSQeXEVrAnX9A0G5aEbz78FLeJizN/HGLmIVmEZ1Hq0Nb9kqyN1L+8Ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bLD8E5p/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tc1qAQXY"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e5cbd8b19bso1512a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 15:32:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744237952; x=1744842752; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GMu1FH4a99+6xCgJv+Tb84Trq4JVQxXXa7kqUK3IbB0=;
-        b=tc1qAQXYDH9dtG0Lq3PAf39LIbi8AL15JVsy1Bfqfc1gOnT4OUu/DhTH2xSoadfJ2m
-         nWBc+vRBq9HqRfy26lVsQ6id6qgyQM2JWlQnzCc2wCEr+DRP7NbYh/Eqenh6Py+TCpkr
-         3uiInRAoESBmm/oAWDtkaYyG4uzzUgCD36bN4XnMcmYiWIq/gdjkeCvT68WEDaXs7Yvj
-         sVAilBhl50zNYc/CLEF67pN3Qp6XPPiInlYMVKDvO8Bt6t4Yfyo7ZkU0mKkUVZQtad7w
-         j5YCIer26BBK0mk770akmFQ5GqJt/q5swr/RNx5uT9Lz+XBUnjVtDmkm8FJrAgVAlE7b
-         /Qvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744237952; x=1744842752;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GMu1FH4a99+6xCgJv+Tb84Trq4JVQxXXa7kqUK3IbB0=;
-        b=ZGDBGjnOB7AN+ol0eurKelELjUxqxTk7J2N0+TmsWb5MBF87ULHWhS5X/uHp6gfKoc
-         Z1iQPy+PUDNF8HMlTbRkB87vXdKNk51MembaReOK6srauNHin9Eb1whnQSs0ZJk29jYT
-         80op058XF49gQgwWoeqjXyCV848UasxVhS0W5f251tIRibVaG+wedaOX0faHz6rJOg9m
-         L9xFJMADnPH0q8OGyMmpK4Wez5GKECKt1moBJ3Ed90/uB23G2wxK6d7rYjt12KvBR0HY
-         2zr8xu58F1z3XTMDGPX692UH3wiFZno1mnTaTiV14yAbVnEzszmYgk66xjmLbWt62bF3
-         fLaw==
-X-Forwarded-Encrypted: i=1; AJvYcCWTidt/WNqBkOQFxkl0xzOEL5qxdYTOmx0XWrb7eoNs95cxDQAFn8R9rZjIqwEyBF9oXev7r05FpZEzZ+w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlC0HKdFk47nJDQ7AS4RVK5sHaRlbK66uz4LJB2zkZqwy8blCw
-	Ksf0qd01XDdmUyRVKkREKddllWkAhkBFNCRhnH6/bxosibsmC0PHq6bFxad1KlUh8JIO6VI4LQ0
-	lFOYWGj6mcrYoCYAxHDkkKUdhLj4VTZm0TPj4
-X-Gm-Gg: ASbGncuVEIFR3kUpKhbUMrUn7stmh8fbW0TFbjJNeXXkRq9JBk58XV1E4SgEGatgNma
-	eOydHVpkBUMrqEjsTYPj5YDPx0hn9VrR9nde8UBkLcD10tJsm4AJhSAvC3ZwNjAex9WbSd8W79O
-	EKlOiCYFxD8Tpsrthjp6i6cxDGOGqcyvTqC15d9Xl6KLU/R4jwVPuZ
-X-Google-Smtp-Source: AGHT+IENolhEXzO3rinX4oLrIHh82oHYmfpNxwGNuU8PEr5id+7uNdCOqNh7a5iRadgkh5271oXOm5pqZaF50y0gefE=
-X-Received: by 2002:aa7:dac6:0:b0:5e5:c024:ec29 with SMTP id
- 4fb4d7f45d1cf-5f328d6ccdbmr28589a12.0.1744237951690; Wed, 09 Apr 2025
- 15:32:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bLD8E5p/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45B90C4CEE2;
+	Wed,  9 Apr 2025 22:34:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744238062;
+	bh=gmOYp4s9nc5Kx5WbhVn4dgwRNBQqeNH3HhdTyYK58YY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bLD8E5p/BeTYeY/SUm/Ay3O7Xgf/Y0NeYtUiXHz0zlzHLXVU6pzwcj939aN/NCY2w
+	 BYRGvXEQRj0Phxvi55L4VdES+GxbuHVUlyhS+XVozoncgcxVca+2V19My6NaaUx37u
+	 vUBOcajVpBH/a2vslsEENyiifZd+/aR4156vhF2QpmG8YnqUwBCKcJEHfBqCacTc0b
+	 Obbfwnuve4rsMmq/FVcIxLtb/kS8UdTZikncuHWiJnkag2ZZs4U8GHe7erbBNEW4d+
+	 MvGiLhdcO/kWSV6H4bmtvjS5gpyvjciXFg4Cml7me9iVO6PFGphpsv0Q/d3mGqkuQV
+	 +nfPFRVsnv8ug==
+Date: Wed, 9 Apr 2025 23:34:16 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
+	Donglin Peng <dolinux.peng@gmail.com>,
+	Zheng Yejian <zhengyejian@huaweicloud.com>, Aishwarya.TCV@arm.com
+Subject: Re: [PATCH v4 2/4] ftrace: Add support for function argument to
+ graph tracer
+Message-ID: <ccc40f2b-4b9e-4abd-8daf-d22fce2a86f0@sirena.org.uk>
+References: <20250227185804.639525399@goodmis.org>
+ <20250227185822.810321199@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250330234039.29814-1-christiansantoslima21@gmail.com>
-In-Reply-To: <20250330234039.29814-1-christiansantoslima21@gmail.com>
-From: Matthew Maurer <mmaurer@google.com>
-Date: Wed, 9 Apr 2025 15:32:19 -0700
-X-Gm-Features: ATxdqUHRf-B9-YGZ1PElPo9dmH5T3f12ShZBn14fNGAx_Ks12v9UsYMLEah-Kjo
-Message-ID: <CAGSQo00LhscUpQCpL9UwkzK5c1rD1QxutZTOenuZP1d-B==KBQ@mail.gmail.com>
-Subject: Re: [PATCH v6] rust: transmute: Add methods for FromBytes trait
-To: "Christian S. Lima" <christiansantoslima21@gmail.com>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, ~lkcamp/patches@lists.sr.ht, richard120310@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="DHuvGhJEzs16pwP+"
+Content-Disposition: inline
+In-Reply-To: <20250227185822.810321199@goodmis.org>
+X-Cookie: Yow!  Are we laid back yet?
+
+
+--DHuvGhJEzs16pwP+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Mar 30, 2025 at 4:40=E2=80=AFPM Christian S. Lima
-<christiansantoslima21@gmail.com> wrote:
->
-> Methods receive a slice and perform size check to add a valid way to make
-> conversion safe. An Option is used, in error case just return `None`.
->
-> The conversion between slices `[T]` is separated from others, because I
-> couldn't implement it in the same way as the other conversions.
->
-> Link: https://github.com/Rust-for-Linux/linux/issues/1119
-> Signed-off-by: Christian S. Lima <christiansantoslima21@gmail.com>
-> ---
-> Changes in v2:
-> - Rollback the implementation for the macro in the repository and impleme=
-nt
->   methods in trait
-> - Link to v2: https://lore.kernel.org/rust-for-linux/20241012193657.290cc=
-79c@eugeo/T/#t
->
-> Changes in v3:
-> - Fix grammar errors
-> - Remove repeated tests
-> - Fix alignment errors
-> - Fix tests not building
-> - Link to v3: https://lore.kernel.org/rust-for-linux/20241109055442.85190=
--1-christiansantoslima21@gmail.com/
->
-> Changes in v4:
-> - Removed core::simd::ToBytes
-> - Changed trait and methods to safe Add
-> - Result<&Self, Error> in order to make safe methods
-> - Link to v4: https://lore.kernel.org/rust-for-linux/20250314034910.13446=
-3-1-christiansantoslima21@gmail.com/
->
-> Changes in v5:
-> - Changed from Result to Option
-> - Removed commentaries
-> - Returned trait impl to unsafe
-> - Link to v5: https://lore.kernel.org/rust-for-linux/20250320014041.10147=
-0-1-christiansantoslima21@gmail.com/
->
-> Changes in v6:
-> - Add endianess check to doc test and use match to check
-> success case
-> - Reformulated safety comments
-> ---
->  rust/kernel/transmute.rs | 89 +++++++++++++++++++++++++++++++++++++---
->  1 file changed, 83 insertions(+), 6 deletions(-)
->
-> diff --git a/rust/kernel/transmute.rs b/rust/kernel/transmute.rs
-> index 1c7d43771a37..16dfa5c7d467 100644
-> --- a/rust/kernel/transmute.rs
-> +++ b/rust/kernel/transmute.rs
-> @@ -9,29 +9,106 @@
->  ///
->  /// It's okay for the type to have padding, as initializing those bytes =
-has no effect.
->  ///
-> +/// # Example
-> +/// ```
-> +/// let foo =3D &[1, 2, 3, 4];
-> +///
-> +/// let result =3D u32::from_bytes(foo);
-> +///
-> +/// #[cfg(target_endian =3D "little")]
-> +/// match result {
-> +///     Some(x) =3D> assert_eq!(*x, 0x4030201),
-> +///     None =3D> unreachable!()
-> +/// }
-> +///
-> +/// #[cfg(target_endian =3D "big")]
-> +/// match result {
-> +///     Some(x) =3D> assert_eq!(*x, 0x1020304),
-> +///     None =3D> unreachable!()
-> +/// }
-> +/// ```
-> +///
->  /// # Safety
->  ///
->  /// All bit-patterns must be valid for this type. This type must not hav=
-e interior mutability.
-> -pub unsafe trait FromBytes {}
-> +pub unsafe trait FromBytes {
-> +    /// Converts a slice of bytes to a reference to `Self` when possible=
-.
-> +    fn from_bytes(bytes: &[u8]) -> Option<&Self>;
-> +
-> +    /// Converts a mutable slice of bytes to a reference to `Self` when =
-possible.
-> +    fn from_bytes_mut(bytes: &mut [u8]) -> Option<&mut Self>
-> +    where
-> +        Self: AsBytes;
-> +}
->
->  macro_rules! impl_frombytes {
->      ($($({$($generics:tt)*})? $t:ty, )*) =3D> {
->          // SAFETY: Safety comments written in the macro invocation.
-> -        $(unsafe impl$($($generics)*)? FromBytes for $t {})*
-> +        $(unsafe impl$($($generics)*)? FromBytes for $t {
-> +            fn from_bytes(bytes: &[u8]) -> Option<&$t> {
+On Thu, Feb 27, 2025 at 01:58:06PM -0500, Steven Rostedt wrote:
+> From: Sven Schnelle <svens@linux.ibm.com>
+>=20
+> Wire up the code to print function arguments in the function graph
+> tracer. This functionality can be enabled/disabled during runtime with
+> options/funcgraph-args.
 
-Consider factoring this out into a helper function, e.g.
-```
-fn from_bytes_sized<T: FromBytes + Sized>(bytes: &[u8]) -> Option<&T> {
-```
-which you can then call in here. If you were not trying to handle
-`?Sized`, we could even put it in the trait default implementation.
+We've been seeing the PID filters selftest failing for a while on
+several arm64 systems, a bisect I managed to run without running into
+any confounding issues pointed to this patch which is in mainline as
+ff5c9c576e75.  It's in the ftrace code, but I'm not immediately seeing
+the relevance.  Output from a failing run:
 
-> +                if bytes.len() =3D=3D core::mem::size_of::<$t>() {
-> +                    let slice_ptr =3D bytes.as_ptr().cast::<$t>();
+ 6190 18:38:41.261255  # not ok 48 ftrace - function pid filters
+ 6191 18:38:41.274039  # # execute: /lava-922575/1/tests/2_kselftest-ftrace=
+/automated/linux/kselftest/ftrace/test.d/ftrace/func-filter-pid.tc
+ 6192 18:38:41.285261  # # + checkreq /lava-922575/1/tests/2_kselftest-ftra=
+ce/automated/linux/kselftest/ftrace/test.d/ftrace/func-filter-pid.tc
+ 6193 18:38:41.296551  # # + grep ^#[ t]*requires: /lava-922575/1/tests/2_k=
+selftest-ftrace/automated/linux/kselftest/ftrace/test.d/ftrace/func-filter-=
+pid.tc
+ 6194 18:38:41.307877  # # + cut -f2- -d:
+ 6195 18:38:41.308157  # # + requires=3D set_ftrace_pid set_ftrace_filter f=
+unction:tracer
+ 6196 18:38:41.319397  # # + eval check_requires  set_ftrace_pid set_ftrace=
+_filter function:tracer
+ 6197 18:38:41.319681  # # + check_requires set_ftrace_pid set_ftrace_filte=
+r function:tracer
+ 6198 18:38:41.319905  # # + p=3Dset_ftrace_pid
+ 6199 18:38:41.330653  # # + r=3Dset_ftrace_pid
+ 6200 18:38:41.330936  # # + t=3Dset_ftrace_pid
+ 6201 18:38:41.331161  # # + [ set_ftrace_pid !=3D set_ftrace_pid ]
+ 6202 18:38:41.331367  # # + [ set_ftrace_pid !=3D set_ftrace_pid ]
+ 6203 18:38:41.342045  # # + [ set_ftrace_pid !=3D set_ftrace_pid ]
+ 6204 18:38:41.342330  # # + [ ! -e set_ftrace_pid ]
+ .......
+ 6364 18:39:15.411636  # # + grep -v 7190
+ 6365 18:39:15.411865  # # + wc -l
+ 6366 18:39:15.412073  # # + count_other=3D3
+ 6367 18:39:15.412554  # # + [ 2 -eq 0 -o 3 -ne 0 ]
+ 6368 18:39:15.412773  # # + fail PID filtering not working?
+ 6369 18:39:15.422776  # # + do_reset
+ 6370 18:39:15.423055  # # + [ 1 -eq 1 ]
+ 6371 18:39:15.423278  # # + echo nofunction-fork
+ 6372 18:39:15.423485  # # + [ 1 -eq 1 ]
+ 6373 18:39:15.423681  # # + echo 0
+ 6374 18:39:15.423873  # # + echo PID filtering not working?
+ 6375 18:39:15.434095  # # PID filtering not working?
+ 6376 18:39:15.434377  # # + exit_fail
+ 6377 18:39:15.434602  # # + exit 1
 
-There's no alignment check, and so the resulting constructed reference
-may be misaligned, which is UB. Same below.
+bisect log:
 
-> +                    unsafe { Some(&*slice_ptr) }
-> +                } else {
-> +                    None
-> +                }
-> +            }
-> +
-> +            fn from_bytes_mut(bytes: &mut [u8]) -> Option<&mut $t>
-> +            where
-> +            Self: AsBytes,
-> +            {
-> +                if bytes.len() =3D=3D core::mem::size_of::<$t>() {
-> +                    let slice_ptr =3D bytes.as_mut_ptr().cast::<$t>();
-> +                    unsafe { Some(&mut *slice_ptr) }
-> +                } else {
-> +                    None
-> +                }
-> +            }
-> +        })*
->      };
->  }
->
->  impl_frombytes! {
->      // SAFETY: All bit patterns are acceptable values of the types below=
-.
-> +    // Checking the pointer size makes this operation safe and it's nece=
-ssary
-> +    // to dereference to get the value and return it as a reference to `=
-Self`.
->      u8, u16, u32, u64, usize,
->      i8, i16, i32, i64, isize,
-> -
-> -    // SAFETY: If all bit patterns are acceptable for individual values =
-in an array, then all bit
-> -    // patterns are also acceptable for arrays of that type.
-> -    {<T: FromBytes>} [T],
->      {<T: FromBytes, const N: usize>} [T; N],
->  }
->
-> +// SAFETY: If all bit patterns are acceptable for individual values in a=
-n array, then all bit
-> +// patterns are also acceptable for arrays of that type.
-> +unsafe impl<T: FromBytes> FromBytes for [T] {
-> +    fn from_bytes(bytes: &[u8]) -> Option<&Self> {
-> +        let slice_ptr =3D bytes.as_ptr().cast::<T>();
-> +        if bytes.len() % core::mem::size_of::<T>() =3D=3D 0 {
-> +            let slice_len =3D bytes.len() / core::mem::size_of::<T>();
-> +            // SAFETY: Since the code checks the size and can be divided=
- into blocks of size T
-> +            // the slice is valid because the size is multiple of T.
-> +            unsafe { Some(core::slice::from_raw_parts(slice_ptr, slice_l=
-en)) }
-> +        } else {
-> +            None
-> +        }
-> +    }
-> +
-> +    fn from_bytes_mut(bytes: &mut [u8]) -> Option<&mut Self>
-> +    where
-> +        Self: AsBytes,
-> +    {
-> +        let slice_ptr =3D bytes.as_mut_ptr().cast::<T>();
-> +        if bytes.len() % core::mem::size_of::<T>() =3D=3D 0 {
-> +            let slice_len =3D bytes.len() / core::mem::size_of::<T>();
-> +            // SAFETY: Since the code checks the size and can be divided=
- into blocks of size T
-> +            // the slice is valid because the size is multiple of T.
-> +            unsafe { Some(core::slice::from_raw_parts_mut(slice_ptr, sli=
-ce_len)) }
-> +        } else {
-> +            None
-> +        }
-> +    }
-> +}
-> +
->  /// Types that can be viewed as an immutable slice of initialized bytes.
->  ///
->  /// If a struct implements this trait, then it is okay to copy it byte-f=
-or-byte to userspace. This
-> --
-> 2.49.0
->
->
+git bisect start
+# status: waiting for both good and bad commits
+# good: [38fec10eb60d687e30c8c6b5420d86e8149f7557] Linux 6.14
+git bisect good 38fec10eb60d687e30c8c6b5420d86e8149f7557
+# status: waiting for bad commit, 1 good commit known
+# bad: [46086739de22d72319e37c37a134d32db52e1c5c] Add linux-next specific f=
+iles for 20250409
+git bisect bad 46086739de22d72319e37c37a134d32db52e1c5c
+# bad: [390513642ee6763c7ada07f0a1470474986e6c1c] io_uring: always do atomi=
+c put from iowq
+git bisect bad 390513642ee6763c7ada07f0a1470474986e6c1c
+# good: [9b960d8cd6f712cb2c03e2bdd4d5ca058238037f] Merge tag 'for-6.15/bloc=
+k-20250322' of git://git.kernel.dk/linux
+git bisect good 9b960d8cd6f712cb2c03e2bdd4d5ca058238037f
+# good: [023b1e9d265ca0662111a9df23d22b4632717a8a] Merge git://git.kernel.o=
+rg/pub/scm/linux/kernel/git/netdev/net
+git bisect good 023b1e9d265ca0662111a9df23d22b4632717a8a
+# good: [3a90a72aca0a98125f0c7350ffb7cc63665f8047] Merge tag 'asm-generic-6=
+=2E15-2' of git://git.kernel.org/pub/scm/linux/kernel/git/arnd/asm-generic
+git bisect good 3a90a72aca0a98125f0c7350ffb7cc63665f8047
+# good: [4a4b30ea80d8cb5e8c4c62bb86201f4ea0d9b030] Merge tag 'bcachefs-2025=
+-03-24' of git://evilpiepirate.org/bcachefs
+git bisect good 4a4b30ea80d8cb5e8c4c62bb86201f4ea0d9b030
+# bad: [a7e135fe59a516b2a981fc5820e7a1e2118b427e] Merge tag 'probes-v6.15' =
+of git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace
+git bisect bad a7e135fe59a516b2a981fc5820e7a1e2118b427e
+# bad: [31eb415bf6f06c90fdd9b635caf3a6c5110a38b6] Merge tag 'ftrace-v6.15' =
+of git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace
+git bisect bad 31eb415bf6f06c90fdd9b635caf3a6c5110a38b6
+# good: [e8eac9fc4832976af800628ba8cbd351edc7f841] ext4: remove unneeded fo=
+rward declaration in namei.c
+git bisect good e8eac9fc4832976af800628ba8cbd351edc7f841
+# good: [129245cfbd6d79c6d603f357f428010ccc0f0ee7] ext4: correct the error =
+handle in ext4_fallocate()
+git bisect good 129245cfbd6d79c6d603f357f428010ccc0f0ee7
+# good: [dc208c69c033d3caba0509da1ae065d2b5ff165f] scripts/sorttable: Allow=
+ matches to functions before function entry
+git bisect good dc208c69c033d3caba0509da1ae065d2b5ff165f
+# bad: [5ba8f4a39ecd160c7b6ef8ef1373375799710a97] function_graph: Remove th=
+e unused variable func
+git bisect bad 5ba8f4a39ecd160c7b6ef8ef1373375799710a97
+# good: [533c20b062d7c25cbcbadb31e3ecb95a08ddb877] ftrace: Add print_functi=
+on_args()
+git bisect good 533c20b062d7c25cbcbadb31e3ecb95a08ddb877
+# bad: [c7a60a733c373eed0094774c141bf2934237e7ff] ftrace: Have funcgraph-ar=
+gs take affect during tracing
+git bisect bad c7a60a733c373eed0094774c141bf2934237e7ff
+# bad: [ff5c9c576e754563b3be4922c3968bc3b0269541] ftrace: Add support for f=
+unction argument to graph tracer
+git bisect bad ff5c9c576e754563b3be4922c3968bc3b0269541
+# first bad commit: [ff5c9c576e754563b3be4922c3968bc3b0269541] ftrace: Add =
+support for function argument to graph tracer
+
+--DHuvGhJEzs16pwP+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmf29ecACgkQJNaLcl1U
+h9C/RQf/cS98rzGre4Btito8xfRMWxN4iL8li9UjZ1s/+dqwsIjH/FFivQ9mapwD
+EjnwgdeGvMHOVbFDNnFwLtCEWudaobj1tRxBRya6jXRuIOCbwJfQgt65ZdvsFLWa
+z3ZzdgX4jfJPzjxE4mbpnwkfbWy7dtsj5+wtLM07vrBt6lLePfTgS9A4gLvLjOum
+jK0dzHTQb9nYgWmpI1pMatNYDcsuhCLDimamEf1qEfu1HDF/gz5Nck1wDZ2BfJGu
+xGb0GqRT1JxjpqxyHjXXNjN9keQ88BMAfDs2gU0X50eIkqvR3IVOPw+8uYL+FEpz
+4dVW2KbvSN6ohrRWxdJfrVIe6DC6VQ==
+=/9p0
+-----END PGP SIGNATURE-----
+
+--DHuvGhJEzs16pwP+--
