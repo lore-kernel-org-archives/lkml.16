@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D9012B9CD;
-	Wed,  9 Apr 2025 10:18:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DF0325D8FF;
+	Wed,  9 Apr 2025 10:18:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744193893; cv=none; b=D9XFlBJFQWDBHqehJ+zY7aU9PwiXqQDgcPNT2SAfx4fKzeWigpretRp6NFNCmwhcbJ3XkNGkuVySPulXDRKkyCDxNMdyrQNvnPKA9bz1A+bJSOgIgHh6uzD62N5SkVR1vreiY9BxqAO74y+PbEb4T8kZH/cbCIwXsCytiRHdxZg=
+	t=1744193898; cv=none; b=LRY+qGVPW0qJ0ykeIDYoABt/Ula6Ks0Ru7CVx4hmW8szSSPopq20vbpF67eCB7kotTE4wq1pxGG4JZ96g/YFtNPBx9Ybhjor2kNbfkTosuF4UTqs/8zFg0Y+46Z5A71mPOzrkMAuAxA2ymomLXfg9RpmEDYBylObaR/ZUqC9NhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744193893; c=relaxed/simple;
-	bh=4DPDo0GWRSm6zQk58zZ2hZ9En9ZaULrTfU6J/69ylc8=;
+	s=arc-20240116; t=1744193898; c=relaxed/simple;
+	bh=6ksrS2ukx8baDR5oexJ+ylv0YSfETRiMQmVoTYYKO+I=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=dJQgy1b2tFxEj+eZPFhbec1iBJjzbzR9HbaqVrD4wJqdBrQIhxddk9N5sY0sZaHOV8zzmzTcqRQhXFKwf37HmcP5sTd2kym5baetqY5a7ECSPrJ236Coa1cr/Pz4XptDk+PyVVbXb07wLE6jJs1ncsvuNN62PdQ6yfs6/lij4nM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nQWH/Gz2; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=d1+nXNHO/bOukpPXx0lwV+U6U8VpfAhIiMW1YyYc6kPJh3IIjuyur9+nZTE90oMfx/bf5stNgKcTG3naDw/+BVnG1plWGUYusDwzTuf8xrK61y88aIGSPVTcPQGQjaRwfS02pwH5WlJnXOO0+4pWIhpPHJe+Nf5nv2axgis1Sis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mKazUwED; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nQWH/Gz2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA47CC4CEE9;
-	Wed,  9 Apr 2025 10:18:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mKazUwED"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8511AC4CEE3;
+	Wed,  9 Apr 2025 10:18:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744193892;
-	bh=4DPDo0GWRSm6zQk58zZ2hZ9En9ZaULrTfU6J/69ylc8=;
+	s=k20201202; t=1744193896;
+	bh=6ksrS2ukx8baDR5oexJ+ylv0YSfETRiMQmVoTYYKO+I=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=nQWH/Gz2MlC21HbwoLJI8G6u+ClrznpovevHVJNre9MKDw6xP6KNAVGf9JwACMnxw
-	 FjsnY+h0qSg4z8u+bDRq//cA5CXGNeq4kOJKTm0MQoRQJgxQLKsQmzaDcU31PnLHZd
-	 fdvUcXvidCaiC/QWaiIPbfb/PvP4YhCY8oqX5mrl2ZTj8JoIUlHoWsky4TOJFP3W0A
-	 SQeJCeM7P8xYe645PMtR0Bl3+R/42+rCnHFNOYiO9PhJKtqCiDgLFanAW6lBW64JMK
-	 jjJxciqzq0DBJUmIeok2LnsJEOdpkBKk20eRKlzfNcyEwm+Mhwn3ypPtt2fMCoIZhV
-	 QGPUEhMVpLusQ==
+	b=mKazUwEDITjrCP8v10OLJWD66s96oERJAVdRel9k9zj4em/4y3EiQfqt3eAZ6Mk3f
+	 UHqdfD3zwIZTAQYwEEt2AtC0/DUU4r80hKU+SOVnoS8VFucFXWQBMsIo2jtyxTriFd
+	 zOIQ4GqKa1Y72VNUKHtUNeGf7XbT/E8XsbWzsaXNDuSf1U8vzasWx3kROuUczIivBW
+	 xaMdalUbev4Or76Ih9wXiGHSlSqp/Vgc3Zzq4DxL9en9rlev2cXMqYpLG+elzTFjfM
+	 caA2Xmd+HJaILs9NeKva3ndXvn3aSV9FUAXM5oa+MmndTbOkZkIEAz2yD6pSlUcVI2
+	 nrxn1zVra3KOg==
 From: Andreas Hindborg <a.hindborg@kernel.org>
 To: "Oliver Mangold" <oliver.mangold@pm.me>
 Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
@@ -35,15 +35,16 @@ Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
  Lossin" <benno.lossin@proton.me>,  "Alice Ryhl" <aliceryhl@google.com>,
   "Trevor Gross" <tmgross@umich.edu>,  "Asahi Lina" <lina@asahilina.net>,
   <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v9 1/5] rust: types: Add Ownable/Owned types
-In-Reply-To: <20250325-unique-ref-v9-1-e91618c1de26@pm.me> (Oliver Mangold's
-	message of "Tue, 25 Mar 2025 11:56:51 +0000")
+Subject: Re: [PATCH v9 3/5] rust: Add missing SAFETY documentation for ARef
+ example
+In-Reply-To: <20250325-unique-ref-v9-3-e91618c1de26@pm.me> (Oliver Mangold's
+	message of "Tue, 25 Mar 2025 11:57:10 +0000")
 References: <20250325-unique-ref-v9-0-e91618c1de26@pm.me>
-	<Ml2H7_ySOyeMcC8pbvvmed1q5GE60kAML1QCXOUWvV_N8f1870LAb1iomjNlfpilMILe6GynzZvKM9cf8SIfZg==@protonmail.internalid>
-	<20250325-unique-ref-v9-1-e91618c1de26@pm.me>
+	<BilXj9TIYuQxgQ8GYVKxO0m88NUME1b-jtwrV9ZX3W9GXO-QJGFpb9rChJZarPa4e2AAvgJTm_DINEIW1JINlA==@protonmail.internalid>
+	<20250325-unique-ref-v9-3-e91618c1de26@pm.me>
 User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Wed, 09 Apr 2025 10:34:37 +0200
-Message-ID: <87o6x5d97m.fsf@kernel.org>
+Date: Wed, 09 Apr 2025 11:26:31 +0200
+Message-ID: <87a58pd6t4.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,150 +53,68 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
 
-Hi Oliver,
-
 "Oliver Mangold" <oliver.mangold@pm.me> writes:
 
-> From: Asahi Lina <lina@asahilina.net>
+> SAFETY comment in rustdoc example was just 'TODO'. Fixed.
 >
-> By analogy to AlwaysRefCounted and ARef, an Ownable type is a (typically
-> C FFI) type that *may* be owned by Rust, but need not be. Unlike
-> AlwaysRefCounted, this mechanism expects the reference to be unique
-> within Rust, and does not allow cloning.
->
-> Conceptually, this is similar to a KBox<T>, except that it delegates
-> resource management to the T instead of using a generic allocator.
->
-> Link: https://lore.kernel.org/all/20250202-rust-page-v1-1-e3170d7fe55e@asahilina.net/
-> Signed-off-by: Asahi Lina <lina@asahilina.net>
-> [ om:
->   - split code into separate file and `pub use` it from types.rs
->   - make from_raw() and into_raw() public
->   - fixes to documentation
-> ]
 > Signed-off-by: Oliver Mangold <oliver.mangold@pm.me>
-> Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
 > ---
->  rust/kernel/lib.rs     |   1 +
->  rust/kernel/ownable.rs | 117 +++++++++++++++++++++++++++++++++++++++++++++++++
->  rust/kernel/types.rs   |   2 +
->  3 files changed, 120 insertions(+)
-
-I would suggest moving ownable.rs to rust/kernel/types/ownable.rs and
-then moving `pub mod ownable` to types.rs.
-
+>  rust/kernel/types.rs | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >
-> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-> index 7697c60b2d1a670c436246d422de3b22b1520956..52c294bbf8ded260540e0bc07499257bce91383c 100644
-> --- a/rust/kernel/lib.rs
-> +++ b/rust/kernel/lib.rs
-> @@ -61,6 +61,7 @@
->  #[cfg(CONFIG_NET)]
->  pub mod net;
->  pub mod of;
-> +pub mod ownable;
->  pub mod page;
->  #[cfg(CONFIG_PCI)]
->  pub mod pci;
-> diff --git a/rust/kernel/ownable.rs b/rust/kernel/ownable.rs
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..f4bebea23ce1d62f5597e35199ca38ea07b293db
-> --- /dev/null
-> +++ b/rust/kernel/ownable.rs
-> @@ -0,0 +1,117 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +//! Owned reference types.
-> +
-> +use core::{
-> +    marker::PhantomData,
-> +    mem::ManuallyDrop,
-> +    ops::{Deref, DerefMut},
-> +    ptr::NonNull,
-> +};
-> +
-> +/// Types that may be owned by Rust code or borrowed, but have a lifetime managed by C code.
-> +///
-> +/// It allows such types to define their own custom destructor function to be called when
-> +/// a Rust-owned reference is dropped.
-> +///
-> +/// This is usually implemented by wrappers to existing structures on the C side of the code.
-> +///
-> +/// # Safety
-> +///
-> +/// Implementers must ensure that:
-> +/// - Any objects owned by Rust as [`Owned<T>`] stay alive while that owned reference exists (i.e.
-> +///   until the [`release()`](Ownable::release) trait method is called).
-> +/// - That the C code follows the usual mutable reference requirements. That is, the kernel will
-> +///   never mutate the [`Ownable`] (excluding internal mutability that follows the usual rules)
-> +///   while Rust owns it.
-> +pub unsafe trait Ownable {
-> +    /// Releases the object (frees it or returns it to foreign ownership).
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// Callers must ensure that the object is no longer referenced after this call.
-> +    unsafe fn release(this: NonNull<Self>);
-> +}
-> +
-> +/// A subtrait of Ownable that asserts that an [`Owned<T>`] or `&mut Owned<T>` Rust reference
-> +/// may be dereferenced into a `&mut T`.
-> +///
-> +/// # Safety
-> +///
-> +/// Implementers must ensure that access to a `&mut T` is safe, implying that it is okay to call
-> +/// [`core::mem::swap`] on the `Ownable`. This excludes pinned types (meaning: most kernel types).
-> +pub unsafe trait OwnableMut: Ownable {}
-> +
-> +/// An owned reference to an ownable kernel object.
-> +///
-> +/// The object is automatically freed or released when an instance of [`Owned`] is
-> +/// dropped.
-> +///
-> +/// # Invariants
-> +///
-> +/// The pointer stored in `ptr` is non-null and valid for the lifetime of the [`Owned`] instance.
+> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
+> index c8b78bcad259132808cc38c56b9f2bd525a0b755..db29f7c725e631c11099fa9122901ec2b3f4a039 100644
+> --- a/rust/kernel/types.rs
+> +++ b/rust/kernel/types.rs
+> @@ -492,7 +492,7 @@ pub unsafe fn from_raw(ptr: NonNull<T>) -> Self {
+>      ///
+>      /// struct Empty {}
+>      ///
+> -    /// # // SAFETY: TODO.
+> +    /// // SAFETY: We do not free anything.
 
-I am not sure we need the non-null invariant here, since it is an
-invariant of `NonNull`. The rest is fine.
+How about:
 
-> +pub struct Owned<T: Ownable> {
-> +    ptr: NonNull<T>,
-> +    _p: PhantomData<T>,
-> +}
-> +
-> +// SAFETY: It is safe to send `Owned<T>` to another thread when the underlying `T` is `Send` because
-> +// it effectively means sending a unique `&mut T` pointer (which is safe because `T` is `Send`).
+  This implementation will never free the underlying object, so the
+  object is kept alive longer than the safety requirement specifies.
 
-I would drop 'pointer' in 'a unique `&mut T` ~pointer~' here. '`&mut T`'
-is sufficient alone.
 
-> +unsafe impl<T: Ownable + Send> Send for Owned<T> {}
-> +
-> +// SAFETY: It is safe to send `&Owned<T>` to another thread when the underlying `T` is `Sync`
-> +// because it effectively means sharing `&T` (which is safe because `T` is `Sync`).
+>      /// unsafe impl RefCounted for Empty {
+>      ///     fn inc_ref(&self) {}
+>      ///     unsafe fn dec_ref(_obj: NonNull<Self>) {}
+> @@ -500,7 +500,7 @@ pub unsafe fn from_raw(ptr: NonNull<T>) -> Self {
+>      ///
+>      /// let mut data = Empty {};
+>      /// let ptr = NonNull::<Empty>::new(&mut data).unwrap();
+> -    /// # // SAFETY: TODO.
+> +    /// // SAFETY: We keep `data` around longer than the `ARef`.
 
-Like here, I think this is correct (without the pointer wording).
+This is not sufficient. The safety requirement is:
 
-> +unsafe impl<T: Ownable + Sync> Sync for Owned<T> {}
-> +
-> +impl<T: Ownable> Owned<T> {
-> +    /// Creates a new instance of [`Owned`].
-> +    ///
-> +    /// It takes over ownership of the underlying object.
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// Callers must ensure that the underlying object is acquired and can be considered owned by
-> +    /// Rust.
+  Callers must ensure that the reference count was incremented at least once, and that they
+  are properly relinquishing one increment. That is, if there is only one increment, callers
+  must not use the underlying object anymore -- it is only safe to do so via the newly
+  created [`ARef`].
 
-This part "the underlying object is acquired" is unclear to me. How about:
+How about:
 
-  Callers must ensure that *ownership of* the underlying object is acquired.
+  The `RefCounted` implementation for `Empty` does not count references
+  and never frees the underlying object. Thus we can act as having a
+  refcount on the object that we pass to the newly created `ARef`.
+
+I think this example actually exposes a soundness hole. When the
+underlying object is allocated on the stack, the safety requirements are
+not sufficient to ensure the lifetime of the object. We could safely
+return `data_ref` and have the underlying object go away. We should add
+to the safety requirement of `ARef::from_raw`:
+
+  `ptr` must be valid while the refcount is positive.
+
+That would allow the code in this example, but prevent the issue
+outlined above.
 
 
 Best regards,
 Andreas Hindborg
-
 
 
