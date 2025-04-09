@@ -1,110 +1,80 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC05265613;
-	Wed,  9 Apr 2025 13:42:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAA8425DD0E;
+	Wed,  9 Apr 2025 13:44:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744206161; cv=none; b=TnswMMBDUMgCwOb3o0JcjXerdjgDWR64am0mcHayvKOqhIrE9wOnWLzj2uvoup4G2U61KpoYNPCGXyqM1BKtNFGE0UWe0BrpdhnCFdHps4UVxDSnk6aoYw/o1imZ45/EtIYEW/jVRTCvY3d0Xr4wybYg2yDH0ApfW8JHej8zlaw=
+	t=1744206290; cv=none; b=JV93SjsNav+KFSdO4E0XYovuMvur4tckYPwyVDgJ033NxehTlYfEndTpMYfylqRedHAbEvAx08YMD4nGm+Xx4kjenXFAo41fveO74iHfklxrAhL3xzjjHajHEKLRBSoWVjGpihW974y09U8+wNWJvBhsdcAQySNicn0eoXBSrHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744206161; c=relaxed/simple;
-	bh=SbmIfA5pH+hW4F6YNCZhg9bPIQAu+HswRCASMjXW470=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tAuJKik+x1sWfURFUkxyU2OUQhmL2yvmKOOtneALuLaIDbqAxwkkSjI1XCc60cZMc54L9ji2TZ5BxOG13GHDNO0wvGtLwI5XB5FbD5Y3LYz9pY2Caauenl6fRsev2upPxQaLTsuy0db7W/5BsZQ/VkrcRjQVuNxFBbC1IUSyBBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=k2rxdcqQ; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744206290; c=relaxed/simple;
+	bh=83YVMS2hsr3Awe8gA4+dCoPdIwMkXe+5JQPCgLuOiks=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uwHuUzBVMA70W5zu1Qb/Y3LnVHMRrsqWwj4kG4ZIUSwkevTakytyqH5Qg7LrFQOnP+bJmiyGwfvqz5DKbbgKxnRPayhznyIZeciJIJU/Jjh6YC0AtcRxQwFhoxof0EtttFug/P3C1wn6epSIYjvbU5oyEgjGZ1x2lP3dXyA3FLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a2daIIyr; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="k2rxdcqQ"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 539DgOhb843577
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 9 Apr 2025 08:42:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744206144;
-	bh=sM6plPBWAZIFYns+UdwR7yCI3bmNKDmbRwLMz5wetM0=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=k2rxdcqQOD+x3sBIAqmwBGUQ5MQV++JHLYefjqBUZgyKn/dtaRffij8gXQPxvYBfb
-	 mzem86dP7HxbUn1fKhB/9c1Qje5BASc/IsLue44faC5sHnTh/OV24SNIwlxWWSx4TN
-	 Z1p9pq5u6LXhb2jA/XeBtOpQf7+VDpz0ZTW87JNs=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 539DgO9U018884
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 9 Apr 2025 08:42:24 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 9
- Apr 2025 08:42:24 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 9 Apr 2025 08:42:23 -0500
-Received: from abhilash-HP.dhcp.ti.com (abhilash-hp.dhcp.ti.com [172.24.227.115])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 539DfZvt122297;
-	Wed, 9 Apr 2025 08:42:20 -0500
-From: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
-To: <nm@ti.com>, <vigneshr@ti.com>
-CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <vaishnav.a@ti.com>, <jai.luthra@linux.dev>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <imx@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-        <u-kumar1@ti.com>, Yemike Abhilash Chandra <y-abhilashchandra@ti.com>,
-        <stable@vger.kernel.org>
-Subject: [PATCH v2 7/7] arm64: dts: ti: k3-am62x: Rename I2C switch to I2C mux in OV5640 overlay
-Date: Wed, 9 Apr 2025 19:11:28 +0530
-Message-ID: <20250409134128.2098195-8-y-abhilashchandra@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250409134128.2098195-1-y-abhilashchandra@ti.com>
-References: <20250409134128.2098195-1-y-abhilashchandra@ti.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a2daIIyr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744206288; x=1775742288;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=83YVMS2hsr3Awe8gA4+dCoPdIwMkXe+5JQPCgLuOiks=;
+  b=a2daIIyrrpdMy5C4gWg9NOOFHPnmzMuWKMslQX0cD19DaL+62s8+IPNH
+   yfKi57hUm5wKdSYtKfPyu8tkS11G9VPPmVEHi9hqY7vLUf3np30obT3Zw
+   ZhN0y9suyuPG7moOM1GocK9bKjp2YNf4oFMpneKjg354z6hzyPTa1b80g
+   pdzhy6DzSMPjxwbrNfCwdwJ7sCFUyPYwiTRX6LFY5mMy2z92Mgh1tXfIx
+   eHpSUlTWfYKCin/sdoIFs8nTpemWHuefw8hq+pe2tgbQj1lUXSIF5u4mR
+   2XW5tg0OuAqqdJK+VLDAmv4n7okc+/ER83wccFvxUmgMGLa4E6UKM9X14
+   A==;
+X-CSE-ConnectionGUID: NVQ5lt1eSQShCou4KkPk8Q==
+X-CSE-MsgGUID: +Cb3bAw0SempgsCZ9w1Lvg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="33288450"
+X-IronPort-AV: E=Sophos;i="6.15,200,1739865600"; 
+   d="scan'208";a="33288450"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 06:44:47 -0700
+X-CSE-ConnectionGUID: R8aZaGi2RNmyO6MKGreazQ==
+X-CSE-MsgGUID: +e8U61ruQxqEwtHbGLbChg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,200,1739865600"; 
+   d="scan'208";a="129549769"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa008.jf.intel.com with ESMTP; 09 Apr 2025 06:44:45 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id D4FBE5CE; Wed, 09 Apr 2025 16:44:43 +0300 (EEST)
+Date: Wed, 9 Apr 2025 16:44:43 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Mika Westerberg <westeri@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH v1 0/2] gpiolib: acpi: Fix missing info filling
+Message-ID: <20250409134443.GT3152277@black.fi.intel.com>
+References: <20250409132942.2550719-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250409132942.2550719-1-andriy.shevchenko@linux.intel.com>
 
-The OV5640 device tree overlay incorrectly defined an I2C switch instead
-of an I2C mux. According to the DT bindings, the correct terminology and
-node definition should use "i2c-mux" instead of "i2c-switch". Hence,
-update the same to avoid dtbs_check warnings.
+On Wed, Apr 09, 2025 at 04:27:52PM +0300, Andy Shevchenko wrote:
+> Kees reported that code, while being refactored, missed the point of
+> filling the info structure which supplies GPIO flags to the upper layer.
+> Indeed, without that part the GPIO expander get no IRQ on Intel Edison,
+> for example. Fix this in this series.
+> 
+> Andy Shevchenko (2):
+>   gpiolib: acpi: Use temporary variable for struct acpi_gpio_info
+>   gpiolib: acpi: Make sure we fill struct acpi_gpio_info
 
-Fixes: 635ed9715194 ("arm64: dts: ti: k3-am62x: Add overlays for OV5640")
-Cc: stable@vger.kernel.org
-Signed-off-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
----
- arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-ov5640.dtso      | 2 +-
- arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-tevi-ov5640.dtso | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Both,
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-ov5640.dtso b/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-ov5640.dtso
-index ccc7f5e43184..7fc7c95f5cd5 100644
---- a/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-ov5640.dtso
-+++ b/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-ov5640.dtso
-@@ -22,7 +22,7 @@ &main_i2c2 {
- 	#size-cells = <0>;
- 	status = "okay";
- 
--	i2c-switch@71 {
-+	i2c-mux@71 {
- 		compatible = "nxp,pca9543";
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-diff --git a/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-tevi-ov5640.dtso b/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-tevi-ov5640.dtso
-index 4eaf9d757dd0..b6bfdfbbdd98 100644
---- a/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-tevi-ov5640.dtso
-+++ b/arch/arm64/boot/dts/ti/k3-am62x-sk-csi2-tevi-ov5640.dtso
-@@ -22,7 +22,7 @@ &main_i2c2 {
- 	#size-cells = <0>;
- 	status = "okay";
- 
--	i2c-switch@71 {
-+	i2c-mux@71 {
- 		compatible = "nxp,pca9543";
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--- 
-2.34.1
-
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
