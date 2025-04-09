@@ -1,81 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [212.227.15.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E6BC26B948;
-	Wed,  9 Apr 2025 15:47:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B89D226B96C;
+	Wed,  9 Apr 2025 15:48:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744213680; cv=none; b=oZYXx166flF/91Q/fZd4P4Q+XcnprWmfpSoQBFaCBIIxqmn5ow+HR1G5zqqt8akl8oU8z+YG+BiE+7a+Gwu31I5cQW2IUgmyzKZYGnjnIT8R0wTZH2Vo/NDjO+jmsl22emwZBF2OJ3qisswzysJZcOU1TOjwjm0bqR4yMh5w9Ms=
+	t=1744213701; cv=none; b=q84Zk1EG6wD4o9oXXqlNYadOfQ4yaC52tKk94Meuv/EUpu9GZscDBYwKrICDlqPY+Oa14mhnBzYQcnmF7rTOPqjnI8CjQ4H//q789kHErFE28c5+G0JTgWAIYb1mPmfKr4Pbx7KbrkMDaAMWleTIHlmbR0nBM4JIGl6O9O2Z9Tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744213680; c=relaxed/simple;
-	bh=UmuDN18MktFopw1Z5xqO1NY2q6NRs0IlbVmb4P+d4Nc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FyJycWQzm2isPq2wABgfotoEDY8EHKkoyorT6s5HRNaJLvAuW6lbnPvXcuO19uCxu39SXgEdonlScdEUnkoB+ibNFMNOwrpAcmDy67vn0BNROFjmP77Pa6QBVzC6g8w4a8A+uqBEt8umlSbsURHTV2B3YJ/l/hWnXB5Bn7Z9+IA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BmD99qMI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744213701; c=relaxed/simple;
+	bh=j0V1wck0xZxzCc/1mxSTxnQIbGt4ju3zFjXLX5tgr00=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=F5DmYSJGAqKa1AbyBSL1nxJItVy94nB0WGZ9ZMXNtxBxDJIBmO2SFRigLEb+I+F4M575WYxGuq153SjhCMzuwXLoy7aTUOfK27x/8fhjT+0T/8cw6DCo7Nisa8pBJ5CkfcrxWYuWh9GfXIU1FMttsB3aRlizMOWTA96UHhbOCZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=PphQyRZr; arc=none smtp.client-ip=212.227.15.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BmD99qMI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E55AC4CEE2;
-	Wed,  9 Apr 2025 15:47:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744213679;
-	bh=UmuDN18MktFopw1Z5xqO1NY2q6NRs0IlbVmb4P+d4Nc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BmD99qMISwWJql2hnIVO8tgetqjk/J/WuFA3+3PDsFdPh1TklLHcmvJEm2rOSTpNF
-	 MzwQBY3YytNDnillH7JQGnFs51VFN6oy23DsHcTTxKnWHt88P2lkAmi7/UU6ELfk0v
-	 aOOmChW04tGlZ0dCVtPz8jD0rUmU5kAYj4SL+74q/jDdjukCqf3ghCju0GqPmF8DFH
-	 GnjSZb8/z4RcOJ9kCqKRTLpKfgQlcprqoBgtn5Eii0SMC+QIa/sXEM6vHUgrwUKMeM
-	 YnrXCNSWQGR9FYg5IDjfLU183z6IS8TqWFIowBm0j0JT61zcm7h2o6rk4IEfMj+EyW
-	 +E5I+5hGfK04A==
-From: Miguel Ojeda <ojeda@kernel.org>
-To: gregkh@linuxfoundation.org
-Cc: akpm@linux-foundation.org,
-	broonie@kernel.org,
-	conor@kernel.org,
-	f.fainelli@gmail.com,
-	hargar@microsoft.com,
-	jonathanh@nvidia.com,
-	linux-kernel@vger.kernel.org,
-	linux@roeck-us.net,
-	lkft-triage@lists.linaro.org,
-	patches@kernelci.org,
-	patches@lists.linux.dev,
-	pavel@denx.de,
-	rwarsow@gmx.de,
-	shuah@kernel.org,
-	srw@sladewatkins.net,
-	stable@vger.kernel.org,
-	sudipm.mukherjee@gmail.com,
-	torvalds@linux-foundation.org,
-	Miguel Ojeda <ojeda@kernel.org>
-Subject: Re: [PATCH 6.12 000/426] 6.12.23-rc3 review
-Date: Wed,  9 Apr 2025 17:47:48 +0200
-Message-ID: <20250409154748.1233729-1-ojeda@kernel.org>
-In-Reply-To: <20250409115859.721906906@linuxfoundation.org>
-References: <20250409115859.721906906@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="PphQyRZr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1744213668; x=1744818468; i=markus.elfring@web.de;
+	bh=ib4IhZGD0jDk7BbJKX7gsQ/I7ag9tHI6LBdrJijgTZw=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=PphQyRZrLM0QJHWznf39jSzf6Rilc4KAvbHUs7zYJgtsz5wJaR4X50gETr2jWLNe
+	 j7GdHkUeGfHCSakW7TV/H4TkA0R5SJohjqZC60EoEgOgDNbxnk7m5hN7WKnXiW6dL
+	 K6DhDKIHDknR1yRa0GkkFvdCJnHIdGduwKqqpfsfIkufHjhcBRRVnaDPxCVyKXuci
+	 wf+4ypFqU/1T+MalFV7rFE/eMRHTAsZhUIElfQLcOypEpSfWyC4+TxuFyMtFDsiLF
+	 ta7H6N/nNqjbiOzrcnB03HG+VjkPRTsx/1XjohTlTM+w2HhS5I20nki94yW2ONfKd
+	 D8Z1wZ+l+/y0QGvUOw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.27]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1Myezp-1t8dib0fHR-015vDX; Wed, 09
+ Apr 2025 17:47:48 +0200
+Message-ID: <5cb34dde-fb40-4654-806f-50e0c2ee3579@web.de>
+Date: Wed, 9 Apr 2025 17:47:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+To: Abdun Nihaal <abdun.nihaal@gmail.com>, netdev@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Potnuri Bharat Teja <bharat@chelsio.com>,
+ Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
+ Vishal Kulkarni <vishal@chelsio.com>
+References: <20250409054323.48557-1-abdun.nihaal@gmail.com>
+Subject: Re: [PATCH net-next] cxgb4: fix memory leak in
+ cxgb4_init_ethtool_filters() error path
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250409054323.48557-1-abdun.nihaal@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:1xqDJl4bH+XFPfuPRah1CtMfk+/ByhWXB5sJOzItbSfnuvd0Pzv
+ UNaF+GjwpBNyJftGdjrggJKgW1f/10Hja17KXE2HA2Lp3jHjIZbb+v3cDo5r9g9W4ibgxz8
+ PSBbvthRJzf3UMZvlVEJp8K7FOKjqESI2tPOcZ+56N85w8H5x/VMrSFpcmRhBLf3FdpLj3R
+ wmh/lVNrkM3kjwM0l805w==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:D+BS8iXSyUI=;xhZPwpxhixT66Q2KZJQn0Iv+V81
+ 4HIoqNLoSbdWHkOFD9s6QQMRH9UGDl12ZPx/xGSFQmZXClVYM6S0x3wVjFqdY8aMNy4yYjszA
+ pYO+aEJxeMECjkKTV2Aihtqnj+mQqDIVFByYZIMNjyz1QBcn1d5V+uSEt3seE8paeQlBJi9ET
+ VNZ6QRQSQ5wagBH+uT0PVaObSB+uKIts1T2dRNODeUmWXyi46Y+ptLo3SHbbuwE3+qY31aJtD
+ KeoE99Nt8X26vQLsRXzWR4P7+MVKMQUzW210u3rGQ7idtRemZ/J+BboQKkWQhsCHnzGZFooU3
+ VEQaAV5XUC2h5gcFUDW6YUi8rvhIdqhgFGyALM59/R/hrkBWC33UtBzPPl9g5zu6YUUL0YD53
+ ysWuSgRRMp4xdMfG8nS+JnXWJK3w/TSc9XUzA8VeF7LJrellyo1tfTsV5I6CXNSj8So8S1lpG
+ 2Gy7BM3eh34L7ew52vLypD6GaFdEAoNZRIhFvoLJxR/Zf+Or1X9NtpbXzqeuEVLvH+Qs5zZnC
+ Yi74BRrF4+Rbncl+/o90IjTz7rguekR4BQ8ixFZa96UhikvoMRfcVkB2iJqvzthb+DWqrDx7K
+ eWwo6LVLmQkskQP27wLfOtmY90znR4LUx9pEfLnOOCGZx8iemkWDbOBi/qzhm1+itoZohVOg6
+ TbQXY5eWOjChW/CHrf+vmLhKgIPR4Bs4UqxT5CMqQZvnfPuC01WRl5ZTJMupGJQF2RlQUknLP
+ VGX68hn87jCFGSg7gQYnRKL2LHR3fUuOIc7biIwp2xPdvmbEHITIEaXK4eP3J+FEaCxkvk2KO
+ BNha2Pta5ddpotcGKL77Q9TeiukmbyV2gn63w+C8UTNeXIxGgajB5Ej0DmatBaUAxyFxOc9lW
+ QYyRwNTDLP1XaGvDGoPtGxzFHp9XIghvTZaYXOBkpGwL2l9ryh+q17+UrEkT8OLqU4v+ttn3I
+ YFtwfCez0m9VjIrYvxrZAZ1Xaa7rOGiL0WbH5RODy4D22LGTLTQ3hO7k0JX/5ypq4oJ3B170v
+ TrW58OPPYsC7TTbNIfJeJeVx3iHGHp4U89ZVsQq5uUDtG1GGFS2L7tZV741ed/ii+x/89ezT9
+ 3uSFlNnCiMwiGubK7ahO/B4QiQorRu1JUJCoa9ErzUOF8LqjjY+/yS6uk/Zp4wi6h51JggqYm
+ TentKtqRpzsSai/qogjV+pd9eecj6Pw9RC/OTpm9kRxqZBmGD32C4erKgWUPEK99+2d0cLJnF
+ FwC13RJPWGFZaDubV1GlRUg4X6UVXvSVKDzS+4MFeDBvmk14J4nANrj8btECCCLCapUSMpwff
+ i9OflMJfzzCKNxYD1+JECjzr4zryJocuEYYBJyJIrb77ZkRrQpgOzJYDUROYz61ZLXoy1bjUI
+ dBHnC3DyzjVz1wEua3M/B4/jqWXHnamt22eg/vGzbyXdPh203CFqn6tRjR+UINPfYaW6tI1bs
+ vscc9ckHHk6vWLM3BKOAq6jEXUSmgQWSF8xfZNhTrJqmYgWfQazJpRPs7Z2P9jkgOiKacDS0A
+ JeDzrdVzL89lxj32ucA=
 
-On Wed, 09 Apr 2025 14:02:59 +0200 Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.12.23 release.
-> There are 426 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 11 Apr 2025 11:58:05 +0000.
-> Anything received after that time might be too late.
+=E2=80=A6
+> +++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c
+> @@ -2270,6 +2270,7 @@ int cxgb4_init_ethtool_filters(struct adapter *ada=
+p)
+>  		eth_filter->port[i].bmap =3D bitmap_zalloc(nentries, GFP_KERNEL);
+>  		if (!eth_filter->port[i].bmap) {
+>  			ret =3D -ENOMEM;
+> +			kvfree(eth_filter->port[i].loc_array);
+>  			goto free_eth_finfo;
+>  		}
+>  	}
 
-Boot-tested under QEMU for Rust x86_64, arm64 and riscv64; built-tested
-for loongarch64:
+How do you think about to move the shown error code assignment behind the =
+mentioned label
+(so that another bit of duplicate source code could be avoided)?
 
-Tested-by: Miguel Ojeda <ojeda@kernel.org>
-
-Thanks!
-
-Cheers,
-Miguel
+Regards,
+Markus
