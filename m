@@ -1,118 +1,106 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9429D21A422;
-	Wed,  9 Apr 2025 15:55:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5583A1A3159;
+	Wed,  9 Apr 2025 15:55:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744214120; cv=none; b=H+pwbqabq/DvXArsO3dIc5lmtjrIMSEx5zALuvSsN9LUW4Ofirrn9oCMC2GiiLBSHZUuDsrJHbDgXWgChxtXw0dJUj48LzyxJK61SSDZDa/FWiFANE+n/audHfB61piYq/73XN9g+f99oIKb68chClDe28x3cy6Pltve0G6mOCE=
+	t=1744214138; cv=none; b=Sm1z2vFpJGqio5tWWxW8W77NMYM7byHaUeZG+DXa9Fyv3yIHabVR8kW6uAhsr9OkSbQK5jpUNobBINdeNmL5/+b6Jv0bLx5UQivHDlkZjo2o/XtH/kALKuS2cz2KQ64lp7EX6MAqVz9cpFvzplLwzxwPCu7zwPtUl3DgIVMyO7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744214120; c=relaxed/simple;
-	bh=Z/u/y9H7bfrbhw7EKyJc7oXjEouvThyVHbJQ7zqQJAw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lJJurgi+cw29k2eKt9EYORNr8EfvFUFvEBbP7a3Lvac0pUHGWdwtxIOkxPZ69b76Yk5WXeypiUzq+3S3H/lkmc+ixDAHaiNdrBhWPD26MSkS+FkalTzrfFu/z3uIKInZeFuUoJ/P7nKquCmWJA6FjJCntUpQ0yPAS1FGYn9E8H0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KyDZVNkg; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744214138; c=relaxed/simple;
+	bh=WW1N/1DaqI87EqtkhE04HgTwYLpLakjaAuM2yUvrwPQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tFObxeila99h3ZLMo015v86JYi5zIak9RjYJ02LBNhl/V13QVaLwWF8hbYT7qh91e1E5NDYcdTf1KDuHd4NCNG79zWNjam3jCKJImsPEUZGgKU+O2bSyxRqoliPb186NM8eUcKjndmidOC0jOdCcwidYk3NIz8e1pdiFQCjo5K8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ns4iX0OS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KyDZVNkg"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39c1ef4acf2so4317305f8f.0;
-        Wed, 09 Apr 2025 08:55:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744214115; x=1744818915; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=96rYjwJIel7XEnNFVJz6mXlV9QKD/8bYydzJ5fW5Jfw=;
-        b=KyDZVNkgF23xPtkolHniJFzGMEIgjNLVotLAEwi/sAtHM7iWPcT/WNYdjIrQS4wGE+
-         l0k5EZh84XW6220bctNmB9OwTnTrurnSgi3ofDKHtBByGSseyZKnDtLP7Atg5FM4/mVo
-         gE52Pykb8KtUlPbMX2GDcgSEfNEargrtMrY6KncbokPi6lNVKqYNqzCLuoHKC+yrIctS
-         XoyrhJmdfyV2Uq1ms0fxMUsZ6uYaalyHVSCpmnj+/vFqeOTj8e9NckNFq1s1kEOxvD7g
-         taVr5dK+LguBTfzAVYoCHaCPeKs8GOiCeY8e5u4ZUKNMBEk4aVVqf2yC2bElS26HXhga
-         QTgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744214115; x=1744818915;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=96rYjwJIel7XEnNFVJz6mXlV9QKD/8bYydzJ5fW5Jfw=;
-        b=Dj5FakiZcKqYGctdYG6mjuARYm9PUgVWtY6m6HqhLFShtPMam3sgQUgtmHzQWunb7Z
-         Lm2jYdNdHrjuoR4QNOQTgpYzUpe4ClND07f0Qf8tODbob2/IaAKfTC4t2irbmiNALv1Q
-         yHkPLetU9JLvxX4SiaDsQ5WR6Mp51hORnSVonVVjUGc/jmZcRfiTIsmUNUNxT/L2EpG8
-         ZKI5WXh3eea8ZzyoukAnfWdHKwMaSA+8gMsZHCkh+fYNILZA43Tbev4Efmu4NDRjaV53
-         dL5bpZOoovZ1JSbNSbF+E9RPvU87ojSqoU0YtzN19nxEHMTKm2aHJ4aqtJMFcZyH7DOO
-         AGFw==
-X-Forwarded-Encrypted: i=1; AJvYcCV8mcAbDtnYYa13cCxMWKVyw7Bt06wDhXaWJp7GMZ1ouC6+EEcadtTxgHyeXqaZYbxoimKLYui24D1XfjuW@vger.kernel.org, AJvYcCXuxFIFYHctcwt8jUs24pn/uzMQrJ78D61yPvI3fYps1oq/BpMf6Y4BwrNrHQI9iCn+OGoctCZEXXS5GOFz@vger.kernel.org
-X-Gm-Message-State: AOJu0YykzBhsymzKa56QaQpig8TI1ua0MDcd/06Ll69zYJPqhYrIIsAi
-	3qf4WtzC7PhpFLXNwnJvGGw+xCNTT6oa4Wh0EMGHFzNpXylVuCINxdbtYO1H
-X-Gm-Gg: ASbGncv9gknQNclYVhYDIHEMjM9ycBfBDq7GBwfe6f6d3VFq3+8+4EckSdrd7twUWi9
-	lbm1y9ANfwv42kV3ED9yqVO4tEwPVhIn0IjzeKVad6bqiLDyHoV4eOg86c98z2+UWc3ful6A6Nf
-	ULLoan/NqLLD0uVort4QrSHhnszPeluvleQPqS0RmeQSZ6jhtH0UMDvk+olO28XM9QB5xkbAO88
-	ETnclwB+LIRr/Xc2yUTVrRW/HyPuKGIk4VB5ziJCU7DHyRe8hnf9J0FpwkhqtSYndoEfpsRD4/0
-	Tgu9hNpR/6ZwT5t5i/rrLdxR6M3wABpzvRGhn3AOwG3FtHU2zjzY
-X-Google-Smtp-Source: AGHT+IHr37EuT6rktM5MvALsQLaLzfvBH30bEBRwNNyCckdtfvbLhW4XZugzfoE7BQicQ9uyDyhe4A==
-X-Received: by 2002:a05:6000:2585:b0:391:2306:5131 with SMTP id ffacd0b85a97d-39d87cd329fmr3448191f8f.45.1744214114754;
-        Wed, 09 Apr 2025 08:55:14 -0700 (PDT)
-Received: from localhost ([194.120.133.58])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43f20625592sm23893915e9.10.2025.04.09.08.55.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 08:55:14 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][V2] select: do_pollfd: add unlikely branch hint return path
-Date: Wed,  9 Apr 2025 16:55:10 +0100
-Message-ID: <20250409155510.577490-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ns4iX0OS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67B56C4CEE2;
+	Wed,  9 Apr 2025 15:55:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744214137;
+	bh=WW1N/1DaqI87EqtkhE04HgTwYLpLakjaAuM2yUvrwPQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Ns4iX0OSppovqb9VC+Y4d9RlZ0wyE9soo85cb4ockpsqwokaEmE19h84RHZyd41Uz
+	 5tV4jYnThZWoz81jB7iCYeWD0XYeWQik7OkaqxWP33hB6sqcWCGnfzt3Yv4IsH9RVH
+	 GUe8v5kBk8sTYGRs+iO3dmu76UBh2BNo7KeojQBuxc8vhOQpXcVYc7rC4kl2DZ6/eg
+	 yLMyVYpogA4NqufayXttjfNnv37npJ5l1EH8LOR7RH+57fSFqrWCje7uGTSruP3JSI
+	 r9EcV652v3SpsQd1yAuy5enjLTC8lXIhIY+YM33uuhP1lXdR5Em06IlOuF3t2AY9BW
+	 rFKW0bm9oav/g==
+Date: Wed, 9 Apr 2025 08:55:36 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: Stanislav Fomichev <sdf@fomichev.me>, netdev@vger.kernel.org,
+ davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+ paulmck@kernel.org, joel@joelfernandes.org, steven.price@arm.com,
+ akpm@linux-foundation.org, anshuman.khandual@arm.com,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH net-next] configs/debug: run and debug PREEMPT
+Message-ID: <20250409085536.245acdf1@kernel.org>
+In-Reply-To: <3f5ff26b-9904-462e-ac22-84b5d212e9ff@kernel.org>
+References: <20250402172305.1775226-1-sdf@fomichev.me>
+	<df253016-81df-4cc9-8a8c-f92fd1cb8aea@kernel.org>
+	<20250408120318.65125876@kernel.org>
+	<3f5ff26b-9904-462e-ac22-84b5d212e9ff@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Adding an unlikely() hint on the fd < 0 comparison return path improves
-run-time performance of the poll() system call. gcov based coverage
-analysis based on running stress-ng and a kernel build shows that this
-path return path is highly unlikely.
+On Wed, 9 Apr 2025 13:58:13 +0200 Matthieu Baerts wrote:
+> On 08/04/2025 21:03, Jakub Kicinski wrote:
+> > On Tue, 8 Apr 2025 20:18:26 +0200 Matthieu Baerts wrote:  
+> >> On 02/04/2025 19:23, Stanislav Fomichev wrote:  
+> >>> Recent change [0] resulted in a "BUG: using __this_cpu_read() in
+> >>> preemptible" splat [1]. PREEMPT kernels have additional requirements
+> >>> on what can and can not run with/without preemption enabled.
+> >>> Expose those constrains in the debug kernels.    
+> >>
+> >> Good idea to suggest this to find more bugs!
+> >>
+> >> I did some quick tests on my side with our CI, and the MPTCP selftests
+> >> seem to take a bit more time, but without impacting the results.
+> >> Hopefully, there will be no impact in slower/busy environments :)  
+> > 
+> > What kind of slow down do you see? I think we get up to 50% more time
+> > spent in the longer tests.  
+> 
+> That's difficult to measure in our CI because we have a majority of
+> tests either creating test envs with random parameters (latency, losses,
+> etc.), or waiting for a transfer at a limited speed to finish. Plus, we
+> don't control the host running our tests. But if we omit that, our
+> packetdrill tests take ~20% longer on the CI, and our 2 mini KUnit tests
+> took ~10% longer (275ms -> 305ms). Globally, our test suite took maybe
+> ~10-20% longer, and that's acceptable.
+> 
+> So not 50%. Is this difference acceptable for NIPA? Even when some tests
+> are restarted automatically in case of instabilities?
 
-Benchmarking on an Debian based Intel(R) Core(TM) Ultra 9 285K with
-a 6.15-rc1 kernel and a poll of 1024 file descriptors with zero timeout
-shows an call reduction from 32818 ns down to 32635 ns, which is a ~0.5%
-performance improvement.
+We also see 10%+ on most cases, the 50% was the worst one I glanced.
+The worst offenders in terms of runtime only increased by 10% so still
+within the guidelines.
 
-Results based on running 25 tests with turbo disabled (to reduce clock
-freq turbo changes), with 30 second run per test and comparing the number
-of poll() calls per second. The % standard deviation of the 25 tests
-was 0.08%, so results are reliable.
+> One last thing, Stanislav's patch has been shared during Linus' merge
+> window: perhaps something else could also impact the time?
+> 
+> > Not sure how bad is too bad..  
+> 
+> Did you observe more instabilities? Maybe the individual results should
+> be omitted, and only debug specific issues (calltraces, kmemleak, etc.)
+> should be looked at?
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
+A couple but unclear at this stage whether that was just the merge
+window or enabling preempt debug. Now patchwork is super unstable
+so again, hard to judge the source of the problems :(
 
-V2: replace mincore with poll() in commit message to fix a cut-n-paste error,
-    add more info about the gcov analysis
+> > I'm leaning
+> > towards applying this to net-next and we can see if people running
+> > on linux-next complain?  
+> 
+> Good idea! But I do wonder how run **and monitor** the selftests in
+> linux-next with a debug kernel :)
 
----
- fs/select.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/select.c b/fs/select.c
-index 7da531b1cf6b..0eaf3522abe9 100644
---- a/fs/select.c
-+++ b/fs/select.c
-@@ -857,7 +857,7 @@ static inline __poll_t do_pollfd(struct pollfd *pollfd, poll_table *pwait,
- 	int fd = pollfd->fd;
- 	__poll_t mask, filter;
- 
--	if (fd < 0)
-+	if (unlikely(fd < 0))
- 		return 0;
- 
- 	CLASS(fd, f)(fd);
--- 
-2.49.0
-
+One way to find out :)
