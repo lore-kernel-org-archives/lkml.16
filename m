@@ -1,99 +1,152 @@
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4000325F7AE;
-	Wed,  9 Apr 2025 12:22:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43AFA25EFB2
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 12:22:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744201351; cv=none; b=Kpxl7CtKOX5lPc+uAhasNculkBJ1ir4KKoB9lVgHLIPoLMz0u2xQtxgCic6v5vgf31nOSfhVSO7cXUBmL8V7A0ol2jtOt0jM6qP7rBYO+OKs/vC/6/ZNTVFcDQR5iKGjMjGVd7Z1BBLhlrnio7Mub3GmJwBtifuZayTkICX6IgY=
+	t=1744201358; cv=none; b=cYJVMaEuFtUvju5C4RNWkvLoJ/1PDmGeist9ZgebII4DA+ENy4C5OvRh72Y+YSUdtXWEVIJ+7tCNLRZdUiwekHRhRvGaXPLZ4Z2GNg/1HiH0bdzBGj3U3j6RnFqPtrkztE2hoEHM0FR6lD/068QW1494uL5nh/Qofj1JGIGq+lg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744201351; c=relaxed/simple;
-	bh=LE+y//3PoHrlrUwskk7lkzy167MR2m8QvyNq8JW+NeY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D/77GKpzxXjvslbucwlmnd/4RS4WN6SG01s/0pOVygAJ0ehOhBPKVn2IK8pG5MQ8qNfUwlRVuWr1NZ/2uM826iNRpHlmBKMvsx75id4DGDusW4ocKjV7jeoEaKwn+AmOfjvzFIQGDVQz7oK6KPh3L3yOfSEGsrCWFAycm18Boj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-86d5e3ddb66so3131346241.2;
-        Wed, 09 Apr 2025 05:22:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744201345; x=1744806145;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bJL1/IMECgroxe4ixu4JwJZG4/o4g+ajZJq3/oMKTKk=;
-        b=WxcOzuj8JyRkZtR3DK03te3742ldxiZPq7WDuq+O5bCy6Rca3RK5riDaaubRaw/z4Z
-         5E0Workdw8wT+YOlPS6BcLyM7OiJCq2Q4b9aRnuzajWx6EAIhLFukSY5cC54DkSA8B2j
-         Rtx1lSlHc1Jk0WgB0Wq+IRX6J3y2Ly37LI9VObk4JpyccEQgAIyGpKYdqLDxdQc6/gX1
-         1nrCoquWPxpZLyJtGJbZOyqVrH+fCZK+9dbwJM4cr68irYxNqlbAKWYaRbox8V3kVRva
-         /gNTHP/u5iOedl+g/EB/DKrrJvf9O0Y7u3IhD354qmbIb+j35jDk5wdER90HR3vs/ulS
-         O9xA==
-X-Forwarded-Encrypted: i=1; AJvYcCVst504BPQ9olDDPeh34q7aI1+jIhadw/bXszEVquD0EQ40onZ0qoaX3VBBZKEWNkDum3Q0ICZh/T0bxMsoTwSZAEA=@vger.kernel.org, AJvYcCXnwaZrPQ1z2WNuEPnivSjBxb59Edn/tPAgPDgcmFdWlkBqLCDheedHND/wV9H44JzeP/1tyN0afST1fVE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNxg0gXbmqTiTEYu4YRsF3IPrvFoH/ByTHuMWx3MgAAMtNlxZk
-	UmN4lWDy9FWAwYWaSOJlBrN7B4Ky6YouXQCh+QfHAuFazhszNS0Khpz6h0SnVLE=
-X-Gm-Gg: ASbGnctrSXOdvBL5xtZvgG6MqqJUMr5DAJrHS5s1S7XAmMB9JvLMtiBveWbaX9KYvBe
-	QhydCa/Z4gwgzpQV4epeypLAwCJ4dQh4yFnByRq+9nuZbC7DmMatyYTpVGvSDc21Udjdw+eixnX
-	MT+p6j3k//SqkdZDUT6xUTK0wqt3Qukalgxy/pEKhWonXvcIy1S6HrdkWMHzz88Ys5gt5fdF3N1
-	+SirZI0fJH67zTN3Vw3YYtCePs7hYzg6rhkX5sqsiNDqhO24jghG/ekkbXEIok9aNUyifFar1eV
-	xA9FNq+fB548oUcbI7Pl0c1T1kBxmrX2EDXg6Ql8uMVAv4KTJEyQqot6HJbmhVndNX1DgoJpMHE
-	EWoY=
-X-Google-Smtp-Source: AGHT+IHgHLQu4g156S9rnKAS1tI3x64i/vIebdeKOkMW/WKDgtKpLuOwPFeyCiNBsdoemdVdVy6hJw==
-X-Received: by 2002:a05:6102:334a:b0:4c3:6393:843f with SMTP id ada2fe7eead31-4c9c415fd02mr1987753137.5.1744201345387;
-        Wed, 09 Apr 2025 05:22:25 -0700 (PDT)
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com. [209.85.222.50])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-875571373f6sm205045241.9.2025.04.09.05.22.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Apr 2025 05:22:24 -0700 (PDT)
-Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-86d3907524cso2849299241.0;
-        Wed, 09 Apr 2025 05:22:24 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXTXTUGcQW84BN4J8ORfvXjrVizxNvDr+5ARoWRginlxTBwp9hB7/WWRWsfx2OHKdBx6qQNfvQfYPmGcHfhnqPW61w=@vger.kernel.org, AJvYcCXlLrtN/Wc5k3kGjAbqfBk2cK7fbVesoOA93EtIoKZ9czv0ysCmy8UEr6EjZee2A/y6TzdiiS5kmJ4Gl9k=@vger.kernel.org
-X-Received: by 2002:a05:6102:f8f:b0:4c1:9cb2:8389 with SMTP id
- ada2fe7eead31-4c9c4160c95mr2421085137.2.1744201344054; Wed, 09 Apr 2025
- 05:22:24 -0700 (PDT)
+	s=arc-20240116; t=1744201358; c=relaxed/simple;
+	bh=NwYEHXfPH/JhOIY5bahDLjdLn+VXu7PO8U1iZ+IysJY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mqClleaa8F6CiZo+BFFOlfjVowN4iv9w88v5qnC8J5Ix0iYnFJ99aM/EnDWzVHpOmi+yDqtwaTyzwljLbZcDktgogIcwvBDKM+DM1ZqSG6iecZnNm5JsfFlI+EZcbJLfDEXARE/Nb1hYAffw3Jk/to9D0IODq9GoyxbNAH21HYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pyYgL2Wz; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lyH+l2mU; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pyYgL2Wz";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lyH+l2mU"
+From: "Ahmed S. Darwish" <darwi@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744201355;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=t0NkJjs2duFmNMufSDDgLb+Oj4/TN6nrtSv4WwLH3L0=;
+	b=pyYgL2WzXqzvLXpFmRwTzMQr+JnGazXbvdWwildkDLGsFFmV/iYfa6MVJcDf0C4KjXeqmz
+	W+3zzx2r9TpdNkvjAPoaeNVRlc+vCDiSqFnupgf2uuyfVjV3Eed2d9exBVN9FtcPjdT1mb
+	KdSQsSBnAm6UkHx15qEu1DVxRMNsATcwUOprrmqN6WaWU4xSaz/BcRSSpJThxGvv/qa81s
+	/v1REhtqkmhLQldAJO0a61FoTTzZ2eeD1iQAku4rMCTiLFqAnHTN1XbGs1DK4ANID0OGPr
+	27aKiy3Q4Bs7YccGQmcLLIAXA7JodZpFVyw7sjVJTMU5rek0vBYbGD0p1ZEZ2g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744201355;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=t0NkJjs2duFmNMufSDDgLb+Oj4/TN6nrtSv4WwLH3L0=;
+	b=lyH+l2mU2OXC4WDq7o1tv5KVKBmiKFJC7izYuIGwQ8JWgUZYhVvEaiP+N6xa5B1+PSP4al
+	nVGNiSnflPoNbDCA==
+To: Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	John Ogness <john.ogness@linutronix.de>,
+	x86@kernel.org,
+	x86-cpuid@lists.linux.dev,
+	LKML <linux-kernel@vger.kernel.org>,
+	"Ahmed S. Darwish" <darwi@linutronix.de>
+Subject: [PATCH v2 0/2] x86/cacheinfo: Fixes for CPUID(0x80000005) and CPUID(0x80000006)
+Date: Wed,  9 Apr 2025 14:22:29 +0200
+Message-ID: <20250409122233.1058601-1-darwi@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250401090133.68146-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250401090133.68146-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250401090133.68146-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 9 Apr 2025 14:22:12 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXxoLOsAi8qtARhq6Z-ju7pytBonAQKC5Q8XKvb_YRPTw@mail.gmail.com>
-X-Gm-Features: ATxdqUEiBvOMzWpw7V5yFKH5RLWLxl2HUDIyxt7xDP5_uWVS4Ux4gJsD7QM6m9g
-Message-ID: <CAMuHMdXxoLOsAi8qtARhq6Z-ju7pytBonAQKC5Q8XKvb_YRPTw@mail.gmail.com>
-Subject: Re: [PATCH 1/4] soc: renesas: Kconfig: Enable SoCs by default when
- ARCH_RENESAS is set
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Russell King <linux@armlinux.org.uk>, Magnus Damm <magnus.damm@gmail.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, 1 Apr 2025 at 11:02, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Enable various Renesas SoCs by default when ARCH_RENESAS is selected.
-> Adding default y if ARCH_RENESAS to the relevant configurations removes
-> the need to manually enable individual SoCs in defconfig files.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Hi,
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v6.16.
+Changelog v2:
+-------------
 
-Gr{oetje,eeting}s,
+Rebase over tip:master, as of now:
 
-                        Geert
+   5c5e95d43de9 ("Merge branch into tip/master: 'x86/nmi'")
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+per Ingo's request.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Changelog v1:
+-------------
+
+https://lore.kernel.org/lkml/20250409105429.1048199-1-darwi@linutronix.de
+
+While working on the x86-cpuid-db CPUID model on top of the CPUID(2) and
+CPUID(4) cleanups at tip/x86/cpu,[*] I've discovered some L1/2/3 cache
+associativity parsing issues for the AMD CPUID(4) emulation logic .
+
+Here are the fixes on top of -rc1.
+
+* Summary:
+
+The AMD CPUID(4) emulation logic, uses CPUID(0x80000005) and
+CPUID(0x80000006) for extracting the L1/L2/L3 cache info.  It then uses
+an assocs[] associativity mapping array to map the extracted
+associativity values to their CPUID(4) equivalents.
+
+Using the same associativity mapping array for both leaves is invalid.
+
+Per the AMD manuals, the associativity field semantics between
+CPUID(0x80000005) and CPUID(0x80000006) is different.  The first patch
+fixes that for the former leaf.  For the latter leaf, the second patch
+completes the associativity mapping array and handles the special case of
+an L2/L3 associativity of 9, which is just a marker — not a real cache
+associativity value.
+
+* Example testing for L1d cacheinfo:
+
+On a Qemu-emulated AMD machine without CPUID(0x8000001d) topology
+extensions, and with below cpuid(1) view:
+
+   L1 data cache information (0x80000005/ecx):
+      line size (bytes) = 0x40 (64)
+      lines per tag     = 0x1 (1)
+      associativity     = 0x8 (8)
+      size (KB)         = 0x20 (32)
+   L1 instruction cache information (0x80000005/edx):
+      line size (bytes) = 0x40 (64)
+      lines per tag     = 0x1 (1)
+      associativity     = 0x4 (4)
+      size (KB)         = 0x40 (64)
+   L2 unified cache information (0x80000006/ecx):
+      line size (bytes) = 0x40 (64)
+      lines per tag     = 0x1 (1)
+      associativity     = 8-way (6)
+      size (KB)         = 0x200 (512)
+   L3 cache information (0x80000006/edx):
+      line size (bytes)     = 0x40 (64)
+      lines per tag         = 0x1 (1)
+      associativity         = 16-way (8)
+      size (in 512KB units) = 0x10 (16)
+
+Before applying this PQ, we get:
+
+   /sys/devices/system/cpu/cpu[0-8]/cache/index0/ways_of_associativity: 16
+   /sys/devices/system/cpu/cpu[0-8]/cache/index0/number_of_sets: 32
+
+and after:
+
+   /sys/devices/system/cpu/cpu[0-8]/cache/index0/ways_of_associativity: 8
+   /sys/devices/system/cpu/cpu[0-8]/cache/index0/number_of_sets: 64
+
+Thanks,
+
+[*] https://lore.kernel.org/lkml/20250304085152.51092-1-darwi@linutronix.de
+    https://lore.kernel.org/lkml/20250324133324.23458-1-darwi@linutronix.de
+
+8<--
+
+Ahmed S. Darwish (2):
+  x86/cacheinfo: Properly parse CPUID(0x80000005) L1d/L1i associativity
+  x86/cacheinfo: Properly parse CPUID(0x80000006) L2/L3 associativity
+
+ arch/x86/kernel/cpu/cacheinfo.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
+
+base-commit: 5c5e95d43de95309622fbf85bf55765ca2cae551
+--
+2.49.0
