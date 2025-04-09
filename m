@@ -1,115 +1,134 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83F32270EBF
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 17:04:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D28CF1DFFC;
+	Wed,  9 Apr 2025 17:04:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744218249; cv=none; b=OjTt/mDVmRa0a0lkSTka3giDOESTS2n/lhDoHGRnFhPDL4RJXDq/SHhulq7IRwdBR7xW+Yr7YjmmlPNkQ6kzywoJBb5lTJEi1MZC3o9VIt2aIPuORSd3DteIVnZDUhycy19iu7GVY/ThK3Qt3hrXzWAvcVRqfGc30wZH9Ez6L3o=
+	t=1744218292; cv=none; b=eAHMeB6ryfmLaY9rNilxOPmaOUMdsBcs/UC9renNmbCJuM0Ea5l+dCXlRM6zs3bOYSSgXbv7Wl81ZKTgSS5Ig7cQEmgMSG6m/t6SQaqAkDegnP5cy52B1ITm9FcqvGcagf518RWx+WS/O1W3SkgsFdZFlX61/2pUL6n8ledyAIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744218249; c=relaxed/simple;
-	bh=kN9JnMbt7VVDHzh+ztLsT/qKogWwPPdRuxWtpEOFJ8Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rE8CBpQaHk+CPOWeFP5ZF3705z5Nq/sW056mlhdpYwi9RAyJuPzy1hWcy537Jn5MI9SIRQQ4OEnhpjCs/biCoYFqyBU/iLcfCLfUiufGDmGf+oouy3g1WafUIDLhcI1tz/xxHancKZc4G/JTHMzcfG2cvWSFr7HV4rb/kwgqkaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=0RdhAPNR; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1744218292; c=relaxed/simple;
+	bh=AK63bXsws5LI+IIQAeopP/uy2WwZqDIcj/MXMgiB7g0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I2Faq7RvFhNxgV818WlRfWH3Sdgz/1WEAh+vYucPaECv1HG9nmT4XrfEVR+PsVBtVvoCA3YoYdjSlyeTSSL355Dd9CN5ogQiPs0B6y2zuQxbAhNyWvnsO5LpSWGiVZ0JJOknFMfFObv2NZJDxfT0d1dghPQGk+Ai4hOaPZrjZFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bIwpPEVa; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="0RdhAPNR"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5499e3ec54dso8375914e87.0
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 10:04:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bIwpPEVa"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-3014ae35534so5852672a91.0;
+        Wed, 09 Apr 2025 10:04:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1744218245; x=1744823045; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MqlYSrcDfr+Bx9X1PTIHEgRTGk5ECdZWTlRh/r4BB3A=;
-        b=0RdhAPNRPCyuj3QK09n009+tJ/zUw5f4SNULbYFC6i1aLF9zLwSB9NwrPB/mWML4TL
-         yKMyv/wgPWGvTOIQBzZEB8RemLtinYZgnz3+QvgIEtHmVyb0wC288nC/uXafxBxa8jYN
-         1W5qx0YFVeBo0BVpYMAYE5BQ8Xv081xpwjMEXZNyHlp1SCmakk5sWTv4UWf6sS/N6Wy3
-         VcYwXmrFyyBFYtdFv6H3KOGY0YFqK2SycbVztd3AAt0UtPo6id42jIw/2WPcfRVPsWua
-         Szg4DHzilxkqjwasZ9sMDPh6SmEIjKhQXMP6X/YkAny4T3SJIrQ+XfLjJHIwWmfuoVU7
-         ExDA==
+        d=gmail.com; s=20230601; t=1744218290; x=1744823090; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=klGbrW2mzbCdR+XeXsx1uph/j4tkgJ+FLETarobmc34=;
+        b=bIwpPEVaIA51//rxdBCYippJnNQhm/GjFU6gUHN/+VytrjZLHXlOQfvYvKx1L2ab2y
+         xozRRwpe+QZ0W3tCLM3LwIpjlN+Tw3du1HlFQRCTLcHaeo8ZSCQlLTyNstt24NjDnymG
+         UkqdgwiryiZPOw4Ypb/iHvlEMpgdEgY/ay0TrXUwHlI+TkvsHLo+X5WcIKuZVmdAcfg8
+         n4J68y9+ZdY1fRe/hvrH8xRkayfk7p+O+rZ/TUovLoV/E34Ps4c/LPPQqmqnA2IJmCY6
+         REIt4RX/6DN8aGyRrV87WX3h+v07Zw5n3jl9vsfbrZNeOPdnABeQUJ3wCPLInhh0v3F6
+         HYyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744218245; x=1744823045;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MqlYSrcDfr+Bx9X1PTIHEgRTGk5ECdZWTlRh/r4BB3A=;
-        b=M4r6gUJC3YMLztPAaxJH4UyvwZeVkF8/zDexlc7AMnXULW7fcGV68ckpzRCQrM7cd8
-         xytYRTqVqXR/yPXBxA8whf0N4iQ9OiXJ9nI9eD3ZXWlz1sn9du8PmN7RnEwmPqfNfaJd
-         o5MietjL1bptAmwqcVGuwcLlS3Bj5tu8HlElKectt1Wcu+AUmvz2GrB50QOCsv4qPBep
-         sR/0TdZ3WNU8kciiAr7V9Qkx6ZCUs5Tu3/twK0FQmBOl6PXUFuKMNm5yDxHZcDfJWLnC
-         3SKTHYJk7lTqYGiZ/5nhOrHNfXNOma1NaFUyfo7stf2fnS1TYYwxfVEJQzJmptfNwtVn
-         BCpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVZaqHqULWFxY1t8Z1JbLngP21mlJQzghVQpNFN53UB9MtQ+7O7KotwKz1dyqxhvY0ETgbmROiNJZk+rUQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfQX3Z2Ozf46cgfl+tsmqLb0gU6sMWet4uNpdvppsg0mMoqv0M
-	4b7OGbtjmaUIACR/pjVs9N2zrWDQZ4a9k3MZXdFvfsaKci1k/8mjIYYxq9zSdTL63sRQ8new2mK
-	/dJqv3f0vbXG04ETl6VpuCb0T4cz3ZEszkxPVlIiF7zgux9n1
-X-Gm-Gg: ASbGncuCMppTNUZpOptleUCTW5HIyCWwuFo+RlnjcmqL6gJaOOYAqNnPVP3qo16ci3+
-	6+he8KIdm1R7eZA/UGVgS9CAuawLTkTLQSkszi3J+cKCXJMCGT2DX6VXJnmWKzVc/wVwd6ggEAD
-	8HJuoBQziIKzaluv85gfep+vOAeTwFQMksSvVFyXyKzH3sHFwlT/dp/A==
-X-Google-Smtp-Source: AGHT+IG0sdf40rd8ltxoAmZ7Hkro96U10DsVSvaXZNOHgXQ0QuK1RAiemvn92IF5EB5HFu9m8RLiVFJQ922J9YjgaUU=
-X-Received: by 2002:a05:6512:2397:b0:549:6f5a:27b1 with SMTP id
- 2adb3069b0e04-54c43723172mr981927e87.30.1744218245324; Wed, 09 Apr 2025
- 10:04:05 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744218290; x=1744823090;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=klGbrW2mzbCdR+XeXsx1uph/j4tkgJ+FLETarobmc34=;
+        b=Cbwh7HyFoCa7Yr7wLz0iurkYgjoAArboYbPtHIY/Uxy6+nijjQdvLEuelUBajZljjk
+         P2mW6Pgym7JMIeCFiZ3pEdvEt6k6+70dOuN4nyy+NuzrT158IKz89h0Ws2AYiTTiEddR
+         VBBx9kyQZ0m5jrwaj041QV1GQwZkD7W8c4ZEfYiZrmT4e4PdMDTxqMRYDSnDWpwXcq5J
+         ElNIiVxHpVKA04bxDuOhO6L9q7lqXpFWiGF80cd9nWloviPMc9K3Y+DvD0xaCWGVS3Ut
+         Hcv5li3hGKiy/+3iq3w3oXaaynJIySmjNwdeKfY9t4x5zeKkMq2JcCXslRClCbvku6js
+         zJkw==
+X-Forwarded-Encrypted: i=1; AJvYcCU8LpF3GdalMpQkcaN4V++V97VgUxueorm4UbbG7HkO8SfXBZlVfEOV0MXcUKkEfLSeV0Y87RpJ@vger.kernel.org, AJvYcCWeQ1jY6uzjC7cgFrJt3e8G9iAjRe5Bg14iRnJ3XTA+uGuv6BC7qcCrwuP+rKAE+qe7kwBM/3Xp6wdYmWg=@vger.kernel.org, AJvYcCX3I1D9UcPXXnbq6igSTp53d7BEmajLHQOPqtSkhGGEofDsTQCeuCOHFR4PMyBlpY+uSXvxyybDpxy6J6Fj6HloIgac@vger.kernel.org
+X-Gm-Message-State: AOJu0YyyIpYxWeRQQS9SdefBeFxnoyxtGtKZPss4lNQu43VbIwTqpAY0
+	Mg+0+A5CmybW1xm4D+S5RJtu4EnzLj02YZoJN+24ZtG2wT8E3r2E
+X-Gm-Gg: ASbGncszd5PvgNbxPh62UtE/LThZQGdSABVG+/al/fHrZlQNy8PJjqqSXWjRQlyu8zW
+	mEH+bXwCXXRzC6zQwbH+x4RuM0RdklQUL5rj28IJEg81h9cPFwZwvH27LzlHw+78ieTKW2Pv9jo
+	l8ZrqNKzjW/J64jMC10OCM4GZGBjrdEV9862chdPFwtXdfZTxektIThyJaiSowuHV2hIK1CSdJ6
+	Qq5TTOw8mq57zSySQRPjv/nGoxjhmaCVlVJ5idLhQs4A/VFHc1YTnRBTQCbXKEdqdLypBjeWgMZ
+	8FKHDElc5NVZeFXZa2cL1x5zoE30OHSWPk6I0YVxIjM1
+X-Google-Smtp-Source: AGHT+IH1GJQRsQdL8vsxW2i6J/AcLPmhbW7dGfFqiXayketC4IAZW8FIee9qDIlr5sPY9tyxW/kMew==
+X-Received: by 2002:a17:90b:270b:b0:301:1bce:c26f with SMTP id 98e67ed59e1d1-306dd324830mr3507098a91.3.1744218289915;
+        Wed, 09 Apr 2025 10:04:49 -0700 (PDT)
+Received: from localhost ([129.210.115.104])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306df06a767sm1890018a91.6.2025.04.09.10.04.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 10:04:49 -0700 (PDT)
+Date: Wed, 9 Apr 2025 10:04:48 -0700
+From: Cong Wang <xiyou.wangcong@gmail.com>
+To: Jiayuan Chen <jiayuan.chen@linux.dev>
+Cc: bpf@vger.kernel.org, mrpre@163.com, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Jakub Sitnicki <jakub@cloudflare.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next v1] bpf, sockmap: Introduce tracing capability
+ for sockmap
+Message-ID: <Z/aosJ3uvzTZTEXS@pop-os.localdomain>
+References: <20250409102937.15632-1-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407-gpiod-is-equal-v1-0-7d85f568ae6e@linaro.org>
- <20250407-gpiod-is-equal-v1-1-7d85f568ae6e@linaro.org> <Z_aFBfjb17JxOwyk@black.fi.intel.com>
-In-Reply-To: <Z_aFBfjb17JxOwyk@black.fi.intel.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 9 Apr 2025 19:03:53 +0200
-X-Gm-Features: ATxdqUEFfYRnPGi35HjFj1Fnc_q7q55qd7QfatcmT7NN48s4l6l_VroqVjqKAtU
-Message-ID: <CAMRc=MdUxWa05uWpf2r7h-_csBciZD6pp4tHvaxsXoWFQ4Bi0Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2] gpio: provide gpiod_is_equal()
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, 
-	Mark Brown <broonie@kernel.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409102937.15632-1-jiayuan.chen@linux.dev>
 
-On Wed, Apr 9, 2025 at 4:32=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@intel.com> wrote:
->
-> On Mon, Apr 07, 2025 at 09:08:14AM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > There are users in the kernel that directly compare raw GPIO descriptor
-> > pointers in order to determine whether they refer to the same physical
-> > GPIO pin. This accidentally works like this but is not guaranteed by an=
-y
-> > API contract. Let's provide a comparator function that hides the actual
-> > logic.
->
-> ...
->
-> > +bool gpiod_is_equal(struct gpio_desc *desc, struct gpio_desc *other)
-> > +{
-> > +     return desc =3D=3D other;
->
-> I think it's better to have the one checked against NULL. That's how
-> comparators make more sense, see, for example, 1b1bb7b29b10 ("drivers:
-> base: Don't match devices with NULL of_node/fwnode/etc").
->
+On Wed, Apr 09, 2025 at 06:29:33PM +0800, Jiayuan Chen wrote:
+> Sockmap has the same high-performance forwarding capability as XDP, but
+> operates at Layer 7.
+> 
+> Introduce tracing capability for sockmap, similar to XDP, to trace the
+> execution results of BPF programs without modifying the programs
+> themselves, similar to the existing trace_xdp_redirect{_map}.
+> 
+> It is crucial for debugging BPF programs, especially in production
+> environments.
+> 
+> Additionally, a header file was added to bpf_trace.h to automatically
+> generate tracepoints.
+> 
+> Test results:
+> $ echo "1" > /sys/kernel/tracing/events/sockmap/enable
+> 
+> skb:
+> sockmap_redirect: sk=00000000d3266a8d, type=skb, family=2, protocol=6, \
+> prog_id=73, length=256, action=PASS
+> 
+> msg:
+> sockmap_redirect: sk=00000000528c7614, type=msg, family=2, protocol=6, \
+> prog_id=185, length=5, action=REDIRECT
+> 
+> tls:
+> sockmap_redirect: sk=00000000d04d2224, type=skb, family=2, protocol=6, \
+> prog_id=143, length=35, action=PASS
+> 
+> strparser:
+> sockmap_skb_strp_parse: sk=00000000ecab0b30, family=2, protocol=6, \
+> prog_id=170, size=5
 
-Yeah I guess it can be improved in a follow-up.
+Nice work!
 
-> Ideally it should be IS_ERR_OR_NULL(), but we have here a principal disag=
-reement,
-> so this might be yet another (buggy) function in GPIOLIB.
->
+While you are on it, could we also trace skb->_sk_redir bits too? It is
+very useful to distinguish, at least, ingress from egress redirection.
 
-Our disagreement has nothing to do with this. In fact validating
-against IS_ERR() (and returning false) makes more sense than just
-accepting IS_ERR() in acting like it's a valid descriptor.
-
-I will send a follow-up tomorrow.
-
-Bartosz
+Thanks!
