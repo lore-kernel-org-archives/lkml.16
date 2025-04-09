@@ -1,64 +1,57 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF5E268FE7;
-	Wed,  9 Apr 2025 14:57:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7965D26981F
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 14:57:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744210633; cv=none; b=XO+iXoshCPL4wuLI9I0vD45eVD9q86c8YxODaWvRG4mpl4HinaVpSN3ekMYDCeHhEIKiBRSjX7T4tLme7c17rXekX0zrMZ1D3LceMC1IL55A9uMVre3mxAKYYSti5bewdWZzez39SgfWWKxOk7Gi7REnP/juc7pBDtUPSZakHp0=
+	t=1744210643; cv=none; b=KHa1q9n+Js6SeBJXgr0Tmvspo5l4OZO55jGUVwrz1pufkEp5N2gIMGuD/pD1Z4WSF/bJLi/RTO2ij0CzbbZ8XGrKFT027FKA+4pCnD5JgsFAPFXhuh4f43Ok5yXIQagnKYigHjxa8J0GquZsPW3Qu4Fq+LNcsYcJL67eY6Xu6J4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744210633; c=relaxed/simple;
-	bh=ADNGUNPjht6pF0bZgUe8BuYoaHN32NWDtMTTxruXVD0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l37MTtjHZ2v0bkWrM61EP+SxMHT1a5awUuYYVk/63qML4xzXeqcdK04E4GP6UmNpPjv70SgTQwojWMCqhLR9VP8if13rmKB4+P/WM2ZOqioFL7iBlpDOKwF52/rl9gZfsSCDCCugRiDWuc78iPzqToHyhhOuOWApI3lbsL4wqGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eZeqCwJg; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744210643; c=relaxed/simple;
+	bh=pjfSeuLPVBAQn+LkAC6CaVgrqz5G7ixyn15ncvGjkKU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=HBs97eknVjXgxRO0+0SHiPPjjvNS/fK1tnI6Wm6L3unmKFEaqu6ydzrZQ6NOTO+aBfUEQMRIFGj6EE+vrfIBa7dfTuNxRUCfDhR60kJUK9OS4yQnejiR8jntMQBuYA84EeBf3fsUBTrzU5VvZqWvnzp0CBaXw4HCPHoP2IFjcIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=iIztZUFK; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eZeqCwJg"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30bf8f3fbd6so7626851fa.2;
-        Wed, 09 Apr 2025 07:57:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744210630; x=1744815430; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XTxp3qW+KPuzf+zXWuGUYa2ldWHd+1dpKttsCAAJnR4=;
-        b=eZeqCwJgTbS5AM6/SUnly4j1VmICDewXKwZQoCl5BQt2jc4KyR06uxYC0ZcYBBwLo8
-         EXhRZaFBn9NlIFcwEo7miiNaozhgRz7HD+Wg718CUT6QnlhowxQjt8+lNNj/lX4V8IZL
-         ckPTuIMZHlY9VSf0jkTQNIG5g8hhZwxHI2K7r8oWmaTSg8p4dZs7eBKsGjy/OHnzC1L+
-         VtkNNn+rV8AhCSFRIe1h6JgdB+qpC4SiwVaUjib8xGU1dV6geF8wwVeZg7DZEYrdhGl6
-         kBK2urHK4ucHnSb+cnsMTPtSDRm8PhpEmXLuRF3qAR2+DSl9bcJO9RJasFe/Rc1z3m8V
-         2KYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744210630; x=1744815430;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XTxp3qW+KPuzf+zXWuGUYa2ldWHd+1dpKttsCAAJnR4=;
-        b=nZlfv7ZQEr//dhqLH6WF9DWZ7u03yXdJyJFKvuHSap/kxUx4nprYxVQrVph4VM04Df
-         yZZDr4r9h3HuH4XI94TyPHgTyOiGR1yURxC5gPaghegSr08gxwIHJGjRrWhhBEPqO2eb
-         stK34X0gv5tdVvIuzcudgsn9YPERfcVlI7rwQusMK71JvJMkK1GNwYDCX7CL5x+ALHTI
-         8TwyrLTSGD1hLshnM8HwWS+6yonKiuExbAcbG+VSRKBVEUEmfwToXeAQE+aK33S+6BMk
-         0DaoDtL+shmIy3jolXW2QMJ6DHmqwpJmgJR6kVXyhji5UsqlYOBUL1FHi0XwIxEbun4w
-         coLA==
-X-Forwarded-Encrypted: i=1; AJvYcCVFX8QzIMSXVI+CgvUU7pPa0v0AR7lsWYyTuX4FIY+L9WOXSVsy3calB7ZWurL3Q376ARgvbkv8MT9tqA==@vger.kernel.org, AJvYcCWYQGJC5GsLGApCVJWagnf+p1oL7miZ4H9SFvfxhvNQasewdwNv9aLX1tX4+RB1FmAV3lLUYayd@vger.kernel.org, AJvYcCWz08ISi45ig7p41fdcVaK7iDfwYaMRuWWOJ+CKSJ7UaU/yZCuzOgwKC0XmlZPyRgOajtat1XIfZ6MJajM=@vger.kernel.org, AJvYcCX/V9DPdGCJPdjWZrJg2jiamquDXqZ2Pb45hYFjEq3KD7FNQBiv8ESfo8pk6O1VoyyiS/zfMehoaH5Abw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzM8WwaEjUGmW4L5YKM2lJJqN4tLfWERz2QDm4jduPt3XTJxdzY
-	gB6g07QOtkFR/Vyk30zkkG0OBUXDhnLJrQViQfDhb4OyTbX5nRpy
-X-Gm-Gg: ASbGnctBNw9viPsr3mSFcabmVEFcGRUm/KOA9eWuV/YqabS74uWwDYDVwnPdL8vDUSp
-	WXl7oJ346mvIZq80AlRLx1kzy/b20ToWZUL60ptStVogxfdOSe+12rCHQC7/V4BqQ/7LLLWOu+4
-	aUnhG+EPlcx2kE7EKWEiduQi05v+8I/A8uCaMPkKGTmbXsWv2cMviZcM28tftLYDLz/dQcyc+mf
-	GMBk5CIrR9PLUaTgHNDcAxLmUTZPOTYPwVDi+YrysZBYxW1DBmD9Ifx864lJf+tUL0KBIlSpDaj
-	0HX3UmycvA6odJ9SRAwqdBPgurGxMqZFOMK3uhWzr1AOGTTvvIipkczwgyquzXp79UBlEQ==
-X-Google-Smtp-Source: AGHT+IG7fk9emZaqKs/kKGowvaUASd2CDo9SSBq5dR2zvDPKxRK4W1C4hr7cqLTnQPNN0OUJNfi0kg==
-X-Received: by 2002:a05:651c:221a:b0:30d:62c1:3bfc with SMTP id 38308e7fff4ca-30f4387ba49mr2911011fa.7.1744210629436;
-        Wed, 09 Apr 2025 07:57:09 -0700 (PDT)
-Received: from [172.27.52.232] (auburn-lo423.yndx.net. [93.158.190.104])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30f4649d61csm1929521fa.7.2025.04.09.07.57.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Apr 2025 07:57:09 -0700 (PDT)
-Message-ID: <02d570de-001b-4622-b4c4-cfedf1b599a1@gmail.com>
-Date: Wed, 9 Apr 2025 16:56:29 +0200
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="iIztZUFK"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250409145719euoutp0160b1709278aad6985708b41bee01bc35~0rlXpfI451484014840euoutp01Z
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 14:57:19 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250409145719euoutp0160b1709278aad6985708b41bee01bc35~0rlXpfI451484014840euoutp01Z
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1744210639;
+	bh=Yha5fxmt9Z3U4yCtDlYZ8avZRDhv2VDiruB2EG1+TZo=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=iIztZUFKDZY4QVCO6zSth9zPgsvMMSmx0qMIOB07XqNFSkJpTmDQYHYw1DPYbLiBq
+	 NT1T2iLVfeWJ+moY6abMDkxsoAcHn1jx4Ev2Y3C1RHqd+HpgxisMsnSFvG6ph5A255
+	 prHJlXj5ieM9T34kcwBY4jTLdR+3EY2RaaY7/g7Q=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+	20250409145719eucas1p2ad84f6af2002edc79e7d6e10b75beb64~0rlXWHIuh2592425924eucas1p2n;
+	Wed,  9 Apr 2025 14:57:19 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+	eusmges3new.samsung.com (EUCPMTA) with SMTP id E3.9F.20397.FCA86F76; Wed,  9
+	Apr 2025 15:57:19 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250409145718eucas1p16597d26ed3fbea97307fc964cd9e5268~0rlWtsRXb1538315383eucas1p1H;
+	Wed,  9 Apr 2025 14:57:18 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250409145718eusmtrp16e8c5c3b447b4f6489bed767ac91d1c8~0rlWtJyQ61977719777eusmtrp19;
+	Wed,  9 Apr 2025 14:57:18 +0000 (GMT)
+X-AuditID: cbfec7f5-ed1d670000004fad-9b-67f68acf2849
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+	eusmgms2.samsung.com (EUCPMTA) with SMTP id 3F.43.19654.ECA86F76; Wed,  9
+	Apr 2025 15:57:18 +0100 (BST)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250409145717eusmtip2ee05530ac9517db0b5cea501963c38ec~0rlV-duWP0701107011eusmtip2U;
+	Wed,  9 Apr 2025 14:57:17 +0000 (GMT)
+Message-ID: <cfe88721-e5fa-423f-aec9-92bc9b7bb92e@samsung.com>
+Date: Wed, 9 Apr 2025 16:57:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,84 +59,92 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] kasan: Avoid sleepable page allocation from atomic
- context
-To: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Hugh Dickins
- <hughd@google.com>, Nicholas Piggin <npiggin@gmail.com>,
- Guenter Roeck <linux@roeck-us.net>, Juergen Gross <jgross@suse.com>,
- Jeremy Fitzhardinge <jeremy@goop.org>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, kasan-dev@googlegroups.com, sparclinux@vger.kernel.org,
- xen-devel@lists.xenproject.org, linuxppc-dev@lists.ozlabs.org,
- linux-s390@vger.kernel.org, stable@vger.kernel.org
-References: <cover.1744128123.git.agordeev@linux.ibm.com>
- <2d9f4ac4528701b59d511a379a60107fa608ad30.1744128123.git.agordeev@linux.ibm.com>
- <3e245617-81a5-4ea3-843f-b86261cf8599@gmail.com>
- <Z/aDckdBFPfg2h/P@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+Subject: Re: [PATCH 10/10] [RESEND 3] dma/contiguous: avoid warning about
+ unused size_bytes
+To: Arnd Bergmann <arnd@arndb.de>, Andy Shevchenko
+	<andriy.shevchenko@linux.intel.com>
+Cc: Arnd Bergmann <arnd@kernel.org>, Michal Nazarewicz <mina86@mina86.com>,
+	Kyungmin Park <kyungmin.park@samsung.com>, Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>, Robin Murphy <robin.murphy@arm.com>,
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org
 Content-Language: en-US
-From: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-In-Reply-To: <Z/aDckdBFPfg2h/P@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-Content-Type: text/plain; charset=UTF-8
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+In-Reply-To: <3f3ed85e-187b-4b06-812b-fe34e23511d9@app.fastmail.com>
 Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrDKsWRmVeSWpSXmKPExsWy7djPc7rnu76lGyzrFrbobZrOZPF30jF2
+	i21bNrFa/PpiYbH39VZ2i7NNb9gtLu+aw2ax4HgLq8XBD09YHTg91sxbw+jx+9ckRo9NqzrZ
+	PO5c28PmMe9koMeLzTMZPdb9ecXk0bdlFaPH501yAZxRXDYpqTmZZalF+nYJXBmn9yxkL+jk
+	rJjyaw5LA+N69i5GTg4JAROJiecOAdlcHEICKxglLi3azQrhfAFyls+Bcj4zSqz9Ox2uZfXH
+	r8wQieWMEr2f30M5HxklTl2fxAhSxStgJ/H/9j82EJtFQEViTvc8Zoi4oMTJmU9YQGxRAXmJ
+	+7dmgE0VFoiV+PLjF5gtIhAhMXv6D7DVzALdTBJtN9rAhjILiEvcejKfCcRmEzCU6HrbBbaA
+	U8BF4sSH/2wQNfIS29/OAbtIQqCZU+LE2vNMEHe7SJz80MIKYQtLvDq+BeofGYnTk3tYIBra
+	GSUW/L7PBOFMYJRoeH6LEaLKWuLOuV9AKziAVmhKrN+lDxF2lFjddocZJCwhwCdx460gxBF8
+	EpO2TYcK80p0tAlBVKtJzDq+Dm7twQuXmCcwKs1CCpdZSN6cheSdWQh7FzCyrGIUTy0tzk1P
+	LTbOSy3XK07MLS7NS9dLzs/dxAhMYKf/Hf+6g3HFq496hxiZOBgPMUpwMCuJ8E7I+5YuxJuS
+	WFmVWpQfX1Sak1p8iFGag0VJnHfR/tZ0IYH0xJLU7NTUgtQimCwTB6dUA1Px5JMRL6O3f/h1
+	OqDLTPtR6fPuYx1z06PTbQxMO/PunmSWr2Pryrdu+en483qCl53jrh0NOzzd5l7/2n16XeuL
+	sicqfbu5uCJFtyvOm2j4nOX4lcvFisG2P961idt9kg5y2LXlTfSSbzf1JfYHMR3NZb+VfPr9
+	e9fHgamHreXm6HYemOjo6q9t2SR7Jox74Y0NYjKvPykcnWv+1q2RdcHDSzUTkz13LtZrrD3z
+	zjTwdMDpd8KmKYF21ataj+wzUzb+8nvq5TVOnl4t3SKbpX9NEjyndN5j/6qqYPlcX1dp9uPG
+	PR1zuwsbY5qOPN1Xu+6QR+WduvvHZK8VewUvXPTUd931/AXJpzlUmcPa7iixFGckGmoxFxUn
+	AgCr+6VjzwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrHIsWRmVeSWpSXmKPExsVy+t/xe7rnur6lG8z9qmbR2zSdyeLvpGPs
+	Ftu2bGK1+PXFwmLv663sFmeb3rBbXN41h81iwfEWVouDH56wOnB6rJm3htHj969JjB6bVnWy
+	edy5tofNY97JQI8Xm2cyeqz784rJo2/LKkaPz5vkAjij9GyK8ktLUhUy8otLbJWiDS2M9Awt
+	LfSMTCz1DI3NY62MTJX07WxSUnMyy1KL9O0S9DJO71nIXtDJWTHl1xyWBsb17F2MnBwSAiYS
+	qz9+Ze5i5OIQEljKKPHx5E9miISMxMlpDawQtrDEn2tdbBBF7xklbl6YAFbEK2An8f/2PzYQ
+	m0VARWJO9zyouKDEyZlPWEBsUQF5ifu3ZoBtExaIlfjy4xeYLSIQITG37RfYZmaBXiaJzR+b
+	2CE2nGOSaDzVD9bNLCAucevJfCYQm03AUKLrbRfYNk4BF4kTH/6zQdSYSXRt7WKEsOUltr+d
+	wzyBUWgWkkNmIRk1C0nLLCQtCxhZVjGKpJYW56bnFhvpFSfmFpfmpesl5+duYgRG7LZjP7fs
+	YFz56qPeIUYmDsZDjBIczEoivBPyvqUL8aYkVlalFuXHF5XmpBYfYjQFhsZEZinR5Hxgysgr
+	iTc0MzA1NDGzNDC1NDNWEudlu3I+TUggPbEkNTs1tSC1CKaPiYNTqoFp0UnnYAm3aVL6yyZU
+	hxw2Crj97Xx2S6hhj412iIKwVeHTKXYFrzq0ZzySWsjQoqCz8uULvfglEzcV9aRarExwSiu9
+	8+KK2pE0l7o7dY6y/RzzD+7SYOljNn07I9BHt3aLvMsuv73/rASrNDwUPzsey5XkuJri+8P2
+	FuuXC2I3Ov7d0hKR15jRfTbIb3LMy9aF7t4zDcNORRUG5H1f/YNrp6+ZZprIYvkqw43FnbKf
+	3A/KV4Tbdd4XmzY/x2jnK7Ofe4y8rt0QXTzTquPdTvV1lzVLejvcYnS353MvKteYN+fqkV1X
+	VXdvXvj6qUlw/NdXoblxjqfkG1PZkuR1z+3iYLnCfFdVP+xIV8tDViWW4oxEQy3mouJEAHdV
+	WLRhAwAA
+X-CMS-MailID: 20250409145718eucas1p16597d26ed3fbea97307fc964cd9e5268
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250409122452eucas1p2fd6f06f30de0c6b37b510a10081b724a
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20250409122452eucas1p2fd6f06f30de0c6b37b510a10081b724a
+References: <20250409122131.2766719-1-arnd@kernel.org>
+	<CGME20250409122452eucas1p2fd6f06f30de0c6b37b510a10081b724a@eucas1p2.samsung.com>
+	<20250409122441.2875424-1-arnd@kernel.org>
+	<59af67fa-ca0d-48f6-8b78-b1c694af9dfd@samsung.com>
+	<Z_aHdH7Ei_cffeIL@smile.fi.intel.com>
+	<3f3ed85e-187b-4b06-812b-fe34e23511d9@app.fastmail.com>
 
+On 09.04.2025 16:51, Arnd Bergmann wrote:
+> On Wed, Apr 9, 2025, at 16:43, Andy Shevchenko wrote:
+>> On Wed, Apr 09, 2025 at 04:35:57PM +0200, Marek Szyprowski wrote:
+>>> On 09.04.2025 14:24, Arnd Bergmann wrote:
+>>>> From: Arnd Bergmann <arnd@arndb.de>
+>>>>
+>>>> When building with W=1, this variable is unused for configs with
+>>>> CONFIG_CMA_SIZE_SEL_PERCENTAGE=y:
+>>>>
+>>>> kernel/dma/contiguous.c:67:26: error: 'size_bytes' defined but not used [-Werror=unused-const-variable=]
+>>>>
+>>>> Change this to a macro to avoid the warning.
+>>>>
+>>>> -static const phys_addr_t size_bytes __initconst =
+>>>> -	(phys_addr_t)CMA_SIZE_MBYTES * SZ_1M;
+>>>> +#define size_bytes (CMA_SIZE_MBYTES * SZ_1M)
+>> This had phys_addr_t type before, do we still have the platforms when it can be
+>> bigger than 32-bit integer?
+> It can certainly be larger on 64-bit systems, I think I messed it
+> up. Marek, can you fix this to put back the cast, or should I
+> send a patch on top?
 
+I will drop this one then as I didn't push my branch yet and apply v2, 
+which seems to be fine.
 
-On 4/9/25 4:25 PM, Alexander Gordeev wrote:
-> On Wed, Apr 09, 2025 at 04:10:58PM +0200, Andrey Ryabinin wrote:
-> 
-> Hi Andrey,
-> 
->>> @@ -301,7 +301,7 @@ static int kasan_populate_vmalloc_pte(pte_t *ptep, unsigned long addr,
->>>  	if (likely(!pte_none(ptep_get(ptep))))
->>>  		return 0;
->>>  
->>> -	page = __get_free_page(GFP_KERNEL);
->>> +	page = __get_free_page(GFP_ATOMIC);
->>>  	if (!page)
->>>  		return -ENOMEM;
->>>  
->>
->> I think a better way to fix this would be moving out allocation from atomic context. Allocate page prior
->> to apply_to_page_range() call and pass it down to kasan_populate_vmalloc_pte().
-> 
-> I think the page address could be passed as the parameter to kasan_populate_vmalloc_pte().
-
-We'll need to pass it as 'struct page **page' or maybe as pointer to some struct, e.g.:
-struct page_data {
- struct page *page;
-};
-
-
-So, the kasan_populate_vmalloc_pte() would do something like this:
-
-kasan_populate_vmalloc_pte() {
-	if (!pte_none)
-		return 0;
-	if (!page_data->page)
-		return -EAGAIN;
-
-	//use page to set pte
-
-        //NULLify pointer so that next kasan_populate_vmalloc_pte() will bail
-	// out to allocate new page
-	page_data->page = NULL; 
-}
-
-And it might be good idea to add 'last_addr' to page_data, so that we know where we stopped
-so that the next apply_to_page_range() call could continue, instead of starting from the beginning. 
-
-
-> 
->> Whenever kasan_populate_vmalloc_pte() will require additional page we could bail out with -EAGAIN,
->> and allocate another one.
-> 
-> When would it be needed? kasan_populate_vmalloc_pte() handles just one page.
-> 
-
-apply_to_page_range() goes over range of addresses and calls kasan_populate_vmalloc_pte()
-multiple times (each time with different 'addr' but the same '*unused' arg). Things will go wrong
-if you'll use same page multiple times for different addresses.
-
-
-> Thanks!
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
