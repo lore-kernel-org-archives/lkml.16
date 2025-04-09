@@ -1,201 +1,142 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2065.outbound.protection.outlook.com [40.107.92.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78821F956;
-	Wed,  9 Apr 2025 23:35:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.65
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744241709; cv=fail; b=Oas1wFTH2AmFuhjD1qgE3jV1F5/XH6mN9SmYQ9PX69tguyU4DaP+2TpCz73ab2m7w1S9wC0/OneTOQcUbMfSBVWZIvpGFmARIS7nlX6ee02gfIEiUJH6X6VEnKzKiSs/56kZXSgI56vhIYK4i9a+37/s08jDDJGNryDH2yIu7sk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744241709; c=relaxed/simple;
-	bh=EwTLZyEEJ984tuXpsSKPZ8DzfC9m57Of0UbZ1SMqWGY=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=baHqH7Xt0h79ERtlQ7qmuVbpWYtaZawMWgar5lyrRzBUoFF9Czyh8za5wqnEpLfTO1prMVxSa9ujwalwNmGBY0AYgKIZp+dsChjL5QgDeBOGcCq++b7fmOD9cTE/kTE0ezr5E6ne+z2r4Ktr1fMUtl5scxXeIsDDn2NdcjZj2sE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=jbro53IK; arc=fail smtp.client-ip=40.107.92.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86B2B21ABA0
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 23:35:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744241739; cv=none; b=nd0xz0BLdlozDt18IXHmZKsXb5+UAhLYF/KVHM4U70d6jt59z+9+TzaxZfgoUvIVcbhNbhxQ9tnzVmg/MRh4eH2DOOEBWYyCJ5msbdQa4fhc6Zg3xfNyqvsPKAFd5A8IDnT4Jwz3gyFcFQpTlo+GvHYklMfR+KCUiHxmE8m3o/k=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744241739; c=relaxed/simple;
+	bh=WdYuCOeD4SMA1IL4hLLCZE7Ua1W39J9lLIdtEDxryJY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bSrPc8o8qgVe0y+TPMVJg8evDo1wDMgCJuItUJNMzDTE9TGIcipxL2LJVhp6w1U+8v2q4XvWLEjWxhKI3gTbArHGyeEa1GaEVbOfCYjNX3ZSOx13NoZTZ0juGF6k3Pz++ZTviUEJWYJdayhlJvWhn1xvOmLBSwHRUBfiZVaRjfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wnPBW3Vj; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="jbro53IK"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Fz40K1UajCoiSn6gj17qGly/InhPVzvcX2bkq+PYLOD3qJIALOdY9UtY6OF69vAi0WFwYNEjvj0DRRnjemKwv08oY0LpBiEkL5vW7ERsZZ/lyPtQBXzCAUKB5i1+eBYOrjvkP6LZ/tBEDC0cDGXWihaLKDC/Jlqri1prehQJBoWPSlgwbX/JKErmk1unKn4qanjLO7wxokHUhG+E4z2kfKBhsn+AmFvx8MWO4IWzZG8UHNiAtqib00SDO+LV0D52hFRn0RO7C39FPx8RxYPvG3SquvOdfx8Ikf7rN9kn7w/rdDZAY8OKduFcKUFceICHTit4VKRMo6r9ptfAzRoNKQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PapD87pgRNW/JZkDAwsUX/iSV0ZGmWVOrtySnI7bhzM=;
- b=Yrwj+68ytbftrH35sWo1/y8h9R3BpNpBa83hUxeSAJbbbuS2gUvGow39q3/jHG1tDldzPQj/h/CIw2ukEdroPszCsj0pVX4Dcie3Lw+eM7P6z8WJk2IKJxCw3ercMH/gvDbqyg3pPNNaTFHliUEnUIMLTra2sRYwMQAkDq0CCmr3Ldh2vjQ1s/XYSaMuUNK0YH71KbFu1dgwrz42Mxeu7vprIBr8wNUkTgZxY88PytCJwM2ewToLutFJjFlf4A30BChyEW5BtRXq/MDrMwWLmGSa8KP+IylL/j1GNMFBVJqV4ryxd4wGas7NaITvjK4eaEHgyTKUXNhZTB5RGShd6w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PapD87pgRNW/JZkDAwsUX/iSV0ZGmWVOrtySnI7bhzM=;
- b=jbro53IKx2JquSXMEKJR0f9PuKkhGsiIsDr+47DbybAzVLhd1/5lVuwnp+0fWorQB2OkgoEvbnsiDONcH7A1is8allp9O3RGo59ujrwmXU0FGprDaXLX1xUZ8JhtX3R/2GQDoFrG0fFLy84bEDYNKjOSMER5yh85A0zotk6jZGs=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS0PR12MB6583.namprd12.prod.outlook.com (2603:10b6:8:d1::12) by
- PH8PR12MB6699.namprd12.prod.outlook.com (2603:10b6:510:1ce::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.32; Wed, 9 Apr
- 2025 23:35:04 +0000
-Received: from DS0PR12MB6583.namprd12.prod.outlook.com
- ([fe80::c8a9:4b0d:e1c7:aecb]) by DS0PR12MB6583.namprd12.prod.outlook.com
- ([fe80::c8a9:4b0d:e1c7:aecb%5]) with mapi id 15.20.8606.029; Wed, 9 Apr 2025
- 23:35:04 +0000
-Message-ID: <e30d9997-6fa9-4ada-89a9-0d4dde0fc3e4@amd.com>
-Date: Wed, 9 Apr 2025 16:35:02 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net 3/6] pds_core: handle unsupported
- PDS_CORE_CMD_FW_CONTROL result
-To: Simon Horman <horms@kernel.org>
-Cc: andrew+netdev@lunn.ch, brett.creeley@amd.com, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- michal.swiatkowski@linux.intel.com, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org
-References: <20250407225113.51850-1-shannon.nelson@amd.com>
- <20250407225113.51850-4-shannon.nelson@amd.com>
- <20250409163420.GL395307@horms.kernel.org>
-Content-Language: en-US
-From: "Nelson, Shannon" <shannon.nelson@amd.com>
-In-Reply-To: <20250409163420.GL395307@horms.kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DS7P220CA0059.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:8:224::11) To DS0PR12MB6583.namprd12.prod.outlook.com
- (2603:10b6:8:d1::12)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wnPBW3Vj"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-30db1bc464dso2027511fa.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 16:35:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744241735; x=1744846535; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=j+bh+lqxAi15Sw7UB9yBtSHuH8GSNWA87/qr/kod/AE=;
+        b=wnPBW3VjrwGKrwb/Aa/Nm6yh2fskydtUWT4cDBdYzU4dE072khgW1lD7PbGuXVPJTn
+         Ju7MZX+MUApHvLKJUR9ekUC4v9Pt7YudxB65/d/gQWZgNEbMDt2IeOzh/tyMdOvKUkth
+         I2OlX9URDQg5BbtI7DtccHkaHdAS/+OAzP6Ot5yT70WNHoXsFe0aZOSQNGn8CuU+zknz
+         W8QHjcV8MhV93UI9q3LsEzW1SmXVlhj+mJID6v/GCKl57mub68xgKCX67j0fIEtxb6EB
+         oldnezy3Kkg26xGxE8xlNUEckGLzB9W1EwzH5NIx1fx1rC1CFXN2FIQEIzpJi6shAqpx
+         oWRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744241735; x=1744846535;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=j+bh+lqxAi15Sw7UB9yBtSHuH8GSNWA87/qr/kod/AE=;
+        b=cm9nCm1wGRDgkPDCDvT7VGBv5WOlnYljD3LtGzrhAv392JGh5EeaMaN2dKDgy6YyRZ
+         FzrXA7PQFRDfhlv2oizHoDka8wIfAVbNvl3W23VQrn3OVFo3bPQwi/oMYBQhKBSOz9Uk
+         fx60Pu9rsdzWDi7WsFOet1zY0bswAZB2tH83MU3hJsrYRZeTV11IXHrSaR5/7sqNSwMs
+         ehH+8c8SGHOwXn3AwycTnGarTh5dIbmbwKLIFYBugFlJlJ9VZOnGURzE0OLvUT1edruL
+         qlhf4gk1URv6EutIdzjeEEUDwq3jE/v1FM9kivvW7abpQCJpaJaFLuz0xz1tMdNe/6Sn
+         pYkw==
+X-Gm-Message-State: AOJu0YwB8ixUH5PHxkBlBxYAGWju+yy72+rHNMA3zoB6H6yJMkZmRBzT
+	aH79kWnwFl6Kkvkbj6MKglSsr0HNGV3UmOPCmsoRH7/HUoElyMAXJBbFSNQLCZQUkP9iRZwu1i2
+	U6UpI7y/LAEs1+LpRi2oyU7A+kfUOVgKUrtU=
+X-Gm-Gg: ASbGncvFgEeGBLvzuMJ1q9FNtZp57NMP6G/hbMtQGJQ3CMeioH5OlybzIwYkLIIyMM4
+	ARM2CFNGCPwLhtCn6posxYJh7bWhnDskZTsieLgzo1EYnOG0AcOWRej9z0Ydfz+/2HWJGDxvdFr
+	XwOaovirdsRflRyIpe2MCxDlet/dLdWCHEYWTCN8L2Z599z0kEWIa26y2JOGEn
+X-Google-Smtp-Source: AGHT+IG3WlX1BIfrnMPIBrTgMc4sHiDnxlaGvNmZFR4kutLMAbqujyeGclcUUANjmUNxkmMYWoqgWH7Iiad+qwqjEEc=
+X-Received: by 2002:a05:651c:199f:b0:30b:c3ce:ea1f with SMTP id
+ 38308e7fff4ca-30facc05426mr2255251fa.15.1744241735334; Wed, 09 Apr 2025
+ 16:35:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB6583:EE_|PH8PR12MB6699:EE_
-X-MS-Office365-Filtering-Correlation-Id: 79d7622f-72d8-4d74-4073-08dd77bf279d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VzI0cGQ1cVlzWFJ4a05zMGhzSlBiY2xweVFId3g4UHdHSVl6YnFWakZUWUth?=
- =?utf-8?B?Q01LRDNkRlpIdVd4YWdZVHlYa2J2dm0raGpiZlFjWGxzVGtWY1BRM3UvcGFy?=
- =?utf-8?B?UERZS09rdVJNODg5LzJzV3EyYmNzb0pJMXpjUmRWQ0VLYVNyN3JDR3B3NzVI?=
- =?utf-8?B?VzJibk1Sdk5iZkJKajA5R0NCVTdNU2xuY21lTncwSk5UV05HOVRqclpKaUww?=
- =?utf-8?B?dUdzQVUyMmxFTWgzeTRJRlpKZU1sN2FScWZUVU5nOGdGQk1SRVhTL2dpTTlL?=
- =?utf-8?B?Z1lxVWoyby9zU3lBY2gzUVRaQnplU1NjUTRsR3FmK0NTQmkvdVdNMGxEdmth?=
- =?utf-8?B?Zml6NjlxVlZUei9CUnpLcDRPOHVVYldsdW15ck1hb0wycUhEamVnaEtDWGhu?=
- =?utf-8?B?QnFvaExmNGJtV3JQNjl5d0xKNkRISWkwZC80YjZwajNsMFBkbzhFOVpJVWFE?=
- =?utf-8?B?YmxxQVhmdWJiY3RFc2tGU3ZxbTUyd0JwUUZrTlZVWEphNG5nZlJKVFArQlg0?=
- =?utf-8?B?RFN5Zm5YVXBhTW5OemhNWnFoSDV6Umg2ZDE5alM5KzgySWgraUIrWkRpckJS?=
- =?utf-8?B?L1hlcDQ5L25PUHd5empkeHBBVjBFeUIvenQyNTIzMVczTWFYUHNBeWVSeWRu?=
- =?utf-8?B?eWhUYUNMUmE1REQreFNuWTlRc0JqYm5SMnNRRjJVRG04UEFPckFYNnpwTWxx?=
- =?utf-8?B?Y0lsclJtVHZKY3F0TmJKMVlYU3NPZlBmc0xtc09Vd0RQbCtGU3U2TE5NaUFK?=
- =?utf-8?B?ZUhXWTB6SlBQMlMza1ErQjRiMjdrU3MyZlc4MkxwY3dTMTZyelZiUjgzcEw2?=
- =?utf-8?B?WTFoTXd3WGlaRXZheTNEWEFOQmZoQWJkRm1vSG1uT0czcWRVL0JodWNTeHU0?=
- =?utf-8?B?Uk8rbTBSWENGbnZsc0hJVllFcU11L1V1SHpTbnhMRFlidExXZE1jaCtRcjQr?=
- =?utf-8?B?b20zNE81M3RlajJDZkN3dXJrMktWZGk2VjFreTRPY1dPK0FaRjdYczVldW12?=
- =?utf-8?B?YW1nTmRSdmtnR2xkdnU3aWJ6V2dub0tPUUlDdmpVdVgwYkhacjEwTHc1WE9r?=
- =?utf-8?B?MVFuQ1dBRklxSE5JcTJRdXFrTktSa3NVN1J0MXdLcHhiWEVvZTFZZjBJd2ZB?=
- =?utf-8?B?OWlvWkI3blpEMmhxdzdMQS9tUk9aWDFsREo3VzhXcmg3UE5xeGhmTE5Fb3ZM?=
- =?utf-8?B?TjUzQzlyUGZKYzRBWENqckRSbWF0TFpLVHJWYzY0S2ZqOFRPalhQZ3JDRWto?=
- =?utf-8?B?R2NJREthdUFOMGN1QmNrVURPWUdLNnVsMXFGamdIaGxYbTVwTGVyZUVtV1ZI?=
- =?utf-8?B?OVZXN2tpc3lhU2taSHkwRytYWmtpejAvUUk3Z1ZTRHNIZGFlTjFXTGVHUGIw?=
- =?utf-8?B?NitzWmMvMlNybjIyWW9RSzRCY21VcC9yLzdFUDRqUmZkdlQ3d214VG80emFT?=
- =?utf-8?B?LzZLZDBNazkyNnN5ZEZiblF3Uk0wM2R2dGtYcFhETTdJandncGt6Y09LdTB5?=
- =?utf-8?B?M2R0RDNadmRIY2RFYVlKN1B1cVF3T2lGUEx5NzEvS2NzakVBRW9oMFV2aUV4?=
- =?utf-8?B?R1pES3gvK21IZ3NvTE5Oc3hJREwzd0FJbUVyeWE0UG1MWEpCQjhYRXRCaGZZ?=
- =?utf-8?B?UWNhSEJ6ZmRYbnpMMmdDSmN1ektITTN4LzNoQ2l4N3JJeUNPdjVnVlB6Smpi?=
- =?utf-8?B?VkljQndWbGNNZCtaSFhNV29wR0xYVFpDa2pzOTJSSnhNM1lzSXpwYUcwa1p5?=
- =?utf-8?B?U3p0RXF0OTYxT1VLYzBMc1hTTG5oWjh4TWY0enFST0tucTgrczRLMnc0NVNn?=
- =?utf-8?B?K1ZoemRNNHd5NXdlQjJWUSt2S1ExTGtpK0sycGdBTkFMU1FkUjhHMTI3QnRQ?=
- =?utf-8?B?eCs0TC9SMVFycE9vSE8zRFFZcC9KNkJPWlVBclZ1V3dKMzAxTFg2ajRHWjBp?=
- =?utf-8?Q?teRDyPxk8g8=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6583.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UGZ0Z1RIK3dLei9MOEpDcmtnRG55aWlCSmxXRkpGQitDOUkzRTZXbURiWWZl?=
- =?utf-8?B?VFdaRmQwZWY5RlZSbGM2ZGpORUFXL0tFSHZYa1NCV0locFRPT3JZZ3U1aHpI?=
- =?utf-8?B?emRYNFdENWJ5UDd5dEM4cWpyKzBXQTllOXFPVVM4cEFFUGRhN1hKbkloa01Q?=
- =?utf-8?B?T1hzVnZqYUQvT3hzalZua2hvZ0kvQjFuQXo5dE1MaW0xTWtRdEJvYnBaQkts?=
- =?utf-8?B?TDhWcm8vT2duZkR1LzRCQTRteUtpT2x6T2VyWXZpQlJZYWxSK3lVLzk0NzJt?=
- =?utf-8?B?WmMrbzA0dHlaVXhKRit3UWUvU3kxRTdDdXpuNDY1ZGNML3lUZ3g0ZTA3TTlJ?=
- =?utf-8?B?SWw4RVJMK01xbk4vRHcrNzRGZTA5S1FvTXBqZVR2YkxmcEhmd2NIQ3Y3SDdZ?=
- =?utf-8?B?Ri9ZMkZ2dzFvcEpZTWM1VzlDcmZKTVhCWm1EQlhlRk5BcmZnNjNKN1o1cFhk?=
- =?utf-8?B?WlI0SlN3SHRrTTFPbkY4OHJEeEpLT0FwOHAzUlROYms5NHFMRStWVFBnSWU0?=
- =?utf-8?B?VkUvSjJMeGZ6S1JvRkwwd2NjeHRzNHdPRGh5eVJoTUk3ZXU5dTh4SWdFRUY1?=
- =?utf-8?B?MFYwQ3MyZmlReDhuTTl6SmpXQ3VCcUxyaVFFS1R0am5yWGdVNk1FajgrdW85?=
- =?utf-8?B?Uk8yeE5iZ3lsT0tjMHhTa0l5ZDFVamRPZ3pWQ09Tb2hwdEVOM0NFYzk2YXN5?=
- =?utf-8?B?ejZyUkd2cmtaYlFHSnVFOHBOTXg3OXJHVHhLWnhJOWMzejQ1Qitrb0JxaXJR?=
- =?utf-8?B?Nk1yZGYxVEdEcVkvU3pyY3d4N2lEUVJobG0xaStwQWRrK3ZiNXJjUHNudkIv?=
- =?utf-8?B?SGhTWFFHam1aNTNtMzMxY2s0U0lRZVlEMnZNM3UrV1lvUFgrRmF2R0oyOVYr?=
- =?utf-8?B?WmxhVW5uRDdtWWNWVG9lRVZHTFkyM2RUYjh4Q1FBOExsTUN5ellVN1JtMkVs?=
- =?utf-8?B?M1h2TDEvSUZnTDVtTnFXUG13dkhLUHRGeTJlY0VGQVIvb1ZjTlVZbEt4OEN1?=
- =?utf-8?B?TDdaU0pLL0ZabThidGdBd1B6U3ZIL010NzMrcCt1T01vd2gzMlJmOHBTc0x2?=
- =?utf-8?B?dVFUd1Q0TmxBOC81Yy9YWGxEL2cxK1ZiMzhBUDk5SHJ0OWRIM04xbEMyYVVv?=
- =?utf-8?B?WGFuczBIejl1dVBndGY3QnUzTzM3NG9MaExJWHpXcTExd0JWMGxxU3ZUVGNC?=
- =?utf-8?B?dEwxMmhpVTA1VlZiWHhCQ09pZHlmV0dZdjlWZWJNaVFBMU1OTFRRbGhzVHRj?=
- =?utf-8?B?N1kvZkQ1S3o2ZGlEanZwZ1JZLzBXdmVGQWtORmViWWpZaUQzeHlLcDNGUDM2?=
- =?utf-8?B?bmlmQmxxTHBZSXJXYStMYXRLY01uU1RkckIyNHdLMENjMHZlZUk3U0hEUW9X?=
- =?utf-8?B?Y0RNY0tkai9IaHNDRk5mUElDQ1lUMXU3SHcvSXRVUGNQMUdLSnhKOFpKanp4?=
- =?utf-8?B?bi85Y1ZVaHV0T3M5NFZSUTR1dlp5NThPVDRpK0Yzb3JRakVMcVNrVmFkeFI1?=
- =?utf-8?B?eWdiVW5KR0h3VzFQV24vRytXaVZQR2xxaVpHRW80L2g5SGZ4SHIyNFgvSW5p?=
- =?utf-8?B?VTdsN081YXVMYnpJNFJqTkp1YWFXclFBRmtLTTB2cmRObnhtOEFkamNjWk9k?=
- =?utf-8?B?eHQ2YlRGTWxocTBRbXdEY2pHL0RlejlqRzNiU1lGVDZJOTZ3aEVuYk5KYWMr?=
- =?utf-8?B?QzJtdnp5bmFuRnEwYmNCOFI4Z3FJTU1KNFZBbzFnMDYzZmdMVlNSQnVwdGVx?=
- =?utf-8?B?Vys0RXdEdnpNSDA1SnJDSlRjUFVubVVXcnhSYm1qMEhwWEN2YU5pWFgvZmFy?=
- =?utf-8?B?dDhFWFFmcSs2dGI5VkQrV1ViY0wxNHpoNDN4Y0F4VkcwUGpKSXdvcG4wcVhX?=
- =?utf-8?B?cDhwUzNoZVZVUWMwbkhQWUNUNmhRNGwxQ3EvcTRSK2JhdXEzMzZXRlJ5ekd6?=
- =?utf-8?B?MENLRG93amxHMUlISVN6eXpPUXN0QmVOQmlvK2R4U3EyUk5JS2JNcVBQanc1?=
- =?utf-8?B?UDIrcXBnQjVDc251NG9mc0tsVjFjQUdDVWhoNXYvcGZOaDVkZ1pFV1NTUTdi?=
- =?utf-8?B?a3hMb1A4WTNpVGN1aEtOSVFpaC8zQVdCYjI2YkY3eXltSDhtUHlMc0N3SzlO?=
- =?utf-8?Q?hI2/9Sto8PZD3+kjvb0ez7zrC?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 79d7622f-72d8-4d74-4073-08dd77bf279d
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6583.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 23:35:04.5155
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +kDdNedJadVTHxp6EOfyvEwKwPRaeyj0RnaRlXHJZhGmfNXLHOOipvZG6QYz2q6XBz2fJl/E8g9BY8DLS1G4Fg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6699
+References: <20250407134654.92841-1-hupu.gm@gmail.com>
+In-Reply-To: <20250407134654.92841-1-hupu.gm@gmail.com>
+From: John Stultz <jstultz@google.com>
+Date: Wed, 9 Apr 2025 16:35:22 -0700
+X-Gm-Features: ATxdqUHf5yRKw1nIO9jt9y2jXjKEwmnGnG60rBKF-UXJxDX-IbFHG900Wh8_fU4
+Message-ID: <CANDhNCptjorLthhgMBLLCCYsk5MJT73Daj+usFPWNenpgYTF4A@mail.gmail.com>
+Subject: Re: [RFC 1/1] sched: Remove unreliable wake_cpu check in proxy_needs_return
+To: hupu <hupu.gm@gmail.com>
+Cc: linux-kernel@vger.kernel.org, juri.lelli@redhat.com, peterz@infradead.org, 
+	vschneid@redhat.com, mingo@redhat.com, vincent.guittot@linaro.org, 
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
+	mgorman@suse.de, hupu@transsion.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/9/2025 9:34 AM, Simon Horman wrote:
-> 
-> On Mon, Apr 07, 2025 at 03:51:10PM -0700, Shannon Nelson wrote:
->> From: Brett Creeley <brett.creeley@amd.com>
->>
->> If the FW doesn't support the PDS_CORE_CMD_FW_CONTROL command
->> the driver might at the least print garbage and at the worst
->> crash when the user runs the "devlink dev info" devlink command.
->>
->> This happens because the stack variable fw_list is not 0
->> initialized which results in fw_list.num_fw_slots being a
->> garbage value from the stack.  Then the driver tries to access
->> fw_list.fw_names[i] with i >= ARRAY_SIZE and runs off the end
->> of the array.
->>
->> Fix this by initializing the fw_list and adding an ARRAY_SIZE
->> limiter to the loop, and by not failing completely if the
->> devcmd fails because other useful information is printed via
->> devlink dev info even if the devcmd fails.
-> 
-> Hi Brett, and Shannon,
-> 
-> It looks like the ARRAY_SIZE limiter on the loop exists since
-> commit 8c817eb26230 ("pds_core: limit loop over fw name list").
-> And, if so, I think the patch description should be reworked a bit.
+Hey hupu!
+  Thanks so much for taking the time to review the full proxy patch
+series and to submit this change!
 
-Yes, you're right... that's what I get for pushing patches out while 
-Brett is on vacation.  I'll trim that up.
+On Mon, Apr 7, 2025 at 6:47=E2=80=AFAM hupu <hupu.gm@gmail.com> wrote:
+>
+> The (p->wake_cpu !=3D cpu_of(rq)) check in proxy_needs_return() is unsafe
+> during early wakeup phase. When called via ttwu_runnable() path:
+>
+> |-- try_to_wake_up
+>     |-- ttwu_runnable
+>         |-- proxy_needs_return    //we are here
+>     |-- select_task_rq
+>     |-- set_task_cpu              //set p->wake_cpu here
+>     |-- ttwu_queue
+>
+> The p->wake_cpu at this point reflects the CPU where donor last ran befor=
+e
+> blocking, not the target migration CPU. During blocking period:
+> 1. CPU affinity may have been changed by other threads
+> 2. Proxy migrations might have altered the effective wake_cpu
+> 3. set_task_cpu() hasn't updated wake_cpu yet in this code path
 
-sln
+A few nits here:
+1) We do reassign wake_cpu __set_cpus_allowed_ptr_locked() if necessary.
+2) Proxy migrations use proxy_set_task_cpu() which preserve the wake_cpu
 
-> 
->>
->> Fixes: 45d76f492938 ("pds_core: set up device and adminq")
->> Signed-off-by: Brett Creeley <brett.creeley@amd.com>
->> Signed-off-by: Shannon Nelson <shannon.nelson@amd.com>
-> 
-> ...
+And I'm not sure I quite understand the concern of #3 above. Could you
+clarify further?
 
+> This makes the wake_cpu vs current CPU comparison meaningless and potenti=
+ally
+> dangerous. Rely on find_proxy_task()'s later migration logic to handle CP=
+U
+> placement based on up-to-date affinity and scheduler state.
+
+The task_cpu serialization rules are a bit more subtle then I'd like,
+so I'll grant there likely could be bugs lurking there, but I'm not
+totally sure I understand the case you're thinking of here.
+
+As you noted, in proxy_needs_return() we use the wake_cpu to tell us
+if the task is still on the rq where it was blocked,  with the hope
+that we can short-cut the deactiave&wakeup logic and instead just mark
+it BO_RUNNABLE and return from ttwu.
+
+I'm not sure how the "find_proxy_task()'s later migration logic" gets
+involved here. Instead, it seems your change would just force it so we
+always do the deactivate&wakeup (still using the task->wake_cpu as the
+guide for select_task_rq()).
+
+This would be a more conservative approach, since select_task_rq would
+handle finding an appropriate rq if wake_cpu was not correct, so I
+don't disagree with your suggestion. In fact, in getting the v16
+series ready, I've reworked the find_proxy_tasks()'s "need_return:"
+logic to do the deactivate/wakeup step because otherwise I was hitting
+cases where we would try to do the manual return-migration off to a
+offline cpu during cpu-hotplug testing.  So a similar approach might
+be helpful here to avoid wakeups on offlined cpus (though I need to
+look a bit more at the cpu hotplug code to understand how we'd hit the
+task->on_rq case and have task_cpu() return an offlined rq).
+
+But I'm a little hesitant to drop the optimization, so if you have a
+more specific case that would be problematic, I'd appreciate you
+sharing.
+
+thanks
+-john
