@@ -1,132 +1,81 @@
-Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A017A25D1ED;
-	Wed,  9 Apr 2025 08:31:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AE0F2550B8;
+	Wed,  9 Apr 2025 08:32:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744187513; cv=none; b=lkOD+PqtOggTWL9pWaDADquFV4UGN5vppGh0XDQ9694pfYer6yXsFEB9U5zMKynW8Zp130t7L8DhLGRqlNeD+/jclDrE03lDkrQxWoSPSpMyy1sPObyCwq7PrNNJ7rpgHoa9fQb0wJAOMew58dHIeXaqAm09dvWw4hs85v22EYM=
+	t=1744187541; cv=none; b=laKTeJnexfkoK++DIdvGHLHyB+xLRfCkcogBXdZHT1PHRQ6YXB0vNa7JS8coyWCeT8MkT80LuNzgsQR4KeE8ETvLv0Ys33gzyfWzoy/y3RQEgUBIoW5P1dYCCRUWg6t6KQUyiBgeRIeQwx+lb2MnfLlHslhURKsBb4Ovn0DmKaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744187513; c=relaxed/simple;
-	bh=PCpZpdhmfkrQTn04uXQxa/ZIWBVgIJf/v0Z5cgyr0h4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=piAVuDp15CMpzMk96vRcqIndKUSae1BF7604VWmIl2SZ6fxOOn0rAuXiJK+Ak1PczCvtDTKopSDwnFFRanDDuq4yB7hatiwAikkJcdaVtgWTGfH+tDboC9SNcxFqetSt+5sm84TinanCgclNCtETdd7iTd90TDDlXANNHBasbwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.fm; spf=pass smtp.mailfrom=fastmail.fm; dkim=pass (2048-bit key) header.d=fastmail.fm header.i=@fastmail.fm header.b=gL6oXoGf; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Cpj7yjcI; arc=none smtp.client-ip=103.168.172.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.fm
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.fm
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fastmail.fm header.i=@fastmail.fm header.b="gL6oXoGf";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Cpj7yjcI"
-Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
-	by mailfout.phl.internal (Postfix) with ESMTP id AAC6C1380140;
-	Wed,  9 Apr 2025 04:31:49 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-09.internal (MEProxy); Wed, 09 Apr 2025 04:31:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.fm; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1744187509;
-	 x=1744273909; bh=t6lmhI9lGDXs0/ghIIQ/kwihxBN774g27lMjQXgy508=; b=
-	gL6oXoGf8RA2NAuc6yg4i0HZCWKp+C7wmCvwdmuAjKrWYqZt7OCbpj1E3onC5vrI
-	/BUIcoHoABC1zTD4VBhrUeo5WzI/kFk1b8H+4kjSSTlH2k8tBoTij8WN/DbHbsqO
-	I71yaMiSWBAk7VAufXboL1AVG7DSNVMNzE9obm7PnYm4Zq2QimAm7lFp4SCcHbnn
-	y6tXwXmuzXQX3YvSHgn+UFJ8hqUehs1o9jEyD3OJtCj74PC7dPjMlKJPxs2Hv+kh
-	ZDbqJPQ24/n3/oxtod52a9Ah1KOHGJG724n6pCPT8L3B17aZd6oj5Osk7apEuIwd
-	OTQwruEQ21cjoAUtz+irPA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744187509; x=
-	1744273909; bh=t6lmhI9lGDXs0/ghIIQ/kwihxBN774g27lMjQXgy508=; b=C
-	pj7yjcIBC8YIAc6moPAM1lFW36hWc4haPuYtauOO5XShSMc/RAp1oyM+C+ztD8he
-	2SH/15Rz4tcdLPTDAV4EMQKZqj0FUFbIQ9or3iziqjDBTe8SONL5cO2zaSlgBKUG
-	cmzQ8J7MaaBbfn38KQZ3Mrpa+cxiHV80qg+UDx1PcHdzcf/fqpXUAcPs+/c80RX1
-	PcoeA/6wF/4eOJaQzkcNsINJsQ7rvS+tUFsIMOGKnFpMnERh15POMLJKnrah2Ck3
-	HENppBffRdHrvS5sP1swa39/pJJtJ/lEJTyiZiHRDovAg4JHb20H/nWNgRGiwUoT
-	Q5OF50louOGwDSus+lImw==
-X-ME-Sender: <xms:dDD2Z0bAUbbjrewj5RTiNixKojhJaH2uFdZCOh7IBeyBA5LDpIx94w>
-    <xme:dDD2Z_bdC1DJFbe8JSQNRVQ1jw_G0EWKAHYxgZjB72XovapxEWZEMkcxCeiOPwwap
-    yGOiivw9pRbTdmf>
-X-ME-Received: <xmr:dDD2Z-_doKjDgXPcwkbEbtNas1LKD5p9miK3-6MqEOjhKS5zQXacpw360zYrgwIwT5UfWAykZ9Uo58Kh5qYXfeUkFHzZ-fHgI00khCq508Pk2_IqyDC2>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdehhedvucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddt
-    vdejnecuhfhrohhmpeeuvghrnhguucfutghhuhgsvghrthcuoegsvghrnhgurdhstghhuh
-    gsvghrthesfhgrshhtmhgrihhlrdhfmheqnecuggftrfgrthhtvghrnheptddugefgjeef
-    kedtgefhheegvddtfeejheehueeufffhfeelfeeuheetfedutdeinecuffhomhgrihhnpe
-    hgihhthhhusgdrtghomhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgr
-    ihhlfhhrohhmpegsvghrnhgurdhstghhuhgsvghrthesfhgrshhtmhgrihhlrdhfmhdpnh
-    gspghrtghpthhtohepledpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepjhgrtgho
-    sehulhhsrdgtohdriigrpdhrtghpthhtohepmhhikhhlohhssehsiigvrhgvughirdhhuh
-    dprhgtphhtthhopehlihhnuhigqdhfshguvghvvghlsehvghgvrhdrkhgvrhhnvghlrdho
-    rhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrd
-    horhhgpdhrtghpthhtoheptghhrhhishhtohhphhgvrdhjrghilhhlvghtseifrghnrggu
-    ohhordhfrhdprhgtphhtthhopehjohgrnhhnvghlkhhoohhnghesghhmrghilhdrtghomh
-    dprhgtphhtthhopehrughunhhlrghpsehinhhfrhgruggvrggurdhorhhgpdhrtghpthht
-    ohepthhrrghpvgigihhtsehsphgrfihnrdhlihhnkhdprhgtphhtthhopegurghvihgurd
-    hlrghighhhthdrlhhinhhugiesghhmrghilhdrtghomh
-X-ME-Proxy: <xmx:dDD2Z-qkGnN7oduFT9PCvNZ28g_dmqU3jWLFWdQCxIthLPEcP4FKaQ>
-    <xmx:dDD2Z_o3fiL9VPyUfvw55J1bHiIWQlxB8Uxp4uQgT0Ed_BbFUDrpWQ>
-    <xmx:dDD2Z8QNZ_06GZK-7QVi22GEHQEToWI3Du_vgxz7Ty8gS7vjAOAZzQ>
-    <xmx:dDD2Z_qFjJaETK89aVToW6M8JuZQIeFAnQwcMjA3DTF4-fCtTfJIlQ>
-    <xmx:dTD2Z8RJG-6HmAEoUiTqIvWTdEju_svnxnZ_HH-fYCp9xdtE3dy1UFKL>
-Feedback-ID: id8a24192:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 9 Apr 2025 04:31:47 -0400 (EDT)
-Message-ID: <e8659104-54de-4155-bac1-f45df440e468@fastmail.fm>
-Date: Wed, 9 Apr 2025 10:31:46 +0200
+	s=arc-20240116; t=1744187541; c=relaxed/simple;
+	bh=imr/R0IdKcYs+VVd894mjJLrbqrM/WWrz2d60Bnn7YU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N1V8tNbiJdJnaMlYBJsjdLaXlll/sScpyqJR40bJ/5d888nagEibfeJfDJJVKHlK7ueycec5OZS2yk3PlpGB9oKLpZoQ4MeJHoJ9KL7DFlRWSI+JQRXIkXGOGsJi+1/Ivt738w6PRylG1wKS+UX9hQACBRlO+AxDOTyqt307DTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 201A168AA6; Wed,  9 Apr 2025 10:32:09 +0200 (CEST)
+Date: Wed, 9 Apr 2025 10:32:08 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: xni@redhat.com, colyli@kernel.org, axboe@kernel.dk, agk@redhat.com,
+	snitzer@kernel.org, mpatocka@redhat.com, song@kernel.org,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+	dm-devel@lists.linux.dev, linux-raid@vger.kernel.org,
+	yi.zhang@huawei.com, yangerkun@huawei.com,
+	"yukuai (C)" <yukuai3@huawei.com>, kbusch@kernel.org
+Subject: Re: [PATCH RFC v2 00/14] md: introduce a new lockless bitmap
+Message-ID: <20250409083208.GA2326@lst.de>
+References: <20250328060853.4124527-1-yukuai1@huaweicloud.com> <Z-aCzTWXzFWe4oxU@infradead.org> <c6c608e2-23e7-486f-100a-d1fb6cfff4f2@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] fuse: Adjust readdir() buffer to requesting buffer
- size.
-To: Jaco Kroon <jaco@uls.co.za>, Miklos Szeredi <miklos@szeredi.hu>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- christophe.jaillet@wanadoo.fr, joannelkoong@gmail.com,
- rdunlap@infradead.org, trapexit@spawn.link, david.laight.linux@gmail.com
-References: <20250314221701.12509-1-jaco@uls.co.za>
- <20250401142831.25699-1-jaco@uls.co.za>
- <20250401142831.25699-3-jaco@uls.co.za>
- <CAJfpegtOGWz_r=7dbQiCh2wqjKh59BqzqJ0ruhtYtsYBB+GG2Q@mail.gmail.com>
- <19df312f-06a2-4e71-960a-32bc952b0ed2@uls.co.za>
- <CAJfpegseKMRLpu3-yS6PeU2aTmh_qKyAvJUWud_SLz1aCHY_tw@mail.gmail.com>
- <d42dec00-513c-49d4-b4f3-d7a6ae387a6b@fastmail.fm>
- <b812fec3-8736-4005-918e-318e955c1902@uls.co.za>
-From: Bernd Schubert <bernd.schubert@fastmail.fm>
-Content-Language: en-US, de-DE, fr
-In-Reply-To: <b812fec3-8736-4005-918e-318e955c1902@uls.co.za>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c6c608e2-23e7-486f-100a-d1fb6cfff4f2@huaweicloud.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-Hi Jaco,
+On Sat, Mar 29, 2025 at 09:11:13AM +0800, Yu Kuai wrote:
+> The purpose here is to hide the low level bitmap IO implementation to
+> the API disk->submit_bio(), and the bitmap IO can be converted to buffer
+> IO to the bdev_file. This is the easiest way that I can think of to
+> resue the pagecache, with natural ability for dirty page writeback. I do
+> think about creating a new anon file and implement a new
+> file_operations, this will be much more complicated.
 
-On 4/9/25 09:12, Jaco Kroon wrote:
-> Hi Bernd,
-> 
-> You sure you're looking at the newest version?
-> 
-> Or where does the below need to get applied?
-> 
-> I'm not seeing that in the patch to which you replied.
+I've started looking at this a bit now, sorry for the delay.
 
+As far as I can see you use the bitmap file just so that you have your
+own struct address_space and thus page cache instance and then call
+read_mapping_page and filemap_write_and_wait_range on it right?
 
-I just applied Miklos' patch that uses vmalloc. It applies
-to the repo without your patch
+For that you'd be much better of just creating your own trivial
+file_system_type with an inode fully controlled by your driver
+that has a trivial set of address_space ops instead of oddly
+mixing with the block layer.
 
-I also
-pushed to a branch
+Note that either way I'm not sure using the page cache here is an
+all that good idea, as we're at the bottom of the I/O stack and
+thus memory allocations can very easily deadlock.
 
-https://github.com/bsbernd/linux/commit/2b5ca68656a4a47e35b8cf1dfcf39c4335066497
+What speaks against using your own folios explicitly allocated at
+probe time and then just doing manual submit_bio on that?  That's
+probably not much more code but a lot more robust.
 
-In this branch: https://github.com/bsbernd/linux/tree/fuse-large-readdir
+Also a high level note: the bitmap_operations aren't a very nice
+interface.  A lot of methods are empty and should just be called
+conditionally.  Or even better you'd do away with the expensive
+indirect calls and just directly call either the old or new
+bitmap code.
 
+> Meanwhile, bitmap file for the old bitmap will be removed sooner or
+> later, and this bdev_file implementation will compatible with bitmap
+> file as well.
 
-Cheers,
-Bernd
+Which would also mean that at that point the operations vector would
+be pointless, so we might as well not add it to start with.
+
