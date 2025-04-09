@@ -1,135 +1,82 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9904626A085;
-	Wed,  9 Apr 2025 15:50:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4136D26A085
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 15:51:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744213861; cv=none; b=LGvXi0j6MVRu+ckZwIyRumetSbJhr951d7lxDotPYJPtjpdA6co+7nRsheJTOS7p/vXJZJzYqr5vnR/GE7wE6VoTQIef0c4PmH7vrzjdx2prSj0y1te5hq1CPLg6SE/2GclSk1GgdGh23D6UVgrzJWc3wG+STag+we2cvjSe2sg=
+	t=1744213888; cv=none; b=gqrOOhASh2afrvENHJqfeyCw1Vducc2PtQryn27IvC2AorxxfouMpQKGCTg1EVLzkPgd2jL76hQnMiEdBy/SvkODekK2EiKirtwJy9ALqHZUM19E64CCUPgFClgui2f3cgS0zjEf1I99ihIpaxj+VlL2NdK1Ehl4xoMfcHC+LJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744213861; c=relaxed/simple;
-	bh=bvozvL+Ka3UE57hADrHygiEEqNN6MU5nlJ3B+28IPjg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XdHrAflbBmKLYCLKAboT88UgJgK4iiz5u5KPJaSMI857EpigSJKqN8X/MGh9wUBZJyLgA5SZCsg96VE/fbqEzT97CAFvoDKZwM4y4NhEhOOOApi1ryx5eJyt7wL01J5kGopKshJxKF1J4YA1XX/muzgibbXXYx+zYWHMzTNEUs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=d/QSwyj6; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1744213888; c=relaxed/simple;
+	bh=Dq6dHHPYmSjlOD/Kgg4/4XEfD6hkJkfImhiGkZXmJBc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XlWJzd4BLcymjZho9Q6La3y7JFgxpbGko/7OzXaobvf2nFC+nP7Sl6Ts3KkTH79R3orLg8R1DFQWHjNnN09ISUD0cNFnkFCD18jp652+plX/w2Yg82W9lRYQjHHamZKIxoldkUsWV3EDqc45H56Is46BWtr/ApiVvAkyiAH232s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=BbZ7RnMm; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="d/QSwyj6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1744213856;
-	bh=bvozvL+Ka3UE57hADrHygiEEqNN6MU5nlJ3B+28IPjg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=d/QSwyj6A/GsoV1lb0JMMaH1EXGZRVDAAH/pa/Fy+Vzkgi5vrgyalGshHWTccvu2T
-	 eH7NBGQrxOZhgkW2FTWZ1fmBoPA/hG8GdyAGGg7ePKqln76v5bafr9JTsQRd5OnQJr
-	 BpFdUtAlooojoZJ97HPjV5MN9Tcr3v0fKsYV7JfOz/qb6UXYoOKiVEgPvZep4kAM59
-	 B0j9BiMIdGbzUl2HoROUyJijk+zTKxegWlSan6vy74mKleqdX0Fq2XLmOz1FDbW+YT
-	 zVaK+shJ3ZNBWq8JkyAkoX14HLQQODhOwBJDcQjOTTTY3AGhXEMuOMLukiPFy2TDkC
-	 ID2JcQzQ31ceA==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="BbZ7RnMm"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id F00F840E0230;
+	Wed,  9 Apr 2025 15:51:23 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id hh-W27klhieP; Wed,  9 Apr 2025 15:51:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1744213880; bh=q4NZoW9zZYjyVoEnIfke0UamQPZzyA1mCfd5/MB9sGc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BbZ7RnMmwbQ4cQ8nYVynvondfABnUpDG3VgVja3p6Cs98z/i3XSYssmgInZ2OZ6zY
+	 RXlHvUntzG7WLC1K56ZRYrY36otxU7+2mtDiKAJODIRMxOGR1L+vAUlL0jMWtzbUWy
+	 MY6zQTrkUE5zVUrOJpxLfl/JfLSP0c12oJ/Ue7sCXvO+2UU5I83n0NcwMUoJA0KAxp
+	 0q8L5Q/zD5TZcIHmjKrH36+gnF+7CPwLITdBRL4c/xTUWuJGM5XtYCM4IWrjt+LlY9
+	 +98thpONADmddeuQM9flQa2r22AkAyFptmu+qmoxVK/SKpxmuzAF2UWb5M2ev0vvI9
+	 XUUFti3J6sFQ5Dy85jnwh3C5BOnt6zbX81rWhc/MHyVn92d6DRNALr2lw7ZZH8nh/G
+	 0n28BeT7sY89eJPnEhaiZv6onEXce+Jd3KEY3/YsuOx6KuTHdM/dUx+wJyxIUcXr1q
+	 SfOKS4uWGGED5oBRLMJBkNF7ny8LqG5J7G90NQntJ6Q/BfeBVUvjkKVR3kPUaxJD/h
+	 mYfeLtKvYBLU3YwXRNtEAZq4KtmWLutrXtmYVWxYNoVG/74iZG4LXWKGbhCTF5lCcZ
+	 V+gYuOzyayWkxiF96mqxfK1XcS2bLxExQ1x+fTN1Q4Pv4FfzHz7JkOgaNbFJVMl3WX
+	 gWwCbcb1hUPUKirollIIuDJA=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id F07EC17E0657;
-	Wed,  9 Apr 2025 17:50:55 +0200 (CEST)
-Message-ID: <399f89fb-092e-4fb3-8a0b-987dea129554@collabora.com>
-Date: Wed, 9 Apr 2025 17:50:55 +0200
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4A7D740E022F;
+	Wed,  9 Apr 2025 15:51:14 +0000 (UTC)
+Date: Wed, 9 Apr 2025 17:51:13 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Dirk Gouders <dirk@gouders.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Linux Kernel <linux-kernel@vger.kernel.org>,
+	Linux x86 <x86@kernel.org>
+Subject: Re: AMD Ryzen 7 PRO 7735U: 8 instead of 16 CPUs?
+Message-ID: <20250409155113.GJZ_aXccanDyIyhAP4@fat_crate.local>
+References: <ghlds9lidx.fsf@gouders.net>
+ <20250409112414.GFZ_ZY3k88JhYTbYJ0@fat_crate.local>
+ <ghplhl1qm2.fsf@gouders.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 3/3] memory: mtk-smi: mt8188: Use
- devm_pm_runtime_enable
-To: Krzysztof Kozlowski <krzk@kernel.org>,
- Friday Yang <friday.yang@mediatek.com>
-Cc: Yong Wu <yong.wu@mediatek.com>, Rob Herring <robh@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>,
- linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- Project_Global_Chrome_Upstream_Group@mediatek.com
-References: <20250408033206.12176-1-friday.yang@mediatek.com>
- <20250408033206.12176-4-friday.yang@mediatek.com>
- <20250408-woodoo-quick-worm-bf82b4@shite>
- <e777f95c-c21f-4a91-b044-5fc19eb22c3d@collabora.com>
- <258c8fda-70cc-4624-aef6-7cbef3cdbde6@kernel.org>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <258c8fda-70cc-4624-aef6-7cbef3cdbde6@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ghplhl1qm2.fsf@gouders.net>
 
-Il 09/04/25 11:56, Krzysztof Kozlowski ha scritto:
-> On 09/04/2025 10:26, AngeloGioacchino Del Regno wrote:
->> Il 08/04/25 08:29, Krzysztof Kozlowski ha scritto:
->>> On Tue, Apr 08, 2025 at 11:31:56AM GMT, Friday Yang wrote:
->>>> Replace pm_runtime_enable with the devres-enabled version which
->>>> can trigger pm_runtime_disable.
->>>>
->>>> Signed-off-by: Friday Yang <friday.yang@mediatek.com>
->>>> ---
->>>>    drivers/memory/mtk-smi.c | 16 +++++++++-------
->>>>    1 file changed, 9 insertions(+), 7 deletions(-)
->>>>
->>>> diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
->>>> index f25d46d2ef33..daef6d350419 100644
->>>> --- a/drivers/memory/mtk-smi.c
->>>> +++ b/drivers/memory/mtk-smi.c
->>>> @@ -713,16 +713,17 @@ static int mtk_smi_larb_probe(struct platform_device *pdev)
->>>>    	if (ret)
->>>>    		goto err_link_remove;
->>>>
->>>> -	pm_runtime_enable(dev);
->>>> +	ret = devm_pm_runtime_enable(dev);
->>>> +	if (ret)
->>>> +		goto err_link_remove;
->>>> +
->>>>    	platform_set_drvdata(pdev, larb);
->>>>    	ret = component_add(dev, &mtk_smi_larb_component_ops);
->>>>    	if (ret)
->>>> -		goto err_pm_disable;
->>>> +		goto err_link_remove;
->>>>
->>>>    	return 0;
->>>>
->>>> -err_pm_disable:
->>>> -	pm_runtime_disable(dev);
->>>
->>> You now broke/changed the order of cleanup without any explanation.
->>>
->>> Best regards,
->>> Krzysztof
->>>
->>
->> I agree some comment in the commit description saying that the cleanup reordering
->> doesn't matter in this specific case would've been nice to have, but anyway IMO
->> it's not a big deal - he didn't break anything, anyway :-)
-> 
-> Cleanup orderings are tricky, so are you sure nothing got here called in
-> incorrect moment?
+On Wed, Apr 09, 2025 at 02:11:49PM +0200, Dirk Gouders wrote:
+> Oh well, thanks for the hint: CONFIG_NR_CPUS=8
 
-Yes.
+Yeah, that option has been known to be very strict, stingy and not giving even
+a single CPU more than specified!
 
- >> I see that runtime PM will be disabled much later and
-> what certainty you have that device won't get resumed that time?
-> 
-How can a device that failed to probe be resumed?! Who's going to resume it?! :-)
+:-P :-P
 
-Also, in the remove phase, all users get removed first, there's no ISR (implies
-that there's no isr that will resume this device inadvertently, and other than
-no isr - there's no kthread/queue/this/that that could do this), and no nothing.
+-- 
+Regards/Gruss,
+    Boris.
 
-Moreover, SMI-LARB cannot be removed unless all of the components are unbound;
-SMI-Common (be it a common or a sub-common) cannot be removed if SMI-LARB is still
-using it.
-
-No I don't see anything that can resume it before devm does its job.
-
-If you do see something though, I'm curious to understand what I'm missing here :-)
-
-Cheers!
-Angelo
+https://people.kernel.org/tglx/notes-about-netiquette
