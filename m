@@ -1,206 +1,296 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D22B725F79D
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 14:20:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EB0069D2B;
+	Wed,  9 Apr 2025 14:21:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744208425; cv=none; b=nvJ3YPlfbKydLYZ9Od1RewkerY8fF2bCN9o01LZ5hjt8I7c0AdiOhKsO04dl3UAJ+hZBenuWX+AiRqy6kuqZxaJLB5r9X3ohDc/4FrqX35ZNfh6tEaa85UZ0iuyitxQxG2sVF5BcJgtO/f/HqYoByru+QgEZ/gYPrWqXGFFWWF0=
+	t=1744208515; cv=none; b=gPMgTUFBV35rsM98CjprRPXXcX5omNxXbFbUUwcVbmcB/jygqa6DRD0rxhs3vVT5WE4HGQ8lvZUEdVq33omouFG9MLP+7CHRBtdEGYH5Xuk5frN8T6DVwo4PtzfuoV/QOw/MmsMAOlbtKZw8FsKIgdPPW6ooQdhs92BWGiNsJkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744208425; c=relaxed/simple;
-	bh=NQqy/cjx9OyWoyDJhTBrZuVp1p/HEvWyVobPSNDaeLI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=X4qkrqgAPTYNhF8tR3GxFjcgt0PcWVnT1r0jxq15BlsZyfj17nz1/QgbebCHD/56o5IsxNPZLxd9wZjbZnUkIm+sl/wtzJJx1pPI+NPXROjP/b90WyDRqnvesS10JHpEvd+Kka2JI5p+nkK6IEe2UI6+q9yIk5fX1sIwaJbLQws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=partner.samsung.com; spf=pass smtp.mailfrom=partner.samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=CCkFSkhm; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=partner.samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=partner.samsung.com
+	s=arc-20240116; t=1744208515; c=relaxed/simple;
+	bh=vAmC2drAHBzHtNgBifeXzr5zmsNl5tXCpvkQpn8quHo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d7abfnKOCTdk791AFUrgtI1+NG4lMIGMqNIRPImNuGiNlZUUWwiGECToCruXVnfsDaYJv+xY4qkZYXt2mx6xI4nUcWBQOIrjLamBsm77AaNDFsZ8Yzks6dcxvir+FKyVdjjj4GYRdweYCkDn/0ajZX/+OHwYW7QK/jz51rvZVoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JR0BsReO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="CCkFSkhm"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250409142019euoutp02b02e8a5c66009a2be709de42b4b4ff71~0rFEWF4_n2658126581euoutp02Z
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 14:20:19 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250409142019euoutp02b02e8a5c66009a2be709de42b4b4ff71~0rFEWF4_n2658126581euoutp02Z
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1744208420;
-	bh=IxrZvb+bqm1wNomd6Au0BLypn+IJ8OzZGfnv5IKf4rk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CCkFSkhmBEtjrpbqdgH/fucNLT7FuQ/YCwH2UUi5FufT6io98JIcYmz5gFHh14IXm
-	 xIz6VmXYRccs8LZxsXmVLD9pcFncvqhJej+Oej+ag9cDjU5KqIGtfpuYx7O1aq8mNs
-	 t+V33fytmEPWMxFVJq6rWZhr6LZeVEtGarMeebg4=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20250409142019eucas1p26c2a822f06bb50d4e84b19fec1d80519~0rFENfR_l0509405094eucas1p2x;
-	Wed,  9 Apr 2025 14:20:19 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges2new.samsung.com (EUCPMTA) with SMTP id 6F.2A.20409.32286F76; Wed,  9
-	Apr 2025 15:20:19 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250409142019eucas1p2e9fcd882f71cac08385cd7313a1dec90~0rFD34Dxk2502525025eucas1p2C;
-	Wed,  9 Apr 2025 14:20:19 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250409142019eusmtrp181b480d1cbe6467d222a9650ddebf491~0rFD3RRKN3073330733eusmtrp1U;
-	Wed,  9 Apr 2025 14:20:19 +0000 (GMT)
-X-AuditID: cbfec7f4-c39fa70000004fb9-6c-67f68223e60b
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id 4F.7D.19654.32286F76; Wed,  9
-	Apr 2025 15:20:19 +0100 (BST)
-Received: from localhost.localdomain (unknown [106.210.135.126]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250409142019eusmtip2aa1b8045af6c73c58966996f6718d4b3~0rFDjHI9U1557915579eusmtip28;
-	Wed,  9 Apr 2025 14:20:19 +0000 (GMT)
-From: "e.kubanski" <e.kubanski@partner.samsung.com>
-To: magnus.karlsson@intel.com
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, bjorn@kernel.org,
-	maciej.fijalkowski@intel.com, jonathan.lemon@gmail.com
-Subject: Re: Re: [PATCH] xsk: Fix race condition in AF_XDP generic RX path
-Date: Wed,  9 Apr 2025 16:20:11 +0200
-Message-Id: <20250409142011.82687-1-e.kubanski@partner.samsung.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <CGME20250409125216eucas1p150b189cd13807197a233718302103a02@eucas1p1.samsung.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JR0BsReO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2B5BC4CEE2;
+	Wed,  9 Apr 2025 14:21:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744208515;
+	bh=vAmC2drAHBzHtNgBifeXzr5zmsNl5tXCpvkQpn8quHo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JR0BsReO5qUEp66JmGFNad8PN643CouBXNz1iLv2AHpXBISgGu9yLrcXgg1eTh8Gc
+	 mJnAPDwXQOOjsxMi+lt3ijTNwBaRwSsptAKpkhDd2GZLf4tBHuO+jnx1GpCtjwJjeE
+	 qCvEXQ3vnAhBSWOyz8sNB1qDElfRE1+IC2u/GU8vtW2C+np6memRISCwo/ai5hqw8x
+	 zAAfk5tT1ytyPVuutLPAoF/nm9YlA4XFfqjuWatFE11fk+z22K9huBrRimyuIKyZ05
+	 ZVEl80l54HZdUopGGMRVYqnnax6NERNfqh7V2AVHU560Lmt+5EKri1slua18Z0hnOl
+	 tmsPvkfDMiOUw==
+Date: Wed, 9 Apr 2025 17:21:50 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>,
+	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+	"H. Peter Anvin" <hpa@zytor.com>, linux-coco@lists.linux.dev,
+	linux-integrity@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+	Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Joerg Roedel <jroedel@suse.de>,
+	Dionna Glaze <dionnaglaze@google.com>,
+	Claudio Carvalho <cclaudio@linux.ibm.com>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	linux-kernel@vger.kernel.org, Dov Murik <dovmurik@linux.ibm.com>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v6 3/4] tpm: add SNP SVSM vTPM driver
+Message-ID: <Z_aCfqp1EQBxRrRx@kernel.org>
+References: <20250403100943.120738-1-sgarzare@redhat.com>
+ <20250403100943.120738-4-sgarzare@redhat.com>
+ <Z-7b9VPEhmVYHjbX@kernel.org>
+ <CAGxU2F7a8uLz0367FubJhnwOAqGSpymTc9GefRAT5foRPHV9VA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpnleLIzCtJLcpLzFFi42LZduzneV3lpm/pBocn6Vhsfb+KxWLXupnM
-	Fpd3zWGzuHn8OYvFikMn2C2OLRBzYPPYOesuu8fiPS+ZPDat6mTz+LxJLoAlissmJTUnsyy1
-	SN8ugStj0ollLAXvxSqOnDzF1MD4T7CLkZNDQsBEoun/JKYuRi4OIYEVjBLL9zxlhHC+MEos
-	W3eIBcL5zChxdMZ/NpiWRyunsEMkljNKdK18B9XylVHi98NfjCBVbALGEk3f97OA2CICshJ/
-	1pwEK2IWaGGUePF2LRNIQljAS+L13P1AYzk4WARUJY6c5gQJ8wo4Szx6N5kZYpu8xP6DZ8Fs
-	ToE4iTvzDrFD1AhKnJz5BGw+M1BN89bZzCDzJQRWckg039vADtHsIrGh7RrUIGGJV8e3QMVl
-	JE5P7mGBaGhmlJg1s5MdwulhlFhz9QojyEUSAtYSa0/agpjMApoS63fpQ/Q6Shyd9ZAdooJP
-	4sZbQYgb+CQmbZvODBHmlehoE4Ko1pG4cfE51FYpie8zN7NA2B4SW0/uYJvAqDgLyTezkHwz
-	C2HvAkbmVYziqaXFuempxUZ5qeV6xYm5xaV56XrJ+bmbGIFp5fS/4192MC5/9VHvECMTB+Mh
-	RgkOZiUR3gl539KFeFMSK6tSi/Lji0pzUosPMUpzsCiJ8y7a35ouJJCeWJKanZpakFoEk2Xi
-	4JRqYLLc+bgqUGK7Mc//Lo0Ak4qkF9wdcSzHy6L04kXeRXn7ti2+YfjgzMQfib1rG1X1jDjn
-	H/mePoG9MY9j5UHbZY/nO4pdCuL422L3gfXkmtxYo4IFSv69zZHnkrszpEWzrry7/CvXhT+n
-	5ezORdOFWCSfTpNSK3tUe2tJ8j1+Tu26b9Nniz5bfeTOO83gDz+dY97VvYqUe3riupdz35/T
-	hx94hvP8Z7QtcNrwzVv3+qE58+cUnOXhvfY4bcGMcP/aQ098zCwKvx1KvP1urduOdZbH3R3O
-	hZVVnlsZM/3t/hhRt4l3glt1VWKNO6tXGYm5HjL4a9lz/fve082n/HmEt13NKcu4eyH3rsm7
-	EK8nj5VYijMSDbWYi4oTAUz9Bi+aAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrCLMWRmVeSWpSXmKPExsVy+t/xe7rKTd/SDT4vlbDY+n4Vi8WudTOZ
-	LS7vmsNmcfP4cxaLFYdOsFscWyDmwOaxc9Zddo/Fe14yeWxa1cnm8XmTXABLlJ5NUX5pSapC
-	Rn5xia1StKGFkZ6hpYWekYmlnqGxeayVkamSvp1NSmpOZllqkb5dgl7GpBPLWArei1UcOXmK
-	qYHxn2AXIyeHhICJxKOVU9hBbCGBpYwSzYdzIeJSEn/W/WGGsIUl/lzrYuti5AKq+cwosa5v
-	EhNIgk3AWKLp+34WEFtEQFbiz5qTjCBFzAJdjBIT3zSBTRUW8JJ4PXc/UDcHB4uAqsSR05wg
-	YV4BZ4lH7yZDLZCX2H/wLJjNKRAncWfeIaiDYiU6uxawQNQLSpyc+QTMZgaqb946m3kCo8As
-	JKlZSFILGJlWMYqklhbnpucWG+kVJ+YWl+al6yXn525iBAb/tmM/t+xgXPnqo94hRiYOxkOM
-	EhzMSiK8E/K+pQvxpiRWVqUW5ccXleakFh9iNAU6eyKzlGhyPjD+8kriDc0MTA1NzCwNTC3N
-	jJXEedmunE8TEkhPLEnNTk0tSC2C6WPi4JRqYHI6/Mvoh82ED/rm7Zavv37T75Cc0LnY+MAb
-	H8mdaoenyl3u77qhvPjGDIeKj1eW+76bo7xtY/SRq4q6XAWhN//p9nH1/ZutK7fVU6dX+nY2
-	H7+3cPXskyf97uvJGu1YY7Wz4J3KxR3Ktt1/CtKOCEUF9b3y+cgkm3lnp8XChT+63b+a2Yo2
-	3v71q0/g+vpP4lnMM7j2/zRVlf1gdibkT/GUrDoX14MuM11F/9zp1GD+aDdZJd/Icb7fl4hF
-	ySWnD36sWN/Ra/Ihcv+8I3cXhtSqz5m9QPjN9lxnta3xOrU/Yyse71gRIpK4oTt8Xr/P0Y81
-	llcmLJt11tzQyfxW2c8GzzN/eXSbFvJmT7u6u0SJpTgj0VCLuag4EQDmZCwgBwMAAA==
-X-CMS-MailID: 20250409142019eucas1p2e9fcd882f71cac08385cd7313a1dec90
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250409125216eucas1p150b189cd13807197a233718302103a02
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20250409125216eucas1p150b189cd13807197a233718302103a02
-References: <CGME20250409125216eucas1p150b189cd13807197a233718302103a02@eucas1p1.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGxU2F7a8uLz0367FubJhnwOAqGSpymTc9GefRAT5foRPHV9VA@mail.gmail.com>
 
-> I do not fully understand what you are doing in user space. Could you
-> please provide a user-space code example that will trigger this
-> problem?
+On Wed, Apr 09, 2025 at 11:43:55AM +0200, Stefano Garzarella wrote:
+> On Thu, 3 Apr 2025 at 21:05, Jarkko Sakkinen <jarkko@kernel.org> wrote:
+> >
+> > On Thu, Apr 03, 2025 at 12:09:41PM +0200, Stefano Garzarella wrote:
+> > > From: Stefano Garzarella <sgarzare@redhat.com>
+> > >
+> > > Add driver for the vTPM defined by the AMD SVSM spec [1].
+> > >
+> > > The specification defines a protocol that a SEV-SNP guest OS can use to
+> > > discover and talk to a vTPM emulated by the Secure VM Service Module (SVSM)
+> > > in the guest context, but at a more privileged level (VMPL0).
+> > >
+> > > The new tpm-svsm platform driver uses two functions exposed by x86/sev
+> > > to verify that the device is actually emulated by the platform and to
+> > > send commands and receive responses.
+> > >
+> > > The device cannot be hot-plugged/unplugged as it is emulated by the
+> > > platform, so we can use module_platform_driver_probe(). The probe
+> > > function will only check whether in the current runtime configuration,
+> > > SVSM is present and provides a vTPM.
+> > >
+> > > This device does not support interrupts and sends responses to commands
+> > > synchronously. In order to have .recv() called just after .send() in
+> > > tpm_try_transmit(), the .status() callback returns 0, and both
+> > > .req_complete_mask and .req_complete_val are set to 0.
+> > >
+> > > [1] "Secure VM Service Module for SEV-SNP Guests"
+> > >     Publication # 58019 Revision: 1.00
+> > >
+> > > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> > > ---
+> > > v6:
+> > > - removed the `locality` field (set to 0) and the FIXME comment [Jarkko]
+> > > v5:
+> > > - removed cancel/status/req_* ops after rebase on master that cotains
+> > >   commit 980a573621ea ("tpm: Make chip->{status,cancel,req_canceled} opt")
+> > > v4:
+> > > - moved "asm" includes after the "linux" includes [Tom]
+> > > - allocated buffer separately [Tom/Jarkko/Jason]
+> > > v3:
+> > > - removed send_recv() ops and followed the ftpm driver implementing .status,
+> > >   .req_complete_mask, .req_complete_val, etc. [Jarkko]
+> > > - removed link to the spec because those URLs are unstable [Borislav]
+> > > ---
+> > >  drivers/char/tpm/tpm_svsm.c | 128 ++++++++++++++++++++++++++++++++++++
+> > >  drivers/char/tpm/Kconfig    |  10 +++
+> > >  drivers/char/tpm/Makefile   |   1 +
+> > >  3 files changed, 139 insertions(+)
+> > >  create mode 100644 drivers/char/tpm/tpm_svsm.c
+> > >
+> > > diff --git a/drivers/char/tpm/tpm_svsm.c b/drivers/char/tpm/tpm_svsm.c
+> > > new file mode 100644
+> > > index 000000000000..b9242c9eab87
+> > > --- /dev/null
+> > > +++ b/drivers/char/tpm/tpm_svsm.c
+> > > @@ -0,0 +1,128 @@
+> > > +// SPDX-License-Identifier: GPL-2.0-only
+> > > +/*
+> > > + * Copyright (C) 2025 Red Hat, Inc. All Rights Reserved.
+> > > + *
+> > > + * Driver for the vTPM defined by the AMD SVSM spec [1].
+> > > + *
+> > > + * The specification defines a protocol that a SEV-SNP guest OS can use to
+> > > + * discover and talk to a vTPM emulated by the Secure VM Service Module (SVSM)
+> > > + * in the guest context, but at a more privileged level (usually VMPL0).
+> > > + *
+> > > + * [1] "Secure VM Service Module for SEV-SNP Guests"
+> > > + *     Publication # 58019 Revision: 1.00
+> > > + */
+> > > +
+> > > +#include <linux/module.h>
+> > > +#include <linux/kernel.h>
+> > > +#include <linux/platform_device.h>
+> > > +#include <linux/tpm_svsm.h>
+> > > +
+> > > +#include <asm/sev.h>
+> > > +
+> > > +#include "tpm.h"
+> > > +
+> > > +struct tpm_svsm_priv {
+> > > +     void *buffer;
+> > > +};
+> > > +
+> > > +static int tpm_svsm_send(struct tpm_chip *chip, u8 *buf, size_t len)
+> > > +{
+> > > +     struct tpm_svsm_priv *priv = dev_get_drvdata(&chip->dev);
+> > > +     int ret;
+> > > +
+> > > +     ret = svsm_vtpm_cmd_request_fill(priv->buffer, 0, buf, len);
+> > > +     if (ret)
+> > > +             return ret;
+> > > +
+> > > +     /*
+> > > +      * The SVSM call uses the same buffer for the command and for the
+> > > +      * response, so after this call, the buffer will contain the response
+> > > +      * that can be used by .recv() op.
+> > > +      */
+> > > +     return snp_svsm_vtpm_send_command(priv->buffer);
+> > > +}
+> > > +
+> > > +static int tpm_svsm_recv(struct tpm_chip *chip, u8 *buf, size_t len)
+> > > +{
+> > > +     struct tpm_svsm_priv *priv = dev_get_drvdata(&chip->dev);
+> > > +
+> > > +     /*
+> > > +      * The internal buffer contains the response after we send the command
+> > > +      * to SVSM.
+> > > +      */
+> > > +     return svsm_vtpm_cmd_response_parse(priv->buffer, buf, len);
+> > > +}
+> > > +
+> > > +static struct tpm_class_ops tpm_chip_ops = {
+> > > +     .flags = TPM_OPS_AUTO_STARTUP,
+> > > +     .recv = tpm_svsm_recv,
+> > > +     .send = tpm_svsm_send,
+> > > +};
+> > > +
+> > > +static int __init tpm_svsm_probe(struct platform_device *pdev)
+> > > +{
+> > > +     struct device *dev = &pdev->dev;
+> > > +     struct tpm_svsm_priv *priv;
+> > > +     struct tpm_chip *chip;
+> > > +     int err;
+> > > +
+> > > +     if (!snp_svsm_vtpm_probe())
+> > > +             return -ENODEV;
+> > > +
+> > > +     priv = devm_kmalloc(dev, sizeof(*priv), GFP_KERNEL);
+> > > +     if (!priv)
+> > > +             return -ENOMEM;
+> > > +
+> > > +     /*
+> > > +      * The maximum buffer supported is one page (see SVSM_VTPM_MAX_BUFFER
+> > > +      * in tpm_svsm.h).
+> > > +      */
+> > > +     priv->buffer = (void *)devm_get_free_pages(dev, GFP_KERNEL, 0);
+> > > +     if (!priv->buffer)
+> > > +             return -ENOMEM;
+> > > +
+> > > +     chip = tpmm_chip_alloc(dev, &tpm_chip_ops);
+> > > +     if (IS_ERR(chip))
+> > > +             return PTR_ERR(chip);
+> > > +
+> > > +     dev_set_drvdata(&chip->dev, priv);
+> > > +
+> > > +     err = tpm2_probe(chip);
+> > > +     if (err)
+> > > +             return err;
+> > > +
+> > > +     err = tpm_chip_register(chip);
+> > > +     if (err)
+> > > +             return err;
+> > > +
+> > > +     dev_info(dev, "SNP SVSM vTPM %s device\n",
+> > > +              (chip->flags & TPM_CHIP_FLAG_TPM2) ? "2.0" : "1.2");
+> > > +
+> > > +     return 0;
+> > > +}
+> > > +
+> > > +static void __exit tpm_svsm_remove(struct platform_device *pdev)
+> > > +{
+> > > +     struct tpm_chip *chip = platform_get_drvdata(pdev);
+> > > +
+> > > +     tpm_chip_unregister(chip);
+> > > +}
+> > > +
+> > > +/*
+> > > + * tpm_svsm_remove() lives in .exit.text. For drivers registered via
+> > > + * module_platform_driver_probe() this is ok because they cannot get unbound
+> > > + * at runtime. So mark the driver struct with __refdata to prevent modpost
+> > > + * triggering a section mismatch warning.
+> > > + */
+> > > +static struct platform_driver tpm_svsm_driver __refdata = {
+> > > +     .remove = __exit_p(tpm_svsm_remove),
+> > > +     .driver = {
+> > > +             .name = "tpm-svsm",
+> > > +     },
+> > > +};
+> > > +
+> > > +module_platform_driver_probe(tpm_svsm_driver, tpm_svsm_probe);
+> > > +
+> > > +MODULE_DESCRIPTION("SNP SVSM vTPM Driver");
+> > > +MODULE_LICENSE("GPL");
+> > > +MODULE_ALIAS("platform:tpm-svsm");
+> > > diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+> > > index fe4f3a609934..dddd702b2454 100644
+> > > --- a/drivers/char/tpm/Kconfig
+> > > +++ b/drivers/char/tpm/Kconfig
+> > > @@ -234,5 +234,15 @@ config TCG_FTPM_TEE
+> > >       help
+> > >         This driver proxies for firmware TPM running in TEE.
+> > >
+> > > +config TCG_SVSM
+> > > +     tristate "SNP SVSM vTPM interface"
+> > > +     depends on AMD_MEM_ENCRYPT
+> > > +     help
+> > > +       This is a driver for the AMD SVSM vTPM protocol that a SEV-SNP guest
+> > > +       OS can use to discover and talk to a vTPM emulated by the Secure VM
+> > > +       Service Module (SVSM) in the guest context, but at a more privileged
+> > > +       level (usually VMPL0).  To compile this driver as a module, choose M
+> > > +       here; the module will be called tpm_svsm.
+> > > +
+> > >  source "drivers/char/tpm/st33zp24/Kconfig"
+> > >  endif # TCG_TPM
+> > > diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
+> > > index 2b004df8c04b..9de1b3ea34a9 100644
+> > > --- a/drivers/char/tpm/Makefile
+> > > +++ b/drivers/char/tpm/Makefile
+> > > @@ -45,3 +45,4 @@ obj-$(CONFIG_TCG_CRB) += tpm_crb.o
+> > >  obj-$(CONFIG_TCG_ARM_CRB_FFA) += tpm_crb_ffa.o
+> > >  obj-$(CONFIG_TCG_VTPM_PROXY) += tpm_vtpm_proxy.o
+> > >  obj-$(CONFIG_TCG_FTPM_TEE) += tpm_ftpm_tee.o
+> > > +obj-$(CONFIG_TCG_SVSM) += tpm_svsm.o
+> > > --
+> > > 2.49.0
+> > >
+> > >
+> >
+> > Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+> 
+> In the next version I'm moving the snp_svsm_vtpm_probe() call from
+> here to sev core where the device is registered.
+> See https://lore.kernel.org/linux-integrity/o2u7p3wb64lcc4sziunr274hyubkgmspzdjcvihbpzkw6mkvpo@sjq3vi4y2qfl/
+> 
+> Do I carry your R-b for this patch (and patch 4) or would you rather
+> take a look at v7?
 
-We want to scale single hardware queue AF_XDP setup to
-receive packets on multiple threads through RPS mechanisms.
-The problem arises when RPS is enabled in the kernel.
-In this situation single hardware queue flow can scale across
-multiple CPU cores. Then we perform XDP/eBPF load-balancing
-to multiple sockets, by using CPU_ID of issued XDP call.
+I'm fine with it. I'm sure that Boris et al make the complains if/when
+required :-) This whole process has been going on smoothly overall, and
+all my concerns have been addressed.
 
-Every socket is binded to queue number 0, device has single queue.
+> 
+> Thanks,
+> Stefano
+> 
 
-User-space socket setup looks more-or-less like that (with libxdp):
-```
-xsk_ring_prod fq{};
-xsk_ring_cons cq{};
-
-xsk_umem_config umem_cfg{ ... };
-xsk_umem* umem;
-auto result = xsk_umem__create(&umem, umem_memory, pool_size_bytes, &fq, &cq, &umem_cfg);
-
-...
-
-xsk_socket_config xsk_cfg{
-    ...
-    .xdp_flags = XDP_FLAGS_SKB_MODE,
-    ...
-};
-
-xsk_socket* sock1{nullptr};
-xsk_ring_cons rq1{};
-xsk_ring_prod tq1{};
-auto result = xsk_socket__create_shared(
-    &sock1,
-    device_name,
-    0,
-    &rq1,
-    &tq1,
-    &fq,
-    &cq,
-    &cfg
-);
-
-xsk_socket* sock2{nullptr};
-xsk_ring_cons rq2{};
-xsk_ring_prod tq2{};
-auto result = xsk_socket__create_shared(
-    &sock2,
-    device_name,
-    0,
-    &rq2,
-    &tq2,
-    &fq,
-    &cq,
-    &cfg
-);
-
-...
-```
-
-We're working on cloud native deploymetns, where
-it's not possible to scale RX through RSS mechanism only.
-
-That's why we wanted to use RPS to scale not only
-user-space processing but also XDP processing.
-
-This patch effectively allows us to use RPS to scale XDP
-in Generic mode.
-
-The same goes for RPS disabled, where we use MACVLAN
-
-child device attached to parent device with multiple queues.
-In this situation MACVLAN allows for multi-core kernel-side
-processing, but xsk_buff_pool isn't protected.
-
-We can't do any passthrough in this situation, we must rely
-on MACVLAN with single RX/TX queue pair.
-
-Of course this is not a problem in situation where every device
-packet is processed on single core.
-
-> Please note that if you share an Rx ring or the fill ring between
-> processes/threads, then you have to take care about mutual exclusion
-> in user space.
-
-Of course, RX/TX/FILL/COMP are SPSC queues, we included mutual
-exclusion for FILL/COMP because RX/TX are accessed by single thread.
-Im doing single process deployment with multiple threads, where every
-thread has it's own AF_XDP socket and pool is shared across threads.
-
-> If you really want to do this, it is usually a better
-> idea to use the other shared umem mode in which each process gets its
-> own rx and fill ring, removing the need for mutual exclusion.
-
-If I understand AF_XDP architecture correctly it's not possible for single
-queue deployment, or maybe Im missing something? We need to maintain
-single FILL/COMP pair per device queue.
-
+BR, Jarkko
