@@ -1,107 +1,104 @@
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B0B927816F
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 18:52:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F0D279332;
+	Wed,  9 Apr 2025 18:52:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744224759; cv=none; b=Tfr22N0aTfpsyp5eTv0Cux1afkbH9iaaKoYKYRwxCvFJO1J9QEmNT0zjiYa5bNOxBlvZXlugI74DBLLPULhSXBDmqGM7nRHaXCyrlpBm3R66rrswwqBRg+TwMJhEKGtoM+FRZXPgVKw8kY0nOOEci5w1cBjgMUF2bQZ/TMaJyWY=
+	t=1744224764; cv=none; b=hZICPHzIdAOAoeMrD3ek2+LWLUkOB5oPv7oNjKHbOoailF/BiZuc5UPHXyA6lx+Mc/iloY6JayMqArfHqk/1XeP1dKEv/RT0+3MW2U8nI6X1Kr5egg9NnOxk+kjQGaSHnwwSFVrYFTVzMMbMf9SfGO2LpiQSMlGClS8wbyHLnZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744224759; c=relaxed/simple;
-	bh=pLt7GiueBlfEk7bEqYSj6/150Oe2cspFuNbigDQxZMk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Lu9Tr4tfbeABxqjg6/iL+IL7OYnVK+sdkrYqdtW9DF4vRNIgvw1pxBRu7MASjMdbhZs0e2/YB0Qh1AhS1MOo4+ejziPsTFqDws1Ww4iaEyC2ydZ4MB+SI2yH8fVtyc1b0/mNJfOjQ2rPTOP14iQmDGZ3b8fzN6D5QboQe6Hxp70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=OC09pHcc; arc=none smtp.client-ip=209.85.210.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1744224764; c=relaxed/simple;
+	bh=BSUmpdOQLiDXhEbmUHBtxJH6Dq1anrYbjkezVFE3k+c=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=NH3axQDowqgkGHUQCH/QrUP8z4B289ZCuZDBVJ1Om5rtsP+YzVQ6A53nazJ2qY907oPQ0ACrO0E67VHoKwlzER6FUCJlAFu+jnCx14ucTc6VBa/+OT2XxQcaxbwjdUvyDjMzsQCptebLb95Stc2f35589butf3MZzKlGX9YVATQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lrKiPbJW; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Xcsa7lo8; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="OC09pHcc"
-Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-72c172f1de1so10476a34.3
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 11:52:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1744224757; x=1744829557; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=08HrC4TNhMaF2kgAGKOzCB9x+b2Lv0SOP0JhsgwzY5s=;
-        b=OC09pHccqol73I4WIRGW0GAWmDlEWCDdiMkllOiHZMN1f0af8dg91uwoathD+YcjmL
-         Otl0NUI23X4sA7Vm5XR/57fT4sgXZ4G31D4Jo4PT/x2xBQl+RNie9W2oPP2S/IIfrvJc
-         0Qt4HzIzbcvCYK2c8+S1A/we/13rVUKNFDDrc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744224757; x=1744829557;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=08HrC4TNhMaF2kgAGKOzCB9x+b2Lv0SOP0JhsgwzY5s=;
-        b=ltNo3TD0cbXKlbzCMbwLH8xThUNuWPlgo97IrHC/bTS0wt+DNeHuoCnaM3V4t2kWrQ
-         vaEMklz16ueSBRPFsHVRga5IRWJgx77MZvcrXBDKXAB3In0xqw4Wxx3PJWPbihb4KGSd
-         Dh7zbG3shLgY71iU0orVt9l7EdBoDivrxiaxQ/8Q2LBW3VAb9e5dhkOwARrEZbF/fxKA
-         gI8WKuzxH5kAnCt8o8nW+R/kbAovj54unAQlByoQ9AClcH/kVMzEnzYyfCVYYXnWhmSZ
-         300m5isXzvzWLkvsQNO2UYSXDMukiKOp0qwOa5XDYBWd5yRQVoZJJ5h75G/ruyrYNEB7
-         VJ4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXUsRqoHVEbD9yHx2UjRNEzzG0PwN/ecgrLLeh+1+yZ1ooHiilZB9i4fJJF07R+dYt8n+G5ezWbgp2IbJQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiMAj8Mfd/CPcNqOEi791EDYgZQYAmWMOE6U45bmGZyVK9WAMB
-	YabFNKV3pfS2bn6brcU3oobLhWW2pz6aRsbk2ejfIm+UP3vQBp7NZRAHWtR7+/0=
-X-Gm-Gg: ASbGnctq65iNkB5sivuazPhLE/3axAtCL3ysGxIxE+MGsIEmkUgg+1zZzqViqBxWOq7
-	IXdfLPsFjWPnX+1jVXEb6nC5pDM68RrZl0au6N8/fW4DqmpR+wK3bDvZDrxL0hnLuazROf8LPg3
-	2CaJf+kgcFfsrkseTVc+WRXd9HJ82Y+gD4k6u5hfwu+pDAMcqmigd0not1eXvMUmXypSkKscaGv
-	uD+LS20L4iy5ljKdiAEQ57rFrgsmbW0IzpaFIFz2WGDcerqZYMN0tUh5S5DFZQihnh+wLuOuib0
-	L79H4uGscyXfn4+r9oZq+f1NvCYawklWvdMajwkncWUSTiL8v28=
-X-Google-Smtp-Source: AGHT+IFE4WLk96sOEuDaUbLNglaG8LWOuDvoLplefjWi18rbkgHxYdcBhfLP+c4HletU/vfeakO66Q==
-X-Received: by 2002:a05:6830:6304:b0:72b:9fb2:2abd with SMTP id 46e09a7af769-72e7bb2c8a0mr19492a34.20.1744224757172;
-        Wed, 09 Apr 2025 11:52:37 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-72e73d8d90bsm280459a34.34.2025.04.09.11.52.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Apr 2025 11:52:36 -0700 (PDT)
-Message-ID: <52fb54ef-4f30-4585-b5ff-6e52310ac43e@linuxfoundation.org>
-Date: Wed, 9 Apr 2025 12:52:35 -0600
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lrKiPbJW";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Xcsa7lo8"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744224761;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Xz45tyDLtvOyOUuJdgYcFYGxgqi+8xDlZvb7hCeMYoA=;
+	b=lrKiPbJWfb49gcZW6Um62l+nwOQe2w8Anmmd8kxSjATSOXFYi1cQdppVooSOPgvQ3NpryO
+	G284H/HY6cvd+rZZsFNjBpoTBD2tkCbve/9EurQ3+Xd6XM6nH91jbi1cgnVtmqlfKUJ89B
+	QzTSkFrQOrKa5Of/z+Ae4XZk7pc+PWzAoGVD/vL4kGrxgN49xJgeNYhI3P4asfwjzVq17G
+	BEKU5p/sAR6/8acLbZXCI+6JcEFaD0+c4hif/ExXNSq0NVQHyh+kAwBeM9xecb//Rv96Ez
+	rZLHuRqumUsy+qOYCUumUmINXALoPPbQHHIqbztIkIEUIk6e1YLNKERSYYkKrg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744224761;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Xz45tyDLtvOyOUuJdgYcFYGxgqi+8xDlZvb7hCeMYoA=;
+	b=Xcsa7lo8AWIUXlp14grUnxpJvCfO5SlhON1U3dVIwQ+2t7/FtYhJj/bNURJgXZ399+iFHb
+	qJMstcea9mXV5QDQ==
+To: Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto
+ <inochiama@gmail.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ sophgo@lists.linux.dev, Yixun Lan <dlan@gentoo.org>, Longbin Li
+ <looong.bin@gmail.com>
+Subject: Re: [PATCH v3 4/4] irqchip/sg2042-msi: Add the Sophgo SG2044 MSI
+ interrupt controller
+In-Reply-To: <MA0P287MB2262DBC84878347B78CA50ECFEB42@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
+References: <20250408050147.774987-1-inochiama@gmail.com>
+ <20250408050147.774987-5-inochiama@gmail.com>
+ <MA0P287MB2262DBC84878347B78CA50ECFEB42@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
+Date: Wed, 09 Apr 2025 20:52:40 +0200
+Message-ID: <87o6x5tbev.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.1 000/205] 6.1.134-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20250409115832.610030955@linuxfoundation.org>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20250409115832.610030955@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 4/9/25 06:02, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.1.134 release.
-> There are 205 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri, 11 Apr 2025 11:58:02 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.134-rc2.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+On Wed, Apr 09 2025 at 15:53, Chen Wang wrote:
 
-Compiled and booted on my test system. No dmesg regressions.
+> On 2025/4/8 13:01, Inochi Amaoto wrote:
+>> Add support for Sophgo SG2044 MSI interrupt controller.
+>>
+>> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+>> Reviewed-by: Chen Wang <unicorn_wang@outlook.com>
+>> ---
+>>   drivers/irqchip/irq-sg2042-msi.c | 61 ++++++++++++++++++++++++++++++--
+>>   1 file changed, 58 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/irqchip/irq-sg2042-msi.c b/drivers/irqchip/irq-sg2042-msi.c
+>> index 30a1d2bfd474..2935ca213306 100644
+>> --- a/drivers/irqchip/irq-sg2042-msi.c
+>> +++ b/drivers/irqchip/irq-sg2042-msi.c
+>> @@ -19,8 +19,6 @@
+>>   
+>>   #include "irq-msi-lib.h"
+>>   
+>> -#define SG2042_MAX_MSI_VECTOR	32
+>> -
+>>   struct sg204x_msi_chip_info {
+>>   	const struct irq_chip		*irqchip;
+>>   	const struct msi_parent_ops	*parent_ops;
+>> @@ -44,7 +42,7 @@ struct sg204x_msi_chipdata {
+>>   	u32					irq_first;
+>>   	u32					num_irqs;
+>>   
+>> -	DECLARE_BITMAP(msi_map, SG2042_MAX_MSI_VECTOR);
+>> +	unsigned long				*msi_map;
+>
+> Regarding the common parts of SG2042 and SG2044, I noticed that you 
+> changed DECLARE_BITMAP back to dynamic application. If there is a next 
+> version, I suggest you mention it in the commit information.
 
-Tested-by: Shuah Khan <skhan@linuxfoundation.org>
+Actually that should be part of the previous patch which prepares for
+configurable initialization. Then this one just adds the new variant.
 
-thanks,
--- Shuah
+Thanks,
+
+        tglx
+
+
