@@ -1,228 +1,73 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC4CC26A0E0
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 14:43:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 258A82673A3
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 14:43:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744209829; cv=none; b=BZlyOxpJyRu2rRd7ncpZFv3GoOYA0yyDMicRrODbnLP4HFIYrBWGwJwIjJi2BnnoUWNv6GnGzBTXV7v/CQbrhJa2YncYH9YuEQwoYm0T+DWsA1kazkpabk8qw2JRYNYIfWHuiROEk7LYHDMbkslXYG95LATYyWBg1bnW5+pInA0=
+	t=1744209831; cv=none; b=avnGM5CveABJYP9nrvPeX0efYrxfxiOjN8PmUy0qNC8zRHkTlmgn9YuRHUz/Pbl+RZX9vksjxJkTKicx7+jngkojx2JAo1pysex+goPdUr0gqSImqsE9YBXCWkQU56J3fyOczObraL0m5SuWnqwLCK2H044Y5uy/VLFX/nopRhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744209829; c=relaxed/simple;
-	bh=7Qyl/KGbNgAjKHzOstykL1b1PVeFC9C9SmfU8PxYhlc=;
+	s=arc-20240116; t=1744209831; c=relaxed/simple;
+	bh=AQEmlAiyQVKEv+Eym+pu0l2fbr7oQtf08qsmZpffl0w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WKQT7q2GgsbYH6x4Uxa5chyctt036S0pCzS6VGQJW8iGDcs1nh1OFnk2MQnTtmu8QnklQIFUPGdSsjOwUEgSMNw44BsLZHsQO+MAutEdg6eBKUt4mPJ4YsV/E4SwTMJfMh6QzJc4m74yfg5IgoavmKyDCXghCr/26z4uqzpEREE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=Rv1Tpnnf; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=K9o4yxbvqeUhkOk7sDEq+T9MiSnhrYveTDq2slKB9V7M2E+bQtKv8Hz4+Bdaglao9Yp5oHIFk7H9Pj3rWSjnLov2kd7JfGD6ab8BYqQxZON/kuyNP/o9HMSMUK4gLPJi/OlybBMFREfGFSL965RK9khk4uML8xMmZipv9BlaDYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=v9CcRUcw; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="Rv1Tpnnf"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-22622ddcc35so92903985ad.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 07:43:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1744209827; x=1744814627; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ow5mA7lTDwDJ/M6E3XEwhzsM01atmOj/MJRSg0pfs/U=;
-        b=Rv1TpnnfCAYDUJmZsb8GSLvbfAR41yOxgzPfzDczY7jUA9EHzFeKfw8JMydztCGYmZ
-         EjkDW3U9IbEbUtWHMuA7Ei3zh3fO1csXbPVFVIW4Lk95SfxgnBXXrgS+h1ORV6U+k9rK
-         0q3vzGjvCCjgiP9ttTvVkciqE0XaJPSBdZR16s8pDn7OLYvGm5g+2E0VHGt2MX9y6x9h
-         MUF7ZnNirkUdAMreh7a4kyTkdeG9ovH0ptoLzHh8IZi9NhzWmPlJFGGHjxCbG5LBLWF0
-         6k8csHj2KmrgIgaOfbscu3VA6rKihvw7Im13SXTB/DAuk8xbv597NB3r5s2ufihZAbqu
-         pHgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744209827; x=1744814627;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ow5mA7lTDwDJ/M6E3XEwhzsM01atmOj/MJRSg0pfs/U=;
-        b=VMVgiI9s04aAfW9vPO9r9uGgcGNW0KFeDSTugF9eGmooBF9OzW9cB5a9m58rOQCuNE
-         O9BOsZlyJioL2BoCYC7nIedXtoJoZPd4BNOdDWW/R8xFjDItrnx/sJeki+hx0+StItQg
-         jLAynlu6W1jmOJ8Tr/QDCOjMweDuleGTCoUuZ2L7SV6cWpGqmbleog+szl8gMipf7LGH
-         Xq7lohuM6PeGgi2nH0er6G71YCPBHZHUPbSw3bN4fKKa5hXZQpRdMRGQVUJaJunO9EfO
-         7j+5ZsLiTy+1cygr4etJIt9EUGu0+GpvX6YYrkbs8ViSiJGIwwoFaANcpE7pvlYBuCHH
-         4HKA==
-X-Forwarded-Encrypted: i=1; AJvYcCXIDNY5tymQQyJ6G1geyKGevQ4qdD8hqpU5WGI9m9nqAmG8HO+7nFu8n6686RuuEq26VTvzkaKHL4SmKEo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsmFRK/M/59gqkDFxK3okFuzWZjrjz2d/SBrqU4EmbSyPUJopZ
-	N3o863Lf0aIjnDoNbwfsdpK1QkS97fngUFUVYHXB5eG42Wmvq51eo1xNWaCkEVE=
-X-Gm-Gg: ASbGncuOu4Dc1SZTYf+/LhnW48zoKh1bcaXnPR0X4WwVJ7r34dpM4HdtiPtB+nNq8y2
-	b102LKr8kCD1f5TUOaRAmcZiGqpq3HkktpQLpHbHsZshYLBOBw7YyQr79pUSDLPcCH+gNImLZn7
-	O4ch4me1IN0xxuxgIQwIO2K626RVlYnCIbLY7vVwGRoQdeJDEqlDPKo80VMfBCoHFX8efzVJfPf
-	H28cPnn+IkFE2avWaigzn/Bsu0ZRPsiVnK5UNYkFbg4pALtvZ2jphs8RLC1KsADo4xKFvTfTS/y
-	AtTq2Sz41MCsD0Aens2n8enlCbtS0n1NAHxKSnW2Xv7lBkr8ehE=
-X-Google-Smtp-Source: AGHT+IEgaCnvV5qiE5FYgc0Ujjm72QHq4NY5rpvgBrpJwRVGqGD1OFM7I6sIlnm2n2XAV9/GUpCxyg==
-X-Received: by 2002:a17:903:32cb:b0:220:c164:6ee1 with SMTP id d9443c01a7336-22ac2a1df5cmr51260355ad.32.1744209826897;
-        Wed, 09 Apr 2025 07:43:46 -0700 (PDT)
-Received: from debug.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7cb538csm12708815ad.176.2025.04.09.07.43.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 07:43:46 -0700 (PDT)
-Date: Wed, 9 Apr 2025 07:43:42 -0700
-From: Deepak Gupta <debug@rivosinc.com>
-To: Alexandre Ghiti <alex@ghiti.fr>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Christian Brauner <brauner@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
-	Jann Horn <jannh@google.com>, Conor Dooley <conor+dt@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	alistair.francis@wdc.com, richard.henderson@linaro.org,
-	jim.shu@sifive.com, andybnac@gmail.com, kito.cheng@sifive.com,
-	charlie@rivosinc.com, atishp@rivosinc.com, evan@rivosinc.com,
-	cleger@rivosinc.com, alexghiti@rivosinc.com,
-	samitolvanen@google.com, broonie@kernel.org,
-	rick.p.edgecombe@intel.com, Zong Li <zong.li@sifive.com>
-Subject: Re: [PATCH v12 03/28] riscv: zicfiss / zicfilp enumeration
-Message-ID: <Z_aHnj2-8OlcRuHd@debug.ba.rivosinc.com>
-References: <20250314-v5_user_cfi_series-v12-0-e51202b53138@rivosinc.com>
- <20250314-v5_user_cfi_series-v12-3-e51202b53138@rivosinc.com>
- <cc314da6-8755-4037-846b-01a20b3c68e1@ghiti.fr>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="v9CcRUcw"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=lXAtUWl+TYjkSdWZluavjU5zi8D2SOC5COayB+U2vLw=; b=v9CcRUcwC50bzVnTTn6Zm8uQiq
+	F/Gx4rQMQPg3XD8sRYa5YX2SpwseK1s85wCdOL1fgvH1Ft3EmpE0FyEGWPOrIj4EAQLNy9YNm7/Gt
+	qChUMLvGagBd1v+xO2aY+Vw+lfe2JZtGSppPJSGYOG6JegyHwgF9LZ+vg8Xskc64B2+9CJHpe7N+e
+	2feIt1Z7JQiDt6d5uAM2roFe2tuvPctbzI91Z2tKY/llzhJXESHpp3t+7cTmzjZzekneVyl7ABSI9
+	SHTiwTAx380e5xQVbDf0WtUynDNAPw+HJESD84i9z//Oxyjjh4z62SKTGRvmbpdWngd8ISE1DNX0c
+	oSUjAp+w==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u2WeX-00000001bS0-1muU;
+	Wed, 09 Apr 2025 14:43:46 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 85A883003FA; Wed,  9 Apr 2025 16:43:45 +0200 (CEST)
+Date: Wed, 9 Apr 2025 16:43:45 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	Ingo Molnar <mingo@kernel.org>, Juergen Gross <jgross@suse.com>
+Subject: Re: [PATCH v4 0/4] objtool: Fix INSN_CONTEXT_SWITCH
+Message-ID: <20250409144345.GG9833@noisy.programming.kicks-ass.net>
+References: <cover.1744095216.git.jpoimboe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cc314da6-8755-4037-846b-01a20b3c68e1@ghiti.fr>
+In-Reply-To: <cover.1744095216.git.jpoimboe@kernel.org>
 
-On Mon, Apr 07, 2025 at 05:48:27PM +0200, Alexandre Ghiti wrote:
->
->On 14/03/2025 22:39, Deepak Gupta wrote:
->>This patch adds support for detecting zicfiss and zicfilp. zicfiss and
->>zicfilp stands for unprivleged integer spec extension for shadow stack
->>and branch tracking on indirect branches, respectively.
->>
->>This patch looks for zicfiss and zicfilp in device tree and accordinlgy
->>lights up bit in cpu feature bitmap. Furthermore this patch adds detection
->>utility functions to return whether shadow stack or landing pads are
->>supported by cpu.
->>
->>Reviewed-by: Zong Li <zong.li@sifive.com>
->>Signed-off-by: Deepak Gupta <debug@rivosinc.com>
->>---
->>  arch/riscv/include/asm/cpufeature.h | 13 +++++++++++++
->>  arch/riscv/include/asm/hwcap.h      |  2 ++
->>  arch/riscv/include/asm/processor.h  |  1 +
->>  arch/riscv/kernel/cpufeature.c      | 13 +++++++++++++
->>  4 files changed, 29 insertions(+)
->>
->>diff --git a/arch/riscv/include/asm/cpufeature.h b/arch/riscv/include/asm/cpufeature.h
->>index 569140d6e639..69007b8100ca 100644
->>--- a/arch/riscv/include/asm/cpufeature.h
->>+++ b/arch/riscv/include/asm/cpufeature.h
->>@@ -12,6 +12,7 @@
->>  #include <linux/kconfig.h>
->>  #include <linux/percpu-defs.h>
->>  #include <linux/threads.h>
->>+#include <linux/smp.h>
->>  #include <asm/hwcap.h>
->>  #include <asm/cpufeature-macros.h>
->>@@ -137,4 +138,16 @@ static __always_inline bool riscv_cpu_has_extension_unlikely(int cpu, const unsi
->>  	return __riscv_isa_extension_available(hart_isa[cpu].isa, ext);
->>  }
->>+static inline bool cpu_supports_shadow_stack(void)
->>+{
->>+	return (IS_ENABLED(CONFIG_RISCV_USER_CFI) &&
->>+		riscv_cpu_has_extension_unlikely(smp_processor_id(), RISCV_ISA_EXT_ZICFISS));
->
->
->I would use riscv_has_extension_unlikely() instead of the cpu specific 
->variant, that would remove the need for #include <linux/smp.h>. Unless 
->you have a good reason to do that?
+On Tue, Apr 08, 2025 at 12:02:12AM -0700, Josh Poimboeuf wrote:
+> I decided to keep the "unsupported instruction in callable function"
+> warning, it's not hurting anything.  As a result we now have
+> INSN_SYSCALL and INSN_SYSRET.
+> 
+> v4:
+> - split up patches
+> - don't get rid of "unsupported instruction in callable function" warning
+> - split INSN_CONTEXT_SWITCH -> INSN_SYSCALL / INSN_SYSRET
+> 
+> v3: https://lore.kernel.org/9b23e4413873bee38961e628b0c73f6d3a26d494.1743799705.git.jpoimboe@kernel.org
+> 
+> Josh Poimboeuf (4):
+>   objtool: Fix INSN_CONTEXT_SWITCH handling in validate_unret()
+>   objtool: Split INSN_CONTEXT_SWITCH into INSN_SYSCALL and INSN_SYSRET
+>   objtool: Stop UNRET validation on UD2
+>   objtool, xen: Fix INSN_SYSCALL / INSN_SYSRET semantics
 
+This looks nice, thanks for doing that. Belated:
 
-No I dont remember the reason. I'll fix it.
-When I am fixing it, and happpen to remember the reason.
-I'll post it.
-
->
->
->>+}
->>+
->>+static inline bool cpu_supports_indirect_br_lp_instr(void)
->>+{
->>+	return (IS_ENABLED(CONFIG_RISCV_USER_CFI) &&
->>+		riscv_cpu_has_extension_unlikely(smp_processor_id(), RISCV_ISA_EXT_ZICFILP));
->>+}
->>+
->>  #endif
->>diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
->>index 869da082252a..2dc4232bdb3e 100644
->>--- a/arch/riscv/include/asm/hwcap.h
->>+++ b/arch/riscv/include/asm/hwcap.h
->>@@ -100,6 +100,8 @@
->>  #define RISCV_ISA_EXT_ZICCRSE		91
->>  #define RISCV_ISA_EXT_SVADE		92
->>  #define RISCV_ISA_EXT_SVADU		93
->>+#define RISCV_ISA_EXT_ZICFILP		94
->>+#define RISCV_ISA_EXT_ZICFISS		95
->>  #define RISCV_ISA_EXT_XLINUXENVCFG	127
->>diff --git a/arch/riscv/include/asm/processor.h b/arch/riscv/include/asm/processor.h
->>index 5f56eb9d114a..e3aba3336e63 100644
->>--- a/arch/riscv/include/asm/processor.h
->>+++ b/arch/riscv/include/asm/processor.h
->>@@ -13,6 +13,7 @@
->>  #include <vdso/processor.h>
->>  #include <asm/ptrace.h>
->>+#include <asm/hwcap.h>
->>  #define arch_get_mmap_end(addr, len, flags)			\
->>  ({								\
->>diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
->>index c6ba750536c3..82065cc55822 100644
->>--- a/arch/riscv/kernel/cpufeature.c
->>+++ b/arch/riscv/kernel/cpufeature.c
->>@@ -150,6 +150,15 @@ static int riscv_ext_svadu_validate(const struct riscv_isa_ext_data *data,
->>  	return 0;
->>  }
->>+static int riscv_cfi_validate(const struct riscv_isa_ext_data *data,
->>+			      const unsigned long *isa_bitmap)
->>+{
->>+	if (!IS_ENABLED(CONFIG_RISCV_USER_CFI))
->>+		return -EINVAL;
->>+
->>+	return 0;
->>+}
->>+
->>  static const unsigned int riscv_zk_bundled_exts[] = {
->>  	RISCV_ISA_EXT_ZBKB,
->>  	RISCV_ISA_EXT_ZBKC,
->>@@ -333,6 +342,10 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
->>  	__RISCV_ISA_EXT_SUPERSET_VALIDATE(zicboz, RISCV_ISA_EXT_ZICBOZ, riscv_xlinuxenvcfg_exts,
->>  					  riscv_ext_zicboz_validate),
->>  	__RISCV_ISA_EXT_DATA(ziccrse, RISCV_ISA_EXT_ZICCRSE),
->>+	__RISCV_ISA_EXT_SUPERSET_VALIDATE(zicfilp, RISCV_ISA_EXT_ZICFILP, riscv_xlinuxenvcfg_exts,
->>+					  riscv_cfi_validate),
->>+	__RISCV_ISA_EXT_SUPERSET_VALIDATE(zicfiss, RISCV_ISA_EXT_ZICFISS, riscv_xlinuxenvcfg_exts,
->>+					  riscv_cfi_validate),
->>  	__RISCV_ISA_EXT_DATA(zicntr, RISCV_ISA_EXT_ZICNTR),
->>  	__RISCV_ISA_EXT_DATA(zicond, RISCV_ISA_EXT_ZICOND),
->>  	__RISCV_ISA_EXT_DATA(zicsr, RISCV_ISA_EXT_ZICSR),
->>
->
->With the above comment fixed, you can add:
->
->Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
->
->Thanks,
->
->Alex
->
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
