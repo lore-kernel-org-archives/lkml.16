@@ -1,210 +1,125 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 833072135A1
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 20:45:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93CE121481E;
+	Wed,  9 Apr 2025 20:45:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744231538; cv=none; b=A8mYV5V0pL4buIXmgnRFMxzTQcPhmxpp6rzq5nrtPcsluYRBprK/WX+dfsHjEiHEkhvDb9UtPRMVCtVBWwZwWQ8dAjz9PUtigKdVhOC2Lu9YeT4jvv5E5Mn42OWNzpArigf7y1JaMK31aI4vvbRFoV+1Ztuq+VunSwenwzvwDCc=
+	t=1744231543; cv=none; b=U1+HZw7xF/5eEqoP8coISf3Js5hqcpgnkn4PpjePP9qpRR3BTgS4cB52ee4oT6EKMOv7Be/iHBkhhzpbf2bmPKcnFJPzUL/hznV39vPJMRoQofdTLiZLCTg9QX8bZQ0+lMvO2Kd5WYgTNWZCDm7f62agSx8JWaZjub/3c4EPcbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744231538; c=relaxed/simple;
-	bh=xOp9DXsMQrw85PtagiwlHyz33EONNax0oXOrZSgcHHk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cuV1gGQcIhEgiWP5JnY1bEZDiE76pkxpzcV7XmZt3CSbs7OLPu+8WIdfJi/sNcrMjzvFRrdFYcBC7fYMhuiIgLfUeicZjX282/TRokqlUVcEA+Et5idBhf1PQOdtjK2GB3JS5gV1/YibSBij28Yk8PQGSQ/Ab9W8CBZOTtzg/Xk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xC8aSKQf; arc=none smtp.client-ip=91.218.175.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744231543; c=relaxed/simple;
+	bh=cUenJzwspzcZC4iAhVtPGZ5Qjcu2yzhoR4F6Li2MW38=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=H7wowL1jPtXKdk3E2esW7QAktZQEsYhrQQ4rT5kpKhS3yNmgnG2a778dqHfb+GPW2/WdUogvNRaHJJaQOdDhzVx+vgp4KuDp0swoxhIBjLf7LA2uk9NjOcFNGHyaj8n/AMWJZ3ZfQEfmySB8cpXmfRv1jl3dF7o6fJaJu5QACuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O+aWfhdD; arc=none smtp.client-ip=209.85.219.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xC8aSKQf"
-Date: Wed, 9 Apr 2025 13:45:12 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744231523;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ENOcZPIItp2JvszVxj/GE2Qd8ZKfpfM4JflKxCvjNwk=;
-	b=xC8aSKQfjMqodNcjkUTLUjs/zqCFYnuOpjbh5P9WpT5NQV26kzbmBYXpCKWYi7kZGBKsxL
-	gZW41lEMVPwc0O3ZChQyXo3FcMfH90y50iz05hYThAcZmGJ8iVYi08BYw8+X5iWzs50Hx2
-	w3VkprowZiWZQ4RRthwlJQvvZgV2B04=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Maxim Levitsky <mlevitsk@redhat.com>
-Cc: kvm@vger.kernel.org, Alexander Potapenko <glider@google.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	kvm-riscv@lists.infradead.org,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Jing Zhang <jingzhangos@google.com>,
-	Waiman Long <longman@redhat.com>, x86@kernel.org,
-	Kunkun Jiang <jiangkunkun@huawei.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Anup Patel <anup@brainfault.org>,
-	Albert Ou <aou@eecs.berkeley.edu>, kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>,
-	Borislav Petkov <bp@alien8.de>, Alexandre Ghiti <alex@ghiti.fr>,
-	Keisuke Nishimura <keisuke.nishimura@inria.fr>,
-	Sebastian Ott <sebott@redhat.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Atish Patra <atishp@atishpatra.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Randy Dunlap <rdunlap@infradead.org>, Will Deacon <will@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	linux-riscv@lists.infradead.org, Marc Zyngier <maz@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	Joey Gouly <joey.gouly@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Andre Przywara <andre.przywara@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Sean Christopherson <seanjc@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2 2/4] KVM: x86: move
- sev_lock/unlock_vcpus_for_migration to kvm_main.c
-Message-ID: <Z_bcWBfhoUZfRzek@linux.dev>
-References: <20250409014136.2816971-1-mlevitsk@redhat.com>
- <20250409014136.2816971-3-mlevitsk@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O+aWfhdD"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6ef0537741dso41226d6.2;
+        Wed, 09 Apr 2025 13:45:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744231540; x=1744836340; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3gPzZ56otu+n0Q0EQ494VJkh4lNvsg4X22Kcyvv+XGE=;
+        b=O+aWfhdD+yA2JFh04G+/UnIUvTab0ccJQNc7kA5UFWCYCTOPaNloI+O1twsdusv6Tf
+         9LNnK7Q0MvQgs4cnmol343xQTECAnJ9nEp+XmSf5b1BPqWD0l5IZsYFgWCHGkzVbfCpT
+         nJ/qxoIXigLfvAyGFg0V29w45xF+FoFXtBhkY6MLct3PgwjOoH/oizCC4bK61Zp4Xv4W
+         Vme8EKgc0HNq9hlYmWMwx5yPHocahb5OHJcctikl3o7WGI5HoPHxuiWWZK286pQYWQRR
+         zK9qGUXEgGYAKYyjml0LwibaJ/nJuImEtsZnYOkMhMy8SEsKx0ltssrBUUAWXbRgkugB
+         6CHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744231540; x=1744836340;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3gPzZ56otu+n0Q0EQ494VJkh4lNvsg4X22Kcyvv+XGE=;
+        b=otdlq4nbeEdiZs9fLi93IxyVIT6PS4Kbevj2lqBTu7TY1cnfgiWBN+s9c3iPuMhCeD
+         J4zogRu8/biz0nzsbokB67SFdx4NLvKMTYj5leNVnum7aQqpHZrGKZa8781DcuU0WGXl
+         GQKSYzFX2YqHS3dP46zlklASjJXaTqxq7GzJ/lngw7B+HwHJkNPLxwP7cd7TrgAgSG1l
+         1tXEDWmlm9+4xXbIrUb54wiSMj+f7vFlVQ0930xyGp5WF97FLvHq3sqCCqjXHQttyjp5
+         5mIpep3NfHjNSydM8IoW1Fx0aIg4vXHXirDwfxBcYlT+fLdVNDzKt4j+BaPfVjC7ESUM
+         zVxw==
+X-Forwarded-Encrypted: i=1; AJvYcCVl8FGQL/YUQGfm+78i6v0bYgOsT7S76jZxwlJTWJjRw7ewN6u3f/qKiRh4CmHP4rWmemNGiXEWIGeWtQE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgGISxNM8Tj1GbOlie+YqcP/tGDh2sSQw2C//MC0Gv3bOeVSzw
+	DVBRc+aDQtsGocrTaVi2BGWnJYo+mWS4CsTsxjgk/rbleg/GFV8=
+X-Gm-Gg: ASbGncsfYq52P/H52fW/eUkix2LDReOyukps4z1ozhoJSh1967G9BHadmZwQJiDEU+I
+	+Eh9xdlMXl/n6GpXHXBVJsZ5cQcF9WnAOEK8O52c4jkSnySo+9FHC2snn22DaWiC9usEGRzPbZA
+	vvw47aSoVH4UL9yeyyy2ezGTzwS2flaqHkY1MRX1/i27ajopbwhfZ9uAQikCfCVxThi2eJgU9Tx
+	qt68nMSJsVkKU6lSwoh9SZ0/TzDPmW07x7mm0T7zYbDzwfMFmj2wrN07UukLt6s3SX/UC5AOqar
+	zUWUdhmvKk+tCRh/5qqDi5Ce5a3EIk0TQIj2Pw==
+X-Google-Smtp-Source: AGHT+IGjE+VUOBEomw6CWFpbs+MXDUxnnAMARCBc5reoVD4E6+JG/HZ5PAKx4OvSTQtZPDMy9pGM1w==
+X-Received: by 2002:a05:6214:2486:b0:6e8:f4f9:40e1 with SMTP id 6a1803df08f44-6f0dba2463amr27327886d6.0.1744231540275;
+        Wed, 09 Apr 2025 13:45:40 -0700 (PDT)
+Received: from ise-alpha.. ([2620:0:e00:550a:642:1aff:fee8:511b])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f0de95fdfbsm11499706d6.1.2025.04.09.13.45.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 13:45:39 -0700 (PDT)
+From: Chenyuan Yang <chenyuan0y@gmail.com>
+To: alim.akhtar@samsung.com,
+	avri.altman@wdc.com,
+	bvanassche@acm.org,
+	James.Bottomley@HansenPartnership.com,
+	martin.petersen@oracle.com,
+	peter.wang@mediatek.com,
+	minwoo.im@samsung.com,
+	manivannan.sadhasivam@linaro.org,
+	viro@zeniv.linux.org.uk,
+	cw9316.lee@samsung.com,
+	quic_nguyenb@quicinc.com,
+	quic_cang@quicinc.com,
+	stanley.chu@mediatek.com
+Cc: linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chenyuan Yang <chenyuan0y@gmail.com>
+Subject: [PATCH] scsi: ufs: mcq: Add NULL check in ufshcd_mcq_abort()
+Date: Wed,  9 Apr 2025 15:45:37 -0500
+Message-Id: <20250409204537.3566793-1-chenyuan0y@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250409014136.2816971-3-mlevitsk@redhat.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 08, 2025 at 09:41:34PM -0400, Maxim Levitsky wrote:
-> Move sev_lock/unlock_vcpus_for_migration to kvm_main and call the
-> new functions the kvm_lock_all_vcpus/kvm_unlock_all_vcpus
-> and kvm_lock_all_vcpus_nested.
-> 
-> This code allows to lock all vCPUs without triggering lockdep warning
-> about reaching MAX_LOCK_DEPTH depth by coercing the lockdep into
-> thinking that we release all the locks other than vcpu'0 lock
-> immediately after we take them.
-> 
-> No functional change intended.
-> 
-> Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
-> Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
-> ---
->  arch/x86/kvm/svm/sev.c   | 65 +++---------------------------------
->  include/linux/kvm_host.h |  6 ++++
->  virt/kvm/kvm_main.c      | 71 ++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 81 insertions(+), 61 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-> index 0bc708ee2788..7adc54b1f741 100644
-> --- a/arch/x86/kvm/svm/sev.c
-> +++ b/arch/x86/kvm/svm/sev.c
-> @@ -1889,63 +1889,6 @@ enum sev_migration_role {
->  	SEV_NR_MIGRATION_ROLES,
->  };
->  
-> -static int sev_lock_vcpus_for_migration(struct kvm *kvm,
-> -					enum sev_migration_role role)
-> -{
-> -	struct kvm_vcpu *vcpu;
-> -	unsigned long i, j;
-> -
-> -	kvm_for_each_vcpu(i, vcpu, kvm) {
-> -		if (mutex_lock_killable_nested(&vcpu->mutex, role))
-> -			goto out_unlock;
-> -
-> -#ifdef CONFIG_PROVE_LOCKING
-> -		if (!i)
-> -			/*
-> -			 * Reset the role to one that avoids colliding with
-> -			 * the role used for the first vcpu mutex.
-> -			 */
-> -			role = SEV_NR_MIGRATION_ROLES;
-> -		else
-> -			mutex_release(&vcpu->mutex.dep_map, _THIS_IP_);
-> -#endif
-> -	}
-> -
-> -	return 0;
-> -
-> -out_unlock:
-> -
-> -	kvm_for_each_vcpu(j, vcpu, kvm) {
-> -		if (i == j)
-> -			break;
-> -
-> -#ifdef CONFIG_PROVE_LOCKING
-> -		if (j)
-> -			mutex_acquire(&vcpu->mutex.dep_map, role, 0, _THIS_IP_);
-> -#endif
-> -
-> -		mutex_unlock(&vcpu->mutex);
-> -	}
-> -	return -EINTR;
-> -}
-> -
-> -static void sev_unlock_vcpus_for_migration(struct kvm *kvm)
-> -{
-> -	struct kvm_vcpu *vcpu;
-> -	unsigned long i;
-> -	bool first = true;
-> -
-> -	kvm_for_each_vcpu(i, vcpu, kvm) {
-> -		if (first)
-> -			first = false;
-> -		else
-> -			mutex_acquire(&vcpu->mutex.dep_map,
-> -				      SEV_NR_MIGRATION_ROLES, 0, _THIS_IP_);
-> -
-> -		mutex_unlock(&vcpu->mutex);
-> -	}
-> -}
-> -
->  static void sev_migrate_from(struct kvm *dst_kvm, struct kvm *src_kvm)
->  {
->  	struct kvm_sev_info *dst = to_kvm_sev_info(dst_kvm);
-> @@ -2083,10 +2026,10 @@ int sev_vm_move_enc_context_from(struct kvm *kvm, unsigned int source_fd)
->  		charged = true;
->  	}
->  
-> -	ret = sev_lock_vcpus_for_migration(kvm, SEV_MIGRATION_SOURCE);
-> +	ret = kvm_lock_all_vcpus_nested(kvm, false, SEV_MIGRATION_SOURCE);
->  	if (ret)
->  		goto out_dst_cgroup;
-> -	ret = sev_lock_vcpus_for_migration(source_kvm, SEV_MIGRATION_TARGET);
-> +	ret = kvm_lock_all_vcpus_nested(source_kvm, false, SEV_MIGRATION_TARGET);
->  	if (ret)
->  		goto out_dst_vcpu;
->  
-> @@ -2100,9 +2043,9 @@ int sev_vm_move_enc_context_from(struct kvm *kvm, unsigned int source_fd)
->  	ret = 0;
->  
->  out_source_vcpu:
-> -	sev_unlock_vcpus_for_migration(source_kvm);
-> +	kvm_unlock_all_vcpus(source_kvm);
->  out_dst_vcpu:
-> -	sev_unlock_vcpus_for_migration(kvm);
-> +	kvm_unlock_all_vcpus(kvm);
->  out_dst_cgroup:
->  	/* Operates on the source on success, on the destination on failure.  */
->  	if (charged)
-> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> index 1dedc421b3e3..30cf28bf5c80 100644
-> --- a/include/linux/kvm_host.h
-> +++ b/include/linux/kvm_host.h
-> @@ -1015,6 +1015,12 @@ static inline struct kvm_vcpu *kvm_get_vcpu_by_id(struct kvm *kvm, int id)
->  
->  void kvm_destroy_vcpus(struct kvm *kvm);
->  
-> +int kvm_lock_all_vcpus_nested(struct kvm *kvm, bool trylock, unsigned int role);
-> +void kvm_unlock_all_vcpus(struct kvm *kvm);
-> +
-> +#define kvm_lock_all_vcpus(kvm, trylock) \
-> +	kvm_lock_all_vcpus_nested(kvm, trylock, 0)
-> +
+A race can occur between the MCQ completion path and the abort handler:
+once a request completes, __blk_mq_free_request() sets rq->mq_hctx to
+NULL, meaning the subsequent ufshcd_mcq_req_to_hwq() call in
+ufshcd_mcq_abort() can return a NULL pointer. If this NULL pointer is
+dereferenced, the kernel will crash.
 
-Can you instead add lock / trylock variants of this?
+Add a NULL check for the returned hwq pointer. If hwq is NULL, log an
+error and return FAILED, preventing a potential NULL-pointer dereference.
 
-kvm_trylock_all_vcpus(kvm) seems a bit more obvious in the calling code.
+This is similar to the fix in commit 74736103fb41
+("scsi: ufs: core: Fix ufshcd_abort_one racing issue").
 
-Thanks,
-Oliver
+This is found by our static analysis tool KNighter.
+
+Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
+Fixes: f1304d442077 ("scsi: ufs: mcq: Added ufshcd_mcq_abort()")
+---
+ drivers/ufs/core/ufs-mcq.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/ufs/core/ufs-mcq.c b/drivers/ufs/core/ufs-mcq.c
+index 240ce135bbfb..2c8792911616 100644
+--- a/drivers/ufs/core/ufs-mcq.c
++++ b/drivers/ufs/core/ufs-mcq.c
+@@ -692,6 +692,11 @@ int ufshcd_mcq_abort(struct scsi_cmnd *cmd)
+ 	}
+ 
+ 	hwq = ufshcd_mcq_req_to_hwq(hba, scsi_cmd_to_rq(cmd));
++	if (!hwq) {
++		dev_err(hba->dev, "%s: failed to get hwq for tag %d\n",
++			__func__, tag);
++		return FAILED;
++	}
+ 
+ 	if (ufshcd_mcq_sqe_search(hba, hwq, tag)) {
+ 		/*
+-- 
+2.34.1
+
