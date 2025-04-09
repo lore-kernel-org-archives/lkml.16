@@ -1,121 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6A51BF33F;
-	Wed,  9 Apr 2025 17:02:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72E431C3314
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 17:02:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744218143; cv=none; b=LAdXoBS5lKcX7dM5TuswLPs+xW7eFCTYtRxYOBnxXe49pk11ceRoARjwU0AL00X+XiQBHYnkGJWTeyqTXBMT1iwFusLCkj0vRbItVBiBpWFqYDrpgF8vPH7DQvqwwQRf1Ya46FZbdUca89zUMUCgbi+S8DQU5WVkVpnWltPNKXA=
+	t=1744218158; cv=none; b=WOmqqjTx/1IdKQDzk5MhnTn2AOAJ8+h650jsTJDMDdnzHBLP6KFTkPBg2oDNVfekaEguGi/tT6Bxoa1A4WOdSts1NteL1LHDKUblo7N3GIs3T+gMUTySqPKDN4Y6uCaXb8fm7gj+sYStUaaQIhyFClqiXrg3SJJYJg+NLvrwwQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744218143; c=relaxed/simple;
-	bh=/u41XI6uvihLXf7P4x6bd9qPEqdbmFcdJO7teKWxRJA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=I+lXzgxuxBWoCArLbH7ADpIfBJikA4wmwly36+j/svVl/ktbYrn2seQbk7S+Xhq9tZcfZr2WgoqgbAQST+6+zFIzQnOJUMGxXiDa0d9vtMc+PaL1V5IJ72lpEZaCkLC59U8LoUV5qJRw4fUqNVNekU/SM3wZUC/6mdtVW7eTwBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nldhErR1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744218158; c=relaxed/simple;
+	bh=8Woo7zONtTGlS+vR4tnAD9QERZsc8c39ch7Sp73TTfk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EFfH0V3tKwkBYgCN0YX9DmwUPk1lZu3SfEbFYKoLF/m4MGzYEYGODUZZAhCZgILzhqgr0BDTsKmRlN+y+nO3L9WfqA28S7NknOmo0F1itm0j0S1bik0iM21KqVA9ZVVwfek+Hm/RctjNJgEgDEmlCVoUI4vqDbcrYY+S1nQYOWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BjUnZhX2; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nldhErR1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1E29C4CEE2;
-	Wed,  9 Apr 2025 17:02:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744218143;
-	bh=/u41XI6uvihLXf7P4x6bd9qPEqdbmFcdJO7teKWxRJA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nldhErR1u9KnUEp9PQ3CkE8M+vwYOhwB4jTVbQDZoPYUJmwhbNelZDKw3a/KlTRev
-	 JvN0TcrIxN2RRS+akdaTgKOiRDhDqBIDovCBBIZntw/B0O9tnkW4eAuP6djo5sB0Nb
-	 18q01bffZ9Nu0+BbTB06F/gijtrTMfug7sZmADVS66Q9hmK+ACyWs50fkJHEEMI8OC
-	 HxR4h3Z+6Xa/dqJa+rGgH2YlfkTbeStZhpPg6OUUwN2SgMe95CtzdJT4TLvRXn5H2y
-	 BLbctFwt7Xd3gbhhuLknTJ5NmmOGjQWQILmQwTdglDTmUTYwzFaS3xOkrL0SFFmIX7
-	 bQLv6b+gRUI6A==
-From: SeongJae Park <sj@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: SeongJae Park <sj@kernel.org>,
-	stable@vger.kernel.org,
-	patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org,
-	akpm@linux-foundation.org,
-	linux@roeck-us.net,
-	shuah@kernel.org,
-	patches@kernelci.org,
-	lkft-triage@lists.linaro.org,
-	pavel@denx.de,
-	jonathanh@nvidia.com,
-	f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net,
-	rwarsow@gmx.de,
-	conor@kernel.org,
-	hargar@microsoft.com,
-	broonie@kernel.org,
-	damon@lists.linux.dev
-Subject: Re: [PATCH 6.14 000/726] 6.14.2-rc4 review
-Date: Wed,  9 Apr 2025 10:02:21 -0700
-Message-Id: <20250409170221.23509-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250409115934.968141886@linuxfoundation.org>
-References: 
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BjUnZhX2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744218154;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=50r+s/P904+CGfzLh0ycHBDHZFcTaMXvlcTYX7DyJ60=;
+	b=BjUnZhX2IDZ63/iIne/UPOCnNzYVA0gcnzr8bWC1XDcINBN3WDJ4dYkzzi68DNKq3gWDTi
+	6gWcnEdsnHR3Q6/IkvJs3vmaX8Sty/nTku6uCk/ZGMWImlZm1ZjSf6TTZdhyQAl1qzkd6M
+	Km4+ruTlWVpXvvmJVXNQ0a6lSJJ06jQ=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-344-J9jIKsrSM2qUPL-NgUtTjg-1; Wed,
+ 09 Apr 2025 13:02:30 -0400
+X-MC-Unique: J9jIKsrSM2qUPL-NgUtTjg-1
+X-Mimecast-MFC-AGG-ID: J9jIKsrSM2qUPL-NgUtTjg_1744218148
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 29F111800EC5;
+	Wed,  9 Apr 2025 17:02:28 +0000 (UTC)
+Received: from localhost (unknown [10.22.88.189])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2EB921808882;
+	Wed,  9 Apr 2025 17:02:26 +0000 (UTC)
+Date: Wed, 9 Apr 2025 14:02:25 -0300
+From: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Clark Williams <clrkwllms@kernel.org>, Tejun Heo <tj@kernel.org>,
+	David Vernet <dvernet@meta.com>, Barret Rhoden <brho@google.com>,
+	Josh Don <joshdon@google.com>, Crystal Wood <crwood@redhat.com>,
+	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+	Juri Lelli <juri.lelli@redhat.com>
+Subject: Re: [PATCH] sched: do not call __put_task_struct() on rt if
+ pi_blocked_on is set
+Message-ID: <Z_aoIY7GwPFUqMNb@uudg.org>
+References: <Z_W-i-ya0Q6fkXRh@uudg.org>
+ <20250409114330.1444221e@gandalf.local.home>
+ <Z_af4PF18ocF0bBW@uudg.org>
+ <20250409123944.15df8714@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409123944.15df8714@gandalf.local.home>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Hello,
-
-On Wed,  9 Apr 2025 14:03:36 +0200 Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-
-> This is the start of the stable review cycle for the 6.14.2 release.
-> There are 726 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Wed, Apr 09, 2025 at 12:39:44PM -0400, Steven Rostedt wrote:
+> On Wed, 9 Apr 2025 13:27:12 -0300
+> "Luis Claudio R. Goncalves" <lgoncalv@redhat.com> wrote:
 > 
-> Responses should be made by Fri, 11 Apr 2025 11:58:08 +0000.
-> Anything received after that time might be too late.
+> > > > -	if (!IS_ENABLED(CONFIG_PREEMPT_RT) || preemptible()) {
+> > > > +#ifdef CONFIG_PREEMPT_RT
+> > > > +	if (!preemptible() || current->pi_blocked_on)
+> > > > +		defer = true;
+> > > > +#endif  
+> > > 
+> > > Why add the ugly #ifdef back?
+> > > 
+> > > 	if (!IS_ENABLED(CONFIG_PREEMPT_RT) ||
+> > > 	    (preemptible() && !current->pi_blocked_on)) {  
+> > 
+> > I had to add the #ifdef to avoid the build failing if CONFIG_RT_MUTEXES is
+> > not set. I do know SMP, FUTEX, I2C, PSTORE and a few more things depend on
+> > CONFIG_RT_MUTEXES being enabled, but I opted for being thorough.
+> > 
+> > I would be more than glad getting rid of the #ifdef and simplifying the patch
+> > if that possible build failure is not a case to worry about, if RT_MUTEXES are
+> > always enabled nowadays.
+> > 
+> 
+> Because pi_blocked_on is only defined when CONFIG_RT_MUTEXES is enabled?
+> 
+> OK, then perhaps we should add in sched.h:
+> 
+> #ifdef CONFIG_RT_MUTEXES
+> static inline bool tsk_is_pi_blocked_on(struct task_struct *tsk)
+> {
+> 	return tsk->pi_blocked_on != NULL;
+> }
+> #else
+> static inline bool tsk_is_pi_blocked_on(strut task_struct *tsk)
+> {
+> 	return false;
+> }
+> #endif
+> 
+> ??
 
-This rc kernel passes DAMON functionality test[1] on my test machine.
-Attaching the test results summary below.  Please note that I retrieved the
-kernel from linux-stable-rc tree[2].
+Thank you for the suggestion! I will rework the patch with that and send v2
+after basic testing.
 
-Tested-by: SeongJae Park <sj@kernel.org>
+Luis
+ 
+> -- Steve
+> 
+---end quoted text---
 
-[1] https://github.com/damonitor/damon-tests/tree/next/corr
-[2] 2cc38486a844 ("Linux 6.14.2-rc4")
-
-Thanks,
-SJ
-
-[...]
-
----
-
- [32m
-ok 1 selftests: damon: sysfs.sh
-ok 2 selftests: damon: sysfs_update_schemes_tried_regions_wss_estimation.py
-ok 3 selftests: damon: damos_quota.py
-ok 4 selftests: damon: damos_quota_goal.py
-ok 5 selftests: damon: damos_apply_interval.py
-ok 6 selftests: damon: damos_tried_regions.py
-ok 7 selftests: damon: damon_nr_regions.py
-ok 8 selftests: damon: reclaim.sh
-ok 9 selftests: damon: lru_sort.sh
-ok 10 selftests: damon: sysfs_update_removed_scheme_dir.sh
-ok 11 selftests: damon: sysfs_update_schemes_tried_regions_hang.py
-ok 1 selftests: damon-tests: kunit.sh
-ok 2 selftests: damon-tests: huge_count_read_write.sh # SKIP
-ok 3 selftests: damon-tests: buffer_overflow.sh
-ok 4 selftests: damon-tests: rm_contexts.sh # SKIP
-ok 5 selftests: damon-tests: record_null_deref.sh
-ok 6 selftests: damon-tests: dbgfs_target_ids_read_before_terminate_race.sh
-ok 7 selftests: damon-tests: dbgfs_target_ids_pid_leak.sh
-ok 8 selftests: damon-tests: damo_tests.sh
-ok 9 selftests: damon-tests: masim-record.sh
-ok 10 selftests: damon-tests: build_i386.sh
-ok 11 selftests: damon-tests: build_arm64.sh # SKIP
-ok 12 selftests: damon-tests: build_m68k.sh # SKIP
-ok 13 selftests: damon-tests: build_i386_idle_flag.sh
-ok 14 selftests: damon-tests: build_i386_highpte.sh
-ok 15 selftests: damon-tests: build_nomemcg.sh
- [33m
- [92mPASS [39m
