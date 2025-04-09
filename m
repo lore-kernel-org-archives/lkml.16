@@ -1,261 +1,134 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1032125B9;
-	Wed,  9 Apr 2025 07:31:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A6102147F8;
+	Wed,  9 Apr 2025 07:33:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744183914; cv=none; b=dO9jBCe39dPDvNznNv49tcr8f1GuQIn7phsscHchN5t1fcnWE/+NxRGOw4KhnpGe2ugeDGa+kZJmZrjIGe+DXDhoDqgy6X8XD0Q0E3j/q+wJUERf/x7T+18AXsH74UBydiesPH+4+ayQBByraEb5LgNt2ZhHwaKKmimT/k0CyUQ=
+	t=1744184024; cv=none; b=UbJi6XKakzH7LpFtFuj+C7JcATB9jHg4xv9E2w6z2naSZWWACjGY8N7wBlgujwj7EnB/vxm4nc5M2SeJPtQUyPLmCQCfmbeUgrFupjLz6ym1sDoFAU0P1H9GXDRSVwcuCH9XTB0vgb1CDH/c5ibq4FyDCp4WoFkHz0CAxBKQ1bU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744183914; c=relaxed/simple;
-	bh=0reF5eVkTPs+VQ+XzqgvxURmmJIR5Kufrz5v6wcSEdU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=UWv7sU71QMHVWEQLOKMEl44BKY7hMECXp+4ZOlSur11xjarGMuPuuFezI1UZB7jv//ZgSM6LdLWej7mZ7TcI2ZqjcRIvYFgEs5H3sFlF7prKDE8ERjfuogm4/6SdzG0FH0vV59UAjmSF2FS3b+2BOb2jfUgeF9QVvUOXG9Bp+RQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gE42Zmel; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744184024; c=relaxed/simple;
+	bh=TbjocJ7oJ1wE3teiuUGsEIirnON9GZPBxazhTpNsjqw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k+EBDbYMluDnYZpiOdDmTGOfDoQHgmH8MEtatqRQPB6ZXhHYgVKejRuvoldNsJW/KIiUO5AzMsZ78lMhPCcwG8OGDiBrKCT+TMQlNywYzXp6bbUDbI3XTZiAJxFzCHMXTk/wFnt5gfbSpxykYq8Ay1WluFuMkCCn4ostdYv3XD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oW73w/Ts; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gE42Zmel"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cec5cd73bso36386545e9.3;
-        Wed, 09 Apr 2025 00:31:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744183911; x=1744788711; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=FxkrmrDnX1oVlK+vG9j1Gh2jAbjCk8teFF7Lnah4O98=;
-        b=gE42Zmel2zjYuzaqA7Z6PgJfS2EFd8v2qsK0JnoeRhywZKpSpbMNTZHptcJTl6x69j
-         AS21VWActTSGpZxdXb88oYk+jvsR7eA/mB/a9qZMNPcaYw0IqbeOpITY0X1uuwe6ZCoa
-         ZzG00oVaXizfYbsa/LPQ08gQaGHEQmCoSkmpzNAX4Ckj17OdGwn3iVSdPiVLybDKqM74
-         /uv6CfCjQsu0AVKuezx8a1CWM2KWUN5U8mvCF7A7n4D1prJK4x/RFcp87cYONhp4wIME
-         1FpLdBf02vl2r//x9g/VmAbETftOTJ+b+AOfWM3omH727Qji5hZM9H9CPaPub9QNsEDq
-         DZNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744183911; x=1744788711;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FxkrmrDnX1oVlK+vG9j1Gh2jAbjCk8teFF7Lnah4O98=;
-        b=gf6ir4hh0WOdY24JSj1RQGgf5ftj1xopZ72EsVfgNKONN2u4gAnkxmvoZu5PHCbVSZ
-         oMKLHiEHPDY0R4ZNIvnsTy07OLRF96NIr3zAW4iVKjuPICTrXO87govkgc9Zju4/rHdL
-         Dplp0jvMjkkqeyWiKlHywsIE9qgL422Z32KXzET89oIkLfD7wWTxqfyhTut5W86GBbHd
-         Udj3vPeqbzh+ZTjfAmjQ7ViUqZktSbONUqbRhRDufsQ7EbQbvvmiuA3IFY2RC8XUWZoX
-         e+Gqh0ST0VtDvHjlTBYwgJbu5nFr9Zyc1uf7+eZBWKBoEBAk3RjDEXvFTu4NL8xCYKWT
-         zWrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVk/8pRuAUSE7O6tqkD4RSNa/t+hAa4Mkq8OfcJsmEBQwiJl8+ZCNe8C6PSCSoIyd/DQK5uBGuMFeE=@vger.kernel.org, AJvYcCXybI6qO/1eWBFrdfxQAynXvVvOROPJxyF8b5xu86PEjcBtHRSF8YByhjDsbRxUkW2LomxginMd5VHjb00R@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1M11eX0m6vnMqptXdUw8gObh119yTiQtY7R7Nu42xp9qWPVeh
-	oSUTw5T9bHp5dlzQDtgPEUs6x5AcFoTwtODMlk/Zuur0fWceUJ7y
-X-Gm-Gg: ASbGnctt+2v4GoZ0JMxLEewkX+pgim3Lr6OHod+WaLgAUYkez7g31F8x5ORo7GTNiy+
-	ElvwPWqKICoe4wm1kHOyHzdj+mV6zBXBd26nCNHf1ySFkhOSJekDuAoFG3c+e0jU1GBaLDCNl8g
-	Il0SwojWNOlOMVNtvBs8ToiaQ1HwChVW8AEZ+cUzo0sDLLLgJIGccYO2HzrBULIs7KAmJTl4BZu
-	ezPUV/rJSDOLMl1C8z1k4KsojBt6xI1XDFBBbp172uANq/1yOfCQLa9ZZUzfcs4NWxveM52tLwF
-	bzSBF+VDf2GC4qNgATQZlp/g6F8ILm5exuN+AdsOeIX6taq/A7YT8YKCc6ArKUrWym/H4JiQmEl
-	RCg/qYby23f8TYIs=
-X-Google-Smtp-Source: AGHT+IE+RJVpqMf15Nm4Oq0HJr4Jofxhvw22oqRlpuJ57WBFl4u2dFpbeuHGNH1NyfH4T/4RMBanbA==
-X-Received: by 2002:a05:600c:548a:b0:43d:94:2d1e with SMTP id 5b1f17b1804b1-43f1eca8070mr14482225e9.13.1744183910715;
-        Wed, 09 Apr 2025 00:31:50 -0700 (PDT)
-Received: from ?IPv6:2001:818:ea56:d000:56e0:ceba:7da4:6673? ([2001:818:ea56:d000:56e0:ceba:7da4:6673])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f2338dc13sm7193965e9.3.2025.04.09.00.31.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 00:31:50 -0700 (PDT)
-Message-ID: <0900650872a1533a344df375e99ce116046b3ee0.camel@gmail.com>
-Subject: Re: [PATCH v4 5/5] iio: dac: ad3552r-hs: add support for internal
- ramp
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Angelo Dureghello <adureghello@baylibre.com>, Nuno =?ISO-8859-1?Q?S=E1?=
- <nuno.sa@analog.com>, Jonathan Cameron <jic23@kernel.org>, Lars-Peter
- Clausen <lars@metafoo.de>, Jonathan Corbet <corbet@lwn.net>, Olivier Moysan
- <olivier.moysan@foss.st.com>, Michael Hennerich
- <Michael.Hennerich@analog.com>
-Cc: linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Wed, 09 Apr 2025 07:32:09 +0100
-In-Reply-To: <20250408-wip-bl-ad3552r-fixes-v4-5-b33c0264bd78@baylibre.com>
-References: <20250408-wip-bl-ad3552r-fixes-v4-0-b33c0264bd78@baylibre.com>
-	 <20250408-wip-bl-ad3552r-fixes-v4-5-b33c0264bd78@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oW73w/Ts"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DC08C4CEE3;
+	Wed,  9 Apr 2025 07:33:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744184023;
+	bh=TbjocJ7oJ1wE3teiuUGsEIirnON9GZPBxazhTpNsjqw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=oW73w/TsFr0FI4Nb5NBVXBMLKDRdct1Vd9vmmIUIlj9K2WHxNSt7WHJSQ329866Qo
+	 NifXrmT9lNFgsxuTKdNI9dk1AbnOTu1Y1mSkysC/T0r094cl3hTH78GZr0m8Fc3EB7
+	 ++07A2yv5AYaXYag9RR5C+eUZgZkvn/HKMoTkk1vf3KbmoYhTr9Xvg94plqka26gM7
+	 zB3Aw6CUSUR02TTgqGU4YAm2N3+ZU/M3aHdXSUHXW/Y4IjOh47KUBL4SRgeaV3b/iu
+	 g06d6+I5XtAnQxRu+WBi74SydfBtiERzaAy2OP7O9Q3AcIw2EiZlRnhDLYmVp6FkOm
+	 kecHwhnyKc8Qg==
+Message-ID: <f26c71f4-3a17-4335-943c-90e3671c9266@kernel.org>
+Date: Wed, 9 Apr 2025 09:33:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/2] dt-bindings: memory-controllers: Add MediaTek DRAM
+ controller interface
+To: =?UTF-8?B?Q3J5c3RhbCBHdW8gKOmDreaZtik=?= <Crystal.Guo@mediatek.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ Project_Global_Chrome_Upstream_Group
+ <Project_Global_Chrome_Upstream_Group@mediatek.com>,
+ "robh@kernel.org" <robh@kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+References: <20250403065030.22761-1-crystal.guo@mediatek.com>
+ <20250403065030.22761-2-crystal.guo@mediatek.com>
+ <20250406-hasty-saffron-flamingo-5c1dae@shite>
+ <bf1f44c34097d090894303cf6e3a9f017f4d5b38.camel@mediatek.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <bf1f44c34097d090894303cf6e3a9f017f4d5b38.camel@mediatek.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, 2025-04-08 at 12:18 +0200, Angelo Dureghello wrote:
-> From: Angelo Dureghello <adureghello@baylibre.com>
->=20
-> The ad3552r can be feeded from the HDL controller by an internally
-> generated 16bit ramp, useful for debug pourposes. Add debugfs a file
-> to enable or disable it.
->=20
-> Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
-> ---
+On 09/04/2025 09:16, Crystal Guo (郭晶) wrote:
+> On Sun, 2025-04-06 at 14:35 +0200, Krzysztof Kozlowski wrote:
+>> External email : Please do not click links or open attachments until
+>> you have verified the sender or the content.
+>>
+>>
+>> On Thu, Apr 03, 2025 at 02:48:47PM GMT, Crystal Guo wrote:
+>>> +maintainers:
+>>> +  - Crystal Guo <crystal.guo@mediatek.com>
+>>> +
+>>> +description:
+>>> +  A MediaTek DRAM controller interface to provide the current data
+>>> rate of DRAM.
+>>
+>> DRAM controller does not offer scaling? Or PHY/timing configuration?
+>> This binding looks pretty incomplete.
+>>
+> 
+> The PHY/timing configuration is completed during the bootloader stage.
+> In the kernel, we currently only need to provide an interface to
+> retrieve the current DDR data rate.
+Not really, that's what you currently want to do in kernel, but not what
+you for example will want next days. Binding is supposed to be complete,
+so if you do not have any scaling/interconnect then extend the
+description of hardware and explain that memory controller is non
+configurable, cannot scale and it exposes only read interface. Or
+something similar.
 
-Hi Angelo,
-
-One issue that needs a respin and then a minor comment... With it,
-
-Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
-
-> =C2=A0drivers/iio/dac/ad3552r-hs.c | 166 ++++++++++++++++++++++++++++++++=
-+++++++++--
-> =C2=A01 file changed, 160 insertions(+), 6 deletions(-)
->=20
-> diff --git a/drivers/iio/dac/ad3552r-hs.c b/drivers/iio/dac/ad3552r-hs.c
-> index
-> 37397e188f225a8099745ec03f7c604da76960b1..9a8eed7a06e4f2e7b23d59764b8f2fc=
-21e2c4537
-> 100644
-> --- a/drivers/iio/dac/ad3552r-hs.c
-> +++ b/drivers/iio/dac/ad3552r-hs.c
-> @@ -7,6 +7,7 @@
-> =C2=A0 */
-> =C2=A0
-> =C2=A0#include <linux/bitfield.h>
-> +#include <linux/debugfs.h>
-> =C2=A0#include <linux/delay.h>
-> =C2=A0#include <linux/gpio/consumer.h>
-> =C2=A0#include <linux/iio/backend.h>
-> @@ -54,6 +55,18 @@ struct ad3552r_hs_state {
-> =C2=A0	struct ad3552r_hs_platform_data *data;
-> =C2=A0	/* INTERFACE_CONFIG_D register cache, in DDR we cannot read values=
-. */
-> =C2=A0	u32 config_d;
-> +	/* Protects backend I/O operations from concurrent accesses. */
-> +	struct mutex lock;
-> +};
-> +
-> +enum ad3552r_sources {
-> +	AD3552R_SRC_IIO_BUFFER,
-> +	AD3552R_SRC_BACKEND_RAMP_GEN,
-> +};
-> +
-> +static const char * const dbgfs_attr_source[] =3D {
-> +	[AD3552R_SRC_IIO_BUFFER] =3D "iio-buffer",
-> +	[AD3552R_SRC_BACKEND_RAMP_GEN] =3D "backend-ramp-generator",
-> =C2=A0};
-
-nit: I would use more generic strings. I assume "iio-buffer" is just the "n=
-ormal"
-data so use something like that. For the ramp, is it 16 bits? I would just =
-use ex:
-RAMP_16. I do not thing that the "backend" prefix (as well as "-generator")=
- to add
-much.
-> =C2=A0
-
-...
-
-> +
-> +static ssize_t ad3552r_hs_show_data_source_avail(struct file *f,
-> +						 char __user *userbuf,
-> +						 size_t count, loff_t *ppos)
-> +{
-> +	ssize_t len =3D 0;
-> +	char *buf;
-> +	int i;
-> +
-> +	buf =3D kmalloc(PAGE_SIZE, GFP_KERNEL);
-> +	if (!buf)
-> +		return -ENOMEM;
-> +
-
-When are we freeing this memory? I also do not see the point for a PAGE_SIZ=
-E
-allocation for such a small string table. I would say to simplify things an=
-d use a
-local buffer with 64/128 bytes (should be more than enough). If you see thi=
-s growing
-in the future, you can also go with seq_file.
-
-- Nuno S=C3=A1
-
-> +	for (i =3D 0; i < ARRAY_SIZE(dbgfs_attr_source); i++) {
-> +		len +=3D scnprintf(buf + len, PAGE_SIZE - len, "%s ",
-> +				 dbgfs_attr_source[i]);
-> +	}
-> +	buf[len - 1] =3D '\n';
-> +
-> +	return simple_read_from_buffer(userbuf, count, ppos, buf, len);
-> +}
-> +
-> +static const struct file_operations ad3552r_hs_data_source_fops =3D {
-> +	.owner =3D THIS_MODULE,
-> +	.write =3D ad3552r_hs_write_data_source,
-> +	.read =3D ad3552r_hs_show_data_source,
-> +};
-> +
-> +static const struct file_operations ad3552r_hs_data_source_avail_fops =
-=3D {
-> +	.owner =3D THIS_MODULE,
-> +	.read =3D ad3552r_hs_show_data_source_avail,
-> +};
-> +
-> =C2=A0static int ad3552r_hs_setup(struct ad3552r_hs_state *st)
-> =C2=A0{
-> =C2=A0	u16 id;
-> @@ -550,11 +678,7 @@ static int ad3552r_hs_setup(struct ad3552r_hs_state =
-*st)
-> =C2=A0	if (ret)
-> =C2=A0		return ret;
-> =C2=A0
-> -	ret =3D iio_backend_data_source_set(st->back, 0, IIO_BACKEND_EXTERNAL);
-> -	if (ret)
-> -		return ret;
-> -
-> -	ret =3D iio_backend_data_source_set(st->back, 1, IIO_BACKEND_EXTERNAL);
-> +	ret =3D ad3552r_hs_set_data_source(st, IIO_BACKEND_EXTERNAL);
-> =C2=A0	if (ret)
-> =C2=A0		return ret;
-> =C2=A0
-> @@ -661,6 +785,26 @@ static const struct iio_info ad3552r_hs_info =3D {
-> =C2=A0	.debugfs_reg_access =3D &ad3552r_hs_reg_access,
-> =C2=A0};
-> =C2=A0
-> +static void ad3552r_hs_debugfs_init(struct iio_dev *indio_dev)
-> +{
-> +	struct ad3552r_hs_state *st =3D iio_priv(indio_dev);
-> +	struct dentry *d =3D iio_get_debugfs_dentry(indio_dev);
-> +
-> +	if (!IS_ENABLED(CONFIG_DEBUG_FS))
-> +		return;
-> +
-> +	d =3D iio_get_debugfs_dentry(indio_dev);
-> +	if (!d) {
-> +		dev_warn(st->dev, "can't set debugfs in driver dir\n");
-> +		return;
-> +	}
-> +
-> +	debugfs_create_file("data_source", 0600, d, st,
-> +			=C2=A0=C2=A0=C2=A0 &ad3552r_hs_data_source_fops);
-> +	debugfs_create_file("data_source_available", 0600, d, st,
-> +			=C2=A0=C2=A0=C2=A0 &ad3552r_hs_data_source_avail_fops);
-> +}
-> +
-> =C2=A0static int ad3552r_hs_probe(struct platform_device *pdev)
-> =C2=A0{
-> =C2=A0	struct ad3552r_hs_state *st;
-> @@ -705,7 +849,17 @@ static int ad3552r_hs_probe(struct platform_device *=
-pdev)
-> =C2=A0	if (ret)
-> =C2=A0		return ret;
-> =C2=A0
-> -	return devm_iio_device_register(&pdev->dev, indio_dev);
-> +	ret =3D devm_iio_device_register(&pdev->dev, indio_dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret =3D devm_mutex_init(&pdev->dev, &st->lock);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ad3552r_hs_debugfs_init(indio_dev);
-> +
-> +	return ret;
-> =C2=A0}
-> =C2=A0
-> =C2=A0static const struct of_device_id ad3552r_hs_of_id[] =3D {
->=20
-
+Best regards,
+Krzysztof
