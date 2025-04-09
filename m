@@ -1,70 +1,69 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5181A188006
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 11:00:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48AF42248B8
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 11:01:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744196443; cv=none; b=T4vkv/HAPu+JAc47KdOrZkLfa7CmZ7Z9BLnd2QXgzsEb1w5Qu5wX2CL1+xkr87mS4M58AWvJhJ8ZqHMp/ubHTL9ja4SsnqXuAfO2GOKSYx1YHnlP5jKkG5dhp99Tz8ID39uXHQRhFNnkDoc3rMj/FoTbuID0YOvyGCsPlFIlZuk=
+	t=1744196493; cv=none; b=Io741N+QTGp++CJDO9c7ONPJ3aePF7XTN6Q11wRGyMgfGr/OR9i0pjY4zk7wrJaYTCBhpGRFGyU6B4lO44KAxIoRPNgG/t64rymt270m7M297A6MmAnB75a6UnOIOtEeFtpi49hBb1YNjreC/sMO0d6fMsy09Cfy4TCSz/lEHTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744196443; c=relaxed/simple;
-	bh=E5E1BmPjEKd9c0c0GxDB+1P9MW+/Vj/8fin/Wp/T8W0=;
+	s=arc-20240116; t=1744196493; c=relaxed/simple;
+	bh=kbcnBub2qRCGOu06jo+ufjNUGTCmhyGxpUtKPPrK65k=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=BCwx7YnM2NKRgVgMt/SibyS/UwiCF8qhDJXBqFZKVfDXfhtPqFqmWmneFlrmONxUTlK5Mtq32WS98I7x88qGDjxQYZ1drnlWlYbWm2QBY7jQLRTwTOTejeFfijBPxLYSuaxNYGzxht+BYEvklPqdGED7sgkB+eDVYxa0IL/PNhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Rx4Nqzjh; arc=none smtp.client-ip=209.85.221.49
+	 Content-Disposition; b=sItxO35e9wzknJ6AtLa40CpYAbBmKJYJgWXuRVPCSQ9nU6sUW8IT6f0uU5o3GN9Y1UX3YadSm7MLG8m+HxFx6NHGY95luReFGQy5huFCkpC2JkwhwcHgnFLzQ1IHRD8NL9bz27hCA1P6i3kVeOiMCtTKs30ZGg2nD4Q8fu9znFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=InKwe0+Z; arc=none smtp.client-ip=209.85.221.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Rx4Nqzjh"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3913b539aabso4012771f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 04:00:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="InKwe0+Z"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-39c1efc4577so3622367f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 04:01:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744196439; x=1744801239; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1744196488; x=1744801288; darn=vger.kernel.org;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=dMsTxQJ4MJkThAh69c9vTEJavOMnmubT5UY82dUq9UM=;
-        b=Rx4NqzjhVxUK2pgfGghu5EFAHEgZMr+INUhpcbd7iu/meSwnlPSyDBlrWG3VNWeh91
-         4AtYw5Wpj1woLRm6asY0dcpCgAAmUfte4SUR31MoMfs4tOS+GdNwgCr4lDoEZ22wfHy6
-         a8dykjEE+3LSLYWcHx/u+QIbvKaiPvy7PftSN9uQE17U4VpYawY5YrHnwQbbS1y91T+x
-         z3g/a5W9q0qpYPQGIe9esf9s0JbVaRIiiHUmnFvbMCgcwhY+klRwA8rqeCDHT6G/5fi1
-         0pKTQMoMdjXYBZ0uM2PSR76DBOST9JdEYZVjDQxTfnz07qEdL7tW0c4XhbLOwKUzS7IT
-         RPEg==
+        bh=WexvrN0iRH6s5lqXIKOGOc76DID+kB8LkmF1Khh6aFg=;
+        b=InKwe0+Zr4NPnAaN7KME36tJvgoUSCnXpsh+0E4c+omkT2jYPFPCi1iQaAGFxOvGr+
+         8sA4AuTt5sAodApX0OwaoG1ob9tOIM66G8g13MtmdF83DmI7EA0pyeFlwAvhQ9K3zHGY
+         yW7vh1M3ykS+6AGNO51Puvbd9jdMR/pEA4AUKmgMOzOTRIws9wyzqwnacYWqjU4VZ+1v
+         gCINfWDzGqxeec66CHtzWePY9O7e6uaI/rL5drlzfCznIekjv4IKiWB/5SOFbFM5sYjU
+         6ryevgrFMPEyQzi/tUVExaJHAhlGW9PvseXTsGoaPoOKCvfd/8lsbjlzDhdtHKV7v5zY
+         DbfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744196439; x=1744801239;
+        d=1e100.net; s=20230601; t=1744196488; x=1744801288;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dMsTxQJ4MJkThAh69c9vTEJavOMnmubT5UY82dUq9UM=;
-        b=BilmlJu27ESVpOC2yhOZKBP6nLP13TsYnsxKX+8NfTsovf8uEKEDHH9M6FlhGc70W7
-         1feIq24kE1wptqXzXl6wWxS4KdT+qd07kWl7kU7dkvuN0p1fSjfTBOnPZETxkCdUJTUT
-         2xjM66cUIbDqmccJFC7BRBf7FeJwBL6Fnb5jBF3LAd3ip6+VSl2sOkMIlnqZwtSPqBnb
-         BGabzGWmShRH96yyZAR3BZTArOK3NBSD3cv2a9DvxLnVnfV8aHMthSDiRCj+fCxpIb4n
-         a1gTxzOcz4ApFJMJ6nPOaLB3oM/rnx51EZ25fKl/DmZpiB96uP4D8I+iys74uxzQOgpp
-         3a1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXJbFvGsvtLjPE0hhuDKJaelQFcNGs1KdhNb47BIantwX5/4BXcJt1TCKvZmhhmimk4/o8ksYUYOLLCzq8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQgLaWD4bPIBNem+F6dNa2eE8j/1puo74M9eNG0uWti45bnrDw
-	qTXRV4alQBptlq6UcNpFY/oq45r8PwM2UrTobJT2Z6+81Q/j9fhE1LUTv6XYJCk=
-X-Gm-Gg: ASbGncvBqYGX4OHDsBFKs8C8vhZJ1hQOgmU89ytQ41OPh7YKcf/L+rUBIhg2qr7n2Ky
-	1WXGhnbc/moeL0QJQJtjqdcV2LSSenngnQlK/wf4URrfGwIuUq4CO/8lmGHC7sXe0A9KeO5T17p
-	juAmO1DDY537jRTRIGN2oLARtbsCSjlaYNgVf+kCOt4oxwjFIyskTsyzvpgMH/p/N3HpITSK6iN
-	SM8METLXO7Sak1bd+GIEgZ5tu1VdfCRZDxzxsePB9BUfpeTnflx638UqKBJp7W1xIFWvj8mWB0m
-	NRwmy1w2nDjmVSl3+mvPcfl8101ZdQCnKt1JtfVcW4eLrA==
-X-Google-Smtp-Source: AGHT+IHjGuoRPXApmr/fLNcJT+pJu0CQiZAC37N0JslksHu6yjn064Cn1Gd7YxJ1WwJwxyqUVuhsOw==
-X-Received: by 2002:a05:6000:4308:b0:39d:6f2b:e74d with SMTP id ffacd0b85a97d-39d88564b64mr1742489f8f.39.1744196439615;
-        Wed, 09 Apr 2025 04:00:39 -0700 (PDT)
+        bh=WexvrN0iRH6s5lqXIKOGOc76DID+kB8LkmF1Khh6aFg=;
+        b=YswODXi7LawsWvjvE4IFDM9rKdfrfaMIJTH7CTH+eGeGAmSDMRLquvAKry+cl401I9
+         3c7euwhnmRTkbhvFnTc0oojw/wOKs4288uufV7eFtBEI01o4mRrEqipQamxwQQsJ2yBO
+         QhYJ8P2sDepi+i6Yi/nIuRNpTczLh+C8EObdhPOjLaUjDOx9VqmsCKXf7MO6yYhIVWCt
+         Egq5ytxZyeSbJQJO8109L5OIs/3vnz+l+Lk+JN7Uq9OxgChcIvM3DHsAGv03YYp3Hrdb
+         7sMd1UBc/WFQcsF7Xs/4wO5CXGBz9NfFqtYQfqjD4dRwzWGWlKxt3gamYQ4BtaM/7OSj
+         vXGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVwlxSHWR+e2abdRxRZ0OG1CzjMmeuK36q17/lvFUNfgcaCQpczNZ9GkXFd0SqEqNPADrjX8M98xJOf+ZY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMdjo9HY4cwwrxsDpQeRwhUjwNQlpaCepTfRpdSf1f4xS8BsKR
+	S8+Xu8fFk475BrDg0Bbvyw8pTLgvpzimkMBvHk6HpOp6Qmo6lEaqABriG/dzoL8=
+X-Gm-Gg: ASbGncsD+wS9lpuKqU9VFenoAbKVuom5DG542fHD6VD+NN8pbgL5CFvCY2kDf/BbF4q
+	hvohDOiv9v4+jUK1B1c9kYm+7UomoJqgPb5oMv1Gbi5/i95ZP8yusUnwS+MKOz2cv8plfOW/NV2
+	Zogq4ZQje0lkDryG/NL4V1GvtoMX8lmkxh0CToCXkO/j7vxbHy/y/umohtblvqYDlZRN4eze/Ao
+	mSwHP1igvysyHb+TPBAVF9l+nIUy13K6xU7Dl1AbQ0ujB9U7ySfk9qMqg9ZY0jHk1DuYzhA7xhe
+	wmp1s+Z0pGE34p2UijJDtoUlFnBX2kp+72c1OaS+wfEP6g==
+X-Google-Smtp-Source: AGHT+IF2Njmy6uDcmNjK/vqJ2HttsKJfbdo9EDMtXLQyenYtyEJxAD4fQ/53R944kzDkaZ5HLwroFA==
+X-Received: by 2002:a5d:59a8:0:b0:391:31f2:b99a with SMTP id ffacd0b85a97d-39d87aa8ae0mr2409272f8f.5.1744196488617;
+        Wed, 09 Apr 2025 04:01:28 -0700 (PDT)
 Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39d89361170sm1297162f8f.2.2025.04.09.04.00.38
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39d8938aac2sm1307492f8f.52.2025.04.09.04.01.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 04:00:39 -0700 (PDT)
-Date: Wed, 9 Apr 2025 14:00:35 +0300
+        Wed, 09 Apr 2025 04:01:28 -0700 (PDT)
+Date: Wed, 9 Apr 2025 14:01:25 +0300
 From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Raju Rangoju <Raju.Rangoju@amd.com>
-Cc: Mark Brown <broonie@kernel.org>,
-	Akshata MukundShetty <akshata.mukundshetty@amd.com>,
-	Krishnamoorthi M <krishnamoorthi.m@amd.com>,
-	linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: [PATCH next] spi: spi_amd: Fix an IS_ERR() vs NULL check in probe
-Message-ID: <0e0f5ede-8993-4fac-967c-51e46b095416@stanley.mountain>
+To: Dinesh Karthikeyan <quic_dinek@quicinc.com>
+Cc: Jeff Johnson <jjohnson@kernel.org>, Kalle Valo <kvalo@kernel.org>,
+	Ramya Gnanasekar <quic_rgnanase@quicinc.com>,
+	linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH] wifi: ath12k: Fix buffer overflow in debugfs
+Message-ID: <35daefbd-d493-41d9-b192-96177d521b40@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,30 +74,29 @@ Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 X-Mailer: git-send-email haha only kidding
 
-The devm_ioremap() function returns NULL on error, it doesn't
-return error pointers.  Update the error checking to match.
+If the user tries to write more than 32 bytes then it results in memory
+corruption.  Fortunately, this is debugfs so it's limitted to root users.
 
-Fixes: b644c2776652 ("spi: spi_amd: Add PCI-based driver for AMD HID2 SPI controller")
+Fixes: 3f73c24f28b3 ("wifi: ath12k: Add support to enable debugfs_htt_stats")
 Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 ---
- drivers/spi/spi-amd-pci.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/ath/ath12k/debugfs_htt_stats.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/spi/spi-amd-pci.c b/drivers/spi/spi-amd-pci.c
-index e1ecab755fe9..e5faab414c17 100644
---- a/drivers/spi/spi-amd-pci.c
-+++ b/drivers/spi/spi-amd-pci.c
-@@ -46,8 +46,8 @@ static int amd_spi_pci_probe(struct pci_dev *pdev,
- 	io_base_addr = (io_base_addr & AMD_SPI_BASE_ADDR_MASK) + AMD_HID2_PCI_BAR_OFFSET;
- 	amd_spi->io_remap_addr = devm_ioremap(dev, io_base_addr, AMD_HID2_MEM_SIZE);
+diff --git a/drivers/net/wireless/ath/ath12k/debugfs_htt_stats.c b/drivers/net/wireless/ath/ath12k/debugfs_htt_stats.c
+index 1c0d5fa39a8d..aeaf970339d4 100644
+--- a/drivers/net/wireless/ath/ath12k/debugfs_htt_stats.c
++++ b/drivers/net/wireless/ath/ath12k/debugfs_htt_stats.c
+@@ -5377,6 +5377,9 @@ static ssize_t ath12k_write_htt_stats_type(struct file *file,
+ 	const int size = 32;
+ 	int num_args;
  
--	if (IS_ERR(amd_spi->io_remap_addr))
--		return dev_err_probe(dev, PTR_ERR(amd_spi->io_remap_addr),
-+	if (!amd_spi->io_remap_addr)
-+		return dev_err_probe(dev, -ENOMEM,
- 				"ioremap of SPI registers failed\n");
- 
- 	dev_dbg(dev, "io_remap_address: %p\n", amd_spi->io_remap_addr);
++	if (count > size)
++		return -EINVAL;
++
+ 	char *buf __free(kfree) = kzalloc(size, GFP_KERNEL);
+ 	if (!buf)
+ 		return -ENOMEM;
 -- 
 2.47.2
 
