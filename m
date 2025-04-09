@@ -1,136 +1,107 @@
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45BA525C70A;
-	Wed,  9 Apr 2025 08:55:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D372528FC
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 08:56:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744188948; cv=none; b=czuvhH/VTS2cTU0Fmh44y7QpAOieuJlg26s0yR5Vr1Nqvles1tVXth8vMUDG9wr8sdOE0ZHXjS/AjowAKtvKHP9J1l0L7ho22hcGtRXkuy72zIeQ7MI1kq+3AJ80u5MUt7DdZFoi6IdJHodCbmTj+GjEtrmIZjuHLow+jz3D0Oc=
+	t=1744189008; cv=none; b=QQ+SzlIINtri9LMa6Pa/Jl3SKE7qGX/WPMVI0h21jkDlQYuGNxU+mQy2zylkzUubW7UObnwNKvwacW9INFq7Bff4lZK4n2otzNhjtWaHrW2u5FYxTwP/mIfI+9sChO/fxC/vtT0cuTQ++s4LkQowq0Tt7AKI03OivtBV+1IEWG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744188948; c=relaxed/simple;
-	bh=FkYGG/blNPkE+YJlD1UdzBjF3QbM1eptOxdUmwF+Lag=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UFKP+YSs0dOSve6F0kyt80F2rK/WBosBpwY1o5rHow5JtC4kC51TXgBiKG6ZC87Dx5hI8qBXQgST0ZsJ8xMa/siH8R8+Hnj7El29y3iv3XcKK4uw3QMRNlUOPZTx7iR4fnt8S3yS+cSuioXsDksTh9f6P4UipNFBthhKwWNk5QA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GBuVltAO; arc=none smtp.client-ip=209.85.221.173
+	s=arc-20240116; t=1744189008; c=relaxed/simple;
+	bh=9FKzHiZkyVqJIEUKOBCkb0+X287tOTOwgifqFsa3J/g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KK6F3rCv9pMvMoo5Zdn4TAsqx0pHIRjGeaKPm7rGURRWPzTQHXSfg5DLPcrn88zYHiTxamHlFeMZ+NHLcH/dvlUtItUpsIOBfY79nJFGfp8mGv/uD1yEqgkBAix+WbB/rZwubtGNBAyYigDC4DT9ds/m5YZH2VzJ68vEk8OSXL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gO0edmRI; arc=none smtp.client-ip=209.85.221.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GBuVltAO"
-Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-5240a432462so483359e0c.1;
-        Wed, 09 Apr 2025 01:55:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gO0edmRI"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3914bc3e01aso3829252f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 01:56:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744188946; x=1744793746; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xKkhSratOE8FhNwto8msCYe3EaTscTslbqKejN9e03g=;
-        b=GBuVltAOASHPZMHs0R//UippvcXFM+APF0GXC2G6z/71eAQlmcTeGBFqALFsXwsqEk
-         FVxhKuEVaHHuGGlArpEbE1g94ZZ/LoSOWvO55NSHIlhx8S6iLEgQ6XtpXc2Xkm96Cc3k
-         sAZmRPLixk6ie6T06fmPGyr6xkAaarMv1AXcktq2VgV+lrS8aak6ihjRHY2PDGENsNEY
-         pnB4Q/lW61O/V37zxtgl11v7kt/l/Wh629k2/c35shB116T4XpnjzRI+AgZHjNQyHJs8
-         k+2wAABErJ+SNfYGWvW0ELdPf1r6B1ye1IPCwo3Py0vdqqBqBrDAXSiofKJdosmmTo4l
-         BWHA==
+        d=gmail.com; s=20230601; t=1744189005; x=1744793805; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=P4JUvz8afTc7HG6/FXYMalLsIL/FarPH6ddKiz9jFrk=;
+        b=gO0edmRIUoPDevjivlm2aQtiqR4hnqeyXquz0TShLqdYdKJRpGBy9mqzloIs0ODnkO
+         EfrD+udFOSYFvN35N+TzU2dk2cslI9R/PqszROyEHkR6ZKhyW88E70LNroQGaWO6NxWp
+         jxj5KP7ySBvyc9+Bw/kPE8/00ApuRLgRHgZVBfCusrd+MRdJqIUaeGZSrfyrUXNx+NSZ
+         cD7/cAwUHNHbxSZKePWwCIMPy5LSTXOPPm38zUgZNyw2zOYgS6ip6iXsJayItEzIwa2X
+         iOORehBXrZJroVhldUguXvM46zc79BLWLiYPDTIhieHt2Ikn4PNlknM2wgvgrnhdCjHV
+         3j0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744188946; x=1744793746;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xKkhSratOE8FhNwto8msCYe3EaTscTslbqKejN9e03g=;
-        b=rHSzgBRkHlV88sNiHPnMSsAfaAcRWOpNLUhocSdgp2AEjqZFVd3MMUiz1JUaalAxv5
-         aldFUpXGXGbknr8dP5lZ7m+yFWZilq4ydtE5U4HNssPgK954w0Cnya1JbQNRHkgnm8jW
-         O3ey483dYj6QFZJSKJpnJD3Qnn5fii4uHn1xdlboFhXtVS49VvxE2oD0O0yBYYTPdMDx
-         pw+L6lWM20xeQwsBuAYrmhdRe5YVBurdB+KhZdbEsVUNCpwYKbsMfu/LckOU9UhxURO4
-         l0MSEVeL/sIzIpPhcPxFkuqQah+tj64+xzuoeZntnXDzIggrHQPamZFaHfF7iZWpk+Ws
-         Jvcw==
-X-Forwarded-Encrypted: i=1; AJvYcCUGwVrh0c3PJiT5VesenV3dUCJuCSiP7A6QiEHTdeSaW54rNvEQ+gmzWSMNY8ndT5zkfGXNV7kh5up67cmW@vger.kernel.org, AJvYcCVTbtkd+KYV8hRYGnEn0XHYuXc826hqllwLaGdkYw6JPeF2K6WF7TSlA8ZB80zNezQ0FOFkvHPnOuK3@vger.kernel.org, AJvYcCVcmtoGYTeRVPMtfXm7YrV9vnbtaOs7SJeUZf8FTU6FZGfAKuu1Jf/IpaqFqAupcjTa3E9dFZIFlkt1BWeh4F3WxPQ=@vger.kernel.org, AJvYcCWaCQe0Bk6LlQQhEunenz6K1+qjEP94dLeK2ZPoxED8KWVWkW6JRoTQIQ8vxb86tpEczaUhMqCJqKZl@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQjTGFdTpUlr72ztZSxf0OwakpQIp8LOpnp8MOzkbBD+pxmB3f
-	orhbl6K/rKBaYdWWGhMQap0EcYYgcyteCuIF19HyfGpkiS4FP3IA47EnLqaYnO++FgvdpYotD6e
-	koBwDxrp1t3s4zWdzTNgRFOskOCw=
-X-Gm-Gg: ASbGncsoeyrxDdRg7sLMeStvtir25exOQfhJ0Vhg7F05F8DMVNzSvFNvRSSkUZ0Re2Q
-	cGLFlNMgM4UdpMABtiil4oBYQR/Vts2IYd3H7MjK48am+AuJadnUDiXo79s80+rAuFzfcy5zZuh
-	+1dj5yBypJIpbVYK9yFDD5GZOo++EK96EA/0TteHy4aOk1TXzDbzaoDCA=
-X-Google-Smtp-Source: AGHT+IFkvSJE5U/9fmVpXSs+iaoY5nuY5+IWwlLNMnF2gNZkr5kIoflvPEnL4H4NBK6FHRKQDcdNNrDvBUNiQdI3bio=
-X-Received: by 2002:a05:6122:d89:b0:50d:39aa:7881 with SMTP id
- 71dfb90a1353d-527a8beff21mr1371744e0c.0.1744188946056; Wed, 09 Apr 2025
- 01:55:46 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744189005; x=1744793805;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=P4JUvz8afTc7HG6/FXYMalLsIL/FarPH6ddKiz9jFrk=;
+        b=h6WIMqhtqHq4ssMTIkOplRg7YrYBnqMCKV9BNE0b6PSuKfdURJNZI477ZsPGMsuMwu
+         QCtQxh4u2mBsutZQV9H5oV8U4AylJP7NT/wDLW3iJXfdStS+epG/KrF7Fw62TY8KuNWn
+         RktO3nry0K5wP4SSXv+8HO6RANsRjwtjiRh0GViqOGgatVFc5DAVhy5MbtZ2ey+x3iSd
+         VN0gDNBWneMRSKUYUHjMUBKufE6Hg+BLEbhC4+5p5x0UcWj2qXUQWPdFQQek5JbkyEVR
+         7iBJ9JrmWYZ4DTo0x9NK1VunAljnT0r1Qhl4uHFfaKaN/QgrJmmjgRzh6GRMxybp7dyd
+         uNhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVDJiH9cdZAUpdaNOev3jn+BLIFxSPa1YRts0B2jSPYWVPv3VIivQb9a6yIui4AuY6+laiIlN1mdPziCVo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxvH3ywfmlLXBUjm9N6dM9OsklCfjgpvoQNw4ufTuw1gdhDgO7m
+	8D9TcRUCJn2VUXfiiba2DGdqtkjkJOwKGhidmY0sWT7plj26xsh+a756LVEK
+X-Gm-Gg: ASbGnctJq+OROk40fGzcDvy80NLsoKoMtwvHqZ7hstBMtQ8xBKqDAW8sdLoQJ8Agfez
+	aaU+07i2G/yQsiX41gt2G7gOv6dBbbKZrAlGhMfV5OfCE4j4gSH7jXRIpCSrZ4h2HUlUOMB/IYN
+	A+hVD45IWJKpVjCA5bURDfbs2zXJsvPkwhhKsOWsgzRyw/bw0R/KxQv/yWu5UFU84BEJtHGsUT3
+	uWGQt3JLl127Vg72t+n7bgecPBTHSZeOiiNKeo1iQyX2he7NNE78mk4jdKhPTGJ6Dq0uXHy8BB9
+	TputTBHC31GEtSky1E0MznREvwo+5ltpHDxEJjHcvsiF5cXQwkd0p/36
+X-Google-Smtp-Source: AGHT+IFYophTFBfoBk+6EWJfbHdMU/Z8k+vo558UaGYrCpc1xC8rg6vdLxD4hv17xkKSTLflQi8oDw==
+X-Received: by 2002:a05:6000:1786:b0:390:d6b0:b89 with SMTP id ffacd0b85a97d-39d87cdbdbemr1553050f8f.50.1744189004914;
+        Wed, 09 Apr 2025 01:56:44 -0700 (PDT)
+Received: from egonzo (82-64-73-52.subs.proxad.net. [82.64.73.52])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f23572bb2sm9102605e9.29.2025.04.09.01.56.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 01:56:44 -0700 (PDT)
+Date: Wed, 9 Apr 2025 10:56:42 +0200
+From: Dave Penkler <dpenkler@gmail.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Michael Rubin <matchstick@neverthere.org>, gregkh@linuxfoundation.org,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [Patch v1 01/21] staging: gpib: Using struct
+ gpib_board_type_ioctl
+Message-ID: <Z_Y2Sg1tDok_MX6u@egonzo>
+References: <20250409055903.321438-1-matchstick@neverthere.org>
+ <20250409055903.321438-2-matchstick@neverthere.org>
+ <23dec5fd-5abc-40f9-9b13-0f873ffc4242@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250408200916.93793-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250408200916.93793-11-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdVAxaLZJ4y0AWKrLobp55n5NPqQgEtHK_d1DDUM1LAkDw@mail.gmail.com>
-In-Reply-To: <CAMuHMdVAxaLZJ4y0AWKrLobp55n5NPqQgEtHK_d1DDUM1LAkDw@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Wed, 9 Apr 2025 09:55:20 +0100
-X-Gm-Features: ATxdqUF6pkX8g8cSssT4x6HUE0uVbLtqiF0Qca_2kkdcVwxXzZnsXvGx2QnlRqk
-Message-ID: <CA+V-a8uc22sYFwfB7CJK9gSmT7ibv5MxTPyTBJtJMijKcgbW5g@mail.gmail.com>
-Subject: Re: [PATCH v2 10/15] drm: renesas: rz-du: mipi_dsi: Use mHz for D-PHY
- frequency calculations
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Magnus Damm <magnus.damm@gmail.com>, dri-devel@lists.freedesktop.org, 
-	devicetree@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <23dec5fd-5abc-40f9-9b13-0f873ffc4242@stanley.mountain>
 
-Hi Geert,
+On Wed, Apr 09, 2025 at 11:10:41AM +0300, Dan Carpenter wrote:
+> On Wed, Apr 09, 2025 at 05:58:43AM +0000, Michael Rubin wrote:
+> > diff --git a/drivers/staging/gpib/uapi/gpib_ioctl.h b/drivers/staging/gpib/uapi/gpib_ioctl.h
+> > index 6202865278ea..4ddcbc2a81b0 100644
+> > --- a/drivers/staging/gpib/uapi/gpib_ioctl.h
+> > +++ b/drivers/staging/gpib/uapi/gpib_ioctl.h
+> > @@ -12,9 +12,9 @@
+> >  
+> >  #define GPIB_CODE 160
+> >  
+> > -typedef struct {
+> > +struct gpib_board_type_ioctl {
+> >  	char name[100];
+> > -} board_type_ioctl_t;
+> > +};
+> 
+> This breaks user API so now user space can't compile.  I don't think
+> any of these 21 patches can be applied.
+>
+> regards,
+> dan carpenter
+> 
+ 
+These patches are OK. I will make a new release of the userspace libraries
+with a compat include that defines the typedefs.
+cheers,
+-Dave
 
-Thank you for the review.
-
-On Wed, Apr 9, 2025 at 9:16=E2=80=AFAM Geert Uytterhoeven <geert@linux-m68k=
-.org> wrote:
->
-> Hi Prabhakar,
->
-> On Tue, 8 Apr 2025 at 22:09, Prabhakar <prabhakar.csengg@gmail.com> wrote=
-:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > Pass the HSFREQ in milli-Hz to the `dphy_init()` callback to improve
-> > precision, especially for the RZ/V2H(P) SoC, where PLL dividers require
-> > high accuracy.
-> >
-> > These changes prepare the driver for upcoming RZ/V2H(P) SoC support.
-> >
-> > Co-developed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> > Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Thanks for your patch!
->
-> > --- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-> > +++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-> > @@ -33,7 +33,7 @@
-> >  struct rzg2l_mipi_dsi;
-> >
-> >  struct rzg2l_mipi_dsi_hw_info {
-> > -       int (*dphy_init)(struct rzg2l_mipi_dsi *dsi, unsigned long hsfr=
-eq);
-> > +       int (*dphy_init)(struct rzg2l_mipi_dsi *dsi, unsigned long long=
- hsfreq_mhz);
->
-> Due to the lack of capitalization of the "hz" part, it is not clear
-> that the "m" stands for "milli" instead of "mega".
-> Perhaps hsfreq_mHz or hsfreq_millihz?
->
-Agreed, I will use `hsfreq_millihz`. Shall I respin a new version as
-the initial patches do the same (i.e. use mhz).
-
-Cheers,
-Prabhakar
