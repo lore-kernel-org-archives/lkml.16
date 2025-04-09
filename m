@@ -1,372 +1,107 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8B6E27EC62;
-	Wed,  9 Apr 2025 18:54:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED32227EC92
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 18:54:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744224879; cv=none; b=eChorRBZ/2udhOBdSDoO5AUIEufpXh/23cN3Q/YUCuriVR/sPfFAbUT2eR4UlVK7cGgFPPfiBfLV/pCbst14sEDnynksDgTJfb6E9/5SAf/jzI+90aYsDNCErxrpYZK1726Oca2FwPxmj5v5L04pS7vrG7a/41F+GaaSa46l2bs=
+	t=1744224880; cv=none; b=iIa8UUpexwSSSwhNpQ/X/2321YoN+Q1J+iHRp+pazX8y6OyDNgLdPWKVWSZXpNx74c6bkoZ38xVfugZGI8wWzIM2D2efPhXSH341VL1Dg+2K2IG7qx2f5wmWJbk34Q03hi8jeTOynEdbm40Y0bTn+r8fOzNJvEoAu2s4nkL8Hcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744224879; c=relaxed/simple;
-	bh=eAKPFokw74tkd2XehzPjCy5BFL/HhIzbTg85Rtl1A4A=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=NDQrlCBYFxMYZ3N5PXwwqtm0Uak7D1OVfMY8+5He+mL/8Q+df7vpE6k/zjpz8GHKN+6slaFCDfbMWQAB2/cCm9D/OaE+CVOXaZVc3dJnTxv2/eoI7ifAC1ImY1SbUD/vkutFrDbWgAqglr/4Dvl3YK70ubutytDvKeQu4SIumUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tAixYEYw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ur5Qt1CU; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744224880; c=relaxed/simple;
+	bh=BItrTn2IJIH0MdLppMsWlQgxElkb3NvoIdETrPiCE0I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Jkln/eptFT6PnpQI7+w/I8BdLC9wOmPWcfUP7PH/YPst9cVoK2bj0Wec0UCKSq3CwzNznP20GkL/Lcp3K34aPOiU5751K2O8NRc8lWwMayhRnXN3K5dppqw3toPHtTxk+BWGuOf0kHneT61SpGc2YpNdy1+Yu8sTc0ydOIdC4YE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=f2OwgbzV; arc=none smtp.client-ip=209.85.166.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tAixYEYw";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ur5Qt1CU"
-Date: Wed, 09 Apr 2025 18:54:34 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744224875;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=diekNr5mvax6qVZbaHpWqBwckDu/4fk1ntMcN2G8LvU=;
-	b=tAixYEYw64yoC/d0fjQgEVJzyR7HJQ1ByHwJfG5DpAbyp1QczzhIMjNnUQziXn9vzAfx2e
-	lfRBki/MRNrCuwMFMmMgjl3sS0qSYCWWH0e7KOy09IQvNN8JFyKCawoNsy6od0AngK5f0Q
-	XPSoHj0azYrESkkrYOR53k3xefS/xrvmKhvYsyK93jPW+ptSf6E98QYpffghz+8WY8r7wG
-	izl35mi2f5cZwEHYioQ0DDV2uPd9WN5KiKU1jC1YOyTFcVyKklIEt5Rdp2F1LY+WGSZeWx
-	Pg2rDgM7iE/GIZnkaaUPpQxOsosT6Y1APaRL5XGdEBGCEfKaTMHPxxsM5U1kGQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744224875;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=diekNr5mvax6qVZbaHpWqBwckDu/4fk1ntMcN2G8LvU=;
-	b=Ur5Qt1CUgk7KnqnkeSx40o7NHmhEWbw39+z6vk07gp9LTvdabCcWRkfVDRWO8wClNCg1Np
-	kH/pz4f3OuZrAECA==
-From: "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/msi] genirq/msi: Use lock guards for MSI descriptor locking
-Cc: Thomas Gleixner <tglx@linutronix.de>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250319105506.144672678@linutronix.de>
-References: <20250319105506.144672678@linutronix.de>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="f2OwgbzV"
+Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-861525e9b0aso4248439f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 11:54:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1744224877; x=1744829677; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=c7HCUg9+RtKDsPTNL/2WrP5NNIONueuTQQ7XmSzDe9Y=;
+        b=f2OwgbzV1zXXF7U1vpHEmCcmt1TFyCwBw9v8Iu01ONlVjzTG/8rioTCvehVDeNjM+R
+         57GDnG5RE7/NlvPSDenOeAWRQyBBMdhbhBJvWFCWQ+wbCaFaOVcYOMsZFa7jf5+n4Az7
+         sQPwqqr9SHSSqu20pTCxRlC/Coesoruh8i1hk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744224877; x=1744829677;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=c7HCUg9+RtKDsPTNL/2WrP5NNIONueuTQQ7XmSzDe9Y=;
+        b=Cf2QBBPbqNhQ3jD6vGaEJ5t99dSySwnGCbFC3DK3mISm3gtwR3NK9c6ls5M+NNtD7W
+         wQGMMIpret0aBZtunqLL2mAE5FI5r33dRIWrBA4JOLy43GeKByS3zORTJokGZvGJfMg+
+         hUAp21UWtecIem6w7zVlD9A76FJZEvvwc0RWjUhydTaN5HVc3lOPL7j8cFt2mz/cINo/
+         vJmdOZ9cOevkMsnnfP6AKkl6By4N5DsgUDBD2QlEkDPhyH/4sHFEB0CUFeIsT+vpYoSL
+         PaE8hG2+ItaQEJ9Fxg7WuA1NOyx1mnM751OVLTUGgJuNKOf9qXbJMQhb5qS2kGyg2xj0
+         dTuw==
+X-Forwarded-Encrypted: i=1; AJvYcCVnQajq/JBnME1s/AqKwnkTozjncjCK9SneG7wa7rx1DUv9/UoQp3p78+AaKg6kQk4OZbcNPv+mXz/lqmo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHWKu39Gq4uC4mxWOZ1QTIuAQDJEBCPwY/AF+UrOrI9QqJHbtd
+	Y4roFcxFmqA9NTcLdmqrjmQSIhjV24gIibjP3ClLke22uz/kd/1Isn6C6N2W/as=
+X-Gm-Gg: ASbGncuZwzxOKSPwYjYjX+1M0NDniXBLghqZfaJK/A8RZUDC22zzTpAuDuBFCv6dn6T
+	Bh2r58y7HJrpMpyZ1IUDdkrjjPtp5DbmC1nQ7xZIxmTQNJKqS4sgQE/PKKYYQJsuvpkdska6DT/
+	bRwsm0mT2SNNFWCZWJjpCB6lAoSwlPoJVCgfomyqZr1JeyBv064D1D3CfBDbvDD7a7bEt02oRum
+	TNO09467j8NOLQdCzt+zCbbj/wZv1CmEYCBF+ROQ+Tnj0rxlTZXY8pxvQjK7B1qKhc1awAjcV+C
+	5IYEfJXKdrvhRIHWjjYBV3w3FGYM0EkPJklJI8ObHmKXDo9Zdbc=
+X-Google-Smtp-Source: AGHT+IH5i6yQTBGbz82VtAMEMdTBDeDBWpGhiHzbBDbPeaa1aVN55DG89VDgZRcqxydWuF8KbdUa8A==
+X-Received: by 2002:a05:6e02:1522:b0:3d4:6fb7:3a36 with SMTP id e9e14a558f8ab-3d7e478131cmr1913715ab.20.1744224877086;
+        Wed, 09 Apr 2025 11:54:37 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f505e0271bsm369857173.96.2025.04.09.11.54.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Apr 2025 11:54:36 -0700 (PDT)
+Message-ID: <51c911d6-a7bd-40e1-97b8-f73d94d2e9ce@linuxfoundation.org>
+Date: Wed, 9 Apr 2025 12:54:35 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174422487480.31282.1454328912019908708.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5.4 000/154] 5.4.292-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20250408104815.295196624@linuxfoundation.org>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20250408104815.295196624@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the irq/msi branch of tip:
+On 4/8/25 04:49, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.292 release.
+> There are 154 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 10 Apr 2025 10:47:53 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.292-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-Commit-ID:     0dac2b09303c89ffb21d25d40bf6aefd39f214b0
-Gitweb:        https://git.kernel.org/tip/0dac2b09303c89ffb21d25d40bf6aefd39f214b0
-Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Wed, 19 Mar 2025 11:56:39 +01:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Wed, 09 Apr 2025 20:47:29 +02:00
+Compiled and booted on my test system. No dmesg regressions.
 
-genirq/msi: Use lock guards for MSI descriptor locking
+Tested-by: Shuah Khan <skhan@linuxfoundation.org>
 
-Provide a lock guard for MSI descriptor locking and update the core code
-accordingly.
-
-No functional change intended.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Link: https://lore.kernel.org/all/20250319105506.144672678@linutronix.de
-
-
-
----
- include/linux/irqdomain.h |   2 +-
- include/linux/msi.h       |   3 +-
- kernel/irq/msi.c          | 109 +++++++++++++------------------------
- 3 files changed, 45 insertions(+), 69 deletions(-)
-
-diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-index bb71111..2f95571 100644
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -281,6 +281,8 @@ static inline struct fwnode_handle *irq_domain_alloc_fwnode(phys_addr_t *pa)
- 
- void irq_domain_free_fwnode(struct fwnode_handle *fwnode);
- 
-+DEFINE_FREE(irq_domain_free_fwnode, struct fwnode_handle *, if (_T) irq_domain_free_fwnode(_T))
-+
- struct irq_domain_chip_generic_info;
- 
- /**
-diff --git a/include/linux/msi.h b/include/linux/msi.h
-index 86e4274..4e43991 100644
---- a/include/linux/msi.h
-+++ b/include/linux/msi.h
-@@ -232,6 +232,9 @@ int msi_setup_device_data(struct device *dev);
- void msi_lock_descs(struct device *dev);
- void msi_unlock_descs(struct device *dev);
- 
-+DEFINE_LOCK_GUARD_1(msi_descs_lock, struct device, msi_lock_descs(_T->lock),
-+		    msi_unlock_descs(_T->lock));
-+
- struct msi_desc *msi_domain_first_desc(struct device *dev, unsigned int domid,
- 				       enum msi_desc_filter filter);
- 
-diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
-index 5c8d43c..5747d20 100644
---- a/kernel/irq/msi.c
-+++ b/kernel/irq/msi.c
-@@ -448,7 +448,6 @@ EXPORT_SYMBOL_GPL(msi_next_desc);
- unsigned int msi_domain_get_virq(struct device *dev, unsigned int domid, unsigned int index)
- {
- 	struct msi_desc *desc;
--	unsigned int ret = 0;
- 	bool pcimsi = false;
- 	struct xarray *xa;
- 
-@@ -462,7 +461,7 @@ unsigned int msi_domain_get_virq(struct device *dev, unsigned int domid, unsigne
- 	if (dev_is_pci(dev) && domid == MSI_DEFAULT_DOMAIN)
- 		pcimsi = to_pci_dev(dev)->msi_enabled;
- 
--	msi_lock_descs(dev);
-+	guard(msi_descs_lock)(dev);
- 	xa = &dev->msi.data->__domains[domid].store;
- 	desc = xa_load(xa, pcimsi ? 0 : index);
- 	if (desc && desc->irq) {
-@@ -471,16 +470,12 @@ unsigned int msi_domain_get_virq(struct device *dev, unsigned int domid, unsigne
- 		 * PCI-MSIX and platform MSI use a descriptor per
- 		 * interrupt.
- 		 */
--		if (pcimsi) {
--			if (index < desc->nvec_used)
--				ret = desc->irq + index;
--		} else {
--			ret = desc->irq;
--		}
-+		if (!pcimsi)
-+			return desc->irq;
-+		if (index < desc->nvec_used)
-+			return desc->irq + index;
- 	}
--
--	msi_unlock_descs(dev);
--	return ret;
-+	return 0;
- }
- EXPORT_SYMBOL_GPL(msi_domain_get_virq);
- 
-@@ -998,9 +993,8 @@ bool msi_create_device_irq_domain(struct device *dev, unsigned int domid,
- 				  void *chip_data)
- {
- 	struct irq_domain *domain, *parent = dev->msi.domain;
--	struct fwnode_handle *fwnode, *fwnalloced = NULL;
--	struct msi_domain_template *bundle;
- 	const struct msi_parent_ops *pops;
-+	struct fwnode_handle *fwnode;
- 
- 	if (!irq_domain_is_msi_parent(parent))
- 		return false;
-@@ -1008,7 +1002,8 @@ bool msi_create_device_irq_domain(struct device *dev, unsigned int domid,
- 	if (domid >= MSI_MAX_DEVICE_IRQDOMAINS)
- 		return false;
- 
--	bundle = kmemdup(template, sizeof(*bundle), GFP_KERNEL);
-+	struct msi_domain_template *bundle __free(kfree) =
-+		kmemdup(template, sizeof(*bundle), GFP_KERNEL);
- 	if (!bundle)
- 		return false;
- 
-@@ -1031,41 +1026,36 @@ bool msi_create_device_irq_domain(struct device *dev, unsigned int domid,
- 	 * node as they are not guaranteed to have a fwnode. They are never
- 	 * looked up and always handled in the context of the device.
- 	 */
--	if (bundle->info.flags & MSI_FLAG_USE_DEV_FWNODE)
--		fwnode = dev->fwnode;
-+	struct fwnode_handle *fwnode_alloced __free(irq_domain_free_fwnode) = NULL;
-+
-+	if (!(bundle->info.flags & MSI_FLAG_USE_DEV_FWNODE))
-+		fwnode = fwnode_alloced = irq_domain_alloc_named_fwnode(bundle->name);
- 	else
--		fwnode = fwnalloced = irq_domain_alloc_named_fwnode(bundle->name);
-+		fwnode = dev->fwnode;
- 
- 	if (!fwnode)
--		goto free_bundle;
-+		return false;
- 
- 	if (msi_setup_device_data(dev))
--		goto free_fwnode;
--
--	msi_lock_descs(dev);
-+		return false;
- 
-+	guard(msi_descs_lock)(dev);
- 	if (WARN_ON_ONCE(msi_get_device_domain(dev, domid)))
--		goto fail;
-+		return false;
- 
- 	if (!pops->init_dev_msi_info(dev, parent, parent, &bundle->info))
--		goto fail;
-+		return false;
- 
- 	domain = __msi_create_irq_domain(fwnode, &bundle->info, IRQ_DOMAIN_FLAG_MSI_DEVICE, parent);
- 	if (!domain)
--		goto fail;
-+		return false;
- 
-+	/* @bundle and @fwnode_alloced are now in use. Prevent cleanup */
-+	retain_and_null_ptr(bundle);
-+	retain_and_null_ptr(fwnode_alloced);
- 	domain->dev = dev;
- 	dev->msi.data->__domains[domid].domain = domain;
--	msi_unlock_descs(dev);
- 	return true;
--
--fail:
--	msi_unlock_descs(dev);
--free_fwnode:
--	irq_domain_free_fwnode(fwnalloced);
--free_bundle:
--	kfree(bundle);
--	return false;
- }
- 
- /**
-@@ -1079,12 +1069,10 @@ void msi_remove_device_irq_domain(struct device *dev, unsigned int domid)
- 	struct msi_domain_info *info;
- 	struct irq_domain *domain;
- 
--	msi_lock_descs(dev);
--
-+	guard(msi_descs_lock)(dev);
- 	domain = msi_get_device_domain(dev, domid);
--
- 	if (!domain || !irq_domain_is_msi_device(domain))
--		goto unlock;
-+		return;
- 
- 	dev->msi.data->__domains[domid].domain = NULL;
- 	info = domain->host_data;
-@@ -1093,9 +1081,6 @@ void msi_remove_device_irq_domain(struct device *dev, unsigned int domid)
- 	irq_domain_remove(domain);
- 	irq_domain_free_fwnode(fwnode);
- 	kfree(container_of(info, struct msi_domain_template, info));
--
--unlock:
--	msi_unlock_descs(dev);
- }
- 
- /**
-@@ -1111,16 +1096,14 @@ bool msi_match_device_irq_domain(struct device *dev, unsigned int domid,
- {
- 	struct msi_domain_info *info;
- 	struct irq_domain *domain;
--	bool ret = false;
- 
--	msi_lock_descs(dev);
-+	guard(msi_descs_lock)(dev);
- 	domain = msi_get_device_domain(dev, domid);
- 	if (domain && irq_domain_is_msi_device(domain)) {
- 		info = domain->host_data;
--		ret = info->bus_token == bus_token;
-+		return info->bus_token == bus_token;
- 	}
--	msi_unlock_descs(dev);
--	return ret;
-+	return false;
- }
- 
- static int msi_domain_prepare_irqs(struct irq_domain *domain, struct device *dev,
-@@ -1391,12 +1374,9 @@ int msi_domain_alloc_irqs_range_locked(struct device *dev, unsigned int domid,
- int msi_domain_alloc_irqs_range(struct device *dev, unsigned int domid,
- 				unsigned int first, unsigned int last)
- {
--	int ret;
- 
--	msi_lock_descs(dev);
--	ret = msi_domain_alloc_irqs_range_locked(dev, domid, first, last);
--	msi_unlock_descs(dev);
--	return ret;
-+	guard(msi_descs_lock)(dev);
-+	return msi_domain_alloc_irqs_range_locked(dev, domid, first, last);
- }
- EXPORT_SYMBOL_GPL(msi_domain_alloc_irqs_range);
- 
-@@ -1500,12 +1480,8 @@ struct msi_map msi_domain_alloc_irq_at(struct device *dev, unsigned int domid, u
- 				       const struct irq_affinity_desc *affdesc,
- 				       union msi_instance_cookie *icookie)
- {
--	struct msi_map map;
--
--	msi_lock_descs(dev);
--	map = __msi_domain_alloc_irq_at(dev, domid, index, affdesc, icookie);
--	msi_unlock_descs(dev);
--	return map;
-+	guard(msi_descs_lock)(dev);
-+	return __msi_domain_alloc_irq_at(dev, domid, index, affdesc, icookie);
- }
- 
- /**
-@@ -1542,13 +1518,11 @@ int msi_device_domain_alloc_wired(struct irq_domain *domain, unsigned int hwirq,
- 
- 	icookie.value = ((u64)type << 32) | hwirq;
- 
--	msi_lock_descs(dev);
-+	guard(msi_descs_lock)(dev);
- 	if (WARN_ON_ONCE(msi_get_device_domain(dev, domid) != domain))
- 		map.index = -EINVAL;
- 	else
- 		map = __msi_domain_alloc_irq_at(dev, domid, MSI_ANY_INDEX, NULL, &icookie);
--	msi_unlock_descs(dev);
--
- 	return map.index >= 0 ? map.virq : map.index;
- }
- 
-@@ -1641,9 +1615,8 @@ void msi_domain_free_irqs_range_locked(struct device *dev, unsigned int domid,
- void msi_domain_free_irqs_range(struct device *dev, unsigned int domid,
- 				unsigned int first, unsigned int last)
- {
--	msi_lock_descs(dev);
-+	guard(msi_descs_lock)(dev);
- 	msi_domain_free_irqs_range_locked(dev, domid, first, last);
--	msi_unlock_descs(dev);
- }
- EXPORT_SYMBOL_GPL(msi_domain_free_irqs_all);
- 
-@@ -1673,9 +1646,8 @@ void msi_domain_free_irqs_all_locked(struct device *dev, unsigned int domid)
-  */
- void msi_domain_free_irqs_all(struct device *dev, unsigned int domid)
- {
--	msi_lock_descs(dev);
-+	guard(msi_descs_lock)(dev);
- 	msi_domain_free_irqs_all_locked(dev, domid);
--	msi_unlock_descs(dev);
- }
- 
- /**
-@@ -1694,12 +1666,11 @@ void msi_device_domain_free_wired(struct irq_domain *domain, unsigned int virq)
- 	if (WARN_ON_ONCE(!dev || !desc || domain->bus_token != DOMAIN_BUS_WIRED_TO_MSI))
- 		return;
- 
--	msi_lock_descs(dev);
--	if (!WARN_ON_ONCE(msi_get_device_domain(dev, MSI_DEFAULT_DOMAIN) != domain)) {
--		msi_domain_free_irqs_range_locked(dev, MSI_DEFAULT_DOMAIN, desc->msi_index,
--						  desc->msi_index);
--	}
--	msi_unlock_descs(dev);
-+	guard(msi_descs_lock)(dev);
-+	if (WARN_ON_ONCE(msi_get_device_domain(dev, MSI_DEFAULT_DOMAIN) != domain))
-+		return;
-+	msi_domain_free_irqs_range_locked(dev, MSI_DEFAULT_DOMAIN, desc->msi_index,
-+					  desc->msi_index);
- }
- 
- /**
+thanks,
+-- Shuah
