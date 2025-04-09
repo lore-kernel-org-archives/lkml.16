@@ -1,190 +1,114 @@
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DB7B2116F1;
-	Wed,  9 Apr 2025 21:00:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
+Received: from 004.mia.mailroute.net (004.mia.mailroute.net [199.89.3.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7A5F21148F;
+	Wed,  9 Apr 2025 21:00:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744232411; cv=none; b=UiHemmyoO726BwWaNhTj3VJ8Ssl4r685JUGTpcAXk1bui2QObghxBUAYiN93yrVZcQrZPpgsWynuCSEktAndZseky1RMjOFkQNTnC0PjW0Q5TTyICP2pab73gIZgcsH2CV17JexvxhgkbMdNSaYP5eq+SVRKa145ap7owbPhwmE=
+	t=1744232413; cv=none; b=ZKZaPnvqvUaKtqo2g6nuv4HmXWykUFDOSgVjRja6Wmz/VZDoybPsslWiJ0CDJBSZ5XouNPkWPO2fCq82Vn5XD+/e1j54U86mWKsVbrRMJI+xBHXnLlHVrtxSQnM4YAarv209m4uFBuDyq/Skt1IjmA6aTqnDlK0h6VhPhXdfHVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744232411; c=relaxed/simple;
-	bh=pslv7qHnpWWSRmp/rvaXp+wXQ6pjICYbC6fyVrMo6QY=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=lHjvXblVl+VnnYle+ZPBP1oKrwMOnmqeVJAFp3qPuC7vT35/fPvqec3fMIe2UtRvGtgp0LcW5srEsEQ2XemRjtr6E5YuEilIWWNY9og7Ob/Ashsinf2XQqwJqf/PDgwuico/efut67RqfZQDAwwDWMEkMqFnUfYhJuQVrF15bn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-	id 962DB92009C; Wed,  9 Apr 2025 22:59:59 +0200 (CEST)
+	s=arc-20240116; t=1744232413; c=relaxed/simple;
+	bh=u9y+3WWgJyQXBNeDtdGlxMTb4ab/g/8Jj2VBJvdZcxo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZYGhAlm6bL7LiyG/bMZOywPK76A82gkO6gKFKxl4U6P8dwsg55iXet1vn2YbBugo1WnKYpXFW/WMBsYvkeuBnwRY3ZXjf4OckWSeimlu7/n2xXOq8B+efr/rUtCAH76hZb3E4yYPsyKVmvaDkgtRs0slFIewtNZ30/xCdsON+x4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=Tu9YuzZS; arc=none smtp.client-ip=199.89.3.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="Tu9YuzZS"
 Received: from localhost (localhost [127.0.0.1])
-	by angie.orcam.me.uk (Postfix) with ESMTP id 8EF1392009B;
-	Wed,  9 Apr 2025 21:59:59 +0100 (BST)
-Date: Wed, 9 Apr 2025 21:59:59 +0100 (BST)
-From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-cc: Arnd Bergmann <arnd@arndb.de>, 
-    Linus Torvalds <torvalds@linux-foundation.org>, 
-    Richard Henderson <richard.henderson@linaro.org>, 
-    Ivan Kokshaysky <ink@unseen.parts>, Matt Turner <mattst88@gmail.com>, 
-    John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
-    Magnus Lindholm <linmag7@gmail.com>, 
-    "Paul E. McKenney" <paulmck@kernel.org>, 
-    Alexander Viro <viro@zeniv.linux.org.uk>, linux-alpha@vger.kernel.org, 
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Alpha: Emulate unaligned LDx_L/STx_C for data
- consistency
-In-Reply-To: <87v7rd8h99.fsf@email.froward.int.ebiederm.org>
-Message-ID: <alpine.DEB.2.21.2504092019200.18515@angie.orcam.me.uk>
-References: <alpine.DEB.2.21.2502181912230.65342@angie.orcam.me.uk> <CAHk-=wgBZk1FFOyiTKLnz4jNe-eZtYsrztcYRRXZZxF8evk1Rw@mail.gmail.com> <alpine.DEB.2.21.2502202106200.65342@angie.orcam.me.uk> <alpine.DEB.2.21.2504072042350.29566@angie.orcam.me.uk>
- <CAHk-=whKa0-myNkpq2aMCQ=o7S+Sqj--TQEM8wfC9b2C04jidA@mail.gmail.com> <e1356a60-525b-4405-ad5b-eb6e93de8fef@app.fastmail.com> <87v7rd8h99.fsf@email.froward.int.ebiederm.org>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+	by 004.mia.mailroute.net (Postfix) with ESMTP id 4ZXwLq65xqzm22HC;
+	Wed,  9 Apr 2025 21:00:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1744232401; x=1746824402; bh=4qpDFoC7jRxlhD7xqwhzQhGg
+	yvb+J8AtlP8vjZ317ng=; b=Tu9YuzZSu7T2UHbDvRpWrtn4uRosQ3C0b6s7XEYA
+	B0ab7ir4m4iKX7BJ1bSeSH1o8JdiJIpRBo/DdQlhrUiisho8j8IzYAJWHSGFX3dg
+	rVpooRaJGjgvnAk/klH9Z/i+wzOthYUh1i1UsTLUBiwQWpVUfR5MBOPGImQ2tTw+
+	wgiiRHJZMUvNL2pL1PC1EMqQTawBLauXcyk/4PyOr3dgXdYtgyEXbOWiI1IUaH5D
+	chDNTuLcjOaR8X5Kdm5RC3dA+x6FxhHhkYpHHDlJllZYy1W3/tGtpDxkbIRc8y1U
+	ASRwg261OTtr5f02QwQbfa8wE4STj1j/SPO8wyHBjDSM9A==
+X-Virus-Scanned: by MailRoute
+Received: from 004.mia.mailroute.net ([127.0.0.1])
+ by localhost (004.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id lxL8XKZCaJb9; Wed,  9 Apr 2025 21:00:01 +0000 (UTC)
+Received: from [100.66.154.22] (unknown [104.135.204.82])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 004.mia.mailroute.net (Postfix) with ESMTPSA id 4ZXwLc2rFzzm0pKY;
+	Wed,  9 Apr 2025 20:59:51 +0000 (UTC)
+Message-ID: <2e19c458-4136-4860-b853-1314c4ab5952@acm.org>
+Date: Wed, 9 Apr 2025 13:59:50 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] scsi: ufs: mcq: Add NULL check in ufshcd_mcq_abort()
+To: Chenyuan Yang <chenyuan0y@gmail.com>, alim.akhtar@samsung.com,
+ avri.altman@wdc.com, James.Bottomley@HansenPartnership.com,
+ martin.petersen@oracle.com, peter.wang@mediatek.com, minwoo.im@samsung.com,
+ manivannan.sadhasivam@linaro.org, viro@zeniv.linux.org.uk,
+ cw9316.lee@samsung.com, quic_nguyenb@quicinc.com, quic_cang@quicinc.com,
+ stanley.chu@mediatek.com
+Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250409204537.3566793-1-chenyuan0y@gmail.com>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20250409204537.3566793-1-chenyuan0y@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, 9 Apr 2025, Eric W. Biederman wrote:
-
-> >> So unless you actually *see* the unaligned faults, I really think you
-> >> shouldn't emulate them.
-> >>
-> >> And I'd like to know where they are if you do see them
+On 4/9/25 1:45 PM, Chenyuan Yang wrote:
+> A race can occur between the MCQ completion path and the abort handler:
+> once a request completes, __blk_mq_free_request() sets rq->mq_hctx to
+> NULL, meaning the subsequent ufshcd_mcq_req_to_hwq() call in
+> ufshcd_mcq_abort() can return a NULL pointer. If this NULL pointer is
+> dereferenced, the kernel will crash.
 > 
-> I was nerd sniped by this so I took a look.
+> Add a NULL check for the returned hwq pointer. If hwq is NULL, log an
+> error and return FAILED, preventing a potential NULL-pointer dereference.
 > 
-> I have a distinct memory that even the ipv4 stack can generate unaligned
-> loads.  Looking at the code in net/ipv4/ip_input.c:ip_rcv_finish_core
-> there are several unprotected accesses to iph->daddr.
+> This is similar to the fix in commit 74736103fb41
+> ("scsi: ufs: core: Fix ufshcd_abort_one racing issue").
 > 
-> Which means that if the lower layers ever give something that is not 4
-> byte aligned for ipv4 just reading the destination address will be an
-> unaligned read.
+> This is found by our static analysis tool KNighter.
 > 
-> There are similar unprotected accesses to the ipv6 destination address
-> but it is declared as an array of bytes.  So that address can not
-> be misaligned.
+> Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
+> Fixes: f1304d442077 ("scsi: ufs: mcq: Added ufshcd_mcq_abort()")
+> ---
+>   drivers/ufs/core/ufs-mcq.c | 5 +++++
+>   1 file changed, 5 insertions(+)
 > 
-> There is a theoretical path through 802.2 that adds a 3 byte sap
-> header that could cause problems.  We have LLC_SAP_IP defined
-> but I don't see anything calling register_8022_client that would
-> be needed to hook that up to the ipv4 stack.
-> 
-> As long as the individual ethernet drivers have the hardware deliver
-> packets 2 bytes into an aligned packet buffer the 14 byte ethernet
-> header will end on a 16 byte aligned location, I don't think there
-> is a way to trigger unaligned behavior with ipv4 or ipv6.
-> 
-> Hmm.  Looking appletalk appears to be built on top of SNAP.
-> So after the ethernet header processing the code goes through
-> net/llc/llc_input.c:llc_rcv and then net/802/snap_rcv before
-> reaching any of the appletalk protocols.
-> 
-> I think the common case for llc would be 3 bytes + 5 bytes for snap,
-> for 8 bytes in the common case.  But the code seems to be reading
-> 4 or 5 bytes for llc so I am confused.  In either case it definitely
-> appears there are cases where the ethernet headers before appletalk
-> can be an odd number of bytes which has the possibility of unaligning
-> everything.
-> 
-> Both of the appletalk protocols appear to make unguarded 16bit reads
-> from their headers.  So having a buffer that is only 1 byte aligned
-> looks like it will definitely be a problem.
+> diff --git a/drivers/ufs/core/ufs-mcq.c b/drivers/ufs/core/ufs-mcq.c
+> index 240ce135bbfb..2c8792911616 100644
+> --- a/drivers/ufs/core/ufs-mcq.c
+> +++ b/drivers/ufs/core/ufs-mcq.c
+> @@ -692,6 +692,11 @@ int ufshcd_mcq_abort(struct scsi_cmnd *cmd)
+>   	}
+>   
+>   	hwq = ufshcd_mcq_req_to_hwq(hba, scsi_cmd_to_rq(cmd));
+> +	if (!hwq) {
+> +		dev_err(hba->dev, "%s: failed to get hwq for tag %d\n",
+> +			__func__, tag);
+> +		return FAILED;
+> +	}
+>   
+>   	if (ufshcd_mcq_sqe_search(hba, hwq, tag)) {
+>   		/*
 
- Thank you for your analysis, really insightful.
+This patch makes the ufshcd_cmd_inflight() check just above the
+modified code superfluous. Please remove it.
 
-> > FWIW, all the major architectures that have variants without
-> > unaligned load/store (arm32, mips, ppc, riscv) trap and emulate
-> > them for both user and kernel access for normal memory, but
-> > they don't emulate it for atomic ll/sc type instructions.
-> > These instructions also trap and kill the task on the
-> > architectures that can do hardware unaligned access (x86
-> > cmpxchg8b being a notable exception).
+Additionally, please change the error message such that it reports
+that the command has already completed.
 
- But all those architectures have 1-byte and 2-byte memory access machine 
-instructions as well, and consequently none requires an RMW sequence to 
-update such data quantities that implies the data consistency issue that 
-we have on non-BWX Alpha.
+Thanks,
 
-> I don't see anything that would get atomics involved in the networking
-> stack.  No READ_ONCE on packet data or anything like that.  I believe
-> that is fairly fundamental as well.  Whatever is processing a packet is
-> the only code processing that packet.
-> 
-> So I would be very surprised if the kernel needed emulation of any
-> atomics, just emulation of normal unaligned reads.  I haven't looked to
-> see if the transmission paths do things that will result in unaligned
-> writes.
-
- The problem we have on the non-BWX Alpha target is that hardware has no 
-memory access instructions narrower than 4 bytes.  Consequently to write a 
-1- or 2-byte quantity an RMW instruction sequence is required, in the way 
-of reading the whole 4-byte quantity, inserting the bytes to be modified, 
-and writing the whole 4-byte quantity back to memory.  However such a 
-sequence is not safe for concurrent writes, as described below.
-
- A pair of concurrent RMW sequences targetting the same part of an aligned 
-4-byte data quantity is not an issue: it's just an execution race and 
-software may be prepared for it (or otherwise either prevent the race via 
-a mutex or alternatively use an atomic data type along with the associated 
-accessors, which will move data locations in memory suitably apart).
-
- The issue is a pair of concurrent RMW sequences targetting different 
-parts of the same aligned 4-byte data quantity: software can legitimately 
-expect that writes to disjoint memory locations (e.g. adjacent struct 
-members, except for bit-fields) won't affect each other.  But here where a 
-pair of such RMW sequences runs interleaved, the later write to one 
-location will clobber the value written previously to the other.  So we 
-have a data race.  Note that no atomicity is concerned here, we are 
-talking plain memory writes, such as with ordinary assignments to regular 
-variables in C code.
-
- So I have come up with a solution where such RMW sequences are actually 
-emitted by GCC as an LDL_L/STL_C atomic access loop which ensures that no 
-intervening write has changed the aligned 4-byte data quantity containing 
-the 1- or 2-byte quantity accessed.  This guarantees consistency of the 
-part(s) of the aligned 4-byte data quantity *outside* the 1- or 2-byte 
-quantity written.  Atomicity is guaranteed by hardware as a side effect, 
-but not a part of this Alpha/Linux psABI extension (i.e. not in our 
-contract).
-
- For known-unaligned 2-byte quantities (such as packed structure members) 
-the compiler knows that they may span 2 aligned 4-byte data quantities and 
-produces two LDL_L/STL_C loops with suitable address adjustments and data 
-masking.  This still guarantess consistency of data *outside* the 2-byte 
-quantity written.  No atomicity is guaranteed, because parts of the 2-byte 
-quantity may be stored by pieces (if the 2-byte quantity is in the middle 
-of an aligned 4-byte quantity, then it'll be written twice).
-
- The problem is with the case where the compiler has been told to produce 
-code to write an aligned 2-byte quantity, but at run time it turns out 
-unaligned.  Now we have to emulate the LDL_L and STL_C instructions of the 
-atomic access loop or otherwise the code will crash.
-
- My approach for this scenario is simple: LDL_L emulation remembers the 
-address accessed and data present in the 2 aligned 4-byte data quantities 
-spanned, and STL_C emulation returns failure in the case of an address 
-mismatch and otherwise uses two LDL_L/STL_C loops to load the the 2 
-aligned 4-byte data quantities by piece, compare each with data retrieved 
-previously at LDL_L emulation time, returning failure in the case of a 
-mismatch, insert the requested value and then store the resulting 
-quantity.  Again this guarantees consistency of the parts of the 2 aligned 
-4-byte data quantities *outside* the unaligned 2-byte quantity written.  
-And again, no atomicity is guaranteed.
-
- So while there are no atomic operations in our code at the C language 
-level, we get them sneaked in by the compiler under our feet to solve the 
-data consistency issue.  Now if we can ascertain the code paths concerned 
-won't ever exercise concurrency, we could tell the compiler not to produce 
-these atomics for 1-byte and 2-byte accesses, on a file-by-file or even 
-function-by-function basis, but it seems to me like the very maintenance 
-effort we want to avoid for a legacy platform.  Whereas if we build the 
-kernel with the atomics enabled universally, we won't have to be bothered 
-with analysing individual cases (at performance cost, but that's assumed).
-
- I've left 8-byte data quantities out for clarity from the consideration 
-above; they're used by the compiler as suitable and handled accordingly.
-
- Let me know if you find anything here unclear.
-
-  Maciej
+Bart.
