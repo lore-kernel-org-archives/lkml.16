@@ -1,62 +1,62 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A15C22CBE6
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 07:07:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05C2C22FF4C
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 07:07:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744182422; cv=none; b=TPGBOD7zPg2C58fnXCHGkfleSnqlGMq6i4wbk5K3edDGoAS+nd7UEGE1nqVau9Jc+2DeAjTzbqdYxMAMuC5krGLk9gHfJIocQv/E3N8MLACEZO3rBS94TpHXGvvw5UZt/6H2/CqL4lV3S3iSi04y2kBnS+2khKUM2vmmVLrvYs4=
+	t=1744182427; cv=none; b=FMFIzScg2ZAHi3859d82QX4hvxkFkx6BNSaph4BRKkZYkZK44NWVIJfFYI0BNOHCOIudR9OPb2SguEr6oRM3FAGLl7NQ63vM3ehxux46R+AYt7KIH6JAvjqpOChM32VEq/jcMZRw0u+MYDFzm+rzg7siwXCspjpZuIt1FP63K+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744182422; c=relaxed/simple;
-	bh=o0oQ8mZEvcUWUHkzpwNeZxo8/gDgobO52WaprMFBHMg=;
+	s=arc-20240116; t=1744182427; c=relaxed/simple;
+	bh=fNUgRKUy6JECxkAoBBqkiCGPS0fEFwo2xN9QfDY1CYM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Sec6mT64Drf5Qpz0RF5TNEpFuQ0vibtxJfkHJfLDTyY+J0LA2YhA7ohP6l7X+cM1VzcG/2ZJk8spH6EjmUos46MOyHZ5AyFms89j5lT1TaW9JXhLpE/ag6j89iCwZ3DOxt7BhPu5sq4+AWxjGNw8RePqd4DXGYoj2M17LqxgGoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=dJD3cWLW; arc=none smtp.client-ip=209.85.210.181
+	 MIME-Version; b=mg9rCoB3zcwDa8CvaBE5wkrd3KpEgOL40kHXpwupbKW1jVoF0qFjogDHBimcKoSs+m2d7zhraY66UxRueOISXITdA3lOVu6PEWl8WQQFZfTi1tu/Klmyt/B1xMlJInZ7sks4kzJF4/jGrn+In2J+4RoqZyBXbiqZizCn9ZyuWp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Oc9lYRjv; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="dJD3cWLW"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-739b3fe7ce8so5662231b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 00:07:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Oc9lYRjv"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-225477548e1so61029265ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 00:07:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1744182420; x=1744787220; darn=vger.kernel.org;
+        d=bytedance.com; s=google; t=1744182425; x=1744787225; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ujmYaz1xhzgQruKX3gsS9ChwvjKO75yxs6+zEFvJeXQ=;
-        b=dJD3cWLW3En9nqd2BMNIK/lz2moiQ1sVVFlC416i0FqS/j6dVBU2J10BhbmkXnQ7zQ
-         55cNcqRW4Jyfu6hOSVnYbALHkGAtoA1oIPPlbzSCGLwpxMPGgdmUaOm5SkjlBmgloqCF
-         RgDL1kRg2SosUnV2OpG4uWYSN/cGw8fiJMulKlK7wv1LeVXBDd5rKSB8YbA0xHabSJwE
-         ToRWiy6CElz8fgoDcGVtjVtFiajISml5MtFZ9zuqI2t0ojYmqmvSJPPs1jLQko/UFsGS
-         Phxkei3FXiUtWS1wSsdEK4Z8i+4HuDKYLBhzR4XB4EYpC1CoNfFqySR2kiv4jiNgKZUC
-         zqqw==
+        bh=A2hnt1J4L3olEEgVeJYpHiMUYT2gnH0FfIQaw5NdEjY=;
+        b=Oc9lYRjvDzqOsri2a0g8zj70nPK7BU1zH5hmJfSno3MQOYVHzfSO/f40cPLph9sBdG
+         hVVPIXbsXDpFr6pPZh8NjrKV30jCSEUCAU2nfbPKloEn4vhPFEhaZzG0Lzy1vEpFr9eR
+         VHAKQYmflGw6bdWr2SX6B8gG9KuFLJAxVn8SFR5GDpi7uvmBy5DXA1jipjA5qypLqFWT
+         qMC0MAFTpFqjSu+Wc9CzbN0sN1E8XHeq8oexoJ932WVr7ktEkSEqLp3COZbPA57oN75P
+         WPeaZ3SkTfW340xCCdExLtsaFvBaETZ/3y7THi97mW5BorZDHSS/PC3yAlcAbWV1BeSw
+         svNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744182420; x=1744787220;
+        d=1e100.net; s=20230601; t=1744182425; x=1744787225;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ujmYaz1xhzgQruKX3gsS9ChwvjKO75yxs6+zEFvJeXQ=;
-        b=kadR+rIp1aJVvZX2GVO8+chcg6easDnEZM5jaXDZGY7o/XlsoPkaItCGsG45maQcxH
-         4xeSQZNfhKH309OHlrJ9Cw6OigSLm71p/Lb/5k3zEp8QpIeDd+AD+P2iL5u6TYNf+wU0
-         ybZOKxCiYMNNHXx7aC2hLoUelVWOxNKKZOFAQSDlJrYZ9NFPOMaEmPh5G0xe1yq5jqoA
-         iA786N27BVs0R/R8vr0do+qsyGj5EQsEv2GegN1gw4U+q2nmz+12w/qYMrdISHcbF8iY
-         zXm0Ar+pr++BL7KImQO81nWu56BZk4aPaoDVPcT8WP6R09QkAsIZPZOfto+QsnfRmrmK
-         bviw==
-X-Forwarded-Encrypted: i=1; AJvYcCX5PBTa8QdE/2CAWItVz06H8tpw0SH/47LqulPv8gQ5cw5UonJ7O6v1FU3y7svGFFSxhM020h7+U0H9A4M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YytbZso1EZtIP3CA81znuLIjM37kAu0Ic2kFf9Vj+M5UWpn46UY
-	gNAkqcMgyN3QYwoRRZsrQ44e47Lu3kAnigt98xR+sUfEMgUKQtrx8/GFjmSvFYU=
-X-Gm-Gg: ASbGncuFx5kHGPmm0dCzJTYgOSMgzJtvyyHP5qfQwuK5bo3ndY6Wms7ZoAzTWym/brN
-	R43O6pHgTeZuhSziS9f4T/k6HRKBGJOJeiEZjRaAg6feSjQ5kH8q2sQZp1CsugebQmGh/xsmoyG
-	SnIEi25UMRENVyZdvudSsX2wxRTSEjPNdozU9aOFLBvCt7ehub8NI68WKX8k8fp4Ad51Q3/gp26
-	FV/Cqnw9kuGYAYO1F9U4hzoDyiMUfDuCkgCP4kNN1ndJPaJFkkfwh0GVQspI8P1j6e3LNZgWiuE
-	RTi/Dj/4isdgJ2sqgqUqMjpWe8N0m+s2loxG7WJs+smL2CHH5ToBvjYJSDtrRkRAmw==
-X-Google-Smtp-Source: AGHT+IF7GDjhZRQpVU8yYUwePq+oEDguHY3UMiaiTFMPBsZnqmwOAVKFg5rczv+LKfHVkKSU2/h6og==
-X-Received: by 2002:a05:6a21:9106:b0:1f5:7366:2a01 with SMTP id adf61e73a8af0-201592fdfe1mr2896234637.37.1744182419773;
-        Wed, 09 Apr 2025 00:06:59 -0700 (PDT)
+        bh=A2hnt1J4L3olEEgVeJYpHiMUYT2gnH0FfIQaw5NdEjY=;
+        b=AAWctt2Fe+voR8f9wj/SMDlTYEF2oT0cyZ/ImTd2EdOOgLBgCHKnOfL6CQJKjXqx2Y
+         GttO+uA9hhYvji968g8Pqd8b8kTg6mN9p6z0XFddFAZiqHmg5sB9Z8NbujF7YMapMWST
+         HYPAkWJMC7QsbZ0IAwC+3k1cXr9wOA8j46Rju8IqdgbPBnMP6YeXJXw11IQAO0YjnsSY
+         J8mDP44Aogc8q3ONC2BZAbkwu9x2G7yigYOY37Jw5Nxds406P9T4HU7YXugeVfoJbCVG
+         R91ifgH5YupbEPGX6ydKNda2Na07Qd2tlzPVUG8TXrA4ax6tW6JLnmsdm8jqWgwo+WPn
+         CGTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWZfxCeB6fagCH3PgVIqA4biQ0igQbmk1axAGLsbG4P+hP9dAC3HzQxY4Y2REyOB1uJg7PtZ86thElrpTw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+iFlHV0My/VZoHjAb6gWo7KVHhttD9kG6Baga32KMpiQUima3
+	HmRLG5iH74wC4zqSSHrh0m2fP4pPus5QOP/ZRtjyf4GhRtq58uKZ2Xs+2XTA22w=
+X-Gm-Gg: ASbGncvU6Z3kgdgCYspmUw2pMhRktOO00KtzcrHwIeNn+fbI3aQ+epQxxzA98qgLzEW
+	O1qLtgOYjLDfWq2UQ7cZGFxOtozSbphw8awzKI+7PvN6Ouu0F2ItcK0q2qB3qA7U8zGV3//VKpQ
+	OnckVAntbDXuLnasywb3POFUWA8TMvuU2GChQUG0+M9felmXLdzaesa50wgEQOSYna2Lst3dkh8
+	+4L+sDDGxMSK9vpXrxFH9Cfu52CqEsiMG02aLu9dRx+JomNT8pYl0MWeUP1kwmq/4VKMrxiAHBB
+	OeQGkMyRCs625s3roNpzKeJhDzFydPVRwDyxx1s+RTWhhOg19NOYwkuwgSToS9YEdQ==
+X-Google-Smtp-Source: AGHT+IEqzbVgFBQGm2kJbpgwtHwR6FDnzEvHZ2VCmuE1rmHyw8CkVPDDJbNjbPVqYOiqi6Mf2+tk+g==
+X-Received: by 2002:a17:903:22c6:b0:225:b718:4dff with SMTP id d9443c01a7336-22ac2c36a0amr33086715ad.53.1744182425144;
+        Wed, 09 Apr 2025 00:07:05 -0700 (PDT)
 Received: from n37-069-081.byted.org ([115.190.40.13])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1d44800sm565754b3a.37.2025.04.09.00.06.56
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1d44800sm565754b3a.37.2025.04.09.00.07.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 00:06:59 -0700 (PDT)
+        Wed, 09 Apr 2025 00:07:04 -0700 (PDT)
 From: Zhongkun He <hezhongkun.hzk@bytedance.com>
 To: akpm@linux-foundation.org
 Cc: hannes@cmpxchg.org,
@@ -67,9 +67,9 @@ Cc: hannes@cmpxchg.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
 	Zhongkun He <hezhongkun.hzk@bytedance.com>
-Subject: [PATCH V3 1/3] mm: add swappiness=max arg to memory.reclaim for only anon reclaim
-Date: Wed,  9 Apr 2025 15:06:18 +0800
-Message-Id: <720e8e2c5b84efed5cf9980567794e7c799d179a.1744169302.git.hezhongkun.hzk@bytedance.com>
+Subject: [PATCH V3 2/3] mm: add max swappiness arg to lru_gen for anonymous memory only
+Date: Wed,  9 Apr 2025 15:06:19 +0800
+Message-Id: <b3af3747daefa00177b48f4666780da58177f7c0.1744169302.git.hezhongkun.hzk@bytedance.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <cover.1744169302.git.hezhongkun.hzk@bytedance.com>
 References: <cover.1744169302.git.hezhongkun.hzk@bytedance.com>
@@ -81,127 +81,116 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-With this patch 'commit <68cd9050d871> ("mm: add swappiness= arg to
-memory.reclaim")', we can submit an additional swappiness=<val> argument
-to memory.reclaim. It is very useful because we can dynamically adjust
-the reclamation ratio based on the anonymous folios and file folios of
-each cgroup. For example,when swappiness is set to 0, we only reclaim
-from file folios.
+The MGLRU already supports reclaiming only from anonymous memory
+via the /sys/kernel/debug/lru_gen interface. Now, memory.reclaim
+also supports the swappiness=max parameter to enable reclaiming
+solely from anonymous memory. To unify the semantics of proactive
+reclaiming from anonymous folios, the max parameter is introduced.
 
-However,we have also encountered a new issue: when swappiness is set to
-the MAX_SWAPPINESS, it may still only reclaim file folios.
+Additionally, the use of SWAPPINESS_ANON_ONLY in place of
+'MAX_SWAPPINESS + 1' improves code clarity and makes the intention
+more explicit.
 
-So, we hope to add a new arg 'swappiness=max' in memory.reclaim where
-proactive memory reclaim only reclaims from anonymous folios when
-swappiness is set to max. The swappiness semantics from a user
-perspective remain unchanged.
-
-For example, something like this:
-
-echo "2M swappiness=max" > /sys/fs/cgroup/memory.reclaim
-
-will perform reclaim on the rootcg with a swappiness setting of 'max' (a
-new mode) regardless of the file folios. Users have a more comprehensive
-view of the application's memory distribution because there are many
-metrics available. For example, if we find that a certain cgroup has a
-large number of inactive anon folios, we can reclaim only those and skip
-file folios, because with the zram/zswap, the IO tradeoff that
-cache_trim_mode or other file first logic is making doesn't hold -
-file refaults will cause IO, whereas anon decompression will not.
-
-With this patch, the swappiness argument of memory.reclaim has a new
-mode 'max', means reclaiming just from anonymous folios both in traditional
-LRU and MGLRU.
-
-Here is the previous discussion:
-https://lore.kernel.org/all/20250314033350.1156370-1-hezhongkun.hzk@bytedance.com/
-https://lore.kernel.org/all/20250312094337.2296278-1-hezhongkun.hzk@bytedance.com/
-https://lore.kernel.org/all/20250318135330.3358345-1-hezhongkun.hzk@bytedance.com/
-
-Suggested-by: Yosry Ahmed <yosry.ahmed@linux.dev>
 Signed-off-by: Zhongkun He <hezhongkun.hzk@bytedance.com>
 ---
- Documentation/admin-guide/cgroup-v2.rst | 3 +++
- include/linux/swap.h                    | 4 ++++
- mm/memcontrol.c                         | 5 +++++
- mm/vmscan.c                             | 7 +++++++
- 4 files changed, 19 insertions(+)
+ Documentation/admin-guide/mm/multigen_lru.rst |  5 ++--
+ mm/vmscan.c                                   | 26 ++++++++++++++-----
+ 2 files changed, 22 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
-index 1a16ce68a4d7..472c01e0eb2c 100644
---- a/Documentation/admin-guide/cgroup-v2.rst
-+++ b/Documentation/admin-guide/cgroup-v2.rst
-@@ -1348,6 +1348,9 @@ The following nested keys are defined.
- 	same semantics as vm.swappiness applied to memcg reclaim with
- 	all the existing limitations and potential future extensions.
+diff --git a/Documentation/admin-guide/mm/multigen_lru.rst b/Documentation/admin-guide/mm/multigen_lru.rst
+index 33e068830497..9cb54b4ff5d9 100644
+--- a/Documentation/admin-guide/mm/multigen_lru.rst
++++ b/Documentation/admin-guide/mm/multigen_lru.rst
+@@ -151,8 +151,9 @@ generations less than or equal to ``min_gen_nr``.
+ ``min_gen_nr`` should be less than ``max_gen_nr-1``, since
+ ``max_gen_nr`` and ``max_gen_nr-1`` are not fully aged (equivalent to
+ the active list) and therefore cannot be evicted. ``swappiness``
+-overrides the default value in ``/proc/sys/vm/swappiness``.
+-``nr_to_reclaim`` limits the number of pages to evict.
++overrides the default value in ``/proc/sys/vm/swappiness`` and the valid
++range is [0-200, max], with max being exclusively used for the reclamation
++of anonymous memory. ``nr_to_reclaim`` limits the number of pages to evict.
  
-+	The valid range for swappiness is [0-200, max], setting
-+	swappiness=max exclusively reclaims anonymous memory.
-+
-   memory.peak
- 	A read-write single value file which exists on non-root cgroups.
- 
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index db46b25a65ae..f57c7e0012ba 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -414,6 +414,10 @@ extern unsigned long try_to_free_pages(struct zonelist *zonelist, int order,
- #define MEMCG_RECLAIM_PROACTIVE (1 << 2)
- #define MIN_SWAPPINESS 0
- #define MAX_SWAPPINESS 200
-+
-+/* Just recliam from anon folios in proactive memory reclaim */
-+#define SWAPPINESS_ANON_ONLY (MAX_SWAPPINESS + 1)
-+
- extern unsigned long try_to_free_mem_cgroup_pages(struct mem_cgroup *memcg,
- 						  unsigned long nr_pages,
- 						  gfp_t gfp_mask,
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 421740f1bcdc..b0b3411dc0df 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -4396,11 +4396,13 @@ static ssize_t memory_oom_group_write(struct kernfs_open_file *of,
- 
- enum {
- 	MEMORY_RECLAIM_SWAPPINESS = 0,
-+	MEMORY_RECLAIM_SWAPPINESS_MAX,
- 	MEMORY_RECLAIM_NULL,
- };
- 
- static const match_table_t tokens = {
- 	{ MEMORY_RECLAIM_SWAPPINESS, "swappiness=%d"},
-+	{ MEMORY_RECLAIM_SWAPPINESS_MAX, "swappiness=max"},
- 	{ MEMORY_RECLAIM_NULL, NULL },
- };
- 
-@@ -4434,6 +4436,9 @@ static ssize_t memory_reclaim(struct kernfs_open_file *of, char *buf,
- 			if (swappiness < MIN_SWAPPINESS || swappiness > MAX_SWAPPINESS)
- 				return -EINVAL;
- 			break;
-+		case MEMORY_RECLAIM_SWAPPINESS_MAX:
-+			swappiness = SWAPPINESS_ANON_ONLY;
-+			break;
- 		default:
- 			return -EINVAL;
- 		}
+ A typical use case is that a job scheduler runs this command before it
+ tries to land a new job on a server. If it fails to materialize enough
 diff --git a/mm/vmscan.c b/mm/vmscan.c
-index b620d74b0f66..c99a6a48d0bc 100644
+index c99a6a48d0bc..18a175752b57 100644
 --- a/mm/vmscan.c
 +++ b/mm/vmscan.c
-@@ -2503,6 +2503,13 @@ static void get_scan_count(struct lruvec *lruvec, struct scan_control *sc,
- 		goto out;
+@@ -2697,8 +2697,11 @@ static bool should_clear_pmd_young(void)
+ 		READ_ONCE((lruvec)->lrugen.min_seq[LRU_GEN_FILE]),	\
  	}
  
-+	/* Proactive reclaim initiated by userspace for anonymous memory only */
-+	if (swappiness == SWAPPINESS_ANON_ONLY) {
-+		WARN_ON_ONCE(!sc->proactive);
-+		scan_balance = SCAN_ANON;
-+		goto out;
-+	}
++#define max_evictable_type(swappiness)						\
++	((swappiness) != SWAPPINESS_ANON_ONLY)
 +
- 	/*
- 	 * Do not apply any pressure balancing cleverness when the
- 	 * system is close to OOM, scan both anon and file equally
+ #define evictable_min_seq(min_seq, swappiness)				\
+-	min((min_seq)[!(swappiness)], (min_seq)[(swappiness) <= MAX_SWAPPINESS])
++	min((min_seq)[!(swappiness)], (min_seq)[max_evictable_type(swappiness)])
+ 
+ #define for_each_gen_type_zone(gen, type, zone)				\
+ 	for ((gen) = 0; (gen) < MAX_NR_GENS; (gen)++)			\
+@@ -2706,7 +2709,7 @@ static bool should_clear_pmd_young(void)
+ 			for ((zone) = 0; (zone) < MAX_NR_ZONES; (zone)++)
+ 
+ #define for_each_evictable_type(type, swappiness)			\
+-	for ((type) = !(swappiness); (type) <= ((swappiness) <= MAX_SWAPPINESS); (type)++)
++	for ((type) = !(swappiness); (type) <= max_evictable_type(swappiness); (type)++)
+ 
+ #define get_memcg_gen(seq)	((seq) % MEMCG_NR_GENS)
+ #define get_memcg_bin(bin)	((bin) % MEMCG_NR_BINS)
+@@ -3857,7 +3860,7 @@ static bool inc_min_seq(struct lruvec *lruvec, int type, int swappiness)
+ 	int hist = lru_hist_from_seq(lrugen->min_seq[type]);
+ 	int new_gen, old_gen = lru_gen_from_seq(lrugen->min_seq[type]);
+ 
+-	if (type ? swappiness > MAX_SWAPPINESS : !swappiness)
++	if (type ? (swappiness == SWAPPINESS_ANON_ONLY) : !swappiness)
+ 		goto done;
+ 
+ 	/* prevent cold/hot inversion if the type is evictable */
+@@ -5523,7 +5526,7 @@ static int run_cmd(char cmd, int memcg_id, int nid, unsigned long seq,
+ 
+ 	if (swappiness < MIN_SWAPPINESS)
+ 		swappiness = get_swappiness(lruvec, sc);
+-	else if (swappiness > MAX_SWAPPINESS + 1)
++	else if (swappiness > SWAPPINESS_ANON_ONLY)
+ 		goto done;
+ 
+ 	switch (cmd) {
+@@ -5580,7 +5583,7 @@ static ssize_t lru_gen_seq_write(struct file *file, const char __user *src,
+ 	while ((cur = strsep(&next, ",;\n"))) {
+ 		int n;
+ 		int end;
+-		char cmd;
++		char cmd, swap_string[5];
+ 		unsigned int memcg_id;
+ 		unsigned int nid;
+ 		unsigned long seq;
+@@ -5591,13 +5594,22 @@ static ssize_t lru_gen_seq_write(struct file *file, const char __user *src,
+ 		if (!*cur)
+ 			continue;
+ 
+-		n = sscanf(cur, "%c %u %u %lu %n %u %n %lu %n", &cmd, &memcg_id, &nid,
+-			   &seq, &end, &swappiness, &end, &opt, &end);
++		n = sscanf(cur, "%c %u %u %lu %n %4s %n %lu %n", &cmd, &memcg_id, &nid,
++			   &seq, &end, swap_string, &end, &opt, &end);
+ 		if (n < 4 || cur[end]) {
+ 			err = -EINVAL;
+ 			break;
+ 		}
+ 
++		/* set by userspace for anonymous memory only */
++		if (!strncmp("max", swap_string, sizeof("max"))) {
++			swappiness = SWAPPINESS_ANON_ONLY;
++		} else {
++			err = kstrtouint(swap_string, 0, &swappiness);
++			if (err)
++				break;
++		}
++
+ 		err = run_cmd(cmd, memcg_id, nid, seq, &sc, swappiness, opt);
+ 		if (err)
+ 			break;
 -- 
 2.39.5
 
