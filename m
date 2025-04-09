@@ -1,142 +1,122 @@
-Received: from zg8tmja2lje4os4yms4ymjma.icoremail.net (zg8tmja2lje4os4yms4ymjma.icoremail.net [206.189.21.223])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13C4D3D76;
-	Wed,  9 Apr 2025 04:02:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.21.223
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34C2A3D76;
+	Wed,  9 Apr 2025 04:04:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744171365; cv=none; b=Ldn17isHl+CxKhiUYlH4u6TvMybqAYmINAa6mfgdt3hUhFAbGJOwEPIiRlYA3C5bcn2PtAk7O7ZQxim9TKvKHnEjfpMY4VpCK+JrpmUziZNSkbCLUxnXCXP7+uenREf2yO+4nxEdfIngH9dF4QkYb99GuuWSHSIu3Dyb/V/HauQ=
+	t=1744171442; cv=none; b=olL5OWO3wkj98legQX9jFgFGKmCu7o4xeOM2gdyBngYWgzA/H2caPgmfhph9YgEPSbjikNMspdBKZGh+uRhjtTx0Vu83zd2iHy88+xdaVYtfhCey3C1QEZGJaGY7aZNcylBqhNVE6GMoxlghGtr7mx0WAfmQc4N9WJE2QvL4DKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744171365; c=relaxed/simple;
-	bh=ltVOTq6OdODO4CeVRkToE7me66wnLAqvC9n9gxVv1iM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pqjsK7epY04eD1WMIG7iP5Ni7RJ8R/32eNgqggxBClwEfelUpIisc7/ge5DLafORgkRmsAqdZqwQbNP5J7393Ox3dAv4Ul+amPRx6qrDVgEbFrFQWG4Ku40JAxRqqq4ATw8jUtMJQZx5qYEnIyfp92KpDB3UPpcBkL6i9J4quqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn; spf=pass smtp.mailfrom=phytium.com.cn; arc=none smtp.client-ip=206.189.21.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytium.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytium.com.cn
-Received: from prodtpl.icoremail.net (unknown [10.12.1.20])
-	by hzbj-icmmx-7 (Coremail) with SMTP id AQAAfwDn76c08fVnBtCwEw--.12678S2;
-	Wed, 09 Apr 2025 12:01:56 +0800 (CST)
-Received: from phytium.com.cn (unknown [123.150.8.50])
-	by mail (Coremail) with SMTP id AQAAfwBHSoYw8fVnOyxkAA--.72S3;
-	Wed, 09 Apr 2025 12:01:53 +0800 (CST)
-From: Yuquan Wang <wangyuquan1236@phytium.com.cn>
-To: Jonathan.Cameron@huawei.com,
-	dan.j.williams@intel.com,
-	rppt@kernel.org,
-	rafael@kernel.org,
-	lenb@kernel.org,
-	akpm@linux-foundation.org,
-	alison.schofield@intel.com,
-	rrichter@amd.com,
-	bfaccini@nvidia.com,
-	haibo1.xu@intel.com,
-	david@redhat.com
-Cc: linux-cxl@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
+	s=arc-20240116; t=1744171442; c=relaxed/simple;
+	bh=D03yomViP85sZ7xkf5etK1i+y2JadkTdw7EFuab7kVs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jAhp7rL0dFnuuskT192xMNhs8k9ZVWUAWLYc0cFeqv2E8xTsBKrYgWTrzFX/1pmFfbB8HCmQnshJwOyqrMvAz+qASC8dvSPntCGktZp6I3NuAVLKXVydwTxjxSJ20fZW873Bd5xg/8gIi8nZBLmtpH3m9aCHZobRqbATMwZLCvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k38rmXDx; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k38rmXDx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE062C4CEE3;
+	Wed,  9 Apr 2025 04:04:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744171441;
+	bh=D03yomViP85sZ7xkf5etK1i+y2JadkTdw7EFuab7kVs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=k38rmXDxCqQT3hB1u+hC500R/vsTcgMNqpyf28DpXoFQjPVOT2cBOIGUq8iYzHmtR
+	 thy3gTfGh6mudDEgEDE7H7rcxh0cm8APa8RqH4TIimxpDcYS+PrPJC7IvK1rETxmNh
+	 LKciXo0L86TV6fF/bgGXzzflAs0RJeZPEKpJV4oubf1f5+lRwmj5n3recncubx/C3u
+	 qrkoGjlNe1l2hB3O2nkt5VTyKIntsGTfxQZFXxklWZQ5Z19Ry+zUT7hIiC2KrIvFWU
+	 j3yWdce7Yh82xrCzZ21QTg6gbBl+UToTMWf/B6nxooQuW0MAEANgwNC7uQU85OARhF
+	 qz7FeadRPIrhw==
+From: Bjorn Andersson <andersson@kernel.org>
+To: Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	cros-qcom-dts-watchers@chromium.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	chenbaozi@phytium.com.cn,
-	loongarch@lists.linux.dev,
-	Yuquan Wang <wangyuquan1236@phytium.com.cn>
-Subject: [PATCH v2] mm: numa_memblks: introduce numa_add_reserved_memblk
-Date: Wed,  9 Apr 2025 12:01:21 +0800
-Message-Id: <20250409040121.3212489-1-wangyuquan1236@phytium.com.cn>
-X-Mailer: git-send-email 2.34.1
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Dmitry Baryshkov <lumag@kernel.org>
+Subject: Re: [PATCH v2 00/24] ARM / arm64: dts: qcom: Use the header with DSI phy clock IDs
+Date: Tue,  8 Apr 2025 23:03:59 -0500
+Message-ID: <174417136198.113796.2666820396319444637.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250408-dts-qcom-dsi-phy-clocks-v2-0-73b482a6dd02@linaro.org>
+References: <20250408-dts-qcom-dsi-phy-clocks-v2-0-73b482a6dd02@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAfwBHSoYw8fVnOyxkAA--.72S3
-X-CM-SenderInfo: 5zdqw5pxtxt0arstlqxsk13x1xpou0fpof0/1tbiAQAOAWf0L0IFaAAfsC
-Authentication-Results: hzbj-icmmx-7; spf=neutral smtp.mail=wangyuquan
-	1236@phytium.com.cn;
-X-Coremail-Antispam: 1Uk129KBjvJXoWxXFW7Ar4xuF4DCr48Xr47Jwb_yoW5Zw4rpa
-	yUG3Z8XF4xGw1xGw1xuryj9w1S93WrKr1DJFZrGr13ZF4rWry2vr4UtFsxZr1DtrW7ur1r
-	Wr4vyw15uw1rAFUanT9S1TB71UUUUjJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	DUYxn0WfASr-VFAU7a7-sFnT9fnUUIcSsGvfJ3UbIYCTnIWIevJa73UjIFyTuYvj4RJUUU
-	UUUUU
 
-acpi_parse_cfmws() currently adds empty CFMWS ranges to numa_meminfo
-with the expectation that numa_cleanup_meminfo moves them to
-numa_reserved_meminfo. There is no need for that indirection when it is
-known in advance that these unpopulated ranges are meant for
-numa_reserved_meminfo in support of future hotplug / CXL provisioning.
 
-Introduce and use numa_add_reserved_memblk() to add the empty CFMWS
-ranges directly.
+On Tue, 08 Apr 2025 11:31:57 +0200, Krzysztof Kozlowski wrote:
+> Changes in v2:
+> - Collect tags and rebase (no changes).
+> - Dependency was merged, so this can send be applied freely.
+> - Link to v1: https://lore.kernel.org/r/20250127-dts-qcom-dsi-phy-clocks-v1-0-9d8ddbcb1c7f@linaro.org
+> 
+> Use the header with DSI phy clock IDs to make code more readable.
+> Changes done with sed with alignment/wrapping fixups. Verified with
+> dtx_diff.
+> 
+> [...]
 
-Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
----
+Applied, thanks!
 
-Changes in v2 (Thanks to Dan & Alison):
-- Use numa_add_reserved_memblk() to replace numa_add_memblk() in acpi_parse_cfmws()
-- Add comments to describe the usage of numa_add_reserved_memblk()
-- Updating the commit message to clarify the purpose of the patch
+[01/24] ARM: dts: qcom: msm8226: Use the header with DSI phy clock IDs
+        commit: 17268faf29992d37033d6ad1a5ed5d924f2430d8
+[02/24] ARM: dts: qcom: msm8974: Use the header with DSI phy clock IDs
+        commit: 1afdd80d1e021f758c975d857c6beb6da5c891bd
+[03/24] ARM: dts: qcom: msm8916: Use the header with DSI phy clock IDs
+        commit: 651af46f33ab284400e0fc307e5a81de54c75945
+[04/24] arm64: dts: qcom: msm8917: Use the header with DSI phy clock IDs
+        commit: 7c92da246e1a6933f25fa015d6c43a6bcfb2c7b3
+[05/24] arm64: dts: qcom: msm8939: Use the header with DSI phy clock IDs
+        commit: 011e7f2c26dcb42c255ab54207f548d68c3b8e38
+[06/24] arm64: dts: qcom: msm8953: Use the header with DSI phy clock IDs
+        commit: 8e35fab460cce97e387a2c975db45b762b551521
+[07/24] arm64: dts: qcom: msm8976: Use the header with DSI phy clock IDs
+        commit: b06f27d09ed455f153d2523f96bbd94ecf6a69d8
+[08/24] arm64: dts: qcom: msm8996: Use the header with DSI phy clock IDs
+        commit: 4b32499da71716e075ea2dba115e3fe8b6f8ed2f
+[09/24] arm64: dts: qcom: msm8998: Use the header with DSI phy clock IDs
+        commit: f4220c41decc1944ef319c859840aa5405eee6fa
+[10/24] arm64: dts: qcom: qcm2290: Use the header with DSI phy clock IDs
+        commit: 48478f726f3793a9d1cf9b10d6487a81ea7e3c73
+[11/24] arm64: dts: qcom: sc7180: Use the header with DSI phy clock IDs
+        commit: adaa876233c102e53fb2bafe4f502474613f4ed2
+[12/24] arm64: dts: qcom: sc8180x: Use the header with DSI phy clock IDs
+        commit: 4390fc773154ea25c0aeb4e75d0425cfa8de431f
+[13/24] arm64: dts: qcom: sdm630: Use the header with DSI phy clock IDs
+        commit: 3c1ae3b255555406c5ff030190649437e399dde9
+[14/24] arm64: dts: qcom: sdm670: Use the header with DSI phy clock IDs
+        commit: dc489ba0dea37e3655d265f5889ade0d173229d5
+[15/24] arm64: dts: qcom: sdm845: Use the header with DSI phy clock IDs
+        commit: 77764620c1888e8c8dc169f7c2f693fc4db96964
+[16/24] arm64: dts: qcom: sm6115: Use the header with DSI phy clock IDs
+        commit: b44bf3bc74912649b2495894e82f5384e24e2060
+[17/24] arm64: dts: qcom: sm6125: Use the header with DSI phy clock IDs
+        commit: 4f40ebbebcd9a7a03b72aac478c7df7c7b44c635
+[18/24] arm64: dts: qcom: sm6350: Use the header with DSI phy clock IDs
+        commit: ab7cd7f3968f14171d50ba0b0655186c3857d258
+[19/24] arm64: dts: qcom: sm8150: Use the header with DSI phy clock IDs
+        commit: 35ed99d7f589f310688fa0d088913e5c8927da43
+[20/24] arm64: dts: qcom: sm8250: Use the header with DSI phy clock IDs
+        commit: 855ff06098b7f3a2aca21b79d32d212fd096a98e
+[21/24] arm64: dts: qcom: sm8350: Use the header with DSI phy clock IDs
+        commit: ee4bb3169263bad99d68e0039e944ae53e77691a
+[22/24] arm64: dts: qcom: sm8450: Use the header with DSI phy clock IDs
+        commit: 0d18a031499d4ea2b86cdc8120c22bdcf22bcac0
+[23/24] arm64: dts: qcom: sm8550: Use the header with DSI phy clock IDs
+        commit: 0d046b7ad7d3c7f2dfc53fc5ad48e2fe2c3f2186
+[24/24] arm64: dts: qcom: sm8650: Use the header with DSI phy clock IDs
+        commit: 314ffec606514cdf6d4bbedaaeeba0c826b6afc2
 
- drivers/acpi/numa/srat.c     |  2 +-
- include/linux/numa_memblks.h |  1 +
- mm/numa_memblks.c            | 22 ++++++++++++++++++++++
- 3 files changed, 24 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
-index 0a725e46d017..751774f0b4e5 100644
---- a/drivers/acpi/numa/srat.c
-+++ b/drivers/acpi/numa/srat.c
-@@ -453,7 +453,7 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
- 		return -EINVAL;
- 	}
- 
--	if (numa_add_memblk(node, start, end) < 0) {
-+	if (numa_add_reserved_memblk(node, start, end) < 0) {
- 		/* CXL driver must handle the NUMA_NO_NODE case */
- 		pr_warn("ACPI NUMA: Failed to add memblk for CFMWS node %d [mem %#llx-%#llx]\n",
- 			node, start, end);
-diff --git a/include/linux/numa_memblks.h b/include/linux/numa_memblks.h
-index dd85613cdd86..991076cba7c5 100644
---- a/include/linux/numa_memblks.h
-+++ b/include/linux/numa_memblks.h
-@@ -22,6 +22,7 @@ struct numa_meminfo {
- };
- 
- int __init numa_add_memblk(int nodeid, u64 start, u64 end);
-+int __init numa_add_reserved_memblk(int nid, u64 start, u64 end);
- void __init numa_remove_memblk_from(int idx, struct numa_meminfo *mi);
- 
- int __init numa_cleanup_meminfo(struct numa_meminfo *mi);
-diff --git a/mm/numa_memblks.c b/mm/numa_memblks.c
-index ff4054f4334d..541a99c4071a 100644
---- a/mm/numa_memblks.c
-+++ b/mm/numa_memblks.c
-@@ -200,6 +200,28 @@ int __init numa_add_memblk(int nid, u64 start, u64 end)
- 	return numa_add_memblk_to(nid, start, end, &numa_meminfo);
- }
- 
-+/**
-+ * numa_add_reserved_memblk - Add one numa_memblk to numa_reserved_meminfo
-+ * @nid: NUMA node ID of the new memblk
-+ * @start: Start address of the new memblk
-+ * @end: End address of the new memblk
-+ *
-+ * Add a new memblk to the numa_reserved_meminfo.
-+ *
-+ * Usage Case: numa_cleanup_meminfo() reconciles all numa_memblk instances
-+ * against memblock_type information and moves any that intersect reserved
-+ * ranges to numa_reserved_meminfo. However, when that information is known
-+ * ahead of time, we use numa_add_reserved_memblk() to add the numa_memblk
-+ * to numa_reserved_meminfo directly.
-+ *
-+ * RETURNS:
-+ * 0 on success, -errno on failure.
-+ */
-+int __init numa_add_reserved_memblk(int nid, u64 start, u64 end)
-+{
-+	return numa_add_memblk_to(nid, start, end, &numa_reserved_meminfo);
-+}
-+
- /**
-  * numa_cleanup_meminfo - Cleanup a numa_meminfo
-  * @mi: numa_meminfo to clean up
+Best regards,
 -- 
-2.34.1
-
+Bjorn Andersson <andersson@kernel.org>
