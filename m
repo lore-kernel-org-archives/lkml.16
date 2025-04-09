@@ -1,69 +1,44 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C5F14F104;
-	Wed,  9 Apr 2025 02:22:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD8B15746F;
+	Wed,  9 Apr 2025 02:23:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744165357; cv=none; b=GfTx1eC06qmc6ljqGFLkFWQwl2EFFYC7lMWj3aGhlzj7xENYrqN8q8Bgci+OAjq4pzQ/HSiRYpPjDegGvC2hvVZdbCa1iTVH6K35KcDuL+bGvc5b+isLfvPqyZR9+p60AtehUKcFYniEjWxaP0cvZMQWu/FVpqLOk8V3YxUcFXc=
+	t=1744165390; cv=none; b=Ygb74py2NNKSWw2f2il79gBOkT/9tz/nsdfc9TBI+JQ9ywA6Stao6iEgKxJJlMgm2W03NacNC8CvfNo0QOZBVubSOX6LtMTa4ZSUrnxKPog/EUXuLlEHXSlC4HGjWGeQul0FFL4yFp0QuvKKqRbMX+RZQXNbeylALolOhAJOXZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744165357; c=relaxed/simple;
-	bh=/xFpigHjeCenOvaIiPeP+K517mAY8qj9sAvIlssbnZ8=;
+	s=arc-20240116; t=1744165390; c=relaxed/simple;
+	bh=5YrKufIRjjuIDHAGNdEbgfNkGgfPSHnxt8MOhqKxuF4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pN6pcq6LfnXkkQi8LF4uoeUBORw7MUFmNCsdEpkBRTmOF5fFV45iEi69C/7+9isEbiKu2BlLFuL6bX9PzvDnjKLuuHMW3xLK6JFdu0a3a2K0dotQt8OJJtxcCrKZWChggkis4kt8jMzxOM/ObxMYrRR2EVW9LGUxIq0cfEtP3F4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Oki6Aq2o; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=V4W9PTM3I5bqxqhXYUnxsmitVrVpdymc6vNZSuuW2LIaPbK5OJCWro+0gcguwn64v8wQW1ZOa+ASGYMUWVxYCUzGjxepbTD1QCT4eFlIR9iCTzQjyH1vnLPQcArd6RsmpOTEuQFFMaNsPhF794A5jkszAYS+jdxtiKu/RNSo7PY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=khNoS7BW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Oki6Aq2o"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744165356; x=1775701356;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=/xFpigHjeCenOvaIiPeP+K517mAY8qj9sAvIlssbnZ8=;
-  b=Oki6Aq2ooyJLzbSGUeZ/rHx/nedgCtXMsyAYSfLoyxVj9g3yzPhwzmfZ
-   51+0Af1zEoPRIkT8I7POl2d2LfmKQYdjdgABdN8Lqe0f6JQ7qvD9qByrj
-   F2dxxQ4QSl2krABlXBMcsWIC6qXY7EPayYCpdulphn3wvE3OSF3WTA9gW
-   Dv6TAObZpAdlAkOyJhtO9QNaIpUzf0jt+C4fHD5R/x97ByaW/LObLnOgs
-   tabHJao9Fg7Vu2IQ0E8L/drcbaIkOWM4AN9hnyAoz9+FlWUnLleNxRoaK
-   GRiyxKwVJHL5PA89G7ywyRWEZLeC63gE0Vk4A5qVEYv4uuTs6C8+0Bff3
-   w==;
-X-CSE-ConnectionGUID: 8KCK64GZQC20wKNdpRNM5g==
-X-CSE-MsgGUID: YAh4aI3FRKOBIxihZJ6vig==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="45742650"
-X-IronPort-AV: E=Sophos;i="6.15,199,1739865600"; 
-   d="scan'208";a="45742650"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 19:22:35 -0700
-X-CSE-ConnectionGUID: SFlbZrv7RpeZeZJGlkvwrw==
-X-CSE-MsgGUID: LGaKhWZNQ66UoLsYYQhIrg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,199,1739865600"; 
-   d="scan'208";a="129273444"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 08 Apr 2025 19:22:32 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u2L5C-0008Bj-0S;
-	Wed, 09 Apr 2025 02:22:30 +0000
-Date: Wed, 9 Apr 2025 10:21:44 +0800
-From: kernel test robot <lkp@intel.com>
-To: Sean Anderson <sean.anderson@linux.dev>, netdev@vger.kernel.org,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Russell King <linux@armlinux.org.uk>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	upstream@airoha.com, Christian Marangi <ansuelsmth@gmail.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Kory Maincent <kory.maincent@bootlin.com>,
-	Sean Anderson <sean.anderson@linux.dev>
-Subject: Re: [net-next PATCH v2 02/14] device property: Add optional
- nargs_prop for get_reference_args
-Message-ID: <202504091003.Hc0Ig56O-lkp@intel.com>
-References: <20250407231746.2316518-3-sean.anderson@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="khNoS7BW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91A26C4CEE5;
+	Wed,  9 Apr 2025 02:23:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744165389;
+	bh=5YrKufIRjjuIDHAGNdEbgfNkGgfPSHnxt8MOhqKxuF4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=khNoS7BWq7Ex98xDmpqkq9piwD6HzZvi1Dpw0kif/WvX6cf53WmJ11AOi7jKZNZdm
+	 w85lcYSzZyyw1Cdh7ntscKd9q43Gu6h0Ly4fBTR//AT3ItytEZNu0ihHs/KlkG+r9x
+	 2JUrKF0qjZpxb9HJon37o6dNx/lDHTvxz9rYNO+23ocFAhI53JjWkO0d86HI5MAMuP
+	 2iTIRN3DXpmWPaOpTAQvy//nFO6mS7PlI8MSkXjmsO6nM3Az0mjHDwIvFExdww3KmV
+	 2JglaDIWbIYHlShpXGCVemuRZa4DYFCb13PNX5rC4yjuS6SXXZKh1kekrLp79sOeKf
+	 jjk1Z/G5a2U1A==
+Date: Tue, 8 Apr 2025 19:23:08 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: John Garry <john.g.garry@oracle.com>
+Cc: brauner@kernel.org, hch@lst.de, viro@zeniv.linux.org.uk, jack@suse.cz,
+	cem@kernel.org, linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
+	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
+	linux-block@vger.kernel.org, catherine.hoang@oracle.com
+Subject: Re: [PATCH v6 01/12] fs: add atomic write unit max opt to statx
+Message-ID: <20250409022308.GJ6283@frogsfrogsfrogs>
+References: <20250408104209.1852036-1-john.g.garry@oracle.com>
+ <20250408104209.1852036-2-john.g.garry@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,89 +47,180 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250407231746.2316518-3-sean.anderson@linux.dev>
+In-Reply-To: <20250408104209.1852036-2-john.g.garry@oracle.com>
 
-Hi Sean,
+This probably should have cc'd linux-api...
 
-kernel test robot noticed the following build errors:
+On Tue, Apr 08, 2025 at 10:41:58AM +0000, John Garry wrote:
+> XFS will be able to support large atomic writes (atomic write > 1x block)
+> in future. This will be achieved by using different operating methods,
+> depending on the size of the write.
+> 
+> Specifically a new method of operation based in FS atomic extent remapping
+> will be supported in addition to the current HW offload-based method.
+> 
+> The FS method will generally be appreciably slower performing than the
+> HW-offload method. However the FS method will be typically able to
+> contribute to achieving a larger atomic write unit max limit.
+> 
+> XFS will support a hybrid mode, where HW offload method will be used when
+> possible, i.e. HW offload is used when the length of the write is
+> supported, and for other times FS-based atomic writes will be used.
+> 
+> As such, there is an atomic write length at which the user may experience
+> appreciably slower performance.
+> 
+> Advertise this limit in a new statx field, stx_atomic_write_unit_max_opt.
+> 
+> When zero, it means that there is no such performance boundary.
+> 
+> Masks STATX{_ATTR}_WRITE_ATOMIC can be used to get this new field. This is
+> ok for older kernels which don't support this new field, as they would
+> report 0 in this field (from zeroing in cp_statx()) already. Furthermore
+> those older kernels don't support large atomic writes - apart from block
+> fops, but there would be consistent performance there for atomic writes
+> in range [unit min, unit max].
+> 
+> Signed-off-by: John Garry <john.g.garry@oracle.com>
 
-[auto build test ERROR on net-next/main]
+Seems fine to me, but I imagine others have stronger opinions.
+Acked-by: "Darrick J. Wong" <djwong@kernel.org>
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Sean-Anderson/dt-bindings-net-Add-Xilinx-PCS/20250408-072650
-base:   net-next/main
-patch link:    https://lore.kernel.org/r/20250407231746.2316518-3-sean.anderson%40linux.dev
-patch subject: [net-next PATCH v2 02/14] device property: Add optional nargs_prop for get_reference_args
-config: i386-buildonly-randconfig-003-20250409 (https://download.01.org/0day-ci/archive/20250409/202504091003.Hc0Ig56O-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-12) 11.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250409/202504091003.Hc0Ig56O-lkp@intel.com/reproduce)
+--D
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504091003.Hc0Ig56O-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> drivers/acpi/property.c:1669:39: error: initialization of 'int (*)(const struct fwnode_handle *, const char *, const char *, int,  unsigned int,  struct fwnode_reference_args *)' from incompatible pointer type 'int (*)(const struct fwnode_handle *, const char *, const char *, unsigned int,  unsigned int,  struct fwnode_reference_args *)' [-Werror=incompatible-pointer-types]
-    1669 |                 .get_reference_args = acpi_fwnode_get_reference_args,   \
-         |                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/acpi/property.c:1680:1: note: in expansion of macro 'DECLARE_ACPI_FWNODE_OPS'
-    1680 | DECLARE_ACPI_FWNODE_OPS(acpi_device_fwnode_ops);
-         | ^~~~~~~~~~~~~~~~~~~~~~~
-   drivers/acpi/property.c:1669:39: note: (near initialization for 'acpi_device_fwnode_ops.get_reference_args')
-    1669 |                 .get_reference_args = acpi_fwnode_get_reference_args,   \
-         |                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/acpi/property.c:1680:1: note: in expansion of macro 'DECLARE_ACPI_FWNODE_OPS'
-    1680 | DECLARE_ACPI_FWNODE_OPS(acpi_device_fwnode_ops);
-         | ^~~~~~~~~~~~~~~~~~~~~~~
->> drivers/acpi/property.c:1669:39: error: initialization of 'int (*)(const struct fwnode_handle *, const char *, const char *, int,  unsigned int,  struct fwnode_reference_args *)' from incompatible pointer type 'int (*)(const struct fwnode_handle *, const char *, const char *, unsigned int,  unsigned int,  struct fwnode_reference_args *)' [-Werror=incompatible-pointer-types]
-    1669 |                 .get_reference_args = acpi_fwnode_get_reference_args,   \
-         |                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/acpi/property.c:1681:1: note: in expansion of macro 'DECLARE_ACPI_FWNODE_OPS'
-    1681 | DECLARE_ACPI_FWNODE_OPS(acpi_data_fwnode_ops);
-         | ^~~~~~~~~~~~~~~~~~~~~~~
-   drivers/acpi/property.c:1669:39: note: (near initialization for 'acpi_data_fwnode_ops.get_reference_args')
-    1669 |                 .get_reference_args = acpi_fwnode_get_reference_args,   \
-         |                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/acpi/property.c:1681:1: note: in expansion of macro 'DECLARE_ACPI_FWNODE_OPS'
-    1681 | DECLARE_ACPI_FWNODE_OPS(acpi_data_fwnode_ops);
-         | ^~~~~~~~~~~~~~~~~~~~~~~
-   cc1: some warnings being treated as errors
-
-
-vim +1669 drivers/acpi/property.c
-
-99c63707bafd15 Sakari Ailus      2022-03-31  1650  
-db3e50f3234ba1 Sakari Ailus      2017-07-21  1651  #define DECLARE_ACPI_FWNODE_OPS(ops) \
-db3e50f3234ba1 Sakari Ailus      2017-07-21  1652  	const struct fwnode_operations ops = {				\
-db3e50f3234ba1 Sakari Ailus      2017-07-21  1653  		.device_is_available = acpi_fwnode_device_is_available, \
-146b4dbb0eef36 Sinan Kaya        2017-12-13  1654  		.device_get_match_data = acpi_fwnode_device_get_match_data, \
-8c756a0a2de17f Sakari Ailus      2022-03-31  1655  		.device_dma_supported =				\
-8c756a0a2de17f Sakari Ailus      2022-03-31  1656  			acpi_fwnode_device_dma_supported,		\
-8c756a0a2de17f Sakari Ailus      2022-03-31  1657  		.device_get_dma_attr = acpi_fwnode_device_get_dma_attr,	\
-db3e50f3234ba1 Sakari Ailus      2017-07-21  1658  		.property_present = acpi_fwnode_property_present,	\
-bb3914101f704a Rob Herring (Arm  2025-01-09  1659) 		.property_read_bool = acpi_fwnode_property_present,	\
-db3e50f3234ba1 Sakari Ailus      2017-07-21  1660  		.property_read_int_array =				\
-db3e50f3234ba1 Sakari Ailus      2017-07-21  1661  			acpi_fwnode_property_read_int_array,		\
-db3e50f3234ba1 Sakari Ailus      2017-07-21  1662  		.property_read_string_array =				\
-db3e50f3234ba1 Sakari Ailus      2017-07-21  1663  			acpi_fwnode_property_read_string_array,		\
-db3e50f3234ba1 Sakari Ailus      2017-07-21  1664  		.get_parent = acpi_node_get_parent,			\
-db3e50f3234ba1 Sakari Ailus      2017-07-21  1665  		.get_next_child_node = acpi_get_next_subnode,		\
-db3e50f3234ba1 Sakari Ailus      2017-07-21  1666  		.get_named_child_node = acpi_fwnode_get_named_child_node, \
-bc0500c1e43d95 Sakari Ailus      2019-10-03  1667  		.get_name = acpi_fwnode_get_name,			\
-e7e242bccb209b Sakari Ailus      2019-10-03  1668  		.get_name_prefix = acpi_fwnode_get_name_prefix,		\
-3e3119d3088f41 Sakari Ailus      2017-07-21 @1669  		.get_reference_args = acpi_fwnode_get_reference_args,	\
-db3e50f3234ba1 Sakari Ailus      2017-07-21  1670  		.graph_get_next_endpoint =				\
-0ef7478639c516 Sakari Ailus      2018-07-17  1671  			acpi_graph_get_next_endpoint,			\
-db3e50f3234ba1 Sakari Ailus      2017-07-21  1672  		.graph_get_remote_endpoint =				\
-0ef7478639c516 Sakari Ailus      2018-07-17  1673  			acpi_graph_get_remote_endpoint,			\
-37ba983cfb47cc Sakari Ailus      2017-07-21  1674  		.graph_get_port_parent = acpi_fwnode_get_parent,	\
-db3e50f3234ba1 Sakari Ailus      2017-07-21  1675  		.graph_parse_endpoint = acpi_fwnode_graph_parse_endpoint, \
-99c63707bafd15 Sakari Ailus      2022-03-31  1676  		.irq_get = acpi_fwnode_irq_get,				\
-db3e50f3234ba1 Sakari Ailus      2017-07-21  1677  	};								\
-db3e50f3234ba1 Sakari Ailus      2017-07-21  1678  	EXPORT_SYMBOL_GPL(ops)
-db3e50f3234ba1 Sakari Ailus      2017-07-21  1679  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> ---
+>  block/bdev.c              | 3 ++-
+>  fs/ext4/inode.c           | 2 +-
+>  fs/stat.c                 | 6 +++++-
+>  fs/xfs/xfs_iops.c         | 2 +-
+>  include/linux/fs.h        | 3 ++-
+>  include/linux/stat.h      | 1 +
+>  include/uapi/linux/stat.h | 8 ++++++--
+>  7 files changed, 18 insertions(+), 7 deletions(-)
+> 
+> diff --git a/block/bdev.c b/block/bdev.c
+> index 4844d1e27b6f..b4afc1763e8e 100644
+> --- a/block/bdev.c
+> +++ b/block/bdev.c
+> @@ -1301,7 +1301,8 @@ void bdev_statx(struct path *path, struct kstat *stat,
+>  
+>  		generic_fill_statx_atomic_writes(stat,
+>  			queue_atomic_write_unit_min_bytes(bd_queue),
+> -			queue_atomic_write_unit_max_bytes(bd_queue));
+> +			queue_atomic_write_unit_max_bytes(bd_queue),
+> +			0);
+>  	}
+>  
+>  	stat->blksize = bdev_io_min(bdev);
+> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> index 1dc09ed5d403..51a45699112c 100644
+> --- a/fs/ext4/inode.c
+> +++ b/fs/ext4/inode.c
+> @@ -5663,7 +5663,7 @@ int ext4_getattr(struct mnt_idmap *idmap, const struct path *path,
+>  			awu_max = sbi->s_awu_max;
+>  		}
+>  
+> -		generic_fill_statx_atomic_writes(stat, awu_min, awu_max);
+> +		generic_fill_statx_atomic_writes(stat, awu_min, awu_max, 0);
+>  	}
+>  
+>  	flags = ei->i_flags & EXT4_FL_USER_VISIBLE;
+> diff --git a/fs/stat.c b/fs/stat.c
+> index f13308bfdc98..c41855f62d22 100644
+> --- a/fs/stat.c
+> +++ b/fs/stat.c
+> @@ -136,13 +136,15 @@ EXPORT_SYMBOL(generic_fill_statx_attr);
+>   * @stat:	Where to fill in the attribute flags
+>   * @unit_min:	Minimum supported atomic write length in bytes
+>   * @unit_max:	Maximum supported atomic write length in bytes
+> + * @unit_max_opt: Optimised maximum supported atomic write length in bytes
+>   *
+>   * Fill in the STATX{_ATTR}_WRITE_ATOMIC flags in the kstat structure from
+>   * atomic write unit_min and unit_max values.
+>   */
+>  void generic_fill_statx_atomic_writes(struct kstat *stat,
+>  				      unsigned int unit_min,
+> -				      unsigned int unit_max)
+> +				      unsigned int unit_max,
+> +				      unsigned int unit_max_opt)
+>  {
+>  	/* Confirm that the request type is known */
+>  	stat->result_mask |= STATX_WRITE_ATOMIC;
+> @@ -153,6 +155,7 @@ void generic_fill_statx_atomic_writes(struct kstat *stat,
+>  	if (unit_min) {
+>  		stat->atomic_write_unit_min = unit_min;
+>  		stat->atomic_write_unit_max = unit_max;
+> +		stat->atomic_write_unit_max_opt = unit_max_opt;
+>  		/* Initially only allow 1x segment */
+>  		stat->atomic_write_segments_max = 1;
+>  
+> @@ -732,6 +735,7 @@ cp_statx(const struct kstat *stat, struct statx __user *buffer)
+>  	tmp.stx_atomic_write_unit_min = stat->atomic_write_unit_min;
+>  	tmp.stx_atomic_write_unit_max = stat->atomic_write_unit_max;
+>  	tmp.stx_atomic_write_segments_max = stat->atomic_write_segments_max;
+> +	tmp.stx_atomic_write_unit_max_opt = stat->atomic_write_unit_max_opt;
+>  
+>  	return copy_to_user(buffer, &tmp, sizeof(tmp)) ? -EFAULT : 0;
+>  }
+> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+> index 756bd3ca8e00..f0e5d83195df 100644
+> --- a/fs/xfs/xfs_iops.c
+> +++ b/fs/xfs/xfs_iops.c
+> @@ -610,7 +610,7 @@ xfs_report_atomic_write(
+>  
+>  	if (xfs_inode_can_atomicwrite(ip))
+>  		unit_min = unit_max = ip->i_mount->m_sb.sb_blocksize;
+> -	generic_fill_statx_atomic_writes(stat, unit_min, unit_max);
+> +	generic_fill_statx_atomic_writes(stat, unit_min, unit_max, 0);
+>  }
+>  
+>  STATIC int
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index 016b0fe1536e..7b19d8f99aff 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -3475,7 +3475,8 @@ void generic_fillattr(struct mnt_idmap *, u32, struct inode *, struct kstat *);
+>  void generic_fill_statx_attr(struct inode *inode, struct kstat *stat);
+>  void generic_fill_statx_atomic_writes(struct kstat *stat,
+>  				      unsigned int unit_min,
+> -				      unsigned int unit_max);
+> +				      unsigned int unit_max,
+> +				      unsigned int unit_max_opt);
+>  extern int vfs_getattr_nosec(const struct path *, struct kstat *, u32, unsigned int);
+>  extern int vfs_getattr(const struct path *, struct kstat *, u32, unsigned int);
+>  void __inode_add_bytes(struct inode *inode, loff_t bytes);
+> diff --git a/include/linux/stat.h b/include/linux/stat.h
+> index be7496a6a0dd..e3d00e7bb26d 100644
+> --- a/include/linux/stat.h
+> +++ b/include/linux/stat.h
+> @@ -57,6 +57,7 @@ struct kstat {
+>  	u32		dio_read_offset_align;
+>  	u32		atomic_write_unit_min;
+>  	u32		atomic_write_unit_max;
+> +	u32		atomic_write_unit_max_opt;
+>  	u32		atomic_write_segments_max;
+>  };
+>  
+> diff --git a/include/uapi/linux/stat.h b/include/uapi/linux/stat.h
+> index f78ee3670dd5..1686861aae20 100644
+> --- a/include/uapi/linux/stat.h
+> +++ b/include/uapi/linux/stat.h
+> @@ -182,8 +182,12 @@ struct statx {
+>  	/* File offset alignment for direct I/O reads */
+>  	__u32	stx_dio_read_offset_align;
+>  
+> -	/* 0xb8 */
+> -	__u64	__spare3[9];	/* Spare space for future expansion */
+> +	/* Optimised max atomic write unit in bytes */
+> +	__u32	stx_atomic_write_unit_max_opt;
+> +	__u32	__spare2[1];
+> +
+> +	/* 0xc0 */
+> +	__u64	__spare3[8];	/* Spare space for future expansion */
+>  
+>  	/* 0x100 */
+>  };
+> -- 
+> 2.31.1
+> 
+> 
