@@ -1,175 +1,227 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C6062248B8;
-	Wed,  9 Apr 2025 10:31:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 164D51DDC23
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 10:31:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744194678; cv=none; b=JSFWe7qVJPF1dyH8c/Z83uoXxYIIWkxzPcav8pW8nJdZTNt43nW1+Jnxjefgsnw/R+HCg2yAu+zFxap972qab6V7x7T9mnuSBXcP3AGLF/+PjIm2iXI+AT8iC8+EDzYkkmoOzINZyQpwOnmWpxswNSu5vOi7cVnJI+vmirF1vPE=
+	t=1744194682; cv=none; b=Vg4Tt60vsvJ3U+cNMkWXcKTNajccNyaqEWZaQUrTb6/upnEDmP2tR/4zFNB2O3rZHpzvwrGDLTX35vh5JHTf8KyD5fIZrCgOUNRzesc8kEvV/bajECMBowHV8rMOZkxeSvs1eFUAYZbUE8bvZ+B8gxnIByBM6J8idSN8ejtRXOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744194678; c=relaxed/simple;
-	bh=ZmnnNKPrzuiYuW3i7a9kKVexFSeeKK3P4O6fu9PWHKY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=r7Jlss9outTKHvhzE8bWyRIlHw3l8ZQ2vS7D4orifykKPliz5riQSxlUC15s2GMDaUFGyuaVcx0u0KLgQ1+B6nHYtZU/mlXmoAK/lATP2i2FEFyY85nVDbXWS3HS8jKAzM6luOgxX5hCLstM7X6g4FACs7mAlAERlKPM51UKQCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KQJeHNQR; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1744194682; c=relaxed/simple;
+	bh=7tCpeHKZ1A/clvJXiH38q3HA5HL3XDVp270WzK+qIMs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ff3fOgA46gKcWK4/hzT8sVEemPmzqINiq2XXLnPfIl4dZWqaTxa9mW7r6thyJaBcgGqHPs6JoYr26yZMq/EntxlhuuRc4OSzIQXQ8PvfVHOzpU93JAua+I/Cv+k9TCUh0tg+DOaiR34JUYrHKGZrJ7QggiBImCS19XGczuppXa0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NZpOCjfL; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KQJeHNQR"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5398AlK1027501;
-	Wed, 9 Apr 2025 10:31:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	O1N1PLxK6fPILave/3Q2dBZNQWAtsMgPgHNSiOxWQys=; b=KQJeHNQRUZwJxKw5
-	wmbAaiCWk56QTCQFmYOosuu9XOSvzZDm4lpe7WQTxhWFegdMZeACj3SCuA4kUgHc
-	O7+K+EL+iJBaN8LIq7wx8OBZj+NrrGnPry4rPeTEzzepKxkJjurzT0cEViOh9LXy
-	XrSUVbFjSBISkEEdFSCnFjW4qvVKWyJwk0rGlCCJ5ZAdczn8+OgRwQFYth/Q/9+v
-	JQAP/VSAyWcce/MH5NCdlzEEBWmSLbLobcT1xu55MHdTs0d0DDZFZuZcaiN4Q0jf
-	ZIqdf3dlddTp//SBSAnSePDGi/SWLFa3PBkt0KxrMfETjgw0L8wNI/X5UruF8/w1
-	uFzF7A==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twcrk3bb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 09 Apr 2025 10:31:07 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 539AV6x5024760
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 9 Apr 2025 10:31:06 GMT
-Received: from [10.50.45.73] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 9 Apr 2025
- 03:31:02 -0700
-Message-ID: <a4c6afb5-1edc-4fb1-98fe-8f4e50e3c8ef@quicinc.com>
-Date: Wed, 9 Apr 2025 16:00:57 +0530
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NZpOCjfL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744194678;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=refESg+vH3BJLPab3Cq73AckZskE4pPHUsPbnMRz6UE=;
+	b=NZpOCjfLbVpDcfUavxfyxbkx9omTfMmhuFuBCurvmLulPK81hSQXtNPsIB31HxHr6V2Fv+
+	31XZcU9fh+JkVKqkrXyjY9GM6x2nPlxGMSjNxsv0tGcQy4XCwvoZrvzkmqDrVn5N7pf4uo
+	eaCkFHl/C9PEYKpDqwPbavrRYYUH6Y4=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-170-XfnUG8B8OF67uquBk-Iueg-1; Wed, 09 Apr 2025 06:31:15 -0400
+X-MC-Unique: XfnUG8B8OF67uquBk-Iueg-1
+X-Mimecast-MFC-AGG-ID: XfnUG8B8OF67uquBk-Iueg_1744194674
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3912fc9861cso2682132f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 03:31:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744194674; x=1744799474;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=refESg+vH3BJLPab3Cq73AckZskE4pPHUsPbnMRz6UE=;
+        b=Kj1vM2pU5BpcIbUrtotnhvl82JjyX2z5lvEzFZZqvxnosmiNyZ+9GrYkj2mot2Al1A
+         ykhyiRkvMFU3he42Hs2XmcY5ycvTDrgLxzmsdnaA9SctNAaVExKY7lyP/e4QE1QsY0FV
+         QwdidLfopfzsnapqFfaj/kuNLMk9/0ggfAQ0BqG60khZYutdIy55GTXFT9KYToSWlbXz
+         yYDu8F5VheG3fduQUSj+KObVjhBKlB0WOS2LN41KgGkZS+0fLOD2ciuSgqw30U31Q1k6
+         aPQ6aPvahN0K1f6d2JFkfs5CP6rTEGcwqtdZUF2WHghpN41D0qitgxwXKV+f30AYolXJ
+         Xu1w==
+X-Forwarded-Encrypted: i=1; AJvYcCUL/Am8iQbKTxNszhNtkvLyqxF/Ex0lDghlUUZQX9GWKrkAHEj+VzuhFoZsfFsqLydWmzmnoGeJDED2SMA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJm6DgPGJFrgAkOXoFqvAaPOtgIWJLFSpK5EA256SIskEOB2Bj
+	zc9bDif3KiuorUZSz+RptxZ4on2LVzNK8GCGJXGo8HHODpfYzMAGcJocZTtch2XR2iUHRDmGu/j
+	TZFO9haL0sLaRqswyH/lYp7YQM9+V3GLY7xI0EMxuX2VU+HFJa8k921UXwe7YGg==
+X-Gm-Gg: ASbGncvm5QulOfWjQP1VZqQD6NrjUNoHGh1241ofvflBh2Uxh07m2QmSmtSuP1Y117R
+	YyWc7O00Mn0XQJI0ljP5na1e5867eYn2NzgK8neNoLl/qPeyd3ms+NSvJYneQxuy8bNHzIFOf3P
+	c0Bwhg5rdfAiZ/rxLLiiwXjKCvAGRlcoOrGSU8ngmuXBXJxT4ckHBpdQ0m5dxmYsO7E1bYJox8N
+	HcV2WVN5AEWb5m01yG67GnQyM7f20S+4mozY3YcE1dFJz05YlHO9mlEVPaU5uTcXKpO/UmBQvhQ
+	4B2yVzvDF9+bYr+HwZO+DxlQTGPJd4e6YxFW0GKUcLhGvbYV9XUeS3Qdl5rtGCwITfO6jjjXvpS
+	vh6SXQj1mJCPU/2QpwR9SrnU+/C9ijdjJwA==
+X-Received: by 2002:a05:6000:2585:b0:391:2306:5131 with SMTP id ffacd0b85a97d-39d87cd329fmr2322433f8f.45.1744194674021;
+        Wed, 09 Apr 2025 03:31:14 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGBDiD+2sSvcX6Vb021yG6t+LtienyPvq5RRwZlGQe+eSgWYV0qQIFTcNgO6O/S0vMjwqpy/w==
+X-Received: by 2002:a05:6000:2585:b0:391:2306:5131 with SMTP id ffacd0b85a97d-39d87cd329fmr2322407f8f.45.1744194673672;
+        Wed, 09 Apr 2025 03:31:13 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c70d:8400:ed9b:a3a:88e5:c6a? (p200300cbc70d8400ed9b0a3a88e50c6a.dip0.t-ipconnect.de. [2003:cb:c70d:8400:ed9b:a3a:88e5:c6a])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d8938a500sm1223602f8f.49.2025.04.09.03.31.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Apr 2025 03:31:13 -0700 (PDT)
+Message-ID: <e40651de-3666-4ea7-9bd3-0369f07c979d@redhat.com>
+Date: Wed, 9 Apr 2025 12:31:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v3 2/5] media: platform: qcom/iris: add
- power_off_controller to vpu_ops
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] selftests/mm: Fix compiler -Wmaybe-uninitialized warning
+To: Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250409095006.1422620-1-anshuman.khandual@arm.com>
+ <9da46633-e9c1-42a7-b52b-16cf89836abc@redhat.com>
+ <0ec536d2-4b82-4e97-9985-15cd431059ba@arm.com>
+ <dcf585d8-8293-42ea-9d31-23825cc2f658@redhat.com>
+ <5c37c129-a8cb-4f17-8af1-059450083c73@arm.com>
+From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
-To: Neil Armstrong <neil.armstrong@linaro.org>,
-        Vikash Garodia
-	<quic_vgarodia@quicinc.com>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250407-topic-sm8x50-iris-v10-v3-0-63569f6d04aa@linaro.org>
- <20250407-topic-sm8x50-iris-v10-v3-2-63569f6d04aa@linaro.org>
-From: Dikshita Agarwal <quic_dikshita@quicinc.com>
-In-Reply-To: <20250407-topic-sm8x50-iris-v10-v3-2-63569f6d04aa@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: Wun_gYVspRoeCnGjGTULg19aZSOwQr7w
-X-Authority-Analysis: v=2.4 cv=QuVe3Uyd c=1 sm=1 tr=0 ts=67f64c6b cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=tiq6G2YW-mO17P-vupoA:9
- a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: Wun_gYVspRoeCnGjGTULg19aZSOwQr7w
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-09_03,2025-04-08_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- spamscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0 priorityscore=1501
- clxscore=1015 phishscore=0 impostorscore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504090058
+Autocrypt: addr=david@redhat.com; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
+ AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
+ 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
+ rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
+ wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
+ 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
+ pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
+ KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
+ BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
+ 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
+ 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
+ M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
+ AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
+ boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
+ 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
+ XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
+ a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
+ Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
+ 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
+ kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
+ th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
+ jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <5c37c129-a8cb-4f17-8af1-059450083c73@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
+On 09.04.25 12:25, Anshuman Khandual wrote:
+> 
+> 
+> On 4/9/25 15:51, David Hildenbrand wrote:
+>> On 09.04.25 12:09, Anshuman Khandual wrote:
+>>>
+>>>
+>>> On 4/9/25 15:27, David Hildenbrand wrote:
+>>>> On 09.04.25 11:50, Anshuman Khandual wrote:
+>>>>> Following build warning comes up for cow test as 'transferred' variable has
+>>>>> not been initialized. Fix the warning via zero init for the variable.
+>>>>>
+>>>>>      CC       cow
+>>>>> cow.c: In function ‘do_test_vmsplice_in_parent’:
+>>>>> cow.c:365:61: warning: ‘transferred’ may be used uninitialized [-Wmaybe-uninitialized]
+>>>>>      365 |                 cur = read(fds[0], new + total, transferred - total);
+>>>>>          |                                                 ~~~~~~~~~~~~^~~~~~~
+>>>>> cow.c:296:29: note: ‘transferred’ was declared here
+>>>>>      296 |         ssize_t cur, total, transferred;
+>>>>>          |                             ^~~~~~~~~~~
+>>>>>      CC       compaction_test
+>>>>>      CC       gup_longterm
+>>>>>
+>>>>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>>>>> Cc: Shuah Khan <shuah@kernel.org>
+>>>>> Cc: linux-mm@kvack.org
+>>>>> Cc: linux-kselftest@vger.kernel.org
+>>>>> Cc: linux-kernel@vger.kernel.org
+>>>>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>>>>> ---
+>>>>>     tools/testing/selftests/mm/cow.c | 2 +-
+>>>>>     1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/tools/testing/selftests/mm/cow.c b/tools/testing/selftests/mm/cow.c
+>>>>> index f0cb14ea8608..b6cfe0a4b7df 100644
+>>>>> --- a/tools/testing/selftests/mm/cow.c
+>>>>> +++ b/tools/testing/selftests/mm/cow.c
+>>>>> @@ -293,7 +293,7 @@ static void do_test_vmsplice_in_parent(char *mem, size_t size,
+>>>>>             .iov_base = mem,
+>>>>>             .iov_len = size,
+>>>>>         };
+>>>>> -    ssize_t cur, total, transferred;
+>>>>> +    ssize_t cur, total, transferred = 0;
+>>>>>         struct comm_pipes comm_pipes;
+>>>>>         char *old, *new;
+>>>>>         int ret, fds[2];
+>>>>
+>>>>
+>>>> if (before_fork) {
+>>>>       transferred = vmsplice(fds[1], &iov, 1, 0);
+>>>> ...
+>>>>
+>>>> if (!before_fork) {
+>>>>       transferred = vmsplice(fds[1], &iov, 1, 0);
+>>>> ...
+>>>>
+>>>> for (total = 0; total < transferred; total += cur) {
+>>>> ...
+>>>>
+>>>>
+>>>> And I don't see any jump label that could jump to code that would ve using transferred.
+>>>>
+>>>> What am I missing?
+>>>
+>>> Probably because both those conditional statements are not mutually
+>>> exclusive above with an if-else construct. Hence compiler flags it
+>>> rather as a false positive ? Initializing with 0 just works around
+>>> that false positive.
+>>
+>> This is something the compiler should clearly be able to verify. before_fork is never changed in that function.
+>>
+>> We should not work around wrong compilers.
+>>
+>> Which compiler are you using such that you run into this issue?
+> 
+> gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0
+> 
 
+gcc (GCC) 14.2.1 20250110 (Red Hat 14.2.1-7)
 
-On 4/7/2025 8:54 PM, Neil Armstrong wrote:
-> In order to support the SM8650 iris33 hardware, we need to provide a
-> specific constoller power off sequences via the vpu_ops callbacks.
-Just a nit: s/constoller/controller
-> 
-> Add the callback, and use the current helper for currently supported
-> platforms.
-> 
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-> ---
->  drivers/media/platform/qcom/iris/iris_vpu2.c       | 1 +
->  drivers/media/platform/qcom/iris/iris_vpu3.c       | 1 +
->  drivers/media/platform/qcom/iris/iris_vpu_common.c | 4 ++--
->  drivers/media/platform/qcom/iris/iris_vpu_common.h | 2 ++
->  4 files changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/media/platform/qcom/iris/iris_vpu2.c b/drivers/media/platform/qcom/iris/iris_vpu2.c
-> index 8f502aed43ce2fa6a272a2ce14ff1ca54d3e63a2..7cf1bfc352d34b897451061b5c14fbe90276433d 100644
-> --- a/drivers/media/platform/qcom/iris/iris_vpu2.c
-> +++ b/drivers/media/platform/qcom/iris/iris_vpu2.c
-> @@ -34,5 +34,6 @@ static u64 iris_vpu2_calc_freq(struct iris_inst *inst, size_t data_size)
->  
->  const struct vpu_ops iris_vpu2_ops = {
->  	.power_off_hw = iris_vpu_power_off_hw,
-> +	.power_off_controller = iris_vpu_power_off_controller,
->  	.calc_freq = iris_vpu2_calc_freq,
->  };
-> diff --git a/drivers/media/platform/qcom/iris/iris_vpu3.c b/drivers/media/platform/qcom/iris/iris_vpu3.c
-> index b484638e6105a69319232f667ee7ae95e3853698..13dab61427b8bd0491b69a9bc5f5144d27d17362 100644
-> --- a/drivers/media/platform/qcom/iris/iris_vpu3.c
-> +++ b/drivers/media/platform/qcom/iris/iris_vpu3.c
-> @@ -118,5 +118,6 @@ static u64 iris_vpu3_calculate_frequency(struct iris_inst *inst, size_t data_siz
->  
->  const struct vpu_ops iris_vpu3_ops = {
->  	.power_off_hw = iris_vpu3_power_off_hardware,
-> +	.power_off_controller = iris_vpu_power_off_controller,
->  	.calc_freq = iris_vpu3_calculate_frequency,
->  };
-> diff --git a/drivers/media/platform/qcom/iris/iris_vpu_common.c b/drivers/media/platform/qcom/iris/iris_vpu_common.c
-> index fe9896d66848cdcd8c67bd45bbf3b6ce4a01ab10..268e45acaa7c0e3fe237123c62f0133d9dface14 100644
-> --- a/drivers/media/platform/qcom/iris/iris_vpu_common.c
-> +++ b/drivers/media/platform/qcom/iris/iris_vpu_common.c
-> @@ -211,7 +211,7 @@ int iris_vpu_prepare_pc(struct iris_core *core)
->  	return -EAGAIN;
->  }
->  
-> -static int iris_vpu_power_off_controller(struct iris_core *core)
-> +int iris_vpu_power_off_controller(struct iris_core *core)
->  {
->  	u32 val = 0;
->  	int ret;
-> @@ -264,7 +264,7 @@ void iris_vpu_power_off(struct iris_core *core)
->  {
->  	dev_pm_opp_set_rate(core->dev, 0);
->  	core->iris_platform_data->vpu_ops->power_off_hw(core);
-> -	iris_vpu_power_off_controller(core);
-> +	core->iris_platform_data->vpu_ops->power_off_controller(core);
->  	iris_unset_icc_bw(core);
->  
->  	if (!iris_vpu_watchdog(core, core->intr_status))
-> diff --git a/drivers/media/platform/qcom/iris/iris_vpu_common.h b/drivers/media/platform/qcom/iris/iris_vpu_common.h
-> index 63fa1fa5a4989e48aebdb6c7619c140000c0b44c..f8965661c602f990d5a7057565f79df4112d097e 100644
-> --- a/drivers/media/platform/qcom/iris/iris_vpu_common.h
-> +++ b/drivers/media/platform/qcom/iris/iris_vpu_common.h
-> @@ -13,6 +13,7 @@ extern const struct vpu_ops iris_vpu3_ops;
->  
->  struct vpu_ops {
->  	void (*power_off_hw)(struct iris_core *core);
-> +	int (*power_off_controller)(struct iris_core *core);
->  	u64 (*calc_freq)(struct iris_inst *inst, size_t data_size);
->  };
->  
-> @@ -22,6 +23,7 @@ void iris_vpu_clear_interrupt(struct iris_core *core);
->  int iris_vpu_watchdog(struct iris_core *core, u32 intr_status);
->  int iris_vpu_prepare_pc(struct iris_core *core);
->  int iris_vpu_power_on(struct iris_core *core);
-> +int iris_vpu_power_off_controller(struct iris_core *core);
->  void iris_vpu_power_off_hw(struct iris_core *core);
->  void iris_vpu_power_off(struct iris_core *core);
->  
-> 
-Reviewed-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+Seems to be fine, just like all other compilers people used with this 
+over the years.
+
+Maybe something about that compiler is shaky that was fixed in the meantime?
+
+-- 
+Cheers,
+
+David / dhildenb
+
