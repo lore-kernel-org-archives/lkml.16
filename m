@@ -1,162 +1,85 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBEC5101C8;
-	Wed,  9 Apr 2025 20:22:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2841D1E1E13;
+	Wed,  9 Apr 2025 20:22:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744230138; cv=none; b=K8s2L/UEh7j9uW2GibHFjs79kDofi1I1vy2FUmRBr1NG0f3LJ3sVjBo45K50akp9y6AvZbp5GNokvy8zZQxz8SqwQi2qF8WOOY6vGib8xrqTk0oYm/XoCuOdUbAdysOQ+ssw0c8Tlf1eAMaEpBZa6UHVdvTL2vsisVlASj0Rg7M=
+	t=1744230154; cv=none; b=nJozpLyQGprHZP0YTCanNGRPx/ilK3LqRuBGaLMD1GiDdIuHkvpF1eioQUprQgKUUFt0T+etMNHDzZI+vxMonx4Gireqryeobuiu9jnqElCqEJqomLfgdkHghGa6vj0R8t6J88TjTwXDcPM+3qLEjIdqXByLOFT7jMVGs3ty0lk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744230138; c=relaxed/simple;
-	bh=+yKQ8UlWyCG9yhdOevh4lapX94fj1l+SYopE3UtUQ8s=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hCLx3d+utDzvvRQrwtGqyxWYb0wn7AOaoDIR//P94xcZdV/23xM1YyeYH5zX4mC17FrC5aEfIJtUqnc/ofIza28hm2gu53AwpEdRQAxLV90eNR+v3btr5j+McFtWiT/Er9tLZ77fv8+bPFUBnbU/dvytLAaPrODpCIM8VDRqXzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ga74MhCa; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1744230154; c=relaxed/simple;
+	bh=OW/xgC8e9ub8XpLbqZUYjYmRTQcN1mckVDqHGAKK35E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WobBbLA4zUabhL2xH3rkmplom3b5z5k5tTfyKzxTefQxcx6Q6DbwK4QMAiv9ohSuwXXxmmD0WAYPXPiRSbfdyCU0XJ1e+++auD3xXfMZCSMoKWM6bXnV+w2w0ezOKh4TaP0ipMaS/W2tWI66ctVuEwW/fwIq+zGsPZr8W0YuSiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dOnDX4dL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ga74MhCa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1744230134;
-	bh=+yKQ8UlWyCG9yhdOevh4lapX94fj1l+SYopE3UtUQ8s=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=ga74MhCaIE6ib2x9g1zR5Fl0gLsaifzlTXgru3XbGtrVQFaXa5sRMCdYul2QQP5UL
-	 1XLuRJhg4r3Mha3/KJclqmR4FHABbed0jX0AU/ttyi3qDI5nhtlfoKbK0UhAPkq80+
-	 O7MZrDgysaDeaFpAxYA51sBy+TJnl1pa+KncOMbsqlglzYM/JBnNtgbOH3ALUGZTun
-	 /wFWYkLiwG/EPKXzXnt3/cHCKLjd0/XxZotla2/qWlcEXX20O++ZwqczscJYEuk9S8
-	 jrnFrZrK/e6BlqHPYQHUGtiuqBrhXXxzEJimmK7gSTtPRt83n5f6d6jlfuFA4LcgC/
-	 1i4WLzF3rwA0w==
-Received: from [IPv6:2606:6d00:11:e976::5ac] (unknown [IPv6:2606:6d00:11:e976::5ac])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nicolas)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 38EB017E00FC;
-	Wed,  9 Apr 2025 22:22:12 +0200 (CEST)
-Message-ID: <f6e16d37ba85d6d99c250163a80db9b5591d8c81.camel@collabora.com>
-Subject: Re: [PATCH v3 1/4] media: imx-jpeg: Move mxc_jpeg_free_slot_data()
- ahead
-From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-To: ming.qian@oss.nxp.com, mchehab@kernel.org, hverkuil-cisco@xs4all.nl, 
-	mirela.rabulea@oss.nxp.com
-Cc: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, 
-	festevam@gmail.com, xiahong.bao@nxp.com, eagle.zhou@nxp.com,
- linux-imx@nxp.com, 	imx@lists.linux.dev, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org, 	linux-arm-kernel@lists.infradead.org
-Date: Wed, 09 Apr 2025 16:22:10 -0400
-In-Reply-To: <20250408025725.1244-2-ming.qian@oss.nxp.com>
-References: <20250408025725.1244-1-ming.qian@oss.nxp.com>
-	 <20250408025725.1244-2-ming.qian@oss.nxp.com>
-Organization: Collabora Canada
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.56.0 (3.56.0-1.fc42) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dOnDX4dL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9ABEC4CEE2;
+	Wed,  9 Apr 2025 20:22:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744230154;
+	bh=OW/xgC8e9ub8XpLbqZUYjYmRTQcN1mckVDqHGAKK35E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dOnDX4dL4SGLCjmmI5inCI3tky45vog+GW7BluujDFAGcIzuLliJeKM9oA+gETqCj
+	 xevYQkZCw4EQXDdGCXJmii80h4myJYR6Zqfo1x3MIRxXWW/Ik8gfQaj2yYvlpNY5/h
+	 E7bf+8AmbVtJQPEhzvrbTFwB7oTwhM+AGvnQo1LGeo1gUqY82R89jO2rvNJxeYGAk1
+	 KwVRAa/fiyE9akNpveePfCzwQEysT3hEmNJO80bpNxfDCMeYX4tqwjzi84Bv4SUsPC
+	 jsnImVEqcdy451PBjJPJF5P4BfsRsbizhnr5ll8bzyVFx/3Jc2PXipTHGYcqP8rUnJ
+	 KwfCxpBPV52eQ==
+Date: Wed, 9 Apr 2025 13:22:28 -0700
+From: Kees Cook <kees@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	linux-kbuild@vger.kernel.org, linux-hardening@vger.kernel.org,
+	kasan-dev@googlegroups.com, Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH] gcc-plugins: Remove SANCOV plugin
+Message-ID: <202504091322.A6EBAC8B@keescook>
+References: <20250409160251.work.914-kees@kernel.org>
+ <32bb421a-1a9e-40eb-9318-d8ca1a0f407f@app.fastmail.com>
+ <202504090919.6DE21CFA7A@keescook>
+ <6f7e3436-8ae8-473d-be64-c962366ca5c8@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6f7e3436-8ae8-473d-be64-c962366ca5c8@app.fastmail.com>
 
-Hi,
-
-Le mardi 08 avril 2025 à 10:57 +0800, ming.qian@oss.nxp.com a écrit :
-> From: Ming Qian <ming.qian@oss.nxp.com>
+On Wed, Apr 09, 2025 at 09:28:22PM +0200, Arnd Bergmann wrote:
+> On Wed, Apr 9, 2025, at 18:19, Kees Cook wrote:
+> > On Wed, Apr 09, 2025 at 06:16:58PM +0200, Arnd Bergmann wrote:
+> >> On Wed, Apr 9, 2025, at 18:02, Kees Cook wrote:
+> >> 
+> >> >  config KCOV
+> >> >  	bool "Code coverage for fuzzing"
+> >> >  	depends on ARCH_HAS_KCOV
+> >> > -	depends on CC_HAS_SANCOV_TRACE_PC || GCC_PLUGINS
+> >> > +	depends on CC_HAS_SANCOV_TRACE_PC
+> >> 
+> >> So this dependency would also disappear. I think either way is fine.
+> >> 
+> >> The rest of the patch is again identical to my version.
+> >
+> > Ah! How about you keep the patch as part of your gcc-8.1 clean up, then?
+> > That seems more clear, etc.
 > 
-> Move function mxc_jpeg_free_slot_data() ahead of
-> mxc_jpeg_alloc_slot_data(). Then when allocation fails,
-> can call it to clean up erros accordingly.
-
-Its nice to be explicit when there is no functional changes. Perhaps
-this rephrase could work for you ?
-
-
-   Move function mxc_jpeg_free_slot_data() above
-   mxc_jpeg_alloc_slot_data() allowing to call that function during
-   allocation failures. No functional changes are made.
-
+> Sure, I can probably keep that all in a branch of the asm-generic
+> tree, or alternatively send it through the kbuild tree.
 > 
-> Signed-off-by: Ming Qian <ming.qian@oss.nxp.com>
+> Shall I include the patch to remove the structleak plugin as well?
 
-Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Sorry, I misread, *stackleak* needs to stay. structleak can go. I'll
+carry that.
 
-> ---
-> v3
-> - Split the moving of code into a separate patch
-> 
->  .../media/platform/nxp/imx-jpeg/mxc-jpeg.c    | 46 +++++++++++------
-> --
->  1 file changed, 26 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
-> b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
-> index 0e6ee997284b..b2f7e9ad1885 100644
-> --- a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
-> +++ b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
-> @@ -752,6 +752,32 @@ static int mxc_get_free_slot(struct
-> mxc_jpeg_slot_data *slot_data)
->  	return -1;
->  }
->  
-> +static void mxc_jpeg_free_slot_data(struct mxc_jpeg_dev *jpeg)
-> +{
-> +	/* free descriptor for decoding/encoding phase */
-> +	dma_free_coherent(jpeg->dev, sizeof(struct mxc_jpeg_desc),
-> +			  jpeg->slot_data.desc,
-> +			  jpeg->slot_data.desc_handle);
-> +	jpeg->slot_data.desc = NULL;
-> +	jpeg->slot_data.desc_handle = 0;
-> +
-> +	/* free descriptor for encoder configuration phase / decoder
-> DHT */
-> +	dma_free_coherent(jpeg->dev, sizeof(struct mxc_jpeg_desc),
-> +			  jpeg->slot_data.cfg_desc,
-> +			  jpeg->slot_data.cfg_desc_handle);
-> +	jpeg->slot_data.cfg_desc_handle = 0;
-> +	jpeg->slot_data.cfg_desc = NULL;
-> +
-> +	/* free configuration stream */
-> +	dma_free_coherent(jpeg->dev, MXC_JPEG_MAX_CFG_STREAM,
-> +			  jpeg->slot_data.cfg_stream_vaddr,
-> +			  jpeg->slot_data.cfg_stream_handle);
-> +	jpeg->slot_data.cfg_stream_vaddr = NULL;
-> +	jpeg->slot_data.cfg_stream_handle = 0;
-> +
-> +	jpeg->slot_data.used = false;
-> +}
-> +
->  static bool mxc_jpeg_alloc_slot_data(struct mxc_jpeg_dev *jpeg)
->  {
->  	struct mxc_jpeg_desc *desc;
-> @@ -798,26 +824,6 @@ static bool mxc_jpeg_alloc_slot_data(struct
-> mxc_jpeg_dev *jpeg)
->  	return false;
->  }
->  
-> -static void mxc_jpeg_free_slot_data(struct mxc_jpeg_dev *jpeg)
-> -{
-> -	/* free descriptor for decoding/encoding phase */
-> -	dma_free_coherent(jpeg->dev, sizeof(struct mxc_jpeg_desc),
-> -			  jpeg->slot_data.desc,
-> -			  jpeg->slot_data.desc_handle);
-> -
-> -	/* free descriptor for encoder configuration phase / decoder
-> DHT */
-> -	dma_free_coherent(jpeg->dev, sizeof(struct mxc_jpeg_desc),
-> -			  jpeg->slot_data.cfg_desc,
-> -			  jpeg->slot_data.cfg_desc_handle);
-> -
-> -	/* free configuration stream */
-> -	dma_free_coherent(jpeg->dev, MXC_JPEG_MAX_CFG_STREAM,
-> -			  jpeg->slot_data.cfg_stream_vaddr,
-> -			  jpeg->slot_data.cfg_stream_handle);
-> -
-> -	jpeg->slot_data.used = false;
-> -}
-> -
->  static void mxc_jpeg_check_and_set_last_buffer(struct mxc_jpeg_ctx
-> *ctx,
->  					       struct
-> vb2_v4l2_buffer *src_buf,
->  					       struct
-> vb2_v4l2_buffer *dst_buf)
+-- 
+Kees Cook
