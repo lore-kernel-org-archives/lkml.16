@@ -1,86 +1,147 @@
-Received: from mail.nic.cz (mail.nic.cz [217.31.204.67])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F2C529D0B;
-	Wed,  9 Apr 2025 09:26:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.31.204.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10BEC12CDAE;
+	Wed,  9 Apr 2025 09:27:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744190801; cv=none; b=jQxmOpYcCDdL4rXcoMkrnawlla4wMulPXVRPCy41gGw9D8U0WTBjbnNGbmBLabCZxBfSqLYQn3fpPUElUA8ADRT5nz+oizT9xuyvhb0uDqUuN7WKP2uU9HhG1zkMIVRoFDn5OOu+RtoTBlSQknfmsbMyDM9NRWEvXMRy0xcHuPQ=
+	t=1744190845; cv=none; b=LNGbklS40vRpCghaWTaMajyT0nZUIJoC4o5PM5+zKw1rCyVzZQmlo7xQM1hQ9jcZVdMr6/sQHQInX9V2tYZEi4t9Kh5kpixUo5Ir/bvQc/FoVM1tZIJQzQAzwIkQbTJCQw41xlmCXvA79W0KxZSibKK7HQdAYz9setQgrBrztaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744190801; c=relaxed/simple;
-	bh=i6Un4LBrv7+umUVjVMx0RfOQwqJo1mgsjWpVn24kD1c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pu+HKN9OFDST9unFq/EtfX2E+RmcWQzppL8W3YXBQ4btUHUT1zd8G9QhHxQPmT7s16wpzoJyVp1d/R4Cuk/Qysccja6DPGP6YOss4lr0a88mYIbkMOPFgSpF1MYlPANhqb+Yfi1waalhxzZITP/MDSktya4C4SVFKOwK3qKBAKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nic.cz; spf=pass smtp.mailfrom=nic.cz; dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b=VVrwu/tW; arc=none smtp.client-ip=217.31.204.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nic.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nic.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="VVrwu/tW"
-Received: from solitude (unknown [172.20.6.77])
-	by mail.nic.cz (Postfix) with ESMTPS id CC6531C1262;
-	Wed,  9 Apr 2025 11:17:28 +0200 (CEST)
-Authentication-Results: mail.nic.cz;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-	t=1744190248; bh=i6Un4LBrv7+umUVjVMx0RfOQwqJo1mgsjWpVn24kD1c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Reply-To:
-	 Subject:To:Cc;
-	b=VVrwu/tWDhfFMGpRzlFpShahG82/37rTB1DPaqBIli+GcT54xRbJXOP9Rt21GKd/Y
-	 lKUBraLBQAk3uiGNVsaCZ92XK40tw615cKFExlZ1PCJPDsy8CVitAqqIGNYo2mPRtW
-	 Lq49aH/pXBCrhnWEF7ZZDBIs3ouLFRSJa2Wjvd+w=
-Date: Wed, 9 Apr 2025 11:17:28 +0200
-From: Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH] platform: cznic: use new GPIO line value setter callbacks
-Message-ID: <7r44ci6ojbkc2gsvaj5ekgd76sictqek3xmhhebicugm43rbt5@micbmk7ndzm3>
-References: <20250408-gpiochip-set-rv-platform-cznic-v1-1-c3d4e724433f@linaro.org>
+	s=arc-20240116; t=1744190845; c=relaxed/simple;
+	bh=hO0SDwT67pLhlDTtYRqAD+v/GxTRKC3nAKAXae4odSQ=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=WCyctYudoFmfCerD96XMpv3R+ZeA3/HDORfJjl7TmJZp17v/8gzQM1yp5EmREXY6qY/W8drCmPI0grUSG5njvbItvXT0xcqmOSrUcCsmBZ1pMPI4rE9TghRRpfvSPhK4x8WMRAOOs21mjLa9BIt0AkAlKNqbdOt9IPcQlga8QaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZXcyw6zgBz4f3m7J;
+	Wed,  9 Apr 2025 17:26:48 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id EDDC91A058E;
+	Wed,  9 Apr 2025 17:27:13 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgCnC2BvPfZncubXIw--.15724S3;
+	Wed, 09 Apr 2025 17:27:13 +0800 (CST)
+Subject: Re: [PATCH RFC v2 00/14] md: introduce a new lockless bitmap
+To: Christoph Hellwig <hch@lst.de>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc: xni@redhat.com, colyli@kernel.org, axboe@kernel.dk, agk@redhat.com,
+ snitzer@kernel.org, mpatocka@redhat.com, song@kernel.org,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ dm-devel@lists.linux.dev, linux-raid@vger.kernel.org, yi.zhang@huawei.com,
+ yangerkun@huawei.com, kbusch@kernel.org, "yukuai (C)" <yukuai3@huawei.com>
+References: <20250328060853.4124527-1-yukuai1@huaweicloud.com>
+ <Z-aCzTWXzFWe4oxU@infradead.org>
+ <c6c608e2-23e7-486f-100a-d1fb6cfff4f2@huaweicloud.com>
+ <20250409083208.GA2326@lst.de>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <115c3b08-aff1-dd97-fe6a-7901452ce62c@huaweicloud.com>
+Date: Wed, 9 Apr 2025 17:27:11 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250408-gpiochip-set-rv-platform-cznic-v1-1-c3d4e724433f@linaro.org>
-X-Rspamd-Action: no action
-X-Rspamd-Server: mail
-X-Spamd-Bar: /
-X-Rspamd-Queue-Id: CC6531C1262
-X-Rspamd-Pre-Result: action=no action;
-	module=multimap;
-	Matched map: WHITELISTED_IP
-X-Spamd-Result: default: False [-0.10 / 16.00];
-	MIME_GOOD(-0.10)[text/plain];
-	WHITELISTED_IP(0.00)[172.20.6.77];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[]
+In-Reply-To: <20250409083208.GA2326@lst.de>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgCnC2BvPfZncubXIw--.15724S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxWry5WFWDtw4fJw4fCFykXwb_yoW5CFW3pF
+	ZxKr1Fkr4DJrWxWrn7Zws7XFyFk3ykJFZrJrySq3sYkr98Grna9r18KayYqa4UXr48JF4a
+	vFWvq34rXa15AFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBF14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
+	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVW8ZVWrXwCF04k20xvY0x
+	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcV
+	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
+	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0pRHUDLUUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On Tue, Apr 08, 2025 at 09:19:19AM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Hi,
 
-...
+ÔÚ 2025/04/09 16:32, Christoph Hellwig Ð´µÀ:
+> On Sat, Mar 29, 2025 at 09:11:13AM +0800, Yu Kuai wrote:
+>> The purpose here is to hide the low level bitmap IO implementation to
+>> the API disk->submit_bio(), and the bitmap IO can be converted to buffer
+>> IO to the bdev_file. This is the easiest way that I can think of to
+>> resue the pagecache, with natural ability for dirty page writeback. I do
+>> think about creating a new anon file and implement a new
+>> file_operations, this will be much more complicated.
+> 
+> I've started looking at this a bit now, sorry for the delay.
+> 
+> As far as I can see you use the bitmap file just so that you have your
+> own struct address_space and thus page cache instance and then call
+> read_mapping_page and filemap_write_and_wait_range on it right?
+Yes.
 
-> -static void omnia_gpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
-> -				    unsigned long *bits)
-> +static int omnia_gpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
-> +				   unsigned long *bits)
->  {
->  	unsigned long ctl = 0, ctl_mask = 0, ext_ctl = 0, ext_ctl_mask = 0;
->  	struct omnia_mcu *mcu = gpiochip_get_data(gc);
->  	unsigned int i;
-> +	int ret;
+> 
+> For that you'd be much better of just creating your own trivial
+> file_system_type with an inode fully controlled by your driver
+> that has a trivial set of address_space ops instead of oddly
+> mixing with the block layer.
 
-In this driver the name `err' is used everywhere for this kind of
-variable (when it contains error code or zero for success).
-`ret' is only used if the variable can also contain positive return
-value.
+Yes, this is exactly what I said implement a new file_operations(and
+address_space ops), I wanted do this the easy way, just reuse the raw
+block device ops, this way I just need to implement the submit_bio ops
+for new hidden disk.
 
-Bartosz, I will send updated version, if that is okay with you?
+I can try with new fs type if we really think this solution is too
+hacky, however, the code line will be much more. :(
 
-Marek
+> 
+> Note that either way I'm not sure using the page cache here is an
+> all that good idea, as we're at the bottom of the I/O stack and
+> thus memory allocations can very easily deadlock.
+
+Yes, for the page from bitmap, this set do the easy way just read and
+ping all realted pages while loading the bitmap. For two reasons:
+
+1) We don't need to allocate and read pages from IO path;(In the first
+RFC version, I'm using a worker to do that).
+2) In the first RFC version, I find and get page in the IO path, turns
+out page reference is an *atomic*, and the overhead is not acceptable;
+
+And the only action from IO path is that if bitmap page is dirty,
+filemap_write_and_wait_range() is called from async worker, the same as
+old bitmap, to flush bitmap dirty pages.
+> 
+> What speaks against using your own folios explicitly allocated at
+> probe time and then just doing manual submit_bio on that?  That's
+> probably not much more code but a lot more robust.
+
+I'm not quite sure if I understand you correctly. Do you means don't use
+pagecache for bitmap IO, and manually create BIOs like the old bitmap,
+meanwhile invent a new solution for synchronism instead of the global
+spin_lock from old bitmap?
+
+Thanks,
+Kuai
+
+> 
+> Also a high level note: the bitmap_operations aren't a very nice
+> interface.  A lot of methods are empty and should just be called
+> conditionally.  Or even better you'd do away with the expensive
+> indirect calls and just directly call either the old or new
+> bitmap code.
+> 
+>> Meanwhile, bitmap file for the old bitmap will be removed sooner or
+>> later, and this bdev_file implementation will compatible with bitmap
+>> file as well.
+> 
+> Which would also mean that at that point the operations vector would
+> be pointless, so we might as well not add it to start with.
+> 
+> .
+> 
+
