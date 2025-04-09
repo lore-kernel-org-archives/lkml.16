@@ -1,56 +1,77 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f98.google.com (mail-ot1-f98.google.com [209.85.210.98])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3500726ACB;
-	Wed,  9 Apr 2025 02:48:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744166937; cv=pass; b=svz8RJ6igqi/M2pGXIMulDvdb2wC1eX8LQAB6x4XEJyA8jWSKYnv6SjU9bWbgxQ4+2VAeB0E/o93mnkZU8zX1ig00fEMiZm40h+pcJT3uOd+4CxI+mnrppMTlWIXOHubyRmp/vbcOJh5trmmhZhmT1EmFwm0jeaIVeW+vsnfkgo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744166937; c=relaxed/simple;
-	bh=lscGfddQOWE8AhqxBdTatyY2pkbkU2TqgJ7DNijPCQ8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ulBc1ofNsIyJhJY5Rt8yEUKsNtpSgJ9DnoR8exZabFyGW7b7d9aFCWOLUgrn9N7b8Jd3dj3IaPA4lDpOadW+3rEUARgJuaJYGaIuUzikFbKdXvWaUdZI0BLtqd4zyvdAOlioCw2SIQYftzdd8oblM7/pVh6vz0ux+JAEd/MBFDI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=crxGwqIc; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE09A38FB9
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 02:49:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.98
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744167000; cv=none; b=JTv12DAMQWjgh/73pOYWDNxUnkEKFFzL8fDK20nKHD9NTBpjKa09sA44arKa65AecJTDkZO0bXgRj8InXTBwcm6ug+CoojHUfs6AJtT9FkaXXUUjYRvlvwGONMFcKhrbCfwqRTKpchctsvB2iIZJWHYzqvhLNQuhfalhiVxM93w=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744167000; c=relaxed/simple;
+	bh=oSbcp+HMi37hsvJxb6JgCimDrm0TZ96JAmlZ+5ptdLQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UrIHwarTkEiIhEQdS1Jm9A5UIn42V2FyK6dffD/wdI9jHyfuDD5T4qxXewFiI1aq9OlQYWIK3nMN+VmbBblzO/3njF7r+9Gel9D274ZvVHLS4giRaQC4tGlfcqqlNbDQuDAQSc9qCz4HBk89A5E2MoS2p312pbLkCS59ekP+mBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=fAv7b2G3; arc=none smtp.client-ip=209.85.210.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="crxGwqIc"
-ARC-Seal: i=1; a=rsa-sha256; t=1744166924; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=j8kr/U6Mhg6pNnJ59+Ueg3DXV7i8FnpJgdofZdbPJPoD0iy5v4oa05jKdB1yINAAaP9EgQ6eOl2cRP+uwL0IbLVCfN5Lp9ntusM6aC65vFDcfIrinn/w7bssIMyLmXwACwu6jvnnPRP2h0D/I1FZUJ+3FmqHPIYPOqQsjwzzNsQ=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1744166924; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Lo6rdbpVKNpqrSIHHGzsgA1k3qr45/jNwyi8MvtoIIw=; 
-	b=PPTJbscpob4lLJfai1vezKfdZyXwqwU5GO+l9gSCMvqMJmpf1SaZhv7lj36H/qgvpVP22gdLdCxa3RjAFdhJJa7EOc3V3rvkTLPgn+dZhePkW3ebQtiIfqNn/kZ8MmtXcA55fSRFVcZHj9upHz9Twg+7/DLY71E0mz6yPB8CIQk=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744166924;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
-	bh=Lo6rdbpVKNpqrSIHHGzsgA1k3qr45/jNwyi8MvtoIIw=;
-	b=crxGwqIct4nGSKOU6B67xz/gTuEmgQxUx0G6HJl+dQ8gsEWIyn0oTdJ65DN4oGeB
-	ecQ68eW6/CcKACYF+t/27AH9gfkhnWX8uJgFlGntFPzefh4gkLitzzcgN0WcGyB14TL
-	INU/IoXMWgI1W9hZHj8lRM0Vc0RJrY9wahZLCJJ8=
-Received: by mx.zohomail.com with SMTPS id 1744166922314423.9205214893128;
-	Tue, 8 Apr 2025 19:48:42 -0700 (PDT)
-From: Li Ming <ming.li@zohomail.com>
-To: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	shiju.jose@huawei.com,
-	Li Ming <ming.li@zohomail.com>
-Subject: [RFC PATCH 1/1] cxl/feature: Using Full Data Transfer only when offset is 0
-Date: Wed,  9 Apr 2025 10:48:25 +0800
-Message-Id: <20250409024825.510632-1-ming.li@zohomail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="fAv7b2G3"
+Received: by mail-ot1-f98.google.com with SMTP id 46e09a7af769-72b87587c61so447542a34.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 19:49:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1744166998; x=1744771798; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gdepLXKYc4w4R2CT56FvEdADqtoy0OyNwTPs1VSuUO0=;
+        b=fAv7b2G3InMoZcIE2R59VhftlhYaslaK+z/fqkRCgHKGgt3nr0dGtxXtqog8q6t1Oy
+         5WUpf2KLGZXoEUPtjgnoXEZfogSbLhnkfr3tLP3kJs5R9PuBwhX9zg46lADnvZVNXizo
+         fic9CL0SBWSENemTQO3uIhqdm7txp3dFxWqCPV8hIp6dHEhyrW4dkxDRHyBbc+mNB0U+
+         a1vkyFxFUK6MuO5tFOe6/cEt/kAE3QV6pm+jg0Bn+iVQQtkGMyersCllz4GPG4qHbg5x
+         glhphuR12b1VWbyF3GRFxnhk1VNpZ7icVpsuVwZLLKC43xAwYbRU606skPuRDGnQp+RK
+         BcXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744166998; x=1744771798;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gdepLXKYc4w4R2CT56FvEdADqtoy0OyNwTPs1VSuUO0=;
+        b=U7dl7AJUR7IH6pX+RWVzQ1t38/huK9M61VInqUOcQe7N5nb7XigjxJSaNhFX/6jOZa
+         N6xPJD/ycXS4MTBfW5EjhWMMO4Qfigbpwq1ydQiUFQIJRbCiI4DiGSMACiAhdZ8NAUfG
+         e6KGWtLbOWa++320GNCcsB4kCouutLmdWF3ZeKVoM7N/E8WtxpXuJcmVSG1TaINSEk4z
+         zVF29mn9JFAro7bCCbbkRSSeQJjVeHquS/yiPwGqNY+AYIaqEDQsVehgXLK/TkFW9gcd
+         YGZhyc/tJZ+sjjJYGir8aKkqr+VLH1I6TEJ4Yz+Jld8bYPmHK5gvY33qhpOcgmBZtoqO
+         3Vyg==
+X-Forwarded-Encrypted: i=1; AJvYcCX6rrb/DhkoAXNQosQdSV3t/R/2vrw7coaQnryg5kk52VW/vgcINuLwXEq0O/vPjQrsN6/uqE/W3Uvz/io=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSuwgNAlzUFHUTgIcvX1cFlXdJzR137HTA2Ng6Wi2zoOUdJA/o
+	ytERmWxVKVq1e4NrWrEQDrG3jy8tN7Bl4PWHy7hBvJM+VLADcKn4L0JrqWy8AmIS4M4nmAMi3qx
+	2kOIvDOr3h6L0U0MVs76Ut4qoJKjC5tFH
+X-Gm-Gg: ASbGncsFOqYQidJ2s/smRMX8BgGgEdunZgciQlSrEan1sU6kJgqUiM5zye9byfABnX7
+	dVfnpVgkOcq3BUpOGcHBDgg+SoeGGMiJ4f5K1jNq7HEz8S/4mcDuPNPiv8Byy/wgCDgLflUTtXL
+	G3hDYa3y2tBRCvcVr0tR+KUqBV35aVry8h0XkWgCrc99kFg+Zh8cDBIrVOeBs8EeNu10dl26k5V
+	mFkLlz2cIb2fNHOMizUf4PM0TGf7PnVbIkQnNjoD2voQ+t/kP2lu17NKyHVwZZw23PDzapVovvO
+	4w6o6sqr6HRbyahdZ4jnCxzMY9Rt6RVPxEeTuhe/q45eQLHn
+X-Google-Smtp-Source: AGHT+IG7UagWB48dQ9nnghKAGIyqOWWUlJc6F9oTBFsaRfbwlN/GSxnM5gGWRPD8sIhDJq3uUJ8pk+9s/zWO
+X-Received: by 2002:a05:6871:a012:b0:29e:6ddf:22d2 with SMTP id 586e51a60fabf-2d091ad46c8mr175604fac.9.1744166997809;
+        Tue, 08 Apr 2025 19:49:57 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.129])
+        by smtp-relay.gmail.com with ESMTPS id 586e51a60fabf-2d0969cc5ddsm36518fac.23.2025.04.08.19.49.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 19:49:57 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.7.70.37])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id C90863402AD;
+	Tue,  8 Apr 2025 20:49:56 -0600 (MDT)
+Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
+	id C3AEBE41459; Tue,  8 Apr 2025 20:49:56 -0600 (MDT)
+From: Caleb Sander Mateos <csander@purestorage.com>
+To: Ming Lei <ming.lei@redhat.com>,
+	Jens Axboe <axboe@kernel.dk>
+Cc: Caleb Sander Mateos <csander@purestorage.com>,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] ublk: skip blk_mq_tag_to_rq() bounds check
+Date: Tue,  8 Apr 2025 20:49:54 -0600
+Message-ID: <20250409024955.3626275-1-csander@purestorage.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,96 +79,134 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Feedback-ID: rr08011227f20bcca5c106d8699ac36b9a000053f8b3e81b113ef9f3641ee97bd85e20a86509cb1e8636800a:zu0801122782f97f2525511600c75b1c5a000080bbaa6f63aba2bc0f88beb6a2e927c4f46ff526ae8eaae98d:rf0801122d7f72687dca2b6df80bade99f0000368d6f36486f75a5b6b022f677aaecdffd7ec0da5960db1f6d71e5db776d35:ZohoMail
-X-ZohoMailClient: External
 
-Per CXL r3.2 section 8.2.10.6.3 Set Feature(Opcode 0502h)
+The ublk driver calls blk_mq_tag_to_rq() in several places.
+blk_mq_tag_to_rq() tolerates an invalid tag for the tagset, checking it
+against the number of tags and returning NULL if it is out of bounds.
+But all the calls from the ublk driver have already verified the tag
+against the ublk queue's queue depth. In ublk_commit_completion(),
+ublk_handle_need_get_data(), and case UBLK_IO_COMMIT_AND_FETCH_REQ, the
+tag has already been checked in __ublk_ch_uring_cmd(). In
+ublk_abort_queue(), the loop bounds the tag by the queue depth. In
+__ublk_check_and_get_req(), the tag has already been checked in
+__ublk_ch_uring_cmd(), in the case of ublk_register_io_buf(), or in
+ublk_check_and_get_req().
 
-"If the Feature data is transferred in its entirely, the caller makes
-one call to Set Feature with Action = Full Data Transfer. The Offset
-field is not used and shall be ignored."
+So just index the tagset's rqs array directly in the ublk driver.
+Convert the tags to unsigned, as blk_mq_tag_to_rq() does.
 
-It implies if using Full Data Transfer, the received data should be
-updated from offset 0 on device side.
-
-Current driver implementation is if feature data size is less than mbox
-payload - set feature header, driver will use Full Data Transfer even if
-user provides an offset. Per above description, feature data will be
-written from offset 0 rather than the offset value user provided, the
-result will not be what user expects.
-
-The changes is checking if the offset caller provides is equal to 0, if
-yes, using Full Data Transfer, if not, using Initiate Data Transfer -
-Finish Data Transfer.
-
-After the changes, all Set Feature transfer scenarios are below:
-
-1. data size + header is less than mbox payload and offset is 0
-	Full Data Transfer
-
-2. data size + header is less than mbox payload and offset is not 0
-	Initiate Data Transfer(with all feature data) - Finish Data Transfer(with no feature data)
-
-3. data size + header us greater than mbox payload with any value of offset
-	Initiate Data Transfer - Continue Data Transfer - Finish Data Transfer
-
-Fixes: 14d502cc2718e ("cxl/mbox: Add SET_FEATURE mailbox command")
-Signed-off-by: Li Ming <ming.li@zohomail.com>
+Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
 ---
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8 v6.15-rc1
----
- drivers/cxl/core/features.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+ drivers/block/ublk_drv.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
-index f4daefe3180e..fcc624cefe89 100644
---- a/drivers/cxl/core/features.c
-+++ b/drivers/cxl/core/features.c
-@@ -259,6 +259,17 @@ size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
- 	return data_rcvd_size;
+diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
+index 2fd05c1bd30b..5b07329f5197 100644
+--- a/drivers/block/ublk_drv.c
++++ b/drivers/block/ublk_drv.c
+@@ -210,11 +210,11 @@ struct ublk_params_header {
+ };
+ 
+ static bool ublk_abort_requests(struct ublk_device *ub, struct ublk_queue *ubq);
+ 
+ static inline struct request *__ublk_check_and_get_req(struct ublk_device *ub,
+-		struct ublk_queue *ubq, int tag, size_t offset);
++		struct ublk_queue *ubq, unsigned tag, size_t offset);
+ static inline unsigned int ublk_req_build_flags(struct request *req);
+ static inline struct ublksrv_io_desc *ublk_get_iod(struct ublk_queue *ubq,
+ 						   int tag);
+ static inline bool ublk_dev_is_user_copy(const struct ublk_device *ub)
+ {
+@@ -1515,11 +1515,11 @@ static void ublk_commit_completion(struct ublk_device *ub,
+ 	/* now this cmd slot is owned by nbd driver */
+ 	io->flags &= ~UBLK_IO_FLAG_OWNED_BY_SRV;
+ 	io->res = ub_cmd->result;
+ 
+ 	/* find the io request and complete */
+-	req = blk_mq_tag_to_rq(ub->tag_set.tags[qid], tag);
++	req = ub->tag_set.tags[qid]->rqs[tag];
+ 	if (WARN_ON_ONCE(unlikely(!req)))
+ 		return;
+ 
+ 	if (req_op(req) == REQ_OP_ZONE_APPEND)
+ 		req->__sector = ub_cmd->zone_append_lba;
+@@ -1533,11 +1533,11 @@ static void ublk_commit_completion(struct ublk_device *ub,
+  * blk-mq queue, so we are called exclusively with blk-mq and ubq_daemon
+  * context, so everything is serialized.
+  */
+ static void ublk_abort_queue(struct ublk_device *ub, struct ublk_queue *ubq)
+ {
+-	int i;
++	unsigned i;
+ 
+ 	for (i = 0; i < ubq->q_depth; i++) {
+ 		struct ublk_io *io = &ubq->ios[i];
+ 
+ 		if (!(io->flags & UBLK_IO_FLAG_ACTIVE)) {
+@@ -1545,11 +1545,11 @@ static void ublk_abort_queue(struct ublk_device *ub, struct ublk_queue *ubq)
+ 
+ 			/*
+ 			 * Either we fail the request or ublk_rq_task_work_cb
+ 			 * will do it
+ 			 */
+-			rq = blk_mq_tag_to_rq(ub->tag_set.tags[ubq->q_id], i);
++			rq = ub->tag_set.tags[ubq->q_id]->rqs[i];
+ 			if (rq && blk_mq_request_started(rq)) {
+ 				io->flags |= UBLK_IO_FLAG_ABORTED;
+ 				__ublk_fail_req(ubq, io, rq);
+ 			}
+ 		}
+@@ -1824,14 +1824,14 @@ static void ublk_mark_io_ready(struct ublk_device *ub, struct ublk_queue *ubq)
+ 		complete_all(&ub->completion);
+ 	mutex_unlock(&ub->mutex);
  }
  
-+static bool is_last_feat_transfer(struct cxl_mbox_set_feat_in *pi)
-+{
-+	switch (le32_to_cpu(pi->flags) & CXL_SET_FEAT_FLAG_DATA_TRANSFER_MASK) {
-+	case CXL_SET_FEAT_FLAG_FULL_DATA_TRANSFER:
-+	case CXL_SET_FEAT_FLAG_FINISH_DATA_TRANSFER:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
- /*
-  * FEAT_DATA_MIN_PAYLOAD_SIZE - min extra number of bytes should be
-  * available in the mailbox for storing the actual feature data so that
-@@ -294,14 +305,14 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox,
- 	if (hdr_size + FEAT_DATA_MIN_PAYLOAD_SIZE > cxl_mbox->payload_size)
- 		return -ENOMEM;
+ static void ublk_handle_need_get_data(struct ublk_device *ub, int q_id,
+-		int tag)
++		unsigned tag)
+ {
+ 	struct ublk_queue *ubq = ublk_get_queue(ub, q_id);
+-	struct request *req = blk_mq_tag_to_rq(ub->tag_set.tags[q_id], tag);
++	struct request *req = ub->tag_set.tags[q_id]->rqs[tag];
  
--	if (hdr_size + feat_data_size <= cxl_mbox->payload_size) {
-+	if (hdr_size + feat_data_size <= cxl_mbox->payload_size && !offset) {
- 		pi->flags = cpu_to_le32(feat_flag |
- 					CXL_SET_FEAT_FLAG_FULL_DATA_TRANSFER);
- 		data_in_size = feat_data_size;
- 	} else {
- 		pi->flags = cpu_to_le32(feat_flag |
- 					CXL_SET_FEAT_FLAG_INITIATE_DATA_TRANSFER);
--		data_in_size = cxl_mbox->payload_size - hdr_size;
-+		data_in_size = min(feat_data_size, cxl_mbox->payload_size - hdr_size);
- 	}
+ 	ublk_queue_cmd(ubq, req);
+ }
  
- 	do {
-@@ -322,7 +333,8 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox,
- 		}
+ static inline int ublk_check_cmd_op(u32 cmd_op)
+@@ -1989,11 +1989,11 @@ static int __ublk_ch_uring_cmd(struct io_uring_cmd *cmd,
  
- 		data_sent_size += data_in_size;
--		if (data_sent_size >= feat_data_size) {
-+		if (data_sent_size >= feat_data_size &&
-+		    is_last_feat_transfer(pi)) {
- 			if (return_code)
- 				*return_code = CXL_MBOX_CMD_RC_SUCCESS;
- 			return 0;
+ 		ublk_fill_io_cmd(io, cmd, ub_cmd->addr);
+ 		ublk_mark_io_ready(ub, ubq);
+ 		break;
+ 	case UBLK_IO_COMMIT_AND_FETCH_REQ:
+-		req = blk_mq_tag_to_rq(ub->tag_set.tags[ub_cmd->q_id], tag);
++		req = ub->tag_set.tags[ub_cmd->q_id]->rqs[tag];
+ 
+ 		if (!(io->flags & UBLK_IO_FLAG_OWNED_BY_SRV))
+ 			goto out;
+ 
+ 		if (ublk_need_map_io(ubq)) {
+@@ -2033,18 +2033,18 @@ static int __ublk_ch_uring_cmd(struct io_uring_cmd *cmd,
+ 			__func__, cmd_op, tag, ret, io->flags);
+ 	return ret;
+ }
+ 
+ static inline struct request *__ublk_check_and_get_req(struct ublk_device *ub,
+-		struct ublk_queue *ubq, int tag, size_t offset)
++		struct ublk_queue *ubq, unsigned tag, size_t offset)
+ {
+ 	struct request *req;
+ 
+ 	if (!ublk_need_req_ref(ubq))
+ 		return NULL;
+ 
+-	req = blk_mq_tag_to_rq(ub->tag_set.tags[ubq->q_id], tag);
++	req = ub->tag_set.tags[ubq->q_id]->rqs[tag];
+ 	if (!req)
+ 		return NULL;
+ 
+ 	if (!ublk_get_req_ref(ubq, req))
+ 		return NULL;
 -- 
-2.34.1
+2.45.2
 
