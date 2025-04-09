@@ -1,49 +1,52 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 969E31E1023
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 06:45:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E45E2D600
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 06:47:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744181103; cv=none; b=K9moaEkVVX2X6CRx4gB/R/88Gxw0T2BTUGT5tnwzDu9DqNv7s4oefVnQki3c5GbtYO/uIxS8Kbc2MVqIV/UN8puCurKHTSeKLqwCQdhx2FtwBsKRu0vUOdbffXLxbXya561dKXP7ypLOeCtdxSPjlsqQTCuYkYIONlgI0WqEwh8=
+	t=1744181252; cv=none; b=hJFLWYOVJpcKgr0Mrqc9chqiE5/pqXY/59RuAff97dxwz2iPz6Se/YD1vT0dJKqOw48emOrZrEBkmxtP5tbNNR+OH2kwcLpKxo2OxvbmyawaWHXxLUYDL5uVO+98Q5pK9Ihwk0rcqercQtWUDfrsqtwZRvbmgW8ZZayV2XOJkzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744181103; c=relaxed/simple;
-	bh=Lk/nerQuXwCVaG1hZ0KR4U4tdyw6/FXCBoB6hXRgscQ=;
+	s=arc-20240116; t=1744181252; c=relaxed/simple;
+	bh=dSuhNbiaWYrVPStkGfZ4mDD4EmWjCfc/hB+7hG057p4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SiqQZRaWMdKYsOi3s4CBiM+ALK8sAtf72uLWsBFv78jO4vu9nPArdF7Ublw3Xee6xKd3mg21WpfNluBIfHQrHZRuYxqXBSTF1rfmDJlp581F8l9nhbZavhd/3oPXvkno1x3kMsX6LdNVAiS2EzIx1YSLiOZIjFLnlcjI93fT6P8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FJqxQ0tl; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=SVOmnjhnEe8QLRnseym9ZUBKWtpZotjZTIgBg2Hl08wGYb3W4yFZhX0jCVQVgM9mfRFVHpFbVyDj5d7NM8T9/RPLcr6r+cjk42vSMbDTSsBn00uxmiJ3oDaFoqf0MyLa1dt3JHvprV7+i9bf8eQ11VPyqi0mx4dLkApqyIFFFKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=hYEm43Gw; arc=none smtp.client-ip=44.202.169.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FJqxQ0tl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744181099;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Xyyyv7/mfJ9H0zBbyj9vD5vCWrDye2V05E9brkG1H0g=;
-	b=FJqxQ0tlb2yCd5CtizmWFzTbySj2YFqlDidAPfbCc0/84s9Nj4nR7YYtPvyi+RiSeKWRCz
-	HBmw1iXprfGYfqFkC+dKQsEnFq9zARGPrcUDVPyLez7eiWzKV4UlvFC60I6+SDWCszFmgb
-	LYgezhQiY4uiyIw4XT4j+8d9yQbT5a8=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-675-m6XxHO3uPn6SB5zNQuCBSg-1; Wed,
- 09 Apr 2025 02:44:55 -0400
-X-MC-Unique: m6XxHO3uPn6SB5zNQuCBSg-1
-X-Mimecast-MFC-AGG-ID: m6XxHO3uPn6SB5zNQuCBSg_1744181093
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CA7321955DCD;
-	Wed,  9 Apr 2025 06:44:52 +0000 (UTC)
-Received: from [10.44.32.72] (unknown [10.44.32.72])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 521C43001D0E;
-	Wed,  9 Apr 2025 06:44:47 +0000 (UTC)
-Message-ID: <22b9f197-2f98-43c7-9cc9-c748e80078b0@redhat.com>
-Date: Wed, 9 Apr 2025 08:44:46 +0200
+	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="hYEm43Gw"
+Received: from eig-obgw-5003a.ext.cloudfilter.net ([10.0.29.159])
+	by cmsmtp with ESMTPS
+	id 2N7juSIUwiuzS2PDdubrMy; Wed, 09 Apr 2025 06:47:29 +0000
+Received: from box5620.bluehost.com ([162.241.219.59])
+	by cmsmtp with ESMTPS
+	id 2PDcud7FQrsgD2PDcuToi7; Wed, 09 Apr 2025 06:47:29 +0000
+X-Authority-Analysis: v=2.4 cv=TNGOSEla c=1 sm=1 tr=0 ts=67f61801
+ a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
+ a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
+ a=HaFmDPmJAAAA:8 a=49j0FZ7RFL9ueZfULrUA:9 a=QEXdDO2ut3YA:10
+ a=nmWuMzfKamIsx3l42hEX:22 a=hTR6fmoedSdf3N0JiVF8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
+	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=WIYjIZka4Koev1rTlkF0ZS+CFjn6vZFVHi4ABUumf54=; b=hYEm43GwVKwUfaDlFbJ/uUvTfK
+	eg6k8wlPh4xZ6lshE5G/nu8u4WHqLxDmT+xJBaP4H+7QFT0vc50dRK8o9rwG7Iq3y8DxxJK8Eb2Wf
+	bI5FnJOBpYV4TqiUgykBje9ByfvOH/UZPRJPZ4de06z47iC9oavlZYdOyaAVuEkCqTei2lJbc0Y0B
+	hqMemSFc8bd/VgTpdOwLIycHwx/GRmXBN+H/rn/os7u+qbCjLNSz7tru5NU02Z6YWJUkRSQnXdRXA
+	VJT5idoGOg0oBVTlECIzD9n+gsbPlisntTorB6bF/2g+wjB+U9tM97mkcCvwhttuubo7hOm3gT/0U
+	hIlL0OQA==;
+Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:49620 helo=[10.0.1.116])
+	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <re@w6rz.net>)
+	id 1u2PDa-00000000LZT-2EAL;
+	Wed, 09 Apr 2025 00:47:26 -0600
+Message-ID: <633cd6e8-6802-4a70-914c-d1207bf9d7e4@w6rz.net>
+Date: Tue, 8 Apr 2025 23:47:22 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,103 +54,61 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 05/28] mfd: zl3073x: Add components versions register defs
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: netdev@vger.kernel.org, Michal Schmidt <mschmidt@redhat.com>,
- Vadim Fedorenko <vadim.fedorenko@linux.dev>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
- Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
- Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
- Andy Shevchenko <andy@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20250407172836.1009461-1-ivecera@redhat.com>
- <20250407172836.1009461-6-ivecera@redhat.com>
- <a5d2e1eb-7b98-4909-9505-ec93fe0c3aac@lunn.ch>
+Subject: Re: [PATCH 6.6 000/268] 6.6.87-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250408104828.499967190@linuxfoundation.org>
 Content-Language: en-US
-From: Ivan Vecera <ivecera@redhat.com>
-In-Reply-To: <a5d2e1eb-7b98-4909-9505-ec93fe0c3aac@lunn.ch>
+From: Ron Economos <re@w6rz.net>
+In-Reply-To: <20250408104828.499967190@linuxfoundation.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - box5620.bluehost.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - w6rz.net
+X-BWhitelist: no
+X-Source-IP: 73.223.253.157
+X-Source-L: No
+X-Exim-ID: 1u2PDa-00000000LZT-2EAL
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:49620
+X-Source-Auth: re@w6rz.net
+X-Email-Count: 73
+X-Org: HG=bhshared;ORG=bluehost;
+X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfByZAJu16WtN5W3qjUNVaqZDOy7cTwJ7zR86AdXDlq15LNGC945MyKsK27MmoUNYYFF8Xqno6jC27NpPDr+IzBXzFPHgYE3Iyuokcc7IHpntYyy8zJXr
+ 6zIIRc3W59k+bXodFtNyU9bevGowps2TcDg3cEVJ9A38BKkPFAr6x1fg7OUhQes6HDqnO6S0cGQyYVlwx6KdZf1g8zL5K2u2pZ0=
 
-On 07. 04. 25 11:09 odp., Andrew Lunn wrote:
-> On Mon, Apr 07, 2025 at 07:28:32PM +0200, Ivan Vecera wrote:
->> Add register definitions for components versions and report them
->> during probe.
->>
->> Reviewed-by: Michal Schmidt <mschmidt@redhat.com>
->> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
->> ---
->>   drivers/mfd/zl3073x-core.c | 35 +++++++++++++++++++++++++++++++++++
->>   1 file changed, 35 insertions(+)
->>
->> diff --git a/drivers/mfd/zl3073x-core.c b/drivers/mfd/zl3073x-core.c
->> index 39d4c8608a740..b3091b00cffa8 100644
->> --- a/drivers/mfd/zl3073x-core.c
->> +++ b/drivers/mfd/zl3073x-core.c
->> @@ -1,10 +1,19 @@
->>   // SPDX-License-Identifier: GPL-2.0-only
->>   
->> +#include <linux/bitfield.h>
->>   #include <linux/module.h>
->>   #include <linux/unaligned.h>
->>   #include <net/devlink.h>
->>   #include "zl3073x.h"
->>   
->> +/*
->> + * Register Map Page 0, General
->> + */
->> +ZL3073X_REG16_DEF(id,			0x0001);
->> +ZL3073X_REG16_DEF(revision,		0x0003);
->> +ZL3073X_REG16_DEF(fw_ver,		0x0005);
->> +ZL3073X_REG32_DEF(custom_config_ver,	0x0007);
->> +
->>   /*
->>    * Regmap ranges
->>    */
->> @@ -159,10 +168,36 @@ EXPORT_SYMBOL_NS_GPL(zl3073x_dev_alloc, "ZL3073X");
->>   
->>   int zl3073x_dev_init(struct zl3073x_dev *zldev)
->>   {
->> +	u16 id, revision, fw_ver;
->>   	struct devlink *devlink;
->> +	u32 cfg_ver;
->> +	int rc;
->>   
->>   	devm_mutex_init(zldev->dev, &zldev->lock);
->>   
->> +	scoped_guard(zl3073x, zldev) {
-> 
-> Why the scoped_guard? The locking scheme you have seems very opaque.
+On 4/8/25 03:46, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.6.87 release.
+> There are 268 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 10 Apr 2025 10:47:53 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.87-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-We are read the HW registers in this block and the access is protected 
-by this device lock. Regmap locking will be disabled in v2 as this is 
-not sufficient.
+Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
 
->> +		rc = zl3073x_read_id(zldev, &id);
->> +		if (rc)
->> +			return rc;
->> +		rc = zl3073x_read_revision(zldev, &revision);
->> +		if (rc)
->> +			return rc;
->> +		rc = zl3073x_read_fw_ver(zldev, &fw_ver);
->> +		if (rc)
->> +			return rc;
->> +		rc = zl3073x_read_custom_config_ver(zldev, &cfg_ver);
->> +		if (rc)
->> +			return rc;
-> 
-> Could a parallel operation change the ID? Upgrade the firmware
-> version?
-> 
-> 	Andrew
-
-No, but register access functions require the device lock to be held. 
-See above.
-
-Thanks,
-Ivan
+Tested-by: Ron Economos <re@w6rz.net>
 
