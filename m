@@ -1,178 +1,109 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B30F2676E9;
-	Wed,  9 Apr 2025 15:32:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D64A26770E;
+	Wed,  9 Apr 2025 15:33:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744212775; cv=none; b=QUmYH/cPHOVLFyYNnEycIFwn8QVpMaPVB1b/uInfmHCW13EtrbUi9i3PDByvcY25AoAtFyaqSx1RGzS0aOb62Ujn3NKw3JwadHOnruv4EoYQEL7vxrRl/zey1zSJf05BuLo4qj/tpxc1wZ8iaRwZqM5M1NVLnxhpArvpHM/QuSQ=
+	t=1744212802; cv=none; b=Ixy0R8ce8ktsZiZyvm3D60xlfHCpBgogK61TSnHmUPappz2DqVyO6e1E3JDVDPti6i7C8bkz5jjAhtq/ECrESYeNxS78UDydTj9+srKjGNTP4jyLwoh9DsX2kJwY/NHiLJUqTTK1hIlwLEYL7aBmhrJ9DK9kapSexkTFo40om0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744212775; c=relaxed/simple;
-	bh=8wC1vIXVUrYRDQcVV3Qol2ing2bHs2QBuSHbStzAf3g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=biInTpb14xfQ/jnxk65v+2X27Xms4CSr/gqRI7LM8Ww3wokhVNo1C9taeE8+2bPIWo7ho5UTohXWi3aetMa8gP20DjC0Xcs/sfR0ry9jNN5wMcRCCKzpzHkDt0KZfKe7U8SkD5j4NQ7lDPsvXQXVfY9DXdLSTRLOYh19xWo11do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=noxQPKY7; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744212802; c=relaxed/simple;
+	bh=mErJO8k3cpuBPBmJcDHzl2+V5zvBB5RozSbgoAix5w4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IuGuocMQWGzs7kFQdYW8mf4aFpWh/42MDiwZfEvE3igRNO1A7MVifHHDjTui3C6txBneFOjjzupSAaJqD55KC/dS0k6LyluQylkoeJqzcK5vecZSgd9Mr5cf6CRupHYid6OnXvPiV5b+bpjlhbXXhpVy74bwVwbEHe7YSM9bVBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FZo9teaG; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="noxQPKY7"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30db1bc464dso61282751fa.0;
-        Wed, 09 Apr 2025 08:32:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744212771; x=1744817571; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Y0hope6H7ESnSOwlHVjc9jrLdGWOO0sRm2XAZ3flFlk=;
-        b=noxQPKY7GnrVc0pqIGAGirhT8fVSpedQ2lQzYWIwlPQViiibsuk03QYxEbaS9yea30
-         lgOHEum0iIok4MaWjNqsiBLZAmSpY9VEnKy7JXdnvZHl+H3VSIHoC1EqSAkbgaIZP0Wn
-         1YBmzP8QYUUpo5maU0BX6W57A3BTM1X7hopaNaImXkWNVWFcWe/hybASsBylmyZi6Dbu
-         4+UJ+U0WcJcR7xPHpAC3Pp89XrrkeRdqN3YxGqpUWX2l7RLM0lbx8JvA0kh57TivmTq0
-         mDM4Y/fz+NZMTitb0F27Or7YbyVD8sdccalp688HVKZOUoILlKBeWnDLaKTHKil0+53i
-         ziLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744212771; x=1744817571;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Y0hope6H7ESnSOwlHVjc9jrLdGWOO0sRm2XAZ3flFlk=;
-        b=p6fxggZaFERMJl3TIn6a3IdHqiWAuFwHQ1ws9VxqjeHDD4jWyuxS35r6LWuOozngB3
-         YNblG9pcOYoCDfYXVmnD3UFzZ7my7A49LEyzjTJjDYEHTw0Lmeg8zZnaiZTLRdEfGZMv
-         FP9+I8qMdIdJXCcatwN1AaP801yiO5rp4POT1oZNYx6w8rIbMngZDL0+wdIKYSLRqaI2
-         DeAH9obIb3wbIztCfdKWrsHpO/E7pNbkdLgxE3zu+RZstBmZt6D6/1ohsu0TwpHcdYH1
-         mhSXQqBhieoOz8gfDPFEfOH/Exxk6hld9vQukKgJtLHNy+/zxn6xV4bwnXwrfp+NRdca
-         eJpw==
-X-Forwarded-Encrypted: i=1; AJvYcCU+QFCSESjWIMOtPD0ehLsguFlc1sbZWACz3hUQFDJ7O8GnQkXVdsDtCDOhGowjGnJgRtz4FOAXz5W9EuNh@vger.kernel.org, AJvYcCUiTMSvoMzNVi7lh+2Qmv7Tx/sf5RERSmoe7rsIgA3Lv6w9NPck9On6tC6tVFZpAtp1Y3di867o2jeKPFl/yw==@vger.kernel.org, AJvYcCVHrCL1smb4GvcpZUXLEnVfTZ/Iq+D4sKKn1QR3rJBVQ11vngQVGsOoISvCic7fCiN9sc0Q4vFnwUIb3ac=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyA8o1Lu6bCpFalGbKBI2r3RlptfyESJuiP1hk35jPGsAFNTZ4v
-	B5TiktHg8kBZeBWqSSC4uxRVkvGGcTVfmg0hjhP9TLdTiHn0DZwRl2QlO/sh6iVJA7929e3CVXW
-	+IHQzg4On53vD8xlMfKRXeY/rvo5Yje0UVUk=
-X-Gm-Gg: ASbGncvFIX7Z6w5FgFU7+yAiC+zac919N5ycX0dDi0VQQOhm3iB3iQ8205jphUdF//p
-	NSmBM1VEqG22L5G8x8+dMfvkr3GtN0pcweUuLBWm6BaDm0m02ATmfvRwp+MxGu2Ky8PnEHxYJG9
-	bt9g0Y5g+3V6gxliXB2neQvg==
-X-Google-Smtp-Source: AGHT+IFu/sCRRE/zuYQxpO7Z/QuzxIxpI2ihFbL3egoMziMj7jxtQmily5wAx7fkILu7q6XwXt4QgGWB3iFj4j66esY=
-X-Received: by 2002:a05:651c:1603:b0:30b:d0d5:1fee with SMTP id
- 38308e7fff4ca-30f4362f5f9mr12048941fa.0.1744212770949; Wed, 09 Apr 2025
- 08:32:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FZo9teaG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744212802; x=1775748802;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=mErJO8k3cpuBPBmJcDHzl2+V5zvBB5RozSbgoAix5w4=;
+  b=FZo9teaGJkxPaEiVsT4BfSjJMFK6MSuY3RtK/d1aeA9xrBD3d/DOVEpS
+   2a4yfZ2/9amjjvwpCXjepGFt0kz5UaKEpgkCbN3bz8TbX9Rbs7VXnK4mS
+   WHf7jioaKznua+i2RXNv/2TeT9skJP0TLDY0oJsPs839PdginhkUsr7c+
+   HWALEAH6VQ81qqMRpmNH/1R2h+3tcTVkgGZfTEm+WBJuMHRGB99uSIH7d
+   uYkWBC0STkw55rGWGqfN6WuyxRO4Vsj5oTkOxHh1pSK1qt4qCqHFKjOvW
+   n0o1TwoXuUrEHvNfONgXwvBUjyQLC+/zVdBHr9A1K6VovEJRuXpSXFIs8
+   w==;
+X-CSE-ConnectionGUID: GTXsCr01TgGN7u6G3SpJ0w==
+X-CSE-MsgGUID: jW5wamcWSDKOJZc1jxYnRg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="45582295"
+X-IronPort-AV: E=Sophos;i="6.15,200,1739865600"; 
+   d="scan'208";a="45582295"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 08:33:21 -0700
+X-CSE-ConnectionGUID: Fpvn1roRQguN0PtW+NjSfA==
+X-CSE-MsgGUID: hp7hC+GATASRmDoW92HvTA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,200,1739865600"; 
+   d="scan'208";a="128354896"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 08:33:17 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1u2XQQ-0000000AmNz-0KQG;
+	Wed, 09 Apr 2025 18:33:14 +0300
+Date: Wed, 9 Apr 2025 18:33:13 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Oliver Graute <oliver.graute@kococonnector.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
+	Yu Jiaoliang <yujiaoliang@vivo.com>, linux-input@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 03/10] [v2] Input: stmpe-ts - use module alias instead of
+ device table
+Message-ID: <Z_aTOUUmyXpWnt57@smile.fi.intel.com>
+References: <20250409122131.2766719-1-arnd@kernel.org>
+ <20250409122314.2848028-1-arnd@kernel.org>
+ <20250409122314.2848028-3-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250404102535.705090-1-ubizjak@gmail.com> <CAK7LNATO1RfACvWhHJuLi-FYWMnSn6+Tp67-EZtVWNk+RCSTVQ@mail.gmail.com>
- <CAFULd4bx9BGKo_4kn14rsVr44otpdjpjn_o6=zMp8iu98f9Upg@mail.gmail.com>
- <CAK7LNATnactfA2U0CB2VcoE1eDc+bj=Jjye-Khsc3xG-iZ2XVQ@mail.gmail.com>
- <CAFULd4b25r5wf31DJputSOZhhMTrejQ_3-2P5rpeOL8H=4_mcA@mail.gmail.com>
- <CAK7LNAQVbwnnX5TJLmEShtmUtLCwr=rnZgwX9NoAke+PqzsqiA@mail.gmail.com>
- <CAFULd4b2azU-oBOTTXgQ6ahkVeYWHTJrnmJ97vtLm3P6jMOeug@mail.gmail.com> <20250409152812.GGZ_aSDEaLEOVUf3YX@fat_crate.local>
-In-Reply-To: <20250409152812.GGZ_aSDEaLEOVUf3YX@fat_crate.local>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Wed, 9 Apr 2025 17:32:39 +0200
-X-Gm-Features: ATxdqUGS7isbkS0rU1SwEJvoSZgZ6KTf5SF7rcW4ikE2sytX2LFzVy3mDmvZz7E
-Message-ID: <CAFULd4avYC6V=-ewBcTGHA5GjuTBh++-wLNOH=M68u1rwNsAmg@mail.gmail.com>
-Subject: Re: [PATCH] compiler.h: Avoid the usage of __typeof_unqual__() when
- __GENKSYMS__ is defined
-To: Borislav Petkov <bp@alien8.de>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, linux-modules@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Paul Menzel <pmenzel@molgen.mpg.de>, Sami Tolvanen <samitolvanen@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409122314.2848028-3-arnd@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Apr 9, 2025 at 5:28=E2=80=AFPM Borislav Petkov <bp@alien8.de> wrote=
-:
->
-> On Sun, Apr 06, 2025 at 05:36:13PM +0200, Uros Bizjak wrote:
-> > On Fri, Apr 4, 2025 at 9:14=E2=80=AFPM Masahiro Yamada <masahiroy@kerne=
-l.org> wrote:
-> > >
-> > > On Fri, Apr 4, 2025 at 11:37=E2=80=AFPM Uros Bizjak <ubizjak@gmail.co=
-m> wrote:
-> > > >
-> > > > On Fri, Apr 4, 2025 at 4:06=E2=80=AFPM Masahiro Yamada <masahiroy@k=
-ernel.org> wrote:
-> > > >
-> > > > > > > > Current version of genksyms doesn't know anything about __t=
-ypeof_unqual__()
-> > > > > > > > operator.  Avoid the usage of __typeof_unqual__() with genk=
-syms to prevent
-> > > > > > > > errors when symbols are versioned.
-> > > > > > > >
-> > > > > > > > There were no problems with gendwarfksyms.
-> > > > > > > >
-> > > > > > > > Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-> > > > > > > > Fixes: ac053946f5c40 ("compiler.h: introduce TYPEOF_UNQUAL(=
-) macro")
-> > > > > > > > Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
-> > > > > > > > Closes: https://lore.kernel.org/lkml/81a25a60-de78-43fb-b56=
-a-131151e1c035@molgen.mpg.de/
-> > > > > > > > Cc: Sami Tolvanen <samitolvanen@google.com>
-> > > > > > > > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > > > > > > > ---
-> > > > > > >
-> > > > > > >
-> > > > > > > Why don't you add it to the genksyms keyword table?
-> > > > > >
-> > > > > > It doesn't work, even if I patch it with an even more elaborate=
- patch
-> > > > > > (attached).
-> > > > > >
-> > > > > > I guess some more surgery will be needed, but for now a fallbac=
-k works
-> > > > > > as expected.
-> > > > > >
-> > > > > > Uros.
-> > > > >
-> > > > > The attached patch looks good to me.
-> > > >
-> > > > FAOD - do you refer to the submitted one for compiler.h or to the o=
-ne
-> > > > for scripts/genksyms/keywords.c? (The latter doesn't fix the warnin=
-g,
-> > > > though).
-> > >
-> > >
-> > >
-> > > You are still seeing the warnings because __typeof_unqual__
-> > > is not only the issue.
-> > >
-> > > Hint:
-> > >
-> > > $ make -s KCFLAGS=3D-D__GENKSYMS__  arch/x86/kernel/setup_percpu.i
-> > > $ grep  'this_cpu_off;'  arch/x86/kernel/setup_percpu.i
-> >
-> > I see.
-> >
-> > With my workaround, this_cpu_off is declared as:
-> >
-> > extern __attribute__((section(".data..percpu" "..hot.."
-> > "this_cpu_off"))) __typeof__(unsigned long) this_cpu_off;
-> >
-> > while without workaround, the same variable is declared as:
-> >
-> > extern __seg_gs __attribute__((section(".data..percpu" "..hot.."
-> > "this_cpu_off"))) __typeof__(unsigned long) this_cpu_off;
-> >
-> > It looks that genksyms should be extended to handle (or ignore)
-> > __seg_gs/__seg_fs named address prefix. Somewhat surprising, because
-> > genksyms can process:
-> >
-> > extern __attribute__((section(".data..percpu" "..hot.."
-> > "const_current_task"))) __typeof__(struct task_struct * const
-> > __seg_gs) const_current_task
-> >
-> > without problems.
-> >
-> > I'm sorry, but I'm not able to extend genksyms with a new keyword by my=
-self...
->
-> Well, we need a fix here because this fires a lot by now - triggers on my
-> machines now too.
->
-> So either take a fix or we'll need to revert until it is fixed properly.
+On Wed, Apr 09, 2025 at 02:22:55PM +0200, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> When compile tested with W=1 on x86_64 with driver as built-in:
+> 
+>   stmpe-ts.c:371:34: error: unused variable 'stmpe_ts_ids' [-Werror,-Wunused-const-variable]
+> 
+> Ideally this would be referenced from the platform_driver, but since
+> the compatible string is already matched by the mfd driver for its
+> parent device, that would break probing.
+> 
+> In this case, the of_device_id table just serves as a module alias
+> for loading the driver, while the device itself is probed using
+> the platform device name.
+> 
+> Remove the table and instead use a module alias that reflects how
+> the driver is actually probed.
 
-The workaround is posted to the list. It should be committed to the
-mainline until genksyms is fixed.
+...
 
-Uros.
+> +MODULE_ALIAS("platform:stmpe-ts");
+
+Isn't the preferable way to have platform device ID table instead?
+Krzysztof?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
