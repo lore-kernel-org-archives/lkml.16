@@ -1,149 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABC2826461B;
-	Wed,  9 Apr 2025 13:41:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 790F8433C4;
+	Wed,  9 Apr 2025 13:41:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744206068; cv=none; b=T/dqsjzviCtxJl2awLFK+XQSGM809x9hUU3citqjg6wB2ykp5cIb73QBqfoP6Ey9q/x5LdyBNwM9ffwkRxTmzt4PBv0irJc5ooJZFm4LwEmnRY8S2WNkH5EvWaQkqNcwuVowkyQAfPBeH0TAJ/cM7ANF6ybvuyHMNZbQe4kFdIk=
+	t=1744206117; cv=none; b=k0bbq4kYf4I7tA9Qz8cEYbA6xdRR4Yxu+VL3ERgGHD0qasitCCJMk9TNrfLYcBB28e2AVtaWZmMzTBQH4MKi+H37Kck3QfPdbnDRQ8vOILrJL5TANtH029OpZgd+Dgn2GWQlLLCi6Oh0F1Zc7LwzKXg/PVoMZmLQ9FHlziMOspM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744206068; c=relaxed/simple;
-	bh=+1atZIFJ5wuqFQAdnBtVviK8HirErlh/0SzSdL6g428=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=p7tq+XIUvodycdWLVUlYWgkFZwoQ3033dNpdGxo56vE7Dc9doIa1tWdXMnLM4GyycpIrKzGsUL4aIgvqT+hjxqqJePUptetVW85XaQ3LiQ+KtKcQOF38Qj6WLIjsuWRYX/k1vr4TCOGv0mky1llQfQI7u8fVoSFF90T5Zck7stU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73450C4CEE7;
-	Wed,  9 Apr 2025 13:41:07 +0000 (UTC)
-Date: Wed, 9 Apr 2025 09:42:26 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: [PATCH] ftrace: Show subops in enabled_functions
-Message-ID: <20250409094226.23f75293@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1744206117; c=relaxed/simple;
+	bh=3rAJaOKgh4+IDZkzlyNd4k9ObD+frWVRnBf/L86s5pw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FDblU4R9SbK6MyDYAvHltHUl8AGloqFlBWtM4RmzTVA0quFpHJi0VPpJuv9OZxj713cfcQqyvHNHhwB4B3qpgELtlDyrG3b09XyeXdLmq3PMnb57JDxHnC6zOZjv52z22RtyR/0H92JV+DmaMgaMO6U9+SZXch+6AlyTqZyvigg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=FeDaF9Ka; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FeDaF9Ka"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 539DfenG843121
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 9 Apr 2025 08:41:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744206100;
+	bh=z5+02e1VECt6e7j0vj6RHxQ3TukVfOXtn1DHHYQDDmQ=;
+	h=From:To:CC:Subject:Date;
+	b=FeDaF9Kabcjt+sbqnpuhvfMVjAtXklEqjCmUqFVhUwhmNSj7FHss9NfQzF6FCzfOh
+	 QE4hZGGML4VXZDeqoDG9ROPIiyZH5u3a+mTeR/RqZGzNkxb2YTw4dVL9ZkK5EGUWU1
+	 CMuJaukQYbeaI3bOOee9c/7gSj1LV/IZM1/SV0Pg=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 539DfeEA124912
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 9 Apr 2025 08:41:40 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 9
+ Apr 2025 08:41:40 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 9 Apr 2025 08:41:40 -0500
+Received: from abhilash-HP.dhcp.ti.com (abhilash-hp.dhcp.ti.com [172.24.227.115])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 539DfZvm122297;
+	Wed, 9 Apr 2025 08:41:36 -0500
+From: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+To: <nm@ti.com>, <vigneshr@ti.com>
+CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <vaishnav.a@ti.com>, <jai.luthra@linux.dev>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <imx@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+        <u-kumar1@ti.com>, Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+Subject: [PATCH v2 0/7] Fix dtbs_check warnings in CSI overlays
+Date: Wed, 9 Apr 2025 19:11:21 +0530
+Message-ID: <20250409134128.2098195-1-y-abhilashchandra@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-From: Steven Rostedt <rostedt@goodmis.org>
+There are a bunch of new warnings generated using CONFIG_OF_ALL_DTBS.
+This configuration applies DTB and overlay together to generate test DTBs,
+which are then validated using dtbs_check.
 
-The function graph infrastructure uses subops of the function tracer.
-These are not shown in enabled_functions. Add a "subops:" section to the
-enabled_functions line to show what functions are attached via subops. If
-the subops is from the function_graph infrastructure, then show the entry
-and return callbacks that are attached.
+This patch series fixes all warnings related to sensor overlays on
+jacinto platforms and a few minor warnings on sitara as well.
 
-Here's an example of the output:
+To fix some of the warnings, missing power regulator nodes are added on
+the J721E-SK and the regulator hierarchy on the AM68-SK is corrected.
 
-schedule_on_each_cpu (1)                tramp: 0xffffffffc03ef000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60     subops: {ent:trace_graph_entry+0x0/0x20 ret:trace_graph_return+0x0/0x150}
+IMX219 Logs: https://gist.github.com/Yemike-Abhilash-Chandra/1f1ee770507b31e6015ec3ef35a4da79
+OV5640 Logs: https://gist.github.com/Yemike-Abhilash-Chandra/7801f74d28ed5895a15049ce9f0fbe60
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- include/linux/ftrace.h |  2 ++
- kernel/trace/fgraph.c  |  2 ++
- kernel/trace/ftrace.c  | 36 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 40 insertions(+)
+Changelog:
+Changes in V2:
+- Split commits containing logically separate changes into individual patches.
+- Use fixes and stable according to ./Documentation/process/stable-kernel-rules.rst
+- Rebase on top of next-20250409
 
-diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index fbabc3d848b3..fc939ca2ff66 100644
---- a/include/linux/ftrace.h
-+++ b/include/linux/ftrace.h
-@@ -328,6 +328,7 @@ ftrace_func_t ftrace_ops_get_func(struct ftrace_ops *ops);
-  * DIRECT - Used by the direct ftrace_ops helper for direct functions
-  *            (internal ftrace only, should not be used by others)
-  * SUBOP  - Is controlled by another op in field managed.
-+ * GRAPH  - Is a component of the fgraph_ops structure
-  */
- enum {
- 	FTRACE_OPS_FL_ENABLED			= BIT(0),
-@@ -349,6 +350,7 @@ enum {
- 	FTRACE_OPS_FL_PERMANENT                 = BIT(16),
- 	FTRACE_OPS_FL_DIRECT			= BIT(17),
- 	FTRACE_OPS_FL_SUBOP			= BIT(18),
-+	FTRACE_OPS_FL_GRAPH			= BIT(19),
- };
- 
- #ifndef CONFIG_DYNAMIC_FTRACE_WITH_ARGS
-diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index 8d925cbdce3a..c5b207992fb4 100644
---- a/kernel/trace/fgraph.c
-+++ b/kernel/trace/fgraph.c
-@@ -1382,6 +1382,8 @@ int register_ftrace_graph(struct fgraph_ops *gops)
- 	/* Always save the function, and reset at unregistering */
- 	gops->saved_func = gops->entryfunc;
- 
-+	gops->ops.flags |= FTRACE_OPS_FL_GRAPH;
-+
- 	ret = ftrace_startup_subops(&graph_ops, &gops->ops, command);
- 	if (!ret)
- 		fgraph_array[i] = gops;
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 1a48aedb5255..cd62f5ab3dfe 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -4323,6 +4323,40 @@ static inline int print_rec(struct seq_file *m, unsigned long ip)
- }
- #endif
- 
-+static void print_subops(struct seq_file *m, struct ftrace_ops *ops, struct dyn_ftrace *rec)
-+{
-+	struct ftrace_ops *subops;
-+	bool first = true;
-+
-+	list_for_each_entry(subops, &ops->subop_list, list) {
-+		if (!((subops->flags & FTRACE_OPS_FL_ENABLED) &&
-+		      hash_contains_ip(rec->ip, subops->func_hash)))
-+			continue;
-+		if (first) {
-+			seq_printf(m, "\tsubops:");
-+			first = false;
-+		}
-+		if (subops->flags & FTRACE_OPS_FL_GRAPH) {
-+			struct fgraph_ops *gops;
-+
-+			gops = container_of(subops, struct fgraph_ops, ops);
-+			seq_printf(m, " {ent:%pS ret:%pS}",
-+				   (void *)gops->entryfunc,
-+				   (void *)gops->retfunc);
-+			continue;
-+		}
-+		if (subops->trampoline) {
-+			seq_printf(m, " {%pS (%pS)}",
-+				   (void *)subops->trampoline,
-+				   (void *)subops->func);
-+			add_trampoline_func(m, subops, rec);
-+		} else {
-+			seq_printf(m, " {%pS}",
-+				   (void *)subops->func);
-+		}
-+	}
-+}
-+
- static int t_show(struct seq_file *m, void *v)
- {
- 	struct ftrace_iterator *iter = m->private;
-@@ -4375,6 +4409,7 @@ static int t_show(struct seq_file *m, void *v)
- 						   (void *)ops->trampoline,
- 						   (void *)ops->func);
- 					add_trampoline_func(m, ops, rec);
-+					print_subops(m, ops, rec);
- 					ops = ftrace_find_tramp_ops_next(rec, ops);
- 				} while (ops);
- 			} else
-@@ -4387,6 +4422,7 @@ static int t_show(struct seq_file *m, void *v)
- 			if (ops) {
- 				seq_printf(m, "\tops: %pS (%pS)",
- 					   ops, ops->func);
-+				print_subops(m, ops, rec);
- 			} else {
- 				seq_puts(m, "\tops: ERROR!");
- 			}
+Yemike Abhilash Chandra (7):
+  arm64: dts: ti: j721e-sk: Add DT nodes for power regulators
+  arm64: dts: ti: am68-sk: Fix regulator hierarchy
+  arm64: dts: ti: k3-j721e-sk: Remove clock-names property from IMX219
+    overlay
+  arm64: dts: ti: k3-j721e-sk: Add requiried voltage supplies for IMX219
+  arm64: dts: ti: k3-am62x: Remove clock-names property from IMX219
+    overlay
+  arm64: dts: ti: k3-am62x: Rename I2C switch to I2C mux in IMX219
+    overlay
+  arm64: dts: ti: k3-am62x: Rename I2C switch to I2C mux in OV5640
+    overlay
+
+ .../boot/dts/ti/k3-am62x-sk-csi2-imx219.dtso  |  3 +-
+ .../boot/dts/ti/k3-am62x-sk-csi2-ov5640.dtso  |  2 +-
+ .../dts/ti/k3-am62x-sk-csi2-tevi-ov5640.dtso  |  2 +-
+ .../boot/dts/ti/k3-am68-sk-base-board.dts     | 13 ++++++-
+ .../dts/ti/k3-j721e-sk-csi2-dual-imx219.dtso  | 35 +++++++++++++++++--
+ arch/arm64/boot/dts/ti/k3-j721e-sk.dts        | 31 ++++++++++++++++
+ 6 files changed, 79 insertions(+), 7 deletions(-)
+
 -- 
-2.47.2
+2.34.1
 
