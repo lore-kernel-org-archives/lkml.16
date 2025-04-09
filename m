@@ -1,67 +1,90 @@
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2116.outbound.protection.outlook.com [40.107.255.116])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5F7D29A2;
-	Wed,  9 Apr 2025 01:49:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.255.116
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCAD55FB95;
+	Wed,  9 Apr 2025 01:51:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744163384; cv=fail; b=oSGT6PV2r5/68kZ1aLbqkfNzldkAWNcBbPWA32BNKLz3oBno5lwZFOmIniiOWvEWQPROJ4KYjYI58h4Qa6eOWRUD1Xe40OVbm37Sr6oxMuFSZK8f1iPpYjVVTdBtvVwfNo4dogYaCvxCGMi+6gQ/HDwQlDmAiv79UwJOS644hiw=
+	t=1744163483; cv=fail; b=b+NJ6aMspCmwUC/4nPB6nU4bRxJiqPLRxxLvOcEW000CHH/Kp7qquZuDlEGU8KU9xUKZqfzmb/KQkaTtvxHkd2VZpJGUqno0E2z9J7pKM7GBuUeiOpnL+8PnYEuX0rZ3oFxqPza3bYLxrT0mgirJDeR/+Ddd2UAEbm3z46NmXZs=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744163384; c=relaxed/simple;
-	bh=8TO0ucvxdFeR+4FZ5zKZAQ+NHIjbS3Tk+zVMP6GCRvQ=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=K9FYWLyBWwO0vGSHGOYnY7d9RRHU2cdPyr78bV6rAqRLsiJNzgHyWPfTfcMV6Ze/fCRUDb+zky8vuktYRQSlXwfzb3bKHPJFdoQXBF2K51srmk/xuAvBKettJGnp/NeZBFrt7OnDMSErzzqdTBQrj6/OVB1upSbF7b7LpzviKSQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b=vwl3tn2Q; arc=fail smtp.client-ip=40.107.255.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
+	s=arc-20240116; t=1744163483; c=relaxed/simple;
+	bh=kbTABqI7Asf4DnHA+V1bqZXZ0LVhpNAsIEd7IS+IZbU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=VbUm+q/q+jpHBywIzjvcjesPD5QWaANyxxZ2XO7YTNzS+6vrZpCmDlIQGt4h33iCjnR+M6X4qwYtnmIsJtyeB86bmAOtbZLZtUtuETRQ3+T5Of0PRuU7VLVuDCz9y0ecDEU5sLNPL2uLATZCKBMsSPRNQZCOVDn0E3XsQBKglTM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=WmnACkup; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=kNTIjP8u; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b="vwl3tn2Q"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WmnACkup";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="kNTIjP8u"
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 538L9mSd005736;
+	Wed, 9 Apr 2025 01:50:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2023-11-20; bh=U5h5T4IU3br4tjynPx
+	sRt1tHoNo/WXSTlq7PBAhS2BE=; b=WmnACkup5ashHbZPUehJ+d/DA4Iu0CWOcZ
+	TNSauBIRwlPWqJ3Kk1/rJ9Sbaq0ETtew/39oiG+jckptLFa12w2rrB4/JzlYqVhh
+	vBrSt+XlneRg77djEzKSjE1mXVRD4qAza4YyLhhKvpj2a+FS8YQy68SXbRQsDGsh
+	JTP+qlHgnytUTJkm2g4z59U0Ca2RWnRF4L5xMB4vAewgECmKiYYMAywPqQYqpyoR
+	Rhn3x0FLorewSsZraIs4HmJPo6quI5Eq5jW/XD2ndlsY0tjwuGIRk6j6uIUiEnYw
+	hxumFDhNgqU+Dv3CFJEVu2UjrbFUXKLCesXK7zJMkOprju1FVhzw==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45tvjcx4y8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 09 Apr 2025 01:50:59 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5391bJE7022410;
+	Wed, 9 Apr 2025 01:50:58 GMT
+Received: from cy4pr05cu001.outbound.protection.outlook.com (mail-westcentralusazlp17010000.outbound.protection.outlook.com [40.93.6.0])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 45ttyav18q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 09 Apr 2025 01:50:58 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bToF7DEN52nkIgZ5pRe3add60Zg2HFp5jtYWctImwOAreO8+GPbz6Yy+rQUmQqTocG9ZMEM6AQsURVqcgnVj95q9rJoxGFuIqyzeqlSGvI2hcYyFEVnaREWmUqorg5nkm0BX7w0ZZiPcFH5pwrcGhYM7l5v+Y1dRZKc996y3eAwzzoVsIY1p78FI+3Klpapr8geEkE+EtVT7yctSN0Muljn1e1Qa6NeRNAH2Bz/nGXmRLMhk44rQ11689LkpxFkhSnRN/TPvkQHhnuQrmM0ERDB3OZcS5p3kjFh4r04geu5lFl1Y9m0DuIAvmdvv2wQxEf3pawo3vXWmg7/UjBiLlw==
+ b=P5fGPMS77HVQPUfAuuagAwgtJzxXPBFznxwS2Ikv/pOi58N21X/+DEXEoCbmertYIqsgeHdHg7KTUPqWwRgXnUElYwm1RBXl62XmBH5/3/TkJv2vXLcl72d/mZiQMJKwctzY13xu2V6QcA5YiCG1j9vuaLfTKCCkvmJa0llWHrRXbnNLT3+gZR3b1eq+KRp6AbywEmkVhB+uk+5zwt2MrJgVpn1GAITQDnB2L1q+G6OaRiFMgtUc8W9hH6npq0rfK58G7+JyhjimLLyXPLd9j6D8jm5F4m/DT8D4c3ls2zUE8GlRYwlXIk9mf8r3R6sBLtFAM/95GLrj2njGL0VfUA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xibo7uBmFnL2stbLsqepvmGIZZxmhXkFCRr/VW7YIrM=;
- b=u216oVoSEtFV95tMEu39wsqzqWKSIoRgmBk3gvaZCiZLuBy6cwhc//5xhJD8RHbdHfmzjbH+U74NxuivqGpMBDJxP/GWaDroRt+TeWc0SUR+lhSWPBB47RG/gTnHx3TQtVeStg/9GvjtgmP9UJfCK/0PE5b17TO1FOuob4KV7JB2IO5oVzB4QHfs60yzD+BcEyDMYQVIGNnsiWmPAt+6hgd/InO1a5SWOAimA7nf27SsyCsVUaMRi1CwIBpr3I6FJu5PT3HRhZezYS+eBjWuy0gmX+1LlB9Ic+aQqtoNdcpmnU94WAB9K21I+wHl0uhJx5VATVlGb+WQoupk7NJMXw==
+ bh=U5h5T4IU3br4tjynPxsRt1tHoNo/WXSTlq7PBAhS2BE=;
+ b=fs8sO65G1y2HnczhxmyPLh9IVzUJX7e9BXbVsGeoEq1QD7Vzmq4NVypBjSRY1rSDK4SuXhW7/jI+U/g+yxTAQgTxGCC1wL4D6Xeubn4E7gvN+orrcy/2j6ETtCc5N/XGJDMFDq0SNFD9Rz2x3WhLJSeO6BtnVzhgTIqTg6FatlPue6yestCIsiVEAvg13OBtcgJ/XXn4225+yzdcFniTTy01oCCg3DHuaHZFMcYAgzmzZ8TVVO8BJLJc+LPfNa4NXsbKuTy/7jjUk2bO0xFumfoo9hM2aaIJ2G7dNXtx/VcyYDBmqf7+jtARlWXvgGEeWIB9iyCWzblkHb8K6uG/GQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amlogic.com; dmarc=pass action=none header.from=amlogic.com;
- dkim=pass header.d=amlogic.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amlogic.com;
- s=selector1;
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xibo7uBmFnL2stbLsqepvmGIZZxmhXkFCRr/VW7YIrM=;
- b=vwl3tn2QzwYiCQABCMu32W6ab5vM4/3OMy/wsyjZM2+RdDUqxV0CJQ6vOh5afgH1pr2qnMougXHGihgRzfQ72JW8a3TkBnHB/3es8ZCgRSjKenx36ayPyzdaerXJEh3dRkZhIZV2ieeg2jYvmLpoEmGb5a8RFSmy++xH+0KvNDUF9bkV3ZbbR9bj5OySuvMTWeg/Zn8HVMwyaeBS2BEgRTgOoc4MVLUT8rtgnfdGEBxvoC1NcqbNrf89bT2VmekDOropZCUOmgwcNiUbqU+I5OxCB7Hv1o0XJ5s+Xfe8SukOaItd51y6vwwEwCEBCqIy0uKYbLpxcjLIq139rGo5ag==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amlogic.com;
-Received: from TYZPR03MB6896.apcprd03.prod.outlook.com (2603:1096:400:289::14)
- by KL1PR03MB7019.apcprd03.prod.outlook.com (2603:1096:820:b4::12) with
+ bh=U5h5T4IU3br4tjynPxsRt1tHoNo/WXSTlq7PBAhS2BE=;
+ b=kNTIjP8ulSEjZ2zzaIOvCKmDwTVbB4IVkgKjtN2EAzB142WBkVxmODiiwjy93M9EV/DL39pOsHkJ4oXDB2jOvGjwM6sxsx4HFLSOJeRlMAznhSRhGDqPD/RJFqtXvnO7SvLmbACtVoqqZOFtrhgWuRmkh0PPJEIkNOSfHkmFotA=
+Received: from CH3PR10MB7329.namprd10.prod.outlook.com (2603:10b6:610:12c::16)
+ by SJ0PR10MB4752.namprd10.prod.outlook.com (2603:10b6:a03:2d7::19) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.21; Wed, 9 Apr
- 2025 01:49:37 +0000
-Received: from TYZPR03MB6896.apcprd03.prod.outlook.com
- ([fe80::ac4e:718:3b03:3123]) by TYZPR03MB6896.apcprd03.prod.outlook.com
- ([fe80::ac4e:718:3b03:3123%5]) with mapi id 15.20.8606.027; Wed, 9 Apr 2025
- 01:49:37 +0000
-Message-ID: <aebccc51-14a2-40be-8d9e-20a55ce94459@amlogic.com>
-Date: Wed, 9 Apr 2025 09:49:34 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] spi: meson-spicc: add DMA support
-Content-Language: en-US
-To: neil.armstrong@linaro.org, Mark Brown <broonie@kernel.org>,
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
- Sunny Luo <sunny.luo@amlogic.com>
-References: <20250408-spi-dma-v1-1-3c38be62c09c@amlogic.com>
- <c29a8c28-996c-4e94-b0a1-0e4a37f0bebb@linaro.org>
-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
-In-Reply-To: <c29a8c28-996c-4e94-b0a1-0e4a37f0bebb@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: TY2PR02CA0019.apcprd02.prod.outlook.com
- (2603:1096:404:56::31) To TYZPR03MB6896.apcprd03.prod.outlook.com
- (2603:1096:400:289::14)
+ 2025 01:50:50 +0000
+Received: from CH3PR10MB7329.namprd10.prod.outlook.com
+ ([fe80::f238:6143:104c:da23]) by CH3PR10MB7329.namprd10.prod.outlook.com
+ ([fe80::f238:6143:104c:da23%7]) with mapi id 15.20.8606.029; Wed, 9 Apr 2025
+ 01:50:50 +0000
+Date: Wed, 9 Apr 2025 10:50:42 +0900
+From: Harry Yoo <harry.yoo@oracle.com>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Suren Baghdasaryan <surenb@google.com>,
+        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Uladzislau Rezki <urezki@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+        maple-tree@lists.infradead.org
+Subject: Re: [PATCH RFC v3 3/8] slab: add sheaf support for batching
+ kfree_rcu() operations
+Message-ID: <Z_XScomDqU_Dke17@harry>
+References: <20250317-slub-percpu-caches-v3-0-9d9884d8b643@suse.cz>
+ <20250317-slub-percpu-caches-v3-3-9d9884d8b643@suse.cz>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250317-slub-percpu-caches-v3-3-9d9884d8b643@suse.cz>
+X-ClientProxiedBy: SL2PR03CA0011.apcprd03.prod.outlook.com
+ (2603:1096:100:55::23) To CH3PR10MB7329.namprd10.prod.outlook.com
+ (2603:10b6:610:12c::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,529 +92,217 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYZPR03MB6896:EE_|KL1PR03MB7019:EE_
-X-MS-Office365-Filtering-Correlation-Id: db1a0b21-39cb-4ef5-ac34-08dd7708c912
+X-MS-TrafficTypeDiagnostic: CH3PR10MB7329:EE_|SJ0PR10MB4752:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2b087a95-2fe6-4a66-fa36-08dd7708f470
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|376014|366016|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?OEo4VjFWazluT2VHMHRlREFsMThnQjM3cVBQTjgyd3lwaFpHZWcwYnRTUE94?=
- =?utf-8?B?c2JEK0xmSHRYcURMU1pHSTZtQ3BiOWFhanBNUDNqZmZVWTg5Q0VXbE5JS3NM?=
- =?utf-8?B?eTVyR1h2bW8rYWhPSjh2SGdwSkRVZHF3K2xxTnJOMEZoWHlkZHZrZUl4ZlRs?=
- =?utf-8?B?bWdLM3RlRkpHR0ZtUk9JOWdrT3FZL2JUdUdJeGpZLytQT09qVGUweGRWNzhJ?=
- =?utf-8?B?cFJYMFdZcHZya3pZbTVCMDUyNzQxOUZuRHlQZ3AzVnVPZEMxa1NjdXFTOGpE?=
- =?utf-8?B?Y1ZjM05DdXM3cFBqN2l3RG5iem5maXNwbjNIV3ZndUZVQ0xObk9KVllwU3BJ?=
- =?utf-8?B?TUpDSy9NWUVlM0xZWjBjOHo1aVdwcmRzNTZHazBqeWlaZnNtTGVGNTVrYlE1?=
- =?utf-8?B?aUtXR3B2VDdoTkt6b2h6bHFXUGtZOWJXUFg5L0JaNDV6S1lKaWR1WUJIUEpV?=
- =?utf-8?B?UW03MDBjRWQ5TWtRclhaZGJpdy9vcFR4QWZSd2V1L0JpU0ZPMGFLMUNHSC9B?=
- =?utf-8?B?M2V2S1FUSVpkSDA4eVpCTDRUUXdidjl5TCs1NG83bmhpTGFPWjNjYVB3TmRR?=
- =?utf-8?B?U3hZQjg1T0ZIUFFyOUVzc1YyckpVckdweXpXZDBBbks0d1UxVHNVL3E5U3RS?=
- =?utf-8?B?VVF6cndxUjFJQzlSVTJGYXdKaDB4amJrUGFGQjNxcjlQUmN3ZEIrUmFiQTlB?=
- =?utf-8?B?dHoxc3o4RThQaSt6YmFlZzg3cFB1dk1TZS9aR21MZkU3ZWRkQm9WQ3d2cWpv?=
- =?utf-8?B?VmpvN1J5Ukg0L3Q4TUthRDVhejVVQ2lHMHp0c20zL2puYm1UaEZVNXZXdUdG?=
- =?utf-8?B?RUJzYUVscHFsU1FBU0lKaDVsa2I4NXhDY2ZkUnJrd0psRmw1dVh6YkhFVFJs?=
- =?utf-8?B?aFRJVk5mTkYvWFdwWnJTY1lXeTZYY3lwb0NadzZaRXh6Zm1zTDFESGlwQ08x?=
- =?utf-8?B?N2kvcEptSlhYU1R2VDdmR1ZCdXRqaFdNR3VPRHk4K1hqVVd1WmdmbEJNMHFh?=
- =?utf-8?B?cDhxNlJUMEU0ejA4QXNacHg1RThLZXJzWFBDby9yRUFZaTlPcE42UVplS2tP?=
- =?utf-8?B?Y0QxbWt4SmRYVk93N3ZHdmROUUtrditidGN3Zk9ZZnhVcmhHQVBsd2R1aVds?=
- =?utf-8?B?N1dPeWZGQU1hQjdabXFTRHVlK3dBcjhaUFhZUzk1L3dXOTFkSlhTU29Xa3hM?=
- =?utf-8?B?T3V5MEljblh6UXVHTnFZZ3JEOUxZODdsZ1ZQdlFJREczOHgwRE5NVThiR04x?=
- =?utf-8?B?UGI0N1JpejZLdGtHazRTYUZ1VEZkdGl4TzdLd0ZSRFVZRHFrbEQ1cHg1VzJw?=
- =?utf-8?B?Q0FOV1F2TGIxSlptcEZNMVd4cnQ4MGhJZm5vaUJIL2tTWEU4WlN5VTV6SWRW?=
- =?utf-8?B?dTZSTW8wcTZDemxZcys2ZkJpSCs0NUQrR1NyZEYrcXFnRW9UT09VUkRkbE4z?=
- =?utf-8?B?KzExVVFBbnBMVGpKb3d1UEFVRlZnZEJXRFNRalA3djY1QkYrcE0yelk4U1pU?=
- =?utf-8?B?a1VDd1plZHdYaTQvaHpOS1l6WDdGcVZTV1dDM2d4dE8zbGp4aWZXMlIvd2dZ?=
- =?utf-8?B?MFpMendmaGh2b08xMXM4clFrMmwzemVMMTAwNGFVRXVqUG9uZ1JEaXJQM1R0?=
- =?utf-8?B?NDZiRXljcHpneVVVN0pUVkdGMUxxYlZQQndqeVZ4OU5lOTVGTG5ZWTVvbGFl?=
- =?utf-8?B?dlNnUkttekVsNERjR0xPTmRacWxNZkxvc1gxd1cxOHplNGFkZDVybHQ4dTBC?=
- =?utf-8?B?Ym9xdTRtRVI5UDM3NFU4TGszbjBSWStHWXd5MWZHZ2VMQ1V4WHpjWG1BNm93?=
- =?utf-8?B?T0NaWGpUUEJ2ZGd3RUdCclVlaXRoTCtUUnpmcHZhQ1BhRGNPUUdJYXRwdjdk?=
- =?utf-8?B?WG84OVJLaC9zV2g5dXFpcExhRU4rVmZKNThST29VQ0ZEV05VdXQvb0MwSTll?=
- =?utf-8?Q?OGxaF8F/0Ks=3D?=
+	=?us-ascii?Q?0JDNDJ9P43rgI5S7dew/CqnKZF6p/Xr8Od6YN31RupOELFsGcRs/AY0JK1zA?=
+ =?us-ascii?Q?luH6GOvkZkyMtb+vvsUia15mJGEPp7T6Opf8NXnwAubo2fWmXcRTZAEFGhC6?=
+ =?us-ascii?Q?OuZXVYhe29AltXfSF34X42lxtgScES3w+txiLu1pkS5SztJcJ+4OFovI0L9O?=
+ =?us-ascii?Q?+9/+7yfz0cr6lNUMOAtp5xs32sD2/CKbcOXQHIs5NsWg64AHuTIwo8mHNCIc?=
+ =?us-ascii?Q?eyPuvfo4iCnNy/FaWxyJ2OujbtcuwsiFeIkfXal4owAuZH4Skv+x5SiUzqGq?=
+ =?us-ascii?Q?UgZdt4pC6sERF4INj56B4Q0H+zEzvo07byL8Acmcv5qGAdkdvLm+rrUB/GCN?=
+ =?us-ascii?Q?QVOk24PkQrVscaWKdN8biU7LnBQGPRJ4VHBHxrl7kJ1MC0/dZ27ZtW2ahiIM?=
+ =?us-ascii?Q?FLa0emCzW5rnQU/qezy4COb1nieVWIUFUtY4Z2cjNEb/u05f8m6kpUPqtJ5W?=
+ =?us-ascii?Q?eKVbg6LsmL4rW1QucAn21M77wvMZ2wjT5dLXmCCvs5Tzc2XdYpLdaA0sXiUT?=
+ =?us-ascii?Q?SQSOCIIBPfIDDCBvvMX958oblwjFp4XCD0vTjx5NARykGGYaohjweU6XjP+e?=
+ =?us-ascii?Q?yFDb+ErWbN1ZsJOjgXEAMAvlvKB/1DmsgVtdP/FI6Dcp8XiHc0wQ0R+c3+MN?=
+ =?us-ascii?Q?I5uJrP9/TENnkHaBjiTRDUUC3baibAsv845t3O7fncGbaQE2IHEcpOIENdzo?=
+ =?us-ascii?Q?lcmLbjjniGY6aMpLInf9+/1ExucwF1Hk7d08om7ZFDupSIDaYi86dOhJqd15?=
+ =?us-ascii?Q?L5QPO3P9HHF/BR4JS1LcxEdYNZIgXYZiM/vJYsp7PcR/oiJXencCaip/HFAC?=
+ =?us-ascii?Q?b6R/KHtfrI7Hcp5NjPOueo0DsgCCiviqLCD3Og09CnD5C2PvQfzzadDcTX97?=
+ =?us-ascii?Q?i24BpIUR9eE04ovmvxV1TUa/2Z2x4IerzjZr5L/YVqGsqzFpHsmpPlkS9KoU?=
+ =?us-ascii?Q?J3dfijEcV6Vee5DlMSyGnxC4mVj5Y3sUCykk3MwChiEgrxifwNJh+w0tI1qv?=
+ =?us-ascii?Q?hyGRFs9HM54IZhEDpIpwi5ZtIQHOUqF2TsKvmR+aSS5u1kuH5lYI6P9Q/t4u?=
+ =?us-ascii?Q?oQqFvoYKkxhD942b3Sb2znv3Mzpirv42V/5hySsfC4kGj3CivIazp+Wd9+Wt?=
+ =?us-ascii?Q?vlU36lHe8imb8yav7Qe2O/k/OCYAtRA6F7bSyhD6nQvfTcE026aE9jvzkzKc?=
+ =?us-ascii?Q?+hCuPlGd5z05g/29SliaPt4XdF48X+/YW2ii9alps0d5A/DR1isQo3GmcV8i?=
+ =?us-ascii?Q?CdPJePQ4ZUStrjyG2F3wLyqutmDUIkCiqYkzG1exPPglU+rxNPT6gWI3NgxQ?=
+ =?us-ascii?Q?JCf4uzDxf2pOewbEF7eoXmJPADpKsKH6iSZ/p9K7aKYvP5qXuUrdUQ7OR9GM?=
+ =?us-ascii?Q?YvoP6zH9zc1lXR2EpACujQDFtk2B?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB6896.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR10MB7329.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?S043OHZNZE1IRU5rRDF6NzJtV0Nxb291YnFYd2RLeU9RMGcybHBPL3hhc1Y3?=
- =?utf-8?B?UXlualF6cWk0ZWtpSlZ4T0pVbm5zTUwrZEZwaU1JZ2FKc1R5RUN3aGV2M0Y2?=
- =?utf-8?B?M0swa1VQRC9Jc2N4UU1lcFdvKytUejRjSGQ1anlmTXZ5eG1mVHZVcUloMVdj?=
- =?utf-8?B?NFc2NDk2dDQ4TzJUWEhYeksyQ3RIWnBVc1ZiMUI2TWlFelNpWWRHWGlqU3FQ?=
- =?utf-8?B?V3p5NmZwdk5tc1l5Zk42Tlh5bUFwWEdibGZMY0dHSXBXVUtYZmUvSzlGWGlv?=
- =?utf-8?B?c2wzOG5wc2ZWRVdMK3JmVzVIWi9OV3dYWXFWU1pic3B4RUtEQkpBcldTTHl2?=
- =?utf-8?B?T2MvS1JZN2lnNlVJem0rY0c5WWJFRmJ5Q2RLd2FlS3dacXBkci9TVFkzdGhU?=
- =?utf-8?B?VktFUEQzUWdGYXU2TG1vb2hGTzhaK0RMSVhMcWR1VnVUY2VLRDBuaGhkNkZY?=
- =?utf-8?B?YXRTeGFqK0NWUmdZL1JBam9JeEhnanJQNXJWQ2dHR0ZENVNzVm1PU2hSQThp?=
- =?utf-8?B?NVRFcEN5TWxWYzg4R2NyUWkrSVU3TVZjYkZ2MHN6dzQ1cHR3TnIzRU0zVW5n?=
- =?utf-8?B?N05yOXhNL3Ftc25nd1ZnN3llYkNNUXVhRXhLWDU5YWVEUkJkZlcyeE1JdEhF?=
- =?utf-8?B?aFE2c3lXZVRKdU1YTmtNdTFlSzAxZnR5YUdVUDRobE5wS3VqZzNUdzQ4TC9y?=
- =?utf-8?B?ZUVUK3NTVzByZTFhOWtXOGI2ZDduK0NaSHJaTCt1Z3Znc0dFOVZjUTFqZkhT?=
- =?utf-8?B?dDZsSGF4MkI2Sk1OL2VZUml3L3lxcU1NSEZFVzhxR0VNTml6dE56NGd2STdD?=
- =?utf-8?B?bDhMOGttaHJnQm9RS1RTQmNNRTFTNmRLNlpUTkxtZ3J6bFZWejFHVDRVc2Vn?=
- =?utf-8?B?NFpDYUE5aThEQ1NHeWtZbEIxL3ROb2cwQjZNMmVTenhEWEdHYnpLMkVkdElT?=
- =?utf-8?B?T05nMy8zWHFoS1lkUzFrKzU5bUY1clFSN2tEVmtSaEJocUhKL0tyeUJzbzVF?=
- =?utf-8?B?VVQ5RXgwZmxzYzR4RllwUlI4dlVRbHV6Q2ExSzJJUlNQUnhiVGEyT1piUnAw?=
- =?utf-8?B?eFFnMHZhOGhjUytCQW5hS1BmR016R0hMcHNaTlp2b3dpY2NBanpnVzJ6bGk3?=
- =?utf-8?B?aWlOSEljVHREcUZHb1dybmljMkRzSTJyUnRwcWRhV3BmRWUveUxxYUZ4ZW5L?=
- =?utf-8?B?bUlkaVZNbWMzMzdRQlZvN01raHR5dXlSSCsvMHQzN2txcnFUS003cks5eTVG?=
- =?utf-8?B?cmZYaEdQdmlwVDB0dGdkUjhMa0xpZmRpL3NabGFMZWVQOEJjVHUrcFpQblpK?=
- =?utf-8?B?eUxkcUJ1NU54TjhNZlh1ajV1L0pGYTh5bkt6Z0lhMzV4WGh6cE9JNlNQYkFm?=
- =?utf-8?B?dU15QVRXazRLRUZRS09EdjdIb1lCYW84V2JMaXNzbUZhQ0FwQVQvd3prYndv?=
- =?utf-8?B?emFNUkE2ZmdvUnRvNzh6cE5MMjVSL1JmWFRJMFJSZDJmTTdFWUVaVWVDcU92?=
- =?utf-8?B?RlNVMHg4QmlVTXhhSE1aaU5tRXVkL1pDSXFIakp6cGppak5PbzMvTGNQNk1N?=
- =?utf-8?B?aHVtcW54bG8yaE56UmRaRUgxVGhzMVRlNTA2QmYwRTRRT01SS2RCWEwxZ0R4?=
- =?utf-8?B?dWJ0Rks3VXVuL1lweUZjSUpBNkh4L21pajc2LzU2SWc0YnRMTGdtcmEvSnY1?=
- =?utf-8?B?SDNKU3hPczFyOGFkNEw4c1A4VDB4VnRMbkRDM1loYTBWbE9JK3djUFVGa01o?=
- =?utf-8?B?UjhJK3hYMVRtUndnTGpnQzU5dGNETkxIV1FuMWh4clg5TkRxWTRBd1plMk9q?=
- =?utf-8?B?SFJXWkRLdTFrb0xUUElYL1pYNnhyYURJY3RId2UvbVlndVBNSlFBTEZEc2Ny?=
- =?utf-8?B?S0U0ckUySndaTlBqN2d1VCsxMFZ1cmtFTm8xdEFndnV2b2lxUm9UTm82aVA5?=
- =?utf-8?B?aEVCcTNVcy8wSS9XSVRUcXpKZzlSaEpoRnpQMXY1Ym9JQ2EwV3hvRS9jSnB4?=
- =?utf-8?B?dEFPOHpmQ0lJQWZwa2R0a29mQVg5MTdkaUducWVqZmFGWjdJL2l3MTZSeHMv?=
- =?utf-8?B?YTh6OTE1UEZVRmlOMHc4Ty9lVDNUaHpYYWtmVVRYUWgyeStNVFFRRXBLQkVO?=
- =?utf-8?B?czUzczNHaXA0VFU1S0gvSVdVM3BROWlWRW5uOEJlUThZazkwYlpkdmUxdzVk?=
- =?utf-8?B?Y1E9PQ==?=
-X-OriginatorOrg: amlogic.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: db1a0b21-39cb-4ef5-ac34-08dd7708c912
-X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB6896.apcprd03.prod.outlook.com
+	=?us-ascii?Q?6MizkdL+zibvvZzYi+gB0IuM4PgRSDnBMVAGEY3ZNN2Ha/z8q3Q6qVLc62y4?=
+ =?us-ascii?Q?UZVSgiejQIpjxh6pW5Wg0Bt1f6pIYgmBtsIXUPUEa/ShlLwDfn31LkGRxufz?=
+ =?us-ascii?Q?XxPsM5wC0v81S3MFU9p5b03KpPUBLR+/KM6piM4bpC9bQo1uHM00GF3BCNSM?=
+ =?us-ascii?Q?UWYpdD6DXMLCSfszHqR2ftPlrv5aAH9yM20VQu5vp6fLCmnJlczZWno8A59Y?=
+ =?us-ascii?Q?/kwJwPv8lIcYXdF9cJDFnLjYkI+AIStIs8Xu9W5mlI6vVM290IQF4KaJJCLS?=
+ =?us-ascii?Q?dTQS0ZFHRY4ti9J93vPCyiCFzTYQ6zKPk877efkD6D/J+Cav8UCLinlg5Y64?=
+ =?us-ascii?Q?tMUUq6Ussjs7ip/X49gwAk7Lre4+5JjXyF2gWi3gJDU2IJ2WJtFR+Enj5HWm?=
+ =?us-ascii?Q?mTtmFEixfA9Y5kAuHYZWcog+w/+eu/MDB5ssDNILArDQtqw1VizvgZUptiln?=
+ =?us-ascii?Q?HDa4dsN+AvEJletUph6ova4ls4Q1QS27PXnBwTWFO9WbubMNBHEppB4MnCCz?=
+ =?us-ascii?Q?1RfZsKKmWqxXUhZV/6hgYF+vrnIUk82ZNlM958CkD8xhY7sR0XnHSeEYHCCs?=
+ =?us-ascii?Q?3qA6wsVOYrrKgHgedq//PnyL0VrWYRIQ3O9B/lNGzueVxjQrgggGomri8OMq?=
+ =?us-ascii?Q?R0P3rD0pGCTPFAOn/uHWwedoZEeCH+7JmxPw4Ovu8ERHNTSsXFvUj4pN5UQ5?=
+ =?us-ascii?Q?G05Tf3FZzf/+dc3gWZjFRns9gb3Y56+x1d2pEDtPz0t2cK/6ny7+melFofA3?=
+ =?us-ascii?Q?03Vc7Xc+Hgsb2bzlIbHfGX6KE43o2d0sA5KQizPTQFJcIZiq9HcuhRw3qvK1?=
+ =?us-ascii?Q?hm0hU8qXyiTRrn96Beq/FS6lqUJDoe39w+jqZb4FoHYScqzC8a6Q37k+o0vS?=
+ =?us-ascii?Q?uoRVVV7RyHbjt61JiZmT8/dygF98Km3UCnVyJEfwbdLL18wME8pJaAiMZUss?=
+ =?us-ascii?Q?WrK+uw22itEEubjFLA9lDbZNxD24k8R2FsjeQmI4M1qLYw0J7UGPRvzU6Mdz?=
+ =?us-ascii?Q?ePP8VDOxggFIPYiV0zx+aa6T9pysjvj8ggjRV7T4oj34g6aLmVj9m3OtH4fR?=
+ =?us-ascii?Q?XFEvCqhbnKT2A+CKmlyyYvQdn6EiKHsQEHSR3McDXyOl/tUszhinrsNuk5Fn?=
+ =?us-ascii?Q?YHfvnTxTwY9hz374Gm42HMz4RiScNvvlncuzyr2oDpPk5dUrFdlead0UK3ea?=
+ =?us-ascii?Q?DvFQWQnKCVROskLTEgq7yjBOzXZGRsbTD8ndKJZkj6UaDy+6LRF4JVHbG1v5?=
+ =?us-ascii?Q?StS68ygnbFfL8/iZY9ydaHnwh24WwpAC5Vhe1fLK1f7BpM9KX1GXw6m6qzV0?=
+ =?us-ascii?Q?VlWgCTEyvRuBqRo+SsmTxolQ1GOBmjmgPn1Uxte99FTxZwh4Uhk5FgZVQVY9?=
+ =?us-ascii?Q?BefT68HG27U2VijpfMy6vM+G6uaP0GJHsIhw+Qi+R25/ox1ZNGlXZ5kr0Dw/?=
+ =?us-ascii?Q?5jIaBi0EpWtXne34VyH+QhwIdWyT9APkzIQH2TCpzBgmQn9t0U0RvggzC9o0?=
+ =?us-ascii?Q?lm2i/7gsZFnqUbpBM0KEreQDXPs5GOlt3CgDmPrhs83Tpn2OmozTKzM943cT?=
+ =?us-ascii?Q?3iznzbTLh6sYH8R3zeRUJYbUyTMDmLGNWbewv2C4?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	CQuFHqVCpSYSciwcmrjLc0EcgC8iPbhfItTNZhNCpJEHfxq/M0DEmJP//d738+tC/JrS9JaWc7Y3jZizSSog/wfmfUVhphSneNGs0JqLBNxc2R3SMG2EZoXlU/h0iImPrsjeFTqVp7oxRIGJX225pzEJMUwUfTQ2nq5PC5/0KrFrGxZlp9zlAHVoMcXv6xSvX5vV3bBdX7sa4LKyhfy9k754Mws0r7Q6ZEdUFJnfVsntaABTE4lMjypk36Bw0APtP7xmkbNDr8sUU+W+eszmrv6LiTBJIYhkznh7BAfLjvxhukINs91ifJxEoHcQjam9K7ak00kN5leT/BpgcUk8UaItwtD0VqvjrpuQJ/4aP2OnrxVdNm+rczNF4WSEb43WxabA0VPBxndn7+v4mHccKSYDR9mwltiiSXa5aN/HI7AzAAykc9NL1aoudWwMyGQpXZdyp/MfNot3/vUQlcXMCrG1p/xFP7Ywcg9vaIY63Yk5zIKRXUXxboE3mjkUFoDDcpzFDZcpT8/5JncqdZ7olUdKC1WjStZHjHkRCuIRf7CLfau/npRmLkAH+5yG0golujbnhSpJNYJRtaIFWbnazTsXtx/zDo9vfDOckIhU1oU=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2b087a95-2fe6-4a66-fa36-08dd7708f470
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR10MB7329.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 01:49:37.7034
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 01:50:50.5510
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 0df2add9-25ca-4b3a-acb4-c99ddf0b1114
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: N4bQL3ZtVfTcb1ELY0LJtxiR6kLS2xEEUyDtO0FUan/FkI5oJ/+e91aGfotkvhj+Ct6GAKoLwT3PoiPeEVPtuiydeMFLokmTzAiI09yRdfY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR03MB7019
+X-MS-Exchange-CrossTenant-UserPrincipalName: VwmePSmZAFGAM6vX2x+gWnA8gM4XMtj3QX3JsG+3e9ShdhAwljIHLpZPxM/QuyrdMr/5MnYVbXKQQ4PNljTu8w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4752
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-09_01,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 spamscore=0
+ adultscore=0 phishscore=0 malwarescore=0 suspectscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
+ definitions=main-2504090002
+X-Proofpoint-ORIG-GUID: EVCsr9jcYJE6NfzQbCN9Ku1SubexngwC
+X-Proofpoint-GUID: EVCsr9jcYJE6NfzQbCN9Ku1SubexngwC
 
-Hi Neil,
-    Thanks for your reply.
+On Mon, Mar 17, 2025 at 03:33:04PM +0100, Vlastimil Babka wrote:
+> Extend the sheaf infrastructure for more efficient kfree_rcu() handling.
+> For caches with sheaves, on each cpu maintain a rcu_free sheaf in
+> addition to main and spare sheaves.
+> 
+> kfree_rcu() operations will try to put objects on this sheaf. Once full,
+> the sheaf is detached and submitted to call_rcu() with a handler that
+> will try to put it in the barn, or flush to slab pages using bulk free,
+> when the barn is full. Then a new empty sheaf must be obtained to put
+> more objects there.
+> 
+> It's possible that no free sheaves are available to use for a new
+> rcu_free sheaf, and the allocation in kfree_rcu() context can only use
+> GFP_NOWAIT and thus may fail. In that case, fall back to the existing
+> kfree_rcu() machinery.
+> 
+> Expected advantages:
+> - batching the kfree_rcu() operations, that could eventually replace the
+>   existing batching
+> - sheaves can be reused for allocations via barn instead of being
+>   flushed to slabs, which is more efficient
+>   - this includes cases where only some cpus are allowed to process rcu
+>     callbacks (Android)
+> 
+> Possible disadvantage:
+> - objects might be waiting for more than their grace period (it is
+>   determined by the last object freed into the sheaf), increasing memory
+>   usage - but the existing batching does that too?
+> 
+> Only implement this for CONFIG_KVFREE_RCU_BATCHED as the tiny
+> implementation favors smaller memory footprint over performance.
+> 
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> Reviewed-by: Suren Baghdasaryan <surenb@google.com>
+> ---
+>  mm/slab.h        |   2 +
+>  mm/slab_common.c |  24 ++++++++
+>  mm/slub.c        | 165 ++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+>  3 files changed, 189 insertions(+), 2 deletions(-)
+> 
+> diff --git a/mm/slab.h b/mm/slab.h
+> index 8daaec53b6ecfc44171191d421adb12e5cba2c58..94e9959e1aefa350d3d74e3f5309fde7a5cf2ec8 100644
+> --- a/mm/slab.h
+> +++ b/mm/slab.h
+> @@ -459,6 +459,8 @@ static inline bool is_kmalloc_normal(struct kmem_cache *s)
+>  	return !(s->flags & (SLAB_CACHE_DMA|SLAB_ACCOUNT|SLAB_RECLAIM_ACCOUNT));
+>  }
+>  
+> +bool __kfree_rcu_sheaf(struct kmem_cache *s, void *obj);
+> +
+>  /* Legal flag mask for kmem_cache_create(), for various configurations */
+>  #define SLAB_CORE_FLAGS (SLAB_HWCACHE_ALIGN | SLAB_CACHE_DMA | \
+>  			 SLAB_CACHE_DMA32 | SLAB_PANIC | \
+> diff --git a/mm/slab_common.c b/mm/slab_common.c
+> index ceeefb287899a82f30ad79b403556001c1860311..9496176770ed47491e01ed78e060a74771d5541e 100644
+> --- a/mm/slab_common.c
+> +++ b/mm/slab_common.c
+> @@ -1957,6 +1978,9 @@ void kvfree_call_rcu(struct rcu_head *head, void *ptr)
+>  	if (!head)
+>  		might_sleep();
+>  
+> +	if (kfree_rcu_sheaf(ptr))
+> +		return;
+> +
+>  	// Queue the object but don't yet schedule the batch.
+>  	if (debug_rcu_head_queue(ptr)) {
+>  		// Probable double kfree_rcu(), just leak.
+> diff --git a/mm/slub.c b/mm/slub.c
+> index fa3a6329713a9f45b189f27d4b1b334b54589c38..83f4395267dccfbc144920baa7d0a85a27fbb1b4 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -350,6 +350,8 @@ enum stat_item {
+>  	ALLOC_FASTPATH,		/* Allocation from cpu slab */
+>  	ALLOC_SLOWPATH,		/* Allocation by getting a new cpu slab */
+>  	FREE_PCS,		/* Free to percpu sheaf */
+> +	FREE_RCU_SHEAF,		/* Free to rcu_free sheaf */
+> +	FREE_RCU_SHEAF_FAIL,	/* Failed to free to a rcu_free sheaf */
+>  	FREE_FASTPATH,		/* Free to cpu slab */
+>  	FREE_SLOWPATH,		/* Freeing not to cpu slab */
+>  	FREE_FROZEN,		/* Freeing to frozen slab */
+> @@ -442,6 +444,7 @@ struct slab_sheaf {
+>  		struct rcu_head rcu_head;
+>  		struct list_head barn_list;
+>  	};
+> +	struct kmem_cache *cache;
+>  	unsigned int size;
+>  	void *objects[];
+>  };
+> @@ -450,6 +453,7 @@ struct slub_percpu_sheaves {
+>  	localtry_lock_t lock;
+>  	struct slab_sheaf *main; /* never NULL when unlocked */
+>  	struct slab_sheaf *spare; /* empty or full, may be NULL */
+> +	struct slab_sheaf *rcu_free; /* for batching kfree_rcu() */
+>  	struct node_barn *barn;
+>  };
+>  
+> @@ -2597,7 +2621,7 @@ static void sheaf_flush_unused(struct kmem_cache *s, struct slab_sheaf *sheaf)
+>  static void pcs_flush_all(struct kmem_cache *s)
+>  {
+>  	struct slub_percpu_sheaves *pcs;
+> -	struct slab_sheaf *spare;
+> +	struct slab_sheaf *spare, *rcu_free;
+>  
+>  	localtry_lock(&s->cpu_sheaves->lock);
+>  	pcs = this_cpu_ptr(s->cpu_sheaves);
+> @@ -2605,6 +2629,9 @@ static void pcs_flush_all(struct kmem_cache *s)
+>  	spare = pcs->spare;
+>  	pcs->spare = NULL;
+>  
+> +	rcu_free = pcs->rcu_free;
+> +	pcs->rcu_free = NULL;
+> +
+>  	localtry_unlock(&s->cpu_sheaves->lock);
 
-On 2025/4/8 15:41, Neil Armstrong wrote:
-> [ EXTERNAL EMAIL ]
-> 
-> Hi,
-> 
-> On 08/04/2025 09:04, Xianwei Zhao via B4 Relay wrote:
->> From: Xianwei Zhao <xianwei.zhao@amlogic.com>
->>
->> Add DMA support for spicc driver.
->>
->> DMA works if the transfer meets the following conditions:
->> 1. 64 bits per word;
->> 2. The transfer length must be multiples of the dma_burst_len,
->>     and the dma_burst_len should be one of 8,7...2,
->>     otherwise, it will be split into several SPI bursts.
->>
->> Signed-off-by: Sunny Luo <sunny.luo@amlogic.com>
->> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
->> ---
->>   drivers/spi/spi-meson-spicc.c | 243 
->> ++++++++++++++++++++++++++++++++++++++++--
->>   1 file changed, 232 insertions(+), 11 deletions(-)
->>
->> diff --git a/drivers/spi/spi-meson-spicc.c 
->> b/drivers/spi/spi-meson-spicc.c
->> index df74ad5060f8..81e263bceba9 100644
->> --- a/drivers/spi/spi-meson-spicc.c
->> +++ b/drivers/spi/spi-meson-spicc.c
->> @@ -21,6 +21,7 @@
->>   #include <linux/interrupt.h>
->>   #include <linux/reset.h>
->>   #include <linux/pinctrl/consumer.h>
->> +#include <linux/dma-mapping.h>
->>
->>   /*
->>    * The Meson SPICC controller could support DMA based transfers, but 
->> is not
->> @@ -33,6 +34,20 @@
->>    * - CS management is dumb, and goes UP between every burst, so is 
->> really a
->>    *   "Data Valid" signal than a Chip Select, GPIO link should be 
->> used instead
->>    *   to have a CS go down over the full transfer
->> + *
->> + * DMA achieves a transfer with one or more SPI bursts, each SPI 
->> burst is made
->> + * up of one or more DMA bursts. The DMA burst implementation 
->> mechanism is,
->> + * For TX, when the number of words in TXFIFO is less than the preset
->> + * reading threshold, SPICC starts a reading DMA burst, which reads 
->> the preset
->> + * number of words from TX buffer, then writes them into TXFIFO.
->> + * For RX, when the number of words in RXFIFO is greater than the preset
->> + * writing threshold, SPICC starts a writing request burst, which 
->> reads the
->> + * preset number of words from RXFIFO, then write them into RX buffer.
->> + * DMA works if the transfer meets the following conditions,
->> + * - 64 bits per word
->> + * - The transfer length in word must be multiples of the 
->> dma_burst_len, and
->> + *   the dma_burst_len should be one of 8,7...2, otherwise, it will 
->> be split
->> + *   into several SPI bursts by this driver
-> 
-> Fine, but then also rephrase the previous paragraph since you're adding 
-> DMA.
-> 
-Will do.
+Hmm this hunk in v3 is fine, but on your slub-percpu-shaves-v4r0 branch
+it's calling local_unlock() twice. Probably a rebase error?
 
-> Could you precise on which platform you tested the DMA ?
-> 
+Otherwise looks good to me.
 
-aq222(S4)
+When you address this, please feel free to add:
 
->>    */
->>
->>   #define SPICC_MAX_BURST     128
->> @@ -128,6 +143,29 @@
->>
->>   #define SPICC_DWADDR        0x24    /* Write Address of DMA */
->>
->> +#define SPICC_LD_CNTL0       0x28
->> +#define VSYNC_IRQ_SRC_SELECT         BIT(0)
->> +#define DMA_EN_SET_BY_VSYNC          BIT(2)
->> +#define XCH_EN_SET_BY_VSYNC          BIT(3)
->> +#define DMA_READ_COUNTER_EN          BIT(4)
->> +#define DMA_WRITE_COUNTER_EN         BIT(5)
->> +#define DMA_RADDR_LOAD_BY_VSYNC              BIT(6)
->> +#define DMA_WADDR_LOAD_BY_VSYNC              BIT(7)
->> +#define DMA_ADDR_LOAD_FROM_LD_ADDR   BIT(8)
->> +
->> +#define SPICC_LD_CNTL1       0x2c
->> +#define DMA_READ_COUNTER             GENMASK(15, 0)
->> +#define DMA_WRITE_COUNTER            GENMASK(31, 16)
->> +#define DMA_BURST_LEN_DEFAULT                8
->> +#define DMA_BURST_COUNT_MAX          0xffff
->> +#define SPI_BURST_LEN_MAX    (DMA_BURST_LEN_DEFAULT * 
->> DMA_BURST_COUNT_MAX)
->> +
->> +enum {
->> +     DMA_TRIG_NORMAL = 0,
->> +     DMA_TRIG_VSYNC,
->> +     DMA_TRIG_LINE_N,
-> 
-> You're only using DMA_TRIG_NORMAL, what the other 2 values for ?
-> 
+Reviewed-by: Harry Yoo <harry.yoo@oracle.com>
 
-DMA_TRIG_VSYNC and DMA_TRIG_LINE_N are used by VOUT modules in certain 
-partial TV SoCs. These DMA triggering methods rely on special signal 
-lines, and are not supported in this context. I will delete the 
-corresponding information.
+Thanks!
 
->
->> +
->>   #define SPICC_ENH_CTL0      0x38    /* Enhanced Feature */
->>   #define SPICC_ENH_CLK_CS_DELAY_MASK GENMASK(15, 0)
->>   #define SPICC_ENH_DATARATE_MASK             GENMASK(23, 16)
->> @@ -171,6 +209,9 @@ struct meson_spicc_device {
->>       struct pinctrl                  *pinctrl;
->>       struct pinctrl_state            *pins_idle_high;
->>       struct pinctrl_state            *pins_idle_low;
->> +     dma_addr_t                      tx_dma;
->> +     dma_addr_t                      rx_dma;
->> +     bool                            using_dma;
->>   };
->>
->>   #define pow2_clk_to_spicc(_div) container_of(_div, struct 
->> meson_spicc_device, pow2_div)
->> @@ -202,6 +243,155 @@ static void meson_spicc_oen_enable(struct 
->> meson_spicc_device *spicc)
->>       writel_relaxed(conf, spicc->base + SPICC_ENH_CTL0);
->>   }
->>
->> +static int meson_spicc_dma_map(struct meson_spicc_device *spicc,
->> +                            struct spi_transfer *t)
->> +{
->> +     struct device *dev = spicc->host->dev.parent;
->> +
->> +     if (!(t->tx_buf && t->rx_buf))
->> +             return -EINVAL;
->> +
->> +     t->tx_dma = dma_map_single(dev, (void *)t->tx_buf, t->len, 
->> DMA_TO_DEVICE);
->> +     if (dma_mapping_error(dev, t->tx_dma))
->> +             return -ENOMEM;
->> +
->> +     t->rx_dma = dma_map_single(dev, t->rx_buf, t->len, 
->> DMA_FROM_DEVICE);
->> +     if (dma_mapping_error(dev, t->rx_dma))
->> +             return -ENOMEM;
->> +
->> +     spicc->tx_dma = t->tx_dma;
->> +     spicc->rx_dma = t->rx_dma;
->> +
->> +     return 0;
->> +}
->> +
->> +static void meson_spicc_dma_unmap(struct meson_spicc_device *spicc,
->> +                               struct spi_transfer *t)
->> +{
->> +     struct device *dev = spicc->host->dev.parent;
->> +
->> +     if (t->tx_dma)
->> +             dma_unmap_single(dev, t->tx_dma, t->len, DMA_TO_DEVICE);
->> +     if (t->rx_dma)
->> +             dma_unmap_single(dev, t->rx_dma, t->len, DMA_FROM_DEVICE);
->> +}
->> +
->> +/*
->> + * According to the remain words length, calculate a suitable spi 
->> burst length
->> + * and a dma burst length for current spi burst
->> + */
->> +static u32 meson_spicc_calc_dma_len(struct meson_spicc_device *spicc,
->> +                                 u32 len, u32 *dma_burst_len)
->> +{
->> +     u32 i;
->> +
->> +     if (len <= spicc->data->fifo_size) {
->> +             *dma_burst_len = len;
->> +             return len;
->> +     }
->> +
->> +     *dma_burst_len = DMA_BURST_LEN_DEFAULT;
->> +
->> +     if (len == (SPI_BURST_LEN_MAX + 1))
->> +             return SPI_BURST_LEN_MAX - DMA_BURST_LEN_DEFAULT;
->> +
->> +     if (len >= SPI_BURST_LEN_MAX)
->> +             return SPI_BURST_LEN_MAX;
->> +
->> +     for (i = DMA_BURST_LEN_DEFAULT; i > 1; i--)
->> +             if ((len % i) == 0) {
->> +                     *dma_burst_len = i;
->> +                     return len;
->> +             }
->> +
->> +     i = len % DMA_BURST_LEN_DEFAULT;
->> +     len -= i;
->> +
->> +     if (i == 1)
->> +             len -= DMA_BURST_LEN_DEFAULT;
->> +
->> +     return len;
->> +}
->> +
->> +static void meson_spicc_setup_dma(struct meson_spicc_device *spicc, 
->> u8 trig)
->> +{
->> +     unsigned int len;
->> +     unsigned int dma_burst_len, dma_burst_count;
->> +     unsigned int count_en = 0;
->> +     unsigned int txfifo_thres = 0;
->> +     unsigned int read_req = 0;
->> +     unsigned int rxfifo_thres = 31;
->> +     unsigned int write_req = 0;
->> +     unsigned int ld_ctr1 = 0;
->> +
->> +     writel_relaxed(spicc->tx_dma, spicc->base + SPICC_DRADDR);
->> +     writel_relaxed(spicc->rx_dma, spicc->base + SPICC_DWADDR);
->> +
->> +     /* Set the max burst length to support a transmission with 
->> length of
->> +      * no more than 1024 bytes(128 words), which must use the CS 
->> management
->> +      * because of some strict timing requirements
->> +      */
->> +     writel_bits_relaxed(SPICC_BURSTLENGTH_MASK, SPICC_BURSTLENGTH_MASK,
->> +                         spicc->base + SPICC_CONREG);
->> +
->> +     len = meson_spicc_calc_dma_len(spicc, spicc->xfer_remain,
->> +                                    &dma_burst_len);
->> +     spicc->xfer_remain -= len;
->> +     dma_burst_count = DIV_ROUND_UP(len, dma_burst_len);
->> +     dma_burst_len--;
->> +
->> +     if (trig == DMA_TRIG_LINE_N)
->> +             count_en |= VSYNC_IRQ_SRC_SELECT;
-> 
-> Is this the VPU VSYNC irq ? is this a tested and valid usecase ?
-> 
-
-Yes, it is VPU VSYNC irq, This part of the code is not completely. NO 
-tested about it. I will delete it.
-
->> +
->> +     if (spicc->tx_dma) {
->> +             spicc->tx_dma += len;
->> +             count_en |= DMA_READ_COUNTER_EN;
->> +             if (trig == DMA_TRIG_VSYNC || trig == DMA_TRIG_LINE_N)
->> +                     count_en |= DMA_RADDR_LOAD_BY_VSYNC
->> +                                 | DMA_ADDR_LOAD_FROM_LD_ADDR;
->> +             txfifo_thres = spicc->data->fifo_size - dma_burst_len;
->> +             read_req = dma_burst_len;
->> +             ld_ctr1 |= FIELD_PREP(DMA_READ_COUNTER, dma_burst_count);
->> +     }
->> +
->> +     if (spicc->rx_dma) {
->> +             spicc->rx_dma += len;
->> +             count_en |= DMA_WRITE_COUNTER_EN;
->> +             if (trig == DMA_TRIG_VSYNC || trig == DMA_TRIG_LINE_N)
->> +                     count_en |= DMA_WADDR_LOAD_BY_VSYNC
->> +                                 | DMA_ADDR_LOAD_FROM_LD_ADDR;
->> +             rxfifo_thres = dma_burst_len;
->> +             write_req = dma_burst_len;
->> +             ld_ctr1 |= FIELD_PREP(DMA_WRITE_COUNTER, dma_burst_count);
->> +     }
->> +
->> +     writel_relaxed(count_en, spicc->base + SPICC_LD_CNTL0);
->> +     writel_relaxed(ld_ctr1, spicc->base + SPICC_LD_CNTL1);
->> +     writel_relaxed(((trig == DMA_TRIG_NORMAL) ? SPICC_DMA_ENABLE : 0)
->> +                 | SPICC_DMA_URGENT
->> +                 | FIELD_PREP(SPICC_TXFIFO_THRESHOLD_MASK, txfifo_thres)
->> +                 | FIELD_PREP(SPICC_READ_BURST_MASK, read_req)
->> +                 | FIELD_PREP(SPICC_RXFIFO_THRESHOLD_MASK, rxfifo_thres)
->> +                 | FIELD_PREP(SPICC_WRITE_BURST_MASK, write_req),
->> +                 spicc->base + SPICC_DMAREG);
->> +}
->> +
->> +static void meson_spicc_dma_irq(struct meson_spicc_device *spicc)
->> +{
->> +     if (readl_relaxed(spicc->base + SPICC_DMAREG) & SPICC_DMA_ENABLE)
->> +             return;
->> +
->> +     if (spicc->xfer_remain) {
->> +             meson_spicc_setup_dma(spicc, DMA_TRIG_NORMAL);
->> +     } else {
->> +             writel_bits_relaxed(SPICC_SMC, 0, spicc->base + 
->> SPICC_CONREG);
->> +             writel_relaxed(0, spicc->base + SPICC_INTREG);
->> +             writel_relaxed(0, spicc->base + SPICC_DMAREG);
->> +             meson_spicc_dma_unmap(spicc, spicc->xfer);
->> +             complete(&spicc->done);
->> +     }
->> +}
->> +
->>   static inline bool meson_spicc_txfull(struct meson_spicc_device *spicc)
->>   {
->>       return !!FIELD_GET(SPICC_TF,
->> @@ -293,6 +483,11 @@ static irqreturn_t meson_spicc_irq(int irq, void 
->> *data)
->>
->>       writel_bits_relaxed(SPICC_TC, SPICC_TC, spicc->base + 
->> SPICC_STATREG);
->>
->> +     if (spicc->using_dma) {
->> +             meson_spicc_dma_irq(spicc);
->> +             return IRQ_HANDLED;
->> +     }
-> 
-> Make meson_spicc_dma_irq() return irqreturn_t and return IRQ_HANDLED.
-> 
-
-Will do.
-
->> +
->>       /* Empty RX FIFO */
->>       meson_spicc_rx(spicc);
->>
->> @@ -426,9 +621,6 @@ static int meson_spicc_transfer_one(struct 
->> spi_controller *host,
->>
->>       meson_spicc_reset_fifo(spicc);
->>
->> -     /* Setup burst */
->> -     meson_spicc_setup_burst(spicc);
->> -
->>       /* Setup wait for completion */
->>       reinit_completion(&spicc->done);
->>
->> @@ -442,11 +634,40 @@ static int meson_spicc_transfer_one(struct 
->> spi_controller *host,
->>       /* Increase it twice and add 200 ms tolerance */
->>       timeout += timeout + 200;
->>
->> -     /* Start burst */
->> -     writel_bits_relaxed(SPICC_XCH, SPICC_XCH, spicc->base + 
->> SPICC_CONREG);
->> +     if (xfer->bits_per_word == 64) {
->> +             int ret;
->>
->> -     /* Enable interrupts */
->> -     writel_relaxed(SPICC_TC_EN, spicc->base + SPICC_INTREG);
->> +             /* must tx */
->> +             if (!xfer->tx_buf)
->> +                     return -EINVAL;
->> +
->> +             /* dma_burst_len 1 can't trigger a dma burst */
->> +             if (xfer->len < 16)
->> +                     return -EINVAL;
-> 
-> Those 2 checks should be done to enable the DMA mode, you should 
-> fallback to FIFO mode
-> instead of returning EINVAL, except if 64 bits_per_word is only valid in 
-> DMA mode ?
->
-
-I only support DMA when bits_per_word equals 64, because the register 
-operation is more complicated if use PIO module. The register is 32 bits 
-wide, a word needs to be written twice to the register.
-
->> +
->> +             ret = meson_spicc_dma_map(spicc, xfer);
->> +             if (ret) {
->> +                     meson_spicc_dma_unmap(spicc, xfer);
->> +                     dev_err(host->dev.parent, "dma map failed\n");
->> +                     return ret;
->> +             }
->> +
->> +             spicc->using_dma = true;
->> +             spicc->xfer_remain = DIV_ROUND_UP(xfer->len, 
->> spicc->bytes_per_word);
->> +             meson_spicc_setup_dma(spicc, DMA_TRIG_NORMAL);
->> +             writel_relaxed(SPICC_TE_EN, spicc->base + SPICC_INTREG);
->> +             writel_bits_relaxed(SPICC_SMC, SPICC_SMC, spicc->base + 
->> SPICC_CONREG);
->> +     } else {
->> +             spicc->using_dma = false;
->> +             /* Setup burst */
->> +             meson_spicc_setup_burst(spicc);
->> +
->> +             /* Start burst */
->> +             writel_bits_relaxed(SPICC_XCH, SPICC_XCH, spicc->base + 
->> SPICC_CONREG);
->> +
->> +             /* Enable interrupts */
->> +             writel_relaxed(SPICC_TC_EN, spicc->base + SPICC_INTREG);
->> +     }
->>
->>       if (!wait_for_completion_timeout(&spicc->done, 
->> msecs_to_jiffies(timeout)))
->>               return -ETIMEDOUT;
->> @@ -853,10 +1074,10 @@ static int meson_spicc_probe(struct 
->> platform_device *pdev)
->>       host->num_chipselect = 4;
->>       host->dev.of_node = pdev->dev.of_node;
->>       host->mode_bits = SPI_CPHA | SPI_CPOL | SPI_CS_HIGH | SPI_LOOP;
->> -     host->bits_per_word_mask = SPI_BPW_MASK(32) |
->> -                                SPI_BPW_MASK(24) |
->> -                                SPI_BPW_MASK(16) |
->> -                                SPI_BPW_MASK(8);
->> +     /* DMA works at 64 bits, but it is invalidated by the spi core,
->> +      * clr the mask to avoid the spi core validation check
->> +      */
->> +     host->bits_per_word_mask = 0;
-> 
-> Fine, instead please add a check in meson_spicc_setup() to make sure
-> we operate only in 8, 16, 24, 32 & 64 bits_per_word.
-> 
-> So not need to clear it, the host buffer was allocated with 
-> spi_alloc_host() which
-> allocates with kzalloc(), already zeroing the allocated memory.
-> 
-
-Will drop this line, and check bits_per_word in meson_spicc_setup.
-
-> Neil
-> 
->>       host->flags = (SPI_CONTROLLER_MUST_RX | SPI_CONTROLLER_MUST_TX);
->>       host->min_speed_hz = spicc->data->min_speed_hz;
->>       host->max_speed_hz = spicc->data->max_speed_hz;
->>
->> ---
->> base-commit: 49807ed87851916ef655f72e9562f96355183090
->> change-id: 20250408-spi-dma-c499f560d295
->>
->> Best regards,
-> 
-> With those fixed, the path is clear & clean, thanks !
-> 
-> Neil
+-- 
+Cheers,
+Harry / Hyeonggon
