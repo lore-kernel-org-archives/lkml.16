@@ -1,73 +1,48 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAFDB21B9C3;
-	Wed,  9 Apr 2025 20:29:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D724821C18D
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 20:30:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744230601; cv=none; b=S1hVVCALkLO001bDUUkziz72FSe7PT36KSXk9IDsVOfUGYAHKTixObkn6Kv4vQ3PwSAJn0SfbyF1oS9CxMU8BME9rsedLq1Vo/HBxt1isunbPpiEzLO/+Ki8SOxWTQIbi1ES0gW/NwZBwbqftu3AJ1U2aCdEli0vckizMf3EM7A=
+	t=1744230601; cv=none; b=GsUpausYrxwYikXvmgSUgeXMV+pimxrZtezvobYd08W4AToGsd1/hpjZ0n80zl+WNjzL2VJv/yFtGfn29m+TAv21z/k8s4P8HtFbl+M4ZTQklmRavZAl/wKo7PcRuLxFHMaHCND8kfuPrNCIRnJAFyvvGqA8eIxRGmVmmAdWP2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744230601; c=relaxed/simple;
-	bh=mM6GmBObjPqQnuCfgx4fhtNNxK7FGrp0trXSFwWq/bU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ht9+39cT9GdxcXwmiwSsjyF1A92/CyyHD2Zd9CYvaMCKUq3ggdIRh9onj+PS/+xhe6a8PPZrqzYW51LZGxXc4mZENJaf8RgGhe95hvT/NgmEtUasMK9xJZ8ZfJspdHDEurSt/tGjSrwZfGwRrBBkQFxsvjzScOk0QLfpjc7EmYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XV11+kga; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=X+VA0lIwOAQriS1JPvrMBGkDqxSlHlVnTNRR/Wd/Eg0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Oa3aDYsEwYDQ7I/UCGhLuq+NcUAzPD8jplxstYlzLNtYu1ESA4sdLLP84cl5Bnq792yflH+Pevq1HsC1FZ5rOHq++GO1BnvjtSgr068DWovXmN0uMzC2VHAr1J8NhCRSEuJowxh30pmS87RmjQU5ojKu4/n6M0MRbtpKbkvKx/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NbZyzqQ4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XV11+kga"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-ae727e87c26so93991a12.0;
-        Wed, 09 Apr 2025 13:29:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744230598; x=1744835398; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qzlIX+xzxyYLyLoGasAP9j4LEnzMkotTrielfXAc04o=;
-        b=XV11+kgaceSHXedaoFILZlCj3Gx8NoZB+Omfte7gwq3RfQswA9QEJ0rhX9UfqztlHd
-         J8LjsoroLQWvV+G2L0J8tPWhCo5V/TynsJuS4dgamBNx0EuYF1BRR05PeGY6wEsUaF0t
-         B/yt4u5+NxiNPb9bnw9imNbzAuu+MFayjNWK7rC4ViNM3stoEBt96ObpazTIBbP7Rlww
-         ItbYNCFsZ+LH5WJVswAjdCT/EhAvZpBj1AO7yURZOVUsmnnwtBtI6hPUCjUxgGerAPIy
-         MInIq7NP7Qs8mHF7a3tuzFg6k6Bso+Oix6Dkpcx8NYNAf18BPJRtI0KhUPTDwc4V8WoQ
-         SUgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744230598; x=1744835398;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qzlIX+xzxyYLyLoGasAP9j4LEnzMkotTrielfXAc04o=;
-        b=RjEZWgNAiquhE5lQHIIN8rE70WMJWfe42YdhycSz+vKZ28SrrkL5blfGw2DiWEDs+E
-         4feOct2k6YqMjHqIFG5RnqcawzFM0z0IbMMh5etdYSRhuY+PFVNNybtDT1+Bn6bOxcGi
-         Fs5kW0+TJ8VExgs6ed1Z/JuLyxpSvFPw29WrICYwzIuziPFNw31uwwH759r7G0LxStAQ
-         ZIjMvpRU/Xw+Lo6Yc6hbbYojvYEuAWX2h5Hee3btVN2SyICibJSDltc4/Tcz+0oIp5Sm
-         q4+nWGLRiV/deSy8CERdEdcdoJLz+Kaaq+y+HvAzX+Of/pMLhccWkC4h3rzueiZsEfSe
-         9Qag==
-X-Forwarded-Encrypted: i=1; AJvYcCXRve305CMSkapM1g5JiWjHNR6/Ds4f1uzbRp4XeX9dMak3zS0GgRNw3E7nZgPwWejSBH9K//Kr+iOMR+w=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxf95PDXLtlk+eQvHejjAEGTPQZehpDV6/ammYfh/JuZJXBGeW0
-	aOudXaRhNjQ47hFLF7yTaXqzrq+ULA7nPmt9mexZ/v/t3qCnYm4U
-X-Gm-Gg: ASbGncvzgmN8ANsB91Pfvjxl3CyptXlWpNyXO1ULOCRtE7zPqY1w+liwmsDa9BZPGFH
-	eoSgMHIPj9lgN3mA5F8kp3dp6WflHVTZ9j+aXYX7RzLQfX3m2wUaJOASWeDSnj5Lox7Dy67fXp1
-	CycOiwn1ouUfvEhMuio2ob1wHleuPqjXgRuByS9iFtsS8K9ylMym5DnjQc0IGui9JeTUkh2F3O9
-	B5547Ok0ijr0/M2Aa9ehw13x64m/UJl3p6jksyl/dpbp+bhoCs0NoIpmtVTwUSG74mPR2n87yAc
-	L2pG9GkVKjnHduQdepKvAGhfBhHMN+nccI5JhJnqFltz0GixjMhw6kYMxnyPWbpc/Oq75bFjyQ=
-	=
-X-Google-Smtp-Source: AGHT+IHMXC1iKyAmZS4EWmnHPmfbsE96VrMUE1nHXIiST8LQxxxpK8DsksMjruABZ6IRME7gCGs5gg==
-X-Received: by 2002:a05:6a21:4a4c:b0:1f3:36f7:c0d2 with SMTP id adf61e73a8af0-201695fb5a8mr740772637.41.1744230598044;
-        Wed, 09 Apr 2025 13:29:58 -0700 (PDT)
-Received: from purva-IdeaPad-Gaming-3-15IHU6.. ([2409:4080:204:a537:9312:7e1:b2cb:ef99])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b02a0de8926sm1447388a12.30.2025.04.09.13.29.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 13:29:57 -0700 (PDT)
-From: Purva Yeshi <purvayeshi550@gmail.com>
-To: cosmin.tanislav@analog.com,
-	lars@metafoo.de,
-	Michael.Hennerich@analog.com,
-	jic23@kernel.org
-Cc: linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Purva Yeshi <purvayeshi550@gmail.com>
-Subject: [PATCH] iio: addac: ad74115: Fix use of uninitialized variable rate
-Date: Thu, 10 Apr 2025 01:59:45 +0530
-Message-Id: <20250409202945.205088-1-purvayeshi550@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NbZyzqQ4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72091C4CEE8;
+	Wed,  9 Apr 2025 20:29:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744230601;
+	bh=X+VA0lIwOAQriS1JPvrMBGkDqxSlHlVnTNRR/Wd/Eg0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=NbZyzqQ4A9UMHSh86js+hS/pYDbOuSkNui4MOBd2Z771zIbNiFZQs8HNkzgAgaWeP
+	 cmnA1+2yODLe+EAJfdMMhCKR2uQJ8SZI9d16N/HtxmRPbksj8ievLs12XXmxdE5axL
+	 jQUPiegdpf4WeHxhF547Qs+jZYnlI75HyF6WDOY63F7aiGovG31J92vsYvv1TUay3M
+	 eA0P08luKyDkxda6y++m67mx67+u+A7nl6BcUU4OhxER8JH5BCwaeztmOu94om+2K7
+	 U6rwNPHf5vNEsxDuwJRoVkAzNkr46VcBLNqzqfSNKJLcYRJIfDUCYr4wrn9+TftTfa
+	 mD2yOKA1gSvlg==
+From: Ingo Molnar <mingo@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Juergen Gross <jgross@suse.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Dave Hansen <dave.hansen@intel.com>,
+	Xin Li <xin@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 16/20] x86/msr: Rename 'mce_wrmsrl()' to 'mce_wrmsrq()'
+Date: Wed,  9 Apr 2025 22:29:03 +0200
+Message-ID: <20250409202907.3419480-17-mingo@kernel.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250409202907.3419480-1-mingo@kernel.org>
+References: <20250409202907.3419480-1-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,36 +51,67 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Fix Smatch-detected error:
-drivers/iio/addac/ad74115.c:823 _ad74115_get_adc_code() error:
-uninitialized symbol 'rate'.
-
-The variable rate was declared but not given any value before being used
-in a division. If the code reached that point without setting rate, it
-would cause unpredictable behavior.
-
-Declare and initialize 'rate' to zero inside the 'else' block where it is
-used. This ensures 'rate' is always initialized before being passed to
-DIV_ROUND_CLOSEST.
-
-Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+Suggested-by: "H. Peter Anvin" <hpa@zytor.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Xin Li <xin@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
 ---
- drivers/iio/addac/ad74115.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/cpu/mce/core.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/iio/addac/ad74115.c b/drivers/iio/addac/ad74115.c
-index a7e480f2472d..26770c68e5fa 100644
---- a/drivers/iio/addac/ad74115.c
-+++ b/drivers/iio/addac/ad74115.c
-@@ -814,7 +814,7 @@ static int _ad74115_get_adc_code(struct ad74115_state *st,
- 			return -ETIMEDOUT;
- 	} else {
- 		unsigned int regval, wait_time;
--		int rate;
-+		int rate = 0;
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index 765b799c7090..255927f0284e 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -423,7 +423,7 @@ noinstr u64 mce_rdmsrq(u32 msr)
+ 	return EAX_EDX_VAL(val, low, high);
+ }
  
- 		ret = ad74115_get_adc_rate(st, channel, &rate);
- 		if (ret < 0)
+-static noinstr void mce_wrmsrl(u32 msr, u64 v)
++static noinstr void mce_wrmsrq(u32 msr, u64 v)
+ {
+ 	u32 low, high;
+ 
+@@ -829,7 +829,7 @@ void machine_check_poll(enum mcp_flags flags, mce_banks_t *b)
+ 		/*
+ 		 * Clear state for this bank.
+ 		 */
+-		mce_wrmsrl(mca_msr_reg(i, MCA_STATUS), 0);
++		mce_wrmsrq(mca_msr_reg(i, MCA_STATUS), 0);
+ 	}
+ 
+ 	/*
+@@ -910,8 +910,8 @@ static noinstr bool quirk_skylake_repmov(void)
+ 	      MCI_STATUS_ADDRV | MCI_STATUS_MISCV |
+ 	      MCI_STATUS_AR | MCI_STATUS_S)) {
+ 		misc_enable &= ~MSR_IA32_MISC_ENABLE_FAST_STRING;
+-		mce_wrmsrl(MSR_IA32_MISC_ENABLE, misc_enable);
+-		mce_wrmsrl(MSR_IA32_MCx_STATUS(1), 0);
++		mce_wrmsrq(MSR_IA32_MISC_ENABLE, misc_enable);
++		mce_wrmsrq(MSR_IA32_MCx_STATUS(1), 0);
+ 
+ 		instrumentation_begin();
+ 		pr_err_once("Erratum detected, disable fast string copy instructions.\n");
+@@ -1274,7 +1274,7 @@ static __always_inline void mce_clear_state(unsigned long *toclear)
+ 
+ 	for (i = 0; i < this_cpu_read(mce_num_banks); i++) {
+ 		if (arch_test_bit(i, toclear))
+-			mce_wrmsrl(mca_msr_reg(i, MCA_STATUS), 0);
++			mce_wrmsrq(mca_msr_reg(i, MCA_STATUS), 0);
+ 	}
+ }
+ 
+@@ -1693,7 +1693,7 @@ noinstr void do_machine_check(struct pt_regs *regs)
+ 	instrumentation_end();
+ 
+ clear:
+-	mce_wrmsrl(MSR_IA32_MCG_STATUS, 0);
++	mce_wrmsrq(MSR_IA32_MCG_STATUS, 0);
+ }
+ EXPORT_SYMBOL_GPL(do_machine_check);
+ 
 -- 
-2.34.1
+2.45.2
 
