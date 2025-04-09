@@ -1,114 +1,198 @@
-Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723CA1D5166
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 06:32:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 193A51B6CE0
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 06:36:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744180354; cv=none; b=N4Gp/OWAXOdNrN3m9CCX17aQezOovxs7AmcZY5RiXkfRJ2Q/yKvHsNqcIK7G7GfpfDkTzb+ACBRfpJ0DMtzE4ER7G956DfJil2RQSainkTlV4NPqgNIxIHjynEiA06m2W2LTkXfmfVozEM+OYvCupp+zLSX4GXHo9+rAK/fkt8k=
+	t=1744180603; cv=none; b=rsVtlaLEdb+56RPPkWrl9uRU4tq4V9plCpNaIRC6zW+ZjPDKyY+Wrzl3N9hV1MxxfLqD+CtUR6mMeUKveY91w/eQjg9pXA533WXhwCri4pi4cHp0ANVH3TrvD5iBb0KmFpoTwZF94qCxiWA0gGAIsvVxA7LmiO79JRc5rI6CtwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744180354; c=relaxed/simple;
-	bh=P0n5ieh+g6o6HGAdK43qktzXXD5vVTv1CTEEArbr+HI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DXwOYLrql+RNOyCkxPaz+X+wb9suF9XFkRnJomRPc5Q3DmFpe7pU0hMTr2m04yditUq+y2VFyGUg+XwRbO85ReQA233ivZkNQGrhEz3S4GXB4Q5gyobKE6D6UZLFo2kZ0kYW1iNRfTUCh7jXq3dieVMuoljhxhjSlilfoPyukx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=GGzzat/g; arc=none smtp.client-ip=35.89.44.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
+	s=arc-20240116; t=1744180603; c=relaxed/simple;
+	bh=htJb0hi3i8Uumf4NXM2uKOYATRawaMO2ZOlca+fgrJM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IvURuGVur1ogqLGSd0S9yFJWUsZFuC7mhm+NBISSKDtQ1KMM0DM8+J8/zdM+OWjy1h4zrA5bjVSeNCxjxIGMJ0CrPrq30S865sKOgIIrZyd68+AES+ze0ZiHTpzVV3brP9fUTLTABaY6q1akDlHu6dKfTkoPQq5oNDq+g5TKHO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xN78ymuA; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="GGzzat/g"
-Received: from eig-obgw-6006a.ext.cloudfilter.net ([10.0.30.182])
-	by cmsmtp with ESMTPS
-	id 2ANruKeWwMETl2Oz4ueZcB; Wed, 09 Apr 2025 06:32:26 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id 2Oz3uJTnYv7F52Oz3u9SqY; Wed, 09 Apr 2025 06:32:25 +0000
-X-Authority-Analysis: v=2.4 cv=Pcv5hDhd c=1 sm=1 tr=0 ts=67f61479
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=49j0FZ7RFL9ueZfULrUA:9 a=QEXdDO2ut3YA:10
- a=nmWuMzfKamIsx3l42hEX:22 a=hTR6fmoedSdf3N0JiVF8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=DAMCG4KqC6S0IVaUW/bW9NdlcATf9WHaqkSH8tCf2Ac=; b=GGzzat/gIN/pSjfBPbNQejkBNA
-	DETwpBdkQ79c9bvPxLytOO150lYNzeMR12i1yPaFfsFbFGKtHIetBtLC9HdvEuHqlbDAk1+7FEtUr
-	uBwJSajmCXZpQS1JAk3F7L3NfcAQZ8mgm/fgIKP6e50gOYp6QZGPx1AlmA82oxFNCInCDCGky/JCg
-	iVDnBzWypm/OrFI6ZXKIsJpywxg5bS/iVBa8CQ9HdYKa3KTOt0VXumRBEoUVVm2JW6yfFXhPyZeuK
-	0F0di0nu78CW4Di8J68bbJ3KFW0pEs0M9WNoEFEWL9b5IE/ku2Ef7p8Spb/PZNy16yWKO7DvEEw0X
-	IISZHDzw==;
-Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:57796 helo=[10.0.1.116])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <re@w6rz.net>)
-	id 1u2Oz1-00000000F3O-22uQ;
-	Wed, 09 Apr 2025 00:32:23 -0600
-Message-ID: <c7347b3f-4b63-4682-ab78-15b10326f5d7@w6rz.net>
-Date: Tue, 8 Apr 2025 23:32:20 -0700
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xN78ymuA"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-736e52948ebso7459439b3a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 23:36:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744180601; x=1744785401; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=JyLHBKKtBdcGeGPsMw3f6Qv4QssdQHR7Pid6EQwgQ8w=;
+        b=xN78ymuAj77FKAMt+DD5OW2V6k9fRGCUP+uexXXWMI+QX8audVZ8rM2LhtvFA6TpwP
+         0taWsSLOgCJW9/LKuwyW9PAWLfc2Lzkn3gwpqEbYYzmjJFfT5Gwhr8+fWQ5WNzY0sZZz
+         OoXQ/NFPbEBeDRRMPLFH/kFEHjl6Nk2EotbmaD1qKS52biAtPeSw+2UYHVp0updP0toV
+         dMnwkMkE0NtYpZWcbdBj4gaCZQVyDM1G+TctPLAVxouvLPai9Ylg9D92CXXeqHCdMwG0
+         y2mPwolhvOyiyl5LIeP+RIrB313UTp0pY0SWSpodg/M369m2EIGHR/YQrz5/Dqs3HbvE
+         X1rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744180601; x=1744785401;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JyLHBKKtBdcGeGPsMw3f6Qv4QssdQHR7Pid6EQwgQ8w=;
+        b=njz7BVVIs+jCqra2xLqBp3gqepwpK8uFM2R+voEUrApTD5NSnWHKtfAnbzq4g2Mc2w
+         OFcTgviG0VT+2OSKmd15egi6pTX+nN1IlJYPjo01KS4g5M24h7Y3sczpXtdeabEVntKw
+         /C7mNAkfMBmAaQmC30zLUy1gPpeX88Sn05yStkDlImRRK6bwIpcc7bMTsGTFezdBC/+s
+         NCDVNBTVJMpyfds9nIvXqEtJw+SORkx0P6XSkYUKuzSNHrtLHRmVmQrgdlvutSVkV84T
+         KeW3+EuRbjxvM0zjPjbe2KymYXtlXmNjrBOynWV+KM3+Ar8DYl+1H0NcG9t7RrHFKzDP
+         Jv9g==
+X-Forwarded-Encrypted: i=1; AJvYcCU2qh1Nw0HabGx1JU6ZyVuX8Aiyma8pDGoXKpnVGCQ1O79dRu48kcoy5y71ZIgIPHQ9zrzBMVacPUzDk8g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHEppnDavJzHb78n7808h+X1mJR7oOag2XE9LtY05ORJh38Ioy
+	fyM5Rff0byDJNyxCsi7j1Z2qRJGeJHUTowoKJRwxULDgvvMheV3IJw64YzuapyeZUhNL+9n6viY
+	=
+X-Gm-Gg: ASbGnctaW12LKRk+fBGkmOKhfG3RnxL3FNO9HpCiGvX+G/bvCA/WOQDrTXMSzUkRRQE
+	Jo+NguzDl1C0SVmB06d6NrpZJ+QoUdmogtwWUFE09eu0gDaRRboF+azPmPeCXDF6FmgOyH3Y511
+	JZMMauldu72iQ7sjI4+dC81XrlfXXEAdb0fSLR2Tb5sOD/xVGWBCyfmVF3JHMqdzYy33y2PIKpZ
+	atVEppocFX7SYGUlBJRo2QWQ32GWHmz8xkgEfSDrigBo6KW3847mR/HQU+Iz1kuuDhqEkOsgbwf
+	I76A5mGFA/jCp+dCYNdaoRwebw5/rl8YXupv/K4ceRyGKKVjhLk=
+X-Google-Smtp-Source: AGHT+IHsJVrpDdInYLAhJaCNmHpq2veRp8h4bN1zX1HiVkJrECPermHzrundQFT6RfXaFpJfsW7aQw==
+X-Received: by 2002:a05:6a20:9f8e:b0:1f5:7eee:bb10 with SMTP id adf61e73a8af0-201591580c4mr2941076637.8.1744180601350;
+        Tue, 08 Apr 2025 23:36:41 -0700 (PDT)
+Received: from thinkpad ([120.56.198.53])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1e382a4sm510787b3a.96.2025.04.08.23.36.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 23:36:40 -0700 (PDT)
+Date: Wed, 9 Apr 2025 12:06:35 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, 
+	bhelgaas@google.com, vigneshr@ti.com, kishon@kernel.org, 18255117159@163.com, 
+	cassel@kernel.org, wojciech.jasko-EXT@continental-corporation.com, 
+	thomas.richard@bootlin.com, bwawrzyn@cisco.com, linux-pci@vger.kernel.org, 
+	linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, srk@ti.com
+Subject: Re: [PATCH v2 4/4] PCI: j721e: Add support to build as a loadable
+ module
+Message-ID: <zsxnx7biwogov5dw5yiafkgk6tsrtspac75bjbrca5uevweaim@ly67hwfyk7qh>
+References: <20250330083914.529222-1-s-vadapalli@ti.com>
+ <20250330083914.529222-5-s-vadapalli@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.13 000/500] 6.13.11-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250408154123.083425991@linuxfoundation.org>
-Content-Language: en-US
-From: Ron Economos <re@w6rz.net>
-In-Reply-To: <20250408154123.083425991@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 73.223.253.157
-X-Source-L: No
-X-Exim-ID: 1u2Oz1-00000000F3O-22uQ
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:57796
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 35
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfGVttOzwYL7wEv7MI1bBHFaJM56heUEc61SGmDWQWz03i0akks0Gfgn9FVDwSXbfru7IqjnD9RFEP4wYlsuSaZaVGXv5CZqZDHhAbj829ZB/e4T8lZLm
- J8MkQjjF4uDkYa1wZ3CvRq/4oNHj5+CQDZr7ifPiD5KXPa2osUAi2YB374sJVcS53OgExQ020eQw+JbCtoubIhp+kk5ka+/uCuA=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250330083914.529222-5-s-vadapalli@ti.com>
 
-On 4/8/25 08:54, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.13.11 release.
-> There are 500 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 10 Apr 2025 15:40:28 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.13.11-rc2.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.13.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Sun, Mar 30, 2025 at 02:09:14PM +0530, Siddharth Vadapalli wrote:
+> The 'pci-j721e.c' driver is the application/glue/wrapper driver for the
+> Cadence PCIe Controllers on TI SoCs. Implement support for building it as a
+> loadable module.
+> 
+> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+> ---
+> 
+> v1:
+> https://lore.kernel.org/r/20250307103128.3287497-5-s-vadapalli@ti.com/
+> Changes since v1:
+> - Based on feedback from Thomas at:
+>   https://lore.kernel.org/r/88b3ecbe-32b6-4310-afb9-da19a2d0506a@bootlin.com/
+>   the "check" for a non-NULL "pcie-refclk" in j721e_pcie_remove() has been
+>   dropped.
+> 
+> Regards,
+> Siddharth.
+> 
+>  drivers/pci/controller/cadence/Kconfig     |  6 ++--
+>  drivers/pci/controller/cadence/pci-j721e.c | 33 +++++++++++++++++++++-
+>  2 files changed, 35 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/cadence/Kconfig b/drivers/pci/controller/cadence/Kconfig
+> index 82b58096eea0..72d7d264d6c3 100644
+> --- a/drivers/pci/controller/cadence/Kconfig
+> +++ b/drivers/pci/controller/cadence/Kconfig
+> @@ -43,10 +43,10 @@ config PCIE_CADENCE_PLAT_EP
+>  	  different vendors SoCs.
+>  
+>  config PCI_J721E
+> -	bool
+> +	tristate
+>  
+>  config PCI_J721E_HOST
+> -	bool "TI J721E PCIe controller (host mode)"
+> +	tristate "TI J721E PCIe controller (host mode)"
+>  	depends on ARCH_K3 || COMPILE_TEST
+>  	depends on OF
+>  	select PCIE_CADENCE_HOST
+> @@ -57,7 +57,7 @@ config PCI_J721E_HOST
+>  	  core.
+>  
+>  config PCI_J721E_EP
+> -	bool "TI J721E PCIe controller (endpoint mode)"
+> +	tristate "TI J721E PCIe controller (endpoint mode)"
+>  	depends on ARCH_K3 || COMPILE_TEST
+>  	depends on OF
+>  	depends on PCI_ENDPOINT
+> diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
+> index ef1cfdae33bb..8bffcd31729c 100644
+> --- a/drivers/pci/controller/cadence/pci-j721e.c
+> +++ b/drivers/pci/controller/cadence/pci-j721e.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/irqchip/chained_irq.h>
+>  #include <linux/irqdomain.h>
+>  #include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/pci.h>
+>  #include <linux/platform_device.h>
+> @@ -27,6 +28,7 @@
+>  #define cdns_pcie_to_rc(p) container_of(p, struct cdns_pcie_rc, pcie)
+>  
+>  #define ENABLE_REG_SYS_2	0x108
+> +#define ENABLE_CLR_REG_SYS_2	0x308
+>  #define STATUS_REG_SYS_2	0x508
+>  #define STATUS_CLR_REG_SYS_2	0x708
+>  #define LINK_DOWN		BIT(1)
+> @@ -116,6 +118,15 @@ static irqreturn_t j721e_pcie_link_irq_handler(int irq, void *priv)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> +static void j721e_pcie_disable_link_irq(struct j721e_pcie *pcie)
+> +{
+> +	u32 reg;
+> +
+> +	reg = j721e_pcie_intd_readl(pcie, ENABLE_CLR_REG_SYS_2);
+> +	reg |= pcie->linkdown_irq_regfield;
+> +	j721e_pcie_intd_writel(pcie, ENABLE_CLR_REG_SYS_2, reg);
+> +}
+> +
+>  static void j721e_pcie_config_link_irq(struct j721e_pcie *pcie)
+>  {
+>  	u32 reg;
+> @@ -633,9 +644,25 @@ static void j721e_pcie_remove(struct platform_device *pdev)
+>  	struct j721e_pcie *pcie = platform_get_drvdata(pdev);
+>  	struct cdns_pcie *cdns_pcie = pcie->cdns_pcie;
+>  	struct device *dev = &pdev->dev;
+> +	struct cdns_pcie_ep *ep;
+> +	struct cdns_pcie_rc *rc;
+> +
+> +	if (pcie->mode == PCI_MODE_RC) {
+> +		rc = container_of(cdns_pcie, struct cdns_pcie_rc, pcie);
+> +		cdns_pcie_host_disable(rc);
+> +	} else {
+> +		ep = container_of(cdns_pcie, struct cdns_pcie_ep, pcie);
+> +		cdns_pcie_ep_disable(ep);
+> +	}
+> +
+> +	if (pcie->reset_gpio) {
+> +		msleep(PCIE_T_PVPERL_MS);
 
-Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
+There is no point in adding a delay before PERST# assertion.
 
-Tested-by: Ron Economos <re@w6rz.net>
+> +		gpiod_set_value_cansleep(pcie->reset_gpio, 1);
 
+This is not PERST# assert, isn't it? Typo?
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
