@@ -1,310 +1,319 @@
-Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2077.outbound.protection.outlook.com [40.107.247.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62B7626B2D1;
-	Wed,  9 Apr 2025 16:26:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744216011; cv=fail; b=Tm63bEnV3RyKiSZ2FS6ZOXH8s9Hb394QygQrzir820i5uEmTy1TFwrVw/3C1HBIKsJ4vwxPdtWRL0KerhhLzvHRgDWRtSEik9Bh3RCSe0TRMbKLWQcnsI3+AGiF3OnV8if/5mFASIYxKU5pQ/3HxRB6HHOa4aDvS4FMTQBfvADk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744216011; c=relaxed/simple;
-	bh=Cgj9zq35+tXPARe33Aq6QEduF1rdeKGs+9PFGTDYWV4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=b1Te7WkWXdStFHG1G2gKHZI6HxT80g2cuA5hHqV9Yhrc5DowV3/TFINku6jviS+DDrnoLe8+kCIER9CgbBkuGen+6Zj4pgMrd/FLLlwp7Tx6u3ygZjTGu8tbMduTEJ9omLkTAm1Sv/XCGsl+aXbmYtJijFfqoE2/Spku8BJvgS0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de; spf=pass smtp.mailfrom=cherry.de; dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b=SmVhTG3Z; arc=fail smtp.client-ip=40.107.247.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cherry.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B5B26B2CF
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 16:26:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744216020; cv=none; b=IutnA0I2OjxbzxqCjvtbRvbH/eZCZ1oz4xJ+N7oq2fLH/rr3uy4yl6/G/IVDeZ3q9nH07Iwyl3aLB50n3S4+rMGSCLw6XD5MWTgQ4Xbei39U7JfbsfWkmq8kjDgk1yszTk6lXeulDgGR4oxiaS1xDmwwn2IbZUNb0F1ciqs9eR4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744216020; c=relaxed/simple;
+	bh=I7bKAVYH4lAfQNoycierrwfzAOJeEsFuwQlPVG/ml1A=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=XCv99fbYYKXgwAUl7qoxm7ejQZnyVqC2RoMa9O8ijpbVvhZy76IJFtzwv6w7XCn3QZxUF+mKf3D/lWheSTeI4Ck+aJX63hi6LPyaJutvgKG55xiU/V5nZUMMI3Sl5ZovKUh0zIc7lHhwxYU0bP1pqHjOC+p0zU1LxBojRP2V1fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=K7Z19thJ; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b="SmVhTG3Z"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=p54TNEg1zUfrj+II1+VRUeAjXIaafuiXoD4ysAJGkcehGHkw2tw8ODCi62Qd8cFiiTdFLIWPtRpPQkel/sIk5cTjVVh/l0X4iVB3Z0R3EahfsUv8OFCJm82aS6OOTQJoTWEboA1ZXOkQj1H+8aybLp2z+is0RQZ8UlhaSmiJWXCR+P9uE1tDFvlCG++zUnFpalEGQAVZnfseIUnL3YziiGsBgC6ocQA16kQT4AKH2YP0cFh/CAZgMHBdrZjlt6MQaSOBF38K/ls5bCniyHFveaUepFuKIqzbcTDT0kypEe7mn9i8xM0w6VckceN6KwkGEpkhV/TB1gj2KQXvx0+18g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dUw+jU74cJsaVH4d80pif1Y0IVb4Mcv9ya38QnS46+s=;
- b=r9Y9DFKuE/XxC3IfI5xNkzJF+NFZ0X78jf9EdAotGK4XmtFMs+sx1F3qtHhRYTA9AHd+vZqsPejdqT7bcBq0vIYjoUDjtzkmVRWpp/uJA6xzeckzkIk2nJcL4vnD7RBFZK2ZSv/H5HxgSK1dqSmifIIDG+nbPs98LNiK9X2RGoIOPELkhofnE41sWqtuhI+wKAkOhex97eXBDD/J3NPUeJgQvOK5oeAaNYAMGVtbu+wAFTJUPoPzfOiYgMmq9g8tk6LeMZO0pvssonvj12TPjdyNKMakLRLVUwkdkIkpc+mhJtlKtzxT6skH9sJfylXlNO8OxFIF7j88URF0ycmdJw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
- dkim=pass header.d=cherry.de; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dUw+jU74cJsaVH4d80pif1Y0IVb4Mcv9ya38QnS46+s=;
- b=SmVhTG3ZcaeyV0dElTy7ZFsavwLG8p/BgyP0tVOjZJ3TzBpEhPWkcxTLRKBD1WKeSpOF/DuLJNXtnrDApmpYSjwse5HlFrchQAoFuIR+FpLiveuzKqH/2f0oERGtelMLehX4I33kH6qtaWyghAWTBCubrDelOE3NOdJXKT5bTzc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=cherry.de;
-Received: from AS8PR04MB8897.eurprd04.prod.outlook.com (2603:10a6:20b:42c::20)
- by AS8PR04MB7815.eurprd04.prod.outlook.com (2603:10a6:20b:28a::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Wed, 9 Apr
- 2025 16:26:45 +0000
-Received: from AS8PR04MB8897.eurprd04.prod.outlook.com
- ([fe80::35f6:bc7d:633:369a]) by AS8PR04MB8897.eurprd04.prod.outlook.com
- ([fe80::35f6:bc7d:633:369a%6]) with mapi id 15.20.8606.033; Wed, 9 Apr 2025
- 16:26:45 +0000
-Message-ID: <cc49276b-f64f-42a8-b4b4-61bde17b61e3@cherry.de>
-Date: Wed, 9 Apr 2025 18:26:43 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/5] dt-bindings: usb: cypress,hx3: Add support for all
- variants
-To: Conor Dooley <conor@kernel.org>,
- =?UTF-8?Q?=C5=81ukasz_Czechowski?= <lukasz.czechowski@thaumatec.com>
-Cc: Matthias Kaehlcke <mka@chromium.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Benjamin Bara <benjamin.bara@skidata.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- Klaus Goger <klaus.goger@theobroma-systems.com>, linux-usb@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
-References: <20250326-onboard_usb_dev-v1-0-a4b0a5d1b32c@thaumatec.com>
- <20250326-onboard_usb_dev-v1-2-a4b0a5d1b32c@thaumatec.com>
- <20250326-fanatic-onion-5f6bf8ec97e3@spud>
- <CABd623tEGh=qtpF0h7PkRBBrR7V9EaxUv9HregqbPcLU_2Exbg@mail.gmail.com>
- <20250409-commend-brewing-7c541aec26a9@spud>
-Content-Language: en-US
-From: Quentin Schulz <quentin.schulz@cherry.de>
-In-Reply-To: <20250409-commend-brewing-7c541aec26a9@spud>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FR0P281CA0270.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:b5::16) To AS8PR04MB8897.eurprd04.prod.outlook.com
- (2603:10a6:20b:42c::20)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K7Z19thJ"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43cfebc343dso47515835e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 09:26:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744216015; x=1744820815; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JSp4ty85LzeyrRbTnah9LeTjNVJM7XWlOpFLqxqVkeg=;
+        b=K7Z19thJqZEILrnO5EIj9SWCf2Syv2H5Odzmu2UXkofGXLP/UP35m+dLP8E5gu3x2t
+         CPFriSuq6KgiZkNbxpcC1V3xUxTHqad5vMaMGBDqBrEzj/usoeCwGAlvTZWtxIAPdJsN
+         i3zyQtSdtLX+kZClKZ2H7QTrMFN1PkD6MKmQtXGXH67tGQoitalF0tO5nu8tyO7PvqW4
+         RZsKlHwB57TjGChst1XkR7GxdB03AHOWiym1ABgpn8r2Tgu8bwHUSIqOkUWiwyv7SVrj
+         Dz5Dt25ZVxB8VaUXZoVMj/JlErPURQqwdEv7RXBCy20grK8/jjR0QJ1beFxlPrI61SwK
+         eiwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744216015; x=1744820815;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=JSp4ty85LzeyrRbTnah9LeTjNVJM7XWlOpFLqxqVkeg=;
+        b=gOt8S8+QkfFQTuaLq1es1Tibq5wWu8hXT6QhC341GZly9Lf18WWO7tMWltUEsOL/kt
+         HP/bSHWO53/flszY7xuRhAWPjJquYTSXQ6BGHlz8t5FoPLc2sFXNe+pieLcb9rU0Wa5y
+         9M/4Dv3xloDfXn0IWI3lmeUwX/x61HC4DWSSmYs/dFa0sU8MZ+bE7qrewDqh0nh+m+J7
+         i5oQV94RYvp5WYvucfcsh2Fd0Hp9EG7b3BTWboHqCJtW8Ph0/XVvgux9dMR+lPTGONx+
+         b8oiQ5zo+MwHtui6/GujMWc1tu/pgVzSddwed7QiKGS6PkX1k5ipCXuhQ7JzO51VPcLy
+         MCyw==
+X-Forwarded-Encrypted: i=1; AJvYcCVm95HYU0iZ/LpJbnWVv9VWoU0e5K+KUN3UHC4OpYwUL0aSilfPiPClDfsFHiMqOsSu8XQEK1ttC6A/RJk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQdPDa7HoRh8Wpb+8mvQf0K+lvGFDgnltVaT2bQjBea5Glihx1
+	9FegT8/V966E2lvWh4S5t/w69kQ5EegS7grYT/QRm5G+6Uqg2I5f7bSa6ZBdAoI=
+X-Gm-Gg: ASbGncu/Fdv4+63qpyiOF0POYwjgd+hx79Wm34iLNwrXy89S3Zr9ZZjSCy7J6SDWkQ3
+	lxuD6cIApZOpWBxooAVfwe126xPJ6nhY7RKY6/FOjVX8rGcYmNa49E8iFOnXbylqLOANQQy16gm
+	isFHa4mzgGk3anmZtZb2HAjw7a4XnKCMbSSS4AM30FdDCDPL40vjuNHTqimkmPClmRADHcRYjYt
+	UY7pBwrXY8aYwWbJYGq817HQcZalSbH+XPtQmOASh+ak+uCJGSvOLr7GS9XCiStWFfR2i7ixY4d
+	MrgyJ93XxQqHXRbR7VJJwf1kOL4ZN6sOkFpXlP2uV6LlKi/gFdm8nC/UuIi4cZPFwV73tcT6Zqq
+	382nc/F2ZuDjMq9fUCg==
+X-Google-Smtp-Source: AGHT+IE4pgJC7F75RQmdvqxiCKqZVfdVoZauqghq0OlFNK0wjkzDjhkVHca4QNEGcxe3FS6jbliKiw==
+X-Received: by 2002:a05:600c:3484:b0:43b:ca39:6c75 with SMTP id 5b1f17b1804b1-43f1ecd6affmr44410605e9.16.1744216015215;
+        Wed, 09 Apr 2025 09:26:55 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:87d9:979a:1261:ab65? ([2a01:e0a:3d9:2080:87d9:979a:1261:ab65])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f205eccd8sm24795565e9.5.2025.04.09.09.26.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Apr 2025 09:26:54 -0700 (PDT)
+Message-ID: <72a5b302-5c99-4457-86c8-5fa994c93c4a@linaro.org>
+Date: Wed, 9 Apr 2025 18:26:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR04MB8897:EE_|AS8PR04MB7815:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3d6b4b00-33f5-42d4-23e6-08dd77835176
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|366016|1800799024|376014|13003099007|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?cjRqZmovVHhYbFI2VTRrb3NXQ0lSaDlvK3B6QVE2am9vQnNWclVmdC9sWWQy?=
- =?utf-8?B?OWszdEp2ZkViUkFrbUVzRDNoeTRnTW1uYUllNzB3NGlvSlBOa1FiR3Zpdm9E?=
- =?utf-8?B?VXZneCsvbWVaM1ZWQmtHSmh1UEhXQTVhTnJyeExwZ2lVRnp1cnZmSUNjWWgy?=
- =?utf-8?B?T0RWYk8vL2VWKzAxMEJtaEhDNExKM3laa0EyRVhlVlNtVmc5ZmszSnpJN0x3?=
- =?utf-8?B?MVF6emxFMlp2MHc3dE1nNXJjSk5QcjZhdEQwVUZuUTBGRVJxTjcvYnJxVTFX?=
- =?utf-8?B?Wk92RzJxMmVVdlFTaTAxck9PcmNmZ2pkQ1MwZGYzMHFuSXg0MVVaY0tyeExm?=
- =?utf-8?B?T255ell5NFI0akVLVkY5SWZGUlQvODd4cHFSQ3NsaE5ob3FZTGJWdUdEY21S?=
- =?utf-8?B?NHBCYXpvUnEydWY3dDRVdkJrWG5QcHRGV0U1R0JnazNJOGVURHBjOVRpa2JK?=
- =?utf-8?B?dW1hNGNNQ2xhZGE5T0duNnMrZ0VjT1BadGtxVUs0Zy9WekdNVm1hWEJrRyt6?=
- =?utf-8?B?TzQ1b2psVUlKVEM3azJicVBRR0VwSisxNmFSMURrUUJZVUlqWnhVTEZnNStj?=
- =?utf-8?B?YlIraXZzUG04MGdTQXFDRDI0VlR3MTliaVY2NThXUDZYbnFuS29tQzEyUGxh?=
- =?utf-8?B?c25HUXU4L2xabTRxZzd5bGs2L3dhNEFEV0ZLSDFEY1B3Y0Npb0tHL3QvTUZl?=
- =?utf-8?B?OFp4M0NZeHh5RHAydGhiNFM0eE13RG04NTkzNnNwcEg1aTdmSGpvREFCZ0RX?=
- =?utf-8?B?VkRUYmtVZEpuUURTRlpQUDRmbXBHWXlBV1VGNXpxK3dXaGYycXBMeHVnY1pW?=
- =?utf-8?B?RUJaMFY2bjVpckIveDZIYnErZERPcnBSQmZzekpwRkEwQUlURjBRWUdFWHlh?=
- =?utf-8?B?ZmRYOTVGc3kxazNnMUVRRVhTL243cU5rbEtJOVozNDByRGtDOEViS1JGejFF?=
- =?utf-8?B?Z0JyMFhINHhXVExuM3lIb0Q3ZHVmanl1QWVmaHFQYjcrdEdkVFBzWXRjUFFm?=
- =?utf-8?B?UnJVTGhwQnpZY28zOWdZbGIzSVpZczZBMGcyU2ZlQ1p3U3FDbkpvY3hUMmNQ?=
- =?utf-8?B?UXZuQkRvWnR4ZXp2WEk5M1NzN1o3bHpOZGhWdFcwTDNnblBkUUpGa3lTb1JW?=
- =?utf-8?B?c2dybjBFbkFvSWZnanYyUmxoWEt2Q2J1WmJzWWlrRmdjSFBaNEE5N05FQzE2?=
- =?utf-8?B?UmdDSFRRY1piWHo3NEpMdGUwdkx2WVZXTTVCMU1vQ2k5Qzc0T1MvU3VIZFBC?=
- =?utf-8?B?NnpKNTllNWVtRlpWOFVYYzc1bDBSd1Uvd3hPZC9HWXJQMXFBUkY5N1hZMDlh?=
- =?utf-8?B?Q2pTVjBMdE5sTWp0RHU4TW81ZXVsaUlFdXpPWHUvWTVVWDlXOEJZSVJBbnZj?=
- =?utf-8?B?Yk5Eczczb1dGSzdNcHRhaHlQb0k0T1FPaUprS0JvUnBWa29lRU0zVEZKZGpT?=
- =?utf-8?B?QytJb1dJeXN2T3hUcXpqZzJ4NFJDUnVKcGI2N21aUXE3em9OaW1uMlRQMVZ3?=
- =?utf-8?B?R3VRbmxvU28zeUxjTVF6S1l2MGdEM3ZlQVhMM05PZm9IMWN0eDk0RmtwaENU?=
- =?utf-8?B?b1BTa25sSWZ3Z3NiSlVjWE1UMllzeW5YaWZlM2o2cGltUDlMbTVlQnZLMnFx?=
- =?utf-8?B?WTdhdGk2Qmc2RlRyd1Y1SHdXRVVmSklZUDBnanduSWpub3RMRzNKOHpXaW9m?=
- =?utf-8?B?Z3NyeTBRZTY1dWdVb1VubzNyaWk5NEw5ems1eEd4TjdlRE1jd2VacXdvSEpD?=
- =?utf-8?B?TU1BdEwzTnE3bThtZnJFQTM1OWJpUG12dU5ZaERKNEc3T1BLcXY3UlVXTnQz?=
- =?utf-8?Q?GK89hVQ5ti+mMOMX2E5PKSmPf2XkVzZ471yG0=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8897.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(1800799024)(376014)(13003099007)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?eWtKVHBxdzNTMUVpMURTNVduQnh3SmZUNEcxekNuUkszWjVHMkVYbXUvYTZZ?=
- =?utf-8?B?UkIvd1VRNkdZV2phdERtZ0JYQ2NDWmNqWmp0cVJRNFBXbGJBaG9NTm04cFlI?=
- =?utf-8?B?UVhPaG1HNDNrYVd0MHY2aDRZM3dqVWptK3EreEdvc0Q2TWVoK1BsUjUxdDVP?=
- =?utf-8?B?VnlvVitmdlp3TzhJTmZzL3lLa0JOaWwxMUFRWDJ5Z2taTmN5bm84VkgyM2w2?=
- =?utf-8?B?M0lpdThEbjd5YmV2VXl5SFJ3LzVwTHF3Rk1sMitZSFFqTG82YzU5MEFBVTBk?=
- =?utf-8?B?M0luRFgxOVVNTGNoY0NrUmRmYkVzcTlmVHpQR2JZT1pReXNZeXNuTTcvVVg0?=
- =?utf-8?B?WThTdVZzbDI0SUhkcnZMcjY2RU5sSlpBWWQwajZTMWVIejB5SUFUU0l3TWFE?=
- =?utf-8?B?R1htU1pML3d3NmozWnBiMTBCM1NJU01FNWU3aWdFTG5EVFZQVE84ekZNQThR?=
- =?utf-8?B?ZGUrT3paNWJncnNtaWlYY1NHR25yT3NjL1NaYXhFcDFVMnVHOUdZWVUwNDhT?=
- =?utf-8?B?OFB6ZmR1U2tDM1d5UUtUUzBrOHo0Z0R6T0I5dW4zT2tOaC92YllhWGVzV3Zt?=
- =?utf-8?B?Y3lLempjQ3Z4YjBSRG9QNWVPZ0ZGditYSWlPQ0NoK2N3YXVDMlhKUytQMUx1?=
- =?utf-8?B?Zlg0MWo0eGdWMWIvdlZxMk9hRmtRWHNXY0tSamttM3ZOWG4rMDlpN3EvS1p5?=
- =?utf-8?B?K2xEL2hvVXRvR1pISzMvcXlEY28zc1ZldkhlZ01wVUY2cDVSR0RzL2hEZjNz?=
- =?utf-8?B?WFFYbEswMlBhWjltK2ZwY2lXMERWU1VENnNmOHRvWGQwSEh1bjRCUVlsTlM4?=
- =?utf-8?B?aWFSNThkbWZ5K1pwS2FWOFV0enI3TzZJVE5RVzhvWkFqajVnN01qWm5UUVd1?=
- =?utf-8?B?M1V1bTU4MW54d1VqL3dNZkQwM2ljdUx5aFF3bi9CL2dmQkpFOEpnZkJ6VG9I?=
- =?utf-8?B?aU4ra05IM3hXaUhwRkUzQmNZcHErdEp5ek9JRUw3S2RNRzJMZ012ZUJRVll2?=
- =?utf-8?B?TW1PRmV3VXFkRHhTQ1pSOW1DS2JtdVpFdUxNQ2hycVA1YVViRXRGTTYzb1Vr?=
- =?utf-8?B?b2YxTTdpdEE2Tm90QnFWczYvcFZXVXJUWDJ1RURjQXZTTmN5WW5aVENWdWFm?=
- =?utf-8?B?eWVMdFJ3QnFGdGxiMkhpWDJIWmQxNlJkWVhJcTdTVnJoT01sNTFQNHk5QWVM?=
- =?utf-8?B?R08zdGl6T1FlZjN1VjVURzRHMitXdVc2eHJpWExYbUkvV1U3WEx4MHlaWC9r?=
- =?utf-8?B?MjlPTDU2emFuaVcyMUl5SEsyeFZSYngyaTEwSVNxV3kwd1RxQnN5dWhCLysw?=
- =?utf-8?B?SmM3WEg2QmF0U2U3VlVHVzZheHZnOWxpai9ucFBWQnUxTUJ2Qi9mWVNzeDVj?=
- =?utf-8?B?dVhockpVM2tzakk3eDhWbDVrc0hDRmVLbUlOYUNlMVNBbGI2K0lwYks5WkF1?=
- =?utf-8?B?WThIVzBacWdiZnBaU3AydC84ZTZlcEd0VTBjaGE1d0hyT1pYYU5wMjhZWGRu?=
- =?utf-8?B?NGNhUVB3Nkg4SGNyV0pjMnZkM3N6eG04RHBYRitBRkdYZi9nb2xxOXgzaVFX?=
- =?utf-8?B?eFl2UTI0d2xEaGxjaHR5cUJlczRZOVJuemxGeTdTOC85b2RPOUNsTEM3Nnhr?=
- =?utf-8?B?NWtjYXMxQ2p5NWZzWlRYOTNTUWY5MDVhT1JSOVVPRUpRZmRORUtqZ2ZPRVhK?=
- =?utf-8?B?NE9wb2VFOFQ4blZjQzBTbUc4NHowd0JDVDVJVEJsQXFzaU4yQ0xMSUIrdUFu?=
- =?utf-8?B?aEx0d2J4a2ZHOXdiV1VreUcxUjlUNzhhUzZYa0xCK2k1ZjJDbHd0aFowUHFn?=
- =?utf-8?B?T1FoazZlOUZpdDlTVUFDYjY2M1RxaDNGTHFHZGJjWlVKRGgwbUV3ajU4dWRO?=
- =?utf-8?B?SkRMWFlJYmh2OU5tc05EaEhBVU5GZnZkRzVVU2ZtdVhLTXVUdTd6a3hxeDIx?=
- =?utf-8?B?QzJiQUdQdTBuSzBna3JEWVlPbVZadUw5Z3NKMTFYbXhKbHcrN09YQ3FZZ3Bq?=
- =?utf-8?B?RzUxY3ZIUzV3eG5Xckd6MEloUW5BQ0ZOTXVwTEVaWXZER0IxWjYzTzZsdkVT?=
- =?utf-8?B?a2dMUGRjK3pKSktFNmd5YnNVSEgyUmQvM282SzMrRHE2WldKa2FRRG95akJp?=
- =?utf-8?B?czRpb0hPNm8yVld2c1ljcGhwOHYrRG4yZGZIL05Yb2paaVhkYW9JMjdnYmkz?=
- =?utf-8?B?ZFE9PQ==?=
-X-OriginatorOrg: cherry.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3d6b4b00-33f5-42d4-23e6-08dd77835176
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8897.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 16:26:45.0445
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bWHy0IeI6FCp1OYrNWJL8W7xRZTnG40NhVuVZ1L/wehHu4AS5XcvI2sQjl2UWJoNXwoeoK9X9X2dF0oyZlz5XoTt8HXQaZBJhq5F1AX7JvA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB7815
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH 00/20] Add support for HEVC and VP9 codecs in decoder
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Stefan Schmidt <stefan.schmidt@linaro.org>, Hans Verkuil
+ <hverkuil@xs4all.nl>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ stable@vger.kernel.org, Dan Carpenter <dan.carpenter@linaro.org>
+References: <20250408-iris-dec-hevc-vp9-v1-0-acd258778bd6@quicinc.com>
+ <801511ac-78db-476b-8f1d-a478b0b64bcb@linaro.org>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <801511ac-78db-476b-8f1d-a478b0b64bcb@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Conor,
+On 09/04/2025 16:29, Bryan O'Donoghue wrote:
+> On 08/04/2025 16:54, Dikshita Agarwal wrote:
+>> Hi All,
+>>
+>> This patch series adds initial support for the HEVC(H.265) and VP9
+>> codecs in iris decoder. The objective of this work is to extend the
+>> decoder's capabilities to handle HEVC and VP9 codec streams,
+>> including necessary format handling and buffer management.
+>> In addition, the series also includes a set of fixes to address issues
+>> identified during testing of these additional codecs.
+>>
+>> These patches also address the comments and feedback received from the
+>> RFC patches previously sent. I have made the necessary improvements
+>> based on the community's suggestions.
+>>
+>> Changes sinces RFC:
+>> - Added additional fixes to address issues identified during further
+>> testing.
+>> - Moved typo fix to a seperate patch [Neil]
+>> - Reordered the patches for better logical flow and clarity [Neil,
+>> Dmitry]
+>> - Added fixes tag wherever applicable [Neil, Dmitry]
+>> - Removed the default case in the switch statement for codecs [Bryan]
+>> - Replaced if-else statements with switch-case [Bryan]
+>> - Added comments for mbpf [Bryan]
+>> - RFC: https://lore.kernel.org/linux-media/20250305104335.3629945-1-quic_dikshita@quicinc.com/
+>>
+>> These patches are tested on SM8250 and SM8550 with v4l2-ctl and
+>> Gstreamer for HEVC and VP9 decoders, at the same time ensured that
+>> the existing H264 decoder functionality remains uneffected.
+>>
+>> Note: 1 of the fluster compliance test is fixed with firmware [1]
+>> [1]: https://lore.kernel.org/linux-firmware/1a511921-446d-cdc4-0203-084c88a5dc1e@quicinc.com/T/#u
+>>
 
-On 4/9/25 6:18 PM, Conor Dooley wrote:
-> On Tue, Apr 08, 2025 at 06:36:04PM +0200, Łukasz Czechowski wrote:
->> Hello,
+<snip>
+
+>> ---
+>> Dikshita Agarwal (20):
+>>        media: iris: Skip destroying internal buffer if not dequeued
+>>        media: iris: Update CAPTURE format info based on OUTPUT format
+>>        media: iris: Add handling for corrupt and drop frames
+>>        media: iris: Avoid updating frame size to firmware during reconfig
+>>        media: iris: Send V4L2_BUF_FLAG_ERROR for buffers with 0 filled length
+>>        media: iris: Add handling for no show frames
+>>        media: iris: Improve last flag handling
+>>        media: iris: Skip flush on first sequence change
+>>        media: iris: Prevent HFI queue writes when core is in deinit state
+>>        media: iris: Remove redundant buffer count check in stream off
+>>        media: iris: Remove deprecated property setting to firmware
+>>        media: iris: Fix missing function pointer initialization
+>>        media: iris: Fix NULL pointer dereference
+>>        media: iris: Fix typo in depth variable
+>>        media: iris: Add a comment to explain usage of MBPS
+>>        media: iris: Add HEVC and VP9 formats for decoder
+>>        media: iris: Add platform capabilities for HEVC and VP9 decoders
+>>        media: iris: Set mandatory properties for HEVC and VP9 decoders.
+>>        media: iris: Add internal buffer calculation for HEVC and VP9 decoders
+>>        media: iris: Add codec specific check for VP9 decoder drain handling
 >>
->> śr., 26 mar 2025 o 18:58 Conor Dooley <conor@kernel.org> napisał(a):
->>>
->>> On Wed, Mar 26, 2025 at 05:22:57PM +0100, Lukasz Czechowski wrote:
->>>> The Cypress HX3 hubs use different default PID value depending
->>>> on the variant. Update compatibles list.
->>>>
->>>> Fixes: 1eca51f58a10 ("dt-bindings: usb: Add binding for Cypress HX3 USB 3.0 family")
->>>> Cc: stable@vger.kernel.org # 6.6
->>>> Cc: stable@vger.kernel.org # Backport of the patch in this series fixing product ID in onboard_dev_id_table and onboard_dev_match in drivers/usb/misc/onboard_usb_dev.{c,h} driver
->>>> Signed-off-by: Lukasz Czechowski <lukasz.czechowski@thaumatec.com>
->>>> ---
->>>>   Documentation/devicetree/bindings/usb/cypress,hx3.yaml | 6 ++++++
->>>>   1 file changed, 6 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/usb/cypress,hx3.yaml b/Documentation/devicetree/bindings/usb/cypress,hx3.yaml
->>>> index 1033b7a4b8f9..f0b93002bd02 100644
->>>> --- a/Documentation/devicetree/bindings/usb/cypress,hx3.yaml
->>>> +++ b/Documentation/devicetree/bindings/usb/cypress,hx3.yaml
->>>> @@ -15,8 +15,14 @@ allOf:
->>>>   properties:
->>>>     compatible:
->>>>       enum:
->>>> +      - usb4b4,6500
->>>> +      - usb4b4,6502
->>>> +      - usb4b4,6503
->>>>         - usb4b4,6504
->>>>         - usb4b4,6506
->>>> +      - usb4b4,6507
->>>> +      - usb4b4,6508
->>>> +      - usb4b4,650a
->>>
->>> All these devices seem to have the same match data, why is a fallback
->>> not suitable?
->>>
+>>   drivers/media/platform/qcom/iris/iris_buffer.c     |  22 +-
+>>   drivers/media/platform/qcom/iris/iris_ctrls.c      |  35 +-
+>>   drivers/media/platform/qcom/iris/iris_hfi_common.h |   1 +
+>>   .../platform/qcom/iris/iris_hfi_gen1_command.c     |  44 ++-
+>>   .../platform/qcom/iris/iris_hfi_gen1_defines.h     |   5 +-
+>>   .../platform/qcom/iris/iris_hfi_gen1_response.c    |  22 +-
+>>   .../platform/qcom/iris/iris_hfi_gen2_command.c     | 143 +++++++-
+>>   .../platform/qcom/iris/iris_hfi_gen2_defines.h     |   5 +
+>>   .../platform/qcom/iris/iris_hfi_gen2_response.c    |  57 ++-
+>>   drivers/media/platform/qcom/iris/iris_hfi_queue.c  |   2 +-
+>>   drivers/media/platform/qcom/iris/iris_instance.h   |   6 +
+>>   .../platform/qcom/iris/iris_platform_common.h      |  28 +-
+>>   .../platform/qcom/iris/iris_platform_sm8250.c      |  15 +-
+>>   .../platform/qcom/iris/iris_platform_sm8550.c      | 143 +++++++-
+>>   drivers/media/platform/qcom/iris/iris_vb2.c        |   3 +-
+>>   drivers/media/platform/qcom/iris/iris_vdec.c       | 113 +++---
+>>   drivers/media/platform/qcom/iris/iris_vdec.h       |  11 +
+>>   drivers/media/platform/qcom/iris/iris_vidc.c       |   3 -
+>>   drivers/media/platform/qcom/iris/iris_vpu_buffer.c | 397 ++++++++++++++++++++-
+>>   drivers/media/platform/qcom/iris/iris_vpu_buffer.h |  46 ++-
+>>   20 files changed, 948 insertions(+), 153 deletions(-)
+>> ---
+>> base-commit: 7824b91d23e9f255f0e9d2acaa74265c9cac2e9c
+>> change-id: 20250402-iris-dec-hevc-vp9-2654a1fc4d0d
 >>
->> Thank you for the suggestion. Indeed the fallback compatible appears
->> to work fine in this case,
->> and I am able to avoid additional entries in onboard_dev_match table
->> as added in the first patch in this series.
->>
->> However, after I've updated the cypress,hx3.yaml schema file and
->> rk3399-puma.dtsi file,
->> I get the following warnings, when running "make dtbs_check":
->>
->> linux/arch/arm64/boot/dts/rockchip/rk3399-puma-haikou.dtb: hub@1:
->> compatible: ['usb4b4,6502', 'usb4b4,6506'] is too long
->>   from schema $id: http://devicetree.org/schemas/usb/cypress,hx3.yaml#
->> linux/arch/arm64/boot/dts/rockchip/rk3399-puma-haikou.dtb: hub@2:
->> compatible: ['usb4b4,6500', 'usb4b4,6504'] is too long
->>   from schema $id: http://devicetree.org/schemas/usb/cypress,hx3.yaml#
->>
->> Below is the diff of my changes:
->>
->> diff --git a/Documentation/devicetree/bindings/usb/cypress,hx3.yaml
->> b/Documentation/devicetree/bindings/usb/cypress,hx3.yaml
->> index f0b93002bd02..d6eac1213228 100644
->> --- a/Documentation/devicetree/bindings/usb/cypress,hx3.yaml
->> +++ b/Documentation/devicetree/bindings/usb/cypress,hx3.yaml
->> @@ -14,15 +14,22 @@ allOf:
->>
->>   properties:
->>     compatible:
->> -    enum:
->> -      - usb4b4,6500
->> -      - usb4b4,6502
->> -      - usb4b4,6503
->> -      - usb4b4,6504
->> -      - usb4b4,6506
->> -      - usb4b4,6507
->> -      - usb4b4,6508
->> -      - usb4b4,650a
->> +    oneOf:
->> +      - enum:
->> +          - usb4b4,6504
->> +          - usb4b4,6506
->> +      - items:
->> +          - enum:
->> +              - usb4b4,6500
->> +              - usb4b4,6508
->> +          - const: usb4b4,6504
->> +      - items:
->> +          - enum:
->> +              - usb4b4,6502
->> +              - usb4b4,6503
->> +              - usb4b4,6507
->> +              - usb4b4,650a
->> +          - const: usb4b4,6506
->>
->>     reg: true
->>
->> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
->> b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
->> index d0d867374b3f..7fac61f95fc6 100644
->> --- a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
->> +++ b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
->> @@ -594,14 +594,14 @@ &usbdrd_dwc3_1 {
->>          #size-cells = <0>;
->>
->>          hub_2_0: hub@1 {
->> -               compatible = "usb4b4,6502";
->> +               compatible = "usb4b4,6502", "usb4b4,6506";
->>                  reg = <1>;
->>                  peer-hub = <&hub_3_0>;
->>                  reset-gpios = <&gpio4 RK_PA3 GPIO_ACTIVE_HIGH>;
->>          };
->>
->>          hub_3_0: hub@2 {
->> -               compatible = "usb4b4,6500";
->> +               compatible = "usb4b4,6500", "usb4b4,6504";
->>                  reg = <2>;
->>                  peer-hub = <&hub_2_0>;
->>                  reset-gpios = <&gpio4 RK_PA3 GPIO_ACTIVE_HIGH>;
->>
->>
->> Do you have any suggestions on how I can properly update the schema
->> files to avoid the above warnings?
+>> Best regards,
 > 
-> The diffs you have here look okay, not really sure what you're asking
-> for.
+> Assuming we merge Neils sm8650 stuff first, which I think we should merge first, you'll have a subsequent build error to fix [1]
 
-It fails dtbs_check:
+I agree, it would be simpler, I prepared a fix to apply on top of this patchset.
 
-linux/arch/arm64/boot/dts/rockchip/rk3399-puma-haikou.dtb: hub@1: 
-compatible: ['usb4b4,6502', 'usb4b4,6506'] is too long
-  from schema $id: http://devicetree.org/schemas/usb/cypress,hx3.yaml#
-linux/arch/arm64/boot/dts/rockchip/rk3399-puma-haikou.dtb: hub@2: 
-compatible: ['usb4b4,6500', 'usb4b4,6504'] is too long
-  from schema $id: http://devicetree.org/schemas/usb/cypress,hx3.yaml#
+> 
+> https://git.codelinaro.org/bryan.odonoghue/kernel/-/tree/linaro/arm-laptop/wip/x1e80100-6.15-rc1-dell-inspiron14-camss-ov02c10-ov02e10-audio-iris?ref_type=heads
+> 
+> Testing your series in isolation. I can confirm vp9 decodes also getting some strange prinouts which we need to follow up to see if they exist with the baseline driver [2].
+> 
+> https://git.codelinaro.org/bryan.odonoghue/kernel/-/tree/linaro/arm-laptop/wip/x1e80100-6.15-rc1-dell-inspiron14-camss-ov02c10-ov02e10-audio-iris-20250408-iris-dec-hevc-vp9-v1-0-acd258778bd6@quicinc.com?ref_type=heads
+> 
 
-I'm not sure we're allowed to add new errors with dtbs_check (and would 
-like to avoid it in any case).
+<snip>
 
-Cheers,
-Quentin
+> [  126.582170] qcom-iris aa00000.video-codec: session error received 0x1000006: unknown
+> [  126.582177] qcom-iris aa00000.video-codec: session error received 0x4000004: invalid operation for current state
+
+With the following on top of the last SM8650 patchet + this patchset, I have the same HEVC errors on SM8650, but VP9 works fine:
+[  115.185745] qcom-iris aa00000.video-codec: session error received 0x4000004: invalid operation for current state
+[  115.221058] qcom-iris aa00000.video-codec: session error received 0x1000006: unknown
+
+==========================================><==============================================
+diff --git a/drivers/media/platform/qcom/iris/iris_platform_sm8550.c b/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
+index 65f3accc2fb2..7d5116528fca 100644
+--- a/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
++++ b/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
+@@ -213,6 +213,22 @@ static void iris_set_sm8550_preset_registers(struct iris_core *core)
+  	writel(0x0, core->reg_base + 0xB0088);
+  }
+
++static void iris_set_sm8650_preset_registers(struct iris_core *core)
++{
++	writel(0x0, core->reg_base + 0xB0088);
++	writel(0x33332222, core->reg_base + 0x13030);
++	writel(0x44444444, core->reg_base + 0x13034);
++	writel(0x1022, core->reg_base + 0x13038);
++	writel(0x0, core->reg_base + 0x13040);
++	writel(0xFFFF, core->reg_base + 0x13048);
++	writel(0x33332222, core->reg_base + 0x13430);
++	writel(0x44444444, core->reg_base + 0x13434);
++	writel(0x1022, core->reg_base + 0x13438);
++	writel(0x0, core->reg_base + 0x13440);
++	writel(0xFFFF, core->reg_base + 0x13448);
++	writel(0x99, core->reg_base + 0xA013C);
++}
++
+  static const struct icc_info sm8550_icc_table[] = {
+  	{ "cpu-cfg",    1000, 1000     },
+  	{ "video-mem",  1000, 15000000 },
+@@ -390,6 +406,7 @@ struct iris_platform_data sm8550_data = {
+
+  /*
+   * Shares most of SM8550 data except:
++ * - set_preset_registers to iris_set_sm8650_preset_registers
+   * - vpu_ops to iris_vpu33_ops
+   * - clk_rst_tbl to sm8650_clk_reset_table
+   * - controller_rst_tbl to sm8650_controller_reset_table
+@@ -400,7 +417,7 @@ struct iris_platform_data sm8650_data = {
+  	.init_hfi_command_ops = iris_hfi_gen2_command_ops_init,
+  	.init_hfi_response_ops = iris_hfi_gen2_response_ops_init,
+  	.vpu_ops = &iris_vpu33_ops,
+-	.set_preset_registers = iris_set_sm8550_preset_registers,
++	.set_preset_registers = iris_set_sm8650_preset_registers,
+  	.icc_tbl = sm8550_icc_table,
+  	.icc_tbl_size = ARRAY_SIZE(sm8550_icc_table),
+  	.clk_rst_tbl = sm8650_clk_reset_table,
+@@ -428,20 +445,34 @@ struct iris_platform_data sm8650_data = {
+  	.ubwc_config = &ubwc_config_sm8550,
+  	.num_vpp_pipe = 4,
+  	.max_session_count = 16,
+-	.max_core_mbpf = ((8192 * 4352) / 256) * 2,
+-	.input_config_params =
+-		sm8550_vdec_input_config_params,
+-	.input_config_params_size =
+-		ARRAY_SIZE(sm8550_vdec_input_config_params),
++	.max_core_mbpf = NUM_MBS_8K * 2,
++	.input_config_params_default =
++		sm8550_vdec_input_config_params_default,
++	.input_config_params_default_size =
++		ARRAY_SIZE(sm8550_vdec_input_config_params_default),
++	.input_config_params_hevc =
++		sm8550_vdec_input_config_param_hevc,
++	.input_config_params_hevc_size =
++		ARRAY_SIZE(sm8550_vdec_input_config_param_hevc),
++	.input_config_params_vp9 =
++		sm8550_vdec_input_config_param_vp9,
++	.input_config_params_vp9_size =
++		ARRAY_SIZE(sm8550_vdec_input_config_param_vp9),
+  	.output_config_params =
+  		sm8550_vdec_output_config_params,
+  	.output_config_params_size =
+  		ARRAY_SIZE(sm8550_vdec_output_config_params),
+  	.dec_input_prop = sm8550_vdec_subscribe_input_properties,
+  	.dec_input_prop_size = ARRAY_SIZE(sm8550_vdec_subscribe_input_properties),
+-	.dec_output_prop = sm8550_vdec_subscribe_output_properties,
+-	.dec_output_prop_size = ARRAY_SIZE(sm8550_vdec_subscribe_output_properties),
+-
++	.dec_output_prop_avc = sm8550_vdec_subscribe_output_properties_avc,
++	.dec_output_prop_avc_size =
++		ARRAY_SIZE(sm8550_vdec_subscribe_output_properties_avc),
++	.dec_output_prop_hevc = sm8550_vdec_subscribe_output_properties_hevc,
++	.dec_output_prop_hevc_size =
++		ARRAY_SIZE(sm8550_vdec_subscribe_output_properties_hevc),
++	.dec_output_prop_vp9 = sm8550_vdec_subscribe_output_properties_vp9,
++	.dec_output_prop_vp9_size =
++		ARRAY_SIZE(sm8550_vdec_subscribe_output_properties_vp9),
+  	.dec_ip_int_buf_tbl = sm8550_dec_ip_int_buf_tbl,
+  	.dec_ip_int_buf_tbl_size = ARRAY_SIZE(sm8550_dec_ip_int_buf_tbl),
+  	.dec_op_int_buf_tbl = sm8550_dec_op_int_buf_tbl,
+==========================================><==============================================
+
+Thanks,
+Neil
