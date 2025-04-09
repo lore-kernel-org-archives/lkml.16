@@ -1,61 +1,74 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99DE118CBE1;
-	Wed,  9 Apr 2025 14:25:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486D8265CB5;
+	Wed,  9 Apr 2025 14:25:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744208715; cv=none; b=FIU4dzsUhC3xoD2smiDLidvDlPLv0/XXtB5E3n6rYYWZTaRggiywUs9OvtPVzjHJ5J5mkycLoCDskbW4kjGhfNrNgWM4MW/pzEJNdIVzjvYK1mxcZNIN7DPHYmnoCxt73qdyQ31z9p176j6++4jYB3d6pHG1ZKYT91BHtGTCvQI=
+	t=1744208718; cv=none; b=h5BbQ0eHXGx6qiyNpY67D/ei3Et3g0DAmrW8GknwOyeKQllDWfl+tf35Cq27lSLfS0nrszy3jckYhE0UPpGW3W9RFicmK3nIBceUsIxMX6qMXX5bow/ZMwfOPyj7+zHZ+Wkoz+tYHWRlxXFGbC+ngHX194iptnfxn+AOqu63ZLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744208715; c=relaxed/simple;
-	bh=JyUyIJyU0ZXJDvodc8BAc4Ocyexf+D8OENVtq+NNldk=;
+	s=arc-20240116; t=1744208718; c=relaxed/simple;
+	bh=qCQcsvfYktQKjto5hQwySNvL5iBrBUQml5G8WWesrTU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XeOb84jCj5X06qbBUr/cV4h8xcUl1GxO8NR66K4BBVfiF+UD2iwzLWkr63BNP4qayo6OIJBFgAxChMXRBtzOtwOtRVer408slXI+2jW/3+0/H2nrK5UvBw9tAQV/yYDutzoNdiTR4NTm6jQsWl+wdSfKFTKe3JZvh9XF6vrUN+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gflKF2jB; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ATZqdJpO; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=fgHJjCTMmRmGmkAUGHoSmHDQk+5nKjXcyCpXdZANSPYovglbSdnQfOTzfryzaC2hUI7+a/78IZdMwpmwlZyfGje7m2h3wPs8jbi2luJ9SqTVdCGutngSmP71Cm7zIzIc1OJksnJp5VaUHR2wAefnzHEbAxTACLcpqp3/H4FIzPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hzmlOKPI; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gflKF2jB";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ATZqdJpO"
-Date: Wed, 9 Apr 2025 16:25:10 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744208711;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JyUyIJyU0ZXJDvodc8BAc4Ocyexf+D8OENVtq+NNldk=;
-	b=gflKF2jBzlcAlKkBnWx47eCRcUcpkuPgqz8EPS3Gx+6L7FsvB/l2JAdVKnqkRhZtTKwKU3
-	RwLfCkFOKb5abgnb8nlEE3PzAnCBFrGkXR2FbdMdKPjwHV6bPuKs3sQkgxYOzbW03ABSYu
-	IVbJD51EP6QlLwhRoXxBnitigy77tq+tgKhJXMsTeYDi32dYlnkUB0dbkKCm5YxGewEel1
-	dhmQs2MeANbtRk3maTMtPHam98CJLsSwnUf/kLYRBBy96HnSKkIonEa9NAjVSWTivxOB9s
-	74ZfFjeIxwX6NDNOx9JN76pf+imvnlmif4ziVymCZbHt/eVcFNgGcwVbK+7czQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744208711;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JyUyIJyU0ZXJDvodc8BAc4Ocyexf+D8OENVtq+NNldk=;
-	b=ATZqdJpOwjxEaol79yvNrNC75bpwmPUElyTSiV2H6wrHcB5e9gP3VLEHnND+B16lqYSldM
-	b9RGWi28wfLEG2DA==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Eric Chanudet <echanude@redhat.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
-	Clark Williams <clrkwllms@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>, Ian Kent <ikent@redhat.com>,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev,
-	Alexander Larsson <alexl@redhat.com>,
-	Lucas Karpinski <lkarpins@redhat.com>
-Subject: Re: [PATCH v4] fs/namespace: defer RCU sync for MNT_DETACH umount
-Message-ID: <20250409142510.PIlMaZhX@linutronix.de>
-References: <20250408210350.749901-12-echanude@redhat.com>
- <20250409-egalisieren-halbbitter-23bc252d3a38@brauner>
- <20250409131444.9K2lwziT@linutronix.de>
- <4qyflnhrml2gvnvtguj5ee7ewrz3ejhgdb2lfihifzjscc5orh@6ah6qxppgk5n>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hzmlOKPI"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-30549dacd53so831483a91.1;
+        Wed, 09 Apr 2025 07:25:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744208715; x=1744813515; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zfJxLC7wLvSINk+yl7dVGie7f5vAe0C3LCRWygQl7Xw=;
+        b=hzmlOKPIJUawVMKiMrOosO01chQCSWjloIOhh+QCyGhaZD3HRegilQSJpcMXIqDZci
+         mrfVgdaq/QjJ56R3eDMaXCPsh/lW/8X48XcStN4L+9EOiXfOUy29atgqpWuGSZP9DCbj
+         uC3E4OUr5sPZki9QLzNQSr3nGKZetfPF1KLq9/dpgvtE0oR6094NtuAIWNJTEnpBuEVD
+         BHiGSi9GIhoSwgd0RiSn+YK2U0LcCe++7IFVNJlBobQcaG5UgUdLwn6lB2WjY1WmEg8P
+         5tfYudYUW/JkzY/xUR1NnveizlbCCor29umfdM/sE9LB2IGsstO0jKSZzlwTMV1fUZ7a
+         LW1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744208715; x=1744813515;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zfJxLC7wLvSINk+yl7dVGie7f5vAe0C3LCRWygQl7Xw=;
+        b=hvsU69PNblKi4w9vETzaTWBwNi4Tgg7UYoqnUnBXopYjiGq1ab62u/kE2fgrreDGiw
+         LUeqJfLS76IFRDvf0lUJtKtSycoZIfrwX0S+b8zAgOLGomgQ1n/3qabV9/79mIWzdLMZ
+         lZoKkpdK4+iM+5fS1V4FQacy58VzexjX/HxNxnxqvd9EsYBORKIQY5Eu7oCySHuy/+3M
+         H/4IqGhLTsoI4XJTl2gb5qUx6r2G8So58fi+K9Q4FHUt8tyI/qv6JaNBReSSWDbFwqtZ
+         ho57Mk6VufEOzmRDFK2Mi0APOe/bO0JHCY43AtHsdWsaoq180XpdG6s/OT9wItMvsCVR
+         HPIw==
+X-Forwarded-Encrypted: i=1; AJvYcCUGWRGyxYC9w3RkHrdBbJRA7x6CB/3fGtNaWB+G2vIOYGHNgH5puKwdowICijBLiMjDPcFyAwKCXG6+VwqN@vger.kernel.org, AJvYcCXCIKZqRXzSjZ1xFVc8FImRWiitnfvSKD+JZgGD9Cbqpi2hC2D3Cq/DstSHH0alwQWFvSU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRFC2nmkzzl4thL5OhAz9G8UBFNO3WObGev5/kRJjFKrb7I3z9
+	5B8We2tgmjW4Nrrz/Y8YJR1hwdjgM1ff2v2u2Vw8hQCwExu6QQg=
+X-Gm-Gg: ASbGncuCTAoy+kgtZ2IYtUnyf1cB1nsm+jpxMVv0gaYt5BJbXzMw5ePLEuQT9/9ZqnQ
+	qlVB7rIGIPkeR8QozONmyiyvo2acF6hB9zHx6uPk0TSfU8Ar4V/gx6zlDCN5Aq2hNAv5vZEvBBJ
+	vc3/MRCSF2OzdMre3BsPbLSf4XeX0dphI3PScBsrlrqgfEtBkT2/N+EknJkNqr41jmBYxhM1PLu
+	3KF6mZL7cPRNNyS1NZK98LJgtKItx0kzGABqOiGqb+kOQ4Dw4SwZzrgNCw0yXlhmj5fTVVExe34
+	NwnVsfz0vjvB0g67hS00cf1dMb+Yl2zLAQg+vfYQ
+X-Google-Smtp-Source: AGHT+IHGLYcoO/orX7nCWeuHDsnJqoy2EHiHXumGysMZgYJ95by5Ga9thZxXcKt+YCsnQ/TLrwaXgQ==
+X-Received: by 2002:a17:90b:5283:b0:2ff:6e58:89f5 with SMTP id 98e67ed59e1d1-306dc0452bfmr4891770a91.6.1744208715405;
+        Wed, 09 Apr 2025 07:25:15 -0700 (PDT)
+Received: from localhost ([2601:646:9e00:f56e:123b:cea3:439a:b3e3])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-306dd10c42asm1832714a91.7.2025.04.09.07.25.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 07:25:14 -0700 (PDT)
+Date: Wed, 9 Apr 2025 07:25:14 -0700
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: Daniel Xu <dxu@dxuuu.xyz>
+Cc: andrii@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+	john.fastabend@gmail.com, martin.lau@linux.dev, eddyz87@gmail.com,
+	song@kernel.org, yonghong.song@linux.dev, kpsingh@kernel.org,
+	sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC bpf-next 10/13] bpf: verifier: Add indirection to
+ kallsyms_lookup_name()
+Message-ID: <Z_aDSipnuvNAhHbE@mini-arch>
+References: <cover.1744169424.git.dxu@dxuuu.xyz>
+ <7540678e9a46c13f680f2aacab28bb88446583f5.1744169424.git.dxu@dxuuu.xyz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,45 +77,53 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <4qyflnhrml2gvnvtguj5ee7ewrz3ejhgdb2lfihifzjscc5orh@6ah6qxppgk5n>
+In-Reply-To: <7540678e9a46c13f680f2aacab28bb88446583f5.1744169424.git.dxu@dxuuu.xyz>
 
-On 2025-04-09 16:02:29 [+0200], Mateusz Guzik wrote:
-> On Wed, Apr 09, 2025 at 03:14:44PM +0200, Sebastian Andrzej Siewior wrote:
-> > One question: Do we need this lazy/ MNT_DETACH case? Couldn't we handle
-> > them all via queue_rcu_work()?
-> > If so, couldn't we have make deferred_free_mounts global and have two
-> > release_list, say release_list and release_list_next_gp? The first one
-> > will be used if queue_rcu_work() returns true, otherwise the second.
-> > Then once defer_free_mounts() is done and release_list_next_gp not
-> > empty, it would move release_list_next_gp -> release_list and invoke
-> > queue_rcu_work().
-> > This would avoid the kmalloc, synchronize_rcu_expedited() and the
-> > special-sauce.
-> >=20
->=20
-> To my understanding it was preferred for non-lazy unmount consumers to
-> wait until the mntput before returning.
->=20
-> That aside if I understood your approach it would de facto serialize all
-> of these?
->=20
-> As in with the posted patches you can have different worker threads
-> progress in parallel as they all get a private list to iterate.
->=20
-> With your proposal only one can do any work.
->=20
-> One has to assume with sufficient mount/unmount traffic this can
-> eventually get into trouble.
+On 04/08, Daniel Xu wrote:
+> kallsyms_lookup_name() cannot be exported from the kernel for policy
+> reasons, so add this layer of indirection to allow the verifier to still
+> do kfunc and global variable relocations.
+> 
+> Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
+> ---
+>  include/linux/bpf.h   |  2 ++
+>  kernel/bpf/core.c     | 14 ++++++++++++++
+>  kernel/bpf/verifier.c | 13 +++++--------
+>  3 files changed, 21 insertions(+), 8 deletions(-)
+> 
+> diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+> index 44133727820d..a5806a7b31d3 100644
+> --- a/include/linux/bpf.h
+> +++ b/include/linux/bpf.h
+> @@ -2797,6 +2797,8 @@ static inline int kfunc_desc_cmp_by_id_off(const void *a, const void *b)
+>  }
+>  const struct bpf_kfunc_desc *
+>  find_kfunc_desc(const struct bpf_prog *prog, u32 func_id, u16 offset);
+> +unsigned long bpf_lookup_type_addr(struct btf *btf, const struct btf_type *func,
+> +				   const char **name);
+>  int bpf_get_kfunc_addr(const struct bpf_prog *prog, u32 func_id,
+>  		       u16 btf_fd_idx, u8 **func_addr);
+>  
+> diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+> index e892e469061e..13301a668fe0 100644
+> --- a/kernel/bpf/core.c
+> +++ b/kernel/bpf/core.c
+> @@ -1639,6 +1639,20 @@ find_kfunc_desc(const struct bpf_prog *prog, u32 func_id, u16 offset)
+>  }
+>  EXPORT_SYMBOL_GPL(find_kfunc_desc);
+>  
+> +unsigned long bpf_lookup_type_addr(struct btf *btf, const struct btf_type *t,
+> +				   const char **name)
+> +{
+> +	unsigned long addr;
+> +
+> +	*name = btf_name_by_offset(btf, t->name_off);
+> +	addr = kallsyms_lookup_name(*name);
+> +	if (!addr)
+> +		return -ENOENT;
+> +
+> +	return addr;
+> +}
+> +EXPORT_SYMBOL_GPL(bpf_lookup_type_addr);
 
-Right, it would serialize them within the same worker thread. With one
-worker for each put you would schedule multiple worker from the RCU
-callback. Given the system_wq you will schedule them all on the CPU
-which invokes the RCU callback. This kind of serializes it, too.
-
-The mntput() callback uses spinlock_t for locking and then it frees
-resources. It does not look like it waits for something nor takes ages.
-So it might not be needed to split each put into its own worker on a
-different CPU=E2=80=A6 One busy bee might be enough ;)
-
-Sebastian
+Let's namespecify all these new exports? EXPORT_SYMBOL_NS_GPL
