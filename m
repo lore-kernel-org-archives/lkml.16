@@ -1,529 +1,282 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 610A825D901;
-	Wed,  9 Apr 2025 10:30:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49D9325D8FC
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 10:29:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744194600; cv=none; b=ft+vBiasgXDi7O9bOmvUeyDM+QtS7ETjJIZLD8TIWRtCvx93VwMI3y8cFCmNKN7+heYkDWPU4PvFcKU6Wl+nd3CmdJ/XLTM0CB3yGukqxu3lvwGbP7eNIq6ft+OPez/u2So/5RlGEfti/Tkss1IGHi/ff7Rh7Pw6e4iO1lI9k0w=
+	t=1744194601; cv=none; b=R31hrJrVIDhItC2mLtxWOaVY3HqklgRJtKGUMf9fzZFkxHOpLinpu3HdNXAdaknqfaavlN8I4QzXsgpEERPfC3UXESkQHgS2pXRbPFTfoxZLsMLJtNN08mPHW+2OYav65YSJxzzxpwOsOjTCJISm5cOnc4vkbV2eEXZkyJ1OYNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744194600; c=relaxed/simple;
-	bh=JigT+plp+7A8VKFY0n8PLCX/GefjzffIPW4BRW5hv6I=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=L805kpkKqVv4EaKc98ra4zAMIj6hRt66sEHWTBdj+FD6zQaecWCpymgunyo2S2ZDYK1tUJinq9ps42XQ9GoYKhF0S9cg743c5Xwg5U13RN2fYC8krQ7uqwVbh8I85f7NxcVg/VtkMBPpEBUBXvF/i2258mNgwwYcg2PyhqQKcdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yez1SoH7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744194601; c=relaxed/simple;
+	bh=WQk83JuPuQX2fSNl/OKOGc35+sSgfnC9FLi+eV/1Z4A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hp23ydSkwO09EuO/2FWHM2XzN7FFgXdDgdWvdETHI2ZJMSr9FCeFtbP/3R3A/q5ONPdJjreA5q8a68vSxTnRrHS7r4JdEn5sBirgnz16M+7tha13mpeF82tsbGA3rlXb0hzqc3ZvfaX31iHvZgxHxOYdjt2fX8tVk6DefJqBFxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=URr6BBK3; arc=none smtp.client-ip=95.215.58.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yez1SoH7"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DA3F7C4CEEC;
-	Wed,  9 Apr 2025 10:29:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744194599;
-	bh=JigT+plp+7A8VKFY0n8PLCX/GefjzffIPW4BRW5hv6I=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=Yez1SoH7VEDkRgWPsFyUD7loDnXAeHtTCSkU5t18Lc0fjRPoUjCf4yVF4M7DacXk8
-	 i76W0fYhyxg703+tkIiB9/Cy4fpxXllN31S7GgNtn3+/Aky/k+RA4aQQ/hQclyaqUy
-	 fxnVuhBQ/qH7nCQVT5kJ9WSaZ+OAMajsLeId+mMBtjEbdbmng+byx76sJdBLumRyD5
-	 jOzg+K07hZswKjqfJpnp7E1DvrJBM7YRc5zRu6WxKC0x4/qLQQXEz7ixPJ4tlAVIbv
-	 bi/MHzlhevMXxirwHYnuFD+Oek43jZuowP4Tv1j5IoraRWs8wFxMliOep0pcqpNwwe
-	 rRyJsNgRXBHMA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF9FC369A1;
-	Wed,  9 Apr 2025 10:29:59 +0000 (UTC)
-From: Keguang Zhang via B4 Relay <devnull+keguang.zhang.gmail.com@kernel.org>
-Date: Wed, 09 Apr 2025 18:29:33 +0800
-Subject: [PATCH v2 3/4] ASoC: loongson: Add Loongson-1 AC97 Driver
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="URr6BBK3"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744194596;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=tVjoel3accGTvriYfDQCUCAxB4fdnEejpHrDGJrVaco=;
+	b=URr6BBK36GF8FRT9ASyYKMCuY2UJLHSxLZu4gdJzyjDDmhSvKVSruxFiPU64s3ACJIP+vr
+	A8QaJ+YG9O447840kX6fdKi+j8V7tSZKg+qx2hkfTC6YOKa8IRz4jZnU0ePs117q9KWUfd
+	26m7vdffmeNppHNYwAbukuQ1kg+Nf8s=
+From: Jiayuan Chen <jiayuan.chen@linux.dev>
+To: bpf@vger.kernel.org
+Cc: mrpre@163.com,
+	Jiayuan Chen <jiayuan.chen@linux.dev>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Jakub Sitnicki <jakub@cloudflare.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH bpf-next v1] bpf, sockmap: Introduce tracing capability for sockmap
+Date: Wed,  9 Apr 2025 18:29:33 +0800
+Message-ID: <20250409102937.15632-1-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250409-loongson1-ac97-v2-3-65d5db96a046@gmail.com>
-References: <20250409-loongson1-ac97-v2-0-65d5db96a046@gmail.com>
-In-Reply-To: <20250409-loongson1-ac97-v2-0-65d5db96a046@gmail.com>
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>
-Cc: linux-mips@vger.kernel.org, linux-sound@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Keguang Zhang <keguang.zhang@gmail.com>
-X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744194597; l=14972;
- i=keguang.zhang@gmail.com; s=20231129; h=from:subject:message-id;
- bh=B3si2Eft+DFE9YSZQ9IdpXcNFn3XGud7ESFYumGdYJE=;
- b=SRSHMd1+S0z+H8FzmMTynE2HVkpG2MFx375fI/gdB8d5BIkVv/GOE8sMQLAB3rH9ktnnWE6oB
- Xc8xTM7qvHmBaDanR+pYIVxr5BVgBcS3YyaFGWuviYSbA9DAJbymDBf
-X-Developer-Key: i=keguang.zhang@gmail.com; a=ed25519;
- pk=FMKGj/JgKll/MgClpNZ3frIIogsh5e5r8CeW2mr+WLs=
-X-Endpoint-Received: by B4 Relay for keguang.zhang@gmail.com/20231129 with
- auth_id=102
-X-Original-From: Keguang Zhang <keguang.zhang@gmail.com>
-Reply-To: keguang.zhang@gmail.com
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-From: Keguang Zhang <keguang.zhang@gmail.com>
+Sockmap has the same high-performance forwarding capability as XDP, but
+operates at Layer 7.
 
-Add AC97 driver for Loongson-1 SoCs.
+Introduce tracing capability for sockmap, similar to XDP, to trace the
+execution results of BPF programs without modifying the programs
+themselves, similar to the existing trace_xdp_redirect{_map}.
 
-Signed-off-by: Keguang Zhang <keguang.zhang@gmail.com>
+It is crucial for debugging BPF programs, especially in production
+environments.
+
+Additionally, a header file was added to bpf_trace.h to automatically
+generate tracepoints.
+
+Test results:
+$ echo "1" > /sys/kernel/tracing/events/sockmap/enable
+
+skb:
+sockmap_redirect: sk=00000000d3266a8d, type=skb, family=2, protocol=6, \
+prog_id=73, length=256, action=PASS
+
+msg:
+sockmap_redirect: sk=00000000528c7614, type=msg, family=2, protocol=6, \
+prog_id=185, length=5, action=REDIRECT
+
+tls:
+sockmap_redirect: sk=00000000d04d2224, type=skb, family=2, protocol=6, \
+prog_id=143, length=35, action=PASS
+
+strparser:
+sockmap_skb_strp_parse: sk=00000000ecab0b30, family=2, protocol=6, \
+prog_id=170, size=5
+
+Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
 ---
- MAINTAINERS                         |   1 +
- sound/soc/loongson/Kconfig          |  10 +
- sound/soc/loongson/Makefile         |   2 +
- sound/soc/loongson/loongson1_ac97.c | 398 ++++++++++++++++++++++++++++++++++++
- 4 files changed, 411 insertions(+)
+ MAINTAINERS                    |  1 +
+ include/linux/bpf_trace.h      |  2 +-
+ include/trace/events/sockmap.h | 89 ++++++++++++++++++++++++++++++++++
+ net/core/skmsg.c               |  6 +++
+ 4 files changed, 97 insertions(+), 1 deletion(-)
+ create mode 100644 include/trace/events/sockmap.h
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 6b4103444d7e..7d218de94529 100644
+index a7a1d121a83e..578e16d86853 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -16244,6 +16244,7 @@ F:	arch/mips/include/asm/mach-loongson32/
- F:	arch/mips/loongson32/
- F:	drivers/*/*loongson1*
- F:	drivers/net/ethernet/stmicro/stmmac/dwmac-loongson1.c
-+F:	sound/soc/loongson/loongson1_ac97.c
+@@ -4420,6 +4420,7 @@ L:	netdev@vger.kernel.org
+ L:	bpf@vger.kernel.org
+ S:	Maintained
+ F:	include/linux/skmsg.h
++F:	include/trace/events/sockmap.h
+ F:	net/core/skmsg.c
+ F:	net/core/sock_map.c
+ F:	net/ipv4/tcp_bpf.c
+diff --git a/include/linux/bpf_trace.h b/include/linux/bpf_trace.h
+index ddf896abcfb6..896346fb2b46 100644
+--- a/include/linux/bpf_trace.h
++++ b/include/linux/bpf_trace.h
+@@ -3,5 +3,5 @@
+ #define __LINUX_BPF_TRACE_H__
  
- MIPS/LOONGSON2EF ARCHITECTURE
- M:	Jiaxun Yang <jiaxun.yang@flygoat.com>
-diff --git a/sound/soc/loongson/Kconfig b/sound/soc/loongson/Kconfig
-index 2d8291c1443c..1a3c28816e7a 100644
---- a/sound/soc/loongson/Kconfig
-+++ b/sound/soc/loongson/Kconfig
-@@ -37,3 +37,13 @@ config SND_SOC_LOONGSON_I2S_PLATFORM
- 	  The controller work as a platform device, we can found it in
- 	  Loongson-2K1000 SoCs.
- endmenu
-+
-+config SND_LOONGSON1_AC97
-+	tristate "Loongson1 AC97 Support"
-+	depends on LOONGSON1_APB_DMA
-+	select SND_SOC_AC97_CODEC
-+	select SND_SOC_GENERIC_DMAENGINE_PCM
-+	select REGMAP_MMIO
-+	help
-+	  Say Y or M if you want to add support for codecs attached to
-+	  the Loongson1 AC97 controller.
-diff --git a/sound/soc/loongson/Makefile b/sound/soc/loongson/Makefile
-index c0cb1acb36e3..4c6d3130bcee 100644
---- a/sound/soc/loongson/Makefile
-+++ b/sound/soc/loongson/Makefile
-@@ -8,6 +8,8 @@ obj-$(CONFIG_SND_SOC_LOONGSON_I2S_PLATFORM) += snd-soc-loongson-i2s-plat.o snd-s
- 
- snd-soc-loongson-i2s-y := loongson_i2s.o
- 
-+obj-$(CONFIG_SND_LOONGSON1_AC97) += loongson1_ac97.o
-+
- #Machine Support
- snd-soc-loongson-card-y := loongson_card.o
- obj-$(CONFIG_SND_SOC_LOONGSON_CARD) += snd-soc-loongson-card.o
-diff --git a/sound/soc/loongson/loongson1_ac97.c b/sound/soc/loongson/loongson1_ac97.c
+ #include <trace/events/xdp.h>
+-
++#include <trace/events/sockmap.h>
+ #endif /* __LINUX_BPF_TRACE_H__ */
+diff --git a/include/trace/events/sockmap.h b/include/trace/events/sockmap.h
 new file mode 100644
-index 000000000000..84901900ad43
+index 000000000000..2a69b011e88f
 --- /dev/null
-+++ b/sound/soc/loongson/loongson1_ac97.c
-@@ -0,0 +1,398 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * AC97 Controller Driver for Loongson-1 SoC
-+ *
-+ * Copyright (C) 2025 Keguang Zhang <keguang.zhang@gmail.com>
-+ */
++++ b/include/trace/events/sockmap.h
+@@ -0,0 +1,89 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM sockmap
 +
-+#include <linux/bitfield.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
++#if !defined(_TRACE_SOCKMAP_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_SOCKMAP_H
 +
-+#include <sound/dmaengine_pcm.h>
-+#include <sound/pcm.h>
-+#include <sound/pcm_params.h>
-+#include <sound/soc.h>
++#include <linux/filter.h>
++#include <linux/tracepoint.h>
++#include <linux/bpf.h>
++#include <linux/skmsg.h>
 +
-+/* Loongson-1 AC97 Controller Registers */
-+#define AC97_CSR		0x0
-+#define AC97_OCC0		0x4
-+#define AC97_ICC		0x10
-+#define AC97_CRAC		0x18
-+#define AC97_INTRAW		0x54
-+#define AC97_INTM		0x58
-+#define AC97_INT_CW_CLR		0x68
-+#define AC97_INT_CR_CLR		0x6c
++TRACE_DEFINE_ENUM(__SK_DROP);
++TRACE_DEFINE_ENUM(__SK_PASS);
++TRACE_DEFINE_ENUM(__SK_REDIRECT);
++TRACE_DEFINE_ENUM(__SK_NONE);
 +
-+/* Control Status Register Bits (CSR) */
-+#define CSR_RESUME		BIT(1)
-+#define CSR_RST_FORCE		BIT(0)
++#define show_act(x) \
++	__print_symbolic(x, \
++		{ __SK_DROP,		"DROP" }, \
++		{ __SK_PASS,		"PASS" }, \
++		{ __SK_REDIRECT,	"REDIRECT" }, \
++		{ __SK_NONE,		"NONE" })
 +
-+/* MIC Channel Configuration Bits */
-+#define M_DMA_EN		BIT(22)
-+#define M_FIFO_THRES		GENMASK(21, 20)
-+#define M_FIFO_THRES_FULL	FIELD_PREP(M_FIFO_THRES, 3)
-+#define M_FIFO_THRES_HALF	FIELD_PREP(M_FIFO_THRES, 1)
-+#define M_FIFO_THRES_QUARTER	FIELD_PREP(M_FIFO_THRES, 0)
-+#define M_SW			GENMASK(19, 18)
-+#define M_SW_16_BITS		FIELD_PREP(M_SW, 2)
-+#define M_SW_8_BITS		FIELD_PREP(M_SW, 0)
-+#define M_VSR			BIT(17)
-+#define M_CH_EN			BIT(16)
-+/* Right Channel Configuration Bits */
-+#define R_DMA_EN		BIT(14)
-+#define R_FIFO_THRES		GENMASK(13, 12)
-+#define R_FIFO_THRES_EMPTY	FIELD_PREP(R_FIFO_THRES, 3)
-+#define R_FIFO_THRES_HALF	FIELD_PREP(R_FIFO_THRES, 1)
-+#define R_FIFO_THRES_QUARTER	FIELD_PREP(R_FIFO_THRES, 0)
-+#define R_SW			GENMASK(11, 10)
-+#define R_SW_16_BITS		FIELD_PREP(R_SW, 2)
-+#define R_SW_8_BITS		FIELD_PREP(R_SW, 0)
-+#define R_VSR			BIT(9)
-+#define R_CH_EN			BIT(8)
-+/* Left Channel Configuration Bits */
-+#define L_DMA_EN		BIT(6)
-+#define L_FIFO_THRES		GENMASK(5, 4)
-+#define L_FIFO_THRES_EMPTY	FIELD_PREP(L_FIFO_THRES, 3)
-+#define L_FIFO_THRES_HALF	FIELD_PREP(L_FIFO_THRES, 1)
-+#define L_FIFO_THRES_QUARTER	FIELD_PREP(L_FIFO_THRES, 0)
-+#define L_SW			GENMASK(3, 2)
-+#define L_SW_16_BITS		FIELD_PREP(L_SW, 2)
-+#define L_SW_8_BITS		FIELD_PREP(L_SW, 0)
-+#define L_VSR			BIT(1)
-+#define L_CH_EN			BIT(0)
++#define trace_sockmap_skmsg_redirect(sk, prog, msg, act)	\
++	trace_sockmap_redirect((sk), "msg", (prog), (msg)->sg.size, (act))
 +
-+/* Codec Register Access Command Bits (CRAC) */
-+#define CODEC_WR		BIT(31)
-+#define CODEC_ADR		GENMASK(22, 16)
-+#define CODEC_DAT		GENMASK(15, 0)
++#define trace_sockmap_skb_redirect(sk, prog, skb, act)		\
++	trace_sockmap_redirect((sk), "skb", (prog), (skb)->len, (act))
 +
-+/* Interrupt Register (INTRAW) */
-+#define CW_DONE			BIT(1)
-+#define CR_DONE			BIT(0)
++TRACE_EVENT(sockmap_redirect,
++	    TP_PROTO(const struct sock *sk, const char *type,
++		     const struct bpf_prog *prog, int length, int act),
++	    TP_ARGS(sk, type, prog, length, act),
 +
-+#define LS1X_AC97_DMA_TX_EN		BIT(31)
-+#define LS1X_AC97_DMA_STEREO		BIT(30)
-+#define LS1X_AC97_DMA_TX_BYTES		GENMASK(29, 28)
-+#define LS1X_AC97_DMA_TX_4_BYTES	FIELD_PREP(LS1X_AC97_DMA_TX_BYTES, 2)
-+#define LS1X_AC97_DMA_TX_2_BYTES	FIELD_PREP(LS1X_AC97_DMA_TX_BYTES, 1)
-+#define LS1X_AC97_DMA_TX_1_BYTE		FIELD_PREP(LS1X_AC97_DMA_TX_BYTES, 0)
-+#define LS1X_AC97_DMA_DADDR_MASK	GENMASK(27, 0)
++	TP_STRUCT__entry(
++		__field(const void *, sk)
++		__field(const char *, type)
++		__field(__u16, family)
++		__field(__u16, protocol)
++		__field(int, prog_id)
++		__field(int, length)
++		__field(int, act)
++	),
 +
-+#define LS1X_AC97_DMA_FIFO_SIZE		128
++	TP_fast_assign(
++		__entry->sk		= sk;
++		__entry->type		= type;
++		__entry->family		= sk->sk_family;
++		__entry->protocol	= sk->sk_protocol;
++		__entry->prog_id	= prog->aux->id;
++		__entry->length		= length;
++		__entry->act		= act;
++	),
 +
-+#define LS1X_AC97_TIMEOUT		3000
++	TP_printk("sk=%p, type=%s, family=%d, protocol=%d, prog_id=%d, length=%d, action=%s",
++		  __entry->sk, __entry->type, __entry->family, __entry->protocol,
++		  __entry->prog_id, __entry->length,
++		  show_act(__entry->act))
++);
 +
-+struct ls1x_ac97 {
-+	void __iomem *reg_base;
-+	struct regmap *regmap;
-+	dma_addr_t tx_dma_base;
-+	dma_addr_t rx_dma_base;
-+	struct snd_dmaengine_dai_dma_data capture_dma_data;
-+	struct snd_dmaengine_dai_dma_data playback_dma_data;
-+};
++TRACE_EVENT(sockmap_skb_strp_parse,
++	    TP_PROTO(const struct sock *sk, const struct bpf_prog *prog,
++		     int size),
++	    TP_ARGS(sk, prog, size),
 +
-+static struct ls1x_ac97 *ls1x_ac97;
++	TP_STRUCT__entry(
++		__field(const void *, sk)
++		__field(__u16, family)
++		__field(__u16, protocol)
++		__field(int, prog_id)
++		__field(int, size)
++	),
 +
-+static const struct regmap_config ls1x_ac97_regmap_config = {
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.reg_stride = 4,
-+};
++	TP_fast_assign(
++		__entry->sk		= sk;
++		__entry->family		= sk->sk_family;
++		__entry->protocol	= sk->sk_protocol;
++		__entry->prog_id	= prog->aux->id;
++		__entry->size		= size;
++	),
 +
-+static void ls1x_ac97_reset(struct snd_ac97 *ac97)
-+{
-+	int val;
++	TP_printk("sk=%p, family=%d, protocol=%d, prog_id=%d, size=%d",
++		  __entry->sk, __entry->family, __entry->protocol,
++		  __entry->prog_id, __entry->size)
++);
++#endif /* _TRACE_SOCKMAP_H */
 +
-+	regmap_write(ls1x_ac97->regmap, AC97_CSR, CSR_RST_FORCE);
-+	regmap_read_poll_timeout(ls1x_ac97->regmap, AC97_CSR, val,
-+				 !(val & CSR_RESUME), 0, LS1X_AC97_TIMEOUT);
-+}
-+
-+static void ls1x_ac97_write(struct snd_ac97 *ac97, unsigned short reg, unsigned short val)
-+{
-+	int tmp, ret;
-+
-+	tmp = FIELD_PREP(CODEC_ADR, reg) | FIELD_PREP(CODEC_DAT, val);
-+	regmap_write(ls1x_ac97->regmap, AC97_CRAC, tmp);
-+	ret = regmap_read_poll_timeout(ls1x_ac97->regmap, AC97_INTRAW, tmp,
-+				       (tmp & CW_DONE), 0, LS1X_AC97_TIMEOUT);
-+	if (ret)
-+		pr_err("timeout on AC97 write! %d\n", ret);
-+
-+	regmap_read(ls1x_ac97->regmap, AC97_INT_CW_CLR, &ret);
-+}
-+
-+static unsigned short ls1x_ac97_read(struct snd_ac97 *ac97, unsigned short reg)
-+{
-+	int val, ret;
-+
-+	val = CODEC_WR | FIELD_PREP(CODEC_ADR, reg);
-+	regmap_write(ls1x_ac97->regmap, AC97_CRAC, val);
-+	ret = regmap_read_poll_timeout(ls1x_ac97->regmap, AC97_INTRAW, val,
-+				       (val & CR_DONE), 0, LS1X_AC97_TIMEOUT);
-+	if (ret) {
-+		pr_err("timeout on AC97 read! %d\n", ret);
-+		return ret;
-+	}
-+
-+	regmap_read(ls1x_ac97->regmap, AC97_INT_CR_CLR, &ret);
-+	regmap_read(ls1x_ac97->regmap, AC97_CRAC, &ret);
-+
-+	return (ret & CODEC_DAT);
-+}
-+
-+static void ls1x_ac97_init(struct snd_ac97 *ac97)
-+{
-+	writel(0, ls1x_ac97->reg_base + AC97_INTRAW);
-+	writel(0, ls1x_ac97->reg_base + AC97_INTM);
-+
-+	/* Config output channels */
-+	regmap_update_bits(ls1x_ac97->regmap, AC97_OCC0,
-+			   R_DMA_EN | R_FIFO_THRES | R_CH_EN |
-+			   L_DMA_EN | L_FIFO_THRES | L_CH_EN,
-+			   R_DMA_EN | R_FIFO_THRES_EMPTY | R_CH_EN |
-+			   L_DMA_EN | L_FIFO_THRES_EMPTY | L_CH_EN);
-+
-+	/* Config inputs channel */
-+	regmap_update_bits(ls1x_ac97->regmap, AC97_ICC,
-+			   M_DMA_EN | M_FIFO_THRES | M_CH_EN |
-+			   R_DMA_EN | R_FIFO_THRES | R_CH_EN |
-+			   L_DMA_EN | L_FIFO_THRES | L_CH_EN,
-+			   M_DMA_EN | M_FIFO_THRES_FULL | M_CH_EN |
-+			   R_DMA_EN | R_FIFO_THRES_EMPTY | R_CH_EN |
-+			   L_DMA_EN | L_FIFO_THRES_EMPTY | L_CH_EN);
-+
-+	if (ac97->ext_id & AC97_EI_VRA) {
-+		regmap_update_bits(ls1x_ac97->regmap, AC97_OCC0, R_VSR | L_VSR, R_VSR | L_VSR);
-+		regmap_update_bits(ls1x_ac97->regmap, AC97_ICC, M_VSR, M_VSR);
-+	}
-+}
-+
-+static struct snd_ac97_bus_ops ls1x_ac97_ops = {
-+	.reset	= ls1x_ac97_reset,
-+	.write	= ls1x_ac97_write,
-+	.read	= ls1x_ac97_read,
-+	.init	= ls1x_ac97_init,
-+};
-+
-+static int ls1x_ac97_hw_params(struct snd_pcm_substream *substream,
-+			       struct snd_pcm_hw_params *params,
-+			       struct snd_soc_dai *cpu_dai)
-+{
-+	struct ls1x_ac97 *ac97 = dev_get_drvdata(cpu_dai->dev);
-+	struct snd_dmaengine_dai_dma_data *dma_data = snd_soc_dai_get_dma_data(cpu_dai, substream);
-+
-+	switch (params_channels(params)) {
-+	case 1:
-+		dma_data->addr &= ~LS1X_AC97_DMA_STEREO;
-+		break;
-+	case 2:
-+		dma_data->addr |= LS1X_AC97_DMA_STEREO;
-+		break;
-+	default:
-+		dev_err(cpu_dai->dev, "unsupported channels! %d\n", params_channels(params));
-+		return -EINVAL;
-+	}
-+
-+	switch (params_format(params)) {
-+	case SNDRV_PCM_FORMAT_S8:
-+	case SNDRV_PCM_FORMAT_U8:
-+		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
-+			regmap_update_bits(ac97->regmap, AC97_OCC0,
-+					   R_SW | L_SW,
-+					   R_SW_8_BITS | L_SW_8_BITS);
-+		else
-+			regmap_update_bits(ac97->regmap, AC97_ICC,
-+					   M_SW | R_SW | L_SW,
-+					   M_SW_8_BITS | R_SW_8_BITS | L_SW_8_BITS);
-+		break;
-+	case SNDRV_PCM_FORMAT_S16_LE:
-+	case SNDRV_PCM_FORMAT_U16_LE:
-+	case SNDRV_PCM_FORMAT_S16_BE:
-+	case SNDRV_PCM_FORMAT_U16_BE:
-+		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
-+			regmap_update_bits(ac97->regmap, AC97_OCC0,
-+					   R_SW | L_SW,
-+					   R_SW_16_BITS | L_SW_16_BITS);
-+		else
-+			regmap_update_bits(ac97->regmap, AC97_ICC,
-+					   M_SW | R_SW | L_SW,
-+					   M_SW_16_BITS | R_SW_16_BITS | L_SW_16_BITS);
-+		break;
-+	default:
-+		dev_err(cpu_dai->dev, "unsupported format! %d\n", params_format(params));
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int ls1x_ac97_dai_probe(struct snd_soc_dai *cpu_dai)
-+{
-+	struct ls1x_ac97 *ac97 = dev_get_drvdata(cpu_dai->dev);
-+
-+	ac97->capture_dma_data.addr = ac97->rx_dma_base & LS1X_AC97_DMA_DADDR_MASK;
-+	ac97->capture_dma_data.addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
-+	ac97->capture_dma_data.fifo_size = LS1X_AC97_DMA_FIFO_SIZE;
-+
-+	ac97->playback_dma_data.addr = ac97->tx_dma_base & LS1X_AC97_DMA_DADDR_MASK;
-+	ac97->playback_dma_data.addr |= LS1X_AC97_DMA_TX_4_BYTES;
-+	ac97->playback_dma_data.addr |= LS1X_AC97_DMA_TX_EN;
-+	ac97->playback_dma_data.addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
-+	ac97->playback_dma_data.fifo_size = LS1X_AC97_DMA_FIFO_SIZE;
-+
-+	snd_soc_dai_init_dma_data(cpu_dai, &ac97->playback_dma_data, &ac97->capture_dma_data);
-+	snd_soc_dai_set_drvdata(cpu_dai, ac97);
-+
-+	return 0;
-+}
-+
-+static const struct snd_soc_dai_ops ls1x_ac97_dai_ops = {
-+	.probe		= ls1x_ac97_dai_probe,
-+	.hw_params	= ls1x_ac97_hw_params,
-+};
-+
-+#define LS1X_AC97_FMTS (SNDRV_PCM_FMTBIT_S8 | SNDRV_PCM_FMTBIT_U8 |\
-+	SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S16_BE |\
-+	SNDRV_PCM_FMTBIT_U16_LE	| SNDRV_PCM_FMTBIT_U16_BE)
-+
-+static struct snd_soc_dai_driver ls1x_ac97_dai[] = {
-+	{
-+		.name = "ls1x-ac97",
-+		.playback = {
-+			.stream_name = "AC97 Playback",
-+			.channels_min = 1,
-+			.channels_max = 2,
-+			.rates = SNDRV_PCM_RATE_8000_48000,
-+			.formats = LS1X_AC97_FMTS,
-+		},
-+		.capture = {
-+			.stream_name = "AC97 Capture",
-+			.channels_min = 1,
-+			.channels_max = 2,
-+			.rates = SNDRV_PCM_RATE_8000_48000,
-+			.formats = LS1X_AC97_FMTS,
-+		},
-+		.ops = &ls1x_ac97_dai_ops,
-+	},
-+};
-+
-+static const struct snd_soc_component_driver ls1x_ac97_component = {
-+	.name = KBUILD_MODNAME,
-+	.legacy_dai_naming = 1,
-+};
-+
-+static int ls1x_ac97_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct ls1x_ac97 *ac97;
-+	struct resource *res;
-+	int ret;
-+
-+	ac97 = devm_kzalloc(dev, sizeof(struct ls1x_ac97), GFP_KERNEL);
-+	if (!ac97)
-+		return -ENOMEM;
-+	ls1x_ac97 = ac97;
-+	platform_set_drvdata(pdev, ac97);
-+
-+	ac97->reg_base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(ac97->reg_base))
-+		return PTR_ERR(ac97->reg_base);
-+
-+	ac97->regmap = devm_regmap_init_mmio(dev, ac97->reg_base, &ls1x_ac97_regmap_config);
-+	if (IS_ERR(ac97->regmap))
-+		return dev_err_probe(dev, PTR_ERR(ac97->regmap), "devm_regmap_init_mmio failed\n");
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "audio-tx");
-+	if (!res)
-+		return dev_err_probe(dev, -EINVAL, "Missing 'audio-tx' in reg-names property\n");
-+
-+	ac97->tx_dma_base = dma_map_resource(dev, res->start, resource_size(res),
-+					     DMA_TO_DEVICE, 0);
-+	if (dma_mapping_error(dev, ac97->tx_dma_base))
-+		return -ENXIO;
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "audio-rx");
-+	if (!res)
-+		return dev_err_probe(dev, -EINVAL, "Missing 'audio-rx' in reg-names property\n");
-+
-+	ac97->rx_dma_base = dma_map_resource(dev, res->start, resource_size(res),
-+					     DMA_FROM_DEVICE, 0);
-+	if (dma_mapping_error(dev, ac97->rx_dma_base))
-+		return -ENXIO;
-+
-+	ret = devm_snd_dmaengine_pcm_register(dev, NULL, 0);
-+	if (ret)
-+		dev_err_probe(dev, ret, "failed to register PCM\n");
-+
-+	ret = devm_snd_soc_register_component(dev, &ls1x_ac97_component,
-+					      ls1x_ac97_dai, ARRAY_SIZE(ls1x_ac97_dai));
-+	if (ret)
-+		dev_err_probe(dev, ret, "failed to register DAI\n");
-+
-+	return snd_soc_set_ac97_ops(&ls1x_ac97_ops);
-+}
-+
-+static void ls1x_ac97_remove(struct platform_device *pdev)
-+{
-+	ls1x_ac97 = NULL;
-+	snd_soc_set_ac97_ops(NULL);
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int ls1x_ac97_suspend(struct device *dev)
-+{
-+	int val;
-+
-+	regmap_clear_bits(ls1x_ac97->regmap, AC97_OCC0, R_DMA_EN | R_CH_EN | L_DMA_EN | L_CH_EN);
-+	regmap_clear_bits(ls1x_ac97->regmap, AC97_ICC,
-+			  M_DMA_EN | M_CH_EN | R_DMA_EN | R_CH_EN | L_DMA_EN | L_CH_EN);
-+	regmap_set_bits(ls1x_ac97->regmap, AC97_CSR, CSR_RESUME);
-+
-+	return regmap_read_poll_timeout(ls1x_ac97->regmap, AC97_CSR, val,
-+					(val & CSR_RESUME), 0, LS1X_AC97_TIMEOUT);
-+}
-+
-+static int ls1x_ac97_resume(struct device *dev)
-+{
-+	int val;
-+
-+	regmap_set_bits(ls1x_ac97->regmap, AC97_OCC0, R_DMA_EN | R_CH_EN | L_DMA_EN | L_CH_EN);
-+	regmap_set_bits(ls1x_ac97->regmap, AC97_ICC,
-+			M_DMA_EN | M_CH_EN | R_DMA_EN | R_CH_EN | L_DMA_EN | L_CH_EN);
-+	regmap_set_bits(ls1x_ac97->regmap, AC97_CSR, CSR_RESUME);
-+
-+	return regmap_read_poll_timeout(ls1x_ac97->regmap, AC97_CSR, val,
-+					!(val & CSR_RESUME), 0, LS1X_AC97_TIMEOUT);
-+}
-+#endif
-+
-+static const struct dev_pm_ops ls1x_ac97_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(ls1x_ac97_suspend, ls1x_ac97_resume)
-+};
-+
-+static const struct of_device_id ls1x_ac97_match[] = {
-+	{ .compatible = "loongson,ls1b-ac97" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, ls1x_ac97_match);
-+
-+static struct platform_driver ls1x_ac97_driver = {
-+	.probe		= ls1x_ac97_probe,
-+	.remove		= ls1x_ac97_remove,
-+	.driver		= {
-+		.name	= KBUILD_MODNAME,
-+		.of_match_table = ls1x_ac97_match,
-+		.pm = &ls1x_ac97_pm_ops,
-+	},
-+};
-+
-+module_platform_driver(ls1x_ac97_driver);
-+
-+MODULE_AUTHOR("Keguang Zhang <keguang.zhang@gmail.com>");
-+MODULE_DESCRIPTION("Loongson-1 AC97 Controller Driver");
-+MODULE_LICENSE("GPL");
-
++#include <trace/define_trace.h>
+diff --git a/net/core/skmsg.c b/net/core/skmsg.c
+index 0ddc4c718833..9fb948f3b1eb 100644
+--- a/net/core/skmsg.c
++++ b/net/core/skmsg.c
+@@ -9,6 +9,7 @@
+ #include <net/tcp.h>
+ #include <net/tls.h>
+ #include <trace/events/sock.h>
++#include <trace/events/sockmap.h>
+ 
+ static bool sk_msg_try_coalesce_ok(struct sk_msg *msg, int elem_first_coalesce)
+ {
+@@ -904,6 +905,7 @@ int sk_psock_msg_verdict(struct sock *sk, struct sk_psock *psock,
+ 		sock_hold(psock->sk_redir);
+ 	}
+ out:
++	trace_sockmap_skmsg_redirect(sk, prog, msg, ret);
+ 	rcu_read_unlock();
+ 	return ret;
+ }
+@@ -975,6 +977,7 @@ int sk_psock_tls_strp_read(struct sk_psock *psock, struct sk_buff *skb)
+ 		ret = bpf_prog_run_pin_on_cpu(prog, skb);
+ 		ret = sk_psock_map_verd(ret, skb_bpf_redirect_fetch(skb));
+ 		skb->sk = NULL;
++		trace_sockmap_skb_redirect(psock->sk, prog, skb, ret);
+ 	}
+ 	sk_psock_tls_verdict_apply(skb, psock, ret);
+ 	rcu_read_unlock();
+@@ -1084,6 +1087,7 @@ static void sk_psock_strp_read(struct strparser *strp, struct sk_buff *skb)
+ 		skb_bpf_set_strparser(skb);
+ 		ret = sk_psock_map_verd(ret, skb_bpf_redirect_fetch(skb));
+ 		skb->sk = NULL;
++		trace_sockmap_skb_redirect(sk, prog, skb, ret);
+ 	}
+ 	sk_psock_verdict_apply(psock, skb, ret);
+ out:
+@@ -1107,6 +1111,7 @@ static int sk_psock_strp_parse(struct strparser *strp, struct sk_buff *skb)
+ 		skb->sk = psock->sk;
+ 		ret = bpf_prog_run_pin_on_cpu(prog, skb);
+ 		skb->sk = NULL;
++		trace_sockmap_skb_strp_parse(psock->sk, prog, ret);
+ 	}
+ 	rcu_read_unlock();
+ 	return ret;
+@@ -1211,6 +1216,7 @@ static int sk_psock_verdict_recv(struct sock *sk, struct sk_buff *skb)
+ 		skb_bpf_redirect_clear(skb);
+ 		ret = bpf_prog_run_pin_on_cpu(prog, skb);
+ 		ret = sk_psock_map_verd(ret, skb_bpf_redirect_fetch(skb));
++		trace_sockmap_skb_redirect(psock->sk, prog, skb, ret);
+ 	}
+ 	ret = sk_psock_verdict_apply(psock, skb, ret);
+ 	if (ret < 0)
 -- 
-2.43.0
-
+2.47.1
 
