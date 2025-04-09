@@ -1,225 +1,76 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7373C25A620;
-	Wed,  9 Apr 2025 08:02:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35FC625B685;
+	Wed,  9 Apr 2025 08:02:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744185766; cv=none; b=R1sDRaE8j4nANunxapx1jhhzr1hSCA1T8qZE1tEykZ7+ghh5ZYIpv5VVkjRtDB4Yuay5l3Mwy1Ml2fovfGrOzgLmndeCaDE4O5UXUqzfoqKtCClewA7LD/u05JFi1uNip5fj1+9rz/azcReXKML24wyhzIOM2itZSFL2hn3WSxg=
+	t=1744185771; cv=none; b=XL2r/LtyPJCpwOPnc94bjPOkStg2q3bLZXz7jajqjCX1atzRtRfOZsQEf2kR6eZ6YUOXJn2XJDZJ5yZMT5EG6oOuC1pejPErMP9Wlh/6di5+Hg2yQ1x3YbkW4/caprUJTDb/EQyerJ8dTWUU2Abse5efiRBmTc4oLs1eqjziPNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744185766; c=relaxed/simple;
-	bh=7JaXlk6Ow9kqmxyDvnnDUnrF65VEYrVRFf8JaGGZOzQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GIx6VZlQ0McHZcTGOJ6iu9r03FfTsVvlwvXrCtYMuUDR6dx2fODZdWrrIGCStNrbSoKYysQphIOKtKemWZ1KR4wadzeRR7ENyxmyznY0u0K71UYpPcBetZnB6bSUoDTITc8gzjef9EomAPQBJNoUe/vraAUQATkJkfGAOSBWzNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=a/FKFrCa; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="a/FKFrCa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1744185762;
-	bh=7JaXlk6Ow9kqmxyDvnnDUnrF65VEYrVRFf8JaGGZOzQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=a/FKFrCa77AVRLxjzYVOvcjwp+87ulCaBy9i3Sc5IcLSkwc61Q0yuCOBHqIkY8fhJ
-	 a1Ay1U0RhhezDhFFNsR98n86ynE3q1rsMBxcJ2ECvcrmKoRDUhc42ocS5pNkJqatrv
-	 x17qvv+xbAZuHRqlQXDJTs2G4wgKlv1fJRpHB7/0x2sjO1joIoGKHdD4UrQungmhmw
-	 moti4p1yuyefkKWKLYmsjQbRKriNaDoubLISqG0TNJkRCo79F5818GditJBrmHmjAy
-	 EZj9CF8PcLmpKpStDSaZ117+PlvknNFC0fPFQ5F9Nzr88OM3c3pK7zTUhXD4492XVd
-	 gs+pGjfbQrWew==
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id F2C1317E07F3;
-	Wed,  9 Apr 2025 10:02:41 +0200 (CEST)
-Date: Wed, 9 Apr 2025 10:02:37 +0200
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: =?UTF-8?B?QWRyacOhbg==?= Larumbe <adrian.larumbe@collabora.com>
-Cc: Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Sumit Semwal
- <sumit.semwal@linaro.org>, Christian =?UTF-8?B?S8O2bmln?=
- <christian.koenig@amd.com>, kernel@collabora.com,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
-Subject: Re: [PATCH v5 2/4] drm/panthor: Add driver IOCTL for setting BO
- labels
-Message-ID: <20250409100237.1a152238@collabora.com>
-In-Reply-To: <20250408222427.1214330-3-adrian.larumbe@collabora.com>
-References: <20250408222427.1214330-1-adrian.larumbe@collabora.com>
-	<20250408222427.1214330-3-adrian.larumbe@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1744185771; c=relaxed/simple;
+	bh=J/uu+qgNusqrRm+lKxXP1nlROH5aUHnwJ4eWR386yUQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=iN+VEgIlU3DWLGEHAwtX5pEY6OnMxy3QcWFfZQ+rhYAHDxQc4OOG2fPry6if7Ddf9q30u70+fWpGnkizDIs4scrFrJnmyLwujP30SsARfA29Oajv1r+rxhRbCCtbKIZ6/RlWXFfI89KhLXHN4hFcmDq+tRZiz/xD0d6xfE66bU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4ZXb065Mkrz1f1sB;
+	Wed,  9 Apr 2025 15:57:42 +0800 (CST)
+Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
+	by mail.maildlp.com (Postfix) with ESMTPS id 75A7D1A0188;
+	Wed,  9 Apr 2025 16:02:40 +0800 (CST)
+Received: from [10.67.120.129] (10.67.120.129) by
+ dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 9 Apr 2025 16:02:40 +0800
+Message-ID: <38964e68-ac20-4595-b41d-8adc83ae6ba0@huawei.com>
+Date: Wed, 9 Apr 2025 16:02:39 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] mm: page_alloc: speed up fallbacks in rmqueue_bulk()
+To: Johannes Weiner <hannes@cmpxchg.org>, Andrew Morton
+	<akpm@linux-foundation.org>
+CC: Vlastimil Babka <vbabka@suse.cz>, Brendan Jackman <jackmanb@google.com>,
+	Mel Gorman <mgorman@techsingularity.net>, Carlos Song <carlos.song@nxp.com>,
+	<linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>, kernel test robot
+	<oliver.sang@intel.com>, <stable@vger.kernel.org>
+References: <20250407180154.63348-1-hannes@cmpxchg.org>
+Content-Language: en-US
+From: Yunsheng Lin <linyunsheng@huawei.com>
+In-Reply-To: <20250407180154.63348-1-hannes@cmpxchg.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpemf200006.china.huawei.com (7.185.36.61)
 
-On Tue,  8 Apr 2025 23:24:22 +0100
-Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com> wrote:
+On 2025/4/8 2:01, Johannes Weiner wrote:
 
-> Allow UM to label a BO for which it possesses a DRM handle.
->=20
-> Signed-off-by: Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com>
-> Reviewed-by: Liviu Dudau <liviu.dudau@arm.com>
+...
 
-Just one minor doc issue below, but with this fixed, it's
-
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-
-> ---
->  drivers/gpu/drm/panthor/panthor_drv.c | 42 ++++++++++++++++++++++++++-
->  drivers/gpu/drm/panthor/panthor_gem.h |  2 ++
->  include/uapi/drm/panthor_drm.h        | 19 ++++++++++++
->  3 files changed, 62 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/gpu/drm/panthor/panthor_drv.c b/drivers/gpu/drm/pant=
-hor/panthor_drv.c
-> index 310bb44abe1a..163c027562aa 100644
-> --- a/drivers/gpu/drm/panthor/panthor_drv.c
-> +++ b/drivers/gpu/drm/panthor/panthor_drv.c
-> @@ -1330,6 +1330,44 @@ static int panthor_ioctl_vm_get_state(struct drm_d=
-evice *ddev, void *data,
->  	return 0;
->  }
-> =20
-> +static int panthor_ioctl_bo_set_label(struct drm_device *ddev, void *dat=
-a,
-> +				  struct drm_file *file)
-> +{
-> +	struct drm_panthor_bo_set_label *args =3D data;
-> +	struct drm_gem_object *obj;
-> +	const char *label;
-> +	int ret =3D 0;
-> +
-> +	obj =3D drm_gem_object_lookup(file, args->handle);
-> +	if (!obj)
-> +		return -ENOENT;
-> +
-> +	if (args->size && args->label) {
-> +		if (args->size > PANTHOR_BO_LABEL_MAXLEN) {
-> +			ret =3D -E2BIG;
-> +			goto err_label;
-> +		}
-> +
-> +		label =3D strndup_user(u64_to_user_ptr(args->label), args->size);
-> +		if (IS_ERR(label)) {
-> +			ret =3D PTR_ERR(label);
-> +			goto err_label;
-> +		}
-> +	} else if (args->size && !args->label) {
-> +		ret =3D -EINVAL;
-> +		goto err_label;
-> +	} else {
-> +		label =3D NULL;
-> +	}
-> +
-> +	panthor_gem_bo_set_label(obj, label);
-> +
-> +err_label:
-> +	drm_gem_object_put(obj);
-> +
-> +	return ret;
-> +}
-> +
->  static int
->  panthor_open(struct drm_device *ddev, struct drm_file *file)
+>  
+> @@ -2934,6 +2981,7 @@ struct page *rmqueue_buddy(struct zone *preferred_zone, struct zone *zone,
 >  {
-> @@ -1399,6 +1437,7 @@ static const struct drm_ioctl_desc panthor_drm_driv=
-er_ioctls[] =3D {
->  	PANTHOR_IOCTL(TILER_HEAP_CREATE, tiler_heap_create, DRM_RENDER_ALLOW),
->  	PANTHOR_IOCTL(TILER_HEAP_DESTROY, tiler_heap_destroy, DRM_RENDER_ALLOW),
->  	PANTHOR_IOCTL(GROUP_SUBMIT, group_submit, DRM_RENDER_ALLOW),
-> +	PANTHOR_IOCTL(BO_SET_LABEL, bo_set_label, DRM_RENDER_ALLOW),
->  };
-> =20
->  static int panthor_mmap(struct file *filp, struct vm_area_struct *vma)
-> @@ -1508,6 +1547,7 @@ static void panthor_debugfs_init(struct drm_minor *=
-minor)
->   * - 1.2 - adds DEV_QUERY_GROUP_PRIORITIES_INFO query
->   *       - adds PANTHOR_GROUP_PRIORITY_REALTIME priority
->   * - 1.3 - adds DRM_PANTHOR_GROUP_STATE_INNOCENT flag
-> + * - 1.4 - adds DRM_IOCTL_PANTHOR_BO_SET_LABEL ioctl
->   */
->  static const struct drm_driver panthor_drm_driver =3D {
->  	.driver_features =3D DRIVER_RENDER | DRIVER_GEM | DRIVER_SYNCOBJ |
-> @@ -1521,7 +1561,7 @@ static const struct drm_driver panthor_drm_driver =
-=3D {
->  	.name =3D "panthor",
->  	.desc =3D "Panthor DRM driver",
->  	.major =3D 1,
-> -	.minor =3D 3,
-> +	.minor =3D 4,
-> =20
->  	.gem_create_object =3D panthor_gem_create_object,
->  	.gem_prime_import_sg_table =3D drm_gem_shmem_prime_import_sg_table,
-> diff --git a/drivers/gpu/drm/panthor/panthor_gem.h b/drivers/gpu/drm/pant=
-hor/panthor_gem.h
-> index 0582826b341a..e18fbc093abd 100644
-> --- a/drivers/gpu/drm/panthor/panthor_gem.h
-> +++ b/drivers/gpu/drm/panthor/panthor_gem.h
-> @@ -13,6 +13,8 @@
-> =20
->  struct panthor_vm;
-> =20
-> +#define PANTHOR_BO_LABEL_MAXLEN	PAGE_SIZE
-> +
->  /**
->   * struct panthor_gem_object - Driver specific GEM object.
->   */
-> diff --git a/include/uapi/drm/panthor_drm.h b/include/uapi/drm/panthor_dr=
-m.h
-> index 97e2c4510e69..26b52f147360 100644
-> --- a/include/uapi/drm/panthor_drm.h
-> +++ b/include/uapi/drm/panthor_drm.h
-> @@ -127,6 +127,9 @@ enum drm_panthor_ioctl_id {
-> =20
->  	/** @DRM_PANTHOR_TILER_HEAP_DESTROY: Destroy a tiler heap. */
->  	DRM_PANTHOR_TILER_HEAP_DESTROY,
-> +
-> +	/** @DRM_PANTHOR_BO_SET_LABEL: Label a BO. */
-> +	DRM_PANTHOR_BO_SET_LABEL,
->  };
-> =20
->  /**
-> @@ -977,6 +980,20 @@ struct drm_panthor_tiler_heap_destroy {
->  	__u32 pad;
->  };
-> =20
-> +/**
-> + * struct drm_panthor_bo_set_label - Arguments passed to DRM_IOCTL_PANTH=
-OR_BO_SET_LABEL
-> + */
-> +struct drm_panthor_bo_set_label {
-> +	/** @handle: Handle of the buffer object to label. */
-> +	__u32 handle;
-> +
-> +	/** @size: Length of the label, including the NULL terminator. */
+>  	struct page *page;
+>  	unsigned long flags;
+> +	enum rmqueue_mode rmqm = RMQUEUE_NORMAL;
+>  
+>  	do {
+>  		page = NULL;
+> @@ -2945,7 +2993,7 @@ struct page *rmqueue_buddy(struct zone *preferred_zone, struct zone *zone,
+>  		if (alloc_flags & ALLOC_HIGHATOMIC)
+>  			page = __rmqueue_smallest(zone, order, MIGRATE_HIGHATOMIC);
+>  		if (!page) {
+> -			page = __rmqueue(zone, order, migratetype, alloc_flags);
+> +			page = __rmqueue(zone, order, migratetype, alloc_flags, &rmqm);
+>  
+>  			/*
+>  			 * If the allocation fails, allow OOM handling and
 
-We probably want to document the limit here (page size).
-
-> +	__u32 size;
-> +
-> +	/** @label: User pointer to a NULL-terminated string */
-> +	__u64 label;
-> +};
-> +
->  /**
->   * DRM_IOCTL_PANTHOR() - Build a Panthor IOCTL number
->   * @__access: Access type. Must be R, W or RW.
-> @@ -1019,6 +1036,8 @@ enum {
->  		DRM_IOCTL_PANTHOR(WR, TILER_HEAP_CREATE, tiler_heap_create),
->  	DRM_IOCTL_PANTHOR_TILER_HEAP_DESTROY =3D
->  		DRM_IOCTL_PANTHOR(WR, TILER_HEAP_DESTROY, tiler_heap_destroy),
-> +	DRM_IOCTL_PANTHOR_BO_SET_LABEL =3D
-> +		DRM_IOCTL_PANTHOR(WR, BO_SET_LABEL, bo_set_label),
->  };
-> =20
->  #if defined(__cplusplus)
-
+It was not in the diff, but it seems the zone->lock is held inside the do..while loop,
+doesn't it mean that the freelists are subject to outside changes and rmqm is stale?
