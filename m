@@ -1,171 +1,113 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC70D2627EA;
-	Wed,  9 Apr 2025 12:51:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D3FA2627EA;
+	Wed,  9 Apr 2025 12:52:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744203115; cv=none; b=V+3VYrwVrv7qBCioQW2VNeMGysL5b7XJQDSgHHF6AArDiDQYWOPu6TRoIA1YwUxCkTTvOI1BKW8PQESg4EE0TzvPO9DovcLWz/1YUvMgzuyw30MhwYhLiBjMfM/Jj+r2zZ1Pbs4YrXRyuC7zmMk6SI65UNwsOJ321HgzHmOHeHE=
+	t=1744203137; cv=none; b=RtAC1GBlN0VZJhQ5k3BNTHmmDoDt3OW5EBZylK24mXNDtDwKzMwbs2/t4OaAuiFy9zEbSTLter3NXG4Efd3Hvk+OXElkf9OI8M40sxgTqUctFjRQbfTIXRpx+LWMtM0eVcNi0dL0cWmE6YgQbC2VL3ogRu1WRqDQ/qykYKC7BUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744203115; c=relaxed/simple;
-	bh=y1KOsl3bM2Nc82jWkBpwB9pBWedP0INipQprBLc0j5o=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=cLb5nm0NhBQqIKXEeQL7VefSo0IeahXHuB6CSgw0U0lAkXKQXjlU6g5hpKPVECNaccp98gAiwHf0E8lScLEhws7FJRzqbFq4Nzuv8r02lKTcZu5bxiFiVT2QShjTzrNqvlS7shIeMkrSwPnkCjrK1EVSw0IHVHrVk9JfE0Q+s7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=qoq0l8CR; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1744203137; c=relaxed/simple;
+	bh=Wga7NfE5EOLKXNPpGWNCl75SXWhKLrcAiVKGdRIqwI8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=S6IymdbBbA8bjiE5/n/WKSqxwf+K4gfbW+fd7oAaCSEdbrWHwA+yV5JScwO+G3BxxmBnLFBqFFaxfK3HNA1bKFR5ox1t5vdE9Vv8r49PkWYI0KzFb3VH820Dvl0VB9qiabVyj6Nmuj51s9LqA7sZUdDzFvdsId19qPACHqWc5Rw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=bO3gSMGV; arc=none smtp.client-ip=185.226.149.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="qoq0l8CR"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4ZXjWR652Hz9sn9;
-	Wed,  9 Apr 2025 14:51:47 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1744203109; h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=y1KOsl3bM2Nc82jWkBpwB9pBWedP0INipQprBLc0j5o=;
-	b=qoq0l8CRDL+UCLVS3PHrT3P1vR961xDbvNHjxml9bfKWX4A8AKek0gxWwmdmbupugwQeUa
-	Or+iNbsFczg2uc1qjLHcrFuRpL+GzZagbMm58iileZJozNcIGY1Wxql/PZKK+5bG8ZsWq2
-	2YoNz9CTr+r/TtXKi8y1ULJZxxI6uQrf97iP25KM8X3lfdIHeDBuYN1kXSv4fCXzbScnTT
-	yLuadRHPxEojfM+iEAtJ0zGXkOO/SSAIQW6CFfEy729P3TxL/gTXnIHf4mkGow540KskXM
-	nrcgR++I+jzbqfsLLSFAJ5yiAQoZy2b6Yx0KmrVsiTq4Af3cCbXv1hYpqyHV5w==
-Message-ID: <73d41cd84c73b296789b654e45125bfce88e0dbf.camel@mailbox.org>
-Subject: Re: [PATCH 1/2] dma-fence: Rename dma_fence_is_signaled()
-From: Philipp Stanner <phasta@mailbox.org>
-Reply-To: phasta@kernel.org
-To: Boris Brezillon <boris.brezillon@collabora.com>, Philipp Stanner
-	 <phasta@kernel.org>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>, Gustavo Padovan
- <gustavo@padovan.org>, Christian =?ISO-8859-1?Q?K=F6nig?=
- <christian.koenig@amd.com>, Felix Kuehling <Felix.Kuehling@amd.com>, Alex
- Deucher <alexander.deucher@amd.com>, Xinhui Pan <Xinhui.Pan@amd.com>, David
- Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>,  Thomas Zimmermann <tzimmermann@suse.de>, Lucas Stach
- <l.stach@pengutronix.de>, Russell King <linux+etnaviv@armlinux.org.uk>,
- Christian Gmeiner <christian.gmeiner@gmail.com>,  Jani Nikula
- <jani.nikula@linux.intel.com>, Joonas Lahtinen
- <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Tvrtko Ursulin <tursulin@ursulin.net>, Frank Binns
- <frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>, Qiang Yu
- <yuq825@gmail.com>, Rob Clark <robdclark@gmail.com>, Sean Paul
- <sean@poorly.run>,  Konrad Dybcio <konradybcio@kernel.org>, Abhinav Kumar
- <quic_abhinavk@quicinc.com>, Dmitry Baryshkov
- <dmitry.baryshkov@linaro.org>, Marijn Suijten
- <marijn.suijten@somainline.org>,  Lyude Paul <lyude@redhat.com>, Danilo
- Krummrich <dakr@kernel.org>, Rob Herring <robh@kernel.org>,  Steven Price
- <steven.price@arm.com>, Dave Airlie <airlied@redhat.com>, Gerd Hoffmann
- <kraxel@redhat.com>,  Matthew Brost <matthew.brost@intel.com>, Huang Rui
- <ray.huang@amd.com>, Matthew Auld <matthew.auld@intel.com>,  Melissa Wen
- <mwen@igalia.com>, =?ISO-8859-1?Q?Ma=EDra?= Canal <mcanal@igalia.com>, Zack
- Rusin <zack.rusin@broadcom.com>, Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Lucas De Marchi
- <lucas.demarchi@intel.com>, Thomas =?ISO-8859-1?Q?Hellstr=F6m?=
- <thomas.hellstrom@linux.intel.com>, Bas Nieuwenhuizen
- <bas@basnieuwenhuizen.nl>,  Yang Wang <kevinyang.wang@amd.com>, Jesse Zhang
- <jesse.zhang@amd.com>, Tim Huang <tim.huang@amd.com>,  Sathishkumar S
- <sathishkumar.sundararaju@amd.com>, Saleemkhan Jamadar
- <saleemkhan.jamadar@amd.com>, Sunil Khatri <sunil.khatri@amd.com>, Lijo
- Lazar <lijo.lazar@amd.com>, Hawking Zhang <Hawking.Zhang@amd.com>, Ma Jun
- <Jun.Ma2@amd.com>, Yunxiang Li <Yunxiang.Li@amd.com>, Eric Huang
- <jinhuieric.huang@amd.com>, Asad Kamal <asad.kamal@amd.com>, Srinivasan
- Shanmugam <srinivasan.shanmugam@amd.com>,  Jack Xiao <Jack.Xiao@amd.com>,
- Friedrich Vock <friedrich.vock@gmx.de>, Michel =?ISO-8859-1?Q?D=E4nzer?=
- <mdaenzer@redhat.com>, Geert Uytterhoeven <geert@linux-m68k.org>,
- Anna-Maria Behnsen <anna-maria@linutronix.de>, Thomas Gleixner
- <tglx@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, Dan
- Carpenter <dan.carpenter@linaro.org>,  linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org,  linaro-mm-sig@lists.linaro.org,
- linux-kernel@vger.kernel.org,  amd-gfx@lists.freedesktop.org,
- etnaviv@lists.freedesktop.org,  intel-gfx@lists.freedesktop.org,
- lima@lists.freedesktop.org,  linux-arm-msm@vger.kernel.org,
- freedreno@lists.freedesktop.org,  nouveau@lists.freedesktop.org,
- virtualization@lists.linux.dev,  spice-devel@lists.freedesktop.org,
- intel-xe@lists.freedesktop.org
-Date: Wed, 09 Apr 2025 14:51:14 +0200
-In-Reply-To: <20250409143917.31303d22@collabora.com>
-References: <20250409120640.106408-2-phasta@kernel.org>
-	 <20250409120640.106408-3-phasta@kernel.org>
-	 <20250409143917.31303d22@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="bO3gSMGV"
+Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
+	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.93)
+	(envelope-from <mhal@rbox.co>)
+	id 1u2UuO-0009cr-7G; Wed, 09 Apr 2025 14:52:00 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
+	s=selector1; h=Cc:To:Message-Id:Content-Transfer-Encoding:Content-Type:
+	MIME-Version:Subject:Date:From;
+	bh=f8y5kARShR5ZLHXs9fSAYU7oghihWo6U0sGdj42AVuw=; b=bO3gSMGVQs62Kc9g60sAUfmuGj
+	yV5w2IXK7bndM+9Q9OgJCsQbMWEJK55eaWfCdXoPtodwc2+Prh/ud1GqN09+2Qkamzo/h+Ej9w0zk
+	Z9HfRv0DBHzzhENH64a65Ho9pkhWzhR9U4BwKBq1Ni95KLsEXHhf4ISDuLCK7dB+4tczkZ1BKcbjU
+	kSFmpUXTfNqzUHSclNEbrl2dNDyRBEhm7N+pF1P9RZdx0hbi3z5nURjKRSwGC5VFlR8qlelWyni32
+	bhIXGcgT4akapkAg+PubdrNyaWsMzLyyy/SI95MjvGystZpnOlVMVDB0ywiOKycPJQ8opLpFnB1H5
+	k6YwmlZw==;
+Received: from [10.9.9.73] (helo=submission02.runbox)
+	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
+	(envelope-from <mhal@rbox.co>)
+	id 1u2UuD-0003GE-PE; Wed, 09 Apr 2025 14:51:54 +0200
+Received: by submission02.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.93)
+	id 1u2Uts-0021Ze-Ld; Wed, 09 Apr 2025 14:51:28 +0200
+From: Michal Luczaj <mhal@rbox.co>
+Date: Wed, 09 Apr 2025 14:50:58 +0200
+Subject: [PATCH net-next] af_unix: Remove unix_unhash()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MBO-RS-META: 7iy136p8m6py4oeaepzr7ogfmahipjtt
-X-MBO-RS-ID: b1321202fe5ffc9b996
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250409-cleanup-drop-unix-unhash-v1-1-1659e5b8ee84@rbox.co>
+X-B4-Tracking: v=1; b=H4sIADFt9mcC/x2MQQqDMBAAvyJ77kKMNtB+RXpIs1uzIGtItATEv
+ xu8DMxh5oDCWbjAuzsg81+KrNqkf3QQoteZUag5WGOfZjQOw8Je94SU14S7Sm2IvkR0diAavoF
+ eo4OWp8w/qfd6AuUNlesGn/O8ACHfB5J0AAAA
+X-Change-ID: 20250406-cleanup-drop-unix-unhash-623dd3bcd946
+To: Kuniyuki Iwashima <kuniyu@amazon.com>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ bpf@vger.kernel.org, Michal Luczaj <mhal@rbox.co>
+X-Mailer: b4 0.14.2
 
-On Wed, 2025-04-09 at 14:39 +0200, Boris Brezillon wrote:
-> Hi Philipp,
->=20
-> On Wed,=C2=A0 9 Apr 2025 14:06:37 +0200
-> Philipp Stanner <phasta@kernel.org> wrote:
->=20
-> > dma_fence_is_signaled()'s name strongly reads as if this function
-> > were
-> > intended for checking whether a fence is already signaled. Also the
-> > boolean it returns hints at that.
-> >=20
-> > The function's behavior, however, is more complex: it can check
-> > with a
-> > driver callback whether the hardware's sequence number indicates
-> > that
-> > the fence can already be treated as signaled, although the
-> > hardware's /
-> > driver's interrupt handler has not signaled it yet. If that's the
-> > case,
-> > the function also signals the fence.
-> >=20
-> > (Presumably) this has caused a bug in Nouveau (unknown commit),
-> > where
-> > nouveau_fence_done() uses the function to check a fence, which
-> > causes a
-> > race.
-> >=20
-> > Give the function a more obvious name.
->=20
-> This is just my personal view on this, but I find the new name just
-> as
-> confusing as the old one. It sounds like something is checked, but
-> it's
-> clear what, and then the fence is forcibly signaled like it would be
-> if
-> you call drm_fence_signal(). Of course, this clarified by the doc,
-> but
-> given the goal was to make the function name clearly reflect what it
-> does, I'm not convinced it's significantly better.
->=20
-> Maybe dma_fence_check_hw_state_and_propagate(), though it might be
-> too long of name. Oh well, feel free to ignore this comments if a
-> majority is fine with the new name.
+Dummy unix_unhash() was introduced for sockmap in commit 94531cfcbe79
+("af_unix: Add unix_stream_proto for sockmap"), but there's no need to
+implement it anymore.
 
-Yoa, the name isn't perfect (the perfect name describing the whole
-behavior would be
-dma_fence_check_if_already_signaled_then_check_hardware_state_and_propa
-gate() ^^'
+->unhash() is only called conditionally: in unix_shutdown() since commit
+d359902d5c35 ("af_unix: Fix NULL pointer bug in unix_shutdown"), and in BPF
+proto's sock_map_unhash() since commit 5b4a79ba65a1 ("bpf, sockmap: Don't
+let sock_map_{close,destroy,unhash} call itself").
 
-My intention here is to have the reader realize "watch out, the fence
-might get signaled here!", which is probably the most important event
-regarding fences, which can race, invoke the callbacks and so on.
+Remove it.
 
-For details readers will then check the documentation.
+Signed-off-by: Michal Luczaj <mhal@rbox.co>
+---
+ net/unix/af_unix.c | 8 --------
+ 1 file changed, 8 deletions(-)
 
-But I'm of course open to see if there's a majority for this or that
-name.
+diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
+index f78a2492826f9cc1e302ee6f8ca93c367656670a..2ab20821d6bb244a09e0364e1c649042360e23b1 100644
+--- a/net/unix/af_unix.c
++++ b/net/unix/af_unix.c
+@@ -950,13 +950,6 @@ static void unix_close(struct sock *sk, long timeout)
+ 	 */
+ }
+ 
+-static void unix_unhash(struct sock *sk)
+-{
+-	/* Nothing to do here, unix socket does not need a ->unhash().
+-	 * This is merely for sockmap.
+-	 */
+-}
+-
+ static bool unix_bpf_bypass_getsockopt(int level, int optname)
+ {
+ 	if (level == SOL_SOCKET) {
+@@ -987,7 +980,6 @@ struct proto unix_stream_proto = {
+ 	.owner			= THIS_MODULE,
+ 	.obj_size		= sizeof(struct unix_sock),
+ 	.close			= unix_close,
+-	.unhash			= unix_unhash,
+ 	.bpf_bypass_getsockopt	= unix_bpf_bypass_getsockopt,
+ #ifdef CONFIG_BPF_SYSCALL
+ 	.psock_update_sk_prot	= unix_stream_bpf_update_proto,
 
-P.
+---
+base-commit: 420aabef3ab5fa743afb4d3d391f03ef0e777ca8
+change-id: 20250406-cleanup-drop-unix-unhash-623dd3bcd946
 
-
->=20
-> Regards,
->=20
-> Boris
+Best regards,
+-- 
+Michal Luczaj <mhal@rbox.co>
 
