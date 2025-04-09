@@ -1,106 +1,114 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95ACF1E32D7
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 06:39:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0E901DEFE7
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 06:40:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744180757; cv=none; b=kdIddvCEDqCxIBXar8NmQhBM38ViXx3MFv1lGk69eUr/bwvwY7UtrqPzZy37hCngu3hGk5tmCFpBwl0q46mvgxpkhzqkVJeW8PDRW792kx870E7Jji65qPDE5nQtgb8QFo45IMwt4Gm/9H6EmRGX6aH0+aDHHfeS3R0qAumDVWM=
+	t=1744180813; cv=none; b=JPNlBRpoqBBQZzkLJeeFmtMRK98xZ1a7FruHaTEoGz/7nb0dpr6SvYPJMIG23c8RVrgKneJl89A2KLMnyNJ4cTw2x7ZCsQ5U3cSGej0QQ+i8eLNUGAb/zteZqRgTQwn7+DcUEjKdXGLppM6WBZN6TPRjgKVNh+tQtMa2jfTs5Cc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744180757; c=relaxed/simple;
-	bh=hVp5WFva9rgZVexzBPn+XxH7bJEYj+ZOJVusQwSN3IA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=R9d53VNzGDeI8B9H56mTScWyjwGqN+gYpFRcA1jjR/O3WB0jpXF9W5vgE4LMH7KH23dcvSBELxcB+07Jf8Jo+M9k/EGDLqXrVKm/IGAcNErT68FlQeLDK74dbGMjpTCVOYXqB/xGOMipkAqbxG6rSKCbGhAxBd+hikNif5s1P2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org; spf=pass smtp.mailfrom=neverthere.org; dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b=PFVlmK6d; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neverthere.org
+	s=arc-20240116; t=1744180813; c=relaxed/simple;
+	bh=EA4R1E+05gtL01yoBf9zEwuEj63laa4tf7bpqq0eQhU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=I0DXyiVJUI06FZtP+ReDEpFO3EJ1ymUBuRpV+iiGzLyNMW7S0acquEWYdn3nn/JKGdOMFh2JD2mw4mH43iIRo0m0cC9Nxm5RyAc6OJuvsIM6dqBhkz1orRetNgNtqzGNxK63RsRbfvYy1gfK9GvjxwX7lb/sUXhsSDq2blx1M1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=xikLMr6k; arc=none smtp.client-ip=44.202.169.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b="PFVlmK6d"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-22423adf751so63438545ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 23:39:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=neverthere.org; s=google; t=1744180755; x=1744785555; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Bt5oeg1YeiWkj0MO+LI199fGU/IYOFN5i4d+y5e7ahU=;
-        b=PFVlmK6d1nsMX1NW8Cg4zaXmcqyW+4gM8rBYPisHu576xXMDTxSGF5U35KrrPpOYqb
-         5KSjWLpIJovwDKlXHz1yj/FdvEfdX1QgnYg1OgPsY4ssC3t7smGQWsr8EcLC4Ejg4YtM
-         ruBL1a1hv6Vv/7GGAbLeWE0Sb1ZReNxzq87Zk5w5WdYPLJYaSawwb48LFKNo9Yh6zi/n
-         mla2dXJqFWaxcfEptyGuDTqpuH/kAYYTs5NIpyWHK0cWediXXCqFyVniK4/5p97TIZmw
-         q2VwgMUUCoekVBTD7KX0hByk/KM5T0jbFbgYvKHp6U8mnvhmexbxJyEq46wdY7ApgNPN
-         6Tmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744180755; x=1744785555;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Bt5oeg1YeiWkj0MO+LI199fGU/IYOFN5i4d+y5e7ahU=;
-        b=EgGeZ2qwuUTgOTUL8OW4a+7D5M7VPANob2VCvaRQ/GTyHJPHrWnVZMmW5kkZX7wIGv
-         FrANSsSdk/OsjAr9ZokJy2YiUDsHIE4RqgZTacazSFpbRjoePvQQMt7grwNnkXyWqY1s
-         Slyul2RGYRbl0HCQPXHFfqFw6WdZYJIfVIBNKfFJcDeVZlXhRnlamXFm/qihWIxH9vOC
-         nLgUXQ4JC8MBgJuwF/ji7LXZUq/u9BFP8euIkx5Y9SGig4HgdYXc51cUjwqVxwOd2lb5
-         26iObkaSQH6YgUWPyyn75Wb4BSTh2hs8a0fU3GWdZySaoUWcY8tq1FX7PMesVXAEZkoc
-         z2SA==
-X-Forwarded-Encrypted: i=1; AJvYcCWeZ0bDeI6ykJZ7+lai4pGZ7MQ/4DiElUj/liBpNgyK5rUGPlAOBwjQi+fYwKzEmdIpn5T2QtxE8EHBKH8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKZ4yi5Dj5XoYlIxzS5ttYERDYma0tPv9lH654qW55jCy/XZjm
-	H5CuCNLwz0hzjXZ6sQI4E+cdrmEUJ012jbWV+rtOe/pgcyGgGCR3AIAqNoTrZw==
-X-Gm-Gg: ASbGncv9ZaJsf9mN2i6fI1OHgSLcMMgp7fUyebXURTFV5h96nOJTt/MKpnACD8EconS
-	LJflKMuae7y2Z7K3KE8lKA9fC+0w4oZteDKXdYd3ayxMtOmlR4Vpnv0aEC3NwIkrK44Im3q1IKE
-	iTDCLP/WmJgu7xTtV7tFlkpYyPGP2cUq8tiVf5idpCPVVhtV4cLi5piP/CYWaRy0Xynd2/r+j/j
-	gZTce15CgecxnAVdIHYv/QIz7nghjMMHXjpQBxhQims76sEPml/5fcUtS5tlGqmEN6pXNSleA9I
-	0XlhQfghTJTe/k3Hfsa7eAFaXJdv+aaQ/71Ohiqa1Uws6jCuFp48GxsQNVqWp7mAHD0qH40L+qT
-	fLukeWw==
-X-Google-Smtp-Source: AGHT+IGnU25bUP5atRZcFC1y9/sAb5cC/bQ9EwUgqsr5SeEgKypjDzpbSo8xQOr2SRDfkZR9JAXTww==
-X-Received: by 2002:a17:903:3d0d:b0:224:2717:798d with SMTP id d9443c01a7336-22ac2c2eb98mr27424215ad.50.1744180754853;
-        Tue, 08 Apr 2025 23:39:14 -0700 (PDT)
-Received: from tiamat (c-69-181-214-135.hsd1.ca.comcast.net. [69.181.214.135])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7cc91ecsm4078515ad.212.2025.04.08.23.39.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 23:39:14 -0700 (PDT)
-From: Michael Rubin <matchstick@neverthere.org>
-To: gregkh@linuxfoundation.org,
-	dpenkler@gmail.com
-Cc: linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Michael Rubin <matchstick@neverthere.org>
-Subject: [Patch v1 6/6] staging: gpib: Removing function ibAPE
-Date: Wed,  9 Apr 2025 06:39:04 +0000
-Message-ID: <20250409063904.342292-7-matchstick@neverthere.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250409063904.342292-1-matchstick@neverthere.org>
-References: <20250409063904.342292-1-matchstick@neverthere.org>
+	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="xikLMr6k"
+Received: from eig-obgw-5004a.ext.cloudfilter.net ([10.0.29.221])
+	by cmsmtp with ESMTPS
+	id 2KjXuRnARiuzS2P6Xubp8d; Wed, 09 Apr 2025 06:40:09 +0000
+Received: from box5620.bluehost.com ([162.241.219.59])
+	by cmsmtp with ESMTPS
+	id 2P6XusGP3jrgq2P6XuPzCP; Wed, 09 Apr 2025 06:40:09 +0000
+X-Authority-Analysis: v=2.4 cv=PK7E+uqC c=1 sm=1 tr=0 ts=67f61649
+ a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
+ a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
+ a=HaFmDPmJAAAA:8 a=49j0FZ7RFL9ueZfULrUA:9 a=QEXdDO2ut3YA:10
+ a=nmWuMzfKamIsx3l42hEX:22 a=hTR6fmoedSdf3N0JiVF8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
+	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=qpm6j0JhOIFKcdxChBMhu3xTAdJvNiLceWDGvFN+pFQ=; b=xikLMr6kwELm3gep0qnGf5GqzI
+	JAE6i5oDYASi2Owvm9B0QWLx8TAryzPa99z1unsiJv6/CsF7qmCj4d3ghaGTfgWeNvJ/gjJMMenc/
+	9x0Sw3rxvlMcJUBzqvZPrR+WcWFs7ALibc/neD18LxieXlyqHIVKKanPwFzlNmE3UU+ySBbEbqieU
+	xD1Bp7gY3PAF4n90SCOpCfsHXow1oXkS7qkiih9/nFh3LDWNqyeqSXOxLEJQ2tFM5gOX4YDKOMNxv
+	JVcnhbCfUfcVbWOrWCP6stJpGepCeSW7vnozvPG7W8MS/2Kiyvk6wIADz0jeH3nlNHZj6ikKcT2+B
+	5BrrC2Ew==;
+Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:58032 helo=[10.0.1.116])
+	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <re@w6rz.net>)
+	id 1u2P6V-00000000J2N-0zEQ;
+	Wed, 09 Apr 2025 00:40:07 -0600
+Message-ID: <696e8945-3343-4cf7-b5aa-b39051db3911@w6rz.net>
+Date: Tue, 8 Apr 2025 23:40:03 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.12 000/423] 6.12.23-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250408154121.378213016@linuxfoundation.org>
+Content-Language: en-US
+From: Ron Economos <re@w6rz.net>
+In-Reply-To: <20250408154121.378213016@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - box5620.bluehost.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - w6rz.net
+X-BWhitelist: no
+X-Source-IP: 73.223.253.157
+X-Source-L: No
+X-Exim-ID: 1u2P6V-00000000J2N-0zEQ
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:58032
+X-Source-Auth: re@w6rz.net
+X-Email-Count: 54
+X-Org: HG=bhshared;ORG=bluehost;
+X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfNvtPz1wJ/woTkPnunwB8cbUyNHUSe4vUjIIyreJSf5g+Z1lTdQmadvQBUx6z+O2EDb+CWkFMqGjRVfH8Shr2SiKx/I9v7yj2JB0+xX0RObCZD6Bl0ko
+ RUm7yD5Rcfq7HgeSoRTOBZn9v+0BBxjnOAFf1qMow5jThxPipIACYr1v+hQRBPbGlFryGuGaheKMCAqI2Y2t1MVj+YbxU4l5oIo=
 
-Reported by checkpatch.pl as CamelCase where function is undefined.
+On 4/8/25 08:53, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.12.23 release.
+> There are 423 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 10 Apr 2025 15:40:31 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.23-rc2.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-CHECK: Avoid CamelCase: <ibAPE>
+Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
 
-Removing undefined function.
-
-Signed-off-by: Michael Rubin <matchstick@neverthere.org>
----
- drivers/staging/gpib/include/gpib_proto.h | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/staging/gpib/include/gpib_proto.h b/drivers/staging/gpib/include/gpib_proto.h
-index fce33f5715fb..4c01c436b9a7 100644
---- a/drivers/staging/gpib/include/gpib_proto.h
-+++ b/drivers/staging/gpib/include/gpib_proto.h
-@@ -22,7 +22,6 @@ int serial_poll_all(struct gpib_board *board, unsigned int usec_timeout);
- void init_gpib_descriptor(struct gpib_descriptor *desc);
- int dvrsp(struct gpib_board *board, unsigned int pad, int sad,
- 	  unsigned int usec_timeout, uint8_t *result);
--void ibAPE(struct gpib_board *board, int pad, int v);
- int ibcac(struct gpib_board *board, int sync, int fallback_to_async);
- int ibcmd(struct gpib_board *board, uint8_t *buf, size_t length, size_t *bytes_written);
- int ibgts(struct gpib_board *board);
--- 
-2.43.0
+Tested-by: Ron Economos <re@w6rz.net>
 
