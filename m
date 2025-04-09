@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72CEA2144B6
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 20:29:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FBEF214818
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 20:29:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744230568; cv=none; b=GGUUofvq0pDL9eze6nGNdM6ffOc+V+bub4ATGRtGx5zgG8gnu8QvZM28elaKq6gqAHqXztmyi4dJ5hQVKn++HZK8Awq3sLEWp5pNeTD4I3a+xmygi1sdENrpFKA0fjldD+EgIqBmejGj8SgmUH7f+fMH10ssLuoqH+MOnRgaNGU=
+	t=1744230571; cv=none; b=YDPIY7lKMHgm+o3NHG33dLW59jBJ2tw+1SESt3gYEJC4a8qnqB7xOTFtAqlIr4IrCs8dBScL82A7/gfR1PJOAdv35Vpo32JdwfW/HogDwVxpF4KYxx2XgVfE/BgkgwvHNLV5AM1Ytupb2yTmkurFP2XPOTQeta6JtmMH1NvmMqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744230568; c=relaxed/simple;
-	bh=yipjOyzmBSZ7V2iWhmnuivyq5uPoOKOJUFIKj9yOP/s=;
+	s=arc-20240116; t=1744230571; c=relaxed/simple;
+	bh=pcdFfqfrcfGZJnWA/SNftQEqbPDQX9Zmdn9ZV6SxDfQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rPiscb2+lurgPYY3EHQoZvWl1Nx6RZt+I+D5RP66hmExETWpc/2T9jS8GsrKpMncoVPkUCUPyroqupPbUqCsAU0inFh23fvlQ2h9ghDESm/PGGPA6ccQcpD0FwwcHqN8KThsdKT/6psM49S7yHDhAhPyw0ZnKa21gQrq9RrRRag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tpKZSXmZ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=jjE/R7pBkFTBimXazVmurOtCtgCbaYglWpm38D+/QGsm6GgHEbZG+QHyn6j1e7HUOncc2zUVYehK8k2Vu9fbgDGTUggREkGW7uPgiRZ1UBZNbyuKnheoTezDo9LGG+yZrDlacLOTYoxXuXNTe82UwC9OiRFYDtjsSgBwVPowLEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G5qn5T4h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tpKZSXmZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 996C9C4CEE8;
-	Wed,  9 Apr 2025 20:29:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G5qn5T4h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 625CFC4CEEA;
+	Wed,  9 Apr 2025 20:29:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744230567;
-	bh=yipjOyzmBSZ7V2iWhmnuivyq5uPoOKOJUFIKj9yOP/s=;
+	s=k20201202; t=1744230570;
+	bh=pcdFfqfrcfGZJnWA/SNftQEqbPDQX9Zmdn9ZV6SxDfQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tpKZSXmZBjJ4wkcS6G9nXzfgfc8q0EeKC8mII1dvFBQAW5QzzHJFhDmE/gdcsnLBO
-	 GA2WqYdwTiAvZ9ztRpmelVio4bpVoB2TIISuqmnqC2zeEnWtxBRcS6SKYVNsZiCAOi
-	 ntfivOQyb7ZjzmMOBinpNIoesjT+pA+xWgJj5tl0enmwQQmRGYCqmeYsEFHXlvHJbF
-	 j0zGmFsfCzdpHEtjFp8kHkxUu2EaGQr6Em9lliBHNFhQWynbCj5onGbrPNIv0BgQ/6
-	 64uq0UNgeRc4PFnCvBV3TRA55K+w/KNfCX5zhzG91hWuPsvT+avhZlehcIF/N3nZta
-	 g89OekGXzTNbw==
+	b=G5qn5T4hO42WFbyhj3gsJ/5y3m5dAurJHuWqR0MqdVVuC7sIgX8FnENBfiSNbFX4M
+	 LoHofXoZjO5rcQxZwUBre8anvkofdmc+ku3ixn6l4ZIrDpOYBoO22QGmcFdNInbhiY
+	 t/GMh9K3nIVa1sN8l/l0gu8+KPNho1vZYYnrn42RWa2qgMof7ZyIedTLgFshM57Wky
+	 kmKQlLjp5cuwWcZk2GJTxdPoilBnoqaj7VzgpceRZyGKhYFj5XVYemIqNkKLOaUI53
+	 a1RdVqLEtJA5jDsGpzs6nqGKyFVeMOberDQIzgEYWRLcCgQ0UIH4vvMIYv3xrQe9U6
+	 usx2DHBUr4XAA==
 From: Ingo Molnar <mingo@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: Juergen Gross <jgross@suse.com>,
@@ -37,9 +37,9 @@ Cc: Juergen Gross <jgross@suse.com>,
 	Borislav Petkov <bp@alien8.de>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 04/20] x86/msr: Use u64 in rdmsrl_safe() and paravirt_read_pmc()
-Date: Wed,  9 Apr 2025 22:28:51 +0200
-Message-ID: <20250409202907.3419480-5-mingo@kernel.org>
+Subject: [PATCH 05/20] x86/msr: Harmonize the prototype and definition of do_trace_rdpmc()
+Date: Wed,  9 Apr 2025 22:28:52 +0200
+Message-ID: <20250409202907.3419480-6-mingo@kernel.org>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250409202907.3419480-1-mingo@kernel.org>
 References: <20250409202907.3419480-1-mingo@kernel.org>
@@ -51,7 +51,15 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The paravirt_read_pmc() result is in fact only loaded into an u64 variable.
+In <asm/msr.h> the first parameter of do_trace_rdpmc() is named 'msr':
+
+   extern void do_trace_rdpmc(unsigned int msr, u64 val, int failed);
+
+But in the definition it's 'counter':
+
+   void do_trace_rdpmc(unsigned counter, u64 val, int failed)
+
+Use 'msr' in both cases, and change the type to u32.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: Juergen Gross <jgross@suse.com>
@@ -60,31 +68,44 @@ Cc: Dave Hansen <dave.hansen@intel.com>
 Cc: Xin Li <xin@zytor.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 ---
- arch/x86/include/asm/paravirt.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/msr.h | 4 ++--
+ arch/x86/lib/msr.c         | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
-index c4c23190925c..c270ca050781 100644
---- a/arch/x86/include/asm/paravirt.h
-+++ b/arch/x86/include/asm/paravirt.h
-@@ -231,7 +231,7 @@ static inline void wrmsrl(unsigned msr, u64 val)
- 	_err;						\
- })
+diff --git a/arch/x86/include/asm/msr.h b/arch/x86/include/asm/msr.h
+index 8ee6fc633476..ec5c873a83a1 100644
+--- a/arch/x86/include/asm/msr.h
++++ b/arch/x86/include/asm/msr.h
+@@ -65,11 +65,11 @@ DECLARE_TRACEPOINT(write_msr);
+ DECLARE_TRACEPOINT(rdpmc);
+ extern void do_trace_write_msr(unsigned int msr, u64 val, int failed);
+ extern void do_trace_read_msr(unsigned int msr, u64 val, int failed);
+-extern void do_trace_rdpmc(unsigned int msr, u64 val, int failed);
++extern void do_trace_rdpmc(u32 msr, u64 val, int failed);
+ #else
+ static inline void do_trace_write_msr(unsigned int msr, u64 val, int failed) {}
+ static inline void do_trace_read_msr(unsigned int msr, u64 val, int failed) {}
+-static inline void do_trace_rdpmc(unsigned int msr, u64 val, int failed) {}
++static inline void do_trace_rdpmc(u32 msr, u64 val, int failed) {}
+ #endif
  
--static inline int rdmsrl_safe(unsigned msr, unsigned long long *p)
-+static inline int rdmsrl_safe(unsigned msr, u64 *p)
+ /*
+diff --git a/arch/x86/lib/msr.c b/arch/x86/lib/msr.c
+index 5a18ecc04a6c..20f5c36e5fde 100644
+--- a/arch/x86/lib/msr.c
++++ b/arch/x86/lib/msr.c
+@@ -136,9 +136,9 @@ void do_trace_read_msr(unsigned int msr, u64 val, int failed)
+ EXPORT_SYMBOL(do_trace_read_msr);
+ EXPORT_TRACEPOINT_SYMBOL(read_msr);
+ 
+-void do_trace_rdpmc(unsigned counter, u64 val, int failed)
++void do_trace_rdpmc(u32 msr, u64 val, int failed)
  {
- 	int err;
- 
-@@ -239,7 +239,7 @@ static inline int rdmsrl_safe(unsigned msr, unsigned long long *p)
- 	return err;
+-	trace_rdpmc(counter, val, failed);
++	trace_rdpmc(msr, val, failed);
  }
- 
--static inline unsigned long long paravirt_read_pmc(int counter)
-+static inline u64 paravirt_read_pmc(int counter)
- {
- 	return PVOP_CALL1(u64, cpu.read_pmc, counter);
- }
+ EXPORT_SYMBOL(do_trace_rdpmc);
+ EXPORT_TRACEPOINT_SYMBOL(rdpmc);
 -- 
 2.45.2
 
