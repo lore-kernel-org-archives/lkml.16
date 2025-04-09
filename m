@@ -1,63 +1,63 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6039B2777F9
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 18:10:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A90E2777E1
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 18:10:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744222204; cv=none; b=rJnd1AalYOdCRmoQng+l1ugsgrH7KmRviahHdxVGH9VfC52d+gthFCqe4sbX0NOyObRl26x7QOd3ENCsvoavEUt5Cc3xsi7PDqKVi3B4pbHmwiKaQZ595DQtIQaiTzHSaB3o+UvM2ad2fITcnhMxMrdo9cinuBKDQSBhqIEMLic=
+	t=1744222203; cv=none; b=F6RNt9Q1f8iEzaZ9ZCu/lf855mo4cbLpFkdTVgUM/4TSY3FKBDofRCT400OUVM3zwGzOZeSZNT1UyZxooXGjycwzJPDysNWiZtYLLtmCd96tuUIRo4NONJ22vKQlSe8eIMLlgSznX6J+WAUMI3CFJAmXKool7G1YggwqKbt83gw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744222204; c=relaxed/simple;
-	bh=N95I4jtfm8tV/UxSD/+PkNeT+KRbUV2lDcZrHgxcpkQ=;
+	s=arc-20240116; t=1744222203; c=relaxed/simple;
+	bh=jqUPwEQlcnwZt3/asgScigP93X2I5b2gZl/ENeZQ3iE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ac7aTK7W9PR1oiUGQT6S0T7N+JwiWrgdSaTQSHewZxL4f63mWWLnhFD+z4i3cycSC+bXGEIuBRxEAphUAj47yeweUIAWBK7QnavsgGxVut9PHncoJrR0vLaC3HqrFFgCdmhQdOLsBslGJYV4eeTpSWUK3sDrUevsgdOK/lQe7oc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org; spf=pass smtp.mailfrom=neverthere.org; dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b=eJE8XUIO; arc=none smtp.client-ip=209.85.215.181
+	 MIME-Version; b=m7lV0qtRkA8Cn+4OR2Gr28A+1wY6dO9Qm1DEZL4ZVJxu1tIOCkat1tz75WalZ528lSDkbSZkrQ0bAL2Saq6wbmd6SwZmxcjAYw9TARgO4M6kj8YtqnG6qKNUPmIGH8cj9Ji4wtk1yeX+LzTC8qAbQ/SN6VdlSif3lRrXz8zK0gQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org; spf=pass smtp.mailfrom=neverthere.org; dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b=LeFCH64w; arc=none smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neverthere.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b="eJE8XUIO"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-af519c159a8so8617a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 11:10:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b="LeFCH64w"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2243803b776so102464195ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 11:10:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=neverthere.org; s=google; t=1744222201; x=1744827001; darn=vger.kernel.org;
+        d=neverthere.org; s=google; t=1744222200; x=1744827000; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gGz8cuaRzJJ2oAljQysG1oQTihJGr/6KvD6+YWx4kWA=;
-        b=eJE8XUIOUBXZaCqe/IsCaUwC4MzcZeGv3R4naduBnqhkSwQh6DADCWvfqy8gQEyDMC
-         qY1BKDVzfYm6d77KvKqdjZ51kPS8BD1BeEcKA4RGmgMo5jiW/jvqL1DgJOZhB6pIly+k
-         ncHwuuEBvcWDf6XLRlRLkSAL6Y7hvZzQ1p8aHkr02RtY3R1zAHmOQs2Xm4Oz2TfJ0bdF
-         8Y9pHPelTcw6h91e3Gn2IMkYe4ZO6HODXoJBGj1o/1jjlVj+Lyi2D3UsMjm7kYwIAfDP
-         cv0kk9yZAm/tvfzLF9tmY6jJ7s4s73Rb7R8Cjjb2vrZ/P7wgB7Iez+6QkW1EPzndUmLy
-         BkSA==
+        bh=CecMt/raU8dnOgWd9SQV1F1UDBfO/Dd21R5LTc9yaMI=;
+        b=LeFCH64wXKQ8Z0xKSvZLfG/yi/3rmx75V/t2EhPAwG90Ur78LPxbu5avrMIJuO4El3
+         Hnxa0xY11qA+TyWaQP+LofyWTw3ytUFF5NwtfkMNZmKHKFVroy1QstqJfBMKSgcYr9hf
+         GhzhegwzI1CTAk6tKh58rdXIvh5nWU5HIA06hsIke26N4gPiqfMqwuuef6pWaJqB5d9y
+         VidxkCAsgx0FSG1VgOs+9o+d5UarjsCAhjhE9gGDbe0LwQQESYZsYqyEhpLKuIwdhHkx
+         9GKDNvPtfT7BEnCcrPTyFa7PiQhVxDgSvqZFFqZuCpW1c1enPk3naMRhQQMRchYi6eyD
+         +gvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744222202; x=1744827002;
+        d=1e100.net; s=20230601; t=1744222200; x=1744827000;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gGz8cuaRzJJ2oAljQysG1oQTihJGr/6KvD6+YWx4kWA=;
-        b=YYcCuvGEPgYpiX2lTKzKQjtEm+HGZQ7bZWg6q/OcPdYYNXzlXIVox/MaaY4g7C8qC0
-         bwFb3rkCQayk29pV4SiikKQxn7rKVDmn9Qu8qPaOvqkJAez47e5l7aFI249PAEEd33dr
-         muXAFV+k/hz3iCv0hCcsfe/C8uRRgElzdszB+wp+yk5gE0yGt0a6A5MjUiz63KDlvF22
-         I/BKamA1WgjzYguIXySKCC2Ovh0b+eop5QNOoxk+zSfyH/1PXRrfya1bzeM+aqgrLk00
-         AZIJV5c8Z8jzOP+Zxyv7z8ASGN3QN/AM2mvp/FdsjLLVotmt11TRKmPNP2/ZtLhmJzJU
-         myqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVq8b1CewQCkO5Q+UXcYmmHyowZqJdu2tVy/+sNJCaf1xrCgxjJGf4V3cUISAaXuREbCRGh+VsaTB9RmJ4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkCx13sdeOCLteulnwwuOQdRu/g4esHqT0ToFGpOOMKbKyrlIB
-	zEVrycy795OuEVSmKNmO1W6UQWrxV4hSYQ4XPLpbTvI+WL/itbMv9w+uAy4Veg==
-X-Gm-Gg: ASbGncsXKm8mUH/Z/v7owxdYxVmBUDgGWhwd9Ifi4sZ4+0mOE+6RR3JfuehxTnXBWxj
-	vai5C8z5f9mc4F58fALG1n30ohT19imHZvMA9pyWF3ZIpW3EQ+JB2GJNMgzdBadEcMktkB87bne
-	sluOLijWiY8Wm9ppe5H1kzaZPXASSJ7/XnQKhWdNRjtEdoaeTxTuwUxFD6CuS7GMIOS4Z39uVu3
-	MC/1Yctbvkn5YfvDCGpdxVm+NrBHCTghq0VLTyrwwQQVqmgmflE1vewC7hoUro/haGv5P4Nln/n
-	UwIADba/3+MjwPmBEj2Ba2nSSX3i+OYMGWL1On+9+EWCA9q0fjFcSPmMj+moG5/aBR+MGpb4yv3
-	Vzm/E5vO08ZMShjUb
-X-Google-Smtp-Source: AGHT+IEgs6RUWozkbh4QD2FqyyruOz6bjWFjR2k+VOZ4ezhRHSrXbXvDWyrrTiQT8q17rBG4ISXwQA==
-X-Received: by 2002:a17:90b:270c:b0:2ff:5c4e:5acd with SMTP id 98e67ed59e1d1-306dbc2e412mr5791558a91.35.1744222201702;
-        Wed, 09 Apr 2025 11:10:01 -0700 (PDT)
+        bh=CecMt/raU8dnOgWd9SQV1F1UDBfO/Dd21R5LTc9yaMI=;
+        b=kghnDXxOiXyeC+pKpHWSqngzJL3Vm1QmveikmXIF4UjR31z7umIFvN4pMs544yDDz3
+         qu8s6dbwd4r+LTtkWVLA7j2LQb2AW0YA6qZbZTAwaKneoA6vYEvHOKz6dKWfum5AY7fv
+         2jX6hEUSoAd39cxTizjXy3vVvmHRrxtwG08Y1+5/jP4vYdxZs+1hgbfnYmvm4ZEf5Fgd
+         +RS8C7SLctdHk5lfDN4nCYHO9YWGhw9Wg+MkRYjTR6nYfSoOgDqJG9YtkkSDNoXCnXsJ
+         DQTJk0fMAidxtTOEb8O8NY9RwuJY03yrCvmS3eVhVFY63uOeRYdUWMResOhweaaOOx01
+         yjFA==
+X-Forwarded-Encrypted: i=1; AJvYcCXjfn+z/RV8o/JmjNOrgxOVQp5jaNFMZuvIGyWgL5ZdHgd3sYyLazn2XuuHBfZ/6u/LycpeCnFFbYdfug4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSNNbKIJdI1MWkEn7nzcNXskXGecmMvEmyWmzUN1uUcOx4oc66
+	4pqimaj9ZPlePUIE/Id8Arnj2U3w4J+k2b5nQBmcAbYcVHyuWun+TDtF42ZVwg==
+X-Gm-Gg: ASbGnctcUTp30SuAEcr+3y8sact3dhg0Kg9O3ANZ3TNYphJcf1EWzrWENbHev2zHej7
+	wGVcTTHLDgxdVokoalHy9u/rhs6TKG5F4QYv9N042B/H4xJFWoIUSd4Ds++gPT7NWRsQ5Smv2Fu
+	tNwxdwf5I8D5krBwgZdzxwPnBtqTiMtkCOaZiPyoRpHsRjNwARYEysg1t3yVfnUI8q8wHQNuI80
+	5iowiFQ9pWrQN9Qjv5P4HU7keCjhwteV7+tZR/zZIAYE3LloD6q6nL7r9lF7YwCkCxsVWgpLjk2
+	v/f3Yszg8Vs98FCr9psPPEGdZq/7Q2qcOfRh7mpXDDVnxXq71pUxzeP3IqcbBw+td4cJFr2IZJI
+	Em2ZuvQ==
+X-Google-Smtp-Source: AGHT+IEWUOHZgP8g4/g3KQWG8J1PQkBdlWsjrYzDs/V3gnf3e76QSCrxCzAE8HB12n1p9qtyZvIaBQ==
+X-Received: by 2002:a17:902:d48b:b0:215:94eb:adb6 with SMTP id d9443c01a7336-22ac2a1dee3mr64152325ad.40.1744222200490;
+        Wed, 09 Apr 2025 11:10:00 -0700 (PDT)
 Received: from tiamat (c-69-181-214-135.hsd1.ca.comcast.net. [69.181.214.135])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306dd11e659sm1970502a91.16.2025.04.09.11.10.01
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b62b88sm15201115ad.41.2025.04.09.11.10.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 11:10:01 -0700 (PDT)
+        Wed, 09 Apr 2025 11:10:00 -0700 (PDT)
 From: Michael Rubin <matchstick@neverthere.org>
 To: gregkh@linuxfoundation.org,
 	dpenkler@gmail.com,
@@ -65,9 +65,9 @@ To: gregkh@linuxfoundation.org,
 Cc: linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	Michael Rubin <matchstick@neverthere.org>
-Subject: [PATCH v1 05/23] staging: gpib: gpib_proto: u8 over uint8_t
-Date: Wed,  9 Apr 2025 18:09:35 +0000
-Message-ID: <20250409180953.398686-6-matchstick@neverthere.org>
+Subject: [PATCH v1 04/23] staging: gpib: fmh_gpib: u8 over uint8_t
+Date: Wed,  9 Apr 2025 18:09:34 +0000
+Message-ID: <20250409180953.398686-5-matchstick@neverthere.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250409180953.398686-1-matchstick@neverthere.org>
 References: <20250409180953.398686-1-matchstick@neverthere.org>
@@ -85,49 +85,178 @@ CHECK: Prefer kernel type 'u8' over 'uint8_t'
 
 Signed-off-by: Michael Rubin <matchstick@neverthere.org>
 ---
- drivers/staging/gpib/include/gpib_proto.h | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/staging/gpib/fmh_gpib/fmh_gpib.c | 32 ++++++++++++------------
+ drivers/staging/gpib/fmh_gpib/fmh_gpib.h |  6 ++---
+ 2 files changed, 19 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/staging/gpib/include/gpib_proto.h b/drivers/staging/gpib/include/gpib_proto.h
-index 4c01c436b9a7..1c8e5955b9ce 100644
---- a/drivers/staging/gpib/include/gpib_proto.h
-+++ b/drivers/staging/gpib/include/gpib_proto.h
-@@ -21,16 +21,16 @@ static inline unsigned long usec_to_jiffies(unsigned int usec)
- int serial_poll_all(struct gpib_board *board, unsigned int usec_timeout);
- void init_gpib_descriptor(struct gpib_descriptor *desc);
- int dvrsp(struct gpib_board *board, unsigned int pad, int sad,
--	  unsigned int usec_timeout, uint8_t *result);
-+	  unsigned int usec_timeout, u8 *result);
- int ibcac(struct gpib_board *board, int sync, int fallback_to_async);
--int ibcmd(struct gpib_board *board, uint8_t *buf, size_t length, size_t *bytes_written);
-+int ibcmd(struct gpib_board *board, u8 *buf, size_t length, size_t *bytes_written);
- int ibgts(struct gpib_board *board);
- int ibonline(struct gpib_board *board);
- int iboffline(struct gpib_board *board);
- int iblines(const struct gpib_board *board, short *lines);
--int ibrd(struct gpib_board *board, uint8_t *buf, size_t length, int *end_flag, size_t *bytes_read);
--int ibrpp(struct gpib_board *board, uint8_t *buf);
--int ibrsv2(struct gpib_board *board, uint8_t status_byte, int new_reason_for_service);
-+int ibrd(struct gpib_board *board, u8 *buf, size_t length, int *end_flag, size_t *bytes_read);
-+int ibrpp(struct gpib_board *board, u8 *buf);
-+int ibrsv2(struct gpib_board *board, u8 status_byte, int new_reason_for_service);
- void ibrsc(struct gpib_board *board, int request_control);
- int ibsic(struct gpib_board *board, unsigned int usec_duration);
- int ibsre(struct gpib_board *board, int enable);
-@@ -39,11 +39,11 @@ int ibsad(struct gpib_board *board, int addr);
- int ibeos(struct gpib_board *board, int eos, int eosflags);
- int ibwait(struct gpib_board *board, int wait_mask, int clear_mask, int set_mask,
- 	   int *status, unsigned long usec_timeout, struct gpib_descriptor *desc);
--int ibwrt(struct gpib_board *board, uint8_t *buf, size_t cnt, int send_eoi, size_t *bytes_written);
-+int ibwrt(struct gpib_board *board, u8 *buf, size_t cnt, int send_eoi, size_t *bytes_written);
- int ibstatus(struct gpib_board *board);
- int general_ibstatus(struct gpib_board *board, const struct gpib_status_queue *device,
- 		     int clear_mask, int set_mask, struct gpib_descriptor *desc);
- int io_timed_out(struct gpib_board *board);
--int ibppc(struct gpib_board *board, uint8_t configuration);
-+int ibppc(struct gpib_board *board, u8 configuration);
+diff --git a/drivers/staging/gpib/fmh_gpib/fmh_gpib.c b/drivers/staging/gpib/fmh_gpib/fmh_gpib.c
+index 30fbf1065de2..261d663cf8c1 100644
+--- a/drivers/staging/gpib/fmh_gpib/fmh_gpib.c
++++ b/drivers/staging/gpib/fmh_gpib/fmh_gpib.c
+@@ -48,7 +48,7 @@ static struct platform_driver fmh_gpib_platform_driver;
+ static struct pci_driver fmh_gpib_pci_driver;
  
- #endif /* GPIB_PROTO_INCLUDED */
+ // wrappers for interface functions
+-static int fmh_gpib_read(struct gpib_board *board, uint8_t *buffer, size_t length,
++static int fmh_gpib_read(struct gpib_board *board, u8 *buffer, size_t length,
+ 			 int *end, size_t *bytes_read)
+ {
+ 	struct fmh_priv *priv = board->private_data;
+@@ -56,7 +56,7 @@ static int fmh_gpib_read(struct gpib_board *board, uint8_t *buffer, size_t lengt
+ 	return nec7210_read(board, &priv->nec7210_priv, buffer, length, end, bytes_read);
+ }
+ 
+-static int fmh_gpib_write(struct gpib_board *board, uint8_t *buffer, size_t length,
++static int fmh_gpib_write(struct gpib_board *board, u8 *buffer, size_t length,
+ 			  int send_eoi, size_t *bytes_written)
+ {
+ 	struct fmh_priv *priv = board->private_data;
+@@ -64,7 +64,7 @@ static int fmh_gpib_write(struct gpib_board *board, uint8_t *buffer, size_t leng
+ 	return nec7210_write(board, &priv->nec7210_priv, buffer, length, send_eoi, bytes_written);
+ }
+ 
+-static int fmh_gpib_command(struct gpib_board *board, uint8_t *buffer, size_t length,
++static int fmh_gpib_command(struct gpib_board *board, u8 *buffer, size_t length,
+ 			    size_t *bytes_written)
+ {
+ 	struct fmh_priv *priv = board->private_data;
+@@ -108,7 +108,7 @@ static void fmh_gpib_remote_enable(struct gpib_board *board, int enable)
+ 	nec7210_remote_enable(board, &priv->nec7210_priv, enable);
+ }
+ 
+-static int fmh_gpib_enable_eos(struct gpib_board *board, uint8_t eos_byte, int compare_8_bits)
++static int fmh_gpib_enable_eos(struct gpib_board *board, u8 eos_byte, int compare_8_bits)
+ {
+ 	struct fmh_priv *priv = board->private_data;
+ 
+@@ -143,14 +143,14 @@ static int fmh_gpib_secondary_address(struct gpib_board *board, unsigned int add
+ 	return nec7210_secondary_address(board, &priv->nec7210_priv, address, enable);
+ }
+ 
+-static int fmh_gpib_parallel_poll(struct gpib_board *board, uint8_t *result)
++static int fmh_gpib_parallel_poll(struct gpib_board *board, u8 *result)
+ {
+ 	struct fmh_priv *priv = board->private_data;
+ 
+ 	return nec7210_parallel_poll(board, &priv->nec7210_priv, result);
+ }
+ 
+-static void fmh_gpib_parallel_poll_configure(struct gpib_board *board, uint8_t configuration)
++static void fmh_gpib_parallel_poll_configure(struct gpib_board *board, u8 configuration)
+ {
+ 	struct fmh_priv *priv = board->private_data;
+ 
+@@ -179,7 +179,7 @@ static void fmh_gpib_local_parallel_poll_mode(struct gpib_board *board, int loca
+ 	}
+ }
+ 
+-static void fmh_gpib_serial_poll_response2(struct gpib_board *board, uint8_t status,
++static void fmh_gpib_serial_poll_response2(struct gpib_board *board, u8 status,
+ 					   int new_reason_for_service)
+ {
+ 	struct fmh_priv *priv = board->private_data;
+@@ -214,7 +214,7 @@ static void fmh_gpib_serial_poll_response2(struct gpib_board *board, uint8_t sta
+ 	spin_unlock_irqrestore(&board->spinlock, flags);
+ }
+ 
+-static uint8_t fmh_gpib_serial_poll_status(struct gpib_board *board)
++static u8 fmh_gpib_serial_poll_status(struct gpib_board *board)
+ {
+ 	struct fmh_priv *priv = board->private_data;
+ 
+@@ -393,7 +393,7 @@ static int fmh_gpib_all_bytes_are_sent(struct fmh_priv *e_priv)
+ 	return 1;
+ }
+ 
+-static int fmh_gpib_dma_write(struct gpib_board *board, uint8_t *buffer, size_t length,
++static int fmh_gpib_dma_write(struct gpib_board *board, u8 *buffer, size_t length,
+ 			      size_t *bytes_written)
+ {
+ 	struct fmh_priv *e_priv = board->private_data;
+@@ -471,7 +471,7 @@ static int fmh_gpib_dma_write(struct gpib_board *board, uint8_t *buffer, size_t
+ 	return retval;
+ }
+ 
+-static int fmh_gpib_accel_write(struct gpib_board *board, uint8_t *buffer,
++static int fmh_gpib_accel_write(struct gpib_board *board, u8 *buffer,
+ 				size_t length, int send_eoi, size_t *bytes_written)
+ {
+ 	struct fmh_priv *e_priv = board->private_data;
+@@ -586,7 +586,7 @@ static int wait_for_tx_fifo_half_empty(struct gpib_board *board)
+ /* supports writing a chunk of data whose length must fit into the hardware'd xfer counter,
+  * called in a loop by fmh_gpib_fifo_write()
+  */
+-static int fmh_gpib_fifo_write_countable(struct gpib_board *board, uint8_t *buffer,
++static int fmh_gpib_fifo_write_countable(struct gpib_board *board, u8 *buffer,
+ 					 size_t length, int send_eoi, size_t *bytes_written)
+ {
+ 	struct fmh_priv *e_priv = board->private_data;
+@@ -652,7 +652,7 @@ static int fmh_gpib_fifo_write_countable(struct gpib_board *board, uint8_t *buff
+ 	return retval;
+ }
+ 
+-static int fmh_gpib_fifo_write(struct gpib_board *board, uint8_t *buffer, size_t length,
++static int fmh_gpib_fifo_write(struct gpib_board *board, u8 *buffer, size_t length,
+ 			       int send_eoi, size_t *bytes_written)
+ {
+ 	struct fmh_priv *e_priv = board->private_data;
+@@ -699,7 +699,7 @@ static int fmh_gpib_fifo_write(struct gpib_board *board, uint8_t *buffer, size_t
+ 	return retval;
+ }
+ 
+-static int fmh_gpib_dma_read(struct gpib_board *board, uint8_t *buffer,
++static int fmh_gpib_dma_read(struct gpib_board *board, u8 *buffer,
+ 			     size_t length, int *end, size_t *bytes_read)
+ {
+ 	struct fmh_priv *e_priv = board->private_data;
+@@ -848,7 +848,7 @@ static void fmh_gpib_release_rfd_holdoff(struct gpib_board *board, struct fmh_pr
+ 	spin_unlock_irqrestore(&board->spinlock, flags);
+ }
+ 
+-static int fmh_gpib_accel_read(struct gpib_board *board, uint8_t *buffer, size_t length,
++static int fmh_gpib_accel_read(struct gpib_board *board, u8 *buffer, size_t length,
+ 			       int *end, size_t *bytes_read)
+ {
+ 	struct fmh_priv *e_priv = board->private_data;
+@@ -898,7 +898,7 @@ static int fmh_gpib_accel_read(struct gpib_board *board, uint8_t *buffer, size_t
+ /* Read a chunk of data whose length is within the limits of the hardware's
+  * xfer counter.  Called in a loop from fmh_gpib_fifo_read().
+  */
+-static int fmh_gpib_fifo_read_countable(struct gpib_board *board, uint8_t *buffer,
++static int fmh_gpib_fifo_read_countable(struct gpib_board *board, u8 *buffer,
+ 					size_t length, int *end, size_t *bytes_read)
+ {
+ 	struct fmh_priv *e_priv = board->private_data;
+@@ -956,7 +956,7 @@ static int fmh_gpib_fifo_read_countable(struct gpib_board *board, uint8_t *buffe
+ 	return retval;
+ }
+ 
+-static int fmh_gpib_fifo_read(struct gpib_board *board, uint8_t *buffer, size_t length,
++static int fmh_gpib_fifo_read(struct gpib_board *board, u8 *buffer, size_t length,
+ 			      int *end, size_t *bytes_read)
+ {
+ 	struct fmh_priv *e_priv = board->private_data;
+diff --git a/drivers/staging/gpib/fmh_gpib/fmh_gpib.h b/drivers/staging/gpib/fmh_gpib/fmh_gpib.h
+index de6fd2164414..e7602d7e1401 100644
+--- a/drivers/staging/gpib/fmh_gpib/fmh_gpib.h
++++ b/drivers/staging/gpib/fmh_gpib/fmh_gpib.h
+@@ -124,13 +124,13 @@ static const unsigned int fifo_data_mask = 0x00ff;
+ static const unsigned int fifo_xfer_counter_mask = 0x0fff;
+ static const unsigned int fifo_max_burst_length_mask = 0x00ff;
+ 
+-static inline uint8_t gpib_cs_read_byte(struct nec7210_priv *nec_priv,
+-					unsigned int register_num)
++static inline u8 gpib_cs_read_byte(struct nec7210_priv *nec_priv,
++				   unsigned int register_num)
+ {
+ 	return readb(nec_priv->mmiobase + register_num * nec_priv->offset);
+ }
+ 
+-static inline void gpib_cs_write_byte(struct nec7210_priv *nec_priv, uint8_t data,
++static inline void gpib_cs_write_byte(struct nec7210_priv *nec_priv, u8 data,
+ 				      unsigned int register_num)
+ {
+ 	writeb(data, nec_priv->mmiobase + register_num * nec_priv->offset);
 -- 
 2.43.0
 
