@@ -1,132 +1,216 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 267F225A2DC;
-	Wed,  9 Apr 2025 09:50:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6877225C70B
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 09:51:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744192251; cv=none; b=neCUkGrK0cBtpkcZk2Oenn705enEw8r0L9T9x8UzX3CjASvlPoZxO/wzVIFUr5qWRT2g5WMbFdrqUQBEnRWiUCy+ogue0r6ZHvjCT3YaVPlz8xhxH7ImuugEeUcfNXV6P762OqASGBvQLUsuytQQ6DRBEuK9B3cqoZRhRYo8mnc=
+	t=1744192264; cv=none; b=AVnCN3dTf2+Gd4+AYK/EO/JrXY15h+YIv5hwmdfJguHcljXCva0MIg9iYzeiZBGjD+XkUaT40EulXNcLt4Ag95WccyWDGNsIMe0B2Nk6iZGzZlBFRuewNu5bI2jnPfYs5GhIt1UHejDs6sIemmNPj6mbS2oXbP6t0EMrgxqpQKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744192251; c=relaxed/simple;
-	bh=3Xy1d0ZKCKOQ3MBUYJIkxShddwZ/IF8I+/NfadY8KBs=;
+	s=arc-20240116; t=1744192264; c=relaxed/simple;
+	bh=DpUkIKGDpIBV3cYAXbEup5OjKbfXtLEX/LwSCYEclE8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fsSS8ZmuJehMvIZ9Rok18IU8N9YztPOS6v8k8wHOU6pDTN9BSq1sTQFRU6piKAnaKXFReEMvH+Eh+y/4l+3CKXelTlwpNf6AOodYku/Moj/rW5MlMcgL+2AGHMe7mvu6GytACIWMiWIFUsQytbna+10TwyQNwbPQxWojJ/D6u2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MNzdfvrq; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=aBOGCzkyLR2OzYCXxIKjC3BrC3rFBw2Ye7oIsJucD+RmNG15+sGnI3dhv6Jggz4r43Qnxthj2oq8SKlX7KUDnKGjIry3PD7My2wNiPnLf7s0V8Tn70Lq7R5ZtxiTxBVddfILkNlXTobdy9ePMIc/f3VbLtSwwsaLUph2tLSDnyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=n/mXTtzP; arc=none smtp.client-ip=209.85.221.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MNzdfvrq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99EEFC4CEEC;
-	Wed,  9 Apr 2025 09:50:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744192250;
-	bh=3Xy1d0ZKCKOQ3MBUYJIkxShddwZ/IF8I+/NfadY8KBs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=MNzdfvrqD3KPqxzYt3+xIIy8bnPL/qmzlLmAsmcF6ceCFXY55RNc9HhomphjQuHy7
-	 cLm6wCVpt4WpmbrqeLfqn72WTJ6sZTQ9ZpStlhUDBV1dG7V1Cw77mPkURm128PozmX
-	 d5X7G0zMsBwJ3CJJRFurEtwUFkN2COUjfmHRf/JadXY2fZr/rqoKZ16sIKcp9yB2/Z
-	 ugOPr0ZjA9i0gGp8zYbl2JsSUeoOx4FN8cxODE1/UUY+cwDPeCjaRwa5JmXofVIeVz
-	 rcB60nZt4Qn7jhCEcn4r9R1Tmtt+RV0zIyfpLrJCk3pOG0qcn50fNglIrF3oCw1utx
-	 pEGV0E716PwIw==
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5e5c9662131so10209942a12.3;
-        Wed, 09 Apr 2025 02:50:50 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU69t5H0LGpyRbxntKauCfNQ/aiYNJKinVjChHRO2GoWDsPz3Ybf4IvUd8mcK6za5Kf6TL9JUUunbRrvIgb@vger.kernel.org, AJvYcCWyB8t5FkEeF9AsSV7UJiqBBU9lcYuTy14BqabE0v2KCHm4dHgXoIhrVxUBDNz7QL9CL/9idJjzsT0wdA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQMrJGVNhAjBdNy8D28hC1iE3luiF3j73cAOWYD0DNre54DIBi
-	4qVMINL0CFAL/jA58QUEurrLOwe0eQmnx0q29wxEE3iDf2Nbvf6NLdwrc/B5lilUALEiBMCvXVd
-	WhSisbp/OxEwA0mWTipjkAB6iyB4=
-X-Google-Smtp-Source: AGHT+IEQPRgz05B5cbUBeFx6ljVX3NfUNAODD2oo5w8cUjx/V6yY1vctEbX9Jt45SZyIT2g8yRkjj4ew0h7AXUvZMYY=
-X-Received: by 2002:a17:907:6094:b0:abf:4bde:51b1 with SMTP id
- a640c23a62f3a-aca9b65e5d9mr250602966b.21.1744192249141; Wed, 09 Apr 2025
- 02:50:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n/mXTtzP"
+Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-52403e39a23so5205856e0c.2
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 02:51:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744192260; x=1744797060; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1njNObE6GIJqOAUn6DtRc5r3V4Q5XV6eVkgK12erEv4=;
+        b=n/mXTtzPLQGerKvlRcpBFBjJb/WS639fjIVNzGQUqR6egcxs8mSi7bbSGNJOAOQam7
+         8XNaDo2tUGNhAVDE18HMejiyv8gvtoGnlRGZfhzUTXsJS9A7Rs+qXziA01kj9gD4IUXu
+         UR4xV8Aty/ZfMyXlhJh6kTYs1/EG63m06nqo/gPrJFkJ1NWGrP7eYQpJn3+VOODaqWFl
+         0rQp/WyuL47Yc+4IaBQwAXuM0KsynVc9kcrKnI/7zLPsT0LccxFq0Dwi+t4Zr5J8VAM1
+         PGeql7h7+ZH+L3+cep4W/85P/PFf25CNLfbYQntJevEIZTsINhcRLnPUYkAcjuhL5wnV
+         xg2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744192260; x=1744797060;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1njNObE6GIJqOAUn6DtRc5r3V4Q5XV6eVkgK12erEv4=;
+        b=l/8wVfkUDdfXmro2mRqSlzcS6VpTOpkrTFK1m47fhwuhnD11PIgr7WYref1mycltF7
+         40NLJJWd1MJ9/53VDmozoMAuaWoZ5o7eUjwswLzu8wvImaXd5lE0SjqY8eI6ZtVSwUgK
+         +rpXqfUV6DMIF4gpdK/pVL4gUDhcm7u43m30xQnP1m7KphVUOI2wIenofVWBpLVQ89NF
+         VR+2//i9IiG15CvjElNeHAHuJRo6mjjxqWWzG714DKns1c016nWq0nETxiCzpPzlWM5d
+         441gCRd/FIyGH2Y+Z6IqM4N/vYhVDc2qYWWNWDQlgLG/3zZyOCWPOm+tcXYBCVn8r18K
+         qkiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVoGyqdDcBmg4f0Dc0QzwKmGWRWf6kglqbWubokj9inFjTzq3qAaE8EWmOdnWuRLxuQNpLj1WlooiDOn5c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLZ4zcbZiOAwwBfvLsh/1hh+ho/yMUk3axyu3IhFDcKiVRECNl
+	rH95SyngwaiY9WZKPYXSfDYKco4j5fSkNG2d6BWTGm7DH6FPl1B1tADhjNENTEpfBlPkslU7GG0
+	m+f+d/BG8FS6BoDtDaAgxG3y1pdPI5e3e8kiPDw==
+X-Gm-Gg: ASbGnctS8ye0TetPBdNYqHKw4duoVwQXJ1geMU7j2PWLhHaMdF5ShbWvimUVF3bXHtl
+	OBXOU5XWxqCgdG7jxLScXm0V+igLQOSIXqVUuD44SyGqKmX4mH+rAvZP1YOzP8gxNuD9EziJk21
+	99u9ew5I36gLg2spKpD9S8QDK9SFKhBrilQqP2F3zc4ZOpAwROICJU5Mk=
+X-Google-Smtp-Source: AGHT+IHsG0WKPLT9y5IYgBaUgVr1z4LIH9R6xpKkJTuJ5byGHhHn7WE9slVfaWZ/SR14YCSc7WcOvPakH+olVCjROHA=
+X-Received: by 2002:a05:6102:570f:b0:4bb:e80b:473d with SMTP id
+ ada2fe7eead31-4c9c41848f6mr1465104137.6.1744192260230; Wed, 09 Apr 2025
+ 02:51:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250408122933.121056-1-frank.li@vivo.com> <20250408122933.121056-4-frank.li@vivo.com>
- <CAL3q7H7BS6juCS0eRdo6sqM4jzeMMi1o=huG38wgKYumD7qmmw@mail.gmail.com> <20250408230413.GE13292@twin.jikos.cz>
-In-Reply-To: <20250408230413.GE13292@twin.jikos.cz>
-From: Filipe Manana <fdmanana@kernel.org>
-Date: Wed, 9 Apr 2025 10:50:12 +0100
-X-Gmail-Original-Message-ID: <CAL3q7H49CYEJWv6-zDY2VxTL5MgJtrFL+KEwKrJJFii-exmyyA@mail.gmail.com>
-X-Gm-Features: ATxdqUGWs7SG0Cm4MKLLdiioCwAgCiDq-AAk_INdDxbCxU24Q__DQFEKYn-nw64
-Message-ID: <CAL3q7H49CYEJWv6-zDY2VxTL5MgJtrFL+KEwKrJJFii-exmyyA@mail.gmail.com>
-Subject: Re: [PATCH 4/4] btrfs: Fix transaction abort during failure in del_balance_item()
-To: dsterba@suse.cz
-Cc: Yangtao Li <frank.li@vivo.com>, clm@fb.com, josef@toxicpanda.com, dsterba@suse.com, 
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250408104820.353768086@linuxfoundation.org>
+In-Reply-To: <20250408104820.353768086@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 9 Apr 2025 15:20:48 +0530
+X-Gm-Features: ATxdqUHXBcjtcqSTk0bz5Hn75TBoEbSUnr0VzKiWJ8WGDtcsvBL0fc7wW3KoqtA
+Message-ID: <CA+G9fYty2+wHZUUVBWposQB1uDV+Z-b3+5HgsJP-a=z3pjEseQ@mail.gmail.com>
+Subject: Re: [PATCH 5.10 000/227] 5.10.236-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 9, 2025 at 12:04=E2=80=AFAM David Sterba <dsterba@suse.cz> wrot=
-e:
+On Tue, 8 Apr 2025 at 16:26, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> On Tue, Apr 08, 2025 at 03:53:04PM +0100, Filipe Manana wrote:
-> > On Tue, Apr 8, 2025 at 1:19=E2=80=AFPM Yangtao Li <frank.li@vivo.com> w=
-rote:
-> > >
-> > > Handle errors by adding explicit btrfs_abort_transaction
-> > > and btrfs_end_transaction calls.
-> >
-> > Again, like in the previous patch, why?
-> > This provides no reason at all why we should abort.
-> > And the same comment below.
-> >
-> > >
-> > > Signed-off-by: Yangtao Li <frank.li@vivo.com>
-> > > ---
-> > >  fs/btrfs/volumes.c | 11 +++++++----
-> > >  1 file changed, 7 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
-> > > index 347c475028e0..23739d18d833 100644
-> > > --- a/fs/btrfs/volumes.c
-> > > +++ b/fs/btrfs/volumes.c
-> > > @@ -3777,7 +3777,7 @@ static int del_balance_item(struct btrfs_fs_inf=
-o *fs_info)
-> > >         struct btrfs_trans_handle *trans;
-> > >         BTRFS_PATH_AUTO_FREE(path);
-> > >         struct btrfs_key key;
-> > > -       int ret, err;
-> > > +       int ret;
-> > >
-> > >         path =3D btrfs_alloc_path();
-> > >         if (!path)
-> > > @@ -3800,10 +3800,13 @@ static int del_balance_item(struct btrfs_fs_i=
-nfo *fs_info)
-> > >         }
-> > >
-> > >         ret =3D btrfs_del_item(trans, root, path);
-> > > +       if (ret)
-> > > +               goto out;
-> > > +
-> > > +       return btrfs_commit_transaction(trans);
-> > >  out:
-> > > -       err =3D btrfs_commit_transaction(trans);
-> > > -       if (err && !ret)
-> > > -               ret =3D err;
-> > > +       btrfs_abort_transaction(trans, ret);
-> > > +       btrfs_end_transaction(trans);
-> >
-> > A transaction abort will turn the fs into RO mode, and it's meant to
-> > be used when we can't proceed with changes to the fs after we did
-> > partial changes, to avoid leaving things in an inconsistent state.
-> > Here we don't abort because we haven't done any changes before using
-> > the transaction handle, so an abort is pointless and will turn the fs
-> > into RO mode unnecessarily.
+> This is the start of the stable review cycle for the 5.10.236 release.
+> There are 227 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> The del_balance_item() case seems to be unique, there's only one caller
-> reset_balance_state() that calls btrfs_handle_fs_error() in case of an
-> error. This is almost the same as a transaction abort, but
-> del_balance_item() may be called from various contexts.
+> Responses should be made by Thu, 10 Apr 2025 10:47:53 +0000.
+> Anything received after that time might be too late.
 >
-> The error handling may be improved here, e.g. some callers may care
-> about the actual error of del_balance_item/reset_balance_state, but
-> rather a hard transaction abort it could be better to handle it more
-> gracefully for operations that are restartable, like return an EAGAIN.
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.10.236-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.10.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-That's just not possible in 2 cases out of 3 (btrfs_cancel_balance()
-being the exception where it's possible), since we already have an
-error return value to return to user space.
-The btrfs_handle_fs_error() call is exaggerated and doesn't accomplish
-anything as the balance item was already persisted in a transaction
-committed previously.
+
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
+
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+## Build
+* kernel: 5.10.236-rc1
+* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
+rc.git
+* git commit: 327fc1af5609fca2b091894de2ee904fa6391306
+* git describe: v5.10.235-228-g327fc1af5609
+* test details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.10.y/build/v5.10=
+.235-228-g327fc1af5609
+
+## Test Regressions (compared to v5.10.234-463-g92c950d96187)
+
+## Metric Regressions (compared to v5.10.234-463-g92c950d96187)
+
+## Test Fixes (compared to v5.10.234-463-g92c950d96187)
+
+## Metric Fixes (compared to v5.10.234-463-g92c950d96187)
+
+## Test result summary
+total: 39096, pass: 26647, fail: 2806, skip: 9346, xfail: 297
+
+## Build Summary
+* arc: 5 total, 5 passed, 0 failed
+* arm: 101 total, 101 passed, 0 failed
+* arm64: 30 total, 30 passed, 0 failed
+* i386: 22 total, 22 passed, 0 failed
+* mips: 22 total, 22 passed, 0 failed
+* parisc: 3 total, 0 passed, 3 failed
+* powerpc: 21 total, 21 passed, 0 failed
+* riscv: 9 total, 9 passed, 0 failed
+* s390: 9 total, 9 passed, 0 failed
+* sh: 10 total, 10 passed, 0 failed
+* sparc: 6 total, 6 passed, 0 failed
+* x86_64: 26 total, 26 passed, 0 failed
+
+## Test suites summary
+* boot
+* kselftest-arm64
+* kselftest-breakpoints
+* kselftest-capabilities
+* kselftest-cgroup
+* kselftest-clone3
+* kselftest-core
+* kselftest-cpu-hotplug
+* kselftest-cpufreq
+* kselftest-efivarfs
+* kselftest-exec
+* kselftest-fpu
+* kselftest-ftrace
+* kselftest-futex
+* kselftest-gpio
+* kselftest-intel_pstate
+* kselftest-ipc
+* kselftest-kcmp
+* kselftest-membarrier
+* kselftest-memfd
+* kselftest-mincore
+* kselftest-mqueue
+* kselftest-net
+* kselftest-net-mptcp
+* kselftest-openat2
+* kselftest-ptrace
+* kselftest-rseq
+* kselftest-rtc
+* kselftest-sigaltstack
+* kselftest-size
+* kselftest-tc-testing
+* kselftest-timers
+* kselftest-tmpfs
+* kselftest-tpm2
+* kselftest-user_events
+* kselftest-vDSO
+* kselftest-x86
+* kunit
+* libgpiod
+* libhugetlbfs
+* log-parser-boot
+* log-parser-build-clang
+* log-parser-build-gcc
+* log-parser-test
+* ltp-capability
+* ltp-commands
+* ltp-containers
+* ltp-controllers
+* ltp-cpuhotplug
+* ltp-crypto
+* ltp-cve
+* ltp-dio
+* ltp-fcntl-locktests
+* ltp-fs
+* ltp-fs_bind
+* ltp-fs_perms_simple
+* ltp-hugetlb
+* ltp-ipc
+* ltp-math
+* ltp-mm
+* ltp-nptl
+* ltp-pty
+* ltp-sched
+* ltp-smoke
+* ltp-syscalls
+* ltp-tracing
+* perf
+* rcutorture
+
+--
+Linaro LKFT
+https://lkft.linaro.org
