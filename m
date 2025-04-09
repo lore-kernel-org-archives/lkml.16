@@ -1,30 +1,32 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2BAF25C6FB;
-	Wed,  9 Apr 2025 11:27:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9819B25E444
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 11:27:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744198045; cv=none; b=FKizg8hbQgdVSyKdqwcke0TuigV15DaWBhfsjbLMjAZ38m11Cwm+MMPBOGphMx5+oGEB5JumnZ0BTPTt02n83dRkOng0EskFGI5ciE+amfKfP7X/GRQ0bdwHs4I7J9jXS+00/4R8DSX3Au05NfmRiXPXwjehKh9gAKt7g8yM7vk=
+	t=1744198054; cv=none; b=E5/66yaAm3YfUYbD8n4hIxFFYldIUujYYBDiOadTsPFuL2SsIMkBuzxKUKjWWsvLk1/RPwT8MWZOhcf8RJwJEoWvzo+ebkUyyWWoTIEBh8GtJQpyfr7ccks/WaK26OWDLocEA1Vyil8pLTndTXLGjXFaEMcm3tNzUGZ9s3Mu3U4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744198045; c=relaxed/simple;
-	bh=+o22E5RcH+sglBGMSqX6O933OVxTfE119DlmXip/o50=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nzKUX7pYlGlTWhuYlqenljnCvOxJt+6yrtjeF0BjaDqB97o7q/b81/shL516aiARNbV6EnUCw3JDN4oTVy2uUG73K3NFFAfNPJgY4Y2kWiwhJOvqubN97Ci7pxJWQ3f5GRkLW8BKf4inEnGU9363E7N6oOWFHZXiL+FLlmD7420=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Stl/b+pz; arc=none smtp.client-ip=91.218.175.178
+	s=arc-20240116; t=1744198054; c=relaxed/simple;
+	bh=jaCCEhMu/ZA7sNNf4gB18lq+LJhArWLfsHwTE2hLXVQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=QW8ruZhmXYlypUSSJkjp+RaICyMSGznI08EK4c/3LYcBG3SoucJSQOnMv3hxE4221O73TkyLWYmWy930Eufp039bXhUWZDF+rZPMmcWc4brWkk5w4kAbPPq/UG5NoSbwvwStvxvKpzFmKoItKy0YH1/us5VYo//m27yi8TtV/vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Yxfa/goX; arc=none smtp.client-ip=91.218.175.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Stl/b+pz"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Yxfa/goX"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744198037;
+	t=1744198048;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=dYki+8hZ1VIAcnV82v/klkogc/Iawb6YfIpaQ5C6q3k=;
-	b=Stl/b+pz4nWZWrB4ZorspouS2L3UN47q7kcQ8QaoOa3j2K2lS490bmEngmKNLDPqzcrOgU
-	pCDnginI67mJb8d5ZbCvcneL6MJ8bFqDDaUo2QDuMjezS9ogpOsd49vQ9YTqYdlXdAxxfx
-	C7un6NwtR/Y79Tq7Hpe9f0DR00t9uQ8=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eHvtp7YYn14B2Q4ebk0uMqwmp3eob0evSrA9m3c+UEQ=;
+	b=Yxfa/goXZBtmGnp5S09KtoaQhl98YQFgcWQAy8eTr2vB+tKQiqY2gRphBfbWKDHiqI1q1g
+	ZU3er5dRisadh4ZzGfQN9Z/bYRMfefT1SEVbV6Em3T88Q2cqRnIYrWAsVWin9VXQlv7MKL
+	zCo8G9W3yjPl2DdzlArSGfFIu+oRbxc=
 From: Jiayuan Chen <jiayuan.chen@linux.dev>
 To: kuba@kernel.org,
 	edumazet@google.com
@@ -44,9 +46,11 @@ Cc: mrpre@163.com,
 	netdev@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v4 0/2] tcp: add a new TW_PAWS drop reason
-Date: Wed,  9 Apr 2025 19:26:03 +0800
-Message-ID: <20250409112614.16153-1-jiayuan.chen@linux.dev>
+Subject: [PATCH net-next v4 1/2] tcp: add TCP_RFC7323_TW_PAWS drop reason
+Date: Wed,  9 Apr 2025 19:26:04 +0800
+Message-ID: <20250409112614.16153-2-jiayuan.chen@linux.dev>
+In-Reply-To: <20250409112614.16153-1-jiayuan.chen@linux.dev>
+References: <20250409112614.16153-1-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,7 +63,7 @@ X-Migadu-Flow: FLOW_OUT
 Devices in the networking path, such as firewalls, NATs, or routers, which
 can perform SNAT or DNAT, use addresses from their own limited address
 pools to masquerade the source address during forwarding, causing PAWS
-verification to fail more easily under TW status.
+verification to fail more easily.
 
 Currently, packet loss statistics for PAWS can only be viewed through MIB,
 which is a global metric and cannot be precisely obtained through tracing
@@ -67,44 +71,133 @@ to get the specific 4-tuple of the dropped packet. In the past, we had to
 use kprobe ret to retrieve relevant skb information from
 tcp_timewait_state_process().
 
-We add a drop_reason pointer and a new counter.
+We add a drop_reason pointer, similar to what previous commit does:
+commit e34100c2ecbb ("tcp: add a drop_reason pointer to tcp_check_req()")
 
+This commit addresses the PAWSESTABREJECTED case and also sets the
+corresponding drop reason.
+
+We use 'pwru' to test.
+
+Before this commit:
+''''
+./pwru 'port 9999'
+2025/04/07 13:40:19 Listening for events..
+TUPLE                                        FUNC
+172.31.75.115:12345->172.31.75.114:9999(tcp) sk_skb_reason_drop(SKB_DROP_REASON_NOT_SPECIFIED)
+'''
+
+After this commit:
+'''
+./pwru 'port 9999'
+2025/04/07 13:51:34 Listening for events..
+TUPLE                                        FUNC
+172.31.75.115:12345->172.31.75.114:9999(tcp) sk_skb_reason_drop(SKB_DROP_REASON_TCP_RFC7323_TW_PAWS)
+'''
+
+Suggested-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
 ---
-v3 -> v4:
-1. Update commit message and make it more concise.
-2. Integrated Reviewed-by tag from v3.
-https://lore.kernel.org/netdev/20250407140001.13886-1-jiayuan.chen@linux.dev/T/#t
+ include/net/dropreason-core.h | 6 ++++++
+ include/net/tcp.h             | 3 ++-
+ net/ipv4/tcp_ipv4.c           | 3 ++-
+ net/ipv4/tcp_minisocks.c      | 7 +++++--
+ net/ipv6/tcp_ipv6.c           | 3 ++-
+ 5 files changed, 17 insertions(+), 5 deletions(-)
 
-v2 -> v3: Use new SNMP counter and drop reason suggested by Eric.
-https://lore.kernel.org/netdev/5cdc1bdd9caee92a6ae932638a862fd5c67630e8@linux.dev/T/#t
-
-I didn't provide a packetdrill script.
-I struggled for a long time to get packetdrill to fix the client port, but
-ultimately failed to do so...
-
-Instead, I wrote my own program to trigger PAWS, which can be found at
-https://github.com/mrpre/nettrigger/tree/main
-'''
-//assume nginx running on 172.31.75.114:9999, current host is 172.31.75.115
-iptables -t filter -I OUTPUT -p tcp --sport 12345 --tcp-flags RST RST -j DROP
-./nettrigger -i eth0 -s 172.31.75.115:12345 -d 172.31.75.114:9999 -action paws
-'''
-
-
-Jiayuan Chen (2):
-  tcp: add TCP_RFC7323_TW_PAWS drop reason
-  tcp: add LINUX_MIB_PAWS_TW_REJECTED counter
-
- Documentation/networking/net_cachelines/snmp.rst | 2 ++
- include/net/dropreason-core.h                    | 7 +++++++
- include/net/tcp.h                                | 3 ++-
- include/uapi/linux/snmp.h                        | 1 +
- net/ipv4/proc.c                                  | 1 +
- net/ipv4/tcp_ipv4.c                              | 3 ++-
- net/ipv4/tcp_minisocks.c                         | 9 ++++++---
- net/ipv6/tcp_ipv6.c                              | 3 ++-
- 8 files changed, 23 insertions(+), 6 deletions(-)
-
+diff --git a/include/net/dropreason-core.h b/include/net/dropreason-core.h
+index e4fdc6b54cef..9701d7f936f6 100644
+--- a/include/net/dropreason-core.h
++++ b/include/net/dropreason-core.h
+@@ -40,6 +40,7 @@
+ 	FN(TCP_OFOMERGE)		\
+ 	FN(TCP_RFC7323_PAWS)		\
+ 	FN(TCP_RFC7323_PAWS_ACK)	\
++	FN(TCP_RFC7323_TW_PAWS)		\
+ 	FN(TCP_RFC7323_TSECR)		\
+ 	FN(TCP_LISTEN_OVERFLOW)		\
+ 	FN(TCP_OLD_SEQUENCE)		\
+@@ -283,6 +284,11 @@ enum skb_drop_reason {
+ 	 * Corresponds to LINUX_MIB_PAWS_OLD_ACK.
+ 	 */
+ 	SKB_DROP_REASON_TCP_RFC7323_PAWS_ACK,
++	/**
++	 * @SKB_DROP_REASON_TCP_RFC7323_TW_PAWS: PAWS check, socket is in
++	 * TIME_WAIT state.
++	 */
++	SKB_DROP_REASON_TCP_RFC7323_TW_PAWS,
+ 	/**
+ 	 * @SKB_DROP_REASON_TCP_RFC7323_TSECR: PAWS check, invalid TSEcr.
+ 	 * Corresponds to LINUX_MIB_TSECRREJECTED.
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index 4450c384ef17..5078ad868fee 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -427,7 +427,8 @@ enum tcp_tw_status {
+ enum tcp_tw_status tcp_timewait_state_process(struct inet_timewait_sock *tw,
+ 					      struct sk_buff *skb,
+ 					      const struct tcphdr *th,
+-					      u32 *tw_isn);
++					      u32 *tw_isn,
++					      enum skb_drop_reason *drop_reason);
+ struct sock *tcp_check_req(struct sock *sk, struct sk_buff *skb,
+ 			   struct request_sock *req, bool fastopen,
+ 			   bool *lost_race, enum skb_drop_reason *drop_reason);
+diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
+index 8cce0d5489da..d5b5c32115d2 100644
+--- a/net/ipv4/tcp_ipv4.c
++++ b/net/ipv4/tcp_ipv4.c
+@@ -2417,7 +2417,8 @@ int tcp_v4_rcv(struct sk_buff *skb)
+ 		goto csum_error;
+ 	}
+ 
+-	tw_status = tcp_timewait_state_process(inet_twsk(sk), skb, th, &isn);
++	tw_status = tcp_timewait_state_process(inet_twsk(sk), skb, th, &isn,
++					       &drop_reason);
+ 	switch (tw_status) {
+ 	case TCP_TW_SYN: {
+ 		struct sock *sk2 = inet_lookup_listener(net,
+diff --git a/net/ipv4/tcp_minisocks.c b/net/ipv4/tcp_minisocks.c
+index fb9349be36b8..27511bf58c0f 100644
+--- a/net/ipv4/tcp_minisocks.c
++++ b/net/ipv4/tcp_minisocks.c
+@@ -97,7 +97,8 @@ static void twsk_rcv_nxt_update(struct tcp_timewait_sock *tcptw, u32 seq,
+  */
+ enum tcp_tw_status
+ tcp_timewait_state_process(struct inet_timewait_sock *tw, struct sk_buff *skb,
+-			   const struct tcphdr *th, u32 *tw_isn)
++			   const struct tcphdr *th, u32 *tw_isn,
++			   enum skb_drop_reason *drop_reason)
+ {
+ 	struct tcp_timewait_sock *tcptw = tcp_twsk((struct sock *)tw);
+ 	u32 rcv_nxt = READ_ONCE(tcptw->tw_rcv_nxt);
+@@ -245,8 +246,10 @@ tcp_timewait_state_process(struct inet_timewait_sock *tw, struct sk_buff *skb,
+ 		return TCP_TW_SYN;
+ 	}
+ 
+-	if (paws_reject)
++	if (paws_reject) {
++		*drop_reason = SKB_DROP_REASON_TCP_RFC7323_TW_PAWS;
+ 		__NET_INC_STATS(twsk_net(tw), LINUX_MIB_PAWSESTABREJECTED);
++	}
+ 
+ 	if (!th->rst) {
+ 		/* In this case we must reset the TIMEWAIT timer.
+diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
+index b03c223eda4f..7dcb33f879ee 100644
+--- a/net/ipv6/tcp_ipv6.c
++++ b/net/ipv6/tcp_ipv6.c
+@@ -1970,7 +1970,8 @@ INDIRECT_CALLABLE_SCOPE int tcp_v6_rcv(struct sk_buff *skb)
+ 		goto csum_error;
+ 	}
+ 
+-	tw_status = tcp_timewait_state_process(inet_twsk(sk), skb, th, &isn);
++	tw_status = tcp_timewait_state_process(inet_twsk(sk), skb, th, &isn,
++					       &drop_reason);
+ 	switch (tw_status) {
+ 	case TCP_TW_SYN:
+ 	{
 -- 
 2.47.1
 
