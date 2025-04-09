@@ -1,247 +1,151 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00888267734;
-	Wed,  9 Apr 2025 15:09:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF98267F6C
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 15:09:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744211392; cv=none; b=Zr9N6RBlnThogZTNGFPpxtGG+A98w+PLH9rzKcAvZ0ZzPB771Ud9zJNQcbj8hcGpAZV8npLcWKl04T13pyyKb/UOsilFwbxz48cAAWVePxt7Xb0esZzxC4t+4dORv0NFkI9rAzarkwcM8XisRcd7pyGX7EjR3+8tXxGfpqJO1n4=
+	t=1744211396; cv=none; b=Us4OC00R7wlJjlUgmoeRB0taY/V0E6ahtl2zivgBHNzHOYp7UxP2ml2SUoaZ0J/ZIE2rBWAUw2fZVJ9aMLs83DPBDRM0pnew8tDjZo7dp+WIgy5UYFiyDYXXQFtYtLn2kDUMGqQjG3h5RfoiIVTszDZ+ga8NNMpde2VQHLRb0BM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744211392; c=relaxed/simple;
-	bh=vdppM8d0ErL/ETCZvsFANbRA3p6PjXQ2zYGfKhb7umU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=a0eVYnSUSoEgvXpDhzO9k/3uY461uvgHwLeocw86FQUeJ2B663PxMTiQ4DvnRxzPvzq4APtaxFEPgSKhx7vm5c+YU5juUvItFHyVyECJlc4ReSemYSPTXzRt+zKZbYeev/f2HoOfy1s5Z2ifDB1ltSgIBjdq57+8Wj1pa7yjxTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NF1Yq1aX; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744211396; c=relaxed/simple;
+	bh=ZgPt0kY4v51PrWRwjEFd1UVcxTCxhC8NiE86uy2w7SY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mvuOtRGZyJmiHtKdj7zq0Jrbx+HNpQlViPrX2QY9woofUoiTJW1BluTtEWXZqVdz8AHYCgk7+1Qx3lDQeW7nhyKk0U0kB8dw1/w4GiAWGEvXLg/+BUkjXDphgHsT8nVFXmXOD1lt7bsmmDb2LoS4j9pqUvrGyK1amCf8AC4MG5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dF/+tUgb; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NF1Yq1aX"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-73bb647eb23so528152b3a.0;
-        Wed, 09 Apr 2025 08:09:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744211390; x=1744816190; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PrhjGmovgh/xIKQ/o/j6ahrmcFyr6axBEkfxzGvYCyc=;
-        b=NF1Yq1aXNz8PnJaUidx4qqKFbMdnsw7eQJIQ68rgk53AJf/pj81i1X4W47g20/K04P
-         Zgs6SONQ4pgYMcpWXtQg2kEqSjjr58ACQzfvowPy5c2iwuUD8IVl+XpRD0xye8sgOFx3
-         JRT1zYHQPAULTVFmm/2uWbpxTRPJoOXan02twtD/gknFZHhKQHyvAv9A6lJdM1eZk7fu
-         nzZhiov4g15uMQmzO074tZ+aNmGAG4H1N5AckwySPjtoOJZz21oa8P94YcLGNmXVHs2r
-         u5pQ32D7OGVa9lrfvsrqCu1BG/ecNG4uHTfUUBvBqJaWUWJOPj363VS4O7KdvgoiZnd6
-         jlww==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dF/+tUgb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744211393;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=B57j4Ps108WJ39MtEA7WB4JULRneEM8e8M06m5Z+dPI=;
+	b=dF/+tUgbuupjhVv9H07zxI4cQUX731qYGJfE63WcBTJ5IoUZyMC2icRibtK42u/S38yc5i
+	ZWCZssRfYW/CjxiNwn6HBhObbziTOmzPWPE6k/L57sr/Kt5rFgMuU112eCzorsu6g6S0IJ
+	5xeh5j+67/K6oxrByMMR08INCsZyb5M=
+Received: from mail-yw1-f200.google.com (mail-yw1-f200.google.com
+ [209.85.128.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-615-vUz62eWFOZm305aVqBE-Sw-1; Wed, 09 Apr 2025 11:09:50 -0400
+X-MC-Unique: vUz62eWFOZm305aVqBE-Sw-1
+X-Mimecast-MFC-AGG-ID: vUz62eWFOZm305aVqBE-Sw_1744211390
+Received: by mail-yw1-f200.google.com with SMTP id 00721157ae682-6fda4eaca22so76041957b3.2
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 08:09:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1744211390; x=1744816190;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=PrhjGmovgh/xIKQ/o/j6ahrmcFyr6axBEkfxzGvYCyc=;
-        b=CQxA9plgVUNalLA2vILQO7EiVze9XdzI4cizcHHpU7he2JX/I7UVfkR/UyeFILGbl0
-         MS3GYYe7rjiuCLts5FHL0Ei+a9wINQpMdDPJmmgkdqJeqZdWsMkHjGlQxyUO5+HySOQ3
-         uKwt4TeovGKuBSR4ortQP7x0BF98z8+LDkr02KP6iQF4dKbeEU1SWUc0gIXYl+gbgrGc
-         +3rSV4Rqz5FlKNnoJi5lOE7R3HcFJPc49v9fH9ToD9ilS8Q5Elj3egxFkASJct/D11OE
-         mBiSZbD3cQnLLzUaf7V/den7eYxApaQ0Xls0AlzJKqrK0AonS9vNYTPtVGWzox6XE9D2
-         qR9g==
-X-Forwarded-Encrypted: i=1; AJvYcCVJKfowE6Fr0JRooq7w5CCYPg9NGkqhuu0RXVxK5txxXXqGRPvdiKe9drWbMLbyOGVvfSbOwot88E1EfXg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIUqm4zHdyeJAN54OnEkC3FW15S2asESsjHuidMD5c6lt365/4
-	4hS6E/C14y5MqTIgP1FcK9bKYvtPt82jcTgVdUzs4nSNyfYUVLwLSFKwCBQ=
-X-Gm-Gg: ASbGnctkg1k60jxg+ovh0GLhD7zsF07NVZldSA9IuAzVBcXjLHb1fd3gZ2Z2wdDSJO+
-	5scOTpbWEKvnOsHwyBP3t+1kJDt6AjXtdiLi2nBHCtCzjrNdxFV6jTaAv3PpbWKZh7zPQWA+fYO
-	ZWL4phutuYRVa7tAF2i+N8qGd7mg3UkGb9qK9EvelnrynJ1mB2v5EqC9Rj3wfpgHWjxZjmte5ft
-	wEgqD2MDvCxeKtvmcQsq/97Y8ld2KSyIGhbjzlobgFlkiKH5tizxlg1h2xZgSmTNLKjyGZmMGB7
-	0U+VjwiV0AkP3u6Sk0w60MHZs72xPtDKAAxhXJxoIHhgDwA/uuAa7vHJ7iZxpegRdtCFSrmMu9j
-	Hhy4y01/ToX+WNlYXLyXlakQ+szhWDI5qfA==
-X-Google-Smtp-Source: AGHT+IEIV1TLo6IjW7UX9fiLk7WZ/GDX3g7tYEHzjwBt+yjiWaho+mHufK8BtbWBlnDd3P8oi+X+ZA==
-X-Received: by 2002:a05:6a00:ad6:b0:736:7a00:e522 with SMTP id d2e1a72fcca58-73bafbc6364mr3867472b3a.2.1744211389732;
+        bh=B57j4Ps108WJ39MtEA7WB4JULRneEM8e8M06m5Z+dPI=;
+        b=GunKXP/in+YWJeq1c8DuD16u9mmxj6NOE7l44SGTDuqx8fQwWIETgQ2seRQjOWlIUr
+         0MShkFLpIRPa0zJ9jl1eiiMPb1TmjHBXZ/9ca7m/4EaATAHAeaEapTcpga9AHSnsE/ZI
+         ewNo0LUqZJIigJK6W4pnffGgQG1bCfEDxbPiL1qSTCqDkPucnTjkVx3q8mehRYuRsgN4
+         8NFvBJJtNARgMXX5PFcFvwkRoy/ORIJ92hlfj85+CktT6Mp05I64hhhAPG108AU+yUWt
+         C1XWh90ImeQb/7GxNb4QFOZ8xco6oNGP8yY00EXXYzKZEjCddMDaF6LmuhByyy0K4fIg
+         Fh5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU8+jFGd5HWcCexgGJ4ulsHrZAowUDHpYBSJ7iIUK3hRzFS5UaqnQPf7+KPe5osMyeawNHGeqRJ2Hfu/xY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHHbVKAgcQt/joSQdJiFtlM6JVsQWOPpM5R9lkk0GYXycOW83w
+	1BuRqFTk8vCtnE3z5qUBGGTYIEgNLXdIVhZbwxI1PXjLdQ3Dm964VCGcjAGJS07JobDzboEQp+E
+	V94hSLF1jbtVas8yPORhm8ugubPBrcE0+vD8VQ+jrjqGfcvnz99PDxUSi6rEULrBXiP5rQvx1uK
+	tpFvyV3+mnuPZfgA6GzBIw+hoileK/40vM4Z0g
+X-Gm-Gg: ASbGncvU7bBY6++KXH36/IQSJ2fXrjqLSvggKWH0yTd/MQ+l55GYteC2JpU53cwZQRm
+	wGAiXc8bD9cZWCXM1/RxDza96yv9SmLibYF6E60eKuKhxvOML5iAFHHJvhqCDK3uLFJ0=
+X-Received: by 2002:a05:6902:2485:b0:e6d:fe4e:2fea with SMTP id 3f1490d57ef6-e702ef93146mr5070947276.22.1744211389891;
         Wed, 09 Apr 2025 08:09:49 -0700 (PDT)
-Received: from localhost.localdomain (124-218-201-66.cm.dynamic.apol.com.tw. [124.218.201.66])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1d469a3sm1499249b3a.66.2025.04.09.08.09.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 08:09:49 -0700 (PDT)
-From: "Lucien.Jheng" <lucienx123@gmail.com>
-To: linux-clk@vger.kernel.org,
-	andrew@lunn.ch,
-	hkallweit1@gmail.com,
-	linux@armlinux.org.uk,
-	kuba@kernel.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	daniel@makrotopia.org,
-	ericwouds@gmail.com
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	joseph.lin@airoha.com,
-	wenshin.chung@airoha.com,
-	lucien.jheng@airoha.com,
-	"Lucien.Jheng" <lucienx123@gmail.com>
-Subject: [PATCH v8 net-next PATCH 1/1] net: phy: air_en8811h: Add clk provider for CKO pin
-Date: Wed,  9 Apr 2025 23:09:02 +0800
-Message-Id: <20250409150902.3596-1-lucienx123@gmail.com>
-X-Mailer: git-send-email 2.34.1
+X-Google-Smtp-Source: AGHT+IFAPGM5gyLOwLfn2UdRTVZky07wzaGcSPFlzlIDICN1npX81A2QuWPKW22/H4HhkZ/sajnEFn3RzZLt/hxweLI=
+X-Received: by 2002:a05:6902:2485:b0:e6d:fe4e:2fea with SMTP id
+ 3f1490d57ef6-e702ef93146mr5070899276.22.1744211389481; Wed, 09 Apr 2025
+ 08:09:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250403100943.120738-1-sgarzare@redhat.com> <20250403100943.120738-5-sgarzare@redhat.com>
+ <20250408110012.GFZ_UBvOcEfEcIM4mI@fat_crate.local> <eqtiiphs6rtjo7nirkw7zcicew75wnl4ydenrt5vl6jdpqdgj6@2brjlyjbqhoq>
+ <20250408112820.GBZ_UIVPp-LuIiVrIV@fat_crate.local> <o2u7p3wb64lcc4sziunr274hyubkgmspzdjcvihbpzkw6mkvpo@sjq3vi4y2qfl>
+ <20250409102120.GCZ_ZKIJw9WkXpTz4u@fat_crate.local> <CAGxU2F7r_fWgr2YRmCvh2iQ1vPg30f-+W6FXyuidbakZkwhw2w@mail.gmail.com>
+ <20250409113154.GGZ_ZaqgfRrrMij_Zm@fat_crate.local> <409a9171bc3224dd55344729ab3106917ac113bf.camel@HansenPartnership.com>
+In-Reply-To: <409a9171bc3224dd55344729ab3106917ac113bf.camel@HansenPartnership.com>
+From: Stefano Garzarella <sgarzare@redhat.com>
+Date: Wed, 9 Apr 2025 17:09:38 +0200
+X-Gm-Features: ATxdqUFDHs60Y8bJz4qgiFtoScY5UJ31NSfT68Bf62VVN8_SmIl8qmI4-UUsk9k
+Message-ID: <CAGxU2F4cPgM1Uh+TDPBNsB1J8M-QgnEBF=vXQmxktJw3MXQbLg@mail.gmail.com>
+Subject: Re: [PATCH v6 4/4] x86/sev: register tpm-svsm platform device
+To: James Bottomley <James.Bottomley@hansenpartnership.com>, Borislav Petkov <bp@alien8.de>
+Cc: Jarkko Sakkinen <jarkko@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>, "H. Peter Anvin" <hpa@zytor.com>, 
+	linux-coco@lists.linux.dev, linux-integrity@vger.kernel.org, 
+	Ingo Molnar <mingo@redhat.com>, x86@kernel.org, Tom Lendacky <thomas.lendacky@amd.com>, 
+	Joerg Roedel <jroedel@suse.de>, Dionna Glaze <dionnaglaze@google.com>, 
+	Claudio Carvalho <cclaudio@linux.ibm.com>, linux-kernel@vger.kernel.org, 
+	Dov Murik <dovmurik@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 
-EN8811H outputs 25MHz or 50MHz clocks on CKO, selected by GPIO3.
-CKO clock operates continuously from power-up through md32 loading.
-Implement clk provider driver so we can disable the clock output in case
-it isn't needed, which also helps to reduce EMF noise
+On Wed, 9 Apr 2025 at 14:22, James Bottomley
+<James.Bottomley@hansenpartnership.com> wrote:
+>
+> On Wed, 2025-04-09 at 13:31 +0200, Borislav Petkov wrote:
+> > On Wed, Apr 09, 2025 at 12:43:01PM +0200, Stefano Garzarella wrote:
+> > > Sorry, maybe I missed something.
+> > >
+> > > tpm_svsm.c registers the driver with
+> > > module_platform_driver_probe().
+> > >
+> > > Someone (the platform I guess) has to register the device by
+> > > calling platform_device_register(), as we already do for example
+> > > for sev_guest.
+> >
+> > Maybe that platform device thing is the wrong approach. Why does the
+> > core code need to register some dummy platform device in the first
+> > place? Why can't drivers/char/tpm/tpm_svsm.c probe and init without
+> > it?
+>
+> Because of the way driver and device matching works in Linux.  We have
+> to have a struct device because that sits at the he heart of the TPM
+> driver binding.  If we have a struct device, it has to sit on a bus
+> (because that's the Linux design) and if we don't have a bus then we
+> have to use a platform device (or, now, we could use a struct device on
+> the faux bus).
 
-Signed-off-by: Lucien.Jheng <lucienx123@gmail.com>
----
-Change in PATCH v8:
-air_en8811h.c:
- * Fix: Correct various code style inconsistencies.
+I tried to look at faux bus, but IIUC, it doesn't fit. I mean, we
+could use it if we had a driver here in sev/core.c, but using a
+separate module for the tpm-svsm driver, how do we get the module to
+load when we find out that the device is there?
 
- drivers/net/phy/air_en8811h.c | 103 +++++++++++++++++++++++++++++++++-
- 1 file changed, 100 insertions(+), 3 deletions(-)
+In short, my question: how do we load the module automatically when we
+discover the device?
 
-diff --git a/drivers/net/phy/air_en8811h.c b/drivers/net/phy/air_en8811h.c
-index e9fd24cb7270..57fbd8df9438 100644
---- a/drivers/net/phy/air_en8811h.c
-+++ b/drivers/net/phy/air_en8811h.c
-@@ -11,6 +11,7 @@
-  * Copyright (C) 2023 Airoha Technology Corp.
-  */
+faux seems more useful to me when there's no need to discover the
+device, but loading the module itself starts everything. If, on the
+other hand, we want to have it load when we discover it, we have to
+either have a bus or have core code that registers a platform_device
+that will then be recognized by the driver in a separate module.
 
-+#include <linux/clk-provider.h>
- #include <linux/phy.h>
- #include <linux/firmware.h>
- #include <linux/property.h>
-@@ -115,6 +116,11 @@
- #define EN8811H_GPIO_OUTPUT		0xcf8b8
- #define   EN8811H_GPIO_OUTPUT_345		(BIT(3) | BIT(4) | BIT(5))
+> Busses can be either physical (PCI, GSC, ...) and
+> abstract (virtio, xen, scsi, ...), so it's not impossible, if the SVSM
+> has more than one device, that it should have it's own SVSM bus which
+> we could then act a bit like the virtio bus and the SVSM vTPM struct
+> device could sit on this (the TPM subsystem, like most driver
+> subsystems, doesn't care about busses, it only cares that the abstract
+> bus device id matching works).
 
-+#define EN8811H_HWTRAP1			0xcf914
-+#define   EN8811H_HWTRAP1_CKO			BIT(12)
-+#define EN8811H_CLK_CGM			0xcf958
-+#define   EN8811H_CLK_CGM_CKO			BIT(26)
-+
- #define EN8811H_FW_CTRL_1		0x0f0018
- #define   EN8811H_FW_CTRL_1_START		0x0
- #define   EN8811H_FW_CTRL_1_FINISH		0x1
-@@ -142,10 +148,15 @@ struct led {
- 	unsigned long state;
- };
+Yes, I'm also looking at introducing a svsm bus as we've already
+discussed, but that's going to take some time.
 
-+#define clk_hw_to_en8811h_priv(_hw)			\
-+	container_of(_hw, struct en8811h_priv, hw)
-+
- struct en8811h_priv {
--	u32		firmware_version;
--	bool		mcu_needs_restart;
--	struct led	led[EN8811H_LED_COUNT];
-+	u32			firmware_version;
-+	bool			mcu_needs_restart;
-+	struct led		led[EN8811H_LED_COUNT];
-+	struct clk_hw		hw;
-+	struct phy_device	*phydev;
- };
+In the end though, platform_device is not that bad IMO. The tpm-svsm
+is really a device provided by the (virtual) platform, so doing some
+sort of discovery of the bus in sev/core.c and registering the device
+if discovered might be a compromise for now until we develop the bus.
 
- enum {
-@@ -806,6 +817,86 @@ static int en8811h_led_hw_is_supported(struct phy_device *phydev, u8 index,
- 	return 0;
- };
+If you agree, I'll move all the discovery here in sev/core.c as I
+suggested earlier, so that when we get the bus we'll move this code
+somehow into the bus.
+@Borsilav @James WDYT?
 
-+static unsigned long en8811h_clk_recalc_rate(struct clk_hw *hw,
-+					     unsigned long parent)
-+{
-+	struct en8811h_priv *priv = clk_hw_to_en8811h_priv(hw);
-+	struct phy_device *phydev = priv->phydev;
-+	u32 pbus_value;
-+	int ret;
-+
-+	ret = air_buckpbus_reg_read(phydev, EN8811H_HWTRAP1, &pbus_value);
-+	if (ret < 0)
-+		return ret;
-+
-+	return (pbus_value & EN8811H_HWTRAP1_CKO) ? 50000000 : 25000000;
-+}
-+
-+static int en8811h_clk_enable(struct clk_hw *hw)
-+{
-+	struct en8811h_priv *priv = clk_hw_to_en8811h_priv(hw);
-+	struct phy_device *phydev = priv->phydev;
-+
-+	return air_buckpbus_reg_modify(phydev, EN8811H_CLK_CGM,
-+				       EN8811H_CLK_CGM_CKO,
-+				       EN8811H_CLK_CGM_CKO);
-+}
-+
-+static void en8811h_clk_disable(struct clk_hw *hw)
-+{
-+	struct en8811h_priv *priv = clk_hw_to_en8811h_priv(hw);
-+	struct phy_device *phydev = priv->phydev;
-+
-+	air_buckpbus_reg_modify(phydev, EN8811H_CLK_CGM,
-+				EN8811H_CLK_CGM_CKO, 0);
-+}
-+
-+static int en8811h_clk_is_enabled(struct clk_hw *hw)
-+{
-+	struct en8811h_priv *priv = clk_hw_to_en8811h_priv(hw);
-+	struct phy_device *phydev = priv->phydev;
-+	u32 pbus_value;
-+	int ret;
-+
-+	ret = air_buckpbus_reg_read(phydev, EN8811H_CLK_CGM, &pbus_value);
-+	if (ret < 0)
-+		return ret;
-+
-+	return (pbus_value & EN8811H_CLK_CGM_CKO);
-+}
-+
-+static const struct clk_ops en8811h_clk_ops = {
-+	.recalc_rate	= en8811h_clk_recalc_rate,
-+	.enable		= en8811h_clk_enable,
-+	.disable	= en8811h_clk_disable,
-+	.is_enabled	= en8811h_clk_is_enabled,
-+};
-+
-+static int en8811h_clk_provider_setup(struct device *dev, struct clk_hw *hw)
-+{
-+	struct clk_init_data init;
-+	int ret;
-+
-+	if (!IS_ENABLED(CONFIG_COMMON_CLK))
-+		return 0;
-+
-+	init.name = devm_kasprintf(dev, GFP_KERNEL, "%s-cko",
-+				   fwnode_get_name(dev_fwnode(dev)));
-+	if (!init.name)
-+		return -ENOMEM;
-+
-+	init.ops = &en8811h_clk_ops;
-+	init.flags = 0;
-+	init.num_parents = 0;
-+	hw->init = &init;
-+
-+	ret = devm_clk_hw_register(dev, hw);
-+	if (ret)
-+		return ret;
-+
-+	return devm_of_clk_add_hw_provider(dev, of_clk_hw_simple_get, hw);
-+}
-+
- static int en8811h_probe(struct phy_device *phydev)
- {
- 	struct en8811h_priv *priv;
-@@ -838,6 +929,12 @@ static int en8811h_probe(struct phy_device *phydev)
- 		return ret;
- 	}
-
-+	priv->phydev = phydev;
-+	/* Co-Clock Output */
-+	ret = en8811h_clk_provider_setup(&phydev->mdio.dev, &priv->hw);
-+	if (ret)
-+		return ret;
-+
- 	/* Configure led gpio pins as output */
- 	ret = air_buckpbus_reg_modify(phydev, EN8811H_GPIO_OUTPUT,
- 				      EN8811H_GPIO_OUTPUT_345,
---
-2.34.1
+Thanks,
+Stefano
 
