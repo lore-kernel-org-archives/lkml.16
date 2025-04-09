@@ -1,472 +1,108 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D409F25B67E
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 08:04:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 388932405FD;
+	Wed,  9 Apr 2025 08:05:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744185843; cv=none; b=ouyV6XVd69sosM8yU5L+Wu1TAl12cAlP+qd6+gx1giIkvb3MGqjJUdU+tHpMDUpmHzm/IEJtoDByiRvU8zXJ+WtMoY4LUuKERIOUag5JC/+meSHGgpD2+nLDlSRmFXmUwuwAMk1BwH4bJXsDnd3JETgmxLIHlZYWDpXAEakEK94=
+	t=1744185915; cv=none; b=jeOErdikrAxlieY2Lxn3fSztaF4gToHEA7m2yAvBCBAbsrmiBjlk+jK24dfRaYoVlH/+edPpefG8rFEcwjrFY5rjPi+a/R0LgY2PJDRNHvCamxlKLGFyj9ols1rMSJF3vfevuYqp4Rp13uovkUDIuphj/AaUvhLuAxTXb7Uev9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744185843; c=relaxed/simple;
-	bh=ZaVw5OY/Fp/j2BL95jCBKv6mfWVHYmdtI7BWrOnSXVs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lw0FkEJQPgIOlqywQ6UyexAFqPKaLmJGXc38FU0lOAzdKcDruMAloRhZG/JH9nRxoSxgiB+G7b9zosz9KgDU1zk1JEnBqp/q+MnlGMU91w+djAGhpWKqS/mCTgqjwEjaPVQAw1h8Gg1JcvOrhbwyhquYvHnEAxHIy+pMqi7dRd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=X0HfnFIR; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744185915; c=relaxed/simple;
+	bh=GX89WpulnCn9iyOCjfe2i+8YedETrjUlUWYiE6fb4mE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=K/9gSU6n82PCoch0nlEf6iYVa3W6f6A7KyDrasZQFnIngxKvCopVyGIYCY3/vUBdjbUyTVf0YLHbMMBSUdZKbFdiHpMLoMxBW0pRYgSYz3Q4f6gNVsqX0C1cL2ThvGeNW6qPsX1uxt4XMVL1G3Sxr/GjleMURpVneVVMi7xrtKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=XiXNnRIX; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X0HfnFIR"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22435603572so62773275ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 01:04:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744185841; x=1744790641; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=cZkefp3SsqAWOBBxs1VEWuV1y8jA3RO3nWFxkIRrTSA=;
-        b=X0HfnFIRj5VA6KsJPY1o4BRlXI9ouuU3TeMDv0VG+E1uM+ynGugnAOd7AUrmNMaAMw
-         wG/PXZw1ixv65Auj+TgkA7+lUdbh0X1Qt8EdZfIeQxoNf0QO62SPO+hQUHPvOaO4KRQf
-         dtreqXyh4fz+sCxV+bLXTbBQAqb9qPBvidNnsFvwCeSMSwXXohM9ZAONEedDvVFtIkDj
-         7WUf2fiORiwLi3zJ4V+qJOY2oU9gJ6AP8C16dVDJKebS8t5+tDUfsCyIhzyCUaeruPOW
-         iW9yXE2QEhelS4Q0nBQA9g+dKZxtXJcBjU/LpM7Qnp1jRwdxsEgT+OrKD5CktTODSHd/
-         Ln1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744185841; x=1744790641;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cZkefp3SsqAWOBBxs1VEWuV1y8jA3RO3nWFxkIRrTSA=;
-        b=o3nOXRdAqy7fezrzG0QaPRUMgyFaZbK0xOyxjn9u8KJfoSsHtev8oDDz51qjbcVSLN
-         brJ1urVjCzuivR9i03ktVW/K6c5to6dPvpqRZ8xcdMIe3VoLbUkSFEyOPpVcXzMtcg+j
-         YT4cGN0X4KAov7hIxglHubO+P7ZFt4HKVD+uefCsoGjm/OX6x+s0JZ7lUBrhcEcDukEv
-         i4nQIO30HOWuhVVZlz36bztE8+NRQ5E8B51gYZ9u/ggwcUo5ng0zmOxoM9yFzjF7FxNk
-         pAoHaqfTqoFv4o/utALn3fsWB1H9nRlrUmqfEHNO4H9aovwFx0rmzhI6eMr+a5FSKEQR
-         MjfA==
-X-Forwarded-Encrypted: i=1; AJvYcCWfHKs+vtAm6wkSgGQkUdxv7g/FIG02wHerGJ2GCARD8ZAQDtzkVmYF1Z9jxBDAhNTLmXZCZb5kbzoM8dI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsaHL0DnDKhi0jrnoyAC2VjCRofGG/1CMj1mC/RUHbhZk25H9h
-	T2E+wIYOEzOL15vuF8BGiN2xEsHwwTnSfdUBHbqitQEqXwE6Zw0cLFft7dDqjg==
-X-Gm-Gg: ASbGncvqZmr88gI5DqbnCSwVZLWHEP4D2TZKlU+iuw8Z+J9/nHSO/i67quMNWuyZIyy
-	2vx4LCpfrPReybCHVpkA6GiH83UKzZrlC7k0kIUw3xzPmOiucmgPKS4ZU/tT9gLcONNC8/J9oQg
-	gZppjc0N8vAEVe+OhY48rZB9bJHxhx4vRI5zrjFq7zdcob/FPvsBQrN8pTu9blpmph23ja0DDfI
-	XSrxz3Wz8lRg0ql7q7l6GFtX3Aw4PWkQb/4O/3CFE256IhjpkS/Dpa+TmeTW6aVcKEsB8sAS0EA
-	1zK7RXbeEwT7i10gyayG5wRTzu3rhZWpk1FxZ85LCRFI1tkc8/A=
-X-Google-Smtp-Source: AGHT+IHzv+8zIVtNQ9GRK5QB/aNaohw8UHnO+WeQYD3ggOvprCdhZxsimpY14GlAS7+65p73hE+tow==
-X-Received: by 2002:a17:902:ccc8:b0:224:c46:d162 with SMTP id d9443c01a7336-22ac2992075mr29880945ad.20.1744185841087;
-        Wed, 09 Apr 2025 01:04:01 -0700 (PDT)
-Received: from thinkpad ([120.56.198.53])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7c9937fsm5677465ad.155.2025.04.09.01.03.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 01:04:00 -0700 (PDT)
-Date: Wed, 9 Apr 2025 13:33:54 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Christian Bruel <christian.bruel@foss.st.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, 
-	bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com, p.zabel@pengutronix.de, 
-	johan+linaro@kernel.org, cassel@kernel.org, quic_schintav@quicinc.com, 
-	fabrice.gasnier@foss.st.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 4/9 RESEND] PCI: stm32: Add PCIe Endpoint support for
- STM32MP25
-Message-ID: <dirqsnrzjoiht7vvzzwh73gf3zuwyco6lc46k6s6pkifde2uzw@icmtn7x53swc>
-References: <20250325065935.908886-1-christian.bruel@foss.st.com>
- <20250325065935.908886-5-christian.bruel@foss.st.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="XiXNnRIX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1744185911;
+	bh=GX89WpulnCn9iyOCjfe2i+8YedETrjUlUWYiE6fb4mE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=XiXNnRIXqaOCR6ZRVD5I/OR9XqMMxnFa1L7JmwC2309kj/FAowTnV+Qmg0GD71VFc
+	 nLg+sAket30nwFyHr782FE5laBy3NGrzfXP5ck0HS5MQQd/5KMBRpbpilXWqU8OqMY
+	 5TnkKyPNEJmRUcW8FLsIVuLBYT/6hCBpV4EuV2wUkDuxJAL0dLfEmuOGqYXjWv0wk7
+	 py4FGzm/b/mZM8gtzn6/5u3+dzNUl7GSy1t4D2wrtA0X79cYrjXoT7E4UzQb9e/PAc
+	 +35+cFymTzt28UoeAJTbTsVy3mQLmrDnPe2INNXlry5JDVzQUTIfH9As/Sy9WdX9Jd
+	 uGtL2agUqQPOA==
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bbrezillon)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id B443A17E07F3;
+	Wed,  9 Apr 2025 10:05:10 +0200 (CEST)
+Date: Wed, 9 Apr 2025 10:05:07 +0200
+From: Boris Brezillon <boris.brezillon@collabora.com>
+To: =?UTF-8?B?QWRyacOhbg==?= Larumbe <adrian.larumbe@collabora.com>
+Cc: Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Sumit Semwal
+ <sumit.semwal@linaro.org>, Christian =?UTF-8?B?S8O2bmln?=
+ <christian.koenig@amd.com>, kernel@collabora.com,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
+Subject: Re: [PATCH v5 3/4] drm/panthor: Label all kernel BO's
+Message-ID: <20250409100507.45446b75@collabora.com>
+In-Reply-To: <20250408222427.1214330-4-adrian.larumbe@collabora.com>
+References: <20250408222427.1214330-1-adrian.larumbe@collabora.com>
+	<20250408222427.1214330-4-adrian.larumbe@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250325065935.908886-5-christian.bruel@foss.st.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 25, 2025 at 07:59:30AM +0100, Christian Bruel wrote:
-> Add driver to configure the STM32MP25 SoC PCIe Gen1 2.5GT/s or Gen2 5GT/s
-> controller based on the DesignWare PCIe core in endpoint mode.
-> 
-> Uses the common reference clock provided by the host.
-> 
-> The PCIe core_clk receives the pipe0_clk from the ComboPHY as input,
-> and the ComboPHY PLL must be locked for pipe0_clk to be ready.
-> Consequently, PCIe core registers cannot be accessed until the ComboPHY is
-> fully initialised and refclk is enabled and ready.
-> 
-> Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
+On Tue,  8 Apr 2025 23:24:23 +0100
+Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com> wrote:
+
+> Kernel BO's aren't exposed to UM, so labelling them is the responsibility
+> of the driver itself. This kind of tagging will prove useful in further
+> commits when want to expose these objects through DebugFS.
+>=20
+> Expand panthor_kernel_bo_create() interface to take a NULL-terminated
+> string. No bounds checking is done because all label strings are given
+> as statically-allocated literals, but if a more complex kernel BO naming
+> scheme with explicit memory allocation and formatting was desired in the
+> future, this would have to change.
+>=20
+> Signed-off-by: Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com>
+
+Just one modification suggested on a label, but this looks good
+otherwise
+
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+
 > ---
->  drivers/pci/controller/dwc/Kconfig         |  12 +
->  drivers/pci/controller/dwc/Makefile        |   1 +
->  drivers/pci/controller/dwc/pcie-stm32-ep.c | 420 +++++++++++++++++++++
->  drivers/pci/controller/dwc/pcie-stm32.h    |   1 +
->  4 files changed, 434 insertions(+)
->  create mode 100644 drivers/pci/controller/dwc/pcie-stm32-ep.c
-> 
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index 0c18879b604c..4a3eb838557c 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -401,6 +401,18 @@ config PCIE_STM32
->  	  This driver can also be built as a module. If so, the module
->  	  will be called pcie-stm32.
->  
-> +config PCIE_STM32_EP
-> +	tristate "STMicroelectronics STM32MP25 PCIe Controller (endpoint mode)"
-> +	depends on ARCH_STM32 || COMPILE_TEST
-> +	depends on PCI_ENDPOINT
-> +	select PCIE_DW_EP
-> +	help
-> +	  Enables endpoint support for DesignWare core based PCIe controller
-> +	  found in STM32MP25 SoC.
-> +
-> +	  This driver can also be built as a module. If so, the module
-> +	  will be called pcie-stm32-ep.
-> +
->  config PCI_DRA7XX
->  	tristate
->  
-> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-> index 576d99cb3bc5..caebd98f6dd3 100644
-> --- a/drivers/pci/controller/dwc/Makefile
-> +++ b/drivers/pci/controller/dwc/Makefile
-> @@ -29,6 +29,7 @@ obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
->  obj-$(CONFIG_PCIE_VISCONTI_HOST) += pcie-visconti.o
->  obj-$(CONFIG_PCIE_RCAR_GEN4) += pcie-rcar-gen4.o
->  obj-$(CONFIG_PCIE_STM32) += pcie-stm32.o
-> +obj-$(CONFIG_PCIE_STM32_EP) += pcie-stm32-ep.o
->  
->  # The following drivers are for devices that use the generic ACPI
->  # pci_root.c driver but don't support standard ECAM config access.
-> diff --git a/drivers/pci/controller/dwc/pcie-stm32-ep.c b/drivers/pci/controller/dwc/pcie-stm32-ep.c
-> new file mode 100644
-> index 000000000000..a8e9c5a9b127
-> --- /dev/null
-> +++ b/drivers/pci/controller/dwc/pcie-stm32-ep.c
-> @@ -0,0 +1,420 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * STMicroelectronics STM32MP25 PCIe endpoint driver.
-> + *
-> + * Copyright (C) 2025 STMicroelectronics
-> + * Author: Christian Bruel <christian.bruel@foss.st.com>
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/of_gpio.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/regmap.h>
-> +#include <linux/reset.h>
-> +#include "pcie-designware.h"
-> +#include "pcie-stm32.h"
-> +
-> +enum stm32_pcie_ep_link_status {
-> +	STM32_PCIE_EP_LINK_DISABLED,
-> +	STM32_PCIE_EP_LINK_ENABLED,
-> +};
-> +
-> +struct stm32_pcie {
-> +	struct dw_pcie pci;
-> +	struct regmap *regmap;
-> +	struct reset_control *rst;
-> +	struct phy *phy;
-> +	struct clk *clk;
-> +	struct gpio_desc *perst_gpio;
-> +	enum stm32_pcie_ep_link_status link_status;
-> +	unsigned int perst_irq;
-> +};
-> +
-> +static void stm32_pcie_ep_init(struct dw_pcie_ep *ep)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> +	enum pci_barno bar;
-> +
-> +	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++)
-> +		dw_pcie_ep_reset_bar(pci, bar);
-> +}
-> +
-> +static int stm32_pcie_enable_link(struct dw_pcie *pci)
-> +{
-> +	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
-> +
-> +	regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR,
-> +			   STM32MP25_PCIECR_LTSSM_EN,
-> +			   STM32MP25_PCIECR_LTSSM_EN);
-> +
-> +	return dw_pcie_wait_for_link(pci);
-> +}
-> +
-> +static void stm32_pcie_disable_link(struct dw_pcie *pci)
-> +{
-> +	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
-> +
-> +	regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR, STM32MP25_PCIECR_LTSSM_EN, 0);
-> +}
-> +
-> +static int stm32_pcie_start_link(struct dw_pcie *pci)
-> +{
-> +	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
-> +	struct dw_pcie_ep *ep = &pci->ep;
-> +	int ret;
-> +
-> +	if (stm32_pcie->link_status == STM32_PCIE_EP_LINK_ENABLED) {
-> +		dev_dbg(pci->dev, "Link is already enabled\n");
-> +		return 0;
-> +	}
-> +
-> +	ret = stm32_pcie_enable_link(pci);
-> +	if (ret) {
-> +		dev_err(pci->dev, "PCIe cannot establish link: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	dw_pcie_ep_linkup(ep);
-> +
+>  drivers/gpu/drm/panthor/panthor_fw.c    | 8 +++++---
+>  drivers/gpu/drm/panthor/panthor_gem.c   | 4 +++-
+>  drivers/gpu/drm/panthor/panthor_gem.h   | 2 +-
+>  drivers/gpu/drm/panthor/panthor_heap.c  | 6 ++++--
+>  drivers/gpu/drm/panthor/panthor_sched.c | 9 ++++++---
+>  5 files changed, 19 insertions(+), 10 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/drm/pa=
+nthor/panthor_sched.c
+> index 1a276db095ff..432a8993a0cb 100644
+> --- a/drivers/gpu/drm/panthor/panthor_sched.c
+> +++ b/drivers/gpu/drm/panthor/panthor_sched.c
+> @@ -3334,7 +3334,8 @@ group_create_queue(struct panthor_group *group,
+>  						  DRM_PANTHOR_BO_NO_MMAP,
+>  						  DRM_PANTHOR_VM_BIND_OP_MAP_NOEXEC |
+>  						  DRM_PANTHOR_VM_BIND_OP_MAP_UNCACHED,
+> -						  PANTHOR_VM_KERNEL_AUTO_VA);
+> +						  PANTHOR_VM_KERNEL_AUTO_VA,
+> +						  "Ring buffer");
 
-This callback should only be used when the epc_features::linkup_notifier flag is
-set. That only applies to platforms supporting LINK_UP interrupt. In this case,
-once the start_link() callback returns, it is assumed that the link is active.
-So no need to call dw_pcie_ep_linkup().
+						  "CS ring buffer"
 
-> +	stm32_pcie->link_status = STM32_PCIE_EP_LINK_ENABLED;
-> +
-> +	enable_irq(stm32_pcie->perst_irq);
-> +
-> +	return 0;
-> +}
-> +
-> +static void stm32_pcie_stop_link(struct dw_pcie *pci)
-> +{
-> +	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
-> +
-> +	if (stm32_pcie->link_status == STM32_PCIE_EP_LINK_DISABLED) {
-> +		dev_dbg(pci->dev, "Link is already disabled\n");
-> +		return;
-> +	}
-> +
-> +	disable_irq(stm32_pcie->perst_irq);
-> +
-> +	stm32_pcie_disable_link(pci);
-> +
-> +	stm32_pcie->link_status = STM32_PCIE_EP_LINK_DISABLED;
-> +}
-> +
-> +static int stm32_pcie_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
-> +				unsigned int type, u16 interrupt_num)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> +
-> +	switch (type) {
-> +	case PCI_IRQ_INTX:
-> +		return dw_pcie_ep_raise_intx_irq(ep, func_no);
-> +	case PCI_IRQ_MSI:
-> +		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
-> +	default:
-> +		dev_err(pci->dev, "UNKNOWN IRQ type\n");
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static const struct pci_epc_features stm32_pcie_epc_features = {
-> +	.msi_capable = true,
-> +	.align = SZ_64K,
-> +};
-> +
-> +static const struct pci_epc_features*
-> +stm32_pcie_get_features(struct dw_pcie_ep *ep)
-> +{
-> +	return &stm32_pcie_epc_features;
-> +}
-> +
-> +static const struct dw_pcie_ep_ops stm32_pcie_ep_ops = {
-> +	.init = stm32_pcie_ep_init,
-> +	.raise_irq = stm32_pcie_raise_irq,
-> +	.get_features = stm32_pcie_get_features,
-> +};
-> +
-> +static const struct dw_pcie_ops dw_pcie_ops = {
-> +	.start_link = stm32_pcie_start_link,
-> +	.stop_link = stm32_pcie_stop_link,
-> +};
-> +
-> +static int stm32_pcie_enable_resources(struct stm32_pcie *stm32_pcie)
-> +{
-> +	int ret;
-> +
-> +	ret = phy_init(stm32_pcie->phy);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = clk_prepare_enable(stm32_pcie->clk);
-> +	if (ret)
-> +		phy_exit(stm32_pcie->phy);
-> +
-> +	return ret;
-> +}
-> +
-> +static void stm32_pcie_disable_resources(struct stm32_pcie *stm32_pcie)
-> +{
-> +	clk_disable_unprepare(stm32_pcie->clk);
-> +
-> +	phy_exit(stm32_pcie->phy);
-> +}
-> +
-> +static void stm32_pcie_perst_assert(struct dw_pcie *pci)
-> +{
-> +	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
-> +	struct device *dev = pci->dev;
-> +
-> +	dev_dbg(dev, "PERST asserted by host. Shutting down the PCIe link\n");
-> +
-> +	/*
-> +	 * Do not try to release resources if the PERST# is
-> +	 * asserted before the link is started.
-
-Make use of 80 columns.
-
-> +	 */
-> +	if (stm32_pcie->link_status == STM32_PCIE_EP_LINK_DISABLED) {
-> +		dev_dbg(pci->dev, "Link is already disabled\n");
-> +		return;
-> +	}
-> +
-> +	stm32_pcie_disable_link(pci);
-> +
-> +	stm32_pcie_disable_resources(stm32_pcie);
-> +
-> +	pm_runtime_put_sync(dev);
-> +
-> +	stm32_pcie->link_status = STM32_PCIE_EP_LINK_DISABLED;
-> +}
-> +
-> +static void stm32_pcie_perst_deassert(struct dw_pcie *pci)
-> +{
-> +	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
-> +	struct device *dev = pci->dev;
-> +	struct dw_pcie_ep *ep = &pci->ep;
-> +	int ret;
-> +
-> +	if (stm32_pcie->link_status == STM32_PCIE_EP_LINK_ENABLED) {
-> +		dev_dbg(pci->dev, "Link is already enabled\n");
-> +		return;
-> +	}
-> +
-> +	dev_dbg(dev, "PERST de-asserted by host. Starting link training\n");
-> +
-> +	ret = pm_runtime_resume_and_get(dev);
-> +	if (ret < 0) {
-> +		dev_err(dev, "pm runtime resume failed: %d\n", ret);
-> +		return;
-> +	}
-> +
-> +	ret = stm32_pcie_enable_resources(stm32_pcie);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to enable resources: %d\n", ret);
-> +		goto err_pm_put_sync;
-> +	}
-> +
-> +	ret = dw_pcie_ep_init_registers(ep);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to complete initialization: %d\n", ret);
-> +		goto err_disable_resources;
-> +	}
-> +
-> +	pci_epc_init_notify(ep->epc);
-> +
-> +	ret = stm32_pcie_enable_link(pci);
-> +	if (ret) {
-> +		dev_err(dev, "PCIe Cannot establish link: %d\n", ret);
-> +		goto err_deinit_notify;
-> +	}
-
-Link is supposed to be enabled only by the start_link() callback.
-
-> +
-> +	stm32_pcie->link_status = STM32_PCIE_EP_LINK_ENABLED;
-> +
-> +	return;
-> +
-> +err_deinit_notify:
-> +	pci_epc_deinit_notify(ep->epc);
-> +
-> +err_disable_resources:
-> +	stm32_pcie_disable_resources(stm32_pcie);
-> +
-> +err_pm_put_sync:
-> +	pm_runtime_put_sync(dev);
-> +}
-> +
-> +static irqreturn_t stm32_pcie_ep_perst_irq_thread(int irq, void *data)
-> +{
-> +	struct stm32_pcie *stm32_pcie = data;
-> +	struct dw_pcie *pci = &stm32_pcie->pci;
-> +	u32 perst;
-> +
-> +	perst = gpiod_get_value(stm32_pcie->perst_gpio);
-> +	if (perst)
-> +		stm32_pcie_perst_assert(pci);
-> +	else
-> +		stm32_pcie_perst_deassert(pci);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int stm32_add_pcie_ep(struct stm32_pcie *stm32_pcie,
-> +			     struct platform_device *pdev)
-> +{
-> +	struct dw_pcie_ep *ep = &stm32_pcie->pci.ep;
-> +	struct device *dev = &pdev->dev;
-> +	int ret;
-> +
-> +	ret = pm_runtime_resume_and_get(dev);
-> +	if (ret < 0) {
-> +		dev_err(dev, "pm runtime resume failed: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR,
-> +				 STM32MP25_PCIECR_TYPE_MASK,
-> +				 STM32MP25_PCIECR_EP);
-> +	if (ret) {
-> +		goto err_pm_put_sync;
-> +		return ret;
-> +	}
-> +
-> +	reset_control_assert(stm32_pcie->rst);
-> +	reset_control_deassert(stm32_pcie->rst);
-> +
-> +	ep->ops = &stm32_pcie_ep_ops;
-> +
-> +	ret = dw_pcie_ep_init(ep);
-> +	if (ret) {
-> +		dev_err(dev, "failed to initialize ep: %d\n", ret);
-> +		goto err_pm_put_sync;
-> +	}
-> +
-> +	ret = stm32_pcie_enable_resources(stm32_pcie);
-> +	if (ret) {
-> +		dev_err(dev, "failed to enable resources: %d\n", ret);
-> +		goto err_ep_deinit;
-> +	}
-> +
-> +	ret = dw_pcie_ep_init_registers(ep);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to initialize DWC endpoint registers\n");
-> +		goto err_disable_resources;
-> +	}
-> +
-> +	pci_epc_init_notify(ep->epc);
-> +
-
-You are calling dw_pcie_ep_init_registers() and  pci_epc_init_notify() from 2
-places. I think the one in stm32_pcie_perst_deassert() should be dropped since
-the DBI registers are available at this point itself.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+>  	if (IS_ERR(queue->ringbuf)) {
+>  		ret =3D PTR_ERR(queue->ringbuf);
+>  		goto err_free_queue;
