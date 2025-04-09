@@ -1,233 +1,339 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2065.outbound.protection.outlook.com [40.107.101.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19ADA265CC6;
-	Wed,  9 Apr 2025 15:56:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.65
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744214190; cv=fail; b=aXkDmEop3z7UqqJAp5Fcmi0ANTS75nQQeWymbekRAZfVWCNcnU0Ye4Zeaf0jr1idkjbeLclet/y+83YNanEIBflhMewhzUxQvlw7ehN3eg61AKtcoS/NbC9ikq47Gvo8u8HKNbLVsFBfqb5kAOzzmJDd3wc73HuJOhhri8Unn9I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744214190; c=relaxed/simple;
-	bh=eotrPZJNQ12OE99cMf9YEZVtPj2oc4C3D6lLcHga8/g=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=t6YnfwUkddkiqdsDgjbE0rNqewuvdkCKRDzQBowEKsjTDcxEsUF39dQjtjt2sNV+Jfq5b6lgBx0WkmXMse1YlxSQ6lPIZG4aN9o1n8LOk2x9gRR9INj9pUZjoCWTteDuPe92d/6xr/mvUIOOg6vYkiVRPDgxz14/WH1DV6FjIt4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=kFD6k5mw; arc=fail smtp.client-ip=40.107.101.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74A6826A0BA
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 15:56:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744214193; cv=none; b=m+a/LpfRNz4VhBiZX48csP82oVGq3yJI5EOA3+uftgPRp5PTzooDiY1D8SWuIFFI8SMeX5uc12FpKorlwc7USDTmfktSOjkzmVNSY7qwuqSjJj3N8wUjxaMq6Nch5FHXWnX6rE+3RIh0HWDEJWCnIZJa7SOIjqcPsYX8WKoP7Bk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744214193; c=relaxed/simple;
+	bh=hob3GHAx1ipfX0P23W8hQp6pUWXUFZ926AVVxlqLlk0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ry4eTVzeFMKmUblr/cKKPVRfqjwFjV1g5wE4zP9t2LhRnrFekD7Tto6mMxCRvSRUIs5RzH/bp0zyizBmIrQrNya8MHxicppoEyBEVDzG25XPeYzEcb50bn3wznJvyaCtild7z13yOoNGHWLPD6eaFYAs5B5IDS/g0Lxcz/zYp1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sAYP26Xf; arc=none smtp.client-ip=209.85.221.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="kFD6k5mw"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=dVo2wd5bXTh3MF7PdKphkgp8qyGDWtY0cubqLsx1J1hPRaLerWCNUSZ4f0IJUsZ963Fmlh2mtTvd2EoPPYS4XhD4LRSTmSnes58nfG+LgXnNI9tsjFrUhpZ9tr/WJ6Xg3foo/RLsguXXQgeXGE5vc2OFNoEX/o113FabyeodOwdcMWR3qr7jfjjtZTafKusIkZx+TC5/UX132Yar1df2tVfWJ5XllDvlEbbIzx4+NaphJjuKgTns76xuHR+lMOINCLM6fcn3kJroimeUeeY4qH4GLLtNLcwItwzE3+ok+uL0bOi24jztir+B7jRqXXZxBfDSZeYU8f7Q6d60ScFivg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=R5NaR+rZ5vs1pJjQJnQx9+pD4pQkGHf60vCq61Hwqyc=;
- b=gjavMbvy42wa/vVYhplj9bdEyaZH+PjqaNPqyTz6t0OidhdpDvsXDdkZlYYUFNYsW7WskhdsB4O9Wgxhz4M5m8CWdW2Md25KgopCvPa47xS90Q9Su4NUNDilqRsHh7/t7031htBeTQROzhT6YLSQxzN1vBzDmOvqZa8YY6/wLUdMG/yTUT7X9XyNsN3xLGQWIaSfR+Okn0RKynGOE4xPojUBA+XtBevXT3vAszvvbMfWBn1xNWIMc5fSyKPKrRbFz0c/nz9emsnH+4BaY2XvqMF0t4tolM6HfoH5CVyfpAY3izQpV3TM6tVIJKbzBxSVe2Q9zwQqvJOq0r1mx2BtLg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=R5NaR+rZ5vs1pJjQJnQx9+pD4pQkGHf60vCq61Hwqyc=;
- b=kFD6k5mw4r2mL/+6WiLqZJIkyETK5gDMoK7cH8yDg1FWLD96JHVPnHBFYHzXpyJUtRco6NuTarocAAgPpuP5dTwRJdib6GF4pWIwJOHy7YNDhiQKakORkCOaR59k/EWweeflgG3rkW6sb2vXobIfCR/6SPQ/tk81LCssDEjugldS0RgwK+RIGndbVfCs/xh7RcpEaAjtTepntBDHbxExO3hQsgj65CaZ3ERaoBI35t+HwAmPGlxztAY/MeY71i9JzTl5Rd1yj5416B8e94S+Qpd+vrKzhmDAZfoseK/4X5YofNge20JjwWbpPMXSLAjJTZHZMpyDImhBQyoqY489Xw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BY5PR12MB3953.namprd12.prod.outlook.com (2603:10b6:a03:194::22)
- by LV8PR12MB9084.namprd12.prod.outlook.com (2603:10b6:408:18e::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.31; Wed, 9 Apr
- 2025 15:56:26 +0000
-Received: from BY5PR12MB3953.namprd12.prod.outlook.com
- ([fe80::308:2250:764d:ed8f]) by BY5PR12MB3953.namprd12.prod.outlook.com
- ([fe80::308:2250:764d:ed8f%7]) with mapi id 15.20.8632.021; Wed, 9 Apr 2025
- 15:56:25 +0000
-Message-ID: <8358f9a8-3a39-4e85-b2fe-5298da3d36cf@nvidia.com>
-Date: Wed, 9 Apr 2025 17:56:19 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 01/12] net/mlx5: HWS, Fix matcher action template
- attach
-To: Michal Kubiak <michal.kubiak@intel.com>, Tariq Toukan <tariqt@nvidia.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Eric Dumazet <edumazet@google.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- Gal Pressman <gal@nvidia.com>, Leon Romanovsky <leonro@nvidia.com>,
- Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
- netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
- linux-kernel@vger.kernel.org, Moshe Shemesh <moshe@nvidia.com>,
- Mark Bloch <mbloch@nvidia.com>, Yevgeny Kliteynik <kliteyn@nvidia.com>
-References: <1744120856-341328-1-git-send-email-tariqt@nvidia.com>
- <1744120856-341328-2-git-send-email-tariqt@nvidia.com>
- <Z/aQZzRYWkSLV1r/@localhost.localdomain>
-Content-Language: en-US
-From: Vlad Dogaru <vdogaru@nvidia.com>
-In-Reply-To: <Z/aQZzRYWkSLV1r/@localhost.localdomain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR0P281CA0174.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:b4::7) To BY5PR12MB3953.namprd12.prod.outlook.com
- (2603:10b6:a03:194::22)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sAYP26Xf"
+Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-523f1b31cf8so2905798e0c.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 08:56:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744214190; x=1744818990; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=8AOUBaKz4k65EfvFtHnS9r16WBFkIa0uC8s/4pmp31M=;
+        b=sAYP26XfrRLMcHCaPC3Op3rZxQLHsXFZJlHe4/x5rGUDL7KqssIVSmMCrohgyIM5Gw
+         H76mqXh5oJlWEBEd+Z1Vc6m7Dc1MvfRpRGDCkQhhGiDPgaUt3BxNorv/LF2wZZwzOtK/
+         f6dXqspIJ244wexh/3kmxP1MAlOk3FaCNQvS+6cm+di7OH4SmI1WldGt9PAMieqM2oLY
+         imlDH/LaKulxTjxb78/pAvOGebhlO0gNZqSQBu/oeU5s0qTWXquasP4oR88xOcpphUiK
+         qhwBLTWdzjR+q1rroOBsaDiU+qUqeTtwNIFVljOItXpxAUfjPNCf5Z/99qbwp7vFNLAF
+         piVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744214190; x=1744818990;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8AOUBaKz4k65EfvFtHnS9r16WBFkIa0uC8s/4pmp31M=;
+        b=r4LpIxdabj6wZNkQdH12ForGd5GVE8Jy24OWBioWewMCX3iBd6EC0iw4z6/gtdiAOG
+         LYNVpQ5reJ9h5a2ce9pjTEkFj1qWJoXSTy5BsqnrSPYWh+F3JQ1YeLETCremqZriJ3oX
+         G+sZWvzcQJNHfnrRZidr1Te/543RUS5a/zUGd1Zsa2TMOSR3kkhT/CDojyJBqQuew/SE
+         bjWAjjcFxvRkd5vh9NDfnjmUTem+akdvTU0sz+xuKxdzCHjF1eatQIzJhCYKKXCTFJF4
+         dUglu77lxBBkF8pBsV3rcxQQF28ZA1tzWQ6H2Q/TAHB0oghWXHdFUFWWXce5oIGZKkOg
+         qL4A==
+X-Forwarded-Encrypted: i=1; AJvYcCUw4xN4fddDvmzuf2+eUsAFM6Lg/NUlnN4vDrM/TTXbm8X5KtV5NCHr3UE/agde+kcskyDzp7qujVRRU9c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YydVZ/K6Cn/0icMEz5z/wW5CGys9Gj8ChfJN1h9s0dfKzab+aQc
+	X7/yUwp/KDpuPeBM0kwDisCy7nqZBnIQn/dBE3mSPMX9fvXOTp0oNBgBQbbXXyEcn7ENlLMTuE2
+	frk4GnjsA0+s2Fn1HDgR8yb95fcxZYEgZCMSv5g==
+X-Gm-Gg: ASbGnctE/a5fYol222x+imMEDUo3cUh7gCXHaBg+IpjHuj6ccHwFeT3mP3vhBejF+Ac
+	zlY0o/2sCqW0kCyGScr0I8OWi9C7xWJkePROQpnC/Z2da/dpP9UDSIFr4Yhh3jlA6vqhS9VlAfL
+	BXGptVdslVvpquNnTgQYCEigO/sc6T2426kIl2u59m4VKZpH6aFHspMgymBVwhh28suw==
+X-Google-Smtp-Source: AGHT+IHAYOkRnjj4GyTCCh1iY/ZOItnunEtUpgqT8hpMTBxn0on/ShchAm+CXwhiK3vw5FX6fk0YxzKhFmWiXa4EPd0=
+X-Received: by 2002:a05:6122:3291:b0:520:3e1c:500f with SMTP id
+ 71dfb90a1353d-527a923823fmr2577969e0c.8.1744214190187; Wed, 09 Apr 2025
+ 08:56:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BY5PR12MB3953:EE_|LV8PR12MB9084:EE_
-X-MS-Office365-Filtering-Correlation-Id: 941c0c01-8e0f-4a1b-33e8-08dd777f1516
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|7416014|10070799003|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?REdNOHlZY2t2aVZUZXhwWTNiSWZFV2MvTUJQNzkveWxNNVA5bHJKRWxpMDZO?=
- =?utf-8?B?a0o3aHBYOG9FODAzZkxJV3N5dXJvSlJld3pzNkhWbDAxbkJuUnRlQ0xyVEhp?=
- =?utf-8?B?aTRMMGI3Qk9Dak9SSkg1aTAwcHNMTXB1WkRNY3F1S21SUHBaRS96RHV0bWVX?=
- =?utf-8?B?clJONzBaQ25KK0FCT1EvMEpCU3JNeHU5S1YrRVcyUmlTNEkvVUM4cCtoUGM3?=
- =?utf-8?B?SzJ2aC9HMWR3WXoxbS9EdXFVRXBGUy9YejN5UjUvME94cG5nUE1DeXd2Nnhx?=
- =?utf-8?B?WFJEY3N0QVErYnBGV29jVGE5MkVwMHlDWmtJdlNDbzBnS1RBTGFlRm1qbEM4?=
- =?utf-8?B?dWgrQmVGWTJpb1JaVjM0ZVpvbyszbE5Zdlo2TkxsbWNjZ2xUVDFRNUIrczY4?=
- =?utf-8?B?OVZ1NkkvNjBMaFo3Ulg0OURvQTZrK2tLOHRzN0hYQnhaeGZWd3VpYzFFV2ty?=
- =?utf-8?B?UmZXRGgwa2ZFYWVhejZwK0UzZHhUQXp6UWtpOWE5dkNxVXBVVXR6bFo4SGJx?=
- =?utf-8?B?UVFnMld6YU1rRzdmcUhIM3R2dVNWeE14MGRjK2FCVXdkTzhDVDR1NFl6Mk5x?=
- =?utf-8?B?RG1MbUROUE04dzRDY3lSTUNFcis1S011OXAyTnJ3T0syTGdoM1BPTkhxNVdR?=
- =?utf-8?B?Qml5Z3RIS1Z1cExnY3gxbXErU29OeS9XQ1B1UjJEbzlsNUpGWUxMUDRxK2xB?=
- =?utf-8?B?VHVUUVpQaXNkK0Q3LzdpL0xaSy9JWXY3aGN6SEJIYWlCRFVTVEU2QVVoZkgz?=
- =?utf-8?B?dzBzclcxMTJHdG9lejZheGJzVWYydzZXSGJ3R1EyWkd5WmhSSHhYNmxMN1g5?=
- =?utf-8?B?eXdhUTJQbUthRlZQZGZzckpzLzhxN1BrT292Tm90Z0grWlhrTDRpYVBnc0pT?=
- =?utf-8?B?U0NpMlZobGdqcVR6YnV4RXN3SzRmdDZYVGlzWjAzMnR5VUc5YUpUaWdJRTUw?=
- =?utf-8?B?S0ZyRlI2MFRCNFpaREptNnRxT0Z1WWRBaTFjUEVrV3lYbDlKcC9McENzN2hN?=
- =?utf-8?B?emsrekNCODY1L1NiemJsQTFvc2ZSbk9kdFhwcW1wdzJLSzc2aGIzUU8zU3Jx?=
- =?utf-8?B?L0ZreDJ6U3hQRldEdlN0VGJIU3hWYTlRTzRlbGRxTEpzM0QyT0hRUkZ6Z0U5?=
- =?utf-8?B?MFhXMTZWNlN3N050WW05d2orM1ByVVJ2Rm8xVENZT1EzZWZYam11R3NxN0h2?=
- =?utf-8?B?L2VFaWdNclRiZWJrcXRUdWdPbFkzSE1uVlhPcXdrOUFqL3VGMjZoaWVGcUNi?=
- =?utf-8?B?bE1zaFl5ZWRoUXJVbVh4NzNab2VYeWlXaVllWDZYOStJaVhFTyszNzFwQ1NW?=
- =?utf-8?B?Nlh2RGJWUGtWazc0YXNnY2pxODZnVTkzUjdwaVlDejNWcTE4eWtXbGI4R1Fn?=
- =?utf-8?B?RVNXSnF2UEdnMVlYWE5sMEFFc3lCTDZEOTlPeU0wcU5RUitDMi83YkM1eExD?=
- =?utf-8?B?ays2dFRiM01KNUhvOTlCUTNHY2pNZTlGbVhzM0toc0tFa3RWc1l1YXpTaVVh?=
- =?utf-8?B?K2hMT0dnTGp1ZTlYWHVmaDFoSXRsb2czTXcwMUFSSnFhblVMRGpkMmlFaDg3?=
- =?utf-8?B?VDV1bDRtQ2pzQnhIYlRLM1RvVUtuek9XSitDL0xHOVpSTGh3MkhWUnB1UXkw?=
- =?utf-8?B?eDU0RldWc2s2RDZEZ01ocDdjaW0yZGZiREYvdVp3cVJNZllJb2EzMUNaTDlQ?=
- =?utf-8?B?Y1pZc25Tam1uNFR2RGEydU95N09pM2FWSFMwSVdFVFlzODN5UzFGbk5LbjVz?=
- =?utf-8?B?a3AreE5IcHIxOVJ5WEUzaFRKYmhYN0dRMjB5OXdDMUNxaXZXZHY2cXIyRnFt?=
- =?utf-8?B?NG5CWFB1bEFSM1JGRWlrZTNaWjUzcjlUL3ZxK0FwOXp0VGlDaVVHSU1OSUIz?=
- =?utf-8?B?eW1kTEtiQVUvWFlsWVNseUZGNUVrWTJuczM1ei9HdmZpVXRGYnR0VStKQ21W?=
- =?utf-8?Q?jUXkZXx6yAM=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR12MB3953.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(10070799003)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?QzJaaTBDdTQrVS82UUVHdEYzZlhub0ppNHNZb1Z2ZGdId3FuQ0VpYW9zOU5k?=
- =?utf-8?B?NndESjYvQ3liVC9EaTMxMTlaa09kUUtJVThUZThITGpQQWo1NXVLNGFGaTRs?=
- =?utf-8?B?V09jOXduN0o2bVNTUkdxM3lRa3ZGdjBabVNJYStHVUp1RUNvVnlRWE54djJZ?=
- =?utf-8?B?RFFmZHRMMUdaN1o0Y01BSEJuUUVBbnIyWkNEMVRZaWpNVDd1UmczcWw4WlE4?=
- =?utf-8?B?MVQ3TTFNaVljQnp2S0oveDZ2ZTh4eWlJSGJmZjFKd1JQOFpvOWQ3L01sMHBY?=
- =?utf-8?B?OElwMXNPYTBIaExwWkp1ekxldEk5a3RvaEllNUdHL1NYK3BzMldZOHErc3di?=
- =?utf-8?B?Q3ovV0tkRWdhVEJrazg0dGpUaHpxRmwvNTFiLzlnbUc0ZWViQVNmajBJRVpO?=
- =?utf-8?B?anBlb2MzU0F4QmVGd1Y0Z09LYStpS0haUDkveTh6d2ZZVG5xaUhxY3pveGFC?=
- =?utf-8?B?SHhlOWFGc3ZrY2VtMUcxWnhXcktMelJvVGtUSVZHeFBCQ2FlZmgxQ0g1R0hD?=
- =?utf-8?B?RTJUREUxWXFTRkRYdE5KTmxab1dBK1lOZFhGY2FQOVEvLzNGaTNxclQyNy90?=
- =?utf-8?B?ZFg3THZ4U0R1Z1NnRk01WWxxVHB6UkxDV2Riekk0WVZ3WlFESmpRNmhoN0li?=
- =?utf-8?B?bE91WkRuYUNOdmNUM1Q3RkZyZGdEenN1YWNXVUFHK2lKK2VydUxLdmk4ZHkz?=
- =?utf-8?B?NlltM3hjc0h2S1R1TmloQVowWmwzOHc5Rmp4eTdkRU16TzIxaWZSVThMOWJv?=
- =?utf-8?B?YzU2VUhTWUs3ODhBbjhzU2ZKY3FoQVRPOGhQVEdRVkxsZEk1T2grbDk4endy?=
- =?utf-8?B?YTNGajNIUGZvbXlSMkJJRUVmekVSSTlnZVIxbFNGczUyNSt1WCt3TmNxbTZ5?=
- =?utf-8?B?ZWh2Wm80UlVvNm9LZTBwSTVHM3RNbzdRUFZvOEpOemtzRWtGQTkyaS8yYnQ1?=
- =?utf-8?B?YlloeGNJZ0sxcXh4T0hxN1lmM3pmemJpMFF5MGczaGhnMUFFNnZpRmxRM3N4?=
- =?utf-8?B?NWVjRTlrUHAyV2R0UzRya3hHdDZWWStyazB1UmJGeGVnTDdVT0kxd0dFcWRu?=
- =?utf-8?B?eDFPVC9iVFRKOGMyVHdHWWxOVldkSjQ0bXFKTk4vTjk4MWhRQTJtS21iK3VB?=
- =?utf-8?B?ejNOUENJeUdVaEo5QXNOTm80cFFpc0w3bjNvZitDWmlHdW5kbVdMa20rUWJY?=
- =?utf-8?B?dGxydnpla0pUZlN3TXdKY1FpVm9JcTVxcFV3d0h4aDdsVVJjWkp5dDcxcVFZ?=
- =?utf-8?B?dnRCUkw1NWxqWjNwQ0dsV2txMlNab1YvVzFwaCtycEtpLy9aRDZUckxDblls?=
- =?utf-8?B?WFdYYjU5RS8yWkZScnptRUpnL3A5SUFiWHJwMEJYSk54TU0wZ1UyMVkrQ0JE?=
- =?utf-8?B?RTBGZU5kTGx4U25zdVRiY0R5c3QxelN5VWZOVmF6VVZ2U3NGT2pLR0dFR1JU?=
- =?utf-8?B?VzVHcExrenhaMUlFZlFCSERrTHBTejgxYkgyUHBjcDc1a2NZbUtUeXNYdWhq?=
- =?utf-8?B?SG5NTGZKTUlwK0Uya01RK3o4Q3FWbnVYVnFIcDAvSTJuMWVkV3h1TnEzbUhK?=
- =?utf-8?B?aitqYm5PeTYwVUEzdTVlbUxYVUozaFdxR1NXdzh5a01ndStIUlV0c3RBUkpY?=
- =?utf-8?B?Q1dxcnJLaU9BU0ZlcFFJUXd6d1lDa3I0bDl4V2tyMGtiOU5YaUluQjFUZ1Ft?=
- =?utf-8?B?aTlpbWhYZzhpcmpJUllWMkpWcmwzaVlXK29vcWVqL2FxM1kzdzJXdjlxS1Fn?=
- =?utf-8?B?T0pKbXB6VGpqOUFDdWVoeVVQNUVqaTBNNmZyS0xhY2dwbVZWejlBRk5ISTQy?=
- =?utf-8?B?ZzJFUzRINU4wTmorK1VBaEFDVWZQR0NTV2lwMldmbEs2d3MwV1ZCZWRsbHZF?=
- =?utf-8?B?T0RLZHZ0eWpmcG1jMUtPaGQ2YmZEL1RwSk0yTVhmclIrSEZQUDQ1ZW5YTkN5?=
- =?utf-8?B?aFZqckI1Uzd4dVlJa3NSWkFWN2xaMCtDRTJrSnQ5QjYwVTJmTURRTUlHWTJU?=
- =?utf-8?B?WGtuMEJqb09RaDlVbHdlUFYwQjdzcVhEenNmeCtXVDZqZWo4dFhkcUViZjZ2?=
- =?utf-8?B?U09WN08vc2lJZXc5ZnRRZm9pKzN3d1hWc2s1SkxqamFzMnIwSVBtZGtCaXgz?=
- =?utf-8?B?bXhxYm9Od0JqaGRuVFRSUkErUWQ2dkxsZVBjMG14ZHFPbGZVdTdwZU93dWdK?=
- =?utf-8?Q?gwSXHYWeJzwdKDDNdGBy+s4aViVgT6iXeshsOJ+yb52o?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 941c0c01-8e0f-4a1b-33e8-08dd777f1516
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR12MB3953.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 15:56:25.7650
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wNR3+l2D0KBKxLLDHKreOk6hYKQJw2LDcAe8bOYokrNtkIOtXGmFmSSLJ2+h0ryYE0+tyx/tOKi3i78WBcGTsQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9084
+References: <CA+G9fYt0F_vR-zOV4P8m4HTv6AecT-eEnrL+t5wgAaKPodi0mQ@mail.gmail.com>
+ <6e0ef5cc-b692-4d39-bec4-a75c1af3f0aa@arm.com>
+In-Reply-To: <6e0ef5cc-b692-4d39-bec4-a75c1af3f0aa@arm.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 9 Apr 2025 21:26:18 +0530
+X-Gm-Features: ATxdqUGUsxvoW2AC8LyCA3f5WgQxLUMC2Q7RV8pjSCJR4XLdNVjwMGpmUyBY9Fo
+Message-ID: <CA+G9fYs_nUN2x8fFJ0cfudHWbCOLSJK=OhEK0Efd1ifcjq_LRg@mail.gmail.com>
+Subject: Re: arm64: juno-r2: SSD detect failed on mainline and next
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>, iommu@lists.linux.dev, 
+	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 4/9/25 17:21, Michal Kubiak wrote:
-> On Tue, Apr 08, 2025 at 05:00:45PM +0300, Tariq Toukan wrote:
->> From: Vlad Dogaru <vdogaru@nvidia.com>
->>
->> The procedure of attaching an action template to an existing matcher had
->> a few issues:
->>
->> 1. Attaching accidentally overran the `at` array in bwc_matcher, which
->>     would result in memory corruption. This bug wasn't triggered, but it
->>     is possible to trigger it by attaching action templates beyond the
->>     initial buffer size of 8. Fix this by converting to a dynamically
->>     sized buffer and reallocating if needed.
->>
->> 2. Similarly, the `at` array inside the native matcher was never
->>     reallocated. Fix this the same as above.
->>
->> 3. The bwc layer treated any error in action template attach as a signal
->>     that the matcher should be rehashed to account for a larger number of
->>     action STEs. In reality, there are other unrelated errors that can
->>     arise and they should be propagated upstack. Fix this by adding a
->>     `need_rehash` output parameter that's orthogonal to error codes.
->>
->> Fixes: 2111bb970c78 ("net/mlx5: HWS, added backward-compatible API handling")
->> Signed-off-by: Vlad Dogaru <vdogaru@nvidia.com>
->> Reviewed-by: Yevgeny Kliteynik <kliteyn@nvidia.com>
->> Reviewed-by: Mark Bloch <mbloch@nvidia.com>
->> Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
-> 
-> In general the patch looks OK to me.
-> Just one request for clarification inline.
+On Wed, 2 Apr 2025 at 21:04, Robin Murphy <robin.murphy@arm.com> wrote:
+>
+> On 31/03/2025 5:03 am, Naresh Kamboju wrote:
+> > Regressions on arm64 Juno-r2 devices detect SSD tests failed on the
+> > Linux next and Linux mainline.
+> >
+> > First seen on the v6.14-7245-g5c2a430e8599
+> >   Good: v6.14
+> >   Bad: v6.14-7422-gacb4f33713b9
+>
+> Sorry, I can't seem to reproduce this on my end, both today's mainline
+> and acb4f33713b9 with my config, and even acb4f33713b9 with the linked
+> LKFT config, all work OK on my Juno r2 (using a SATA SSD and PCIe
+> networking). The only thing which stands out in your log is that PCI
+> seems to give up probing and assigning resources beyond the switch
+> downstream ports (so SATA and ethernet are never discovered), whereas on
+> mine it does[2]. However that all happens before the first IOMMU
+> instance probes (which conveniently is the PCIe one), so it's hard to
+> imagine how that could have an effect anyway...
+>
+> The only obvious difference is that I'm using EDK2 rather than U-Boot,
+> so that's done all the PCIe configuration once already, but it doesn't
+> seem like that's significant - looking back at a random older log[1],
+> the on-board endpoints were still being picked up right after
+> reconfiguring the switch, well before the IOMMU comes into the picture.
+>
 
-Thank you for reviewing.
+Since it is a still issue on mainline and next,
 
->> ---
->>   .../mellanox/mlx5/core/steering/hws/bwc.c     | 55 ++++++++++++++++---
->>   .../mellanox/mlx5/core/steering/hws/bwc.h     |  9 ++-
->>   .../mellanox/mlx5/core/steering/hws/matcher.c | 48 +++++++++++++---
->>   .../mellanox/mlx5/core/steering/hws/matcher.h |  4 ++
->>   .../mellanox/mlx5/core/steering/hws/mlx5hws.h |  5 +-
->>   5 files changed, 97 insertions(+), 24 deletions(-)
->>
-> 
-> [...]
-> 
->> @@ -520,6 +529,23 @@ hws_bwc_matcher_extend_at(struct mlx5hws_bwc_matcher *bwc_matcher,
->>   			  struct mlx5hws_rule_action rule_actions[])
->>   {
->>   	enum mlx5hws_action_type action_types[MLX5HWS_BWC_MAX_ACTS];
->> +	void *p;
->> +
->> +	if (unlikely(bwc_matcher->num_of_at >= bwc_matcher->size_of_at_array)) {
->> +		if (bwc_matcher->size_of_at_array >= MLX5HWS_MATCHER_MAX_AT)
->> +			return -ENOMEM;
->> +		bwc_matcher->size_of_at_array *= 2;
-> 
-> Is it possible that `num_of_at` is even greater than twice `size_of_array`?
-> If so, shouldn't you calculate how many multiplications by 2 you need to
-> do?
+Bisected and reverted patch ^ causing kernel warnings at boot time
+but finding the SSD drive,
 
-We only extend the array by one template at a time, immediately after 
-this check, so this can't happen.
+  [bcb81ac6ae3c2ef95b44e7b54c3c9522364a245c]
+  iommu: Get DT/ACPI parsing into the proper probe path
 
-Cheers,
-Vlad
+pcieport 0000:00:00.0: late IOMMU probe at driver bind, something fishy here!
+WARNING: at drivers/iommu/iommu.c:559 __iommu_probe_device
+
+I see boot warnings [1]
+I am happy to test debug patches if you have any.
+
+[1] https://lkft.validation.linaro.org/scheduler/job/8212667#L1291
+
+- Naresh
+
+> Thanks,
+> Robin.
+>
+>
+> [1] https://lkft.validation.linaro.org/scheduler/job/8143082#L1283
+> [2]:
+>
+> [    1.741362] pci-host-generic 40000000.pcie: host bridge
+> /pcie@40000000 ranges:
+> [    1.748682] pci-host-generic 40000000.pcie:       IO
+> 0x005f800000..0x005fffffff -> 0x0000000000
+> [    1.757465] pci-host-generic 40000000.pcie:      MEM
+> 0x0050000000..0x0057ffffff -> 0x0050000000
+> [    1.766224] pci-host-generic 40000000.pcie:      MEM
+> 0x4000000000..0x40ffffffff -> 0x4000000000
+> [    1.775019] pci-host-generic 40000000.pcie:   IB MEM
+> 0x0080000000..0x00ffffffff -> 0x0080000000
+> [    1.783781] pci-host-generic 40000000.pcie:   IB MEM
+> 0x0800000000..0x09ffffffff -> 0x0800000000
+> [    1.792615] pci-host-generic 40000000.pcie: ECAM at [mem
+> 0x40000000-0x4fffffff] for [bus 00-ff]
+> [    1.801559] pci-host-generic 40000000.pcie: PCI host bridge to bus
+> 0000:00
+> [    1.808485] pci_bus 0000:00: root bus resource [bus 00-ff]
+> [    1.814022] pci_bus 0000:00: root bus resource [io  0x0000-0x7fffff]
+> [    1.820408] pci_bus 0000:00: root bus resource [mem
+> 0x50000000-0x57ffffff]
+> [    1.827314] pci_bus 0000:00: root bus resource [mem
+> 0x4000000000-0x40ffffffff pref]
+> [    1.835050] pci 0000:00:00.0: [1556:1100] type 01 class 0x060400 PCIe
+> Root Port
+> [    1.842444] pci 0000:00:00.0: BAR 0 [mem 0x4000000000-0x4000003fff
+> 64bit pref]
+> [    1.849717] pci 0000:00:00.0: PCI bridge to [bus 01-08]
+> [    1.854990] pci 0000:00:00.0:   bridge window [io  0x0000-0x1fff]
+> [    1.861125] pci 0000:00:00.0:   bridge window [mem 0x50000000-0x501fffff]
+> [    1.868099] pci 0000:00:00.0: supports D1 D2
+> [    1.872393] pci 0000:00:00.0: PME# supported from D0 D1 D2 D3hot D3cold
+> [    1.881014] pci 0000:01:00.0: [111d:8090] type 01 class 0x060400 PCIe
+> Switch Upstream Port
+> [    1.889407] pci 0000:01:00.0: PCI bridge to [bus 02-08]
+> [    1.894675] pci 0000:01:00.0:   bridge window [io  0x0000-0x1fff]
+> [    1.900812] pci 0000:01:00.0:   bridge window [mem 0x50000000-0x501fffff]
+> [    1.907690] pci 0000:01:00.0: enabling Extended Tags
+> [    1.912876] pci 0000:01:00.0: PME# supported from D0 D3hot D3cold
+> [    1.924459] pci 0000:02:01.0: [111d:8090] type 01 class 0x060400 PCIe
+> Switch Downstream Port
+> [    1.933037] pci 0000:02:01.0: PCI bridge to [bus 03]
+> [    1.938045] pci 0000:02:01.0:   bridge window [io  0x1000-0x1fff]
+> [    1.944179] pci 0000:02:01.0:   bridge window [mem 0x50100000-0x501fffff]
+> [    1.951060] pci 0000:02:01.0: enabling Extended Tags
+> [    1.956298] pci 0000:02:01.0: PME# supported from D0 D3hot D3cold
+> [    1.963053] pci 0000:02:02.0: [111d:8090] type 01 class 0x060400 PCIe
+> Switch Downstream Port
+> [    1.971621] pci 0000:02:02.0: PCI bridge to [bus 04]
+> [    1.976698] pci 0000:02:02.0: enabling Extended Tags
+> [    1.981924] pci 0000:02:02.0: PME# supported from D0 D3hot D3cold
+> [    1.988682] pci 0000:02:03.0: [111d:8090] type 01 class 0x060400 PCIe
+> Switch Downstream Port
+> [    1.997272] pci 0000:02:03.0: PCI bridge to [bus 05]
+> [    2.002352] pci 0000:02:03.0: enabling Extended Tags
+> [    2.007578] pci 0000:02:03.0: PME# supported from D0 D3hot D3cold
+> [    2.014713] pci 0000:02:0c.0: [111d:8090] type 01 class 0x060400 PCIe
+> Switch Downstream Port
+> [    2.023303] pci 0000:02:0c.0: PCI bridge to [bus 06]
+> [    2.028396] pci 0000:02:0c.0: enabling Extended Tags
+> [    2.033643] pci 0000:02:0c.0: PME# supported from D0 D3hot D3cold
+> [    2.040569] pci 0000:02:10.0: [111d:8090] type 01 class 0x060400 PCIe
+> Switch Downstream Port
+> [    2.049131] pci 0000:02:10.0: PCI bridge to [bus 07]
+> [    2.054220] pci 0000:02:10.0: enabling Extended Tags
+> [    2.059439] pci 0000:02:10.0: PME# supported from D0 D3hot D3cold
+> [    2.066798] pci 0000:02:1f.0: [111d:8090] type 01 class 0x060400 PCIe
+> Switch Downstream Port
+> [    2.075368] pci 0000:02:1f.0: PCI bridge to [bus 08]
+> [    2.080377] pci 0000:02:1f.0:   bridge window [io  0x0000-0x0fff]
+> [    2.086507] pci 0000:02:1f.0:   bridge window [mem 0x50000000-0x500fffff]
+> [    2.093397] pci 0000:02:1f.0: enabling Extended Tags
+> [    2.098625] pci 0000:02:1f.0: PME# supported from D0 D3hot D3cold
+> [    2.105519] pci 0000:03:00.0: [1095:3132] type 00 class 0x018000 PCIe
+> Legacy Endpoint
+> [    2.113532] pci 0000:03:00.0: BAR 0 [mem 0x50104000-0x5010407f 64bit]
+> [    2.120020] pci 0000:03:00.0: BAR 2 [mem 0x50100000-0x50103fff 64bit]
+> [    2.126520] pci 0000:03:00.0: BAR 4 [io  0x1000-0x107f]
+> [    2.131794] pci 0000:03:00.0: ROM [mem 0xfff80000-0xffffffff pref]
+> [    2.138189] pci 0000:03:00.0: supports D1 D2
+> [    2.142965] pci 0000:03:00.0: disabling ASPM on pre-1.1 PCIe device.
+> You can enable it with 'pcie_aspm=force'
+> [    2.154011] pci 0000:08:00.0: [11ab:4380] type 00 class 0x020000 PCIe
+> Legacy Endpoint
+> [    2.162015] pci 0000:08:00.0: BAR 0 [mem 0x50000000-0x50003fff 64bit]
+> [    2.168492] pci 0000:08:00.0: BAR 2 [io  0x0000-0x00ff]
+> [    2.173941] pci 0000:08:00.0: supports D1 D2
+> [    2.178260] pci 0000:08:00.0: PME# supported from D0 D1 D2 D3hot D3cold
+> [    2.185740] pci 0000:00:00.0: bridge window [mem
+> 0x50000000-0x501fffff]: assigned
+> [    2.193266] pci 0000:00:00.0: BAR 0 [mem 0x4000000000-0x4000003fff
+> 64bit pref]: assigned
+> [    2.201411] pci 0000:00:00.0: bridge window [io  0x1000-0x2fff]: assigned
+> [    2.208235] pci 0000:01:00.0: bridge window [mem
+> 0x50000000-0x501fffff]: assigned
+> [    2.215754] pci 0000:01:00.0: bridge window [io  0x1000-0x2fff]: assigned
+> [    2.222580] pci 0000:02:01.0: bridge window [mem
+> 0x50000000-0x500fffff]: assigned
+> [    2.230120] pci 0000:02:1f.0: bridge window [mem
+> 0x50100000-0x501fffff]: assigned
+> [    2.237648] pci 0000:02:01.0: bridge window [io  0x1000-0x1fff]: assigned
+> [    2.244470] pci 0000:02:1f.0: bridge window [io  0x2000-0x2fff]: assigned
+> [    2.251313] pci 0000:03:00.0: ROM [mem 0x50000000-0x5007ffff pref]:
+> assigned
+> [    2.258399] pci 0000:03:00.0: BAR 2 [mem 0x50080000-0x50083fff
+> 64bit]: assigned
+> [    2.265769] pci 0000:03:00.0: BAR 0 [mem 0x50084000-0x5008407f
+> 64bit]: assigned
+> [    2.273141] pci 0000:03:00.0: BAR 4 [io  0x1000-0x107f]: assigned
+> [    2.279286] pci 0000:02:01.0: PCI bridge to [bus 03]
+> [    2.284289] pci 0000:02:01.0:   bridge window [io  0x1000-0x1fff]
+> [    2.290425] pci 0000:02:01.0:   bridge window [mem 0x50000000-0x500fffff]
+> [    2.297275] pci 0000:02:02.0: PCI bridge to [bus 04]
+> [    2.302302] pci 0000:02:03.0: PCI bridge to [bus 05]
+> [    2.307327] pci 0000:02:0c.0: PCI bridge to [bus 06]
+> [    2.312353] pci 0000:02:10.0: PCI bridge to [bus 07]
+> [    2.317382] pci 0000:08:00.0: BAR 0 [mem 0x50100000-0x50103fff
+> 64bit]: assigned
+> [    2.324751] pci 0000:08:00.0: BAR 2 [io  0x2000-0x20ff]: assigned
+> [    2.330881] pci 0000:02:1f.0: PCI bridge to [bus 08]
+> [    2.335895] pci 0000:02:1f.0:   bridge window [io  0x2000-0x2fff]
+> [    2.342030] pci 0000:02:1f.0:   bridge window [mem 0x50100000-0x501fffff]
+> [    2.348874] pci 0000:01:00.0: PCI bridge to [bus 02-08]
+> [    2.354129] pci 0000:01:00.0:   bridge window [io  0x1000-0x2fff]
+> [    2.360270] pci 0000:01:00.0:   bridge window [mem 0x50000000-0x501fffff]
+> [    2.367113] pci 0000:00:00.0: PCI bridge to [bus 01-08]
+> [    2.372366] pci 0000:00:00.0:   bridge window [io  0x1000-0x2fff]
+> [    2.378494] pci 0000:00:00.0:   bridge window [mem 0x50000000-0x501fffff]
+> [    2.385325] pci_bus 0000:00: resource 4 [io  0x0000-0x7fffff]
+> [    2.391101] pci_bus 0000:00: resource 5 [mem 0x50000000-0x57ffffff]
+> [    2.397398] pci_bus 0000:00: resource 6 [mem
+> 0x4000000000-0x40ffffffff pref]
+> [    2.404478] pci_bus 0000:01: resource 0 [io  0x1000-0x2fff]
+> [    2.410078] pci_bus 0000:01: resource 1 [mem 0x50000000-0x501fffff]
+> [    2.416374] pci_bus 0000:02: resource 0 [io  0x1000-0x2fff]
+> [    2.421980] pci_bus 0000:02: resource 1 [mem 0x50000000-0x501fffff]
+> [    2.428277] pci_bus 0000:03: resource 0 [io  0x1000-0x1fff]
+> [    2.433877] pci_bus 0000:03: resource 1 [mem 0x50000000-0x500fffff]
+> [    2.440195] pci_bus 0000:08: resource 0 [io  0x2000-0x2fff]
+> [    2.445799] pci_bus 0000:08: resource 1 [mem 0x50100000-0x501fffff]
+> [    2.519972] Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
+> [    2.532646] msm_serial: driver initialized
+> [    2.537422] SuperH (H)SCI(F) driver initialized
+> [    2.542220] STM32 USART driver initialized
+> [    2.551250] arm-smmu 2b500000.iommu: probing hardware configuration...
+> [    2.557832] arm-smmu 2b500000.iommu: SMMUv1 with:
+> [    2.562564] arm-smmu 2b500000.iommu:         stage 2 translation
+> [    2.568006] arm-smmu 2b500000.iommu:         coherent table walk
+> [    2.573449] arm-smmu 2b500000.iommu:         stream matching with 32
+> register groups
+> [    2.580643] arm-smmu 2b500000.iommu:         4 context banks (4 stage-2 only)
+> [    2.587205] arm-smmu 2b500000.iommu:         Supported page sizes: 0x60211000
+> [    2.593778] arm-smmu 2b500000.iommu:         Stage-2: 40-bit IPA -> 40-bit PA
+> [    2.600471] arm-smmu 2b500000.iommu:         preserved 0 boot mappings
+> [    2.607710] pci 0000:00:00.0: Adding to iommu group 0
+> [    2.613204] pci 0000:01:00.0: Adding to iommu group 0
+> [    2.618588] pci 0000:02:01.0: Adding to iommu group 0
+> [    2.623975] pci 0000:02:02.0: Adding to iommu group 0
+> [    2.629373] pci 0000:02:03.0: Adding to iommu group 0
+> [    2.634742] pci 0000:02:0c.0: Adding to iommu group 0
+> [    2.640127] pci 0000:02:10.0: Adding to iommu group 0
+> [    2.645531] pci 0000:02:1f.0: Adding to iommu group 0
+> [    2.650952] pci 0000:03:00.0: Adding to iommu group 0
+> [    2.656349] pci 0000:08:00.0: Adding to iommu group 0
+>
+>
+> >
+> > * Juno-r2,
+> >   - detect-ssd
+> >   - mkfs.ext4-ssd
+> >
+> > Regression Analysis:
+> >   - New regression? yes
+> >   - Reproducibility? Yes
+> >
+> > Test regression: arm64 Juno-r2 SSD detect failed
+> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> >
+> > Anders bisected this to,
+> > # first bad commit:
+> >    [bcb81ac6ae3c2ef95b44e7b54c3c9522364a245c]
+> >    iommu: Get DT/ACPI parsing into the proper probe path
+> >
+> > ## Test log
+> >    mkfs.ext4 /dev/disk/by-id/ata-SanDisk_SSD_PLUS_240GB_223004A01292
+> >    mke2fs 1.47.2 (1-Jan-2025)
+> >    The file /dev/disk/by-id/ata-SanDisk_SSD_PLUS_240GB_223004A01292
+> > does not exist and no size was specified.
+> >
+> > ## Source
+> > * Kernel version: 6.14.0
+> > * Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+> > * Git sha: acb4f33713b9f6cadb6143f211714c343465411c
+> > * Git describe: v6.14-7422-gacb4f33713b9
+> > * Project details:
+> > https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.14-7422-gacb4f33713b9/
+> >
+> > ## Test
+> > * Test log: https://lkft.validation.linaro.org/scheduler/job/8188382#L1538
+> > * Test history:
+> > https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.14/testrun/27742015/suite/ltp-cve/test/cve-2017-2671/history/
+> > * Test details:
+> > https://lkft.validation.linaro.org/scheduler/job/8188382/definition
+> > * Test link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2uwduIsT14Pz3XEoUQQIS6ndlQK/
+> > * Kernel config:
+> > https://storage.tuxsuite.com/public/linaro/lkft/builds/2uwduIsT14Pz3XEoUQQIS6ndlQK/config
+> >
+> >
+> > --
+> > Linaro LKFT
+> > https://lkft.linaro.org
