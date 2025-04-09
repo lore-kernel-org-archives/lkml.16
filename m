@@ -1,44 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FEBA1EB18C;
-	Wed,  9 Apr 2025 20:39:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FCA021018F;
+	Wed,  9 Apr 2025 20:40:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744231166; cv=none; b=Etr8xEzfeHLY0cOMyIHSlajyt05xw0fhudBvDkt5P+Qkjq9T8y0kHp7pVS62CMt/ZEHKxjc7WmRvMkBd2w4ZO4qDeTetmCWGZZeCW+yRozn1Kc2QuhtNIpq4l2eBehdPF7b1i153PynGit1xL1T147JQ9YRJVCbZa1N68LRSRYo=
+	t=1744231202; cv=none; b=k/wn4lfQTIyyYdczxaAujrh+wq0H0BQl73OKalQD+Bv7d8VqnGRVJhxyXdpZtD5PhWA3lWBiG0h6izzRvt7xdgD2iXtWmdoNym5sEYNLEIDLicsj4LQeLOc3efe6LxiDi7NxiC7zzlhFEnv70xsqIN0KxXcaO0AMht8voFlCv6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744231166; c=relaxed/simple;
-	bh=PXaRRTFy7bWWNGMulgtEHLLhwWsaJHDiExnPpSJMUqk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=b35ecuy3ngaSyEsYhu4/PwBizrPpkeiYWooVWEXf4KscUklgjV5LvjLR/GxqVp4fY6eMK7N5Mkjjkrj6RvW9E8uYMNqZOo8yC1dHuu+AUDLWEVPY/B+p1/mrrzeTMVQA8anSPcTpa7YzfuavcSJ6sVzZIk58OHjkIq2Rylxpj7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hrcq5M/9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744231202; c=relaxed/simple;
+	bh=9BKAHqis+X5kWtEvZvUWZC8z/kchZX2ryYpVwrL7c9w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nMjZzINopr2N/+WXAPhiaoEnDALu5qs5qD+hhJCwTqGaGbyN57BolHTO4Y+SstW4ZkWMbB5qZWr+JStCRZCh9UDbuygcsPxr5UUJDTUq1i/B0NVmYC0x+CnneD3rUlxmpX0I96WZWEljEdFg9KVe7QUl5MPR6trKI9olvMN/qnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kb0TuXLJ; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hrcq5M/9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BD62C4CEE2;
-	Wed,  9 Apr 2025 20:39:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744231164;
-	bh=PXaRRTFy7bWWNGMulgtEHLLhwWsaJHDiExnPpSJMUqk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=hrcq5M/9WJL/uZTfsfkfvnttmSUwSmNTgSasnH275o5mt4mrHFKgCqC2DwbI5tZqX
-	 qSq1SZwRnb8dxZA23eYVF5GPS4Wvg2DhTxJilrc1vDO84zTMQWmo+bmdsSL3HgWFKD
-	 EcnTPXo88O1Cr+2eWNZKbpMSIwVjZjHO54BjWWFOvhQreh0YwT88hmLCvRTp8wWW+i
-	 R7xWr8TB0A81SIdG45MsfJfNqyNU+jV1izbnyw482/ZBA5dt2y9Ui9eCBlJ1ITAWqJ
-	 Zs4XiV4KOC5gtNhz013rvnodETzfPM4r4kcrjrRlLR69T96xIvh13IDPUqa59EwREW
-	 DNAvtJ1Z250CA==
-Date: Wed, 9 Apr 2025 15:39:23 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manikandan Karunakaran Pillai <mpillai@cadence.com>
-Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"kw@linux.com" <kw@linux.com>,
-	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
-	"robh@kernel.org" <robh@kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/7] PCI: cadence: Add header support for PCIe next
- generation controllers
-Message-ID: <20250409203923.GA295549@bhelgaas>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kb0TuXLJ"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e5e1a38c1aso132629a12.2;
+        Wed, 09 Apr 2025 13:40:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744231199; x=1744835999; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9BKAHqis+X5kWtEvZvUWZC8z/kchZX2ryYpVwrL7c9w=;
+        b=kb0TuXLJ4QaoloIwncO5UwKkoH9SIHvCSX/4FCX94YccNwU/2EES4FxzEDoq44zES8
+         jzOBt66BxO8eIUJw2wEe8nUVwfu7CBhpHYt5hMlR1vCIPlVEgqD37+fXGfxp4LFdskBk
+         PYO7hbp7Hai776HHCg3bVzimVcyTLepM9tb392h7J3PsMZhABCbm43ycePjMxJysJpOU
+         t9nCALEBrCoUNVh51ittX19vsA0ULHFudBvaLxINaa1kTyUCdRypCTKTaJTk0+uU8YMx
+         3uPOvVaN6itSnrMNxcV3pFD8zDHopEcBr7YI8ztRXqPw1VMziRNpMZ8MjniJm4We4uC7
+         HKaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744231199; x=1744835999;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9BKAHqis+X5kWtEvZvUWZC8z/kchZX2ryYpVwrL7c9w=;
+        b=JdHrAyr8kvAq0Ddgk/cY51iwyta9JDJMX+oSwUdlYjTVnYhmBXLDCHcfmABegAfIiR
+         fV25ZBkWg7Mndl0et96wwyB+Ffwr/ssa53BDq06Xif605JLKWHuzhZR9EB3OFBrD+sHx
+         CnmUe+qUSg5BqlKiXqPP41NN+5OJQBDCyOEmikj1NsejZgqutKzfMBH2rduZGzG6GF5Z
+         rabiatVGe2c1eb1Y6Lyo51I3VHJ3MwH61Sfjdou/WDxqrl7miog+E6HS5cQzelsikadx
+         6UjGlj8xBLh4yM4KHc5dfh4mODFUH8spp8ZwORjV52zbSF5hIQBa1mrOSdQSM73Zm6a5
+         41Dg==
+X-Forwarded-Encrypted: i=1; AJvYcCUvtkYYt/yWflPeicmJU7/950wXqOavq5FqpOvRLUdyYgaJ6LRvLwRJ37/sYlVSBixesaf/eV6HMluyF0w=@vger.kernel.org, AJvYcCXo7QNMlfR+m51qfUHWWavvAc19GZl0Riio2UYnC7TU6QPn0JCEgIbdZIChzYMxh0UAwuxT8cedLIFc8A==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNTBSilcaeWq2S329aGRfLMOXKmeTwen3eFbLXnW1ZlGfoPG14
+	Eo3TmgiIIgHcOHIgB7AB9ZNK5kjk0HGhLw8dpTN0XtslcaiG3UNr
+X-Gm-Gg: ASbGnctHnjb7JpMRVDNIrpbF6naf80DM7pPh6qnIRVgApiglCopLBAf+7OGMSvIrmvM
+	4I32hgEdNy0CZJ7/yYn6gTCeEiO3+dKHY30uQ2eAcgDR07wpz+AsLVa7xZg2vsSEd78BL/961fK
+	zdQfEYwIAB0fC7+Xl9W4ymgzb6HQdGpK03QNeELGUz4jOu1iU2ypmt1P2v5Ij1rxSLWGjNHN/gQ
+	Suo6g+RNtm3y9aucVNkLG3M4kuUBDF9LkttyggbAVQoIFpnGj9xX03vaaVcT/qJSIaFLA3m4WVl
+	sw9ZCDXs5XSM9VEPKzTcTGgbmyeeGrZW/PbkJg==
+X-Google-Smtp-Source: AGHT+IE7tTpDQvqjbIuxq7dP2LnTwsZbQB6Q0L/sFtb7HJ2jpYLO0kXHgS+k3I+2itIeJ8/rcJDfWw==
+X-Received: by 2002:a17:906:1c51:b0:ac8:17a1:e42 with SMTP id a640c23a62f3a-acabd194d27mr9509066b.22.1744231198508;
+        Wed, 09 Apr 2025 13:39:58 -0700 (PDT)
+Received: from pampelmuse ([2a02:810d:a1:6000:959d:6b59:1561:d2b4])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1ce70ebsm148831366b.178.2025.04.09.13.39.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 13:39:58 -0700 (PDT)
+Date: Wed, 9 Apr 2025 22:39:56 +0200
+From: Gon Solo <gonsolo@gmail.com>
+To: Ricardo Ribalda <ribalda@chromium.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-spdx@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Duje =?utf-8?Q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+Subject: Re: [PATCH v2] scripts/spdxcheck: Limit the scope of git.Repo
+Message-ID: <Z_bbHP3JeRh2hLe2@pampelmuse>
+References: <20250409-spx-v2-1-168115798db2@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,140 +74,13 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CH2PPF4D26F8E1CE94EC3F4A0D6B9849818A2A12@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+In-Reply-To: <20250409-spx-v2-1-168115798db2@chromium.org>
 
-On Thu, Mar 27, 2025 at 11:26:21AM +0000, Manikandan Karunakaran Pillai wrote:
-> Add the required definitions for register addresses and register bits
-> for the next generation Cadence PCIe controllers - High performance
-> rchitecture(HPA) controllers. Define register access functions for
-> SoC platforms with different base address
+Am Wed, Apr 09, 2025 at 08:04:19PM +0000 schrieb Ricardo Ribalda:
+> Changes in v2:
+> - Make repo a local variable
+> - Link to v1: https://lore.kernel.org/r/20250225-spx-v1-1-e935b27eb80d@chromium.org
 
-"Next generation" is not really meaningful since there will probably
-be a next-next generation, and "high performance architecture" is
-probably not much better because the next-next generation will
-presumably be "higher than high performance."
+This is not necessary as it was Python's fault and is fixed by 3.13.3
+which came out yesterday. I just checked.
 
-I would just use the codename or marketing name and omit "next
-generation."  Maybe that's "HPA" and we can look forward to another
-superlative name for the next generation after this :)
-
-s/High performance/High Performance/
-s/rchitecture/Architecture/
-
-Add period at end of sentence.
-
-> +#define CDNS_PCIE_HPA_LM_EP_FUNC_BAR_CFG(bar, fn) \
-> +	(((bar) < BAR_3) ? CDNS_PCIE_HPA_LM_EP_FUNC_BAR_CFG0(fn) : \
-> +			CDNS_PCIE_HPA_LM_EP_FUNC_BAR_CFG1(fn))
-> +#define CDNS_PCIE_HPA_LM_EP_FUNC_BAR_CFG0(pfn) (0x4000 * (pfn))
-> +#define CDNS_PCIE_HPA_LM_EP_FUNC_BAR_CFG1(pfn) ((0x4000 * (pfn)) + 0x04)
-> +#define CDNS_PCIE_HPA_LM_EP_VFUNC_BAR_CFG(bar, fn) \
-> +	(((bar) < BAR_3) ? CDNS_PCIE_HPA_LM_EP_VFUNC_BAR_CFG0(fn) : \
-> +			CDNS_PCIE_HPA_LM_EP_VFUNC_BAR_CFG1(fn))
-> +#define CDNS_PCIE_HPA_LM_EP_VFUNC_BAR_CFG0(vfn) ((0x4000 * (vfn)) + 0x08)
-> +#define CDNS_PCIE_HPA_LM_EP_VFUNC_BAR_CFG1(vfn) ((0x4000 * (vfn)) + 0x0C)
-> +#define CDNS_PCIE_HPA_LM_EP_FUNC_BAR_CFG_BAR_APERTURE_MASK(f) \
-> +	(GENMASK(9, 4) << ((f) * 10))
-> +#define CDNS_PCIE_HPA_LM_EP_FUNC_BAR_CFG_BAR_APERTURE(b, a) \
-> +	(((a) << (4 + ((b) * 10))) & (CDNS_PCIE_HPA_LM_EP_FUNC_BAR_CFG_BAR_APERTURE_MASK(b)))
-> +#define CDNS_PCIE_HPA_LM_EP_FUNC_BAR_CFG_BAR_CTRL_MASK(f) \
-> +	(GENMASK(3, 0) << ((f) * 10))
-> +#define CDNS_PCIE_HPA_LM_EP_FUNC_BAR_CFG_BAR_CTRL(b, c) \
-> +	(((c) << ((b) * 10)) & (CDNS_PCIE_HPA_LM_EP_FUNC_BAR_CFG_BAR_CTRL_MASK(b)))
-
-Wow, these names are ... loooong.  This would be more readable if they
-could be abbreviated a bit.  "PCIE" could be dropped with no loss.
-There are probably other words that could be dropped too.
-
->  struct cdns_pcie_ops {
->  	int	(*start_link)(struct cdns_pcie *pcie);
->  	void	(*stop_link)(struct cdns_pcie *pcie);
->  	bool	(*link_up)(struct cdns_pcie *pcie);
->  	u64     (*cpu_addr_fixup)(struct cdns_pcie *pcie, u64 cpu_addr);
-> +	int	(*pcie_host_init_root_port)(struct cdns_pcie_rc *rc);
-> +	int	(*pcie_host_bar_ib_config)(struct cdns_pcie_rc *rc,
-> +					   enum cdns_pcie_rp_bar bar,
-> +					   u64 cpu_addr, u64 size,
-> +					   unsigned long flags);
-> +	int	(*pcie_host_init_address_translation)(struct cdns_pcie_rc *rc);
-> +	void	(*pcie_detect_quiet_min_delay_set)(struct cdns_pcie *pcie);
-> +	void	(*pcie_set_outbound_region)(struct cdns_pcie *pcie, u8 busnr, u8 fn,
-> +					    u32 r, bool is_io, u64 cpu_addr,
-> +					    u64 pci_addr, size_t size);
-> +	void	(*pcie_set_outbound_region_for_normal_msg)(struct cdns_pcie *pcie,
-> +							   u8 busnr, u8 fn, u32 r,
-> +							   u64 cpu_addr);
-> +	void	(*pcie_reset_outbound_region)(struct cdns_pcie *pcie, u32 r);
-
-Also some pretty long names here that don't fit the style of the
-existing members (none of the others have the "pcie_" prefix).
-
-> + * struct cdns_pcie_reg_offset - Register bank offset for a platform
-> + * @ip_reg_bank_off - ip register bank start offset
-> + * @iP_cfg_ctrl_reg_off - ip config contrl register start offset
-
-s/@iP_cfg_ctrl_reg_off/@ip_cfg_ctrl_reg_off/
-
-"scripts/kernel-doc -none <file>" should find errors like this for you.
-
-s/contrl/control/
-
-> + * @axi_mstr_common_off - AXI master common register start
-> + * @axi_slave_off - AXI skave offset start
-
-s/skave/slave/
-
-> +struct cdns_pcie_reg_offset {
-> +	u32  ip_reg_bank_off;
-> +	u32  ip_cfg_ctrl_reg_off;
-> +	u32  axi_mstr_common_off;
-> +	u32  axi_slave_off;
-> +	u32  axi_master_off;
-> +	u32  axi_hls_off;
-> +	u32  axi_ras_off;
-> +	u32  axi_dti_off;
->  };
->  
->  /**
-> @@ -305,10 +551,12 @@ struct cdns_pcie {
->  	struct resource		*mem_res;
->  	struct device		*dev;
->  	bool			is_rc;
-> +	bool			is_hpa;
->  	int			phy_count;
->  	struct phy		**phy;
->  	struct device_link	**link;
->  	const struct cdns_pcie_ops *ops;
-> +	struct cdns_pcie_reg_offset cdns_pcie_reg_offsets;
-
-Why does struct cdns_pcie need to contain an entire struct
-cdns_pcie_reg_offset instead of just a pointer to it?
-
-> +static inline u32 cdns_reg_bank_to_off(struct cdns_pcie *pcie, enum cdns_pcie_reg_bank bank)
-> +{
-> +	u32 offset;
-> +
-> +	switch (bank) {
-> +	case REG_BANK_IP_REG:
-> +		offset = pcie->cdns_pcie_reg_offsets.ip_reg_bank_off;
-
-It's a little hard to untangle this without being able to apply the
-series, but normally we would add the struct cdns_pcie_reg_offset
-definition, the inclusion in struct cdns_pcie, this use of it, and the
-setting of it in the same patch.
-
->  #ifdef CONFIG_PCIE_CADENCE_EP
-> @@ -556,7 +909,10 @@ static inline int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
->  	return 0;
->  }
->  #endif
-> -
-
-Probably spurious change?  Looks like we would want the blank line
-here.
-
-> +bool cdns_pcie_linkup(struct cdns_pcie *pcie);
-> +bool cdns_pcie_hpa_linkup(struct cdns_pcie *pcie);
-> +int cdns_pcie_hpa_startlink(struct cdns_pcie *pcie);
-> +void cdns_pcie_hpa_stop_link(struct cdns_pcie *pcie);
->  void cdns_pcie_detect_quiet_min_delay_set(struct cdns_pcie *pcie);
