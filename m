@@ -1,39 +1,65 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79799268C70;
-	Wed,  9 Apr 2025 14:50:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5D25266EF8;
+	Wed,  9 Apr 2025 14:51:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744210259; cv=none; b=prWsEM2mPFnrcjS96a1ir5iuWjDKjmtH+cjHD6l4z0T00D6yxPaeSJ6oqDwV+roswYw/asfS5TsJSxCdkEE7VoD82bJQozoI9k3MMYJIQSdMkY1MGryxdIvFHNKcmGLdsmT4BP+aAoUkIMqffJHa/+DT6HJ9a0RrZiHiZbW3ltI=
+	t=1744210286; cv=none; b=oYUD1WQFXvsCaHoi8+04amRfk3/KzQFbMsWz7ZRRMveoE4yzyMeZhVXqqWR5+9eXgAhgV27qRRfaNHzWJOxP4pnEIJAA2h/5TkbcJnbOJTTOiAToL5XHyr8+L/95NJWtEdcYFJROSnF+DJ3qGbbI4ezJ1rO+qEL1ETCQdspnMOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744210259; c=relaxed/simple;
-	bh=76HRXjoVDNGV1BpLkLeHafjZmIL6Ps8NxucCDrQ1CqM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tR2d5fTqQ9w/NtueGTWEJ554y2smavfdoytwkmqpUhTNbi64v32T293iK17179t7DqVTkHzvMq2pqrI4yZ0Zt7EedslRKEupQUdpk8TPTGObczEhj2YO6dZmITXoPiQPDIMUfhofz/FsemCeNnM7YAYhMyGGFGEuhgS9Gi5Ag10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ijoqRPOi; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744210286; c=relaxed/simple;
+	bh=6ZNRTbRDkv0mz1ZutTn9+djhbORiCLYU4JDZTOzIs2Q=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=cnICDE4JqauF/AyRqvHKh7XAnQCAVaZUU9xDO2T+hff6DdMCPEUAunzgEONQFYAbE7bw9bNplJEEbR5taySnfXGur23Eget4SQTAExvw8uySq7fH67GzxSknF+K0t0GHMMQ+F4BAY0VhnHpZYo04NkfBRs+fizHOon9YF8/Q1Ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GglbDtyb; arc=none smtp.client-ip=209.85.219.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ijoqRPOi"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 70E024427E;
-	Wed,  9 Apr 2025 14:50:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744210249;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Mzm1JuGkocIsGBpNPmA5oKl0NqM4cvm2NKtV1oMF3eQ=;
-	b=ijoqRPOijtHQVSqqM/gfbkTeRSVsd5eqPrGNS8JjT+DJ7aqdiD/GWWEdf7CCD2qkPsWZjD
-	tH387B9pU4qb45sOs11AO0mrDCeMo6Mx0XBU3RYmdwUGoYiDNAEO6RrwBZ5spySJ49/QNZ
-	k8WWYIhcCgego2JauCKR/6+zlNLb1/amQUjPIoYzqt+jdJo+L0FU6cZ5JZYd+W4UuGgnMI
-	O8vLbnCDJpAK2vL5dFneqP80lKiuPpI7tViBgqgQQrmuOsC850B+ZU8o+6SaJMleMvUjaf
-	oOlp5cDkRtVfkR/EJCbMCrs7O1P+8GCgStDURNjAHudBr5bx/EayYX+bq1ZTKA==
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Date: Wed, 09 Apr 2025 16:50:35 +0200
-Subject: [PATCH v7 2/2] drm/tests: bridge: add a KUnit test for
- devm_drm_bridge_alloc()
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GglbDtyb"
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6e8f43c1fa0so81969676d6.3;
+        Wed, 09 Apr 2025 07:51:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744210284; x=1744815084; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HAzhb4wVbbjDuTOHS5YilxLef1hgz+nzXa5NJUtVfng=;
+        b=GglbDtybfJhEJXyNhNw6A21ERQcZmXRAx6XJbTcsv2usG+dJhvAkw2Pah+3VTfTvCA
+         xqwJ1ElSf6vFgAxvnbsgSbRkWmu5As8c9SQ3/RsqfC5NhbZ5WKBJf3r4WPrPGCAP0g6x
+         1PZvVKjbJf5z+/HCZreoHZ7NOYtz4o3gLHOMhh1OxqhjhqyViLhW8FupXgIKvxOjYBc5
+         KSkYxXa+8s3aE7AswPtVwbjY1dc15nZ8mg1U0juaoqGWW/ItHZuouYtdd0kSjjNK61Mh
+         Z6V+6vHkRBMbfUMbosPKYi1x6KSomzjWP59HL8EqSDklpeepMgKzlPhI2CQNEDiATbwP
+         k9+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744210284; x=1744815084;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HAzhb4wVbbjDuTOHS5YilxLef1hgz+nzXa5NJUtVfng=;
+        b=f1h9aGzfGIKoRux0fgaSTa4I2u3jzzg5MVyjwybHtpmIlRE4iRuawvdsIZJtR7uVor
+         Hxzl9YVxrmAV8H1RFvkeZrHgRWj8l7x/2ymG/4D6JWyUZSnJneAg2mn2d4291fOXz0X/
+         qJMZ7YAKF0z70Ne1ZEPRca+Z2g6jEQIxD8CZTvoOiN2Gv8LTb3Iv2lniktcGssUPlvv8
+         bUjArjEjxpFvuzetLkwJyIQSBg2WZWtA2y83FUg+uPliD3rvSQThqURR/cEm/dRGorP/
+         MRQqSP3qbxGbsd1j5GX03FtzKRzBAnoVR89YWqxHBo7nXAIX5iUH8uV3AY2NoLz+As5T
+         65mg==
+X-Forwarded-Encrypted: i=1; AJvYcCU/9yiQak6MklIVhqrlyGtNzMX5IWPrK4VIy1IfSP44octOBxggC5zQSTH0svSvKhUlpsO+9azuIG7yyaY=@vger.kernel.org, AJvYcCUj7L8WZejmiAOx2Zoweb9BgeaVrnpP+hufwZccTtu3X4DkwAFjqUQGrhAv44airs8AzFwHQfQpuORQ@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQWY47If/XghRPpY9Vfyt6U00CmegCkenTJ9YqwkYsOAN9/TNG
+	LtSOWTa9N2bNb663juJvodD0bOw/86BBJBPg4cH4GtCPfnJ0Vub0
+X-Gm-Gg: ASbGncszuZ0GnNgU9zSsPvWxe342QEurljD8VBv0BTUni38XqPRJft9U55a/Lm4NErg
+	B2d7wkXedgXGDapuHMnYiWRQaZmFhDRqBnIaIEZOi5EfPPXQCLz+GHkEQra/JyRTvI80O40+oKF
+	WQ8KMm2ZF/9A8yA0g062roCj+4obfyOGWhahvTI7ZAeAc9nD0jRFDLpnwbJqPsE4E/f9DZ6zOCj
+	XPMMFa/b2F6jUuMG0lWjkK6QO/8YNj+gNqAjrU5yU4yaPT6PmMHRfUHVXqgy66ZLGPujS/w5Nmv
+	US4QZOVYtu/vuiTl0j0QImCpL2nc3DJKMH1S9zckcQ1QzcCwnTkE0BoElxNS/gfma3quQXeYfl0
+	44EidkwzEfm0h5xjoyYTJXiU48S7UPuifRNxxGUU5TdsK
+X-Google-Smtp-Source: AGHT+IEI+1r0BjFWD5KnBSWcO5feK0qnKlr7YAv2o0J1Sh4vSh1h6CmGIIsSKC8ij4Sx8U9bnfiM3Q==
+X-Received: by 2002:a05:6214:19e1:b0:6ed:19d1:212f with SMTP id 6a1803df08f44-6f0dd025089mr39184886d6.5.1744210283608;
+        Wed, 09 Apr 2025 07:51:23 -0700 (PDT)
+Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([2620:10d:c091:600::1:3298])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f0de95fa89sm8229876d6.6.2025.04.09.07.51.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 07:51:23 -0700 (PDT)
+From: Tamir Duberstein <tamird@gmail.com>
+Subject: [PATCH v2 0/4] rust: list: remove HasListLinks::OFFSET
+Date: Wed, 09 Apr 2025 10:51:17 -0400
+Message-Id: <20250409-list-no-offset-v2-0-0bab7e3c9fd8@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,136 +68,56 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250409-drm-bridge-alloc-doc-test-v7-2-a3ca4b97597f@bootlin.com>
-References: <20250409-drm-bridge-alloc-doc-test-v7-0-a3ca4b97597f@bootlin.com>
-In-Reply-To: <20250409-drm-bridge-alloc-doc-test-v7-0-a3ca4b97597f@bootlin.com>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Jonathan Corbet <corbet@lwn.net>, Andrzej Hajda <andrzej.hajda@intel.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>
-Cc: Anusha Srivatsa <asrivats@redhat.com>, 
- Paul Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, 
- =?utf-8?q?Herv=C3=A9_Codina?= <herve.codina@bootlin.com>, 
- Hui Pu <Hui.Pu@gehealthcare.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Luca Ceresoli <luca.ceresoli@bootlin.com>
-X-Mailer: b4 0.14.2
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdeivdelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeiieeuvdfftefgueduleehueetgffgjeeitedtteetkeeuueeuueekveevvdeuveenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvpdhhvghloheplgduledvrdduieekrddujeekrdduudekngdpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopefnrghurhgvnhhtrdhpihhntghhrghrthesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtohepnhgvihhlrdgrrhhms
- hhtrhhonhhgsehlihhnrghrohdrohhrghdprhgtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepjfhuihdrrfhusehgvghhvggrlhhthhgtrghrvgdrtghomhdprhgtphhtthhopehluhhmrghgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrfhhoshhssehkvghrnhgvlhdrohhrgh
-X-GND-Sasl: luca.ceresoli@bootlin.com
+X-B4-Tracking: v=1; b=H4sIAGWJ9mcC/3WPwW7DIBBEf8XiXCrAmGKf+h+VDwssCVIMLRCrV
+ eR/7ya59NLj7M6+nbmxhjVhY8twYxX31FLJJNTLwPwZ8gl5CqSZEmoSo9L8klrnufASY8POZ4P
+ RTN4pmCdGR58VY/p+AD9W0meyl/rz4O/yPv0XtUsuOMSg3Fv0Wit4P22QLq++bGw9nuyKX1fK2
+ J8PmIOGnPZb6ssgIKpoHEqnlZWjnZyR1jtrIMzaYMAg7Azesr/dqOo9jhYzcXKHlLFSIL5de8b
+ WuJPTGMDp0dqwUIH1OH4B6T0MDjQBAAA=
+X-Change-ID: 20250324-list-no-offset-96ef65cb2a95
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+ Bjorn Helgaas <bhelgaas@google.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-pci@vger.kernel.org, Tamir Duberstein <tamird@gmail.com>
+X-Mailer: b4 0.15-dev
 
-Add a basic KUnit test for the newly introduced drm_bridge_alloc().
+The bulk of this change occurs in the last commit, please its commit
+messages for details. The first commit exists in 2 other series but was
+picked into this series to allow using `container_of!` without the need
+to cast from `*const Self` to `*mut Self`.
 
-Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+---
+Changes in v2:
+- Change type parameter delimiter to `{}` for consistency. (Boqun Feng)
+- Rebase on v6.15-rc1.
+- Extract first commit to its own series as it is shared with other
+  series.
+- Link to v1: https://lore.kernel.org/r/20250324-list-no-offset-v1-0-afd2b7fc442a@gmail.com
 
 ---
+Tamir Duberstein (4):
+      rust: list: simplify macro capture
+      rust: list: use consistent type parameter style
+      rust: list: use consistent self parameter name
+      rust: list: remove OFFSET constants
 
-Changed in v7:
- - rebase on current drm-misc-next, which now has a drm_bridge_test.c file
- - cleanup commit message
-
-Changed in v6:
- - update to new devm_drm_bridge_alloc() API
- - remove drm_test_drm_bridge_put test, not straightforward to write with
-   the new API and the current notification mechanism
- - do not allocate a drm_device: a bridge is allocated without one
- - rename some identifiers for easier code reading
-
-This patch was added in v5.
+ rust/kernel/list.rs                    |  18 +++--
+ rust/kernel/list/impl_list_item_mod.rs | 128 +++++++++++++++------------------
+ 2 files changed, 67 insertions(+), 79 deletions(-)
 ---
- drivers/gpu/drm/tests/drm_bridge_test.c | 60 +++++++++++++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250324-list-no-offset-96ef65cb2a95
+prerequisite-change-id: 20250409-container-of-mutness-b153dab4388d:v1
+prerequisite-patch-id: 53d5889db599267f87642bb0ae3063c29bc24863
 
-diff --git a/drivers/gpu/drm/tests/drm_bridge_test.c b/drivers/gpu/drm/tests/drm_bridge_test.c
-index ff88ec2e911c9cc9a718483f09d4c764f45f991a..87fb64744b67f0780457a546aba77ba945a0ce67 100644
---- a/drivers/gpu/drm/tests/drm_bridge_test.c
-+++ b/drivers/gpu/drm/tests/drm_bridge_test.c
-@@ -8,6 +8,7 @@
- #include <drm/drm_bridge_helper.h>
- #include <drm/drm_kunit_helpers.h>
- 
-+#include <kunit/device.h>
- #include <kunit/test.h>
- 
- struct drm_bridge_init_priv {
-@@ -407,11 +408,70 @@ static struct kunit_suite drm_bridge_helper_reset_crtc_test_suite = {
- 	.test_cases = drm_bridge_helper_reset_crtc_tests,
- };
- 
-+struct drm_bridge_alloc_test_ctx {
-+	struct device *dev;
-+};
-+
-+/*
-+ * Mimick the typical struct defined by a bridge driver, which embeds a
-+ * bridge plus other fields.
-+ */
-+struct dummy_drm_bridge {
-+	int dummy; // ensure we test non-zero @bridge offset
-+	struct drm_bridge bridge;
-+};
-+
-+static const struct drm_bridge_funcs drm_bridge_dummy_funcs = {
-+};
-+
-+static int drm_test_bridge_alloc_init(struct kunit *test)
-+{
-+	struct drm_bridge_alloc_test_ctx *ctx;
-+
-+	ctx = kunit_kzalloc(test, sizeof(*ctx), GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx);
-+
-+	ctx->dev = kunit_device_register(test, "drm-bridge-dev");
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx->dev);
-+
-+	test->priv = ctx;
-+
-+	return 0;
-+}
-+
-+/*
-+ * Test that the allocation and initialization of a bridge works as
-+ * expected and doesn't report any error.
-+ */
-+static void drm_test_drm_bridge_alloc(struct kunit *test)
-+{
-+	struct drm_bridge_alloc_test_ctx *ctx = test->priv;
-+	struct dummy_drm_bridge *dummy;
-+
-+	dummy = devm_drm_bridge_alloc(ctx->dev, struct dummy_drm_bridge, bridge,
-+				      &drm_bridge_dummy_funcs);
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, dummy);
-+}
-+
-+static struct kunit_case drm_bridge_alloc_tests[] = {
-+	KUNIT_CASE(drm_test_drm_bridge_alloc),
-+	{ }
-+};
-+
-+static struct kunit_suite drm_bridge_alloc_test_suite = {
-+	.name = "drm_bridge_alloc",
-+	.init = drm_test_bridge_alloc_init,
-+	.test_cases = drm_bridge_alloc_tests,
-+};
-+
- kunit_test_suites(
- 	&drm_bridge_get_current_state_test_suite,
- 	&drm_bridge_helper_reset_crtc_test_suite,
-+	&drm_bridge_alloc_test_suite,
- );
- 
- MODULE_AUTHOR("Maxime Ripard <mripard@kernel.org>");
-+MODULE_AUTHOR("Luca Ceresoli <luca.ceresoli@bootlin.com>");
-+
- MODULE_DESCRIPTION("Kunit test for drm_bridge functions");
- MODULE_LICENSE("GPL");
-
+Best regards,
 -- 
-2.49.0
+Tamir Duberstein <tamird@gmail.com>
 
