@@ -1,190 +1,242 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD8CB241CAF
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 13:24:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AF32255E4D;
+	Wed,  9 Apr 2025 13:25:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744205076; cv=none; b=uFapT++gy7AtfYF08SmHubGCaYezPAy6y8hvqy1ZlCU6MYKsncAQn5lyTMcwq0NkH18uCE012oI7ROBehcdk9bHjIuonq3pHRdJ3MXGwF2NRI7MnamcOa1Gf2284jUDsENAp5EVPriw5lFQOpO9T++tLKEBGyS9TaoDX+QU3LCM=
+	t=1744205144; cv=none; b=bH3cZesdIWi/OR2xhFXadobMWwDdERCGopWRV9ZiZZIb8YLE/GWNbxPCDrV4AoT0O9C3vqY+PRLA7D55Fc2u942YUGeH7DyKW3WJAUVSRRI3SHLq5hYGtSDI57qG1+U+Kq8BNJoEaFQCxqQyb3dVh11ItP5brZepVFs5AtkFYmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744205076; c=relaxed/simple;
-	bh=lR6HbIW46Lo1luKRc0aisq12HHbyplNXNMAdbjw83Qw=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=s0F2KwpVtos8hdQpd+/QYX5zkeneiGg6wgPc2priTYCcCDU8klDFE8qJ3OhtT5MlRQoZAPtyhxHoEnKgMT3s9qLtYvyENoTqzeaELZCqI2JDI/lnzm+E4n44D4pXaIPB0NDN31YsAuhMalmVdAM3o4JmoUVcFrhw5ABOZNEfNfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fZnPtZRl; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744205144; c=relaxed/simple;
+	bh=ywQHOtBWUaayWMmXLKDE9oibC6pt0eSAjkXAU0hLgbg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bOUDKb5Ra5aMSxPd83aHifPwnZKrtgR5MoUlc2x6T1xnV9ydVt1SkLWXYO8JmNtgkxnFmltnjOt8zvh06NZ58fObmpcsTpfLSijPleLzZJx0GfMrpyiNEyCVDVi1RQ88/htT4NhS0ITKQ1+APtRbsm9aLq4cakwTwqs7hccqWHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TGJ/LEO9; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fZnPtZRl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744205073;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lfwYYsGrLuBzhEjko8XOF3Kr8lKmO5hpl5xF++WtSAA=;
-	b=fZnPtZRl73M0z+lcx/Y9yccDrAEhDIB79CytU0CVUOQSy357iSRuVmSG+nGCKp5eOyKLP+
-	AUkdk/GjlAJGrI5af3EPsw2PB4ySeqPtndQmcpVlBY5fNxbuA1TvLBoyBo0Yu/U4mxkasG
-	A59yrhL67rAcwrOJhBXX9/jQL9gu19Q=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-282-0sGq1VTdOK6CsMIJAsgGDg-1; Wed,
- 09 Apr 2025 09:24:30 -0400
-X-MC-Unique: 0sGq1VTdOK6CsMIJAsgGDg-1
-X-Mimecast-MFC-AGG-ID: 0sGq1VTdOK6CsMIJAsgGDg_1744205068
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1F214195606A;
-	Wed,  9 Apr 2025 13:24:28 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.40])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B9ECE19560AD;
-	Wed,  9 Apr 2025 13:24:24 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <Z_ZHoCgi2BY5lVjN@archie.me>
-References: <Z_ZHoCgi2BY5lVjN@archie.me> <Z_XOr4Ak4S0EOdrw@archie.me> <1565252.1744124997@warthog.procyon.org.uk> <1657441.1744189529@warthog.procyon.org.uk>
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: dhowells@redhat.com, Christian Brauner <brauner@kernel.org>,
-    Paulo Alcantara <pc@manguebit.com>, Jeff Layton <jlayton@kernel.org>,
-    Viacheslav Dubeyko <slava@dubeyko.com>,
-    Alex Markuze <amarkuze@redhat.com>, Timothy Day <timday@amazon.com>,
-    Jonathan Corbet <corbet@lwn.net>, netfs@lists.linux.dev,
-    linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] netfs: Update main API document
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TGJ/LEO9"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5499c5d9691so7561112e87.2;
+        Wed, 09 Apr 2025 06:25:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744205139; x=1744809939; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=CCPfq870lo6I3VwBZegYGwOMPFDFieit2DF9RetxgIQ=;
+        b=TGJ/LEO9VOkVEbGDWxAlgMTx3o0I0ItPgDgVyT5AMaxD5vi8O3v2608Eg+HXL/fE2z
+         qwXcEZ2hMTbQ7u1HPnu8CvnOJZzFdal3+1saLQ+b0zmqF4XA+1+k4Xd4VPEFkNiDm40W
+         wp2jCovG+oRliM92hotkV/xIW1zyodSLqwOMHT86hqhkFQI0O0gRpeD3e0XHOWn4gRhu
+         0xyqQnlWINqs31TT5jNp7jvNdgAxPZgnTz6L3fvvzfgiM2Efzv6oZoFzWKVaAMsrQJN8
+         sk2DruoxJAh7+98WEaCiTmXJ1d7HDIWC022VJ/Rqecm9kzgjN1Q+R9XLT0KlmNiXKkdf
+         CPug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744205139; x=1744809939;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CCPfq870lo6I3VwBZegYGwOMPFDFieit2DF9RetxgIQ=;
+        b=pUzaSpht4gm8NY/knHINUp4ljKKyAfzE0RHvmKCM6pHkgMpt/8pwnBjJxl9gMpOQxk
+         8KuzMe4iNs8/j8EJPV8nFtfA9aFQvcSgytdQ8wecxtHBgGXmNxEMx0swMoKsEoamWcSK
+         ZpWeoAHo39itLWsfomcn35VL0PrZsX7PhM6noMkojt/I2PaIn9VGt1pHtDWgPfpEHWFg
+         VSAgbklPY6PgXUpy7UqzwLwJK7hglC0xuPBTPPEAOzexZ5DwyRyFQufg6IZfLaFR6rqa
+         BfflUqNpgOLLphJfikGD+HbbAa1cVlxlu6S0X27XJQkwN1Hn+zVGtXXYo8M/lAd9/Bnt
+         FPLw==
+X-Forwarded-Encrypted: i=1; AJvYcCUIzWYY1vHjpnyMTI7d0VLWrV7P6NllsKpxZ6uxzFS+VqCkesLdjSoaSHpF2cI9B/EZdESar+a2Gjb4@vger.kernel.org, AJvYcCW07bbLC+gTN7ysBVH1qQ2I9v01nSBnXCtColWVyWnec4U6YOxmgY+/PGewuTkUjo2rVLyNLPBBPY4iSFF5@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywf2/hCPvuWFUagMNNibTm0dl+xM8eBwFKIo0t/HF79sqr3wgNw
+	QE/hwsSOWYihe1dW2Dz0PizDPQRsUqhqNIhH+/ObNG4H6QWXjul7
+X-Gm-Gg: ASbGncsOAqocXn7Z2kvplzH/8UQi9dXp2mWudN4XQfXB+wVNQMDATliEB8oWShDKyrZ
+	03gTp1sO4Ykgte35MosgCBSAeC5CPgOct1BqUBZU/526Jbv35JLEjSUs4Zvk49v1APOAWiYe9hw
+	A5uw/qHqd+mRjtcq+KR1jkzLlsG9fyuyn5pYf8OeXSBiVGWA7uVZDmMFn8Lq/lpW3JCF7u6LgLR
+	QacDzGWDHugk0AsTeffJRhc7ykkqzM1wTsEiIVqghqdvFdiPPxadCY9XrqRddGqwG1POSF5BtNd
+	ou6qDAvn4/yCwnJOXwFyTyLPYbubEgPOfCCGfwhqA2UXCE51PZemln6dEy5G2XJA/K9/SS1dv8h
+	uZjfRQXcSr5/8
+X-Google-Smtp-Source: AGHT+IGolglO8KHWHfYhPUPwqYH4QluVvVji4FU7LlGDKueiKzOe0iuK04Akv8MJU97gcutn8Zezgw==
+X-Received: by 2002:a05:6512:1095:b0:549:8537:79d6 with SMTP id 2adb3069b0e04-54c44576943mr746530e87.48.1744205139035;
+        Wed, 09 Apr 2025 06:25:39 -0700 (PDT)
+Received: from gmail.com (83-233-6-197.cust.bredband2.com. [83.233.6.197])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54c455e9272sm136782e87.92.2025.04.09.06.25.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 06:25:38 -0700 (PDT)
+Date: Wed, 9 Apr 2025 15:25:36 +0200
+From: Marcus Folkesson <marcus.folkesson@gmail.com>
+To: Javier Martinez Canillas <javierm@redhat.com>
+Cc: David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Thomas Zimmermann <tzimmrmann@suse.de>
+Subject: Re: [PATCH v3 2/3] drm/st7571-i2c: add support for Sitronix ST7571
+ LCD controller
+Message-ID: <Z_Z1UOan6Qu5d3VM@gmail.com>
+References: <20250408-st7571-v3-0-200693efec57@gmail.com>
+ <20250408-st7571-v3-2-200693efec57@gmail.com>
+ <87cydn9bkx.fsf@minerva.mail-host-address-is-not-set>
+ <Z_Uin2dvmbantQU4@gmail.com>
+ <87ecy1g8z8.fsf@minerva.mail-host-address-is-not-set>
+ <Z_YWq4ry6Y-Jgvjq@gmail.com>
+ <87bjt5fz51.fsf@minerva.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1676059.1744205063.1@warthog.procyon.org.uk>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="2ofPkAe93cfrZ/9C"
+Content-Disposition: inline
+In-Reply-To: <87bjt5fz51.fsf@minerva.mail-host-address-is-not-set>
+
+
+--2ofPkAe93cfrZ/9C
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 09 Apr 2025 14:24:23 +0100
-Message-ID: <1676060.1744205063@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Bagas Sanjaya <bagasdotme@gmail.com> wrote:
+Hello Javier,
 
-> > > > +Further, if a read from the cache fails, the library will ask the=
- filesystem to
-> > > > +do the read instead, renegotiating and retiling the subrequests a=
-s necessary.
-> > > Read from the filesystem itself or direct read?
-> > =
+On Wed, Apr 09, 2025 at 11:43:54AM +0200, Javier Martinez Canillas wrote:
+> Marcus Folkesson <marcus.folkesson@gmail.com> writes:
+>=20
+> Hello Marcus,
+>=20
+> [...]
+>=20
+> >>=20
+> >> That's a god question, I don't really know...
+> >>=20
+> >> But fbdev does support XRGB8888, which may be another good reason to a=
+dd
+> >> it and make it the default format. Yes, it will cause an unnecessary p=
+ixel
+> >> format conversion but the I2C transport is so slow anyways that comput=
+e is
+> >> not the bottleneck when using these small displays.
+> >
+> > Hrm, I now realised that I have another issue.
+> > Not all LCDs that will be attached to the ST7571 controller will be
+> > grayscale.
+> > The display I've attached to the ST7571 is a monochrome LCD for example.
+> >
+>=20
+> Oh, that's very interesting. This means that vendors are using a more cap=
+able IC
+> (i.e: ST7571) for display controllers + LCD panels board designs, even wh=
+ere they
+> could had used a less capable one (i.e: ST7765). That is, using an IC tha=
+t supports
+> 2-bit grayscale when they could just used one that only supported monochr=
+ome pixels.
+>=20
+> From a quick search, I found for example this one from SinoCrystal:
+>=20
+> https://displaysino.com/product_details/SC128128012-V01.html
+>=20
+> > Maybe the right way to do it is to only support XRGB8888 and specify=20
+> > if the display is monochrome or grayscale in the device tree.
+> >
+> > Or do you have any good suggestions?
+> >
+>=20
+> I don't know the proper way to handle this, but what I would do is to inc=
+lude
+> the actual boards as entries in the OF device ID table instead of just th=
+e ICs.
+>=20
+> And then for each entry you can specify what formats are supported, e.g:
+>=20
+> static const uint32_t monochrome_formats[] =3D {
+> 	DRM_FORMAT_XRGB8888,
+>         DRM_FORMAT_R1
+> };
+>=20
+> static const uint32_t grayscale_formats[] =3D {
+> 	DRM_FORMAT_XRGB8888,
+>         DRM_FORMAT_R1
+>         DRM_FORMAT_R2
+> };
+>=20
+> static const struct of_device_id st7571_of_match[] =3D {
+> 	/* monochrome displays */
+> 	{
+> 		.compatible =3D "sinocrystal,sc128128012-v01",
+> 		.data =3D monochrome_formats,
+> 	},
+> ...
+>         /* grayscale displays */
+> 	{
+> 		.compatible =3D "foo,bar",
+> 		.data =3D grayscale_formats,
+> 	},
+> };
+>=20
+> and then in your probe callback, you can get the correct format list for
+> the device matched. Something like the following for example:
+>=20
+> static int st7571_probe(struct i2c_client *client) {
+>        const uint32_t *formats =3D device_get_match_data(client->dev);
+>        ...
+>=20
+>        ret =3D drm_universal_plane_init(..., formats, ...);
+>        ...
+> };
+>=20
+> Likely you will need to define more stuff to be specific for each entry, =
+maybe
+> you will need different primary plane update handlers too. Similar to how=
+ I had =20
+> to do it the ssd130x driver to support all the Solomon OLED controller fa=
+milies:
+>=20
+> https://elixir.bootlin.com/linux/v6.11/source/drivers/gpu/drm/solomon/ssd=
+130x.c#L1439
 
-> > I'm not sure what you mean.  Here, I'm talking about read subrequests =
-- i.e. a
-> > subrequest that corresponds to a BIO issued to the cache or a single R=
-PC
-> > issued to the server.  Things like DIO and pagecache are at a higher l=
-evel and
-> > not directly exposed to the filesystem.
-> > =
+Thanks, that sounds like a good idea.
 
-> > Maybe I should amend the text to read:
-> > =
+I've now experimenting with XRGB8888, and, well, it works. I guess.
+The thresholds levels in the all conversion steps for  XRGB8888 -> 8 bit gr=
+ayscale -> monochrome
+makes my penguin look a bit boring.
 
-> > 	Further, if one or more subrequests issued to read from the cache
-> > 	fail, the library will issue them to the filesystem instead,
-> > 	renegotiating and retiling the subrequests as necessary.
-> =
+But I guess that is expected.
 
-> That one sounds better to me.
+Please compare
+https://www.marcusfolkesson.se/xrgb8888.png
+and
+https://www.marcusfolkesson.se/c1.png
 
-I think I like this better:
+> --=20
+> Best regards,
+>=20
+> Javier Martinez Canillas
+> Core Platforms
+> Red Hat
+>=20
 
-	Further, if one or more contiguous cache-read subrequests fail, the
-	library will pass them to the filesystem to perform instead,
-	renegotiating and retiling them as necessary to fit with the
-	filesystem's parameters rather than those of the cache.
+Best regards,
+Marcus Folkesson
 
-> > > > +Netfslib will pin resources on an inode for future writeback (suc=
-h as pinning
-> > > > +use of an fscache cookie) when an inode is dirtied.  However, thi=
-s needs
-> > > > +managing.  Firstly, a function is provided to unpin the writeback=
- in
-> > > inode management?
-> > > > +``->write_inode()``::
-> > =
+--2ofPkAe93cfrZ/9C
+Content-Type: application/pgp-signature; name=signature.asc
 
-> > Is "inode management" meant to be a suggested insertion or an alternat=
-ive for
-> > the subsection title?
-> =
+-----BEGIN PGP SIGNATURE-----
 
-> I mean "However, this needs managing the inode (inode management)". Is i=
-t
-> correct to you?
+iQIzBAEBCAAdFiEEBVGi6LZstU1kwSxliIBOb1ldUjIFAmf2dUsACgkQiIBOb1ld
+UjJ2FQ/9F0UFdn828HNufX71J48BfU7Ae27co8Y+CWw0T9eVXhT5v+xn9bTNdQ9d
+0559ifYcUFI95AZKaDSQCH2JXngYVD7ym/lcIT63LNZEGPiJyqT201mQEjyxHVWI
+88FXsZX4pAMHf7egL1YD9VkksybmvSRzlOY+a6y6GxvFfkPbCAJWroRdhk97J/d/
+/rYgr1XVBCA3q1CfeX4MXONhdNkQTyeoPnv+/N5zmLY8pYRjLYF97/AsN6jHh+7Y
+oE9Cai1jbz1ThDq3l8ngXNMtMag/xjXbJIBWB7krmVzgFyiWJUlVgmEN2xxk3jrI
+muNlGIbcQEPKASwh4F7SC5FYwymG63e78qXsrJ5JUmzbYx8M0xMztYABSC0OGzLe
+Vzx6whPv0VGPgKULgrI8LrZqiW4Zl3B76CZfff3oBdvq+zHPXRrvsEVXnXRfw2t8
+x1raGSc0ln14kHr1LzYoMTyJ4ao3RWPG/ZuSbBQbxrJuFqpDPKUJ4Zt+M5GKDfQQ
+9HqylDeIDXS92l9tV7Ei8xdBthzhjYggDyoWKJ35Luq5YG/PICC3/PqJRTa3W+OG
+uubjtV9HGLIxDf/cj7tdVXSGAAhDy8uzTJTzsfdLS8EWwUw6ZXgrQ3JU2FWx+o+z
+UQGfvTeQwqeOemY52P/B+xj9/hvZLgxDqZzgudAiK95h5a4fmHM=
+=xpde
+-----END PGP SIGNATURE-----
 
-Um.  "However, this needs managing the inode (inode management)" isn't val=
-id
-English and "(inode management)" is superfluous with "managing the inode" =
-also
-in the sentence.
-
-How about:
-
-	Netfslib will pin resources on an inode for future writeback (such as pin=
-ning
-	use of an fscache cookie) when an inode is dirtied.  However, this pinnin=
-g
-	needs careful management.  To manage the pinning, the following sequence
-	occurs:
-
-	 1) An inode state flag ``I_PINNING_NETFS_WB`` is set by netfslib when th=
-e
-	    pinning begins (when a folio is dirtied, for example) if the cache is
-	    active to stop the cache structures from being discarded and the cach=
-e
-	    space from being culled.  This also prevents re-getting of cache reso=
-urces
-	    if the flag is already set.
-
-	 2) This flag then cleared inside the inode lock during inode writeback i=
-n the
-	    VM - and the fact that it was set is transferred to ``->unpinned_netf=
-s_wb``
-	    in ``struct writeback_control``.
-
-	 3) If ``->unpinned_netfs_wb`` is now set, the write_inode procedure is f=
-orced.
-
-	 4) The filesystem's ``->write_inode()`` function is invoked to do the cl=
-eanup.
-
-	 5) The filesystem invokes netfs to do its cleanup.
-
-	To do the cleanup, netfslib provides a function to do the resource unpinn=
-ing::
-
-		int netfs_unpin_writeback(struct inode *inode, struct writeback_control =
-*wbc);
-
-	If the filesystem doesn't need to do anything else, this may be set as a =
-its
-	``.write_inode`` method.
-
-	Further, if an inode is deleted, the filesystem's write_inode method may =
-not
-	get called, so::
-
-		void netfs_clear_inode_writeback(struct inode *inode, const void *aux);
-
-	must be called from ``->evict_inode()`` *before* ``clear_inode()`` is cal=
-led.
-
-
-instead?
-
-Thanks,
-David
-
+--2ofPkAe93cfrZ/9C--
