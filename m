@@ -1,320 +1,249 @@
-Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3456825B694
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 08:27:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEB651D7E5C;
+	Wed,  9 Apr 2025 08:28:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744187255; cv=none; b=iY/3vmuHnloXMvGCJSUO+ow7yBXMgx2cuQmhwOhdrpo4Qb8Bd+LecnVQlYlVFRxnWGy+0HxGOqrdR6VO85mb1/Bl/IKei8n/1NVZyWlO/CqyTXttE/hEV14r/i/QxgsFXst8yl+VjWW5SzyGdUJ0xHyq8njv2kWxWNUJyd/YJQY=
+	t=1744187290; cv=none; b=dsfsJW1sJzg1TSp55n961cbTNBtoDk++mk7aiEacLAERGSjJrR5IlWD7Vp1VdDaOH+k2EF8xackmWtCaiRn3SC/Q7Qe7uU/4kEdAH72O+sYha7g5iGuSU4/1BJQLQEQZSoYVIWlQt3OUfEfGFsUTTTfVr2G9dq9Wm2sGy4q0ue8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744187255; c=relaxed/simple;
-	bh=jkHYEX1Ktd5OqU5tbqEEOC9i8YxJ6TPdszvCIdEeSeY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F6i71DWUNq3jYFGPLRx9I3LiQpXa+jwAX7NLbsI982r3id8nYcyLSazRqD60R+gXGRO1+tFKtGkaTzHF58mi9rD4O4xWw4coGoTIGNTcrUD2N8LarwEyGIrOEF8rHBLo2FXw7GWw7ij/rggBOK2B9nS8geUxx7yJ0x92Md7GJlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yrOlad9b; arc=none smtp.client-ip=209.85.160.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744187290; c=relaxed/simple;
+	bh=XjZPuGkyzZ3ZsxR1CYydlgtWfyJMYdlW9PLID91sIjM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FHauHAHZXpDP4VGXUN0rV6prO/n47/NnPmtpqdl72xpQ4HxBMC+yTx+CgyX1BnxSjfutF8tw9QL7EIYOcZikEwqjuEbyygI3++OqCdromxaFHgqLfAIraT/jTfgNSdljhstJM1tcNh8JHdUYC5EKLd4vNSmiNcWmVn1VI5oHqvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TcSSTyH6; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yrOlad9b"
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2c7e5f7f0e3so1904225fac.3
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 01:27:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TcSSTyH6"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-7394945d37eso5473647b3a.3;
+        Wed, 09 Apr 2025 01:28:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744187252; x=1744792052; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=i/lMrgXCt3JM3AMAeq45BbCg9Kkq7K6y3EXwhXyUEBw=;
-        b=yrOlad9biyApdRTJanMQTvQCodVssZ4SUTIWfVLBVS2g4oehGJ/yhfDlx1072CSkr/
-         CtThwRi2RKcb8rHUkduN5JHDHJr96pFHJJvKKz/nchiRLPqVfKJHXZpJ5cKP4EkQQ/vz
-         Ws8Azv4Bc6Lr83S9WSkR9dzUi+DSNzUJy+kTEm2Loh6y0I57s/wSKnuZYireefZbUy3G
-         tn7/qIAh+B2TnltI7R3L45dKZlJvfIaTlel7V7HlhksSOWwOoA2QpzgXV+dO87AB8yTy
-         x9DmVQGP+Gk+8aAaby8WlgYOlSD9rNeeIegZnwqTiNzHFGumzdlBQchqcOs2jVlvTpav
-         +Xpw==
+        d=gmail.com; s=20230601; t=1744187288; x=1744792088; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JtjDf2NQhGHHNRHvjCl7HSRvlpv2773loFx0UKVrEeE=;
+        b=TcSSTyH61qO8wDrm9lQZ0O2IJN4sikaVa4Jy/2FjxyErnx6Pm5pZ6sn6Jdcosqon2e
+         kCBRC/fzuINsQvaWFttpCDq+JYG5TSx7AKzPTtOckzCKdgrt0+6rCoUzuMZ9WXFp6KWT
+         /rf09J4cKeBeijtz/zTlG2NM1ErOyPwxvC2P13i4t8fTLK8+cAVX60ipKUzuZKgapS3D
+         A3io1DR7wPZa+920DqhcT2/zWqhIm1YMEsS8d6tJ1x3RnPYzlXOIIEwqkN43QRpfQPgS
+         p9tnBW5vCytAmOdVieEdSZs8kl0M0dTcvKc+wgDJoABaIwzv6NDtQA/qLBsKRKfw4ycn
+         XiFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744187252; x=1744792052;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=i/lMrgXCt3JM3AMAeq45BbCg9Kkq7K6y3EXwhXyUEBw=;
-        b=nBdyXJyAC17o7WsG47ZKBlf69DxQFuTRnK5eOj+5K20WhLSE0zNHtfabYkx7HIiFd1
-         ZeWKP/we/wNrAHW4gKI+UjykGHLL3f6p2kauk3DllTtCN2pL3lzuXQcUqzXarXc06kFd
-         CYww4PadW8O7unTAMa4mg24Qm1rYDxNG7XTOIY4z18q4IvrJamCoOsWuNa1s+UY5tTXe
-         IQPgzoAs3hBrwG9HflMjLwW96DeXM4VBsLxIm4JY26V5UxYMd4M6egz0vrxAGH9eHrmu
-         yy5ATOBg4hbSjG2MZ5AfsfEE9paLgvyqYiFwSoW33xhpPm69wJIiEVOOk4HTKJYETSG7
-         cgCg==
-X-Forwarded-Encrypted: i=1; AJvYcCUjaZR1zmxPin6vqWYDvN66LutTUWNFNNZUWgO3v4fOg4PLHBfI9gH9CN8sIZCfj/ev8kfPho0DQCU656g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7vps4km0Mtfg5Q7LO4QjpKE8La8SYYU4vnC/wIoI28ArT/RZs
-	GyfJGNX6//jUrfcUH0rZc9YI347lg92pUbCVeLwSlIZYecicIPpY3aedsJzOFxH5tBCYiZ2ds5L
-	j0ST7pyd3qYv0tXrrNCNLxW5oivokrDUhVqA2hg==
-X-Gm-Gg: ASbGnctBGsEPlc26I9zbSDC19Ag//52R9117h+q3AVOltjt/IOOhu2N/XvEd122PFT9
-	/JnE7m0b68+k5cLyhTHFQrQ56P2lCWtnH3ixPL6AJLXmMa+QIdqWLmQUWNuMBt/IsWOVCF8F9rD
-	GpVr1MyGqOZAAQOEgaWfcJTkg=
-X-Google-Smtp-Source: AGHT+IEZeTFmVGTODWpd4xX+uFSSHfdEGipiWyYBCt8L1cARUIZAiR6ETmFp0kxz7VRwM4TyG8bHNU5bF8YWbLJbRHo=
-X-Received: by 2002:a05:6870:7194:b0:2c6:72d3:fc93 with SMTP id
- 586e51a60fabf-2d09176b3c9mr745417fac.12.1744187252078; Wed, 09 Apr 2025
- 01:27:32 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744187288; x=1744792088;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JtjDf2NQhGHHNRHvjCl7HSRvlpv2773loFx0UKVrEeE=;
+        b=loEPsH/+3ecniWKdgvQ+EWRG5Z8yMLlCQHxwQCngGxkYLAKTUt6NbsTKiVtaAWnmAA
+         WrPS2GaOyb1U9poFAODyfzHmJTEBX97emoGufJbDbn6WxZHx6jng8xlGDTN+jHg3mbb1
+         /PWbgRDXZkj+gvJALJAMGnahwFvNJXNvQ4iex5HpTnwbDt10QrIhXdBA0wm0WsSwupl7
+         wIUE0vzdGABlNBd/eNT5azNgnCCWReo0g9QRAsjctT0U/GunCmSuoNybXTQPliSImpHp
+         qUikc6VLmOHA7WYYnl8320tG2UsK1jtKA7Zzc8I9KnKfm9Z1eEyKzoar3QwYkjArlGja
+         h34Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUCpBoz8xaUU2D9QuB0r6QchbcKoKw1VwlUFIM4oFqFbVDUIvLMgXMZ7W1FN6JV7EmM3hOwkyQV@vger.kernel.org, AJvYcCUe+F4u5wrLVvyXNt91NFBAO1SF0/1vhGqlWWnjktKE4FbYgdrrl00EZ/IUferYdtqWK0a3ximqoHGCoA==@vger.kernel.org, AJvYcCUqX2CgEGO3JEtXsjMe8MU0Pu9AVHadnvIk67sZsOlB+299a1AZID9D3TpaSDmj4ZpCVZdR9YI4CLtE@vger.kernel.org, AJvYcCVKyuuUiPR1EeYQBPpgoGi083dcaP8+vZsxrCjDUjpwG8CKPGskDHNHc0fAHVkIeXj6vIHah/d8eWJzCDY=@vger.kernel.org, AJvYcCVwircLtZuDIkKnm3xdWpVqoyyQvQHYy+bNZN3NlbrycEMzlrXY1z9iT+7dzDfQKQNJm4jmDv1Y0diq@vger.kernel.org, AJvYcCX6K4l2K4ma/TcfqOKpH3LVqdaCYv4rcei7lWBgjF+bA1qABVKcbqVv3Wk5p+/9VenMmkbsmpo1wao=@vger.kernel.org, AJvYcCXosFLVMG2S3UB4oJR1rjrdRpiX2Nfwnpi7YufC6s8SJkcNr0AesYkJijVdPjZ9WpUnFJnqdxuM4WtCdtzQ6C0=@vger.kernel.org, AJvYcCXpo1IjM8piF/Frik79qcDez5qtW5u+Y0gsGU4J6X3CSrlo+yqtdCGUDMkCLsXMNsddRTBUgUk7LA9E@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxNWx+vIS5eFL38o8LAErapzr2g4oaw4grOVBJmK2rBlNSRk8l
+	xAnxuzvBEWxYSuy2vuTnN23nx+bj3IddshflZJwPRfeC9iEUJuY/
+X-Gm-Gg: ASbGncuQQ0M1XOVOBwJaRrBs8qMjnfTXGsHw2R7VzadLzBnWLwgvKkNLNngd65aAlB8
+	okiPxai3F62SQt0iWD31FEMXdgGLmQMnWDHzBpLMDNMxuxUPYayY+c0yTxf5iZDacdsp1yYPp3/
+	sodMnfhTYKzMj5wIUzN5bLUSIueeo+5yIdMTPSJUQsM3t+EKE1T5nfASu6GHDj+Vi0L147GlHhf
+	/LntOyJ6usL5iw6rlpeGyxhlyniEw4Eu82YyyhXKcAKTTl7bA4SZkdMaG0ZO3HWUyL5ZSWo2E8g
+	N0D6kontKm6OxW8AHFR+ByCePJoLPQxLQ3oW8okjo8UdJx0Tm28zvpYO5a7aDruPUJU/B19E5vv
+	5B0w=
+X-Google-Smtp-Source: AGHT+IFBx2B28vRPeJOkne+pOpjHCYBblDOl2gEMtjI5RfQ0Ye7G2dbVhSljEOlQ3pkopR1vuShfTw==
+X-Received: by 2002:a05:6a00:1144:b0:734:b136:9c39 with SMTP id d2e1a72fcca58-73bafd31777mr1855221b3a.19.1744187287900;
+        Wed, 09 Apr 2025 01:28:07 -0700 (PDT)
+Received: from hcdev-d520mt2.. (60-250-196-139.hinet-ip.hinet.net. [60.250.196.139])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1d46509sm740772b3a.57.2025.04.09.01.28.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 01:28:07 -0700 (PDT)
+From: a0282524688@gmail.com
+X-Google-Original-From: tmyu0@nuvoton.com
+To: lee@kernel.org,
+	linus.walleij@linaro.org,
+	brgl@bgdev.pl,
+	andi.shyti@kernel.org,
+	mkl@pengutronix.de,
+	mailhol.vincent@wanadoo.fr,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	wim@linux-watchdog.org,
+	linux@roeck-us.net,
+	jdelvare@suse.com,
+	alexandre.belloni@bootlin.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	linux-can@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-watchdog@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-rtc@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	Ming Yu <tmyu0@nuvoton.com>
+Subject: [PATCH v9 0/7] Add Nuvoton NCT6694 MFD drivers
+Date: Wed,  9 Apr 2025 16:27:45 +0800
+Message-Id: <20250409082752.3697532-1-tmyu0@nuvoton.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250327-qcom-tee-using-tee-ss-without-mem-obj-v3-0-7f457073282d@oss.qualcomm.com>
- <20250327-qcom-tee-using-tee-ss-without-mem-obj-v3-3-7f457073282d@oss.qualcomm.com>
- <CAHUa44GRBiRr6CsFWxJhyzf1cRSEP66m5K7uFntOv3oYWTHWgQ@mail.gmail.com>
- <5de2a378-77cf-4373-b3ae-faeebb931e2d@oss.qualcomm.com> <CAHUa44F-t29Hu0o3+0vFLjtrnA8ZGycPFcUTXEOmms9B=cZ6XA@mail.gmail.com>
- <db3e8182-99ae-4a63-96ca-5d7ebeeb170f@oss.qualcomm.com>
-In-Reply-To: <db3e8182-99ae-4a63-96ca-5d7ebeeb170f@oss.qualcomm.com>
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Date: Wed, 9 Apr 2025 10:27:20 +0200
-X-Gm-Features: ATxdqUGMP5rCKKVvoNhq1SVNDfoVDLELnKd9DL_eKtgXdtc8jbz_99zAWdvG1vE
-Message-ID: <CAHUa44G9NS-kyqEuuJrqijNttGANUJ_3W0uu+686fhA2C6pYDQ@mail.gmail.com>
-Subject: Re: [PATCH v3 03/11] tee: add TEE_IOCTL_PARAM_ATTR_TYPE_UBUF
-To: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
-Cc: Sumit Garg <sumit.garg@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Apurupa Pattapu <quic_apurupa@quicinc.com>, 
-	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	linux-arm-msm@vger.kernel.org, op-tee@lists.trustedfirmware.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
-	linux-doc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 9, 2025 at 9:20=E2=80=AFAM Amirreza Zarrabi
-<amirreza.zarrabi@oss.qualcomm.com> wrote:
->
->
->
-> On 4/9/2025 4:41 PM, Jens Wiklander wrote:
-> > Hi Amirreza,
-> >
-> > On Wed, Apr 9, 2025 at 2:28=E2=80=AFAM Amirreza Zarrabi
-> > <amirreza.zarrabi@oss.qualcomm.com> wrote:
-> >>
-> >> Hi jens,
-> >>
-> >> On 4/8/2025 10:19 PM, Jens Wiklander wrote:
-> >>
-> >> Hi Amirreza,
-> >>
-> >> On Fri, Mar 28, 2025 at 3:48=E2=80=AFAM Amirreza Zarrabi
-> >> <amirreza.zarrabi@oss.qualcomm.com> wrote:
-> >>
-> >> For drivers that can transfer data to the TEE without using shared
-> >> memory from client, it is necessary to receive the user address
-> >> directly, bypassing any processing by the TEE subsystem. Introduce
-> >> TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INPUT/OUTPUT/INOUT to represent
-> >> userspace buffers.
-> >>
-> >> Signed-off-by: Amirreza Zarrabi <amirreza.zarrabi@oss.qualcomm.com>
-> >> ---
-> >>  drivers/tee/tee_core.c   | 33 +++++++++++++++++++++++++++++++++
-> >>  include/linux/tee_drv.h  |  6 ++++++
-> >>  include/uapi/linux/tee.h | 22 ++++++++++++++++------
-> >>  3 files changed, 55 insertions(+), 6 deletions(-)
-> >>
-> >> Is this patch needed now that the QCOMTEE driver supports shared
-> >> memory? I prefer keeping changes to the ABI to a minimum.
-> >>
-> >> Cheers,
-> >> Jens
-> >>
-> >> Unfortunately, this is still required. QTEE supports two types of data=
- transfer:
-> >> (1) using UBUF and (2) memory objects. Even with memory object support=
-, some APIs still
-> >> expect to receive data using UBUF. For instance, to load a TA, QTEE of=
-fers two interfaces:
-> >> one where the TA binary is in UBUF and another where the TA binary is =
-in a memory object.
-> >
-> > Is this a limitation in the QTEE backend driver or on the secure side?
-> > Can it be fixed? I don't ask for changes in the ABI to the secure
-> > world since I assume you haven't made such changes while this patch
-> > set has evolved.
-> >
-> > Cheers,
-> > Jens
->
-> The secure-side ABI supports passing data using memcpy to the same
-> buffer that contains the message for QTEE, rather than using a memory
-> object. Some services tend to use this approach for small data instead
-> of allocating a memory object. I have no choice but to expose this suppor=
-t.
+From: Ming Yu <tmyu0@nuvoton.com>
 
-Got it, thanks! It's needed.
+This patch series introduces support for Nuvoton NCT6694, a peripheral
+expander based on USB interface. It models the chip as an MFD driver
+(1/7), GPIO driver(2/7), I2C Adapter driver(3/7), CANfd driver(4/7),
+WDT driver(5/7), HWMON driver(6/7), and RTC driver(7/7).
 
->
-> Throughout the patchset, I have not made any change to the ABI but
-> tried to provide support for the memory object in a separate,
-> independent commit, distinct from the UBUF.
+The MFD driver implements USB device functionality to issue
+custom-define USB bulk pipe packets for NCT6694. Each child device can
+use the USB functions nct6694_read_msg() and nct6694_write_msg() to issue
+a command. They can also request interrupt that will be called when the
+USB device receives its interrupt pipe.
 
-OK
+The following introduces the custom-define USB transactions:
+	nct6694_read_msg - Send bulk-out pipe to write request packet
+			   Receive bulk-in pipe to read response packet
+			   Receive bulk-in pipe to read data packet
 
-Cheers,
-Jens
+	nct6694_write_msg - Send bulk-out pipe to write request packet
+			    Send bulk-out pipe to write data packet
+			    Receive bulk-in pipe to read response packet
+			    Receive bulk-in pipe to read data packet
 
->
-> Best regards,
-> Amir
->
-> >
-> >>
-> >> Best Regards,
-> >> Amir
-> >>
-> >> diff --git a/drivers/tee/tee_core.c b/drivers/tee/tee_core.c
-> >> index 22cc7d624b0c..bc862a11d437 100644
-> >> --- a/drivers/tee/tee_core.c
-> >> +++ b/drivers/tee/tee_core.c
-> >> @@ -404,6 +404,17 @@ static int params_from_user(struct tee_context *c=
-tx, struct tee_param *params,
-> >>                         params[n].u.value.b =3D ip.b;
-> >>                         params[n].u.value.c =3D ip.c;
-> >>                         break;
-> >> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INPUT:
-> >> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT:
-> >> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INOUT:
-> >> +                       params[n].u.ubuf.uaddr =3D u64_to_user_ptr(ip.=
-a);
-> >> +                       params[n].u.ubuf.size =3D ip.b;
-> >> +
-> >> +                       if (!access_ok(params[n].u.ubuf.uaddr,
-> >> +                                      params[n].u.ubuf.size))
-> >> +                               return -EFAULT;
-> >> +
-> >> +                       break;
-> >>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT:
-> >>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
-> >>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
-> >> @@ -472,6 +483,11 @@ static int params_to_user(struct tee_ioctl_param =
-__user *uparams,
-> >>                             put_user(p->u.value.c, &up->c))
-> >>                                 return -EFAULT;
-> >>                         break;
-> >> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT:
-> >> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INOUT:
-> >> +                       if (put_user((u64)p->u.ubuf.size, &up->b))
-> >> +                               return -EFAULT;
-> >> +                       break;
-> >>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
-> >>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
-> >>                         if (put_user((u64)p->u.memref.size, &up->b))
-> >> @@ -672,6 +688,13 @@ static int params_to_supp(struct tee_context *ctx=
-,
-> >>                         ip.b =3D p->u.value.b;
-> >>                         ip.c =3D p->u.value.c;
-> >>                         break;
-> >> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INPUT:
-> >> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT:
-> >> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INOUT:
-> >> +                       ip.a =3D (u64)p->u.ubuf.uaddr;
-> >> +                       ip.b =3D p->u.ubuf.size;
-> >> +                       ip.c =3D 0;
-> >> +                       break;
-> >>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT:
-> >>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
-> >>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
-> >> @@ -774,6 +797,16 @@ static int params_from_supp(struct tee_param *par=
-ams, size_t num_params,
-> >>                         p->u.value.b =3D ip.b;
-> >>                         p->u.value.c =3D ip.c;
-> >>                         break;
-> >> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT:
-> >> +               case TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INOUT:
-> >> +                       p->u.ubuf.uaddr =3D u64_to_user_ptr(ip.a);
-> >> +                       p->u.ubuf.size =3D ip.b;
-> >> +
-> >> +                       if (!access_ok(params[n].u.ubuf.uaddr,
-> >> +                                      params[n].u.ubuf.size))
-> >> +                               return -EFAULT;
-> >> +
-> >> +                       break;
-> >>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
-> >>                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
-> >>                         /*
-> >> diff --git a/include/linux/tee_drv.h b/include/linux/tee_drv.h
-> >> index ce23fd42c5d4..d773f91c6bdd 100644
-> >> --- a/include/linux/tee_drv.h
-> >> +++ b/include/linux/tee_drv.h
-> >> @@ -82,6 +82,11 @@ struct tee_param_memref {
-> >>         struct tee_shm *shm;
-> >>  };
-> >>
-> >> +struct tee_param_ubuf {
-> >> +       void * __user uaddr;
-> >> +       size_t size;
-> >> +};
-> >> +
-> >>  struct tee_param_value {
-> >>         u64 a;
-> >>         u64 b;
-> >> @@ -92,6 +97,7 @@ struct tee_param {
-> >>         u64 attr;
-> >>         union {
-> >>                 struct tee_param_memref memref;
-> >> +               struct tee_param_ubuf ubuf;
-> >>                 struct tee_param_value value;
-> >>         } u;
-> >>  };
-> >> diff --git a/include/uapi/linux/tee.h b/include/uapi/linux/tee.h
-> >> index d0430bee8292..3e9b1ec5dfde 100644
-> >> --- a/include/uapi/linux/tee.h
-> >> +++ b/include/uapi/linux/tee.h
-> >> @@ -151,6 +151,13 @@ struct tee_ioctl_buf_data {
-> >>  #define TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT        6
-> >>  #define TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT 7       /* input and o=
-utput */
-> >>
-> >> +/*
-> >> + * These defines userspace buffer parameters.
-> >> + */
-> >> +#define TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INPUT   8
-> >> +#define TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_OUTPUT  9
-> >> +#define TEE_IOCTL_PARAM_ATTR_TYPE_UBUF_INOUT   10      /* input and o=
-utput */
-> >> +
-> >>  /*
-> >>   * Mask for the type part of the attribute, leaves room for more type=
-s
-> >>   */
-> >> @@ -186,14 +193,17 @@ struct tee_ioctl_buf_data {
-> >>  /**
-> >>   * struct tee_ioctl_param - parameter
-> >>   * @attr: attributes
-> >> - * @a: if a memref, offset into the shared memory object, else a valu=
-e parameter
-> >> - * @b: if a memref, size of the buffer, else a value parameter
-> >> + * @a: if a memref, offset into the shared memory object,
-> >> + *     else if a ubuf, address of the user buffer,
-> >> + *     else a value parameter
-> >> + * @b: if a memref or ubuf, size of the buffer, else a value paramete=
-r
-> >>   * @c: if a memref, shared memory identifier, else a value parameter
-> >>   *
-> >> - * @attr & TEE_PARAM_ATTR_TYPE_MASK indicates if memref or value is u=
-sed in
-> >> - * the union. TEE_PARAM_ATTR_TYPE_VALUE_* indicates value and
-> >> - * TEE_PARAM_ATTR_TYPE_MEMREF_* indicates memref. TEE_PARAM_ATTR_TYPE=
-_NONE
-> >> - * indicates that none of the members are used.
-> >> + * @attr & TEE_PARAM_ATTR_TYPE_MASK indicates if memref, ubuf, or val=
-ue is
-> >> + * used in the union. TEE_PARAM_ATTR_TYPE_VALUE_* indicates value,
-> >> + * TEE_PARAM_ATTR_TYPE_MEMREF_* indicates memref, and TEE_PARAM_ATTR_=
-TYPE_UBUF_*
-> >> + * indicates ubuf. TEE_PARAM_ATTR_TYPE_NONE indicates that none of th=
-e members
-> >> + * are used.
-> >>   *
-> >>   * Shared memory is allocated with TEE_IOC_SHM_ALLOC which returns an
-> >>   * identifier representing the shared memory object. A memref can ref=
-erence
-> >>
-> >> --
-> >> 2.34.1
-> >>
->
+Changes since version 8:
+- Modify the signed-off-by with my work address
+- Rename all MFD cell names to "nct6694-xxx"
+- Add irq_dispose_mapping() in the error handling path and in the remove
+  function
+- Fix some comments in nct6694.c and in nct6694.h
+- Add module parameters to configure I2C's baudrate in i2c-nct6694.c
+- Rename all function names nct6694_can_xxx to nct6694_canfd_xxx in
+  nct6694_canfd.c
+- Fix nct6694_canfd_handle_state_change() in nct6694_canfd.c
+- Fix nct6694_canfd_start() to configure NBTP and DBTP in nct6694_canfd.c
+- Add can_set_static_ctrlmode() in nct6694_canfd.c
+
+Changes since version 7:
+- Add error handling for devm_mutex_init()
+- Modify the name of the child devices CAN1 and CAN2 to CAN0 and CAN1.
+- Fix multiline comments to net-dev style in nct6694_canfd.c
+
+Changes since version 6:
+- Fix nct6694_can_handle_state_change() in nct6694_canfd.c
+- Fix warnings in nct6694_canfd.c
+- Move the nct6694_can_priv's bec to the end in nct6694_canfd.c
+- Fix warning in nct6694_wdt.c
+- Fix temp_hyst's data type to signed variable in nct6694-hwmon.c
+
+Changes since version 5:
+- Modify the module name and the driver name consistently
+- Fix mfd_cell to MFD_CELL_NAME() and MFD_CELL_BASIC()
+- Drop unnecessary macros in nct6694.c
+- Update private data and drop mutex in nct6694_canfd.c
+- Fix nct6694_can_handle_state_change() in nct6694_canfd.c
+
+Changes since version 4:
+- Modify arguments in read/write function to a pointer to cmd_header
+- Modify all callers that call the read/write function
+- Move the nct6694_canfd.c to drivers/net/can/usb/
+- Fix the missing rx offload function in nct6694_canfd.c
+- Fix warngings in nct6694-hwmon.c
+
+Changes since version 3:
+- Modify array buffer to structure for each drivers
+- Fix defines and comments for each drivers
+- Add header <linux/bits.h> and use BIT macro in nct6694.c and
+  gpio-nct6694.c
+- Modify mutex_init() to devm_mutex_init()
+- Add rx-offload helper in nct6694_canfd.c
+- Drop watchdog_init_timeout() in nct6694_wdt.c
+- Modify the division method to DIV_ROUND_CLOSEST() in nct6694-hwmon.c
+- Drop private mutex and use rtc core lock in rtc-nct6694.c
+- Modify device_set_wakeup_capable() to device_init_wakeup() in
+  rtc-nct6694.c
+
+Changes since version 2:
+- Add MODULE_ALIAS() for each child driver
+- Modify gpio line names be a local variable in gpio-nct6694.c
+- Drop unnecessary platform_get_drvdata() in gpio-nct6694.c
+- Rename each command in nct6694_canfd.c
+- Modify each function name consistently in nct6694_canfd.c
+- Modify the pretimeout validation procedure in nct6694_wdt.c
+- Fix warnings in nct6694-hwmon.c
+
+Changes since version 1:
+- Implement IRQ domain to handle IRQ demux in nct6694.c
+- Modify USB_DEVICE to USB_DEVICE_AND_INTERFACE_INFO API in nct6694.c
+- Add each driver's command structure
+- Fix USB functions in nct6694.c
+- Fix platform driver registration in each child driver
+- Sort each driver's header files alphabetically
+- Drop unnecessary header in gpio-nct6694.c
+- Add gpio line names in gpio-nct6694.c
+- Fix errors and warnings in nct6694_canfd.c
+- Fix TX-flow control in nct6694_canfd.c
+- Fix warnings in nct6694_wdt.c
+- Drop unnecessary logs in nct6694_wdt.c
+- Modify start() function to setup device in nct6694_wdt.c
+- Add voltage sensors functionality in nct6694-hwmon.c
+- Add temperature sensors functionality in nct6694-hwmon.c
+- Fix overwrite error return values in nct6694-hwmon.c
+- Add write value limitation for each write() function in nct6694-hwmon.c
+- Drop unnecessary logs in rtc-nct6694.c
+- Fix overwrite error return values in rtc-nct6694.c
+- Modify to use dev_err_probe API in rtc-nct6694.c
+
+
+Ming Yu (7):
+  mfd: Add core driver for Nuvoton NCT6694
+  gpio: Add Nuvoton NCT6694 GPIO support
+  i2c: Add Nuvoton NCT6694 I2C support
+  can: Add Nuvoton NCT6694 CANFD support
+  watchdog: Add Nuvoton NCT6694 WDT support
+  hwmon: Add Nuvoton NCT6694 HWMON support
+  rtc: Add Nuvoton NCT6694 RTC support
+
+ MAINTAINERS                         |  12 +
+ drivers/gpio/Kconfig                |  12 +
+ drivers/gpio/Makefile               |   1 +
+ drivers/gpio/gpio-nct6694.c         | 494 +++++++++++++++
+ drivers/hwmon/Kconfig               |  10 +
+ drivers/hwmon/Makefile              |   1 +
+ drivers/hwmon/nct6694-hwmon.c       | 949 ++++++++++++++++++++++++++++
+ drivers/i2c/busses/Kconfig          |  10 +
+ drivers/i2c/busses/Makefile         |   1 +
+ drivers/i2c/busses/i2c-nct6694.c    | 184 ++++++
+ drivers/mfd/Kconfig                 |  15 +
+ drivers/mfd/Makefile                |   2 +
+ drivers/mfd/nct6694.c               | 367 +++++++++++
+ drivers/net/can/usb/Kconfig         |  11 +
+ drivers/net/can/usb/Makefile        |   1 +
+ drivers/net/can/usb/nct6694_canfd.c | 815 ++++++++++++++++++++++++
+ drivers/rtc/Kconfig                 |  10 +
+ drivers/rtc/Makefile                |   1 +
+ drivers/rtc/rtc-nct6694.c           | 309 +++++++++
+ drivers/watchdog/Kconfig            |  11 +
+ drivers/watchdog/Makefile           |   1 +
+ drivers/watchdog/nct6694_wdt.c      | 298 +++++++++
+ include/linux/mfd/nct6694.h         | 101 +++
+ 23 files changed, 3616 insertions(+)
+ create mode 100644 drivers/gpio/gpio-nct6694.c
+ create mode 100644 drivers/hwmon/nct6694-hwmon.c
+ create mode 100644 drivers/i2c/busses/i2c-nct6694.c
+ create mode 100644 drivers/mfd/nct6694.c
+ create mode 100644 drivers/net/can/usb/nct6694_canfd.c
+ create mode 100644 drivers/rtc/rtc-nct6694.c
+ create mode 100644 drivers/watchdog/nct6694_wdt.c
+ create mode 100644 include/linux/mfd/nct6694.h
+
+-- 
+2.34.1
+
