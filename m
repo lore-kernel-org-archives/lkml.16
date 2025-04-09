@@ -1,95 +1,155 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 589421BF33F;
-	Wed,  9 Apr 2025 17:02:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EDC926FDA4;
+	Wed,  9 Apr 2025 17:02:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744218158; cv=none; b=Tq2xPNrdhwgf7v5uGnY+XwL5mUozNyY57HczmK1bGJNk4/6PCt2l9OyEZ/9d+SPoYGlg5ikxiOYGd8rNASF3IGFkS+txTNQhBu//nMGJq27gbOLY4powVEvwrxJhzqrfrv62XTcB+MLHxF+8qIIDuXEoff77sBQKQQwIPo7z1rc=
+	t=1744218168; cv=none; b=r3ZaDZrXnDR9C7ZvXdMNr88u96fJXNjavwvqGBeZtblnx+/pbLITn2jKYt1yq80nMJdFOlqc+d9MMMLaSztzEtH+1uZ2y/GFDbOxOJuo+oGE4bhBkPpLe6rwlwMnXZtutqjBN7fitvWh52J+/jMcbWZSnIGSHIYkyntyT4QyCb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744218158; c=relaxed/simple;
-	bh=2fgrXbl7XmK/1Sd1jXkY+WL8zQcGEPJy1lFAiX+4sZ8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kdhM1p711p3RjbWYEEPqxO07RBgk/00bjucnJ+vafOG7c3mgCTz1nuyvmeIs9J/oA9rwDeYbAw6p6rQwOCJzbuspYqoJLV/2McaYHpfIANGOJMocm4SppjmwrIh1r1UZ/7YPT6kHRfIWjOSZWbcPxhPgo2dIWqdUucvkShN/CUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YorHfPsw; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744218168; c=relaxed/simple;
+	bh=OHvUhXtTCCbp0EONF6S3id69DHrK++gymSSJsARfsUA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LGXPB1dYHIrgvbB+/ejp6CWbPegr0V92kqA/g+zF2c2oWKTvobzsVEL7zdplX9a/0n0fRvGP17qVp/5DBpJYwWD8h/IBVIBmPPC6sZ6a7c5zBYTuD7iak6uLrpMipZGe0dXpok8algLWzEMvkvGNsPymb5Kn8cx+gX2MlvnrAQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=cNFZcIXV; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YorHfPsw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744218157; x=1775754157;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2fgrXbl7XmK/1Sd1jXkY+WL8zQcGEPJy1lFAiX+4sZ8=;
-  b=YorHfPswphdkLiFGma5xKFUegX859r1uhBAmLx8EoItV3byLy9iUgAlh
-   lIOzn3F4msczkCbikjpsC+obLV1P8lsxnku0j37XCC1r6ANSZ8dPoTlPN
-   nD8biAdVgUQgUATuW+kAxXyD8w5FkmreBMlkjHp5UK/Hxb1CydpvKHeUU
-   spYFEhRjK9idFxOIMoA5g2YeQD95FWr2KArQA2/ObUod5Y5cA83t2rq1b
-   yzqAjZPncysEDRfPzWskPNv7s4YqdHeM7ds6c6TX5CsFsiYE4BdpHAECl
-   Q5Wob842ljx27ZGOViplno6/RDHPhv28QOyVGegiIuqDCEektn5c1pCBO
-   Q==;
-X-CSE-ConnectionGUID: TO0ssnPUToyKhYl5rsBlwA==
-X-CSE-MsgGUID: SSCNnrpIQEWGcEHYZRWyEw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="56371745"
-X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
-   d="scan'208";a="56371745"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 10:02:35 -0700
-X-CSE-ConnectionGUID: paFj+VcoTGiDSdzXaUP6mA==
-X-CSE-MsgGUID: CqqqKux0Sve0pXbYVxqIcw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
-   d="scan'208";a="151822353"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 10:02:31 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1u2Yol-0000000Anq8-2VfQ;
-	Wed, 09 Apr 2025 20:02:27 +0300
-Date: Wed, 9 Apr 2025 20:02:27 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
-	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v6 08/12] gpio: regmap: Allow to provide init_valid_mask
- callback
-Message-ID: <Z_aoI2n5v0TyJhb3@smile.fi.intel.com>
-References: <20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com>
- <20250409-mdb-max7360-support-v6-8-7a2535876e39@bootlin.com>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="cNFZcIXV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=jYHYsmST/s6mhdaoenm3YeJwWoT2gBbnRyd04iTSby8=; b=cNFZcIXVMBwNJbxH/8a8WS8IM4
+	I6EyD+R8/PTWcrW0rGnoZAZKMA/JvLP5ShDx/SbHTlFMdr+gu9jziy3P4vzfR93SNhl4CnBFMYUJI
+	9m+sxWzqzAXNQR9JIUdYOIOr2U4qPFd9wNsXeV/lmS9+CE7VxzV3Ig15ThN/9ZslWfGoQ4eSWtQXr
+	gpuY3O1ZKhh5XQQzESpw5hlhhK+A1+t8Wg+FAcJm9eP3jHfENQFsyrEjWaXlYeF7u9UoBHFLiz2ob
+	rp5s8gnHCPZtXAG91gcRIZQjCQNryXoE9GAlNuphCx1w7E8CaDjLRmt9ivc8YlM/FzL/4BxmLqK6u
+	56AY5hQw==;
+Received: from [191.204.192.64] (helo=[192.168.15.100])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1u2Yov-00EEWh-I0; Wed, 09 Apr 2025 19:02:37 +0200
+Message-ID: <dddab8dd-6d36-4899-ae8c-d284c4c0306c@igalia.com>
+Date: Wed, 9 Apr 2025 14:02:32 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250409-mdb-max7360-support-v6-8-7a2535876e39@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] ovl: Enable support for casefold filesystems
+To: Gabriel Krisman Bertazi <gabriel@krisman.be>
+Cc: Miklos Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>,
+ Theodore Tso <tytso@mit.edu>, linux-unionfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ kernel-dev@igalia.com
+References: <20250409-tonyk-overlayfs-v1-0-3991616fe9a3@igalia.com>
+ <871pu1b7l5.fsf@mailhost.krisman.be>
+Content-Language: en-US
+From: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
+In-Reply-To: <871pu1b7l5.fsf@mailhost.krisman.be>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 09, 2025 at 04:55:55PM +0200, Mathieu Dubois-Briand wrote:
-> Allows to populate the gpio_regmap_config structure with
-> init_valid_mask() callback to set on the final gpio_chip structure.
+Hi Gabriel!
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Em 09/04/2025 13:52, Gabriel Krisman Bertazi escreveu:
+> André Almeida <andrealmeid@igalia.com> writes:
+> 
+>> Hi all,
+>>
+>> We would like to support the usage of casefold filesystems with
+>> overlayfs. This patchset do some of the work needed for that, but I'm
+>> sure there are more places that need to be tweaked so please share your
+>> feedback for this work.
+> 
+> I didn't look the patches yet, but this is going to be quite tricky.
+> For a start, consider the semantics when mixing volumes with different
+> case settings for lower/upper/work directories.  And that could be any
+> setting, such as whether the directory has +F, the encoding version and
+> the encoding flags (strict mode).  Any mismatch will look bonkers and
+> you want to forbid the mount.
+> 
+> Consider upperdir is case-sensitive but lowerdir is not.  In this case,
+> I suspect the case-exact name would be hidden by the upper, but the
+> inexact-case would still resolve from the lower when it shouldn't, and
+> can't be raised again.  If we have the other way around, the upper
+> will hide more than one file from the lower and it is a matter of luck
+> which file we are getting.
+> 
+> In addition, if we have a case-insensitive on top of a case-sensitive,
+> there is no way we can do the case-insensitive lookup on the lower
+> without doing a sequential search across the entire directory.  Then it
+> is again a matter of luck which file we are getting.
+> 
+> The issue can appear even on the same volume, since case-insensitiveness
+> is actually per-directory and can be flipped when a directory is empty.
+> If something like the below is possible, we are in the same situation
+> again:
+> 
+> mkdir lower/ci
+> chattr +F lower/ci
+> touch lower/ci/BLA
+> mount -o overlay none upperdir=upper,lowerdir=lower,workdir=work merged
+> rm -r merged/ci/BLA    // creates a whiteout in upper
+>                         // merged looks empty and should be allowed to drop +F
+> chattr -F merged/ci
+> 
+> So we'd also need to always forbid clearing the +F attribute and perhaps
+> forbid it from ever being set on the merged directory.  We also want to
+> require the encoding version and flags to match.
+> 
 
--- 
-With Best Regards,
-Andy Shevchenko
+Thank you for the prompt response. I agree with you, for the next 
+version I will implement such restrictions. I think it will be better to 
+start with very restrict possibilities and then slowly dropping then, if 
+they prove to be not problematic.
 
+>> * Implementation
+>>
+>> The most obvious place that required change was the strncmp() inside of
+>> ovl_cache_entry_find(), that I managed to convert to use d_same_name(),
+>> that will then call the generic_ci_d_compare function if it's set for
+>> the dentry. There are more strncmp() around ovl, but I would rather hear
+>> feedback about this approach first than already implementing this around
+>> the code.
+> 
+> I'd suggest marking it as an RFC since it is not a functional
+> implementation yet, IIUC.
+> 
+
+Ops, you are right, I forgot to tag it as such.
+
+>>> * Testing
+>> sudo mount -t tmpfs -o casefold tmpfs mnt/
+>> cd mnt/
+>> mkdir dir
+>> chattr +F dir
+>> cd dir/
+>> mkdir upper lower
+>> mkdir lower/A lower/b lower/c
+>> mkdir upper/a upper/b upper/d
+>> mkdir merged work
+>> sudo mount -t overlay overlay -olowerdir=lower,upperdir=upper,workdir=work, merged
+>> ls /tmp/mnt/dir/merged/
+>> a  b  c  d
+>>
+>> And ovl is respecting the equivalent names. `a` points to a merged dir
+>> between `A` and `a`, but giving that upperdir has a lowercase `a`, this
+>> is the name displayed here.
+> 
+> Did you try fstests generic/556?  It might require some work to make it
+> run over ovl, but it will exercise several cases that are quite
+> hard to spot.
+> 
+> 
+
+I haven't tried, I'm not sure which directory should I point to fstests 
+to use for the test, the merged one?
 
