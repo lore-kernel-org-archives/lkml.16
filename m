@@ -1,354 +1,337 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE9CA1EF371;
-	Wed,  9 Apr 2025 06:54:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0ACB212FA2
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 06:55:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744181686; cv=none; b=Z4NrqQ804nJkdYz7jUlLtyhlkUZh223pIe9yfjnRXV6//EEKsL79bpHKVmP8SoUQIsX4Uq52Oc5ZSr8pRZtQuNldMkhucI/JxCqYV1KzXtXKOiNlAGcfc6FTw7lJWeebIQjCwPdMmRfuGy+bvPNi72xgaFvncEkZkQQBmM66qdA=
+	t=1744181725; cv=none; b=Bts3Q+eiY4/0Jj8g5VT+jYLMbnCqm6pXKnNUH7yufqxOWGYmaUoTl9XQ5Xyo2Uc20UoPLINVU9EAVJYw3EpwWZr5JbOTG14+vNY8AhMQ9fiSCpwkUDw6ZNnm6JTqpPfRfFJXYNe6C/l4lik6szqcug05Asi0bpD1Aa1pe+wskrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744181686; c=relaxed/simple;
-	bh=N2Ql7XE06BfJOvsUbi1FFm2hRKOzU2ggVSI2kdalZI0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e68oZOWM3awVInfiq9M3cqBTN00Ev5oceEgMpUbWqiQCB/JrthgHI43oAAJBJdSzHqaV1SwrX+mqyvzAaPjN2VGZcJd/vjkGnEw9NOCDeTX5rbTOsom+wsxq4xsT0vzuzJBZowLP4OofyvNXa3sHybUTlNbj1l1F5pK+BMbY8+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=pIB1Cb03; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=IM0A0iJT reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1744181725; c=relaxed/simple;
+	bh=QdVBI9jATxw7evkS6I10+tbNM0r/BgQjoVbuKYu53nc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iimqN5gMXB5L40w9FGDqzrBjKQ6Eeqh+B+opqaIp50sh9G3dA+mD2bK6lCU369VTGiXJoRyuOqEkKWrnJoHyAWQck+TcuXPH9C/209WWXjnRAdu0UrohgNaX+6Gm9RXC3ZnI3lK5m9tYvNLLSee5uejHGzeohSqKp803OeB9kIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vusY60yE; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="pIB1Cb03";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="IM0A0iJT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vusY60yE"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-af579e46b5dso4260401a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 23:55:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1744181683; x=1775717683;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Q6+UEGaM07beYSVq7txElg3igRbrlGhkQ6SKj0rGMEs=;
-  b=pIB1Cb03zFi1LnGnGGdTKfWRfasvWy1Wz2EbuIWc67ohA5gV9TCOF4S/
-   SyITdQwB5DaY72yWV6ryfceA39dwJIdgfIkBpaRIBlpauGFO2jT+nHuyX
-   jTDacwwc4CMt9zPic50GNxheqSONroOrkAaTQWQNR7M/p4gtTQKcBDQNe
-   IDLVnu1WmuZuqg4Tbv/A2FfBxTq/gea03Jcw7/NNms3N9WA1vRSOeR5ya
-   flnJ4Xm/XH8hzO0+kqsmLdPQtgrWARUk/h/Glbo1Nv/ysarDX3tjpOZi4
-   a5pNmJMPXDIqgSXdI22x/xToHMw7hmssLZ8niKLugsT0j1M9y8DjLvzzS
-   g==;
-X-CSE-ConnectionGUID: yb9vgwJiRdSvn9TbThY0GQ==
-X-CSE-MsgGUID: 2Dp7tbY4SS2M+x/fNS+Q1A==
-X-IronPort-AV: E=Sophos;i="6.15,200,1739833200"; 
-   d="scan'208";a="43417865"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 09 Apr 2025 08:54:39 +0200
-X-CheckPoint: {67F619AF-2E-DC4DC9A0-F4F29281}
-X-MAIL-CPID: 7CD51142A2A0AC6D93C942DA02FD42FC_0
-X-Control-Analysis: str=0001.0A006371.67F619AC.0096,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 2EEA0164843;
-	Wed,  9 Apr 2025 08:54:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1744181675;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Q6+UEGaM07beYSVq7txElg3igRbrlGhkQ6SKj0rGMEs=;
-	b=IM0A0iJT+UOj21PQbTwYJbNds5PEehmoEMsTmsFhS1O6DImFdpKMN0ZSKLwhxQ9bD+z3x3
-	oUTBS4a+v2nqro2EDW4epbD98cwy6mwE0QuJHAnJTvi3wWoGbcq86WUzB9qYrZeR4bdHGx
-	Tj/ItuTVSDMFGJ2XP4MCF2PGA7yYdTbXrSgsh/iTSqzZCgz/f523wj96q9tT59KdpLJXHx
-	0ZqKSVNrAALNK9Xfcj1w+ccEtVXeXN/xCbtpnFlYcPO8Oy2Q+KzNXVRzDJp8ACv0EovjNz
-	m09kDAwA/0oWH8UFAX7r6feCIGQvEr46criNZusd68TRVaOUv4YzLVpfJO/8rw==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>
-Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
-	linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 1/1] hwmon: (gpio-fan) Add regulator support
-Date: Wed,  9 Apr 2025 08:54:26 +0200
-Message-ID: <20250409065430.1413439-1-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.43.0
+        d=linaro.org; s=google; t=1744181723; x=1744786523; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=BOZjLOAGYZcTUH3TOIZZnZSwMjEJaIzKoYbYDzfZTq8=;
+        b=vusY60yEWq+zDVMG77LqShNfNUZaMFPMO1VNSZHH1ky1d2DTWutqJoOr/Q+cw4y79w
+         1OQYckkK1vY/JmpqL4WUg9/EwQf9ElpZJNvJnkQi4B+G3agqX6Fa6vtFdq1JD05UoQ7+
+         HS/jDUwKe2Gi/WQbZkKmmO0p62Abl8egmNtNip57vGkGK2bZ78MjTDCGSrfRyRSocIjr
+         sLRTbxMcC9hWzG8DDMMw7HcIsZ0tCt+Rixugy7blb0S2z7IDPXj80YKtNdhlmXiEpp7W
+         EcdMYACX7zxMt2StL00OfKDwenr15lDl6bnZ/bXIH6rBb4T5ZHyXSEHjSQghBAQX466a
+         tyHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744181723; x=1744786523;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BOZjLOAGYZcTUH3TOIZZnZSwMjEJaIzKoYbYDzfZTq8=;
+        b=qy5HM21dsEdvnKUSljT/CI2QEFC7fELWezOwLPrcJeIYLg5Gaudc7seK8ECEegMhsi
+         reqszN/tuFqzTfAeY8ESSQHPAs7mJBp3hpQlaD71xQh6hJJnQQk57wzbhX3x5RDH8lhH
+         Gn3CniBzkwQZrKN3saNrs/6w/wXmic6jvw5LvHh0wdNkPEYQyvZYeMi/5ObRKg8D0jBR
+         gMBrjd8fv9pho4mV5JjsiKYdHLI/OBUXavewO0YZ5fUsNXZsa2uns8NJxyzSTH/t4wSr
+         GOHYFXBgnJEywo76gFsYld+ANKLCLAp24hAPcQ7b0/8BNPdlxDavCY6It4MjYQ7/7271
+         0Qug==
+X-Forwarded-Encrypted: i=1; AJvYcCWhSRSKohZbSEmWJvUVE2l4mPSTgRB/Jj6IdeKCBt23LQnt3LFB65QkUsecmkljfpWD5hWPIiW80D2ovcM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7DRjTlUlJjsNTftqLKy4mTCo/5XxyvnGJdXhCKxmOth98vHoi
+	Qek9xHDrXS7FWYITwoi1faDbbj+EQ0I+mj7/38CCns4koepPrw7MbrijZUqxhw==
+X-Gm-Gg: ASbGncvoiYf5y40HL1fTAkL3kEf4uFIDz1udAI24Sbrb7BaPCQcsHmwtQWsAc/mnRpt
+	1hAHq1SyL9JOYDioBuBqgy4EnoUJgk/30ohgKEj4d+37h9oM+GLEGimQNDIgd4YrUlyLpIbCgWI
+	+xwO7efE1HmILmGazwk4Zn0kgQQPzxmAj9AHbnlAeNwgibgSRwEgZaxy4nAJekTz24JrbGwFeac
+	tvoxl6aybjWlRZc8k4aOePzMuYiDPNi5xjl+gTHmiIyJVvyhZRdcCuw58orA/PRKySCIUzqSumR
+	kuc/IWdb0Td38UKwRwwd0qCEvBQ91UUVConFu4enYoCJ8yjDpfTLdMnanosfFg==
+X-Google-Smtp-Source: AGHT+IFEKpvJ/peYbL5UF/N3MPHp1NNbjrOs3QVXN8gAKbEYxPJH808F/Kuid1w2H5MEKJ7Cx9vuPA==
+X-Received: by 2002:a05:6a20:438c:b0:1f5:769a:a4bf with SMTP id adf61e73a8af0-201592e0c38mr3268658637.36.1744181722822;
+        Tue, 08 Apr 2025 23:55:22 -0700 (PDT)
+Received: from thinkpad ([120.56.198.53])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b02a11d2654sm508981a12.35.2025.04.08.23.55.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 23:55:22 -0700 (PDT)
+Date: Wed, 9 Apr 2025 12:25:16 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: "Musham, Sai Krishna" <sai.krishna.musham@amd.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>, 
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com" <kw@linux.com>, 
+	"robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>, 
+	"conor+dt@kernel.org" <conor+dt@kernel.org>, "cassel@kernel.org" <cassel@kernel.org>, 
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Simek, Michal" <michal.simek@amd.com>, 
+	"Gogada, Bharat Kumar" <bharat.kumar.gogada@amd.com>, "Havalige, Thippeswamy" <thippeswamy.havalige@amd.com>
+Subject: Re: [PATCH v6 2/2] PCI: xilinx-cpm: Add support for PCIe RP PERST#
+ signal
+Message-ID: <kjfnox7hefk7ribdhkzj4kbkwyeg7lf62oep7duw6vfarmx5hl@eg5nzkbusm4n>
+References: <20250326022811.3090688-1-sai.krishna.musham@amd.com>
+ <20250326022811.3090688-3-sai.krishna.musham@amd.com>
+ <cjrb3idrj3x7vo4fujl6nakj3foyu64gtxwovmxd4qvovvhwqq@26bpt5b4zjao>
+ <DM4PR12MB6158EFFB5F245FAA5CB022A8CDA92@DM4PR12MB6158.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+In-Reply-To: <DM4PR12MB6158EFFB5F245FAA5CB022A8CDA92@DM4PR12MB6158.namprd12.prod.outlook.com>
 
-FANs might be supplied by a regulator which needs to be enabled as well.
-This is implemented using runtime PM. Every time speed_index changes from
-0 to non-zero and vise versa RPM is resumed or suspended.
-Intitial RPM state is determined by initial value of speed_index.
+On Fri, Apr 04, 2025 at 06:59:23AM +0000, Musham, Sai Krishna wrote:
+> [AMD Official Use Only - AMD Internal Distribution Only]
+> 
+> Hi Manivannan,
+> 
+> Thanks for the review.
+> 
+> > -----Original Message-----
+> > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > Sent: Thursday, March 27, 2025 10:56 PM
+> > To: Musham, Sai Krishna <sai.krishna.musham@amd.com>
+> > Cc: bhelgaas@google.com; lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
+> > krzk+dt@kernel.org; conor+dt@kernel.org; cassel@kernel.org; linux-
+> > pci@vger.kernel.org; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > Simek, Michal <michal.simek@amd.com>; Gogada, Bharat Kumar
+> > <bharat.kumar.gogada@amd.com>; Havalige, Thippeswamy
+> > <thippeswamy.havalige@amd.com>
+> > Subject: Re: [PATCH v6 2/2] PCI: xilinx-cpm: Add support for PCIe RP PERST#
+> > signal
+> >
+> > Caution: This message originated from an External Source. Use proper caution
+> > when opening attachments, clicking links, or responding.
+> >
+> >
+> > On Wed, Mar 26, 2025 at 07:58:11AM +0530, Sai Krishna Musham wrote:
+> > > Add PCIe IP reset along with GPIO-based control for the PCIe Root
+> > > Port PERST# signal. Synchronizing the PCIe IP reset with the PERST#
+> > > signal's assertion and deassertion avoids Link Training failures.
+> > >
+> > > Adapt to use GPIO framework and make reset optional to maintain
+> > > backward compatibility with existing DTBs.
+> > >
+> > > Add clear firewall after Link reset for CPM5NC.
+> > >
+> > > Signed-off-by: Sai Krishna Musham <sai.krishna.musham@amd.com>
+> > > ---
+> > > Changes for v6:
+> > > - Correct version check condition of CPM5NC_HOST.
+> > >
+> > > Changes for v5:
+> > > - Handle probe defer for reset_gpio.
+> > > - Resolve ABI break.
+> > >
+> > > Changes for v4:
+> > > - Add PCIe PERST# support for CPM5NC.
+> > > - Add PCIe IP reset along with PERST# to avoid Link Training Errors.
+> > > - Remove PCIE_T_PVPERL_MS define and PCIE_T_RRS_READY_MS after
+> > >   PERST# deassert.
+> > > - Move PCIe PERST# assert and deassert logic to
+> > >   xilinx_cpm_pcie_init_port() before cpm_pcie_link_up(), since
+> > >   Interrupts enable and PCIe RP bridge enable should be done after
+> > >   Link up.
+> > > - Update commit message.
+> > >
+> > > Changes for v3:
+> > > - Use PCIE_T_PVPERL_MS define.
+> > >
+> > > Changes for v2:
+> > > - Make the request GPIO optional.
+> > > - Correct the reset sequence as per PERST#
+> > > - Update commit message
+> > > ---
+> > >  drivers/pci/controller/pcie-xilinx-cpm.c | 86 ++++++++++++++++++++++--
+> > >  1 file changed, 82 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/controller/pcie-xilinx-cpm.c b/drivers/pci/controller/pcie-xilinx-
+> > cpm.c
+> > > index d0ab187d917f..b10c0752a94f 100644
+> > > --- a/drivers/pci/controller/pcie-xilinx-cpm.c
+> > > +++ b/drivers/pci/controller/pcie-xilinx-cpm.c
+> > > @@ -6,6 +6,8 @@
+> > >   */
+> > >
+> > >  #include <linux/bitfield.h>
+> > > +#include <linux/delay.h>
+> > > +#include <linux/gpio/consumer.h>
+> > >  #include <linux/interrupt.h>
+> > >  #include <linux/irq.h>
+> > >  #include <linux/irqchip.h>
+> > > @@ -21,6 +23,13 @@
+> > >  #include "pcie-xilinx-common.h"
+> > >
+> > >  /* Register definitions */
+> > > +#define XILINX_CPM_PCIE0_RST         0x00000308
+> > > +#define XILINX_CPM5_PCIE0_RST                0x00000318
+> > > +#define XILINX_CPM5_PCIE1_RST                0x0000031C
+> > > +#define XILINX_CPM5NC_PCIE0_RST              0x00000324
+> > > +
+> > > +#define XILINX_CPM5NC_PCIE0_FRWALL   0x00001140
+> > > +
+> > >  #define XILINX_CPM_PCIE_REG_IDR              0x00000E10
+> > >  #define XILINX_CPM_PCIE_REG_IMR              0x00000E14
+> > >  #define XILINX_CPM_PCIE_REG_PSCR     0x00000E1C
+> > > @@ -99,6 +108,7 @@ struct xilinx_cpm_variant {
+> > >       u32 ir_status;
+> > >       u32 ir_enable;
+> > >       u32 ir_misc_value;
+> > > +     u32 cpm_pcie_rst;
+> > >  };
+> > >
+> > >  /**
+> > > @@ -106,6 +116,8 @@ struct xilinx_cpm_variant {
+> > >   * @dev: Device pointer
+> > >   * @reg_base: Bridge Register Base
+> > >   * @cpm_base: CPM System Level Control and Status Register(SLCR) Base
+> > > + * @crx_base: CPM Clock and Reset Control Registers Base
+> > > + * @cpm5nc_attr_base: CPM5NC Control and Status Registers Base
+> > >   * @intx_domain: Legacy IRQ domain pointer
+> > >   * @cpm_domain: CPM IRQ domain pointer
+> > >   * @cfg: Holds mappings of config space window
+> > > @@ -118,6 +130,8 @@ struct xilinx_cpm_pcie {
+> > >       struct device                   *dev;
+> > >       void __iomem                    *reg_base;
+> > >       void __iomem                    *cpm_base;
+> > > +     void __iomem                    *crx_base;
+> > > +     void __iomem                    *cpm5nc_attr_base;
+> > >       struct irq_domain               *intx_domain;
+> > >       struct irq_domain               *cpm_domain;
+> > >       struct pci_config_window        *cfg;
+> > > @@ -475,12 +489,45 @@ static int xilinx_cpm_setup_irq(struct xilinx_cpm_pcie
+> > *port)
+> > >   * xilinx_cpm_pcie_init_port - Initialize hardware
+> > >   * @port: PCIe port information
+> > >   */
+> > > -static void xilinx_cpm_pcie_init_port(struct xilinx_cpm_pcie *port)
+> > > +static int xilinx_cpm_pcie_init_port(struct xilinx_cpm_pcie *port)
+> > >  {
+> > >       const struct xilinx_cpm_variant *variant = port->variant;
+> > > +     struct device *dev = port->dev;
+> > > +     struct gpio_desc *reset_gpio;
+> > > +
+> > > +     /* Request the GPIO for PCIe reset signal */
+> > > +     reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
+> > > +     if (IS_ERR(reset_gpio)) {
+> > > +             if (PTR_ERR(reset_gpio) != -EPROBE_DEFER)
+> > > +                     dev_err(dev, "Failed to request reset GPIO\n");
+> > > +             return PTR_ERR(reset_gpio);
+> > > +     }
+> > >
+> > > -     if (variant->version == CPM5NC_HOST)
+> > > -             return;
+> > > +     if (reset_gpio && port->crx_base) {
+> > > +             /* Assert the PCIe IP reset */
+> > > +             writel_relaxed(0x1, port->crx_base + variant->cpm_pcie_rst);
+> > > +
+> > > +             /* Controller specific delay */
+> > > +             udelay(50);
+> > > +
+> >
+> > There should be atleast 100ms delay before PERST# deassert as per the spec. So
+> > use PCIE_T_PVPERL_MS. I know that you had it before, but removed in v4. I don't
+> > see a valid reason for that.
+> 
+> For CPM/CPM5/CPM5NC, the "Power Up" sequence mentioned in section 2.2.1
+> of PCIe Electromechanical Spec is handled in the design. The PERST# we are
+> using here is applied after the Power Up sequence and will be used for warm reset,
+> where power of the system is already stable.
+> 
 
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
----
-Patch 1 & 2 from v1 [1] have already been applied, although number 2 [2] is not
-yet showing in next-20250305. Patches 3 & 4 (just removing comments) from v1
-have been dropped, so only this patch remains.
+I don't quite understand what you mean by 'warm reset' here. Even if the power
+was already stable, what is the guarantee that the 100ms time is elapsed before
+deasserting the PERST#? Does the hardware logic ensure 100ms time is elapsed
+before the driver is probed?
 
-Changes in v5:
-* Fix an uninitialized variable, detected by kernel test robot
+> So, we changed the delay after PERST# and IP reset assertion to 50us controller
+> specific delay, similar to TPERST(PERST# active time 100us) delay in "Power
+> sequencing and Reset Signal Timings" of PCIe Electromechanical Spec. After
+> deassertion of PERST# signal and IP reset, a delay of PCIE_T_RRS_READY_MS
+> is required before checking the Link. Please let me know if you have further queries.
+> 
 
-Changes in v4:
-* Remove unecessary variable initialization
-* Simplify return code handling
+This part is fine.
 
-Changes in v3:
-* Remove noisy dev_err calls related to runtime pm
-* Properly propagate return codes from set_fan_speed
+> Thanks, I will update this information in commit message.
+> >
+> > > +             /* Deassert the PCIe IP reset */
+> > > +             writel_relaxed(0x0, port->crx_base + variant->cpm_pcie_rst);
+> > > +
+> > > +             /* Deassert the reset signal */
+> > > +             gpiod_set_value(reset_gpio, 0);
+> > > +             mdelay(PCIE_T_RRS_READY_MS);
+> > > +
+> > > +             if (variant->version == CPM5NC_HOST && port->cpm5nc_attr_base) {
+> > > +                     /* Clear Firewall */
+> > > +                     writel_relaxed(0x00, port->cpm5nc_attr_base +
+> > > +                                     XILINX_CPM5NC_PCIE0_FRWALL);
+> > > +                     writel_relaxed(0x01, port->cpm5nc_attr_base +
+> > > +                                     XILINX_CPM5NC_PCIE0_FRWALL);
+> > > +                     writel_relaxed(0x00, port->cpm5nc_attr_base +
+> > > +                                     XILINX_CPM5NC_PCIE0_FRWALL);
+> > > +                     return 0;
+> > > +             }
+> > > +     }
+> > >
+> > >       if (cpm_pcie_link_up(port))
+> > >               dev_info(port->dev, "PCIe Link is UP\n");
+> > > @@ -512,6 +559,8 @@ static void xilinx_cpm_pcie_init_port(struct
+> > xilinx_cpm_pcie *port)
+> > >       pcie_write(port, pcie_read(port, XILINX_CPM_PCIE_REG_RPSC) |
+> > >                  XILINX_CPM_PCIE_REG_RPSC_BEN,
+> > >                  XILINX_CPM_PCIE_REG_RPSC);
+> > > +
+> > > +     return 0;
+> > >  }
+> > >
+> > >  /**
+> > > @@ -551,6 +600,27 @@ static int xilinx_cpm_pcie_parse_dt(struct
+> > xilinx_cpm_pcie *port,
+> > >               port->reg_base = port->cfg->win;
+> > >       }
+> > >
+> > > +     port->crx_base = devm_platform_ioremap_resource_byname(pdev,
+> > > +                                                            "cpm_crx");
+> > > +     if (IS_ERR(port->crx_base)) {
+> > > +             if (PTR_ERR(port->crx_base) == -EINVAL)
+> > > +                     port->crx_base = NULL;
+> > > +             else
+> > > +                     return PTR_ERR(port->crx_base);
+> > > +     }
+> > > +
+> > > +     if (port->variant->version == CPM5NC_HOST) {
+> > > +             port->cpm5nc_attr_base =
+> > > +                     devm_platform_ioremap_resource_byname(pdev,
+> > > +                                                           "cpm5nc_attr");
+> >
+> > Where is this resource defined in the binding?
+> 
+> This patch is tested for mentioned CPM versions, I apologize that
+> I missed adding the cpm5nc_attr resource in DT binding. I will not
+> repeat this again. I will add the resource in the next patch.
+> Thanks for your understanding.
+> >
+> > > +             if (IS_ERR(port->cpm5nc_attr_base)) {
+> > > +                     if (PTR_ERR(port->cpm5nc_attr_base) == -EINVAL)
+> >
+> > Why?
+> 
+> This condition check is added to make cpm5nc_attr_base optional,
+> once I add missing resource in DT this condition will be applicable.
 
-Changes in v2:
-* Make regulator non-optional
+Why are you checking for -EINVAL? What does it correspond to?
 
-[1] https://lore.kernel.org/all/20250210145934.761280-1-alexander.stein@ew.tq-group.com/
-[2] https://web.git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git/commit/?h=hwmon-next&id=9fee7d19bab635f89223cc40dfd2c8797fdc4988
- drivers/hwmon/gpio-fan.c | 103 +++++++++++++++++++++++++++++++++------
- 1 file changed, 87 insertions(+), 16 deletions(-)
+If your intention is to make the resource_get optional, you should use
+platform_get_resource_byname() first. If it returns NULL, then it means the
+resource is not defined in DT.
 
-diff --git a/drivers/hwmon/gpio-fan.c b/drivers/hwmon/gpio-fan.c
-index cee3fa146d69a..2f507bb76a8fb 100644
---- a/drivers/hwmon/gpio-fan.c
-+++ b/drivers/hwmon/gpio-fan.c
-@@ -20,6 +20,9 @@
- #include <linux/gpio/consumer.h>
- #include <linux/of.h>
- #include <linux/of_platform.h>
-+#include <linux/pm.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/thermal.h>
- 
- struct gpio_fan_speed {
-@@ -42,6 +45,7 @@ struct gpio_fan_data {
- 	bool			pwm_enable;
- 	struct gpio_desc	*alarm_gpio;
- 	struct work_struct	alarm_work;
-+	struct regulator	*supply;
- };
- 
- /*
-@@ -125,13 +129,32 @@ static int __get_fan_ctrl(struct gpio_fan_data *fan_data)
- }
- 
- /* Must be called with fan_data->lock held, except during initialization. */
--static void set_fan_speed(struct gpio_fan_data *fan_data, int speed_index)
-+static int set_fan_speed(struct gpio_fan_data *fan_data, int speed_index)
- {
- 	if (fan_data->speed_index == speed_index)
--		return;
-+		return 0;
-+
-+	if (fan_data->speed_index == 0 && speed_index > 0) {
-+		int ret;
-+
-+		ret = pm_runtime_resume_and_get(fan_data->dev);
-+		if (ret < 0)
-+			return ret;
-+	}
- 
- 	__set_fan_ctrl(fan_data, fan_data->speed[speed_index].ctrl_val);
-+
-+	if (fan_data->speed_index > 0 && speed_index == 0) {
-+		int ret;
-+
-+		ret = pm_runtime_put_sync(fan_data->dev);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
- 	fan_data->speed_index = speed_index;
-+
-+	return 0;
- }
- 
- static int get_fan_speed_index(struct gpio_fan_data *fan_data)
-@@ -176,7 +199,7 @@ static ssize_t pwm1_store(struct device *dev, struct device_attribute *attr,
- 	struct gpio_fan_data *fan_data = dev_get_drvdata(dev);
- 	unsigned long pwm;
- 	int speed_index;
--	int ret = count;
-+	int ret;
- 
- 	if (kstrtoul(buf, 10, &pwm) || pwm > 255)
- 		return -EINVAL;
-@@ -189,12 +212,12 @@ static ssize_t pwm1_store(struct device *dev, struct device_attribute *attr,
- 	}
- 
- 	speed_index = DIV_ROUND_UP(pwm * (fan_data->num_speed - 1), 255);
--	set_fan_speed(fan_data, speed_index);
-+	ret = set_fan_speed(fan_data, speed_index);
- 
- exit_unlock:
- 	mutex_unlock(&fan_data->lock);
- 
--	return ret;
-+	return ret ? ret : count;
- }
- 
- static ssize_t pwm1_enable_show(struct device *dev,
-@@ -211,6 +234,7 @@ static ssize_t pwm1_enable_store(struct device *dev,
- {
- 	struct gpio_fan_data *fan_data = dev_get_drvdata(dev);
- 	unsigned long val;
-+	int ret = 0;
- 
- 	if (kstrtoul(buf, 10, &val) || val > 1)
- 		return -EINVAL;
-@@ -224,11 +248,11 @@ static ssize_t pwm1_enable_store(struct device *dev,
- 
- 	/* Disable manual control mode: set fan at full speed. */
- 	if (val == 0)
--		set_fan_speed(fan_data, fan_data->num_speed - 1);
-+		ret = set_fan_speed(fan_data, fan_data->num_speed - 1);
- 
- 	mutex_unlock(&fan_data->lock);
- 
--	return count;
-+	return ret ? ret : count;
- }
- 
- static ssize_t pwm1_mode_show(struct device *dev,
-@@ -279,7 +303,7 @@ static ssize_t set_rpm(struct device *dev, struct device_attribute *attr,
- 		goto exit_unlock;
- 	}
- 
--	set_fan_speed(fan_data, rpm_to_speed_index(fan_data, rpm));
-+	ret = set_fan_speed(fan_data, rpm_to_speed_index(fan_data, rpm));
- 
- exit_unlock:
- 	mutex_unlock(&fan_data->lock);
-@@ -386,6 +410,7 @@ static int gpio_fan_set_cur_state(struct thermal_cooling_device *cdev,
- 				  unsigned long state)
- {
- 	struct gpio_fan_data *fan_data = cdev->devdata;
-+	int ret;
- 
- 	if (!fan_data)
- 		return -EINVAL;
-@@ -395,11 +420,11 @@ static int gpio_fan_set_cur_state(struct thermal_cooling_device *cdev,
- 
- 	mutex_lock(&fan_data->lock);
- 
--	set_fan_speed(fan_data, state);
-+	ret = set_fan_speed(fan_data, state);
- 
- 	mutex_unlock(&fan_data->lock);
- 
--	return 0;
-+	return ret;
- }
- 
- static const struct thermal_cooling_device_ops gpio_fan_cool_ops = {
-@@ -499,6 +524,8 @@ static void gpio_fan_stop(void *data)
- 	mutex_lock(&fan_data->lock);
- 	set_fan_speed(data, 0);
- 	mutex_unlock(&fan_data->lock);
-+
-+	pm_runtime_disable(fan_data->dev);
- }
- 
- static int gpio_fan_probe(struct platform_device *pdev)
-@@ -521,6 +548,11 @@ static int gpio_fan_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, fan_data);
- 	mutex_init(&fan_data->lock);
- 
-+	fan_data->supply = devm_regulator_get(dev, "fan");
-+	if (IS_ERR(fan_data->supply))
-+		return dev_err_probe(dev, PTR_ERR(fan_data->supply),
-+				     "Failed to get fan-supply");
-+
- 	/* Configure control GPIOs if available. */
- 	if (fan_data->gpios && fan_data->num_gpios > 0) {
- 		if (!fan_data->speed || fan_data->num_speed <= 1)
-@@ -548,6 +580,17 @@ static int gpio_fan_probe(struct platform_device *pdev)
- 			return err;
- 	}
- 
-+	pm_runtime_set_suspended(&pdev->dev);
-+	pm_runtime_enable(&pdev->dev);
-+	/* If current GPIO state is active, mark RPM as active as well */
-+	if (fan_data->speed_index > 0) {
-+		int ret;
-+
-+		ret = pm_runtime_resume_and_get(&pdev->dev);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	/* Optional cooling device register for Device tree platforms */
- 	fan_data->cdev = devm_thermal_of_cooling_device_register(dev, np,
- 				"gpio-fan", fan_data, &gpio_fan_cool_ops);
-@@ -568,41 +611,69 @@ static void gpio_fan_shutdown(struct platform_device *pdev)
- 	}
- }
- 
-+static int gpio_fan_runtime_suspend(struct device *dev)
-+{
-+	struct gpio_fan_data *fan_data = dev_get_drvdata(dev);
-+	int ret = 0;
-+
-+	if (fan_data->supply)
-+		ret = regulator_disable(fan_data->supply);
-+
-+	return ret;
-+}
-+
-+static int gpio_fan_runtime_resume(struct device *dev)
-+{
-+	struct gpio_fan_data *fan_data = dev_get_drvdata(dev);
-+	int ret = 0;
-+
-+	if (fan_data->supply)
-+		ret = regulator_enable(fan_data->supply);
-+
-+	return ret;
-+}
-+
- static int gpio_fan_suspend(struct device *dev)
- {
- 	struct gpio_fan_data *fan_data = dev_get_drvdata(dev);
-+	int ret = 0;
- 
- 	if (fan_data->gpios) {
- 		fan_data->resume_speed = fan_data->speed_index;
- 		mutex_lock(&fan_data->lock);
--		set_fan_speed(fan_data, 0);
-+		ret = set_fan_speed(fan_data, 0);
- 		mutex_unlock(&fan_data->lock);
- 	}
- 
--	return 0;
-+	return ret;
- }
- 
- static int gpio_fan_resume(struct device *dev)
- {
- 	struct gpio_fan_data *fan_data = dev_get_drvdata(dev);
-+	int ret = 0;
- 
- 	if (fan_data->gpios) {
- 		mutex_lock(&fan_data->lock);
--		set_fan_speed(fan_data, fan_data->resume_speed);
-+		ret = set_fan_speed(fan_data, fan_data->resume_speed);
- 		mutex_unlock(&fan_data->lock);
- 	}
- 
--	return 0;
-+	return ret;
- }
- 
--static DEFINE_SIMPLE_DEV_PM_OPS(gpio_fan_pm, gpio_fan_suspend, gpio_fan_resume);
-+static const struct dev_pm_ops gpio_fan_pm = {
-+	RUNTIME_PM_OPS(gpio_fan_runtime_suspend,
-+		       gpio_fan_runtime_resume, NULL)
-+	SYSTEM_SLEEP_PM_OPS(gpio_fan_suspend, gpio_fan_resume)
-+};
- 
- static struct platform_driver gpio_fan_driver = {
- 	.probe		= gpio_fan_probe,
- 	.shutdown	= gpio_fan_shutdown,
- 	.driver	= {
- 		.name	= "gpio-fan",
--		.pm	= pm_sleep_ptr(&gpio_fan_pm),
-+		.pm	= pm_ptr(&gpio_fan_pm),
- 		.of_match_table = of_gpio_fan_match,
- 	},
- };
+- Mani
+
 -- 
-2.43.0
-
+மணிவண்ணன் சதாசிவம்
