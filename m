@@ -1,33 +1,31 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0950215F48;
-	Wed,  9 Apr 2025 07:00:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F113215191
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 07:01:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744182020; cv=none; b=iozIhDj9M2ShOipHb0p5ubXkGTtzQFoJO7B1QD7iQs7keoUu57D8ELtv+ISTbuftrOqCPhBZnR6RJDVNxst02/efo8967ztIj/Ra9ygbAeKS3CqGIuPtPEONVGmpUzZm6Ja269bYeqHs2Dz2lx0Xmu4XrMXSs5a9iiOb0ZuIZbs=
+	t=1744182112; cv=none; b=gaSQDJhLluXtNE2rhZZ5hNg2KWgnSLEqYHJTcG44BwsbRmeyG7g/8zMTlUn5c4EbG7EPf7wZysgTPt7ChvK2twEddQgFd2FMa/YqJ5UMmJy8eq33XP1KSIualYvGngD5fz+K26ucxBtmPnRcQLzOyX07Iry2J+OHGcgHmT885qk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744182020; c=relaxed/simple;
-	bh=TdOOOBHCsmehyp8mWelVi40UMNZCvIW9e4mU/iC/Y6c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qgbFpYc2KrthteTqF4AoG5gcpjRQV0xfSvBOLTXnTbdF/ALCEUbFlq8VfiHnxRWo9X8VY6/9dkn5PgsgwyGAp5z5cqh5aBBOuKcndcckvq9h1fDMa9efT0iHt8knxuz48PRSCvVYhwFLtKLJBDJkqgLH5bW8kPYWVyREG1GBMio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KqZ+m/K3; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KqZ+m/K3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66A9DC4CEE3;
-	Wed,  9 Apr 2025 07:00:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744182020;
-	bh=TdOOOBHCsmehyp8mWelVi40UMNZCvIW9e4mU/iC/Y6c=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KqZ+m/K3xb4JnzIpPBGmEwaV5HUSgJgGW/pF/RR7AJAewOomNcSQoafsxwFrXyfoQ
-	 +CM6yUnw1xH9cIgNXlzUaS7ki/TwxTDiV0opSwzkjjni7dXDSFShXjc9VOoJO2KQ9U
-	 QucEpiCJ0A9agjsoh844krAl6yvt7QrjRvC53DTdtjZvsvvjxZQWwFnIDoUc73I96q
-	 Uv1jR2Cy80JzdYNv0RMx6t/ye/PWG0xt1fcu9SmlbVIpbUHcOL/mPJyplCx74Dpaqe
-	 h1cLFa8y9EA3jiWhmrqDyPN/ulBzdMm/X7f8U/MbkxB0IKmsSePjueMqAL+xStMruL
-	 EmeEtVWTWm3bw==
-Message-ID: <2dabc542-33b8-4878-a586-f9aac7e035bc@kernel.org>
-Date: Wed, 9 Apr 2025 09:00:15 +0200
+	s=arc-20240116; t=1744182112; c=relaxed/simple;
+	bh=qEXyDpV8WgexzCCVxuJ0THUirxo+mq5+vfSEG0UPfPU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=H2dlS3P3OwwO15dv2OE8wUsHSbvSf3vtiM+mJ+11sXtGvnRQh171xeaERhAPEDcvUuL/5Ed+D3MaoKO6GFaCvPV/nq1jXeHohlzHr/vYyPg8o45VQ4gyv2ToGr7Oi/J3xbBl8KU3ATFxNf9BuNfk5LOCpbzJZ1Hh065mqgxeXW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZXYkq556jz13LQv;
+	Wed,  9 Apr 2025 15:01:07 +0800 (CST)
+Received: from kwepemg500008.china.huawei.com (unknown [7.202.181.45])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6DA5D180B4A;
+	Wed,  9 Apr 2025 15:01:48 +0800 (CST)
+Received: from [10.174.177.186] (10.174.177.186) by
+ kwepemg500008.china.huawei.com (7.202.181.45) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 9 Apr 2025 15:01:40 +0800
+Message-ID: <0e82b335-09ce-4a0d-809e-f55405ac7953@huawei.com>
+Date: Wed, 9 Apr 2025 15:01:39 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,138 +33,102 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 3/6] dt-bindings: watchdog: Add Qualcomm restart
- reason binding
-To: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>,
- Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
-References: <20250408-wdt_reset_reason-v1-0-e6ec30c2c926@oss.qualcomm.com>
- <20250408-wdt_reset_reason-v1-3-e6ec30c2c926@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250408-wdt_reset_reason-v1-3-e6ec30c2c926@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Subject: Re: [RFC PATCH] mm/damon: add full LPAE support for memory monitoring
+ above 4GB
+To: SeongJae Park <sj@kernel.org>
+CC: <akpm@linux-foundation.org>, <damon@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+	<wangkefeng.wang@huawei.com>
+References: <20250409025036.70633-1-sj@kernel.org>
+From: zuoze <zuoze1@huawei.com>
+In-Reply-To: <20250409025036.70633-1-sj@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemg500008.china.huawei.com (7.202.181.45)
 
-On 08/04/2025 10:49, Kathiravan Thirumoorthy wrote:
-> Add a devicetree binding for the Qualcomm IPQ SOCs restart reason
-> information region found in the IMEM, allowing the system to identify
-> the cause of a restart.
+
+
+在 2025/4/9 10:50, SeongJae Park 写道:
+> Hi Ze,
 > 
-> Signed-off-by: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
-> ---
->  .../bindings/watchdog/qcom,restart-reason.yaml     | 46 ++++++++++++++++++++++
->  1 file changed, 46 insertions(+)
+> On Tue, 8 Apr 2025 15:55:53 +0800 Ze Zuo <zuoze1@huawei.com> wrote:
 > 
-> diff --git a/Documentation/devicetree/bindings/watchdog/qcom,restart-reason.yaml b/Documentation/devicetree/bindings/watchdog/qcom,restart-reason.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..babbaa70b114f9691018ed6cb10bfa78e18fad64
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/qcom,restart-reason.yaml
-> @@ -0,0 +1,46 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/watchdog/qcom,restart-reason.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm IPQ SoC restart reason location
-> +
-> +maintainers:
-> +  - Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
-> +
-> +description:
-> +  The Qualcomm IPQ SoC restart reason memory region, in IMEM, is used to
-> +  identify the cause of the system restart. This will be helpful to identify
-> +  the cause when the RAM dump collection is disabled.
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,restart-reason-info
+>> Previously, DAMON's physical address space monitoring only supported
+>> memory ranges below 4GB on LPAE-enabled systems. This was due to
+>> the use of 'unsigned long' in 'struct damon_addr_range', which is
+>> 32-bit on ARM32 even with LPAE enabled.
+> 
+> Nice finding!
 
-No generic compatibles.
+Thank you for the kind words!
 
-OTOH, I don't see much of a value of this being a separate node.
-
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    imem@8600000 {
-> +      compatible = "qcom,ipq5424-imem", "syscon", "simple-mfd";
-> +      reg = <0x08600000 0x1000>;
-> +
-> +      #address-cells = <1>;
-> +      #size-cells = <1>;
-> +
-> +      ranges = <0 0x08600000 0x1000>;
-
-Drop all above.
-
-> +
-> +      restart-reason@7b0 {
-> +        compatible = "qcom,restart-reason-info";
-> +        reg = <0x7b0 0x4>;
-> +      };
-> +    };
-> +...
+> 
+>>
+>> This patch modifies the data types to properly support >4GB physical
+>> address spaces:
+>> 1. Changes 'start' and 'end' in 'struct damon_addr_range' from
+>>     'unsigned long' to 'unsigned long long' (u64)
+>> 2. Updates all related arithmetic operations and comparisons
+>> 3. Adjusts print formats from %lu to %llu where needed
+>> 4. Maintains backward compatibility for non-LPAE systems
+>>
+>> Since the overhead of always using u64 is negligible on 32-bit systems,
+>> should we prefer this simplified approach over the conditional typedef?
+>>
+>> Alternative implementation approaches to consider:
+>>
+>> 1. Introduce damon_addr_t that adapts to CONFIG_PHYS_ADDR_T_64BIT
+>> 2. Convert all DAMON address operations to use this type
+>>
+>> Just like implementation:
+>>   #ifdef CONFIG_PHYS_ADDR_T_64BIT
+>>      typedef unsigned long long damon_addr_t;
+>>   #else
+>>      typedef unsigned long damon_addr_t;
+>>   #endif
+>>
+>> This method could potentially cause minor issues with print formatting
+>> and division operations. We'd appreciate any suggestions for better
+>> approaches. Thank you for your input.
+>>
+>> The patch change allows DAMON to work with:
+>> - 32-bit ARM with LPAE (40-bit physical addresses)
+>> - 64-bit ARM systems
+>> - x86_64 physical address monitoring
+>> while preserving existing behavior on 32-bit systems without LPAE.
+> 
+> Again, nice finding and good improvement.  Thank you so much for sharing this
+> nice patch.
+> 
+> But, this doesn't seem like a very small and simple change.  I think we can
+> find the best approach together, by understanding impact of this change for
+> short term and long term.  For that, could you please also share how prevalent
+> 32-bit ARM machines with LPAE are, and what would be your expected usage of
+> physical address space monitoring on such machines, in both short term and long
+> term?
 > 
 
+Thank you for your feedback. I agree this isn’t a simple change, and
+the current approach might not be optimal. Let’s work together to find
+the best solution.
 
-Best regards,
-Krzysztof
+As for the prevalence of 32-bit ARM machines with LPAE, these devices
+are still widely used in our product application. The main goal for
+enabling DAMON on these devices is to optimize memory usage. During
+usage, we identified this optimization point, as well as overflow issues
+with bytes* and other reclaim statistics interfaces.
+
+These devices are still in frequent use, and given their large installed
+base, they are unlikely to be replaced in the short term.
+
+Thanks again for your insights. I look forward to working together to
+find the best solution.
+
+
+> 
+> Thanks,
+> SJ
+> 
+> [...]
+> 
