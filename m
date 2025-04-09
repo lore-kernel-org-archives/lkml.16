@@ -1,68 +1,45 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94D0221B8F6;
-	Wed,  9 Apr 2025 22:38:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A02EE21B9F0;
+	Wed,  9 Apr 2025 22:45:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744238301; cv=none; b=jMRBdg31MFkWDx6r6CVbCzWIXNxJ6AJtKVPcy4fqpmwQ4MIPWr395TzuN/rw3VgFshO3HkPG+RGVTjGwohVMzbDK88MQIxmZ2rhwjfBPJTfJrV+YfoXc4uOFjA4bSLNWR3rjh1NpKh2aWbuDbr7N9J2EUs1kyJRcZSFB77KYBjQ=
+	t=1744238709; cv=none; b=dYjVR9VwF2L39kjDFiF5bk5OZHYtz9ozBbs3+OTKuK4WeRjlREEV7MYwOrd1CvSPPEO+0/c93yYDjI1aOH/rn6yJhUYJhr3aoWAMoSgOPeqQr1YM8PM980KJ5Ta0gvXXDc2b8NJqsL4p7KLpFv57LOMyBrKfY+IV4vjsbJJMb78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744238301; c=relaxed/simple;
-	bh=OHtp4F7p63NJxA84todWDgotcK4aJifK+VZb4O3Drbc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C70z4d54cLOLoJnmlYP4gbxj40LcIWrXpakyZEBCP+9FHAirbD/E3kTwaCIXOiGVfGCwUt755GhUInzsNfQdZ888EKZyPkU91GrVtvpzhWVjUDoYNFPdkaBZuUGPnxVU7CXr3Jbyi6J1fQyHLvyI/rfsfYCLU+ZwxmW+exmr64Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=T7bs0RuM; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1744238709; c=relaxed/simple;
+	bh=zCUD012UtR9OFmMAHU6saDApQ76XDpflVQ4NOMuRe+s=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=IyevzWmmOcEIT3LQlD7cSLit6u7tlEfK72+3x3OoMaJsDq6cWjRtXX28gG0srvl5XRyD1cEiDP0nRL35BNidaM7CicHu0JP2fFU2UJFKpabzdKrD5pDMUVG3szaSmd0ZmiG/FM8zQUQUPmkbf8RVyHWqhP0nUBOw+594NJLsUk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nbnw4RMl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="T7bs0RuM"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=nL7mIlluM6OajPfL+ZNXktP9xeZ4qYxjj5R5ClsiFZk=; b=T7bs0RuMx2TEfemGQ8TkaA5C4x
-	kbzR+XmTDl120aq8xn4QYgqqBxvn3dAIqc/vUE7TPy41UGJEF9P7K/KPZ5j7WaOZ7GrkPx8ZokpS4
-	wUGaU7A4lAKA9K1IQ4YUxusOj1Hf4t13aOc3/L1JReswU47DwNP1CWzDncNiNwjlOq+zoVVMXCvdk
-	7Stv0r6kswmQMJTMceNraJpD9mqgDZlxM2zJXiqgnFfzDk7zzA9YNFSLkMYxQJ39fAR+pdc4zlBlg
-	BiO6F7ckVftxk/mHWtscoPXHnlElFhDaGAssgssagWP/SoSX0V5O7xTc3W02Cw3Wx+jsA5KDeSPQh
-	wbscKE/Q==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:56222)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1u2e3Y-00018D-1w;
-	Wed, 09 Apr 2025 23:38:04 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1u2e3U-0002vu-2s;
-	Wed, 09 Apr 2025 23:38:00 +0100
-Date: Wed, 9 Apr 2025 23:38:00 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: Simon Horman <horms@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH net-next v2 2/2] net: phy: Add Marvell PHY PTP support
-Message-ID: <Z/b2yKMXNwjqTKy4@shell.armlinux.org.uk>
-References: <20250408154934.GZ395307@horms.kernel.org>
- <Z_VdlGVJjdtQuIW0@shell.armlinux.org.uk>
- <20250409101808.43d5a17d@kmaincent-XPS-13-7390>
- <Z_YwxYZc7IHkTx_C@shell.armlinux.org.uk>
- <20250409104858.2758e68e@kmaincent-XPS-13-7390>
- <Z_ZlDLzvu_Y2JWM8@shell.armlinux.org.uk>
- <20250409143820.51078d31@kmaincent-XPS-13-7390>
- <Z_Z3lchknUpZS1UP@shell.armlinux.org.uk>
- <20250409180414.19e535e5@kmaincent-XPS-13-7390>
- <Z_avqyOX2bi44sO9@shell.armlinux.org.uk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nbnw4RMl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2D32C4CEE2;
+	Wed,  9 Apr 2025 22:45:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744238709;
+	bh=zCUD012UtR9OFmMAHU6saDApQ76XDpflVQ4NOMuRe+s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=nbnw4RMlZTmDbfLlO6SAAXkrvPnckubKEud1dlVN/U1ssO2mqr5IxLJd7xd3Qjw6O
+	 A2WCCcaK++oAER2dqCFdMN1Qo53XMU72XTj6HWBcenFW3Uxl7wL5nT/D5ykig3RWUL
+	 +QF7DjQF3nEwvv3ezPuPjYB9AeaDTWdo4IcsO2jRDB3ydDPGXG6DI4AJXVF55vvGjx
+	 FBLv6Olq66zUdQZESDqMcfxRmq38cooVGiFcCJVip9/y6YjvkBJd59VHRq0w2EIuUB
+	 bII42ACCHN+0VQVTqzlwfO6WGPl2v71YanQFsGDwbYunv8Dr5Wn3zVv3GHImZB/NxB
+	 SFRqym3Z1zW/g==
+Date: Wed, 9 Apr 2025 17:45:07 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Manikandan Karunakaran Pillai <mpillai@cadence.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kw@linux.com" <kw@linux.com>,
+	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+	"robh@kernel.org" <robh@kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Frank Li <Frank.Li@nxp.com>
+Subject: Re: [PATCH 6/7] PCI: cadence: Add callback functions for Root Port
+ and EP controller
+Message-ID: <20250409224507.GA300150@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,100 +48,287 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z_avqyOX2bi44sO9@shell.armlinux.org.uk>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <CH2PPF4D26F8E1CD797FF6A6A2698036717A2A12@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
 
-On Wed, Apr 09, 2025 at 06:34:35PM +0100, Russell King (Oracle) wrote:
-> On Wed, Apr 09, 2025 at 06:04:14PM +0200, Kory Maincent wrote:
-> > On Wed, 9 Apr 2025 14:35:17 +0100
-> > "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
-> > 
-> > > On Wed, Apr 09, 2025 at 02:38:20PM +0200, Kory Maincent wrote:
-> > > > Ok, thanks for the tests and these information.
-> > > > Did you run ptp4l with this patch applied and did you switch to Marvell PHY
-> > > > PTP source?  
-> > > 
-> > > This was using mvpp2, but I have my original patch as part of my kernel
-> > > rather than your patch.
-> > 
-> > So you are only testing the mvpp2 PTP. It seems there is something broken with
-> > it. I don't think it is related to my work.
-> 
-> Yes, and it has worked - but probably was never tested with PTPDv2 but
-> with linuxptp. As it was more than five years ago when I worked on this
-> stuff, I just can't remember the full details of the test setup I used.
-> 
-> I think the reason I gave up running PTP on my network is the problems
-> that having the NIC bound into a Linux bridge essentially means that
-> you can't participate in PTP on that machine. That basically means a
-> VM host machine using a bridge device for the guests can't use PTP
-> to time sync itself.
-> 
-> Well, it looks like the PHY based timestamping also isn't working -
-> ptp4l says its failing to timestamp transmitted packets, but having
-> added debug, the driver _is_ timestamping them, so the timestamps
-> are getting lost somewhere in the networking layer, or are too late
-> for ptp4l, which only waits 1ms, and the schedule_delayed_work(, 2) 
-> will be about 20ms at HZ=100. Increasing the wait in ptp4l to 100ms
-> still doesn't appear to get a timestamp. According to the timestamps
-> on the debug messages, it's only taking 10ms to return the timestamp.
-> 
-> So, at the moment, ptp looks entirely non-functional. Or the userspace
-> tools are broken.
+[+cc Frank for .cpu_addr_fixup()]
 
-Right, got to the bottom of it at last. I hate linuxptp / ptp4l. The
-idea that one looks at the source, sees this:
+On Thu, Mar 27, 2025 at 11:42:27AM +0000, Manikandan Karunakaran Pillai wrote:
+> Add support for the second generation PCIe controller by adding
+> the required callback functions. Update the common functions for
+> endpoint and Root port modes. Invoke the relevant callback functions
+> for platform probe of PCIe controller using the callback functions
 
-                res = poll(&pfd, 1, sk_tx_timeout);
-                if (res < 1) {
-                        pr_err(res ? "poll for tx timestamp failed: %m" :
-                                     "timed out while polling for tx timestamp");
-                        pr_err("increasing tx_timestamp_timeout may correct "
-                               "this issue, but it is likely caused by a driver bug");
+Pick "second generation" or "HPA" and use it consistently so we can
+keep this all straight.
 
-finds this in the same file:
+s/endpoint/Endpoint/
+s/Root port/Root Port/
 
-int sk_tx_timeout = 1;
+Add period again.
 
-So it seemed obvious and logical that increasing that initialiser would
-increase the _default_ timeout... but no, that's not the case, because,
-ptp4l.c does:
+> @@ -877,7 +877,7 @@ int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
+>  	set_bit(0, &ep->ob_region_map);
+>  
+>  	if (ep->quirk_detect_quiet_flag)
+> -		cdns_pcie_detect_quiet_min_delay_set(&ep->pcie);
+> +		pcie->ops->pcie_detect_quiet_min_delay_set(&ep->pcie);
 
-        sk_tx_timeout = config_get_int(cfg, NULL, "tx_timestamp_timeout");
+Maybe the quirk check should go inside .pcie_detect_quiet_min_delay()?
+Just an idea, maybe that wouldn't help.
 
-unconditionally, and config.c has a table of config options along with
-their defaults... meaning that initialiser above for sk_tx_timeout
-means absolutely nothing, and one _has_ to use a config file.
+> +void __iomem *cdns_pci_hpa_map_bus(struct pci_bus *bus, unsigned int devfn,
+> +				   int where)
+> +{
+> +	struct pci_host_bridge *bridge = pci_find_host_bridge(bus);
+> +	struct cdns_pcie_rc *rc = pci_host_bridge_priv(bridge);
+> +	struct cdns_pcie *pcie = &rc->pcie;
+> +	unsigned int busn = bus->number;
+> +	u32 addr0, desc0, desc1, ctrl0;
+> +	u32 regval;
+> +
+> +	if (pci_is_root_bus(bus)) {
+> +		/*
+> +		 * Only the root port (devfn == 0) is connected to this bus.
+> +		 * All other PCI devices are behind some bridge hence on another
+> +		 * bus.
+> +		 */
+> +		if (devfn)
+> +			return NULL;
+> +
+> +		return pcie->reg_base + (where & 0xfff);
+> +	}
+> +
+> +	/*
+> +	 * Clear AXI link-down status
+> +	 */
+> +	regval = cdns_pcie_hpa_readl(pcie, REG_BANK_AXI_SLAVE, CDNS_PCIE_HPA_AT_LINKDOWN);
+> +	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE, CDNS_PCIE_HPA_AT_LINKDOWN,
+> +			     (regval & GENMASK(0, 0)));
+> +
+> +	desc1 = 0;
+> +	ctrl0 = 0;
+> +	/*
 
-With that fixed, ptp4l's output looks very similar to that with mvpp2 -
-which doesn't inspire much confidence that the ptp stack is operating
-properly with the offset and frequency varying all over the place, and
-the "delay timeout" messages spamming frequently. I'm also getting
-ptp4l going into fault mode - so PHY PTP is proving to be way more
-unreliable than mvpp2 PTP. :(
+Blank line before comment.  You could make this a single-line comment,
+e.g.,
 
-Now, the one thing I can't get rid of is the receive timestamp
-overflow warning - this occurs whenever e.g. ptp4l is restarted,
-and is caused by there being no notification that PTP isn't being
-used anymore.
+  /* Update Output registers for AXI region 0. */
 
-Consequently, we end up with the PHY queuing a timestamp for a Sync
-packet which it sees on the network, but because nothing is wanting
-the packets (because e.g. ptp4l has been stopped) there's no packets
-queued into the receive queue to take this timestamp, so we stop
-polling the PHY for timestamps.
+> +	 * Update Output registers for AXI region 0.
+> +	 */
+> +	addr0 = CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_NBITS(12) |
+> +		CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_DEVFN(devfn) |
+> +		CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_BUS(busn);
+> +	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
+> +			     CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0(0), addr0);
+> +
+> +	desc1 = cdns_pcie_hpa_readl(pcie, REG_BANK_AXI_SLAVE,
+> +				    CDNS_PCIE_HPA_AT_OB_REGION_DESC1(0));
+> +	desc1 &= ~CDNS_PCIE_HPA_AT_OB_REGION_DESC1_DEVFN_MASK;
+> +	desc1 |= CDNS_PCIE_HPA_AT_OB_REGION_DESC1_DEVFN(0);
+> +	ctrl0 = CDNS_PCIE_HPA_AT_OB_REGION_CTRL0_SUPPLY_BUS |
+> +		CDNS_PCIE_HPA_AT_OB_REGION_CTRL0_SUPPLY_DEV_FN;
+> +	/*
 
-If we continue to rapidly poll the PHY, then we could needlessly
-waste cycles - because nothing tells us "we have no one wanting
-hardware timestamps anymore" which seems to be a glaring hole in
-the PTP design.
+Again.
 
-Not setting DISTSOVERWRITE seems like a solution, but that seems to
-lead to issues with timestamps being lost.
+> +	 * The bus number was already set once for all in desc1 by
+> +	 * cdns_pcie_host_init_address_translation().
 
-Well, having spent much of the afternoon and all evening on this,
-and all I see are problems that don't seem to have solutions.
+This comment sounds like you only support the root bus and a single
+other bus.  But you're not actually setting the *bus number* here;
+you're setting up either a Type 0 access (for the Root Port's
+secondary bus) or a Type 1 access (for anything else, e.g. things
+below a switch).
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+> +	 */
+> +	if (busn == bridge->busnr + 1)
+
+The Root Port's secondary bus number need not be the Root Port's bus
+number + 1.  It *might* be, and since you said the current design only
+has a single Root Port, it probably *will* be, but that secondary bus
+number is writable and can be changed either by the PCI core or by the
+user via setpci.  So you shouldn't assume this.  If/when a design
+supports more than one Root Port, that assumption will certainly be
+broken.
+
+> +		desc0 |= CDNS_PCIE_HPA_AT_OB_REGION_DESC0_TYPE_CONF_TYPE0;
+> +	else
+> +		desc0 |= CDNS_PCIE_HPA_AT_OB_REGION_DESC0_TYPE_CONF_TYPE1;
+> +
+> +	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
+> +			     CDNS_PCIE_HPA_AT_OB_REGION_DESC0(0), desc0);
+> +	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
+> +			     CDNS_PCIE_HPA_AT_OB_REGION_DESC1(0), desc1);
+> +	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
+> +			     CDNS_PCIE_HPA_AT_OB_REGION_CTRL0(0), ctrl0);
+> +
+> +	return rc->cfg_base + (where & 0xfff);
+> +}
+
+> +++ b/drivers/pci/controller/cadence/pcie-cadence.c
+> @@ -5,9 +5,49 @@
+>  
+>  #include <linux/kernel.h>
+>  #include <linux/of.h>
+> -
+
+Spurious change, keep this blank line.
+
+>  #include "pcie-cadence.h"
+>  
+> +bool cdns_pcie_linkup(struct cdns_pcie *pcie)
+
+Static unless needed elsewhere.  I can't tell whether it is because I
+can't download or apply the whole series.
+
+> +{
+> +	u32 pl_reg_val;
+> +
+> +	pl_reg_val = cdns_pcie_readl(pcie, CDNS_PCIE_LM_BASE);
+> +	if (pl_reg_val & GENMASK(0, 0))
+> +		return true;
+> +	else
+> +		return false;
+
+Drop the else:
+
+  if (pl_reg_val & GENMASK(0, 0))
+    return true;
+
+  return false;
+
+> +}
+> +
+> +bool cdns_pcie_hpa_linkup(struct cdns_pcie *pcie)
+> +{
+> +	u32 pl_reg_val;
+> +
+> +	pl_reg_val = cdns_pcie_hpa_readl(pcie, REG_BANK_IP_REG, CDNS_PCIE_HPA_PHY_DBG_STS_REG0);
+> +	if (pl_reg_val & GENMASK(0, 0))
+> +		return true;
+> +	else
+> +		return false;
+
+Ditto.
+
+> +}
+> +
+> +int cdns_pcie_hpa_startlink(struct cdns_pcie *pcie)
+
+s/cdns_pcie_hpa_startlink/cdns_pcie_hpa_start_link/
+
+> +{
+> +	u32 pl_reg_val;
+> +
+> +	pl_reg_val = cdns_pcie_hpa_readl(pcie, REG_BANK_IP_REG, CDNS_PCIE_HPA_PHY_LAYER_CFG0);
+> +	pl_reg_val |= CDNS_PCIE_HPA_LINK_TRNG_EN_MASK;
+> +	cdns_pcie_hpa_writel(pcie, REG_BANK_IP_REG, CDNS_PCIE_HPA_PHY_LAYER_CFG0, pl_reg_val);
+> +	return 1;
+
+This should return 0 for success.
+
+> +}
+
+> +void cdns_pcie_hpa_set_outbound_region(struct cdns_pcie *pcie, u8 busnr, u8 fn,
+> +				       u32 r, bool is_io,
+> +				       u64 cpu_addr, u64 pci_addr, size_t size)
+> +{
+> +	/*
+> +	 * roundup_pow_of_two() returns an unsigned long, which is not suited
+> +	 * for 64bit values.
+> +	 */
+> +	u64 sz = 1ULL << fls64(size - 1);
+> +	int nbits = ilog2(sz);
+> +	u32 addr0, addr1, desc0, desc1, ctrl0;
+> +
+> +	if (nbits < 8)
+> +		nbits = 8;
+> +
+> +	/*
+> +	 * Set the PCI address
+> +	 */
+
+Could be a single line comment:
+
+  /* Set the PCI address */
+
+like many others in this series.
+
+> +	addr0 = CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0_NBITS(nbits) |
+> +		(lower_32_bits(pci_addr) & GENMASK(31, 8));
+> +	addr1 = upper_32_bits(pci_addr);
+> +
+> +	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
+> +			     CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR0(r), addr0);
+> +	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
+> +			     CDNS_PCIE_HPA_AT_OB_REGION_PCI_ADDR1(r), addr1);
+> +
+> +	/*
+> +	 * Set the PCIe header descriptor
+> +	 */
+> +	if (is_io)
+> +		desc0 = CDNS_PCIE_HPA_AT_OB_REGION_DESC0_TYPE_IO;
+> +	else
+> +		desc0 = CDNS_PCIE_HPA_AT_OB_REGION_DESC0_TYPE_MEM;
+> +	desc1 = 0;
+> +
+> +	/*
+> +	 * Whatever Bit [26] is set or not inside DESC0 register of the outbound
+> +	 * PCIe descriptor, the PCI function number must be set into
+> +	 * Bits [31:24] of DESC1 anyway.
+
+s/Whatever/Whether/ (I think)
+
+> +	 * In Root Complex mode, the function number is always 0 but in Endpoint
+> +	 * mode, the PCIe controller may support more than one function. This
+> +	 * function number needs to be set properly into the outbound PCIe
+> +	 * descriptor.
+> +	 *
+> +	 * Besides, setting Bit [26] is mandatory when in Root Complex mode:
+> +	 * then the driver must provide the bus, resp. device, number in
+> +	 * Bits [31:24] of DESC1, resp. Bits[23:16] of DESC0. Like the function
+> +	 * number, the device number is always 0 in Root Complex mode.
+> +	 *
+> +	 * However when in Endpoint mode, we can clear Bit [26] of DESC0, hence
+> +	 * the PCIe controller will use the captured values for the bus and
+> +	 * device numbers.
+> +	 */
+> +	if (pcie->is_rc) {
+> +		/* The device and function numbers are always 0. */
+> +		desc1 = CDNS_PCIE_HPA_AT_OB_REGION_DESC1_BUS(busnr) |
+> +			CDNS_PCIE_HPA_AT_OB_REGION_DESC1_DEVFN(0);
+> +		ctrl0 = CDNS_PCIE_HPA_AT_OB_REGION_CTRL0_SUPPLY_BUS |
+> +			CDNS_PCIE_HPA_AT_OB_REGION_CTRL0_SUPPLY_DEV_FN;
+> +	} else {
+> +		/*
+> +		 * Use captured values for bus and device numbers but still
+> +		 * need to set the function number.
+> +		 */
+> +		desc1 |= CDNS_PCIE_HPA_AT_OB_REGION_DESC1_DEVFN(fn);
+> +	}
+> +
+> +	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
+> +			     CDNS_PCIE_HPA_AT_OB_REGION_DESC0(r), desc0);
+> +	cdns_pcie_hpa_writel(pcie, REG_BANK_AXI_SLAVE,
+> +			     CDNS_PCIE_HPA_AT_OB_REGION_DESC1(r), desc1);
+> +
+> +	/*
+> +	 * Set the CPU address
+> +	 */
+> +	if (pcie->ops->cpu_addr_fixup)
+> +		cpu_addr = pcie->ops->cpu_addr_fixup(pcie, cpu_addr);
+
+Oops, we can't add any more .cpu_addr_fixup() functions or uses.  This
+must be done via the devicetree description.  If we add a new
+.cpu_addr_fixup(), it may cover up defects in the devicetree.
+
+You can see Frank Li's nice work to fix this for some of the dwc
+drivers on the branch ending at 07ae413e169d ("PCI: intel-gw: Remove
+intel_pcie_cpu_addr()"):
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/?h=07ae413e169d
+
+This one is the biggest issue so far.
+
+Bjorn
