@@ -1,191 +1,133 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20AA912CDAE;
-	Wed,  9 Apr 2025 09:28:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B4D012CDAE;
+	Wed,  9 Apr 2025 09:28:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744190919; cv=none; b=adQzWQmhnzZ5msEmzPGfNE6JXy+R2csndwcahbgiEzB45RmvqD1rqOuX0StpFGWNgGzMq85WtBGCyUlYsIWkrNBvg5rkkBJyFe3D/6rNjF7o4LS5m8c/IvzYe4VZ0Onn59L1XK6jh/mZH+O1d/EwaOj9gsOZ2Xu5BpBqGf1u9hg=
+	t=1744190939; cv=none; b=hatRfBQWRCsG1DJx4XZLS93CrO/kzat9N5EitXIwKR7Sq2MTZdmi59z6CFDXpa5z2gIpW2jLQtGRnmpj7ZG1BWkAKXmHaMsKNmA9BMPezFttpIS1J4NP3VoeRrgx4JT0lo8HCoGy3V+pdIhVeEn6W1c5rUtqgsoXF30AzTuoeC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744190919; c=relaxed/simple;
-	bh=9V07LzGaas5AZ+oux1lgxy/80UvkgLFtP9F6ZYTTbws=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hiMEz+gMIdc7qO5dYGoXLz7SI9MdCWXHq5wbVaSfAYXB9R8uoHR+cz8I9XJvQp01jxF5EGxvT/STfNuS55VAn8O5qBub+5+LaXWb57LcSayJJdS6giG/rZ3uXwEMKzPz/ECEjsLnXkImJjOAYt7Z/bl7j3qwbSPgtO7XNIz0zNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=LH27FwtY; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1744190939; c=relaxed/simple;
+	bh=KanLV8teFafM3o2AgwNuwgKNCMSridXAMcWEyeQGXTU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LUkgbxnjFLfj40CxbVsKC1qrRDWJ1vbPd2m8LSp0MysGMr+qDDBxzCnwOKh8fEusVSaUBBDq1OPr4RyWvEwtS1BWiuhfV/CK/RwNoowKHgMfCHokn+7xWifSTf2wu7n6mnTT8RCCEH9nNNV5zYwUfcoyaX/WUoTsYaxqHjDR+kg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=opqHZhyM; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="LH27FwtY"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=nXxv0ft02xQmL5xjLiDXgZUpWE6PV4IMsxVkdLC+K5Y=; b=LH27FwtYmQeaz34BpW6bsmsbC1
-	GT2UqhP3QQWnqSP6HcQ/JnPWW4E7KNXCpKstwRjMazUfCQREHzgX657mcPNM6kwCCO2RNpODg3I+p
-	iN61GByQ5lreandT+U6icXzKkIBvToGleFbZljJSAJXBgm3EyoFqcJH7AxBuEt17S2uVDt7Bo0YrX
-	3XHMlgTYKdNV39o2QaQQz10wGmHk/VbNx7F2lNF8ISfusmlAaQZAahnRzBPzUlYinBcFfbI0Of1rn
-	3Le4AZ5DnQ/iTO/D3W9JquCvJu0K3D1CLERc9/zoP6Znt8isBVKQmPDa/kA+/FKJJ18cCeAKOX8Uu
-	jYViuU4A==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:49584)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1u2RjN-0000JX-2y;
-	Wed, 09 Apr 2025 10:28:25 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1u2RjK-0002SD-1Q;
-	Wed, 09 Apr 2025 10:28:22 +0100
-Date: Wed, 9 Apr 2025 10:28:22 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Vladimir Oltean <vladimir.oltean@nxp.com>
-Cc: Kory Maincent <kory.maincent@bootlin.com>, Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Marek =?utf-8?B?QmVo4oia4oirbg==?= <kabel@kernel.org>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH net-next v2 0/2] Add Marvell PHY PTP support
-Message-ID: <Z_Y9tvN7rk9YJTPN@shell.armlinux.org.uk>
-References: <20250407-feature_marvell_ptp-v2-0-a297d3214846@bootlin.com>
- <Z_P3FKEhv1s0y4d7@shell.armlinux.org.uk>
- <20250407182028.75531758@kmaincent-XPS-13-7390>
- <Z_P-K7mEEH6ProlC@shell.armlinux.org.uk>
- <20250407183914.4ec135c8@kmaincent-XPS-13-7390>
- <Z_WJO9g5Al1Yr_LX@shell.armlinux.org.uk>
- <20250409103130.43ab4179@kmaincent-XPS-13-7390>
- <Z_Yxb6-qclDSWk01@shell.armlinux.org.uk>
- <20250409083835.pwtqkwalqkwgfeol@skbuf>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="opqHZhyM"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A8E07432BC;
+	Wed,  9 Apr 2025 09:28:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744190929;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=S7l8DdiwAsT9iakA4gFPB1pBO6OTN/7Blo3PFVtSEWc=;
+	b=opqHZhyM1IneIaZeMbXDIzm+KCDAUoF2l/oHki5jyFHJYMeo13n5cPGexNc7QKJihDwxAN
+	+m6MJkjCT/KuNEhDGN1ZUZVm+MJ8veq5ACAT7VPlZHWBdYbAwVeGSR9h/uebXqZXI5qFql
+	DlQxLtwFLOoiOA5mAxFko00jBknccCrBd9EW9IVbsoZQUk3KngguS4zIPlfFX+y8lAEY3/
+	d+UggslpBftKF9/y9Q9P4HRfJnsxAM33NLGZhOR8GZo77fw/6xsFuGVDQGOL6LjJG2ZksK
+	/LKq4lMh6j2uco/mjpy7KWxQA5Ws3ryXaO4JqZ96wjelLwLztD8Ss7mmAv5lFQ==
+Date: Wed, 9 Apr 2025 11:28:46 +0200
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang
+ <quic_jesszhan@quicinc.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
+ <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
+ <simona@ffwll.ch>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/4] dt-bindings: display: panel: ili9881c: Add
+ dsi-lanes property
+Message-ID: <20250409112846.2fb20426@kmaincent-XPS-13-7390>
+In-Reply-To: <20250408-statuesque-poised-firefly-ed8db1@houat>
+References: <20250408-feature_sfto340xc-v1-0-f303d1b9a996@bootlin.com>
+	<20250408-feature_sfto340xc-v1-1-f303d1b9a996@bootlin.com>
+	<20250408-statuesque-poised-firefly-ed8db1@houat>
+Organization: bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250409083835.pwtqkwalqkwgfeol@skbuf>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdehieefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgfdutdefvedtudegvefgvedtgfdvhfdtueeltefffefffffhgfetkedvfeduieeinecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehkmhgrihhntggvnhhtqdgirffuqddufedqjeefledtpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudehpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnhgvihhlrdgrrhhmshhtrhhonhhgsehlihhnrghrohdrohhrghdprhgtphhtthhopehquhhitggpjhgvshhsiihhrghnsehquhhitghinhgtrdgtohhmpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhst
+ heslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomhdprhgtphhtthhopehsihhmohhnrgesfhhffihllhdrtghhpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrgh
+X-GND-Sasl: kory.maincent@bootlin.com
 
-On Wed, Apr 09, 2025 at 11:38:35AM +0300, Vladimir Oltean wrote:
-> On Wed, Apr 09, 2025 at 09:35:59AM +0100, Russell King (Oracle) wrote:
-> > On Wed, Apr 09, 2025 at 10:31:30AM +0200, Kory Maincent wrote:
-> > > On Tue, 8 Apr 2025 21:38:19 +0100
-> > > "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
-> > > 
-> > > > On Mon, Apr 07, 2025 at 06:39:14PM +0200, Kory Maincent wrote:
-> > > > > On Mon, 7 Apr 2025 17:32:43 +0100
-> > > > > "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
-> > > > > > I'm preferring to my emails in connection with:
-> > > > > > 
-> > > > > > https://lore.kernel.org/r/ZzTMhGDoi3WcY6MR@shell.armlinux.org.uk
-> > > > > > 
-> > > > > > when I tested your work last time, it seemed that what was merged hadn't
-> > > > > > even been tested. In the last email, you said you'd look into it, but I
-> > > > > > didn't hear anything further. Have the problems I reported been
-> > > > > > addressed?  
-> > > > > 
-> > > > > It wasn't merged it was 19th version and it worked and was tested, but not
-> > > > > with the best development design. I have replied to you that I will do some
-> > > > > change in v20 to address this.
-> > > > > https://lore.kernel.org/all/20241113171443.697ac278@kmaincent-XPS-13-7390/
-> > > > > 
-> > > > > It gets finally merged in v21.  
-> > > > 
-> > > > Okay, so I'm pleased to report that this now works on the Macchiatobin:
-> > > > 
-> > > > where phc 2 is the mvpp2 clock, and phc 0 is the PHY.
-> > > 
-> > > Great, thank you for the testing!
-> > > 
-> > > > 
-> > > > # ethtool -T eth2
-> > > > Time stamping parameters for eth2:
-> > > > Capabilities:
-> > > >         hardware-transmit
-> > > >         software-transmit
-> > > >         hardware-receive
-> > > >         software-receive
-> > > >         software-system-clock
-> > > >         hardware-raw-clock
-> > > > PTP Hardware Clock: 2
-> > > > Hardware Transmit Timestamp Modes:
-> > > >         off
-> > > >         on
-> > > >         onestep-sync
-> > > >         onestep-p2p
-> > > > Hardware Receive Filter Modes:
-> > > >         none
-> > > >         all
-> > > > 
-> > > > So I guess that means that by default it's using PHC 2, and thus using
-> > > > the MVPP2 PTP implementation - which is good, it means that when we add
-> > > > Marvell PHY support, this won't switch to the PHY implementation.
-> > > 
-> > > Yes.
-> > > 
-> > > > 
-> > > > Now, testing ethtool:
-> > > > 
-> > > > $ ./ethtool --get-hwtimestamp-cfg eth2
-> > > > netlink error: Operation not supported
-> > > > 
-> > > > Using ynl:
-> > > > 
-> > > > # ./ynl/cli.py --spec netlink/specs/ethtool.yaml --no-schema --dump
-> > > > tsconfig-get --json '{"header":{"dev-name":"eth2"}}' []
-> > > > 
-> > > > So, It's better, something still isn't correct as there's no
-> > > > configuration. Maybe mvpp2 needs updating first? If that's the case,
-> > > > then we're not yet in a position to merge PHY PTP support.
-> > > 
-> > > Indeed mvpp2 has not been update to support the ndo_hwtstamp_get/set NDOs.
-> > > Vlad had made some work to update all net drivers to these NDOs but he never
-> > > send it mainline:
-> > > https://github.com/vladimiroltean/linux/commits/ndo-hwtstamp-v9
-> > > 
-> > > I have already try to ping him on this but without success.
-> > > Vlad any idea on when you could send your series upstream?
-> > 
-> > Right, and that means that the kernel is not yet ready to support
-> > Marvell PHY PTP, because all the pre-requisits to avoid breaking
-> > mvpp2 have not yet been merged.
-> > 
-> > So that's a NAK on this series from me.
-> > 
-> > I'd have thought this would be obvious given my well known stance
-> > on why I haven't merged Marvell PHY PTP support before.
-> > 
-> > -- 
-> > RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> > FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
-> 
-> I will try to update and submit that patch set over the course of this
-> weekend.
+On Tue, 8 Apr 2025 17:44:32 +0200
+Maxime Ripard <mripard@kernel.org> wrote:
 
-Thanks. Friday is really the last day for me for an uncertain period
-thereafter where I won't be able to do any further testing.
+> hi,
+>=20
+> On Tue, Apr 08, 2025 at 05:27:00PM +0200, Kory Maincent wrote:
+> > Add the dsi-lanes property to specify the number of DSI lanes used by t=
+he
+> > panel. This allows configuring the panel for either two, three or four
+> > lanes.
+> >=20
+> > Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+> > ---
+> >  Documentation/devicetree/bindings/display/panel/ilitek,ili9881c.yaml |=
+ 5
+> > +++++ 1 file changed, 5 insertions(+)
+> >=20
+> > diff --git
+> > a/Documentation/devicetree/bindings/display/panel/ilitek,ili9881c.yaml
+> > b/Documentation/devicetree/bindings/display/panel/ilitek,ili9881c.yaml
+> > index
+> > baf5dfe5f5ebdd92f460a78d0e56e1b45e7dd323..e36550616f6aac86c79832a48132c=
+e8c11ebcf7a
+> > 100644 ---
+> > a/Documentation/devicetree/bindings/display/panel/ilitek,ili9881c.yaml =
++++
+> > b/Documentation/devicetree/bindings/display/panel/ilitek,ili9881c.yaml =
+@@
+> > -27,6 +27,11 @@ properties: reg: maxItems: 1=20
+> > +  dsi-lanes:
+> > +    description: Number of DSI lanes to be used must be <2>, <3> or <4>
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > +    enum: [2, 3, 4]
+> > + =20
+>=20
+> We have the data-lanes property for that already
 
-I don't run PTP on my network as it's IMHO not as good as NTP with the
-hardware I have. It's also been five years since I last had something
-setup, which was when I was working on Marvell PHY support, All the
-knowledge I had back then for PTP support has been "swapped out" into
-/dev/null. I don't even remember which machines I was using, and thus
-have no idea if they're even still connected to the network.
+Indeed but there is no such usage in panel bindings, only in bridge binding=
+s.
 
-As this has already been blocked on this for five years, I don't think
-it's unreasonable that it takes longer, so please don't feel that you
-need to get them done by Friday.
+You are saying that I should add something like that:
+  port:                                                                    =
+   =20
+    $ref: /schemas/graph.yaml#/properties/port
 
-Just be aware that I won't be able to test again for an uncertain
-period thereafter.
+    properties:                                                            =
+=20
+      endpoint:                                                            =
+=20
+        $ref: /schemas/media/video-interfaces.yaml#                        =
+=20
+        unevaluatedProperties: false                                       =
+=20
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+        data-lanes:
+          minItems: 2
+          maxItems: 4                                              =20
+
+And use drm_of_get_data_lanes_count in the drivers.
+
+If we do so, maybe this binding should land in panel-common.yaml instead?
+
+Regards,
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
