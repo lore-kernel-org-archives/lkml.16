@@ -1,279 +1,127 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A10B1D516C;
-	Wed,  9 Apr 2025 16:08:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31B651CAA87;
+	Wed,  9 Apr 2025 16:08:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744214914; cv=none; b=e5P00A0dmTU1b3Pbh+kni2YG1xswYdz8OPk8bOKIqlk6775NFIRY7aEQzIL/mv9dXlsIZu46WtvOqxvPF+s7EqaWciZ/+amRaDCHW/qr23qM4iEuqN7qt8Tar6DZieR7j1EjRzSackRM5WBzXLp83T8E/4ITepQioviuCdsE6KY=
+	t=1744214928; cv=none; b=XvIcEPIzcC0qVEXCmIgHEimxG6K4MgY4P9zR+Qle59L8tzRAZphYGQgdWjzljdLC6LnXiIjMD9VQA4CdE0yjjsrUhrQKtA5B1sEl7qXcepz7vbq6snxaunv4QVok6f+mTZbZZfjr44poQKbFb1YgwG0HeY510TK7rlf6JIMu9PQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744214914; c=relaxed/simple;
-	bh=UeISwS9y3lU/oQu7T7xyKZsM9KiV5qGEixeP6JETyEU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pWa9FgeQdCi5Idn70iyvrHojA1JsE0AHOgXZL8FxAx3lZ56Qti8+auxXYFtQr5iUfZo84kWC2wJFdJJzrcyyHqwOpJT6no4hiX6AdXEEcFerdiZm4xjPinfOS60IviId+XS0fnHLGQ/6TsM2xGe1PSpoLLhtvL2EX7UCrw+Slow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n/jgB6Gs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744214928; c=relaxed/simple;
+	bh=U136m1ePMiHup/OJWWPTED0TS3OMbL/CgENFCdA9fr4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=G05rm1QqvYZwvG7FoTcWJiYsBYtlczXt5eO9UXeXPgC5x+D8Yk6dR8Lk3COqaK/xCIN8UpFGcq1I1w+AlQ2EI5GABkddPQTP2/KwLxPxuPa2O2h8a/NcaI9g9fkPU7YamXE3377zufM1CCSqQX/CnMnL3g90LnhXARvGe1VMFDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r2BYMjDU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n/jgB6Gs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F973C4CEF1;
-	Wed,  9 Apr 2025 16:08:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r2BYMjDU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AE5AC4CEE2;
+	Wed,  9 Apr 2025 16:08:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744214913;
-	bh=UeISwS9y3lU/oQu7T7xyKZsM9KiV5qGEixeP6JETyEU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=n/jgB6Gsjv1i0qlLY1nBumLDo98W9dCINpuwbo/duD0w6nTdDewzI5cFEioHm2zoo
-	 RYlHiq9ouIS7iDlrc4vWOpdCA2A6M06RB0d1G6CtkTKk9u5Iy2jqBhnvtUyCZ7y91F
-	 8Z04d+/8kY5i8f2uQBGCcIdEV9HpRywc6MPeViv6oJ1IYFNVhMIEeZoeHa3U+R/vus
-	 ulkcI77SaSR6wf+IWdfF9P7NbKRX4eKFC9tSZ3V5yhh8hLsCfNy16eMfWfH6Q3CaRi
-	 AYo+jA9iCT+I4ChFdshLKonVCpj+a+YIOArQ6NyYS5Lhoa+NHpnwzqA+BrDLZOo8Nn
-	 WtO+/V90GuWzA==
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30effbfaf4aso70850001fa.3;
-        Wed, 09 Apr 2025 09:08:33 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU/BvnjnnMC3Axk0OvzdeVPsR4QpmxeTVYuuAauSmwtyuqNveGyBUKRpCrJyD2BjkYd/Q9WYTpcdGj5d9wO@vger.kernel.org, AJvYcCX06HBICiQ1y0UWSUkXE23QX+itqq/RXDwWyPeMSWWrOwMTiKb+8emx2sD8+tmfsFEcKDeh2/hRzwwssi93@vger.kernel.org, AJvYcCXIB/xpZ8KDed9631lBZcheHjlXwU9R8gQ/G7gTGkOypDohgf28dnD2+9tHIfstxxiiWt3B40Y2dHuKOK2Pe7E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzp/9LhAPahdLwf6NxjTg44l8joBqm137oLcMkC84WNMcnYcDPZ
-	QTZLDXzuRUfBIDQSu2y4qaJt0gHHpXhb3KU6MoEckNahv54BfpJV7es8WfanyS1jSKKglPe9ff4
-	t9U2dfv7Nnnqai2+ka8EgSCHiucg=
-X-Google-Smtp-Source: AGHT+IH1f90QFFxZc7443QxPxjRfbyPZM2F/wtr8cixknUNRSj+QhdIqvEVXWa56LSQzmNQ3nhi5t+kOxBzbECfTATo=
-X-Received: by 2002:a2e:bcc5:0:b0:30d:dad4:e06f with SMTP id
- 38308e7fff4ca-30f44f4b784mr11569621fa.2.1744214911615; Wed, 09 Apr 2025
- 09:08:31 -0700 (PDT)
+	s=k20201202; t=1744214927;
+	bh=U136m1ePMiHup/OJWWPTED0TS3OMbL/CgENFCdA9fr4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=r2BYMjDU7ETSO4yGvcd25H3Zyq6RwlCc++3/am2IjZL28A6K7WqSHm2MTJ4QvNPeL
+	 6pBSHesbAsmZTq1CmTTccrgaOrhT15uEAN1xh/Iu4OEPgNtk8G76cTDw27X9w4uWHU
+	 DXO79rwEiRJy+ehNXmxOYMSnIT7MDVz2pV/Ae6TvRt7Hpmm91AhY4/6G4KppDp1gHm
+	 xv5Muz0jBs9SxM4TZ95oStsU6aPCet9dQnHpHRMSKO429jub75cHkXIqcw+yjNMo2I
+	 UULbv3b+cBVKf8/UZZqZBZSkBArkq6c2FlFFpVmnZvHSGJlH7ZEgyE3xskngsgLDcz
+	 OdoKJqXEroZvA==
+From: Miguel Ojeda <ojeda@kernel.org>
+To: gregkh@linuxfoundation.org
+Cc: akpm@linux-foundation.org,
+	broonie@kernel.org,
+	conor@kernel.org,
+	f.fainelli@gmail.com,
+	hargar@microsoft.com,
+	jonathanh@nvidia.com,
+	linux-kernel@vger.kernel.org,
+	linux@roeck-us.net,
+	lkft-triage@lists.linaro.org,
+	patches@kernelci.org,
+	patches@lists.linux.dev,
+	pavel@denx.de,
+	rwarsow@gmx.de,
+	shuah@kernel.org,
+	srw@sladewatkins.net,
+	stable@vger.kernel.org,
+	sudipm.mukherjee@gmail.com,
+	torvalds@linux-foundation.org
+Subject: Re: [PATCH 6.6 000/269] 6.6.87-rc2 review
+Date: Wed,  9 Apr 2025 18:08:31 +0200
+Message-ID: <20250409160831.1243751-1-ojeda@kernel.org>
+In-Reply-To: <20250409115840.028123334@linuxfoundation.org>
+References: <20250409115840.028123334@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250409160409.work.168-kees@kernel.org>
-In-Reply-To: <20250409160409.work.168-kees@kernel.org>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Wed, 9 Apr 2025 18:08:19 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHks1_eC=cAmkPC45deMp3_VdxckjyRoWvMovdBekg2bQ@mail.gmail.com>
-X-Gm-Features: ATxdqUGTZiuSmGYhSGBrMgZkO_TFJf73mCS8XUbFOLk-qWt97OZAcKf2VyJwGh8
-Message-ID: <CAMj1kXHks1_eC=cAmkPC45deMp3_VdxckjyRoWvMovdBekg2bQ@mail.gmail.com>
-Subject: Re: [PATCH] gcc-plugins: Remove ARM_SSP_PER_TASK plugin
-To: Kees Cook <kees@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Chris Packham <chris.packham@alliedtelesis.co.nz>, 
-	Douglas Anderson <dianders@chromium.org>, Russell King <linux@armlinux.org.uk>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, 
-	Linus Walleij <linus.walleij@linaro.org>, Andrew Davis <afd@ti.com>, 
-	Seung-Woo Kim <sw0312.kim@samsung.com>, Xin Li <xin3.li@intel.com>, 
-	Jinjie Ruan <ruanjinjie@huawei.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	Eric Biggers <ebiggers@google.com>, Yuntao Liu <liuyuntao12@huawei.com>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Dave Vasilevsky <dave@vasilevsky.ca>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, 9 Apr 2025 at 18:04, Kees Cook <kees@kernel.org> wrote:
+On Wed, 09 Apr 2025 14:02:47 +0200 Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
 >
-> As part of trying to remove GCC plugins from Linux, drop the
-> ARM_SSP_PER_TASK plugin. The feature is available upstream since GCC
-> 12, so anyone needing newer kernels with per-task ssp can update their
-> compiler[1].
+> This is the start of the stable review cycle for the 6.6.87 release.
+> There are 269 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> Link: https://lore.kernel.org/all/08393aa3-05a3-4e3f-8004-f374a3ec4b7e@app.fastmail.com/ [1]
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> Cc: Douglas Anderson <dianders@chromium.org>
-> Cc: Russell King <linux@armlinux.org.uk>
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: Nicolas Schier <nicolas@fjasle.eu>
-> Cc: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Andrew Davis <afd@ti.com>
-> Cc: Seung-Woo Kim <sw0312.kim@samsung.com>
-> Cc: Xin Li <xin3.li@intel.com>
-> Cc: Jinjie Ruan <ruanjinjie@huawei.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-hardening@vger.kernel.org
-> Cc: linux-kbuild@vger.kernel.org
-> ---
->  arch/arm/Kconfig                              |   3 +-
->  arch/arm/boot/compressed/Makefile             |   2 +-
->  scripts/Makefile.gcc-plugins                  |   6 -
->  scripts/gcc-plugins/Kconfig                   |   4 -
->  scripts/gcc-plugins/arm_ssp_per_task_plugin.c | 107 ------------------
->  5 files changed, 2 insertions(+), 120 deletions(-)
->  delete mode 100644 scripts/gcc-plugins/arm_ssp_per_task_plugin.c
->
+> Responses should be made by Fri, 11 Apr 2025 11:58:04 +0000.
+> Anything received after that time might be too late.
 
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
+For 6.1.y and 6.6.y, Rust fails to build with:
 
+     error[E0432]: unresolved import `crate::ffi`
+      --> rust/kernel/print.rs:10:5
+       |
+    10 |     ffi::{c_char, c_void},
+       |     ^^^
+       |     |
+       |     unresolved import
+       |     help: a similar path exists: `core::ffi`
 
-> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> index 835b5f100e92..6f037edf0f41 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -1379,8 +1379,7 @@ config CC_HAVE_STACKPROTECTOR_TLS
->  config STACKPROTECTOR_PER_TASK
->         bool "Use a unique stack canary value for each task"
->         depends on STACKPROTECTOR && CURRENT_POINTER_IN_TPIDRURO && !XIP_DEFLATED_DATA
-> -       depends on GCC_PLUGINS || CC_HAVE_STACKPROTECTOR_TLS
-> -       select GCC_PLUGIN_ARM_SSP_PER_TASK if !CC_HAVE_STACKPROTECTOR_TLS
-> +       depends on CC_HAVE_STACKPROTECTOR_TLS
->         default y
->         help
->           Due to the fact that GCC uses an ordinary symbol reference from
-> diff --git a/arch/arm/boot/compressed/Makefile b/arch/arm/boot/compressed/Makefile
-> index 945b5975fce2..d61369b1eabe 100644
-> --- a/arch/arm/boot/compressed/Makefile
-> +++ b/arch/arm/boot/compressed/Makefile
-> @@ -96,7 +96,7 @@ KBUILD_CFLAGS += -DDISABLE_BRANCH_PROFILING
->
->  ccflags-y := -fpic $(call cc-option,-mno-single-pic-base,) -fno-builtin \
->              -I$(srctree)/scripts/dtc/libfdt -fno-stack-protector \
-> -            -I$(obj) $(DISABLE_ARM_SSP_PER_TASK_PLUGIN)
-> +            -I$(obj)
->  ccflags-remove-$(CONFIG_FUNCTION_TRACER) += -pg
->  asflags-y := -DZIMAGE
->
-> diff --git a/scripts/Makefile.gcc-plugins b/scripts/Makefile.gcc-plugins
-> index 6da109d563a5..194122d969a8 100644
-> --- a/scripts/Makefile.gcc-plugins
-> +++ b/scripts/Makefile.gcc-plugins
-> @@ -36,12 +36,6 @@ ifdef CONFIG_GCC_PLUGIN_STACKLEAK
->  endif
->  export DISABLE_STACKLEAK_PLUGIN
->
-> -gcc-plugin-$(CONFIG_GCC_PLUGIN_ARM_SSP_PER_TASK) += arm_ssp_per_task_plugin.so
-> -ifdef CONFIG_GCC_PLUGIN_ARM_SSP_PER_TASK
-> -    DISABLE_ARM_SSP_PER_TASK_PLUGIN += -fplugin-arg-arm_ssp_per_task_plugin-disable
-> -endif
-> -export DISABLE_ARM_SSP_PER_TASK_PLUGIN
-> -
->  # All the plugin CFLAGS are collected here in case a build target needs to
->  # filter them out of the KBUILD_CFLAGS.
->  GCC_PLUGINS_CFLAGS := $(strip $(addprefix -fplugin=$(objtree)/scripts/gcc-plugins/, $(gcc-plugin-y)) $(gcc-plugin-cflags-y))
-> diff --git a/scripts/gcc-plugins/Kconfig b/scripts/gcc-plugins/Kconfig
-> index ba868d1eef3d..6b34ba19358d 100644
-> --- a/scripts/gcc-plugins/Kconfig
-> +++ b/scripts/gcc-plugins/Kconfig
-> @@ -36,8 +36,4 @@ config GCC_PLUGIN_LATENT_ENTROPY
->            * https://grsecurity.net/
->            * https://pax.grsecurity.net/
->
-> -config GCC_PLUGIN_ARM_SSP_PER_TASK
-> -       bool
-> -       depends on GCC_PLUGINS && ARM
-> -
->  endif
-> diff --git a/scripts/gcc-plugins/arm_ssp_per_task_plugin.c b/scripts/gcc-plugins/arm_ssp_per_task_plugin.c
-> deleted file mode 100644
-> index 7328d037f975..000000000000
-> --- a/scripts/gcc-plugins/arm_ssp_per_task_plugin.c
-> +++ /dev/null
-> @@ -1,107 +0,0 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> -
-> -#include "gcc-common.h"
-> -
-> -__visible int plugin_is_GPL_compatible;
-> -
-> -static unsigned int canary_offset;
-> -
-> -static unsigned int arm_pertask_ssp_rtl_execute(void)
-> -{
-> -       rtx_insn *insn;
-> -
-> -       for (insn = get_insns(); insn; insn = NEXT_INSN(insn)) {
-> -               const char *sym;
-> -               rtx body;
-> -               rtx current;
-> -
-> -               /*
-> -                * Find a SET insn involving a SYMBOL_REF to __stack_chk_guard
-> -                */
-> -               if (!INSN_P(insn))
-> -                       continue;
-> -               body = PATTERN(insn);
-> -               if (GET_CODE(body) != SET ||
-> -                   GET_CODE(SET_SRC(body)) != SYMBOL_REF)
-> -                       continue;
-> -               sym = XSTR(SET_SRC(body), 0);
-> -               if (strcmp(sym, "__stack_chk_guard"))
-> -                       continue;
-> -
-> -               /*
-> -                * Replace the source of the SET insn with an expression that
-> -                * produces the address of the current task's stack canary value
-> -                */
-> -               current = gen_reg_rtx(Pmode);
-> -
-> -               emit_insn_before(gen_load_tp_hard(current), insn);
-> -
-> -               SET_SRC(body) = gen_rtx_PLUS(Pmode, current,
-> -                                            GEN_INT(canary_offset));
-> -       }
-> -       return 0;
-> -}
-> -
-> -#define PASS_NAME arm_pertask_ssp_rtl
-> -
-> -#define NO_GATE
-> -#include "gcc-generate-rtl-pass.h"
-> -
-> -#if BUILDING_GCC_VERSION >= 9000
-> -static bool no(void)
-> -{
-> -       return false;
-> -}
-> -
-> -static void arm_pertask_ssp_start_unit(void *gcc_data, void *user_data)
-> -{
-> -       targetm.have_stack_protect_combined_set = no;
-> -       targetm.have_stack_protect_combined_test = no;
-> -}
-> -#endif
-> -
-> -__visible int plugin_init(struct plugin_name_args *plugin_info,
-> -                         struct plugin_gcc_version *version)
-> -{
-> -       const char * const plugin_name = plugin_info->base_name;
-> -       const int argc = plugin_info->argc;
-> -       const struct plugin_argument *argv = plugin_info->argv;
-> -       int i;
-> -
-> -       if (!plugin_default_version_check(version, &gcc_version)) {
-> -               error(G_("incompatible gcc/plugin versions"));
-> -               return 1;
-> -       }
-> -
-> -       for (i = 0; i < argc; ++i) {
-> -               if (!strcmp(argv[i].key, "disable"))
-> -                       return 0;
-> -
-> -               /* all remaining options require a value */
-> -               if (!argv[i].value) {
-> -                       error(G_("no value supplied for option '-fplugin-arg-%s-%s'"),
-> -                             plugin_name, argv[i].key);
-> -                       return 1;
-> -               }
-> -
-> -               if (!strcmp(argv[i].key, "offset")) {
-> -                       canary_offset = atoi(argv[i].value);
-> -                       continue;
-> -               }
-> -               error(G_("unknown option '-fplugin-arg-%s-%s'"),
-> -                     plugin_name, argv[i].key);
-> -               return 1;
-> -       }
-> -
-> -       PASS_INFO(arm_pertask_ssp_rtl, "expand", 1, PASS_POS_INSERT_AFTER);
-> -
-> -       register_callback(plugin_info->base_name, PLUGIN_PASS_MANAGER_SETUP,
-> -                         NULL, &arm_pertask_ssp_rtl_pass_info);
-> -
-> -#if BUILDING_GCC_VERSION >= 9000
-> -       register_callback(plugin_info->base_name, PLUGIN_START_UNIT,
-> -                         arm_pertask_ssp_start_unit, NULL);
-> -#endif
-> -
-> -       return 0;
-> -}
-> --
-> 2.34.1
->
+In 6.1.y, C `char` and `core::ffi::c_char` are both signed. So the only issue is
+the `const` -- we can keep using the `core::ffi::c_char` type.
+
+In 6.6.y, C `char` changed to unsigned, but `core::ffi::c_char` is signed.
+
+Either way, for both branches, I would recommend dropping the patch -- it is not
+critical, and we can always send it later.
+
+Thus, for 6.1.y we could just drop the `rust/kernel/print.rs` changes. And for
+6.6.y we would need something like:
+
+    diff --git a/rust/kernel/print.rs b/rust/kernel/print.rs
+    index f48926e3e9fe..c85b9b4922a0 100644
+    --- a/rust/kernel/print.rs
+    +++ b/rust/kernel/print.rs
+    @@ -6,10 +6,7 @@
+     //!
+     //! Reference: <https://www.kernel.org/doc/html/latest/core-api/printk-basics.html>
+
+    -use core::{
+    -    ffi::{c_char, c_void},
+    -    fmt,
+    -};
+    +use core::{ffi::c_void, fmt};
+
+     use crate::str::RawFormatter;
+
+    @@ -18,11 +15,7 @@
+
+     // Called from `vsprintf` with format specifier `%pA`.
+     #[no_mangle]
+    -unsafe extern "C" fn rust_fmt_argument(
+    -    buf: *mut c_char,
+    -    end: *mut c_char,
+    -    ptr: *const c_void,
+    -) -> *mut c_char {
+    +unsafe extern "C" fn rust_fmt_argument(buf: *mut u8, end: *mut u8, ptr: *const c_void) -> *mut u8 {
+         use fmt::Write;
+         // SAFETY: The C contract guarantees that `buf` is valid if it's less than `end`.
+         let mut w = unsafe { RawFormatter::from_ptrs(buf.cast(), end.cast()) };
+
+Thanks!
+
+Cheers,
+Miguel
