@@ -1,203 +1,362 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2049.outbound.protection.outlook.com [40.107.92.49])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 300C415624B;
-	Wed,  9 Apr 2025 18:53:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744224815; cv=fail; b=eWbtEl5GLnkmi6KnWI4hZ6bdHmla+YQZf5XgiFRLZGFPkxObnx48INx854RgDV0w8/cPRy/6CgervRMWoT1jwRBOB5cjbnGp3aQDIg4r/Xg6kVnBnOn5+tOGZdBmf3zx252B/GrKGkBu8LlURlNEKEsRmiUoXJNd6zNcr7mgbLA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744224815; c=relaxed/simple;
-	bh=yV6yLS8nv4E82rhFjHjBp7rb3J/Ddni8ErFOBO8McnY=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=cWH10Sk8km5LaPwSHDCjBDYEoKcTMjE6VSpdvyoQt3yBT088AvuKWnmbXmEOekpRRxu5L3sf5Cz7jrb8VR0hGds29ifq3J0/NBrtUTwH95ZvQqcwQSVVuNo+Acrz3ZUBzlFaysGTvdP+0l+hz0sHLhe1r9tfjM+dqOZiL2UG7cg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=gnN3R2ux; arc=fail smtp.client-ip=40.107.92.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="gnN3R2ux"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=B7Uyq83OkNY/RBwtIdvirdWXemUFVzN0nIHQWZ1q3DOy5GvS4zIshmnCk5bBBq7H8rJLgNA0372YaEwR/5CaeCq4lxi3SvgeOhDRFiTFpA8L4IenRnamxXsol6inafxeDdv7nw2o+xQ+fJEE1BnfUB2NsI72bw2y3PVCBq8JONj2mi8zneyThcgYikNKLoig2l0NsgttWqk1pJR8M4QGAX3E3dBX6uYpKJo05X6fVX/c7N1VqPbdlSSMX+WXtMTE3aNEc4+GYEsP8irOp+FazfE8vj8/KORuZgPPVxwPNZ4ZLXqTYm18wEf+y1qxEQ4BToEmPG22NsQiwMHZz9J/CQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Owhs+ScX/5yEGVBI6IEWuWt0ftxcuDYqa3S7MFVfQ5M=;
- b=Or8O5oUlauq4vyZDujt4Wh5cXwGydANE2NmnyvRRks9NwzJZx58Ml5Nh9wiMFkiZ9o/5BjovkvQisucN0tc579kI+2eecIIfYWthQJj1RGlgR2ZuImedfhZWGTAKufIr0HCJkTfBlqvXWEFMBlmAQLsdPjLJgc4MPEEcL6I+l7Go//i9jH/V3ids5RLttH+PfoQyxSz+qS0GdJxtujqPaPztD/tIu9kASOT06Ty3GKguFgdnSyoTO6Q9eLlseoJOhJV7u71U+fcgd05JzGdtmbjjgQfiAurvHPgL7WpRMIf6EuaNHKt8mhOk0CPO957uOARt+kVqzT3LDkut02BGgA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Owhs+ScX/5yEGVBI6IEWuWt0ftxcuDYqa3S7MFVfQ5M=;
- b=gnN3R2uxW1HCyehG9pMfuVvJOm5AgG1V/flgdJs/EnS4yCJga0G1w+Wq8kcb0B5lP5erwIZZMNF4NfHbi92rqO5MgZ5Q0ffb+JdJIzygyo57wBFiE82ztNI1pgcmiVf7Yqdg3NRoMC/2qqizH7fFOk0OvjTgZ0EQWwaVEwEAhwM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by CH1PPF0B4A257F6.namprd12.prod.outlook.com (2603:10b6:61f:fc00::605) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.35; Wed, 9 Apr
- 2025 18:53:30 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%4]) with mapi id 15.20.8606.033; Wed, 9 Apr 2025
- 18:53:29 +0000
-Message-ID: <7a3bda35-05a0-49ad-b014-1834a176a906@amd.com>
-Date: Wed, 9 Apr 2025 13:53:25 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/8] ACPI: CPPC: Add IS_OPTIONAL_CPC_REG macro to judge
- if a cpc_reg is optional
-To: Lifeng Zheng <zhenglifeng1@huawei.com>, rafael@kernel.org,
- lenb@kernel.org, robert.moore@intel.com, viresh.kumar@linaro.org,
- gautham.shenoy@amd.com, ray.huang@amd.com, perry.yuan@amd.com,
- pierre.gondois@arm.com
-Cc: acpica-devel@lists.linux.dev, linux-acpi@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linuxarm@huawei.com,
- jonathan.cameron@huawei.com, zhanjie9@hisilicon.com, lihuisong@huawei.com,
- cenxinghai@h-partners.com, hepeng68@huawei.com
-References: <20250409065703.1461867-1-zhenglifeng1@huawei.com>
- <20250409065703.1461867-2-zhenglifeng1@huawei.com>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20250409065703.1461867-2-zhenglifeng1@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA9PR03CA0009.namprd03.prod.outlook.com
- (2603:10b6:806:20::14) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 899361C5D63;
+	Wed,  9 Apr 2025 18:53:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744224836; cv=none; b=htavV7GsfDe1KYDMXPRVl7tqUFrDpmcrc1lOSmGJhLF7dAdYl7UlC6sGNAMgYshfwqMTPwQVxwQC0oN4z3bgWaoh7wzufMR5wd8Y62Vmbdl/NsOoqUXAt+StNxFF3o0HA25e9wXWYQeVbqjOAYmzWmISZN5DZBKSuXFDI7WZnC8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744224836; c=relaxed/simple;
+	bh=6puIFq1VK1N8Qa37vGYhhsmTypoOuNsqquMTn7zYA4I=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=pCG3OcIQak29KBaNUDJK4TteAsLfZbOVZZlnmF8YK1XnSw+h3bWne3xEHpgqq+5gbo7U+CtWHspZLss4evi8CJSBWxJFRojus07cYI0waWUBBQAlcMgCBbzYBoY2/Vnp02PZHJZS+Il8zZwfhxF4SloxXhzTV99+yHM2Qx4iFw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6B8AC4CEEA;
+	Wed,  9 Apr 2025 18:53:55 +0000 (UTC)
+Date: Wed, 9 Apr 2025 14:55:15 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>
+Subject: [PATCH v2] tracing: Allow the top level trace_marker to write into
+ another instances
+Message-ID: <20250409145515.1cf1835e@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|CH1PPF0B4A257F6:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2e1f86d7-228b-43dd-f55d-08dd7797d147
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|1800799024|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NG9admIxVzlKcWVQem5Ic05oVGprRzZ5cXk4OXM1RzBCbk1NWi9FSDRBb3ZZ?=
- =?utf-8?B?NmsydlUyY0FBaWN5SkVlVUZtdDExVHdwaHpuNzNWQ3JHL2VDWkVvSnpReWx5?=
- =?utf-8?B?WU40dWZZMlFMZS9UUXQ2Snk5dkpROGZhMitvQkdHd2ZRNU5ISHBpK1dTSFFW?=
- =?utf-8?B?dGlzV3V6dG9BR1lCeUlDSE5waDdFMDBNc01mL2t4RHplU0cvVHcwWUVMc1BN?=
- =?utf-8?B?MkFDVDltcTBwZkR3eEVNWnloUS9VdVA0N292dGpYSm1NMW1RWWxOVGlodUdv?=
- =?utf-8?B?ZDhJK3BsTGJrZDBnZWFBTHI1c2trYUthMXZTZlZIWWNTd3NnN2hOZ00yRWxU?=
- =?utf-8?B?YnVVR3htM1VkK1ZEM2FQSnFxaFZGT25UQWtIQTQyVjgybUZENDlaOW81d0o1?=
- =?utf-8?B?QkdMVElqS0JLWFNYdXhIQVJybHk1cy81WEVEQzFzVEpiczkvdU9zczhsQity?=
- =?utf-8?B?Qk1FQzQ2ZFRYZkJ2azJqQm0yUE9JRXhrODV4NFNEQjZXcHJPZElCOCt4MHMw?=
- =?utf-8?B?dkF0eGtESEJYMG05eVhCTUVzaDZDUUdlY2NRVXMyOVQ2UGdnOS9FY2RXclZG?=
- =?utf-8?B?eWJGR0g3M3A2THZ4OVR1cDMzRHFkbUhHY2hPY1RWUUtLajloclBLQjRHa1ZF?=
- =?utf-8?B?VGpmUCtIa0g4MEFHVUIzY0FXakh2ZU9JR3cxMURReENZRUtMTmpNY1p0R0Ft?=
- =?utf-8?B?a21sUWptcjllUG9WN3d5aW4zYmpHRTM1YnR3UW1jUjFIQlV2eTMxN1daWW5D?=
- =?utf-8?B?TWVJUjVWWVRQZDZpZjUvWWxmSWJJSC9FZGpEakI5Q1RaOEY4NFZ5ak1JaTVv?=
- =?utf-8?B?eVlMcnBGTTJidXc2R05tTWFJU05Rd053UnY1UGVSL2JleWxyR2JwckZrUVp2?=
- =?utf-8?B?T3VjNzB2bnNjWUJLeTFGZFM4Y2xtb21GcEc5QmxMU2ozanN2SVpOY2YrVTg1?=
- =?utf-8?B?N0JnVDdjaG9pNTlOMHk1K01RZlZKdmxjajRSUEh6T0w3M3RObTAvMDZ4RHA4?=
- =?utf-8?B?NjZnMEc2YlRLQWxHbGJBU0dadW9VQ05TUDZlcFN2cnRQNmVKSk5HQlVrNUdM?=
- =?utf-8?B?OTZNU0VoNWFRYkEzLzBlS2tzQ3R1eHVhSW50V2gwS05LVG52Z3JzYkRyMFpx?=
- =?utf-8?B?UGtOcUd0Uis4MHFWNlBEay9XdmRoV2pvWGxESFBwQXhGR2ozckJrVytaY0Zp?=
- =?utf-8?B?UU9kSnZ3OXVnWnlYdXROcnhqTmU4VWR1UElMUTgwb1VTTWt0K3BxeFZ5NzNa?=
- =?utf-8?B?cGtmVWE2RjhaVVl1WW5vNlhGb1dSQTB6dUV5VFlGbzJ5WHltczVoRFlNd2FE?=
- =?utf-8?B?aTdRSGE4VkNmYTBCS0dKVno3ZUVoT05SbnJGRjgxWUkrQ2ZjMURhWGxOYVB0?=
- =?utf-8?B?eFVTeElNazJtRGlSV2czcFBsUHdCMkhkOHM0ekJqT0hJL1FPVFZiMW1sU3VP?=
- =?utf-8?B?OVVkZks2TDBSR0czQWE5S08xR00wUWdiNG5FMXBjNHlzRkFBcU5vZWVvRkRV?=
- =?utf-8?B?Z3lrT0QrNk4zbmsraWx6NGk3VnFPdUtTaUFrbFhiNy9RcXZmZDRrV2dPRElx?=
- =?utf-8?B?RlhwbklvVHRoeis5TU5KOXo2OU9aS3RENjhOUU10V1kxQkVUQklUTTJxcDZY?=
- =?utf-8?B?VjhBMCtvQm13ZHorMGlxUi80RTFEL2RrQjlHMndYZkN6MVZLZHdOaUp0U01v?=
- =?utf-8?B?T2h6clFrS0RIMjkvTnNKd2hocStZVm5taDRXK0FlaFNheERQU1dDWVprMEhy?=
- =?utf-8?B?T3NiNmR6UzZuQ0lFbjExZUJkZS8wazhZTmFJdUNqRmV3Yy9mU2g2R2plUDJM?=
- =?utf-8?B?ZTAzeUVtQnYyOHh2NHpKSmMvNllKd2o2dnY5RjJVUUdPa0RncHFlOUFHRkQz?=
- =?utf-8?Q?YHfEVfBhyesrG?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bWlVaDRtUk9YQjFkYlRaOExJeGQzaG11ckd2cXhPdDd5UlRLWno4VGJ2aFpj?=
- =?utf-8?B?MVFCNVBtQ3AzSVVXcUlTcTZscmpEQzdyMkFZU0p0Y1c4NG5Vc2FpeithazUv?=
- =?utf-8?B?MHpUZk9Zbng2ZnI3Z014ZnRVVllRK1VGcmlyaHBVZFhDYWRFK3kwcHovbXov?=
- =?utf-8?B?UHgvNVpIbnBYVVVoeDNoN2lCZlpGWEdJZ0Y1T0xtSDBCSERLcDQ0cFNDSGNI?=
- =?utf-8?B?RGIweWlDL2wvYnhSaTZtMUhPQTRiT2swOGZNL2FjVXljM2QvVnNHcndkbzZP?=
- =?utf-8?B?M09FM2w4Zk1INUQ4Y2wrY1I2TWdiaUM5bWtNVTBLaTBJQ2NBVStPczZ3Z2NT?=
- =?utf-8?B?cG9TRmNBVEd6UjNTVi9aY3d4Y3NwQ2QveHkyZVRyUlduRFJWWHZWbkFxMDI1?=
- =?utf-8?B?Z01hRiswTDMzOHhFL2hyVHNLbWM5cncrbGNrcHF3bEdBUzRMbk9RUmZJWHFM?=
- =?utf-8?B?ZkRnNmRKazNaYzE4U2V5MGgzajY3czFEM0I4WTFHbHcxRURKellyTnhvSXlZ?=
- =?utf-8?B?NjJoalluL2lnd0sySVFmVlVrOGY1VjRJNmJoR1gvcEx4YXJ3bmwwYy9DTzh1?=
- =?utf-8?B?bXdQNGhuVVlYVUk2TlhWWWtZdkU4aFFuRXJYNlM1VFFhZ3V4Rng0TTFIaENP?=
- =?utf-8?B?cW1GWlVObUYwL1hISGMrZXhYUk5JZlQwT0N1MnJvYU9ocFBoUjNwMytIWHlY?=
- =?utf-8?B?Y1VUVERtZDFUVlBqeFUzZVh4bzJPbnFPc1dpQUlPWm5oU3BOMm0wTVdETzl1?=
- =?utf-8?B?NW81SklORC9VTkRxZFhEQ3E4RnlCdXR0dXZCa3p1azN3dk5QbjVocEw0bFFV?=
- =?utf-8?B?RFpsS0t3M3dTV0dDQ3FXQW1EZnNQa0lHSWVRbmE4L3V0dzV3M0pyZzdGdWRO?=
- =?utf-8?B?MzQxVWh6NlRTVUFUYW5YYmN5VFB6Sk5uWjJQaldiMFZoZFVoOSs0WWFqaGQ5?=
- =?utf-8?B?OFBXMWVzU3NNU3Y1bjZEQ1dKcHBtNnhTWHlSOWozRzFSTS9KKzZLTGxrVHJM?=
- =?utf-8?B?K2c1eVo0TWR1bUZuVnk5UW8yT0ZDOHJ5TnQzaGJoYjd3c2c5emVQRmVtZklV?=
- =?utf-8?B?aG14NWJTODlWcEZFeVBScnJKSGpJaWxWZmtyMDQxUzBzWGc3cW54QlBEWlBV?=
- =?utf-8?B?TEVCSVRLd3IySHpyM01MNXg3SFpGbHRhVWVFenhyV21xWTFXMDBiZGhrS1Y5?=
- =?utf-8?B?VWpnUmxoVy9EYU5CWFpCRk13bFQ4USs5WkE2azJEQUFURjBxRTYvREdVdmcr?=
- =?utf-8?B?Q2xVMzlvbmRhc0UyZ3JHOW82UTBnbGRlN3FHUHhoMVhIVzBBb0t3QTJpYnJv?=
- =?utf-8?B?ZmwrWHBRMWRiVWRjRzUxVXUrZUJlZFBBUlJsZFVhUDRvQVBNQzd5MVJ1UFdI?=
- =?utf-8?B?SmM2TVEveEdPdDFNTkwwN2NFV1NUdXZ4bE96bGtvQUFnbkJnTm9vRFVxVjhp?=
- =?utf-8?B?Y1RCL1kyc1ZFa0pySDc4N0xuT0J4K3djQ1VqNHloYUozdFZ1WW9DdnJxeWw5?=
- =?utf-8?B?bGtVY1g2d1FMTm44SmJZNmx2MzlFandvUGlFbnVjbnI5ZmJoV0pjMkNBZnJu?=
- =?utf-8?B?eTJsR0ptZ3kxQVBlNS9LaldMSlBJd1pURUtkRkk5anZyOGhWdTNDVUplUlFN?=
- =?utf-8?B?cGpVQTVUZXpQaUZFN3dzV1o1OU1hN0NYZytDMHFyRW5qeEtoQ1hwVnBuVlN3?=
- =?utf-8?B?K3Z4RXZQQUxqVW4rdUR6em5OZkZiN0FNNnNTYXJsOFBWQzJSajY4Tm1hcnM1?=
- =?utf-8?B?UjZ4d01md2ROZGgvejRmbGNEOS9mMEJiOXpHc0gxbk1UbFJzL0MvRGpqUlJi?=
- =?utf-8?B?UFdrNGJUR01DYUgwS0JtTURDbjR5MCtYZTJWQTRvdDNlK0tVRFhzaFJLOTI1?=
- =?utf-8?B?SUdYcmJsNkY4cGhpalZKSTNEZnpzckVGQTByYy9mMnpBWFZNTDZMbWFVT2o1?=
- =?utf-8?B?bmhGWnFtTi9NMlpybC8wMUFPS0RSeHVVSzVUd2pQaGRldHI5MVNkaDc1L0Fr?=
- =?utf-8?B?RWlOMkxaWElnbmZ3OWtXL0tOK0ZWbmltc1FmOVpUekxNNVJON1IvM0NOY3lu?=
- =?utf-8?B?SWliNllQUzAzN2VWWkYrc0ROK2J4QnRCVlliL3E1T0pwR1BiRzNpS1Nod0g2?=
- =?utf-8?Q?srud+WleHvAD3nazwVo0Y0TII?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2e1f86d7-228b-43dd-f55d-08dd7797d147
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 18:53:29.3718
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cVmD+ho7BduSRHtvsd8lBimpfgcWGGzNJNXMZSwgNoLAJJ7X8dLSe13BFd4Yqx92YTjJewbo/vdbb2FpZnaKnw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH1PPF0B4A257F6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 4/9/2025 1:56 AM, Lifeng Zheng wrote:
-> In ACPI 6.5, s8.4.6.1 _CPC (Continuous Performance Control), whether each
-> of the per-cpu cpc_regs[] is mendatory or optional is defined. Since the
-mandatory
-> CPC_SUPPORTED() check is only for optional cpc field, another macro to
-> check if the field is optional is needed.
-> 
-> Reviewed-by: Pierre Gondois <pierre.gondois@arm.com>
-> Signed-off-by: Lifeng Zheng <zhenglifeng1@huawei.com>
-> ---
->   drivers/acpi/cppc_acpi.c | 14 ++++++++++++++
->   1 file changed, 14 insertions(+)
-> 
-> diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
-> index f193e713825a..39f019e265da 100644
-> --- a/drivers/acpi/cppc_acpi.c
-> +++ b/drivers/acpi/cppc_acpi.c
-> @@ -129,6 +129,20 @@ static DEFINE_PER_CPU(struct cpc_desc *, cpc_desc_ptr);
->   #define CPC_SUPPORTED(cpc) ((cpc)->type == ACPI_TYPE_INTEGER ?		\
->   				!!(cpc)->cpc_entry.int_value :		\
->   				!IS_NULL_REG(&(cpc)->cpc_entry.reg))
-> +
-> +/*
-> + * Each bit indicates the optionality of the register in per-cpu
-> + * cpc_regs[] with the corresponding index. 0 means mandatory and 1
-> + * means optional.
-> + */
-> +#define REG_OPTIONAL (0x1FC7D0)
-> +
-> +/*
-> + * Use the index of the register in per-cpu cpc_regs[] to check if
-> + * it's an optional one.
-> + */
-> +#define IS_OPTIONAL_CPC_REG(reg_idx) (REG_OPTIONAL & (1U << (reg_idx)))
-> +
->   /*
->    * Arbitrary Retries in case the remote processor is slow to respond
->    * to PCC commands. Keeping it high enough to cover emulators where
+From: Steven Rostedt <rostedt@goodmis.org>
+
+There are applications that have it hard coded to write into the top level
+trace_marker instance (/sys/kernel/tracing/trace_marker). This can be
+annoying if a profiler is using that instance for other work, or if it
+needs all writes to go into a new instance.
+
+A new option is created called "copy_trace_marker". By default, the top
+level has this set, as that is the default buffer that writing into the
+top level trace_marker file will go to. But now if an instance is created
+and sets this option, all writes into the top level trace_marker will also
+be written into that instance buffer just as if an application were to
+write into the instance's trace_marker file.
+
+If the top level instance disables this option, then writes to its own
+trace_marker and trace_marker_raw files will not go into its buffer.
+
+If no instance has this option set, then the write will return an error
+and errno will contain ENODEV.
+
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+Changes since v2: https://lore.kernel.org/20250408112714.403a4368@gandalf.local.home
+
+- Instead of having a single destination for writing into the top level
+  trace marker with a "redirect_trace_marker" option, have a
+  "copy_trace_marker" option that will have writes into the top level
+  trace_marker file go into other instances (more than one).
+  (Mathieu Desnoyers)
+
+ Documentation/trace/ftrace.rst |  13 ++++
+ kernel/trace/trace.c           | 138 ++++++++++++++++++++++++++-------
+ kernel/trace/trace.h           |   2 +
+ 3 files changed, 123 insertions(+), 30 deletions(-)
+
+diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
+index c9e88bf65709..af66a05e18cc 100644
+--- a/Documentation/trace/ftrace.rst
++++ b/Documentation/trace/ftrace.rst
+@@ -1205,6 +1205,19 @@ Here are the available options:
+ 	default instance. The only way the top level instance has this flag
+ 	cleared, is by it being set in another instance.
+ 
++  copy_trace_marker
++	If there are applications that hard code writing into the top level
++	trace_marker file (/sys/kernel/tracing/trace_marker or trace_marker_raw),
++	and the tooling would like it to go into an instance, this option can
++	be used. Create an instance and set this option, and then all writes
++	into the top level trace_marker file will also be redirected into this
++	instance.
++
++	Note, by default this option is set for the top level instance. If it
++	is disabled, then writes to the trace_marker or trace_marker_raw files
++	will not be written into the top level file. If no instance has this
++	option set, then a write will error with the errno of ENODEV.
++
+   annotate
+ 	It is sometimes confusing when the CPU buffers are full
+ 	and one CPU buffer had a lot of events recently, thus
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 8ddf6b17215c..e864a08ca18d 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -493,7 +493,8 @@ EXPORT_SYMBOL_GPL(unregister_ftrace_export);
+ 	 TRACE_ITER_ANNOTATE | TRACE_ITER_CONTEXT_INFO |		\
+ 	 TRACE_ITER_RECORD_CMD | TRACE_ITER_OVERWRITE |			\
+ 	 TRACE_ITER_IRQ_INFO | TRACE_ITER_MARKERS |			\
+-	 TRACE_ITER_HASH_PTR | TRACE_ITER_TRACE_PRINTK)
++	 TRACE_ITER_HASH_PTR | TRACE_ITER_TRACE_PRINTK |		\
++	 TRACE_ITER_COPY_MARKER)
+ 
+ /* trace_options that are only supported by global_trace */
+ #define TOP_LEVEL_TRACE_FLAGS (TRACE_ITER_PRINTK |			\
+@@ -501,7 +502,8 @@ EXPORT_SYMBOL_GPL(unregister_ftrace_export);
+ 
+ /* trace_flags that are default zero for instances */
+ #define ZEROED_TRACE_FLAGS \
+-	(TRACE_ITER_EVENT_FORK | TRACE_ITER_FUNC_FORK | TRACE_ITER_TRACE_PRINTK)
++	(TRACE_ITER_EVENT_FORK | TRACE_ITER_FUNC_FORK | TRACE_ITER_TRACE_PRINTK | \
++	 TRACE_ITER_COPY_MARKER)
+ 
+ /*
+  * The global_trace is the descriptor that holds the top-level tracing
+@@ -513,6 +515,9 @@ static struct trace_array global_trace = {
+ 
+ static struct trace_array *printk_trace = &global_trace;
+ 
++/* List of trace_arrays interested in the top level trace_marker */
++static LIST_HEAD(marker_copies);
++
+ static __always_inline bool printk_binsafe(struct trace_array *tr)
+ {
+ 	/*
+@@ -534,6 +539,28 @@ static void update_printk_trace(struct trace_array *tr)
+ 	tr->trace_flags |= TRACE_ITER_TRACE_PRINTK;
+ }
+ 
++/* Returns true if the status of tr changed */
++static bool update_marker_trace(struct trace_array *tr, int enabled)
++{
++	lockdep_assert_held(&event_mutex);
++
++	if (enabled) {
++		if (!list_empty(&tr->marker_list))
++			return false;
++
++		list_add_rcu(&tr->marker_list, &marker_copies);
++		tr->trace_flags |= TRACE_ITER_COPY_MARKER;
++		return true;
++	}
++
++	if (list_empty(&tr->marker_list))
++		return false;
++
++	list_del_init(&tr->marker_list);
++	tr->trace_flags &= ~TRACE_ITER_COPY_MARKER;
++	return true;
++}
++
+ void trace_set_ring_buffer_expanded(struct trace_array *tr)
+ {
+ 	if (!tr)
+@@ -5189,7 +5216,8 @@ int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled)
+ {
+ 	if ((mask == TRACE_ITER_RECORD_TGID) ||
+ 	    (mask == TRACE_ITER_RECORD_CMD) ||
+-	    (mask == TRACE_ITER_TRACE_PRINTK))
++	    (mask == TRACE_ITER_TRACE_PRINTK) ||
++	    (mask == TRACE_ITER_COPY_MARKER))
+ 		lockdep_assert_held(&event_mutex);
+ 
+ 	/* do nothing if flag is already set */
+@@ -5220,6 +5248,9 @@ int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled)
+ 		}
+ 	}
+ 
++	if (mask == TRACE_ITER_COPY_MARKER)
++		update_marker_trace(tr, enabled);
++
+ 	if (enabled)
+ 		tr->trace_flags |= mask;
+ 	else
+@@ -7097,11 +7128,9 @@ tracing_free_buffer_release(struct inode *inode, struct file *filp)
+ 
+ #define TRACE_MARKER_MAX_SIZE		4096
+ 
+-static ssize_t
+-tracing_mark_write(struct file *filp, const char __user *ubuf,
+-					size_t cnt, loff_t *fpos)
++static ssize_t write_marker_to_buffer(struct trace_array *tr, const char __user *ubuf,
++				      size_t cnt)
+ {
+-	struct trace_array *tr = filp->private_data;
+ 	struct ring_buffer_event *event;
+ 	enum event_trigger_type tt = ETT_NONE;
+ 	struct trace_buffer *buffer;
+@@ -7115,18 +7144,6 @@ tracing_mark_write(struct file *filp, const char __user *ubuf,
+ #define FAULTED_STR "<faulted>"
+ #define FAULTED_SIZE (sizeof(FAULTED_STR) - 1) /* '\0' is already accounted for */
+ 
+-	if (tracing_disabled)
+-		return -EINVAL;
+-
+-	if (!(tr->trace_flags & TRACE_ITER_MARKERS))
+-		return -EINVAL;
+-
+-	if ((ssize_t)cnt < 0)
+-		return -EINVAL;
+-
+-	if (cnt > TRACE_MARKER_MAX_SIZE)
+-		cnt = TRACE_MARKER_MAX_SIZE;
+-
+ 	meta_size = sizeof(*entry) + 2;  /* add '\0' and possible '\n' */
+  again:
+ 	size = cnt + meta_size;
+@@ -7192,18 +7209,11 @@ tracing_mark_write(struct file *filp, const char __user *ubuf,
+ }
+ 
+ static ssize_t
+-tracing_mark_raw_write(struct file *filp, const char __user *ubuf,
++tracing_mark_write(struct file *filp, const char __user *ubuf,
+ 					size_t cnt, loff_t *fpos)
+ {
+ 	struct trace_array *tr = filp->private_data;
+-	struct ring_buffer_event *event;
+-	struct trace_buffer *buffer;
+-	struct raw_data_entry *entry;
+-	ssize_t written;
+-	int size;
+-	int len;
+-
+-#define FAULT_SIZE_ID (FAULTED_SIZE + sizeof(int))
++	ssize_t written = -ENODEV;
+ 
+ 	if (tracing_disabled)
+ 		return -EINVAL;
+@@ -7211,10 +7221,39 @@ tracing_mark_raw_write(struct file *filp, const char __user *ubuf,
+ 	if (!(tr->trace_flags & TRACE_ITER_MARKERS))
+ 		return -EINVAL;
+ 
+-	/* The marker must at least have a tag id */
+-	if (cnt < sizeof(unsigned int))
++	if ((ssize_t)cnt < 0)
+ 		return -EINVAL;
+ 
++	if (cnt > TRACE_MARKER_MAX_SIZE)
++		cnt = TRACE_MARKER_MAX_SIZE;
++
++	/* The global trace_marker can go to multiple instances */
++	if (tr == &global_trace) {
++		guard(rcu)();
++		list_for_each_entry_rcu(tr, &marker_copies, marker_list) {
++			written = write_marker_to_buffer(tr, ubuf, cnt);
++			if (written < 0)
++				break;
++		}
++	} else {
++		written = write_marker_to_buffer(tr, ubuf, cnt);
++	}
++
++	return written;
++}
++
++static ssize_t write_raw_marker_to_buffer(struct trace_array *tr,
++					  const char __user *ubuf, size_t cnt)
++{
++	struct ring_buffer_event *event;
++	struct trace_buffer *buffer;
++	struct raw_data_entry *entry;
++	ssize_t written;
++	int size;
++	int len;
++
++#define FAULT_SIZE_ID (FAULTED_SIZE + sizeof(int))
++
+ 	size = sizeof(*entry) + cnt;
+ 	if (cnt < FAULT_SIZE_ID)
+ 		size += FAULT_SIZE_ID - cnt;
+@@ -7245,6 +7284,40 @@ tracing_mark_raw_write(struct file *filp, const char __user *ubuf,
+ 	return written;
+ }
+ 
++static ssize_t
++tracing_mark_raw_write(struct file *filp, const char __user *ubuf,
++					size_t cnt, loff_t *fpos)
++{
++	struct trace_array *tr = filp->private_data;
++	ssize_t written = -ENODEV;
++
++#define FAULT_SIZE_ID (FAULTED_SIZE + sizeof(int))
++
++	if (tracing_disabled)
++		return -EINVAL;
++
++	if (!(tr->trace_flags & TRACE_ITER_MARKERS))
++		return -EINVAL;
++
++	/* The marker must at least have a tag id */
++	if (cnt < sizeof(unsigned int))
++		return -EINVAL;
++
++	/* The global trace_marker_raw can go to multiple instances */
++	if (tr == &global_trace) {
++		guard(rcu)();
++		list_for_each_entry_rcu(tr, &marker_copies, marker_list) {
++			written = write_raw_marker_to_buffer(tr, ubuf, cnt);
++			if (written < 0)
++				break;
++		}
++	} else {
++		written = write_raw_marker_to_buffer(tr, ubuf, cnt);
++	}
++
++	return written;
++}
++
+ static int tracing_clock_show(struct seq_file *m, void *v)
+ {
+ 	struct trace_array *tr = m->private;
+@@ -9738,6 +9811,7 @@ trace_array_create_systems(const char *name, const char *systems,
+ 	INIT_LIST_HEAD(&tr->events);
+ 	INIT_LIST_HEAD(&tr->hist_vars);
+ 	INIT_LIST_HEAD(&tr->err_log);
++	INIT_LIST_HEAD(&tr->marker_list);
+ 
+ #ifdef CONFIG_MODULES
+ 	INIT_LIST_HEAD(&tr->mod_events);
+@@ -9897,6 +9971,9 @@ static int __remove_instance(struct trace_array *tr)
+ 	if (printk_trace == tr)
+ 		update_printk_trace(&global_trace);
+ 
++	if (update_marker_trace(tr, 0))
++		synchronize_rcu();
++
+ 	tracing_set_nop(tr);
+ 	clear_ftrace_function_probes(tr);
+ 	event_trace_del_tracer(tr);
+@@ -10965,6 +11042,7 @@ __init static int tracer_alloc_buffers(void)
+ 	INIT_LIST_HEAD(&global_trace.events);
+ 	INIT_LIST_HEAD(&global_trace.hist_vars);
+ 	INIT_LIST_HEAD(&global_trace.err_log);
++	list_add(&global_trace.marker_list, &marker_copies);
+ 	list_add(&global_trace.list, &ftrace_trace_arrays);
+ 
+ 	apply_trace_boot_options();
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 79be1995db44..a2639daea47b 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -404,6 +404,7 @@ struct trace_array {
+ 	struct trace_options	*topts;
+ 	struct list_head	systems;
+ 	struct list_head	events;
++	struct list_head	marker_list;
+ 	struct trace_event_file *trace_marker_file;
+ 	cpumask_var_t		tracing_cpumask; /* only trace on set CPUs */
+ 	/* one per_cpu trace_pipe can be opened by only one user */
+@@ -1368,6 +1369,7 @@ extern int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
+ 		C(MARKERS,		"markers"),		\
+ 		C(EVENT_FORK,		"event-fork"),		\
+ 		C(TRACE_PRINTK,		"trace_printk_dest"),	\
++		C(COPY_MARKER,		"copy_trace_marker"),\
+ 		C(PAUSE_ON_TRACE,	"pause-on-trace"),	\
+ 		C(HASH_PTR,		"hash-ptr"),	/* Print hashed pointer */ \
+ 		FUNCTION_FLAGS					\
+-- 
+2.47.2
 
