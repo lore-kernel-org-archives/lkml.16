@@ -1,100 +1,100 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EED625DCE9;
-	Wed,  9 Apr 2025 11:31:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 472D822E3F7;
+	Wed,  9 Apr 2025 11:32:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744198283; cv=none; b=fLOOWmC4H1qaYc38LL2DMaqxIgkjhktl0w6h/y7rp10j7ky0nelGoDcZkHoj3gU8iZtTJKGakch9nrj9J1x//NhxwWWBtZokFY1urBZEdKRAkpsMbYNNTPHSWgwJkZwVa79j4m675Bczpw/BXOyTDoHdNGUF5thfAZ4v9umgdDM=
+	t=1744198341; cv=none; b=XMwZUHy+wDHg52UrmaNlPObvbZK1OItxEeapnajLWp3NH4Rivw4DCZ+P4izNR8AXETNG1FJJCy2EgGypWLl0xkLwTHug9Kh9ws4HViZX0tthWZsdsArMi90EtFurHF+62eGVOorAKaGqnFRVBaM/L34SbPYW02sEOXJ4uiWFyNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744198283; c=relaxed/simple;
-	bh=FLV91CEpQSeUuhyrf6X7Y7S8BnEVeMNhFp42arzdGXU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AaLzr1q3DDJeywLw1dG2tyLwRE/3G7pjr7jr/j03RJcJuh10TW03M0zBXCA1TMf6LppRlgjxoHZSKoDwQhU51pc8UCQuwPg5LLFrTioYUJrCL+nbhvTrrn/Y0+lMJCUnHrbXYzuKiReAWBPxN4WFnGh3tr8nqYlPjqsXrYqeTt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=c7FFw26W; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1744198341; c=relaxed/simple;
+	bh=uJ2A4eJ9gw+1+DX8cROf0E6YMpexW4oBimv3nz/BFW8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hmlY+ZoazHj+/7yTA3Z/c1Xa3ozU0443RfLYz3Sy5xqYxt1RLBgNvUFtGxo+xry74zYbiF46tOo+KsIe9PRLfABd7LYjGMtw28V6lPVK1B7BYeoe24LQw/lh9CxXZqmFFXg8RHefPEsx1RVAh7tO1CiiKD2Wam5RMgpyKMhn+R8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=IIqwh7nN; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="c7FFw26W"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=FLV91CEpQSeUuhyrf6X7Y7S8BnEVeMNhFp42arzdGXU=; b=c7FFw26WRc/QcDvoT6DswQt2BF
-	pjsKo96k8Jhg6DT1jL3A3zD7qVhGe56ZplefRjSMaFlWqNTwbLQVraOPY49tPDM7zeU44PESHMfKG
-	a59aze3NrikVXGDVi4+CrVzjqoWsgU7OGjCTRVcdk+VPwWVwA2UAXDKxq+vFcWmOs+DIFo2q9r+XK
-	eSrJ8D+dW0Tfh3UD5XamwRVfJSKNz+CMdWCkDyNXcf+MTE3Pd05g6qYN9pQ5F3vzXTtd3ySDlnBFa
-	8wcaYPrekUWunloaKUrUeOwDomnHCLi0UXfRP2Lt/LbuaND8CCQeZBvZMZG77BT7guBdM/HYNq1Hs
-	NvbHA9ww==;
-Received: from [223.233.71.56] (helo=[192.168.1.12])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1u2TeA-00E4Ri-Pl; Wed, 09 Apr 2025 13:31:11 +0200
-Message-ID: <35b4fe2a-606c-f25c-0d5c-1abb6e7b3003@igalia.com>
-Date: Wed, 9 Apr 2025 17:01:05 +0530
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="IIqwh7nN"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 075BF40E019F;
+	Wed,  9 Apr 2025 11:32:18 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id gUu-ArE3mT14; Wed,  9 Apr 2025 11:32:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1744198334; bh=Kd1dq6qO7Pm6ZvRiE64SfOl2sLEG/m2bPzR2xytbWHQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IIqwh7nNBt2x+2yj2qdpDHb2uNH4WmLAfAawqK2p//IrzduhQ8PFg+DomGP5FYLQK
+	 kcj2PVRNQboa/SNhYSO0QtRTu2tdzUrLsOwH+aw4CcSOnV/vh7z0nPDetHKCIMVR3v
+	 nsMDU9KzwVsc5asqWYjKK857/gsJ9XU1qxafO0NA8Kp1azysr7ZnwTM1m85Hv3QP7i
+	 ylLJTkcDpcPfao2bkxgX86prmHPuNDcK538rmjQd86silLCGZg1/xjm+iKOYcFRb5c
+	 C/AsxZ4+QOaI7PNAPe0vjDdP+8w3HR5IthiN2ssiRegxMs++Dp6nCiI/4PaQyl5gE8
+	 k6udHOGVHPt4wPRxnbiIivvwSvFLb7zf6myK6NBMecifVosboSyiDPUMoOhwuXYuy6
+	 k2Gww+0LV0Kfv9dpscT6gsjw3sr57CQgHJlWANL9ZG3Pka1IiGaD3t3o0tmTnvqmr0
+	 1T4ExnmlBKn1rNr3i/cOoS6ACrqmO+LL8gODtBGu6BJObEa/vxvcZtArQjzVgvFdpE
+	 cmQSiNlZsHSh/FsBECEPl06lteBMug5JKseiqqxhDFaktM75TbzQKI11+Q9DTg1xYZ
+	 aK6AhhdgaKw/1ILedOANYASvDjLa2KVbvPLwP4d+wfgL7iQWfaQ457O+EaFXYQHjs9
+	 YZ2cPK7xkIT8mZD0iRkn/1go=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DCF4C40E01A3;
+	Wed,  9 Apr 2025 11:31:55 +0000 (UTC)
+Date: Wed, 9 Apr 2025 13:31:54 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: Jarkko Sakkinen <jarkko@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+	"H. Peter Anvin" <hpa@zytor.com>, linux-coco@lists.linux.dev,
+	linux-integrity@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+	x86@kernel.org, Tom Lendacky <thomas.lendacky@amd.com>,
+	Joerg Roedel <jroedel@suse.de>,
+	Dionna Glaze <dionnaglaze@google.com>,
+	Claudio Carvalho <cclaudio@linux.ibm.com>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	linux-kernel@vger.kernel.org, Dov Murik <dovmurik@linux.ibm.com>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v6 4/4] x86/sev: register tpm-svsm platform device
+Message-ID: <20250409113154.GGZ_ZaqgfRrrMij_Zm@fat_crate.local>
+References: <20250403100943.120738-1-sgarzare@redhat.com>
+ <20250403100943.120738-5-sgarzare@redhat.com>
+ <20250408110012.GFZ_UBvOcEfEcIM4mI@fat_crate.local>
+ <eqtiiphs6rtjo7nirkw7zcicew75wnl4ydenrt5vl6jdpqdgj6@2brjlyjbqhoq>
+ <20250408112820.GBZ_UIVPp-LuIiVrIV@fat_crate.local>
+ <o2u7p3wb64lcc4sziunr274hyubkgmspzdjcvihbpzkw6mkvpo@sjq3vi4y2qfl>
+ <20250409102120.GCZ_ZKIJw9WkXpTz4u@fat_crate.local>
+ <CAGxU2F7r_fWgr2YRmCvh2iQ1vPg30f-+W6FXyuidbakZkwhw2w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH v2 1/3] exec: Dynamically allocate memory to store task's
- full name
-Content-Language: en-US
-To: Kees Cook <kees@kernel.org>
-Cc: Bhupesh <bhupesh@igalia.com>, akpm@linux-foundation.org,
- kernel-dev@igalia.com, linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com,
- laoar.shao@gmail.com, pmladek@suse.com, rostedt@goodmis.org,
- mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
- alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com,
- mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org,
- david@redhat.com, viro@zeniv.linux.org.uk, ebiederm@xmission.com,
- brauner@kernel.org, jack@suse.cz, mingo@redhat.com, juri.lelli@redhat.com,
- bsegall@google.com, mgorman@suse.de, vschneid@redhat.com
-References: <20250331121820.455916-1-bhupesh@igalia.com>
- <20250331121820.455916-2-bhupesh@igalia.com>
- <202504030924.50896AD12@keescook>
- <3202d24e-b155-ab0a-86cd-0a3204ec52dd@igalia.com>
- <202504041023.A21FA17DDC@keescook>
-From: Bhupesh Sharma <bhsharma@igalia.com>
-In-Reply-To: <202504041023.A21FA17DDC@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAGxU2F7r_fWgr2YRmCvh2iQ1vPg30f-+W6FXyuidbakZkwhw2w@mail.gmail.com>
 
-Hi Kees,
+On Wed, Apr 09, 2025 at 12:43:01PM +0200, Stefano Garzarella wrote:
+> Sorry, maybe I missed something.
+> 
+> tpm_svsm.c registers the driver with module_platform_driver_probe().
+> 
+> Someone (the platform I guess) has to register the device by calling
+> platform_device_register(), as we already do for example for
+> sev_guest.
 
-Sorry for the delay - I was out for a couple of days.
+Maybe that platform device thing is the wrong approach. Why does the core code
+need to register some dummy platform device in the first place? Why can't
+drivers/char/tpm/tpm_svsm.c probe and init without it?
 
-On 4/4/25 10:54 PM, Kees Cook wrote:
-> On Fri, Apr 04, 2025 at 12:18:56PM +0530, Bhupesh Sharma wrote:
->> In another review for this series, Yafang mentioned the following cleanup +
->> approach suggested by Linus (see [0]).
->> Also I have summarized my understanding on the basis of the suggestions
->> Linus shared and the accompanying background threads (please see [1]).
->>
->> Kindly share your views on the same, so that I can change the implementation
->> in v3 series accordingly.
-> In thinking about this a little more I think we can't universally change
-> all the APIs to use the new full_name since it is a pointer, which may
-> be getting changed out from under readers if a setter changes it. So
-> this may need some careful redesign, likely with RCU. hmm.
->
+-- 
+Regards/Gruss,
+    Boris.
 
-Thinking more about this, Linus mentioned in [0]:
-
-'Since user space can randomly change their names anyway, using locking
-was always wrong for readers (for writers it probably does make sense
-to have some lock'
-
-So, if we go with the union approach, probably we can do with just a writer-lock, whereas if we go with a task->full_name like pointer one, we would probably need a rcu lock.
-
-Please let me know your comments.
-
-[0]. https://lore.kernel.org/all/CAHk-=wivfrF0_zvf+oj6==Sh=-npJooP8chLPEfaFV0oNYTTBA@mail.gmail.com/
-
+https://people.kernel.org/tglx/notes-about-netiquette
