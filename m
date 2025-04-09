@@ -1,139 +1,82 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBA1A264FBA
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 13:19:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61008218EA2;
+	Wed,  9 Apr 2025 13:21:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744204777; cv=none; b=im71OpWYbPW1ObSDKexlE9B2ruVX85EQz29AnaZbMm34q6xTkVujKwQeT8t8XYsPuDIlMR6f/k/5gNkj5hhsckM2zBjncLOdBQKjhxrbsw5KONO5J+wMbH0ezES4hOFpRCG/T9qQst633EDOzotv+9Z6H69vjegJwhXGhgvlpBw=
+	t=1744204897; cv=none; b=fdk3l0fqpqusa32X1wY0X9ELQTQwi3bV1U2EjN0SH9LKPVvqOfip9cDAkEwrAqVSzFQiSX9hGwnx9SE/T4q36DkY7LdwU4Yp0SP9hoXsNzA1hOdpcKoJtwsBC60/IU9YgnVB0g5D1MOXS30QSluPuSham12nYKikLqQjOtO5PgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744204777; c=relaxed/simple;
-	bh=QnEbq81WG/G4uWQ0H7Xdkr/N+XKj9P55Wll6BVS07fE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
-	 References; b=jMqqZVyQRapxwRQjbz/4a4X7f8BTKIhZY3ntAcqBXk9vNxOykvrajv4TAOKOGS+BH/fwkV31kPwi1jdhN9EzQxh5CHQlEw2h6EECrwliOa3tC3CKnTeAvhk8D9D6g9yH097YlKguU4OoyI98Xce/HPjBCm7GMQ3Cy5lXREdCVvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=partner.samsung.com; spf=pass smtp.mailfrom=partner.samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=WDoJkqId; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=partner.samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=partner.samsung.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="WDoJkqId"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250409131930euoutp02f0260dd9f48d352eb9755af9a8fc3a00~0qP90u03T2495024950euoutp02v
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 13:19:30 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250409131930euoutp02f0260dd9f48d352eb9755af9a8fc3a00~0qP90u03T2495024950euoutp02v
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1744204770;
-	bh=ajQR5ZKkUJJOfFz3DoIefpGG3D1hZOJkRQa0pPm8NGo=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=WDoJkqIdeW2rHSX7wPM5CfkOwQoriEzGKLW3Uw7g0IZizpvKOo+bbyNtKaWa0AGaa
-	 A1S08+tcUthHK5L26fGCz3wijy2TQE7A2I/7ovpsO8/gPL/pYsCrEyXw18vMqbnqHQ
-	 seVrUVG6mqFiQafE8lxpR5WTjNpkvW3T3nWSg738=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20250409131930eucas1p132940cb320ad36d80b90584e8937ac09~0qP9Y_IKW2055320553eucas1p1-;
-	Wed,  9 Apr 2025 13:19:30 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-	eusmges1new.samsung.com (EUCPMTA) with SMTP id 11.D1.20821.2E376F76; Wed,  9
-	Apr 2025 14:19:30 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250409131930eucas1p22b304bf5924a9b3bc43a442d738ebef3~0qP9FOWp70469704697eucas1p2C;
-	Wed,  9 Apr 2025 13:19:30 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250409131930eusmtrp2e2199d72fa0da5ec446bf2fe886b0e1a~0qP9ET3_l3273432734eusmtrp23;
-	Wed,  9 Apr 2025 13:19:30 +0000 (GMT)
-X-AuditID: cbfec7f2-b09c370000005155-4f-67f673e27c40
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id B2.42.19654.1E376F76; Wed,  9
-	Apr 2025 14:19:29 +0100 (BST)
-Received: from localhost.localdomain (unknown [106.210.135.126]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250409131929eusmtip20dcfc89f65c7cecb613cd2851acda8f5~0qP8qCftP1305413054eusmtip2K;
-	Wed,  9 Apr 2025 13:19:29 +0000 (GMT)
-From: "e.kubanski" <e.kubanski@partner.samsung.com>
-To: linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc: bjorn@kernel.org, magnus.karlsson@intel.com,
-	maciej.fijalkowski@intel.com, jonathan.lemon@gmail.com, "e.kubanski"
-	<e.kubanski@partner.samsung.com>
-Subject: [PATCH] xsk: Fix offset calculation in unaligned mode
-Date: Wed,  9 Apr 2025 15:19:13 +0200
-Message-Id: <20250409131913.65179-1-e.kubanski@partner.samsung.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1744204897; c=relaxed/simple;
+	bh=zr4G9PuRlvn1Iebs/Po3WpTXgWWeStxGqrwJOl40BRI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SFPh46Y77s4uIcuTrQgtGLGDT6k2zb1BOsX+6nyy/uSPvsPwSU5dFIkKOi1h46Ilxe9sCDQpleUUu4cffr91p8kqVhAFn2iLlDT8JErwfApwyvL5ShSWZiCqmjz09p1Q/DYuoj/QrUtC82TaiyJuEzex7LGSN1X4jdw/7DgC7qg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1541B15A1;
+	Wed,  9 Apr 2025 06:21:35 -0700 (PDT)
+Received: from bogus (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DCFAE3F694;
+	Wed,  9 Apr 2025 06:21:32 -0700 (PDT)
+Date: Wed, 9 Apr 2025 14:21:30 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: Cristian Marussi <cristian.marussi@arm.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Henry Martin <bsdhenrymartin@gmail.com>, arm-scmi@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [v2 0/2] cpufreq: scmi/scpi: Fix NULL pointer dereference in
+ get_rate()
+Message-ID: <20250409-glistening-hasty-ape-c9c7e9@sudeepholla>
+References: <20250408150354.104532-1-bsdhenrymartin@gmail.com>
+ <0558b7f7-8c69-4664-afc6-bae4fdc6f071@web.de>
+ <20250409-merry-gay-lemur-8288cf@sudeepholla>
+ <52aa52a5-7081-41ee-872e-f1728c06daf1@web.de>
+ <Z_Zhp38o9KiicPVw@pluto>
+ <3f5662dc-7547-4585-a396-4546fa98d34f@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Se1BMcRSe3727d68dy20znEJYj5k8Nq/hei2GYVuNjEFEo5Vr7Wi35l4V
-	6zENabQTmm2mtNpph4yUFZu22iIteshbek4TjaLIK/JKabsM/33nfN93XnNIXHpC6E1q9XsZ
-	Vq8OlxFigaP8+4MZrVyPZma/ZTid/z5bQD8/cx6nnZfTcPqpM52gGypeCegsV6WILreOXCZS
-	FpmbRcpzJR2Y0p6dQCjL3pVgym67zzphsHjxTiZcG82wfopQ8e4b6Z+wSJto3wvTvFh0kjAi
-	kgRqLnS/DzaiIaSUykJga1hqROIB/BlB/JN0IR90I0h5XUu4VW5DU4mF4IkLCK73Nor44AuC
-	hDdtyK0iqDlw5GupwI1HUDTYz/YMlsIpM4LMEucg4Ukp4N3Pb7gbC6jJYD3VgrlnklAroO82
-	y3cbB6Vl9wclEsoDqtJeDlrxgfzR/DO4uyZQFhLKTXUYb1gJTb15OI89obPimojHY6C/KAPj
-	DUcRmNMSRHyQiODSsxrEX2MR2KqWuCFO+UKu04/3LgdXwXUhrxgG9V0e/AzDwORIxfm0BI7H
-	S3n1dKh//OpPV2/4mpYn4CVKuBL359IhYEqNJZLQePN/i5n/W8z8bwQrwrPRKCaK02kYbpae
-	iZFzah0XpdfIwyJ0djTwMdV9FZ8KkaXzo9yFMBK5EJC4bIQkSd+jkUp2qvcbGDZiOxsVznAu
-	NJoUyEZJzpYe00gpjXovs4dhIhn2L4uRQ7xjsS2JffJJARZrkNeyLqyxJa/QIJMFeK0oSGnX
-	ud545PYGbZjfmdQQE9psUcRUiVM3hIw9OGHa5tMK46GKk5OTw0z5K33uLdTObrT8KI7uCAFI
-	McqL1+6gH5Wt8u5/S1yc7Zi4acrqZ9G0sMn3xoHHhhOVB2riZa8dkV3t/rK8y4GEKieYsj+M
-	62gLPfIy43BH99CNlXMKFhg3X9jO5oTNZ7b6Vy+5WXvLOTFFV3x1bOSa44Wqu9rCO9uCVs3I
-	rPt4WhuXjGfoE23irG1+vqJf9RdzamdGBPg71t/StLFUK3c/MMGmUsUWbVRM37VnU5A1hOLa
-	q1WK3reGBR8MSk1/zVKZgNutnjUVZzn1b7JcnwmgAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrGLMWRmVeSWpSXmKPExsVy+t/xe7oPi7+lG8ybbG6x9f0qFosHs5cy
-	W+xaN5PZ4vKuOWwWN48/Z7FYcegEu8WxBWIO7B47Z91l91i85yWTx6ZVnWweB9/tYfL4vEku
-	gDVKz6Yov7QkVSEjv7jEVina0MJIz9DSQs/IxFLP0Ng81srIVEnfziYlNSezLLVI3y5BL2Pf
-	nE9MBWvZKx5OMmtg7GPrYuTkkBAwkbi9Zy6QzcUhJLCUUeL2oYVMEAkpiT/r/jBD2MISf651
-	QRV9ZpTYefk8WIJNwFii6ft+FhBbRMBK4sHtf8wgRcwC8xgl5uxazwqSEBawk3j3+wdYA4uA
-	qsSC/vtAGzg4eAWcJf4dKYJYIC+x/+BZsBJeAUGJkzOfgM1kBoo3b53NPIGRbxaS1CwkqQWM
-	TKsYRVJLi3PTc4uN9IoTc4tL89L1kvNzNzECA3zbsZ9bdjCufPVR7xAjEwfjIUYJDmYlEd4J
-	ed/ShXhTEiurUovy44tKc1KLDzGaAp03kVlKNDkfGGN5JfGGZgamhiZmlgamlmbGSuK8bFfO
-	pwkJpCeWpGanphakFsH0MXFwSjUwFd9a6LXdVOzIgp+uTKpx0W+3SfBN36Ax/2Sz4TwJFUeu
-	Z5ke2zdueZCpenJ61Rtn+c/1hcvdamw0zwk0PmC9rKSweMPf9K0c528387r8cv8iPadzRg2n
-	yOtHx+PKTi079+n3A/vTuaIng7baZKY75b1uXtrF/Uj6paJCtOG3rCumMlMOaVy+sXBhxGrO
-	GlGeUi/JBRvZn7sV2KyVvSg069KFiNuPJe9XSMkZ5rx0ZVPTPOek/+25mkHJmvfVdu0mnU+4
-	7098serFuhfzGY4U3vO05Hhs0qB91lyEu/5K7AEWhcRLd9ie9N3vNLy+a196y8oOtd3+mpe2
-	771yuHtO4PdYTV+umLCr/ec/b+F2VmIpzkg01GIuKk4EALRlnqn5AgAA
-X-CMS-MailID: 20250409131930eucas1p22b304bf5924a9b3bc43a442d738ebef3
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250409131930eucas1p22b304bf5924a9b3bc43a442d738ebef3
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20250409131930eucas1p22b304bf5924a9b3bc43a442d738ebef3
-References: <CGME20250409131930eucas1p22b304bf5924a9b3bc43a442d738ebef3@eucas1p2.samsung.com>
+In-Reply-To: <3f5662dc-7547-4585-a396-4546fa98d34f@web.de>
 
-Offset calculation in unaligned mode didn't
-match previous behaviour.
+On Wed, Apr 09, 2025 at 02:25:52PM +0200, Markus Elfring wrote:
+> >>>> Can any other summary phrase variants become more desirable accordingly?
+> >
+> > I agree with Sudeep, the above sentence is completely incomprehensible
+> > to me
+> 
+> Can any suggestions gain acceptance also for better summary phrases?
+> 
+> 
+> 
+> >>> This is meaningless, sorry can't parse. Ignoring it as others in the
+> >>> community are doing already.
+> >> Do you care if the term “null pointer dereference” would be used in consistent ways?
+> >
+> > ...this is more comprehensible,
+> 
+> Thanks for another bit of constructive information.
+> 
+> 
+> >                                 but again I cannot grasp what's yor advice
+> > specifically on this commit message.
+> May the usage of abbreviations be reconsidered once more also for such messages
+> (in presented update steps)?
+> 
 
-Unaligned mode should pass offset only in
-upper 16 bits, lower 48 bits should pass
-only specific chunk location in umem.
+Still can't understand you. Sorry for that. Alternatively, you can do what
+I sometimes do: just write the whole commit log as you would expect and see
+if that helps. I am sure that helps, so please do that.
 
-pool->headroom was duplicated into offset
-and address of the umem chunk.
-
-Signed-off-by: Eryk Kubanski <e.kubanski@partner.samsung.com>
----
- include/net/xsk_buff_pool.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/net/xsk_buff_pool.h b/include/net/xsk_buff_pool.h
-index 7f0a75d6563d..b3699a848844 100644
---- a/include/net/xsk_buff_pool.h
-+++ b/include/net/xsk_buff_pool.h
-@@ -232,8 +232,8 @@ static inline u64 xp_get_handle(struct xdp_buff_xsk *xskb,
- 		return orig_addr;
- 
- 	offset = xskb->xdp.data - xskb->xdp.data_hard_start;
--	orig_addr -= offset;
- 	offset += pool->headroom;
-+	orig_addr -= offset;
- 	return orig_addr + (offset << XSK_UNALIGNED_BUF_OFFSET_SHIFT);
- }
- 
 -- 
-2.34.1
-
+Regards,
+Sudeep
