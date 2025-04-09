@@ -1,111 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55705146A68;
-	Wed,  9 Apr 2025 15:37:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 011E026770E;
+	Wed,  9 Apr 2025 15:38:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744213081; cv=none; b=APQegdzuCeNk4ERuBzLSNwUwLQjWQFhazXwSXQ+UcPP0+osdWrLNgj4ioQYFBYav8kOFPT8s8j3BG382QAWDU1sLpXaQUkbsw/LqDuPrY809yHxBveVJ0ynojvQX09WVdjqCG6lpUqiIRDLFVs3IfG1Brj0OUHX+ZIsQjNoQI8c=
+	t=1744213092; cv=none; b=W4wWBr2BU2lerwCR/DiW3GCpD2d8wi+KygnT2HcKUC/qCHWPTIb9m6QV34FwOSsryAFJbiPzWhj9sxZAWt1P90IGdTL4gpLga6AVM4BJjEbseIxZ8YVxApayOgPad5UDtJ0h/ORuImPkQOGwDz0UIHvgccuQTkOUakCsKOB/LVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744213081; c=relaxed/simple;
-	bh=Np4BTx1MWkMz2bIXuqdoxHghOz7aK/DoTriXQNuO/CI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NtezyLOzczFuTiR++UbM83v55++hDzmX5KDRRfttvV0T/u4uSXzMZRYyzPpG4KDNzq5G7Y3XSSs9EgnduRCKlhDQS7Mc9DOeT2HSfoqfK/C+pVAdcnIvXO6RxElh5obGnticwQVHshsljG94DSzi0DOixuq8bUk8aaDUFQaf8V8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jCTbsY2V; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744213092; c=relaxed/simple;
+	bh=fqfH1kvrY0NprE4Wf6dbWb0UT2mQUYVQx6Gs7AkqODg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rV0NzyfqbzcIv3jnaJ43/lcvr28/YHJl8W8x7pxAtoFEwsH6CBvkzS9sHuuGzuviCYvcQ0+bRLqRjKPosyHtOutotyV4pQgjyh50x2LYAwI+gZj07AM5wbM/ddQEduEZ+Q7P2Rc8egX3qrruEk5IbFJqrZhxdGriDw4U+XNIMXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VzPDUykg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jCTbsY2V"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744213076; x=1775749076;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Np4BTx1MWkMz2bIXuqdoxHghOz7aK/DoTriXQNuO/CI=;
-  b=jCTbsY2VW6GEnX23PbhrK5E4gP1WOhO5hKHNDxhZ4B6Fg5wR5RsL+V3N
-   SI469Ew2769mGUOLChxYR8nl9tNoHSmqJqc+4byGCQDx5YtbgnGf6a6iB
-   bAfZqAz71qOWLSLd8ASB9fkYP4PUcaVyqbUJdZZ4Z7w4TEVWf/PClE3Dn
-   Ks34K1vpTEex/24yvX/QrxRAiOd9LrEXEerBn3Cb7o+1Y/BGhu74tzfah
-   O3qQWw9pv7nd+rN3yze1VcWl6l+WDZFw4eouj4nxWd5LZYF/NyIyTUbhC
-   nNW3QdtmEeX7cnSuFOBJ+tyV0U0eCDbWOWhDoLxxNkT6zRUZkEwP0n+1k
-   Q==;
-X-CSE-ConnectionGUID: X0jivdV3Qwqqlxpu9Mcilg==
-X-CSE-MsgGUID: FKHVxARZS5S1zPqTMSmS5A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="49490694"
-X-IronPort-AV: E=Sophos;i="6.15,200,1739865600"; 
-   d="scan'208";a="49490694"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 08:37:56 -0700
-X-CSE-ConnectionGUID: ISocaCiRTZOLLHKbMJqlbg==
-X-CSE-MsgGUID: +RLLekkYQECZ/2bqbblf3A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,200,1739865600"; 
-   d="scan'208";a="129144844"
-Received: from ldmartin-desk2.corp.intel.com (HELO [10.125.111.236]) ([10.125.111.236])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 08:37:54 -0700
-Message-ID: <1be19059-e879-4404-a68a-10093fef7522@intel.com>
-Date: Wed, 9 Apr 2025 08:37:53 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VzPDUykg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79A34C4CEE2;
+	Wed,  9 Apr 2025 15:38:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744213091;
+	bh=fqfH1kvrY0NprE4Wf6dbWb0UT2mQUYVQx6Gs7AkqODg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VzPDUykgYlNJ9VEOYJEoxdfu6RVmeanMWYFbIEtNmKYLRtebJrUstrCN/ItySJLx1
+	 iTrG/qxrLQy33IHXySaYWxl4X4XIxz9btWkwjrTe+mE3bOEhCcEXI/kgCn7091qSZp
+	 uz8paIAFq1AqvpooGWnCMRDPXdMPSCCI2V1uvCGVxdxYFasuG0HkDscVOl8VuWLXJJ
+	 ACGXaSTxVURARgJYwG1G6ZKrSiZCLdkGXjZf9TgFWU2TbqtOKjHnkMJ6uz3SGHaldl
+	 cWclysuAKuxG7b9j3NG1/GenKh0zPVx5EhCPcm3HUgWzx0iAT/rVGVpsdEqg5ApYbm
+	 ulAHyhy1crTmA==
+Date: Wed, 9 Apr 2025 17:38:06 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: linux-fsdevel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>, 
+	Lennart Poettering <lennart@poettering.net>, Daan De Meyer <daan.j.demeyer@gmail.com>, 
+	Mike Yuan <me@yhndnzj.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 3/4] pidfd: improve uapi when task isn't found
+Message-ID: <20250409-sesshaft-absurd-35d97607142c@brauner>
+References: <20250403-work-pidfd-fixes-v1-0-a123b6ed6716@kernel.org>
+ <20250403-work-pidfd-fixes-v1-3-a123b6ed6716@kernel.org>
+ <20250404123737.GC3720@redhat.com>
+ <20250404-roben-zoodirektor-13cb8d1acefe@brauner>
+ <20250404145323.GE3720@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] cxl/feature: Update out_len in set feature failure
- case
-To: Li Ming <ming.li@zohomail.com>, dave@stgolabs.net,
- jonathan.cameron@huawei.com, alison.schofield@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250409022521.510146-1-ming.li@zohomail.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20250409022521.510146-1-ming.li@zohomail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250404145323.GE3720@redhat.com>
 
+On Fri, Apr 04, 2025 at 04:53:24PM +0200, Oleg Nesterov wrote:
+> On 04/04, Christian Brauner wrote:
+> >
+> > On Fri, Apr 04, 2025 at 02:37:38PM +0200, Oleg Nesterov wrote:
+> > > And... the code looks a bit overcomplicated to me, why not simply
+> > >
+> > > 	int pidfd_prepare(struct pid *pid, unsigned int flags, struct file **ret)
+> > > 	{
+> > > 		if (!pid_has_task(pid, PIDTYPE_PID))
+> > > 			return -ESRCH;
+> > >
+> > > 		if (!(flags & PIDFD_THREAD) && !pid_has_task(pid, PIDTYPE_TGID))
+> > > 			return -ENOENT;
+> >
+> > I thought that checking PIDTYPE_PID first could cause misleading results
+> > where we report ENOENT where we should report ESRCH: If the task was
+> > released after the successful PIDTYPE_PID check for a pid that was never
+> > a thread-group leader we report ENOENT.
+> 
+> Hmm... but the code above can only return ENOENT if !(flags & PIDFD_THREAD),
+> so in this case -ENOENT is correct?
+> 
+> I guess -ENOENT would be wrong if this pid _was_ a leader pid and we
+> race with __unhash_process() which does
+> 
+> 	detach_pid(post->pids, p, PIDTYPE_PID);
+> 	if (group_dead)
+> 		detach_pid(post->pids, p, PIDTYPE_TGID);
 
-
-On 4/8/25 7:25 PM, Li Ming wrote:
-> CXL subsystem supports userspace to configure features via fwctl
-> interface, it will configure features by using Set Feature command.
-> Whatever Set Feature succeeds or fails, CXL driver always needs to
-> return a structure fwctl_rpc_cxl_out to caller, and returned size is
-> updated in a out_len parameter. The out_len should be updated not only
-> when the set feature succeeds, but also when the set feature fails.
-
-Good catch! Can you add a Fixes tag please? Otherwise 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Yes, exactly.
 
 > 
-> Signed-off-by: Li Ming <ming.li@zohomail.com>
-> ---
-> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8 v6.15-rc1
-> 
-> v2:
-> - Adjust changelog
-> ---
->  drivers/cxl/core/features.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
-> index f4daefe3180e..066dfc29a3dd 100644
-> --- a/drivers/cxl/core/features.c
-> +++ b/drivers/cxl/core/features.c
-> @@ -528,13 +528,13 @@ static void *cxlctl_set_feature(struct cxl_features_state *cxlfs,
->  	rc = cxl_set_feature(cxl_mbox, &feat_in->uuid,
->  			     feat_in->version, feat_in->feat_data,
->  			     data_size, flags, offset, &return_code);
-> +	*out_len = sizeof(*rpc_out);
->  	if (rc) {
->  		rpc_out->retval = return_code;
->  		return no_free_ptr(rpc_out);
->  	}
->  
->  	rpc_out->retval = CXL_MBOX_CMD_RC_SUCCESS;
-> -	*out_len = sizeof(*rpc_out);
->  
->  	return no_free_ptr(rpc_out);
->  }
+> but without tasklist_lock (or additional barries in both pidfd_prepare() and
+> __unhash_process() pidfd_prepare() can see the result of these 2 detach_pid()'s
+> in any order anyway. So I don't think the code above is "more" racy.
 
+Right... Hm, I don't like the inherent raciness of this. I think we
+should fix this. I'm playing with something. I'll try to get it out
+today.
+
+> 
+> Although perhaps we can rely on the fact the the 1st detach_pid(PIDTYPE_PID)
+> does wake_up(pid->wait_pidfd) and use pid->wait_pidfd->lock to avoid the
+> races, not sure...
+> 
+> But,
+> 
+> > But I can adapt that to you scheme.
+> 
+> Again, up to you, whatever you prefer.
+> 
+> Oleg.
+> 
