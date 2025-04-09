@@ -1,115 +1,185 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6682B1E25E8;
-	Wed,  9 Apr 2025 20:02:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D88E1E32D6
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 20:04:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744228931; cv=none; b=ZhCVXI+1hrI+7ULR3amCjtihETbEIzYVqxHOquL4oGBR5ugUD5lPElreNz9wUYVAYmq4ha8MmWXBxMIKjG4JzF2gTU+d8nJVNinC1P5VTQ+xYm+ANY22XU6YPiB4F+Ztn3GRXJP0ciKaci4SCRkkD6+jok83huU+S+deBPVtqo4=
+	t=1744229069; cv=none; b=s8lmZOsV8JbBpHzw+G0dcgAQ39NlZiiF/ttt6qIv8PLOm/KCWEMQEjVd9nHe4hIcDpR+bq3XEVR3EghpTG/L793G475c3tH7xEWj046pg5dYU0kwaU69S+TumsLXQuZxnwEr220COGAUl2gyU5D/UCnR4Q4R6GYT7W4GzsysKFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744228931; c=relaxed/simple;
-	bh=RivJtlJPjlvJu05CKyc/0RdCV3vLGzeW8/E4YZH4UJ0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=KnotR9AFJTvpcJfzQeOjzZ8DiilDYBsXlA2NKEnBup8fb+1qML3uJ7+L6+i5MzSGlMq24ZoOW8cjltVAEl/PN5FTbhLuiVjPc4K0RWHg+BlDATJ4vLAtqGyObJ+swYe3xmQI+gmunhcsqfzaMcsAtpg5W8M53Ybezud6PCKia18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jWj2P+fr; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744229069; c=relaxed/simple;
+	bh=V6sRKuetJn5AbaXphKCel7x1TyDGI8JOUEdRcyW6CHE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=GWsh1wAVTKl9CQDO8XgBXg+bU/Mss/B6fRnTDRX0S49qtgP9+RZucOJssn5odKx8VKZmBinobNN4RgzHJr4dCATG68hH0uVfWr8z3G7VXXlDIf/p2VMkQUd6zhtfSUnF/XZgsZ2iB4fNw6lp+U8Hoc1/URQAzo8t050oNV3XEQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=d5t7ZIhw; arc=none smtp.client-ip=209.85.222.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jWj2P+fr"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-af91fc1fa90so111165a12.0;
-        Wed, 09 Apr 2025 13:02:10 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="d5t7ZIhw"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7c5e39d1e0eso7787285a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 13:04:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744228929; x=1744833729; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=KblXmZbPmAj/AGHKtjspI0A8P37Ek5VsUHaWencyHUI=;
-        b=jWj2P+frn7k1ITmQx116vaYhhp65iLTrSCY1cW2n63h3z3Z4xAJv0Lq0tM6dW6nZYU
-         80cyUX2XdW5vUg7iwALAHeV+I4VZ27QrXI4lodb6+XN2oM7wbdmzv9+GJ7upwCCGoMVC
-         hhLO69fmAr4oSl9ZMnHWVQJCUv0jPDbpbmWydfYel9CNNRhYcg9C8bxrEA/1/97bW35w
-         9iPaJqggLWVJtiv3b7wLOZabdl48vEtNxvdoCaQ2dbMzR2f1s29YC8v7O5sEqw+wfSyP
-         vFX3e0351TmL4m1z9bsn+oiOEFBOVJDS13pvA+c7mWWjchU6QP1jT//iVo3dtZ2cQpkf
-         5mBw==
+        d=chromium.org; s=google; t=1744229063; x=1744833863; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2zrkJPw55Y9UfxsEFvyWMHfC80VpPTQSx/31eYU2UIg=;
+        b=d5t7ZIhwKFAl6dUNirf3cDay9D/vEH7MfERiyaoLL5v/wFRhH33u6TmTW1+F/ny3zV
+         JzeRdK9k6HWm2nfFaOd8ezy+RohSsUN3ZZNULE7noMsuy36PU+HPCW0ZkRB5s6ntH6cP
+         ODBpqUYtGQuWBkg62gY/Ir5SFVW1CYOG603iw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744228929; x=1744833729;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1744229063; x=1744833863;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=KblXmZbPmAj/AGHKtjspI0A8P37Ek5VsUHaWencyHUI=;
-        b=vP8/yPDy8+dL/P2MSY2LqRtQSmnxpoQ3KzJjGB4N0S/vxf1lmDVz8JrC/nW26IMxaw
-         Gd0MkWbHC29rBpd9kC9cHplJmTaSjwy3AbkYI5j9r0kJ+VnpLlAm8W0jWxsAYggi8GeQ
-         RgWcC+Lm3FN/Iy7JCXAJ1lf7Z/TxRnuZEEKefIWW/I9IhV2o5TYj7R30srxGKw0A8CXX
-         FXXCIJ6SJiVV68EQYLO017zU7uw9Khr7edW5j72DCR139E39ImVe9X2+dGsTe1A3k26H
-         uXifZl1hK88lO5cKv1XZgshY9deYaZnTfwTjnjYSev+EjIJkohgIeP1MDjXtqR5jpfx+
-         7NxA==
-X-Forwarded-Encrypted: i=1; AJvYcCXLK3tdtESB6U0MDcSOmgLrwiDJgwUDjSVgkPjqKQsumtzbloIVDZuypnZ7NasPxX1mQuZQsuFANui5lMY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzP435X9xmyyFBoxCjmQRO8LmZcoe7hu7L6GC1UNrBKl5I6vr+B
-	R7znMhZGIihN2JqFnVGHv4xuR6dPSIgO/TsWFiQplT3CRG9w+5cE
-X-Gm-Gg: ASbGncug0OY2dWmazxwVQ1Zgn/Jd3i3QXUMD36lXtG2Wjn/8Uqf3r+TVkpRLh4P4yUo
-	q/ya3zIEtZMZSOqeRTgEz9WabMq7VZyK8hF9ATNCHz7sXm3+BokUzYIvhDR85M+ec1AS9abd1Ac
-	a9DA3mQhAbIoqmQRekdcRK5eJ0YFz+Cw38byvugnahAu4Ef7Nm0RBSe4uqcvqCnt1d6z/dKJwS0
-	Rsvmia8T3sQsyOCXTUiqhErNpQakBVmUTwlbokLSNi0c70CSmc9J5jyriJDJC2n/EtI63bCs22i
-	j8gH78PJcw1tL7f2DTh5NgoXlcRSFmFWYmNhuknHgP7d/pgQxS3EdQayn8Crb2PqCpwq5xJfUru
-	9fblrF8Xr
-X-Google-Smtp-Source: AGHT+IG0jkHgEAisMOI/scsZfAGy2hm+fGVsFv8etcJZn4BDMVILIzirSxsWFk3PdHh1d08IJRRidg==
-X-Received: by 2002:a05:6a20:6f02:b0:1f5:80a3:b008 with SMTP id adf61e73a8af0-201695cd5a4mr528866637.32.1744228929442;
-        Wed, 09 Apr 2025 13:02:09 -0700 (PDT)
-Received: from purva-IdeaPad-Gaming-3-15IHU6.. ([2409:4080:204:a537:9312:7e1:b2cb:ef99])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b02a3221832sm1652173a12.70.2025.04.09.13.02.05
+        bh=2zrkJPw55Y9UfxsEFvyWMHfC80VpPTQSx/31eYU2UIg=;
+        b=JsWvS26dpqk67v0wf90BJPKWUzmzk+JrGS3LiLZYw9wGHkR2fqDKiKYtUDWp/8mGnH
+         sCcRcbG29glXSsb/qzJhTlQvQaw4QMmu1VB/xF4M7ZYwKPT0KGw5yATe2swlg2vu2axD
+         LxX00YKX1QkjA+k33EKzNyKafKMeSwkQEzgLgdhx6g0hEqY7XfIS6vJBkXpffPYOi/wL
+         btPBWUo0Dl+rNqJwgnzD07CDEUGSfMsHVixcoauE9O6e7X/mE3T2D5iyAIQ0ucegMsQQ
+         R+NFp+FM/Mdiw4TM/uuSvDfC0t1PC1HwI1BTNmddUlnl5ILwf+wPxiqy35Wq1WFnTU6W
+         6ynQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUtaxg8B7aFEqQRciFp4twyNpEHNQC/4akIQrpmM3YgCcknfgTpqDBO7DM5Rh/YBKWZT5DeuVt+DTuW238=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxk5jvMcSAeS5q3uu3abWkfIs5m3PozRKKlBbgyZgPza4OE2Jpg
+	8XB6LvxQQlAicw8p6gtquEd6ewZ27MT5ZUPtKE/H1sGPegXd8i9MdSFZQBRdvw==
+X-Gm-Gg: ASbGncvS1WePoQx8UXuA5lznFc4gkdA7mhH9UsUGEk0JuTb0+t/8K0Zna3PvmUx7iXF
+	TA3qDhKddfW4ihDzWlhwXRlu2mC6Q0MhoK2I0OSprZmAXaTg13cZs7em4TMM40jsv+osuh5jmW7
+	UkfiDieQAdQYgGWvu/ul2K2cdCQ+P1IpALl9k6ykrqi3qW9dbo3r45ORsrW8hONl2x3M2GfaaGC
+	8W71PCoh9eO4kreHCKWHrE4FT/tSDrjC53pbDH2UUjUuXYoWuiviQtMjo/r1EBzGmfxk9VhizVO
+	6j9I8/8gdUgqvgvRG1n3nE5DgfWW0IUgmB5PiwDyAVD3elBhVySCTHkDWV/SOa7391rOiAJvoL5
+	DwHaVdrJvpiivl8W6wA==
+X-Google-Smtp-Source: AGHT+IF/OgVz1Lw3IHaAPZg8e6Tzq6TMokI1iBKCA0SJBYl53v3u98C2/mmtHWybZPD+2AjUYirn8g==
+X-Received: by 2002:a05:620a:24cb:b0:7c5:5a97:f770 with SMTP id af79cd13be357-7c7a76c3d8bmr13043785a.41.1744229063262;
+        Wed, 09 Apr 2025 13:04:23 -0700 (PDT)
+Received: from denia.c.googlers.com (249.240.85.34.bc.googleusercontent.com. [34.85.240.249])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c7a10a4d66sm114608285a.6.2025.04.09.13.04.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 13:02:09 -0700 (PDT)
-From: Purva Yeshi <purvayeshi550@gmail.com>
-To: lars@metafoo.de,
-	Michael.Hennerich@analog.com,
-	jic23@kernel.org
-Cc: linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Purva Yeshi <purvayeshi550@gmail.com>
-Subject: [PATCH] iio: adc: ad_sigma_delta: Fix use of uninitialized variable status_pos
-Date: Thu, 10 Apr 2025 01:31:51 +0530
-Message-Id: <20250409200151.201327-1-purvayeshi550@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        Wed, 09 Apr 2025 13:04:22 -0700 (PDT)
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Wed, 09 Apr 2025 20:04:19 +0000
+Subject: [PATCH v2] scripts/spdxcheck: Limit the scope of git.Repo
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=y
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250409-spx-v2-1-168115798db2@chromium.org>
+X-B4-Tracking: v=1; b=H4sIAMLS9mcC/1WMQQ6CMBBFr0JmbU2Z2oCuvIdhIWWgs4CSqTYY0
+ rtb2bl8P/+9HSIJU4RbtYNQ4shhKYCnCpx/LhMpHgoDarQa0aq4bsq06EZ7MabRBOW5Co28HZV
+ HV9hzfAX5HNFU/9Z/P9WqVnQ1tseG+lYPd+clzPyez0Em6HLOX8YktsKZAAAA
+X-Change-ID: 20250225-spx-382cf543370e
+To: Thomas Gleixner <tglx@linutronix.de>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-spdx@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>, 
+ Andreas Wendleder <gonsolo@gmail.com>, 
+ Ricardo Ribalda <ribalda@chromium.org>
+X-Mailer: b4 0.14.2
 
-Fix Smatch-detected error:
-drivers/iio/adc/ad_sigma_delta.c:604 ad_sd_trigger_handler() error:
-uninitialized symbol 'status_pos'.
+If the git.Repo object's scope extends to the Python interpreter's
+shutdown phase, its destructor may fail due to the interpreter's state.
 
-The variable `status_pos` was only initialized in specific switch cases
-(1, 2, 3, 4), which could leave it uninitialized if `reg_size` had an
-unexpected value.
+Exception ignored in: <function Git.AutoInterrupt.__del__ at 0x7f1941dd5620>
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/git/cmd.py", line 565, in __del__
+  File "/usr/lib/python3/dist-packages/git/cmd.py", line 546, in _terminate
+  File "/usr/lib/python3.13/subprocess.py", line 2227, in terminate
+ImportError: sys.meta_path is None, Python is likely shutting down
 
-Fix by validating `reg_size` before the switch block. If it’s not
-one of the expected values, return early and log an error. This ensures
-`status_pos` is always initialized before use and prevents undefined
-behavior.
+Make repo a variable of the function read_spdxdata() and scan_git_tree()
+to limit the scope of git.Repo and ensure proper resource management.
 
-Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 ---
- drivers/iio/adc/ad_sigma_delta.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Changes in v2:
+- Make repo a local variable
+- Link to v1: https://lore.kernel.org/r/20250225-spx-v1-1-e935b27eb80d@chromium.org
+---
+ scripts/spdxcheck.py | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/iio/adc/ad_sigma_delta.c b/drivers/iio/adc/ad_sigma_delta.c
-index 6c37f8e21120..d3b59d90b728 100644
---- a/drivers/iio/adc/ad_sigma_delta.c
-+++ b/drivers/iio/adc/ad_sigma_delta.c
-@@ -568,6 +568,11 @@ static irqreturn_t ad_sd_trigger_handler(int irq, void *p)
- 	else
- 		transfer_size = reg_size;
+diff --git a/scripts/spdxcheck.py b/scripts/spdxcheck.py
+index 8d608f61bf371647e7ca0129f583e94e535b6193..d5c4c37f1b068486af28110261f74c67301618a9 100755
+--- a/scripts/spdxcheck.py
++++ b/scripts/spdxcheck.py
+@@ -45,7 +45,9 @@ class dirinfo(object):
+                 self.files.append(fname)
  
-+	if (reg_size != 1 && reg_size != 2 && reg_size != 3 && reg_size != 4) {
-+		dev_err(&indio_dev->dev, "Unsupported reg_size: %u\n", reg_size);
-+		return IRQ_HANDLED;
-+	}
+ # Read the spdx data from the LICENSES directory
+-def read_spdxdata(repo):
++def read_spdxdata():
++    repo = git.Repo(os.getcwd())
++    assert not repo.bare
+ 
+     # The subdirectories of LICENSES in the kernel source
+     # Note: exceptions needs to be parsed as last directory.
+@@ -295,7 +297,15 @@ def exclude_file(fpath):
+             return True
+     return False
+ 
+-def scan_git_tree(tree, basedir, dirdepth):
++def scan_git_tree(basedir, dirdepth):
++    repo = git.Repo(os.getcwd())
++    tree = repo.head.commit.tree
 +
- 	switch (reg_size) {
- 	case 4:
- 	case 2:
++    basedir = basedir.strip('/')
++    if basedir != '.':
++        for p in basedir.split('/'):
++            tree = tree[p]
++
+     parser.set_dirinfo(basedir, dirdepth)
+     for el in tree.traverse():
+         if not os.path.isfile(el.path):
+@@ -306,11 +316,6 @@ def scan_git_tree(tree, basedir, dirdepth):
+         with open(el.path, 'rb') as fd:
+             parser.parse_lines(fd, args.maxlines, el.path)
+ 
+-def scan_git_subtree(tree, path, dirdepth):
+-    for p in path.strip('/').split('/'):
+-        tree = tree[p]
+-    scan_git_tree(tree, path.strip('/'), dirdepth)
+-
+ def read_exclude_file(fname):
+     rules = []
+     if not fname:
+@@ -348,12 +353,8 @@ if __name__ == '__main__':
+         sys.exit(1)
+ 
+     try:
+-        # Use git to get the valid license expressions
+-        repo = git.Repo(os.getcwd())
+-        assert not repo.bare
+-
+         # Initialize SPDX data
+-        spdx = read_spdxdata(repo)
++        spdx = read_spdxdata()
+ 
+         # Initialize the parser
+         parser = id_parser(spdx)
+@@ -389,14 +390,13 @@ if __name__ == '__main__':
+                     if os.path.isfile(p):
+                         parser.parse_lines(open(p, 'rb'), args.maxlines, p)
+                     elif os.path.isdir(p):
+-                        scan_git_subtree(repo.head.reference.commit.tree, p,
+-                                         args.depth)
++                        scan_git_tree(p, args.depth)
+                     else:
+                         sys.stderr.write('path %s does not exist\n' %p)
+                         sys.exit(1)
+             else:
+                 # Full git tree scan
+-                scan_git_tree(repo.head.commit.tree, '.', args.depth)
++                scan_git_tree('.', args.depth)
+ 
+             ndirs = len(parser.spdx_dirs)
+             dirsok = 0
+
+---
+base-commit: d082ecbc71e9e0bf49883ee4afd435a77a5101b6
+change-id: 20250225-spx-382cf543370e
+
+Best regards,
 -- 
-2.34.1
+Ricardo Ribalda <ribalda@chromium.org>
 
