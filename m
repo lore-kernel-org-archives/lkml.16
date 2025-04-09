@@ -1,195 +1,147 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F53C101C8
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 20:23:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62DFD101C8;
+	Wed,  9 Apr 2025 20:24:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744230233; cv=none; b=qwcGdBGbjm6htmmCa+ToS2ulhc9FNlXmSYHtwIflvtpPYnK0RkQOfgBhyyRtYEwfR2DfdmtbfteSnXfmJqZqJp2ns8hMxXZhssd1c4vNv/NwHsMjqLYcIXTupSPsruODshXana2RaZlEAQQn58emrPI/NvadS5Mgs9Ef6JnN1Ok=
+	t=1744230283; cv=none; b=tb1+qW/43rEYGECqPFtylexoukJD7qx9KyYk8upFTEAIhxeiC0LW+dv3icX4eA/zk2AEgmZKQXm1wVt+njmGbsOYKrUMw8eQqexTiu27zKeKzlknuXZLDa7+qLxqngWz9eA1ShVA3/FG9LUP+oeX6tDgaZg15ynLvv+ao2I+qVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744230233; c=relaxed/simple;
-	bh=PPxyfWl0FeVIzey67CF4rmC+Mnd/QZMoJ20FzYi7e70=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=MOyeGj1lY9Cg29reh5gR+rIJaplUCI8gyl/ypfKMBF0S7QTy2Ixj56zRYuhEy3E4cL2ciu3kUPEAcUD/w56/R7HF3WY5aM5QVlt9DLU7D5rp7rfHLR9mwLhmCMzeo1tQzPWEjq/FdSpj5Vi7D2aEjsFf+Y3QCQw/r8aizhOocp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C9Eps8ez; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744230283; c=relaxed/simple;
+	bh=2DGaCu81+mksOe/jz5U+Y2o/ljB3IPRpgOi+JK/6erc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BiwtE2jutrHv+H2ou2Ashaciy2E77f3VS3lhTJ3OlPJ2qhET4xxP4OKM8QFHotSiHwGmSFsAkr24HhHzCXaFlDacJED0wnrebr/IFxoLD8fRRukZhTuXaT+QMV9P8S7tewNox4j57E8pxn2xoukJSN4TouCUR+8eSZI7ZrAN5m0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B6XZa/F7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C9Eps8ez"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744230231; x=1775766231;
-  h=date:from:to:cc:subject:message-id;
-  bh=PPxyfWl0FeVIzey67CF4rmC+Mnd/QZMoJ20FzYi7e70=;
-  b=C9Eps8ezpY8x+Vaoh53y/sEkARoGhlOdEdJ0gjKO4oL2YE63Kvescn+S
-   aECh8Yk3wZKdGmsTG4SmWY7Fcpk/N/bNjlGY8Xo1s0T4IQjKNrcAa4pvK
-   X5u7/Xz20vu9IsPcLGXrfVrw2uczBysF/HynpOEKdRZECufYcHZ8VQWKd
-   EWyUc4A02PhWsKKStqS22YtAdWXlGEYcqB2HU1AqYAP0afLlzIuQ/yPeY
-   dG0qvsnNq3+Xj5k8U3TdgtHnzFkoUSlAqeVYwO0AuzTfCfva4e7LNtEFL
-   tYHfqqw1DCnQx2aj/oI73bltGOQvSLvBPjZID6GNdTYBJzLtkfLzhABOd
-   Q==;
-X-CSE-ConnectionGUID: tIBTSzsCRhKYMqTnwSNpHQ==
-X-CSE-MsgGUID: xe5xKqdFR+at2kwrzk/XSg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="49525276"
-X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
-   d="scan'208";a="49525276"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 13:23:51 -0700
-X-CSE-ConnectionGUID: Tt+sKNv3QKOVQqfJK4Iyvg==
-X-CSE-MsgGUID: HbkDxCIYSheexf5vY2eh6w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
-   d="scan'208";a="132826537"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 09 Apr 2025 13:23:50 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u2bxb-0009HG-2f;
-	Wed, 09 Apr 2025 20:23:47 +0000
-Date: Thu, 10 Apr 2025 04:23:30 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:sched/core] BUILD SUCCESS
- 6432e163ba1b7d80b5876792ce53e511f041ab91
-Message-ID: <202504100422.o3aOvx8Y-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B6XZa/F7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1060C4CEE2;
+	Wed,  9 Apr 2025 20:24:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744230282;
+	bh=2DGaCu81+mksOe/jz5U+Y2o/ljB3IPRpgOi+JK/6erc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=B6XZa/F7bZNIT8bFQUNQw7qdEYMx6HCmSFYrqtarQ74rcJGE0P/JsYc2we3j0MloJ
+	 wtNHECbv2AWikVRq6G1sKqvGmgGu47UEF2VV4kuJLzY6ti2upbs5lvbEg1Q6H3rEuu
+	 fbi7nEhCharrBfRLUpOkz1IwLLY85rYADnqOanmEvX/rDKCltBZ69WPBgsPAAP+7m5
+	 g4fzf1FY1Qmu8GGA5eB5n/yrZBGdOvt4p6oQTzFK3UCCJTcMNedqS3gcIk+95RAAXM
+	 3zF7pFljDC3TRMwbGXX3CcAakSDXiHxxMywQz4/Eu88Mp0tzMBcl4yfynH2dSKvXGf
+	 SJI2Sqg8orrww==
+Date: Wed, 9 Apr 2025 15:24:41 -0500
+From: Seth Forshee <sforshee@kernel.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Paolo Bonzini <pbonzini@redhat.com>, x86@kernel.org,
+	linux-perf-users@vger.kernel.org, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: kvm guests crash when running "perf kvm top"
+Message-ID: <Z_bXiVb8prqRbqh3@do-x1carbon>
+References: <Z_VUswFkWiTYI0eD@do-x1carbon>
+ <Z_aovIbwdKIIBMuq@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_aovIbwdKIIBMuq@google.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched/core
-branch HEAD: 6432e163ba1b7d80b5876792ce53e511f041ab91  sched/isolation: Make use of more than one housekeeping cpu
+On Wed, Apr 09, 2025 at 10:05:00AM -0700, Sean Christopherson wrote:
+> On Tue, Apr 08, 2025, Seth Forshee wrote:
+> > A colleague of mine reported kvm guest hangs when running "perf kvm top"
+> > with a 6.1 kernel. Initially it looked like the problem might be fixed
+> > in newer kernels, but it turned out to be perf changes which must avoid
+> > triggering the issue. I was able to reproduce the guest crashes with
+> > 6.15-rc1 in both the host and the guest when using an older version of
+> > perf. A bisect of perf landed on 7b100989b4f6 "perf evlist: Remove
+> > __evlist__add_default", but this doesn't look to be fixing any kind of
+> > issue like this.
+> > 
+> > This box has an Ice Lake CPU, and we can reproduce on other Ice Lakes
+> > but could not reproduce on another box with Broadwell. On Broadwell
+> > guests would crash with older kernels in the host, but this was fixed by
+> > 971079464001 "KVM: x86/pmu: fix masking logic for
+> > MSR_CORE_PERF_GLOBAL_CTRL". That does not fix the issues we see on Ice
+> > Lake.
+> > 
+> > When the guests crash we aren't getting any output on the serial
+> > console, but I got this from a memory dump:
+> 
+> ...
+> 
+> > Oops: 0000 [#1] PREEMPT SMP NOPTI
+> > BUG: kernel NULL pointer dereference, address: 000000000000002828
+> 
+> FWIW, this is probably slightly corrupted.  When I run with EPT disabled, to force
+> KVM to intercept #PFs, the reported CR2 is 0x28.  Which is consistent with the
+> guest having DS_AREA=0.  I.e. the CPU is attempting to store into the DS/PEBS
+> buffer.
+> 
+> As suspected, the issue is PEBS.  After adding a tracepoint to capture the MSRs
+> that KVM loads as part of the perf transition, it's easy to see that PEBS_ENABLE
+> gets loaded with a non-zero value immediate before death, doom, and destruction.
+> 
+>   CPU 0: kvm_entry: vcpu 0, rip 0xffffffff81000aa0 intr_info 0x80000b0e error_code 0x00000000
+>   CPU 0: kvm_perf_msr: MSR 38f: host 1000f000000fe guest 1000f000000ff
+>   CPU 0: kvm_perf_msr: MSR 600: host fffffe57186af000 guest 0
+>   CPU 0: kvm_perf_msr: MSR 3f2: host 0 guest 0
+>   CPU 0: kvm_perf_msr: MSR 3f1: host 0 guest 1
+>   CPU 0: kvm_exit: vcpu 0 reason EXCEPTION_NMI rip 0xffffffff81000aa0 info1 0x0000000000000028 intr_info 0x80000b0e error_code 0x00000000
+> 
+> The underlying issue is that KVM's current PMU virtualization uses perf_events
+> to proxy guest events, i.e. piggybacks intel_ctrl_guest_mask, which is also used
+> by host userspace to communicate exclude_host/exclude_guest.  And so perf's
+> intel_guest_get_msrs() allows using PEBS for guest events, but only if perf isn't
+> using PEBS for host events.
+> 
+> I didn't actually verify that "perf kvm top" generates for events, but I assuming
+> it's creating a precise, a.k.a. PEBS, event that measures _only_ guest, i.e.
+> excludes host.  That causes a false positive of sorts in intel_guest_get_msrs(),
+> and ultimately results in KVM running the guest with a PEBS event enabled, even
+> though the guest isn't using the (virtual) PMU.
+> 
+> Pre-ICX CPUs don't isolate PEBS events across the guest/host boundary, and so
+> perf/KVM hard disable PEBS on VM-Enter.  And a simple (well, simple for perf)
+> precise event doesn't cause problems, because perf/KVM will disable PEBS events
+> that are counting the host.  I.e. if a PEBS event counts host *and* guest, it's
+> "fine".
+> 
+> Long story short, masking PEBS_ENABLE with the guest's value (in addition to
+> what perf allows) fixes the issue on my end.  Assuming testing goes well, I'll
+> post this as a proper patch.
+> 
+> --
+> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> index cdb19e3ba3aa..1d01fb43a337 100644
+> --- a/arch/x86/events/intel/core.c
+> +++ b/arch/x86/events/intel/core.c
+> @@ -4336,7 +4336,7 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
+>         arr[pebs_enable] = (struct perf_guest_switch_msr){
+>                 .msr = MSR_IA32_PEBS_ENABLE,
+>                 .host = cpuc->pebs_enabled & ~cpuc->intel_ctrl_guest_mask,
+> -               .guest = pebs_mask & ~cpuc->intel_ctrl_host_mask,
+> +               .guest = pebs_mask & ~cpuc->intel_ctrl_host_mask & kvm_pmu->pebs_enable,
+>         };
+>  
+>         if (arr[pebs_enable].host) {
 
-elapsed time: 1459m
+This fixes the issue for me, thanks!
 
-configs tested: 118
-configs skipped: 4
+> --
+> 
+> 
+> > Let me know if I can provide any additional information or testing.
+> 
+> Uber nit: in the future, explicitly state whether a command is being run in the
+> guest or host.  I had a brain fart and it took me an embarrasingly long time to
+> grok that running "perf kvm top" in the guest would be nonsensical.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-14.2.0
-arc                               allnoconfig    gcc-14.2.0
-arc                              allyesconfig    gcc-14.2.0
-arc                   randconfig-001-20250409    gcc-12.4.0
-arc                   randconfig-002-20250409    gcc-10.5.0
-arc                        vdk_hs38_defconfig    gcc-14.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-14.2.0
-arm                         axm55xx_defconfig    clang-15
-arm                         mv78xx0_defconfig    clang-19
-arm                         orion5x_defconfig    clang-21
-arm                   randconfig-001-20250409    gcc-7.5.0
-arm                   randconfig-002-20250409    gcc-7.5.0
-arm                   randconfig-003-20250409    gcc-7.5.0
-arm                   randconfig-004-20250409    clang-14
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20250409    clang-21
-arm64                 randconfig-002-20250409    clang-21
-arm64                 randconfig-003-20250409    clang-15
-arm64                 randconfig-004-20250409    gcc-6.5.0
-csky                              allnoconfig    gcc-14.2.0
-csky                  randconfig-001-20250409    gcc-14.2.0
-csky                  randconfig-002-20250409    gcc-14.2.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon               randconfig-001-20250409    clang-21
-hexagon               randconfig-002-20250409    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250409    gcc-12
-i386        buildonly-randconfig-002-20250409    clang-20
-i386        buildonly-randconfig-003-20250409    gcc-11
-i386        buildonly-randconfig-004-20250409    clang-20
-i386        buildonly-randconfig-005-20250409    gcc-12
-i386        buildonly-randconfig-006-20250409    gcc-12
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250409    gcc-14.2.0
-loongarch             randconfig-002-20250409    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                           ci20_defconfig    clang-21
-mips                          eyeq6_defconfig    clang-21
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250409    gcc-10.5.0
-nios2                 randconfig-002-20250409    gcc-8.5.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                              defconfig    gcc-14.2.0
-parisc                randconfig-001-20250409    gcc-13.3.0
-parisc                randconfig-002-20250409    gcc-13.3.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                   bluestone_defconfig    clang-21
-powerpc                      pcm030_defconfig    clang-15
-powerpc               randconfig-001-20250409    gcc-6.5.0
-powerpc               randconfig-002-20250409    clang-21
-powerpc               randconfig-003-20250409    clang-21
-powerpc                     stx_gp3_defconfig    gcc-14.2.0
-powerpc                     tqm8560_defconfig    gcc-14.2.0
-powerpc64             randconfig-001-20250409    clang-21
-powerpc64             randconfig-002-20250409    gcc-8.5.0
-powerpc64             randconfig-003-20250409    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                 randconfig-001-20250409    clang-21
-riscv                 randconfig-002-20250409    clang-21
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-15
-s390                             allyesconfig    gcc-14.2.0
-s390                  randconfig-001-20250409    gcc-9.3.0
-s390                  randconfig-002-20250409    gcc-9.3.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                                  defconfig    gcc-14.2.0
-sh                         ecovec24_defconfig    gcc-14.2.0
-sh                             espt_defconfig    gcc-14.2.0
-sh                            hp6xx_defconfig    gcc-14.2.0
-sh                    randconfig-001-20250409    gcc-12.4.0
-sh                    randconfig-002-20250409    gcc-12.4.0
-sh                           se7780_defconfig    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250409    gcc-13.3.0
-sparc                 randconfig-002-20250409    gcc-7.5.0
-sparc64               randconfig-001-20250409    gcc-11.5.0
-sparc64               randconfig-002-20250409    gcc-13.3.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250409    gcc-12
-um                    randconfig-002-20250409    clang-14
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250409    clang-20
-x86_64      buildonly-randconfig-002-20250409    gcc-12
-x86_64      buildonly-randconfig-003-20250409    clang-20
-x86_64      buildonly-randconfig-004-20250409    clang-20
-x86_64      buildonly-randconfig-005-20250409    gcc-12
-x86_64      buildonly-randconfig-006-20250409    gcc-12
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250409    gcc-11.5.0
-xtensa                randconfig-002-20250409    gcc-11.5.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Apologies, I tried to make sure I differentiated between host vs guest
+in my description since I know it gets confusing, but I missed that one.
+I'll triple check for that in the future.
