@@ -1,128 +1,125 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2723270EC5;
-	Wed,  9 Apr 2025 17:13:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BC2F270EB9;
+	Wed,  9 Apr 2025 17:14:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744218783; cv=none; b=AuGeTS+IYVVnw8WmA3LMo/rj0tGlDc0w4xSPLA2RxkKUbDTnS4iMzkVFH3NDBzSTGiScYGYkhMEzKVjlNW3+B7wXioXDwlXGMm63H7xpc86Vl2yQQsJ8A3+75Jd11x0jTo22GdKZqeJexgfiGLhxr67jBhcyFivWCdkYUi+FXYs=
+	t=1744218877; cv=none; b=IcaLp2Fo5sJc4nHm0wP/i6GmGE7meHCyhCnJSlYZIaZWbtCWWbTaGbVKRg6B+Slmt8jy6DK5dbVNfbvbXfIvsJ68TB14+Rggx/6GCEwU8FsylCCj33V/sepoJpOpzOaBijuAMG06bInOg5xgEUf1ybrBGF/CZVVD5tLs+NVKMjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744218783; c=relaxed/simple;
-	bh=s9Gi35I1sUGULtTOtFmgKjk2LcTE5lWCFnKHhQhu+Tw=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Sb3BeA6rNV6AIJmav5iY1Hy4Xjx6/+46PIBPZoQUZDeSlMAl5LgDyyDen5BLvztDiPnpZmGU9CWN13I4mv3vT99oI8V3nQnp4Adl/8Rjrwh2nzUwzcJ/gxzaz+Z81/CH1053vr0QkOq007ngabiyeOXQzoiWfgYWaLfiDyP0YC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZXqD94V21z6HJc7;
-	Thu, 10 Apr 2025 01:08:57 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7B4091402F1;
-	Thu, 10 Apr 2025 01:12:52 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 9 Apr
- 2025 19:12:51 +0200
-Date: Wed, 9 Apr 2025 18:12:50 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Andy Shevchenko <andy@kernel.org>
-CC: <jean-baptiste.maneyrol@tdk.com>, Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	David Lechner <dlechner@baylibre.com>, Nuno =?ISO-8859-1?Q?S=E1?=
-	<nuno.sa@analog.com>, <linux-iio@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 2/2] iio: imu: inv_icm42600: switch to use generic
- name irq get
-Message-ID: <20250409181250.00001c9f@huawei.com>
-In-Reply-To: <Z_apXw_HoD0EHHY-@smile.fi.intel.com>
-References: <20250409-iio-imu-inv-icm42600-rework-interrupt-using-names-v3-0-dab85a0a7c2b@tdk.com>
-	<20250409-iio-imu-inv-icm42600-rework-interrupt-using-names-v3-2-dab85a0a7c2b@tdk.com>
-	<Z_apXw_HoD0EHHY-@smile.fi.intel.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1744218877; c=relaxed/simple;
+	bh=2yCH11+QS6uXp6BOH0cT74jcB7dPGpLEP/wtuGCkuZ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SWdQRNwY7/9d9PgfMDnKnKMLIGIVQ3+yfvdMfH/h0NumZC/nUlAe3rqjMR4Ta/0QOH5NbEGPp6OcBC11oZST3qy0RgswXJOuVMpVYZs1XGcZT2UUMJdXk3QpNosht1+lQeiDpt1CCjbT3tAmD5TjKQTAiVO77W9jDPkyU99eb08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f/lcfEpZ; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f/lcfEpZ"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e5e8274a74so11197678a12.1;
+        Wed, 09 Apr 2025 10:14:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744218873; x=1744823673; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=q4jn7E2mOey7c52PMiFK2mN0C3Pf6nDc9jBX5P7DR0w=;
+        b=f/lcfEpZ2UqSvgeaWE+Vds4lQH1V7yxTmUJyGIjY4WutVtgGS5lWuyp/UOUXDq/fvE
+         BK1XiSBj3QMAki8xgIwaKOr1RqzpgcD/fhlB2JVXAvyELVsFjEIxJ1h+cED5wXr7X02N
+         rT1mkF5s1IYxzhQTS++V/QTdu3vHU8GA1OHM5TyftMbPWU23rKftkAREeIQ3TVppmVL0
+         u9jlxGMpvdzkW50w700dySS13A1WL+fnj5GX7c7Y5pDCnuWP00RK/SsMy2jFNjkvpIWz
+         hU+DRUPKubfE+FLTNiFohFCwz/x/tMN2nl3PQ1xFSzcDzos5NPdvsOAyCf4GBGWAQ+Gn
+         MGYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744218873; x=1744823673;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=q4jn7E2mOey7c52PMiFK2mN0C3Pf6nDc9jBX5P7DR0w=;
+        b=oajGJRnIOY7fo4azZT7ds2itfoDbQtza/zaVkspzhO5jedp2m9HKSt1dPaa49qawKK
+         DaCxN4rzlNL/MzoQxqP2MDmS/BlT9qC6UujdlEfOdGFIYfL7ogTBBbwPeBfJYNYnNUB1
+         UWur75NbJsw6ywqszrUY8l4IHBTkNa5t4J4ZBqj4rH1+k0GYKELW2jvPYWLcwZrKwNAX
+         C8jnRiUWrEDZUMoCpJgWVEMGf5fvjg6lYeVSVvLT9Z6F0lqnbPBg5xEBQ3XPqAqGS1L5
+         45fllPEPjY9zrYzX+0gtW2tB+GnZJrveeCFZwnLSImIAzdjOOV/qeIJecjTJNVyW/Yx/
+         dtVg==
+X-Forwarded-Encrypted: i=1; AJvYcCVJakBoGFt6bLAGh262L/Wjcv4Dpc1AMzfVLIpD3LwU+FqCjjSSwKrM/zOtz/7Ru7LslJCbsTxqH1XQCFM=@vger.kernel.org, AJvYcCWVjkap1ShxCTihX+frIpDjki+gv1/vj0sYloqBU9iI7QtNMNmmD3RiiDgIwdLXMcN+p+nXvXlCwDWLbVM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOCcS90dY6+WKXdAPVcFP/TpYiEksGfPFvg/YtgrqNAdGXqn2o
+	DdMIYeWiHNcAVWGn1D+WBKDKJ6SQ7+QANFzbn+UL06LHadoNBRB7
+X-Gm-Gg: ASbGncud/NRtLbeMtur7dxUm/gGMkAfegdvBUCKFw/bCtt8FzRUJn2OUUXAaP+WZPQ+
+	UK48/9tm3xvNpi/9NEx++v1SUJAS03w6y78tf9TV5Fc9pVxAau8AHoIscGbo/Wpu682AupAjW2U
+	qqj2NtWso/iBDZHCsF61vtIPFjdkCQnMMdzthrc1b+ZzlRk84+3ohrCdEazSpXxaHqKB2xQj7t0
+	5pEO72ShA2MYzd318zMVuZ4ooBe2d1hXQM9tblZ4LCl9+AL3S7gU+KFDMdNUC4w6vyL6Ihz7X6E
+	/77rHHTTZMP0gmXjpE8en8DLhnFEHTLipBsLuuQW1f1UfuKlStC1Fv6UrztaSgNbfETrPTmhpQ=
+	=
+X-Google-Smtp-Source: AGHT+IFVIwUn9gnSu5wpLhhWkHk63r3TT3qIYaq3NQxQez4llYrua2mut70dsHOl+ApdX+lUsRLs0g==
+X-Received: by 2002:a17:907:97d4:b0:ac3:121e:f2cb with SMTP id a640c23a62f3a-aca9d5dd4femr299108766b.1.1744218872489;
+        Wed, 09 Apr 2025 10:14:32 -0700 (PDT)
+Received: from eldamar.lan (c-82-192-244-13.customer.ggaweb.ch. [82.192.244.13])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1ce732dsm124991466b.171.2025.04.09.10.14.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 10:14:31 -0700 (PDT)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 00A30BE2DE0; Wed, 09 Apr 2025 19:14:30 +0200 (CEST)
+Date: Wed, 9 Apr 2025 19:14:30 +0200
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Takashi Iwai <tiwai@suse.de>
+Cc: "C.D. MacEachern" <craig.daniel.maceachern@gmail.com>,
+	1100928@bugs.debian.org, Kuan-Wei Chiu <visitorckw@gmail.com>,
+	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: Bug#1100928: [regression 6.1.y] microphone no longer records (on
+ VivoBook_ASUSLaptop TP401MARB_J401MA)
+Message-ID: <Z_aq9kkdswrGZRUQ@eldamar.lan>
+References: <878qojypu6.wl-tiwai@suse.de>
+ <CAJ8x=4gN1fH6chp4C3jX1OXq2-JhbP5yUzLbqvWrAJ-u=+VNhw@mail.gmail.com>
+ <87mscw4dst.wl-tiwai@suse.de>
+ <Z_AxsuGoaVK9P3L4@eldamar.lan>
+ <174248253267.1718.4037292692790831697.reportbug@x>
+ <CAJ8x=4gQQeh+yuUrBDT3P_ZkWRT+7pPujq-ZF6Fcao0V7kohFw@mail.gmail.com>
+ <Z_DNcG7wp4iPh5NH@eldamar.lan>
+ <CAJ8x=4hmi0Afneepe15Ef-kzVZO+uyw5Row+Cooob_QR=DpwQg@mail.gmail.com>
+ <Z_E9LbOiYN5dPpSb@eldamar.lan>
+ <87zfgu1klk.wl-tiwai@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87zfgu1klk.wl-tiwai@suse.de>
 
-On Wed, 9 Apr 2025 20:07:43 +0300
-Andy Shevchenko <andy@kernel.org> wrote:
+Hi,
 
-> On Wed, Apr 09, 2025 at 05:14:32PM +0200, Jean-Baptiste Maneyrol via B4 Relay wrote:
-> > From: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
+On Sat, Apr 05, 2025 at 09:20:23PM +0200, Takashi Iwai wrote:
+> On Sat, 05 Apr 2025 16:24:45 +0200,
+> Salvatore Bonaccorso wrote:
 > > 
-> > Use generic fwnode_irq_get_byname() for getting interrupt pin using
-> > interrupt name. Only INT1 is supported by the driver currently.
+> > Control: tags -1 - moreinfo
 > > 
-> > If not found fallback to first defined interrupt to keep compatibility.  
+> > On Sat, Apr 05, 2025 at 09:08:38AM -0400, C.D. MacEachern wrote:
+> > > Thanks, running it now, microphone levels working fine now! Testing
+> > > recording and playback, working perfectly.
+> > 
+> > Many thanks for testing the patch and confirming the fix.
+> > 
+> > Takashi, assume you will monitor that 8983dc1b66c0 ("ALSA:
+> > hda/realtek: Fix built-in mic on another ASUS VivoBook model") get
+> > backported to all the relevant stable series? TTBOM, it won't apply
+> > cleanly to 6.1.y so Greg or Sasha might not get it down to 6.1.y
+> > witout explicit backport request?
 > 
-> ...
-> 
-> > -int inv_icm42600_core_probe(struct regmap *regmap, int chip, int irq,
-> > +int inv_icm42600_core_probe(struct regmap *regmap, int chip,
-> >  			    inv_icm42600_bus_setup bus_setup);  
-> 
-> If you use 100 limit, it fits now on one line.
+> As it has Fixes tag, it'll be backported usually to stable branches,
+> yes.  If it's missing, just ping stable ML.
 
-I'd rather stick to 'just over 80' where it really helps. Rather than
-generally switch to 100.  Maybe that day will come but I'm not sure it is
-yet.
+Yes right, and in meanwhile it has made the way to 6.12.y, 6.13.y and
+6.14.y. I just fear it won't go as well down to 6.1.y automatically as
+the change does not apply "cleanly" so might need to make a hint :)
 
-> 
-> ...
-> 
-> > -int inv_icm42600_core_probe(struct regmap *regmap, int chip, int irq,
-> > +int inv_icm42600_core_probe(struct regmap *regmap, int chip,
-> >  			    inv_icm42600_bus_setup bus_setup)  
-> 
-> Ditto.
-> 
-> ...
-> 
-> > +	struct fwnode_handle *fwnode;  
-> 
-> Do you need to include property.h?
-> 
-> ...
-> 
-> > +	/* get INT1 only supported interrupt or fallback to first interrupt */
-> > +	fwnode = dev_fwnode(dev);  
-> 
-> > +	if (!fwnode)
-> > +		return -ENODEV;  
-> 
-> Unneeded check, the below will do it for you,
-> 
-> > +	irq = fwnode_irq_get_byname(fwnode, "INT1");
-> > +	if (irq < 0 && irq != -EPROBE_DEFER) {
-> > +		dev_info(dev, "no INT1 interrupt defined, fallback to first interrupt\n");
-> > +		irq = fwnode_irq_get(fwnode, 0);
-> > +	}
-> > +	if (irq < 0)
-> > +		return dev_err_probe(dev, irq, "error missing INT1 interrupt\n");  
-> 
-> ...
-> 
-> > -	return inv_icm42600_core_probe(regmap, chip, client->irq,
-> > +	return inv_icm42600_core_probe(regmap, chip,
-> >  				       inv_icm42600_i2c_bus_setup);  
-> 
-> This is now one line (81 characters which is fine independently on your choice
-> of the limit).
-> 
-> ...
-> 
-> > -	return inv_icm42600_core_probe(regmap, chip, spi->irq,
-> > +	return inv_icm42600_core_probe(regmap, chip,
-> >  				       inv_icm42600_spi_bus_setup);  
-> 
-> One line.
-> 
+Thanks a lot for your work, I will apply ahead the 6.1.y inclusion the
+fix as well in Debian to address https://bugs.debian.org/1100928 .
 
+Regards,
+Salvatore
