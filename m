@@ -1,197 +1,132 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F5321DDC04;
-	Wed,  9 Apr 2025 20:54:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C363F1DDC04;
+	Wed,  9 Apr 2025 20:55:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744232096; cv=none; b=YuelhCaX0DwGjvmcGXlQNiy8tAkFzTUUXhoexWSQjeZzjorXGA0uz8eVlsvpB/sF7wG3w9NtB7yCEmTb2mzXTPsBMpGChrVqea5Hg+mGEIcQ2BuBRNANaTzstTpDoTM+dOzT+0dvGJaO39n9JG8USR19oanZmu7vrVJHArQdBqY=
+	t=1744232149; cv=none; b=rJm163gHqSI5p2/8i0VcHqX66ebVk+T808tPQEc+FQUEgdqOpx1ELQlN2URwdlfUk8cRAGHQvyRuUjfae1M/vVn+o22n4FUVPmPNentV0+oFTf3JIvh5sn3UBatQSSd4VfmQ7eD9yuu+BYK2u9JHu580lzA6L3ORv/bujwMvBXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744232096; c=relaxed/simple;
-	bh=4oSZZwhw7PQhTzXV7fjqEVHEgheLJg48XzbYnFxp19A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g3yed8oJqxBLV5x53NAbPhbt1LQ/9dvJyHOYuZkyuGVRQpOCZcgwNCLelYLapYB+SdYZXciqzeAoBZtbqLyetaDCBVCiyq4gLaCSvPI1aJIeIpDNhwP/dhL80YBOBp1/Fr4egUy9C3z4dxxlMDKMawAJVGgLaI1q3UnEis7UJqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=mGstyAOy; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1744232149; c=relaxed/simple;
+	bh=EPn/d0cd3kjYwFoD8biIUR0OJ+wRMiKabWAhIrPT/2g=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=C4mgkzUDsdzf7BJaiVUrkUwTlCpGZEuTN4CsEfnrDexHWbl1JhVJqxWnrWx3pxdSk2/B9fmNOlMl2KKUPUgTxjbkjWkqMFzV3qpar4vyUzIBqZoQiRs2c3Mo341ddT3Ma5P9UeuF5bmlQQXfqmJ3Q3kj1iEX9CxKc8QXSR6NQBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TGuOLviF; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="mGstyAOy"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id E407C9CE;
-	Wed,  9 Apr 2025 22:52:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1744231974;
-	bh=4oSZZwhw7PQhTzXV7fjqEVHEgheLJg48XzbYnFxp19A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mGstyAOyr2ER8aIjbnelGwUaEIXExrU8SkzTl0SiFDCR0/0Vpxyyh111y7QRl5KP+
-	 BuBRnjR/iYwYjDiDNRhSwRgunXVbwt+mU9jCORSjzqJEIWMh6DS2m29h6w7jgNd1sO
-	 +RUq2Nlqioxr+PKJ6tkx7LtbmxPDcR9tuCG+PzFw=
-Date: Wed, 9 Apr 2025 23:54:26 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-Cc: Ricardo Ribalda <ribalda@chromium.org>, hdegoede@redhat.com,
-	mchehab@kernel.org, linux-media@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TGuOLviF"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-736c1cf75e4so30750b3a.2;
+        Wed, 09 Apr 2025 13:55:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744232147; x=1744836947; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7QkpG4m8Lc/btjIEh5jay7XVuJOJzyS0YVOjKC0nw0g=;
+        b=TGuOLviFP76RgHxquxIVbBQ3WDvyvk2uPHQoRNZ1vu8FMVrUzLQ0bILzzvUS2X4Cq+
+         IeS2LSH95xLjhmerLe0lnd6b2hG7F6sP0JZMkg98n+0GxKsOvRbnkX0WGQkvERjGjOy9
+         IR/gCRXPDb3TtZ8M3E8hE8MI86EBX/9SKpVLSwNCl2O4EMiFWk5JKTN9tSsLEu4fpb8Y
+         nyt1DfQINTrl2DnKUOB1pv1eivjLoE3e6XqRJ56mJRRDrnPi4Jr7F2JgAeEEe6DTj2RN
+         jQsoAHS0m2fX9LkBoGed55d7ZvNUGAFfZJNKfvyTGKy0uD8tNMQ7VhTrWLsrYiQiUGE3
+         Zy9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744232147; x=1744836947;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7QkpG4m8Lc/btjIEh5jay7XVuJOJzyS0YVOjKC0nw0g=;
+        b=KaTaOw6IFT/zpwtgoyvMNd/RNysKVy743cevIr+9NgZA7fdAjzxy3QHu4MEWwALlP7
+         I1mLDx4oDs1Zs25XG7gTjwdrB7dAQ1Ppaiv/oge0hJ4V3CiVLelDnToHt29hQAbdEazS
+         KZu+A7CwBgLXeTpMGkMIaA6ztUodvG1tktK2GJABSFy+15/XpLeeGHy6OVr6UhWZVwhZ
+         w6oLqq+JfLQym1+Wgu0SZ/uIeK9dSshh1mZ0/3zwUdx7Sp9iL/bjh3KOQM1NnqQKEdi7
+         lsaNtI5KPKm/GvZIbvi3zGswjVziaYqCEYQsXy2Psyk46MEXGwsGPM7FVn0nzfoH74u7
+         5SIA==
+X-Forwarded-Encrypted: i=1; AJvYcCUDUSxdDDp0wgbNVzRu0Q3W6s4S1NMwAkXPvv6IGzZbbYMrdrpCpyEp3QztARI06saFUm13lVwZZn0OY0i7@vger.kernel.org, AJvYcCUpLVqVFJbx4h7W1jKWOBAMwXsBnQ9F/Jqj2u33AAheH7Bzm0Rp4F1a+/0fB0yZSRB0SsUQVu6HZgux+KA5ZFw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkfACZBRA9Idp+MrrHumDAIFryyKOkMWgoPuiVhOUyjMa5jzmZ
+	tCAcqjcAkvzkplod9XkKvNdxXURKanKMoM6xqCClT1iozmhFp7EM
+X-Gm-Gg: ASbGnctyHUt9X9ogRfHEtHgMhT5z7r596Jt09yvE6PEWOzBuWEfRx1vXvsYhcjTX0hQ
+	qgXWd/jDMniiotbmcbGgMeIeB26RZFue3nB/F8RvGSjrASYmy2AHD+m1qdXG2FsosvX6bsJr/Gu
+	xlJkmT+ddv4up3jFhFgyFVtm+CA3TmzJQv/yQnF7PkZmMk+0wXgVvzmsF0tej5tos3rsw2/sWjf
+	6skYG3qD3nuxj2KKEYu2f1N99GuBEZcvyCgwh0v3Ra5xDcleCus+nY3dWrjPqnMlvaONiC3+5l+
+	VuQ490SmP9AvPnCw/XIv5oqitx4gc3l4+2kzoMR0LW8qUeBFWMpgyvNtlnDzObCphqbfNQ2slw=
+	=
+X-Google-Smtp-Source: AGHT+IGhGUwWPR32v/s/SkavVBdJ58Gtxo/MVhQ80j4uIDoiELiGftMvP4XeTKKA/0fHgSDCX83T/w==
+X-Received: by 2002:a05:6a00:3987:b0:728:e2cc:bfd6 with SMTP id d2e1a72fcca58-73bbefabeeemr383715b3a.18.1744232146641;
+        Wed, 09 Apr 2025 13:55:46 -0700 (PDT)
+Received: from purva-IdeaPad-Gaming-3-15IHU6.. ([2409:4080:204:a537:9312:7e1:b2cb:ef99])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1d46509sm1875527b3a.57.2025.04.09.13.55.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 13:55:46 -0700 (PDT)
+From: Purva Yeshi <purvayeshi550@gmail.com>
+To: peterhuewe@gmx.de,
+	jarkko@kernel.org
+Cc: jgg@ziepe.ca,
+	linux-integrity@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	syzbot+701fc9cc0cb44e2b0fe9@syzkaller.appspotmail.com,
-	skhan@linuxfoundation.org, kernelmentees@lists.linuxfoundation.org
-Subject: Re: [PATCH] media: Fix invalid link creation when source entity has
- 0 pads
-Message-ID: <20250409205426.GA12162@pendragon.ideasonboard.com>
-References: <67e26157.0c0a0220.36adcd.506e@mx.google.com>
- <CANiDSCsvEke31SAgXhs_sXEN7d6fXrwuhJFsi2mzESq1Jc8pxA@mail.gmail.com>
- <CAKUZ0zJjdSDH3cw=8iKJauU5dmcq9TFhAaJX4yS5UQoiCUaguA@mail.gmail.com>
- <20250326001336.GA23984@pendragon.ideasonboard.com>
- <CAKUZ0zKDy47cQ0ZQo-=1c7wmazbutF=VF3qX09DfZFBz01hh-g@mail.gmail.com>
- <20250402002948.GC4845@pendragon.ideasonboard.com>
- <CAKUZ0z+V0pBvAf1VRGcWf_QcROZFsTUcHmNM1T1=DpBw56yi8A@mail.gmail.com>
+	Purva Yeshi <purvayeshi550@gmail.com>
+Subject: [PATCH] char: tpm: tpm-buf: Fix uninitialized return values in read helpers
+Date: Thu, 10 Apr 2025 02:25:36 +0530
+Message-Id: <20250409205536.210202-1-purvayeshi550@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKUZ0z+V0pBvAf1VRGcWf_QcROZFsTUcHmNM1T1=DpBw56yi8A@mail.gmail.com>
 
-Hi Gabriel,
+Fix Smatch-detected error:
+drivers/char/tpm/tpm-buf.c:208 tpm_buf_read_u8() error:
+uninitialized symbol 'value'.
+drivers/char/tpm/tpm-buf.c:225 tpm_buf_read_u16() error:
+uninitialized symbol 'value'.
+drivers/char/tpm/tpm-buf.c:242 tpm_buf_read_u32() error:
+uninitialized symbol 'value'.
 
-On Tue, Apr 08, 2025 at 01:35:00AM -0400, Gabriel Shahrouzi wrote:
-> On Tue, Apr 1, 2025 at 8:30 PM Laurent Pinchart wrote:
-> > On Sat, Mar 29, 2025 at 01:50:00PM -0400, Gabriel wrote:
-> > > Hi Laurent,
-> > >
-> > > I’ve analyzed the bug report, and the root cause of the
-> > > "WARNING-media_create_pad_link" issue is a mismatch in terminal
-> > > references in the USB descriptor.
-> > >
-> > > The format type descriptor references terminal ID 6, while the audio
-> > > streaming interface descriptor points to terminal ID 5. This
-> > > discrepancy triggers the warning: "No streaming interface found for
-> > > terminal 6", followed by the media pad link warning.
-> >
-> > Can you share the USB descriptors.
->
-> The USB descriptors via the Syzkaller reproducer:
->          "\x12\x01\x00\x00\xfb\x5d\x7d\x08\x6d\x04\xc3\x08\x16\x6b\x01\x02\x03"
->          "\x01\x09\x02\x50\x00\x01\x00\x00\x00\x00\x09\x04\x1f\x00\x00\xff\x01"
->          "\x00\x00\x0a\x24\x02\x00\x00\x05\x02\x01\x02\x07\x24\x07\x05\x00\x00"
->          "\x18\xc2\x24\x08\x05\x04\x00\x04\x96\x0d\x24\x06\x01\x01\x03\x02\x00"
->          "\x01\x00\x06\x00\x06\x09\x24\x03\x05\x05\x03\x06\x05\x81\x09\x24\x03"
->          "\x06\x01\x01\x04\x05\x05\x07\x24\x04\x05\x01\x00\x9c\xbd\x89"
+Call tpm_buf_read() to populate value but do not check its return
+status. If the read fails, value remains uninitialized, causing
+undefined behavior when returned or processed.
 
-If I haven't made any mistake in the manual decode process (is there any
-Linux tool that can decode a binary descriptors dump the same way lsusb
-decodes descriptors from a device ?), the relevant UVC descriptors there
-are
+Initialize value to zero to ensure a defined return even if
+tpm_buf_read() fails, avoiding undefined behavior from using
+an uninitialized variable.
 
-0x0a		bLength
-0x24		bDescriptorType USB_DT_CS_INTERFACE
-0x02		bDescriptorSubtype VC_INPUT_TERMINAL
-0x00		bTerminalID 0 (invalid)
-0x00, 0x05	bTerminalType 0x0500 (invalid)
-0x02		bAssocTerminal 2 (invalid)
-0x01		iTerminal 1 
-0x02, 0x07
+Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+---
+ drivers/char/tpm/tpm-buf.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-0x09		bLength
-0x24		bDescriptorType USB_DT_CS_INTERFACE
-0x03		bDescriptorSubtype VC_OUTPUT_TERMINAL 
-0x06		bTerminalID 6 
-0x01, 0x01	bTerminalType TT_STREAMING
-0x04		bAssocTerminal 4 (invalid)
-0x05		bSourceID 5 
-0x05		iTerminal 5
-
-0x07		bLength
-0x24		bDescriptorType USB_DT_CS_INTERFACE
-0x04		bDescriptorSubtype VC_SELECTOR_UNIT 
-0x05		bUnitID 5 
-0x01		bNrInPins 1 
-0x00		baSourceID(1) 0 
-0x9c		iSelector 156
-
-Ignoring a few invalid values (bTerminalID shouldb't be 0, bTerminalType
-0x0500 is defined by the specification, and the two bAssocTerminal ids
-are also invalid), this creates the following chain:
-
-VC_INPUT_TERMINAL (0) -> VC_SELECTOR_UNIT (5) -> VC_OUTPUT_TERMINAL (6)
-
-Looking at uvc_mc_init_entity() where the media_entity->num_pads field
-gets assigned by calling media_entity_pads_init(), a media entity is
-only initialized when the entity type is not TT_STREAMING (so it's a
-subdev), or when the entity has an associated video device. I think
-that what is happening here is that the second entity in the above list
-(VC_OUTPUT_TERMINAL, id 6) fails to initialize properly in
-uvc_register_terms() is there is no corresponding streaming interface in
-the device. This is confirmed by the
-
-usb 1-1: No streaming interface found for terminal 6.
-
-message in the syzbot kernel log. No video device is created for the
-terminal, and no media_entity is initialized. Trying to later link the
-entity in uvc_mc_create_links() then fails.
-
-I don't want to address this in uvc_mc_create_links() as the invalid
-terminal in the chain means we could have other issues elsewhere. One
-option is to fail turn the missing streaming interface check in a hard
-failure, at least for the chain being registered. The driver could still
-proceed to registering other chains.
-
-There's a small risk of regression for buggy devices. If that's a
-problem, we could instead remove invalid terminals from the device
-entities list before we proceed to scanning chains.
-
-> > > I confirmed this by changing the terminal ID in the format descriptor
-> > > from 6 to 5, which eliminates both warnings. This shows the warning is
-> > > correctly identifying an invalid descriptor configuration, not a
-> > > kernel bug.
-> >
-> > There's still something not quite right. uvc_entity->num_pads should
-> > always be equal to the corresponding media_entity->num_pads. That's not
-> > the case here, and I think it indicates a bug.
->
-> Ah ok - the mismatch itself shouldn't happen regardless of the descriptor
->
-> > > Since the USB descriptor is invalid, I believe the warning is
-> > > necessary and should remain. The code should stay as is.
-> >
-> > There should be a warning, but I think it needs to be caught in a
-> > different place, earlier.
->
-> Got it.
->
-> > > On Tue, Mar 25, 2025 at 8:13 PM Laurent Pinchart wrote:
-> > > > On Tue, Mar 25, 2025 at 06:05:00PM -0400, Gabriel wrote:
-> > > > > Hi Ricardo,
-> > > > >
-> > > > > > I cannot reach that URL
-> > > > > I was unable to access the URL from my email client when I initially
-> > > > > sent the email, but a couple of hours later, I was able to. Initially,
-> > > > > copying and pasting the URL into the browser provided a workaround.
-> > > > >
-> > > > > > Shouldn't it be?:
-> > > > > > Fixes: 4ffc2d89f38a ("[media] uvcvideo: Register subdevices for each entity")
-> > > > > You're right, I incorrectly referenced the wrong commit. However, I’m
-> > > > > not certain if it should reference a96aa5342d57 (Fixes: a96aa5342d57 -
-> > > > > '[media] uvcvideo: Ignore entities for terminals with no supported
-> > > > > format') as it's the latest commit affecting the line I'm changing or
-> > > > > the one you mentioned.
-> > > > >
-> > > > > > Shouldn't source->num_pads be the same as remote->num_pads?
-> > > > > The fuzzer (Syzkaller) that triggered the warning appears to have
-> > > > > encountered a case where source->num_pads and remote->num_pads were
-> > > > > different. When analyzing the case in GDB, remote->num_pads was 1,
-> > > > > while source->num_pads was 0.
-> > > >
-> > > > This seems like the real bug that should be fixed.
-> > > >
-> > > > > > Are you sure that your kernel does not contain?
-> > > > > > https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/media/usb/uvc/uvc_entity.c?id=41ddb251c68ac75c101d3a50a68c4629c9055e4c
-> > > > > Yes, it should be included since I am running the upstream kernel.
-
+diff --git a/drivers/char/tpm/tpm-buf.c b/drivers/char/tpm/tpm-buf.c
+index e49a19fea3bd..dc882fc9fa9e 100644
+--- a/drivers/char/tpm/tpm-buf.c
++++ b/drivers/char/tpm/tpm-buf.c
+@@ -201,7 +201,7 @@ static void tpm_buf_read(struct tpm_buf *buf, off_t *offset, size_t count, void
+  */
+ u8 tpm_buf_read_u8(struct tpm_buf *buf, off_t *offset)
+ {
+-	u8 value;
++	u8 value = 0;
+ 
+ 	tpm_buf_read(buf, offset, sizeof(value), &value);
+ 
+@@ -218,7 +218,7 @@ EXPORT_SYMBOL_GPL(tpm_buf_read_u8);
+  */
+ u16 tpm_buf_read_u16(struct tpm_buf *buf, off_t *offset)
+ {
+-	u16 value;
++	u16 value = 0;
+ 
+ 	tpm_buf_read(buf, offset, sizeof(value), &value);
+ 
+@@ -235,7 +235,7 @@ EXPORT_SYMBOL_GPL(tpm_buf_read_u16);
+  */
+ u32 tpm_buf_read_u32(struct tpm_buf *buf, off_t *offset)
+ {
+-	u32 value;
++	u32 value = 0;
+ 
+ 	tpm_buf_read(buf, offset, sizeof(value), &value);
+ 
 -- 
-Regards,
+2.34.1
 
-Laurent Pinchart
