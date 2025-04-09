@@ -1,123 +1,160 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55EFE7083A
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 02:17:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C5F14F104;
+	Wed,  9 Apr 2025 02:22:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744165044; cv=none; b=bqpnWHFfAfWC3Hryhhr+tV3m/tytnPvz4IGcsLVB/I3objSHetbGRXsaAFkZ3u8vsjy7Dtur7grmculRqUPI8+wO/VrhVjbZA8+15ScT+Qc4mINv2+HDBdrAqa2ZnHL6unv3jx2X0pfBOGPH/Ih2xTszLaPsdgmSn3sjFi1fEu4=
+	t=1744165357; cv=none; b=GfTx1eC06qmc6ljqGFLkFWQwl2EFFYC7lMWj3aGhlzj7xENYrqN8q8Bgci+OAjq4pzQ/HSiRYpPjDegGvC2hvVZdbCa1iTVH6K35KcDuL+bGvc5b+isLfvPqyZR9+p60AtehUKcFYniEjWxaP0cvZMQWu/FVpqLOk8V3YxUcFXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744165044; c=relaxed/simple;
-	bh=WDqMBd92k2n/VhyZDze6xnRKCm6vD/2kvmn85px7pIA=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=YH4hDgmG8eorZBmrLc7RVBlszgbjaT858C3tkzQN7OsJQGa/OzC2jVrD0WE5VmTHzMdN4L0Em4e1z6pqgWl7zi6fdcO661jlK881PUsJMCi+yR4pEObCxbunTJA+pel/wZKMwuwr3oTlxypCp4YFILBd1cqNFpeqnenG/2vnMnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [111.9.175.10])
-	by gateway (Coremail) with SMTP id _____8CxvnKr2PVnYKy1AA--.40691S3;
-	Wed, 09 Apr 2025 10:17:15 +0800 (CST)
-Received: from [10.136.12.26] (unknown [111.9.175.10])
-	by front1 (Coremail) with SMTP id qMiowMCxPsep2PVnbb91AA--.26584S3;
-	Wed, 09 Apr 2025 10:17:15 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: Enhance robust of kprobe
-To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250408092756.22339-1-yangtiezhu@loongson.cn>
-From: Jinyang He <hejinyang@loongson.cn>
-Message-ID: <f83d1048-93f6-6c11-2c2a-98c1e1ea7e9d@loongson.cn>
-Date: Wed, 9 Apr 2025 10:17:13 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1744165357; c=relaxed/simple;
+	bh=/xFpigHjeCenOvaIiPeP+K517mAY8qj9sAvIlssbnZ8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pN6pcq6LfnXkkQi8LF4uoeUBORw7MUFmNCsdEpkBRTmOF5fFV45iEi69C/7+9isEbiKu2BlLFuL6bX9PzvDnjKLuuHMW3xLK6JFdu0a3a2K0dotQt8OJJtxcCrKZWChggkis4kt8jMzxOM/ObxMYrRR2EVW9LGUxIq0cfEtP3F4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Oki6Aq2o; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Oki6Aq2o"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744165356; x=1775701356;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=/xFpigHjeCenOvaIiPeP+K517mAY8qj9sAvIlssbnZ8=;
+  b=Oki6Aq2ooyJLzbSGUeZ/rHx/nedgCtXMsyAYSfLoyxVj9g3yzPhwzmfZ
+   51+0Af1zEoPRIkT8I7POl2d2LfmKQYdjdgABdN8Lqe0f6JQ7qvD9qByrj
+   F2dxxQ4QSl2krABlXBMcsWIC6qXY7EPayYCpdulphn3wvE3OSF3WTA9gW
+   Dv6TAObZpAdlAkOyJhtO9QNaIpUzf0jt+C4fHD5R/x97ByaW/LObLnOgs
+   tabHJao9Fg7Vu2IQ0E8L/drcbaIkOWM4AN9hnyAoz9+FlWUnLleNxRoaK
+   GRiyxKwVJHL5PA89G7ywyRWEZLeC63gE0Vk4A5qVEYv4uuTs6C8+0Bff3
+   w==;
+X-CSE-ConnectionGUID: 8KCK64GZQC20wKNdpRNM5g==
+X-CSE-MsgGUID: YAh4aI3FRKOBIxihZJ6vig==
+X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="45742650"
+X-IronPort-AV: E=Sophos;i="6.15,199,1739865600"; 
+   d="scan'208";a="45742650"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 19:22:35 -0700
+X-CSE-ConnectionGUID: SFlbZrv7RpeZeZJGlkvwrw==
+X-CSE-MsgGUID: LGaKhWZNQ66UoLsYYQhIrg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,199,1739865600"; 
+   d="scan'208";a="129273444"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 08 Apr 2025 19:22:32 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u2L5C-0008Bj-0S;
+	Wed, 09 Apr 2025 02:22:30 +0000
+Date: Wed, 9 Apr 2025 10:21:44 +0800
+From: kernel test robot <lkp@intel.com>
+To: Sean Anderson <sean.anderson@linux.dev>, netdev@vger.kernel.org,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	upstream@airoha.com, Christian Marangi <ansuelsmth@gmail.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Kory Maincent <kory.maincent@bootlin.com>,
+	Sean Anderson <sean.anderson@linux.dev>
+Subject: Re: [net-next PATCH v2 02/14] device property: Add optional
+ nargs_prop for get_reference_args
+Message-ID: <202504091003.Hc0Ig56O-lkp@intel.com>
+References: <20250407231746.2316518-3-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250408092756.22339-1-yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowMCxPsep2PVnbb91AA--.26584S3
-X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxWrWkAw13WFWfJFWxAF17XFc_yoW5GFy8pF
-	s7C3yrtrW8XFy0va4UAw15uryFy3yUJ3yxWw1UAa43tws8Cw1qqr1xWrWq9Fn8Gr4rtr1S
-	vF18Kry0vF1UGFgCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
-	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
-	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc4
-	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
-	xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
-	1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU70PfDUUU
-	U
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250407231746.2316518-3-sean.anderson@linux.dev>
 
-On 2025-04-08 17:27, Tiezhu Yang wrote:
+Hi Sean,
 
-> Currently, interrupts need to be disabled before single-step mode is set,
-> it requires that the CSR_PRMD_PIE must be cleared in save_local_irqflag()
-> which is called by setup_singlestep(), this is reasonable.
->
-> But in the first kprobe breakpoint exception, if the irq is enabled at the
-> beginning of do_bp(), it will not be disabled at the end of do_bp() due to
-> the CSR_PRMD_PIE has been cleared in save_local_irqflag(). For this case,
-> it may corrupt exception context when restoring exception after do_bp() in
-> handle_bp(), this is not reasonable.
->
-> Based on the above analysis, in order to make sure the irq is disabled at
-> the end of do_bp() for the first kprobe breakpoint exception, it is proper
-> to disable irq first before clearing CSR_PRMD_PIE in save_local_irqflag().
->
-> Fixes: 6d4cc40fb5f5 ("LoongArch: Add kprobes support")
-> Co-developed-by: Tianyang Zhang <zhangtianyang@loongson.cn>
-> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->   arch/loongarch/kernel/kprobes.c | 1 +
->   1 file changed, 1 insertion(+)
->
-> diff --git a/arch/loongarch/kernel/kprobes.c b/arch/loongarch/kernel/kprobes.c
-> index 8ba391cfabb0..6eab97636e6b 100644
-> --- a/arch/loongarch/kernel/kprobes.c
-> +++ b/arch/loongarch/kernel/kprobes.c
-> @@ -113,6 +113,7 @@ NOKPROBE_SYMBOL(set_current_kprobe);
->   static void save_local_irqflag(struct kprobe_ctlblk *kcb,
->   			       struct pt_regs *regs)
->   {
-> +	local_irq_disable();
->   	kcb->saved_status = regs->csr_prmd;
->   	regs->csr_prmd &= ~CSR_PRMD_PIE;
->   }
+kernel test robot noticed the following build errors:
 
-Hi, Tiezhu,
+[auto build test ERROR on net-next/main]
 
-I think the carsh is caused by "irq-triggered re-re-enter" clear
-the previous_kprobe status. An example things like,
+url:    https://github.com/intel-lab-lkp/linux/commits/Sean-Anderson/dt-bindings-net-Add-Xilinx-PCS/20250408-072650
+base:   net-next/main
+patch link:    https://lore.kernel.org/r/20250407231746.2316518-3-sean.anderson%40linux.dev
+patch subject: [net-next PATCH v2 02/14] device property: Add optional nargs_prop for get_reference_args
+config: i386-buildonly-randconfig-003-20250409 (https://download.01.org/0day-ci/archive/20250409/202504091003.Hc0Ig56O-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-12) 11.3.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250409/202504091003.Hc0Ig56O-lkp@intel.com/reproduce)
 
-...
-   static void setup_singlestep(struct kprobe *p, struct pt_regs *regs,
-                    struct kprobe_ctlblk *kcb, int reenter)
-   {
-       union loongarch_instruction insn;
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504091003.Hc0Ig56O-lkp@intel.com/
 
-       if (reenter) {
-           save_previous_kprobe(kcb);
-  ===================   <- irq and trigger re-re-enter in its handler
-           set_current_kprobe(p);
-           kcb->kprobe_status = KPROBE_REENTER;
-       } else {
-           kcb->kprobe_status = KPROBE_HIT_SS;
-       }
-...
+All errors (new ones prefixed by >>):
 
-We should assure the previous_kprobe status not be changed after re-enter.
-So this `local_irq_disable` should be set in reenter block begin.
-And for !reenter block, `local_irq_disable` may be not needed.
+>> drivers/acpi/property.c:1669:39: error: initialization of 'int (*)(const struct fwnode_handle *, const char *, const char *, int,  unsigned int,  struct fwnode_reference_args *)' from incompatible pointer type 'int (*)(const struct fwnode_handle *, const char *, const char *, unsigned int,  unsigned int,  struct fwnode_reference_args *)' [-Werror=incompatible-pointer-types]
+    1669 |                 .get_reference_args = acpi_fwnode_get_reference_args,   \
+         |                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/acpi/property.c:1680:1: note: in expansion of macro 'DECLARE_ACPI_FWNODE_OPS'
+    1680 | DECLARE_ACPI_FWNODE_OPS(acpi_device_fwnode_ops);
+         | ^~~~~~~~~~~~~~~~~~~~~~~
+   drivers/acpi/property.c:1669:39: note: (near initialization for 'acpi_device_fwnode_ops.get_reference_args')
+    1669 |                 .get_reference_args = acpi_fwnode_get_reference_args,   \
+         |                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/acpi/property.c:1680:1: note: in expansion of macro 'DECLARE_ACPI_FWNODE_OPS'
+    1680 | DECLARE_ACPI_FWNODE_OPS(acpi_device_fwnode_ops);
+         | ^~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/acpi/property.c:1669:39: error: initialization of 'int (*)(const struct fwnode_handle *, const char *, const char *, int,  unsigned int,  struct fwnode_reference_args *)' from incompatible pointer type 'int (*)(const struct fwnode_handle *, const char *, const char *, unsigned int,  unsigned int,  struct fwnode_reference_args *)' [-Werror=incompatible-pointer-types]
+    1669 |                 .get_reference_args = acpi_fwnode_get_reference_args,   \
+         |                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/acpi/property.c:1681:1: note: in expansion of macro 'DECLARE_ACPI_FWNODE_OPS'
+    1681 | DECLARE_ACPI_FWNODE_OPS(acpi_data_fwnode_ops);
+         | ^~~~~~~~~~~~~~~~~~~~~~~
+   drivers/acpi/property.c:1669:39: note: (near initialization for 'acpi_data_fwnode_ops.get_reference_args')
+    1669 |                 .get_reference_args = acpi_fwnode_get_reference_args,   \
+         |                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/acpi/property.c:1681:1: note: in expansion of macro 'DECLARE_ACPI_FWNODE_OPS'
+    1681 | DECLARE_ACPI_FWNODE_OPS(acpi_data_fwnode_ops);
+         | ^~~~~~~~~~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
 
-Jinyang
 
+vim +1669 drivers/acpi/property.c
+
+99c63707bafd15 Sakari Ailus      2022-03-31  1650  
+db3e50f3234ba1 Sakari Ailus      2017-07-21  1651  #define DECLARE_ACPI_FWNODE_OPS(ops) \
+db3e50f3234ba1 Sakari Ailus      2017-07-21  1652  	const struct fwnode_operations ops = {				\
+db3e50f3234ba1 Sakari Ailus      2017-07-21  1653  		.device_is_available = acpi_fwnode_device_is_available, \
+146b4dbb0eef36 Sinan Kaya        2017-12-13  1654  		.device_get_match_data = acpi_fwnode_device_get_match_data, \
+8c756a0a2de17f Sakari Ailus      2022-03-31  1655  		.device_dma_supported =				\
+8c756a0a2de17f Sakari Ailus      2022-03-31  1656  			acpi_fwnode_device_dma_supported,		\
+8c756a0a2de17f Sakari Ailus      2022-03-31  1657  		.device_get_dma_attr = acpi_fwnode_device_get_dma_attr,	\
+db3e50f3234ba1 Sakari Ailus      2017-07-21  1658  		.property_present = acpi_fwnode_property_present,	\
+bb3914101f704a Rob Herring (Arm  2025-01-09  1659) 		.property_read_bool = acpi_fwnode_property_present,	\
+db3e50f3234ba1 Sakari Ailus      2017-07-21  1660  		.property_read_int_array =				\
+db3e50f3234ba1 Sakari Ailus      2017-07-21  1661  			acpi_fwnode_property_read_int_array,		\
+db3e50f3234ba1 Sakari Ailus      2017-07-21  1662  		.property_read_string_array =				\
+db3e50f3234ba1 Sakari Ailus      2017-07-21  1663  			acpi_fwnode_property_read_string_array,		\
+db3e50f3234ba1 Sakari Ailus      2017-07-21  1664  		.get_parent = acpi_node_get_parent,			\
+db3e50f3234ba1 Sakari Ailus      2017-07-21  1665  		.get_next_child_node = acpi_get_next_subnode,		\
+db3e50f3234ba1 Sakari Ailus      2017-07-21  1666  		.get_named_child_node = acpi_fwnode_get_named_child_node, \
+bc0500c1e43d95 Sakari Ailus      2019-10-03  1667  		.get_name = acpi_fwnode_get_name,			\
+e7e242bccb209b Sakari Ailus      2019-10-03  1668  		.get_name_prefix = acpi_fwnode_get_name_prefix,		\
+3e3119d3088f41 Sakari Ailus      2017-07-21 @1669  		.get_reference_args = acpi_fwnode_get_reference_args,	\
+db3e50f3234ba1 Sakari Ailus      2017-07-21  1670  		.graph_get_next_endpoint =				\
+0ef7478639c516 Sakari Ailus      2018-07-17  1671  			acpi_graph_get_next_endpoint,			\
+db3e50f3234ba1 Sakari Ailus      2017-07-21  1672  		.graph_get_remote_endpoint =				\
+0ef7478639c516 Sakari Ailus      2018-07-17  1673  			acpi_graph_get_remote_endpoint,			\
+37ba983cfb47cc Sakari Ailus      2017-07-21  1674  		.graph_get_port_parent = acpi_fwnode_get_parent,	\
+db3e50f3234ba1 Sakari Ailus      2017-07-21  1675  		.graph_parse_endpoint = acpi_fwnode_graph_parse_endpoint, \
+99c63707bafd15 Sakari Ailus      2022-03-31  1676  		.irq_get = acpi_fwnode_irq_get,				\
+db3e50f3234ba1 Sakari Ailus      2017-07-21  1677  	};								\
+db3e50f3234ba1 Sakari Ailus      2017-07-21  1678  	EXPORT_SYMBOL_GPL(ops)
+db3e50f3234ba1 Sakari Ailus      2017-07-21  1679  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
