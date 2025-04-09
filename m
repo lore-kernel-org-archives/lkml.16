@@ -1,208 +1,115 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0FF615F330
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 09:11:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09573155389
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 09:13:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744189892; cv=none; b=c8ATj4bUnXvKUDUEbnMjs+fAhkzh5uOH25vY5ysfIvb+aGWpkh0GQauLnQCc2ne1vmOKimrR8Z+KySF+kp6QsL8xXPHbmE+Dcm0NYnP8FCW2juB+DoOFDTSvSyChKIYq4fGBmrDnYj0+jo1URTgQRLWiYVzUxOWo8Z5uNQZEoSA=
+	t=1744190007; cv=none; b=Ot9tI01cqR5+ktIa6d+e9L5A2hcrYaFj8XhkVvZLnFFVfX6SFzXuiP4hzM3aBoxTDQLlTIF4jWCMcNxNuNyWQ90XmgIY+yU6AMk9qmzJ9OhdaOq8Amko3nno70M0ywobJisZ1/Bwr8fH5aCus21QPF50XfsA7YeqSG7ju9DZtc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744189892; c=relaxed/simple;
-	bh=oxBpfxWpETYNWAwIwG57Qtk/PEMDni3sXW1IrlVnkiA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B8+e7QwikMyuQO0pHnenR4MR2KUqiChQhxVxLDwQ6xlWqnsaG4W1iAfLZnzKjrFJYoQtlLLV5wSucvSoRJ+VE0L0GgD140/Py07ZR7yVjUsTy+phMMGtYbjfa4h4QWME+O45RMDcGZMKoYkbgR+PaDW6V3n4NXIRy6Jq3pXxIu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=x68SfJeD; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ATH4sD7m; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=x68SfJeD; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ATH4sD7m; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1744190007; c=relaxed/simple;
+	bh=w8jM+kjNpQwYUHFIVj+21LsNdXWV4iKMqaSnGVehs7c=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=dhDuAsiX2vsYyn+Nx7fF7NYTe1QFdNyePAE62LIXBg7CPqJSYGoS4zBE02E6Vz89ls0sE2uJ7vzjjXBns5E/vGEzKs1S6Ujy+Pkujrv2c44qyGj1Hl9TASlWQZ/G5McF8s9MHB0QqExHRBZZIfxPp2FSoKB5R6/s5ByF9eQPLMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=IP7Wimv0; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="x68SfJeD";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ATH4sD7m";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="x68SfJeD";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ATH4sD7m"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 15F1F21163;
-	Wed,  9 Apr 2025 09:11:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744189889; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7VXKOBNGUI9fKpg7pWhEZW+0RN6rg/pB63thRan8omU=;
-	b=x68SfJeDcHWG4nFcDgc0x+pMik057A/7bA8Si1mY8jdtIS8ZV99dKP54JG6sLgFH4x29rT
-	QoY47pkCg30pmyOhVz14P/MJBWT04qTcrNT3+aMGP5L1UbuP5howowKrCoXiBsAqoXdkVr
-	tpK3Azj1uysVQmPb7LZpkHVHGeBeNY8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744189889;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7VXKOBNGUI9fKpg7pWhEZW+0RN6rg/pB63thRan8omU=;
-	b=ATH4sD7mpWPE4lfUe+bcILMf7OGxlOw2A3qtnSff+apAYhQUB7VOa1SIOkMbO8Sr4VczvK
-	WPGh52nLDaQz8ZDA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744189889; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7VXKOBNGUI9fKpg7pWhEZW+0RN6rg/pB63thRan8omU=;
-	b=x68SfJeDcHWG4nFcDgc0x+pMik057A/7bA8Si1mY8jdtIS8ZV99dKP54JG6sLgFH4x29rT
-	QoY47pkCg30pmyOhVz14P/MJBWT04qTcrNT3+aMGP5L1UbuP5howowKrCoXiBsAqoXdkVr
-	tpK3Azj1uysVQmPb7LZpkHVHGeBeNY8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744189889;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7VXKOBNGUI9fKpg7pWhEZW+0RN6rg/pB63thRan8omU=;
-	b=ATH4sD7mpWPE4lfUe+bcILMf7OGxlOw2A3qtnSff+apAYhQUB7VOa1SIOkMbO8Sr4VczvK
-	WPGh52nLDaQz8ZDA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0351313691;
-	Wed,  9 Apr 2025 09:11:29 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id qdSUAME59mfRawAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Wed, 09 Apr 2025 09:11:29 +0000
-Message-ID: <0f2091ba-0a43-4dd3-aa48-fe284530044a@suse.cz>
-Date: Wed, 9 Apr 2025 11:11:37 +0200
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IP7Wimv0"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-306bf444ba2so3025527a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 02:13:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1744190004; x=1744794804; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BaNms8AAHYU6+Lu110JwWuCHuNcKevGY2uAR6UWGQNE=;
+        b=IP7Wimv0+4lMP02bu2jDuBGVXZS7Y0PuCUYtYQeKWoEvcrAeFQRpmnubsCOhcIHL4u
+         R9G9YZq5lwvDEMELvAWCQkokl2aS2fKt2BUaQnPXBlaM+GJ2YnbiJw85X9FhLXuWyiMT
+         f85gli5YSFazGR4wFm6WTc9hhjR41Pvg6Cey0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744190004; x=1744794804;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BaNms8AAHYU6+Lu110JwWuCHuNcKevGY2uAR6UWGQNE=;
+        b=kjn7N391am40M3jQUzfgFs9YiE9HbQ1Me53UoUpfUs9kwYyawiLBK+bov6o4mIC6DG
+         AivbhOK00noCXyNWTtaTw6eHdngy68ibbD+ZRsMkCBgJcQ9UY5gqUBopuLHe7e0OFjsJ
+         nTfUqHZReZOph7m38Z3Dkq9l1lkmAH5/hvSoiI4kWcUE0LE2SKLqKCuJAazlBQ9xZT52
+         OgL3qfqn4MuGQzogxux/OYHui9otqfgehVLJm7N2v4F/iNo3Lt7pWty6N3iNULMDZ8Q8
+         493KclHOldG03tnTienkZgb3l7E84Lz2SGClIHuHCLCjCVabxQc25sXJYSdkFrgsK7el
+         x5Ag==
+X-Forwarded-Encrypted: i=1; AJvYcCWPDrqohFwV1C3f8JxOP/tgPk/pa+x2fGMAO+UBP7yPidxIu4Cn51eacaMxejHwyQOlYRsYJYZxrR02kKg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQz1yDFGvbe4QIC/+VvyULDVXb1MuIo3orW2tXOgOgQqmBPyQj
+	qC3tFkVL/1YdpcTYDPRW56/Heby6O0VR1JAeTuANMPOdGiOxM5AGIPQ7tgoZGQ==
+X-Gm-Gg: ASbGncvoTgyGsEZXkrxJTkiiLi199pxs/W/oIiOc5rY/ZIUmdWbKtnVGq3GRpc6Csje
+	8yBOEAtHW38qx6rSA1aWzZSY+Hd6yyNUfvnbpBbpe5v/IlCcBOpD+C8+rd7zkQJfiQ8BEE/U++Q
+	hNRy+18Rz4lBITAGEK8XFG7FQwAfoAY8pIf+IKd0E3xDiMX/Wx8yPGqtLtTujWNh4/0hZDRV4xZ
+	rYdvm9VRlg+9AAo5cXFwSak1wxbTxAv3kYWda+aqVv90RYCWCgNGa/jh1ksBGnFJtYpApGEDCME
+	/NNfyk/GJVZUHvLYFDnRDk4+shElTlJU8/zW3xveYcSIwnkP2d9PnXOBm07HiclRrJlM4dROZFE
+	/xYOEOz9C32UYU8S9E4dt0IU+rqKT
+X-Google-Smtp-Source: AGHT+IG2BgqZHSIHI8aYAkVrTJn/SDbhHGgzVIz93kwK2lBJoxcfDzl64PMZYZKZH2NJ1T9ptVPhUw==
+X-Received: by 2002:a17:90a:d644:b0:306:b78a:e22d with SMTP id 98e67ed59e1d1-306dbbc2ce6mr2970209a91.20.1744190004299;
+        Wed, 09 Apr 2025 02:13:24 -0700 (PDT)
+Received: from yuanhsinte.c.googlers.com (95.147.221.35.bc.googleusercontent.com. [35.221.147.95])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306dd10dc40sm1182551a91.9.2025.04.09.02.13.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 02:13:23 -0700 (PDT)
+From: Hsin-Te Yuan <yuanhsinte@chromium.org>
+Date: Wed, 09 Apr 2025 09:13:11 +0000
+Subject: [PATCH] thermal: sysfs: Return ENODATA instead of EAGAIN for reads
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm: kvmalloc: make kmalloc fast path real fast path
-To: Michal Hocko <mhocko@suse.com>, Dave Chinner <david@fromorbit.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Shakeel Butt <shakeel.butt@linux.dev>, Yafang Shao
- <laoar.shao@gmail.com>, Harry Yoo <harry.yoo@oracle.com>,
- Kees Cook <kees@kernel.org>, joel.granados@kernel.org,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- Josef Bacik <josef@toxicpanda.com>, linux-mm@kvack.org
-References: <20250401073046.51121-1-laoar.shao@gmail.com>
- <3315D21B-0772-4312-BCFB-402F408B0EF6@kernel.org> <Z-y50vEs_9MbjQhi@harry>
- <CALOAHbBSvMuZnKF_vy3kGGNOCg5N2CgomLhxMxjn8RNwMTrw7A@mail.gmail.com>
- <Z-0gPqHVto7PgM1K@dread.disaster.area> <Z-0sjd8SEtldbxB1@tiehlicka>
- <zeuszr6ot5qdi46f5gvxa2c5efy4mc6eaea3au52nqnbhjek7o@l43ps2jtip7x>
- <Z-43Q__lSUta2IrM@tiehlicka> <Z-48K0OdNxZXcnkB@tiehlicka>
- <Z-7m0CjNWecCLDSq@tiehlicka> <Z_YjKs5YPk66vmy8@tiehlicka>
-From: Vlastimil Babka <vbabka@suse.cz>
-Content-Language: en-US
-In-Reply-To: <Z_YjKs5YPk66vmy8@tiehlicka>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Score: -2.80
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_ALL(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[linux.dev,gmail.com,oracle.com,kernel.org,vger.kernel.org,toxicpanda.com,kvack.org];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
+Message-Id: <20250409-temp-v1-1-9a391d8c60fd@chromium.org>
+X-B4-Tracking: v=1; b=H4sIACc69mcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDEwNL3ZLU3AJds9SkFEPjxBSDlKQUJaDSgqLUtMwKsDHRsbW1AHYO/vd
+ WAAAA
+X-Change-ID: 20250409-temp-6ebd13ad0dbd
+To: "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
+ Lukasz Luba <lukasz.luba@arm.com>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Hsin-Te Yuan <yuanhsinte@chromium.org>
+X-Mailer: b4 0.15-dev-7be4f
 
-On 4/9/25 9:35 AM, Michal Hocko wrote:
-> On Thu 03-04-25 21:51:46, Michal Hocko wrote:
->> Add Andrew
-> 
-> Andrew, do you want me to repost the patch or can you take it from this
-> email thread?
+When userspace nonblocking reads temperature via sysfs, EAGAIN error
+returned by thermal driver will confuse user from the usual meaning of
+EAGAIN, the read would block. Change to throw ENODATA instead of EAGAIN
+to userspace. Also, ENODATA more accurately reflects that data is not
+currently available.
 
-I'll take it as it's now all in mm/slub.c
+Signed-off-by: Hsin-Te Yuan <yuanhsinte@chromium.org>
+---
+ drivers/thermal/thermal_sysfs.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
->> Also, Dave do you want me to redirect xlog_cil_kvmalloc to kvmalloc or
->> do you preffer to do that yourself?
->>
->> On Thu 03-04-25 09:43:41, Michal Hocko wrote:
->>> There are users like xfs which need larger allocations with NOFAIL
->>> sementic. They are not using kvmalloc currently because the current
->>> implementation tries too hard to allocate through the kmalloc path
->>> which causes a lot of direct reclaim and compaction and that hurts
->>> performance a lot (see 8dc9384b7d75 ("xfs: reduce kvmalloc overhead for
->>> CIL shadow buffers") for more details).
->>>
->>> kvmalloc does support __GFP_RETRY_MAYFAIL semantic to express that
->>> kmalloc (physically contiguous) allocation is preferred and we should go
->>> more aggressive to make it happen. There is currently no way to express
->>> that kmalloc should be very lightweight and as it has been argued [1]
->>> this mode should be default to support kvmalloc(NOFAIL) with a
->>> lightweight kmalloc path which is currently impossible to express as
->>> __GFP_NOFAIL cannot be combined by any other reclaim modifiers.
->>>
->>> This patch makes all kmalloc allocations GFP_NOWAIT unless
->>> __GFP_RETRY_MAYFAIL is provided to kvmalloc. This allows to support both
->>> fail fast and retry hard on physically contiguous memory with vmalloc
->>> fallback.
->>>
->>> There is a potential downside that relatively small allocations (smaller
->>> than PAGE_ALLOC_COSTLY_ORDER) could fallback to vmalloc too easily and
->>> cause page block fragmentation. We cannot really rule that out but it
->>> seems that xlog_cil_kvmalloc use doesn't indicate this to be happening.
->>>
->>> [1] https://lore.kernel.org/all/Z-3i1wATGh6vI8x8@dread.disaster.area/T/#u
->>> Signed-off-by: Michal Hocko <mhocko@suse.com>
->>> ---
->>>  mm/slub.c | 8 +++++---
->>>  1 file changed, 5 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/mm/slub.c b/mm/slub.c
->>> index b46f87662e71..2da40c2f6478 100644
->>> --- a/mm/slub.c
->>> +++ b/mm/slub.c
->>> @@ -4972,14 +4972,16 @@ static gfp_t kmalloc_gfp_adjust(gfp_t flags, size_t size)
->>>  	 * We want to attempt a large physically contiguous block first because
->>>  	 * it is less likely to fragment multiple larger blocks and therefore
->>>  	 * contribute to a long term fragmentation less than vmalloc fallback.
->>> -	 * However make sure that larger requests are not too disruptive - no
->>> -	 * OOM killer and no allocation failure warnings as we have a fallback.
->>> +	 * However make sure that larger requests are not too disruptive - i.e.
->>> +	 * do not direct reclaim unless physically continuous memory is preferred
->>> +	 * (__GFP_RETRY_MAYFAIL mode). We still kick in kswapd/kcompactd to start
->>> +	 * working in the background but the allocation itself.
->>>  	 */
->>>  	if (size > PAGE_SIZE) {
->>>  		flags |= __GFP_NOWARN;
->>>  
->>>  		if (!(flags & __GFP_RETRY_MAYFAIL))
->>> -			flags |= __GFP_NORETRY;
->>> +			flags &= ~__GFP_DIRECT_RECLAIM;
->>>  
->>>  		/* nofail semantic is implemented by the vmalloc fallback */
->>>  		flags &= ~__GFP_NOFAIL;
->>> -- 
->>> 2.49.0
->>>
->>
->> -- 
->> Michal Hocko
->> SUSE Labs
-> 
+diff --git a/drivers/thermal/thermal_sysfs.c b/drivers/thermal/thermal_sysfs.c
+index 24b9055a0b6c515b865e0d7e2db1d0de176ff767..3d1713e053dfb867933d95131f1f2491d2ecd07e 100644
+--- a/drivers/thermal/thermal_sysfs.c
++++ b/drivers/thermal/thermal_sysfs.c
+@@ -40,8 +40,11 @@ temp_show(struct device *dev, struct device_attribute *attr, char *buf)
+ 
+ 	ret = thermal_zone_get_temp(tz, &temperature);
+ 
+-	if (ret)
++	if (ret) {
++		if (ret == -EAGAIN)
++			return -ENODATA;
+ 		return ret;
++	}
+ 
+ 	return sprintf(buf, "%d\n", temperature);
+ }
+
+---
+base-commit: a24588245776dafc227243a01bfbeb8a59bafba9
+change-id: 20250409-temp-6ebd13ad0dbd
+
+Best regards,
+-- 
+Hsin-Te Yuan <yuanhsinte@chromium.org>
 
