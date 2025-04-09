@@ -1,113 +1,147 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77CCA267B0E
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 15:15:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D305A17C219;
+	Wed,  9 Apr 2025 15:15:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744211749; cv=none; b=Acmz2K5TBnmJ1QGJo8HCdp/HpaS/8xTS+DRWjyQpMkpjAB4mr4uiwUcd0lBtfClp1xpzPt9GMqYQxXy99durZ97fzY3MqtlTPRUPX+NTEHALHnyG1/QCxDV7gLu4YE5SpXvYucZUbp9r0o0vK1aQ8d7fanN376qEwWEpBD4qdXY=
+	t=1744211761; cv=none; b=WjghopzTuEkZd6LZdocm3xp1cvqSU/lAzq9zZjdIjJEnYQUT9bzuIntfM1kFIJ6X3vpH0SnhQH7zk+UuzFFvZFl4MeivGuL8+wc/MpCAYGHJ6+I47/GQm5Fj3GPVW7KhgOQAZdW+XvH16wxK08Hw5F5SVZER6Kv+aFdVA4W6iYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744211749; c=relaxed/simple;
-	bh=mp2CsehvKqem/lx+OexYDU/oBQK2yMbEYL7KsM3zEk0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=ZRvEfJQr+5aAL8Wr0B5VLaIaauhJhaJeMRcXsif5m8oHd+Q+5j7G5LSKn95WPaM4hQ7KYWpePdfWwI1K6KZ70dS3SfucMscKJxv/If2Hfb0A7KtnVXGKgZJNP7Pnuk/tAXUpYqZB6VTZo5cBgPWBwng/Uxy/15XLDbOAMwQbwi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=bji4hMnN reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1744211761; c=relaxed/simple;
+	bh=JD3UCsEmPQ64i5dIKbrJePQ8znLynqiSwHlAm2gAgCc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=U69+aWzguGwIvadfz38H1wkqw0gTeziYYdESvydP17yTf8xUeJHFzevRK1X2DsWfo86XefRGIEDsXcYLfbOmseYnFVU9DzbzUHM1P6BKlHByTVLbNG+AqGmW/UbPm3HVMPS7sfenoQYYeJ54wX7j71MiTTsuKuvJBHfZQMkDN1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D77ojHRc; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="bji4hMnN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=p17wyMtonYAQUADLGWTScq4n6sxeET0p55+B5KQ9WCU=; b=b
-	ji4hMnNkUfdiRrheqU2nhsFtDk80YN1tS22La//IBIbHBi1XoQWcCCCrYmlNk/7W
-	xjs/0h8i8q35eCkKL8tuIvKCFK6RQKZH/vCQeOPd7I2BBjH6kCuQVCQHjhmob8dw
-	sWhPLkgKCVyrGgJOKtc4+yHs/iwHLJ/H+4Ga7V1KE4=
-Received: from xavier_qy$163.com ( [2408:820c:340b:d070:c540:cde:b0c8:b3ab]
- ) by ajax-webmail-wmsvr-40-117 (Coremail) ; Wed, 9 Apr 2025 23:15:13 +0800
- (CST)
-Date: Wed, 9 Apr 2025 23:15:13 +0800 (CST)
-From: Xavier  <xavier_qy@163.com>
-To: "Lance Yang" <ioworker0@gmail.com>
-Cc: "Dev Jain" <dev.jain@arm.com>, akpm@linux-foundation.org,
-	baohua@kernel.org, catalin.marinas@arm.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	ryan.roberts@arm.com, will@kernel.org
-Subject: Re:Re: [PATCH v1] mm/contpte: Optimize loop to reduce redundant
- operations
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <CAK1f24nR9kYE7OA3onPYi0_jYeAPeX-yqLCFh8GJOkUuZOt45g@mail.gmail.com>
-References: <20250407092243.2207837-1-xavier_qy@163.com>
- <20250407112922.17766-1-ioworker0@gmail.com>
- <5e3f976f.bca1.19610528896.Coremail.xavier_qy@163.com>
- <CAK1f24=hwXCg6K8a=qoWi2DGEWFGBcenSGRoKXtJEo=iR4DtDw@mail.gmail.com>
- <027cc666-a562-46fa-bca5-1122ea00ec0e@arm.com>
- <CAK1f24nR9kYE7OA3onPYi0_jYeAPeX-yqLCFh8GJOkUuZOt45g@mail.gmail.com>
-X-NTES-SC: AL_Qu2fBv6avk8q5Saebekfmk4QgeY+WMW1vP4m34NSN5FwjD/pywkgQGVSIETq9eO0NCSzmgmGehVR0OBiRbhaTaA3/FwUOmzmXNlPer6WIiUFBA==
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D77ojHRc"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30f30200b51so26823751fa.3;
+        Wed, 09 Apr 2025 08:15:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744211758; x=1744816558; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=B0/uW4jPxHZ/GoeUPgM6M/7DEGndKYYoe9YilYwKUUw=;
+        b=D77ojHRcAPC/+VwuhJBDFcYByjy75HJ9AABXFZ6gWGYBjoVjijMdGbV664GfG7NBAV
+         OI0Ogi9rqj6/j7ieAHFkhkb3CmG2ErDfyhuzkQccMddOe8H5b/S0XWY2sQCxw+iqVutd
+         pLu0Zo/G70ImbMSMY6hc0oz9l2ZG6vyJdeRgOaO6kiamXxihBNGn7cMVvViPh1JW8v2m
+         xUd3FERpeI3GWtrUDMdxB/jKT6Ybcv+KNe15qy6LmBQPLIBPWQ/7AmlXONKRfnK+EhF8
+         daYK9mhU+rQLJVod8rDYqjhBL18IAfZTJw9C3eA7RmoWDElp/ibb69+b7PcIF9fdo5vm
+         KMFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744211758; x=1744816558;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=B0/uW4jPxHZ/GoeUPgM6M/7DEGndKYYoe9YilYwKUUw=;
+        b=fF7zqbK9FQzJJFlSLk6I5JjTozJJHqTetcxe21fdcbOANlHuA5VN59yuGXL0H383ty
+         qh52AcOxL81tMVxOG8XAwaV2Ftw7F9B+1H0DGFNmGoHz+peyo+Y88rLVew91qP+kW2rM
+         qb9y20xhCxmtzlZXGa7MMApG+zhLg6DFHnPiD8VSCzzwoWbimSv9a4fBmaLryVhgXpzo
+         bv0A4ZONKriglJkG/Ics/aZzF2gk3fGAwO2gjTw6iqteNeyL8mNihU/A6+3nayeLq+mj
+         S8fumyUp4forkIN+02LQZvLyVEAEy5mHAs8aWsSRjHa/tadSTzELy72pYLwNNBRRtxNH
+         HE+w==
+X-Forwarded-Encrypted: i=1; AJvYcCUTNOMwholhzz/+L39W8sSlCUTgLSFH4ej7DFMtyxaIMqQ+AqUXVWroIKTBvU75Py6fXdlmDjFc1kojoP93@vger.kernel.org, AJvYcCVnvmYSEyAonjENSANy8Xp6I3RdQQxk8e51GLMsQivBRrHDwVTxWx3MKGUdQB+ppJ8xmXAkmpzVMYkB@vger.kernel.org, AJvYcCWgaRgUNinHx8FDoSNUaxPdhnW3YiE9/6x6g0zXSAM6LziPzS0waEtxiA21QPYqtkeWNZeSHyWHUdQHi/vEcGI=@vger.kernel.org, AJvYcCX1zFFgpwFgzCbSWkKyDbAM79CX3K2bR3u2HbrDH8h6z3eEjTuaq4qGDz28jSICEawivlElOYX+@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxP4jmO2U0ybFTaIWrLk0eDQspuu04jjrWMlZAZMQA2GPYgtfp
+	+UUYeOJTCzTRJvvCsaaZRsu8xjdRUHwXTyqg8CliOY9w0hvjdG0RNuCQMDfQq0bxLv4XX5hfQeo
+	JShmwsblMg9QzirnqnKJLL/e3vcQ=
+X-Gm-Gg: ASbGncs4DhoibiclLIfL7PQIWVvLteWhgoWDM4hYA0GzL/El/sHESdOmFX9lGPI/2y+
+	KZZjLvKMvkMow0bN4zkfvmEzcNmHzD9ZdT1KlyVrl3XiZudD7e14li+o+anPXAeoKI13nf7z308
+	6xvkLqhMs6vDu8wKF577WmgA==
+X-Google-Smtp-Source: AGHT+IGNIwqxn5mFZL5/yjjNE/1+c0Q5XXczzTx4ISCw+fSAPDJR88uRUs5CfplseOFx7Y7BUJqkOOXlpJ/JHLnOpnI=
+X-Received: by 2002:a05:651c:1475:b0:308:e5e8:9d4c with SMTP id
+ 38308e7fff4ca-30f43894d5cmr14376751fa.28.1744211757664; Wed, 09 Apr 2025
+ 08:15:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <20c9bd15.b2a7.1961b1e9e88.Coremail.xavier_qy@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:dSgvCgBnrWMBj_ZnwbSSAA--.27509W
-X-CM-SenderInfo: 50dyxvpubt5qqrwthudrp/1tbiTgcqEGf18hkl0QAIs2
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+References: <20250127160709.80604-1-ubizjak@gmail.com> <20250127160709.80604-7-ubizjak@gmail.com>
+ <66e54eb9-58b3-4559-af32-66a77fe1ea01@kernel.org> <CAFULd4YiYRhqu7mGWMN9pAsV-Nc6a97+EgiTCR34iaYDvXjDwQ@mail.gmail.com>
+ <77B3F3ED-102D-4759-98F1-622629EBF9AF@zytor.com>
+In-Reply-To: <77B3F3ED-102D-4759-98F1-622629EBF9AF@zytor.com>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Wed, 9 Apr 2025 17:15:45 +0200
+X-Gm-Features: ATxdqUFXaMouhTV-LvYcXiA_EezjmjAt_Olprrf1g0qki_J08Ltm70ceNO6A5E4
+Message-ID: <CAFULd4ahm3-r66eBJSHV4NfBpnFLUpK2hRak42whuJJeui+B+Q@mail.gmail.com>
+Subject: Re: [PATCH v4 6/6] percpu/x86: Enable strict percpu checks via named
+ AS qualifiers
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Jiri Slaby <jirislaby@kernel.org>, x86@kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-bcachefs@vger.kernel.org, 
+	linux-arch@vger.kernel.org, netdev@vger.kernel.org, 
+	Nadav Amit <nadav.amit@gmail.com>, Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, 
+	Christoph Lameter <cl@linux.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>, 
+	Brian Gerst <brgerst@gmail.com>, Peter Zijlstra <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-CgpIaSBMYW5jZSwKCgpBdCAyMDI1LTA0LTA4IDE3OjE3OjI3LCAiTGFuY2UgWWFuZyIgPGlvd29y
-a2VyMEBnbWFpbC5jb20+IHdyb3RlOgo+T24gVHVlLCBBcHIgOCwgMjAyNSBhdCAxMjoxOeKAr0FN
-IERldiBKYWluIDxkZXYuamFpbkBhcm0uY29tPiB3cm90ZToKPj4KPj4KPj4gSGkgWGF2aWVyLAo+
-Pgo+PiBPbiAwNy8wNC8yNSA3OjAxIHBtLCBMYW5jZSBZYW5nIHdyb3RlOgo+PiA+IE9uIE1vbiwg
-QXByIDcsIDIwMjUgYXQgODo1NuKAr1BNIFhhdmllciA8eGF2aWVyX3F5QDE2My5jb20+IHdyb3Rl
-Ogo+PiA+Pgo+PiA+Pgo+PiA+Pgo+PiA+PiBIaSBMYW5jZSwKPj4gPj4KPj4gPj4gVGhhbmtzIGZv
-ciB5b3VyIGZlZWRiYWNrLCBteSByZXNwb25zZSBpcyBhcyBmb2xsb3dzLgo+PiA+Pgo+PiA+PiAt
-LQo+PiA+PiBUaGFua3MsCj4+ID4+IFhhdmllcgo+PiA+Pgo+PiA+Pgo+PiA+Pgo+PiA+Pgo+PiA+
-Pgo+PiA+PiBBdCAyMDI1LTA0LTA3IDE5OjI5OjIyLCAiTGFuY2UgWWFuZyIgPGlvd29ya2VyMEBn
-bWFpbC5jb20+IHdyb3RlOgo+PiA+Pj4gVGhhbmtzIGZvciB0aGUgcGF0Y2guIFdvdWxkIHRoZSBm
-b2xsb3dpbmcgY2hhbmdlIGJlIGJldHRlcj8KPj4gPj4+Cj4+ID4+PiBkaWZmIC0tZ2l0IGEvYXJj
-aC9hcm02NC9tbS9jb250cHRlLmMgYi9hcmNoL2FybTY0L21tL2NvbnRwdGUuYwo+PiA+Pj4gaW5k
-ZXggNTUxMDdkMjdkM2Y4Li42NGViM2IyZmJmMDYgMTAwNjQ0Cj4+ID4+PiAtLS0gYS9hcmNoL2Fy
-bTY0L21tL2NvbnRwdGUuYwo+PiA+Pj4gKysrIGIvYXJjaC9hcm02NC9tbS9jb250cHRlLmMKPj4g
-Pj4+IEBAIC0xNzQsNiArMTc0LDkgQEAgcHRlX3QgY29udHB0ZV9wdGVwX2dldChwdGVfdCAqcHRl
-cCwgcHRlX3Qgb3JpZ19wdGUpCj4+ID4+Pgo+PiA+Pj4gICAgICAgICAgICAgICAgaWYgKHB0ZV95
-b3VuZyhwdGUpKQo+PiA+Pj4gICAgICAgICAgICAgICAgICAgICAgICBvcmlnX3B0ZSA9IHB0ZV9t
-a3lvdW5nKG9yaWdfcHRlKTsKPj4gPj4+ICsKPj4gPj4+ICsgICAgICAgICAgICAgIGlmIChwdGVf
-eW91bmcob3JpZ19wdGUpICYmIHB0ZV9kaXJ0eShvcmlnX3B0ZSkpCj4+ID4+PiArICAgICAgICAg
-ICAgICAgICAgICAgIGJyZWFrOwo+PiA+Pj4gICAgICAgIH0KPj4KPj4gUXVpdGUgdGhlIGNvaW5j
-aWRlbmNlLCBJIHdhcyB0aGlua2luZyBvZiBkb2luZyBleGFjdGx5IHRoaXMgc29tZSBkYXlzCj4+
-IGJhY2sgYW5kIHRlc3RpbmcgaXQgb3V0IDogKSBDYW4geW91IGRvIGEgbWljcm9hbmFseXNpcyB3
-aGV0aGVyIHRoaXMgZ2V0cwo+PiB1cyBhIGJlbmVmaXQgb3Igbm90PyBUaGlzIGxvb2tzIGxpa2Ug
-YW4gb3B0aW1pemF0aW9uIG9uIHBhcGVyIGJ1dCBtYXkKPj4gbm90IGJlIG9uZSBhZnRlciBhbGwg
-YmVjYXVzZSBDT05UX1BURVMgaXMgb25seSAxNiBhbmQgYSBzaW1wbGUgbG9vcAo+PiB3aXRob3V0
-IGV4dHJhIGlmLWNvbmRpdGlvbnMgbWF5IGp1c3QgYmUgZmFzdGVyLgo+Cj5ZZWFoLCBJIHdhcyB0
-aGlua2luZyB0aGUgc2FtZSA7KQo+Cj5UaGlzIGNoYW5nZSBzZWVtcyByZWFzb25hYmxlIGluIHRo
-ZW9yeS4gQnV0IHdpdGggQ09OVF9QVEVTPTE2LCBrZWVwaW5nCj5pdCBzaW1wbGUgbWlnaHQgYWN0
-dWFsbHkgYmUgZmFzdGVyLCBJTU8uCgpQbGVhc2UgdGFrZSBhIGxvb2sgYXQgcGF0Y2ggdjIuIEkn
-dmUgdXBkYXRlZCB0aGUgY29kZSB3aXRob3V0IGludHJvZHVjaW5nIGFueQphZGRpdGlvbmFsIGNo
-ZWNrcy4gVGhlIG51bWJlciBvZiBjaGVja3MgaW4gdGhlIG5ldyBwYXRjaCBpcyBkZWZpbml0ZWx5
-IGxlc3MgdGhhbgpvciBlcXVhbCB0byB0aGF0IGluIHRoZSBvcmlnaW5hbCBjb2RlLgoKLS0KVGhh
-bmtzLApYYXZpZXIKCgo+Cj5UaGFua3MsCj5MYW5jZQo+Cj4+Cj4+ID4+Pgo+PiA+Pj4gICAgICAg
-IHJldHVybiBvcmlnX3B0ZTsKPj4gPj4+IC0tCj4+ID4+Pgo+PiA+Pj4gV2UgY2FuIGNoZWNrIHRo
-ZSBvcmlnX3B0ZSBmbGFncyBkaXJlY3RseSBpbnN0ZWFkIG9mIHVzaW5nIGV4dHJhIGJvb2xlYW4K
-Pj4gPj4+IHZhcmlhYmxlcywgd2hpY2ggZ2l2ZXMgdXMgYW4gZWFybHktZXhpdCB3aGVuIGJvdGgg
-ZGlydHkgYW5kIHlvdW5nIGZsYWdzCj4+ID4+PiBhcmUgc2V0Lgo+PiA+PiBZb3VyIHdheSBvZiB3
-cml0aW5nIHRoZSBjb2RlIGlzIGluZGVlZCBtb3JlIGNvbmNpc2UuIEhvd2V2ZXIsIEkgdGhpbmsK
-Pj4gPj4gICB1c2luZyBib29sZWFuIHZhcmlhYmxlcyBtaWdodCBiZSBtb3JlIGVmZmljaWVudC4g
-QWx0aG91Z2ggaXQgaW50cm9kdWNlcwo+PiA+PiAgIGFkZGl0aW9uYWwgdmFyaWFibGVzLCBjb21w
-YXJpbmcgYm9vbGVhbiB2YWx1ZXMgaXMgbGlrZWx5IHRvIGJlIG1vcmUKPj4gPj4gICBlZmZpY2ll
-bnQgdGhhbiBjaGVja2luZyBiaXQgc2V0dGluZ3MuCj4+ID4+Cj4+ID4+Pgo+PiA+Pj4gQWxzbywg
-aXMgdGhpcyBvcHRpbWl6YXRpb24gcmVhbGx5IG5lZWRlZCBmb3IgdGhlIGNvbW1vbiBjYXNlPwo+
-PiA+PiBUaGlzIGZ1bmN0aW9uIGlzIG9uIGEgaGlnaC1mcmVxdWVuY3kgZXhlY3V0aW9uIHBhdGgu
-IER1cmluZyBkZWJ1Z2dpbmcsCj4+ID4+ICAgSSBmb3VuZCB0aGF0IGluIG1vc3QgY2FzZXMsIHRo
-ZSBmaXJzdCBmZXcgcGFnZXMgYXJlIGFscmVhZHkgbWFya2VkIGFzCj4+ID4+ICAgYm90aCBkaXJ0
-eSBhbmQgeW91bmcuIEJ1dCBjdXJyZW50bHksIHRoZSBwcm9ncmFtIHN0aWxsIGhhcyB0byBjb21w
-bGV0ZQo+PiA+PiAgIHRoZSBlbnRpcmUgbG9vcCBvZiAxNiBwdGVwIGl0ZXJhdGlvbnMsIHdoaWNo
-IHNlcmlvdXNseSByZWR1Y2VzIHRoZSBlZmZpY2llbmN5Lgo+PiA+Cj4+ID4gSG1tLi4uIGFncmVl
-ZCB0aGF0IHRoaXMgcGF0Y2ggaGVscHMgd2hlbiBlYXJseSBQVEVzIGFyZSBkaXJ0eS95b3VuZywg
-YnV0Cj4+ID4gZm9yIGxhdGUtb25lcy1vbmx5IGNhc2VzLCBpdCBvbmx5IGludHJvZHVjZXMgb3Zl
-cmhlYWQgd2l0aCBubyBiZW5lZml0LCBJSVVDLgo+PiA+Cj4+ID4gU28sIGxldCdzIHdhaXQgZm9y
-IGZvbGtzIHRvIHRha2UgYSBsb29rIDspCj4+ID4KPj4gPiBUaGFua3MsCj4+ID4gTGFuY2UKPj4g
-Pgo+PiA+Pj4KPj4gPj4+IFRoYW5rcywKPj4gPj4+IExhbmNlCj4+ID4KPj4KCgo=
+On Wed, Apr 9, 2025 at 5:09=E2=80=AFPM H. Peter Anvin <hpa@zytor.com> wrote=
+:
+>
+> On April 9, 2025 4:43:27 AM PDT, Uros Bizjak <ubizjak@gmail.com> wrote:
+> >On Wed, Apr 9, 2025 at 1:07=E2=80=AFPM Jiri Slaby <jirislaby@kernel.org>=
+ wrote:
+> >>
+> >> On 27. 01. 25, 17:05, Uros Bizjak wrote:
+> >> > This patch declares percpu variables in __seg_gs/__seg_fs named AS
+> >> > and keeps them named AS qualified until they are dereferenced with
+> >> > percpu accessor. This approach enables various compiler check
+> >> > for cross-namespace variable assignments.
+> >>
+> >> So this causes modpost to fail to version some symbols:
+> >>
+> >> > WARNING: modpost: EXPORT symbol "xen_vcpu_id" [vmlinux] version gene=
+ration failed, symbol will not be versioned.
+> >> > Is "xen_vcpu_id" prototyped in <asm/asm-prototypes.h>?
+> >> > WARNING: modpost: EXPORT symbol "irq_stat" [vmlinux] version generat=
+ion failed, symbol will not be versioned.
+> >> > Is "irq_stat" prototyped in <asm/asm-prototypes.h>?
+> >> > WARNING: modpost: EXPORT symbol "fred_rsp0" [vmlinux] version genera=
+tion failed, symbol will not be versioned.
+> >> > Is "fred_rsp0" prototyped in <asm/asm-prototypes.h>?
+> >> > WARNING: modpost: EXPORT symbol "cpu_dr7" [vmlinux] version generati=
+on failed, symbol will not be versioned.
+> >> > Is "cpu_dr7" prototyped in <asm/asm-prototypes.h>?
+> >> > WARNING: modpost: EXPORT symbol "cpu_tss_rw" [vmlinux] version gener=
+ation failed, symbol will not be versioned.
+> >> > Is "cpu_tss_rw" prototyped in <asm/asm-prototypes.h>?
+> >> > WARNING: modpost: EXPORT symbol "__tss_limit_invalid" [vmlinux] vers=
+ion generation failed, symbol will not be versioned.
+> >> > Is "__tss_limit_invalid" prototyped in <asm/asm-prototypes.h>?
+> >> > WARNING: modpost: EXPORT symbol "irq_fpu_usable" [vmlinux] version g=
+eneration failed, symbol will not be versioned.
+> >> > Is "irq_fpu_usable" prototyped in <asm/asm-prototypes.h>?
+> >> > WARNING: modpost: EXPORT symbol "cpu_info" [vmlinux] version generat=
+ion failed, symbol will not be versioned.
+> >> > Is "cpu_info" prototyped in <asm/asm-prototypes.h>?
+> >> > WARNING: modpost: EXPORT symbol "gdt_page" [vmlinux] version generat=
+ion failed, symbol will not be versioned.
+> >> > Is "gdt_page" prototyped in <asm/asm-prototypes.h>?
+> >>  > ...
+> >>
+> >> That happens both with 6.15-rc1 and today's -next. Ideas?
+> >
+> >https://lore.kernel.org/lkml/20250404102535.705090-1-ubizjak@gmail.com/
+
+> A lot of those seem to be things that definitely shouldn't be expected...
+
+These symbols are just declared with an extra __seg_gs that genksyms
+doesn't understand, e.g.:
+
+extern __seg_gs __attribute__((section(".data..percpu" "..hot.."
+"this_cpu_off"))) __typeof__(unsigned long) this_cpu_off;
+
+The workaround falls back when __GENKSYMS__ is defined to:
+
+extern __attribute__((section(".data..percpu" "..hot.."
+"this_cpu_off"))) __typeof__(unsigned long) this_cpu_off;
+
+which is what genksyms processes without problems.
+
+Uros.
