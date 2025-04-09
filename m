@@ -1,87 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5ED31C2324;
-	Wed,  9 Apr 2025 17:07:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14C211C2324;
+	Wed,  9 Apr 2025 17:08:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744218470; cv=none; b=mPcOTSYwyFA5gQ5R9UUF/z2QM9AM66WZGAFDh1awhK1MQRFb14F2CXVHdW2gPhFNc3I4TMc+o64MTdz9AqXR8SSk7lubDgLe4dh6zA7bvlzgGJsR5sPUSZu89EaHCu3FNEv6snBYUdbwvSQnxddDi82O0YpHGQHw53PhGVmwxbI=
+	t=1744218496; cv=none; b=LVoDu1rGnE+gRCLXr+odpkTKkjEAne5cLbwlI+/60LXkZQJLNTfpb5afTPt5QIYGSR1gxxdoPsty+C9Z11jAVXEEMYAVixSsZzpUdXcKdrNgphM6WXWfvU+dpCd8JsrUq/MQxB7ew9OdLAGbP/HAND7VhKbqS0gfEQOx4TDWu7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744218470; c=relaxed/simple;
-	bh=PcqRDQbAzwE809Lz8qtd+AbOW+ahMuiblP3wSIQB8Ss=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LlA9f9umQPvMTOTrCoyiFaq8ebOI/dx9U75BhjigqU6WJJfydkCtdT89ep3AdRnF2NH8+mxEOwejeXqFgItiOi4sbb/co2UY1GtWLAYmXkHY3qMVez9Ln6JlxVaPlQsPnYIAQ87VZY45Ag0125jJgEYMqoP6BPtwlH1WlrBd0z0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a57XR0c4; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a57XR0c4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E47FC4CEE2;
-	Wed,  9 Apr 2025 17:07:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744218470;
-	bh=PcqRDQbAzwE809Lz8qtd+AbOW+ahMuiblP3wSIQB8Ss=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=a57XR0c43AffaWmAz1Ed7S/TRdn57sZL7pBF3H7tCtXQAUM2KXRXXq6ioEJRw5WVw
-	 rpZDto+ddqJoC6HYDwcWVYHBOy79rwxs7Lo+qeu7/U+OUyZFeO/IjzNAUZCsvGTmAi
-	 fQ8PBep3dK71lPOvym3o3tj3kDYtLE5xU0IByVZsRh1vq8rNBs3LpGVhh5ps/OZbbl
-	 941G4LCV9sfUzJoOwzupdnuEjfbug7GmjcD2iKk4+DfvcHLJiIuFPOWxPGeFnusMNz
-	 TN8SRDnQsLHWL5SCoiYntMb46wkdnnmGnUv8WiEY4vj/FCiMYFYXbzrvQUrH8YgQTN
-	 HOLsk9c8VGjag==
-Date: Wed, 9 Apr 2025 18:07:45 +0100
-From: Simon Horman <horms@kernel.org>
-To: Shannon Nelson <shannon.nelson@amd.com>
-Cc: andrew+netdev@lunn.ch, brett.creeley@amd.com, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	michal.swiatkowski@linux.intel.com, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: Re: [PATCH net 4/6] pds_core: Remove unnecessary check in
- pds_client_adminq_cmd()
-Message-ID: <20250409170745.GO395307@horms.kernel.org>
-References: <20250407225113.51850-1-shannon.nelson@amd.com>
- <20250407225113.51850-5-shannon.nelson@amd.com>
+	s=arc-20240116; t=1744218496; c=relaxed/simple;
+	bh=iOeB+D7hHLfOumoiYclzkNLQWOZ6MxWqpBTCBAaYbHw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Bmba357mrufEcJp3d33i08aLvD2byElh860msFDJBsJEND+JHlubDJdCinIt4U//o3Di0qtByc23zbyg+5zHqiWpQCA7lJ/OOmJT5m/7gYICPF1ZRt0kJdtWb87aTYRvXa3BjEODWDaCOy+ljC1hEGgHqShOUKOdVLuzeINb3Cs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-476af5479feso68667021cf.2;
+        Wed, 09 Apr 2025 10:08:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744218491; x=1744823291;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oQY1o7SxIT4SK13jx8540K5lOFJCUfKlKKOAT7vzuN4=;
+        b=NwtgrvLYK/Jiue3ECzs0CDztukh+45ietjWYEADBG2bo3cbxsXQ+s15rcrJtsYHwxt
+         m980Eu+y3N+fGGpjJVvn67Ud3TsXqBDSvADhLrF4uI2Cu1LYVtE0C/ljIko0TmPxWZkb
+         8pjnFJR0vBz46D7aKfBAYX2bBMzzD9iA/KcT0k7r0lWH7sLkc7OJqGSWcKP3GKq2qF9X
+         107C0I0iLgrvAf8/7NwanFZi/Dogug865tI606yVSSNhL/ls9jP2wbTD2ZYjkaT8o7+h
+         HfpNJwoZAbFvoDwfFuXmRLKtJClBkAV1Hfonc6XXgG/dth7GI5rVtn+mCX9tgi9Q/BFe
+         Tpsg==
+X-Forwarded-Encrypted: i=1; AJvYcCWs/7f1M/GbpR9Pp4QfMRKP8ljm6o9uwRAfCYCVOrgvmK0oQ9pLXBso5lSa4buBG0rZ6Ks5oUytX1UVBNi4gTk=@vger.kernel.org, AJvYcCWvAkNFAbOSqwS+Lu+uf/91DjS82rk5JWXSk8fKll58uf+FyDJQaIxSgVYmy0ftPgfuSI9AFUZ8wKmMYXo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVwBn2tdQbwdQr9IBkjocw2ruXKKaKBHUwo2zU0WJknRtVeupW
+	RvLnKb6tYMmOoUaPFFVZ7Q0WHloJ2GW1q2IMEptwR7qYcg9wD8YNA5Nqmq1PukY=
+X-Gm-Gg: ASbGnctnWKY/jHuYjjzLPOgT/+PyG2kSxnWExyXxeV4vMu9Orrljg1kYxAQej8YhR9w
+	IofjsfzwTrORi7qdsJO39whlTY8sTtzpI0vbq7jhMsfN7YqP40DXFzs1EPSJmtJqNf1ck4gYMQy
+	gmm9SzyEgEdNGWOYR3XFaEAj2E1cygn2tWdxK1aGV/pNq0/2D+D8hWVZ7OfWLFRuh8sABDEgyTg
+	zufBlhwKaEVyvadwG8xNcIpGQLaVGN2n23435y8L7Bcaka1DL0mOnNso0l+5/9k4cQB3ecUEu4Q
+	8uYsBUuJ1bkQLDJaKiXq3owDKEL6W63Pz3FusMUGDbADGFMd3IGLlSOSNrNKM5nqtm295f2yEkS
+	LY1shGtE=
+X-Google-Smtp-Source: AGHT+IHqQhe9bvbGPb2d0plfGbID0qYrk67eoNDVlBSwmQZXe1wM8EhBVOuxYi7mxMNZPK7pciZ4Fw==
+X-Received: by 2002:ad4:4ea1:0:b0:6e8:fde9:5d07 with SMTP id 6a1803df08f44-6f0dd0ac556mr42405866d6.26.1744218490679;
+        Wed, 09 Apr 2025 10:08:10 -0700 (PDT)
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com. [209.85.222.170])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f0dea07ef3sm9500836d6.71.2025.04.09.10.08.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Apr 2025 10:08:10 -0700 (PDT)
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7c7913bab2cso290420085a.0;
+        Wed, 09 Apr 2025 10:08:09 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUWFDJBb3M60aUz3OKmtZ18HmV/GISzM8yUnQCKyRBdymtDN+caEvaCpOUX+F+b0XaL+Y46mQwM6ikU7kw=@vger.kernel.org, AJvYcCUicDLFsEbhN6XltiBw+QTfrq/tHxUW/meqlrtzh0JpHZ7B26qMSoZGxxQqDzkxx9xE1Z/woHIe6WWwM9shcus=@vger.kernel.org
+X-Received: by 2002:a05:620a:298e:b0:7c5:56c0:a8 with SMTP id
+ af79cd13be357-7c79dd93ccemr445711285a.1.1744218489140; Wed, 09 Apr 2025
+ 10:08:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407225113.51850-5-shannon.nelson@amd.com>
+References: <20250409061129.136788-1-fujita.tomonori@gmail.com> <CANiq72mbci8kxEx5jrq=HVc6WKuJqq8NCLzNsjH1wFcJNoHm+w@mail.gmail.com>
+In-Reply-To: <CANiq72mbci8kxEx5jrq=HVc6WKuJqq8NCLzNsjH1wFcJNoHm+w@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 9 Apr 2025 19:07:56 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWtgSjxeGYJVNzeWPOCd9nUWeKQnCtFQaROQ1o=r_-QwQ@mail.gmail.com>
+X-Gm-Features: ATxdqUGA2zHq6_S5SB_qEsVdujtLoXOP8BLoi9G8SgAElmMjDh-OTkFg66-F8QM
+Message-ID: <CAMuHMdWtgSjxeGYJVNzeWPOCd9nUWeKQnCtFQaROQ1o=r_-QwQ@mail.gmail.com>
+Subject: Re: [PATCH v1] um: fix incompatible argument type in iounmap()
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: FUJITA Tomonori <fujita.tomonori@gmail.com>, richard@nod.at, 
+	anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net, 
+	linux-um@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>, 
+	Stephen Bates <sbates@raithlin.com>, Danilo Krummrich <dakr@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, 
+	Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 07, 2025 at 03:51:11PM -0700, Shannon Nelson wrote:
-> From: Brett Creeley <brett.creeley@amd.com>
-> 
-> When the pds_core driver was first created there were some race
-> conditions around using the adminq, especially for client drivers.
-> To reduce the possibility of a race condition there's a check
-> against pf->state in pds_client_adminq_cmd(). This is problematic
-> for a couple of reasons:
-> 
-> 1. The PDSC_S_INITING_DRIVER bit is set during probe, but not
->    cleared until after everything in probe is complete, which
->    includes creating the auxiliary devices. For pds_fwctl this
->    means it can't make any adminq commands until after pds_core's
->    probe is complete even though the adminq is fully up by the
->    time pds_fwctl's auxiliary device is created.
-> 
-> 2. The race conditions around using the adminq have been fixed
->    and this path is already protected against client drivers
->    calling pds_client_adminq_cmd() if the adminq isn't ready,
->    i.e. see pdsc_adminq_post() -> pdsc_adminq_inc_if_up().
-> 
-> Fix this by removing the pf->state check in pds_client_adminq_cmd()
-> because invalid accesses to pds_core's adminq is already handled by
-> pdsc_adminq_post()->pdsc_adminq_inc_if_up().
-> 
-> Fixes: 10659034c622 ("pds_core: add the aux client API")
+Hi Miguel,
 
-I'm assuming that backporting this patch that far only
-makes sense if other fixes have been backported too.
-And that their fixes tags should enable that happening.
+CC arnd
 
-If so, this seems fine to me.
+On Wed, 9 Apr 2025 at 16:48, Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
+> On Wed, Apr 9, 2025 at 8:16=E2=80=AFAM FUJITA Tomonori
+> <fujita.tomonori@gmail.com> wrote:
+> >
+> > Align iounmap() signature with other architectures.
+>
+> Most indeed have `volatile`, but nios2 and m68k don't -- Cc'ing them
+> just in case.
 
-> Signed-off-by: Brett Creeley <brett.creeley@amd.com>
-> Signed-off-by: Shannon Nelson <shannon.nelson@amd.com>
+Indeed. Apparently the volatile keyword has not always been there...
+Why does iounmap() need the volatile keyword?
+Why does pci_iounmap() not have the volatile keyword?
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+Gr{oetje,eeting}s,
+
+                        Geert
+
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
