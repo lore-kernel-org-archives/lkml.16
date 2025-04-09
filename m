@@ -1,140 +1,96 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D4D827781A;
-	Wed,  9 Apr 2025 19:13:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6228279322
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 19:14:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744226023; cv=none; b=bvfaeoGFGj7H7jmDh2BZC4GW1QcqR3/J605WYGRJcxXsQ/hzJspstEC7742l6YM02fiC90FBjjQfJtYFtxnLaOxR3P3EccKNLptnrRGfXb0Rqs0Wi38oFItUCZKkpBZX0Doo8Rjd0SF9sCz6Da49OH7kLjq2BSiin+Vw+E/WCSQ=
+	t=1744226086; cv=none; b=oRKcjb/ss8txoxJ+9q+lrPTan4gYbPm1DHJnnbZ+L6rs6jAfFB6HgBAPMgLXwLM5i0l/ajpSep1APQArjroS/ml7J0YclXDpOHMj5AjQ/Qu1toT7Nq21kFj97pNcAv11B0mgaQctm1dWOQDgNYkwj0TS0hA8heAZtpDF4yzg6io=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744226023; c=relaxed/simple;
-	bh=bII1RpD7ypSXY5zMoPYZb6959z8htAPPjAzhqYdTo/Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=llPXJMuSk4WRbQwlHTb69KBzHOFXX5mAJIDw6cGA6mVeYlLEwVJlweNdKQpjMacEq3cgLC4HX/E8NJZ/I3fqhLhV8ZxLSX7qOtG4zKCqeVr1nDmD63FdX/W3OKU6xJjgz6riChnk533jNW0CxamNTE4i5sxu/r2kD13tL1cRQBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=AmWc/8xB; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1744226086; c=relaxed/simple;
+	bh=ObEbdYoZwh4e4oD/nKauzI9XH6EntmyOLUPtsuvDmio=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=O2BFKUOyBTceiCLM8H0AEgGl3oW8jgoYX2ME4Yfr33cVzJjPeeKU7553a2TXU2me8nSFL2/Z8yz+BRpmPtxwOS9EPDswJAEFJ36r3ZXjHLCUVJTIRi9iNmdmpsJqetB3+zcf5T/9usns9uDlUIVtHy6Ao4cgnjpa5/ch4nbc70o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MwyquiVZ; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AmWc/8xB"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=pBCktiJTF9ueOit2Y8l4DE7XAAKAGJ58t0d/eWAXUGM=; b=AmWc/8xBAGnnECdlqIW9iVhNNM
-	HeNPscZWzE1EH0e6+sdXsLXkKwXxcQlliua6O4B+8tbEosd8zRtgPABxpACWabsRlL2AhVumY8k3v
-	VGaeXfuz5yLvKlJ7VqRPPvMNwn6Q1PwxlR3p7RxF8AgnAYQ4uhGkqRdpg2bdlN8vF0slGcH5ywvAq
-	ylezD+WnpXoXR7cEPeqPrqA4gkvkLcM7hEpu9FumuAev3/XgHy7D13E5p7yBC5qIkzclgJ0CWpYDK
-	lbjNiXcY9QlFH3G+rQ3Q7Pze68dz4Ohu/Wntrdh333DnnTr/5MU505oanGJcByd0jq9FZ0qqmVuSo
-	j/GMKxpw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u2arc-00000008fgp-3V4J;
-	Wed, 09 Apr 2025 19:13:33 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 67ACF3003FF; Wed,  9 Apr 2025 21:13:32 +0200 (CEST)
-Date: Wed, 9 Apr 2025 21:13:32 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
-	linux-rtc@vger.kernel.org,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Mateusz =?utf-8?Q?Jo=C5=84czyk?= <mat.jonczyk@o2.pl>,
-	lkml <linux-kernel@vger.kernel.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Chris Bainbridge <chris.bainbridge@gmail.com>
-Subject: Re: [PATCH] timekeeping: Add a lockdep override in tick_freeze().
-Message-ID: <20250409191332.GR9833@noisy.programming.kicks-ass.net>
-References: <20250330113202.GAZ-krsjAnurOlTcp-@fat_crate.local>
- <87sempv17b.ffs@tglx>
- <20250403135031.giGKVTEO@linutronix.de>
- <20250403193659.hhUTgJLH@linutronix.de>
- <87r029uh3j.ffs@tglx>
- <20250404133429.pnAzf-eF@linutronix.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MwyquiVZ"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22580c9ee0aso63645ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 12:14:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744226084; x=1744830884; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hsN4usZK0A7ueS0icyhQ0S0ROuOzv2PqXDsZm30Wf1w=;
+        b=MwyquiVZqoMszR+nCRADI4UhuArixYsr8HnpOr3gctWsLgfYov8NvAy570zDUP5nEV
+         6JHHenjEZtZm4u5uDCeBXk+oakU2yAz/RSRsXMvA9wmtt+pzmxdoAQisiQB7DcE8k9Vo
+         mstD4IyBCBDjG2xG3M5f/ObHy4UCMh4/C9LM8Z8dT9cFnlEbWJmKaBjM6G/guBYqRn0k
+         QJD51oIEnUYPq/WIVHpHrUpSUXnS31EmKksoLu0BH2nlJkiZ2dL8gV9uxl6IPC6HbeU3
+         ajQF16f/2gUgb7ss6Hl9Pa6o7CI+np0+IN1yo/uhtdk1gKVprSVBGA1ionknN6DyJdOp
+         tiUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744226084; x=1744830884;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hsN4usZK0A7ueS0icyhQ0S0ROuOzv2PqXDsZm30Wf1w=;
+        b=ZYwdcuNBR0D4F2r/7LmxuR60v+uBNWSHkUUigxFEKWfp4/i44KEk/GIbAjwMh4Lg4t
+         4Q9iieAixzq/zSFmFicR9Ud956FUL8mAxE6OeE1y4uPIU2/0FVKemXgj6KEaLWLlOfo2
+         veSrPMo/dr3indbm8qek2sugnC55rM1oM3NmajV2pkAoSwMNvCzt4vX8d7XSn1/j/gYp
+         uvJu+xo1Po35gTlvihx0Ty55EuV105OAsVF21P7+P5sabA92eVY4QPXRuPgdwQu57NDB
+         rJHpoFa3FrKX6hWcLni7hP4L18JlxLDxwlhwZ5IZFDkgY9e+csO44P/rBCGD0ICmVxrD
+         Xebg==
+X-Gm-Message-State: AOJu0YzQCdWuiPul94h9E5WNG4TOPeQRA6C9imloBTj0zIMVApkz87+1
+	mnRBQdxX05MgK6P5If0hhDmpg7tlT+NdkZGGLpYyZDQ6sSkSx9iB
+X-Gm-Gg: ASbGncttjEFUpZSpbEGRO8+PBSvPUhuRzwPW1QMemXsj4BRabr2dHVZJM0C4a40tYCR
+	O4GDquOJmeX3+BPvGLVDOnIZ2oY08dbbCXsQQkRvD0j+Ll4kTiM/slHygW0DZThLK6XRodBYlkM
+	ijM3Ck6JzC1oCo3w+mC/M6qSJVJUGlG54zammcNg10UEMcmFD01QmGx6Isl5gVxHz5EteC+/7ww
+	8k9Ium57u8T4FLHozeLyf9PR7CgqLMvp4G8kSRA8Uch0Tl7LU5jSwmMx7z5sEhZeAUOw1cwJeO0
+	MQ9gYp0e7B0zUG32njHg9CdHxZAN1TqdRLMvs96Qt9+a5a7oBg==
+X-Google-Smtp-Source: AGHT+IFns0pp73xtBvR0QaS5uQEgm848oqDPe033njIN1zmw5oHVs52wvkKz8a9wxIyS/J2CPP84wQ==
+X-Received: by 2002:a17:902:e752:b0:226:30f6:1639 with SMTP id d9443c01a7336-22b42c2f2damr618145ad.51.1744226083964;
+        Wed, 09 Apr 2025 12:14:43 -0700 (PDT)
+Received: from jemmy.. ([223.167.142.48])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1d2b0b9sm1733064b3a.36.2025.04.09.12.14.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 12:14:43 -0700 (PDT)
+From: Jemmy Wong <jemmywong512@gmail.com>
+To: Willy Tarreau <w@1wt.eu>,
+	linux@weissschuh.net
+Cc: linux-kernel@vger.kernel.org,
+	Jemmy Wong <Jemmywong512@gmail.com>
+Subject: [PATCH v2] tools/nolibc/types.h: fix mismatched parenthesis in minor()
+Date: Thu, 10 Apr 2025 03:14:36 +0800
+Message-ID: <20250409191436.75658-1-jemmywong512@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250404133429.pnAzf-eF@linutronix.de>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 04, 2025 at 03:34:29PM +0200, Sebastian Andrzej Siewior wrote:
-> tick_freeze() acquires a raw_spinlock_t (tick_freeze_lock). Later in the
-> callchain (timekeeping_suspend() -> mc146818_avoid_UIP()) the RTC driver
-> can acquire a spinlock_t which becomes a sleeping lock on PREEMPT_RT.
-> Lockdep complains about this lock nesting.
-> 
-> Add a lockdep override for this special case and a comment explaining
-> why it is okay.
-> 
-> Reported-by: Borislav Petkov <bp@alien8.de>
-> Closes: https://lore.kernel.org/all/20250330113202.GAZ-krsjAnurOlTcp-@fat_crate.local/
-> Reported-by: Chris Bainbridge <chris.bainbridge@gmail.com>
-> Closes: https://lore.kernel.org/all/CAP-bSRZ0CWyZZsMtx046YV8L28LhY0fson2g4EqcwRAVN1Jk+Q@mail.gmail.com/
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Fix an imbalance where opening parentheses exceed closing ones.
 
-This is of course horrible :-) But yes, probably the best one can do
-given how things are.
+Signed-off-by: Jemmy Wong <Jemmywong512@gmail.com>
+---
+ tools/include/nolibc/types.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+diff --git a/tools/include/nolibc/types.h b/tools/include/nolibc/types.h
+index b26a5d0c417c..32d0929c633b 100644
+--- a/tools/include/nolibc/types.h
++++ b/tools/include/nolibc/types.h
+@@ -201,7 +201,7 @@ struct stat {
+ /* WARNING, it only deals with the 4096 first majors and 256 first minors */
+ #define makedev(major, minor) ((dev_t)((((major) & 0xfff) << 8) | ((minor) & 0xff)))
+ #define major(dev) ((unsigned int)(((dev) >> 8) & 0xfff))
+-#define minor(dev) ((unsigned int)(((dev) & 0xff))
++#define minor(dev) ((unsigned int)((dev) & 0xff))
+ 
+ #ifndef offsetof
+ #define offsetof(TYPE, FIELD) ((size_t) &((TYPE *)0)->FIELD)
+-- 
+2.43.0
 
-> ---
->  kernel/time/tick-common.c | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> diff --git a/kernel/time/tick-common.c b/kernel/time/tick-common.c
-> index a47bcf71defcf..8fd8e2ee09fa1 100644
-> --- a/kernel/time/tick-common.c
-> +++ b/kernel/time/tick-common.c
-> @@ -509,6 +509,7 @@ void tick_resume(void)
->  
->  #ifdef CONFIG_SUSPEND
->  static DEFINE_RAW_SPINLOCK(tick_freeze_lock);
-> +static DEFINE_WAIT_OVERRIDE_MAP(tick_freeze_map, LD_WAIT_SLEEP);
->  static unsigned int tick_freeze_depth;
->  
->  /**
-> @@ -528,9 +529,20 @@ void tick_freeze(void)
->  	if (tick_freeze_depth == num_online_cpus()) {
->  		trace_suspend_resume(TPS("timekeeping_freeze"),
->  				     smp_processor_id(), true);
-> +		/*
-> +		 * All other CPUs have their interrupts disabled and are
-> +		 * suspended to idle. Other tasks have been frozen so there is
-> +		 * no scheduling happening. This means that there is no
-> +		 * concurrency in the system at this point. Therefore it is okay
-> +		 * to acquire a sleeping lock on PREEMPT_RT, such as spinlock_t,
-> +		 * because the lock can not be acquired and can not block.
-> +		 * Inform lockdep about the situation.
-> +		 */
-> +		lock_map_acquire_try(&tick_freeze_map);
->  		system_state = SYSTEM_SUSPEND;
->  		sched_clock_suspend();
->  		timekeeping_suspend();
-> +		lock_map_release(&tick_freeze_map);
->  	} else {
->  		tick_suspend_local();
->  	}
-> @@ -552,8 +564,16 @@ void tick_unfreeze(void)
->  	raw_spin_lock(&tick_freeze_lock);
->  
->  	if (tick_freeze_depth == num_online_cpus()) {
-> +		/*
-> +		 * Similar to tick_freeze(). On resumption the first CPU may
-> +		 * acquire uncontended sleeping locks while other CPUs block on
-> +		 * tick_freeze_lock.
-> +		 */
-> +		lock_map_acquire_try(&tick_freeze_map);
->  		timekeeping_resume();
->  		sched_clock_resume();
-> +		lock_map_release(&tick_freeze_map);
-> +
->  		system_state = SYSTEM_RUNNING;
->  		trace_suspend_resume(TPS("timekeeping_freeze"),
->  				     smp_processor_id(), false);
-> -- 
-> 2.49.0
-> 
