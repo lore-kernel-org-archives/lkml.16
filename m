@@ -1,127 +1,150 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F6C25E479;
-	Wed,  9 Apr 2025 11:43:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A93125E81A;
+	Wed,  9 Apr 2025 11:44:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744199022; cv=none; b=jNxkzWMGw62WuHgJmp4+1MoE0nqETxufm6s+L5XM9fZyu8huESw3JGRIN8DYQtdoxQZZjnKfnxTqy4q214ypBhyQQF5mEnWpJslMc8uh2znHh5I1p0oxFI5+xW+LmG/5LKpSZ8LhQIFVEGxpqW8KJu7nBKLdR3N1MTPZb6a+9VQ=
+	t=1744199048; cv=none; b=MVcFXpdGauQDJKaH8E/+DVPwXZTOWIKwXxpbwgsqT1VTCjw3/lJUmiZzZ1/EMAJIzHzVskmqv0A6TGhlYFOPuETW36zJOFf0qcktwgjHYGaov0csUxwRWQfr/aC0ZJ7m1d3JTwGxumhGbnYonJ5c2V9R0Ar/2rg1irBT968Bk4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744199022; c=relaxed/simple;
-	bh=7x2Ww/8t207kNntVHldmoaSNNhjSpbEKuUzDA0pk2+I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=C/0exSt48bfZkMP666cl0TGaso+Vz8iBIVIbdWb/v3yLuxIVdE01UXev+JrKYxmJUkFwjfCkof4ctPi0HwkvbGnV6wP9zlPDDTPlnJQSxjIgVpzPccT8SO+L4xXtNMYqF2JCVcl6ZNx2bnjyB1nzUZ2ZCpBVkBsWiz/DZJ7WKBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c2PK4x5p; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744199048; c=relaxed/simple;
+	bh=1cPrVQ7kf4CjzELcx2r3Mt/clhzq06BtS1bl+mQBAbc=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=DD2hdH/ja8NiBXpGk/ES4H5KNvWDsihFFo+C84eR8IY4fhWvLUZdKCGXr2QhFIPG6OYLMEnFrnnaHyaSrvga7OsjCu7fBzFYWGkm/fmK6RJhLJjaBHo4OCLyfmyHv+TQ42IOAdf9IuK++ZuUv67IMEsjLCin3cVmLQ5NJrKSjeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=HHQyIUCH; arc=none smtp.client-ip=212.227.15.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c2PK4x5p"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30c0517142bso59680561fa.1;
-        Wed, 09 Apr 2025 04:43:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744199019; x=1744803819; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VBMK+0yCj5pVI3lWqjEquwqkVpMB0DEP0oWlPoEM9ds=;
-        b=c2PK4x5pGBs/47TRp4qitXsySCgi0XWc89nmlJl/p2VbmYIU2Ft2bscvoNjvP4GUGn
-         7r9Qqnr0WCzBLfQ5PwAqzqHOw05GIR5pe+9amNEWxEWi9xhtqNwNoU4CNOUu5fn7aCPZ
-         QMBuly38mjTBdALIZeOWwfjCADQ467OMCpHcqmH7w8ML+mLM3yakNnlyQHKkJ91nYgFm
-         U98hVU43R78SYzeSbHVf8SbccK/B9B0+mqEkT8CMIB+u86fWRDizpwWlVscDEhmuO6k1
-         6bD7OkFFUEOm/c0xCL3bG/heS4NQnW5n+ziVJ9PNW3pHHdpqWTVftL89HdkiyHcHWtLJ
-         /tQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744199019; x=1744803819;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VBMK+0yCj5pVI3lWqjEquwqkVpMB0DEP0oWlPoEM9ds=;
-        b=mZZyFjRHwLLBd8qZPiFMdDmwodjtWXGEwZerZUDvnZu2QBrKMwGcCH4M0nL6JUOaI3
-         ppFATDLr1VTvKgGUVVow7fULtoVowTG45EtP3RRYqxx1NOy/ggtqBQNgBLdu2p35CFg4
-         XVdvwAUhKw9RoEem6SyxzA08NUeC+yfcRiznhAqj9ojeQY8Z4U3yaVucUKX+jvekXMeN
-         LkF3PHT22qXNXicIsZkPMVMP8Or68K8Fl74s3zzOxUgW3oSuRQjZSklxlCSGAO7RrwYu
-         9XPATFzXGsN/aQEdah6GND5y0FYA/Us31Cm990DP8yRP3i1Y5ob2eSd8XqpLhMLPUysv
-         64vw==
-X-Forwarded-Encrypted: i=1; AJvYcCU7R8gYuxWAsl4jTzpSaDK1IWav07B/Unr4YRdjsDeZhtVJfo9htvRj5Ovpcag3EmQAkY0z1aUSQH0bgJCmKTc=@vger.kernel.org, AJvYcCVlyfHnZpHEOCF4zrd+c061CUjvZcNVkc2vFiXRNiNsYe51UZPm3Rhb2J8Ln+tMpDaWa2D/YATBewuaVmzl@vger.kernel.org, AJvYcCWye89G7bhWhtzAttOUQcvbmxJjYFqNv6kMSJXOdedDx4Z5N8SoRsEYFShKIJ0TFKOkH02B5fYI@vger.kernel.org, AJvYcCWzcz8jLYQyK5HTBuCTm2yhbRQCd1hvkLC0bygQ8ydalCZcgMjINIpigVxw3aXpFHyvRmfgnOvZnOWy@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVaJHl6glqbCysG5IRQLqm0QIPZvJz4cPyXjiEdr/4HMrnyPzL
-	rmVeaLqaufFd34NZqE8DkcgrCGSq9RgSTh1MRVn7m0RUZSx2tUGM/o/kURvkwYDwvtrwm243ea0
-	fDzuRqLD56t+ifZcF3Y3D6FA3MZM=
-X-Gm-Gg: ASbGncsVaBlH8wgIav7lJgQdWnz0mfYe00nrH9fMcW/R2jA93zJQ5OLNtX88kCQc1Nb
-	jecLvlovBaDknNlLRSzchI9J0r3HQ9lqRzKaVFW1bXz34v+Hd/WLzsqOA/VXTV251j2fAvx6r/D
-	EUDhAkR6x+n1sk/AfASTtiIQ==
-X-Google-Smtp-Source: AGHT+IHLILaO4FHiXQ6HEiLldUu+4jbxiwgECUQrUvKhKnrG8lAE04WZLWRoT4ZI6kZE9adL8Z8pGuxkMOFYudtSW8E=
-X-Received: by 2002:a05:651c:556:b0:30b:ef98:4653 with SMTP id
- 38308e7fff4ca-30f438c8db8mr7664881fa.36.1744199018584; Wed, 09 Apr 2025
- 04:43:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="HHQyIUCH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1744199024; x=1744803824; i=markus.elfring@web.de;
+	bh=ZcboPvUR5IHm0tuhCfo0KhbP/W6yUMqtAc0Ziq24U7U=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
+	 Subject:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=HHQyIUCH2tXvFr1A9+pq3qpGYQJ58DNhx0SvwG3ZcnAQEInuolYwItp6q8aHQxVg
+	 9hEl7g83CAsnsLDxLy4+Zgi4Df4Y52kd3Zpx0PZyPYXvqp795SEd0YmCe7oLPBHv9
+	 tgO0IAfSBqan6RYKvkp6oSpmviw4XgDD2c7l4cjiEt6HqZsTNIgBRPMOlR0+9NBJ2
+	 RUBPJuCX1DNTjQklZjsYcrc3H1fgU3BMzSgGUGMjgYqHkF8acEhUTCZgapXHaL+Ha
+	 2tUxHRSJmhrGhnVHowTMdo1uRY1wpnvW7olHQU6ik0AW+4o3dsQsObvMtINTV7Alf
+	 pX6+q01rCHUk9xptsQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.27]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1N30dV-1t4LfG3KqT-00xgZ1; Wed, 09
+ Apr 2025 13:43:43 +0200
+Message-ID: <3727de04-7993-4b81-80c0-adb40b847307@web.de>
+Date: Wed, 9 Apr 2025 13:43:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250127160709.80604-1-ubizjak@gmail.com> <20250127160709.80604-7-ubizjak@gmail.com>
- <66e54eb9-58b3-4559-af32-66a77fe1ea01@kernel.org>
-In-Reply-To: <66e54eb9-58b3-4559-af32-66a77fe1ea01@kernel.org>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Wed, 9 Apr 2025 13:43:27 +0200
-X-Gm-Features: ATxdqUGmbJ5OXHqfwIkM9Wrb_lrcpIIkF68sC66bDwJWw_DGX50EuQ2sGGGHMMs
-Message-ID: <CAFULd4YiYRhqu7mGWMN9pAsV-Nc6a97+EgiTCR34iaYDvXjDwQ@mail.gmail.com>
-Subject: Re: [PATCH v4 6/6] percpu/x86: Enable strict percpu checks via named
- AS qualifiers
-To: Jiri Slaby <jirislaby@kernel.org>
-Cc: x86@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	linux-bcachefs@vger.kernel.org, linux-arch@vger.kernel.org, 
-	netdev@vger.kernel.org, Nadav Amit <nadav.amit@gmail.com>, 
-	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>, 
-	Brian Gerst <brgerst@gmail.com>, Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+To: linux-sunxi@lists.linux.dev, linux-crypto@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Andre Przywara
+ <andre.przywara@arm.com>, Chen-Yu Tsai <wens@csie.org>,
+ Corentin Labbe <clabbe.montjoie@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Ovidiu Panait <ovidiu.panait.oss@gmail.com>,
+ Samuel Holland <samuel@sholland.org>
+Content-Language: en-GB
+Cc: LKML <linux-kernel@vger.kernel.org>, Julia Lawall <julia.lawall@inria.fr>
+From: Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] crypto: sun8i-ce-hash - Refine exception handling in
+ sun8i_ce_hash_run()
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:jEGNiMKs8nAQw2qIQjUCQq/KWOsVvdlxMimxs5ulT7dkC8Jy8vn
+ sjvXtDkHx1NdmMR2lfMzvk9aLWGt6cUsQAf4s4emy/sWUqdg3UOLtEjqk17QN47SO7dFcJb
+ AXUoI3lNiWi1QxGCvZBv3C1zvrsuJNDxfKbgyudePrBW8wI9qmNQ4IeqhC27tyOSa3ZpB6i
+ 1sbNZMcwz1m1/XdJa+Dgw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:xNwPz1kyRa4=;mhac4w7rrkZIUH0v2PZOyYFCNiY
+ JyzmGclW/6PQvJJ45Nz42p+6+B9uGh+XKN1ZwSDZpqjHJ5OimogrHASfjWlyFI14Hh0YYUOol
+ ZkUJknhX4uAv5J+cFMubYlTZGUG/Bo++ZnvSGmGnF70rAcMsxeAMHcAVrBD8L2ujzwCsu8Nqe
+ 4JB3h+oEyfqn9FfS5GOfCXVPcf4+EDFGoQ8QvUd+qjCzbD0dtLan5W5QV7m8loLKGao52gnhI
+ FPfJYsA++FkB+UbSCAlBRw7Xm+gZv01E7L3fPOLV/2lrIhXxhNjiGO3svor4dTetQW5vXW5HR
+ 8fTBaqSwwVxuFLK/1bACOSrkbyo8WTEoeUzI8GZHaui31Z/XXFBKUzdEody1ymjEVGlMDdTrB
+ epPne+q0z0xzaIWBJyBAIjZFBYogkQZ4dxc5BdI4kdH5keHGGptYQlAoLBChZhWrQQ/uhUJK8
+ TzxmOn/KSiIhwLOUUo/mG1bh9emuXe14PRzcl/nugKDccjefIYJ+0Dq8+/gKyvKyXXRGZyD1q
+ okI2wmDTI3VGUiHjZQI0fjdleH1QJqkR9B986Mu1aw+3DMv2czXTuMI8Ac7+63pJxuK/RWys/
+ MQzG9ZhH6fx8HNTraJBRgH3J006Tze/vLmPqGhZjdGIqhANJPp+I8IuMLQju9yme3Y4wCQ3WZ
+ qOR2embihPCMKfrba+MTqjHe5FOLEXqgyeRFRL3isO0gPaQAiHNZ8Klk5PlgMIrRGS509nvFM
+ I+5enqjNqKWdUcj9AjZRG20o+4d8hKYJBRS0UVCrscp44yGgG8aW2M5BlWk9faqnicr7Kz1tS
+ J2QbvRCUcAr2DBHu82vCmCbhWeL8dvRRzOIYc/Ljoya4rNX3A9EG8sbvcccOhLyth3mS29lIl
+ 08m+rEr/FPMIuI/GKUqALXQpa2tlbFMizemDSUJ3dNUsgwhiXZ57OtlZRx582WVHUUyxjEb4u
+ 3Oe6kQvxD/soNWmJC2ESsC6OzZWcIPvqfwXlEzkUcw8K1gJxGcg1Lq0vfxCFeiq3vEMDCNv7l
+ 4R3tkXylq+wgilTD8HgWiKsGtM3rRPufDeD3jKunDbAwhQMDeOpcGeCjAb7YuixPJzGru9m5Y
+ l1hVZfZvuNN6tjfgEljjut8M49BAwGWByQ6uWpkk2yGySY+82oOo8otShveK2kS38P5GzsRFx
+ 2i1/j2BzovByq9gGjlz5llgCv92MpDkwPpt9QkzA2J7/baSD1tcoVPSVbfwqRYRVZpIJLs6Gr
+ cHtSBZikXE8fIQC2liW+EtsF+sALU5F5FMujb4W3+pqqrQakTozhzTUrvwIeWKixNi+VGuxc+
+ YYxy35wkU0EPEoMUeji3co3tbLllbFWCeGWyUQis0S8lxv0NXhThkW59OqfliT9sn217/IJxN
+ kRxcwoW+UFf+a44sfTstf4N36E1XsLqTFkxemtsKQ/gej5PECPnTs2a20VBDGZuVWqlTstS/J
+ fz61JGNz42bJBhKTE7MNA9yRm6vdHnT4o9Yi9lW3tCK44ZDyt4SnI2F3fValD3iGEAf0ewnUA
+ l5CXOLI5PhcXDfZoi08=
 
-On Wed, Apr 9, 2025 at 1:07=E2=80=AFPM Jiri Slaby <jirislaby@kernel.org> wr=
-ote:
->
-> On 27. 01. 25, 17:05, Uros Bizjak wrote:
-> > This patch declares percpu variables in __seg_gs/__seg_fs named AS
-> > and keeps them named AS qualified until they are dereferenced with
-> > percpu accessor. This approach enables various compiler check
-> > for cross-namespace variable assignments.
->
-> So this causes modpost to fail to version some symbols:
->
-> > WARNING: modpost: EXPORT symbol "xen_vcpu_id" [vmlinux] version generat=
-ion failed, symbol will not be versioned.
-> > Is "xen_vcpu_id" prototyped in <asm/asm-prototypes.h>?
-> > WARNING: modpost: EXPORT symbol "irq_stat" [vmlinux] version generation=
- failed, symbol will not be versioned.
-> > Is "irq_stat" prototyped in <asm/asm-prototypes.h>?
-> > WARNING: modpost: EXPORT symbol "fred_rsp0" [vmlinux] version generatio=
-n failed, symbol will not be versioned.
-> > Is "fred_rsp0" prototyped in <asm/asm-prototypes.h>?
-> > WARNING: modpost: EXPORT symbol "cpu_dr7" [vmlinux] version generation =
-failed, symbol will not be versioned.
-> > Is "cpu_dr7" prototyped in <asm/asm-prototypes.h>?
-> > WARNING: modpost: EXPORT symbol "cpu_tss_rw" [vmlinux] version generati=
-on failed, symbol will not be versioned.
-> > Is "cpu_tss_rw" prototyped in <asm/asm-prototypes.h>?
-> > WARNING: modpost: EXPORT symbol "__tss_limit_invalid" [vmlinux] version=
- generation failed, symbol will not be versioned.
-> > Is "__tss_limit_invalid" prototyped in <asm/asm-prototypes.h>?
-> > WARNING: modpost: EXPORT symbol "irq_fpu_usable" [vmlinux] version gene=
-ration failed, symbol will not be versioned.
-> > Is "irq_fpu_usable" prototyped in <asm/asm-prototypes.h>?
-> > WARNING: modpost: EXPORT symbol "cpu_info" [vmlinux] version generation=
- failed, symbol will not be versioned.
-> > Is "cpu_info" prototyped in <asm/asm-prototypes.h>?
-> > WARNING: modpost: EXPORT symbol "gdt_page" [vmlinux] version generation=
- failed, symbol will not be versioned.
-> > Is "gdt_page" prototyped in <asm/asm-prototypes.h>?
->  > ...
->
-> That happens both with 6.15-rc1 and today's -next. Ideas?
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Wed, 9 Apr 2025 13:26:55 +0200
 
-https://lore.kernel.org/lkml/20250404102535.705090-1-ubizjak@gmail.com/
+Two if branches contained duplicate source code.
+Thus avoid the specification of repeated error code assignments by using
+additional labels instead.
 
-Uros.
+This issue was transformed by using the Coccinelle software.
+
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/crypto/allwinner/sun8i-ce/sun8i-ce-hash.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-hash.c b/drivers/c=
+rypto/allwinner/sun8i-ce/sun8i-ce-hash.c
+index ba13fb75c05d..7d31e190bb6a 100644
+=2D-- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-hash.c
++++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-hash.c
+@@ -399,14 +399,14 @@ int sun8i_ce_hash_run(struct crypto_engine *engine, =
+void *breq)
+ 	}
+ 	if (len > 0) {
+ 		dev_err(ce->dev, "remaining len %d\n", len);
+-		err =3D -EINVAL;
+-		goto err_unmap_src;
++		goto e_inval_src;
+ 	}
+ 	addr_res =3D dma_map_single(ce->dev, result, digestsize, DMA_FROM_DEVICE=
+);
+ 	cet->t_dst[0].addr =3D desc_addr_val_le32(ce, addr_res);
+ 	cet->t_dst[0].len =3D cpu_to_le32(digestsize / 4);
+ 	if (dma_mapping_error(ce->dev, addr_res)) {
+ 		dev_err(ce->dev, "DMA map dest\n");
++e_inval_src:
+ 		err =3D -EINVAL;
+ 		goto err_unmap_src;
+ 	}
+@@ -428,16 +428,15 @@ int sun8i_ce_hash_run(struct crypto_engine *engine, =
+void *breq)
+ 		j =3D hash_pad(bf, 2 * bs, j, byte_count, false, bs);
+ 		break;
+ 	}
+-	if (!j) {
+-		err =3D -EINVAL;
+-		goto err_unmap_result;
+-	}
++	if (!j)
++		goto e_inval_result;
+
+ 	addr_pad =3D dma_map_single(ce->dev, buf, j * 4, DMA_TO_DEVICE);
+ 	cet->t_src[i].addr =3D desc_addr_val_le32(ce, addr_pad);
+ 	cet->t_src[i].len =3D cpu_to_le32(j);
+ 	if (dma_mapping_error(ce->dev, addr_pad)) {
+ 		dev_err(ce->dev, "DMA error on padding SG\n");
++e_inval_result:
+ 		err =3D -EINVAL;
+ 		goto err_unmap_result;
+ 	}
+=2D-
+2.49.0
+
