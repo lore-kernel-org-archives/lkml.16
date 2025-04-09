@@ -1,103 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62CA7214A7F;
-	Wed,  9 Apr 2025 19:54:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A072202C44
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 19:55:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744228451; cv=none; b=WYahd8HijWGGgljQZwVoZI2y9iN7Yu25MdRJayLwzDJ0xXYr3kOsrgEFcbp0MEAI9L7VB/hPe03dIH33eeTOFrVLd7+KKMfihkmPm+KNMgUfyHh7OTG6mrgAfzL9H0JbKZhyMRsUyt6UdfJtcNbIv1IDNz2JS+no33SQ5YUsoyY=
+	t=1744228502; cv=none; b=QXTv5g/yiAHmIVTsOp5ppQ5iM/8mbZBB5Gf1y093lGD3QVkOnNwG7nI/8F2b+G4pELqbVP5zz8RzAV4J++18f1RU8AQfyaXVygSCkWDbuR+dCJeRGayt2D+Q9qMruhADSOx9YVfPSvKBMJFlnScGowr21AonCBbpp3tN5FnXfD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744228451; c=relaxed/simple;
-	bh=q7KvwDfQqFDNGgQf6PyiHomLFAW6NL2n557EpD26id8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oy1/Yaw991znhwp5goXstaqIx3MSAul68EdkULkv06fub7A452cZfm2d1VFeXm8c1Ih6pxf3fij9Zu0Nk0uXQ8nrabO2A8y3aAJxh0RDq+tamaRNUbCt20kGjzAfweWC6OTatmjxnItm2Iu7FiAA/Sp0NrSMhPH5/3GAfhyiNfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VulSS1Yw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744228502; c=relaxed/simple;
+	bh=xn68JtN4Qk06N0r1rRh9xofitl+E4BHuD3TI27fRFfs=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=gdJ/k+LRqaFt+7RZcDk7EpncK8T7xwBSxmJOXii8CEObHtjTCNb50p6WpCPbZ3Nl/yePyStQ6qPGpIRur1KNxxvk6NRZnVZnMGjS9+TeQdqpHl45Olc8wwZDdjB8FgEEmcCwDReT8LtkALg4Jy4f4GmSZiKCfzJWHZKzve8kkK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--tjmercier.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZCxfOvJ9; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--tjmercier.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VulSS1Yw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 260C8C4CEE2;
-	Wed,  9 Apr 2025 19:54:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744228450;
-	bh=q7KvwDfQqFDNGgQf6PyiHomLFAW6NL2n557EpD26id8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VulSS1YwlnFjfym00iwjm8nZpYCyp06C0ojMIpSCSHZR4u0kCve/HPOLSpwGvY8u5
-	 pBTjBb/9vduXt1yHmPU9a+E8F7KAYhYpWKQEBBPX+/hfy20lXzFqyHyY8B+HK6sZUf
-	 xN3fYMEJoURP0ouK4XLhP558hxwDPdlv3j55wiCtlhRPkFu/TgXbgsw4c31dujDZWx
-	 WI68CmIsMMEvM72xxyr1xE96ssKn4YT5iCMXcjHWRmRp8UzErdBvMQgGb+caLf69ln
-	 4GvtnHjQrXPK2u6hCjNy/AUsgKBW8iPDB+syZsrtkVGFcuJdzKsEe35yQuSR5M6flU
-	 mNFGcP/z9LOpg==
-Date: Wed, 9 Apr 2025 21:53:59 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Dave Hansen <dave.hansen@intel.com>, Xin Li <xin@zytor.com>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
-	linux-edac@vger.kernel.org, kvm@vger.kernel.org,
-	xen-devel@lists.xenproject.org, linux-ide@vger.kernel.org,
-	linux-pm@vger.kernel.org, bpf@vger.kernel.org, llvm@lists.linux.dev,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, jgross@suse.com,
-	andrew.cooper3@citrix.com, peterz@infradead.org, acme@kernel.org,
-	namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, wei.liu@kernel.org,
-	ajay.kaher@broadcom.com, alexey.amakhalov@broadcom.com,
-	bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
-	pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
-	luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
-	haiyangz@microsoft.com, decui@microsoft.com
-Subject: Re: [RFC PATCH v1 01/15] x86/msr: Replace __wrmsr() with
- native_wrmsrl()
-Message-ID: <Z_bQV2oOnJlwbxnk@gmail.com>
-References: <20250331082251.3171276-1-xin@zytor.com>
- <20250331082251.3171276-2-xin@zytor.com>
- <Z-pruogreCuU66wm@gmail.com>
- <9D15DE81-2E68-4FCD-A133-4963602E18C9@zytor.com>
- <a0254e73-bf7c-4876-b64e-b08e96044666@zytor.com>
- <e5770add-9d18-40e1-929d-df7c40f3c7d1@intel.com>
- <ADCFB190-A89A-460D-81A6-80E20AEFBFBC@zytor.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZCxfOvJ9"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-73009f59215so7556b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 12:55:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744228500; x=1744833300; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=0Cxlom7LaqSTPNZq2xmK4+ieYxW2eyaqpLd90fUc9Os=;
+        b=ZCxfOvJ9TKKPij5ol67bpHIKIN4ocgS+jlyjWabJe8rXDb7dM8omjhhxvwYxlWRr6E
+         JIzw6ekXdJnOU2mOBKpne10r/Qkv7Asz8xse2pRvFjqNwexGmJcUME6MWjd8ICEGhLKB
+         zaFHWxbzT4grejh044ZTkQjeRnWZLVkxOTp+K7epeWHGeHjhG/7XOrPXafSKwyxQq3+u
+         +QE4r7Uo+HthUF69Y/vSQUOq+ak5SWi6Ix6svcpia1HFtuRcl0vSPUuhg4GkbHELIXmH
+         6N6D3JUEauqJvcOyrF/t/w6S6+OquM6H7REDjcfWmOklshz/K9MwIsrHhBmWcRXgi9Q9
+         PXpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744228500; x=1744833300;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0Cxlom7LaqSTPNZq2xmK4+ieYxW2eyaqpLd90fUc9Os=;
+        b=HaZDXSg9D1CG2wTX3VHtFXqhaInxb6c2DfNv7YqVeLxHT8dxxH8/UwjEqIp/L3ySaM
+         piMe+PC93RF4DnP7r9qIz32WF6hw9yC3ZOjY61ymiiA6ksu96EWX1//QjXvedeT5amEB
+         V8yYfjet2HjKHpHHRareHSMhVw+2MWirbqtn2tGTouZZUsPvajNZ2buBZY+B6RlQbHYz
+         ckd5q+fQBxDb6EDVJ3i1U4s9nk9cO3w1Vi75wOq746qi8kTVOyUbxlgf6XjaDoK7OyVT
+         sXib2gxJfAX6CsCvnlXvasKXFr0a7EmGdUby1QvmRP3sE0NHxNN3XBXbWbi54xLW+NrE
+         IpDw==
+X-Forwarded-Encrypted: i=1; AJvYcCXM6Ux1Xc8XK9U/ZgqIf5Goz5pCB4fgzvXCl6fMsGFivUzZfsGuk0PgkPSIiMGez62FZs5akf4FJHgf+Lo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrPwDSVEBRIMkXKkDVtJEEN1uQdNh03o27TBeOUbkF7wDKXYk2
+	yB1tuvwJGQ2WMCqKpBYlkFQIF5V96YErIzBCoe6Wi5O5FcuGNeG1CjbVz0WN9+/CJsYjgLF42db
+	PAKB008f95Dv3Xw==
+X-Google-Smtp-Source: AGHT+IE+v/JVOzdWcyI0nV5rZ7/P1D+Fevt3cx+6ulg9GOA2p6sFNANwQH15D7aywnU+YXm3dQlH5ywEzddm+mE=
+X-Received: from pfix12.prod.google.com ([2002:aa7:9a8c:0:b0:736:86e0:8dee])
+ (user=tjmercier job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a20:7287:b0:1fe:5e67:21af with SMTP id adf61e73a8af0-201695c7b73mr609078637.30.1744228500266;
+ Wed, 09 Apr 2025 12:55:00 -0700 (PDT)
+Date: Wed,  9 Apr 2025 19:54:47 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ADCFB190-A89A-460D-81A6-80E20AEFBFBC@zytor.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
+Message-ID: <20250409195448.3697351-1-tjmercier@google.com>
+Subject: [PATCH] alloc_tag: Handle incomplete bulk allocations in vm_module_tags_populate
+From: "T.J. Mercier" <tjmercier@google.com>
+To: Suren Baghdasaryan <surenb@google.com>, Kent Overstreet <kent.overstreet@linux.dev>, 
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: "T.J. Mercier" <tjmercier@google.com>, Janghyuck Kim <janghyuck.kim@samsung.com>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+alloc_pages_bulk_node may partially succeed and allocate fewer than the
+requested nr_pages. There are several conditions under which this can
+occur, but we have encountered the case where CONFIG_PAGE_OWNER is
+enabled causing all bulk allocations to always fallback to single page
+allocations due to commit 187ad460b841 ("mm/page_alloc: avoid page
+allocator recursion with pagesets.lock held").
 
-* H. Peter Anvin <hpa@zytor.com> wrote:
+Currently vm_module_tags_populate immediately fails when
+alloc_pages_bulk_node returns fewer than the requested number of pages.
+This patch causes vm_module_tags_populate to retry bulk allocations for
+the remaining memory instead.
 
-> On April 2, 2025 8:41:07 AM PDT, Dave Hansen <dave.hansen@intel.com> wrote:
-> >On 3/31/25 22:53, Xin Li wrote:
-> >> Per "struct msr" defined in arch/x86/include/asm/shared/msr.h:
-> >> 
-> >> struct msr {
-> >>         union {
-> >>                 struct {
-> >>                         u32 l;
-> >>                         u32 h;
-> >>                 };
-> >>                 u64 q;
-> >>         };
-> >> };
-> >> 
-> >> Probably *msrq() is what we want?
-> >
-> > What would folks think about "wrmsr64()"? It's writing a 64-bit 
-> > value to an MSR and there are a lot of functions in the kernel that 
-> > are named with the argument width in bits.
-> 
-> Personally, I hate the extra verbosity, mostly visual, since numerals 
-> are nearly as prominent as capital letters they tend to attract the 
-> eye. There is a reason why they aren't used this way in assembly 
-> languages.
+Reported-by: Janghyuck Kim <janghyuck.kim@samsung.com>
+Signed-off-by: T.J. Mercier <tjmercier@google.com>
+---
+ lib/alloc_tag.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-So what's the consensus here? Both work for me, but I have to pick one. :-)
+diff --git a/lib/alloc_tag.c b/lib/alloc_tag.c
+index 1d893e313614..25ecc1334b67 100644
+--- a/lib/alloc_tag.c
++++ b/lib/alloc_tag.c
+@@ -422,11 +422,20 @@ static int vm_module_tags_populate(void)
+ 		unsigned long old_shadow_end = ALIGN(phys_end, MODULE_ALIGN);
+ 		unsigned long new_shadow_end = ALIGN(new_end, MODULE_ALIGN);
+ 		unsigned long more_pages;
+-		unsigned long nr;
++		unsigned long nr = 0;
+ 
+ 		more_pages = ALIGN(new_end - phys_end, PAGE_SIZE) >> PAGE_SHIFT;
+-		nr = alloc_pages_bulk_node(GFP_KERNEL | __GFP_NOWARN,
+-					   NUMA_NO_NODE, more_pages, next_page);
++		while (nr < more_pages) {
++			unsigned long allocated;
++
++			allocated = alloc_pages_bulk_node(GFP_KERNEL | __GFP_NOWARN,
++				NUMA_NO_NODE, more_pages - nr, next_page + nr);
++
++			if (!allocated)
++				break;
++			nr += allocated;
++		}
++
+ 		if (nr < more_pages ||
+ 		    vmap_pages_range(phys_end, phys_end + (nr << PAGE_SHIFT), PAGE_KERNEL,
+ 				     next_page, PAGE_SHIFT) < 0) {
+-- 
+2.49.0.504.g3bcea36a83-goog
 
-Thanks,
-
-	Ingo
