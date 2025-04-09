@@ -1,59 +1,79 @@
-Received: from mx0a-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2054.outbound.protection.outlook.com [40.107.94.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9188B1DE2A7;
-	Wed,  9 Apr 2025 05:35:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744176927; cv=none; b=lZDcGeh3D+qkZTSaam7jE5sn8LYJuYF027cJE5uBgz/vnXn33m3m5223HJGXeoIGFXvGqmuGduN1veujhhT+ciFef2ugBa9oZAAiRgIx3CWv1R3mCnbubIAWmziptQWOkU4VfCbY0Gh3nF684BOKcOLcy0wwadg8ddwOXwrYzDg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744176927; c=relaxed/simple;
-	bh=KvRLMsa4ZS4vGJe2Ejl3rV/a/uy73YQhW3DMOISV2Jo=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1EC71DE8BE;
+	Wed,  9 Apr 2025 05:35:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744176932; cv=fail; b=u2fzCLfydbw4pnaxO2RNEzxxNKef+qkMxPVkDYRsN2LI/E/10VGhrVw1Aol6dl9K57H017cHb6spfEwskiYqE69PdHWTgNCAvBqIgEjeXGYt5imDxNl4sYSj5Rc3YwAlRc42Oi8lYJqwHnvWtdiEfN1GkQuolBzp9SPozVLrawg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744176932; c=relaxed/simple;
+	bh=KoCzauALSNFlQV0QLANKavLjEfqdOa/anecedhSeu24=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dfjzztTauqozBlNPdWHj6FI+pxPCKtiRzfjC/gwaAInAmDyaHx1QBrLsBU92XQOgoc+GYrZbN1o8cUqmCZA2gIUEFURt+NDHNU9AgiIrKLxMDnBJ4JbkB3kSzlzhYBjhlGGDBoLBjxtInERa87/TKcIgmXhPZj8SYYTDEFxQpJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=FVkp8uHG; arc=none smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	 MIME-Version:Content-Type; b=QnAPNAdQ/mVmgOvANxINbmo9CqlbyPnj84+kzQDGnbqXN9Eh3LDnsJcx2EMtj6RjHs05HpUoC9kkiGEkQ0At7A7MsPYZjrHXwJ1D5r3qpD/t/r8GnPnkLvsnUdNstSU3RvLjHOa/1jcM25rGRxh7A3vR/W8EtkdJj5/Ks5PjTVE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Oo4g/yqc; arc=fail smtp.client-ip=40.107.94.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="FVkp8uHG"
-Received: from pps.filterd (m0431384.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 538K8hSf028449;
-	Tue, 8 Apr 2025 22:34:59 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pfpt0220; bh=Q
-	RbogAxa6wY5MlJKGbXArgC8WnLT5+lPy4Ur6edgAW0=; b=FVkp8uHGWarymtJjp
-	0IJuhSQ9b3nztyyfIYjmRHDSSVK+ddKtuTsVwHJJ2rRG+G3+zQo6OiVbY1KV3e3i
-	5DKB0JCL1kElEvGBCS0RqNoB2uAo/D//FHnN6YRqoLb5k6uo3Rfs/WoFzY4zsO1o
-	VwA9JWHX//tprwTGPJz9L8JxIgxy4T2YgxeWfaMjZZoBge5PiBk8YkovT7X4FHkg
-	iGAqgCRaBwS5z3L/0/8qeBHpO5hygSmCSGVGIFfyq7VFAHQWGZL2LhIzQM+YpfHY
-	qy1hRAIQEh8vkBLf+3t4yBLCMhA+sZeTyuSmunr423zZpE/9WoA09ukRHaSqyBEP
-	0+bYA==
-Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 45ursc736j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 08 Apr 2025 22:34:59 -0700 (PDT)
-Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
- DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Tue, 8 Apr 2025 22:34:58 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Tue, 8 Apr 2025 22:34:58 -0700
-Received: from tx2-sever.caveonetworks.com (unknown [10.110.141.15])
-	by maili.marvell.com (Postfix) with ESMTP id 20C303F7085;
-	Tue,  8 Apr 2025 22:34:58 -0700 (PDT)
-From: George Cherian <george.cherian@marvell.com>
-To: <linux@roeck-us.net>, <wim@linux-watchdog.org>, <a.fatoum@pengutronix.de>
-CC: <linux-watchdog@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "George
- Cherian" <george.cherian@marvell.com>
-Subject: [PATCH v5 1/2] drivers: watchdog: Introduce watchdog reset timeout on panic
-Date: Wed, 9 Apr 2025 05:34:51 +0000
-Message-ID: <20250409053452.3173447-2-george.cherian@marvell.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250409053452.3173447-1-george.cherian@marvell.com>
-References: <20250409053452.3173447-1-george.cherian@marvell.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Oo4g/yqc"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=hukLKAOCXnGo32Si7xFno+YEtv9PltTeleIm1zgM0+hV/1ljK+0EV3UNXrEy/47MGmdfYxS082oA15PC++eE0dsmMYOIZZZP/Qa+G5qIul9FdyDfixiuiFVwbFON5vHJKl+h9cFUfWs8lbzjeX8Dfzy81IfS9TjHJtrUhLadbAKSF20kP3NGAmxg2IdenJckMGW3XUcuKpteBtB9+4/ypd93NRi2/pf+mkgXfQTisPyg7cE7vl/ywSbbij2QBkAxUDKOtiWsnHTZp6GpIy859A6xim/hs7/TnAS1uO5br3/gE2HyZPIaj3Cm5fcHA5jwE3lKeu1DVvZay+7Uaj061w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3Z5IuqlIlYFiC4oC0vmVqbtKJHcRr0/edZ+MJUI6tUg=;
+ b=PZ2JK5gbAi27y4SFFXZFiEtVnJuvMukHNv4MPKKrVjUZTTrWabUFaWBeQpR9cxAGdghQ93Eci8zQRaepuRGh3D5IAplWjiskAxIihFVIKzIbsU4RIymrNfaBdd4Jr8UvokwIe27mo1/jN9ZaIkSKLqJsOCWMzsLpbLTCKN7sjBGcR3+wPtdz3wIK9boRt7WU+yoGftVh6eGBk67nAjX6r0YZwMSPhtd7Yud6uN8/E3ulCzwLiToSbllWiUlupjoELzItriw4zZCpinJbLbVNA270Lni4UvwZlNsG93ov8nbGGGbOAxDizVZWjNW/WmOC4dsaI0ePamvHPwGrUO9Zxw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3Z5IuqlIlYFiC4oC0vmVqbtKJHcRr0/edZ+MJUI6tUg=;
+ b=Oo4g/yqcO+JvmgKObUe+QS0X2zp/stsgp/iNRjY//Kl+8AY2nBRGh3ZswKo2Q2t7n7zRwJ11WIiRzO3iQ6x1/XATwhIg4BKvJwb3CNUKZNQSQ3WzL3mVqvB/XDzBoEiCx/7NJ2VicqiMt6voeC9AhX3ECmJ/jZic8LBrAElc8YQ=
+Received: from SJ0PR03CA0215.namprd03.prod.outlook.com (2603:10b6:a03:39f::10)
+ by CY5PR12MB6551.namprd12.prod.outlook.com (2603:10b6:930:41::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.29; Wed, 9 Apr
+ 2025 05:35:26 +0000
+Received: from CO1PEPF000044F4.namprd05.prod.outlook.com
+ (2603:10b6:a03:39f:cafe::a0) by SJ0PR03CA0215.outlook.office365.com
+ (2603:10b6:a03:39f::10) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8606.35 via Frontend Transport; Wed,
+ 9 Apr 2025 05:35:26 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1PEPF000044F4.mail.protection.outlook.com (10.167.241.74) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8632.13 via Frontend Transport; Wed, 9 Apr 2025 05:35:26 +0000
+Received: from BLRKPRNAYAK.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 9 Apr
+ 2025 00:35:19 -0500
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+To: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
+	<vincent.guittot@linaro.org>, "Gautham R. Shenoy" <gautham.shenoy@amd.com>,
+	Mario Limonciello <mario.limonciello@amd.com>, "Rafael J. Wysocki"
+	<rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>,
+	<linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt
+	<rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman
+	<mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, Waiman Long
+	<llong@redhat.com>, Swapnil Sapkal <swapnil.sapkal@amd.com>, "Dhananjay
+ Ugwekar" <Dhananjay.Ugwekar@amd.com>, Huang Rui <ray.huang@amd.com>, "Perry
+ Yuan" <perry.yuan@amd.com>, K Prateek Nayak <kprateek.nayak@amd.com>
+Subject: [PATCH v2 1/4] sched/fair: Use READ_ONCE() to read sg->asym_prefer_cpu
+Date: Wed, 9 Apr 2025 05:34:43 +0000
+Message-ID: <20250409053446.23367-2-kprateek.nayak@amd.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250409053446.23367-1-kprateek.nayak@amd.com>
+References: <20250409053446.23367-1-kprateek.nayak@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,184 +82,90 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Proofpoint-GUID: ds-uy9gpYhdaS1Kb6S9vMWA9Bha_9XkA
-X-Authority-Analysis: v=2.4 cv=M85NKzws c=1 sm=1 tr=0 ts=67f60703 cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=XR8D0OoHHMoA:10 a=M5GUcnROAAAA:8 a=1XQDrr_peQNd6h_5ez0A:9 a=OBjm3rFKGHvpk9ecZwUJ:22
-X-Proofpoint-ORIG-GUID: ds-uy9gpYhdaS1Kb6S9vMWA9Bha_9XkA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-09_02,2025-04-08_04,2024-11-22_01
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000044F4:EE_|CY5PR12MB6551:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6a8ec31d-1216-465d-31ef-08dd772854d8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|82310400026|36860700013|1800799024|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Qtve5uUpTzzFv9yp2sppvnaCTS5iu9KYrcmPeFM55prxG/pL+PK+zg9NRFgV?=
+ =?us-ascii?Q?vUFCVu0uPkqYpoh9LDE692Diaj4iJXwCqY/CVQRFfK0F2SY2GL8+gpje/XwD?=
+ =?us-ascii?Q?Y5LAKTGYANA4wE5Q/ILBM9DM1bzGOcHozd0YVkaEu2lSDzAkQSx4dohVj1j7?=
+ =?us-ascii?Q?WcCL4c8tGcr/jHMalBEJNbBhI5aTnLf1F1xrMtI+a/Zt6tjXirg8ppBuYOtk?=
+ =?us-ascii?Q?LeLydFuWp2A/X2f7wWhVgbIvucdLUKmfQ9x3dMWvqROhGNv3WsnWQmYobT+g?=
+ =?us-ascii?Q?xmj6cQyZmxpX1U1oATAiLRt0klpzzNejfQfEt/FyhIglPtVmb7nifMslQ/5/?=
+ =?us-ascii?Q?Iplc13IiCpBlAnJC/4kOLhjxT8W19hiu3HBN7YztuX5JXudLOyTWeTlVhp6Q?=
+ =?us-ascii?Q?ZF+xBMQuQ6RTw2inakhhD51/mrHPYqX9heYeGeW3bxxDbDOSx0ewGsodaj1h?=
+ =?us-ascii?Q?GcClv1MkiuVyc2AoX308SOc7lwuWhG0qg7R6WZHkRR+IetJHokKGm7Ekd8lj?=
+ =?us-ascii?Q?vizYYRnlcgr/m+RNkZdCtDwvRMXJP54fgTPHSYACb5qwjWZvP8tAim2i1d0c?=
+ =?us-ascii?Q?2jGF1Bz/A5bUEDT/9d25RL+9M0Qgl3QBkqk4YPIUfTknFiKd32c9kLXu4bMl?=
+ =?us-ascii?Q?mmRuIZTpKgfZnV0h/wHChY47zGQx4w6uNoJRQxabMEHmF23I/9ocu72VpFBN?=
+ =?us-ascii?Q?zI4UJiiJsVWoEHCxjjuS2RchI4z0Q8dhJY8FDOCJ+ZesrnNMIYc3ffMFLGsx?=
+ =?us-ascii?Q?NYOSMoXHtRqjR6P8B+TNBfeLrA7PNi7D3IW/dL0Meb9vC/KCCdvC/7zDtA6r?=
+ =?us-ascii?Q?cFvm35Xvje+A5QS624puC84NtaKIyiP9bE5MylgrTXoqu+E0vhIULGk6an46?=
+ =?us-ascii?Q?1mCgkH0WPvMDnaQwKkvCZiCzNcwgpUZyCn+Dt7ndowntEQipEGbmUBVMalhe?=
+ =?us-ascii?Q?D/30cuZXau8lsfNBplhNZFiNk7FApB7XoEjh8xZ5eWWCkLawqBvMRK9YIwVq?=
+ =?us-ascii?Q?GoP/IakjcL3PT2w3U0eDopB2lZW3ELr3a35XQISeEGnx+6qOv/m1+mf28ez5?=
+ =?us-ascii?Q?b/c7vZIi5aD0ORAiWVx1WpMjb6ToSH3MAf9J+jkbISq8+AldFDzm1BwDy38d?=
+ =?us-ascii?Q?ONPxtTk9XiTnybxRuy89w/bbm9WLbp9hpQ1CaGOKh96iqgJ/JDdk0wyXTRN5?=
+ =?us-ascii?Q?unwreWS2aZicr2QhQHWGL0ds6XK5VUgr70iA0uGVSAQ3RFTvyOSdQycKu/XL?=
+ =?us-ascii?Q?qocveTNjUopZTJmOkajqOc3KUvH0FSsI7tHOSYMoukVIomnGKfPsT4g6wKol?=
+ =?us-ascii?Q?b2sg7kgFCVvr2AB3QScHMc+G9fN6yjkDvPKEK+VcXMhvlT9f8YmdRcIenNgb?=
+ =?us-ascii?Q?gKPr51nHOeDytneuWc/xS9GN0vO8SVv0X+Aym+6FjdAMTzbmuaTtTAfcrxuV?=
+ =?us-ascii?Q?xcxxJNWgGa5h1Q6eRe1zKh/rLmUODsUY1xePT0eYtU8Q1YX65mRuakg2UKv6?=
+ =?us-ascii?Q?C2vU7g6Ym2u3T24=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(82310400026)(36860700013)(1800799024)(921020);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 05:35:26.0924
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6a8ec31d-1216-465d-31ef-08dd772854d8
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000044F4.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6551
 
-In a kernel panic situation followed by loading of kdump kernel, it can
-so happen that watchdog reset can happen while booting the kdump kernel.
-Add a provision to configure/update the watchdog timeout in case of
-panic.
-This is acheived by:
-1. Provide a sysfs entry to configure the timeout (reset_on_panic) in
-   case of kernel panic.
-2. reset_on_panic  takes time in seconds. If set to 0 then the watchdog
-   is disarmed completely.
-3. Register a panic notifer and update the watchdog timeout in case of
-   panic.
-4. Introduce a new flag to watchdog drivers to set whether ops are
-   atmoic.
-The above feature cannot be supported to watchdog drivers which sleeps
-during set_timeout or stop.
+Subsequent commits add the support to dynamically update the sched_group
+struct's "asym_prefer_cpu" member from a remote CPU. Use READ_ONCE()
+when reading the "sg->asym_prefer_cpu" to ensure load balancer always
+reads the latest value.
 
-Signed-off-by: George Cherian <george.cherian@marvell.com>
+Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
 ---
- drivers/watchdog/watchdog_core.c | 33 ++++++++++++++++++++++++++++++++
- drivers/watchdog/watchdog_dev.c  | 28 +++++++++++++++++++++++++++
- include/linux/watchdog.h         |  3 +++
- include/uapi/linux/watchdog.h    |  1 +
- 4 files changed, 65 insertions(+)
+ kernel/sched/fair.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/watchdog/watchdog_core.c b/drivers/watchdog/watchdog_core.c
-index 6152dba4b52c..7ec46dfe9888 100644
---- a/drivers/watchdog/watchdog_core.c
-+++ b/drivers/watchdog/watchdog_core.c
-@@ -35,6 +35,7 @@
- #include <linux/err.h>		/* For IS_ERR macros */
- #include <linux/of.h>		/* For of_alias_get_id */
- #include <linux/property.h>	/* For device_property_read_u32 */
-+#include <linux/panic_notifier.h> /* For panic handler */
- #include <linux/suspend.h>
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 0c19459c8042..5e1bd9e8464c 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -10251,7 +10251,7 @@ sched_group_asym(struct lb_env *env, struct sg_lb_stats *sgs, struct sched_group
+ 	    (sgs->group_weight - sgs->idle_cpus != 1))
+ 		return false;
  
- #include "watchdog_core.h"	/* For watchdog_dev_register/... */
-@@ -155,6 +156,28 @@ int watchdog_init_timeout(struct watchdog_device *wdd,
- }
- EXPORT_SYMBOL_GPL(watchdog_init_timeout);
- 
-+static int watchdog_panic_notify(struct notifier_block *nb,
-+				 unsigned long action, void *data)
-+{
-+	int ret;
-+	struct watchdog_device *wdd;
-+
-+	wdd = container_of(nb, struct watchdog_device, panic_nb);
-+	if (watchdog_active(wdd)) {
-+		if (!wdd->reset_on_panic) {
-+			ret = wdd->ops->stop(wdd);
-+			if (ret)
-+				return NOTIFY_BAD;
-+		} else {
-+			ret = wdd->ops->set_timeout(wdd, wdd->reset_on_panic);
-+			if (ret)
-+				return NOTIFY_BAD;
-+		}
-+	}
-+
-+	return NOTIFY_DONE;
-+}
-+
- static int watchdog_reboot_notifier(struct notifier_block *nb,
- 				    unsigned long code, void *data)
- {
-@@ -334,6 +357,13 @@ static int ___watchdog_register_device(struct watchdog_device *wdd)
- 				wdd->id, ret);
- 	}
- 
-+	if (wdd->info->options & WDIOF_OPS_ATOMIC) {
-+		wdd->panic_nb.notifier_call = watchdog_panic_notify;
-+		atomic_notifier_chain_register(&panic_notifier_list,
-+					       &wdd->panic_nb);
-+		set_bit(WDOG_RESET_ON_PANIC, &wdd->status);
-+	}
-+
- 	return 0;
+-	return sched_asym(env->sd, env->dst_cpu, group->asym_prefer_cpu);
++	return sched_asym(env->sd, env->dst_cpu, READ_ONCE(group->asym_prefer_cpu));
  }
  
-@@ -390,6 +420,9 @@ static void __watchdog_unregister_device(struct watchdog_device *wdd)
- 	if (test_bit(WDOG_STOP_ON_REBOOT, &wdd->status))
- 		unregister_reboot_notifier(&wdd->reboot_nb);
+ /* One group has more than one SMT CPU while the other group does not */
+@@ -10488,7 +10488,8 @@ static bool update_sd_pick_busiest(struct lb_env *env,
  
-+	if (test_bit(WDOG_RESET_ON_PANIC, &wdd->status))
-+		atomic_notifier_chain_unregister(&panic_notifier_list,
-+						 &wdd->panic_nb);
- 	watchdog_dev_unregister(wdd);
- 	ida_free(&watchdog_ida, wdd->id);
- }
-diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
-index 8369fd94fc1a..89cc9b681992 100644
---- a/drivers/watchdog/watchdog_dev.c
-+++ b/drivers/watchdog/watchdog_dev.c
-@@ -617,6 +617,33 @@ static ssize_t pretimeout_governor_store(struct device *dev,
- }
- static DEVICE_ATTR_RW(pretimeout_governor);
+ 	case group_asym_packing:
+ 		/* Prefer to move from lowest priority CPU's work */
+-		return sched_asym_prefer(sds->busiest->asym_prefer_cpu, sg->asym_prefer_cpu);
++		return sched_asym_prefer(READ_ONCE(sds->busiest->asym_prefer_cpu),
++					 READ_ONCE(sg->asym_prefer_cpu));
  
-+static ssize_t reset_on_panic_show(struct device *dev,
-+				   struct device_attribute *attr,
-+				   char *buf)
-+{
-+	struct watchdog_device *wdd = dev_get_drvdata(dev);
-+
-+	return sysfs_emit(buf, "%u\n", wdd->reset_on_panic);
-+}
-+
-+static ssize_t reset_on_panic_store(struct device *dev,
-+				    struct device_attribute *attr,
-+				    const char *buf, size_t count)
-+{
-+	struct watchdog_device *wdd = dev_get_drvdata(dev);
-+	unsigned int value;
-+	int ret;
-+
-+	ret = kstrtouint(buf, 0, &value);
-+	if (ret)
-+		return ret;
-+
-+	wdd->reset_on_panic = value;
-+
-+	return count;
-+}
-+static DEVICE_ATTR_RW(reset_on_panic);
-+
- static umode_t wdt_is_visible(struct kobject *kobj, struct attribute *attr,
- 				int n)
- {
-@@ -648,6 +675,7 @@ static struct attribute *wdt_attrs[] = {
- 	&dev_attr_bootstatus.attr,
- 	&dev_attr_status.attr,
- 	&dev_attr_nowayout.attr,
-+	&dev_attr_reset_on_panic.attr,
- 	&dev_attr_pretimeout_governor.attr,
- 	&dev_attr_pretimeout_available_governors.attr,
- 	NULL,
-diff --git a/include/linux/watchdog.h b/include/linux/watchdog.h
-index 99660197a36c..8783edf93bab 100644
---- a/include/linux/watchdog.h
-+++ b/include/linux/watchdog.h
-@@ -105,9 +105,11 @@ struct watchdog_device {
- 	unsigned int max_timeout;
- 	unsigned int min_hw_heartbeat_ms;
- 	unsigned int max_hw_heartbeat_ms;
-+	unsigned int reset_on_panic;
- 	struct notifier_block reboot_nb;
- 	struct notifier_block restart_nb;
- 	struct notifier_block pm_nb;
-+	struct notifier_block panic_nb;
- 	void *driver_data;
- 	struct watchdog_core_data *wd_data;
- 	unsigned long status;
-@@ -118,6 +120,7 @@ struct watchdog_device {
- #define WDOG_HW_RUNNING		3	/* True if HW watchdog running */
- #define WDOG_STOP_ON_UNREGISTER	4	/* Should be stopped on unregister */
- #define WDOG_NO_PING_ON_SUSPEND	5	/* Ping worker should be stopped on suspend */
-+#define WDOG_RESET_ON_PANIC	6	/* Reset the watchdog on panic for loading kdump kernels */
- 	struct list_head deferred;
- };
- 
-diff --git a/include/uapi/linux/watchdog.h b/include/uapi/linux/watchdog.h
-index b15cde5c9054..4e19cc653a72 100644
---- a/include/uapi/linux/watchdog.h
-+++ b/include/uapi/linux/watchdog.h
-@@ -48,6 +48,7 @@ struct watchdog_info {
- #define	WDIOF_PRETIMEOUT	0x0200  /* Pretimeout (in seconds), get/set */
- #define	WDIOF_ALARMONLY		0x0400	/* Watchdog triggers a management or
- 					   other external alarm not a reboot */
-+#define WDIOF_OPS_ATOMIC	0x0800  /* Indicate whether watchdog ops will sleep or not */
- #define	WDIOF_KEEPALIVEPING	0x8000	/* Keep alive ping reply */
- 
- #define	WDIOS_DISABLECARD	0x0001	/* Turn off the watchdog timer */
+ 	case group_misfit_task:
+ 		/*
 -- 
 2.34.1
 
