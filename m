@@ -1,126 +1,131 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from flow-b8-smtp.messagingengine.com (flow-b8-smtp.messagingengine.com [202.12.124.143])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C4825291E;
-	Wed,  9 Apr 2025 16:11:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA8C25D53F;
+	Wed,  9 Apr 2025 16:12:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.143
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744215110; cv=none; b=Xdcskx5N3VJcGgyvSlhfHXGhmCKh5Oz84PXTniZ2E5uuue5DbwOHP0DxB2w99cfxYyR+z1eJqLwbIIJ4NBPipzDQj08+VYtVPAjz1OOR6ySvOaKjXDGwizo681I3vW1OLTjA4Qx4OCPwOFndpdobYw7DJt97fjeaTDSNmcpYAEk=
+	t=1744215181; cv=none; b=KRC1v2QaZYETX22tTdQaDFkCmIaTqJbv4wejrl2Ow8Y0K2NFD4AaFRs0TyhHRwOuWEFvvn3NCzYnx9sPYDf/YkCF87bjS4JvZzsktLEar4na/ze1ZfLliTWO8g0u9uWUGivwVsvnBn2tS9VFJeu0hU5S2UvWqMvT00auBjnmw20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744215110; c=relaxed/simple;
-	bh=SOt/CFi1QiyqKnESz/YdCWfrhyhPQInzpR3x42DBcxE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=WvcG1R4mR25pyuOBJLCnx8Z2P6GbCujE0VKW8ihGtXIiu7X4Txr5A/zGJdpe+cTaF2OwXMyB1PSbPU8/OY7CxP8k9A2q2SRewN9eYvHvBI+nfYOisLtOakbqdw9WzWZGT/WDJHCLZeCP2fJ3XqcbzlQLhGzJUSeugRZJKOQaz+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=B/rx5/JP; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1744215181; c=relaxed/simple;
+	bh=F+tkmTBxAkQ7XxT5PXvydcdDOtzhCLLWni8C2dOYaJw=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=e2CPUmvctTKp5+8akwzLe4kQAUGWJXdAo3CHnTI47zGg43+sDJi9DsvWKDJSy6CRuE69xYAAoWnOePbNNk5n6IcnZ8Mj5RXHTybCG/42XAsa7VLMsfbcAbhiGnA9ZxO+Jx2xcpzYpDFig2Qi6yL205M6QSmntHoGxdWuYR9d77o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Sf9N7x9+; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=w4jf9RrY; arc=none smtp.client-ip=202.12.124.143
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="B/rx5/JP"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53990uxk006865;
-	Wed, 9 Apr 2025 16:11:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	XXwUDlQWx/Utjz+xFTN2fvOi5jYALPdD8+MrVwah8A8=; b=B/rx5/JPdjBxsG+U
-	X5XoTURq4hOH+4xUyonHLnFOvPS+GlxtXVleseObQhgT1z7D3jSmC6xbXGE0PPVh
-	fIhrAqqfvcIjn2jIAtpZ+4AXNE9beR1E5Wwu8HUwSriVXMX4+7hf8QiWHXoIyBky
-	OIWJoLXf9LPXZWQRJiL8/6txAWUP4homhQUCnGoxufKhLeCEmNtLcfGOJvfzGWIm
-	O7hew3G6qQxIf3Cv/5WfnyDTFyKXtqXbj38TJFH9swURLB1tLO8Dexgqo+PsOtWT
-	saHC8qeID5m6tfVIV0ix/k1VdirU5ZxT22ahj0GvBS04wSu9e6cFlmlpvCu/sEsE
-	doftOw==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twg3kxgx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 09 Apr 2025 16:11:39 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 539GBcTR007745
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 9 Apr 2025 16:11:38 GMT
-Received: from [10.216.18.165] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 9 Apr 2025
- 09:11:34 -0700
-Message-ID: <902ed546-4335-26a9-27aa-56a543108b22@quicinc.com>
-Date: Wed, 9 Apr 2025 21:41:31 +0530
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Sf9N7x9+";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="w4jf9RrY"
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailflow.stl.internal (Postfix) with ESMTP id BDFB91D40378;
+	Wed,  9 Apr 2025 12:12:57 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-12.internal (MEProxy); Wed, 09 Apr 2025 12:12:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1744215177;
+	 x=1744222377; bh=33jataLKOMrDl7oW0kqbiVVzQKavk3L6wvJAXox3arE=; b=
+	Sf9N7x9+592spj2w4NNDK8DtL3spi5xwI2nbpr/pMDEQ7Lenz94gJddRGkxKPJCd
+	dxmat3ZDeyFSH/Z7Dl6Jp9DfbjS8kEY9kJN1riq4740H7cNcxmnBTaplX+hyvRjE
+	DkA7ealGvq25awf+4agXajLLLcPGVDQvYHRQFbe8lAJGmAllko4J/11Kfnip48dT
+	xlx/Bk/ZiK3aPWlvPbxMoqZoln02HfAbvScwfwtzlTNLSFOWcJymaz9jX/ZyaVjG
+	0E6DiN7uJmFOLhCDjt6zSog9WoffVL8fGYYaCz/RMKuOrtz1YFKwGpDJ4Iozjh9J
+	szqvIOSXe0zIGR100jkiOg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744215177; x=
+	1744222377; bh=33jataLKOMrDl7oW0kqbiVVzQKavk3L6wvJAXox3arE=; b=w
+	4jf9RrYg4MM5owPrOa4DT6jv3N1l91Yu4GO1QlERQ+SMDVQAyKmHGZiX+Db3faDE
+	IhNLd3+8fbLy7AspKB+5YG6/wIQY6Xmc6aMqFiw+zvJnZb6rNOOCBGdhyus+uFZn
+	P8A9+xez6PLjbt+ieWYeC2Cz9C0krrpgg17oF0SMkYjWkC/Mnr9VU1GscuUhfVYG
+	0kqBdl4/6vPwcdltUJzuNftlFIrsY8ttt6MUcOlz0oPDLCkOmB5SGotmrzrDzsvl
+	sYOXaUt89J21qTGkdHMkBzUDAW3Ke7+Pv2RA2759ZjHnucWUh3SjPX6oBGNIqYCI
+	uHeaYM6uTncr0j6e9WCRA==
+X-ME-Sender: <xms:h5z2Z8KHSoVXEffdwRcJgSRi8DSBQzY1RtX891upV9s3lgmUI8fwmw>
+    <xme:h5z2Z8I1gmGW-Ei2-vrmdTZioXTfQxxD2AoXWBL3t2PIMur3C7gcvmPQ5mTCqkkTl
+    09xfb8_7etFlMG9lBQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdeigeehucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhepfefhheetffduvdfgieeghfejtedvkeetkeej
+    feekkeelffejteevvdeghffhiefhnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenuc
+    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnuges
+    rghrnhgusgdruggvpdhnsggprhgtphhtthhopedvfedpmhhouggvpehsmhhtphhouhhtpd
+    hrtghpthhtoheptghhrhhishdrphgrtghkhhgrmhesrghllhhivgguthgvlhgvshhishdr
+    tghordhniidprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpd
+    hrtghpthhtoheprhhmkhdokhgvrhhnvghlsegrrhhmlhhinhhugidrohhrghdruhhkpdhr
+    tghpthhtohepughirghnuggvrhhssegthhhrohhmihhumhdrohhrghdprhgtphhtthhope
+    hnihgtohhlrghssehfjhgrshhlvgdrvghupdhrtghpthhtohepghgvvghrthdorhgvnhgv
+    shgrshesghhlihguvghrrdgsvgdprhgtphhtthhopegvsghighhgvghrshesghhoohhglh
+    gvrdgtohhmpdhrtghpthhtoheplhhiuhihuhhnthgrohduvdeshhhurgifvghirdgtohhm
+    pdhrtghpthhtoheprhhurghnjhhinhhjihgvsehhuhgrfigvihdrtghomh
+X-ME-Proxy: <xmx:h5z2Z8uH9UIIzQnIliicFwHgsOXHjzdCs4Ex5QgLPr22gZQc2YCcYw>
+    <xmx:h5z2Z5afkpjYXabgkSsHiAciTMBD6ajkQSbDxosFYTcLBn6CkU3Qgg>
+    <xmx:h5z2ZzZ7WiCmp4sZvdoocklgHZiXZXbt_i2LvM6eWrCg8y2RcF5eRQ>
+    <xmx:h5z2Z1CW5_uxueBOV24t9UGGki1NZ76N5o6InHz9Kk6Y6SHvEjWyHw>
+    <xmx:iZz2Z3z_uLxm7F_ZG070Y08vLseOaj9es3758GkaThsd27sU5h0BuLLi>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id BBAC22220073; Wed,  9 Apr 2025 12:12:55 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v4 4/6] media: platform: qcom/iris: rename iris_vpu3 to
- iris_vpu3x
-Content-Language: en-US
-To: Neil Armstrong <neil.armstrong@linaro.org>,
-        Dikshita Agarwal
-	<quic_dikshita@quicinc.com>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Bryan
- O'Donoghue" <bryan.odonoghue@linaro.org>
-References: <20250409-topic-sm8x50-iris-v10-v4-0-40e411594285@linaro.org>
- <20250409-topic-sm8x50-iris-v10-v4-4-40e411594285@linaro.org>
-From: Vikash Garodia <quic_vgarodia@quicinc.com>
-In-Reply-To: <20250409-topic-sm8x50-iris-v10-v4-4-40e411594285@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+X-ThreadId: T1a2df1155f45051f
+Date: Wed, 09 Apr 2025 18:12:15 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Ard Biesheuvel" <ardb@kernel.org>, "Kees Cook" <kees@kernel.org>
+Cc: "Chris Packham" <chris.packham@alliedtelesis.co.nz>,
+ "Doug Anderson" <dianders@chromium.org>,
+ "Russell King" <linux@armlinux.org.uk>,
+ "Masahiro Yamada" <masahiroy@kernel.org>,
+ "Nathan Chancellor" <nathan@kernel.org>,
+ "Nicolas Schier" <nicolas@fjasle.eu>,
+ "Russell King" <rmk+kernel@armlinux.org.uk>,
+ "Linus Walleij" <linus.walleij@linaro.org>, "Andrew Davis" <afd@ti.com>,
+ "Seung-Woo Kim" <sw0312.kim@samsung.com>, "Xin Li" <xin3.li@intel.com>,
+ "Ruan Jinjie" <ruanjinjie@huawei.com>, linux-arm-kernel@lists.infradead.org,
+ linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
+ "Eric Biggers" <ebiggers@google.com>, "Yuntao Liu" <liuyuntao12@huawei.com>,
+ "Paul E. McKenney" <paulmck@kernel.org>,
+ "Dave Vasilevsky" <dave@vasilevsky.ca>,
+ "Geert Uytterhoeven" <geert+renesas@glider.be>, linux-kernel@vger.kernel.org
+Message-Id: <b5a57fd6-ceae-45b7-b8eb-1ea85001dd45@app.fastmail.com>
+In-Reply-To: 
+ <CAMj1kXHks1_eC=cAmkPC45deMp3_VdxckjyRoWvMovdBekg2bQ@mail.gmail.com>
+References: <20250409160409.work.168-kees@kernel.org>
+ <CAMj1kXHks1_eC=cAmkPC45deMp3_VdxckjyRoWvMovdBekg2bQ@mail.gmail.com>
+Subject: Re: [PATCH] gcc-plugins: Remove ARM_SSP_PER_TASK plugin
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: kbTkeGp3dH3-n5oqDxNJl1HQfmcZGAfK
-X-Proofpoint-ORIG-GUID: kbTkeGp3dH3-n5oqDxNJl1HQfmcZGAfK
-X-Authority-Analysis: v=2.4 cv=I/9lRMgg c=1 sm=1 tr=0 ts=67f69c3b cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=KKAkSRfTAAAA:8 a=2ECtzDhs6wtSefyIrJgA:9
- a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-09_05,2025-04-08_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- phishscore=0 suspectscore=0 mlxlogscore=999 lowpriorityscore=0 spamscore=0
- clxscore=1015 malwarescore=0 adultscore=0 priorityscore=1501
- impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504090103
 
+On Wed, Apr 9, 2025, at 18:08, Ard Biesheuvel wrote:
+> On Wed, 9 Apr 2025 at 18:04, Kees Cook <kees@kernel.org> wrote:
+>>
+>> As part of trying to remove GCC plugins from Linux, drop the
+>> ARM_SSP_PER_TASK plugin. The feature is available upstream since GCC
+>> 12, so anyone needing newer kernels with per-task ssp can update their
+>> compiler[1].
+>>
+>> Suggested-by: Arnd Bergmann <arnd@arndb.de>
+>> Link: https://lore.kernel.org/all/08393aa3-05a3-4e3f-8004-f374a3ec4b7e@app.fastmail.com/ [1]
+>> Signed-off-by: Kees Cook <kees@kernel.org>
+>
+> Acked-by: Ard Biesheuvel <ardb@kernel.org>
 
-On 4/9/2025 8:08 PM, Neil Armstrong wrote:
-> The vpu33 HW is very close to vpu3, and shares most of the
-> operations, so rename file to vpu3x since we'll handle all vpu3
-> variants in it.
-> 
-> Reviewed-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
-> Tested-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org> # x1e Dell
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-> ---
->  drivers/media/platform/qcom/iris/Makefile                      | 2 +-
->  drivers/media/platform/qcom/iris/{iris_vpu3.c => iris_vpu3x.c} | 0
->  2 files changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/platform/qcom/iris/Makefile b/drivers/media/platform/qcom/iris/Makefile
-> index 35390534534e93f4617c1036a05ca0921567ba1d..473aaf655448180ade917e642289677fc1277f99 100644
-> --- a/drivers/media/platform/qcom/iris/Makefile
-> +++ b/drivers/media/platform/qcom/iris/Makefile
-> @@ -20,7 +20,7 @@ qcom-iris-objs += \
->               iris_vb2.o \
->               iris_vdec.o \
->               iris_vpu2.o \
-> -             iris_vpu3.o \
-> +             iris_vpu3x.o \
->               iris_vpu_buffer.o \
->               iris_vpu_common.o \
->  
-> diff --git a/drivers/media/platform/qcom/iris/iris_vpu3.c b/drivers/media/platform/qcom/iris/iris_vpu3x.c
-> similarity index 100%
-> rename from drivers/media/platform/qcom/iris/iris_vpu3.c
-> rename to drivers/media/platform/qcom/iris/iris_vpu3x.c
+Acked-by: Arnd Bergmann <arnd@arndb.de>
 
-Reviewed-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+I was going to send the same patch and double-checked it to
+make sure they are actually identical.
+
+        Arnd
