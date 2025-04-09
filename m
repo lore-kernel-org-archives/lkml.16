@@ -1,263 +1,230 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02CF4268C40
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 14:43:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2989326980F;
+	Wed,  9 Apr 2025 14:43:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744209810; cv=none; b=hMHLrvhjmXw/WOv7xCOXAg7sXk6owDGPBpm/DlFCEV7yAHx0lb04Pb9fTfKb1vn4Gj0i9YvMeCkcFi8oLFsgkl75Lpx1mYholsyhqQmMh+xIWji3wTjj33gP/nvejTV6FmF0YutCY5s8Wbj63yA9D5RTTzX9doNjAJq4Kvhwcf0=
+	t=1744209815; cv=none; b=JTlCCC6ZW6tv7xQleQDCVT8On1M7EWJObE1+mZ9OYhDiDevMZIx8gpRuYmd0dymaj9RIpOJChSTrR8Zwa1MnLlVwbT4TAzPT1D6NEhz83Keg5ynXrZ4CpxluIlA7f1h5q51mL/RMUb7JcUseF0drfcTVXDDUSfPNzR7RwwfWqfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744209810; c=relaxed/simple;
-	bh=kQ9GHfesH0VP3UbX5nxEs6wOWpoqClYTSG7LdtlBlS8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VI1jtvPyGfJaLIho8ZQCCZ4LXsh5q9kjvG3arCrqv71skK5F4sBawSHNgXIP7IXr6giJhO3d+Sz750iWQ0Vd2X02VZRhinJcijdzgaZDuWJ/zq2lWpMpzmBpcqVLUXbKHElDjleljMOyFkBiGimEotDWcWgRqsJeh8Itp0GsIdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LKiJS8zn; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744209815; c=relaxed/simple;
+	bh=55xj2dep3MokLpLRxr+nyhMZKrz7iW75JqqR6hPoPhE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=L29ItFsFYrd4S6ZZSp3mzSGsyRnj15euKDyp+/6R+8NyAHRK63iZkEGJhth84/El3wMtn09Ek4582jF3IMBXBFhX0ULvFoL/uI8MG7fzTRgSRxVIrEFlPCHl+XQMFSZV/Eve4cf/DP3v/XR1cv6cbpgRkP3vha2k767AanmwBOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a/+sm7rC; arc=none smtp.client-ip=209.85.222.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LKiJS8zn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744209808;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wcivbUEWC4kBHEWoC8mH97RWcHUUu64DZ8iwYH5064E=;
-	b=LKiJS8zn9FgsjKMqfYQbDBVyWvGtXRqVMjVjdeNC8WfiO2FZ5KSiKImFzN/tW1ZgCrjU1I
-	jqZAC6W2KhyWDlUVGklTWlJN4dKl9xgcSRdFmMRVaZqz0ELyTFRuNVKv2BL4R0XDutpETy
-	DsvzcpI04JfBTXuyIJkvXVGeIxUgArM=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-695-B_um9ZZTMveArSVeNO6W7A-1; Wed,
- 09 Apr 2025 10:43:23 -0400
-X-MC-Unique: B_um9ZZTMveArSVeNO6W7A-1
-X-Mimecast-MFC-AGG-ID: B_um9ZZTMveArSVeNO6W7A_1744209801
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8CDBA18007E1;
-	Wed,  9 Apr 2025 14:43:21 +0000 (UTC)
-Received: from p16v.luc.cera.cz (unknown [10.44.32.72])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id F3BFD18009BC;
-	Wed,  9 Apr 2025 14:43:16 +0000 (UTC)
-From: Ivan Vecera <ivecera@redhat.com>
-To: netdev@vger.kernel.org
-Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Prathosh Satish <Prathosh.Satish@microchip.com>,
-	Lee Jones <lee@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Michal Schmidt <mschmidt@redhat.com>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2 05/14] mfd: zl3073x: Add register access helpers
-Date: Wed,  9 Apr 2025 16:42:41 +0200
-Message-ID: <20250409144250.206590-6-ivecera@redhat.com>
-In-Reply-To: <20250409144250.206590-1-ivecera@redhat.com>
-References: <20250409144250.206590-1-ivecera@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a/+sm7rC"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7c5e2fe5f17so675980485a.3;
+        Wed, 09 Apr 2025 07:43:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744209812; x=1744814612; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uXjtjSGRBJAecGZkTORy/ykoAp22kdkGcCUZ52AKfbI=;
+        b=a/+sm7rCPIx0pOrWTBi200zl9vJmpSjYwl71/gXLRgFpfq1dwDYgvVtsoeS8ojWYZc
+         PO30l1LZGwMc+56KG+DkoD7RQDD8mfOfSb/5j3/Bd43HKsNcr84sKbdLK47/YhNKQYwB
+         /tD3Feo5LekCynxWVB9/wEDJ3jdgjaaanBS8ql4CMxPhpJ3ULSX3Eaw3Cpp75Tig+vYi
+         g9goTYdQV5FsCD0j5fnRI+sdfIa/A7zmwumSkZ8Z2cloRcMZ/RDq1lVRPkJa7gmo543S
+         IlBNZmXjy6C+Pl3cbVYnfgeJqhRHX3PUri4T01rkWuxbA6jAARzCjS6rP2a4UZxTfZHn
+         s/9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744209812; x=1744814612;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uXjtjSGRBJAecGZkTORy/ykoAp22kdkGcCUZ52AKfbI=;
+        b=N4KmEzNlymmNIoSwvmBSABFtR3rUulJiZNaPwSRooR5jC+Sv9SvX5bCaVokC6DvJ4v
+         oaW3SjH3D48tnZbyqDFPapNn52tPd+Q4JywsqY0GNYSJFJB8LY3HCCOrBXkobKbOE48Z
+         uHvH8TIP0xTrqSJ2BFbjLSftSCPvYpTUaytnZeuwqXNhDv8EBfUsgoHJfBYqo5wLh/qX
+         1ebYuMF+5px/9a6idgIqLXc3IRBGTi2reRnjDjHYNnvFJ/AdPFFXfXkwfQ5J+YBok4Y8
+         kGQg5kC3b6yPmvqpNlCVD/hVJazqVRSQ+E4oEKBqH3WKUdpRnZe4BT7pmBG8flb5m6Bn
+         svOg==
+X-Forwarded-Encrypted: i=1; AJvYcCWeA94WxgpXo/s5BT5a8nfuuAZnErS0rufRuAQoAqA3Sye7W+1jJZnpAl1eeHGXMfBa3PzkBXK4JUVvNhw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQbeTH38p2WxyVO7oaD4AexZAeezJqGpKTypQ3gEcKSMsaUSTH
+	Mp81gmgAOimBwLPdvWX6ieTlPTMPWH+85g2B5q7/9hljG1bpxas/
+X-Gm-Gg: ASbGnctlh1iFP2ddisi3usmij4euVDNE7zK4WOQ2+erO16M/q2chprDwfEkxs9FUrGd
+	B6aWvUWg4rS/7TTgtlHu5KtxkCHywHA4TalWbTsze2xEmTRIe6a0U9abbFnFv1gbWqGfQKRA9aR
+	rfZRois9vLjWaiEeGLF//XNV+2QNaNKXt8stjTlJodqZ5woUeDDsn3Txu2Ofi6WPneJkojW3gGR
+	LLZC/RDAam5IpKzJuz3kDwypL4mCsg3ykdRSW8RXdSNvdX/R2nBzGskWbkPmEFTyQwq2cD4neL5
+	BAgxodb2CQ7eafmWSyKWMaSe5Uzck9LkP1nDujalP+9ABAk8n7FCOC1YYLLzovx43iXx3bR9a65
+	K2GMe/wyT5oJ6ROgojShCH1L5soeC38QVKP/CQFFESj4S
+X-Google-Smtp-Source: AGHT+IE6AFyUXyEIT9EnJhREUPE9hpaInNQlNF10dFxnM4HagCVj0WgYnGLNPolh10kXeKG6yflvcg==
+X-Received: by 2002:a05:620a:454e:b0:7c7:95ee:77bf with SMTP id af79cd13be357-7c79cbd19a2mr430038585a.19.1744209811740;
+        Wed, 09 Apr 2025 07:43:31 -0700 (PDT)
+Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([2620:10d:c091:600::1:3298])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c7a11e6c1dsm79816085a.108.2025.04.09.07.43.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 07:43:31 -0700 (PDT)
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Wed, 09 Apr 2025 10:43:16 -0400
+Subject: [PATCH] rust: retain pointer mut-ness in `container_of!`
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250409-container-of-mutness-v1-1-64f472b94534@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAIOH9mcC/x3MPQqAMAxA4atIZgP1D9SriEO1UTOYSqMiFO9uc
+ fyG9yIoBSaFPosQ6GZlLwlFnsG8WVkJ2SVDacrG1KbD2ctpWSigX3C/TiFVnIqmcnaqq7Z1kNI
+ j0MLPvx3G9/0AFL1lgmYAAAA=
+X-Change-ID: 20250409-container-of-mutness-b153dab4388d
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Tamir Duberstein <tamird@gmail.com>
+X-Mailer: b4 0.15-dev
 
-Add helpers zl3073x_{read,write}_reg() to access device registers.
-These functions have to be called with device lock that can be taken
-by zl3073x_{lock,unlock}() or a caller can use defined guard.
+Avoid casting the input pointer to `*const _`, allowing the output
+pointer to be `*mut` if the input is `*mut`. This allows a number of
+`*const` to `*mut` conversions to be removed at the cost of slightly
+worse ergonomics when the macro is used with a reference rather than a
+pointer; the only example of this was in the macro's own doctest.
 
-Locking mechanism of regmap is not sufficient because sometimes is
-necessary to perform several register operations at once. This is
-especially a case of register mailboxes (more details in patch 7 & 8).
-Disable regmap locking mechanism and use this device lock instead.
-
-Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 ---
-v1->v2:
-* disabled regmap locking
+This patch is extracted from 3 other series to reduce duplication.
 ---
- drivers/mfd/zl3073x-core.c  | 90 +++++++++++++++++++++++++++++++++++++
- include/linux/mfd/zl3073x.h | 33 ++++++++++++++
- 2 files changed, 123 insertions(+)
+ rust/kernel/lib.rs    |  5 ++---
+ rust/kernel/rbtree.rs | 23 ++++++++++-------------
+ 2 files changed, 12 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/mfd/zl3073x-core.c b/drivers/mfd/zl3073x-core.c
-index 116c6dd9eebc7..f0d85f77a7a76 100644
---- a/drivers/mfd/zl3073x-core.c
-+++ b/drivers/mfd/zl3073x-core.c
-@@ -5,9 +5,11 @@
- #include <linux/dev_printk.h>
- #include <linux/device.h>
- #include <linux/export.h>
-+#include <linux/lockdep.h>
- #include <linux/mfd/zl3073x.h>
- #include <linux/module.h>
- #include <linux/regmap.h>
-+#include <linux/unaligned.h>
- #include <net/devlink.h>
- #include "zl3073x.h"
- 
-@@ -46,6 +48,7 @@ const struct regmap_config zl3073x_regmap_config = {
- 	.max_register		= ZL3073x_NUM_PAGES * ZL3073x_PAGE_SIZE,
- 	.ranges			= zl3073x_regmap_ranges,
- 	.num_ranges		= ARRAY_SIZE(zl3073x_regmap_ranges),
-+	.disable_locking	= true,
- };
- 
- /**
-@@ -59,6 +62,93 @@ const struct regmap_config *zl3073x_get_regmap_config(void)
+diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+index de07aadd1ff5..1df11156302a 100644
+--- a/rust/kernel/lib.rs
++++ b/rust/kernel/lib.rs
+@@ -190,7 +190,7 @@ fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
+ /// }
+ ///
+ /// let test = Test { a: 10, b: 20 };
+-/// let b_ptr = &test.b;
++/// let b_ptr: *const _ = &test.b;
+ /// // SAFETY: The pointer points at the `b` field of a `Test`, so the resulting pointer will be
+ /// // in-bounds of the same allocation as `b_ptr`.
+ /// let test_alias = unsafe { container_of!(b_ptr, Test, b) };
+@@ -199,9 +199,8 @@ fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
+ #[macro_export]
+ macro_rules! container_of {
+     ($ptr:expr, $type:ty, $($f:tt)*) => {{
+-        let ptr = $ptr as *const _ as *const u8;
+         let offset: usize = ::core::mem::offset_of!($type, $($f)*);
+-        ptr.sub(offset) as *const $type
++        $ptr.byte_sub(offset).cast::<$type>()
+     }}
  }
- EXPORT_SYMBOL_NS_GPL(zl3073x_get_regmap_config, "ZL3073X");
  
-+/**
-+ * zl3073x_read_reg - Read value from device register
-+ * @zldev: pointer to zl3073x device
-+ * @reg: register to be read
-+ * @len: number of bytes to read
-+ * @value: pointer to place to store value read from the register
-+ *
-+ * Caller has to hold the device lock that can be obtained
-+ * by zl3073x_lock().
-+ *
-+ * Return: 0 on success or <0 on error
-+ */
-+int zl3073x_read_reg(struct zl3073x_dev *zldev, unsigned int reg,
-+		     unsigned int len, void *value)
-+{
-+	u8 buf[6];
-+	int rc;
-+
-+	lockdep_assert_held(&zldev->lock);
-+
-+	rc = regmap_bulk_read(zldev->regmap, reg, buf, len);
-+	if (rc)
-+		return rc;
-+
-+	switch (len) {
-+	case 1:
-+		*(u8 *)value = buf[0];
-+		break;
-+	case 2:
-+		*(u16 *)value = get_unaligned_be16(buf);
-+		break;
-+	case 4:
-+		*(u32 *)value = get_unaligned_be32(buf);
-+		break;
-+	case 6:
-+		*(u64 *)value = get_unaligned_be48(buf);
-+		break;
-+	default:
-+		WARN(true, "Unsupported register size: %u\n", len);
-+		break;
-+	}
-+
-+	return rc;
-+}
-+EXPORT_SYMBOL_GPL(zl3073x_read_reg);
-+
-+/**
-+ * zl3073x_write_reg - Write value to device register
-+ * @zldev: pointer to zl3073x device
-+ * @reg: register to be written
-+ * @len: number of bytes to write
-+ * @value: pointer to value to write to the register
-+ *
-+ * Caller has to hold the device lock that can be obtained
-+ * by zl3073x_lock().
-+ *
-+ * Return: 0 on success, <0 on error
-+ */
-+int zl3073x_write_reg(struct zl3073x_dev *zldev, unsigned int reg,
-+		      unsigned int len, const void *value)
-+{
-+	u8 buf[6];
-+
-+	lockdep_assert_held(&zldev->lock);
-+
-+	switch (len) {
-+	case 1:
-+		buf[0] = *(u8 *)value;
-+		break;
-+	case 2:
-+		put_unaligned_be16(*(u16 *)value, buf);
-+		break;
-+	case 4:
-+		put_unaligned_be32(*(u32 *)value, buf);
-+		break;
-+	case 6:
-+		put_unaligned_be48(*(u64 *)value, buf);
-+		break;
-+	default:
-+		WARN(true, "Unsupported register size: %u\n", len);
-+		break;
-+	}
-+
-+	return regmap_bulk_write(zldev->regmap, reg, buf, len);
-+}
-+EXPORT_SYMBOL_GPL(zl3073x_write_reg);
-+
- static const struct devlink_ops zl3073x_devlink_ops = {
- };
+diff --git a/rust/kernel/rbtree.rs b/rust/kernel/rbtree.rs
+index 5246b2c8a4ff..8d978c896747 100644
+--- a/rust/kernel/rbtree.rs
++++ b/rust/kernel/rbtree.rs
+@@ -424,7 +424,7 @@ pub fn cursor_lower_bound(&mut self, key: &K) -> Option<Cursor<'_, K, V>>
+         while !node.is_null() {
+             // SAFETY: By the type invariant of `Self`, all non-null `rb_node` pointers stored in `self`
+             // point to the links field of `Node<K, V>` objects.
+-            let this = unsafe { container_of!(node, Node<K, V>, links) }.cast_mut();
++            let this = unsafe { container_of!(node, Node<K, V>, links) };
+             // SAFETY: `this` is a non-null node so it is valid by the type invariants.
+             let this_key = unsafe { &(*this).key };
+             // SAFETY: `node` is a non-null node so it is valid by the type invariants.
+@@ -496,7 +496,7 @@ fn drop(&mut self) {
+             // but it is not observable. The loop invariant is still maintained.
  
-diff --git a/include/linux/mfd/zl3073x.h b/include/linux/mfd/zl3073x.h
-index f3f33ef8bfa18..00dcc73aeeb34 100644
---- a/include/linux/mfd/zl3073x.h
-+++ b/include/linux/mfd/zl3073x.h
-@@ -3,6 +3,7 @@
- #ifndef __LINUX_MFD_ZL3073X_H
- #define __LINUX_MFD_ZL3073X_H
+             // SAFETY: `this` is valid per the loop invariant.
+-            unsafe { drop(KBox::from_raw(this.cast_mut())) };
++            unsafe { drop(KBox::from_raw(this)) };
+         }
+     }
+ }
+@@ -761,7 +761,7 @@ pub fn remove_current(self) -> (Option<Self>, RBTreeNode<K, V>) {
+         let next = self.get_neighbor_raw(Direction::Next);
+         // SAFETY: By the type invariant of `Self`, all non-null `rb_node` pointers stored in `self`
+         // point to the links field of `Node<K, V>` objects.
+-        let this = unsafe { container_of!(self.current.as_ptr(), Node<K, V>, links) }.cast_mut();
++        let this = unsafe { container_of!(self.current.as_ptr(), Node<K, V>, links) };
+         // SAFETY: `this` is valid by the type invariants as described above.
+         let node = unsafe { KBox::from_raw(this) };
+         let node = RBTreeNode { node };
+@@ -806,7 +806,7 @@ fn remove_neighbor(&mut self, direction: Direction) -> Option<RBTreeNode<K, V>>
+             unsafe { bindings::rb_erase(neighbor, addr_of_mut!(self.tree.root)) };
+             // SAFETY: By the type invariant of `Self`, all non-null `rb_node` pointers stored in `self`
+             // point to the links field of `Node<K, V>` objects.
+-            let this = unsafe { container_of!(neighbor, Node<K, V>, links) }.cast_mut();
++            let this = unsafe { container_of!(neighbor, Node<K, V>, links) };
+             // SAFETY: `this` is valid by the type invariants as described above.
+             let node = unsafe { KBox::from_raw(this) };
+             return Some(RBTreeNode { node });
+@@ -912,7 +912,7 @@ unsafe fn to_key_value_mut<'b>(node: NonNull<bindings::rb_node>) -> (&'b K, &'b
+     unsafe fn to_key_value_raw<'b>(node: NonNull<bindings::rb_node>) -> (&'b K, *mut V) {
+         // SAFETY: By the type invariant of `Self`, all non-null `rb_node` pointers stored in `self`
+         // point to the links field of `Node<K, V>` objects.
+-        let this = unsafe { container_of!(node.as_ptr(), Node<K, V>, links) }.cast_mut();
++        let this = unsafe { container_of!(node.as_ptr(), Node<K, V>, links) };
+         // SAFETY: The passed `node` is the current node or a non-null neighbor,
+         // thus `this` is valid by the type invariants.
+         let k = unsafe { &(*this).key };
+@@ -1021,7 +1021,7 @@ fn next(&mut self) -> Option<Self::Item> {
  
-+#include <linux/cleanup.h>
- #include <linux/mutex.h>
+         // SAFETY: By the type invariant of `IterRaw`, `self.next` is a valid node in an `RBTree`,
+         // and by the type invariant of `RBTree`, all nodes point to the links field of `Node<K, V>` objects.
+-        let cur = unsafe { container_of!(self.next, Node<K, V>, links) }.cast_mut();
++        let cur = unsafe { container_of!(self.next, Node<K, V>, links) };
  
- struct device;
-@@ -20,4 +21,36 @@ struct zl3073x_dev {
- 	struct mutex		lock;
- };
+         // SAFETY: `self.next` is a valid tree node by the type invariants.
+         self.next = unsafe { bindings::rb_next(self.next) };
+@@ -1216,7 +1216,7 @@ pub fn get_mut(&mut self) -> &mut V {
+         // SAFETY:
+         // - `self.node_links` is a valid pointer to a node in the tree.
+         // - We have exclusive access to the underlying tree, and can thus give out a mutable reference.
+-        unsafe { &mut (*(container_of!(self.node_links, Node<K, V>, links).cast_mut())).value }
++        unsafe { &mut (*(container_of!(self.node_links, Node<K, V>, links))).value }
+     }
  
-+/**
-+ * zl3073x_lock - Lock the device
-+ * @zldev: device structure pointer
-+ *
-+ * Caller has to take this lock when it needs to access device registers.
-+ */
-+static inline void zl3073x_lock(struct zl3073x_dev *zldev)
-+{
-+	mutex_lock(&zldev->lock);
-+}
-+
-+/**
-+ * zl3073x_unlock - Unlock the device
-+ * @zldev: device structure pointer
-+ *
-+ * Caller unlocks the device when it does not need to access device
-+ * registers anymore.
-+ */
-+static inline void zl3073x_unlock(struct zl3073x_dev *zldev)
-+{
-+	mutex_unlock(&zldev->lock);
-+}
-+
-+DEFINE_GUARD(zl3073x, struct zl3073x_dev *, zl3073x_lock(_T),
-+	     zl3073x_unlock(_T));
-+
-+int zl3073x_read_reg(struct zl3073x_dev *zldev, unsigned int reg,
-+		     unsigned int len, void *value);
-+
-+int zl3073x_write_reg(struct zl3073x_dev *zldev, unsigned int reg,
-+		      unsigned int len, const void *value);
-+
- #endif /* __LINUX_MFD_ZL3073X_H */
+     /// Converts the entry into a mutable reference to its value.
+@@ -1226,7 +1226,7 @@ pub fn into_mut(self) -> &'a mut V {
+         // SAFETY:
+         // - `self.node_links` is a valid pointer to a node in the tree.
+         // - This consumes the `&'a mut RBTree<K, V>`, therefore it can give out a mutable reference that lives for `'a`.
+-        unsafe { &mut (*(container_of!(self.node_links, Node<K, V>, links).cast_mut())).value }
++        unsafe { &mut (*(container_of!(self.node_links, Node<K, V>, links))).value }
+     }
+ 
+     /// Remove this entry from the [`RBTree`].
+@@ -1239,9 +1239,7 @@ pub fn remove_node(self) -> RBTreeNode<K, V> {
+         RBTreeNode {
+             // SAFETY: The node was a node in the tree, but we removed it, so we can convert it
+             // back into a box.
+-            node: unsafe {
+-                KBox::from_raw(container_of!(self.node_links, Node<K, V>, links).cast_mut())
+-            },
++            node: unsafe { KBox::from_raw(container_of!(self.node_links, Node<K, V>, links)) },
+         }
+     }
+ 
+@@ -1272,8 +1270,7 @@ fn replace(self, node: RBTreeNode<K, V>) -> RBTreeNode<K, V> {
+         // SAFETY:
+         // - `self.node_ptr` produces a valid pointer to a node in the tree.
+         // - Now that we removed this entry from the tree, we can convert the node to a box.
+-        let old_node =
+-            unsafe { KBox::from_raw(container_of!(self.node_links, Node<K, V>, links).cast_mut()) };
++        let old_node = unsafe { KBox::from_raw(container_of!(self.node_links, Node<K, V>, links)) };
+ 
+         RBTreeNode { node: old_node }
+     }
+
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250409-container-of-mutness-b153dab4388d
+
+Best regards,
 -- 
-2.48.1
+Tamir Duberstein <tamird@gmail.com>
 
