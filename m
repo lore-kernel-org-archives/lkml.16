@@ -1,110 +1,210 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C732144DB;
-	Wed,  9 Apr 2025 06:58:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DBB5213245;
+	Wed,  9 Apr 2025 06:59:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744181937; cv=none; b=MH0gEb73StgwdfxgCAOGCbe+Ltz7f0816b/8iLgV9Sx07ICFS6RMy/NmKXod84pp2O4iJ61pnlhVzGP450xg0id9frEDZC9+sUqnQ5AeZPq2SiXedLrb7nwBXuafi5Hq+Xl5ergLCkSPm2gImwARZyBOfO/qmEZjc8SfCRwKweQ=
+	t=1744181967; cv=none; b=Licq5r6fQeikQx2mmBFzuBr3/1VuKKRRc0Fjv8jyQky2kliwiQZd6/OswHq5Ne/GSS57n8ynWi9ckX9TP+WVkI/9Nv5P5hTsnIR8jp9ebPF2F+8MMnZ8TOLvupI7+pYe6SYHy2BUqy/lQczalsfVfl6QfQPJ1Mfexq/jjzQQQC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744181937; c=relaxed/simple;
-	bh=Nt84t6m6mhPkjjvZ7EsC4vTJVqfWi3j4nIQ3mgOiw6A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dv33lUd9vtMV9Xwj1KP6Lwla/JmIRXANnKo8MR5JDFJtYcASuC03AiaMij8a6W/6JjRTqNd1FV1vDVgFRV3yZ19b+3leLdAMU5OW8b7ZfrgHlM+77zltkK8xEtHMJJKZU3SW8rT5O7GoSqesTx7DIA4pmyc5MGKcvf36czDtEbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nmyw/bgF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744181967; c=relaxed/simple;
+	bh=bS8Ebl8McHMwQRP2b9+9bPhRqECSzCU5b02fcngqsqY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Tf2WTuFyy0Zx0eRptUSYlsW8jEV3i0jr89Ud12tMkDlsNsNZC3xkiQ68WMblVZIh4EFvE5S2a9YDWW4VPMj3CgVUrGjehNfGb3bbIjw52+hpQczTYuD5hMmdjk2mWfleUJk0l2eM/pWTr7wzja1j9++ecVfsRiyXz6xt33z8WII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JZ++LZ7a; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nmyw/bgF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9537DC4CEE3;
-	Wed,  9 Apr 2025 06:58:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744181936;
-	bh=Nt84t6m6mhPkjjvZ7EsC4vTJVqfWi3j4nIQ3mgOiw6A=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Nmyw/bgF7jM8ApGX0fKPQRw/4Er05KUaPn17pghbctKVJZS2ooTUt1LKZKRZJZ0Vq
-	 SH6uzOk/VPZCU9rAlBq17ZIm4n4lIm5+dnf+bKwyoT/CjcTfbFdHESaXQjNLdkY0xy
-	 QT5CBeyVE4tLL0l2cDE4lYHZBVpE6KjR3HZlKuE7WKrPM/XrfPI4GpLnzRsWqJhMbq
-	 ACjfstOtJa25HbOwTK2AIXg2GlZsJOnBZNMz1DqCXegh5DE8gz1TUYqXDCa50JHReo
-	 0Nuv1YSvebLQsFt2XMiEztF7gjKoL8uGpVp8uiRoM37lxCSWGRaFlfK6VTG2/EaMTS
-	 1EUkZMTwNpi2g==
-Message-ID: <43dd7191-c797-4d8c-af58-03fc0eaaa95b@kernel.org>
-Date: Wed, 9 Apr 2025 08:58:51 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JZ++LZ7a"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-224191d92e4so60807035ad.3;
+        Tue, 08 Apr 2025 23:59:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744181965; x=1744786765; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RIfDOjq9qhHckyXryae5MbYL+xPZ6FAVHhgspJGsYWI=;
+        b=JZ++LZ7aTSDrZ/1ggSOGaz7L48YUMqxuBTwPga/dwg+QGXHUUgwCY2s9YL7dJV4XCY
+         yPJDihfiF8GHEObs5+vjRKGne5rR4lvWt/BXscicgLXqBusN3EAKbjDWNZPR0HxlznSu
+         CzjwpKxdKEJ+3WZwIeEcMQXq2E5GdoTVYEiarFnfaujD6XsGXpez/uhyyymm9BQaE84E
+         Gv2NQccT1UtWoZM7A/HLyb/VNpVqe55dvhQhIjnuDypgAyRaBDZ3+30ZOSCopIH/g704
+         +kCDAGoGK+DzjyGYAjBNUAOLM60qLoZUJoaE4PhKwcKzvaNvTvrlwPTcPOH621Y8HHDj
+         vBiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744181965; x=1744786765;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RIfDOjq9qhHckyXryae5MbYL+xPZ6FAVHhgspJGsYWI=;
+        b=tUeFNStu+eyCV0zH4UlU5Jhj4BarXJ5RRLMkVDQhMWNajpeEw3pttdWG+PGf2qjFEw
+         SCm+wvZU/+P18fKzGApV6QMxCF2r8atN3yVdTx5aZkV0+g/NHM2xnkR0ddtuJKKqb5Vn
+         /o0w67x14rlRmdqXbXw6hu1+elyLpI7zkPJaxBW6v9Ipc9UuOO1K+yB90vAUnHxJD3AV
+         m83HXv/z1G8xW0Dz/ABEUR2HbHaLxj4rkOcck7YkB50cDDvQRw0SOrffHO/VqN960lfU
+         QPCZIGml/Gra/FqRjwaJFjYNtGYqzTSwuS0lI+cgblz7MfRoYFHizOFdeTgCgSDyXfX2
+         jM3A==
+X-Forwarded-Encrypted: i=1; AJvYcCXUxSIYLya801RuMHKMsvNIHEXp+gxLw5Ag/f1Ewo7gPeeylBHLIcqwKhve9gRUM851jfzrlBc+DHbu+RjLeg==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yysu9UtDxLRVYoamRI67Jo+d7PuZ4X38htXSJgEKPFjolVPHw40
+	IX09aUlQ7hJQ1Dfmw5+MDtj0JTzjhcvgdpugOyc/a5AyniPFWPs3k5fXTm62
+X-Gm-Gg: ASbGncubB9SBRJWVKC6309zlEj0h/7zY1Wu5HqaBCCVceYVmND6+etnEL/taZFOfVGa
+	T4/fnRJq7COyMp3gMhO8wDOE7y/WpoK7VxBGfSH9G3sZpM8TX5QkP5C5HZCvjgEV6ZcFu6JBzRn
+	xCGz2jfTwKtzCb3dGvSG01do1wFfQXRbBi3DVtLiK7PX+YgyOwCz1zEEthCvmlR+LOi5Lj4B1Kh
+	RMTm2soWKH7dqfjWI+vCD12KwPSRPJyhuSX3OeY+XH3OJdqLnhH4hTbuCpGHSM1+0/c1pG7K5Mz
+	GSN8nvlxiWthU37Ib7R5jPpNh6BGa0nqXJ4w/cpz+ShdPsbAu3usKBWMMAP18l8jGlWuSVHmeeE
+	DS51EdStNHfcMIhq/42rvCe5HupcF
+X-Google-Smtp-Source: AGHT+IH3bX9bz4NSeffRNUm1cA4jaTwLt7BuSbxQGS6DHGZ0kp+vhH5H4LqkKJt7qc/lkXgGcXJQYg==
+X-Received: by 2002:a17:903:1c4:b0:224:93e:b5d7 with SMTP id d9443c01a7336-22ac3fefc81mr20504865ad.34.1744181965015;
+        Tue, 08 Apr 2025 23:59:25 -0700 (PDT)
+Received: from mew.. (p4204131-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.160.176.131])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7ccb596sm4407815ad.220.2025.04.08.23.59.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Apr 2025 23:59:24 -0700 (PDT)
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	x86@kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	loongarch@lists.linux.dev,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	hpa@zytor.com,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	tangyouling@loongson.cn,
+	hejinyang@loongson.cn,
+	yangtiezhu@loongson.cn,
+	ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu
+Subject: [PATCH v5 1/4] x86/bug: Add ARCH_WARN_ASM macro for BUG/WARN asm code sharing with Rust
+Date: Wed,  9 Apr 2025 15:57:58 +0900
+Message-ID: <20250409065802.136971-2-fujita.tomonori@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250409065802.136971-1-fujita.tomonori@gmail.com>
+References: <20250409065802.136971-1-fujita.tomonori@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 1/6] dt-bindings: sram: qcom,imem: Document IPQ5424
- compatible
-To: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>,
- Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
-References: <20250408-wdt_reset_reason-v1-0-e6ec30c2c926@oss.qualcomm.com>
- <20250408-wdt_reset_reason-v1-1-e6ec30c2c926@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250408-wdt_reset_reason-v1-1-e6ec30c2c926@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 08/04/2025 10:49, Kathiravan Thirumoorthy wrote:
-> Add compatible for Qualcomm's IPQ5424 IMEM.
-> 
-> Signed-off-by: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
-> ---
->  Documentation/devicetree/bindings/sram/qcom,imem.yaml | 1 +
->  1 file changed, 1 insertion(+)
+Add new ARCH_WARN_ASM macro for BUG/WARN assembly code sharing with
+Rust to avoid the duplication.
 
-Why is this RFC? What is not finished here? I could not find explanation
-in cover letter.
+No functional changes.
 
-Best regards,
-Krzysztof
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+---
+ arch/x86/include/asm/bug.h | 56 +++++++++++++++++++-------------------
+ 1 file changed, 28 insertions(+), 28 deletions(-)
+
+diff --git a/arch/x86/include/asm/bug.h b/arch/x86/include/asm/bug.h
+index f0e9acf72547..be5aef1aff9e 100644
+--- a/arch/x86/include/asm/bug.h
++++ b/arch/x86/include/asm/bug.h
+@@ -32,45 +32,42 @@
+ #ifdef CONFIG_GENERIC_BUG
+ 
+ #ifdef CONFIG_X86_32
+-# define __BUG_REL(val)	".long " __stringify(val)
++# define __BUG_REL(val)	".long " val
+ #else
+-# define __BUG_REL(val)	".long " __stringify(val) " - ."
++# define __BUG_REL(val)	".long " val " - ."
+ #endif
+ 
+ #ifdef CONFIG_DEBUG_BUGVERBOSE
++#define __BUG_ENTRY(file, line, flags)					\
++	"2:\t" __BUG_REL("1b") "\t# bug_entry::bug_addr\n"		\
++	"\t" __BUG_REL(file)   "\t# bug_entry::file\n"			\
++	"\t.word " line        "\t# bug_entry::line\n"			\
++	"\t.word " flags       "\t# bug_entry::flags\n"
++#else
++#define __BUG_ENTRY(file, ine, flags)					\
++	"2:\t" __BUG_REL("1b") "\t# bug_entry::bug_addr\n"		\
++	"\t.word " flags       "\t# bug_entry::flags\n"
++#endif
++
++#define _BUG_FLAGS_ASM(ins, file, line, flags, size, extra)		\
++	"1:\t" ins "\n"							\
++	".pushsection __bug_table,\"aw\"\n"				\
++	__BUG_ENTRY(file, line, flags)					\
++	"\t.org 2b + " size "\n"					\
++	".popsection\n"							\
++	extra
+ 
+ #define _BUG_FLAGS(ins, flags, extra)					\
+ do {									\
+-	asm_inline volatile("1:\t" ins "\n"				\
+-		     ".pushsection __bug_table,\"aw\"\n"		\
+-		     "2:\t" __BUG_REL(1b) "\t# bug_entry::bug_addr\n"	\
+-		     "\t"  __BUG_REL(%c0) "\t# bug_entry::file\n"	\
+-		     "\t.word %c1"        "\t# bug_entry::line\n"	\
+-		     "\t.word %c2"        "\t# bug_entry::flags\n"	\
+-		     "\t.org 2b+%c3\n"					\
+-		     ".popsection\n"					\
+-		     extra						\
++	asm_inline volatile(_BUG_FLAGS_ASM(ins, "%c0",			\
++					   "%c1", "%c2", "%c3", extra)	\
+ 		     : : "i" (__FILE__), "i" (__LINE__),		\
+ 			 "i" (flags),					\
+ 			 "i" (sizeof(struct bug_entry)));		\
+ } while (0)
+ 
+-#else /* !CONFIG_DEBUG_BUGVERBOSE */
+-
+-#define _BUG_FLAGS(ins, flags, extra)					\
+-do {									\
+-	asm_inline volatile("1:\t" ins "\n"				\
+-		     ".pushsection __bug_table,\"aw\"\n"		\
+-		     "2:\t" __BUG_REL(1b) "\t# bug_entry::bug_addr\n"	\
+-		     "\t.word %c0"        "\t# bug_entry::flags\n"	\
+-		     "\t.org 2b+%c1\n"					\
+-		     ".popsection\n"					\
+-		     extra						\
+-		     : : "i" (flags),					\
+-			 "i" (sizeof(struct bug_entry)));		\
+-} while (0)
+-
+-#endif /* CONFIG_DEBUG_BUGVERBOSE */
++#define ARCH_WARN_ASM(file, line, flags, size)				\
++	_BUG_FLAGS_ASM(ASM_UD2, file, line, flags, size, "")
+ 
+ #else
+ 
+@@ -92,11 +89,14 @@ do {								\
+  * were to trigger, we'd rather wreck the machine in an attempt to get the
+  * message out than not know about it.
+  */
++
++#define ARCH_WARN_REACHABLE	ANNOTATE_REACHABLE(1b)
++
+ #define __WARN_FLAGS(flags)					\
+ do {								\
+ 	__auto_type __flags = BUGFLAG_WARNING|(flags);		\
+ 	instrumentation_begin();				\
+-	_BUG_FLAGS(ASM_UD2, __flags, ANNOTATE_REACHABLE(1b));	\
++	_BUG_FLAGS(ASM_UD2, __flags, ARCH_WARN_REACHABLE);	\
+ 	instrumentation_end();					\
+ } while (0)
+ 
+-- 
+2.43.0
+
