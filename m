@@ -1,166 +1,135 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CA40264633;
-	Wed,  9 Apr 2025 15:14:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EF3125E476
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 15:15:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744211688; cv=none; b=DD8w4nhscfd+ph/HT8OB5453RZ+ojBZUfCiNU+FjQ4kODcc0Hbor24W5Ddzdx9TYCk2AyQ1tARsPYXa1stl5UtsjOIgE7GC51czMgF26mjMt2S0whmkeEGcSAbWbSGKPSxfNRAzoaCFhP5lFVyyZJn2tE/v6WYghb4yt7eXzSAA=
+	t=1744211721; cv=none; b=QV6LXTRwCNX6GiWLlkqVrhkgRj53L/88zjt7AKBnFN6svRV3yMg2tA4qpBfvl/3nMbCwvAO2Nd3uJ29zrub9XZ2HpFPqYeKe7PzzezZA2/tKnonb057eI1oqjOx+TR2ZKM0cO/p37W9e730cqYYQ4+TJoCvBAJZK3szkh9gSGW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744211688; c=relaxed/simple;
-	bh=0w8yAQJiPOZnV0UHv/R8A2XVkSYUyrYq+ByRjE1W+QM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=RnV6rUXHzsi0pCH0cN7XpsVzKvaNdNfuCecZJxF9ns3ALvrT+0fBtVUWa6tBGUxjN1dB80LhQKbCKLd/0p1WJKcczvoL38FGvYyGsoUAU4pQgK1PFFKEEu0Gy9ILfWbF7419XYGbNZJEXgV+fgECP2k0sIrUJJX2RdD2fuN7OlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fZekAEak; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744211721; c=relaxed/simple;
+	bh=+hr1leVk+vEvAiLuvc2P3kcQ9inzGoIyYb2ePAU5BBY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EziS/xqlyL3OAm+l1GZGiliUhoCinHiwXyyp8rHj0a+BDQp+Xi3mbkFV+V+swzG42HtnRiHtbigNp0axqF0CPm9G+PTMlA004Lr83DEj7hu328C9Yu0XjVjkpKS6WFd1oHl+OjcpQ9k1W8wBRdJmpuMbCJki5Hnuh0ihiXxjzJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qGAsuyCF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fZekAEak"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D2D0DC4CEE8;
-	Wed,  9 Apr 2025 15:14:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qGAsuyCF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97DC9C4CEE2;
+	Wed,  9 Apr 2025 15:15:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744211687;
-	bh=0w8yAQJiPOZnV0UHv/R8A2XVkSYUyrYq+ByRjE1W+QM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=fZekAEak8Hd7jjr2cf5FY1tEMEauoC+/H1mQ41GqRqAhRy7t0nokoo1OGcOTFd+yn
-	 d37U0C6Q4chPU6zmA9+3QrjN3cFQDxKsya/cmqeHKyzM8yyG9yUTNvDgzQP1+Bl+Jp
-	 wFnm5cL/70ZHakz+SIMJQf5PKiSHhv7SMDfKHPHVMKOrqg/GeT2D+YvCA97uTWQeWI
-	 Zi8+cbb7XAJCAhnRFt2esrp77FYCmmq3S1lYnVSxPRILqWsel0uuWbynl2c6oky2da
-	 4t+/r0yTP6L4b5gC4kNVAWI71RmQF2c2OZ9Nm8XK2SkPVC6um4pcKkOcowbQdSHA5v
-	 NpoPTTBPLMKig==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6238C369A6;
-	Wed,  9 Apr 2025 15:14:47 +0000 (UTC)
-From: Jean-Baptiste Maneyrol via B4 Relay <devnull+jean-baptiste.maneyrol.tdk.com@kernel.org>
-Date: Wed, 09 Apr 2025 17:14:32 +0200
-Subject: [PATCH v3 2/2] iio: imu: inv_icm42600: switch to use generic name
- irq get
+	s=k20201202; t=1744211718;
+	bh=+hr1leVk+vEvAiLuvc2P3kcQ9inzGoIyYb2ePAU5BBY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qGAsuyCFY9mN4YiIigVo0qC9BC11jhzYB7tXR1yoN/jJmvi7Wy7Z63vhfpidEZ558
+	 tzgLqdBNY36YQ7DIymQaMlsN24/kqBLhYQmhHDuvcshbIsvCCogn6CuwOQn9EeL6vN
+	 gDlbb1FgQ9DyNLs48Y5BfJjiA8cGbw0ZuM049hOWvVg4sMOBfbQiNeVh6VHlZOEaVZ
+	 xfRaVKRteNNwQYaQhT1xtrTMqOY4e0B5C99dcmY5zAQVHp1L00cMu5NhDfNM/v4PcJ
+	 PPHUhwdcEKTlWPYskKJZ2J3KPvAhRDz+JgPIrwOSf0wP6YPl7g2NB9u9Jxs6GizuyQ
+	 zMQr6QuXsg4JA==
+Date: Wed, 9 Apr 2025 17:15:16 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+	kernel@collabora.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 10/15] drm/tests: hdmi: Replace open coded EDID setup
+Message-ID: <20250409-spectral-persimmon-gorilla-4827ad@houat>
+References: <20250326-hdmi-conn-yuv-v3-0-294d3ebbb4b2@collabora.com>
+ <20250326-hdmi-conn-yuv-v3-10-294d3ebbb4b2@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250409-iio-imu-inv-icm42600-rework-interrupt-using-names-v3-2-dab85a0a7c2b@tdk.com>
-References: <20250409-iio-imu-inv-icm42600-rework-interrupt-using-names-v3-0-dab85a0a7c2b@tdk.com>
-In-Reply-To: <20250409-iio-imu-inv-icm42600-rework-interrupt-using-names-v3-0-dab85a0a7c2b@tdk.com>
-To: Jonathan Cameron <jic23@kernel.org>, 
- Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, David Lechner <dlechner@baylibre.com>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Andy Shevchenko <andy@kernel.org>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744211686; l=4065;
- i=jean-baptiste.maneyrol@tdk.com; s=20240923; h=from:subject:message-id;
- bh=/VtK2uQ40gbKTy8BClZYWTjqk6A7kwyWnfPM64PZuwk=;
- b=Embo/tmwLQHDcYKYU6ptpEtaAO+uC89KyWB9MHCTT92WeA0vLH6Ux4kgPa3tz4Nhnlx0rB9Fr
- 5YeeWovYXq9AjzISPQpd8sGhlFVql7rhCuiYv1bpzwgKn0vAuxQfHX5
-X-Developer-Key: i=jean-baptiste.maneyrol@tdk.com; a=ed25519;
- pk=bRqF1WYk0hR3qrnAithOLXSD0LvSu8DUd+quKLxCicI=
-X-Endpoint-Received: by B4 Relay for
- jean-baptiste.maneyrol@tdk.com/20240923 with auth_id=218
-X-Original-From: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
-Reply-To: jean-baptiste.maneyrol@tdk.com
-
-From: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
-
-Use generic fwnode_irq_get_byname() for getting interrupt pin using
-interrupt name. Only INT1 is supported by the driver currently.
-
-If not found fallback to first defined interrupt to keep compatibility.
-
-Signed-off-by: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
----
- drivers/iio/imu/inv_icm42600/inv_icm42600.h      |  2 +-
- drivers/iio/imu/inv_icm42600/inv_icm42600_core.c | 17 +++++++++++++++--
- drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c  |  2 +-
- drivers/iio/imu/inv_icm42600/inv_icm42600_spi.c  |  2 +-
- 4 files changed, 18 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600.h b/drivers/iio/imu/inv_icm42600/inv_icm42600.h
-index 18787a43477b89db12caee597ab040af5c8f52d5..f893dbe6996506a33eb5d3be47e6765a923665c9 100644
---- a/drivers/iio/imu/inv_icm42600/inv_icm42600.h
-+++ b/drivers/iio/imu/inv_icm42600/inv_icm42600.h
-@@ -426,7 +426,7 @@ int inv_icm42600_set_temp_conf(struct inv_icm42600_state *st, bool enable,
- int inv_icm42600_debugfs_reg(struct iio_dev *indio_dev, unsigned int reg,
- 			     unsigned int writeval, unsigned int *readval);
- 
--int inv_icm42600_core_probe(struct regmap *regmap, int chip, int irq,
-+int inv_icm42600_core_probe(struct regmap *regmap, int chip,
- 			    inv_icm42600_bus_setup bus_setup);
- 
- struct iio_dev *inv_icm42600_gyro_init(struct inv_icm42600_state *st);
-diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
-index ef9875d3b79db116f9fb4f6d881a7979292c1792..8ce817a4d5aa78cc8b228ee3064083b336c2c357 100644
---- a/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
-+++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c
-@@ -683,12 +683,13 @@ static void inv_icm42600_disable_pm(void *_data)
- 	pm_runtime_disable(dev);
- }
- 
--int inv_icm42600_core_probe(struct regmap *regmap, int chip, int irq,
-+int inv_icm42600_core_probe(struct regmap *regmap, int chip,
- 			    inv_icm42600_bus_setup bus_setup)
- {
- 	struct device *dev = regmap_get_device(regmap);
- 	struct inv_icm42600_state *st;
--	int irq_type;
-+	struct fwnode_handle *fwnode;
-+	int irq, irq_type;
- 	bool open_drain;
- 	int ret;
- 
-@@ -697,6 +698,18 @@ int inv_icm42600_core_probe(struct regmap *regmap, int chip, int irq,
- 		return -ENODEV;
- 	}
- 
-+	/* get INT1 only supported interrupt or fallback to first interrupt */
-+	fwnode = dev_fwnode(dev);
-+	if (!fwnode)
-+		return -ENODEV;
-+	irq = fwnode_irq_get_byname(fwnode, "INT1");
-+	if (irq < 0 && irq != -EPROBE_DEFER) {
-+		dev_info(dev, "no INT1 interrupt defined, fallback to first interrupt\n");
-+		irq = fwnode_irq_get(fwnode, 0);
-+	}
-+	if (irq < 0)
-+		return dev_err_probe(dev, irq, "error missing INT1 interrupt\n");
-+
- 	irq_type = irq_get_trigger_type(irq);
- 	if (!irq_type)
- 		irq_type = IRQF_TRIGGER_FALLING;
-diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c
-index 04e440fe023aa3869529b0f0be003ea0544bfb8d..38cc0d7834fcb96dabc401f29d613cf9fc75b8f5 100644
---- a/drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c
-+++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_i2c.c
-@@ -67,7 +67,7 @@ static int inv_icm42600_probe(struct i2c_client *client)
- 	if (IS_ERR(regmap))
- 		return PTR_ERR(regmap);
- 
--	return inv_icm42600_core_probe(regmap, chip, client->irq,
-+	return inv_icm42600_core_probe(regmap, chip,
- 				       inv_icm42600_i2c_bus_setup);
- }
- 
-diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_spi.c b/drivers/iio/imu/inv_icm42600/inv_icm42600_spi.c
-index 2bd2c4c8e50c3fe081e882aca6c64736510b474c..f40a09c4cbfc673e76922d13d61a3634785300ec 100644
---- a/drivers/iio/imu/inv_icm42600/inv_icm42600_spi.c
-+++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_spi.c
-@@ -64,7 +64,7 @@ static int inv_icm42600_probe(struct spi_device *spi)
- 	if (IS_ERR(regmap))
- 		return PTR_ERR(regmap);
- 
--	return inv_icm42600_core_probe(regmap, chip, spi->irq,
-+	return inv_icm42600_core_probe(regmap, chip,
- 				       inv_icm42600_spi_bus_setup);
- }
- 
-
--- 
-2.49.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="hyq7kc3elzthcf4g"
+Content-Disposition: inline
+In-Reply-To: <20250326-hdmi-conn-yuv-v3-10-294d3ebbb4b2@collabora.com>
 
 
+--hyq7kc3elzthcf4g
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 10/15] drm/tests: hdmi: Replace open coded EDID setup
+MIME-Version: 1.0
+
+On Wed, Mar 26, 2025 at 12:19:59PM +0200, Cristian Ciocaltea wrote:
+> Make use of the recently introduced macros to reduce boilerplate code
+> around EDID setup. This also helps dropping the redundant calls to
+> set_connector_edid().
+>=20
+> No functional changes intended.
+>=20
+> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+> ---
+>  drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c | 220 ++++++++-------=
+------
+>  1 file changed, 78 insertions(+), 142 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c b/drivers=
+/gpu/drm/tests/drm_hdmi_state_helper_test.c
+> index 284bd9b1418a454d05c4a38263519eb8ae450090..7b2aaee5009ce58e6edf2649e=
+2182c43ba834523 100644
+> --- a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
+> +++ b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
+> @@ -751,19 +751,15 @@ static void drm_test_check_output_bpc_crtc_mode_cha=
+nged(struct kunit *test)
+>  	struct drm_crtc *crtc;
+>  	int ret;
+> =20
+> -	priv =3D drm_kunit_helper_connector_hdmi_init(test,
+> -						    BIT(HDMI_COLORSPACE_RGB),
+> -						    10);
+> +	priv =3D drm_kunit_helper_connector_hdmi_init_with_edid(test,
+> +				BIT(HDMI_COLORSPACE_RGB),
+> +				10,
+> +				test_edid_hdmi_1080p_rgb_yuv_dc_max_200mhz);
+>  	KUNIT_ASSERT_NOT_NULL(test, priv);
+> =20
+>  	drm =3D &priv->drm;
+>  	crtc =3D priv->crtc;
+>  	conn =3D &priv->connector;
+> -	ret =3D set_connector_edid(test, conn,
+> -				 test_edid_hdmi_1080p_rgb_yuv_dc_max_200mhz,
+> -				 ARRAY_SIZE(test_edid_hdmi_1080p_rgb_yuv_dc_max_200mhz));
+> -	KUNIT_ASSERT_GT(test, ret, 0);
+> -
+
+Yeah, ok, nvm what I said on the previous patch, it's needed.
+
+>  	preferred =3D find_preferred_mode(conn);
+>  	KUNIT_ASSERT_NOT_NULL(test, preferred);
+> =20
+> @@ -830,19 +826,15 @@ static void drm_test_check_output_bpc_crtc_mode_not=
+_changed(struct kunit *test)
+>  	struct drm_crtc *crtc;
+>  	int ret;
+> =20
+> -	priv =3D drm_kunit_helper_connector_hdmi_init(test,
+> -						    BIT(HDMI_COLORSPACE_RGB),
+> -						    10);
+> +	priv =3D drm_kunit_helper_connector_hdmi_init_with_edid(test,
+> +				BIT(HDMI_COLORSPACE_RGB),
+> +				10,
+> +				test_edid_hdmi_1080p_rgb_yuv_dc_max_200mhz);
+
+Alignment is off.
+
+Maxime
+
+--hyq7kc3elzthcf4g
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZ/aPBAAKCRDj7w1vZxhR
+xc0XAP9a63kRQwFIOR8U0+DDlR4KQjNFtiXjm4xBOWVEheu3HwD/Wc4jrx4iQgQE
+DXP1igU/FIQ1fA7j/37yxVx4SuH7AQc=
+=8z5y
+-----END PGP SIGNATURE-----
+
+--hyq7kc3elzthcf4g--
