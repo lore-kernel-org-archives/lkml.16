@@ -1,82 +1,81 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 433711DA0E0
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 05:30:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CFEC1D9A54
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 05:32:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744176635; cv=none; b=lPSfHCpF8DPawUOw1SjQpo2p0Zus2ibGLcwZn8sp5idrxxi4izNwS1h9QY2lrcExdsl+fvCGjoO+1z1rfDuuYUaBXTzj9oEfkLBtEzczus5YN4kzEfO4xi0GO/AucpFLCsVcLON7cor/PPxFJH5rnhISZEZ/7B+QEX8cOdBqWEQ=
+	t=1744176742; cv=none; b=bKENkxtjQLLcO7YO83nFlgRYsHon8nW9AuebCTbdN1IueQp/+691ovkENOyJNDJm+1/hnMbYHek4WwQca/iTnKgq/QwIe0OOdAlP4r+4rOKW1kqonX6oSveQEw3FOAj9WljkOGQVM1VcthjCRkVMClz/jPTp+Bx8oMroxbwVrMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744176635; c=relaxed/simple;
-	bh=R7hiJCkatJysWFE6sFi+boDLQC0QCBTx8/v67EiLvO0=;
+	s=arc-20240116; t=1744176742; c=relaxed/simple;
+	bh=2iFpcjMuEBHc6EEiX/UltOrfSiESXXtv+Vrk/DWljdE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S3TiVny7W5yFd0EB+hERrvP8RHXLC/uv7gE66VkAzaTe8EQN5oEFE5N216KP+9arroOJHXh7wA0+37gfJopoUKRpPYCGi0n9VIPcUgFj73V8o6MvNbOAZiA6xz5b2/TYwejrRHdj0hZhQYc1TNnMbCcfnaGbKya3/QlUov7a3P8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=2VSortwh; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=oKxDXtDx6Ddj8ILuKsXb1KPIuC71O5pgHF8trLz7G73eLJ3Q5SDmmdp0Yr3vrTVhX7Q5hVFxPzd87E0XjWxR2u3o0QRjebeYM5Vk6MjV1rcZtHcF/lTl18jQzHmCmEU2PtZFh/7xbpfjAjl7l58fEoA/xUyI59BfJ3BW/tlKyMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dOBasmdP; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="2VSortwh"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-736b34a71a1so7432920b3a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 22:30:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1744176632; x=1744781432; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=aA07albMhL3fFH5QzUo/KeZ0yw8nrVP+2r3FD61bWYo=;
-        b=2VSortwhnJjEW2ZWRYsN5FPlEqgseal3/1e84GQirIoBdTratk/mLbOxehfARk13Az
-         sZ92L1Ia86zsnNRqEbS8O0joZTvVBJoaYB+nFGgf5rq/covf60Tc0vhmxaixhY/+ZtUb
-         WALnPmEnAcpiJxU2kNbckvgdzGR6b2TgSUMVFwlloUrqf7nG/GJEVAqf/cY234LsB614
-         gJm9akfNmGIPLHioaG0sOg8iC9F/isBNY9MgzCCy0nS07HBLLgYMaftjq+02YgUF1VGv
-         ZOYjeILGat/yC9vcaloZwOyT6CCqE9nnw22UD3rTLVQNNvH6NdRzxv2bC03LFjlk73Y3
-         XYiQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dOBasmdP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744176739;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QqN9Zfb7zsWPAApJSbDsVLc/6LelOdZ+0v2KH6pBb6E=;
+	b=dOBasmdPtWaMWnZymwVcIpeTuuCeu8Gch8Hfm7yAR7DMN+Up2g3f8kF8SaUHfxgcVz2Lv1
+	VEzHar68Gc6day415an3iuamKW/8P3lbnjWzktV4GrPQ7oXT/5mcQp9yQTQ9QcI3mlC+RI
+	TxXoChoRaKw1rFNOcFFpIGdWiyIlvN8=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-121-MxEwS-PXPmyEMMMfmqzFhw-1; Wed, 09 Apr 2025 01:32:15 -0400
+X-MC-Unique: MxEwS-PXPmyEMMMfmqzFhw-1
+X-Mimecast-MFC-AGG-ID: MxEwS-PXPmyEMMMfmqzFhw_1744176734
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43cec217977so40249335e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 22:32:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744176632; x=1744781432;
+        d=1e100.net; s=20230601; t=1744176734; x=1744781534;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aA07albMhL3fFH5QzUo/KeZ0yw8nrVP+2r3FD61bWYo=;
-        b=MzrMHsM72y0hQ4hWWNRdj6Q7TGYiEAE+qAPq8OhTMkEbCDoRoLuBtkHwd7Wriko+9e
-         de0vMYrbYXzT0gi8J66jiXcmF2JsAKDqSrJEhooW31C4H5DyER/3vQXYFXXiHRpCzcPK
-         ioWYnEUbAVXDa8oNjLpBZU3ZoSO9kgWZrbMCRbrpa0xF7QzSla7V/zgf2JrCi6aBKCjJ
-         i7Y/8QbiVO6RFiW2h5XGlldFQ/6uSaO+Thibjc1ht0WXuI5UuuA6HPOSSlwJMg0MKw/N
-         mUjXqDlHpz2bAX3d8WkZ8pelcv819nMTyrkWP3JjLuYNYPm/DayRu+UG8nR2xeKtk9FS
-         9Ajg==
-X-Forwarded-Encrypted: i=1; AJvYcCWPitvIlEjZQ/LQtQbCP2QKwDm/vpL/yOYBTmeHDvRFkIdgMPW35lC4MGKSdqrtWbezABtna72H3lfkTbE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpjaRUVHcx6kr7ozBgwJuedeHcSH9guWjnFDsRagBZpgFqG1tf
-	vk0pJt3vrG8KKwV/51SzR+NRCX8RoautdQq7hOszxXB8ASVWrRiLYMZ39jnX+IU=
-X-Gm-Gg: ASbGncvuBSyqkHy1HwFETnN6nCjiSYX6IsNdWmm1pseVci185QptB+rKW9fgbUsUhcx
-	8ro1ZO0DCGSGVgh1HeRDmtspXSn5hnuN49S/1fS94y+/LxfsYRhv9aEQYdN4AWwgwYDWuxaLP0e
-	xqxG/5ECCK5NcHn2LSmEeVEuyZ6eqwKflKbnmFzrGyRr7PqVT4Uez3EKaT0VczjFalbbg4yUYuV
-	dTI315eU5aAVvEcX9kl2iQo6VGH5o84ZHjYzzR/YtoJ2w6ecqHL6YlDLVl3Y5R81AOIcd3GRuFj
-	Tr/CxslxRs5Llg9x0DMjV203YAbr/c1uoDJH/gPCDRAXmN/SlHkuORYV/pShgLiDTrA36T9A1EQ
-	0XmVVOXhw1IMskteShg==
-X-Google-Smtp-Source: AGHT+IFZgHcaCsesio4fOj1pttogbZE5YtveLF4WEKUpmqgVHeONG2Il5NKIs/SWKZoNNmD8aQrvmQ==
-X-Received: by 2002:a05:6a00:e12:b0:736:a973:748 with SMTP id d2e1a72fcca58-73bafd6a4a1mr1539346b3a.22.1744176632136;
-        Tue, 08 Apr 2025 22:30:32 -0700 (PDT)
-Received: from dread.disaster.area (pa49-181-60-96.pa.nsw.optusnet.com.au. [49.181.60.96])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1e66c6csm361081b3a.158.2025.04.08.22.30.30
+        bh=QqN9Zfb7zsWPAApJSbDsVLc/6LelOdZ+0v2KH6pBb6E=;
+        b=H1Ry5HErQCdrDRXlfs077NyRopUQGwURRDbCsXbE17Yfdao7LmM4GFtTI+w2ixT3/m
+         f6qUAQJMg32HwAacv6yWWwm6TYei1cuLVzENNlGcQTKPbEtK/boZa5fUVsGPsuLc0YXx
+         Gemz8v9/FA3GU1cug6gNR5wO7czGnpnCD9OCXM4+DPnOsg8/B7fxOlxmWPkPnMRYlWDe
+         PBO9NwjvDrIGs38ZW/34Ub3QdiDoJo4MkuwKkbHv++DsDXp1tZ+438cn9llYfX45GnVY
+         DtsVKbVU66FAlQCkOOmR/Ti4wXfYpjcWuEFvIwEhKsN9NFWs9kOJA2XeNgOXfBIaZR/F
+         16PQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXCwY2Os3+rVkcITX0CmYICohWKUq15J60D9W6mrojqYGWxf8dY7j4sNfZlSKYPAyIT8ZywgrLYdlDFw3Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8XvPjTvVKkakyQS+YnhjYSsTteYnXCOB5oT9u92xx8dfiazdE
+	oNuGNRF3ZkrytrKJj13Qt1A5eX46w234UHHKw9tu8M+QzVJnSIg00lLGJWxuw2iRWetnb/fNEGt
+	knSGfpwUNtTet8RXDZFOAPIRUcW8/ky9/0QgvryGI0gz11+77tkSpTI2tDA5k9Q==
+X-Gm-Gg: ASbGncsdTDnxnBMK9BaYyQ/YAhV8VnUHEqlKE3HRSRYc+zn5TLU1UsabIsE296+i/wU
+	e0wcOPF0r8AyTivrRRHbyjx8He3uwo6qPjtTspYIjqI5HfaFbmDoDB4Gy+FPj0WQSOFIljAxfrw
+	rHMwxPfAMU38pPIOaov+vVceb1mmx6OZNToav5vBQEXZzusiZ1jQpgV9p9JJEbg1FpyMdsqKBKe
+	QJUJboJb3oGIRMJoEGDf9UOhQAS8QUXXZ87CTXajQT8IaqQD8sICBKZ5YMlBqISI8y7NclTXrc0
+	M6WDyJQM3nT3K2GL/qisNkIWU20riCT1oNFc9rkpf7+dxVo=
+X-Received: by 2002:a05:6000:4023:b0:38f:4d40:358 with SMTP id ffacd0b85a97d-39d88525ebcmr801332f8f.9.1744176734497;
+        Tue, 08 Apr 2025 22:32:14 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFHFPdvMlkiXcaHT/+np9HKiWfjLVNoIGsBWaLbzFDwMgEMDrzSpCUsSKwEhafjbiP42cKtig==
+X-Received: by 2002:a05:6000:4023:b0:38f:4d40:358 with SMTP id ffacd0b85a97d-39d88525ebcmr801314f8f.9.1744176734140;
+        Tue, 08 Apr 2025 22:32:14 -0700 (PDT)
+Received: from jlelli-thinkpadt14gen4.remote.csb ([176.206.22.101])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d893775b9sm579664f8f.35.2025.04.08.22.32.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 22:30:31 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.98)
-	(envelope-from <david@fromorbit.com>)
-	id 1u2O16-00000006MBb-1BzD;
-	Wed, 09 Apr 2025 15:30:28 +1000
-Date: Wed, 9 Apr 2025 15:30:28 +1000
-From: Dave Chinner <david@fromorbit.com>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: John Garry <john.g.garry@oracle.com>, brauner@kernel.org, hch@lst.de,
-	viro@zeniv.linux.org.uk, jack@suse.cz, cem@kernel.org,
-	linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
-	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
-	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
-	linux-block@vger.kernel.org, catherine.hoang@oracle.com
-Subject: Re: [PATCH v6 11/12] xfs: add xfs_compute_atomic_write_unit_max()
-Message-ID: <Z_YF9HpdbkJDLeuR@dread.disaster.area>
-References: <20250408104209.1852036-1-john.g.garry@oracle.com>
- <20250408104209.1852036-12-john.g.garry@oracle.com>
- <Z_WnbfRhKR6RQsSA@dread.disaster.area>
- <20250409004156.GL6307@frogsfrogsfrogs>
+        Tue, 08 Apr 2025 22:32:13 -0700 (PDT)
+Date: Wed, 9 Apr 2025 07:32:11 +0200
+From: Juri Lelli <juri.lelli@redhat.com>
+To: Harshit Agarwal <harshit@nutanix.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v3] sched/deadline: Fix race in push_dl_task
+Message-ID: <Z_YGW8IrRQfhfdM8@jlelli-thinkpadt14gen4.remote.csb>
+References: <20250408045021.3283624-1-harshit@nutanix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,229 +84,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250409004156.GL6307@frogsfrogsfrogs>
+In-Reply-To: <20250408045021.3283624-1-harshit@nutanix.com>
 
-On Tue, Apr 08, 2025 at 05:41:56PM -0700, Darrick J. Wong wrote:
-> On Wed, Apr 09, 2025 at 08:47:09AM +1000, Dave Chinner wrote:
-> > On Tue, Apr 08, 2025 at 10:42:08AM +0000, John Garry wrote:
-> > > Now that CoW-based atomic writes are supported, update the max size of an
-> > > atomic write for the data device.
-> > > 
-> > > The limit of a CoW-based atomic write will be the limit of the number of
-> > > logitems which can fit into a single transaction.
-> > 
-> > I still think this is the wrong way to define the maximum
-> > size of a COW-based atomic write because it is going to change from
-> > filesystem to filesystem and that variability in supported maximum
-> > length will be exposed to userspace...
-> > 
-> > i.e. Maximum supported atomic write size really should be defined as
-> > a well documented fixed size (e.g. 16MB). Then the transaction
-> > reservations sizes needed to perform that conversion can be
-> > calculated directly from that maximum size and optimised directly
-> > for the conversion operation that atomic writes need to perform.
+Hello,
+
+On 08/04/25 04:50, Harshit Agarwal wrote:
+> When a CPU chooses to call push_dl_task and picks a task to push to
+> another CPU's runqueue then it will call find_lock_later_rq method
+> which would take a double lock on both CPUs' runqueues. If one of the
+> locks aren't readily available, it may lead to dropping the current
+> runqueue lock and reacquiring both the locks at once. During this window
+> it is possible that the task is already migrated and is running on some
+> other CPU. These cases are already handled. However, if the task is
+> migrated and has already been executed and another CPU is now trying to
+> wake it up (ttwu) such that it is queued again on the runqeue
+> (on_rq is 1) and also if the task was run by the same CPU, then the
+> current checks will pass even though the task was migrated out and is no
+> longer in the pushable tasks list.
+> Please go through the original rt change for more details on the issue.
 > 
-> I'll get to this below...
-
-I'll paste it here so it's all in one context.
-
-> This is why I don't agree with adding a static 16MB limit -- we clearly
-> don't need it to emulate current hardware, which can commit up to 64k
-> atomically.  Future hardware can increase that by 64x and we'll still be
-> ok with using the existing tr_write transaction type.
+> To fix this, after the lock is obtained inside the find_lock_later_rq,
+> it ensures that the task is still at the head of pushable tasks list.
+> Also removed some checks that are no longer needed with the addition of
+> this new check.
+> However, the new check of pushable tasks list only applies when
+> find_lock_later_rq is called by push_dl_task. For the other caller i.e.
+> dl_task_offline_migration, existing checks are used.
 > 
-> By contrast, adding a 16MB limit would result in a much larger minimum
-> log size.  If we add that to struct xfs_trans_resv for all filesystems
-> then we run the risk of some ancient filesystem with a 12M log failing
-> suddenly failing to mount on a new kernel.
-> 
-> I don't see the point.
+> Signed-off-by: Harshit Agarwal <harshit@nutanix.com>
+> Cc: stable@vger.kernel.org
+> ---
 
-You've got stuck on ithe example size of 16MB I gave, not
-the actual reason I gave that example.
+The new version looks good to me.
 
-That is: we should not be exposing some unpredictable, filesystem
-geometry depending maximum atomic size to a userspace API.  We need
-to define a maximum size that we support, that we can clearly
-document and guarantee will work on all filesystem geometries.
+Some final minor touches to changelog/comment might still be required,
+but Peter maybe you can do it if/when picking up the change?
 
-What size that is needs to be discussed - all you've done is
-demonstrate that 16MB would require a larger minimum log size for a
-small set of historic/legacy filesystem configs.
+Anyway,
 
-I'm actually quite fine with adding new reservations that change
-minimum required log sizes - this isn't a show-stopper in any way.
+Acked-by: Juri Lelli <juri.lelli@redhat.com>
 
-Atomic writes are optional functionality, so if the log size is too
-small for the atomic write transaction requirements, then we don't
-enable the atomic write functionality on that filesystem. Hence the
-minimum required log size for the filesystem -does not change- and
-the filesystem mounts as normal..
+Thanks!
+Juri
 
-i.e. the user hasn't lost anything on these tiny log filesystems
-when the kernel is upgraded to support software atomic writes.
-All that happens is that the legacy filesystem will never support
-atomic writes....
-
-Such a mount time check allows us to design the atomic write
-functionality around a fixed upper size bound that we can guarantee
-will work correctly. i.e. the size of the transaction reservation
-needed for it is irrelevant because we guarantee to only run that
-transaction on filesytsems with logs large enough to support it.
-
-Having a consistent maximum atomic write size makes it easier for
-userspace to create logic and algorithms around, and it makes it
-much easier for us to do boundary condition testing as we don't have
-to reverse engineer the expected boundaries from filesysetm geometry
-in test code. Fixed sizes make API verification and testing a whole
-lot simpler.
-
-And, finally, if everything is sized from an single API constant, it
-makes it easy to modify the supported size in future. The 64MB
-minimum log size gives us lots of headroom to increase supported
-atomic write sizes, so if userspace finds that it really needs
-larger sizes than what we initially support, it's trivial to change
-both the kernel and the test code to support a larger size...
-
-> > > diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-> > > index b2dd0c0bf509..42b2b7540507 100644
-> > > --- a/fs/xfs/xfs_super.c
-> > > +++ b/fs/xfs/xfs_super.c
-> > > @@ -615,6 +615,28 @@ xfs_init_mount_workqueues(
-> > >  	return -ENOMEM;
-> > >  }
-> > >  
-> > > +unsigned int
-> > > +xfs_atomic_write_logitems(
-> > > +	struct xfs_mount	*mp)
-> > > +{
-> > > +	unsigned int		efi = xfs_efi_item_overhead(1);
-> > > +	unsigned int		rui = xfs_rui_item_overhead(1);
-> > > +	unsigned int		cui = xfs_cui_item_overhead(1);
-> > > +	unsigned int		bui = xfs_bui_item_overhead(1);
-> > > +	unsigned int		logres = M_RES(mp)->tr_write.tr_logres;
-> > > +
-> > > +	/*
-> > > +	 * Maximum overhead to complete an atomic write ioend in software:
-> > > +	 * remove data fork extent + remove cow fork extent +
-> > > +	 * map extent into data fork
-> > > +	 */
-> > > +	unsigned int		atomic_logitems =
-> > > +		(bui + cui + rui + efi) + (cui + rui) + (bui + rui);
-> > 
-> > This seems wrong. Unmap from the data fork only logs a (bui + cui)
-> > pair, we don't log a RUI or an EFI until the transaction that
-> > processes the BUI or CUI actually frees an extent from the the BMBT
-> > or removes a block from the refcount btree.
-> 
-> This is tricky -- the first transaction in the chain creates a BUI and a
-> CUI and that's all it needs.
-> 
-> Then we roll to finish the BUI.  The second transaction needs space for
-> the BUD, an RUI, and enough space to relog the CUI (== CUI + CUD).
-> 
-> Then we roll again to finish the RUI.  This third transaction needs
-> space for the RUD and space to relog the CUI.
-> 
-> Roll again, fourth transaction needs space for the CUD and possibly a
-> new EFI.
-> 
-> Roll again, fifth transaction needs space for an EFD.
-
-Yes, that is exactly the point I was making.
-
-> > > +
-> > > +	/* atomic write limits are always a power-of-2 */
-> > > +	return rounddown_pow_of_two(logres / (2 * atomic_logitems));
-> > 
-> > What is the magic 2 in that division?
-> 
-> That's handwaving the lack of a computation involving
-> xfs_allocfree_block_count.  A better version would be to figure out the
-> log space needed:
-> 
-> 	/* Overhead to finish one step of each intent item type */
-> 	const unsigned int	f1 = libxfs_calc_finish_efi_reservation(mp, 1);
-> 	const unsigned int	f2 = libxfs_calc_finish_rui_reservation(mp, 1);
-
-Yup, those should be a single call to xfs_calc_buf_res(xfs_allocfree_block_count())
-
-> 	const unsigned int	f3 = libxfs_calc_finish_cui_reservation(mp, 1);
-
-Similarly, xfs_calc_refcountbt_reservation().
-
-> 	const unsigned int	f4 = libxfs_calc_finish_bui_reservation(mp, 1);
-
-xfs_calc_write_reservation() but for a single extent instead of 2.
-Also, I think the bui finish needs to take into account dquots, too.
-
-> 	/* We only finish one item per transaction in a chain */
-> 	const unsigned int	step_size = max(f4, max3(f1, f2, f3));
-
-And that is xfs_calc_itruncate_reservation(), except it reserves
-space for 1 extent to be processed instead of 4.
-
-FWIW, I'd suggest that these helpers make for a better way of
-calculating high level reservations such as
-xfs_calc_write_reservation() and xfs_calc_itruncate_reservation()
-because those functions currently don't take into account how
-intents are relogged during those operations.
-
-> and then you have what you need to figure out the logres needed to
-> support a given awu_max, or vice versa:
-> 
-> 	if (desired_max) {
-> 		dbprintf(
->  "desired_max: %u\nstep_size: %u\nper_intent: %u\nlogres: %u\n",
-> 				desired_max, step_size, per_intent,
-> 				(desired_max * per_intent) + step_size);
-> 	} else if (logres) {
-> 		dbprintf(
->  "logres: %u\nstep_size: %u\nper_intent: %u\nmax_awu: %u\n",
-> 				logres, step_size, per_intent,
-> 				logres >= step_size ? (logres - step_size) / per_intent : 0);
-> 	}
-> 
-> I hacked this into xfs_db so that I could compute a variety of
-> scenarios.  Let's pretend I have a 10T filesystem with 4k fsblocks and
-> the default configuration.
-> 
-> # xfs_db /dev/mapper/moo -c logres -c "untorn_max -b $(( (16 * 1048576) / 4096 ))" -c "untorn_max -l 244216"
-> type 0 logres 244216 logcount 5 flags 0x4
-> type 1 logres 428928 logcount 5 flags 0x4
-> <snip>
-> minlogsize logres 648576 logcount 8
-> 
-> To emulate a 16MB untorn write, you'd need a logres of:
-> 
-> desired_max: 4096
-> step_size: 107520
-> per_intent: 208
-> logres: 959488
->
-> 959488 > 648576, which would alter the minlogsize calculation.  I know
-> we banned tiny filesystems a few years ago, but there's still a risk in
-> increasing it.
-
-Yeah, it's a bit under a megabyte of reservation space. That's no
-big deal, as log reservations get much larger than this as block
-size and log stripe units are increased.
-
-<snip the rest, they all show roughly the same thing>
-
-Ok, these numbers pretty much prove my point - that a fixed max
-atomic write size somewhere around 16MB isn't going to be a problem
-for any filesystem that uses the historic small fs default log size
-(10MB) or larger.
-
-Let's avoid the internal XFS minlogsize problems by disabling the
-atomic write functionality on the increasingly rare legacy
-filesystems where the log is too small. That allows us to design and
-implement sane userspace API bounds and guarantees for atomic writes
-and not expose internal filesystem constraints and inconsistencies
-to applications...
-
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
