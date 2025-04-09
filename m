@@ -1,75 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from server.wki.vra.mybluehostin.me (server.wki.vra.mybluehostin.me [162.240.238.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFEFB241107;
-	Wed,  9 Apr 2025 11:23:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25828184F;
+	Wed,  9 Apr 2025 11:23:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.240.238.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744197781; cv=none; b=nU0w/ztVfP5lOP8oHeuVLtMoR1wJ4+C0Skk2Yk2mtXR65MBagwYiJbsgt9l1ontC00MBv9dSBzd32p8OzAPeaVGEYvVv0HfKl2qa7qDOCLGVymfZ9rR66rqn0jJcN/r+GLbfkBX89IhNIHO/1cafNy4a/4NHc2NcP01iuLGjz6w=
+	t=1744197827; cv=none; b=sDhkg6FJUQcVRvCUdj42IPi9DPKQ6C+TXdnFCyGior+0ouM/W7M4xZMSQe4dyKzhcKqn9swqYze1IdcyRRkVZM0nuBPvgcAWWcUAMciEL8+MlUeozh0NtmssytywNvwn2gWrn/pihEQd+YTkodp3MqL4KwosTgSRPR5jqNFI9jM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744197781; c=relaxed/simple;
-	bh=pi0WMsJLoykdjZe73nbr4+UgAHAmDF2AYES9ra/chZU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N88JJmHYGeCa1MMPxrCS2R2TaF4bYp42/MDZq1Xh4WYZ/tXhsms6ucQLsNNhPgS6VMO7rgfGVKYVO1hjVj2WDRo0PWqhxtHI1GeWZr24JWnrUh/aZ69bYIin4NSgjwvG4WDdQ7F8NInXbsVh5eeMSJtksIow11R9iVSqPPXkz3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hsg5jC/L; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744197827; c=relaxed/simple;
+	bh=RQESQKzfSXBY0laUS40IBmHKGOusKeyWPZVQaeperP0=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=L+13nGWDBA3XzU88Psz3OEqTR5JNbbf0re2dTB/Im5bLRztK1uS9s2+TW22JpEM7VJ2tWOekaYanu0G8OXUCu26ltrguzhgYfsTX9jKbeP2NyKcU0m3hL6b06vzf5fIOxD1uba5LX5kPr/CXsAymEfzMR3CW+leSMqcs6Uzkrso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com; spf=pass smtp.mailfrom=couthit.com; dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b=1k8b39Uu; arc=none smtp.client-ip=162.240.238.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=couthit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hsg5jC/L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5A55C4CEE3;
-	Wed,  9 Apr 2025 11:22:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744197780;
-	bh=pi0WMsJLoykdjZe73nbr4+UgAHAmDF2AYES9ra/chZU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Hsg5jC/LSj52/WVMMsr6q8ux4IIeVTWcyIx7nIQIwMP2BaFz8gAykr9NPyHECulmw
-	 v0/Apf5tf3Ow9WWfHE05fLu3haUz/l5y53514VLdV1/KtkxhRqaVD46e2LQ0HpB2VV
-	 IOxjGfrrKM4Le3oqg+bWZxBozFlIkHQNo9w0xQl9q+tECHTKZdWJkxcH4yu9OBH4a/
-	 56gx35k6fviezJC1uBqUhxHq9UsuHaK/vouecN2GGz7ELwXJXPU7QLlkwXmp+SuM62
-	 uP5IMDBB4M/JWJQG9lyffxCyHbc+ms04iBauCxmR+zP0lXuyXYMEZfEpWsIcNk/8pC
-	 Tf+EcoxdvSCqQ==
-Date: Wed, 9 Apr 2025 14:22:51 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Haakon Bugge <haakon.bugge@oracle.com>
-Cc: Sharath Maddibande Srinivasan <sharath.srinivasan@oracle.com>,
-	"jgg@ziepe.ca" <jgg@ziepe.ca>,
-	"phaddad@nvidia.com" <phaddad@nvidia.com>,
-	"markzhang@nvidia.com" <markzhang@nvidia.com>,
-	OFED mailing list <linux-rdma@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>,
-	Aron Silverton <aron.silverton@oracle.com>
-Subject: Re: [PATCH v2] RDMA/cma: Fix workqueue crash in
- cma_netevent_work_handler
-Message-ID: <20250409112251.GJ199604@unreal>
-References: <bf0082f9-5b25-4593-92c6-d130aa8ba439@oracle.com>
- <D90F918E-A69B-434C-9593-D1E253F150F4@oracle.com>
+	dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b="1k8b39Uu"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=couthit.com
+	; s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:
+	References:In-Reply-To:Message-ID:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=mTLeaQccaur/2Px+QYaVo0y9f0E6hAnQJK93lpiHxns=; b=1k8b39Uu4ggHVDIC6jfEA+6ngj
+	qH3oi32C7YyUHJO8IqMMk0mEq0xkiZPtDPdxfUPut2nIk+i3VUoELkitrKi2xsW5BmVDcnlVYT/XU
+	XZVN3ynXzcHE217wmO/Sp/WKmHhQesWhmRUMVA7jFXoPM8lQ5emUSTbY29l91pauN+v06XsUHPw8n
+	odqGWLt7DN0QlP5TZuQ2qQshbN2siGx+j4XCpPey/fCKfOJIlqpy4PqRqtPQP11aIcJJu2Zh7PnPB
+	Akq9K1i/SpFOPtyIuJ/CITUdU00EMaZ2BEOoxvGUuqfHu7kKoOUDNORzN6xWk3tA27vliJ9/JUcdx
+	8GUEWETQ==;
+Received: from [122.175.9.182] (port=42231 helo=zimbra.couthit.local)
+	by server.wki.vra.mybluehostin.me with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.1)
+	(envelope-from <parvathi@couthit.com>)
+	id 1u2TWm-000000000KJ-46Fj;
+	Wed, 09 Apr 2025 16:53:32 +0530
+Received: from zimbra.couthit.local (localhost [127.0.0.1])
+	by zimbra.couthit.local (Postfix) with ESMTPS id CDE0F178202B;
+	Wed,  9 Apr 2025 16:53:23 +0530 (IST)
+Received: from localhost (localhost [127.0.0.1])
+	by zimbra.couthit.local (Postfix) with ESMTP id AD606178245B;
+	Wed,  9 Apr 2025 16:53:23 +0530 (IST)
+Received: from zimbra.couthit.local ([127.0.0.1])
+	by localhost (zimbra.couthit.local [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id ehMCXn9FYaRf; Wed,  9 Apr 2025 16:53:23 +0530 (IST)
+Received: from zimbra.couthit.local (zimbra.couthit.local [10.10.10.103])
+	by zimbra.couthit.local (Postfix) with ESMTP id 5FE54178202B;
+	Wed,  9 Apr 2025 16:53:23 +0530 (IST)
+Date: Wed, 9 Apr 2025 16:53:23 +0530 (IST)
+From: Parvathi Pudi <parvathi@couthit.com>
+To: kuba <kuba@kernel.org>
+Cc: parvathi <parvathi@couthit.com>, danishanwar <danishanwar@ti.com>, 
+	rogerq <rogerq@kernel.org>, andrew+netdev <andrew+netdev@lunn.ch>, 
+	davem <davem@davemloft.net>, edumazet <edumazet@google.com>, 
+	pabeni <pabeni@redhat.com>, robh <robh@kernel.org>, 
+	krzk+dt <krzk+dt@kernel.org>, conor+dt <conor+dt@kernel.org>, 
+	nm <nm@ti.com>, ssantosh <ssantosh@kernel.org>, tony@atomide.com, 
+	richardcochran <richardcochran@gmail.com>, glaroque@baylibre.com, 
+	schnelle <schnelle@linux.ibm.com>, 
+	m-karicheri2 <m-karicheri2@ti.com>, rdunlap@infradead.org, 
+	diogo ivo <diogo.ivo@siemens.com>, basharath <basharath@couthit.com>, 
+	horms <horms@kernel.org>, jacob e keller <jacob.e.keller@intel.com>, 
+	m-malladi <m-malladi@ti.com>, 
+	javier carrasco cruz <javier.carrasco.cruz@gmail.com>, 
+	afd <afd@ti.com>, s-anna <s-anna@ti.com>, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, 
+	netdev <netdev@vger.kernel.org>, 
+	devicetree <devicetree@vger.kernel.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, 
+	linux-omap@vger.kernel.org, pratheesh <pratheesh@ti.com>, 
+	Prajith Jayarajan <prajith@ti.com>, 
+	Vignesh Raghavendra <vigneshr@ti.com>, praneeth <praneeth@ti.com>, 
+	srk <srk@ti.com>, rogerq <rogerq@ti.com>, 
+	krishna <krishna@couthit.com>, pmohan <pmohan@couthit.com>, 
+	mohan <mohan@couthit.com>
+Message-ID: <1391470178.1024554.1744197803224.JavaMail.zimbra@couthit.local>
+In-Reply-To: <20250407104424.01cc42f2@kernel.org>
+References: <20250407102528.1048589-1-parvathi@couthit.com> <20250407104424.01cc42f2@kernel.org>
+Subject: Re: [PATCH net-next v4 00/11] PRU-ICSSM Ethernet Driver
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <D90F918E-A69B-434C-9593-D1E253F150F4@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 8.8.15_GA_3968 (ZimbraWebClient - FF113 (Linux)/8.8.15_GA_3968)
+Thread-Topic: PRU-ICSSM Ethernet Driver
+Thread-Index: nAqz5d2VEyYJKR02Qq+Mau3zw+PRSA==
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - server.wki.vra.mybluehostin.me
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - couthit.com
+X-Get-Message-Sender-Via: server.wki.vra.mybluehostin.me: authenticated_id: smtp@couthit.com
+X-Authenticated-Sender: server.wki.vra.mybluehostin.me: smtp@couthit.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-On Tue, Apr 08, 2025 at 01:17:39PM +0000, Haakon Bugge wrote:
+Hi,
 
-<...>
-
-> > Fixes: 925d046e7e52 ("RDMA/core: Add a netevent notifier to cma")
-> > Cc: stable@vger.kernel.org
-> > Co-developed-by: Håkon Bugge <haakon.bugge@oracle.com>
-> > Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
-> > Signed-off-by: Sharath Srinivasan <sharath.srinivasan@oracle.com>
+> On Mon,  7 Apr 2025 15:55:17 +0530 Parvathi Pudi wrote:
+>> The Programmable Real-Time Unit Industrial Communication Sub-system (PRU-ICSS)
+>> is available on the TI SOCs in two flavors: Gigabit ICSS (ICSSG) and the older
+>> Megabit ICSS (ICSSM).
+>> 
+>> Support for ICSSG Dual-EMAC mode has already been mainlined [1] and the
+>> fundamental components/drivers such as PRUSS driver, Remoteproc driver,
+>> PRU-ICSS INTC, and PRU-ICSS IEP drivers are already available in the mainline
+>> Linux kernel. The current set of patch series builds on top of these components
+>> and introduces changes to support the Dual-EMAC using ICSSM on the TI AM57xx,
+>> AM437x and AM335x devices.
+>> 
+>> AM335x, AM437x and AM57xx devices may have either one or two PRU-ICSS instances
+>> with two 32-bit RISC PRU cores. Each PRU core has (a) dedicated Ethernet
+>> interface
+>> (MII, MDIO), timers, capture modules, and serial communication interfaces, and
+>> (b) dedicated data and instruction RAM as well as shared RAM for inter PRU
+>> communication within the PRU-ICSS.
 > 
-> A gentle ping on this patch.
-
-Sharath sent this patch during merge window. RDMA is closed during that period.
-
-Thanks
-
+> This was posted prior to the "net-next is OPEN" announcement:
+> https://lore.kernel.org/all/20250407055403.7a8f40df@kernel.org/
 > 
+> In the interest of fairness towards those who correctly wait
+> for the tree to be open I will ask you to repost this again,
+> in a couple of days.
 > 
-> Thxs, Håkon
-> 
+
+Sure, we will resubmit the patches along with changes based on the feedback
+received from Andrew Lunn and Keller, Jacob E shortly.
+
+Thanks and Regards,
+Parvathi.
+
