@@ -1,93 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [212.227.15.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC7E1EEF9;
-	Wed,  9 Apr 2025 14:24:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6771615ECD7;
+	Wed,  9 Apr 2025 14:24:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744208650; cv=none; b=eYDCpEXQUo9TVB4KQNkwAvg2Ps7eAkDQyJ+pgyWR7tKKamzXaTj3rbTYL5WxbqCBSIl6xz6+kuPfqaXO7jOX94/EIq7PzopLzx6sn0Kw8vQPgT7XjSv2pbiauvRHiFa9xgfsCtbs2qvU+QqPyHv70NGPDaQrHUJKire8t8c3jo0=
+	t=1744208662; cv=none; b=jBvddh6x0s9OUrzOu3vlovcM/3A6mT/sNsiA5KUQhm8XJZTOKZb1mZCc+TQBavEjL6qyB4i15Ze8/c5s74CixEQXm+jCaUortoi9fPi2soHP7DSS1NuT5BvreUyN5p+F+iOVSAAqSsRfn6y0vPBcWDDlaHigD25nHtUm38WN0Uc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744208650; c=relaxed/simple;
-	bh=+bUKzVAvFQYvkMjsCyigBf4UoBW+YWb6/sF+uZDucnU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NwuqcEHK29cKn/iv/5SXHID7WDU2Q1sJIOassgFoOqN5LTF8Rsl2r3Ut8BGVj3BAtNPin5eoTmL+HoESfwgvNYqxETuecTZcITRmaJDtDqQ/fo5IW9btofqrUQ+YDRzEF5Le9DRiCh2dAMoVZvUvR05xfNWj6gBWAjxTHgxtjdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pz7C2Awi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744208662; c=relaxed/simple;
+	bh=FEX86ieQtTjcsMrvm61w0FN/i4G3RKlhYgTWDNp/5kQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XqogzRjx++XaZINgQBegsUenbIVIBDGJU0PA0HhNKV/SsktlyRG1zNVjLD7GLqJlXqQIl0dCPvOagJBwo5TWBnqbpKs3NbrV8nQP8Cf3h+8LZU2SZvCsCnmQdraeS0BWRyMBupLHjk+R0Da9aHPxo4LcEzWDhLhx7w8GEkjLKVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=olLEdyb9; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pz7C2Awi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2D34C4CEE7;
-	Wed,  9 Apr 2025 14:24:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744208649;
-	bh=+bUKzVAvFQYvkMjsCyigBf4UoBW+YWb6/sF+uZDucnU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pz7C2Awi2qN3TQS6JrMYXalXUoAJ8NiXCAj2KDVU71iXJrHuklPN63FU4bgUz0hP5
-	 1wkjoganzMXRa5vI/apOM/XrMxgrg2PN0KMCwmAA4fhbjRWtYTSVuwzmGCghoCfS/C
-	 JtpiMyb7iyFMPyncMFtQfMHfkfDWo/L62omJps7KT0KEvkTyvv3jFKlz2iXcNgP3Fo
-	 BKwImXLAv+Xi8/RLn+Tq5Be3drgBPCjtv3uGPsOfv9Ox9SV4nhFooECBYsDqXsIHKZ
-	 UdN7brVOZwzeJA09ypJaPVLQkZ1Q08ZJwoX5hHvswn+tEN6X63wxzqH4O64s9o9XRD
-	 5bfuX2uBk//6Q==
-Date: Wed, 9 Apr 2025 15:24:04 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Richard Fitzgerald <rf@opensource.cirrus.com>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
-	patches@opensource.cirrus.com
-Subject: Re: [PATCH] ASoC: cs-amp-lib-test: Don't select SND_SOC_CS_AMP_LIB
-Message-ID: <a47c2074-2e28-43e6-a7a1-c3ac662723cf@sirena.org.uk>
-References: <20250409104544.878475-1-rf@opensource.cirrus.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="olLEdyb9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1744208642; x=1744813442; i=markus.elfring@web.de;
+	bh=FEX86ieQtTjcsMrvm61w0FN/i4G3RKlhYgTWDNp/5kQ=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=olLEdyb9QhIEe2b+MMOQ4sF0MMbx/vSk6E0kv0p/w8KYLIRB+hh10n9pgxgXrCCW
+	 4L2MKYie4uGqRcHAIM/ZQhpAXAGJCcdO5mDjcGX3usmqxxv7m7mBXGg+NVwNBo5Zh
+	 s+eD8sa/OWxwPimDUTb/2x5kJyoQGrquMaX7pKmYypVYq/JlFkVo36NlEfIQG3aLA
+	 KzdzYdd8cVLBpnUn2T/gxI8ltQ+++AQjaRsJhJt0SM7CVDOs0PQHMyYU8J2t7UJ0q
+	 RZJLPe8mEIQHZnKI/PXfDCKSsjqx/aBeE/jzvSi+AhBKxtWBqEJbFgNY+BUr30k5N
+	 QHwsjl9lDp0HzE+KBA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.27]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MVrft-1tbP7f0J4X-00MPqE; Wed, 09
+ Apr 2025 16:24:02 +0200
+Message-ID: <daf7934a-17f7-4e41-ba00-cec155437c7e@web.de>
+Date: Wed, 9 Apr 2025 16:24:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="LjPT8NQEUqQoI9cF"
-Content-Disposition: inline
-In-Reply-To: <20250409104544.878475-1-rf@opensource.cirrus.com>
-X-Cookie: Surprise due today.  Also the rent.
-
-
---LjPT8NQEUqQoI9cF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v2 0/2] cpufreq: scmi/scpi: Fix NULL pointer dereference in
+ get_rate()
+To: Sudeep Holla <sudeep.holla@arm.com>,
+ Cristian Marussi <cristian.marussi@arm.com>,
+ Henry Martin <bsdhenrymartin@gmail.com>, arm-scmi@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: LKML <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>
+References: <20250408150354.104532-1-bsdhenrymartin@gmail.com>
+ <0558b7f7-8c69-4664-afc6-bae4fdc6f071@web.de>
+ <20250409-merry-gay-lemur-8288cf@sudeepholla>
+ <52aa52a5-7081-41ee-872e-f1728c06daf1@web.de> <Z_Zhp38o9KiicPVw@pluto>
+ <3f5662dc-7547-4585-a396-4546fa98d34f@web.de>
+ <20250409-glistening-hasty-ape-c9c7e9@sudeepholla>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250409-glistening-hasty-ape-c9c7e9@sudeepholla>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:t5v7mMZJZZsS+n267hBMyKvP4/+RVlchh+BOFxAknfqwRji+4RW
+ GJJCwak089+mygl9TaQLJxO9SecKQ83EoLnNIHTGpv9rSZpYMCue7oc0vULqJ9F+ieswSng
+ f+7k0YST3xTps3fs4RFvL63F7eSU9mXjPNa/XvLH4V1/ZscD4ROaJeAiar6rNCu9Yr24NLs
+ UOVKQTdttGjcIsLTP0rkA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:HOIHOb3bGZ4=;1rP3BcuxMDYjjaUCQBgbe3i9IxE
+ wM4gO39oEm9HdYKzPTnx3fUD9f3EKCGO7sUMwuU7Qp+WSJetes3zhWBpXv9lbLbcU/fjOXQ0D
+ yiGMi/1DeSgyjxJdS9kcjrLdpj1DsevuYXD9rSV83BjV69c1952DNdJgyvKeNnJsQ2A9F1Qi/
+ RijB94SnsfaFiJPj6piqdgOxlLkMRjAc3RcqiuHel4fALDVeC9Lt2DR8qBzsvUllU6VlLTUif
+ w/g3L8YfTIcrQbWoWv89Hxj1d2mDeOmCYYMoghgEJEZ4ZSaG8QSnH9solSeS4QMy1E7XgLjBC
+ 2w14jmra2DMHyD9BMR/pOKHtaZltpQQUcoB4MMur2Pt/tVvXSoIpfb3n1t1Jd7CaeS10qwsRA
+ XH6hEv+5gDAIHLk9dJik7AKsXUUs/c3c9iXrgCel+T/pT62ibsSrAEPfW7VrwRQIhDiLviIaT
+ xRqLv3I+ek/Dpk5E9GtQttd6SYefM+e8pCGvh/UL9zBPgKpNr0yUnSe9lWEFrh+PToa45egSw
+ aEzv8F3nnexauzHHt2Y3fCrodKO8NFpP7UAEzCmbOVuLk9fWwwaVR6okh8PnuFKYxnpgjWPP5
+ ccLUE8WA+K0qHr1OJ3NL7FIe9XpQ5IIahARNb8o3UcAYjqtHB5h72U/EHmiSAfl1U8GfcotKt
+ VnYT9QQ74TVYlong1Pgw9fHZg0jFWygUqCbCPTvjk9Mai9/svhdflEmvM5J+ggDIUS2zDrhkY
+ T8ochudKdXJ1rzDV+d3GF2q3gGrm5LiaxlSuzxnQ4+MrSULS3m1jyUIbe84JtOFFu3nhvGFO4
+ PhGuATu2NExKNmbp5YBVuWrwy2EjWYMGIu83bfvnG/js933lPfGnn/BpK3MOIjSqqqw97WTWc
+ 0VdDbGGkYBQdgfmcdqermzaVwCnl3pG5z9s3nI+wA+afG07MmsnIM81P6Tkeo77t3T1+8mWGf
+ wE91b6jim3eE0/zfs7SzG1GLU/E3PupDO4VJFnvGOQ5IFTXmjtB/YB4blaJw3FgGHM9zS8H8q
+ qLQKhltSWHqsAbTUNUpFLVOXL9JMTWE77xpcdHBI2krJDv+iEe8NH51cUJIl3PBwhFMg8itkN
+ H9veGeDqDZWkytci/7eq7xeI7jyN9i6OMDRy/gukxF713zHW/UV/d5EQMRMykJ0LW6Zc7UI9X
+ ap6naO/L6B5MXmzTxV6w66dn0c8dccsgA5UMtTeeEDlFCBlrG0uBc271sPwFW/n1iCt4FLQwT
+ 3ltqpcxa7Ou8rx+TfUHcjZ03IjtP+AKlJbScxWRLEZDNL92XlJGYM+tkO/aylCmMuazNTxQQ2
+ 6ha2SjasrUxa1eZ6UgBoATbpyzL88CryofWpBNPO8Ee9O6/q8i5wU20Zrhe4fcsmL1wezrIYw
+ ifCsR77pR6BhHYL6bQbk2nA8zq+9/DocHITIfp3lTDgKKFvlQCn5UaQkHGySXiwarQSl3Kyqt
+ 3weslyYFLRKXYMcHcwNTIJtPHFoMcLT+bBBPvhTUftCmEjUruqQRAldHrebKfqBwpimqB0KY5
+ JzaegFLNIz5sitxTED8=
 
-On Wed, Apr 09, 2025 at 11:45:44AM +0100, Richard Fitzgerald wrote:
-> Depend on SND_SOC_CS_AMP_LIB instead of selecting it.
->=20
-> KUNIT_ALL_TESTS should only build tests for components that are
-> already being built, it should not cause other stuff to be added
-> to the build.
+>> May the usage of abbreviations be reconsidered once more also for such =
+messages
+>> (in presented update steps)?
+>
+> Still can't understand you. Sorry for that. =E2=80=A6
 
->  config SND_SOC_CS_AMP_LIB_TEST
-> -	tristate "KUnit test for Cirrus Logic cs-amp-lib"
-> -	depends on KUNIT
-> +	tristate "KUnit test for Cirrus Logic cs-amp-lib" if !KUNIT_ALL_TESTS
-> +	depends on SND_SOC_CS_AMP_LIB && KUNIT
->  	default KUNIT_ALL_TESTS
-> -	select SND_SOC_CS_AMP_LIB
->  	help
->  	  This builds KUnit tests for the Cirrus Logic common
->  	  amplifier library.
+Will any communication challenges need further clarifications also accordi=
+ng to
+wordings like the following?
+* null-ptr-deref
+* null pointer dereference
 
-This by itself results in the Cirrus tests being removed from a kunit
---alltests run which is a regression in coverage.  I'd expect to see
-some corresponding updates in the KUnit all_tests.config to keep them
-enabled.
-
---LjPT8NQEUqQoI9cF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEyBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmf2gwMACgkQJNaLcl1U
-h9APhQf2IkAczMn1TG1mpvzVIO9PkrIMBo9XUTw/LAgmriLVU8bTq+Ds9SOtzv/y
-bhZhab9lkzpNl3qbFzVuCkkvHcpNxlR9/B3g+EFRgR78rGw1rILoqOyZ9eUgyCp5
-qGqIGty6oxxY3NJ3et4YPXBXwJpkBLwWhWn4aEq1lif4d3qCTKARSou3ARRR89mb
-/+kYXF34GvtIfZaeI5Cl0xwy5WW85DCojUaLRam1hnPXydZ+viHHYbM52qqrYMKc
-f+GVTOIvR3FadRuSJL1FxZKT+cz34ZXYdfrAxiJEgrRFtNAH+xYs6J/u3LKN5mRO
-qctoPxg94qtE8ZTCxtZxt2F1GIv8
-=0aND
------END PGP SIGNATURE-----
-
---LjPT8NQEUqQoI9cF--
+Regards,
+Markus
