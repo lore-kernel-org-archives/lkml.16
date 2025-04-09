@@ -1,167 +1,112 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76AEF2638B8;
-	Wed,  9 Apr 2025 13:29:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5E3F149C64;
+	Wed,  9 Apr 2025 13:31:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744205390; cv=none; b=LHX3bdG+1Y6y0uv02lFwZY8t5EXfZ+j5JM6t2fgumJAq6EYXbmBMVRu8K+8MjtFaoKsoltdF1x99Ny1pFIs+mgjfLmtWj2gZX+6Chbzfx9G5aFfJI3VEuY+r1xlM9/VlsN/SfRZsAEYrBn+DrWCw7ewX1oaPR7cuKvxnoqUoMvU=
+	t=1744205509; cv=none; b=i2IaQ9ke2s9kHeq0mE0WbBgTXu7xKYeuA/tAfsLDUFg90FNpXlZMAdFkartt1YjqlLBAX5L04VHLhJy2t/byrG8Iar2N1pwx/+nbZhYLK7P3qGm8J12KvaqQAELDIA9FDTt/6YUbOZwPPanAsa7gIKUCLbnaahEGcFV9vIUO/SM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744205390; c=relaxed/simple;
-	bh=WGqk/2EVEjZ1Rlyihh/W+qt1GXz6ybM69ER2KNQFH68=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HPIQ9THytergl0HQ3YYAMzBvidi0c4rV43wdUIcJJtMd3FmKhP0ITIjMOhmHCNCu+DCqepjYaQ2q5avHR1i5qgVuc/16/YyzysrqHFMW1n8eKDAynyQ+zCjNTIWjLpluZxD/9X8AVuCPdWrRzkY6/JJHiWVqSTzdnCFKkYntzr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jTUIYjSp; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744205509; c=relaxed/simple;
+	bh=Kz93Uzj4cLus0XiXcFlQ1Ns1YrndBKtdlqqpAv1CNJc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O7KDvGvX8HMFIP/w1xvRlYmUmkOJqQQ11FM5jM14PS4GrwqTLF5puCwvqQmV35G09G/kmibjczJ4GiB1wRtlYXUmmYgL8nMz5wRqpZgoT8kXLhAT2YCzG/GC4qb/+WM+q5kPe3nzzOYvBO22DAc/h8CSj/3yR3YUHhbEuRjhZmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Hsyij0vh; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jTUIYjSp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744205388; x=1775741388;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=WGqk/2EVEjZ1Rlyihh/W+qt1GXz6ybM69ER2KNQFH68=;
-  b=jTUIYjSpEnq7SZM15w75+alIGcUUKwdC8xSoddmlkUwdsFd5nhuFee52
-   2Dwww6pTgfJCZg1oNVEnXNDvmu8pqoT4zprMUlb7Cm5cOPFdSZm/iaVQK
-   S5rXEhIuoUek5AwVIrGtxBfX1+IwE/auFrdEqFYFxmWYrNTzZ0OkAlqVd
-   Uf4PR2+kpC4Op/talSYtZAvwzlu7jx2r9xneQIyb2Ng+9LP+zqTfd3kZ9
-   0p5Za3o7WE/QxihM5YyrfcieQqOIf17jEqJ0CaUT/u94uIQawPRo23d9x
-   QBJm0OTFgqWKPFBMzFHcRaRAn6ocl3CiixV8M5048YCPpDE/AOvV+rLS7
-   A==;
-X-CSE-ConnectionGUID: /UbRBUwQTRCEFFI4BPDtww==
-X-CSE-MsgGUID: kfc0ibz0SHGVAm5j41wfRg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="48384175"
-X-IronPort-AV: E=Sophos;i="6.15,200,1739865600"; 
-   d="scan'208";a="48384175"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 06:29:48 -0700
-X-CSE-ConnectionGUID: CIQyYABTRsuIt2cRawWl/A==
-X-CSE-MsgGUID: 2rbEOmqDQ9KK9XuQrjml2Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,200,1739865600"; 
-   d="scan'208";a="128564685"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa006.jf.intel.com with ESMTP; 09 Apr 2025 06:29:45 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 9B7C95CE; Wed, 09 Apr 2025 16:29:44 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Mika Westerberg <westeri@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Kees Bakker <kees@ijzerbout.nl>
-Subject: [PATCH v1 2/2] gpiolib: acpi: Make sure we fill struct acpi_gpio_info
-Date: Wed,  9 Apr 2025 16:27:54 +0300
-Message-ID: <20250409132942.2550719-3-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250409132942.2550719-1-andriy.shevchenko@linux.intel.com>
-References: <20250409132942.2550719-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Hsyij0vh"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 539BwZug013895;
+	Wed, 9 Apr 2025 13:31:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=pTKrCQdDq2Gpt5KWIVDEkQnxs9eFdt
+	FjHzlfnJkmf7o=; b=Hsyij0vh031VFaWJrOlKI3stwC0b8sUv/C9RayNFhcapel
+	dQ+32q1XN7GbevQ5A+Q1mlsDIP4fwonNKviKT+dbPI7xChLKZKil+lzpJ9E67TMF
+	aG5tA7sypQjYuwIwx93rxE4YuxvY+V3fCULKTYU4bwvMee1Q26y+gW8xq2mTCxlP
+	OVpAZMVmK+1ThZrVIcMSAkL1FvW4fgMdkfyCzBhho1j17FqIJn6X/Wesdb456wpl
+	YKhTbv1/1N1VrKGvJb40PloOGYDtFXXg1csnpwKRnANtcyTurYZt7mIruD3KvjXF
+	76Y6JpbVFJIaD1OFVr5xEEztOKDaH5FryKj4Ogkg==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45w57px24w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 09 Apr 2025 13:31:46 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 539DVk6o031361;
+	Wed, 9 Apr 2025 13:31:46 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45w57px24r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 09 Apr 2025 13:31:46 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5399WtTe014473;
+	Wed, 9 Apr 2025 13:31:45 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45ufunqu64-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 09 Apr 2025 13:31:44 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 539DVfkC33161708
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 9 Apr 2025 13:31:41 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2B4052004B;
+	Wed,  9 Apr 2025 13:31:41 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B8BCC20040;
+	Wed,  9 Apr 2025 13:31:40 +0000 (GMT)
+Received: from osiris (unknown [9.171.93.223])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed,  9 Apr 2025 13:31:40 +0000 (GMT)
+Date: Wed, 9 Apr 2025 15:31:39 +0200
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Amir Mohammad Jahangirzad <a.jahangirzad@gmail.com>
+Cc: gor@linux.ibm.com, agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
+        svens@linux.ibm.com, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] s390/boot: replace strncpy() with strscpy()
+Message-ID: <20250409133139.7333Ccd-hca@linux.ibm.com>
+References: <20250402231433.117505-1-a.jahangirzad@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250402231433.117505-1-a.jahangirzad@gmail.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 9XpxJSHbg9RwYsW6gmunAeFELb9foB0w
+X-Proofpoint-GUID: vjQikTDZWcqYhRuC3ObMLG__wist_Cs-
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-09_05,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
+ spamscore=0 suspectscore=0 lowpriorityscore=0 adultscore=0 mlxlogscore=791
+ priorityscore=1501 malwarescore=0 impostorscore=0 phishscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504090082
 
-The previous refactoring missed the filling of the struct acpi_gpio_info
-and that's how the lot of the code got eliminated. Restore those pieces
-by passing the pointer all down in the call stack.
+On Thu, Apr 03, 2025 at 02:44:34AM +0330, Amir Mohammad Jahangirzad wrote:
+> From: "Amir Mohammad Jahangirzad" <a.jahangirzad@gmail.com>
+> 
+> strncpy() is deprecated for use on NUL-terminated destination strings
+> as it doesn't guarantee NUL-termination when the source string length
+> exceeds the destination buffer size. strscpy() is a safer alternative
+> as it always NUL-terminates the destination and returns the number of
+> characters copied (excluding the NUL).
+> 
+> Replace strncpy() with strscpy() for copying the bootdebug_filter value,
+> using sizeof(bootdebug_filter) rather than sizeof()-1 since strscpy()
+> takes the full buffer size as parameter.
+> 
+> 
+> Link: https://github.com/KSPP/linux/issues/90
+> Signed-off-by: Amir Mohammad Jahangirzad <a.jahangirzad@gmail.com>
+> ---
+>  arch/s390/boot/ipl_parm.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-With this, the code grows by ~6%, but in conjunction with the previous
-refactoring it still gives -387 bytes
-
-add/remove: 2/0 grow/shrink: 5/1 up/down: 852/-35 (817)
-Function                                     old     new   delta
-acpi_dev_gpio_irq_wake_get_by                129     695    +566
-acpi_find_gpio                               216     354    +138
-acpi_find_gpio.__UNIQUE_ID_ddebug504           -      56     +56
-acpi_dev_gpio_irq_wake_get_by.__UNIQUE_ID_ddebug506       -      56     +56
-acpi_populate_gpio_lookup                    536     548     +12
-acpi_gpio_property_lookup                    414     426     +12
-acpi_get_gpiod_by_index                      307     319     +12
-__acpi_find_gpio                             638     603     -35
-Total: Before=14154, After=14971, chg +5.77%
-
-As a positive side effect, it improves memory footprint for
-struct acpi_gpio_lookup. `pahole` difference before and after:
-
--       /* size: 64, cachelines: 1, members: 4 */
--       /* member types with holes: 1, total: 1 */
-
-+       /* size: 32, cachelines: 1, members: 4 */
-
-Reported-by: Kees Bakker <kees@ijzerbout.nl>
-Closes: https://lore.kernel.org/r/9715c8dd-38df-48fd-a9d1-7a78163dc989@ijzerbout.nl
-Fixes: 8b4f52ef7a41 ("gpiolib: acpi: Deduplicate some code in __acpi_find_gpio()")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpiolib-acpi.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-index 5b6344f0d065..2ac9c7b31908 100644
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -742,8 +742,8 @@ static int acpi_gpio_update_gpiod_lookup_flags(unsigned long *lookupflags,
- }
- 
- struct acpi_gpio_lookup {
--	struct acpi_gpio_info info;
- 	struct acpi_gpio_params params;
-+	struct acpi_gpio_info *info;
- 	struct gpio_desc *desc;
- 	int n;
- };
-@@ -752,7 +752,7 @@ static int acpi_populate_gpio_lookup(struct acpi_resource *ares, void *data)
- {
- 	struct acpi_gpio_lookup *lookup = data;
- 	struct acpi_gpio_params *params = &lookup->params;
--	struct acpi_gpio_info *info = &lookup->info;
-+	struct acpi_gpio_info *info = lookup->info;
- 
- 	if (ares->type != ACPI_RESOURCE_TYPE_GPIO)
- 		return 1;
-@@ -806,7 +806,7 @@ static int acpi_populate_gpio_lookup(struct acpi_resource *ares, void *data)
- 
- static int acpi_gpio_resource_lookup(struct acpi_gpio_lookup *lookup)
- {
--	struct acpi_gpio_info *info = &lookup->info;
-+	struct acpi_gpio_info *info = lookup->info;
- 	struct acpi_device *adev = info->adev;
- 	struct list_head res_list;
- 	int ret;
-@@ -832,7 +832,7 @@ static int acpi_gpio_property_lookup(struct fwnode_handle *fwnode, const char *p
- {
- 	struct fwnode_reference_args args;
- 	struct acpi_gpio_params *params = &lookup->params;
--	struct acpi_gpio_info *info = &lookup->info;
-+	struct acpi_gpio_info *info = lookup->info;
- 	unsigned int index = params->crs_entry_index;
- 	unsigned int quirks = 0;
- 	int ret;
-@@ -893,8 +893,8 @@ static int acpi_gpio_property_lookup(struct fwnode_handle *fwnode, const char *p
- static int acpi_get_gpiod_by_index(struct acpi_device *adev, const char *propname,
- 				   struct acpi_gpio_lookup *lookup)
- {
--	struct acpi_gpio_info *info = &lookup->info;
- 	struct acpi_gpio_params *params = &lookup->params;
-+	struct acpi_gpio_info *info = lookup->info;
- 	int ret;
- 
- 	if (propname) {
-@@ -975,6 +975,7 @@ __acpi_find_gpio(struct fwnode_handle *fwnode, const char *con_id, unsigned int
- 
- 	memset(&lookup, 0, sizeof(lookup));
- 	lookup.params.crs_entry_index = idx;
-+	lookup.info = info;
- 
- 	/* Try first from _DSD */
- 	for_each_gpio_property_name(propname, con_id) {
--- 
-2.47.2
-
+You could have at least compile tested this before sending.
