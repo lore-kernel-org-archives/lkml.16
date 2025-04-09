@@ -1,140 +1,138 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BF7B191F77
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 14:31:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52A7118A6A5
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 14:31:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744209084; cv=none; b=SYzQ4JJWyL3zm7k2VjFItezmDKLlKq2nZs2tdCSz/mbPuLkrzoncb/ZW3GektYTu0el2o28L1WskYu+h9/5i8KxcWLdq9OOMRe1r6tE6lxrRUOuZoivUzX/qKxLxBXN41Dng5ykGiqG289+gPWuuYWV2QwT3liWDWbY5CHUAwKA=
+	t=1744209095; cv=none; b=EaoQ9DrMKRujn6jXzbptQX2oYtiYT3ZhEaeznHd1jaj+4TyEjiz844N9hxyO3rGCPdyp+/VW5Gkb/On6zEOo7t3KtjUHNcQ47inN2wlibu8tWSFcXMIVh12IxExHBF8uxdcZe2PWc9bOQw1tpcljdoP4n+S9etMa42fBHeJMAf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744209084; c=relaxed/simple;
-	bh=/A0/E6RW+zz/Q3F9MNhOyGXOFashPLIF47QpTHlLk50=;
+	s=arc-20240116; t=1744209095; c=relaxed/simple;
+	bh=OkMWtlaCHFz94VPXhhboq3VaT9gsh5ncKm1X+sD+RRI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AlnuuVZqrqJPozbaAZi72htL31AsU3myGT0xn2MWhO3NKzUfMN2U8z+4/YNRMjaPodh9G7gZeGnY1Cfep9Z3zGjWU/D0pidMNAJrGjoPXeiBfrFK4ZNLvszmKvMIzTP+GFreQ5vYurLBAKGgkfhva2p65xJg0f/xAvQbfF7mgc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d0l6Y8rM; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 To:Cc:Content-Type; b=ia9YFgzmlbIk2ma9NOG1KMLpXPwQn7ov/VZOatZQqG9CLyxleOnWYd6an4nXOs0/JlBOFKb/1aKsDQ3tQBoAMCzR8F3BLXGMy8MgtusRbTr41BNnE0QuyWDCgfISC6tH/rwEXC+9GRVN4+WUyOM2PJtreZmiG/43IWDMfMPMdnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Mxf1o8OA; arc=none smtp.client-ip=209.85.128.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d0l6Y8rM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744209081;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bWzyml1e3e0sFCXu/PTQRw2B8guy4dfIE5xDJUgcYCI=;
-	b=d0l6Y8rM170aJ85v1aSB8DjnHwDe8SumBL2NtsZqg3kTltpA4SnWGTyzIMyGVA6KWSBymd
-	RRHMjd+PaO/tw/avX3kTbBOtBhxUGIfK1vqF28CbakRvqSdT5d8Jgj1vWwH67EH/LNCEOQ
-	gNehPM91yeQrWVmZ9yTl0PHMFQ55etc=
-Received: from mail-oa1-f69.google.com (mail-oa1-f69.google.com
- [209.85.160.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-345-cY_tUuzPM0O_UigJ6A7HXw-1; Wed, 09 Apr 2025 10:31:16 -0400
-X-MC-Unique: cY_tUuzPM0O_UigJ6A7HXw-1
-X-Mimecast-MFC-AGG-ID: cY_tUuzPM0O_UigJ6A7HXw_1744209076
-Received: by mail-oa1-f69.google.com with SMTP id 586e51a60fabf-2c8757f7d36so339630fac.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 07:31:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mxf1o8OA"
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-6feab7c5f96so66882357b3.3
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 07:31:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744209092; x=1744813892; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=oFEL98j0Nv64o0yCV8CrzqGFLc958Qmn2qWiAuOU8rY=;
+        b=Mxf1o8OAYwFVRs7PTuEaqjrzKWee3xELh9AbT9axDAG4t1Ee2zHEmtS6NjkJSdsBDm
+         p7ARO2kNnT+R8pDWuq8LGq6lbY2RhAdilnEkx/jY5uPa/ehOExbRiFvcaolDnvIBuy7x
+         CuZqDpOCLj5vSxUcrMvg3jnXrFueqsGOvIOB1uGbhj6LBBfk8dl6xPaurWQJzGsJVCMH
+         Qxjz2B5gsemAnIUSuUfsQ6IvCz7kTuty1/86i50ocJCwvkdItpJLRoVDaAyED+WyZ2sD
+         FlEqlNaSRMJvZWtUOKlsctTN5uRC1KdFR+p+gTjv6CRrjvHA+fkAnxoo4oFhAl3nz6ii
+         jaQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744209076; x=1744813876;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bWzyml1e3e0sFCXu/PTQRw2B8guy4dfIE5xDJUgcYCI=;
-        b=qdrKdbp9wWociogQRyG7l/+YiNFSiNXhNfOScdkl1wjAJGqmDpK1SdG86Q66/2Oe3l
-         neDAx+3nPKwEnzgtOAuXOmAsZnTlYShee76kMM1ymLiYUaocssaaSiJw5oTbrGGMZ51j
-         f9Oeyy0oqk0a3pLBGZkrFQOCF+wynGLqTsiJpdpqYnLkrqZyRde2se8eEMGun6FWAQ8t
-         tLEo+XGM+uxIWQIn8KvsSOKkOTeABmT0eSfMhl9byFMhA1/zvf+/USbpGWJKtQaCG6f8
-         1K4PL1HEQ67/bRbsbUG8OMCHgi7xDnOquvM/jxrHIkWqqKhsh3sSkUUksvNFUIxaxgY7
-         7gbg==
-X-Forwarded-Encrypted: i=1; AJvYcCV97XS+YnDP7puHeCHquew0Dz+N/8aU+HusvaPgV/LoRvm/NgnoCaGp9Ej2ESA+a+Qv6clQxWYqeFECOGg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKaUjWgrAhJJQwzEsa+0/eaSKVUHrq4p5DOeHayIHl1WU5Jxmp
-	e1/0q2Ti4udzQrNuUyYBbNpYBrdEeKdpZqlOp7rT4C4YVPY04/kAFz5Bn/BofgfnzgLHTd9hPwJ
-	qlDM2Qf6jkGolDI81kGoBQGHfxgsH4aIaYHmk8V2wh9w8odWGMO2IWNWwZmutZCuNgwpGDCNiYP
-	sxNWGdMVSo/lYWaxAsH0HSX54ZCs/ZwVvrYIf3
-X-Gm-Gg: ASbGncsxC0ny2P7SJ8BgTtCZYrdsJNrqIMYo2geQHDJtl7Oe3TQske7j81ZEhBed12f
-	gxANnkA0/979lHQG6rH2WE/yG2cnyGXxDH5vGAQmaIU17TTZoB1QOhBCpeWnKcoWBgFot
-X-Received: by 2002:a05:6871:6184:b0:29e:32e7:5f0d with SMTP id 586e51a60fabf-2d08df909f5mr633841fac.10.1744209076138;
-        Wed, 09 Apr 2025 07:31:16 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEj15/sfKzjsjKYtAN6/sg9JG469/cZB1MFteleubs5OfTolZvlG+wELSU/pYcsvOH+TTr8CnoX3erw61YVCr4=
-X-Received: by 2002:a05:6871:6184:b0:29e:32e7:5f0d with SMTP id
- 586e51a60fabf-2d08df909f5mr633832fac.10.1744209075809; Wed, 09 Apr 2025
- 07:31:15 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744209092; x=1744813892;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oFEL98j0Nv64o0yCV8CrzqGFLc958Qmn2qWiAuOU8rY=;
+        b=f/9AVGcGwQkVuSLxwwxcURMmdYSSnz4KUGRRddN3WtOunohEBHKzDhuQBeCG/0AuPh
+         1Q/DUt6kwMXD5fCMn4PtahvsV4bks759PBv1pceQv0Tu1bS3IJYVqYukot8kocgNtiSm
+         fXCAuvybzGxbeevhHWWO9iJPfhJK0xes8hAt+PCeFgLZkJWxCVq2awvfaHcSu8B4eL8G
+         77xGLcgKuxsvk4KsA+MQPqyi/FZYOP5uPHZLyCmQpk01p6F3SSYC8rRFA4dwsSzCOBIJ
+         oxEdQmJfBmLwx5VaIqmS9hUK1CeHsv12LE/rdkTdIxXDiELu6UWnQwo9ydWRslKNZc7c
+         hh7w==
+X-Gm-Message-State: AOJu0Yy2/PAswMtsrxGRkX/2dH4t9lSJiwvaRIR2QbfTNtaPG4GmEBiI
+	favtOuMMo4o5Sgtrtt7j5jVyQ4GCQMYqKLyY6KyWiD5780YqSghlQACzWkatvJNPKgLEF8U5Mxf
+	rhmyQ5HMT7gOd7r11cXO8Q9b/ljASjR/HZScfdw==
+X-Gm-Gg: ASbGncszZWJ7WSaOgFwqUFwoYtnEytT7drrpj+7wuOH5v3RTHvqVVhcW9WYAc5st2+c
+	edZjb3xxPF++HopcT+e6+vhcsLFuq05oM227kbtmgj6xqiVgLNdNyWzsgQDJL5QRo0bP138+WwK
+	GF0ECy4VrLRjfHFvZzUjl6WkGyxG+1RGFTbBpqlIXTAbTelYLPtsIghpY=
+X-Google-Smtp-Source: AGHT+IF4v5ddVlhpl7XXkiqtBokzQ91W32mmENzyPvsi71Y4dYxLX5GlEjhKpMuyRO1Bkz53IVfT2sXx2EzFFMEWN8s=
+X-Received: by 2002:a05:690c:9b07:b0:6fd:6589:7957 with SMTP id
+ 00721157ae682-7053ae8ca3bmr49692347b3.32.1744209092075; Wed, 09 Apr 2025
+ 07:31:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250409074529.2233733-1-ciprianmarian.costea@oss.nxp.com>
-In-Reply-To: <20250409074529.2233733-1-ciprianmarian.costea@oss.nxp.com>
-From: Enric Balletbo i Serra <eballetb@redhat.com>
-Date: Wed, 9 Apr 2025 16:30:58 +0200
-X-Gm-Features: ATxdqUHzKWaL37Ln9vA_iKRnaJ2sqIT6FJHzwrfyAc7evIoEaSOKgMOMRDePQYI
-Message-ID: <CALE0LRscnNFzo-tdjBdQQSi=1EdMveX-eSXyhpg_Bdp6EFiKgA@mail.gmail.com>
-Subject: Re: [PATCH v2] hwmon: (ina2xx) make regulator 'vs' support optional
-To: Ciprian Costea <ciprianmarian.costea@oss.nxp.com>
-Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, s32@nxp.com, imx@lists.linux.dev, 
-	Christophe Lizzi <clizzi@redhat.com>, Alberto Ruiz <aruizrui@redhat.com>, 
-	Eric Chanudet <echanude@redhat.com>, Florin Buica <florin.buica@nxp.com>
+References: <CA+G9fYtdXHVuirs3v6at3UoKNH5keuq0tpcvpz0tJFT4toLG4g@mail.gmail.com>
+ <CA+G9fYuHhz2YCafabKK+QMJiDuM65OcxpaW9TN-=u56r_kyGSA@mail.gmail.com> <2025040216-directive-unmapped-5301@gregkh>
+In-Reply-To: <2025040216-directive-unmapped-5301@gregkh>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 9 Apr 2025 20:01:20 +0530
+X-Gm-Features: ATxdqUGsFIk4VNkjjSv0a16kAsaDqgjo9GWyB8SFwTjeyfnGkilfWAombhlDVSY
+Message-ID: <CA+G9fYsefOWiHbnnbOjjG4kaX3o4hKOkOtDpVfzQNd+E9ycc8g@mail.gmail.com>
+Subject: Re: qemu-i386 boot failed on mainline master - no console output
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: open list <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>, 
+	linux-mm <linux-mm@kvack.org>, lkft-triage@lists.linaro.org, 
+	Linux Regressions <regressions@lists.linux.dev>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Vinod Koul <vkoul@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Anders Roxell <anders.roxell@linaro.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Ciprian,
-
-Many thanks for your patch.
-
-On Wed, Apr 9, 2025 at 9:45=E2=80=AFAM Ciprian Costea
-<ciprianmarian.costea@oss.nxp.com> wrote:
+On Wed, 2 Apr 2025 at 16:57, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> From: Ciprian Marian Costea <ciprianmarian.costea@oss.nxp.com>
+> On Wed, Apr 02, 2025 at 02:24:53PM +0530, Naresh Kamboju wrote:
+> > + Linus
+> > + Greg KH
+> >
+> > On Wed, 2 Apr 2025 at 14:14, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> > >
+> > > Regressions on qemu-i386 devices boot tests failed with defconfig on
+> > > the mainline master no console output.
+> > >
+> >
+> > The qemu-i386 boot failed with no console output and is still happening on
+> > the latest mainline master branch.
+> >
+> > > First seen on the char-misc-6.15-rc1 merge 25601e85441d ("Merge tag
+> > > 'char-misc-6.15-rc1' of...)
+> > >  Good: [08733088b566b58283f0f12fb73f5db6a9a9de30] Merge tag
+> > > 'rust-fixes-6.15-merge'
+> > >  Bad:  [91e5bfe317d8f8471fbaa3e70cf66cae1314a516] Merge tag 'dmaengine-6.15-rc1'
+> > >
+> > > * qemu-i386
+> > >  - boot
+> > >
+> > > Regression Analysis:
+> > >  - New regression? Yes
+> > >  - Reproducibility? Yes
+> > >
+> > > Test regression: qemu-i386 boot failed on mainline master
+> > > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> > >
+> > > Anders bisected this to,
+> > >   # first bad commit:
+> > >     [eb0ece16027f8223d5dc9aaf90124f70577bd22a]
+> > >     Merge tag 'mm-stable-2025-03-30-16-52' of
+> > > git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
 >
-> According to the 'ti,ina2xx' binding, the 'vs-supply' property is
-> optional. Use devm_regulator_get_enable_optional() to avoid a kernel
-> warning message if the property is not provided.
+> But this is bisected to the mm merge, not the char-misc merge, right?
 >
-> Co-developed-by: Florin Buica <florin.buica@nxp.com>
-> Signed-off-by: Florin Buica <florin.buica@nxp.com>
-> Signed-off-by: Ciprian Marian Costea <ciprianmarian.costea@oss.nxp.com>
+> And is this just on i386?  Nothing arch-specific in the char-misc merge
+> that I can see, so I would place bets on mm doing something accidentally
+> on 32bit systems.
 
-I verified that using the following patch gets rid of the kernel
-warning about using the dummy regulator, and that the driver continue
-working as expected.
-
-[    7.247679] ina2xx 2-0040: power monitor ina231 (Rshunt =3D 1000 uOhm)
-
-So,
-
-Tested-by: Enric Balletbo i Serra <eballetbo@kernel.org>
-
-Thanks,
-  Enric
+The qemu-i386 boot pass with the latest mainline kernel with
+clang-nightly and gcc-13.
+ Linux version 6.15.0-rc1 (tuxmake@tuxmake) (Debian clang version
+21.0.0 (++20250402105505+c57b9c233a87-1~exp1~20250402225526.1363),
+Debian LLD 21.0.0) #1 SMP PREEMPT_DYNAMIC @1743981563
 
 
-> ---
->  drivers/hwmon/ina2xx.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
+Links:
+ - https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/naresh/tests/2vUkJBr5vV419fzcTFDkOmiIkax
+ - https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/naresh/tests/2vUk3KcyEleDxVppDpZ1jeSIx0j
+
+ - Naresh
+
 >
-> diff --git a/drivers/hwmon/ina2xx.c b/drivers/hwmon/ina2xx.c
-> index 345fe7db9de9..b79e9c2072b3 100644
-> --- a/drivers/hwmon/ina2xx.c
-> +++ b/drivers/hwmon/ina2xx.c
-> @@ -959,8 +959,11 @@ static int ina2xx_probe(struct i2c_client *client)
->                 return PTR_ERR(data->regmap);
->         }
+> thanks,
 >
-> -       ret =3D devm_regulator_get_enable(dev, "vs");
-> -       if (ret)
-> +       /* Regulator core returns -ENODEV if the 'vs' is not available.
-> +        * Hence the check for -ENODEV return code is necessary.
-> +        */
-> +       ret =3D devm_regulator_get_enable_optional(dev, "vs");
-> +       if (ret < 0 && ret !=3D -ENODEV)
->                 return dev_err_probe(dev, ret, "failed to enable vs regul=
-ator\n");
->
->         ret =3D ina2xx_init(dev, data);
-> --
-> 2.45.2
->
-
+> greg k-h
