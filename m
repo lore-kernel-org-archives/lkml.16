@@ -1,102 +1,125 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC4321A5BA4
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 23:49:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 082232144C4;
+	Wed,  9 Apr 2025 23:59:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744242564; cv=none; b=O+LQIUvsM7BfTIjYGdybqWL2bytBXfstsU2MOXvi2s4hGLy10sNWGhrr43599vaMNqU9+svJad0qRCzIOEOOcBYp+nRMMTa4kAfT/7psBJ3TuucmiTCN3xp4R7o1YOHf/3LNT1Ld/jIb+Z8ggaXbHr6ro7ZzNpWc5xNVzmn+0PM=
+	t=1744243157; cv=none; b=oIEz8yCm41AGfodNpnDF63F34Iaghd5oGlfEktDrt5hW6mejfkjhDeU2sr0N5DifzWqNnxvpNMg6siJwtjLdMVSf8LffYvATCO2BgwYgQ773MbxU8HI0mOVQeAFQYIxEnSTwxY2rXjnOrOjxlZmYG4Zh8YEC6UwkENOxrXo88Kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744242564; c=relaxed/simple;
-	bh=6bteriFkfzTdZSX5zx7zzEw0WeVJEzf/0AjjlNeU/gc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dbX4t700D0j/BKSVnyLuMyHOyxpKDYR4nSrPruKEW4x7/6gHyNqOQQt2K5y+C1kJG3yCoyA/NX7R1tv/Ab90fQ8/5kwJn2grkZiyE+Jo/ZeQFJyrmZ1O0mFMq53I5zv4j67SSAU+lTA1FoL1c1XQfkNRvMyRFWbjZbHuzfdS/64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=tW4eYrBv; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="tW4eYrBv"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744242559;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=79KmuShFT0OWZoCqYUxoC00IFXDPi718JpVr84N2Wa4=;
-	b=tW4eYrBvwAA03RrYgu0wtSylOO4sNUg37R9ECDivbgJG+hNF8BRnqpppDnR/mqr6pDTKQv
-	SaaGCRb3fNeJtPc6gTMEmC2LBKx9ga+ANM0nwDv+MoY1BFmebvIxlsX+doz9nZCqfkFVdk
-	ogjQbR5VbSEyNrOTa9PHKKt80bTWVGU=
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Yosry Ahmed <yosry.ahmed@linux.dev>,
-	linux-mm@kvack.org,
-	cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Meta kernel team <kernel-team@meta.com>
-Subject: [PATCH] memcg: optimize memcg_rstat_updated
-Date: Wed,  9 Apr 2025 16:49:08 -0700
-Message-ID: <20250409234908.940121-1-shakeel.butt@linux.dev>
+	s=arc-20240116; t=1744243157; c=relaxed/simple;
+	bh=fbizQkJURv/VI4ti6Z1JNgUGnYq1ZQ73QlfCFSh6YFs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RawUuz+QRiy0SxngPhLbjfZFq7574DotMyTm2efu0PI37gIYOKot/YAnpSSjYxSY5GWXrzW/5RmgEfZJtLeiJr+dh5KXnx5zl8gSR8DjAOBTBn8cFnU5iU2ALLQHaWfBolNEy9kIwg/UcmZezg/Lku/qhVbn4Tt/xu/PBgKdyXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from localhost (unknown [116.232.27.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id C5016343371;
+	Wed, 09 Apr 2025 23:59:13 +0000 (UTC)
+Date: Wed, 9 Apr 2025 23:59:09 +0000
+From: Yixun Lan <dlan@gentoo.org>
+To: Alex Elder <elder@riscstar.com>
+Cc: gregkh@linuxfoundation.org, jirislaby@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org,
+	benjamin.larsson@genexis.eu, bastien.curutchet@bootlin.com,
+	andriy.shevchenko@linux.intel.com, u.kleine-koenig@baylibre.com,
+	lkundrak@v3.sk, devicetree@vger.kernel.org,
+	linux-serial@vger.kernel.org, spacemit@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] serial: 8250_of: add support for an optional bus
+ clock
+Message-ID: <20250409235909-GYB19066@gentoo>
+References: <20250409192213.1130181-1-elder@riscstar.com>
+ <20250409192213.1130181-3-elder@riscstar.com>
+ <20250409214345-GYA19066@gentoo>
+ <04facbe3-cd40-4d79-a204-2b91880da331@riscstar.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <04facbe3-cd40-4d79-a204-2b91880da331@riscstar.com>
 
-Currently the kernel maintains the stats updates per-memcg which is
-needed to implement stats flushing threshold. On the update side, the
-update is added to the per-cpu per-memcg update of the given memcg and
-all of its ancestors. However when the given memcg has passed the
-flushing threshold, all of its ancestors should have passed the
-threshold as well. There is no need to traverse up the memcg tree to
-maintain the stats updates.
+Hi Alex,
 
-Perf profile collected from our fleet shows that memcg_rstat_updated is
-one of the most expensive memcg function i.e. a lot of cumulative CPU
-is being spent on it. So, even small micro optimizations matter a lot.
+On 17:47 Wed 09 Apr     , Alex Elder wrote:
+> On 4/9/25 4:43 PM, Yixun Lan wrote:
+> > Hi Alex,
+> > 
+> > On 14:22 Wed 09 Apr     , Alex Elder wrote:
+> >> The SpacemiT UART requires a bus clock to be enabled, in addition to
+> >> it's "normal" core clock.  Look up the optional bus clock by name,
+> >> and if that's found, look up the core clock using the name "core".
+> >>
+> >> Supplying a bus clock is optional.  If no bus clock is needed, the
+> >> the first/only clock is used for the core clock.
+> >>
+> >> Signed-off-by: Alex Elder <elder@riscstar.com>
+> >> ---
+> >> v2: Update logic to more check for the optional bus clock first
+> >>
+> >>   drivers/tty/serial/8250/8250_of.c | 11 ++++++++++-
+> >>   1 file changed, 10 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/tty/serial/8250/8250_of.c b/drivers/tty/serial/8250/8250_of.c
+> >> index 11c860ea80f60..a90a5462aa72a 100644
+> >> --- a/drivers/tty/serial/8250/8250_of.c
+> >> +++ b/drivers/tty/serial/8250/8250_of.c
+> >> @@ -123,7 +123,16 @@ static int of_platform_serial_setup(struct platform_device *ofdev,
+> >>   
+> >>   	/* Get clk rate through clk driver if present */
+> >>   	if (!port->uartclk) {
+> >> -		info->clk = devm_clk_get_enabled(dev, NULL);
+> >> +		struct clk *bus_clk;
+> > we also need to handle clk in suspend/resume procedure, so
+> > I think you need to put bus_clk inside struct of_serial_info..
+> 
+> OK, I didn't do anything for that in previous versions of the
+> series.
+> 
+> I think that means we'd call clk_disable_unprepare() on
+> the bus clock after doing so for the function clock.  And
+> clk_prepare_enable() on the bus clock before doing that for
+> the function clock in of_serial_resume().  That's easy.
+> 
+right, pretty much similar to info->clk
 
-Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
----
- mm/memcontrol.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+> Is there anything further you think is required?  There is
+> no clock rate associated with the bus clock that I know of,
+> so even if the function clock rate changes, the bus clock
+> can remain as-is.
+> 
+no further info I know of, my best guess, the rate doesn't
+really matter, a wide clk range should just work fine.
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 421740f1bcdc..ea3e40e589df 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -585,18 +585,20 @@ static inline void memcg_rstat_updated(struct mem_cgroup *memcg, int val)
- 	cgroup_rstat_updated(memcg->css.cgroup, cpu);
- 	statc = this_cpu_ptr(memcg->vmstats_percpu);
- 	for (; statc; statc = statc->parent) {
-+		/*
-+		 * If @memcg is already flushable then all its ancestors are
-+		 * flushable as well and also there is no need to increase
-+		 * stats_updates.
-+		 */
-+		if (!memcg_vmstats_needs_flush(statc->vmstats))
-+			break;
-+
- 		stats_updates = READ_ONCE(statc->stats_updates) + abs(val);
- 		WRITE_ONCE(statc->stats_updates, stats_updates);
- 		if (stats_updates < MEMCG_CHARGE_BATCH)
- 			continue;
- 
--		/*
--		 * If @memcg is already flush-able, increasing stats_updates is
--		 * redundant. Avoid the overhead of the atomic update.
--		 */
--		if (!memcg_vmstats_needs_flush(statc->vmstats))
--			atomic64_add(stats_updates,
--				     &statc->vmstats->stats_updates);
-+		atomic64_add(stats_updates, &statc->vmstats->stats_updates);
- 		WRITE_ONCE(statc->stats_updates, 0);
- 	}
- }
+> > 
+> >> +
+> >> +		bus_clk = devm_clk_get_optional_enabled(dev, "bus");
+> > for the 'optional', we can interpret it's optional for other vendor
+> > UART, but a must required clk for SpacemiT's k1 UART controller
+> > 
+> > would it better to guard this inside a compatible test or even introduce
+> > a flag in compatible data?
+> 
+> I don't personally think so. We could, but the DT binding is going
+> out of its way to define when the bus clock is required.  This is
+> simpler, and generic.
+> 
+I would personally choose the way of introducing a flag of compatible data,
+but it's a lot change of the code (may not worth the effort)..
+
+anyway, I'm fine with your current version, and yes, it's generic
+thanks for doing this..
+
 -- 
-2.47.1
-
+Yixun Lan (dlan)
+Gentoo Linux Developer
+GPG Key ID AABEFD55
