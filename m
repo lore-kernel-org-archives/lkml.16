@@ -1,101 +1,182 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6C781C84CF
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 17:42:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29AE5198E8C;
+	Wed,  9 Apr 2025 17:43:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744220563; cv=none; b=Vgt9NyxkHLXx4g3MCBxGtWaRuXQHWUZKMLgp1EhPDIWN+aeapTU6gKwDVGYCKAXti9hfJpd7NUS9pVw/wTechA1n9LOr/4zYHEIV0y7CeNQN/xh6K/hW/tbRE2EaEuZ47wlZLf5ys5KGfNckguVhIGaVjmb/OGuz/iY2ZUlNWo8=
+	t=1744220630; cv=none; b=iKJdtF3mzfAO/Km3NVq9jMkxYSFl6iwHFLlIpbHCQ3EWi7SB6JskcMt2IW94VRtEeXfOTVB4zVvbZZSmG63A96D0gJHQk2YuX8beNPzs8wNLmZaHx3DmvAJWFMAT4cPQ6Xu/KiGwBBqs9HkrWP/ilGLbObwhFnU6AiYxN2kQ4Uo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744220563; c=relaxed/simple;
-	bh=6nNQatqaorKzv92tvaje0/GNGx2i/9tcg23Gb8LTF+E=;
+	s=arc-20240116; t=1744220630; c=relaxed/simple;
+	bh=MtID83NVzrryWVOVO0Svs05fGH/vIbBHq9cB2N/UeCk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=N4AvfIskVXlIs0XXZNm3Ia1cXvB+Jx3lsCTXhJdTo7Ffrgm/9yeXeIpqmwMz+SbqggHTqaXpCHzdLJEedrEYI/Yqrs3Tl+y2KUjUEkXu28Lptbsp2RyZD5RwomGcH0D/0T0akGpc063WJEegnZHnJj/3QiFAMX6zerRFOLjdpfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=dheEA5P6; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	 To:Cc:Content-Type; b=hPe0SQRDJ7sH71A82w2XuEpdz+D4Dwng2xQLHLLSyclV7mNZyivVr9hCu8p0z5HiUW+Vc7FdZtma0FWM5nCQoiF9XEHGF+vHHWY0G8sZ8IKcfHXVbHR9gwl282+l8P5GUfNP6MGP4ij90PUxPchy4SjNh/2nJnuDdq4dzyTSl5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TSEa44w6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="dheEA5P6"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e5e0caa151so12307929a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 10:42:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1744220559; x=1744825359; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=qoBR+vDT5PVn2pWN/hnunYWhxqisiDADqelTleC033g=;
-        b=dheEA5P6ud67PKRq8WjAQEOSGhc7/Aoj3rEwgFyI4YeQemuR3QY/HHtred2aTBICvg
-         XgjaJW2nVB2vtYLc3HQGdRPfYf5oW8btOxGthgj/IQn7qEbUBtEi7RiLpzsM5E79sJpz
-         rGmut3QubtgInrpvzCCyXsbzVE9PjtDlw4WiM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744220559; x=1744825359;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qoBR+vDT5PVn2pWN/hnunYWhxqisiDADqelTleC033g=;
-        b=N8+t6BjCrquFfCOaYv7JUS34hlrV1zVN4E6c9E2/O4OQp6v5Fuj5pxd8WxjRdLOE39
-         0dz4HKwvkq6cdQ6nPR7kww8IIyan0aLemJz7f8Bf4mYJ0btVRFUKYEBMRgrWHlQNCryz
-         1CHTtEKeZ9wTDBlKiMxMAV+VvjC7HRiCTBr94m+E13ZTZ2rUBLOvfI4r1wcahhGjykSz
-         vpt6vzhXY/lCd0njfyN1Z5Iefz0si0Rr48LNQJESorFL4mx1XUUz+3yT4hZPVou2Hl1e
-         CLeSN9hi7cSRy+5rLI0FOxLNzrBV1OIsJo5V/y5uKhmSvoIGxysTGofYzbOYRATt1lPN
-         mTIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXiYMU4dAkLOO11i0wFiTfv9iT3W1ukmZtxDhQJUi281DXLKJg/RvoHg0HC/ARmDkKxSJr4mHh3SIVOzTs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzoTpjPBj3IRm42IZ3FilvAXpTOChT2vbbO2F7J2qVt8NCHf9Vj
-	w/2uMSar63q8oNlc53upYDbQX3aJCUnDGN6JAU5q+FclQvZ3jRTQlzEQ6OT5Eg/3Kozosl01ngZ
-	klv0=
-X-Gm-Gg: ASbGncv+NLOi/j11v03kc8RXWh2ecW09VrARFLjn3tUhOPIid1lSiEsIauHZlng9GbV
-	EkzaDIF1hN7TVJ/jDHx1sbVmJrEfY/iIRkCGY5Y9IxjigFxWREFxjTwD2e9cHs64BjuA3he0ovU
-	qB60K9e5bOeDD1s/B4iZ/XofypbUTQznOVFsmzpjHVWAfHCwiu8VpEcyjouo7s4SGxUPQJ40fXW
-	p7hjbyL7gKlDZX7RAQTajUXo4n1Ta6xnYY0j6+EszK8Nk9DZHz+0a5qfcsEqX8rXU+D+ZAwpTRo
-	hVj52ywh2fdXWLSvhqHdiF+h/JLeSCwX33+D5r/WI4x2udyRodEH+bSat8qsK76Q+9VR9KqX9qS
-	+OkavKlA3+tSG6Vk=
-X-Google-Smtp-Source: AGHT+IHCfpm0ncDaWg+VH81qLMR7q/WX7w6ZTBqpezICa56Y9kx52uJDMxhQAwmJ0XWEI5HBNsbnUQ==
-X-Received: by 2002:a05:6402:1ecc:b0:5ec:cc28:1a78 with SMTP id 4fb4d7f45d1cf-5f2f76e4cccmr3807958a12.20.1744220558768;
-        Wed, 09 Apr 2025 10:42:38 -0700 (PDT)
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f2fbd35099sm1048370a12.68.2025.04.09.10.42.37
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Apr 2025 10:42:37 -0700 (PDT)
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac2ab99e16eso1340326466b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 10:42:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWrXt2DvmAaduYRPWCv2a2VJ5AGNN4MqIsd4rGEwxNX7aqLOYfipfeMXtnTSRRE6aHV0XP9uu0jqiev6HY=@vger.kernel.org
-X-Received: by 2002:a17:906:6a1d:b0:ac6:e20f:fa48 with SMTP id
- a640c23a62f3a-aca9b697344mr478182666b.33.1744220557177; Wed, 09 Apr 2025
- 10:42:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TSEa44w6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 844E3C4CEED;
+	Wed,  9 Apr 2025 17:43:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744220629;
+	bh=MtID83NVzrryWVOVO0Svs05fGH/vIbBHq9cB2N/UeCk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=TSEa44w6B7unc/ZsNLKHX4+rhG7W+tF6t+sZbTP1gjyf+JQEmSksFeTUOp9VMkB6j
+	 V5X0zENSlMCQheEBAEUkbxrwXKtQGWb6ABZmClMHbBrSR99YjvBzu/al/A8iIKyRn4
+	 9g2VSHATuMz0Od+w+5uocSuDSGCczE+ktkRfXA49xHmU4jt9ibT1BIBRB2uIMZoNaO
+	 2dB22BmtMmFEjCYGUpvwc7ldxg5n1+1axR2mFMGLqERXWz/PpXdRARizR1pF22CK11
+	 DqtaFEY60CI0rdCfuvTzUQBQ+XwSfTXNnMCypgRxbFJcKHSen+yH+IPQ7oIOyaAmOP
+	 FsMCUqCAhYdcw==
+Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-2cc89c59cc0so592467fac.0;
+        Wed, 09 Apr 2025 10:43:49 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUlh1bkufDY2PBYmQj+gR+5ua8nBoj5BgC5jSGo0Qb48bjHq+oLjorbh1hk76Hnya/mNWG4oF8togrl4IQ=@vger.kernel.org, AJvYcCWP9tvgoxv8StHa4+qHcZAp9KNuxIvJPn2DCctBeq3t6d8kYFqDDwFsznGIfZfIyLb4LxrNQYwqURzg@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWh2vBbGgWo+cPRwUV5kh+nFWNoNQ85pQLbUeHiq6Eq8iHoOR4
+	fpz8/iIOVTtElQcb233oUtq0Dx/7fXvfxlD7NWMhUgPqaotFsApT/ddlIxHHThlZEfkJQMoQLSA
+	cySyLuWyEKgAtnHGAOEEarrS5gk8=
+X-Google-Smtp-Source: AGHT+IEPa25BLLz45O3A0aw2iD4LjOUUKGFiVDtx9bT0W1iV2DAm1cz3hWJk/Q9WFcb6+s9b/jRDJAaSzvz/wnM7boI=
+X-Received: by 2002:a05:6871:50c3:b0:29e:3d2a:a4a9 with SMTP id
+ 586e51a60fabf-2d0ad00e7d7mr261368fac.5.1744220628802; Wed, 09 Apr 2025
+ 10:43:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407-kbuild-disable-gcc-plugins-v1-1-5d46ae583f5e@kernel.org>
- <202504081630.4CE88E855@keescook> <db50faff-7290-4193-b861-f60e36f1d1e3@sirena.org.uk>
- <CAHk-=wjc+piYyUw36s4ttEkY32jVkxhRtyrt431wew7XcDS2Qg@mail.gmail.com> <a9a459c2-674d-43dc-9e27-41de0471f602@sirena.org.uk>
-In-Reply-To: <a9a459c2-674d-43dc-9e27-41de0471f602@sirena.org.uk>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 9 Apr 2025 10:42:19 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whKEuQQh2JymabBQLrLs=pEfx0qYVmUnYZRq_tOFj90sA@mail.gmail.com>
-X-Gm-Features: ATxdqUG-Bs73VX2eSGz8XZIzzueOW3xC6j3KpNJoIRi6w4YuDwZR8xbIvrtKvKY
-Message-ID: <CAHk-=whKEuQQh2JymabBQLrLs=pEfx0qYVmUnYZRq_tOFj90sA@mail.gmail.com>
-Subject: Re: [PATCH] gcc-plugins: Disable GCC plugins for compile test builds
-To: Mark Brown <broonie@kernel.org>
-Cc: Kees Cook <kees@kernel.org>, =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>, 
-	Arnd Bergmann <arnd@arndb.de>, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
+References: <20250327195928.680771-2-csokas.bence@prolan.hu> <20250327195928.680771-3-csokas.bence@prolan.hu>
+In-Reply-To: <20250327195928.680771-3-csokas.bence@prolan.hu>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 9 Apr 2025 19:43:37 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jmuzvo-xzGBDhGVBbY7svbrqEdi-SeJrx5BG=qtN6ZiQ@mail.gmail.com>
+X-Gm-Features: ATxdqUGGv3EHTXO2Nz1qHrCletcbUOdpHS7e7KIVtcT50Kb-Q5VhiMdKVyPZvbU
+Message-ID: <CAJZ5v0jmuzvo-xzGBDhGVBbY7svbrqEdi-SeJrx5BG=qtN6ZiQ@mail.gmail.com>
+Subject: Re: [PATCH v6 1/2] pm: runtime: Add new devm functions
+To: =?UTF-8?B?QmVuY2UgQ3PDs2vDoXM=?= <csokas.bence@prolan.hu>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Varshini Rajendran <varshini.rajendran@microchip.com>, Tudor Ambarus <tudor.ambarus@linaro.org>, 
+	Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, 
+	Alexander Dahl <ada@thorsis.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	Pavel Machek <pavel@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 9 Apr 2025 at 10:29, Mark Brown <broonie@kernel.org> wrote:
+On Thu, Mar 27, 2025 at 8:59=E2=80=AFPM Bence Cs=C3=B3k=C3=A1s <csokas.benc=
+e@prolan.hu> wrote:
 >
-> Sadly it seems like the build bots didn't find it, or at least if they
-> found it they didn't identify it well enough to end up with reporting
-> the issue to someone who'd fix it.
+> Add `devm_pm_runtime_set_active_enabled()` and
+> `devm_pm_runtime_get_noresume()` for simplifying common cases in drivers.
+>
+> Signed-off-by: Bence Cs=C3=B3k=C3=A1s <csokas.bence@prolan.hu>
 
-I wouldn't be entirely surpised if a lot of the build bots end up
-running old distros (because "enterprise").
+I can apply this one alone if you want me to do that, but I could also
+apply the other patch in the series if it got an ACK from the driver
+maintainer.
 
-So this is presumably only happening with certain compiler versions,
-and I expect the build bots have a fairly small set of compilers they
-end up testing.
-
-            Linus
+> ---
+>  drivers/base/power/runtime.c | 44 ++++++++++++++++++++++++++++++++++++
+>  include/linux/pm_runtime.h   |  4 ++++
+>  2 files changed, 48 insertions(+)
+>
+> diff --git a/drivers/base/power/runtime.c b/drivers/base/power/runtime.c
+> index 0e127b0329c0..205a4f8828b0 100644
+> --- a/drivers/base/power/runtime.c
+> +++ b/drivers/base/power/runtime.c
+> @@ -1568,6 +1568,32 @@ void pm_runtime_enable(struct device *dev)
+>  }
+>  EXPORT_SYMBOL_GPL(pm_runtime_enable);
+>
+> +static void pm_runtime_set_suspended_action(void *data)
+> +{
+> +       pm_runtime_set_suspended(data);
+> +}
+> +
+> +/**
+> + * devm_pm_runtime_set_active_enabled - set_active version of devm_pm_ru=
+ntime_enable.
+> + *
+> + * @dev: Device to handle.
+> + */
+> +int devm_pm_runtime_set_active_enabled(struct device *dev)
+> +{
+> +       int err;
+> +
+> +       err =3D pm_runtime_set_active(dev);
+> +       if (err)
+> +               return err;
+> +
+> +       err =3D devm_add_action_or_reset(dev, pm_runtime_set_suspended_ac=
+tion, dev);
+> +       if (err)
+> +               return err;
+> +
+> +       return devm_pm_runtime_enable(dev);
+> +}
+> +EXPORT_SYMBOL_GPL(devm_pm_runtime_set_active_enabled);
+> +
+>  static void pm_runtime_disable_action(void *data)
+>  {
+>         pm_runtime_dont_use_autosuspend(data);
+> @@ -1590,6 +1616,24 @@ int devm_pm_runtime_enable(struct device *dev)
+>  }
+>  EXPORT_SYMBOL_GPL(devm_pm_runtime_enable);
+>
+> +static void pm_runtime_put_noidle_action(void *data)
+> +{
+> +       pm_runtime_put_noidle(data);
+> +}
+> +
+> +/**
+> + * devm_pm_runtime_get_noresume - devres-enabled version of pm_runtime_g=
+et_noresume.
+> + *
+> + * @dev: Device to handle.
+> + */
+> +int devm_pm_runtime_get_noresume(struct device *dev)
+> +{
+> +       pm_runtime_get_noresume(dev);
+> +
+> +       return devm_add_action_or_reset(dev, pm_runtime_put_noidle_action=
+, dev);
+> +}
+> +EXPORT_SYMBOL_GPL(devm_pm_runtime_get_noresume);
+> +
+>  /**
+>   * pm_runtime_forbid - Block runtime PM of a device.
+>   * @dev: Device to handle.
+> diff --git a/include/linux/pm_runtime.h b/include/linux/pm_runtime.h
+> index 7fb5a459847e..756b842dcd30 100644
+> --- a/include/linux/pm_runtime.h
+> +++ b/include/linux/pm_runtime.h
+> @@ -96,7 +96,9 @@ extern void pm_runtime_new_link(struct device *dev);
+>  extern void pm_runtime_drop_link(struct device_link *link);
+>  extern void pm_runtime_release_supplier(struct device_link *link);
+>
+> +int devm_pm_runtime_set_active_enabled(struct device *dev);
+>  extern int devm_pm_runtime_enable(struct device *dev);
+> +int devm_pm_runtime_get_noresume(struct device *dev);
+>
+>  /**
+>   * pm_suspend_ignore_children - Set runtime PM behavior regarding childr=
+en.
+> @@ -294,7 +296,9 @@ static inline bool pm_runtime_blocked(struct device *=
+dev) { return true; }
+>  static inline void pm_runtime_allow(struct device *dev) {}
+>  static inline void pm_runtime_forbid(struct device *dev) {}
+>
+> +static inline int devm_pm_runtime_set_active_enabled(struct device *dev)=
+ { return 0; }
+>  static inline int devm_pm_runtime_enable(struct device *dev) { return 0;=
+ }
+> +static inline int devm_pm_runtime_get_noresume(struct device *dev) { ret=
+urn 0; }
+>
+>  static inline void pm_suspend_ignore_children(struct device *dev, bool e=
+nable) {}
+>  static inline void pm_runtime_get_noresume(struct device *dev) {}
+> --
+> 2.49.0
+>
+>
