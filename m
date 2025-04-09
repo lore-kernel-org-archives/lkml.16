@@ -1,102 +1,141 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0602725DAF1
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 10:58:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFE7A25DAEF;
+	Wed,  9 Apr 2025 10:59:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744196330; cv=none; b=FXMVeXw67IjDJR2PCC8xG/6LWmOCsZt7wmr2ZNm1XCRQOkHEEbiVqxM4WAdaeAWZcSqP3ZzsaLwqJ91iWvT19BWSwF96+aplYwT/zBScpQtpv3sR8z9pNwnX8Q4/+LSG9pqnE2Hl7mcNpis18i6LjFihqLNrPDOwxio6UcPdQTc=
+	t=1744196403; cv=none; b=Txdct5XfeWC6ePpo0wLGOAioy1XJTCgr9KLYzK4gCJEVBSqEgvGf853yeUCBYHUNC/1y0UfzHR9GmxzRlPz/AucfbQw3iDC2XXvgXLpgfRB2x0CfhS40+0DE0mQuh2jcECpG9IGtFxlm0d0hd/3MO/QQskT6oOvR7Kbi10y36aw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744196330; c=relaxed/simple;
-	bh=Beq6p0A0Aj03j7AtotcrQhblg6FIC8rtviizuSi6oIQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=kg4CJwAcy3zOZzL9xjgivfmC9b4lu4ncMj4k93f3/5qmfU4cE9ycYF75faUK+xvcdt2kwvJMFZzXKknlB6tK2SjldSL+kwDXayflGO6OjaFfHW4bjN67MizDO79a8okMDyAx6wPe1AKV13f+UV+tLjyVSWkDyvdDTSjuRJAoZyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KMIaZK4m; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1744196403; c=relaxed/simple;
+	bh=TfB1w3nVESPRx1uoE2Mc5Ze55+L0OBKpgUXDoSKfnCE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=b4WrV+3MnmcZ1FsdLNbgBhvuAaPfqVFfYTY8kIwQWNmuWK6nFxP2aeUXtt8eeWZf0WZcPEMAS1vIr4WBXRnE1HUtvZAKKg+pEPWlt32CCUdu5wHCGYJRtz3O+KLda1+Sge2gRKKNomZEsi00EOe5CVZXRgNxdigPiO03MuLipIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=RIb4T0jX; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=c6yWtWu5 reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KMIaZK4m"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43cf05f0c3eso42896405e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 03:58:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="RIb4T0jX";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="c6yWtWu5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744196326; x=1744801126; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=IiF3hItZ0UAK/f8Cj3X61O/0nheHKx3BwiQHqAtvtCQ=;
-        b=KMIaZK4m2AB+tusrYpYso1uIarovmI17rvC5mYPkUTH2fA3gKybefldLMpqUbuuqHQ
-         t+k/BH8dVdTIBQUl+jfluK45wdrdc9luf5lRBzt1v4PxUlEPTv3YxE2HMsagh/h7jaDY
-         vl3K6BclRbmdSU5BbmJu4hoUDL4CAnmsrO2X3DtvbuHeTTbo8vCG4V0zG5x6PDTjmAhP
-         ms1C7HIP2SqAUiw9BH3PgzGGeKdjK0MEDV6YdixiR3p24RtZGoYbTacQVcW2/B/97PpY
-         dgu4FUJnHGafQXZc6iAYkHNMhrpBOt8epHuOc9iK57LaG1LSqShoSCoFe3n/xqSR3OL2
-         6p+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744196326; x=1744801126;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IiF3hItZ0UAK/f8Cj3X61O/0nheHKx3BwiQHqAtvtCQ=;
-        b=nEOUg8+8xRdFwGDv0Cwmg5X4bMnLBNR71p1S89RNVgdw144xtoMfzo3FqkvMNK6I+L
-         U+hHzzJIoBVFYu0XlbBgLaHc7/2r9UDcjurogL6wX67vt301rS19CGvyZ5sOSgiX+JpD
-         mba93HQVlhYOSW2tQp3zFu47JO6hoHVd+DCNS23BtnIynIG/3w67YjKZHHvDkKjS9Iej
-         seKn01ycim6U2KKG0wLt8WSgB8uvUGavE1hN90c9zbWJ6YI6DSJFxqfoEFIV7zkKK1vK
-         BYl0kdWvoC83oZz31xhw/KYF+j3AfLC63/ZAWH3/rD6K9+Ms5SrWXquBK15NUpxjFjPs
-         zk3A==
-X-Forwarded-Encrypted: i=1; AJvYcCXPYZpdFo2Ikncmq0/CmWuoaTcApnJzkl6paoH4UY3zNBk3PrCfXVMWVsSqwEuZX0YOpQOE2k9i9GVQKqM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeHTo8URi7JwpfsDLbK8+Ez2hrm//ztqThA9RJ2L2CEoW0PTKN
-	A7ABeiuvFIrki8mUoDvvTl5IfXh+NiSDgnQDC0JFIE0q76Y3g1dafvbEVe4v0lE=
-X-Gm-Gg: ASbGncuYKGtn3fx2J+s54qB4RF1CDqccDNFh59hnxzf8dr/Xa8QpoUQOU3a60R0e1rk
-	W2NU7qg7UTFayN/+Ret0bbI7+K0wW9BRg0nYg6IQ6T2AwMDXPjI7aTI1Q6dQLnGjjUxz40nKOAK
-	Anl3mwV7wYwmJlEkN5j0eJXnFV6+ANeBuc6G18I+7N+ieCsoyC0fyQn1o2GXPayS82U1Y8l1TqP
-	icOzUx/0CivdeZRFFGoYX2SR8hFic05OHvaKLCgjX/ayYkxT3AkXBF4VHK2WThjnztNa6KzCE8O
-	3e8Cyc+Vbugi0GNQ8vx63fdKb7c77naUkKclgcMLYFFrAw==
-X-Google-Smtp-Source: AGHT+IFqdSFJblVZ7boxxxINoAK4ozoRnpThv+xWoaahnbfo9IExrYdlTmE3N6jSm+EyLm0u1m1MSw==
-X-Received: by 2002:a5d:6d86:0:b0:39c:310a:f87e with SMTP id ffacd0b85a97d-39d87aa837dmr2381147f8f.16.1744196326323;
-        Wed, 09 Apr 2025 03:58:46 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39d89378daasm1308967f8f.38.2025.04.09.03.58.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 03:58:45 -0700 (PDT)
-Date: Wed, 9 Apr 2025 13:58:42 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Minchan Kim <minchan@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Brian Geffon <bgeffon@google.com>, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH next] zram: Fix uninitialized variable in
- zram_writeback_slots()
-Message-ID: <02b8e156-e04f-4ab3-9322-b740c1f95284@stanley.mountain>
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1744196399; x=1775732399;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Kn75fkqPv9i2aiN1xOdOZGSnE5xqACnS+FveSU5qwDo=;
+  b=RIb4T0jX2jIy1weYafwVy2t14ihbWZ1UxIGZ647ecTgJqFs4pBKGaVUM
+   V6NYU7weNgD0DBEapQsBgcNEeZIoHWfvYENFY8znnGSYNcbUvY3rKXQRx
+   x6Syj17GH24c43FzXu7DEW4N8M2rNVadMDu2D4J5vfQFnWCc/5NSCVaAS
+   Ut5UXJMLM6+5MUkzHeZ0LyPv8HkuZP00P5OEwhJZuS4GKz9OiCDCX1cIF
+   0mnFWE2PffT8Q/Ry5IY4lozDopUeF3lDY/2HhB9xj43jQy5VWpiABj1/9
+   3OjK2pR5v6ajm50M8lb111b0gkHcTSOLqYlGKpEITTVeHxkTA1d5P0wOG
+   Q==;
+X-CSE-ConnectionGUID: FaxeuNCfQkWKH7AtI6ab7g==
+X-CSE-MsgGUID: 5VwsxvJMQVCKcn0dBh+4hA==
+X-IronPort-AV: E=Sophos;i="6.15,200,1739833200"; 
+   d="scan'208";a="43426690"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 09 Apr 2025 12:59:56 +0200
+X-CheckPoint: {67F6532B-59-7141A0B0-E6EDEC14}
+X-MAIL-CPID: C309E74E949F8B32217D51A50BFA7CA5_3
+X-Control-Analysis: str=0001.0A006371.67F65329.000F,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id B4609165763;
+	Wed,  9 Apr 2025 12:59:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1744196391;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Kn75fkqPv9i2aiN1xOdOZGSnE5xqACnS+FveSU5qwDo=;
+	b=c6yWtWu5ldp40FtgZLvlKrLPY8tZFdZikCLZSAcQjmnId/U1Z42jqJJzy/rq+jP4UqS4Hf
+	SLkiGUErbtWr5TQ6KSRVKwv6NjWsBOAx4GrxWkl+HOBqBEk6iYFgIMKQbuzrnhUN44zOqe
+	2P4t+3fKlVkeuur7IWfG8M6AjMTT3Ui0rFqoUU6gveNIhFl7l1N0wely8wPDYYE3OrtLVG
+	2mrthxPtuqoAv5GNLJwvrjVcFNJiq9dVMVdEZhu5XEfvRDmsXnLig9ktLHjeUh4U/rOyQt
+	6x8jvhu+Jsu9eBSbzO0eHVsHZYL+MkisR4MZEBnVRHtvGcE4CQ2Ley5EF7aIbg==
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Peng Fan <peng.fan@nxp.com>
+Cc: devicetree@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject:
+ Re: [PATCH v2 1/1] dt-bindings: firmware: imx95-scmi: Allow linux,code for
+ protocol@81
+Date: Wed, 09 Apr 2025 12:59:50 +0200
+Message-ID: <2003940.PYKUYFuaPT@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <20241104085622.177781-1-alexander.stein@ew.tq-group.com>
+References: <20241104085622.177781-1-alexander.stein@ew.tq-group.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+X-Last-TLS-Session-Version: TLSv1.3
 
-The "ret" variable is only initialized on errors and not on success.
-Initialize it to zero.
+Hi,
 
-Fixes: 4529d2d13fd1 ("zram: modernize writeback interface")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
- drivers/block/zram/zram_drv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Am Montag, 4. November 2024, 09:56:21 CEST schrieb Alexander Stein:
+> BBM protocol supports a single power button, supported by driver
+> imx-sm-bbm-key.c. By default this is KEY_POWER, but can also be overwritt=
+en
+> using linux,code. Add a reference to this schema and add linux,code as a
+> supported property.
+>=20
+> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
 
-diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-index 2133488dbfd4..94e6e9b80bf0 100644
---- a/drivers/block/zram/zram_drv.c
-+++ b/drivers/block/zram/zram_drv.c
-@@ -741,7 +741,7 @@ static int zram_writeback_slots(struct zram *zram, struct zram_pp_ctl *ctl)
- 	struct zram_pp_slot *pps;
- 	struct bio_vec bio_vec;
- 	struct bio bio;
--	int ret, err;
-+	int ret = 0, err;
- 	u32 index;
- 
- 	page = alloc_page(GFP_KERNEL);
--- 
-2.47.2
+Is there any other feedback or things to do here?
+
+Thanks
+Alexander
+
+> ---
+> Changes in v2:
+> * Added default value
+>=20
+>  .../devicetree/bindings/firmware/nxp,imx95-scmi.yaml   | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/firmware/nxp,imx95-scmi.ya=
+ml b/Documentation/devicetree/bindings/firmware/nxp,imx95-scmi.yaml
+> index 1a95010a546b1..c1b7140ee0098 100644
+> --- a/Documentation/devicetree/bindings/firmware/nxp,imx95-scmi.yaml
+> +++ b/Documentation/devicetree/bindings/firmware/nxp,imx95-scmi.yaml
+> @@ -12,13 +12,19 @@ maintainers:
+> =20
+>  properties:
+>    protocol@81:
+> -    $ref: '/schemas/firmware/arm,scmi.yaml#/$defs/protocol-node'
+> -    unevaluatedProperties: false
+> +    type: object
+> +    allOf:
+> +      - $ref: '/schemas/firmware/arm,scmi.yaml#/$defs/protocol-node'
+> +      - $ref: /schemas/input/input.yaml#
+> +    additionalProperties: false
+> =20
+>      properties:
+>        reg:
+>          const: 0x81
+> =20
+> +      linux,code:
+> +        default: 116  # KEY_POWER
+> +
+>    protocol@84:
+>      $ref: '/schemas/firmware/arm,scmi.yaml#/$defs/protocol-node'
+>      unevaluatedProperties: false
+>=20
+
+
+=2D-=20
+TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
+Amtsgericht M=FCnchen, HRB 105018
+Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
+http://www.tq-group.com/
+
 
