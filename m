@@ -1,203 +1,122 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A5841DFDB8;
-	Wed,  9 Apr 2025 19:21:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E40E41E5018
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 19:21:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744226495; cv=none; b=GUY112XvahcANclonCFVHctAQDgKyBmlpt2Wm+PsJUNWCQ1LF2KfWQpYXldlFMtKJiXBKaY2WwPplQrp+DwY3c1TAmaU0ENRWT+5045ikyvl/mh22rHfdV0P6sCbpiH5oZp3QroT59BYbTyiHAi5WbdbGdQD5wpZRuZXKthmh5s=
+	t=1744226514; cv=none; b=duJq9Nqp5gLDYID4wQGCC4SypQtPUMez7T+TxCOIAye1Ng2u9i1M4j1tG6FqBguBGhT6/vJnCW8WRh3L9Njipf8UBFd7Mm9FNzBT2O94VXDqLU4cQTztji2T1meSPmx8oDyLCYK1ZyJYYZAnuSE6HAahOZC6+ApdXZkwPnrTQdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744226495; c=relaxed/simple;
-	bh=Hin3jaoZD2UKks89Cwi9KM4qtpbZXTlLg+tKDL12RxE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o2Kw7u+gzpfHQG0cYD7i/+CriBUa/Lng+16oIWhLN1nYxSyew52h/fk1pWAEHGhdOWrucRs2jq+qr4csWqHY96I+i4hKubcNOzsCvkxyWrRQQ/6hTfHVKvUl7Bkrq8DSN6A9j4PeviVC2qqosKsgnRJTL2209uvI7wW8cQ6sIwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j3sPKuA3; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744226514; c=relaxed/simple;
+	bh=tqqtVLL0a7rnxVyWWNMx3H0IFxuLoh3JJkSTBORz7dM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TnxAJgExwkK2b4qGOlbGFhHVqI7t4lAWqUGVMe83fVJeDC4R1+Sp7/FHb+8OWCLFiU3cFcC/+OPnThRUkKZhsBsaMFOJktMiUSxa/nKLPlZP4lGDQn3tPZ7DQaMUBj6q1PlHwyAWdOG3a1lptRjW476TjABbnGnJDZeqtsVQudE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=FBUBH+Nu; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j3sPKuA3"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-736b0c68092so6023092b3a.0;
-        Wed, 09 Apr 2025 12:21:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744226493; x=1744831293; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+fSnm+LAeRoIOsICdxC6XJUJVWVyIvXXXOFvA8oRabs=;
-        b=j3sPKuA3dp323p5m7tCsJu6KS0+ukLTzkbLwvbJt+SIzLJIM8xFy9lEPUaoeX/A3Ff
-         V2LysCyfefoeb17ECJVo3GqJX416if/Qj+1NcHZI/fVKDUGujoi9aJfCdzD0nhuTzp3B
-         /2Q2cxfWzjRLo8Rflw3IjNbQfJfXF1F0UNGuVKplG4IzSEei/SfBTX2v9O9al6aEhXxK
-         ccJsbOd0BhuidFdPOCvUg5zo0D+VmFlT6CpjlH+mii0vB+itYHA/StvsPWLOxP3t59nx
-         PHw8aJ0ozBbs9jtS2GKTg9lqCuPNGWeTFgHIDiFrgCgBuRgX8ARxBNegytagkEGqpdiX
-         qgVQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="FBUBH+Nu"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 539HIdUs008056
+	for <linux-kernel@vger.kernel.org>; Wed, 9 Apr 2025 19:21:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	ao2/4Ir7LjEidGCmtnAUzgnJ1V7Yk4U0mm093nzxA/8=; b=FBUBH+NufFHcklkW
+	+pkQwxYqymHBAdpD3DQ9e77+Bf9pxYOadwtNU+oar0BXBZ8YuGvK9KQEQ3mKr/mv
+	PpVdW8sfpQ7oxKe0HnubXHyiMd8NqAUVM7Alp+kPbHnkc7o2uffeuN64eCzE2yVI
+	JXdwYhwJ68+l70W4R6SwzKvNe8uVvoC0CEeknToRvAAZe6ewmdJ4zedDNAKGcPf2
+	2ku0u8aut0we2EAFiiK1crcozY6SSL8xQtRal91g9vJD7ycPp7NB0jpid4Ztnmuv
+	KLjDq1LMuMjuEH9rvpF/diEhN8GTppxlEFxdXg2uhqOHzCWqCkNLAzf29gIZWIvG
+	Bbb6sA==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twg3mfx5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 19:21:50 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5841ae28eso1323385a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 12:21:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744226493; x=1744831293;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+fSnm+LAeRoIOsICdxC6XJUJVWVyIvXXXOFvA8oRabs=;
-        b=S8pDzd/6gbbnIcEX6AgbjVSZ/+59P3NbTq807q5Z4nce5GlpXwuLX0h8X1YXnNVcdg
-         5vxcSEF6JFcx/ToCM9gbrR6y3q/mDBodvXqg6nUt/xWmFQbH99j2/vYEIObzfB6Kdfr6
-         murTm3aXwzT5P4RWnAbXZ/IwPk+w8KmHR6Obj/l09HR1NCrvX5O7DcFJpvvuLGvay3EG
-         SvAL1CNgUa73kg0EHDBXn1EulaXQUr9OiwtnIOImhEiO0lowS2FdFkqwW5IMBOZCLD/g
-         4oV/v2896AI7U8VDXcyFtUcBRef72psctu7bkWW2+op/fc3Uo904+qV38TbibgdV1B/6
-         Yk3g==
-X-Forwarded-Encrypted: i=1; AJvYcCUMYLNi19Bs+6cShiZH+Z+i9sIdfjjC8WXtwiZrT1mGRjOE3wYnuOud5bER0gc4rw7wdTVeIbCOxjUyN/U=@vger.kernel.org, AJvYcCUZzijAlzEin6mK+cSpFwSGEM5FSprnZgf+RpfRVc+I0FpYSXMH5futdadr6Rc4y6DvxUYnhHO4mJlZ1V5N@vger.kernel.org, AJvYcCUx10lTu9vhYe6vspQUeWitWxM3FUIAuI+ZA4GD8l+Kegb/T1U8/R+4YIkCEfbSIi4rABeb/ejBCopUl/ak1ao=@vger.kernel.org, AJvYcCVj9SzZsyVlwRkryPHKSoV10/QqHa45WBxHtIrfaJCbh+Ng+mBA2f9rlxYDPa1O85SHfuIXwV3v3HAdWMM=@vger.kernel.org, AJvYcCW8vfZHZmuOdICqExhIWxio/tN9zQxi7/qxFYJj+h4pfEq/z2S/WCTr8OKSZLEMRWsQFxkekVGe@vger.kernel.org, AJvYcCWueVuI5+7BJC0/ykpkWOFUHhWfQN5HdEQlCktjiyZYntVGY2emlrshGJQISbwjKkbRfP6GPmDFAxT0EQsm@vger.kernel.org, AJvYcCWxPWbjZ/31pilfge+MjwFUWq31YJu9hYjSx2zKbUBUZQWkSoMTMWvWmetFAniLKFBIhrA=@vger.kernel.org, AJvYcCXeRn4tp4Wejulgg6A8XHi8MCTP6NuleeALfno0HQHoh6YNRCZgPVvRBc5Si3gGWXQAQaMUTkQj0eBNvzE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUj5WOO6UrNJZ7sjw+rSzCjLaeW7Af61TgzkUzLlbPd53Yme1z
-	GmyKME+gqdtkF9jBUpBu9bLRru2R5Mgddve0n35L6Ap+FkWkKPes
-X-Gm-Gg: ASbGncv0C3NjN5TNLd3E+2VC/taBdjFf+W4+Z/HP6ardZIfVrcrJ+StyW9cfAj5v2Yk
-	7Q8tzzZ4Vu3XPBP9hLSC//lpMhlfqrvS5hZmK4nAAZpGWSFri8CiEOiAHDq0N/s1zLZov9iLYrG
-	KJr4wZfjNEzSFbRiXxQoFZ12rUSncJoe2AMUSdKCVrBGYi5EI6zTB2xDIAONTg65OW2OYbVjzyY
-	g6HMpDW5oy5qJ4v9Yq9Mw2EWLgjL792mWN+0JTa3yG4KJ7x9/XId3ynTJWuEdxU93bGzOkt5bJ8
-	6KN20HnKk121WNG/rVxzmSTQmz1rufdIeTZi21oG2xynnXZ9LTZDq6FG7+TApd/55QIe
-X-Google-Smtp-Source: AGHT+IHAXQm8yqDVRx3hUkKcG0uQQDMrqQOD2SeunqXbiHMcL37CayQuCVkU18t9V7SBUxyy5kmIoQ==
-X-Received: by 2002:a05:6a20:9c89:b0:1f5:873b:3d32 with SMTP id adf61e73a8af0-201695fb36dmr272504637.39.1744226492588;
-        Wed, 09 Apr 2025 12:21:32 -0700 (PDT)
-Received: from visitorckw-System-Product-Name ([140.113.216.168])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1e69376sm1726443b3a.165.2025.04.09.12.21.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 12:21:32 -0700 (PDT)
-Date: Thu, 10 Apr 2025 03:21:21 +0800
-From: Kuan-Wei Chiu <visitorckw@gmail.com>
-To: Guenter Roeck <linux@roeck-us.net>, Yury Norov <yury.norov@gmail.com>
-Cc: Yury Norov <yury.norov@gmail.com>, tglx@linutronix.de, mingo@redhat.com,
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-	jk@ozlabs.org, joel@jms.id.au, eajames@linux.ibm.com,
-	andrzej.hajda@intel.com, neil.armstrong@linaro.org,
-	rfoss@kernel.org, maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com,
-	simona@ffwll.ch, dmitry.torokhov@gmail.com, mchehab@kernel.org,
-	awalls@md.metrocast.net, hverkuil@xs4all.nl,
-	miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-	louis.peens@corigine.com, andrew+netdev@lunn.ch,
-	davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
-	parthiban.veerasooran@microchip.com, arend.vanspriel@broadcom.com,
-	johannes@sipsolutions.net, gregkh@linuxfoundation.org,
-	jirislaby@kernel.org, akpm@linux-foundation.org, jdelvare@suse.com,
-	alexandre.belloni@bootlin.com, pgaj@cadence.com, hpa@zytor.com,
-	alistair@popple.id.au, linux@rasmusvillemoes.dk,
-	Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-	jernej.skrabec@gmail.com, kuba@kernel.org,
-	linux-kernel@vger.kernel.org, linux-fsi@lists.ozlabs.org,
-	dri-devel@lists.freedesktop.org, linux-input@vger.kernel.org,
-	linux-media@vger.kernel.org, linux-mtd@lists.infradead.org,
-	oss-drivers@corigine.com, netdev@vger.kernel.org,
-	linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev,
-	brcm80211-dev-list.pdl@broadcom.com, linux-serial@vger.kernel.org,
-	bpf@vger.kernel.org, jserv@ccns.ncku.edu.tw, Frank.Li@nxp.com,
-	linux-hwmon@vger.kernel.org, linux-i3c@lists.infradead.org,
-	david.laight.linux@gmail.com, andrew.cooper3@citrix.com,
-	Yu-Chun Lin <eleanor15x@gmail.com>
-Subject: Re: [PATCH v4 01/13] bitops: Change parity8() to parity_odd() with
- u64 input and bool return type
-Message-ID: <Z/bIsT7RT1C7rGYC@visitorckw-System-Product-Name>
-References: <20250409154356.423512-1-visitorckw@gmail.com>
- <20250409154356.423512-2-visitorckw@gmail.com>
- <Z_anYpZw_E8ehN21@yury>
- <Z/a7t1yATUXn11vD@visitorckw-System-Product-Name>
- <315b4c75-a596-4509-99f7-921ebda2fed9@roeck-us.net>
+        d=1e100.net; s=20230601; t=1744226509; x=1744831309;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ao2/4Ir7LjEidGCmtnAUzgnJ1V7Yk4U0mm093nzxA/8=;
+        b=oJiRgGqkQQs0kFb/DHivW1I+mYfyU3MyKlXmPezkIO04VA2CIdDj6HYO0CnlaPujyX
+         8ZUUNHoOxZcsN1wOKqBXuvSKLsCkeaJL3plidQV8XRbnkxJof75WXCHP6WOeGuiMafCX
+         W+V6rMkN+yZdXkjPzXU7pJd1v+od3FqMzF7Os0+3NAZalHLCnEVWxwM5Os9PU1sm9GuJ
+         td6+0qOnF2B2IhE3wdOLGW86bqD6KRn6Zbeq9E9ETu+OGQg+NOajFNvgicgGDYTbWudv
+         Du5BXJawaOfCQt+URZC3oUNxIjTq69hSSul/epshnJAuY6jVBQYQousozjrxLN/pVZOm
+         a2Gg==
+X-Forwarded-Encrypted: i=1; AJvYcCUuXNYijKPJJYH82Yh3SFAEgHpT+73oTF3mBSwoYQPvj4SAkaMH2ZN4bgcxQlYsU856KyBEEmlcVM0dkyQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YymoWewODWp0iofRqwuNHlYgGSl/UWG2dzQFCAB+MFftrhTE2mX
+	tVM76GCItbI8WAqcjtfRWuiY35ggTWnY4YxsnCYSDqJ+L42f5GW5dURAqnhX64NALeESrB+en1K
+	01n1X3W2HmQtEpCGXII7uAzxbVtbYGqIWiyjU7asZEXbLRrAHwC2EaIeJ8eIR0Wg=
+X-Gm-Gg: ASbGnct/Yfwvu9UEmxoZlEsHViWVkbuWL+zXjwcsskVYlu3krxxTEkwiVDmxzy3pJeI
+	UDjn0W+ZKXF0xu43UMRRZ8m70owV75jkLL2ZTLIraktSn71ycIjRdnIdmZYO4j430WloLj4fnuO
+	M5CrRgw+FowSLHFn1Kx7l1Pmbf8SbUG6TMePZUCiNyArNqhD6W5PMhdi6FBoxPSFZA3+5K/8WhR
+	kccYvbl2kf1Nqx9TytqYAwcnlwbS6Z1o4JFylsMaaJ3QVY+lTjFCBwr1voJyHjTZsY90iOnAb2Q
+	3DfPLXeWNroK97FbkDNhbi1tToqdGkuEe6GCMyPwixzoOnNMD4Lhwk1zUnADzxlSJg==
+X-Received: by 2002:ac8:605:0:b0:474:e7de:8595 with SMTP id d75a77b69052e-47960156d99mr14124311cf.14.1744226509596;
+        Wed, 09 Apr 2025 12:21:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE77QLvXVQb8hQrclk4GktTwGGdd9UcIQL9qbqVYhfi4TU+IPv00TzOyHgAFpOf5a4SCAcmAg==
+X-Received: by 2002:ac8:605:0:b0:474:e7de:8595 with SMTP id d75a77b69052e-47960156d99mr14124201cf.14.1744226509199;
+        Wed, 09 Apr 2025 12:21:49 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f2fbc0c7basm1151156a12.30.2025.04.09.12.21.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Apr 2025 12:21:48 -0700 (PDT)
+Message-ID: <2326817d-0b23-4990-b5a4-68efc8c20b03@oss.qualcomm.com>
+Date: Wed, 9 Apr 2025 21:21:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <315b4c75-a596-4509-99f7-921ebda2fed9@roeck-us.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: qcom: sc7280: Stop setting dmic01 pinctrl for
+ va-macro
+To: Luca Weiss <luca.weiss@fairphone.com>, cros-qcom-dts-watchers@chromium.org,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20250404-sc7280-va-dmic01-v1-1-2862ddd20c48@fairphone.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250404-sc7280-va-dmic01-v1-1-2862ddd20c48@fairphone.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: 5JESKKHL4cZ-JJVNkJ-XedEvlIF3iILh
+X-Proofpoint-ORIG-GUID: 5JESKKHL4cZ-JJVNkJ-XedEvlIF3iILh
+X-Authority-Analysis: v=2.4 cv=I/9lRMgg c=1 sm=1 tr=0 ts=67f6c8ce cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=6H0WHjuAAAAA:8 a=EUspDBNiAAAA:8 a=FVEEgxo8gcP725zB7O8A:9 a=QEXdDO2ut3YA:10
+ a=bTQJ7kPSJx9SKPbeHEYW:22 a=Soq9LBFxuPC4vsCAQt-j:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-09_06,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
+ phishscore=0 suspectscore=0 mlxlogscore=676 lowpriorityscore=0 spamscore=0
+ clxscore=1015 malwarescore=0 adultscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504090128
 
-On Wed, Apr 09, 2025 at 11:39:22AM -0700, Guenter Roeck wrote:
-> On 4/9/25 11:25, Kuan-Wei Chiu wrote:
-> > On Wed, Apr 09, 2025 at 12:59:14PM -0400, Yury Norov wrote:
-> > > On Wed, Apr 09, 2025 at 11:43:44PM +0800, Kuan-Wei Chiu wrote:
-> > > > Redesign the parity8() helper as parity_odd(), changing its input type
-> > > > from u8 to u64 to support broader use cases and its return type from
-> > > > int to bool to clearly reflect the function's binary output. The
-> > > > function now returns true for odd parity and false for even parity,
-> > > > making its behavior more intuitive based on the name.
-> > > > 
-> > > > Also mark the function with __attribute_const__ to enable better
-> > > > compiler optimization, as the result depends solely on its input and
-> > > > has no side effects.
-> > > > 
-> > > > While more efficient implementations may exist, further optimization is
-> > > > postponed until a use case in performance-critical paths arises.
-> > > > 
-> > > > Co-developed-by: Yu-Chun Lin <eleanor15x@gmail.com>
-> > > > Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
-> > > > Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
-> > > > ---
-> > > >   arch/x86/kernel/bootflag.c               |  4 ++--
-> > > >   drivers/hwmon/spd5118.c                  |  2 +-
-> > > >   drivers/i3c/master/dw-i3c-master.c       |  2 +-
-> > > >   drivers/i3c/master/i3c-master-cdns.c     |  2 +-
-> > > >   drivers/i3c/master/mipi-i3c-hci/dat_v1.c |  2 +-
-> > > >   include/linux/bitops.h                   | 19 ++++++++++++-------
-> > > >   6 files changed, 18 insertions(+), 13 deletions(-)
-> > > > 
-> > > > diff --git a/arch/x86/kernel/bootflag.c b/arch/x86/kernel/bootflag.c
-> > > > index 73274d76ce16..86aae4b2bfd5 100644
-> > > > --- a/arch/x86/kernel/bootflag.c
-> > > > +++ b/arch/x86/kernel/bootflag.c
-> > > > @@ -26,7 +26,7 @@ static void __init sbf_write(u8 v)
-> > > >   	unsigned long flags;
-> > > >   	if (sbf_port != -1) {
-> > > > -		if (!parity8(v))
-> > > > +		if (!parity_odd(v))
+On 4/4/25 10:42 AM, Luca Weiss wrote:
+> There's devices that don't have a DMIC connected to va-macro, so stop
+> setting the pinctrl in sc7280.dtsi, but move it to the devices that
+> actually are using it.
 > 
-> What is the benefit of this change all over the place instead of
-> adding parity_odd() as new API and keeping the old one (just letting
-> it call the new API) ?
+> No change in functionality is expected, just some boards with disabled
+> va-macro are losing the pinctrl (herobrine-r1, villager-r0, zombie*).
 > 
-> A simple
-> 
-> static inline int parity8(u8 val)
-> {
-> 	return parity_odd(val);
-> }
-> 
-> would have done the trick and be much less invasive.
-> 
-Yury has previously mentioned that adding multiple fixed-type parity
-functions increases his maintenance burden. IIUC, he prefers having a
-single interface in bitops.h rather than multiple ones.
+> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> ---
 
-He were reluctant to add three more functions like:
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-static inline bool parity16(u16 val)
-{
-    return parity8(val ^ (val >> 8));
-}
-
-static inline bool parity32(u32 val)
-{
-    return parity16(val ^ (val >> 16));
-}
-
-static inline bool parity64(u64 val)
-{
-    return parity32(val ^ (val >> 32));
-}
-
-But instead, we ended up with:
-
-static inline bool parity(u64 val)
-{
-    val ^= val >> 32;
-	val ^= val >> 16;
-	val ^= val >> 8;
-	val ^= val >> 4;
-	return (0x6996 >> (val & 0xf)) & 1;
-}
-
-static inline bool parity8(u8 val)
-{
-    return parity_odd(val);
-}
-
-But in the end, we introduced both parity(u64) and parity8(u8), which,
-IMHO, might be even more confusing than having consistent fixed-type
-helpers.
-
-Regards,
-Kuan-Wei
-
+Konrad
