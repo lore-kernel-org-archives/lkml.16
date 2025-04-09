@@ -1,130 +1,136 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F6825E464;
-	Wed,  9 Apr 2025 12:38:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61ACE1D54E9;
+	Wed,  9 Apr 2025 12:39:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744202306; cv=none; b=TceBLw3kDaeql4/GWUopwOtaZpAuN6SxwVC+l+1fmAjI+SCXzbUW2iQFSKIxg53UzS9RNJ4woXO2obD+h5HQ8+VJOKbEUZ4vfhyu85TE0liFOTUXweN+sQe0dPi+MngPVOcYcaYC67aEFNi1F1J33TyamQaZ4ZlV8e6Ko4hFF48=
+	t=1744202374; cv=none; b=VBdJhicV0SpPDBNAafT6+ihJ2O42wXO5sBWcSDGfcFH1cNiLyoVih6+j1gUztlL7bQuB9w4gLhgiYNiSmBtvsz+ELcTEjgDOQFRx4gnrQY2qInbjffPDZ3OOjqyssmLXRxytdR7tpW7EUxzA/37twwGQmOOnClBbtzmql05gRfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744202306; c=relaxed/simple;
-	bh=2SNTx5q9vFCxJlAR03UnE2J3anzFvwsnsMBxSHmXmrQ=;
+	s=arc-20240116; t=1744202374; c=relaxed/simple;
+	bh=aC6H39PURz2QUDBngdSNG8br7W7dWUtEUshtsY93R/Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RaIOXwBiqy4UFl+f5rNOnyNHPXs/h2DAXPv4u92rkOa6f8tfdDbt6E+q6jcmpVQeF1JIT9TRhpynBgHxrW8BtB7YJC81Zpn/oVfa5Tdh/ERU8RTxKxbZNt78RZrNluTO3RtSw9tcsuc61kQsNk3Oma580BoFWNWllXFcKJ+Hop8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ZImdO5Zr; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	 MIME-Version:Content-Type; b=RTyfOiklWtY2s0kPqwP17QzIpPlVRU4RYrXMiuDNgPdO1KSKKB8vR9+ToB+eLKPj46ZGUvuBBRJs6HE5xkbGnDH5slvy++g9IaDFLEr3RDU+5isXcHx87WLQlKaZOn8S+xqmIs+ACScdiwkIxuc7o0vzG60f3oCvx93biFNax3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=mhh8uLQo; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ZImdO5Zr"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6FCC04318F;
-	Wed,  9 Apr 2025 12:38:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744202302;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/3h/CgjlzmDrDN0HV7EfEznZDQLY9I1gv3XAhfIymWg=;
-	b=ZImdO5ZrqwVVxKyD54pYYb4FSjUHL141/D4x0ROezwRe+opQflXvF69dgqrlP9HDXeZhI5
-	+VNgSP2RuffvN/itbAEbaX4+8u4hpFh0tsjOKYcDp50w4d+eqgID6tSl+1ky79HYXpYzOF
-	/kiTdvusXKm+29KOjin+EXIRYyLnojp13HIf59/XaFJ4Z9eJTQUkh/+FC3HvNP8VPGvqcE
-	2VoCg0ZFAwHcsQEs3nbkFixNi/mCy4ypRRP2uD6lc+mUfFBJLiYcRvmzPSiqgdzXBPj5uj
-	cQ049gZefmnFmff0qqgJ2P+X5HPfezqatFgs+feAH57vne8egtiXwcc/g6LSmQ==
-Date: Wed, 9 Apr 2025 14:38:20 +0200
-From: Kory Maincent <kory.maincent@bootlin.com>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Simon Horman <horms@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Heiner
- Kallweit <hkallweit1@gmail.com>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>,
- Richard Cochran <richardcochran@gmail.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, Maxime Chevallier
- <maxime.chevallier@bootlin.com>, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org
-Subject: Re: [PATCH net-next v2 2/2] net: phy: Add Marvell PHY PTP support
-Message-ID: <20250409143820.51078d31@kmaincent-XPS-13-7390>
-In-Reply-To: <Z_ZlDLzvu_Y2JWM8@shell.armlinux.org.uk>
-References: <20250407-feature_marvell_ptp-v2-0-a297d3214846@bootlin.com>
-	<20250407-feature_marvell_ptp-v2-2-a297d3214846@bootlin.com>
-	<20250408154934.GZ395307@horms.kernel.org>
-	<Z_VdlGVJjdtQuIW0@shell.armlinux.org.uk>
-	<20250409101808.43d5a17d@kmaincent-XPS-13-7390>
-	<Z_YwxYZc7IHkTx_C@shell.armlinux.org.uk>
-	<20250409104858.2758e68e@kmaincent-XPS-13-7390>
-	<Z_ZlDLzvu_Y2JWM8@shell.armlinux.org.uk>
-Organization: bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="mhh8uLQo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1744202364;
+	bh=aC6H39PURz2QUDBngdSNG8br7W7dWUtEUshtsY93R/Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=mhh8uLQoI3p3NNc4h7btWWNPb/fPy5xOET+3hALsZt+ufJ4VFnK9G/jPiONDxABjH
+	 dhWA3dafoDcKauF+CcDNtzT/SBKik+arVAnRq3kS1rOGn7bkWdrrC39MjxiRJ0/l50
+	 p9wavx10I8fwQ9SpVKQtq8AxRo5Y4k1ve2FmCmntqe+mN2J6tEXEsz23B5IHBeNV4g
+	 hU6UO19UaYAxApKhvgEBfvbzdLYXBVDolm8+4Ld5uFSC2WzXJl0M5Hm8YHliW08bnb
+	 vKihmoVf+K5z6XRc1ZYWdqZMUAkSUeecLllqA2v42v9a9MqJB2MId+V6b4UzVnzNzV
+	 TTgvxp3dqvmHw==
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bbrezillon)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 3E67717E0702;
+	Wed,  9 Apr 2025 14:39:22 +0200 (CEST)
+Date: Wed, 9 Apr 2025 14:39:17 +0200
+From: Boris Brezillon <boris.brezillon@collabora.com>
+To: Philipp Stanner <phasta@kernel.org>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>, Gustavo Padovan
+ <gustavo@padovan.org>, Christian =?UTF-8?B?S8O2bmln?=
+ <christian.koenig@amd.com>, Felix Kuehling <Felix.Kuehling@amd.com>, Alex
+ Deucher <alexander.deucher@amd.com>, Xinhui Pan <Xinhui.Pan@amd.com>, David
+ Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Lucas Stach
+ <l.stach@pengutronix.de>, Russell King <linux+etnaviv@armlinux.org.uk>,
+ Christian Gmeiner <christian.gmeiner@gmail.com>, Jani Nikula
+ <jani.nikula@linux.intel.com>, Joonas Lahtinen
+ <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Tvrtko Ursulin <tursulin@ursulin.net>, Frank Binns
+ <frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>, Qiang Yu
+ <yuq825@gmail.com>, Rob Clark <robdclark@gmail.com>, Sean Paul
+ <sean@poorly.run>, Konrad Dybcio <konradybcio@kernel.org>, Abhinav Kumar
+ <quic_abhinavk@quicinc.com>, Dmitry Baryshkov
+ <dmitry.baryshkov@linaro.org>, Marijn Suijten
+ <marijn.suijten@somainline.org>, Lyude Paul <lyude@redhat.com>, Danilo
+ Krummrich <dakr@kernel.org>, Rob Herring <robh@kernel.org>, Steven Price
+ <steven.price@arm.com>, Dave Airlie <airlied@redhat.com>, Gerd Hoffmann
+ <kraxel@redhat.com>, Matthew Brost <matthew.brost@intel.com>, Huang Rui
+ <ray.huang@amd.com>, Matthew Auld <matthew.auld@intel.com>, Melissa Wen
+ <mwen@igalia.com>, =?UTF-8?B?TWHDrXJh?= Canal <mcanal@igalia.com>, Zack
+ Rusin <zack.rusin@broadcom.com>, Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Lucas De Marchi
+ <lucas.demarchi@intel.com>, Thomas =?UTF-8?B?SGVsbHN0csO2bQ==?=
+ <thomas.hellstrom@linux.intel.com>, Bas Nieuwenhuizen
+ <bas@basnieuwenhuizen.nl>, Yang Wang <kevinyang.wang@amd.com>, Jesse Zhang
+ <jesse.zhang@amd.com>, Tim Huang <tim.huang@amd.com>, Sathishkumar S
+ <sathishkumar.sundararaju@amd.com>, Saleemkhan Jamadar
+ <saleemkhan.jamadar@amd.com>, Sunil Khatri <sunil.khatri@amd.com>, Lijo
+ Lazar <lijo.lazar@amd.com>, Hawking Zhang <Hawking.Zhang@amd.com>, Ma Jun
+ <Jun.Ma2@amd.com>, Yunxiang Li <Yunxiang.Li@amd.com>, Eric Huang
+ <jinhuieric.huang@amd.com>, Asad Kamal <asad.kamal@amd.com>, Srinivasan
+ Shanmugam <srinivasan.shanmugam@amd.com>, Jack Xiao <Jack.Xiao@amd.com>,
+ Friedrich Vock <friedrich.vock@gmx.de>, Michel =?UTF-8?B?RMOkbnplcg==?=
+ <mdaenzer@redhat.com>, Geert Uytterhoeven <geert@linux-m68k.org>,
+ Anna-Maria Behnsen <anna-maria@linutronix.de>, Thomas Gleixner
+ <tglx@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, Dan
+ Carpenter <dan.carpenter@linaro.org>, linux-media@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+ linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+ etnaviv@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+ lima@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+ freedreno@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+ virtualization@lists.linux.dev, spice-devel@lists.freedesktop.org,
+ intel-xe@lists.freedesktop.org
+Subject: Re: [PATCH 1/2] dma-fence: Rename dma_fence_is_signaled()
+Message-ID: <20250409143917.31303d22@collabora.com>
+In-Reply-To: <20250409120640.106408-3-phasta@kernel.org>
+References: <20250409120640.106408-2-phasta@kernel.org>
+	<20250409120640.106408-3-phasta@kernel.org>
+Organization: Collabora
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdeitdduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnheptefgfeffgeelkeeugfejkeetveeffeelveetffefgeeuhfffjeejvdfgueeltdffnecuffhomhgrihhnpehgihhthhhusgdrtghomhdpsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghlohepkhhmrghinhgtvghnthdqigfrufdqudefqdejfeeltddpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduhedprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtohephhhorhhmsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhmpdhrt
- ghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhm
-X-GND-Sasl: kory.maincent@bootlin.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, 9 Apr 2025 13:16:12 +0100
-"Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
+Hi Philipp,
 
-> On Wed, Apr 09, 2025 at 10:48:58AM +0200, Kory Maincent wrote:
-> > On Wed, 9 Apr 2025 09:33:09 +0100
-> > "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
-> >  =20
-> > > On Wed, Apr 09, 2025 at 10:18:08AM +0200, Kory Maincent wrote: =20
->  [...] =20
->  [...] =20
-> > >  [...] =20
-> > >  [...] =20
-> > >  [...] =20
-> > >  [...] =20
-> > >  [...]   =20
->  [...] =20
->  [...] =20
-> > >=20
-> > > I don't spend much time at the physical location where the hardware t=
-hat
-> > > I need to test your long awaited code is anymore. That means the
-> > > opportunities to test it are *rare*.
-> > >=20
-> > > So far, each time I've tested your code, it's been broken. This really
-> > > doesn't help.
-> > >=20
-> > > If you want me to do anything more in a timely manner, like test fixe=
-s,
-> > > you need to get them to me by the end of this week, otherwise I won't
-> > > again be able to test them for a while. =20
-> >=20
-> > You could try again with Vlad patch adding support to ndo_hwtstamp_get/=
-set
-> > to the mvpp2 drivers.
-> > https://github.com/vladimiroltean/linux/commit/5bde95816f19cf2872367ecd=
-bef1efe476e4f833
-> > =20
->=20
-> Well, I'm not sure PTP is working correctly.
->=20
-> On one machine (SolidRun Hummingboard 2), I'm running ptpd v2:
+On Wed,  9 Apr 2025 14:06:37 +0200
+Philipp Stanner <phasta@kernel.org> wrote:
 
-...
-=20
-> So we can see that ptpdv2 is responding to the delay requests, but it
-> seems that ptp4l doesn't see them, but it is seeing the other messages
-> from the HB2 running in master mode. I don't have time to investigate
-> any further until later today, and then again not until tomorrow
-> evening.
+> dma_fence_is_signaled()'s name strongly reads as if this function were
+> intended for checking whether a fence is already signaled. Also the
+> boolean it returns hints at that.
+> 
+> The function's behavior, however, is more complex: it can check with a
+> driver callback whether the hardware's sequence number indicates that
+> the fence can already be treated as signaled, although the hardware's /
+> driver's interrupt handler has not signaled it yet. If that's the case,
+> the function also signals the fence.
+> 
+> (Presumably) this has caused a bug in Nouveau (unknown commit), where
+> nouveau_fence_done() uses the function to check a fence, which causes a
+> race.
+> 
+> Give the function a more obvious name.
 
-Ok, thanks for the tests and these information.
-Did you run ptp4l with this patch applied and did you switch to Marvell PHY=
- PTP
-source?
+This is just my personal view on this, but I find the new name just as
+confusing as the old one. It sounds like something is checked, but it's
+clear what, and then the fence is forcibly signaled like it would be if
+you call drm_fence_signal(). Of course, this clarified by the doc, but
+given the goal was to make the function name clearly reflect what it
+does, I'm not convinced it's significantly better.
+
+Maybe dma_fence_check_hw_state_and_propagate(), though it might be
+too long of name. Oh well, feel free to ignore this comments if a
+majority is fine with the new name.
 
 Regards,
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+
+Boris
