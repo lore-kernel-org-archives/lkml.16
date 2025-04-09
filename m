@@ -1,203 +1,220 @@
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2083.outbound.protection.outlook.com [40.107.96.83])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 686D117A319;
-	Wed,  9 Apr 2025 16:07:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.83
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744214879; cv=fail; b=JJeDyC2n/0rV9kjizNmbkuoIED0vpeZpnkJcDu/vzH3Q4t/b/ANSznKJhBCPNYc8lG7M5kWrPNccKHYKiGMQtwGk7FK9ZgUMR7Cvx9JRIcxfER3u04qW7tJ+mfZvBjaNceKYpzC+Po2YghPMI2eNCKz4ZLZs0vmtaxZY7EnNHAg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744214879; c=relaxed/simple;
-	bh=YaROIC+jxgTEaf0zlIIkX4yEhwmlhca4EVSE+d4eTws=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ZQXLx5dFzEZafZ5haA0X4RaSOn0j7ugF7ii0z+oSYa403/WM3TIhxI3weJ4S/tzPnq74MnD/B4EF1dwMjMAdzkmzGgUBxVEGQDG3avp4nWJy23vEdbXRjdFhovnJ8idAAPCFqrkgnoQvpccZx9BZ+ur9E89Ao54nk3yhmgEjWKw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=x1LMv1/b; arc=fail smtp.client-ip=40.107.96.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C40C31D5175
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 16:08:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744214900; cv=none; b=ifhOVkQce9GzQzhjxYyHOlGiWoOcITs1d2O5XCKGxXtLOdoLsCUZT9G9NBtFdrxtT1T7UpDHpy8jW5UlD4LMCclkMg2YzkzKcEhATHTZVlDkUzZLpdj7/ey3UTRAxQ8h9OvQm5fQDw6CerShPHrAOwg2YILhFfZTe9Kj45l5hso=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744214900; c=relaxed/simple;
+	bh=u88iK1Z2yhXsjmCslV466RjH4vgWiCfX1hsXNmpELU4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TbXAEKSBokH5top8sFlD4w3d5rZ+rA4+sJYCs6WCmSSzqY2G7RY5tFxznaA9RhkbpTLwEF8FWRy5ITLJYz0myKbQYVhTH0KbTobJCojeWz2SkRiydcGyfx6FK/BVsQztWKbrCeCrQFJUzwCyAL07oha4pNmp83KMx7uF8ZBhjZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UQoXkSEf; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="x1LMv1/b"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=h6ozzq+V4CaL1c70BCNX8OVPGWXHLhdfiD4i+ujrt/2Mbm/+FTkULdW2dS+BuXZL9cOl68rWIo9b0oeAGUUt5BEwsT0DHcOboTYlRlJMHia+MPYHilmZ8VpwXtrCiVDYcZcMtmMwaWG37EvcTYFtiaK89njNRnzRboWODu5qxfGbaQO2G6THcEmUn7EcbtXg2O+JmLVZ9b3Pd4IGk4rxnnmP5MIozLvkhu3Siu/geWmyu9QUmJgjW+PDuewxjdamh2zYjK8SuXBv7zzw/wnB44kcgFXiiZvNuENYlu+sKvCjroxj4zeRGQT9Y9elZBCO9lpDc7YLiqUK3a9uW2QeNg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rmfP52NbqTAYqJgijfY8BaJSM5aS4uPSrqUP54d4LPY=;
- b=mFdYcFfF80ZXxuj5P7T97FfKIYkC3GDtFA/N9jqg5ZwoKMiPaB2YfZn52/1I/1WmtyNVLY0RFojlK13c3GfbMGkryJnPKSIgy0UPgO3cwN/kEcT4MKilJgwrlLVhB7SqlhAafiuPCz2EALZkzCQ53YyWE851OMwF22bjkYbN7HaqW4AigWRQYLc/z+wEPt5X2xb/9KPvasbj3A+YBaKsd7S4RLmqI4NQZV9BdSQJEo/8lMISTnucNKoQ1SrMlN0wNZBz76QM5KXEepB93Opm0yVJ9W6Cv1HWW2HTVwEVHxgfUv6xaeNBXP1odR7oA2ECOGIlmB5RKtAVTkHjqZAO2w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rmfP52NbqTAYqJgijfY8BaJSM5aS4uPSrqUP54d4LPY=;
- b=x1LMv1/b3PsHEf8QpplJ62inbHmRFDjKLO+yFDIq8qt9WOAQkPdEpVQmxaUzpEOUFmCKRbzOw0K3muPJ+nZ9Wq5oWJXZcG3Jegahxv0nBmhdGtJ9VYaIoDFa1h1khfVredmkoCSNT19mA3htx01D8iZ366co2Rt3ROEBXXtF4Fs=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB5070.namprd12.prod.outlook.com (2603:10b6:5:389::22)
- by MW6PR12MB8663.namprd12.prod.outlook.com (2603:10b6:303:240::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.22; Wed, 9 Apr
- 2025 16:07:54 +0000
-Received: from DM4PR12MB5070.namprd12.prod.outlook.com
- ([fe80::20a9:919e:fd6b:5a6e]) by DM4PR12MB5070.namprd12.prod.outlook.com
- ([fe80::20a9:919e:fd6b:5a6e%5]) with mapi id 15.20.8632.017; Wed, 9 Apr 2025
- 16:07:54 +0000
-Message-ID: <6e5bf479-ee95-a996-5845-1f76730e2488@amd.com>
-Date: Wed, 9 Apr 2025 11:07:49 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v6 4/4] x86/sev: register tpm-svsm platform device
-To: Borislav Petkov <bp@alien8.de>, Stefano Garzarella <sgarzare@redhat.com>
-Cc: Jarkko Sakkinen <jarkko@kernel.org>,
- Dave Hansen <dave.hansen@linux.intel.com>, Peter Huewe <peterhuewe@gmx.de>,
- Jason Gunthorpe <jgg@ziepe.ca>, "H. Peter Anvin" <hpa@zytor.com>,
- linux-coco@lists.linux.dev, linux-integrity@vger.kernel.org,
- Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
- Joerg Roedel <jroedel@suse.de>, Dionna Glaze <dionnaglaze@google.com>,
- Claudio Carvalho <cclaudio@linux.ibm.com>,
- James Bottomley <James.Bottomley@hansenpartnership.com>,
- linux-kernel@vger.kernel.org, Dov Murik <dovmurik@linux.ibm.com>,
- Thomas Gleixner <tglx@linutronix.de>
-References: <20250403100943.120738-1-sgarzare@redhat.com>
- <20250403100943.120738-5-sgarzare@redhat.com>
- <20250408110012.GFZ_UBvOcEfEcIM4mI@fat_crate.local>
- <eqtiiphs6rtjo7nirkw7zcicew75wnl4ydenrt5vl6jdpqdgj6@2brjlyjbqhoq>
- <20250408112820.GBZ_UIVPp-LuIiVrIV@fat_crate.local>
- <o2u7p3wb64lcc4sziunr274hyubkgmspzdjcvihbpzkw6mkvpo@sjq3vi4y2qfl>
- <20250409102120.GCZ_ZKIJw9WkXpTz4u@fat_crate.local>
- <CAGxU2F7r_fWgr2YRmCvh2iQ1vPg30f-+W6FXyuidbakZkwhw2w@mail.gmail.com>
- <20250409113154.GGZ_ZaqgfRrrMij_Zm@fat_crate.local>
-Content-Language: en-US
-From: Tom Lendacky <thomas.lendacky@amd.com>
-In-Reply-To: <20250409113154.GGZ_ZaqgfRrrMij_Zm@fat_crate.local>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA0PR13CA0010.namprd13.prod.outlook.com
- (2603:10b6:806:130::15) To DM4PR12MB5070.namprd12.prod.outlook.com
- (2603:10b6:5:389::22)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UQoXkSEf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744214897;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=78AmE8RpcE4a72lQ1mWWnyl8tSqgeIRIaFNrpROmMX8=;
+	b=UQoXkSEf65vbljUlHRvM1NaZHh3RS0VA8DtvxLYuz0YTbBXA7kZilNzuJxBIvgxIe7GOdN
+	l1wtqngCI67WrPrcxuMJQmkTeg1wi/gXduocM1OO7Fi6SIn25FKpoO61CVYpoHkswoIFGQ
+	8Icw6BAOHfjEbPB/LS0v4dvlq/fMNB8=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-362-MpUd6322Mrqbw7ejdnbhtg-1; Wed, 09 Apr 2025 12:08:16 -0400
+X-MC-Unique: MpUd6322Mrqbw7ejdnbhtg-1
+X-Mimecast-MFC-AGG-ID: MpUd6322Mrqbw7ejdnbhtg_1744214895
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43ce8f82e66so43798785e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 09:08:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744214895; x=1744819695;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=78AmE8RpcE4a72lQ1mWWnyl8tSqgeIRIaFNrpROmMX8=;
+        b=dbuPJj4Zx9fopdvaYL2o7NxXMG8/S2/4joPuzLP5+WY2LrsAHB038lkE2LeBgQqVnT
+         Dt0Tzrw2nzY/Ds1T7gF6xsF/vdF+5L20+sFn/kE5fXp6ozo4LNuYuQ4IqcMph5biQbQQ
+         mPkqJyAIT2qcu27ZJhmV7djkWfbQ9P89NS/HS5EWM+SIb54mz7ysRnI1IA0ppH79VRY2
+         dg+rcL1J3iANI+UWCw8ClzYWd1PBed47zbiqV6swQihV1/RMAu17pEohoY5xPsoWlrWV
+         q1mr7XewtgnyPg9CRTWGcO/jPKp7giRUGDY6g3wrZg0XMP6JazWcC6UDhW/YoTgqv3aD
+         AHNw==
+X-Forwarded-Encrypted: i=1; AJvYcCWDKbyuEDylxWJGUdgjo1xHjOXgca1h/EA5xCsWVZT24t+zzCeK6v45bvYsJxwmKMwihy0FiUWD828uOe0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzaKUrZCDPZxupYosIfT+PwXIeImFG4MSB3kgolZjtpY6uKrvzo
+	81iGzmdSUaRLOz/NWYd5LDiNwKM44C2C2r22oVvlO+WpzonlKeQcHA5oQJx0t4GFTF+AzNZAlJy
+	4ezNvhRkXxUrHi8V2UNJikiYHYm4qG0dqdQOvRXMv55mXkfni7W558/d6sQNJgA==
+X-Gm-Gg: ASbGncuS3Sf07LKz3FpaB9URcpYVKeKj0Yxl8NMbWvyM/WCl8dmmm1YcRDdgqgSjCqK
+	SKwLG7ooEfkym5pkxCWsdyMzRG2Sx2muYK53uwKGYIq7jXh1Jkcj1glOYl5yOePbHEmVr5q0wJr
+	fHuhCq0J/lsyo0UiZ0+Vv5UoksPK09bTtdr8dFO8BJubQ2jGAULF2qfv+JFbsjOAnxOQA4YPP5E
+	WX9w5b7ReWiIrHCT5OZ5N9PQqndjnnbEI+rE5FNGDY95gLSSWzS5dYZcId53g3Z+KZxYNcVxqgx
+	pc46xA==
+X-Received: by 2002:a05:600c:8518:b0:439:86fb:7340 with SMTP id 5b1f17b1804b1-43f1ed693ebmr44247975e9.30.1744214895079;
+        Wed, 09 Apr 2025 09:08:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHa8WvXPvdR9mW4X+Ki70qXHwL+hlbwdViRmCYAc7xQXDBe/sMhsY1YIaOF1Gj1cQgn8/YTXA==
+X-Received: by 2002:a05:600c:8518:b0:439:86fb:7340 with SMTP id 5b1f17b1804b1-43f1ed693ebmr44247295e9.30.1744214894624;
+        Wed, 09 Apr 2025 09:08:14 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d893774aasm2066312f8f.30.2025.04.09.09.08.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 09:08:13 -0700 (PDT)
+Date: Wed, 9 Apr 2025 12:08:10 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Daniel Verkamp <dverkamp@chromium.org>,
+	Halil Pasic <pasic@linux.ibm.com>, linux-kernel@vger.kernel.org,
+	linux-s390@vger.kernel.org, virtualization@lists.linux.dev,
+	kvm@vger.kernel.org, Chandra Merla <cmerla@redhat.com>,
+	Stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
+	Thomas Huth <thuth@redhat.com>, Eric Farman <farman@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Wei Wang <wei.w.wang@intel.com>,
+	"stefanha@redhat.com" <stefanha@redhat.com>,
+	Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v1] s390/virtio_ccw: don't allocate/assign airqs for
+ non-existing queues
+Message-ID: <20250409120320-mutt-send-email-mst@kernel.org>
+References: <33def1b0-d9d5-46f1-9b61-b0269753ecce@redhat.com>
+ <88d8f2d2-7b8a-458f-8fc4-c31964996817@redhat.com>
+ <CABVzXAmMEsw70Tftg4ZNi0G4d8j9pGTyrNqOFMjzHwEpy0JqyA@mail.gmail.com>
+ <3bbad51d-d7d8-46f7-a28c-11cc3af6ef76@redhat.com>
+ <20250407170239-mutt-send-email-mst@kernel.org>
+ <440de313-e470-4afa-9f8a-59598fe8dc21@redhat.com>
+ <20250409065216-mutt-send-email-mst@kernel.org>
+ <4ad4b12e-b474-48bb-a665-6c1dc843cd51@redhat.com>
+ <20250409073652-mutt-send-email-mst@kernel.org>
+ <5cd8463e-21ed-4c99-a9b2-9af45c6eb7af@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5070:EE_|MW6PR12MB8663:EE_
-X-MS-Office365-Filtering-Correlation-Id: c98c1d90-f2db-475d-5ca3-08dd7780afc5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZG1jd1JSWWt1d0F0Z0JuNnQ4K05kbXpsNU9VTDF6bWU5R01ZYzNsaE81UUl2?=
- =?utf-8?B?RklmbVM1VGJYeUlxWUVXaGQyd2M2bmxvUlFoa3huT3h6UGVxZ0FMSkJGZVg5?=
- =?utf-8?B?TGFxeDBnZzZrSTJMb253Si9mZk5xMkNHL0M3Y0M3MlY2VXVXQ3hVdzdUZFBD?=
- =?utf-8?B?a1BJdnhJQld4RGZqUGdVVUtMWXJnTmdGdzd2ZmJ5S3hPZzV5YU5iVEZjVkpl?=
- =?utf-8?B?S3VsMmJpUzMzUzlsV3hmbHduMXEzYjM5d3d5Z1JlcnRkZjRvMmRhdDFIZ0oz?=
- =?utf-8?B?SmN1NlUrRmtvLzFDMjhnTndGaThVMmlrOStBZXJ2L2UxMXpVUTQyV2U0cks5?=
- =?utf-8?B?V1Q4NTgvNXZrSU5nbVMyODhobC9MK2pDOUFZTGFEQ0pkMUFxbzB1dXhYc1d1?=
- =?utf-8?B?TUtJWlh5Q0RLZzEwOS9WdlhpbEJEbzd5R3IwZXdIMlBQTjRUZGhJb3o3UVdW?=
- =?utf-8?B?YXJORG5HS2ZZQWFsV2U1QmNsT2FEaFYxbkJwakZybTNCZGZyV3JiVzFwbEZJ?=
- =?utf-8?B?MHZvY3JHTUZpSUdYOUJIWlZqeWs5c0FFUGlxUTBTVG9uOTVkb0orOUthVFYr?=
- =?utf-8?B?cUt3c3Jwbk50VjhhdGpaMmFyMEt2QVY1NThOMDFUa0dIMzcvODJBRjFmc3Rx?=
- =?utf-8?B?ckFRSExRclRHVElmM0lObzQ4bDB6cWJWc2JkRnlBQkhhWHFkT2xTN1dKVXFY?=
- =?utf-8?B?bGhXRXpZdU1SNXhVcCtobFQ2eVFWL1J4M1YxZ2UwbUZMVGV0YXBlTkx1M3pO?=
- =?utf-8?B?YTBFTkhadGd4MVhyNzVWcXhCQmxkQ05zdUZTRHMrVEg0b0g3bDFRbHphWmYz?=
- =?utf-8?B?UW1tWDgxWjE0akZ0M1R6V0RtMnh6cG9qT01OU21hNUlSelJjbjhaTWNYOHdi?=
- =?utf-8?B?M0lva01Id1MvTkFLTFFreHFnNUtjR1NpQUNUM1ZSc3ZBRDdGa3ByS2pnc3Q1?=
- =?utf-8?B?dWdhakk4bmxSdjJvZFB1azl6eS9saXBuclFrUG50M1hwQlJXTUpIa21lNFRL?=
- =?utf-8?B?Qnh1MWNEVEZaYnVyNzdEQkNQT2E5UFdCd2YzL3J4Ym5GTVBPRlVJWE85azR3?=
- =?utf-8?B?SmZMQmNxcUpiU2k0SlI3YUM3YzJadUVIUGp2blhaQXNjVDRwNWtndldXdVlR?=
- =?utf-8?B?NUowYk1YYTk5Qys1UTh4YnFURGxHdVM1RHVFTUMzMldQeXcrU1FjVFlvN2Z4?=
- =?utf-8?B?RXFXdmo2RFlhbG5obFZkQzRmcThsZlZWQnJkUjhSYlZHSlIzcnAwM29vcGhx?=
- =?utf-8?B?WU13Y1NZejZVY1Z0aDdjc294QnFyd2pya2JYbzNad1lrZjFPN3dPMTZCYTNH?=
- =?utf-8?B?RW9tNVZZc2dBZEM1WWNXdFJNMGY5OEM1bkZLNTk2cXk0NGtXRWJ1NlArTFlR?=
- =?utf-8?B?dzN1K3d6SXNPQ1R2NUlTSi9FeTJCcHROZjFkS2FVSVp3c2ZSMjdDNThOMXRi?=
- =?utf-8?B?S1BhSDZFQU9LbzRUZVg3cUlzRHFMSmdPVFBXVGRqTk04TTFLRDlqdmcvNEZm?=
- =?utf-8?B?cTk0WHJDa0kxS2xJR1JqcTdJb0NSY0ErOWxyY3pjcVFuVTBJc2NsNTBmVGlu?=
- =?utf-8?B?OS9iOUpRTkhYbTR5R0x4WVVLSWsyQWp2TlQ3QUdIckkwekJMejBpVk5qR3ZS?=
- =?utf-8?B?Y0cvZUg1cjAzUTZsUThHV05YeFk2TkpRWjFURm8rRlNQK09GRzlTbVNXL0gz?=
- =?utf-8?B?S0ZEVEVPa1Z3aHJuaW5KMDgxVTV6QlNiRUJ0d3NJbUxoTXpoeGxuZ0FRMTc2?=
- =?utf-8?B?ZnRhczNQajJwNFlHQ0xqMzRYUng4UWFCQWFIcVZXeGl1U3Q3bWMwRmNjNWg3?=
- =?utf-8?B?cUlOazZHQlFleEVxa3hUc04waG1DT0VIVFMwVk1EVEtjRzhxUDBPUUZNeG5Z?=
- =?utf-8?Q?vahZsGzIk1vrt?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5070.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?REpFbGlWaEtPNzBMTlJRaURORkdKZEtwNE84SjZ1VDNtL1d4ekwvLzAyTlpI?=
- =?utf-8?B?VStzRGkzcFdxcENwb21UcnVHZ0ZzbWNhNUVLRUJSdXAwQjNMV2ppOUlVTnBV?=
- =?utf-8?B?QW9CUmZST3lIQ3ZETmtLV2MwNmE4MWRjYW1zbHhXbVRoZHF1MytRYmZTNFl3?=
- =?utf-8?B?Vy9uNjI1Z0p3ak5aQy8yV2J2L1JEZUVQWktmcHJYQ1BkUUdURjdySjYyRlZD?=
- =?utf-8?B?clh2MlJVS3BnaHE2Z0RSKzlpM0tlckNacS9kQmhlZ3BrZG92YU91Y0ZVRmhH?=
- =?utf-8?B?SjhSeVRTL3k4VVJiZExTc25SbklxRVppQTVjcm1CbEtCZ2JMNHRSZlowVkxr?=
- =?utf-8?B?TXNITFpNTUNlVmEwYVRYY1paOE9mMVUwbnMrYUYzRnZETVVXdjZBb1NnaHRN?=
- =?utf-8?B?NndqVDVQR1o3Z2dlS0Q5REU1c2EyK3BwcHkyWUlrTmdDLzJ6Z3JxRzNreHJS?=
- =?utf-8?B?QlBraysrTXZSWjh5WFQzeUtMRlVFci8rejIrbkdPUHRaUTBGTnhuSjNrTjJa?=
- =?utf-8?B?WW9EUHZXKzdwWGxDRG1JOEJpbGlEdWdwY2ZiUmRnSUUrTVN2MzJGQ01ud3FS?=
- =?utf-8?B?SFVzemxaRk1Cc011UG1LUktJVzJQV2dMbTBYUjU4dGFOeUNDeFNSdHBtZTho?=
- =?utf-8?B?RHNqOVpxUXRwajNvbGJJYUF2VHlPdVBYWitoQ0pHbVZ2Qzg1bTNoS3V0YVJX?=
- =?utf-8?B?VVBGaUtabmtYTE0vbFVYZm02b0tIMHJRelVoMWgxYVdwOUdYamhuRlZmS09F?=
- =?utf-8?B?aGdDbm9jYkgzbmgyNkhzaCtDcVNLL0lyalcrWEFQWXlvbjhQSTRmNW5NeFlR?=
- =?utf-8?B?Qm8xa01GbFBWYUpoM0hFY2dXTldjMkJjMHdSUlpoOU9kbCtsNjdiNXBwKzc0?=
- =?utf-8?B?UlBZUWZKQVNGVVdLalJXdnZmVE1CeE82RC82QnBubEYvVWdtUElZa1lyVFJ2?=
- =?utf-8?B?dGVFQVpWTTAvdURycE4wYjdtTlVOVXdacVBFUnZWajJvc3cxMFhQbjRBMFhr?=
- =?utf-8?B?Q01KSmI1RlozU2llWmQwbEtxaDFnUFdIRWttNlBvY2s5VVllci80RStvOXBl?=
- =?utf-8?B?QjdiVTZEUnBubUk0OWZiMzcvRGdnNTBUbXU2dCtlT1g1UStmQkdqSU1kRDkv?=
- =?utf-8?B?WVNJV2RJWk1UbjJMWWVGNGdWajVaenJoeGlBSWsrM3V1L2NXVHBnTzFsMHFH?=
- =?utf-8?B?SUNRTDBld0kza1JhS1F5dWdwUjJvZE1KQUMvbWpSYmhIUytwVVF2SHRqc2p3?=
- =?utf-8?B?djROODlKcXRPNitEeGU5Z2xwbk9vaVRQQW15dHI2NjFzUlFlaElBSzk0dzN0?=
- =?utf-8?B?dXhKdkRKb1RNUUhqVXJVYUNvcTF5aUs2VmJ2MWgrbDk0bk5QNmVKblJvQ2JX?=
- =?utf-8?B?Z3poN3p3Vkp4RUtVUnN1Y09jSGU4MjJMUG5vL2UxRUpqck83QmgwZGRHZ1V4?=
- =?utf-8?B?OXhFdW5NS3JjckdjVzlvQ0ppemNxY0FHdGRLMnFybHA4V0kyUUtselh6Nmdr?=
- =?utf-8?B?TjBMYlQvejdEWHFqaXRXdzdVTUZ5OENMSDdkZGI2Nm9qcWRsS1BHRTlwNVJs?=
- =?utf-8?B?VFcyRFExTlI4WU00U0Q0aU5BUTdiell1eno3N2FNdkdRRjZibHpHcjN2VzZW?=
- =?utf-8?B?bm5ma0ZKaGZ5ZFFiZWJlNVBSbmxyL1FPL3BrVkhrTW93VVpPWnZEVm9lekxi?=
- =?utf-8?B?QmlVYWRmYkc2amxFVWhoZWtjbU12THp4MFgxZGVPMGorOFdOUDZUSnNMeHN4?=
- =?utf-8?B?b09HbmszUW1JeW1BMm9jTGJVSVJVSzk2WGFtVWQvKzRlS0xiQ3VFTWowQjFh?=
- =?utf-8?B?cHB1QVJBTy8wQWR5S20xbFV2S3IrRVhpRHI5emR5RWUybXhCUHlDVFFiRVEz?=
- =?utf-8?B?Z1ZISFlXSHR6KzBkY1pqNVhROW85SnVzeUhTZzdJWFo3MnowVExhcXhNZ09C?=
- =?utf-8?B?MjNmYVNDWkE5cWprZGRObm9id3JibWdGSnhaUjRHbCtkWUl4S0hzOC9xc1Zo?=
- =?utf-8?B?UVc1djA2NDlvY0xMRGljbWhRR01oVnBMdmpaNGFHZ2tmYmtKbC9tdU9mZ2M1?=
- =?utf-8?B?UThvbU5MVVM4M3lHc1hRYzFVTm1sQU12Q2g0Z1lJZ01pNkpMYnhTemVieFRv?=
- =?utf-8?Q?+s5L0teRvyH+E8IxVExAGZkmm?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c98c1d90-f2db-475d-5ca3-08dd7780afc5
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5070.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 16:07:54.6569
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: m/Iv/y3gvy7VXVkSazlNq/v3MPhN5DWeoHvokjyy5/I3dsJLkMl274gyzNuqmvkTHvZ4GBzqiIycCTpOm7kzUg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB8663
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5cd8463e-21ed-4c99-a9b2-9af45c6eb7af@redhat.com>
 
-On 4/9/25 06:31, Borislav Petkov wrote:
-> On Wed, Apr 09, 2025 at 12:43:01PM +0200, Stefano Garzarella wrote:
->> Sorry, maybe I missed something.
->>
->> tpm_svsm.c registers the driver with module_platform_driver_probe().
->>
->> Someone (the platform I guess) has to register the device by calling
->> platform_device_register(), as we already do for example for
->> sev_guest.
+On Wed, Apr 09, 2025 at 02:24:32PM +0200, David Hildenbrand wrote:
+> On 09.04.25 14:07, Michael S. Tsirkin wrote:
+> > On Wed, Apr 09, 2025 at 01:12:19PM +0200, David Hildenbrand wrote:
+> > > On 09.04.25 12:56, Michael S. Tsirkin wrote:
+> > > > On Wed, Apr 09, 2025 at 12:46:41PM +0200, David Hildenbrand wrote:
+> > > > > On 07.04.25 23:20, Michael S. Tsirkin wrote:
+> > > > > > On Mon, Apr 07, 2025 at 08:47:05PM +0200, David Hildenbrand wrote:
+> > > > > > > > In my opinion, it makes the most sense to keep the spec as it is and
+> > > > > > > > change QEMU and the kernel to match, but obviously that's not trivial
+> > > > > > > > to do in a way that doesn't break existing devices and drivers.
+> > > > > > > 
+> > > > > > > If only it would be limited to QEMU and Linux ... :)
+> > > > > > > 
+> > > > > > > Out of curiosity, assuming we'd make the spec match the current QEMU/Linux
+> > > > > > > implementation at least for the 3 involved features only, would there be a
+> > > > > > > way to adjust crossvm without any disruption?
+> > > > > > > 
+> > > > > > > I still have the feeling that it will be rather hard to get that all
+> > > > > > > implementations match the spec ... For new features+queues it will be easy
+> > > > > > > to force the usage of fixed virtqueue numbers, but for free-page-hinting and
+> > > > > > > reporting, it's a mess :(
+> > > > > > 
+> > > > > > 
+> > > > > > Still thinking about a way to fix drivers... We can discuss this
+> > > > > > theoretically, maybe?
+> > > > > 
+> > > > > Yes, absolutely. I took the time to do some more digging; regarding drivers
+> > > > > only Linux seems to be problematic.
+> > > > > 
+> > > > > virtio-win, FreeBSD, NetBSD and OpenBSD and don't seem to support
+> > > > > problematic features (free page hinting, free page reporting) in their
+> > > > > virtio-balloon implementations.
+> > > > > 
+> > > > > So from the known drivers, only Linux is applicable.
+> > > > > 
+> > > > > reporting_vq is either at idx 4/3/2
+> > > > > free_page_vq is either at idx 3/2
+> > > > > statsq is at idx2 (only relevant if the feature is offered)
+> > > > > 
+> > > > > So if we could test for the existence of a virtqueue at an idx easily, we
+> > > > > could test from highest-to-smallest idx.
+> > > > > 
+> > > > > But I recall that testing for the existance of a virtqueue on s390x resulted
+> > > > > in the problem/deadlock in the first place ...
+> > > > > 
+> > > > > -- 
+> > > > > Cheers,
+> > > > > 
+> > > > > David / dhildenb
+> > > > 
+> > > > So let's talk about a new feature bit?
+> > > 
+> > > Are you thinking about a new feature that switches between "fixed queue
+> > > indices" and "compressed queue indices", whereby the latter would be the
+> > > legacy default and we would expect all devices to switch to the new
+> > > fixed-queue-indices layout?
+> > > 
+> > > We could make all new features require "fixed-queue-indices".
+> > 
+> > I see two ways:
+> > 1. we make driver behave correctly with in spec and out of spec devices
+> >     and we make qemu behave correctly with in spec and out of spec devices
+> > 2. a new feature bit
+> > 
+> > I prefer 1, and when we add a new feature we can also
+> > document that it should be in spec if negotiated.
+> > 
+> > My question is if 1 is practical.
 > 
-> Maybe that platform device thing is the wrong approach. Why does the core code
-> need to register some dummy platform device in the first place? Why can't
-> drivers/char/tpm/tpm_svsm.c probe and init without it?
-
-I think the platform device is the right approach (just like we do for the
-sev-guest driver), but I think we should only register the device if an
-SVSM is present. Then let the vTPM driver probe routine check if the SVSM
-vTPM support is present.
-
-So the vTPM driver wouldn't change, just snp_init_platform_device():
-
-	if (snp_vmpl && platform_device_register(&tpm_svsm_device))
-
-Looking at the message that is issued after, maybe it should read
-"devices" now.
-
-Thanks,
-Tom
-
+> AFAIKT, 1) implies:
 > 
+> virtio-balloon:
+> 
+> a) Driver
+> 
+> As mentioned above, we'd need a reliable way to test for the existence of a
+> virtqueue, so we can e.g., test for reporting_vq idx 4 -> 3 -> 2
+> 
+> With that we'd be able to support compressed+fixed at the same time.
+> 
+> Q: Is it possible/feasible?
+> 
+> b) Device: virtio-balloon: we can fake existence of STAT and
+> FREE_PAGE_HINTING easily, such that the compressed layout corresponds to the
+> fixed layout easily.
+> 
+> Q: alternatives? We could try creating multiple queues for the same feature,
+> but it's going to be a mess I'm afraid ...
+> 
+> 
+> virtio-fs:
+> 
+> a) Driver
+> 
+> Linux does not even implement VIRTIO_FS_F_NOTIFICATION or respect
+> VIRTIO_FS_F_NOTIFICATION when calculating queue indices, ...
+> 
+> b) Device
+> 
+> Same applies to virtiofsd ...
+> 
+> Q: Did anybody actually implement VIRTIO_FS_F_NOTIFICATION ever? If not, can
+> we just remove it from the spec completely and resolve the issue that way?
+
+Donnu. Vivek?
+
+Or we can check for queue number 1+num_request_queues maybe?
+If that exists then it is spec compliant?
+
+
+> -- 
+> Cheers,
+> 
+> David / dhildenb
+
