@@ -1,83 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C847725E476;
-	Wed,  9 Apr 2025 15:16:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A689069D2B;
+	Wed,  9 Apr 2025 15:17:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744211767; cv=none; b=pnck+Lb427/MIsOheCJKjl/EgOXEJ5fGBC+X8ARQZ7VghF6Pn2DmcOGJN8Rk8RYvXxp9I7bdIimIZfCX/fLO4kwb6zwK2lG92wIVbQ99Uv/aZ58mRo2cbxW/TbkI4HNK/kjG5RGCKwgLY4mh04YBSsiOXAgiFMvMi9UiZyLe2cQ=
+	t=1744211876; cv=none; b=SlgChnB+kDxXq0XV2QgINkXUQy+3WgQF8H9NnpukwlMIEYM63CuXbMwuSM6JkQ1R6ZCVX+y0lcY36kITI1raF6HtonEj2qFLcEhaTbHUgAtxqIT5Esr5FhlucgV0jsDBP19tPyhYtnMSnoNWtWJycNn8o81JCmN+AbNGCjrC6DQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744211767; c=relaxed/simple;
-	bh=DKKmY2V8mvcFiDPGL8AqRokOoZks78KJFsmlJwP4lzg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=V4sdgLScvDQV/AdX4lEE3aK9banfuT9R08Pz8P4oSuAo7u/ybSoFRTQNxzxpQ+HQKY6+Le0RSvYXLpiWGnehuCZ3uxN3K9kz1IVQ6cffsSQpZrLkEy9Q62OtLj/heMTYUP6GL3GeD0J3hTuAd1rM5zOdPptXSjEeaXYsx39ZOF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=prwWxa2j; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744211876; c=relaxed/simple;
+	bh=B6CnZZxOmRj9WjoB7zj7+BLt3gdS8mqjcbG4sbdSz5k=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=PzrD1bk67ABiiDFnoaCp6fWJPvZtnnfu+Uncub5Ufurc1BoPMOI41SCWBNE1FGWXwwVTZNisTvw3RQT92evyPglQNxIRkOBXoaQQ1FsrgpCI6VcFqy7MtDuTEeeArq5evJuYcG0cNx94PDo6z7FDz6tnTCgeDG4yTVyMG67dHCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZudEVGyV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="prwWxa2j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D09C6C4CEE2;
-	Wed,  9 Apr 2025 15:16:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZudEVGyV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC3CEC4CEE2;
+	Wed,  9 Apr 2025 15:17:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744211766;
-	bh=DKKmY2V8mvcFiDPGL8AqRokOoZks78KJFsmlJwP4lzg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=prwWxa2jeOysxWDkTt9VgGDKrkB1xLCe7tUzVro3a+2ivcoJyEDhBTgRYCedqGMsY
-	 /CnEI4jUGLnsV2TUkK1rNK4WNfYFQL2Mrb2hjpNCPEZZhF0m63BxJ4bw0iQHA9ecu0
-	 dHqsT1XpHVXFKNcLllHD+vC0a49v0hEnXLZdOVx0I7Cv4JTuhABuLEtTP7ae8lo7Fx
-	 5pyziH8b5DwUFkkwc4mydVA5KBBFHZoLIdz6VTjVzH18YcXdQA+ymIMi4VuRNegXdJ
-	 yAAjcNfasD7pqptxmXs6q7Cw5I3Rgkn7MRdgP4JPm9xKa1VNxyS1ZL3MeDpo+ym9dW
-	 0jd0DHZdZbkXw==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Michal Nazarewicz <mina86@mina86.com>,
-	Kyungmin Park <kyungmin.park@samsung.com>,
-	iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] [v4] dma/contiguous: avoid warning about unused size_bytes
-Date: Wed,  9 Apr 2025 17:15:42 +0200
-Message-Id: <20250409151557.3890443-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	s=k20201202; t=1744211876;
+	bh=B6CnZZxOmRj9WjoB7zj7+BLt3gdS8mqjcbG4sbdSz5k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=ZudEVGyVTVqKJEXjfUOMN0q53Rs+fb13Tyxnu5nKHUFpP5TjefHF4RyfHZM37oiJJ
+	 UceMCe6PkFwazZdBel2mQOUdPca4uD6UVROcd7d8f1vtTmheTsaSrT4EtIWm3VcAcb
+	 VVD7GQWgIC+ik/IS36cIuxepH8887a/8oGw/05u1+mJaqv1FoXhjHJOMaMOLPAqxXn
+	 o7HwhF8ncBwsZZkoG+2nLTPyTVA+S6r9CAXkFIxDLgZ8pdM58/3qdhpzOsjnkxgNxy
+	 /ZaDUlnwEHRNOAUb3Od2Al/G8bGB1kxsGdiM9rgJ3wIh+SibyOfiglTRJebyEIToCh
+	 1bIzHBi1eRplQ==
+Date: Wed, 9 Apr 2025 10:17:54 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Mike Looijmans <mike.looijmans@topic.nl>
+Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Michal Simek <michal.simek@amd.com>, Rob Herring <robh@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] pcie-xilinx: Wait for link-up status during
+ initialization
+Message-ID: <20250409151754.GA283974@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409144930.10402-1-mike.looijmans@topic.nl>
 
-From: Arnd Bergmann <arnd@arndb.de>
+Please make the subject line match previous changes to this driver.
+See "git log --oneline drivers/pci/controller/pcie-xilinx.c"
 
-When building with W=1, this variable is unused for configs with
-CONFIG_CMA_SIZE_SEL_PERCENTAGE=y:
+On Wed, Apr 09, 2025 at 04:49:24PM +0200, Mike Looijmans wrote:
+> When the driver loads, the transceiver may still be in the state of
+> setting up a link. Wait for that to complete before continuing. This
+> fixes that the PCIe core does not work when loading the PL bitstream
+> from userspace. There's only milliseconds between the FPGA boot and the
+> core initializing in that case, and the link won't be up yet. The design
+> only worked when the FPGA was programmed in the bootloader, as that will
+> give the system hundreds of milliseconds to boot.
+> 
+> As the PCIe spec allows up to 100 ms time to establish a link, we'll
+> allow up to 200ms before giving up.
 
-kernel/dma/contiguous.c:67:26: error: 'size_bytes' defined but not used [-Werror=unused-const-variable=]
+This sounds like there's still a race between userspace loading the PL
+bitstream and the driver waiting for link up, but we're just waiting
+longer in the kernel so userspace has more chance of winning the race.
+Is that true?
 
-Change this to a macro to avoid the warning.
+> @@ -126,6 +127,19 @@ static inline bool xilinx_pcie_link_up(struct xilinx_pcie *pcie)
+>  		XILINX_PCIE_REG_PSCR_LNKUP) ? 1 : 0;
+>  }
+>  
+> +static int xilinx_pci_wait_link_up(struct xilinx_pcie *pcie)
+> +{
+> +	u32 val;
+> +
+> +	/*
+> +	 * PCIe r6.0, sec 6.6.1 provides 100ms timeout. Since this is FPGA
+> +	 * fabric, we're more lenient and allow 200 ms for link training.
+> +	 */
+> +	return readl_poll_timeout(pcie->reg_base + XILINX_PCIE_REG_PSCR, val,
+> +			(val & XILINX_PCIE_REG_PSCR_LNKUP), 2 * USEC_PER_MSEC,
+> +			200 * USEC_PER_MSEC);
 
-Fixes: c64be2bb1c6e ("drivers: add Contiguous Memory Allocator")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-v4: fix type mistake from v3
-v3: use a macro instead of constant
-v2: fix spelling mistake.
----
- kernel/dma/contiguous.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+There should be a #define in drivers/pci/pci.h for this 100ms value
+that you can use here to connect this more closely with the spec.
 
-diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
-index 055da410ac71..8df0dfaaca18 100644
---- a/kernel/dma/contiguous.c
-+++ b/kernel/dma/contiguous.c
-@@ -64,8 +64,7 @@ struct cma *dma_contiguous_default_area;
-  * Users, who want to set the size of global CMA area for their system
-  * should use cma= kernel parameter.
-  */
--static const phys_addr_t size_bytes __initconst =
--	(phys_addr_t)CMA_SIZE_MBYTES * SZ_1M;
-+#define size_bytes ((phys_addr_t)CMA_SIZE_MBYTES * SZ_1M)
- static phys_addr_t  size_cmdline __initdata = -1;
- static phys_addr_t base_cmdline __initdata;
- static phys_addr_t limit_cmdline __initdata;
--- 
-2.39.5
+Maybe there's a way to use read_poll_timeout(), readx_poll_timeout(),
+or something similar so we can use xilinx_pcie_link_up() directly
+instead of reimplementing it here?
 
+> +}
+> +
+>  /**
+>   * xilinx_pcie_clear_err_interrupts - Clear Error Interrupts
+>   * @pcie: PCIe port information
+> @@ -493,7 +507,7 @@ static void xilinx_pcie_init_port(struct xilinx_pcie *pcie)
+>  {
+>  	struct device *dev = pcie->dev;
+>  
+> -	if (xilinx_pcie_link_up(pcie))
+> +	if (!xilinx_pci_wait_link_up(pcie))
+>  		dev_info(dev, "PCIe Link is UP\n");
+>  	else
+>  		dev_info(dev, "PCIe Link is DOWN\n");
