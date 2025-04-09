@@ -1,70 +1,117 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1CCE1D6DBF;
-	Wed,  9 Apr 2025 18:11:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB94727703E;
+	Wed,  9 Apr 2025 18:15:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744222263; cv=none; b=sYATA2EFNOtWJ0Ry0lkcdCy/jhCaTviN3cstDuYOIuFFsc8IocIwWiNvBfWoCJrHBz2GGCETpeSF3UbDvCCUVquGynEKfo/x+ws51L8I/ExtOtzt+Qgz8ajCQOk8d/rwCWXu30DjAIXErOvF5t1kFC1zF7jOcYm+QePgComzhMs=
+	t=1744222515; cv=none; b=hwJxHzKHrK13CqT9O6Z6+zMUqeHVGSLeCTwkrd5lcOSBJJ0BQtFXnqCg8MqPnTRfz4c7gJs8bsOjWCg25OyN12Y1xh86t+qoXNVjHJ2glcp5YLAhXFJ48RoF8zMsOeqpsRdOFp4ukwu2GgDVXRc/cVXUtkaXMwmJ2m79PhMSh1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744222263; c=relaxed/simple;
-	bh=dHvJ9+eEjlF71dEQbog68jYNzXGSmn/QePJdRg+RP0Q=;
-	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
-	 Subject:From:Cc:To:Date; b=FXNJgglYs6BV0FKM6XrNaCvzNlSpRvyOOKHvuFc/OwmhlpKXYLEEP5bsIowCOLDbtPa5CfVRFo61xnLfTmcBwj9LicaiqA8it7gohXIiaOmu8s+mPD0Jf9eZql7H/dDiNbLOmgcNsReNvTfuIgiREB4P0EzKjkiawqss5NAtyW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LB3GdJyt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744222515; c=relaxed/simple;
+	bh=4r5HG3NTq9biZEw4Uj9EEIPEGtxbWgWfLLlxbu+5Uk0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IxrEytu5yiHk7QzK//S1AHvoWC2hR0SJwUX4UeP3n8Zc81RSuXBzkz4PEqZzfHgbZ57+jvMoaDn9CjSfTME0V+1t21Ezr+qP28nnY/jbGAW0B8fsBCBhTaY0tjjVwywl8Aqt//39cD//ZSngAlXupX3nk1DHoTcisHkAxv1kZ3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OUMXlFsJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LB3GdJyt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01D78C4CEE2;
-	Wed,  9 Apr 2025 18:11:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OUMXlFsJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12B45C4AF09;
+	Wed,  9 Apr 2025 18:15:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744222263;
-	bh=dHvJ9+eEjlF71dEQbog68jYNzXGSmn/QePJdRg+RP0Q=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=LB3GdJytWYvj6/4YL+wkyCncPvm4zvj4DRBzr+hjloRzKmRHl4ZXvh0iWVHsfuyg1
-	 KLgykPnStVn988WPK1zMTPKbTOurr7NJ87v3hp+o6LFAnLAVtrZzbr9GOyXESpcRvo
-	 uPfdWusGnTBRwvdN2wnZS3sAUxGg3pEmJVpxdiNQDp5LEjcw5vaNB/Gc51caK75HqE
-	 vVjJw/tL+V02E7CHMCmYXNSDoK2nRdhxfll1Owu3nv9pmW7PhdmYgKqbLkGg139XYb
-	 Jh5LpSBeVWpAbUqOVhvWbb2WBXk9dRes/t2peYyl3uNtyg9cdkx4C3EdQLe3FM2KGa
-	 QJXf9KijZIrCg==
-Message-ID: <ac130f09d89b8efea8e0d24f1465c42f@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1744222515;
+	bh=4r5HG3NTq9biZEw4Uj9EEIPEGtxbWgWfLLlxbu+5Uk0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=OUMXlFsJD2ytyFDOCigXg+ShBeLN08E376X/Emjr92uXdgxlX3EYTK5XjpmS4v84/
+	 qsbQghWx3FblyVyKum8U6AiinZgmuXCpwIGcIHMOJ86WAAWLRXH08w4pS+/WrWiwSu
+	 ViSlBezfXI+1RIn38VXeliubwsLokM4SzVsGJDznx/EOQB0Iwbkzt7t8hdLcHZ8Inr
+	 xDyTZ8D6AXIT9aCEMmYCw7sMMvTLPUxx9cYcYjTBwGOUEe7Y+TvPwnf2G+8N94FhVx
+	 MNLqVmyfAmwQMXiLpq2WyUcHWY+c+TMkFwd9Go7XYFaLxJUN+kRFBQ7OXNNasSJ2WR
+	 eiUQsEg+FOgXQ==
+Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-6044db3b45bso1266216eaf.1;
+        Wed, 09 Apr 2025 11:15:15 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVKTMBsz9l0kZL9cloyNmE/9kAezRLCptYGJq8b33zDo3+CLuA3uIM9fCgRsAjHabd5trjRhAemuLL6h1c=@vger.kernel.org, AJvYcCXywIL71Fw4iJEvOaH9M4TEIC5R/8zFfQKlmBz1BUkkixMtgQA2qH6i0/3DCpkdMc847fq9X8RpgeI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKZCi0S6e/LGHhcgLJZUpAdULGCzp9Zbzhfdg3B8X18I37igvr
+	2m6IiyJz3KYh6J/HxP7afeie7OPm9VWjiFj3sWcagNBelJEht06prMDDtc25rRev+5JHWzeWc4b
+	AAuUZgWTOzCyIpWNPG/lRgspjIKM=
+X-Google-Smtp-Source: AGHT+IHc0XT92maYQsZMhlvcO6Yxw3Krw6nEwd0v7SCqAcl25HTX77lX1X46ge/9KAbZEIg217Bv5g+fdhkX3476zXQ=
+X-Received: by 2002:a05:6870:164c:b0:2c2:b18c:9be9 with SMTP id
+ 586e51a60fabf-2d091718fdfmr2013141fac.3.1744222514331; Wed, 09 Apr 2025
+ 11:15:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250318080755.61126-2-thorsten.blum@linux.dev>
+In-Reply-To: <20250318080755.61126-2-thorsten.blum@linux.dev>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 9 Apr 2025 20:15:03 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0ieQTjM1a8mCf5oqFxFZcb6GJM9vcHB1_NHo4sQ5sSNJw@mail.gmail.com>
+X-Gm-Features: ATxdqUEsZScLn3IiT-Ti7w4GXgeUD6TxQQWhCmxnbbKMFWVfhoqzKsitfAdnfqE
+Message-ID: <CAJZ5v0ieQTjM1a8mCf5oqFxFZcb6GJM9vcHB1_NHo4sQ5sSNJw@mail.gmail.com>
+Subject: Re: [PATCH] PM: hibernate: Remove size arguments when calling strscpy()
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@kernel.org>, Len Brown <len.brown@intel.com>, 
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250408-msm-serial-earlycon-v1-1-429080127530@linaro.org>
-References: <20250408-msm-serial-earlycon-v1-1-429080127530@linaro.org>
-Subject: Re: [PATCH] serial: msm: Configure correct working mode before starting earlycon
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, Sam Day <me@samcday.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, Stephan Gerhold <stephan.gerhold@linaro.org>
-Date: Wed, 09 Apr 2025 11:11:00 -0700
-User-Agent: alot/0.12.dev8+g17a99a841c4b
 
-Quoting Stephan Gerhold (2025-04-08 10:22:47)
-> diff --git a/drivers/tty/serial/msm_serial.c b/drivers/tty/serial/msm_ser=
-ial.c
-> index 1b137e06844425584afe5d3f647e9537c6e2d658..3449945493ceb42369d2acafc=
-a925350fccc4f82 100644
-> --- a/drivers/tty/serial/msm_serial.c
-> +++ b/drivers/tty/serial/msm_serial.c
-> @@ -1746,6 +1746,12 @@ msm_serial_early_console_setup_dm(struct earlycon_=
-device *device,
->         if (!device->port.membase)
->                 return -ENODEV;
-> =20
-> +       /* Disable DM / single-character modes */
-> +       msm_write(&device->port, 0, UARTDM_DMEN);
-> +       msm_write(&device->port, MSM_UART_CR_CMD_RESET_RX, MSM_UART_CR);
-> +       msm_write(&device->port, MSM_UART_CR_CMD_RESET_TX, MSM_UART_CR);
-> +       msm_write(&device->port, MSM_UART_CR_TX_ENABLE, MSM_UART_CR);
+On Tue, Mar 18, 2025 at 9:09=E2=80=AFAM Thorsten Blum <thorsten.blum@linux.=
+dev> wrote:
+>
+> The size parameter is optional and strscpy() automatically determines
+> the length of the destination buffer using sizeof() if the argument is
+> omitted. This makes the explicit sizeof() calls unnecessary. Remove
+> them to shorten and simplify the code.
+>
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> ---
+>  kernel/power/hibernate.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
+>
+> diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
+> index 10a01af63a80..ddf7c4a5736f 100644
+> --- a/kernel/power/hibernate.c
+> +++ b/kernel/power/hibernate.c
+> @@ -756,7 +756,7 @@ int hibernate(void)
+>          * Query for the compression algorithm support if compression is =
+enabled.
+>          */
+>         if (!nocompress) {
+> -               strscpy(hib_comp_algo, hibernate_compressor, sizeof(hib_c=
+omp_algo));
+> +               strscpy(hib_comp_algo, hibernate_compressor);
+>                 if (crypto_has_comp(hib_comp_algo, 0, 0) !=3D 1) {
+>                         pr_err("%s compression is not available\n", hib_c=
+omp_algo);
+>                         return -EOPNOTSUPP;
+> @@ -1005,9 +1005,9 @@ static int software_resume(void)
+>          */
+>         if (!(swsusp_header_flags & SF_NOCOMPRESS_MODE)) {
+>                 if (swsusp_header_flags & SF_COMPRESSION_ALG_LZ4)
+> -                       strscpy(hib_comp_algo, COMPRESSION_ALGO_LZ4, size=
+of(hib_comp_algo));
+> +                       strscpy(hib_comp_algo, COMPRESSION_ALGO_LZ4);
+>                 else
+> -                       strscpy(hib_comp_algo, COMPRESSION_ALGO_LZO, size=
+of(hib_comp_algo));
+> +                       strscpy(hib_comp_algo, COMPRESSION_ALGO_LZO);
+>                 if (crypto_has_comp(hib_comp_algo, 0, 0) !=3D 1) {
+>                         pr_err("%s compression is not available\n", hib_c=
+omp_algo);
+>                         error =3D -EOPNOTSUPP;
+> @@ -1455,8 +1455,7 @@ static int hibernate_compressor_param_set(const cha=
+r *compressor,
+>         if (index >=3D 0) {
+>                 ret =3D param_set_copystring(comp_alg_enabled[index], kp)=
+;
+>                 if (!ret)
+> -                       strscpy(hib_comp_algo, comp_alg_enabled[index],
+> -                               sizeof(hib_comp_algo));
+> +                       strscpy(hib_comp_algo, comp_alg_enabled[index]);
+>         } else {
+>                 ret =3D index;
+>         }
+> --
 
-In msm_complete_tx_dma() these are under an if condition checking the
-version of uartdm. Do we need that here? Although I also see that
-MSM_UART_CR_CMD_RESET_TX is unconditionally written in msm_reset() but
-not MSM_UART_CR_TX_ENABLE so maybe the condition check is wrong or the
-bit doesn't exist in earlier versions of the hardware so it doesn't
-really matter.
+Applied as 6.16 material, thanks!
