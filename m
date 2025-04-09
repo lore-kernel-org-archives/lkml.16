@@ -1,65 +1,57 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F98F22D4D4;
-	Wed,  9 Apr 2025 08:36:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73DC825D213;
+	Wed,  9 Apr 2025 08:36:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744187771; cv=none; b=Akkfs69WJHnJONS/AEiFXDvW4lqK1w0IpTcPW8aNhorq6L16EWsRNhlLvL7xeljhYayNiweqUJnDVxMOyGWvjll2CsYbhKQ6IDxXJznpOk6HHEdeDmwpJjZ3cGy/j6si2tm19kvk1Vdodu74mMTU15vPaI/49zomqFDHB0uqVDM=
+	t=1744187772; cv=none; b=baGj/E5C/3V2bKGdfQjbvB4GWFQJTVVjq38J5bnNXd0OKbzHqLkfd45pCwZ/VOstmC0Ed6zFFNvIbtYOrTIqohszMK4BPMaYEBRMcVR97RVyn3aMGmQmLRuIvgkk6NZZCIB4I4giUHPB5XvCeCSd5lemp/dQX8UROfmzqOePTiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744187771; c=relaxed/simple;
-	bh=ndma1L/vxUMfXkDwaQPrl7wCz2eHmQ0e3LdcIJkDHd0=;
+	s=arc-20240116; t=1744187772; c=relaxed/simple;
+	bh=AjITk3Md+AG+a9nq5/1M/7k+M+xWBDNKTQp+Pam8Qec=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q9Oq7AIbJ2r027kHSv4GO4YzaTf1iqRr5ijeIfRsIqd61di3FuXoySFe2SwkYgrDTVdi5sWfzMTaH0JOs48F/IbzIXwvyNwQX20jud1tQZNuVljstw2mAi5VMnnCtmWUIXm4d6fDgG9l6r9TB0QQa9Cnin3RZiShMAhHQofURCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=JxOHfEpA; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=AdEQUrCBYr07X2ps3qIqT9iEm7Mq265zSSLsZWC/nr88scapstpbepGjTm5vDD9wALiv2mgUjkstoN/AdlVvIRQLjuzxqoEik4VHA13XqKCYCEgJ2kCqqe0MADmQscLLjbpQWrR6DJvvnO54VTtnSxe+8w2vZOapVyEVxfpfR80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jxl4EkcT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="JxOHfEpA"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Q3ecYacwG4Aorvd7wfw9EgBZG2LtEkkY7JvpnDXhS48=; b=JxOHfEpADDwTcatS2ifIslfKRW
-	7sPd0FGyUmBnOsdVtrf88xQQYyNdqrJwverEDU/kZrjwttigjkfiWrUqsqoS5Eim3L9KT7L7adelx
-	CbLsaCDvLtsUUOzw2Pm0XuUrmtm8MCN/ia2POGL5WFxwkYgh4fLaPS8o5tn7Mnm062w5bA1QUj6x8
-	a9yejTFS3Rfk7W+EB55xuo2GzIROnZdn86J18+M7YSb1P3q6RBoWFV0avEkPf8txze37hcOBl/ZER
-	8U0xxf6857IFe+FbIjTGwqUYmrMPMw94U6bYSLpeRCkvkv/olb9aOBwOTFdx5dh4IPQDNrPAYie7T
-	716a9zzQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:47374)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1u2Quf-0000GO-1d;
-	Wed, 09 Apr 2025 09:36:01 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1u2Qud-0002Pp-0k;
-	Wed, 09 Apr 2025 09:35:59 +0100
-Date: Wed, 9 Apr 2025 09:35:59 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	Vladimir Oltean <vladimir.oltean@nxp.com>
-Subject: Re: [PATCH net-next v2 0/2] Add Marvell PHY PTP support
-Message-ID: <Z_Yxb6-qclDSWk01@shell.armlinux.org.uk>
-References: <20250407-feature_marvell_ptp-v2-0-a297d3214846@bootlin.com>
- <Z_P3FKEhv1s0y4d7@shell.armlinux.org.uk>
- <20250407182028.75531758@kmaincent-XPS-13-7390>
- <Z_P-K7mEEH6ProlC@shell.armlinux.org.uk>
- <20250407183914.4ec135c8@kmaincent-XPS-13-7390>
- <Z_WJO9g5Al1Yr_LX@shell.armlinux.org.uk>
- <20250409103130.43ab4179@kmaincent-XPS-13-7390>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jxl4EkcT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2D8EC4CEE3;
+	Wed,  9 Apr 2025 08:35:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744187771;
+	bh=AjITk3Md+AG+a9nq5/1M/7k+M+xWBDNKTQp+Pam8Qec=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jxl4EkcTYBvpu02SHiv4NYKjhRHuI1QV1VXtqxPQ6xmZhA9y0GaGbXlIT3hyEO7S7
+	 5viRVWZH4JiIx/RIg+ayZEQEhaWtFgahx62A+n8kZ4DU/nRT9mIhBjmCPfoY4hZ+Yf
+	 +4RAFEBv3UpOO5m4cOfJTXaDBDL8ygyC6Du55rytLyi2dvoGXmwMRTZEir/CqwlA62
+	 IbcINznr+djTduj1Sy8XSTZEaHL6tM9ze/2nO6qrmacw1KrIyPMyWeKZ1S/vhd1ywP
+	 et0eFpvt+49XTr2LuywdEfwAr8kc3vv2m5q6Mxv+lnvokkoxZkglhy0D/BNkW0rWmR
+	 ZOpPouY0e55uQ==
+Date: Wed, 9 Apr 2025 11:35:55 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Pratyush Yadav <ptyadav@amazon.de>,
+	Changyuan Lyu <changyuanl@google.com>, linux-kernel@vger.kernel.org,
+	graf@amazon.com, akpm@linux-foundation.org, luto@kernel.org,
+	anthony.yznaga@oracle.com, arnd@arndb.de, ashish.kalra@amd.com,
+	benh@kernel.crashing.org, bp@alien8.de, catalin.marinas@arm.com,
+	dave.hansen@linux.intel.com, dwmw2@infradead.org,
+	ebiederm@xmission.com, mingo@redhat.com, jgowans@amazon.com,
+	corbet@lwn.net, krzk@kernel.org, mark.rutland@arm.com,
+	pbonzini@redhat.com, pasha.tatashin@soleen.com, hpa@zytor.com,
+	peterz@infradead.org, robh+dt@kernel.org, robh@kernel.org,
+	saravanak@google.com, skinsburskii@linux.microsoft.com,
+	rostedt@goodmis.org, tglx@linutronix.de, thomas.lendacky@amd.com,
+	usama.arif@bytedance.com, will@kernel.org,
+	devicetree@vger.kernel.org, kexec@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+	linux-mm@kvack.org, x86@kernel.org
+Subject: Re: [PATCH v5 09/16] kexec: enable KHO support for memory
+ preservation
+Message-ID: <Z_Yxa7fTA70YEe84@kernel.org>
+References: <20250320015551.2157511-1-changyuanl@google.com>
+ <20250320015551.2157511-10-changyuanl@google.com>
+ <mafs01pu9qm6r.fsf@amazon.de>
+ <20250403161001.GG342109@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,96 +60,24 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250409103130.43ab4179@kmaincent-XPS-13-7390>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <20250403161001.GG342109@nvidia.com>
 
-On Wed, Apr 09, 2025 at 10:31:30AM +0200, Kory Maincent wrote:
-> On Tue, 8 Apr 2025 21:38:19 +0100
-> "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
+On Thu, Apr 03, 2025 at 01:10:01PM -0300, Jason Gunthorpe wrote:
+> On Thu, Apr 03, 2025 at 03:50:04PM +0000, Pratyush Yadav wrote:
 > 
-> > On Mon, Apr 07, 2025 at 06:39:14PM +0200, Kory Maincent wrote:
-> > > On Mon, 7 Apr 2025 17:32:43 +0100
-> > > "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
-> > > > I'm preferring to my emails in connection with:
-> > > > 
-> > > > https://lore.kernel.org/r/ZzTMhGDoi3WcY6MR@shell.armlinux.org.uk
-> > > > 
-> > > > when I tested your work last time, it seemed that what was merged hadn't
-> > > > even been tested. In the last email, you said you'd look into it, but I
-> > > > didn't hear anything further. Have the problems I reported been
-> > > > addressed?  
-> > > 
-> > > It wasn't merged it was 19th version and it worked and was tested, but not
-> > > with the best development design. I have replied to you that I will do some
-> > > change in v20 to address this.
-> > > https://lore.kernel.org/all/20241113171443.697ac278@kmaincent-XPS-13-7390/
-> > > 
-> > > It gets finally merged in v21.  
-> > 
-> > Okay, so I'm pleased to report that this now works on the Macchiatobin:
-> > 
-> > where phc 2 is the mvpp2 clock, and phc 0 is the PHY.
+> > +struct kho_mem_track {
+> > +	/* Points to L4 KHOMEM descriptor, each order gets its own table. */
+> > +	struct xarray orders;
+> > +};
 > 
-> Great, thank you for the testing!
-> 
-> > 
-> > # ethtool -T eth2
-> > Time stamping parameters for eth2:
-> > Capabilities:
-> >         hardware-transmit
-> >         software-transmit
-> >         hardware-receive
-> >         software-receive
-> >         software-system-clock
-> >         hardware-raw-clock
-> > PTP Hardware Clock: 2
-> > Hardware Transmit Timestamp Modes:
-> >         off
-> >         on
-> >         onestep-sync
-> >         onestep-p2p
-> > Hardware Receive Filter Modes:
-> >         none
-> >         all
-> > 
-> > So I guess that means that by default it's using PHC 2, and thus using
-> > the MVPP2 PTP implementation - which is good, it means that when we add
-> > Marvell PHY support, this won't switch to the PHY implementation.
-> 
-> Yes.
-> 
-> > 
-> > Now, testing ethtool:
-> > 
-> > $ ./ethtool --get-hwtimestamp-cfg eth2
-> > netlink error: Operation not supported
-> > 
-> > Using ynl:
-> > 
-> > # ./ynl/cli.py --spec netlink/specs/ethtool.yaml --no-schema --dump
-> > tsconfig-get --json '{"header":{"dev-name":"eth2"}}' []
-> > 
-> > So, It's better, something still isn't correct as there's no
-> > configuration. Maybe mvpp2 needs updating first? If that's the case,
-> > then we're not yet in a position to merge PHY PTP support.
-> 
-> Indeed mvpp2 has not been update to support the ndo_hwtstamp_get/set NDOs.
-> Vlad had made some work to update all net drivers to these NDOs but he never
-> send it mainline:
-> https://github.com/vladimiroltean/linux/commits/ndo-hwtstamp-v9
-> 
-> I have already try to ping him on this but without success.
-> Vlad any idea on when you could send your series upstream?
+> I think it would be easy to add a 5th level and just use bits 63:57 as
+> a 6 bit order. Then you don't need all this stuff either.
 
-Right, and that means that the kernel is not yet ready to support
-Marvell PHY PTP, because all the pre-requisits to avoid breaking
-mvpp2 have not yet been merged.
-
-So that's a NAK on this series from me.
-
-I'd have thought this would be obvious given my well known stance
-on why I haven't merged Marvell PHY PTP support before.
+Even 4 levels won't work with 16K and 64K pages.
+To use tables we'd need to scale the number of levels based on PAGE_SIZE.
+ 
+> Jason
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Sincerely yours,
+Mike.
