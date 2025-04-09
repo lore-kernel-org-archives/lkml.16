@@ -1,193 +1,343 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 705C7213E6A;
-	Wed,  9 Apr 2025 23:43:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744242230; cv=fail; b=e5OPN4C9h3cjBW5bwREGB+yI3pljDAkrRvgouN5BgHvcJVyRT2cjs8Hz0qlHoTsAMEByYubHw3cvZTpkOz4gv42en+bF1F4QZ33i++TkfQUTvZPHxCH/BChn5INCOEOT9UTVUay7Q5bI4rHw3n0QsQzcxh0aHmnx6/+RAA6Gfvs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744242230; c=relaxed/simple;
-	bh=H7i5aAimX7kqnteNx/jr+HDYdOG2RrQIrQFgYkIPv6Y=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=h81KvUKm43mZrkRfKyUW3wZ/cbFX6TRWWk/zmuLYUQbmTfYbfRX0hc31GgySerSFCiSZ+KjTz4je+u6IDDfHPOXtOOXmB3YA/yvQOw87UFtV1nMQqSmyVPTILXIKbaKf4HdGbgiJHDY0CDYJel6Lsj5ibSG4gaIiiMa+9bK/loY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IydYlaj+; arc=fail smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A6AC1A5BA4;
+	Wed,  9 Apr 2025 23:46:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744242377; cv=none; b=P+svKBYDkAEuA+NxZOSLtJrizvMtfXfbpCftaCXul/IDTsMvHc2HOV/GKlHo0i5cDJhK7nepyJqTlwH+92zUYFrh0nCthlSaLoBC08FYWscWfn4R48XO0B39WWHK0FbQyDsGX5oFa/uRAkepS8hFzqBljIx9NXgJwZViurFlQOY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744242377; c=relaxed/simple;
+	bh=D2j6lsQNFmlZkkBdK0jIAElxCCOytoXhhNlTCM+/o8E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JoTS/dRTjg6NOEGKODRcUYsnunaaXjwdnhLvy53Vt8RPCrbUftr3O2wpqKZKbz/TpEFmBRmpuqN0prfH27NveY0yMnifl2Y46B/ia/sXoMgCrCo3jBKOfwdyc8IPTvFMnMraxWsK4vWcNQ8DMFHPJGY9sK/KnqTxhp3/cRjYTa0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S88rhuDS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IydYlaj+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744242227; x=1775778227;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=H7i5aAimX7kqnteNx/jr+HDYdOG2RrQIrQFgYkIPv6Y=;
-  b=IydYlaj+9pYzeQxJKWa4s1rrVYRxPDS6c7o0xMs23JUtrGxCqJGlAhTT
-   2tSxMDgkN6QKGr+PUsZwtS+pqIivfgbzyCbq0UWmWjKgp/WsabjNgCqHJ
-   nPx+wSgilyIQDZGj3XffL7HBqUZUlY1ovtqdebn2Ttw6j6fP0XmU3pMhZ
-   0ATX2IxS1s3Diyb4s58S/AbCcZOA0hCYPGw39vsWm6JU+XUALIlpB6u4o
-   Tbc2LmCimMQyQ/JPsOssEEPRRJSeimzXn/KDMpjlHVcEl3BlBIHA/yAzi
-   V+FWKUhAleDql74Zc7AWdNq7H9vKjzPjQzwLpOYiSc8aHMIq638gJgyCZ
-   g==;
-X-CSE-ConnectionGUID: PSrVErudSiSPmBUQGoMlBQ==
-X-CSE-MsgGUID: omXQf6yhS26+MpQMEaN5AQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="56408248"
-X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
-   d="scan'208";a="56408248"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 16:43:38 -0700
-X-CSE-ConnectionGUID: qvI7LYZIRdmCUlO4FwhvUg==
-X-CSE-MsgGUID: PEpk7/hPTCWJNMn15Vgg6Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
-   d="scan'208";a="159714448"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 16:43:38 -0700
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Wed, 9 Apr 2025 16:43:37 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Wed, 9 Apr 2025 16:43:37 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.41) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 9 Apr 2025 16:43:37 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=nu/F4tZ72TEFX3QGx9FWU+JlJJVJ8IWpZZ2ICbGl2s/Bd7vMKOZx1N3p5Pi3P+7PihK+GekomqYbXJSVIDGadiGMTr2n2hZgM/x1MOlGWGwMhrKjeisW41njb9V+pp8BuDVu7ZD9SH1Q5G86YFDpg6aRLbxi0fGWs6DQHmSzGHWRjFWumfJiBzdvCrXiLay49aia/O2hWmIK8N/0Mn8xSCyihHLVOGQcmTzuuqANUcmqzIYGPk7aKihudsJYyyzqrcoThWSYpRsov5Eu4+c2YC7D6Z180uWAyRYdMUiUURF/qMEteySerLr3MB4yn5TU2QcOoWd2ZyZ4qFh8tyBb4Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=V4wzjgPbiUgV5bMpPBslWwI7ITUiX7I+CRFFIs9w4rU=;
- b=tyi1+GdHxAwmPaxE+lZ/SA2Pcs2KIiYKzkfdM3w31Py2/n36CVm7ahB2P66SQI2gotmT0TQXuhldBC50oTvt3rUK2gQr3CcX+/Pp2M5SPpvyCGm/lRODqp4/vnerHdxjr77mWKIjcrW9sEqq/zAkBqc2JWfpoMAMhEOscJkR8SLyAd7uD2OEIoYjmuQbDp97B0mVsVNaQs0TZG8e4SBB8A/U4xMP0TH3NzKyfGquBLE5Xt2yD7gQkud0hhKAGSQEJZUx5e54jOdX5ju2p9YOYHPsttOTk0/2r63lyp3SPOY+bxdBy+0ptJDNbm5VaOiCEel3CqH5r2akCN4QLtARwA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by DM4PR11MB7254.namprd11.prod.outlook.com (2603:10b6:8:10e::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.21; Wed, 9 Apr
- 2025 23:43:20 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%3]) with mapi id 15.20.8606.033; Wed, 9 Apr 2025
- 23:43:20 +0000
-Date: Wed, 9 Apr 2025 16:43:18 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: Gregory Price <gourry@gourry.net>, <linux-cxl@vger.kernel.org>
-CC: <nvdimm@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<kernel-team@meta.com>, <dan.j.williams@intel.com>,
-	<vishal.l.verma@intel.com>, <dave.jiang@intel.com>, David Hildenbrand
-	<david@redhat.com>
-Subject: Re: [PATCH v2] DAX: warn when kmem regions are truncated for memory
- block alignment.
-Message-ID: <67f7061681282_71fe294b2@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20250402015920.819077-1-gourry@gourry.net>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250402015920.819077-1-gourry@gourry.net>
-X-ClientProxiedBy: MW4P220CA0002.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:303:115::7) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S88rhuDS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE838C4CEE2;
+	Wed,  9 Apr 2025 23:46:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744242376;
+	bh=D2j6lsQNFmlZkkBdK0jIAElxCCOytoXhhNlTCM+/o8E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=S88rhuDSAHF/McWjpYFRPivJaW5VSiRP4cv9eQS1CD+sBV0wFMfTmKDxiWZSKmXi0
+	 a7mJPn/AQTaMC9kDP4mCkbAmFgdK8quoZBiBg1IcFs1qBtyzGSXl7cz7lRAiJIOBQ6
+	 mzI9sTz8NdeiryYD7GJ/KKL77UPNHuwVEapOu880cmi6AMjF7SAU2lbXZeg3KnE0O4
+	 8xZIyLC5/0G7AWhsDZamLFCf5OsyPIvWweWNHnnyhzKcTV4pU8jf3PmKJvJtUN/+HY
+	 YxOAoYKDUQGhuGxdVQN18mYtIxrB7HlCd5zfuhu+9Jw+GUK5bPcFQFsdFlds5Cr2n0
+	 inWszXvhCXv4A==
+Date: Wed, 9 Apr 2025 16:46:15 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Dave Chinner <david@fromorbit.com>
+Cc: John Garry <john.g.garry@oracle.com>, brauner@kernel.org, hch@lst.de,
+	viro@zeniv.linux.org.uk, jack@suse.cz, cem@kernel.org,
+	linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
+	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
+	linux-block@vger.kernel.org, catherine.hoang@oracle.com
+Subject: Re: [PATCH v6 11/12] xfs: add xfs_compute_atomic_write_unit_max()
+Message-ID: <20250409234615.GV6283@frogsfrogsfrogs>
+References: <20250408104209.1852036-1-john.g.garry@oracle.com>
+ <20250408104209.1852036-12-john.g.garry@oracle.com>
+ <Z_WnbfRhKR6RQsSA@dread.disaster.area>
+ <20250409004156.GL6307@frogsfrogsfrogs>
+ <Z_YF9HpdbkJDLeuR@dread.disaster.area>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DM4PR11MB7254:EE_
-X-MS-Office365-Filtering-Correlation-Id: 68c7eb04-8351-4215-1493-08dd77c04f68
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?Ynsh4MsetHELvZJSbE7e+6+RT23k/0MtGD2M9otQjk+HsBRFZ7ZmMJMuEvUx?=
- =?us-ascii?Q?dTGFh8bxOcsiFjZBo0RKmgIHFUVvZJg1N4JX6Iy/etmeFfIUlxikIQfIJLeP?=
- =?us-ascii?Q?PO8YbgYw4bzaFVCMQQIWxMH1ihmJPcJxN27BbQ8mbI6NzsWAgihKLA8r/nfd?=
- =?us-ascii?Q?Q5ec3Kav6787hcImdo3FZnynj0QauEluON10TkDsgCdaAX8EmKRVNa2/T83R?=
- =?us-ascii?Q?Ib9CNum5MGkcOEpNSZq5eQ/QTEROYN66JXQoKdrHGTamMkGGnuT1xxx7NZnJ?=
- =?us-ascii?Q?oqUegvTnixqGB1SF2BUwot6ZGmNxbEG8wvx2Hie6Je4x7eOjf/Q83NQKKPdi?=
- =?us-ascii?Q?iwS2eGe1xSLcNW2sG3HvpyoHWAcC2BHcwa0Qp7CIXaR2rrfJt/RC+zCguXTV?=
- =?us-ascii?Q?RwogAufzLKyj8llA7VligvZlm3cvyzcqGjh8mVMH8u8kSS32IrhOZKm+fLjE?=
- =?us-ascii?Q?uocTZYSIjWqoyt/IEta8DDBjCtCEKGwLN6mgDQtilrxTVrh5litTS9qmfegh?=
- =?us-ascii?Q?9+okuWwz1nVIv2E3w2lTbAXaNyaAhk+Z7gAnsKVp8SyT0LvgVi3wGoqrwHK5?=
- =?us-ascii?Q?txCS7AKbv+DLCIfW7eH9gJrewc1ciyPyypznVjUimp3Ytk6j86IDoTHSOMFV?=
- =?us-ascii?Q?FV2iTOjJ96jqUy5kGocpvGP1u2DDE8J2XWqGbgfOYqAifA9+G/Gr8zH8uCrq?=
- =?us-ascii?Q?tMKoY+M2FW6OFEFjudbK+4DxjOgJwlzxMrRtBPRpbSEQO2gB9yJyL9dEqJ18?=
- =?us-ascii?Q?IbBX9TOr5qhToPH9LABg9EYNOEhwbMNogPDqiCtRy0NDrsYMH1/gfl7QcO3h?=
- =?us-ascii?Q?2E8nd9wNe93kHUtJWzJSjoVtXMCsMEYNOskYMUlSHbduQ3IGASojHCHiKEDG?=
- =?us-ascii?Q?NUf0fD3nWOS6xpfO54v3XqpX+zvPKZFtMFUgRIOfC5sGLXOfulmXAQrAw3/T?=
- =?us-ascii?Q?XjhITCaaO4DUxbwuUaXSVZKdRBmfkL83hzelqElRgmcoen6F/CWIlef44dys?=
- =?us-ascii?Q?K9+FS6tX/22Zc2qbiTmVkcszyyMxyCnk4wa6MWxV9V7QeTASNMzO9LAnYm8R?=
- =?us-ascii?Q?rztPmJF4x7LkCp5Lxi549cixE9pwf68hyCVnn0voMnkQpcbbE93qGV4yG+0N?=
- =?us-ascii?Q?IjN60p4oqlsEW7LR2/6ER7XS+UQFFMheYCr4meFTyQWJU65B8j+nQTArIbDk?=
- =?us-ascii?Q?SIcDr/UaDIeJoBtaI7STafUcXJkk9HWozaKwpCr2tthljVl+Jmc5vxYlO55C?=
- =?us-ascii?Q?1DganwcyDiI7xXW/kmKvUszh0NqFfNQYm1vxWrhlp7YlIyWCnilzKA0Qa9fj?=
- =?us-ascii?Q?SExhuBJRp1HXuol/b/ltt003VNXiikPdQEyc+yPNHDCtgIENFJ7MH4Mx+7xB?=
- =?us-ascii?Q?yLhCcVIYLwohAAUsyRvxruVVud4T?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?AcJbsrfUTsbO/4OPeYCEalcPbJr1m+pTLWR+KdWEbkgTU96/sG3Q+KINx6JP?=
- =?us-ascii?Q?WgWUKWhgRy4X3yVYyI8xLoJRswoCyKWBQUSkekkwnsk1f0QLc2V4uP2cXi41?=
- =?us-ascii?Q?/SGY1Is73twxfobNYkyzKW5kllgMjMjUOhzB7bJFa9ofVAaH9VadenhQFmIN?=
- =?us-ascii?Q?W3QvtieeqYZ36FahCEunkLBsiBe4wGc9G7ynMtXiJ4wXDttSgtq5lTmjBCPZ?=
- =?us-ascii?Q?EnF+rcjtGBXlHldVAjluHlKFpMlP4g3ptq8PrILiGBFqdwY8ybVRJgeDkEz9?=
- =?us-ascii?Q?I5IOvCeyKlyQieqPa2FJTSn0hpvrr6BUAuiSZC27z5IeHSYVm7nDqqIDnEzo?=
- =?us-ascii?Q?cWnOkf+qYW2ZAeQqXWfDm9LdAbWGfl1vSL275BKljENKF4Mro5Xp0InE7CfS?=
- =?us-ascii?Q?FICiNXq8yVBld33fX/hLQdF53GyzuNI4qy2kypbIQVJ+bS2AwVPLwFqLir0X?=
- =?us-ascii?Q?VO3G2Li0tcKyzwdACSRBKuWu80TVL+gAcsvj0pcVcML3gYZQR6oU6oTZ2m+7?=
- =?us-ascii?Q?4wfXDXZxxVM1+mCpDIyjpfi46LsfDaRaJ40nSrCYCv9Kp0Xb7PFUecmPH9le?=
- =?us-ascii?Q?f3CWnAhmwFJiqwxh6IBJN9SVlFAAEQb5HRhWOuBrW0Er8cQ8mWop//hLkasg?=
- =?us-ascii?Q?UWZnYrZuAjNvxId/FDfhRe/2lvfr1W8GMXfcJhKNdFSm9Yq+7uJdY82XDIMc?=
- =?us-ascii?Q?qIR8wVtn+hG8W9am2Q1SdYQ6YLB8nyluwfHFouethVhuU9tnxi/i/iZfH6QP?=
- =?us-ascii?Q?AkQUVlXAYEUwYcZ6BsxiKQ/GyjoiaQc+A8GKKKJGiFQ9i4Q1eNkSFx3VGbH2?=
- =?us-ascii?Q?MOxScMLS4J/PWKhBcWH9KMeQDiIU4hGdEJoLTEOD9esCHb8kfx2AEhQYCOKp?=
- =?us-ascii?Q?syDzxxoE+vYOTQWxV2PFJ9gkVbEIuehoppFiUfm5pZeunfTwT0MI37/c1E9Z?=
- =?us-ascii?Q?cdhyDpOjkjKvFgSnapCVYr3s7gE4uwVvuabad04/1oepKFVyJMKMSLZnCu1l?=
- =?us-ascii?Q?RoVhh3EGqWap6Fm/jiesAz9kO1+VaiHVNQEcJqhpME/9qKk2C7/NOIjY2uXE?=
- =?us-ascii?Q?KvaBytX6nD450KxJHXVcAtKVUPLkpUB3l+EYcJXI4XhweQ0ToLhwjS0mCgkw?=
- =?us-ascii?Q?cmW88wjxmyWILarDYHhUZQzcNlj3J5R1aViZ3GbwmpIV8vxDKKo8eUzUW5YC?=
- =?us-ascii?Q?pY3mtyi5HB4N6wQK/049K3jduMYTt9V9nQTrPofDM4VfTRZXuu+JA+us4nLk?=
- =?us-ascii?Q?hJTlHUXwlh+o9ZzLxUzQF0K9bjWH7dne6ukzPzFvSQSsMX3swdkE+/vpABhZ?=
- =?us-ascii?Q?xHPnHPz5wtgNFOhvz3MtBcQxlS8hQOd0SXdFea12OSTmLZm65cFhBuyMYbud?=
- =?us-ascii?Q?f1ncrpuNwPY7CGwBf7kSUGKcjTzk+L+DORju0BgJKpFFecbhjQTIotduDzKu?=
- =?us-ascii?Q?JRl7qdT3t7e8afVV3aVIQl/7PMJbqZqzaMbbxRXsQOQXB+/hpk2naIqMA5HT?=
- =?us-ascii?Q?XgFarhBgkjvwfOO5nYKGfeiOyV5Kj16SiezjxD5kc23bj+onXmYQWnKPFB+M?=
- =?us-ascii?Q?avohPC9bYpDE7YHGHitT3OboQdGSYZiVYpE+RG9zCdsEMOGe51tMOrJzmPXg?=
- =?us-ascii?Q?jQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 68c7eb04-8351-4215-1493-08dd77c04f68
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 23:43:20.7642
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IZRBNGuFZ/QMnpmCjEziiUewgSueFLiJcPEJtaCIoOAxNfy/6ALux9f9ftXEC3XwVy6kfIHdwpLVgG2xVChSxid6qytwZ13mrBPuYS0+HP4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB7254
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z_YF9HpdbkJDLeuR@dread.disaster.area>
 
-Gregory Price wrote:
-> Device capacity intended for use as system ram should be aligned to the
-> archite-defined memory block size or that capacity will be silently
-> truncated and capacity stranded.
+On Wed, Apr 09, 2025 at 03:30:28PM +1000, Dave Chinner wrote:
+> On Tue, Apr 08, 2025 at 05:41:56PM -0700, Darrick J. Wong wrote:
+> > On Wed, Apr 09, 2025 at 08:47:09AM +1000, Dave Chinner wrote:
+> > > On Tue, Apr 08, 2025 at 10:42:08AM +0000, John Garry wrote:
+> > > > Now that CoW-based atomic writes are supported, update the max size of an
+> > > > atomic write for the data device.
+> > > > 
+> > > > The limit of a CoW-based atomic write will be the limit of the number of
+> > > > logitems which can fit into a single transaction.
+> > > 
+> > > I still think this is the wrong way to define the maximum
+> > > size of a COW-based atomic write because it is going to change from
+> > > filesystem to filesystem and that variability in supported maximum
+> > > length will be exposed to userspace...
+> > > 
+> > > i.e. Maximum supported atomic write size really should be defined as
+> > > a well documented fixed size (e.g. 16MB). Then the transaction
+> > > reservations sizes needed to perform that conversion can be
+> > > calculated directly from that maximum size and optimised directly
+> > > for the conversion operation that atomic writes need to perform.
+> > 
+> > I'll get to this below...
 > 
-> As hotplug dax memory becomes more prevelant, the memory block size
-> alignment becomes more important for platform and device vendors to
-> pay attention to - so this truncation should not be silent.
+> I'll paste it here so it's all in one context.
 > 
-> This issue is particularly relevant for CXL Dynamic Capacity devices,
-> whose capacity may arrive in spec-aligned but block-misaligned chunks.
+> > This is why I don't agree with adding a static 16MB limit -- we clearly
+> > don't need it to emulate current hardware, which can commit up to 64k
+> > atomically.  Future hardware can increase that by 64x and we'll still be
+> > ok with using the existing tr_write transaction type.
+> > 
+> > By contrast, adding a 16MB limit would result in a much larger minimum
+> > log size.  If we add that to struct xfs_trans_resv for all filesystems
+> > then we run the risk of some ancient filesystem with a 12M log failing
+> > suddenly failing to mount on a new kernel.
+> > 
+> > I don't see the point.
 > 
-> Suggested-by: David Hildenbrand <david@redhat.com>
-> Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Gregory Price <gourry@gourry.net>
+> You've got stuck on ithe example size of 16MB I gave, not
+> the actual reason I gave that example.
 
-The typo in the changelog was already noted, and this addresses all my
-feedback so feel free to add:
+Well you kept saying 16MB, so that's why I ran the numbers on it.
 
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> That is: we should not be exposing some unpredictable, filesystem
+> geometry depending maximum atomic size to a userspace API.  We need
+> to define a maximum size that we support, that we can clearly
+> document and guarantee will work on all filesystem geometries.
+> 
+> What size that is needs to be discussed - all you've done is
+> demonstrate that 16MB would require a larger minimum log size for a
+> small set of historic/legacy filesystem configs.
+
+No, I've done more than that.  I've shown that it's possible to
+determine the maximum permissible size of a software untorn writes
+completions given a log reservation, which means that we can:
+
+1) Determine if we can backstop hardware untorn writes with software
+untorn writes.
+
+2) Determine the largest untorn write we can complete in software for
+an existing filesystems with no other changes required.
+
+in addition to 3) Determine if we can land an untorn write of a
+specific size.
+
+We care about (1).  (2) is basically done (albeit with calculation
+errors) by this patchset.  (3) is not something we're interested in.
+If you believe that having a fixed upper size bound that isn't tied to
+existing log reservations is worth pursuing, then please send patches
+building off this series.
+
+I think it wouldn't be much work to have a larger fixed limit that
+doesn't depend on any of the existing static transaction reservations.
+Use the computation I provided to decide if that limit won't push the
+filesystem too close to the maximum transaction size, then dynamically
+compute the reservation at ioend time for the specific IO being
+completed.
+
+But again, our users don't want that, they're fine with 64k.  They
+really don't want the software fallback at all.  If you have users who
+prefer a well known static limit, then please work with them.
+
+> I'm actually quite fine with adding new reservations that change
+> minimum required log sizes - this isn't a show-stopper in any way.
+
+I'm not convinced.  The minimum log size footgun still exists; it's just
+that the new(ish) 64M floor makes it much less likely to happen.  The
+image factories have been upgraded with newer xfsprogs so the number of
+complaints will (at long last) slowly go down, but 12M logs are still
+causing problems.
+
+> Atomic writes are optional functionality, so if the log size is too
+> small for the atomic write transaction requirements, then we don't
+> enable the atomic write functionality on that filesystem. Hence the
+> minimum required log size for the filesystem -does not change- and
+> the filesystem mounts as normal..
+> 
+> i.e. the user hasn't lost anything on these tiny log filesystems
+> when the kernel is upgraded to support software atomic writes.
+> All that happens is that the legacy filesystem will never support
+> atomic writes....
+> 
+> Such a mount time check allows us to design the atomic write
+> functionality around a fixed upper size bound that we can guarantee
+> will work correctly. i.e. the size of the transaction reservation
+> needed for it is irrelevant because we guarantee to only run that
+> transaction on filesytsems with logs large enough to support it.
+
+Yes, that's what I've been trying to say all along.
+
+> Having a consistent maximum atomic write size makes it easier for
+> userspace to create logic and algorithms around, and it makes it
+> much easier for us to do boundary condition testing as we don't have
+> to reverse engineer the expected boundaries from filesysetm geometry
+> in test code. Fixed sizes make API verification and testing a whole
+> lot simpler.
+
+John added a statx field so that the kernel can advertise the hardware
+and software untorn write capabilities.  Are you saying that's not good
+enough even for (1) and (2) from above?
+
+If it turns out that users want a higher limit, they can come talk to us
+about adding a mkfs option or whatever to declare that they want more,
+and then we can enforce that.
+
+> And, finally, if everything is sized from an single API constant, it
+> makes it easy to modify the supported size in future. The 64MB
+> minimum log size gives us lots of headroom to increase supported
+> atomic write sizes, so if userspace finds that it really needs
+> larger sizes than what we initially support, it's trivial to change
+> both the kernel and the test code to support a larger size...
+> 
+> > > > diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+> > > > index b2dd0c0bf509..42b2b7540507 100644
+> > > > --- a/fs/xfs/xfs_super.c
+> > > > +++ b/fs/xfs/xfs_super.c
+> > > > @@ -615,6 +615,28 @@ xfs_init_mount_workqueues(
+> > > >  	return -ENOMEM;
+> > > >  }
+> > > >  
+> > > > +unsigned int
+> > > > +xfs_atomic_write_logitems(
+> > > > +	struct xfs_mount	*mp)
+> > > > +{
+> > > > +	unsigned int		efi = xfs_efi_item_overhead(1);
+> > > > +	unsigned int		rui = xfs_rui_item_overhead(1);
+> > > > +	unsigned int		cui = xfs_cui_item_overhead(1);
+> > > > +	unsigned int		bui = xfs_bui_item_overhead(1);
+> > > > +	unsigned int		logres = M_RES(mp)->tr_write.tr_logres;
+> > > > +
+> > > > +	/*
+> > > > +	 * Maximum overhead to complete an atomic write ioend in software:
+> > > > +	 * remove data fork extent + remove cow fork extent +
+> > > > +	 * map extent into data fork
+> > > > +	 */
+> > > > +	unsigned int		atomic_logitems =
+> > > > +		(bui + cui + rui + efi) + (cui + rui) + (bui + rui);
+> > > 
+> > > This seems wrong. Unmap from the data fork only logs a (bui + cui)
+> > > pair, we don't log a RUI or an EFI until the transaction that
+> > > processes the BUI or CUI actually frees an extent from the the BMBT
+> > > or removes a block from the refcount btree.
+> > 
+> > This is tricky -- the first transaction in the chain creates a BUI and a
+> > CUI and that's all it needs.
+> > 
+> > Then we roll to finish the BUI.  The second transaction needs space for
+> > the BUD, an RUI, and enough space to relog the CUI (== CUI + CUD).
+> > 
+> > Then we roll again to finish the RUI.  This third transaction needs
+> > space for the RUD and space to relog the CUI.
+> > 
+> > Roll again, fourth transaction needs space for the CUD and possibly a
+> > new EFI.
+> > 
+> > Roll again, fifth transaction needs space for an EFD.
+> 
+> Yes, that is exactly the point I was making.
+
+It's also slightly wrong -- if an extent referenced by the chain isn't
+actively being worked on, its BUI/CUI can get relogged.  So the actual
+computation is:
+
+	relog = bui + bud + cui + cud;
+	per_intent = max(tx0..tx4, relog);
+
+That doesn't seem to change the output though.
+
+> > > > +
+> > > > +	/* atomic write limits are always a power-of-2 */
+> > > > +	return rounddown_pow_of_two(logres / (2 * atomic_logitems));
+> > > 
+> > > What is the magic 2 in that division?
+> > 
+> > That's handwaving the lack of a computation involving
+> > xfs_allocfree_block_count.  A better version would be to figure out the
+> > log space needed:
+> > 
+> > 	/* Overhead to finish one step of each intent item type */
+> > 	const unsigned int	f1 = libxfs_calc_finish_efi_reservation(mp, 1);
+> > 	const unsigned int	f2 = libxfs_calc_finish_rui_reservation(mp, 1);
+> 
+> Yup, those should be a single call to xfs_calc_buf_res(xfs_allocfree_block_count())
+> 
+> > 	const unsigned int	f3 = libxfs_calc_finish_cui_reservation(mp, 1);
+> 
+> Similarly, xfs_calc_refcountbt_reservation().
+> 
+> > 	const unsigned int	f4 = libxfs_calc_finish_bui_reservation(mp, 1);
+> 
+> xfs_calc_write_reservation() but for a single extent instead of 2.
+> Also, I think the bui finish needs to take into account dquots, too.
+> 
+> > 	/* We only finish one item per transaction in a chain */
+> > 	const unsigned int	step_size = max(f4, max3(f1, f2, f3));
+> 
+> And that is xfs_calc_itruncate_reservation(), except it reserves
+> space for 1 extent to be processed instead of 4.
+> 
+> FWIW, I'd suggest that these helpers make for a better way of
+> calculating high level reservations such as
+> xfs_calc_write_reservation() and xfs_calc_itruncate_reservation()
+> because those functions currently don't take into account how
+> intents are relogged during those operations.
+> 
+> > and then you have what you need to figure out the logres needed to
+> > support a given awu_max, or vice versa:
+> > 
+> > 	if (desired_max) {
+> > 		dbprintf(
+> >  "desired_max: %u\nstep_size: %u\nper_intent: %u\nlogres: %u\n",
+> > 				desired_max, step_size, per_intent,
+> > 				(desired_max * per_intent) + step_size);
+> > 	} else if (logres) {
+> > 		dbprintf(
+> >  "logres: %u\nstep_size: %u\nper_intent: %u\nmax_awu: %u\n",
+> > 				logres, step_size, per_intent,
+> > 				logres >= step_size ? (logres - step_size) / per_intent : 0);
+> > 	}
+> > 
+> > I hacked this into xfs_db so that I could compute a variety of
+> > scenarios.  Let's pretend I have a 10T filesystem with 4k fsblocks and
+> > the default configuration.
+> > 
+> > # xfs_db /dev/mapper/moo -c logres -c "untorn_max -b $(( (16 * 1048576) / 4096 ))" -c "untorn_max -l 244216"
+> > type 0 logres 244216 logcount 5 flags 0x4
+> > type 1 logres 428928 logcount 5 flags 0x4
+> > <snip>
+> > minlogsize logres 648576 logcount 8
+> > 
+> > To emulate a 16MB untorn write, you'd need a logres of:
+> > 
+> > desired_max: 4096
+> > step_size: 107520
+> > per_intent: 208
+> > logres: 959488
+> >
+> > 959488 > 648576, which would alter the minlogsize calculation.  I know
+> > we banned tiny filesystems a few years ago, but there's still a risk in
+> > increasing it.
+> 
+> Yeah, it's a bit under a megabyte of reservation space. That's no
+> big deal, as log reservations get much larger than this as block
+> size and log stripe units are increased.
+> 
+> <snip the rest, they all show roughly the same thing>
+> 
+> Ok, these numbers pretty much prove my point - that a fixed max
+> atomic write size somewhere around 16MB isn't going to be a problem
+> for any filesystem that uses the historic small fs default log size
+> (10MB) or larger.
+> 
+> Let's avoid the internal XFS minlogsize problems by disabling the
+> atomic write functionality on the increasingly rare legacy
+> filesystems where the log is too small. That allows us to design and
+> implement sane userspace API bounds and guarantees for atomic writes
+> and not expose internal filesystem constraints and inconsistencies
+> to applications...
+
+Ok then.
+
+--D
+
+> 
+> -Dave.
+> -- 
+> Dave Chinner
+> david@fromorbit.com
+> 
