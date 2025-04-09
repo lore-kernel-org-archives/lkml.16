@@ -1,240 +1,190 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from MA0PR01CU012.outbound.protection.outlook.com (mail-southindiaazolkn19011026.outbound.protection.outlook.com [52.103.67.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 447D51D5CC2;
-	Wed,  9 Apr 2025 05:49:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744177756; cv=none; b=FIPdfRzs7hpYtNFYbqq4EbHu0h8tN1pwLN2EvOq3feY4BtNzctW+cIZexmCFT93NLGcbHhQdJ7fliBDbrDRb/koUEnGtWz3fQwHFWjxDeY7ZUxGRcUDUmHVNnRD7/gOGB3fCs/4PptlRUOgiJxaDqkbeq3MCNueAzQa6Pv1bGGY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744177756; c=relaxed/simple;
-	bh=k4HcGRw78ZPemeVLUPmNyPpjYHYVgeBQ3IfXfKFaiqw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Q4fAB+sP4axKjg9D4/Uyc7SIF/NSxRd8sMk8Frk3FIcc5Raxi//DNGe3mu3Z+rHovCMmVmc2IycJGcMMya7xgQLy93w3SNzVrMRxDhgjEclhFoksSExoQghuDOKgmVKfBGy/rOKXzXcXq+4Utfock/M84tCtAcPWPAXdFr1Fl2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=LfCvLzdN; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C48871D5166;
+	Wed,  9 Apr 2025 05:49:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.67.26
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744177796; cv=fail; b=debaS3O2vqoUW22vh8uUlkQpe3DtZ6YuNCAUX7XInHyByo6ENsXAQRTYKWxvo6/4VW074Nwl/PSeRqBLjB8mfOKAI7fLLtih8ZmN6aG8sA0THjBSPdXlNBDnomUOgbcoxuahfABiDykxEUdC3SKGljtdUkbzU8dmhmQ9lsJmhiU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744177796; c=relaxed/simple;
+	bh=gH3W2dLXCNnBHduBsKziwdnT2mYbeXtSuhho/0/m8Sc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=hB7swG1l3mB6UHjSPmAYPWalSFfx6B1G4wvLSmpDxcWBjQiz2P6A6l8T6db/o/gbpRVpXr89G6veM+U5dy+My2mnc2PPoIzOmWawqGeGim+lZ8fVuqFJjx+dLNlm5A/orxsmV/uGpqaUNIgVRc/VC9R+/dF5hvzshJEWP7Bpdlg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=QARsrIVB; arc=fail smtp.client-ip=52.103.67.26
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LfCvLzdN"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 538JZem7011629;
-	Wed, 9 Apr 2025 05:49:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ovsg1QF8xQXaSQIpASLIOR/7BlVQMkeqc0GKLgadWWw=; b=LfCvLzdN/zncPJ5k
-	eDJl+aEnQrr4nwizG4NdbVf9Y/bg+xoAxATEL2+5tC7CQQLLlM1WTnLd31WDIHaa
-	6/QXZsYoT7OnxZeae7MbdoWWu7olejUx/dsE6tMwpaw5J1y4Hr1ACGznYHcWPfNu
-	Lcdrh/TiFFhc1JaNZlDJOAMEP02/Y9U1Qs9HDA4DFRai8F0GXK0rh1dblK/MkubZ
-	GuqyG8VqLjMhUcDcI/K1P7IYd1X4hOmHjvQH+TmzloT1/ietjvD9n5wJEzb9usby
-	kInspd1x+1/laWneEJbMpeY5IbJs0rukJm5oQw98j9a2fcsWbVE0z3pyOIH2mZEb
-	EclwfQ==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twftj2g1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 09 Apr 2025 05:49:05 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5395n56L001254
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 9 Apr 2025 05:49:05 GMT
-Received: from [10.217.219.207] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 8 Apr 2025
- 22:49:01 -0700
-Message-ID: <6ab62bb9-2758-4a12-aec3-6de9efc3075a@quicinc.com>
-Date: Wed, 9 Apr 2025 11:18:58 +0530
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="QARsrIVB"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=vbdM+sEOZMqOIKf3BF44HlzaFAAMLaXm94MIaCAnCPWNxDFIuspvZymOf7ayq7zwS+ztSqROA/kB1pG100dCzAlz3iBQnIRJzewHG3noUuBWtQ9fckWAp/U5qGzyID6voHoDszPqCZC927sgSYpa0hg/seXCFBBYTifmmSrHAzcf0XRw464MZhH6eMCXp/rdT/jBQ7/jK0ELFdqL+2ezw1BgJG2j12wjHwPSibUEuNrqG/C5+04ujxrA0nkWMOG26z9+PtE5JObuUs223qthv7NnwFIbNJ5weLPdNW0weBFO5DjAtVEOJmnmpFT8+sckNwu3hU4nvyvGPKpkbvzZLQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ttTlp5M/UNkjfjguP2v1XwHOUl2HenyqUAjD8Q1duHw=;
+ b=hWgY+wecDgTFFOYGdgpUZsBsZ5DdH83XIYUUHuaioTOZaOTWjTkkdNUCklkiTKKalkA6KVexl1S13XFl58nQ+9vrdM9drbiH3yV9I7777Vb1TqhkweHE/rm4GCGHuQYFXhhHU/aZ/5ibu6brQRP8ApC5hgSIADhQpKKQMWTK8huok7h6OUH0BnO5I+u1fmD3iMnWW/IAP0ISZXMMf/xvlQ82iHt6wM3tKIZsm5YHJUnHSYQ9UL8tFU+YMDkgOFM8D/XZguG9YVteevoFi92ZE7ooiVWjhP3AQCRCco9x1XJb1oAdlVVjSi7ZaIvWUyXJ3dcFqoowAkzGgtakvBGDag==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ttTlp5M/UNkjfjguP2v1XwHOUl2HenyqUAjD8Q1duHw=;
+ b=QARsrIVBkG35kbuUaMzFdtoeGotgcWgvSYjVnBDLNv2QxQ0ezQawnxx5kwrOSjYpMcqOFZYYvGqjqRrx5UBy9oChMF73D9sLVnd0jXyBivEjf/telIYKYuVebfuJTANHre9zA8aeDAt7c/ak62cdTn6EoPVOenW2zgxb8i3vq0ESYdXMdoDfw4T6gxAkWk7q1vNvyYX1eEEEFWRaZT2+0RTSeACfrabvDX4pEZURTrmYpWZmdSHNMul/RrbwAJQY4OvAeMpM7IU1nPLMedyb7ggN08Z2/OYzzrsFL4OWCHADA17DA0vWQEmrUksoUCBULeuw9ckQVd7L4V3xL0TKiw==
+Received: from MA0P287MB2262.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:100::6)
+ by MA0P287MB0170.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:b5::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Wed, 9 Apr
+ 2025 05:49:45 +0000
+Received: from MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+ ([fe80::ca81:3600:b1e4:fcf4]) by MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+ ([fe80::ca81:3600:b1e4:fcf4%5]) with mapi id 15.20.8606.033; Wed, 9 Apr 2025
+ 05:49:45 +0000
+Message-ID:
+ <MA0P287MB2262E17477166BBC1B62B2E9FEB42@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
+Date: Wed, 9 Apr 2025 13:49:40 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v13 1/3] dt-bindings: soc: sophgo: add RTC support for
+ Sophgo CV1800 series
+To: Inochi Amaoto <inochiama@gmail.com>
+Cc: Jingbao Qiu <qiujingbao.dlmu@gmail.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Arnd Bergmann <arnd@arndb.de>, Yangyu Chen <cyy@cyyself.name>,
+ linux-kernel@vger.kernel.org,
+ Alexander Sverdlin <alexander.sverdlin@gmail.com>, sophgo@lists.linux.dev,
+ devicetree@vger.kernel.org, linux-rtc@vger.kernel.org
+References: <20250309202629.3516822-1-alexander.sverdlin@gmail.com>
+ <20250309202629.3516822-2-alexander.sverdlin@gmail.com>
+ <vxjtdvy5vxhmqldgvt4mgeuor36gdjriiai7y3rej3tevuwisa@wpupxzhvc3tt>
+ <a691fe4864debf7592010bc892066beb439c1740.camel@gmail.com>
+ <tay4sxc6vx3lgwywlz3nefxo3tlkj2lm6qwdozogz5agao2djh@wt2qtruopmy2>
+From: Chen Wang <unicorn_wang@outlook.com>
+In-Reply-To: <tay4sxc6vx3lgwywlz3nefxo3tlkj2lm6qwdozogz5agao2djh@wt2qtruopmy2>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TYCP286CA0275.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:3c9::17) To MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:a01:100::6)
+X-Microsoft-Original-Message-ID:
+ <423859d5-0119-4a47-a663-91ca40ab683c@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/3] i3c: master: Add Qualcomm I3C controller driver
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: <alexandre.belloni@bootlin.com>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <jarkko.nikula@linux.intel.com>,
-        <linux-i3c@lists.infradead.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <andersson@kernel.org>, <konradybcio@kernel.org>
-References: <20250403134644.3935983-1-quic_msavaliy@quicinc.com>
- <20250403134644.3935983-3-quic_msavaliy@quicinc.com>
- <20250404-provocative-mayfly-of-drama-eeddc1@shite>
- <4fe9f898-63bf-4815-a493-23bdee93481e@quicinc.com>
- <e93c50ce-30dd-45ef-b945-019e703bd7c3@kernel.org>
-Content-Language: en-US
-From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-In-Reply-To: <e93c50ce-30dd-45ef-b945-019e703bd7c3@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=B5+50PtM c=1 sm=1 tr=0 ts=67f60a51 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=9noXzk69sv193lEOhfoA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: R7jrNI3Zn3z8QFV1UoGmI9KPfZ17VsXq
-X-Proofpoint-ORIG-GUID: R7jrNI3Zn3z8QFV1UoGmI9KPfZ17VsXq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-09_02,2025-04-08_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- suspectscore=0 malwarescore=0 bulkscore=0 phishscore=0 spamscore=0
- priorityscore=1501 adultscore=0 impostorscore=0 lowpriorityscore=0
- mlxscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504090020
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MA0P287MB2262:EE_|MA0P287MB0170:EE_
+X-MS-Office365-Filtering-Correlation-Id: 491cfd69-8fe6-44c0-fa90-08dd772a54e3
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|7092599003|8060799006|5072599009|19110799003|6090799003|461199028|15080799006|1602099012|10035399004|440099028|3412199025|4302099013|41001999003;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?V1NxQTZaMXNwcDVzWU83TEIxNm5RT2p1WjZpSnZZOUZWQnFOeWRITEE4eklV?=
+ =?utf-8?B?YmFqL2NFOUdHZll0RS9VcWZBZlpLbFArNXNlWTVLNUF2d1F5T3gzL0lrQjVn?=
+ =?utf-8?B?UmlJVmxwRWRSNlo3cnB1YU1GNlB4dW5KSHFxSVU3Uzh2eVUwKzBjWVRTanJ3?=
+ =?utf-8?B?YUduTlpnbWtXejRydkhXbXQ4VWZ3ZHY5OGdXWTAzczVjZFhkOGVuZWFRVmRh?=
+ =?utf-8?B?djZZK0hnNVlNUnpZZjR3d0h5V0R6Q2xpWE1NRWtiKzQwRW9UYXZqSHJadmY1?=
+ =?utf-8?B?aEplR0N5czBmK0hNa1dOTzBJQkhTL2NaOU40cURUYkNvTkFpUEwyTi9jNTZp?=
+ =?utf-8?B?Rmprc0pmdko4b2czNGMwOUZZSDUzcC9nd1kxWDVoMHdmMnFHUFMzbUowMUw5?=
+ =?utf-8?B?TXVrUWh2ZFlGTGY1TmxvaVNibHFzanRjNXFmTkt0NlZJN09FSTJqVVJNWG4y?=
+ =?utf-8?B?MXZqeHhNVlRYQldRSTNkNW4rU3FzSUpqYzN2dXhNT2ZocUY1SStKZWh6bXMw?=
+ =?utf-8?B?TWo4RktmNkdtYWtMM3J5UTlzb2Vpd3dIZUxBelJ5YXhBK01hTWNYdE55YmNS?=
+ =?utf-8?B?K1pOK1RTMmNOM2xjMUUvRC9jNXNlSDBBUWpZNlFLRTdpMXE1d3p2U1NVQjJH?=
+ =?utf-8?B?bmx3cUg3Y3FpVzc0dGZ4SGoxZndVR3ZpZ3dIYkZoZElRVGtSOHNNMllMcUpJ?=
+ =?utf-8?B?WjVXSTlZSGJvNWsxUUxxNEhtbDBIMVFjMDJtNUV2Q3dmclh1Z3JSMUZRSkVa?=
+ =?utf-8?B?VVA2YXV1V3l6anUwRGgxckhERVN6MWtLZlJoOXNMOXlEK2NWT2pGem1xQWNs?=
+ =?utf-8?B?WHpUTk1ubnhDSWJ4NnRjK1l4SlM1REpJUDd5S3YyTjlxMVBpUFcrUHFheG5S?=
+ =?utf-8?B?bDFxQ0kzcjFNbE9hQitPa2lpOHYrVEpaWmZOMEV0bUR1aExxV3pCK0p0YUV6?=
+ =?utf-8?B?VVJHcTM3NlJNUDRjekJ2a0dTTjJZT0JLeVE5eTBqVS9jOGVWdDhLS0lDdFhC?=
+ =?utf-8?B?dnpUYlh5citIT1pIM2hQU2hSSXY3M01kRjRpL01JbHhmNE55RkVnM1JSaU40?=
+ =?utf-8?B?OE16ak1SQURhYzFmemdWVUdidFFlSUFqOXBiRy9WYnhNbUJpVitiZjlRY0lm?=
+ =?utf-8?B?eDhscE1XdGJYWTU4SDV3NloyZzhUNllndlpoeDN6S1NuUk1SZmZLbG9FanJG?=
+ =?utf-8?B?djJGVFFwT0IrdkZXZVplK0R1blBmNTQvOXlIMG9ZVytxa1hyTFA4Sm5XSHh5?=
+ =?utf-8?B?Mzlia2JkdTlUMWp2VCtwZ0tYMWloR0c3cERxV1ZSVFdiWks2aklMZ3hLOTV0?=
+ =?utf-8?B?S1c0c1hlZUdKN2NWaVhFb0pydlRaRnhqNkw0cjNsT21WSGJZNlQveTBKTWhn?=
+ =?utf-8?B?MWEwcnFXczBDQXFaUFpQOGlHeTZnczd0K3gvODlxdmk5OXJCZVdlY1lCWFJh?=
+ =?utf-8?B?NmFPODVNMTZPR3hvbHlMdS9EY21oUjV6YnhGS3lzWTVlMVY2a1AyRWZmQm5L?=
+ =?utf-8?B?V1RwQklTREF0aEJXak1IQVVkWnB5bWxpZnc2MllvMldyVC9hNlN3cjdnQ1ZY?=
+ =?utf-8?B?ZklkSTB2ODBCdFlFaEJqS29FV3hpa3dBTXJkL2IxdjdEL2c5citNdWlYRi9n?=
+ =?utf-8?B?OGxQUFJTL0hoOURoQjluMDRlWEFwZWVvYjdOZXREQUtndzdQemF5bWNDTWs2?=
+ =?utf-8?B?eDd4Qkt6bzQzSy9IemlnYU1STjRKS3Q4Umx2Y2E4c2lONTVZRTA5SWllRjRR?=
+ =?utf-8?B?aHFEa1IxWGIrVWNWWmcwUFNQUzF0N21WWllmSHExQS9yNXVVQjdIZGo5cU82?=
+ =?utf-8?Q?bkbWL5DPD/wAO1zGu0l7hd98K0uxRxa+/7MZI=3D?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?djQyeUpXeGNMbFMzK1JIOWFLcUtsSk1PSGRXbWtxcFlLODMvMHBsdmpGenFD?=
+ =?utf-8?B?TUdXTTd0VUtXQ1BjbFd4V2ZqRk9OTzVoZ25MaUcydUs1VndXc1RFZC93QW54?=
+ =?utf-8?B?UmpnSDA2SDRVYURPdHZIdTVOWC83bTFoTWxsM0RNUUZqK05ONXlUNFBsSmFU?=
+ =?utf-8?B?K1ozbTkvN0h1L1Rwcmo5VVNYYld5OFc2UmJiVXlFOWtsbi9ObHplbnNNOVJs?=
+ =?utf-8?B?cnNINGkrbW01c0tFZkRhV09qb0tEbFhWQXlKOEhYdVkzVitnVGNsclpRdnpC?=
+ =?utf-8?B?czgxRkVxV0prS1lLTGRkR2tnUS83SGhJZHlveWpJOEZJd0MxamQ1VWhnSjJi?=
+ =?utf-8?B?Y0R5NnZ5dG5uSVRRdmk4QmdKN05YM0VSZmZqdVhWaHI0b05oam5HRC9YYUh0?=
+ =?utf-8?B?KzBwSm5QbHVaejBiZUVIT1FGNGV6N25tR1huMVA5L1ZoR0NJeGpPT2lFVVF2?=
+ =?utf-8?B?aVFoYlNNYTRBTG11UU9UMDg1U1dXOU5nSlEzblJGNFZ0RFNlQStrbUJTR3Mv?=
+ =?utf-8?B?dzA2VG5GUDJ4YXVwVWowK2ZDNkladEovUmlJczBvWmVTVlRWVTcrd0dWMDZU?=
+ =?utf-8?B?Z1JMWUdpWk9xaDJFQTd1N0NZQ21ELzV6djdoOTJoNElaL1J5WkRFYStWUDhz?=
+ =?utf-8?B?VC9KZ2lVQ3FoMTBJcXg4YVFmS3JsSUR5NlNlQmRNZXhpenVaOUNVUnpMSUk5?=
+ =?utf-8?B?NXo3QTZ6a21IeXVDeGQ4Tk9rTkVkRW4yZ1F1aG5BRVFKckhJWk1CMzJITDBV?=
+ =?utf-8?B?MS9BQVdBdVRiRzJGWlhhcnptWkxONjdwUnMvUGdIdFJHQ0dCTU9oSFZ4Znk0?=
+ =?utf-8?B?ZHY1Z3A4OEZxU1ppSG4xQTZJT1NLdGduUFlrVU05T3o2WFpnUXZBUUJ6Y2sw?=
+ =?utf-8?B?SlFKY3ZrcXE3QjVQTEFnQzFGR05aQW02a0VaWThCVGRMT2pQd1liZTQ2ZHZT?=
+ =?utf-8?B?SDdHWjNvakE0MklrRGNzbVQ3VjN6UjljUVp3ZGF4SWhQQzhrM3ZUTDVJWDN1?=
+ =?utf-8?B?Vkp0ZkpUY3ZKQ3V6MEZwUDcrSUVQdE42a1oyNkFvMXczVUlJZXlKb00xcEJZ?=
+ =?utf-8?B?eHpxdkcydTVGZWl1WmtwY0VGZ1E4RUxSMzF5Zy9LSDFCbkNrSGRuNWREZWhX?=
+ =?utf-8?B?QTNSWnNsK1Mra3RHU0ZXZEdYMDJFQ0FsamV4Vksxa0tVU2FOaTFPWkw0YjlR?=
+ =?utf-8?B?N0IzMkpsZmZucmp4NWVxaGZKTU4wNm1UM0NIOG9mQkVKOTdaL2t6LzA5MGd2?=
+ =?utf-8?B?SGxtUUVaMklBYjl0K3JOZlc0Nlh3dTRhazdKamZZNG9neU53Z3VqYXh5WHNp?=
+ =?utf-8?B?ODVRODdSV2J5emZpdVJkTVNGemo2bVorTjVWSWhWczNnNUdNQ0ZUQWVwb0J5?=
+ =?utf-8?B?MHAycm90Qm52eDRkUVhRUDJ4K2Z6ZmMwSDNQZmUrcWZTb0NPRHBUeGQvQVNx?=
+ =?utf-8?B?bmxLN3JWZGI3M2FseWV0TlBwTFhteWo2TGFJY0x5MEFMNFBHazNtbkdZUEZT?=
+ =?utf-8?B?ZVhLMDM5UXllWERyblYxRzNVSmFDMm50ZEZLOUVGM2h1d2kvMkVhOXFtRk5Q?=
+ =?utf-8?B?Sm83VVlsVmRaTzkvRUJuWEhIOElzaTF4V1dxQlh2dHFHUFQ3ZEQrOUVHS0Zi?=
+ =?utf-8?B?TFl3ZzVDRVVvWDNUQ2dOMzRTR1c3bkNTVFFEemlPRWRLSS9YT1Z5Rk8xb1BH?=
+ =?utf-8?B?WGlna2VWV2ZqTXA4NjJ0U2EyZmNhbkdiZlR3azRlVTg0K1VSWkIzWi9MNnls?=
+ =?utf-8?Q?J7Zzu2OxDoe6/1AUiW2L/+wYSFsuhzebikspa3D?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 491cfd69-8fe6-44c0-fa90-08dd772a54e3
+X-MS-Exchange-CrossTenant-AuthSource: MA0P287MB2262.INDP287.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 05:49:45.6349
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MA0P287MB0170
 
-Hi Krzysztof,
-
-On 4/9/2025 12:11 AM, Krzysztof Kozlowski wrote:
-> On 08/04/2025 15:23, Mukesh Kumar Savaliya wrote:
->>>> +
->>>> +static int i3c_geni_runtime_get_mutex_lock(struct geni_i3c_dev *gi3c)
->>>> +{
->>>
->>> You miss sparse/lockdep annotations.
->>>
->> This is called in pair only, but to avoid repeated code in caller
->> functions, we have designed this wrapper.
->> i3c_geni_runtime_get_mutex_lock()
->> i3c_geni_runtime_put_mutex_unlock().
+On 2025/4/8 7:34, Inochi Amaoto wrote:
+> On Mon, Apr 07, 2025 at 07:29:37AM +0200, Alexander Sverdlin wrote:
+>> Hi Inochi!
 >>
->> caller function maintains the parity. e.g. geni_i3c_master_priv_xfers().
+>> On Mon, 2025-04-07 at 09:09 +0800, Inochi Amaoto wrote:
+>>>> Add RTC devicetree binding for Sophgo CV1800 series SoC. The device is
+>>>> called RTC, but contains control registers of other HW blocks in its
+>>>> address space, most notably of Power-on-Reset (PoR) module, DW8051 IP
+>>>> (MCU core), accompanying SRAM, hence putting it in SoC subsystem.
+>>>>
+>>> I think this is a mfd device, so why not moving this into mfd subsystem?
+>> MFD is by far the most tricky subsystem to get into [1] ;-)
+>> SOC looks much more realistic [2]
 >>
->> Does a comment help here ? Then i can write up to add.
-> 
-> I do not see how this is relevant to my comment at all.
-> 
-What i understood is you suspect about lock/unlock imbalance right ?
-I know that Lockdep annotations will be used to check if locks are 
-acquired and released in a proper order.
-
-You want me to add below code in both the functions mentioned ?
-     lockdep_assert_held(&gi3c->lock);
-
-What exact sparse/attribute can be added ? I am not sure about that.
+>> [1] https://lore.kernel.org/all/20250306003211.GA8350@google.com/
+>> [2] https://lore.kernel.org/all/20250303-loud-mauve-coyote-1eefbb@krzk-bin/
 >>
->>>> +	int ret;
->>>> +
->>>> +	mutex_lock(&gi3c->lock);
->>>> +	reinit_completion(&gi3c->done);
->>>> +	ret = pm_runtime_get_sync(gi3c->se.dev);
->>>> +	if (ret < 0) {
->>>> +		dev_err(gi3c->se.dev, "error turning on SE resources:%d\n", ret);
->>>> +		pm_runtime_put_noidle(gi3c->se.dev);
->>>> +		/* Set device in suspended since resume failed */
->>>> +		pm_runtime_set_suspended(gi3c->se.dev);
->>>> +		mutex_unlock(&gi3c->lock);
->>>
->>> Either you lock or don't lock, don't mix these up.
->>>
->> Caller is taking care of not calling i3c_geni_runtime_put_mutex_unlock()
->> if this failed.
-> 
-> 
-> I do not see how this is relevant to my comment at all.
-> 
-same as above
->>>> +		return ret;
->>>> +	}
->>>> +
->>>> +	return 0;
->>>> +}
->>>> +
->>>> +static void i3c_geni_runtime_put_mutex_unlock(struct geni_i3c_dev *gi3c)
->>>> +{
->>>
->>> Missing annotations.
->>>
->> Shall i add a comment here ?
-> 
-> Do you understand what is sparse? And lockdep?
-> 
-Little but not clear on exact sparse attribute to be added. please help 
-me. if you can help with some clear comment and sample, will be easier 
-if you can.
+> Cool, let's keep it.
+>
+> LGTM.
+>
+> Reviewed-by: Inochi Amaoto <inochiama@gmail.com>
 
-Lockdep : Helps with runtime check if lock, unlock are proper.
-sparse: attributes /special comments to add which helps with static 
-analysis which is not done by the compiler.
->>>> +	pm_runtime_mark_last_busy(gi3c->se.dev);
->>>> +	pm_runtime_put_autosuspend(gi3c->se.dev);
->>>> +	mutex_unlock(&gi3c->lock);
->>>> +}
->>>> +
->>>> +static void geni_i3c_abort_xfer(struct geni_i3c_dev *gi3c)
->>>> +{
->>>> +	unsigned long time_remaining;
->>>> +	unsigned long flags;
->>>> +
->>>> +	reinit_completion(&gi3c->done);
->>>> +	spin_lock_irqsave(&gi3c->irq_lock, flags);
->>>> +	geni_i3c_handle_err(gi3c, GENI_TIMEOUT);
->>>> +	geni_se_abort_m_cmd(&gi3c->se);
->>>> +	spin_unlock_irqrestore(&gi3c->irq_lock, flags);
->>>> +	time_remaining = wait_for_completion_timeout(&gi3c->done, XFER_TIMEOUT);
->>>> +	if (!time_remaining)
->>>> +		dev_err(gi3c->se.dev, "Timeout abort_m_cmd\n");
->>>> +}
->>>
->>> ...
->>>
->>>> +
->>>> +static int i3c_geni_resources_init(struct geni_i3c_dev *gi3c, struct platform_device *pdev)
->>>> +{
->>>> +	int ret;
->>>> +
->>>> +	gi3c->se.base = devm_platform_ioremap_resource(pdev, 0);
->>>> +	if (IS_ERR(gi3c->se.base))
->>>> +		return PTR_ERR(gi3c->se.base);
->>>> +
->>>> +	gi3c->se.clk = devm_clk_get(&pdev->dev, "se");
->>>> +	if (IS_ERR(gi3c->se.clk))
->>>> +		return dev_err_probe(&pdev->dev, PTR_ERR(gi3c->se.clk),
->>>> +							"Unable to get serial engine core clock: %pe\n",
->>>> +							gi3c->se.clk);
->>>
->>> Totally messed indentation.
->>>
->> yes, corrected.
->>>> +	ret = geni_icc_get(&gi3c->se, NULL);
->>>> +	if (ret)
->>>> +		return ret;
->>>> +
->>>> +	/* Set the bus quota to a reasonable value for register access */
->>>> +	gi3c->se.icc_paths[GENI_TO_CORE].avg_bw = GENI_DEFAULT_BW;
->>>> +	gi3c->se.icc_paths[CPU_TO_GENI].avg_bw = GENI_DEFAULT_BW;
->>>> +	ret = geni_icc_set_bw(&gi3c->se);
->>>> +	if (ret)
->>>> +		return ret;
->>>> +
->>>> +	/* Default source clock (se-clock-frequency) freq is 100Mhz */
->>>> +	gi3c->clk_src_freq = KHZ(100000);
->>>
->>> And why can't you use clk_get_rate()?
->>>
->> During probe(), we need one time initialization of source clock
->> frequencey. HW has no clock set before this.
-> 
-> How is it possible that there is no clock or clock was not configured
-> but you need to know it? Anyway, it's tiring to keep discussing this.
-> 
->>>> +
->>>> +	return 0;
->>>> +}
->>>> +
->>>> +static int geni_i3c_probe(struct platform_device *pdev)
->>>> +{
->>>> +	u32 proto, tx_depth, fifo_disable;
->>>> +	struct geni_i3c_dev *gi3c;
->>>
->>> Just store pdev->dev in local dev variable, to simplify everything here.
->> yes, thats right. But i see other drivers are using same pdev->dev. Is
->> it fine ? if really required, will change it.
-> 
-> Are you going to discuss every little comment? And come with arguments
-> like "I found poor code, so I am allowed to do the same"?
-> 
-> Best regards,
-> Krzysztof
+Hi, Inochi
+
+I think you were not reviewing the latest version of this patchset. The 
+latest version is v14 
+@https://lore.kernel.org/linux-rtc/20250315224921.3627852-1-alexander.sverdlin@gmail.com/
+
+Chen
+
+
 
