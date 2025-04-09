@@ -1,165 +1,174 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95ABB266B5D
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 16:41:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3865A267706
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 16:43:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744216882; cv=none; b=BwrmK9J2nOSFE9rIMEe+rmM9F9ICdLRBFuw7M0i4RnlrjzzROGj2h4GIljGb86E8XsDQ2Q6fWtZaXzTGksAWwSdWiI4vrtXiM4jlc5c0JMklURfCAPhtNCRHfPz7d9UoJVzK7YO7C1ZorPLIzgL7dt32bguTUO0MOSZP23MxdWg=
+	t=1744217024; cv=none; b=C2t6bzZYeFjhBSjLge1C+EzLsL7N0H/Oos1PXL0yedWzi/CNGNi/CAjbNyDUGsErLXxdeD5NkVuuZGppb8v8BUydl/HYfGdvmPagy11cVb8cMIiZdY11ze6mB13IWTFPXDjD5XNcIzio3OksBwiJdmAOS6jk26FTllS58Ohiay0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744216882; c=relaxed/simple;
-	bh=LFzjRlHP58WYddt2JQzoAgF2hPWegnLNbBxpK5k40fA=;
+	s=arc-20240116; t=1744217024; c=relaxed/simple;
+	bh=5eUj6yBdJ8a0mINwGc3NfXDTNv0qkC5CznahgFCyhNE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dNSzNy3ssB/WLU5+00bNAFBc+vawKdg2+tKCBZ2F6Nom4tbH7kFaivbeNsJ35hi1yodyhqZsnCd8Nb1s3cfBboyGQ284l0mimWV7hctY8CB/madpLmEibcv0yPz1c748ZY4D9NyOJGPVkpgILjO6w9CxYEZDU8zy+6qa2aWbotc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C8POyYtH; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=bjrzEN0j23dPIHuWVbUOpJ2AxUSrGdnRVTJf84MwLa3ckyBd5xZBKe4eyTnJz6pAqZhmTjK4MoA6ZSI3YT+5VdnH16A5rwtqjLJbVEESahj5rvjgRNP6RQVHJYLc5tBVyoLQ4aWf8TlpnQWcBZnpfgM2m3vgwE4qZLJRVwbFBbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xlr6WSs0; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C8POyYtH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744216879;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=u36fvjFtGQQGPvbO3308W/6GduN68vFneYmXVnvzh1s=;
-	b=C8POyYtHXjTP3uCUZs7ozJtbO5DnkkQ8qJRHN9i3jt13URH3snYj+F6ZiQjMTO1fvzgKVp
-	r9pMgjNQCTRfNVGUHgwaxPkvRd4+ojnFOayN7WpZTgDyLkAdN3hRLbdNDk0sDF3az/MYY6
-	JvhpQ/v/Ot1h55n7YhMedXMTE18YbJU=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-407-ffTLoX_WMwawMN57nKptIg-1; Wed, 09 Apr 2025 12:41:18 -0400
-X-MC-Unique: ffTLoX_WMwawMN57nKptIg-1
-X-Mimecast-MFC-AGG-ID: ffTLoX_WMwawMN57nKptIg_1744216878
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-478f78ff9beso198673371cf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 09:41:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xlr6WSs0"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2243803b776so101032125ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 09:43:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744217022; x=1744821822; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=vY1cCwOeuEYKDsSiTLX+gpvDg+AadEDeAOXISK1ljl4=;
+        b=xlr6WSs0UFPT1X4QuKinBAVQbl/EgJxxa7ghRyYYeDc9oHeBO4lJXxTaEvv+gcg1sk
+         lcT1X9cQtxrxFPQA2oDC1PKQRANIs9xyVkF4pNdrxeZE3wtMqSpvslunVctvNYpCQkSg
+         6d7PIK+OMsN3ELAyWUyrb5rGAEqVZlo4mWs2GPBUXCXSx8YnqkoO9Z0TjCD/mQsPxLK6
+         y/1n6GZ5pC0d8jhYqrXTm929ikAqoUYbz1mWkwOQT6s5ebGWkEle2qPFp7zVJsJeA/Vc
+         IgsltZGvJyTH7WRc/RhZ+NtrLJuawttKKWqfOXcg6X4u8mhqNCyF8tek4DBOwpXHrrT4
+         DNVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744216878; x=1744821678;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u36fvjFtGQQGPvbO3308W/6GduN68vFneYmXVnvzh1s=;
-        b=cMBZq++XLJU7qd7MPkZXy6AXKc/dzrd99KGnQA+EQe9PKh8MyylQNsz42Tf2sd7YGN
-         F2M0UJrsXh4MrmOmIMeI6nT9Vs1ExZlMkhlmmd1fE5y4LEeVTbbW8lkRuf7IXqEegYHf
-         aMyCmkAglPEht04rPztaRsr2yhHPAOahYltd4OVS2fOE2z9P4l5y3RuKLaxCW742NZU3
-         n/O2MpVCeb/RcOY3HLm/fnFDRl3+TiqIC+iOHc3e3KyaKRI9vl0oQwyyta7eu4qNENXZ
-         x1AEzL9Xttl1NNRI8G1eHQQK47zP1v3r1kAYxqEdbRJU0DwYsfw3fBQ2BL6ML5HFMMWp
-         nOQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWosYMW0vKTE3VVE0Sk3B8sjESVkjvR9xF0bOLjNy98uKaovwmpK/6YtsOdQ3yTaaWmh4Kz7r104swRN1M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNbJoh6OrcOZv8l5PwogXrS7d1ngHWmG3vxhENcPEr0CMFSPYZ
-	7AKy5dJgh8rXGMXbO0Sne0YeKpg0mYAqrn4iziM1jDeuweODvMqtkzdWsOqHLJVmmS7olcBv4yn
-	hLMKYcRoQxekOKXq5EGxJlkaej1z+o3Mo7k3/stap8OyCJrToAABs9/hcIbB9/g==
-X-Gm-Gg: ASbGncvsPiJEZeX2dqTAe7Pu+n9hzlKzopYgOBmV9Bj36Kssw2lXvawBLTcA2YGBSgK
-	H94sibdsno2KbhmdKyn8WS+9FSNiHHUogbaWFMe1bjV4qHsRESJ+eCzdsPnwnB3IjNWuQT4E0zf
-	KEj0OKKmXYqhj1Aefx+sx0WOxNS/qPeDmNUnZESlFW6wTDolCQVIWS4WGMinRN/NBnFrfBypZmV
-	bIusygVwafNFgIbZbQTx1ZFTbaH7fg47n6c1lFeS8E1Cd4gh/z2QH6Uu08FGszphc5IGS+Zp9Kz
-	/8BvKuyGLLepIt8+44C1nd+ag0x4A/fgcQKCgVHrU7vScRbZBgtWT9o=
-X-Received: by 2002:a05:622a:1a0c:b0:476:6f90:395e with SMTP id d75a77b69052e-479600a8a0emr50360411cf.21.1744216877740;
-        Wed, 09 Apr 2025 09:41:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEO4Ll+hkTGnpbMHgI6Rh64gexYzHgzyCZesnMCv/qeydPl1RejXVPlhADf4PUXiDZhoJk95w==
-X-Received: by 2002:a05:622a:1a0c:b0:476:6f90:395e with SMTP id d75a77b69052e-479600a8a0emr50360031cf.21.1744216877443;
-        Wed, 09 Apr 2025 09:41:17 -0700 (PDT)
-Received: from localhost (pool-100-17-21-114.bstnma.fios.verizon.net. [100.17.21.114])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47964d71a4esm9143961cf.2.2025.04.09.09.41.16
+        d=1e100.net; s=20230601; t=1744217022; x=1744821822;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vY1cCwOeuEYKDsSiTLX+gpvDg+AadEDeAOXISK1ljl4=;
+        b=YGazC8v8hv6PJMuNaudA/OuWyrl87V0MX7xDywr8jKAqlOdFrZU5LVlf1NfQc9dUKx
+         eTNWojydpXOfVexzpHqrfk9PG03U4515GJaRBr/+zzJKISpX0JJKfTFBAohx2BYPnL4P
+         8CwMho8R2oHUTJFwHC7njjagNFJdY4osTXkVtj74emfZf+nHILgu9znnTmZqYZ7oPbgO
+         Z9qijGqysbHKREOW83x7F6ZP2wGDEb+47IgbOsg1doBhHJtA+/Kc8Syn0yuVax6wU95N
+         O7sqDuyYYD74APMQDlArBrxPkCNs0mtccqidXIr/stI7fttpRdq7fBKtpd/w8SrggZML
+         Y3Fg==
+X-Forwarded-Encrypted: i=1; AJvYcCX7QZXWm9ubPqtG0HFqDQOz4qCOGfs9zdIZdQZ3ocQKS/yhePhDSejJ/bqKV+2hII6SNZfl4m6OoKb47jY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJBP5jDCo148H8ig9/3S1LBVV45Rpkf8lcZ7IYNM5K9votj6Kh
+	/ApqKHufmAkH4/4WvhjNy0FEIzwiYlMHWUyNScfksWFQRKW7xDRQJxnRh7dVVA==
+X-Gm-Gg: ASbGncvyPGQJvGhL4OSvpdLGhLRjfzN3hZ9RctAuzBJyxQDr9ZXf2FPqP/ZX0SFXXKu
+	2z9ESpwfhuHVhgK8taKBuq7A//RkoCPOq+OihQELpYWUyZFa61Q5LLwPwqoOk8xo0FCRqJQvPvy
+	7/xztZz24yP3IH0HSNxhtELxv8DCif/UenSIA0iXsy0GwMleq01i0NgTxh931s0Hfb6F7FiYj/G
+	eSqMd29pPUkNxx5bFbHr6IUOei/HvaOuVRRMTV9rA5CxI+wR51LcnndsDmXTATfpYUJ+vBD+0XF
+	JAwGZPYETg0X4u04iEAPHPWz9yIpEWWHnueHjXztGTreb+1/6EdBWIMpJCYv0w==
+X-Google-Smtp-Source: AGHT+IGmox3LqV854DFPIki4F+4Ez1MkIE7qgsYtzCRr9m1FgmnFh+N3/PD/p2Tx05KbHuOZaTpH7A==
+X-Received: by 2002:a17:903:32ce:b0:224:7a4:b2a with SMTP id d9443c01a7336-22ac297c916mr55618525ad.11.1744217022535;
+        Wed, 09 Apr 2025 09:43:42 -0700 (PDT)
+Received: from thinkpad ([120.56.198.53])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b642besm14327585ad.46.2025.04.09.09.43.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 09:41:16 -0700 (PDT)
-Date: Wed, 9 Apr 2025 12:41:15 -0400
-From: Eric Chanudet <echanude@redhat.com>
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Clark Williams <clrkwllms@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ian Kent <ikent@redhat.com>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev, 
-	Alexander Larsson <alexl@redhat.com>, Lucas Karpinski <lkarpins@redhat.com>
-Subject: Re: [PATCH v4] fs/namespace: defer RCU sync for MNT_DETACH umount
-Message-ID: <fviov5jz4sga2qyexil57xz2egdjf2rz43qfr4jcozycgbovah@qptpvswdu2ia>
-References: <20250408210350.749901-12-echanude@redhat.com>
- <mey7l4rm7r5fxndlg72jfjjwwctyoimjg35jetrnv5gbee4qll@w5ldyvm6h22a>
+        Wed, 09 Apr 2025 09:43:41 -0700 (PDT)
+Date: Wed, 9 Apr 2025 22:13:36 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Hongxing Zhu <hongxing.zhu@nxp.com>
+Cc: Frank Li <frank.li@nxp.com>, 
+	"l.stach@pengutronix.de" <l.stach@pengutronix.de>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>, 
+	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>, 
+	"bhelgaas@google.com" <bhelgaas@google.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, 
+	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, 
+	"festevam@gmail.com" <festevam@gmail.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 3/6] PCI: imx6: Workaround i.MX95 PCIe may not exit
+ L23 ready
+Message-ID: <4qrfkx3ckywcbk7qbjplal5j7v6sjs3zebeehe5dnrgjz2ej2t@krdwjb4xm2sx>
+References: <20250328030213.1650990-1-hongxing.zhu@nxp.com>
+ <20250328030213.1650990-4-hongxing.zhu@nxp.com>
+ <ovaomfvo7b3uxoss3tzhrkgdy6cvxi4kr2zxmqsfjxds5qfohl@t6kc4rswq6gp>
+ <AS8PR04MB8676687332C78840B927E7568CAF2@AS8PR04MB8676.eurprd04.prod.outlook.com>
+ <rqgl5jjauppyudgmugp34fillkeli3qkwf4uf2djghi6nslebg@pyi6rbwyduxd>
+ <AS8PR04MB8676BB3EDFCF3E5A490AC0628CAE2@AS8PR04MB8676.eurprd04.prod.outlook.com>
+ <AS8PR04MB8676C5D0DB84975D34C4C65A8CB52@AS8PR04MB8676.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <mey7l4rm7r5fxndlg72jfjjwwctyoimjg35jetrnv5gbee4qll@w5ldyvm6h22a>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AS8PR04MB8676C5D0DB84975D34C4C65A8CB52@AS8PR04MB8676.eurprd04.prod.outlook.com>
 
-On Wed, Apr 09, 2025 at 03:04:43PM +0200, Mateusz Guzik wrote:
-> On Tue, Apr 08, 2025 at 04:58:34PM -0400, Eric Chanudet wrote:
-> > Defer releasing the detached file-system when calling namespace_unlock()
-> > during a lazy umount to return faster.
+On Tue, Apr 08, 2025 at 03:02:42AM +0000, Hongxing Zhu wrote:
+> > -----Original Message-----
+> > From: Hongxing Zhu
+> > Sent: 2025年4月3日 11:23
+> > To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > Cc: Frank Li <frank.li@nxp.com>; l.stach@pengutronix.de; lpieralisi@kernel.org;
+> > kw@linux.com; robh@kernel.org; bhelgaas@google.com;
+> > shawnguo@kernel.org; s.hauer@pengutronix.de; kernel@pengutronix.de;
+> > festevam@gmail.com; linux-pci@vger.kernel.org;
+> > linux-arm-kernel@lists.infradead.org; imx@lists.linux.dev;
+> > linux-kernel@vger.kernel.org
+> > Subject: RE: [PATCH v3 3/6] PCI: imx6: Workaround i.MX95 PCIe may not exit
+> > L23 ready
 > > 
-> > When requesting MNT_DETACH, the caller does not expect the file-system
-> > to be shut down upon returning from the syscall. Calling
-> > synchronize_rcu_expedited() has a significant cost on RT kernel that
-> > defaults to rcupdate.rcu_normal_after_boot=1. Queue the detached struct
-> > mount in a separate list and put it on a workqueue to run post RCU
-> > grace-period.
-> > 
-> > w/o patch, 6.15-rc1 PREEMPT_RT:
-> > perf stat -r 10 --null --pre 'mount -t tmpfs tmpfs mnt' -- umount mnt
-> >     0.02455 +- 0.00107 seconds time elapsed  ( +-  4.36% )
-> > perf stat -r 10 --null --pre 'mount -t tmpfs tmpfs mnt' -- umount -l mnt
-> >     0.02555 +- 0.00114 seconds time elapsed  ( +-  4.46% )
-> > 
-> > w/ patch, 6.15-rc1 PREEMPT_RT:
-> > perf stat -r 10 --null --pre 'mount -t tmpfs tmpfs mnt' -- umount mnt
-> >     0.026311 +- 0.000869 seconds time elapsed  ( +-  3.30% )
-> > perf stat -r 10 --null --pre 'mount -t tmpfs tmpfs mnt' -- umount -l mnt
-> >     0.003194 +- 0.000160 seconds time elapsed  ( +-  5.01% )
-> > 
+> > > -----Original Message-----
+> > > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > Sent: 2025年4月2日 23:18
+> > > To: Hongxing Zhu <hongxing.zhu@nxp.com>
+> > > Cc: Frank Li <frank.li@nxp.com>; l.stach@pengutronix.de;
+> > > lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
+> > > bhelgaas@google.com; shawnguo@kernel.org; s.hauer@pengutronix.de;
+> > > kernel@pengutronix.de; festevam@gmail.com; linux-pci@vger.kernel.org;
+> > > linux-arm-kernel@lists.infradead.org; imx@lists.linux.dev;
+> > > linux-kernel@vger.kernel.org
+> > > Subject: Re: [PATCH v3 3/6] PCI: imx6: Workaround i.MX95 PCIe may not
+> > > exit L23 ready
+> > >
+> > > On Wed, Apr 02, 2025 at 07:59:26AM +0000, Hongxing Zhu wrote:
+> > > > > -----Original Message-----
+> > > > > From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > > > Sent: 2025年4月2日 15:08
+> > > > > To: Hongxing Zhu <hongxing.zhu@nxp.com>
+> > > > > Cc: Frank Li <frank.li@nxp.com>; l.stach@pengutronix.de;
+> > > > > lpieralisi@kernel.org; kw@linux.com; robh@kernel.org;
+> > > > > bhelgaas@google.com; shawnguo@kernel.org; s.hauer@pengutronix.de;
+> > > > > kernel@pengutronix.de; festevam@gmail.com;
+> > > > > linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> > > > > imx@lists.linux.dev; linux-kernel@vger.kernel.org
+> > > > > Subject: Re: [PATCH v3 3/6] PCI: imx6: Workaround i.MX95 PCIe may
+> > > > > not exit L23 ready
+> > > > >
+> > > > > On Fri, Mar 28, 2025 at 11:02:10AM +0800, Richard Zhu wrote:
+> > > > > > ERR051624: The Controller Without Vaux Cannot Exit L23 Ready
+> > > > > > Through Beacon or PERST# De-assertion
+> > > > >
+> > > > > Is it possible to share the link to the erratum?
+> > > > >
+> > > > Sorry, the erratum document isn't ready to be published yet.
+> > > > > >
+> > > > > > When the auxiliary power is not available, the controller cannot
+> > > > > > exit from
+> > > > > > L23 Ready with beacon or PERST# de-assertion when main power is
+> > > > > > not removed.
+> > > > > >
+> > > > >
+> > > > > I don't understand how the presence of Vaux affects the controller.
+> > > > > Same goes for PERST# deassertion. How does that relate to Vaux? Is
+> > > > > this erratum for a specific endpoint behavior?
+> > > > IMHO I don't know the exact details of the power supplies in this IP design.
+> > > > Refer to my guess , maybe the beacon detect or wake-up logic in
+> > > > designs is  relied on the status of SYS_AUX_PWR_DET signals in this case.
+> > >
+> > > Can you please try to get more details? I couldn't understand the errata.
+> > >
+> > Sure. Will contact designer and try to get more details.
+> Hi Mani:
+> Get some information from designs, the internal design logic is relied on the
+>  status of SYS_AUX_PWR_DET signal to handle the low power stuff.
+> So, the SYS_AUX_PWR_DET is required to be 1b'1 in the SW workaround.
 > 
-> Christian wants the patch done differently and posted his diff, so I'm
-> not going to comment on it.
-> 
-> I do have some feedback about the commit message though.
-> 
-> In v1 it points out a real user which runs into it, while this one does
-> not. So I would rewrite this and put in bench results from the actual
-> consumer -- as it is one is left to wonder why patching up lazy unmount
-> is of any significance.
 
-Certainly. Doing the test mentioned in v1 again with v4+Christian's
-suggested changes:
-- QEMU x86_64, 8cpus, PREEMPT_RT, w/o patch:
-# perf stat -r 10 --table --null -- crun run test
-    0.07584 +- 0.00440 seconds time elapsed  ( +-  5.80% )
-- QEMU x86_64, 8cpus, PREEMPT_RT, w/ patch:
-# perf stat -r 10 --table --null -- crun run test
-    0.01421 +- 0.00387 seconds time elapsed  ( +- 27.26% )
+Ok. So due to the errata, when the link enters L23 Ready state, it cannot
+transition to L3 when Vaux is not available. And the workaround requires setting
+SYS_AUX_PWR_DET bit?
 
-I will add that to the commit message.
+IIUC, the issue here is that the controller is not able to detect the presence
+of Vaux in the L23 Ready state. So it relies on the SYS_AUX_PWR_DET bit. But
+even in that case, how would you support the endpoint *with* Vaux?
 
-> I had to look up what rcupdate.rcu_normal_after_boot=1 is. Docs claim it
-> makes everyone use normal grace-periods, which explains the difference.
-> But without that one is left to wonder if perhaps there is a perf bug in
-> RCU instead where this is taking longer than it should despite the
-> option. Thus I would also denote how the delay shows up.
-
-I tried the test above while trying to force expedited RCU on the
-cmdline with:
-    rcupdate.rcu_normal_after_boot=0 rcupdate.rcu_expedited=1
-
-Unfortunately, rcupdate.rcu_normal_after_boot=0 has no effect and
-rcupdate_announce_bootup_oddness() reports:
-[    0.015251] 	No expedited grace period (rcu_normal_after_boot).
-
-Which yielded similar results:
-- QEMU x86_64, 8cpus, PREEMPT_RT, w/o patch:
-# perf stat -r 10 --table --null -- crun run test
-    0.07838 +- 0.00322 seconds time elapsed  ( +-  4.11% )
-- QEMU x86_64, 8cpus, PREEMPT_RT, w/ patch:
-# perf stat -r 10 --table --null -- crun run test
-    0.01582 +- 0.00353 seconds time elapsed  ( +- 22.30% )
-
-I don't think rcupdate.rcu_expedited=1 had an effect, but I have not
-confirmed that yet.
-
-> v1 for reference:
-> > v1: https://lore.kernel.org/all/20230119205521.497401-1-echanude@redhat.com/
+- Mani
 
 -- 
-Eric Chanudet
-
+மணிவண்ணன் சதாசிவம்
