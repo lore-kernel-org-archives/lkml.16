@@ -1,327 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F065B224FD;
-	Wed,  9 Apr 2025 18:01:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC03D270EC0
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 18:02:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744221708; cv=none; b=du2gXNtN+WF6e2Ws4n69Kh+d+Cqf2D4cL/mpMff6ypeF3N/pPGY90nH+GJDV3Ut3bVwV04y3DO0x+FBn9anQHgzhplME20Pp0GrknAJQqh95RRC5Lvy2Td2GDQVpKKLnEAZrwc2ZdX7J+sU4T0RNFDP/lnJqt77jIjkwsLb5rMo=
+	t=1744221771; cv=none; b=L4vyQZAlaMKeIQVprBFfmK+Pc4cCV2hVYJ3V5joZox8SeyBUMS/iUS52qxBohPrpqunEnJ4kSsR4GqOQJdzzUrx/UL1eryq64Uo9qJCeyNsOVJD2nhNqBhjDdgnJMjd9TCwBoJfb1p+wcB5jvX37dKR3n/W6C10C2jHmBH/OT04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744221708; c=relaxed/simple;
-	bh=OpxRysdetPZmwEfzBmXkRut/QF4t+1PGcBGiiCDSQ1g=;
+	s=arc-20240116; t=1744221771; c=relaxed/simple;
+	bh=rw9zpv1DnQzC20rG+h3qdgCl4K9t7ANELij3BfGZjOY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Yk1AhdVG/8vQhejQ/BZKEqCOPJCgx+3oIpiJw0EysoJhsyiWcKd7k7VHYSnPSG4Qal3RNM4Y5i6tFVNyHx2lKDQKQRzJye23wOybg061I3VED6t8H04csPGdp4K7aC/gEcTfj2iKAHPkSj/yNIc/hXRlZj4OhUqOlDvZgRWl+S0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=moCdWLFY; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=bov/Azzk86qiHZX0v5ajSLPQ+ydVNQLl86P/pfinhf4+gu7M6T/Y138pWGO9E8ftVFmNZbbk8YBVHpbrP4BcMbciqVBlxLSzMGiSyzh4FS5d/ssXq8LO2PDF3EPxMklk6iXOXhS4IaFbmwnC/wMRXcCThu+GRDTdursjFsTOOdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=bRNPAXbO; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="moCdWLFY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55213C4CEED;
-	Wed,  9 Apr 2025 18:01:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744221707;
-	bh=OpxRysdetPZmwEfzBmXkRut/QF4t+1PGcBGiiCDSQ1g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=moCdWLFYdYlSeYCIlF2OU+liWzwxznAcld/bsLsBL/7Ll25fehvHRUYGojqNqD8yQ
-	 cluUF25QyDccI44w0UUKAVmYkVgeSCY87BH5yDZ6O3rJJQwYbnxQO+ID15T3z411M7
-	 7O8ki8x7ihg7Bvjr5bvXAT+ZLaD8gTGKKsyas6iCJGch8rVc3umCvEOOI7FNkcNCMr
-	 4IVFCZd8ocWRlt1S5lO0FjYuBcTWalAulHp6NHMvlsYo8zjLu7i9CKWIaerqyVgqq5
-	 SxGMlKGsQeBiNklOgT1KJY0Iu7KSgYaWfV8DqGnm9lkVjKVt3RcO598Emk1RnAeMPN
-	 vGq3xTSd2IoZw==
-Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-2c2bb447e5eso3789490fac.0;
-        Wed, 09 Apr 2025 11:01:47 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUg1hLIaUhFPkSEXWvpRztvSa7y2zOfDqZAtbU76UlihMtAeVg38j2yCkIARbhzDQQuT9UTxWpxMHQ=@vger.kernel.org, AJvYcCV0TzFGZSsIs9XE3cshjU24HcBdmAGeUJEXte9Iqkh4wyWyU/ZyfBTohLYUQ0AnoPKVUvnnrS+3ViHbcaLe@vger.kernel.org, AJvYcCXgHyS0BO9U/y38iiFz4xqMXsNw42mmPPfZ1TXGskoydjrZZGgbkoGeUkjyG+LJbfQ2PEZaob1DpPY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQ/5a5ExzEkVIUIxOCTtNDPI3Al4l+9QXFPErv53HD9h2uz+eZ
-	37UxlRVvcW32jIftVtQteI41MhRIDW8JP/FodL5kbCwsYIXiKtHZCNw83SD8VZqlbN/0PRHVWu4
-	LIfo27rP2oTwuqkvAt/DMsDZDCss=
-X-Google-Smtp-Source: AGHT+IH0aSAZCZRe9OeyBsWXZdS9tQHmmLmWe2pEmHF3WD9gqr8OOF07pgYid/iw+yqovePgljplLww09TJRyB536RY=
-X-Received: by 2002:a05:6871:4004:b0:2c2:71f:2c0b with SMTP id
- 586e51a60fabf-2d08dd69215mr1972904fac.11.1744221706546; Wed, 09 Apr 2025
- 11:01:46 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="bRNPAXbO"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso951365366b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 11:02:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1744221768; x=1744826568; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=3qFFLqcADuEgBjUtPWCyjtkh5UNIkTkxSF7xerxyso8=;
+        b=bRNPAXbOwUkhs/QQg2C6ql6fTUR20G4EVXpF1IuMI+iahlE48sUND9sJcThM+z6JNS
+         WyaXL8q+m7bM3g918qtjVBzcY2y7ONhOT31xH9TQSUC3u6AKHoorzGq01klOlm/7V32t
+         sosAksWVQIuRoZW7tDwvlITl8SLi2lBpqY1KA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744221768; x=1744826568;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3qFFLqcADuEgBjUtPWCyjtkh5UNIkTkxSF7xerxyso8=;
+        b=VqcqjXrKRprABagDYxNABA4iinAR5NtjP5k1mN3papbZB0+/C6g9S7BfYVbqA1Shm5
+         DmZTJX6YleeeFSIWIE7W3d2SSbAkCaVFBs+rg/0qLIdj7RspK0yYmSClkI3SIFGyDg+J
+         2rSCDqRFrZDuF24TM9ek0AKEtJv/UQ/iIGvFQDFWZ2o4NFnU+5RQrrIIj/sRWpxMzFAz
+         z0vRenWc9emDfuIFfSfjgj7dDuzGRmHUp6VT7/3Qlms5qq9J/vHbE5YdDox2LP9Rk83/
+         dB35uK7rIQVnNxJHCrLXr4qQdFTZ6LuT1nFJeQh4aZoSYku+t98ZOu8gHoO5oytLaG8x
+         6jAg==
+X-Forwarded-Encrypted: i=1; AJvYcCUgh4l2B5UvrP3RH8SFdHr3C/lc6bo1Qmp56jQc3/67HUInp9sdQtJi1zBHxsHI+H3f+2fk7meBnz9Bn+E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWVkreqMTMHbGssxa57O+fR3oj3lE/ekZAo/dw7653irSHWb1k
+	uZgJc9Oj6w8+Mrn72NCCUC7vZAEgW2SUU0PMToJRczGBlLp2Z1xnv3o+8qlABKJE4LLD+jrze23
+	NscA=
+X-Gm-Gg: ASbGncun18VgNlacpYc4PLn+pAQYFVwUmJuXF0joXCRK4Kil8xB0aVlioE+iW3a6v87
+	OVd0NAZ7ddky7HBIoABzTEJOkdcqtkBKMBPhEowUyR+M256d5eAiujBjFgKDOMnkzg08313lGzw
+	nhA8YfdgsvmkkebS7R8HI7KYxQcNbwBsoi2vPS/N4+AVRRie1/LMWrw3cUcLZ2wtilr3YL7twni
+	73xS8g+0htrdKVLFVQ/X3+/AXA//UrD95wSAVeo0YLF3DnlwigaR/mBZH66dLSS0SCspJUV1KrU
+	t8mUTkoZ1/52ozPiLpEdcdxYe0EWyY/SrjsrdQSQrOx0RqFkS0uogiwzSr1yp6VZacm9x3SBrjn
+	dRUyQB032/V3Pp7k=
+X-Google-Smtp-Source: AGHT+IGRwjQxg5RXmDW8l0AL9t1uMpBqKhdd6IVlt5jQgK7QcmmlrhUV6ImnVgkpZrP0LycdJMj6tA==
+X-Received: by 2002:a17:907:6094:b0:abf:4bde:51b1 with SMTP id a640c23a62f3a-aca9b65e5d9mr416164166b.21.1744221767468;
+        Wed, 09 Apr 2025 11:02:47 -0700 (PDT)
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com. [209.85.218.41])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f2fbc0b791sm1091597a12.28.2025.04.09.11.02.46
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Apr 2025 11:02:46 -0700 (PDT)
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ac29fd22163so1249245766b.3
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 11:02:46 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW1J/Rru3zZNG2LgG2heVVu6ciMw4b9NFJWCPLKsrVWXniDHx5ET2lzLgj51yMyw8y/Lk/uqSc/z9auAxg=@vger.kernel.org
+X-Received: by 2002:a17:907:3f8d:b0:ac7:75b0:67d9 with SMTP id
+ a640c23a62f3a-aca9b614bf9mr434720066b.4.1744221765925; Wed, 09 Apr 2025
+ 11:02:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250326-cross-lock-dep-v1-0-3199e49e8652@bootlin.com> <20250326-cross-lock-dep-v1-9-3199e49e8652@bootlin.com>
-In-Reply-To: <20250326-cross-lock-dep-v1-9-3199e49e8652@bootlin.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 9 Apr 2025 20:01:35 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gAArg413ydKJUsX5Lu4AgwsK7Mmm+VQr3PrYWaG1khpg@mail.gmail.com>
-X-Gm-Features: ATxdqUGNVtbdm0qtuk7B2q6-vDlh_MFtMpWp0JmavlsZKB8UQ4CQ3rixuR7MbZs
-Message-ID: <CAJZ5v0gAArg413ydKJUsX5Lu4AgwsK7Mmm+VQr3PrYWaG1khpg@mail.gmail.com>
-Subject: Re: [PATCH RFC 09/10] clk: Make sure clock parents and children are
- resumed when necessary
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
-	Chen-Yu Tsai <wenst@chromium.org>, Lucas Stach <l.stach@pengutronix.de>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Marek Vasut <marex@denx.de>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Kevin Hilman <khilman@kernel.org>, 
-	Fabio Estevam <festevam@denx.de>, Jacky Bai <ping.bai@nxp.com>, Peng Fan <peng.fan@nxp.com>, 
-	Shawn Guo <shawnguo@kernel.org>, Shengjiu Wang <shengjiu.wang@nxp.com>, linux-imx@nxp.com, 
-	Ian Ray <ian.ray@gehealthcare.com>, =?UTF-8?Q?Herv=C3=A9_Codina?= <herve.codina@bootlin.com>, 
-	Luca Ceresoli <luca.ceresoli@bootlin.com>, Saravana Kannan <saravanak@google.com>
+References: <cover.1744098446.git.jpoimboe@kernel.org> <35ae5c17e8cc88506b5ae8f3b06d9491f7ef319c.1744098446.git.jpoimboe@kernel.org>
+ <20250409143821.GE9833@noisy.programming.kicks-ass.net> <4q77jakv67gmglrcbzojngyutbfi3pzgsjayrymkg7dhkxo4hl@mczk3gots764>
+In-Reply-To: <4q77jakv67gmglrcbzojngyutbfi3pzgsjayrymkg7dhkxo4hl@mczk3gots764>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 9 Apr 2025 11:02:29 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whAtuMohKpzrzt0HFLP0RdU=KB-_4fu25gG6O4R=+PXvg@mail.gmail.com>
+X-Gm-Features: ATxdqUFOiQ_tKOZcS5TVEGSjmAumzjAXnWYRgOmio6YnZvOB9gSoEEfVMNS1s34
+Message-ID: <CAHk-=whAtuMohKpzrzt0HFLP0RdU=KB-_4fu25gG6O4R=+PXvg@mail.gmail.com>
+Subject: Re: [PATCH RFC 4/5] x86/alternative: Improve code generation readability
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Ingo Molnar <mingo@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 26, 2025 at 7:26=E2=80=AFPM Miquel Raynal <miquel.raynal@bootli=
-n.com> wrote:
+On Wed, 9 Apr 2025 at 10:41, Josh Poimboeuf <jpoimboe@kernel.org> wrote:
 >
-> Any pm_runtime_get() call will both wake up the core clock as well as
-> its parents. But there are some cases which also require resuming the
-> children clocks. One way to do that is to use the new
-> pm_runtime_get_consumers() helper.
->
-> It's been identified that the following situation may require resuming
-> the children:
-> - getting the rate
-> - setting the rate
-> - changing the parent (especially since it may produce rate changes)
-> - putting the clock, which may involve reparenting as well
->
-> In order to fix the ABBA locking situation between clock and power
-> domains, let's disimburse these two locks by resuming the children
-> outside of the prepare_lock in one function call by using this new
-> helper.
->
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> ---
->  drivers/clk/clk.c | 77 +++++++++++++++++++++++++++++++++++++++++++++++++=
-++++++
->  1 file changed, 77 insertions(+)
->
-> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> index 339ebfa8cca729ffb84127e01a21f741bc270cb3..26af3a134fa7b9d7f4a77ff47=
-3df7e79fd465789 100644
-> --- a/drivers/clk/clk.c
-> +++ b/drivers/clk/clk.c
-> @@ -119,6 +119,20 @@ static int clk_pm_runtime_get(struct clk_core *core)
->         return pm_runtime_resume_and_get(core->dev);
->  }
->
-> +static int clk_pm_runtime_get_and_consumers(struct clk_core *core)
-> +{
-> +       int ret;
-> +
-> +       if (!core || !core->rpm_enabled)
-> +               return 0;
-> +
-> +       ret =3D pm_runtime_resume_and_get(core->dev);
-> +       if (!ret)
-> +               pm_runtime_get_consumers(core->dev);
+> I actually think the compactness of putting the entry on a single line
+> is really nice.
 
-So here, you also need to take children into account directly.
+Yeah, I think the noise with size calculations in particular is stuff
+that I never look at, and making it one long line is better than
+multiple lines, I think.
 
-> +
-> +       return ret;
-> +}
-> +
->  static int clk_pm_runtime_get_if_active(struct clk_core *core)
->  {
->         int ret;
-> @@ -141,6 +155,16 @@ static void clk_pm_runtime_put(struct clk_core *core=
-)
->         pm_runtime_put_sync(core->dev);
->  }
->
-> +static void clk_pm_runtime_put_and_consumers(struct clk_core *core)
-> +{
-> +       if (!core || !core->rpm_enabled)
-> +               return;
-> +
-> +       pm_runtime_put_consumers(core->dev);
+That said, for some of the alternatives, it would be even nicer if we
+could make the noise more compact by just hardcoding sizes. Our
+generic alternatives macros do result in some *very* verbose output
+that is entirely illegible to humans.
 
-And here too.
+And yes, we need that generic case for most of them, since the
+instruction size will depend on register choice and the modrm
+addressing details etc.
 
-> +
-> +       pm_runtime_put_sync(core->dev);
-> +}
-> +
->  /**
->   * clk_pm_runtime_get_all() - Runtime "get" all clk provider devices
->   *
-> @@ -2010,10 +2034,15 @@ unsigned long clk_get_rate(struct clk *clk)
->         if (!clk)
->                 return 0;
->
-> +       if (clk_pm_runtime_get_and_consumers(clk->core))
-> +               return 0;
-> +
->         clk_prepare_lock();
->         rate =3D clk_core_get_rate_recalc(clk->core);
->         clk_prepare_unlock();
->
-> +       clk_pm_runtime_put_and_consumers(clk->core);
-> +
->         return rate;
->  }
->  EXPORT_SYMBOL_GPL(clk_get_rate);
-> @@ -2605,6 +2634,10 @@ int clk_set_rate(struct clk *clk, unsigned long ra=
-te)
->         if (!clk)
->                 return 0;
->
-> +       ret =3D clk_pm_runtime_get_and_consumers(clk->core);
-> +       if (ret)
-> +               return ret;
-> +
->         /* prevent racing with updates to the clock topology */
->         clk_prepare_lock();
->
-> @@ -2618,6 +2651,8 @@ int clk_set_rate(struct clk *clk, unsigned long rat=
-e)
->
->         clk_prepare_unlock();
->
-> +       clk_pm_runtime_put_and_consumers(clk->core);
-> +
->         return ret;
->  }
->  EXPORT_SYMBOL_GPL(clk_set_rate);
-> @@ -2648,6 +2683,10 @@ int clk_set_rate_exclusive(struct clk *clk, unsign=
-ed long rate)
->         if (!clk)
->                 return 0;
->
-> +       ret =3D clk_pm_runtime_get_and_consumers(clk->core);
-> +       if (ret)
-> +               return ret;
-> +
->         /* prevent racing with updates to the clock topology */
->         clk_prepare_lock();
->
-> @@ -2665,6 +2704,8 @@ int clk_set_rate_exclusive(struct clk *clk, unsigne=
-d long rate)
->
->         clk_prepare_unlock();
->
-> +       clk_pm_runtime_put_and_consumers(clk->core);
-> +
->         return ret;
->  }
->  EXPORT_SYMBOL_GPL(clk_set_rate_exclusive);
-> @@ -2755,12 +2796,18 @@ int clk_set_rate_range(struct clk *clk, unsigned =
-long min, unsigned long max)
->         if (!clk)
->                 return 0;
->
-> +       ret =3D clk_pm_runtime_get_and_consumers(clk->core);
-> +       if (ret)
-> +               return ret;
-> +
->         clk_prepare_lock();
->
->         ret =3D clk_set_rate_range_nolock(clk, min, max);
->
->         clk_prepare_unlock();
->
-> +       clk_pm_runtime_put_and_consumers(clk->core);
-> +
->         return ret;
->  }
->  EXPORT_SYMBOL_GPL(clk_set_rate_range);
-> @@ -2964,6 +3011,10 @@ int clk_set_parent(struct clk *clk, struct clk *pa=
-rent)
->         if (!clk)
->                 return 0;
->
-> +       ret =3D clk_pm_runtime_get_and_consumers(clk->core);
-> +       if (ret)
-> +               return ret;
-> +
->         clk_prepare_lock();
->
->         if (clk->exclusive_count)
-> @@ -2977,6 +3028,8 @@ int clk_set_parent(struct clk *clk, struct clk *par=
-ent)
->
->         clk_prepare_unlock();
->
-> +       clk_pm_runtime_put_and_consumers(clk->core);
-> +
->         return ret;
->  }
->  EXPORT_SYMBOL_GPL(clk_set_parent);
-> @@ -3459,10 +3512,16 @@ static int clk_rate_set(void *data, u64 val)
->         struct clk_core *core =3D data;
->         int ret;
->
-> +       ret =3D clk_pm_runtime_get_and_consumers(core);
-> +       if (ret)
-> +               return ret;
-> +
->         clk_prepare_lock();
->         ret =3D clk_core_set_rate_nolock(core, val);
->         clk_prepare_unlock();
->
-> +       clk_pm_runtime_put_and_consumers(core);
-> +
->         return ret;
->  }
->
-> @@ -3518,11 +3577,18 @@ DEFINE_DEBUGFS_ATTRIBUTE(clk_prepare_enable_fops,=
- clk_prepare_enable_get,
->  static int clk_rate_get(void *data, u64 *val)
->  {
->         struct clk_core *core =3D data;
-> +       int ret;
-> +
-> +       ret =3D clk_pm_runtime_get_and_consumers(core);
-> +       if (ret)
-> +               return ret;
->
->         clk_prepare_lock();
->         *val =3D clk_core_get_rate_recalc(core);
->         clk_prepare_unlock();
->
-> +       clk_pm_runtime_put_and_consumers(core);
-> +
->         return 0;
->  }
->
-> @@ -3659,12 +3725,18 @@ static ssize_t current_parent_write(struct file *=
-file, const char __user *ubuf,
->         if (!parent)
->                 return -ENOENT;
->
-> +       err =3D clk_pm_runtime_get_and_consumers(parent);
-> +       if (err)
-> +               return err;
-> +
->         clk_prepare_lock();
->         err =3D clk_core_set_parent_nolock(core, parent);
->         clk_prepare_unlock();
->         if (err)
->                 return err;
->
-> +       clk_pm_runtime_put_and_consumers(parent);
-> +
->         return count;
->  }
->
-> @@ -4762,6 +4834,9 @@ void __clk_put(struct clk *clk)
->         if (!clk || WARN_ON_ONCE(IS_ERR(clk)))
->                 return;
->
-> +       if (clk_pm_runtime_get_and_consumers(clk->core))
-> +               return;
-> +
->         clk_prepare_lock();
->
->         /*
-> @@ -4784,6 +4859,8 @@ void __clk_put(struct clk *clk)
->
->         clk_prepare_unlock();
->
-> +       clk_pm_runtime_put_and_consumers(clk->core);
-> +
->         owner =3D clk->core->owner;
->         kref_put(&clk->core->ref, __clk_release);
->         module_put(owner);
->
-> --
-> 2.48.1
->
+But some of them are kind of pointless.
+
+I did have something that just knew that 'clac'/'stac' were three-byte
+instructions (and it was very obvious indeed back when we encoded them
+as such, using the ".byte" syntax).
+
+And that avoided a *lot* of noise in the alternatives section, and
+removed the subsequent ".skip" part entirely because both sides would
+just use the right size without any calculations.
+
+I can't find that hacky patch of mine, and I didn't keep it around
+because it *was* hacky, but maybe I'll try to resurrect a cleaner
+version of it.
+
+There may not be very many people who care, because yeah, it really
+only shows up when looking at the compiler-generated assembler output,
+and I agree that that isn't exactly _common_.
+
+              Linus
