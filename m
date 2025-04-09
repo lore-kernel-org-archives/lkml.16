@@ -1,147 +1,191 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10BEC12CDAE;
-	Wed,  9 Apr 2025 09:27:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20AA912CDAE;
+	Wed,  9 Apr 2025 09:28:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744190845; cv=none; b=LNGbklS40vRpCghaWTaMajyT0nZUIJoC4o5PM5+zKw1rCyVzZQmlo7xQM1hQ9jcZVdMr6/sQHQInX9V2tYZEi4t9Kh5kpixUo5Ir/bvQc/FoVM1tZIJQzQAzwIkQbTJCQw41xlmCXvA79W0KxZSibKK7HQdAYz9setQgrBrztaU=
+	t=1744190919; cv=none; b=adQzWQmhnzZ5msEmzPGfNE6JXy+R2csndwcahbgiEzB45RmvqD1rqOuX0StpFGWNgGzMq85WtBGCyUlYsIWkrNBvg5rkkBJyFe3D/6rNjF7o4LS5m8c/IvzYe4VZ0Onn59L1XK6jh/mZH+O1d/EwaOj9gsOZ2Xu5BpBqGf1u9hg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744190845; c=relaxed/simple;
-	bh=hO0SDwT67pLhlDTtYRqAD+v/GxTRKC3nAKAXae4odSQ=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=WCyctYudoFmfCerD96XMpv3R+ZeA3/HDORfJjl7TmJZp17v/8gzQM1yp5EmREXY6qY/W8drCmPI0grUSG5njvbItvXT0xcqmOSrUcCsmBZ1pMPI4rE9TghRRpfvSPhK4x8WMRAOOs21mjLa9BIt0AkAlKNqbdOt9IPcQlga8QaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZXcyw6zgBz4f3m7J;
-	Wed,  9 Apr 2025 17:26:48 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id EDDC91A058E;
-	Wed,  9 Apr 2025 17:27:13 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgCnC2BvPfZncubXIw--.15724S3;
-	Wed, 09 Apr 2025 17:27:13 +0800 (CST)
-Subject: Re: [PATCH RFC v2 00/14] md: introduce a new lockless bitmap
-To: Christoph Hellwig <hch@lst.de>, Yu Kuai <yukuai1@huaweicloud.com>
-Cc: xni@redhat.com, colyli@kernel.org, axboe@kernel.dk, agk@redhat.com,
- snitzer@kernel.org, mpatocka@redhat.com, song@kernel.org,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- dm-devel@lists.linux.dev, linux-raid@vger.kernel.org, yi.zhang@huawei.com,
- yangerkun@huawei.com, kbusch@kernel.org, "yukuai (C)" <yukuai3@huawei.com>
-References: <20250328060853.4124527-1-yukuai1@huaweicloud.com>
- <Z-aCzTWXzFWe4oxU@infradead.org>
- <c6c608e2-23e7-486f-100a-d1fb6cfff4f2@huaweicloud.com>
- <20250409083208.GA2326@lst.de>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <115c3b08-aff1-dd97-fe6a-7901452ce62c@huaweicloud.com>
-Date: Wed, 9 Apr 2025 17:27:11 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+	s=arc-20240116; t=1744190919; c=relaxed/simple;
+	bh=9V07LzGaas5AZ+oux1lgxy/80UvkgLFtP9F6ZYTTbws=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hiMEz+gMIdc7qO5dYGoXLz7SI9MdCWXHq5wbVaSfAYXB9R8uoHR+cz8I9XJvQp01jxF5EGxvT/STfNuS55VAn8O5qBub+5+LaXWb57LcSayJJdS6giG/rZ3uXwEMKzPz/ECEjsLnXkImJjOAYt7Z/bl7j3qwbSPgtO7XNIz0zNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=LH27FwtY; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="LH27FwtY"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=nXxv0ft02xQmL5xjLiDXgZUpWE6PV4IMsxVkdLC+K5Y=; b=LH27FwtYmQeaz34BpW6bsmsbC1
+	GT2UqhP3QQWnqSP6HcQ/JnPWW4E7KNXCpKstwRjMazUfCQREHzgX657mcPNM6kwCCO2RNpODg3I+p
+	iN61GByQ5lreandT+U6icXzKkIBvToGleFbZljJSAJXBgm3EyoFqcJH7AxBuEt17S2uVDt7Bo0YrX
+	3XHMlgTYKdNV39o2QaQQz10wGmHk/VbNx7F2lNF8ISfusmlAaQZAahnRzBPzUlYinBcFfbI0Of1rn
+	3Le4AZ5DnQ/iTO/D3W9JquCvJu0K3D1CLERc9/zoP6Znt8isBVKQmPDa/kA+/FKJJ18cCeAKOX8Uu
+	jYViuU4A==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:49584)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1u2RjN-0000JX-2y;
+	Wed, 09 Apr 2025 10:28:25 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1u2RjK-0002SD-1Q;
+	Wed, 09 Apr 2025 10:28:22 +0100
+Date: Wed, 9 Apr 2025 10:28:22 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Vladimir Oltean <vladimir.oltean@nxp.com>
+Cc: Kory Maincent <kory.maincent@bootlin.com>, Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Marek =?utf-8?B?QmVo4oia4oirbg==?= <kabel@kernel.org>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH net-next v2 0/2] Add Marvell PHY PTP support
+Message-ID: <Z_Y9tvN7rk9YJTPN@shell.armlinux.org.uk>
+References: <20250407-feature_marvell_ptp-v2-0-a297d3214846@bootlin.com>
+ <Z_P3FKEhv1s0y4d7@shell.armlinux.org.uk>
+ <20250407182028.75531758@kmaincent-XPS-13-7390>
+ <Z_P-K7mEEH6ProlC@shell.armlinux.org.uk>
+ <20250407183914.4ec135c8@kmaincent-XPS-13-7390>
+ <Z_WJO9g5Al1Yr_LX@shell.armlinux.org.uk>
+ <20250409103130.43ab4179@kmaincent-XPS-13-7390>
+ <Z_Yxb6-qclDSWk01@shell.armlinux.org.uk>
+ <20250409083835.pwtqkwalqkwgfeol@skbuf>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250409083208.GA2326@lst.de>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCnC2BvPfZncubXIw--.15724S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxWry5WFWDtw4fJw4fCFykXwb_yoW5CFW3pF
-	ZxKr1Fkr4DJrWxWrn7Zws7XFyFk3ykJFZrJrySq3sYkr98Grna9r18KayYqa4UXr48JF4a
-	vFWvq34rXa15AFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBF14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVW8ZVWrXwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0pRHUDLUUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409083835.pwtqkwalqkwgfeol@skbuf>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Hi,
-
-ÔÚ 2025/04/09 16:32, Christoph Hellwig Ð´µÀ:
-> On Sat, Mar 29, 2025 at 09:11:13AM +0800, Yu Kuai wrote:
->> The purpose here is to hide the low level bitmap IO implementation to
->> the API disk->submit_bio(), and the bitmap IO can be converted to buffer
->> IO to the bdev_file. This is the easiest way that I can think of to
->> resue the pagecache, with natural ability for dirty page writeback. I do
->> think about creating a new anon file and implement a new
->> file_operations, this will be much more complicated.
+On Wed, Apr 09, 2025 at 11:38:35AM +0300, Vladimir Oltean wrote:
+> On Wed, Apr 09, 2025 at 09:35:59AM +0100, Russell King (Oracle) wrote:
+> > On Wed, Apr 09, 2025 at 10:31:30AM +0200, Kory Maincent wrote:
+> > > On Tue, 8 Apr 2025 21:38:19 +0100
+> > > "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
+> > > 
+> > > > On Mon, Apr 07, 2025 at 06:39:14PM +0200, Kory Maincent wrote:
+> > > > > On Mon, 7 Apr 2025 17:32:43 +0100
+> > > > > "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
+> > > > > > I'm preferring to my emails in connection with:
+> > > > > > 
+> > > > > > https://lore.kernel.org/r/ZzTMhGDoi3WcY6MR@shell.armlinux.org.uk
+> > > > > > 
+> > > > > > when I tested your work last time, it seemed that what was merged hadn't
+> > > > > > even been tested. In the last email, you said you'd look into it, but I
+> > > > > > didn't hear anything further. Have the problems I reported been
+> > > > > > addressed?  
+> > > > > 
+> > > > > It wasn't merged it was 19th version and it worked and was tested, but not
+> > > > > with the best development design. I have replied to you that I will do some
+> > > > > change in v20 to address this.
+> > > > > https://lore.kernel.org/all/20241113171443.697ac278@kmaincent-XPS-13-7390/
+> > > > > 
+> > > > > It gets finally merged in v21.  
+> > > > 
+> > > > Okay, so I'm pleased to report that this now works on the Macchiatobin:
+> > > > 
+> > > > where phc 2 is the mvpp2 clock, and phc 0 is the PHY.
+> > > 
+> > > Great, thank you for the testing!
+> > > 
+> > > > 
+> > > > # ethtool -T eth2
+> > > > Time stamping parameters for eth2:
+> > > > Capabilities:
+> > > >         hardware-transmit
+> > > >         software-transmit
+> > > >         hardware-receive
+> > > >         software-receive
+> > > >         software-system-clock
+> > > >         hardware-raw-clock
+> > > > PTP Hardware Clock: 2
+> > > > Hardware Transmit Timestamp Modes:
+> > > >         off
+> > > >         on
+> > > >         onestep-sync
+> > > >         onestep-p2p
+> > > > Hardware Receive Filter Modes:
+> > > >         none
+> > > >         all
+> > > > 
+> > > > So I guess that means that by default it's using PHC 2, and thus using
+> > > > the MVPP2 PTP implementation - which is good, it means that when we add
+> > > > Marvell PHY support, this won't switch to the PHY implementation.
+> > > 
+> > > Yes.
+> > > 
+> > > > 
+> > > > Now, testing ethtool:
+> > > > 
+> > > > $ ./ethtool --get-hwtimestamp-cfg eth2
+> > > > netlink error: Operation not supported
+> > > > 
+> > > > Using ynl:
+> > > > 
+> > > > # ./ynl/cli.py --spec netlink/specs/ethtool.yaml --no-schema --dump
+> > > > tsconfig-get --json '{"header":{"dev-name":"eth2"}}' []
+> > > > 
+> > > > So, It's better, something still isn't correct as there's no
+> > > > configuration. Maybe mvpp2 needs updating first? If that's the case,
+> > > > then we're not yet in a position to merge PHY PTP support.
+> > > 
+> > > Indeed mvpp2 has not been update to support the ndo_hwtstamp_get/set NDOs.
+> > > Vlad had made some work to update all net drivers to these NDOs but he never
+> > > send it mainline:
+> > > https://github.com/vladimiroltean/linux/commits/ndo-hwtstamp-v9
+> > > 
+> > > I have already try to ping him on this but without success.
+> > > Vlad any idea on when you could send your series upstream?
+> > 
+> > Right, and that means that the kernel is not yet ready to support
+> > Marvell PHY PTP, because all the pre-requisits to avoid breaking
+> > mvpp2 have not yet been merged.
+> > 
+> > So that's a NAK on this series from me.
+> > 
+> > I'd have thought this would be obvious given my well known stance
+> > on why I haven't merged Marvell PHY PTP support before.
+> > 
+> > -- 
+> > RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> > FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
 > 
-> I've started looking at this a bit now, sorry for the delay.
-> 
-> As far as I can see you use the bitmap file just so that you have your
-> own struct address_space and thus page cache instance and then call
-> read_mapping_page and filemap_write_and_wait_range on it right?
-Yes.
+> I will try to update and submit that patch set over the course of this
+> weekend.
 
-> 
-> For that you'd be much better of just creating your own trivial
-> file_system_type with an inode fully controlled by your driver
-> that has a trivial set of address_space ops instead of oddly
-> mixing with the block layer.
+Thanks. Friday is really the last day for me for an uncertain period
+thereafter where I won't be able to do any further testing.
 
-Yes, this is exactly what I said implement a new file_operations(and
-address_space ops), I wanted do this the easy way, just reuse the raw
-block device ops, this way I just need to implement the submit_bio ops
-for new hidden disk.
+I don't run PTP on my network as it's IMHO not as good as NTP with the
+hardware I have. It's also been five years since I last had something
+setup, which was when I was working on Marvell PHY support, All the
+knowledge I had back then for PTP support has been "swapped out" into
+/dev/null. I don't even remember which machines I was using, and thus
+have no idea if they're even still connected to the network.
 
-I can try with new fs type if we really think this solution is too
-hacky, however, the code line will be much more. :(
+As this has already been blocked on this for five years, I don't think
+it's unreasonable that it takes longer, so please don't feel that you
+need to get them done by Friday.
 
-> 
-> Note that either way I'm not sure using the page cache here is an
-> all that good idea, as we're at the bottom of the I/O stack and
-> thus memory allocations can very easily deadlock.
+Just be aware that I won't be able to test again for an uncertain
+period thereafter.
 
-Yes, for the page from bitmap, this set do the easy way just read and
-ping all realted pages while loading the bitmap. For two reasons:
-
-1) We don't need to allocate and read pages from IO path;(In the first
-RFC version, I'm using a worker to do that).
-2) In the first RFC version, I find and get page in the IO path, turns
-out page reference is an *atomic*, and the overhead is not acceptable;
-
-And the only action from IO path is that if bitmap page is dirty,
-filemap_write_and_wait_range() is called from async worker, the same as
-old bitmap, to flush bitmap dirty pages.
-> 
-> What speaks against using your own folios explicitly allocated at
-> probe time and then just doing manual submit_bio on that?  That's
-> probably not much more code but a lot more robust.
-
-I'm not quite sure if I understand you correctly. Do you means don't use
-pagecache for bitmap IO, and manually create BIOs like the old bitmap,
-meanwhile invent a new solution for synchronism instead of the global
-spin_lock from old bitmap?
-
-Thanks,
-Kuai
-
-> 
-> Also a high level note: the bitmap_operations aren't a very nice
-> interface.  A lot of methods are empty and should just be called
-> conditionally.  Or even better you'd do away with the expensive
-> indirect calls and just directly call either the old or new
-> bitmap code.
-> 
->> Meanwhile, bitmap file for the old bitmap will be removed sooner or
->> later, and this bdev_file implementation will compatible with bitmap
->> file as well.
-> 
-> Which would also mean that at that point the operations vector would
-> be pointless, so we might as well not add it to start with.
-> 
-> .
-> 
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
