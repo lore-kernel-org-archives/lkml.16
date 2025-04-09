@@ -1,120 +1,181 @@
-Received: from mail-m49197.qiye.163.com (mail-m49197.qiye.163.com [45.254.49.197])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27F271D54FA;
-	Wed,  9 Apr 2025 09:43:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA381D54FA
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 09:44:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744191835; cv=none; b=vCIzcnC8HQiOarnzvV7lK0Z1bMe7AntsEpXto3VzG29M256oZ4pdymXMm+Ed8hS5Z3bpmWJEs32rbbGm+TCf58tWJuTVDIpm1XxCCO3cbSBA05k0iO5O4JvWK9v4YivRx6raRDO8UmI/cYlBtjeIWeVwDZnkxOtSufKhKCyKdo4=
+	t=1744191842; cv=none; b=GqaDU9tDvuIgj8SzEBrgF0Yqo26w3d4In0SHCPUqLKtSi+rc0m/pZDId7hSgqGzQkjfNMFpblVYwZF2jtYlmofrUMSnr/68Kg7AtEgi/VnkQtnWPADaH3LA2jq7pE5otPk6Yf7DaPpUg1eVN2K35rWCTnq4pxH/sGkjRCRsQdG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744191835; c=relaxed/simple;
-	bh=84ymEGm4zvSJ3WXK2INgidAW+cBpZ4oXWDbgkmXwmIc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=o8+5donf6fxhnAD3NMGCeJRxYpeS6kYsSz+ax+SEO3z5/LO4j3jAYSXgtPetnu9sLgytP43UHRnuCUWWc/fqOh4dZArwnG4OUQFlzjyBQc9/bE5jtSkJsjh1zpvy+YKqqx2AkeE/F76WltITBAzd91QntFaczNECRHqE+xIv9DQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn; spf=pass smtp.mailfrom=whut.edu.cn; arc=none smtp.client-ip=45.254.49.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=whut.edu.cn
-Received: from [198.18.0.1] (gy-adaptive-ssl-proxy-2-entmail-virt205.gy.ntes [27.18.106.237])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 113920671;
-	Wed, 9 Apr 2025 17:43:41 +0800 (GMT+08:00)
-Message-ID: <a71f45fc-d266-447d-8fb0-1ff0897f5bff@whut.edu.cn>
-Date: Wed, 9 Apr 2025 17:43:41 +0800
+	s=arc-20240116; t=1744191842; c=relaxed/simple;
+	bh=qgbt78J6YUlj9E/mqPX2zDzf7z9lsZzNRFMWS/p05hU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=iZDV+HT5P/4oDrSM/sKD1JzhHcEb2fI6OI6pEsQmPSucsUeBVSdQ7g/ge2agODadqYFknuYa8vUgLdTwIfB2sNLKrCjlo7DAPJ/ABVTQqdTwYD3wiH0O4OJEsXu/taeXiz+MFdcUOaX8g48+oHtbBERSTdvwsCYWnsxtKzUM/4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=THwnFTdk; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="THwnFTdk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744191839;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G7znzCj/gfMRbAPJAEPE1rTbQF7vTbZ1Y1hJc3xX8N8=;
+	b=THwnFTdkOqieDievgHeG/SqRgOB5nTyJod4QImtnUO/RDqONCjL9zaqIh4RuDhK+TGCoBn
+	y4m49+h72h3HN108Yjl+wFSv6pwN19SBFyF9BwezUabSVqPj8uHjkfGqqktKa0gnD3h8ac
+	pVQxo9xTsyf02iVppJSFm/YAnWIRAsI=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-66-mDZeD2OAM7K9a5wFofBttA-1; Wed, 09 Apr 2025 05:43:58 -0400
+X-MC-Unique: mDZeD2OAM7K9a5wFofBttA-1
+X-Mimecast-MFC-AGG-ID: mDZeD2OAM7K9a5wFofBttA_1744191837
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43947a0919aso46050955e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 02:43:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744191837; x=1744796637;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=G7znzCj/gfMRbAPJAEPE1rTbQF7vTbZ1Y1hJc3xX8N8=;
+        b=df5Yxmr+7ugoT5pjeEQeDDRXNyPoTEwvUzzM1ZQpwULctUmxVJdBSx4qajge3aawyy
+         IvWsMhsOX+bo0zzQ9G3DwzK3646HJWKsf2fs/mV/Xz94YKx0Vog1Tphsc7TboswSnu8a
+         YXPt8IiY0vaE256XdywCHH+JU1bWVuouTtrOtcGkHmeWvTGG4BPJJ9uDETMLa1imzLvK
+         iDz+Hf4so9JfiLxLURZc/PuzwOi5Zlg40Aeho9BVq/v4K2If1iYvGFudcnmUCdvmtx3j
+         LrMQ4uJvDdrFj/YpOEFfGKfmy2V+BQFx1PnVuIVvcNGbMulBKNC5aqYT4V5jyEE3Alfo
+         w3bg==
+X-Forwarded-Encrypted: i=1; AJvYcCWcQqXWpVJ5saiDeypgVF10SgqxAsVemHAAw85IKbhOFYbP4cfkkj5gBVOsAGx1iTpsJEt8X5kRJ5JILt4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUojA2nScUxvuvSArNoljH3hIYqd8td5Cv9HWEGtQqHET2cb1n
+	hJeWo93BFPhcYMXwZusf0Ynivn3OJAySPgw6uisuj1v4pRY8sAiknrm4efW3Mp/eKmKSPy54ZgM
+	2BCxCmbHHrCIeWCqk2ZDdyMwYPwH7fRgUaBX47YQ5oymrdjBAbz+w/hN8/nST+g==
+X-Gm-Gg: ASbGncutgd7jmrdYizqZa8X+4fDw2fss5Ta0C40N1fruXXO3aHFJ5NK838M78x7wbtb
+	VVkKxGOIQd68Gy8WwuEPtQ7Ydjc1DqDJoSYYOk57XUhGOpvHwb83G8mFtLhE62QIWgGDy2Ej5sc
+	5sTaIRHENUh/MbtxMs6wJAkfC5SE5qAq4i6a0y51O8SHjGOKJ0VBl/aXXTif+QB3jZpXoycXL0g
+	GBGx37dHX/va3QR6icYt30k9vvZesmfQWCemq4cmph9HIbLtclcXenxhxug7YowFn7u8creF5rH
+	JwGyQ0HX6P51lQfSySVsYY8hmghuL86OCzhB28pV0JxaX00zpBlhc9+KN7qEoGdEoVqSdA==
+X-Received: by 2002:a5d:64c4:0:b0:391:3915:cffb with SMTP id ffacd0b85a97d-39d885612a7mr1577987f8f.43.1744191836702;
+        Wed, 09 Apr 2025 02:43:56 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHGu4u3BK/v6GJbjaLAKLe1GqebFBXWq85va/hCAimH4+nbm9+X2gTzlrwLpJ0IJFLslffWkQ==
+X-Received: by 2002:a5d:64c4:0:b0:391:3915:cffb with SMTP id ffacd0b85a97d-39d885612a7mr1577958f8f.43.1744191836268;
+        Wed, 09 Apr 2025 02:43:56 -0700 (PDT)
+Received: from localhost (62-151-111-63.jazzfree.ya.com. [62.151.111.63])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d893f113csm1113919f8f.69.2025.04.09.02.43.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 02:43:55 -0700 (PDT)
+From: Javier Martinez Canillas <javierm@redhat.com>
+To: Marcus Folkesson <marcus.folkesson@gmail.com>
+Cc: David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas
+ Zimmermann <tzimmrmann@suse.de>
+Subject: Re: [PATCH v3 2/3] drm/st7571-i2c: add support for Sitronix ST7571
+ LCD controller
+In-Reply-To: <Z_YWq4ry6Y-Jgvjq@gmail.com>
+References: <20250408-st7571-v3-0-200693efec57@gmail.com>
+ <20250408-st7571-v3-2-200693efec57@gmail.com>
+ <87cydn9bkx.fsf@minerva.mail-host-address-is-not-set>
+ <Z_Uin2dvmbantQU4@gmail.com>
+ <87ecy1g8z8.fsf@minerva.mail-host-address-is-not-set>
+ <Z_YWq4ry6Y-Jgvjq@gmail.com>
+Date: Wed, 09 Apr 2025 11:43:54 +0200
+Message-ID: <87bjt5fz51.fsf@minerva.mail-host-address-is-not-set>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/7] phy: spacemit: add USB3 support for K1 PCIe/USB3
- combo PHY
-To: Krzysztof Kozlowski <krzk@kernel.org>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>
-Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
- linux-riscv@lists.infradead.org, spacemit@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-References: <20250407-b4-k1-usb3-v3-2-v1-0-bf0bcc41c9ba@whut.edu.cn>
- <20250407-b4-k1-usb3-v3-2-v1-5-bf0bcc41c9ba@whut.edu.cn>
- <74770bec-eeda-4823-b494-bea177fe26b0@kernel.org>
-Content-Language: en-US
-From: Ze Huang <huangze@whut.edu.cn>
-In-Reply-To: <74770bec-eeda-4823-b494-bea177fe26b0@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCHx4ZVh8YSBlCHUhKHR1NQlYeHw5VEwETFhoSFy
-	QUDg9ZV1kYEgtZQVlJTFVKQ1VKS01VSUhMWVdZFhoPEhUdFFlBWU9LSFVKS0hKTkxPVUpLS1VKQk
-	tLWQY+
-X-HM-Tid: 0a9619ef181403a1kunm113920671
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MRQ6HCo5TjJCDjwXERcME0kh
-	NVFPCShVSlVKTE9PSkJKQ0lDTUpPVTMWGhIXVRMOGhUcAR47DBMOD1UeHw5VGBVFWVdZEgtZQVlJ
-	TFVKQ1VKS01VSUhMWVdZCAFZQUhOS0o3Bg++
+Content-Type: text/plain
 
-On 4/7/25 9:28 PM, Krzysztof Kozlowski wrote:
-> On 07/04/2025 14:38, Ze Huang wrote:
->> Add support for USB 3.0 mode on the K1 PCIe/USB3 combo PHY. Currently,
->> only USB mode is supported; PCIe support is not included in this change.
->>
->> Signed-off-by: Ze Huang <huangze@whut.edu.cn>
->> ---
->>   drivers/phy/spacemit/Kconfig          |   8 ++
->>   drivers/phy/spacemit/Makefile         |   1 +
->>   drivers/phy/spacemit/phy-k1-combphy.c | 229 ++++++++++++++++++++++++++++++++++
->>   3 files changed, 238 insertions(+)
->>
->> diff --git a/drivers/phy/spacemit/Kconfig b/drivers/phy/spacemit/Kconfig
->> index f0c2a33f53cc810e71c6140ae957aa68a2b6ff0c..12749aba756329cf64fb9199055ba484fe05f3ab 100644
->> --- a/drivers/phy/spacemit/Kconfig
->> +++ b/drivers/phy/spacemit/Kconfig
->> @@ -10,3 +10,11 @@ config PHY_SPACEMIT_K1_USB2
->>   	help
->>   	  Enable this to support K1 USB 2.0 PHY driver. This driver takes care of
->>   	  enabling and clock setup and will be used by K1 udc/ehci/otg driver.
->> +
->> +config PHY_SPACEMIT_K1_COMBPHY
->> +	tristate "SpacemiT K1 PCIe/USB3 combo PHY support"
->> +	depends on OF
->> +	select GENERIC_PHY
->> +	default ARCH_SPACEMIT && USB_DWC3_SPACEMIT
->> +	help
->> +	  USB3/PCIe Combo PHY Support for SpacemiT K1 SoC
-> Missing depends on ARCH_SPACEMIT || COMPILE_TEST
+Marcus Folkesson <marcus.folkesson@gmail.com> writes:
 
-Will fix, thanks!
+Hello Marcus,
 
->
-> ...
->
->
->> +	priv->phy = devm_phy_create(dev, NULL, &spacemit_combphy_ops);
->> +	if (IS_ERR(priv->phy))
->> +		return dev_err_probe(dev, PTR_ERR(priv->phy),
->> +				     "failed to create combphy\n");
->> +
->> +	dev_set_drvdata(dev, priv);
->> +	phy_set_drvdata(priv->phy, priv);
-> Both make no sense. Look what this function does.
+[...]
 
-It does seem redundant at first glance, but pdev->dev is the parent of 
-phy->dev.
-pdev->dev->driver_data will be used in spacemit_combphy_xlate()
-phy->dev->driver_data  will be used in phy_ops functions
+>> 
+>> That's a god question, I don't really know...
+>> 
+>> But fbdev does support XRGB8888, which may be another good reason to add
+>> it and make it the default format. Yes, it will cause an unnecessary pixel
+>> format conversion but the I2C transport is so slow anyways that compute is
+>> not the bottleneck when using these small displays.
+>
+> Hrm, I now realised that I have another issue.
+> Not all LCDs that will be attached to the ST7571 controller will be
+> grayscale.
+> The display I've attached to the ST7571 is a monochrome LCD for example.
+>
 
-I've checked some other drivers that did the same:
-     - phy-zynqmp.c at lines 990 and 1026
-     - phy-rockchip-samsung-hdptx.c at lines 1989 and 2000
+Oh, that's very interesting. This means that vendors are using a more capable IC
+(i.e: ST7571) for display controllers + LCD panels board designs, even where they
+could had used a less capable one (i.e: ST7765). That is, using an IC that supports
+2-bit grayscale when they could just used one that only supported monochrome pixels.
 
+From a quick search, I found for example this one from SinoCrystal:
+
+https://displaysino.com/product_details/SC128128012-V01.html
+
+> Maybe the right way to do it is to only support XRGB8888 and specify 
+> if the display is monochrome or grayscale in the device tree.
 >
-> Best regards,
-> Krzysztof
+> Or do you have any good suggestions?
 >
->
+
+I don't know the proper way to handle this, but what I would do is to include
+the actual boards as entries in the OF device ID table instead of just the ICs.
+
+And then for each entry you can specify what formats are supported, e.g:
+
+static const uint32_t monochrome_formats[] = {
+	DRM_FORMAT_XRGB8888,
+        DRM_FORMAT_R1
+};
+
+static const uint32_t grayscale_formats[] = {
+	DRM_FORMAT_XRGB8888,
+        DRM_FORMAT_R1
+        DRM_FORMAT_R2
+};
+
+static const struct of_device_id st7571_of_match[] = {
+	/* monochrome displays */
+	{
+		.compatible = "sinocrystal,sc128128012-v01",
+		.data = monochrome_formats,
+	},
+...
+        /* grayscale displays */
+	{
+		.compatible = "foo,bar",
+		.data = grayscale_formats,
+	},
+};
+
+and then in your probe callback, you can get the correct format list for
+the device matched. Something like the following for example:
+
+static int st7571_probe(struct i2c_client *client) {
+       const uint32_t *formats = device_get_match_data(client->dev);
+       ...
+
+       ret = drm_universal_plane_init(..., formats, ...);
+       ...
+};
+
+Likely you will need to define more stuff to be specific for each entry, maybe
+you will need different primary plane update handlers too. Similar to how I had  
+to do it the ssd130x driver to support all the Solomon OLED controller families:
+
+https://elixir.bootlin.com/linux/v6.11/source/drivers/gpu/drm/solomon/ssd130x.c#L1439
+
+-- 
+Best regards,
+
+Javier Martinez Canillas
+Core Platforms
+Red Hat
+
