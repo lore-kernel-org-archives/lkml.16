@@ -1,69 +1,70 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BE6B20E32F
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 11:00:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5181A188006
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 11:00:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744196427; cv=none; b=d5sZliXalnCBBqVTuYyCzLuhda9i2Rpu3dWNnyQqQ2+y8wzItMmOZVVzLaxHAUN6wSoLu0pbF3TWwHIaQJ6HM2jhC2XBU8MLDsG9ZPLQhimdseQHIdNN0EfPDUUpgE6TDFhSL0gwLPBlz8ZVN2qR77lRToN3CiZ0VPPcx8w8WUA=
+	t=1744196443; cv=none; b=T4vkv/HAPu+JAc47KdOrZkLfa7CmZ7Z9BLnd2QXgzsEb1w5Qu5wX2CL1+xkr87mS4M58AWvJhJ8ZqHMp/ubHTL9ja4SsnqXuAfO2GOKSYx1YHnlP5jKkG5dhp99Tz8ID39uXHQRhFNnkDoc3rMj/FoTbuID0YOvyGCsPlFIlZuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744196427; c=relaxed/simple;
-	bh=TXbbF1zjZi8YpyEwLeqY6OJ4Ffj6+deknefbHUzUNHQ=;
+	s=arc-20240116; t=1744196443; c=relaxed/simple;
+	bh=E5E1BmPjEKd9c0c0GxDB+1P9MW+/Vj/8fin/Wp/T8W0=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=bQiq2PDy0zKaG3uZre4YqIhPqMslYy7jvJmOh6GoUMYOb2kpsuRfWC7R7w4Kh5M0rmGS1sGVPtbM2zdW5asfL0PBV7B3JI9mnrkHMYLkUWOK8g1Kfws6atRL8IlJDvtGqHfe1X4osL8Uy7a0XH/fWRTWdyau6DN+EvdO718AGig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PwlvHVZo; arc=none smtp.client-ip=209.85.221.47
+	 Content-Disposition; b=BCwx7YnM2NKRgVgMt/SibyS/UwiCF8qhDJXBqFZKVfDXfhtPqFqmWmneFlrmONxUTlK5Mtq32WS98I7x88qGDjxQYZ1drnlWlYbWm2QBY7jQLRTwTOTejeFfijBPxLYSuaxNYGzxht+BYEvklPqdGED7sgkB+eDVYxa0IL/PNhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Rx4Nqzjh; arc=none smtp.client-ip=209.85.221.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PwlvHVZo"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-39149bccb69so6210582f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 04:00:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Rx4Nqzjh"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3913b539aabso4012771f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 04:00:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744196424; x=1744801224; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1744196439; x=1744801239; darn=vger.kernel.org;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=kbiuDHdVeIa3R6A3S/AmU2DqX1Wn9eEzl5pawdchrAM=;
-        b=PwlvHVZoEUn0//wun9PYY3aH2bH+feMOEPMOZJIwh2Uz8QlArr8qKLhKwMnnJA1wt7
-         Gr/VNcDzkDD12AumaK3gVIPAaAFhLTefHTL/aMivkWCqOCd25EXACSMJoj9SwELsHG5s
-         4xdzTTW/B63aC8otcEDZ/y85E8XpyEMVd9orIMELijo0d90aYnQBxJNNS6gMSZsbfo+v
-         wWih4mk8r/5FaFwEugAGeRQ0Yp7fpEDoedsGrbOn3c7IMn18plBzlyNSEOcobI++8W3f
-         41oovLQ/0TjPYYXoVzMf4KnysHssba6mmTDK4ucy/BbMbG9MO8sqdhIiLQ0V/OLzUdHV
-         ddvg==
+        bh=dMsTxQJ4MJkThAh69c9vTEJavOMnmubT5UY82dUq9UM=;
+        b=Rx4NqzjhVxUK2pgfGghu5EFAHEgZMr+INUhpcbd7iu/meSwnlPSyDBlrWG3VNWeh91
+         4AtYw5Wpj1woLRm6asY0dcpCgAAmUfte4SUR31MoMfs4tOS+GdNwgCr4lDoEZ22wfHy6
+         a8dykjEE+3LSLYWcHx/u+QIbvKaiPvy7PftSN9uQE17U4VpYawY5YrHnwQbbS1y91T+x
+         z3g/a5W9q0qpYPQGIe9esf9s0JbVaRIiiHUmnFvbMCgcwhY+klRwA8rqeCDHT6G/5fi1
+         0pKTQMoMdjXYBZ0uM2PSR76DBOST9JdEYZVjDQxTfnz07qEdL7tW0c4XhbLOwKUzS7IT
+         RPEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744196424; x=1744801224;
+        d=1e100.net; s=20230601; t=1744196439; x=1744801239;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kbiuDHdVeIa3R6A3S/AmU2DqX1Wn9eEzl5pawdchrAM=;
-        b=uKnWRx1dHgw45LYPn3/Wpum+jQKsVe8pBgomB4oKwJPiqJlhP4KPHst/94NB7qYuxG
-         1x6zeZFM5bnk19M1vQNIDe4VLwfZgpHNktC/R730XWtCpWnkdpsFl7QPKxAgFfjSViVZ
-         ytuZ7+8pxhMssKBC1N+w/7gj0AqiVyytn18L/3tx3e9DKv28bSKOSjVpZlnti8iYiNJZ
-         JPP6sAVsn0pG8JMIsjXCN9lFAyeESFncMMhjh55xMKr5gLSxVvLWRf/oVXMpweCRcuq9
-         vrwIdC+XDeoVZXM+rScHyEsmOww4J/yxA105fGQfLAwLFlbQSuo/lqlISXo8En5/l8H8
-         6SXw==
-X-Forwarded-Encrypted: i=1; AJvYcCVYpFErMvXt31I50It9XrxPku3BPVDuKjx78NV5soSg3v5k98pUxLH2xyqVDk0sUL7VWi4pkbUMdtc7MlE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAoo44IzwZx21IXyZNBCpWv1EDxjAg43XZnlRiefHg/KQUMV1n
-	zv1EBJiWMFAwJeQFcKHcSbihJtrvt6sR7Z1emxQoH9jtxwSe3fiyjK5/9HypCIA=
-X-Gm-Gg: ASbGncsq8eqjcHC4pKBigmicrvyKaJ/x3T3txw/ysKQaa205xeqH+GHCWArlPDvom7A
-	lky8BgRHlSHLSCW9EDz9KpYJ5HEyDf7IIHqGTedZA4kFBbxNYIU2fRVVvEWP8CS34g4HH7O1rJx
-	+VZCJsaqb+K29Eu4yhl2shDvxQATlELZVyvedVb+DTZ0HEZ5vpxy/yfB7nwhALTiTIzRIAUsAjw
-	RDV6efxlkjQqGu8eUvAxT4v4fVL53hfZCaT4ihQxDmBqxR4ksWX7umyMzLOkFvixQEMQR8M1oaj
-	G1TTq30dG8jneahGDcSSDJJzvHuK4AODPze+E8t44B3KmsZoNQcvOCQb
-X-Google-Smtp-Source: AGHT+IEMjvJRXwtECocC18o7I7YJL0m4T21SAiMp4ugNPg39UK5Hf4bTJoM5nx1QtVGbXPOR2J/7dw==
-X-Received: by 2002:a5d:5c84:0:b0:39a:c80b:8288 with SMTP id ffacd0b85a97d-39d87ab92bamr2196525f8f.33.1744196424413;
-        Wed, 09 Apr 2025 04:00:24 -0700 (PDT)
+        bh=dMsTxQJ4MJkThAh69c9vTEJavOMnmubT5UY82dUq9UM=;
+        b=BilmlJu27ESVpOC2yhOZKBP6nLP13TsYnsxKX+8NfTsovf8uEKEDHH9M6FlhGc70W7
+         1feIq24kE1wptqXzXl6wWxS4KdT+qd07kWl7kU7dkvuN0p1fSjfTBOnPZETxkCdUJTUT
+         2xjM66cUIbDqmccJFC7BRBf7FeJwBL6Fnb5jBF3LAd3ip6+VSl2sOkMIlnqZwtSPqBnb
+         BGabzGWmShRH96yyZAR3BZTArOK3NBSD3cv2a9DvxLnVnfV8aHMthSDiRCj+fCxpIb4n
+         a1gTxzOcz4ApFJMJ6nPOaLB3oM/rnx51EZ25fKl/DmZpiB96uP4D8I+iys74uxzQOgpp
+         3a1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXJbFvGsvtLjPE0hhuDKJaelQFcNGs1KdhNb47BIantwX5/4BXcJt1TCKvZmhhmimk4/o8ksYUYOLLCzq8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQgLaWD4bPIBNem+F6dNa2eE8j/1puo74M9eNG0uWti45bnrDw
+	qTXRV4alQBptlq6UcNpFY/oq45r8PwM2UrTobJT2Z6+81Q/j9fhE1LUTv6XYJCk=
+X-Gm-Gg: ASbGncvBqYGX4OHDsBFKs8C8vhZJ1hQOgmU89ytQ41OPh7YKcf/L+rUBIhg2qr7n2Ky
+	1WXGhnbc/moeL0QJQJtjqdcV2LSSenngnQlK/wf4URrfGwIuUq4CO/8lmGHC7sXe0A9KeO5T17p
+	juAmO1DDY537jRTRIGN2oLARtbsCSjlaYNgVf+kCOt4oxwjFIyskTsyzvpgMH/p/N3HpITSK6iN
+	SM8METLXO7Sak1bd+GIEgZ5tu1VdfCRZDxzxsePB9BUfpeTnflx638UqKBJp7W1xIFWvj8mWB0m
+	NRwmy1w2nDjmVSl3+mvPcfl8101ZdQCnKt1JtfVcW4eLrA==
+X-Google-Smtp-Source: AGHT+IHjGuoRPXApmr/fLNcJT+pJu0CQiZAC37N0JslksHu6yjn064Cn1Gd7YxJ1WwJwxyqUVuhsOw==
+X-Received: by 2002:a05:6000:4308:b0:39d:6f2b:e74d with SMTP id ffacd0b85a97d-39d88564b64mr1742489f8f.39.1744196439615;
+        Wed, 09 Apr 2025 04:00:39 -0700 (PDT)
 Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39d893611d0sm1278591f8f.6.2025.04.09.04.00.23
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39d89361170sm1297162f8f.2.2025.04.09.04.00.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 04:00:24 -0700 (PDT)
-Date: Wed, 9 Apr 2025 14:00:20 +0300
+        Wed, 09 Apr 2025 04:00:39 -0700 (PDT)
+Date: Wed, 9 Apr 2025 14:00:35 +0300
 From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Binbin Zhou <zhoubinbin@loongson.cn>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Juxin Gao <gaojuxin@loongson.cn>, linux-pwm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH next] pwm: loongson: Fix an error code in probe()
-Message-ID: <6965a480-745c-426f-b17b-e96af532578f@stanley.mountain>
+To: Raju Rangoju <Raju.Rangoju@amd.com>
+Cc: Mark Brown <broonie@kernel.org>,
+	Akshata MukundShetty <akshata.mukundshetty@amd.com>,
+	Krishnamoorthi M <krishnamoorthi.m@amd.com>,
+	linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH next] spi: spi_amd: Fix an IS_ERR() vs NULL check in probe
+Message-ID: <0e0f5ede-8993-4fac-967c-51e46b095416@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,28 +75,30 @@ Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 X-Mailer: git-send-email haha only kidding
 
-There is a copy and paste bug so we accidentally returned
-PTR_ERR(ddata->clk) instead of "ret".
+The devm_ioremap() function returns NULL on error, it doesn't
+return error pointers.  Update the error checking to match.
 
-Fixes: 322fc380cea1 ("pwm: Add Loongson PWM controller support")
+Fixes: b644c2776652 ("spi: spi_amd: Add PCI-based driver for AMD HID2 SPI controller")
 Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 ---
- drivers/pwm/pwm-loongson.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/spi-amd-pci.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pwm/pwm-loongson.c b/drivers/pwm/pwm-loongson.c
-index 412c67739ef9..e31afb11ddd7 100644
---- a/drivers/pwm/pwm-loongson.c
-+++ b/drivers/pwm/pwm-loongson.c
-@@ -211,7 +211,7 @@ static int pwm_loongson_probe(struct platform_device *pdev)
- 	if (ddata->clk) {
- 		ret = devm_clk_rate_exclusive_get(dev, ddata->clk);
- 		if (ret)
--			return dev_err_probe(dev, PTR_ERR(ddata->clk),
-+			return dev_err_probe(dev, ret,
- 					     "Failed to get exclusive rate\n");
+diff --git a/drivers/spi/spi-amd-pci.c b/drivers/spi/spi-amd-pci.c
+index e1ecab755fe9..e5faab414c17 100644
+--- a/drivers/spi/spi-amd-pci.c
++++ b/drivers/spi/spi-amd-pci.c
+@@ -46,8 +46,8 @@ static int amd_spi_pci_probe(struct pci_dev *pdev,
+ 	io_base_addr = (io_base_addr & AMD_SPI_BASE_ADDR_MASK) + AMD_HID2_PCI_BAR_OFFSET;
+ 	amd_spi->io_remap_addr = devm_ioremap(dev, io_base_addr, AMD_HID2_MEM_SIZE);
  
- 		ddata->clk_rate = clk_get_rate(ddata->clk);
+-	if (IS_ERR(amd_spi->io_remap_addr))
+-		return dev_err_probe(dev, PTR_ERR(amd_spi->io_remap_addr),
++	if (!amd_spi->io_remap_addr)
++		return dev_err_probe(dev, -ENOMEM,
+ 				"ioremap of SPI registers failed\n");
+ 
+ 	dev_dbg(dev, "io_remap_address: %p\n", amd_spi->io_remap_addr);
 -- 
 2.47.2
 
