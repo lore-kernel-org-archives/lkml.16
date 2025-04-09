@@ -1,243 +1,189 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C5891C6BE;
-	Wed,  9 Apr 2025 19:17:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 499861E22E6
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 19:17:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744226234; cv=none; b=WlclO+1eE9cJsdyU3MIJTMniEy+CzW/vgTZBz8bsHSqAHwT08dsKofOj9whlC72tmHSy/+p9IKEoRC/q9JZuTSvvNvcKfMzHJ3XPGj/wMw3yXslCIeqgfQDjBuHGBwOqG/JjETXsT5T7/3/lW9B+MWk2Tq+zmb0zS3Uov/66R+o=
+	t=1744226262; cv=none; b=s3pD9IOz9ggZ1FDQ3iW97tcNepPFc9vDNM3WaL5BQfC780dxMhjUGOPeXEF8ixc7uQ73q+TlxhdeAAnDF3p2JlSBglbSoOf7js/OqCuVjhd21g0pZjhFWwv5NDd4Y0JpYrmjeaOOK7Z7lAWAP9s/9ZtAwIqXB6fSxl1Q1V1vBhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744226234; c=relaxed/simple;
-	bh=bF03VxvTsU+BqmHsQq0q+S9ppRrCc1/KlnD8PJitqk8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ROzE8dUwHA2d2YtFV8hBxnZ3kqekwy9ziKop/gM1fL8/EsljRzVzABCUuiCVmBV+Bfo2Kwc6mJNZCq4ZtEG7mJhVw+Hgvhu+b2vP4XPb4r5YVxNrxKcDmevQRYWMpt4i8Oim0xoCwqnlfcJwUIxyuOiYY0oxGQ5nXnJY5ilBBhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qJI2/Xoi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744226262; c=relaxed/simple;
+	bh=9AOGJ16kRt3tVGIANi9OM2YSv2giRzrvMBRJunLNMic=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=de68yOhm2klYjyUhRqSVzSDpsGbFpvVyoKgEmcjrYaXbiPYp/U78BdkqjxtyEhGpM1yW7HL7n5tRwOHVz1+eepvSwLg2NlgbnEKMRekiiZkdTdF4BZ/2ZK+cRIBQ+Yr0M5Qg1Q7ahTQfo+8VRFjv1r5tGWxAuiwLts7Zrz4nWdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=P1ZaGMYu; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qJI2/Xoi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE2B7C4CEE2;
-	Wed,  9 Apr 2025 19:17:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744226234;
-	bh=bF03VxvTsU+BqmHsQq0q+S9ppRrCc1/KlnD8PJitqk8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qJI2/XoironzsJaz+i80e/WQ5Qp9VcugyrJtl/YBj3oj0+B7CR2sHsGtWpizK6yO4
-	 VBHn2aUCKN25vPTBjtUJ5ErBpW2uZ0Nr7njrQYPiJXVIm5JOFP/Aa8E5gmKRCoJxm0
-	 2vFvQqbHpIzkDxqkRul6nNrkQNGD3XqtCFeaHlXiWlZ71xy8f9NAVNkpTbM33mpsn2
-	 gk6Zv+IScY5WaKqKDsrRvA4EyHwyJNofhELmFBXXaSUa90cRftnriGKZcCivNb5MT/
-	 7CNvC3GIEekiFTO9pLOuthuuJFylF+HSeUIxKp18BpylKcbyjrBpuCpkk/cUVDn0Ei
-	 6TKBITTbXPjew==
-Date: Wed, 9 Apr 2025 21:17:02 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Xin Li <xin@zytor.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	virtualization@lists.linux.dev, linux-edac@vger.kernel.org,
-	kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
-	linux-ide@vger.kernel.org, linux-pm@vger.kernel.org,
-	bpf@vger.kernel.org, llvm@lists.linux.dev, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	x86@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
-	peterz@infradead.org, acme@kernel.org, namhyung@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, wei.liu@kernel.org,
-	ajay.kaher@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-	tony.luck@intel.com, pbonzini@redhat.com, vkuznets@redhat.com,
-	seanjc@google.com, luto@kernel.org, boris.ostrovsky@oracle.com,
-	kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH] x86/msr: Standardize on 'u32' MSR indices in <asm/msr.h>
-Message-ID: <Z_bHrjUKKWN28TX9@gmail.com>
-References: <20250331082251.3171276-1-xin@zytor.com>
- <20250331082251.3171276-2-xin@zytor.com>
- <Z-pruogreCuU66wm@gmail.com>
- <9D15DE81-2E68-4FCD-A133-4963602E18C9@zytor.com>
- <Z-ubVFyoOzwKhI53@gmail.com>
- <c316a6c6-b97c-48b2-9598-d44e2ec72fbc@zytor.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="P1ZaGMYu"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 539HH4JO015742
+	for <linux-kernel@vger.kernel.org>; Wed, 9 Apr 2025 19:17:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	lqcvEHgtU6uy6Jy9R3xfK2JQeeSFv9Thsxw6q2/X9Mc=; b=P1ZaGMYuZPrZL5KR
+	XZiKtavnC4AyIYCh6dOxImZoZXu0m7BNx7H4elJ23PoihUL+Yuv1xQghUfUqO2yf
+	EKskcXY3S1OMlYHl4wwRuTX7zoGuXZzmGgDflk31KBTTRY+Vof/kGRj3+dduSnIe
+	VsUIZ+BbUoLuDCKXJ1OSj3p7XnoOaBPUgA+l6bsI5ihatCLcgzebo8Mqv7RYeBuS
+	vEshVJZfQa/qOQXvTmQTuD9U5qNFhJcfIneHe4AjsA7GH+LKOpjUiNlznAqXqLAB
+	w+rAT4Hsg5XGv7T0ykTAkm0d2S5jDG9F7IzVICI/v8yzG400QvZcxRBCWTIfUv6C
+	0MK32A==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twd2vg78-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 19:17:40 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5530c2e01so941185a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 12:17:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744226259; x=1744831059;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lqcvEHgtU6uy6Jy9R3xfK2JQeeSFv9Thsxw6q2/X9Mc=;
+        b=Am1292Khc7DAj6vhdXtZ17UpMoMfP445IPrHVqXff0nNaplVrk+aJdkfl3RxzR8PMx
+         3E1H5gpnjcy8ynoPg+7KU7j04bVuji4J6/jyEyeJJSyyHFF77nhHXFk7LOk77f89d5hr
+         KLySks9xe6JRggSbQ0qQ2hfACE06o+zhTIiUCoR4GXGMSkTsv5U7E0tnWq/Xj6tKqnWh
+         kIeZ8NyDRfCANcmfnDNL/BQf+A3uht5mPdvjrnXMQrkfNgyB7YGMFoGuC/tmZyakJ8J1
+         Lk+JfTyyMkL3n2rYau4efC0WS9QYMmhUEW7oS7JZdcTtBkehnkrvNPQfIKyb54t+5vgR
+         gDfA==
+X-Forwarded-Encrypted: i=1; AJvYcCW9fPO17rRZwxTal2hYH6kPa6LVDDXAtjgHVE+PxUj/bH8hdmLX5KkpL1lO/I/wTwEYfgW26QSk3X+SyMU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywlj1kH01WBY3opWH9lhLfEdyVqjGwUzeNhsH3EUIcoW+hvtK1o
+	AkFbVvRXegFoYeGFf19hSDggaaBX2HIzDfd/Gz3uEwWsnwpIVRNGvQyn2qjdJ5+ypCo070ICieS
+	xZw0ZJ1tDxfUbU3RU+vZHLliZDGbpJWSQLTkZh/Ip1Gz28CQe+bIY7/P833O1Q8g=
+X-Gm-Gg: ASbGncvylSpz6MMxIVx/HhM0WnKh1D2eSRjTPU0CWwLKJzFKowjxSPA3f604Z2ZmOuB
+	28EPWlwyIned4Zv9OUn7KyGJA/TCGtyBPP2bSzoKS7vREwuaK064Ixpag+XsexCo9RmBaamXmhv
+	qop8sdUu6xWD4IBlchKY2asjZDE8flxMabbk4Gw+S/Y/jzmsQNGH0wpJXEKLmImoBGSwGxqqtof
+	2ZUQ4e03keAiChS6daSDC5jCvj3ywl971bTg0X5o8/H7GaXFky7NYv+fJXTY6AyetWMLIBxGC3T
+	CFEZyDDiizYRCy0PfqgW8z4uhbaz1202Mqz4k4RWtrlVSm5gfsGkujjFILorCqjJCw==
+X-Received: by 2002:a05:620a:d93:b0:7c5:606d:dccd with SMTP id af79cd13be357-7c79cbbe2bbmr258668385a.1.1744226258816;
+        Wed, 09 Apr 2025 12:17:38 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFNs/f/dMR7v4+f3J7T8RQuT+APxl+MlHJ8DyM2bYtuDetjuAYExfOKY3Pr7QtPXMMvnZoJgQ==
+X-Received: by 2002:a05:620a:d93:b0:7c5:606d:dccd with SMTP id af79cd13be357-7c79cbbe2bbmr258665385a.1.1744226258315;
+        Wed, 09 Apr 2025 12:17:38 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1bb3553sm140768266b.29.2025.04.09.12.17.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Apr 2025 12:17:37 -0700 (PDT)
+Message-ID: <e3faf128-6a36-428e-8e34-55d87d4686ac@oss.qualcomm.com>
+Date: Wed, 9 Apr 2025 21:17:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c316a6c6-b97c-48b2-9598-d44e2ec72fbc@zytor.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 2/4] media: venus: pm_helpers: use opp-table for the
+ frequency
+To: Bryan O'Donoghue <bod@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Renjiang Han <quic_renjiang@quicinc.com>,
+        Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
+        Vikash Garodia <quic_vgarodia@quicinc.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20241219-add-venus-for-qcs615-v6-0-e9a74d3b003d@quicinc.com>
+ <20241219-add-venus-for-qcs615-v6-2-e9a74d3b003d@quicinc.com>
+ <fde279ad-27ed-4947-a408-23139bcd270a@oss.qualcomm.com>
+ <351a9654-ffa1-4727-b772-95d4ed113c81@quicinc.com>
+ <ac145c57-1db3-4747-88e2-02825f958d5a@oss.qualcomm.com>
+ <6f11921a-4ee8-4f40-9131-529f548f681a@kernel.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <6f11921a-4ee8-4f40-9131-529f548f681a@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: oEKiDYDF5PM3H2alYPH_BOZE7niK189l
+X-Proofpoint-GUID: oEKiDYDF5PM3H2alYPH_BOZE7niK189l
+X-Authority-Analysis: v=2.4 cv=NaLm13D4 c=1 sm=1 tr=0 ts=67f6c7d4 cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=6lrxKQdraE29tqtzjYYA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=bTQJ7kPSJx9SKPbeHEYW:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-09_06,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
+ priorityscore=1501 adultscore=0 malwarescore=0 suspectscore=0
+ lowpriorityscore=0 bulkscore=0 mlxlogscore=999 clxscore=1015 phishscore=0
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504090128
 
-
-* Xin Li <xin@zytor.com> wrote:
-
-> On 4/1/2025 12:52 AM, Ingo Molnar wrote:
-> > > Should we rename the *msrl() functions to *msrq() as part of this
-> > > overhaul?
-> > Yeah, that's a good idea, and because talk is cheap I just implemented
-> > this in the tip:WIP.x86/msr branch with a couple of other cleanups in
-> > this area (see the shortlog & diffstat below), but the churn is high:
-> > 
-> >    144 files changed, 1034 insertions(+), 1034 deletions(-)
+On 4/7/25 5:39 PM, Bryan O'Donoghue wrote:
+> On 09/01/2025 13:05, Konrad Dybcio wrote:
+>> On 2.01.2025 6:38 AM, Renjiang Han wrote:
+>>>
+>>> On 12/23/2024 10:17 PM, Konrad Dybcio wrote:
+>>>> On 19.12.2024 6:41 AM, Renjiang Han wrote:
+>>>>> The frequency value in the opp-table in the device tree and the freq_tbl
+>>>>> in the driver are the same.
+>>>>>
+>>>>> Therefore, update pm_helpers.c to use the opp-table for frequency values
+>>>>> for the v4 core.
+>>>>> If getting data from the opp table fails, fall back to using the frequency
+>>>>> table.
+>>>>>
+>>>>> Signed-off-by: Renjiang Han<quic_renjiang@quicinc.com>
+>>>>> ---
+>>>>>    drivers/media/platform/qcom/venus/pm_helpers.c | 53 +++++++++++++++++++-------
+>>>>>    1 file changed, 39 insertions(+), 14 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/media/platform/qcom/venus/pm_helpers.c b/drivers/media/platform/qcom/venus/pm_helpers.c
+>>>>> index 33a5a659c0ada0ca97eebb5522c5f349f95c49c7..b61c0ad152878870b7223efa274e137d3636433b 100644
+>>>>> --- a/drivers/media/platform/qcom/venus/pm_helpers.c
+>>>>> +++ b/drivers/media/platform/qcom/venus/pm_helpers.c
+>>>>> @@ -43,14 +43,20 @@ static int core_clks_enable(struct venus_core *core)
+>>>>>        const struct venus_resources *res = core->res;
+>>>>>        const struct freq_tbl *freq_tbl = core->res->freq_tbl;
+>>>>>        unsigned int freq_tbl_size = core->res->freq_tbl_size;
+>>>>> +    struct device *dev = core->dev;
+>>>>> +    struct dev_pm_opp *opp;
+>>>>>        unsigned long freq;
+>>>>>        unsigned int i;
+>>>>>        int ret;
+>>>>>    -    if (!freq_tbl)
+>>>>> -        return -EINVAL;
+>>>>> -
+>>>>> -    freq = freq_tbl[freq_tbl_size - 1].freq;
+>>>>> +    opp = dev_pm_opp_find_freq_ceil(dev, &freq);
+>>>>> +    if (IS_ERR(opp)) {
+>>>>> +        if (!freq_tbl)
+>>>>> +            return -EINVAL;
+>>>>> +        freq = freq_tbl[freq_tbl_size - 1].freq;
+>>>>> +    } else {
+>>>>> +        dev_pm_opp_put(opp);
+>>>>> +    }
+>>>> I'm not super convinced how this could have ever worked without
+>>>> scaling voltage levels, by the way. Perhaps this will squash some
+>>>> random bugs :|
+>>>>
+>>>> Konrad
+>>>   Thanks for your comment.
+>>>   The default value of freq is 0, and then dev_pm_opp_find_freq_ceil is
+>>>   used to match freq to the maximum value in opp-table that is close to
+>>>   0. The frequency values ​​in opp-table and freq_tbl are the same, and
+>>>   dev_pm_opp_find_freq_ceil is used to assign the minimum value in
+>>>   opp-table to freq. So the logic is the same as before. I'm not sure if
+>>>   I've answered your concern.
+>>
+>> We talked offline, but for the record: my concern here was about
+>> clk_set_rate() not scaling RPM/h voltage corners, which this patch
+>> fixes
+>>
+>> Konrad
 > 
-> Hi Ingo,
-> 
-> I noticed that you keep the type of MSR index in these patches as
-> "unsigned int".
-> 
-> I'm thinking would it be better to standardize it as "u32"?
-> 
-> Because:
-> 1) MSR index is placed in ECX to execute MSR instructions, and the
->    high-order 32 bits of RCX are ignored on 64-bit.
-> 2) MSR index is encoded as a 32-bit immediate in the new immediate form
->    MSR instructions.
+> Konrad is this an RB from you, do you have any other concerns with this code ?
 
-Makes sense - something like the attached patch?
+OK the comment above was misleading - back then I must have thought this patch
+changed clk_set_rate to dev_pm_opp_set_rate - which is not what it does
 
-Thanks,
+I won't be blocking this, but I'm not super keen on thoroughly reviewing it
+either - there are a lot of raw clk_ calls that are hard to keep track of.. 
 
-	Ingo
-
-=====================>
-From: Ingo Molnar <mingo@kernel.org>
-Date: Wed, 9 Apr 2025 21:12:39 +0200
-Subject: [PATCH] x86/msr: Standardize on 'u32' MSR indices in <asm/msr.h>
-
-This is the customary type used for hardware ABIs.
-
-Suggested-by: Xin Li <xin@zytor.com>
-Suggested-by: "H. Peter Anvin" <hpa@zytor.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/include/asm/msr.h | 29 ++++++++++++++---------------
- arch/x86/lib/msr.c         |  4 ++--
- 2 files changed, 16 insertions(+), 17 deletions(-)
-
-diff --git a/arch/x86/include/asm/msr.h b/arch/x86/include/asm/msr.h
-index 4ee9ae734c08..20deb58308e5 100644
---- a/arch/x86/include/asm/msr.h
-+++ b/arch/x86/include/asm/msr.h
-@@ -63,12 +63,12 @@ struct saved_msrs {
- DECLARE_TRACEPOINT(read_msr);
- DECLARE_TRACEPOINT(write_msr);
- DECLARE_TRACEPOINT(rdpmc);
--extern void do_trace_write_msr(unsigned int msr, u64 val, int failed);
--extern void do_trace_read_msr(unsigned int msr, u64 val, int failed);
-+extern void do_trace_write_msr(u32 msr, u64 val, int failed);
-+extern void do_trace_read_msr(u32 msr, u64 val, int failed);
- extern void do_trace_rdpmc(u32 msr, u64 val, int failed);
- #else
--static inline void do_trace_write_msr(unsigned int msr, u64 val, int failed) {}
--static inline void do_trace_read_msr(unsigned int msr, u64 val, int failed) {}
-+static inline void do_trace_write_msr(u32 msr, u64 val, int failed) {}
-+static inline void do_trace_read_msr(u32 msr, u64 val, int failed) {}
- static inline void do_trace_rdpmc(u32 msr, u64 val, int failed) {}
- #endif
- 
-@@ -79,7 +79,7 @@ static inline void do_trace_rdpmc(u32 msr, u64 val, int failed) {}
-  * think of extending them - you will be slapped with a stinking trout or a frozen
-  * shark will reach you, wherever you are! You've been warned.
-  */
--static __always_inline u64 __rdmsr(unsigned int msr)
-+static __always_inline u64 __rdmsr(u32 msr)
- {
- 	DECLARE_ARGS(val, low, high);
- 
-@@ -91,7 +91,7 @@ static __always_inline u64 __rdmsr(unsigned int msr)
- 	return EAX_EDX_VAL(val, low, high);
- }
- 
--static __always_inline void __wrmsr(unsigned int msr, u32 low, u32 high)
-+static __always_inline void __wrmsr(u32 msr, u32 low, u32 high)
- {
- 	asm volatile("1: wrmsr\n"
- 		     "2:\n"
-@@ -113,7 +113,7 @@ do {							\
- 	__wrmsr((msr), (u32)((u64)(val)),		\
- 		       (u32)((u64)(val) >> 32))
- 
--static inline u64 native_read_msr(unsigned int msr)
-+static inline u64 native_read_msr(u32 msr)
- {
- 	u64 val;
- 
-@@ -125,8 +125,7 @@ static inline u64 native_read_msr(unsigned int msr)
- 	return val;
- }
- 
--static inline u64 native_read_msr_safe(unsigned int msr,
--						      int *err)
-+static inline u64 native_read_msr_safe(u32 msr, int *err)
- {
- 	DECLARE_ARGS(val, low, high);
- 
-@@ -142,7 +141,7 @@ static inline u64 native_read_msr_safe(unsigned int msr,
- 
- /* Can be uninlined because referenced by paravirt */
- static inline void notrace
--native_write_msr(unsigned int msr, u32 low, u32 high)
-+native_write_msr(u32 msr, u32 low, u32 high)
- {
- 	__wrmsr(msr, low, high);
- 
-@@ -152,7 +151,7 @@ native_write_msr(unsigned int msr, u32 low, u32 high)
- 
- /* Can be uninlined because referenced by paravirt */
- static inline int notrace
--native_write_msr_safe(unsigned int msr, u32 low, u32 high)
-+native_write_msr_safe(u32 msr, u32 low, u32 high)
- {
- 	int err;
- 
-@@ -251,7 +250,7 @@ do {								\
- 	(void)((high) = (u32)(__val >> 32));			\
- } while (0)
- 
--static inline void wrmsr(unsigned int msr, u32 low, u32 high)
-+static inline void wrmsr(u32 msr, u32 low, u32 high)
- {
- 	native_write_msr(msr, low, high);
- }
-@@ -259,13 +258,13 @@ static inline void wrmsr(unsigned int msr, u32 low, u32 high)
- #define rdmsrq(msr, val)			\
- 	((val) = native_read_msr((msr)))
- 
--static inline void wrmsrq(unsigned int msr, u64 val)
-+static inline void wrmsrq(u32 msr, u64 val)
- {
- 	native_write_msr(msr, (u32)(val & 0xffffffffULL), (u32)(val >> 32));
- }
- 
- /* wrmsr with exception handling */
--static inline int wrmsr_safe(unsigned int msr, u32 low, u32 high)
-+static inline int wrmsr_safe(u32 msr, u32 low, u32 high)
- {
- 	return native_write_msr_safe(msr, low, high);
- }
-@@ -280,7 +279,7 @@ static inline int wrmsr_safe(unsigned int msr, u32 low, u32 high)
- 	__err;							\
- })
- 
--static inline int rdmsrq_safe(unsigned int msr, u64 *p)
-+static inline int rdmsrq_safe(u32 msr, u64 *p)
- {
- 	int err;
- 
-diff --git a/arch/x86/lib/msr.c b/arch/x86/lib/msr.c
-index e18925899f13..4ef7c6dcbea6 100644
---- a/arch/x86/lib/msr.c
-+++ b/arch/x86/lib/msr.c
-@@ -122,14 +122,14 @@ int msr_clear_bit(u32 msr, u8 bit)
- EXPORT_SYMBOL_GPL(msr_clear_bit);
- 
- #ifdef CONFIG_TRACEPOINTS
--void do_trace_write_msr(unsigned int msr, u64 val, int failed)
-+void do_trace_write_msr(u32 msr, u64 val, int failed)
- {
- 	trace_write_msr(msr, val, failed);
- }
- EXPORT_SYMBOL(do_trace_write_msr);
- EXPORT_TRACEPOINT_SYMBOL(write_msr);
- 
--void do_trace_read_msr(unsigned int msr, u64 val, int failed)
-+void do_trace_read_msr(u32 msr, u64 val, int failed)
- {
- 	trace_read_msr(msr, val, failed);
- }
+Konrad
