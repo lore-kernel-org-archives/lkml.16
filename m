@@ -1,138 +1,86 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from mail-m155101.qiye.163.com (mail-m155101.qiye.163.com [101.71.155.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C09818FC75;
-	Wed,  9 Apr 2025 08:18:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B562A24888E;
+	Wed,  9 Apr 2025 08:18:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744186695; cv=none; b=ubOpkhR8FJwBjYKveeTVVwrauI/r9nGfKVd4ZCffhNR3ZX7lwaehiXSrSCJcHZb0Yn7EIfNARRsuRaGNfyhtkDO3YahFoFpmd8r7ppL+VWLXYucdKsU3MLmgydFGnimx/t4kJVNzoutOgsLBXaRccVQ+ew5pemMj6CtJqAlgiOY=
+	t=1744186714; cv=none; b=RbxaPwUfxU3Yt9Rm4ZayL7R2QBHv/Z95XhT/8oXGPN2OWhxA6QecO9qVqbMfq+QDzolFXAojYB1Q5kRYPbhWSroezorPQuHkqZF+YTqEv9AVx8+ko1O/kDKVfKIBeoKIdhTPXPIr5GvzRNPSkKAY9HNHh0hMk+LUstTg3xidSVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744186695; c=relaxed/simple;
-	bh=ZWg+mSGoUBjLS3Iq/MflbPPUiI1DmKUlohQQrKNWe58=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gGvLl8i33Mxpf8wIuQrKg8uFAG7B0y1Y1QoBFED9chGJl1IOqft7AWbh1t0iO3B3b0Ksv4SL6YFH3l9bmzvBZ1lqLjTVo/ek9Fo650bMgRPmoP2Kdmk7K8B4sjv/nIz4hGLH7FmorItTZ3sZIrq5H+IFkitVO+jn682K9aHIGdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=SXbU84yx; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="SXbU84yx"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 3F4F543281;
-	Wed,  9 Apr 2025 08:18:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744186691;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=F7/sUB4NKSKcBZ2AS73T3m/vvUDAL6vhtK3n+glPbSU=;
-	b=SXbU84yxeIjUgNSlnWszEPbWrUZATdskY+g4qvNrroLs1qbcM8ARdcwmCKSmsWt2iyLHN1
-	AO79A+BH1KPUDvrtlOboJzCPsv1k5PkNqLWrcarzrUj9jkpdryFXYYOp6sWFruPKYpCTle
-	7Mi23qPgvKrRfyf8oCr+yfRsZ4kYcUJPluUe3NmrRw9QCVEen0R1itge0OA7HnTUdCYgWA
-	e+XKhxZIwOdQ3HlOWfudaKaKKNdQTQ7Gl+1Y6Wg8FnqBbjHy1S7Fith32wu1IncEedV8O7
-	P9KjNiuMWhE7K9j4HPyR0V9Df30QpiKTdjo8S/EHMCnb3j4dUQFk9/XXseSIqw==
-Date: Wed, 9 Apr 2025 10:18:08 +0200
-From: Kory Maincent <kory.maincent@bootlin.com>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Simon Horman <horms@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Heiner
- Kallweit <hkallweit1@gmail.com>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>,
- Richard Cochran <richardcochran@gmail.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, Maxime Chevallier
- <maxime.chevallier@bootlin.com>, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org
-Subject: Re: [PATCH net-next v2 2/2] net: phy: Add Marvell PHY PTP support
-Message-ID: <20250409101808.43d5a17d@kmaincent-XPS-13-7390>
-In-Reply-To: <Z_VdlGVJjdtQuIW0@shell.armlinux.org.uk>
-References: <20250407-feature_marvell_ptp-v2-0-a297d3214846@bootlin.com>
-	<20250407-feature_marvell_ptp-v2-2-a297d3214846@bootlin.com>
-	<20250408154934.GZ395307@horms.kernel.org>
-	<Z_VdlGVJjdtQuIW0@shell.armlinux.org.uk>
-Organization: bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1744186714; c=relaxed/simple;
+	bh=bDLklmSuD1z4loHKQkbi7DxMd1QQgqBE6trMGJKNdyk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lAB8niHPe5LcxGSRCVMoN3EvVTNNMGSt9CbCr+Lce2VHfArdXYsLaFJcEoaGJKpgIgtf516X3EPRccUsjgLN+sBl79LK1aOBCq8x6tf/5H2Ns2vCLKG+zw9G8xLerYYubefkQ7B2qWJkCO6jF+yND+JXoZJakEl9QVBHB+nGZIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn; spf=pass smtp.mailfrom=whut.edu.cn; arc=none smtp.client-ip=101.71.155.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=whut.edu.cn
+Received: from [198.18.0.1] (gy-adaptive-ssl-proxy-2-entmail-virt205.gy.ntes [27.18.106.237])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 1135140cf;
+	Wed, 9 Apr 2025 16:18:22 +0800 (GMT+08:00)
+Message-ID: <2986e9bd-0e01-4361-86ed-e4d92406c911@whut.edu.cn>
+Date: Wed, 9 Apr 2025 16:18:22 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdehgeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgfdutdefvedtudegvefgvedtgfdvhfdtueeltefffefffffhgfetkedvfeduieeinecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehkmhgrihhntggvnhhtqdgirffuqddufedqjeefledtpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudehpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopehhohhrmhhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehhkhgrlhhlfigvihhtudesghhmrghilhdrtghomhdprhgtphhtthhopegurghvvghms
- egurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomh
-X-GND-Sasl: kory.maincent@bootlin.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/7] phy: spacemit: support K1 USB2.0 PHY controller
+To: Krzysztof Kozlowski <krzk@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>
+Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-riscv@lists.infradead.org, spacemit@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+References: <20250407-b4-k1-usb3-v3-2-v1-0-bf0bcc41c9ba@whut.edu.cn>
+ <20250407-b4-k1-usb3-v3-2-v1-4-bf0bcc41c9ba@whut.edu.cn>
+ <abac53a6-cba7-4962-9f34-ab2eac9e6e3d@kernel.org>
+Content-Language: en-US
+From: Ze Huang <huangze@whut.edu.cn>
+In-Reply-To: <abac53a6-cba7-4962-9f34-ab2eac9e6e3d@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZH05CVkMfH0tOGB5IGUIeSlYeHw5VEwETFhoSFy
+	QUDg9ZV1kYEgtZQVlJTFVKQ1VKS01VSUhMWVdZFhoPEhUdFFlBWU9LSFVKS0hKTkxPVUpLS1VKQk
+	tLWQY+
+X-HM-Tid: 0a9619a0fb7503a1kunm1135140cf
+X-HM-MType: 10
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NlE6GQw6ITIBPD1JGVYxAS09
+	DCgKFD5VSlVKTE9PSkNNTEtCTklPVTMWGhIXVRMOGhUcAR47DBMOD1UeHw5VGBVFWVdZEgtZQVlJ
+	TFVKQ1VKS01VSUhMWVdZCAFZQUlLTkI3Bg++
 
-On Tue, 8 Apr 2025 18:32:04 +0100
-"Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
+On 4/7/25 9:25 PM, Krzysztof Kozlowski wrote:
+> On 07/04/2025 14:38, Ze Huang wrote:
+>> +static const struct of_device_id spacemit_usb2phy_dt_match[] = {
+>> +	{ .compatible = "spacemit,k1-usb2-phy", },
+>> +	{ /* sentinal */ }
+>> +};
+>> +MODULE_DEVICE_TABLE(of, spacemit_usb2phy_dt_match);
+>> +
+>> +static struct platform_driver spacemit_usb2_phy_driver = {
+>> +	.probe	= spacemit_usb2phy_probe,
+>> +	.driver = {
+>> +		.name   = "spacemit-usb2-phy",
+>> +		.owner  = THIS_MODULE,
+>
+> Take recent drivers and use them as base. There is no such 'owner' since
+> 10 years.
 
-> On Tue, Apr 08, 2025 at 04:49:34PM +0100, Simon Horman wrote:
-> > On Mon, Apr 07, 2025 at 04:03:01PM +0200, Kory Maincent wrote: =20
-> > > From: Russell King <rmk+kernel@armlinux.org.uk>
-> > >=20
-> > > From: Russell King <rmk+kernel@armlinux.org.uk>
-> > >=20
-> > > Add PTP basic support for Marvell 88E151x PHYs. These PHYs support
-> > > timestamping the egress and ingress of packets, but does not support
-> > > any packet modification.
-> > >=20
-> > > The PHYs support hardware pins for providing an external clock for the
-> > > TAI counter, and a separate pin that can be used for event capture or
-> > > generation of a trigger (either a pulse or periodic).  This code does
-> > > not support either of these modes.
-> > >=20
-> > > The driver takes inspiration from the Marvell 88E6xxx DSA and DP83640
-> > > drivers.  The hardware is very similar to the implementation found in
-> > > the 88E6xxx DSA driver, but the access methods are very different,
-> > > although it may be possible to create a library that both can use
-> > > along with accessor functions.
-> > >=20
-> > > Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-> > >=20
-> > > Add support for interruption.
-> > > Fix L2 PTP encapsulation frame detection.
-> > > Fix first PTP timestamp being dropped.
-> > > Fix Kconfig to depends on MARVELL_PHY.
-> > > Update comments to use kdoc.
-> > >=20
-> > > Co-developed-by: Kory Maincent <kory.maincent@bootlin.com>
-> > > Signed-off-by: Kory Maincent <kory.maincent@bootlin.com> =20
-> >=20
-> > Hi Kory,
-> >=20
-> > Some minor feedback from my side.
-> >  =20
-> > > ---
-> > >=20
-> > > Russell I don't know which email I should use, so I keep your old SOB=
-. =20
-> >=20
-> > Russell's SOB seems to be missing. =20
->=20
-> ... and anyway, I haven't dropped my patches, I'm waiting for the
-> fundamental issue with merging Marvell PHY PTP support destroying the
-> ability to use MVPP2 PTP support to be solved, and then I will post
-> my patches.
->=20
-> They aren't dead, I'm just waiting for the issues I reported years ago
-> with the PTP infrastructure to be resolved - and to be tested as
-> resolved.
->=20
-> I'm still not convinced that they have been given Kory's responses to
-> me (some of which I honestly don't understand), but I will get around
-> to doing further testing to see whether enabling Marvell PHY PTP
-> support results in MVPP2 support becoming unusable.
->=20
-> Kory's lack of communication with me has been rather frustrating.
+Will follow. Thank you for pointing that out.
 
-You were in CC in all the series I sent and there was not a lot of review a=
-nd
-testing on your side. I know you seemed a lot busy at that time but I don't
-understand what communication is missing here?=20
+>
+>
+> Best regards,
+> Krzysztof
+>
+>
 
-Regards,
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
