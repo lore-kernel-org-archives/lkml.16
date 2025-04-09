@@ -1,60 +1,72 @@
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21E39263F3A
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 13:13:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DBB82253E4;
+	Wed,  9 Apr 2025 13:13:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744204400; cv=none; b=ud/4ivzHafAWCFb7ANZLuyKKk3cJRS2DVQX7VfJVgIwpOX+B3lQOkzJYi4vNB2iKeq6p3ZdWwFDZ+xID2Pfct9mnPGCF2Pe0leyTfG6XWDuzqJC7OQUCfeuoGHDlV+Aw5zIZR8+WqnbL+iiz3Io6UaJpHFC5ioGI7EsY3cczeWI=
+	t=1744204406; cv=none; b=sKZma7akoXYK68Rd1dNdxs1YRb4Oix3zs+TNj7SqR4xTQGRVPcqMjG/BLPxC21SzEkA6n+vRQv7sTT7NxQknss8lJUdB5ZMrWUs69TzXuluAjXno2yQgSPyF7jSuY5JZTR3DkFwodGo+CwFGeFqQHX5Y44FfnfwPDpXEp6kH+sA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744204400; c=relaxed/simple;
-	bh=NEuXEAf0EoHvdi3tLgzyhmCbJUmfqZDU6pN1X9AaFMs=;
+	s=arc-20240116; t=1744204406; c=relaxed/simple;
+	bh=DATJrZaH9JfWeAmD0tPnwt88xNWYRlg12xEesQvyvlQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sKBTFS8WRsYhe2gW2I6vU0hrlv6vZdgOr6h6c49TmQNwao+jdGb163XRUrOav/eSRPEiQblGZWNPp9u1cfc0VRwejw6dEhZnekkJTPDyN5wJ46yyJvEJJTCkJyQKL9ZXEuwO//h/o47Qm6xYmYD5GBL0OzNr1K8PxXshYs1G2Ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=AALbTqyk; arc=none smtp.client-ip=148.251.105.195
+	 MIME-Version; b=G48w0SOQ4bU19UF3Xa6QhYqG5rRNBnqCjbtyn945cNkDB4MoljKHfsD4taOsSRjSxagB6FOq6UlBpR9Htr9hOdWPUlnMaAhWm26P0beJdzuE2JZsydcPxyYSjn9k34QOEEx6xPB6iXHki1pqbJvUlNiKOPsxrBKdeH8ydJLjTLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=bhCn2K5l; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="AALbTqyk"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="bhCn2K5l"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1744204397;
-	bh=NEuXEAf0EoHvdi3tLgzyhmCbJUmfqZDU6pN1X9AaFMs=;
+	s=mail; t=1744204402;
+	bh=DATJrZaH9JfWeAmD0tPnwt88xNWYRlg12xEesQvyvlQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AALbTqykzgOFJwXwrfudo7uMKkPLpsGgttDFYQ/SHqOVCdGLvIuMr+OiI0f3r7s3l
-	 cT4p7GxNdHYQ1+z57QywB+fSapcg2pUN8qIyEZ5nMwhbS6yl2rUUUWlBcp2h6jXVmW
-	 f1myxybJ6YqDKKos0Cg6YGg7TNBn3CnAj/ET46w3wSGG+CGdghGPZAs30hoZ0Ho2BB
-	 hJqa3pbv0LKe2+BGG3L+7ibaoDI2GVXnw1W3yylMmwIvBhwBVCnMPE0QC21SoJwvp9
-	 BjmmC0qUeyIx3JVSkgOHiCb8FbRQ9iReaBMg098MnjgoA1UkGauCZg4S1fC/ESO32U
-	 V3H25MdeUH0SQ==
+	b=bhCn2K5lLSQjDFCIVlZkErThvTIcoRMNCnEIB5S19nppa/+WzfTJB7C8899lgyuI5
+	 p8FNkIuD0hMLLWff4SqugEZpAR8g35TsC/qcWBfRKmIuzkTHbeqmFIqRZyok0Eu3Tu
+	 YBeshRkBoXhVxcIg+y3fdM0g0S+WYUb1J2AD9V3OVUYPTzAwQs8hrn3Glk2F1o07md
+	 rmCgmr0+sqyBuZ2TneKrvW8V6UYmt1sULckWYZBDfrASWxmAIEY3RDSWgK1Bf2bTrO
+	 /eGCfm37KiOAZRy+Kf90o07it3Z3DWIHEwvA1xjYzElxAzANMm88VUAu08Kzmz/dEg
+	 zJ89W38eqxQJw==
 Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id C775917E0FC1;
-	Wed,  9 Apr 2025 15:13:16 +0200 (CEST)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 6AC3817E07F2;
+	Wed,  9 Apr 2025 15:13:21 +0200 (CEST)
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 To: chunkuang.hu@kernel.org
 Cc: p.zabel@pengutronix.de,
 	airlied@gmail.com,
 	simona@ffwll.ch,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
 	matthias.bgg@gmail.com,
 	angelogioacchino.delregno@collabora.com,
+	ck.hu@mediatek.com,
+	jitao.shi@mediatek.com,
+	jie.qiu@mediatek.com,
+	junzhi.zhao@mediatek.com,
 	dri-devel@lists.freedesktop.org,
 	linux-mediatek@lists.infradead.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	kernel@collabora.com,
+	dmitry.baryshkov@linaro.org,
 	lewis.liao@mediatek.com,
 	ives.chenjh@mediatek.com,
 	tommyyl.chen@mediatek.com,
 	jason-jh.lin@mediatek.com
-Subject: [PATCH v1 5/5] drm/mediatek: mtk_dpi: Rename output fmts array for MT8195 DP_INTF
-Date: Wed,  9 Apr 2025 15:13:06 +0200
-Message-ID: <20250409131306.108635-6-angelogioacchino.delregno@collabora.com>
+Subject: [PATCH v8 01/23] dt-bindings: display: mediatek: Add binding for HDMIv2 DDC
+Date: Wed,  9 Apr 2025 15:12:56 +0200
+Message-ID: <20250409131318.108690-2-angelogioacchino.delregno@collabora.com>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250409131306.108635-1-angelogioacchino.delregno@collabora.com>
-References: <20250409131306.108635-1-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20250409131318.108690-1-angelogioacchino.delregno@collabora.com>
+References: <20250409131318.108690-1-angelogioacchino.delregno@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,42 +75,64 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-For the sake of increasing human readability and avoid possible
-confusion between DPI and DP_INTF output formats (as the two are
-ever so slightly different), rename the mt8195_output_fmts array
-to mt8195_dp_intf_output_fmts.
+Add a binding for the Display Data Channel (DDC) IP in MediaTek
+SoCs with version 2 HDMI TX IP.
 
-This commit brings no functional changes.
-
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
 Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 ---
- drivers/gpu/drm/mediatek/mtk_dpi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ .../mediatek/mediatek,mt8195-hdmi-ddc.yaml    | 41 +++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/mediatek/mediatek,mt8195-hdmi-ddc.yaml
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
-index 9de537a77493..0b7f91fb519f 100644
---- a/drivers/gpu/drm/mediatek/mtk_dpi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
-@@ -1106,7 +1106,7 @@ static const u32 mt8195_dpi_output_fmts[] = {
- 	MEDIA_BUS_FMT_YUV10_1X30,
- };
- 
--static const u32 mt8195_output_fmts[] = {
-+static const u32 mt8195_dp_intf_output_fmts[] = {
- 	MEDIA_BUS_FMT_RGB888_1X24,
- 	MEDIA_BUS_FMT_RGB888_2X12_LE,
- 	MEDIA_BUS_FMT_RGB888_2X12_BE,
-@@ -1248,8 +1248,8 @@ static const struct mtk_dpi_conf mt8195_dpintf_conf = {
- 	.dpi_factor = dpi_factor_mt8195_dp_intf,
- 	.num_dpi_factor = ARRAY_SIZE(dpi_factor_mt8195_dp_intf),
- 	.max_clock_khz = 600000,
--	.output_fmts = mt8195_output_fmts,
--	.num_output_fmts = ARRAY_SIZE(mt8195_output_fmts),
-+	.output_fmts = mt8195_dp_intf_output_fmts,
-+	.num_output_fmts = ARRAY_SIZE(mt8195_dp_intf_output_fmts),
- 	.pixels_per_iter = 4,
- 	.dimension_mask = DPINTF_HPW_MASK,
- 	.hvsize_mask = DPINTF_HSIZE_MASK,
+diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,mt8195-hdmi-ddc.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,mt8195-hdmi-ddc.yaml
+new file mode 100644
+index 000000000000..bde4dc556d4f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,mt8195-hdmi-ddc.yaml
+@@ -0,0 +1,41 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/mediatek/mediatek,mt8195-hdmi-ddc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: MediaTek HDMI MT8195 series HDMI Display Data Channel (DDC)
++
++maintainers:
++  - AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
++  - CK Hu <ck.hu@mediatek.com>
++
++properties:
++  compatible:
++    oneOf:
++      - const: mediatek,mt8195-hdmi-ddc
++      - items:
++          - const: mediatek,mt8188-hdmi-ddc
++          - const: mediatek,mt8195-hdmi-ddc
++
++  clocks:
++    maxItems: 1
++
++  power-domains:
++    maxItems: 1
++
++required:
++  - compatible
++  - clocks
++
++additionalProperties: false
++
++examples:
++  - |
++    hdmi {
++        hdmi_ddc: i2c {
++            compatible = "mediatek,mt8195-hdmi-ddc";
++            clocks = <&clk26m>;
++        };
++    };
++...
 -- 
 2.49.0
 
