@@ -1,282 +1,115 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5512276040;
-	Wed,  9 Apr 2025 17:39:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F5B26FDB7
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 17:39:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744220366; cv=none; b=XkrELjqwOgCOWK+ing1gIixsCL44dDRb02YnIA+3S8pUJ3dzFvWfRLykXlgc3dV5WuQHCXtdXqfs3IBW1SXjB05dlT8vrJnHz/+ClbSpF83coM3JkOQvVDEtenjdvCYW0qysKrOO+z5Znd0RuMQ3UpB1R8+vqD2N+1Q1lrCWwOA=
+	t=1744220374; cv=none; b=ZuG39ZwXUMzCO7wNWOG4hxjHwKeieLE/nOQpaU0YpRLCe9l3yP5TSEPXWJzLPkpwLXNnlJy2BUTOidkgSKyUTYaBhwg+UqUz3tqdUjKMlU9FJ67UA6GpGRC2AbLNsmGU6qv6Atxq2SGIXIjI0+FO3Rm20J3O8qGTL9ghqR/gAjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744220366; c=relaxed/simple;
-	bh=msPgzrV8Us/naJ3S+zSDwJxkQrEyWqBjzxX0c40z2zw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=pSNir2ddIa7NyMM3upDSpjjZOnqBZtfRHi1Of22grekPAqYK/mJPFWL9ujh2756ZEEfMpQqWaCz4xwhab8QqMc8LDdgWSip1QHLRQJys+pznZaBHWvB4DFynSutSMFEk4ihK8U3QqfmkLP4G2lZv1Rr/9EbzVLXcXdZelHMzo5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=nXMyLimo; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744220374; c=relaxed/simple;
+	bh=N9rPsmdyTYCJPwhlzHdSu/S9+X++s3kwQh98QhmpvZ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q8D9cYC61BLG8/ioFSIURRXDKvFAzEGkOsViW4oc52lsOuDYhvMSd6AQNKE6cl2pvuv7np9V0KcUgJM9yJgbdRV7rb2LLeWp5Tu7GfwCKEekP5NdNdHz9EiHNIJSKT1wKzd1iH4iz/L0wWfZTYi1+wwI/oAb/lpekz1yDsIOIJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HimBEwXh; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nXMyLimo"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 539HdDcd894353
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 9 Apr 2025 12:39:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744220353;
-	bh=rCJqBTtApQp0a/WR/olWHy2S6RHwhtdebllXn8ohFLE=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=nXMyLimohCVJ1eIKLAs1Wdz1um/G1fJLytg5VwJpXgqTfV2Rf6NfK4xxu+eEc3/Ik
-	 hXpslgkCYWQ4pzSnGdZDxI1qnl4Xn/tuDas4Qko76JMIHpQ18Ssq5UUzUlNe1aPMuy
-	 0vjrUsL1CyzY6QhJ0XxMRnzrkeMGkRH+EOaz0OD0=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 539HdDaP015557
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 9 Apr 2025 12:39:13 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 9
- Apr 2025 12:39:12 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 9 Apr 2025 12:39:12 -0500
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 539HdCpr021525;
-	Wed, 9 Apr 2025 12:39:12 -0500
-Message-ID: <b7f6570f-3b80-4fc1-8201-d44f5692867f@ti.com>
-Date: Wed, 9 Apr 2025 12:39:11 -0500
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HimBEwXh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744220372; x=1775756372;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=N9rPsmdyTYCJPwhlzHdSu/S9+X++s3kwQh98QhmpvZ4=;
+  b=HimBEwXhIq6hSkDhQFgfqw98HZNwFZMYvbzQRSVDprI8bi7OXjv9bq5a
+   mhD9K5md32FciD9K7SZAS55FZYHFC5aa/1O9Ea9peyhoOlnt2jZBcBNGy
+   GZrQy+P0TW5c5s+NpBQKi5Mm5s8N+zJPqF22HFpb9TXC7WPquz0mtpL9l
+   eVhNJj8cKq1DkZFPkpGAI53T0YOxpfnQpUHVl3LJGUN5uYsgrsiKL5Y5i
+   D99dM9THra7umTkIt+GCvBKqCokRRQKiN0QY2VsfQCcN8bNNN/Z/JXYJ+
+   z0F/hq7D1QBcvuWh/+h4tAghGlhBnWeckzEArdB/3eixvTQ+A6vCtctN+
+   g==;
+X-CSE-ConnectionGUID: eMZLPYNCRp2Qr00zD82QbA==
+X-CSE-MsgGUID: qWTeZ53CQsGvwgg1UsmdhA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="45882411"
+X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
+   d="scan'208";a="45882411"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 10:39:31 -0700
+X-CSE-ConnectionGUID: JUyz7kLPQeGLbEVtCrP72A==
+X-CSE-MsgGUID: Tht2dgwmR6qD1OlwOUgVnw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
+   d="scan'208";a="133864059"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by orviesa005.jf.intel.com with ESMTP; 09 Apr 2025 10:39:30 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u2ZOZ-00099r-0A;
+	Wed, 09 Apr 2025 17:39:27 +0000
+Date: Thu, 10 Apr 2025 01:39:24 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Christoph Hellwig <hch@infradead.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>
+Subject: Re: [PATCH 2/3] vmalloc: Switch to for_each_vmap_node() helper
+Message-ID: <202504100130.OjlBJLkQ-lkp@intel.com>
+References: <20250408151549.77937-2-urezki@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/5] dt-bindings: mfd: syscon: Add ti,am62-ddr-pmctrl
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Markus
- Schneider-Pargmann <msp@baylibre.com>
-CC: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Siddharth
- Vadapalli <s-vadapalli@ti.com>, Nishanth Menon <nm@ti.com>,
-        Vignesh
- Raghavendra <vigneshr@ti.com>,
-        Tero Kristo <kristo@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-References: <20250122-topic-am62-dt-syscon-v6-13-v1-0-515d56edc35e@baylibre.com>
- <20250122-topic-am62-dt-syscon-v6-13-v1-2-515d56edc35e@baylibre.com>
- <20250124-heavy-jaybird-of-vitality-4cbe24@krzk-bin>
- <20250124-able-beagle-of-prowess-f5eb7a@krzk-bin>
- <mocfnpebc67xegcis6tx3ekhsjcsqnvhwtipufycrtq2be4nbh@pmxhir5gmkos>
- <639b4e3a-3f68-4fba-aa33-c46dcb6fc88f@linaro.org>
- <d6252b73-0bcc-4724-8144-d6a98c8980f8@ti.com>
- <74ee6d9b-fd78-4d8a-a94f-b2c4dc794b60@linaro.org>
- <ebsbaaxyatrcikoem75t2blkhhceuidq3wnj3r2hbezfcmtc3u@ptffexrigbff>
- <f9a2247e-e0eb-4e22-8626-80e87afa9386@linaro.org>
- <qjwlppsq4eorzepvjsgjjyyaddouo5w2rjguu5c2mqesd6luwp@f426xeghy2ht>
- <2130b439-74d0-475d-8429-1a1b4d9738aa@linaro.org>
-Content-Language: en-US
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <2130b439-74d0-475d-8429-1a1b4d9738aa@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250408151549.77937-2-urezki@gmail.com>
 
-On 2/12/25 1:35 PM, Krzysztof Kozlowski wrote:
-> On 10/02/2025 11:35, Markus Schneider-Pargmann wrote:
->> On Sun, Feb 09, 2025 at 01:21:27PM +0100, Krzysztof Kozlowski wrote:
->>> On 07/02/2025 15:40, Markus Schneider-Pargmann wrote:
->>>> Hi Krzysztof,
->>>>
->>>> On Mon, Jan 27, 2025 at 01:09:49PM +0100, Krzysztof Kozlowski wrote:
->>>>> On 24/01/2025 23:35, Andrew Davis wrote:
->>>>>> On 1/24/25 10:48 AM, Krzysztof Kozlowski wrote:
->>>>>>> On 24/01/2025 17:05, Markus Schneider-Pargmann wrote:
->>>>>>>> Hi Krzysztof,
->>>>>>>>
->>>>>>>> On Fri, Jan 24, 2025 at 09:22:54AM +0100, Krzysztof Kozlowski wrote:
->>>>>>>>> On Fri, Jan 24, 2025 at 09:19:49AM +0100, Krzysztof Kozlowski wrote:
->>>>>>>>>> On Wed, Jan 22, 2025 at 11:24:33AM +0100, Markus Schneider-Pargmann wrote:
->>>>>>>>>>> Add compatible for ti,am62-ddr-pmctrl to the list. There is a DDR pmctrl
->>>>>>>>>>> register in the wkup-conf register space of am62a and am62p. This
->>>>>>>>>>> register controls DDR power management.
->>>>>>>>>>>
->>>>>>>>>>> Signed-off-by: Markus Schneider-Pargmann <msp@baylibre.com>
->>>>>>>>>>> ---
->>>>>>>>>>>    Documentation/devicetree/bindings/mfd/syscon.yaml | 2 ++
->>>>>>>>>>>    1 file changed, 2 insertions(+)
->>>>>>>>>>
->>>>>>>>>> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->>>>>>>>>
->>>>>>>>> Un-acked, I missed the point that you really speak in commit msg about
->>>>>>>>> register and you really treat one register is a device. I assumed you
->>>>>>>>> only need that register from this device, but no. That obviously is not
->>>>>>>>> what this device is. Device is not a single register among 10000 others.
->>>>>>>>> IOW, You do not have 10000 devices there.
->>>>>>>>
->>>>>>>> Do I understand you correctly that the whole register range of the
->>>>>>>> wkup_conf node as seen in arch/arm64/boot/dts/ti/k3-am62a-wakeup.dtsi
->>>>>>>> should be considered a single syscon device?
->>>>>>>
->>>>>>> I don't have the datasheets (and not my task to actually check this),
->>>>>>> but you should probably follow datasheet. I assume it describes what is
->>>>>>> the device, more or less.
->>>>>>>
->>>>>>> I assume entire wkup_conf is considered a device.
->>>>>>>
->>>>>>>>
->>>>>>>> Unfortunately wkup_conf is modeled as a simple-bus with currently 5
->>>>>>>> subnodes defined of which 4 of them consist of a single register. Most
->>>>>>>> of them are syscon as well. So I think I can't change the simple-bus
->>>>>>>> back to syscon.
->>>>>>>
->>>>>>> Huh... Maybe TI folks will help us understand why such design was chosen.
->>>>>>>
->>>>>>
->>>>>> Many of the devices inside the wkup_conf are already modeled as such.
->>>>>> Clocks and muxes for instance already have drivers and bindings, this
->>>>>> is nothing new to TI.
->>>>>>
->>>>>> If we just use a blank "syscon" over the entire region we would end up
->>>>>> with drivers that use phandles to the top level wkup_conf node and
->>>>>> poke directly the registers they need from that space.
->>>>>>
->>>>>> Would you rather have
->>>>>>
->>>>>> some-device {
->>>>>> 	ti,epwm_tbclk = <&wkup_conf>;
->>>>>> }
->>>>>>
->>>>>> or
->>>>>>
->>>>>> some-device {
->>>>>> 	clocks = <&epwm_tbclk 0>;
->>>>>> }
->>>>>
->>>>> How is this comparable? These are clocks. You would have clocks property
->>>>> in both cases.
->>>>>
->>>>>
->>>>>>
->>>>>> with that epwm_tbclk being a proper clock node inside wkup_conf?
->>>>>> I would much prefer the second, even though the clock node
->>>>>> only uses a single register. And in the first case, we would need
->>>>>> to have the offset into the wkup_conf space hard-coded in the
->>>>>> driver for each new SoC. Eventually all that data would need to be
->>>>>> put in tables and we end up back to machine board files..
->>>>>>
->>>>>> I'm not saying every magic number in all drivers should
->>>>>> be offloaded into DT, but there is a line somewhere between
->>>>>> that and having the DT simply contain the SoC's name compatible
->>>>>
->>>>> That's not the question here.
->>>>>
->>>>>> and all other data going into the kernel. That line might be a
->>>>>> personal preference, so my question back is: what is wrong
->>>>>> if we do want "1000 new syscons per each register" for our
->>>>>> SoCs DT?
->>>>>
->>>>> Because it is false representation of hardware. You do not have 1000
->>>>> devices. You have only one device.
->>>>>
->>>>>
->>>>>>
->>>>>> (and the number is not 1000, scanning the kernel I can see
->>>>>> the largest wkup_conf region node we have today has a grand
->>>>>> total number sub-nodes of 6)
->>>>>
->>>>> But what is being added here is device per each register, not per feature.
->>>>
->>>> The register layout is like this:
->>>
->>> The register layout of what? How is the device called? Is datasheet
->>> available anywhere?
->>
->> Yes, it is available here: https://www.ti.com/de/lit/pdf/spruj16
->>
->> 14 Registers
->> 14.2 Device Configuration Registers
->> 14.2.1 CTRL_MMR Registers
->> 14.2.1.1 General Purpose Control Registers
->> 14.2.1.1.3 WKUP_CTRL_MMR0 Registers
->>
->> Each domain has their own set of general purpose control registers,
->> CTRL_MMR for the main domain, MCU_CTRL_MMR0 for the MCU domain,
->> WKUP_CTRL_MMR0 for the wakeup domain.
-> 
-> 
-> So according to the doc you have only one device - CTRL_MMR. All other
-> splits are superficial.
-> 
+Hi Uladzislau,
 
-It is not one device, it is a collection of devices under one labeled
-bus range. Some items here are full normal devices, already modeled by DT
-as stand-alone devices, for instance our chipid, efuse, clock controller,
-etc. even our pinmux is part of this bus range.
+kernel test robot noticed the following build warnings:
 
-They are grouped as we have one set for each domain (MAIN, WKUP, MCU).
+[auto build test WARNING on akpm-mm/mm-everything]
+[also build test WARNING on linus/master v6.15-rc1 next-20250409]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-All other splits are not superficial, if we go down that path then
-the whole SoC is one "device". We could simply have the whole address
-bus be one node and have Linux hard-code offsets in the drivers, we
-end up back at board files..
+url:    https://github.com/intel-lab-lkp/linux/commits/Uladzislau-Rezki-Sony/vmalloc-Switch-to-for_each_vmap_node-helper/20250408-231807
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+patch link:    https://lore.kernel.org/r/20250408151549.77937-2-urezki%40gmail.com
+patch subject: [PATCH 2/3] vmalloc: Switch to for_each_vmap_node() helper
+config: sparc-randconfig-002-20250409 (https://download.01.org/0day-ci/archive/20250410/202504100130.OjlBJLkQ-lkp@intel.com/config)
+compiler: sparc-linux-gcc (GCC) 7.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250410/202504100130.OjlBJLkQ-lkp@intel.com/reproduce)
 
-DT should break things into logically distinct and reusable units
-so we don't have to store that in the kernel. That is what we do
-here, even if some units end up being very small.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504100130.OjlBJLkQ-lkp@intel.com/
 
->>
->> So I understand this to just be a collection of general purpose control
->> registers. If you go by feature, then many of the registers can be
->> grouped into units with a specific purpose or controlling a specific
->> device which are also grouped by the offsets they represent. I assume
-> 
-> It could work if you have distinctive groups, but here:
-> 1. You do not have this grouped, you just judge by yourself "oh, that's
-> group A, that's B".
-> 2. Group per one register is not that.
-> 
-> For me this is one big block and even CLKSEL is spread all over so
-> cannot be really made distinctive.
-> 
->> this is why the other nodes in this wkup_conf node were created. Also in
-> 
-> The other nodes represent some sort of fake or totally arbitrary
-> grouping. That's abuse of the syscon.
-> 
+All warnings (new ones prefixed by >>):
 
-They are grouped by function.
+   mm/vmalloc.c: In function 'vmap_init_nodes':
+>> mm/vmalloc.c:5087:9: warning: unused variable 'n' [-Wunused-variable]
+     int i, n;
+            ^
 
->> my opinion this makes the relation between the original device and this
->> general purpose control registers better understandable.
->>
->> For this patch the ddr-pmctrl regsiter is just a single register, but it
->> has the purpose of controlling the DDR device power management.
-> 
-> Sure, but that is NOT syscon. One register of entire block is not system
-> controller. The entire block is system controller.
-> 
 
-The whole block cannot be a system controller as there are regular
-devices inside this range. If we made the whole region a syscon and
-also left the device nodes inside, then we would have overlapping
-register owners, one register would be controlled by two or more
-drivers. How would we synchronize mappings, access, updates, etc.
-Any one register should belong to exactly one device.
+vim +/n +5087 mm/vmalloc.c
 
-Is your issue the name "system controller", as yes I agree some of
-these regions are not "system controllers".
+7fa8cee003166e Uladzislau Rezki (Sony  2024-01-02  5083) 
+d093602919ad59 Uladzislau Rezki (Sony  2024-01-02  5084) static void vmap_init_nodes(void)
+d093602919ad59 Uladzislau Rezki (Sony  2024-01-02  5085) {
+d093602919ad59 Uladzislau Rezki (Sony  2024-01-02  5086) 	struct vmap_node *vn;
+8f33a2ff307248 Uladzislau Rezki (Sony  2024-01-02 @5087) 	int i, n;
+8f33a2ff307248 Uladzislau Rezki (Sony  2024-01-02  5088) 
 
-Would it work better if we didn't call this "ti,am62-ddr-pmctrl"
-node a "syscon"? That can be done, we just would add a normal
-binding doc for it, instead of trying to reuse the generic
-bindings/mfd/syscon.yaml file.
-
-Andrew
-
-> 
-> 
-> Best regards,
-> Krzysztof
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
