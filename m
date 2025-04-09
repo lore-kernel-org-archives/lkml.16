@@ -1,107 +1,133 @@
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C56C2192F5
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 14:07:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC1E1264FA5;
+	Wed,  9 Apr 2025 14:07:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744207630; cv=none; b=PeldaVnIDJyB2eNi6rnwUUaDdSSY0LSBrg40h7jIjBCKusviu6XDsUaqujXYHF3EqszjSWjzJ3fm60UgWyvaijeW2U8GkT3iArZ5Mc3cRdhpWqBCizbbzD4D98j4zZ78WcXV99LP2+FfYGAWBNOJpS75ZrKAPMp3bnffXY3vxX8=
+	t=1744207631; cv=none; b=L0kpsGOL4cmsrBmslDgX8IQjtvIEUYAJBaZzFT3vjaKQm5ETD8E8x8mahwPxpBmI5ebuhwTdR33aibwVz/a0BmncpIgNfpFHoGRV8/8iLET91bC9BSCZ+Bs7eBmUYEXExQEtO3bPNZE3Kdjq4NNhbaKeK7/9aomDBIbsIoaRjBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744207630; c=relaxed/simple;
-	bh=PqduoJbYDtzqUC58ESv/YEoJVbnqv595vRc7J7Cqtps=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 Cc:Content-Type; b=b6gFz0oqPL6iQCiNAOezrrA8StLvZI7D+gj91b9nUVHo50AqrXtyRo+fPjTmvsPw03DWMe9cLUb/XsZskDkX403Eo8OMKd5WL7bqb/i3MJcwvxFeAC0yo84scttI/GANSB9ZMrk9mu/F8HkfSWloxCOX3XaGcFDHzqbWKLGcAEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nluz7D5m; arc=none smtp.client-ip=209.85.221.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744207631; c=relaxed/simple;
+	bh=UgktLFzb+e+eJV8h1xhP+4y4L19Zt2j1W5TFzLZ3fAk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BqG5KAYvYdL7EUovdutqz4bs00+MTb0jIZqBFu8CyD/ihmlyOD77b5IRZJuuJNgKnStP25AbtRBkNoKzSJLnbkitwAqp3r4LmpobLrQTs+CsoB3/V9U5LcavwQ9Ok3AjOqVNDx/eu/BOcL9dStiqAWjMSpV9qADyBevO2nBIH0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=q7JuOWiq; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nluz7D5m"
-Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-52413efd0d3so2954921e0c.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 07:07:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744207627; x=1744812427; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PqduoJbYDtzqUC58ESv/YEoJVbnqv595vRc7J7Cqtps=;
-        b=Nluz7D5m/eF123QASuYRrpNCh5cWD77cD29eLMmJG8v67lMjGfPvpAdgKcGO48EfG6
-         yV0qHNRaZBWsucb+Q1z4TPkI1XGHp9j7CP1L+kAGEwM2Mov6qc9KKYFbdc2ioaNqgmiD
-         Y3WBilOlgrJWXEVan+eRUtlI3HsRJzMqEkuCPDti1f+G8l8AUpzphT3eMPOcGBY9k072
-         TJAWM/2DimLcJvOgza4p17zJY8igvagFr4ZgZdyktWjA4Hn0evzWeDilHtR8te2/RAhU
-         6zN8K0zLadr97rEwr+gL+sXGN/Gttn9/hS/LMZSxJrGaDR/pKVKRFVwIer+07bUbnAZR
-         1XdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744207627; x=1744812427;
-        h=content-transfer-encoding:cc:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PqduoJbYDtzqUC58ESv/YEoJVbnqv595vRc7J7Cqtps=;
-        b=OQL6lkyDiAp0wtPt8vCHSv0V0FrdOl/lPHFRdJpqiVrbylOnym7pS51mNC3+8l2uQu
-         ENZmQiG/4/2AWbmYtliM7vGzG+2ybcvhKRRYVBW+Bkd0MEzxXx1bZM9w+VlRIK2xGpjm
-         ZaA9XFAWe9U/w4auGNs+l45AwLXWjA4C8Nv27YczO0GjwdnYuwOqEfew/0dy4SFGQgMC
-         yB4t446x3+iEtzkCgxoSvtJsdEBcMSsQ7uO0c46P0IWFAWGQqBI3+celYFLhBHa7FfsG
-         v/aYb4/PjL4QH4C33RPrCI2NKIN2xH46pkWF1LN2nK18nnergpaH2BSFPetj3cqcsgHw
-         Cocw==
-X-Forwarded-Encrypted: i=1; AJvYcCVsRyjjEZcFg+jOPeL5Oae14qJPg52WKcxdHTkxc9FCG3ab+qv4mmL9YuDU8J2TbNdbT+5s/X5naB/IUrI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwM8PNw0z4oetYMXEmGWNEZxDb3JVhGgk0If+/2G5rJX9ufLamR
-	StAilV2PBB5TEOi7RyByL6idlXXRauM8yNwmnqeAK6IQXZ7izzNm2Gzr0mqbTwaTzrzEx5/NOwZ
-	rgNqwDK4oXqbAVP9pdx1hPWgbybg=
-X-Gm-Gg: ASbGncvCX4UqhGvkLow9AeXcW1ex4EJfKTm+b8+ejHEGJM0GCkKRZUmYBQeaO01hCBq
-	KcpBY/wuAHIIZZNx6vW1HpZomszZX2b5EKuQbKTqOgkW6NJms9T08nPZWD3svwwARjaAQaxD/3t
-	KfFCvwWEcE/1pBe/CHDV+ECDOD
-X-Received: by 2002:a05:6122:6588:b0:51f:4154:c1b2 with SMTP id
- 71dfb90a1353d-527a9cc8fc0mt1747773e0c.2.1744207627185; Wed, 09 Apr 2025
- 07:07:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="q7JuOWiq"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=3Ro2fPi/15BsTrXL3Ti3RuIwgl6WKvf6SctPhYlhK8k=; b=q7JuOWiqNBR44LFThNc7ttAMJA
+	dqNFuO3RvQssM9X5n3aWR6EV7Y5ue9p2Yg79PwTq6LxMN98dZMpvSKVqib9omN94DtUk3hgZajiXc
+	OItud1HbcwWnIvviDf1AvjOD5pcEEC6i3F2nCiwxwKC2ZmlmbnLVwLq0ZvE6ugE+jYl6iloVBbjba
+	P9H/U1ScMwugRgj91aiKazNHeH/keaHYvLK6d8+HRtnH8LdwVxFY05d7qQU+APvzEIrc9qDODUQ3t
+	Y8pruiEOPJSq7uSl1CLn1gnNmfG8hphtHv33WlWK9xcY4bNMBj7i3jd5YeJ91eljLTh0sKseX4ify
+	S/dXoX8Q==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u2W52-00000001YbP-05FQ;
+	Wed, 09 Apr 2025 14:07:04 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 9A4F33003FA; Wed,  9 Apr 2025 16:07:03 +0200 (CEST)
+Date: Wed, 9 Apr 2025 16:07:03 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: linux-kernel@vger.kernel.org
+Cc: linux-tip-commits@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>, Brian Gerst <brgerst@gmail.com>,
+	Juergen Gross <jgross@suse.com>, "H. Peter Anvin" <hpa@zytor.com>,
+	Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org
+Subject: Re: [tip: perf/core] uprobes/x86: Add support to emulate NOP5
+ instruction
+Message-ID: <20250409140703.GB9833@noisy.programming.kicks-ass.net>
+References: <20250408211310.51491-1-jolsa@kernel.org>
+ <174419899905.31282.16125441491898382603.tip-bot2@tip-bot2>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z/PyMXTjCHduOhKX@HP-650> <CAHp75VdtUhUBL5d103RunY5EvgmTQVH48S21N1-1KmDM0q44Aw@mail.gmail.com>
-In-Reply-To: <CAHp75VdtUhUBL5d103RunY5EvgmTQVH48S21N1-1KmDM0q44Aw@mail.gmail.com>
-From: Samuel Abraham <abrahamadekunle50@gmail.com>
-Date: Wed, 9 Apr 2025 15:06:58 +0100
-X-Gm-Features: ATxdqUHsbnK795wVxw9QVhafe2Y6kUO7YKAlKUo58tUZnSRiPWCXFv7dunVORH4
-Message-ID: <CADYq+fbbA+K6qsPSa73s94+Whe-_gZ0-ZquYjyx0S4RXFq1W-A@mail.gmail.com>
-Subject: Re: [PATCH v5] staging: rtl8723bs: Use % 4096u instead of & 0xfff
-Cc: gregkh@linuxfoundation.org, julia.lawall@inria.fr, 
-	outreachy@lists.linux.dev, linux-staging@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, david.laight.linux@gmail.com, andy@kernel.org, 
-	dan.carpenter@linaro.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <174419899905.31282.16125441491898382603.tip-bot2@tip-bot2>
 
-On Mon, Apr 7, 2025 at 5:17=E2=80=AFPM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Mon, Apr 7, 2025 at 6:54=E2=80=AFPM Abraham Samuel Adekunle
-> <abrahamadekunle50@gmail.com> wrote:
-> >
-> > The sequence number is constrained to a range of [0, 4095], which
-> > is a total of 4096 values. The bitmask operation using `& 0xfff` is
-> > used to perform this wrap-around. While this is functionally correct,
-> > it obscures the intended semantic of a 4096-based wrap.
-> >
-> > Using a modulo operation `% 4096u` makes the wrap-around logic
-> > explicit and easier to understand. It clearly signals that the
-> > sequence number cycles through a range of 4096 values.
-> > It also makes the code robust against potential changes of the 4096
-> > upper limit, especially when it becomes a non power of 2 value while
-> > the AND(&) works solely for power of 2 values.
-> >
-> ...
->
-> Besides that I haven't found in the changelog if you have looked at
-> the entire driver code and checked that all usages of this field is
-> done in the same / similar way and no need to convert anything more
-> that these.
+On Wed, Apr 09, 2025 at 11:43:19AM -0000, tip-bot2 for Jiri Olsa wrote:
+> The following commit has been merged into the perf/core branch of tip:
+> 
+> Commit-ID:     38440aebd4acc7bb3721eea77829bdb724d2551a
+> Gitweb:        https://git.kernel.org/tip/38440aebd4acc7bb3721eea77829bdb724d2551a
+> Author:        Jiri Olsa <jolsa@kernel.org>
+> AuthorDate:    Tue, 08 Apr 2025 23:13:09 +02:00
+> Committer:     Ingo Molnar <mingo@kernel.org>
+> CommitterDate: Wed, 09 Apr 2025 12:35:17 +02:00
+> 
+> uprobes/x86: Add support to emulate NOP5 instruction
+> 
+> Adding support to emulate NOP5 as the original uprobe instruction.
+> 
+> This change speeds up uprobe on top of NOP5 and is a preparation for
+> usdt probe optimization, that will be done on top of NOP5 instruction.
+> 
+> With this change the usdt probe on top of NOP5 won't take the performance
+> hit compared to usdt probe on top of standard NOP instruction.
+> 
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Brian Gerst <brgerst@gmail.com>
+> Cc: Juergen Gross <jgross@suse.com>
+> Cc: H. Peter Anvin <hpa@zytor.com>
+> Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+> Link: https://lore.kernel.org/r/20250408211310.51491-1-jolsa@kernel.org
+> ---
+>  arch/x86/kernel/uprobes.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+> index 9194695..63cc68e 100644
+> --- a/arch/x86/kernel/uprobes.c
+> +++ b/arch/x86/kernel/uprobes.c
+> @@ -608,6 +608,16 @@ static void riprel_post_xol(struct arch_uprobe *auprobe, struct pt_regs *regs)
+>  		*sr = utask->autask.saved_scratch_register;
+>  	}
+>  }
+> +
+> +static int is_nop5_insn(uprobe_opcode_t *insn)
+> +{
+> +	return !memcmp(insn, x86_nops[5], 5);
+> +}
+> +
+> +static bool emulate_nop5_insn(struct arch_uprobe *auprobe)
+> +{
+> +	return is_nop5_insn((uprobe_opcode_t *) &auprobe->insn);
+> +}
+>  #else /* 32-bit: */
+>  /*
+>   * No RIP-relative addressing on 32-bit
+> @@ -621,6 +631,10 @@ static void riprel_pre_xol(struct arch_uprobe *auprobe, struct pt_regs *regs)
+>  static void riprel_post_xol(struct arch_uprobe *auprobe, struct pt_regs *regs)
+>  {
+>  }
+> +static bool emulate_nop5_insn(struct arch_uprobe *auprobe)
+> +{
+> +	return false;
+> +}
+>  #endif /* CONFIG_X86_64 */
+>  
+>  struct uprobe_xol_ops {
+> @@ -852,6 +866,8 @@ static int branch_setup_xol_ops(struct arch_uprobe *auprobe, struct insn *insn)
+>  		break;
+>  
+>  	case 0x0f:
+> +		if (emulate_nop5_insn(auprobe))
+> +			goto setup;
+>  		if (insn->opcode.nbytes != 2)
+>  			return -ENOSYS;
+>  		/*
 
-I have found more cases using a small Coccinelle semantic patch.
-There were also cases in the media driver, but I did not touch those since =
-it is
-not allowed for an outreachy applicant.
-I will send a patchset soon.
+This is still very weird code. See the comment here:
 
-Thanks
-Adekunle
+https://lkml.kernel.org/r/20241213104536.GZ35539@noisy.programming.kicks-ass.net
