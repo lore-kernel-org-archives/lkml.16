@@ -1,116 +1,116 @@
-Received: from out162-62-58-211.mail.qq.com (out162-62-58-211.mail.qq.com [162.62.58.211])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B23B61A5BA4
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 17:33:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 834E21C5F39;
+	Wed,  9 Apr 2025 17:34:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744220001; cv=none; b=ggDedB9xuyjXPTzHDNsmPL4tvFs9rEqtxpXR97J4EaTAoAkVSV0t2ZjgbTV8dKAoFh1DSkwEllOp3HkcNCfgK/i95EC2DRbMtqdrQIZ70Xc5E0zTTxyAC94A8R6owimVF+b0bHGY26HzrQ3GqyZIPpQHrV9K2DUGGIt26OGJVWY=
+	t=1744220093; cv=none; b=DZOo+/CEDQ7uqsfuHx71roHDN4OLeKSNYwEFM8Kccb55QpjyxaDFHgR6MovmM0Y2YrzO8R5jIlp20tr2ie9wILRmxlbF+gD9lpHPeNlXeCYWJJLqU1Q9OJEpbf6G4wAqZW3Kv512LcUp9MZxWDT1+lsxIggQ0bRR5/3CFLi10OE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744220001; c=relaxed/simple;
-	bh=UDsScVawTwMhviryuJnaMYaRiEHTchUhs9U9vyHyEts=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=i851HYn/Kii0ZeaqdaYyqGrRiPJbFZqBD2NwVgH7GN/VqFJpxmoOg0NSO0+5e8Zk2L1E8KhFdWz4wzKrmSHS9faMEEoRRUt1AzU2+HhvDcfIjm+Qg8yLkorh6wz7o4a3MBodfpOvmL4YLvWrm8HIBCkr4wRJufkn5vTsI4nBwIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=LmU2o3W7; arc=none smtp.client-ip=162.62.58.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1744220093; c=relaxed/simple;
+	bh=fet8ZDtq4y7709qBrhbHF3MVZJQgOOyKdqtHqZFuodY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kBaK6Z7xpOuJjijz1DD5dgsQK0wnEKqeO3etHJdvMDRmMhDgn1DXRnLD3fIU+IYsTBYKHkSr02k6wY1M/N4GxfOHsye7rrqKfzypGn/yUqHWOM+Z55JIStDTRVoyNmq0sEhcLxoJerhCQARECgO4Ld82oI+tVl+wFptg+604E8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=q1z/Ws0U; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="LmU2o3W7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1744219690;
-	bh=Tx0Hr945Xe0rUvgIJ5OIe+KhPZ6SaToN7Vw0a9/byQo=;
-	h=From:To:Cc:Subject:Date;
-	b=LmU2o3W7qap/AsEeLwZfRBRIPsSlXOHH/mDMK5bI9nm3GOmpacdhbnHurB8dV4mzb
-	 AmPPveDEsS+jNPfHZd8kjqwPCXr5v+PirYS/zkMvj4FQxnDOfWr8kyopBDjoxW2KsM
-	 3aSnPFAC5FgEqoNNSjTHCSPYUNlZXkuTITETL3lA=
-Received: from localhost.localdomain ([116.148.99.229])
-	by newxmesmtplogicsvrszgpua8-1.qq.com (NewEsmtp) with SMTP
-	id 7090107A; Thu, 10 Apr 2025 01:28:09 +0800
-X-QQ-mid: xmsmtpt1744219689tp7uccbam
-Message-ID: <tencent_A8520B8C5C017A6C86DAD38B120D1B4D2905@qq.com>
-X-QQ-XMAILINFO: NnYhxYSyuBnLoiY02xCxdjTDiiqKpCIFUzYrRQdufj93eM9uj7y9BA7aQFfHOF
-	 ZfQDHlcAg5U+EENz8IGC0vm5F7KaU0XZzSdUqCSth8Nl0MX6w8VBB2yf/nUmb8BuJRR03BHCm+za
-	 VMuRq1WR9sxsIZ+Rmbx7f6+H3s7R1B+rAmYZRkIJsvLGNGeL2TqavaFFdXfEjyzCq4aUOTOxTQgL
-	 aZIbld+j+TE+smkfXku3Zvtn7lVdjE8mpRdIcQCIyUM3MpCyEgcALsyM9PCH5tohq+qTpVC9neCU
-	 lHUCuRbJj6Jp72dVeaY5GGdS0lt4n4XXITZaVt6irTHkLkadgMNhRNWYYGxwKwGpffpNfXbsMqje
-	 zaWWj60roeL7OUTWGPrgwTTTg5YV5ibadLsRZooo+EMBC4WyHxKmr/lSOqnOA4JyfRBGxcOMqKaR
-	 2YSBToDxRuzCh79LVUlDAJySZGYE/fIMheVbP9Y3PDIawjh3jPLV80m6H173OaOPZkqwDuejkSId
-	 UP1mF1T71KrnwA0BbIv57vwa9Kyp0Gp6ac7Cew9z/m158TNbv2oUiW60y8vzDDyJHdxgXm0M2v98
-	 H6M/Y4ugR3SwPlaOhISnLJuxh/Je36yzGFKmUk/FbV5zZOcSTK14zZyTHG0pf5XiG3fFNy62Fz42
-	 rIq7q3VzR6FBSoIVDpTDVpB9sWZE18m310NIefwEOZpkLQSITb5ce1tMxsqAN2jSXoeifQ8WmiqH
-	 Z7V6gVxwk0voMS4/F42CM94DEHs8naF2BAHmD3vJkdiXOQmtc3k8Jd+y6vay4xhVaCdPx6P0YI+l
-	 t6bPEmsCGlMQBCfCIo307CJIk8Yzzly5Zmc1hOSTE7sqjQ08GD8Z5H5NpiQK2eS93v7AfBE3n+Kh
-	 cSIJNUV2PHOKT1kSzi7pb9G63m72wpAZ/3wuW9kFC/SkHQM5B8vC+r72Rv5/vGkNO5Gay43PRCwW
-	 f7SdK9AfDJ6LTFobkj1BJMZyYKNan0dashq3Qpu4S2aJ7fHIl5Naqz4KauPNctrANwicwYmYG01r
-	 ELN0qkHw==
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
-From: zhoumin <teczm@foxmail.com>
-To: hirofumi@mail.parknet.co.jp
-Cc: linux-kernel@vger.kernel.org,
-	zhoumin <teczm@foxmail.com>
-Subject: [PATCH] fat: Optimized FAT bad char check
-Date: Thu, 10 Apr 2025 01:27:12 +0800
-X-OQ-MSGID: <20250409172712.698457-1-teczm@foxmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="q1z/Ws0U"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=N4LvEMvJcaYh0O8lvXByJBpLV2ZXxaE8V3ig6rTCot4=; b=q1z/Ws0U8HQkJ8A0FVo0+SD6wW
+	nCIJ7xqhEgAD3e8YQLdIWQsMS+VqgeofonnAW2zIDSCqqk4n1HVE+zoO7DrfRBmiecyvhWLeKjdXg
+	fYQSDBGAPhYHyzmLwfpANsEaLccKZY1tzTohGKthR59/tCTcnTEoHheVWL2DHOzu/tX0Wpe8SN3w6
+	OGjEtuwIwrRYfvRL9Ct2FhYLm+9VbQNypN6WjYJv7o+L0zL7BJgjId4DgMs7md8fdpDUd3rg/bylv
+	e8wjmOlxU/UuaWoxSes6YpK5A+DW6o2VsOpeC9i8Q9wuYHjRzfiQD/fdtb2TNpciXK0uilJTpFzAE
+	XLzpXu2A==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:52476)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1u2ZJu-0000qm-1N;
+	Wed, 09 Apr 2025 18:34:38 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1u2ZJr-0002kM-1F;
+	Wed, 09 Apr 2025 18:34:35 +0100
+Date: Wed, 9 Apr 2025 18:34:35 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: Simon Horman <horms@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH net-next v2 2/2] net: phy: Add Marvell PHY PTP support
+Message-ID: <Z_avqyOX2bi44sO9@shell.armlinux.org.uk>
+References: <20250407-feature_marvell_ptp-v2-2-a297d3214846@bootlin.com>
+ <20250408154934.GZ395307@horms.kernel.org>
+ <Z_VdlGVJjdtQuIW0@shell.armlinux.org.uk>
+ <20250409101808.43d5a17d@kmaincent-XPS-13-7390>
+ <Z_YwxYZc7IHkTx_C@shell.armlinux.org.uk>
+ <20250409104858.2758e68e@kmaincent-XPS-13-7390>
+ <Z_ZlDLzvu_Y2JWM8@shell.armlinux.org.uk>
+ <20250409143820.51078d31@kmaincent-XPS-13-7390>
+ <Z_Z3lchknUpZS1UP@shell.armlinux.org.uk>
+ <20250409180414.19e535e5@kmaincent-XPS-13-7390>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409180414.19e535e5@kmaincent-XPS-13-7390>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-1. Add first-Character Validation based on FAT Spec 6.1 ->
-Note the following -> 2
-2. Add check for 0x7F (DEL character) even though the specification
-does not explicitly mention it
+On Wed, Apr 09, 2025 at 06:04:14PM +0200, Kory Maincent wrote:
+> On Wed, 9 Apr 2025 14:35:17 +0100
+> "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
+> 
+> > On Wed, Apr 09, 2025 at 02:38:20PM +0200, Kory Maincent wrote:
+> > > Ok, thanks for the tests and these information.
+> > > Did you run ptp4l with this patch applied and did you switch to Marvell PHY
+> > > PTP source?  
+> > 
+> > This was using mvpp2, but I have my original patch as part of my kernel
+> > rather than your patch.
+> 
+> So you are only testing the mvpp2 PTP. It seems there is something broken with
+> it. I don't think it is related to my work.
 
-Signed-off-by: zhoumin <teczm@foxmail.com>
----
- fs/fat/namei_vfat.c | 23 ++++++++++-------------
- 1 file changed, 10 insertions(+), 13 deletions(-)
+Yes, and it has worked - but probably was never tested with PTPDv2 but
+with linuxptp. As it was more than five years ago when I worked on this
+stuff, I just can't remember the full details of the test setup I used.
 
-diff --git a/fs/fat/namei_vfat.c b/fs/fat/namei_vfat.c
-index dd910edd2404..d264057f32aa 100644
---- a/fs/fat/namei_vfat.c
-+++ b/fs/fat/namei_vfat.c
-@@ -195,16 +195,6 @@ static const struct dentry_operations vfat_dentry_ops = {
- 	.d_compare	= vfat_cmp,
- };
- 
--/* Characters that are undesirable in an MS-DOS file name */
--
--static inline bool vfat_bad_char(wchar_t w)
--{
--	return (w < 0x0020)
--	    || (w == '*') || (w == '?') || (w == '<') || (w == '>')
--	    || (w == '|') || (w == '"') || (w == ':') || (w == '/')
--	    || (w == '\\');
--}
--
- static inline bool vfat_replace_char(wchar_t w)
- {
- 	return (w == '[') || (w == ']') || (w == ';') || (w == ',')
-@@ -220,10 +210,17 @@ static inline int vfat_is_used_badchars(const wchar_t *s, int len)
- {
- 	int i;
- 
--	for (i = 0; i < len; i++)
--		if (vfat_bad_char(s[i]))
--			return -EINVAL;
-+	for (i = 0; i < len; i++) {
-+		if (i == 0 && s[0] == 0x05)
-+			continue;
- 
-+		/* Characters that are undesirable in an MS-DOS file name */
-+		if ((s[i] < 0x0020) || (s[i] == '*') || (s[i] == '?') ||
-+			(s[i] == '<') || (s[i] == '>') || (s[i] == '|')
-+			|| (s[i] == '"') || (s[i] == ':') || (s[i] == '/')
-+			|| (s[i] == '\\') || (s[i] == 0x7f))
-+			return -EINVAL;
-+	}
- 	if (s[i - 1] == ' ') /* last character cannot be space */
- 		return -EINVAL;
- 
+I think the reason I gave up running PTP on my network is the problems
+that having the NIC bound into a Linux bridge essentially means that
+you can't participate in PTP on that machine. That basically means a
+VM host machine using a bridge device for the guests can't use PTP
+to time sync itself.
+
+Well, it looks like the PHY based timestamping also isn't working -
+ptp4l says its failing to timestamp transmitted packets, but having
+added debug, the driver _is_ timestamping them, so the timestamps
+are getting lost somewhere in the networking layer, or are too late
+for ptp4l, which only waits 1ms, and the schedule_delayed_work(, 2) 
+will be about 20ms at HZ=100. Increasing the wait in ptp4l to 100ms
+still doesn't appear to get a timestamp. According to the timestamps
+on the debug messages, it's only taking 10ms to return the timestamp.
+
+So, at the moment, ptp looks entirely non-functional. Or the userspace
+tools are broken.
+
 -- 
-2.43.0
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
