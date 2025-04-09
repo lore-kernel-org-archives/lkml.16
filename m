@@ -1,227 +1,523 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03F311D6DBB;
-	Wed,  9 Apr 2025 12:32:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744201954; cv=fail; b=I0wT0SlXZfIFIHWR+Am85U98ex0lvun0QkJKEIC1RS6IZmJ17od+mdIdtV4xDGG1qAUV60URVNoQxkhAMoWHkYczO0yAH6YfoaBbiQ6wr3npCUEJQFYRRwjGQ3AX0jKq2DmPr/B/rOr03nDUMXHpZw+zqxCCg3F4AEPrSt9S2ew=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744201954; c=relaxed/simple;
-	bh=66qiwUvAA01qoT1aL3wTAjJS2qw0BSTCbFJ9WB3F+P4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Pu+Eg9CAFjXg9nts3xDPN4DkKBw5lBnEIEGAkpUZ72PLfY7bPTPzboQmznVEQy6EMjIrNDEYdO+521dRt5WbwyXDEzqJOReIzvDNzIdfCtjq6R9V6Coyn/mfBDe7X51JgnCQRG2V0RnhWnBTARCRSvjqoXFRrXx9Ovh9kiYzDao=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=HLX3kir5; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=rNLeu3UN; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDD011D6DBB
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 12:35:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744202116; cv=none; b=LPRBkcg8RVNkWauiwZ8wkFObyZ9zxb5I+eEYX5KTKFLJqrnlXhiuE8Z3F3VCcOwPMrAosascvLfWIFd9fhm+IxzWUiPsfx19tUVvQuKFtUoYgysZZxHphNi0NYX8D/MrM+tKf8J8bkXX7h3cEiM0QstzBJsa8XpTrc1u/BKpSJ8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744202116; c=relaxed/simple;
+	bh=AR8tMReo6gXjXCyDW/1ZqLTbyT97iDty6hMA6ClMTKc=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=dIf4lLvuFSZqlAAsJcXQC7cXAB0dWSWS57OiKzuYG6o+uHfZCntvtHjQdrYD8kOalL8bCt2CATovExqG0DHY3wCVAXI2ac9OiKUN2jgTbRKxSv8jbY0/DOHM3ZeFM86q6X8AEG3nH4bTnIvetKzOnuvu1/1SaQZbVwQ4aTTTD/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VkIUHBqt; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HLX3kir5";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="rNLeu3UN"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5397tvVj004446;
-	Wed, 9 Apr 2025 12:31:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=hCWaynb/eoSUuFQwcMH9dIFayT+3l1Vg0wONR3dWf2M=; b=
-	HLX3kir5icTUILlAWdx09etQqGN002JT807woYqmZLHniSHmf3brd1hBD5HS1ydG
-	2qCsyZWGA4y+zrfJOnrIedMRJ1xFj5Nz7Sl0vRUfoSNwx/yw+2Lgk+x4aBFa/g2X
-	L0l8EJsxQQYY3Fju/CSR10cl2RdQ3mnRDs4TY/uKitTUfATdOecnDfyRlSgfH9ds
-	DcG71PJLZ5wpNIrLqRCNUalimz2RsCA8Wnv22OgLKsvETiULzYFfchtfKPlf4Dd5
-	CucAJBt5xgqKW/oXlwMk4Lud2sBNavaoE32QYQFl1dCKMQnMsS017jdkdKmen/8l
-	WT7PLRaYOw3eK3TlaKpREQ==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45tv4sy39v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 09 Apr 2025 12:31:59 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 539CUtV6020924;
-	Wed, 9 Apr 2025 12:31:58 GMT
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2175.outbound.protection.outlook.com [104.47.58.175])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 45ttyh2eer-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 09 Apr 2025 12:31:58 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LYcxzcFVemBOIgjvHL70b4XSNCYU8JavBthm6be2fPXjfj/VWR3cvE/1ZWkZP+UgAh5Xs/kMLdi78ENURFbwiN1n1gCo5Y1lKd5ksXtK4geQ/J9nSdcLpWCyI6ryePJMhAxv37WG2JxLvyKyDMmZkz4K1LyYcbk8EalnhpQ/0AkzsatBb0Q54z9qeHl326LG0lmxvLaDkbFwhZfjY9PWfZmHhCnUn4JmLP/7dbTkqR2fRuwV4uEEXn4Pyb2imEr1pNjImRjysmRS+1fxIaBuq8x5OHEK+Xn/qWl8A36f3XJff/8ELxevV+2t65lfkD5ECwf0unM7lEXcdREXBg7KqQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hCWaynb/eoSUuFQwcMH9dIFayT+3l1Vg0wONR3dWf2M=;
- b=ybG1VDKlWKNbX4KiJmHsmyfiGfPPvLLVDOVP62hVu5axLIHKCpE62TQqcM2et9o6NN4itSlHPzNlO4B7vepx2Gbjh3fr55XZABxJE3oce0ssxIe77IhAngqzFWlwcI6W+vtYD7sXr7P1C0xBx0znhq8GcjaJRoynT8B1IFg4sE1YTQEgzTDjF5iGmpZe8SqyZVt6vVasn9oTn10sppjJ4kkYKbyQYdBVx4o04gjRrIPaIgWRXb3U6C6/b/AD5mu9tbvdvXTbnZ7rDl9bI2pQJNKVEoHqx/6nQhPdKcCmoyWSzNt+l0h/u3TTlfssIc/w4x3YVA2WdVPdlMZuRhXEGw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VkIUHBqt"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3913958ebf2so5946052f8f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 05:35:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hCWaynb/eoSUuFQwcMH9dIFayT+3l1Vg0wONR3dWf2M=;
- b=rNLeu3UNNROGKZdbLa1g1BNshP605/TUuyEINdNBd9c7UDpQmDwZ8mI9t5JLB5FZSX9GpbHQ+BBbutxjCz72ZEp4JnyAYGn9WW46eowJNj0o1Z5aE8Uzb9lzbXnmvpvBcGsBEhGzuKHbFtLbmdvVpEYWbHyrgXBvtn8ErmHBKtE=
-Received: from DS7PR10MB5328.namprd10.prod.outlook.com (2603:10b6:5:3a6::12)
- by CH0PR10MB5068.namprd10.prod.outlook.com (2603:10b6:610:c7::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.21; Wed, 9 Apr
- 2025 12:31:56 +0000
-Received: from DS7PR10MB5328.namprd10.prod.outlook.com
- ([fe80::ea13:c6c1:9956:b29c]) by DS7PR10MB5328.namprd10.prod.outlook.com
- ([fe80::ea13:c6c1:9956:b29c%6]) with mapi id 15.20.8632.017; Wed, 9 Apr 2025
- 12:31:56 +0000
-Message-ID: <634bcc25-492a-4c87-ba7c-157c358813ac@oracle.com>
-Date: Wed, 9 Apr 2025 18:01:47 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [External] : [PATCH 5.4 000/154] 5.4.292-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
-        f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
-        rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com,
-        broonie@kernel.org
-References: <20250408104815.295196624@linuxfoundation.org>
-Content-Language: en-US
-From: ALOK TIWARI <alok.a.tiwari@oracle.com>
-In-Reply-To: <20250408104815.295196624@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SI1PR02CA0008.apcprd02.prod.outlook.com
- (2603:1096:4:1f7::14) To DS7PR10MB5328.namprd10.prod.outlook.com
- (2603:10b6:5:3a6::12)
+        d=linaro.org; s=google; t=1744202111; x=1744806911; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tRjvqUTYovkYw+WiUkgsWp2p1ZMUvIdDIVCIeyGbJz0=;
+        b=VkIUHBqtXIPoErHoUQrgHaoSjOSnOc9E8f6riP6VseyM9V/dGhjAx8OvVsrLH+b8fK
+         8tB74x7LzJIovQGJ174jK4iiShQT0xz0MxTzYSnh226Vx/1g/0zIM/lTk99C/Q5+6bPK
+         3B2Ci7BqnWdkitNVolghBH6IIZOoAi4JjtHYG+N3DUcIgmbLCDDd13rsvRJjqZSoiYQk
+         AVOgAQaurKEW9mfdoNIBRCPrvRTYFzzv1aauG3FXF/I2i6MMHpPr9p4M4cjkes63mFLH
+         kiMTRfR66f7vCas/GhYYKK+cBXOjU2eAOQ2k1ZW5fyqwYbD1G/HdWcZ/AkIPJldIpOwg
+         D2xA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744202111; x=1744806911;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=tRjvqUTYovkYw+WiUkgsWp2p1ZMUvIdDIVCIeyGbJz0=;
+        b=whgPhCE3+hlTYdbvi2f3FmdY9kfCdeBVbQjKgXBN3O+nE+6MV7wc4fMy/N3KJCfAuE
+         RYHw1nA4x5ZTOgeb7G5wAGVtL5emTWpcXsXWteftoPCg4wvJUCMUeWB9fmmmGziGiTOi
+         6Lp+4SgInnSceVZ+5ZIX49+2oQcBrYKZKEYPj2DNhnzivl0bKqNddeX+BJ1oAfwb//yd
+         VyaFp+oAMC8Z1nolr+cehrvHyGUIynu0PGMoI+JBF0YckpNWXtUu+rhzkBzLUGDEnIQQ
+         TzcNKZ/odjc5EXcYUYnW5RLVmzRVw8ZOQxPblrbqWegHi8BES6wpPYNhIOCNKizp2s8C
+         /6dw==
+X-Forwarded-Encrypted: i=1; AJvYcCWdZ5uUyCTBwl/ai0NVniN95Jeqfh7y8ZFfbz8Cm2/e4bA95eLqpWGJ4f2ZmKMwXEySa64OArpXKhzcdjc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFegYQ9pmItjwZlLj4THshyWlrlaaUyhR0nDdVaht7LvMyi3wR
+	cplWaDt01lex+DUu2lvgm2Hx/Lwzdgi8xw9uyxYlPOh7+zd8UoO3aKyynQKqwtI=
+X-Gm-Gg: ASbGncv+sZf5Dpc4nea5y3LiOMZsff9Upo/sA6uFtSm9ISvOiVyQxtZ385ecYuKAT9s
+	1poAkPRJmuohKS9c7i6hyIXv/TYR0Iku+bWbg7EYB/NrI9Y5cTGjEcwJzPJy383FQmEodUAG1hv
+	IfI09khIfNRfGI4Sn5TmkAuxOQIQ2wC8qbEmkIem1dZPER5oXaVUQoBmFFdH3f/KQ5MOPT2Xsm4
+	bMGv3Bh/ichSSpDXDVMwXFTTCUFia6UYEnePfuQPd6er1zlVPuabqPmSr1pHAnlcvlrlGGDHZxK
+	QonQibdDE5Z1dTCK//bosbCRUX9kPnP2Q6V6aQLim5kz/vI23StxIP6rpA1SVdTOa7yLVVTFAfS
+	3ss0IP8xA7YyozfcsfA==
+X-Google-Smtp-Source: AGHT+IHVsOawwdiJy2sziChP3ExoSdK0tjE96AWxpntKvy2nAzzOPADmcyhSzcjHQtpvTyABGElrQg==
+X-Received: by 2002:a05:6000:2486:b0:38d:d0ca:fbad with SMTP id ffacd0b85a97d-39d87aa8211mr2677000f8f.14.1744202110831;
+        Wed, 09 Apr 2025 05:35:10 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:87d9:979a:1261:ab65? ([2a01:e0a:3d9:2080:87d9:979a:1261:ab65])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d893fdf8fsm1506595f8f.91.2025.04.09.05.35.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Apr 2025 05:35:10 -0700 (PDT)
+Message-ID: <d9d81cb4-12b4-4db3-becb-4578548986b2@linaro.org>
+Date: Wed, 9 Apr 2025 14:35:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR10MB5328:EE_|CH0PR10MB5068:EE_
-X-MS-Office365-Filtering-Correlation-Id: 40515f4a-1481-4995-7aa9-08dd776283f2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?RitETHhFWHRwMFdOeEpzNEZ1a1pBRXluUFVJSE9LYnJRbng4U3RWTFlzYjRM?=
- =?utf-8?B?Y2N0WWNsWW5PSTVwbXFyajhDM0c5clpBOXkxUUxWR3hvd2NJRVZEajQxMUZ0?=
- =?utf-8?B?ZThGMGRvOTJVaGhjZ3RwcFpXMTRPMDZidDFaQ2FvTVBZQ1QySTlvQWVqM2w1?=
- =?utf-8?B?S3c2cGFnTEVIeXg4M0I2d2VmYXhJRTR1S1IzalR5ZFNLclNuanJmTldGaWpi?=
- =?utf-8?B?cG5XbEN4WFMwNGFWS1NhaFNKRVlRNUFYcCt4Sm8wZ3hKRjVxOWFlZlB2bktI?=
- =?utf-8?B?MEVITThnWmJGbDAzb2IwS2JHdFpOaHFUMXU0VmQ4akkrTWhTWVhwcHUrK2dX?=
- =?utf-8?B?VkVyUU1SNXRSSTRvK1hQcjJMV21UMWl2cEo2UFJWY202MHkrZTlWY3lTNm91?=
- =?utf-8?B?R3RrblY5NTVSaGVJMjBYdHovbkpsdDZ4cVR1dUtwaGdVdytRZTlyZUN3TmNZ?=
- =?utf-8?B?SEhsWmhzdUtUQnIrTnVyYjVXTDRtaEpybE80MUVkZXpBNHMrbnBkWUxSRCsv?=
- =?utf-8?B?MEMwdWJIL0dBaEZ4ZEthZkRuL0Q0Y3JQSE84M1pRb1JxdUpHNnoxSTdmUUEv?=
- =?utf-8?B?KzVqdmVqMjNzSVhYZXJhOTR3aDBHTnNDcXFtU1ozUGhRNXY2b3UrL3RPeFlm?=
- =?utf-8?B?U1BTK1lENkw4eDVWR3V4ckZGK2cyOGNVR1E4M1NjQkROMG5kekRWaDlLNG4y?=
- =?utf-8?B?Q21YWStSNitaSkVZZ25jOVBJVEI1WmhqSHhZM1haZGJRSDBQekNHcVRPc2Nh?=
- =?utf-8?B?bGR1RjczdW5NRXliOGJad3ZJL1YrQUFveERVWjdBUUVKTTdrMlZQL3d1UEtz?=
- =?utf-8?B?czhHc2Z6RittdjZyUWhqUEh3UWFkS052VmVlUTRhaVpRM3gxOEZOK1QyNzFj?=
- =?utf-8?B?WVgyNUIxUjV2eHlWemFjUm80UEZCOWVMYWNCWStoZ0dOdmRLajU1WlozTXVk?=
- =?utf-8?B?bytiTXlPa01PbzkyWlJObnIwelgrOXJrVHRxNEVOOUNTUUZxbWdhZE1BTDN6?=
- =?utf-8?B?cUxWaVFUTkRPbzE3ZnJyQ2gzYnN5emNXYUZBeUhYVXQ0YmZMYXpVVXJQY3pu?=
- =?utf-8?B?Ym9mbHJLeVU5QmozWWhyL3ZtOE9hTDBiaXJpamJvc1dUdFl2SWpHS3RLL1c2?=
- =?utf-8?B?WVpUREh0L0czQUFjdzhxTW1KTUFtTHlOY0piOG9xNHRxV1NrUDRUbUxUUS9i?=
- =?utf-8?B?QVBUbkQ1dW9JWi95dkErVWljV3hacmR2c2lseE5NaXZkM2JGZmI2TnNXcFl0?=
- =?utf-8?B?ZkhWSWRQWDhHS0hyQ1lzc0NRc3c2VWJ5c1NadG55VUR6R0pqaStCNmwxbFox?=
- =?utf-8?B?TGVLSW5hbUR0OTBnRjdQUnZiSE5ZLzJWUUVCcGpoN21FTjFSck9aTkxwVE5y?=
- =?utf-8?B?dDM2bk55NnQzWVVUWGZLT2QxSk1WUmIxTHhGTlNMTi9tYmMrRVhVWWVhR3cy?=
- =?utf-8?B?c1ZjR3k5OGhYeUFFQTBUWkFSYjBLZlg1eFROZm11dDU0L1F6R3RkdHRHY3d5?=
- =?utf-8?B?eSt1WWRHVkRmc3NMT3FOemFrR0g3aDc1M003UllIOXE2WTd6RFcxT1FMSVdI?=
- =?utf-8?B?dzBFTmszOUw3V2hWZmsyWDRxa2dUVXEvOW9wUjNVTkdBaGxsb3NOZUJHMlpW?=
- =?utf-8?B?Y0wzVjRxQ244OGcwMnk4Z1doSXhGRU5XWk11aUpNVEZpMkw1bVdUOVNwQytE?=
- =?utf-8?B?eWEwVGtVSTFtME1uNVJlQUFhODRXOUhtVU5MVU12ZlUyTnVHNmJ4T2VJemdz?=
- =?utf-8?B?RFNYVlVxaGl0eVN3UXNsdTJWZHo5d2dNdmxIR09TZitxU052MFNmNThhT3dU?=
- =?utf-8?Q?vrkfuv5Pbdj38oQDtIjIUAu0MnYYlQi0n4zkc=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR10MB5328.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aUJMYXlidkJUdjFOUjN5LzlxK25ybGJzWEI5QXlpano4MXo3VFoxTjMwbGpR?=
- =?utf-8?B?UjZ1Y0hVS3NFU0d1OEFYUjYrZ0FwWmpWUFNmMkVhVzVTeTJma1VnaXEvTkFn?=
- =?utf-8?B?ZklpTEtKZlFubFBQYjJ3UkRnNjh5RlZzbFFlSSs2aGtRdmh6amFhZHU5MXFl?=
- =?utf-8?B?VC9HL3dpaVE2Y2Y0eUpId0FsSC9MaTFqSG1EK0dDMGYyS1UzYVFHSFJyUmhR?=
- =?utf-8?B?QmFpVmFBeml3VDFFd1lGN3hwb0ZVcHFYSXpjVVNnMjQ3WlFwQ0VmNENsUVJr?=
- =?utf-8?B?ZkpjYWNUL0pzNnl6eTFKNlpzSGFqVGIzUlBjUlVQcFJWNlNLU1BER1pSQXdx?=
- =?utf-8?B?ajhnMnpkNHhHQW4wUzFMaEV3TXdFZVc3eWhsYVBKd2YrTmFXZzl3UXhiNVdV?=
- =?utf-8?B?LzZvUllqT25KVmdDdUloOGtweVliUUZaSExtZnhrNDQ4MFJQMzB1WWFJWVJi?=
- =?utf-8?B?MUp6ZmdSMVZOckczZ2hEUm43TmdPbGtzbDgzZGRHcnpUSVNBdTh6R0lBNHEv?=
- =?utf-8?B?T0kybFZDeHord1hEMTlRbVJsOUxmZXM0NmN6Rjk4NFAvNFB4cmZ5K3BpNHZG?=
- =?utf-8?B?RkpLRzNTY3IrT2ExekhXczRvZHZtZUZUYW5DQVZXd3dxa2JUcFFSZWRKR1NH?=
- =?utf-8?B?d1NocExaYWNEV1FDVUx3dDhjd1FncGh5WmJxQnV1d0xERWg5U3NGalprZU5K?=
- =?utf-8?B?SUdWT2ROYUoraFM2aUF3Wm41b2wwazhMbUEwdFRpYmE3cXduU3hBU0RyYzVz?=
- =?utf-8?B?V2FmQ0lIRlNKZG1SZXZWK3U4NWlqY291bDBSSTN5dVNMYnE1ODQ5ZS9tTXpJ?=
- =?utf-8?B?VEh5N2xWVlc4ODIrUU5xRHlMMXVFNjdScVAyZWtzSGhGU1pETnNCTnVjbllH?=
- =?utf-8?B?eVlyWnpuVENlMnBibURmQWtZaDBmemJxb3ZaMDE4WG9VZnVkcjNUcUpoYXY4?=
- =?utf-8?B?Y21jV1lra2p0WWxYU2RwNS9Ra09MVFJCMTB5UzRWL3BTcWFZYkJxaXdsdmox?=
- =?utf-8?B?UTRHR3Q5eDV3ZTM2cjNGdFFKZHpOdExGMWx1Y21tQ1ZXdVpvRjZiMWVKV1lN?=
- =?utf-8?B?a3hSZTl4ZlFoZDIwb0ZvVU5LNG9nN2xSTE9QakZDZlJrL3FDRFBaeUZtSnps?=
- =?utf-8?B?YmtwRzRXNTFIbFR5bW9ZVUtjTHJONXRWbEdId1dxektlVWZ0UVcwSXU1ZXJs?=
- =?utf-8?B?b1BVc1BVczF4Y3UxSUo1S0JkaTBqTTFWUmxaNU5QOFNONGYxa093KzI0UXp0?=
- =?utf-8?B?VHgrOURuOWxILzlRNktocXJDZHVYeE5qUWdNbXVIU0dhcUNiV0NYdEJuYTRp?=
- =?utf-8?B?TlJzWXNYYk1CWFV1aFZPV2hSS2l0RmtsMHlUNytYQ2JBUytzMm5icWZJemh6?=
- =?utf-8?B?c0dDOFNpZkE1VkdCcE02azhRb2dBZHpOZDNhZUFiWEFYMEw0SE16OVRhS1hZ?=
- =?utf-8?B?Qmtqd2pNaHQ2ajZObnpVbmlzMDlXTllWb2llUG9YZkJzVzRCVHpHVEI3S2Y1?=
- =?utf-8?B?MTdBaFUyQTEwYU1jamFXNFV4bC9Sb0xXa1hOcEFqRGlDb0FKeFpqeC82UjZ0?=
- =?utf-8?B?emFkYmpwUkVxQldiR3JFenFGdENSMG9XdVR5ZjlpL2NjYzkyeXB5eXNKdFZp?=
- =?utf-8?B?bWxHNVVaVEZFaXE2dSt1T3ppU1dCNzhCOHlwUmxjb2t6dFd5NE9lMEVQT0ox?=
- =?utf-8?B?bHpLRlUxU0ZhRWpBYmRjb3hzNmVvSXhsOXRQMk52b2I3VEpDTHNjRFlaWTdz?=
- =?utf-8?B?bmVZRDRWZ2oxOFBqRFl6eEpvMFExR1ZHTXFXeHRaRE9hcnl5eW4wRHFxaUc2?=
- =?utf-8?B?Q25LbWFkdkEyRWEzWVlWeVBwY1ZWOEZTZUNObVJmdlNtcFpzcU93UnRnSlRW?=
- =?utf-8?B?MjBMdW1SY2pIalpNVE1YUjNoKzJ6ck8rNldPY0ZWQTVWVjN3cXlnQmYxTFR0?=
- =?utf-8?B?dWx5R0NJemsyT2ZRUXhzVS9iRytSZ2hnc2d2OEoxSFRFQlFMSVpVVGVmcjlL?=
- =?utf-8?B?WDU3MzQ5WWV0MDlLM0ppZVRvWkFpQm9xKzJJRTh6b2NQclNySjJTalUybEdG?=
- =?utf-8?B?SGtGWWxOak1KY05vN0JlblRwQXJsUGFleUNPbzhpN1V4WVhMbElzdzROK01p?=
- =?utf-8?B?VVpXYUhZa3hRMWkySjE2VEV2eFJMcHh3eWNRLzBXcFBCQXl5VWVOK0xKM3pP?=
- =?utf-8?B?QWc9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	ls+gWEz6PXV2WjL4rJt9ZZ/AiwUwDApyt7PQ72WxzusOcf/NdtyzA4noMxKb//h1yFE6C3NSjX6OwKBDQ0r2o9uNRT6GxboxPCHtXqoMhc7kD3NhxoMDRuGLfseBeSvIlRNmD4LIGEEDolzqNXEqQ0itohkDkAUPHbkIpqLaKaNy4mtfl/0cpS/9iEDxrPFHD0L8FFYao76t9SXTD3GL+A3yg26VS3Ybo5rZFuE96nYaYKuqHNDqam2AOQ48lUPERlamUNSNshXLCuuJ9jbwnHYhsV4WLBLvoDOkX7IScGCngfeAo2PMfISfCvEw+pZU87dj3HWfHg3ciLMako1hWYxxFhZ4TEhaN21nZ/z36T1wWzuxllgDOT3d3hBIZBtGNtAlA+Dtb7CaI1qSh5vd4YEJe4kEd2hmtVx+TTxIya6sf7Gl0baVdz6XHuFhlZJlULIzB8zuM7WRj1uRHKghdWOhICqz1dz7cmnUOATOJLd45mPYZ/yPuD6qgBtR+wqCb8ZVSGEE3CPWJa7foHASxfe79qQWGnP+j1NQ5TDJXKVyAVJjF4mHdYzFDhjjauYOS0FoFMoNyG6UTnMhpgS/68zHnFOr+jkd0PC3aqM+DnA=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 40515f4a-1481-4995-7aa9-08dd776283f2
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR10MB5328.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 12:31:56.4857
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: O0ASNLNaXtqDHzZDQeZ8YJRO3Ww8pKFMEP/TKiDNFyErZMco2Dp/Y4mXyzZKN7hsDwoEPZ35O8cz6QO7jgJVWp8ivdf3ZKABuyrYodBdUcI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR10MB5068
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-09_04,2025-04-08_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0
- mlxlogscore=999 phishscore=0 bulkscore=0 adultscore=0 malwarescore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2502280000 definitions=main-2504090074
-X-Proofpoint-ORIG-GUID: YW-uLCceliOxn39XEz7Qsy6_w1JprfJz
-X-Proofpoint-GUID: YW-uLCceliOxn39XEz7Qsy6_w1JprfJz
+User-Agent: Mozilla Thunderbird
+From: neil.armstrong@linaro.org
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH] spi: meson-spicc: add DMA support
+To: Xianwei Zhao <xianwei.zhao@amlogic.com>, Mark Brown <broonie@kernel.org>,
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Sunny Luo <sunny.luo@amlogic.com>
+References: <20250408-spi-dma-v1-1-3c38be62c09c@amlogic.com>
+ <c29a8c28-996c-4e94-b0a1-0e4a37f0bebb@linaro.org>
+ <aebccc51-14a2-40be-8d9e-20a55ce94459@amlogic.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <aebccc51-14a2-40be-8d9e-20a55ce94459@amlogic.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-HI Greg,
+Hi,
 
-On 08-04-2025 16:19, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.292 release.
-> There are 154 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On 09/04/2025 03:49, Xianwei Zhao wrote:
+> Hi Neil,
+>     Thanks for your reply.
 > 
-> Responses should be made by Thu, 10 Apr 2025 10:47:53 +0000.
-> Anything received after that time might be too late.
+> On 2025/4/8 15:41, Neil Armstrong wrote:
+>> [ EXTERNAL EMAIL ]
+>>
+>> Hi,
+>>
+>> On 08/04/2025 09:04, Xianwei Zhao via B4 Relay wrote:
+>>> From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+>>>
+>>> Add DMA support for spicc driver.
+>>>
+>>> DMA works if the transfer meets the following conditions:
+>>> 1. 64 bits per word;
+>>> 2. The transfer length must be multiples of the dma_burst_len,
+>>>     and the dma_burst_len should be one of 8,7...2,
+>>>     otherwise, it will be split into several SPI bursts.
+>>>
+>>> Signed-off-by: Sunny Luo <sunny.luo@amlogic.com>
+>>> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+>>> ---
+>>>   drivers/spi/spi-meson-spicc.c | 243 ++++++++++++++++++++++++++++++++++++++++--
+>>>   1 file changed, 232 insertions(+), 11 deletions(-)
+>>>
+>>> diff --git a/drivers/spi/spi-meson-spicc.c b/drivers/spi/spi-meson-spicc.c
+>>> index df74ad5060f8..81e263bceba9 100644
+>>> --- a/drivers/spi/spi-meson-spicc.c
+>>> +++ b/drivers/spi/spi-meson-spicc.c
+>>> @@ -21,6 +21,7 @@
+>>>   #include <linux/interrupt.h>
+>>>   #include <linux/reset.h>
+>>>   #include <linux/pinctrl/consumer.h>
+>>> +#include <linux/dma-mapping.h>
+>>>
+>>>   /*
+>>>    * The Meson SPICC controller could support DMA based transfers, but is not
+>>> @@ -33,6 +34,20 @@
+>>>    * - CS management is dumb, and goes UP between every burst, so is really a
+>>>    *   "Data Valid" signal than a Chip Select, GPIO link should be used instead
+>>>    *   to have a CS go down over the full transfer
+>>> + *
+>>> + * DMA achieves a transfer with one or more SPI bursts, each SPI burst is made
+>>> + * up of one or more DMA bursts. The DMA burst implementation mechanism is,
+>>> + * For TX, when the number of words in TXFIFO is less than the preset
+>>> + * reading threshold, SPICC starts a reading DMA burst, which reads the preset
+>>> + * number of words from TX buffer, then writes them into TXFIFO.
+>>> + * For RX, when the number of words in RXFIFO is greater than the preset
+>>> + * writing threshold, SPICC starts a writing request burst, which reads the
+>>> + * preset number of words from RXFIFO, then write them into RX buffer.
+>>> + * DMA works if the transfer meets the following conditions,
+>>> + * - 64 bits per word
+>>> + * - The transfer length in word must be multiples of the dma_burst_len, and
+>>> + *   the dma_burst_len should be one of 8,7...2, otherwise, it will be split
+>>> + *   into several SPI bursts by this driver
+>>
+>> Fine, but then also rephrase the previous paragraph since you're adding DMA.
+>>
+> Will do.
 > 
-> The whole patch series can be found in one patch at:
-> 	https://urldefense.com/v3/__https://www.kernel.org/pub/linux/kernel/ 
-> v5.x/stable-review/patch-5.4.292-rc1.gz__;!!ACWV5N9M2RV99hQ! 
-> OZKy7DuB2mQOmJgLN747FcgCIXuoSlZ-9UbBf2csrfvE9- 
-> cOL7DGMQKhKYylWod_poLaTNVNImdm3RPN9IoAbRqwww$ 
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> and the diffstat can be found below.
+>> Could you precise on which platform you tested the DMA ?
+>>
 > 
-> thanks,
-> 
-> greg k-h
+> aq222(S4)
 
-No problems seen on x86_64 and aarch64 with our testing.
+Will you be able to test on other platforms ?
 
-Tested-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+> 
+>>>    */
+>>>
+>>>   #define SPICC_MAX_BURST     128
+>>> @@ -128,6 +143,29 @@
+>>>
+>>>   #define SPICC_DWADDR        0x24    /* Write Address of DMA */
+>>>
+>>> +#define SPICC_LD_CNTL0       0x28
+>>> +#define VSYNC_IRQ_SRC_SELECT         BIT(0)
+>>> +#define DMA_EN_SET_BY_VSYNC          BIT(2)
+>>> +#define XCH_EN_SET_BY_VSYNC          BIT(3)
+>>> +#define DMA_READ_COUNTER_EN          BIT(4)
+>>> +#define DMA_WRITE_COUNTER_EN         BIT(5)
+>>> +#define DMA_RADDR_LOAD_BY_VSYNC              BIT(6)
+>>> +#define DMA_WADDR_LOAD_BY_VSYNC              BIT(7)
+>>> +#define DMA_ADDR_LOAD_FROM_LD_ADDR   BIT(8)
+>>> +
+>>> +#define SPICC_LD_CNTL1       0x2c
+>>> +#define DMA_READ_COUNTER             GENMASK(15, 0)
+>>> +#define DMA_WRITE_COUNTER            GENMASK(31, 16)
+>>> +#define DMA_BURST_LEN_DEFAULT                8
+>>> +#define DMA_BURST_COUNT_MAX          0xffff
+>>> +#define SPI_BURST_LEN_MAX    (DMA_BURST_LEN_DEFAULT * DMA_BURST_COUNT_MAX)
+>>> +
+>>> +enum {
+>>> +     DMA_TRIG_NORMAL = 0,
+>>> +     DMA_TRIG_VSYNC,
+>>> +     DMA_TRIG_LINE_N,
+>>
+>> You're only using DMA_TRIG_NORMAL, what the other 2 values for ?
+>>
+> 
+> DMA_TRIG_VSYNC and DMA_TRIG_LINE_N are used by VOUT modules in certain partial TV SoCs. These DMA triggering methods rely on special signal lines, and are not supported in this context. I will delete the corresponding information.
+> 
+>>
+>>> +
+>>>   #define SPICC_ENH_CTL0      0x38    /* Enhanced Feature */
+>>>   #define SPICC_ENH_CLK_CS_DELAY_MASK GENMASK(15, 0)
+>>>   #define SPICC_ENH_DATARATE_MASK             GENMASK(23, 16)
+>>> @@ -171,6 +209,9 @@ struct meson_spicc_device {
+>>>       struct pinctrl                  *pinctrl;
+>>>       struct pinctrl_state            *pins_idle_high;
+>>>       struct pinctrl_state            *pins_idle_low;
+>>> +     dma_addr_t                      tx_dma;
+>>> +     dma_addr_t                      rx_dma;
+>>> +     bool                            using_dma;
+>>>   };
+>>>
+>>>   #define pow2_clk_to_spicc(_div) container_of(_div, struct meson_spicc_device, pow2_div)
+>>> @@ -202,6 +243,155 @@ static void meson_spicc_oen_enable(struct meson_spicc_device *spicc)
+>>>       writel_relaxed(conf, spicc->base + SPICC_ENH_CTL0);
+>>>   }
+>>>
+>>> +static int meson_spicc_dma_map(struct meson_spicc_device *spicc,
+>>> +                            struct spi_transfer *t)
+>>> +{
+>>> +     struct device *dev = spicc->host->dev.parent;
+>>> +
+>>> +     if (!(t->tx_buf && t->rx_buf))
+>>> +             return -EINVAL;
+>>> +
+>>> +     t->tx_dma = dma_map_single(dev, (void *)t->tx_buf, t->len, DMA_TO_DEVICE);
+>>> +     if (dma_mapping_error(dev, t->tx_dma))
+>>> +             return -ENOMEM;
+>>> +
+>>> +     t->rx_dma = dma_map_single(dev, t->rx_buf, t->len, DMA_FROM_DEVICE);
+>>> +     if (dma_mapping_error(dev, t->rx_dma))
+>>> +             return -ENOMEM;
+>>> +
+>>> +     spicc->tx_dma = t->tx_dma;
+>>> +     spicc->rx_dma = t->rx_dma;
+>>> +
+>>> +     return 0;
+>>> +}
+>>> +
+>>> +static void meson_spicc_dma_unmap(struct meson_spicc_device *spicc,
+>>> +                               struct spi_transfer *t)
+>>> +{
+>>> +     struct device *dev = spicc->host->dev.parent;
+>>> +
+>>> +     if (t->tx_dma)
+>>> +             dma_unmap_single(dev, t->tx_dma, t->len, DMA_TO_DEVICE);
+>>> +     if (t->rx_dma)
+>>> +             dma_unmap_single(dev, t->rx_dma, t->len, DMA_FROM_DEVICE);
+>>> +}
+>>> +
+>>> +/*
+>>> + * According to the remain words length, calculate a suitable spi burst length
+>>> + * and a dma burst length for current spi burst
+>>> + */
+>>> +static u32 meson_spicc_calc_dma_len(struct meson_spicc_device *spicc,
+>>> +                                 u32 len, u32 *dma_burst_len)
+>>> +{
+>>> +     u32 i;
+>>> +
+>>> +     if (len <= spicc->data->fifo_size) {
+>>> +             *dma_burst_len = len;
+>>> +             return len;
+>>> +     }
+>>> +
+>>> +     *dma_burst_len = DMA_BURST_LEN_DEFAULT;
+>>> +
+>>> +     if (len == (SPI_BURST_LEN_MAX + 1))
+>>> +             return SPI_BURST_LEN_MAX - DMA_BURST_LEN_DEFAULT;
+>>> +
+>>> +     if (len >= SPI_BURST_LEN_MAX)
+>>> +             return SPI_BURST_LEN_MAX;
+>>> +
+>>> +     for (i = DMA_BURST_LEN_DEFAULT; i > 1; i--)
+>>> +             if ((len % i) == 0) {
+>>> +                     *dma_burst_len = i;
+>>> +                     return len;
+>>> +             }
+>>> +
+>>> +     i = len % DMA_BURST_LEN_DEFAULT;
+>>> +     len -= i;
+>>> +
+>>> +     if (i == 1)
+>>> +             len -= DMA_BURST_LEN_DEFAULT;
+>>> +
+>>> +     return len;
+>>> +}
+>>> +
+>>> +static void meson_spicc_setup_dma(struct meson_spicc_device *spicc, u8 trig)
+>>> +{
+>>> +     unsigned int len;
+>>> +     unsigned int dma_burst_len, dma_burst_count;
+>>> +     unsigned int count_en = 0;
+>>> +     unsigned int txfifo_thres = 0;
+>>> +     unsigned int read_req = 0;
+>>> +     unsigned int rxfifo_thres = 31;
+>>> +     unsigned int write_req = 0;
+>>> +     unsigned int ld_ctr1 = 0;
+>>> +
+>>> +     writel_relaxed(spicc->tx_dma, spicc->base + SPICC_DRADDR);
+>>> +     writel_relaxed(spicc->rx_dma, spicc->base + SPICC_DWADDR);
+>>> +
+>>> +     /* Set the max burst length to support a transmission with length of
+>>> +      * no more than 1024 bytes(128 words), which must use the CS management
+>>> +      * because of some strict timing requirements
+>>> +      */
+>>> +     writel_bits_relaxed(SPICC_BURSTLENGTH_MASK, SPICC_BURSTLENGTH_MASK,
+>>> +                         spicc->base + SPICC_CONREG);
+>>> +
+>>> +     len = meson_spicc_calc_dma_len(spicc, spicc->xfer_remain,
+>>> +                                    &dma_burst_len);
+>>> +     spicc->xfer_remain -= len;
+>>> +     dma_burst_count = DIV_ROUND_UP(len, dma_burst_len);
+>>> +     dma_burst_len--;
+>>> +
+>>> +     if (trig == DMA_TRIG_LINE_N)
+>>> +             count_en |= VSYNC_IRQ_SRC_SELECT;
+>>
+>> Is this the VPU VSYNC irq ? is this a tested and valid usecase ?
+>>
+> 
+> Yes, it is VPU VSYNC irq, This part of the code is not completely. NO tested about it. I will delete it.
+
+Thx
+
+> 
+>>> +
+>>> +     if (spicc->tx_dma) {
+>>> +             spicc->tx_dma += len;
+>>> +             count_en |= DMA_READ_COUNTER_EN;
+>>> +             if (trig == DMA_TRIG_VSYNC || trig == DMA_TRIG_LINE_N)
+>>> +                     count_en |= DMA_RADDR_LOAD_BY_VSYNC
+>>> +                                 | DMA_ADDR_LOAD_FROM_LD_ADDR;
+>>> +             txfifo_thres = spicc->data->fifo_size - dma_burst_len;
+>>> +             read_req = dma_burst_len;
+>>> +             ld_ctr1 |= FIELD_PREP(DMA_READ_COUNTER, dma_burst_count);
+>>> +     }
+>>> +
+>>> +     if (spicc->rx_dma) {
+>>> +             spicc->rx_dma += len;
+>>> +             count_en |= DMA_WRITE_COUNTER_EN;
+>>> +             if (trig == DMA_TRIG_VSYNC || trig == DMA_TRIG_LINE_N)
+>>> +                     count_en |= DMA_WADDR_LOAD_BY_VSYNC
+>>> +                                 | DMA_ADDR_LOAD_FROM_LD_ADDR;
+>>> +             rxfifo_thres = dma_burst_len;
+>>> +             write_req = dma_burst_len;
+>>> +             ld_ctr1 |= FIELD_PREP(DMA_WRITE_COUNTER, dma_burst_count);
+>>> +     }
+>>> +
+>>> +     writel_relaxed(count_en, spicc->base + SPICC_LD_CNTL0);
+>>> +     writel_relaxed(ld_ctr1, spicc->base + SPICC_LD_CNTL1);
+>>> +     writel_relaxed(((trig == DMA_TRIG_NORMAL) ? SPICC_DMA_ENABLE : 0)
+>>> +                 | SPICC_DMA_URGENT
+>>> +                 | FIELD_PREP(SPICC_TXFIFO_THRESHOLD_MASK, txfifo_thres)
+>>> +                 | FIELD_PREP(SPICC_READ_BURST_MASK, read_req)
+>>> +                 | FIELD_PREP(SPICC_RXFIFO_THRESHOLD_MASK, rxfifo_thres)
+>>> +                 | FIELD_PREP(SPICC_WRITE_BURST_MASK, write_req),
+>>> +                 spicc->base + SPICC_DMAREG);
+>>> +}
+>>> +
+>>> +static void meson_spicc_dma_irq(struct meson_spicc_device *spicc)
+>>> +{
+>>> +     if (readl_relaxed(spicc->base + SPICC_DMAREG) & SPICC_DMA_ENABLE)
+>>> +             return;
+>>> +
+>>> +     if (spicc->xfer_remain) {
+>>> +             meson_spicc_setup_dma(spicc, DMA_TRIG_NORMAL);
+>>> +     } else {
+>>> +             writel_bits_relaxed(SPICC_SMC, 0, spicc->base + SPICC_CONREG);
+>>> +             writel_relaxed(0, spicc->base + SPICC_INTREG);
+>>> +             writel_relaxed(0, spicc->base + SPICC_DMAREG);
+>>> +             meson_spicc_dma_unmap(spicc, spicc->xfer);
+>>> +             complete(&spicc->done);
+>>> +     }
+>>> +}
+>>> +
+>>>   static inline bool meson_spicc_txfull(struct meson_spicc_device *spicc)
+>>>   {
+>>>       return !!FIELD_GET(SPICC_TF,
+>>> @@ -293,6 +483,11 @@ static irqreturn_t meson_spicc_irq(int irq, void *data)
+>>>
+>>>       writel_bits_relaxed(SPICC_TC, SPICC_TC, spicc->base + SPICC_STATREG);
+>>>
+>>> +     if (spicc->using_dma) {
+>>> +             meson_spicc_dma_irq(spicc);
+>>> +             return IRQ_HANDLED;
+>>> +     }
+>>
+>> Make meson_spicc_dma_irq() return irqreturn_t and return IRQ_HANDLED.
+>>
+> 
+> Will do.
+> 
+>>> +
+>>>       /* Empty RX FIFO */
+>>>       meson_spicc_rx(spicc);
+>>>
+>>> @@ -426,9 +621,6 @@ static int meson_spicc_transfer_one(struct spi_controller *host,
+>>>
+>>>       meson_spicc_reset_fifo(spicc);
+>>>
+>>> -     /* Setup burst */
+>>> -     meson_spicc_setup_burst(spicc);
+>>> -
+>>>       /* Setup wait for completion */
+>>>       reinit_completion(&spicc->done);
+>>>
+>>> @@ -442,11 +634,40 @@ static int meson_spicc_transfer_one(struct spi_controller *host,
+>>>       /* Increase it twice and add 200 ms tolerance */
+>>>       timeout += timeout + 200;
+>>>
+>>> -     /* Start burst */
+>>> -     writel_bits_relaxed(SPICC_XCH, SPICC_XCH, spicc->base + SPICC_CONREG);
+>>> +     if (xfer->bits_per_word == 64) {
+>>> +             int ret;
+>>>
+>>> -     /* Enable interrupts */
+>>> -     writel_relaxed(SPICC_TC_EN, spicc->base + SPICC_INTREG);
+>>> +             /* must tx */
+>>> +             if (!xfer->tx_buf)
+>>> +                     return -EINVAL;
+>>> +
+>>> +             /* dma_burst_len 1 can't trigger a dma burst */
+>>> +             if (xfer->len < 16)
+>>> +                     return -EINVAL;
+>>
+>> Those 2 checks should be done to enable the DMA mode, you should fallback to FIFO mode
+>> instead of returning EINVAL, except if 64 bits_per_word is only valid in DMA mode ?
+>>
+> 
+> I only support DMA when bits_per_word equals 64, because the register operation is more complicated if use PIO module. The register is 32 bits wide, a word needs to be written twice to the register.
+
+OK then leave it as-is
+
+> 
+>>> +
+>>> +             ret = meson_spicc_dma_map(spicc, xfer);
+>>> +             if (ret) {
+>>> +                     meson_spicc_dma_unmap(spicc, xfer);
+>>> +                     dev_err(host->dev.parent, "dma map failed\n");
+>>> +                     return ret;
+>>> +             }
+>>> +
+>>> +             spicc->using_dma = true;
+>>> +             spicc->xfer_remain = DIV_ROUND_UP(xfer->len, spicc->bytes_per_word);
+>>> +             meson_spicc_setup_dma(spicc, DMA_TRIG_NORMAL);
+>>> +             writel_relaxed(SPICC_TE_EN, spicc->base + SPICC_INTREG);
+>>> +             writel_bits_relaxed(SPICC_SMC, SPICC_SMC, spicc->base + SPICC_CONREG);
+>>> +     } else {
+>>> +             spicc->using_dma = false;
+>>> +             /* Setup burst */
+>>> +             meson_spicc_setup_burst(spicc);
+>>> +
+>>> +             /* Start burst */
+>>> +             writel_bits_relaxed(SPICC_XCH, SPICC_XCH, spicc->base + SPICC_CONREG);
+>>> +
+>>> +             /* Enable interrupts */
+>>> +             writel_relaxed(SPICC_TC_EN, spicc->base + SPICC_INTREG);
+>>> +     }
+>>>
+>>>       if (!wait_for_completion_timeout(&spicc->done, msecs_to_jiffies(timeout)))
+>>>               return -ETIMEDOUT;
+>>> @@ -853,10 +1074,10 @@ static int meson_spicc_probe(struct platform_device *pdev)
+>>>       host->num_chipselect = 4;
+>>>       host->dev.of_node = pdev->dev.of_node;
+>>>       host->mode_bits = SPI_CPHA | SPI_CPOL | SPI_CS_HIGH | SPI_LOOP;
+>>> -     host->bits_per_word_mask = SPI_BPW_MASK(32) |
+>>> -                                SPI_BPW_MASK(24) |
+>>> -                                SPI_BPW_MASK(16) |
+>>> -                                SPI_BPW_MASK(8);
+>>> +     /* DMA works at 64 bits, but it is invalidated by the spi core,
+>>> +      * clr the mask to avoid the spi core validation check
+>>> +      */
+>>> +     host->bits_per_word_mask = 0;
+>>
+>> Fine, instead please add a check in meson_spicc_setup() to make sure
+>> we operate only in 8, 16, 24, 32 & 64 bits_per_word.
+>>
+>> So not need to clear it, the host buffer was allocated with spi_alloc_host() which
+>> allocates with kzalloc(), already zeroing the allocated memory.
+>>
+> 
+> Will drop this line, and check bits_per_word in meson_spicc_setup.
 
 Thanks,
-Alok
+Neil
+
+> 
+>> Neil
+>>
+>>>       host->flags = (SPI_CONTROLLER_MUST_RX | SPI_CONTROLLER_MUST_TX);
+>>>       host->min_speed_hz = spicc->data->min_speed_hz;
+>>>       host->max_speed_hz = spicc->data->max_speed_hz;
+>>>
+>>> ---
+>>> base-commit: 49807ed87851916ef655f72e9562f96355183090
+>>> change-id: 20250408-spi-dma-c499f560d295
+>>>
+>>> Best regards,
+>>
+>> With those fixed, the path is clear & clean, thanks !
+>>
+>> Neil
+
