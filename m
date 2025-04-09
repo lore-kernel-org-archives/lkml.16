@@ -1,193 +1,120 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3FE926770E;
-	Wed,  9 Apr 2025 15:01:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E25C3266F14
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 15:02:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744210863; cv=none; b=c48ZBXEm6zdTbtMesO7U9lbbsv/kArKYvfe1DvDGlvVnC/m4Hxl/kv3T2yv+U1HAptjNH3p1JjIa6r1MBglif9rB/CmYS/0IZoS0QdIUmen7ZwTMlM9uvcADIpN88pX8d/w0onl0DIsqospHe/xILp4gJCWqXCOdsTf3S1mQTKo=
+	t=1744210928; cv=none; b=MyiWxy5DR6CBV34mfDEWlZi1BTWQCMN3Ucb5re5sEKdIf0GyiiRgqyQL/0wJI3Kvem5hg4LG2AAZeNS9d6j/zm0Y0qAkoKLN0SWpYlzEvo5ntT3drNwl8UqNZmbMYwvb5kr7oBThSo3WDyPkAA2X1zpPCCfq2eSOl8ksf/2+n7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744210863; c=relaxed/simple;
-	bh=jVNGTLzeD/GPFS0YZ/FaiOHvvNVvXKoxvsqsmFxbLns=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tR/CI+FdSr3Zioy/srTSnztNLmFtVRbh321cDnO4OPFhjgptQ/Gj2V1RTsntl/CFQWrM90GZM2cNmKYRYGkL1v7ENE9YzXm0wCwZvwMAdN3LfUG8r58IfD93pxxMU1/mYZ9H+X3rBnA1nV51wpvl1Sbx/logz+/msA6sw0XT2Uo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=DmCBfR6Q; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1744210928; c=relaxed/simple;
+	bh=aJQppEWjaL2KF5deFSae2ldF9ctBxth+C4C3IIXJlnw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PjF4zoXmS6oHG0fOFW5MhFhhJo2Y+J3/EDz5+Bqvg1hfEskPySFEWpehnRINSuWm5HPC7Idrskal10esqvrFnTi1YyNm7ROqP6clNRBdtytZ7BVrd3qUzGYVh6G8syADFPOvW7aBNniXjJbAyDioPPYKRwNcYYJO4RN39oTjvAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=USeGB18u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="DmCBfR6Q"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Cc:To:In-Reply-To:References:Message-Id:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:Sender:
-	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-	:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=1cFw2FZbI8nH+C107hw+pJ1/vEWiDjdnIrrhccQpX9s=; b=DmCBfR6QXnFJa5WkKZ+3YBx3Bd
-	f0rJQ+vdt1UD8GYCoM43X1KCun9EvoVldbJEqHMfblVLynvinpzQQpuYQfQg+pOLrXgw7OJT2i2u4
-	YetqZvF7lYwbBCizQ1eDowz5UcKjq8tJoYcm3MDr9G91knDTeU7LPTsFa9G1G4hHGmS2u1os5Dg1n
-	LB1H9LzOVjmB/Bb1UEDTGqt4Mgo10lCqkm0edlpIxiQ9fJYawrT0GFcy0baCJ5iETjXomJ2X6vrzU
-	21izkKdUGzfniZ7518AVeXe7I2Cws0M9xCodjMKO7bL77AW1OSoAC3RKfUXDH+ZJo+H7wYpNHOxZI
-	Ek+VavZA==;
-Received: from [191.204.192.64] (helo=[192.168.15.100])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1u2Wv7-00EBVR-HN; Wed, 09 Apr 2025 17:00:53 +0200
-From: =?utf-8?q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
-Date: Wed, 09 Apr 2025 12:00:42 -0300
-Subject: [PATCH 2/3] ovl: Make ovl_dentry_weird() accept casefold dentries
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="USeGB18u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CA47C4CEE2;
+	Wed,  9 Apr 2025 15:02:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744210927;
+	bh=aJQppEWjaL2KF5deFSae2ldF9ctBxth+C4C3IIXJlnw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=USeGB18uwqiTZNbG1Z0F1wrI5ftkJYJTV2a43/QfqQGLa3C3TQ3TW142CivEOBMV1
+	 Rym2Y9R+o367sWZ2dWJQOJKZ5pTsKMsSKD9BkwX4gskWdEbokQGKIE5cOrixPNmHLA
+	 DYNFzGHPfnbAZ2JX6sjDYJ3Rk1hx4e/+iVrc+pm6eOTuLp14sordp1lKImVmnQpxRH
+	 OB8ijywqomEfMx4P5JyBtEZuQJvC9tfMxTvRCz34DyMz/IM9SCS2Cd+oagIKismoqY
+	 F+IFRxzgZLYcXKSDlIrmWP08NbI7yP6tNtM6l3Wwax8qpvf52G3Vp3JQKUtDEDWzPw
+	 bya+z+Besvnuw==
+Date: Wed, 9 Apr 2025 17:02:04 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+	kernel@collabora.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 06/15] drm/connector: hdmi: Factor out bpc and format
+ computation logic
+Message-ID: <20250409-funny-hopping-condor-cbc50c@houat>
+References: <20250326-hdmi-conn-yuv-v3-0-294d3ebbb4b2@collabora.com>
+ <20250326-hdmi-conn-yuv-v3-6-294d3ebbb4b2@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250409-tonyk-overlayfs-v1-2-3991616fe9a3@igalia.com>
-References: <20250409-tonyk-overlayfs-v1-0-3991616fe9a3@igalia.com>
-In-Reply-To: <20250409-tonyk-overlayfs-v1-0-3991616fe9a3@igalia.com>
-To: Miklos Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>, 
- Theodore Tso <tytso@mit.edu>, Gabriel Krisman Bertazi <krisman@kernel.org>
-Cc: linux-unionfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-fsdevel@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
- kernel-dev@igalia.com, 
- =?utf-8?q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
-X-Mailer: b4 0.14.2
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="yynkvojouwztmong"
+Content-Disposition: inline
+In-Reply-To: <20250326-hdmi-conn-yuv-v3-6-294d3ebbb4b2@collabora.com>
 
-ovl_dentry_weird() is used to avoid problems with filesystems that has
-their d_hash and d_compare implementations. Create an exception for this
-function, where only casefold filesystems are eligible to use their own
-d_hash and d_compare functions, allowing to support casefold
-filesystems.
 
-Signed-off-by: André Almeida <andrealmeid@igalia.com>
----
- fs/overlayfs/namei.c     | 11 ++++++-----
- fs/overlayfs/overlayfs.h |  2 +-
- fs/overlayfs/params.c    |  3 ++-
- fs/overlayfs/util.c      | 12 +++++++-----
- 4 files changed, 16 insertions(+), 12 deletions(-)
+--yynkvojouwztmong
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 06/15] drm/connector: hdmi: Factor out bpc and format
+ computation logic
+MIME-Version: 1.0
 
-diff --git a/fs/overlayfs/namei.c b/fs/overlayfs/namei.c
-index be5c65d6f8484b1fba6b3fee379ba1d034c0df8a..140bc609ffebe00151cbb446720f5106dbeb2ef2 100644
---- a/fs/overlayfs/namei.c
-+++ b/fs/overlayfs/namei.c
-@@ -192,7 +192,7 @@ struct dentry *ovl_decode_real_fh(struct ovl_fs *ofs, struct ovl_fh *fh,
- 		return real;
- 	}
- 
--	if (ovl_dentry_weird(real)) {
-+	if (ovl_dentry_weird(real, ofs)) {
- 		dput(real);
- 		return NULL;
- 	}
-@@ -244,7 +244,7 @@ static int ovl_lookup_single(struct dentry *base, struct ovl_lookup_data *d,
- 		goto out_err;
- 	}
- 
--	if (ovl_dentry_weird(this)) {
-+	if (ovl_dentry_weird(this, ofs)) {
- 		/* Don't support traversing automounts and other weirdness */
- 		err = -EREMOTE;
- 		goto out_err;
-@@ -365,6 +365,7 @@ static int ovl_lookup_data_layer(struct dentry *dentry, const char *redirect,
- 				 struct path *datapath)
- {
- 	int err;
-+	struct ovl_fs *ovl = OVL_FS(layer->fs->sb);
- 
- 	err = vfs_path_lookup(layer->mnt->mnt_root, layer->mnt, redirect,
- 			LOOKUP_BENEATH | LOOKUP_NO_SYMLINKS | LOOKUP_NO_XDEV,
-@@ -376,7 +377,7 @@ static int ovl_lookup_data_layer(struct dentry *dentry, const char *redirect,
- 		return err;
- 
- 	err = -EREMOTE;
--	if (ovl_dentry_weird(datapath->dentry))
-+	if (ovl_dentry_weird(datapath->dentry, ovl))
- 		goto out_path_put;
- 
- 	err = -ENOENT;
-@@ -767,7 +768,7 @@ struct dentry *ovl_get_index_fh(struct ovl_fs *ofs, struct ovl_fh *fh)
- 
- 	if (ovl_is_whiteout(index))
- 		err = -ESTALE;
--	else if (ovl_dentry_weird(index))
-+	else if (ovl_dentry_weird(index, ofs))
- 		err = -EIO;
- 	else
- 		return index;
-@@ -815,7 +816,7 @@ struct dentry *ovl_lookup_index(struct ovl_fs *ofs, struct dentry *upper,
- 		dput(index);
- 		index = ERR_PTR(-ESTALE);
- 		goto out;
--	} else if (ovl_dentry_weird(index) || ovl_is_whiteout(index) ||
-+	} else if (ovl_dentry_weird(index, ofs) || ovl_is_whiteout(index) ||
- 		   inode_wrong_type(inode, d_inode(origin)->i_mode)) {
- 		/*
- 		 * Index should always be of the same file type as origin
-diff --git a/fs/overlayfs/overlayfs.h b/fs/overlayfs/overlayfs.h
-index 6f2f8f4cfbbc177fbd5441483395d7ff72efe332..f3de013517598c44c15ca9f950f6c2f0a5c2084b 100644
---- a/fs/overlayfs/overlayfs.h
-+++ b/fs/overlayfs/overlayfs.h
-@@ -445,7 +445,7 @@ void ovl_dentry_init_reval(struct dentry *dentry, struct dentry *upperdentry,
- 			   struct ovl_entry *oe);
- void ovl_dentry_init_flags(struct dentry *dentry, struct dentry *upperdentry,
- 			   struct ovl_entry *oe, unsigned int mask);
--bool ovl_dentry_weird(struct dentry *dentry);
-+bool ovl_dentry_weird(struct dentry *dentry, struct ovl_fs *ovl);
- enum ovl_path_type ovl_path_type(struct dentry *dentry);
- void ovl_path_upper(struct dentry *dentry, struct path *path);
- void ovl_path_lower(struct dentry *dentry, struct path *path);
-diff --git a/fs/overlayfs/params.c b/fs/overlayfs/params.c
-index 6759f7d040c89d3b3c01572579c854a900411157..459e8bddf1777c12c9fa0bdfc150e2ea22eaafc3 100644
---- a/fs/overlayfs/params.c
-+++ b/fs/overlayfs/params.c
-@@ -277,6 +277,7 @@ static int ovl_mount_dir_check(struct fs_context *fc, const struct path *path,
- 			       enum ovl_opt layer, const char *name, bool upper)
- {
- 	struct ovl_fs_context *ctx = fc->fs_private;
-+	struct ovl_fs *ovl = fc->s_fs_info;
- 
- 	if (!d_is_dir(path->dentry))
- 		return invalfc(fc, "%s is not a directory", name);
-@@ -290,7 +291,7 @@ static int ovl_mount_dir_check(struct fs_context *fc, const struct path *path,
- 	if (sb_has_encoding(path->mnt->mnt_sb))
- 		return invalfc(fc, "case-insensitive capable filesystem on %s not supported", name);
- 
--	if (ovl_dentry_weird(path->dentry))
-+	if (ovl_dentry_weird(path->dentry, ovl))
- 		return invalfc(fc, "filesystem on %s not supported", name);
- 
- 	/*
-diff --git a/fs/overlayfs/util.c b/fs/overlayfs/util.c
-index 0819c739cc2ffce0dfefa84d3ff8f9f103eec191..4dd523a1a13ab0a6cf51d967d0b712873e6d8580 100644
---- a/fs/overlayfs/util.c
-+++ b/fs/overlayfs/util.c
-@@ -200,15 +200,17 @@ void ovl_dentry_init_flags(struct dentry *dentry, struct dentry *upperdentry,
- 	spin_unlock(&dentry->d_lock);
- }
- 
--bool ovl_dentry_weird(struct dentry *dentry)
-+bool ovl_dentry_weird(struct dentry *dentry, struct ovl_fs *ovl)
- {
-+	int flags = DCACHE_NEED_AUTOMOUNT | DCACHE_MANAGE_TRANSIT;
-+
-+	if (!ovl->casefold)
-+		flags |= DCACHE_OP_HASH | DCACHE_OP_COMPARE;
-+
- 	if (!d_can_lookup(dentry) && !d_is_file(dentry) && !d_is_symlink(dentry))
- 		return true;
- 
--	return dentry->d_flags & (DCACHE_NEED_AUTOMOUNT |
--				  DCACHE_MANAGE_TRANSIT |
--				  DCACHE_OP_HASH |
--				  DCACHE_OP_COMPARE);
-+	return dentry->d_flags & flags;
- }
- 
- enum ovl_path_type ovl_path_type(struct dentry *dentry)
+Hi,
 
--- 
-2.49.0
+On Wed, Mar 26, 2025 at 12:19:55PM +0200, Cristian Ciocaltea wrote:
+> In preparation to support fallback to an alternative output format, e.g.
+> YUV420, when RGB cannot be used for any of the available color depths,
+> move the bpc try loop out of hdmi_compute_config() and, instead, make it
+> part of hdmi_compute_format_bpc().  Additionally, add a new parameter to
+> the latter holding the output format to be checked and eventually set.
+>
+> This improves code reusability and further extensibility.
+>=20
+> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
 
+I think patch 5 could be squashed into this one.
+
+> ---
+>  drivers/gpu/drm/display/drm_hdmi_state_helper.c | 50 ++++++++++++-------=
+------
+>  1 file changed, 23 insertions(+), 27 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/display/drm_hdmi_state_helper.c b/drivers/gp=
+u/drm/display/drm_hdmi_state_helper.c
+> index 160964190d82ac233fdbe34ac54024a007a19872..6de0abb15ecb36fd4eb98725e=
+2a3835e5e0db134 100644
+> --- a/drivers/gpu/drm/display/drm_hdmi_state_helper.c
+> +++ b/drivers/gpu/drm/display/drm_hdmi_state_helper.c
+> @@ -608,42 +608,19 @@ static int
+>  hdmi_compute_format_bpc(const struct drm_connector *connector,
+>  			struct drm_connector_state *conn_state,
+>  			const struct drm_display_mode *mode,
+> -			unsigned int bpc)
+> +			unsigned int max_bpc, enum hdmi_colorspace fmt)
+>  {
+>  	struct drm_device *dev =3D connector->dev;
+> -
+> -	/*
+> -	 * TODO: Add support for YCbCr420 output for HDMI 2.0 capable
+> -	 * devices, for modes that only support YCbCr420.
+> -	 */
+
+And we should fix that comment for now.
+
+Once fixed,
+Reviewed-by: Maxime Ripard <mripard@kernel.org>
+
+Maxime
+
+--yynkvojouwztmong
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZ/aL7AAKCRDj7w1vZxhR
+xRX7AP9oCS18KWYPOr+6QUwEjFua6SqgR4gNhMjWooVbQ7iSmQEAiyIln41e61EW
+KUxzlYInnsg5bfGRUAn7NvOBEPb9ZQE=
+=yeix
+-----END PGP SIGNATURE-----
+
+--yynkvojouwztmong--
