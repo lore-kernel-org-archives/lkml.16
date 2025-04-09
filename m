@@ -1,65 +1,65 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 637162676FA
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 14:38:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C4C42676D5
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 14:38:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744209513; cv=none; b=PnOUIEbaO7AXnEZ2nSEbdUNKGqKgBeCLt9auDDO7id9jzrhE6i+qqZ6sFiu/+Dtb+8ygyhtXauDBdlvsBXZ+xd6okGarBK4qTP0XzjxgHJPrhJxC41S0sG0SJvD8Bx9z5PPWpa9wAeeXaA6D2cqPhkhi60TjNkhRhZM7js/+pAk=
+	t=1744209513; cv=none; b=HLL8ehdD8Yy9ncM4weHYhAEtEr5xLJYnDQeXtXgU4XlVo3lEbMmvQT4lJnlH0dX08AvTA22VSyqmm9n1PjXrD6hFIVRDGz9pO5rggXYOX4NYZ4lc1J7Ps6O3VaRpsRnOZDFMeQgZBPGLTlxRph1Rqz8acfWvWEjFEa7MtVpZh54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744209513; c=relaxed/simple;
-	bh=TwpN7WB7TovIb/Aom4JEIlovlaaSBos+8c3GTGn1tRE=;
+	bh=L29D+dHeTrFH3hV1Wk+oU5i0WH2qeyAcee7cjmaet1w=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=m0pVA1LOybtjNeAC/1b+AICBliD/yACRKIqM7Pvliu/HawMw8gKKgIXXg866d4qQGpiU45nG0IG0xvXD5+gutW6vknijopGKnJ8JgqJO6SwcsN3xdPl9kX6Qs2EVpQJzXIRQIqfe2K37HIT95ogL5apQW0qTPApP063MelAxL8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FCy8/PqM; arc=none smtp.client-ip=209.85.128.47
+	 In-Reply-To:To:Cc; b=ulWlJeXiV02mzO4UOaZkWepWvwsrPWmKuLXAskKCjOKb7mxSLBvZITSd2u7lBlj2B9/XxFb4/7iMHYWQXdIkdNUJtLmM/h1Fpjyh3sHF3ALaP7rqTrKxH+ehBLFLK5CQBi3PAOINrVhs2TIMVlqraPUokzQPKC1Pq5YuYxmQ6IM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=c+tPzEWz; arc=none smtp.client-ip=209.85.221.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FCy8/PqM"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cfebc343dso46374885e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 07:38:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c+tPzEWz"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-391342fc0b5so5395434f8f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 07:38:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744209508; x=1744814308; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1744209507; x=1744814307; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=m/NF1ZydIUvd4N7KqoBnhLoGbjaoZN62+JonM5wUK+o=;
-        b=FCy8/PqMbX5ucH/jMP94cZMRQ/WwO+Fo0CV6n6hZ5MHfKfHuR4IS+WjQTVwSWp3aYW
-         gr5YU31k6JNUrv5v35ecwMs5xGDFpoPdzNGveoY24BlSMFjPR2XHQUWj4/Xv4tOkXqo6
-         G4k7/l3m+3SizudCr4xM/if/u2uzVuYLnjLu/hG5soK1PatVLuBFrRNYg+yHahRj9F4D
-         N8k/VTyiiQygP76RyRWtaXCdeyMSRaHIrURzgRJiAE8lrdOVKjk07bRUaS5teKt2/zje
-         lVnaRzP/AyYQdrUJPykYyq9bdZJJq3DArHz3TVBPVmA9Z8gLDH1dOhhU+lQ7uC7JSgYT
-         Hyow==
+        bh=s3PkO8wukirLciBy0qd6kGi8KmY6F0eQXfG6DiOuo68=;
+        b=c+tPzEWzaheFlgIMHv/rNJw7P5Er+01EtMuXMM0UclAbIaa8N3Ni3GtM/jwArgyije
+         NomsVuPsZSpkUIiuJwolrLF1L8Oy1h0ArVoWtS8yCqUSs7n0+sYiFtlFMhNID79oitgq
+         o1Wv6NoONtDfH6y1wk9Q8SRp8mZS2qYTPViXPvALLFZIvRuvzksMSBw0YMLuVvGB7/Vq
+         YXsUKuNqaWR865xID2w+UiICIIvQcW5NdN45Dr/vVXRhEe4ovEpofLWVi/mDZ58Nsj0o
+         mbfLGBOjobi7aBDUtTzrzHGgWptggOU9MYFlytGjKISTm/bDe33nKb+LIFZUfihV0naK
+         IJUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744209508; x=1744814308;
+        d=1e100.net; s=20230601; t=1744209507; x=1744814307;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=m/NF1ZydIUvd4N7KqoBnhLoGbjaoZN62+JonM5wUK+o=;
-        b=JES/8EVPuZcRrAHT6CrW0e00trMGE/bPQuvc8LBW5o/Y+R9IPTz/1cJymMZY6/DsSG
-         XNLUFOHoc3P3oN+DMw/aTsLtwfh3lHGuR2YpQs3UB/hf3uxKtnmGcdAiaAk56L29uKs4
-         XM+p6aIKt9A31eoVEbVgCp7Q/lVZWmPlbjDIMPWSC0yoJajxwg+UDXDSjvdQnNRqqsm2
-         b9Ws1gpb1eTSa3vdsrwieGi8qZil7AxVfphLXHe8n2gCIQZ+1gSXYDI5l72GPyWEz/4C
-         pCd076vkSu6sT6psmeoBvToAqM6ZblKyVD59QmrrIje/IFl2OcGR5Nh6k8laqezOzlp9
-         0SvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVKr6h0v+unCCnMOZF9Jp7TXsQrHRXeJsEA2PLuzlSYRc0aSdPu+5LbJPJ79N2NDk7KTdL2ksfb75UUFSI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0TziQGZN+w229SFMBjSx0YRIQCLJtwl0E34BCmSp4monqvfIi
-	P+vp00n2k40Mm/LkZoGrQVql0u1FYOOh66UkOG+Q7lMv/EXtiPQzDlGcVunaqmQ=
-X-Gm-Gg: ASbGncvjZ4bszQfA2eAujeiUZNPzdPKRIIjdgdvp9rH0PjKxL9+6U7NvePK2WIbBVTD
-	Lxn8AigBSbxrMli1XIdrG3hHvLSKVqdzLobYMGOxChga3GseKYfpJ2TL/KvCH+PC1F6zM9h2Nfm
-	q2Ingri7fNlHhgHZLRjzwscLQCkRNhAQV/Lg6G0VkhNOD4jwo/bKEAvOaZ5kOvnE14zc7Il1bpg
-	P2oC4nsZzKrnWwLrJwp7Yyitw8Js2OBfsUIr1r1plDNjaamXNuPw23Sr8zsEOvf/u2JdYmghmQJ
-	ADwXm1SrVE78TXuZPXosKj17k/Gg2NsJCEMt12TCT8u6uEIkfeMFpCl+qkLkIQ==
-X-Google-Smtp-Source: AGHT+IHt3tWE71LTEXVzyHw+QWXDZ9BI265fKqAiFU8xitCNid8MP3TrNBem8f3KAvrsA4uSKRbRSA==
-X-Received: by 2002:a05:600c:5486:b0:43b:c0fa:f9dd with SMTP id 5b1f17b1804b1-43f1ed4b4a3mr25024705e9.25.1744209508072;
-        Wed, 09 Apr 2025 07:38:28 -0700 (PDT)
+        bh=s3PkO8wukirLciBy0qd6kGi8KmY6F0eQXfG6DiOuo68=;
+        b=imr+122BAbsZgkWTVP/I/tjkGIADTOaYFLs+fZJEHhuJ/wXUyeohR7ilRwpAawhdkv
+         uHpzq+BAJixjddyhYTUAO1RxdBR5ilgftpcnnaOfgWdu15BJ58I7RsVLEUmJaIizw7SL
+         TYk9DEwb+J5Xk3wtrNJbymYMqwUHxJxEkUMTUg8AyU1PkwSrE92jyWoC6pYqXckEesMA
+         ddGF3hgqfZu7qeY0rESKq1/fkVcGmjM4LlMJ/YucR2A9ED1l/OoWpHb1/1oMgNmlXrbm
+         iT3mMpFRaSZkjK+nWzagEtQQ3xoszqz6Qak9YXF29MmYERYPZXRIIReMn0VAohDMSbBP
+         R/ag==
+X-Forwarded-Encrypted: i=1; AJvYcCW4S5SHV+LGIgTCAydo5heiJI24QDPWeMLBGRgtse/ez9xohCEwud8/G9yBR5/lQNlLV8w9sFeydMzd0Zw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy825hKhPVND8Loraup0oceArPBnRyy475EYccnX5hIgc8vaymI
+	WCKLr7ZwCvbGc4cHf96NoQ2GecsBMBH9VbcLIrWXMFETM74ODD1hym69wZyVKKk=
+X-Gm-Gg: ASbGnctZ0t1JWA/2jCtZVWymdVsAzoTGGvEWDCFHB3zv6p2RmVSPPw4AjWwJU5Y5pL0
+	RQN/t3pi5SNLNU8x3sWysv25m0SI0cEsJK3F9wOdMtsygsKfC8wZhFF70CMEcoBmYMw0bry14wD
+	AqVeIkzi2PjJchUYgg0/bUsR87kMiKiRofDOSVYFlrta4aEvLVB2xs8WrotiY2Jzm409aD7+N+k
+	HlZ1I22XLkll/gxgZHZWX2GHHhKmqZqjl+azS1I7UF9C+nhzXIl1eZOJrXIfpeHnsWdE0QbMF3H
+	cgW81xRLJYo3OedbJ61/X8eAQqXscBR9slZ76EY5Z0O1Hki2gBBd2iXe7X55yQfASv0/+3WM
+X-Google-Smtp-Source: AGHT+IG07vsd8sdXzQ/hg9/E2YQGswo+FG991Y68G+gzXsNkkPm2nAAmtSHhecTGQs/d5NXP6Des0Q==
+X-Received: by 2002:a5d:64c4:0:b0:391:3915:cffb with SMTP id ffacd0b85a97d-39d885612a7mr2763660f8f.43.1744209507300;
+        Wed, 09 Apr 2025 07:38:27 -0700 (PDT)
 Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f20625ea4sm22222045e9.12.2025.04.09.07.38.27
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f20625ea4sm22222045e9.12.2025.04.09.07.38.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Wed, 09 Apr 2025 07:38:27 -0700 (PDT)
 From: Neil Armstrong <neil.armstrong@linaro.org>
-Date: Wed, 09 Apr 2025 16:38:24 +0200
-Subject: [PATCH v4 6/6] media: platform: qcom/iris: add sm8650 support
+Date: Wed, 09 Apr 2025 16:38:23 +0200
+Subject: [PATCH v4 5/6] media: platform: qcom/iris: add support for vpu33
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,7 +68,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250409-topic-sm8x50-iris-v10-v4-6-40e411594285@linaro.org>
+Message-Id: <20250409-topic-sm8x50-iris-v10-v4-5-40e411594285@linaro.org>
 References: <20250409-topic-sm8x50-iris-v10-v4-0-40e411594285@linaro.org>
 In-Reply-To: <20250409-topic-sm8x50-iris-v10-v4-0-40e411594285@linaro.org>
 To: Vikash Garodia <quic_vgarodia@quicinc.com>, 
@@ -82,143 +82,257 @@ Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
  Neil Armstrong <neil.armstrong@linaro.org>, 
  Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5286;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8845;
  i=neil.armstrong@linaro.org; h=from:subject:message-id;
- bh=TwpN7WB7TovIb/Aom4JEIlovlaaSBos+8c3GTGn1tRE=;
- b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBn9oZe3DEOvpC5qTMwP/UIE7//HGWGN9GM6J2n2dOY
- VR0lkTeJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZ/aGXgAKCRB33NvayMhJ0R6eD/
- 9lB6rU9VZKyLFyyWymyblecXKQW0WaRzZfJOUXMmif3MPclwBLvOBY8Sb/UskWRE7QUDaBMoFeioxx
- ncGWanh3zYUdMR8wUIff0GmbgACaxujafsGN2tu6GSRayIMyuJit1pITrF69kw8W+5SzNvqtWGlR/s
- WeH5YDNdWu5th18zSZCbVOOAkmJAZoE9s6NAu7bQqeVBMZgrBJhWDQ0jVuOGgDIpywSyVudzyGT7Ow
- SksVeyZGIhDYN0zg0XVrRX4FUVehDdAAgwB8qR1AXY9QETkbhhMV/TkzOcY/o9xcLPb0EMPJqUhatR
- gDfczcmUfjbE0syD6WR+FgsnGAQK4djhoHP/eHXVDwTcIpf0Q92/X59wenrL3884We05N6+6Ab807h
- UwpyOYSHCipe9iPXK1UMQPAwtZTcSZ2uXtC2qgyoRiFNRhS9jgSWXhjcy41ZBUhuLhBHwOc6/uuZQC
- s2sr/FhepzlCEmhWrnU80m8cf7RUD6skVCvpN8uKLepAMeUqkb/PcyBi5yNFRdX3mGBX+/dljc+6P1
- 7HGQI9i0bhMjmzD//8gBTDolkK1+G05JuvstsmdqiXMvmLE+9dEOwDxTuIZIonJ3qfTytDIbmrGhaZ
- CjVprkEmDWliwWDxFgrUZIOWJ/mXUpabHMNbOygJ2YPGG1F7aumHeOxWU8Uw==
+ bh=L29D+dHeTrFH3hV1Wk+oU5i0WH2qeyAcee7cjmaet1w=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBn9oZdz7dpsVxclXpwHLzrC39buSc/01b3/WjnH3aa
+ NlzSpuCJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZ/aGXQAKCRB33NvayMhJ0Yh5EA
+ CIv12LO6WhCrGMn/BM/UDR5Ki/mNWu2LqDJuUKOFthYPJM0faIdJ14X9Ungt9Ir7BHAyNK6q9h5sJq
+ u+jVLF+JFW0wy6sSpOiTkK6ouUKOODckbi+0e43Fe6v0T+olZHbWDHixGsHMWdueTbo4gX+A8k1Prt
+ xUg7ZSZen4alZAw8iJBtChy2Vr8IZaZbJRc6cCZaD05wdsC/i6p+0IyNKrvI1UgvkHJcQjOvekaO+X
+ GVUne5iz0HXBcNEWGB7bi9jq9bMjxEkdPDEhBsGXau2FQLcU3Dy17insU27JJBwWUQ0d9xmP5sg8gS
+ NtSlkP7SfkNHTcHaF835ODCl90PGbCLBR12xOs8r4gcWE6t5DAUwhsFDKY8MwebOp9RwOcq9WfyVNK
+ qw++8046wTIibVbzptV6oy4/ODgREPZz1sbXAtdjPkfV2TU+yduzsyacGf3/oVm3z+3qYeBQKF8PA2
+ xYRvgW6rt6Mf1TKIPQQomE8wSNx5hWDrtxrALU+fGq9T2ldQHFAHMGQe0U6ze70TnZUN3eouiNY+zv
+ 4qQMauF7VUx6gWDLqrDfOQUk5OLX4To0B9TDrclUbsCIXtFQP7uDmR1Ls4SaZh9Gm8xcsByBNCKcgo
+ POZUfWlYoWnL1bqaTPKPsg5xDHXPmRHdYZ0rHYzbP1meKkod/N5PVMHewiyw==
 X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
  fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
-Add support for the SM8650 platform by re-using the SM8550
-definitions and using the vpu33 ops.
-
-The SM8650/vpu33 requires more reset lines, but the H.264
-decoder capabilities are identical.
+The IRIS acceleration found in the SM8650 platforms uses the vpu33
+hardware version, and requires a slighly different reset and power off
+sequences in order to properly get out of runtime suspend.
 
 Tested-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org> # x1e Dell
 Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 ---
- .../platform/qcom/iris/iris_platform_common.h      |  1 +
- .../platform/qcom/iris/iris_platform_sm8550.c      | 64 ++++++++++++++++++++++
- drivers/media/platform/qcom/iris/iris_probe.c      |  4 ++
- 3 files changed, 69 insertions(+)
+ drivers/media/platform/qcom/iris/iris_vpu3x.c      | 160 ++++++++++++++++++++-
+ drivers/media/platform/qcom/iris/iris_vpu_common.h |   1 +
+ 2 files changed, 157 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/platform/qcom/iris/iris_platform_common.h b/drivers/media/platform/qcom/iris/iris_platform_common.h
-index fdd40fd80178c4c66b37e392d07a0a62f492f108..6bc3a7975b04d612f6c89206eae95dac678695fc 100644
---- a/drivers/media/platform/qcom/iris/iris_platform_common.h
-+++ b/drivers/media/platform/qcom/iris/iris_platform_common.h
-@@ -35,6 +35,7 @@ enum pipe_type {
+diff --git a/drivers/media/platform/qcom/iris/iris_vpu3x.c b/drivers/media/platform/qcom/iris/iris_vpu3x.c
+index 13dab61427b8bd0491b69a9bc5f5144d27d17362..5d8b437ded2647a71c0c0e6b51a0942919ef6076 100644
+--- a/drivers/media/platform/qcom/iris/iris_vpu3x.c
++++ b/drivers/media/platform/qcom/iris/iris_vpu3x.c
+@@ -4,20 +4,39 @@
+  */
  
- extern struct iris_platform_data sm8250_data;
- extern struct iris_platform_data sm8550_data;
-+extern struct iris_platform_data sm8650_data;
+ #include <linux/iopoll.h>
++#include <linux/reset.h>
  
- enum platform_clk_type {
- 	IRIS_AXI_CLK,
-diff --git a/drivers/media/platform/qcom/iris/iris_platform_sm8550.c b/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
-index 35d278996c430f2856d0fe59586930061a271c3e..d0f8fa960d53367023e41bc5807ba3f8beae2efc 100644
---- a/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
-+++ b/drivers/media/platform/qcom/iris/iris_platform_sm8550.c
-@@ -144,6 +144,10 @@ static const struct icc_info sm8550_icc_table[] = {
+ #include "iris_instance.h"
+ #include "iris_vpu_common.h"
+ #include "iris_vpu_register_defines.h"
  
- static const char * const sm8550_clk_reset_table[] = { "bus" };
++#define WRAPPER_TZ_BASE_OFFS			0x000C0000
++#define AON_BASE_OFFS				0x000E0000
+ #define AON_MVP_NOC_RESET			0x0001F000
  
-+static const char * const sm8650_clk_reset_table[] = { "bus", "core" };
++#define WRAPPER_DEBUG_BRIDGE_LPI_CONTROL	(WRAPPER_BASE_OFFS + 0x54)
++#define WRAPPER_DEBUG_BRIDGE_LPI_STATUS		(WRAPPER_BASE_OFFS + 0x58)
++#define WRAPPER_IRIS_CPU_NOC_LPI_CONTROL	(WRAPPER_BASE_OFFS + 0x5C)
++#define REQ_POWER_DOWN_PREP			BIT(0)
++#define WRAPPER_IRIS_CPU_NOC_LPI_STATUS		(WRAPPER_BASE_OFFS + 0x60)
+ #define WRAPPER_CORE_CLOCK_CONFIG		(WRAPPER_BASE_OFFS + 0x88)
+ #define CORE_CLK_RUN				0x0
+ 
++#define WRAPPER_TZ_CTL_AXI_CLOCK_CONFIG		(WRAPPER_TZ_BASE_OFFS + 0x14)
++#define CTL_AXI_CLK_HALT			BIT(0)
++#define CTL_CLK_HALT				BIT(1)
 +
-+static const char * const sm8650_controller_reset_table[] = { "xo" };
++#define WRAPPER_TZ_QNS4PDXFIFO_RESET		(WRAPPER_TZ_BASE_OFFS + 0x18)
++#define RESET_HIGH				BIT(0)
 +
- static const struct bw_info sm8550_bw_table_dec[] = {
- 	{ ((4096 * 2160) / 256) * 60, 1608000 },
- 	{ ((4096 * 2160) / 256) * 30,  826000 },
-@@ -264,3 +268,63 @@ struct iris_platform_data sm8550_data = {
- 	.dec_op_int_buf_tbl = sm8550_dec_op_int_buf_tbl,
- 	.dec_op_int_buf_tbl_size = ARRAY_SIZE(sm8550_dec_op_int_buf_tbl),
- };
+ #define CPU_CS_AHB_BRIDGE_SYNC_RESET		(CPU_CS_BASE_OFFS + 0x160)
+ #define CORE_BRIDGE_SW_RESET			BIT(0)
+ #define CORE_BRIDGE_HW_RESET_DISABLE		BIT(1)
+ 
++#define CPU_CS_X2RPMH				(CPU_CS_BASE_OFFS + 0x168)
++#define MSK_SIGNAL_FROM_TENSILICA		BIT(0)
++#define MSK_CORE_POWER_ON			BIT(1)
 +
-+/*
-+ * Shares most of SM8550 data except:
-+ * - vpu_ops to iris_vpu33_ops
-+ * - clk_rst_tbl to sm8650_clk_reset_table
-+ * - controller_rst_tbl to sm8650_controller_reset_table
-+ * - fwname to "qcom/vpu/vpu33_p4.mbn"
-+ */
-+struct iris_platform_data sm8650_data = {
-+	.get_instance = iris_hfi_gen2_get_instance,
-+	.init_hfi_command_ops = iris_hfi_gen2_command_ops_init,
-+	.init_hfi_response_ops = iris_hfi_gen2_response_ops_init,
-+	.vpu_ops = &iris_vpu33_ops,
-+	.set_preset_registers = iris_set_sm8550_preset_registers,
-+	.icc_tbl = sm8550_icc_table,
-+	.icc_tbl_size = ARRAY_SIZE(sm8550_icc_table),
-+	.clk_rst_tbl = sm8650_clk_reset_table,
-+	.clk_rst_tbl_size = ARRAY_SIZE(sm8650_clk_reset_table),
-+	.controller_rst_tbl = sm8650_controller_reset_table,
-+	.controller_rst_tbl_size = ARRAY_SIZE(sm8650_controller_reset_table),
-+	.bw_tbl_dec = sm8550_bw_table_dec,
-+	.bw_tbl_dec_size = ARRAY_SIZE(sm8550_bw_table_dec),
-+	.pmdomain_tbl = sm8550_pmdomain_table,
-+	.pmdomain_tbl_size = ARRAY_SIZE(sm8550_pmdomain_table),
-+	.opp_pd_tbl = sm8550_opp_pd_table,
-+	.opp_pd_tbl_size = ARRAY_SIZE(sm8550_opp_pd_table),
-+	.clk_tbl = sm8550_clk_table,
-+	.clk_tbl_size = ARRAY_SIZE(sm8550_clk_table),
-+	/* Upper bound of DMA address range */
-+	.dma_mask = 0xe0000000 - 1,
-+	.fwname = "qcom/vpu/vpu33_p4.mbn",
-+	.pas_id = IRIS_PAS_ID,
-+	.inst_caps = &platform_inst_cap_sm8550,
-+	.inst_fw_caps = inst_fw_cap_sm8550,
-+	.inst_fw_caps_size = ARRAY_SIZE(inst_fw_cap_sm8550),
-+	.tz_cp_config_data = &tz_cp_config_sm8550,
-+	.core_arch = VIDEO_ARCH_LX,
-+	.hw_response_timeout = HW_RESPONSE_TIMEOUT_VALUE,
-+	.ubwc_config = &ubwc_config_sm8550,
-+	.num_vpp_pipe = 4,
-+	.max_session_count = 16,
-+	.max_core_mbpf = ((8192 * 4352) / 256) * 2,
-+	.input_config_params =
-+		sm8550_vdec_input_config_params,
-+	.input_config_params_size =
-+		ARRAY_SIZE(sm8550_vdec_input_config_params),
-+	.output_config_params =
-+		sm8550_vdec_output_config_params,
-+	.output_config_params_size =
-+		ARRAY_SIZE(sm8550_vdec_output_config_params),
-+	.dec_input_prop = sm8550_vdec_subscribe_input_properties,
-+	.dec_input_prop_size = ARRAY_SIZE(sm8550_vdec_subscribe_input_properties),
-+	.dec_output_prop = sm8550_vdec_subscribe_output_properties,
-+	.dec_output_prop_size = ARRAY_SIZE(sm8550_vdec_subscribe_output_properties),
+ #define AON_WRAPPER_MVP_NOC_RESET_REQ		(AON_MVP_NOC_RESET + 0x000)
+ #define VIDEO_NOC_RESET_REQ			(BIT(0) | BIT(1))
+ 
+@@ -25,7 +44,16 @@
+ 
+ #define VCODEC_SS_IDLE_STATUSN			(VCODEC_BASE_OFFS + 0x70)
+ 
+-static bool iris_vpu3_hw_power_collapsed(struct iris_core *core)
++#define AON_WRAPPER_MVP_NOC_LPI_CONTROL		(AON_BASE_OFFS)
++#define AON_WRAPPER_MVP_NOC_LPI_STATUS		(AON_BASE_OFFS + 0x4)
 +
-+	.dec_ip_int_buf_tbl = sm8550_dec_ip_int_buf_tbl,
-+	.dec_ip_int_buf_tbl_size = ARRAY_SIZE(sm8550_dec_ip_int_buf_tbl),
-+	.dec_op_int_buf_tbl = sm8550_dec_op_int_buf_tbl,
-+	.dec_op_int_buf_tbl_size = ARRAY_SIZE(sm8550_dec_op_int_buf_tbl),
++#define AON_WRAPPER_MVP_NOC_CORE_SW_RESET	(AON_BASE_OFFS + 0x18)
++#define SW_RESET				BIT(0)
++#define AON_WRAPPER_MVP_NOC_CORE_CLK_CONTROL	(AON_BASE_OFFS + 0x20)
++#define NOC_HALT				BIT(0)
++#define AON_WRAPPER_SPARE			(AON_BASE_OFFS + 0x28)
++
++static bool iris_vpu3x_hw_power_collapsed(struct iris_core *core)
+ {
+ 	u32 value, pwr_status;
+ 
+@@ -40,7 +68,7 @@ static void iris_vpu3_power_off_hardware(struct iris_core *core)
+ 	u32 reg_val = 0, value, i;
+ 	int ret;
+ 
+-	if (iris_vpu3_hw_power_collapsed(core))
++	if (iris_vpu3x_hw_power_collapsed(core))
+ 		goto disable_power;
+ 
+ 	dev_err(core->dev, "video hw is power on\n");
+@@ -79,7 +107,125 @@ static void iris_vpu3_power_off_hardware(struct iris_core *core)
+ 	iris_vpu_power_off_hw(core);
+ }
+ 
+-static u64 iris_vpu3_calculate_frequency(struct iris_inst *inst, size_t data_size)
++static void iris_vpu33_power_off_hardware(struct iris_core *core)
++{
++	u32 reg_val = 0, value, i;
++	int ret;
++
++	if (iris_vpu3x_hw_power_collapsed(core))
++		goto disable_power;
++
++	dev_err(core->dev, "video hw is power on\n");
++
++	value = readl(core->reg_base + WRAPPER_CORE_CLOCK_CONFIG);
++	if (value)
++		writel(CORE_CLK_RUN, core->reg_base + WRAPPER_CORE_CLOCK_CONFIG);
++
++	for (i = 0; i < core->iris_platform_data->num_vpp_pipe; i++) {
++		ret = readl_poll_timeout(core->reg_base + VCODEC_SS_IDLE_STATUSN + 4 * i,
++					 reg_val, reg_val & 0x400000, 2000, 20000);
++		if (ret)
++			goto disable_power;
++	}
++
++	ret = readl_poll_timeout(core->reg_base + AON_WRAPPER_MVP_NOC_LPI_STATUS,
++			reg_val, reg_val & BIT(0), 200, 2000);
++	if (ret)
++		goto disable_power;
++
++	/* set MNoC to low power, set PD_NOC_QREQ (bit 0) */
++	writel(BIT(0), core->reg_base + AON_WRAPPER_MVP_NOC_LPI_CONTROL);
++
++	writel(CORE_BRIDGE_SW_RESET | CORE_BRIDGE_HW_RESET_DISABLE,
++	       core->reg_base + CPU_CS_AHB_BRIDGE_SYNC_RESET);
++	writel(CORE_BRIDGE_HW_RESET_DISABLE, core->reg_base + CPU_CS_AHB_BRIDGE_SYNC_RESET);
++	writel(0x0, core->reg_base + CPU_CS_AHB_BRIDGE_SYNC_RESET);
++
++disable_power:
++	iris_vpu_power_off_hw(core);
++}
++
++static int iris_vpu33_power_off_controller(struct iris_core *core)
++{
++	u32 xo_rst_tbl_size = core->iris_platform_data->controller_rst_tbl_size;
++	u32 clk_rst_tbl_size = core->iris_platform_data->clk_rst_tbl_size;
++	u32 val = 0;
++	int ret;
++
++	writel(MSK_SIGNAL_FROM_TENSILICA | MSK_CORE_POWER_ON, core->reg_base + CPU_CS_X2RPMH);
++
++	writel(REQ_POWER_DOWN_PREP, core->reg_base + WRAPPER_IRIS_CPU_NOC_LPI_CONTROL);
++
++	ret = readl_poll_timeout(core->reg_base + WRAPPER_IRIS_CPU_NOC_LPI_STATUS,
++				 val, val & BIT(0), 200, 2000);
++	if (ret)
++		goto disable_power;
++
++	writel(0x0, core->reg_base + WRAPPER_DEBUG_BRIDGE_LPI_CONTROL);
++
++	ret = readl_poll_timeout(core->reg_base + WRAPPER_DEBUG_BRIDGE_LPI_STATUS,
++				 val, val == 0, 200, 2000);
++	if (ret)
++		goto disable_power;
++
++	writel(CTL_AXI_CLK_HALT | CTL_CLK_HALT,
++	       core->reg_base + WRAPPER_TZ_CTL_AXI_CLOCK_CONFIG);
++	writel(RESET_HIGH, core->reg_base + WRAPPER_TZ_QNS4PDXFIFO_RESET);
++	writel(0x0, core->reg_base + WRAPPER_TZ_QNS4PDXFIFO_RESET);
++	writel(0x0, core->reg_base + WRAPPER_TZ_CTL_AXI_CLOCK_CONFIG);
++
++	reset_control_bulk_reset(clk_rst_tbl_size, core->resets);
++
++	/* Disable MVP NoC clock */
++	val = readl(core->reg_base + AON_WRAPPER_MVP_NOC_CORE_CLK_CONTROL);
++	val |= NOC_HALT;
++	writel(val, core->reg_base + AON_WRAPPER_MVP_NOC_CORE_CLK_CONTROL);
++
++	/* enable MVP NoC reset */
++	val = readl(core->reg_base + AON_WRAPPER_MVP_NOC_CORE_SW_RESET);
++	val |= SW_RESET;
++	writel(val, core->reg_base + AON_WRAPPER_MVP_NOC_CORE_SW_RESET);
++
++	/* poll AON spare register bit0 to become zero with 50ms timeout */
++	ret = readl_poll_timeout(core->reg_base + AON_WRAPPER_SPARE,
++				 val, (val & BIT(0)) == 0, 1000, 50000);
++	if (ret)
++		goto disable_power;
++
++	/* enable bit(1) to avoid cvp noc xo reset */
++	val = readl(core->reg_base + AON_WRAPPER_SPARE);
++	val |= BIT(1);
++	writel(val, core->reg_base + AON_WRAPPER_SPARE);
++
++	reset_control_bulk_assert(xo_rst_tbl_size, core->controller_resets);
++
++	/* De-assert MVP NoC reset */
++	val = readl(core->reg_base + AON_WRAPPER_MVP_NOC_CORE_SW_RESET);
++	val &= ~SW_RESET;
++	writel(val, core->reg_base + AON_WRAPPER_MVP_NOC_CORE_SW_RESET);
++
++	usleep_range(80, 100);
++
++	reset_control_bulk_deassert(xo_rst_tbl_size, core->controller_resets);
++
++	/* reset AON spare register */
++	writel(0, core->reg_base + AON_WRAPPER_SPARE);
++
++	/* Enable MVP NoC clock */
++	val = readl(core->reg_base + AON_WRAPPER_MVP_NOC_CORE_CLK_CONTROL);
++	val &= ~NOC_HALT;
++	writel(val, core->reg_base + AON_WRAPPER_MVP_NOC_CORE_CLK_CONTROL);
++
++	iris_disable_unprepare_clock(core, IRIS_CTRL_CLK);
++
++disable_power:
++	iris_disable_power_domains(core, core->pmdomain_tbl->pd_devs[IRIS_CTRL_POWER_DOMAIN]);
++	iris_disable_unprepare_clock(core, IRIS_AXI_CLK);
++
++	return 0;
++}
++
++static u64 iris_vpu3x_calculate_frequency(struct iris_inst *inst, size_t data_size)
+ {
+ 	struct platform_inst_caps *caps = inst->core->iris_platform_data->inst_caps;
+ 	struct v4l2_format *inp_f = inst->fmt_src;
+@@ -119,5 +265,11 @@ static u64 iris_vpu3_calculate_frequency(struct iris_inst *inst, size_t data_siz
+ const struct vpu_ops iris_vpu3_ops = {
+ 	.power_off_hw = iris_vpu3_power_off_hardware,
+ 	.power_off_controller = iris_vpu_power_off_controller,
+-	.calc_freq = iris_vpu3_calculate_frequency,
++	.calc_freq = iris_vpu3x_calculate_frequency,
 +};
-diff --git a/drivers/media/platform/qcom/iris/iris_probe.c b/drivers/media/platform/qcom/iris/iris_probe.c
-index 4f8bce6e2002bffee4c93dcaaf6e52bf4e40992e..7cd8650fbe9c09598670530103e3d5edf32953e7 100644
---- a/drivers/media/platform/qcom/iris/iris_probe.c
-+++ b/drivers/media/platform/qcom/iris/iris_probe.c
-@@ -345,6 +345,10 @@ static const struct of_device_id iris_dt_match[] = {
- 			.data = &sm8250_data,
- 		},
- #endif
-+	{
-+		.compatible = "qcom,sm8650-iris",
-+		.data = &sm8650_data,
-+	},
- 	{ },
++
++const struct vpu_ops iris_vpu33_ops = {
++	.power_off_hw = iris_vpu33_power_off_hardware,
++	.power_off_controller = iris_vpu33_power_off_controller,
++	.calc_freq = iris_vpu3x_calculate_frequency,
  };
- MODULE_DEVICE_TABLE(of, iris_dt_match);
+diff --git a/drivers/media/platform/qcom/iris/iris_vpu_common.h b/drivers/media/platform/qcom/iris/iris_vpu_common.h
+index f8965661c602f990d5a7057565f79df4112d097e..93b7fa27be3bfa1cf6a3e83cc192cdb89d63575f 100644
+--- a/drivers/media/platform/qcom/iris/iris_vpu_common.h
++++ b/drivers/media/platform/qcom/iris/iris_vpu_common.h
+@@ -10,6 +10,7 @@ struct iris_core;
+ 
+ extern const struct vpu_ops iris_vpu2_ops;
+ extern const struct vpu_ops iris_vpu3_ops;
++extern const struct vpu_ops iris_vpu33_ops;
+ 
+ struct vpu_ops {
+ 	void (*power_off_hw)(struct iris_core *core);
 
 -- 
 2.34.1
