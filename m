@@ -1,113 +1,97 @@
-Received: from ida.uls.co.za (ida.uls.co.za [154.73.32.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BFC52512D6;
-	Wed,  9 Apr 2025 07:12:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=154.73.32.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D98C1254861
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 07:14:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744182763; cv=none; b=O1p8z7bQvAKk/S8KA0QDdZFHBo6nncxXQyaWPdYsW1uuzTPHVdCaoApEiGYpQOW9VMkBLDe5pHa0etCDTVTl2ZJ3B7aK2yU08z8LvSmYT5mBLQS1SH1ijZiTtSzt8hKlACNN/i885emKCrqD3OyMmYn4xB41IosVB4Qqs5dmvf8=
+	t=1744182848; cv=none; b=MuXhyVCG5MV06croMgN+C88yxPYms/VLPr0Jc0A4+GtWy/4o1wju3bCaQ8XTWDw/6qzMUUbJwmiH/JTKEO5Sla117Wkhj25P/olkoFf9YqA6qdvjEY1wsb1eZqMZaccdkXwzgyZVSCsyRiWgyV8ycLhualKfUAgM0b8x/XJkkXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744182763; c=relaxed/simple;
-	bh=LJsLW47Yu9RL0DyNLKDNDVL+rZbaxKSPrYK9IdMb6do=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Mt4vSpYn6YDF1849bPlM5N80ovDIWqdH69zqzcSa/zp+jePP3Dpgc30kYsF1ZUoQvqP3H4NtRqBfs67XrgEn8vyASpLbsL5OLAYF15Ji3TETNDSy2Au1m+HYB0fZjHxgL2LxbIedHLnTIEyUm1iYiPJrxkFTed2DPtKZjZjWWZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uls.co.za; spf=pass smtp.mailfrom=uls.co.za; arc=none smtp.client-ip=154.73.32.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uls.co.za
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uls.co.za
-Received: from [192.168.42.21]
-	by ida.uls.co.za with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
-	(Exim 4.97.1)
-	(envelope-from <jaco@uls.co.za>)
-	id 1u2Pbe-000000006c7-3umt;
-	Wed, 09 Apr 2025 09:12:19 +0200
-Message-ID: <b812fec3-8736-4005-918e-318e955c1902@uls.co.za>
-Date: Wed, 9 Apr 2025 09:12:16 +0200
+	s=arc-20240116; t=1744182848; c=relaxed/simple;
+	bh=o4u22On0K74aCLxCe4KHlANGFU1KZOeJn9PZNDHqBII=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=leiR51dvnbPttefv99W0BMXaz5GUhcY5vR1uGHwAiwyElN4JKgEMKhqwyQ6z4eBw4C6HZScqQJsfQtxgWkgli0ISdNx2bWFDxaAhDhmtB2U3BZSYNwZxGDIZf+hNLx6hJdO2g1UHAbth/CjeevngVggocENz0/wWx1uxkAfGVQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ekCQmfKE; arc=none smtp.client-ip=209.85.160.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ekCQmfKE"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-47691d82bfbso126134001cf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 00:14:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744182845; x=1744787645; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o4u22On0K74aCLxCe4KHlANGFU1KZOeJn9PZNDHqBII=;
+        b=ekCQmfKEB0bLWZzXtd7R2oH2sSK14iQ2pma12G0EcIvhTlGB5SzYD+FgtuHYRw2Ziv
+         omL2HXb+4fJjfL/p/Xo6SNAkjcTaoFkU1s6RAPZ+TM0i75czBtd9YFBdwfmbDCGnS9R6
+         N/uMZVezf3JMPZb38v+Zbn5iTlPumqS+2SSWkdwnYavt6JFgEUiv+wc9xB+eJEZypHh9
+         gMjWJpEyz556pzyVvs43uDl82DSSbFZ7XDTR3exeKDf0t5BFnsw1LMoZo/e1RdvRzZ9r
+         OXkD0+UHehK8C0/iex+frri3vn2aEBBt3adjC5LInhzD4JrYmcCKSJU4HS2lwnw66Ows
+         jbaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744182845; x=1744787645;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=o4u22On0K74aCLxCe4KHlANGFU1KZOeJn9PZNDHqBII=;
+        b=JlA3u1Rsg/HBA9Wb+8JEOLw+GEi5eOyi/l2NRcYFH2uPIATzRqFUro8h9sxCg36Dha
+         m/3wllurKCYXcPpaTLTbG4SFaxYqaLI7f5Q11xym+QjvIpEgum9wWm7XaLDFjlbfE3Vm
+         YuMiSNGTvvQE+sM+0nj9dwbZ958bRVAGh6+JLdstPiDwFbwzxycCK+nWN9OdmKCbvnTZ
+         oxYR4RyjWBpz5Dl//KVs15jr97qhgsL8ZL3AlyhRy0u7CYBTBvZ3X5eMEF91Wyi3ilGM
+         qnn6l9Vma2IvfePN6lAe2akGOD6ykUHM/yqRJU05/839IUx37zX/i0lWgC5y5MHu1KK2
+         5GXA==
+X-Forwarded-Encrypted: i=1; AJvYcCW292VGmJWfQQoN5wlxa1YBtEx0AgtSZDITklIjx72a903e3I6FUyM6JDMg8tkSY+FiKS0WV2ILG5Qji0Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqoI+TFHXVpuHZB93bXTh9n3DLYhXSVKHTxOYSKF0nE/U0AhDI
+	qSFMyX7BsLa0FJS6Yr7EEEhGe+O648ELffOc0ZzS2iZI+K5B46Hzz7xfgsmuaO6/qE+jTWf3ifz
+	okjxrM/UjMsgeR8iQpm88bN9GJ6YHaA2xy9IO
+X-Gm-Gg: ASbGncvb0qQdNT1cE1OeBjfKA/FK4AoY2/maGjnZQ3f+mf+JPeU441kuZHN3kRdlAOY
+	YXZSdhWgW3K8Xsi9oJJy8h3z6AvvnxEyklHFZ08xomRZZi9n0ZukBV53bmHv/2i9v+ZMFkxq+QY
+	P5RV39PjeQwqREbfKyGWZU2g==
+X-Google-Smtp-Source: AGHT+IEPf+bMOSyPAyRRT5FnYt/dQDrDJkP7fgIqSBGifSkvX0GxrGH6i7XdUzqfrW17ujqWAY4wjqbjwcnaYpM00XA=
+X-Received: by 2002:a05:622a:1209:b0:475:ce:3c59 with SMTP id
+ d75a77b69052e-479600c94ffmr21204371cf.30.1744182844448; Wed, 09 Apr 2025
+ 00:14:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] fuse: Adjust readdir() buffer to requesting buffer
- size.
-To: Bernd Schubert <bernd.schubert@fastmail.fm>,
- Miklos Szeredi <miklos@szeredi.hu>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- christophe.jaillet@wanadoo.fr, joannelkoong@gmail.com,
- rdunlap@infradead.org, trapexit@spawn.link, david.laight.linux@gmail.com
-References: <20250314221701.12509-1-jaco@uls.co.za>
- <20250401142831.25699-1-jaco@uls.co.za>
- <20250401142831.25699-3-jaco@uls.co.za>
- <CAJfpegtOGWz_r=7dbQiCh2wqjKh59BqzqJ0ruhtYtsYBB+GG2Q@mail.gmail.com>
- <19df312f-06a2-4e71-960a-32bc952b0ed2@uls.co.za>
- <CAJfpegseKMRLpu3-yS6PeU2aTmh_qKyAvJUWud_SLz1aCHY_tw@mail.gmail.com>
- <d42dec00-513c-49d4-b4f3-d7a6ae387a6b@fastmail.fm>
-Content-Language: en-GB
-From: Jaco Kroon <jaco@uls.co.za>
-Autocrypt: addr=jaco@uls.co.za; keydata=
- xsBNBFXtplYBCADM6RTLCOSPiclevkn/gdf8h9l+kKA6N+WGIIFuUtoc9Gaf8QhXWW/fvUq2
- a3eo4ULVFT1jJ56Vfm4MssGA97NZtlOe3cg8QJMZZhsoN5wetG9SrJvT9Rlltwo5nFmXY3ZY
- gXsdwkpDr9Y5TqBizx7DGxMd/mrOfXeql57FWFeOc2GuJBnHPZQMJsQ66l2obPn36hWEtHYN
- gcUSPH3OOusSEGZg/oX/8WSDQ/b8xz1JKTEgcnu/JR0FxzjY19zSHmbnyVU+/gF3oeJFcEUk
- HvZu776LRVdcZ0lb1bHQB2K9rTZBVeZLitgAefPVH2uERVSO8EZO1I5M7afV0Kd/Vyn9ABEB
- AAHNG0phY28gS3Jvb24gPGphY29AdWxzLmNvLnphPsLAdwQTAQgAIQUCVe2mVgIbAwULCQgH
- AgYVCAkKCwIEFgIDAQIeAQIXgAAKCRAILcSxr/fungCPB/sHrfufpRbrVTtHUjpbY4bTQLQE
- bVrh4/yMiKprALRYy0nsMivl16Q/3rNWXJuQ0gR/faC3yNlDgtEoXx8noXOhva9GGHPGTaPT
- hhpcp/1E4C9Ghcaxw3MRapVnSKnSYL+zOOpkGwye2+fbqwCkCYCM7Vu6ws3+pMzJNFK/UOgW
- Tj8O5eBa3DiU4U26/jUHEIg74U+ypYPcj5qXG0xNXmmoDpZweW41Cfo6FMmgjQBTEGzo9e5R
- kjc7MH3+IyJvP4bzE5Paq0q0b5zZ8DUJFtT7pVb3FQTz1v3CutLlF1elFZzd9sZrg+mLA5PM
- o8PG9FLw9ZtTE314vgMWJ+TTYX0kzsBNBFXtplYBCADedX9HSSJozh4YIBT+PuLWCTJRLTLu
- jXU7HobdK1EljPAi1ahCUXJR+NHvpJLSq/N5rtL12ejJJ4EMMp2UUK0IHz4kx26FeAJuOQMe
- GEzoEkiiR15ufkApBCRssIj5B8OA/351Y9PFore5KJzQf1psrCnMSZoJ89KLfU7C5S+ooX9e
- re2aWgu5jqKgKDLa07/UVHyxDTtQKRZSFibFCHbMELYKDr3tUdUfCDqVjipCzHmLZ+xMisfn
- yX9aTVI3FUIs8UiqM5xlxqfuCnDrKBJjQs3uvmd6cyhPRmnsjase48RoO84Ckjbp/HVu0+1+
- 6vgiPjbe4xk7Ehkw1mfSxb79ABEBAAHCwF8EGAEIAAkFAlXtplYCGwwACgkQCC3Esa/37p7u
- XwgAjpFzUj+GMmo8ZeYwHH6YfNZQV+hfesr7tqlZn5DhQXJgT2NF6qh5Vn8TcFPR4JZiVIkF
- o0je7c8FJe34Aqex/H9R8LxvhENX/YOtq5+PqZj59y9G9+0FFZ1CyguTDC845zuJnnR5A0lw
- FARZaL8T7e6UGphtiT0NdR7EXnJ/alvtsnsNudtvFnKtigYvtw2wthW6CLvwrFjsuiXPjVUX
- 825zQUnBHnrED6vG67UG4z5cQ4uY/LcSNsqBsoj6/wsT0pnqdibhCWmgFimOsSRgaF7qsVtg
- TWyQDTjH643+qYbJJdH91LASRLrenRCgpCXgzNWAMX6PJlqLrNX1Ye4CQw==
-Organization: Ultimate Linux Solutions (Pty) Ltd
-In-Reply-To: <d42dec00-513c-49d4-b4f3-d7a6ae387a6b@fastmail.fm>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-report: Relay access (ida.uls.co.za).
+References: <20250408-tcpsendmsg-v3-0-208b87064c28@debian.org> <20250408-tcpsendmsg-v3-2-208b87064c28@debian.org>
+In-Reply-To: <20250408-tcpsendmsg-v3-2-208b87064c28@debian.org>
+From: Eric Dumazet <edumazet@google.com>
+Date: Wed, 9 Apr 2025 09:13:53 +0200
+X-Gm-Features: ATxdqUExgIlhI5h9g1kuJu6S49AR43PpGh5RclwAbpAXHtSKJ9IcrrdS9kYyTqQ
+Message-ID: <CANn89iKr2kfCakou8id62C5ic95HF5RCps9a2cUv5FL3yjAGdg@mail.gmail.com>
+Subject: Re: [PATCH net-next v3 2/2] trace: tcp: Add tracepoint for tcp_sendmsg_locked()
+To: Breno Leitao <leitao@debian.org>
+Cc: David Ahern <dsahern@kernel.org>, Neal Cardwell <ncardwell@google.com>, 
+	Kuniyuki Iwashima <kuniyu@amazon.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Simon Horman <horms@kernel.org>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	kernel-team@meta.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Bernd,
+On Tue, Apr 8, 2025 at 8:32=E2=80=AFPM Breno Leitao <leitao@debian.org> wro=
+te:
+>
+> Add a tracepoint to monitor TCP send operations, enabling detailed
+> visibility into TCP message transmission.
+>
+> Create a new tracepoint within the tcp_sendmsg_locked function,
+> capturing traditional fields along with size_goal, which indicates the
+> optimal data size for a single TCP segment. Additionally, a reference to
+> the struct sock sk is passed, allowing direct access for BPF programs.
+> The implementation is largely based on David's patch[1] and suggestions.
+>
+> Link: https://lore.kernel.org/all/70168c8f-bf52-4279-b4c4-be64527aa1ac@ke=
+rnel.org/ [1]
+> Signed-off-by: Breno Leitao <leitao@debian.org>
 
-You sure you're looking at the newest version?
-
-Or where does the below need to get applied?
-
-I'm not seeing that in the patch to which you replied.
-
-Kind regards,
-Jaco
-
-
-On 2025/04/08 16:19, Bernd Schubert wrote:
-
->
-> On 4/1/25 17:33, Miklos Szeredi wrote:
->> On Tue, 1 Apr 2025 at 17:04, Jaco Kroon <jaco@uls.co.za> wrote:
->>
->>> Because fuse_simple_request via fuse_args_pages (ap) via fuse_io_args
->>> (ia) expects folios and changing that is more than what I'm capable off,
->>> and has larger overall impact.
->> Attaching a minimally tested patch.
-> Just tested this and looks good to me. Could we change to
->
-> -	size_t bufsize = 131072;
-> +	size_t bufsize = fc->max_pages << PAGE_SHIFT;
->
-> ?
->
-> I'm testing with that in my branch, going to run xfstests over night.
->
->
-> Reviewed-by: Bernd Schubert <bschubert@ddn.com>
->
->
-> Thanks,
-> Bernd
+Reviewed-by: Eric Dumazet <edumazet@google.com>
