@@ -1,88 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB2625DCEC;
-	Wed,  9 Apr 2025 12:30:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 244E221858D;
+	Wed,  9 Apr 2025 12:31:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744201802; cv=none; b=ZY2XRRlKXsECta2afGrDjLxV8ebajfomyc31XiFW/fZ8cWSqpG4lzDAAumZ2eMxuu7cM4H77TAyoKpF1A9jZ1UN+6QIfd5xt8+3bGIfFqfC2G/fWt3q1arYMSST7xKvOd3hLCVD/aaazcrKIpnqwf+Rmnqtv4UJQ2gOfJ3JvWmg=
+	t=1744201904; cv=none; b=hhcYGiYsUAQEWvz9Zmx+Z7JeOz0qg65SpTl1EhPN3bYoceKK+3l+a+2RN5pTb04uMMbpxpP3uhOMp0aRhwlaHi71EqbOw5Pu6JikakrRQ23ezCAQI592JXNwmi2E3d4QL57e21iM9qSKZbGX00p3+0V8p0eHOGQ4ijJGRl6IyXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744201802; c=relaxed/simple;
-	bh=IZoOsZsy8sycYe6l3UDWg9W0PAk6ggScHLXiXDpcBOs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iiWqDEqy7KoOuRWwPsSOwyeJ6uqhpFFXBjl74rXZpIcfBOf05qFET1H8xHIL/RXJz0ovj97TahgojWKyX5VhwMhORewD2wc5I8n5nIm3dA4ntyX/189UgTpfjNIlgxb7STAwTD9Uk9rYi+lur/J7+wsmY1tdaehGEBazw1ihNYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X13c65Wv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744201904; c=relaxed/simple;
+	bh=HtuFhXI63urBA3dRKYyXQ6GHreCYVeNttV6YM+zDLlM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G19nER0MV8OKV8BtT7Uj08e1MXiJFEFwezlNvTM/3axdccv/CzO9PtQ8kIzbgUFEPVn5kQetMcsM5aZRpXLJgJYpYVX+HX4u/ZhKnUVCybGN7NC9AEI0+H4OhX423oZEjjOqJyvrAPCi7ZjmnxjTEkjyCE6m4q5mGDRJO4f6dac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b=fXqaPu4F; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X13c65Wv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 637ECC4CEE3;
-	Wed,  9 Apr 2025 12:29:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744201801;
-	bh=IZoOsZsy8sycYe6l3UDWg9W0PAk6ggScHLXiXDpcBOs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=X13c65WvBHdt0K8dH9/tmuUHVrLk04U/l5se7vnYNohYidTx/CXA3unl7hPlG9apO
-	 5DUSGjKQ+jAzKmzKUDOkkkAeEBdPm+t5RraN7UDAkMwkBvCg4xIsKqxLo+CmQiNTPi
-	 mat7+8IaNdzzbUyyJ7CnfFNNQtdFYrnjv3LcJCsFkCT4Gx7xKw77UGrWfpTTfTpiUl
-	 gTOZPa0xK7AhzKNOa9KsBtPIygy4QEZ9aivAQDBZj7Sv3o5oqgCUsBJ79NrgHv4sYa
-	 p51LLCQle8bBlZd6f+M1T0m2BJZitB/7ZAi4yf6yQlfJghhlw0hFJV9ZGSPJPMZpoA
-	 mPtIf8JyGKMew==
-Date: Wed, 9 Apr 2025 13:29:56 +0100
-From: Mark Brown <broonie@kernel.org>
-To: ChiYuan Huang <cy_huang@richtek.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Otto lin <otto_lin@richtek.com>, Allen Lin <allen_lin@richtek.com>,
-	devicetree@vger.kernel.org, linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/4] ASoC: codecs: Add support for Richtek rt9123p
-Message-ID: <0aa1c431-4408-489d-8f11-e6055c827e20@sirena.org.uk>
-References: <cover.1743774849.git.cy_huang@richtek.com>
- <27583d8f9bb07351e5c9ea78ed286ca6daa74a8d.1743774849.git.cy_huang@richtek.com>
- <20250404200519.GA198531-robh@kernel.org>
- <Z/Mh8JEHqYohvcfL@git-send.richtek.com>
- <Z/XILJ8YRt905whu@git-send.richtek.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b="fXqaPu4F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1744201877; x=1744806677; i=rwarsow@gmx.de;
+	bh=HtuFhXI63urBA3dRKYyXQ6GHreCYVeNttV6YM+zDLlM=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=fXqaPu4Fpu6/nm6QEyAZAjC85NQSQs0PUALi+mkm/syWLchKtEmoLcQM82pjZqwO
+	 oJcFolGGMkCdObsGFCtx8P/xbipZCNUJZxdoWc0wvEH0FW1dUEteLuDEIReSE8zQT
+	 4RPaz3hXzJm8FXqgHQnBwp41zBAZdfDERqYaP6+Dm7uN0hR99qN8cYjEVurem2WK7
+	 gZAyB3DT7IOxkf5ZJHqXfU3tVA+R7Ug3T3tCZSslNvFwRkS/Z/lIevPskL/mD9W3O
+	 ItmZra9EhAMhaFscv7mNIt+K42WFebTEbDD/uz535bjU/zZaCjB5ah5zPp0h9inBd
+	 KoNHgxWMpn0ZOjQRLQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.200.20] ([46.142.33.88]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MgvvT-1tQQ8m2PHh-00oBvK; Wed, 09
+ Apr 2025 14:31:17 +0200
+Message-ID: <1ab58338-d663-4457-a113-67ae2142a978@gmx.de>
+Date: Wed, 9 Apr 2025 14:31:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="BIesKuQNbSpzPwCg"
-Content-Disposition: inline
-In-Reply-To: <Z/XILJ8YRt905whu@git-send.richtek.com>
-X-Cookie: Words must be weighed, not counted.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.14 000/726] 6.14.2-rc4 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250409115934.968141886@linuxfoundation.org>
+From: Ronald Warsow <rwarsow@gmx.de>
+Content-Language: de-DE, en-US
+In-Reply-To: <20250409115934.968141886@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:bORnGVt06sB2sVQc4wayjK/8AUsQgBOI5577Vn2o9FxhtGrsuJj
+ oOPlKGbIA+JTqyVYVcgcKGh5HXREoj1Ll3Z7Yvr2unamPEzq7cuuhuhAkMKxknY503+aYQt
+ h4kT9QVrTvdIB2l13zIlLd/BUHqhZMS+Wln74DOoxxWYxpxJurJDlNKKbMNJ9hXvS4/CJIm
+ KY1s8culc8xgLOPuaSJQw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:G3NdtSYX7jw=;a2sz+NerWmd6+vjyZGdaotYGgsz
+ MKvkse2qm7i6/nbn7yFA8+wne8zFMRjzbb1UX58GIjWBzaA+dzlA11PpcNpsldg2sK0P8MBKS
+ 6Npte8/3vzxNHuL93P2J29gSzw9cywFZNqwbkfl3Rk8PWIY4TVrngMDOr7QlAALaS/JiJquIu
+ lT9mFqljkbYS1zSj65/ZOJai2aOex/DUM9czYHa5MM3P6kq04Qyfna4H41c0EnjpSdbcdrYyz
+ M7+Bg1zo9GiqDgCSodX60/itxr7+Al1793IaI6DcZMFBBdLNfPhZ7hwsNffkNoIAhgoPYmd0V
+ Yhs9uM2AR0TOHOu07oOF3Ba+pbFaXsCGej6U6UYX9BAI/Uc/aj0CT/XSJ0DzJpVtM0RcFvhdH
+ 7ObBAb8TmJoqnyQRF3YUSsFEC3Fr+Xdm5vSckzpfkohJ2OiPMSRk+UWJd+AnVhilTbc2vAjPd
+ nS2R5mnNG/ydC8jt9bDkD0e0HWzImSG8vDBX01gSxxGwYnxRxim39TXWat7WF/oAsg41iwDFm
+ XoYZkI1dZfsuWw0KIkNNl80x5r/uB+c8ZOlMfckWsdE2r4tebE9jf6Cy62Smj8fuNG78OwsRj
+ aMpXwz8voHca4/l5IAUZKlp4ovHTjiPAggk/fR/hDPCgDONxgdexUMJcTlW5c3TuSoFb9xx1a
+ wJ+UydWSj8aLXPFgPMJl3voc3yXlG4Trvcir4tu9mq8uDohJClCX+oo4osMR1ZZUMcIgd7Gwb
+ tuB+7kaOey3Y+YgM5U//FUEB4uYn5+WS9T0z/qKrvTo3irUtkqZ/wt+g+/UDkRPzeBYGeNMUE
+ oYrri0iz469TqayZ7YRm9NRMuh3m+INjnDkTmJ3QeaVliHxr/HgMzIims3UsYu3FHH2dmIJ4L
+ 3dB7Atc6MifFZOs5Y78N27YosXtxKFFDyrHCZpSnDIEwO02oSs8mvDaM33NWi9Fwocu2Ow7r/
+ /B8Kylc6QaWjxnSP19bgSrsVJjAjp6Z49PU1957MVDO1Zd5qQ4bZZnyXFtnYvBw2LhaGenMqN
+ ScDKb55ceYS0PIl1E+DTbPlbefNnvw6e4lj6QPFRfrqGBJNV6Ihpe+UfLqt5Si9Ac0F/eXG18
+ IfXaijTN0/izjtEe9r9DlfWFYeU8VkcrATpVGsZDYv0YFFPtvEJ6XxvyjvG+f9PsaQ6IIh52j
+ /g4jRd1us3MCvybFtCsyOwBdrCcLfy7NclruxhGtwPaZLof7yc1vMI0FYpm3mH66uQswSkqfE
+ /fDZ8wnQYXiEA/JExKaMn9ewJCjoo4sivP+DfGVJbBro+XBhhCd1oexABrEry7yKwV0QyLIA9
+ Ruf//NmKgW7yLXuw3F5Hhx8W0TNlHe/NFa+wGatg53uKQc12SkpLHxUO4cTQrFr/yFc1aksTw
+ 7XxJmAshVDpRSHixjNiYdgRn6mSPrFsmXXDSv1LCmNMRhS/G8ojSNb5kOiUoAmTTuqQUDAyr2
+ Rnw5KYwLG6uryHuffrQcMJ46ALGw=
 
+Hi Greg
 
---BIesKuQNbSpzPwCg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+no regressions here on x86_64 (RKL, Intel 11th Gen. CPU)
 
-On Wed, Apr 09, 2025 at 09:06:52AM +0800, ChiYuan Huang wrote:
+Thanks
 
-> In last mail, I have already described what the delay for.
+Tested-by: Ronald Warsow <rwarsow@gmx.de>
 
-> Another question is for this property name 'enable-delay'. Should I add a
-> suffix like as 'enable-delay-ms'?
-
-Yes, if there's sensible units then adding a suffix for them would be
-good.
-
---BIesKuQNbSpzPwCg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmf2aEMACgkQJNaLcl1U
-h9CgBgf/T0/YpQZE7mqmZaBrW3K9TGXl0yrAZmdxuMnBRHS4G2ui4cr27J3PqI3S
-CRuKgq8PZxaeLwyH9lnSlYG3wA4O5DxYVn77Msu7NcOtLmnumyTvEEy9oxdsmdSK
-Rb4L+Lgt8s1+EcXCyvCkso4RXJHPmVk1CVpzrrUsJXvqH1w/Mt5n9n31uSvtFkg/
-Q6Eapenh3vW6bv/8T40YQbbbw7KCMfxoATSCk9+vcrm/E+j5ia6iXhDiHa87W+by
-0QJIId4CmqiwOhrBDE1ILXuYp9ayaZGNrwHWxkAmAqHqe2exHYwxoMEsuL8qvjL1
-U/Mg5FC8LjifOS52Zj2LlMifEn2p6g==
-=ooYi
------END PGP SIGNATURE-----
-
---BIesKuQNbSpzPwCg--
