@@ -1,189 +1,74 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 499861E22E6
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 19:17:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB9B41C6BE;
+	Wed,  9 Apr 2025 19:17:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744226262; cv=none; b=s3pD9IOz9ggZ1FDQ3iW97tcNepPFc9vDNM3WaL5BQfC780dxMhjUGOPeXEF8ixc7uQ73q+TlxhdeAAnDF3p2JlSBglbSoOf7js/OqCuVjhd21g0pZjhFWwv5NDd4Y0JpYrmjeaOOK7Z7lAWAP9s/9ZtAwIqXB6fSxl1Q1V1vBhw=
+	t=1744226281; cv=none; b=HObqfkdJVxg30O1MG2TgXrmVpgpyKjn3FnTJv8bDGtegCHZZsEBeaMvSrRflFP/X2783ZNbXtjLSmt1P5DhqX1ZhngW9w9gCPkWs+eUCFRbCmOTPUKqCu8Kw0dUaKNHfNreEx18ccXFb2wEa1ZzfmBkHsUljKpPICCjTrw/Xl8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744226262; c=relaxed/simple;
-	bh=9AOGJ16kRt3tVGIANi9OM2YSv2giRzrvMBRJunLNMic=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=de68yOhm2klYjyUhRqSVzSDpsGbFpvVyoKgEmcjrYaXbiPYp/U78BdkqjxtyEhGpM1yW7HL7n5tRwOHVz1+eepvSwLg2NlgbnEKMRekiiZkdTdF4BZ/2ZK+cRIBQ+Yr0M5Qg1Q7ahTQfo+8VRFjv1r5tGWxAuiwLts7Zrz4nWdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=P1ZaGMYu; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="P1ZaGMYu"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 539HH4JO015742
-	for <linux-kernel@vger.kernel.org>; Wed, 9 Apr 2025 19:17:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	lqcvEHgtU6uy6Jy9R3xfK2JQeeSFv9Thsxw6q2/X9Mc=; b=P1ZaGMYuZPrZL5KR
-	XZiKtavnC4AyIYCh6dOxImZoZXu0m7BNx7H4elJ23PoihUL+Yuv1xQghUfUqO2yf
-	EKskcXY3S1OMlYHl4wwRuTX7zoGuXZzmGgDflk31KBTTRY+Vof/kGRj3+dduSnIe
-	VsUIZ+BbUoLuDCKXJ1OSj3p7XnoOaBPUgA+l6bsI5ihatCLcgzebo8Mqv7RYeBuS
-	vEshVJZfQa/qOQXvTmQTuD9U5qNFhJcfIneHe4AjsA7GH+LKOpjUiNlznAqXqLAB
-	w+rAT4Hsg5XGv7T0ykTAkm0d2S5jDG9F7IzVICI/v8yzG400QvZcxRBCWTIfUv6C
-	0MK32A==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twd2vg78-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 19:17:40 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5530c2e01so941185a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 12:17:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744226259; x=1744831059;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lqcvEHgtU6uy6Jy9R3xfK2JQeeSFv9Thsxw6q2/X9Mc=;
-        b=Am1292Khc7DAj6vhdXtZ17UpMoMfP445IPrHVqXff0nNaplVrk+aJdkfl3RxzR8PMx
-         3E1H5gpnjcy8ynoPg+7KU7j04bVuji4J6/jyEyeJJSyyHFF77nhHXFk7LOk77f89d5hr
-         KLySks9xe6JRggSbQ0qQ2hfACE06o+zhTIiUCoR4GXGMSkTsv5U7E0tnWq/Xj6tKqnWh
-         kIeZ8NyDRfCANcmfnDNL/BQf+A3uht5mPdvjrnXMQrkfNgyB7YGMFoGuC/tmZyakJ8J1
-         Lk+JfTyyMkL3n2rYau4efC0WS9QYMmhUEW7oS7JZdcTtBkehnkrvNPQfIKyb54t+5vgR
-         gDfA==
-X-Forwarded-Encrypted: i=1; AJvYcCW9fPO17rRZwxTal2hYH6kPa6LVDDXAtjgHVE+PxUj/bH8hdmLX5KkpL1lO/I/wTwEYfgW26QSk3X+SyMU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywlj1kH01WBY3opWH9lhLfEdyVqjGwUzeNhsH3EUIcoW+hvtK1o
-	AkFbVvRXegFoYeGFf19hSDggaaBX2HIzDfd/Gz3uEwWsnwpIVRNGvQyn2qjdJ5+ypCo070ICieS
-	xZw0ZJ1tDxfUbU3RU+vZHLliZDGbpJWSQLTkZh/Ip1Gz28CQe+bIY7/P833O1Q8g=
-X-Gm-Gg: ASbGncvylSpz6MMxIVx/HhM0WnKh1D2eSRjTPU0CWwLKJzFKowjxSPA3f604Z2ZmOuB
-	28EPWlwyIned4Zv9OUn7KyGJA/TCGtyBPP2bSzoKS7vREwuaK064Ixpag+XsexCo9RmBaamXmhv
-	qop8sdUu6xWD4IBlchKY2asjZDE8flxMabbk4Gw+S/Y/jzmsQNGH0wpJXEKLmImoBGSwGxqqtof
-	2ZUQ4e03keAiChS6daSDC5jCvj3ywl971bTg0X5o8/H7GaXFky7NYv+fJXTY6AyetWMLIBxGC3T
-	CFEZyDDiizYRCy0PfqgW8z4uhbaz1202Mqz4k4RWtrlVSm5gfsGkujjFILorCqjJCw==
-X-Received: by 2002:a05:620a:d93:b0:7c5:606d:dccd with SMTP id af79cd13be357-7c79cbbe2bbmr258668385a.1.1744226258816;
-        Wed, 09 Apr 2025 12:17:38 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFNs/f/dMR7v4+f3J7T8RQuT+APxl+MlHJ8DyM2bYtuDetjuAYExfOKY3Pr7QtPXMMvnZoJgQ==
-X-Received: by 2002:a05:620a:d93:b0:7c5:606d:dccd with SMTP id af79cd13be357-7c79cbbe2bbmr258665385a.1.1744226258315;
-        Wed, 09 Apr 2025 12:17:38 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1bb3553sm140768266b.29.2025.04.09.12.17.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Apr 2025 12:17:37 -0700 (PDT)
-Message-ID: <e3faf128-6a36-428e-8e34-55d87d4686ac@oss.qualcomm.com>
-Date: Wed, 9 Apr 2025 21:17:35 +0200
+	s=arc-20240116; t=1744226281; c=relaxed/simple;
+	bh=SW+anX2q3RaqVoCHxVXbf8GdHLpP6Zl5Lw6Q/sV1Ezw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IEfLJRY5tDIR4Hs/PcQGnFCxmfuLShlG7RLP0O6poe0XiJVx2L9DPsstQQXj3it4LHZaCtSI7jyQ9I7jKE6bzSCJk8qnX/Br6B/i2n057lz9Izeh6ZWvcDIKY4vKIVXmHwqwst34e8lE5C2pyXdHDawBlruLGmnfvm+dXyWjfMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com; spf=none smtp.mailfrom=foss.arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=foss.arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B080D15A1;
+	Wed,  9 Apr 2025 12:17:59 -0700 (PDT)
+Received: from bogus (unknown [10.57.41.33])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DE6DF3F694;
+	Wed,  9 Apr 2025 12:17:57 -0700 (PDT)
+Date: Wed, 9 Apr 2025 20:17:54 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	linux-pm@vger.kernel.org
+Subject: Re: [PATCH 1/9] cpuidle: psci: Transition to the faux device
+ interface
+Message-ID: <20250409-adorable-venomous-cormorant-d01246@sudeepholla>
+References: <20250317-plat2faux_dev-v1-0-5fe67c085ad5@arm.com>
+ <20250317-plat2faux_dev-v1-1-5fe67c085ad5@arm.com>
+ <CAJZ5v0gcRDJFJtnPY+sszkUEYsdqxfm194Y7=namkD0qYnokHg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/4] media: venus: pm_helpers: use opp-table for the
- frequency
-To: Bryan O'Donoghue <bod@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Renjiang Han <quic_renjiang@quicinc.com>,
-        Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
-        Vikash Garodia <quic_vgarodia@quicinc.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20241219-add-venus-for-qcs615-v6-0-e9a74d3b003d@quicinc.com>
- <20241219-add-venus-for-qcs615-v6-2-e9a74d3b003d@quicinc.com>
- <fde279ad-27ed-4947-a408-23139bcd270a@oss.qualcomm.com>
- <351a9654-ffa1-4727-b772-95d4ed113c81@quicinc.com>
- <ac145c57-1db3-4747-88e2-02825f958d5a@oss.qualcomm.com>
- <6f11921a-4ee8-4f40-9131-529f548f681a@kernel.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <6f11921a-4ee8-4f40-9131-529f548f681a@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: oEKiDYDF5PM3H2alYPH_BOZE7niK189l
-X-Proofpoint-GUID: oEKiDYDF5PM3H2alYPH_BOZE7niK189l
-X-Authority-Analysis: v=2.4 cv=NaLm13D4 c=1 sm=1 tr=0 ts=67f6c7d4 cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=6lrxKQdraE29tqtzjYYA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=bTQJ7kPSJx9SKPbeHEYW:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-09_06,2025-04-08_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
- priorityscore=1501 adultscore=0 malwarescore=0 suspectscore=0
- lowpriorityscore=0 bulkscore=0 mlxlogscore=999 clxscore=1015 phishscore=0
- spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504090128
+In-Reply-To: <CAJZ5v0gcRDJFJtnPY+sszkUEYsdqxfm194Y7=namkD0qYnokHg@mail.gmail.com>
 
-On 4/7/25 5:39 PM, Bryan O'Donoghue wrote:
-> On 09/01/2025 13:05, Konrad Dybcio wrote:
->> On 2.01.2025 6:38 AM, Renjiang Han wrote:
->>>
->>> On 12/23/2024 10:17 PM, Konrad Dybcio wrote:
->>>> On 19.12.2024 6:41 AM, Renjiang Han wrote:
->>>>> The frequency value in the opp-table in the device tree and the freq_tbl
->>>>> in the driver are the same.
->>>>>
->>>>> Therefore, update pm_helpers.c to use the opp-table for frequency values
->>>>> for the v4 core.
->>>>> If getting data from the opp table fails, fall back to using the frequency
->>>>> table.
->>>>>
->>>>> Signed-off-by: Renjiang Han<quic_renjiang@quicinc.com>
->>>>> ---
->>>>>    drivers/media/platform/qcom/venus/pm_helpers.c | 53 +++++++++++++++++++-------
->>>>>    1 file changed, 39 insertions(+), 14 deletions(-)
->>>>>
->>>>> diff --git a/drivers/media/platform/qcom/venus/pm_helpers.c b/drivers/media/platform/qcom/venus/pm_helpers.c
->>>>> index 33a5a659c0ada0ca97eebb5522c5f349f95c49c7..b61c0ad152878870b7223efa274e137d3636433b 100644
->>>>> --- a/drivers/media/platform/qcom/venus/pm_helpers.c
->>>>> +++ b/drivers/media/platform/qcom/venus/pm_helpers.c
->>>>> @@ -43,14 +43,20 @@ static int core_clks_enable(struct venus_core *core)
->>>>>        const struct venus_resources *res = core->res;
->>>>>        const struct freq_tbl *freq_tbl = core->res->freq_tbl;
->>>>>        unsigned int freq_tbl_size = core->res->freq_tbl_size;
->>>>> +    struct device *dev = core->dev;
->>>>> +    struct dev_pm_opp *opp;
->>>>>        unsigned long freq;
->>>>>        unsigned int i;
->>>>>        int ret;
->>>>>    -    if (!freq_tbl)
->>>>> -        return -EINVAL;
->>>>> -
->>>>> -    freq = freq_tbl[freq_tbl_size - 1].freq;
->>>>> +    opp = dev_pm_opp_find_freq_ceil(dev, &freq);
->>>>> +    if (IS_ERR(opp)) {
->>>>> +        if (!freq_tbl)
->>>>> +            return -EINVAL;
->>>>> +        freq = freq_tbl[freq_tbl_size - 1].freq;
->>>>> +    } else {
->>>>> +        dev_pm_opp_put(opp);
->>>>> +    }
->>>> I'm not super convinced how this could have ever worked without
->>>> scaling voltage levels, by the way. Perhaps this will squash some
->>>> random bugs :|
->>>>
->>>> Konrad
->>>   Thanks for your comment.
->>>   The default value of freq is 0, and then dev_pm_opp_find_freq_ceil is
->>>   used to match freq to the maximum value in opp-table that is close to
->>>   0. The frequency values ​​in opp-table and freq_tbl are the same, and
->>>   dev_pm_opp_find_freq_ceil is used to assign the minimum value in
->>>   opp-table to freq. So the logic is the same as before. I'm not sure if
->>>   I've answered your concern.
->>
->> We talked offline, but for the record: my concern here was about
->> clk_set_rate() not scaling RPM/h voltage corners, which this patch
->> fixes
->>
->> Konrad
+On Wed, Apr 09, 2025 at 08:03:32PM +0200, Rafael J. Wysocki wrote:
+> On Mon, Mar 17, 2025 at 11:13 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
+> >
+> > The PSCI cpuidle driver does not require the creation of a platform
+> > device. Originally, this approach was chosen for simplicity when the
+> > driver was first implemented.
+> >
+> > With the introduction of the lightweight faux device interface, we now
+> > have a more appropriate alternative. Migrate the driver to utilize the
+> > faux bus, given that the platform device it previously created was not
+> > a real one anyway. This will simplify the code, reducing its footprint
+> > while maintaining functionality.
+> >
+> > Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> > Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > Cc: linux-pm@vger.kernel.org
+> > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 > 
-> Konrad is this an RB from you, do you have any other concerns with this code ?
+> Do you want me to pick up this one?
+> 
 
-OK the comment above was misleading - back then I must have thought this patch
-changed clk_set_rate to dev_pm_opp_set_rate - which is not what it does
+Yes you can pick this up.
 
-I won't be blocking this, but I'm not super keen on thoroughly reviewing it
-either - there are a lot of raw clk_ calls that are hard to keep track of.. 
+Just checked again, this is v1 and correct version.
 
-Konrad
+-- 
+Regards,
+Sudeep
