@@ -1,118 +1,159 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAF481D5160
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 17:17:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D98F1D5160;
+	Wed,  9 Apr 2025 17:17:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744219045; cv=none; b=E/xe8LoKJ2WDAt4HIOTC9ewCy1iqqaBI2uLzIYep69xsI7KYol3JAvDvjqDCJ9cA3XS4OHXWIkGHULp7Ygqbdb2VNyOhTpAsFzyW62g0Eg4DyKQDzUiKTaIhdpruw+6ay+TjQJSMU2AT+Ek6AUMaH/qKvo0W4/fNKh5u4A3YLtc=
+	t=1744219051; cv=none; b=fdaVF2APXG/JWTp2irEB6RGZ1a0hBn3rOEYpucBeqryGAT9HqJxGV0uI/985c6Cc1Gm5P9i2xoEo8foNvSrwss/VQpespF5dhrbu35e6Kl8RWNNfmsPGSfzrkSpOXc6CidXw/19WKy7vBBZNtqVaffg3ZPqsKKoGL1sc//gYP5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744219045; c=relaxed/simple;
-	bh=pWkUYx8Z7d+7TbYa6z0EEqFa/z5ytSu6rcNh90+Adeo=;
+	s=arc-20240116; t=1744219051; c=relaxed/simple;
+	bh=oG1XpsnmZMgS6W1f2ESImGKuTZ1RSerPiAWqKD5r30k=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ApDALT9TPTmuNCgTuUksczoxPeYe1TKqoobIQ4voAjLlZWOe1zK3zkyJXAKGf3XpUXqTejJePu82BWYF1i1C/C6PqYSHN9izugF5cHB8KMYfK8a+6PzF9yZXlvVKNbz0nDv+GQVnkSWNTJrD+1elzmkAMs0ssrTvRZSKh8Gxtqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=V8aYPQes; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 To:Cc:Content-Type; b=T9x2tM25PD6GrLnawkVoD3isc1a+XPVpHYikJWeKywGNJnYmja9jwv5OHkqEDhee1OrcmqIymU6BxMKU8VoWPwuSpJ7f67qytRq61jXfER9w8gaGHHfaOMNUvjz0EDnNT+EXnwjsqMDfPkKfsuHNmIvo4pUwBXeYvNIPfCihfek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UbjJ30Q8; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V8aYPQes"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744219042;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pWkUYx8Z7d+7TbYa6z0EEqFa/z5ytSu6rcNh90+Adeo=;
-	b=V8aYPQesjZVroyWbdw6FUR8sQJcgW/XojK5pUS4O9LwXddO5NdcGcdf2RyULs7N74FrFBH
-	m2uAuHFVs5fiMCfxs/rg5frLIIFW2Q/mz9bX95OkG3qn3Crg4KhXgh0+3Ad6d8jaN5mFJj
-	Bzoh9WV2JHN9y/XZxFgZcVXINcpiivY=
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
- [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-550-FKTsmKaoP_Ct56V_0gVS8w-1; Wed, 09 Apr 2025 13:17:20 -0400
-X-MC-Unique: FKTsmKaoP_Ct56V_0gVS8w-1
-X-Mimecast-MFC-AGG-ID: FKTsmKaoP_Ct56V_0gVS8w_1744219039
-Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-5498f71580cso2820167e87.3
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 10:17:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UbjJ30Q8"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e8be1bdb7bso11366179a12.0;
+        Wed, 09 Apr 2025 10:17:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744219048; x=1744823848; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CcMr2WswXxqD9O8dPFeqV99p5x+vz6aKhmjsl5xuOwM=;
+        b=UbjJ30Q8CerDxyYwD0ZSPrLLx/J+NGIIPXyN+5ceg8bs78LRAfn780Ho7BSIJ/ETd+
+         XFUFA7J9Bmp/5oICbecVUugkaV0E61/bLlLtMWWTxEpe/n2ianFS41mgiFzCfWrR2fef
+         QTW7oGXW6pURJof1MYKchzzy1VwYWWTqb4r4YlwtjmMNmsU1dKeLw/62v5C2wF2ovLqO
+         HBgPMhfjtkKI/ro+GS1N3ieqJhA1UH9s1Ad1v6iLrKIz0fQz99pBBiDMf91iAfNhCIcF
+         pzrmw1QNwnDOz5TIhHGP76wQ48PtXlVsw5F1Df7ct2ao/STawC5D8pu8HEAaTMEHELAh
+         89Ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744219039; x=1744823839;
+        d=1e100.net; s=20230601; t=1744219048; x=1744823848;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pWkUYx8Z7d+7TbYa6z0EEqFa/z5ytSu6rcNh90+Adeo=;
-        b=bK8GjAAlfg+qk0W8NxPd8KWhHTjPD/Rl3kp85FcoVTded0RK51rGZ+noa9qJUtQJ2Q
-         UAaSyVP4pfShexX5Hp4aWr7Gr7cLiBt9LrS9bAckOe98FdvdVKjEnVY0IG4fvq7VTZdd
-         sqj3oVqdOzJj5YLRYms1eGB00B1tMBPhShY18YZnvmn3lQ+bX4g3yR/cPQIkCT10DD7u
-         d/psGWpkSai7I7AaliJ59aS3+29NNy/S7mYPV26g0EDmtCYJH532Z/ptZzPALRgbOtfc
-         /gU4DNKRrFamvJ8YewqTXIqfoMg0mo14/XoJWkHP67iXHGGjGYpKB1np97N1D4fKNrfC
-         CbHg==
-X-Forwarded-Encrypted: i=1; AJvYcCXQGPS3o3SlpnvkY7ujDPB8NiaUx0h+blOHAuhrCLY64weN6KSGi9n2lVC39N/p/EwlmTZtdHoAVnsvcoM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVWzgE+rcFMaBjwY3MmbuecIJ5Mv2WfeVVGjsNhkmnQnr/YjKl
-	QTuiodDOKC/HJFYW9H5/SGZEdG9YM3Ge96Ncbkm3XpnQys66ZwmAj1BjPObkuaoZvCBAsat//En
-	2io2t2RuR4/Phg8J8eK2hR+le2yIAXf/cfkDtS//ql6/wnB0wXLVtvO4ZsnL2nxQOLEEZiCefEl
-	vu9CewrH18lu6sVi/4EwTK8vqnwGNSdYdPmsga
-X-Gm-Gg: ASbGncvr0hAKKB88WKZ9EdniZyuWiMvTfDpOPYiKc74fE2ZUQIQzrmHqg53pYi+QKrz
-	DDch+o3hq8mmiB0t8bqztFLb1C3DgrWvqQXDQgi6m+lU6/MDO81Kuf6UQhKPRkvp/NmSkSQ==
-X-Received: by 2002:a05:6512:12c3:b0:549:8fb5:f0ca with SMTP id 2adb3069b0e04-54c43704490mr1164468e87.2.1744219039272;
-        Wed, 09 Apr 2025 10:17:19 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF2Wo66N3+O53fWWkX9HJh7ijQ9WgsK77lEWNRBj4Og7eVn/S5CEJrJ/K9qYVOyzEZssKlNhqDXx7uyE7nsGWc=
-X-Received: by 2002:a05:6512:12c3:b0:549:8fb5:f0ca with SMTP id
- 2adb3069b0e04-54c43704490mr1164455e87.2.1744219038953; Wed, 09 Apr 2025
- 10:17:18 -0700 (PDT)
+        bh=CcMr2WswXxqD9O8dPFeqV99p5x+vz6aKhmjsl5xuOwM=;
+        b=YtR7YCOe/2wm8OFRB3SO6cZMkXr3tIzHYUNq1uqWuRUlKpd6sUPnlhaNfHj2qInp8N
+         hfMSB7hFKiLXIXE58VcdAMciJyFoTgialRVA1reQco4iAXFPUfMTd1P+ZA3U6bLQ8mt/
+         Q3Ci62uwmn3k+77anmf3W9QbaimMNIAhN4dklSYmybHZn0SpH8zF6XxPN87ZD2Vw2WDk
+         pndvLvzfdKgSsellbPXdzhAIeWbuOrwt5/7pIex2qNUCJXxos1dzTL467ZNhkBdhIXu0
+         6FowkVmydv0bPFT2i6+Is7OPoPYwuRANAKzdW1HicOte6+MqFSWJCW5+bkCNDbPvcZE4
+         TP4w==
+X-Forwarded-Encrypted: i=1; AJvYcCVq7vl7uqcKgWgs1bvl0L7bWXoBCYTQi8RlqFuhwlP3V+PnxpUMINXqlOAc9X5ONFUGITBkFgmTZQ65JokDbw==@vger.kernel.org, AJvYcCWO4+p+Yd41pBilytuiIS/CJpnCR6QbRQBXhLXf/QakohCtcZ3KPJJ6R0ht3oKO5Gm/rmh9RQIALDAd/iZ2@vger.kernel.org, AJvYcCWxv7NH9JOi1bI6VNk90TwwM0rx6U5YBs6xp2DDhT+fs4SHXkS3tHGv6JNFKpCF1xpQQLAcFK4ltvMK8rVV@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJAKFMitTeYoorYYb9vgQsca9WTF/q4fKTjDfjG88Pl2qoIwt3
+	fVtnthcTRUR2DUCM8GPVAuybAg3hXVlwu/d9W/E09etlxC3TTXo7U1uQwlCVQLB/SbjCKd4MADq
+	9W9U4mqNUBedKAVVYQQ9BwX7XFxQ=
+X-Gm-Gg: ASbGnctxAUQ9zDypRZXpxgb9QaOB2rrEg59zowNO9ojtZ6TqFVjCbvIvMPGhSIP4p37
+	+8IRNm/7u/EvJcgKIlc2hXY4QgIgX7jHDiY5o5UkN2lNwkXu0cieWpQosgO8jIDdNHml8Gebvii
+	WacIHd8TJQos+kNHu43fDbCl8jkpfQFNI8
+X-Google-Smtp-Source: AGHT+IF04PadMDXpfDEi4BXQjRN+FQazc2gzuE2WTQVFibWnjAGtbBhRfLN4Dn9al/wpkrcQIVDgiceCR7jghAjrsro=
+X-Received: by 2002:a17:906:6a2a:b0:ac3:eb24:ab26 with SMTP id
+ a640c23a62f3a-aca9b734e25mr343573766b.51.1744219047996; Wed, 09 Apr 2025
+ 10:17:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250409165510.23066-1-vdronov@redhat.com> <2172b969-1e0b-4fbb-8242-27518e9f6951@intel.com>
-In-Reply-To: <2172b969-1e0b-4fbb-8242-27518e9f6951@intel.com>
-From: Vladis Dronov <vdronov@redhat.com>
-Date: Wed, 9 Apr 2025 19:17:07 +0200
-X-Gm-Features: ATxdqUEvHkwpK_2uGrq1S0cFZrksvMW6yIhqBWZFrI-YD4l1tQoblAZr4YQJGs4
-Message-ID: <CAMusb+Q4O4A9Ay7Sdz5LEe0g1fw_w6j2xgC9HOBYhhOk8i0XWQ@mail.gmail.com>
-Subject: Re: [PATCH] selftests/sgx: Fix an enclave built with extended instructions
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: linux-sgx@vger.kernel.org, Jarkko Sakkinen <jarkko@kernel.org>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
+References: <20250409-tonyk-overlayfs-v1-0-3991616fe9a3@igalia.com>
+In-Reply-To: <20250409-tonyk-overlayfs-v1-0-3991616fe9a3@igalia.com>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Wed, 9 Apr 2025 19:17:15 +0200
+X-Gm-Features: ATxdqUGAVRsl9nEX4oKdjlJpAAzfHJXhbwwPJiTK5spEdYhZ92SxGUtI2rXTogM
+Message-ID: <CAOQ4uxiwv8F9p8L98BiX8fPBS-HSpNhJ_dtcZAkqM02RA0LuVQ@mail.gmail.com>
+Subject: Re: [PATCH 0/3] ovl: Enable support for casefold filesystems
+To: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
+Cc: Miklos Szeredi <miklos@szeredi.hu>, Theodore Tso <tytso@mit.edu>, 
+	Gabriel Krisman Bertazi <krisman@kernel.org>, linux-unionfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	kernel-dev@igalia.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 9, 2025 at 7:07=E2=80=AFPM Dave Hansen <dave.hansen@intel.com> =
-wrote:
+On Wed, Apr 9, 2025 at 5:01=E2=80=AFPM Andr=C3=A9 Almeida <andrealmeid@igal=
+ia.com> wrote:
 >
-> On 4/9/25 09:55, Vladis Dronov wrote:
-> ...
-> > Fix this by adding "-mno-avx" to ENCL_CFLAGS in Makefile. Add some comm=
-ents
-> > about this to code locations where enclave's xfrm field is set.
-> >
-> > Suggested-by: Dave Hansen <dave.hansen@linux.intel.com>
-> > Signed-off-by: Vladis Dronov <vdronov@redhat.com>
+> Hi all,
 >
-> First of all, this looks fine to me:
+> We would like to support the usage of casefold filesystems with
+> overlayfs. This patchset do some of the work needed for that, but I'm
+> sure there are more places that need to be tweaked so please share your
+> feedback for this work.
 >
-> Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+> * Implementation
 >
-> The code comments are fine. I'm much less picky about selftests.
->
-> I'm also open to other solutions here. We could, for instance, set
-> xfrm=3D7 to allow AVX2 instructions (which are generated by
-> "--with-arch_64=3Dx86-64-v3") or use some compiler flags other than
-> "-mno-avx".
->
-> But "-mno-avx" does seem good to me.
->
+> The most obvious place that required change was the strncmp() inside of
+> ovl_cache_entry_find(), that I managed to convert to use d_same_name(),
 
-Thank you for the ACK, Dave.
+That's a very niche part of overlayfs where comparison of names matter.
 
-I've tested an enclave with xfrm=3D7 and it errors out at the AVX512
-instruction (namely, vmovdqa64) in the same way. So if there is a
-compiler built with "--with-arch_64=3Dx86-64-v4" in some future, we
-would get into the exact same situation.
+Please look very closely at ovl_lookup() and how an overlay entry stack is
+composed from several layers including the option to redirect to different =
+names
+via redirect xattr, so there is really very much to deal with other
+than readdir.
 
-So I believe a solution when we disable extended instruction sets
-in an enclave as one covering all future cases.
+I suggest that you start with a design proposal of how you intend to tackle=
+ this
+task and what are your requirements?
+Any combination of casefold supported layers?
 
+Thanks,
+Amir.
+
+> that will then call the generic_ci_d_compare function if it's set for
+> the dentry. There are more strncmp() around ovl, but I would rather hear
+> feedback about this approach first than already implementing this around
+> the code.
+>
+> * Testing
+>
+> I used tmpfs to create a small ovl like this:
+>
+> sudo mount -t tmpfs -o casefold tmpfs mnt/
+> cd mnt/
+> mkdir dir
+> chattr +F dir
+> cd dir/
+> mkdir upper lower
+> mkdir lower/A lower/b lower/c
+> mkdir upper/a upper/b upper/d
+> mkdir merged work
+> sudo mount -t overlay overlay -olowerdir=3Dlower,upperdir=3Dupper,workdir=
+=3Dwork, merged
+> ls /tmp/mnt/dir/merged/
+> a  b  c  d
+>
+> And ovl is respecting the equivalent names. `a` points to a merged dir
+> between `A` and `a`, but giving that upperdir has a lowercase `a`, this
+> is the name displayed here.
+>
+> Thanks,
+>         Andr=C3=A9
+>
+> ---
+> Andr=C3=A9 Almeida (3):
+>       ovl: Make ovl_cache_entry_find support casefold
+>       ovl: Make ovl_dentry_weird() accept casefold dentries
+>       ovl: Enable support for casefold filesystems
+>
+>  fs/overlayfs/namei.c     | 11 ++++++-----
+>  fs/overlayfs/overlayfs.h |  2 +-
+>  fs/overlayfs/ovl_entry.h |  1 +
+>  fs/overlayfs/params.c    |  5 +++--
+>  fs/overlayfs/readdir.c   | 32 +++++++++++++++++++++-----------
+>  fs/overlayfs/util.c      | 12 +++++++-----
+>  6 files changed, 39 insertions(+), 24 deletions(-)
+> ---
+> base-commit: a24588245776dafc227243a01bfbeb8a59bafba9
+> change-id: 20250409-tonyk-overlayfs-591f5e4d407a
+>
+> Best regards,
+> --
+> Andr=C3=A9 Almeida <andrealmeid@igalia.com>
+>
