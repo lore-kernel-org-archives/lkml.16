@@ -1,142 +1,283 @@
-Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2061.outbound.protection.outlook.com [40.107.244.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA2720297F;
-	Wed,  9 Apr 2025 20:56:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744232208; cv=none; b=Td/ogHXofyo/cxkBrCAGY7Y677vc+FZJcR6WQiBj2acoIPpprsrcqAT7P6TRvz9SdYrR4oj0xB61dGCc9OFdkOdZORbCXw+fZRuBxWa9S5n+w5AYsGjXPJFAs29JKXNGtk2g5tVufflGvTjN6pbAUVymhSuYSGWjTTueoXnWd94=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744232208; c=relaxed/simple;
-	bh=Ka9I1gJSp0X0T+u/nhdNP1Ql3Cj7Gtryu0r8A3geZog=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ekeYaj1vzeMuFBa5nSwc0ncWbnYYozgLf54PtpCakODiRkjenXGNxRF2/+PB8iZxCGGVNOrHeFXZuvfWF7cb68dxJUlAMlv0j+kia6NbpVPZsgU8rSsKlPYq7AOlPmY0cGTWz97LeCQc6oRQOGG6cG/5iug/ExGTeDLt6qApPHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VmNICRx+; arc=none smtp.client-ip=209.85.160.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E37401E5018;
+	Wed,  9 Apr 2025 20:58:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.61
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744232295; cv=fail; b=U5AZD5czC1yRXickO6bHgReqmghEzv0ll2cbQLcBi/T8CDM4mNHtoOWQ7FND0N6TeubBoXpv3nD5IMGn+gFgfOAEJmerTjsP7cHvMrCGG4KYTJY/JEGcEc+sCPiTWsetScSsrputw7UyQ0J714MUxPgp5Bsv6cisQNrBxkRr7fg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744232295; c=relaxed/simple;
+	bh=ErTGCOeCsURQFaQ1K4sTLVp9Oucu4A4H+30Cd/eCFF0=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=AiUKkjUt5nprKrrCdTvfJdTzT6ZPuLyjEiipGEO5RzhqbwpTF/pQhsueigeM/dBCSKeFD2KLlwWq48ayOXFD8mGC5t9OrFEjL7raiFloSeP3vGRB+KCBqZbr2oUpZXCBt8hFPhX7ozLHFeB2Dk9wfqa517LNqDuch0TowPRCO1w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LoCXbBI/; arc=fail smtp.client-ip=40.107.244.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VmNICRx+"
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-2b8e2606a58so28558fac.0;
-        Wed, 09 Apr 2025 13:56:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744232206; x=1744837006; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=St0u1FQ/HiS/87vKMqrXQMxMgUlG5KFQVCs/QGECYpQ=;
-        b=VmNICRx+3V78ztrqglUta3S5bw1Y3UzPLRoGRy2AtHxZxXl5Y4jkHihN27Fey+NrZb
-         bM2L8VvIXOuIdOcn+gUn88Ic1XDOFpy5lIT6utif0sDL9V13NhFdU3+HmT8CvnO50kGP
-         gdCAQUukQ4obgmuAQAaBhgUGvp9/IY4fIc1d2lRksxMZ3oPXrndJd9X4NxI6eSDJYGnF
-         uAZ+1147EydnwBuYqnwzw/zWQKdRchP8R0Bn/beLNAWYEZ8Yhiesq7BnNipn0ykBmotk
-         TEafYdc/fiIIksiXr+MDkkwSk02Rrr99vnW/P7jsr0vJWS+gU2w98QgPxv7Yv4X/A0ae
-         qZpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744232206; x=1744837006;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=St0u1FQ/HiS/87vKMqrXQMxMgUlG5KFQVCs/QGECYpQ=;
-        b=Ia2XeEiL5uawXxKS8wwz9vdcGJd4oxlO6oHAShOq4BXiQGfFHiSRrri6bsJgCQgXFh
-         wvCQEHCL3faZDxoT4RIqIeqzoZdwrpoHm20xP6Gww+lC/jrSvq0TRjaPOA4QzR10xAAs
-         sLGORhtain5+29ew8fI53reGloNz2KeDNoshfw1p4S9tHLnYv4fqCE48CyUpLFhgzTnb
-         HUMn5oe7manx1yraz/QJHazHrpROyihK8cV1rBE9nB5GBqro9DmHN2Cd5uy/mCuyLK+w
-         cQlezY5I1CNiQCQq98KbGGHp1WuzgvhKFC0JQjzTkr/2NyNpUUAYjxTFVUbwWtCowDQP
-         R6Ew==
-X-Forwarded-Encrypted: i=1; AJvYcCU/7Ab7xQl1nN+66xIw26XfUwRgnJbC+hhtdnPU8sTNHEZjlw6LloxitkxrQvg8MI1iE6t3qmiW@vger.kernel.org, AJvYcCXOyJD953fNi9oYqyylNUyGJT6nIwJmGncx0WCuEROhDKwiW/Be2eA2dL0hane3BMgQMBWHoZGcnCFPvUw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVfuSK6g8OZ1xLkeKr4FMUc6YJMw/XNeDbXiZcxvdTBTnGU135
-	ZYD89gJocii2oooDqCurW5ezTPTa7AuJYQHWLlkXR94iDBhb+qon
-X-Gm-Gg: ASbGnctmibcDNPKBtapA4tkcKuUUQTQsungJGzlb+Watk7eLFXyWkVVsMXI6X33Ed9P
-	FgVTGeBrTgmP1h/EMbh0yRKLfbqBp9yCRzCpdf3ihm16uUPNuqYxgPOtTeWYdy7b/T2DIjqY0AJ
-	ofFpZVR0kC0MY8lLsPIc/DZ1z5kQs1nIXZTa4HJYkNpeDBKTAs0kRtP+14B/p8MiQ4BwnDNuYVy
-	oD42My+Fu0osuKuteUSr5kOPAE1CGQ+LOWP2TzzP7y/XIpLarWUqowJvkaB8GIFy3H4CedetLcV
-	tWDoIinUFkZ+lVIEwmGjczNvVXO+npU5hpb1Zi4mIsxkFTBJDXIjQZAOzu7gJLPnbuwQ
-X-Google-Smtp-Source: AGHT+IHBEJxCYfyQDjJQItYWVDnh7HpluZP7fGhZMr8B63ZTI04kZBjK4HFOrDNUzYo17QWWUq5FBw==
-X-Received: by 2002:a05:6871:71cc:b0:2b7:f8d9:d5f7 with SMTP id 586e51a60fabf-2d0b36d04ccmr115185fac.19.1744232206163;
-        Wed, 09 Apr 2025 13:56:46 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2d096cd262asm380445fac.35.2025.04.09.13.56.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Apr 2025 13:56:45 -0700 (PDT)
-Message-ID: <f170d500-8aad-4816-8bb9-b4433ab905fb@gmail.com>
-Date: Wed, 9 Apr 2025 13:56:43 -0700
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LoCXbBI/"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CHTouL1VnHovr1wP5GgaqQX+MTeYyyDFJB+c5nVLgDt3NO4G52lsX7bjnDIHLtRDht87bZSsuBYMXdYHzF3/ncGuWwimGLv71jfPGdg/zOATbniFCD1rxJmPklaUxc4HcfT6gF9XieivTHGlRJuy8nN+Q8/ENqfFYjXxwoAsJpNwY4lTlAqp5GNh60LN5lpkzNFjR/1OvA6WL9ut1Svey0rd5Fa3+u6Wlead4JavO+AjO/5aNSSTkVjAVTWKp5y3Z4jlVzWuHFN2LS1KSHyGh6+RaSR1DQbguRS+HR7Jd63inO4jjamc7tv7lHpCTFLt7ukA6nCfWjkZhaI4BrgkWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2Uz77EW42lZsfusO+/W5gj+EOyG1lmw0EcYbhDNHZDM=;
+ b=uU7b1kmEdevfqM6CrVHa6CF4nTjfwJI8ZR7zq5wfSSFLQ60WgB5teLAQ45HRvlsDIz1G3ScPOtqddMEbBhL1Jxg1njtNg7upi4xqcZv3uy/7FG4Pj3i2t+fS7QMs/Naxf5l66mUQSK0GfUzejSzTgg8OQDVsZ4bFmPcb4rLO8RayDDvAyamDqD1cldj/RV8hFP32XGUVA200FiFU2AsICGsFJ7dGJNiel19hO2ern3DXlyeDXtvHNdfT1tUKC7ZDlvU4Km3dDcBEVPCQzcpA1OIxkSELNVzzrGQoP22n1feo4JyDlm3UNDb1bFBwiAcKZecRpFTJzvc/Vyir3+iV+w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2Uz77EW42lZsfusO+/W5gj+EOyG1lmw0EcYbhDNHZDM=;
+ b=LoCXbBI/AcldRLQkenLTymuVyzL/+JQR2HpD0wh85g+rCweSf36yaa0b0LjkJTj/7Hf5AFI4ejpNRDb84R0uELN6yK2FR2d1n701MVyeg4/brZeaSlTHtEO82W+XDNouO1rlcM/ePK0lJmMtF1mCgtxCrFuS84o/7Mg/BHysyZg=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by MW6PR12MB7072.namprd12.prod.outlook.com (2603:10b6:303:238::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.35; Wed, 9 Apr
+ 2025 20:58:09 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%4]) with mapi id 15.20.8606.033; Wed, 9 Apr 2025
+ 20:58:08 +0000
+Message-ID: <483e9fc0-28bb-4531-88bb-738cd9ce9eb3@amd.com>
+Date: Wed, 9 Apr 2025 15:58:06 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cpufreq/amd-pstate: Enable ITMT support after
+ initializing core rankings
+To: K Prateek Nayak <kprateek.nayak@amd.com>,
+ "Gautham R. Shenoy" <gautham.shenoy@amd.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>,
+ Huang Rui <ray.huang@amd.com>, Perry Yuan <perry.yuan@amd.com>,
+ Meng Li <li.meng@amd.com>
+References: <20250409030004.23008-1-kprateek.nayak@amd.com>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <20250409030004.23008-1-kprateek.nayak@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN7PR04CA0194.namprd04.prod.outlook.com
+ (2603:10b6:806:126::19) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.12 000/426] 6.12.23-rc3 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
- conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250409115859.721906906@linuxfoundation.org>
-Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- WlfRzlpjIPmdjgoicA==
-In-Reply-To: <20250409115859.721906906@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|MW6PR12MB7072:EE_
+X-MS-Office365-Filtering-Correlation-Id: 953196d7-acde-4d0c-abb8-08dd77a93b52
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?YlE1d0Q1QzRpVjZEUEczNStpQm4ybXlDSmhJZDhpbUROV2xYcndqVXcyK0lX?=
+ =?utf-8?B?RFhDSHBBMVM0KzllTmd4b3pDWkdUOXEzbElPK21ob25SemxQeXhoeG1kSTZp?=
+ =?utf-8?B?ZFo2OHRaUDYycjFPejNneUk3dWZUdFdNZEJiSWdWVWEyNjZoMTJpclprU2FG?=
+ =?utf-8?B?SzlGYTJ3c2gvZkp5VWNXS3hZcHBkNERuVHBuVjZYSEJUUWtKZjVIdXdoOVFs?=
+ =?utf-8?B?Mjc4dzdUUEFpSXpPVDRkTm9IaWYvQ3pIcTFmSlhGZVJtcFozQjJhZUpiYjhk?=
+ =?utf-8?B?VXNtM1hiQTV6Nndrd0MrSTBwLzNDaXNHSVZPVGRBOGduRExEUnRGYzRodnFk?=
+ =?utf-8?B?Zy9aKzRERjVwcE5Oc2tDV2hCTElyOERudEJtT3U1dnllM1pZajMxTjczOGlx?=
+ =?utf-8?B?dWdpanJIaXhTQzJJdlJSV0NLQWpNRjBLcGFwNlQyQTQ1M09WMmNBNS9CRnVB?=
+ =?utf-8?B?RWR4T2VsdGVKK3B4OVlmZVd5cEtKcTA2enFSbWdVZ054V1B6akVMYS9IcDlF?=
+ =?utf-8?B?RDg4WUlKek5SRGVDaFJNdnI3eXg2NU41em0ybGVUZ3dtd3RHTHdta0NRSXFD?=
+ =?utf-8?B?am1Qamk5RzBLRnlPZk1mbWNLbmxFY05KRUw3WU9GK1k3UHYva1kra2phTHFC?=
+ =?utf-8?B?SWp5cERuWHZhWXZLMCtZeDJjdjA4V2E5TFJ1MUlIMnl3cHVwK3FwZjJ4N3Q0?=
+ =?utf-8?B?ZnMwZ01Vd25UMDdXZFlmUWN2SnRLOThQLzE4RDk4Y3FxTTVUM0Iwa0Fla3V3?=
+ =?utf-8?B?Q2VrOFBKWUJIbjh1SEFSQ3BCeFJvdWIyTy9ESkRYZE5ReUV0THZMaExiNGYv?=
+ =?utf-8?B?M1Z4TS9kYklWM2crSWRIV2pBTDF2N2o3bXVxSURxN1RlbStFbStPbW0ybk5K?=
+ =?utf-8?B?QjJLa2FMR0M3Umc2QWFLZ09pN0s3WDBxQVhUSjVadE5hRUZyV214a0hRZWxr?=
+ =?utf-8?B?YmZvVGR6M09Kdm1UOERMMXEwSzY2ZWFkWFdwSHNXQ3MrcmVNQU9oQmVBbGhN?=
+ =?utf-8?B?VWx6YWNqNktoTWxGS2dWSHU2cE55ZUtielM1UWl4a2FTRFNreXpyczgzVUdK?=
+ =?utf-8?B?QlNTKzVhYjJtc2hTUlpudy9RbkxIZGJ4OHliRHF1K21vVFhCRHBYUkxUS1pj?=
+ =?utf-8?B?d1Z1T0t3amdGUUFJRXlPanJqdW94SllYTUVubTBPWUo4Szlxb1RlQm5WRisz?=
+ =?utf-8?B?Ym4xYUF4dGM1UzJSUWx5RHBKbXl5TTJLVDF1YWN3QXNjcjE5ODhUTWJMZXNq?=
+ =?utf-8?B?MHpMZVQ0MWVNOTBvZHJWR2RMVWMvUjRwOGVJZE5aSnA4UnNUU1BHc210OEho?=
+ =?utf-8?B?QlBkT2hqdVM4MHNSckIrT09iZXR2NEJVeHlRRk9UamxDQ0xYTXhSWHhwVnFh?=
+ =?utf-8?B?MmVYU25rdmxaV1FCNWNta0FianlWL2FGdE9KRUk0dTFac2VrNXBieDcyVmcz?=
+ =?utf-8?B?anBER1ZlRGpRQk9XQXZEWDU3b21KQVVKYWRRQU1nS21DcFlQVFY5SGZWaTAz?=
+ =?utf-8?B?SlRXMDFjNWpZT0tzUm40WGV1NHN2RVhEQ0JFaktlekp4VlNaQW5mRk1DWG12?=
+ =?utf-8?B?R1hWQWF4NjdiSGxFNldXSGhNVVcvUTh1R2JrZFlUWnVLWm0xbzJjenhhWkhV?=
+ =?utf-8?B?QkxKMHptZnhOUm14Wkg3WEthc21sb1NxTXo3NEdLdWVzbDYvVkVzWVFCc1R3?=
+ =?utf-8?B?MmxrYlFDb1JGdUF0c1N2R05BeWNwSFRxOVc4L283K3JwL0FMQWxISExtdElJ?=
+ =?utf-8?B?dVJHVU40alpRc1c2Y3V2UjNlZGJDTFA2a0N3OVNVNTJHUStlY0xTTlpFN25P?=
+ =?utf-8?B?czFmQTZyODZtTkVUMC9heXdKS1JWY3p1Rzh0dUdxcXFxaG5IQ1NxRmp5QzBt?=
+ =?utf-8?B?aWFObGJVc2JvVXZiNkRtbVd1anJ0UG1UQncvaW1YUXhFMkJxMUFJYkdBc2xT?=
+ =?utf-8?Q?QavnQCqhcfo=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZTRVSTIyY3JtTjEycVNmcitIRzJZdVdvMU5FQ1F5ZHl3cUlBSWdKYmhGT0Q1?=
+ =?utf-8?B?WVUwbGo5bGFMQkNrTUhYZHBkdjNZRW53d1diUDRtVDR4ZHhSTUNjS2lXc3Vh?=
+ =?utf-8?B?ZHVVcU5uRnFOVFFpU29rOGlvb1VVYm11cUY1VmhGTnVNS1BtbVJ2WXVkd3U3?=
+ =?utf-8?B?eG9kMWJvOGZKdURsWDFIMW5ISWxOR0lJcXhWNnZsZnk5MFJiMlFURU8xREp2?=
+ =?utf-8?B?R1lLaklJUHBHemtMMG5wei9TSjVoL0I3TENNZDNJOUs4UXZFWmc1QS9VOFhF?=
+ =?utf-8?B?M2hJSGo3akJuOWdRVS9RemN6RDgyaHNWVlRtMmxyeHZpRjN0b3R5UmIzeUR4?=
+ =?utf-8?B?UEFlVjJ0bFoveDlWbDhQUjBjc01kc1RVQy9yM3kzUkh6bng3dENnS2dtTVBa?=
+ =?utf-8?B?VUJ5WWJ1SHJrQ3R4NjZoU0VmQXhuT3pNN01JN1NSUys0djBzOHMyTk1IOW11?=
+ =?utf-8?B?VDdaYnVzaXdhVElqV3kweHpiNm5PV2NZSlVnZmtkcit3aDQvaDN1RXc5Rmd0?=
+ =?utf-8?B?QW1WWWpxaEpGd3BpSE1TUHo0MXlIdVphSXQrSnJ0L3JVNlR6K0FGdEhvMmlw?=
+ =?utf-8?B?akc1dFJmTlcxdEhMTzNwaDBqeEN6eFhPZFVUMzd0aXVKQmFuYVA1Z3NybWFm?=
+ =?utf-8?B?S1Rwc3NnazVlWWZLb1A4Z1lub2ZXblVGVityWU1ZREYrVSt3WXQyOUN5aWVm?=
+ =?utf-8?B?ZHVSK3czdUtiY3FNUFBBVDQvWVV1WkJ0T3B0ZFlyVE9NdDZ5QTNQbTJoa1F5?=
+ =?utf-8?B?V1hhSE5xSDRxMVJPVXpHZi8xMTM1dWhyL2NvMVVDSFZpMmp4c2o5VzZQRHQ2?=
+ =?utf-8?B?OENCZjlmMlJzSzhYcXRLdTZhb1pvN1RqTWVyK1UrLzV3QXZpRTJCbzl3dlo1?=
+ =?utf-8?B?bEJrcUZDMTlnczFTanpjVFB4am1ubGNFWS9vNFc5N050RUxaTUJWeGw0SGpG?=
+ =?utf-8?B?V21rYUk5SUJxZFF4Njcwb0JxQkQ3Y2tTSjBCV0h6c3ROR2lYL2RDSGpHOXZP?=
+ =?utf-8?B?dWNoRnJMTGZUdDRVazdKVW91TWRzLzgzS2x4VTFyQTM4SEtuOTc2dHNWRTdm?=
+ =?utf-8?B?T01DQ24zdTNtc09BMitlVlExVnBwWmRWdnFXNkc2dWNrUVR5UWFKUHJPWEhP?=
+ =?utf-8?B?M2Z5OEtJNmM1SXhuMDRqMlA4bE5wR0RvNGpqWlVKOTNUR2JnZXdYbG5XNity?=
+ =?utf-8?B?czViQnhYV2c0YmxQck40aTUwaTVSejMwV09FQm05ZUJXVUtNaG15b3lKbkla?=
+ =?utf-8?B?K2R3NzFKNDhTQnhxNDN3WFpuRDYxWktUa2hGUHB4MUhGS3hrYWtiL04rTGRT?=
+ =?utf-8?B?YmRvUlkrSzh4ZExWV0orRUxxeHRHZ0s4VWc4MDZLMEJJZThPV1d1OHhCTDFr?=
+ =?utf-8?B?MVpyRE5mc0VsakZUcGVydFVuZGE4TDRmS2xZdDJuWlY3K2hKazVLSXY1d1lU?=
+ =?utf-8?B?RldnR1BueWtnbzV6RkNkWUxyeVRIY2JqSmxVTnROemFPYnpmSEc1b29EWGYr?=
+ =?utf-8?B?anRWakZrejFPS0NKVGlaL0w4b0lpV09GRUdQbnNhZ0gxT29KdERZU1hNZVJx?=
+ =?utf-8?B?SFNlVUcvNnc1K3V3VVVFck1tWVRSOFQxVUJDQ3JoZ0J4cHZRN0hGaTNxZTZ2?=
+ =?utf-8?B?WjU4MFI2U2luUG5SZkppeVBhZmFON0xZV2hzTjdmRm5oK0VhV0hNRFdySTBm?=
+ =?utf-8?B?WCs1Y09DdmUvTlo4aU4zTEtWcDBGYS9mSUZsUkRlb3BHZno1WWlxaFIzQ1c1?=
+ =?utf-8?B?NURMZFhvSXI2UjBWcktuRzdEV3Rpcnp3dkQyT2diT0tsbVZGSWpSL2M1NUpk?=
+ =?utf-8?B?NkZub1U0Ryt2K3ptN3d3MytVQUVIRzM2REhBK05ub2w5ekQvcm9OeUJJN0pY?=
+ =?utf-8?B?Vjl3L2Y0dmg1ZS85SVIxOENSaXhKTFovbXBVM1ZwaDJzbzFlSlluVzVWcGtQ?=
+ =?utf-8?B?RjNCN3FPdXR5UjBSZklUUlJxbERqQVpUVzRmV2tJQ1Y0VnREdUMvVG5QNVFS?=
+ =?utf-8?B?RmdSNWRpblFzMHFoU2ZJbjVOYksxa0NmZjNIUnNwTGQxcDZjaC9XZ211R1gw?=
+ =?utf-8?B?YXVaRlZpc0JPME5JdmVFQmwyNnVpa0pnaW5WVTByaDRtUU1nKzVWZjlXcjV2?=
+ =?utf-8?Q?W1fpSb7gKJH8HgwIgdY3yIbU2?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 953196d7-acde-4d0c-abb8-08dd77a93b52
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 20:58:08.7349
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: H/yH9H1IC2oyLAo4b9+zVREQqac6IB/hCecEMVQk8LenPJvxQWNOF2jbmwwHjEViExNVAcPjeyRQva4K9QiCkg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB7072
 
-On 4/9/25 05:02, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.12.23 release.
-> There are 426 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On 4/8/2025 10:00 PM, K Prateek Nayak wrote:
+> When working on dynamic asym priority support, it was observed that
+> "asym_prefer_cpu" on AMD systems supporting Preferred Core ranking
+> was always the first CPU in the sched group after boot even though it
+> was not the CPU with the highest asym priority.
 > 
-> Responses should be made by Fri, 11 Apr 2025 11:58:05 +0000.
-> Anything received after that time might be too late.
+> "asym_prefer_cpu" is cached when the sched domain hierarchy is
+> constructed. On AMD systems that support Preferred Core rankings, sched
+> domains are rebuilt when ITMT support is enabled for the first time from
+> amd_pstate*_cpu_init().
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.23-rc3.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
-> and the diffstat can be found below.
+> Since amd_pstate*_cpu_init() is called to initialize the cpudata for
+> each CPU, the ITMT support is enabled after the first CPU initializes
+> its asym priority but this is too early since other CPUs have not yet
+> initialized their asym priorities and the sched domain is rebuilt when
+> the ITMT support is toggled on for the first time.
 > 
-> thanks,
+> Initialize the asym priorities first in amd_pstate*_cpu_init() and then
+> enable ITMT support only after amd_pstate_register_driver() is finished
+> to ensure all CPUs have correctly initialized their asym priorities
+> before sched domain hierarchy is rebuilt and "asym_prefer_cpu" is
+> cached.
 > 
-> greg k-h
+> Remove the delayed work mechanism now that ITMT support is only toggled
+> from the driver init path which is outside the cpuhp critical section.
+> 
+> Fixes: f3a052391822 ("cpufreq: amd-pstate: Enable amd-pstate preferred core support")
+> Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
+> ---
+>   drivers/cpufreq/amd-pstate.c | 28 ++++++++--------------------
+>   1 file changed, 8 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
+> index c54c031939c8..ee638589f5f9 100644
+> --- a/drivers/cpufreq/amd-pstate.c
+> +++ b/drivers/cpufreq/amd-pstate.c
+> @@ -794,19 +794,9 @@ static void amd_perf_ctl_reset(unsigned int cpu)
+>   	wrmsrl_on_cpu(cpu, MSR_AMD_PERF_CTL, 0);
+>   }
+>   
+> -/*
+> - * Set amd-pstate preferred core enable can't be done directly from cpufreq callbacks
+> - * due to locking, so queue the work for later.
+> - */
+> -static void amd_pstste_sched_prefcore_workfn(struct work_struct *work)
+> -{
+> -	sched_set_itmt_support();
+> -}
+> -static DECLARE_WORK(sched_prefcore_work, amd_pstste_sched_prefcore_workfn);
+> -
+>   #define CPPC_MAX_PERF	U8_MAX
+>   
+> -static void amd_pstate_init_prefcore(struct amd_cpudata *cpudata)
+> +static void amd_pstate_init_asym_prio(struct amd_cpudata *cpudata)
 
-On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
-BMIPS_GENERIC:
+I think the previous function name was fine.
 
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
+1) It still does set cpudata->hw_prefcore afterall and
+2) We still have an amd_detect_prefcore() that is used to determine 
+whether amd_pstate_prefcore is set.
+
+>   {
+>   	/* user disabled or not detected */
+>   	if (!amd_pstate_prefcore)
+> @@ -814,14 +804,8 @@ static void amd_pstate_init_prefcore(struct amd_cpudata *cpudata)
+>   
+>   	cpudata->hw_prefcore = true;
+>   
+> -	/*
+> -	 * The priorities can be set regardless of whether or not
+> -	 * sched_set_itmt_support(true) has been called and it is valid to
+> -	 * update them at any time after it has been called.
+> -	 */
+> +	/* The priorities must be initialized before ITMT support can be toggled on. */
+>   	sched_set_itmt_core_prio((int)READ_ONCE(cpudata->prefcore_ranking), cpudata->cpu);
+> -
+> -	schedule_work(&sched_prefcore_work);
+>   }
+>   
+>   static void amd_pstate_update_limits(unsigned int cpu)
+> @@ -974,7 +958,7 @@ static int amd_pstate_cpu_init(struct cpufreq_policy *policy)
+>   	if (ret)
+>   		goto free_cpudata1;
+>   
+> -	amd_pstate_init_prefcore(cpudata);
+> +	amd_pstate_init_asym_prio(cpudata);
+>   
+>   	ret = amd_pstate_init_freq(cpudata);
+>   	if (ret)
+> @@ -1450,7 +1434,7 @@ static int amd_pstate_epp_cpu_init(struct cpufreq_policy *policy)
+>   	if (ret)
+>   		goto free_cpudata1;
+>   
+> -	amd_pstate_init_prefcore(cpudata);
+> +	amd_pstate_init_asym_prio(cpudata);
+>   
+>   	ret = amd_pstate_init_freq(cpudata);
+>   	if (ret)
+> @@ -1780,6 +1764,10 @@ static int __init amd_pstate_init(void)
+>   		}
+>   	}
+>   
+> +	/* Enable ITMT support once all CPUs have initialized their asym priorities. */
+> +	if (amd_pstate_prefcore)
+> +		sched_set_itmt_support();
+> +
+
+Hmm, by moving it after the first registration that has the side effect 
+that if you changed driver modes from active to passive (for example) 
+ITMT priorities stay identical and aren't updated.
+I guess that makes sense since the rankings /shouldn't/ change.
+
+I feel this should be OK, thanks.
+
+>   	return ret;
+>   
+>   global_attr_free:
+> 
+> base-commit: 56a49e19e1aea1374e9ba58cfd40260587bb7355
+
