@@ -1,156 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F86A1C5F23
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 18:21:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 672E31C5F23;
+	Wed,  9 Apr 2025 18:22:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744222896; cv=none; b=sriAh4QpTNNUvfdi8l37Oj+iEJ4nNGk6MotFfbCSPCeuYNikXpjLYWcgJVmH7ssmvRW+IihIwkUJWX0YK7YxEhwmUgxT258qy9S6Q7wNhGpDhNqjhQYZmV6o+76FLYFDrotfgpCxjnjWUB/ZSJ+cVZe1Z/TajXYYE4VzCV8lcY0=
+	t=1744222947; cv=none; b=nbotkosqamANMcICYl63/pMjBTLeUmM8pTSZ2+HcItmDZuI0hIkzn9dgGMUmYmn9DVFCC+5a8sGFZqoI/HTQ4zMEZoITyAlnqmeDmv7q2s+vPI+3w1GNAQgczZ1h7br82bpXReofgcYdNP1FJ18/jaAlbiyHU/QcWCY9FvBv4uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744222896; c=relaxed/simple;
-	bh=rF/4ACsIG/tFNbGRO5wYRJcR4xBaQIyDKKhb987ERh4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YRausohSDhULEqubxWEVNX8DXQ811s85v5+3291733MLcELge6iXPlsZ/aav00ZA3DEZZVUnbDPsSJ6JA7ylVRNh0LwabqGpSSrjOkV5aHcXVSuohLTWvuvoSpEcid954oWdPfWL93VXKAINGQhAc0t/ui0t4z2jIy5f8SS9xVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E3oGybFg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744222947; c=relaxed/simple;
+	bh=w+j8lu1r0xwnw+RjG9AetU0PtQlqSbWDZeToiORrs0k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AjIX6jIWxF1qfM9aQSsnNPEBCmhpTfFqpYUn2m2//FzhSECGDsyY/3YlkoXk+OeF4wZm9qLiBWopY6j0MAaDjpTjtBM984mjuTUFyYUQB9AhEYf/P5UbMVNsXDTWmzwfpZF7sDGhnlS72wLX40J/SLwYf/vUs0bwLCaE0u0+9X4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GXCyWM4u; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E3oGybFg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E29FC4CEE2;
-	Wed,  9 Apr 2025 18:21:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744222896;
-	bh=rF/4ACsIG/tFNbGRO5wYRJcR4xBaQIyDKKhb987ERh4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=E3oGybFgZtJlcpFYB1nP9daP5Y7GT1NLQn5PqAFqpB3CfHPMzeogJn5RVK/rEkVmY
-	 QiKQGIIH0a2MrLhZknbavuqM/KVPneU4io5Mqq3iYgbBDZxape/5JmM67z/k2SZ+ik
-	 5DiBEPymTtxujlszDrYdWNNffNbT/sECvg+nuEepFb8uWFaDZrhhJEe62HN2ZnpI75
-	 fXlz/9VApoFedhxBm2OIqFMVa41/6wDZz90/VxCXzr/8grn7y0Y4i4I/9E2Y5NImGL
-	 8RzV51jPUa0fdTm0saXYA6KRygSE6G/YzvMrUYQtCsqikt2rVLSheXXM9DORj+UFbU
-	 tnZ35Bj1P1TSQ==
-From: =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Nick Kossifidis <mick@ics.forth.gr>,
-	linux-riscv@lists.infradead.org
-Cc: =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH fixes] riscv: Properly export reserved regions in /proc/iomem
-Date: Wed,  9 Apr 2025 20:21:27 +0200
-Message-ID: <20250409182129.634415-1-bjorn@kernel.org>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GXCyWM4u"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30beedb99c9so65078761fa.3;
+        Wed, 09 Apr 2025 11:22:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744222943; x=1744827743; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=w+j8lu1r0xwnw+RjG9AetU0PtQlqSbWDZeToiORrs0k=;
+        b=GXCyWM4uO3Fqdu9EWR0SkIfOlXAqzYliCwGjuKLx8k3+JjlXd9qgS5nvidv4E8aK1L
+         fbui3Yy/KZQH8TmTwWyBGq/GaFDvAHkCjxK4CB5tIsI8qMUmFy0UL+dUOhH5GP18fzLe
+         f30kjVoUlct35V54pglOWqWU2jgqkfA6PJ0OqYE2ehCe5SC72rkW8za9RUOUGFDDxtMs
+         +dyqrYAxDnNim3lKVb601QhBWKnELMgLBYjzJz8k0UAXmWi/1gxhCplVuiLgd1z4ll2B
+         CaNxhW7n7sdjXZBVD08vkXCvs8maqGwd6yYaFS+GK5ipO82Dglt1HhwPCpv9YNMZ8LpZ
+         uISw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744222943; x=1744827743;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=w+j8lu1r0xwnw+RjG9AetU0PtQlqSbWDZeToiORrs0k=;
+        b=kg8CgsbITsKN8bZoVP+TVxokZAZz/R+EtuQ9Bfu8HuctYh+FtoQVRHl/rW7bu2Nfh3
+         VLKIW5CehSmZbCA+uSVEj0Xm7PEp3Wh8GdalYBjRIwigm29lRPfueKNfRszdPfjaxpR0
+         4HwFHfZP1G7TBfaK+m3SpqxvsZxwmwMYT6oNfF/jt1rBye101IeFfjWDAzwMaGRF5/i2
+         Tm9xh+RqWMWgYWpwRNWH3XyvY22Cqu6xdyWi5+BKG3gzY1luJxgDHpmD49NFb2KXRNZS
+         129K1+aMLWjnqsYVmvmbcS4uCnJDZlZz8onlEIhBY3MgXqxmHPhDmHQ0sbPQ8f8MYHFK
+         VyXA==
+X-Forwarded-Encrypted: i=1; AJvYcCVDI8e8EL5trfq9C0iEB2qrBwoOJdd40IQSrbO8SZVORljWF+fD/mtUiEHuQKHtf7LVUI6xB+KVS0V/Oms=@vger.kernel.org, AJvYcCVyKP57Zr09kdTJo770v1TemUtt4En8ly8YhETpDI/VmJDOKu7Ky5Z6eo6SITymLsC8fjnI4y2BNiTlz7RgbQ==@vger.kernel.org, AJvYcCXEw5kuCh+hHhYtxJnywLYXNy9rOT0lS3qabc98P8GVvvgPCTn851d1knE/JFxX0+mTSasOmJ/RLMjv/h4o@vger.kernel.org
+X-Gm-Message-State: AOJu0YxD+p40+qPKEgiPWEBDBk8ysuoQ83TUDUruSD49DKC4kvb3WbMx
+	XXR1pLqQQlAAULebRT8mw30qlAnQQZUIaYdb4zDFgoa/M3+gFDByOaexsUSlTN+GlWTqqJVDhXK
+	UcGhRaJXGvOxopEVX8+imf1r+25M=
+X-Gm-Gg: ASbGncu/qwoKFfNetu2TRhrKeqLFnxGN+6k/xVme18HJ4hE0ad8BaQ9MbPrj0bVWkXa
+	0TbmKogyKR1enqXBM7JkHLdvmpSOD26ABSmg9v1fT8UbOyMGlmS7dRUC+X7PVgm9BVkdNfa54J0
+	Ge+aefgkT6ED4K0fSFRgKRiQ==
+X-Google-Smtp-Source: AGHT+IFsB9benurawG81+pvnZhZj9jumXPvVrvbkEkLVqi891fTMsPJbJSjcP8kZ9f0nWfiqMJ2a0Hmv4Nd8ZMIVsAo=
+X-Received: by 2002:a05:651c:1b11:b0:30a:448a:467 with SMTP id
+ 38308e7fff4ca-30facc1fae8mr199711fa.21.1744222943258; Wed, 09 Apr 2025
+ 11:22:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250404102535.705090-1-ubizjak@gmail.com> <CAK7LNATO1RfACvWhHJuLi-FYWMnSn6+Tp67-EZtVWNk+RCSTVQ@mail.gmail.com>
+ <CAFULd4bx9BGKo_4kn14rsVr44otpdjpjn_o6=zMp8iu98f9Upg@mail.gmail.com>
+ <CAK7LNATnactfA2U0CB2VcoE1eDc+bj=Jjye-Khsc3xG-iZ2XVQ@mail.gmail.com>
+ <CAFULd4b25r5wf31DJputSOZhhMTrejQ_3-2P5rpeOL8H=4_mcA@mail.gmail.com>
+ <CAK7LNAQVbwnnX5TJLmEShtmUtLCwr=rnZgwX9NoAke+PqzsqiA@mail.gmail.com>
+ <CAFULd4b2azU-oBOTTXgQ6ahkVeYWHTJrnmJ97vtLm3P6jMOeug@mail.gmail.com>
+ <20250409152812.GGZ_aSDEaLEOVUf3YX@fat_crate.local> <CAFULd4avYC6V=-ewBcTGHA5GjuTBh++-wLNOH=M68u1rwNsAmg@mail.gmail.com>
+ <20250409153819.GHZ_aUayZlfOd7TTq4@fat_crate.local>
+In-Reply-To: <20250409153819.GHZ_aUayZlfOd7TTq4@fat_crate.local>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Wed, 9 Apr 2025 20:22:11 +0200
+X-Gm-Features: ATxdqUE-C1Kv9b5K2r0cnaqqZQfpFR1Cncv9OTwGH9yN-dFDPcpf4fvukunwpnc
+Message-ID: <CAFULd4Y=BbAwrQdCY5sO8WuUo1wi4h-BiqywoKBu50ir6f_XHw@mail.gmail.com>
+Subject: Re: [PATCH] compiler.h: Avoid the usage of __typeof_unqual__() when
+ __GENKSYMS__ is defined
+To: Borislav Petkov <bp@alien8.de>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, linux-modules@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Paul Menzel <pmenzel@molgen.mpg.de>, Sami Tolvanen <samitolvanen@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Björn Töpel <bjorn@rivosinc.com>
+On Wed, Apr 9, 2025 at 5:38=E2=80=AFPM Borislav Petkov <bp@alien8.de> wrote=
+:
+>
+> On Wed, Apr 09, 2025 at 05:32:39PM +0200, Uros Bizjak wrote:
+> > The workaround is posted to the list. It should be committed to the
+> > mainline until genksyms is fixed.
+>
+> I'll take it through tip.
 
-The /proc/iomem represents the kernel's memory map. Regions marked
-with "Reserved" tells the user that the range should not be tampered
-with. Kexec-tools, when using the older kexec_load syscall relies on
-the "Reserved" regions to build the memory segments, that will be the
-target of the new kexec'd kernel.
+Thanks!
 
-The RISC-V port tries to expose all reserved regions to userland, but
-some regions were not properly exposed: Regions that resided in both
-the "regular" and reserved memory block, e.g. the EFI Memory Map. A
-missing entry could result in reserved memory being overwritten.
-
-It turns out, that arm64, and loongarch had a similar issue a while
-back:
-
-  commit d91680e687f4 ("arm64: Fix /proc/iomem for reserved but not memory regions")
-  commit 50d7ba36b916 ("arm64: export memblock_reserve()d regions via /proc/iomem")
-
-Similar to the other ports, resolve the issue by splitting the regions
-in an arch initcall, since we need a working allocator.
-
-Fixes: ffe0e5261268 ("RISC-V: Improve init_resources()")
-Signed-off-by: Björn Töpel <bjorn@rivosinc.com>
----
- arch/riscv/kernel/setup.c | 36 +++++++++++++++++++++++++++++++++++-
- 1 file changed, 35 insertions(+), 1 deletion(-)
-
-diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
-index c174544eefc8..f7c9a1caa83e 100644
---- a/arch/riscv/kernel/setup.c
-+++ b/arch/riscv/kernel/setup.c
-@@ -66,6 +66,9 @@ static struct resource bss_res = { .name = "Kernel bss", };
- static struct resource elfcorehdr_res = { .name = "ELF Core hdr", };
- #endif
- 
-+static int num_standard_resources;
-+static struct resource *standard_resources;
-+
- static int __init add_resource(struct resource *parent,
- 				struct resource *res)
- {
-@@ -139,7 +142,7 @@ static void __init init_resources(void)
- 	struct resource *res = NULL;
- 	struct resource *mem_res = NULL;
- 	size_t mem_res_sz = 0;
--	int num_resources = 0, res_idx = 0;
-+	int num_resources = 0, res_idx = 0, non_resv_res = 0;
- 	int ret = 0;
- 
- 	/* + 1 as memblock_alloc() might increase memblock.reserved.cnt */
-@@ -193,6 +196,7 @@ static void __init init_resources(void)
- 	/* Add /memory regions to the resource tree */
- 	for_each_mem_region(region) {
- 		res = &mem_res[res_idx--];
-+		non_resv_res++;
- 
- 		if (unlikely(memblock_is_nomap(region))) {
- 			res->name = "Reserved";
-@@ -210,6 +214,9 @@ static void __init init_resources(void)
- 			goto error;
- 	}
- 
-+	num_standard_resources = non_resv_res;
-+	standard_resources = &mem_res[res_idx + 1];
-+
- 	/* Clean-up any unused pre-allocated resources */
- 	if (res_idx >= 0)
- 		memblock_free(mem_res, (res_idx + 1) * sizeof(*mem_res));
-@@ -221,6 +228,33 @@ static void __init init_resources(void)
- 	memblock_free(mem_res, mem_res_sz);
- }
- 
-+static int __init reserve_memblock_reserved_regions(void)
-+{
-+	u64 i, j;
-+
-+	for (i = 0; i < num_standard_resources; i++) {
-+		struct resource *mem = &standard_resources[i];
-+		phys_addr_t r_start, r_end, mem_size = resource_size(mem);
-+
-+		if (!memblock_is_region_reserved(mem->start, mem_size))
-+			continue;
-+
-+		for_each_reserved_mem_range(j, &r_start, &r_end) {
-+			resource_size_t start, end;
-+
-+			start = max(PFN_PHYS(PFN_DOWN(r_start)), mem->start);
-+			end = min(PFN_PHYS(PFN_UP(r_end)) - 1, mem->end);
-+
-+			if (start > mem->end || end < mem->start)
-+				continue;
-+
-+			reserve_region_with_split(mem, start, end, "Reserved");
-+		}
-+	}
-+
-+	return 0;
-+}
-+arch_initcall(reserve_memblock_reserved_regions);
- 
- static void __init parse_dtb(void)
- {
-
-base-commit: a24588245776dafc227243a01bfbeb8a59bafba9
--- 
-2.45.2
-
+Best regards,
+Uros.
