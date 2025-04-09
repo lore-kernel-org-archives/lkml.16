@@ -1,148 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5F1D270EBF;
-	Wed,  9 Apr 2025 17:10:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16A1C1BF33F
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 17:11:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744218619; cv=none; b=HJJ+h2rKd5/WspYj+6/WfpyJz2T4D7jOS7b9Q8hA5q1LII4xF8bEqmjctmNSLPqLH+BvgZleUCgdqCz4N/5TSKdhu8HlwyY4SLFhbqOPJ/euQmHgGLIXgZVvPKifuZLEZH+E/NvKk2Z+SnIT3XoeAbwv2fGmqzXxtnPozdKvYUQ=
+	t=1744218685; cv=none; b=oKO4+hGTr5y3tkIkNSUak0G7jrBdO7gKRSdAnaV+50xwUXowRe9fItAzl9CNO4U9uy4pGaf+wr3eTWVqzy0xox0ZaR1UNGBEaTMfSkUIr3SfSewKdN77Jmc+x+4N7NqobEK5epqm+uJ5ch7VkVqUSh3UNRGxRgp2ksIlNNLh+HE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744218619; c=relaxed/simple;
-	bh=cAQwVlXf7+CjPLnuPwVGgRDY9ncDHb1puhcdzHnY0jY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jOQbuN0gkJhbivQHZW1/LG1eXQM/KVJyF62lP0gwtR5cYqPMadotQd58/uwSbDXWzj+tyfxly7JyDSG3l+pa+jcc4Jrin0QiIkb1zJUbMXD7fLrOFHFQAKdFP9Boytu0BLXy9olh1gLq70Rbs+H5Jfo1yHwRxXtY/0KQq38YtJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ovq1dc1I; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744218685; c=relaxed/simple;
+	bh=GvLrVaMRk+XztBY+J4lQJ8LE4ym2Z2YVwwwap4Cnt74=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VIYURq3zbbM67gh2PM4eMioC+eWlYfsyRUYm0JAro7AyMwdpXK+G8ALgUm99XaOmP9zR6G50/PtyCd9VjRaaptQuhqRbU3Wc30SmOJci9cuKEQrQY9UYQSSjBOU0O1yaY+qzryectEd8g91Ggsf7xu01SaEjmsZRLUZvGc5I9D4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j7iT+15Z; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ovq1dc1I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C601C4AF0B;
-	Wed,  9 Apr 2025 17:10:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744218618;
-	bh=cAQwVlXf7+CjPLnuPwVGgRDY9ncDHb1puhcdzHnY0jY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Ovq1dc1IXAl5wnc9ryHVYFDKGcsVmLts9fdhHxRd6Ws8T5QKCvKmR7LKHn5l+zlbu
-	 x4Arzznvq6P+X5kbPB2XgQQwiQnmInizm6I4RF9aLofbJ8AvKSoOHxAJxZet9U3zH/
-	 d3rUtnBvtvX87CFu9D31IQd4NUkTEPgs5/XivyzKTtfxpeEP7DW92lD18Dk0voOsen
-	 2VQdXPuQWZhUJpSp2xilMss32k6mfkVcFTNj5zg0dBylCElIpBN3wz+74cDt3E35Sm
-	 gaf/vF5ywRmKIodBboG2VjREIsD5FNI6dccSzg5xmmDB51XgrxLU/9JPjjRV6Yt3O7
-	 AnEketpdYnnmg==
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-2c7f876b321so2190276fac.1;
-        Wed, 09 Apr 2025 10:10:18 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUvXz0SyhbDjXjwyYRKFVZM1Auun3RgQEgzFxGr/+aexioRPf+QiGLieC31lmBqT0b9iqbun+wWpQgHGFR1@vger.kernel.org, AJvYcCXTkEDr6DizXVuRfl4CM19Xgkz8kWlKpYaGJBmCyMg+qRtcDiaNbDjjyVtMCDjmIV4Da8RRZEYQlJw=@vger.kernel.org, AJvYcCXkx/RvTiFUIQeiNtoX1gGFMs3Kp1tpxe3ZPUuG7XoZ9PH9jGRFRwpRmn0v54eKBTnj6gOR15fPOCgb@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmYVsxio7HxGkjkGiQLvCkDy0S/uKocDU+A+BTJ89EmpffWM4h
-	ymdOf8vf5EVr6og5af/cDlHuHtP6RG5ZOYYiD+fx0w2Y7V5fHEfTlheNQTEmjxd6gW9Sadqxqca
-	ZEvQpnOWs9ULlf4i7EHyuv3ms1uY=
-X-Google-Smtp-Source: AGHT+IE1HcaprfbES+AEj26IYVhioa7kyOAsoqMrfIDfQQwSe2RuMsl/a8oiE9RCn4sEC+kDDYA6hgAtGjfVmjvNbho=
-X-Received: by 2002:a05:6870:ab0d:b0:2c2:2f08:5e5b with SMTP id
- 586e51a60fabf-2d0917bb20cmr1802929fac.13.1744218617585; Wed, 09 Apr 2025
- 10:10:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j7iT+15Z"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-224341bbc1dso64011285ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 10:11:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744218683; x=1744823483; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ljY6ET4Gs1ZLwfHwkM4Df+UpKJ+L4lbBmw0jsIJyzxc=;
+        b=j7iT+15ZjwLPnZQlN/HiAyVOvz36GFv5qvFJLX+skPmziZ3L2cOwY0BPjV2aryk0Xk
+         Lue6gt1n1EfA2BIFh+hVCKXz+1+FxQz0fUlbSFf7LZXUkUipXcaYXYwwFGfJoPzLAwEk
+         A3PD+uFUfALy/IlYoHPC0xIp8EEkKTVMdCqCsLzikgXo1PQrWPzDqe1IwwD8e92ZYywS
+         EhW1ALnmoV0XsXHRJKFpGKtUBytXXQNIr2to0ICpf3c+VSsZhomcEda8VAzdsZMVo3T3
+         9Nw2DuGD1uIhAmhxxrc7rwQCD1gCF+fKWqK+PtdWuCgOf8Ew7TwnoNCIWtv36Js50ph6
+         D7BA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744218683; x=1744823483;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ljY6ET4Gs1ZLwfHwkM4Df+UpKJ+L4lbBmw0jsIJyzxc=;
+        b=D4OpUW60xmjWs7XSuHVgrQo6e/cb+VW7TjWIiuyKA+IKpTgPp4QdVL4w53X39uS/l0
+         SXg/qzPW+TVTT9VYxhkmFO8ddTAXsS5rNjUoGIAv9NSYNo0CcSB4xRP1YwZGbpIPhZUp
+         5kMx0puFCUNgqMIsA2pThKa1NgcI8cqVW6CJTTfobhjV/5/QgJege6B1ql5VTnrmtfaO
+         ou+1AxdRe1SmtrwlQvPSVCIPLXcY33HDGZ2lwiv9k8rU9YGqr6c3qPceUA+UjaaI8vLf
+         dtFOPMd2UJ9uNhYs/fO2s5P5D5ZIpyyiXEF616A0ow4sOmkJ5Hs/e8ql1WwqKRYohBnd
+         w+wA==
+X-Forwarded-Encrypted: i=1; AJvYcCV+rtlbTo71MTn0ujrkrwH4OMpovfS33bl+q1DB9r9ssSaHm7bCk8aqgTYJ1mxZpsatsItNS7oA2iD1Mfw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxl/7jOLEjAV5L+xP3OXNbhDQyCQ8iuzZttv5yZbLGMjK10ZuSA
+	t1RHqj6Vixpxph8h8YARsDx+atDyFKAMOBnYcbilMGyEppXzmeWk
+X-Gm-Gg: ASbGncv0AoR4eRpICUmYcVH7LsPRzC/pZVPbDPNpJVY9B7tvzZDJrR3DygaDq0R+CfY
+	XQmAXj45IIqXmNj7yNSX+8f2NCwIXAFbASBgkIWZDVDAr8u6991kawS3SrWrx5V/cSzG1QCCWtf
+	giIioTYZ/j89Ix7K4W0OgkAbuJYNKaM4qwttIqG556WlO7YDy5ZAXQt9SB4oPhzIt4e8KeFJZVG
+	CWl+SDYqUR/Hg2qQ+sUOplK8pBN9PO7NZXdXn8IJXht7xctnEVRA29JkdzslvRjZvkmUx97dhZ7
+	dVEfQ4SnC5A6nYGxVl6wj7YP8GZxeF24IwK3IxHLv4LGfQ==
+X-Google-Smtp-Source: AGHT+IFN4lnjAG2pC86AigCdhe18+t7czfJrLdV8seqNXHVt3C/GgPo7KXAmU0xU0Lhj1qng6dfQLg==
+X-Received: by 2002:a17:902:e80f:b0:220:ff3f:6cc0 with SMTP id d9443c01a7336-22ac2a1df0bmr56410235ad.38.1744218683140;
+        Wed, 09 Apr 2025 10:11:23 -0700 (PDT)
+Received: from eleanor-wkdl.. ([140.116.96.203])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b8bcd7sm14659015ad.88.2025.04.09.10.11.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 10:11:22 -0700 (PDT)
+From: Yu-Chun Lin <eleanor15x@gmail.com>
+To: vgupta@kernel.org
+Cc: linux-snps-arc@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	jserv@ccns.ncku.edu.tw,
+	visitorckw@gmail.com,
+	Yu-Chun Lin <eleanor15x@gmail.com>
+Subject: [PATCH] ARC: unwind: Use built-in sort swap to reduce code size and improve performance
+Date: Thu, 10 Apr 2025 01:11:16 +0800
+Message-ID: <20250409171116.550665-1-eleanor15x@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250409065703.1461867-1-zhenglifeng1@huawei.com> <20250409065703.1461867-3-zhenglifeng1@huawei.com>
-In-Reply-To: <20250409065703.1461867-3-zhenglifeng1@huawei.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 9 Apr 2025 19:10:06 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0is5YXxqHDAC4Ki44U9mwDH3KvW0=JmFYS-25QwKYDR1A@mail.gmail.com>
-X-Gm-Features: ATxdqUEZY7ZSPbkwrXMr4u7_twpdladBp3zkPIRv7P3Mi7CxPU_yAnM6-yPmvM4
-Message-ID: <CAJZ5v0is5YXxqHDAC4Ki44U9mwDH3KvW0=JmFYS-25QwKYDR1A@mail.gmail.com>
-Subject: Re: [PATCH v6 2/8] ACPI: CPPC: Optimize cppc_get_perf()
-To: Lifeng Zheng <zhenglifeng1@huawei.com>
-Cc: rafael@kernel.org, lenb@kernel.org, robert.moore@intel.com, 
-	viresh.kumar@linaro.org, mario.limonciello@amd.com, gautham.shenoy@amd.com, 
-	ray.huang@amd.com, perry.yuan@amd.com, pierre.gondois@arm.com, 
-	acpica-devel@lists.linux.dev, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linuxarm@huawei.com, 
-	jonathan.cameron@huawei.com, zhanjie9@hisilicon.com, lihuisong@huawei.com, 
-	cenxinghai@h-partners.com, hepeng68@huawei.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 9, 2025 at 8:57=E2=80=AFAM Lifeng Zheng <zhenglifeng1@huawei.co=
-m> wrote:
->
-> Optimize cppc_get_perf() with three changes:
->
-> 1. Change the error kind to "no such device" when pcc_ss_id < 0, as other
-> register value getting functions.
->
-> 2. Add a check to verify if the register is supported to be read before
-> using it. The logic is:
->
-> (1) If the register is of the integer type, check whether the register is
-> optional and its value is 0. If yes, the register is not supported.
->
-> (2) If the register is of other types, a null one is not supported.
->
-> 3. Return the result of cpc_read() instead of 0.
->
-> Reviewed-by: Pierre Gondois <pierre.gondois@arm.com>
-> Signed-off-by: Lifeng Zheng <zhenglifeng1@huawei.com>
-> ---
->  drivers/acpi/cppc_acpi.c | 21 ++++++++++++++-------
->  1 file changed, 14 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
-> index 39f019e265da..2f789d3b3cad 100644
-> --- a/drivers/acpi/cppc_acpi.c
-> +++ b/drivers/acpi/cppc_acpi.c
-> @@ -1201,20 +1201,29 @@ static int cppc_get_perf(int cpunum, enum cppc_re=
-gs reg_idx, u64 *perf)
->
->         reg =3D &cpc_desc->cpc_regs[reg_idx];
->
-> +       if (reg->type =3D=3D ACPI_TYPE_INTEGER ?
-> +           (IS_OPTIONAL_CPC_REG(reg_idx) && !reg->cpc_entry.int_value) :
-> +           IS_NULL_REG(&reg->cpc_entry.reg)) {
+The custom swap function used in sort() was identical to the default
+built-in sort swap. Remove the custom swap function and passes NULL to
+sort(), allowing it to use the default swap function.
 
-Please avoid using the ternary operator in any new kernel code.
+This change reduces code size and improves performance, particularly when
+CONFIG_MITIGATION_RETPOLINE is enabled. With RETPOLINE mitigation, indirect
+function calls incur significant overhead, and using the default swap
+function avoids this cost.
 
-Why not write it this way
+$ ./scripts/bloat-o-meter ./unwind.o.old ./unwind.o.new
+add/remove: 0/1 grow/shrink: 0/1 up/down: 0/-22 (-22)
+Function                                     old     new   delta
+init_unwind_hdr.constprop                    544     540      -4
+swap_eh_frame_hdr_table_entries               18       -     -18
+Total: Before=4410, After=4388, chg -0.50%
 
-if ((reg->type =3D=3D ACPI_TYPE_INTEGER && IS_OPTIONAL_CPC_REG(reg_idx)
-    && !reg->cpc_entry.int_value) || (reg->type !=3D ACPI_TYPE_INTEGER &&
-    IS_NULL_REG(&reg->cpc_entry.reg)) {
+Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
+---
+Compile test only
 
-> +               pr_debug("CPC register is not supported\n");
-> +               return -EOPNOTSUPP;
-> +       }
-> +
->         if (CPC_IN_PCC(reg)) {
->                 int pcc_ss_id =3D per_cpu(cpu_pcc_subspace_idx, cpunum);
->                 struct cppc_pcc_data *pcc_ss_data =3D NULL;
-> -               int ret =3D 0;
-> +               int ret;
->
-> -               if (pcc_ss_id < 0)
-> -                       return -EIO;
-> +               if (pcc_ss_id < 0) {
-> +                       pr_debug("Invalid pcc_ss_id\n");
-> +                       return -ENODEV;
-> +               }
->
->                 pcc_ss_data =3D pcc_data[pcc_ss_id];
->
->                 down_write(&pcc_ss_data->pcc_lock);
->
->                 if (send_pcc_cmd(pcc_ss_id, CMD_READ) >=3D 0)
-> -                       cpc_read(cpunum, reg, perf);
-> +                       ret =3D cpc_read(cpunum, reg, perf);
->                 else
->                         ret =3D -EIO;
->
-> @@ -1223,9 +1232,7 @@ static int cppc_get_perf(int cpunum, enum cppc_regs=
- reg_idx, u64 *perf)
->                 return ret;
->         }
->
-> -       cpc_read(cpunum, reg, perf);
-> -
-> -       return 0;
-> +       return cpc_read(cpunum, reg, perf);
->  }
->
->  /**
-> --
+ arch/arc/kernel/unwind.c | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
+
+diff --git a/arch/arc/kernel/unwind.c b/arch/arc/kernel/unwind.c
+index d8969dab12d4..789cfb9ea14e 100644
+--- a/arch/arc/kernel/unwind.c
++++ b/arch/arc/kernel/unwind.c
+@@ -241,15 +241,6 @@ static int cmp_eh_frame_hdr_table_entries(const void *p1, const void *p2)
+ 	return (e1->start > e2->start) - (e1->start < e2->start);
+ }
+ 
+-static void swap_eh_frame_hdr_table_entries(void *p1, void *p2, int size)
+-{
+-	struct eh_frame_hdr_table_entry *e1 = p1;
+-	struct eh_frame_hdr_table_entry *e2 = p2;
+-
+-	swap(e1->start, e2->start);
+-	swap(e1->fde, e2->fde);
+-}
+-
+ static void init_unwind_hdr(struct unwind_table *table,
+ 			    void *(*alloc) (unsigned long))
+ {
+@@ -345,7 +336,7 @@ static void init_unwind_hdr(struct unwind_table *table,
+ 	sort(header->table,
+ 	     n,
+ 	     sizeof(*header->table),
+-	     cmp_eh_frame_hdr_table_entries, swap_eh_frame_hdr_table_entries);
++	     cmp_eh_frame_hdr_table_entries, NULL);
+ 
+ 	table->hdrsz = hdrSize;
+ 	smp_wmb();
+-- 
+2.43.0
+
