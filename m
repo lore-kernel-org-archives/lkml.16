@@ -1,121 +1,70 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D6BA26B955;
-	Wed,  9 Apr 2025 16:30:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EACC01C84AA
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 16:30:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744216217; cv=none; b=ksWegQMRVdgumRlOqI8/OM9+kcZ6U4HvnNd6oGJsA4xfOV/dEmltNcsS8MmLLLRNtuF1GgcsSEGLW9pvBUD3hdiatWjjpwCBsVlSV+fI+yC2aXwKKh1Tdgouu7LbdLlfVuyNqrH8qvBuPOog8X2G6z7XEZ39Fy1JIuCX38Vaq3A=
+	t=1744216247; cv=none; b=EnsW/p1HdcpzJIVf0wsYp6KEGl7fPeJuhiqhgP5nE5lzFkomExpemUCjSg5mdXX8uQtY+QPaD4EkPETKlByw0lzp8zAbM4DWyAe0S1HPDMPyYDn+DEvLMy8OS5iwsmYZF3bVl09aI6AsvwklvsWyPVeKVYesJ0N+VbsFfydy2vE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744216217; c=relaxed/simple;
-	bh=i6SRLhtvN2maXi2hWslCEBU8ghY7zgrpV96NRr8npBI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rp2purO8mNL1GCRtLVtBeXolQ+8bHRhRe4b2Ql2hh7rKiW29f3PPVy9eDswH3FtBw09xA4j9vVvRmPsa5ZL0n8s9xlhebbsxHzkZVTO6JDo+AsgytbsleRjd1ZNKc+Z7fIXzEO1GY+ZDbWDJPNvCxypHQfd9mz0wmtwiv0Gt8jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=nuLZJt/o; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1744216247; c=relaxed/simple;
+	bh=Q/X+FN87AaEgSDHEwiiw1dU3MDuO+kYIqxnG/MeEXh8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=knWdtu6BQg2NrLDLb8shD75+2Unb2ksj/bVRMkPYjj/mBBVVghXTSnV72vncMkdq14s21mBW+/vqV+G9lVQUsR5JaUEVmQcxtemIB6pmQxG02njS7QFvQ50EGce+ahoOBqjQ71cYaggfmEuZgs2/7GPu69KAqRcKqBqWJpeHESU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=Mmiq4Hv3; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="nuLZJt/o"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=T3a3+8TqrHaUFYu63rI92mX0/x/Q+BzbMPWgEExVc8c=; b=nuLZJt/o43stOD9pHO2Un3mbKY
-	a6tA1QXjeWa3Hu/qQQjO5S4Tczw08upKS/fNroVsb0H/Rb2yVYYKjLFXSLxNscBwKi9z7Qjglkokc
-	nQSH9O1SrctoxxETcn4UmjxAt0mMm/yxwTi/kidtbKoEflMitCXqUq+QEMqnbpDtEir8=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u2YJL-008Zfd-T6; Wed, 09 Apr 2025 18:29:59 +0200
-Date: Wed, 9 Apr 2025 18:29:59 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-	Andrei Botila <andrei.botila@oss.nxp.com>,
-	Sabrina Dubroca <sd@queasysnail.net>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Eric Woudstra <ericwouds@gmail.com>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [net-next PATCH v6 5/6] net: phy: Add support for Aeonsemi
- AS21xxx PHYs
-Message-ID: <29bbd0c3-a64d-4aef-a0b2-5ec4999ff7e1@lunn.ch>
-References: <20250407200933.27811-1-ansuelsmth@gmail.com>
- <20250407200933.27811-6-ansuelsmth@gmail.com>
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="Mmiq4Hv3"
+Received: from wse-pc.fritz.box (host-88-217-226-44.customer.m-online.net [88.217.226.44])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPA id C73C52FC0050;
+	Wed,  9 Apr 2025 18:30:33 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1744216234;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=cNCf3IuAjyApDX/6a4t81bLCKE7aJ1LuEin2d7+4gNE=;
+	b=Mmiq4Hv3lSTucmEFxCstErkmcb31wuADE8bC0TYAdXtNwb7uW1iN5ehQgQliIWBtf35qxR
+	iwKuS3rlwb3eWoXX8UXLQNkwFzkfJhSDXZ++/7woGdfQ76tMNafMlU8KVtXyKVOKq3rICp
+	G14RB+RbCG/epTWizptPWZaw5zzDhGE=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+From: Werner Sembach <wse@tuxedocomputers.com>
+To: harry.wentland@amd.com,
+	sunpeng.li@amd.com,
+	siqueira@igalia.com,
+	alexander.deucher@amd.com,
+	christian.koenig@amd.com,
+	airlied@gmail.com,
+	simona@ffwll.ch
+Cc: amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Werner Sembach <wse@tuxedocomputers.com>
+Subject: [PATCH 0/1] drm/amd/display: Add quirk to force backlight type on some TUXEDO devices
+Date: Wed,  9 Apr 2025 18:26:59 +0200
+Message-ID: <20250409163029.130651-1-wse@tuxedocomputers.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407200933.27811-6-ansuelsmth@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-> +static int aeon_ipc_get_fw_version(struct phy_device *phydev)
-> +{
-> +	u16 ret_data[8], data[1];
-> +	u16 ret_sts;
-> +	int ret;
-> +
-> +	data[0] = IPC_INFO_VERSION;
-> +	ret = aeon_ipc_send_msg(phydev, IPC_CMD_INFO, data,
-> +				sizeof(data), &ret_sts);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = aeon_ipc_rcv_msg(phydev, ret_sts, ret_data);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	phydev_info(phydev, "Firmware Version: %s\n", (char *)ret_data);
+This is a quirk we currently manually apply via our installer, but we don't
+have this exact device + panel configuration in our archive anymore so I
+could only test the qurik moking in other ids.
 
-Maybe don't trust the firmware to return a \0 terminated string?
+Werner Sembach (1):
+  drm/amd/display: Add quirk to force backlight type on some TUXEDO
+    devices
 
-> +static int as21xxx_match_phy_device(struct phy_device *phydev,
-> +				    const struct phy_driver *phydrv)
-> +{
-> +	/* Sync parity... */
-> +	ret = aeon_ipc_sync_parity(phydev, priv);
-> +	if (ret)
-> +		goto out;
-> +
-> +	/* ...and send a third NOOP cmd to wait for firmware finish loading */
-> +	ret = aeon_ipc_noop(phydev, priv, &ret_sts);
-> +	if (ret)
-> +		goto out;
-> +
-> +out:
-> +	mutex_destroy(&priv->ipc_lock);
-> +	kfree(priv);
-> +
-> +	/* Return not maching anyway as PHY ID will change after
-> +	 * firmware is loaded. This relies on the driver probe
-> +	 * order where the first PHY driver probed is the
-> +	 * generic one.
-> +	 */
-> +	return ret;
-> +}
+ .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 32 ++++++++++++++++++-
+ 1 file changed, 31 insertions(+), 1 deletion(-)
 
-This is not obvious. ret is either an error code, and we want to
-return it. Or it is 0 because aeon_ipc_noop() returned 0 on success.
-But the code then turns that 0 success into a false, does not match.
-I think this last bit needs commenting on.
-
-With those two fixed, you can add my Reviewed-by:
-
-    Andrew
-
----
-pw-bot: cr
+-- 
+2.43.0
 
