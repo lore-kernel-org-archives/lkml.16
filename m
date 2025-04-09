@@ -1,132 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DE1426B955;
-	Wed,  9 Apr 2025 14:48:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6894426B955;
+	Wed,  9 Apr 2025 14:48:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744210083; cv=none; b=YG93QKwSYhywPZ6l4m6W0sNtDgz1CZvGJkRQPTY9MDC9/Xf/zHAA41PwipidOdyrgWWjm5ArTIEb3Q5DGmdF/kpYbnbLQVdpZjkJ/OO2vZYre/fzH6MxDZLRXfiIovvXOmL8SxIGIR4hcCS7AYLsOLyu2R0Pf7w184o6EZK5lGw=
+	t=1744210087; cv=none; b=IxYYZIJ0JZ7mtaH1rpT6Pd/e7y6/mV1k1eLlP+dCsnFvzIdkwSqSBYUJB6cbEXQ7iGnYNqYcqsCzlDUuhRI2yn+8W5czxkB8j+Et7Gs39oEpF8zuLDHyTUcj6GkrnAiduh/uk7B7R3yG5wnTKT+hIwrhT6NDyQwje3OV/pUKolM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744210083; c=relaxed/simple;
-	bh=DA0MsBAv7mSBKJfJZoGs6FR9UBhabwdVtyUhzknmeLQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=P2qOK7fAuB4klpSf2xQgjcjqguWw/xvBF55zMI8DyT/sCVIzatfe/2SJXMjR7dqUwoNYiWsOu7Ntk/88GSUr7NWu+pk0uBfhBP3r7Mbp398yk5sMLbNPr+iRyuypBYoURpKM0Wlx/XQ+wz1e3/AeZakAr8pViRjmeB8oIvOvD2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NIBMslPg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744210087; c=relaxed/simple;
+	bh=t+sfbVV4SiI1C5sy+DzovZKb19HUWpMy4SsLijVQ49c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OFkTtoGg442mM0sdyeZENiVbXWMNfcDFo/Tnnhs4sbnYX5KChum3Q5ZsXtg+v5oxy7ZCeccBzR8PYXHEEzrolVGwtN8cVQbC8PrB6EI2ptYKCsLaz9xS8x5i5T+iXwn+OjtLvJ6rX8XswsWELZZ2d6fLzz3LrIuE9vmakr59jd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cciwX0UF; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NIBMslPg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8594FC4CEEC;
-	Wed,  9 Apr 2025 14:47:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744210082;
-	bh=DA0MsBAv7mSBKJfJZoGs6FR9UBhabwdVtyUhzknmeLQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=NIBMslPg5t+nzDSNBdQt0IvPeAs0rJiY2u61m4prx6ZmA8wEYAU9TYXWhjJr2iyvD
-	 MfM5gNaiHl0O4Yjk5UcBDB7ncfTlYC5UGHKeFIxsug0O4C2uZNQslz7sPI/dx/noXi
-	 Zn0uBkkmWfnRmrhrEhyPDlqDH/7l2tCg7tZgGMKEupHMzjAJiWsTTWPLaot/gEdFky
-	 WvvfQwFYTxU9rvg89pCvrUY7Zl14FItOlwprTBgC8+Og0mI93G785V/CFkPiTCM20A
-	 F4wyOmY3d11WtTTDjzyo+urwIPpSO9cgY66xQjaJXLsMLz2Ah97+ldpqYp08C8riGF
-	 0Vchk7fAZhIag==
-From: Konrad Dybcio <konradybcio@kernel.org>
-Date: Wed, 09 Apr 2025 16:47:31 +0200
-Subject: [PATCH 3/4] drm/msm/a6xx: Get HBB dynamically, if available
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cciwX0UF"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-af9b16eca8eso518950a12.1;
+        Wed, 09 Apr 2025 07:48:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744210086; x=1744814886; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=t+sfbVV4SiI1C5sy+DzovZKb19HUWpMy4SsLijVQ49c=;
+        b=cciwX0UFJGTqX3vXA9nesJlMBhMI470VasEMnE2vjaMK32Wl9IjmMaC/XANqJbAQJh
+         Rn1x4DX0pt5VHoiZo7b7Riuitqn2jdHgUu8E2/R6qUeaIxUiNYVvoQ60hxsJod7Ir8zt
+         z6NUSiTn4zOUcZqphwaUr6dUCHriRGrX/swMCFODXmrKCwcjDFcwcEfj7XcMfI76GRhE
+         SkrVBoF1BcSsb4k3Jg8KehxXwYRknr33k/pqerSAQSSAaGqOhJoODhLWKmBVMsT6XiZ2
+         Hxu24qZhjhbzoQ60jhN0B2kGm38X1exvmFUa9d9Upguc9gSNzI3Nok2DnoI3najAdwEs
+         CkAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744210086; x=1744814886;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=t+sfbVV4SiI1C5sy+DzovZKb19HUWpMy4SsLijVQ49c=;
+        b=nFyn3pQDwIFRUFy2sWP5aYW8i3jqlXaYRAip+seyNtstk2OsA/FKLB3emFjCjPgpuL
+         GZNBK8ziVGN2/P83Jkq43ufH2z4L4xgN8+5QpN9RxCzyNpMAoyLytmOXhYCQ9Li41m4S
+         ndogGCfHkpQlW4fACNhc0sL89nizfC0vC2jPnDS+jDUnQFmA8ICn4WNEQS9740TIIkH6
+         YM+ys2w3kJZXdhXb6LX+fg4jcCDea5PtfXlobxyVbNwDk4qdBTu9aDBQJhsBNpaFrQdK
+         XgESmm0rKC2zII4oi5FeiALqqLj3nhn4wyPAXce9o2gW1/DQh8S3bByDfqcUCEa3oTPC
+         6koQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVJy5yNS3ie9veFhwrKzjj9e5BcqEKDotBCS4adG1adut56WHEWzq/fjDIZGVuw3RN0uEbth+ZrO+EPaKpD9Sg=@vger.kernel.org, AJvYcCXeCUSVbwoCHl8nsqFJMLy1PrTUrOQIHOeb+b3csLwNPa4cE/I+j7auY7Q41hdSl2NAheaBvKZO3IDdt9I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMFkHDjb3YH8so/Ti+VymbpnxJPetgGWoExeuDQDck1ElX5ndb
+	6TM9Xn6NO7Egd2O1G4LQ4/oOiBzYskGmzqbGs/QEvLbZsiZ0yeE6kNzBcpgYusKkat8AhoMsZPj
+	33XmsSLfeH3ZmsVOFMg90ELj50a4=
+X-Gm-Gg: ASbGncvmeedRi5P/TyCsnGIyMWOZ+bfL5Yel7T90NLQy1TTqr5Tn0gx1PKe7wP30+Fi
+	tod5Rih6yA/DJvBdMQAluNTQ3iGERbqWC8mgbylwEgr07JFHMk7fDf49L5Om9yacsYFmVStaOmj
+	WqFu203ympFQrJdOIqe9bXaGoEzBYEFRcA
+X-Google-Smtp-Source: AGHT+IFu3m+E2XPPJm9CpPYU0T8chUkLDG5jm5xrgDt4moQJnQIHZ/KUoOKRsStmjsw1fnexQET8vOP2opD9TB+qELU=
+X-Received: by 2002:a17:902:db0d:b0:224:10a2:cad1 with SMTP id
+ d9443c01a7336-22ac3f13978mr17062085ad.10.1744210085546; Wed, 09 Apr 2025
+ 07:48:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250409-topic-smem_dramc-v1-3-94d505cd5593@oss.qualcomm.com>
-References: <20250409-topic-smem_dramc-v1-0-94d505cd5593@oss.qualcomm.com>
-In-Reply-To: <20250409-topic-smem_dramc-v1-0-94d505cd5593@oss.qualcomm.com>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Kees Cook <kees@kernel.org>, 
- "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
- Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Dmitry Baryshkov <lumag@kernel.org>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- linux-hardening@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- freedreno@lists.freedesktop.org, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744210063; l=2386;
- i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
- bh=OYohf13YmiKhzjC5R6w/3DMzEahK0lGhnx+WyDhcm6w=;
- b=fNEsSSQ6jli6oC71liry1Endi/Jxui35CzCj32bAjUMJOBu1cSMwi/etDA3bbnM/J9Pe5s27u
- 8HYTGcOuc99AfzlrXTJlbqdx59TCcInKGKt09TRED9IfQszMgv2wjIf
-X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
- pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
+References: <20250409061129.136788-1-fujita.tomonori@gmail.com>
+In-Reply-To: <20250409061129.136788-1-fujita.tomonori@gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Wed, 9 Apr 2025 16:47:52 +0200
+X-Gm-Features: ATxdqUFqVu5MaC3L7mL4r0bbWRkrPzcLXrBDchUoh9IuHJeyx16OliIVVo32LbY
+Message-ID: <CANiq72mbci8kxEx5jrq=HVc6WKuJqq8NCLzNsjH1wFcJNoHm+w@mail.gmail.com>
+Subject: Re: [PATCH v1] um: fix incompatible argument type in iounmap()
+To: FUJITA Tomonori <fujita.tomonori@gmail.com>
+Cc: richard@nod.at, anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net, 
+	linux-um@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>, 
+	Stephen Bates <sbates@raithlin.com>, Danilo Krummrich <dakr@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+On Wed, Apr 9, 2025 at 8:16=E2=80=AFAM FUJITA Tomonori
+<fujita.tomonori@gmail.com> wrote:
+>
+> Align iounmap() signature with other architectures.
 
-The Highest Bank address Bit value can change based on memory type used.
+Most indeed have `volatile`, but nios2 and m68k don't -- Cc'ing them
+just in case.
 
-Attempt to retrieve it dynamically, and fall back to a reasonable
-default (the one used prior to this change) on error.
+Cc'ing also the original authors of both sides too.
 
-Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
----
- drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+Thanks!
 
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-index 06465bc2d0b4b128cddfcfcaf1fe4252632b6777..0cc397378c99db35315209d0265ad9223e8b55c7 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-@@ -13,6 +13,7 @@
- #include <linux/firmware/qcom/qcom_scm.h>
- #include <linux/pm_domain.h>
- #include <linux/soc/qcom/llcc-qcom.h>
-+#include <linux/soc/qcom/smem.h>
- 
- #define GPU_PAS_ID 13
- 
-@@ -669,17 +670,22 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
- static void a6xx_set_ubwc_config(struct msm_gpu *gpu)
- {
- 	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
-+	u32 hbb = qcom_smem_dram_get_hbb();
-+	u32 ubwc_mode = adreno_gpu->ubwc_config.ubwc_swizzle & 1;
-+	u32 level2_swizzling_dis = !(adreno_gpu->ubwc_config.ubwc_swizzle & 2);
-+	u32 hbb_hi, hbb_lo;
-+
- 	/*
- 	 * We subtract 13 from the highest bank bit (13 is the minimum value
- 	 * allowed by hw) and write the lowest two bits of the remaining value
- 	 * as hbb_lo and the one above it as hbb_hi to the hardware.
- 	 */
--	BUG_ON(adreno_gpu->ubwc_config.highest_bank_bit < 13);
--	u32 hbb = adreno_gpu->ubwc_config.highest_bank_bit - 13;
--	u32 hbb_hi = hbb >> 2;
--	u32 hbb_lo = hbb & 3;
--	u32 ubwc_mode = adreno_gpu->ubwc_config.ubwc_swizzle & 1;
--	u32 level2_swizzling_dis = !(adreno_gpu->ubwc_config.ubwc_swizzle & 2);
-+	if (hbb < 0)
-+		hbb = adreno_gpu->ubwc_config.highest_bank_bit;
-+	hbb -= 13;
-+	BUG_ON(hbb < 0);
-+	hbb_hi = hbb >> 2;
-+	hbb_lo = hbb & 3;
- 
- 	gpu_write(gpu, REG_A6XX_RB_NC_MODE_CNTL,
- 		  level2_swizzling_dis << 12 |
-@@ -2467,6 +2473,10 @@ struct msm_gpu *a6xx_gpu_init(struct drm_device *dev)
- 	bool is_a7xx;
- 	int ret;
- 
-+	/* We need data from SMEM to retrieve HBB in set_ubwc_config() */
-+	if (!qcom_smem_is_available())
-+		return ERR_PTR(-EPROBE_DEFER);
-+
- 	a6xx_gpu = kzalloc(sizeof(*a6xx_gpu), GFP_KERNEL);
- 	if (!a6xx_gpu)
- 		return ERR_PTR(-ENOMEM);
-
--- 
-2.49.0
-
+Cheers,
+Miguel
