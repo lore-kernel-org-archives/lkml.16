@@ -1,99 +1,72 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E05D713A265;
-	Wed,  9 Apr 2025 00:50:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43595DDBC
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 00:51:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744159835; cv=none; b=qEP5ylFp+hnxZbj2wodhFIwNO5agtQKBigp5ja6zAK9xSAYBc38Ze+CmsDWH5rptR5xcwkA/JOa4r6GoALgwnNOOobX9rXASYWeitchBCD/U8rrstaZvM+aGz1f/IlAu9tvkZ86DPfPUjMofuGl0Dgz0mmQeieh2Pkfk7yfXbtk=
+	t=1744159867; cv=none; b=XZOo1FfD0mNMiEgt0zmiHR2gFvjXRAjERZvnw9gooWHhEHrI2U+Ui4LBhVjV0tTDyw7KmAL4lPDVAyONdN8cR0qE/moO29GFD2P4qsEoP2825I9seMbTjrW7hyD9UWpwmTrwzEaAnIZixm37epx9j3Jpb4InVpa8iAzP3QQojp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744159835; c=relaxed/simple;
-	bh=bVh50W/06oFUVmTSZNyIfxGCe7IOik9ucMy2Q0xFECA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bTps1zDWdHhSMta4IWvJMpeuM67oGxdiNH/t3RmaSQBAgZ5A5j7Y4RTZ07xZQ0UQ3x6tyl2Z3MCccwk6ZFzIfTBZKw6QhAra/xy3/ue2cw6F8qdJzttcbvyuH4BR6VEoZS6Li1EwKELhzAe6YlmYuooqUojgO9OLuXLhU2pQ3Uc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cSWSCGhf; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cSWSCGhf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744159833; x=1775695833;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=bVh50W/06oFUVmTSZNyIfxGCe7IOik9ucMy2Q0xFECA=;
-  b=cSWSCGhfIGWRlmSTDVrQ9l/O+7ShIKJyW8GI11+eweyzrrmdmLGblTYC
-   Zxi2XIKDMZHqHUoSqmjgrvLdsQmkvTppmTP9hPK0/SUOXQh8F8irQIVMn
-   gyNVi4hoY4Jzmh4oOCHMMdk5Iy+9nvj6J5UL4/Tzllcxs6j30pb0dUQPf
-   YyXke9nkSwR1CYKUsQuFJ1Vm2x23HI0sTtBPck4Nw9NL8YMojt5AK78bf
-   Qu7lf9CBubDzrEUpLhOm85mWFD2H/t6x6B+iFTq61yE21xNUcnSR4fbNd
-   VVwxdTvUmX74L1dOMPqielPY/AZhvNJK1SIGrEOww/cuIngIiLax/FG2Y
-   Q==;
-X-CSE-ConnectionGUID: CnkTWisQRH+1LQdZdEKwRg==
-X-CSE-MsgGUID: +esdBoC/TcO6Qzlr3j1+Kg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="68095414"
-X-IronPort-AV: E=Sophos;i="6.15,199,1739865600"; 
-   d="scan'208";a="68095414"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 17:50:33 -0700
-X-CSE-ConnectionGUID: bnCG4pKPR6qkpkLQJgww7g==
-X-CSE-MsgGUID: 2nRf4wDmRv68LhAuqMW7hg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,199,1739865600"; 
-   d="scan'208";a="151611734"
-Received: from rzhang1-mobl7.sh.intel.com ([10.238.6.124])
-  by fmviesa002.fm.intel.com with ESMTP; 08 Apr 2025 17:50:31 -0700
-From: Zhang Rui <rui.zhang@intel.com>
-To: rafael.j.wysocki@intel.com
-Cc: ggherdovich@suse.cz,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-acpi@vger.kernel.org
-Subject: [PATCH 2/2] ACPI: processor: idle: Remove redundant pr->power.count assignment
-Date: Wed,  9 Apr 2025 08:50:26 +0800
-Message-ID: <20250409005026.1932637-3-rui.zhang@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250409005026.1932637-1-rui.zhang@intel.com>
-References: <20250409005026.1932637-1-rui.zhang@intel.com>
+	s=arc-20240116; t=1744159867; c=relaxed/simple;
+	bh=TydRVdPn+p6hylClZuMmzrQoXaa/p+EK3FiKnsrOQRM=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=eqW1nQ5VTRqiEJrgCk61BW7Kd/4k9jHWj4KrfotsvwrNcgYFgHOVFlK9Ph4kZyerwOUAN6nSjHgcexb68v13TWWQZ6wIx+J8hMHosRg/3IrdaIRaajYWJoqNrV0oy5q7p20/q5Czbo/1CVMlSVGtQJQZjQvzdibO+liDDhNXiA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3d43d1df18bso66443035ab.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 17:51:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744159863; x=1744764663;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pSzNwONIWh5y6FDtc3cWxp0nEsJS5BN4r4vz+IUgfpU=;
+        b=wSc6AIPdG0wlkzFoxYRTX8pSVNazYB2/BF7+P7U0oB3pL7UHVmtEv0+kGNJ9wSzNUC
+         OchhPmJdnshqq/Rkmm0CtVtVz2GkVjLyP+UJX2HKsmWmoYBkHSb2pp4AlaCzlB/ad/uO
+         kbTst85QHPGEHX1xxmMO66eJUvEmUMPig6uaGIF8ovyiFzEW92ZXYmvmoaIvYnkA80l0
+         Pg5DhpG5sQM36NPdQot07EmkEAE46dPH4Gap9Miw93wuCfT5sT9IRTHXHRP83c1d9ebN
+         d8fZBhRrkMIkYbGVBk7OQ12oHx6erBpsr3MTlqaQ5yeKLeY3sIsYgcsVWi3oYRkHQID8
+         pkPA==
+X-Forwarded-Encrypted: i=1; AJvYcCVsDUbADqOCYl3l28fMzSdu/5HdLURUopfihUjdTmrQpWj6OSG3jXPDfiXGNvRo+EkgCRDw9JBmFw7MxDM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFfL9r4O6kxhf3N7qi2lA3XEVV3mS2MrPVHx7fywGHDLftS3rY
+	NlF2oIo4CdcsBNTZzKqeb2t8GF37/auGGrr+NgJLC8a5Ku8hU37Rup/4iefKimy42T37HQpw2FO
+	dLvi9CEGp6HuhXsnwZaKi2NCHqEYS/1bi22107DOUsXNJ8WV8JEjchi8=
+X-Google-Smtp-Source: AGHT+IGP3SHGjP4CEscrYMBDEv2pt/DiAlII8XgEtwQLWd9ajzXsCEylkgmUCYsXFNDl6Ke3TjVsURm3qIa7TEqGyctboH+/nKuw
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:1529:b0:3d3:dece:3dab with SMTP id
+ e9e14a558f8ab-3d776c8075dmr9286035ab.1.1744159863337; Tue, 08 Apr 2025
+ 17:51:03 -0700 (PDT)
+Date: Tue, 08 Apr 2025 17:51:03 -0700
+In-Reply-To: <tencent_8AC8BB0933599E021BCA4B351B8B252FBA08@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67f5c477.050a0220.258fea.0004.GAE@google.com>
+Subject: Re: [syzbot] [wireless?] general protection fault in cfg80211_mlme_deauth
+From: syzbot <syzbot+00778a9a557a2a5e1a33@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-pr->power.count stands for the number of valid processor cstates. And it
-is correctly set with the return value of acpi_processor_power_verify(),
-in acpi_processor_get_cstate_info().
+Hello,
 
-Remove the redundant logic that unnecessarily overrides pr->power.count
-value.
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+unregister_netdevice: waiting for DEV to become free
 
-No functional change intended.
+unregister_netdevice: waiting for batadv0 to become free. Usage count = 3
 
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
----
- drivers/acpi/processor_idle.c | 6 ------
- 1 file changed, 6 deletions(-)
 
-diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.c
-index 7264444d56b8..623c415790b0 100644
---- a/drivers/acpi/processor_idle.c
-+++ b/drivers/acpi/processor_idle.c
-@@ -483,12 +483,6 @@ static int acpi_processor_get_cstate_info(struct acpi_processor *pr)
- 	pr->power.count = acpi_processor_power_verify(pr);
- 	pr->flags.power = 1;
- 
--	for (i = 1; i < ACPI_PROCESSOR_MAX_POWER; i++) {
--		if (pr->power.states[i].valid) {
--			pr->power.count = i;
--		}
--	}
--
- 	return 0;
- }
- 
--- 
-2.43.0
+Tested on:
+
+commit:         a2458824 Merge tag 'linux_kselftest-kunit-6.15-rc2' of..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1269b74c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=eecd7902e39d7933
+dashboard link: https://syzkaller.appspot.com/bug?extid=00778a9a557a2a5e1a33
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=1549b74c580000
 
