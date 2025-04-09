@@ -1,59 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CA9684D13;
-	Wed,  9 Apr 2025 02:36:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 589DF16FF37;
+	Wed,  9 Apr 2025 02:40:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744166181; cv=none; b=ndE41kxggC0G5hn8Ea7MOprSzl4H05M8Z1POo3b7tVA+lw/lorBXHPqKHxmLHIlUjA1SEBTl5aq7KpP3yFzYDYWWjiKz/QDQpFn/f47DWPmlwcd7jYBAPClWXh7O0AKQIQpWa9iQM2cJROmsZRv0UrS3SsytdMamaQyWOSU4A4k=
+	t=1744166412; cv=none; b=UQ5s1IiLdfyLNyQb/y6zWDQjsUC9tT+5qtMzFKmoKu3Lt/QJnOQpgZCj6aRy9kbocsQPIzxBuTqI50jzKSGoqYDKYi98Z9FjEzNmIU1cTBqvokBR9s3gDFUZbmwCNYSVBN8j/5H7anh80E+VrHBphFSyqcWmM6PirAIaS7wJAk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744166181; c=relaxed/simple;
-	bh=e30ZB3HYy50+lqVsFSuwMLvoDoP41VEnsYY5MoZEUFk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=upgudv3n+yxebPUj+fM4HICRNbIocbTkGCQrRJjWitLXICkgjjcJ0r5mDS8HFzoAR7OSKZFkWfRKj6gKv6BaFZFJO5TL3AeuH5VYwx9BwVLcykHpb8R1u3al2x8LSQhScwVKl3FKCnmUC33JolUas/+m5UI8mr7qowiciCzLiRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rjYydueC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744166412; c=relaxed/simple;
+	bh=bSzcio7IDj6Y0wwhWkJcBwAQlNfvv5mIiVbGYUzV1WA=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=tYksO+NsYDB710pl7g+TJky/a/MEMi77Nlt/lGNugmnCMT9AF3OLetyr4ggV1pFa2KGQPQdMBHNRoQljswqyj+odAMJVvkKp4L6Fdxuh2cELLUHaZHzMe2Wtfquoqt0ZbVg3etgutw53Ol3d+r5fHo6QPqQgR3jgP8At1lW8P0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vg98Lmv2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rjYydueC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EA74C4CEE5;
-	Wed,  9 Apr 2025 02:36:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vg98Lmv2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E817C4CEE5;
+	Wed,  9 Apr 2025 02:40:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744166179;
-	bh=e30ZB3HYy50+lqVsFSuwMLvoDoP41VEnsYY5MoZEUFk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rjYydueCPaqDR1tLI0+kj3WkRPT3GU0ElQcQKVvhTzcRv6rXkjOvUtVy3p+ZdF9rS
-	 wKuV1H+PlA+czyjV3ucbk5rtPGBaIBHXYSAhQxXqL17oMhsli/Z3RAhtf9toS61hY3
-	 H6FC0nW5x8v2WIIYgiAKNyC9vnVioq/TIcspbipmP2M+IytWgFSEzIeLjWHW6zfPFf
-	 4s9dqUshIHmLF6Y6hV0A7AnlB85chXYQUaglRDgPuCGvTRyF8kwYKQMuUM0qow8OP5
-	 6e8YRfMbnkZsLON4pI/qqiaMThBLkE4Y8qQxBsxrwjgDy0hwmJWp/jC7Q+QLRhrbZ9
-	 UZ5NCp86KvMKg==
-From: SeongJae Park <sj@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: SeongJae Park <sj@kernel.org>,
-	stable@vger.kernel.org,
-	patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org,
-	akpm@linux-foundation.org,
-	linux@roeck-us.net,
-	shuah@kernel.org,
-	patches@kernelci.org,
-	lkft-triage@lists.linaro.org,
-	pavel@denx.de,
-	jonathanh@nvidia.com,
-	f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net,
-	rwarsow@gmx.de,
-	conor@kernel.org,
-	hargar@microsoft.com,
-	broonie@kernel.org,
-	damon@lists.linux.dev
-Subject: Re: [PATCH 5.15 000/279] 5.15.180-rc1 review
-Date: Tue,  8 Apr 2025 19:36:17 -0700
-Message-Id: <20250409023617.70466-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250408104826.319283234@linuxfoundation.org>
-References: 
+	s=k20201202; t=1744166412;
+	bh=bSzcio7IDj6Y0wwhWkJcBwAQlNfvv5mIiVbGYUzV1WA=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=Vg98Lmv2jF5zRnJz5XXwGn3xdhPsJrmRdU41lTYCvJ5iZyN6Ywf0PedE7F66AG+CE
+	 U8qr0PJWARTcy18aESgKmkfu3Gg3Giq3PGpaWnQPGxk/f96s9O7kOReuB8S64v8Png
+	 KRlgohc5yifaFA8NX6scdYGTWvlAwLHhf/mMPB60DuRx2uCY2KIRUCGCSSB/0N9TGK
+	 OQsM9SZxfA+rib4WQuqtyKTtrebBIooUVtY6TCgbQZ0WeWgKWWFCWOJXf+rREoZ5MD
+	 PXR/J69up98esRNanTp0J2eCXp/vjzNbtARV0EEHd951eCQQp+qATX1FRqQa+3hP8v
+	 +p+t7KaCvYONg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE21A38111D4;
+	Wed,  9 Apr 2025 02:40:50 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,50 +37,41 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next] net: Drop unused @sk of
+ __skb_try_recv_from_queue()
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174416644934.2289933.6913898922606163380.git-patchwork-notify@kernel.org>
+Date: Wed, 09 Apr 2025 02:40:49 +0000
+References: <20250407-cleanup-drop-param-sk-v1-1-cd076979afac@rbox.co>
+In-Reply-To: <20250407-cleanup-drop-param-sk-v1-1-cd076979afac@rbox.co>
+To: Michal Luczaj <mhal@rbox.co>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, horms@kernel.org, willemdebruijn.kernel@gmail.com,
+ dsahern@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hello,
+Hello:
 
-On Tue,  8 Apr 2025 12:46:23 +0200 Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-> This is the start of the stable review cycle for the 5.15.180 release.
-> There are 279 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Mon, 07 Apr 2025 21:01:02 +0200 you wrote:
+> __skb_try_recv_from_queue() deals with a queue, @sk is never used.
+> Remove sk from function parameters, adapt callers.
 > 
-> Responses should be made by Thu, 10 Apr 2025 10:47:53 +0000.
-> Anything received after that time might be too late.
+> No functional change intended.
+> 
+> Signed-off-by: Michal Luczaj <mhal@rbox.co>
+> 
+> [...]
 
-This rc kernel passes DAMON functionality test[1] on my test machine.
-Attaching the test results summary below.  Please note that I retrieved the
-kernel from linux-stable-rc tree[2].
+Here is the summary with links:
+  - [net-next] net: Drop unused @sk of __skb_try_recv_from_queue()
+    https://git.kernel.org/netdev/net-next/c/420aabef3ab5
 
-Tested-by: SeongJae Park <sj@kernel.org>
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-[1] https://github.com/damonitor/damon-tests/tree/next/corr
-[2] 0b4857306c61 ("Linux 5.15.180-rc1")
 
-Thanks,
-SJ
-
-[...]
-
----
-
-ok 1 selftests: damon: debugfs_attrs.sh
-ok 1 selftests: damon-tests: kunit.sh
-ok 2 selftests: damon-tests: huge_count_read_write.sh
-ok 3 selftests: damon-tests: buffer_overflow.sh
-ok 4 selftests: damon-tests: rm_contexts.sh
-ok 5 selftests: damon-tests: record_null_deref.sh
-ok 6 selftests: damon-tests: dbgfs_target_ids_read_before_terminate_race.sh
-ok 7 selftests: damon-tests: dbgfs_target_ids_pid_leak.sh
-ok 8 selftests: damon-tests: damo_tests.sh
-ok 9 selftests: damon-tests: masim-record.sh
-ok 10 selftests: damon-tests: build_i386.sh
-ok 11 selftests: damon-tests: build_arm64.sh # SKIP
-ok 12 selftests: damon-tests: build_m68k.sh # SKIP
-ok 13 selftests: damon-tests: build_i386_idle_flag.sh
-ok 14 selftests: damon-tests: build_i386_highpte.sh
-ok 15 selftests: damon-tests: build_nomemcg.sh
- [33m
- [92mPASS [39m
