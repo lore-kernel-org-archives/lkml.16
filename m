@@ -1,73 +1,80 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118E125D1E7
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 08:41:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF7A625D20D
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 08:41:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744188098; cv=none; b=thLzl0U3DMiGoNAuuZmC7Lotv/EGfnj9kEvA0Nx4V2WWgCAC8gEJxuSRc0PkFgxDaPp8mrPlzvsu0bmFBjgdP6NFh3EITI2+S1KwUm8xjAH1bTgXyV0BM3X8RQg3k8dkDsdbS2jGy1gF8G5vAwDKA7gRLr48prmcwMbMTVfSdHI=
+	t=1744188107; cv=none; b=u76qKdkGF35p3ekP+dNncQn1IMoAw+YUjGEhfgrNeVgtdAQ8KLi7+2DlMhDKGgGCO8KlsTVQX3ELNRKYZZk9LR/exXrB2ObcZJ/erHgCLFmZXhMyFWT/gJBMi6fFzsBp4Gy8VW7eT/hLGQQQbLqm24KEBwBorW1+f/5yxgPmynk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744188098; c=relaxed/simple;
-	bh=ykrjLAWwRkI657MTOJTHD9gPFn+F7dJf31R6fHhnorc=;
+	s=arc-20240116; t=1744188107; c=relaxed/simple;
+	bh=lYReHbTMQCeR2BT9nW9VzYq7MnsKRG5ohTeMAY4qWC4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q/N+iXBxhprfdAn4inaFM+QGjpUeFriYgT04Dx9CFUkUfkoBn+LSkeOV9bo3OGaWOliNAl9V683NfBAShNHX2u2yNIPnEzJUGNIqU/fjxgHiFbbYFcnkKaeyxqNMM80dredLK7hm6T4Qw5HJsY0kMZLqWx0SvkgrdZ4uFSQVV/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KP50S4RI; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=RjoPZvngnsXky2EukZ35bQ8Zd+YtHDL3AxqMPdTAGR0j72TDSMEMFrhGqKCpqhyLoLr01TMHA2l5dk8ocYdj1XRzAauFPOu+UKjiDaFRSwTWFsVF9bKGLTjYQeTYypeuJdLsz/8PQAZh0H+4X3Xe3GQns9aK7O9lOogBwZF8JYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=xa3ksB1x; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ngpcSF7b; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=xa3ksB1x; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ngpcSF7b; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KP50S4RI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744188094;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="xa3ksB1x";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ngpcSF7b";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="xa3ksB1x";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ngpcSF7b"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id B2B9F1F388;
+	Wed,  9 Apr 2025 08:41:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744188097; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=lcU1dMAvpChtGIJQUrQPKwz+6tZ2DlMGYvtyjmj3LFo=;
-	b=KP50S4RIkMUvpJy3Vc84a0JAWskB0LWL1dVhDy1mIDhTE/OentiWGB3mJR4tIKY6U05fQT
-	wPuhjKDn1+7Tu/byWGFcvQJ5zfhOzJBUM+TCtOmhV7WVxw1bx3nyHcVcYZVA2p5RlITJGS
-	/3HkkfeMJeaOUhfevK89E+AmRPQUvzo=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-496-Hz5pDYCoM5-Pz5khoR621g-1; Wed, 09 Apr 2025 04:41:33 -0400
-X-MC-Unique: Hz5pDYCoM5-Pz5khoR621g-1
-X-Mimecast-MFC-AGG-ID: Hz5pDYCoM5-Pz5khoR621g_1744188092
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43cf327e9a2so54505555e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 01:41:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744188092; x=1744792892;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=lcU1dMAvpChtGIJQUrQPKwz+6tZ2DlMGYvtyjmj3LFo=;
-        b=sI2JnMVI6cwFicFyHyBigH0TnUmOL235lF+jQkjYHfO8gYhj80pWP3MAO7XMIHpYkn
-         MqOjCMpGgGR5rBhW9ib9KAX4ooVg5Dlz59k7EMEb62JDPYtIqjORTgwP36GHslvyMkvM
-         rG87bZBgRRrDhiNunevSAYP67toblhHlNu6YZTXthHshtqpYjoj8no51A9DKQFlJ4qmD
-         Rg4Zjk+IRGL/X/6/iWYSlqB4hJHus+J3JbuN2T8Lg7An9qF35woRqXcr8tzI0y8rxMpz
-         fMyErLOhNG9nIsaaULdXl6/Rx+p5vQOkUEoRg5+zJ7janPxnSXV8LFK3Xj+9INSTnTXr
-         8HJA==
-X-Forwarded-Encrypted: i=1; AJvYcCUIk0cGn4AztgTIc4JzwCeLOxSbYhPhCoHaSYSYXqAItVCRy/6fPBa3FkpmieINZzjMavb9XizNmAEIGfg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yya62l341inHsih8LmprKOT1ZkMaBx6+O/W30XYieITcbJwVbAf
-	v1AR7CuJgqQpUgmUmooz7tQeEGh318sR+1rfs0mmOuDBdrqR7nhgbtkzrBl/3z/q37zqjFaCLxv
-	WCuN8s4R0IqLdYhSODXfzTx0WxDSRpGUXCFbG+z2R5I+WVKgNnJITZjiXz7Y+0g==
-X-Gm-Gg: ASbGncvVGflvcAxTjBOwu1M68E+K8R2Oydd8/2oo/ZIaYxiRPz7gzHTZ9DjvKhcUfvm
-	qRrSf1+/c2yhAIrpgsvBnqPTj2/Gx4ztfkrxuiWDNoYxNeYkl9oEbVGyYp0Ojswh+jiSvn+uVf0
-	x9fxQPgtT4/8pZ3n/KE2cdORkWTn9pQ7rUEH75KdVNkCxWWX8TI0y+t/skKKpVAh9ItnBszG6rW
-	7cRAPDHbS5BmGcb+8ldkYOaa3mWBncaAQEVIkVMTZ/+rOsPcyDau6szSYT3hgOZsjERGdcTWKgB
-	8aRCloN9SdV+3UM9C5rFGWb18vRA2xDHHo/L1rHOFdYI8AvJ9XUzDhXBNMYvk5nkxJxLojwnMsQ
-	ogpK9qg598r9B1MEsNrGZmI62FAhiJHTlZw==
-X-Received: by 2002:a05:600c:35c7:b0:43c:efed:733e with SMTP id 5b1f17b1804b1-43f1eca80f3mr15977955e9.14.1744188092254;
-        Wed, 09 Apr 2025 01:41:32 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEl9WL/SfH2EOqqSuxrHJDDqgcHQy7+sAbW3ps3u9XYsFemw8VQuRCP7qynP/IkrwyWObgUjA==
-X-Received: by 2002:a05:600c:35c7:b0:43c:efed:733e with SMTP id 5b1f17b1804b1-43f1eca80f3mr15977725e9.14.1744188091842;
-        Wed, 09 Apr 2025 01:41:31 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c70d:8400:ed9b:a3a:88e5:c6a? (p200300cbc70d8400ed9b0a3a88e50c6a.dip0.t-ipconnect.de. [2003:cb:c70d:8400:ed9b:a3a:88e5:c6a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d89363066sm945398f8f.7.2025.04.09.01.41.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Apr 2025 01:41:31 -0700 (PDT)
-Message-ID: <4d9bdd44-a4fc-440b-8a4f-586d4cea65d7@redhat.com>
-Date: Wed, 9 Apr 2025 10:41:30 +0200
+	 in-reply-to:in-reply-to:references:references;
+	bh=f6Y8XZ8ioDDRtrzfM8mvcVLgbeSwyDfafUZk4c2B+pY=;
+	b=xa3ksB1x4SYDG/IAWiifM7oqcLyoGJDh0HO7KxrQ2FTstrVUGAzTyT8XmAsvJ0+s3AduCk
+	oOs8lX+s8HUL82tveGa1PeZIcwbMtd+CwOO+aAcczqFa4R4udAZSl33htydG7Gkaf3b/1L
+	I5j+OQE4gO37oAFA170oQpc8Ey7Gvgk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744188097;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=f6Y8XZ8ioDDRtrzfM8mvcVLgbeSwyDfafUZk4c2B+pY=;
+	b=ngpcSF7bVN28T4hqsNGRwVE8wnRd6bH4KqrYOLPyWngVmXAOURPkJuZZBIJS5a6oJIr08J
+	R2MmwnsxaNPQOIAQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744188097; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=f6Y8XZ8ioDDRtrzfM8mvcVLgbeSwyDfafUZk4c2B+pY=;
+	b=xa3ksB1x4SYDG/IAWiifM7oqcLyoGJDh0HO7KxrQ2FTstrVUGAzTyT8XmAsvJ0+s3AduCk
+	oOs8lX+s8HUL82tveGa1PeZIcwbMtd+CwOO+aAcczqFa4R4udAZSl33htydG7Gkaf3b/1L
+	I5j+OQE4gO37oAFA170oQpc8Ey7Gvgk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744188097;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=f6Y8XZ8ioDDRtrzfM8mvcVLgbeSwyDfafUZk4c2B+pY=;
+	b=ngpcSF7bVN28T4hqsNGRwVE8wnRd6bH4KqrYOLPyWngVmXAOURPkJuZZBIJS5a6oJIr08J
+	R2MmwnsxaNPQOIAQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A427713691;
+	Wed,  9 Apr 2025 08:41:37 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id g6zBJ8Ey9mffYgAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Wed, 09 Apr 2025 08:41:37 +0000
+Message-ID: <019215ee-12f3-4c2c-8b63-5b7ba1153c30@suse.cz>
+Date: Wed, 9 Apr 2025 10:41:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,95 +85,66 @@ User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH] MAINTAINERS: Update HUGETLB reviewers
 To: Oscar Salvador <osalvador@suse.de>,
  Andrew Morton <akpm@linux-foundation.org>
-Cc: Muchun Song <muchun.song@linux.dev>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, Peter Xu <peterx@redhat.com>,
- Vlastimil Babka <vbabka@suse.cz>, Michal Hocko <mhocko@suse.com>
+Cc: Muchun Song <muchun.song@linux.dev>, David Hildenbrand
+ <david@redhat.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ Peter Xu <peterx@redhat.com>, Michal Hocko <mhocko@suse.com>
 References: <20250409082452.269180-1-osalvador@suse.de>
-From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
+From: Vlastimil Babka <vbabka@suse.cz>
 In-Reply-To: <20250409082452.269180-1-osalvador@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.cz:mid,suse.de:email]
+X-Spam-Score: -4.30
+X-Spam-Flag: NO
 
-On 09.04.25 10:24, Oscar Salvador wrote:
+On 4/9/25 10:24 AM, Oscar Salvador wrote:
 > I have done quite some review on hugetlb code over the years, and some
 > work on it as well, the latest being the hugetlb pagewalk unification which
 > is a work in progress, and touches hugetlb code to great lengths.
 > 
 > HugeTLB does not have many reviewers, so I would like to help out by
 > offering myself as an official Reviewer.
-> 
+
+Thanks, Oscar!
+
 > Signed-of-by: Oscar Salvador <osalvador@suse.de>
+
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+
 > ---
->   MAINTAINERS | 1 +
->   1 file changed, 1 insertion(+)
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 > diff --git a/MAINTAINERS b/MAINTAINERS
 > index 193d7e216d79..7b32498a42cb 100644
 > --- a/MAINTAINERS
 > +++ b/MAINTAINERS
 > @@ -10963,6 +10963,7 @@ F:	include/linux/platform_data/huawei-gaokun-ec.h
->   
->   HUGETLB SUBSYSTEM
->   M:	Muchun Song <muchun.song@linux.dev>
+>  
+>  HUGETLB SUBSYSTEM
+>  M:	Muchun Song <muchun.song@linux.dev>
 > +R:	Oscar Salvador <osalvador@suse.de>
->   L:	linux-mm@kvack.org
->   S:	Maintained
->   F:	Documentation/ABI/testing/sysfs-kernel-mm-hugepages
-
-Thanks, I barely have capacity to review all in that area, and focus 
-only on things that affect page migration, hotplug, hvo, ... so having 
-another "official" reviewer that can help Muchun will be quite nice!
-
-Acked-by: David Hildenbrand <david@redhat.com>
-
--- 
-Cheers,
-
-David / dhildenb
+>  L:	linux-mm@kvack.org
+>  S:	Maintained
+>  F:	Documentation/ABI/testing/sysfs-kernel-mm-hugepages
 
