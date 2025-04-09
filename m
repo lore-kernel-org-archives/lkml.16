@@ -1,184 +1,213 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2075.outbound.protection.outlook.com [40.107.237.75])
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B15CD25C707;
-	Wed,  9 Apr 2025 08:03:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.75
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744185820; cv=fail; b=Qm1ACopxjRFotd5iKTTPNcRHsn2G+2pcZLmUCHJggzpmYXSxV9WYRIlXsJX4FDQyUSJOfvv0JkoII29FTylbfOhyaZdA0VG7dAYfi/Md6ia5ovdlUtXPxFfb3nL0IryYrMtw8yDy2ihPWyhdiFGhh5ioe0kG+ASFODPfid7+HyE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744185820; c=relaxed/simple;
-	bh=fsD2uSP+xTS5VEYtgHfD1CG2rl2RnEORDZCs4rhytzc=;
-	h=From:To:CC:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID:Date; b=mpMkX4Q4gQwQxeY3CaeQKpFevYepGfgAmP74332IrhZB9ufkBsD6m0dcezkMiV54AEEI+xxMuXuJ60qACdBQxcBGeXs2vo0XDmMk4R6v3xhh//exgfD1x94gQLJIAaTt4ebSTUdYstwdOoG+Rpypft/5r59HUf5apSdi3VO2iC0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Hsaxc56i; arc=fail smtp.client-ip=40.107.237.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2DAB25B673;
+	Wed,  9 Apr 2025 08:03:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744185832; cv=none; b=ndWMEQIYmqDj3hGqZJrxp7o/HOC/2CQ5xnJkF7Mj4WnUAWBqoNdTq6QetATSiM18HIvAvnbeeQT6mHS49/aBRsdlLQLqCaxGvIgsIaHY9g4H95tQRWU6wcgp9VLJMp7QeRE1c9wqLVaaiX76JwA4PMgzKdxryLT9qUMlNZiyVoM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744185832; c=relaxed/simple;
+	bh=7fqznLAyvHu/jJ9za6hfLAeZqCvQ3xojCZMtgLC3XYw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=V3VYGwF19eduEdHH0T1XTdf6vjdkqiuB4AteDqRjiUL+susHcJAaGWohJiHkl91/B/fHCwcnSMDyq18WYx5ASbf66sAPMmB4LnyMnepAjbsGNS+qJuADw1/fF0LhI9enKQq7lF/HVsIUSN0YpdI0eoAQkgnm9f9951A+TAH+jC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=H9kbCebU; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Hsaxc56i"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WATe6ws1YoBdAWalCbCe3RaRq4dLAhhPvE7SGNpdl3F3SxCAQF1J7+NhzIfOiUboXF/0834RURmJ8b1BxIRbMMPsw/RQVLOrnmGqQGA/9cmn7byEdY9RM1bBHsAZ6k9t3sQNi+ZrRK8Pcp1BvVFwVngnuQhmbfnxv0PvK9oivC+lxXl31zq8w6A+Elzc98ograPh9IB1e7Stx07iyowscdoZs/aWTp0H0zvB9lpFzgvhx8kg//ZdfjXnzU5G2Y4mos9C2BeGSHcWN2OiSlDGfEb2sz2AKnCwuTPa/HU6wPvWul7yqq82ikt1J2z3tadrnikkAywxisZ/Rl6auhrxTw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BfRPf26RAI7ufMjLWA16WxPfumGVDjpu31hpBkoGMQg=;
- b=b+Sv/q6EJUeiqEriIqp/CjrkZpaQ1PmxGzLp/vxFGe6vjgfVsqbw3NXshlLD+PxMMI1iMo7waFuYVXSS5xg6hI4Gax12xEKuDZpFIhKUEfO2ZVFFM9aI4ikpgiIaUcVSSrGyL5Zt0sIUtGhW95sMRWt7NcSw8wRvHO9usMmC4i0QCIsIM6/3ZIL4ONn2bPRAZXaafHX23keVLZAk530/twkxcxtQWR9clV4wL26sBfYZAAV1KXNOXU4YMfnVYI0FpD+416XI4WOoxj9NCaF5D7MagLZu2v03OWq9zlor+kt9rbg2O/Iz0PthOxRDTU4cbhDVid8SvCTt67uZ64NDaw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.233) smtp.rcpttodomain=linuxfoundation.org
- smtp.mailfrom=nvidia.com; dmarc=pass (p=reject sp=reject pct=100) action=none
- header.from=nvidia.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BfRPf26RAI7ufMjLWA16WxPfumGVDjpu31hpBkoGMQg=;
- b=Hsaxc56izGnlZFwNLgOVwaN52DQFjS0k0I/skLfWrIuj75LrF3GzWyvFMqUt7/IW2CGAzO2EexvjsC+Rr8N7owXp9Uss8ojZx3V2orsTy4FXuSsbMaZrMqlG5kLYgRgp93H/tMWAPbXCjr0uvLE0LN+ra9yNv6pzrtEXrKOkUlRv467Ym/s+f9cTNFfoUl62Wkp+owWIAql0anCHh9aeh4CYUoJwyncKB5HGSM8awGVlslm4j2E28sljA0pqxJnSLRJT3toQi2NpcBRXv7vjC8pu20CHMz88qfRkudwCoKd99qaXO/QGbsmQlGCd0kFq04PWDM5Qu7/DHY+alhPAIA==
-Received: from MW4PR03CA0268.namprd03.prod.outlook.com (2603:10b6:303:b4::33)
- by CYYPR12MB8940.namprd12.prod.outlook.com (2603:10b6:930:bd::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.43; Wed, 9 Apr
- 2025 08:03:35 +0000
-Received: from CY4PEPF0000EDD0.namprd03.prod.outlook.com
- (2603:10b6:303:b4:cafe::2b) by MW4PR03CA0268.outlook.office365.com
- (2603:10b6:303:b4::33) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8606.36 via Frontend Transport; Wed,
- 9 Apr 2025 08:03:35 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.233) by
- CY4PEPF0000EDD0.mail.protection.outlook.com (10.167.241.196) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8606.22 via Frontend Transport; Wed, 9 Apr 2025 08:03:34 +0000
-Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
- (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 9 Apr 2025
- 01:03:22 -0700
-Received: from drhqmail201.nvidia.com (10.126.190.180) by
- drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Wed, 9 Apr 2025 01:03:22 -0700
-Received: from jonathanh-vm-01.nvidia.com (10.127.8.9) by mail.nvidia.com
- (10.126.190.180) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
- Transport; Wed, 9 Apr 2025 01:03:22 -0700
-From: Jon Hunter <jonathanh@nvidia.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	<patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-	<linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-	<lkft-triage@lists.linaro.org>, <pavel@denx.de>, <jonathanh@nvidia.com>,
-	<f.fainelli@gmail.com>, <sudipm.mukherjee@gmail.com>, <srw@sladewatkins.net>,
-	<rwarsow@gmx.de>, <conor@kernel.org>, <hargar@microsoft.com>,
-	<broonie@kernel.org>, <linux-tegra@vger.kernel.org>, <stable@vger.kernel.org>
-Subject: Re: [PATCH 6.12 000/423] 6.12.23-rc2 review
-In-Reply-To: <20250408154121.378213016@linuxfoundation.org>
-References: <20250408154121.378213016@linuxfoundation.org>
-X-NVConfidentiality: public
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="H9kbCebU"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4ZXb711qMBz9t4w;
+	Wed,  9 Apr 2025 10:03:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1744185821; h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7fqznLAyvHu/jJ9za6hfLAeZqCvQ3xojCZMtgLC3XYw=;
+	b=H9kbCebUZR1c7HOrQgYjPIYBVEFAXQSWcq6/p1UyaFsQL5RVW8qDJPZJDp+qC3GjKNVxRt
+	DRZL0n/rENniKePXYZaCqEJY0i7wRIVO8nj1NZnDeePrW2Dn3W1dB+9XWKWpB33dMcfYJ9
+	J2f7juccWHrQ6rBYVzSeuDhek0t6v0Y1omaNC+VbHOyOLNiRNHXjOlg+v77wj55CLq6kZe
+	I8GCkSKnPB7VGieK0t/tUrz6+VwPURjf1eHIX/aqKevwbGEZET2BfNY4v4zU1C5ZKlQMsV
+	q1BjHRuzslbwi9G5yJVXKkWQP5uTYc6Ftpwgx9gaAtErlzy1rplwxy1+/krYeg==
+Message-ID: <2486e9eba3806f8e7fc3df724e916929a627fac7.camel@mailbox.org>
+Subject: Re: [PATCH v8 00/10] Improve gpu_scheduler trace events + UAPI
+From: Philipp Stanner <phasta@mailbox.org>
+Reply-To: phasta@kernel.org
+To: Pierre-Eric Pelloux-Prayer <pierre-eric@damsy.net>, Pierre-Eric
+ Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>, Tvrtko Ursulin
+ <tvrtko.ursulin@igalia.com>, Philipp Stanner <phasta@kernel.org>, Danilo
+ Krummrich <dakr@kernel.org>, Matthew Brost <matthew.brost@intel.com>
+Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	etnaviv@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+	intel-xe@lists.freedesktop.org, lima@lists.freedesktop.org, 
+	linaro-mm-sig@lists.linaro.org, linux-arm-msm@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-media@vger.kernel.org, nouveau@lists.freedesktop.org
+Date: Wed, 09 Apr 2025 10:03:34 +0200
+In-Reply-To: <f3416edf-46f8-4296-86bd-600ab629fe60@damsy.net>
+References: <20250320095818.40622-1-pierre-eric.pelloux-prayer@amd.com>
+	 <f3416edf-46f8-4296-86bd-600ab629fe60@damsy.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <0723e4f1-7102-46e0-8758-e542c5cbc12b@drhqmail201.nvidia.com>
-Date: Wed, 9 Apr 2025 01:03:22 -0700
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EDD0:EE_|CYYPR12MB8940:EE_
-X-MS-Office365-Filtering-Correlation-Id: 966e8010-9027-4cdb-74a8-08dd773d06ec
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|7416014|376014|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?UjFNUGQ5RWd5QnVuLzE3R3k4NzAxeEVVTnQyZk5vN3M2TE1zSzEwRnQ2Z0Nz?=
- =?utf-8?B?aWJjazBON1VTeVZiRmhDTHAxSWF1WWNVWGw1aktjaFNhQ2NsV1lzeVl2WjNC?=
- =?utf-8?B?eFdTRVhFQzhVRDVPOXRlcTM0YzBaY3drVTR1WS9laG9QVkFacUNqN3NWT3I2?=
- =?utf-8?B?aG15alRNNHJDT21NemRReDdDeldVVUpNMkl4MFBmRXB4UUVZV01yTmpiOGUw?=
- =?utf-8?B?YUFYMzlDUDFIb25mOUxLeHFvQ2h4c0JITTlUckZUUkRsd2xWT09QQXNxNHlY?=
- =?utf-8?B?RjIyM0hrTGFHQloxZ2lsemVsSTlMWmFqWk5tMGpJNGxFaHBzRGVzbGdmekky?=
- =?utf-8?B?ZlF2M1QzRGxOS0wvd2VCdDNySjVycHdtank4ZE5TOGIrZ2lMeDVVN0RuT2RH?=
- =?utf-8?B?OGViWi9OVXoyTEJJUjViNmcyTVh3NHIvRjJaKzRGUElQZGpncjJpbjZ6M21v?=
- =?utf-8?B?ZDNFQ3lmWFRqa2FYNGMwdWlsUjZ3ZkxpcCtvU1JGTHBrdEVuT1J2SVhsSUtN?=
- =?utf-8?B?MzRHQVpaQWZwRlpsUVVITE5BNkNOYkVoUjMrd29tV09EOGw5eUZQYjVZSFdL?=
- =?utf-8?B?akhmUm9sV0UrNURmaksyZGlTK05tTTcrNk54QzJDZURNcXlyb2gvaTJ4MUp3?=
- =?utf-8?B?eUd1b0ZhTXpwNk1STnE0YXlxOThrVXR3ekRqK3NtRGgrOE9ONE1LcXVNckxV?=
- =?utf-8?B?Q2g3K01mSGFJOHA2TFcyeEdMZzBQbVZVeWszT04ra3JWeHdITXJRWUFXVWdI?=
- =?utf-8?B?MGJjRDlCOGNyS2FxRlFlRWtXdnIwN0ZNTiszL3RuYVo5amZ2UDZmZVN0R3Zj?=
- =?utf-8?B?NlAyd2N4ZmFOZm9YMTBpeGJaYm5HWEljNlVJRXo0MVBDaHVLekgwWkpmcERL?=
- =?utf-8?B?RVVMOHVvYVdHemZHK1lpVU9QeWJVenliOSs2TTMvMzlJdVJ1UVF5Y0F1TlJZ?=
- =?utf-8?B?dEdDMlVlWGdra2poZzFUY1N5YVNyWUNhNEVXbXNDUVdxOG1vcENXV2NFSDRj?=
- =?utf-8?B?SUNYcU9Qd0VtWHZKRHc3WXZkc2J6MHVUK2FjY1d2R3FwZ0k1T053aGNLWDBz?=
- =?utf-8?B?elY5Z3BTd2lQZXBtLzNreEJuQ25pVFMzd1FFUXRyNDVDK3dWZXMrZEdoTGls?=
- =?utf-8?B?dHRXWjIxdWxBTVNxTE9hZzRCZzY5b3lZWDVjL0xzU0NBSk9pRHQvYjEyQTVF?=
- =?utf-8?B?cVRSdGhla3lZTXZ2dTRaeW5FelcyV2Z2aDY3bkdTK1JoejY2UFFlWGRYb2pl?=
- =?utf-8?B?ZDdrby90SWVLVHRZczhiRE1aSE5UWnduelBhQnZDOHM5L3FnbWplSENyVzZP?=
- =?utf-8?B?NmlrVEkzWVlqRUxJMTFYQTBMRTdJZFcva1hIRi91MmhqMWVLU3ZLSXNRTkJK?=
- =?utf-8?B?Q3drU1NSVHdFUVVmUk55Mk5wdGExdksxajE1MEtqQ3pwMzNla2owUnZCa2xV?=
- =?utf-8?B?T3dtV3I0ejBRMXVCSE84dTNwcUlhWTlSK0JSVlB6SFhmTFJOWHhwYjl3QlFj?=
- =?utf-8?B?MkNLV0ZyM1RZNUxMVVFRVEd6Nk1ETlo4OUtnQ2xkTmlKVG9UbkgzcUFsakxk?=
- =?utf-8?B?ai94d2FqOGRHUnIrUURyWXFqajRnOWUxTlVYdmFWT3dMdHhIb3VwMjNBQVVi?=
- =?utf-8?B?aVlYbVFpZ3FyNGlrYUxENzFRV1lSMU5FbENGQ0VjRzlqbVdKalUwYXBCSEFh?=
- =?utf-8?B?YlIxZEZtc05ac1l6SW1sSFcxSncyWWlBcEFvaXBmeTJldTA3Yi8yNlBQYWNX?=
- =?utf-8?B?VmRrZTg4T3FhSWtESUFLVzZ0RlBndWc1SlZrTmEwZHc3d010VjVJTi9XVXdO?=
- =?utf-8?B?OWtyblpzc1BqU01qK2VzNDRLby80UkZ0RlI3Z3c1QXJ4eitxVmhSajdBeEU2?=
- =?utf-8?B?UkhMc25FMGtQaG1yRmxPOXVaTHlFQS9MUnV1b2NrNlRPT1dVQUtWZXFTN0Ux?=
- =?utf-8?B?clk5dzFZZzAwUXNSZU9yNnR5RFVqK0VoVGV2eW1PaWhZQ1BxTG9QZVJ3LzhI?=
- =?utf-8?Q?2MqnT9ZdKDkSwfolSYeSuK3hk5TGTk=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(7416014)(376014)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 08:03:34.8254
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 966e8010-9027-4cdb-74a8-08dd773d06ec
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000EDD0.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB8940
+X-MBO-RS-META: ac77wnkq97cnh7ipc437xrje46qmhgfq
+X-MBO-RS-ID: 890d0c8e5ddfbadb243
 
-On Tue, 08 Apr 2025 17:53:48 +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.12.23 release.
-> There are 423 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 10 Apr 2025 15:40:31 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.23-rc2.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+On Wed, 2025-04-09 at 09:52 +0200, Pierre-Eric Pelloux-Prayer wrote:
+> Hi,
+>=20
+> I've rebased the series on top of drm-next, applied the minor tweaks
+> suggested by Tvrtko on v8 and=20
+> the R-b tags. The result can be found on gitlab.fdo:
+>=20
+> https://gitlab.freedesktop.org/pepp/linux/-/commits/improve_gpu_scheduler=
+_trace_v9
+>=20
+> I believe it's ready to be merged, unless I've missed something?
 
-All tests passing for Tegra ...
+Has slipped my radar for a while, sorry.
 
-Test results for stable-v6.12:
-    10 builds:	10 pass, 0 fail
-    28 boots:	28 pass, 0 fail
-    116 tests:	116 pass, 0 fail
+I browsed over the series=20
 
-Linux version:	6.12.23-rc2-ga285b6821aeb
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra186-p3509-0000+p3636-0001, tegra194-p2972-0000,
-                tegra194-p3509-0000+p3668-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra210-p3450-0000,
-                tegra30-cardhu-a04
+Can you pro forma send the v9 (with the scheduler maintainers also in
+the cover letter's CC) with the changelog, please?
 
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
+Then I'd ACK and someone (probably me?) can take it in.
 
-Jon
+Thanks
+P.
+
+>=20
+> Thanks,
+> Pierre-Eric
+>=20
+> Le 20/03/2025 =C3=A0 10:57, Pierre-Eric Pelloux-Prayer a =C3=A9crit=C2=A0=
+:
+> > Hi,
+> >=20
+> > The initial goal of this series was to improve the drm and amdgpu
+> > trace events to be able to expose more of the inner workings of
+> > the scheduler and drivers to developers via tools.
+> >=20
+> > Then, the series evolved to become focused only on gpu_scheduler.
+> > The changes around vblank events will be part of a different
+> > series, as well as the amdgpu ones.
+> >=20
+> > Moreover Sima suggested to make some trace events stable uAPI,
+> > so tools can rely on them long term.
+> >=20
+> > The first patches extend and cleanup the gpu scheduler events,
+> > then add a documentation entry in drm-uapi.rst.
+> >=20
+> > The last 2 patches are new in v8. One is based on a suggestion
+> > from Tvrtko and gets rid of drm_sched_job::id. The other is a
+> > cleanup of amdgpu trace events to use the fence=3D%llu:%llu format.
+> >=20
+> > The drm_sched_job patches don't affect gpuvis which has code to
+> > parse
+> > the gpu_scheduler events but these events are not enabled.
+> >=20
+> > Changes since v7:
+> > * uint64_t -> u64
+> > * reworked dependencies tracing (Tvrtko)
+> > * use common name prefix for all events (Tvrtko)
+> > * dropped drm_sched_job::id (Tvrtko)
+> >=20
+> > Useful links:
+> > - userspace tool using the updated events:
+> > https://gitlab.freedesktop.org/tomstdenis/umr/-/merge_requests/37
+> > - v7:
+> > https://lists.freedesktop.org/archives/dri-devel/2025-January/488117.ht=
+ml
+> >=20
+> > Pierre-Eric Pelloux-Prayer (10):
+> > =C2=A0=C2=A0 drm/debugfs: output client_id in in drm_clients_info
+> > =C2=A0=C2=A0 drm/sched: store the drm client_id in drm_sched_fence
+> > =C2=A0=C2=A0 drm/sched: add device name to the drm_sched_process_job ev=
+ent
+> > =C2=A0=C2=A0 drm/sched: cleanup gpu_scheduler trace events
+> > =C2=A0=C2=A0 drm/sched: trace dependencies for gpu jobs
+> > =C2=A0=C2=A0 drm/sched: add the drm_client_id to the drm_sched_run/exec=
+_job
+> > events
+> > =C2=A0=C2=A0 drm/sched: cleanup event names
+> > =C2=A0=C2=A0 drm/doc: document some tracepoints as uAPI
+> > =C2=A0=C2=A0 drm: get rid of drm_sched_job::id
+> > =C2=A0=C2=A0 drm/amdgpu: update trace format to match gpu_scheduler_tra=
+ce
+> >=20
+> > =C2=A0 Documentation/gpu/drm-uapi.rst=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 19 ++++
+> > =C2=A0 drivers/accel/amdxdna/aie2_ctx.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 3 +-
+> > =C2=A0 drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd.c=C2=A0=C2=A0=C2=A0 |=
+=C2=A0=C2=A0 2 +-
+> > =C2=A0 drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 3 +-
+> > =C2=A0 drivers/gpu/drm/amd/amdgpu/amdgpu_job.c=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 |=C2=A0=C2=A0 8 +-
+> > =C2=A0 drivers/gpu/drm/amd/amdgpu/amdgpu_job.h=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 |=C2=A0=C2=A0 3 +-
+> > =C2=A0 drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h=C2=A0=C2=A0=C2=A0=C2=
+=A0 |=C2=A0 32 ++----
+> > =C2=A0 drivers/gpu/drm/drm_debugfs.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 10 =
++-
+> > =C2=A0 drivers/gpu/drm/etnaviv/etnaviv_gem_submit.c=C2=A0 |=C2=A0=C2=A0=
+ 2 +-
+> > =C2=A0 drivers/gpu/drm/imagination/pvr_job.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 2 +-
+> > =C2=A0 drivers/gpu/drm/imagination/pvr_queue.c=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 |=C2=A0=C2=A0 5 +-
+> > =C2=A0 drivers/gpu/drm/imagination/pvr_queue.h=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 |=C2=A0=C2=A0 2 +-
+> > =C2=A0 drivers/gpu/drm/lima/lima_gem.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 2 +-
+> > =C2=A0 drivers/gpu/drm/lima/lima_sched.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 6 +-
+> > =C2=A0 drivers/gpu/drm/lima/lima_sched.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 3 +-
+> > =C2=A0 drivers/gpu/drm/msm/msm_gem_submit.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 8 +-
+> > =C2=A0 drivers/gpu/drm/nouveau/nouveau_sched.c=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 |=C2=A0=C2=A0 3 +-
+> > =C2=A0 drivers/gpu/drm/panfrost/panfrost_drv.c=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 |=C2=A0=C2=A0 2 +-
+> > =C2=A0 drivers/gpu/drm/panthor/panthor_drv.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 3 +-
+> > =C2=A0 drivers/gpu/drm/panthor/panthor_mmu.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 2 +-
+> > =C2=A0 drivers/gpu/drm/panthor/panthor_sched.c=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 |=C2=A0=C2=A0 5 +-
+> > =C2=A0 drivers/gpu/drm/panthor/panthor_sched.h=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 |=C2=A0=C2=A0 3 +-
+> > =C2=A0 .../gpu/drm/scheduler/gpu_scheduler_trace.h=C2=A0=C2=A0 | 103
+> > +++++++++++++-----
+> > =C2=A0 drivers/gpu/drm/scheduler/sched_entity.c=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 |=C2=A0 16 ++-
+> > =C2=A0 drivers/gpu/drm/scheduler/sched_fence.c=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 |=C2=A0=C2=A0 4 +-
+> > =C2=A0 drivers/gpu/drm/scheduler/sched_internal.h=C2=A0=C2=A0=C2=A0 |=
+=C2=A0=C2=A0 2 +-
+> > =C2=A0 drivers/gpu/drm/scheduler/sched_main.c=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 |=C2=A0 11 +-
+> > =C2=A0 drivers/gpu/drm/v3d/v3d_submit.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 2 +-
+> > =C2=A0 drivers/gpu/drm/xe/xe_sched_job.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 3 +-
+> > =C2=A0 include/drm/gpu_scheduler.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
+=C2=A0 13 ++-
+> > =C2=A0 30 files changed, 186 insertions(+), 96 deletions(-)
+> >=20
+
