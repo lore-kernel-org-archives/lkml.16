@@ -1,66 +1,66 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C16B266F1A
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 14:38:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86984266B6C
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 14:38:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744209510; cv=none; b=V5my7t3RZ6IPFAN/v8j6Nn8nlTebDGHGRxph5WP+eZwE5H6RHcA8opEGn/62aErfGraBxKSU3Mmxb37Jr2w7vrdeX2flt9fR32FArC7NiTak0MMYS0SWI6xef5kYYgpWgyVoaginjGNzOLEGLFnRPd9LpL2lNU9pIasvMHa6WOk=
+	t=1744209511; cv=none; b=tCLorY7U7cC81Cdp4kJnRedGEJp4jXLV2OlR8ahwY56piWaXc1lKEjHbncVa/bajnCr9KKcyrtT9Hw4F99Rsi2qRohxx3MAZx3P48Fj6wQO2UiX/OMMteufbqBQWnZSMAKf2pvP4l6yyWeRsRbtM2JRmtW74ctuLm65G+Hyc1Gg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744209510; c=relaxed/simple;
-	bh=UkC2xQ49cwtjimQJomEXRVHWedJyZAC8YoJhIXvmiUg=;
+	s=arc-20240116; t=1744209511; c=relaxed/simple;
+	bh=LFaWlT8O8apwunlmzUQurSx47z7eOOQyQ6z0Cp8+d3k=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jmJM2A6xnCCChJfRw99VTimWHPGn4NNpckYVo2gjr5ZkhopojYMlYFczESJld9JOHcXOsMP+TqlujNPLqNJiM7tOK6xGfhE3tXZkAUTQPiDrWQo8/aqplZm1bKRdLKvI4OKjBN5d9aFlavjyqIpC1CpjQPSpUgt4DufnGN13d80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WkT/X41n; arc=none smtp.client-ip=209.85.128.54
+	 In-Reply-To:To:Cc; b=Ab+4DpqjMgR2HEWw9WRBhkt5k6uHLV9kwCgRnMCLho/fbfoih3mBdL6DoyWIqM5+xNvWe98xnOTlLxE3cSB6L4amS6DVLTTJ11VeQQFIrWmQy0p/z0U+QXqCfc0bwvztCSFB+VFNPwNTrlC1iAuNfC7SbLzx/o0nU+ti2eFGow8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Mffrfda9; arc=none smtp.client-ip=209.85.221.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WkT/X41n"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43d0359b1fcso6028325e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 07:38:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mffrfda9"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-39c266c2dd5so5966642f8f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 07:38:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google; t=1744209506; x=1744814306; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Bo4P1zkBy5ZJ7KB9fJf8Jg+rHcpVMabyPlCyrK4lEHg=;
-        b=WkT/X41n9slZelJ0f+IjYW4dktevFl1kI5tUYrvL+tBgdXywaca2arAOIjTTr5OVf4
-         1wXIwWEQAjzavsv7ATR4yqQAYx6ETzjyEvSi2Z57zOArhF/1cqoBH1j4JpG10ovuyZZu
-         DuN4BLj84QAMWcNJyW1oszIsM3JALKZ1Q9nTmf2CFhfksyhafgW4fMCVCFpcFClrl7W8
-         u1w+pUOrVeUWugJSyJL6jug3ZOZVD1sZmBRg0iapmtDYowDGsHgavCfERrapOLH+sERA
-         DqprAH+t5dx0AruHB9EFzZXtKB5X58PUyrcbO76BWNYJ0sZDgJWQd/+1bx30458Osprm
-         26vA==
+        bh=B7GE8ttTtM/vr3qrOv34WTHDyd35XgYWdWnFQsZ+vbY=;
+        b=Mffrfda9aWzhCxOfaHpc5/BAV4n45GqI/6v1Gg7IYQpIexuY17y0EX7m55xeQuiEdH
+         WjGbIkj6zK3BW+6gyAu+HFmWH4vi8KEbsOeal2pvMrjwRiIpdNJY59s9VQI0GDB5Ybdg
+         HGTDm5qk9CxuWXdkZg0KYkMsTZo1zeGrQ3tTlkunsQCi8QXd688TIjwvweu2xAqmUi8T
+         OgsvXGc783NoEP2kl6u8wELEuX45PODbKBofgcVcqEk2wmMZOCIloLnnouY19dls7gy9
+         NRst8HgKpEKB66QE7r/sogzAHVb75XBBSHemgaI8wQLgk2h3qYb2Kz3mbqMWy3IjdI1/
+         sHxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1744209506; x=1744814306;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Bo4P1zkBy5ZJ7KB9fJf8Jg+rHcpVMabyPlCyrK4lEHg=;
-        b=xSjGnLCynmyFDPMiGh75HGartxiew9zdhOxl4+UaO+EevE0zirp2VS7HHdNA4+/Ud8
-         1A3C5r/4TQw194mx3/UlrYtP6RmSNtVDC2rQ3gvif+P7NZEgKSp32eo3RgmrIIWxYWow
-         2CMtc6CAMFjqtjOniZAdIe9rTD/aXRcqm9wTyvvOwBZ6K/ajC9bIJ5NNLb7KMEbP/aQv
-         PAUvrSFzfJL94GxlbBk7ZVRrP4fitcJf7gLJw7Rq3TJqBU7kqQgtVKfy+12Clrm2HWmI
-         eB1hWokEA8e5ekRj5FieXzBt+P4WUZ11zyNSFXBUT+8W1s181VCBySvAqHo4aAh0S4Zy
-         zgIg==
-X-Forwarded-Encrypted: i=1; AJvYcCVpIw6SnmyeQll40fWh9dAzwmrIXseyGlXY7nV/VikPGmUpFiLopGQN92BiRCfnS//U/m10pT5IhrmBdoY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbxC+LygwklII3iB8scCMVyonvkTzeHVF9wIMjp9Oi5lBsCirV
-	SddMM5/IJavetbwIJkNxchk66iVKPYPyNABkeMgd+R1FLxiQTfj67dytLkggUsE=
-X-Gm-Gg: ASbGnctr9/q5+xr+MOT0WgujZC6YJm/cB8Io05Cy0oNJinT5KsH2+vhRZD/wS56FENP
-	2R0BDLp0yp3+KlIbhj/lZQrSf6waazcSJuOh3wCXIbWGtrbtMlh3W3WYDMYEtY75HWI3DWci8I+
-	4ua7oWR3Ks+bWeguBTplfPeUUhn9CuHCzrpPV/2BCLjLaBc9FIje65CiuBQm0hINU1/ZyiCfr4z
-	yqtrmf852IouKRqamtc5yYAbdl4aW4EnwgjieG0UQVmhfaCFzg3+5MNzB8rs8uoY+yKM6E0XfUe
-	DAS06t1EO+870OZFk8n3s9JD9JKgV0B2manrP1PI0NgXv9FdCGPNerHzaLUGcA==
-X-Google-Smtp-Source: AGHT+IFv7vvZGkXcHBNRCdhKTeLeBp4cYIuYHhGaihx/MrjaTEN7nvEzCapEn3UnIS2n9HKlMs6wyg==
-X-Received: by 2002:a05:600c:2151:b0:43b:bb72:1dce with SMTP id 5b1f17b1804b1-43f0e55ecc4mr57604475e9.5.1744209505740;
-        Wed, 09 Apr 2025 07:38:25 -0700 (PDT)
+        bh=B7GE8ttTtM/vr3qrOv34WTHDyd35XgYWdWnFQsZ+vbY=;
+        b=EZBD+W0Mq2U5yRv5cXwvB5icLgYTu5Eh/aKvPWnTjXyNopsGHtPgPJKj11LtapiObe
+         JhWmy+FyvVcjTE47Ny15ZqNoEaGFXh8wbk8TqjchRgrhh+2ZhCZMID4C7tSH+2M5C/2x
+         flg4HY49JhL1h5yrs5tzH8dK9T6Ys4Qf+zVrRXIfucny2zie/lAueYSqE342Mi7tfepn
+         8767xz7Dfx/pMISKbybnpsY58q59OxZoOI7we+wVh5WteMGmb1RaIjA/q1ivOWAchUay
+         p9/dYBCsH8arzEXG6AiiUwkuaj3tIfFtswMhkwG7Fl/d5Fcln5zckT8VVwcsmP1xwIVd
+         eXVw==
+X-Forwarded-Encrypted: i=1; AJvYcCUN7dyMfymK9BVJWi8HwtVx7CmGia8rxwaWSaYqUaahNzX/MERExgKcv6M8SPAPRv2hxbXeCDjVK2IGE4o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxif3CkCrH8JelZRlM1b3pflmSh8+YwfaEuejdMyb5EOIcLIyNU
+	Av9+aPR0/FlQsNh84jIyqFSqcbNzNKPIc7C9fyZLEF6N+mOogMHfcna05hqS/K0=
+X-Gm-Gg: ASbGncswfW/yRW5GG5WpxzLXGFbZpr4f39H2byYJf4/aja6I6Nu1t0pIQh15H7DatHN
+	pFxZ6xWIVr5oad+6Z9UgpZAdoCLdvaVUnqjM3cnM37D1f4I4nx+wSaUN3hczKCkGk8IAq6zRcN+
+	44OLp8wL5/YKUIylvCAuoV6tqX0PJN14CljNA8cXbm01UFVSO3V2f8L9Cfgl9TCKOlcCCgY7mLf
+	iOSCLaYfq7v7FgbhOXmVlXS36wyGmZ7m+xoq0t9/1yQVJpDdRWAtx4H8TgdoAEKhkAozMiCVHWi
+	YmD+86fRCZSvXXyr3WSfQdjfkOPbdKn+CJecAWSe84aaPvfrdr22xKLUgdMcGaTZLWiPjY1n
+X-Google-Smtp-Source: AGHT+IHBOcnQAUv4WE9+yjJLtCtaUreStK4OYX964pnkEvboEZCla7DUKWRpQdsuIBMFNPLo96W5lQ==
+X-Received: by 2002:a05:6000:2508:b0:390:ebae:6c18 with SMTP id ffacd0b85a97d-39d87aa57eemr2988297f8f.12.1744209506513;
+        Wed, 09 Apr 2025 07:38:26 -0700 (PDT)
 Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f20625ea4sm22222045e9.12.2025.04.09.07.38.24
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f20625ea4sm22222045e9.12.2025.04.09.07.38.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 07:38:25 -0700 (PDT)
+        Wed, 09 Apr 2025 07:38:26 -0700 (PDT)
 From: Neil Armstrong <neil.armstrong@linaro.org>
-Date: Wed, 09 Apr 2025 16:38:21 +0200
-Subject: [PATCH v4 3/6] media: platform: qcom/iris: introduce optional
- controller_rst_tbl
+Date: Wed, 09 Apr 2025 16:38:22 +0200
+Subject: [PATCH v4 4/6] media: platform: qcom/iris: rename iris_vpu3 to
+ iris_vpu3x
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +69,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250409-topic-sm8x50-iris-v10-v4-3-40e411594285@linaro.org>
+Message-Id: <20250409-topic-sm8x50-iris-v10-v4-4-40e411594285@linaro.org>
 References: <20250409-topic-sm8x50-iris-v10-v4-0-40e411594285@linaro.org>
 In-Reply-To: <20250409-topic-sm8x50-iris-v10-v4-0-40e411594285@linaro.org>
 To: Vikash Garodia <quic_vgarodia@quicinc.com>, 
@@ -83,124 +83,52 @@ Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
  Neil Armstrong <neil.armstrong@linaro.org>, 
  Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4061;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1340;
  i=neil.armstrong@linaro.org; h=from:subject:message-id;
- bh=UkC2xQ49cwtjimQJomEXRVHWedJyZAC8YoJhIXvmiUg=;
- b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBn9oZcV7CVwIn1ST/ZBfpW97oqY5UNsIXiraUmG0sV
- jy96y86JAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZ/aGXAAKCRB33NvayMhJ0d6HD/
- wJFG8FstjJU+by0UVFSAK7fztkHtey1OapUAeLcrAeOp/+KCVrUjr37A2sRZskOOqe7ybZFgsBuCwB
- wsKPhl9YJqR6ej5WIYHfrsP/3/rX5OZWM5P2TnRMPv+Y8XoZXYTRn+feo/f6+PKnTo03dYSmVPkaUS
- KQcNULUdQc4fsKPKtwIcfT8+H9j9NyxzL3Ws27HNzYTKxLvtolrv2YqurKjxk6b5tNLZducEZcX73k
- DoDCl3u4DJYHcbrxpao6Exb6g+a6NyC65mwPtyjpcoNKqe6qb3iIPEAFwhkcwV3zr7+Z0QAE0EDvmn
- V3gknp7ehLJdZh8u9KhMghvuFiQsPc4QKLQwzjF44W1370CrYvYcYzw3+aaQh+Z4CYooSBu31ZeFlO
- 6tKRgT7Icfl5jWcd7WMSV0OZbEWokPoFMF616TmyOdrBnAt1jER7Z2lEzaqqMNsEzhbd0EMCtoEAbR
- KT+IOrcPd/ez7rvOUAps0ADpuYl2Af71wUoGaS8TP/hrepqJyy0w++diJVIS0MTS7zym6fxk6xlecG
- NY56NuUMe8mwVNVgVYW3Abqi1rp7A/8p9ao4RpGejbUNjApUKHlgDS0L1IrL5mkGZIKoVLwq2yz63o
- SbhUPrvHiUFjLyEny6wFI2ygOXHpNFV0yj5XTcA6ubyvRWwNGrWIPIcf1ehg==
+ bh=LFaWlT8O8apwunlmzUQurSx47z7eOOQyQ6z0Cp8+d3k=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBn9oZdrvKI10VRBU2gBQhU5KhrlbnDf2vl/PvYOgG2
+ RDKqtcyJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZ/aGXQAKCRB33NvayMhJ0UzqD/
+ 43VnCWC8Zj6mLX4sAkgQr1lCuIfpTLKKrg1Ok+QyZh7elYr/qrF06zdm2n8THAp0DCDOFEKf7OVENX
+ edB3mdsL39N13pHHoETnsIzBhyUWDSHIWI5P+RJD8fSy4p57Qq44+wa5l41acYu/SZzxPmScmhpAbx
+ niOR1vBAEeiqOcedXLfbITZAqqPw/SteuB+2gucNPHqzAiG7UZeB/WtcKU6tXRf05kNC6lCjzDx1IY
+ 7XhgZlcW2DUGftDe8IKSKKEiI7di0r4hnAMqMsyw9HHeEE/iOGk3EWAqslkmXOahiKijybX5QDDckJ
+ SzaN38j17zNiWMOQgGU+EdNTQO3kd15YkKDSU9Bu8R5rjY4r8TqmM8WaxX1MQVVzMMDyaVBUl0b6lc
+ LO/dA7HlEsu+9hwTC4XinTQev8PMNu4hJVd24CfFMMbCB9YwT83coL+z2lMqlvm6r6qJRjrzNHVlwO
+ 25NGiSD4usN/bLW1wlIDhp2cJaHLmMMbw/m+9n2S4czbR+SDpyrs4v9GvsMGrC8YXSPCys+1hzpL5b
+ z21EbKOnY2nVIwUWMCpY6Z3ZLeOuxzrw3qRg4wDlH+Ai3q5hKeonwJLLVseitv/iYqOfjWn4bCWuLr
+ l1ivBNMV2Qzh+BrfbBaQqRHhJzP2HEM3bkuqi+NO1KK0DN4UlcUV2TDd59Wg==
 X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
  fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
-Introduce an optional controller_rst_tbl use to store reset lines
-used to reset part of the controller.
+The vpu33 HW is very close to vpu3, and shares most of the
+operations, so rename file to vpu3x since we'll handle all vpu3
+variants in it.
 
-This is necessary for the vpu3 support, when the xo reset line
-must be asserted separately from the other reset line
-on power off operation.
-
-Factor the iris_init_resets() logic to allow requesting
-multiple reset tables.
-
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Reviewed-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
 Tested-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org> # x1e Dell
 Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 ---
- drivers/media/platform/qcom/iris/iris_core.h       |  1 +
- .../platform/qcom/iris/iris_platform_common.h      |  2 ++
- drivers/media/platform/qcom/iris/iris_probe.c      | 39 +++++++++++++++-------
- 3 files changed, 30 insertions(+), 12 deletions(-)
+ drivers/media/platform/qcom/iris/Makefile                      | 2 +-
+ drivers/media/platform/qcom/iris/{iris_vpu3.c => iris_vpu3x.c} | 0
+ 2 files changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/qcom/iris/iris_core.h b/drivers/media/platform/qcom/iris/iris_core.h
-index 37fb4919fecc62182784b4dca90fcab47dd38a80..78143855b277cd3ebdc7a1e7f35f6df284aa364c 100644
---- a/drivers/media/platform/qcom/iris/iris_core.h
-+++ b/drivers/media/platform/qcom/iris/iris_core.h
-@@ -82,6 +82,7 @@ struct iris_core {
- 	struct clk_bulk_data			*clock_tbl;
- 	u32					clk_count;
- 	struct reset_control_bulk_data		*resets;
-+	struct reset_control_bulk_data		*controller_resets;
- 	const struct iris_platform_data		*iris_platform_data;
- 	enum iris_core_state			state;
- 	dma_addr_t				iface_q_table_daddr;
-diff --git a/drivers/media/platform/qcom/iris/iris_platform_common.h b/drivers/media/platform/qcom/iris/iris_platform_common.h
-index f6b15d2805fb2004699709bb12cd7ce9b052180c..fdd40fd80178c4c66b37e392d07a0a62f492f108 100644
---- a/drivers/media/platform/qcom/iris/iris_platform_common.h
-+++ b/drivers/media/platform/qcom/iris/iris_platform_common.h
-@@ -156,6 +156,8 @@ struct iris_platform_data {
- 	unsigned int clk_tbl_size;
- 	const char * const *clk_rst_tbl;
- 	unsigned int clk_rst_tbl_size;
-+	const char * const *controller_rst_tbl;
-+	unsigned int controller_rst_tbl_size;
- 	u64 dma_mask;
- 	const char *fwname;
- 	u32 pas_id;
-diff --git a/drivers/media/platform/qcom/iris/iris_probe.c b/drivers/media/platform/qcom/iris/iris_probe.c
-index aca442dcc153830e6252d1dca87afb38c0b9eb8f..4f8bce6e2002bffee4c93dcaaf6e52bf4e40992e 100644
---- a/drivers/media/platform/qcom/iris/iris_probe.c
-+++ b/drivers/media/platform/qcom/iris/iris_probe.c
-@@ -91,25 +91,40 @@ static int iris_init_clocks(struct iris_core *core)
- 	return 0;
- }
+diff --git a/drivers/media/platform/qcom/iris/Makefile b/drivers/media/platform/qcom/iris/Makefile
+index 35390534534e93f4617c1036a05ca0921567ba1d..473aaf655448180ade917e642289677fc1277f99 100644
+--- a/drivers/media/platform/qcom/iris/Makefile
++++ b/drivers/media/platform/qcom/iris/Makefile
+@@ -20,7 +20,7 @@ qcom-iris-objs += \
+              iris_vb2.o \
+              iris_vdec.o \
+              iris_vpu2.o \
+-             iris_vpu3.o \
++             iris_vpu3x.o \
+              iris_vpu_buffer.o \
+              iris_vpu_common.o \
  
--static int iris_init_resets(struct iris_core *core)
-+static int iris_init_reset_table(struct iris_core *core,
-+				 struct reset_control_bulk_data **resets,
-+				 const char * const *rst_tbl, u32 rst_tbl_size)
- {
--	const char * const *rst_tbl;
--	u32 rst_tbl_size;
- 	u32 i = 0;
- 
--	rst_tbl = core->iris_platform_data->clk_rst_tbl;
--	rst_tbl_size = core->iris_platform_data->clk_rst_tbl_size;
--
--	core->resets = devm_kzalloc(core->dev,
--				    sizeof(*core->resets) * rst_tbl_size,
--				    GFP_KERNEL);
--	if (!core->resets)
-+	*resets = devm_kzalloc(core->dev,
-+			       sizeof(struct reset_control_bulk_data) * rst_tbl_size,
-+			       GFP_KERNEL);
-+	if (!*resets)
- 		return -ENOMEM;
- 
- 	for (i = 0; i < rst_tbl_size; i++)
--		core->resets[i].id = rst_tbl[i];
-+		(*resets)[i].id = rst_tbl[i];
-+
-+	return devm_reset_control_bulk_get_exclusive(core->dev, rst_tbl_size, *resets);
-+}
-+
-+static int iris_init_resets(struct iris_core *core)
-+{
-+	int ret;
-+
-+	ret = iris_init_reset_table(core, &core->resets,
-+				    core->iris_platform_data->clk_rst_tbl,
-+				    core->iris_platform_data->clk_rst_tbl_size);
-+	if (ret)
-+		return ret;
-+
-+	if (!core->iris_platform_data->controller_rst_tbl_size)
-+		return 0;
- 
--	return devm_reset_control_bulk_get_exclusive(core->dev, rst_tbl_size, core->resets);
-+	return iris_init_reset_table(core, &core->controller_resets,
-+				     core->iris_platform_data->controller_rst_tbl,
-+				     core->iris_platform_data->controller_rst_tbl_size);
- }
- 
- static int iris_init_resources(struct iris_core *core)
+diff --git a/drivers/media/platform/qcom/iris/iris_vpu3.c b/drivers/media/platform/qcom/iris/iris_vpu3x.c
+similarity index 100%
+rename from drivers/media/platform/qcom/iris/iris_vpu3.c
+rename to drivers/media/platform/qcom/iris/iris_vpu3x.c
 
 -- 
 2.34.1
