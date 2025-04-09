@@ -1,179 +1,79 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EA47258A;
-	Wed,  9 Apr 2025 03:57:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E5983FB1B
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 03:59:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744171079; cv=none; b=PIyrbdRLv9DyGSJcvSLu/ZYdpoOze4Q/iSdRb22tfd1hxPXxODP+YqElklQeLOKe2lh19jRiH5GNC8BS5g6XxrwY2ekjSKotWl/Fq93k5x5ceD3Ok4aTz7rlJrxY92l5Ye2DZAsboXkPyTHWUvdw+CZdAz/I/SL5H+SxYjCnnpc=
+	t=1744171148; cv=none; b=GLCrTsDDrF79TySNSevcXVcwOkIz3tg5n1YR9/+SzJT2Z9kIipgd3bTnyLExPvSevc2PtR+md9/6A/IIAK41oZRY/QUZ1UXb2zFCrLIb/4uViKganGb/yWBIsnP9hZX2dOo2HOSqdK3k9mGFa820bLW/Cod5aRRWTQJRhTq8h6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744171079; c=relaxed/simple;
-	bh=C8VoMDP/9DwEUbnuWChyJAzFBxjjKZGOkfQ/fb1wU68=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=spb4V/XG3csNqsqUAmHThMwyOCu437iH2us+H2kNDnQuO3eZHIFyxBs9tl1XJf7AV1jkY8SB2BixADb1oxKs7u8CbPq6N/VEsHJs4qS1K5BGeYHp0dxhdWCiagCVGDiZv4/qxqgFlO/A8e9qZhE7xIo8OdQyrra121cjnQM7QG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=czI78n2P; arc=none smtp.client-ip=220.197.31.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="czI78n2P"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=KKEef
-	WvqrG4PzRUfHiysIFUryV3aK/Eeg4jpW8eL55c=; b=czI78n2P/yvESCIDnKo8I
-	FCgXJj2+3LlfT9p1VD/pT+z4i6MeXMTR8OyRV5ra286hV1YuOZtJmaTzKaQpRUJk
-	somfp2KLxKAGMGX9LK+8NiexIfh80jVVoFpiNsOir2aHetfBRTXHEAfaXXnroPuG
-	hXcYTSIihe+Rx39jgTKSFc=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wDHD3GH7PVnbwQBFQ--.4446S6;
-	Wed, 09 Apr 2025 11:42:06 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: lpieralisi@kernel.org,
-	bhelgaas@google.com
-Cc: kw@linux.com,
-	manivannan.sadhasivam@linaro.org,
-	ilpo.jarvinen@linux.intel.com,
-	robh@kernel.org,
-	jingoohan1@gmail.com,
-	thomas.richard@bootlin.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Hans Zhang <18255117159@163.com>
-Subject: [PATCH v9 4/6] PCI: dwc: Use common PCI host bridge APIs for finding the capabilities
-Date: Wed,  9 Apr 2025 11:41:54 +0800
-Message-Id: <20250409034156.92686-5-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250409034156.92686-1-18255117159@163.com>
-References: <20250409034156.92686-1-18255117159@163.com>
+	s=arc-20240116; t=1744171148; c=relaxed/simple;
+	bh=/hs4mz57QkzD+POEBZdYWPhm87ASHpd3wXi171AOTVE=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=Dp/oZ3EOM2Wuo8b9azDolkk8EEfbNjkHiMlC2KpCca7cZmve2hbuJFvNYMopjDIhxVJbW9mz2foqEsfQSKi4oqWR4OuE/2pc9L16L9AQci/Nb+6fy7lB9lLRrExH6LTXKiX4xcwzsZkEEGRy6sr0RYNJATODaQX4sjlJnDq3ZyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d443811f04so60128035ab.1
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 20:59:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744171145; x=1744775945;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3Xmbh9ETjMYYnIqDT5ZMvjmgmJyKPg1AP50uzLWCg0M=;
+        b=UKydxtY3JyLXzS4bD/fuom3mnCdbYx3RzYLLPFV9/VB1bLiMU7aegmZTm0dMnV/jI9
+         hluF/GTye16NfTNwUXdH0q11B2pUZ8slK0iRsDl4cULB/XFFjOQdvZj9RRyYotuV4b3i
+         IJcglh6qoTJF70ksuGLoU/XLNwKBAoI1m8oO0/va7dSTDxKX76cJq3isDf+vI7fCIuj+
+         qJ5LOdozvHdU+nOwqkU6ITRIylhnIy0MoYjLVbs32giGF7+ijxl3QGPwCCwujDcJZbdX
+         K6u0u7BG7bNLLf/xqyzh8VUoJbe2LZnQIctgiqgmaZSaOlvSNd8h/iIei/DjZOEezZKB
+         rOEw==
+X-Forwarded-Encrypted: i=1; AJvYcCXBdvzFyy6zOp/lfga7RB9kARJz7RyKsj1LQQBqglBxNeUxHoxzdz2PqDE2oMN1yNmkiRLHx1qNvlNBLho=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6qm4AmcomX79IjNrsRcr2Pt3tyHB4DhNIip+bKz3OibUvVmqT
+	WEpxnEGPg+SehdlMnavBy/XnZlSZYqhUmxWseJ9Mfu4ya/nTW0pwu9bIYS47U6fgYmPc3TZzrQa
+	cQp9L5hsNW5WbHhqz8tR50BtzrSfLukMvq6gj8cVPIWwxlWK8bLh/QGA=
+X-Google-Smtp-Source: AGHT+IFjLjZ26x0YTu6iNlhJUnYo5KtlBBw/Aia86NjqsznbuOsPBWlCVziPfDJ8T26S/BmRFOyIO3aIpkN0zXTLzeAKegTiXgZq
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDHD3GH7PVnbwQBFQ--.4446S6
-X-Coremail-Antispam: 1Uf129KBjvJXoWxury5Cw17JryfCFy7ZrW8JFb_yoW5ZFWDpa
-	yrA3ZYkr4rtr4aqa1qvFnIyFy5AF9xAFWxZa97GwnavF12krWjg340kayaqF1IyrZFgF13
-	Kr48JF95Cw1ktFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zEbAwPUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOhEqo2f16yc8WQAAsZ
+X-Received: by 2002:a05:6e02:1582:b0:3d4:4134:5213 with SMTP id
+ e9e14a558f8ab-3d7b462136cmr8112525ab.11.1744171145539; Tue, 08 Apr 2025
+ 20:59:05 -0700 (PDT)
+Date: Tue, 08 Apr 2025 20:59:05 -0700
+In-Reply-To: <67f4d325.050a0220.396535.0558.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67f5f089.050a0220.258fea.0009.GAE@google.com>
+Subject: Re: [syzbot] [net?] WARNING in __linkwatch_sync_dev
+From: syzbot <syzbot+48c14f61594bdfadb086@syzkaller.appspotmail.com>
+To: andrew@lunn.ch, davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
+	jv@jvosburgh.net, kuba@kernel.org, linux-kernel@vger.kernel.org, 
+	liuhangbin@gmail.com, netdev@vger.kernel.org, pabeni@redhat.com, 
+	sdf@fomichev.me, stfomichev@gmail.com, sven@narfation.org, 
+	sw@simonwunderlich.de, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Use the PCI core is now exposing generic macros for the host bridges to
-search for the PCIe capabilities, make use of them in the DWC driver.
+syzbot has bisected this issue to:
 
-Signed-off-by: Hans Zhang <18255117159@163.com>
----
-Changes since v8:
-- None
+commit 00b35530811f2aa3d7ceec2dbada80861c7632a8
+Author: Eric Dumazet <edumazet@google.com>
+Date:   Thu Feb 6 14:04:22 2025 +0000
 
-Changes since v7:
-- Resolve compilation errors.
+    batman-adv: adopt netdev_hold() / netdev_put()
 
-Changes since v6:
-https://lore.kernel.org/linux-pci/20250323164852.430546-3-18255117159@163.com/
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=175db74c580000
+start commit:   7702d0130dc0 Add linux-next specific files for 20250408
+git tree:       linux-next
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=14ddb74c580000
+console output: https://syzkaller.appspot.com/x/log.txt?x=10ddb74c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=91edf513888f57d7
+dashboard link: https://syzkaller.appspot.com/bug?extid=48c14f61594bdfadb086
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11520398580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16b1323f980000
 
-- The patch commit message were modified.
+Reported-by: syzbot+48c14f61594bdfadb086@syzkaller.appspotmail.com
+Fixes: 00b35530811f ("batman-adv: adopt netdev_hold() / netdev_put()")
 
-Changes since v5:
-https://lore.kernel.org/linux-pci/20250321163803.391056-3-18255117159@163.com/
-
-- Kconfig add "select PCI_HOST_HELPERS"
----
- drivers/pci/controller/dwc/pcie-designware.c | 72 ++------------------
- 1 file changed, 7 insertions(+), 65 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 97d76d3dc066..274f1add95b0 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -205,83 +205,25 @@ void dw_pcie_version_detect(struct dw_pcie *pci)
- 		pci->type = ver;
- }
- 
--/*
-- * These interfaces resemble the pci_find_*capability() interfaces, but these
-- * are for configuring host controllers, which are bridges *to* PCI devices but
-- * are not PCI devices themselves.
-- */
--static u8 __dw_pcie_find_next_cap(struct dw_pcie *pci, u8 cap_ptr,
--				  u8 cap)
-+static int dw_pcie_read_cfg(void *priv, int where, int size, u32 *val)
- {
--	u8 cap_id, next_cap_ptr;
--	u16 reg;
--
--	if (!cap_ptr)
--		return 0;
--
--	reg = dw_pcie_readw_dbi(pci, cap_ptr);
--	cap_id = (reg & 0x00ff);
--
--	if (cap_id > PCI_CAP_ID_MAX)
--		return 0;
-+	struct dw_pcie *pci = priv;
- 
--	if (cap_id == cap)
--		return cap_ptr;
-+	*val = dw_pcie_read_dbi(pci, where, size);
- 
--	next_cap_ptr = (reg & 0xff00) >> 8;
--	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
-+	return PCIBIOS_SUCCESSFUL;
- }
- 
- u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
- {
--	u8 next_cap_ptr;
--	u16 reg;
--
--	reg = dw_pcie_readw_dbi(pci, PCI_CAPABILITY_LIST);
--	next_cap_ptr = (reg & 0x00ff);
--
--	return __dw_pcie_find_next_cap(pci, next_cap_ptr, cap);
-+	return PCI_FIND_NEXT_CAP_TTL(dw_pcie_read_cfg, PCI_CAPABILITY_LIST, cap,
-+				     pci);
- }
- EXPORT_SYMBOL_GPL(dw_pcie_find_capability);
- 
--static u16 dw_pcie_find_next_ext_capability(struct dw_pcie *pci, u16 start,
--					    u8 cap)
--{
--	u32 header;
--	int ttl;
--	int pos = PCI_CFG_SPACE_SIZE;
--
--	/* minimum 8 bytes per capability */
--	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
--
--	if (start)
--		pos = start;
--
--	header = dw_pcie_readl_dbi(pci, pos);
--	/*
--	 * If we have no capabilities, this is indicated by cap ID,
--	 * cap version and next pointer all being 0.
--	 */
--	if (header == 0)
--		return 0;
--
--	while (ttl-- > 0) {
--		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
--			return pos;
--
--		pos = PCI_EXT_CAP_NEXT(header);
--		if (pos < PCI_CFG_SPACE_SIZE)
--			break;
--
--		header = dw_pcie_readl_dbi(pci, pos);
--	}
--
--	return 0;
--}
--
- u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap)
- {
--	return dw_pcie_find_next_ext_capability(pci, 0, cap);
-+	return PCI_FIND_NEXT_EXT_CAPABILITY(dw_pcie_read_cfg, 0, cap, pci);
- }
- EXPORT_SYMBOL_GPL(dw_pcie_find_ext_capability);
- 
--- 
-2.25.1
-
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
