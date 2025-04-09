@@ -1,45 +1,46 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2060.outbound.protection.outlook.com [40.107.93.60])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2068.outbound.protection.outlook.com [40.107.94.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71FF22561CE
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 11:16:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.60
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 525622561CE
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 11:16:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.68
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744197367; cv=fail; b=cPfNLbAT8UmRGtqXY2UN04Lps9zcARV6lY2G2GyAfYN/1u/b97hcsY5oP0lOuabaak/yGPIxyGNlGs+xBKLscBvwnk+dB167D6pGLXOMqCYnA1YYwTCCZsHvdInKG499jDfJkma5Himx2sl5TMU2c1zBAH3vjDW9IS9dn/ap6XE=
+	t=1744197383; cv=fail; b=h+kuveMUWOZL6Go+7iBuMbQWzffiz4WI/bmWPesBSsqdWC1B6Cajz2QUp81hVNm9ZDV12lM55hFqdnJ/GXAjpIbP3Yx/ehxqyhysw+KT9Z9CVjXqZ1gHilviGulK92x+ekG/JPkGjji8DIfwGAM8crp4EZ9rQeVW4Maku2SgbLg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744197367; c=relaxed/simple;
-	bh=O4OaLaZg8UL1lGoBT42QsaUFFfM6nGTAH9Gb7PJ8lDA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gV1jiXyDKPvCf5OY1Xfq/Z6ZS5LuRgT2STwUf6blkO9qix9ImbU33osi6gzMo98Do5Jst832lBLEcsRqWVMx6zkRf11iKCY0N+Im0vgMY76hTG/3gGdO4ijuSbNRR6FVUpllQt8oOxlHjPhQ9IcLhaR0gTXG+PpRTdJjOP/sWos=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=g8zX5XP3; arc=fail smtp.client-ip=40.107.93.60
+	s=arc-20240116; t=1744197383; c=relaxed/simple;
+	bh=K4QmAXWan/Gfh4IaOG/Go2kfyw+qoo0me0o6FHn61WY=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KhV7zaqSu7GC1qxNkfPG0PqtP+kX9GIK1pT87GK7vXupNCzN0xdDEGjiBG8YzlV6l6fJSKMQ7ufzIvn2Lbxj0zK+vR1MikwZHEA3UWEJisI6lAhz+A/mNiEK+I6O9CCOI4pmXyejyerLcKG4zkbacQa/QeYFZ8AcagHVqUHOmQU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=neZ87bgR; arc=fail smtp.client-ip=40.107.94.68
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="g8zX5XP3"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="neZ87bgR"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YxruYfwVYCQMB8QJXETERoAS/gWKbzYCgD7CqxaV8E3x3ug+FwQ3GwNA1w4mRvh3vAkHk/YKYNf0VzCbxAP/tqEtNK+Os/upa6esV/lqBJ2z/Ty29rGx4AxU/sbWVBl/jzfewH9gbraU11xIlATkiT5b0yDUcaGZX7ZLCDADvwFiKW6a0kRMyRW/v4UqN3Vs3JsNH9YfVWrtNezV/Q9q3zBzll7mW1/VLV1FDSPdi3n3Qr3VvbdTw82vqJMEGeE2IwaXjw9LjEAnCBefDq+bMi/VYmNa2g6QW2mspqY9ytzW1y/1A3KBwG1LGUiil0V+CxO+bfz0YFAnJqbhouslaQ==
+ b=F/8vv0ocioFKVbDF6yZ8LiXJ8zPgXvSh6lJpW0LqFY+/bWl+VyG/RoOnTa+HMlCgXzrCWCoSrQsIQXSvL+pw9j2Pm4MNDaYSxPhEf9YKuVzVY5/PbGY+8LCxUY9+tmYQkNLJwFK7c9r1ZdqeLvyHTSpEuQi7+HxwJyzNrmJRmtIA4/CIF+MOP8pEGx62rdxiutVUm4j/dfttzxh1rlHQnucQiHOCFAzrf/AogQla/UeEsgZRp89aOt4nhXBGV76zX82Duoob84eqEd+S42FjSJTx5gBGWt8jNU468DdywIgPSs4k/kLjkVlPXgARHk+rm1Xlh692y1gE7IET1l8i7A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZYw1LaIgNKo3SJ+Yq+WYdTqKiyWr/uE5RRC0Weuo5XI=;
- b=X+0gia10zsJ3+Hf2DrhoQ92p2eW0r3jlQj8wKww+O8mGo8pZ6RLnpBMPLhCkXFurGtes9xAtzDJD9jBtAxzlj37O3Yq1Ea02HWFbkZOg9q3tb7K51OGWfWB5jdOMksX1kJlCmaPc5+sKhjbQiINI1YfFeEB24mpo5PaX90AcSB9E22EgGMdIZUOf/vovbCTQFMt1dizJZqBAXhFbYNHSILGpFK4uCx2z8GKQxt1bRDezyjlVt9+NSJmLQc45ToSNqkBaudrnSIqpwjYGiKNz4NxHOvIAlPV/5GX3U6fFKRx2vKDpDHmpiMDW2YPgcUC3eY062C2BEGLBpNlg4/Ml+Q==
+ bh=kPVaxz21b+77MaWG9eBfmcoXKISJNR++9KE9ZeXUHHw=;
+ b=AmzRrpg10NJPmsDo09K9tRx2Dw3eB3CjMNKcnqBZrJI1dgOTIFxj2EkyS9KOAofkFJcocyCNBX1nWe0LYHVxGyhGhXPOKQU/iYQRxWDlISxxTheCXVeUM2KxOabOA17vmXcMxOnU1wTBPmmvqPVRRLKy7U5hEQsuht3vdAvVf89jPDaL8L6sJLVi/YtEue1+6An866b+sx1B3e6b6lrTAjgcrNn/XKJIO4TqDwZ6hJmvjL2NBbbnxAb9y+nKODikGBD+jPG3x48bv3g92eoB2HuYxifMTV2oESHt5U0QszSHAZk8wqtpRGjOX+plrHzCbjQwPALG4+C2Svsz1Xrv0Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZYw1LaIgNKo3SJ+Yq+WYdTqKiyWr/uE5RRC0Weuo5XI=;
- b=g8zX5XP3c5YJOLsM/6bbpOw+RTONzR6xm5pK5MpsRSebJYjeooY7Mt3RZppx/bZqz/wlRF11gzv3vxIMO8YvqBSUHTaUSz8TPRJ50hSpSfy3OZOUA88tTwqVwq0RxrEtaf1tJajHoxQbBv2uHk4KMwzoCzuoBiDv9kkDVK8f3XM=
-Received: from PH7P220CA0158.NAMP220.PROD.OUTLOOK.COM (2603:10b6:510:33b::34)
- by DS4PR12MB9562.namprd12.prod.outlook.com (2603:10b6:8:27e::5) with
+ bh=kPVaxz21b+77MaWG9eBfmcoXKISJNR++9KE9ZeXUHHw=;
+ b=neZ87bgReiSZckgPbuD4r5sa+xxI3a8TjX5Et6UNEpiRLzXjLudljyxawKIQSYlif+K3llv2Nb9s2nKieOrgCxjtDukV5POoTSS1dhKpQ34pkOFLtfhBgn/67CHh5THDZWOohOcLv/czqqjyPFd6JAn4Efe+IexvlCXP0QuJoJQ=
+Received: from CY5PR16CA0017.namprd16.prod.outlook.com (2603:10b6:930:10::6)
+ by PH7PR12MB7115.namprd12.prod.outlook.com (2603:10b6:510:1ee::15) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.21; Wed, 9 Apr
- 2025 11:16:00 +0000
-Received: from CY4PEPF0000FCBE.namprd03.prod.outlook.com
- (2603:10b6:510:33b:cafe::b2) by PH7P220CA0158.outlook.office365.com
- (2603:10b6:510:33b::34) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.33; Wed, 9 Apr
+ 2025 11:16:18 +0000
+Received: from CY4PEPF0000FCC2.namprd03.prod.outlook.com
+ (2603:10b6:930:10:cafe::ca) by CY5PR16CA0017.outlook.office365.com
+ (2603:10b6:930:10::6) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.22 via Frontend Transport; Wed,
- 9 Apr 2025 11:15:59 +0000
+ 9 Apr 2025 11:16:17 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -47,13 +48,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000FCBE.mail.protection.outlook.com (10.167.242.100) with Microsoft
+ CY4PEPF0000FCC2.mail.protection.outlook.com (10.167.242.104) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8632.13 via Frontend Transport; Wed, 9 Apr 2025 11:15:59 +0000
+ 15.20.8606.22 via Frontend Transport; Wed, 9 Apr 2025 11:16:17 +0000
 Received: from BLRKPRNAYAK.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 9 Apr
- 2025 06:15:53 -0500
+ 2025 06:16:12 -0500
 From: K Prateek Nayak <kprateek.nayak@amd.com>
 To: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
 	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
@@ -63,10 +64,12 @@ CC: Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt
 	<mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, "Gautham R.
  Shenoy" <gautham.shenoy@amd.com>, Swapnil Sapkal <swapnil.sapkal@amd.com>, "K
  Prateek Nayak" <kprateek.nayak@amd.com>
-Subject: [RFC PATCH 0/5] 
-Date: Wed, 9 Apr 2025 11:15:34 +0000
-Message-ID: <20250409111539.23791-1-kprateek.nayak@amd.com>
+Subject: [RFC PATCH 1/5] sched/fair: Add push task framework
+Date: Wed, 9 Apr 2025 11:15:35 +0000
+Message-ID: <20250409111539.23791-2-kprateek.nayak@amd.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250409111539.23791-1-kprateek.nayak@amd.com>
+References: <20250409111539.23791-1-kprateek.nayak@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,147 +82,235 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000FCBE:EE_|DS4PR12MB9562:EE_
-X-MS-Office365-Filtering-Correlation-Id: 88cc3b0b-d66e-4ce6-ec5c-08dd7757e813
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000FCC2:EE_|PH7PR12MB7115:EE_
+X-MS-Office365-Filtering-Correlation-Id: 52c57013-712e-46a7-f199-08dd7757f300
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014|7416014|13003099007;
+	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014|7416014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?boa0njwUtgeEquuDYR37x0qcd7APaopigxnAC+JmApnSpj0CcttU2QFCOCfz?=
- =?us-ascii?Q?SgzZXQTj80GDg3YTL65KB51KlaKwQ9kZOMqM8QWW9JwVgYs+eteArfo50Buk?=
- =?us-ascii?Q?qBFO0UZbXNF6+RgHHRJKwMFo9sw8BPWPTfepJLa0TOtjrOzyccBCmHwpmv/M?=
- =?us-ascii?Q?xwv9n2iepYK7mZUDWr6mXOCFQWPFHDR02XVVTAGUR/o6aC0UviP+NRIXGDgX?=
- =?us-ascii?Q?2OdB/NIVLLhOgrUfjcB+ECr7or0ll/dhlOYL4KvmKcZ8JCVETAhfm3lsOw2J?=
- =?us-ascii?Q?v0Za+qjO1nbHQjiZoOW0J+8kTVa0w8octNRHKgBawie3ZSeV8Uf9bkzCI58+?=
- =?us-ascii?Q?PoTN91Sbb3uEziFP5W6Xu3ni6/vpE7X3MgZrXpBu395ulbwYO6Z+GVrMmhcN?=
- =?us-ascii?Q?OFXBYLuZSDJz4+pXmTJ1tAznfRwctfVNkWL8UY3zzo6Az8kBPLMiCUgGkKIj?=
- =?us-ascii?Q?f/Q5FiWgYuA+C1dQlvg7JY6dtqfa5GMCyfXDJ8BN3Lj50b/prCN6kd/yGQWW?=
- =?us-ascii?Q?MGvgTjEXCPmix32F/FHMuL1CtZ0pCM4EYvYiEv5E8zf7QE+Jjc6rocwUyufH?=
- =?us-ascii?Q?J3XcFqOfALBYa91Y6V1jVamLQsoFGkFowz2uYthAi52XGaxiEpVCi19iRejP?=
- =?us-ascii?Q?c1hgDYxuiqJwjIq3dTW6kBDMymadLZb0+MvMUeEPwk5TVgSqmIVoSdsK0N0K?=
- =?us-ascii?Q?cB5XxKE8jO+SWuRdXMAx70a1Nw7ULzMkDTwvxI3E3Xaz/CqFQ3omrV337wEd?=
- =?us-ascii?Q?Sa29ZpaRrbTG5Q7uly0FA1lGuAE9PK71nEc+kTl5J+TpnZ9lBvpExtD0jxkS?=
- =?us-ascii?Q?hnztDk5FnQBoyFWaUz8RqtNwiOXdkeqBvKe8Ulg674aeA2eRon6fwCSiU+Gu?=
- =?us-ascii?Q?yDmV8DKWxSHGHDTuHKyUhBkYRdRKWFHlSaXypG2LVLI96b+KFPWdAh/+aWTB?=
- =?us-ascii?Q?NXJrQM2xtn+i+D1paVDu3iBDSj6Q7y4zM2gj3Xai7usKMKIrnoqXVDN/KLz3?=
- =?us-ascii?Q?3uyQxhItjo8GprgUNf3bE/L940FrbwkRa4x1hA90dGBqPiqol2JDo/60rFHP?=
- =?us-ascii?Q?12C8Iuybf/NwO5Hz2b0wSInVI/5fX/0CACCsc9VATt4cz4UfhknrI4Vf1873?=
- =?us-ascii?Q?4xMZ8zJ9HpDKCUv56pvF58busdb74FxJaaGDoVOENhSUx81t035PwSM6qLYw?=
- =?us-ascii?Q?0o3ZozHiSyl7hFmnVnd6jg1Kyxu6lI1aerl26ifuGxPxyh5wGvpkmB5onqGm?=
- =?us-ascii?Q?Nyw3njmruDYGTrLQjfzbjK9DWi7j4MX5i9riZpK3F+UaqJc9G9OoYSozdI13?=
- =?us-ascii?Q?aDdaeVpJkXhoXyC54VWvO1/GgZ0MZoUGAS3Q3Q3DOh33747C1hNY3k+PGPFd?=
- =?us-ascii?Q?YU43vTRl8WpofmFprwLfT0IfeTQTRjzyIW3p3WKDSDDYpG+6sUYfIp60phep?=
- =?us-ascii?Q?+54hVB2ZWdzg5K0/bPuiAqeP/vxBOCTz1UEcfh6URyUTSW6R6HGcJNSSVa11?=
- =?us-ascii?Q?ho9QBTxamSXFK9A=3D?=
+	=?us-ascii?Q?FiJo86WTMzdqjtw8VtlRltDI1mxluBlTos1eCb1O7UXU1jZK5OofhT9Z5Sdj?=
+ =?us-ascii?Q?jQaIPAC0A9/lTPkrAPscOk44++HPcijChJujDIaKAS+Cv3TltR1w8zSEy7DF?=
+ =?us-ascii?Q?VbFOPX70/hkzC6CrjwDyudLRUXaH++h4rICl1SI9nY8JrpzbvSdzp25TXLC0?=
+ =?us-ascii?Q?9cLvxBWEStrh2DE4MEmmIs5tcmKX3rvaH3Y8Hz5aPeGL6RVPEQbdUC+i4CRt?=
+ =?us-ascii?Q?jcG/THORVYGbso+NeOcUkmrCXi5WLygWvJWtn4SgJSVzky+3Wu1B1rxr0Vnz?=
+ =?us-ascii?Q?1F/IpUPyGeHRZZdrIMDZSSTn0T9SRlvv/CymkgoX0rHNXSsPRkIPdJ0adPr6?=
+ =?us-ascii?Q?u8KPlDLDi+kJR6QRGaPGapWeWU4qiro1DOSOC6jHWxGGHL9qzoYyX0jIGHrW?=
+ =?us-ascii?Q?sfvfKkyKbyggG2H/cTTllLz49EI9ynoZ9Mew6baSznMXfHw9zU9IHjVLXQxt?=
+ =?us-ascii?Q?uXOcKGysu3WhMBo3ktGgKJy0Z0qvPvioJjkSer8he27u3MjlUgKSJBFgGx2q?=
+ =?us-ascii?Q?wD7TDxw7mAVaJK7oq057eD68+swMSGwFfANOYmLCwFrwKTRq3a9Z/aHfh5oa?=
+ =?us-ascii?Q?rYyBtmKufV4IVYlnngQPbuXe7nDUx794Ps1F6rORnoxevMdiz+T8hILBiHcX?=
+ =?us-ascii?Q?A71f7IH6otKzcdgbvft8zMVN/9yHBkuPhNmUenGPJM9ZStPUqHQXiP3RIRqY?=
+ =?us-ascii?Q?Q8wRGm4JfBwdXkc8qCWMbbfwBZh85bu87bGftaa7gyNS0aNyS6MjUJP8+xDJ?=
+ =?us-ascii?Q?yHMIWNKE1/E1QwuhsJ0DzhrSCIwW9/X6JpW2+tUKF7v8RKmd8pufPXStA2VJ?=
+ =?us-ascii?Q?OoQomA5usXb8BXmePH7TrPss89TzA1Jjb8Ub4enYoIDeJtsVbcdD4nHYQ+iW?=
+ =?us-ascii?Q?kC3WqDJfJmbGe4AcaBbLRE5L5lBY4VUtgMRKY/C8fsidAdSOzxN5E+aDkOUp?=
+ =?us-ascii?Q?G8JlcNEZG3N1lu6S/609ESk/yRm2qA7pMsdxR9Zy2Lg8LQbwVYK4lW4jpPx6?=
+ =?us-ascii?Q?1luFWjmor1Dog7uSn10uIZxPF7OxmV8aNQolWY3P31K9AbYZZN1N7OKXpedR?=
+ =?us-ascii?Q?i0z+BWvC3HQulB2mcp2Q/9gSjfFytAxZ75bDz4Od+wRZtMF5BIwlaYTGZwZS?=
+ =?us-ascii?Q?ZXhcKHJ833+Ju66f5IDW9wrzfhBQhJa+Jk62ebaiQTGIsL/jHvEZBRihdOza?=
+ =?us-ascii?Q?O9dlFiwNye6Mr0HfcwcTYNlA4fJzDF0igVv/Bka5w/Up3Uc+/3nErvPHY51N?=
+ =?us-ascii?Q?22wIgVqmv8g25jV07aaK9nVQaAMyqF+tlmmpYCRrbLAyRXbnQ+WX3KmvEUSH?=
+ =?us-ascii?Q?iiQXDdqBIMAJWvdg6jv6BczIqd1Eku7I0y6gRBoui3NY21CNUu1e7eRLew0i?=
+ =?us-ascii?Q?wGtnjyq9XxyFeKHmfFuRrRh+WtjyAuYQeyRdUKDdzpodNS5iX81PHk19ecJZ?=
+ =?us-ascii?Q?9R2tErBiDz33NOce6fFu23JF6r79/VbJVGeWYwKQtv+Ev0OmgNu8ulxynzSt?=
+ =?us-ascii?Q?GVC/D9p2GRhKCHjHzHHbd6M9xeSfjyrpuJTPzixhv/oo72drl+v1AFm08w?=
+ =?us-ascii?Q?=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014)(7416014)(13003099007);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014)(7416014);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 11:15:59.4395
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 11:16:17.7701
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 88cc3b0b-d66e-4ce6-ec5c-08dd7757e813
+X-MS-Exchange-CrossTenant-Network-Message-Id: 52c57013-712e-46a7-f199-08dd7757f300
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000FCBE.namprd03.prod.outlook.com
+	CY4PEPF0000FCC2.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS4PR12MB9562
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7115
 
-Hello everyone,
+From: Vincent Guittot <vincent.guittot@linaro.org>
 
-There was some interest at OSPM'25 to explore using the push task
-mechanism for idle and newidle balance. This series implements one such
-idea. The main reason for the RFC is to understand if this is the
-implementation people were in favor of before trying to optimize it for
-all the workloads from my test setup.
+Add the skeleton for push task infrastructure. The empty
+push_fair_task() prototype will be used to implement proactive idle
+balancing in subsequent commits.
 
-Note: The current performance of the prototype is rough. I haven't
-optimized it yet since I would love some feedback first on the approach.
+  [ prateek: Broke off relevant bits from [1] ]
 
+Link: https://lore.kernel.org/all/20250302210539.1563190-6-vincent.guittot@linaro.org/ [1]
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
+---
+ kernel/sched/fair.c  | 85 ++++++++++++++++++++++++++++++++++++++++++++
+ kernel/sched/sched.h |  2 ++
+ 2 files changed, 87 insertions(+)
 
-Current approach
-================
-
-The push task framework for fair class has been cherry-pick from
-Vincent's series and has been implemented for !EAS case.
-
-This series implements the idea from Valentin [2] where, in presence of
-pushable tasks, the CPU will set itself on a per-LLC "overloaded_mask".
-
-The inter-NUMA newidle balance has been modified to traverse the CPUs
-set on the overloaded mask, first in the local-LLC, and then CPUs set on
-overloaded mask of other LLCs in same NUMA node with the goal of pulling
-a single task towards itself rather than performing a full fledged load
-balancing.
-
-This implements some of the ideas from David Vernet's SAHRED_RUNQ
-prototype [3] except, instead of a single SHARED_RUNQ per-LLC /
-per-shard, the overloaded mask serves an indicator of per-CPU rq(s)
-containing pushable task that can be migrated to the CPU going idle.
-This avoids having a per-SHARED_RUNQ lock at the expense of maintaining
-the overloaded cpumask.
-
-The push callback itself has been modified to try push the tasks on the
-pushable task list to one of the CPUs on the "nohz.idle_cpus_mask"
-taking the load off of idle balancing.
-
-
-Clarification required
-======================
-
-I believe using the per-CPU pushable task list as a proxy for a single
-SHARED_RUNQ was the idea Peter was implying during the discussion. Is
-this correct or did I completely misunderstand it? P.S. SHARED_RUNQ
-could also be modelled as a large per-LLC push list.
-
-An alternate implementation is to allow CPUs to go to idle as quickly as
-possible and then rely completely on push mechanism and the
-"idle_cpu_mask" to push task to an idle CPU however this puts the burden
-of moving tasks on a busy overloaded CPU which may not be ideal.
-
-Since folks mentioned using "push mechanism" for newidle balance, was
-the above idea the one they had in mind?
-
-There seems to be some clear advantage from doing a complete balance in
-the newidle path. Since the schedstats are not rigged up yet for the new
-approach, I'm not completely sure where the advantages vs disadvantages
-are currently.
-
-If the current approach is right, I'll dig deeper to try address all the
-shortcomings of this prototype.
-
-Systems with unified LLC will likely run into bottlenecks to maintain a
-large per-LLC mask that can have multiple concurrent updates. I have
-plans to implement a "sd_shard" which shards the large LLC making the
-cpumask maintenance less heavy on these systems.
-
-
-References
-==========
-
-[1] https://lore.kernel.org/lkml/20250302210539.1563190-6-vincent.guittot@linaro.org/
-[2] https://lore.kernel.org/lkml/xhsmh1putoxbz.mognet@vschneid-thinkpadt14sgen2i.remote.csb/
-[3] https://lore.kernel.org/lkml/20231212003141.216236-1-void@manifault.com/
-
---
-K Prateek Nayak (4):
-  sched/fair: Introduce overloaded_mask in sched_domain_shared
-  sched/fair: Update overloaded mask in presence of pushable task
-  sched/fair: Rework inter-NUMA newidle balancing
-  sched/fair: Proactive idle balance using push mechanism
-
-Vincent Guittot (1):
-  sched/fair: Add push task framework
-
- include/linux/sched/topology.h |   1 +
- kernel/sched/fair.c            | 297 +++++++++++++++++++++++++++++++--
- kernel/sched/sched.h           |   2 +
- kernel/sched/topology.c        |  25 ++-
- 4 files changed, 306 insertions(+), 19 deletions(-)
-
-
-base-commit: 6432e163ba1b7d80b5876792ce53e511f041ab91
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 0c19459c8042..98d3ed2078cd 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -7044,6 +7044,7 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+ 	hrtick_update(rq);
+ }
+ 
++static void fair_remove_pushable_task(struct rq *rq, struct task_struct *p);
+ static void set_next_buddy(struct sched_entity *se);
+ 
+ /*
+@@ -7074,6 +7075,8 @@ static int dequeue_entities(struct rq *rq, struct sched_entity *se, int flags)
+ 		h_nr_idle = task_has_idle_policy(p);
+ 		if (task_sleep || task_delayed || !se->sched_delayed)
+ 			h_nr_runnable = 1;
++
++		fair_remove_pushable_task(rq, p);
+ 	} else {
+ 		cfs_rq = group_cfs_rq(se);
+ 		slice = cfs_rq_min_slice(cfs_rq);
+@@ -8556,6 +8559,64 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
+ 	return target;
+ }
+ 
++static inline bool fair_push_task(struct task_struct *p)
++{
++	if (!task_on_rq_queued(p))
++		return false;
++
++	if (p->se.sched_delayed)
++		return false;
++
++	if (p->nr_cpus_allowed == 1)
++		return false;
++
++	return true;
++}
++
++static inline int has_pushable_tasks(struct rq *rq)
++{
++	return !plist_head_empty(&rq->cfs.pushable_tasks);
++}
++
++/*
++ * See if the non running fair tasks on this rq can be sent on other CPUs
++ * that fits better with their profile.
++ */
++static bool push_fair_task(struct rq *rq)
++{
++	return false;
++}
++
++static void push_fair_tasks(struct rq *rq)
++{
++	/* push_fair_task() will return true if it moved a fair task */
++	while (push_fair_task(rq))
++		;
++}
++
++static DEFINE_PER_CPU(struct balance_callback, fair_push_head);
++
++static inline void fair_queue_pushable_tasks(struct rq *rq)
++{
++	if (!has_pushable_tasks(rq))
++		return;
++
++	queue_balance_callback(rq, &per_cpu(fair_push_head, rq->cpu), push_fair_tasks);
++}
++static void fair_remove_pushable_task(struct rq *rq, struct task_struct *p)
++{
++	plist_del(&p->pushable_tasks, &rq->cfs.pushable_tasks);
++}
++
++static void fair_add_pushable_task(struct rq *rq, struct task_struct *p)
++{
++	if (fair_push_task(p)) {
++		plist_del(&p->pushable_tasks, &rq->cfs.pushable_tasks);
++		plist_node_init(&p->pushable_tasks, p->prio);
++		plist_add(&p->pushable_tasks, &rq->cfs.pushable_tasks);
++	}
++}
++
+ /*
+  * select_task_rq_fair: Select target runqueue for the waking task in domains
+  * that have the relevant SD flag set. In practice, this is SD_BALANCE_WAKE,
+@@ -8725,6 +8786,9 @@ balance_fair(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+ 	return sched_balance_newidle(rq, rf) != 0;
+ }
+ #else
++static inline void fair_queue_pushable_tasks(struct rq *rq) {}
++static void fair_remove_pushable_task(struct rq *rq, struct task_struct *p) {}
++static inline void fair_add_pushable_task(struct rq *rq, struct task_struct *p) {}
+ static inline void set_task_max_allowed_capacity(struct task_struct *p) {}
+ #endif /* CONFIG_SMP */
+ 
+@@ -8914,6 +8978,12 @@ pick_next_task_fair(struct rq *rq, struct task_struct *prev, struct rq_flags *rf
+ 		put_prev_entity(cfs_rq, pse);
+ 		set_next_entity(cfs_rq, se);
+ 
++		/*
++		 * The previous task might be eligible for being pushed on
++		 * another cpu if it is still active.
++		 */
++		fair_add_pushable_task(rq, prev);
++
+ 		__set_next_task_fair(rq, p, true);
+ 	}
+ 
+@@ -8986,6 +9056,13 @@ static void put_prev_task_fair(struct rq *rq, struct task_struct *prev, struct t
+ 		cfs_rq = cfs_rq_of(se);
+ 		put_prev_entity(cfs_rq, se);
+ 	}
++
++	/*
++	 * The previous task might be eligible for being pushed on another cpu
++	 * if it is still active.
++	 */
++	fair_add_pushable_task(rq, prev);
++
+ }
+ 
+ /*
+@@ -13260,6 +13337,8 @@ static void __set_next_task_fair(struct rq *rq, struct task_struct *p, bool firs
+ {
+ 	struct sched_entity *se = &p->se;
+ 
++	fair_remove_pushable_task(rq, p);
++
+ #ifdef CONFIG_SMP
+ 	if (task_on_rq_queued(p)) {
+ 		/*
+@@ -13277,6 +13356,11 @@ static void __set_next_task_fair(struct rq *rq, struct task_struct *p, bool firs
+ 	if (hrtick_enabled_fair(rq))
+ 		hrtick_start_fair(rq, p);
+ 
++	/*
++	 * Try to push prev task before checking misfit for next task as
++	 * the migration of prev can make next fitting the CPU
++	 */
++	fair_queue_pushable_tasks(rq);
+ 	update_misfit_status(p, rq);
+ 	sched_fair_update_stop_tick(rq, p);
+ }
+@@ -13307,6 +13391,7 @@ void init_cfs_rq(struct cfs_rq *cfs_rq)
+ 	cfs_rq->tasks_timeline = RB_ROOT_CACHED;
+ 	cfs_rq->min_vruntime = (u64)(-(1LL << 20));
+ #ifdef CONFIG_SMP
++	plist_head_init(&cfs_rq->pushable_tasks);
+ 	raw_spin_lock_init(&cfs_rq->removed.lock);
+ #endif
+ }
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index c5a6a503eb6d..aa92c0d75de7 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -716,6 +716,8 @@ struct cfs_rq {
+ 	struct list_head	leaf_cfs_rq_list;
+ 	struct task_group	*tg;	/* group that "owns" this runqueue */
+ 
++	struct plist_head	pushable_tasks;
++
+ 	/* Locally cached copy of our task_group's idle value */
+ 	int			idle;
+ 
 -- 
 2.34.1
 
