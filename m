@@ -1,154 +1,151 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F912147F7;
-	Wed,  9 Apr 2025 21:12:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC0C01DA61B;
+	Wed,  9 Apr 2025 21:12:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744233142; cv=none; b=PMlPBp5v4cEmpHHFbEFlEMhq4E2svv2i74mhQISYcBimbZeePG8HbwjeRJ870eg/+qLochY7gIYfNugAi9JdGPZ7QzIZA9xs69lCTfxy/trf7uzWvuWldoHb5ltDiPoaltG5VAoOSPrWcbNK02Iw9FCeOJolctQE/IXz5LohQhQ=
+	t=1744233173; cv=none; b=E+vaE2LFRHq6Tos/r0S0z4kw5VDGz6Y3QD81308Xneu9H9D1fIbnVifTUgWSt+9thfiBPRX4pfaHWXhSjmX6Vhurm8X8PrT3MlVJvOZuaT/aFDcevivMWrLCvDrJjYUc1uQ5tm1peUpNj5zVYauTXutAUHQ1y/qrAihn1PLY9a4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744233142; c=relaxed/simple;
-	bh=CIcEj47j7D9sJ6Vfzua7+dlSs0YPaM4cccnDm1gu3xo=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=JJQuIr/fWhpiXpIyRf0lruwNGqyCqsAiH35I4j97bjCPApSjm1pvDc6SHpH1B/m/xJl+Ag6LRH9B+HDPkPDuvJ7cscD+RYZzSaeDrAgpECZ56nNHptT6l5n602IAqTx7q3oD+sgE4wcwWd5uC+PwbbmNk1iTOmcSugoAlNd+PRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OmtFaNPb; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Mj60UDye; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744233173; c=relaxed/simple;
+	bh=YAShHKLj8AoioI4Y2oEJ64CG3mJHNjT9J6J+lcCikLs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fc74SMtnm6P8RyDmoGbn7Yk1bSV9PKUjESnxYEHJcCjPCZRlKQGUF5yl8AhvymAVo/TRxC6n6BgHCqvRCGGIUErJzCX+dXUm5TLmjQgY8zA+R6TE13ewjXPOo7wTC1XAxRn/6OWMOKsNNoIMrQ0VrPpKa2BwsuAbL6ggnyU4uBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sgsIZF9k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OmtFaNPb";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Mj60UDye"
-Date: Wed, 09 Apr 2025 21:12:11 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744233136;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mZcQYVb/1gtOZBb+Bo9eTmIOgqSQzQz4ZcTZVzAUOCQ=;
-	b=OmtFaNPbxklxga3hQ0t72WuCO8hBRRgI8La2oxqqVoPVWLkDHtkrOTdJA/Oda0hPq0QDhx
-	2nX9RJo1pc6uChtPjhCGQ5ybbdJzNZyxtR4FUQe+nFRH/C6LQVSL+VxZMZ1nlE+t9sWwA5
-	xyiDTN4aa2+jjwDlgQwKtiH1zD3fqVtks5fnHIYcNTw2a/tTKBXcGsVBQbOX/uIEFlaaEQ
-	DGBZskVE/wM3aZ2M6j15w6xnOB2nCFkdPHo8xd5oedCCbflXCtqkaEWrDl7VqWHsdstg2h
-	XqBisLBFyIYCfFgshE1YHe5JAUc2s8SvLL6/DwzqLsXXZrYcYaqeEIMh4LUtTg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744233136;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mZcQYVb/1gtOZBb+Bo9eTmIOgqSQzQz4ZcTZVzAUOCQ=;
-	b=Mj60UDyeD7qQCUkNFsoUsQpkDieLVQpdsrQloBVIASDr8MIYWagHusNHn0TjqJA+gORP5Z
-	6BizbF/gmDWngSCg==
-From: "tip-bot2 for Sebastian Andrzej Siewior" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: timers/urgent] timekeeping: Add a lockdep override in tick_freeze()
-Cc: Borislav Petkov <bp@alien8.de>,
- Chris Bainbridge <chris.bainbridge@gmail.com>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Thomas Gleixner <tglx@linutronix.de>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250404133429.pnAzf-eF@linutronix.de>
-References: <20250404133429.pnAzf-eF@linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sgsIZF9k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6284C4CEE2;
+	Wed,  9 Apr 2025 21:12:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744233173;
+	bh=YAShHKLj8AoioI4Y2oEJ64CG3mJHNjT9J6J+lcCikLs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=sgsIZF9k9MpBH1Hv6vfy3AZVYRa62mPjCja+kWjnM66kF7irll7p3r1e/PKZeQMQg
+	 bhppqt+hinZOK/yKnktSu54neTTQxfjCLOZgrWp3hhYJpPv/wnlNllq7IxcyxD9bky
+	 W5iSsifb+pSaYU5KQGOu6BvU2UXvKO4haSJu8eG0Lnh/D3ZHxakLPAvhHsl9H9YL3k
+	 DcvHMrccQ3iEarZFvWY3UibadziAEI/4i7jHCct91rB0/jbGL0eou3zec65HQ76o2J
+	 dw5Lg+MDjoJEiAuoLNCVRP53zLKr20ir54v6Hjjw8ppekVKUFvER7K1lINC3LRW4I+
+	 zjOwXDB8fnOCw==
+From: =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	=?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
+Subject: [PATCH v2] platform: cznic: use new GPIO line value setter callbacks
+Date: Wed,  9 Apr 2025 23:12:43 +0200
+Message-ID: <20250409211243.20105-1-kabel@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174423313221.31282.12756480935760918765.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-The following commit has been merged into the timers/urgent branch of tip:
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Commit-ID:     92e250c624ea37fde64bfd624fd2556f0d846f18
-Gitweb:        https://git.kernel.org/tip/92e250c624ea37fde64bfd624fd2556f0d846f18
-Author:        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-AuthorDate:    Fri, 04 Apr 2025 15:34:29 +02:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Wed, 09 Apr 2025 22:30:39 +02:00
+struct gpio_chip now has callbacks for setting line values that return
+an integer, allowing to indicate failures. Convert the driver to using
+them.
 
-timekeeping: Add a lockdep override in tick_freeze()
-
-tick_freeze() acquires a raw spinlock (tick_freeze_lock). Later in the
-callchain (timekeeping_suspend() -> mc146818_avoid_UIP()) the RTC driver
-acquires a spinlock which becomes a sleeping lock on PREEMPT_RT.  Lockdep
-complains about this lock nesting.
-
-Add a lockdep override for this special case and a comment explaining
-why it is okay.
-
-Reported-by: Borislav Petkov <bp@alien8.de>
-Reported-by: Chris Bainbridge <chris.bainbridge@gmail.com>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lore.kernel.org/all/20250404133429.pnAzf-eF@linutronix.de
-Closes: https://lore.kernel.org/all/20250330113202.GAZ-krsjAnurOlTcp-@fat_crate.local/
-Closes: https://lore.kernel.org/all/CAP-bSRZ0CWyZZsMtx046YV8L28LhY0fson2g4EqcwRAVN1Jk+Q@mail.gmail.com/
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Signed-off-by: Marek Behún <kabel@kernel.org>
 ---
- kernel/time/tick-common.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+Commit 98ce1eb1fd87e ("gpiolib: introduce gpio_chip setters that return
+values") added new line setter callbacks to struct gpio_chip. They allow
+to indicate failures to callers. We're in the process of converting all
+GPIO controllers to using them before removing the old ones.
+---
+Changes since v1:
+- renamed the variable `ret` to `err`
 
-diff --git a/kernel/time/tick-common.c b/kernel/time/tick-common.c
-index a47bcf7..9a38594 100644
---- a/kernel/time/tick-common.c
-+++ b/kernel/time/tick-common.c
-@@ -509,6 +509,7 @@ void tick_resume(void)
+Arnd, I guess this can be merged by gpio subsystem maintainers.
+Marek
+---
+ .../platform/cznic/turris-omnia-mcu-gpio.c    | 35 ++++++++++++-------
+ 1 file changed, 22 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/platform/cznic/turris-omnia-mcu-gpio.c b/drivers/platform/cznic/turris-omnia-mcu-gpio.c
+index 5f35f7c5d5d7..dabdce113af2 100644
+--- a/drivers/platform/cznic/turris-omnia-mcu-gpio.c
++++ b/drivers/platform/cznic/turris-omnia-mcu-gpio.c
+@@ -438,27 +438,28 @@ static int omnia_gpio_get_multiple(struct gpio_chip *gc, unsigned long *mask,
+ 	return 0;
+ }
  
- #ifdef CONFIG_SUSPEND
- static DEFINE_RAW_SPINLOCK(tick_freeze_lock);
-+static DEFINE_WAIT_OVERRIDE_MAP(tick_freeze_map, LD_WAIT_SLEEP);
- static unsigned int tick_freeze_depth;
+-static void omnia_gpio_set(struct gpio_chip *gc, unsigned int offset, int value)
++static int omnia_gpio_set(struct gpio_chip *gc, unsigned int offset, int value)
+ {
+ 	const struct omnia_gpio *gpio = &omnia_gpios[offset];
+ 	struct omnia_mcu *mcu = gpiochip_get_data(gc);
+ 	u16 val, mask;
  
- /**
-@@ -528,9 +529,22 @@ void tick_freeze(void)
- 	if (tick_freeze_depth == num_online_cpus()) {
- 		trace_suspend_resume(TPS("timekeeping_freeze"),
- 				     smp_processor_id(), true);
-+		/*
-+		 * All other CPUs have their interrupts disabled and are
-+		 * suspended to idle. Other tasks have been frozen so there
-+		 * is no scheduling happening. This means that there is no
-+		 * concurrency in the system at this point. Therefore it is
-+		 * okay to acquire a sleeping lock on PREEMPT_RT, such as a
-+		 * spinlock, because the lock cannot be held by other CPUs
-+		 * or threads and acquiring it cannot block.
-+		 *
-+		 * Inform lockdep about the situation.
-+		 */
-+		lock_map_acquire_try(&tick_freeze_map);
- 		system_state = SYSTEM_SUSPEND;
- 		sched_clock_suspend();
- 		timekeeping_suspend();
-+		lock_map_release(&tick_freeze_map);
- 	} else {
- 		tick_suspend_local();
- 	}
-@@ -552,8 +566,16 @@ void tick_unfreeze(void)
- 	raw_spin_lock(&tick_freeze_lock);
+ 	if (!gpio->ctl_cmd)
+-		return;
++		return -EINVAL;
  
- 	if (tick_freeze_depth == num_online_cpus()) {
-+		/*
-+		 * Similar to tick_freeze(). On resumption the first CPU may
-+		 * acquire uncontended sleeping locks while other CPUs block on
-+		 * tick_freeze_lock.
-+		 */
-+		lock_map_acquire_try(&tick_freeze_map);
- 		timekeeping_resume();
- 		sched_clock_resume();
-+		lock_map_release(&tick_freeze_map);
+ 	mask = BIT(gpio->ctl_bit);
+ 	val = value ? mask : 0;
+ 
+-	omnia_ctl_cmd(mcu, gpio->ctl_cmd, val, mask);
++	return omnia_ctl_cmd(mcu, gpio->ctl_cmd, val, mask);
+ }
+ 
+-static void omnia_gpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
+-				    unsigned long *bits)
++static int omnia_gpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
++				   unsigned long *bits)
+ {
+ 	unsigned long ctl = 0, ctl_mask = 0, ext_ctl = 0, ext_ctl_mask = 0;
+ 	struct omnia_mcu *mcu = gpiochip_get_data(gc);
+ 	unsigned int i;
++	int err;
+ 
+ 	for_each_set_bit(i, mask, ARRAY_SIZE(omnia_gpios)) {
+ 		unsigned long *field, *field_mask;
+@@ -487,13 +488,21 @@ static void omnia_gpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
+ 
+ 	guard(mutex)(&mcu->lock);
+ 
+-	if (ctl_mask)
+-		omnia_ctl_cmd_locked(mcu, OMNIA_CMD_GENERAL_CONTROL,
+-				     ctl, ctl_mask);
++	if (ctl_mask) {
++		err = omnia_ctl_cmd_locked(mcu, OMNIA_CMD_GENERAL_CONTROL,
++					   ctl, ctl_mask);
++		if (err)
++			return err;
++	}
 +
- 		system_state = SYSTEM_RUNNING;
- 		trace_suspend_resume(TPS("timekeeping_freeze"),
- 				     smp_processor_id(), false);
++	if (ext_ctl_mask) {
++		err = omnia_ctl_cmd_locked(mcu, OMNIA_CMD_EXT_CONTROL,
++					   ext_ctl, ext_ctl_mask);
++		if (err)
++			return err;
++	}
+ 
+-	if (ext_ctl_mask)
+-		omnia_ctl_cmd_locked(mcu, OMNIA_CMD_EXT_CONTROL,
+-				     ext_ctl, ext_ctl_mask);
++	return 0;
+ }
+ 
+ static bool omnia_gpio_available(struct omnia_mcu *mcu,
+@@ -1014,8 +1023,8 @@ int omnia_mcu_register_gpiochip(struct omnia_mcu *mcu)
+ 	mcu->gc.direction_output = omnia_gpio_direction_output;
+ 	mcu->gc.get = omnia_gpio_get;
+ 	mcu->gc.get_multiple = omnia_gpio_get_multiple;
+-	mcu->gc.set = omnia_gpio_set;
+-	mcu->gc.set_multiple = omnia_gpio_set_multiple;
++	mcu->gc.set_rv = omnia_gpio_set;
++	mcu->gc.set_multiple_rv = omnia_gpio_set_multiple;
+ 	mcu->gc.init_valid_mask = omnia_gpio_init_valid_mask;
+ 	mcu->gc.can_sleep = true;
+ 	mcu->gc.names = omnia_mcu_gpio_names;
+-- 
+2.49.0
+
