@@ -1,73 +1,84 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10FE4267B00;
-	Wed,  9 Apr 2025 15:42:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB5717A319;
+	Wed,  9 Apr 2025 15:43:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744213333; cv=none; b=D0d40ubzWXrrZnrrA3WSai+20j+jg/9DBCzAa52SZ+nDV2qOXbUnbRAp0vMhQ5gtWTLzuNN+DzJ3zuO1dK949tYEQk40bmQ8fD2W+egouCr40WIFPPLKY+Ue/krm6mEmDxsXlDspwPO6r1HqojtbGLxA2n+LNN8GYULsu7LLVaY=
+	t=1744213400; cv=none; b=B4MnAjWC4botPH3ThPHF9PtLvTup1DTccwr4OpsPd2CmkCKpYUpLjjjAyoT7topZPdcJQXSgAci5i327QnF8p8q+WuXHBsAW38sBwjiJP2rBO1veDsbRq72uECd69iYX5eyltVYv40rsjuk9Xlp8qzAGs2WJv0MYN3p5lnZRmNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744213333; c=relaxed/simple;
-	bh=WC1VfsSLvnSOjUPL0QpZTEJJPqGDT0zFmkUzfy8MhBE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FTYC7X4tCEKM3CFyE8ZrP54x0mlzPBYY1R3iOYNV32uahwss18VuT+QyaIijHduUv1YgUGOp6jU1WUqrnHARkhC/RuwqCKNk+I+dDmcHs3aiQQsyNAfoW7HUNROlAsVyePnghT2W0xBiN9fb/dzPVo+OtgXuU755LLtvPhxNOuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 314AEC4CEE7;
-	Wed,  9 Apr 2025 15:42:11 +0000 (UTC)
-Date: Wed, 9 Apr 2025 11:43:30 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Clark Williams
- <clrkwllms@kernel.org>, Tejun Heo <tj@kernel.org>, David Vernet
- <dvernet@meta.com>, Barret Rhoden <brho@google.com>, Josh Don
- <joshdon@google.com>, Crystal Wood <crwood@redhat.com>,
- linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev, Juri Lelli
- <juri.lelli@redhat.com>, lclaudio00@gmail.com
-Subject: Re: [PATCH] sched: do not call __put_task_struct() on rt if
- pi_blocked_on is set
-Message-ID: <20250409114330.1444221e@gandalf.local.home>
-In-Reply-To: <Z_W-i-ya0Q6fkXRh@uudg.org>
-References: <Z_W-i-ya0Q6fkXRh@uudg.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1744213400; c=relaxed/simple;
+	bh=k2miXl1ondWrQPYCbSibfKxqRNlBY3ts+SvGry/cRgk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ah/iVhnGGIzlh/NuqUYdDZoORyIwxCIu2jduF9BqE6/6nf9cC7uQ7vV8TXaDl58CwlajABSZ5c4B4UVR5m+fbWw/bqN9nEQkzRaaxVRxzNFlm3zTyV/85/gOxP6mcGBf2B0zOULVyvtA1jbAnPk+0iVzmNWW1bvbTS35bavKpbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EgKl4Y8u; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EgKl4Y8u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A787C4CEED;
+	Wed,  9 Apr 2025 15:43:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744213400;
+	bh=k2miXl1ondWrQPYCbSibfKxqRNlBY3ts+SvGry/cRgk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=EgKl4Y8uJ+s5Gz5sent1TRwKfM8y2q6rYNnkUISndsVOhcV5LpclHSAOkCTqvQE38
+	 bEdrWzlSUkQdYAWhZMRX4wGhQjtBToSEUuePU93eTJtlS40XgWyC85SO768NhPlaFr
+	 CFKFBzHlI+d0jtv9QX2Hu2/Lql3iyhn7H93xc0zGY+bhPVC1js3JkZQfOVLM7cSRkp
+	 jdsD8Lt4Sbc1iVHom025Jp91jw1191YzRdK7p1B7fHV9BoTAAX4UXnHm7FH2v3NV8n
+	 sQqzaetf34PQVDUxa9U0w1GkF/eRiXEtSX/xg9wScjXmaOmtmjobAQNEnmx8te7813
+	 OwQr6mEreRP2Q==
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-2c764f2c223so2306692fac.0;
+        Wed, 09 Apr 2025 08:43:20 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUyPA/jmyvXL7XRrAOXNVN2OPFEu8LHkZG8dZkFIfJjvbPveSfme0MlHJlthhCG4zvcByqJyCKxXxrb@vger.kernel.org, AJvYcCX5FtqQAKLHoq/5wbsp64rBfeYEVM992tsZmS+8q9H3i+fVjvz992VqNH7jViQBUl03NtHoc1rKdjWU+jmF@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5O3x+jtg4G/NTVgWx7NYZAzo2bDmB4svuTn0ZXmvyuuCk9CgR
+	BTpBns3g3Y3ZPx9SMs79g+N3obC/teirae4Eo34qQ1DA/mPuCp5li86ZYb639lzvf3rLU0DQ7gJ
+	2wD+0pp/PE6cdcWbZq2DBPWNv5Y4=
+X-Google-Smtp-Source: AGHT+IHPfE7dSRIjUYkW2+C2sa2qSFLVGvgXTJUA6F0Mi8pbopsKWhs/TqIWlOIiHcyTG8p1i7bwABRt1Z+JrILnmHE=
+X-Received: by 2002:a05:6870:2dc3:b0:29e:7a13:1341 with SMTP id
+ 586e51a60fabf-2d0916bbd32mr1573160fac.8.1744213399488; Wed, 09 Apr 2025
+ 08:43:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250331163227.280501-1-andriy.shevchenko@linux.intel.com>
+ <CAJZ5v0ib46bqNkJ9em9GKbUhJpCOjDqgLOyDQmqO1n8LMWJpyQ@mail.gmail.com> <Z_aIUokzC0eD-Uw-@smile.fi.intel.com>
+In-Reply-To: <Z_aIUokzC0eD-Uw-@smile.fi.intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 9 Apr 2025 17:43:07 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0j3e0j=ZGxa3C5pWpL6-fOcFORGZKRG9jhmo4wCZpoD7Q@mail.gmail.com>
+X-Gm-Features: ATxdqUHtH2lSvDOr3ZxfU0yUHCQhcz0XkxwEBoMwEN8JjU_WlQo_X1RURciyf_M
+Message-ID: <CAJZ5v0j3e0j=ZGxa3C5pWpL6-fOcFORGZKRG9jhmo4wCZpoD7Q@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] device property: Add a note to the fwnode.h
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Zijun Hu <quic_zijuhu@quicinc.com>, 
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Len Brown <lenb@kernel.org>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 8 Apr 2025 21:27:37 -0300
-"Luis Claudio R. Goncalves" <lgoncalv@redhat.com> wrote:
+On Wed, Apr 9, 2025 at 4:46=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Wed, Apr 09, 2025 at 04:19:03PM +0200, Rafael J. Wysocki wrote:
+> > On Mon, Mar 31, 2025 at 6:32=E2=80=AFPM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > >
+> > > Add a note to the fwnode.h that the header should not be used
+> > > directly in the leaf drivers, they all should use the higher
+> > > level APIs and the respective headers.
+> > >
+> > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> >
+> > Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> Thank you, but you already commented on this and proposed the better word=
+ing
+> which is in v2. So, what should I do now?
 
->  {
-> +	bool defer = false;
-> +
->  	if (!refcount_dec_and_test(&t->usage))
->  		return;
->  
->  	/*
->  	 * In !RT, it is always safe to call __put_task_struct().
-> -	 * Under RT, we can only call it in preemptible context.
-> +	 * Under RT, we can only call it in preemptible context,
-> +	 * when not blocked on a PI chain.
->  	 */
-> -	if (!IS_ENABLED(CONFIG_PREEMPT_RT) || preemptible()) {
-> +#ifdef CONFIG_PREEMPT_RT
-> +	if (!preemptible() || current->pi_blocked_on)
-> +		defer = true;
-> +#endif
-
-Why add the ugly #ifdef back?
-
-	if (!IS_ENABLED(CONFIG_PREEMPT_RT) ||
-	    (preemptible() && !current->pi_blocked_on)) {
-
--- Steve
-
-> +
-> +	if (!defer) {
->  		static DEFINE_WAIT_OVERRIDE_MAP(put_task_map, LD_WAIT_SLEEP);
->  
->  
+The tag is for the v2, sorry.  Let me add it there.
