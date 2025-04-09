@@ -1,148 +1,96 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D9FD1E5018;
-	Wed,  9 Apr 2025 19:26:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3A95165F1A;
+	Wed,  9 Apr 2025 19:28:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744226815; cv=none; b=fVmeVb/S2+7aH5ZLRoi6PwDorNu7k/Oowqx9rJwFX1jMhYn7SSDpr45DvPzAF0LnhbIwk81mWOWe/zsScEli3hYocsXp95/62U8NFcMxTDKZ7wwxh8EJQGfA1WNB27rIFe/zVhSAppOtw02ZTg4h2CAQhipK46xLeqM49EIPL1E=
+	t=1744226921; cv=none; b=tD3x2RjwUoiqYBY6BnPqkxd5+2o8lZTFeT5uR7ql+rQRg87bqVNboNxm2xYywVufBMDIuamum5X/A79VqQat9dFizHUegdnQsaMKxzFCWNXynLg6M+Wf/431hlx2FV98t5hDFsFUyHqZ2yY1mBqbgT4c6qWBRQ1FIW/U7as2pZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744226815; c=relaxed/simple;
-	bh=sA/bpj3BuSqZXVAYo031rA+ylGI/wpeddO9qtvpA41o=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=jC/chiGOYyR7h94jJQbLqmd6sXTwLX/3raZPioZ31o5fkv0CnGVdn/ta1PtWcNuiVXSbjHtGFM3AaU8p2gDV0rfgl5Xuu3X4Qu6StTf9QuX5mVg4FNxMF8pNoWuSXZ6hbHlIHshx42MonqdhbCGLwXzAXcYqmN5Zhfl31upDPX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PfB3DDLN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/OVAaqLN; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744226921; c=relaxed/simple;
+	bh=DhFwMu1PKUY4hicZ2+TMOX5Fqw+M6yOZu7nOaMMC/38=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iyCd1jbMcusx4rS7+TtqN0216protfBR56RvxDfr/DyYAU89w7/rOjfMkoSwEmd9ddJeFhfSqgfn0NdlI2MaeCqqxP8PkdgumtSVj22YQzAug2PupMZaLE1y3s/ufhf6bLLtJuv3fWda5yqlkQrXWiLp71R4WWQus/PQ4QlT91E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t6nnY5P5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PfB3DDLN";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/OVAaqLN"
-Date: Wed, 09 Apr 2025 19:26:49 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744226811;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OUn0eHsxvYoiNDw7aVWqQVKnA1VQ9ZX/1DAcbgV/4jo=;
-	b=PfB3DDLNT/F6w6ZA03da1PSVJ9zcU7DT4WD+o0U5J2Wxo2o4WnVOnbJ2cH8/fBSlb9O444
-	dwtr9HMPTvlme8+jJmHPl7umyVLDn0to+1EJAJKcBw5xJKdJywCihs5BMJabsA+WFmD2Tx
-	QZOt7qhkOTqe8U1xmyU0Jv21VaeAWTn+tFhpWdwIT8d/XUdvHjxIfN7poPV6fBbNgigo7I
-	+VOhm+GL9f1itN5mIEQcij/lZBDp0Mh7hy39sQ370yhkyQWfbTkItx9Sn3L2AxtaEBrg1p
-	NiHUGK6v7ENCsEB0urrTumLYKM7dRmNv+qjjv91UZX/k2JV0bHe3seSfDq+okA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744226811;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OUn0eHsxvYoiNDw7aVWqQVKnA1VQ9ZX/1DAcbgV/4jo=;
-	b=/OVAaqLNA5ubwlKTTPt1zWlCppV3HZuwKn235aNVKIb7YA+lGjhGNRjIcs5jCpHpY07a5m
-	N20oNKWgPtmLfoBw==
-From: "tip-bot2 for Eric Dumazet" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] posix-timers: Initialize cache early and move
- pointer into __timer_data
-Cc: Eric Dumazet <edumazet@google.com>, Thomas Gleixner <tglx@linutronix.de>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250402133114.253901-1-edumazet@google.com>
-References: <20250402133114.253901-1-edumazet@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t6nnY5P5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48BC3C4CEEA;
+	Wed,  9 Apr 2025 19:28:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744226920;
+	bh=DhFwMu1PKUY4hicZ2+TMOX5Fqw+M6yOZu7nOaMMC/38=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=t6nnY5P5bU0W7rQ8BC7DtGFfUACwss+wCt0kxkjCwbEzewsdu7f6z9SKj8BkvNSEo
+	 UlbnyZyFNrj4hfWfGdwOd9/H5nfJEN9wSvhZy7MtGoZ1jgCbG5E8BgoeHQ4PZfB57l
+	 WHILETRO3wQZAeUfPMvpyzFxFledF1Fb/JqW7aoved8oKzrgE9GWottedblTnESW/l
+	 7rCgj8eBDrbJ6tZmzayOVA+DPBJX9RLXZ4iU42/9QeZfVaVccfQs7xFKpUxDIMGgRd
+	 tVA2hNZ3VU6qu8CuBPMsrqDIZhr9LEsw81p7XTgqHczn9LfluxCUr/I99KeszxMyGj
+	 0O8YoRUInNdmw==
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-2b8e2606a58so3833139fac.0;
+        Wed, 09 Apr 2025 12:28:40 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVBIS41QfOXTcnEU3KCOqNxh6at7j28prlbTfChJPaegxi9UELbYUt5ZIOBsNIFbd00Arw+BCm/2dcgiXg=@vger.kernel.org, AJvYcCW2rx9vr/5vCz+Uti4D/49nC1ooO0xXf6FzWhOKpPzQzND4LVAmIi1is6VglYPi37rtz2JgaKiSFzA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjcxHKIdM0ijK0cC5/X5S4KJ1579aelm9w26Bms3++nwG9WryQ
+	NneyVyu9a6fe2ubQ1VZVYhMu/pSshcqcCbJfOBnAUwpSNytEr5bCNlkAR2vZ4/fwGSKaWml72HC
+	/69uGwW6DqqDNGzQeoAUosjMI5kk=
+X-Google-Smtp-Source: AGHT+IFQrvV9siJvA+vy09af+rlvAnNn8NW1kjNdBkk+pxh+gUmoXyC+FogYn/4QTdn7lohQj3L7WQQYxEOm0GLA+n8=
+X-Received: by 2002:a05:6870:aa98:b0:2cc:3603:f05f with SMTP id
+ 586e51a60fabf-2d08e08e3aemr2986761fac.35.1744226919578; Wed, 09 Apr 2025
+ 12:28:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174422680979.31282.16193617108904580960.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20250317-plat2faux_dev-v1-0-5fe67c085ad5@arm.com>
+ <20250317-plat2faux_dev-v1-1-5fe67c085ad5@arm.com> <CAJZ5v0gcRDJFJtnPY+sszkUEYsdqxfm194Y7=namkD0qYnokHg@mail.gmail.com>
+ <20250409-adorable-venomous-cormorant-d01246@sudeepholla>
+In-Reply-To: <20250409-adorable-venomous-cormorant-d01246@sudeepholla>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 9 Apr 2025 21:28:28 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jty2P6KoMH2i3vYwTaTH8a0HUBisKF0BBpHvoWuSOdDw@mail.gmail.com>
+X-Gm-Features: ATxdqUGJQTSKhadOFmwt9qo96GsZu6OMpUapnTgnX2HxAu4AGKLXm61CGMUf6h8
+Message-ID: <CAJZ5v0jty2P6KoMH2i3vYwTaTH8a0HUBisKF0BBpHvoWuSOdDw@mail.gmail.com>
+Subject: Re: [PATCH 1/9] cpuidle: psci: Transition to the faux device interface
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, linux-kernel@vger.kernel.org, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The following commit has been merged into the timers/core branch of tip:
+On Wed, Apr 9, 2025 at 9:18=E2=80=AFPM Sudeep Holla <sudeep.holla@arm.com> =
+wrote:
+>
+> On Wed, Apr 09, 2025 at 08:03:32PM +0200, Rafael J. Wysocki wrote:
+> > On Mon, Mar 17, 2025 at 11:13=E2=80=AFAM Sudeep Holla <sudeep.holla@arm=
+.com> wrote:
+> > >
+> > > The PSCI cpuidle driver does not require the creation of a platform
+> > > device. Originally, this approach was chosen for simplicity when the
+> > > driver was first implemented.
+> > >
+> > > With the introduction of the lightweight faux device interface, we no=
+w
+> > > have a more appropriate alternative. Migrate the driver to utilize th=
+e
+> > > faux bus, given that the platform device it previously created was no=
+t
+> > > a real one anyway. This will simplify the code, reducing its footprin=
+t
+> > > while maintaining functionality.
+> > >
+> > > Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> > > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> > > Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > > Cc: linux-pm@vger.kernel.org
+> > > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> >
+> > Do you want me to pick up this one?
+> >
+>
+> Yes you can pick this up.
+>
+> Just checked again, this is v1 and correct version.
 
-Commit-ID:     0df6db767a535472a46aeea93c280de067784a9f
-Gitweb:        https://git.kernel.org/tip/0df6db767a535472a46aeea93c280de067784a9f
-Author:        Eric Dumazet <edumazet@google.com>
-AuthorDate:    Wed, 02 Apr 2025 13:31:14 
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Wed, 09 Apr 2025 21:21:36 +02:00
-
-posix-timers: Initialize cache early and move pointer into __timer_data
-
-Move posix_timers_cache initialization to posixtimer_init(). At that point
-the memory subsystem is already up and running.
-
-Also move the cache pointer to the __timer_data variable to avoid
-potential false sharing, since it never was marked as __ro_after_init.
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250402133114.253901-1-edumazet@google.com
-
----
- kernel/time/posix-timers.c | 23 ++++++++++-------------
- 1 file changed, 10 insertions(+), 13 deletions(-)
-
-diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
-index 6222112..2053b1a 100644
---- a/kernel/time/posix-timers.c
-+++ b/kernel/time/posix-timers.c
-@@ -30,8 +30,6 @@
- #include "timekeeping.h"
- #include "posix-timers.h"
- 
--static struct kmem_cache *posix_timers_cache;
--
- /*
-  * Timers are managed in a hash table for lockless lookup. The hash key is
-  * constructed from current::signal and the timer ID and the timer is
-@@ -49,10 +47,12 @@ struct timer_hash_bucket {
- static struct {
- 	struct timer_hash_bucket	*buckets;
- 	unsigned long			mask;
--} __timer_data __ro_after_init __aligned(2*sizeof(long));
-+	struct kmem_cache		*cache;
-+} __timer_data __ro_after_init __aligned(4*sizeof(long));
- 
--#define timer_buckets	(__timer_data.buckets)
--#define timer_hashmask	(__timer_data.mask)
-+#define timer_buckets		(__timer_data.buckets)
-+#define timer_hashmask		(__timer_data.mask)
-+#define posix_timers_cache	(__timer_data.cache)
- 
- static const struct k_clock * const posix_clocks[];
- static const struct k_clock *clockid_to_kclock(const clockid_t id);
-@@ -283,14 +283,6 @@ static int posix_get_hrtimer_res(clockid_t which_clock, struct timespec64 *tp)
- 	return 0;
- }
- 
--static __init int init_posix_timers(void)
--{
--	posix_timers_cache = kmem_cache_create("posix_timers_cache", sizeof(struct k_itimer),
--					       __alignof__(struct k_itimer), SLAB_ACCOUNT, NULL);
--	return 0;
--}
--__initcall(init_posix_timers);
--
- /*
-  * The siginfo si_overrun field and the return value of timer_getoverrun(2)
-  * are of type int. Clamp the overrun value to INT_MAX
-@@ -1556,6 +1548,11 @@ static int __init posixtimer_init(void)
- 	unsigned long i, size;
- 	unsigned int shift;
- 
-+	posix_timers_cache = kmem_cache_create("posix_timers_cache",
-+					       sizeof(struct k_itimer),
-+					       __alignof__(struct k_itimer),
-+					       SLAB_ACCOUNT, NULL);
-+
- 	if (IS_ENABLED(CONFIG_BASE_SMALL))
- 		size = 512;
- 	else
+Applied as 6.16 material, thanks!
