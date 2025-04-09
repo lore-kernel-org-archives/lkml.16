@@ -1,120 +1,99 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C88B2620C8;
-	Wed,  9 Apr 2025 12:25:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A9BD26657D;
+	Wed,  9 Apr 2025 12:26:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744201562; cv=none; b=U9vFicWJgIpB71c8dFqBe4MQOCACiqKDg5YhPT/pm0YfT4ngFT+YjQ26eXOYiDlSi+kWZq8OAHix8k3Vp/ZgPptd9/eA1Tq+jKszZNa+U8amRcppJbShUagGLNSKPbFtuRxgkXR8P2XDqL982uMcXbbz/U2pUWN1OfVft4TSCXs=
+	t=1744201566; cv=none; b=tz+9VWsldCOMCb/RYZMwRZZdMNpirL4ZRswPRm6nssvaQwqVfYnIdGllB1kHc5UPkNY0WNwjcYttlmObH+Pa3+OHQBnFBVHejM/Io/X3lM+H3TZOGhcDX6doWo5jkFnvLsfuKU7kEHgfDKlwHJPyTUlWbA99Fw5n7a2HAK3BABc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744201562; c=relaxed/simple;
-	bh=nk47CoesMhTwnSNevdSLOJ1cndzTb++kFJKfqhGBfYU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r492L1ew3uahvDTflZkkjbCD9MJlmM1IuTNT7IfH39gi3wrL7jhXKAt76dezcd6t3WbRZtXvOgZf4K2t8QaRjKVSxPk1cZsHWuTwRmTMRPiz/gUtLB3b3JicgkJblfgeoVkSFC5QT6ptOOv7D6Y4dwA5ie1ykkYlInHRilu/idI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=Luqn26m3; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="Luqn26m3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1744201553; x=1744806353; i=markus.elfring@web.de;
-	bh=91in10Bo377Kti0d7FHmcV3G76xUTbUrZole2RX2WGg=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=Luqn26m3s+UeS0jyuADpzZ2jzBZVhIZkqtkWoZPoU98olV//GDy4elBsYUDQRE7l
-	 9qMD2EOfuawMebNW9JHgAEhxPVSYRyykFIJ+ctryKkhyVdPCbnqMMHJifBdPEvMWn
-	 jwKDhX1Qq+iJazNVL7tGl+g4iLl6RFtTwsRX4bEqfwpIoDq1mwzmfFxLbMQMV8RvY
-	 9aFmT6POV9I6tgfxn84qbfsnFTwraoFOXXiOW5Dl4D/a85/L0gPwfjJ36rqk1uMFC
-	 aNvNuSKDddn4nFRYJhW8rQ6I2oMHpi4Moq73UV4jL3xFDwjERccGJeo03EHL7oXjI
-	 4ongejd1NRdZFg7IfQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.27]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MGxQV-1tozqM2Uqp-0029Qb; Wed, 09
- Apr 2025 14:25:53 +0200
-Message-ID: <3f5662dc-7547-4585-a396-4546fa98d34f@web.de>
-Date: Wed, 9 Apr 2025 14:25:52 +0200
+	s=arc-20240116; t=1744201566; c=relaxed/simple;
+	bh=v8SmZPkBKtgitgD4I5VqgBozH7bCwR2oTxGY0EkAkrU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Jt5aoW8vichVxegitFN3+/eDhrieOepmivRbmD+vv061k8hy77O7P4ysuEkjZjBmQ+I3YxYuopvYkCRaiuEsnBoW+zKZvwW2tELbtxihNkMIoinsVlWVS3RAdheqGwKNfHTUh5OGqA+3PdC9oh7l4n87YzaHNekbXYf7ooxLpPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-51eb1818d4fso7947827e0c.1;
+        Wed, 09 Apr 2025 05:26:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744201561; x=1744806361;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WLofmsDNJz6a8tN2PE/KFwLpm79s5qyqgCo17acWdOg=;
+        b=KeiJTmsXJNQxqn2+vbheeCQQ7VB/Tdrhq3xr/m85A0x65EuXcXSlfiiVMdUbiRv7CS
+         8BEKZc5B6VMSUMHSZ0JrLAf7f5nNLBJRB0JJ1xn6XLjx4EroeG47LrIK1aIzxcU1vKhS
+         IVq7HxYf12nBKbVIPfwy9BTg77H9KGURIfB8YQY0f/zWTKkjYpyHAujI1PfLB1pL23Q1
+         nZ4Bo8ckK7vuYNnj91tF7QRUz6ra8yW06D7fX1mpHhGBIv7g7DPRXn2PFL5V80dadh8B
+         H6rAADvCF4IkkWBqPI+wsDuizHktIeS5Cw0v1JP2Bi083CKnQowHCr98B0rnO0sJFRnq
+         BycA==
+X-Forwarded-Encrypted: i=1; AJvYcCV3YbOvqcBrSKRrZ2/PTLrUiNOoOmy1b4kL/lME/iKgpN8zY8yjEs0hcFDwseoesPsYyJB2KnXaB9nmQyDf8WCcDs8=@vger.kernel.org, AJvYcCXq3iAj8+5H3uLRVAx5w1sJbO/4AVKEKsvhh44gNRYHx5OJPzEN7ry1uklSJnsOxQZV1y4B1fXljLrD3lM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhPteyzUtj1fs3ddPGvuL4fW9WClQe5+O3ti0zgDUM0+/4UMRw
+	AJ5WYI//YzxKPEjgHS3rxvDJ/E8enqQINCaEbpJCB3aEPasQSsab3sbrwKj/GLM=
+X-Gm-Gg: ASbGnct0lBhQOAgpcX8grSDmcGDB4mvipiaJ+5C5DSUoJsANWl15UtUklXvD3bIp2Cx
+	jkXXQe5QlL5hNaoYykXUgbmHxEu/2A8jncCBKovP/eXKmJRjl4IMMuqJeSFEghZ5X7DOgU3V+SF
+	wXePr1+v9l5OF0CRrGTgTR8g6pIK9/55XPpKxgBBGmKeWm85FeJz7Kstolsm5kHDvOxDJdAuckD
+	z5CxQ0zpqVFqW4m6n7Cg6/vmXUVUzkUnaX/OauL16206bJphZpKaoWYoBjDjfE4Yl6LUEO3Cdp/
+	ahpf7tcYnEdp+7BK4vfOUkLJ3Yp184xocZBTDF3N/dWI7vizQ56Q3V8O7Y1D9KDrR08L8dYA2sF
+	sf+o=
+X-Google-Smtp-Source: AGHT+IE4nP9sHCqoEfAXKapSvU370PSy1HcdOBLYhOBIcs0kqen14EQ/BiiLz69rp+OLHpMRCpGm3A==
+X-Received: by 2002:a05:6122:252a:b0:518:91b3:5e37 with SMTP id 71dfb90a1353d-527a91af7abmr1749779e0c.5.1744201561482;
+        Wed, 09 Apr 2025 05:26:01 -0700 (PDT)
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com. [209.85.222.47])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-527abd4cde2sm182159e0c.10.2025.04.09.05.26.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Apr 2025 05:26:00 -0700 (PDT)
+Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-86d3ac0fec0so5971637241.1;
+        Wed, 09 Apr 2025 05:26:00 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV2vZzVqw78yTNVvTRUlleNBb4lD8ubTO3lVfNDBfBpSw9MzmNxNOHAwo1ewvx6Ey7Rzxrs3qiJ7FtI4Os=@vger.kernel.org, AJvYcCVy7ZKKhjNELhi75K4tTymeZzKTFOTTr7Ipfogm2uxDKuo/pPLN30XQhjYYsQiMrWxmB7voVngn0kLZnEfIyF2w5zk=@vger.kernel.org
+X-Received: by 2002:a05:6102:80a6:b0:4bb:c24b:b61a with SMTP id
+ ada2fe7eead31-4c9c445a383mr2092287137.19.1744201560103; Wed, 09 Apr 2025
+ 05:26:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v2 0/2] cpufreq: scmi/scpi: Fix NULL pointer dereference in
- get_rate()
-To: Cristian Marussi <cristian.marussi@arm.com>,
- Sudeep Holla <sudeep.holla@arm.com>, Henry Martin
- <bsdhenrymartin@gmail.com>, arm-scmi@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: LKML <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>
-References: <20250408150354.104532-1-bsdhenrymartin@gmail.com>
- <0558b7f7-8c69-4664-afc6-bae4fdc6f071@web.de>
- <20250409-merry-gay-lemur-8288cf@sudeepholla>
- <52aa52a5-7081-41ee-872e-f1728c06daf1@web.de> <Z_Zhp38o9KiicPVw@pluto>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <Z_Zhp38o9KiicPVw@pluto>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:T0cXVK0d8v95DyOXS0pqeKnH6XASFIsv80j8jEk9rqqhlJOR62y
- art0PqrEY2cIo6ymg7K/FDjUXNN9THddBM+wsuPi0SbrEtnddwVf5Yc0CWLLfWCSzD9C5sW
- zfW/a0Uvw/252pNYhEI111JYTuvU1W7WpjO4qOBG8w9EDLXGqbKHf1s4IqJ56EGCW4AEmla
- JLalyEJxFzLCNosdUXbzg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Usz1cshPlwQ=;BToUsUhaxnExn17nxgP2athAK99
- nl/VF8jGo9Y4SMCCxx4vlGAGdfUNPtGfvDlkO21zLGs1b1SMOwEHa300krtdP+hK8O0Lv1M8m
- CXCDTwM04vzanod2pQCPW7YzbvN/xiqFa/mq7BmCRQol3nZggJowQ7ylG1v3CZ4fDn8uTNbyN
- Dur/+k8EQ8truB/N2hl+dWSjtg3k8tAQSKNnsH+Y7/4+7HCBy4TFfvc2eHDCxJjX9IpI2qY/B
- 1mXqz3g5yuCXeZFKkPTN1IcQMw0aXiVD21BrPZpoNhlf0o7aO1pNX6WB94BNM0hAtD1Yp0MYZ
- +Q+msQamOVvQnmvsYu5ZFLFosaTRDccVDml+fGDlm3x+i8WV0f/32W/ypGIjDmevEvq9p6CkD
- UrEEokqRTmIlVDjVpJOvCvlVIp8oKxitJ3FyMx2j3QKNemmjuXIO6ftbPoNrV5KEYu+j3Avp8
- P9DJLXj0sXVjlZqLYMq4mLctjUkSdBDtyrhUfS5Z9Njc2evWXMTWT2JLXcd88za42RGke9cUy
- soma6W4U0Un8ic3eVXSR/XCizkvXx2RQP1q0mkTZucIVVUMjuTXF/drYAdMlZMrptaDZLBLk1
- U/9GMyngBPXj7woXJiOwrryOu2SUjP7XfqN0wy3v4HmLdib8EJSrshyYiI7zRRFJMyqtfYa5u
- g+jrMC9wfw9oSi0M2xOaeDbYxeOSGjRK2yVqQc+qxrvSYxDfovP46qPCpLdQYgbVIqemu6j/e
- M+A1nbysKCve7iDjL3pDYVPEcA3EeBBCnogWm/p/dv4Fyk6NyJjhCKffshpxK7npjka/c/HNL
- kmj9MznzW5IUJgBUaFIt3KWGfHRjGBB1nHTa8yQaAG11ubPL2pdbZDeXpJ8uPfqxFo1CHuFNt
- hrexpjuPaA7LquU4w/MO80U/TSpm124mBhwxY9jmS8A7gKZHVL4IiU45Vz2pTkOpdzQY01ey3
- eH8hRLccM/m5/N9eOTNSP7pR7Diu12YA9blMR3c0+T7QyQCxC9LR3mqo5fAopH37uC4oq4p8O
- 5TS1uyQnQlp5Uu+RY/LGHlG4ID5kCdBTpJ6/JiJXC3o+0VOMdAe1d2sMDUEcJKBwQpKsQ7SkH
- Q2sE1wNl/qvdWwUGiNDajjKOV5jAb24s44OBopzTGHBf00blcnurv8Q2cp7OaCXyCp9W3q7KC
- cO1DW5p+wSDFTkzGJqZXIjRcWcRbBWVALbTs3sH8cczVZxRvFfra7ydEtJMJqbvVAchV1JEaN
- OczzYheBEVWnvtDgB8CwNLyduQHUsWUl1vWByXPovSRKUjiR2clNidr5+RNRwLlpkKgjU4Z9f
- vaireKzmPEsxLkXxdTBq48PPwkL5ddUonAsstEXQt0jOCquVFjgVKPmooio/yNsLKsqJSEYjA
- YMt7zASGrJjmh58R5INxwsygiEIYzVGNlismh0hiq3zpBTegNr8ZIL99zUF1QdhulXnQg1t9p
- QNgItIY4oFc3SUiNmOxTPkIdlzIMAchGf98PREGV4kixWQY3e0V6SqTLs179jo3iXk0qLVwAS
- QZb8s3do7fo6v3L9d6Y=
+References: <20250401090133.68146-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250401090133.68146-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250401090133.68146-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 9 Apr 2025 14:25:48 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVzpEJn=24HBC2+cATwKKLtDFd33JXHMugUXNAsQX_Y4g@mail.gmail.com>
+X-Gm-Features: ATxdqUFJNg6w-BI8dIVJ1F4IvtULXKwQUo9xfmn0tN2_Y0EF5dzaxljN2HWD5Fc
+Message-ID: <CAMuHMdVzpEJn=24HBC2+cATwKKLtDFd33JXHMugUXNAsQX_Y4g@mail.gmail.com>
+Subject: Re: [PATCH 4/4] arm: multi_v7_defconfig: Drop individual Renesas SoC entries
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Russell King <linux@armlinux.org.uk>, Magnus Damm <magnus.damm@gmail.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
->>>> Can any other summary phrase variants become more desirable according=
-ly?
+On Tue, 1 Apr 2025 at 11:02, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 >
-> I agree with Sudeep, the above sentence is completely incomprehensible
-> to me
-
-Can any suggestions gain acceptance also for better summary phrases?
-
-
-
->>> This is meaningless, sorry can't parse. Ignoring it as others in the
->>> community are doing already.
->> Do you care if the term =E2=80=9Cnull pointer dereference=E2=80=9D woul=
-d be used in consistent ways?
+> ARCH_RENESAS is already enabled in multi_v7_defconfig, which ensures that
+> all ARM32 Renesas SoCs are enabled by default. As a result, explicitly
+> listing individual Renesas SoC entries is redundant. Remove these entries
+> to simplify the configuration.
 >
-> ...this is more comprehensible,
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Thanks for another bit of constructive information.
+Thanks, will queue in renesas-devel for v6.16.
 
+Gr{oetje,eeting}s,
 
->                                 but again I cannot grasp what's yor advi=
-ce
-> specifically on this commit message.
-May the usage of abbreviations be reconsidered once more also for such mes=
-sages
-(in presented update steps)?
+                        Geert
 
-Regards,
-Markus
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
