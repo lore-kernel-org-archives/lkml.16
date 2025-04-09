@@ -1,35 +1,87 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13DB1276050
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 18:30:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6077D1DE3D6
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 18:30:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744223428; cv=none; b=oHwPJuxKpzUagxa3bk0T5+A4AGm17lccW2DbkAMt65eh/Me3maFl4ep+lZ1RabZuAda3EghgYoGzPalccPAU7NA9amgkaT4G65l8XqsMEBPi2jV+/gx6zbhVH9w2YnhGUQL7T0nRVO2BBcfrPETz4CzKT6Bv48BV083qcImSYOc=
+	t=1744223432; cv=none; b=YbK7c61OAO0deGpAx5sEq3WT4ohmtUJAkueNODuUEuKEPh/hnkN77rvj9jAi9yh0g419UOeltBdbfDjd1zyZQN65Hs/kKlco2+s/CARVhjuG40xrbr7VjDJLHat81ffIliRdJp9SMWIyehxDAZHLhoQoau+8oF0V30u96R8VUBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744223428; c=relaxed/simple;
-	bh=04rOBKhcjCW+RhY80oosYuyxIou3ZD3wjiMDthrhvGA=;
+	s=arc-20240116; t=1744223432; c=relaxed/simple;
+	bh=dIw9ear7k7FgFPlObhguloGq6LYTAnDz8kwUG/XebKk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZkFHh40uJaSGLrFTDqcIz3JPFKYezRUkLslnFBmmXIRBccNS24AxKue3xiu0jaVxcDMYBgy9giHS9o3DQhPTX3n3jbI2WuxdfpiI4eD+vr/RD32XBnoJk3RMTE/O1EbiBmH5zFfv392Gzc0GrmH2peY7RtalD5xnJuDTXijGfok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=tZG1ZEsx; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y0xmFPJUMWRGugVC6YvtbCRCXzyrxJp0b8fMfU7BMCTnCSWcmYaQMCdYBoiiPIo05hSifwrWA/rxkdpj4bJpSQ9KgDPc8PfNW2vC4BV7Ewau3hv8mxZF8fux9mJM49z3ZAG0NqLy0+xDC8SpkQWkVsAD0SiGsugdaQfMa57tKtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=wRdQYYWT; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=AawqQuVV; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=wRdQYYWT; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=AawqQuVV; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="tZG1ZEsx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1744223415;
-	bh=04rOBKhcjCW+RhY80oosYuyxIou3ZD3wjiMDthrhvGA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tZG1ZEsxUrf4+rAZp8doWpyR1PQEGNCEIOqbl1O+t91BttcODgHFItV5yNduylvl1
-	 Wy6SHxjHA+ICCc9wllC7518RkpgpFLn9/YdeUKH/pqO2DJpVxBNU4OcrwRHnNOFZLr
-	 1wv7TrSvZeEEgzH2SAx1MPbNOnAtOCBKMPJSL+Ag=
-Date: Wed, 9 Apr 2025 20:30:14 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Jemmy Wong <jemmywong512@gmail.com>
-Cc: Willy Tarreau <w@1wt.eu>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fix mismatched parentheses
-Message-ID: <bb44ee43-b08f-4a4a-bdde-dda785756680@t-8ch.de>
-References: <20250409181934.5589-1-jemmywong512@gmail.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="wRdQYYWT";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="AawqQuVV";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="wRdQYYWT";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="AawqQuVV"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 3C14C1F38D;
+	Wed,  9 Apr 2025 18:30:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744223428;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xYv9hBv5E6oJ0N8tZcRCr+KK/kU3VloQCZgZBgu79Xg=;
+	b=wRdQYYWTCh/9dO6y8l2Jgar53B9lNeKRrIOY14H7Thh4/AMQDh+7YcKvK8BMpZAmONVqdy
+	lE3o8jst9H/GXGK6trlMb2WBZwF2ABbXc+R9DC3rNHKlFOl1smQ2UWJzFcBa2u20nk1wU6
+	9eas3uANvYUY7B6WkltrVgQOjuxNYfU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744223428;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xYv9hBv5E6oJ0N8tZcRCr+KK/kU3VloQCZgZBgu79Xg=;
+	b=AawqQuVVXcvclxwdw7G+0yrpD0iSiTzhLFDDw2nMOB5DRCfXiDsy/ofj2H6gaklaM4TBuF
+	+qpl+T6wFGCrNgBQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=wRdQYYWT;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=AawqQuVV
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744223428;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xYv9hBv5E6oJ0N8tZcRCr+KK/kU3VloQCZgZBgu79Xg=;
+	b=wRdQYYWTCh/9dO6y8l2Jgar53B9lNeKRrIOY14H7Thh4/AMQDh+7YcKvK8BMpZAmONVqdy
+	lE3o8jst9H/GXGK6trlMb2WBZwF2ABbXc+R9DC3rNHKlFOl1smQ2UWJzFcBa2u20nk1wU6
+	9eas3uANvYUY7B6WkltrVgQOjuxNYfU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744223428;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xYv9hBv5E6oJ0N8tZcRCr+KK/kU3VloQCZgZBgu79Xg=;
+	b=AawqQuVVXcvclxwdw7G+0yrpD0iSiTzhLFDDw2nMOB5DRCfXiDsy/ofj2H6gaklaM4TBuF
+	+qpl+T6wFGCrNgBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1C432137AC;
+	Wed,  9 Apr 2025 18:30:28 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id c1thBsS89mf4HAAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Wed, 09 Apr 2025 18:30:28 +0000
+Date: Wed, 9 Apr 2025 20:30:22 +0200
+From: David Sterba <dsterba@suse.cz>
+To: Yangtao Li <frank.li@vivo.com>
+Cc: clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] btrfs: convert to spinlock guards in
+ btrfs_update_ioctl_balance_args()
+Message-ID: <20250409183022.GG13292@suse.cz>
+Reply-To: dsterba@suse.cz
+References: <20250409125724.145597-1-frank.li@vivo.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,48 +90,68 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250409181934.5589-1-jemmywong512@gmail.com>
+In-Reply-To: <20250409125724.145597-1-frank.li@vivo.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Rspamd-Queue-Id: 3C14C1F38D
+X-Spam-Score: -4.21
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.21 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCPT_COUNT_FIVE(0.00)[6];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Hi Jemmy,
-
-good catch and thanks for your patch!
-There are some small formal issues with it, though.
-Could you fix those and send a v2?
-
-The patch subject should start with "tools/nolibc: ", and could be a bit
-more specific: "fix mismatched parenthesis in minor()"
-
-(more below)
-
-On 2025-04-10 02:19:34+0800, Jemmy Wong wrote:
-> Corrects an imbalance where opening parentheses exceed closing ones.
-
-Use imperative language: "Correct an ..."
-
-As this is a bugfix, a Fixes tag would be great.
-In this case:
-
-Fixes: eba6d00d38e7 ("tools/nolibc/types: move makedev to types.h and make it a macro")
-
-> Signed-off-by: Jemmy Wong <Jemmywong512@gmail.com>
+On Wed, Apr 09, 2025 at 06:57:22AM -0600, Yangtao Li wrote:
+> To simplify handling, use the guard helper to let the compiler care for
+> unlocking.
 > 
+> Signed-off-by: Yangtao Li <frank.li@vivo.com>
 > ---
->  tools/include/nolibc/types.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  fs/btrfs/ioctl.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> diff --git a/tools/include/nolibc/types.h b/tools/include/nolibc/types.h
-> index b26a5d0c417c..b57e054cca82 100644
-> --- a/tools/include/nolibc/types.h
-> +++ b/tools/include/nolibc/types.h
-> @@ -201,7 +201,7 @@ struct stat {
->  /* WARNING, it only deals with the 4096 first majors and 256 first minors */
->  #define makedev(major, minor) ((dev_t)((((major) & 0xfff) << 8) | ((minor) & 0xff)))
->  #define major(dev) ((unsigned int)(((dev) >> 8) & 0xfff))
-> -#define minor(dev) ((unsigned int)(((dev) & 0xff))
-> +#define minor(dev) ((unsigned int)(((dev) & 0xff)))
+> diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
+> index 63aeacc54945..7cec105a4cb0 100644
+> --- a/fs/btrfs/ioctl.c
+> +++ b/fs/btrfs/ioctl.c
+> @@ -3438,9 +3438,8 @@ void btrfs_update_ioctl_balance_args(struct btrfs_fs_info *fs_info,
+>  	memcpy(&bargs->meta, &bctl->meta, sizeof(bargs->meta));
+>  	memcpy(&bargs->sys, &bctl->sys, sizeof(bargs->sys));
 >  
->  #ifndef offsetof
->  #define offsetof(TYPE, FIELD) ((size_t) &((TYPE *)0)->FIELD)
+> -	spin_lock(&fs_info->balance_lock);
+> +	guard(spinlock)(&fs_info->balance_lock);
 
+Please don't do the guard() conversions in fs/btrfs/, the explicit
+locking is the preferred style. If other subsystems use the scoped
+locking guards then let them do it.
 
-Thomas
+I personally hate it as it totally disrupts the perception of visibly
+demarcated critical sections. I don't see the benefit comparing saved
+lines of code vs clear and understandable code.
+
+We rarely have a clear case for the guards, I found a few where it
+could be used but then this means we have 2 styles of locking, yet
+another code pattern to learn.
