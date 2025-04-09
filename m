@@ -1,154 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout.web.de (mout.web.de [212.227.15.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A57D924EF6E;
-	Wed,  9 Apr 2025 08:36:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07F1525D205;
+	Wed,  9 Apr 2025 08:36:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744187794; cv=none; b=AZtj15h3+mAouOYsTDEIv5m46460r0YplYfxiApYwMCJSZ1jUncMO3z+68WJqAglwohHoKxULBW+l41+6mWYZ2uzfPmymNmaI6fKsf9nM7jRIbHEu/gmW9cTbyjc8aS79I4zTpjd/8R7aDKMl5g9Ue7ACzJYTVvgFEIKwOTJW/s=
+	t=1744187798; cv=none; b=aCHXn99YwvmHUL5wfX+GaL07HkmRvwGM+3LgJ3I6RWl4lzsx7I5LaXryOG0OTRqegOozFknYOOcQ4KNXyRTD4PO1CcRjL+SASXJQrBg6qMi/AY0cY/EgzpkjnLQNL6NXVfoKM7o3NGz/k+4rqpDpLiIv4GsoBabFtzzeeRfe+sM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744187794; c=relaxed/simple;
-	bh=vX+yZVgdB9/F5MVYvn74uJvoipKBMh2DUd7klkO7k9w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jEl946XomQ2tBoBVGKZHK/qxVPLdSQ47VZeQZJz5OZXs/EyK1P7VZEMNpQRublB/jOONhYUouSJY+xWLuTahmAArjZJy8U1hj8LxK2JibwCAjwPisO0FlYzv5RNPH7Ht1oCtih+4/cNp8phigAOzsClFSYsoRD5EkfVejc9s8sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LToqfAyZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744187798; c=relaxed/simple;
+	bh=dblT+vI1D4rLfk7GKsy2LBpb658Ll7m+QcS8Ej8/oSI=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=sNNdQVMGmUUBmz9AS1+v2czCnVATHpi9GPa5ts4YNq5hMrpm6cq6NGVv5BIIGqmJqgWOBGq04JV+WUCgk7V8wCC9fLv9dwuuAuXkCSAWS1yFbSfJPHmdAEOTlX5BtqsM5Cn2AZI9vnWE7OqkoyYvjiUa+wpvaCf+1Lb/6UtnkeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=S7fkvbQT; arc=none smtp.client-ip=212.227.15.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LToqfAyZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F804C4CEE3;
-	Wed,  9 Apr 2025 08:36:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744187794;
-	bh=vX+yZVgdB9/F5MVYvn74uJvoipKBMh2DUd7klkO7k9w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LToqfAyZBCAwbrvMCMoeHIj0Lxug8wM554pi3hWLDi3YOomdjvMQXBliD4xgl8EGj
-	 NpK5L6cfCseJR/8kFixUbWCaUvKUTek8yVYvtgzcBJAXlIeMcGtniKZrD70Wm65yIV
-	 ubUWNgqGxqw88dpvGkBezGf3uXGpI1oabMCUj8ujP+iB5s9RvIy5aZKznDwjisK+AL
-	 cFVBwnnTLexCbcss/E6LORaCIdmfxwBkHDb0ZfLvKtFd5yWzjMKJnYJqFEsprn1i1O
-	 JX7Rnyj5DkpdRw6FL16CCxJyqSlCp0yivyoHecmuJzsUuXmefr9RjUzoAsbKXSkAdw
-	 ULp4ymWjwMBQg==
-Date: Wed, 9 Apr 2025 10:36:29 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Cc: sforshee@kernel.org, linux-fsdevel@vger.kernel.org, 
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, Linux regressions mailing list <regressions@lists.linux.dev>, 
-	lennart@poettering.net
-Subject: Re: 6.15-rc1/regression/bisected - commit 474f7825d533 is broke
- systemd-nspawn on my system
-Message-ID: <20250409-sektflaschen-gecko-27c021fbd222@brauner>
-References: <CABXGCsPXitW-5USFdP4fTGt5vh5J8MRZV+8J873tn7NYXU61wQ@mail.gmail.com>
- <20250407-unmodern-abkam-ce0395573fc2@brauner>
- <CABXGCsNk2ycAKBtOG6fum016sa_-O9kD04betBVyiUTWwuBqsQ@mail.gmail.com>
- <20250408-regal-kommt-724350b8a186@brauner>
- <CABXGCsPzb3KzJQph_PCg6N7526FEMqtidejNRZ0heF6Mv2xwdA@mail.gmail.com>
- <20250408-vorher-karnickel-330646f410bd@brauner>
- <CABXGCsO56m1e6EO82JNxT6-DGt6isp-9Wf1fk4Pk10ju=-zmVA@mail.gmail.com>
- <20250408-deprimierend-bewandern-6c2878453555@brauner>
- <CABXGCsPx7X7aTtS_9XopXb29r9n=Tjxm7ik007XDOhzS7-WCSw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="S7fkvbQT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1744187793; x=1744792593; i=markus.elfring@web.de;
+	bh=V+Z7eSGNVbrUGyqSXrzqP4ynnA+YZ7ZSJozkKmsrnzI=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=S7fkvbQTlD1nzTl05FqiI5dzwANXbniRGU+w79v5enjn5CJr30fUBylRhsxc1TiO
+	 AhnG5UMYohmfpi1UPKike2Zlr5ZM7wI53fc8mHSHBI879DnduIjm83RtFZMnXe+HU
+	 0wansLsjhNNfJ/elYGoFMLotFuA8D7B7nIBuCpB0DPdKp7nhKksAMuE8yW+9eEff7
+	 uRr6OTGFcSbfS9TZHn+iBYBkFxL/kB9ZD7spd8oE4FZxwXwPchTZClCIVDeH96XKR
+	 M/QTpNBfG6q/AaHYBvFNoit8Gbnpy8kefHzigCRFLetuY2wx91FlQGmZClDRcU3r/
+	 af74e1oc2lFKZIzoRA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.27]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1M4KNZ-1u2hu41009-00Eof3; Wed, 09
+ Apr 2025 10:36:33 +0200
+Message-ID: <7cd21e2c-0a28-4eff-9dba-e5a730aa5a92@web.de>
+Date: Wed, 9 Apr 2025 10:36:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CABXGCsPx7X7aTtS_9XopXb29r9n=Tjxm7ik007XDOhzS7-WCSw@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+To: vulab@iscas.ac.cn, brcm80211-dev-list.pdl@broadcom.com,
+ brcm80211@lists.linux.dev, linux-wireless@vger.kernel.org
+Cc: stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Arend van Spriel <arend.vanspriel@broadcom.com>,
+ Christophe Jaillet <christophe.jaillet@wanadoo.fr>,
+ Kalle Valo <kvalo@kernel.org>, =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megi@xff.cz>,
+ Sai Krishna <saikrishnag@marvell.com>
+References: <20250406084515.2991-1-vulab@iscas.ac.cn>
+Subject: Re: [PATCH] brcm80211: fmac: Add error handling for
+ brcmf_usb_dl_writeimage()
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250406084515.2991-1-vulab@iscas.ac.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:DHvd88JSmsZy5sKX8NacvZmigOG3VNQUVNpwcHQckyz7fSoapoO
+ Ks0mB4jb1Tls+X+Xj4H8XiNWNL4A7b96Bb+ayJlyePCCltGMInRkeBFgQSJuV4df1Mua8FF
+ VozqFAB/MkxL4azAil+UBu3msy4kTMKYYaLujYyHrKdlMmU1ydvi2tQquzIv0mwudhzEouF
+ owP/rlqoWsn8o0M4ch1Gg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:cxsI77KtDlw=;ADsK1gT386ZgI+QWsPqvZz55IHy
+ XNiiFmbaeNQhe2xiqQ45NU+nRARK2fDBnk4t2O7YDw+DeFx8uqskZelvprtfpfT1TIGHKHy0P
+ B/5RL7LC06SsV1OzoMldJqYpXn6jrrqT5BC87oTO30OyTU38wrlVhXwxom0aw85yWoxILGnlX
+ Ry3Md7EnM/A+FtOzq3lkGDkTGRsDh/+GDW2XHrh04VpiqksKQf9206iNf7yJfGrassbUAT7NQ
+ zfwPhqGqTlpmLSazkjkmCSX9zGc1E1RJcJOBUHgIwx1uSfh9ULRsRsAioqLdXMT+QPQAAP9Lr
+ kUHzOitl5bNWz+E5Mnxp4qC9ZFZ/JudwPS8hnMKBwKm4YQgl/nDo5H/1fweDhu8xW57CIjPvf
+ mMBUMg1hmSK3GY4sv4OS/Nykv3aqETzjhTVxSNoclNyZS3SmdwVWtqrP5RWvCzDZjmefCJ1M3
+ Ysox/X2xdKhUl28kWv/lA7tveajS/vD1OhvRiY0CNpXj6LOpHQH1JTJE/qXvjn2PxSDHKc93X
+ PXux0f6lJlvJIke2AnR/bS953T/ufO5WarP2o/17d609TnCMBSNTWTWgONKfx8+myOPZJkQ44
+ x6rBOjNvgyMQq9qEa+OpGM9LOxesMZ/fp5UWrPqOdaCEkXVoSRSDFYR7WIE2y3jyzOUW/0hrV
+ nAqtuYOCYEXE5bGOIUAA1rjDuiUsaZkAfz1fwkNGOwXuTbAXJaWU1wpJTltHUsnBNiLPtq164
+ BGNg9A//HoWZN/Q0bLIr5rqoxTGOrKoKeFs3u1y2nr4oVSAfzkilKmqCUUd5wfo9EG29kTPHq
+ OWg5q0TSsN804aVwlYOxdsn7o+grS2nHZbDqsdOswko15fNJFDFWvgM1zyY/4kb2CqT9Li1yL
+ DxnzmnvWvAHEMvnYKzA78SZatQRYrU4b6Hgz34tHbWr0DRJoL248+CXRG71IVP5CU6RsQDwai
+ B8gPvkGKja0LToRV1U+0m+hc0+GB3ZwFbxiab2KSmMaVHnQFqiy7M39txRS+8bDyQPL7zMRQV
+ QzXX0AmT6SmzHR/Q8GZjxsdHsZpzV9kNoRbJ5a5yalaTv/QM1tThodwO2v10mQluXdRzNnQUB
+ WZX19JtlZ/nK5JRdivfFQUFcXxDWnDXeofkqc075Tq3rvU0KRf5qC/vgDwYTOzHFXM/v4ri4v
+ YaFabhxS6KTA48BlTSZysstgIkk2/mFyy9GbF89a+9b9qMA4OmsSEqIF/R69SQ4KqZkA8MnDS
+ kIqbyWcquFFYT64W/HzoFvsKPJcJG6uFOtHq/PoxK/HEg98+ZpkiTbUycOKOqiwMdKmdzKtyd
+ XUeYrFPBUx+Ozi8YSP4Ruq3/aZMgOXT5+5sRpCCeuomZym1s1YjHwX4L9QmpI30crLmcodFTp
+ mDsse14J9PYUVYTfh7VWgNC6eh9lLXF2g1KPDjQI6QFONm/sUm0LGuZbifYjsZhU+ztSu4MrA
+ iEG9kLLCtIeEvqLcgNssqAXwNdLOL7Up3psa/7DxN8DRkuv/cDCUw3VSnr8MwEuL+MEMQwA==
 
-On Tue, Apr 08, 2025 at 06:05:23PM +0500, Mikhail Gavrilov wrote:
-> On Tue, Apr 8, 2025 at 3:22 PM Christian Brauner <brauner@kernel.org> wrote:
-> >
-> >
-> > Resolved it for you:
-> >
-> > https://web.git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git/log/?h=work.bisect
-> 
-> I can confirm that systemd-nspawn is working on the kernel built from
-> branch work.bisect.
-> It confirms the correctness of my bisect.
-> 
-> > sudo /usr/bin/systemd-nspawn -q --ephemeral -D /var/lib/mock/fedora-rawhide-x86_64/root
-> [sudo] password for mikhail:
-> [root@root-7a084a9cbe689c8a ~]# uname -r
-> 6.15.0-rc1-work.bisect+
-> 
-> And I attached the full kernel log below.
+> The function brcmf_usb_dl_writeimage() calls the function
+> brcmf_usb_dl_cmd() but dose not check its return value. The
 
-Ok, I see the bug. It's caused by pecularity in systemd that a specific
-implementation detail of mount_setattr() papered over.
+* Wording suggestion:
+  The brcmf_usb_dl_cmd() function is called here.
+  Unfortunately, its return value was not checked so far.
 
-Basically, I added a shortcut to mount_settatr():
+* You may occasionally put more than 60 characters into text lines
+  of such a change description.
 
-        /* Don't bother walking through the mounts if this is a nop. */
-        if (attr.attr_set == 0 &&
-            attr.attr_clr == 0 &&
-            attr.propagation == 0)
-                return 0;
+* I propose to replace the word =E2=80=9Cfor=E2=80=9D by =E2=80=9Cin=E2=80=
+=9D (before function names)
+  in some summary phrases.
 
-So that we:
 
-* don't pointlessly do path lookup
-* don't pointlessly walk the mount tree and hold the namespace semaphore etc.
-
-When I added copy_mount_setattr() this cycle this optimization got
-broken because I moved it into this helper and we now do path lookup and
-walk the mount tree even if there's no mount properties to change at
-all.
-
-That's just a performance thing, not a correctness thing though.
-
-systemd has the following code:
-
-	int make_fsmount(
-	                int error_log_level,
-	                const char *what,
-	                const char *type,
-	                unsigned long flags,
-	                const char *options,
-	                int userns_fd) {
-	
-<snip>
-	
-	        mnt_fd = fsmount(fs_fd, FSMOUNT_CLOEXEC, 0);
-	        if (mnt_fd < 0)
-	                return log_full_errno(error_log_level, errno, "Failed to create mount fd for \"%s\" (\"%s\"): %m", what, type);
-	
-	        if (mount_setattr(mnt_fd, "", AT_EMPTY_PATH|AT_RECURSIVE,
-	                          &(struct mount_attr) {
-	                                  .attr_set = ms_flags_to_mount_attr(f) | (userns_fd >= 0 ? MOUNT_ATTR_IDMAP : 0),
-	                                  .userns_fd = userns_fd,
-	                          }, MOUNT_ATTR_SIZE_VER0) < 0)
-	
-<snip>
-
-So if userns_fd is greater or equal than zero MOUNT_ATTR_IDMAP will be
-raised otherwise not.
-
-Later in the code we find this function used in nspawn during:
-
-	static int get_fuse_version(uint32_t *ret_major, uint32_t *ret_minor) {
-
-<snip>
-	        /* Get a FUSE handle. */
-	        fuse_fd = open("/dev/fuse", O_CLOEXEC|O_RDWR);
-<snip>
-	        mnt_fd = make_fsmount(LOG_DEBUG, "nspawn-fuse", "fuse.nspawn", 0, opts, -EBADF);
-
-This will cause the aforementioned mount_setattr() call to be called
-with:
-
-	        if (mount_setattr(mnt_fd, "", AT_EMPTY_PATH|AT_RECURSIVE,
-	                          &(struct mount_attr) {
-	                                  .attr_set = 0,
-	                                  .userns_fd = -EBADF,
-	                          }, MOUNT_ATTR_SIZE_VER0) < 0)
-
-This means:
-
-attr_set == 0 && attr_clear == 0 and propagation == 0 and we'd thus
-never trigger a path lookup on older kernels. But now we do thus causing
-the hang.
-
-I've restored the old behavior. Can you please test?:
-
-https://web.git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git/log/?h=work.mount.fixes
+Regards,
+Markus
