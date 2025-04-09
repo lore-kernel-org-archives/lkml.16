@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45FC725E80B
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 12:24:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E088F25E80B
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 12:24:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744201461; cv=none; b=GLQqRHgoHr4in/zHa3OonlXERZIiWe2nyidMYb6DL7LourVUQwyGW1ohBGGoGmLQwbwLy3BiFPll7SiBdF7U4go7Fl/kEf2alZF6GBSsltf3uf0loCYM3bevY3bLpp8Q0itfdEHdaxFLj650g0mGHKXn8dnpMqJS8kBRmgRSBhs=
+	t=1744201467; cv=none; b=aR1PtogwjpG9oMiOAA+i2Yahwj/5FKtUZklydBLwNXXheJLdA18aIsM8/PDITjIezUKTxc/fqnM08euM5EOK3k2K6W6iryE1ga8MvTDSGJeXyCiaR0u5xGerUQRMb2nCYSWhgWllKpIDLa3JXfdlSaGhrQOaxnuKyujurox8qQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744201461; c=relaxed/simple;
-	bh=4f3zqeUf2l96bOM8cmDyuUo+fnc4TY8/SVT6maVvOTU=;
+	s=arc-20240116; t=1744201467; c=relaxed/simple;
+	bh=N7cXk0xwkxHLyp46KrkCrfl8x3DEFXzKxkNNdsktsZo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=sDe61z8ihf+6IkyluT1igW7l2USH5NEeDqJaB/SdV8cRvty6rqftjFXftJD6EhJnLUtUbUgn0gLV4usFeDITInMNlPQRqO9TjNrcwXrqkq/sScZ6W9xO3gRrkdoX2bu5Ut/KeXlW5QiSojetSSgchIvJcA0OTQXSw2oqUGV3wWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cVJuMTIJ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=X4qMdNwuKulFmwOsuWI+8dd1nWB/FKkGKfE5kA1bLgElmKDE/pboIyYSVd659iuE3AP47O/c/FoL4A7irvZ/pKMeOdqMgg5GrlOfVUDcoPJIlCuxQEsDUWc4wqpGG7ICoUO1tl8Y8d8+5nFk7A4438q/hkrowy6EnFPfqtXxwfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VhTgHZL2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cVJuMTIJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20F79C4CEE7;
-	Wed,  9 Apr 2025 12:24:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VhTgHZL2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5E9AC4CEE3;
+	Wed,  9 Apr 2025 12:24:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744201460;
-	bh=4f3zqeUf2l96bOM8cmDyuUo+fnc4TY8/SVT6maVvOTU=;
+	s=k20201202; t=1744201466;
+	bh=N7cXk0xwkxHLyp46KrkCrfl8x3DEFXzKxkNNdsktsZo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cVJuMTIJ/Pnv1YUYnoSmuzXCXUPjfLGY3NsM+ComJejxAOSYH7xZe6xjP7YFL3Zwc
-	 L5MYHrCoxIMCVaaR6hnBhnIM286M33F+a7VKqYCa1JSy6J2FxCOyCxzzQh8Hv/rUk5
-	 XyofOcVjvRua+Lk58UmRHcFROz1fB4sBrzpGcs3oHIBQ5dvYJsMJNNkenywEl5mSFq
-	 jCqkCAXHxbmjC5asGvqfO6wnWwxiosTf9wMgubVHCWR4RLjm4GADCHbcy+gxKFXQ4f
-	 olBzl62clnJ7Le8LhqiplNT2cu9u9tdLfTtomiwvpQ7qFThMvbX40z+vRvd6eWHn5W
-	 nilFGJEhK5xiQ==
+	b=VhTgHZL2BssrGT5lcLZKtchZa4GE09gc773hganK+mvE1vzwW3lWp9o563qxZIO5+
+	 F0+OZ4Jrol/z4Xm4Jn1QCJmllUbuTILu7eEYLwPwLdcV56InQor+o/xF+v4MBFMLX3
+	 ipjXodXHLQCj/uRh0aq0gaLJZ6Sn5dDknDaj8ePMGg0+u1NgERoABShtP2rnVdf9fl
+	 vkP80P8lu7txlefynC3+3+39E1UlK1TbOhihc/4QNno+kKU+kz15uaPIkiVKAdUtrf
+	 evBB+V+c6fK6of2WDgXV+hL/RC5lEEEoad5YUocd5KwTPmnJC3Dd5zDkEyQnan7jOb
+	 Oq70sGDBiuj8Q==
 From: Arnd Bergmann <arnd@kernel.org>
-To: Ian Abbott <abbotti@mev.co.uk>,
-	H Hartley Sweeten <hsweeten@visionengravers.com>
+To: Jiri Kosina <jikos@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Kosina <jkosina@suse.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 08/10] [RESEND 2] comedi: ni_atmio: avoid warning for unused device_ids[] table
-Date: Wed,  9 Apr 2025 14:23:00 +0200
-Message-Id: <20250409122314.2848028-8-arnd@kernel.org>
+Subject: [PATCH 09/10] [RESEND 2] apm-emulation: hide an unused variable
+Date: Wed,  9 Apr 2025 14:23:01 +0200
+Message-Id: <20250409122314.2848028-9-arnd@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250409122314.2848028-1-arnd@kernel.org>
 References: <20250409122131.2766719-1-arnd@kernel.org>
@@ -51,34 +51,45 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-When the driver is built-in, it produces a W=1 warning:
+The driver_version variable is only used inside of an #ifdef block, which
+leads to a W=1 warning:
 
-drivers/comedi/drivers/ni_atmio.c:209:35: error: 'device_ids' defined but not used [-Werror=unused-const-variable=]
-  209 | static const struct pnp_device_id device_ids[] = {
+drivers/char/apm-emulation.c:144:19: error: 'driver_version' defined but not used [-Werror=unused-const-variable=]
 
-The actual probe() function has a different way of identifying
-the hardware, so just mark this one as __maybe_unused so it
-can be dropped when built-in.
+Move this into the function using it.
 
-Reviewed-by: Ian Abbott <abbotti@mev.co.uk>
+Fixes: 7726942fb15e ("[APM] Add shared version of APM emulation")
+Acked-by: Jiri Kosina <jkosina@suse.com>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/comedi/drivers/ni_atmio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Found while looking through my patch backlog, still applies
+---
+ drivers/char/apm-emulation.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/comedi/drivers/ni_atmio.c b/drivers/comedi/drivers/ni_atmio.c
-index 330ae1c58800..b4e759e5703f 100644
---- a/drivers/comedi/drivers/ni_atmio.c
-+++ b/drivers/comedi/drivers/ni_atmio.c
-@@ -215,7 +215,7 @@ static const int ni_irqpin[] = {
+diff --git a/drivers/char/apm-emulation.c b/drivers/char/apm-emulation.c
+index e795390b070f..53ce352f7197 100644
+--- a/drivers/char/apm-emulation.c
++++ b/drivers/char/apm-emulation.c
+@@ -141,9 +141,6 @@ static struct apm_queue kapmd_queue;
  
- #include "ni_mio_common.c"
+ static DEFINE_MUTEX(state_lock);
  
--static const struct pnp_device_id device_ids[] = {
-+static const struct pnp_device_id __maybe_unused device_ids[] = {
- 	{.id = "NIC1900", .driver_data = 0},
- 	{.id = "NIC2400", .driver_data = 0},
- 	{.id = "NIC2500", .driver_data = 0},
+-static const char driver_version[] = "1.13";	/* no spaces */
+-
+-
+ 
+ /*
+  * Compatibility cruft until the IPAQ people move over to the new
+@@ -435,6 +432,8 @@ static struct miscdevice apm_device = {
+  */
+ static int proc_apm_show(struct seq_file *m, void *v)
+ {
++	static const char driver_version[] = "1.13";	/* no spaces */
++
+ 	struct apm_power_info info;
+ 	char *units;
+ 
 -- 
 2.39.5
 
