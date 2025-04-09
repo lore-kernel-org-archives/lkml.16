@@ -1,223 +1,241 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06CF7101C8;
-	Wed,  9 Apr 2025 20:27:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68DF1143748
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 20:29:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744230447; cv=none; b=H08SvxGZOB+zMSgHQWr8hh5jMMLoKef7OK2NDVy3aydZQMYvv0ZBlv5wRTdaYKAfAjCzglXlmhRXbv1cEgZ9ldiMiMzw5FuPK7k+ax3QrKn1lamJ8PkhDI3KYXIzCnyzSG26tPdEsDIQi4GYtCPxyVbID66XAWt0M3OfXj5EWZ8=
+	t=1744230558; cv=none; b=L7jphDNnkOd/QIBTEPTJgnplFBeTMyTS4g8X5mPKECvmFIqBsbcufkoswv2ni3arD4+npMpjBOTXPZ+6iUaQycnkaGZXKlM/cdkT6fQmo9oOWNj36IRKHxYOO9LaJQAq0v32+orHx1BIOMNsD60X2s8ex9t3MI4rI63OCpFmHMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744230447; c=relaxed/simple;
-	bh=fEbv5zBpraILF+Ghnm54tkWozFw0v+CbBgAZephHFoo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Tbs19YqjXApIMgxAnCCZMF2yITpKE+l4aQRmR6gUnMIpxMhpCI7xK1czvMhN4adOjJOywNIIxn3MAXVh0sNFSCDpMyqlHYCScgD/Z14os2dN3IEnvaMBHu7mQ5ptYJ6yxHFBuLPfQMibbKTLLawPJeO6kJMCf1uLaCJJk4rapdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mlR+CXiY; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744230558; c=relaxed/simple;
+	bh=F8Wb/KsqiSNZjGWf7HosHWFlgdoJ5MpFGfZ9wtQul00=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XWkfgtEh7AIU5Z/JXLA1bxDdOCE9ABukdlYIiw3nrj6EYo5xOhQtJaOWcp18xdE7oxUFqFpMpqEb+honS5WEZZrfFK1e4x3IAMxUDP2bafSijuRNfVIW6clokNjZ6C253CNnXBqR/kfjvaBrqFAWphP7orFKI8Bf0lq6WNh2wco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aLXHZYLF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mlR+CXiY"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e60cfef9cfso177680a12.2;
-        Wed, 09 Apr 2025 13:27:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744230444; x=1744835244; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=J0LAM8wut9PB5pz05xM4sp997UQqATNN0PYbo23aLv4=;
-        b=mlR+CXiY76+zgimfpKpIIituwjq2EFuj+J1ujP8DcK8Rn1WmJHzcuZoHF6Yo0ZBPXw
-         DtR4Rf72BOlVNBGs//Hd4U8mHqWw/1uWMfZYI/n8N5kPPOzhPUMVHPNO8Tq737cjVJXG
-         j3bjQxUKivfzQatd3qdPKfzTVTiZRLGbiuWwd9i0SV4XanTz9b4W+nSO3lUPLRu/BSSh
-         MFGLYTO8+GFN7xYHobFAr30FksIlVR5N6ipbs0Sle74P0A/L9h4H3srXC58Ip5ymVDzT
-         NRpjJ2YsYNjvRnEXUhHEYUeHKni47EaesCyFO8kFt1WhY5vtL4yVWDS+wQlrDyaE4c7J
-         lFqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744230444; x=1744835244;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=J0LAM8wut9PB5pz05xM4sp997UQqATNN0PYbo23aLv4=;
-        b=pVSKY/fcSj4L0xxCB8EJiTbL/N7RCb3UqHw14f4yvuRAb/9uUCMFpASsvxupG+2kn+
-         eHvrMXCbUwm3ICRazqq+HkC1jF9jidQ5BJBspL6ZqfxYGsl/Gboh+AC21I68ahmdEjVU
-         QYn7cbY5w+kj7UNaRYqlTY5S1U5ZYEHUplszqm2Jvv48AQbXZ67cT+9aAk/lLI+GYsgv
-         aY4lLCUbcH7pBT8OKVGrzgmp0eBPATAq65/cLlDFNXX5LNaGtIAcBHK4w4UQDjdnb6wP
-         +P7hjAkbzRfXiCG7td6hFJ/O81gA6nQ2Ng6Blq/DT/Siin5JUBMAGCmNTa/sRWN9csdw
-         6k2w==
-X-Forwarded-Encrypted: i=1; AJvYcCUfL2KWWk/jnR8Xetszmio37Yik2gFjiZzP6Am233MYVbMKzFZk/zbWZwoNYRCuOiCS9fICbEP3akrIhulW@vger.kernel.org, AJvYcCXahGeo4U3TYt+parNNNsnNsUG3KGs7D4W/mt/pNzgesECfHEz1TUZK4TValHL65brLgwEl5lGPQeqPcPOT@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyn36rGRTstUbGa3Eae6V44pa0WIWyfNciff+V4aYV7fnGG51Ky
-	QD8/VgjydWJ1qR7nkMw7SjHzj3jKFDdsV2S37gsv9Qgx2YXhj1TaLL3CGVFXYncRvHo7KptwILC
-	XBc1KpY/zPAbObgraX5LZOSwsLyk=
-X-Gm-Gg: ASbGncsRZSGjSQE//hEt2UTRlYr2uuqO/0Loaeyy32xlsJB0oFSUsDL67k5gYxwFDeE
-	2yVEWgbmUJepvHROWFvltnWP8nKL7Gzu5OJmCC9JesRQQ+gUU+6+4/ab3Kv8PdhMyafCo3FSJ/8
-	FaWB5kjocDh32kXHztYujo
-X-Google-Smtp-Source: AGHT+IGuQy4DnmjwQ9A6RQoT1MD/6UgYznoCA9Kpk7nYN37cfGWMeQEMlO/3HPRLThtJNF2da/qGvE7mElSV2NyMWXM=
-X-Received: by 2002:a05:6402:4416:b0:5f2:1572:643b with SMTP id
- 4fb4d7f45d1cf-5f3290edbebmr227085a12.0.1744230444042; Wed, 09 Apr 2025
- 13:27:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aLXHZYLF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81942C4CEE2;
+	Wed,  9 Apr 2025 20:29:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744230556;
+	bh=F8Wb/KsqiSNZjGWf7HosHWFlgdoJ5MpFGfZ9wtQul00=;
+	h=From:To:Cc:Subject:Date:From;
+	b=aLXHZYLFmabsNs8cQdnHsn/2rb39iKqIrgRSgcd3h9vz6NtcFyQX9guzrboYY7e0D
+	 FbcdfND5VhZZH1B8CJwVtV3iwTSBKw09ZTk3XEFCAhTfsTSdyAYGl0OrVmQXAvW+di
+	 sUExRu3LkYr/7CUSUBbucqnblQe2UGEZfq49CtDa6YyTTKvGJaJXbr9ub7GTK569cq
+	 Q/V7QTEHzZ+MhglFbCppkJVkv/LCHSHzHa//gqfX02WlFAr84QHHyA9xTgyNlUdLYK
+	 ZZ73eOF29FuGieyW93RkHN8AGFbnvsf0vkS9hQuEEvr/u69VjinlyipJ6m4ESl/uZU
+	 eyQ/DOcp0iLMA==
+From: Ingo Molnar <mingo@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Juergen Gross <jgross@suse.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Dave Hansen <dave.hansen@intel.com>,
+	Xin Li <xin@zytor.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 00/20] x86 MSR in-kernel API type cleanup and rename
+Date: Wed,  9 Apr 2025 22:28:47 +0200
+Message-ID: <20250409202907.3419480-1-mingo@kernel.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <c58291cd-0775-4c90-8443-ba71897b5cbb@p183>
-In-Reply-To: <c58291cd-0775-4c90-8443-ba71897b5cbb@p183>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Wed, 9 Apr 2025 22:27:12 +0200
-X-Gm-Features: ATxdqUGtAF0YoVOpwXPnhA1JTNpmAMSamK1sRZQNMtQLNmmBN_hoYbY-w1Rn9SQ
-Message-ID: <CAGudoHGtvBArbAhpynYLd=FzshR+UM-qx=n_1wOq1BPqW9nTXA@mail.gmail.com>
-Subject: Re: [PATCH] proc: allow to mark /proc files permanent outside of fs/proc/
-To: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: akpm@linux-foundation.org, brauner@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 9, 2025 at 9:20=E2=80=AFPM Alexey Dobriyan <adobriyan@gmail.com=
-> wrote:
->
-> From 06e2ff406942fef65b9c397a7f44478dd4b61451 Mon Sep 17 00:00:00 2001
-> From: Alexey Dobriyan <adobriyan@gmail.com>
-> Date: Sat, 5 Apr 2025 14:50:10 +0300
-> Subject: [PATCH 1/1] proc: allow to mark /proc files permanent outside of
->  fs/proc/
->
-> From: Mateusz Guzik <mjguzik@gmail.com>
->
-> Add proc_make_permanent() function to mark PDE as permanent to speed up
-> open/read/close (one alloc/free and lock/unlock less).
->
-> Enable it for built-in code and for compiled-in modules.
-> This function becomes nop magically in modular code.
->
-> Use it on /proc/filesystems to add a user.
->
->                 Note, note, note!
->
-> If built-in code creates and deletes PDEs dynamically (not in init
-> hook), then proc_make_permanent() must not be used.
->
-> It is intended for simple code:
->
->         static int __init xxx_module_init(void)
->         {
->                 g_pde =3D proc_create_single();
->                 proc_make_permanent(g_pde);
->                 return 0;
->         }
->         static void __exit xxx_module_exit(void)
->         {
->                 remove_proc_entry(g_pde);
->         }
->
-> If module is built-in then exit hook never executed and PDE is
-> permanent so it is OK to mark it as such.
->
-> If module is module then rmmod will yank PDE, but proc_make_permanent()
-> is nop and core /proc code will do everything right.
->
-> [adobriyan@gmail.com: unexport function (usual exporting is a bug)]
-> [adobriyan@gmail.com: rewrite changelog]
->
-> Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
-> Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
-> ---
->  fs/filesystems.c        |  4 +++-
->  fs/proc/generic.c       | 12 ++++++++++++
->  fs/proc/internal.h      |  3 +++
->  include/linux/proc_fs.h | 10 ++++++++++
->  4 files changed, 28 insertions(+), 1 deletion(-)
->
-> diff --git a/fs/filesystems.c b/fs/filesystems.c
-> index 58b9067b2391..81dcd0ddadb6 100644
-> --- a/fs/filesystems.c
-> +++ b/fs/filesystems.c
-> @@ -252,7 +252,9 @@ static int filesystems_proc_show(struct seq_file *m, =
-void *v)
->
->  static int __init proc_filesystems_init(void)
->  {
-> -       proc_create_single("filesystems", 0, NULL, filesystems_proc_show)=
-;
-> +       struct proc_dir_entry *pde =3D
-> +               proc_create_single("filesystems", 0, NULL, filesystems_pr=
-oc_show);
-> +       proc_make_permanent(pde);
->         return 0;
->  }
->  module_init(proc_filesystems_init);
-> diff --git a/fs/proc/generic.c b/fs/proc/generic.c
-> index a3e22803cddf..0342600c0172 100644
-> --- a/fs/proc/generic.c
-> +++ b/fs/proc/generic.c
-> @@ -826,3 +826,15 @@ ssize_t proc_simple_write(struct file *f, const char=
- __user *ubuf, size_t size,
->         kfree(buf);
->         return ret =3D=3D 0 ? size : ret;
->  }
-> +
-> +/*
-> + * Not exported to modules:
-> + * modules' /proc files aren't permanent because modules aren't permanen=
-t.
-> + */
-> +void impl_proc_make_permanent(struct proc_dir_entry *pde);
-> +void impl_proc_make_permanent(struct proc_dir_entry *pde)
-> +{
-> +       if (pde) {
-> +               pde_make_permanent(pde);
-> +       }
-> +}
-> diff --git a/fs/proc/internal.h b/fs/proc/internal.h
-> index 96122e91c645..885b1cd38020 100644
-> --- a/fs/proc/internal.h
-> +++ b/fs/proc/internal.h
-> @@ -80,8 +80,11 @@ static inline bool pde_is_permanent(const struct proc_=
-dir_entry *pde)
->         return pde->flags & PROC_ENTRY_PERMANENT;
->  }
->
-> +/* This is for builtin code, not even for modules which are compiled in.=
- */
->  static inline void pde_make_permanent(struct proc_dir_entry *pde)
->  {
-> +       /* Ensure magic flag does something. */
-> +       static_assert(PROC_ENTRY_PERMANENT !=3D 0);
->         pde->flags |=3D PROC_ENTRY_PERMANENT;
->  }
->
-> diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h
-> index ea62201c74c4..2d59f29b49eb 100644
-> --- a/include/linux/proc_fs.h
-> +++ b/include/linux/proc_fs.h
-> @@ -247,4 +247,14 @@ static inline struct pid_namespace *proc_pid_ns(stru=
-ct super_block *sb)
->
->  bool proc_ns_file(const struct file *file);
->
-> +static inline void proc_make_permanent(struct proc_dir_entry *pde)
-> +{
-> +       /* Don't give matches to modules. */
-> +#if defined CONFIG_PROC_FS && !defined MODULE
-> +       /* This mess is created by defining "struct proc_dir_entry" elsew=
-here. */
-> +       void impl_proc_make_permanent(struct proc_dir_entry *pde);
-> +       impl_proc_make_permanent(pde);
-> +#endif
-> +}
-> +
->  #endif /* _LINUX_PROC_FS_H */
+H. Peter Anvin recently observed that the rdmsrl*()/wrmsrl*() APIs
+are historic misnomers and are actively misleading: the 'l' suffix
+suggests a 32-bit nature, while all these APIs are fixed 64-bit,
+for which we use the 'q' suffix.
 
-This diff should not be changing /proc/filesystems, that's for the
-other patch to do.
+Make the names reflect that, by renaming them to rdmsrq*()/wrmsrq*().
 
-So I think this patch is all you and my name needs to be dropped from
-it, along with marking /proc/filesystems as permanent.
+Also clean up the types to u32 and u64 in <asm/msr.h> and affected code,
+from a hodgepodge of equivalent integer types, to indicate that these
+are all hardware ABI derived types.
 
-Given that you kept the name (proc_make_permanent), the
-fs/filesystems.c side of things is identical so my first patch can be
-just swapped for this one.
+The Git tree with these commits can be found at:
 
-Alternatively I can resend the patchset with this (augmented as
-described above).
---=20
-Mateusz Guzik <mjguzik gmail.com>
+  git://git.kernel.org/pub/scm/linux/kernel/git/mingo/tip.git WIP.x86/msr
+
+Thanks,
+
+	Ingo
+
+==================>
+Ingo Molnar (20):
+  x86/msr: Standardize on u64 in <asm/msr.h>
+  x86/msr: Standardize on u64 in <asm/msr-index.h>
+  x86/msr: Use u64 in rdmsrl_amd_safe() and wrmsrl_amd_safe()
+  x86/msr: Use u64 in rdmsrl_safe() and paravirt_read_pmc()
+  x86/msr: Harmonize the prototype and definition of do_trace_rdpmc()
+  x86/msr: Standardize on 'u32' MSR indices in <asm/msr.h>
+  x86/msr: Rename 'rdmsrl()' to 'rdmsrq()'
+  x86/msr: Rename 'wrmsrl()' to 'wrmsrq()'
+  x86/msr: Rename 'rdmsrl_safe()' to 'rdmsrq_safe()'
+  x86/msr: Rename 'wrmsrl_safe()' to 'wrmsrq_safe()'
+  x86/msr: Rename 'rdmsrl_safe_on_cpu()' to 'rdmsrq_safe_on_cpu()'
+  x86/msr: Rename 'wrmsrl_safe_on_cpu()' to 'wrmsrq_safe_on_cpu()'
+  x86/msr: Rename 'rdmsrl_on_cpu()' to 'rdmsrq_on_cpu()'
+  x86/msr: Rename 'wrmsrl_on_cpu()' to 'wrmsrq_on_cpu()'
+  x86/msr: Rename 'mce_rdmsrl()' to 'mce_rdmsrq()'
+  x86/msr: Rename 'mce_wrmsrl()' to 'mce_wrmsrq()'
+  x86/msr: Rename 'rdmsrl_amd_safe()' to 'rdmsrq_amd_safe()'
+  x86/msr: Rename 'wrmsrl_amd_safe()' to 'wrmsrq_amd_safe()'
+  x86/msr: Rename 'native_wrmsrl()' to 'native_wrmsrq()'
+  x86/msr: Rename 'wrmsrl_cstar()' to 'wrmsrq_cstar()'
+
+ arch/x86/coco/sev/core.c                           |   2 +-
+ arch/x86/events/amd/brs.c                          |   8 +-
+ arch/x86/events/amd/core.c                         |  12 +--
+ arch/x86/events/amd/ibs.c                          |  26 ++---
+ arch/x86/events/amd/lbr.c                          |  20 ++--
+ arch/x86/events/amd/power.c                        |  10 +-
+ arch/x86/events/amd/uncore.c                       |  12 +--
+ arch/x86/events/core.c                             |  42 ++++----
+ arch/x86/events/intel/core.c                       |  66 ++++++-------
+ arch/x86/events/intel/cstate.c                     |   2 +-
+ arch/x86/events/intel/ds.c                         |  10 +-
+ arch/x86/events/intel/knc.c                        |  16 +--
+ arch/x86/events/intel/lbr.c                        |  44 ++++-----
+ arch/x86/events/intel/p4.c                         |  24 ++---
+ arch/x86/events/intel/p6.c                         |  12 +--
+ arch/x86/events/intel/pt.c                         |  32 +++---
+ arch/x86/events/intel/uncore.c                     |   2 +-
+ arch/x86/events/intel/uncore_discovery.c           |  10 +-
+ arch/x86/events/intel/uncore_nhmex.c               |  70 ++++++-------
+ arch/x86/events/intel/uncore_snb.c                 |  42 ++++----
+ arch/x86/events/intel/uncore_snbep.c               |  50 +++++-----
+ arch/x86/events/msr.c                              |   2 +-
+ arch/x86/events/perf_event.h                       |  26 ++---
+ arch/x86/events/probe.c                            |   2 +-
+ arch/x86/events/rapl.c                             |   8 +-
+ arch/x86/events/zhaoxin/core.c                     |  16 +--
+ arch/x86/hyperv/hv_apic.c                          |   4 +-
+ arch/x86/hyperv/hv_init.c                          |  66 ++++++-------
+ arch/x86/hyperv/hv_spinlock.c                      |   6 +-
+ arch/x86/hyperv/ivm.c                              |   2 +-
+ arch/x86/include/asm/apic.h                        |   8 +-
+ arch/x86/include/asm/debugreg.h                    |   4 +-
+ arch/x86/include/asm/fsgsbase.h                    |   4 +-
+ arch/x86/include/asm/kvm_host.h                    |   2 +-
+ arch/x86/include/asm/microcode.h                   |   2 +-
+ arch/x86/include/asm/msr-index.h                   |  12 +--
+ arch/x86/include/asm/msr.h                         |  73 +++++++-------
+ arch/x86/include/asm/paravirt.h                    |   8 +-
+ arch/x86/include/asm/spec-ctrl.h                   |   2 +-
+ arch/x86/kernel/acpi/cppc.c                        |   8 +-
+ arch/x86/kernel/amd_nb.c                           |   2 +-
+ arch/x86/kernel/apic/apic.c                        |  16 +--
+ arch/x86/kernel/apic/apic_numachip.c               |   6 +-
+ arch/x86/kernel/cet.c                              |   2 +-
+ arch/x86/kernel/cpu/amd.c                          |  28 +++---
+ arch/x86/kernel/cpu/aperfmperf.c                   |  28 +++---
+ arch/x86/kernel/cpu/bugs.c                         |  24 ++---
+ arch/x86/kernel/cpu/bus_lock.c                     |  18 ++--
+ arch/x86/kernel/cpu/common.c                       |  68 ++++++-------
+ arch/x86/kernel/cpu/feat_ctl.c                     |   4 +-
+ arch/x86/kernel/cpu/hygon.c                        |   6 +-
+ arch/x86/kernel/cpu/intel.c                        |  10 +-
+ arch/x86/kernel/cpu/intel_epb.c                    |  12 +--
+ arch/x86/kernel/cpu/mce/amd.c                      |  22 ++---
+ arch/x86/kernel/cpu/mce/core.c                     |  58 +++++------
+ arch/x86/kernel/cpu/mce/inject.c                   |  32 +++---
+ arch/x86/kernel/cpu/mce/intel.c                    |  32 +++---
+ arch/x86/kernel/cpu/mce/internal.h                 |   2 +-
+ arch/x86/kernel/cpu/microcode/amd.c                |   2 +-
+ arch/x86/kernel/cpu/microcode/intel.c              |   2 +-
+ arch/x86/kernel/cpu/mshyperv.c                     |  12 +--
+ arch/x86/kernel/cpu/resctrl/core.c                 |  10 +-
+ arch/x86/kernel/cpu/resctrl/monitor.c              |   2 +-
+ arch/x86/kernel/cpu/resctrl/pseudo_lock.c          |   2 +-
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c             |   6 +-
+ arch/x86/kernel/cpu/sgx/main.c                     |   2 +-
+ arch/x86/kernel/cpu/topology.c                     |   2 +-
+ arch/x86/kernel/cpu/topology_amd.c                 |   4 +-
+ arch/x86/kernel/cpu/tsx.c                          |  20 ++--
+ arch/x86/kernel/cpu/umwait.c                       |   2 +-
+ arch/x86/kernel/fpu/core.c                         |   2 +-
+ arch/x86/kernel/fpu/xstate.c                       |  10 +-
+ arch/x86/kernel/fpu/xstate.h                       |   2 +-
+ arch/x86/kernel/fred.c                             |  20 ++--
+ arch/x86/kernel/hpet.c                             |   2 +-
+ arch/x86/kernel/kvm.c                              |  28 +++---
+ arch/x86/kernel/kvmclock.c                         |   4 +-
+ arch/x86/kernel/mmconf-fam10h_64.c                 |   8 +-
+ arch/x86/kernel/process.c                          |  16 +--
+ arch/x86/kernel/process_64.c                       |  20 ++--
+ arch/x86/kernel/reboot_fixups_32.c                 |   2 +-
+ arch/x86/kernel/shstk.c                            |  18 ++--
+ arch/x86/kernel/traps.c                            |  10 +-
+ arch/x86/kernel/tsc.c                              |   2 +-
+ arch/x86/kernel/tsc_sync.c                         |  14 +--
+ arch/x86/kvm/svm/avic.c                            |   2 +-
+ arch/x86/kvm/svm/sev.c                             |   2 +-
+ arch/x86/kvm/svm/svm.c                             |  16 +--
+ arch/x86/kvm/vmx/nested.c                          |   4 +-
+ arch/x86/kvm/vmx/pmu_intel.c                       |   4 +-
+ arch/x86/kvm/vmx/sgx.c                             |   8 +-
+ arch/x86/kvm/vmx/vmx.c                             |  66 ++++++-------
+ arch/x86/kvm/x86.c                                 |  38 ++++----
+ arch/x86/lib/insn-eval.c                           |   6 +-
+ arch/x86/lib/msr-smp.c                             |  16 +--
+ arch/x86/lib/msr.c                                 |  12 +--
+ arch/x86/mm/pat/memtype.c                          |   4 +-
+ arch/x86/mm/tlb.c                                  |   2 +-
+ arch/x86/pci/amd_bus.c                             |  10 +-
+ arch/x86/platform/olpc/olpc-xo1-rtc.c              |   6 +-
+ arch/x86/platform/olpc/olpc-xo1-sci.c              |   2 +-
+ arch/x86/power/cpu.c                               |  26 ++---
+ arch/x86/realmode/init.c                           |   2 +-
+ arch/x86/virt/svm/sev.c                            |  20 ++--
+ arch/x86/xen/suspend.c                             |   6 +-
+ drivers/acpi/acpi_extlog.c                         |   2 +-
+ drivers/acpi/acpi_lpit.c                           |   2 +-
+ drivers/cpufreq/acpi-cpufreq.c                     |   8 +-
+ drivers/cpufreq/amd-pstate-ut.c                    |   6 +-
+ drivers/cpufreq/amd-pstate.c                       |  22 ++---
+ drivers/cpufreq/amd_freq_sensitivity.c             |   2 +-
+ drivers/cpufreq/e_powersaver.c                     |   6 +-
+ drivers/cpufreq/intel_pstate.c                     | 108 ++++++++++-----------
+ drivers/cpufreq/longhaul.c                         |  24 ++---
+ drivers/cpufreq/powernow-k7.c                      |  14 +--
+ drivers/crypto/ccp/sev-dev.c                       |   2 +-
+ drivers/edac/amd64_edac.c                          |   6 +-
+ drivers/gpu/drm/i915/selftests/librapl.c           |   4 +-
+ drivers/hwmon/fam15h_power.c                       |   6 +-
+ drivers/idle/intel_idle.c                          |  34 +++----
+ drivers/mtd/nand/raw/cs553x_nand.c                 |   6 +-
+ drivers/platform/x86/intel/ifs/core.c              |   4 +-
+ drivers/platform/x86/intel/ifs/load.c              |  20 ++--
+ drivers/platform/x86/intel/ifs/runtest.c           |  16 +--
+ drivers/platform/x86/intel/pmc/cnp.c               |   6 +-
+ drivers/platform/x86/intel/pmc/core.c              |   8 +-
+ .../x86/intel/speed_select_if/isst_if_common.c     |  18 ++--
+ .../x86/intel/speed_select_if/isst_if_mbox_msr.c   |  14 +--
+ .../x86/intel/speed_select_if/isst_tpmi_core.c     |   2 +-
+ drivers/platform/x86/intel/tpmi_power_domains.c    |   4 +-
+ drivers/platform/x86/intel/turbo_max_3.c           |   4 +-
+ .../x86/intel/uncore-frequency/uncore-frequency.c  |  10 +-
+ drivers/platform/x86/intel_ips.c                   |  36 +++----
+ drivers/powercap/intel_rapl_msr.c                  |   6 +-
+ .../int340x_thermal/processor_thermal_device.c     |   2 +-
+ drivers/thermal/intel/intel_hfi.c                  |  14 +--
+ drivers/thermal/intel/intel_powerclamp.c           |   4 +-
+ drivers/thermal/intel/intel_tcc_cooling.c          |   4 +-
+ drivers/thermal/intel/therm_throt.c                |  10 +-
+ drivers/video/fbdev/geode/gxfb_core.c              |   2 +-
+ drivers/video/fbdev/geode/lxfb_ops.c               |  22 ++---
+ drivers/video/fbdev/geode/suspend_gx.c             |  10 +-
+ drivers/video/fbdev/geode/video_gx.c               |  16 +--
+ include/hyperv/hvgdk_mini.h                        |   2 +-
+ 144 files changed, 1049 insertions(+), 1050 deletions(-)
+
+-- 
+2.45.2
+
