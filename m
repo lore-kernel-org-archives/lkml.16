@@ -1,218 +1,174 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2055.outbound.protection.outlook.com [40.107.237.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E2C7224F6;
-	Wed,  9 Apr 2025 18:32:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744223550; cv=fail; b=aDxuOXV3whwGixsldMCt+On2ZSIBJ6/pe7OL/PnMybSYn4X0zdMD9GN44+cCfN3L9uaCGt2h2jVAqmyYgYi7D6nAxi9qOtQ0Ic8K45DEMG/6iI6ixsef5+THrWfPDf1m6kQ8NNa+zkZH5DzMtqYt6KgcoZMQT7pVdwgL5yayp68=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744223550; c=relaxed/simple;
-	bh=mnvj2L0Ypy//uNyKO1fCt0VyTcSULDFJ7Pw9z92hLRg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=QxnQT33536xBDpDttGWYIn2ZAACQJdOokWNYQO403hVuqom9/irxDDqVGnzgwPiKzuAFh+yH0ajzOZZ5+i8NsH7wnFBaObwaY99gItWLn27KhHT3rIvA8NBwK3t1OkPzpU0o6XOxv6TPm5unfc+cArnZDGiQg3BxgRlv/49Im2M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=CjharNqy; arc=fail smtp.client-ip=40.107.237.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB76C1D432D;
+	Wed,  9 Apr 2025 18:33:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744223591; cv=none; b=NMbHNBKoL/XIIGN39V9ZDBI+rucKqAfVeqxR+9kmNSfCPqJxDkrAvSqTlCR4FiK7Zlf15/xqb08yXNPAl4euxATcH8990ebcqPkjYtkTk6sbo/L83/Plgs8uKD3xppfYcABJMiIbewV6M88RmHY6YWyDprB+AqV1z1n1xTQu9no=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744223591; c=relaxed/simple;
+	bh=MGeq7y7ME+KPgk832sLNyoOePOBNHMNAWhFiPL63pr4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V5LHIbhTXFheNIkWXuZLX0pJaO6uzEqFSzPSyFrs1vHaS86g8HL6hrTmAlKIfjGHNFfntYB/aj2rkSzZOLy818Im+p9pMvu+Obl07TTV3pnswLZ6Wjuxl/DezfL8VJAua6v/RebafZus32WT3XbHrWOzsm0mdKAdKUmh7VGYCBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A9v2pL24; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="CjharNqy"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Z+J18TsLXJoXVO1zdHkJVkVHedgeMdjEB22MwGdZP7LAViUHO/V3BlY+2Z93+yIMXyLiekHI7y6oCOlmHmfTRDXYl62JZDMvaV4gy9d5Q0ScPv7Bk1RDs4nqjnUA+O7ywdCEtt0kdt7ju4l4dYK7sH1uqbBxiXF2arjPpi/wrqCey0wI+uCVxJLGFo3h5lDj+/VmH0Fc1Bij0p4zPwpB2iTVsydZ0IwKk6M5UYvqsm1B8wqs7x/gmKWksdv7iXANKiEyqOGRxzqpDF09ZwhcLb72+Xv2VwPkuNnQXvo5YD+e3NyeNDb5uKXYzBA7kpuL5r79+RgmSA5HJgbPZSvkhA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/uP0xL9MTbG/uQBky3IVPl9Qpz8fGiHTi4UuVvja5pA=;
- b=MwqiGByxFFxuRq/wnkGSKHug6mJNpVvDA+9FPZJo5aXOWVY5orK6aoJRuUzS1Dejxzf+Lcw1m2S4EpfAeVmy1WKVdtsIUbjLUq3DM9RAG0XWdfpYEyUDiJYQrxvrIoMHcOWK2z1hPBQNA8ciurWiTXWZ2sfE9d2LIR4/Auey71hotUyjoC8tyFcAGwgThRFnEJSpWT3GHn0mZqk2XRBZjNyI68KoR3nmesi0T9/ltyXUGZKqw9fLNhHH6c1c57mLqaFdzzfpykZuSKwfhOC5dWi71vuf7nKDlGEVZ1efgouOW9zJ2UkPe/WxXgnXP5IfuYg0e70bX1nvgMRhlIjXPA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/uP0xL9MTbG/uQBky3IVPl9Qpz8fGiHTi4UuVvja5pA=;
- b=CjharNqyoIgtES8v67X8WIWkza3lzmm4AMTef5gHa0yfFYtw6AZbXeEf0J2YeEoV49InBKGUnKOGUykWVgJp3bWfctdMdoCfuLTe0FJRdwNEb8/CLIXvUjAupR+4A+kbL0rxJT3wAFxzoj393IhEinUAhW0NyQJ+AzUo1CVDV/jD7LYKrGS3TOri6dzH+YnV4N8eDpF9Gveu5DfGZB9qULam72ie2iSNy2AbPGXEMPkZmFWg+Kxa7dg+vtV6SvHd4RuACGS/+l17vEZWsqF0yaKjNqUzzHFffHwaXHlj5JfGCsXMG3bL4l2eRcg6ehMVhRSTtXpxRD2GCvcnjUKjUQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by DS0PR12MB7993.namprd12.prod.outlook.com (2603:10b6:8:14b::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.33; Wed, 9 Apr
- 2025 18:32:24 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%4]) with mapi id 15.20.8606.028; Wed, 9 Apr 2025
- 18:32:24 +0000
-Date: Wed, 9 Apr 2025 15:32:23 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Pratyush Yadav <ptyadav@amazon.de>,
-	Changyuan Lyu <changyuanl@google.com>, linux-kernel@vger.kernel.org,
-	graf@amazon.com, akpm@linux-foundation.org, luto@kernel.org,
-	anthony.yznaga@oracle.com, arnd@arndb.de, ashish.kalra@amd.com,
-	benh@kernel.crashing.org, bp@alien8.de, catalin.marinas@arm.com,
-	dave.hansen@linux.intel.com, dwmw2@infradead.org,
-	ebiederm@xmission.com, mingo@redhat.com, jgowans@amazon.com,
-	corbet@lwn.net, krzk@kernel.org, mark.rutland@arm.com,
-	pbonzini@redhat.com, pasha.tatashin@soleen.com, hpa@zytor.com,
-	peterz@infradead.org, robh+dt@kernel.org, robh@kernel.org,
-	saravanak@google.com, skinsburskii@linux.microsoft.com,
-	rostedt@goodmis.org, tglx@linutronix.de, thomas.lendacky@amd.com,
-	usama.arif@bytedance.com, will@kernel.org,
-	devicetree@vger.kernel.org, kexec@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-	linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH v5 09/16] kexec: enable KHO support for memory
- preservation
-Message-ID: <20250409183223.GO1778492@nvidia.com>
-References: <20250403114209.GE342109@nvidia.com>
- <Z-6UA3C1TPeH_kGL@kernel.org>
- <20250403142438.GF342109@nvidia.com>
- <Z--sUYCvP3Q8nT8e@kernel.org>
- <20250404124729.GH342109@nvidia.com>
- <Z-_kSXrHWU5Bf3sV@kernel.org>
- <20250404143031.GB1336818@nvidia.com>
- <Z_KnovvW7F2ZyzhX@kernel.org>
- <20250407141626.GB1557073@nvidia.com>
- <Z_agP1ohC3sVZrM7@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_agP1ohC3sVZrM7@kernel.org>
-X-ClientProxiedBy: BLAPR03CA0039.namprd03.prod.outlook.com
- (2603:10b6:208:32d::14) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A9v2pL24"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-22403cbb47fso77158175ad.0;
+        Wed, 09 Apr 2025 11:33:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744223589; x=1744828389; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pEZZtQmHxD6cS3JefhP/59PsGmANbj8tqGBgctIT62U=;
+        b=A9v2pL24auIE5Um8q6USerrL3w7QVAt/Q9kIQKSuqTkfp7RA2n4hxDkZjFRWv5tpKY
+         TLJUz97U5pMQOVbRXtQLHCI5pUQhKCmrnJpV1QVHCbd+AIB/SybJw6wivfIHshckpffq
+         sGeYn5StCzmBcKzAZ5k4Y5d38tJno8ZzRTWVNxyN3/Gw+tfS14dNNI8YgSLuHryBlwpY
+         w4cb6q/PJsv8M/7jTOLuTRjnTevNihXM+TF485ywWEpV5nZRdiN08Y8bgZUdwXED9Qe8
+         Pq2BVXi4mBbBTNveKwa3Opp3+qDZ2vTCSOSP0qa7jGicncvvTQqdP6m2JPNMWx9vHpf4
+         J0hA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744223589; x=1744828389;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pEZZtQmHxD6cS3JefhP/59PsGmANbj8tqGBgctIT62U=;
+        b=H4+hT+uj/nxliOb6bR8fG+vjpnRLulb8knYN6VahfoSVtYNi4CZY/Y/vIGHyluCGyr
+         WjqgWXpskvCjdUJDgk5miRJ/zdetSmyoQkdtYuHTeytPsawuHZ6TvWYevWsWyKcP55pE
+         M7s7TTn46j7MEpaEK89sTgQp1vtvKnqZdFfeP65iziOEWsfBjuv7SpCdl5UeG/ryCFdm
+         oj2Ms/H6V34R+i8EElrXRLErYU4Webvf84XGtDMxI2us3Jzu1rwwj5Z879ZgtTkx8MzJ
+         4Ien8+Ep4ZgrRmnTYlowMyTUqP88Yhu5PgKWR/1k4VMwSYlJS1RyPCqN5YBy/qqsaQ5J
+         6I4w==
+X-Forwarded-Encrypted: i=1; AJvYcCUgi0ab4ZhxJSTJuf2YxZzLeDfiZB9ZaouxPSEVIAydSjqgAeeg9ph+cPv0RrHgAnWQgR1N8rsn5OIgU0c=@vger.kernel.org, AJvYcCUtiAVxVw6m70AONoYa5yPVS+fTmBogUQE0mOs/MXKPz+da1MHcUPN+w49J1dRdZDO2MI764kVEF8KvF+09y6E=@vger.kernel.org, AJvYcCVjnII4DlZdNfOh2nFbzS7b9lsCMW54Izpgtwgz6MzvJ9R6lRg75j+GL/KCxn/2/N6RdK9xn9CyKOE4MfY=@vger.kernel.org, AJvYcCVm7elTPjdld7ThmjlPf1o818karFrrZlUCZUKQnjf1NYW0Gq5cVRCY4I+FSnB5z2H7sjtxOHRxWI18Xc+D@vger.kernel.org, AJvYcCVtGuAkeBAiKIFZurTjOuhsI7Oo7Ps4jDA4gQ5DYil0MX+J+nzYGpiQx07oAUyjsPnrLfp/eiajQstWBr41@vger.kernel.org, AJvYcCWESMN/FYvBo7Q2qYCGIvzVocGQ8MSAAH0K3h2r4Ku55Sg7eFn3UYlJm8Nq73prYAsfJxc=@vger.kernel.org, AJvYcCX344eXCuQYhv9c7BsxLVTQX53d6mjG7ep5OjCHLBHWhRDCf2EXJmv8sjhTU3piSU4JDkHHfSNo2UFh8aM=@vger.kernel.org, AJvYcCXYZsdWUar81LM3ReyLu+6M7joQUeHbAOIB73rlo/VkA3JPZ9JCXpQfa19pisMgrlTDdUVaHRzR@vger.kernel.org
+X-Gm-Message-State: AOJu0YzD7IAIyLmPU/JOGMXg5CDsi8dF/yIO++a1elZCMsunbo855ss8
+	kUHYK2fKTbACT/jaCi/QWCQfOYsNRE/3/PB1wmXDlTl2eAMFZUd8
+X-Gm-Gg: ASbGncuVaxee7EFtP0oYPeH7/wNXgdokfASRZqj5kZ4uHf4CSlmOB61oIBg1mI6K7ND
+	O4KBeFBY1HEqw6Beb07ZSS4SuAHteng9105NeRK2hAnEvpaEmxjCzQbtsHu0y2W1E4UJzW0V6g7
+	l0PaL1VK5zxlB6V6omCpMiJKX2Maek7vhqhEwmi21Pntgv1pWOROCEqvmKda3ln0zkMtMTyF6pd
+	TK2lwYcT4NmI9iO2h3Bmaf3HvqmmGrOSO2Kx+3BoAOxDbJoCgZt0d819oTrzNXJLJDDi0sDFJ00
+	GUQzvIibs32L/z7fADewmahsxCYmPc1i33JpYdP4
+X-Google-Smtp-Source: AGHT+IE8wK8xLsT0Kpo2+eqnCnHqRBL6GoNWR5XNtZUkQwRprgm7rO+knOmPkUYsLXDP1SYqhAYEsw==
+X-Received: by 2002:a17:903:2f86:b0:224:10a2:cae1 with SMTP id d9443c01a7336-22ac2a25780mr61351915ad.37.1744223589016;
+        Wed, 09 Apr 2025 11:33:09 -0700 (PDT)
+Received: from localhost ([216.228.127.131])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b02a0817f2dsm1575586a12.11.2025.04.09.11.33.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 11:33:08 -0700 (PDT)
+Date: Wed, 9 Apr 2025 14:33:06 -0400
+From: Yury Norov <yury.norov@gmail.com>
+To: Kuan-Wei Chiu <visitorckw@gmail.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, jk@ozlabs.org,
+	joel@jms.id.au, eajames@linux.ibm.com, andrzej.hajda@intel.com,
+	neil.armstrong@linaro.org, rfoss@kernel.org,
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
+	dmitry.torokhov@gmail.com, mchehab@kernel.org,
+	awalls@md.metrocast.net, hverkuil@xs4all.nl,
+	miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+	louis.peens@corigine.com, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+	parthiban.veerasooran@microchip.com, arend.vanspriel@broadcom.com,
+	johannes@sipsolutions.net, gregkh@linuxfoundation.org,
+	jirislaby@kernel.org, akpm@linux-foundation.org, jdelvare@suse.com,
+	linux@roeck-us.net, alexandre.belloni@bootlin.com, pgaj@cadence.com,
+	hpa@zytor.com, alistair@popple.id.au, linux@rasmusvillemoes.dk,
+	Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+	jernej.skrabec@gmail.com, kuba@kernel.org,
+	linux-kernel@vger.kernel.org, linux-fsi@lists.ozlabs.org,
+	dri-devel@lists.freedesktop.org, linux-input@vger.kernel.org,
+	linux-media@vger.kernel.org, linux-mtd@lists.infradead.org,
+	oss-drivers@corigine.com, netdev@vger.kernel.org,
+	linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev,
+	brcm80211-dev-list.pdl@broadcom.com, linux-serial@vger.kernel.org,
+	bpf@vger.kernel.org, jserv@ccns.ncku.edu.tw, Frank.Li@nxp.com,
+	linux-hwmon@vger.kernel.org, linux-i3c@lists.infradead.org,
+	david.laight.linux@gmail.com, andrew.cooper3@citrix.com,
+	Yu-Chun Lin <eleanor15x@gmail.com>
+Subject: Re: [PATCH v4 00/13] Introduce parity_odd() and refactor redundant
+ parity code
+Message-ID: <Z_a9YpE46Xf8581l@yury>
+References: <20250409154356.423512-1-visitorckw@gmail.com>
+ <Z_amQp3gK5Dm8Qz3@yury>
+ <Z/a5Qh/OeLT8JBS4@visitorckw-System-Product-Name>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|DS0PR12MB7993:EE_
-X-MS-Office365-Filtering-Correlation-Id: 391d2020-5828-4bb7-ccfc-08dd7794df34
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?dRuGXJsKh0EBs01MgQnHJcdIWmZQaOZXdQTT2URCgnOlOQt1IHGQdAUjDwqT?=
- =?us-ascii?Q?U6hfL86RyGOM+T1oGgGOX3rVGDVwFlXW4aeI/Ac0pPXVsUQMhz41yPm5hhMS?=
- =?us-ascii?Q?yhtmJhxLaQSvi5zb+8WP2EiEOaI/nJk2tKDpY3OS4ErlPBTff3DikO3ko8Zt?=
- =?us-ascii?Q?6sInoiviomj2Y3pxPkzGKiXWuD63Mccc3HUOqWYHbgzn9maKQ4NYxBpK/1v1?=
- =?us-ascii?Q?1bPgFwMduU3NgxA4KvKc325JIzoLwid1J6j5AN3ynmNESMl6diNGemz/iTLz?=
- =?us-ascii?Q?gUPBuLlGvGv/eWSzhVb8Tla2Gtu6SzBQPeh5rXMW//z64CmK+aRzk6iFPOzH?=
- =?us-ascii?Q?F/99JuDh1XV2Zt8FLw/+c6xj4z3Cu9BRvdPvNQSa0CqpgkPjjXBDVVM35/CH?=
- =?us-ascii?Q?E3GzWHqbzPmchMCz+GfxTPXxmFoGeCwX9cYS2xW9wg40WLQpuW17FeETWKzm?=
- =?us-ascii?Q?EOzKCGn9TX/EcDN4bCdJ/idJPaVQGrCxLSeVz6ASSMxGv9AziDZT+ShpQpzY?=
- =?us-ascii?Q?FlVLtnEhNO8YaNl6wcbQZnKZv8tD7oqN9qVznz2N6q9G76O/U0x9PiAyWkkc?=
- =?us-ascii?Q?etmoyHsUVg6wQ/DGh87CzSg0RRf2j+DQTDXyKZPdRBBJmzy4V2CYWi7OJwY/?=
- =?us-ascii?Q?2n1yFcWojROP9qDEDik3LDvzOcC05JVTcR6b03z9bXwWMicCuA6/cjWUuMJa?=
- =?us-ascii?Q?X2RbCvAQcXU1bU+IT0sKXQv898VWG9Ffc+jdDKwUPyuLmmOhiySojlPN/2N1?=
- =?us-ascii?Q?XB/5781OnASZAZj/dlkN8V4KRsHr5owYmXLpSGo9zQXtMMdIjdvS8TOpIIvh?=
- =?us-ascii?Q?qAqdreRNT3N80/e29srs7ANTvDSZTkOVQZel2BiXJ122BspNqexMhgXKDE9S?=
- =?us-ascii?Q?eF57uB9gSd3+7d/KuRldjGt21bR5yK6a/X8Xpki5izxTWL6ZHETueSKkFIMV?=
- =?us-ascii?Q?S+fd4QVDaNsNVIumf2/bZgUmVy8Ta8p1CP3rFsb4yPLwiQdo60amNSiM/VjV?=
- =?us-ascii?Q?MXY5uV+vij7+OfkxFMXYUb+LTiudSo6RraZKFbWw57LfXC0iZ9Xq2aqm2iNz?=
- =?us-ascii?Q?sS4dKl0n3ONN9+vCNR2Pvqx3FoVNwa6i1Arz4xcSf8Rbu5mR0MCS7ZrGw0ve?=
- =?us-ascii?Q?bOPG0TalHl5KnJ9qixt1vbLIMDCyv8TlbPBCmx3C5025FX6KIJnf/VNRGvYd?=
- =?us-ascii?Q?iouqNSDXxMHOCKKZ0ip6evdjCNZ96CUdiIwsWYgSZZKSRV2roN+AT0DjjXFz?=
- =?us-ascii?Q?u/kbKEWb/1GloUh1V4GCQGUk/whZ05YLISfAuiLQLTVdfkR+MEyF8K4pUhMb?=
- =?us-ascii?Q?B3t7Fzpn/1Kw4ExJY854n7ublvMjSRtfMn8WcQwH9IawsZWVFj5qd1EqzFN9?=
- =?us-ascii?Q?0ODcEhWCjWOdOtVw/brcyYemrrD1yPeGZfmc7/jmTAoIO+qPyXdBY+UwEijO?=
- =?us-ascii?Q?eObtGmcThD4=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?T0bx5PM7RsCFiS3opX6qQ28nmTZJZ7hxolBEwUDfD/JXnW1vSLG5F/Wn+dz/?=
- =?us-ascii?Q?9vZQ2tN36wAUe1xml6I3Tg1QmzZ+4q4sJvU3OVQ+BR715DroPk1YnBryzKlO?=
- =?us-ascii?Q?XURWcXTDv/GZtzRGdW34v05DKu6cDVtWWyAqBOvN5MEtd1IBJQWbXtCY2vx3?=
- =?us-ascii?Q?KR58EoUQQETHVaO5R6p+csR4yngHV7LEN8tjm1VeYYWSr4FkjpzmWcoCDl0L?=
- =?us-ascii?Q?YFY5IJSAhJyACyzRK9LT0JmyGZIzjzyxfB++zSzL0elNFgaQFJj9N0w/bC1r?=
- =?us-ascii?Q?Qut7nvx8JMX6oypkJFRcVHLn4af4YKkzkG116dWtNuvAyf0QVWHmybTZBP12?=
- =?us-ascii?Q?vikD68CASvFZWGsFfuXsWX2isXArVcLzx0VwRh/YJH1vlHPLfOb5DbEF1oqs?=
- =?us-ascii?Q?R4QGpYSWNgVxQv/C99P1kSjKTMw4A5egoWNOTfoNrpyMMm2mlwoznTGtM37Z?=
- =?us-ascii?Q?oLFKPtef/fbspF1DAS/RBCyNa5UcDbxLmpKrFqMzlyY9iik61e2ySal2/HG9?=
- =?us-ascii?Q?d0XDLBc7Uu9QIp9yEvh4vLtzusBi6YJJa3XJ1SWuf973fqn7MrqRArC0BU41?=
- =?us-ascii?Q?xDyd38ll6W9HTHj34H5xOTk4n9/7Fj9XYuHlTheF/xdrxFBf7uX43hys/x/8?=
- =?us-ascii?Q?Kh5PIVcKpVeu8tN/dL/V6JVfu28j7+HIOYbFBTIeYMyf7auTQz0TZDEY1V/y?=
- =?us-ascii?Q?RczVq6NIT3Oo+5Gd4DiqdqXMnHaUlY8QF59EkS/ecs1JQVDdqIMqL5v4h7dQ?=
- =?us-ascii?Q?9MdbUXdA97prlzvSypanjFN4kZsY03xVt4zmLfx691v9RwLjI3R7+x1eDEGn?=
- =?us-ascii?Q?d9MXs1yf6GFxIAYPvRdYYJAVpvldBVXLd55XAdjqf35H9zUqX/R7n+7s3ZJ1?=
- =?us-ascii?Q?JttN5VYl3+ObP+xJg6RcEg/7L7XpwFq4imA9GzSD7WhPMcDvqYT2KHbDl2GI?=
- =?us-ascii?Q?S+OWaZ6dODpjyh5/oxUmyhgNtnhA8xeBWE2HDrqNwASRkrgBOqgLzi20pbT0?=
- =?us-ascii?Q?CQqJWgSmNz2/LfOL8pO7hxmhxx5V4vmMy0CSomsfA0m+XSRCWT43jZ3HRTmI?=
- =?us-ascii?Q?XByfpTMF8wVypT5U6UhhwJI2txWFMXf7SYza3MtnyWzLbK30ZAkO4/kX7OlU?=
- =?us-ascii?Q?cyDcA8lOYr0j/GJ9+BmQZ8HVYNlYLdjuNZxJ/kLNfO3mw5qhFTJM/RASnARg?=
- =?us-ascii?Q?sX14JdV5weZpSy+IEbCD1ObBhI5KsFxozMsV/YaV8KWF/p+Kls6EQNTYIjUq?=
- =?us-ascii?Q?kmy9nGPKID0f1Wyn5Lp60hmR17R6afNKoizzBIE+27ppQAr+RyEJ2ACrEv9u?=
- =?us-ascii?Q?hO0cT6dzUBGM7X+RDPukSdbqco36hr3EP1XTtjCJPIkJB3iVcyJyg4l7qMhU?=
- =?us-ascii?Q?HGnGRJk9j3tTWGnC+3ognvlV6r6WRehIWm8mFeRg+49K5cQmn8YUmrfJFdgI?=
- =?us-ascii?Q?0T5IcgQZpFNgQqSbLbl9nQKyJdUzwzzQcCTf8uLdvCCbZgeILXkoI9q8ok14?=
- =?us-ascii?Q?x9m9TSprHWoYxnGZyHEBtfbMyiVtk1m7Y26BSQuOkN+uYbwA3aBV6owBGGU2?=
- =?us-ascii?Q?rMT94SIqC45uaY0x4b2MF5JGLQ20AWzGViQXFyks?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 391d2020-5828-4bb7-ccfc-08dd7794df34
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 18:32:24.2078
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: enbfoA0BsyZHTG0k9WwmYnhX1Zbdpjv5IaBPmWyAXsdxiXJ/Hthr3skW8EwlmqRE
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7993
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z/a5Qh/OeLT8JBS4@visitorckw-System-Product-Name>
 
-On Wed, Apr 09, 2025 at 07:28:47PM +0300, Mike Rapoport wrote:
-> On Mon, Apr 07, 2025 at 11:16:26AM -0300, Jason Gunthorpe wrote:
-> > On Sun, Apr 06, 2025 at 07:11:14PM +0300, Mike Rapoport wrote:
+On Thu, Apr 10, 2025 at 02:15:30AM +0800, Kuan-Wei Chiu wrote:
+> On Wed, Apr 09, 2025 at 12:54:35PM -0400, Yury Norov wrote:
+> > On Wed, Apr 09, 2025 at 11:43:43PM +0800, Kuan-Wei Chiu wrote:
+> > > Several parts of the kernel contain open-coded and redundant
+> > > implementations of parity calculation. This patch series introduces
+> > > a unified helper, parity_odd(), to simplify and standardize these
+> > > cases.
+> > > 
+> > > The first patch renames parity8() to parity_odd(), changes its argument
 > > 
-> > KHO needs to provide a way to give back an allocated struct page/folio
-> > that can be freed back to the buddy alloactor, of the proper
-> > order. Whatever you call that function it belongs to KHO as it is
-> > KHO's primary responsibility to manage the buddy allocator and the
-> > struct pages.
+> > Alright, if it's an extension of the area of applicability, it should be
+> > renamed to just parity(). I already shared a table that summarized the
+> > drivers authors' view on that, and they clearly prefer not to add the
+> > suffix - 13 vs 2. The __builtin_parity() doesn't care of suffix as well. 
+> > 
+> > https://lore.kernel.org/all/Z9GtcNJie8TRKywZ@thinkpad/
+> > 
+> > Yes, the argument that boolean function should explain itself sounds
+> > correct, but in this case, comment on top of the function looks enough
+> > to me.
+> > 
+> > The existing codebase doesn't care about the suffix as well. If no
+> > strong preference, let's just pick a short and sweet name?
+> > 
+> I don't have a strong preference for the name, but if I had to guess
+> the return value from the function prototype, I would intuitively
+> expect an int to return "0 for even and 1 for odd," and a bool to
+> return "true for even, false for odd." I recall Jiri and Jacob shared
+> similar thoughts, which is why I felt adding _odd could provide better
+> clarity.
+
+I think they said they are convinced that parity should return 1 for
+odd because of folding and __builtin_parity() arguments.
+ 
+> However, I agree that if the kernel doc comment is clear, it might not
+> be a big issue. But David previously mentioned that he doesn't want to
+> rely on checking the function's documentation every time while reading
+> the code.
+
+He's wrong. Kernel engineers _must_ read documentation, regardless.
+ 
+> Regardless, I'm flexible as long as we all reach a consensus on the
+> naming.
 > 
-> If order is only important for freeing memory back to page allocator, you
-> don't really need it. Freeing contiguous power-of-two number of pages with
-> proper alignment will give the same result, just a tad slower.
+> > > type from u8 to u64 for broader applicability, and updates its return
+> > > type from int to bool to make its usage and return semantics more
+> > > intuitive-returning true for odd parity and false for even parity. It
+> > > also adds __attribute_const__ to enable compiler optimizations.
+> > 
+> > That's correct and nice, but can you support it with a bloat-o-meter's
+> > before/after and/or asm snippets? I also think it worth to be a separate
+> > patch, preferably the last patch in the series.
+> > 
+> I quickly tested it with the x86 defconfig, and it appears that the
+> generated code doesn't change. I forgot who requested the addition
+> during the review process, but I initially thought it would either
+> improve the generated code or leave it unchanged without significantly
+> increasing the source code size.
 
-What I'm asking for is transparency for the driver.
+That's what I actually expected, but was shy to guess openly. :). It's
+hard to imagine how compiler may improve code generation in this case...
 
-iommu going to be doing:
+This attribute is used when there's an asm block, or some non-trivial
+function call. In this case, the function is self-consistent and makes
+no calls. And you see, const annotation raises more questions than
+solves problems. Let's drop it.
 
-  folio = __folio_alloc_node(order >= 0)
-  [.. init struct ioptdesc that is overlayed with struct folio ]
-  folio_put(folio);
-
-As that is how you make memdescs work today. So when we add KHO, I
-want to see:
-
-  folio = __folio_alloc_node(order >= 0);
-  [.. init struct ioptdesc that is overlayed with struct folio ]
-  kho_preserve_folio(folio);
-
-  // kexec
-
-  folio = kho_restore_folio(phys);
-  [.. init struct ioptdesc that is overlayed with struct folio ]
-
-  folio_put(folio);
-
-Working fully.
-
-I do not want to mess with the existing folio_put() code just because
-KHO can't preserve __folio_alloc_node().
-
-Tomorrow someday I think we will switch to a flow more like
-
-   memory = memdesc_alloc(&ioptdesc, order >= 0);
-   [.. init struct ioptdesc that is a new allocation]
-   kho_preserve_memdesc(ioptdesc)
-
-   // kexec
-
-   memory = kho_restore_memdesc(phys, &ioptdesc)
-   [.. init struct ioptdesc that is a new allocation]
-   memdesc_free(memory, ioptdesc);
-
-Jason
-
+Thanks,
+Yury
