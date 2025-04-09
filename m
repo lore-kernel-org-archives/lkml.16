@@ -1,152 +1,91 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53C171DF25D
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 06:16:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EB9E15A85E;
+	Wed,  9 Apr 2025 06:18:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744179386; cv=none; b=Uwe8EEKJJDC/vdjE+fLH2smHecrmsxRErCa5yZ6OPBOymF0BAPqTxW5I4+kjfOIg4HZhNZ/atEZzTtXoTAy+yVCcbArL6Po72NR0vMRKrsHoPdPCxb+mmLHpBtY/R5M+WTFQmMzvyytgbDMuaNsfEJ9lf4T29ygTkZTfbm8wb5o=
+	t=1744179535; cv=none; b=bJ6yGJHZDBN9O04eJf4RuJ0YF3/qzUhqcz41C/m4lKxvRXolIz3OTwUKbJVN5BuLdfA3a2bCm0xeYB338Wn0nDjMi4Q0oR0haJP/or/SRIGjhiZb20wLVUGkysFhpfo1/FYDIKHPdfX01uBexDimB00kLYCNFtZDc+RZctnjpVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744179386; c=relaxed/simple;
-	bh=zffTD6pryexLdEIyq1TeqSHWPUumlDfkr8ttmeubuS4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jYkdyC6Tzup3n/WUCOI8foeibWypc1MTOHX5961PJVZEUPaC7AeWOC8z8iOkTMcTU2a1DxR1DXeKFzEYaP5owNLqKrm9bVyD3QcICkIyaJySaYqg/gxoqEwOZNOQH27TH/EVcTrzEcH5fNYqgnaHLJ9e2nP0N0XF6BOj/xpnRrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=W4BmPHay; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="W4BmPHay"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1744179382;
-	bh=zffTD6pryexLdEIyq1TeqSHWPUumlDfkr8ttmeubuS4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=W4BmPHaykzU0mjTQnBezD5evu7ykl4p8zEVaG88mvKBi9ejPbUc3htisZrkHLCcP/
-	 8CGA++G7tvEHX0D9bYlo0H7FoBpuiGCzBd5IE1Y18JPqsaZNMgxm3JI4ucIYEsI5ol
-	 GcnGci7A//9Vxs/oQhlnnvIq1dQHqr92eYUNcdxtcKwUqkMY8+q4wmhuwAM3XD6uHo
-	 NcV/jEVvJLD10ozIW6GXmeudBw3oWlpDlnbYmnabo9RyDZOsdUpO9ZDRmTbE+6Ysvd
-	 lxyi1sgkrN38ZTu2g2gTyIUeQu8JMxqfxeQzfn2pwH1mvhwrW8UaIEU2Abo3Gc8xIl
-	 x8nCAPE/gLILg==
-Received: from debian.. (unknown [171.76.83.191])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: vignesh)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 6F31C17E101A;
-	Wed,  9 Apr 2025 08:16:19 +0200 (CEST)
-From: Vignesh Raman <vignesh.raman@collabora.com>
-To: dri-devel@lists.freedesktop.org
-Cc: daniels@collabora.com,
-	daniel@fooishbar.org,
-	helen.fornazier@gmail.com,
-	airlied@gmail.com,
-	simona.vetter@ffwll.ch,
-	robdclark@gmail.com,
-	guilherme.gallo@collabora.com,
-	sergi.blanch.torne@collabora.com,
-	valentine.burley@collabora.com,
-	lumag@kernel.org,
-	quic_abhinavk@quicinc.com,
-	mripard@kernel.org,
-	maarten.lankhorst@linux.intel.com,
-	tzimmermann@suse.de,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] drm/ci: Add jobs to run KUnit tests
-Date: Wed,  9 Apr 2025 11:45:39 +0530
-Message-ID: <20250409061543.311184-3-vignesh.raman@collabora.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250409061543.311184-1-vignesh.raman@collabora.com>
-References: <20250409061543.311184-1-vignesh.raman@collabora.com>
+	s=arc-20240116; t=1744179535; c=relaxed/simple;
+	bh=G1LHBNBqeyiZOMPl2PflZcM6o/1KMAKeUJr20z5gmA4=;
+	h=Subject:To:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=EA799e893SXeLZK6LaWsmo/WRIK8jaVWyBGzNO+5TBMMsXRQv4mVpAVxTxNbMtA0NS2jtDwmIb343S+gZDmZt1J9mmPpeONw2uZLK441yD2wqCxxRVH42YnLsu3OEKpB+4l1/I1U0VhVrImL5AKWOudiXiFkQ1xOQnEubgiyi6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4ZXXjj27pnz69Xk;
+	Wed,  9 Apr 2025 14:15:05 +0800 (CST)
+Received: from kwepemg500006.china.huawei.com (unknown [7.202.181.43])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5806E180467;
+	Wed,  9 Apr 2025 14:18:50 +0800 (CST)
+Received: from [10.67.121.110] (10.67.121.110) by
+ kwepemg500006.china.huawei.com (7.202.181.43) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 9 Apr 2025 14:18:49 +0800
+Subject: Re: [PATCH] MAINTAINERS: Maintainer change for hisi_dma
+To: Zhou Wang <wangzhou1@hisilicon.com>, Jie Hai <haijie1@huawei.com>,
+	<vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+References: <20250402085423.347526-1-haijie1@huawei.com>
+ <ff50caa3-c753-feb0-7518-9d0e8a79a8f6@hisilicon.com>
+From: liulongfang <liulongfang@huawei.com>
+Message-ID: <0ea7b0ba-8719-7bd1-c572-0c94d5614b83@huawei.com>
+Date: Wed, 9 Apr 2025 14:18:49 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <ff50caa3-c753-feb0-7518-9d0e8a79a8f6@hisilicon.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemg500006.china.huawei.com (7.202.181.43)
 
-Add jobs to run KUnit tests using tools/testing/kunit/kunit.py tool.
+On 2025/4/8 17:07, Zhou Wang wrote:
+> On 2025/4/2 16:54, Jie Hai wrote:
+>> I am moving on to other things and longfang is going to
+>> take over the role of hisi_dma maintainer. Update the
+>> MAINTAINERS accordingly.
+> 
+> Thanks Jie Hai for maintaining hisi_dma driver! Best wishes to you.
+> Welcome Longfang to maintain this driver together!
+>
 
-Signed-off-by: Vignesh Raman <vignesh.raman@collabora.com>
----
+Thanks to Jie Hai for maintaining the hisi_dma driver,
+and I will continue to maintain it going forward.
 
-v2:
-  - Run KUnit tests with LLVM.
+Thanks.
+Longfang.
 
----
- drivers/gpu/drm/ci/gitlab-ci.yml |  1 +
- drivers/gpu/drm/ci/kunit.sh      | 11 +++++++++++
- drivers/gpu/drm/ci/kunit.yml     | 32 ++++++++++++++++++++++++++++++++
- 3 files changed, 44 insertions(+)
- create mode 100755 drivers/gpu/drm/ci/kunit.sh
- create mode 100644 drivers/gpu/drm/ci/kunit.yml
-
-diff --git a/drivers/gpu/drm/ci/gitlab-ci.yml b/drivers/gpu/drm/ci/gitlab-ci.yml
-index 9e61b49e9960..90ae57ca86a1 100644
---- a/drivers/gpu/drm/ci/gitlab-ci.yml
-+++ b/drivers/gpu/drm/ci/gitlab-ci.yml
-@@ -109,6 +109,7 @@ include:
-   - drivers/gpu/drm/ci/build.yml
-   - drivers/gpu/drm/ci/test.yml
-   - drivers/gpu/drm/ci/check-devicetrees.yml
-+  - drivers/gpu/drm/ci/kunit.yml
-   - 'https://gitlab.freedesktop.org/gfx-ci/lab-status/-/raw/main/lab-status.yml'
- 
- 
-diff --git a/drivers/gpu/drm/ci/kunit.sh b/drivers/gpu/drm/ci/kunit.sh
-new file mode 100755
-index 000000000000..90b8713ce7a2
---- /dev/null
-+++ b/drivers/gpu/drm/ci/kunit.sh
-@@ -0,0 +1,11 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: MIT
-+
-+set -euxo pipefail
-+
-+: "${KERNEL_ARCH:?ERROR: KERNEL_ARCH must be set}"
-+
-+./tools/testing/kunit/kunit.py run \
-+  --arch "${KERNEL_ARCH}" \
-+  --make_option LLVM=1 \
-+  --kunitconfig=drivers/gpu/drm/tests
-diff --git a/drivers/gpu/drm/ci/kunit.yml b/drivers/gpu/drm/ci/kunit.yml
-new file mode 100644
-index 000000000000..405c8fc8239a
---- /dev/null
-+++ b/drivers/gpu/drm/ci/kunit.yml
-@@ -0,0 +1,32 @@
-+.kunit-packages: &kunit-packages
-+  - apt-get update -qq
-+  - apt-get install -y --no-install-recommends clang lld llvm
-+
-+.kunit-base:
-+  timeout: "30m"
-+  script:
-+    - drivers/gpu/drm/ci/kunit.sh
-+
-+kunit:arm32:
-+  extends:
-+    - .build:arm32
-+    - .kunit-base
-+  before_script:
-+    - *kunit-packages
-+    - apt-get install -y --no-install-recommends qemu-system-arm
-+
-+kunit:arm64:
-+  extends:
-+    - .build:arm64
-+    - .kunit-base
-+  before_script:
-+    - *kunit-packages
-+    - apt-get install -y --no-install-recommends qemu-system-aarch64
-+
-+kunit:x86_64:
-+  extends:
-+    - .build:x86_64
-+    - .kunit-base
-+  before_script:
-+    - *kunit-packages
-+    - apt-get install -y --no-install-recommends qemu-system-x86
--- 
-2.47.2
-
+> Acked-by: Zhou Wang <wangzhou1@hisilicon.com>
+> 
+> Thanks,
+> Zhou
+> 
+>>
+>> Signed-off-by: Jie Hai <haijie1@huawei.com>
+>> ---
+>>  MAINTAINERS | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index e0045ac4327b..a9866eefda15 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -10651,7 +10651,7 @@ F:	net/dsa/tag_hellcreek.c
+>>  
+>>  HISILICON DMA DRIVER
+>>  M:	Zhou Wang <wangzhou1@hisilicon.com>
+>> -M:	Jie Hai <haijie1@huawei.com>
+>> +M:	Longfang Liu <liulongfang@huawei.com>
+>>  L:	dmaengine@vger.kernel.org
+>>  S:	Maintained
+>>  F:	drivers/dma/hisi_dma.c
+> .
+> 
