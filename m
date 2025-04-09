@@ -1,143 +1,154 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F40F725B67C;
-	Wed,  9 Apr 2025 11:12:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 170DA25C71D;
+	Wed,  9 Apr 2025 11:12:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744197141; cv=none; b=rqoLS75663/czsYGNtFlpqKldMp8fIgXuE6vjVm8REaOLiL8wSaE1x1vcszhFe015VkyotN5ni8GH2FcMqoGnlAS72jWTa7CjR5kRzIalbsrgibP6XRI39hPgq+36PwQY4rWTL6hfLTRLl45Vd9GIVFN49s2rsG6E9xq77AaIm8=
+	t=1744197142; cv=none; b=oujBtYU2rjmLD6oI7LAzg9LoYx/5V/B3VGOCmPbieXQCAUqne/i2aMRwJzafJvLS5UlNgrW19VeKXI+QMqpERG3UwebVSLqUKwQ5SLJUH3YutV/DWMBcGyfY8PKZMlS/twtcuF9scrupfF/OicpZ30t2RY9oCfYd/WXgwGKsLjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744197141; c=relaxed/simple;
-	bh=DbCo3zQBVGhLx2s27nDfxKdE++jQWAc8ZqVNI5Xdrdw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jTxZbpOsRMtOgL8PvUXwjhUA1rMAlJhpBGZySAbwjQwilEAT067S90PpQ+ObczVTZqzEFaRJ2xLvJrA6eqOOe0dNz3gmbab2rVfm5vF4Do6jdZYkCsPY7ROpOu+nPr0oQXviIkiZXDgOw4QyOz76n28C1v4ecK9pz6BnDmu06PM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B186B1595;
-	Wed,  9 Apr 2025 04:12:18 -0700 (PDT)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C69193F694;
-	Wed,  9 Apr 2025 04:12:16 -0700 (PDT)
-Date: Wed, 9 Apr 2025 12:12:13 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: "Matthew Bystrin" <dev.mbstr@gmail.com>
-Cc: "Cristian Marussi" <cristian.marussi@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>, <arm-scmi@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>,
-	"Philipp Zabel" <p.zabel@pengutronix.de>,
-	"Peng Fan" <peng.fan@nxp.com>
-Subject: Re: [PATCH] firmware: arm_scmi: add timeout in
- do_xfer_with_response()
-Message-ID: <20250409-fierce-astonishing-bug-dd2adb@sudeepholla>
-References: <20250402104254.149998-1-dev.mbstr@gmail.com>
- <20250402-hidden-unyielding-carp-7ee32d@sudeepholla>
- <Z-1gY8mQLznSg5Na@pluto>
- <D8X9JJGPGDNL.1OTKIJODRFKNN@gmail.com>
+	s=arc-20240116; t=1744197142; c=relaxed/simple;
+	bh=sxNzWeLknqUyzVMF6d4y49XHlMG3GHMlSEneyM5P2V8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=AsOOlFa0gwYNmezWBdKNSDe8yPRoNjLM6UmECXIkMLhxpSXgEfjyMIGuePUQacmaY5VeLnRsGBwaumhxvWGviVEhgltTuZBZkhPS7GMIgHPha4rymogM9j2aN3AQoxnEnwrjuQM5LizMdbVnZEEST91jxSdEcG5YozzvOkdwzV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=IuRXUoRV; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="IuRXUoRV"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5398TgeP032297;
+	Wed, 9 Apr 2025 11:12:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	QNg6R2eh4WoQiKofBVHMx4Z8dMgsbFBHkzRO7DTyCM4=; b=IuRXUoRVqW0QUKry
+	midT09z1E/R6uibsODQQwUGPS1MSfH4g0+RBojeHNirKi5AD4FybJNqG87LqbJbC
+	BapvaQKXbzSrahdFGtUSM9+TRSotZOoBjvYzo0IBUd+ukZKm30FFVb/gYP34hhtw
+	A6FtJFYDDbqNIgIb7CvmC/KqFt9791x3UbF+enXMPKQOw5D94oyD4kEoFs95q3iU
+	y37WAelSY6c7kBsWQTit1dx9mGs3nPwJbphpddsVbW31mN1t6T3TmTaT0gfTvo3/
+	dc80EP5K5j80EYTqnTLGmR1RkfpomIWH+I71vYuKGeFNdBXH9K62uTdzjCeOmq8c
+	JTuLXA==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twbeb5vh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 09 Apr 2025 11:12:16 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 539BCFHc014671
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 9 Apr 2025 11:12:15 GMT
+Received: from [10.216.8.212] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 9 Apr 2025
+ 04:12:11 -0700
+Message-ID: <3c5a0470-7c60-c6f7-85b2-9dc5f90e44f0@quicinc.com>
+Date: Wed, 9 Apr 2025 16:42:08 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D8X9JJGPGDNL.1OTKIJODRFKNN@gmail.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH] bus: mhi: ep: Update read pointer only after buffer is
+ written
+To: Sumit Kumar <quic_sumk@quicinc.com>,
+        Manivannan Sadhasivam
+	<manivannan.sadhasivam@linaro.org>,
+        Alex Elder <elder@kernel.org>,
+        "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>
+CC: <mhi@lists.linux.dev>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <quic_akhvin@quicinc.com>,
+        <quic_skananth@quicinc.com>, <quic_vbadigan@quicinc.com>,
+        <stable@vger.kernel.org>, Youssef Samir <quic_yabdulra@quicinc.com>
+References: <20250409-rp_fix-v1-1-8cf1fa22ed28@quicinc.com>
+Content-Language: en-US
+From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+In-Reply-To: <20250409-rp_fix-v1-1-8cf1fa22ed28@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: aL7EV4aHrtXG7PqdiEYUfHsAxwFQwll_
+X-Authority-Analysis: v=2.4 cv=T7OMT+KQ c=1 sm=1 tr=0 ts=67f65610 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8
+ a=ljfrh_M9o-RCrfJy5NoA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: aL7EV4aHrtXG7PqdiEYUfHsAxwFQwll_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-09_04,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ mlxlogscore=999 lowpriorityscore=0 adultscore=0 phishscore=0 bulkscore=0
+ mlxscore=0 malwarescore=0 suspectscore=0 priorityscore=1501 spamscore=0
+ clxscore=1011 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504090065
 
-On Thu, Apr 03, 2025 at 10:50:17PM +0300, Matthew Bystrin wrote:
-> Hi Sudeep, Cristian,
-> 
-> Thanks for having a look on the patch.
-> 
-> Cristian Marussi, Apr 02, 2025 at 19:05:
-> > > Please post this patch along with the vendor specific protocols mentioned
-> > > above and with the reasoning as why 2s is not sufficient.
-> >
-> > Ack on this, it would be good to understand why a huge 2 secs is not
-> > enough...and also...
-> 
-> I've been working on firmware update using SCMI vendor/platform-specific
-> extension on FPGA prototype, so not posted it initially. I'm open to share the
-> details if needed, but need some extra time for preparations. For now I'm
-> posting a brief description of the extension. It has 2 commands:
-> 
-> - Obtain firmware version number.
-> - Update firmware. Firmware image is placed into shared physically contiguous
->   memory, Agent sends to platform micro controller (PuC) physical address and
->   size of the update image to start update procedure. After update is completed
->   (successfully or not) PuC sends delayed response.
-> 
-> 	Agent ----     start update         ---> Platform uC
-> 	Agent <--- update procedure started ---- Platform uC
-> 	...
-> 	Agent <--- (async) update completed ---- Platform uC
-> 
-> I've faced timeout problem with the async completion response. And update can't
-> be done faster than 10s due to SPI flash write speed limit.
-> 
 
-Understood.
 
-> Why not to use notifications?
+On 4/9/2025 4:17 PM, Sumit Kumar wrote:
+> Inside mhi_ep_ring_add_element, the read pointer (rd_offset) is updated
+> before the buffer is written, potentially causing race conditions where
+> the host sees an updated read pointer before the buffer is actually
+> written. Updating rd_offset prematurely can lead to the host accessing
+> an uninitialized or incomplete element, resulting in data corruption.
 > 
-> First of all, semantics. IIUC notifications can be sent by PuC in any time. This
-> is not suitable for updates, because procedure is initiated by an agent, not by
-> a platform.
+> Invoke the buffer write before updating rd_offset to ensure the element
+> is fully written before signaling its availability.
 > 
+> Fixes: bbdcba57a1a2 ("bus: mhi: ep: Add support for ring management")
+> cc: stable@vger.kernel.org
+> Co-developed-by: Youssef Samir <quic_yabdulra@quicinc.com>
+> Signed-off-by: Youssef Samir <quic_yabdulra@quicinc.com>
+> Signed-off-by: Sumit Kumar <quic_sumk@quicinc.com>
+Reviewed-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
 
-The start update should retain as soon as Platform uC acks the request.
-And 2 notifications can be sent out for update procedure started and
-completed. I don't see any issue there. What is the semantics you are
-talking about ?
-
-> Secondly, code implementing  notification waiting duplicates delayed response
-> code. I had implemented it as a proof-of-concept before I prepared this patch.
+- Krishna Chaitanya.
+> ---
+> ---
+>   drivers/bus/mhi/ep/ring.c | 16 ++++++++++------
+>   1 file changed, 10 insertions(+), 6 deletions(-)
 > 
-
-Even delayed response as some timeout so I would rather prefer to use
-notifications in your usecase as it is completely async.
-
-> > > Also instead of churning up existing users/usage, we can explore to had
-> > > one with this timeout as alternative if you present and convince the
-> > > validity of your use-case and the associated timing requirement.
-> > > 
-> >
-> > ...with the proposed patch (and any kind of alternative API proposed
-> > by Sudeep) the delayed response timeout becomes a parameter of the method
-> > do_xfer_with_response() and so, as a consequence, this timoeut becomes
-> > effectively configurable per-transaction, while usually a timeout is
-> > commonly configurable per-channel,
+> diff --git a/drivers/bus/mhi/ep/ring.c b/drivers/bus/mhi/ep/ring.c
+> index aeb53b2c34a8cd859393529d0c8860462bc687ed..26357ee68dee984d70ae5bf39f8f09f2cbcafe30 100644
+> --- a/drivers/bus/mhi/ep/ring.c
+> +++ b/drivers/bus/mhi/ep/ring.c
+> @@ -131,19 +131,23 @@ int mhi_ep_ring_add_element(struct mhi_ep_ring *ring, struct mhi_ring_element *e
+>   	}
+>   
+>   	old_offset = ring->rd_offset;
+> -	mhi_ep_ring_inc_index(ring);
+>   
+>   	dev_dbg(dev, "Adding an element to ring at offset (%zu)\n", ring->rd_offset);
+> +	buf_info.host_addr = ring->rbase + (old_offset * sizeof(*el));
+> +	buf_info.dev_addr = el;
+> +	buf_info.size = sizeof(*el);
+> +
+> +	ret = mhi_cntrl->write_sync(mhi_cntrl, &buf_info);
+> +	if (ret)
+> +		return ret;
+> +
+> +	mhi_ep_ring_inc_index(ring);
+>   
+>   	/* Update rp in ring context */
+>   	rp = cpu_to_le64(ring->rd_offset * sizeof(*el) + ring->rbase);
+>   	memcpy_toio((void __iomem *) &ring->ring_ctx->generic.rp, &rp, sizeof(u64));
+>   
+> -	buf_info.host_addr = ring->rbase + (old_offset * sizeof(*el));
+> -	buf_info.dev_addr = el;
+> -	buf_info.size = sizeof(*el);
+> -
+> -	return mhi_cntrl->write_sync(mhi_cntrl, &buf_info);
+> +	return ret;
+>   }
+>   
+>   void mhi_ep_ring_init(struct mhi_ep_ring *ring, enum mhi_ep_ring_type type, u32 id)
 > 
-> Totally agree, usually it is. And that's why I didn't change do_xfer() call.
-> Here is the thing I want to pay attention to.
+> ---
+> base-commit: 1e26c5e28ca5821a824e90dd359556f5e9e7b89f
+> change-id: 20250328-rp_fix-d7ebc18bc3be
 > 
-> Let's focus on delayed responses. I think delayed response timeout should not be
-> defined by transport but rather should be defined by _function_ PuC providing.
-> And of course platform and transport could influence on the timeout value.
-> 
-
-I think in your case, it is not even transport specific. It is more operation
-specific and hence I prefer notifications.
-
-> > so valid as a whole for any protocol
-> > on that channel across the whole platform, AND optionally describable as
-> > different from the default standard value via DT props (like max-rx-timeout).
-> >
-> > Is this what we want ? (a per-transaction configurable timeout ?)
-> >
-> > If not, it could be an option to make instead this a per-channel optional
-> > new DT described property so that you can configure globally a different
-> > delayed timeout.
-> 
-> Taking into account my previous comment, I don't think that having a per-channel
-> timeout for delayed response would solve the problem in the right way. What
-> about having a per-protocol timeout at least?
-> 
-
-Yes neither per-transport nor per-protocol timeout will suffice in your case.
-This 10s timeout is specific to the update operation and hence use
-notification. All other solution is just workarounds not generic solution.
-
--- 
-Regards,
-Sudeep
+> Best regards,
