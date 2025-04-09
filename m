@@ -1,43 +1,33 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA84F4E2;
-	Wed,  9 Apr 2025 11:07:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744196837; cv=pass; b=XN1zSkoPTOKOY21pVUwYUrHz2GgtquwSgwM8n6BSwfpwQmy3OUgyJUfuxxnuWDieuaPHerQ35yQ4VymNGlEHehCZ8Z3wb0UYgTpROVBaF9dXhf3f8XtQJr7sEbUXPEK4BaUe5F1u6zopB6b8OH1JtvUej5R8Bpp7xspZuayaMOc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EAD1218AC7;
+	Wed,  9 Apr 2025 11:07:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744196837; cv=none; b=Gkm4brOtk4rnIMzBjxBozfDwmvI6deIV3nqs1uYkpnANulszs6jN+3Kr8ffdiUmxpLDsqqeqH/ODDDGsfqzDx7zIUteN1tD0/XTyTUBNpfKWY/+FVF9+1YF06iSzao9GtcUXICeuvptCeLEYTjlBX0A1SR9mfwr1KCtlYpoLPTA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744196837; c=relaxed/simple;
-	bh=2kVs8LDqqakchwzmyNag2tzPPlIh9j76cycJyxtacPI=;
+	bh=5WALcSlXLF4jOWGCUwqVjywh8RLohDbgqlLN686J2Co=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WW48vwp0KZuH9q4oyniKwuZUmdhx+DONpuHR1H1Tm1zcos2KNvzIWyyNOabGDomIMHFFt4z2ofDPSBeRJlxwGIYAI1vysKxYYYSA9VjjG2d5D9LzdFKVI1JZDqcmCKrE+OX6lVsYCIN77Lv6OoP6arotElmJs0hggQeD4oR5CZg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=lD0Mqw2M; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	 In-Reply-To:Content-Type; b=LwZcMY3fOyquGo1q1bAhZF1mz63fHUto9sDVqOQfXJP15xJixsPd1P0pwe0QGyKPyEEuyFL3kQhFOPYe890y0nvUzHxmA6lhH8x9s5m14qZ921qD8v5+IYC27z5DRSIiJeNfEyL4zGBkdT32YLY3hBX5J8JlBMSFyUw/kGuxkIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JMFcv85N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="lD0Mqw2M"
-ARC-Seal: i=1; a=rsa-sha256; t=1744196811; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Gtc+4LD8RTfe0yWyp7bqxkis/LbteYRGIAXs05ukcIR321fh1FFzJwhUzWZEGLnpYsZ07h2hxpX4mp7NOSe2STSRMnxAzjaoy+QIdVQhXkrzEY6nGBuQXTFpU51Z2vQZHatkwsTbgWBC0XSB1e/Yu3OGbZEb99ZpzWyOx7r6Hho=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1744196811; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=zG30n2f/aRteVWgqjxF1osyq1V5F5L32v16dl9hXPTk=; 
-	b=C60x3XSqtlLDM1/hzCaZMpWQ+1DCTxPhC6TBttCvqiQpnDaBIuyw2Aii2ewZHKSWsfJMf+sxb51GYYnyC2w+FfnNGY0eIDi2mDHq2PSMLgoo9sg0/7cTWKUm8Pqe7YWKaKAGBjye6gDYQN2M0Xm4gNTjfSCAjpCjPp+xYFVD5Ug=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
-	dmarc=pass header.from=<usama.anjum@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744196811;
-	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=zG30n2f/aRteVWgqjxF1osyq1V5F5L32v16dl9hXPTk=;
-	b=lD0Mqw2M2QnDu5pxa88W/n3q7kF5e/RTOTbO2yWMgf9Fe5+wg9L83xPtWizh065r
-	/v41XTBmgYEHVc+Cb/JpKuioKCp/JWcl1kFDXWM5PLCbiyWQxeSBPi9oWzL+zMzhHUn
-	Qn/88lS0u3ofjgCLW2qWE+l3JoxLBUKMx/LoexQo=
-Received: by mx.zohomail.com with SMTPS id 1744196809321647.8101420390714;
-	Wed, 9 Apr 2025 04:06:49 -0700 (PDT)
-Message-ID: <bda7ee48-70db-4ee4-9f90-e267e48ba2c3@collabora.com>
-Date: Wed, 9 Apr 2025 16:06:41 +0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JMFcv85N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 282B0C4CEE3;
+	Wed,  9 Apr 2025 11:07:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744196837;
+	bh=5WALcSlXLF4jOWGCUwqVjywh8RLohDbgqlLN686J2Co=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=JMFcv85NoqIbs4DlNh1qTYARvZUZr7qnD6MYTCBnS1G1L2lbk2dErmODU1foLYFGu
+	 MOkY1q7D5/QVRHYEdCphs9+N/wYsulyW237bRmUNa42sKemo64gxVxZgfjFE2YQDwo
+	 oACNTULyMZXi1mLH3Q/VcGTwZp+URx76kspAgajXRw9G0tLGrqtyjO8gm4Slg9VDFv
+	 JnuH0ZRSfSgsB5hyo51dhOaJvObq5ZxGk4JSnhdRIAz2XFkws37ZJAWaTQ2KeePD0t
+	 V/7Ge0OCTeuIKR9WBwQ+3KUno9Ems9m5LJVHCUTPX5Ggn4Dc1OfE1sn8uKK7WLAPO2
+	 TQlyHB/vkq4NQ==
+Message-ID: <66e54eb9-58b3-4559-af32-66a77fe1ea01@kernel.org>
+Date: Wed, 9 Apr 2025 13:07:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,48 +35,152 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] bus: mhi: host: don't free bhie tables during power
- off
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Jeff Hugo <jeff.hugo@oss.qualcomm.com>,
- Youssef Samir <quic_yabdulra@quicinc.com>,
- Matthew Leung <quic_mattleun@quicinc.com>, Yan Zhen <yanzhen@vivo.com>,
- Qiang Yu <quic_qianyu@quicinc.com>, Kunwu Chan <chentao@kylinos.cn>,
- Carl Vanderlip <quic_carlv@quicinc.com>, Sumit Garg <sumit.garg@kernel.org>,
- mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250409082444.582295-1-usama.anjum@collabora.com>
- <2025040918-preflight-elliptic-7046@gregkh>
+Subject: Re: [PATCH v4 6/6] percpu/x86: Enable strict percpu checks via named
+ AS qualifiers
+To: Uros Bizjak <ubizjak@gmail.com>, x86@kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-bcachefs@vger.kernel.org,
+ linux-arch@vger.kernel.org, netdev@vger.kernel.org
+Cc: Nadav Amit <nadav.amit@gmail.com>, Dennis Zhou <dennis@kernel.org>,
+ Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Andy Lutomirski <luto@kernel.org>, Brian Gerst <brgerst@gmail.com>,
+ Peter Zijlstra <peterz@infradead.org>
+References: <20250127160709.80604-1-ubizjak@gmail.com>
+ <20250127160709.80604-7-ubizjak@gmail.com>
 Content-Language: en-US
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <2025040918-preflight-elliptic-7046@gregkh>
-Content-Type: text/plain; charset=UTF-8
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <20250127160709.80604-7-ubizjak@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
 
-Hi Greg,
+On 27. 01. 25, 17:05, Uros Bizjak wrote:
+> This patch declares percpu variables in __seg_gs/__seg_fs named AS
+> and keeps them named AS qualified until they are dereferenced with
+> percpu accessor. This approach enables various compiler check
+> for cross-namespace variable assignments.
 
-Hope you are doing well.
+So this causes modpost to fail to version some symbols:
 
-On 4/9/25 3:43 PM, Greg Kroah-Hartman wrote:
-> On Wed, Apr 09, 2025 at 01:24:26PM +0500, Muhammad Usama Anjum wrote:
->> Tested-on: QCNFA765 WLAN.HSP.1.1-03926.13-QCAHSPSWPL_V2_SILICONZ_CE-2.52297.6
+> WARNING: modpost: EXPORT symbol "xen_vcpu_id" [vmlinux] version generation failed, symbol will not be versioned.
+> Is "xen_vcpu_id" prototyped in <asm/asm-prototypes.h>?
+> WARNING: modpost: EXPORT symbol "irq_stat" [vmlinux] version generation failed, symbol will not be versioned.
+> Is "irq_stat" prototyped in <asm/asm-prototypes.h>?
+> WARNING: modpost: EXPORT symbol "fred_rsp0" [vmlinux] version generation failed, symbol will not be versioned.
+> Is "fred_rsp0" prototyped in <asm/asm-prototypes.h>?
+> WARNING: modpost: EXPORT symbol "cpu_dr7" [vmlinux] version generation failed, symbol will not be versioned.
+> Is "cpu_dr7" prototyped in <asm/asm-prototypes.h>?
+> WARNING: modpost: EXPORT symbol "cpu_tss_rw" [vmlinux] version generation failed, symbol will not be versioned.
+> Is "cpu_tss_rw" prototyped in <asm/asm-prototypes.h>?
+> WARNING: modpost: EXPORT symbol "__tss_limit_invalid" [vmlinux] version generation failed, symbol will not be versioned.
+> Is "__tss_limit_invalid" prototyped in <asm/asm-prototypes.h>?
+> WARNING: modpost: EXPORT symbol "irq_fpu_usable" [vmlinux] version generation failed, symbol will not be versioned.
+> Is "irq_fpu_usable" prototyped in <asm/asm-prototypes.h>?
+> WARNING: modpost: EXPORT symbol "cpu_info" [vmlinux] version generation failed, symbol will not be versioned.
+> Is "cpu_info" prototyped in <asm/asm-prototypes.h>?
+> WARNING: modpost: EXPORT symbol "gdt_page" [vmlinux] version generation failed, symbol will not be versioned.
+> Is "gdt_page" prototyped in <asm/asm-prototypes.h>?
+ > ...
+
+That happens both with 6.15-rc1 and today's -next. Ideas?
+
+Config:
+https://github.com/SUSE/kernel-source/blob/master/config/x86_64/default
+
+It is enough to:
+   make CC='ccache gcc-14' O=../our -j160 vmlinux
+to see the above.
+
+> Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+> Acked-by: Nadav Amit <nadav.amit@gmail.com>
+> Cc: Dennis Zhou <dennis@kernel.org>
+> Cc: Tejun Heo <tj@kernel.org>
+> Cc: Christoph Lameter <cl@linux.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Andy Lutomirski <luto@kernel.org>
+> Cc: Brian Gerst <brgerst@gmail.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> ---
+>   arch/x86/include/asm/percpu.h | 15 ++++++++++++---
+>   1 file changed, 12 insertions(+), 3 deletions(-)
 > 
-> This is not a valid tag in the kernel, please remove.
-I'd added this tag as previous ath11k patches had such tag [1]:
+> diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percpu.h
+> index 27f668660abe..474d648bca9a 100644
+> --- a/arch/x86/include/asm/percpu.h
+> +++ b/arch/x86/include/asm/percpu.h
+> @@ -95,9 +95,18 @@
+>   
+>   #endif /* CONFIG_SMP */
+>   
+> -#define __my_cpu_type(var)	typeof(var) __percpu_seg_override
+> -#define __my_cpu_ptr(ptr)	(__my_cpu_type(*(ptr))*)(__force uintptr_t)(ptr)
+> -#define __my_cpu_var(var)	(*__my_cpu_ptr(&(var)))
+> +#if defined(CONFIG_USE_X86_SEG_SUPPORT) && defined(USE_TYPEOF_UNQUAL)
+> +# define __my_cpu_type(var)	typeof(var)
+> +# define __my_cpu_ptr(ptr)	(ptr)
+> +# define __my_cpu_var(var)	(var)
+> +
+> +# define __percpu_qual		__percpu_seg_override
+> +#else
+> +# define __my_cpu_type(var)	typeof(var) __percpu_seg_override
+> +# define __my_cpu_ptr(ptr)	(__my_cpu_type(*(ptr))*)(__force uintptr_t)(ptr)
+> +# define __my_cpu_var(var)	(*__my_cpu_ptr(&(var)))
+> +#endif
+> +
+>   #define __percpu_arg(x)		__percpu_prefix "%" #x
+>   #define __force_percpu_arg(x)	__force_percpu_prefix "%" #x
 
-I'll move the tag to description in v2. Probably that would be the
-correct approach.
-> 
-> thanks,
-> 
-> greg k-h
-
-[1]
-https://lore.kernel.org/all/20250328-ath11k-bring-hibernation-back-v3-4-23405ae23431@quicinc.com
-
-
+thanks,
 -- 
-Regards,
-Usama
+js
+suse labs
+
