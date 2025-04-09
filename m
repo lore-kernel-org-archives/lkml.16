@@ -1,74 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27EB6253B46
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 19:06:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03C30253B46;
+	Wed,  9 Apr 2025 19:07:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744225615; cv=none; b=Thpz6xizRQXUkvaYLxlAqbroNDzBbxxmPeLPPgPLE5H4wsgCtW9uYNl88Kp0TXHgo9ZmFLuPbA2rVRAxkT85Tc9yxHLqYtefAYvDccn28+kiINrR8SnFMfN+V1iAlk75g/AcdkbhW26uUWRe8ZXczgfCcu1tS5I58ls6Ud580qQ=
+	t=1744225624; cv=none; b=hkq9tAd8PY+uUcrnBpRdQ+1mnDM/n1g/bPmTn9e5tTksp+2UzzgrqnPA+NI7tq3fkhY7XC6zLtbwQlez1LlG4OQ+HTFDMfSDqQWYzelYDdVdE/riiB1E93QyhKbvF/BuGtOgQtTZjY38QO6L2P9x6oueB+LJA/1eNlx+qKSBrQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744225615; c=relaxed/simple;
-	bh=+9fuBJejwno9vlxLG4fXIl+II6GIWfgD1/Po/wY7cOw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A/2zMVJdTjc4QJKPKYifogwHsibrSYvp8ONK7eVgT+hSSuLdx+8GFvcpQTTesOZPJKToK2y4JJyB1o7DvQeV2biguPdvRHrRgCMNLZy4QMSHzToRgG2xLN7Ic2zqRkb652JqMRPff63Pqyl8qFTrLqCxeouaAm9V75b40dYQYA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R9IU0IaA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744225624; c=relaxed/simple;
+	bh=zIMufi1pfOGJfgv3IG37PKRPOjR+foHGW/ZRMqh25oo=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=GnyJnPl09YHmxhHSuUuP7JE13C+X5teqIMg4WCxRj+NkhH1gnc3kydPe/RFuBhbSf5BS/uqsvBKONV+0bjwJXM8k0Spj++6I/yEuWLj8H4CMuSn9vtK0W2YccQzx2/mtB38mxG1FXTg21RBXchJExLXIMPj0h1bvn28Pcj4fato=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XtPWL4Yk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZIC40b8w; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R9IU0IaA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69177C4CEE2;
-	Wed,  9 Apr 2025 19:06:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744225614;
-	bh=+9fuBJejwno9vlxLG4fXIl+II6GIWfgD1/Po/wY7cOw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R9IU0IaAMHe8fzwoYmvfsmLzA4zaAe9WRkK1A6c3t7qDe5naVhD9SwXcod2I3RghW
-	 7TjucyK1R/o4IAI52tZdv1jnvERY5NiA91MFpPtv4M4iZ4q+conTPl6n1RmkTflw69
-	 emsoCW7k66pVFHrXTukVwCScxUnBsvBI8grjT36SC50/n4mnCiaO3vCDMOpwiC89Nx
-	 g1h2u8MOUVf3SbtLKhJoCfSO+zV9/0rG2CJ+16YcxNH6g3kl+qlMxfL04aNjoUnyig
-	 qO0nKAJ1CuiXtwc8BWXbtZtlM+xOmumeEjqX6CFXUNkhH1GwzOPyv0GfY/IXvK3hw7
-	 pzlS6+rkuRe4Q==
-Date: Wed, 9 Apr 2025 09:06:53 -1000
-From: Tejun Heo <tj@kernel.org>
-To: void@manifault.com, arighi@nvidia.com, multics69@gmail.com
-Cc: linux-kernel@vger.kernel.org, sched-ext@meta.com
-Subject: Re: [PATCHSET sched_ext/for-6.16] sched_ext: Reduce usage of
- static_keys
-Message-ID: <Z_bFTQBweZf59CzC@slm.duckdns.org>
-References: <20250408230616.2369765-1-tj@kernel.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XtPWL4Yk";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZIC40b8w"
+Date: Wed, 09 Apr 2025 19:06:57 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744225620;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BuDP/EVbH11rcxXyzzva+s7aNZK+w/uOWpaXPhLmzIg=;
+	b=XtPWL4YkaLVVBLnheKle0GghklSbT3jRNFj4gt6pceuc+RdvJ9o22sHvX7iMQqwbk9lxmt
+	MpTs9qK0Dtb3pxXNdKOOjULFfH/1OEM2E3mHYg58DR1Qhs+AiAfPAqCdY49U184kMR/1cJ
+	N6KU8zpfzj5eoz66jRG9xY8K/yGSfPS08Id70UdsAeNXyyJaUxGt+RM/o9m8xiMEK9mRNV
+	4lq8COfs3yJPu87ivl0mRRut4cXACET62sj+5otoxMLmvOkdXNlSTudBipRoRejIZJ9EzH
+	J/Vt88hzT5PCxYBIz0/aHQQXcFHTNkEMTmLhn084ct0b10x1748WcHC7KjxDsA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744225620;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BuDP/EVbH11rcxXyzzva+s7aNZK+w/uOWpaXPhLmzIg=;
+	b=ZIC40b8wdb5frL3n1zQJZBH0EtnNvgGYnRq2dzJ7i8PFtsLWl6SHRPegSvlbsfE5k/In65
+	j7rsPa1k5E/nPRCQ==
+From: "tip-bot2 for Nam Cao" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/urgent] hrtimer: Add missing ACCESS_PRIVATE() for
+ hrtimer::function
+Cc: kernel test robot <lkp@intel.com>, Nam Cao <namcao@linutronix.de>,
+ Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250408103854.1851093-1-namcao@linutronix.de>
+References: <20250408103854.1851093-1-namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250408230616.2369765-1-tj@kernel.org>
+Message-ID: <174422561796.31282.2133089235929784026.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 08, 2025 at 01:06:00PM -1000, Tejun Heo wrote:
-> sched_ext uses static_keys to optimize branches on ops flags and which ops
-> are implemented. Some of those branches aren't that hot and while others are
-> hotter, they are unlikely to cause meaningful overhead difference given
-> everything else that's going on. static_keys were used more because there
-> was no reason not to use static_keys. However, the planned multiple
-> hierarchical scheduler support won't work with global static_keys as these
-> branches would have to be based on the specific ops instance.
-> 
-> This patchset replaces static_key usages with tests on ops.flags and a
-> bitmap tracking which operation is implemented. I couldn't see performance
-> difference in numerous hackbench runs on a Ryzen 3990x machine before and
-> after the patchset.
-> 
-> This patchset contains the following five patches:
-> 
->  0001-sched_ext-Indentation-updates.patch
->  0002-sched_ext-Remove-scx_ops_enq_-static_keys.patch
->  0003-sched_ext-Remove-scx_ops_cpu_preempt-static_key.patch
->  0004-sched_ext-Remove-scx_ops_allow_queued_wakeup-static_.patch
->  0005-sched_ext-Make-scx_has_op-a-bitmap.patch
+The following commit has been merged into the timers/urgent branch of tip:
 
-Applied to sched_ext/for-6.16.
+Commit-ID:     2424e146bee00ddb4d4f79d3224f54634ca8d2bc
+Gitweb:        https://git.kernel.org/tip/2424e146bee00ddb4d4f79d3224f54634ca8d2bc
+Author:        Nam Cao <namcao@linutronix.de>
+AuthorDate:    Tue, 08 Apr 2025 12:38:54 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Wed, 09 Apr 2025 21:00:42 +02:00
 
-Thanks.
+hrtimer: Add missing ACCESS_PRIVATE() for hrtimer::function
 
--- 
-tejun
+The "function" field of struct hrtimer has been changed to private, but
+two instances have not been converted to use ACCESS_PRIVATE().
+
+Convert them to use ACCESS_PRIVATE().
+
+Fixes: 04257da0c99c ("hrtimers: Make callback function pointer private")
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Nam Cao <namcao@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/20250408103854.1851093-1-namcao@linutronix.de
+Closes: https://lore.kernel.org/oe-kbuild-all/202504071931.vOVl13tt-lkp@intel.com/
+Closes: https://lore.kernel.org/oe-kbuild-all/202504072155.5UAZjYGU-lkp@intel.com/
+---
+ include/linux/hrtimer.h | 2 +-
+ kernel/time/hrtimer.c   | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/hrtimer.h b/include/linux/hrtimer.h
+index 1adcba3..1ef867b 100644
+--- a/include/linux/hrtimer.h
++++ b/include/linux/hrtimer.h
+@@ -345,7 +345,7 @@ static inline void hrtimer_update_function(struct hrtimer *timer,
+ 	if (WARN_ON_ONCE(!function))
+ 		return;
+ #endif
+-	timer->function = function;
++	ACCESS_PRIVATE(timer, function) = function;
+ }
+ 
+ /* Forward a hrtimer so it expires after now: */
+diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+index 517ee25..30899a8 100644
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -366,7 +366,7 @@ static const struct debug_obj_descr hrtimer_debug_descr;
+ 
+ static void *hrtimer_debug_hint(void *addr)
+ {
+-	return ((struct hrtimer *) addr)->function;
++	return ACCESS_PRIVATE((struct hrtimer *)addr, function);
+ }
+ 
+ /*
