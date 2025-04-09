@@ -1,65 +1,63 @@
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DD4425E471
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 12:10:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DB1E25E476
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 12:11:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744200620; cv=none; b=khBblbNCwmU/7iuN80lOLvMvpEx85seEjhJs0hNSirgG1jTSI5eHjLB82H+Oekj9ZOZChNfHReXfE7+71uGieMdrXxjWcfsV3R2ZL2lMjRbKH7gTYUH8VRPjghDWrBYA/ReijozWsBxPYGMpOtIFTHAMG+d0m4asFd35lIHzVv0=
+	t=1744200673; cv=none; b=ANtrcbL/RAxZYtTK7de+pEm1j+Qo/TZwcWDI1n52Q1OPCpx/6uIpsjQqszKM3S+pi4qZLwiGPj04QLcoJ/DnXlm+MR/3tp62cbUVXZkLysInOyzr4vkR674ASESc7rKU+zhLuUC83Pu1SWqlQXxUUmV7hRyi2QFPujCbgU+LtDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744200620; c=relaxed/simple;
-	bh=7EbvCyUEXn2qtD5n42Iv8tV6gC107je0x9KkT+DB1Ho=;
+	s=arc-20240116; t=1744200673; c=relaxed/simple;
+	bh=FjmBBQuTbqcSqV4VON5V19OosV8aeGF3vbwcOaR6PEU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sD/K5udTJ75vchHkrW8m66HZI4zezN33u29dbWUkcckz+QFQluBQbo5kHYBtp5m99wc7C/bXRwIjaHzDsml3vDm8WzvrxpfiBYhoESAWJsTp3SbnfVNotogNh9PV3DlJ8Tj7vYgABnFlttfI01VLYUdiwt12OB6PcyuZdjHd8fo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=1/C1GspJ; arc=none smtp.client-ip=209.85.166.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+	 In-Reply-To:Content-Type; b=Gu2xBHFaFxAn3iSLeqhAnREQ6CT73Wt34CrjEkvsbpYfGZ196+yv6d8GeWroXu69g2qn1c2D0dMSYBrNVxG5mJG0IatbHE1HbANQXOQHpLhsrTMcImcn++0kw10NHU/jOByrgfnYW1W4sa7In4Pcq4aGJRxgAIOcC9u700jPg1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=YMtC1S08; arc=none smtp.client-ip=209.85.210.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="1/C1GspJ"
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3d43c972616so2067545ab.0
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 05:10:17 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="YMtC1S08"
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-72bd828f18dso2029843a34.2
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 05:11:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1744200617; x=1744805417; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xZ20LkStNkObd3KEihi6TUJmcbZftlQkn47bOpKz8AE=;
-        b=1/C1GspJG8yzgxSoVPr3ZUVnvaU3BB7PKSkRKpxiBZmr2QtZSkzOymmvjT9K6s2nsx
-         KjSFvQpviDA/8GMbZrEVxJpNmEJrKjw1vOUuCCgJhtkozK1aKQhibkOGwWzt3rNkIG4I
-         lF7Tp7kgWfxyuAQXNMLGGQK0X5kK5iZcoODGRpHY12RJub+QXnxpDk002etGHx3whnUw
-         HIUlkZUS6I50eOx//gZOA2n62RucEk4ObalGTOVKPrlXqezDr/ZZxBaJbqtkMmdPBXpv
-         t96hIeVpCsQHaQisyYgHIf+K+G6AuFm4McaWZ/F0A++v9Yaaj52150YuQg8HHZ23ppoM
-         eSSA==
+        d=broadcom.com; s=google; t=1744200669; x=1744805469; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=4PtXMGs7EWmz8YpnhCnXD5krrhFi7/XXZNLQxormo78=;
+        b=YMtC1S08yIe2L84xw6e7Yo8bzoUSmvFP+dAZk/fDbwYmIdoLMX/fjcRTk+yK/d+x+c
+         NruSO6zYjblaKvuaIHrnMVgrkNpq+Bd/3e8VS6mVuZBRGH586P4UDSTCCo6guHaxm0sC
+         VfVovpLMVJNhGH329YF/2qE05VkU+xk6ggqwQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744200617; x=1744805417;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xZ20LkStNkObd3KEihi6TUJmcbZftlQkn47bOpKz8AE=;
-        b=rTd6x5Grs4K3mkDuxeXdAm5GvWhXpMoSenDr4sOIOJ1/Oy4fPhgi8IeZKpk/1xfbYi
-         reFeOLQclfziPp49i396eClyTIYqNiRO79k/nAJfarNi34DlPQOIC9xYsISuKfGh6SNu
-         7DIJwy7Pijn94w9OHh9d0K6VDcxNX9iWQ+9WakvMjMILw6WhBFSmXCXBHQsm3e2/08fZ
-         BL7iUyn8gnsOAInIs9BqJq4PZuYJQmdgcvVo6Gc9TnPNroUEzJdigbRV+qSyyDR59HgY
-         g/EWPloUnsHu506A2mcEDEgC/tOfwJuGnhSCVPiaVL9mQRCf+N6GtCzpVkE4DLSn0AJw
-         sOTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCURVkzVT/bLy/VCcLL4v8z1E0D3jSAwWxJZqkQ8S64sXsS6Qf5yELDhIEwXR4jhurcM6giYhm8v1+n377A=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+Xr0yxwgxO8bWBZ+hVh4bFJHl1h2GQERXL1NqONS2IWAnEf0q
-	RzJd1VRMn2WT+lQ/FnIyUJUqpISRwye3YnSnOQpm5LednNlmfn4W51RnPTaqULE=
-X-Gm-Gg: ASbGnctLaA5kcZYMMxPXrEQ4e15Tc2Hrc/kswL6MqY7qnTvuwMXHSUYC3H0gPGasyOY
-	fS/+WgrwA9xr0Eu2Im4eJZNYaz7atkeTHmfxKt/pZSgQcs0s8aCsD+lhNgcqbiFkEaTlPgEWAsV
-	6x/uH5zVd+ujsOvBKi9yq7cI0yofHK0YG8cbKREX7uUv+iURv6u+MACfhExmVLG9uToCrIytfBE
-	go6E5RNsNCVhc1OHRmNbspU4k27gP/ghTpbYkl6g+lzbAv61DnzFTFJncg3UyoIhu+ojIOEf2fr
-	cbHGC5RxN8cQlo3MiBbH0WCj+7a7zfg3Aeq9bzXRNU+bJv7BVP2sg1PgVGtnzXKtycrmGxrGGgc
-	euWiW
-X-Google-Smtp-Source: AGHT+IHOJ53eVbLiI0OAfSwCZqdwNMQH9qWfpQM+iXRoOuzCIFtY9CzuuScoSIUUfueyiH3NuZt54g==
-X-Received: by 2002:a05:6e02:4413:10b0:3d3:de5f:af25 with SMTP id e9e14a558f8ab-3d7035afda7mr62331215ab.0.1744200617264;
-        Wed, 09 Apr 2025 05:10:17 -0700 (PDT)
-Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f505dfd795sm204358173.97.2025.04.09.05.10.16
+        d=1e100.net; s=20230601; t=1744200669; x=1744805469;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4PtXMGs7EWmz8YpnhCnXD5krrhFi7/XXZNLQxormo78=;
+        b=rFBAMvxFme/YpAGl6D/yl7svQaCq2VCLukq9kqpPB+RgBEVqEYMiRwYH7Ge+nBCuEI
+         mQQGMChvIyZ7L2SgnbcvH+VMpcqtvAK5lnGwFf+ToWFLQwdA7oSpA5/gmzKstwkAsNQA
+         de+Fu2a6vBXfYVEmoyP/zSrD7xBHQqI6HIucOrCxHZbgIgNpAjI4yxGUIAoCqfW8zMYp
+         BriCXfS74PAMBvcK+2U9ffvtCI5GhLx50mctzqqQq6nAU0m2aWTfkiJP0LZaoGoPESWV
+         Rqlh+kl/0Fr35bUYPGX9goxzQtIqx1D89mF9O911MOYelvpNJq+wcv4H4FMn6C4Vsjq0
+         K35g==
+X-Forwarded-Encrypted: i=1; AJvYcCUWP+sFN9dpvHWEn7MdCGWIQ/qDpzSb2nQlbK5t1oSnOfz2YgUMYjW//ZM7miIhsAab0rB4KtS1b3F7T5E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxu7NDKSMgXJ/DbS5ROe5/wM/uRYPlrhv84YayKO92O/uhp3wEN
+	C6JuUoKu0Lu8mIEhMDTqyZXPfQTB5bxevBnWji6DGX8gegADmoz9KDqbB58ZpQ==
+X-Gm-Gg: ASbGnctB8QwPNqaB/KWqtpHLC/pdyUsmPswQaE4MTdcGNOL5raF1uE9mvv41brknhnJ
+	FGCZ3yD/Ph/QTO8S+g2GNTxNDxpjNMsWBYPYvAXxHBuxMbS6yvgRXSZGJgnqvg8UlO3LWK8DVv1
+	fTPOkCV3jWFkNf4BnifwGUWhns8fc2HVV47DaYeLccjwkAIOV3S/4hQIVv1oyrUUITLlRnaBw6h
+	qpzjKUBPn/RXmFOjEDGH6bOtlXTdm5uvRjah8faEptsmEZlgGdu4OULMhSF+MTASkvI50SUM9CP
+	2u7FM6mjXtAJY3SAYAXYtzaRLYuOcdETiPzOeyhJLH2bBI9fLwGF5rtrgRGA1TR5bDTyQhcKMvt
+	m1bI=
+X-Google-Smtp-Source: AGHT+IFZAPvCBJgh9XVazfblCmGFa6YHh0C56/60XRWXvVZNJuVRhmhgazTESo+2pXIgjIbzPz1kxw==
+X-Received: by 2002:a05:6830:6086:b0:72b:9506:8db6 with SMTP id 46e09a7af769-72e71aa22admr1193256a34.6.1744200669147;
+        Wed, 09 Apr 2025 05:11:09 -0700 (PDT)
+Received: from [10.176.68.145] ([192.19.176.250])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-72e73e67465sm135366a34.57.2025.04.09.05.11.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Apr 2025 05:10:16 -0700 (PDT)
-Message-ID: <0ca876ea-2607-407f-a0e8-98bb4bd94135@riscstar.com>
-Date: Wed, 9 Apr 2025 07:10:15 -0500
+        Wed, 09 Apr 2025 05:11:07 -0700 (PDT)
+Message-ID: <d791185d-6a23-4c6f-8a93-d5464409939a@broadcom.com>
+Date: Wed, 9 Apr 2025 14:11:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,111 +65,118 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] serial: 8250_of: add support for an optional bus
- clock
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: gregkh@linuxfoundation.org, jirislaby@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, benjamin.larsson@genexis.eu,
- bastien.curutchet@bootlin.com, u.kleine-koenig@baylibre.com, lkundrak@v3.sk,
- devicetree@vger.kernel.org, linux-serial@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250408175146.979557-1-elder@riscstar.com>
- <20250408175146.979557-3-elder@riscstar.com>
- <Z_V-aKBOFHt-0RKz@smile.fi.intel.com>
- <2b322564-10c0-4bbd-89d9-bc9da405f831@riscstar.com>
- <Z_YhwJ1ZGSodMcMH@smile.fi.intel.com>
+Subject: Re: [PATCH] brcm80211: fmac: Add error check for brcmf_usb_dlneeded()
+To: Wentao Liang <vulab@iscas.ac.cn>, kvalo@kernel.org
+Cc: christophe.jaillet@wanadoo.fr, megi@xff.cz, saikrishnag@marvell.com,
+ linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev,
+ brcm80211-dev-list.pdl@broadcom.com, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20250406081930.2909-1-vulab@iscas.ac.cn>
 Content-Language: en-US
-From: Alex Elder <elder@riscstar.com>
-In-Reply-To: <Z_YhwJ1ZGSodMcMH@smile.fi.intel.com>
+From: Arend van Spriel <arend.vanspriel@broadcom.com>
+Autocrypt: addr=arend.vanspriel@broadcom.com; keydata=
+ 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
+In-Reply-To: <20250406081930.2909-1-vulab@iscas.ac.cn>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 4/9/25 2:29 AM, Andy Shevchenko wrote:
-> On Tue, Apr 08, 2025 at 03:11:10PM -0500, Alex Elder wrote:
->> On 4/8/25 2:52 PM, Andy Shevchenko wrote:
->>> On Tue, Apr 08, 2025 at 12:51:43PM -0500, Alex Elder wrote:
+On 4/6/2025 10:19 AM, Wentao Liang wrote:
+> The function brcmf_usb_dlneeded() calls the function brcmf_usb_dl_cmd()
+> but dose not check its return value. The 'id.chiprev' is uninitialized if
+> the function brcmf_usb_dl_cmd() fails, and may propagate to
+> 'devinfo->bus_pub.chiprev'.
 > 
->>>> The SpacemiT UART requires a bus clock to be enabled, in addition to
->>>> it's "normal" core clock.  Look up the core clock by name, and if
->>>> that's found, look up the bus clock.  If named clocks are used, both
->>>> are required.
->>>>
->>>> Supplying a bus clock is optional.  If no bus clock is needed, the clocks
->>>> aren't named and we only look up the first clock.
->>>
->>> Code and description are not aligned. And What you are described above make
->>> more sense to me than what's done below.
->>
->> I want to do this the right way.
->>
->> My explanation says:
->> - look up the core clock by name
->>      - if that is found, look up the bus clock
->>      - both clocks are required in this case (error otherwise)
->> - If the "core" clock is not found:
->>      - look up the first clock.
->>
->> And my code does:
->> - look up the core clock by name (not found is OK)
->>      - if it is found, look up the bus clock by name
->>      - If that is not found or error, it's an error
->> - if the "core" clock is not found
->>      - look up the first clock
->>
->> What is not aligned?
+> Add error handling for brcmf_usb_dl_cmd() to return the function if the
+> 'id.chiprev' is uninitialized.
+
+Thanks for the patch, but NAK. Let me explain why below...
+
+> Fixes: 71bb244ba2fd ("brcm80211: fmac: add USB support for bcm43235/6/8 chipsets")
+> Cc: stable@vger.kernel.org # v3.4+
+> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+> ---
+>   drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c | 7 ++++++-
+>   1 file changed, 6 insertions(+), 1 deletion(-)
 > 
-> That you are telling that bus is optional and core is not, the code does the
-> opposite (and yes, I understand the logic behind, but why not doing the same in
-> the code, i.e. check for the *optional* bus clock first?
+> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
+> index 2821c27f317e..50dddac8a2ab 100644
+> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
+> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
+> @@ -790,6 +790,7 @@ brcmf_usb_dlneeded(struct brcmf_usbdev_info *devinfo)
+>   {
+>   	struct bootrom_id_le id;
+>   	u32 chipid, chiprev;
+> +	int err;
+>   
+>   	brcmf_dbg(USB, "Enter\n");
+>   
+> @@ -798,7 +799,11 @@ brcmf_usb_dlneeded(struct brcmf_usbdev_info *devinfo)
+>   
+>   	/* Check if firmware downloaded already by querying runtime ID */
+>   	id.chip = cpu_to_le32(0xDEAD);
+> -	brcmf_usb_dl_cmd(devinfo, DL_GETVER, &id, sizeof(id));
+> +	err = brcmf_usb_dl_cmd(devinfo, DL_GETVER, &id, sizeof(id));
+> +	if (err) {
+> +		brcmf_err("DL_GETID Failed\n");
+> +		return false;
 
-Ahh, now I see what you mean.  The result will be the same,
-but if it "reads better" that way to you then I'm all for it.
+The boolean return value does not indicate pass or fail. It answers the 
+question implied by the function name brcmf_usb_dlneeded(), ie. is the 
+USB device running firmware (false) or do we need to download firmware 
+(true). So returning false here is not going to help us.
 
-One of the reasons I did it this way was that I wasn't sure
-how to express a "don't care" clock name as a DTS binding,
-so I just tried to avoid that.
+The id.chip is initialized to 0xDEAD so upon a failure that value is 
+being passed to brcmf_usb_prepare_fw_request() which will consequently 
+return NULL, because we do not support a 0xDEAD chip. So there is no 
+need to bail out here. Just print the failure message is enough although 
+I would suggest to include the err value:
 
-In other words, I thought about adding the "bus" clock as an
-optional first lookup, and then leaving the existing code to
-look up the core clock by position--without caring about the
-name.  But I assume named clocks aren't guaranteed to be in
-any particular order ("core" clock *could* be listed second).
+-	brcmf_usb_dl_cmd(devinfo, DL_GETVER, &id, sizeof(id));
++	err = brcmf_usb_dl_cmd(devinfo, DL_GETVER, &id, sizeof(id));
++	if (err)
++		brcmf_err("DL_GETVER failed: err=%d\n", err);
 
-So I look up the "core" clock by (optional) name, and if not
-found look it up by position.  If it is found, I look up the
-bus clock--required in this case.
-
-Now that I write that I understand why you felt the logic was
-a bit inverted.
-
-I'll send v2 today and will rearrange the logic to match what
-you're talking about.
-
->>> Also can we simply not not touch this conditional at all, but just add
->>> a new one before? Like
->>>
->>> 	/* Get clk rate through clk driver if present */
->>>
->>> 	/* Try named clock first */
->>> 	if (!port->uartclk) {
->>> 		...
->>> 	}
->>>
->>> 	/* Try unnamed core clock */
->>> // the below is just an existing code.
->>
->> That's easy enough.  I think it might be a little more code
->> but I have no problem with that.
-> 
-> I;m fine with a little more code, but it will be much cleaner in my point of
-> view and as a bonus the diff will be easier to review.
-
-I understand that completely.  Thanks a lot for clarifying.
-
-					-Alex
-
->>> 	if (!port->uartclk) {
->>> 		...
->>> 	}
-> 
+Regards,
+Arend
 
