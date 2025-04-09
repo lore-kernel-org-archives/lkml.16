@@ -1,289 +1,191 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA7FB265CD1;
-	Wed,  9 Apr 2025 14:34:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744209283; cv=none; b=CLlbY+lzW964NPc1XvstODNfnG5pfT3SVo3hYhoVBsXwjvNga2TIZ8365KVulG6HdJn3Qc4YQdrs6b2EukvIA7gjFWi3cuWBCz0Z6DNZRtarWHhqNF33GyHXx2kmiKS/N9Mu9pbnY0r2MtOw//BG6ZhY3rnjS2+2Pu3fDRIGLDo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744209283; c=relaxed/simple;
-	bh=LegybRFWEbljy3JGRT+NmGtKSqA05LRkumoU1HS8zto=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=G/X4utlqv1IGHa0+epRK4XLWYxa4A0F1MET5YEiRSOkbZwc9THr54MuFQDHg2Gg1c7BI08QxinxunlO8jqbFl43TshfkslUiWVufjt+tS/FFQ3726pJ2XB5qKl6blquuOR5v3Ix+MvoacscDyNFyeLJExmW6OGnpaVNODuwt7Ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96420C4CEE2;
-	Wed,  9 Apr 2025 14:34:42 +0000 (UTC)
-Date: Wed, 9 Apr 2025 10:36:01 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: syzbot <syzbot+b1a3058aa9ba1555eb89@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- mathieu.desnoyers@efficios.com, mhiramat@kernel.org,
- syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [trace?] possible deadlock in ring_buffer_resize
-Message-ID: <20250409103601.360c4525@gandalf.local.home>
-In-Reply-To: <67f67726.050a0220.25d1c8.0004.GAE@google.com>
-References: <67f67726.050a0220.25d1c8.0004.GAE@google.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D8F326657D;
+	Wed,  9 Apr 2025 14:34:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.152.168
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744209291; cv=fail; b=TdJ1l46SG7Q9SOu+9qzIBmGSGMknrpwaD+SnC8Q5S8VHgSybTyOn/TMDd0jLuC7V8oAufiKOrTaM6TaXYIzxPfxqD2uZGmhQOrco4x4bMchku9lxi6azcKjVHACF/PVWhT4XZNsJtWj/9HaKYxDh42EbhhtkF5oz5y3BYxPdO88=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744209291; c=relaxed/simple;
+	bh=SWMC6krOjxAI5OCfZoK7B/XTZ0fpcq3biHzW0kV/3os=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mLuOd5+4jL+OLL4ZoGV9no9k9iVb98pRJwuT8ISVyf0DRVM9fx/8plxMebtnTtik+WAy1wfClcMLTbtvCvdZ4TYCRoR4+iWYyF31PiipfzHphPITQpD8KZuu/E3GM+qahBZ5XA+T62bIACM/LgCkhW+0dkOsqBYjZHVo2NePXU0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=Yyn47/Mz; dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b=FzlOcEtt; arc=fail smtp.client-ip=67.231.152.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cirrus.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="Yyn47/Mz";
+	dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b="FzlOcEtt"
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5395t5sX008875;
+	Wed, 9 Apr 2025 09:34:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	PODMain02222019; bh=btEdQB1SHL7orEIt4p8Mdh1HPGDS7IXRMLaMYSw7uME=; b=
+	Yyn47/MzSGHs75RnH4zR3g7sA9w6xXTUGa1FkL3pGtLNJOJH/Dke+7Z7csWfHZgA
+	IItngeBSrTHZKhPkxwPiplz8zaMJaKaKLIgb6p3wHUAq7NPkUZrAFRnSKN7yUk7d
+	NjZNYI4vDQ7Y0AeH8cqJRmB+mJmF3N2GLBEyufKNdq7R9q67c38dYpbGQzyR4s33
+	0leAL1GHEXuQiNSE14nsnFgNBojqohr1XkF1f1CmD5EjVdKJzp/H6krZP/Twt3Fb
+	3ydFWWTwhK7VMrTCfr+/p95zzyUGhObFAe3+FqyJe1LOMrPTtexN0sULYmGTaot0
+	W8DFQP1J7xe2VhCQ2YDjKw==
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2042.outbound.protection.outlook.com [104.47.58.42])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 45wf0grsjt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 09 Apr 2025 09:34:33 -0500 (CDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=wx9FdMmbjwyIV+pA0fERR+1WM1vsAG1C+TW2T4MHN34+1NJcJGDvjgfKLPmcJXQk3mSrXkQXKPtriQ5R6MWiMHbMQDx2vaM3lOFQt+o6NJz2BtjPmnx3hsdB5Knv5WclGHeA9ll4/EmdX/Q79XIqkOBOhlFTpYj9i8yl6WQkwxTE1GvI6UDbyqRYNlNzhClsqUnd268nf37m4Oe3/vjH1FXlxDK3qXlN0D3WLbnaIyKw1wJEft0ttumEGcUSytnpPygkLhf2hdigTyC14fqARMTbjyghCbL72YbABOsaZ6QYI+yKgncw68tAjJNbIJS/6X8ZilGFokgaGWDCUaAt8g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=btEdQB1SHL7orEIt4p8Mdh1HPGDS7IXRMLaMYSw7uME=;
+ b=Hny/7I9u03cuJ0DsdjLDjU7ZL2FzjgTJvtSjWq7jiwyiTZtOb5Y3OaKyzu/2dOSngZdAyfz3+/+P/yy2fTlwjjiau0MyxsdFnNsbbwR5DcwwEQotEo7XA54qgJ5FCa5zQ+8HKGNvEUvoDIytL66GA7MWypRF3AmzqR7lk0aOJeiYZ50qvL2PB3n4dCDPovqIpkAZ29Jnk6DePYcDTFdZIRaom6mbb1Dr4Eix33GE3BnR5A5lh9opKxyq+boIPssPMHHoRcilTaoVdx85a0VmjZwaCpaNB/k92zlDQzakdCCOn941fBnX6azPb+6XWuW4CR7FImK5ujC21YomYuH3Rw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 84.19.233.75) smtp.rcpttodomain=cirrus.com smtp.mailfrom=cirrus.com;
+ dmarc=fail (p=reject sp=reject pct=100) action=oreject
+ header.from=opensource.cirrus.com; dkim=none (message not signed); arc=none
+ (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=cirrus4.onmicrosoft.com; s=selector2-cirrus4-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=btEdQB1SHL7orEIt4p8Mdh1HPGDS7IXRMLaMYSw7uME=;
+ b=FzlOcEttdkZIsuxlWF7fumFlsGhkM90lGOErOEHn6q/+hsNIrhjWm1n1BEjbCSmSS6Zh76rvssAoPm1/QBOfVB6mFG0WC2ObNORZEgm/V3a6hUm2aRCH0+1j7dzwTWeZ5swanPdGkHNwfgdhgWgpIGgKembd7259cO4ZXeoudEA=
+Received: from PH1PEPF000132E6.NAMP220.PROD.OUTLOOK.COM (2603:10b6:518:1::26)
+ by SJ4PPFCDF0C5BAF.namprd19.prod.outlook.com (2603:10b6:a0f:fc02::a52) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.31; Wed, 9 Apr
+ 2025 14:34:30 +0000
+Received: from CY4PEPF0000EE37.namprd05.prod.outlook.com
+ (2a01:111:f403:f912::2) by PH1PEPF000132E6.outlook.office365.com
+ (2603:1036:903:47::3) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.20 via Frontend Transport; Wed,
+ 9 Apr 2025 14:34:29 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 84.19.233.75)
+ smtp.mailfrom=cirrus.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=oreject header.from=opensource.cirrus.com;
+Received-SPF: Fail (protection.outlook.com: domain of cirrus.com does not
+ designate 84.19.233.75 as permitted sender) receiver=protection.outlook.com;
+ client-ip=84.19.233.75; helo=edirelay1.ad.cirrus.com;
+Received: from edirelay1.ad.cirrus.com (84.19.233.75) by
+ CY4PEPF0000EE37.mail.protection.outlook.com (10.167.242.43) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8632.13
+ via Frontend Transport; Wed, 9 Apr 2025 14:34:29 +0000
+Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by edirelay1.ad.cirrus.com (Postfix) with ESMTPS id D8509406542;
+	Wed,  9 Apr 2025 14:34:27 +0000 (UTC)
+Received: from [198.90.208.23] (ediswws06.ad.cirrus.com [198.90.208.23])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id B5F73820259;
+	Wed,  9 Apr 2025 14:34:27 +0000 (UTC)
+Message-ID: <5feaca10-f3bc-49bb-8e5b-9d9efa918e16@opensource.cirrus.com>
+Date: Wed, 9 Apr 2025 15:34:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ASoC: cs-amp-lib-test: Don't select SND_SOC_CS_AMP_LIB
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+        patches@opensource.cirrus.com, kunit-dev@googlegroups.com,
+        linux-kselftest@vger.kernel.org
+References: <20250409104544.878475-1-rf@opensource.cirrus.com>
+ <a47c2074-2e28-43e6-a7a1-c3ac662723cf@sirena.org.uk>
+Content-Language: en-GB
+From: Richard Fitzgerald <rf@opensource.cirrus.com>
+In-Reply-To: <a47c2074-2e28-43e6-a7a1-c3ac662723cf@sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE37:EE_|SJ4PPFCDF0C5BAF:EE_
+X-MS-Office365-Filtering-Correlation-Id: 03f21567-cfbe-4bbb-58fb-08dd7773a2dd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|61400799027|82310400026|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?NVpuU3FSejdGbWpCTU5UMkROY0tkdWM4QXBvWGVHMWdVRjRjUnF1VnlBYkRy?=
+ =?utf-8?B?ZHQ1SWJlTjhjUEJoa3N4OVdaS2RLUHBaQk40N01VanJuTmZsb3NSK1FOdzhY?=
+ =?utf-8?B?UThRYXpsbmlZeHNCMU5TZmYveVdtUkRxVHJiN3BUOGhIcHFydFpvOUhlR3ZY?=
+ =?utf-8?B?NDVJTmYwMU5Vc09CSmdwTU5xbURFMVE2OUpKcEw5TlhPdURGYitNb2NhdFFM?=
+ =?utf-8?B?MzRlVTJ6RVRBS0pNK3BBYWJCU1Z3b3FYL3lSaCtmRUZNNXZadzd6NnlsNzZC?=
+ =?utf-8?B?cHJYcWRLeUVvSjlsdjc0bTc1aU41UlFrVE4raVl3Q2VFQ2kzYkVVVEtGc3dk?=
+ =?utf-8?B?bk5kOUFJU2hSWldrbno1MUcxQTNwMVd4L01nNk5OMW1mR1pVdDEyUXduOHAz?=
+ =?utf-8?B?QjdwQTljNHZjaCtnekl6SzBZQ096dEZlb3BWQlRqeGo4a09NcWNXLzEva2tl?=
+ =?utf-8?B?WE1aM1dHTDVjZ1R1RHRrQjMvQWJ4M2hRUmVpTUt1Qk1aTFFaKzZOeEpScE5V?=
+ =?utf-8?B?Y241Y0VraUJTM3pONlQ4S0pBS2tESFNLWFZ0bGVmQWdXeUt0ZU5XVGdhTk84?=
+ =?utf-8?B?T0t6dVcxb21SNHZFQ3NlUFVYNGp0TStOeGEyTm5RdktGcWtmaHBEbVpEZ2hV?=
+ =?utf-8?B?dm9Tc0FIVTlDOGJrOE1zTnV5RE5YKzlPZ2NZcFBMOCtXSEF0emxjY2M4YmJS?=
+ =?utf-8?B?RHhpVk9neTduOGRIRWRNeTFEem1WVUpqRjE3bWpUdFdwZ2hhRFpVeWpSMU43?=
+ =?utf-8?B?ZXhRQm0waUxXVWdvTExLTGp3YVpyNlBpVTNUMWdwVWhic0J5b0dZV0ZtOEJh?=
+ =?utf-8?B?eTN0bTRDdWIxWE90QXByRURPZXNhcndPNHRwTEhRS0thTVREL2JDaE45WEl1?=
+ =?utf-8?B?djBJNE44TzlmaUxzZnJGNm9kVS8zajR5WWJvcXF6NG43UGg2U0NjTUQxaGF0?=
+ =?utf-8?B?RStvM0xTUlhPbFVDNWN0QWF3cHBUajVSVzdORlZVZ2Nrd0VUY25pdzBUS0pS?=
+ =?utf-8?B?eHBWNGFUcDBQMElFOFppK3p3aVJmWnVuSmhhQ0poaFRMdkw1ODAwckplbzM5?=
+ =?utf-8?B?VkxvRnVQN01vN1NlNy85WkY2ZWYxdzB1eVQwUHpQbTg0MkRUTW1NRnZETk4x?=
+ =?utf-8?B?Q0NMNmpURGUyY2xNK1VyNU1ibHJCL2xSMlN3Tkx2dXF5eWI3bSt6OEJ6emIy?=
+ =?utf-8?B?ajZQSFhkeEtYM1E3Z0g0R1FDUW1MT2hRQnFmSDRVbThOaFlmV1VZeldjRTR6?=
+ =?utf-8?B?UDVRR0h6b0ZhdGswaGpacFpNK2xCMHdQVU1zaVJzMjZTdEVocjJxVU0zM2Y3?=
+ =?utf-8?B?T0xxd1BraVNzd2FvRkRmV2xoaVA5RnFNTmhWdXJHRTA0ckxXUUZXYXJtSkJl?=
+ =?utf-8?B?dDBseTBPbFg5eGJxaEtZY0daTVpYWUg0U0NYVGgxMGt1alRSZVFwSlJNNUds?=
+ =?utf-8?B?UjJxaUdWeTE4NTVidjZDb1FHTkJJZVc3T082VExNOE9WUy9PTFVMMFBFaTln?=
+ =?utf-8?B?eEFIYUJ2THJCcE03WHUyZUlDT1JkL25QZkMzdjdZdzZKYmpTbjdncXNVZHcz?=
+ =?utf-8?B?YXhXWGN5WDFUM3l2RzVKb2h0SWNTVC9YVFVGRFF5QlpJaStGMDFxYnJBc1lU?=
+ =?utf-8?B?YnI3K0Z0TklYVFQvTzNPTDB5T3VOejhDdkJTZzhhMW5acUtSbXRpK3JQTFlU?=
+ =?utf-8?B?S2Q3ZmtsSHlTSXdLV1pNRnZjcllKSzVsYTU1Q3d3Z0M1ck11T3dNNU80enpE?=
+ =?utf-8?B?QUYycm9sRnpNeGhLd1ZFUkEyajFrMVNPaVNQdUpubC85cnlTK2o4ZGxXUzVM?=
+ =?utf-8?B?bFZHR0ZueVEwTURPbXJaWUZIekxFUTZaNzFtclBBa1dMRkttdEhMU2VRc1RF?=
+ =?utf-8?B?RmR0dmJ3eGVhREVTNXlpam85Q2xjUDBMeVJ4RkFQZVp0eHN2WjRNOXhZTys0?=
+ =?utf-8?B?RXNqaGRzNEszOWhsdThoNEtCWWE2NnEwL21oRWVPMXc0MkFKMUxiaVh4VWFa?=
+ =?utf-8?B?V1BDb3AvMzBRPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:84.19.233.75;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edirelay1.ad.cirrus.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(61400799027)(82310400026)(376014);DIR:OUT;SFP:1102;
+X-OriginatorOrg: opensource.cirrus.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 14:34:29.0869
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 03f21567-cfbe-4bbb-58fb-08dd7773a2dd
+X-MS-Exchange-CrossTenant-Id: bec09025-e5bc-40d1-a355-8e955c307de8
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bec09025-e5bc-40d1-a355-8e955c307de8;Ip=[84.19.233.75];Helo=[edirelay1.ad.cirrus.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000EE37.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ4PPFCDF0C5BAF
+X-Proofpoint-ORIG-GUID: THg_YVy9gFdm97SM2c8zZQ7XZeVn5UQv
+X-Proofpoint-GUID: THg_YVy9gFdm97SM2c8zZQ7XZeVn5UQv
+X-Authority-Analysis: v=2.4 cv=A71sP7WG c=1 sm=1 tr=0 ts=67f68579 cx=c_pps a=mEL9+5ifO1KfKUNINL6WGg==:117 a=h1hSm8JtM9GN1ddwPAif2w==:17 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10
+ a=s63m1ICgrNkA:10 a=RWc_ulEos4gA:10 a=mX3FmPPBFbbKS_jtFSwA:9 a=QEXdDO2ut3YA:10 a=BGLuxUZjE2igh1l4FkT-:22
+X-Proofpoint-Spam-Reason: safe
 
-On Wed, 09 Apr 2025 06:33:26 -0700
-syzbot <syzbot+b1a3058aa9ba1555eb89@syzkaller.appspotmail.com> wrote:
+On 09/04/2025 3:24 pm, Mark Brown wrote:
+> On Wed, Apr 09, 2025 at 11:45:44AM +0100, Richard Fitzgerald wrote:
+>> Depend on SND_SOC_CS_AMP_LIB instead of selecting it.
+>>
+>> KUNIT_ALL_TESTS should only build tests for components that are
+>> already being built, it should not cause other stuff to be added
+>> to the build.
+> 
+>>   config SND_SOC_CS_AMP_LIB_TEST
+>> -	tristate "KUnit test for Cirrus Logic cs-amp-lib"
+>> -	depends on KUNIT
+>> +	tristate "KUnit test for Cirrus Logic cs-amp-lib" if !KUNIT_ALL_TESTS
+>> +	depends on SND_SOC_CS_AMP_LIB && KUNIT
+>>   	default KUNIT_ALL_TESTS
+>> -	select SND_SOC_CS_AMP_LIB
+>>   	help
+>>   	  This builds KUnit tests for the Cirrus Logic common
+>>   	  amplifier library.
+> 
+> This by itself results in the Cirrus tests being removed from a kunit
+> --alltests run which is a regression in coverage.  I'd expect to see
+> some corresponding updates in the KUnit all_tests.config to keep them
+> enabled.
 
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    9f867ba24d36 Merge tag '6.15-rc-part2-smb3-client-fixes' o..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=130a423f980000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=b296730575c90b2a
-> dashboard link: https://syzkaller.appspot.com/bug?extid=b1a3058aa9ba1555eb89
-> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-> 
-> Unfortunately, I don't have any reproducer for this issue yet.
-
-Please state you add fault injections! I wasted an hour looking at this bug
-report, and I think it's due to a bug somewhere else that was caused by
-a fault injection. Maybe it's a bug in my code. I have no idea, but it looks
-really weird. And because there's a bunch of fault injections, I'm going
-to not look any further! See below.
-
-> 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/81b34e4e575d/disk-9f867ba2.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/0984745ca43f/vmlinux-9f867ba2.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/5364b23e2846/bzImage-9f867ba2.xz
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+b1a3058aa9ba1555eb89@syzkaller.appspotmail.com
-> 
-> ======================================================
-> WARNING: possible circular locking dependency detected
-> 6.14.0-syzkaller-13408-g9f867ba24d36 #0 Not tainted
-> ------------------------------------------------------
-> syz.2.506/8033 is trying to acquire lock:
-> ffffffff8e2643f0 (cpu_hotplug_lock){++++}-{0:0}, at: ring_buffer_resize+0x7ea/0x1560 kernel/trace/ring_buffer.c:2894
-> 
-> but task is already holding lock:
-> ffff88801b480488 (&buffer->mutex){+.+.}-{4:4}, at: ring_buffer_resize+0x113/0x1560 kernel/trace/ring_buffer.c:2851
-> 
-> which lock already depends on the new lock.
-> 
-> 
-> the existing dependency chain (in reverse order) is:
-> 
-> -> #5 (&buffer->mutex){+.+.}-{4:4}:  
->        __mutex_lock_common kernel/locking/mutex.c:601 [inline]
->        __mutex_lock+0x199/0xb90 kernel/locking/mutex.c:746
->        ring_buffer_map+0x144/0xa40 kernel/trace/ring_buffer.c:7157
->        tracing_buffers_mmap+0x120/0x1c0 kernel/trace/trace.c:8516
->        call_mmap include/linux/fs.h:2243 [inline]
->        mmap_file mm/internal.h:167 [inline]
->        __mmap_new_file_vma mm/vma.c:2310 [inline]
->        __mmap_new_vma mm/vma.c:2374 [inline]
->        __mmap_region+0x1485/0x27c0 mm/vma.c:2476
->        mmap_region+0x1ab/0x3f0 mm/vma.c:2554
->        do_mmap+0xd8e/0x11b0 mm/mmap.c:561
->        vm_mmap_pgoff+0x281/0x450 mm/util.c:579
->        ksys_mmap_pgoff+0x32c/0x5c0 mm/mmap.c:607
->        __do_sys_mmap arch/x86/kernel/sys_x86_64.c:89 [inline]
->        __se_sys_mmap arch/x86/kernel/sys_x86_64.c:82 [inline]
->        __x64_sys_mmap+0x125/0x190 arch/x86/kernel/sys_x86_64.c:82
->        do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
->        do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
->        entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> 
-> -> #4 (&cpu_buffer->mapping_lock){+.+.}-{4:4}:  
->        __mutex_lock_common kernel/locking/mutex.c:601 [inline]
->        __mutex_lock+0x199/0xb90 kernel/locking/mutex.c:746
->        ring_buffer_map+0xdc/0xa40 kernel/trace/ring_buffer.c:7146
->        tracing_buffers_mmap+0x120/0x1c0 kernel/trace/trace.c:8516
->        call_mmap include/linux/fs.h:2243 [inline]
->        mmap_file mm/internal.h:167 [inline]
->        __mmap_new_file_vma mm/vma.c:2310 [inline]
->        __mmap_new_vma mm/vma.c:2374 [inline]
->        __mmap_region+0x1485/0x27c0 mm/vma.c:2476
->        mmap_region+0x1ab/0x3f0 mm/vma.c:2554
->        do_mmap+0xd8e/0x11b0 mm/mmap.c:561
->        vm_mmap_pgoff+0x281/0x450 mm/util.c:579
->        ksys_mmap_pgoff+0x32c/0x5c0 mm/mmap.c:607
->        __do_sys_mmap arch/x86/kernel/sys_x86_64.c:89 [inline]
->        __se_sys_mmap arch/x86/kernel/sys_x86_64.c:82 [inline]
->        __x64_sys_mmap+0x125/0x190 arch/x86/kernel/sys_x86_64.c:82
->        do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
->        do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
->        entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> 
-> -> #3 (&mm->mmap_lock){++++}-{4:4}:  
->        down_read_killable+0x9e/0x4b0 kernel/locking/rwsem.c:1547
->        mmap_read_lock_killable include/linux/mmap_lock.h:193 [inline]
->        get_mmap_lock_carefully mm/memory.c:6355 [inline]
->        lock_mm_and_find_vma+0x3e7/0x6e0 mm/memory.c:6406
->        do_user_addr_fault+0x2ac/0x1370 arch/x86/mm/fault.c:1360
->        handle_page_fault arch/x86/mm/fault.c:1480 [inline]
->        exc_page_fault+0x5c/0xc0 arch/x86/mm/fault.c:1538
->        asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
->        filldir+0x29c/0x5f0 fs/readdir.c:290
->        dir_emit include/linux/fs.h:3861 [inline]
->        kernfs_fop_readdir+0x3d5/0x930 fs/kernfs/dir.c:1907
->        iterate_dir+0x293/0xb40 fs/readdir.c:108
->        __do_sys_getdents fs/readdir.c:322 [inline]
->        __se_sys_getdents fs/readdir.c:308 [inline]
->        __x64_sys_getdents+0x14d/0x2c0 fs/readdir.c:308
->        do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
->        do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
->        entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> 
-> -> #2 (&root->kernfs_rwsem){++++}-{4:4}:  
-
-How is kernfs_rwsem in the lock chain???
-
-My code shouldn't be called at all with that held.
-Did something not release the lock properly due to a fault?
-
-Who knows?
-
-
->        down_write+0x92/0x200 kernel/locking/rwsem.c:1577
->        kernfs_add_one+0x38/0x840 fs/kernfs/dir.c:791
->        kernfs_create_dir_ns+0xfc/0x1a0 fs/kernfs/dir.c:1091
->        internal_create_group+0x34d/0xf30 fs/sysfs/group.c:170
->        cpuhp_invoke_callback+0x3d2/0xa10 kernel/cpu.c:194
->        cpuhp_issue_call+0x1c0/0x980 kernel/cpu.c:2372
->        __cpuhp_setup_state_cpuslocked+0x3a1/0x7b0 kernel/cpu.c:2518
->        __cpuhp_setup_state+0xf4/0x300 kernel/cpu.c:2547
->        do_one_initcall+0x120/0x6e0 init/main.c:1257
->        do_initcall_level init/main.c:1319 [inline]
->        do_initcalls init/main.c:1335 [inline]
->        do_basic_setup init/main.c:1354 [inline]
->        kernel_init_freeable+0x5c2/0x900 init/main.c:1567
->        kernel_init+0x1c/0x2b0 init/main.c:1457
->        ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
->        ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-> 
-> -> #1 (cpuhp_state_mutex){+.+.}-{4:4}:  
-> 
-> -> #0 (cpu_hotplug_lock){++++}-{0:0}:  
-
-I was wondering how cpu_hotplug_lock was at the top of the chain, as that
-would cause all sorts of bugs if that was the case.
-
-But I'm guessing (I don't know) that a fault injection caused a bug
-somewhere to let this happen.
-
-BAH!
-
-I'm going to stop looking at all syzbot reports if this keeps happening.
-
--- Steve
-
-
-
->        check_prev_add kernel/locking/lockdep.c:3166 [inline]
->        check_prevs_add kernel/locking/lockdep.c:3285 [inline]
->        validate_chain kernel/locking/lockdep.c:3909 [inline]
->        __lock_acquire+0x1173/0x1ba0 kernel/locking/lockdep.c:5235
->        lock_acquire kernel/locking/lockdep.c:5866 [inline]
->        lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5823
->        percpu_down_read include/linux/percpu-rwsem.h:52 [inline]
->        cpus_read_lock+0x42/0x160 kernel/cpu.c:490
->        ring_buffer_resize+0x7ea/0x1560 kernel/trace/ring_buffer.c:2894
->        __tracing_resize_ring_buffer.part.0+0x52/0x1f0 kernel/trace/trace.c:5943
->        __tracing_resize_ring_buffer kernel/trace/trace.c:5937 [inline]
->        tracing_update_buffers+0x102/0x130 kernel/trace/trace.c:6168
->        event_pid_write.isra.0+0xf8/0x7c0 kernel/trace/trace_events.c:2415
->        vfs_write+0x25c/0x1180 fs/read_write.c:682
->        ksys_write+0x12a/0x240 fs/read_write.c:736
->        do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
->        do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
->        entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> 
-> other info that might help us debug this:
-> 
-> Chain exists of:
->   cpu_hotplug_lock --> &cpu_buffer->mapping_lock --> &buffer->mutex
-> 
->  Possible unsafe locking scenario:
-> 
->        CPU0                    CPU1
->        ----                    ----
->   lock(&buffer->mutex);
->                                lock(&cpu_buffer->mapping_lock);
->                                lock(&buffer->mutex);
->   rlock(cpu_hotplug_lock);
-> 
->  *** DEADLOCK ***
-> 
-> 4 locks held by syz.2.506/8033:
->  #0: ffff88807cd2a0f8 (&f->f_pos_lock){+.+.}-{4:4}, at: fdget_pos+0x2a2/0x370 fs/file.c:1213
->  #1: ffff888145eba420 (sb_writers#14){.+.+}-{0:0}, at: ksys_write+0x12a/0x240 fs/read_write.c:736
->  #2: ffffffff8e4451a8 (trace_types_lock){+.+.}-{4:4}, at: tracing_update_buffers+0x1e/0x130 kernel/trace/trace.c:6163
->  #3: ffff88801b480488 (&buffer->mutex){+.+.}-{4:4}, at: ring_buffer_resize+0x113/0x1560 kernel/trace/ring_buffer.c:2851
-> 
-> stack backtrace:
-> CPU: 0 UID: 0 PID: 8033 Comm: syz.2.506 Not tainted 6.14.0-syzkaller-13408-g9f867ba24d36 #0 PREEMPT(full) 
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-> Call Trace:
->  <TASK>
->  __dump_stack lib/dump_stack.c:94 [inline]
->  dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
->  print_circular_bug+0x275/0x350 kernel/locking/lockdep.c:2079
->  check_noncircular+0x14c/0x170 kernel/locking/lockdep.c:2211
->  check_prev_add kernel/locking/lockdep.c:3166 [inline]
->  check_prevs_add kernel/locking/lockdep.c:3285 [inline]
->  validate_chain kernel/locking/lockdep.c:3909 [inline]
->  __lock_acquire+0x1173/0x1ba0 kernel/locking/lockdep.c:5235
->  lock_acquire kernel/locking/lockdep.c:5866 [inline]
->  lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5823
->  percpu_down_read include/linux/percpu-rwsem.h:52 [inline]
->  cpus_read_lock+0x42/0x160 kernel/cpu.c:490
->  ring_buffer_resize+0x7ea/0x1560 kernel/trace/ring_buffer.c:2894
->  __tracing_resize_ring_buffer.part.0+0x52/0x1f0 kernel/trace/trace.c:5943
->  __tracing_resize_ring_buffer kernel/trace/trace.c:5937 [inline]
->  tracing_update_buffers+0x102/0x130 kernel/trace/trace.c:6168
->  event_pid_write.isra.0+0xf8/0x7c0 kernel/trace/trace_events.c:2415
->  vfs_write+0x25c/0x1180 fs/read_write.c:682
->  ksys_write+0x12a/0x240 fs/read_write.c:736
->  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
->  do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> RIP: 0033:0x7fb813f8d169
-> Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-> RSP: 002b:00007fb811df6038 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-> RAX: ffffffffffffffda RBX: 00007fb8141a6320 RCX: 00007fb813f8d169
-> RDX: 0000000000000001 RSI: 0000200000001240 RDI: 0000000000000006
-> RBP: 00007fb81400e2a0 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-> R13: 0000000000000000 R14: 00007fb8141a6320 R15: 00007ffde8fb74c8
->  </TASK>
-> 
-> 
-> ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this issue. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> 
-> If the report is already addressed, let syzbot know by replying with:
-> #syz fix: exact-commit-title
-> 
-> If you want to overwrite report's subsystems, reply with:
-> #syz set subsystems: new-subsystem
-> (See the list of subsystem names on the web dashboard)
-> 
-> If the report is a duplicate of another one, reply with:
-> #syz dup: exact-subject-of-another-report
-> 
-> If you want to undo deduplication, reply with:
-> #syz undup
+That's the defined behaviour of KUNIT_ALL_TESTS. It shouldn't have been
+running as part of an alltests if nothing had selected it. That seems to
+make people angry. Probably the same people who would complain if there
+was a bug in the code that they didn't want to test.
 
