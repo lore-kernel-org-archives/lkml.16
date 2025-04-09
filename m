@@ -1,186 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f74.google.com (mail-oo1-f74.google.com [209.85.161.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38C48259C;
-	Wed,  9 Apr 2025 06:10:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30C101D7999
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 06:10:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744179040; cv=none; b=RGeiO8UjOXPOF6PhtqBSlx+bnKOtXzB0dGrqlj4U+lvo/lCioFFKFFUhEWzQPizRCSutlKYuUyqdbuWwwwHpHSKxheSeArfQTbf7Q3gAAJXVFKu8Ou5q+JujdN8MEg0vqc66D6j3Jrx3YOzz9vC1ETNlWm02S4NWarJlJMVwxMo=
+	t=1744179054; cv=none; b=XnCkMPCAy7pt07a9OuW32buEj3vIx+PDGheug16LAaxkTDIrf/nX0t3gNPxSc+hvcIO83qoaXiF6kdGuEWX/2hYUTZWQFklsJO9FvDCo7QjPNzL7GcrxIaLvsn0hCmCLjrc/jiI0DXFMhSGxAUrn/iGEMHAnT960Y0UrHC/E65c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744179040; c=relaxed/simple;
-	bh=fcb3h/TEDOOZlExJ06Sjkb98E+IeGhwQKU9+F/GNFRc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t5QwVntinjB1E/mqVMx9bzE/T4/1xsR4IaJ19iHTnHlYdEyfQPZveR2WtDWJqscb3z9YFuJO4gwG6H2X98B5zW7W+FkQE1/EMkmSswwWU/5RNVAY0TlsJDtt81TWWiQsPlZz1pyin3ezK2OImly/fqEY1e7CQWskq4noxbuGOsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kFjjhB7O; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744179054; c=relaxed/simple;
+	bh=VOlrE0q1Dgt0/ufOq2NjQaIoTeL0CeB1PTgY3Vto+Q4=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=Df063wohLKDVuIXKCNAOS3PcayeZHlcTv2yMpDdX+GTg6P4o1M7IcgOiOlh7wB7KDsuB2K9L2Zd62EeXXzPSc2oY9C4PW1ymxqReiIHvH2m/alNC0XLUMchSzFxWxs9T26xsR2X0pU7LN/ielZ3R8NVk+jptSH1IQdl5mh11xn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KnuFQagS; arc=none smtp.client-ip=209.85.161.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kFjjhB7O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4DC0C4CEE3;
-	Wed,  9 Apr 2025 06:10:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744179039;
-	bh=fcb3h/TEDOOZlExJ06Sjkb98E+IeGhwQKU9+F/GNFRc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kFjjhB7OMiLNGC+dXWbTK4QwnM3o0/d2n/V7LlizQckxrTzu8gDgWExSbNImoTxgw
-	 +/2yFkXEhi1qBJmD5Iy5wKR9hqPXk02fIMeDKR+UxMVukMjcGDcoXo1rIOFPBpb67U
-	 /zF9qaw6zLTuNNv0PXEmQeFBXmlK8Sf6dEG5O17juczTSWlBZiATh3HMtave1QRAlg
-	 QgAsrD4dDCbiZ2KtROtvwJkhkJXjn7UvdvJwpG9byNWJ/Mk3vD6a70LFiOCYv/6b0H
-	 853j53LLyNBPQpi280S3SgSzwkrBaEGO1U/t0yKHetZFNHWIydIJy/AGA567wTGHHV
-	 0D2CVI5CZppAg==
-Message-ID: <7bbe235d-be3a-4851-b9db-c3c9e956a9fd@kernel.org>
-Date: Wed, 9 Apr 2025 08:10:34 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KnuFQagS"
+Received: by mail-oo1-f74.google.com with SMTP id 006d021491bc7-6037a5f0f1bso6384207eaf.3
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Apr 2025 23:10:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744179052; x=1744783852; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=IQysTOtg9Kdj+LrUMGXjnelf/uERWnWmH3sm6GDGrDs=;
+        b=KnuFQagSm5GTyhX1SSFrHZgPcs4q+p0SHHFCyNnt6dfKQjr2xByeUR13qQdNCbwoWd
+         tqWbOj7JDe6BRS84/N+ywKJuT9iiz9aSy0yQaf18D6wUKV2YGpK/uWyFUqBF3TKX11Pg
+         DWssBktP9qb1nSoKHiJ/C05F8TgJ+IjTZIulgpcgybBdwR7Zd0Ne4rQJw8Y+n39RmHCQ
+         YihXqJpu0l7b5E3365IZQtziv4eMF7vafCJjMuv7wBm94TsKEsr93XOD2vXd+kucHPHN
+         pSR6GGOwTdp506ii2kkKXyiPrUj2iECcDXCC2dOS+wpy65LQ30GmTo/+E8XoL2C3zYbc
+         md5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744179052; x=1744783852;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=IQysTOtg9Kdj+LrUMGXjnelf/uERWnWmH3sm6GDGrDs=;
+        b=LeEQXu5WNQZxAfOEonJ716HZRaCAonh91hrhZId+IGryiUvdbna+kX6+0hiCf7OJqq
+         eMzjdvUOwSc0OR9AGabukz+80AiPc0qske0jom78Ae/fk5gV5DpKop1+6VHKgPdZ5mES
+         8zaZINqYeXDkMWhz9zIa+L7/SzBTUz4ryLvpcZAP7K4IarkI90svyrjetYNPo6FcKSXY
+         dP+cg3Gbuy7BqhR6qRI7k2E2Gm3GYWzL7qqLlueA6KFkCnE30N2LfLpYqgakjn04wCVW
+         jOWk9eMWXFbpF9lTRxb5OfYr7vte4MJWjZYkJohyarrbvCY4IhyeXcFX6p3wW5aXShqe
+         jY9g==
+X-Forwarded-Encrypted: i=1; AJvYcCVwYrUR/aeRUKP2hmL285hWK6GCPrLdTQjtG7uX8A030PAwPls0ghxh1LnMoFtaNQAJAjfzRn8ZqgK1m58=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxb0EditNu+c1AgeFSoTnIOeFSDbgLzlGGYOtIgxT+SyMmSk1Pi
+	EST1EJK4tqYC+933J7dEdRyef2zN8VMyFX867XQV6mIdUGg1ThcIefSU+zRszUN3y9z9SdYBx+U
+	q1ePX+g==
+X-Google-Smtp-Source: AGHT+IEQV4QF+BtOk9XKaaDJXmt70/LQ97tjKNA6w7SsotefkMcSscPT06n12/bTAX31grcBsCWOjkz9q7z4
+X-Received: from oabxi11.prod.google.com ([2002:a05:6870:4f0b:b0:2c1:fc56:4d62])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6870:9598:b0:2a7:d856:94a
+ with SMTP id 586e51a60fabf-2d08dded4damr919045fac.22.1744179052187; Tue, 08
+ Apr 2025 23:10:52 -0700 (PDT)
+Date: Tue,  8 Apr 2025 23:10:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/3] i3c: master: Add Qualcomm I3C controller driver
-To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
-Cc: alexandre.belloni@bootlin.com, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, jarkko.nikula@linux.intel.com,
- linux-i3c@lists.infradead.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- andersson@kernel.org, konradybcio@kernel.org
-References: <20250403134644.3935983-1-quic_msavaliy@quicinc.com>
- <20250403134644.3935983-3-quic_msavaliy@quicinc.com>
- <20250404-provocative-mayfly-of-drama-eeddc1@shite>
- <4fe9f898-63bf-4815-a493-23bdee93481e@quicinc.com>
- <e93c50ce-30dd-45ef-b945-019e703bd7c3@kernel.org>
- <6ab62bb9-2758-4a12-aec3-6de9efc3075a@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <6ab62bb9-2758-4a12-aec3-6de9efc3075a@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
+Message-ID: <20250409061043.700792-1-irogers@google.com>
+Subject: [PATCH v4 00/16] Intel TPEBS min/max/mean/last support
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Weilin Wang <weilin.wang@intel.com>, 
+	James Clark <james.clark@linaro.org>, Xu Yang <xu.yang_2@nxp.com>, 
+	John Garry <john.g.garry@oracle.com>, Howard Chu <howardchu95@gmail.com>, 
+	Levi Yun <yeoreum.yun@arm.com>, Dominique Martinet <asmadeus@codewreck.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 09/04/2025 07:48, Mukesh Kumar Savaliya wrote:
-> Hi Krzysztof,
-> 
-> On 4/9/2025 12:11 AM, Krzysztof Kozlowski wrote:
->> On 08/04/2025 15:23, Mukesh Kumar Savaliya wrote:
->>>>> +
->>>>> +static int i3c_geni_runtime_get_mutex_lock(struct geni_i3c_dev *gi3c)
->>>>> +{
->>>>
->>>> You miss sparse/lockdep annotations.
->>>>
->>> This is called in pair only, but to avoid repeated code in caller
->>> functions, we have designed this wrapper.
->>> i3c_geni_runtime_get_mutex_lock()
->>> i3c_geni_runtime_put_mutex_unlock().
->>>
->>> caller function maintains the parity. e.g. geni_i3c_master_priv_xfers().
->>>
->>> Does a comment help here ? Then i can write up to add.
->>
->> I do not see how this is relevant to my comment at all.
->>
-> What i understood is you suspect about lock/unlock imbalance right ?
-> I know that Lockdep annotations will be used to check if locks are 
-> acquired and released in a proper order.
-> 
-> You want me to add below code in both the functions mentioned ?
->      lockdep_assert_held(&gi3c->lock);
-> 
-> What exact sparse/attribute can be added ? I am not sure about that.
+The patches add support to computing the min, max, mean or last
+retirement latency and then using that value as the basis for metrics.
+When values aren't available, support is added to use the retirement
+latency as recorded for an event in the perf json.
 
-I don't think you tried enough.
+Support is added for reading the retirement latency from the forked
+perf command more than once. To avoid killing the process commands are
+sent through the control fd. Some name handling is changed to make it
+more robust.
 
-git grep sparse -- Documentation/
-which gives you the file name, so:
-git grep lock -- Documentation/dev-tools/sparse.rst
+Rather than retirement latency events having issues with perf record,
+make it so that the retirement latency modifier enables sample
+weights.
 
-Use sparse instead of lockdep.
+v4: Don't use json min/max in retirement latency stats as they will
+    never update afterwards. Warn once if json data is used when TPEBS
+    recording was requested.
 
->>>
->>>>> +	int ret;
->>>>> +
->>>>> +	mutex_lock(&gi3c->lock);
->>>>> +	reinit_completion(&gi3c->done);
->>>>> +	ret = pm_runtime_get_sync(gi3c->se.dev);
->>>>> +	if (ret < 0) {
->>>>> +		dev_err(gi3c->se.dev, "error turning on SE resources:%d\n", ret);
->>>>> +		pm_runtime_put_noidle(gi3c->se.dev);
->>>>> +		/* Set device in suspended since resume failed */
->>>>> +		pm_runtime_set_suspended(gi3c->se.dev);
->>>>> +		mutex_unlock(&gi3c->lock);
->>>>
->>>> Either you lock or don't lock, don't mix these up.
->>>>
->>> Caller is taking care of not calling i3c_geni_runtime_put_mutex_unlock()
->>> if this failed.
->>
->>
->> I do not see how this is relevant to my comment at all.
->>
-> same as above
+v3: Two fixes from Kan Liang. Ensure min/max statistics don't vary
+    when real samples are encountered.
 
+v2: Addition of header cleanup patch originally posted:
+    https://lore.kernel.org/lkml/20241210191823.612631-1-irogers@google.com/
+    as there are no arch specific reasons not to build this code.
+    Fix bug in "perf pmu-events: Add retirement latency to JSON events
+    inside of perf" where "t->stats.n != 0" should have been
+    "t->stats.n == 0".
+    Add patch so that perf record of a retirement latency event
+    doesn't crash but instead enables sample weights for the event.
 
->>>>> +		return ret;
->>>>> +	}
->>>>> +
->>>>> +	return 0;
->>>>> +}
->>>>> +
->>>>> +static void i3c_geni_runtime_put_mutex_unlock(struct geni_i3c_dev *gi3c)
->>>>> +{
->>>>
->>>> Missing annotations.
->>>>
->>> Shall i add a comment here ?
->>
->> Do you understand what is sparse? And lockdep?
->>
-> Little but not clear on exact sparse attribute to be added. please help 
-> me. if you can help with some clear comment and sample, will be easier 
-> if you can.
+Ian Rogers (16):
+  perf intel-tpebs: Cleanup header
+  perf intel-tpebs: Simplify tpebs_cmd
+  perf intel-tpebs: Rename tpebs_start to evsel__tpebs_open
+  perf intel-tpebs: Separate evsel__tpebs_prepare out of
+    evsel__tpebs_open
+  perf intel-tpebs: Move cpumap_buf out of evsel__tpebs_open
+  perf intel-tpebs: Reduce scope of tpebs_events_size
+  perf intel-tpebs: Inline get_perf_record_args
+  perf intel-tpebs: Ensure events are opened, factor out finding
+  perf intel-tpebs: Refactor tpebs_results list
+  perf intel-tpebs: Add support for updating counts in evsel__tpebs_read
+  perf intel-tpebs: Add mutex for tpebs_results
+  perf intel-tpebs: Don't close record on read
+  perf intel-tpebs: Use stats for retirement latency statistics
+  perf stat: Add mean, min, max and last --tpebs-mode options
+  perf pmu-events: Add retirement latency to JSON events inside of perf
+  perf record: Retirement latency cleanup in evsel__config
 
-You did not even bother to grep for simple term.
+ tools/perf/Documentation/perf-stat.txt   |   7 +
+ tools/perf/builtin-stat.c                |  29 +-
+ tools/perf/pmu-events/empty-pmu-events.c | 216 +++----
+ tools/perf/pmu-events/jevents.py         |   6 +
+ tools/perf/pmu-events/pmu-events.h       |   3 +
+ tools/perf/util/Build                    |   2 +-
+ tools/perf/util/evlist.c                 |   1 -
+ tools/perf/util/evsel.c                  |  22 +-
+ tools/perf/util/evsel.h                  |   6 +
+ tools/perf/util/intel-tpebs.c            | 682 ++++++++++++++---------
+ tools/perf/util/intel-tpebs.h            |  40 +-
+ tools/perf/util/parse-events.c           |   4 +
+ tools/perf/util/pmu.c                    |  52 +-
+ tools/perf/util/pmu.h                    |   3 +
+ 14 files changed, 666 insertions(+), 407 deletions(-)
 
+-- 
+2.49.0.504.g3bcea36a83-goog
 
-Best regards,
-Krzysztof
