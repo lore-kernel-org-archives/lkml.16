@@ -1,142 +1,141 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55F7719ADA4;
-	Wed,  9 Apr 2025 15:11:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D93A267732
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 15:11:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744211468; cv=none; b=pKVOAyZ1FFxa27Ed+0plt5S7bGY85agw9vuGAoWxtwzLKfQ5qXY1XMWm+M+jMkcmOF1mwlAtyfXjl7WpMI0fyqdqVdJjm0isuyBVLLTUwTjfsxE7/tOEquD+kSaFBo7asLJMhNNe1FIczc3XIKb4Gzx+2ypAX4qcm/ilIVxwopk=
+	t=1744211518; cv=none; b=IAuUU4VyhMLOQYtQMuuKxo1pDeLtItWJ1NqL2t1n4SXy58DBlTe3P2AqX61S2/GgqTZsHMrPMTQg/GcTlLGMINRc/1ENbRMSL4Y6SCqOQS7M1lybC5nDGwl/Hc2ITnISy6T2gJ4MzJ9CSIeZSLMWrcuEltXXgQPJvvKePJ60CQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744211468; c=relaxed/simple;
-	bh=/9MNo/b3aUMSZDOA5cxzOGNwbKfQ6+ukMR7jtjZC6RU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BUkWaulPHjVzqzi/2Bxx0LdmaTq7ThoAp7IZqkkvym2K0j9+xfZGr8Dz6mwbbX+vyWNlG96LKI8t2XlgrCI4xop4MlPCOGpJkzzRlMv7PJdbm3uSCb+pluqoTx5zBDhwAX/mcavY6QOHyd9hDW0+yKhsYIbX8oFeQTHDXcvaCY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=eHbAXIt0; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1744211518; c=relaxed/simple;
+	bh=9zEvmNFlQZZmYfUY7s7s4qVdIjQmXfR0n8TD+iHvIys=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aUh/J0UFQY5/zZRjzt4p5fY8DgMfcDBwMQ527gKzi72BbAOcHAn9D2Fp9XBBDJMtmoISPeoUDTCGzVt/op0Ig/9YjoIgHaRmjLOQRdZNQSIvhQTTCniuCnU/C5aQvkiLMBmM/PiJrgydOnJ4PGnptpO6l5ZFBe5Z+BAjFqP/giY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uqd/k6WG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="eHbAXIt0"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 73E85442C9;
-	Wed,  9 Apr 2025 15:11:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744211462;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7ItW3vIShknOIc1VpsRjD/4TB14rmx7VFYiWFY7Boh0=;
-	b=eHbAXIt0rXPJr6xrZCtPWry/QZ5KgBztqYxtAaUATqrBOIR8PIh1RqdEv+Zk10dcKAxTV3
-	zN6epN90bTiZHzMdlkZXtPXM896b7GQS7p2kWcob4udD3+Rrrk7Sr7Ec/J6zsWrC4ssRvf
-	9XK/GLCt3Im7eWVDQAFU5KiCs1hlvFV73lMuyyQiThQmnbQ5VjRwdiMJho0kgs+51asBqY
-	671w+/pUL6co9kHCONtz7gA9wCsnOIFsNtf8zZEErR4el2XLmbIlwQQw4rz/baHPSlEgov
-	+OYg50cu4RG+LTYc+mRbMfmW2ByEY0iJsMUGhIgbynpjYEQKb8IEDKMfG5sGMg==
-Date: Wed, 9 Apr 2025 17:10:55 +0200
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>, Andrew Lunn
- <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Marek =?UTF-8?B?QmVo?=
- =?UTF-8?B?w7pu?= <kabel@kernel.org>, Richard Cochran
- <richardcochran@gmail.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, Vladimir Oltean <vladimir.oltean@nxp.com>
-Subject: Re: [PATCH net-next v2 0/2] Add Marvell PHY PTP support
-Message-ID: <20250409171055.43e51012@fedora.home>
-In-Reply-To: <20250409164920.5fbc3fd1@kmaincent-XPS-13-7390>
-References: <20250407-feature_marvell_ptp-v2-0-a297d3214846@bootlin.com>
-	<Z_P3FKEhv1s0y4d7@shell.armlinux.org.uk>
-	<20250407182028.75531758@kmaincent-XPS-13-7390>
-	<Z_P-K7mEEH6ProlC@shell.armlinux.org.uk>
-	<20250407183914.4ec135c8@kmaincent-XPS-13-7390>
-	<Z_WJO9g5Al1Yr_LX@shell.armlinux.org.uk>
-	<20250409103130.43ab4179@kmaincent-XPS-13-7390>
-	<Z_Yxb6-qclDSWk01@shell.armlinux.org.uk>
-	<20250409104637.37301e01@kmaincent-XPS-13-7390>
-	<Z_Y-ENUiX_nrR7VY@shell.armlinux.org.uk>
-	<20250409142309.45cdd62f@kmaincent-XPS-13-7390>
-	<20250409144654.67fae016@fedora.home>
-	<20250409164920.5fbc3fd1@kmaincent-XPS-13-7390>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uqd/k6WG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FD55C4CEE2;
+	Wed,  9 Apr 2025 15:11:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744211517;
+	bh=9zEvmNFlQZZmYfUY7s7s4qVdIjQmXfR0n8TD+iHvIys=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Uqd/k6WGDY2YY9TkGdFJSudBsy9nQNK4bhZusAwhojB5RwFEq/RwRwntqDMjfDFLq
+	 n7YxZQDPx55+eLK8hnuz/FELuyfplqqc5WOQWSBbhea6Spmsj+kQNNiv4gvL6CC4ZU
+	 jg9GbZCW0jDtHOGFmEQgUKrRiR8buCsYo7OHn10kTNgwgu0GVT7U1ZBXcPqfrPlcBR
+	 uq5okBHT2RQbeAFVhOAeCin9gguV7Ou+Df4MITb0aU3NTQkgbWHv7nzjbLB2r/pbIi
+	 x8GJzPNlfuQBSoprLTKg/e15SYA1DEObikyKi/PcKepz5vUBacFJ90Bn8U11VvbB5b
+	 35KoK/oyM4qbA==
+Date: Wed, 9 Apr 2025 17:11:55 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+	kernel@collabora.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 08/15] drm/tests: hdmi: Add macros to simplify EDID
+ setup
+Message-ID: <20250409-ubiquitous-amethyst-trogon-bbb3cf@houat>
+References: <20250326-hdmi-conn-yuv-v3-0-294d3ebbb4b2@collabora.com>
+ <20250326-hdmi-conn-yuv-v3-8-294d3ebbb4b2@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdeifedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeevledtvdevueehhfevhfelhfekveeftdfgiedufeffieeltddtgfefuefhueeknecukfhppedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjedphhgvlhhopehfvgguohhrrgdrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudegpdhrtghpthhtohepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrt
- ghhpdhrtghpthhtohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhm
-X-GND-Sasl: maxime.chevallier@bootlin.com
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="5lzskk4kxc2hm5gh"
+Content-Disposition: inline
+In-Reply-To: <20250326-hdmi-conn-yuv-v3-8-294d3ebbb4b2@collabora.com>
 
-On Wed, 9 Apr 2025 16:49:20 +0200
-Kory Maincent <kory.maincent@bootlin.com> wrote:
 
-> On Wed, 9 Apr 2025 14:46:54 +0200
-> Maxime Chevallier <maxime.chevallier@bootlin.com> wrote:
-> 
-> > On Wed, 9 Apr 2025 14:23:09 +0200
-> > Kory Maincent <kory.maincent@bootlin.com> wrote:
-> >   
-> > > On Wed, 9 Apr 2025 10:29:52 +0100
-> > > "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
-> > >     
-> > > > On Wed, Apr 09, 2025 at 10:46:37AM +0200, Kory Maincent wrote:      
-> >  [...]    
-> > >     
-> >  [...]  
-> >  [...]    
-> > > > 
-> > > > How do I know that from the output? Nothing in the output appears to
-> > > > tells me which PTP implementation will be used.
-> > > > 
-> > > > Maybe you have some understanding that makes this obvious that I don't
-> > > > have.      
-> > > 
-> > > You are right there is no report of the PTP source device info in ethtool.
-> > > With all the design change of the PTP series this has not made through my
-> > > brain that we lost this information along the way.
-> > > 
-> > > You can still know the source like that but that's not the best.
-> > > # ls -l /sys/class/ptp
-> > > 
-> > > It will be easy to add the source name support in netlink but which names
-> > > are better report to the user?
-> > > - dev_name of the netdev->dev and phydev->mdio.dev?
-> > >   Maybe not the best naming for the phy PTP source
-> > >   (ff0d0000.ethernet-ffffffff:01)
-> > > - "PHY" + the PHY ID and "MAC" string?    
-> > 
-> > How about an enum instead of a string indicating the device type, and if
-> > PHY, the phy_index ? (phy ID has another meaning :) )  
-> 
-> This will raise the same question I faced during the ptp series mainline
-> process. In Linux, the PTP is managed through netdev or phylib API.
-> In case of a NIC all is managed through netdev. So if a NIC has a PTP at the PHY
-> layer how should we report that? As MAC PTP because it goes thought netdev, as
-> PHY PTP but without phyindex?
+--5lzskk4kxc2hm5gh
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 08/15] drm/tests: hdmi: Add macros to simplify EDID
+ setup
+MIME-Version: 1.0
 
-Are you referring to the case where the PHY is transparently handled by
-the MAC driver (i.e. controlled through a firmware of some sort) ?
+On Wed, Mar 26, 2025 at 12:19:57PM +0200, Cristian Ciocaltea wrote:
+> Introduce a few macros to facilitate setting custom (i.e. non-default)
+> EDID data during connector initialization.
+>=20
+> The actual conversion to use the new helpers is handled separately.
+>=20
+> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+> ---
+>  drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c | 43 +++++++++++-----=
+------
+>  1 file changed, 21 insertions(+), 22 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c b/drivers=
+/gpu/drm/tests/drm_hdmi_state_helper_test.c
+> index 7ffd666753b10bc991894e238206a3c5328d0e23..bcbd146fb655f4402529e59af=
+09c99dbae7be0bf 100644
+> --- a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
+> +++ b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
+> @@ -140,10 +140,12 @@ static const struct drm_connector_funcs dummy_conne=
+ctor_funcs =3D {
+> =20
+>  static
+>  struct drm_atomic_helper_connector_hdmi_priv *
+> -drm_kunit_helper_connector_hdmi_init_funcs(struct kunit *test,
+> -					   unsigned int formats,
+> -					   unsigned int max_bpc,
+> -					   const struct drm_connector_hdmi_funcs *hdmi_funcs)
+> +connector_hdmi_init_with_edid_funcs(struct kunit *test,
+> +				    unsigned int formats,
+> +				    unsigned int max_bpc,
+> +				    const struct drm_connector_hdmi_funcs *hdmi_funcs,
+> +				    const char *edid_data,
+> +				    size_t edid_len)
+>  {
+>  	struct drm_atomic_helper_connector_hdmi_priv *priv;
+>  	struct drm_connector *conn;
+> @@ -197,30 +199,27 @@ drm_kunit_helper_connector_hdmi_init_funcs(struct k=
+unit *test,
+> =20
+>  	drm_mode_config_reset(drm);
+> =20
+> +	if (edid_data && edid_len) {
+> +		ret =3D set_connector_edid(test, &priv->connector, edid_data, edid_len=
+);
+> +		KUNIT_ASSERT_GT(test, ret, 0);
+> +	}
+> +
+>  	return priv;
+>  }
+> =20
+> -static
+> -struct drm_atomic_helper_connector_hdmi_priv *
+> -drm_kunit_helper_connector_hdmi_init(struct kunit *test,
+> -				     unsigned int formats,
+> -				     unsigned int max_bpc)
+> -{
+> -	struct drm_atomic_helper_connector_hdmi_priv *priv;
+> -	int ret;
+> +#define drm_kunit_helper_connector_hdmi_init_funcs(test, formats, max_bp=
+c, funcs)		\
+> +	connector_hdmi_init_with_edid_funcs(test, formats, max_bpc, funcs, NULL=
+, 0)
 
-In such case, how do you even know that timestamping is done in a PHY,
-as the kernel doesn't know the PHY even exists ? The
-HWTSTAMP_SOURCE_XXX enum either says it's from PHYLIB or NETDEV. As
-PHYs handled by firmwares don't go through phylib, I'd say reporting
-"PHY with no index" won't be accurate.
-
-In such case I'd probably expect the NIC driver to register several
-hwtstamp_provider with different qualifiers
-
-> That's why maybe using netlink string could assure we won't have UAPI breakage
-> in the future due to weird cases.
-> What do you think?
-
-Well I'd say this is the same for enums, nothing prevents you from
-adding more values to your enum ?
+Again, we don't need that one. All current users would actually use
+drm_kunit_helper_connector_hdmi_init_with_edid_funcs().
 
 Maxime
+
+--5lzskk4kxc2hm5gh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZ/aOOgAKCRDj7w1vZxhR
+xdhZAQC2LBoDd/fH5aNs4u8Ya9lcI1PiTisit5ZjnQvPOmHlgQEAjracjEHWyXkC
+uTkpjHqU0kwHuF1xfWwfwvuEXkMgkgg=
+=Tpyq
+-----END PGP SIGNATURE-----
+
+--5lzskk4kxc2hm5gh--
