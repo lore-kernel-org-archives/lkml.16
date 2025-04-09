@@ -1,137 +1,99 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 153A81DC994;
-	Wed,  9 Apr 2025 02:27:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744165662; cv=none; b=ehupHxcX7pQYt6S7hiTV5xGlkXmctzcdn1Ks3Ko7AJVXne7jUIm8SfeN1tD0y8DxI8ZwdKyuGBRhfTzlMxzrWdeB2ADdm2WpVYbGuQHfqVJB2yBceH7NDAboTTj9Spkr/Hcm71QbaBqSfk+h2s//2AtKzl6pnsXaEAzhdpm6rVU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744165662; c=relaxed/simple;
-	bh=vTERchSMbPXnDXvIUDxNM8KwP6K9+Qg2yc85dcqrmyc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=Ym+V1Q0CFE6Fj6ZloTVkbS6h8X6P/TXxEYQBolF2FOWYCR32WLYWeKPFBrBstzJol17SP2qBvIIh+tgFyLUHeZzc32+srDpLE+Pqm7ld6MlK8u+EPvAMgqBGKa0zzK2zt7vSedg+I1X+2fxqWWBnWfw6M7PyldghSbiT1nB4+eI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=NUPHQ1cV; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B96331A8F84;
+	Wed,  9 Apr 2025 02:27:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744165670; cv=pass; b=YIJiba+WYgi7Xd6cAR/iZ7QPNHu3Bh8sYNTfpnDAkdFQ2IfA8l/WzJj872ibybiwnfQZA/vxmsxU0InKAFnrezawYt7jl5ltBnImdemKOezZuWShckv5wGe50W8mN1lyGgQ27Ks1bin9Fts3Wj5cXhtJxTM2ll31hZsGOafMclc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744165670; c=relaxed/simple;
+	bh=9dE9l6ezM0YNa4uq1onv3rHxkvBHGh+DgnDSfgpw6+Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gXnN4QdkDR0yCp1po3JRAeu2ZZauUE59d0Vr4LG/dTIwOGFi5fkfkFW8lj5VGInJrYMm8XcRjwIuFvyGaKntJqPTEn2/lkd44yWvBsgrDIBYifI1FawTTkf1JNi/vACoAfedpcniAITOqRt1aYKarS3AGC7vIlDxgN+KF0IYiQ0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=Or1jbU+w; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="NUPHQ1cV"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 538JYuC1002276;
-	Wed, 9 Apr 2025 02:27:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	kblOBgep6gQ5/QGu8qfiBTUh3VUI/YUVbJDl1VsbaF8=; b=NUPHQ1cVt6cOqski
-	BiDzH2Mw5rxRSCAx4eJPGS41LEZoOxrRFzzhh8SHG9UC+aFGXCg5XIsXdtlV8j9C
-	7q0rlrr/5alnZwClxyv122ECRuqdfLWWdwJjFkt+7rl+IdLWDJgesuUdnlv/ahUQ
-	4wayPA/Czqsmk6nCMRYKVjYt8e8BbbaL6q0R9POicQ/3nCk5uz/E+rLu78MhIUEa
-	p2HT3rm8J3GlARjKYy+p2wSBCvVHkbNg7GEy3KH4lSJM+mQNoqhat/q7e67m7N6z
-	v5OGY5RkE8Kx68tZ8P0qliAuCmisLUQRHq+amHc0iuypt8vNegpffdn5jsStxwZp
-	A+KJIw==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twc1hp8n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 09 Apr 2025 02:27:30 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5392RTLV024671
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 9 Apr 2025 02:27:29 GMT
-Received: from [127.0.1.1] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 8 Apr 2025
- 19:27:27 -0700
-From: Baochen Qiang <quic_bqiang@quicinc.com>
-Date: Wed, 9 Apr 2025 10:26:42 +0800
-Subject: [PATCH ath-next v2 9/9] wifi: ath12k: support 2 channels for
- single pdev device
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="Or1jbU+w"
+ARC-Seal: i=1; a=rsa-sha256; t=1744165654; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=lzPQwfYADmOkHyLAJnOSsaykEs0QWX6pT4BMApK1abHQpn/GEWgTE3b6YUgRLUFHlgxXO0yo3uRV718q7Rqi4xRgK569r8J7ijeilnPP3CezxygWbBbVzGVjMGjP7sh9691mu2sldWBVY1NV720W+4ao3v7CZ8w8WCI2jdAkkoE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1744165654; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=vZv4Eq5lF81LEzsG4V0s6zDPG3V9wW/vSpxZUku0jWY=; 
+	b=Y5d6HnZiUqHReEAgYgPltGqI+f9KZvk4LzzEfRDZugO3F7CKa+jBXRoBKKAH+hVkyClaid8BKsuMOEwmO6gp+PsTKlWlz8m6rVSOpkI0Q00HXZclGNwUM7xv2pGQv+NWrBeIEc0+TdoJEGfVeyWnJaO6RvBmI7d3K3Q53AEcXAI=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1744165654;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=vZv4Eq5lF81LEzsG4V0s6zDPG3V9wW/vSpxZUku0jWY=;
+	b=Or1jbU+wr2oi7ynItENXROqTauGnTGrkCy8+rGUWOiUZd+74AiJHwpfK7YkEtTZK
+	fdmbYcvihjNqK3aLqxqg3Dl42M6acFJMSb1NXi+axxXkeZPkRT7rml9BDWWOLI56YJP
+	ba9LO3n0zylUcMALHOy9OtZKK2mbfVadFQYzZIXE=
+Received: by mx.zohomail.com with SMTPS id 1744165650962337.66983751874034;
+	Tue, 8 Apr 2025 19:27:30 -0700 (PDT)
+Message-ID: <5a0c0846-1fad-4f46-a5d0-699d2407d266@zohomail.com>
+Date: Wed, 9 Apr 2025 10:27:28 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] cxl/feature: Update rpc_out in set feature failure
+ case
+To: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ dan.j.williams@intel.com
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250409021234.509565-1-ming.li@zohomail.com>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <20250409021234.509565-1-ming.li@zohomail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250409-ath12k-wcn7850-mlo-support-v2-9-3801132ca2c3@quicinc.com>
-References: <20250409-ath12k-wcn7850-mlo-support-v2-0-3801132ca2c3@quicinc.com>
-In-Reply-To: <20250409-ath12k-wcn7850-mlo-support-v2-0-3801132ca2c3@quicinc.com>
-To: Johannes Berg <johannes@sipsolutions.net>,
-        Jeff Johnson
-	<jjohnson@kernel.org>
-CC: <linux-wireless@vger.kernel.org>, <ath12k@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Baochen Qiang <quic_bqiang@quicinc.com>
-X-Mailer: b4 0.14.2
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: auX4VBG--qoT2tspE2mw4xa-Iyx4fb-q
-X-Authority-Analysis: v=2.4 cv=KtdN2XWN c=1 sm=1 tr=0 ts=67f5db12 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=TnHeXv7htJ03pNrsuFYA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: auX4VBG--qoT2tspE2mw4xa-Iyx4fb-q
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-09_01,2025-04-08_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
- priorityscore=1501 phishscore=0 bulkscore=0 suspectscore=0 spamscore=0
- malwarescore=0 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=857 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504090002
+Feedback-ID: rr0801122761dc8a8894c860bc5c7321500000e3aa4de60c445508d422e356d8cf0c6ff5843be81d350a0821:zu08011227125125597e93b232d22f4e870000bbe7fc134bd2a6fae4c921204f6c4a8d332423d1ad12bf1b61:rf0801122d96b98ebdb33302ad727520ad0000ad9fd2668e472395eb1a1b0ec9229c3164fee009129279a9b03d8f31e95951:ZohoMail
+X-ZohoMailClient: External
 
-For single pdev device, radio number of a device is forced as 1 in
-ath12k_wmi_ext_soc_hal_reg_caps_parse(). This leads to ah->num_radio == 1
-and then in ath12k_mac_setup_iface_combinations() we report to
-mac/cfg80211 that only 1 channel is supported. In MLO case, it finally
-results in failing to bring up the second link as it is in another
-channel.
+On 4/9/2025 10:12 AM, Li Ming wrote:
+> CXL subsystem supports userspace to configure component features via
+> fwctl interface, it will configure features by using Set Feature
+> command. Whatever Set Feature succeeds or fails, CXL subsystem always
+> needs to return a structure fwctl_rpc_cxl_out to caller, and returned
+> size is updated in a rpc_out parameter. The rpc_out is only updated in
+> success case at this moment, it should also be updated in failure cases.
+>
+> Signed-off-by: Li Ming <ming.li@zohomail.com>
+> ---
+>  drivers/cxl/core/features.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
+> index fcc624cefe89..63f24f032209 100644
+> --- a/drivers/cxl/core/features.c
+> +++ b/drivers/cxl/core/features.c
+> @@ -540,13 +540,13 @@ static void *cxlctl_set_feature(struct cxl_features_state *cxlfs,
+>  	rc = cxl_set_feature(cxl_mbox, &feat_in->uuid,
+>  			     feat_in->version, feat_in->feat_data,
+>  			     data_size, flags, offset, &return_code);
+> +	*out_len = sizeof(*rpc_out);
+>  	if (rc) {
+>  		rpc_out->retval = return_code;
+>  		return no_free_ptr(rpc_out);
+>  	}
+>  
+>  	rpc_out->retval = CXL_MBOX_CMD_RC_SUCCESS;
+> -	*out_len = sizeof(*rpc_out);
+>  
+>  	return no_free_ptr(rpc_out);
+>  }
 
-Change num_different_channels to 2 to allow a second link. Since DFS on
-multiple channels are not supported yet, remove radar_detect_widths.
+Sorry, please ignore this patch, Wrong description in changelog, already send out v2 for review.
 
-For now WCN7850 is the only single pdev device, so others should not be
-affected.
 
-Tested-on: WCN7850 hw2.0 PCI WLAN.HMT.1.0.c5-00481-QCAHMTSWPL_V1.0_V2.0_SILICONZ-3
-Tested-on: WCN7850 hw2.0 PCI WLAN.HMT.1.1.c5-00284-QCAHMTSWPL_V1.0_V2.0_SILICONZ-1
-Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.3.1-00209-QCAHKSWPL_SILICONZ-1
-
-Signed-off-by: Baochen Qiang <quic_bqiang@quicinc.com>
----
- drivers/net/wireless/ath/ath12k/mac.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/net/wireless/ath/ath12k/mac.c b/drivers/net/wireless/ath/ath12k/mac.c
-index 699772a471f5f81c42009b529e756fa75bca0779..ac15527571dda60c69c898488ee06a21aa635163 100644
---- a/drivers/net/wireless/ath/ath12k/mac.c
-+++ b/drivers/net/wireless/ath/ath12k/mac.c
-@@ -11082,13 +11082,18 @@ ath12k_mac_setup_radio_iface_comb(struct ath12k *ar,
- 	comb[0].limits = limits;
- 	comb[0].n_limits = n_limits;
- 	comb[0].max_interfaces = max_interfaces;
--	comb[0].num_different_channels = 1;
- 	comb[0].beacon_int_infra_match = true;
- 	comb[0].beacon_int_min_gcd = 100;
--	comb[0].radar_detect_widths = BIT(NL80211_CHAN_WIDTH_20_NOHT) |
--					BIT(NL80211_CHAN_WIDTH_20) |
--					BIT(NL80211_CHAN_WIDTH_40) |
--					BIT(NL80211_CHAN_WIDTH_80);
-+
-+	if (ar->ab->hw_params->single_pdev_only) {
-+		comb[0].num_different_channels = 2;
-+	} else {
-+		comb[0].num_different_channels = 1;
-+		comb[0].radar_detect_widths = BIT(NL80211_CHAN_WIDTH_20_NOHT) |
-+						BIT(NL80211_CHAN_WIDTH_20) |
-+						BIT(NL80211_CHAN_WIDTH_40) |
-+						BIT(NL80211_CHAN_WIDTH_80);
-+	}
- 
- 	return 0;
- }
-
--- 
-2.25.1
+Ming
 
