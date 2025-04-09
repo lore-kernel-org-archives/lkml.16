@@ -1,105 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 547581B81DC;
-	Wed,  9 Apr 2025 06:44:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B20C41DF754;
+	Wed,  9 Apr 2025 06:44:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744181080; cv=none; b=grctfgFoVHdas3BdD6OP98+LsPYRoClow7zXbqiEuziUg8R8t/Yhi/C30d0L0XMOnFNdp9FtAHbNMWqK+o7PcqXPEcRDMbRRvoSMCTCHie0Got/pj8qyZRTDtb7VdjsMZXt9TTC1XUq1NRA6+9bV0SlQ8dMro7a+odCu5+E69ac=
+	t=1744181080; cv=none; b=E9r/W+R3qlE+jQehYpVk9DjqAWuIqDLd+MGk07rnellV+EJ/Kdn59rR+ZKNQsYfYU0RIWfJL0G+Hd8b2Opfc0vLGqSMdwILjMjya6PQpfs//Vlmkrdn0OWoV+AVMaYt5kLfcRVxt28TFMXvmfAmenj1xsAAOTYAdltj/keY3/4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744181080; c=relaxed/simple;
-	bh=ALBnrSfHV8g4GMuPHWFFLTfPQLBL6JiGSf0XrqgvB2w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QfSXjDLyH7ga69BqDB9EoNndzi+4VCSeedmVT9WulagWIRuaMz4SiUeG+LhjndsWv5AFoyy7tU0OVLof2Z1BCcXAxchqQOv6x0/bnSzMt83AibBEc/TYW7QoavPRQ1L44qHj8ew+1MQLWxWQut4WQoUsl7iRyaGRl5mKGpR8M6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FHRhJMKx; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	bh=lx79xXxH6GOrl4WzKVzUy96oNnBRN75bro9H4eKfU24=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ISyuV1+GystQnc0VIztTRkSPwQOJjzYZ+D+0PtoRJfhIoVdVsMlQPnSTJecfPVrjaaWfKsMglY8VaUe7D1MHFDcgfF1Wh0owPJCJaUyfdvWufUWg0T14nq18YQ2qVhDNH2DiDurnHbxWKZhx6UvnDOUeixWvqKxhB2ytBbECKwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BIrP9QB2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FHRhJMKx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744181078; x=1775717078;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ALBnrSfHV8g4GMuPHWFFLTfPQLBL6JiGSf0XrqgvB2w=;
-  b=FHRhJMKxJc1ablkHMeGxiAnVmhFs5e5C60EX5t6jEDrNngF62wCBDqJm
-   pa5bixfNHZyD+g+JB09d+3WGqExdayQs2oW7lttxoCeqwIec/6tezANfO
-   d6nunvQbnk8aOJpnreKXYsRE1u1DIXg60yThWcS7vrHvRQMQlQBoubZbi
-   BtjuyYJr/2lDimEW/PcGub2zIHRhEQnWlGc18paVbOQrRtVzL3B0CcG5Z
-   Dsh60NRgV+a14VJT5pd+dxOhylH7TMsaHkDL0nDsfw5z0gP9iLFI7v3ra
-   pqVy8IFGreHyiEfV8D7sRxe63E5nOoBvPXJol7JX81CQnDSM+tGYY2qJG
-   g==;
-X-CSE-ConnectionGUID: yO+mWpBWSZOh9bmZeHmr7A==
-X-CSE-MsgGUID: cpcK/FvcSQuDrSuBMHhLNQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11397"; a="44782354"
-X-IronPort-AV: E=Sophos;i="6.15,200,1739865600"; 
-   d="scan'208";a="44782354"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 23:44:37 -0700
-X-CSE-ConnectionGUID: b/FVb1UPT6qv4CdqTE5qLA==
-X-CSE-MsgGUID: ZiQndo1+TFuqri8K0Hg3cA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,200,1739865600"; 
-   d="scan'208";a="165726005"
-Received: from mev-dev.igk.intel.com ([10.237.112.144])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 23:44:35 -0700
-Date: Wed, 9 Apr 2025 08:44:19 +0200
-From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-To: Abdun Nihaal <abdun.nihaal@gmail.com>
-Cc: shannon.nelson@amd.com, brett.creeley@amd.com, andrew+netdev@lunn.ch,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] pds_core: fix memory leak in
- pdsc_debugfs_add_qcq()
-Message-ID: <Z/YXQ7N2lCQxCn0L@mev-dev.igk.intel.com>
-References: <20250409054450.48606-1-abdun.nihaal@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BIrP9QB2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A52CBC4CEE3;
+	Wed,  9 Apr 2025 06:44:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744181080;
+	bh=lx79xXxH6GOrl4WzKVzUy96oNnBRN75bro9H4eKfU24=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=BIrP9QB2EHhgMf/6UGeMoMlrLGzM4f39k39GxdrLNWcJbFQ+hTFt1q1FQNyWjQs6V
+	 1nn6inn293FLaj+W0GuoFbst48hsqTNi2gA+DArFuJqhaiFczcy3RIbXz3JaP/kwc+
+	 j4aJ4crKwNk4lA2V+OSKHVRT/unFFfYoobf8jUUak6xxNgopoxt41jniFjN5Hilw7G
+	 v/q8JYht4njbputwYek2S4Rd/tTFtWg7TbdBBYJgThlsJ2rrWfd3y60qEPpbLnqmTT
+	 4dcCgL4Yu8Pi6Yxp62gywCtB2NgbBc6N4oODNoNftOiToJO/6TUqv5LPaXCIginm7L
+	 yM8lTZbfzZioA==
+Message-ID: <40b87fa6-52b2-435c-9ddc-69585d8ae89d@kernel.org>
+Date: Wed, 9 Apr 2025 08:44:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250409054450.48606-1-abdun.nihaal@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 03/15] dt-bindings: display: renesas,rzg2l-du: Add
+ support for RZ/V2H(P) SoC
+To: Prabhakar <prabhakar.csengg@gmail.com>,
+ Andrzej Hajda <andrzej.hajda@intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Biju Das <biju.das.jz@bp.renesas.com>,
+ Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
+ Magnus Damm <magnus.damm@gmail.com>, dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+Cc: linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+ Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>,
+ Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20250408200916.93793-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250408200916.93793-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <20250408200916.93793-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 09, 2025 at 11:14:48AM +0530, Abdun Nihaal wrote:
-> The memory allocated for intr_ctrl_regset, which is passed to
-> debugfs_create_regset32() may not be cleaned up when the driver is
-> removed. Fix that by using device managed allocation for it.
+On 08/04/2025 22:09, Prabhakar wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > 
-> Fixes: 45d76f492938 ("pds_core: set up device and adminq")
-> Signed-off-by: Abdun Nihaal <abdun.nihaal@gmail.com>
-> ---
->  drivers/net/ethernet/amd/pds_core/debugfs.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+> The DU block on the RZ/V2H(P) SoC is identical to the one found on the
+> RZ/G2L SoC. However, it only supports the DSI interface, whereas the
+> RZ/G2L supports both DSI and DPI interfaces.
 > 
-> diff --git a/drivers/net/ethernet/amd/pds_core/debugfs.c b/drivers/net/ethernet/amd/pds_core/debugfs.c
-> index ac37a4e738ae..04c5e3abd8d7 100644
-> --- a/drivers/net/ethernet/amd/pds_core/debugfs.c
-> +++ b/drivers/net/ethernet/amd/pds_core/debugfs.c
-> @@ -154,8 +154,9 @@ void pdsc_debugfs_add_qcq(struct pdsc *pdsc, struct pdsc_qcq *qcq)
->  		debugfs_create_u32("index", 0400, intr_dentry, &intr->index);
->  		debugfs_create_u32("vector", 0400, intr_dentry, &intr->vector);
->  
-> -		intr_ctrl_regset = kzalloc(sizeof(*intr_ctrl_regset),
-> -					   GFP_KERNEL);
-> +		intr_ctrl_regset = devm_kzalloc(pdsc->dev,
-> +						sizeof(*intr_ctrl_regset),
-> +						GFP_KERNEL);
->  		if (!intr_ctrl_regset)
->  			return;
->  		intr_ctrl_regset->regs = intr_ctrl_regs;
+> Due to this difference, a SoC-specific compatible string
+> 'renesas,r9a09g057-du' is added for the RZ/V2H(P) SoC.
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-In ionic driver it is also devm_ version, thanks for catching that.
-Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
 
-For future submission remember to set correct target (net instead of
-net-next as it is a fix)
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Thanks,
-Michal
-
-> -- 
-> 2.47.2
+Best regards,
+Krzysztof
