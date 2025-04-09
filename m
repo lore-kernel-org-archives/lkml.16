@@ -1,327 +1,149 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FCAF1B0F19;
-	Wed,  9 Apr 2025 21:33:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69B211B0F19
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 21:34:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744234425; cv=none; b=beWrhvunm2eR4DYaaaERa2N+e+HMlwat6NLvYC/er9eK924f1ASKTwdpYZFxG2eX64zWLszW2/vmbKO/8h5bGMXQEoxHtYYuEtj2Qj8J6xlFvL9mIBZ/SwOuQZVtYi0esG1KBdqOpE+6WD1FzVf6g75rbnLNIqhTkA8IJea95fU=
+	t=1744234451; cv=none; b=AMAlBieuD5JhA+c6n2619mFTbhGDFo2aGfg4cfyF5p2V8cyfu6iKC2BNh/iCJQSV/AnaG/g+/DQw9VYrgQDbh6fKvTZd4o9IHQ1NlbosQrMrq80IhyKGFogNsZHjlIi9Rd+h42SxwlFtR2psY7O06PcSNknnmHWLqXPlH1yf2Q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744234425; c=relaxed/simple;
-	bh=JdOn39X3FNu5JSNLrDhPgDNrzrELPoHZNHqg7GCpsxw=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=JILPjIUClmafkrUe46aozSUVwq7sZ2RHbx0reT3YeB9QmYe+zQjh9SAteIvdKKgi7vQgjsFbNwSSRrreX/VJ1FrtmUxUGoP4D+XVtETe9T/HAQpCLLNDPbLqrg8S0XOy13nGAUUBu58M4EOExi7+hsdit7D5fe+j/3OWP4eVJ0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=M/PjdmfE; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ja4+R7Su; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744234451; c=relaxed/simple;
+	bh=a48WLQkkP4gWo/eLBpfCmDza6nZ39Kc1DDQYC5pcMAg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J/gOpor2NnW8sQJYQLd6+0dCKks1Y4YdjDqijOYa6g1vNFKrtyZcnI5BV0yc4Ih2ZbzafVL3RTUfpDns26qcu22jpSI9KGuzdQJz3+X0v6J5ZRZLEiC4/Xr6w0flObM3oQrZigm4Eh8SzpDhzpE50WMoVLmF2wgT+qpAFDknb/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nufb9xb9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="M/PjdmfE";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ja4+R7Su"
-Date: Wed, 09 Apr 2025 21:33:40 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744234421;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EFCJPpeCHLUSc4T0Q6EKmhMjKKHTWdf3JcaA2i/2mqk=;
-	b=M/PjdmfEbZ35OPvANYp3MxIuSA5g5jYgH9BVmZ6Ys8qLTUFh9G2FWiII2BEMHUeISiCSs4
-	FxalxZ1sMkOqkvkIX29Mvxn/0ELZEdnXprgO5uVJaACEJnUHj6alRYxYk1QI0TX1MDXG6t
-	VijWP3AVOmio8CYFsY/h8VEhnmYSoKcXwuS894XL7RhMnPy3Sj85Q1SMEIfoG3wKkL+Gpp
-	AwOgbSPfKrWcOapZ0wf26Hv4tu4Lw+VtxB/o8NxxXqVzCP2+C/mMaUoFsEy8xvnYuqcLEp
-	S8MdfWOEXf7mTLECYUGvHC4aqSHwHO/tp4DgiXi35OCmRxE3Pyow2+CZAKkH6w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744234421;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EFCJPpeCHLUSc4T0Q6EKmhMjKKHTWdf3JcaA2i/2mqk=;
-	b=Ja4+R7Sur/ajGqPAgJq5gzH5M+h5Jymm623IEIcvRpzatwDPGicEal2hexuX+gfyETCbtd
-	/bpO04N+RLPBuMDg==
-From: "tip-bot2 for Mike Rapoport (Microsoft)" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/mm] x86/mm: Consolidate initmem_init()
-Cc: "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
- Ingo Molnar <mingo@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
- "H. Peter Anvin" <hpa@zytor.com>, Kees Cook <keescook@chromium.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- David Woodhouse <dwmw@amazon.co.uk>,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
- Len Brown <len.brown@intel.com>, x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250409122815.420041-1-rppt@kernel.org>
-References: <20250409122815.420041-1-rppt@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nufb9xb9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA986C4CEE2;
+	Wed,  9 Apr 2025 21:34:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744234450;
+	bh=a48WLQkkP4gWo/eLBpfCmDza6nZ39Kc1DDQYC5pcMAg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nufb9xb9hRrg4Y4JrZG03t9mCjGEsDxSMzfT4DyDqc41mI5iHEWFp12mICAsO9s8A
+	 d+4v0ZQgYN81AyalzmB/+s0s/czMQpYOnWWyzm3x2c4KPLhkwRvofjP7VZHW1P0fNq
+	 J2b1Ix2NGLnF2PD4zkPRyvqYIIqNE3jHH60J7z4b1uGnuYDLWTcYP8UpYwJDTMaC9F
+	 XqqBQq+zBwyDsygR0jioHQUbHD85XyBBZHerC5K+fRobaXlj7nw+94qbSclL54Ppd7
+	 Z1z+fr9iwNFExIhczcFdOP7x4iebNYx49syYV/OVHuvMtlfmuAhJDv8kA8nYACy3HU
+	 Zx4GYNvheJtOA==
+Date: Wed, 9 Apr 2025 23:34:06 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Shuah Khan <skhan@linuxfoundation.org>
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org,
+	linux-kernel@vger.kernel.org, hpa@zytor.com
+Subject: Re: [PATCH] x86/Kconfig: Fix dependency for X86_DEBUG_FPU
+Message-ID: <Z_bnzs3IPyhVIYaT@gmail.com>
+References: <20250407231057.328010-1-skhan@linuxfoundation.org>
+ <Z_TIMh7UsWQiSkqg@gmail.com>
+ <f9642a9f-27d4-4f84-818c-390194b898bf@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174423442043.31282.15471928643459038021.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f9642a9f-27d4-4f84-818c-390194b898bf@linuxfoundation.org>
 
-The following commit has been merged into the x86/mm branch of tip:
 
-Commit-ID:     35c3151a98a6e6f56552cff8dc7d59e8ef7aca50
-Gitweb:        https://git.kernel.org/tip/35c3151a98a6e6f56552cff8dc7d59e8ef7aca50
-Author:        Mike Rapoport (Microsoft) <rppt@kernel.org>
-AuthorDate:    Wed, 09 Apr 2025 15:28:15 +03:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 09 Apr 2025 22:02:30 +02:00
+* Shuah Khan <skhan@linuxfoundation.org> wrote:
 
-x86/mm: Consolidate initmem_init()
+> On 4/8/25 00:54, Ingo Molnar wrote:
+> > 
+> > * Shuah Khan <skhan@linuxfoundation.org> wrote:
+> > 
+> > > Compile fails when X86_DEBUG_FPU is enabled and X86_REQUIRED_FEATURE_FPU is
+> > > disabled. Add explicit dependency on X86_REQUIRED_FEATURE_FPU to fix it.
+> > > 
+> > > ../arch/x86/kernel/fpu/regset.c:411:(.text+0x4cf2f): undefined reference to `fpregs_soft_get'
+> > > ld: vmlinux.o: in function `fpregs_set':
+> > > ../arch/x86/kernel/fpu/regset.c:445:(.text+0x4d0da): undefined reference to `fpregs_soft_set'
+> > > ld: vmlinux.o: in function `copy_fpstate_to_sigframe':
+> > > ../arch/x86/kernel/fpu/signal.c:197:(.text+0x4da98): undefined reference to `fpregs_soft_get'
+> > > 
+> > 
+> > So I cannot reproduce this build failure on either v6.14 or v6.15-rc1:
+> > 
+> >    starship:~/tip> git describe
+> >    v6.15-rc1
+> > 
+> >    starship:~/tip> grep -E 'X86_32=|M486SX=|X86_REQUIRED_FEATURE|X86_DEBUG_FPU' .config
+> >    CONFIG_X86_32=y
+> >    CONFIG_M486SX=y
+> >    CONFIG_X86_REQUIRED_FEATURE_ALWAYS=y
+> >    CONFIG_X86_DEBUG_FPU=y
+> > 
+> >    starship:~/tip> make -j128 ARCH=i386 bzImage modules
+> > 
+> >    ...
+> >    Kernel: arch/x86/boot/bzImage is ready  (#5)
+> > 
+> > > Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+> > > ---
+> > > 6.14 compile worked without X86_REQUIRED_FEATURE_FPU enabled. Might be a
+> > > new dependency. Enabling X86_REQUIRED_FEATURE_FPU fixed it for me on my
+> > > test system.
+> > 
+> > So vanilla v6.14 does not have X86_REQUIRED_FEATURE Kconfig flags, at
+> > all:
+> > 
+> >    starship:~/tip> grep FPU .config
+> >    CONFIG_ARCH_HAS_KERNEL_FPU_SUPPORT=y
+> >    CONFIG_X86_DEBUG_FPU=y
+> >    # CONFIG_TEST_FPU is not set
+> > 
+> > Because X86_REQUIRED_FEATURE_FPU is a new v6.15-rc1 feature, introduced
+> > via:
+> > 
+> >    3d37d9396eb3 ("x86/cpufeatures: Add {REQUIRED,DISABLED} feature configs")
+> > 
+> > I have no doubt you are seeing this build failure - but I think there
+> > might be some other .config detail required to reproduce it, not
+> > mentioned in your changelog. Could you please send the config you used?
+> > 
+> 
+> Config attached.
+> 
+> grep _FPU /boot/config-6.14.0+
+> CONFIG_ARCH_HAS_KERNEL_FPU_SUPPORT=y
+> CONFIG_X86_DEBUG_FPU=y
+> # CONFIG_TEST_FPU is not set
+> 
+> I noticed you are building ARCH=i386 - can you reproduce this
+> with x86_64? That is what I am building.
+> 
+> thanks,
+> -- Shuah
 
-There are 4 wariants of initmem_init(), for 32 and 64 bits and for
-CONFIG_NUMA enabled and disabled.
+> #
+> # Automatically generated file; DO NOT EDIT.
+> # Linux/x86 6.14.0 Kernel Configuration
+> #
+> CONFIG_CC_VERSION_TEXT="gcc (Debian 14.2.0-17) 14.2.0"
 
-After commit bbeb69ce3013 ("x86/mm: Remove CONFIG_HIGHMEM64G support")
-NUMA is not supported on 32 bit kernels anymore, and
-arch/x86/mm/numa_32.c can be just deleted and setup_bootmem_allocator()
-with completely misleading name can be folded into initmem_init().
+Is this a vanilla v6.14 kernel? Because on upstream v6.14 'make 
+oldconfig' gives me:
 
-For 64 bits the NUMA variant calls x86_numa_init() and !NUMA variant
-sets all memory to node 0. The later can be split out into inline helper
-called x86_numa_init() and then both initmem_init() functions become the
-same.
+  Generate BTF type information (DEBUG_INFO_BTF) [N/y/?] (NEW) 
 
-Split out memblock_set_node() from initmem_init() for !NUMA on 64 bit
-into x86_numa_init() helper and remove arch/x86/mm/numa_*.c that only
-contained initmem_init() variants for NUMA configs.
+Maybe different build environment?
 
-Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: David Woodhouse <dwmw@amazon.co.uk>
-Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Cc: Len Brown <len.brown@intel.com>
-Link: https://lore.kernel.org/r/20250409122815.420041-1-rppt@kernel.org
----
- arch/x86/include/asm/page_32_types.h |  1 +-
- arch/x86/mm/Makefile                 |  2 +-
- arch/x86/mm/init_32.c                |  7 +---
- arch/x86/mm/init_64.c                |  7 ++-
- arch/x86/mm/mm_internal.h            |  4 ++-
- arch/x86/mm/numa.c                   |  3 +-
- arch/x86/mm/numa_32.c                | 61 +---------------------------
- arch/x86/mm/numa_64.c                | 13 +------
- arch/x86/mm/numa_internal.h          | 10 +----
- 9 files changed, 13 insertions(+), 95 deletions(-)
- delete mode 100644 arch/x86/mm/numa_32.c
- delete mode 100644 arch/x86/mm/numa_64.c
- delete mode 100644 arch/x86/mm/numa_internal.h
+... and after answering that with 'N' the build succeeds:
 
-diff --git a/arch/x86/include/asm/page_32_types.h b/arch/x86/include/asm/page_32_types.h
-index a9b62e0..623f1e9 100644
---- a/arch/x86/include/asm/page_32_types.h
-+++ b/arch/x86/include/asm/page_32_types.h
-@@ -73,7 +73,6 @@ extern unsigned int __VMALLOC_RESERVE;
- extern int sysctl_legacy_va_layout;
- 
- extern void find_low_pfn_range(void);
--extern void setup_bootmem_allocator(void);
- 
- #endif	/* !__ASSEMBLER__ */
- 
-diff --git a/arch/x86/mm/Makefile b/arch/x86/mm/Makefile
-index 32035d5..1e72f06 100644
---- a/arch/x86/mm/Makefile
-+++ b/arch/x86/mm/Makefile
-@@ -52,7 +52,7 @@ obj-$(CONFIG_MMIOTRACE)		+= mmiotrace.o
- mmiotrace-y			:= kmmio.o pf_in.o mmio-mod.o
- obj-$(CONFIG_MMIOTRACE_TEST)	+= testmmiotrace.o
- 
--obj-$(CONFIG_NUMA)		+= numa.o numa_$(BITS).o
-+obj-$(CONFIG_NUMA)		+= numa.o
- obj-$(CONFIG_AMD_NUMA)		+= amdtopology.o
- obj-$(CONFIG_ACPI_NUMA)		+= srat.o
- 
-diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
-index ad662cc..d467f89 100644
---- a/arch/x86/mm/init_32.c
-+++ b/arch/x86/mm/init_32.c
-@@ -612,7 +612,6 @@ void __init find_low_pfn_range(void)
- 		highmem_pfn_init();
- }
- 
--#ifndef CONFIG_NUMA
- void __init initmem_init(void)
- {
- #ifdef CONFIG_HIGHMEM
-@@ -633,12 +632,6 @@ void __init initmem_init(void)
- 	printk(KERN_NOTICE "%ldMB LOWMEM available.\n",
- 			pages_to_mb(max_low_pfn));
- 
--	setup_bootmem_allocator();
--}
--#endif /* !CONFIG_NUMA */
--
--void __init setup_bootmem_allocator(void)
--{
- 	printk(KERN_INFO "  mapped low ram: 0 - %08lx\n",
- 		 max_pfn_mapped<<PAGE_SHIFT);
- 	printk(KERN_INFO "  low ram: 0 - %08lx\n", max_low_pfn<<PAGE_SHIFT);
-diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-index 7c4f6f5..b765539 100644
---- a/arch/x86/mm/init_64.c
-+++ b/arch/x86/mm/init_64.c
-@@ -805,12 +805,17 @@ kernel_physical_mapping_change(unsigned long paddr_start,
- }
- 
- #ifndef CONFIG_NUMA
--void __init initmem_init(void)
-+static inline void x86_numa_init(void)
- {
- 	memblock_set_node(0, PHYS_ADDR_MAX, &memblock.memory, 0);
- }
- #endif
- 
-+void __init initmem_init(void)
-+{
-+	x86_numa_init();
-+}
-+
- void __init paging_init(void)
- {
- 	sparse_init();
-diff --git a/arch/x86/mm/mm_internal.h b/arch/x86/mm/mm_internal.h
-index 3f37b5c..097aadc 100644
---- a/arch/x86/mm/mm_internal.h
-+++ b/arch/x86/mm/mm_internal.h
-@@ -25,4 +25,8 @@ void update_cache_mode_entry(unsigned entry, enum page_cache_mode cache);
- 
- extern unsigned long tlb_single_page_flush_ceiling;
- 
-+#ifdef CONFIG_NUMA
-+void __init x86_numa_init(void);
-+#endif
-+
- #endif	/* __X86_MM_INTERNAL_H */
-diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-index 64e5cdb..4bf04be 100644
---- a/arch/x86/mm/numa.c
-+++ b/arch/x86/mm/numa.c
-@@ -19,8 +19,9 @@
- #include <asm/proto.h>
- #include <asm/dma.h>
- #include <asm/amd_nb.h>
-+#include <asm/numa.h>
- 
--#include "numa_internal.h"
-+#include "mm_internal.h"
- 
- int numa_off;
- 
-diff --git a/arch/x86/mm/numa_32.c b/arch/x86/mm/numa_32.c
-deleted file mode 100644
-index 65fda40..0000000
---- a/arch/x86/mm/numa_32.c
-+++ /dev/null
-@@ -1,61 +0,0 @@
--/*
-- * Written by: Patricia Gaughen <gone@us.ibm.com>, IBM Corporation
-- * August 2002: added remote node KVA remap - Martin J. Bligh 
-- *
-- * Copyright (C) 2002, IBM Corp.
-- *
-- * All rights reserved.          
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful, but
-- * WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE, GOOD TITLE or
-- * NON INFRINGEMENT.  See the GNU General Public License for more
-- * details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-- */
--
--#include <linux/memblock.h>
--#include <linux/init.h>
--#include <linux/vmalloc.h>
--#include <asm/pgtable_areas.h>
--
--#include "numa_internal.h"
--
--extern unsigned long highend_pfn, highstart_pfn;
--
--void __init initmem_init(void)
--{
--	x86_numa_init();
--
--#ifdef CONFIG_HIGHMEM
--	highstart_pfn = highend_pfn = max_pfn;
--	if (max_pfn > max_low_pfn)
--		highstart_pfn = max_low_pfn;
--	printk(KERN_NOTICE "%ldMB HIGHMEM available.\n",
--	       pages_to_mb(highend_pfn - highstart_pfn));
--	high_memory = (void *) __va(highstart_pfn * PAGE_SIZE - 1) + 1;
--#else
--	high_memory = (void *) __va(max_low_pfn * PAGE_SIZE - 1) + 1;
--#endif
--	printk(KERN_NOTICE "%ldMB LOWMEM available.\n",
--			pages_to_mb(max_low_pfn));
--	printk(KERN_DEBUG "max_low_pfn = %lx, highstart_pfn = %lx\n",
--			max_low_pfn, highstart_pfn);
--
--	printk(KERN_DEBUG "Low memory ends at vaddr %08lx\n",
--			(ulong) pfn_to_kaddr(max_low_pfn));
--
--	printk(KERN_DEBUG "High memory starts at vaddr %08lx\n",
--			(ulong) pfn_to_kaddr(highstart_pfn));
--
--	__vmalloc_start_set = true;
--	setup_bootmem_allocator();
--}
-diff --git a/arch/x86/mm/numa_64.c b/arch/x86/mm/numa_64.c
-deleted file mode 100644
-index 59d8016..0000000
---- a/arch/x86/mm/numa_64.c
-+++ /dev/null
-@@ -1,13 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/*
-- * Generic VM initialization for x86-64 NUMA setups.
-- * Copyright 2002,2003 Andi Kleen, SuSE Labs.
-- */
--#include <linux/memblock.h>
--
--#include "numa_internal.h"
--
--void __init initmem_init(void)
--{
--	x86_numa_init();
--}
-diff --git a/arch/x86/mm/numa_internal.h b/arch/x86/mm/numa_internal.h
-deleted file mode 100644
-index 11e1ff3..0000000
---- a/arch/x86/mm/numa_internal.h
-+++ /dev/null
-@@ -1,10 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef __X86_MM_NUMA_INTERNAL_H
--#define __X86_MM_NUMA_INTERNAL_H
--
--#include <linux/types.h>
--#include <asm/numa.h>
--
--void __init x86_numa_init(void);
--
--#endif	/* __X86_MM_NUMA_INTERNAL_H */
+  LD      arch/x86/boot/setup.elf
+  OBJCOPY arch/x86/boot/setup.bin
+  BUILD   arch/x86/boot/bzImage
+Kernel: arch/x86/boot/bzImage is ready  (#3)
+
+More importantly, X86_REQUIRED_FEATURE_FPU *does not exist* in the 
+vanilla v6.14 kernel, it's a new v6.15 feature. So this part of your 
+changelog totally doesn't apply to a v6.14 kernel:
+
+> > > Compile fails when X86_DEBUG_FPU is enabled and X86_REQUIRED_FEATURE_FPU is
+> > > disabled. Add explicit dependency on X86_REQUIRED_FEATURE_FPU to fix it.
+
+Thanks,
+
+	Ingo
