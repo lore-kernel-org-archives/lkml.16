@@ -1,63 +1,61 @@
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
+Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4AA278155
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 18:43:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C452278148
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 18:44:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744224211; cv=none; b=IygbGRvMqq6hEW3d/UV3DUITdnkTBuLx1pIi4fDjOYwC9jViArDwVK2CbHJi/j6tOwcn+q55Gs0+oAJupfNhlk0cCK1cwG2YHQvEhW7GL4LK9VpnlKooSSMtyP83xa+VzHTKudHEQd1NtqB/qFhq5SCndVDze4HkUm957+Ff86o=
+	t=1744224260; cv=none; b=bf2lQBakp3kfqiF9zJVYL7+2BITvns9+CvrWoQNXb+64d+XLR16YyM6H/7fzfSJSyZ7Q3O7UK9+BlrPoTrnUOuV9tf7FkT4FsEEj+PJwQENiKL19jPDcD1dtV8yHuJAELto9cnl1YBh7IOx3YpNP42+vc2BYmlh2seenRa/U4Sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744224211; c=relaxed/simple;
-	bh=39vz9Jz4SIUGg6Pb+C8ys6F0B1ja7AbNj2X6gnj3wFU=;
+	s=arc-20240116; t=1744224260; c=relaxed/simple;
+	bh=cLRXd2ba2CeeSosufDG2CuR6OG3+lGXoinJjPTZG6jA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HExTjPStC7xG79Y7HlwAcQ1rXn9/vWZqVmyBwHjVSXmgr4ZrRwIrJvtmGf7ncDN0r6617TZC1qlVHx/ZUx9ZI1fLL/Wtz7V4hCOLLZyjIXmfrtL7NKjadIRl45M5CThGV85FIa2rF3pPmXk7fwYBhZe4sRtbNnhD16YwhRXuXro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=DDNVpVlq; arc=none smtp.client-ip=209.85.210.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	 In-Reply-To:Content-Type; b=j8mpu0BrmxEefhyG5C4isAWJDxLmgeSMuyOcLuleapooHlZV2XiVWsFbfH9fEG1NLgoOZSxLD9lvMEt11wwdODRCj6cjGLnrvsgND63EhItJ4JiRQ/m+gZRk7nQE/R1jkYhzHOtjSQoUzUm4ViCjn+hH2S/2KW8jqoHdSAsT5X0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=S9s1jBhP; arc=none smtp.client-ip=209.85.166.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="DDNVpVlq"
-Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-72c27166ab3so10231a34.1
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 11:43:28 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="S9s1jBhP"
+Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-85e15dc801aso3104439f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 11:44:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1744224208; x=1744829008; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=yUFP4lEaxI/UXTQ8hF09KRKSpAvq6LdwMQOtlQ6n0zQ=;
-        b=DDNVpVlqYMNnXaIbuqd/VFeygNyScS2JLzUmcXTGkOd1UZKmt3v5Mc/iPwZ4n3D27v
-         A8E9G6z9qvRLykKpUhRUEmNCHfSp+h3ppTLcGRV01qnwVWJDBFP4owZhMGLZBvwDuAgR
-         vkASSjCS5mglXr6Qm51jCAo0VbSJQ2ylml6kI=
+        d=linuxfoundation.org; s=google; t=1744224256; x=1744829056; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wXLBtWFo1iG4jl/4yzD55CgxaVLgw5GIoTATgzYBQvE=;
+        b=S9s1jBhPM9x0rJXYsw7ombzjkm8hWpkxtvse9piBqmAZu/yotvxo0uvAibPCvtC8sH
+         1brKzqcYaoDlcfAfqIp8CTfWeHVzhC2unkRNgevpLCnf5AHlrz2CPJ34lCfioTijnAIz
+         Aj6s5bVqyqq78W66E+1IaPr9ANToFLL/jKPiY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744224208; x=1744829008;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yUFP4lEaxI/UXTQ8hF09KRKSpAvq6LdwMQOtlQ6n0zQ=;
-        b=oVr0vOUGQwtC9StXgkdHmQnhlSqTwtO3W1V63NL/3LA+i70Dx4+Og3gmMEngPQTtI5
-         eOcmZu2ilYh5pCteLSbA3yCYqWzgVDmJh5wyhtwg0v2EPO+VL2iLkcSG72nfnQnlWCSL
-         T4wNaDgH1GBk7pqY7uEJ40zIk9WsGDHxcRg4MG9pYWDIs7vrnF8k2QK5ysF8IwpDKk2W
-         C2lEd1MqVpX0zV8NMld6hQMBnyKVnvY5FiqatyoVN8BFqFk1+GM4dRMXLmgflXvbfq0m
-         AW3SY/E8ZhOQoJlr5bLuB+eGZiOIfgk3PFQmhG9H6VlLSsgPNq6kcWYKQteyVF5y0XkG
-         8Biw==
-X-Forwarded-Encrypted: i=1; AJvYcCVrcgThW7Bvcf6kfBR3vkhCRgQEhbPITT5tCOHIzdaNry98FvZFYQ42BxXHjKgaLtau3xh7DgqAtd/jVow=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/VpQ+h3X6/Yb8SbefPzDFIA2uUgIzOmVfbBA4YKUQef3FX0Xo
-	WT7BEsVxpEskEIma5DgkYGim1i5TMRPU+FJ48iz/qgG3MZjGV+Mq3xyAy14bBg==
-X-Gm-Gg: ASbGncslrT8QTEhVoBgSnwkKTD9UeIGc+/zJXQvNgIPvRsjabuxOHnnC09X8wm2mV+E
-	BVwdOT1C0mg1s7xF4MW3+n1ya6LXdqkIxjW0DtjLlqGkhbovzhR5Qkfzuz9aVt0hMVBByuIus6H
-	P/eOl9IngRILrbCJUTQWePW+IQqVwKeiF1BcclI4zG9fkTtfnoOAW0wzKPYd+jIrLyKGwX9Pejq
-	7mv15kWqdZM+QE3CX+X6HtgWP8FxS+lwYR/BIrPQqfJmch76iZNENE4Uab+BIL5i7h7xKxS/7q0
-	gw+N3EDAOkZKzN01pf7CaNYij49B4wRHA5iKDTRQHs3Y6SCNrE59v/Vm2QlJSZv+Z76RA6yAECq
-	ZQxCsxWbu8Eo+uLny
-X-Google-Smtp-Source: AGHT+IF+btWX9Vo26E5xa94gpnRIcQR2MzTl8AHguTxH8TEW16aEw9TQysoZkDfa3NYurrnfcDnCXQ==
-X-Received: by 2002:a05:6830:6019:b0:72b:87bd:ad47 with SMTP id 46e09a7af769-72e7baae198mr27677a34.3.1744224208126;
-        Wed, 09 Apr 2025 11:43:28 -0700 (PDT)
-Received: from [192.168.178.137] (f215227.upc-f.chello.nl. [80.56.215.227])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2d096cd3764sm325488fac.31.2025.04.09.11.43.14
+        d=1e100.net; s=20230601; t=1744224256; x=1744829056;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wXLBtWFo1iG4jl/4yzD55CgxaVLgw5GIoTATgzYBQvE=;
+        b=eOwlEYacCy+Q/u8JHBXb+/fR8qREra0A5uORanL2bgo/KkUL+Y9emvsqH9KrK+18vr
+         Sca5uXFuGZ9cdY0HTQ7oQb5GXCjNaxP8y5GlynJ1/lnQ7z085kY7cClbIYbVuQawnDyu
+         FjQdxzDw1nx74pj+ICw2s+zKPDcxN25ompMcyk4Rfb5p4xwoONArXUwXtx/rZS0ctO9K
+         IvJvUWej2jcBsBQyA/a1e/Ema3GaHVTw/uri3J2qPRZU5IdTt8NPXvr4QByd5OsxHAo4
+         I91CAdVfpquvXW/HDN/cxBYBeklUBX2tFgymis2E2bHUfohfR4hdxm1j89awIgAKcKmh
+         S3Og==
+X-Forwarded-Encrypted: i=1; AJvYcCUFdMdSuMsUfzrzwC1wJjBaNfkLRmwsIm4AjfD+sOTaB5pP2oUbsGWGbpOM71oFQ3bM2ZM6hN8vZt5fYbs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzuF1udxllfyhPY+OQcSlERGrvZyaP6V6JwKwNTYzg5+/HYrxkE
+	Yi3ahXp0unVIqUOoD+l8JN/acP6EvgEtfrFg4SzUOu3FFoNPUEQO1z0j9wcdJLw=
+X-Gm-Gg: ASbGncvOXQNv32AO8biJxBKmpUZS3Ja0InZAGa5hDPoSX1KXFQXkY2aLuW1jUJ2HJ5W
+	szD6SrLyYrems/zx0T+USGLYgNJ2+y/hL6LPlZ7gTYwNq11qXaFRG00+Kboa2syG6gMtyMn+Vxg
+	ZpTpTT6koh23e4ah5nF3tGQShfLX+4MzxMpHWhFt7JPfXlNdqJDFoZS9tJGSi8WewrUDBGHBHSS
+	Swu62u9KgdCZ9VmAxCVNnKPLsMTg4/ZEfbynk186SAcW6sr29TJbYVgClrinnUX8RaZgDEBVsc5
+	8pl3JayDfv8TeOW9Dx+WJkgoU8OXBwy6MiZhzktfgi65RhqVHNef3KM7rkq8OQ==
+X-Google-Smtp-Source: AGHT+IGO28kEay463v+HtpsW5QZR5xULtav+EFlWbau8kOYwbqxV37888Qg1KR8L2HGq5JcQPyhIkQ==
+X-Received: by 2002:a05:6602:394a:b0:85e:17c5:bb94 with SMTP id ca18e2360f4ac-86161188b7bmr497863839f.1.1744224256359;
+        Wed, 09 Apr 2025 11:44:16 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-861656c8808sm28468639f.37.2025.04.09.11.44.15
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Apr 2025 11:43:27 -0700 (PDT)
-Message-ID: <25b7888d-f704-493b-a2d7-c5e8fff9cfb4@broadcom.com>
-Date: Wed, 9 Apr 2025 20:43:09 +0200
+        Wed, 09 Apr 2025 11:44:15 -0700 (PDT)
+Message-ID: <4f0ac0d1-9c75-4be7-ba3c-3daec2fdc91a@linuxfoundation.org>
+Date: Wed, 9 Apr 2025 12:44:13 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,119 +63,45 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 03/13] media: pci: cx18-av-vbi: Replace open-coded
- parity calculation with parity_odd()
-To: Kuan-Wei Chiu <visitorckw@gmail.com>, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
- jk@ozlabs.org, joel@jms.id.au, eajames@linux.ibm.com,
- andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
- airlied@gmail.com, simona@ffwll.ch, dmitry.torokhov@gmail.com,
- mchehab@kernel.org, awalls@md.metrocast.net, hverkuil@xs4all.nl,
- miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
- louis.peens@corigine.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, pabeni@redhat.com, parthiban.veerasooran@microchip.com,
- johannes@sipsolutions.net, gregkh@linuxfoundation.org, jirislaby@kernel.org,
- yury.norov@gmail.com, akpm@linux-foundation.org, jdelvare@suse.com,
- linux@roeck-us.net, alexandre.belloni@bootlin.com, pgaj@cadence.com
-Cc: hpa@zytor.com, alistair@popple.id.au, linux@rasmusvillemoes.dk,
- Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
- jernej.skrabec@gmail.com, kuba@kernel.org, linux-kernel@vger.kernel.org,
- linux-fsi@lists.ozlabs.org, dri-devel@lists.freedesktop.org,
- linux-input@vger.kernel.org, linux-media@vger.kernel.org,
- linux-mtd@lists.infradead.org, oss-drivers@corigine.com,
- netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
- brcm80211@lists.linux.dev, brcm80211-dev-list.pdl@broadcom.com,
- linux-serial@vger.kernel.org, bpf@vger.kernel.org, jserv@ccns.ncku.edu.tw,
- Frank.Li@nxp.com, linux-hwmon@vger.kernel.org,
- linux-i3c@lists.infradead.org, david.laight.linux@gmail.com,
- andrew.cooper3@citrix.com, Yu-Chun Lin <eleanor15x@gmail.com>
-References: <20250409154356.423512-1-visitorckw@gmail.com>
- <20250409154356.423512-4-visitorckw@gmail.com>
+Subject: Re: [PATCH 6.14 000/726] 6.14.2-rc4 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20250409115934.968141886@linuxfoundation.org>
 Content-Language: en-US
-From: Arend van Spriel <arend.vanspriel@broadcom.com>
-Autocrypt: addr=arend.vanspriel@broadcom.com; keydata=
- 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
-In-Reply-To: <20250409154356.423512-4-visitorckw@gmail.com>
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20250409115934.968141886@linuxfoundation.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 4/9/2025 5:43 PM, Kuan-Wei Chiu wrote:
-> Refactor parity calculations to use the standard parity_odd() helper.
-> This change eliminates redundant implementations.
+On 4/9/25 06:03, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.14.2 release.
+> There are 726 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Co-developed-by: Yu-Chun Lin <eleanor15x@gmail.com>
-> Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
-> Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
-> ---
->   drivers/media/pci/cx18/cx18-av-vbi.c | 12 ++----------
->   1 file changed, 2 insertions(+), 10 deletions(-)
+> Responses should be made by Fri, 11 Apr 2025 11:58:08 +0000.
+> Anything received after that time might be too late.
 > 
-> diff --git a/drivers/media/pci/cx18/cx18-av-vbi.c b/drivers/media/pci/cx18/cx18-av-vbi.c
-> index 65281d40c681..15b515b95956 100644
-> --- a/drivers/media/pci/cx18/cx18-av-vbi.c
-> +++ b/drivers/media/pci/cx18/cx18-av-vbi.c
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.14.2-rc4.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.14.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-[...]
+Compiled and booted on my test system. No dmesg regressions.
 
-> @@ -278,7 +270,7 @@ int cx18_av_decode_vbi_line(struct v4l2_subdev *sd,
->   		break;
->   	case 6:
->   		sdid = V4L2_SLICED_CAPTION_525;
-> -		err = !odd_parity(p[0]) || !odd_parity(p[1]);
-> +		err = !parity_odd(p[0]) || !parity_odd(p[1]);
+Tested-by: Shuah Khan <skhan@linuxfoundation.org>
 
-No need to call parity_odd() twice here. Instead you could do:
-
-		err = !parity_odd(p[0] ^ p[1]);
-
-This is orthogonal to the change to parity_odd() though. More specific 
-to the new parity_odd() you can now do following as parity_odd() 
-argument is u64:
-
-		err = !parity_odd(*(u16 *)p);
-
-Regards,
-Arend
-
+thanks,
+-- Shuah
