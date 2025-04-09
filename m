@@ -1,36 +1,44 @@
-Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [91.216.245.30])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEA7425D214;
-	Wed,  9 Apr 2025 09:42:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.216.245.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCCD01E2858;
+	Wed,  9 Apr 2025 09:43:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744191744; cv=none; b=IkFyPEa6GxoXqS/Agu8+IlagK9mFyy98DoceYa2u2rxfMjhR4whHFTTqWvmibx6iVzNxGoL05QNadV6ESKB0RJzQTnPuCKqEhRaX5jtRrVmLYWUR4elKnENcAJDs0B39OHgnFGZHjEFTzOpDKy+jwTfUxUgi0nQbxeS4OlSslHM=
+	t=1744191795; cv=none; b=NXr0AfcFdQSYd9OZnEN+8cWxdPyJcTBYCyFeSZe5p4Y3HunO8441oSWrSd/t+wNelPE4GGYozsmQtuESYNVaSweIe2Dnm5+Cv5iRTS+PpB6I2dFT4XG5V/Pg7a3OhFV1WFgOGcoH+giyAEkX4w66ls/RCim/V8mPU/8bUelgaSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744191744; c=relaxed/simple;
-	bh=43REFmZRu18CN3j2GspN90f2p0rdAUcbTvNtIutpiKw=;
+	s=arc-20240116; t=1744191795; c=relaxed/simple;
+	bh=FjJ4QbW9SU1iP+ML3U0A+ucRm2GiU0e71LPKaPgthFQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N9qtkjTq6iFea9rAAUO0ATB9ftLjp5B9oQ/Q/+CJ8LGCmECPVIWzZ8CerQrYUiHhYkM8J9HUN+oXru1y/hZ/hannRbCPy4Npk9w/7j523vMlmWRrhqO+/LqxY2idY+sgR6KqwNfR7ghV4pzhlp1toxkjNe/P7UF3m61OX+kMRH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strlen.de; spf=pass smtp.mailfrom=strlen.de; arc=none smtp.client-ip=91.216.245.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strlen.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=strlen.de
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
-	(envelope-from <fw@strlen.de>)
-	id 1u2Rwc-000527-Qs; Wed, 09 Apr 2025 11:42:06 +0200
-Date: Wed, 9 Apr 2025 11:42:06 +0200
-From: Florian Westphal <fw@strlen.de>
-To: lvxiafei <xiafei_xupt@163.com>
-Cc: fw@strlen.de, coreteam@netfilter.org, davem@davemloft.net,
-	edumazet@google.com, horms@kernel.org, kadlec@netfilter.org,
-	kuba@kernel.org, linux-kernel@vger.kernel.org,
-	lvxiafei@sensetime.com, netdev@vger.kernel.org,
-	netfilter-devel@vger.kernel.org, pabeni@redhat.com,
-	pablo@netfilter.org
-Subject: Re: [PATCH V3] netfilter: netns nf_conntrack: per-netns
- net.netfilter.nf_conntrack_max sysctl
-Message-ID: <20250409094206.GB17911@breakpoint.cc>
-References: <20250409072028.GA14003@breakpoint.cc>
- <20250409091319.17856-1-xiafei_xupt@163.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=O9uIxhsaykid0/I+Foi1W9ZB3if08gqJMuMRtAmkZUSmxZr2bZXu3vs+FJA6O+ZyRXz+/6vYPtAJm/EmvCQ+KnEhAGRN0YzEYsj8uQXjxRBbMMtHrSRf4rUQzD4P06nYU5kuGhC1k1wLqQrVBCmllUxRFcxJd/sfGI1NlnfVI0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tz4G8OLX; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tz4G8OLX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62D74C4CEE3;
+	Wed,  9 Apr 2025 09:43:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744191795;
+	bh=FjJ4QbW9SU1iP+ML3U0A+ucRm2GiU0e71LPKaPgthFQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Tz4G8OLX8nnog0v22oBwDuD3JId5z/TPCCskKfAVQorpXd7wLsaFqhlnrza8EuDMr
+	 LjSnxnsFChBhBrq58wtx6DvwfQsfs7tAiWIIKakzb9Xg9v5uRbB8qkgMkPeZwtzxaQ
+	 TVhfhlHk1twuHM91sNPkjfQ6MjrSyV2+6ZvkUlgZUkYqmtQQRiZQgb5yhbxsBEmuMN
+	 rAIwMAQPKjWVXqAhNsd794HAiVN0G2Eoq/x4eOZgFSgw5Vy7MDHX7QTtaerCV8vohN
+	 OGG1pkLzIMzw5GUh6ZL01fFSd/lTo7OpijYZUThfFL+l7TLpzEAExukEGjyXZj6dH0
+	 87Ol5Ac251Mdg==
+Date: Wed, 9 Apr 2025 12:43:06 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Yuquan Wang <wangyuquan1236@phytium.com.cn>
+Cc: Jonathan.Cameron@huawei.com, dan.j.williams@intel.com,
+	rafael@kernel.org, lenb@kernel.org, akpm@linux-foundation.org,
+	alison.schofield@intel.com, rrichter@amd.com, bfaccini@nvidia.com,
+	haibo1.xu@intel.com, david@redhat.com, linux-cxl@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, chenbaozi@phytium.com.cn,
+	loongarch@lists.linux.dev
+Subject: Re: [PATCH v2] mm: numa_memblks: introduce numa_add_reserved_memblk
+Message-ID: <Z_ZBKl8h_BzrW9yG@kernel.org>
+References: <20250409040121.3212489-1-wangyuquan1236@phytium.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,71 +47,97 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250409091319.17856-1-xiafei_xupt@163.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20250409040121.3212489-1-wangyuquan1236@phytium.com.cn>
 
-lvxiafei <xiafei_xupt@163.com> wrote:
-> Florian Westphal <fw@strlen.de> wrote:
-> > Whats the function of nf_conntrack_max?
-> > After this change its always 0?
+On Wed, Apr 09, 2025 at 12:01:21PM +0800, Yuquan Wang wrote:
+> acpi_parse_cfmws() currently adds empty CFMWS ranges to numa_meminfo
+> with the expectation that numa_cleanup_meminfo moves them to
+> numa_reserved_meminfo. There is no need for that indirection when it is
+> known in advance that these unpopulated ranges are meant for
+> numa_reserved_meminfo in support of future hotplug / CXL provisioning.
 > 
-> nf_conntrack_max is a global (ancestor) limit, by default
-> nf_conntrack_max = max_factor * nf_conntrack_htable_size.
+> Introduce and use numa_add_reserved_memblk() to add the empty CFMWS
+> ranges directly.
+> 
+> Signed-off-by: Yuquan Wang <wangyuquan1236@phytium.com.cn>
 
-Argh.
+Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
-net.netfilter.nf_conntrack_max
-is replaced by init_net.nf_conntrack_max in your patch.
+> ---
+> 
+> Changes in v2 (Thanks to Dan & Alison):
+> - Use numa_add_reserved_memblk() to replace numa_add_memblk() in acpi_parse_cfmws()
+> - Add comments to describe the usage of numa_add_reserved_memblk()
+> - Updating the commit message to clarify the purpose of the patch
+> 
+>  drivers/acpi/numa/srat.c     |  2 +-
+>  include/linux/numa_memblks.h |  1 +
+>  mm/numa_memblks.c            | 22 ++++++++++++++++++++++
+>  3 files changed, 24 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
+> index 0a725e46d017..751774f0b4e5 100644
+> --- a/drivers/acpi/numa/srat.c
+> +++ b/drivers/acpi/numa/srat.c
+> @@ -453,7 +453,7 @@ static int __init acpi_parse_cfmws(union acpi_subtable_headers *header,
+>  		return -EINVAL;
+>  	}
+>  
+> -	if (numa_add_memblk(node, start, end) < 0) {
+> +	if (numa_add_reserved_memblk(node, start, end) < 0) {
+>  		/* CXL driver must handle the NUMA_NO_NODE case */
+>  		pr_warn("ACPI NUMA: Failed to add memblk for CFMWS node %d [mem %#llx-%#llx]\n",
+>  			node, start, end);
+> diff --git a/include/linux/numa_memblks.h b/include/linux/numa_memblks.h
+> index dd85613cdd86..991076cba7c5 100644
+> --- a/include/linux/numa_memblks.h
+> +++ b/include/linux/numa_memblks.h
+> @@ -22,6 +22,7 @@ struct numa_meminfo {
+>  };
+>  
+>  int __init numa_add_memblk(int nodeid, u64 start, u64 end);
+> +int __init numa_add_reserved_memblk(int nid, u64 start, u64 end);
+>  void __init numa_remove_memblk_from(int idx, struct numa_meminfo *mi);
+>  
+>  int __init numa_cleanup_meminfo(struct numa_meminfo *mi);
+> diff --git a/mm/numa_memblks.c b/mm/numa_memblks.c
+> index ff4054f4334d..541a99c4071a 100644
+> --- a/mm/numa_memblks.c
+> +++ b/mm/numa_memblks.c
+> @@ -200,6 +200,28 @@ int __init numa_add_memblk(int nid, u64 start, u64 end)
+>  	return numa_add_memblk_to(nid, start, end, &numa_meminfo);
+>  }
+>  
+> +/**
+> + * numa_add_reserved_memblk - Add one numa_memblk to numa_reserved_meminfo
+> + * @nid: NUMA node ID of the new memblk
+> + * @start: Start address of the new memblk
+> + * @end: End address of the new memblk
+> + *
+> + * Add a new memblk to the numa_reserved_meminfo.
+> + *
+> + * Usage Case: numa_cleanup_meminfo() reconciles all numa_memblk instances
+> + * against memblock_type information and moves any that intersect reserved
+> + * ranges to numa_reserved_meminfo. However, when that information is known
+> + * ahead of time, we use numa_add_reserved_memblk() to add the numa_memblk
+> + * to numa_reserved_meminfo directly.
+> + *
+> + * RETURNS:
+> + * 0 on success, -errno on failure.
+> + */
+> +int __init numa_add_reserved_memblk(int nid, u64 start, u64 end)
+> +{
+> +	return numa_add_memblk_to(nid, start, end, &numa_reserved_meminfo);
+> +}
+> +
+>  /**
+>   * numa_cleanup_meminfo - Cleanup a numa_meminfo
+>   * @mi: numa_meminfo to clean up
+> -- 
+> 2.34.1
+> 
+> 
 
-But not net.nf_conntrack_max, so they are now different and not
-related at all anymore except that the latter overrides the former
-even in init_net.
-
-I'm not sure this is sane.  And it needs an update to
-Documentation/networking/nf_conntrack-sysctl.rst
-
-in any case.
-
-Also:
-
--       if (nf_conntrack_max && unlikely(ct_count > nf_conntrack_max)) {
-+       if (net->ct.sysctl_max && unlikely(ct_count > min(nf_conntrack_max, net->ct.sysctl_max))) {
-
-
-... can't be right, this allows a 0 setting in the netns.
-So, setting 0 in non-init-net must be disallowed.
-
-I suggest to remove nf_conntrack_max as a global variable,
-make net.nf_conntrack_max use init_net.nf_conntrack_max too internally,
-so in the init_net both sysctls remain the same.
-
-Then, change __nf_conntrack_alloc() to do:
-
-unsigned int nf_conntrack_max = min(net->ct.sysctl_max, &init_net.ct.sysctl_max);
-
-and leave the if-condition as is, i.e.:
-
-if (nf_conntrack_max && unlikely(ct_count > nf_conntrack_max)) { ...
-
-It means:
-each netns can pick an arbitrary value (but not 0, this ability needs to
-be removed).
-
-When a new conntrack is allocated, then:
-
-If the limit in the init_net is lower than the netns, then
-that limit applies, so it provides upper cap.
-
-If the limit in the init_net is higher, the lower pernet limit
-is applied.
-
-If the init_net has 0 setting, no limit is applied.
-
-This also needs an update to Documentation/networking/nf_conntrack-sysctl.rst
-to explain the restrictions.
-
-Or, alternative, try the other suggestion I made
-(memcg charge at sysctl change time,
- https://lore.kernel.org/netfilter-devel/20250408095854.GB536@breakpoint.cc/).
-
-Or come up with a better proposal.
+-- 
+Sincerely yours,
+Mike.
