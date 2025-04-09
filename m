@@ -1,117 +1,154 @@
-Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 251BE3FFD;
-	Wed,  9 Apr 2025 06:04:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61F5F1DE2CD;
+	Wed,  9 Apr 2025 06:04:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744178689; cv=none; b=fRJwPm/U61dP295x5zWCsSfTJDjnoF7Vj5F7AZ0819MWd/kYT1yzLWpNrtwmEkisZAyLGG+nV6ND1wacOoj23QurrPDdDKqfayQCFCuDnNI+yoQXp0o+ALezwP1gBsmLfD5nk8xpsZWD/6eZ84hclh6X4kkgjBghi/VZMZESKis=
+	t=1744178693; cv=none; b=Qj4XvB2EiwHDALIYmU+ajFq3TSesCkYdo80d9pcXT2BZbRZP7UssqTEGlrJgxGD7AHBhTVMEQMMTmUT0IZlWjPz2qelxjRqZdpz9dzd6Rfx01apcilX/XWDVJX1vnK7Aq6JQ+j6qXZrcpdi7akpiqNzqXtvDAS1NfCAxp5A8mls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744178689; c=relaxed/simple;
-	bh=m4/mW/yD1FOsUz2/Xtq3pAZUmygrqnr24wXblD4T+o8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=m/hWK+q+ke0T/hwHNWO6wk+b/ARbLiH29BweE3mcvjfy6p18JDoTmkkFkeqv1m9YHJrT7ZOvLQp3a8hFnKQCELBFwkwnQXD+UVo0D4a4+jt9heL3l2RbwIe7+lHSBNZkAf/VkqqzRcNRBEu8GvKzZViABJPC1NIkl4pJjloTzeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kajvnHrf; arc=none smtp.client-ip=209.85.221.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744178693; c=relaxed/simple;
+	bh=Codyw5YmlkC3fudw3hQz5TkETEuZ/SQCmbMdWllAKPI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=gf3Ep8A0wBShwv2g/P47N4Oy7pIRerw5zCs2NELqHvGagwQmXEZkrvQ8eC9YclExI//eDIlQieykKmpZAsNfbXhnodFby4KqC0hKQEL+YGG9AdCMun3WKrkY84YvqOLarGp9njXv2P7DEPCeW8nVp+K89CxEqX7+3g8+pvd/2KA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=NZTRWDOS; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kajvnHrf"
-Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-524038ba657so482608e0c.0;
-        Tue, 08 Apr 2025 23:04:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744178687; x=1744783487; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+V4ALGdx0ZvhM0ESKguXWcucuSIXI2xNRiiSByOwwaE=;
-        b=kajvnHrfBOf6hsCRMD7+niF75pqba5nEqDzqiYP1jmsoEtljlrHi+n9hw/oNIdT8UR
-         F4O9B6TB+61uuvrocp6EmAI8xvZ+WT6awSOOzT6XSy/oBH+LXYEiCmctdnrvDtlNny3r
-         fH9p5lD0YZx5XMz62NOVZWNe17X/5RWw+drNw1QUcYuK7SDDE9D9Lu6HA7jwiB3L+SJc
-         ZTqkC++nrEJdteXUFazO50cUqpHsQinssq/f2MxEViVH08dEN5OiZJdqEv7c79HV9pUR
-         RVFPBjHNDbxKepw41Rlqy33LfX+a/C3x4PX3LorfUYgiKYAATHTYzCes/E539DESxP3k
-         wdrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744178687; x=1744783487;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+V4ALGdx0ZvhM0ESKguXWcucuSIXI2xNRiiSByOwwaE=;
-        b=akb/pBvhooTUVp78HXcUokFmvRW/gck+dqzQmF9C/aB6c3kpdaIjPycwdKE0DWM8tl
-         vWkSEFwI2T+/UDV+PxZiB3VniF/rKGETOOBq/1zkqCvMEhvqZRXA0g4ZJ7hWOH9GNI/R
-         4w4eSicubCFayefw7kEXmifGT/mZEhRbgLf4yG0BQyO4IQBGUDByLyi8+cSysd4L+wYs
-         nViBboSKD/GaQDPJ4knyv8K2idf33GVQeqXMwg9N2BXOlRFsSG1eQ+Dp+B6OUDbK11pA
-         nfxe1yg8cgcWWUm5Dr4+p7g3CVw26rcpAVnHei1PitwDbkCsAAiHXtJYDXkA1hDPlp0M
-         6lhw==
-X-Forwarded-Encrypted: i=1; AJvYcCV0XkbGEWcYJqSGHau2usA5knZ+n0KSpLUu1oIATtGvELlmwNt0q9PjQD3UMhS1MiciTTHKQQhxqQv6KA==@vger.kernel.org, AJvYcCXaDXIhOapqNBdKg9p2JEacn7zpwV1cf3oH9TZ7W9uv/Mdine/A6yk8KEGqEtxBnQ4nXPVJKeX8pLCv5zdU@vger.kernel.org
-X-Gm-Message-State: AOJu0YztpL2gyoEsP4OsA6A5hQ8vAwduXJcXeprZFjrtMLboeohk3vUD
-	cLzJbmnEUipL3ABDR8QfJXQNDlHX+/aGMJEqOWm0q34WmCHdTdQm
-X-Gm-Gg: ASbGnctVkDgnK5fNJLPGvAdkCo0PUWc1A7dSrW9AqmfvsvqitU4Rx56JWR6iHG+HaUi
-	gGcoVW0AwXw9kHS9QcIwsjVdoBrOTRfM24Ifa6hm3pD+EAlOFsmK2Ad8P4XAj/VDQusj/Yj8Aym
-	ik9KKULkKhW3jPmJxKl60ALdXPrdmaU7HCZGYACYltqWNTxjlFN5hhTEtWKt6KLYXrq3FeTRHQy
-	UwaagIBqE4/2ziW9XbEPDPoNUcl57uXcVFOesBxeWX4VXSttfmer3qXE7VT6aObG93e27GohApc
-	KBdyeCzTffvmPAeZi7vY9D5arC/UOo2kKouluI3Oh6cPeMtNrhz3HA5TL6Vq4QgepsIDwj+yZPB
-	a
-X-Google-Smtp-Source: AGHT+IHwv4W8fgLGzlrXAXf4jygzq2dLL2QYjoAC/5xm7B4+8GUF26c/3eTljqp4QP/9LBBlmzf9oQ==
-X-Received: by 2002:a05:6122:410:b0:524:2fe0:3898 with SMTP id 71dfb90a1353d-5279ac99ae9mr4306442e0c.5.1744178686881;
-        Tue, 08 Apr 2025 23:04:46 -0700 (PDT)
-Received: from localhost.localdomain ([200.189.18.171])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-527abd4cb9esm99510e0c.6.2025.04.08.23.04.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 23:04:45 -0700 (PDT)
-From: miltonials <miltonjosue2001@gmail.com>
-To: jikos@kernel.org
-Cc: bentiss@kernel.org,
-	linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Milton Barrera <miltonjosue2001@gmail.com>
-Subject: [PATCH] HID: quirks: Add ADATA XPG alpha wireless mouse support
-Date: Wed,  9 Apr 2025 00:04:28 -0600
-Message-ID: <20250409060428.1188-1-miltonjosue2001@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="NZTRWDOS"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 538JYxq4014992;
+	Wed, 9 Apr 2025 06:04:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	1BkldHSIz3yucMyfesi8ioIl7DTyzVa1CkcAw4nPS2I=; b=NZTRWDOSiCH83HHy
+	eMI6Y6sMN5BEnPDYYTRe+6Ikx3gD2nXK7UuEgLs+aKvVykyMKWKk1DV3a+h0E+Pb
+	5zgc2LwrOG9rjG8ZiguUIwbTBUo/JJGrZkRK1x4IGYGSnKTWYaYXJrz4SGqGKeU8
+	O5gH9izMUs2f/+G55o4YsaLU/Ln8NrpoUTeBnf8K2eKNiWWBwCoFdXuLjIeRfV7Y
+	b7wEs9MsId7RbatLWQpGL6gjFTdadk5TG1tpNq+ON8cQzcCwhnrvcF2rX3IpW/v7
+	QSzR0icTlW5FZxJYI5mKhKe9D/GYvjh/noW/NvMSEm7icSVhPC+OOboubqCAx/on
+	uloXyg==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twbuj9va-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 09 Apr 2025 06:04:49 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53964mLe004200
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 9 Apr 2025 06:04:48 GMT
+Received: from [10.152.195.140] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 8 Apr 2025
+ 23:04:44 -0700
+Message-ID: <1445a751-b629-4647-ad69-a1efbb471c21@quicinc.com>
+Date: Wed, 9 Apr 2025 11:34:42 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 2/2] arm64: dts: qcom: ipq5424: Enable PCIe PHYs and
+ controllers
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+CC: <andersson@kernel.org>, <konradybcio@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <quic_varada@quicinc.com>,
+        <quic_srichara@quicinc.com>
+References: <20250402102723.219960-1-quic_mmanikan@quicinc.com>
+ <20250402102723.219960-3-quic_mmanikan@quicinc.com>
+ <ezodm6qh63fs43xx6cw3smspfqkwqb5qscwfee36k5vtktguc4@tlqhuvjg2bly>
+ <bcbd2f83-2599-4a2e-ad69-64edcb97dfbe@quicinc.com>
+ <CAO9ioeVTyWL0-vzzNs3isDodi8jXQ9pHknyyhnWKcb+0tyf1FQ@mail.gmail.com>
+ <769be701-afd1-4c14-8e44-fbb25a0c3f24@quicinc.com>
+ <3831073d-fcc4-46a5-bdb7-ec19702a08be@oss.qualcomm.com>
+Content-Language: en-US
+From: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
+In-Reply-To: <3831073d-fcc4-46a5-bdb7-ec19702a08be@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: eIypSpRtmKuTuVVCRs6B5odrFDj9ja1m
+X-Proofpoint-ORIG-GUID: eIypSpRtmKuTuVVCRs6B5odrFDj9ja1m
+X-Authority-Analysis: v=2.4 cv=dbeA3WXe c=1 sm=1 tr=0 ts=67f60e01 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=0PegrSc1pu9fmHWOW4kA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-09_02,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ suspectscore=0 mlxlogscore=772 phishscore=0 mlxscore=0 spamscore=0
+ malwarescore=0 clxscore=1015 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504090021
 
-From: Milton Barrera <miltonjosue2001@gmail.com>
 
-This patch adds HID_QUIRK_ALWAYS_POLL for the ADATA XPG wireless gaming mouse (USB ID 125f:7505) and its USB dongle (USB ID 125f:7506). Without this quirk, the device does not generate input events properly.
 
-Signed-off-by: Milton Barrera <miltonjosue2001@gmail.com>
----
- drivers/hid/hid-ids.h    | 4 ++++
- drivers/hid/hid-quirks.c | 2 ++
- 2 files changed, 6 insertions(+)
+On 4/8/2025 7:00 PM, Dmitry Baryshkov wrote:
+> On 08/04/2025 15:49, Manikanta Mylavarapu wrote:
+>>
+>>
+>> On 4/3/2025 3:02 PM, Dmitry Baryshkov wrote:
+>>> On Thu, 3 Apr 2025 at 08:08, Manikanta Mylavarapu
+>>> <quic_mmanikan@quicinc.com> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 4/2/2025 7:50 PM, Dmitry Baryshkov wrote:
+>>>>> On Wed, Apr 02, 2025 at 03:57:23PM +0530, Manikanta Mylavarapu wrote:
+>>>>>> Enable the PCIe controller and PHY nodes corresponding to RDP466.
+>>>>>>
+>>>>>> Signed-off-by: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
+>>>>>> ---
+>>>>>> Changes in V6:
+>>>>>>       - No change.
+>>>>>>
+>>>>>>   arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts | 41 ++++++++++++++++++++-
+>>>>>>   1 file changed, 40 insertions(+), 1 deletion(-)
+>>>>>>
+>>>>>> diff --git a/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts b/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
+>>>>>> index 0fd0ebe0251d..1f89530cb035 100644
+>>>>>> --- a/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
+>>>>>> +++ b/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
+>>>>>> @@ -82,6 +82,32 @@ &dwc_1 {
+>>>>>>       dr_mode = "host";
+>>>>>>   };
+>>>>>>
+>>>>>> +&pcie2 {
+>>>>>> +    pinctrl-0 = <&pcie2_default_state>;
+>>>>>> +    pinctrl-names = "default";
+>>>>>> +
+>>>>>> +    perst-gpios = <&tlmm 31 GPIO_ACTIVE_LOW>;
+>>>>>
+>>>>>
+>>>>> No wake-gpios? Please document it in the commit message.
+>>>>>
+>>>>
+>>>> Hi Dmitry,
+>>>>
+>>>> Thank you for reviewing the patch.
+>>>>
+>>>> The wake GPIO is dropped because the PCIe on the IPQ5424 doesn't support low power mode.
+>>>> I will document this information in the commit message and post the next version.
+>>>
+>>> If the GPIO is routed on the PCB I think it should still be described in the DT.
+>>>
+>>>
+>>
+>> Hi Dmitry,
+>>
+>>     I have confirmed with the hardware team that the wake GPIO is not routed on the PCB.
+> 
+> Sad. Please mention it in the commit message.
+> 
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 288a2b864..106273131 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -41,6 +41,10 @@
- #define USB_VENDOR_ID_ACTIONSTAR	0x2101
- #define USB_DEVICE_ID_ACTIONSTAR_1011	0x1011
- 
-+#define USB_VENDOR_ID_ADATA_XPG 0x125f
-+#define USB_VENDOR_ID_ADATA_XPG_WL_GAMING_MOUSE 0x7505
-+#define USB_VENDOR_ID_ADATA_XPG_WL_GAMING_MOUSE_DONGLE 0x7506
-+
- #define USB_VENDOR_ID_ADS_TECH		0x06e1
- #define USB_DEVICE_ID_ADS_TECH_RADIO_SI470X	0xa155
- 
-diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-index 646171598..0731473cc 100644
---- a/drivers/hid/hid-quirks.c
-+++ b/drivers/hid/hid-quirks.c
-@@ -27,6 +27,8 @@
- static const struct hid_device_id hid_quirks[] = {
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_AASHIMA, USB_DEVICE_ID_AASHIMA_GAMEPAD), HID_QUIRK_BADPAD },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_AASHIMA, USB_DEVICE_ID_AASHIMA_PREDATOR), HID_QUIRK_BADPAD },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_ADATA_XPG, USB_VENDOR_ID_ADATA_XPG_WL_GAMING_MOUSE), HID_QUIRK_ALWAYS_POLL },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_ADATA_XPG, USB_VENDOR_ID_ADATA_XPG_WL_GAMING_MOUSE_DONGLE), HID_QUIRK_ALWAYS_POLL },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_AFATECH, USB_DEVICE_ID_AFATECH_AF9016), HID_QUIRK_FULLSPEED_INTERVAL },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_AIREN, USB_DEVICE_ID_AIREN_SLIMPLUS), HID_QUIRK_NOGET },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_AKAI_09E8, USB_DEVICE_ID_AKAI_09E8_MIDIMIX), HID_QUIRK_NO_INIT_REPORTS },
--- 
-2.43.0
+Okay, sure.
 
+Thanks & Regards,
+Manikanta.
