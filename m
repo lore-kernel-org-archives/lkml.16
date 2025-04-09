@@ -1,115 +1,113 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D4E725D918;
-	Wed,  9 Apr 2025 12:46:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5250625E80F
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 12:47:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744202820; cv=none; b=cJMswp86pAPEE7FrQnBtU1C6kPgKcsvrRiL6rsyoUWKNjlfFt/fdzm2cxaChqz8jAYfKGBZR6VDubiR6iBGDcsADz4GEz3zBrMMXzkk+CvDvk3TlzGZnb+mXqotrxRurBaK+SIMs1Vln5jbR3vRFWBY5M/upESwvDhclKQD7PqA=
+	t=1744202834; cv=none; b=lLzf5cZACBrJvLf70sXFz5G7iPoyo8PteuNIu6ezF0bQBrQ3hCzVUCuiXfanz8SmXi0Hn/j12eKozYdPQX74I9bI8qOo04x9vCn1fFa1h8RLDYxnryk+j5G0jwm441hoXh8IwfUDrgPowNwNRLvTzWxLR/MWbeCJABYrwj/U2lg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744202820; c=relaxed/simple;
-	bh=rIgXyEvLCLwUur3A9mieiCA636AMIEFJdwhc2bTEPXw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bcdtqaRS6CAJklS40l9ooTIZBHj8IWI/rDI4jCkwJYFAlLBHrMdVC20PIufvoWhbuZDYQgyf1YpG3EFuvgindOGenpWvxbG+PEIsb4yPk8RcM34Vg+/DgmpTz+8MDZPX8F0yemH65/jt74QUG2sZI3wixNgoHLwVi5flM1qTfE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CiCTfqev; arc=none smtp.client-ip=217.70.183.200
+	s=arc-20240116; t=1744202834; c=relaxed/simple;
+	bh=2sxTchRu1XQdJGmWVI1yN9QSLWL909ueauOjYWjX7lY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=maVJSC0Em7T2IXLyV3JFxCMn/5hd1ADti4AlwmJICIx8/E53rCHrrnlztrtczZKTNNqtXA9mmucxSUs4APumdxRtg7HcQoqVtCBS3X0/FqwSZpgZGEAWvUcrB0i1nHXooou2EhwJDccWp655F+LXSAih3thSj1zGQE1CY8TnJZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=dLiMPFgs; arc=none smtp.client-ip=217.70.183.193
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CiCTfqev"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 5C2BB44154;
-	Wed,  9 Apr 2025 12:46:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="dLiMPFgs"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 1214D44281;
+	Wed,  9 Apr 2025 12:47:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744202816;
+	t=1744202829;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=FF4tLOudDlWUyIhsXqvwgxpBbK+Z9OKBA6LBsPGjCio=;
-	b=CiCTfqevfqWVKVVsNSc630QYRe0CXD+59RQore3LY3/DmxCWQhp0dmoGYdQACE1ijRNVMy
-	lD7agIJCvsLuMH7/i/oAs9yERneJJZQs0CH8jmuQayQsCQvFCIt/sC5ZRglnQZVoNBcIcw
-	V5lioze/0CccaS38sn6JxRpnhFgSsh/wQjx++8Wtii4hXRxV1tN8pFHLGYrAE9zdFuvQp+
-	Cqjeqpsi9bmu3O+8HmCWzIjUeXRk65yrGO1klr314kDTV/25HGNXcb5hY4f1fFbYvhGwRr
-	FYwIoZ5XWdkfxVJto/50d5ASlX2S7GrYb8pQv7lAC6lMrKGPShcrHPIf/nkIiA==
-Date: Wed, 9 Apr 2025 14:46:54 +0200
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>, Andrew Lunn
- <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Marek =?UTF-8?B?QmVo?=
- =?UTF-8?B?w7pu?= <kabel@kernel.org>, Richard Cochran
- <richardcochran@gmail.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, Vladimir Oltean <vladimir.oltean@nxp.com>
-Subject: Re: [PATCH net-next v2 0/2] Add Marvell PHY PTP support
-Message-ID: <20250409144654.67fae016@fedora.home>
-In-Reply-To: <20250409142309.45cdd62f@kmaincent-XPS-13-7390>
-References: <20250407-feature_marvell_ptp-v2-0-a297d3214846@bootlin.com>
-	<Z_P3FKEhv1s0y4d7@shell.armlinux.org.uk>
-	<20250407182028.75531758@kmaincent-XPS-13-7390>
-	<Z_P-K7mEEH6ProlC@shell.armlinux.org.uk>
-	<20250407183914.4ec135c8@kmaincent-XPS-13-7390>
-	<Z_WJO9g5Al1Yr_LX@shell.armlinux.org.uk>
-	<20250409103130.43ab4179@kmaincent-XPS-13-7390>
-	<Z_Yxb6-qclDSWk01@shell.armlinux.org.uk>
-	<20250409104637.37301e01@kmaincent-XPS-13-7390>
-	<Z_Y-ENUiX_nrR7VY@shell.armlinux.org.uk>
-	<20250409142309.45cdd62f@kmaincent-XPS-13-7390>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	bh=0p6IL4xM543LamQB5lij8MdpPeDMo1EXZtv42MQAlC8=;
+	b=dLiMPFgsbn3tCkIA8vPeKMYpXLpXH5jdsmhO3t0lmA39qw+RZ1jk1EclOP6xmalZpdcAzx
+	fvTwilPdp1+c105Hfm8244MXDAmVvZukE+YnyMhyzL75NBlt3pOkE2eyP8KZr9zvWjScH6
+	e33pxifzCbxMZ+ndY1TXZH10m95A4nWBAcf60OBVJYXl45kMll0BRCDV2lUQ6Q4dBDByan
+	KdQAw7X7P1tSVqSzUixqZebf2xNv6dA1T5WQguvf9HXvH0/hVn4zc6idWOc7fcX2IPvdxU
+	2pMfzgrR9PfKha93z7GyfhlCEVshg8Uf4A9GCEYToVQz2hgRmknuVffmw/Qp9Q==
+Date: Wed, 9 Apr 2025 14:47:07 +0200
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+	Markus Stockhausen <markus.stockhausen@gmx.de>,
+	Chris Packham <chris.packham@alliedtelesis.co.nz>,
+	Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 02/10] [v2] clocksource: atmel_tcb: fix kconfig dependency
+Message-ID: <20250409124707fb2456b9@mail.local>
+References: <20250409122131.2766719-1-arnd@kernel.org>
+ <20250409122314.2848028-1-arnd@kernel.org>
+ <20250409122314.2848028-2-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409122314.2848028-2-arnd@kernel.org>
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdeitdefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeevledtvdevueehhfevhfelhfekveeftdfgiedufeffieeltddtgfefuefhueeknecukfhppedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjedphhgvlhhopehfvgguohhrrgdrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudegpdhrtghpthhtohepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrt
- ghhpdhrtghpthhtohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhm
-X-GND-Sasl: maxime.chevallier@bootlin.com
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdeitdefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeetlhgvgigrnhgurhgvuceuvghllhhonhhiuceorghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeeiudeuteehhfekgeejveefhfeiudejuefhgfeljefgjeegkeeujeeugfehgefgnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemrggutdefmeegfheltgemfeefjehfmehffeefugenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemrggutdefmeegfheltgemfeefjehfmehffeefugdphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomheprghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudefpdhrtghpthhtoheprghrnhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghnihgvlhdrlhgviigtrghnoheslhhinhgrrhhordhorhhgpdhrtghpthhtohepthhglhigs
+ ehlihhnuhhtrhhonhhigidruggvpdhrtghpthhtohepkhhriiihshiithhofhdrkhhoiihlohifshhkiheslhhinhgrrhhordhorhhgpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopegrrhhnugesrghrnhgusgdruggvpdhrtghpthhtohepnhhitgholhgrshdrfhgvrhhrvgesmhhitghrohgthhhiphdrtghomhdprhgtphhtthhopegtlhgruhguihhurdgsvgiinhgvrgesthhugihonhdruggvvh
+X-GND-Sasl: alexandre.belloni@bootlin.com
 
-On Wed, 9 Apr 2025 14:23:09 +0200
-Kory Maincent <kory.maincent@bootlin.com> wrote:
+On 09/04/2025 14:22:54+0200, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> Build-testing this driver on arm without CONFIG_OF produces a warning:
+> 
+> drivers/clocksource/timer-atmel-tcb.c:368:34: error: 'atmel_tcb_of_match' defined but not used [-Werror=unused-const-variable=]
+>   368 | static const struct of_device_id atmel_tcb_of_match[] = {
+>       |                                  ^~~~~~~~~~~~~~~~~~
+> 
+> Change the dependency to allow build-testing on all architectures but
+> instead require CONFIG_OF to be present.
+> 
+> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Cc: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-> On Wed, 9 Apr 2025 10:29:52 +0100
-> "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
-> 
-> > On Wed, Apr 09, 2025 at 10:46:37AM +0200, Kory Maincent wrote:  
-> > > On Wed, 9 Apr 2025 09:35:59 +0100
-> > > "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:  
-> 
-> > > > Right, and that means that the kernel is not yet ready to support
-> > > > Marvell PHY PTP, because all the pre-requisits to avoid breaking
-> > > > mvpp2 have not yet been merged.    
-> > > 
-> > > Still I don't understand how this break mvpp2.
-> > > As you just tested this won't switch to the PHY PTP implementation.    
-> > 
-> > How do I know that from the output? Nothing in the output appears to
-> > tells me which PTP implementation will be used.
-> > 
-> > Maybe you have some understanding that makes this obvious that I don't
-> > have.  
-> 
-> You are right there is no report of the PTP source device info in ethtool.
-> With all the design change of the PTP series this has not made through my brain
-> that we lost this information along the way.
-> 
-> You can still know the source like that but that's not the best.
-> # ls -l /sys/class/ptp
-> 
-> It will be easy to add the source name support in netlink but which names are
-> better report to the user?
-> - dev_name of the netdev->dev and phydev->mdio.dev?
->   Maybe not the best naming for the phy PTP source
->   (ff0d0000.ethernet-ffffffff:01)
-> - "PHY" + the PHY ID and "MAC" string?
+Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-How about an enum instead of a string indicating the device type, and if
-PHY, the phy_index ? (phy ID has another meaning :) )
+> ---
+> v2: fix build regression from dropped CONFIG_ARM dependency
+> ---
+>  drivers/clocksource/Kconfig | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+> index 487c85259967..a7d5a465100e 100644
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
+> @@ -437,8 +437,8 @@ config ATMEL_ST
+>  
+>  config ATMEL_TCB_CLKSRC
+>  	bool "Atmel TC Block timer driver" if COMPILE_TEST
+> -	depends on ARM && HAS_IOMEM
+> -	select TIMER_OF if OF
+> +	depends on ARM && OF && HAS_IOMEM
+> +	select TIMER_OF
+>  	help
+>  	  Support for Timer Counter Blocks on Atmel SoCs.
+>  
+> -- 
+> 2.39.5
+> 
 
-Maxime
-
+-- 
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
