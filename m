@@ -1,267 +1,291 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90A0F433AD
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 16:02:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 637601C57B2;
+	Wed,  9 Apr 2025 16:03:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744214580; cv=none; b=mY3v+rw+5bT74DJyBr2Wj/4Kp/VUl/g+E6c6YgiPVKN8kU7bjAcLYlR6o1uMvuiL6OdvGk+MRnZZ7CQqrCcyacQl11C2tu3ORRTzRI2oWIcdk2NJMuBe4XH7vj9Pws4JQl1PvfGSkECwl+vNGhp+PVVrojTsO2F6fDNelVtJ4Ps=
+	t=1744214591; cv=none; b=Cv+oA2cXkQQ/5VEZWcfYjLaMwFoWfUn9SSmaZI9Hlk10fYKfwzNRsXpUT/Xsldrzx90rO2dh+/Jm2kPY+ofiJRpsSx0+8UQCBdIKdYldf7oODN+lbek9EV1LXUCDWnGOdkS+Gse9/CITzn2zQFsM6MpjdLDis34XiGTzQeUrlLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744214580; c=relaxed/simple;
-	bh=ksRX+bRA7T+1C/mvp6DxfIWqG3y2j5bfqsUahLv2kaM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZIswHxaQLMsyfWw2B5pTTi4NjAFiazfrnUqbPEcCD+uQcXKKyfxwJCBzEYI5CrqsYJImw32BBFHrntG07XnJexhMXxMI7RfOIxRhCkTsnJB0a/E08oQ3pUMQzjh/xIM7APrZhDWuFhPYgMB40TqLnUXtjiP0F1HG6MzjTwEilYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=BVW5gIRg; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1744214591; c=relaxed/simple;
+	bh=+ziiKcpq40KHLTKB5D7JfzLNH/xmK8EsYce/6ImmTAs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nSvo5GfBOQ0rOX4C1evoAr2xtKy7SxSguhm9Sl/PYHWHG/C22gczyqmDlDA9i0fanUKrEKV//UuJEeQjBVQEDdUw0PVwTPjHmMgt2YpJ5/yE5MjKaxJZdPWbxNFEWV5bB/w7WaCMBP2G9e74anOvqdwFR8rR0u5gkhdIVxcQsqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SBkFCHrY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="BVW5gIRg"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5e673822f76so11512263a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 09:02:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1744214577; x=1744819377; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=42GXMqXTgHSEbdFJL9v/SA8e4fwkOBIeGkhqojukuws=;
-        b=BVW5gIRgBY10Jr5AuLhC4Fm17KPjRm49Y9yHfTz/m8sAbv31LLSmbTs5R4PwqOSwcf
-         JHwKeCBVA2bh+klNSaxPMZWH+us7XOHUIr2Eg+8PNtMcHknV6VPvUrW+v7HZF7NdAz+D
-         JKUZxLQMXVr6cZpG83Cjl5Rqy/95+1/6zQwMUetmOepAYxXRY9+SDavPjTXys92zpASc
-         78/TQYqygXvfWsxGQwaFhO08xdzjZyLujqmnQpsfp6q9avjivRoc/y7czkj6MJ6RREYY
-         n4LXDYAyEpPpr3wPlqKmXpPIn0jA187zsvi6r9bXMmY+KFl8nieIpGJJpcD48jbqzhb6
-         0isQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744214577; x=1744819377;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=42GXMqXTgHSEbdFJL9v/SA8e4fwkOBIeGkhqojukuws=;
-        b=ebXtpAQR8pMb726Jhd26/kpu8elwWwRRHRssee4FzfI5P/ukg5QFpgRGo/MnxFLs7o
-         kcQ+aaEqFO/TH2689pQX6dJcLOyoHjR+lMsU64oyudIskezN3y1BMIxNqAificOJbF1C
-         x/ydj2KYdvKyLXpGyq2B9wH8nQfdzFc6UuRcwroWfzTaEmAh/Td2gYsJDMTBbkEG9JsO
-         UYCg7ek+jbhAbMJZuPxe5XEF9al065xGcU6lryFuNSPBQTCQ7CG7auGAtAMjciuG3/21
-         KMxdKYYKbQIbcwNn5rmwXDP0UgEYzkC+HY77kNfTP3RFGTfHKj8CTyxgHVdCeevldod9
-         t2xw==
-X-Gm-Message-State: AOJu0YyKnWdClKYIMAwfdmKugDjpUTVh+XGS2MWcGvcmI1aHpzsX59fH
-	aHau3bOVHjCPOLpN6pBMXZNFXxHDl24Zyl1BqyodOrEo8UKHCDxJmwldBSgXUYM=
-X-Gm-Gg: ASbGnct5QcBlxCrdsHepRJohIX+q6sghkNeznF+r/NnKzemTP3JEehVqdG7iqxDE/y9
-	al8pvPtPT2x8+eCH5mI/prTqSr4zDfy+uaSUlqN9PDwzp9ObikldsMwr2N4vmwEW+IivxnZESo0
-	XonAhJdni0rfRSsg62oqsu7Q9RcTX3tIQDuAzbmd6J9cL87mwSl0lfB9zTO0ZOsKkWOJb0q4OOd
-	A74EcbF1guC8cjIaWJQ+fDlTtVGP9dfcPWUMag+dbqrUszQqYAtmagKUZRkxElJwrmDY0y2NADF
-	GUh3MmR/c3IBVxm6gN7i9hM2ODUKcrjd+0f84G7HYH+Krw==
-X-Google-Smtp-Source: AGHT+IETtUUcclvChzfkVjayUT4NIFQtFSY18CMht9bvCbnGlLSXyRVI68LXIT4UJlpIFvINkBP8nA==
-X-Received: by 2002:a17:907:944c:b0:ac3:f1dc:f3db with SMTP id a640c23a62f3a-aca9b65dc96mr289301466b.13.1744214575980;
-        Wed, 09 Apr 2025 09:02:55 -0700 (PDT)
-Received: from [192.168.0.20] ([212.21.133.214])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1bb34eesm119172366b.16.2025.04.09.09.02.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Apr 2025 09:02:55 -0700 (PDT)
-Message-ID: <8d5412a3-5742-43d0-b7aa-a0091dc30cf8@suse.com>
-Date: Wed, 9 Apr 2025 19:02:54 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SBkFCHrY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CC1DC4CEE2;
+	Wed,  9 Apr 2025 16:03:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744214591;
+	bh=+ziiKcpq40KHLTKB5D7JfzLNH/xmK8EsYce/6ImmTAs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=SBkFCHrYcg+lu8qabqWZASjcN3aOdqyQkRpNAyG9uF1KJw02tMLtOxPPWpsgfkFM+
+	 vQTWjn66IR+27ChEMPd3OjNzEVazfrWtvH/+bd1oFLMQdFD5Nk4OPGdzixjqCAZlsC
+	 PbqdIVljXzL+7NqgZqoOgcFHUa5wOD2FJjH42nsRWkbASBegJ0i+pGi1XMlmC1CUO2
+	 QchTp4wGxJnwwjOhMkD09ArGURdsky3qwWmJU7F6CLU6cG5hwx5j/Il09hLEZpkfnz
+	 ToZnyJigCROhN7GXf0Y03V3MCL6D/qJAYpAbrhi/jifohKOy5PsE+0ph2KpICrQzW1
+	 y4aozynH7cYqg==
+From: Kees Cook <kees@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>
+Cc: Kees Cook <kees@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	linux-kbuild@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	kasan-dev@googlegroups.com,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH] gcc-plugins: Remove SANCOV plugin
+Date: Wed,  9 Apr 2025 09:02:56 -0700
+Message-Id: <20250409160251.work.914-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] x86/sev: Disallow userspace access to BIOS region for
- SEV-SNP guests
-To: Dan Williams <dan.j.williams@intel.com>,
- Dave Hansen <dave.hansen@intel.com>, Tom Lendacky <thomas.lendacky@amd.com>,
- Naveen N Rao <naveen@kernel.org>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linux-coco@lists.linux.dev,
- Dave Hansen <dave.hansen@linux.intel.com>, Borislav Petkov <bp@alien8.de>,
- Vishal Annapurve <vannapurve@google.com>,
- Kirill Shutemov <kirill.shutemov@linux.intel.com>,
- Kevin Loughlin <kevinloughlin@google.com>
-References: <20250403120228.2344377-1-naveen@kernel.org>
- <67eedc35be77d_464ec29462@dwillia2-xfh.jf.intel.com.notmuch>
- <l34f6nqq3up23cvrgmebbufztqkvfil5eahecukw5bnqekccpj@6nbciquhwxxc>
- <1bc4c506-57ad-38aa-d56d-ed058f54708e@amd.com>
- <fd683daa-d953-48ca-8c5d-6f4688ad442c@intel.com>
- <67f5b75c37143_71fe2949b@dwillia2-xfh.jf.intel.com.notmuch>
-From: Nikolay Borisov <nik.borisov@suse.com>
-Content-Language: en-US
-In-Reply-To: <67f5b75c37143_71fe2949b@dwillia2-xfh.jf.intel.com.notmuch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7959; i=kees@kernel.org; h=from:subject:message-id; bh=+ziiKcpq40KHLTKB5D7JfzLNH/xmK8EsYce/6ImmTAs=; b=owGbwMvMwCVmps19z/KJym7G02pJDOnfZumvVRVfeZjhfoe+9f43M7rkwuYeDHz90VFA4ngUW 028ddeWjlIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgIlEWDIy/G35sXOHPA+PhRJ/ 0NcgDUkO9zfbRGfx/rd97qGkucVChuGf8rXX3R1L9I8yX4otqVqqM9k9Tm12ifAx2zdO4h8DQu7 wAwA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
+There are very few users of this plugin[1], and since it's features
+are available in GCC 6 and later (and Clang), users can update their
+compilers if they need support on newer kernels.
 
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/all/08393aa3-05a3-4e3f-8004-f374a3ec4b7e@app.fastmail.com/ [1]
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Nicolas Schier <nicolas@fjasle.eu>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Andrey Konovalov <andreyknvl@gmail.com>
+Cc: linux-kbuild@vger.kernel.org
+Cc: linux-hardening@vger.kernel.org
+Cc: kasan-dev@googlegroups.com
+---
+ lib/Kconfig.debug                   |   4 +-
+ scripts/Makefile.gcc-plugins        |   2 -
+ scripts/Makefile.kcov               |   1 -
+ scripts/gcc-plugins/Kconfig         |  10 ---
+ scripts/gcc-plugins/sancov_plugin.c | 134 ----------------------------
+ 5 files changed, 1 insertion(+), 150 deletions(-)
+ delete mode 100644 scripts/gcc-plugins/sancov_plugin.c
 
-On 9.04.25 г. 2:55 ч., Dan Williams wrote:
-> Dave Hansen wrote:
->> On 4/8/25 06:43, Tom Lendacky wrote:
->>>> Tom/Boris, do you see a problem blocking access to /dev/mem for SEV
->>>> guests?
->>> Not sure why we would suddenly not allow that.
->>
->> Both TDX and SEV-SNP have issues with allowing access to /dev/mem.
->> Disallowing access to the individually troublesome regions can fix
->> _part_ of the problem. But suddenly blocking access is guaranteed to fix
->> *ALL* the problems forever.
-> 
-> ...or at least solicits practical use cases for why the kernel needs to
-> poke holes in the policy.
-> 
->> Or, maybe we just start returning 0's for all reads and throw away all
->> writes. That is probably less likely to break userspace that doesn't
->> know what it's doing in the first place.
-> 
-> Yes, and a bulk of the regression risk has already been pipe-cleaned by
-> KERNEL_LOCKDOWN that shuts down /dev/mem and PCI resource file mmap in
-> many scenarios.
-> 
-> Here is an updated patch that includes some consideration for mapping
-> zeros for known legacy compatibility use cases.
-> 
-> -- 8< --
-> From: Dan Williams <dan.j.williams@intel.com>
-> Subject: [PATCH] x86: Restrict /dev/mem access for potentially unaccepted
->   memory by default
-> 
-> Nikolay reports [1] that accessing BIOS data (first 1MB of the physical
-> address space) via /dev/mem results in an SEPT violation.
-> 
-> The cause is ioremap() (via xlate_dev_mem_ptr()) establishes an
-> unencrypted mapping where the kernel had established an encrypted
-> mapping previously.
-> 
-> An initial attempt to fix this revealed that TDX and SEV-SNP have
-> different expectations about which and when address ranges can be mapped
-> via /dev/mem.
-> 
-> Rather than develop a precise set of allowed /dev/mem capable TVM
-> address ranges, lean on the observation that KERNEL_LOCKDOWN is already
-> blocking /dev/mem access in many cases to do the same by default for x86
-> TVMs. This can still be later relaxed as specific needs arise, but in
-> the meantime close off this source of mismatched IORES_MAP_ENCRYPTED
-> expectations.
-> 
-> Note that this is careful to map zeroes rather than reject mappings of
-> the BIOS data space.
-> 
-> Cc: <x86@kernel.org>
-> Cc: Vishal Annapurve <vannapurve@google.com>
-> Cc: Kirill Shutemov <kirill.shutemov@linux.intel.com>
-> Reported-by: Nikolay Borisov <nik.borisov@suse.com>
-> Closes: http://lore.kernel.org/20250318113604.297726-1-nik.borisov@suse.com [1]
-> Fixes: 9aa6ea69852c ("x86/tdx: Make pages shared in ioremap()")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->   arch/x86/Kconfig                |  2 ++
->   arch/x86/include/asm/x86_init.h |  2 ++
->   arch/x86/kernel/x86_init.c      |  6 ++++++
->   arch/x86/mm/init.c              | 14 +++++++++++---
->   4 files changed, 21 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 15f346f02af0..6d4f94a79314 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -888,6 +888,7 @@ config INTEL_TDX_GUEST
->   	depends on X86_64 && CPU_SUP_INTEL
->   	depends on X86_X2APIC
->   	depends on EFI_STUB
-> +	depends on STRICT_DEVMEM
->   	select ARCH_HAS_CC_PLATFORM
->   	select X86_MEM_ENCRYPT
->   	select X86_MCE
-> @@ -1507,6 +1508,7 @@ config AMD_MEM_ENCRYPT
->   	bool "AMD Secure Memory Encryption (SME) support"
->   	depends on X86_64 && CPU_SUP_AMD
->   	depends on EFI_STUB
-> +	depends on STRICT_DEVMEM
->   	select DMA_COHERENT_POOL
->   	select ARCH_USE_MEMREMAP_PROT
->   	select INSTRUCTION_DECODER
-> diff --git a/arch/x86/include/asm/x86_init.h b/arch/x86/include/asm/x86_init.h
-> index 213cf5379a5a..0ae436b34b88 100644
-> --- a/arch/x86/include/asm/x86_init.h
-> +++ b/arch/x86/include/asm/x86_init.h
-> @@ -305,6 +305,7 @@ struct x86_hyper_runtime {
->    * 				semantics.
->    * @realmode_reserve:		reserve memory for realmode trampoline
->    * @realmode_init:		initialize realmode trampoline
-> + * @devmem_is_allowed		restrict /dev/mem and PCI sysfs resource access
->    * @hyper:			x86 hypervisor specific runtime callbacks
->    */
->   struct x86_platform_ops {
-> @@ -323,6 +324,7 @@ struct x86_platform_ops {
->   	void (*set_legacy_features)(void);
->   	void (*realmode_reserve)(void);
->   	void (*realmode_init)(void);
-> +	bool (*devmem_is_allowed)(unsigned long pfn);
->   	struct x86_hyper_runtime hyper;
->   	struct x86_guest guest;
->   };
-> diff --git a/arch/x86/kernel/x86_init.c b/arch/x86/kernel/x86_init.c
-> index 0a2bbd674a6d..346301375bd4 100644
-> --- a/arch/x86/kernel/x86_init.c
-> +++ b/arch/x86/kernel/x86_init.c
-> @@ -143,6 +143,11 @@ static void enc_kexec_begin_noop(void) {}
->   static void enc_kexec_finish_noop(void) {}
->   static bool is_private_mmio_noop(u64 addr) {return false; }
->   
-> +static bool platform_devmem_is_allowed(unsigned long pfn)
-> +{
-> +	return !cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT);
-> +}
-> +
->   struct x86_platform_ops x86_platform __ro_after_init = {
->   	.calibrate_cpu			= native_calibrate_cpu_early,
->   	.calibrate_tsc			= native_calibrate_tsc,
-> @@ -156,6 +161,7 @@ struct x86_platform_ops x86_platform __ro_after_init = {
->   	.restore_sched_clock_state	= tsc_restore_sched_clock_state,
->   	.realmode_reserve		= reserve_real_mode,
->   	.realmode_init			= init_real_mode,
-> +	.devmem_is_allowed		= platform_devmem_is_allowed,
->   	.hyper.pin_vcpu			= x86_op_int_noop,
->   	.hyper.is_private_mmio		= is_private_mmio_noop,
->   
-> diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-> index bfa444a7dbb0..c8679ae1bc8b 100644
-> --- a/arch/x86/mm/init.c
-> +++ b/arch/x86/mm/init.c
-> @@ -867,6 +867,8 @@ void __init poking_init(void)
->    */
->   int devmem_is_allowed(unsigned long pagenr)
->   {
-> +	bool platform_allowed = x86_platform.devmem_is_allowed(pagenr);
-> +
->   	if (region_intersects(PFN_PHYS(pagenr), PAGE_SIZE,
->   				IORESOURCE_SYSTEM_RAM, IORES_DESC_NONE)
->   			!= REGION_DISJOINT) {
-> @@ -885,14 +887,20 @@ int devmem_is_allowed(unsigned long pagenr)
->   	 * restricted resource under CONFIG_STRICT_DEVMEM.
->   	 */
->   	if (iomem_is_exclusive(pagenr << PAGE_SHIFT)) {
-> -		/* Low 1MB bypasses iomem restrictions. */
-> -		if (pagenr < 256)
-> +		/*
-> +		 * Low 1MB bypasses iomem restrictions unless the
-> +		 * platform says "no", in which case map zeroes
-> +		 */
-> +		if (pagenr < 256) {
-> +			if (!platform_allowed)
-> +				return 2;
-
-That'll work but I hate the way this interface works. The sole user of 
-this 0/1/2 convention is page_is_allowed() and the check for 1  inside 
-write_mem(). The proper patch will need to document this...
-
-Reviewed-by: Nikolay Borisov <nik.borisov@suse.com>
-
->   			return 1;
-> +		}
->   
->   		return 0;
->   	}
->   
-> -	return 1;
-> +	return platform_allowed;
->   }
->   
->   void free_init_pages(const char *what, unsigned long begin, unsigned long end)
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 1af972a92d06..e7347419ffc5 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -2135,15 +2135,13 @@ config ARCH_HAS_KCOV
+ config CC_HAS_SANCOV_TRACE_PC
+ 	def_bool $(cc-option,-fsanitize-coverage=trace-pc)
+ 
+-
+ config KCOV
+ 	bool "Code coverage for fuzzing"
+ 	depends on ARCH_HAS_KCOV
+-	depends on CC_HAS_SANCOV_TRACE_PC || GCC_PLUGINS
++	depends on CC_HAS_SANCOV_TRACE_PC
+ 	depends on !ARCH_WANTS_NO_INSTR || HAVE_NOINSTR_HACK || \
+ 		   GCC_VERSION >= 120000 || CC_IS_CLANG
+ 	select DEBUG_FS
+-	select GCC_PLUGIN_SANCOV if !CC_HAS_SANCOV_TRACE_PC
+ 	select OBJTOOL if HAVE_NOINSTR_HACK
+ 	help
+ 	  KCOV exposes kernel code coverage information in a form suitable
+diff --git a/scripts/Makefile.gcc-plugins b/scripts/Makefile.gcc-plugins
+index e4deaf5fa571..6da109d563a5 100644
+--- a/scripts/Makefile.gcc-plugins
++++ b/scripts/Makefile.gcc-plugins
+@@ -52,8 +52,6 @@ KBUILD_CFLAGS += $(GCC_PLUGINS_CFLAGS)
+ 
+ # Some plugins are enabled outside of this Makefile, but they still need to
+ # be included in GCC_PLUGIN so they can get built.
+-gcc-plugin-external-$(CONFIG_GCC_PLUGIN_SANCOV)			\
+-	+= sancov_plugin.so
+ gcc-plugin-external-$(CONFIG_GCC_PLUGIN_RANDSTRUCT)		\
+ 	+= randomize_layout_plugin.so
+ 
+diff --git a/scripts/Makefile.kcov b/scripts/Makefile.kcov
+index 67e8cfe3474b..67de7942b3e7 100644
+--- a/scripts/Makefile.kcov
++++ b/scripts/Makefile.kcov
+@@ -1,6 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ kcov-flags-$(CONFIG_CC_HAS_SANCOV_TRACE_PC)	+= -fsanitize-coverage=trace-pc
+ kcov-flags-$(CONFIG_KCOV_ENABLE_COMPARISONS)	+= -fsanitize-coverage=trace-cmp
+-kcov-flags-$(CONFIG_GCC_PLUGIN_SANCOV)		+= -fplugin=$(objtree)/scripts/gcc-plugins/sancov_plugin.so
+ 
+ export CFLAGS_KCOV := $(kcov-flags-y)
+diff --git a/scripts/gcc-plugins/Kconfig b/scripts/gcc-plugins/Kconfig
+index e383cda05367..ba868d1eef3d 100644
+--- a/scripts/gcc-plugins/Kconfig
++++ b/scripts/gcc-plugins/Kconfig
+@@ -19,16 +19,6 @@ menuconfig GCC_PLUGINS
+ 
+ if GCC_PLUGINS
+ 
+-config GCC_PLUGIN_SANCOV
+-	bool
+-	# Plugin can be removed once the kernel only supports GCC 6+
+-	depends on !CC_HAS_SANCOV_TRACE_PC
+-	help
+-	  This plugin inserts a __sanitizer_cov_trace_pc() call at the start of
+-	  basic blocks. It supports all gcc versions with plugin support (from
+-	  gcc-4.5 on). It is based on the commit "Add fuzzing coverage support"
+-	  by Dmitry Vyukov <dvyukov@google.com>.
+-
+ config GCC_PLUGIN_LATENT_ENTROPY
+ 	bool "Generate some entropy during boot and runtime"
+ 	help
+diff --git a/scripts/gcc-plugins/sancov_plugin.c b/scripts/gcc-plugins/sancov_plugin.c
+deleted file mode 100644
+index b76cb9c42cec..000000000000
+--- a/scripts/gcc-plugins/sancov_plugin.c
++++ /dev/null
+@@ -1,134 +0,0 @@
+-/*
+- * Copyright 2011-2016 by Emese Revfy <re.emese@gmail.com>
+- * Licensed under the GPL v2, or (at your option) v3
+- *
+- * Homepage:
+- * https://github.com/ephox-gcc-plugins/sancov
+- *
+- * This plugin inserts a __sanitizer_cov_trace_pc() call at the start of basic blocks.
+- * It supports all gcc versions with plugin support (from gcc-4.5 on).
+- * It is based on the commit "Add fuzzing coverage support" by Dmitry Vyukov <dvyukov@google.com>.
+- *
+- * You can read about it more here:
+- *  https://gcc.gnu.org/viewcvs/gcc?limit_changes=0&view=revision&revision=231296
+- *  https://lwn.net/Articles/674854/
+- *  https://github.com/google/syzkaller
+- *  https://lwn.net/Articles/677764/
+- *
+- * Usage:
+- * make run
+- */
+-
+-#include "gcc-common.h"
+-
+-__visible int plugin_is_GPL_compatible;
+-
+-tree sancov_fndecl;
+-
+-static struct plugin_info sancov_plugin_info = {
+-	.version	= PLUGIN_VERSION,
+-	.help		= "sancov plugin\n",
+-};
+-
+-static unsigned int sancov_execute(void)
+-{
+-	basic_block bb;
+-
+-	/* Remove this line when this plugin and kcov will be in the kernel.
+-	if (!strcmp(DECL_NAME_POINTER(current_function_decl), DECL_NAME_POINTER(sancov_fndecl)))
+-		return 0;
+-	*/
+-
+-	FOR_EACH_BB_FN(bb, cfun) {
+-		const_gimple stmt;
+-		gcall *gcall;
+-		gimple_stmt_iterator gsi = gsi_after_labels(bb);
+-
+-		if (gsi_end_p(gsi))
+-			continue;
+-
+-		stmt = gsi_stmt(gsi);
+-		gcall = as_a_gcall(gimple_build_call(sancov_fndecl, 0));
+-		gimple_set_location(gcall, gimple_location(stmt));
+-		gsi_insert_before(&gsi, gcall, GSI_SAME_STMT);
+-	}
+-	return 0;
+-}
+-
+-#define PASS_NAME sancov
+-
+-#define NO_GATE
+-#define TODO_FLAGS_FINISH TODO_dump_func | TODO_verify_stmts | TODO_update_ssa_no_phi | TODO_verify_flow
+-
+-#include "gcc-generate-gimple-pass.h"
+-
+-static void sancov_start_unit(void __unused *gcc_data, void __unused *user_data)
+-{
+-	tree leaf_attr, nothrow_attr;
+-	tree BT_FN_VOID = build_function_type_list(void_type_node, NULL_TREE);
+-
+-	sancov_fndecl = build_fn_decl("__sanitizer_cov_trace_pc", BT_FN_VOID);
+-
+-	DECL_ASSEMBLER_NAME(sancov_fndecl);
+-	TREE_PUBLIC(sancov_fndecl) = 1;
+-	DECL_EXTERNAL(sancov_fndecl) = 1;
+-	DECL_ARTIFICIAL(sancov_fndecl) = 1;
+-	DECL_PRESERVE_P(sancov_fndecl) = 1;
+-	DECL_UNINLINABLE(sancov_fndecl) = 1;
+-	TREE_USED(sancov_fndecl) = 1;
+-
+-	nothrow_attr = tree_cons(get_identifier("nothrow"), NULL, NULL);
+-	decl_attributes(&sancov_fndecl, nothrow_attr, 0);
+-	gcc_assert(TREE_NOTHROW(sancov_fndecl));
+-	leaf_attr = tree_cons(get_identifier("leaf"), NULL, NULL);
+-	decl_attributes(&sancov_fndecl, leaf_attr, 0);
+-}
+-
+-__visible int plugin_init(struct plugin_name_args *plugin_info, struct plugin_gcc_version *version)
+-{
+-	int i;
+-	const char * const plugin_name = plugin_info->base_name;
+-	const int argc = plugin_info->argc;
+-	const struct plugin_argument * const argv = plugin_info->argv;
+-	bool enable = true;
+-
+-	static const struct ggc_root_tab gt_ggc_r_gt_sancov[] = {
+-		{
+-			.base = &sancov_fndecl,
+-			.nelt = 1,
+-			.stride = sizeof(sancov_fndecl),
+-			.cb = &gt_ggc_mx_tree_node,
+-			.pchw = &gt_pch_nx_tree_node
+-		},
+-		LAST_GGC_ROOT_TAB
+-	};
+-
+-	/* BBs can be split afterwards?? */
+-	PASS_INFO(sancov, "asan", 0, PASS_POS_INSERT_BEFORE);
+-
+-	if (!plugin_default_version_check(version, &gcc_version)) {
+-		error(G_("incompatible gcc/plugin versions"));
+-		return 1;
+-	}
+-
+-	for (i = 0; i < argc; ++i) {
+-		if (!strcmp(argv[i].key, "no-sancov")) {
+-			enable = false;
+-			continue;
+-		}
+-		error(G_("unknown option '-fplugin-arg-%s-%s'"), plugin_name, argv[i].key);
+-	}
+-
+-	register_callback(plugin_name, PLUGIN_INFO, NULL, &sancov_plugin_info);
+-
+-	if (!enable)
+-		return 0;
+-
+-#if BUILDING_GCC_VERSION < 6000
+-	register_callback(plugin_name, PLUGIN_START_UNIT, &sancov_start_unit, NULL);
+-	register_callback(plugin_name, PLUGIN_REGISTER_GGC_ROOTS, NULL, (void *)&gt_ggc_r_gt_sancov);
+-	register_callback(plugin_name, PLUGIN_PASS_MANAGER_SETUP, NULL, &sancov_pass_info);
+-#endif
+-
+-	return 0;
+-}
+-- 
+2.34.1
 
