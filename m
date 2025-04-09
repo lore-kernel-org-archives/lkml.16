@@ -1,198 +1,183 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C53B278178
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 18:41:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4AA278155
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 18:43:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744224088; cv=none; b=Xytm/dgMXiR24hhpCvBJxBLHbkwpSy5ZzH4OKU5N3vrKoSpA6qp05NnEnGvgeG+IHAYxg4exnQ+r8dBwtPN/cu2hMNvO/AUcEjo2XLEcPaRHDJnX0RiYPmRyzNHRgBC5bSMeP9SKgOFy6TIYqZZUiL3Ik1pm5lfYLLxLeVt6TzY=
+	t=1744224211; cv=none; b=IygbGRvMqq6hEW3d/UV3DUITdnkTBuLx1pIi4fDjOYwC9jViArDwVK2CbHJi/j6tOwcn+q55Gs0+oAJupfNhlk0cCK1cwG2YHQvEhW7GL4LK9VpnlKooSSMtyP83xa+VzHTKudHEQd1NtqB/qFhq5SCndVDze4HkUm957+Ff86o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744224088; c=relaxed/simple;
-	bh=FcHX028iX5LkisRplgkLc8pOcmbMwMbd35p1B7+k4oQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pgziubxZ5fnQV1fWoGCyd5t1ONnkStIdqcozLdDSjhUUCV3jmK8+LtloCIOKyvDfsc40sqS5oa84bCiXEqocGLpq5Ly5wSHoMU1XAk40Wu4ynx9lGPn0LBwJhK08lgxkDQ4aokxwIVgkgV6elLZqHSN/pcuKFLojMZQp/VpMvzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Bg6ZO7Bb; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744224211; c=relaxed/simple;
+	bh=39vz9Jz4SIUGg6Pb+C8ys6F0B1ja7AbNj2X6gnj3wFU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HExTjPStC7xG79Y7HlwAcQ1rXn9/vWZqVmyBwHjVSXmgr4ZrRwIrJvtmGf7ncDN0r6617TZC1qlVHx/ZUx9ZI1fLL/Wtz7V4hCOLLZyjIXmfrtL7NKjadIRl45M5CThGV85FIa2rF3pPmXk7fwYBhZe4sRtbNnhD16YwhRXuXro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=DDNVpVlq; arc=none smtp.client-ip=209.85.210.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bg6ZO7Bb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744224086;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/udgtrvs2rAgp9bOsMF5Zy+uqnCHPJnsUE8E48V9ktk=;
-	b=Bg6ZO7Bb1J3UnfcQqA01BC0v+dl3lBBuY4JUIqazSHUHP9zeGJZu1F0pW2sDGPVt6fqhd7
-	C1Fa5neKlGuPCUwORFF+IpQqTUR50eGtOok3nhSxcJFFmB9tUz1iyMJu/Xr4pDw+4yVuxc
-	NXspY/xDd7kUmbPYs6zXeqgte+ct+GM=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-562-nJIx-zFjOaWIkhAkafWLFg-1; Wed,
- 09 Apr 2025 14:41:22 -0400
-X-MC-Unique: nJIx-zFjOaWIkhAkafWLFg-1
-X-Mimecast-MFC-AGG-ID: nJIx-zFjOaWIkhAkafWLFg_1744224080
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EDE5B1800EC5;
-	Wed,  9 Apr 2025 18:41:19 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.34.54])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id EE4761956094;
-	Wed,  9 Apr 2025 18:41:16 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed,  9 Apr 2025 20:40:44 +0200 (CEST)
-Date: Wed, 9 Apr 2025 20:40:40 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: linux-fsdevel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
-	Lennart Poettering <lennart@poettering.net>,
-	Daan De Meyer <daan.j.demeyer@gmail.com>,
-	Mike Yuan <me@yhndnzj.com>, linux-kernel@vger.kernel.org,
-	Peter Ziljstra <peterz@infradead.org>
-Subject: Re: [RFC PATCH] pidfs: ensure consistent ENOENT/ESRCH reporting
-Message-ID: <20250409184040.GF32748@redhat.com>
-References: <20250409-sesshaft-absurd-35d97607142c@brauner>
- <20250409-rohstoff-ungnade-d1afa571f32c@brauner>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="DDNVpVlq"
+Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-72c27166ab3so10231a34.1
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 11:43:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1744224208; x=1744829008; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=yUFP4lEaxI/UXTQ8hF09KRKSpAvq6LdwMQOtlQ6n0zQ=;
+        b=DDNVpVlqYMNnXaIbuqd/VFeygNyScS2JLzUmcXTGkOd1UZKmt3v5Mc/iPwZ4n3D27v
+         A8E9G6z9qvRLykKpUhRUEmNCHfSp+h3ppTLcGRV01qnwVWJDBFP4owZhMGLZBvwDuAgR
+         vkASSjCS5mglXr6Qm51jCAo0VbSJQ2ylml6kI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744224208; x=1744829008;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yUFP4lEaxI/UXTQ8hF09KRKSpAvq6LdwMQOtlQ6n0zQ=;
+        b=oVr0vOUGQwtC9StXgkdHmQnhlSqTwtO3W1V63NL/3LA+i70Dx4+Og3gmMEngPQTtI5
+         eOcmZu2ilYh5pCteLSbA3yCYqWzgVDmJh5wyhtwg0v2EPO+VL2iLkcSG72nfnQnlWCSL
+         T4wNaDgH1GBk7pqY7uEJ40zIk9WsGDHxcRg4MG9pYWDIs7vrnF8k2QK5ysF8IwpDKk2W
+         C2lEd1MqVpX0zV8NMld6hQMBnyKVnvY5FiqatyoVN8BFqFk1+GM4dRMXLmgflXvbfq0m
+         AW3SY/E8ZhOQoJlr5bLuB+eGZiOIfgk3PFQmhG9H6VlLSsgPNq6kcWYKQteyVF5y0XkG
+         8Biw==
+X-Forwarded-Encrypted: i=1; AJvYcCVrcgThW7Bvcf6kfBR3vkhCRgQEhbPITT5tCOHIzdaNry98FvZFYQ42BxXHjKgaLtau3xh7DgqAtd/jVow=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/VpQ+h3X6/Yb8SbefPzDFIA2uUgIzOmVfbBA4YKUQef3FX0Xo
+	WT7BEsVxpEskEIma5DgkYGim1i5TMRPU+FJ48iz/qgG3MZjGV+Mq3xyAy14bBg==
+X-Gm-Gg: ASbGncslrT8QTEhVoBgSnwkKTD9UeIGc+/zJXQvNgIPvRsjabuxOHnnC09X8wm2mV+E
+	BVwdOT1C0mg1s7xF4MW3+n1ya6LXdqkIxjW0DtjLlqGkhbovzhR5Qkfzuz9aVt0hMVBByuIus6H
+	P/eOl9IngRILrbCJUTQWePW+IQqVwKeiF1BcclI4zG9fkTtfnoOAW0wzKPYd+jIrLyKGwX9Pejq
+	7mv15kWqdZM+QE3CX+X6HtgWP8FxS+lwYR/BIrPQqfJmch76iZNENE4Uab+BIL5i7h7xKxS/7q0
+	gw+N3EDAOkZKzN01pf7CaNYij49B4wRHA5iKDTRQHs3Y6SCNrE59v/Vm2QlJSZv+Z76RA6yAECq
+	ZQxCsxWbu8Eo+uLny
+X-Google-Smtp-Source: AGHT+IF+btWX9Vo26E5xa94gpnRIcQR2MzTl8AHguTxH8TEW16aEw9TQysoZkDfa3NYurrnfcDnCXQ==
+X-Received: by 2002:a05:6830:6019:b0:72b:87bd:ad47 with SMTP id 46e09a7af769-72e7baae198mr27677a34.3.1744224208126;
+        Wed, 09 Apr 2025 11:43:28 -0700 (PDT)
+Received: from [192.168.178.137] (f215227.upc-f.chello.nl. [80.56.215.227])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2d096cd3764sm325488fac.31.2025.04.09.11.43.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Apr 2025 11:43:27 -0700 (PDT)
+Message-ID: <25b7888d-f704-493b-a2d7-c5e8fff9cfb4@broadcom.com>
+Date: Wed, 9 Apr 2025 20:43:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250409-rohstoff-ungnade-d1afa571f32c@brauner>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 03/13] media: pci: cx18-av-vbi: Replace open-coded
+ parity calculation with parity_odd()
+To: Kuan-Wei Chiu <visitorckw@gmail.com>, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+ jk@ozlabs.org, joel@jms.id.au, eajames@linux.ibm.com,
+ andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ airlied@gmail.com, simona@ffwll.ch, dmitry.torokhov@gmail.com,
+ mchehab@kernel.org, awalls@md.metrocast.net, hverkuil@xs4all.nl,
+ miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+ louis.peens@corigine.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, pabeni@redhat.com, parthiban.veerasooran@microchip.com,
+ johannes@sipsolutions.net, gregkh@linuxfoundation.org, jirislaby@kernel.org,
+ yury.norov@gmail.com, akpm@linux-foundation.org, jdelvare@suse.com,
+ linux@roeck-us.net, alexandre.belloni@bootlin.com, pgaj@cadence.com
+Cc: hpa@zytor.com, alistair@popple.id.au, linux@rasmusvillemoes.dk,
+ Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+ jernej.skrabec@gmail.com, kuba@kernel.org, linux-kernel@vger.kernel.org,
+ linux-fsi@lists.ozlabs.org, dri-devel@lists.freedesktop.org,
+ linux-input@vger.kernel.org, linux-media@vger.kernel.org,
+ linux-mtd@lists.infradead.org, oss-drivers@corigine.com,
+ netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
+ brcm80211@lists.linux.dev, brcm80211-dev-list.pdl@broadcom.com,
+ linux-serial@vger.kernel.org, bpf@vger.kernel.org, jserv@ccns.ncku.edu.tw,
+ Frank.Li@nxp.com, linux-hwmon@vger.kernel.org,
+ linux-i3c@lists.infradead.org, david.laight.linux@gmail.com,
+ andrew.cooper3@citrix.com, Yu-Chun Lin <eleanor15x@gmail.com>
+References: <20250409154356.423512-1-visitorckw@gmail.com>
+ <20250409154356.423512-4-visitorckw@gmail.com>
+Content-Language: en-US
+From: Arend van Spriel <arend.vanspriel@broadcom.com>
+Autocrypt: addr=arend.vanspriel@broadcom.com; keydata=
+ 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
+In-Reply-To: <20250409154356.423512-4-visitorckw@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Christian,
-
-I will actually read your patch tomorrow, but at first glance
-
-On 04/09, Christian Brauner wrote:
->
-> The seqcounter might be
-> useful independent of pidfs.
-
-Are you sure? ;) to me the new pid->pid_seq needs more justification...
-
-Again, can't we use pid->wait_pidfd->lock if we want to avoid the
-(minor) problem with the wrong ENOENT?
-
-or even signal->siglock, although in this case we will need
-pid_task() + lock_task_sighand()...
-
-Oleg.
-
-> Signed-off-by: Christian Brauner <brauner@kernel.org>
+On 4/9/2025 5:43 PM, Kuan-Wei Chiu wrote:
+> Refactor parity calculations to use the standard parity_odd() helper.
+> This change eliminates redundant implementations.
+> 
+> Co-developed-by: Yu-Chun Lin <eleanor15x@gmail.com>
+> Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
+> Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
 > ---
->  include/linux/pid.h |  1 +
->  kernel/exit.c       | 11 +++++++++++
->  kernel/fork.c       | 22 ++++++++++++----------
->  kernel/pid.c        |  1 +
->  4 files changed, 25 insertions(+), 10 deletions(-)
+>   drivers/media/pci/cx18/cx18-av-vbi.c | 12 ++----------
+>   1 file changed, 2 insertions(+), 10 deletions(-)
 > 
-> diff --git a/include/linux/pid.h b/include/linux/pid.h
-> index 311ecebd7d56..b54a4c1ef602 100644
-> --- a/include/linux/pid.h
-> +++ b/include/linux/pid.h
-> @@ -65,6 +65,7 @@ struct pid
->  	struct hlist_head inodes;
->  	/* wait queue for pidfd notifications */
->  	wait_queue_head_t wait_pidfd;
-> +	seqcount_rwlock_t pid_seq;
->  	struct rcu_head rcu;
->  	struct upid numbers[];
->  };
-> diff --git a/kernel/exit.c b/kernel/exit.c
-> index 1b51dc099f1e..8050572fe682 100644
-> --- a/kernel/exit.c
-> +++ b/kernel/exit.c
-> @@ -133,17 +133,28 @@ struct release_task_post {
->  static void __unhash_process(struct release_task_post *post, struct task_struct *p,
->  			     bool group_dead)
->  {
-> +	struct pid *pid;
-> +
-> +	lockdep_assert_held_write(&tasklist_lock);
-> +
->  	nr_threads--;
-> +
-> +	pid = task_pid(p);
-> +	raw_write_seqcount_begin(&pid->pid_seq);
->  	detach_pid(post->pids, p, PIDTYPE_PID);
->  	if (group_dead) {
->  		detach_pid(post->pids, p, PIDTYPE_TGID);
->  		detach_pid(post->pids, p, PIDTYPE_PGID);
->  		detach_pid(post->pids, p, PIDTYPE_SID);
-> +	}
-> +	raw_write_seqcount_end(&pid->pid_seq);
->  
-> +	if (group_dead) {
->  		list_del_rcu(&p->tasks);
->  		list_del_init(&p->sibling);
->  		__this_cpu_dec(process_counts);
->  	}
-> +
->  	list_del_rcu(&p->thread_node);
->  }
->  
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index 4a2080b968c8..1480bf6f5f38 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -2109,24 +2109,26 @@ static int __pidfd_prepare(struct pid *pid, unsigned int flags, struct file **re
->  int pidfd_prepare(struct pid *pid, unsigned int flags, struct file **ret)
->  {
->  	int err = 0;
-> +	unsigned int seq;
->  
-> -	if (!(flags & PIDFD_THREAD)) {
-> +	do {
-> +		seq = raw_seqcount_begin(&pid->pid_seq);
->  		/*
->  		 * If this is struct pid isn't used as a thread-group
->  		 * leader pid but the caller requested to create a
->  		 * thread-group leader pidfd then report ENOENT to the
->  		 * caller as a hint.
->  		 */
-> -		if (!pid_has_task(pid, PIDTYPE_TGID))
-> +		if (!(flags & PIDFD_THREAD) && !pid_has_task(pid, PIDTYPE_TGID))
->  			err = -ENOENT;
-> -	}
-> -
-> -	/*
-> -	 * If this wasn't a thread-group leader struct pid or the task
-> -	 * got reaped in the meantime report -ESRCH to userspace.
-> -	 */
-> -	if (!pid_has_task(pid, PIDTYPE_PID))
-> -		err = -ESRCH;
-> +		/*
-> +		 * If this wasn't a thread-group leader struct pid or
-> +		 * the task got reaped in the meantime report -ESRCH to
-> +		 * userspace.
-> +		 */
-> +		if (!pid_has_task(pid, PIDTYPE_PID))
-> +			err = -ESRCH;
-> +	} while (read_seqcount_retry(&pid->pid_seq, seq));
->  	if (err)
->  		return err;
->  
-> diff --git a/kernel/pid.c b/kernel/pid.c
-> index 4ac2ce46817f..bbca61f62faa 100644
-> --- a/kernel/pid.c
-> +++ b/kernel/pid.c
-> @@ -271,6 +271,7 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
->  	upid = pid->numbers + ns->level;
->  	idr_preload(GFP_KERNEL);
->  	spin_lock(&pidmap_lock);
-> +	seqcount_rwlock_init(&pid->pid_seq, &tasklist_lock);
->  	if (!(ns->pid_allocated & PIDNS_ADDING))
->  		goto out_unlock;
->  	pidfs_add_pid(pid);
-> -- 
-> 2.47.2
-> 
+> diff --git a/drivers/media/pci/cx18/cx18-av-vbi.c b/drivers/media/pci/cx18/cx18-av-vbi.c
+> index 65281d40c681..15b515b95956 100644
+> --- a/drivers/media/pci/cx18/cx18-av-vbi.c
+> +++ b/drivers/media/pci/cx18/cx18-av-vbi.c
+
+[...]
+
+> @@ -278,7 +270,7 @@ int cx18_av_decode_vbi_line(struct v4l2_subdev *sd,
+>   		break;
+>   	case 6:
+>   		sdid = V4L2_SLICED_CAPTION_525;
+> -		err = !odd_parity(p[0]) || !odd_parity(p[1]);
+> +		err = !parity_odd(p[0]) || !parity_odd(p[1]);
+
+No need to call parity_odd() twice here. Instead you could do:
+
+		err = !parity_odd(p[0] ^ p[1]);
+
+This is orthogonal to the change to parity_odd() though. More specific 
+to the new parity_odd() you can now do following as parity_odd() 
+argument is u64:
+
+		err = !parity_odd(*(u16 *)p);
+
+Regards,
+Arend
 
