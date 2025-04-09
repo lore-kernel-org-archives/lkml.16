@@ -1,153 +1,108 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A0B91DED5C
-	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 08:51:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F67725A357
+	for <linux-kernel@vger.kernel.org>; Wed,  9 Apr 2025 08:53:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744188710; cv=none; b=cScZCn71SOBjnFi+CswC6zeRtoCMRZvTTWnV2hYNF8AR6dx0/oAYuAxs/SbQkX9mWBwYVMHglgFcZPcbI0U1qMtU05bNbwmK9tGfG1v8E9Bm0hrtglS4Z1VCOHKOF0avkrFej4WtqmSDCcOxP9dAj1AmlYc2dSdgyjAgSt+km/Q=
+	t=1744188802; cv=none; b=WoXAIwH+QvIz9+1qyqFx2YYFI5KXg4eqgyxGb+Jzy0pbEwWsN1Y1v39uZ7XPt454pOBPux5zU1rVW54F0GU++rU46BUTD5S5g7A8NSZT7j6G4BBC7MO/N46GXUSeRYUJv7QUjp1trfLEVxTkll1c+oZ/9UR2tWPjIIt42e8brLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744188710; c=relaxed/simple;
-	bh=ZdX4ylzskOvlzS/dy0Hz+BZ5yhPSDECThaJX99P04N8=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=GY5C3bCfWV/MmcsOpzUpzLvZHdQj3WYw9JvTlI9R2rIkYgNkI6OInRbr8bEviagsQIGhNOTPvyvNHbaCNOb65ugJKlSZtEXDouh671dxh4BMNhRFg9rcwHLS4SvkCuChgfR3VhzKLudNm2Ujpypmfb6hgkkAbDOtJ6SjVV4Hcgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UCaxguYr; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1744188802; c=relaxed/simple;
+	bh=5LtHgusi0DYB4k8LoSlQMj6591nPND2Az8+N2UCeyUY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=X59+3QyNDwoM++mwM03Cba2BYwfQ3B4ZL9NDgIL10MzofPEX740smRlGUwSYxjNAbM2USVPNWa20tDSbVuuVcWDisDO5NCfd0q1oeWz9op8kPRy34lrjGvrfYwXtwJ3R6Q/imp4NplN/V7dJxFzVklsrW8KSLu9jrPmUW7r5qDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QFrvJyQq; arc=none smtp.client-ip=209.85.221.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UCaxguYr"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43d007b2c79so48566055e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 01:51:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QFrvJyQq"
+Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-5242f137a1eso2741130e0c.1
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 01:53:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744188707; x=1744793507; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=W9EIcXKJmOaJtQk62oAIpx09pwCOcTfkyNYjV4byDb0=;
-        b=UCaxguYrNZtdhVJfn0EZBgznR4z/EiwhjffgxZJNqRiyl0f+9HY6LoepRSMvgzQ38a
-         oeESJrVnJ7+Cd6Yv+Bu45cTa89pFmiMiLb58+Uq+5kYtXg6AojMoieH0ZvF2ONwjkSu3
-         TY1P+AU5FtGmnzRitJgqWzLCo3gvF5jeUvR57+OpPgWl2tXkjDC4LkCVY4CtGjzfZ2zG
-         LspSlPHZ4zWpjxUWcnvxFR7xzc4Oz7CUGnL7jg10cGq/6tmt13Al9iz+SU/DMAIBDhLJ
-         N4IMjPQJor7/Qblj3OB9rymsUNWaGy6WLMQN3LhaviNsgwGiMB+lvy/bpDO4/00RdRIO
-         TfHg==
+        d=gmail.com; s=20230601; t=1744188800; x=1744793600; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5LtHgusi0DYB4k8LoSlQMj6591nPND2Az8+N2UCeyUY=;
+        b=QFrvJyQqIjsJF6mv8+8cJHuk7vILfW7diUmUYDo6PoiATb2qZZ6IUrytl5zc33fULa
+         ewnwFxsk4ckKsP7dz5s+lgvosUQRmOn5npsHOqLZNMwfaFNEuNdM/VcgzcpqgfZM7kG6
+         u323XambZ3h83U0zGJ1XMFC+t/TqIQ1oRfERS5ZdjLf1JIFFl+kaaKgF3vooGZ7X6pe6
+         yUUz2ysD2Tvzmf/+EY3+lvdsL/wPoST1qykAnG0gocHvNLtPf4vh9cXV/f5D2xpgWpVk
+         D6zlvLdfXJBfUlYDQXoAPSbJ/1m8LaabiGAbMi+2YUKZ22yHJji6taus3o48SJ2F6Jch
+         OxDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744188707; x=1744793507;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=W9EIcXKJmOaJtQk62oAIpx09pwCOcTfkyNYjV4byDb0=;
-        b=ehHMeTkZKZRCc7NoD5oKrf1Nd6SDV0Q+FF7xuQ/y/EoC9wTQeH5qrqQAuwTGODar7R
-         evovWo67fi7y2VKtwImt4YKVY9VaZ75V6wk7yw3LcyOe1xuyQVLmXx3oesafLaRCD0Uw
-         14Dl2O/aDDioYYiu1P0aeKDn0X4mEJBSf3rqjO62Wi+MbuIfuqRgWicyc7pOkxVpDrhf
-         IHhCZTpvlkVeFlVP2aZ2j+ogSE48nn4BkBZBq2zPG6HjuAyKPB0/SdAqZvkLi5QrwAEI
-         TU9/DnCsdScWdwyGmTEP+IditgOtSrZyw5ChGf1MhMH6umGZ0L35if/tona665qVe+5T
-         WOgA==
-X-Gm-Message-State: AOJu0YybUGfAmaJW3+8mbJw02JFjgfTdM0LhfbBGdP0z0Y5e9LceIAfB
-	K0mS1myGTLxkLxHKFdFA4VzYxalM75BWDwdOOH5xFacWZFPDoK1pBUFXpXLA7aV94DwsAS9V4/E
-	GQzp9QAwjCdAtZg==
-X-Google-Smtp-Source: AGHT+IFFC1oenasUlX25FhpPJr1NS865doQr/pWc7WJ9+kFbWFNqv3muUFiv4LensE/F5lJnwv2wYu4ZTJalJZ4=
-X-Received: from wmbg24.prod.google.com ([2002:a05:600c:a418:b0:43c:fce2:1db2])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:5492:b0:43d:40b0:5b with SMTP id 5b1f17b1804b1-43f1ed4b96amr12837835e9.25.1744188706743;
- Wed, 09 Apr 2025 01:51:46 -0700 (PDT)
-Date: Wed, 9 Apr 2025 08:51:44 +0000
-In-Reply-To: <20250406110718.126146-3-fujita.tomonori@gmail.com>
+        d=1e100.net; s=20230601; t=1744188800; x=1744793600;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5LtHgusi0DYB4k8LoSlQMj6591nPND2Az8+N2UCeyUY=;
+        b=Yw0nMRqnxpthsShmt+1Puh5NjpT4pIUby/uBuvbMcklWEDvCMofgUpNjDCLgv8Z1uz
+         QG2jOalS8PKiMOny45szRNbVFXfii0oQrfl75L3FZLs36IIdFcIifRmhtCitqdSUcSN4
+         L6k+1RKES13kdLr9bcCZW7OqU+A4zgu7tBtBvrq1fY1UpDnCEZYDHsHGVLbrtv3WRx7r
+         H8Ixpdxz0wx4mKVTmCMkQrurEwwW3PDY9ubFjgdkp8gFLR4U/LTI25vU9ruGDBnZ2ecV
+         kDvjp07+8Rw1/gpG7Bg1uFOUqGFe9k567OATKMq8wfk1eM3OhGKEUMQJs48UQe9Ttm8d
+         vq6A==
+X-Forwarded-Encrypted: i=1; AJvYcCW4prkH/c18bUUnOOAFlC4d1z7Y+e4P+GDLCEjOeR8TaL3IeEJ1xFGRqEzSTRBNjcsjUM75AaCR9gkXjRQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxnp0/u8fEYIqVuEiCs0/rpQ675560I4TOBpdzsqmEZEd9pH8cM
+	0IpyIesZxBD6hLXwRvY9FDW0eTbcNn2DvtriEB2FxN9CWr/ZJI6JD/oIHtrBBdaZt6PAEi0w+ep
+	6kscxGvbdgMmv5DmD2fGwoFKKbnk=
+X-Gm-Gg: ASbGncvY+iGdCIifpHVbiPCmlMw7AMXiFDRxD1f4128MogEh2Rbwxogmy6E3UvpIMc2
+	7Yl8orShienH1X9HYb3RGtkL/I7CZ7LCEL7FukJNnEJTw2BNYwE9HWBjIdO+YUSI977r5E33JYA
+	Mbq43HpmUCEyd6HyyzybWaWPO2
+X-Google-Smtp-Source: AGHT+IEN5uVmKF5wn9rZf6ilGSYyjwAo1pIYlP38TLCCIxdf4qZXt+sHLcFubwYXct1iytoDjzKBUGC6aEskhftJhJo=
+X-Received: by 2002:a05:6122:da7:b0:526:483:95fd with SMTP id
+ 71dfb90a1353d-527a9e12274mr693131e0c.10.1744188799915; Wed, 09 Apr 2025
+ 01:53:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250406110718.126146-1-fujita.tomonori@gmail.com> <20250406110718.126146-3-fujita.tomonori@gmail.com>
-Message-ID: <Z_Y1IBcp_NNnks8R@google.com>
-Subject: Re: [PATCH v1 2/2] rust: task: add Rust version of might_sleep()
-From: Alice Ryhl <aliceryhl@google.com>
-To: FUJITA Tomonori <fujita.tomonori@gmail.com>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	boqun.feng@gmail.com, ojeda@kernel.org, alex.gaynor@gmail.com, 
-	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me, 
-	a.hindborg@samsung.com, tmgross@umich.edu, dakr@kernel.org, mingo@redhat.com, 
-	peterz@infradead.org, juri.lelli@redhat.com, vincent.guittot@linaro.org, 
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
-	mgorman@suse.de, vschneid@redhat.com, pmladek@suse.com
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+References: <cover.1744126058.git.abrahamadekunle50@gmail.com>
+ <Z_V70-9Bk-aZ914y@smile.fi.intel.com> <CADYq+fanYZR1UNJVR0iapynQeXTVEe1xPMMJHXHHCGc-Sc3B_Q@mail.gmail.com>
+ <3878cce7-1a85-7f87-70ac-722cfa9d3e19@inria.fr>
+In-Reply-To: <3878cce7-1a85-7f87-70ac-722cfa9d3e19@inria.fr>
+From: Samuel Abraham <abrahamadekunle50@gmail.com>
+Date: Wed, 9 Apr 2025 09:53:11 +0100
+X-Gm-Features: ATxdqUHbg2WozVzGaSYlAbtv3kgxsOyEjlEPeU5hvICINksNLg2KiyM6lqEiz0A
+Message-ID: <CADYq+fYQHtiQU71w4-4V2Rts7mEHVxLEYbxJp7LnCQQAoxycqw@mail.gmail.com>
+Subject: Re: [PATCH v8 0/2] staging: rtl8723bs: Improve readability and
+ clarity of sequence number wrapping
+To: Julia Lawall <julia.lawall@inria.fr>
+Cc: Andy Shevchenko <andy@kernel.org>, outreachy@lists.linux.dev, gregkh@linuxfoundation.org, 
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	david.laight.linux@gmail.com, dan.carpenter@linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Apr 06, 2025 at 08:07:18PM +0900, FUJITA Tomonori wrote:
-> Adds a helper function equivalent to the C's might_sleep(), which
-> serves as a debugging aid and a potential scheduling point.
-> 
-> Note that this function can only be used in a nonatomic context.
-> 
-> This will be used by Rust version of read_poll_timeout().
-> 
-> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
-> ---
->  rust/helpers/task.c |  6 ++++++
->  rust/kernel/task.rs | 26 ++++++++++++++++++++++++++
->  2 files changed, 32 insertions(+)
-> 
-> diff --git a/rust/helpers/task.c b/rust/helpers/task.c
-> index 31c33ea2dce6..2c85bbc2727e 100644
-> --- a/rust/helpers/task.c
-> +++ b/rust/helpers/task.c
-> @@ -1,7 +1,13 @@
->  // SPDX-License-Identifier: GPL-2.0
->  
-> +#include <linux/kernel.h>
->  #include <linux/sched/task.h>
->  
-> +void rust_helper_might_resched(void)
-> +{
-> +	might_resched();
-> +}
-> +
->  struct task_struct *rust_helper_get_current(void)
->  {
->  	return current;
-> diff --git a/rust/kernel/task.rs b/rust/kernel/task.rs
-> index 9e6f6854948d..1f0156b38ab5 100644
-> --- a/rust/kernel/task.rs
-> +++ b/rust/kernel/task.rs
-> @@ -380,3 +380,29 @@ fn eq(&self, other: &Kuid) -> bool {
->  }
->  
->  impl Eq for Kuid {}
-> +
-> +/// Annotation for functions that can sleep.
-> +///
-> +/// Equivalent to the C side [`might_sleep()`], this function serves as
-> +/// a debugging aid and a potential scheduling point.
-> +///
-> +/// This function can only be used in a nonatomic context.
-> +#[track_caller]
-> +#[inline]
-> +pub fn might_sleep() {
-> +    #[cfg(CONFIG_DEBUG_ATOMIC_SLEEP)]
-> +    {
-> +        let loc = core::panic::Location::caller();
-> +        // SAFETY: FFI call.
+On Wed, Apr 9, 2025 at 3:11=E2=80=AFAM Julia Lawall <julia.lawall@inria.fr>=
+ wrote:
+>
+>
+>
+> On Tue, 8 Apr 2025, Samuel Abraham wrote:
+>
+> > On Tue, Apr 8, 2025 at 8:41=E2=80=AFPM Andy Shevchenko <andy@kernel.org=
+> wrote:
+> > >
+> > > On Tue, Apr 08, 2025 at 03:41:55PM +0000, Abraham Samuel Adekunle wro=
+te:
+> > > > The patchset adds spaces around binary operators, breaks long lines=
+ to enhance readability
+> > > > and provides clarity on sequence number wrapping by using a modulo =
+operation % 4096u, in
+> > > > place of the bitwise AND(&) operation & 0xfff.
+> > > > The patches are required to be applied in sequence.
+> > >
+> > > You missed my tags I gave in a previous review round.
+> >
+> > Oh, I'm sorry I do not know how that works, please.
+> > Am I supposed to add them to the commit message?
+>
+> Yes.
 
-Overall this looks okay to me, but this safety comment could be
-improved. This being an FFI call is not the reason *why* it is safe to
-make this call.
+Hello Julia.
+Thanks for the clarity
 
-// SAFETY: `file.as_ptr()` is valid for reading for `file.len()` bytes.
-
-And I might separate the file into a separate variable for clarity:
-let loc = core::panic::Location::caller();
-let file = loc.file();
-
-> +        unsafe {
-> +            crate::bindings::__might_sleep_precision(
-> +                loc.file().as_ptr().cast(),
-> +                loc.file().len() as i32,
-> +                loc.line() as i32,
-> +            )
-> +        }
-> +    }
-> +
-> +    // SAFETY: FFI call.
-> +    unsafe { crate::bindings::might_resched() }
-
-And here you can say
-// SAFETY: Always safe to call.
-
-Alice
+Adekunle
