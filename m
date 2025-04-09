@@ -1,42 +1,60 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61008218EA2;
-	Wed,  9 Apr 2025 13:21:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D2984C80;
+	Wed,  9 Apr 2025 13:21:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744204897; cv=none; b=fdk3l0fqpqusa32X1wY0X9ELQTQwi3bV1U2EjN0SH9LKPVvqOfip9cDAkEwrAqVSzFQiSX9hGwnx9SE/T4q36DkY7LdwU4Yp0SP9hoXsNzA1hOdpcKoJtwsBC60/IU9YgnVB0g5D1MOXS30QSluPuSham12nYKikLqQjOtO5PgA=
+	t=1744204914; cv=none; b=XdeRuMIQbZO2+C0qiXyupe99YAOEFqK9eBERKJDnC34bCZnTlVW9/WDh9h/9Bn2WTuy0KXxfQIbrXdKGizcDpIadRPE5Cbim1FEVQaolxvIE5jQM2s128cnOu1Qi0vqqm3Jg3olsgJq1Qe4CcM0j+e6Zp6DABHJk8euqfSOXKwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744204897; c=relaxed/simple;
-	bh=zr4G9PuRlvn1Iebs/Po3WpTXgWWeStxGqrwJOl40BRI=;
+	s=arc-20240116; t=1744204914; c=relaxed/simple;
+	bh=hkkkXU0rPXOW0FHwk4UkS9j/YrFARBVXCZRGq/oo8ek=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SFPh46Y77s4uIcuTrQgtGLGDT6k2zb1BOsX+6nyy/uSPvsPwSU5dFIkKOi1h46Ilxe9sCDQpleUUu4cffr91p8kqVhAFn2iLlDT8JErwfApwyvL5ShSWZiCqmjz09p1Q/DYuoj/QrUtC82TaiyJuEzex7LGSN1X4jdw/7DgC7qg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1541B15A1;
-	Wed,  9 Apr 2025 06:21:35 -0700 (PDT)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DCFAE3F694;
-	Wed,  9 Apr 2025 06:21:32 -0700 (PDT)
-Date: Wed, 9 Apr 2025 14:21:30 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: Cristian Marussi <cristian.marussi@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Henry Martin <bsdhenrymartin@gmail.com>, arm-scmi@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [v2 0/2] cpufreq: scmi/scpi: Fix NULL pointer dereference in
- get_rate()
-Message-ID: <20250409-glistening-hasty-ape-c9c7e9@sudeepholla>
-References: <20250408150354.104532-1-bsdhenrymartin@gmail.com>
- <0558b7f7-8c69-4664-afc6-bae4fdc6f071@web.de>
- <20250409-merry-gay-lemur-8288cf@sudeepholla>
- <52aa52a5-7081-41ee-872e-f1728c06daf1@web.de>
- <Z_Zhp38o9KiicPVw@pluto>
- <3f5662dc-7547-4585-a396-4546fa98d34f@web.de>
+	 Content-Type:Content-Disposition:In-Reply-To; b=a4a3vHgL/ivDsXrPcxN4nn4sxOXP11/IBsHUG65oVYA9fZJHG9jPVGeWTbNjHV4lqb522MddbvPBB1n4n66qCZQT3A2KBnjhVMV/E8/LsuZFp3tQZH1597wbkQTh9nzQ9TORBj4Bmsn4kv7MGLrAA865zX5lDIoGgrl/foCDk7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uPIEbTbA; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WH3yhCDs; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uPIEbTbA";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WH3yhCDs"
+Date: Wed, 9 Apr 2025 15:21:49 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744204910;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iMwQCoiALCNgWaYTDJpegtVRqt9rDoY6rGfEceo5S9k=;
+	b=uPIEbTbAXea1Pk78zz2srCANqqBb+FipN9mltrJ9HaLxRm4/egfHhFBuSZo+jlH1tu8JVK
+	u8/L5RqwSGSeLCVRPPOwz5fi9EJfEtbCkAaXjY9hiuBjhkHM1oHKn5dMkzVhOhSi84MoE3
+	c6719RwcN2Jyvz0eREZ83LCjs9NLNOp7yJHczlbjF8hKL/IjD9HYO3tGUuCGidzIFB8uRD
+	dpz1oX/DdAeT9zHzIJ7TY4o2yRMYt80ZBqI4WU74924VUz5wrSa7PMeL3BnDUi1Yg9Hzm3
+	U8WG93dzIHKMwDubH4i66Gn9yiCBVgTe4JDix5sQbFBXeDAtLbIxkv10ntyI6g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744204910;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iMwQCoiALCNgWaYTDJpegtVRqt9rDoY6rGfEceo5S9k=;
+	b=WH3yhCDsCGnrn0Dgp8DOitWlcaLqmRxWjuCp+BvgpJgV132yYRa33D1v144UvDdbZrvY5o
+	AgLNVB2lGVP7nqAA==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Jan Kiszka <jan.kiszka@siemens.com>
+Cc: Valentin Schneider <vschneid@redhat.com>,
+	linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kprateek.nayak@amd.com, Thomas Gleixner <tglx@linutronix.de>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Clark Williams <williams@redhat.com>,
+	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
+	Andreas Ziegler <ziegler.andreas@siemens.com>,
+	Felix Moessbauer <felix.moessbauer@siemens.com>,
+	Florian Bezdeka <florian.bezdeka@siemens.com>
+Subject: Re: [RT BUG] Stall caused by eventpoll, rwlocks and CFS bandwidth
+ controller
+Message-ID: <20250409132149.rFrzBCrP@linutronix.de>
+References: <xhsmhttqvnall.mognet@vschneid.remote.csb>
+ <3f7b7ce1-6dd4-4a4e-9789-4c0cbde057bd@siemens.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,38 +63,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3f5662dc-7547-4585-a396-4546fa98d34f@web.de>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <3f7b7ce1-6dd4-4a4e-9789-4c0cbde057bd@siemens.com>
 
-On Wed, Apr 09, 2025 at 02:25:52PM +0200, Markus Elfring wrote:
-> >>>> Can any other summary phrase variants become more desirable accordingly?
-> >
-> > I agree with Sudeep, the above sentence is completely incomprehensible
-> > to me
-> 
-> Can any suggestions gain acceptance also for better summary phrases?
-> 
-> 
-> 
-> >>> This is meaningless, sorry can't parse. Ignoring it as others in the
-> >>> community are doing already.
-> >> Do you care if the term “null pointer dereference” would be used in consistent ways?
-> >
-> > ...this is more comprehensible,
-> 
-> Thanks for another bit of constructive information.
-> 
-> 
-> >                                 but again I cannot grasp what's yor advice
-> > specifically on this commit message.
-> May the usage of abbreviations be reconsidered once more also for such messages
-> (in presented update steps)?
-> 
+On 2025-04-09 08:41:44 [+0200], Jan Kiszka wrote:
+> We are hunting for quite some time sporadic lock-ups or RT systems,=20
+> first only in the field (sigh), now finally also in the lab. Those have=
+=20
+> a fairly high overlap with what was described here. Our baselines so=20
+> far: 6.1-rt, Debian and vanilla. We are currently preparing experiments=
+=20
+> with latest mainline.
+>=20
+> While this thread remained silent afterwards, we have found [1][2][3] as=
+=20
+> apparently related. But this means we are still with this RT bug, even=20
+> in latest 6.15-rc1?
 
-Still can't understand you. Sorry for that. Alternatively, you can do what
-I sometimes do: just write the whole commit log as you would expect and see
-if that helps. I am sure that helps, so please do that.
+Not sure the commits are related. The problem here is that RW locks are
+not really real time friendly. Frederick had a simple fix to it
+	https://lore.kernel.org/all/20210825132754.GA895675@lothringen/
 
--- 
-Regards,
-Sudeep
+but yeah. The alternative, which I didn't look into, would be to replace
+the reader side with RCU so we would just have the writer lock. That
+mean we need to RW lock because of performance=E2=80=A6
+
+> Jan
+>=20
+> [1] https://lore.kernel.org/lkml/20231030145104.4107573-1-vschneid@redhat=
+=2Ecom/
+> [2] https://lore.kernel.org/lkml/20240202080920.3337862-1-vschneid@redhat=
+=2Ecom/
+> [3] https://lore.kernel.org/lkml/20250220093257.9380-1-kprateek.nayak@amd=
+=2Ecom/
+>=20
+
+Sebastian
