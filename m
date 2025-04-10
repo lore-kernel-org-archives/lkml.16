@@ -1,123 +1,140 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5413281355
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 11:24:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14DE3280A53;
+	Thu, 10 Apr 2025 11:26:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744284288; cv=none; b=fXnhZ8f5FySq5+AuO5C7ueUeCUgJU3UfmcLvDvkZMYgeY0nbX/+Fdhbydrh4rCjNpk3Ztkz7fbUbEB8t1eCnpeTlY/UmDK9SBbr7ZJBaT61V3WbpAXNqzpuNbxp7VHSIUaPpawfJmyz38RFEz7GszTCAbB3MoHO7CYTiogLOui4=
+	t=1744284409; cv=none; b=IsJm4y/DZ7JLZruKGy6xyKWzvLPuBqzTkCQP09owuOfxJujA74rlcUKva+pq4XBY4uXTwpKOGrlFo2e2/SNhJLxaBflK/89g3rp7auIxfNniG5mxVR0PuFmYV1sdzAifjUjFSRKo9A3qqaaafBQn5UPfy1+kpRt6w9XzEcGBWZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744284288; c=relaxed/simple;
-	bh=uxZG4n3nv8upFUF3AElIC34tkOtzKRJkS7sA0QWrrlc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Z8FsV8VexHX7CRVWnW1q2omahUj+tt1GXMKTG67qN62qotiSluSOQywYEsx1wHSCCaror62kct/0OThgCn14Tu2z3UOAOEE82DUmWVDpgAan38g4scF/p23EiKojir0YpCe9uaDZDqzD/4J7cltSYgWpw+jztuMVf8igfbmtu98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VCGMXqyP; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744284409; c=relaxed/simple;
+	bh=/4QRP0LSSY1+4wNQDfdTqX7gGpMupN8PmdBWu1jst2c=;
+	h=Content-Type:Date:Message-Id:To:Subject:Cc:From:References:
+	 In-Reply-To; b=S4A3sQysNC1plki+Oy4QHQ0MMx0MAy/Balrrn9PmxqjHjF0Xtc+iluP5WbwxuAvALymHXzHKwkyOcy4hdb6HLfTNl8mF/UKowgVyPbgw4VKAgIRQHJiIB7RkQOA6nRLWDI9U/hAS1MQOlk4dBMcH+CFFHvJJcV2Tfy6qMTDp0JQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OabO3AHx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VCGMXqyP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744284285;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+bRUqjURXRfi5I4u/cU2aBmMRmmhkdr8UnK21YTbfjM=;
-	b=VCGMXqyPTSXeKbI8pdpIlA5o3i3ALJyCXVN9j9m9VGreemc5yaL4KC8KKjJaFaFe5gRmGH
-	nQWfxkqqjWLM7Fcg10NIuRGSazaDLMEWrowGv1ZPZHQZkGqo1DrdPJbpERY8vXQlkNJ5uu
-	wnLIxSa2wKKLuq7Te1Wg+sBRN6PW8SU=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-456-ZllAiCo_NPCsp9n9stmhWA-1; Thu, 10 Apr 2025 07:24:44 -0400
-X-MC-Unique: ZllAiCo_NPCsp9n9stmhWA-1
-X-Mimecast-MFC-AGG-ID: ZllAiCo_NPCsp9n9stmhWA_1744284283
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-ac3e0c1336dso64705466b.3
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 04:24:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744284283; x=1744889083;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+bRUqjURXRfi5I4u/cU2aBmMRmmhkdr8UnK21YTbfjM=;
-        b=a0PLp1oFgN4PXjZz0xvSk0Th5T1XuMFmM4CbVI9JJ6czXx76ZThdHiic+HnAE0AfCA
-         zYYqMFVieiqajbNg/7ubiRpwNX9kJyW4a+L+ohBUI53rMdZ/zHer0yfA9H07n7c0L/0R
-         Idg2askZZJ9jK3FRQkMBx8nv7T96p2QIa5eOKYMcOl+2/Rt9QQcerJlT/y+Ze6jhmL7r
-         +hWHJU3WCb5+q7IFew6u3snxIAKI8J+YsYGVFSczugwxi7hvNlyQbGgoKYyPv405uXIK
-         FvAzPv3RBvh/7NO0Mr5irhr3ggSclDXl6d4IFVVhPYI7P4tF1DABnavjSXnf9qw6I8Cf
-         6eNw==
-X-Gm-Message-State: AOJu0YzKSfH4/KjC9On/uloa2nMW9DeHbUmXmy7gyOKy1QjFPcR3J2MF
-	TJ4Rq6McHfKm7eFjd+9yJFQIS+a7HdAxrUtOC5pgNCKWbSpfgIoq1Tqrq2SK4frHlg+QeI3/f63
-	JYHRBSAHkvILNprmxn3yQi8IqBNxQTG+uIyn5AY4L2ZPrb4fVYneqChWqMiBQNg==
-X-Gm-Gg: ASbGncsIWOsQ9OvyrvZWH+SHTIIzSz56oqn9DAWdggKeNhMqLjHDRhf+ZIc8wJs+PHI
-	8M4CNpSh/SbZqPq325JfaFfXpIVVVOo1LzovHcBzKSTtjG4yb+5ONWXz3GcOmGzBZzaHN3eHFoR
-	Vw4Kr1Cod4qe8DOp8Oob13ZcUPSjMfIXjFZvvlaMJ/VN34c8li3O83HtaEhfyHi6Tyns4OpjmEU
-	jFEnjxNmzHjOY8WSi/cVbaJ8ImkraoAuHp7Pz0MqQ/FnnBNzsdwvGNEQQQWpb75Vb48KFZpvsUQ
-	/Reqm3Vy
-X-Received: by 2002:a17:907:2d22:b0:abf:6ebf:5500 with SMTP id a640c23a62f3a-acabd194daemr265371266b.16.1744284283060;
-        Thu, 10 Apr 2025 04:24:43 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFzYJr1mbcVFMmyOfUdrNowN0DoumFwjn6olFk+s/oECeaB2XhRLnSDLWVgdEThGtX1Z2TGXw==
-X-Received: by 2002:a17:907:2d22:b0:abf:6ebf:5500 with SMTP id a640c23a62f3a-acabd194daemr265369266b.16.1744284282695;
-        Thu, 10 Apr 2025 04:24:42 -0700 (PDT)
-Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1bb312bsm260985966b.15.2025.04.10.04.24.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 04:24:42 -0700 (PDT)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-	id 490101992292; Thu, 10 Apr 2025 13:24:41 +0200 (CEST)
-From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To: Peter Seiderer <ps.report@gmx.net>, netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, "David S . Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Peter
- Seiderer <ps.report@gmx.net>
-Subject: Re: [PATCH net-next v1 00/11] net: pktgen: fix checkpatch code
- style errors/warnings
-In-Reply-To: <20250410071749.30505-1-ps.report@gmx.net>
-References: <20250410071749.30505-1-ps.report@gmx.net>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date: Thu, 10 Apr 2025 13:24:41 +0200
-Message-ID: <87mscotg1y.fsf@toke.dk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OabO3AHx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 075F6C4CEDD;
+	Thu, 10 Apr 2025 11:26:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744284408;
+	bh=/4QRP0LSSY1+4wNQDfdTqX7gGpMupN8PmdBWu1jst2c=;
+	h=Date:To:Subject:Cc:From:References:In-Reply-To:From;
+	b=OabO3AHx9XrOritNLNk+T+lzS6wUFA7IK+HvL6Ph37t0tuo982CSxzsVwedi6kAgt
+	 tuSTOvURZ8oWdnknwvMh9XsrdM3YPxFKyT5fevb7hO7EG9Ker+uuk0YrzTG6MRCrMc
+	 Tka6QYJ58zr5ffZkITqC69UCcL+muGYuU/WuPv6PfMuWORmLgBSJnINk1mt55E3zIf
+	 bVfjK2LLIAjeml7eEPqz5EqQzBWaCPos03gMwA8nSf7NeMHQwVEijbEQW5dq1Psy9z
+	 Rbamjm1BgSi2MsXZAetwmWLB0W+FjpwS3+ps7xTOz9/DYx5za7QuPkalhm4RlnZCFS
+	 Q+gITr1nWtv/g==
+Content-Type: multipart/signed;
+ boundary=ad55f64d21a9492004b5049814098a828c9f0c6ce5dd548f52b9a2e1c6dc;
+ micalg=pgp-sha384; protocol="application/pgp-signature"
+Date: Thu, 10 Apr 2025 13:26:44 +0200
+Message-Id: <D92X7T33NU3T.VSZM5K7U602S@kernel.org>
+To: "Manorit Chawdhry" <m-chawdhry@ti.com>
+Subject: Re: [PATCH] arm64: dts: ti: k3-am62p-j722s: add rng node
+Cc: "Kumar, Udit" <u-kumar1@ti.com>, "Nishanth Menon" <nm@ti.com>, "Vignesh
+ Raghavendra" <vigneshr@ti.com>, "Tero Kristo" <kristo@kernel.org>, "Rob
+ Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+ "Conor Dooley" <conor+dt@kernel.org>,
+ <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+From: "Michael Walle" <mwalle@kernel.org>
+X-Mailer: aerc 0.16.0
+References: <20250313144155.2382316-1-mwalle@kernel.org>
+ <837cba5f-f49e-4cbf-9cbe-2b25f7c9d4b8@ti.com>
+ <D8UECOJ2NMCU.3ALYIKSODJ479@kernel.org>
+ <1ad2d8c2-6a0d-419d-984d-4974adb0e1f0@ti.com>
+ <D8V323NBB32P.3P8H103L83HZK@kernel.org>
+ <e2a37e72-d9c8-4329-8a5a-f2c9865cdb5d@ti.com>
+ <ea82dc29e93d53b659916f2fed10982b@kernel.org>
+ <20250409103303.dkrrvp7mdctx32pd@uda0497581-HP>
+In-Reply-To: <20250409103303.dkrrvp7mdctx32pd@uda0497581-HP>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+
+--ad55f64d21a9492004b5049814098a828c9f0c6ce5dd548f52b9a2e1c6dc
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-Peter Seiderer <ps.report@gmx.net> writes:
+Hi Manorit,
 
-> Fix checkpatch detected code style errors/warnings detected in
-> the file net/core/pktgen.c (remaining checkpatch checks will be addressed
-> in a follow up patch set).
+> > > > > > > > --- a/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dts=
+i
+> > > > > > > > [..]
+> > > > > > > For completeness , this is ok to add this node but
+> > > > > > > should be kept disabled
+> > > > > > Shouldn't it be "reserved" then, see [1].
+> > > > > yes, should be reserved.
+> > > > >=20
+> > > > > With marking status as reserved.
+> > > > >=20
+> > > > > Please use Reviewed-by: Udit Kumar <u-kumar1@ti.com>
+> > > > Thanks.
+> > > >=20
+> > > > > > > similar to
+> > > > > > >=20
+> > > > > > > https://github.com/torvalds/linux/blob/master/arch/arm64/boot=
+/dts/ti/k3-j7200-mcu-wakeup.dtsi#L662
+> > > > > > j784s4, j721e and j721s2 have them enabled. What is the rule he=
+re?
+> > > > > J784s4, j721e and j721s2 SOCs has two TRNG blocks,
+> > > > >=20
+> > > > > example for j721e, one is used by kernel [0] and another by
+> > > > > optee [1].
+> > > > >=20
+> > > > >=20
+> > > > > > You also disable the hwrng in optee in your evm according to [2=
+]:
+> > > > > > CFG_WITH_SOFTWARE_PRNG=3Dy
+> > > > > We are planning to use this hardware block by secure firmware.
+> > > > >=20
+> > > > > Therefore request not to use by optee as well
+> > > > How will you be able to access the RNG from linux and u-boot? I'm
+> > > > asking because I'll need it in u-boot for the lwip stack and the
+> > > > HTTPS protocol.
+> > >=20
+> > > For now,=C2=A0 If you need TRNG then I can suggest to use optee TRNG =
+(ie
+> > > build
+> > > optee with HW TRNG).
+> >=20
+> > I'll be using an uboot TRNG driver. But how will that work in
+> > the future if the RNG is used by the secure firmware?
 >
-> Peter Seiderer (11):
->   net: pktgen: fix code style (ERROR: "foo * bar" should be "foo *bar")
->   net: pktgen: fix code style (ERROR: space prohibited after that '&')
->   net: pktgen: fix code style (ERROR: else should follow close brace
->     '}')
->   net: pktgen: fix code style (WARNING: please, no space before tabs)
->   net: pktgen: fix code style (WARNING: suspect code indent for
->     conditional statements)
->   net: pktgen: fix code style (WARNING: Block comments)
->   net: pktgen: fix code style (WARNING: Missing a blank line after
->     declarations)
->   net: pktgen: fix code style (WARNING: macros should not use a trailing
->     semicolon)
->   net: pktgen: fix code style (WARNING: braces {} are not necessary for
->     single statement blocks)
->   net: pktgen: fix code style (WARNING: quoted string split across
->     lines)
->   net: pktgen: fix code style (WARNING: Prefer strscpy over strcpy)
->
->  net/core/pktgen.c | 111 ++++++++++++++++++++++++++--------------------
->  1 file changed, 64 insertions(+), 47 deletions(-)
+> Wondering if this would be of interest to you [0]. I think since this
+> device only has one TRNG, there has to be a master around and we can
+> mitigate that from OP-TEE as of now, incase anything changes in future
+> then the communication channel between OP-TEE and the secure firmware
+> can be established but currently it's still at work. I think the best
+> way to go forward is to get the numbers from OP-TEE atm IMHO.
 
-Most of these are pretty marginal improvements, so I'm a little on the
-fence about whether they are worth it. But, well, they do improve things
-slightly, so if the maintainers are OK with the churn:
+I saw the optee rng. But as of now, the instructions are to use a
+software PRNG for optee. Thus, if someone compiles optee by
+following the instructions, it's unlikely to work.
 
-Reviewed-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
+Would TI willing to agree to change the building docs and enable the
+TRNG in optee and then work on moving the TRNG into the secure
+firmware and build a channel between optee and that firmware? Right
+now, the TRNG seems pretty useless as we cannot use it neither from
+u-boot or linux (and being future proof).
 
+-michael
+
+--ad55f64d21a9492004b5049814098a828c9f0c6ce5dd548f52b9a2e1c6dc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iKgEABMJADAWIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCZ/eq9BIcbXdhbGxlQGtl
+cm5lbC5vcmcACgkQEic87j4CH/i2vwGAuMOEvrofoPrJP5EJ6QI8mOmjikMnoom8
+48SaS2AWc9/dl3cB6//QpAgW4ddQa5K2AYD49R4EajQsRRXYldYv0a3WRj0OVWCG
+BGFmggZsgVeCah5BcwYrWW3pMdL9bnXeUSo=
+=1UR3
+-----END PGP SIGNATURE-----
+
+--ad55f64d21a9492004b5049814098a828c9f0c6ce5dd548f52b9a2e1c6dc--
