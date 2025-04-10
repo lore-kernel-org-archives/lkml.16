@@ -1,133 +1,121 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B037020C46A
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 09:07:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9791D5143;
+	Thu, 10 Apr 2025 09:07:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744276038; cv=none; b=r2rzR3/9IVZGMpB5UoDhgRQT91RTz1FPzsIZbrlJP0E/To7c90mSrBN6TYpK36nRoashbmOO+4Gqjowb25VZ3tShLekaMhhLXXokRWnPzEsjZtdrcNgQ1T+elULJAYZPGTal+uzIIcY5lIQivlqw2ZvCVxFTPKY0dDPwkkXKloM=
+	t=1744276058; cv=none; b=nsgNV7djS+dzAJY6trq28i+jjYSOLWl5JFP5E6CccqnDYnrGuu1NxDRyDyV0SS8JKf0fwVQfWshlCSrOYp2T4cjRUUmIRVi8+uuITJKX+bxXP+girV6chCHbMcyy0/zdYjrQ9MBK0rvEcIyoKDGlMIhEvmi4C6JmJ7YXZz9Oo8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744276038; c=relaxed/simple;
-	bh=Qyy8NtdK4v51s6DQsvyV7vh8W7trK4iXBzq/oAZ4nQg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=n5Vzp1zJg3UAvjFHcQ2/LMSz8VsY9q52J5SZx+6wLi8JinXieKSyJ/naTH7K5l3Ce1IC7AP5Z3NnZeFlmYHgHWEmTWw/wwJRDJDyf69i3fKhrGErAT8W7+MiDVWgc/XwKsEWoatryss2Ze1IKRh3sMCdf61E3i+77y4jEesFwDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=rnfbOnJA; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=rnfbOnJA; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="rnfbOnJA";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="rnfbOnJA"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id D22341F385;
-	Thu, 10 Apr 2025 09:07:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1744276033; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=RG7oQRjFPo5SBEne+qF+QsXhTklGTjoy3A92M4wO+nQ=;
-	b=rnfbOnJAt0PWbB5EB4jloFMZnFTr7l30kkKUkNt0cDMO5PpMw02A0mZ4htztTfQ1jL/jIj
-	YcCoJFc4SQzSD2DuRALbHQVoU6VZby1tMujaB/jNB4GUXN4+4aRIVSHLPr4fCH1MAIbklL
-	QAFFLq93Z62Wv3HQbYikYytZceRLtck=
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1744276033; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=RG7oQRjFPo5SBEne+qF+QsXhTklGTjoy3A92M4wO+nQ=;
-	b=rnfbOnJAt0PWbB5EB4jloFMZnFTr7l30kkKUkNt0cDMO5PpMw02A0mZ4htztTfQ1jL/jIj
-	YcCoJFc4SQzSD2DuRALbHQVoU6VZby1tMujaB/jNB4GUXN4+4aRIVSHLPr4fCH1MAIbklL
-	QAFFLq93Z62Wv3HQbYikYytZceRLtck=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A1A8813886;
-	Thu, 10 Apr 2025 09:07:13 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id lkqyJUGK92fsEwAAD6G6ig
-	(envelope-from <jgross@suse.com>); Thu, 10 Apr 2025 09:07:13 +0000
-From: Juergen Gross <jgross@suse.com>
-To: torvalds@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org,
-	xen-devel@lists.xenproject.org,
-	sstabellini@kernel.org
-Subject: [GIT PULL] xen: branch for v6.15-rc2
-Date: Thu, 10 Apr 2025 11:07:13 +0200
-Message-ID: <20250410090713.30027-1-jgross@suse.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1744276058; c=relaxed/simple;
+	bh=8OCzwr89gfo3EPpB6MxJdzvOIhhvCt/3FusABEzsj8M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=abycAcErPh5naNvURxzDXWBTJMJOsTI/BTwjG5Zq/2fCtPHf/SCToqe8WRau/qmB4TrnU3MZuTOqProFjp3b8tiwbBCnYEpZGJWvby3oP4nDpl1ib2JHon7SqkYCzBKcUiYeq7isF+GonbgFctwBVQaKAOIh8ryrTpfyKHeLEH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-86fab198f8eso228071241.1;
+        Thu, 10 Apr 2025 02:07:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744276054; x=1744880854;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4Hj5jMU+hKHWCk6ITEuBX7mFwQOOBkyiGAOFy/et6jU=;
+        b=GI6RlZUhzfgOvA06iSngnQazhohlguTsNAT16UXSfT5Hs0KNRW3MZpbsC4lBZGw0l7
+         68mdf13R8upwwviJLCefODBIeXrQK2nX8oecB0UCLTSsVRTtNGemFMEgKgkgwRhzAxzB
+         77mMxagVyTpDyYCZWwfE17e2qXUYm9XJA6ae+0l8sPG5KV05pz9YUuQaX2FkxQf+bpCv
+         3TIzCSJmIbJQIfiBlI7YlOLmI7yZE7MXKR2ZK7bFBhArs6IfZyp5RCeb7h35jGndjQox
+         SNgRkppviF9EnZseU7k7SJQcACoVW5L0U2sDI87ScrseytW05T6V0bbKPPlQg2mbkFuQ
+         Cayg==
+X-Forwarded-Encrypted: i=1; AJvYcCUl3IYPUQJsdtFvaALwQM+0PbyxTT21+AQQYb39BwbPWF/JwSJPqZYodUllNQu95ykXPvnxLeq4Yv7i@vger.kernel.org, AJvYcCVETYp1xdf4RcJ1ttFxx8JhEBzyxlB0CdDvg3K7PWpyV5wTFe90JAOvtSlzCwGFtUsGE0kDPVOuVomZ1W8K@vger.kernel.org, AJvYcCVLNKUo58XTOus+OLKw8ioGpTjdeyfp0txU8eE8ZgMJk0dbuQ4jqA0rKA4pryIgTIi3cA09wnZTMGQm@vger.kernel.org, AJvYcCVhe8NZ7CSmmalHhUqc6dPSV+UOtXxpenD9R3e1fouOYjZIUwNPdserBQS3RTBpzgCtqX3UgBkxY85VrGzLznWVelY=@vger.kernel.org, AJvYcCWVpNdRmGgy0qR3DtTENcYirWbTA2qRxXpuU0exdpPxeR903+IkHBEo8JaE9WqCAj4aA5SAf1uwY1NY4Q0Y@vger.kernel.org, AJvYcCX2Kq1IDbvIrpciwEUUxmGMd5XKSvoHuxDVCcAntdrEeKz+E8CYzk+eL9u7oZoRZsiJqEyL+/ZI1sapfg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiIgmW7106Yj755v1asmD1RDoaJp8/kykP+5S4xcMg0JzEOi4U
+	m25GjQkHfQZOyvKJDTVHh/4JpOrBhzHmCiruYtlPXNJuHuM7Nwn+ZK4+ZBn0
+X-Gm-Gg: ASbGncvTrYBhlhkoBwqO6/OXWb+EQeT3yC3GzJUExx1uKj5YxG4BWwoW+ed+CFsDi13
+	lurp/b+K8YstCdScuwUZkffPGoJgw32NICYeUmpxAIHGI2jN2prPz+Bl+py4LUr6ueUi/e9DX9y
+	9D+HdR4h47Q4Wyc+7ptmjnqWSmmcZKFZuKrQ+clC81gv5jyF7vrbjmwM0qfQKRSlIDlDC9WxBSE
+	MpStA/k2pEsq3pl4v8Y393zp0U0Lz886l/Cw9wO5MNnfEvyYd9OEWq2ZJduudM3w20Bj8k02ykL
+	lJLMQlNntuRMOYDwE7/icy5ep6jJVSjrsfgG6FW929BtqpCB0k2aQbWAYOaJlhoqoN2kcxlmxBp
+	hOuc06hBrUBmsnA==
+X-Google-Smtp-Source: AGHT+IHYqoNcj6rYHdWGPokVMu9omeQp3si9hu9JptlkE5pOYGL5jL/TkmrRRwQ94vE6xmjvWhRhdg==
+X-Received: by 2002:a05:6102:149a:b0:4c3:b0:46fd with SMTP id ada2fe7eead31-4c9d362e440mr1234664137.24.1744276054300;
+        Thu, 10 Apr 2025 02:07:34 -0700 (PDT)
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com. [209.85.222.50])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4c9c97a54e2sm515625137.18.2025.04.10.02.07.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Apr 2025 02:07:33 -0700 (PDT)
+Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-86d69774081so233713241.0;
+        Thu, 10 Apr 2025 02:07:33 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWNNZfOsKrJyDy7gC6sNiREyk5xqvVxWSesD/0/G/P4dIz65Q55gLv7lQYP9tR6R54CAk975osxuEKh4Q==@vger.kernel.org, AJvYcCWb693UoBiXNsYNex0qL6nC6BGAcLoT9evsHyyjY9m+g0y8U+Z6zFwsUkLFLecsN5tUVgBTgPbeP0iC@vger.kernel.org, AJvYcCWq63iFr2APawO9TkhXsjVWHn+e9yd6G5JMOjS/hwfn10qdTyTTRk0cWayFwGXyZGlv5AHyKWySPTDgzOZW@vger.kernel.org, AJvYcCX2zgxVOkmC8Io6MDXGBRROrtchX6YrzeaPgOEAL1jmhwAnBy27lIvBk3AY6eLAIwErUeZhyCvUvN4J@vger.kernel.org, AJvYcCXDKWVjRP82wOZRt8Td/Fag/EVtAC2j/oH3OZ/8FRntaG2k22mFQ8lnzN+lnaHV9xgpUdv8+vupqkZlotu7@vger.kernel.org, AJvYcCXFEDK7fOpFaUwY0VsPT/djW+kgs8+n9aiiaGMzmLDjPnfY+6hy9fXRkcIjXSwSKUaeQrflyhKEHEb86lziopo3hLQ=@vger.kernel.org
+X-Received: by 2002:a05:6102:2b86:b0:4bb:ecb9:b34d with SMTP id
+ ada2fe7eead31-4c9d35de416mr1363043137.18.1744276053277; Thu, 10 Apr 2025
+ 02:07:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_NONE(0.00)[];
-	RCVD_TLS_ALL(0.00)[]
-X-Spam-Score: -2.80
-X-Spam-Flag: NO
+References: <20250407191628.323613-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250407191628.323613-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250407191628.323613-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 10 Apr 2025 11:07:20 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdU0ee30MCXSdW=hho42qFHeT5fpNv0_aNSAv-5wXk2g2A@mail.gmail.com>
+X-Gm-Features: ATxdqUHSkDF5MA2fJWWYG6tz7UFqEDBhjsZgOhDasE7MOZZMXst_J_b_svx43vA
+Message-ID: <CAMuHMdU0ee30MCXSdW=hho42qFHeT5fpNv0_aNSAv-5wXk2g2A@mail.gmail.com>
+Subject: Re: [PATCH v2 01/12] dt-bindings: soc: renesas: Document Renesas
+ RZ/V2N SoC variants and EVK
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Linus,
+Hi Prabhakar,
 
-Please git pull the following tag:
+On Mon, 7 Apr 2025 at 21:16, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Document the Renesas RZ/V2N (R9A09G056) SoC variants, distinguishing
+> between configurations with and without specific hardware features such
+> as GPU, ISP, and cryptographic extensions. Also, document the
+> "renesas,rzv2n-evk" compatible string for the RZ/V2N EVK board.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
- git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git for-linus-6.15a-rc2-tag
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v6.16.
 
-xen: branch for v6.15-rc2
+> --- a/Documentation/devicetree/bindings/soc/renesas/renesas.yaml
+> +++ b/Documentation/devicetree/bindings/soc/renesas/renesas.yaml
+> @@ -551,6 +551,21 @@ properties:
+>                - renesas,r9a09g047e58 # Quad Cortex-A55 + Cortex-M33 + Ethos-U55 (21mm BGA)
+>            - const: renesas,r9a09g047
+>
+> +      - description: RZ/V2N (R9A09G056)
+> +        items:
+> +          - enum:
+> +              - renesas,rzv2n-evk # RZ/V2N EVK
 
-It contains the following patches:
+Shall I add the board part number while applying?
 
-- A simple fix adding the module description of the Xenbus frontend
-  module.
+-              - renesas,rzv2n-evk # RZ/V2N EVK
++              - renesas,rzv2n-evk # RZ/V2N EVK (RTK0EF0186C03000BJ)
 
-- A fix correcting the xen-acpi-processor Kconfig dependency for PVH
-  Dom0 support.
+Gr{oetje,eeting}s,
 
-- A fix for the Xen balloon driver when running as Xen Dom0 in PVH mode.
+                        Geert
 
-- A fix for PVH Dom0 in order to avoid problems with CPU idle and
-  frequency drivers conflicting with Xen.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
-Thanks.
-
-Juergen
-
- arch/x86/xen/enlighten.c                   | 10 +++++++++
- arch/x86/xen/enlighten_pvh.c               | 19 ++++++++++++++++-
- arch/x86/xen/setup.c                       |  3 ---
- drivers/xen/Kconfig                        |  2 +-
- drivers/xen/balloon.c                      | 34 +++++++++++++++++++++---------
- drivers/xen/xenbus/xenbus_probe_frontend.c |  1 +
- 6 files changed, 54 insertions(+), 15 deletions(-)
-
-Arnd Bergmann (1):
-      xenbus: add module description
-
-Jason Andryuk (1):
-      xen: Change xen-acpi-processor dom0 dependency
-
-Roger Pau Monne (2):
-      x86/xen: fix balloon target initialization for PVH dom0
-      x86/xen: disable CPU idle and frequency drivers for PVH dom0
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
