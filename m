@@ -1,126 +1,86 @@
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F138202F71;
-	Thu, 10 Apr 2025 14:38:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 264E5202F71;
+	Thu, 10 Apr 2025 14:39:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744295890; cv=none; b=rzEmG0xp4dtRIXg1eKtQ7UHPg3irH18iEGj5wlhIKiYjFagghDTA+pBvhwy78lUMraLFKdHFVDKtUt0Stuwv7OKDh2bjMO/uD8397ctUWB1I5v5Y/kLMGyqrquZR6MkIIyXFTgXKWvpvadCvGIou2Kh81tCqBM9dcVQSNzJnNFw=
+	t=1744295996; cv=none; b=PEoS4B7Kxr1g2qPbESlT5Xs8tbqwaofDZXHMeR0J78YP6IQ1iuRObQpiXA0ba1/natERrCRRBgzym3CcMjPafhEUwI0AcyjogzCADoEU92KPEm0xk5ALEak9kKvzMoXt6xXcM/g2GeJbLFhyjWePIiorBVj5vwi8HWKAsNboHUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744295890; c=relaxed/simple;
-	bh=YIlYBspB5X+XSsa4+3taaxhNn00GpJC566S6ta2+o6M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MFlkknGs6hRwIYUNUXqHreyb5EY4OucQ5qKe1nQFrdQeCgzYumH/27sAci2vvy7bu3AqT+5wrhS/6Nlb97JlcAy43/V8ftIxgjVNC+t7VVtToYryNnw1Q0VBt1xqCgvuebBsGR5v/S2asBhSzxFXMRzM/FB7eLAveAa7JIGG4BM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Z4nj2Sp8; arc=none smtp.client-ip=148.251.105.195
+	s=arc-20240116; t=1744295996; c=relaxed/simple;
+	bh=fQLVhdECukn8rSnKioZ4Hkj2E9G8FUbxvYOvve74Sbs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=r0iyIsN2gXU9MIM/H2vBeKBj8ZkCUWlxabFZjeBRSaxGB/wb3BklDBYa9iVgQkCgHgPo9gQ6qKhE0duKDo3YxVPrhlDumUEgNKcsEC+qqp3fRznaG4nD7h3Oudnj8HmrSijnljAWFMwgM/oCmF9RvgtX+kH9inYSPoX131z9cYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=VigZi9Q3; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Z4nj2Sp8"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="VigZi9Q3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1744295884;
-	bh=YIlYBspB5X+XSsa4+3taaxhNn00GpJC566S6ta2+o6M=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Z4nj2Sp8Tf9VIOV5k2nhD7NoAInQRKFJD+8YdNvg6jTh/3j8kLnWQU04ynl8hDRyr
-	 gbTqLMoGfErFpSUnnVc6i7n1C3eQZn16X4OhICBZdT4Fj8VUQ2fbbtpry9Ou3gccyf
-	 ao4qtKRRpgXp7ISs/+VkfudlB8pn4onEKm5OC8wAEXWxoelDzA+abhAX8uFdgRTpFb
-	 CU+JNHU0SFW2K457DDauJENLNg/udLbLCAnRyG08pdLN99/pNbaw5mngPtdvX9w9Rs
-	 FfY+70JYDEK72dlFbuUzFY9I7Tk6g+pPQpyIRbikveDOMZyTvcuh9Z3zqpEzyNiB7U
-	 x95FUNMGqnlWA==
-Received: from [192.168.33.15] (fi-19-199-243.service.infuturo.it [151.19.199.243])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	s=mail; t=1744295991;
+	bh=fQLVhdECukn8rSnKioZ4Hkj2E9G8FUbxvYOvve74Sbs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=VigZi9Q3jBLWJn/fh7ChGoQpxIboSo65/aQK+G92HSh1pXJOHrqIubrpp7ZHmmbPP
+	 7YtePeEWQEEKjF5mCuxMxJ7gYFqFJZERKXFCbZ3gZJnG27++i5b2529uaOEFLO7lLL
+	 22fleaCt56LcgyVFNgYRS5ZhN8CSs/6G0AWi6EjSfkU40VldYIqdY1sp9iH/sqk7GE
+	 m7bWh94XZUXnwS/FVTWZ9T0FmDEyltm2/Fs0dEaZiU9aLUIpCt7twD7hNrESYnAzpI
+	 t6AhmZFJrvZ/zPG83MM7m8uT4S+9qPUxxPKf70IqNNtAv8rD2VQzLHrdvJkSbQYxpx
+	 PG6EKR/5yMVMw==
+Received: from IcarusMOD.eternityproject.eu (fi-19-199-243.service.infuturo.it [151.19.199.243])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 6819517E078A;
-	Thu, 10 Apr 2025 16:38:02 +0200 (CEST)
-Message-ID: <d725bafb-8cd9-4f40-b708-2760776bda72@collabora.com>
-Date: Thu, 10 Apr 2025 16:38:00 +0200
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 64F0317E0C8D;
+	Thu, 10 Apr 2025 16:39:48 +0200 (CEST)
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+To: robh@kernel.org
+Cc: krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	ulf.hansson@linaro.org,
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com,
+	fshao@chromium.org,
+	y.oudjana@protonmail.com,
+	wenst@chromium.org,
+	lihongbo22@huawei.com,
+	mandyjh.liu@mediatek.com,
+	mbrugger@suse.com,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	kernel@collabora.com
+Subject: [PATCH v1 0/3] MediaTek Dimensity 1200 - Add Power Domains support
+Date: Thu, 10 Apr 2025 16:39:41 +0200
+Message-ID: <20250410143944.475773-1-angelogioacchino.delregno@collabora.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] mmc: mtk-sd: Add condition to enable 'single' burst
- type
-To: Axe Yang <axe.yang@mediatek.com>,
- Chaotian Jing <chaotian.jing@mediatek.com>,
- Ulf Hansson <ulf.hansson@linaro.org>,
- Matthias Brugger <matthias.bgg@gmail.com>, yong.mao@mediatek.com,
- qingliang.li@mediatek.com, andy-ld.lu@mediatek.com,
- Wenbin Mei <wenbin.mei@mediatek.com>
-Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-References: <20250410075314.6439-1-axe.yang@mediatek.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250410075314.6439-1-axe.yang@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Il 10/04/25 09:52, Axe Yang ha scritto:
-> This change add a condition for 'single' burst type selection.
-> 
-> Read AXI_LEN field from EMMC50_CFG2(AHB2AXI wrapper) register, if the
-> value is not 0, it means the HWIP is using AXI as AMBA bus, which do
-> not support 'single' burst type.
-> 
+In preparation for adding basic support for the OnePlus Nord 2 5G
+DN2103 smartphone, this series adds support for the power domains
+(MTCMOS) of the MediaTek Dimensity 1200 (MT6893) SoC.
 
-You're missing a Suggested-by tag :-)
+AngeloGioacchino Del Regno (3):
+  dt-bindings: power: mediatek: Support Dimensity 1200 MT6893 MTCMOS
+  pmdomain: mediatek: Bump maximum bus protect data array elements
+  pmdomain: mediatek: Add support for Dimensity 1200 MT6893
 
-After adding it,
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+ .../power/mediatek,power-controller.yaml      |   2 +
+ drivers/pmdomain/mediatek/mt6893-pm-domains.h | 585 ++++++++++++++++++
+ drivers/pmdomain/mediatek/mtk-pm-domains.c    |   5 +
+ drivers/pmdomain/mediatek/mtk-pm-domains.h    |   2 +-
+ .../dt-bindings/power/mediatek,mt6893-power.h |  35 ++
+ 5 files changed, 628 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/pmdomain/mediatek/mt6893-pm-domains.h
+ create mode 100644 include/dt-bindings/power/mediatek,mt6893-power.h
 
-> Signed-off-by: Axe Yang <axe.yang@mediatek.com>
-> ---
-> This change dependents on 'mmc: mtk-sd: Cleanups for register R/W':
-> 
-> https://patchwork.kernel.org/project/linux-mediatek/cover/20250325110701.52623-1-angelogioacchino.delregno@collabora.com/
-> ---
->   drivers/mmc/host/mtk-sd.c | 16 ++++++++++++----
->   1 file changed, 12 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-> index ceeae1aeac94..2e4bd5166c17 100644
-> --- a/drivers/mmc/host/mtk-sd.c
-> +++ b/drivers/mmc/host/mtk-sd.c
-> @@ -84,6 +84,7 @@
->   #define EMMC51_CFG0	 0x204
->   #define EMMC50_CFG0      0x208
->   #define EMMC50_CFG1      0x20c
-> +#define EMMC50_CFG2      0x21c
->   #define EMMC50_CFG3      0x220
->   #define SDC_FIFO_CFG     0x228
->   #define CQHCI_SETTING	 0x7fc
-> @@ -306,7 +307,10 @@
->   /* EMMC50_CFG1 mask */
->   #define EMMC50_CFG1_DS_CFG        BIT(28)  /* RW */
->   
-> -#define EMMC50_CFG3_OUTS_WR       GENMASK(4, 0)  /* RW */
-> +/* EMMC50_CFG2 mask */
-> +#define EMMC50_CFG2_AXI_SET_LEN   GENMASK(27, 24) /* RW */
-> +
-> +#define EMMC50_CFG3_OUTS_WR       GENMASK(4, 0)   /* RW */
->   
->   #define SDC_FIFO_CFG_WRVALIDSEL   BIT(24)  /* RW */
->   #define SDC_FIFO_CFG_RDVALIDSEL   BIT(25)  /* RW */
-> @@ -1917,9 +1921,13 @@ static void msdc_init_hw(struct msdc_host *host)
->   	pb1_val |= FIELD_PREP(MSDC_PATCH_BIT1_CMDTA, 1);
->   	pb1_val |= MSDC_PB1_DDR_CMD_FIX_SEL;
->   
-> -	/* Set single burst mode, auto sync state clear, block gap stop clk */
-> -	pb1_val |= MSDC_PB1_SINGLE_BURST | MSDC_PB1_RSVD20 |
-> -		   MSDC_PB1_AUTO_SYNCST_CLR | MSDC_PB1_MARK_POP_WATER;
-> +	/* Support 'single' burst type only when AXI_LEN is 0 */
-> +	sdr_get_field(host->base + EMMC50_CFG2, EMMC50_CFG2_AXI_SET_LEN, &val);
-> +	if (!val)
-> +		pb1_val |= MSDC_PB1_SINGLE_BURST;
-> +
-> +	/* Set auto sync state clear, block gap stop clk */
-> +	pb1_val |= MSDC_PB1_RSVD20 | MSDC_PB1_AUTO_SYNCST_CLR | MSDC_PB1_MARK_POP_WATER;
->   
->   	/* Set low power DCM, use HCLK for GDMA, use MSDC CLK for everything else */
->   	pb1_val |= MSDC_PB1_LP_DCM_EN | MSDC_PB1_RSVD3 |
-
+-- 
+2.49.0
 
