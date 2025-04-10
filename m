@@ -1,110 +1,108 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F5381BE251;
-	Thu, 10 Apr 2025 06:14:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 906DE202C21;
+	Thu, 10 Apr 2025 06:15:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744265692; cv=none; b=A2n58mS/S2Wz5INkxl/7nOA/Z0C56Gv03PdDSGhMFekfK0b4DVoUsXNmETa+vwYL+7PwZQB8JKmgtLzBv5anqnHskt3YHDZnrLhymvBg+AnEsMqRT9QLYLWCO/i/16M0MiPes2jYR7qobY5lO+TOXx4dFcqoSCFxXj8GYol9vr4=
+	t=1744265703; cv=none; b=AnkEvIF2I9RVezCG+HFzwVYSbnHvjnmm8mSHh/8o8IZUta0ptnPCTdooD/7HNDco4WOYcw5wdm6HS2TqIVmRNyTa4M8eY5tC3mG0YJF8bglZOvSpYuWj37tAZKIRKGn6p2PsB3BLKwETZq17gm0B4o9T2SBBaqY6NMQJVilHVvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744265692; c=relaxed/simple;
-	bh=mbx6ITtNLYAzsr/l+UdnT2YEpJ5YQ1IPbyXfHpbGrY0=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=j9RXSVw6aB2G3oyxj2Y2LTujrLSCeilYYAixiJgvELW77ypd3OZlmKqy1LkwufIgj6e/oJssQjT24/AxG9NKzOMt5qbZS0le21N6TKdidr/pTfp0+KDLnPyYOR5cBZcdZ1y1SzFFVMAZ4wzx+8VIksH4DaiWXA1FyubDB0MQ53o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cRRV4ues; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xYJbFi7L; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744265703; c=relaxed/simple;
+	bh=zVqocgr36YZsJUJK4G4a6s/8nYUj5HCGaQSX42jvOFU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sphh2AvgYz/obqVRiCJqhEs5GOl8PR6tjO8QBCoB9KbefCPbyb6U4P5Cw+6Dnl2v3Xk9N/5KrjVdTkDIDf7nnwCFBh93g8fn62AGBnTqP30yvGzdXjsjLAylBdBNHHXiumJ20ieTVoEaa49wtAQd99EzAlPsacB0GXieO93U2l4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NylHXf6l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cRRV4ues";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xYJbFi7L"
-Date: Thu, 10 Apr 2025 06:14:43 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744265688;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZisqoqMU1Q5gHyNLzO+YmukOBCpyJ06A9NlZLs6fanQ=;
-	b=cRRV4uesVI2uWj9a6yv2XbKTUY8Jb5CJsObcFWRxsiAYgWllgwPH9dwE5VzPC7IsSM/zhJ
-	2XvOuIzfqasumlP54EohE2aoMStq/yLoayLsW0UcpPDTWQDq5oOLc755PQZO+NalE0+nE1
-	JMU6kruvhd6Ne3lKMD/Dmv6lD1RR5Tf43KfT2pU8+kYw4ou1oirI29C7hGp8sv9HuIrWpa
-	0wJBdYv8W6LyqM+ZYdDGwy1QLDWi1vroNzcC+48bVtoYvGj0QbYn+rJD8beiTpgs1BV6hg
-	JQFkYi2Xy0hTjv5PXsuvfim2hShiS5E8TveIffbblRdIXDHqnj3lb8VTyRtLIA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744265688;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZisqoqMU1Q5gHyNLzO+YmukOBCpyJ06A9NlZLs6fanQ=;
-	b=xYJbFi7LPrnHXZEJUpGzGqLwA/txoenzRoVKmUKMtHDUoyLkerTfoqE2krTCyuAG+WIzU+
-	9VixP8OPE1g6m5BA==
-From: "tip-bot2 for Josh Poimboeuf" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: objtool/urgent] objtool: Fix false-positive "ignoring
- unreachables" warning
-Cc: kernel test robot <lkp@intel.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Ingo Molnar <mingo@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To:
- <5eb28eeb6a724b7d945a961cfdcf8d41e6edf3dc.1744238814.git.jpoimboe@kernel.org>
-References:
- <5eb28eeb6a724b7d945a961cfdcf8d41e6edf3dc.1744238814.git.jpoimboe@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NylHXf6l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75497C4CEDD;
+	Thu, 10 Apr 2025 06:15:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744265703;
+	bh=zVqocgr36YZsJUJK4G4a6s/8nYUj5HCGaQSX42jvOFU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NylHXf6lqaAGXazFBMv88lr1z9ex6hdd51f1u6e7g72x9dM7wcYU7ONP5o0O5jRxV
+	 gczLYMI8LDcrdT/x0f+YjYkaLVQsk+SH3mQa05wPfPC8zhaLgCmyBhZo1ofAvriN+v
+	 zqQk+zSK9VuGaEBlchIPjbqDwH6SuXj78pa6DhRjuSMHvNe57TGgYj8GhchUWbjbUs
+	 f71h1gS1uCGH6M3UXyDyObUabf8y6k5hMDN4h+jAnZJcBi2ElCuL61pfxVcNqf840/
+	 WoaP5t4J5no1nN5uyrT2qlJ9hdAX8R7ociBsBXjbfR9oWz8+TRxxlgqkGuJby5qZ6r
+	 /02h0jLwoFmkw==
+Date: Thu, 10 Apr 2025 09:14:58 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Purva Yeshi <purvayeshi550@gmail.com>
+Cc: peterhuewe@gmx.de, jgg@ziepe.ca, linux-integrity@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] char: tpm: tpm-buf: Fix uninitialized return values in
+ read helpers
+Message-ID: <Z_dh4tRIa6xxAWQ2@kernel.org>
+References: <20250409205536.210202-1-purvayeshi550@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174426568347.31282.17971680226674649784.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409205536.210202-1-purvayeshi550@gmail.com>
 
-The following commit has been merged into the objtool/urgent branch of tip:
+On Thu, Apr 10, 2025 at 02:25:36AM +0530, Purva Yeshi wrote:
+> Fix Smatch-detected error:
+> drivers/char/tpm/tpm-buf.c:208 tpm_buf_read_u8() error:
+> uninitialized symbol 'value'.
+> drivers/char/tpm/tpm-buf.c:225 tpm_buf_read_u16() error:
+> uninitialized symbol 'value'.
+> drivers/char/tpm/tpm-buf.c:242 tpm_buf_read_u32() error:
+> uninitialized symbol 'value'.
+> 
+> Call tpm_buf_read() to populate value but do not check its return
+> status. If the read fails, value remains uninitialized, causing
+> undefined behavior when returned or processed.
+> 
+> Initialize value to zero to ensure a defined return even if
+> tpm_buf_read() fails, avoiding undefined behavior from using
+> an uninitialized variable.
 
-Commit-ID:     8af6f0fe9c4340ed97f0ba4f3f6cc7bb16558e87
-Gitweb:        https://git.kernel.org/tip/8af6f0fe9c4340ed97f0ba4f3f6cc7bb16558e87
-Author:        Josh Poimboeuf <jpoimboe@kernel.org>
-AuthorDate:    Wed, 09 Apr 2025 15:49:36 -07:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Thu, 10 Apr 2025 08:03:05 +02:00
+How does tpm_buf_read() fail?
 
-objtool: Fix false-positive "ignoring unreachables" warning
+> 
+> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+> ---
+>  drivers/char/tpm/tpm-buf.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/char/tpm/tpm-buf.c b/drivers/char/tpm/tpm-buf.c
+> index e49a19fea3bd..dc882fc9fa9e 100644
+> --- a/drivers/char/tpm/tpm-buf.c
+> +++ b/drivers/char/tpm/tpm-buf.c
+> @@ -201,7 +201,7 @@ static void tpm_buf_read(struct tpm_buf *buf, off_t *offset, size_t count, void
+>   */
+>  u8 tpm_buf_read_u8(struct tpm_buf *buf, off_t *offset)
+>  {
+> -	u8 value;
+> +	u8 value = 0;
+>  
+>  	tpm_buf_read(buf, offset, sizeof(value), &value);
+>  
+> @@ -218,7 +218,7 @@ EXPORT_SYMBOL_GPL(tpm_buf_read_u8);
+>   */
+>  u16 tpm_buf_read_u16(struct tpm_buf *buf, off_t *offset)
+>  {
+> -	u16 value;
+> +	u16 value = 0;
+>  
+>  	tpm_buf_read(buf, offset, sizeof(value), &value);
+>  
+> @@ -235,7 +235,7 @@ EXPORT_SYMBOL_GPL(tpm_buf_read_u16);
+>   */
+>  u32 tpm_buf_read_u32(struct tpm_buf *buf, off_t *offset)
+>  {
+> -	u32 value;
+> +	u32 value = 0;
+>  
+>  	tpm_buf_read(buf, offset, sizeof(value), &value);
+>  
+> -- 
+> 2.34.1
+> 
 
-There's no need to try to automatically disable unreachable warnings if
-they've already been manually disabled due to CONFIG_KCOV quirks.
-
-This avoids a spurious warning with a KCOV kernel:
-
-  fs/smb/client/cifs_unicode.o: warning: objtool: cifsConvertToUTF16.part.0+0xce5: ignoring unreachables due to jump table quirk
-
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/5eb28eeb6a724b7d945a961cfdcf8d41e6edf3dc.1744238814.git.jpoimboe@kernel.org
-
-Closes: https://lore.kernel.org/r/202504090910.QkvTAR36-lkp@intel.com/
----
- tools/objtool/arch/x86/special.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/objtool/arch/x86/special.c b/tools/objtool/arch/x86/special.c
-index 403e587..06ca4a2 100644
---- a/tools/objtool/arch/x86/special.c
-+++ b/tools/objtool/arch/x86/special.c
-@@ -126,7 +126,7 @@ struct reloc *arch_find_switch_table(struct objtool_file *file,
- 	 * indicates a rare GCC quirk/bug which can leave dead
- 	 * code behind.
- 	 */
--	if (reloc_type(text_reloc) == R_X86_64_PC32) {
-+	if (!file->ignore_unreachables && reloc_type(text_reloc) == R_X86_64_PC32) {
- 		WARN_INSN(insn, "ignoring unreachables due to jump table quirk");
- 		file->ignore_unreachables = true;
- 	}
+BR, Jarkko
