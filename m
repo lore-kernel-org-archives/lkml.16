@@ -1,116 +1,108 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11778283C8D;
-	Thu, 10 Apr 2025 11:52:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAC6A281358
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 11:52:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744285967; cv=none; b=Y4xrcOI39f9/rOgdLF66OLaAJ/jhlKaBC+8rc/onEnf9lXGN7jqiu2yEYJFfQBOnk2Y48aUZ9zlxNFHuvEzhuTN0eEnLcoUvynvXGImSLoC/ujVvC+/j6k5/FgaqxCXddvHHOHL64BwpL3WwBw/6b9os+TF/KHwi5LFSp561LLM=
+	t=1744285978; cv=none; b=VuprxLCaenSYx0pvAbsZFt4fEfWfAu3RxZ/YlQTQifCfcxS891wcTDE4pEFGGkdxMPZBUU3QJiUw+9T6XtsAlgEqqTjgLM0oq+3R0Pqs9lIBm+ioDA2bpV6Y0/MjMLWMPMag8pKe9fHXcwtMaNwWTFfsbdfecrE1lnhFIgDl/hM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744285967; c=relaxed/simple;
-	bh=XFQzoxeqsD9v2JOgNHZGxnrAw6ddmJkdJnpFrk0ivkc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jjKjC+dCocSVqUAzbymmLTmcZulW+dzxlVh4F5sGuYaLDubB9km0w7/my2X8SEJy1eJV0OLcIODIO2yjmCR1t6NuT12ndaZK2gj3HG6jZvyR4xT4XdvzLnJvSxi5Il5lyLFPq9uDO0pmZnebdZzQHdJ/oWnc+zTbbnd+ZFYTmls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kzIQN42V; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744285978; c=relaxed/simple;
+	bh=s3csa4H8M9KRAkSXicPip+/546cC5E+ESes5kJTkiJo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fmn6R4dEIuBOZEwQk4hQxKiTvh5hprcFL1pV6rVJhbjS6RrjUEfQ4R236Hv62MRTGy4jjfNS4jf5mAP25hJhLNRJZqS1QPOLGwXQvjkF3Ee8EmcsCMxXo3bE64TYPOLkhqJI+rFocBOOBOvDLOzOvbrIQ44LYnrUp+u1tyCpHGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=So0nvDf7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kzIQN42V"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744285966; x=1775821966;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=XFQzoxeqsD9v2JOgNHZGxnrAw6ddmJkdJnpFrk0ivkc=;
-  b=kzIQN42VhE/Xi1pJ6obatowS7swlN1klI34zELPWlrQiop9JKhMr938R
-   e5KMlYWGpRpuM0cmy2GX4q9sfKO1Ok1wGJFOu5QAFFblETgBezGGVPqCY
-   hGglyNUhF1JAaHpfimgczG+ZDTwvPjUJwHzXz6Lw+qAWuV9vnByQir6Mk
-   0SzplkFR4dxjpOFN9seqEQweBkCJk2GjHlffWP49ACbufVsJWDAyyHQP0
-   ZVSmDG7NdyuUEq+NACaIRC040LtxOP7FvvCPwJpByxY3LRXW3f+4cJNHx
-   t6xFXwzGlW5hHXe5/LeIycPyBy/3dJCe3QsDj+Zx2ZFCN2COwlzdg82MN
-   w==;
-X-CSE-ConnectionGUID: wDmMDZ9qSjetr6XI3mmoyg==
-X-CSE-MsgGUID: Luch5LP9R3iBu76uXtxXZA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11400"; a="44939952"
-X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
-   d="scan'208";a="44939952"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 04:52:42 -0700
-X-CSE-ConnectionGUID: YHA03Bs4SNi8jD6bPNuJYQ==
-X-CSE-MsgGUID: q617/JOcRmiqox68+dv2oQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
-   d="scan'208";a="129731691"
-Received: from irvmail002.ir.intel.com ([10.43.11.120])
-  by fmviesa009.fm.intel.com with ESMTP; 10 Apr 2025 04:52:39 -0700
-Received: from mglak.igk.intel.com (mglak.igk.intel.com [10.237.112.146])
-	by irvmail002.ir.intel.com (Postfix) with ESMTP id DD87C34312;
-	Thu, 10 Apr 2025 12:52:37 +0100 (IST)
-From: Larysa Zaremba <larysa.zaremba@intel.com>
-To: intel-wired-lan@lists.osuosl.org,
-	Tony Nguyen <anthony.l.nguyen@intel.com>
-Cc: Larysa Zaremba <larysa.zaremba@intel.com>,
-	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
-	Emil Tantilov <emil.s.tantilov@intel.com>,
-	Madhu Chittim <madhu.chittim@intel.com>,
-	Josh Hay <joshua.a.hay@intel.com>,
-	Michal Kubiak <michal.kubiak@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH iwl-net] idpf: protect shutdown from reset
-Date: Thu, 10 Apr 2025 13:52:23 +0200
-Message-ID: <20250410115225.59462-1-larysa.zaremba@intel.com>
-X-Mailer: git-send-email 2.47.0
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="So0nvDf7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC51DC4CEDD;
+	Thu, 10 Apr 2025 11:52:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1744285978;
+	bh=s3csa4H8M9KRAkSXicPip+/546cC5E+ESes5kJTkiJo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=So0nvDf7aJT4pu4A7zUuKBfymJRpNxyJ6S+kxrpHAaNVISyW/zbLr+EK1n777xJUH
+	 S+B4Y2hKIP3Uli6M66JIGAONusDGUQRyUf7ePuAdmEzT39Ll7Dj0ww1xYXKqy0i7ii
+	 YYq3DRwNguS6wMFcNfHNHiVWLRTxT1l1cDUz4J7E=
+Date: Thu, 10 Apr 2025 13:51:23 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Charles Han <hanchunchao@inspur.com>
+Cc: arnd@arndb.de, jpanis@baylibre.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2] misc: tps6594-pfsm: Add NULL check in
+ tps6594_pfsm_probe
+Message-ID: <2025041010-bundle-thrive-c32f@gregkh>
+References: <20250410113911.80495-1-hanchunchao@inspur.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250410113911.80495-1-hanchunchao@inspur.com>
 
-Before the referenced commit, the shutdown just called idpf_remove(),
-this way IDPF_REMOVE_IN_PROG was protecting us from the serv_task
-rescheduling reset. Without this flag set the shutdown process is
-vulnerable to HW reset or any other triggering conditions (such as
-default mailbox being destroyed).
+On Thu, Apr 10, 2025 at 07:39:11PM +0800, Charles Han wrote:
+> devm_kasprintf() can return a NULL pointer on failure,but this
+> returned value in tps6594_pfsm_probe() is not checked.
+> Add NULL check in tps6594_pfsm_probe(), to handle kernel NULL
+> pointer dereference error.
+> 
+> Fixes: a0df3ef087f8 ("misc: tps6594-pfsm: Add driver for TI TPS6594 PFSM")
+> Signed-off-by: Charles Han <hanchunchao@inspur.com>
+> ---
+>  drivers/misc/tps6594-pfsm.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/misc/tps6594-pfsm.c b/drivers/misc/tps6594-pfsm.c
+> index 0a24ce44cc37..6db1c9d48f8f 100644
+> --- a/drivers/misc/tps6594-pfsm.c
+> +++ b/drivers/misc/tps6594-pfsm.c
+> @@ -281,6 +281,9 @@ static int tps6594_pfsm_probe(struct platform_device *pdev)
+>  	pfsm->miscdev.minor = MISC_DYNAMIC_MINOR;
+>  	pfsm->miscdev.name = devm_kasprintf(dev, GFP_KERNEL, "pfsm-%ld-0x%02x",
+>  					    tps->chip_id, tps->reg);
+> +	if (!pfsm->miscdev.name)
+> +		return -ENOMEM;
+> +
+>  	pfsm->miscdev.fops = &tps6594_pfsm_fops;
+>  	pfsm->miscdev.parent = dev->parent;
+>  	pfsm->chip_id = tps->chip_id;
+> -- 
+> 2.43.0
+> 
 
-When one of conditions checked in idpf_service_task becomes true,
-vc_event_task can be rescheduled during shutdown, this leads to accessing
-freed memory e.g. idpf_req_rel_vector_indexes() trying to read
-vport->q_vector_idxs. This in turn causes the system to become defunct
-during e.g. systemctl kexec.
+Hi,
 
-Considering using IDPF_REMOVE_IN_PROG would lead to more heavy shutdown
-process, instead just cancel the serv_task before cancelling
-adapter->serv_task before cancelling adapter->vc_event_task to ensure that
-reset will not be scheduled while we are doing a shutdown.
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
 
-Fixes: 4c9106f4906a ("idpf: fix adapter NULL pointer dereference on reboot")
-Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-Signed-off-by: Larysa Zaremba <larysa.zaremba@intel.com>
----
- drivers/net/ethernet/intel/idpf/idpf_main.c | 1 +
- 1 file changed, 1 insertion(+)
+You are receiving this message because of the following common error(s)
+as indicated below:
 
-diff --git a/drivers/net/ethernet/intel/idpf/idpf_main.c b/drivers/net/ethernet/intel/idpf/idpf_main.c
-index bec4a02c5373..b35713036a54 100644
---- a/drivers/net/ethernet/intel/idpf/idpf_main.c
-+++ b/drivers/net/ethernet/intel/idpf/idpf_main.c
-@@ -89,6 +89,7 @@ static void idpf_shutdown(struct pci_dev *pdev)
- {
- 	struct idpf_adapter *adapter = pci_get_drvdata(pdev);
- 
-+	cancel_delayed_work_sync(&adapter->serv_task);
- 	cancel_delayed_work_sync(&adapter->vc_event_task);
- 	idpf_vc_core_deinit(adapter);
- 	idpf_deinit_dflt_mbx(adapter);
--- 
-2.47.0
+- This looks like a new version of a previously submitted patch, but you
+  did not list below the --- line any changes from the previous version.
+  Please read the section entitled "The canonical patch format" in the
+  kernel file, Documentation/process/submitting-patches.rst for what
+  needs to be done here to properly describe this.
 
+- You have marked a patch with a "Fixes:" tag for a commit that is in an
+  older released kernel, yet you do not have a cc: stable line in the
+  signed-off-by area at all, which means that the patch will not be
+  applied to any older kernel releases.  To properly fix this, please
+  follow the documented rules in the
+  Documentation/process/stable-kernel-rules.rst file for how to resolve
+  this.
+
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
+
+thanks,
+
+greg k-h's patch email bot
