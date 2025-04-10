@@ -1,46 +1,46 @@
 Received: from mx07-00376f01.pphosted.com (mx07-00376f01.pphosted.com [185.132.180.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91541267706;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9168726A0D1;
 	Thu, 10 Apr 2025 09:56:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.180.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744278967; cv=none; b=guGcNx1CrshD6FpglS30H7WmoaCnKlvEH6kMkUEWE6I8OVT4hcdZcehfD1uXX2X/EEv6PBjeMBaueunAXMcJwqvQr7T40FCHgc/bxZ12Ey8MUCSUYNdscrRr1bsiCY7RiazpHhSYWP65I8dDOwuZrnWZkteS1fDewdu1IMMSI+w=
+	t=1744278968; cv=none; b=PgTP5cGqtH3ntEt14pdw2KMMFq2yFFDyZXlh9FaYyZSX4DwpC72EFNBtpflaFwE6fscb1k1y6+7O9Mb2/OruSoZOKXFIOXVptLPRQNViRr2JawMRI0BU0rjWBjIXBashOdFtcISWzTnJV1hl+qUK5fkp8OWK1Cq3cbCwt5TA1vc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744278967; c=relaxed/simple;
-	bh=ZCa0GTTVx7rpy0DmBkX6sl/Nnx9cg5HooG5SuyPbnlI=;
+	s=arc-20240116; t=1744278968; c=relaxed/simple;
+	bh=cwhUox7//H167AAG+R5mbZoCosGXgGT7DBgD29i305I=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=QTqXeU/AyzpjWmP72Oy9dDLZaLfDekE9obK5DhG5Hxszq+2hEmgl6N7NsJXUzlp8ZP+zqD8DEmVGUt1B5NIROhqnYJj+kpPVVFpYgqvGCbGM3KuE5Ejc74x5jbTJZMC3hrhairB9ecSksymgvmyxmvHSaJmMMm0bQMJBAt16MqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com; spf=pass smtp.mailfrom=imgtec.com; dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b=QnUXoxpx; arc=none smtp.client-ip=185.132.180.163
+	 In-Reply-To:To:CC; b=RE/lIFve+jAlh/CpMcvgJRzybOUJzVCsoo11r90sJkRvYFt5pqD349U1udPdK5HhJDECya/gazOc00a4yrLTt3bFO5PzXwTpDmIpWqa24AIh9PYPW3jhpqrffSNjbXXlincGRsr0qhOcBU+M/ulRlWMi18RN+SPh8hSJXkJIzMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com; spf=pass smtp.mailfrom=imgtec.com; dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b=mckrzuQO; arc=none smtp.client-ip=185.132.180.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=imgtec.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b="QnUXoxpx"
+	dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b="mckrzuQO"
 Received: from pps.filterd (m0168889.ppops.net [127.0.0.1])
-	by mx07-00376f01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53A60F8W032471;
-	Thu, 10 Apr 2025 10:55:29 +0100
+	by mx07-00376f01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53A60F8Q032471;
+	Thu, 10 Apr 2025 10:55:23 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=imgtec.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=dk201812; bh=B
-	NQIVvpp7of4jDjb+SKZ4XSicmMQPWIFxQyCTjX7wog=; b=QnUXoxpxONMWIhcZX
-	1QdAqTnyh6i+2Yi3Gd7VwZwVOB6s/Ahc8oauQURcoh0dG6YaV83oKSS772KGREXu
-	EO0JQYyLliNeGBM6fujoKOLhoBY6R+VpNlBbWeXIblZ8W3BDgec9Rzxc7nSzyiDp
-	QXwykymLZNCDgvW5drWjfMDX4kLeW+IqxZQh7IRYHtQprEr/Bv7drrOgPu5uKgBE
-	NcHve4xbBhrJnasGRrvDUgFcRf5wiqcif4ta9AEoKCr1GPRaA81oJXfEMhxwhPaF
-	CF3Wfq5/m/66VyLBRsv2WdDpVFe7/FMUPdKKoe6QeI5/enztVc//wmz75qwDi0ds
-	3yTMg==
+	:message-id:mime-version:references:subject:to; s=dk201812; bh=4
+	DNwj8oE9ElJfcM7Gdo3nLUTkjleFIKZUfxZ3uMW+2I=; b=mckrzuQO4a9OE47IO
+	CXurPyGqU2BLy/tZsfsVwhsEA6RuS+pOjXWErb+rfowfgydFBwasBJI5oPvP0rPD
+	oGKDnDJ2AFOlMQoUJ0rP1dMt/c4sDia5+TEcvOxNZfTSlvE0Vr1Amh2V13jZ1gQ7
+	5nyG66AE8ewGDg3k67m3SS7wWPshXOSuU7ykh69sPBhGSGl04R4JNNkQgxmnQp5a
+	pqU9RUlI+MewZpPxq0xuyKV+8ypwnNqOOxoN0BEsauDaZklfvNU+yfqPVzMVm0PM
+	SePw4Vih/a89ys3EStD4QPq9RG3BcW5R8oDToQpa3Vem3fkhaYvO/m+j/yHfMAwt
+	w8+dg==
 Received: from hhmail05.hh.imgtec.org (83-244-153-141.cust-83.exponential-e.net [83.244.153.141])
-	by mx07-00376f01.pphosted.com (PPS) with ESMTPS id 45w86h1d34-7
+	by mx07-00376f01.pphosted.com (PPS) with ESMTPS id 45w86h1d34-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Thu, 10 Apr 2025 10:55:29 +0100 (BST)
+	Thu, 10 Apr 2025 10:55:23 +0100 (BST)
 Received: from
  1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa
  (172.25.6.134) by HHMAIL05.hh.imgtec.org (10.100.10.120) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Thu, 10 Apr 2025 10:55:26 +0100
+ 15.1.2507.44; Thu, 10 Apr 2025 10:55:21 +0100
 From: Matt Coster <matt.coster@imgtec.com>
-Date: Thu, 10 Apr 2025 10:55:12 +0100
-Subject: [PATCH v6 13/18] drm/imagination: Move ELF fw utils to common file
+Date: Thu, 10 Apr 2025 10:55:06 +0100
+Subject: [PATCH v6 07/18] drm/imagination: Handle Rogue safety event IRQs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,7 +49,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250410-sets-bxs-4-64-patch-v1-v6-13-eda620c5865f@imgtec.com>
+Message-ID: <20250410-sets-bxs-4-64-patch-v1-v6-7-eda620c5865f@imgtec.com>
 References: <20250410-sets-bxs-4-64-patch-v1-v6-0-eda620c5865f@imgtec.com>
 In-Reply-To: <20250410-sets-bxs-4-64-patch-v1-v6-0-eda620c5865f@imgtec.com>
 To: Frank Binns <frank.binns@imgtec.com>,
@@ -74,232 +74,252 @@ CC: <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
 	<alessio.belle@imgtec.com>,
         Alexandru Dadu <alexandru.dadu@imgtec.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7910;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7962;
  i=matt.coster@imgtec.com; h=from:subject:message-id;
- bh=ZCa0GTTVx7rpy0DmBkX6sl/Nnx9cg5HooG5SuyPbnlI=;
- b=owGbwMvMwCFWuUfy8817WRsYT6slMaR/n9okG2Tx+MKuz5GRGhf+6m1LOJOts2nSIU6hnVMap
- 15dVeat21HKwiDGwSArpsiyY4XlCrU/aloSN34Vw8xhZQIZwsDFKQATad7B8N/5GLPSmQ3nVO2m
- h9SIpYpozDr976SPz2+TWx3n5m3a51LI8D9zxrvT8bYPJ5kcFImK6L+5aFaFhNpC2f+C+yd8UvT
- 8qsEFAA==
+ bh=7bJNfhFytbvbu6cvrIpRSbTDY3CZGjLuEkKwu/E+W5U=;
+ b=owGbwMvMwCFWuUfy8817WRsYT6slMaR/n9q4r+iw3LGz4ss2/TzbqP71Rm2WzMGC1qBvF272n
+ I2V3vg3t6OUhUGMg0FWTJFlxwrLFWp/1LQkbvwqhpnDygQyhIGLUwAm8uofwz9bzbILORLSQlzZ
+ 7BzHimSYZ7klZiQ82vJPs9on92v9onuMDNMzHC2V/tSmybxZF3iZJcD9V2jC4w7Pvec2x6ctD7E
+ X4wUA
 X-Developer-Key: i=matt.coster@imgtec.com; a=openpgp;
  fpr=05A40CFCE7269D61D97100A1747F0A9036F90DFA
 X-EXCLAIMER-MD-CONFIG: 15a78312-3e47-46eb-9010-2e54d84a9631
-X-Authority-Analysis: v=2.4 cv=MLNgmNZl c=1 sm=1 tr=0 ts=67f79591 cx=c_pps a=AKOq//PuzOIrVTIF9yBwbA==:117 a=AKOq//PuzOIrVTIF9yBwbA==:17 a=UtEzwyU9vMAA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=r_1tXGB3AAAA:8 a=gtgaOig2gG6QrLUE_6sA:9
+X-Authority-Analysis: v=2.4 cv=MLNgmNZl c=1 sm=1 tr=0 ts=67f7958b cx=c_pps a=AKOq//PuzOIrVTIF9yBwbA==:117 a=AKOq//PuzOIrVTIF9yBwbA==:17 a=UtEzwyU9vMAA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=r_1tXGB3AAAA:8 a=EFqOhPBUpbQHUZJt0gEA:9
  a=QEXdDO2ut3YA:10 a=t8nPyN_e6usw4ciXM-Pk:22
-X-Proofpoint-GUID: LWmvLgZ8SOmw9YdXaXy3SlGSi4pXmhMN
-X-Proofpoint-ORIG-GUID: LWmvLgZ8SOmw9YdXaXy3SlGSi4pXmhMN
+X-Proofpoint-GUID: 5FAvgAJvdld4cCtDU5tu3G0FhGCvC59_
+X-Proofpoint-ORIG-GUID: 5FAvgAJvdld4cCtDU5tu3G0FhGCvC59_
 
-Currently only MIPS firmware processors use ELF-formatted firmware. When
-adding support for RISC-V firmware processors, it will be useful to have
-ELF handling functions ready to go.
+From: Alessio Belle <alessio.belle@imgtec.com>
 
+Extend interrupt handling logic to check for safety event IRQs, then clear
+and handle them in the IRQ handler thread.
+
+Safety events need to be checked and cleared with a different set of GPU
+registers than those the IRQ handler has been using so far.
+
+Only two safety events need to be handled on the host: FW fault (ECC error
+correction or detection) and device watchdog timeout. Handling right now
+simply consists of clearing any error and logging the event. If either of
+these events results in an unrecoverable GPU or FW, the driver will
+eventually attempt to recover from it e.g. via pvr_power_reset().
+
+Note that Rogue GPUs may send interrupts to the host for all types of
+safety events, not just the two above. For events not handled by the host,
+clearing the associated interrupt is sufficient.
+
+Signed-off-by: Alessio Belle <alessio.belle@imgtec.com>
 Signed-off-by: Matt Coster <matt.coster@imgtec.com>
 Reviewed-by: Frank Binns <frank.binns@imgtec.com>
 ---
 Changes in v6:
-- Move loop variable as per https://lore.kernel.org/all/20250402-for-loop-counter-scope-v2-1-4fd550d22832@imgtec.com/
 - Add Frank's Rb
-- Link to v5: https://lore.kernel.org/r/20250326-sets-bxs-4-64-patch-v1-v5-13-e4c46e8280a9@imgtec.com
+- Link to v5: https://lore.kernel.org/r/20250326-sets-bxs-4-64-patch-v1-v5-7-e4c46e8280a9@imgtec.com
 Changes in v5:
 - None
-- Link to v4: https://lore.kernel.org/r/20250320-sets-bxs-4-64-patch-v1-v4-13-d987cf4ca439@imgtec.com
+- Link to v4: https://lore.kernel.org/r/20250320-sets-bxs-4-64-patch-v1-v4-7-d987cf4ca439@imgtec.com
 Changes in v4:
-- None
-- Link to v3: https://lore.kernel.org/r/20250310-sets-bxs-4-64-patch-v1-v3-13-143b3dbef02f@imgtec.com
+- Only invoke pvr_device_safety_irq_clear() if has_safety_events is set
+- Link to v3: https://lore.kernel.org/r/20250310-sets-bxs-4-64-patch-v1-v3-7-143b3dbef02f@imgtec.com
 Changes in v3:
-- None
-- Link to v2: https://lore.kernel.org/r/20241118-sets-bxs-4-64-patch-v1-v2-16-3fd45d9fb0cf@imgtec.com
-Changes in v2:
-- None
-- Link to v1: https://lore.kernel.org/r/20241105-sets-bxs-4-64-patch-v1-v1-16-4ed30e865892@imgtec.com
+- Added
 ---
- drivers/gpu/drm/imagination/Makefile      |  1 +
- drivers/gpu/drm/imagination/pvr_fw.h      |  5 +++
- drivers/gpu/drm/imagination/pvr_fw_mips.c | 58 +--------------------------
- drivers/gpu/drm/imagination/pvr_fw_util.c | 66 +++++++++++++++++++++++++++++++
- 4 files changed, 74 insertions(+), 56 deletions(-)
+ drivers/gpu/drm/imagination/pvr_device.c | 113 ++++++++++++++++++++++++++++++-
+ drivers/gpu/drm/imagination/pvr_device.h |   3 +
+ drivers/gpu/drm/imagination/pvr_fw.c     |   3 +
+ 3 files changed, 117 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/imagination/Makefile b/drivers/gpu/drm/imagination/Makefile
-index 3d9d4d40fb806295f55a2819ad24bce047cf8719..f45782063f435969d7465702e9f0d78809b7ed43 100644
---- a/drivers/gpu/drm/imagination/Makefile
-+++ b/drivers/gpu/drm/imagination/Makefile
-@@ -14,6 +14,7 @@ powervr-y := \
- 	pvr_fw_mips.o \
- 	pvr_fw_startstop.o \
- 	pvr_fw_trace.o \
-+	pvr_fw_util.o \
- 	pvr_gem.o \
- 	pvr_hwrt.o \
- 	pvr_job.o \
-diff --git a/drivers/gpu/drm/imagination/pvr_fw.h b/drivers/gpu/drm/imagination/pvr_fw.h
-index ab69f40a7fbc6304171f16dd16d825a68b0362a5..e120eae06bf78633b5bae79a77adac63aa5e06d3 100644
---- a/drivers/gpu/drm/imagination/pvr_fw.h
-+++ b/drivers/gpu/drm/imagination/pvr_fw.h
-@@ -478,4 +478,9 @@ pvr_fw_object_get_fw_addr(struct pvr_fw_object *fw_obj, u32 *fw_addr_out)
- 	pvr_fw_object_get_fw_addr_offset(fw_obj, 0, fw_addr_out);
+diff --git a/drivers/gpu/drm/imagination/pvr_device.c b/drivers/gpu/drm/imagination/pvr_device.c
+index b6ce936f07c8bb26d240e50b72a1d991dbe4b045..a47dd1dd82432f1d66ff90aca26b7b264f4068df 100644
+--- a/drivers/gpu/drm/imagination/pvr_device.c
++++ b/drivers/gpu/drm/imagination/pvr_device.c
+@@ -146,9 +146,61 @@ static void pvr_device_process_active_queues(struct pvr_device *pvr_dev)
+ 	mutex_unlock(&pvr_dev->queues.lock);
  }
  
-+/* Util functions defined in pvr_fw_util.c. These are intended for use in pvr_fw_<arch>.c files. */
-+int
-+pvr_fw_process_elf_command_stream(struct pvr_device *pvr_dev, const u8 *fw, u8 *fw_code_ptr,
-+				  u8 *fw_data_ptr, u8 *fw_core_code_ptr, u8 *fw_core_data_ptr);
-+
- #endif /* PVR_FW_H */
-diff --git a/drivers/gpu/drm/imagination/pvr_fw_mips.c b/drivers/gpu/drm/imagination/pvr_fw_mips.c
-index 7526dddbf5205f3472287f32af8ec7e97ba0fce4..6914fc46db50131aa158ed752d5dab67774ee9ce 100644
---- a/drivers/gpu/drm/imagination/pvr_fw_mips.c
-+++ b/drivers/gpu/drm/imagination/pvr_fw_mips.c
-@@ -8,7 +8,6 @@
- #include "pvr_rogue_mips.h"
- #include "pvr_vm_mips.h"
- 
--#include <linux/elf.h>
- #include <linux/err.h>
- #include <linux/types.h>
- 
-@@ -16,59 +15,6 @@
- #define ROGUE_FW_HEAP_MIPS_SHIFT 24 /* 16 MB */
- #define ROGUE_FW_HEAP_MIPS_RESERVED_SIZE SZ_1M
- 
--/**
-- * process_elf_command_stream() - Process ELF firmware image and populate
-- *                                firmware sections
-- * @pvr_dev: Device pointer.
-- * @fw: Pointer to firmware image.
-- * @fw_code_ptr: Pointer to FW code section.
-- * @fw_data_ptr: Pointer to FW data section.
-- * @fw_core_code_ptr: Pointer to FW coremem code section.
-- * @fw_core_data_ptr: Pointer to FW coremem data section.
-- *
-- * Returns :
-- *  * 0 on success, or
-- *  * -EINVAL on any error in ELF command stream.
-- */
--static int
--process_elf_command_stream(struct pvr_device *pvr_dev, const u8 *fw, u8 *fw_code_ptr,
--			   u8 *fw_data_ptr, u8 *fw_core_code_ptr, u8 *fw_core_data_ptr)
--{
--	struct elf32_hdr *header = (struct elf32_hdr *)fw;
--	struct elf32_phdr *program_header = (struct elf32_phdr *)(fw + header->e_phoff);
--	struct drm_device *drm_dev = from_pvr_device(pvr_dev);
--	int err;
--
--	for (u32 entry = 0; entry < header->e_phnum; entry++, program_header++) {
--		void *write_addr;
--
--		/* Only consider loadable entries in the ELF segment table */
--		if (program_header->p_type != PT_LOAD)
--			continue;
--
--		err = pvr_fw_find_mmu_segment(pvr_dev, program_header->p_vaddr,
--					      program_header->p_memsz, fw_code_ptr, fw_data_ptr,
--					      fw_core_code_ptr, fw_core_data_ptr, &write_addr);
--		if (err) {
--			drm_err(drm_dev,
--				"Addr 0x%x (size: %d) not found in any firmware segment",
--				program_header->p_vaddr, program_header->p_memsz);
--			return err;
--		}
--
--		/* Write to FW allocation only if available */
--		if (write_addr) {
--			memcpy(write_addr, fw + program_header->p_offset,
--			       program_header->p_filesz);
--
--			memset((u8 *)write_addr + program_header->p_filesz, 0,
--			       program_header->p_memsz - program_header->p_filesz);
--		}
--	}
--
--	return 0;
--}
--
- static int
- pvr_mips_init(struct pvr_device *pvr_dev)
- {
-@@ -98,8 +44,8 @@ pvr_mips_fw_process(struct pvr_device *pvr_dev, const u8 *fw,
- 	dma_addr_t dma_addr;
- 	int err;
- 
--	err = process_elf_command_stream(pvr_dev, fw, fw_code_ptr, fw_data_ptr, fw_core_code_ptr,
--					 fw_core_data_ptr);
-+	err = pvr_fw_process_elf_command_stream(pvr_dev, fw, fw_code_ptr, fw_data_ptr,
-+						fw_core_code_ptr, fw_core_data_ptr);
- 	if (err)
- 		return err;
- 
-diff --git a/drivers/gpu/drm/imagination/pvr_fw_util.c b/drivers/gpu/drm/imagination/pvr_fw_util.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..377fe72d86b8b3b58b8ae387135baa825347e181
---- /dev/null
-+++ b/drivers/gpu/drm/imagination/pvr_fw_util.c
-@@ -0,0 +1,66 @@
-+// SPDX-License-Identifier: GPL-2.0-only OR MIT
-+/* Copyright (c) 2024 Imagination Technologies Ltd. */
-+
-+#include "pvr_device.h"
-+#include "pvr_fw.h"
-+
-+#include <drm/drm_device.h>
-+#include <drm/drm_print.h>
-+
-+#include <linux/elf.h>
-+#include <linux/string.h>
-+#include <linux/types.h>
-+
-+/**
-+ * pvr_fw_process_elf_command_stream() - Process ELF firmware image and populate
-+ *                                       firmware sections
-+ * @pvr_dev: Device pointer.
-+ * @fw: Pointer to firmware image.
-+ * @fw_code_ptr: Pointer to FW code section.
-+ * @fw_data_ptr: Pointer to FW data section.
-+ * @fw_core_code_ptr: Pointer to FW coremem code section.
-+ * @fw_core_data_ptr: Pointer to FW coremem data section.
-+ *
-+ * Returns :
-+ *  * 0 on success, or
-+ *  * -EINVAL on any error in ELF command stream.
-+ */
-+int
-+pvr_fw_process_elf_command_stream(struct pvr_device *pvr_dev, const u8 *fw,
-+				  u8 *fw_code_ptr, u8 *fw_data_ptr,
-+				  u8 *fw_core_code_ptr, u8 *fw_core_data_ptr)
++static bool pvr_device_safety_irq_pending(struct pvr_device *pvr_dev)
 +{
-+	struct elf32_hdr *header = (struct elf32_hdr *)fw;
-+	struct elf32_phdr *program_header = (struct elf32_phdr *)(fw + header->e_phoff);
++	u32 events;
++
++	WARN_ON_ONCE(!pvr_dev->has_safety_events);
++
++	events = pvr_cr_read32(pvr_dev, ROGUE_CR_EVENT_STATUS);
++
++	return (events & ROGUE_CR_EVENT_STATUS_SAFETY_EN) != 0;
++}
++
++static void pvr_device_safety_irq_clear(struct pvr_device *pvr_dev)
++{
++	WARN_ON_ONCE(!pvr_dev->has_safety_events);
++
++	pvr_cr_write32(pvr_dev, ROGUE_CR_EVENT_CLEAR,
++		       ROGUE_CR_EVENT_CLEAR_SAFETY_EN);
++}
++
++static void pvr_device_handle_safety_events(struct pvr_device *pvr_dev)
++{
 +	struct drm_device *drm_dev = from_pvr_device(pvr_dev);
-+	int err;
++	u32 events;
 +
-+	for (u32 entry = 0; entry < header->e_phnum; entry++, program_header++) {
-+		void *write_addr;
++	WARN_ON_ONCE(!pvr_dev->has_safety_events);
 +
-+		/* Only consider loadable entries in the ELF segment table */
-+		if (program_header->p_type != PT_LOAD)
-+			continue;
++	events = pvr_cr_read32(pvr_dev, ROGUE_CR_SAFETY_EVENT_STATUS__ROGUEXE);
 +
-+		err = pvr_fw_find_mmu_segment(pvr_dev, program_header->p_vaddr,
-+					      program_header->p_memsz, fw_code_ptr, fw_data_ptr,
-+					      fw_core_code_ptr, fw_core_data_ptr, &write_addr);
-+		if (err) {
-+			drm_err(drm_dev,
-+				"Addr 0x%x (size: %d) not found in any firmware segment",
-+				program_header->p_vaddr, program_header->p_memsz);
-+			return err;
-+		}
++	/* Handle only these events on the host and leave the rest to the FW. */
++	events &= ROGUE_CR_SAFETY_EVENT_STATUS__ROGUEXE__FAULT_FW_EN |
++		ROGUE_CR_SAFETY_EVENT_STATUS__ROGUEXE__WATCHDOG_TIMEOUT_EN;
 +
-+		/* Write to FW allocation only if available */
-+		if (write_addr) {
-+			memcpy(write_addr, fw + program_header->p_offset,
-+			       program_header->p_filesz);
++	pvr_cr_write32(pvr_dev, ROGUE_CR_SAFETY_EVENT_CLEAR__ROGUEXE, events);
 +
-+			memset((u8 *)write_addr + program_header->p_filesz, 0,
-+			       program_header->p_memsz - program_header->p_filesz);
-+		}
++	if (events & ROGUE_CR_SAFETY_EVENT_STATUS__ROGUEXE__FAULT_FW_EN) {
++		u32 fault_fw = pvr_cr_read32(pvr_dev, ROGUE_CR_FAULT_FW_STATUS);
++
++		pvr_cr_write32(pvr_dev, ROGUE_CR_FAULT_FW_CLEAR, fault_fw);
++
++		drm_info(drm_dev, "Safety event: FW fault (mask=0x%08x)\n", fault_fw);
 +	}
 +
-+	return 0;
++	if (events & ROGUE_CR_SAFETY_EVENT_STATUS__ROGUEXE__WATCHDOG_TIMEOUT_EN) {
++		/*
++		 * The watchdog timer is disabled by the driver so this event
++		 * should never be fired.
++		 */
++		drm_info(drm_dev, "Safety event: Watchdog timeout\n");
++	}
 +}
++
+ static irqreturn_t pvr_device_irq_thread_handler(int irq, void *data)
+ {
+ 	struct pvr_device *pvr_dev = data;
++	struct drm_device *drm_dev = from_pvr_device(pvr_dev);
+ 	irqreturn_t ret = IRQ_NONE;
+ 
+ 	/* We are in the threaded handler, we can keep dequeuing events until we
+@@ -164,24 +216,76 @@ static irqreturn_t pvr_device_irq_thread_handler(int irq, void *data)
+ 			pvr_device_process_active_queues(pvr_dev);
+ 		}
+ 
+-		pm_runtime_mark_last_busy(from_pvr_device(pvr_dev)->dev);
++		pm_runtime_mark_last_busy(drm_dev->dev);
+ 
+ 		ret = IRQ_HANDLED;
+ 	}
+ 
++	if (pvr_dev->has_safety_events) {
++		int err;
++
++		/*
++		 * Ensure the GPU is powered on since some safety events (such
++		 * as ECC faults) can happen outside of job submissions, which
++		 * are otherwise the only time a power reference is held.
++		 */
++		err = pvr_power_get(pvr_dev);
++		if (err) {
++			drm_err_ratelimited(drm_dev,
++					    "%s: could not take power reference (%d)\n",
++					    __func__, err);
++			return ret;
++		}
++
++		while (pvr_device_safety_irq_pending(pvr_dev)) {
++			pvr_device_safety_irq_clear(pvr_dev);
++			pvr_device_handle_safety_events(pvr_dev);
++
++			ret = IRQ_HANDLED;
++		}
++
++		pvr_power_put(pvr_dev);
++	}
++
+ 	return ret;
+ }
+ 
+ static irqreturn_t pvr_device_irq_handler(int irq, void *data)
+ {
+ 	struct pvr_device *pvr_dev = data;
++	bool safety_irq_pending = false;
++
++	if (pvr_dev->has_safety_events)
++		safety_irq_pending = pvr_device_safety_irq_pending(pvr_dev);
+ 
+-	if (!pvr_fw_irq_pending(pvr_dev))
++	if (!pvr_fw_irq_pending(pvr_dev) && !safety_irq_pending)
+ 		return IRQ_NONE; /* Spurious IRQ - ignore. */
+ 
+ 	return IRQ_WAKE_THREAD;
+ }
+ 
++static void pvr_device_safety_irq_init(struct pvr_device *pvr_dev)
++{
++	u32 num_ecc_rams = 0;
++
++	/*
++	 * Safety events are an optional feature of the RogueXE platform. They
++	 * are only enabled if at least one of ECC memory or the watchdog timer
++	 * are present in HW. While safety events can be generated by other
++	 * systems, that will never happen if the above mentioned hardware is
++	 * not present.
++	 */
++	if (!PVR_HAS_FEATURE(pvr_dev, roguexe)) {
++		pvr_dev->has_safety_events = false;
++		return;
++	}
++
++	PVR_FEATURE_VALUE(pvr_dev, ecc_rams, &num_ecc_rams);
++
++	pvr_dev->has_safety_events =
++		num_ecc_rams > 0 || PVR_HAS_FEATURE(pvr_dev, watchdog_timer);
++}
++
+ /**
+  * pvr_device_irq_init() - Initialise IRQ required by a PowerVR device
+  * @pvr_dev: Target PowerVR device.
+@@ -199,6 +303,8 @@ pvr_device_irq_init(struct pvr_device *pvr_dev)
+ 
+ 	init_waitqueue_head(&pvr_dev->kccb.rtn_q);
+ 
++	pvr_device_safety_irq_init(pvr_dev);
++
+ 	pvr_dev->irq = platform_get_irq(plat_dev, 0);
+ 	if (pvr_dev->irq < 0)
+ 		return pvr_dev->irq;
+@@ -207,6 +313,9 @@ pvr_device_irq_init(struct pvr_device *pvr_dev)
+ 	pvr_fw_irq_clear(pvr_dev);
+ 	pvr_fw_irq_enable(pvr_dev);
+ 
++	if (pvr_dev->has_safety_events)
++		pvr_device_safety_irq_clear(pvr_dev);
++
+ 	/*
+ 	 * The ONESHOT flag ensures IRQs are masked while the thread handler is
+ 	 * running.
+diff --git a/drivers/gpu/drm/imagination/pvr_device.h b/drivers/gpu/drm/imagination/pvr_device.h
+index 2dd8a8885fe07078896d669d822525fb2b7bab51..6c01d96657de6dc3904ef5ca28365f06cfe0f40b 100644
+--- a/drivers/gpu/drm/imagination/pvr_device.h
++++ b/drivers/gpu/drm/imagination/pvr_device.h
+@@ -308,6 +308,9 @@ struct pvr_device {
+ 	 *  struct pvr_file.
+ 	 */
+ 	spinlock_t ctx_list_lock;
++
++	/** @has_safety_events: Whether this device can raise safety events. */
++	bool has_safety_events;
+ };
+ 
+ /**
+diff --git a/drivers/gpu/drm/imagination/pvr_fw.c b/drivers/gpu/drm/imagination/pvr_fw.c
+index 012596402a33d03513997b40c73564d36570b44c..17c29b5081f417cccd28909ccca4f9ca9da1b9ca 100644
+--- a/drivers/gpu/drm/imagination/pvr_fw.c
++++ b/drivers/gpu/drm/imagination/pvr_fw.c
+@@ -437,6 +437,9 @@ fw_runtime_cfg_init(void *cpu_ptr, void *priv)
+ 	runtime_cfg->active_pm_latency_persistant = true;
+ 	WARN_ON(PVR_FEATURE_VALUE(pvr_dev, num_clusters,
+ 				  &runtime_cfg->default_dusts_num_init) != 0);
++
++	/* Keep watchdog timer disabled. */
++	runtime_cfg->wdg_period_us = 0;
+ }
+ 
+ static void
 
 -- 
 2.49.0
