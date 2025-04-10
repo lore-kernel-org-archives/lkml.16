@@ -1,73 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 589E61BE251;
-	Thu, 10 Apr 2025 06:12:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F5381BE251;
+	Thu, 10 Apr 2025 06:14:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744265525; cv=none; b=nVhgay/lZN0lFVghDwBMuZKj11UBeDwdQAFMXhFFplQDzb6of3cbqt3+a4xZBIXk/iU/dpxN5HYpf6nrV2YkIp4YAKmjgO7V5i78ZD+NrWmAhnHqRin0BYVPrhiLnIgfbnNjnHr8h0GGLue5KSI05Kc/GqUJfIJ/jstXduWO/6I=
+	t=1744265692; cv=none; b=A2n58mS/S2Wz5INkxl/7nOA/Z0C56Gv03PdDSGhMFekfK0b4DVoUsXNmETa+vwYL+7PwZQB8JKmgtLzBv5anqnHskt3YHDZnrLhymvBg+AnEsMqRT9QLYLWCO/i/16M0MiPes2jYR7qobY5lO+TOXx4dFcqoSCFxXj8GYol9vr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744265525; c=relaxed/simple;
-	bh=KHSVNzsI5/zU4ACY7+o1sFXmjI5zBaVysJ4fxcV9JeU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r1RJTGlvuylHwpQf9qzCQoB8DzE2s/FLl5ELkaUF7IXVF3vVSpBNv6cYESC58LdlvBxiQ5dWrqfa7nj7zawloHoESacivRj9m00TjLX9So/w5fbcYBcZoSBdLvTiKS7wUd2vMMyEeFaGOt4TzDdQcNnjVxKKsWk2k4jcysRfMM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=fDepa1+h; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744265692; c=relaxed/simple;
+	bh=mbx6ITtNLYAzsr/l+UdnT2YEpJ5YQ1IPbyXfHpbGrY0=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=j9RXSVw6aB2G3oyxj2Y2LTujrLSCeilYYAixiJgvELW77ypd3OZlmKqy1LkwufIgj6e/oJssQjT24/AxG9NKzOMt5qbZS0le21N6TKdidr/pTfp0+KDLnPyYOR5cBZcdZ1y1SzFFVMAZ4wzx+8VIksH4DaiWXA1FyubDB0MQ53o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cRRV4ues; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xYJbFi7L; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="fDepa1+h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7895C4CEDD;
-	Thu, 10 Apr 2025 06:12:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1744265524;
-	bh=KHSVNzsI5/zU4ACY7+o1sFXmjI5zBaVysJ4fxcV9JeU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fDepa1+hS2ku0AVfFWBp2tZHF3g+6ytQIsl0j3QWmeVIrhyfGTA8fyKoIx0e2CAV9
-	 RnkXG63FCfsi+3NR/jXDUiHsl5rUOfc4bM2N5BLboopQ3sXJc3peQMPsZ3GJxDXtaV
-	 D3s1esFh/UprIwBc68b32XE9DB7rxJByjSDf7I1o=
-Date: Thu, 10 Apr 2025 08:10:02 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Petr =?utf-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
-Cc: Petr Tesarik <ptesarik@suse.com>, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] usb: core: warn if a GFP zone flag is passed to
- hcd_buffer_alloc()
-Message-ID: <2025041035-catchable-stopping-e345@gregkh>
-References: <20250320154733.392410-1-ptesarik@suse.com>
- <20250325134000.575794-1-ptesarik@suse.com>
- <20250409174036.7ee76248@meshulam.tesarici.cz>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cRRV4ues";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xYJbFi7L"
+Date: Thu, 10 Apr 2025 06:14:43 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744265688;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZisqoqMU1Q5gHyNLzO+YmukOBCpyJ06A9NlZLs6fanQ=;
+	b=cRRV4uesVI2uWj9a6yv2XbKTUY8Jb5CJsObcFWRxsiAYgWllgwPH9dwE5VzPC7IsSM/zhJ
+	2XvOuIzfqasumlP54EohE2aoMStq/yLoayLsW0UcpPDTWQDq5oOLc755PQZO+NalE0+nE1
+	JMU6kruvhd6Ne3lKMD/Dmv6lD1RR5Tf43KfT2pU8+kYw4ou1oirI29C7hGp8sv9HuIrWpa
+	0wJBdYv8W6LyqM+ZYdDGwy1QLDWi1vroNzcC+48bVtoYvGj0QbYn+rJD8beiTpgs1BV6hg
+	JQFkYi2Xy0hTjv5PXsuvfim2hShiS5E8TveIffbblRdIXDHqnj3lb8VTyRtLIA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744265688;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZisqoqMU1Q5gHyNLzO+YmukOBCpyJ06A9NlZLs6fanQ=;
+	b=xYJbFi7LPrnHXZEJUpGzGqLwA/txoenzRoVKmUKMtHDUoyLkerTfoqE2krTCyuAG+WIzU+
+	9VixP8OPE1g6m5BA==
+From: "tip-bot2 for Josh Poimboeuf" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: objtool/urgent] objtool: Fix false-positive "ignoring
+ unreachables" warning
+Cc: kernel test robot <lkp@intel.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Ingo Molnar <mingo@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To:
+ <5eb28eeb6a724b7d945a961cfdcf8d41e6edf3dc.1744238814.git.jpoimboe@kernel.org>
+References:
+ <5eb28eeb6a724b7d945a961cfdcf8d41e6edf3dc.1744238814.git.jpoimboe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250409174036.7ee76248@meshulam.tesarici.cz>
+Message-ID: <174426568347.31282.17971680226674649784.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 09, 2025 at 05:40:36PM +0200, Petr Tesařík wrote:
-> On Tue, 25 Mar 2025 14:40:00 +0100
-> Petr Tesarik <ptesarik@suse.com> wrote:
-> 
-> > Remove a misleading comment and issue a warning if a zone modifier is
-> > specified when allocating a hcd buffer.
-> > 
-> > There is no valid use case for a GFP zone modifier in hcd_buffer_alloc():
-> > - PIO mode can use any kernel-addressable memory
-> > - dma_alloc_coherent() ignores memory zone bits
-> > 
-> > This function is called by usb_alloc_coherent() and indirectly by
-> > usb_submit_urb(). Despite the comment, no in-tree users currently pass
-> > GFP_DMA.
-> > 
-> > Signed-off-by: Petr Tesarik <ptesarik@suse.com>
-> 
-> I know this was posted during the merge window, but that's now over.
-> Any comment on this patch?
+The following commit has been merged into the objtool/urgent branch of tip:
 
-Please give me a chance to catch up, it's been non-stop conference
-travel during the merge window, and through this week :(
+Commit-ID:     8af6f0fe9c4340ed97f0ba4f3f6cc7bb16558e87
+Gitweb:        https://git.kernel.org/tip/8af6f0fe9c4340ed97f0ba4f3f6cc7bb16558e87
+Author:        Josh Poimboeuf <jpoimboe@kernel.org>
+AuthorDate:    Wed, 09 Apr 2025 15:49:36 -07:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Thu, 10 Apr 2025 08:03:05 +02:00
 
-thanks,
+objtool: Fix false-positive "ignoring unreachables" warning
 
-greg k-h
+There's no need to try to automatically disable unreachable warnings if
+they've already been manually disabled due to CONFIG_KCOV quirks.
+
+This avoids a spurious warning with a KCOV kernel:
+
+  fs/smb/client/cifs_unicode.o: warning: objtool: cifsConvertToUTF16.part.0+0xce5: ignoring unreachables due to jump table quirk
+
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/5eb28eeb6a724b7d945a961cfdcf8d41e6edf3dc.1744238814.git.jpoimboe@kernel.org
+
+Closes: https://lore.kernel.org/r/202504090910.QkvTAR36-lkp@intel.com/
+---
+ tools/objtool/arch/x86/special.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/objtool/arch/x86/special.c b/tools/objtool/arch/x86/special.c
+index 403e587..06ca4a2 100644
+--- a/tools/objtool/arch/x86/special.c
++++ b/tools/objtool/arch/x86/special.c
+@@ -126,7 +126,7 @@ struct reloc *arch_find_switch_table(struct objtool_file *file,
+ 	 * indicates a rare GCC quirk/bug which can leave dead
+ 	 * code behind.
+ 	 */
+-	if (reloc_type(text_reloc) == R_X86_64_PC32) {
++	if (!file->ignore_unreachables && reloc_type(text_reloc) == R_X86_64_PC32) {
+ 		WARN_INSN(insn, "ignoring unreachables due to jump table quirk");
+ 		file->ignore_unreachables = true;
+ 	}
