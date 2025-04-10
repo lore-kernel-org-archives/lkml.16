@@ -1,127 +1,88 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pv50p00im-ztdg10012001.me.com (pv50p00im-ztdg10012001.me.com [17.58.6.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6244D32C85;
-	Thu, 10 Apr 2025 00:52:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37D4F2E40E
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 00:53:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744246340; cv=none; b=fUkax/EP8tcFlfFSgo6/0Ao07/p6S3JZ/6WGwX1olhpGf4jdTLFuydeyVQvIeFIRGusTC/kACX0AS5QjkOMXfT5gXmDrvsyTNzPGOiWI/N5zwE8qwyF6NUHVxEUQOqdHG34jZx3bLA8GYpY0R8cfw46VpfXlyZxYH2jeB9HWSEI=
+	t=1744246390; cv=none; b=KIkMpphKp0i7fdvpfQm7PoAQIh/E33Ii7xCoNB51G/vBdfC8EKk1iYgKRwiObfBPdbMZeruMU8LJRRQ87QP201daaffP2Z1dxfMgh8pJITOzhd1jH2X22N6M3GVklJ3yjdnN1Yo7MDGmbhXiwDuGib4DGfh28pMO54IAfrpX7QY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744246340; c=relaxed/simple;
-	bh=ox8AgQfTLVA79rJ46te13DbxlMU54VNVSKxdcc5HLFU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zavw4SUtnlgQtUJtgshhhSNZq9z76UzVCnIrVL6gCc0MZVoinIQBQLAsz/XJumFyhfXDOFnimgNNdoEf2YeO8wF5+AA1o7oZr9wgu6RG9Pwl6XrjXQq9GVjwE0iHEw1pE6cvz1xxKH1iOVSY+pKpWaDIXVjHAhuiFN4cXzNSOF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UQyA2jTB; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744246390; c=relaxed/simple;
+	bh=fsOddfVX7V5KkkPXD1GuJHf9rfIe77uHCseIDcO89+s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IgDzO4PdnD3BVozwF0H2NOa5+0V745HssomyXnIC8l/NHWMoO2AM3OlbbQU9TxLoeRiQX/JOxC+PeQ6SgG7ZOUSqRzzAzQh7eo3XRmBntt85jPwgccFN+WKjcTxaUXQfEMgtqeteaMqQcamYxYGiWk0QYAzJDsW0vv91jBPKo4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=u8vtkYb5; arc=none smtp.client-ip=17.58.6.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UQyA2jTB"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-4775ce8a4b0so4036971cf.1;
-        Wed, 09 Apr 2025 17:52:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744246338; x=1744851138; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fs2WdD/B26OtprRfRLTt0LpyKmz5rmP8V5F0HnSmXgk=;
-        b=UQyA2jTBO1XzoF4bPAXHbvxx6zvd8ZDf8jmn/RC8XxYQ1D+QrumSwop2dghgqe2aL9
-         d1kTiX8KisXRDI4bs6ePVhUhmKUapB9a+h9R+u1KyIVVpLzUtLUp0EN+az/Fld9er63F
-         toerjssKlXKUBf7ZoBGCglAu3pE6ZJAqhKhB/uasMpXh3Ec9gjoAoFFNtAvNNfsc1SMk
-         4h+HJYEhEuPQ/i7R/RflnII8Qyfp2uvVbziTrfRRTJpGOMgTu7rMfOaZf3XniICwIhDv
-         oi9pn/QXdsrSmIfHzu1D6pcROfVo9RJroZFfg4eF5y6fc3sjBnUZnP7chxgtYoZVcB4f
-         VKfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744246338; x=1744851138;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Fs2WdD/B26OtprRfRLTt0LpyKmz5rmP8V5F0HnSmXgk=;
-        b=NfJk6ra1nN0xD7bzxJVzmmqEVZHhwNy08/IpBnVuW1r7OD5wtx46Nb0/lkf8NLZn3l
-         dwpBZIlVx4fvN3CTivhHA+Nc1JSrFfQox4c2/10+7P2zsRZuo+2xa7uNXkWiLEpEOS5q
-         YQyKw/RQgQ8zEALX7YaUBQgsnOc7OZdnmZp8Vnvpz3PkGhXOWEvfcSWs237uw6K94Ik3
-         1/UWjyIyyghEfoWkGi4xpYJt6hNpih+PsFMusCzqS2SwruckWOjnCszZHkEjBacRiBQJ
-         WdPdLMPvmkpzvZ9upmHtqQjkRIfB2soFKm+UMlUJMj+ZgHZra7x5VBKjrHVtuGrONRzG
-         sV5A==
-X-Forwarded-Encrypted: i=1; AJvYcCXbT29zu1XvfBxTDO7JfFO5s88f+nj11Yio88KWqAaX/ke7pqQYUt2+jpItyoy+qVdt3l3/A6Ok63Xs@vger.kernel.org
-X-Gm-Message-State: AOJu0YwgbEybuuKQwU/YMtNpG2M2TmawtZOzP8v8XmeLFADI+Ty8TDBp
-	cRcwfdQbpQblBiygMZF6TA5on08nvO0pGjhqhIpHyRfnFvT0xx0J
-X-Gm-Gg: ASbGncsiRLBLLTI01oa47p3cXpPAYVCER+/hN2wbpN2EU1NM+/y3MilN/+r/sOxp3g0
-	STO1oSFcbECiCI/aUJOJlLvFLeO4IZ58sxFMobqBaVtQsE4zmvMSTwerDJIIO2seri9wHHVjiyT
-	ueTjj0WyrFznLW6sXPNKXUR6tDamFqqxRmOxuxV9913ysIAhxpzcIiSCn+RoACnim0XEmhITZ1M
-	yOVsfPpMBXHEM/w6kSMNAtn2ojXyof/8NrJjH6ZzEcZ+wMXKDSn1QH29I4uB79smyA1dOTmBGqD
-	jjvigRQFx82HeOSv
-X-Google-Smtp-Source: AGHT+IEnhl76pykbQfzu9PnuA4q6SybzAfrF021J7S6C5p2V+BNkLwoJw+XTI0wnALfnBZwhQfCB5Q==
-X-Received: by 2002:a05:620a:f0c:b0:7c5:4cb7:ac97 with SMTP id af79cd13be357-7c7a76546f6mr145282785a.1.1744246337937;
-        Wed, 09 Apr 2025 17:52:17 -0700 (PDT)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c7a8a1c798sm7515285a.116.2025.04.09.17.52.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 17:52:17 -0700 (PDT)
-Date: Thu, 10 Apr 2025 08:51:39 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Thomas Gleixner <tglx@linutronix.de>, 
-	Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto <inochiama@gmail.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	sophgo@lists.linux.dev, Yixun Lan <dlan@gentoo.org>, Longbin Li <looong.bin@gmail.com>
-Subject: Re: [PATCH v3 4/4] irqchip/sg2042-msi: Add the Sophgo SG2044 MSI
- interrupt controller
-Message-ID: <fecggqyrkh222svtcudqoemw4vzisa6srod4jaumkrgd7xrm7j@vfs7xs5fo4i6>
-References: <20250408050147.774987-1-inochiama@gmail.com>
- <20250408050147.774987-5-inochiama@gmail.com>
- <MA0P287MB2262DBC84878347B78CA50ECFEB42@MA0P287MB2262.INDP287.PROD.OUTLOOK.COM>
- <87o6x5tbev.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="u8vtkYb5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=r6XmJIFr7QSOukVIZtVvldsOdQcCgSTp2kqkiVt6ee4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:x-icloud-hme;
+	b=u8vtkYb5u8qBR3///h27eNvKQsb9Aam/eKWxbOK44QRpjweuiXUdefgMUAFhKNWHJ
+	 tLHy88+Qi3vnLJyOShuJJru++4rA9qEXuBUcLqepJ/KAqlLnHeSYwrfysg+fq0e2Cl
+	 9ocxBaPXBNcg9HZk6kgGdpGw7vq/JGeQm71W+O9ggqPVpvmvqAg4IU+xih63i6qkZ1
+	 uvahcWPqfYpDdxpffUeiRAtfLNcYC44wvu9YPk0AlciXUnLN1TWRdWOkrO62eqd0XC
+	 z4GDkSwjads+1bxj7XE0ywwKDuoLNygQmF0qf7VULXzUJAFYiHO1d9570Cq0OJzQLW
+	 q4C2eCdTKLtbA==
+Received: from pv50p00im-ztdg10012001.me.com (pv50p00im-ztdg10012001.me.com [17.58.6.51])
+	by pv50p00im-ztdg10012001.me.com (Postfix) with ESMTPS id 3513AA02B0;
+	Thu, 10 Apr 2025 00:53:03 +0000 (UTC)
+Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
+	by pv50p00im-ztdg10012001.me.com (Postfix) with ESMTPSA id F163DA0136;
+	Thu, 10 Apr 2025 00:52:32 +0000 (UTC)
+Message-ID: <2e4fa39d-3d1d-4336-af99-4ecdf8a9482f@icloud.com>
+Date: Thu, 10 Apr 2025 08:52:29 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87o6x5tbev.ffs@tglx>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next] sock: Correct error checking condition for
+ assign|release_proto_idx()
+To: Eric Dumazet <edumazet@google.com>
+Cc: Kuniyuki Iwashima <kuniyu@amazon.com>, Paolo Abeni <pabeni@redhat.com>,
+ Willem de Bruijn <willemb@google.com>, "David S. Miller"
+ <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ Simon Horman <horms@kernel.org>, Pavel Emelyanov <xemul@openvz.org>,
+ Eric Dumazet <dada1@cosmosbay.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
+References: <20250408-fix_net-v1-1-375271a79c11@quicinc.com>
+ <CANn89iKP-5hy-oMuYwEvwFOzzAkfF5=8v7patSE5z7PZQS0V2Q@mail.gmail.com>
+Content-Language: en-US
+From: Zijun Hu <zijun_hu@icloud.com>
+In-Reply-To: <CANn89iKP-5hy-oMuYwEvwFOzzAkfF5=8v7patSE5z7PZQS0V2Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: d1vt1E6VHyJKiYHACmo99i3JmO6Mdgm5
+X-Proofpoint-GUID: d1vt1E6VHyJKiYHACmo99i3JmO6Mdgm5
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-09_06,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 bulkscore=0 spamscore=0
+ adultscore=0 phishscore=0 suspectscore=0 mlxlogscore=961 malwarescore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2504100005
 
-On Wed, Apr 09, 2025 at 08:52:40PM +0200, Thomas Gleixner wrote:
-> On Wed, Apr 09 2025 at 15:53, Chen Wang wrote:
-> 
-> > On 2025/4/8 13:01, Inochi Amaoto wrote:
-> >> Add support for Sophgo SG2044 MSI interrupt controller.
-> >>
-> >> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
-> >> Reviewed-by: Chen Wang <unicorn_wang@outlook.com>
-> >> ---
-> >>   drivers/irqchip/irq-sg2042-msi.c | 61 ++++++++++++++++++++++++++++++--
-> >>   1 file changed, 58 insertions(+), 3 deletions(-)
-> >>
-> >> diff --git a/drivers/irqchip/irq-sg2042-msi.c b/drivers/irqchip/irq-sg2042-msi.c
-> >> index 30a1d2bfd474..2935ca213306 100644
-> >> --- a/drivers/irqchip/irq-sg2042-msi.c
-> >> +++ b/drivers/irqchip/irq-sg2042-msi.c
-> >> @@ -19,8 +19,6 @@
-> >>   
-> >>   #include "irq-msi-lib.h"
-> >>   
-> >> -#define SG2042_MAX_MSI_VECTOR	32
-> >> -
-> >>   struct sg204x_msi_chip_info {
-> >>   	const struct irq_chip		*irqchip;
-> >>   	const struct msi_parent_ops	*parent_ops;
-> >> @@ -44,7 +42,7 @@ struct sg204x_msi_chipdata {
-> >>   	u32					irq_first;
-> >>   	u32					num_irqs;
-> >>   
-> >> -	DECLARE_BITMAP(msi_map, SG2042_MAX_MSI_VECTOR);
-> >> +	unsigned long				*msi_map;
-> >
-> > Regarding the common parts of SG2042 and SG2044, I noticed that you 
-> > changed DECLARE_BITMAP back to dynamic application. If there is a next 
-> > version, I suggest you mention it in the commit information.
-> 
-> Actually that should be part of the previous patch which prepares for
-> configurable initialization. Then this one just adds the new variant.
+On 2025/4/9 03:06, Eric Dumazet wrote:
+>>  {
+>> -       this_cpu_add(net->core.prot_inuse->val[prot->inuse_idx], val);
+>> +       unsigned int idx = prot->inuse_idx;
+>> +
+>> +       if (likely(idx < PROTO_INUSE_NR))
+>> +               this_cpu_add(net->core.prot_inuse->val[idx], val);
+>>  }
+> I do not think we are going to add such a test in the fast path, for a
+> bug that can not happen.
 > 
 
-I think it is OK for me. I will merge this change in previous one.
+agree.
 
-Regards,
-Inochi
+> Please give us a reproducer ?
+
+will remove that check in v2 provided @prot->inuse_idx will never be
+used if @prot fails to be registered.
+
+thank you for code review.
