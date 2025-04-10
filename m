@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0977B201031
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 03:57:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3908F201031
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 03:57:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744257470; cv=none; b=o4bmO8LGFX15Wc9OLZLMnndCvYxN/S9lmTYFMtSXHgM7LGqcIGmMM1tOUD0dvbfohYSTVf9dOY5N0Ogj7F/RiaInwSuHQMHEEz01WRtT0bxca9rehlPvsa/UIaBPvfjhsYNPWKW9FFwJskP9HgM8VgDOiT+RgOCbcxDDz/Vi5k4=
+	t=1744257476; cv=none; b=O3mmYcYJNPs+B5KsldjGQ8mJrK06LLQzc8GSq77KXIOFdfuM7WWcVGj4E9VDoAxSZM05q46hzjJvLJpcZl3InJ4jbP5H2nyWcZG7NHoDNNLDCcgMPe/DLCbdJ2c3s9IpxhSHTDCEFQa1UO/YjK2+CtDV6ov2zQ+r5WiqDtlJvyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744257470; c=relaxed/simple;
-	bh=XbLhsbjg1pnvXCfaaBa7PJtCuV1G98Gervk3p8w/teg=;
+	s=arc-20240116; t=1744257476; c=relaxed/simple;
+	bh=FDODwI3joPHBhYYHwx/rigJpxA2CfVzWCknO0NozRwg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-type; b=LNg9BH40ulBrnxh8iVEvqCcMv8aLDSQQ0gGrBZ5aqytmdM+Igp1TKe1WPNC8mhJed5FVRRbLPxJLKoUB09AxzQBbVWBkbnDFDJQaXKXpBLruNDmBoei9DcLxgIOA2cP7XZ+F6yAMy8t5KVu0eVzGvvQn7U95Xc/9O9b7TL4JpUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Cipe7Qtl; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-type; b=fENWZvkJA6Ramujxj6VPdsJuoI5lS6kqntr1J/weYQg+pDwCKvVZvRmYa2pZ6i/Lti3d5ppfsy3whWgprzhzZbfopxDg6M7c3MML9qnhwuKobOWHUHMK0jJVCA72zIBUjGZUBkpvjrKtMZTmt1s5XMBFXi93lokKgQQ/vfyiKUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eOLfOVyD; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Cipe7Qtl"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eOLfOVyD"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744257465;
+	s=mimecast20190719; t=1744257473;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=f1N+YcIuKzs7QdLEHyEwZZ+GVIPuduBxUV08naMugGA=;
-	b=Cipe7QtllYSJ2oHJFP6dX84AW1RpJ3q6/QxMo68ddXzh1ottmeDLOZm7fYQhuW8A9csr1G
-	YFmoEV/4OWb08uza/EBrOxex1pVyxpSPiexcntBihx4gMk3KGSUIJHZhM4DVGmop8FykMQ
-	V+QoBp/tOhIqEwxQ3GFcUvqWZcq1RgQ=
+	bh=6pFd+u5mCoqhmCfr93K2zek+trGS6VlClORLBIf/qW0=;
+	b=eOLfOVyDIueEQtp6I535dOobrS3KOZvQxnBmNakeRnPh/5nyL0gzBxUfAkycajvAOnnQlH
+	THq0NgQsZ403ggDgpEj510JCN42kU4ZL4sL/gfT6BeYUaWuTpZ00hf2rQNmZL8XnXOdYhQ
+	Rro1uXgQkDHrfaqvGvSCogqHQEoc50E=
 Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-122-lqz1GyQENkqkExtdQptSDQ-1; Wed,
- 09 Apr 2025 23:57:41 -0400
-X-MC-Unique: lqz1GyQENkqkExtdQptSDQ-1
-X-Mimecast-MFC-AGG-ID: lqz1GyQENkqkExtdQptSDQ_1744257460
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-346-6oLAsj_QORK9FKjEnBq8rw-1; Wed,
+ 09 Apr 2025 23:57:47 -0400
+X-MC-Unique: 6oLAsj_QORK9FKjEnBq8rw-1
+X-Mimecast-MFC-AGG-ID: 6oLAsj_QORK9FKjEnBq8rw_1744257465
 Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5455218004A9;
-	Thu, 10 Apr 2025 03:57:40 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 65330180AF4E;
+	Thu, 10 Apr 2025 03:57:45 +0000 (UTC)
 Received: from MiWiFi-R3L-srv.redhat.com (unknown [10.72.112.38])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7808219560AD;
-	Thu, 10 Apr 2025 03:57:35 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5620119560AD;
+	Thu, 10 Apr 2025 03:57:40 +0000 (UTC)
 From: Baoquan He <bhe@redhat.com>
 To: linux-mm@kvack.org
 Cc: akpm@linux-foundation.org,
@@ -50,9 +50,9 @@ Cc: akpm@linux-foundation.org,
 	yanjun.zhu@linux.dev,
 	linux-kernel@vger.kernel.org,
 	Baoquan He <bhe@redhat.com>
-Subject: [PATCH v4 3/4] mm/gup: remove gup_fast_pgd_leaf() and clean up the relevant codes
-Date: Thu, 10 Apr 2025 11:57:16 +0800
-Message-ID: <20250410035717.473207-4-bhe@redhat.com>
+Subject: [PATCH v4 4/4] mm/gup: clean up codes in fault_in_xxx() functions
+Date: Thu, 10 Apr 2025 11:57:17 +0800
+Message-ID: <20250410035717.473207-5-bhe@redhat.com>
 In-Reply-To: <20250410035717.473207-1-bhe@redhat.com>
 References: <20250410035717.473207-1-bhe@redhat.com>
 Precedence: bulk
@@ -65,88 +65,139 @@ Content-type: text/plain
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-In the current kernel, only pud huge page is supported in some
-architectures. P4d and pgd huge pages haven't been supported yet.
-And in mm/gup.c, there's no pgd huge page handling in the
-follow_page_mask() code path. Hence it doesn't make sense to only
-have gup_fast_pgd_leaf() in gup_fast code path.
+The code style in fault_in_readable() and fault_in_writable() is a
+little inconsistent with fault_in_safe_writeable(). In fault_in_readable()
+and fault_in_writable(), it uses 'uaddr' passed in as loop cursor. While
+in fault_in_safe_writeable(), local variable 'start' is used as loop
+cursor. This may mislead people when reading code or making change in
+these codes.
 
-Here remove gup_fast_pgd_leaf() and clean up the relevant codes.
+Here define explicit loop cursor and use for loop to simplify codes in
+these three functions. These cleanup can make them be consistent in
+code style and improve readability.
 
 Signed-off-by: Baoquan He <bhe@redhat.com>
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-Acked-by: David Hildenbrand <david@redhat.com>
 ---
- mm/gup.c | 49 +++----------------------------------------------
- 1 file changed, 3 insertions(+), 46 deletions(-)
+ mm/gup.c | 65 +++++++++++++++++++++++---------------------------------
+ 1 file changed, 26 insertions(+), 39 deletions(-)
 
 diff --git a/mm/gup.c b/mm/gup.c
-index eb668da933e1..77a5bc622567 100644
+index 77a5bc622567..a76bd7e90a71 100644
 --- a/mm/gup.c
 +++ b/mm/gup.c
-@@ -3172,46 +3172,6 @@ static int gup_fast_pud_leaf(pud_t orig, pud_t *pudp, unsigned long addr,
- 	return 1;
- }
+@@ -2113,28 +2113,24 @@ static long __get_user_pages_locked(struct mm_struct *mm, unsigned long start,
+  */
+ size_t fault_in_writeable(char __user *uaddr, size_t size)
+ {
+-	char __user *start = uaddr, *end;
++	const unsigned long start = (unsigned long)uaddr;
++	const unsigned long end = start + size;
++	unsigned long cur = start;
  
--static int gup_fast_pgd_leaf(pgd_t orig, pgd_t *pgdp, unsigned long addr,
--		unsigned long end, unsigned int flags, struct page **pages,
--		int *nr)
--{
--	int refs;
--	struct page *page;
--	struct folio *folio;
--
--	if (!pgd_access_permitted(orig, flags & FOLL_WRITE))
--		return 0;
--
--	BUILD_BUG_ON(pgd_devmap(orig));
--
--	page = pgd_page(orig);
--	refs = record_subpages(page, PGDIR_SIZE, addr, end, pages + *nr);
--
--	folio = try_grab_folio_fast(page, refs, flags);
--	if (!folio)
--		return 0;
--
--	if (unlikely(pgd_val(orig) != pgd_val(*pgdp))) {
--		gup_put_folio(folio, refs, flags);
--		return 0;
+ 	if (unlikely(size == 0))
+ 		return 0;
++
+ 	if (!user_write_access_begin(uaddr, size))
+ 		return size;
+-	if (!PAGE_ALIGNED(uaddr)) {
+-		unsafe_put_user(0, uaddr, out);
+-		uaddr = (char __user *)PAGE_ALIGN((unsigned long)uaddr);
 -	}
--
--	if (!pgd_write(orig) && gup_must_unshare(NULL, flags, &folio->page)) {
--		gup_put_folio(folio, refs, flags);
--		return 0;
+-	end = (char __user *)PAGE_ALIGN((unsigned long)start + size);
+-	if (unlikely(end < start))
+-		end = NULL;
+-	while (uaddr != end) {
+-		unsafe_put_user(0, uaddr, out);
+-		uaddr += PAGE_SIZE;
 -	}
--
--	if (!gup_fast_folio_allowed(folio, flags)) {
--		gup_put_folio(folio, refs, flags);
--		return 0;
--	}
--
--	*nr += refs;
--	folio_set_referenced(folio);
--	return 1;
--}
--
- static int gup_fast_pmd_range(pud_t *pudp, pud_t pud, unsigned long addr,
- 		unsigned long end, unsigned int flags, struct page **pages,
- 		int *nr)
-@@ -3306,12 +3266,9 @@ static void gup_fast_pgd_range(unsigned long addr, unsigned long end,
- 		next = pgd_addr_end(addr, end);
- 		if (pgd_none(pgd))
- 			return;
--		if (unlikely(pgd_leaf(pgd))) {
--			if (!gup_fast_pgd_leaf(pgd, pgdp, addr, next, flags,
--					       pages, nr))
--				return;
--		} else if (!gup_fast_p4d_range(pgdp, pgd, addr, next, flags,
--					       pages, nr))
-+		BUILD_BUG_ON(pgd_leaf(pgd));
-+		if (!gup_fast_p4d_range(pgdp, pgd, addr, next, flags,
-+					pages, nr))
- 			return;
- 	} while (pgdp++, addr = next, addr != end);
++
++	/* Stop once we overflow to 0. */
++	for (; cur && cur < end; cur = PAGE_ALIGN_DOWN(cur + PAGE_SIZE))
++		unsafe_put_user(0, (char __user *)cur, out);
+ 
+ out:
+ 	user_write_access_end();
+-	if (size > uaddr - start)
+-		return size - (uaddr - start);
++	if (size > cur - start)
++		return size - (cur - start);
+ 	return 0;
  }
+ EXPORT_SYMBOL(fault_in_writeable);
+@@ -2188,26 +2184,24 @@ EXPORT_SYMBOL(fault_in_subpage_writeable);
+  */
+ size_t fault_in_safe_writeable(const char __user *uaddr, size_t size)
+ {
+-	unsigned long start = (unsigned long)uaddr, end;
++	const unsigned long start = (unsigned long)uaddr;
++	const unsigned long end = start + size;
++	unsigned long cur = start;
+ 	struct mm_struct *mm = current->mm;
+ 	bool unlocked = false;
+ 
+ 	if (unlikely(size == 0))
+ 		return 0;
+-	end = PAGE_ALIGN(start + size);
+-	if (end < start)
+-		end = 0;
+ 
+ 	mmap_read_lock(mm);
+-	do {
+-		if (fixup_user_fault(mm, start, FAULT_FLAG_WRITE, &unlocked))
++	/* Stop once we overflow to 0. */
++	for (; cur && cur < end; cur = PAGE_ALIGN_DOWN(cur + PAGE_SIZE))
++		if (fixup_user_fault(mm, cur, FAULT_FLAG_WRITE, &unlocked))
+ 			break;
+-		start = (start + PAGE_SIZE) & PAGE_MASK;
+-	} while (start != end);
+ 	mmap_read_unlock(mm);
+ 
+-	if (size > start - (unsigned long)uaddr)
+-		return size - (start - (unsigned long)uaddr);
++	if (size > cur - start)
++		return size - (cur - start);
+ 	return 0;
+ }
+ EXPORT_SYMBOL(fault_in_safe_writeable);
+@@ -2222,30 +2216,23 @@ EXPORT_SYMBOL(fault_in_safe_writeable);
+  */
+ size_t fault_in_readable(const char __user *uaddr, size_t size)
+ {
+-	const char __user *start = uaddr, *end;
++	const unsigned long start = (unsigned long)uaddr;
++	const unsigned long end = start + size;
++	unsigned long cur = start;
+ 	volatile char c;
+ 
+ 	if (unlikely(size == 0))
+ 		return 0;
+ 	if (!user_read_access_begin(uaddr, size))
+ 		return size;
+-	if (!PAGE_ALIGNED(uaddr)) {
+-		unsafe_get_user(c, uaddr, out);
+-		uaddr = (const char __user *)PAGE_ALIGN((unsigned long)uaddr);
+-	}
+-	end = (const char __user *)PAGE_ALIGN((unsigned long)start + size);
+-	if (unlikely(end < start))
+-		end = NULL;
+-	while (uaddr != end) {
+-		unsafe_get_user(c, uaddr, out);
+-		uaddr += PAGE_SIZE;
+-	}
+-
++	/* Stop once we overflow to 0. */
++	for (; cur && cur < end; cur = PAGE_ALIGN_DOWN(cur + PAGE_SIZE))
++		unsafe_get_user(c, (const char __user *)cur, out);
+ out:
+ 	user_read_access_end();
+ 	(void)c;
+-	if (size > uaddr - start)
+-		return size - (uaddr - start);
++	if (size > cur - start)
++		return size - (cur - start);
+ 	return 0;
+ }
+ EXPORT_SYMBOL(fault_in_readable);
 -- 
 2.41.0
 
