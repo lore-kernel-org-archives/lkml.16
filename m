@@ -1,178 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD80628F928
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 20:03:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73198204C2C;
+	Thu, 10 Apr 2025 20:04:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744315433; cv=none; b=O0r66oxH3eqva2WgVBSi0qf3brZMdWqHzIxB/0w0rsdnoKrGdNH+nxF6RT3SkY09/EAXtinDGwQn4HqwY4PzNzp2E9jhorzQp1MfikDyDMVqhW13oVLzj7YxsYvVAG8QSyTNDO8SXuoVQHYXGzz8wzw2A4IkcWoF6/eedDuGHvc=
+	t=1744315453; cv=none; b=aoKxoFq69emLtCs+cOzSXUmthqLNE+wfVNq6m+mFTpg6YqKb5jLNnzVfsZ1Fy6HFe3UjS8wPRHbf59H/w9VOnObvlydRImcZrhvgl3r6BvUjpfUrEVZLN+7CerFPIR+lG/zysI3lY/eOSXYgT1a1SKmI1SA5tn5VpkLowJi6GGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744315433; c=relaxed/simple;
-	bh=I44I/lWKXZB99EvWaI/wk+u4vufTIlRvwfKX6o1UN6w=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=R8YrgaEglX/Zozhr+gpEn/TD7jWt9m2rVLnf/PLIhTAqCULOq2e7xmCM1iImba30a2o5ZZ8SWjZnueHC+0MmaORNnxJwOJjaTqfj/L3IhO98QWQ1MEthMxDFoXZ/nFXDKuHRnEvl22Y28fkD2U/Me9kv4e43L9vB4YUPcEkadpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZQZpr9Gk; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744315453; c=relaxed/simple;
+	bh=qVFTzSs8m8/JdOY2MSSqAb2TnfoOm90LtGGHmpPAkPQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NLAAkGNS4Z5Yz2aohEmC82cPUpqQ6gi66LTDbppdQ9UfPs1HFV8OObKeiUSiR1W4aBU44mafRLxjuQEpNPQp8skcj2DdjHD8vch9Wc0EteftkJDsZ0/DsiXyTVkzpBZh2ZTF2iOtYPmgFs344vnGHZWoFU/nzktCjbwXP2hL+Lg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k3CXiQm4; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZQZpr9Gk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744315430; x=1775851430;
-  h=date:from:to:cc:subject:message-id;
-  bh=I44I/lWKXZB99EvWaI/wk+u4vufTIlRvwfKX6o1UN6w=;
-  b=ZQZpr9Gkm0lj/CYmkecYRfFgTzlJNj+bUWHRvM2RLYY6LX+GnG1NrJ/4
-   5V7jpTQAfIl+RA0fx0vc+ySiKc5q/ciOAn8IvnQt4+61kp9ps+pJq9ryx
-   MVxe9xc8mKfRF9/BXgNykpELCsQR76kpS79Tx4+Rez+Pg3bGfCxHq0cQp
-   IUyexA0EvLDJhBWdsKdjZYzipV8bAUMEMURvP3bRQbLXWY6AKjIXSwGyR
-   WJQpaYp1bwFo1nEucllGveU5cVunjvgwGGc7hhEghhHN2JA8abW95ORK3
-   HhQyCRlC4OS0EyoB1dKpUfdid+LL/xQPjtd+m9iXIApZcs9Kxl4lRoLoj
-   w==;
-X-CSE-ConnectionGUID: 9pL6BNVBT+65TGxBcxooKQ==
-X-CSE-MsgGUID: 22Ky0FANSAaIB/WbzoHd3A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11400"; a="49691701"
-X-IronPort-AV: E=Sophos;i="6.15,203,1739865600"; 
-   d="scan'208";a="49691701"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 13:03:49 -0700
-X-CSE-ConnectionGUID: jfzPRCMQTeKAVggYm5PG6A==
-X-CSE-MsgGUID: olmtBjAkS7iFpX38Yxm3gg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,203,1739865600"; 
-   d="scan'208";a="152179522"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 10 Apr 2025 13:03:13 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u2y7D-000AUx-0E;
-	Thu, 10 Apr 2025 20:03:11 +0000
-Date: Fri, 11 Apr 2025 04:02:11 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:x86/cpu] BUILD SUCCESS
- d02c83d75f9f76dda046edbd9f39b911427677c9
-Message-ID: <202504110403.ETSEZT3A-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k3CXiQm4"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-af589091049so903923a12.1;
+        Thu, 10 Apr 2025 13:04:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744315449; x=1744920249; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+BPKKwTgw638zeDPa9t4YN31D0zKBuMnDnaMDeC0Pfo=;
+        b=k3CXiQm4Pm7ZLkIQncCosFnb6jHF4zvCZQVMwWvdgsaU6pl9DVcZq/8qmtOb8RjnoW
+         oXWkXvR6ZAOcm9rTRI/YuxZy/1NMPQtaAtJakBasOwL76WICwGNL8/ykgCwhUYEfR62S
+         ezjlyiXMxbH5J/RUwpLc0g+JquUKBygOLMrf+khUMOOAUdEgaobZSyg7e/gLeKilN1CK
+         IMUKzuYuTFR4qPyMJyNCQjd+llyKyE4vUB2NYz9FZn2L7PpdQSKf+Ukyj44G/DNFHqjs
+         tk+g0E6JNy1jWagaW4HfSPx9vPimi6k9fMnn+LPlwzMMPKfPI80Wk8hm0+wfKVNnWgeK
+         eBsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744315449; x=1744920249;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+BPKKwTgw638zeDPa9t4YN31D0zKBuMnDnaMDeC0Pfo=;
+        b=gD0w3MiegniY6fcuOn5jnbN5FetqqwSEjNFYuFJ2v8sWIZTpY4Cba6MaPVKqAta/KH
+         Xxhl+NbTaL8sPF2ygBEckzl8xbCryp1cpdNj08nC3FhAulFiAad9RqVH0vGYW52ZJsc0
+         EXOFGY8PWwmrYOF79jpApw8mDr9wyamyMHAne/ZJQzQKOWku3EVG9Gj7UafQTubSTEMC
+         yWfIDfEvKyVtJhYnhRgyb9Dr9dA/RjbUbKCdcrUZa5YQDwx3SUJ5IVj3e1Aq/7Jr/qT4
+         xJbGhmhOE+RMp4WhgLZL6AZyBwn5AKxott91w32NxzdjQWa57TFMnvJ3H41yaXcYapYZ
+         u5sQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUxyWpAbX98GZSYdhIpLfTfsO+nJL6ShO1zmWD1VOqeqtomFndCpoPPo15LRpgSgb+X2BtEX3VJfXpcH5DK@vger.kernel.org, AJvYcCWdxwj995cyyEXrElqsAQWEaJPPr+zs6iCWMSp5vIobSsGzKv3E3lF6JbJoTpLmfvN/1CmAYCE6XmzjTg==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3QG+MpdonkJFNiZykC9pN/w0JeqxRGDrKaorOIkyOoSikVEgk
+	UsLkJVWaFCqBSZdo5G6mP6wXbDpzUGo1Nolt/UTkLC08Z35Sd+5m
+X-Gm-Gg: ASbGnctYAhENd3GUD7jZjTy0us2c2LtbRUBqHJgMXz9OzNtmSDa6HcJMm59asQaFjEj
+	j0Nxz7orDXAX5N/6vwPfbdOnBiEIYxjPi/LYHVDejZBeMX0IHgkFfdpnxHYrpSoj8R26y8aN0AI
+	HJOm1hH3qaEOgL3O9tfjfI2H7ZkP6syXsGelJreWFCE4z6I1wrRG3IWrC4llhgYktYvkcgf2Uek
+	6KuJRHNd1o9k+eH4jB02a8AqyLGNKk08qQmmc5PEV335qF1PxxMzYAFTsKTJaDVMuOOEWyn2CXF
+	eEd3AhNKl9iGVDWU9XVttgqMtx6vSQ2TlAvdSdoTjglm0dtwGRTvDA==
+X-Google-Smtp-Source: AGHT+IG9hWkQzbKUylOmpVq+IvEgROMzWpmbJbm3bKw6AAas7f3lnBn/i2pnRIweuQkjh/eQw7mn8A==
+X-Received: by 2002:a17:90b:6ce:b0:2fe:b470:dde4 with SMTP id 98e67ed59e1d1-30823670b3dmr427427a91.12.1744315449463;
+        Thu, 10 Apr 2025 13:04:09 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b8c62dsm35028245ad.95.2025.04.10.13.04.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Apr 2025 13:04:09 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Thu, 10 Apr 2025 13:04:08 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Purva Yeshi <purvayeshi550@gmail.com>
+Cc: Luca Tettamanti <kronos.it@gmail.com>, Jean Delvare <jdelvare@suse.com>,
+	linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hwmon: asus_atk0110: NULL buf.pointer after free
+Message-ID: <bba9ff87-90de-4eae-99d1-647ee413d480@roeck-us.net>
+References: <20250410183450.15514-1-purvayeshi550@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250410183450.15514-1-purvayeshi550@gmail.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/cpu
-branch HEAD: d02c83d75f9f76dda046edbd9f39b911427677c9  x86/cacheinfo: Properly parse CPUID(0x80000006) L2/L3 associativity
+On Fri, Apr 11, 2025 at 12:04:50AM +0530, Purva Yeshi wrote:
+> Fix Smatch-detected issue:
+> drivers/hwmon/asus_atk0110.c:987 atk_enumerate_old_hwmon() error:
+> double free of 'buf.pointer' (line 966)
+> drivers/hwmon/asus_atk0110.c:1008 atk_enumerate_old_hwmon() error:
+> double free of 'buf.pointer' (line 987)
+> 
+> Smatch warns about double free of 'buf.pointer'.
+> This happens because the same buffer struct is reused multiple times
+> without resetting the pointer after free. Set buf.pointer = NULL
+> after each ACPI_FREE to prevent possible use-after-free bugs.
+> 
+> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+> ---
+>  drivers/hwmon/asus_atk0110.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/hwmon/asus_atk0110.c b/drivers/hwmon/asus_atk0110.c
+> index c80350e499e9..83ee7f25bb8e 100644
+> --- a/drivers/hwmon/asus_atk0110.c
+> +++ b/drivers/hwmon/asus_atk0110.c
+> @@ -964,6 +964,7 @@ static int atk_enumerate_old_hwmon(struct atk_data *data)
+>  			count++;
+>  	}
+>  	ACPI_FREE(buf.pointer);
+> +	buf.pointer = NULL;
+>  
+>  	/* Temperatures */
+>  	buf.length = ACPI_ALLOCATE_BUFFER;
+> @@ -985,6 +986,7 @@ static int atk_enumerate_old_hwmon(struct atk_data *data)
+>  			count++;
+>  	}
+>  	ACPI_FREE(buf.pointer);
+> +	buf.pointer = NULL;
+>  
+>  	/* Fans */
+>  	buf.length = ACPI_ALLOCATE_BUFFER;
 
-elapsed time: 1468m
+buf.length is set to ACPI_ALLOCATE_BUFFER to trigger buffer
+allocation in acpi_evaluate_object_typed(). The old content of
+buf.pointer is irrelevant (and not initialized to start with
+in the first call). The problem you describe does not exist.
 
-configs tested: 101
-configs skipped: 9
+Guenter
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-14.2.0
-arc                               allnoconfig    gcc-14.2.0
-arc                              allyesconfig    gcc-14.2.0
-arc                        nsim_700_defconfig    gcc-14.2.0
-arc                   randconfig-001-20250410    gcc-14.2.0
-arc                   randconfig-002-20250410    gcc-12.4.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-14.2.0
-arm                          gemini_defconfig    clang-20
-arm                       netwinder_defconfig    gcc-14.2.0
-arm                   randconfig-001-20250410    clang-21
-arm                   randconfig-002-20250410    clang-18
-arm                   randconfig-003-20250410    gcc-7.5.0
-arm                   randconfig-004-20250410    gcc-8.5.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20250410    clang-21
-arm64                 randconfig-002-20250410    clang-21
-arm64                 randconfig-003-20250410    gcc-6.5.0
-arm64                 randconfig-004-20250410    gcc-8.5.0
-csky                              allnoconfig    gcc-14.2.0
-csky                  randconfig-001-20250410    gcc-14.2.0
-csky                  randconfig-002-20250410    gcc-14.2.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon               randconfig-001-20250410    clang-21
-hexagon               randconfig-002-20250410    clang-21
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-004-20250410    gcc-11
-i386        buildonly-randconfig-005-20250410    clang-20
-i386        buildonly-randconfig-006-20250410    clang-20
-i386                                defconfig    clang-19
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250410    gcc-12.4.0
-loongarch             randconfig-002-20250410    gcc-12.4.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                       m5208evb_defconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250410    gcc-14.2.0
-nios2                 randconfig-002-20250410    gcc-10.5.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                              defconfig    gcc-14.2.0
-parisc                randconfig-001-20250410    gcc-5.5.0
-parisc                randconfig-002-20250410    gcc-11.5.0
-parisc64                         alldefconfig    gcc-14.1.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                     mpc512x_defconfig    clang-21
-powerpc               randconfig-001-20250410    gcc-6.5.0
-powerpc               randconfig-002-20250410    gcc-6.5.0
-powerpc64             randconfig-002-20250410    clang-21
-powerpc64             randconfig-003-20250410    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                 randconfig-001-20250410    clang-21
-riscv                 randconfig-002-20250410    gcc-8.5.0
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-14.2.0
-s390                  randconfig-001-20250410    clang-17
-s390                  randconfig-002-20250410    gcc-6.5.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                    randconfig-001-20250410    gcc-12.4.0
-sh                    randconfig-002-20250410    gcc-10.5.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250410    gcc-10.3.0
-sparc                 randconfig-002-20250410    gcc-7.5.0
-sparc64               randconfig-001-20250410    gcc-7.5.0
-sparc64               randconfig-002-20250410    gcc-5.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250410    clang-21
-um                    randconfig-002-20250410    gcc-12
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250410    clang-20
-x86_64      buildonly-randconfig-002-20250410    gcc-12
-x86_64      buildonly-randconfig-003-20250410    clang-20
-x86_64      buildonly-randconfig-004-20250410    clang-20
-x86_64      buildonly-randconfig-005-20250410    clang-20
-x86_64      buildonly-randconfig-006-20250410    clang-20
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250410    gcc-14.2.0
-xtensa                randconfig-002-20250410    gcc-7.5.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> @@ -1006,6 +1008,7 @@ static int atk_enumerate_old_hwmon(struct atk_data *data)
+>  			count++;
+>  	}
+>  	ACPI_FREE(buf.pointer);
+> +	buf.pointer = NULL;
+>  
+>  	return count;
+>  }
+> -- 
+> 2.34.1
+> 
+> 
