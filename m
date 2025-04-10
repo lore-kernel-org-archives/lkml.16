@@ -1,263 +1,166 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253481FBE9B
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 04:51:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B951F1A3150;
+	Thu, 10 Apr 2025 05:05:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744260688; cv=none; b=ARjRELNINI5ZTDg4U4NQliIuf0c9Z7r17AhjXxQviQDEyWnZ7wncH5KFSahzZuNJfr3YRWTEGKw6ArJO558Qs4pNX5RfGQAvqHnnJ+SDTBEhqNJKXZBl5nkV0tB4g5gh9KJToVh9bDtctcZ/poOaV3MetIuDgTtmT2T9gYsUnIU=
+	t=1744261527; cv=none; b=RmtO9eNeLvzL3fg2ttKIYEXiwIVScda8QzAaVwTpYHx7qHurVsYtbWNqODn6vNtqDVqYMKrGOS9wde11e2XX8EdPNo+74awUQRmnvxLYAAEc29N71Bdddy84LM4CrNTICImhMpYWvOR2/h2y6VDvO/1uCNHWQtMGKyU4QVU7ak0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744260688; c=relaxed/simple;
-	bh=SkyDg4HJUDUnF3d2cVrAMUNiCn/1XE84x8N+q+pvyr0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R5U+H5EzbwYtgWoM0f1RK0tNUURVW9bAEfvEM5jAKDHtuFa8USdraSqHzxJUtYccJN0naZVJYyzqBXeYnrtBJoJzBtUCgvduwSmtSw+GY/rXaRPfxjrcP7YqvprW6l4R0c2YTUyMj8zFNrtYIyy5QixTZeOUdGbPh+X0EpeA3tM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=T/DkjupQ; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1744261527; c=relaxed/simple;
+	bh=d0SRzgkJEPXktHw5+f25WSWmg8vczFM8sM8a8WNUVLQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=LwNbhuhOP1Oma5Nte6dxMkOrnCbVnwLtJeowNaxvxUmLnyWVVmTJkPxcsa5CDetAux9XA14RLrljwSohyxewD8XHvAZxuFyy60f9k0LWB07PNAcj3ov6ReEih0ZR75oPYlZXxL6bbCrmBUA2xmxfsiYxW4R38COgHwmcANYfoTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RNrCv7kh; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="T/DkjupQ"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-548409cd2a8so496459e87.3
-        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 21:51:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1744260683; x=1744865483; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NCICr8Y1TyleAjVDsOU8scGztgtriadImesn1Q8G2jE=;
-        b=T/DkjupQXhPa2ita2QY1C5S98VeJFCGjw9aaXCVaJTUzKfwQ4qh/p3Ur+3n7a9qZ+X
-         o2ygF1i38C4XM3L2sFSpQHKSRrDJvTwQba5lm/zhBYtvokhOlcngAVEq/j7fZYvU54wI
-         qAdbfTnAarCEBSugc/P1vdNUgeBFpg3C2uDtsViuUp+6zLAgSlSb9yd8QDVJ4+JMmIPl
-         uudDQUuTmp597VhSR+lcBXG+nJv3K2za3HpjBQsQCvzAhQ6BpaGlv+DjHgOExooQ0HfV
-         JAir/RAuUyosr3CK9LhfE+eJhHCoofllb5EZGkR+CtLmhpAAiWLUVFF4Az2MM/3+uR2l
-         PS8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744260683; x=1744865483;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NCICr8Y1TyleAjVDsOU8scGztgtriadImesn1Q8G2jE=;
-        b=fFkOBGTYT9KHtfxV9hNF0Z0T8gt+u+u/9fnIgTk97rMbfjl5LXojvkDs9xzwrNWZbY
-         aUhjslx5oHs8Frw9ICS4o0hvi9Da9/WHgede0zlLZOhuO1za+0qQaLG4uDdUxbK3upLe
-         TOtAWHX8bryv0SJxbj2jFIZOHaSlyeGa3UywLMMu7ukobou1oUtS8R8fUBOLZ6Cv6vW8
-         6NyAQrJaUyZXXsPuAqrM8uFJAKPAXP0TAUBTv1adN9ViwEW5kptuWY2v96RD/sGZDiRe
-         PeW0QnIWgr2XIbHUCQoS6vobq2kDUDhVKl5ADQcWOae9+3nnCa/xR4jpmy2Atc8+BLB8
-         3uYw==
-X-Forwarded-Encrypted: i=1; AJvYcCVUufbGK+0GguP9gCCZ67V7jtwPrQX4LzqHJFRFbkcYeOCK2piCGS3skR3KZKSTec+dc8EEcotzmDBQG6c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyx6jbE8PiJjQO7oJsydbTzJPHRnSHkKfUa5UVD61JSijk8VCin
-	9GwZZtvB9Ff/uD2McoRIf6LJGHdJ6Vlo8/8Q1oOb4AuPVdvQfZWK5ba1VA/lZ8iK0SRLU9XaVpQ
-	b0+Bj/qWoiAK98VbVv2nl29zoH61VTUGVyuwmwXygT6jtdkHlYrI=
-X-Gm-Gg: ASbGncsyPsUUSlEvgUzx0nKTT1bX4n0+KBEI3g25QUCGoYbs6RhbM3t2jrZ1leJF4ak
-	UQdiki9pfYkimfa6D/WwotnX8Ng33EN9lNjRoxOS+/6fMtRxc+GzTRPR6F2kO5DaflJMDBb0d7L
-	BOElo1WhL/OfP6C6WSLLCCuyHT8ggo9X56Xus=
-X-Google-Smtp-Source: AGHT+IHVCj2wRJMmbo6RZNbl02DjTtI3TJ70CFKiTUTRR9/3TqJXXoa9siW2YcLob+ml2kZdmIqaw4wvzv4K5mehWjs=
-X-Received: by 2002:a05:6512:3183:b0:54b:104b:dfcd with SMTP id
- 2adb3069b0e04-54cb68a5549mr357294e87.53.1744260682907; Wed, 09 Apr 2025
- 21:51:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RNrCv7kh"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53A503Fc008413;
+	Thu, 10 Apr 2025 05:05:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Nn8VvEvF4/BbQTPCcCGrRvvmAwnomHKMg9nJ6YFqGlQ=; b=RNrCv7khH2+lnwEk
+	1Hyo6hYbuZyHSiagxe6xcPMHdcMvtjf/HbuxDf1tIlsFz5xtZCIf3tHaKT5OXgwz
+	9KW0IEnQxs3ibMpt/ui/lRImdIlzAGKwHWfK1kPEAzbngPJboisODjnEKWXfxstT
+	6heFKZkA9o1XlENXlpOhcuBIyeSJ+8jKcnaOl5YGYf5AM0bKG2w+TZu2/K/Q/P5P
+	FtYZdj5t7vBUJw7vJsc5o1Y2yhnS69qH6qh4lyG2xk8MF3iLgXORgYW2j/jr+CPw
+	Ys6i/tKZnIY1Ia66CuELCHhawhRETW5AJsYjzNoDK6Cuu6gYVkTUPY9roT6kETLA
+	UVV/DQ==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twdgnrq0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Apr 2025 05:05:01 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53A550gv001919
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Apr 2025 05:05:00 GMT
+Received: from [10.204.66.137] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 9 Apr 2025
+ 22:04:52 -0700
+Message-ID: <d6771074-00b9-449d-997e-7eff50f01193@quicinc.com>
+Date: Thu, 10 Apr 2025 10:34:49 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1744169302.git.hezhongkun.hzk@bytedance.com>
- <b3af3747daefa00177b48f4666780da58177f7c0.1744169302.git.hezhongkun.hzk@bytedance.com>
- <20250409190938.f6befeeb9e86ad72f46503a5@linux-foundation.org>
-In-Reply-To: <20250409190938.f6befeeb9e86ad72f46503a5@linux-foundation.org>
-From: Zhongkun He <hezhongkun.hzk@bytedance.com>
-Date: Thu, 10 Apr 2025 12:50:45 +0800
-X-Gm-Features: ATxdqUF6D0bvdq2QF7OAMnQbYJVJY8B87-DpNhIZNZl3NEtn10Kry7mFtqaq8jE
-Message-ID: <CACSyD1N5--8DSaJrf0JB-n+OsUFvuuQNau5kCmkP8eo2wyN4wQ@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH V3 2/3] mm: add max swappiness arg to
- lru_gen for anonymous memory only
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: hannes@cmpxchg.org, mhocko@suse.com, yosry.ahmed@linux.dev, 
-	muchun.song@linux.dev, yuzhao@google.com, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 07/10] arm64: dts: qcom: sa8775p-ride: add anx7625 DSI
+ to DP bridge nodes
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <robdclark@gmail.com>,
+        <dmitry.baryshkov@linaro.org>, <sean@poorly.run>,
+        <marijn.suijten@somainline.org>, <andersson@kernel.org>,
+        <robh@kernel.org>, <robh+dt@kernel.org>, <krzk+dt@kernel.org>,
+        <konradybcio@kernel.org>, <conor+dt@kernel.org>,
+        <andrzej.hajda@intel.com>, <neil.armstrong@linaro.org>,
+        <rfoss@kernel.org>, <Laurent.pinchart@ideasonboard.com>,
+        <jonas@kwiboo.se>, <jernej.skrabec@gmail.com>,
+        <quic_abhinavk@quicinc.com>, <quic_rajeevny@quicinc.com>,
+        <quic_vproddut@quicinc.com>, <quic_jesszhan@quicinc.com>
+References: <20250404115539.1151201-1-quic_amakhija@quicinc.com>
+ <20250404115539.1151201-8-quic_amakhija@quicinc.com>
+ <nxnqwh2mzvnxv5ytwjsyulxr6ct6mhv3z3v6q4ojrjhhclwv2i@55nb56hnwi3y>
+Content-Language: en-US
+From: Ayushi Makhija <quic_amakhija@quicinc.com>
+In-Reply-To: <nxnqwh2mzvnxv5ytwjsyulxr6ct6mhv3z3v6q4ojrjhhclwv2i@55nb56hnwi3y>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=PJgP+eqC c=1 sm=1 tr=0 ts=67f7517d cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=0Abo7YVxcx67k3rTUHcA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: 9eyw89_tYBSM11787j0PjXzrTwj3gyGB
+X-Proofpoint-GUID: 9eyw89_tYBSM11787j0PjXzrTwj3gyGB
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-09_06,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ lowpriorityscore=0 clxscore=1015 adultscore=0 malwarescore=0 spamscore=0
+ impostorscore=0 suspectscore=0 mlxlogscore=999 bulkscore=0 mlxscore=0
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504100037
 
-On Thu, Apr 10, 2025 at 10:10=E2=80=AFAM Andrew Morton
-<akpm@linux-foundation.org> wrote:
->
-> On Wed,  9 Apr 2025 15:06:19 +0800 Zhongkun He <hezhongkun.hzk@bytedance.=
-com> wrote:
->
-> > The MGLRU
->
-> paging yuzhao?
+On 4/7/2025 1:42 AM, Dmitry Baryshkov wrote:
+> On Fri, Apr 04, 2025 at 05:25:36PM +0530, Ayushi Makhija wrote:
+>> Add anx7625 DSI to DP bridge device nodes.
+>>
+>> Signed-off-by: Ayushi Makhija <quic_amakhija@quicinc.com>
+>> ---
+>>  arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi | 208 ++++++++++++++++++++-
+>>  1 file changed, 207 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+>> index 175f8b1e3b2d..8e784ccf4138 100644
+>> --- a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+>> @@ -28,6 +28,13 @@ chosen {
+>>  		stdout-path = "serial0:115200n8";
+>>  	};
+>>  
+>> +	vph_pwr: vph-pwr-regulator {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "vph_pwr";
+>> +		regulator-always-on;
+>> +		regulator-boot-on;
+>> +	};
+>> +
+>>  	vreg_conn_1p8: vreg_conn_1p8 {
+>>  		compatible = "regulator-fixed";
+>>  		regulator-name = "vreg_conn_1p8";
+>> @@ -128,6 +135,30 @@ dp1_connector_in: endpoint {
+>>  			};
+>>  		};
+>>  	};
+>> +
+>> +	dp-dsi0-connector {
+>> +		compatible = "dp-connector";
+>> +		label = "DSI0";
+>> +		type = "full-size";
+>> +
+>> +		port {
+>> +			dp_dsi0_connector_in: endpoint {
+>> +				remote-endpoint = <&dsi2dp_bridge0_out>;
+>> +			};
+>> +		};
+>> +	};
+>> +
+>> +	dp-dsi1-connector {
+>> +		compatible = "dp-connector";
+>> +		label = "DSI1";
+>> +		type = "full-size";
+>> +
+>> +		port {
+>> +			dp_dsi1_connector_in: endpoint {
+>> +				remote-endpoint = <&dsi2dp_bridge1_out>;
+>> +			};
+>> +		};
+>> +	};
+>>  };
+>>  
+>>  &apps_rsc {
+>> @@ -517,9 +548,135 @@ &i2c11 {
+>>  
+>>  &i2c18 {
+>>  	clock-frequency = <400000>;
+>> -	pinctrl-0 = <&qup_i2c18_default>;
+>> +	pinctrl-0 = <&qup_i2c18_default>,
+>> +		    <&io_expander_intr_active>,
+>> +		    <&io_expander_reset_active>;
+> 
+> These pinctrl entries should go to the IO expander itself.
 
-I have cc yuzhao and look forward to the relay.
+Will move these pinctrl entries in IO expander in next patchset.
 
->
-> > already supports reclaiming only from anonymous memory
-> > via the /sys/kernel/debug/lru_gen interface. Now, memory.reclaim
-> > also supports the swappiness=3Dmax parameter to enable reclaiming
-> > solely from anonymous memory. To unify the semantics of proactive
-> > reclaiming from anonymous folios, the max parameter is introduced.
-> >
-> > Additionally, the use of SWAPPINESS_ANON_ONLY in place of
-> > 'MAX_SWAPPINESS + 1' improves code clarity and makes the intention
-> > more explicit.
-> >
-> > --- a/mm/vmscan.c
-> > +++ b/mm/vmscan.c
-> > @@ -2697,8 +2697,11 @@ static bool should_clear_pmd_young(void)
-> >               READ_ONCE((lruvec)->lrugen.min_seq[LRU_GEN_FILE]),      \
-> >       }
-> >
-> > +#define max_evictable_type(swappiness)                                =
-               \
-> > +     ((swappiness) !=3D SWAPPINESS_ANON_ONLY)
-> > +
-> >  #define evictable_min_seq(min_seq, swappiness)                        =
-       \
-> > -     min((min_seq)[!(swappiness)], (min_seq)[(swappiness) <=3D MAX_SWA=
-PPINESS])
-> > +     min((min_seq)[!(swappiness)], (min_seq)[max_evictable_type(swappi=
-ness)])
->
-> Why oh why did we implement these in cpp?
-
-Just want to make the code more clear.  Maybe we should do more like this
-
-/* The range of swappiness is [0,1-200,201], 0 means file type only;
- * 1-200 anon and file type; 201 anon type only
- */
-#define max_type(swappiness) ((swappiness) !=3D SWAPPINESS_ANON_ONLY)
-#define min_type(swappiness) !(swappiness)
-
-#define evictable_min_seq(min_seq, swappiness)              \
-    min((min_seq)[min_type(swappiness)], (min_seq)[max_type(swappiness)])
-
- #define for_each_evictable_type(type, swappiness)                      \
--       for ((type) =3D !(swappiness); (type) <=3D ((swappiness) <=3D
-MAX_SWAPPINESS); (type)++)
-+       for ((type) =3D min_type(swappiness) ; (type) <=3D
-max_type(swappiness); (type)++)
-
->
-> >
-> > @@ -3857,7 +3860,7 @@ static bool inc_min_seq(struct lruvec *lruvec, in=
-t type, int swappiness)
-> >       int hist =3D lru_hist_from_seq(lrugen->min_seq[type]);
-> >       int new_gen, old_gen =3D lru_gen_from_seq(lrugen->min_seq[type]);
-> >
-> > -     if (type ? swappiness > MAX_SWAPPINESS : !swappiness)
-> > +     if (type ? (swappiness =3D=3D SWAPPINESS_ANON_ONLY) : !swappiness=
-)
->
-> This expression makes my brain bleed.
->
->         if (type) {
->                 if (swappiness =3D=3D SWAPPINESS_ANON_ONLY) {
->                         /*
->                          * Nice comment explaining why we're doing this
->                          */
->                         goto done;;
->                 }
->         } else {
->                 if (!swappiness) {
->                         /*
->                          * Nice comment explaining why we're doing this
->                          */
->                         goto done;
->                 }
->         }
->
-> or
->
->         if (type && (swappiness =3D=3D SWAPPINESS_ANON_ONLY)) {
->                 /*
->                  * Nice comment explaining why we're doing this
->                  */
->                 goto done;
->         }
->
->         if (!type && !swappiness) {
->                 /*
->                  * Nice comment explaining why we're doing this
->                  */
->                 goto done;
->         }
->
-> It's much more verbose, but it has the huge advantage that it creates
-> locations where we can add comments which tell readers what's going on.
-> Which is pretty important, no?
->
-
-Yes, I agree. Will do, thanks.
-
-> >               goto done;
-> >
-> >       /* prevent cold/hot inversion if the type is evictable */
-> > @@ -5523,7 +5526,7 @@ static int run_cmd(char cmd, int memcg_id, int ni=
-d, unsigned long seq,
-> >
-> >       if (swappiness < MIN_SWAPPINESS)
-> >               swappiness =3D get_swappiness(lruvec, sc);
-> > -     else if (swappiness > MAX_SWAPPINESS + 1)
-> > +     else if (swappiness > SWAPPINESS_ANON_ONLY)
-> >               goto done;
-> >
-> >       switch (cmd) {
-> > @@ -5580,7 +5583,7 @@ static ssize_t lru_gen_seq_write(struct file *fil=
-e, const char __user *src,
-> >       while ((cur =3D strsep(&next, ",;\n"))) {
-> >               int n;
-> >               int end;
-> > -             char cmd;
-> > +             char cmd, swap_string[5];
-> >               unsigned int memcg_id;
-> >               unsigned int nid;
-> >               unsigned long seq;
-> > @@ -5591,13 +5594,22 @@ static ssize_t lru_gen_seq_write(struct file *f=
-ile, const char __user *src,
-> >               if (!*cur)
-> >                       continue;
-> >
-> > -             n =3D sscanf(cur, "%c %u %u %lu %n %u %n %lu %n", &cmd, &=
-memcg_id, &nid,
-> > -                        &seq, &end, &swappiness, &end, &opt, &end);
-> > +             n =3D sscanf(cur, "%c %u %u %lu %n %4s %n %lu %n", &cmd, =
-&memcg_id, &nid,
-> > +                        &seq, &end, swap_string, &end, &opt, &end);
->
-> Permits userspace to easily overrun swap_string[].  OK, it's root-only,
-> but still, why permit this?
->
-
-IICC, the arg in sscanf is %4s meaning the length of the string will
-not be allowed to overrun
-the swap_string, thanks.
-
-> >               if (n < 4 || cur[end]) {
-> >                       err =3D -EINVAL;
-> >                       break;
-> >               }
-> >
-> > +             /* set by userspace for anonymous memory only */
-> > +             if (!strncmp("max", swap_string, sizeof("max"))) {
->
-> Can sscanf() give us a non null-terminated string?
->
-
-No, the sscanf will add '\0' to the end, so the maximum number of
-input characters is 4,
-and the length of swap_string is 5, with one character reserved for
-the null terminator '\0'
-for sscanf.
-
-Thanks for your time.
-
-> > +                     swappiness =3D SWAPPINESS_ANON_ONLY;
-> > +             } else {
-> > +                     err =3D kstrtouint(swap_string, 0, &swappiness);
-> > +                     if (err)
-> > +                             break;
-> > +             }
-> > +
-> >               err =3D run_cmd(cmd, memcg_id, nid, seq, &sc, swappiness,=
- opt);
-> >               if (err)
-> >                       break;
->
+Thanks,
+Ayushi
