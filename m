@@ -1,184 +1,171 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2083.outbound.protection.outlook.com [40.107.244.83])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A018E1EB9E8
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 15:45:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744299952; cv=none; b=J2M54IQtHN3Xe4B9eFL04U5Lq8R1zFEYlCyBO21KYbyMCbhzDaAcFvDNcWUD+vrsPpSHbft4v6bIWOVtczdIapTTISDdH7BdC2bmmyT4yhyzl0BPu1NdgGgUgpRU/FFE8Zp5BHp7jPmeP0/YynLg0EJN7CM2nZx2euV4ZknUFl4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744299952; c=relaxed/simple;
-	bh=hLbfVy6MGSyYSuQDq4K6wAOKO0lEFzAf3CuTzYRU6rY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=D7PYJwgyt9tNYjJOnyQKSbWFKkFWsVgheOXP8CVNuc8xqz7EUx40PhMw72Oee9DXErTiw15/QQrxaRshRirPEuC21qxXM5gXbuAKXerdeJCmox+rSZbip0xFzaRKzJ+QDLz4w/5p/h0AYIkrh1xFAknY2xfakLVZNOyAFalE608=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zqX1/xpU; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E85381DC9B3;
+	Thu, 10 Apr 2025 15:45:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.83
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744299959; cv=fail; b=upNF0i8kpyHjABvDJm3lp8f10aqyjHR73eDJHdODJow42dcu812DA0XsI/0C0/NjsAgVaLyDKYkwP6RFtn5fe7ZW+T3YGE9PY55GgTLiiIEIwH0WkTJ8lqXgAZHxPdVLfx4x6RjWamqtFmEvD9t0bg84G4w8ZhiipKXmCbqRS3s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744299959; c=relaxed/simple;
+	bh=qsbx4yFq884/P/X4ItSbm20VC/tLbtjijiBNd0Z6XgI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=GypZiAfpXuDiFpEpY9tyJ4irlqQA5Vkh4gt7OoBllYoMxb2/2DORn1LmQYChkYLmL7IIA+e0VLjF7DrqAFWEsw4YTOX5FTJd2URzwymfy5GbPMB4AH1Dh8tLXuO5q3CIxDADXS3gqTbYKixVt4qaqrEOQdUABAYZ6Xwn2lqm6lE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=rsYzS0o4; arc=fail smtp.client-ip=40.107.244.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zqX1/xpU"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff605a7a43so1249615a91.3
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 08:45:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744299950; x=1744904750; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mJmeJjTQ0N1mLS0S8FtWMDsHRzNfkH/EIVPnKYJbkdE=;
-        b=zqX1/xpULW5UVpXrfLj1IJS6JNni5Mj1eLmhohcBQgL5bRSSKq8MoIwGvDxdSP/Vq2
-         K8rA+3sEpsOmoIh00b2Nb3l1k7LVsHLxGQ/bds9Fv/VGu8AexCvv5X3Vp0+2uDC8wX0c
-         0LDi03iF4HQRzij7U05pKyNkf3vnfKZDotSvjQ2Rx8sbaRQp11TaZoN3KQEShCYlis9R
-         Lbuim/k6XTFcReZJQKFGCFUZiJl04kG4nKc1W/NlHj+Fr5FZRxgBwK7SCiIiS5t3KtxF
-         0sjDgRyrzW73d4hhnZP9GL3xgr0bZZM9uhrnY4BPBugWuj87/OIhT4JJ+KFXc4sMB7Wl
-         3dmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744299950; x=1744904750;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mJmeJjTQ0N1mLS0S8FtWMDsHRzNfkH/EIVPnKYJbkdE=;
-        b=rm4nIU92CDmVJSoV2QtxguDsaOdy5jsnH56TvXLs9eJU50ibYUKCGF7N8Z5GWUkZ2m
-         J6CR4fT5m/UpoHsk5O8p0bXaMVRZwH2NeWsbjVuZ1q5dagJvlHpfREyrRnRj3xvFjzdA
-         O+4VkHDOAtHq7fTgBEePUKdHEof5Jw1liTXXtxcXwgQzlkMOq17jagezKwbMif7lRuFb
-         l4nV/CU3L5Rv4Au32Vp6VSe+aS20LGQXFNMWkW3QR1xRLWPtsrT98ryVWGiOlkir7x8Y
-         zzr/7O/zwbTfww43aEh0GzU5Z25OfyrOSBbwOXGaod0iunR3Vk4ZDM+vcyS/q511NYD5
-         MJdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVSWx/j6oPY12Oz3Pa40IqCwsQcCNjGyLfrDouHD1ILqpQwCyAE1LdNkLV8Eh0wAxHe2kjrhF1DyzEkbIw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPV6taHwHHsW/WqXSu4GEOAq+x20VA1Orvl6UmiF+PRkN6yljp
-	xv62bszdUsXUbFuHxNULCdnl718vSHRKEiQSdQn1PNPDUKNH1mP1PFA1MJnclrNprCHTMVV4LXa
-	aTA==
-X-Google-Smtp-Source: AGHT+IFZ8WC+GSwj6Q6htW5cg/5bqXMTsujFZ73t+Q6ijGyOQ52YfigVgDbVZDUVXqIuS8GOZzkMgi1gkXg=
-X-Received: from pjbta11.prod.google.com ([2002:a17:90b:4ecb:b0:2fc:c98:ea47])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:6c6:b0:2ee:7411:ca99
- with SMTP id 98e67ed59e1d1-30718b64bb2mr4620267a91.1.1744299949966; Thu, 10
- Apr 2025 08:45:49 -0700 (PDT)
-Date: Thu, 10 Apr 2025 08:45:48 -0700
-In-Reply-To: <9b7ceea3-8c47-4383-ad9c-1a9bbdc9044a@oracle.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="rsYzS0o4"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=tTFwyFJBIkhOR4yME0gbAecR1P/Wsnng0komKi6HzbVro/ZeSYy5l+740A5PfGDbSF2C1osA2IoPT27b5ke6jv4LNROgRxr2R8+agHAvi/aismbNKkotpHRrvuzMcvdzxBOx2BuGpPfLz2syI3E94zV78o9BFFOkF3vXKGzLqp17igy4sU4ReqcQbcuPXmjlyTK1jZHyZbxZbWdsXsh4w9THzAE4hiLIj3bt0Vr/Z99Rzmoim+B83VP9rLRLP8txHcxtUdzewHMnfeAAHRg0SxkG6eIMpy5zoDmhRg5UjQUcf/SyzMLKhtoQUdBRUakn9yaVZgYw7L2ikeSvrFbmPQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bItuamAxXUKmDMxMZqfzkQceV+IkqtTaGh72fDG1ceo=;
+ b=O880NRUy2QXDL+LVenGN75+2cxMuhJz3FzSoegzGuvCdj12luXb1cOQkJjyPhyjYR8nynNtRQYUPvodHaxw5wvdnECPJltd93cHs9aSp8jCDpg7/aQg4MHwfx79uQ1rWvvSz/WykTBHxpwQfxpSDC/r4EjLGrfn9OtGdYgXJvtnxA3RTt2TCFHBURxoBKO2xGYzR3A2Ji7vG8OobaNuwyNAfevUmTFC7Pm0+OK+SbbJt+D7kYiG4T3AkiAmUuiHyCBkPOHefvaOxMchPDQHvOt4ILPBi0KhMrR1bX6bw0AzmC8etKSlTlyklHdVHDyQQHX+vvxVqx994Ndw363qPtw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bItuamAxXUKmDMxMZqfzkQceV+IkqtTaGh72fDG1ceo=;
+ b=rsYzS0o4Gcnfmq+Kx0EHrPTL0oAsIgRVsh+k7Hgqx5c3VdpozOwWYHSo+xDkoz0z4nWVxEpEpsQJaP59D6fK4cqcm0mvnSfzTKmvrWJQ8sGHqN+tFHsMCEq3C2CA1gnbWoot3hVcQccEY6+aTM6vL9LE7sc3tEBAC9FzOXr00c74DPc8ltYGR5m61euILRk7ni3i3ZxM8ECz3Z55oLC4Ioa4+N3fonaizrj3ADgrOjIx9TTSLCdrCzH14Cks5zCegGU3ujAdFSN4QivGcmF74q+Ed7J5T+NkRYlNj4zyC28LX80lbfyPqlmvoXtHGAHGCBHjtSAQ3qgIQSGAXkzpAA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BY5PR12MB3953.namprd12.prod.outlook.com (2603:10b6:a03:194::22)
+ by SJ0PR12MB7034.namprd12.prod.outlook.com (2603:10b6:a03:449::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.21; Thu, 10 Apr
+ 2025 15:45:52 +0000
+Received: from BY5PR12MB3953.namprd12.prod.outlook.com
+ ([fe80::308:2250:764d:ed8f]) by BY5PR12MB3953.namprd12.prod.outlook.com
+ ([fe80::308:2250:764d:ed8f%7]) with mapi id 15.20.8632.021; Thu, 10 Apr 2025
+ 15:45:51 +0000
+Date: Thu, 10 Apr 2025 17:45:44 +0200
+From: Vlad Dogaru <vdogaru@nvidia.com>
+To: Michal Kubiak <michal.kubiak@intel.com>
+Cc: Tariq Toukan <tariqt@nvidia.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>, Gal Pressman <gal@nvidia.com>,
+	Leon Romanovsky <leonro@nvidia.com>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Leon Romanovsky <leon@kernel.org>, netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Moshe Shemesh <moshe@nvidia.com>, Mark Bloch <mbloch@nvidia.com>,
+	Yevgeny Kliteynik <kliteyn@nvidia.com>
+Subject: Re: [PATCH net-next 07/12] net/mlx5: HWS, Fix pool size optimization
+Message-ID: <Z_fnqEWpLeT9DznM@nvidia.com>
+References: <1744120856-341328-1-git-send-email-tariqt@nvidia.com>
+ <1744120856-341328-8-git-send-email-tariqt@nvidia.com>
+ <Z/e3wc7q3uGQvwVC@localhost.localdomain>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z/e3wc7q3uGQvwVC@localhost.localdomain>
+X-ClientProxiedBy: FR2P281CA0003.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:a::13) To BY5PR12MB3953.namprd12.prod.outlook.com
+ (2603:10b6:a03:194::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250404193923.1413163-1-seanjc@google.com> <20250404193923.1413163-65-seanjc@google.com>
- <9b7ceea3-8c47-4383-ad9c-1a9bbdc9044a@oracle.com>
-Message-ID: <Z_fnrP4e77mKjdX9@google.com>
-Subject: Re: [PATCH 64/67] iommu/amd: KVM: SVM: Allow KVM to control need for
- GA log interrupts
-From: Sean Christopherson <seanjc@google.com>
-To: Joao Martins <joao.m.martins@oracle.com>
-Cc: kvm@vger.kernel.org, iommu@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Maxim Levitsky <mlevitsk@redhat.com>, David Matlack <dmatlack@google.com>, 
-	Alejandro Jimenez <alejandro.j.jimenez@oracle.com>, 
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>, Vasant Hegde <vasant.hegde@amd.com>, 
-	Joerg Roedel <joro@8bytes.org>, David Woodhouse <dwmw2@infradead.org>, 
-	Lu Baolu <baolu.lu@linux.intel.com>, Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BY5PR12MB3953:EE_|SJ0PR12MB7034:EE_
+X-MS-Office365-Filtering-Correlation-Id: 29d6a334-7ae3-4722-068e-08dd7846c5a2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|10070799003|7416014|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?24cljgscIB8oLLUNYfaUHzbYN7z6nSMmNQ7k0cqhOtUqC2YZH+BfnhX6qyGB?=
+ =?us-ascii?Q?D4sB2gD1DGzVsNY9Y1QzJDjpSo2VIZLzdO6JtmBBWxbq3dFaEnyILTf6P6wi?=
+ =?us-ascii?Q?fKD3tWqqJqIrIURoCKbfExQ2UDX0YAwZOYSglcmZghUlprU0ehcTFhPKthx0?=
+ =?us-ascii?Q?SGiN97uR5UH4AaLCD3yhZywoINk6rtT1Hz6alv7LlTFaL4VfdsfdYM/yYU/q?=
+ =?us-ascii?Q?YqCXSrraHs1LljLk7viLNVOc1vow2NKqkHWT60ymn3w9RiOLLoKeWgJ3VheL?=
+ =?us-ascii?Q?lC+DxMrAydvbmrYcJA/VWcJjLl26CWlDrHi0cBzcuuf4CB7JQjCY2NkJTaLi?=
+ =?us-ascii?Q?bZmQKnVQ3TtRBS1+7fixWjpJ6VqY44op+xMpLgy35gzwTAut8CPUiOT1HO8d?=
+ =?us-ascii?Q?IchSj1keFBxxWHQyFUg8z1y6anmyfTMueF6xKibJGu5+RyR8KpsTekhUCuJu?=
+ =?us-ascii?Q?cdoQaoWaCqOtY6MmwiXw7/687tScTh024romJF5njBQyNpKBxSQS7GQ087jf?=
+ =?us-ascii?Q?qrszILDtgq16ve2SWnhD8WadUXRGtKfA1LupCOx3ZiPsJ7yHqBwjK6GCmPJj?=
+ =?us-ascii?Q?isbHEb8HXHSRkvSnFXpGlJDaLw8+eyJjrLysr4GsH+wVe7VasZPCOp3H4WxL?=
+ =?us-ascii?Q?ok+cQJPteo6l0ug6fsxR6D7/urc1q0tPWaCq6eP1NZeWeIdi4W8MnzJ6gqAq?=
+ =?us-ascii?Q?W2/7h3Y4pYzfSsAOpzqNUWPKJuP4YVqpyr/V3818J/xHGwoq+28IYxtvivd9?=
+ =?us-ascii?Q?hKiWHU3QxTPG2/gdI+J227PcKkAtpuhMJ2yPUnbRsFn/HJ+cME44VolEIZG7?=
+ =?us-ascii?Q?QALBxOmmBesQKOGjE6nGjmjZ4Uw4k+PyiNfcnRnTcZH0qLhWRk0V8jDT7udP?=
+ =?us-ascii?Q?GLu/MeC5BqryTVjvFFuSrvsm9ZvG1LGnMU8A71bbcZEA0VTw+GY9ahy3cgDq?=
+ =?us-ascii?Q?JWw8/oI5bQ3Mdp7PImUkLbpYRj9NQWGW/ltHjnIGQwGrYTf/EP0b2I7B0fyR?=
+ =?us-ascii?Q?tFR6VpdB9PymOwaTEuMucG+PEePCSCueqW0iVWt46dWVxNruM27t0M4OyT4z?=
+ =?us-ascii?Q?N7xRrwMoM7jq6ngQIziG64di0Gv7Eok8/ftGw351qkxn7GWiXoOSqCxUR5cj?=
+ =?us-ascii?Q?TR069x3g7NUXx7r/pOBxdXaOMKUHmd2wX2v014FVq5mByRLET0d87guvovP5?=
+ =?us-ascii?Q?6e3yGD5KIc2D2fPAk7knAQ9F00YsxqDjx4OIvTJFVHCpC17OBQBIOdjU9jov?=
+ =?us-ascii?Q?J/JMr5Ws/ECDIgXFZWKft4UwqWvyaB2vbIY8U4vW2wrwi6fIdT+VmM+iR4aE?=
+ =?us-ascii?Q?UpxbqNUcjZy1uBNgwHEIZ4oyq/l2/PgPA/nHLyW8tpB/CkRiRMrumSDLSflv?=
+ =?us-ascii?Q?uaGZ/rU2YnjXF96d8rqhpNWbre2U?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR12MB3953.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(10070799003)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?51/fZHwT/8wF3tyK/EtnBq7if7+QrXrVmnIZ8WLfHdajgtI9fZ6DHUbyv56r?=
+ =?us-ascii?Q?TiAh/kyqZ6VviOcTScru88Jdyj7fwAL6xAzmCeyGs6WrymcbyjSmCXJ7I6IC?=
+ =?us-ascii?Q?MWfZr64p/kf92ZibRKILFmiWeNiZJNFL1rTFnzpGl67SvKIRk9O3BVgL0xUI?=
+ =?us-ascii?Q?lj+QP3kjFs9r0e1uH9JKjXZOAxBzMAIW+dbR7jHI2aoFt4EjzBBm8CrASOWF?=
+ =?us-ascii?Q?A6u3n35WyKs2L1Nprt4ASs7VAzM3fx2/79mO4ljTMhNfXI4jWgs6RFUpNgAX?=
+ =?us-ascii?Q?FLkxvhPGaDhPvQCEsqEV0DgoEWP1GdGIFB8/aLvj0TO/mzZc16+sZb0PGakB?=
+ =?us-ascii?Q?lCJ9bsWWPki7xGm0oH/frrsi9VWFWsk5pYPsgXPsf5eX2XhXZrtRGyi5MOVX?=
+ =?us-ascii?Q?Et9qHbSWSjngYQEOzaUiVTMf68H/racoGJSU+GFvbD3321uW9mkTS8eNU+PY?=
+ =?us-ascii?Q?tRPuM76kVvUggLOYKYFwY9qP+80Kz5Q5vs/7PK8X/We7iHcf2dlyUO0DbFUB?=
+ =?us-ascii?Q?r3nC4VsxY0U2M6ieyA40wWt3HKdWJTJyIK6LOGVRcejyDrreNHEqMnPGhTfA?=
+ =?us-ascii?Q?f9QZf3tSFZEOgKZhJt5f+48aS3dOkcIiUu7vOshBGXUjk1WNIPx4C2LTd/58?=
+ =?us-ascii?Q?j8T3WPSIzBbFI8uPRL9F4pCiorDbSsto4lN3vb6hTKUEJ78AlTX2/mNB3FPX?=
+ =?us-ascii?Q?EGbtz5P2VcxJ1gjg7m3ADmcBxWE2juv7ijT7rKXV3XIvPHDZGxFMpvtyaXsk?=
+ =?us-ascii?Q?YuNmsbKEgFeFb9jUvrIYh54bHpoz2ulms/u+FeVTVnj8G7VOABvuLQeWh8xr?=
+ =?us-ascii?Q?woNf63erJJ0t+EpylZ75MReKeGhxjTpv0WQPRE2Fx/Olw6rX60WPWPylvL4L?=
+ =?us-ascii?Q?rJQxbuOlW+wjkKAbnUxH9BTgHMN1ZF4jX2fnJW16ACEBf2uuyzWRcQcS6y3X?=
+ =?us-ascii?Q?S+C2Sdyuz1ehHyW8e6U+RRcqBsP3MRYfioKh4wRXWh0zMaavkf6jHjSrxipt?=
+ =?us-ascii?Q?DdiUuIt4vEtki7Lu+I9NCZ+2rpEkniBeu0gA8RrW2yQS8lnPqYffhWH75/y9?=
+ =?us-ascii?Q?+bL4NT0+M5KELiy3JLrs1qeg0q6sCer7Fqm/dwMyIaav8qG9iM25v/9wVoRA?=
+ =?us-ascii?Q?81jp2fgt4im1J7ZatCRnwD9+cEUvAyUYOsJUvS067s4NypnzoGw/3uAJHB6e?=
+ =?us-ascii?Q?A1FUMiGIDVJMSQ1eaBAU8XwF1Q9j9FfmV/DYdG9RbClSsoIkMVuHWRYmOz/t?=
+ =?us-ascii?Q?hURpOxwUGXAyiLftfcLlkeKWXfF3QiX5ANQZTCFEViz094x5yUaJ8/7n0nbD?=
+ =?us-ascii?Q?d0u3+hcZ3Cj5EIBATHfMy0eIbO6UIAjRbru1OuUHvQ15F6In248Mj2LRj9tR?=
+ =?us-ascii?Q?a1yG1itF3IWPF5EmJi8UdpPYkpJi7+SDtmHGvYRiFORR7Oew1Az3Rab7gYar?=
+ =?us-ascii?Q?fwmm2RsQi2KconYO/qcevQLbyB49pvY5A64KxuzQ4fy3Y7HcsX6th/t9OJgo?=
+ =?us-ascii?Q?dz4esNRTxNuoc+z3PADklarFOvCm4hfRGavoYYsANUpOZZMTCCL1oYcsEbm0?=
+ =?us-ascii?Q?QpWvp2w2oNdZyU54VOVZY3pHILHswbRu1+jdTSA0+vo6wn9Ikv3GtYJLh3pq?=
+ =?us-ascii?Q?eegW0p49M2iN4nr35crVV+xjaxd0BV0tnwpeLKZQT7NL?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 29d6a334-7ae3-4722-068e-08dd7846c5a2
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR12MB3953.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 15:45:51.6953
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +ZUIw7DHrij+g9iyb4oz6E+zubELgtRMLoSaAoQdbeMSA+uK9TbANQn70rElJvokmdEpLgHiG35/fKQPAYyg8A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB7034
 
-On Wed, Apr 09, 2025, Joao Martins wrote:
-> On 04/04/2025 20:39, Sean Christopherson wrote:
-> I would suggest holding off on this and the next one, while progressing with
-> the rest of the series.
-
-Agreed, though I think there's a "pure win" alternative that can be safely
-implemented (but it definitely should be done separately).
-
-If HLT-exiting is disabled for the VM, and the VM doesn't have access to the
-various paravirtual features that can put it into a synthetic HLT state (PV async
-#PF and/or Xen support), then I'm pretty sure GALogIntr can be disabled entirely,
-i.e. disabled during the initial irq_set_vcpu_affinity() and never enabled.  KVM
-doesn't emulate HLT via its full emulator for AMD (just non-unrestricted Intel
-guests), so I'm pretty sure there would be no need for KVM to ever wake a vCPU in
-response to a device interrupt.
-
-> > diff --git a/drivers/iommu/amd/iommu.c b/drivers/iommu/amd/iommu.c
-> > index 2e016b98fa1b..27b03e718980 100644
-> > --- a/drivers/iommu/amd/iommu.c
-> > +++ b/drivers/iommu/amd/iommu.c
-> > -static void __amd_iommu_update_ga(struct irte_ga *entry, int cpu)
-> > +static void __amd_iommu_update_ga(struct irte_ga *entry, int cpu,
-> > +				  bool ga_log_intr)
-> >  {
-> >  	if (cpu >= 0) {
-> >  		entry->lo.fields_vapic.destination =
-> > @@ -3783,12 +3784,14 @@ static void __amd_iommu_update_ga(struct irte_ga *entry, int cpu)
-> >  		entry->hi.fields.destination =
-> >  					APICID_TO_IRTE_DEST_HI(cpu);
-> >  		entry->lo.fields_vapic.is_run = true;
-> > +		entry->lo.fields_vapic.ga_log_intr = false;
-> >  	} else {
-> >  		entry->lo.fields_vapic.is_run = false;
-> > +		entry->lo.fields_vapic.ga_log_intr = ga_log_intr;
-> >  	}
-> >  }
-> >
+On Thu, Apr 10, 2025 at 02:21:21PM +0200, Michal Kubiak wrote:
+> On Tue, Apr 08, 2025 at 05:00:51PM +0300, Tariq Toukan wrote:
+> > From: Vlad Dogaru <vdogaru@nvidia.com>
+> > 
+> > The optimization to create a size-one STE range for the unused direction
+> > was broken. The hardware prevents us from creating RTCs over unallocated
+> > STE space, so the only reason this has worked so far is because the
+> > optimization was never used.
+> > 
 > 
-> isRun, Destination and GATag are not cached. Quoting the update from a few years
-> back (page 93 of IOMMU spec dated Feb 2025):
-> 
-> | When virtual interrupts are enabled by setting MMIO Offset 0018h[GAEn] and
-> | IRTE[GuestMode=1], IRTE[IsRun], IRTE[Destination], and if present IRTE[GATag],
-> | are not cached by the IOMMU. Modifications to these fields do not require an
-> | invalidation of the Interrupt Remapping Table.
+> Is there any chance that the optimization can be used (enabled) by
+> someone on previous kernels? If so, maybe the patch is a better candidate
+> for the "net" tree?
 
-Ooh, that's super helpful info.  Any objections to me adding verbose comments to
-explain the effective rules for amd_iommu_update_ga()?
+I strongly doubt it. Hardware steering has only been in the kernel since
+6.14 and we are not aware of any users. The default is still to use the
+older generation software steering, AFAIK.
 
-> This is the reason we were able to get rid of the IOMMU invalidation in
-> amd_iommu_update_ga() ... which sped up vmexit/vmenter flow with iommu avic.
-> Besides the lock contention that was observed at the time, we were seeing stalls
-> in this path with enough vCPUs IIRC; CCing Alejandro to keep me honest.
-> 
-> Now this change above is incorrect as is and to make it correct: you will need
-> xor with the previous content of the IRTE::ga_log_intr and then if it changes
-> then you re-add back an invalidation command via
-> iommu_flush_irt_and_complete()). The latter is what I am worried will
-> reintroduce these above problem :(
-
-Ya, the need to flush definitely changes things.
-
-> The invalidation command (which has a completion barrier to serialize
-> invalidation execution) takes some time in h/w, and will make all your vcpus
-> content on the irq table lock (as is). Even assuming you somehow move the
-> invalidation outside the lock, you will content on the iommu lock (for the
-> command queue) or best case assuming no locks (which I am not sure it is
-> possible) you will need to wait for the command to complete until you can
-> progress forward with entering/exiting.
-> 
-> Unless the GALogIntr bit is somehow also not cached too which wouldn't need the
-> invalidation command (which would be good news!). Adding Suravee/Vasant here.
-> 
-> It's a nice trick how you would leverage this in SVM, but do you have
-> measurements that corroborate its introduction? How many unnecessary GALog
-> entries were you able to avoid with this trick say on a workload that would
-> exercise this (like netperf 1byte RR test that sleeps and wakes up a lot) ?
-
-I didn't do any measurements; I assumed the opportunistic toggling of GALogIntr
-would be "free".
-
-There might be optimizations that could be done, but I think the better solution
-is to simply disable GALogIntr when it's not needed.  That'd limit the benefits
-to select setups, but trying to optimize IRQ bypass for VMs that are CPU-overcommited,
-i.e. can't do native HLT, seems rather pointless.
-
-> I should also mention that there's a different logic that is alternative to
-> GALog (in Genoa or more recent), which is GAPPI support whereby an entry is
-> generated but a more rare condition. Quoting the an excerpts below:
-> 
-> | This mode is enabled by setting MMIO Offset 0018h[GAPPIEn]=1. Under this
-> | mode, guest interrupts (IRTE[GuestMode]=1) update the vAPIC backing page IRR
-> | status as normal.
-> 
-> | In GAPPI mode, a GAPPI interrupt is generated if all of the guest IRR bits
-> | were previously clear prior to the last IRR update. This indicates the new
-> | interrupt is the first pending interrupt to the
-> | vCPU. The GAPPI interrupt is used to signal Hypervisor software to schedule
-> | one or more vCPUs to execute pending interrupts.
-> 
-> | Implementations may not be able to perfectly determine if all of the IRR bits
-> | were previously clear prior to updating the vAPIC backing page to set IRR.
-> | Spurious interrupts may be generated as a
-> | result. Software must be designed to handle this possibility
-
-I saw this as well.  I'm curious if enabling GAPPI mode affects IOMMU interrupt
-delivery latency/throughput due to having to scrape the entire IRR.
-
-> Page 99, "2.2.5.5 Guest APIC Physical Processor Interrupt",
-> https://www.amd.com/content/dam/amd/en/documents/processor-tech-docs/specifications/48882_IOMMU.pdf
+Thanks,
+Vlad
