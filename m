@@ -1,38 +1,37 @@
 Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C1D028D85B;
-	Thu, 10 Apr 2025 14:53:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B7952857C0;
+	Thu, 10 Apr 2025 14:53:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744296806; cv=none; b=sGZr40v9E1a63ZvGmjmksOehyyfFd2pgWE6Kd0qcJnWEdi/TZeWVp8bJP8bCQ0K427Q+S6mb0opbmR3a+eE7YJBkXdsWbDfiU8lhbmdvxh/QYQJuT7utRquiE84RU4Soh9V/hOOqZqiTyZRIGVvS/cWOhBdAxnRCDMpK1Dv3QxQ=
+	t=1744296807; cv=none; b=pu6FBdwjvMJPeUx5VvLUQiBIT5VoLZw2efwUuHAVUxkna9kw58N8cg9xadpPf6X3RGkAqUCuetcvwOJBN54LVLiN0GTnZI/qca53Wzvt+K7X1pFc5xTL4IMnNti+vkcEdiUDbL0i1l+pwcVVvTBiUJpA59tq/zHqe4oY9nFpV0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744296806; c=relaxed/simple;
-	bh=tyRhDNq7Yb0FyNB6I4f57X1AwwuuW78bFX913mnlWFo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tyQnP1mwocR9b0q4rqHCb5DfGrR1EbXswug94ourzytVY8yI4v5+++u5VWeMQ/EB5SLrICu0f5U0h2fvZh5PZeqjgbu4/ZInWhhbwCUAIqd3e8FsZFJawPYoPZsLTXcCBqDuML9NAbh7AFVAykkbNVdVBx+1bHac5jfBIXNyluA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=L748CGEy; arc=none smtp.client-ip=217.70.183.197
+	s=arc-20240116; t=1744296807; c=relaxed/simple;
+	bh=4Vji/GfcxFWxhSbyxw7eJusyE4bs1XmFVkDlbNLqi70=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=nxM/FEU9zvRFv7zrmhFg51x5Hzt3zCwmtsd0jy7VE1CNvuihUBGqGN1PQJBGuMp6CZpnf2GEFBmkOaFt6hM81ItDrXqaJaXxGR+qWyvl3SF8ouOFwpsbBlaHZp48i3WAtJD1dVy/Di09yLtZHcjoEXzEsKxXjAN6eM18g6VVx0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=NF6ykLkL; arc=none smtp.client-ip=217.70.183.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="L748CGEy"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id B2C5342EF2;
-	Thu, 10 Apr 2025 14:53:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="NF6ykLkL"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 61F6E44332;
+	Thu, 10 Apr 2025 14:53:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1744296802;
+	t=1744296801;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b8CmCxrHUmcZpijI8nj3HAO5vWfDAACyJpqlcTZxtes=;
-	b=L748CGEy+bq7CQSmVscaBJmhUCt5hr5nzmtNbv90B6S29pA5I4LgEYhAMerlikZ6+MvC+Y
-	uZGk/c7hmKfYLigPAicKM4YybY4lLiD3LJFllXkcPq4bOnH30HRQlS6DOabk3Y00DsVJdz
-	z+V8QNx/k7MPXn8768jqQ2WCjGroL8oWqXjOSQlPvZpQbEtl6zEbNq4fM5+9qB96ULRRxw
-	/6LXTJOdHT4iUanRy/xOuclIhd2KXc04t8s4NczTWekJS/EexVvLObnPG1vgvEQ53yEIt2
-	x86DvBzYj/o1ij5o+c6xdOSDlKujPN19uceM2OmQCUWwdHnd9vkDVN9V/AWyWQ==
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=XACrmFtTTu8N1uzmt+oqhVkqMDjPP2HTNmYVXTmY2dU=;
+	b=NF6ykLkLs1mpP3vFcinXnQ4UgHn6oyDIvl+/g3UPJhGU3vw6NaAOXzzzKd0oG7WymyiYBP
+	dwCxqXoZKYRlHPLzPkvVODFRETsrQXJC8TWb9PLZPA//LNW9VA++zsi4HB4HOvyQRVTq3o
+	iPSxkKU5hDbDVzY7MoyqxMzjowP++qoK0Z1d0YwB8liPGKKS/2NWLoa72n046kXNjuHrEq
+	DFoG8kWwH3GMEUp9VBoWx/fcrefgFMkXlB+uCc6Sl2rJnQEdpKcG8dNMg2BFbKQfnzfgmz
+	9xOGv9UNDARU2O7BzJULt44+8Peyvq53zQGzI3z0C4LOnTpQOc12503/yCd53g==
 From: Bastien Curutchet <bastien.curutchet@bootlin.com>
-Date: Thu, 10 Apr 2025 16:53:19 +0200
-Subject: [PATCH 2/3] dma-buf: Add DMA_BUF_IOCTL_GET_DMA_ADDR
+Subject: [PATCH 0/3] uio/dma-buf: Give UIO users access to DMA addresses.
+Date: Thu, 10 Apr 2025 16:53:17 +0200
+Message-Id: <20250410-uio-dma-v1-0-6468ace2c786@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,9 +40,10 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250410-uio-dma-v1-2-6468ace2c786@bootlin.com>
-References: <20250410-uio-dma-v1-0-6468ace2c786@bootlin.com>
-In-Reply-To: <20250410-uio-dma-v1-0-6468ace2c786@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIAF3b92cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDEwML3dLMfN2U3ERdyyQDQ8NUy1TzNIMkJaDqgqLUtMwKsEnRsbW1AFK
+ fJGlZAAAA
+X-Change-ID: 20250408-uio-dma-9b011e9e7f0b
 To: Sumit Semwal <sumit.semwal@linaro.org>, 
  =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>
@@ -54,86 +54,54 @@ Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 X-Mailer: b4 0.14.2
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdelvddtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepuegrshhtihgvnhcuvehurhhuthgthhgvthcuoegsrghsthhivghnrdgtuhhruhhttghhvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedtvdehfffgjeduteekgeekuddvffejueevkeektdeggfetkeeghefffeehudethfenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduledvrdduieekrdegvddrheegngdpmhgrihhlfhhrohhmpegsrghsthhivghnrdgtuhhruhhttghhvghtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeelpdhrtghpthhtohepshhumhhithdrshgvmhifrghlsehlihhnrghrohdrohhrghdprhgtphhtthhopegthhhrihhsthhirghnrdhkohgvnhhighesrghmugdrtghomhdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdro
- hhrghdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehlihhnrghrohdqmhhmqdhsihhgsehlihhsthhsrdhlihhnrghrohdrohhrghdprhgtphhtthhopehlihhnuhigqdhmvgguihgrsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsggrshhtihgvnhdrtghurhhuthgthhgvthessghoohhtlhhinhdrtghomh
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdelvddtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhufffkfggtgfgvfevofesthejredtredtjeenucfhrhhomhepuegrshhtihgvnhcuvehurhhuthgthhgvthcuoegsrghsthhivghnrdgtuhhruhhttghhvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedvhfegudetkeffheffleehhfejvefhvdetfeefheettdfgkeegueekleeuvdejfeenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduledvrdduieekrdegvddrheegngdpmhgrihhlfhhrohhmpegsrghsthhivghnrdgtuhhruhhttghhvghtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeelpdhrtghpthhtohepshhumhhithdrshgvmhifrghlsehlihhnrghrohdrohhrghdprhgtphhtthhopegthhhrihhsthhirghnrdhkohgvnhhighesrghmugdrtghomhdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrg
+ hdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehlihhnrghrohdqmhhmqdhsihhgsehlihhsthhsrdhlihhnrghrohdrohhrghdprhgtphhtthhopehlihhnuhigqdhmvgguihgrsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsggrshhtihgvnhdrtghurhhuthgthhgvthessghoohhtlhhinhdrtghomh
 X-GND-Sasl: bastien.curutchet@bootlin.com
 
-There is no way to transmit the DMA address of a buffer to userspace.
-Some UIO users need this to handle DMA from userspace.
+Hi all,
 
-Add a new dma_buf_ops operation that returns the DMA address.
-Add a new ioctl to transmit this DMA address to userspace.
+Many UIO users performing DMA from their UIO device need to access the
+DMA addresses of the allocated buffers. There are out-of-tree drivers
+that allow to do it but nothing in the mainline.
+
+I know DMA shouldn't be handled by userspace but, IMHO, since UIO
+drivers exist, it would be better if they offered a way of doing this.
+
+This patch series use the dma-heap framework which already allows
+userspace to allocate DMA buffers. I tried to avoid 'polluting' the
+existing heaps to prevent inappropriate uses of this new feature by
+introducing a new UIO heap, which is the only one implementing this
+behavior.
+
+PATCH 1 allows the creation of heaps that don't implement map/unmap_buf
+operations as UIO heap doesn't use them.
+PATCH 2 adds the DMA_BUF_IOCTL_GET_DMA_ADDR which transmits the DMA
+addresses to userspace.
+PATCH 3 implements the UIO heap.
+
+It has been tested with the uio_pci_generic driver on a PowerPC.
 
 Signed-off-by: Bastien Curutchet <bastien.curutchet@bootlin.com>
 ---
- drivers/dma-buf/dma-buf.c    | 21 +++++++++++++++++++++
- include/linux/dma-buf.h      |  1 +
- include/uapi/linux/dma-buf.h |  1 +
- 3 files changed, 23 insertions(+)
+Bastien Curutchet (3):
+      dma-buf: Allow heap that doesn't provide map_buf/unmap_buf
+      dma-buf: Add DMA_BUF_IOCTL_GET_DMA_ADDR
+      uio: Add UIO_DMABUF_HEAP
 
-diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
-index 398418bd9731ad7a3a1f12eaea6a155fa77a22fe..cbbb518981e54e50f479c3d1fcf6da6971f639c1 100644
---- a/drivers/dma-buf/dma-buf.c
-+++ b/drivers/dma-buf/dma-buf.c
-@@ -454,6 +454,24 @@ static long dma_buf_import_sync_file(struct dma_buf *dmabuf,
- }
- #endif
- 
-+static int dma_buf_get_dma_addr(struct dma_buf *dmabuf, u64 __user *arg)
-+{
-+	u64 addr;
-+	int ret;
-+
-+	if (!dmabuf->ops->get_dma_addr)
-+		return -EINVAL;
-+
-+	ret = dmabuf->ops->get_dma_addr(dmabuf, &addr);
-+	if (ret)
-+		return ret;
-+
-+	if (copy_to_user(arg, &addr, sizeof(u64)))
-+		return -EFAULT;
-+
-+	return 0;
-+}
-+
- static long dma_buf_ioctl(struct file *file,
- 			  unsigned int cmd, unsigned long arg)
- {
-@@ -504,6 +522,9 @@ static long dma_buf_ioctl(struct file *file,
- 		return dma_buf_import_sync_file(dmabuf, (const void __user *)arg);
- #endif
- 
-+	case DMA_BUF_IOCTL_GET_DMA_ADDR:
-+		return dma_buf_get_dma_addr(dmabuf, (u64 __user *)arg);
-+
- 	default:
- 		return -ENOTTY;
- 	}
-diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
-index 36216d28d8bdc01a9c9c47e27c392413f7f6c5fb..ed4bf15d3ce82e7a86323fff459699a9bc8baa3b 100644
---- a/include/linux/dma-buf.h
-+++ b/include/linux/dma-buf.h
-@@ -285,6 +285,7 @@ struct dma_buf_ops {
- 
- 	int (*vmap)(struct dma_buf *dmabuf, struct iosys_map *map);
- 	void (*vunmap)(struct dma_buf *dmabuf, struct iosys_map *map);
-+	int (*get_dma_addr)(struct dma_buf *dmabuf, u64 *addr);
- };
- 
- /**
-diff --git a/include/uapi/linux/dma-buf.h b/include/uapi/linux/dma-buf.h
-index 5a6fda66d9adf01438619e7e67fa69f0fec2d88d..f3aba46942042de6a2e3a4cca3eb3f87175e29c9 100644
---- a/include/uapi/linux/dma-buf.h
-+++ b/include/uapi/linux/dma-buf.h
-@@ -178,5 +178,6 @@ struct dma_buf_import_sync_file {
- #define DMA_BUF_SET_NAME_B	_IOW(DMA_BUF_BASE, 1, __u64)
- #define DMA_BUF_IOCTL_EXPORT_SYNC_FILE	_IOWR(DMA_BUF_BASE, 2, struct dma_buf_export_sync_file)
- #define DMA_BUF_IOCTL_IMPORT_SYNC_FILE	_IOW(DMA_BUF_BASE, 3, struct dma_buf_import_sync_file)
-+#define DMA_BUF_IOCTL_GET_DMA_ADDR	_IOR(DMA_BUF_BASE, 4, __u64 *)
- 
- #endif
+ drivers/dma-buf/dma-buf.c    |  29 +++++++++--
+ drivers/uio/Kconfig          |   9 ++++
+ drivers/uio/Makefile         |   1 +
+ drivers/uio/uio.c            |   4 ++
+ drivers/uio/uio_heap.c       | 120 +++++++++++++++++++++++++++++++++++++++++++
+ include/linux/dma-buf.h      |   1 +
+ include/linux/uio_driver.h   |   2 +
+ include/uapi/linux/dma-buf.h |   1 +
+ 8 files changed, 164 insertions(+), 3 deletions(-)
+---
+base-commit: 5f13fa25acaa4f586aaed12efcf7436e004eeaf2
+change-id: 20250408-uio-dma-9b011e9e7f0b
 
+Best regards,
 -- 
-2.49.0
+Bastien Curutchet <bastien.curutchet@bootlin.com>
 
