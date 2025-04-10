@@ -1,44 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF25328FFD6;
-	Thu, 10 Apr 2025 20:55:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDF92290BD5;
+	Thu, 10 Apr 2025 20:56:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744318559; cv=none; b=mzqZxvLgjMHa1+UqEp8oThKxNSklgqg6miiclmqq2P8hktYIBHW2wzdmtBXTFUP9LlqBOk5evb1MMdSR3ZiF5QHrg7jufLh9wUIIO1l6G/W2KKqjcWgBbevJAVvLf++IX5FtNEROqIk3Z4kpBUdnaqiqfqGkFEFeMxwsErpmHkA=
+	t=1744318619; cv=none; b=aM4hMCYe9EDcsCvpk6ufaIPgOIhRvdbWR3alzCdLlRbdpOOp+oDXoAbJCQy+WNNLArgODYtPFuh5Nd6xn/4g/akoooGSde6jm9NmrngWErwaqTB42tKLjfhO+5HF6e6SQzmdJMX3j8No82RmqQbcW246Sjjusq7ZbsfwbyxqbYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744318559; c=relaxed/simple;
-	bh=sIP4LMNjW981G+7sUprk0fjwVK1ccUGInZpZiAoDh+c=;
+	s=arc-20240116; t=1744318619; c=relaxed/simple;
+	bh=gjRlPSDk+HP4s4FGm5gbcf/CmugeuOqJPfC/yVVpyyw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lipWWItFSGPcWVbrEte8leyqMjTr5sFuEhLG5Rk8Z/KTjIURkPUe3GdQJ7aQeg4B1T0a1Cr+Mi6F5qrmu832NBZ2IW8u6q1UgT3RdXwHEBIfEFjdv7RrfANIiyo/KEgxRNYbmM4tyeJgA8i73pjlZKqFl4MvArK9mV3hK5d04V0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=itUzQq6w; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=HcZoCHHbD1KlaVpQRRM0zxtW1G1KOKh8izeBJC2O6fKHvS/Eijwvj9hT/21NcuqjA0gZYsTSsnlECtPF5ZnzevqgvqEKokhNEiG+C/KJJRDR23TIIS9/IC5dm06atYk90U1VsVgoZUTnayTSffUwXNp7ukMYxmRl6iKiYQ/aS+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=icN/Z1BF; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="itUzQq6w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27E61C4CEE7;
-	Thu, 10 Apr 2025 20:55:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744318558;
-	bh=sIP4LMNjW981G+7sUprk0fjwVK1ccUGInZpZiAoDh+c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=itUzQq6wRMVynRgOnqug4Eex6T3g3sgv8o2V0EH+ylqu0VsjfDK+svYy3v0n3IE8y
-	 kRItzCdpjnWkTot3qoPXzNi1PrqUr4EpZCrNtkXLvGOuNhjHE7oopxIzSG1quEqFKV
-	 mlVJ9M7hmvEdFPtyH3267R+Y6PRLX006c+TuGYNDha5xzlx1c7uKC56Uavzv5uIIVH
-	 x6enznqtFnAUj2Hdw2QDtX67y/d+P7TScQU/sg+8t8Z9S1ZKip4u5iHhzG/xycagxX
-	 14hU1iBmcmbG918YfE8RPGHuLLpCloRXWO3dXdr5C5cejU70DOV198ebORMmoMKZ4f
-	 Urat8QlSAZm6w==
-Date: Thu, 10 Apr 2025 22:55:54 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: tip-bot2 for Josh Poimboeuf <tip-bot2@linutronix.de>,
-	linux-tip-commits@vger.kernel.org,
-	kernel test robot <lkp@intel.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [tip: objtool/urgent] objtool: Fix false-positive "ignoring
- unreachables" warning
-Message-ID: <Z_gwWnvENF6DY6h-@gmail.com>
-References: <5eb28eeb6a724b7d945a961cfdcf8d41e6edf3dc.1744238814.git.jpoimboe@kernel.org>
- <174426568347.31282.17971680226674649784.tip-bot2@tip-bot2>
- <jd2rsmxvbvawlwwaatx323pzh5on3tjt5cxx5m7icf3sgj6vao@kjmjgb252u3x>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="icN/Z1BF"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=OpP8724RjBuTtHqPoOQEYb+UxkeI+0f3hSg/HwAnRco=; b=icN/Z1BFMHxh7eIZg8j2CW4tVW
+	hHIGaaBjnmXtwawWDpVZLt1mP/C20pZ3xlQkC948V6q2MhQSSSK7Tru1fr0GAbOlCQSK7+Z4DfRQm
+	nWs1pZ21+QvE3vOvDVz97G4MfajtZDrGmk5nOCpaXAqwNOwo4BNWzW3ORkg97kBvJPww=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u2ywq-008jEk-I3; Thu, 10 Apr 2025 22:56:32 +0200
+Date: Thu, 10 Apr 2025 22:56:32 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	"Chester A. Unal" <chester.a.unal@arinc9.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	DENG Qingfang <dqfext@gmail.com>,
+	Sean Wang <sean.wang@mediatek.com>, Simon Horman <horms@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	upstream@airoha.com
+Subject: Re: [net-next PATCH v14 07/16] net: mdio: regmap: add support for
+ C45 read/write
+Message-ID: <5472c608-df78-4433-a086-6ac9323d9d35@lunn.ch>
+References: <20250408095139.51659-1-ansuelsmth@gmail.com>
+ <20250408095139.51659-8-ansuelsmth@gmail.com>
+ <50c7328d-b8f7-4b07-9e34-6d7c34923335@lunn.ch>
+ <67f80275.df0a0220.39b09a.dd38@mx.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,47 +67,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <jd2rsmxvbvawlwwaatx323pzh5on3tjt5cxx5m7icf3sgj6vao@kjmjgb252u3x>
+In-Reply-To: <67f80275.df0a0220.39b09a.dd38@mx.google.com>
 
+> Hope you can give some guidance about this! Happy to split this once we
+> find a common point on how to proceed with this.
 
-* Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+One thing i'm failing to understand is, why use a regmap at all. For a
+single C22 device it make sense. 32 linear registers, nice and
+simple. They could be memory mapped, I2C addresses, SPI addresses,
+etc. The regmap implementer probably just adds a constant offset and
+does a hardware access.
 
-> On Thu, Apr 10, 2025 at 06:14:43AM +0000, tip-bot2 for Josh Poimboeuf wrote:
-> > The following commit has been merged into the objtool/urgent branch of tip:
-> > 
-> > Commit-ID:     8af6f0fe9c4340ed97f0ba4f3f6cc7bb16558e87
-> > Gitweb:        https://git.kernel.org/tip/8af6f0fe9c4340ed97f0ba4f3f6cc7bb16558e87
-> > Author:        Josh Poimboeuf <jpoimboe@kernel.org>
-> > AuthorDate:    Wed, 09 Apr 2025 15:49:36 -07:00
-> > Committer:     Ingo Molnar <mingo@kernel.org>
-> > CommitterDate: Thu, 10 Apr 2025 08:03:05 +02:00
-> > 
-> > objtool: Fix false-positive "ignoring unreachables" warning
-> > 
-> > There's no need to try to automatically disable unreachable warnings if
-> > they've already been manually disabled due to CONFIG_KCOV quirks.
-> > 
-> > This avoids a spurious warning with a KCOV kernel:
-> > 
-> >   fs/smb/client/cifs_unicode.o: warning: objtool: cifsConvertToUTF16.part.0+0xce5: ignoring unreachables due to jump table quirk
-> > 
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-> > Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> > Link: https://lore.kernel.org/r/5eb28eeb6a724b7d945a961cfdcf8d41e6edf3dc.1744238814.git.jpoimboe@kernel.org
-> > 
-> > Closes: https://lore.kernel.org/r/202504090910.QkvTAR36-lkp@intel.com/
-> 
-> Superfluous newline there.
+Multiple C22 devices gets us into a two dimensional problem. Multiple
+C45 devices gives us a three dimensional problem. Mixing multiple C22
+and C45 gets us a four dimensional problem. This is a long way from
+regmaps nice simple model of linear registers.
 
-Fixed. Not sure what happened there.
+What does regmap bring here?
 
-> Also, this probably could use a fixes tag:
-> 
-> Fixes: eeff7ac61526 ("objtool: Warn when disabling unreachable warnings")
-
-Added that one too.
-
-Thanks!
-
-	Ingo
+	Andrew
