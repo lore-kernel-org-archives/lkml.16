@@ -1,158 +1,184 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2057.outbound.protection.outlook.com [40.107.22.57])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D7B1156C6F;
-	Thu, 10 Apr 2025 15:45:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.57
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744299948; cv=fail; b=p4vXkGgiiA/PyZJn6UgSWIyf+v3NHvx7v+VWLmWOAW4BPiTZ9ttYu1VhzSl7ZsVgQtNfPWxcTdfWa4RH099EC9fFypB00/ZGO1kM1GLFUmR/sS9o2RD5kUlSWZJ+0CJHXZrFMj/sWkJK9deafazZio1UZt23oxozE5vNcNRTcEA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744299948; c=relaxed/simple;
-	bh=48xecTfaxS6t2FFUXR225FbblBcWD+DLkI3Ysec31ag=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=rPnFWFDMmiE7fX6Mcz7+WpD9qWfdQRYUzQjsBbH1IgyE+z8bh1xWKY8QQfiPxqdLsWO6rdAFkbQPwxwEx9RD8Z9CH/WwiWz0RdjaHLphDpYxvdUEFEABhQy1WMM2ZklQgAFg2/SY/mhzhVuBZxM1EdNyZrBiKZvKqUHN1kQbpIM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nokia-sbell.com; spf=pass smtp.mailfrom=nokia-sbell.com; dkim=pass (2048-bit key) header.d=nokia-sbell.com header.i=@nokia-sbell.com header.b=qYAllXbg; arc=fail smtp.client-ip=40.107.22.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nokia-sbell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nokia-sbell.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A018E1EB9E8
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 15:45:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744299952; cv=none; b=J2M54IQtHN3Xe4B9eFL04U5Lq8R1zFEYlCyBO21KYbyMCbhzDaAcFvDNcWUD+vrsPpSHbft4v6bIWOVtczdIapTTISDdH7BdC2bmmyT4yhyzl0BPu1NdgGgUgpRU/FFE8Zp5BHp7jPmeP0/YynLg0EJN7CM2nZx2euV4ZknUFl4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744299952; c=relaxed/simple;
+	bh=hLbfVy6MGSyYSuQDq4K6wAOKO0lEFzAf3CuTzYRU6rY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=D7PYJwgyt9tNYjJOnyQKSbWFKkFWsVgheOXP8CVNuc8xqz7EUx40PhMw72Oee9DXErTiw15/QQrxaRshRirPEuC21qxXM5gXbuAKXerdeJCmox+rSZbip0xFzaRKzJ+QDLz4w/5p/h0AYIkrh1xFAknY2xfakLVZNOyAFalE608=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zqX1/xpU; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nokia-sbell.com header.i=@nokia-sbell.com header.b="qYAllXbg"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=M8PEhG4u8WY93ONLwdhu8d2D9kkqkQ2KzzDv+Vx/237WkgeVgZGUmhzz+SD3nnJC3sU71dq8sJDLIRFHFpMV25W//McisBpzUHfnvrXze6IveXh0DKj4+2SO41Hnn01uaZbSLLCCK9+AVbWZrCQgJxhmvugnKVn4eeESfYcb/4hjAnW/eRVtuIaaw0g+A/R4v38uYq8xhwh4SnnktiGWH+ArTnqQObfzn82FEMoTkcM1Oy7FxHDgUewWBLBj+M5yJUMD7eEg0ymEwf7HBbsWxZm5Y0XHG+LwDjtOpKdg1a/QvFJncUoRkKqUR5ANNpxl+wwRFYHdXcFGgvBdSSOduw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/9/XeGDiZf+tgtRmLcTsEl/d0x6cnGFCSBkoyQiW3wM=;
- b=amZE4zdExr7sjR1TnmWa6Zw39FV+zCDIoYo8uteq32/jC3w0ZKW310fqmR5+G5gDOv6y/HTrbq/uAqaIrozbjr02cpK8DUXXFOq7S4pCDh6WjqpA2r+GYmaOA/npoJdVjh4O8+wPyDQUtL9HpqkYdrttMG2O284mY3DQWsUGOkqOrn51H0y2sH7OSA4sM+R/+hYOOgNoSPxFks9w9kRx88p7l3JKr8usk3SggfcBWxkbSsmIzG/KxmWJoGM/rUAv9g6MYIlONfj8dvfKjEZw2B1Q2S/C8oMfJ+gaskhQIE9E9l4zktlVAqSzWEn1jg1PdDkVJhfOxlhlTQsZ05BgdA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nokia-sbell.com; dmarc=pass action=none
- header.from=nokia-sbell.com; dkim=pass header.d=nokia-sbell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia-sbell.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/9/XeGDiZf+tgtRmLcTsEl/d0x6cnGFCSBkoyQiW3wM=;
- b=qYAllXbghg8VeMLNcJHDSKXm2JMnyRgckKgjR8mr/U1W1xZky41h8FBcoEglPkyWCN94XRc5jNgsgBwL3CZTSqw6esn5ZWagA+D2lMbp1HpjoPQbxfs2LaWIFfuWAKugGEgiKW5LAPpyMkDT9o71+oxH1TIBNmgI1sgb7MFYHPx95RdmbyJLpuT/qMaydPgZHelyS57gmZeXdAo92GrKWv+07KARKG1+WJ/C9ZNtfr+3EcvitWUn8bY+iR+vvPd7NfyiAxPiMGRa0JtBzDRQvDAwI50JSEnu+cdPMVZZAa5DWnDdTlb75k2PxUx0yNULng8/mzZ8v1FThaFfO79TKQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nokia-sbell.com;
-Received: from DBBPR07MB7481.eurprd07.prod.outlook.com (2603:10a6:10:1f0::11)
- by PA1PR07MB10210.eurprd07.prod.outlook.com (2603:10a6:102:491::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Thu, 10 Apr
- 2025 15:45:39 +0000
-Received: from DBBPR07MB7481.eurprd07.prod.outlook.com
- ([fe80::884b:f4bb:e97b:b9d5]) by DBBPR07MB7481.eurprd07.prod.outlook.com
- ([fe80::884b:f4bb:e97b:b9d5%5]) with mapi id 15.20.8632.021; Thu, 10 Apr 2025
- 15:45:38 +0000
-From: Zhen XIN <zhen.xin@nokia-sbell.com>
-To: linux-wireless@vger.kernel.org
-Cc: pkshih@realtek.com,
-	linux-kernel@vger.kernel.org,
-	martin.blumenstingl@googlemail.com,
-	Zhen XIN <zhen.xin@nokia-sbell.com>
-Subject: [PATCH -v2 0/2] wifi: rtw88: sdio: Enable tx status for management frames
-Date: Thu, 10 Apr 2025 15:42:15 +0000
-Message-Id: <20250410154217.1849977-1-zhen.xin@nokia-sbell.com>
-X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: TYCPR01CA0153.jpnprd01.prod.outlook.com
- (2603:1096:400:2b1::12) To DBBPR07MB7481.eurprd07.prod.outlook.com
- (2603:10a6:10:1f0::11)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zqX1/xpU"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff605a7a43so1249615a91.3
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 08:45:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744299950; x=1744904750; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=mJmeJjTQ0N1mLS0S8FtWMDsHRzNfkH/EIVPnKYJbkdE=;
+        b=zqX1/xpULW5UVpXrfLj1IJS6JNni5Mj1eLmhohcBQgL5bRSSKq8MoIwGvDxdSP/Vq2
+         K8rA+3sEpsOmoIh00b2Nb3l1k7LVsHLxGQ/bds9Fv/VGu8AexCvv5X3Vp0+2uDC8wX0c
+         0LDi03iF4HQRzij7U05pKyNkf3vnfKZDotSvjQ2Rx8sbaRQp11TaZoN3KQEShCYlis9R
+         Lbuim/k6XTFcReZJQKFGCFUZiJl04kG4nKc1W/NlHj+Fr5FZRxgBwK7SCiIiS5t3KtxF
+         0sjDgRyrzW73d4hhnZP9GL3xgr0bZZM9uhrnY4BPBugWuj87/OIhT4JJ+KFXc4sMB7Wl
+         3dmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744299950; x=1744904750;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mJmeJjTQ0N1mLS0S8FtWMDsHRzNfkH/EIVPnKYJbkdE=;
+        b=rm4nIU92CDmVJSoV2QtxguDsaOdy5jsnH56TvXLs9eJU50ibYUKCGF7N8Z5GWUkZ2m
+         J6CR4fT5m/UpoHsk5O8p0bXaMVRZwH2NeWsbjVuZ1q5dagJvlHpfREyrRnRj3xvFjzdA
+         O+4VkHDOAtHq7fTgBEePUKdHEof5Jw1liTXXtxcXwgQzlkMOq17jagezKwbMif7lRuFb
+         l4nV/CU3L5Rv4Au32Vp6VSe+aS20LGQXFNMWkW3QR1xRLWPtsrT98ryVWGiOlkir7x8Y
+         zzr/7O/zwbTfww43aEh0GzU5Z25OfyrOSBbwOXGaod0iunR3Vk4ZDM+vcyS/q511NYD5
+         MJdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVSWx/j6oPY12Oz3Pa40IqCwsQcCNjGyLfrDouHD1ILqpQwCyAE1LdNkLV8Eh0wAxHe2kjrhF1DyzEkbIw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPV6taHwHHsW/WqXSu4GEOAq+x20VA1Orvl6UmiF+PRkN6yljp
+	xv62bszdUsXUbFuHxNULCdnl718vSHRKEiQSdQn1PNPDUKNH1mP1PFA1MJnclrNprCHTMVV4LXa
+	aTA==
+X-Google-Smtp-Source: AGHT+IFZ8WC+GSwj6Q6htW5cg/5bqXMTsujFZ73t+Q6ijGyOQ52YfigVgDbVZDUVXqIuS8GOZzkMgi1gkXg=
+X-Received: from pjbta11.prod.google.com ([2002:a17:90b:4ecb:b0:2fc:c98:ea47])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:6c6:b0:2ee:7411:ca99
+ with SMTP id 98e67ed59e1d1-30718b64bb2mr4620267a91.1.1744299949966; Thu, 10
+ Apr 2025 08:45:49 -0700 (PDT)
+Date: Thu, 10 Apr 2025 08:45:48 -0700
+In-Reply-To: <9b7ceea3-8c47-4383-ad9c-1a9bbdc9044a@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DBBPR07MB7481:EE_|PA1PR07MB10210:EE_
-X-MS-Office365-Filtering-Correlation-Id: 75fc30b8-a24d-40d3-5436-08dd7846bdea
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?22t0O/fs+Bq4bISviq2DIleNnm8MqjCg0/jOPektXet9ecX+6eZfE2R1hF6Y?=
- =?us-ascii?Q?SPrlx90dHVCwF/s037uYkiHjfoHaFFhwtNEz/3fRVZgHjjNzZglgfB+7cQr+?=
- =?us-ascii?Q?7tkadGajIu5FCeFj6ztI0fQofSBcEA3MEcjJC9RJAmiY8hua/ApK38K7riEa?=
- =?us-ascii?Q?wNrK9E2lrTyjFg4CWtgtaL4HfIY/DsMAD7FpeVZVMeY2S96KwL1UP715rLyO?=
- =?us-ascii?Q?zjbe912bCmBUpcWyxnipu+BLoMylFykYwNTthYa4fAfrbO9FSaLREXgKzbC6?=
- =?us-ascii?Q?7E6VYLe1m60x121rkUvFp8bUMdH0WK++9E+9muWN32tleXtOxVgI1pCNoLUd?=
- =?us-ascii?Q?tJiFWQSdZxaGM/n9Y7N7VDpA0Y9fMpoby3gHAGsk99x3PWN9JwbvPCuhzRpN?=
- =?us-ascii?Q?3ZS6JgNfJNGmrTv1wVr3yzqdCCvHD10rIW+KuIJO21XKOnTXvp0qBTkgM4GW?=
- =?us-ascii?Q?x/+zdwxe5ranCaWf+JEV197C75/OxXPvV+5J3o7zt1s+O6OeoIXLcubH531B?=
- =?us-ascii?Q?LSby5sUOB3TrWGC6j4aOj/8lRPJ1dXHxgbc+r9LEsszhw4aMXLtUZ1z9hHpb?=
- =?us-ascii?Q?X0mZtxjI8slrc7f5cm1z+6Cg+DwlVXve+cyOQ1o94wrm5bKZqS6/tsJoC2XN?=
- =?us-ascii?Q?viaJC3W21lkRk7/rMW+VtnsDen3sklWMopaOuB7OOXciprtLEON/xQbnUte0?=
- =?us-ascii?Q?GcVSpa43Yn5lcnTo0g5cHpLgj3/DIIuSodgh/+2aWQwU2oKQvCvfBPJmRnPs?=
- =?us-ascii?Q?qOJLt77xF70450228I72T1dlEW7xBs3yj8KTPd6oYi3vgoWSQLrMYxdYR8Va?=
- =?us-ascii?Q?4FzeMtRnVpaGqYEMNenWqNXeVXH9MCucEkaLbtEpVd3+veJfaGQL549VjqEu?=
- =?us-ascii?Q?BlfAmOn1V7iJyx2BIi8Wz8If9MzjPgHqxWS3WL9/4q3jBu4t3oetCOZqO8kG?=
- =?us-ascii?Q?/OFkPIEn7GU0EMoLw4wThQlVr+WTDgGDdyo5OalbFGeKoPVsOfUaan7zOoHf?=
- =?us-ascii?Q?G0scwCdHBqu9/VuecisUoLg+u95LCN06gi+SC2KHzoo6L4PDJTTCQx2lFbuu?=
- =?us-ascii?Q?14ZcT1Le47zfcT3kJucS0OmUa9ABZy4IUlmYrRmEY98Dv0vNew5gQKQW2sNp?=
- =?us-ascii?Q?pYbgHF9WToeXAU0+7IEAGoorI9pr6B41/+AVHh1OkvmTfn4F4jS6sGYp1iUd?=
- =?us-ascii?Q?fXd1bDLjqT6oUYqB0pWN3twZXB4HnY//Z0pp/3JQb6yNYfbcqU29YZs8AwmX?=
- =?us-ascii?Q?zI2isdFjClYHKoAW0xTGNutjDBqjgN1/JmrdQjs6eB5GkHLt7Xh9fohZM8s1?=
- =?us-ascii?Q?Ve1KoUoK1LD74s84NkstE7avUUOThDrja32xJ5Aas5KcCfWmHZjMibCfk9M5?=
- =?us-ascii?Q?xEwQBH74Pqdit58BWccFm7Tq2IgS5ivp5HN+P9be8an8hrWLO6P09/ZFfRET?=
- =?us-ascii?Q?EH2mCMIh9FU=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBPR07MB7481.eurprd07.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?dpOZ4JBUhiSpJCNA4KsqEy1JxdC8EJcPf7xPklPZiiyNN+ofQgVsgtrtmz28?=
- =?us-ascii?Q?iUJILr9hAwC9IdEJo+6mVUOLwxTNsFlUAZpRVSUvVds/8cxhXuvoMNQVyTID?=
- =?us-ascii?Q?vvSm+KSbuEecaLFP62UZhlaQB2Y0AdNb1wdfMfhl5MiY/3Pu0ZNRvxRxAJ0Y?=
- =?us-ascii?Q?i0ZyR0MjpHMTthHtBJ828q8ocJswwPAxQ1AlSKnqpPGftt0codxm1Mp6xXw/?=
- =?us-ascii?Q?3Jc9zkZ8DbcmTW70RqPXX0TbRpY4mbOj/QTORcfGPlTqbrzM6lf6JaHyt4we?=
- =?us-ascii?Q?NCpdUQCNecIA14olGyPY80IEeM1b2GS0sy7BoDSs1mas4P1HYnBzIXMGbGT+?=
- =?us-ascii?Q?1V0ym2QWd2bpp6QYe2rfYFNIlBD+MQPH4YWiZFjp5x6KsZXoic9s9Q+nbwJY?=
- =?us-ascii?Q?JysLhOFzWkyY2kY8pbbdL+qGlMR50Ae9vnUpFdowxHBiLqewN4rATQ9JNVbj?=
- =?us-ascii?Q?Wse4UhbTiJEQq6aWtofKFGaS+RKx9aLJdcS1DsaDrKp0NcCWwsV6P3dGH9aS?=
- =?us-ascii?Q?ujLquUvJevXYCwm5u9sYon4HsBetbG9GMJm9M7BHP4d5lWqpUXvbBFpb+6tc?=
- =?us-ascii?Q?RyiIis2o3vi72JlANjeYn+xTIOtj4aq0Renxr6ZFC0z4KN3iprrh972Ug98J?=
- =?us-ascii?Q?UmL+iTipoNIkx5XcTvYwTEkhCAv7qyk6sMgXpeeGwWckUbTO9eqG9pg53Pez?=
- =?us-ascii?Q?HCc9ErI6zliatYDKlnKg91OFi9Qj6bG1fjLMBYCS4kfiNB8/5t6BkXClwVmR?=
- =?us-ascii?Q?e29TOKFtjO+9lmrtejoyD5JFW133oIWJg2F+X023Y3xpYp9nypfPUjxJDZoL?=
- =?us-ascii?Q?Q0h00erDqHGTA/ck6XOtZaVlbYR+zxyLoaZhZCXZoe3g3qc6aSnoP/DySYfZ?=
- =?us-ascii?Q?0hLQcK6hgdy9YBXqVMo3ozHDUDWgeZK4qFlR30F7tMGkgnjm3fk0tKGUikqC?=
- =?us-ascii?Q?3Qurgkuf0LWsSTF+M/4RRoxtJrkw2WRU9CJNrGy8quybQztksH/0gUStagsy?=
- =?us-ascii?Q?LYK5nCoGH6RjBL8F1rxmGVwAX2mW3GK4Tpp1GJGnMqfAS5CkME5Gacg/VYy1?=
- =?us-ascii?Q?grbeCMcROcK668XSa92tiOumBgf/PBybnQqORJuX2qYOWHkEva6xGMPVQT+o?=
- =?us-ascii?Q?HpLZ7A8XwHMRLFDIlF+QYOYge+5oFqu3pGyVc1/RfoB5bmh8IdiBwWSAJdwP?=
- =?us-ascii?Q?BzgEgUiKr1xbjhjT+Oaa5eiCyJjoGHssYM/25Q+9Tb77Ce2XhiZvRXcD/84V?=
- =?us-ascii?Q?B6J2ATr5/EXyXJriO6kMb9gshmNxFQGbozpy7KNjslcXIpNFH9tWwz8/kYT1?=
- =?us-ascii?Q?fW44KjQ2f89C6qCJzJqenefAfHuDf+Fnsh9tMMCdiPdf0/qYq5faJRoForPV?=
- =?us-ascii?Q?FvspsY/cYvdepMj5/ztqNGTWkNS30R3yCQ57pSVTN47V8hbleSJrfzR00ds/?=
- =?us-ascii?Q?X1jO60XA3W5sKGG6g8nc2L8JtVMMrzx09u+VMHOnuMNSrCvDDiCdm0oiYiLu?=
- =?us-ascii?Q?FU2Zqd4nXsoiO1diy++aUGdxcmS2uoVc/wUqmHpphvD5/nfrCLl/FmQCldau?=
- =?us-ascii?Q?6TvT2MVxHnt5HejsBvaQ2jBjarIaW8GQmAd5h1MiOtsCTEbtPUWGum6+DkvU?=
- =?us-ascii?Q?gQ=3D=3D?=
-X-OriginatorOrg: nokia-sbell.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 75fc30b8-a24d-40d3-5436-08dd7846bdea
-X-MS-Exchange-CrossTenant-AuthSource: DBBPR07MB7481.eurprd07.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 15:45:38.6821
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5d471751-9675-428d-917b-70f44f9630b0
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: CQFkCK/PU1EXkMaqhKSVVHTph6An2jYYPtOht+4HtYmePl79DrQ1ctv6UQkoRWAo0+tHcmhpm4RzFWF0HgCp79pE1u9IOK/pxS8GehDuruM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR07MB10210
+Mime-Version: 1.0
+References: <20250404193923.1413163-1-seanjc@google.com> <20250404193923.1413163-65-seanjc@google.com>
+ <9b7ceea3-8c47-4383-ad9c-1a9bbdc9044a@oracle.com>
+Message-ID: <Z_fnrP4e77mKjdX9@google.com>
+Subject: Re: [PATCH 64/67] iommu/amd: KVM: SVM: Allow KVM to control need for
+ GA log interrupts
+From: Sean Christopherson <seanjc@google.com>
+To: Joao Martins <joao.m.martins@oracle.com>
+Cc: kvm@vger.kernel.org, iommu@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Maxim Levitsky <mlevitsk@redhat.com>, David Matlack <dmatlack@google.com>, 
+	Alejandro Jimenez <alejandro.j.jimenez@oracle.com>, 
+	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>, Vasant Hegde <vasant.hegde@amd.com>, 
+	Joerg Roedel <joro@8bytes.org>, David Woodhouse <dwmw2@infradead.org>, 
+	Lu Baolu <baolu.lu@linux.intel.com>, Paolo Bonzini <pbonzini@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 
-Rtw88-sdio do not work in AP mode due to the lack of tx status report for
-management frames.
+On Wed, Apr 09, 2025, Joao Martins wrote:
+> On 04/04/2025 20:39, Sean Christopherson wrote:
+> I would suggest holding off on this and the next one, while progressing with
+> the rest of the series.
 
-These patches put management frames into the right queue for tx status
-report and ensure the correct handling of tx reports.
+Agreed, though I think there's a "pure win" alternative that can be safely
+implemented (but it definitely should be done separately).
 
-changes in v2: have the right queue as pointed out by Bitterblue Smith
+If HLT-exiting is disabled for the VM, and the VM doesn't have access to the
+various paravirtual features that can put it into a synthetic HLT state (PV async
+#PF and/or Xen support), then I'm pretty sure GALogIntr can be disabled entirely,
+i.e. disabled during the initial irq_set_vcpu_affinity() and never enabled.  KVM
+doesn't emulate HLT via its full emulator for AMD (just non-unrestricted Intel
+guests), so I'm pretty sure there would be no need for KVM to ever wake a vCPU in
+response to a device interrupt.
 
-Zhen XIN (2):
-  wifi: rtw88: sdio: call rtw_sdio_indicate_tx_status unconditionally
-  wifi: rtw88: sdio: map mgmt frames to queue TX_DESC_QSEL_MGMT
+> > diff --git a/drivers/iommu/amd/iommu.c b/drivers/iommu/amd/iommu.c
+> > index 2e016b98fa1b..27b03e718980 100644
+> > --- a/drivers/iommu/amd/iommu.c
+> > +++ b/drivers/iommu/amd/iommu.c
+> > -static void __amd_iommu_update_ga(struct irte_ga *entry, int cpu)
+> > +static void __amd_iommu_update_ga(struct irte_ga *entry, int cpu,
+> > +				  bool ga_log_intr)
+> >  {
+> >  	if (cpu >= 0) {
+> >  		entry->lo.fields_vapic.destination =
+> > @@ -3783,12 +3784,14 @@ static void __amd_iommu_update_ga(struct irte_ga *entry, int cpu)
+> >  		entry->hi.fields.destination =
+> >  					APICID_TO_IRTE_DEST_HI(cpu);
+> >  		entry->lo.fields_vapic.is_run = true;
+> > +		entry->lo.fields_vapic.ga_log_intr = false;
+> >  	} else {
+> >  		entry->lo.fields_vapic.is_run = false;
+> > +		entry->lo.fields_vapic.ga_log_intr = ga_log_intr;
+> >  	}
+> >  }
+> >
+> 
+> isRun, Destination and GATag are not cached. Quoting the update from a few years
+> back (page 93 of IOMMU spec dated Feb 2025):
+> 
+> | When virtual interrupts are enabled by setting MMIO Offset 0018h[GAEn] and
+> | IRTE[GuestMode=1], IRTE[IsRun], IRTE[Destination], and if present IRTE[GATag],
+> | are not cached by the IOMMU. Modifications to these fields do not require an
+> | invalidation of the Interrupt Remapping Table.
 
- drivers/net/wireless/realtek/rtw88/sdio.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+Ooh, that's super helpful info.  Any objections to me adding verbose comments to
+explain the effective rules for amd_iommu_update_ga()?
 
--- 
-2.25.1
+> This is the reason we were able to get rid of the IOMMU invalidation in
+> amd_iommu_update_ga() ... which sped up vmexit/vmenter flow with iommu avic.
+> Besides the lock contention that was observed at the time, we were seeing stalls
+> in this path with enough vCPUs IIRC; CCing Alejandro to keep me honest.
+> 
+> Now this change above is incorrect as is and to make it correct: you will need
+> xor with the previous content of the IRTE::ga_log_intr and then if it changes
+> then you re-add back an invalidation command via
+> iommu_flush_irt_and_complete()). The latter is what I am worried will
+> reintroduce these above problem :(
 
+Ya, the need to flush definitely changes things.
+
+> The invalidation command (which has a completion barrier to serialize
+> invalidation execution) takes some time in h/w, and will make all your vcpus
+> content on the irq table lock (as is). Even assuming you somehow move the
+> invalidation outside the lock, you will content on the iommu lock (for the
+> command queue) or best case assuming no locks (which I am not sure it is
+> possible) you will need to wait for the command to complete until you can
+> progress forward with entering/exiting.
+> 
+> Unless the GALogIntr bit is somehow also not cached too which wouldn't need the
+> invalidation command (which would be good news!). Adding Suravee/Vasant here.
+> 
+> It's a nice trick how you would leverage this in SVM, but do you have
+> measurements that corroborate its introduction? How many unnecessary GALog
+> entries were you able to avoid with this trick say on a workload that would
+> exercise this (like netperf 1byte RR test that sleeps and wakes up a lot) ?
+
+I didn't do any measurements; I assumed the opportunistic toggling of GALogIntr
+would be "free".
+
+There might be optimizations that could be done, but I think the better solution
+is to simply disable GALogIntr when it's not needed.  That'd limit the benefits
+to select setups, but trying to optimize IRQ bypass for VMs that are CPU-overcommited,
+i.e. can't do native HLT, seems rather pointless.
+
+> I should also mention that there's a different logic that is alternative to
+> GALog (in Genoa or more recent), which is GAPPI support whereby an entry is
+> generated but a more rare condition. Quoting the an excerpts below:
+> 
+> | This mode is enabled by setting MMIO Offset 0018h[GAPPIEn]=1. Under this
+> | mode, guest interrupts (IRTE[GuestMode]=1) update the vAPIC backing page IRR
+> | status as normal.
+> 
+> | In GAPPI mode, a GAPPI interrupt is generated if all of the guest IRR bits
+> | were previously clear prior to the last IRR update. This indicates the new
+> | interrupt is the first pending interrupt to the
+> | vCPU. The GAPPI interrupt is used to signal Hypervisor software to schedule
+> | one or more vCPUs to execute pending interrupts.
+> 
+> | Implementations may not be able to perfectly determine if all of the IRR bits
+> | were previously clear prior to updating the vAPIC backing page to set IRR.
+> | Spurious interrupts may be generated as a
+> | result. Software must be designed to handle this possibility
+
+I saw this as well.  I'm curious if enabling GAPPI mode affects IOMMU interrupt
+delivery latency/throughput due to having to scrape the entire IRR.
+
+> Page 99, "2.2.5.5 Guest APIC Physical Processor Interrupt",
+> https://www.amd.com/content/dam/amd/en/documents/processor-tech-docs/specifications/48882_IOMMU.pdf
