@@ -1,113 +1,77 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3E3E258CE5;
-	Thu, 10 Apr 2025 09:25:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84D7C204859;
+	Thu, 10 Apr 2025 09:27:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744277101; cv=none; b=BY2eN0vBRmvGi7l3wPBR0FHcNW7fRY94Ne29f2vTtZc+dOacWkM3mfTJuQVzq30aAWVLSHTbYTMgAeSlAXSQ0Dzj5OY4iqgg713fwojM1paVuktv8fQtzTHte6cnQqLU9eIT/TIVsXa9svLn7wlbq0w0eBdbZkD6/Jnb1ScRlqo=
+	t=1744277227; cv=none; b=CvcdGq72wFl6O5o9V+PkBoTMo8FFVtsnOix1d3sy8bArXlRuoCpSLmH4FNjciH4DRK3CjeyVkd9r7EqGnYn5Ll/8nSifSvHUqKVO2KjSPFkhffgy17WxM3X61MG3TNEiXMkSzuvZ/hXhTscCNd+UEiqNU9lPh5uhnid9sn/ln5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744277101; c=relaxed/simple;
-	bh=wrafJtqld39LFoxCo2SLkSTX/FGJSOSUY67ueylsNZ0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SPzZKb+PIopqI5/Z17+VqR+yn5XavSO2y5/d/KpyFOAR8Dz4oE5rJTNOo/fJKScfBC9fWMJx2vwJWphxbrS28mm67AMK9mxKmv8lhca06NpUHzHUCRi+3ed7/1JApwaWA1SH1XVVu6gPDnzr5919Jr7YMtKI5JrHJHAxuBIrIS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C5snF0yF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744277227; c=relaxed/simple;
+	bh=KspGeLOPCiTHid+2kSxIjeK1u5cGf2Od+QXXtZqsIh4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TSA8c+FBIH73PjWegCcVaEtqIlJhFrvwTO9R7fguhX0NYi0dTMpglr7CLCdJCES+u5FioYKQdZ3TeQzY7pPqWtCw8JQslma+gk1y6aqV7RdP3eB6a/ETvcq4azqajQQwWjnM49JTRYG4BFwBpMxA9AdhnXltdmCnYaCgqH7pnCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ocSI26iM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C5snF0yF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 101E6C4CEEE;
-	Thu, 10 Apr 2025 09:24:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ocSI26iM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4B9EC4CEDD;
+	Thu, 10 Apr 2025 09:27:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744277101;
-	bh=wrafJtqld39LFoxCo2SLkSTX/FGJSOSUY67ueylsNZ0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=C5snF0yFfuHVhKnz4fzbkr7N2cym2tQmHOziG7+aRCRCWasD+/UnDEi925ipTORDP
-	 Wllj9EDzOrQkfEb3kkIdAgm760RdsWjtxZuezrG57jUYgIie2Z4zE6LovCxgPMKgjD
-	 mGRrykuwDjycfvx0rte/JH1LoiVw+WlhSdK7dcs19SCy9UohKXvfDGRgXwoNQTOsWe
-	 gq2klvgoxFUBcS6EWbcNLxeYTv2J5wGCScq0/4HHaPDDPuaj8DHcnaVqeAInHaBcQh
-	 oR+qu6Dl0/n8tt3KC/PX+a0yyjM7pt2grisyXo05OvExoyMrD/ZIZ43z/8Z/TojS1W
-	 dVQqt4Guny3Bg==
-From: Philipp Stanner <phasta@kernel.org>
-To: Lyude Paul <lyude@redhat.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Sabrina Dubroca <sd@queasysnail.net>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: dri-devel@lists.freedesktop.org,
-	nouveau@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	linaro-mm-sig@lists.linaro.org,
-	Philipp Stanner <phasta@kernel.org>
-Subject: [PATCH 3/3] drm/nouveau: Add helper to check base fence
-Date: Thu, 10 Apr 2025 11:24:19 +0200
-Message-ID: <20250410092418.135258-5-phasta@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250410092418.135258-2-phasta@kernel.org>
-References: <20250410092418.135258-2-phasta@kernel.org>
+	s=k20201202; t=1744277226;
+	bh=KspGeLOPCiTHid+2kSxIjeK1u5cGf2Od+QXXtZqsIh4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ocSI26iMU7FdNcrINygQcY7Lcn+vq/yI7C5/UVXKVcI7Q/btHJHf5E4cn/BHo4Yzo
+	 mlUjxMKeLTGtqhPFynDu16aJJi4NhBGY/Kz7FxMuEj9vnGVFdEOhkBAlowSKcgKe5I
+	 XmmbceVnFkaqjzbON6krUSN/KevxV8ZT4kg8pTzdyik8Ms8HSOTb5HpG5J8GCmcX2l
+	 gUw0GU+doh46JotLv+MgBhg7q3yiubjjoVcHBdSjS0Kt5wR36ugc0aKElSWr7CxY+9
+	 m+N1J1gUNkP6w8larc8lD2ZwSCMrEtsLWKcJ8GMGTv0zykk28eKsVWOinEbYaFC4ms
+	 to5vrzXbFKbig==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1u2oBh-000000006Sq-3JDM;
+	Thu, 10 Apr 2025 11:27:10 +0200
+Date: Thu, 10 Apr 2025 11:27:09 +0200
+From: Johan Hovold <johan@kernel.org>
+To: jens.glathe@oldschoolsolutions.biz
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/5] arm64: dts: qcom: x1e80100-hp-x14: remove PS8830
+ retimer 1 definitions
+Message-ID: <Z_eO7RUI4c7NXt22@hovoldconsulting.com>
+References: <20250410-hp-x14-v1-0-b4e5ca253ec9@oldschoolsolutions.biz>
+ <20250410-hp-x14-v1-2-b4e5ca253ec9@oldschoolsolutions.biz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250410-hp-x14-v1-2-b4e5ca253ec9@oldschoolsolutions.biz>
 
-Nouveau, unfortunately, checks whether a dma_fence is already siganled
-at various different places with, at times, different methods. In
-nouveau_fence_update() it generally signals all fences the hardware is
-done with by evaluating the sequence number. That mechanism then has no
-way to tell the caller nouveau_fence_done() whether a particular fence
-is actually signaled, which is why the internal bits of the dma_fence
-get checked.
+On Thu, Apr 10, 2025 at 11:13:23AM +0200, Jens Glathe via B4 Relay wrote:
+> From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+> 
+> Clean-up of regulators, i2c definition, pinctrl
+> 
+> Signed-off-by: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
 
-This can be made more readable by providing a new wrapper, which can
-then later be helpful to solve an unrelated bug.
+I already sent a patch removing the bogus retimer here (you were CCed):
 
-Add nouveau_fence_base_is_signaled().
+	https://lore.kernel.org/lkml/20250328084154.16759-1-johan+linaro@kernel.org/
 
-Signed-off-by: Philipp Stanner <phasta@kernel.org>
----
- drivers/gpu/drm/nouveau/nouveau_fence.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+I suggest you rebase this series on that one and mention the dependency
+in the cover letter.
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_fence.c b/drivers/gpu/drm/nouveau/nouveau_fence.c
-index db6f4494405c..0d58a81b3402 100644
---- a/drivers/gpu/drm/nouveau/nouveau_fence.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_fence.c
-@@ -256,6 +256,12 @@ nouveau_fence_emit(struct nouveau_fence *fence)
- 	return ret;
- }
- 
-+static inline bool
-+nouveau_fence_base_is_signaled(struct nouveau_fence *fence)
-+{
-+	return test_bit(DMA_FENCE_FLAG_SIGNALED_BIT, &fence->base.flags);
-+}
-+
- bool
- nouveau_fence_done(struct nouveau_fence *fence)
- {
-@@ -263,7 +269,7 @@ nouveau_fence_done(struct nouveau_fence *fence)
- 	struct nouveau_channel *chan;
- 	unsigned long flags;
- 
--	if (test_bit(DMA_FENCE_FLAG_SIGNALED_BIT, &fence->base.flags))
-+	if (nouveau_fence_base_is_signaled(fence))
- 		return true;
- 
- 	spin_lock_irqsave(&fctx->lock, flags);
-@@ -272,7 +278,7 @@ nouveau_fence_done(struct nouveau_fence *fence)
- 		nvif_event_block(&fctx->event);
- 	spin_unlock_irqrestore(&fctx->lock, flags);
- 
--	return test_bit(DMA_FENCE_FLAG_SIGNALED_BIT, &fence->base.flags);
-+	return nouveau_fence_base_is_signaled(fence);
- }
- 
- static long
--- 
-2.48.1
+Similarly, Juerg already sent a patch enabling the repeaters here:
 
+	https://lore.kernel.org/r/20250319160509.1812805-1-juerg.haefliger@canonical.com
+
+so you can drop your 5/5 as well.
+
+Johan
