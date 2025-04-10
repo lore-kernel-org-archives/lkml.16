@@ -1,97 +1,155 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D71E1D5143
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:48:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E64320409D
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:48:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744267716; cv=none; b=adq9sA7eT/mZYE5B1G97GH+WER87BjblNvYFOxhI1SQ86C7UC835rO+9WzbOFxPcIwI6A2Zif2Q0hbXiufsvuzLEkGV5zNUnPEZcoZwdcLUvi3BfMWhKKIRl/3QS0UZlY1uOnJGHSiqU03B/Wc4/K5OZq+TJuz3qHeP0/QPAifU=
+	t=1744267729; cv=none; b=QCNs+BWkGbYLuJm8ZPrRjepW/lBUWDW3qhG3cmpKGCEgs2NeZGSZ8G3QbitusICtLKtIY7ozALxuQJCjoM7zc7QLWHyPNGQd1N/sWrhNpul2h7FVXrtR531ybZkCBBAr0RqW3g354YRswoskZ2Et3ETmEJFNQxV8dLd/Fm4jAFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744267716; c=relaxed/simple;
-	bh=8T4++6YQL5JmtQQI9b2c0kc3G6Laew+mDIrGJSUBrfA=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=fkuk+X0tC7ipgKnIEWI4nh94zV2AAg0vyDUG5CneXBFxdyNsYnWW4UyAN0uMyF52UjxkOBLc0xT9jHBpMsN5fCIdTJQYEjJksIPcNO+4DdqNzl22ICPQX4p4UoFpYji4WbW3ssNGZ1FIxf6mSuzfM1HV2L5OcqG1w5h6L738A4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SkjSpAcp; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744267729; c=relaxed/simple;
+	bh=sZM9CP//2z8V6Uj/FTh7LVuB83U+xRpiCRHizaMJ//w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QKpqkWhUwmiKWkCgs/0Zy4sVH8XSdKyp6csd+u7x231CqPhkGX9uj4k4IDxcSM7YU4kwKEP3GhxRruUYDkoq6iZlxW8hofiAnuqx04CFlwEmQBFBvgiGYjDgUFEIyw4t7o2RzpY950VoDKJhtx5t87xfcbQOzvysTy1yoUh4ONs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2Zfht4AQ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xLg12l5B; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SkjSpAcp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744267714;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2Zfht4AQ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xLg12l5B"
+Date: Thu, 10 Apr 2025 08:48:44 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744267725;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KqCcO5Qa9K7yRkLmQkxKWOtEKDtWsuadSUO7zSi/SPs=;
-	b=SkjSpAcpz8JtAxjEAWcLEr6fRARsvFvWYIFyju1QY6QXUO1DL0xvO4kLKFWOzGwFXL7GJY
-	8RjvbD6tdcF+0KqoZm5Vv6zQHcI4H+RHifFEp86PDyzoiPiOnY1kOJ50xKZMbQFkgzXU5O
-	8IUJcVdMFkGtCkFrRMg88064XjX3ZZ0=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-94-I2zikjSkMAWHiZe8tpJ4Ng-1; Thu,
- 10 Apr 2025 02:48:30 -0400
-X-MC-Unique: I2zikjSkMAWHiZe8tpJ4Ng-1
-X-Mimecast-MFC-AGG-ID: I2zikjSkMAWHiZe8tpJ4Ng_1744267709
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E22F5180025A;
-	Thu, 10 Apr 2025 06:48:28 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.40])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 04DF218009BC;
-	Thu, 10 Apr 2025 06:48:25 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <20250409190601.2e47f43b@kernel.org>
-References: <20250409190601.2e47f43b@kernel.org> <20250407161130.1349147-1-dhowells@redhat.com> <20250407161130.1349147-4-dhowells@redhat.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: dhowells@redhat.com, netdev@vger.kernel.org,
-    Marc Dionne <marc.dionne@auristor.com>,
-    "David S.
- Miller" <davem@davemloft.net>,
-    Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-    Simon Horman <horms@kernel.org>,
-    Christian Brauner <brauner@kernel.org>,
-    Chuck Lever <chuck.lever@oracle.com>, linux-afs@lists.infradead.org,
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2 03/13] rxrpc: Allow CHALLENGEs to the passed to the app for a RESPONSE
+	bh=2cDfQjMVvP2bl8F3g4a6IR3khW0kxUFdh8FMWtAJKLQ=;
+	b=2Zfht4AQPI7fM/2v77p7eH9APYGCt+J7iXPqq+32fb6KGk82WSl9xVfczj7YVHcGM/Y3dV
+	/fa1M+ilScbHzxdz4tsEVDV921i9qwNUqFum7fpX6it7dP8zvLyV/l2pOvQ6UWeup8AJau
+	EA3onaaIjVVvVYrbA75lLJnuY6uE+b2iTGv0dh29G9mzv4o9Rs96tHNSXKWviY12m9gay2
+	6WyFcqHvQFKzp8/PpEMyGnjLKkcp+omArULWc8UB/QEmUYK9lOsU4K2j+CNLBwu6qjg4e5
+	OaOQKKEik4HVzT4g5FzVN8i9bdXYzU77pYScK04Vdh4iRXi+frkx23oL/6SUxg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744267725;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2cDfQjMVvP2bl8F3g4a6IR3khW0kxUFdh8FMWtAJKLQ=;
+	b=xLg12l5BQw8aXErIR0/4IbfoonTlxjP51TpzIISdt+LpAVaSe2SDIVtcbEYMbndkjMXv71
+	bOHRCAUkbbF6sbDQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+Cc: Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>, Tejun Heo <tj@kernel.org>,
+	David Vernet <dvernet@meta.com>, Barret Rhoden <brho@google.com>,
+	Josh Don <joshdon@google.com>, Crystal Wood <crwood@redhat.com>,
+	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+	Juri Lelli <juri.lelli@redhat.com>, lclaudio00@gmail.com,
+	Ben Segall <bsegall@google.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ingo Molnar <mingo@redhat.com>, Mel Gorman <mgorman@suse.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v2] sched: do not call __put_task_struct() on rt if
+ pi_blocked_on is set
+Message-ID: <20250410064844.wm4KbunL@linutronix.de>
+References: <Z_bDWN2pAnijPAMR@uudg.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2099006.1744267704.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 10 Apr 2025 07:48:25 +0100
-Message-ID: <2099007.1744267705@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Z_bDWN2pAnijPAMR@uudg.org>
 
-Jakub Kicinski <kuba@kernel.org> wrote:
++ sched folks.
 
-> > +	__releases(&rx->sk.sk_lock.slock)
-> =
+On 2025-04-09 15:58:32 [-0300], Luis Claudio R. Goncalves wrote:
+> With PREEMPT_RT enabled, some of the calls to put_task_struct() coming
+> from rt_mutex_adjust_prio_chain() could happen in preemptible context and
+> with a mutex enqueued. That could lead to this sequence:
+> 
+> 	rt_mutex_adjust_prio_chain()
+> 	  put_task_struct()
+> 	    __put_task_struct()
+> 	      sched_ext_free()
+> 	        spin_lock_irqsave()
+> 	          rtlock_lock() --->  TRIGGERS
+> 	                              lockdep_assert(!current->pi_blocked_on);
+> 
+> Adjust the check in put_task_struct() to also consider pi_blocked_on before
+> calling __put_task_struct(), resorting to the deferred call in case it is
+> set.
+> 
+> v2: Rostedt suggested removing the #ifdef from put_task_struct() and
+>     creating tsk_is_pi_blocked_on() in sched.h to make the change cleaner.
 
-> sparse still complains (or maybe in fact it complains because it sees
-> the annotation?):
-> =
+I complained about this special RT case in put_task_struct() when it was
+first got introduced. Couldn't we just just unconditionally do the RCU
+put?
 
-> net/rxrpc/oob.c:173:12: warning: context imbalance in 'rxrpc_respond_to_=
-oob' - wrong count at exit
-> net/rxrpc/oob.c:223:5: warning: context imbalance in 'rxrpc_sendmsg_oob'=
- - wrong count at exit
-> =
+> Suggested-by: Crystal Wood <crwood@redhat.com>
+> Signed-off-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
+> ---
+>  include/linux/sched.h      |   12 ++++++++++++
+>  include/linux/sched/task.h |   10 +++++++---
+>  2 files changed, 19 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index 5ec93e5ba53a9..9fbfa7f55a83d 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -2148,6 +2148,18 @@ static inline bool task_is_runnable(struct task_struct *p)
+>  	return p->on_rq && !p->se.sched_delayed;
+>  }
+>  
+> +#ifdef CONFIG_RT_MUTEXES
+> +static inline bool tsk_is_pi_blocked_on(struct task_struct *tsk)
+> +{
+> +	return tsk->pi_blocked_on != NULL;
+> +}
+> +#else
+> +static inline bool tsk_is_pi_blocked_on(strut task_struct *tsk)
+> +{
+> +	return false;
+> +}
+> +#endif
+> +
+>  extern bool sched_task_on_rq(struct task_struct *p);
+>  extern unsigned long get_wchan(struct task_struct *p);
+>  extern struct task_struct *cpu_curr_snapshot(int cpu);
+> diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
+> index 0f2aeb37bbb04..1f17a3dd51774 100644
+> --- a/include/linux/sched/task.h
+> +++ b/include/linux/sched/task.h
+> @@ -135,9 +135,11 @@ static inline void put_task_struct(struct task_struct *t)
+>  
+>  	/*
+>  	 * In !RT, it is always safe to call __put_task_struct().
+> -	 * Under RT, we can only call it in preemptible context.
+> +	 * Under RT, we can only call it in preemptible context,
+> +	 * when not blocked on a PI chain.
+>  	 */
+> -	if (!IS_ENABLED(CONFIG_PREEMPT_RT) || preemptible()) {
+> +	if (!IS_ENABLED(CONFIG_PREEMPT_RT) ||
+> +	    (preemptible() || !tsk_is_pi_blocked_on(current))) {
+>  		static DEFINE_WAIT_OVERRIDE_MAP(put_task_map, LD_WAIT_SLEEP);
+>  
+>  		lock_map_acquire_try(&put_task_map);
+> @@ -149,7 +151,9 @@ static inline void put_task_struct(struct task_struct *t)
+>  	/*
+>  	 * under PREEMPT_RT, we can't call put_task_struct
+>  	 * in atomic context because it will indirectly
+> -	 * acquire sleeping locks.
+> +	 * acquire sleeping locks. The same is true if the
+> +	 * current process has a mutex enqueued (blocked on
+> +	 * a PI chain).
+>  	 *
+>  	 * call_rcu() will schedule delayed_put_task_struct_rcu()
+>  	 * to be called in process context.
 
-> Not a deal breaker, just wanted to mention it.
-
-Yeah.  I'm pretty sure I have the releases in all the right place.  The
-problem might be that *release_sock()* lacks the annotation.
-
-David
-
+Sebastian
