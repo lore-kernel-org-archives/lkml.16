@@ -1,119 +1,195 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05790284B5D
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 12:34:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D0131EA7EC
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 12:34:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744288462; cv=none; b=kM278XHZPW2YcoTNyIn7QXvG+ZAee/bdg51qK4W+NrrlI7Ofeb9S7Boe7UDDvA62cDZP8T98iQZcmgIbL0q/x28CVj60YV9c381jZ5OMI2XvqSz0J8O25FM7DRP3bmpgJw29gOUVwwY+uENB1vIRjdtGAaVUUTeY8qIYhGrPrVQ=
+	t=1744288495; cv=none; b=PPpzer5b9sAA5GzgpfinEJdpITXVc+C0Ckdnm/BMpCntyOta1+moNe85RsUGtrXlP2z/+b1JrlIovlXWC3YgYPkoX6EOrp2cuganPsMLN11bt3iKEckfl1onBXHDukv2ljSC39Zkzq6Qlp4gXzSCt7RGxbcQ4FESGxZjMYDLWXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744288462; c=relaxed/simple;
-	bh=8mfRqLvLgRotWJCcT9Cz8kGYBSu9kBsAWuuTYbB644I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ojv02Tdi+1UA1prA8apSasHVWNchrM8H2N44IPrnJmnfr22cEdjFPUtjf8+lss1B6ZrM2rjl8XmPsgTehrsFdNae937BE7tWKHwbY+qM7Bm/Wg+MrXsi4NAgm/LX/Hajl4uEQFPguLvqZUy1U/KUNO8D0Im6n93sRJ6cRZKM3e4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iMJtyGTT; arc=none smtp.client-ip=209.85.128.47
+	s=arc-20240116; t=1744288495; c=relaxed/simple;
+	bh=TqoqYW7a4gp6/76bsxLTxXOnix/eiOkPYqrN2pTRfCA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sny6YHeOrlDL3mjoz+ERZXBET4sOcj5c+f8oT4MQqrLLwkXbzOPgDeeA/A4QKwCmqYuTS0fNhSorS+1ZrdQOBj95f4yRQ0/j9MOJdvWFwaWem7rYkVFiYQdlBSXzG2AMEEOQhoJNb9cKHodMRFFlrd48c5lhZg1j3uv4NL+H6Vw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=l2/Kcs5N; arc=none smtp.client-ip=209.85.128.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iMJtyGTT"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43690d4605dso6202105e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 05:34:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l2/Kcs5N"
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-6ff0c9d1761so7547237b3.1
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 05:34:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744288459; x=1744893259; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0pxhhLeX4Bn01k1sSXCLRWiTuTUq5Ae/HRBR2bBu/SE=;
-        b=iMJtyGTTFY5v4KmE57YPKIny7XXwdTPFdUY/zErFLK3+RdrHfmUZgLlYDwdc7gfLyc
-         wtvmjR6K29aQIGirys8xQDqrckfXAKLryo4OEE86oha0Zaw73GVOHjxFBkxZVJvnVp3W
-         bJKGzXr+mWMvfOg2jdezHOQXrWWR2bLQ56FeeOR+9UmE00ftQ5uT83+trjnFlMb24lH8
-         ltv0ww2cg2HzIpTSd8bxxF6PEtkl1xJus65+i+T+TJvgbFwwGAEeqJjEDw3JPqI5N8Yw
-         RcF7/06xfdIjml8k0QwNx/GMSfA6QnQte+LhtCBd+hXhWW57rXneVyrb1il0YnuVsDvo
-         vi/g==
+        d=linaro.org; s=google; t=1744288492; x=1744893292; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=rqOD9OxXJmvSDblyShGiywTB8bqKw04tVNsGe+lxyzo=;
+        b=l2/Kcs5NS1BVHCjFe5dJa8p+HlIAExNJWwoI9rjqzkS0MS+jmqbEhMLRUuqd5RxJkz
+         u11v2ariigV0L1O0vaZ/IpD+POHqUJD2MQ8a9RWNBE7FYZKK11hjeTjZ1DVWxOxOFVIh
+         ZX0p6ZkYS1DlL0payF6SWub4T/qR7VnreZV3LJxXT/NMp4T5Z6zh2F3CLGuvCfb3i7vg
+         per/dhbsHxcBXiWsQtnCsK63MWj0JqVd1cRhjchPM7hmiST3wpGtCLmPuElWlSpYWVqZ
+         LLmDKdVPd+L+tY22Dtfi2R4MwsYhqCeOKuJ5clxE7zBY7X/t620sBhWmjXLLNTQDHHq3
+         ARrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744288459; x=1744893259;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0pxhhLeX4Bn01k1sSXCLRWiTuTUq5Ae/HRBR2bBu/SE=;
-        b=SG1jFd/wzFGr8TMFLAmK1GS3f7lZR0zRH66ZH5YgEce2c3pm7wuRQHjLg27u0aUCaL
-         dcguhpatYRNBuP0DGPXbge071WqRmA1qp353lQrG6bIPVREUICgNoIrCjdfoCqvj+Ho1
-         RaUkHivSv/ALcHF4itsLUxjXIDN63L+rmNlDoNSJISFxiOYtrlkXGOpgT1Zv+Mhsw6Hh
-         y2XidfvXoPZX7fO8xinErlszyggYnGNfYxbTAgh/gl8YipxMXa0Tynqr0OCPGDGMkgg5
-         RDoNUa/16SZje09BWpdjHb8rh/RMWXR4dP6qhJBqFPdrCW++lIwF0P3B2D6NJ7zGJgkB
-         L2wQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWJevxhGdggyz+/4wHYwOHekJRII4V9pB34sq7uEyQFng1pZXQi1nghgDPUhQ6IiJf9jBkSsjaIO14a3oQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsPlGGmO7N/Yd1BdMF4bZaX0iQyCsEOkkgXD3uxpdMIStSisEc
-	JvlsKzsAEdGzc4k9f30nLNXyVLGIIqyJPtuMFaZdRdKB78+2tAvMP+nM1/9Sy+0=
-X-Gm-Gg: ASbGncu6KqGml0qq4FMXQh2FetnZsonsjhjKJKTC9XJunQhLmHsPUdVOmSsjJyHYUSB
-	plWCaQgPoKqt1tbd8eR66DDx9Q+JchSBwYK9pB1xJirSJ3Cr7I4CJRXboGsmicv1ic2IaJ8OUOM
-	B4QNS5SwmoCRuzQtMrKEJjqTzojMLwItsfjh2DzH2d8eist1HFih+YTT93wYxZYOaSUEPVCuMGW
-	sMqXuanYohHz5zJ8IjI5DExyszhDS6s7ZmnJCrVIigZFCExOECiNSlOmZEK1pBNIK/cYRbwN+/F
-	pxHpXE/RFVhL/jcYL3K9SmlbXhN2hFxm3gKsq6L+aJ5z6QXL66RgNw3QPFtvlpg3DFKD9awyiFy
-	OjsFgQGGUTgWO/A==
-X-Google-Smtp-Source: AGHT+IGHSO33i5/vntPYjryZpYO+a8zSBqy4zSbBHLFgNSqa/DrJndjZWx8aL37V3WTtCc01VQ0umQ==
-X-Received: by 2002:a05:600c:4fd2:b0:43d:7588:6699 with SMTP id 5b1f17b1804b1-43f2d7ae780mr26011325e9.7.1744288458981;
-        Thu, 10 Apr 2025 05:34:18 -0700 (PDT)
-Received: from [192.168.69.238] (88-187-86-199.subs.proxad.net. [88.187.86.199])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d893773a0sm4659997f8f.25.2025.04.10.05.34.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 05:34:18 -0700 (PDT)
-Message-ID: <8dcb5c6d-be4f-4891-a999-137d53edfc05@linaro.org>
-Date: Thu, 10 Apr 2025 14:34:17 +0200
+        d=1e100.net; s=20230601; t=1744288492; x=1744893292;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rqOD9OxXJmvSDblyShGiywTB8bqKw04tVNsGe+lxyzo=;
+        b=ZE0nJyPhGCL6doIVFf4VztpL4ontXNxrGwlHCr/AE4XoyvhCx0WWclJYhrro7qRquy
+         24kwatofVS/w9xd7jt3LhQ6iZirAwkhCfZbmSfyc3YXToMhUOSx8rEGDBOYwdzJnIiUR
+         nYe+M7kDlnGuutEhuQBdV1j1XYRQ3a0HJ1QDqjwXjPhttC6rqTW0IhJRCHzEa39gKWZd
+         0E44coTlwaq74/VoX9SAtgbpFuPcZaLX8HH9H/wSGig5V5AtRq/mntJOkLYggu8dFqGN
+         qncyytbFf42q3RjHZdTBYF6lo+bS5LtFajaQMDpILTAlWpCbqqhy3GDqTWbjfSg9MluY
+         CmCg==
+X-Forwarded-Encrypted: i=1; AJvYcCXcFd8tHd16K2G1au8X1vAK7vrj5lasZxbduZOTitLVfMvyfNceXEjwTHZl8dD8Hiam1UuXwkY8tFJxGUA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQD7YKgaaWDdC6TZLJXBoWg8Z9GaaIAY4nRe1ldcXAhwRreCIy
+	o1X8hVFbl9MmPwkd00Fo2r2tuFyz1gergApfx6Vrxzx8teB2FnuNwUOrSdBgh9UdLeAbEDsrra6
+	uyoTrfxKlC5xrZiFRQU0oTPMv6bJLwOMgf+lhwg==
+X-Gm-Gg: ASbGnctlWcGdZM9V+7OTJ8UAat/zvZRt6+yqyK3Hjv/aS1TmpvIki2Rgy5ufthZTIC+
+	UnWgzg4+i2r89+0Wr6yqXmfKvAXylON9BXBFTrGxScD/eAvG9YOZqgI3NKRgxUqRrjPmpiIu3Ya
+	UB3j1zO3U7wwMxpyjT0+oUmqu5x2XSnm7g6g==
+X-Google-Smtp-Source: AGHT+IE96uvkSKWw6YPtFVcby7pWdKNYA2UEmsGaoJPHRvl5S/OcYn8T2l4wlOx/RbleIvNqeqZYcO8OmfDh5/zO70A=
+X-Received: by 2002:a05:690c:3582:b0:702:4eb0:4a60 with SMTP id
+ 00721157ae682-7054c7d0e89mr28286317b3.33.1744288492295; Thu, 10 Apr 2025
+ 05:34:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/6] MIPS: dec: Create reset.h
-To: WangYuli <wangyuli@uniontech.com>
-Cc: guanwentao@uniontech.com, linux-kernel@vger.kernel.org,
- linux-mips@vger.kernel.org, macro@orcam.me.uk, niecheng1@uniontech.com,
- tsbogend@alpha.franken.de, zhanjun@uniontech.com
-References: <11740B01E659CAFF+20250407073158.493183-1-wangyuli@uniontech.com>
- <8E88DD5074AF3B33+20250407073622.495364-3-wangyuli@uniontech.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@linaro.org>
-In-Reply-To: <8E88DD5074AF3B33+20250407073622.495364-3-wangyuli@uniontech.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <CGME20250409093031eucas1p2222e9dc4d354e9b66b7183922c0fb3cf@eucas1p2.samsung.com>
+ <20250409093025.2917087-1-m.wilczynski@samsung.com> <20250409093025.2917087-2-m.wilczynski@samsung.com>
+ <CAPDyKFpoSwKAmiWyvNt1fVyu6=NU1oVOmQLVuzX_bG=-5KrM2Q@mail.gmail.com> <75f97336-6cb5-47fc-ac88-5fe7842e2838@samsung.com>
+In-Reply-To: <75f97336-6cb5-47fc-ac88-5fe7842e2838@samsung.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Thu, 10 Apr 2025 14:34:14 +0200
+X-Gm-Features: ATxdqUFgmaVfbL47_mXJup4YjWo6ZMMfedtXYPTwprySI8RzBXkwm9C8hCD80Tk
+Message-ID: <CAPDyKFq=BF5f2i_Sr1cmVqtVAMgr=0FqsksL7RHZLKn++y0uwg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] dt-bindings: firmware: thead,th1520: Add clocks
+ and resets
+To: Michal Wilczynski <m.wilczynski@samsung.com>
+Cc: Stephen Boyd <sboyd@kernel.org>, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, drew@pdp7.com, guoren@kernel.org, wefu@redhat.com, 
+	p.zabel@pengutronix.de, m.szyprowski@samsung.com, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-pm@vger.kernel.org, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 7/4/25 09:36, WangYuli wrote:
-> Declare externally used functions in reset.c to resolve compilation
-> warnings.
-> 
-> Fix follow errors with gcc-14 when -Werror:
-> 
-> arch/mips/dec/reset.c:22:17: error: no previous prototype for ‘dec_machine_restart’ [-Werror=missing-prototypes]
->     22 | void __noreturn dec_machine_restart(char *command)
->        |                 ^~~~~~~~~~~~~~~~~~~
-> arch/mips/dec/reset.c:27:17: error: no previous prototype for ‘dec_machine_halt’ [-Werror=missing-prototypes]
->     27 | void __noreturn dec_machine_halt(void)
->        |                 ^~~~~~~~~~~~~~~~
-> arch/mips/dec/reset.c:32:17: error: no previous prototype for ‘dec_machine_power_off’ [-Werror=missing-prototypes]
->     32 | void __noreturn dec_machine_power_off(void)
->        |                 ^~~~~~~~~~~~~~~~~~~~~
-> arch/mips/dec/reset.c:38:13: error: no previous prototype for ‘dec_intr_halt’ [-Werror=missing-prototypes]
->     38 | irqreturn_t dec_intr_halt(int irq, void *dev_id)
->        |             ^~~~~~~~~~~~~
-> cc1: all warnings being treated as errors
-> make[7]: *** [scripts/Makefile.build:207: arch/mips/dec/reset.o] Error 1
-> make[7]: *** Waiting for unfinished jobs....
-> 
-> In passing, also correct the include file ordering in setup.c as it
-> doesn't merit a separate commit.
-> 
-> Link: https://lore.kernel.org/all/Z8A0JeFYfBxXOFCD@alpha.franken.de/
-> Signed-off-by: WangYuli <wangyuli@uniontech.com>
-> ---
->   arch/mips/dec/prom/init.c         |  3 +--
->   arch/mips/dec/reset.c             |  2 ++
->   arch/mips/dec/setup.c             |  9 ++-------
->   arch/mips/include/asm/dec/reset.h | 20 ++++++++++++++++++++
->   4 files changed, 25 insertions(+), 9 deletions(-)
->   create mode 100644 arch/mips/include/asm/dec/reset.h
+On Thu, 10 Apr 2025 at 12:42, Michal Wilczynski
+<m.wilczynski@samsung.com> wrote:
+>
+>
+>
+> On 4/9/25 12:41, Ulf Hansson wrote:
+> > On Wed, 9 Apr 2025 at 11:30, Michal Wilczynski <m.wilczynski@samsung.com> wrote:
+> >>
+> >> Prepare for handling GPU clock and reset sequencing through a generic
+> >> power domain by adding clock and reset properties to the TH1520 AON
+> >> firmware bindings.
+> >>
+> >> The T-HEAD TH1520 GPU requires coordinated management of two clocks
+> >> (core and sys) and two resets (GPU and GPU CLKGEN). Due to SoC-specific
+> >> requirements, the CLKGEN reset must be carefully managed alongside clock
+> >> enables to ensure proper GPU operation, as discussed on the mailing list
+> >> [1].
+> >>
+> >> Since the coordination is now handled through a power domain, only the
+> >> programmable clocks (core and sys) are exposed. The GPU MEM clock is
+> >> ignored, as it is not controllable on the TH1520 SoC.
+> >>
+> >> This approach follows upstream maintainers' recommendations [1] to
+> >> avoid SoC-specific details leaking into the GPU driver or clock/reset
+> >> frameworks directly.
+> >>
+> >> [1] - https://lore.kernel.org/all/38d9650fc11a674c8b689d6bab937acf@kernel.org/
+> >>
+> >> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+> >> ---
+> >>  .../bindings/firmware/thead,th1520-aon.yaml   | 28 +++++++++++++++++++
+> >>  1 file changed, 28 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml b/Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml
+> >> index bbc183200400..8075874bcd6b 100644
+> >> --- a/Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml
+> >> +++ b/Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml
+> >> @@ -25,6 +25,16 @@ properties:
+> >>    compatible:
+> >>      const: thead,th1520-aon
+> >>
+> >> +  clocks:
+> >> +    items:
+> >> +      - description: GPU core clock
+> >> +      - description: GPU sys clock
+> >> +
+> >> +  clock-names:
+> >> +    items:
+> >> +      - const: gpu-core
+> >> +      - const: gpu-sys
+> >
+> > These clocks don't look like they belong to the power-domain node, but
+> > rather the GPU's node.
+> >
+> > Or is this in fact the correct description of the HW?
+>
+> Hi,
+> Thank you for your input. Based on my understanding of Stephen
+> presentation the power-domain layer could act as a middleware layer
+> (like ACPI) that could own resources. That being said it was also stated
+> that the proposed approach should work with already existing device
+> trees, which implies that the DT should remain as is.
+>
+> So I could get the resources using attach_dev and detach_dev, but there
+> are two problems with that:
+>
+> 1) The GPU driver will try to manage clocks/reset on it's own using those functions
+>    if I provide non-stub working clocks and reset:
+> static const struct dev_pm_ops pvr_pm_ops = {
+>         RUNTIME_PM_OPS(pvr_power_device_suspend, pvr_power_device_resume,
+>                        pvr_power_device_idle)
+> };
+>
+> So obviously I should invent a way to tell the drm/imagination driver to
+> NOT manage. One obvious way to do this is to introduce new flag to genpd.flags
+> called let's say GENPD_FLAG_EXCLUSIVE_CONTROL, which would tell the consumer
+> driver that the power management is being done only done from the PM
+> middleware driver.
 
-Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
+Something along those lines. Although, I think the below twist to the
+approach would be better.
 
+Some flag (maybe just a bool) should be set dynamically when the
+->attach_dev() callback is invoked and it should be a per device flag,
+not a per genpd flag. In this way, the genpd provider driver can make
+runtime decisions, perhaps even based on some DT compatible string for
+the device being attached to it, whether it should manage PM resources
+or not.
+
+Additionally, we need a new genpd helper function that allows the
+consumer driver to check if the PM resources are managed from the PM
+domain level (genpd) or not.
+
+If it sounds complicated, just let me know I can try to help put the
+pieces together.
+
+>
+> 2) The GPU node doesn't want to own the gpu-clkgen reset. In fact nobody
+>    seems to want to own it, even though theoretically it should be owned by
+>    the clk_vo as this would describe the hardware best (it's resetting the
+>    GPU clocks). But then it would be trickier to get it from the PM driver,
+>    making the code more complex and harder to understand. Nonetheless I
+>    think it would work.
+
+I guess it doesn't really matter to me. Perhaps model it as a reset
+and make the GPU be the consumer of it?
+
+>
+> If this sounds good to you I will work on the code.
+
+Sure, let's give this a try - I am here to help review and guide the best I can.
+
+[...]
+
+Kind regards
+Uffe
