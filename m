@@ -1,145 +1,89 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6D71E9B00;
-	Thu, 10 Apr 2025 02:20:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA53F1E32CD;
+	Thu, 10 Apr 2025 02:20:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744251612; cv=none; b=S6sgojmT26/z8ct04htxm+Aku+AMHywLdfb7SqM1Zm5+UbW95K67RGuH9YEKI4bEPNo8ut9w+8VVc11QdqaI6zcAvd0E0+J6sl8QT8h7RLpPb/loDD7gRTaGfUYG7fNEqxe2g7gly9uRwpvx2nudY8C3Fg0DAIhQ+6YIOu+hGCE=
+	t=1744251611; cv=none; b=nElu2ViK3A0WEcBy4HG9EZcE2rvXfg1V1gNlj8nbQhN+WDrAC725Q8CIElmIDf8u6uqgbcH2kXCYG9hCGmce0jipwcdGNcnHbBFxYEONQMyb5gwsFnja8e9gD6PcYn8KzmOdj2aRkmKTQ+QVya4PH7EIBq+jYJ/ws8cDfsElHMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744251612; c=relaxed/simple;
-	bh=I7DkFdfuScO8i9b3F0kRKooZB7ODmbojxm/2UgIFF/Q=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZE1fGDPFWoZWFRz2Yl0WTFwuuEbEqnbxgFxN8gvrETdB3JzmQDw41An1csvBpSL7JX62KVOabCnoftBKIRf5FWo9+6Kh5jly21+VMFGnn3Z/IXKC9h1C1gn8dgoxr8u78RXLMECaODmwYxlJpDrEy5Rp8lyQegcipwhGAmE1/A8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4ZY3QQ4qYKzQwQS;
-	Thu, 10 Apr 2025 10:18:38 +0800 (CST)
-Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id 558561800EE;
-	Thu, 10 Apr 2025 10:20:02 +0800 (CST)
-Received: from localhost.localdomain (10.90.30.45) by
- kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 10 Apr 2025 10:20:01 +0800
-From: Jijie Shao <shaojijie@huawei.com>
-To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <andrew+netdev@lunn.ch>, <horms@kernel.org>
-CC: <shenjian15@huawei.com>, <wangpeiyang1@huawei.com>,
-	<liuyonglong@huawei.com>, <chenhao418@huawei.com>, <sudongming1@huawei.com>,
-	<xujunsheng@huawei.com>, <shiyongbang@huawei.com>, <libaihan@huawei.com>,
-	<jonathan.cameron@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
-	<salil.mehta@huawei.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <shaojijie@huawei.com>
-Subject: [PATCH net v3 7/7] net: hibmcge: fix multiple phy_stop() issue
-Date: Thu, 10 Apr 2025 10:13:27 +0800
-Message-ID: <20250410021327.590362-8-shaojijie@huawei.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20250410021327.590362-1-shaojijie@huawei.com>
-References: <20250410021327.590362-1-shaojijie@huawei.com>
+	s=arc-20240116; t=1744251611; c=relaxed/simple;
+	bh=bUkqiLfAP/k+IFyaQBzohFul3Uad4pjwsVFoXvMIUm4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=AxKiRsCCIA0fna3aPezJ5p2GNp0Ju4RdlBd9kVPF8m6VeUeFyiXx8bePcUiGEnXNgeua1KcHfFovOgH/j8+pRcgFHx+tErLWqdL7LxhDyfl6/0hGfi7E5YstHMmmQO5C/p1Jk8WXhftwSIoADp2mG90su8RPirUyAO/UwrtvIaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=QE00JUtz; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QE00JUtz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1744251604;
+	bh=EIGh7xVw9mJe7tfwQcjcshSTNY9R4WoIrtEq0zhtpyw=;
+	h=Date:From:To:Cc:Subject:From;
+	b=QE00JUtzwc7pCrVRYXnz3qL0SUGpvba8+G/fLI1FGVzOP6B4VJM26IYfbcrFnFlP3
+	 FUku062M/dtXAWCeIEpnaTz+UQspGmgei4HxYLUwgvOrgzvon1q3CbtNuWWz02ykET
+	 gouKvKt1dZ343BQbZuchZmx6I8GEICHkovOy2iIXIAo+6NJpOiaqzYhOhcRzmQfIE3
+	 qU2qK4jx1IvaUIpDiiFXvVLPaE8ZLnsYI/PVFerMTErbccvb64742GKyx8+kYzVTTA
+	 RCpOoZs65iPUF2aoMCw8r3FHM0mCs/hSaHlejPLst7Etm57JITtixzLVPB2egJTdly
+	 fXB6YSH+a6LaQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZY3S404f4z4x2c;
+	Thu, 10 Apr 2025 12:20:03 +1000 (AEST)
+Date: Thu, 10 Apr 2025 12:20:03 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Alasdair G Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>
+Cc: LongPing Wei <weilongping@oppo.com>, Mikulas Patocka
+ <mpatocka@redhat.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the device-mapper tree
+Message-ID: <20250410122003.5434159b@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemk100013.china.huawei.com (7.202.194.61)
+Content-Type: multipart/signed; boundary="Sig_/551n4GLkAtAk0HXFkm7t2tx";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-After detecting the np_link_fail exception,
-the driver attempts to fix the exception by
-using phy_stop() and phy_start() in the scheduled task.
+--Sig_/551n4GLkAtAk0HXFkm7t2tx
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-However, hbg_fix_np_link_fail() and .ndo_stop()
-may be concurrently executed. As a result,
-phy_stop() is executed twice, and the following Calltrace occurs:
+Hi all,
 
- hibmcge 0000:84:00.2 enp132s0f2: Link is Down
- hibmcge 0000:84:00.2: failed to link between MAC and PHY, try to fix...
- ------------[ cut here ]------------
- called from state HALTED
- WARNING: CPU: 71 PID: 23391 at drivers/net/phy/phy.c:1503 phy_stop...
- ...
- pc : phy_stop+0x138/0x180
- lr : phy_stop+0x138/0x180
- sp : ffff8000c76bbd40
- x29: ffff8000c76bbd40 x28: 0000000000000000 x27: 0000000000000000
- x26: ffff2020047358c0 x25: ffff202004735940 x24: ffff20200000e405
- x23: ffff2020060e5178 x22: ffff2020060e4000 x21: ffff2020060e49c0
- x20: ffff2020060e5170 x19: ffff20202538e000 x18: 0000000000000020
- x17: 0000000000000000 x16: ffffcede02e28f40 x15: ffffffffffffffff
- x14: 0000000000000000 x13: 205d313933333254 x12: 5b5d393430303233
- x11: ffffcede04555958 x10: ffffcede04495918 x9 : ffffcede0274fee0
- x8 : 00000000000bffe8 x7 : c0000000ffff7fff x6 : 0000000000000001
- x5 : 00000000002bffa8 x4 : 0000000000000000 x3 : 0000000000000000
- x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff20202e429480
- Call trace:
-  phy_stop+0x138/0x180
-  hbg_fix_np_link_fail+0x4c/0x90 [hibmcge]
-  hbg_service_task+0xfc/0x148 [hibmcge]
-  process_one_work+0x180/0x398
-  worker_thread+0x210/0x328
-  kthread+0xe0/0xf0
-  ret_from_fork+0x10/0x20
- ---[ end trace 0000000000000000 ]---
+After merging the device-mapper tree, today's linux-next build (powerpc
+ppc64_defconfig) failed like this:
 
-This patch adds the rtnl_lock to hbg_fix_np_link_fail()
-to ensure that other operations are not performed concurrently.
-In addition, np_link_fail exception can be fixed
-only when the PHY is link.
+ERROR: modpost: "__blk_flush_plug" [drivers/md/dm-bufio.ko] undefined!
 
-Fixes: e0306637e85d ("net: hibmcge: Add support for mac link exception handling feature")
-Signed-off-by: Jijie Shao <shaojijie@huawei.com>
-Reviewed-by: Simon Horman <horms@kernel.org>
----
- drivers/net/ethernet/hisilicon/hibmcge/hbg_mdio.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+Caused by commit
 
-diff --git a/drivers/net/ethernet/hisilicon/hibmcge/hbg_mdio.c b/drivers/net/ethernet/hisilicon/hibmcge/hbg_mdio.c
-index f29a937ad087..42b0083c9193 100644
---- a/drivers/net/ethernet/hisilicon/hibmcge/hbg_mdio.c
-+++ b/drivers/net/ethernet/hisilicon/hibmcge/hbg_mdio.c
-@@ -2,6 +2,7 @@
- // Copyright (c) 2024 Hisilicon Limited.
- 
- #include <linux/phy.h>
-+#include <linux/rtnetlink.h>
- #include "hbg_common.h"
- #include "hbg_hw.h"
- #include "hbg_mdio.h"
-@@ -133,12 +134,17 @@ void hbg_fix_np_link_fail(struct hbg_priv *priv)
- {
- 	struct device *dev = &priv->pdev->dev;
- 
-+	rtnl_lock();
-+
- 	if (priv->stats.np_link_fail_cnt >= HBG_NP_LINK_FAIL_RETRY_TIMES) {
- 		dev_err(dev, "failed to fix the MAC link status\n");
- 		priv->stats.np_link_fail_cnt = 0;
--		return;
-+		goto unlock;
- 	}
- 
-+	if (!priv->mac.phydev->link)
-+		goto unlock;
-+
- 	priv->stats.np_link_fail_cnt++;
- 	dev_err(dev, "failed to link between MAC and PHY, try to fix...\n");
- 
-@@ -147,6 +153,9 @@ void hbg_fix_np_link_fail(struct hbg_priv *priv)
- 	 */
- 	hbg_phy_stop(priv);
- 	hbg_phy_start(priv);
-+
-+unlock:
-+	rtnl_unlock();
- }
- 
- static void hbg_phy_adjust_link(struct net_device *netdev)
--- 
-2.33.0
+  713ff5c782f5 ("dm-bufio: improve the performance of __dm_bufio_prefetch")
 
+I have used the device-mapper tree from next-20250409 for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/551n4GLkAtAk0HXFkm7t2tx
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmf3KtMACgkQAVBC80lX
+0Gz8kAgAmXlyLAHb1KrPCiDS46XMuZGwYuYnZaLoFLxJWcroDDEANRP6LKvKDYmp
+gBS6ru/ATiz+CjidNpUG3Gv8ikCC8am3X58QSW+sw+x5Eub/ssjC+iYzIVNtrqvc
+VYfasmv8MvI7hy55n6MAD78aotli2rcpUF/BivXlaWKb92fmQV87owoVdiJO0O4o
+rW6zbpoG6UX7R+FiYqnOVHsU0K6GF/1bVqfLPoOsf+mAIDZNQBReU2vgQGagtgKE
+OuOJya+Oofqg60omWdXe90HBvGmhp4u4L0GwOdonmxxSzQ8YrCiWH7MCo2oYiS4u
+hclG5AtE4NW2aHn25Y2vaI+P/P6geA==
+=8YGT
+-----END PGP SIGNATURE-----
+
+--Sig_/551n4GLkAtAk0HXFkm7t2tx--
