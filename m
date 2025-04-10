@@ -1,121 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F6B020B1F9;
-	Thu, 10 Apr 2025 07:19:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B89BD207666;
+	Thu, 10 Apr 2025 07:19:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744269567; cv=none; b=Vs9K28SgkRJhQ3qNf0vKzHdwZ9o2/Fz1a1DWiDYo+MEXl0gJuziOiS7e11ArqF3antjq9kEbe5PtgTKncTgcABeRo00k6Jh/P+ZwcPwIa98+2AgjpjGQcpBFALqY6KHRk0G5sPpYSF8s2T4TyPINuFKDtsoP3w34YupIIX0O/0s=
+	t=1744269595; cv=none; b=tWK26Qy93MhSlOuheKoRZIf2uufwzRTeF43QvZs1jUy+a+A7FaqxWQI/VCI9x1jzoBIIg0/IYLK9xoj8FSaeZyqLN8bn7rKcUlZPF0pBz08caAtgu//sexGDYOGxj8Cl0ZpZzqjcME5AIEdDqX5Ckpes8MHOgjJz+KTrHLqq0cw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744269567; c=relaxed/simple;
-	bh=rxXXSqIXZBNHJqmd1FTQtUGE3vJtbMGUdcrgc/5WTk4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sfK82DhG2eltDoqYBNz0TDdU30+Rtgp+fSYrlpuJPSpWd7hgX7TF6H4KtNutmnnlI91dpNIAGbYUjYMV9hh8H6Pu9047Cdu7LedtMz0lRdThrTR/EjosUWUg1sXUH+ErANLvngrbhuuVja1ayKkPU5zZTIpypoDyXXSoFYkm5oY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nFy0I/VY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744269595; c=relaxed/simple;
+	bh=Vsi5Z74AIFb+JWP0Mz/aLhtnYJZjhLHWZyvRjDaRQm0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ALPwd9XtGxK0o3ugfrohUYTg7la1m5133vbf1TXW3N7hf4ZRptXc8dnQi8TUAuq8mumXu2r5cdpMGbd258pHSwZ1RZTexAuL/Vd/GDcKZKfe1W8zTe43RXAmdPOQZnWiQiP+enEcZbaE3jXObnhwBj3bClsf8hiGtww6jBqskos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=X9XqGRSE; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nFy0I/VY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 343D2C4CEDD;
-	Thu, 10 Apr 2025 07:19:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744269567;
-	bh=rxXXSqIXZBNHJqmd1FTQtUGE3vJtbMGUdcrgc/5WTk4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=nFy0I/VYUAx3DHquq6OWyhRyPFgZp8Iua8C8ZsF+Cpxm1tNxA7E2v1kvk3O/zXqY6
-	 zcyjSmOC4H707LDj9n4cgI/xVxR04JZ0Ut0oHvImRGLWPM1D2dhBj+vm5O092iOYjr
-	 LOFegqbv9iwRBD1M+FB2bnwsAaR7bw9rO7K5Qo3634Y3bd+XryD+rWJwiET/AxHh49
-	 QfexVaRsCDeH4Nx0f29nm/O81UC0LSoMjuu9Lp1uOHctlnx86Hr5dsGblfNrnjz31k
-	 c7xHnunsTj8mtVbYHd8Ap2qvR0iJLZYcPJ992AaKVx8NixNYpZV3N0GsMEArXBN/zb
-	 noSPbbJfwbidA==
-Message-ID: <eecfb843-e9cd-4d07-bb72-15cf84a25706@kernel.org>
-Date: Thu, 10 Apr 2025 09:19:21 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="X9XqGRSE"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53A75Jiq028846;
+	Thu, 10 Apr 2025 07:19:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	WWO8/7DLtOZWKZPlhQHS2sTXYNW0wRFLGR9UU5I0mnA=; b=X9XqGRSEaivaiSti
+	pZoRG30PUm2rSUWKGV+ZkrfgyGOxh7631cfDZYGpRMCydG6QlFKTxxN3KxYohzcj
+	zzxDDuowUQybWhzuMmgXDqUM5VGxFQ1nxv9QCCIZKnhcXbyWVA4Y0Gtp+IGfKvJl
+	gu8+DZcj8tUosTceL79j4RyZjxFbo2NthRWZZKGFDA0Wl0aSw/EtlPyOt56ll3hX
+	0VmSbqmGfh9tRS7LqvRgQvS5Zcu6wclFez0Z4qzY5DDpRGMNGCluJrSOmaWSOVb0
+	eskeyEUV5PuVIWePyb5eOSjPufx6MepcrAbA9yPewqqlzRPSxcW3/qpU6DJpbEdT
+	2RHFKQ==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twbup0e0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Apr 2025 07:19:45 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53A7JiFN002171
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Apr 2025 07:19:44 GMT
+Received: from [10.50.31.123] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 10 Apr
+ 2025 00:19:41 -0700
+Message-ID: <7dd3712b-c20e-5c62-332c-cb8c39ebed57@quicinc.com>
+Date: Thu, 10 Apr 2025 12:49:38 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 03/14] mfd: Add Microchip ZL3073x support
-To: Andy Shevchenko <andy@kernel.org>, Ivan Vecera <ivecera@redhat.com>
-Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
- Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
- Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20250409144250.206590-1-ivecera@redhat.com>
- <20250409144250.206590-4-ivecera@redhat.com>
- <Z_aVlIiT07ZDE2Kf@smile.fi.intel.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v4 4/6] media: platform: qcom/iris: rename iris_vpu3 to
+ iris_vpu3x
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <Z_aVlIiT07ZDE2Kf@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+        Vikash Garodia
+	<quic_vgarodia@quicinc.com>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Bryan
+ O'Donoghue" <bryan.odonoghue@linaro.org>
+References: <20250409-topic-sm8x50-iris-v10-v4-0-40e411594285@linaro.org>
+ <20250409-topic-sm8x50-iris-v10-v4-4-40e411594285@linaro.org>
+From: Dikshita Agarwal <quic_dikshita@quicinc.com>
+In-Reply-To: <20250409-topic-sm8x50-iris-v10-v4-4-40e411594285@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: V_On9x4TdmT7GcYofUKhvDX65sAyHQnL
+X-Proofpoint-ORIG-GUID: V_On9x4TdmT7GcYofUKhvDX65sAyHQnL
+X-Authority-Analysis: v=2.4 cv=dbeA3WXe c=1 sm=1 tr=0 ts=67f77111 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=KKAkSRfTAAAA:8 a=2ECtzDhs6wtSefyIrJgA:9
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-09_06,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ suspectscore=0 mlxlogscore=999 phishscore=0 mlxscore=0 spamscore=0
+ malwarescore=0 clxscore=1015 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504100053
 
-On 09/04/2025 17:43, Andy Shevchenko wrote:
->> +/*
->> + * Regmap range configuration
->> + *
->> + * The device uses 7-bit addressing and has 16 register pages with
->> + * range 0x00-0x7f. The register 0x7f in each page acts as page
->> + * selector where bits 0-3 contains currently selected page.
->> + */
->> +static const struct regmap_range_cfg zl3073x_regmap_ranges[] = {
->> +	{
->> +		.range_min	= 0,
-> 
-> This still has the same issue, you haven't given a chance to me to reply
-> in v1 thread. I'm not going to review this as it's not settled down yet.
-> Let's first discuss the questions you have in v1.
-> 
-I already started reviewing v2, so now we have simultaneous discussions
-in v1 and v2...
 
-Best regards,
-Krzysztof
+
+On 4/9/2025 8:08 PM, Neil Armstrong wrote:
+> The vpu33 HW is very close to vpu3, and shares most of the
+> operations, so rename file to vpu3x since we'll handle all vpu3
+> variants in it.
+> 
+> Reviewed-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+> Tested-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org> # x1e Dell
+> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> ---
+>  drivers/media/platform/qcom/iris/Makefile                      | 2 +-
+>  drivers/media/platform/qcom/iris/{iris_vpu3.c => iris_vpu3x.c} | 0
+>  2 files changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/platform/qcom/iris/Makefile b/drivers/media/platform/qcom/iris/Makefile
+> index 35390534534e93f4617c1036a05ca0921567ba1d..473aaf655448180ade917e642289677fc1277f99 100644
+> --- a/drivers/media/platform/qcom/iris/Makefile
+> +++ b/drivers/media/platform/qcom/iris/Makefile
+> @@ -20,7 +20,7 @@ qcom-iris-objs += \
+>               iris_vb2.o \
+>               iris_vdec.o \
+>               iris_vpu2.o \
+> -             iris_vpu3.o \
+> +             iris_vpu3x.o \
+>               iris_vpu_buffer.o \
+>               iris_vpu_common.o \
+>  
+> diff --git a/drivers/media/platform/qcom/iris/iris_vpu3.c b/drivers/media/platform/qcom/iris/iris_vpu3x.c
+> similarity index 100%
+> rename from drivers/media/platform/qcom/iris/iris_vpu3.c
+> rename to drivers/media/platform/qcom/iris/iris_vpu3x.c
+> 
+Reviewed-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
