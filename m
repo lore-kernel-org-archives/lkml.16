@@ -1,243 +1,176 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2047.outbound.protection.outlook.com [40.107.249.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 602D11EF37A;
-	Thu, 10 Apr 2025 15:46:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744299966; cv=none; b=k/x/5k9GNRHyRU8n+a2kUZbGi4hxGHmN+DgKo2M1ezApsvau0/+wmfVvNo+OAa1CVCnNizdsdtwqSps7UoAkIXcpyR9wOcO6oZwUXd/DFYiarIRWNxf49vpFYImEtLqD3wPwqIvFDhk542+IIEuTdbN++V9crgnikZDwXV0xwC0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744299966; c=relaxed/simple;
-	bh=mBWPzY/oLlYlxt7dU7C0mAUnfYylWWSdNqiv95dvA6c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mJLQ7Fmnj93VRibazoJVOVJDcLcHCi1k6FMcif2fhHo7BFQLXhV9jnCzbn8iNH6ifvp96RKjtaxp9VCltGrRj2U7jUWe0bBY28/bsbBHHLTMDceJYoef/d7vVIowaY3Pu/vfSPDG6MCKkbvEtqa/V9eCYCM3Kkzl9DcofjH+lns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=LkUsOMU7; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED6661EA7D4;
+	Thu, 10 Apr 2025 15:46:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.249.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744299973; cv=fail; b=KlmIimGl3/F+62zEW7A4NDePZHqabgBdPW+TOdpHuVcbDU+NoQsohe7zlRUoOMpxtYVt+FotHnnbuV9epM8/ekAeeFhvG1gMKvbXs10sT87+9AiCX30SVy+kiPZBAM/ZBADJz/CB1v196VunxwbWbnPtUF2L7dQDRfRXhwoELTw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744299973; c=relaxed/simple;
+	bh=cbjm6KefOoeYX3x0+dTHtfl/1EP9s2BLy0U4+LTn1tA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=MPQtM3NhK5nZazjrWPZoYqJ9YpFMbBU2nPT6rPNvsig1yH5L/HI19+33qbpAz6Tf7Em9cK7t+lVFdddgeQg0r/9KBUoXIhFOfFFIjT2P1+47iCeqxUDUK6dlVDKuqYDzowjHNIGSH6SpWWno31GIWt/KxnJi4V468xMtGN52Sdo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nokia-sbell.com; spf=pass smtp.mailfrom=nokia-sbell.com; dkim=pass (2048-bit key) header.d=nokia-sbell.com header.i=@nokia-sbell.com header.b=JtIZn+L+; arc=fail smtp.client-ip=40.107.249.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nokia-sbell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nokia-sbell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LkUsOMU7"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=pFkrBvG2mx6ZEqS42jE/fH2ceu93D90WMLv65S7BVO8=; b=LkUsOMU7ZWY+tIv+8a1CPZDDY8
-	cGEbYoC9abcvy9O59WWyA7P4SW1tznFe9Oac4TTqyongaPq1nsITGmh9lJhrfdVBdr2t9k6nhD4UW
-	V83vZ8EnZoIHbGQJqOS5alfOpmKCSUevQLwxsjWB0YVd8/0VOimeE5/hBwTlP+P9fhUR8mfzwk/XE
-	bdTNAvD5FnxxYZGFmTZIun7WO2dXqGlOWW695AKLt0tCsgNciYgOJyFb6SrKk/k1LTqNsaj9ybMoK
-	Ty9lJlqV+o63/YlRznMFuJ8mU8bbwx8PIXlBbccMbWlwzqzX8utZg+PbJE36u+EqMyuZA4nIvvVXh
-	s+tQAhFA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u2u6H-000000035Qr-0ciZ;
-	Thu, 10 Apr 2025 15:45:57 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id F25F03003FA; Thu, 10 Apr 2025 17:45:56 +0200 (CEST)
-Date: Thu, 10 Apr 2025 17:45:56 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: =?utf-8?B?UGF3ZcWC?= Anikiel <panikiel@google.com>
-Cc: Sami Tolvanen <samitolvanen@google.com>, Kees Cook <kees@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Nathan Chancellor <nathan@kernel.org>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: [PATCH] objtool: Detect __nocfi calls
-Message-ID: <20250410154556.GB9003@noisy.programming.kicks-ass.net>
-References: <20250410115420.366349-1-panikiel@google.com>
- <20250410123602.GZ9833@noisy.programming.kicks-ass.net>
- <20250410124526.GB9833@noisy.programming.kicks-ass.net>
- <CAM5zL5okN67bsTs6ZodcJd45zQ_BP+ruUwOkPMY97Snma0ugzQ@mail.gmail.com>
- <20250410132522.GD9833@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=nokia-sbell.com header.i=@nokia-sbell.com header.b="JtIZn+L+"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=KGafN0tx4kr6xLF8dSWO734FxHmZbyzkIYepVT97OxZply1FXUPrAEK55Nu4IYD3tAuUjxGYYElIjDz/XvzRU2kXWGbz6ec8gPfrSGPkKQ0IRrZ+JfnCec+CuAMp0zsZQb0uMbtfOgPBZP3JpHX5FJtXXCBzwKr06dSJvF9oAqDwi4j3UOUe9LL8FLj1jUNcfeWL1mHnRW0mTZsk93S2VB/0UOPTYF45rjqdIc+PIb2lcpjBYbUkcA5Z8+0PJq4Gln2q8J0VJOVLoR+yVM2ENVID7yHtaEht4qL7Fvp4jxJS9KqUKJ9dt+v+3hln3ktv1VekYO9AO50I3LCKQdfcEQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fd7ryp86/iW0KTx03BUNLn7z+pmQ3rApnzRUE3SFWmM=;
+ b=DqIngQKIhygK/FOADp6T7rCq4Dhmg1DJ1wUot4ZON2ZQvbzx6NyfZAvR7SHos8tj+duv1YK0010+RoVpXeJyFhA2EOncSO99M7du4BlQPIcovsoJiklREvuHW5yjDgefRmBSk3pVfXhX7FFoFSD92Mjm3aWDy/N8OXPe868ZxzJ7jZMWxbDcari/1S6Zx7VEtdbAa353ity3gcqezppjoXWrR4eVZJQrTgGAKE6q6CS5ukYsZ1D9oPdGCuHEWjpfjMfjHbvUx9tSL6xKTbK5D8Vq+yIbj1ns+dKlwLUuAquu5w0d0WcEstDxGFZQQrCfuEWBRqfaBDWprVj6B9KRRA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nokia-sbell.com; dmarc=pass action=none
+ header.from=nokia-sbell.com; dkim=pass header.d=nokia-sbell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia-sbell.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fd7ryp86/iW0KTx03BUNLn7z+pmQ3rApnzRUE3SFWmM=;
+ b=JtIZn+L+hRQojvkqnzJ9L17czlCYtNeg1gqbW0jMR+zqgAFcwQ4a64USt+gCX4IZEKmM+IfXh6IGnt0zE3D0ezMW+fKPQRhqylSMkJdilWOjsesyX+eBGRHJOkBW+lXgHk/oTZk8H0svfsqJ2BXODePAji27AqLHuDoXCFUTaHsSXJSfO9XJ/WE1OuJ5lR9BcKo2E8VG/LLb833BEA1TkDO8N2F6+C+PFATH4lHZECzsWhZ929pz0Po9z+Tm+SU/f22PNueC//F6udnjmpd/dKYMtbgbPLxkDkSpt7w6zM/gNAJtq6SxwtEFVAxE1YLDNPjL/JvW51D7QHvvEoAqaA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nokia-sbell.com;
+Received: from DBBPR07MB7481.eurprd07.prod.outlook.com (2603:10a6:10:1f0::11)
+ by PA1PR07MB10210.eurprd07.prod.outlook.com (2603:10a6:102:491::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Thu, 10 Apr
+ 2025 15:46:05 +0000
+Received: from DBBPR07MB7481.eurprd07.prod.outlook.com
+ ([fe80::884b:f4bb:e97b:b9d5]) by DBBPR07MB7481.eurprd07.prod.outlook.com
+ ([fe80::884b:f4bb:e97b:b9d5%5]) with mapi id 15.20.8632.021; Thu, 10 Apr 2025
+ 15:46:05 +0000
+From: Zhen XIN <zhen.xin@nokia-sbell.com>
+To: linux-wireless@vger.kernel.org
+Cc: pkshih@realtek.com,
+	linux-kernel@vger.kernel.org,
+	martin.blumenstingl@googlemail.com,
+	Zhen XIN <zhen.xin@nokia-sbell.com>
+Subject: [PATCH -v2 1/2] wifi: rtw88: sdio: call rtw_sdio_indicate_tx_status unconditionally
+Date: Thu, 10 Apr 2025 15:42:16 +0000
+Message-Id: <20250410154217.1849977-2-zhen.xin@nokia-sbell.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250410154217.1849977-1-zhen.xin@nokia-sbell.com>
+References: <20250410154217.1849977-1-zhen.xin@nokia-sbell.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: TYCP301CA0067.JPNP301.PROD.OUTLOOK.COM
+ (2603:1096:405:7d::20) To DBBPR07MB7481.eurprd07.prod.outlook.com
+ (2603:10a6:10:1f0::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250410132522.GD9833@noisy.programming.kicks-ass.net>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DBBPR07MB7481:EE_|PA1PR07MB10210:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2497146e-6582-4c60-f36f-08dd7846cd9b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?xJKjZCGNtl2lbzjwDg+GlUE5Y+FKcbi5FPU5nAfTK9yorfSqTpzKCEMWaaYb?=
+ =?us-ascii?Q?53bnTTrlgLzhE1g7ClQ+nCAn4ChbpizXTfgdHOCXKHM7Kx9cKz7/c5N/2xSh?=
+ =?us-ascii?Q?z7NUFJrvI6dGgr3En20eMaKtamRVojRqDpmn3zez5VQrzqqkdSFBo6JUb64j?=
+ =?us-ascii?Q?f5pTEVvZNUvjZa9FaapGL5oGxJeUDgxSRs4P51e1xWJvNHKYkQTKVyDjS+gc?=
+ =?us-ascii?Q?6hvRUavrSTXE/RYcjPadsB1VuLRxLWUx54cHDR32hTkrE5PWWRWhmjAKrjiu?=
+ =?us-ascii?Q?sp/ib5GdoL5iPINdk5Hm4ciUOjfLogzLAlljusb8tzCwAIalnnJgJoHqrIxa?=
+ =?us-ascii?Q?+9wr6l4fTeFTqYi+im2254/BQOB9pP3ecglAs/Fvp5y7er/N7Ci+9VdeHQe8?=
+ =?us-ascii?Q?3XnAr7IMwmrS9Va8pTJ+liDsNSL8ceOVmaqUhEGcHmB/Fuzlv25hK4Yd8/qi?=
+ =?us-ascii?Q?x8wg1Gkg/MJ9+Cl2+GPORBHIdjzoq3XGAnOWIEXUAnmcGlY9iZxppl1p79vA?=
+ =?us-ascii?Q?t8UhExXCSF3Q/zKg97gnJpj/7MjRD4pKUsVvRurGoxRu/zeHuqDrmfZUK8S9?=
+ =?us-ascii?Q?vZgtidgQWBGRla6NvgTWdkI1+pwV7KLMNzY/H2CSK8P8nGHXSWjfH1gTzLsK?=
+ =?us-ascii?Q?M0Tq0X2ApWmEeIOIFYJ0WFiJQvHgSm45nRQPUoVJjoOkJa5P0nHf3t1Nam1T?=
+ =?us-ascii?Q?5xKw09d6smsymrzD3g0kK8XAnwU2bHqXYEIbIW4Nmgcc8Syauvcr0kWObjMu?=
+ =?us-ascii?Q?LDfCPK1s3QRnZNEWik1WEssTS9bEht0l0uEqJW4n/WHZQfdb4+c6057iRbQE?=
+ =?us-ascii?Q?/ljUSzCfp8GmHgF2h+OOuZ5xRpXRrQAXaCU+u37Pko7RhH/gVB6/jesui5lh?=
+ =?us-ascii?Q?1S62DkEsStQmNCobEMA0gYBWuBIt27k+3SYL9oz79fmwkgotqojIS5YdzzY6?=
+ =?us-ascii?Q?oVrITNFiXtmCz4aQhdICqMxZg+n8hu2yJ2oWqRwVd8DH7iQykassrvp3A4yd?=
+ =?us-ascii?Q?DhvO1kuktcrlI0mAzmZ4gXGZlEzwYThdmODBaBDdxNCYyLoe5a5pAp/sShFx?=
+ =?us-ascii?Q?x6Ut6LsoZQoOvjgqWAW4XLocoRuvynCWedqqBD/JHdQzW5dcTy+itjBR/SKb?=
+ =?us-ascii?Q?XsulIBp5ivfoEuvKcYBSprJI3nJV/fqqeDzsNsD98Cv/p9la/9plYgqnTeBl?=
+ =?us-ascii?Q?EDzy+x/9L4iCM2heua4RKej/RyPrXFfdHVX8pX1UGu7hi6B8sZspikPQlxPf?=
+ =?us-ascii?Q?879aeHv/m8MJICGbRXciBebxEBxCkhEA6F9aVecE03fkhmjSMWiVeDpZRM8u?=
+ =?us-ascii?Q?2FH3RQsEtJ0fBDCWbkkaldCtkFiPBXuw0KEfu45VHEVkbeqDYwP4RdfiiZvM?=
+ =?us-ascii?Q?/FW8Pa8tOclm9GSxKGCqmwkBxqcDKkAJ+4cEA5Izj3bNb/GWtU1HQBQZI9wR?=
+ =?us-ascii?Q?uuN7Ns+PgTI=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBPR07MB7481.eurprd07.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Z8Yr24yJWlM6VoNJw4TnZ2CnYvxz23FDTE4BtYjnWsLZKd9dP2EYYBg1Fzlg?=
+ =?us-ascii?Q?cotcS84vca84KaNOsP8Pn9Y7ZG+GbW3vr3vP4ySiTbZhObQqKOr/ENVCgDhO?=
+ =?us-ascii?Q?mrPCZHGT1D1U6L4B+3nHRY+Xq83OgqTOcywUI/wQZSteVFsUiUtkf3xT7/EY?=
+ =?us-ascii?Q?aSUWxDOUU/juPPHasvmIKtB4CF+MtUvYoBx2yxL59ZVWsQ9Nf/ka7lZl7sp+?=
+ =?us-ascii?Q?AD8SrvUhgyebHwYZCEsXJVexMdU/RSABMwu1nmj4HUdAQIbExNL5gmtJXHdA?=
+ =?us-ascii?Q?JOzW8s5X2Vx68ADkTrvYVGKC+wyoKzaHMZ8Wm5hSddSO6xNq+oH/YqYfStI3?=
+ =?us-ascii?Q?bZT7kEkaTVYYNoFpKZVTEgdDsOFbPut+UBYM4MLWo0rG7J9QvBdL8POmEYXK?=
+ =?us-ascii?Q?jQICRUiT3Zo8CBSFx1Sxj1tujm8g7i4aGKAv8PNipOeQNMgvXdY3mU1nj2ot?=
+ =?us-ascii?Q?0pUIE5HtVeiA8u65uFK6MBLQ/U5ppEvqS9vEYEsgUUliRGwfnEanW8//0HAq?=
+ =?us-ascii?Q?SfIkQlScCe9g5H5o3eq7wUpgfnNNlgX23AoYxakyn+YvAf6xbhxykcGyPecW?=
+ =?us-ascii?Q?53ws+fenZJkgP7BBwA0FY/WkDSAiuoNmVOQkdGfRH3nKIAq3hz+1KkjFu3rr?=
+ =?us-ascii?Q?nYd1f3wccr8DTV14afXq91VFRXfMnJbfs2t8Dk1sA8li0rKcXeTdZ5flfonW?=
+ =?us-ascii?Q?XFs16/wxofspkpflJ553Rj7vGeBQatFgc7cYX5Cjf8bvkmr0ZCQ1U3Sz0DNd?=
+ =?us-ascii?Q?kveQVbBKLrsfVZK6Lco1ASRVJqT7csL+xxktlUC1riBwfshLbr65TiWu7wh7?=
+ =?us-ascii?Q?ZxvAG2mL/ro/E4gu3sosSPydOJHgBaODDZ98Fb48+uPwScMjQ3d3C+/h4i0O?=
+ =?us-ascii?Q?KeZopXWm1u4/tT+tvD9NwpfKYXf4YwYGEz+mSc/2QZH6dzoQ2yFDV6Fm2EOX?=
+ =?us-ascii?Q?xQz7eHDf8BpPPKxopHprnCaeEXB7d9RYCr02Dn8UaK7sxsecnLNIM3HsPpFl?=
+ =?us-ascii?Q?EyJcmA8eS8zxx4Bd4lObEGKu8TPt44UTTZ7KqtRDm+oWmndewKzPG2snfmlh?=
+ =?us-ascii?Q?a2DnA1VeSqvlISj7hvnGo/QOorng7ZoquLuDtUAOxcFInLwPA50tM1lvH8qD?=
+ =?us-ascii?Q?eYcm39FWJYSM0fUtObhcrqIlVoVahkzHZpRazfRX/Tj7uQjBab0od+tQzSeo?=
+ =?us-ascii?Q?SLn0cNtEHvqa0e3R48FD/rIlU93MFRMRGJ5lvKVOpHRJKIw3nI+kI+NB69wq?=
+ =?us-ascii?Q?bRdQjA5JdGXp7fkAr1LCyyenoJUDOfG7RVPgH9lThe4VdR1ChomBNVDKYGPs?=
+ =?us-ascii?Q?rbqEF5odFiVYSrmMpjulpH9OMSLR/OAOt+exP1EKnLGo7Appy7EU/qnHJ6Qa?=
+ =?us-ascii?Q?h+GfxQHAbxWtwe9U74qaO2tx+K2Rh2bQUrmjABf71RCiUWmEq401lcf1Ve21?=
+ =?us-ascii?Q?x4BDtTvs7iPqdxAbhjdNBM78b2O6nuNYmHjitgY5Mr9/TfEdVOq+3icN3ylU?=
+ =?us-ascii?Q?3VQVxv0VuodC8Yw8rMA/G6ef7oiKuej4U+7aIZ4XiZk2+JtrnhplonfuslCa?=
+ =?us-ascii?Q?NpafJzpv0dWJHZJ/Er1lG6GOQrXhRX7cwnhrymit27QDhmYO9NJCPjat1PRL?=
+ =?us-ascii?Q?+w=3D=3D?=
+X-OriginatorOrg: nokia-sbell.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2497146e-6582-4c60-f36f-08dd7846cd9b
+X-MS-Exchange-CrossTenant-AuthSource: DBBPR07MB7481.eurprd07.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 15:46:04.9932
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5d471751-9675-428d-917b-70f44f9630b0
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: TiThzfdDhtBRGiJYme/fds/qlnN7wB7dbvBtLGVj39QYtLMSaYvyyeRpJ0OHn6XUIEK/pVczPdyn3QAR2+OaJuXUazW7MxsjtGneFMkdg6A=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR07MB10210
 
-On Thu, Apr 10, 2025 at 03:25:22PM +0200, Peter Zijlstra wrote:
+Rtw88-sdio do not work in AP mode due to the lack of tx status report for
+management frames.
 
-> I should get objtool to warn about those. They undermine the point of
-> CFI.
+Make the invocation of rtw_sdio_indicate_tx_status unconditional and cover
+all packet queues
 
+Tested-on: rtl8723ds
+
+Fixes: 65371a3f14e7 ("wifi: rtw88: sdio: Add HCI implementation for SDIO based chipsets")
+Signed-off-by: Zhen XIN <zhen.xin@nokia-sbell.com>
 ---
-Subject: objtool: Detect __nocfi calls
+ drivers/net/wireless/realtek/rtw88/sdio.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-Detect and WARN about no_sanitize(kcfi) indirect calls.
-
-Apparently there were a few in some Rust 'core' that got included in the
-kernel and things went *bang*.
-
-This is not a supported form for kernel code. So detect and warn about
-it.
-
-Adds an annotation for the two cases where we have to live with them:
-
- - EFI stubs;
- - kexec handover.
-
-Notably, EFI calls fully disable IBT, as such using runtime EFI services
-is a significant security issue. If you can exploit the kexec handover,
-you get to keep it.
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index cc73f9708464..67ba0db92272 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -442,6 +442,7 @@ void __nocfi machine_kexec(struct kimage *image)
- 
- 	__ftrace_enabled_restore(save_ftrace_enabled);
- }
-+ANNOTATE_NOCFI_SYM(machine_kexec);
- 
- /* arch-dependent functionality related to kexec file-based syscall */
- 
-diff --git a/arch/x86/platform/efi/efi_stub_64.S b/arch/x86/platform/efi/efi_stub_64.S
-index 2206b8bc47b8..2bee139ae1ee 100644
---- a/arch/x86/platform/efi/efi_stub_64.S
-+++ b/arch/x86/platform/efi/efi_stub_64.S
-@@ -11,6 +11,7 @@
- #include <asm/nospec-branch.h>
- 
- SYM_FUNC_START(__efi_call)
-+	ANNOTATE_NOCFI
- 	pushq %rbp
- 	movq %rsp, %rbp
- 	and $~0xf, %rsp
-diff --git a/include/linux/objtool.h b/include/linux/objtool.h
-index 366ad004d794..518daea19699 100644
---- a/include/linux/objtool.h
-+++ b/include/linux/objtool.h
-@@ -185,6 +185,8 @@
-  */
- #define ANNOTATE_REACHABLE(label)	__ASM_ANNOTATE(label, ANNOTYPE_REACHABLE)
- 
-+#define ANNOTATE_NOCFI_SYM(sym)		asm(__ASM_ANNOTATE(sym, ANNOTYPE_NOCFI))
-+
- #else
- #define ANNOTATE_NOENDBR		ANNOTATE type=ANNOTYPE_NOENDBR
- #define ANNOTATE_RETPOLINE_SAFE		ANNOTATE type=ANNOTYPE_RETPOLINE_SAFE
-@@ -194,6 +196,7 @@
- #define ANNOTATE_INTRA_FUNCTION_CALL	ANNOTATE type=ANNOTYPE_INTRA_FUNCTION_CALL
- #define ANNOTATE_UNRET_BEGIN		ANNOTATE type=ANNOTYPE_UNRET_BEGIN
- #define ANNOTATE_REACHABLE		ANNOTATE type=ANNOTYPE_REACHABLE
-+#define ANNOTATE_NOCFI			ANNOTATE type=ANNOTYPE_NOCFI
- #endif
- 
- #if defined(CONFIG_NOINSTR_VALIDATION) && \
-diff --git a/include/linux/objtool_types.h b/include/linux/objtool_types.h
-index df5d9fa84dba..aceac94632c8 100644
---- a/include/linux/objtool_types.h
-+++ b/include/linux/objtool_types.h
-@@ -65,5 +65,6 @@ struct unwind_hint {
- #define ANNOTYPE_IGNORE_ALTS		6
- #define ANNOTYPE_INTRA_FUNCTION_CALL	7
- #define ANNOTYPE_REACHABLE		8
-+#define ANNOTYPE_NOCFI			9
- 
- #endif /* _LINUX_OBJTOOL_TYPES_H */
-diff --git a/tools/include/linux/objtool_types.h b/tools/include/linux/objtool_types.h
-index df5d9fa84dba..aceac94632c8 100644
---- a/tools/include/linux/objtool_types.h
-+++ b/tools/include/linux/objtool_types.h
-@@ -65,5 +65,6 @@ struct unwind_hint {
- #define ANNOTYPE_IGNORE_ALTS		6
- #define ANNOTYPE_INTRA_FUNCTION_CALL	7
- #define ANNOTYPE_REACHABLE		8
-+#define ANNOTYPE_NOCFI			9
- 
- #endif /* _LINUX_OBJTOOL_TYPES_H */
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 4a1f6c3169b3..868601760953 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -1382,6 +1382,26 @@ static int add_call_dest(struct objtool_file *file, struct instruction *insn,
- 
- static int add_retpoline_call(struct objtool_file *file, struct instruction *insn)
- {
-+	struct symbol *sym = insn->sym;
-+
-+	/*
-+	 * kCFI call sites look like:
-+	 *
-+	 *     movl $(-0x12345678), %r10d
-+	 *     addl -4(%r11), %r10d
-+	 *     jz 1f
-+	 *     ud2
-+	 *  1: cs call __x86_indirect_thunk_r11
-+	 *
-+	 * Verify all indirect calls are kCFI adorned by checking for the UD2.
-+	 * Notably, doing __nocfi calls to regular (cfi) functions is broken.
-+	 */
-+	if (opts.cfi && sym && sym->type == STT_FUNC && !sym->nocfi) {
-+		struct instruction *prev = prev_insn_same_sym(file, insn);
-+		if (!prev || prev->type != INSN_BUG)
-+			WARN_INSN(insn, "no-cfi indirect call!");
-+	}
-+
- 	/*
- 	 * Retpoline calls/jumps are really dynamic calls/jumps in disguise,
- 	 * so convert them accordingly.
-@@ -2334,6 +2354,8 @@ static int read_annotate(struct objtool_file *file,
- 
- static int __annotate_early(struct objtool_file *file, int type, struct instruction *insn)
- {
-+	struct symbol *sym;
-+
- 	switch (type) {
- 
- 	/* Must be before add_special_section_alts() */
-@@ -2348,6 +2370,19 @@ static int __annotate_early(struct objtool_file *file, int type, struct instruct
- 		insn->noendbr = 1;
- 		break;
- 
-+	/*
-+	 * Must be before add_{jump,call}_destination(), specifically any
-+	 * add_retpoline_call().
-+	 */
-+	case ANNOTYPE_NOCFI:
-+		sym = insn->sym;
-+		if (!sym) {
-+			WARN_INSN(insn, "dodgy NOCFI annotation");
-+			break;
-+		}
-+		insn->sym->nocfi = 1;
-+		break;
-+
- 	default:
- 		break;
+diff --git a/drivers/net/wireless/realtek/rtw88/sdio.c b/drivers/net/wireless/realtek/rtw88/sdio.c
+index e024061bdbf7..ef51128a4b44 100644
+--- a/drivers/net/wireless/realtek/rtw88/sdio.c
++++ b/drivers/net/wireless/realtek/rtw88/sdio.c
+@@ -1227,10 +1227,7 @@ static void rtw_sdio_process_tx_queue(struct rtw_dev *rtwdev,
+ 		return;
  	}
-@@ -2428,6 +2463,10 @@ static int __annotate_late(struct objtool_file *file, int type, struct instructi
- 		insn->dead_end = false;
- 		break;
  
-+	case ANNOTYPE_NOCFI:
-+		/* early */
-+		break;
-+
- 	default:
- 		ERROR_INSN(insn, "Unknown annotation type: %d", type);
- 		return -1;
-diff --git a/tools/objtool/include/objtool/elf.h b/tools/objtool/include/objtool/elf.h
-index c7c4e87ebe88..f60604d30793 100644
---- a/tools/objtool/include/objtool/elf.h
-+++ b/tools/objtool/include/objtool/elf.h
-@@ -70,6 +70,7 @@ struct symbol {
- 	u8 local_label       : 1;
- 	u8 frame_pointer     : 1;
- 	u8 ignore	     : 1;
-+	u8 nocfi             : 1;
- 	struct list_head pv_target;
- 	struct reloc *relocs;
- };
+-	if (queue <= RTW_TX_QUEUE_VO)
+-		rtw_sdio_indicate_tx_status(rtwdev, skb);
+-	else
+-		dev_kfree_skb_any(skb);
++	rtw_sdio_indicate_tx_status(rtwdev, skb);
+ }
+ 
+ static void rtw_sdio_tx_handler(struct work_struct *work)
+-- 
+2.25.1
+
