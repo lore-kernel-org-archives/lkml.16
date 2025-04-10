@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AEC84C9D;
-	Thu, 10 Apr 2025 03:03:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E8B11E1C36
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 03:03:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744254208; cv=none; b=DyDacfrxV93PxV/jvJWSPEl2igMJVUiDntzBd5nIG9W+lBxyR152ZIiguVRSq3/Wcy3G+soN+HG8TudA0SfyvtGl+fmKBLB/LpmCOXete77k1J3WH2WicwqZhJCg0N98a2F1U+Xs89VqnW9XoRXP1kxUZBF8VpzM+D6jILrHzhc=
+	t=1744254228; cv=none; b=PeH3DCbeFANyrXEchdibq51zrvwXnFQYHIgJLK6uzX7+NFKgihzpAonXK7c9yXaeME3bJTJHXkQm9cUW2rCBDg25L2Mmlged9/toCR7EA6gEHrGrHH1GIdKYcsxbuGbRLlecfA6Uqww+BIRCGPRWgDZ1a+C6XUy5IvuljWHMSiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744254208; c=relaxed/simple;
-	bh=O9I0+J35A+cZCeUgQWA6kZXE8j9emV43n4j/o0l0jew=;
+	s=arc-20240116; t=1744254228; c=relaxed/simple;
+	bh=IirMqiAB81c7mdHKfJBFfeG72poTirxHI+/B8Se38RE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ge+e/qVNK+gKvaM59Pdfb+928nttJpqQRNYhqkkBn36qLsqgwjOnA1PVejvgHKqLIjmnILrDGStQ1X/k/6h57unSg4QgkXedHVfq88DC5xJGzWJweoUhHcGvTSVNDkG3s4xPPw+3nTAFegiuH1aP8sf86D5CKdkyDNOQTWqyDeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=STSa3Rgq; arc=none smtp.client-ip=198.175.65.13
+	 In-Reply-To:Content-Type; b=iP5YsOabYTHbHgwGb5je/0pzyLdhanda7CtSF/QJMt81Fk49/mshruAIel60DhksLrcawR81ZxrtmFg7aotUAZsOmdv0FLJ8/rZ6KSMjlFBwsV6Hmvquc6psPbLnhusSL7lSrBNW9hGIC+5V0MsrpOlKcJg0p6anBFKoLvvy8MY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fCX0fpeJ; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="STSa3Rgq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fCX0fpeJ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744254206; x=1775790206;
+  t=1744254226; x=1775790226;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=O9I0+J35A+cZCeUgQWA6kZXE8j9emV43n4j/o0l0jew=;
-  b=STSa3RgqVkK28RnDdbMjGR4z1CuOvAVSKdlSw1/k9/bpZfh8MHLszoCD
-   QWi9s/ChqOcbHeFMSWp706BcrST5bpIqY7RmAHrLkqOnZHhrfSSxeANii
-   o5izFyj6bofh03FaBDjfl5aJVHN7fSizTzIiqIUMrv6pgIc6VfhP2SRVT
-   9QrcnJwAJBgDsqQaDv2EFuj57pxqcdJWJI92N8odT5wc6i7IaqAkOyq3Z
-   krVjeWauxyP3iyz+xBSYns5xFM7qHKltsXDqQVCTGSAvWfnV5WdWTPoSF
-   ixxD/8KksQ3fWBrCNQItmwqHkozp480LRv10HepQS4BdD7dndezb+fdWV
-   A==;
-X-CSE-ConnectionGUID: pyU+lGkXSnCHcezq8PsrKA==
-X-CSE-MsgGUID: Y3Y/07IlR36p0rAg0uaovg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="56736309"
+  bh=IirMqiAB81c7mdHKfJBFfeG72poTirxHI+/B8Se38RE=;
+  b=fCX0fpeJpSNulxGwUrY/9hWlFtU/897MgLtwqzTJzYXqQJ30sV4c6sfW
+   YG+VRSB7SJSU8GjExlDjM+todMoQWpW6cHqNJDLPPh0Lzq1qciG2dEJVZ
+   gMfIdu29PS8fcSl+jDpzvxXI91NvdsH9f7JK2cFWG6EUjcsZ+YqIG64NW
+   LVFsl+HwjUiklfaybTkIVBG7Z5Q8HUTMVUx94jHbq8mO2Ezfp8QVsVabw
+   IE011bbpupe1l+591ZpesfYJixkvuI9ZWiiqGLR/nq6F00w3WqtY+RmFk
+   pufHhc/Ek4Cuq2zKvZX0bFc62+qTRy2yK4xxGacHvMjHHZNFWqoUWE+4H
+   g==;
+X-CSE-ConnectionGUID: QjnvgZ7DTM6cDo25PLuE/w==
+X-CSE-MsgGUID: L04dgsRMSACtviYc3J1M1Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="56736359"
 X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
-   d="scan'208";a="56736309"
+   d="scan'208";a="56736359"
 Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 20:03:26 -0700
-X-CSE-ConnectionGUID: l1lzOau0TkaMmIqROxFXzg==
-X-CSE-MsgGUID: HRIiJbvqTOWiDNn7i+TQTQ==
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 20:03:45 -0700
+X-CSE-ConnectionGUID: C4F746iETWO0hWsvM/Pjog==
+X-CSE-MsgGUID: 4TIJoEi/S8+L/7oQBmToMQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
-   d="scan'208";a="165983640"
-Received: from yuntin1x-mobl1.ccr.corp.intel.com (HELO [10.238.11.203]) ([10.238.11.203])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 20:03:24 -0700
-Message-ID: <f1445168-3a14-45da-a39b-3009b69f7b8d@linux.intel.com>
-Date: Thu, 10 Apr 2025 11:03:21 +0800
+   d="scan'208";a="165983752"
+Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 20:03:44 -0700
+Message-ID: <5543e3a5-dda5-49b5-aa59-fbc599d24bab@linux.intel.com>
+Date: Thu, 10 Apr 2025 10:59:51 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,57 +52,38 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Documentation/virt/kvm: Fix TDX whitepaper footnote
- reference
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Documentation <linux-doc@vger.kernel.org>,
- Linux KVM <kvm@vger.kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
- Jonathan Corbet <corbet@lwn.net>, Isaku Yamahata <isaku.yamahata@intel.com>,
- Stephen Rothwell <sfr@canb.auug.org.au>
-References: <20250410014057.14577-1-bagasdotme@gmail.com>
+Subject: Re: [PATCH] iommu/vt-d: Remove an unnecessary call set_dma_ops()
+To: =?UTF-8?B?UGV0ciBUZXNhxZnDrWs=?= <petr@tesarici.cz>, iommu@lists.linux.dev
+Cc: Petr Tesarik <ptesarik@suse.com>, David Woodhouse <dwmw2@infradead.org>,
+ Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+ Robin Murphy <robin.murphy@arm.com>, Tom Murphy <murphyt7@tcd.ie>,
+ linux-kernel@vger.kernel.org
+References: <20250403165605.278541-1-ptesarik@suse.com>
+ <20250409174430.00ff4a09@meshulam.tesarici.cz>
 Content-Language: en-US
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <20250410014057.14577-1-bagasdotme@gmail.com>
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <20250409174430.00ff4a09@meshulam.tesarici.cz>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+On 4/9/25 23:44, Petr Tesařík wrote:
+> On Thu,  3 Apr 2025 18:56:05 +0200
+> Petr Tesarik<ptesarik@suse.com> wrote:
+> 
+>> Do not touch per-device DMA ops when the driver has been converted to use
+>> the dma-iommu API.
+>>
+>> Fixes: c588072bba6b ("iommu/vt-d: Convert intel iommu driver to the iommu ops")
+>> Signed-off-by: Petr Tesarik<ptesarik@suse.com>
+> Does anyone agree? Or see any issues?
 
+This change looks good to me. The iommu driver should not call
+set_dma_ops() anyway. I will queue this for v6.15-rc.
 
-On 4/10/2025 9:40 AM, Bagas Sanjaya wrote:
-> Sphinx reports unreferenced footnote warning on TDX docs:
->
-> Documentation/virt/kvm/x86/intel-tdx.rst:255: WARNING: Footnote [1] is not referenced. [ref.footnote]
->
-> Fix footnote reference to the TDX docs on Intel website to squash away
-> the warning.
->
-> Fixes: 52f52ea79a4c ("Documentation/virt/kvm: Document on Trust Domain Extensions (TDX)")
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Closes: https://lore.kernel.org/linux-next/20250409131356.48683f58@canb.auug.org.au/
-> Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
+I ever wondered whether we could clean up dev->dma_iommu when the device
+is released by the iommu core. But, iommu_release_device() is only
+called in the device removal path, so keeping dev->dma_iommu set doesn't
+impose any functional impact AFAICS.
 
-Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
-
-And thanks for the fix.
-
-> ---
->   Documentation/virt/kvm/x86/intel-tdx.rst | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/Documentation/virt/kvm/x86/intel-tdx.rst b/Documentation/virt/kvm/x86/intel-tdx.rst
-> index de41d4c01e5c68..2ab90131a6402a 100644
-> --- a/Documentation/virt/kvm/x86/intel-tdx.rst
-> +++ b/Documentation/virt/kvm/x86/intel-tdx.rst
-> @@ -11,7 +11,7 @@ host and physical attacks.  A CPU-attested software module called 'the TDX
->   module' runs inside a new CPU isolated range to provide the functionalities to
->   manage and run protected VMs, a.k.a, TDX guests or TDs.
->   
-> -Please refer to [1] for the whitepaper, specifications and other resources.
-> +Please refer to [1]_ for the whitepaper, specifications and other resources.
->   
->   This documentation describes TDX-specific KVM ABIs.  The TDX module needs to be
->   initialized before it can be used by KVM to run any TDX guests.  The host
->
-> base-commit: fd02aa45bda6d2f2fedcab70e828867332ef7e1c
-
+Thanks,
+baolu
