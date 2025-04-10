@@ -1,106 +1,145 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B001E9B14
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 16:58:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ABD31E9B14;
+	Thu, 10 Apr 2025 16:58:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744304303; cv=none; b=T1cfq52AWeRK2q5tzVi7CrR7EPXoU5QVkDp35ilyu8OSQt/PbkW3e5kEEAcxdl7nn6qlbILOGYp2noVOP5NrelPG6ioLn9eq7wQqdQVviLOewNdXC1/Vf7K5CkLo9mIZdIWGuiWvvkj52I+gttZuU7tO9ftChcpUIVYLZiL/ddQ=
+	t=1744304309; cv=none; b=rKYXAH2gYeQUY+qByHn0YMcs3ql0feP+3DGxeYMm0I6bu33xS5UvXtwomBilWjWRqY0xNZRelcI1Gsb7G+nG1a24HkBi7KiOLy7h5yt3kx+kVFx1GniYa8vr8UR6yTkZbA8b6NvGdwrPz1MMnALWh3f3dJm++B9bLJa+8AFpHEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744304303; c=relaxed/simple;
-	bh=2NYoTnSK20dkPwMiH+PmrMXMd7m9Agd+Fq+KD2i9skM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uFENg15DfpI3bhoed+d22PIncX/W+K9vCq8AB7pxTVO5twsLe9k0hGh7f2GOwrMTSpVwg2bMJVeZQ3yq7LxNp/4bOZkknkJ/PuOzVxll4O4ZTM0WUYfe6aHIbSLiRenoRkcvSAfGqBRggc7ME5RMaZjkulOcsKmNArcS05apaV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=L5BHU7Bs; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1744304309; c=relaxed/simple;
+	bh=QSrLQbtKHzNu7BnbMHKydpM2WZqiXvwGP3dlepduIZY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HkkokOJ9bRUeLEvRdzx41ZIDjKlD0l0kblkAQZ9YoulaEReLzV7oXXVK3JUkyDpedZo/MmOCNpYcpF0pBjsDtxV2ARiAUwg9CdVX1UGmtZT0TF+DOuWmenSnvSShQL86z0poZv7oT4c+FAlGrOW9wShIwJt71BYYFMXoZ341PzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HnzZaNqD; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L5BHU7Bs"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-477282401b3so9966071cf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 09:58:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HnzZaNqD"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-72d3b48d2ffso1123658b3a.2;
+        Thu, 10 Apr 2025 09:58:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744304300; x=1744909100; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2NYoTnSK20dkPwMiH+PmrMXMd7m9Agd+Fq+KD2i9skM=;
-        b=L5BHU7BsymNPGHmaeAX3U88/kGmZkAHXpZUQlTzwT0fyuY4gnQZ5VoMcmbDDclZPFS
-         tctraX2kjsGkDd/LTx1iVH/tj++s3m6vxizBLDrse0P9wPoh2UUK1O5Ray2sxoqsA/X9
-         Ew8rp1onIReFSLdcOaq6GT4Iug2LP17nR2oWHEylRVJXWY3Tidsxld314Cb3GREeyNfi
-         3Xcr4WCe9fqMPgxRF3E4KKsLdR7/9C2Njc62uato3uSEafSBHJOn317vKMB5Jo6aaIPt
-         lfjnezdW43tVLac0c+WlTUZpBU6fX71Elt3P3peodhlbm8JCyADrTlqjO7Ekrk5QCD+N
-         y+6g==
+        d=gmail.com; s=20230601; t=1744304307; x=1744909107; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Fb4ywqjWz2GIsG+JDj8glrtq3YuAKw64ngABr/SVSQY=;
+        b=HnzZaNqDJFm8O3uQ4kczWO+1QxUNPrGQ7fBiQO6VU63Qf1E+A+xpytbBnwEsm6aPDG
+         3AiW6GhNENqD2VuqJ1El1ETi4GnRLSerJpzP3rTSloOLpk8QO1RLsVaplBSONKMYI/5T
+         2y1uNfaI43W+xUu2Iw8j1bZmsfcdxipEwvu4l5x41/Ox8Kww0CDqezaCkOD9bedwWvAP
+         hjasGsncuFTZYR9I7tygpQ/3vKrVyFSvaX2Qgqj/ChBW59bzlVaUAhB60oWJ/E8eBk/j
+         e2F0F1WRmqJY2zO49VPRL4zfhqbW8ardyrHNcYZ0jZ5m7EpRg9b443m82akFuwR9Keff
+         WwRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744304300; x=1744909100;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2NYoTnSK20dkPwMiH+PmrMXMd7m9Agd+Fq+KD2i9skM=;
-        b=SmA2Z8fqsgVJ/Wm4vELy0PTYHkMSi3ycAdVfP0KCbLCjsgc8qGN0PJZbdnAAng1t1D
-         v7yRFmqvfZtKsAHQtgHkUbDgtT4S9ES6Un6AAcjuPfOFZuM9LfUMBCSJIFyvjrzWttl1
-         AoN+Uwu9a811FfkNaAFpTPDT5lkKOPMjbxtZSFn9+H9ry5Ieg7mWpCgj414+HRJ52fa3
-         MoVjpba+tnsO6OtXs/fvVYTgxIK/Dh/trMvWs3L/ThtyDus42l3BZ8K9kz8LpbDDpCef
-         f4z+vydssLbnd+c7Q6DtmIh7PQtStAB/62z6BltBPE2czOVmDWOt4mArY1N5UpeWouMs
-         xZdg==
-X-Forwarded-Encrypted: i=1; AJvYcCWAKu700wVHYFOS8yNAw3ZWQbehbCENtbCkJ7RpDIa1Ocx6XwCBXAFmUQgldlQjU+AM7eFCdiwj6KL33/I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yys16idjPTUBReVRY/Y2ljvBtBJUqbn8+J6gO1jSEyY8OFJgsi2
-	CXx4KLPP7TGIEeyAt3tekAPGkIEajmWqVZ5qqN1dhn8j/HAXKRnyxhtLLk0w7wGKNBgneFv+s5R
-	1srg9iOxFA6RdkJ7YoUyWB/bsOc3lM83c8rP8
-X-Gm-Gg: ASbGncsNscQqEWih8OlU/WpQp4u41+bnnQFO8b+53WDAZpwkJwZ/+EiENguyjC6zkpv
-	N6xYekA5aL+CbT5+TLh1/HjvuNEKwBRjfl8iyhJAoBlIDhlQXFsJGX+tkpNiIvOEN9A2vHEDOvL
-	Ggbhq/5e5e/GNdcc5sEQLuDeQ=
-X-Google-Smtp-Source: AGHT+IEOVT1Z8/NH1HG6VUHZxnDjeDB3SasAhCAR0fy4recc1QZ/FY0FSGcXw5gByOay7lO/Vo/lgAvjLAswmr7qoDk=
-X-Received: by 2002:ac8:5acd:0:b0:476:884e:52f4 with SMTP id
- d75a77b69052e-4796cbb21acmr50525311cf.12.1744304299429; Thu, 10 Apr 2025
- 09:58:19 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1744304307; x=1744909107;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Fb4ywqjWz2GIsG+JDj8glrtq3YuAKw64ngABr/SVSQY=;
+        b=cDPg+vXZAP5UW5gvz/vVURaQLdVPUkwcSG/yZLsmEO/7+n68kr2lEugRI/okG5WPpt
+         otsrcWQURtmwCT2nlmrzuMyRE9rFDNTiVnQHnEnUUmPWEUFUWpq7mMDuxGHC1woUYoyd
+         EafehhkkSSSpN6PpJB3PJ3eBWuvRFdlFYOZhm8nbd7uS7IvvzRW5UTeQgwzhfGlVwdwd
+         QnYgUNe1/qrszpGaYB9v6ljkawcbsi7HclN7wRS/5Udz2eaNB0SOGa4xRIQy8+0CZxxe
+         8hBC8xDFu4o0B+v1l8UYwdedwSZgNeJD9yHfizAMxgDGLBEl4CUrpkXIsZU19p6V1UQr
+         ZnGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVJG1DfYhs4BT7UWo8dq4M2QN6RS9M7LeyRrJu+hBXppUSZ+yoUkyOnOyBIJ8mQnUPQzA7lnBNhWggFqBQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+vk1Fl32oIHdJZRp0Z6igh5hdM7GeSj0RhRSwTV8XEw3zJi69
+	Jbxr7SjDM08D9l/mU2nrVIUDQAeQCXCTEn5cOP0WMqNEq4RWtZI5JbFMbs2s
+X-Gm-Gg: ASbGnctk8R7nQ05Oeuq1AWeNLunjWqX4FeuEFsXmmHmEiJBe9KR/ZfIIF7m8NkpcA7s
+	0mFgx8gSSeyf35FHCT9SmdCX9ivv3Ro+yq28T6p5MeVblziwM7gaRNqOAX5K4YnD5/Gn2gOnWv4
+	lzIqhNJX/Crk7NOv3kbSrOcqnYAUAihXJvfwYUduwnTyDAbqEcPYW78G7YbV6aLN6pXAXbTkgl+
+	A4nW7dx/75y40cjSyjkgv9Knh+hgWl+ejEW4ylm6qybPRoMscQ/PWgzCXhytCwudPoA9CgpwKIT
+	UgYtWghM/YfsVILZj10MgfUXGIRVOyW4ZZlOMEpXoTx4fEDCinv/FlcZRbzPVNEegcKHxHafJFp
+	FTPLXo12k6cIdVL+RZw==
+X-Google-Smtp-Source: AGHT+IG0e8qIqAIM5EIct+y0ySqTLEOJKSzlXpmPtTuYYh2lvIRJSPXsoYZJ+u7VgR1oUo1i/OLpow==
+X-Received: by 2002:a05:6a00:2185:b0:736:5dc6:a14b with SMTP id d2e1a72fcca58-73bbee82aa0mr4935340b3a.13.1744304307109;
+        Thu, 10 Apr 2025 09:58:27 -0700 (PDT)
+Received: from ?IPV6:2409:4080:204:a537:70f5:9c3d:61d0:62b9? ([2409:4080:204:a537:70f5:9c3d:61d0:62b9])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1d6ae7dsm3532778b3a.82.2025.04.10.09.58.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Apr 2025 09:58:26 -0700 (PDT)
+Message-ID: <c3ad805b-4ccf-4218-8b81-66a8977e2928@gmail.com>
+Date: Thu, 10 Apr 2025 22:28:20 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250410161619.3581785-1-sdf@fomichev.me> <CANn89iJ_CYgP2YQVtL6iQ845GUTkt9Sc6CWgjPB=bJwDPOZr1g@mail.gmail.com>
- <Z_f1juV_86Yv9n21@mini-arch>
-In-Reply-To: <Z_f1juV_86Yv9n21@mini-arch>
-From: Eric Dumazet <edumazet@google.com>
-Date: Thu, 10 Apr 2025 18:58:08 +0200
-X-Gm-Features: ATxdqUEbY-LQ2bL4TLdX6U0Pv1AjS-BCyjWXBjqYDybauiCAjzcRxD1hKqLzAi8
-Message-ID: <CANn89iJ69ffEZcF0VhSwqFSToK9a+O8-DupZkkvHnX6Y7M2aqg@mail.gmail.com>
-Subject: Re: [PATCH net-next] tcp: drop tcp_v{4,6}_restore_cb
-To: Stanislav Fomichev <stfomichev@gmail.com>
-Cc: Stanislav Fomichev <sdf@fomichev.me>, netdev@vger.kernel.org, davem@davemloft.net, 
-	kuba@kernel.org, pabeni@redhat.com, ncardwell@google.com, kuniyu@amazon.com, 
-	horms@kernel.org, dsahern@kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] iio: adc: ad_sigma_delta: Fix use of uninitialized
+ variable status_pos
+To: =?UTF-8?Q?Nuno_S=C3=A1?= <noname.nuno@gmail.com>, lars@metafoo.de,
+ Michael.Hennerich@analog.com, jic23@kernel.org
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250409200151.201327-1-purvayeshi550@gmail.com>
+ <3ed7564cf2749ee207da8ddc5ef06b54d8aea881.camel@gmail.com>
+Content-Language: en-US
+From: Purva Yeshi <purvayeshi550@gmail.com>
+In-Reply-To: <3ed7564cf2749ee207da8ddc5ef06b54d8aea881.camel@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 10, 2025 at 6:45=E2=80=AFPM Stanislav Fomichev <stfomichev@gmai=
-l.com> wrote:
->
-> On 04/10, Eric Dumazet wrote:
-> > On Thu, Apr 10, 2025 at 6:16=E2=80=AFPM Stanislav Fomichev <sdf@fomiche=
-v.me> wrote:
-> > >
-> > > Instead of moving and restoring IP[6]CB, reorder tcp_skb_cb
-> > > to alias with inet[6]_skb_parm. Add static asserts to make
-> > > sure tcp_skb_cb fits into skb.cb and that inet[6]_skb_parm is
-> > > at the proper offset.
-> >
-> > May I ask : why ?
-> >
-> > I think you are simply reverting 971f10eca18 ("tcp: better TCP_SKB_CB
-> > layout to reduce cache line misses")
-> > without any performance measurements.
->
-> Oh, wow, I did not go that far back into the history, thanks for the
-> pointer! Let me see if there is any perf impact form this...
+On 10/04/25 16:39, Nuno Sá wrote:
+> Hi Purva,
+> 
+> Thanks for your patch... See below
+> On Thu, 2025-04-10 at 01:31 +0530, Purva Yeshi wrote:
+>> Fix Smatch-detected error:
+>> drivers/iio/adc/ad_sigma_delta.c:604 ad_sd_trigger_handler() error:
+>> uninitialized symbol 'status_pos'.
+>>
+>> The variable `status_pos` was only initialized in specific switch cases
+>> (1, 2, 3, 4), which could leave it uninitialized if `reg_size` had an
+>> unexpected value.
+>>
+>> Fix by validating `reg_size` before the switch block. If it’s not
+>> one of the expected values, return early and log an error. This ensures
+>> `status_pos` is always initialized before use and prevents undefined
+>> behavior.
+>>
+>> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+>> ---
+>>   drivers/iio/adc/ad_sigma_delta.c | 5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/drivers/iio/adc/ad_sigma_delta.c
+>> b/drivers/iio/adc/ad_sigma_delta.c
+>> index 6c37f8e21120..d3b59d90b728 100644
+>> --- a/drivers/iio/adc/ad_sigma_delta.c
+>> +++ b/drivers/iio/adc/ad_sigma_delta.c
+>> @@ -568,6 +568,11 @@ static irqreturn_t ad_sd_trigger_handler(int irq, void
+>> *p)
+>>   	else
+>>   		transfer_size = reg_size;
+>>   
+>> +	if (reg_size != 1 && reg_size != 2 && reg_size != 3 && reg_size != 4)
+>> {
+>> +		dev_err(&indio_dev->dev, "Unsupported reg_size: %u\n",
+>> reg_size);
+>> +		return IRQ_HANDLED;
+>> +	}
+>> +
+> 
+> Use the switch case for this. Add a default branch for the invalid case. You
+> should also use dev_err_ratelimited() and instead of 'return IRQ_HANDLED', do
+> 'goto irq_handled'.
+> 
+> Thx!
+> - Nuno Sá
 
-To be fair, we now have RB-tree for the out of order queue, we no
-longer of O(N) costs
-when trying to insert an skb in this queue. Also we try to coalesce
-skbs together.
+Hi Nuno,
 
-Tests would require thousands of skbs in the out-of-order queue.
+Thank you for the review and guidance.
 
-Think of long-distance flows (rtt > 100ms), and big tcp_rmem[] and
-tcp_wmem[] limits for the sender/receiver.
+I’ve updated the patch to address your suggestions and will send the 
+next version shortly.
+
+Best regards,
+Purva
+
+> 
+>>   	switch (reg_size) {
+>>   	case 4:
+>>   	case 2:
+
