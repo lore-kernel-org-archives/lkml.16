@@ -1,175 +1,193 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E07B28A408
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:08:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7075A28C5D3;
+	Thu, 10 Apr 2025 13:08:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744290520; cv=none; b=hKzWJ7Jpir18ZMj6AypaZf5j4BQeQ9szCh5rrvumOryX1oAAUMWlJNBZtcxjjIeJ436l+VuQ7tK6Cw7soZCFZRjXzXiKEYLkXK23ZB1ozQfMZ3LJZwEzelHQoU3rvCWUzuJZKlN+o53ZcGe3nP7WiedcHjb1BoquS6H/9tJG9l8=
+	t=1744290522; cv=none; b=eJ/aOuJLJ52ySnYpudFwFIooQpQR7TH6L8CZ3ii4JZVbts6zOPZbH7H8/UHbS2Bu1EGsan9U/9/H1WM9CjJqzXrqsHF3rWrKO0CuB+GkSXK7sM7z8AR3g7mQAaJlR4uNQBjVGKn90Ysf5ZalwXfhZxVvt+jnDu0uJpJ+oOkwCt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744290520; c=relaxed/simple;
-	bh=5mubNZKqQrSu5S0oinweDg4SnDUbFvLRMCDLD1QiRIY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iWXC7Dn7Uc19yQuSOf4iBsi+oditS+X4m9G9oOKSNtnIqo0zWt1NEyxpSXe16JRHv4C+Vkp4I5+mgFUniZo5FxCPM2bjXNisEI+WcirWfvesSPmO1KTLnTD2wZQ6SPL5+tp8BSiv7D4y2R/8b8h0ezagZPodqdXCXYK8YBJsM7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ltdp53VW; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=NDnNRhO6; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ltdp53VW; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=NDnNRhO6; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1744290522; c=relaxed/simple;
+	bh=IRpptOiKFrmHAhXBkMvL+moUnHRIzNyCQ9OIUGR3TUo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=I3huoja+89t2tYLW3vKWzhHgZx55EJFBPXGvMSIBQR20G1Z0x/kzC9tjPSsZzyfc1txraWg9qEIuIZW3a3z8B/SCFzk3jVXWv9m5x6NmroJKnnTEFFUsLSjvY1xiifKl8h0HCYaqILvJooVGkGNhQ5ax6oo+z4/Rf7VJ5BBAjb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bqnsJ6s2; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ltdp53VW";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="NDnNRhO6";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ltdp53VW";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="NDnNRhO6"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 152DE21166;
-	Thu, 10 Apr 2025 13:08:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744290515; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JQ+GE9TVlMaXc0U/j9vFk5uI5XCKPbbp9Ak9w+zgA3g=;
-	b=ltdp53VWtTufTRvgtyHpInvkWOHVNfCdEJSJkoDc0uokyeq7zckk6u0acA0YcMta/h2dN3
-	1FS9+ww4Kvt2wCuRwOEQXZJCJxQGyxYOh+D2/9cgxXUHb2U62AvdWiMS+ulGuR6StIakuU
-	XpsvUk9Ef595xroZIj/eGVzYr1si0jU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744290515;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JQ+GE9TVlMaXc0U/j9vFk5uI5XCKPbbp9Ak9w+zgA3g=;
-	b=NDnNRhO6/DlVDH1EQDP1rhKf40t017jcRX1jfIkEHAjGR3vWHD2pYhAQiiGIq8BMlSDxB9
-	qh1MCfj3aLVnZKAw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=ltdp53VW;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=NDnNRhO6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1744290515; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JQ+GE9TVlMaXc0U/j9vFk5uI5XCKPbbp9Ak9w+zgA3g=;
-	b=ltdp53VWtTufTRvgtyHpInvkWOHVNfCdEJSJkoDc0uokyeq7zckk6u0acA0YcMta/h2dN3
-	1FS9+ww4Kvt2wCuRwOEQXZJCJxQGyxYOh+D2/9cgxXUHb2U62AvdWiMS+ulGuR6StIakuU
-	XpsvUk9Ef595xroZIj/eGVzYr1si0jU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1744290515;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JQ+GE9TVlMaXc0U/j9vFk5uI5XCKPbbp9Ak9w+zgA3g=;
-	b=NDnNRhO6/DlVDH1EQDP1rhKf40t017jcRX1jfIkEHAjGR3vWHD2pYhAQiiGIq8BMlSDxB9
-	qh1MCfj3aLVnZKAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6925513886;
-	Thu, 10 Apr 2025 13:08:34 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id cQhhFNLC92eRYQAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Thu, 10 Apr 2025 13:08:34 +0000
-Date: Thu, 10 Apr 2025 15:08:32 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: Gavin Shan <gshan@redhat.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, adityag@linux.ibm.com,
-	donettom@linux.ibm.com, david@redhat.com,
-	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
-	akpm@linux-foundation.org, shan.gavin@gmail.com
-Subject: Re: [PATCH] drivers/base/memory: Avoid overhead from
- for_each_present_section_nr()
-Message-ID: <Z_fC0M94iwDcoOla@localhost.localdomain>
-References: <20250410125110.1232329-1-gshan@redhat.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bqnsJ6s2"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53A75aKN018319;
+	Thu, 10 Apr 2025 13:08:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	C0lS2+7VSOL0SIGZcpKjdnDb9d67WgyN16/wLnthOpw=; b=bqnsJ6s2atv0917k
+	jG+3SXVTxD6aJUTJpgtQhtlzpZYEK+LRGffmOYi9FrTonuPnDjJHyqd9+pIIxWN4
+	PzBQ3CZoJJ5VX/DPd48umgdupTyQPfQHTLQgJl4BmGsLsKC3O1c4Di8dIOfSpnAr
+	PqYdxS4uSpPuBK3HZo3lF3BruLBkf2/M75Z1YCzU/UYXp2gVuPX43sVa1DyERJKd
+	hoGoCCWpCnBrxF6Uv/YC03N/Li9zqrONLyzRO+f9pe/amtEmeVgTrXDADrdqtrYn
+	ufAg0tWRy+hrjnX1TcDr2DMNTC94xJv+lixiDi+hB3VcEAK6vSq3e9nT/KDm1wDP
+	URzTQg==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twtb73ty-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Apr 2025 13:08:07 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53AD86rA014610
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Apr 2025 13:08:06 GMT
+Received: from [10.216.14.182] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 10 Apr
+ 2025 06:07:57 -0700
+Message-ID: <0f4eca6c-67df-4730-88b3-a277903deabc@quicinc.com>
+Date: Thu, 10 Apr 2025 18:37:54 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250410125110.1232329-1-gshan@redhat.com>
-X-Rspamd-Queue-Id: 152DE21166
-X-Spam-Score: -3.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_CC(0.00)[kvack.org,vger.kernel.org,linux.ibm.com,redhat.com,linuxfoundation.org,kernel.org,linux-foundation.org,gmail.com];
-	DKIM_TRACE(0.00)[suse.de:+];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TAGGED_RCPT(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 07/10] arm64: dts: qcom: sa8775p-ride: add anx7625 DSI
+ to DP bridge nodes
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+        <konradybcio@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <robdclark@gmail.com>,
+        <dmitry.baryshkov@linaro.org>, <sean@poorly.run>,
+        <marijn.suijten@somainline.org>, <andersson@kernel.org>,
+        <robh@kernel.org>, <robh+dt@kernel.org>, <krzk+dt@kernel.org>,
+        <konradybcio@kernel.org>, <conor+dt@kernel.org>,
+        <andrzej.hajda@intel.com>, <neil.armstrong@linaro.org>,
+        <rfoss@kernel.org>, <Laurent.pinchart@ideasonboard.com>,
+        <jonas@kwiboo.se>, <jernej.skrabec@gmail.com>,
+        <quic_abhinavk@quicinc.com>, <quic_rajeevny@quicinc.com>,
+        <quic_vproddut@quicinc.com>, <quic_jesszhan@quicinc.com>
+References: <20250404115539.1151201-1-quic_amakhija@quicinc.com>
+ <20250404115539.1151201-8-quic_amakhija@quicinc.com>
+ <nxnqwh2mzvnxv5ytwjsyulxr6ct6mhv3z3v6q4ojrjhhclwv2i@55nb56hnwi3y>
+Content-Language: en-US
+From: Ayushi Makhija <quic_amakhija@quicinc.com>
+In-Reply-To: <nxnqwh2mzvnxv5ytwjsyulxr6ct6mhv3z3v6q4ojrjhhclwv2i@55nb56hnwi3y>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: u6cLcpuCQZXqIApBuHPMYAggNJBvecAZ
+X-Authority-Analysis: v=2.4 cv=LLlmQIW9 c=1 sm=1 tr=0 ts=67f7c2b7 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=zjBtcsmdu44VOzoy24MA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: u6cLcpuCQZXqIApBuHPMYAggNJBvecAZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-10_03,2025-04-08_04,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
+ clxscore=1015 mlxlogscore=999 malwarescore=0 phishscore=0
+ lowpriorityscore=0 priorityscore=1501 mlxscore=0 spamscore=0 adultscore=0
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504100095
 
-On Thu, Apr 10, 2025 at 10:51:10PM +1000, Gavin Shan wrote:
-> for_each_present_section_nr() was introduced to add_boot_memory_block()
-> by commit 61659efdb35c ("drivers/base/memory: improve add_boot_memory_block()").
-> It causes unnecessary overhead when the present sections are really
-> sparse. next_present_section_nr() called by the macro to find the next
-> present section, which is far away from the spanning sections in the
-> specified block. Too much time consumed by next_present_section_nr()
-> in this case, which can lead to softlockup as observed by Aditya Gupta
-> on IBM Power10 machine.
+Hi Dmirity/Konard
+
+On 4/7/2025 1:42 AM, Dmitry Baryshkov wrote:
+> On Fri, Apr 04, 2025 at 05:25:36PM +0530, Ayushi Makhija wrote:
+>> Add anx7625 DSI to DP bridge device nodes.
+>>
+>> Signed-off-by: Ayushi Makhija <quic_amakhija@quicinc.com>
+>> ---
+>>  arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi | 208 ++++++++++++++++++++-
+>>  1 file changed, 207 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+>> index 175f8b1e3b2d..8e784ccf4138 100644
+>> --- a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
+>> @@ -28,6 +28,13 @@ chosen {
+>>  		stdout-path = "serial0:115200n8";
+>>  	};
+>>  
+>> +	vph_pwr: vph-pwr-regulator {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "vph_pwr";
+>> +		regulator-always-on;
+>> +		regulator-boot-on;
+>> +	};
+>> +
+>>  	vreg_conn_1p8: vreg_conn_1p8 {
+>>  		compatible = "regulator-fixed";
+>>  		regulator-name = "vreg_conn_1p8";
+>> @@ -128,6 +135,30 @@ dp1_connector_in: endpoint {
+>>  			};
+>>  		};
+>>  	};
+>> +
+>> +	dp-dsi0-connector {
+>> +		compatible = "dp-connector";
+>> +		label = "DSI0";
+>> +		type = "full-size";
+>> +
+>> +		port {
+>> +			dp_dsi0_connector_in: endpoint {
+>> +				remote-endpoint = <&dsi2dp_bridge0_out>;
+>> +			};
+>> +		};
+>> +	};
+>> +
+>> +	dp-dsi1-connector {
+>> +		compatible = "dp-connector";
+>> +		label = "DSI1";
+>> +		type = "full-size";
+>> +
+>> +		port {
+>> +			dp_dsi1_connector_in: endpoint {
+>> +				remote-endpoint = <&dsi2dp_bridge1_out>;
+>> +			};
+>> +		};
+>> +	};
+>>  };
+>>  
+>>  &apps_rsc {
+>> @@ -517,9 +548,135 @@ &i2c11 {
+>>  
+>>  &i2c18 {
+>>  	clock-frequency = <400000>;
+>> -	pinctrl-0 = <&qup_i2c18_default>;
+>> +	pinctrl-0 = <&qup_i2c18_default>,
+>> +		    <&io_expander_intr_active>,
+>> +		    <&io_expander_reset_active>;
 > 
->   watchdog: BUG: soft lockup - CPU#248 stuck for 22s! [swapper/248:1]
->   Modules linked in:
->   CPU: 248 UID: 0 PID: 1 Comm: swapper/248 Not tainted 6.15.0-rc1-next-20250408 #1 VOLUNTARY
->   Hardware name: 9105-22A POWER10 (raw) 0x800200 opal:v7.1-107-gfda75d121942 PowerNV
->   NIP:  c00000000209218c LR: c000000002092204 CTR: 0000000000000000
->   REGS: c00040000418fa30 TRAP: 0900   Not tainted  (6.15.0-rc1-next-20250408)
->   MSR:  9000000002009033 <SF,HV,VEC,EE,ME,IR,DR,RI,LE>  CR: 28000428  XER: 00000000
->   CFAR: 0000000000000000 IRQMASK: 0
->   GPR00: c000000002092204 c00040000418fcd0 c000000001b08100 0000000000000040
->   GPR04: 0000000000013e00 c000c03ffebabb00 0000000000c03fff c000400fff587f80
->   GPR08: 0000000000000000 00000000001196f7 0000000000000000 0000000028000428
->   GPR12: 0000000000000000 c000000002e80000 c00000000001007c 0000000000000000
->   GPR16: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
->   GPR20: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
->   GPR24: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
->   GPR28: c000000002df7f70 0000000000013dc0 c0000000011dd898 0000000008000000
->   NIP [c00000000209218c] memory_dev_init+0x114/0x1e0
->   LR [c000000002092204] memory_dev_init+0x18c/0x1e0
->   Call Trace:
->   [c00040000418fcd0] [c000000002092204] memory_dev_init+0x18c/0x1e0 (unreliable)
->   [c00040000418fd50] [c000000002091348] driver_init+0x78/0xa4
->   [c00040000418fd70] [c0000000020063ac] kernel_init_freeable+0x22c/0x370
->   [c00040000418fde0] [c0000000000100a8] kernel_init+0x34/0x25c
->   [c00040000418fe50] [c00000000000cd94] ret_from_kernel_user_thread+0x14/0x1c
+> These pinctrl entries should go to the IO expander itself.
 > 
-> Avoid the overhead by folding for_each_present_section_nr() to the outer
-> loop. add_boot_memory_block() is dropped after that.
+>>  	pinctrl-names = "default";
+>> +
+>>  	status = "okay";
+>> +
+>> +	io_expander: gpio@74 {
+>> +		compatible = "ti,tca9539";
+>> +		reg = <0x74>;
+>> +		interrupts-extended = <&tlmm 98 IRQ_TYPE_EDGE_BOTH>;
+>> +		gpio-controller;
+>> +		#gpio-cells = <2>;
+>> +		interrupt-controller;
+>> +		#interrupt-cells = <2>;
+>> +
+>> +		gpio2-hog {
 > 
-> Fixes: 61659efdb35c ("drivers/base/memory: improve add_boot_memory_block()")
-> Closes: https://lore.kernel.org/linux-mm/20250409180344.477916-1-adityag@linux.ibm.com
-> Reported-by: Aditya Gupta <adityag@linux.ibm.com>
-> Signed-off-by: Gavin Shan <gshan@redhat.com>
+> This needs a huuge explanation in the commit message. Otherwise I'd say
+> these pins should likely be used by the corresponding anx bridges.
 
-Acked-by: Oscar Salvador <osalvador@suse.de>
+Thanks, for the review.
 
+Previously, I was referring to the downstream DT and misunderstood the use of gpio-hog.
+After reading the schematic, I realized that gpio2, gpio3, gpio10, and gpio11 are all input pins
+to the IO expander TC9539. We have already configured gpio2 and gpio10 as interrupts in the
+ANX7625 bridges, so the gpio-hog is not required. It is working without the gpio-hog configuration.
 
--- 
-Oscar Salvador
-SUSE Labs
+Thanks,
+Ayushi
+
