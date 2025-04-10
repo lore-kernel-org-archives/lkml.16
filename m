@@ -1,197 +1,147 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D2181EE031;
-	Thu, 10 Apr 2025 16:55:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB1951EFFAD;
+	Thu, 10 Apr 2025 16:55:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744304104; cv=none; b=DXLWHs6LrNm570ABF9kyEnz5zWfb3nf0vKTE7BMJ8zAaPG6v1PxJTi/O7dP0Hk4+yNU7NwLxXOc+oBjasVqO+dBCW76/Bi6zpiJ908/lU6UkxhgvoFXAL3sXCasXOrIFBG/W8a5Ivt89Z62PK6x3vrIoRc07veCuN1+WWcWKYN0=
+	t=1744304111; cv=none; b=TbqN4H6Ck9j4pHgmFW6LnBdpz+hLlrr3/40y2sKjUrc5pVRcmG6F/C54hCac+nQ53znZKjIRIP75ocoxPKZbbBBCA3bjjfzU2KtnVxUuePeFLvdVc7X6JxZqx2BYAEJkmMaRBuY0cBQFth0Yge/te3Zuv3gyQGnhr3kY5ktaahE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744304104; c=relaxed/simple;
-	bh=6ILYwxPk1uunko0MaW2WhQjFVnHa2NU28ADIkv7zU0I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SrRIT077acdhp4YWtIX5txgP2fPS6pqUXoVQwzklt3TCL/ZnbmidUqzj6WGJlL1z8ErXSZoUJ+ruuBBj+ZAWEvFAolaz/QoRXyE8dSLgHUY8wzo3gIqZiuaR2Lulq0+6tDTNk+UEAaLpMZmEwiKyxEQozIUxH7ktk35cHZM8WMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=Yo8ar9ev; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1744304111; c=relaxed/simple;
+	bh=jr7IvKeCXX2HCm0pjy23wiCb6QGdEzIViDoHGwXVNK0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rciKmi1YMt82Lc2RHcVr5EUt0A3h4iMA1SMnh8FhQg35y+Se4CPsiOh5xFhgJT9JlU+d0JxfjVy6KhvCssBOsGpINikhPj15qUhCcVwgv7qP/Gpi9u0PESMD74kKzVEFWaKXwEaSZtv5Ofr3krDXSVUHDdrdVFBR9RoDd5z4ZvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=AiHIN+8C; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="Yo8ar9ev"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 4E37B25DC2;
-	Thu, 10 Apr 2025 18:54:59 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id AYPDpyDU1__h; Thu, 10 Apr 2025 18:54:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1744304098; bh=6ILYwxPk1uunko0MaW2WhQjFVnHa2NU28ADIkv7zU0I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Yo8ar9evgyQErWgB1u5lLqMaQwD2Tvr49FX66uZuDCTl8NPdVDfVFghZ4W9R6Gaxm
-	 Mz8mOJ0fGzWLWCUY0rhuPrixJ/IrZKiluPQB2r8KYQGfrYo1YJ68jTB+42CH+QqzR5
-	 wL9VTnl1vk+oIEavqYHofGrzOerTvx699vl53+cHVL4KxLG+5QFds2oDzwlVbfbhgV
-	 X+sSce8U4eEU7g0rugNQjHKUJ7eE5xg6N5FPXz8OFAsjly+tCL9Wuca8uD/jK9bTA0
-	 cMRYSw+X+jr4d3UZMHOdQNkBTF+GHaiTzy8HTUuzI6GYBzdUOcd5sLvYbX32itR7TF
-	 1sFQCOSmXIc2A==
-Date: Thu, 10 Apr 2025 16:54:42 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: Icenowy Zheng <uwu@icenowy.me>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Emil Renner Berthing <kernel@esmil.dk>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	Michael Zhu <michael.zhu@starfivetech.com>,
-	Drew Fustini <drew@beagleboard.org>
-Cc: devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="AiHIN+8C"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1744304107; x=1744908907; i=w_armin@gmx.de;
+	bh=E5IEqst5QifiNmEPxnMLO7fV0b71J9ICRr3urOpzNUY=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-Id:
+	 MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=AiHIN+8CQEK7bQK7ReJH5JbtEtg6EpdT8CUFJWJj5uoMKerF84zKa32AtDRyKIr+
+	 7aUwYpXPDG6VLIvVduAfy9onzWouD1aWhksyYLtD3R0s3uWL7mraWCshOcSBc8rrE
+	 Y8zIEikYP1Koq5FIVkCZOkpYlvGLYNWEuX8BIAO45HBVSB6QHMfqZMIMSXCGJs3TL
+	 KhuDCGchG+CZf3xzW/Jv1bVqkmN2QwQTLevqzDDFImVlKODti0QBolZvAbAU8EUdp
+	 SKYFz5IW0QzdZrzeYmUsMEiTjw2D+vKblkVEI+7jDDpvGc91nGDZXH4WLRq6T/q/v
+	 cGYFXFbbIvfQAE6qlw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.fritz.box ([87.177.78.219]) by mail.gmx.net
+ (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1Mnpnm-1tHzVI396w-00p9CE; Thu, 10 Apr 2025 18:55:06 +0200
+From: Armin Wolf <W_Armin@gmx.de>
+To: rafael@kernel.org,
+	rui.zhang@intel.com
+Cc: lenb@kernel.org,
+	linux-acpi@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] riscv: dts: starfive: add DT for Orange Pi RV
-Message-ID: <Z_f30vAuATR1DCWk@pie>
-References: <20250409091801.855083-1-uwu@icenowy.me>
- <20250409091801.855083-2-uwu@icenowy.me>
+Subject: [PATCH 0/3] ACPI: thermal: Properly support the _SCP control method
+Date: Thu, 10 Apr 2025 18:54:53 +0200
+Message-Id: <20250410165456.4173-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250409091801.855083-2-uwu@icenowy.me>
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:QYLUBy5UNdTZv8Wdch5JKS3IJaGVumN3Dp24EqAlX9ai1MZySeu
+ fLVO5rPpJ1gDvBwcTRrwC42Vt6GUeaA7qW4giynp1hLNQdO1vjh0ZAaxuBXBnK/4L6nC3ka
+ BvCXsfsU3Lolc8nlyQqIvdZsShsz3g4ObkSG+6rmLeXr1p4gp2sR+ON6xCR2zDELYZByfou
+ KcEVmanj0sLdzj3Kaqahg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:SoTVxWYJg2s=;dy+1h/FxkSP6TYvl7SyDb5dXVGG
+ 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
+ gulLjNrJJq9k/Dnje0drB4=
 
-On Wed, Apr 09, 2025 at 05:18:01PM +0800, Icenowy Zheng wrote:
-> Orange Pi RV is a newly released SBC with JH7110 SoC, single GbE port
-> (connected to JH7110 GMAC0 via a YT8531 PHY), 4 USB ports (via a VL805
-> PCIe USB controller connected to JH7110 PCIE0), a M.2 M-key slot
-> (connected to JH7110 PCIE1), a HDMI video output, a 3.5mm audio output
-> and a microSD slot.
-> 
-> Onboard peripherals contain a SPI NOR (which contains the U-Boot
-> firmware) and an Ampak AP6256 SDIO Wi-Fi module.
-> 
-> As the schematics isn't available yet, the SDIO Wi-Fi is left disabled
-> yet.
-> 
-> Signed-off-by: Icenowy Zheng <uwu@icenowy.me>
-> ---
->  arch/riscv/boot/dts/starfive/Makefile         |  1 +
->  .../boot/dts/starfive/jh7110-orangepi-rv.dts  | 73 +++++++++++++++++++
->  2 files changed, 74 insertions(+)
->  create mode 100644 arch/riscv/boot/dts/starfive/jh7110-orangepi-rv.dts
-> 
-> diff --git a/arch/riscv/boot/dts/starfive/Makefile b/arch/riscv/boot/dts/starfive/Makefile
-> index b3bb12f78e7d5..24f1a44828350 100644
-> --- a/arch/riscv/boot/dts/starfive/Makefile
-> +++ b/arch/riscv/boot/dts/starfive/Makefile
-> @@ -10,6 +10,7 @@ dtb-$(CONFIG_ARCH_STARFIVE) += jh7100-starfive-visionfive-v1.dtb
->  
->  dtb-$(CONFIG_ARCH_STARFIVE) += jh7110-deepcomputing-fml13v01.dtb
->  dtb-$(CONFIG_ARCH_STARFIVE) += jh7110-milkv-mars.dtb
-> +dtb-$(CONFIG_ARCH_STARFIVE) += jh7110-orangepi-rv.dtb
->  dtb-$(CONFIG_ARCH_STARFIVE) += jh7110-pine64-star64.dtb
->  dtb-$(CONFIG_ARCH_STARFIVE) += jh7110-starfive-visionfive-2-v1.2a.dtb
->  dtb-$(CONFIG_ARCH_STARFIVE) += jh7110-starfive-visionfive-2-v1.3b.dtb
-> diff --git a/arch/riscv/boot/dts/starfive/jh7110-orangepi-rv.dts b/arch/riscv/boot/dts/starfive/jh7110-orangepi-rv.dts
-> new file mode 100644
-> index 0000000000000..bde01f117e0b2
-> --- /dev/null
-> +++ b/arch/riscv/boot/dts/starfive/jh7110-orangepi-rv.dts
-> @@ -0,0 +1,73 @@
-> +// SPDX-License-Identifier: GPL-2.0 OR MIT
-> +/*
-> + * Copyright (C) 2025 Icenowy Zheng <uwu@icenowy.me>
-> + */
-> +
-> +/dts-v1/;
-> +#include "jh7110-common.dtsi"
-> +#include <dt-bindings/leds/common.h>
-> +
-> +/ {
-> +	model = "Xunlong Orange Pi RV";
-> +	compatible = "xunlong,orangepi-rv", "starfive,jh7110";
-> +
-> +	leds {
-> +		compatible = "gpio-leds";
-> +
-> +		led-ack {
-> +			gpios = <&aongpio 3 GPIO_ACTIVE_HIGH>;
-> +			color = <LED_COLOR_ID_GREEN>;
-> +			function = LED_FUNCTION_HEARTBEAT;
-> +			linux,default-trigger = "heartbeat";
-> +			label = "ack";
+The ACPI specification defines an interface for the operating system
+to change the preferred cooling mode of a given ACPI thermal zone.
+This interface takes the form of a special ACPI control method called
+_SCP (see section 11.4.13 for details) and is already supported by the
+ACPI thermal driver.
 
-Should we sort the properties in alphabet order? i.e. color, function,
-gpios, label then linux,default-trigger. See dts-coding-style.rst,
+However this support as many issues:
 
-> The following order of properties in device nodes is preferred:
->
-> 1. "compatible"
-> 2. "reg"
-> 3. "ranges"
-> 4. Standard/common properties (defined by common bindings, e.g. without
-> vendor-prefixes)
-> 5. Vendor-specific properties
-> 6. "status" (if applicable)
-> 7. Child nodes, where each node is preceded with a blank line
+ - the kernel advertises support for the "3.0 _SCP Extensions" yet the
+   ACPI thermal driver does not support those extensions. This may
+   confuse the ACPI firmware.
 
-> +		};
-> +	};
-> +};
-> +
-> +&gmac0 {
-> +	starfive,tx-use-rgmii-clk;
-> +	assigned-clocks = <&aoncrg JH7110_AONCLK_GMAC0_TX>;
-> +	assigned-clock-parents = <&aoncrg JH7110_AONCLK_GMAC0_RMII_RTX>;
-> +	status = "okay";
+ - the execution of the _SCP control method happens after the driver
+   retrieved the trip point values. This conflicts with the ACPI
+   specification:
 
-Vendor property starfive,tx-use-rgmii-clk should go after the common
-ones.
+	"OSPM will automatically evaluate _ACx and _PSV objects after
+	 executing _SCP."
 
-> +};
-> +
-> +&i2c0 {
-> +	status = "okay";
-> +};
-> +
-> +&mmc0 {
-> +	/* TODO: Ampak AP6256 Wi-Fi module attached here */
-> +	status = "disabled";
-> +};
-> +
-> +&mmc1 {
-> +	/delete-property/ cd-gpios;
-> +	broken-cd;
-> +};
-> +
-> +&pcie0 {
-> +	status = "okay";
-> +};
-> +
-> +&pcie1 {
-> +	status = "okay";
-> +};
-> +
-> +&phy0 {
-> +	motorcomm,tx-clk-adj-enabled;
-> +	motorcomm,tx-clk-10-inverted;
-> +	motorcomm,tx-clk-100-inverted;
-> +	motorcomm,tx-clk-1000-inverted;
-> +	motorcomm,rx-clk-drv-microamp = <3970>;
-> +	motorcomm,rx-data-drv-microamp = <2910>;
-> +	rx-internal-delay-ps = <1500>;
-> +	tx-internal-delay-ps = <1500>;
-> +};
+ - the cooling mode is hardcoded to active cooling and cannot be
+   changed by the user.
 
-Ditto, move the vendor properties below the common ones.
+Those issues are fixed in this patch series. In the end the user
+will be able to tell the ACPI firmware wether he prefers active or
+passive cooling. This setting will also be interesting for
+applications like TLP (https://linrunner.de/tlp/index.html).
 
-> +&pwmdac {
-> +	status = "okay";
-> +};
-> +
-> +&spi0 {
-> +	status = "okay";
-> +};
-> -- 
-> 2.49.0
-> 
+The whole series was tested on various devices supporting the _SCP
+control method and on a device without the _SCP control method and
+appears to work flawlessly.
 
-Best regards,
-Yao Zi
+Armin Wolf (3):
+  ACPI: OSI: Stop advertising support for "3.0 _SCP Extensions"
+  ACPI: thermal: Execute _SCP before reading trip points
+  ACPI: thermal: Allow userspace applications to change the cooling mode
+
+ .../ABI/testing/sysfs-driver-thermal          |  14 ++
+ MAINTAINERS                                   |   1 +
+ drivers/acpi/osi.c                            |   1 -
+ drivers/acpi/thermal.c                        | 129 ++++++++++++++++--
+ 4 files changed, 133 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-driver-thermal
+
+=2D-
+2.39.5
+
