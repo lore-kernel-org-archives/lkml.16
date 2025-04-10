@@ -1,85 +1,69 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CC9815624D;
-	Thu, 10 Apr 2025 02:20:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7D2A1AF0BB
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 02:20:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744251602; cv=none; b=Cfd+qLYQNGE80yrcLAH0L9tM1JM041gY1qRxo9DCOTFTrNWksinPqF6b0HlHDjNLn9v60029O+FoIsAaSoCHJJzMv3Bf4FE7tmuBccr0qNTx98auPZrfvdRi/aLnSPSt8Dl8KI5abr6EJ6bpoyuLs012wkmyRGR4MGy1XqeNd+g=
+	t=1744251601; cv=none; b=PgXXuQPuVjjelD+9X8NEQo+/7tp0Ko8oWS6FlkmOmuaOLDrfitLHYStMR8QapWQs03zcIAcr6Gw9kDhk2RUTBPAcQTZMcOwXjZoAb3BgyWHoGAOZ8ugszZMDxXqJrzh4hxZ7KEzHdsXxINxhevj8Sz3xCHjiytj3MgfWYcXRclg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744251602; c=relaxed/simple;
-	bh=1klD8Y7z2hJ9GGeD0Xcot7B/BqnqJoDYxKvvJ1xL8e0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=k/+FahWNyXn4mUiSBjgBi38F2Bimjr7/4uB0EFNzu7MovXfzeOvMdPu2zZSyo5OdfvW2q1rvHvxwZWnEoEpCXlwZJwoA+17ogqMfXACrx0qo3vCcKEL4fYiSqvWhAlCkNOqPCG/gAEekl2BUn+XU6bCrrYHC0xz50vNrr73Q0YY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4ZY3Sk140Mz27hVH;
-	Thu, 10 Apr 2025 10:20:38 +0800 (CST)
-Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8A087140230;
-	Thu, 10 Apr 2025 10:19:57 +0800 (CST)
-Received: from localhost.localdomain (10.90.30.45) by
- kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 10 Apr 2025 10:19:56 +0800
-From: Jijie Shao <shaojijie@huawei.com>
-To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <andrew+netdev@lunn.ch>, <horms@kernel.org>
-CC: <shenjian15@huawei.com>, <wangpeiyang1@huawei.com>,
-	<liuyonglong@huawei.com>, <chenhao418@huawei.com>, <sudongming1@huawei.com>,
-	<xujunsheng@huawei.com>, <shiyongbang@huawei.com>, <libaihan@huawei.com>,
-	<jonathan.cameron@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
-	<salil.mehta@huawei.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <shaojijie@huawei.com>
-Subject: [PATCH net v3 0/7] There are some bugfix for hibmcge driver
-Date: Thu, 10 Apr 2025 10:13:20 +0800
-Message-ID: <20250410021327.590362-1-shaojijie@huawei.com>
-X-Mailer: git-send-email 2.30.0
+	s=arc-20240116; t=1744251601; c=relaxed/simple;
+	bh=UUekSxE+tk+VwekK5jEZCtmL2RwRMomvGMlVVMnw82c=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=nTSuugYUsZfCqsWsAMfNiq5jGKyImOM2cmvi1Z7TiJXt3ui+8sqIRVYXFkfqOoZa94nFcFeSLZM8GTfNU9Hy44887H5QXJmy5FxV/Lvm2Jv0MWhGcl3aGWogNH2G5TzjzjehQwTSnhmA4KZtgi/fDdsjHfFiW4mpFFPWKSz8SXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=C2ZwX9AG; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="C2ZwX9AG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE021C4CEE2;
+	Thu, 10 Apr 2025 02:20:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1744251601;
+	bh=UUekSxE+tk+VwekK5jEZCtmL2RwRMomvGMlVVMnw82c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=C2ZwX9AGrh50LpzrQVm4+LSlDAH5fOQv+fimtEKv8OCHb1+QMkUkmSDDf42tUlPzx
+	 SyzQm0+G3EcJUNb3IkqOrO0brdWKmBPWP8PVGAHYLc7gVcSlICcckHDrBwmq+1Z94g
+	 F2buw12O1+roYa5yCIamZbkLzHPY8CBsuTqKP1Sw=
+Date: Wed, 9 Apr 2025 19:20:00 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Donet Tom <donettom@linux.ibm.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ linux-kernel@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+ linux-mm@kvack.org, Mike Rapoport <rppt@kernel.org>, Ritesh Harjani
+ <ritesh.list@gmail.com>, rafael@kernel.org, Danilo Krummrich
+ <dakr@kernel.org>
+Subject: Re: [PATCH 1/2] mm/memblock: Added a New Memblock Function to Check
+ if the Current Node's Memblock Region Intersects with a Memory Block
+Message-Id: <20250409192000.d8a630d2c10e902bcdf80973@linux-foundation.org>
+In-Reply-To: <50142a29010463f436dc5c4feb540e5de3bb09df.1744175097.git.donettom@linux.ibm.com>
+References: <50142a29010463f436dc5c4feb540e5de3bb09df.1744175097.git.donettom@linux.ibm.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemk100013.china.huawei.com (7.202.194.61)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-There are some bugfix for hibmcge driver
+On Wed,  9 Apr 2025 10:57:56 +0530 Donet Tom <donettom@linux.ibm.com> wrote:
 
----
-ChangeLog:
-v2 -> v3:
-  - Add more details in commit log for patch6, suggested by Jakub.
-  v2: https://lore.kernel.org/all/20250403135311.545633-7-shaojijie@huawei.com/
-v1 -> v2:
-  - Add more details in commit log for patch1, suggested by Simon Horman.
-  v1: https://lore.kernel.org/all/20250402133905.895421-1-shaojijie@huawei.com/
----
+> A new function, curr_node_memblock_intersect_memory_block, has been
 
-Jijie Shao (7):
-  net: hibmcge: fix incorrect pause frame statistics issue
-  net: hibmcge: fix incorrect multicast filtering issue
-  net: hibmcge: fix the share of irq statistics among different network
-    ports issue
-  net: hibmcge: fix wrong mtu log issue
-  net: hibmcge: fix the incorrect np_link fail state issue.
-  net: hibmcge: fix not restore rx pause mac addr after reset issue
-  net: hibmcge: fix multiple phy_stop() issue
+"intersects".
 
- .../ethernet/hisilicon/hibmcge/hbg_common.h   |  8 ++++---
- .../ethernet/hisilicon/hibmcge/hbg_debugfs.c  | 11 +++++----
- .../ethernet/hisilicon/hibmcge/hbg_diagnose.c |  2 +-
- .../net/ethernet/hisilicon/hibmcge/hbg_err.c  |  3 +++
- .../net/ethernet/hisilicon/hibmcge/hbg_hw.c   |  7 ++++++
- .../net/ethernet/hisilicon/hibmcge/hbg_irq.c  | 24 ++++++++++++-------
- .../net/ethernet/hisilicon/hibmcge/hbg_main.c |  8 +++----
- .../net/ethernet/hisilicon/hibmcge/hbg_mdio.c | 11 ++++++++-
- .../net/ethernet/hisilicon/hibmcge/hbg_reg.h  |  3 +++
- 9 files changed, 55 insertions(+), 22 deletions(-)
+Because the name is too short ;)
 
--- 
-2.33.0
+> With this function, the boot time is reduced.
+> 
+> Boot time without this function - 32TB RAM
+> ==========================================
+> Startup finished in 1min 12.413s (kernel)
+> 
+> Boot time with this function -  32TB RAM
+> ========================================
+> Startup finished in 18.031s (kernel)
+
+Impressive.  I'll assume this is rppt material.
+
 
