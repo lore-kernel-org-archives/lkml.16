@@ -1,185 +1,163 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2072.outbound.protection.outlook.com [40.107.22.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E252F189F5C;
-	Thu, 10 Apr 2025 16:07:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.72
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744301251; cv=fail; b=tw6guZBi3/i91mJ8/cdjAyLdUYNuUAIEZegGyBd84R/EvqYVOm57AWBdMONWyvgxXAnek+6sRdfBS1VEmq1vGVB7cKV91EQO4GG2Tanfk7dJCITtgE5T48NBQ9SDubSXT7wZbjTM0gJbeEb+DymzmhpvL1HlDeytmPACdFHYJCQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744301251; c=relaxed/simple;
-	bh=lN62KS+5XnlrCqWAZy54LhE+9RzZMP4GW9HpzMI5Rkc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=mJ3KZnQoUeq91Wt0nSNJBpeTYhonl/OPMJWx6aCdwwb9iF3fnsukt7bk4YhvM1uFRKJdLlUz8uCftUoTdyLssYwevZGN/T6GnM+O2nxkzBCWq9dEyOts6XKqmWX9/WvHCpnerVBaee7iZhbDlI1gOQVuWdL5U0Abp9xxFnGyYkw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=F6KjeHVq; arc=fail smtp.client-ip=40.107.22.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 884721E9B14
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 16:08:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744301292; cv=none; b=D/opfNDqgcmuNupbdXFX4Eggn+9V5VksA1HkdMoAkebYS9dp4SsJ9sjP/NQ/q/lxG5/kUMX7unTXCHhrOYqprYZPN1vfhL7GAoWjI+VaZqiLii4SjombvmEy6cCt0SBrRcy8cyd5FNty0BWXazlNdPowMinwr02XFu5KusuaQB4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744301292; c=relaxed/simple;
+	bh=r/WPmzNSOG7DnhnmxRVyxjV8aisZ4YY9NJhFvRVaLr8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=KJSdPkS+AYkuIPkntHi0acbTHqCXMuOLGjdVgpGKThbmxVflaQKFzgiHSCelDtvtv9FHFk3e04r2HrPz83XXS2lTmC+3o98n36QdY6Ui7ljLwhx9+hPZXpR/hT/skyoiY6+nU1HJWvAfrzipkToiZYdndMycRizDzvbY2d1MEPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=smartx.com; spf=pass smtp.mailfrom=smartx.com; dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b=nxO9olZ0; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=smartx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=smartx.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="F6KjeHVq"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=GsRyg0M6iKVUy5zsqe4C2c9NjJbV1s+upirVnz84gsYKH/lYHUh6VjZ35rFrO2lbx+RitNYI537HPa7fWesYMeKxQAQndiMWpXrcPbAn6uDIilOvg9HQUsHmugE7B7egBq1FtoL6/5Wr5LvEHwA7ZqLM0qinW9t6/r6zSsUFOWCRRl1EomgjPRE2l39QZuOi12+VPj2NJT72AHOp1AcEpjGc9c/NnrlYLv/CiqNHq5y2NVdsUwdRAtAqb2Ve+ToHCZKz740+Rp/NQIbEGX/MqmyGA03hFw2iS6lMP2QeqcrOK1pdULPefep2zeaA0izUtD2z1EjVrB9CCmsYgR1a7w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SqId5nzfmhffmtmm8tBobcXZ5ESa+eTDXrX9l7/+SaA=;
- b=kXqrd9vxjDmhu6Blpxg/XHFSEW2grp66r9r1hmFfXaOlB/UUorTMCgiRHqKuH+obghe2etMLxCk5Q33z4UwFV4iV9c7sqEABBqT69BqAKraumvnkU1rONE6d+WzStl4eBB1A7nfuDYBk+Kn6UHEbO9er8lBH8gp6hRz2o06Wzfn4wJ4OiH8udy4tWkWNcXxCH/5kIza44FUqMEmFQqTU4XmPhSJIB8b0Ux4ybkQ27N+HLDIbf+7nEnDNZsfgwOyZMo22MFfBewQOTaGVn9HohH7ouILORWyHdo7KsW6jBRQ88K7chNzkMeismSAClPouRvp5tFw/dU2Cn2wnK1AN5g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SqId5nzfmhffmtmm8tBobcXZ5ESa+eTDXrX9l7/+SaA=;
- b=F6KjeHVqiejPESTIqlVcGxX8I+ae2SqDnX1IjU4UR2xhMdToOBM9vnNH/WAgU8ZIwslIUlJmY42qqQkzJSYqD6k/dayefEkDKWQS8H1hoZwJI+rQNaNnZyzHeE8IQF3PpiXCNHXoEMjN1JvWOJiT0+uvPiDNQg7ofTL8JnH8QFgFrbNie6UT+ANafY59iqyvksKL8ZpV9T75zpMpvNKp7FkuhjC/lrqc6wf3yTTeGgbEGDkZfbPhemugyO1NGxt/9aJ9M0CAMvYVPMuMJ3chNFMYmKhDJEQ/Xa+zXqFfZLwhpHO7KCHjZsJAcuTlWGFt4qzBTSABs3NUg8PFsO0TmQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by PAXPR04MB9006.eurprd04.prod.outlook.com (2603:10a6:102:20e::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.35; Thu, 10 Apr
- 2025 16:07:26 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8632.021; Thu, 10 Apr 2025
- 16:07:26 +0000
-Date: Thu, 10 Apr 2025 12:07:19 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Adam Ford <aford173@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, aford@beaconembedded.com,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/9] arm64: dts: imx8mm-beacon: Fix HDMI sound output
-Message-ID: <Z/fst7AzAJ3q0iDi@lizhi-Precision-Tower-5810>
-References: <20250410005912.118732-1-aford173@gmail.com>
- <20250410005912.118732-4-aford173@gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250410005912.118732-4-aford173@gmail.com>
-X-ClientProxiedBy: PH7PR17CA0017.namprd17.prod.outlook.com
- (2603:10b6:510:324::13) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b="nxO9olZ0"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-227914acd20so18029395ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 09:08:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=smartx-com.20230601.gappssmtp.com; s=20230601; t=1744301288; x=1744906088; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hq/VSDygxUvqusiASIxz5VUwIaO2iFyZjJyGjGC2vUg=;
+        b=nxO9olZ0dHoU3lG40XetiovtiLgMlTDg6dCyWY0drGL53FO3yil94xKpC5q4IHxl+w
+         AxWJ+vnf0PDU8a/1SVWhOQECIs1zHQiDP+NC9LKP/DaU6PIyn5WEL7rgga1B355jdRcK
+         Mo+EyWwLUXq6SznWd7PJKxUXeZ2vT33t748I5w5L/d9bF83pvWVemBVY/8vk4Z5aT3rl
+         tJMEpf9gY8diJZoX+ISjIBi1jxZIqbKbGW6/1CEmjqpDb+EIympw0TESytT83NMybzeV
+         iKi/9AAuxq2BAOXtdXG6SvtYodLcJX2XpIb1z8n6gVHYHNAhNX4fAmPJWVbGoljP+cmt
+         EWEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744301288; x=1744906088;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hq/VSDygxUvqusiASIxz5VUwIaO2iFyZjJyGjGC2vUg=;
+        b=phguNFyn0c2xVtNfdBgkz3eveSjmE1+ks4lLr5pvpyjQSgriZdSooEy+byZ/7DfnaC
+         hbHr5kXAoZPQCbSM3YyVVr6cIDqhPjnicZVL5MREnToW01ahGSGWCTqzWeVFzqEEuCxH
+         55zPxtGhITh9bv/Uv2/cIuEIX6S/Z7ONatCF1TKRCAncnT93n9M+PhPrD5mkIaa7sEED
+         rAb2ugX1c1HO2PomVcZjmYVdjblPPaEqVCEhRBeMu2rLC+gP/lwcxvc+tnHTBGIQpOSw
+         7H9BvXp4MqXr330Ml+WecfjDupkUeb99twUZOtVaOHpcmWBGgyV46GYd6ONW2NAeT+L+
+         ID+A==
+X-Forwarded-Encrypted: i=1; AJvYcCUCtk63drvv+UrhNKP3kV0hOdC7auHiRm0AhQIHngoXQk+JPjlW3E/5YtrGMGV0K4Xvx0eLGy3MP5M9dho=@vger.kernel.org
+X-Gm-Message-State: AOJu0YymqGa9G5OjD1NT8kH1Mmm5ioDiKP6f3ydCk7br7dLklGwQaEsf
+	9kZKRNoerN3qiFHkN94AP+oaereOHAtRkg2byc7GcMPRzLHQrT0E9UUgsrj3PWU=
+X-Gm-Gg: ASbGncuMn1NIa8uzmm2ufxuXtVaxsYuR3lrfBGRejxt9kQKaEkd1V34uzMLNxcmVnsO
+	x2vPftKOl7C4JVJR4ieROwhFVcSR2avEItusv1Oy+UVfgCYMS4lfLqwcITObK77kkCAgQlhQLsz
+	QVkYkaTqbFIslRVhJQdrQEqeG+iWIsamF+ltdHfs8ngCNXvGrZvlYpN6fm5qU4qpVHjt352j5Ev
+	b6WkmlbeBqb2WutJeoTHQhKQZjVqi/mu6V1nuGertN83VMAWa3KNJN9MC+v8Z+wwre1yRu8H6KP
+	TUuF1W66pZh9D959Sh6Boy8fBBqBB8L/Wvln7SXUbZOE75qwKsarjA==
+X-Google-Smtp-Source: AGHT+IGPEFfzuYGsKFWjoyUUk7FN1CYFyByM7i9vyd1ThL+ecYguA91ljiuUWfeE5IQtgQhbj5/kRg==
+X-Received: by 2002:a17:902:ef02:b0:215:58be:3349 with SMTP id d9443c01a7336-22b8fd48490mr54741595ad.14.1744301288183;
+        Thu, 10 Apr 2025 09:08:08 -0700 (PDT)
+Received: from localhost.localdomain.com ([103.85.74.92])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7ccb5afsm32488185ad.226.2025.04.10.09.08.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Apr 2025 09:08:07 -0700 (PDT)
+From: Jiewei Ke <jiewei@smartx.com>
+To: wagi@kernel.org
+Cc: hare@suse.de,
+	hch@lst.de,
+	jmeneghi@redhat.com,
+	kbusch@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-nvme@lists.infradead.org,
+	mkhalfella@purestorage.com,
+	randyj@purestorage.com,
+	sagi@grimberg.me
+Subject: Re: [PATCH RFC 3/3] nvme: delay failover by command quiesce timeout
+Date: Thu, 10 Apr 2025 12:07:57 -0400
+Message-ID: <20250410160757.2567493-1-jiewei@smartx.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250324-tp4129-v1-3-95a747b4c33b@kernel.org>
+References: <20250324-tp4129-v1-3-95a747b4c33b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PAXPR04MB9006:EE_
-X-MS-Office365-Filtering-Correlation-Id: 35a3ee3f-7437-41be-27e6-08dd7849c946
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|52116014|7416014|38350700014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?dUlSzBxCRmH8Fzi+6Js/vkfFBTFfRaAtxU1q7/dbCmqOSG2v7K0+LfPOSnro?=
- =?us-ascii?Q?BEs8DO7TwFj33hhUK/Gj2G2dJOe8isdYNMbBYw1sI6Uqnp/0iFMwsf/89zoC?=
- =?us-ascii?Q?0ak+9Wpks1pgxWHcXYBsM+sotrGCpbEMaaZl9uMatwuXWQ/Rgxg0bsDmltTZ?=
- =?us-ascii?Q?qHocvKYPWPnwDnbyVCNqGcBBBpkuRosmE025+RXwtkVxoZ7iNy7nJ3spzjmy?=
- =?us-ascii?Q?4ls6zmTh6Nd9SXX6P4wizQM+qizzpKYmMUgWa4SZoVSaTrJJLtkedbNOVLMS?=
- =?us-ascii?Q?TiK3u58lBJcXLp+lqmAIDZzqupAd1CiYSEkNE7SpL3fo5yqojqDj6hFPcxLC?=
- =?us-ascii?Q?ZsWfNBX71bGrdwCJcr3FNOb6enomdogkAalrAPTE0+jW+KQMrnkIQ7C+/i7e?=
- =?us-ascii?Q?aSwwqpVfoZkorJBWDhnzPct957+kc0XyAeIWZtMSoiZoJ+xetnwT+c3sXYD4?=
- =?us-ascii?Q?fij08ftPUOpIoT6Z719nWHBvX86yLDKoRWCrRDNUZbS8FREOT1gP9rmIbr5h?=
- =?us-ascii?Q?hKD4n4fX9SUdNu0ai/4vt1X3SLwJOYr6wc89q1EpwVrfFviq66sH3oNMz7II?=
- =?us-ascii?Q?IrJjvYBw3t/gQ4jf5DWgBYGz7WLr8L0sezXNaT1jx/G7wjAuwSFWDPeKbpVK?=
- =?us-ascii?Q?923QQT0znxQtT1+QUX0G/pje/1EViEyImzcVqGnmxDF7K9vse6EUL1vaCGkF?=
- =?us-ascii?Q?tBgqkktr6ENZf0wTtq9lxydlObFEWjzaKq+LrVu5vYaHzFzPHBRY8M8+VzFB?=
- =?us-ascii?Q?VqxIK+o/9FFNElaDPXRb+JtUBDSXIucoY/DT/VVpx3nasuAS22DizpJUI7Gc?=
- =?us-ascii?Q?ZU2i4YUYYvIKICrcXRNsy5KxxVCSBvNruGN/xGBfPmAbZNokTY3UuYvp4deu?=
- =?us-ascii?Q?0ng1D2D/j1QSXMFJftQut+gtd66a6HeEhfQJOzyuURdCsY7QksqtFoZWUGq3?=
- =?us-ascii?Q?zAiL+pzyTqhG4m1YTmQov6n1nRxLyG8Qe38r4c0XgtbBQYlE78KBQldIZfLO?=
- =?us-ascii?Q?B4L9k8ElAvFqR1FfiAFnujAVkBUeOXVbyW+c91cwvRy8pI4nwq02bby0K0CO?=
- =?us-ascii?Q?nNe6I01GKDJwb2N4pe3RMqHT15Q7Mn1a+akzVrXxfG67GklqOn5Aq6W+8drg?=
- =?us-ascii?Q?KtbwG/pZ1bMV1Oe19ysKYAamx6wO0t15hYJHuhyS/W4xl8sVlgtMrpKSjgd/?=
- =?us-ascii?Q?LiZaeWLkpzzvijvf98fS0N5cay8Zk8gxhrcqTk66gjj1ejTFPmTh9KhE47ZH?=
- =?us-ascii?Q?O6+ERBMjqceW05p7mrB7dDEzMEQmlx65/nivhQaX3KKNSoUQ+/GigwOBfNP4?=
- =?us-ascii?Q?x4RIXCfIiB3MuRMW+Qdcp2StU7CZI5cCSYntBA0MxVWwYZs15ci9oxByuKoW?=
- =?us-ascii?Q?izQyb/PqNfJ+to4FF+6Y9+5Fy5SC1c5kFXvg0slAdsXJhSqIgnbrM/h1vToL?=
- =?us-ascii?Q?n+B5+1pcKjud/NvWSXttF5X8VNm4QTGs?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(52116014)(7416014)(38350700014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?CZawudBxVF2qCJnw88LVNUKx0ovZT5+DM5pc34qLdT1sJ+pxFX1YzzlsxSQj?=
- =?us-ascii?Q?qg3Xmr9/H/GAkw9EJdDX2BrXBAHBDKLyP55IEstsCD918ikCLOAtxW61oDRY?=
- =?us-ascii?Q?HiPthcC4flpohiIWRBjIK5FTmQ/6IPGy7n9tmn6P0OyrOOlGIu9gLNxyoY6n?=
- =?us-ascii?Q?59W/hSIWHy5BBlVJCcQN/VBcgoPYwPN/kOsrFVPXzd6tR8C01DesHCwan39j?=
- =?us-ascii?Q?2MHwCyVV1wpWKFyQwWX8KaxUcRvE+FLkwE7g8Lh+jLyx05Lv2zrTZd5A2huX?=
- =?us-ascii?Q?1iFTjyd8yDyu69QV1/oq5Jhg/UGL5j6o6GJHQgI5rgyV7crrG6fkEC8s8Nfm?=
- =?us-ascii?Q?kHXMpUoxIgocchJs5JO8SDSvPqw+emyq/N4euJH7xctkmwTjLD3npRbYuUaK?=
- =?us-ascii?Q?8G9g6/e1TMcHwbqMluszcFSrzrpoj1206xBDSSAmpjGMZg1Wg3ovNHQ5hrag?=
- =?us-ascii?Q?OQmyJdel9COSo5F3xhSpsRT5RYQ0nM9jkhDhKov8dUWvkGwZvs9QPZ0G9rkR?=
- =?us-ascii?Q?gpFluWHIVMmxP17sMLrnB9sURGsR+4vMfLqoyVrk3q3PO+uqt8BfEYQxRARQ?=
- =?us-ascii?Q?ITPYMAsLd9Ok8j01kyD01UEkPZNFrQLk5pgVGds1gADug3nA6fAj4mlgsfC5?=
- =?us-ascii?Q?yDl4uYNryW+5fkPU55f7QQ5fedCJPlaoGGFBP4jHpUja7iBAazOIwho+KXPw?=
- =?us-ascii?Q?nYhcOHkgyC/ZOMvCwm4TNp0gmvIoPp6mmKaU7Rz6d7pl3nrCz3D0xXQx8sXm?=
- =?us-ascii?Q?RIgfMMMWCSNE4lz4BhmXbQNPW2rpAx6Cd2OSI2LXejvq4NbOKlsOZQQUWWg/?=
- =?us-ascii?Q?l2q4I9XukV/blVqhugaRJfIMVNOOgwE/5MgFOHGIkW5EuG6eeJ+XPttMgHmJ?=
- =?us-ascii?Q?ioLp3h/e5TNmzkEsUD3r4DqDaCZwye3cmVo0xuaOXlayq9PYLyX6iCaissV1?=
- =?us-ascii?Q?/33yFNwMLZujsg4lfYmqOuSsEL6YgKewLf1Gu9Ve85oO9c0hOcs/SZUN3mZt?=
- =?us-ascii?Q?ivozQQwWa3Ai6CwV6TQcZp61H7JaQW0oYONIlQmky1vJlvdjAOAe8rYmUw0S?=
- =?us-ascii?Q?Xw80zMuh+i2UiKUSe/LepaVgwQIPwt9wvHZcJTExqiEzIx129lkJYJJ52WTW?=
- =?us-ascii?Q?EsK2mIXma/KLsyxyOXO1McV5gNgoZHlLwx4Bv/jjgT66uEQr1ZlvOum+TsrZ?=
- =?us-ascii?Q?SDf/e8TJ/Izl1wbFTGwoPDjn51nWB2LzygokdFSEpWx3ZqlUBvwtXrhCLtOW?=
- =?us-ascii?Q?ObR0jYpc+XZP3YVbX/QgUiFzw1gp7dtmtsVd1Bk+9snm9I7v8Zdd/9SZxLZb?=
- =?us-ascii?Q?6Pkwk8Tzta1wXMx7tda589oSJC5AY6BcjSk+ttaC7JpgQHLypEibk0kGfGVm?=
- =?us-ascii?Q?h18e6vgIz8zM4Nyci2HqvlpCMB0Y8FNOcRZ6qPvd0Z7CQ60fGRa1lynzs5AX?=
- =?us-ascii?Q?kdtgXunsdjvEpkUHHUoBSJeD7G1N+4YjRKtRq2eQ0rJSUacO/9AKsqpFmnvN?=
- =?us-ascii?Q?I3julATNYaVUZ+/glWnOqSYSfmQUrwW1dkA0IiLfQKHwpOr26LH36lcbrfFw?=
- =?us-ascii?Q?sXxBIbxTxhF/En1g1vIMNCXBZOUX37yzap2ke7kC?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 35a3ee3f-7437-41be-27e6-08dd7849c946
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 16:07:26.2998
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: G7PPRQYMqirWoMmPWdmBhA4b3Bobvjt5zP7DcFX4BHxoW4/VPVX91SX9V9XJxIWlSGLUOS44y4lxk0fqVYIeTA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB9006
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 09, 2025 at 07:58:58PM -0500, Adam Ford wrote:
-> The HDMI bridge chip's sound card enumerates, but it does not generate
-> sound. This is because the sai5 node is missing the flag telling it
-> to set the mclk as output.
->
-Suggest commit message:
+Hi Daniel,
 
-arm64: dts: imx8mm-beacon: Set SAI5 MCLK direction to output for HDMI audio
+I just noticed that your patchset addresses a similar issue to the one I'm
+trying to solve with my recently submitted patchset [1]. Compared to your
+approach, mine differs in a few key aspects:
 
-The HDMI bridge chip fails to generate an audio source due to the SAI5
-master clock (MCLK) direction not being set to output. This prevents proper
-clocking of the HDMI audio interface.
+1. Only aborted requests are delayed for retry. In the current implementation,
+nvmf_complete_timed_out_request and nvme_cancel_request set the request status
+to NVME_SC_HOST_ABORTED_CMD. These requests are usually already sent to the
+target, but may have timed out or been canceled before a response is received.
+Since the target may still be processing them, the host needs to delay retrying
+to ensure the target has completed or cleaned up the stale requests. On the
+other hand, requests that are not aborted - such as those that never got
+submitted due to no usable path (e.g., from nvme_ns_head_submit_bio), or those
+that already received an ANA error from the target - do not need delayed retry.
 
-Add the `fsl,sai-mclk-direction-output` property to the SAI5 node to ensure
-the MCLK is driven by the SoC, resolving the HDMI sound issue.
+2. The host explicitly disconnects and stops KeepAlive before delay scheduling
+retrying requests. This aligns with Section 9.6 "Communication Loss Handling"
+of the NVMe Base Specification 2.1. Once the host disconnects, the target may
+take up to the KATO interval to detect the lost connection and begin cleaning
+up any remaining requests.
 
-Frank
+@@ -2178,6 +2180,7 @@ static void nvme_rdma_shutdown_ctrl(struct nvme_rdma_ctrl *ctrl, bool shutdown)
+ 	nvme_quiesce_admin_queue(&ctrl->ctrl);
+ 	nvme_disable_ctrl(&ctrl->ctrl, shutdown);
+ 	nvme_rdma_teardown_admin_queue(ctrl, shutdown);
++	nvme_delay_kick_retry_lists(&ctrl->ctrl); <<< delay kick retry after teardown all queues
+ }
 
-> Fixes: 8ad7d14d99f3 ("arm64: dts: imx8mm-beacon: Add HDMI video with sound")
-> Signed-off-by: Adam Ford <aford173@gmail.com>
-> ---
->  arch/arm64/boot/dts/freescale/imx8mm-beacon-kit.dts | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mm-beacon-kit.dts b/arch/arm64/boot/dts/freescale/imx8mm-beacon-kit.dts
-> index 97ff1ddd6318..734a75198f06 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mm-beacon-kit.dts
-> +++ b/arch/arm64/boot/dts/freescale/imx8mm-beacon-kit.dts
-> @@ -124,6 +124,7 @@ &sai5 {
->  	assigned-clock-parents = <&clk IMX8MM_AUDIO_PLL1_OUT>;
->  	assigned-clock-rates = <24576000>;
->  	#sound-dai-cells = <0>;
-> +	fsl,sai-mclk-direction-output;
->  	status = "okay";
->  };
->
-> --
-> 2.48.1
->
+3. Delayed retry of aborted requests is supported across multiple scenarios,
+including error recovery work, controller reset, controller deletion, and
+controller reconnect failure handling. Here's the relevant code for reference.
+
+diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
+index 9109d5476417..f07b3960df7c 100644
+--- a/drivers/nvme/host/tcp.c
++++ b/drivers/nvme/host/tcp.c
+@@ -2449,6 +2449,7 @@ static int nvme_tcp_setup_ctrl(struct nvme_ctrl *ctrl, bool new)
+ destroy_admin:
+ 	nvme_stop_keep_alive(ctrl);
+ 	nvme_tcp_teardown_admin_queue(ctrl, new);
++	nvme_delay_kick_retry_lists(ctrl); <<< requests may be timed out when ctrl reconnects
+ 	return ret;
+ }
+
+@@ -2494,6 +2495,7 @@ static void nvme_tcp_error_recovery_work(struct work_struct *work)
+ 	nvme_tcp_teardown_admin_queue(ctrl, false);
+ 	nvme_unquiesce_admin_queue(ctrl);
+ 	nvme_auth_stop(ctrl);
++	nvme_delay_kick_retry_lists(ctrl); <<< retry_lists may contain timed out or cancelled requests
+
+ 	if (!nvme_change_ctrl_state(ctrl, NVME_CTRL_CONNECTING)) {
+ 		/* state change failure is ok if we started ctrl delete */
+
+@@ -2513,6 +2515,7 @@ static void nvme_tcp_teardown_ctrl(struct nvme_ctrl *ctrl, bool shutdown)
+ 	nvme_quiesce_admin_queue(ctrl);
+ 	nvme_disable_ctrl(ctrl, shutdown);
+ 	nvme_tcp_teardown_admin_queue(ctrl, shutdown);
++	nvme_delay_kick_retry_lists(ctrl); <<< retry_lists may contain timed out or cancelled requests when ctrl reset or delete
+ }
+
+Besides, in nvme_tcp_error_recovery_work, the delayed retry must occur after
+nvme_tcp_teardown_io_queues, because the teardown cancels requests that may need
+to be retried too.
+
+One limitation of my patchset is that it does not yet include full CQT support,
+and due to testing environment constraints, only nvme_tcp and nvme_rdma are
+currently covered.
+
+I'd be happy to discuss the pros and cons of both approaches - perhaps we can
+combine the best aspects.
+
+Looking forward to your thoughts.
+
+Thanks,
+Jiewei
+
+[1] https://lore.kernel.org/linux-nvme/20250410122054.2526358-1-jiewei@smartx.com/
+
