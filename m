@@ -1,62 +1,62 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F2828C5CF
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 14:06:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F9C228CF59
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 14:06:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744294005; cv=none; b=cyOVD9qTKJD0kgy0PNRtXD1+WzWhi8hOq0uePemYGhPhO3XSGBzLbI954gCzS2FXHncSfweUMif/rTq1zF9QQThBEu0VZc2/Wxq3OFhZ2n7h7NOhoRjjZJ712AB6SxLlOldnnBD9pyghfaRU5/axVAP8xoiWlNsxJaax9NqUqvk=
+	t=1744294008; cv=none; b=EkYeTxNAESNSOlgG1JXoXBvs7Ps3THFKJmdfXnleifS8vBHxmiYz4AvIYck5VyfE1C5k731VClL6JlUeWpr2WVt0L9uBgwho1X5DXzIfwxuZAr7V3jXKaPA2k6jpBNUaMHFcc0KKA+3ITzXcJbOAY0YDm1D/3nqPxrYhqsxgJlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744294005; c=relaxed/simple;
-	bh=U9q+8HraNg4JM2K3asvu+3Dz70/97utwVQBUEVgctoI=;
+	s=arc-20240116; t=1744294008; c=relaxed/simple;
+	bh=p38JdNwKSbRpcg+OTLt90OjttluOj7kyYWcHVVGD124=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ewk64EShWPsJZpNBQrdf6UKK1riQl3e4ItcNPM15e8xCgDTFnbGcqXXsFa4+6KUAJUY2Z8KE8yfMIZrQcK6N+cTN/qnaCNMHC0rjNUCafSrUhepp0CNM69EByxPkobg8QdDXcQyCPbnKtzldkubl93CLEySCHW890m2LoBhsDcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=dyL5Zl5Y; arc=none smtp.client-ip=209.85.128.43
+	 MIME-Version; b=ajWGVaB5SpVqoosj0yM8JmuTQSZ4JHGjJ7bXhzb0koyx3JP/rb9X6M6lP7U+38JlXJWNLXd5mWbH6YoZG+5QWc7zlB7677e4HH7GvsfazQUViSDkTt/QAH/XtAhM680Uh+kPRfTV2gHJEIH2Rta/7605dIFkPJ62xKa5dw+OwWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=DKvqglrY; arc=none smtp.client-ip=209.85.128.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="dyL5Zl5Y"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43edecbfb94so9429815e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 07:06:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="DKvqglrY"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4394a823036so8751075e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 07:06:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1744294001; x=1744898801; darn=vger.kernel.org;
+        d=tuxon.dev; s=google; t=1744294005; x=1744898805; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UzlWKmbplGkiGN2v7k/ekxq5IRTgVEaVq/S0RNAob/w=;
-        b=dyL5Zl5YBj98FycXMpHoB4OXqWU1c5FJ5xlm4qw5zIwaUBkJ4g4XdNRi8bszuyNBdV
-         z9GDAClWWZ1Y+Z6ZpnMBfY6cYpgK/zCKjDCZzglP7zcF/DAt+URkrAlR91pfqC5omLkA
-         ARYnHE9WRaAI7B6w4F1J+hk3inoaCsAaXchYezctYzvKCtaAooBKsbz/zie5mSkwkF9b
-         nSi3b/TKZRVeCDjO6V+aDY6SSvRhRNhMAkRQ+Mt5wNaqpXpkH7tSa/6UyzbnWcYqB33K
-         /zmGhAbIjCdlNrcmdyrR/kHISfiaEfhQ6clICftG1wmfp+T4Y6lET0gKw3i0HKNa9nAD
-         YV/A==
+        bh=er/M9cg4i4jHCMP+VhX48FexyYXieZbQGlVSvj5pL1o=;
+        b=DKvqglrYIpLHx0vN2tgBoVTXni1LhOMWh5pEDGlDYaXopnxK/uJusGb81qLMWy+xaA
+         GUNbZnuR5oG52j+QQwvaXEmRimJdjfFfGcCzwgsE6G7h4n/zhp4B7MwApVcD0cqZTDad
+         /yunP8hYzZDUuriIGB5JyVJ780ZH0TJgOdqA9GoAsLxrHI32mnbAl+S5lkCWR9vUAq6X
+         bn0WAaNulQ/oW+Rheh7K8nlIN1dQmjQ4Cd9QEc9z5u9sTCyu//gTwFjsj2xhQflpsTHv
+         nrtsinqNHOHd7Uem0YS3UzoztqhwflplrhAdxEIjRGTPJ8hqrHqAfbkE4jAbNMVrLWG2
+         qOYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744294001; x=1744898801;
+        d=1e100.net; s=20230601; t=1744294005; x=1744898805;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UzlWKmbplGkiGN2v7k/ekxq5IRTgVEaVq/S0RNAob/w=;
-        b=AaES9NlY6Qw47/69vl2n8OiNrxDmS5ZzmpFcwI2KnhAj9lFZW6tO6Hu7ulr4ABJRwZ
-         7JLnY23NMDjNIG9D7+7o5Mlcv1jWFd7UEKNj+GVILL0pUwOm2YCXHF2miZo71U8MRf+E
-         j6TbNwEwvVd9isYrmbWk6jns7g9VIpS3z16TxHK8lH+YG6zWqmVTojAiDe2dN+WR6G9k
-         rYmimap8BWfylMXa7lYgtEVfKuj7EdIkAXjPW9GkXtkTxLrA8eyahSBsh4WKPngq/rta
-         A1GXcTth36dhFMfjRDx+xjBze1PNTy25JBfJqsmnFqOfjaF4Bk/lh6hJ4LO7iSPXPV9o
-         YJeg==
-X-Forwarded-Encrypted: i=1; AJvYcCXzStoG/eTiQZBqFrL5PYnAsThB9RxBdgMSkIJTx/2ODCzfm2qbNa2Fesa9t4i+fZ29aLEwl35Y/dfHEzI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5nkhkKsNIPjH0AJiys3E0pDkcQh8Ub3vy059yaalfOegEfzHj
-	2OJBvSB4/z1uj6D/rbHeuVUCf1i3mrXyzfWN+Ty3u4iFiUOxMAd5nZJZwM78Q1E=
-X-Gm-Gg: ASbGncvPmmbCu6QlVnqZv4qXOP/PGdOLgBCmjQGeAq1lCivBWUmZwXtgejkcTFgb+y7
-	vOxJ8D41lvrWdelC/BN+9BKNkHF49Zw8BEYbpmh1my5pdU8fCuGBuhlfPCanI6uXqduNRTNTyQw
-	Pe3nYtJFzVsMOSM7oeVJRiXN5w0VOMLn6kt8cZ3aeCA07iDUXCoTizAOSV9fE5VCtHACjJ0VTV5
-	CyeraZXGzS+1k9qLOzVWpChj97rtgZZJcv4MrQlx/vZKF2uysKXDbj8iKLOkt4PVYpcDG5iHMiD
-	5lSVh5p6G+yIASND6FwCqpIeK77JkeNGM02dbv/1TORX0z1iUeaFrSrZjO2pICFi3h+nxA==
-X-Google-Smtp-Source: AGHT+IHFIdqfR8VnAOPw2AK4/J46cf2SZb245hEBDTyrPiE7X84if8Bb9XtXir3NzJADmlsiOCSEgw==
-X-Received: by 2002:a05:600c:258:b0:43d:fa59:bced with SMTP id 5b1f17b1804b1-43f3611175fmr5250945e9.32.1744294001198;
-        Thu, 10 Apr 2025 07:06:41 -0700 (PDT)
+        bh=er/M9cg4i4jHCMP+VhX48FexyYXieZbQGlVSvj5pL1o=;
+        b=njWRshnSoIKeHEyFmYQNGYYOGs1lDp2miQyGGy6EJt+bamE3unmNWb7tDNFTlX8dSH
+         EUCTv2e5NNhMIxv7Tk5h3TMUAll+Z8o4UFeqcqzFOYSi5SRYjEUmXfIL+QySxzKBK7jT
+         84oJ+1hUdeYZIrLDd6eGORT9q9m24ySROszgSBGOEh9Hjo631urMnquyxDItl2VoWBuf
+         10nRituFS7sAb39j/dbAnQ4kjF9jVBw2Ot7Mx7bZfrMee2/W3ptzlG6K7c7I99aUTO4n
+         x19GYDuI01JnSdOXiTfzo/HqnO1fH7nss7/0xbxTBOdU0fBVV6L5BnYjuWagMN/xNS6L
+         YTOw==
+X-Forwarded-Encrypted: i=1; AJvYcCXyUDKy682smLtoqQg7KuKxLaEWj+vqJv6k1yeSz75Xb/ndK1dUEa73R+Qk9bNs5qrvCa0JL8WFgs2O0+I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKDmKvya6jD+TQzllixFrP6p2BBUKYDOYdr5K+Ahhx7mbRHWqm
+	CrBjadhktJyrsS+mtU4NoDzpzRIK1l8Do/6KMf4GbTRNG2Iv+SbRCZDAfGwDMEo=
+X-Gm-Gg: ASbGnctpOl61frv0231QOQrIjYh9QyeXKGbq6Yk/+cIL25kY3w/+uAW5yMxjpPOigVh
+	P5qEeyY36EQHy+rp8UV6h9m0PAKV9oq+1BIldhaq0gPQh9e7yfbtbvVIR2ZNELkS5QnF4Gu8Y45
+	bj7P69K0oBmh/dJ+yC7jUFHR+hyWT8OVFDqwyDj31sQt0/G6D33kFYCVRx8jCLrrB5hz1N4McYZ
+	ug6lmrBAkowBSgcUw0RMt3lOXWNLHgwtuQeWplZOeP4WDWFP0gWnjZOzIIzNgxHQIkshXrPgagA
+	pKODCVtHbCSzz2eYrfhsXmX8XZY3maZDetDbhko1utOScG8zuLF0UzoGL6MQAa5jcXoZ0g==
+X-Google-Smtp-Source: AGHT+IHNWGVhlS5SnOM00cxkRLqtPZs363+unsxr0lw677bJgbB75uXuQ6LsKmfmcYDQcMW+dzX0Nw==
+X-Received: by 2002:a05:600c:348d:b0:43d:412e:8a81 with SMTP id 5b1f17b1804b1-43f2d95ed18mr24786595e9.28.1744294004594;
+        Thu, 10 Apr 2025 07:06:44 -0700 (PDT)
 Received: from claudiu-X670E-Pro-RS.. ([82.78.167.57])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d8937f0d8sm4806913f8f.40.2025.04.10.07.06.39
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d8937f0d8sm4806913f8f.40.2025.04.10.07.06.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 07:06:40 -0700 (PDT)
+        Thu, 10 Apr 2025 07:06:43 -0700 (PDT)
 From: Claudiu <claudiu.beznea@tuxon.dev>
 X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
 To: geert+renesas@glider.be,
@@ -72,9 +72,9 @@ Cc: claudiu.beznea@tuxon.dev,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH 2/7] clk: renesas: rzg2l-cpg: Move pointers at the beginning of struct
-Date: Thu, 10 Apr 2025 17:06:23 +0300
-Message-ID: <20250410140628.4124896-3-claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH 4/7] clk: renesas: r9a08g045: Drop power domain instantiation
+Date: Thu, 10 Apr 2025 17:06:25 +0300
+Message-ID: <20250410140628.4124896-5-claudiu.beznea.uj@bp.renesas.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250410140628.4124896-1-claudiu.beznea.uj@bp.renesas.com>
 References: <20250410140628.4124896-1-claudiu.beznea.uj@bp.renesas.com>
@@ -88,43 +88,261 @@ Content-Transfer-Encoding: 8bit
 
 From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-Move pointers at the beginning of structure definition to avoid padding,
-if any.
+Since the configuration order between the individual MSTOP and CLKON bits
+cannot be preserved with the power domain abstraction, drop the power
+domain instantiations.
 
 Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 ---
- drivers/clk/renesas/rzg2l-cpg.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/clk/renesas/r9a08g045-cpg.c | 216 ++++++++++++----------------
+ 1 file changed, 93 insertions(+), 123 deletions(-)
 
-diff --git a/drivers/clk/renesas/rzg2l-cpg.c b/drivers/clk/renesas/rzg2l-cpg.c
-index 2ae36d94fbfa..bf2453900f36 100644
---- a/drivers/clk/renesas/rzg2l-cpg.c
-+++ b/drivers/clk/renesas/rzg2l-cpg.c
-@@ -1183,20 +1183,20 @@ rzg2l_cpg_register_core_clk(const struct cpg_core_clk *core,
- /**
-  * struct mstp_clock - MSTP gating clock
-  *
-+ * @priv: CPG/MSTP private data
-+ * @sibling: pointer to the other coupled clock
-  * @hw: handle between common and hardware-specific interfaces
-  * @off: register offset
-  * @bit: ON/MON bit
-  * @enabled: soft state of the clock, if it is coupled with another clock
-- * @priv: CPG/MSTP private data
-- * @sibling: pointer to the other coupled clock
-  */
- struct mstp_clock {
-+	struct rzg2l_cpg_priv *priv;
-+	struct mstp_clock *sibling;
- 	struct clk_hw hw;
- 	u16 off;
- 	u8 bit;
- 	bool enabled;
--	struct rzg2l_cpg_priv *priv;
--	struct mstp_clock *sibling;
+diff --git a/drivers/clk/renesas/r9a08g045-cpg.c b/drivers/clk/renesas/r9a08g045-cpg.c
+index ddc5d6cd572b..c834d3e4b3d8 100644
+--- a/drivers/clk/renesas/r9a08g045-cpg.c
++++ b/drivers/clk/renesas/r9a08g045-cpg.c
+@@ -192,59 +192,105 @@ static const struct cpg_core_clk r9a08g045_core_clks[] __initconst = {
  };
  
- #define to_mod_clock(_hw) container_of(_hw, struct mstp_clock, hw)
+ static const struct rzg2l_mod_clk r9a08g045_mod_clks[] = {
+-	DEF_MOD("gic_gicclk",		R9A08G045_GIC600_GICCLK, R9A08G045_CLK_P1, 0x514, 0, 0),
+-	DEF_MOD("ia55_pclk",		R9A08G045_IA55_PCLK, R9A08G045_CLK_P2, 0x518, 0, 0),
+-	DEF_MOD("ia55_clk",		R9A08G045_IA55_CLK, R9A08G045_CLK_P1, 0x518, 1, 0),
+-	DEF_MOD("dmac_aclk",		R9A08G045_DMAC_ACLK, R9A08G045_CLK_P3, 0x52c, 0, 0),
+-	DEF_MOD("dmac_pclk",		R9A08G045_DMAC_PCLK, CLK_P3_DIV2, 0x52c, 1, 0),
+-	DEF_MOD("wdt0_pclk",		R9A08G045_WDT0_PCLK, R9A08G045_CLK_P0, 0x548, 0, 0),
+-	DEF_MOD("wdt0_clk",		R9A08G045_WDT0_CLK, R9A08G045_OSCCLK, 0x548, 1, 0),
+-	DEF_MOD("sdhi0_imclk",		R9A08G045_SDHI0_IMCLK, CLK_SD0_DIV4, 0x554, 0, 0),
+-	DEF_MOD("sdhi0_imclk2",		R9A08G045_SDHI0_IMCLK2, CLK_SD0_DIV4, 0x554, 1, 0),
+-	DEF_MOD("sdhi0_clk_hs",		R9A08G045_SDHI0_CLK_HS, R9A08G045_CLK_SD0, 0x554, 2, 0),
+-	DEF_MOD("sdhi0_aclk",		R9A08G045_SDHI0_ACLK, R9A08G045_CLK_P1, 0x554, 3, 0),
+-	DEF_MOD("sdhi1_imclk",		R9A08G045_SDHI1_IMCLK, CLK_SD1_DIV4, 0x554, 4, 0),
+-	DEF_MOD("sdhi1_imclk2",		R9A08G045_SDHI1_IMCLK2, CLK_SD1_DIV4, 0x554, 5, 0),
+-	DEF_MOD("sdhi1_clk_hs",		R9A08G045_SDHI1_CLK_HS, R9A08G045_CLK_SD1, 0x554, 6, 0),
+-	DEF_MOD("sdhi1_aclk",		R9A08G045_SDHI1_ACLK, R9A08G045_CLK_P1, 0x554, 7, 0),
+-	DEF_MOD("sdhi2_imclk",		R9A08G045_SDHI2_IMCLK, CLK_SD2_DIV4, 0x554, 8, 0),
+-	DEF_MOD("sdhi2_imclk2",		R9A08G045_SDHI2_IMCLK2, CLK_SD2_DIV4, 0x554, 9, 0),
+-	DEF_MOD("sdhi2_clk_hs",		R9A08G045_SDHI2_CLK_HS, R9A08G045_CLK_SD2, 0x554, 10, 0),
+-	DEF_MOD("sdhi2_aclk",		R9A08G045_SDHI2_ACLK, R9A08G045_CLK_P1, 0x554, 11, 0),
+-	DEF_MOD("ssi0_pclk2",		R9A08G045_SSI0_PCLK2, R9A08G045_CLK_P0, 0x570, 0, 0),
+-	DEF_MOD("ssi0_sfr",		R9A08G045_SSI0_PCLK_SFR, R9A08G045_CLK_P0, 0x570, 1, 0),
+-	DEF_MOD("ssi1_pclk2",		R9A08G045_SSI1_PCLK2, R9A08G045_CLK_P0, 0x570, 2, 0),
+-	DEF_MOD("ssi1_sfr",		R9A08G045_SSI1_PCLK_SFR, R9A08G045_CLK_P0, 0x570, 3, 0),
+-	DEF_MOD("ssi2_pclk2",		R9A08G045_SSI2_PCLK2, R9A08G045_CLK_P0, 0x570, 4, 0),
+-	DEF_MOD("ssi2_sfr",		R9A08G045_SSI2_PCLK_SFR, R9A08G045_CLK_P0, 0x570, 5, 0),
+-	DEF_MOD("ssi3_pclk2",		R9A08G045_SSI3_PCLK2, R9A08G045_CLK_P0, 0x570, 6, 0),
+-	DEF_MOD("ssi3_sfr",		R9A08G045_SSI3_PCLK_SFR, R9A08G045_CLK_P0, 0x570, 7, 0),
+-	DEF_MOD("usb0_host",		R9A08G045_USB_U2H0_HCLK, R9A08G045_CLK_P1, 0x578, 0, 0),
+-	DEF_MOD("usb1_host",		R9A08G045_USB_U2H1_HCLK, R9A08G045_CLK_P1, 0x578, 1, 0),
++	DEF_MOD("gic_gicclk",		R9A08G045_GIC600_GICCLK, R9A08G045_CLK_P1, 0x514, 0,
++					MSTOP(BUS_ACPU, BIT(3))),
++	DEF_MOD("ia55_pclk",		R9A08G045_IA55_PCLK, R9A08G045_CLK_P2, 0x518, 0,
++					MSTOP(BUS_PERI_CPU, BIT(13))),
++	DEF_MOD("ia55_clk",		R9A08G045_IA55_CLK, R9A08G045_CLK_P1, 0x518, 1,
++					MSTOP(BUS_PERI_CPU, BIT(13))),
++	DEF_MOD("dmac_aclk",		R9A08G045_DMAC_ACLK, R9A08G045_CLK_P3, 0x52c, 0,
++					MSTOP(BUS_REG1, BIT(2))),
++	DEF_MOD("dmac_pclk",		R9A08G045_DMAC_PCLK, CLK_P3_DIV2, 0x52c, 1,
++					MSTOP(BUS_REG1, BIT(3))),
++	DEF_MOD("wdt0_pclk",		R9A08G045_WDT0_PCLK, R9A08G045_CLK_P0, 0x548, 0,
++					MSTOP(BUS_REG0, BIT(0))),
++	DEF_MOD("wdt0_clk",		R9A08G045_WDT0_CLK, R9A08G045_OSCCLK, 0x548, 1,
++					MSTOP(BUS_REG0, BIT(0))),
++	DEF_MOD("sdhi0_imclk",		R9A08G045_SDHI0_IMCLK, CLK_SD0_DIV4, 0x554, 0,
++					MSTOP(BUS_PERI_COM, BIT(0))),
++	DEF_MOD("sdhi0_imclk2",		R9A08G045_SDHI0_IMCLK2, CLK_SD0_DIV4, 0x554, 1,
++					MSTOP(BUS_PERI_COM, BIT(0))),
++	DEF_MOD("sdhi0_clk_hs",		R9A08G045_SDHI0_CLK_HS, R9A08G045_CLK_SD0, 0x554, 2,
++					MSTOP(BUS_PERI_COM, BIT(0))),
++	DEF_MOD("sdhi0_aclk",		R9A08G045_SDHI0_ACLK, R9A08G045_CLK_P1, 0x554, 3,
++					MSTOP(BUS_PERI_COM, BIT(0))),
++	DEF_MOD("sdhi1_imclk",		R9A08G045_SDHI1_IMCLK, CLK_SD1_DIV4, 0x554, 4,
++					MSTOP(BUS_PERI_COM, BIT(1))),
++	DEF_MOD("sdhi1_imclk2",		R9A08G045_SDHI1_IMCLK2, CLK_SD1_DIV4, 0x554, 5,
++					MSTOP(BUS_PERI_COM, BIT(1))),
++	DEF_MOD("sdhi1_clk_hs",		R9A08G045_SDHI1_CLK_HS, R9A08G045_CLK_SD1, 0x554, 6,
++					MSTOP(BUS_PERI_COM, BIT(1))),
++	DEF_MOD("sdhi1_aclk",		R9A08G045_SDHI1_ACLK, R9A08G045_CLK_P1, 0x554, 7,
++					MSTOP(BUS_PERI_COM, BIT(1))),
++	DEF_MOD("sdhi2_imclk",		R9A08G045_SDHI2_IMCLK, CLK_SD2_DIV4, 0x554, 8,
++					MSTOP(BUS_PERI_COM, BIT(11))),
++	DEF_MOD("sdhi2_imclk2",		R9A08G045_SDHI2_IMCLK2, CLK_SD2_DIV4, 0x554, 9,
++					MSTOP(BUS_PERI_COM, BIT(11))),
++	DEF_MOD("sdhi2_clk_hs",		R9A08G045_SDHI2_CLK_HS, R9A08G045_CLK_SD2, 0x554, 10,
++					MSTOP(BUS_PERI_COM, BIT(11))),
++	DEF_MOD("sdhi2_aclk",		R9A08G045_SDHI2_ACLK, R9A08G045_CLK_P1, 0x554, 11,
++					MSTOP(BUS_PERI_COM, BIT(11))),
++	DEF_MOD("ssi0_pclk2",		R9A08G045_SSI0_PCLK2, R9A08G045_CLK_P0, 0x570, 0,
++					MSTOP(BUS_MCPU1, BIT(10))),
++	DEF_MOD("ssi0_sfr",		R9A08G045_SSI0_PCLK_SFR, R9A08G045_CLK_P0, 0x570, 1,
++					MSTOP(BUS_MCPU1, BIT(10))),
++	DEF_MOD("ssi1_pclk2",		R9A08G045_SSI1_PCLK2, R9A08G045_CLK_P0, 0x570, 2,
++					MSTOP(BUS_MCPU1, BIT(11))),
++	DEF_MOD("ssi1_sfr",		R9A08G045_SSI1_PCLK_SFR, R9A08G045_CLK_P0, 0x570, 3,
++					MSTOP(BUS_MCPU1, BIT(11))),
++	DEF_MOD("ssi2_pclk2",		R9A08G045_SSI2_PCLK2, R9A08G045_CLK_P0, 0x570, 4,
++					MSTOP(BUS_MCPU1, BIT(12))),
++	DEF_MOD("ssi2_sfr",		R9A08G045_SSI2_PCLK_SFR, R9A08G045_CLK_P0, 0x570, 5,
++					MSTOP(BUS_MCPU1, BIT(12))),
++	DEF_MOD("ssi3_pclk2",		R9A08G045_SSI3_PCLK2, R9A08G045_CLK_P0, 0x570, 6,
++					MSTOP(BUS_MCPU1, BIT(13))),
++	DEF_MOD("ssi3_sfr",		R9A08G045_SSI3_PCLK_SFR, R9A08G045_CLK_P0, 0x570, 7,
++					MSTOP(BUS_MCPU1, BIT(13))),
++	DEF_MOD("usb0_host",		R9A08G045_USB_U2H0_HCLK, R9A08G045_CLK_P1, 0x578, 0,
++					MSTOP(BUS_PERI_COM, BIT(5))),
++	DEF_MOD("usb1_host",		R9A08G045_USB_U2H1_HCLK, R9A08G045_CLK_P1, 0x578, 1,
++					MSTOP(BUS_PERI_COM, BIT(7))),
+ 	DEF_MOD("usb0_func",		R9A08G045_USB_U2P_EXR_CPUCLK, R9A08G045_CLK_P1, 0x578, 2,
+-					0),
+-	DEF_MOD("usb_pclk",		R9A08G045_USB_PCLK, R9A08G045_CLK_P1, 0x578, 3, 0),
+-	DEF_COUPLED("eth0_axi",		R9A08G045_ETH0_CLK_AXI, R9A08G045_CLK_M0, 0x57c, 0, 0),
++					MSTOP(BUS_PERI_COM, BIT(6))),
++	DEF_MOD("usb_pclk",		R9A08G045_USB_PCLK, R9A08G045_CLK_P1, 0x578, 3,
++					MSTOP(BUS_PERI_COM, BIT(4))),
++	DEF_COUPLED("eth0_axi",		R9A08G045_ETH0_CLK_AXI, R9A08G045_CLK_M0, 0x57c, 0,
++					MSTOP(BUS_PERI_COM, BIT(2))),
+ 	DEF_COUPLED("eth0_chi",		R9A08G045_ETH0_CLK_CHI, R9A08G045_CLK_ZT, 0x57c, 0, 0),
+ 	DEF_MOD("eth0_refclk",		R9A08G045_ETH0_REFCLK, R9A08G045_CLK_HP, 0x57c, 8, 0),
+-	DEF_COUPLED("eth1_axi",		R9A08G045_ETH1_CLK_AXI, R9A08G045_CLK_M0, 0x57c, 1, 0),
++	DEF_COUPLED("eth1_axi",		R9A08G045_ETH1_CLK_AXI, R9A08G045_CLK_M0, 0x57c, 1,
++					MSTOP(BUS_PERI_COM, BIT(3))),
+ 	DEF_COUPLED("eth1_chi",		R9A08G045_ETH1_CLK_CHI, R9A08G045_CLK_ZT, 0x57c, 1, 0),
+ 	DEF_MOD("eth1_refclk",		R9A08G045_ETH1_REFCLK, R9A08G045_CLK_HP, 0x57c, 9, 0),
+-	DEF_MOD("i2c0_pclk",		R9A08G045_I2C0_PCLK, R9A08G045_CLK_P0, 0x580, 0, 0),
+-	DEF_MOD("i2c1_pclk",		R9A08G045_I2C1_PCLK, R9A08G045_CLK_P0, 0x580, 1, 0),
+-	DEF_MOD("i2c2_pclk",		R9A08G045_I2C2_PCLK, R9A08G045_CLK_P0, 0x580, 2, 0),
+-	DEF_MOD("i2c3_pclk",		R9A08G045_I2C3_PCLK, R9A08G045_CLK_P0, 0x580, 3, 0),
+-	DEF_MOD("scif0_clk_pck",	R9A08G045_SCIF0_CLK_PCK, R9A08G045_CLK_P0, 0x584, 0, 0),
+-	DEF_MOD("scif1_clk_pck",	R9A08G045_SCIF1_CLK_PCK, R9A08G045_CLK_P0, 0x584, 1, 0),
+-	DEF_MOD("scif2_clk_pck",	R9A08G045_SCIF2_CLK_PCK, R9A08G045_CLK_P0, 0x584, 2, 0),
+-	DEF_MOD("scif3_clk_pck",	R9A08G045_SCIF3_CLK_PCK, R9A08G045_CLK_P0, 0x584, 3, 0),
+-	DEF_MOD("scif4_clk_pck",	R9A08G045_SCIF4_CLK_PCK, R9A08G045_CLK_P0, 0x584, 4, 0),
+-	DEF_MOD("scif5_clk_pck",	R9A08G045_SCIF5_CLK_PCK, R9A08G045_CLK_P0, 0x584, 5, 0),
++	DEF_MOD("i2c0_pclk",		R9A08G045_I2C0_PCLK, R9A08G045_CLK_P0, 0x580, 0,
++					MSTOP(BUS_MCPU2, BIT(10))),
++	DEF_MOD("i2c1_pclk",		R9A08G045_I2C1_PCLK, R9A08G045_CLK_P0, 0x580, 1,
++					MSTOP(BUS_MCPU2, BIT(11))),
++	DEF_MOD("i2c2_pclk",		R9A08G045_I2C2_PCLK, R9A08G045_CLK_P0, 0x580, 2,
++					MSTOP(BUS_MCPU2, BIT(12))),
++	DEF_MOD("i2c3_pclk",		R9A08G045_I2C3_PCLK, R9A08G045_CLK_P0, 0x580, 3,
++					MSTOP(BUS_MCPU2, BIT(13))),
++	DEF_MOD("scif0_clk_pck",	R9A08G045_SCIF0_CLK_PCK, R9A08G045_CLK_P0, 0x584, 0,
++					MSTOP(BUS_MCPU2, BIT(1))),
++	DEF_MOD("scif1_clk_pck",	R9A08G045_SCIF1_CLK_PCK, R9A08G045_CLK_P0, 0x584, 1,
++					MSTOP(BUS_MCPU2, BIT(2))),
++	DEF_MOD("scif2_clk_pck",	R9A08G045_SCIF2_CLK_PCK, R9A08G045_CLK_P0, 0x584, 2,
++					MSTOP(BUS_MCPU2, BIT(3))),
++	DEF_MOD("scif3_clk_pck",	R9A08G045_SCIF3_CLK_PCK, R9A08G045_CLK_P0, 0x584, 3,
++					MSTOP(BUS_MCPU2, BIT(4))),
++	DEF_MOD("scif4_clk_pck",	R9A08G045_SCIF4_CLK_PCK, R9A08G045_CLK_P0, 0x584, 4,
++					MSTOP(BUS_MCPU2, BIT(5))),
++	DEF_MOD("scif5_clk_pck",	R9A08G045_SCIF5_CLK_PCK, R9A08G045_CLK_P0, 0x584, 5,
++					MSTOP(BUS_MCPU3, BIT(4))),
+ 	DEF_MOD("gpio_hclk",		R9A08G045_GPIO_HCLK, R9A08G045_OSCCLK, 0x598, 0, 0),
+-	DEF_MOD("adc_adclk",		R9A08G045_ADC_ADCLK, R9A08G045_CLK_TSU, 0x5a8, 0, 0),
+-	DEF_MOD("adc_pclk",		R9A08G045_ADC_PCLK, R9A08G045_CLK_TSU, 0x5a8, 1, 0),
+-	DEF_MOD("tsu_pclk",		R9A08G045_TSU_PCLK, R9A08G045_CLK_TSU, 0x5ac, 0, 0),
+-	DEF_MOD("vbat_bclk",		R9A08G045_VBAT_BCLK, R9A08G045_OSCCLK, 0x614, 0, 0),
++	DEF_MOD("adc_adclk",		R9A08G045_ADC_ADCLK, R9A08G045_CLK_TSU, 0x5a8, 0,
++					MSTOP(BUS_MCPU2, BIT(14))),
++	DEF_MOD("adc_pclk",		R9A08G045_ADC_PCLK, R9A08G045_CLK_TSU, 0x5a8, 1,
++					MSTOP(BUS_MCPU2, BIT(14))),
++	DEF_MOD("tsu_pclk",		R9A08G045_TSU_PCLK, R9A08G045_CLK_TSU, 0x5ac, 0,
++					MSTOP(BUS_MCPU2, BIT(15))),
++	DEF_MOD("vbat_bclk",		R9A08G045_VBAT_BCLK, R9A08G045_OSCCLK, 0x614, 0,
++					MSTOP(BUS_MCPU3, BIT(8))),
+ };
+ 
+ static const struct rzg2l_reset r9a08g045_resets[] = {
+@@ -294,78 +340,6 @@ static const unsigned int r9a08g045_crit_mod_clks[] __initconst = {
+ 	MOD_CLK_BASE + R9A08G045_VBAT_BCLK,
+ };
+ 
+-static const struct rzg2l_cpg_pm_domain_init_data r9a08g045_pm_domains[] = {
+-	/* Keep always-on domain on the first position for proper domains registration. */
+-	DEF_PD("always-on",	R9A08G045_PD_ALWAYS_ON,
+-				DEF_REG_CONF(0, 0),
+-				GENPD_FLAG_ALWAYS_ON | GENPD_FLAG_IRQ_SAFE),
+-	DEF_PD("gic",		R9A08G045_PD_GIC,
+-				DEF_REG_CONF(CPG_BUS_ACPU_MSTOP, BIT(3)),
+-				GENPD_FLAG_ALWAYS_ON),
+-	DEF_PD("ia55",		R9A08G045_PD_IA55,
+-				DEF_REG_CONF(CPG_BUS_PERI_CPU_MSTOP, BIT(13)),
+-				GENPD_FLAG_ALWAYS_ON),
+-	DEF_PD("dmac",		R9A08G045_PD_DMAC,
+-				DEF_REG_CONF(CPG_BUS_REG1_MSTOP, GENMASK(3, 0)),
+-				GENPD_FLAG_ALWAYS_ON),
+-	DEF_PD("wdt0",		R9A08G045_PD_WDT0,
+-				DEF_REG_CONF(CPG_BUS_REG0_MSTOP, BIT(0)),
+-				GENPD_FLAG_IRQ_SAFE),
+-	DEF_PD("sdhi0",		R9A08G045_PD_SDHI0,
+-				DEF_REG_CONF(CPG_BUS_PERI_COM_MSTOP, BIT(0)), 0),
+-	DEF_PD("sdhi1",		R9A08G045_PD_SDHI1,
+-				DEF_REG_CONF(CPG_BUS_PERI_COM_MSTOP, BIT(1)), 0),
+-	DEF_PD("sdhi2",		R9A08G045_PD_SDHI2,
+-				DEF_REG_CONF(CPG_BUS_PERI_COM_MSTOP, BIT(11)), 0),
+-	DEF_PD("ssi0",		R9A08G045_PD_SSI0,
+-				DEF_REG_CONF(CPG_BUS_MCPU1_MSTOP, BIT(10)), 0),
+-	DEF_PD("ssi1",		R9A08G045_PD_SSI1,
+-				DEF_REG_CONF(CPG_BUS_MCPU1_MSTOP, BIT(11)), 0),
+-	DEF_PD("ssi2",		R9A08G045_PD_SSI2,
+-				DEF_REG_CONF(CPG_BUS_MCPU1_MSTOP, BIT(12)), 0),
+-	DEF_PD("ssi3",		R9A08G045_PD_SSI3,
+-				DEF_REG_CONF(CPG_BUS_MCPU1_MSTOP, BIT(13)), 0),
+-	DEF_PD("usb0",		R9A08G045_PD_USB0,
+-				DEF_REG_CONF(CPG_BUS_PERI_COM_MSTOP, GENMASK(6, 5)), 0),
+-	DEF_PD("usb1",		R9A08G045_PD_USB1,
+-				DEF_REG_CONF(CPG_BUS_PERI_COM_MSTOP, BIT(7)), 0),
+-	DEF_PD("usb-phy",	R9A08G045_PD_USB_PHY,
+-				DEF_REG_CONF(CPG_BUS_PERI_COM_MSTOP, BIT(4)), 0),
+-	DEF_PD("eth0",		R9A08G045_PD_ETHER0,
+-				DEF_REG_CONF(CPG_BUS_PERI_COM_MSTOP, BIT(2)), 0),
+-	DEF_PD("eth1",		R9A08G045_PD_ETHER1,
+-				DEF_REG_CONF(CPG_BUS_PERI_COM_MSTOP, BIT(3)), 0),
+-	DEF_PD("i2c0",		R9A08G045_PD_I2C0,
+-				DEF_REG_CONF(CPG_BUS_MCPU2_MSTOP, BIT(10)), 0),
+-	DEF_PD("i2c1",		R9A08G045_PD_I2C1,
+-				DEF_REG_CONF(CPG_BUS_MCPU2_MSTOP, BIT(11)), 0),
+-	DEF_PD("i2c2",		R9A08G045_PD_I2C2,
+-				DEF_REG_CONF(CPG_BUS_MCPU2_MSTOP, BIT(12)), 0),
+-	DEF_PD("i2c3",		R9A08G045_PD_I2C3,
+-				DEF_REG_CONF(CPG_BUS_MCPU2_MSTOP, BIT(13)), 0),
+-	DEF_PD("scif0",		R9A08G045_PD_SCIF0,
+-				DEF_REG_CONF(CPG_BUS_MCPU2_MSTOP, BIT(1)), 0),
+-	DEF_PD("scif1",		R9A08G045_PD_SCIF1,
+-				DEF_REG_CONF(CPG_BUS_MCPU2_MSTOP, BIT(2)), 0),
+-	DEF_PD("scif2",		R9A08G045_PD_SCIF2,
+-				DEF_REG_CONF(CPG_BUS_MCPU2_MSTOP, BIT(3)), 0),
+-	DEF_PD("scif3",		R9A08G045_PD_SCIF3,
+-				DEF_REG_CONF(CPG_BUS_MCPU2_MSTOP, BIT(4)), 0),
+-	DEF_PD("scif4",		R9A08G045_PD_SCIF4,
+-				DEF_REG_CONF(CPG_BUS_MCPU2_MSTOP, BIT(5)), 0),
+-	DEF_PD("scif5",		R9A08G045_PD_SCIF5,
+-				DEF_REG_CONF(CPG_BUS_MCPU3_MSTOP, BIT(4)), 0),
+-	DEF_PD("adc",		R9A08G045_PD_ADC,
+-				DEF_REG_CONF(CPG_BUS_MCPU2_MSTOP, BIT(14)), 0),
+-	DEF_PD("tsu",		R9A08G045_PD_TSU,
+-				DEF_REG_CONF(CPG_BUS_MCPU2_MSTOP, BIT(15)), 0),
+-	DEF_PD("vbat",		R9A08G045_PD_VBAT,
+-				DEF_REG_CONF(CPG_BUS_MCPU3_MSTOP, BIT(8)),
+-				GENPD_FLAG_ALWAYS_ON),
+-	DEF_PD("rtc",		R9A08G045_PD_RTC,
+-				DEF_REG_CONF(CPG_BUS_MCPU3_MSTOP, BIT(7)), 0),
+-};
+-
+ const struct rzg2l_cpg_info r9a08g045_cpg_info = {
+ 	/* Core Clocks */
+ 	.core_clks = r9a08g045_core_clks,
+@@ -386,9 +360,5 @@ const struct rzg2l_cpg_info r9a08g045_cpg_info = {
+ 	.resets = r9a08g045_resets,
+ 	.num_resets = R9A08G045_VBAT_BRESETN + 1, /* Last reset ID + 1 */
+ 
+-	/* Power domains */
+-	.pm_domains = r9a08g045_pm_domains,
+-	.num_pm_domains = ARRAY_SIZE(r9a08g045_pm_domains),
+-
+ 	.has_clk_mon_regs = true,
+ };
 -- 
 2.43.0
 
