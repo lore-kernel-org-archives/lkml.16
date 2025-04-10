@@ -1,127 +1,133 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF56D284B5B
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 10:25:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66B6827E1AD
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 10:27:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744280716; cv=none; b=uC+6KOtozZYy/GWW7F+BrE6pkV6KFUTXIlfFVSKnyrGkRVx6xt8dp3oZVGmtuuExqD83UJ+sOsl7uL/aun8rEsBf8QfdXLhAQyYRA7FRKrp2ObUzqIBKkHccs7EHanu8zcnhwgKbNLuwGaAJc0X11zi/eqBVq6JFSbyjvsM8Tqk=
+	t=1744280845; cv=none; b=fzxUx+QBg1hN179MgZ47sOeJdsoUkLUcDJbDxrH6ERh1n73zx6NVVBtkxzWRt1L49RcWVgLI8G+cjf6yWQgYq1FXzaGrelfSloqqm6M/7du2jgIH8Bl15DUvRylhxpjCBsgiQFKMSaZEqdmLPMRD5MdC7f5g6I/3s6GLjaeSn+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744280716; c=relaxed/simple;
-	bh=nt+RA2PEb1rBYOFg/KbiJGocixEt5bp9cJpa0Hka3K8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=KFJR4hsPmk65Kt04bzi3U3FJfz9P7vvNPzPxlUlYc/DwPXYYsb7P1kMbHZq/T1DZJDPQDcWf6MAFEOuBy0BUnb/xNGjDxiAmW5z2wcSRDHQT3wKh8D2K6g84an2UWFdWtd5t4QQCzZZVpOsYFx8CkwEYFq+irFMRPzCLCSB+jEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <s.hauer@pengutronix.de>)
-	id 1u2p5C-0002DG-5i; Thu, 10 Apr 2025 12:24:30 +0200
-Received: from dude02.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::28])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <s.hauer@pengutronix.de>)
-	id 1u2p5A-004Fmz-2r;
-	Thu, 10 Apr 2025 12:24:28 +0200
-Received: from localhost ([::1] helo=dude02.red.stw.pengutronix.de)
-	by dude02.red.stw.pengutronix.de with esmtp (Exim 4.96)
-	(envelope-from <s.hauer@pengutronix.de>)
-	id 1u2p5A-002ODU-2O;
-	Thu, 10 Apr 2025 12:24:28 +0200
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Date: Thu, 10 Apr 2025 12:24:30 +0200
-Subject: [PATCH wireless-next v6 6/9] wifi: mwifiex: simplify
- mwifiex_setup_ht_caps()
+	s=arc-20240116; t=1744280845; c=relaxed/simple;
+	bh=zXXMNPMlBd5Xr1/R5eNjns/e1Lpmk3psqxYqnNZU36g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oXIzB8YmSYAe7J9kGtdI8ivgCHqdLXVPPV10w9bnseJr/wDneXsndxaGqkAhd0iGr5bYchpbO7AV2TLavUhNFwJDQw+95ohDLW+RbBqD4dj6T1WVAjmUg/mscYYGYJ69HvXuFjts7kng4DBpccLoSPDg+izK9cx0/Kwvf98QHP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=OJZSN3kl; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="OJZSN3kl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1744280841;
+	bh=zXXMNPMlBd5Xr1/R5eNjns/e1Lpmk3psqxYqnNZU36g=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=OJZSN3klTVfp3rPCfNWlYOfnomjqGGJfP0ESifLxmcSR/eUlPUhsFOhxTZ/Lcxi6d
+	 FizJmUxSe4LvSjXaMVZyz6nGJelCGM9gfuw2tVGozqhwM5MUAJWS24Ct3rRdY5EnwF
+	 J9SBPGF2qEgUWE3tnbTZe5wBk6EAnbRnjYUZVucYakg5+oljulU1UKASAawewhSHQA
+	 x2fpT9hFsLM4V4izD6nAVVnvsGjUKbEyzGW5knQNQrWtABv5UMyXpIX5+olkKGWBmr
+	 IcWj167NKd7EaEw7rq4VdQccnSlsNoLtD5I0/eBbnPlOJbZSV4klon9Ae+k4cIEuvZ
+	 AOD4rDBD0455Q==
+Received: from [192.168.1.90] (unknown [82.79.138.25])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: cristicc)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 5037017E001F;
+	Thu, 10 Apr 2025 12:27:21 +0200 (CEST)
+Message-ID: <e54840a9-d699-4ffd-b4a0-77dcf344c233@collabora.com>
+Date: Thu, 10 Apr 2025 13:27:21 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 10/15] drm/tests: hdmi: Replace open coded EDID setup
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>,
+ Dave Stevenson <dave.stevenson@raspberrypi.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, kernel@collabora.com,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20250326-hdmi-conn-yuv-v3-0-294d3ebbb4b2@collabora.com>
+ <20250326-hdmi-conn-yuv-v3-10-294d3ebbb4b2@collabora.com>
+ <20250409-spectral-persimmon-gorilla-4827ad@houat>
+Content-Language: en-US
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+In-Reply-To: <20250409-spectral-persimmon-gorilla-4827ad@houat>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250410-mwifiex-cleanup-1-v6-6-a6bbd4ac4d37@pengutronix.de>
-References: <20250410-mwifiex-cleanup-1-v6-0-a6bbd4ac4d37@pengutronix.de>
-In-Reply-To: <20250410-mwifiex-cleanup-1-v6-0-a6bbd4ac4d37@pengutronix.de>
-To: Brian Norris <briannorris@chromium.org>, 
- Francesco Dolcini <francesco@dolcini.it>
-Cc: Johannes Berg <johannes.berg@intel.com>, linux-wireless@vger.kernel.org, 
- linux-kernel@vger.kernel.org, David Lin <yu-hao.lin@nxp.com>, 
- kernel@pengutronix.de, Sascha Hauer <s.hauer@pengutronix.de>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1744280668; l=2419;
- i=s.hauer@pengutronix.de; s=20230412; h=from:subject:message-id;
- bh=nt+RA2PEb1rBYOFg/KbiJGocixEt5bp9cJpa0Hka3K8=;
- b=PGGT8nVJMqbToJ/pQIyVmvysnIns+uBNtP3Xa3hbQHCTH7p3hp06BLob4oOS0PKhCcH9zx28K
- 5reydWOLU41DF12xz5n/pFI9qrXujO6rpkj5fQjJlPis2Tx5UftC8qJ
-X-Developer-Key: i=s.hauer@pengutronix.de; a=ed25519;
- pk=4kuc9ocmECiBJKWxYgqyhtZOHj5AWi7+d0n/UjhkwTg=
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: s.hauer@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-In mwifiex_setup_ht_caps() first a local struct ieee80211_mcs_info
-is initialized and afterwards copied over &ht_info->mcs. Simplify
-this by initializing &ht_info->mcs directly.
+On 4/9/25 6:15 PM, Maxime Ripard wrote:
+> On Wed, Mar 26, 2025 at 12:19:59PM +0200, Cristian Ciocaltea wrote:
+>> Make use of the recently introduced macros to reduce boilerplate code
+>> around EDID setup. This also helps dropping the redundant calls to
+>> set_connector_edid().
+>>
+>> No functional changes intended.
+>>
+>> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+>> ---
+>>  drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c | 220 ++++++++-------------
+>>  1 file changed, 78 insertions(+), 142 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
+>> index 284bd9b1418a454d05c4a38263519eb8ae450090..7b2aaee5009ce58e6edf2649e2182c43ba834523 100644
+>> --- a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
+>> +++ b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
+>> @@ -751,19 +751,15 @@ static void drm_test_check_output_bpc_crtc_mode_changed(struct kunit *test)
+>>  	struct drm_crtc *crtc;
+>>  	int ret;
+>>  
+>> -	priv = drm_kunit_helper_connector_hdmi_init(test,
+>> -						    BIT(HDMI_COLORSPACE_RGB),
+>> -						    10);
+>> +	priv = drm_kunit_helper_connector_hdmi_init_with_edid(test,
+>> +				BIT(HDMI_COLORSPACE_RGB),
+>> +				10,
+>> +				test_edid_hdmi_1080p_rgb_yuv_dc_max_200mhz);
+>>  	KUNIT_ASSERT_NOT_NULL(test, priv);
+>>  
+>>  	drm = &priv->drm;
+>>  	crtc = priv->crtc;
+>>  	conn = &priv->connector;
+>> -	ret = set_connector_edid(test, conn,
+>> -				 test_edid_hdmi_1080p_rgb_yuv_dc_max_200mhz,
+>> -				 ARRAY_SIZE(test_edid_hdmi_1080p_rgb_yuv_dc_max_200mhz));
+>> -	KUNIT_ASSERT_GT(test, ret, 0);
+>> -
+> 
+> Yeah, ok, nvm what I said on the previous patch, it's needed.
+> 
+>>  	preferred = find_preferred_mode(conn);
+>>  	KUNIT_ASSERT_NOT_NULL(test, preferred);
+>>  
+>> @@ -830,19 +826,15 @@ static void drm_test_check_output_bpc_crtc_mode_not_changed(struct kunit *test)
+>>  	struct drm_crtc *crtc;
+>>  	int ret;
+>>  
+>> -	priv = drm_kunit_helper_connector_hdmi_init(test,
+>> -						    BIT(HDMI_COLORSPACE_RGB),
+>> -						    10);
+>> +	priv = drm_kunit_helper_connector_hdmi_init_with_edid(test,
+>> +				BIT(HDMI_COLORSPACE_RGB),
+>> +				10,
+>> +				test_edid_hdmi_1080p_rgb_yuv_dc_max_200mhz);
+> 
+> Alignment is off.
 
-While at it call memset on the u8 rx_mask[] array instead of the struct
-which makes the intention clearer and we no longer have to assume the
-rx_mask array is the first member of struct ieee80211_mcs_info.
+Yeah, that's a compromise to get rid of a bunch of checkpatch complaints:
 
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-Acked-by: Brian Norris <briannorris@chromium.org>
----
- drivers/net/wireless/marvell/mwifiex/cfg80211.c | 16 +++++-----------
- 1 file changed, 5 insertions(+), 11 deletions(-)
+  WARNING: line length of ... exceeds 100 columns
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/cfg80211.c b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-index 33bc5cd3ce960..1d9bc8f980c8d 100644
---- a/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-+++ b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-@@ -2906,16 +2906,12 @@ mwifiex_setup_ht_caps(struct ieee80211_sta_ht_cap *ht_info,
- 		      struct mwifiex_private *priv)
- {
- 	int rx_mcs_supp;
--	struct ieee80211_mcs_info mcs_set;
--	u8 *mcs = (u8 *)&mcs_set;
- 	struct mwifiex_adapter *adapter = priv->adapter;
- 
- 	ht_info->ht_supported = true;
- 	ht_info->ampdu_factor = IEEE80211_HT_MAX_AMPDU_64K;
- 	ht_info->ampdu_density = IEEE80211_HT_MPDU_DENSITY_NONE;
- 
--	memset(&ht_info->mcs, 0, sizeof(ht_info->mcs));
--
- 	/* Fill HT capability information */
- 	if (ISSUPP_CHANWIDTH40(adapter->hw_dot_11n_dev_cap))
- 		ht_info->cap |= IEEE80211_HT_CAP_SUP_WIDTH_20_40;
-@@ -2961,17 +2957,15 @@ mwifiex_setup_ht_caps(struct ieee80211_sta_ht_cap *ht_info,
- 	ht_info->cap |= IEEE80211_HT_CAP_SM_PS;
- 
- 	rx_mcs_supp = GET_RXMCSSUPP(adapter->user_dev_mcs_support);
-+
-+	memset(&ht_info->mcs, 0, sizeof(ht_info->mcs));
- 	/* Set MCS for 1x1/2x2 */
--	memset(mcs, 0xff, rx_mcs_supp);
--	/* Clear all the other values */
--	memset(&mcs[rx_mcs_supp], 0,
--	       sizeof(struct ieee80211_mcs_info) - rx_mcs_supp);
-+	memset(ht_info->mcs.rx_mask, 0xff, rx_mcs_supp);
-+
- 	if (priv->bss_mode == NL80211_IFTYPE_STATION ||
- 	    ISSUPP_CHANWIDTH40(adapter->hw_dot_11n_dev_cap))
- 		/* Set MCS32 for infra mode or ad-hoc mode with 40MHz support */
--		SETHT_MCS32(mcs_set.rx_mask);
--
--	memcpy((u8 *) &ht_info->mcs, mcs, sizeof(struct ieee80211_mcs_info));
-+		SETHT_MCS32(ht_info->mcs.rx_mask);
- 
- 	ht_info->mcs.tx_params = IEEE80211_HT_MCS_TX_DEFINED;
- }
+So we ended up with the following instead:
 
--- 
-2.39.5
+  CHECK: Alignment should match open parenthesis
 
+But at least it's not a warning anymore.
+
+Alternatively, we could maybe come up with a (very) short name for
+drm_kunit_helper_connector_hdmi_init_with_edid(), though I'm not what
+would that be :-(
