@@ -1,179 +1,183 @@
-Received: from EUR03-VI1-obe.outbound.protection.outlook.com (mail-vi1eur03on2072.outbound.protection.outlook.com [40.107.103.72])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C7B61D95A9;
-	Thu, 10 Apr 2025 15:05:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.103.72
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744297558; cv=fail; b=ZoNUYkcl5ooNE3XkvT4ixlJUjiWfT+dOYFq5c4B7AhFUKjru1+8Tq+vGayCfbrhp++E7kMZgj0MM6m3UIQZgrw9Idg6ir/2dG8s5sPOXWTa3ramXPEnWpCszpxvFbRQeWByQHrIUZKE+EN+0B40NSWMSe3SPJxyhRJGIwez7gB0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744297558; c=relaxed/simple;
-	bh=Pu8TJSbiQ2OhzR296m9z9HIqrlEomcUJfFWY9m3FLZc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=OP38IHTm1UG91e6jkPBq+gPRw2BD9kr5tPBXLdwrqPFVEfI6v2+NXeWpvlrXJRI/tMvJLPQB2QZ2f9NHIWbPxu/JJdOAD7ZYiaZBQikPfydncgwSmGOzAWSxLxrXMon02PSfj9XbHvN8dtZTa9SY/Yx2wV+zOJWHamba9cMC2hU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=PAPT099/; arc=fail smtp.client-ip=40.107.103.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D88E1DB356
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 15:06:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744297567; cv=none; b=dmfBvK846V/oPBy5A5WTMtwFPIWmZeKtglUsq6xvs0Uv1FQO9hoe/C/IZnyK+0JidjgaarZzdB3RdoPg6GtQm4lp1DzLPoYnzCwzxTy6gxGgQL89ntczGd2GaZL2Hky4P690NTcJFA9GJWvQHHZoPMdxObdilv4QKmGVoPcWpSI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744297567; c=relaxed/simple;
+	bh=i/wV+cfAdpSCZ8frE82BhmUeyqZVWD/FpxbdA1lIrvk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=QePGsf6GZcM9SF5nfm0UHdj9EXAFiIN/NHEmA9o6itj5fbAi9eMCANluygKQ2gQMR4yyengXu1uIWvHpo/oDGYFHsoGXm5lQzfXUjaK1HJxPxGMwM9zVU012KwgSKtc6128TlN3l2V3Xb80Kvo0WH/29dMjty6Nwgp97OUj0yag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dGL79bH7; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="PAPT099/"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=m43qYZyMAxOn1dm1RnNf343dD5rrsnbwFwXCtYWSuBdt+ags+TSWqy8vhFAs64wUnSMvOLRftpLGgGWrqGkEG7a8RxchT90wCznrWdJi/t0TMGcFLtQrM5L3dSKjOtrqPxgagRSMaKwwpZbgJgof3B9nEc9AuPo75Gz0vn4xZLYiao20+602ON2AgK1RG985Ds2v4hbaqszH39t7CuqjGqKQ+Q4IrRez1+8UxJ+Adod2BAAm3Z16NzY6NqAnKr1lzH11D3+I+2DCzGbiwQ1cmLjpHry/y1AHCO0BfNQJhxtJ/R8FAYFYWCjyPgRzJIyHBp9dufxuZ7BJliseNZeUBQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BVmez/e0MNtk92q16T3oioQzdZTnBgQ95XSEbrXfEFE=;
- b=hGTwQZpWOxse+RsT+8/v0VBhJCkSBmQ0GR0sevyKbCoqBejaZ3Fm0YILR2t/QKiAoL8eSnHZHCul701SH7IJftWcrSEZoNk92A21vKnF91Ap+gUvo6frCGKMNjh82YbGX9QWtU+Vcw9tak+K0mav+MW08bR7kmHPAm3iICppYdfF3eU/G6CDGR5n8nxcLMy/r5q2xD79mnozbaq64HAT34AzySF4FRe1qU3M9g4UI4oaiIglefWqajlESWkyAq5MefbUMAEv9Ouir/L+Jgj/yVsZJupNm6Dnd0etlVEOnO8JMImi1eZ56KW1/6PTh3cvUBF4zeVsVBUXhJyGB6kD7A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BVmez/e0MNtk92q16T3oioQzdZTnBgQ95XSEbrXfEFE=;
- b=PAPT099/m5zJW6fiW3p501Gx1Zr5P9QeUefCQ6t/Zez8md/JYjQ6SomRdTpPqe9xHagsQyF+OS2k664Vi6MHGi+ndFxCi1mJSq0tsaKWJfALVidt7IhvZc1i0pF4fJFnAzfkpCmp4ptrOtcCXFSzX4L+tiiNBwBbZNvOITEEovSa8txWwZVIdbEX2+m3T/7lfAGTqhAB98eqswVoP8QpIFNYM6dMKaOifp2ML2BExct3k4iUqO2OkbK/3Fyjildl8q4e14DvzJOPKjMR5a3X55tyPKtegUi5Kk8V85wKQYKiBV8xpUWOp1JwuB6dvGYk/weeF4FFoyAW2ZFM4LcPkw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AS8PR04MB9093.eurprd04.prod.outlook.com (2603:10a6:20b:444::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Thu, 10 Apr
- 2025 15:05:52 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8632.021; Thu, 10 Apr 2025
- 15:05:52 +0000
-Date: Thu, 10 Apr 2025 11:05:44 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Primoz Fiser <primoz.fiser@norik.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, upstream@lists.phytec.de
-Subject: Re: [PATCH 07/13] arm64: dts: freescale: imx93-phyboard-segin:
- Disable SD-card write-protect
-Message-ID: <Z/feSO9YbHd2lBxr@lizhi-Precision-Tower-5810>
-References: <20250410090251.1103979-1-primoz.fiser@norik.com>
- <20250410090251.1103979-8-primoz.fiser@norik.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250410090251.1103979-8-primoz.fiser@norik.com>
-X-ClientProxiedBy: BYAPR07CA0096.namprd07.prod.outlook.com
- (2603:10b6:a03:12b::37) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dGL79bH7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744297563;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=i/wV+cfAdpSCZ8frE82BhmUeyqZVWD/FpxbdA1lIrvk=;
+	b=dGL79bH7EGt9R0y4SZoXAL22Du3hitF1cQ6udERSVVCB1miD48orT/qU7gdoYwzRJADhwV
+	mLxEk5rIRE75chTGxbNQaphMQRUzr0NA4BnapeOnKMIc7nFIown+s5PN28KpBxahkEeoTj
+	KZaC/EatuJw5GImmqg1SwQiS8P/hA0w=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-93-hMD7JyVTPTakyswkZucrBA-1; Thu, 10 Apr 2025 11:05:57 -0400
+X-MC-Unique: hMD7JyVTPTakyswkZucrBA-1
+X-Mimecast-MFC-AGG-ID: hMD7JyVTPTakyswkZucrBA_1744297556
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-39123912ff0so390352f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 08:05:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744297556; x=1744902356;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=i/wV+cfAdpSCZ8frE82BhmUeyqZVWD/FpxbdA1lIrvk=;
+        b=ttsWFmd65mQPeQaPyH6+nzUijs9cLIhi0qK5CZSEVUyyUjvaJ3ZZEFqQlUlClBMIMz
+         NPdBKCo7m+tn0flgrKrTwXHwxMzvvouyMYxp6VuSVyjhodTpqxFRaFZhbtWaE6caB3os
+         KO8gus3CjHjXc60mq9CekQm+3VlsqyQMmHiCg2YHAc2nSPXrbCHGxBuvfy4Mlre+ODRr
+         gYJ57Vdv9LHI15FjfVd9aA6OZX28fuyUNPOiI4D1E4u5RDsbt6LeG6wd7ZWZKTMFQ2sT
+         CXB6bK0qcpV3x6Xuz0i4FYUBpqthOci+8KfSPdHkvRzVOAXLUIf4pBDAS3Hm8MFNoflK
+         SMIg==
+X-Forwarded-Encrypted: i=1; AJvYcCX8aJuPbrGnaUFIT5N6K0OlhGesReqednhftU/F3kLXtB8eKGKERfa/en7uRTpDL66aefzFKemfy0kEgPM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5DXpcpDAedWL07gL0dJpaP5x/hnoKOkJWMYLFKpFI5xmiolZ9
+	PsSWC+72DDakrfe6h1pUkpt0cdfp0/9E3nkS4aUf29pas0uAzP0lnJzLG316/M/7KF4Y6UJ9geE
+	RieJkVtiMw9ntkWouh+UlRf15Qc/elm/6b7JMu+ndM1xZySZHmWYR98d4XwCc7Q==
+X-Gm-Gg: ASbGncsQ8qz6Dzno1rK7fgr3OvYFs8N9MAQjjX1bf7+8mzQvMZunEltgnTImigwVkrU
+	+FS7GIwViq6KjxypyN40S9clUrFrYRexOYB6cd017m2r/+C58oYbC+RbSNOxgoFE9sLnL5+Fm8+
+	B/SrryEPNbvIA26rtI1ghKN4RqdzQfgObSUo6reVRCE6L4/fgSqgAQrknFWgMuUB4wno3ndCjQ2
+	4uvxhLSogBv/f57tORafwGQpUWHB4oecP+1bAa8WC814Q+7/vtkhSzYR6CxD20gkYs0wTLa4OLz
+	0d0CdecGvjHZJwhC0QbUCs+qaE0VTzQlqjzXww==
+X-Received: by 2002:a05:6000:1863:b0:38f:503a:d93f with SMTP id ffacd0b85a97d-39d8fd8c55emr2956478f8f.40.1744297556128;
+        Thu, 10 Apr 2025 08:05:56 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEmaiNcWIdBg09PgEKL7T/ex4twD0QSzIRKCesXrCMhx/62w6Bk8o+vD9bC7DblS/CYIKAdLw==
+X-Received: by 2002:a05:6000:1863:b0:38f:503a:d93f with SMTP id ffacd0b85a97d-39d8fd8c55emr2956295f8f.40.1744297554300;
+        Thu, 10 Apr 2025 08:05:54 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.40])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d89362fd6sm5205516f8f.16.2025.04.10.08.05.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Apr 2025 08:05:53 -0700 (PDT)
+Message-ID: <1c60e19d1cebc09a8fd89f073c3dbec80c8ddbf1.camel@redhat.com>
+Subject: Re: [PATCH] timers: Exclude isolated cpus from timer migation
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, 
+ Waiman Long <longman@redhat.com>
+Date: Thu, 10 Apr 2025 17:05:52 +0200
+In-Reply-To: <Z_fcv6CrHk0Qa9HV@localhost.localdomain>
+References: <20250410065446.57304-2-gmonaco@redhat.com>
+	 <87ecy0tob1.ffs@tglx>
+	 <2c9d71fd79d7d1cec66e48bcb87b39a874858f01.camel@redhat.com>
+	 <Z_fBq2AQjzyg8m5w@localhost.localdomain> <87wmbsrwca.ffs@tglx>
+	 <Z_fHLM4nWP5XVGBU@localhost.localdomain>
+	 <4fdc6582c828fbcd8c6ad202ed7ab560134d1fc3.camel@redhat.com>
+	 <Z_fTmzdvLEmrAth6@localhost.localdomain>
+	 <56eae8396c5531b7a92a8e9e329ad68628e53729.camel@redhat.com>
+	 <Z_fcv6CrHk0Qa9HV@localhost.localdomain>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
+ xyhmqeUWOzFx5P43S1E1dhsrLWgP
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS8PR04MB9093:EE_
-X-MS-Office365-Filtering-Correlation-Id: 213627c0-c490-4cac-57a7-08dd78412fc2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|1800799024|52116014|7416014|38350700014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?d9aaquSNX9P0FWbpBQ2dkmDAIDBkgbm4ohIb3oq7BuwmNF6leAli9M7xw5Eo?=
- =?us-ascii?Q?5gKnZXN6a/uN9eqHTxPtD2WuF9h3S1P1hLT//veIj6K/uTxcSPPJmU/VwZNC?=
- =?us-ascii?Q?OxQ3yrRQzz3AtfkpBu3ruRju0HuiyAM8HqU6HEANsclfQQPmYXx9e8VRdqa7?=
- =?us-ascii?Q?pv1PVf6+qqnshaYvdNlCpYgl+tk29B8V4cgF865XQLqYFvdEaDhXJ7hmu6k2?=
- =?us-ascii?Q?DecLLsU1P79TIvFwy8eILkQmv3Hq2udAl26LpynorbYzxyv5QYhzMbQcsnqc?=
- =?us-ascii?Q?CocBVKY7hFzP4TbUyu4nc85nb70YuCGBeSLpsp4afcFnNupm9irGN2x2gLkN?=
- =?us-ascii?Q?NYAiNpzS84+nB9/ZyPCcjfrp9X0xcDAiIS/baSP23wqzTBl3x2eXABEgc3BS?=
- =?us-ascii?Q?7XCC5Z5goi7zU3HYtz2WChjKDfNgmlCRaHp9PrkI1pWyNIMEFe1UozrALQzY?=
- =?us-ascii?Q?W3OOQRRVOlCcZI/MSnSR94H/isH3mrvxw2UOp+T0KW5mgt3NnIkVMjS3iKMV?=
- =?us-ascii?Q?VXpCLK2e+8aP4D4OS446Jy0QVWRwZf+2vZlO9cbBUkfiW/dn8GB9pcCWycpV?=
- =?us-ascii?Q?1cdxaM/OAlLWKbu39X1VsUyHHT/7dQn+qdzTuRJeBoBz4MNPM4gYMIdCujsF?=
- =?us-ascii?Q?/zSHg55+BIe98Oy5UJIiaHoixvs3ZItrBCM4Clrr8SFt94TKVY1oOK9gpbtU?=
- =?us-ascii?Q?50XIRZne0OykSr6/LQbcUWGW9bYvvL6eYbLMxDQgTAH+i8fZUtldCc7HMkTF?=
- =?us-ascii?Q?f1AErYFhm6x4aKRiyixPQ2cn4/MNMrH2x8QbWg/y9LQwk5SR/xWe1MMaR26p?=
- =?us-ascii?Q?ZRETcyfThlZxte4SEI9xpFnE5qCzj4AzXHzu+/KXBE6BOVJs2nmSh3ghIhW4?=
- =?us-ascii?Q?b5tedxMuS0iykzMTmKQYrqVvg4SSbvOrX2Bt8H0iCP/87QcHsiVrl5vmXUqD?=
- =?us-ascii?Q?NwjNacozSZGqXQ9y8DdidamhdG29/B2JQcXoAJoYkl4Vt9P2KhI7n1rBIjW5?=
- =?us-ascii?Q?1GGFEBkLK8DM8NSuj+Nth9TV2Ft+xBIfewukU6fEV4YHaWj5GWFIrrVgVtJV?=
- =?us-ascii?Q?ulMtLcVC/rBFiPSCLcdsAs804ZNMXo7mQVqsPVJy3u+Igd9JcsG/mnO7GdMk?=
- =?us-ascii?Q?zRC85D+tTV2lAsZZpDVi7lwqm0mwZ83/uLuhycji+lmXBOnVIdx/JZi9/U7e?=
- =?us-ascii?Q?AHNzbHUDhWWhqIWGzp74jCT8FO6FKEMekK8Vb3l/fk4DhVRWX1XviLiBK6gj?=
- =?us-ascii?Q?m+0UifqU0nHTekV73r5uxPCPvvtyTUym3K7/xk1hbos9P4VPTpZGXpEA6P4i?=
- =?us-ascii?Q?raM3N7k8FJmX4mhDCV7ifaq4hAicWFSy3DMKREcHORw1RM6eREY1q98+VqQl?=
- =?us-ascii?Q?oMAD03/iekLkoVkr+oVz5ifM8ST1bcc91bFZYHf51UtF6SVYPaRU1MINKGzY?=
- =?us-ascii?Q?UKM+kUcx9mwAmNojzFNBcw32IBMfU58U?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(52116014)(7416014)(38350700014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?O/aao3VnbI/1x6MKJB9JZBuqFvd7SXtL3jq6RB6GCe9cFhOSAYUw+7WyTVBy?=
- =?us-ascii?Q?mfPuK50ElxF3/hDKAZzEDrqUTHpdUZko82YQSib1LYNSUFjtUiRTeOdz9X8+?=
- =?us-ascii?Q?LL9+lWvOXIQDZ2BlL3oxSaJvjFhhUxqIMDoBDTNR1sSvbP7ZsqC1iBJfyKKH?=
- =?us-ascii?Q?z9WVoTo9AsXZGtlgv3X2QbuwlfYeFyM60tURPZ04jnGysGyEEBlmMf266Pyp?=
- =?us-ascii?Q?o+CdicrQlpuac+yf1+UgBub/+GzLsfftg0RQE03YuSSIqQwHaaZyckAj3GTQ?=
- =?us-ascii?Q?SLDxaw/tU7jwWRgBFxuFOKh6D3KoeiLkdy1FMNJAnDdLmQMxx5wOHuQlmxQq?=
- =?us-ascii?Q?SJytNA9TZCksZc6XzHktyXxzSW1aEyC1EDdYWkVVZGBbPS2OmOQJP16evHlP?=
- =?us-ascii?Q?iIzfnjMU+xdBEIUBWcpAoxxtd5mS8eNBYQ5luQnOpFi115xgjDkmbrxggHEx?=
- =?us-ascii?Q?d90DwXTYJrH5A5c7sfFhba+nZHNE9bufAd8GEPajGCqKqwLyVcPCiddCy634?=
- =?us-ascii?Q?yNMmwliLaNhIqKX9kH+w00fe3rcNc/wFtiHsPafvjGaaouyF9Eqme5Lq3vbf?=
- =?us-ascii?Q?aN4AtsOIDnE8IwWw6jolVQH0/ipDoaChQJz9wmZbec8v533qlhHOUAqRBzck?=
- =?us-ascii?Q?24amMe3LEqGZ5QKJ/WkoWQMiXUWCGQhkXz7yrVoVK/CBOVaUNHHe9ykXGYlJ?=
- =?us-ascii?Q?1jZWrKtEsmYKM1/WzDfiUE3YXO8X7bXsI87W8OxEc7wf6fGGILxwi4rL2Dcb?=
- =?us-ascii?Q?DLyDe6Pt+YsMKxiUkNFlyMohrCkDO/nijpNv92eYejuxGK4cIXvlv/GgDjvB?=
- =?us-ascii?Q?yFraO5dc5ZZZ9mJ8GbLfjp0u8aTbTiEpqJU/W9cx7W3hkXaMK4BvScHAtfrG?=
- =?us-ascii?Q?tYTfjqX2bCmM7uDRhCANrZANhnoeGJwUHFeelk444O+n8EFXBKhX8I6v+WZx?=
- =?us-ascii?Q?9/UiSuk5nGQeYaoiBF1p80zmeEdxDnMFAmfvs9BQdMZoR2UnLXNup5gC41t5?=
- =?us-ascii?Q?8tr7vh6NjpE6EyWb2cP2ee83OH9BBl3qXhjZ+0RaZC9jURt4gYDkMyE2dCOx?=
- =?us-ascii?Q?dLy7B3bE+Bwj8DDA8bCh0hBMITbw8ageyWxF4cU+JyE08YwH5SxhpwfH4hv3?=
- =?us-ascii?Q?Zaw8DsXd9UvCCZCZUwyn5FacYfLIJaQ9aaJMW1d1nIXUN4Znki0otsUAq6ss?=
- =?us-ascii?Q?5Stl5IZNCyxxGaXlSUvdIlrD5IGXDgh45xNPEx6Wt6V2uE7SExtblEvGCKXt?=
- =?us-ascii?Q?y7HBL1NCwDE7dOhGU6wqWS70lhVpJiN7aiUsvJQpobCx8HxHqrhw01tZPQjt?=
- =?us-ascii?Q?xGqppHVaBSOVbZuQN27QPPruhadrQYdG6JUF2thbRFy1ODK3/2/jD2c5VnkH?=
- =?us-ascii?Q?8gQBavZ2tXxuOwFNQ3Q2zuzOAbssAmu+/q9sIARjc6qRL+Fzj8TABVxPpxyB?=
- =?us-ascii?Q?0vevDlXur65otm/OnafaWMwSLS8d5pm7DEZXfo69rk2aMAFu0kl/fBjvhIh0?=
- =?us-ascii?Q?BAC2K3457rNC8FPc9RxeuVxGbygn2R5IS+y5+xSqWKBJgAfRpQ4sKHM6lJ1m?=
- =?us-ascii?Q?UJIan/UrVel5B9AUpJmfOBufLyNpiOS8YmiI3jtG?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 213627c0-c490-4cac-57a7-08dd78412fc2
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 15:05:52.7927
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: adzDICyg8rhI0fEG5YnpWmLIxyib3rWFs3k0zIT1DkAsK08L2s0Lc+xXeG2nav00kXrd/B1JLY1+uYJ1xJ9O/g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB9093
 
-On Thu, Apr 10, 2025 at 11:02:45AM +0200, Primoz Fiser wrote:
-> Add disable-wp flag (write-protect) to usdhc2 node (SD-card) to get rid
-> of the following kernel boot warning:
->
->   host does not support reading read-only switch, assuming write-enable
->
-> Micro SD cards can't be physically write-protected like full-sized
-> cards. Thus disable this feature.
 
-"Thus add disable-wp property".
 
-Frank
->
-> Signed-off-by: Primoz Fiser <primoz.fiser@norik.com>
-> ---
->  arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts b/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
-> index 902b523fc92c..3d5cd0561362 100644
-> --- a/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
-> +++ b/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
-> @@ -48,6 +48,7 @@ &usdhc2 {
->  	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_cd>;
->  	bus-width = <4>;
->  	cd-gpios = <&gpio3 0 GPIO_ACTIVE_LOW>;
-> +	disable-wp;
->  	no-mmc;
->  	no-sdio;
->  	vmmc-supply = <&reg_usdhc2_vmmc>;
-> --
-> 2.34.1
->
+On Thu, 2025-04-10 at 16:59 +0200, Frederic Weisbecker wrote:
+> Le Thu, Apr 10, 2025 at 04:46:10PM +0200, Gabriele Monaco a =C3=A9crit :
+> >=20
+> >=20
+> > On Thu, 2025-04-10 at 16:20 +0200, Frederic Weisbecker wrote:
+> > > Le Thu, Apr 10, 2025 at 03:56:02PM +0200, Gabriele Monaco a =C3=A9cri=
+t
+> > > :
+> > > > On Thu, 2025-04-10 at 15:27 +0200, Frederic Weisbecker wrote:
+> > > > > But how do we handle global timers that have been initialized
+> > > > > and
+> > > > > queued from
+> > > > > isolated CPUs?
+> > > >=20
+> > > > I need to sketch a bit more the solution but the rough idea is:
+> > > > 1. isolated CPUs don't pull remote timers
+> > >=20
+> > > That's the "easy" part.
+> > >=20
+> > > > 2. isolated CPUs ignore their global timers and let others pull
+> > > > them
+> > > > =C2=A0 perhaps with some more logic to avoid it expiring
+> > >=20
+> > > This will always involve added overhead because you may need to
+> > > wake
+> > > up
+> > > a CPU upon enqueueing a global timer to make sure it will be
+> > > handled.
+> > > At least when all other CPUs are idle.
+> > >=20
+> > > > Wouldn't that be sufficient?
+> > > >=20
+> > > > Also, I would definitely do 1. for any kind of isolation, but
+> > > > I'm
+> > > > not
+> > > > sure about 2.
+> > > > Strictly speaking domain isolated cores don't claim to be free
+> > > > of
+> > > > kernel noise, even if they initiate it (but nohz_full ones do).
+> > > > What would be the expectation there?
+> > >=20
+> > > I don't know, I haven't heard complains about isolcpus handling
+> > > global
+> > > timers so far...
+> > >=20
+> > > I wouldn't pay much attention to 2) until anybody complains. Does
+> > > 1)
+> > > even
+> > > matter to anybody outside nohz_full ?
+> > >=20
+> >=20
+> > Makes sense..
+> > In our case, 2. is not a big issue because it can usually be solved
+> > by
+> > other configurations, but 1. is an issue.
+> > Most people indeed use nohz_full in that scenario, but some users
+> > may
+> > not want its overhead.
+> >=20
+> > I find it misleading at best for global timers to migrate from
+> > housekeeping to isolcpus cores and since it's "easy", I'd
+> > definitely
+> > change that.
+>=20
+> Easy but still a bit invasive so:
+>=20
+
+I'm not understanding what is going to be invasive in this case.
+Aren't we just talking about not allowing isolcpus to pull timers from
+other cpus?
+Let's ignore for now the global timers started on those CPUs, I'm not
+aware of complaints regarding that.
+
+As far as I understand, the change would allow timer migration to work
+normally out of isolcpus and among housekeeping ones, we are not
+forcing any migration that would potentially introduce overhead or
+missed timers.
+Or am I oversimplifying it?
+
+Thanks,
+Gabriele
+
