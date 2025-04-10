@@ -1,240 +1,135 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AE94284B3D
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 14:18:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2024928C5A0;
+	Thu, 10 Apr 2025 14:18:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744294732; cv=none; b=O1NvkZ28TSMrSrAd6xwlOo9z55Y7BIWK91Z98xQRDdLu0ehNHudW6x1DqCmZf2FuSclcNo4ZQRcMcP1s7gbry+fDVEaafAYPp+WZ4e+JAhhQYm/TSxXQNgQZZiE3iEXgk0oGmHGcIjMkYTxQDGuOa9+HJqxr6CflJroYz9DyQiM=
+	t=1744294735; cv=none; b=hc38LcwpxZtOFTwVnupkZsekrjyNRWZ6r/gheR//IN1kRJTo30OwxC2m/RNk1JQyNyqBTroyDj2+I/hLkOPzFY4bvHRwfcntfDYzzYaAk7RJaU0WQYhKcnFL+SeUS9S7D3GecCuqsn2QB4z4Cg0ZvshhTF8eEyZz1DSW0353c9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744294732; c=relaxed/simple;
-	bh=w73Z+SWToipvwY0ppQE3GKDc1Wy8J1qem7rYPsqoNEg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lEyxVEbNQ5INpXSw4GoBas6lIuP/LsomWEvtNEqtZRW/wiMLoV37m6tb1UN2VSSAJOWDfYTcptndSucE8efROWyDGsYW70AfEnLJeG8oin+a60qX67o3i2cuuKCileHEQ3rH0sdl/8KNX7tkT7w79BWtrgWnFUHZoVTIRMjVzzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CZW/ZaMG; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744294735; c=relaxed/simple;
+	bh=UQ27vrQLCi8V4Grh3C1PRVUE7qYKzT6JbAsCqSsolYE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kNXIFuQEWdEBFWk2FnFjNgzZlEzMxUuKWTBzoRp7Ny6rnsJlOON/wyNGSc7wBgimq1Qi+hr+R0S/0ratWKVUywUmvOvZ0yUvmaGgHd+5mtXfvocXHJXVo/876g6w1wrejTwr7vXFuCWrJ6cNCsQ1p9lvt0r7zhoZI76svEXEDH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eNYZU+1r; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CZW/ZaMG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744294729;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Y7asJtLNtRy2Pycw2tJgzfoU3bLUAEvPjbye8iIV0Ho=;
-	b=CZW/ZaMGlSuYMEO8b+aR0RGvZPtCHzZWoSnq3pTL7F4MzvPpksa+d7Gb9Ymz2/TpIqWllw
-	AiMSUs9VBVQ+i+J5DwY536IZHhvame1wUhMFgT8j1+3M8TUWVAbrWq9epFAFoFjZ5T0e6Y
-	0//UaqDXaT7wQ8x2OwnR1cDNI/VtB9s=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-316-KVd3xlw3Mi6xop4H04o7hA-1; Thu,
- 10 Apr 2025 10:18:45 -0400
-X-MC-Unique: KVd3xlw3Mi6xop4H04o7hA-1
-X-Mimecast-MFC-AGG-ID: KVd3xlw3Mi6xop4H04o7hA_1744294724
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6359619560B3;
-	Thu, 10 Apr 2025 14:18:44 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.45.225.190])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6CFEA1801A6D;
-	Thu, 10 Apr 2025 14:18:42 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: torvalds@linux-foundation.org
-Cc: kuba@kernel.org,
-	davem@davemloft.net,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Networking for v6.15-rc2
-Date: Thu, 10 Apr 2025 16:18:31 +0200
-Message-ID: <20250410141831.46694-1-pabeni@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eNYZU+1r"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744294733; x=1775830733;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=UQ27vrQLCi8V4Grh3C1PRVUE7qYKzT6JbAsCqSsolYE=;
+  b=eNYZU+1rU8H3WaGHuUP8A0xP17y8x3OKYgcvirl3d7CjLnSoR7d0EwDo
+   SnHeHhkOtIBeXS7zOvcMqutrO2yhSaYjn4TuaXYrnx9+E0LTNMByEmVBl
+   yrHNuh4xDiphpW+DPdvRJIr3L3nRk4qX29ySntduLhv7VdL9QDAcc0Apv
+   55mEBbCbih4bjOyh1CiCmFtaPuuN68NGqaQFwcbw8FDcYk0xx5c/g7MEx
+   9x+rl3YMKwpf4XRc02J8FyLwIN+g3NHZ2seBlMR5YOCcjj2UdRmh2af8G
+   +FguYKWWpI71fUJQzHsfYo8ecpbMGO2ztRrJJCc3Ou3MyzxVPM8kxzeUW
+   A==;
+X-CSE-ConnectionGUID: cuXbM/DUQeCgxZoqPIX0tg==
+X-CSE-MsgGUID: QFHF/ofzTuCAsICQnU8FLQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11400"; a="57190264"
+X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
+   d="scan'208";a="57190264"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 07:18:52 -0700
+X-CSE-ConnectionGUID: o7QVdegNRvSJLWEnhVhM6w==
+X-CSE-MsgGUID: 9FAYZpHpT2OwCe0ucqzqyA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
+   d="scan'208";a="133036043"
+Received: from jairdeje-mobl1.amr.corp.intel.com (HELO [10.124.221.45]) ([10.124.221.45])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 07:18:51 -0700
+Message-ID: <e88be442-1163-4163-8f2f-06a37d1e595a@intel.com>
+Date: Thu, 10 Apr 2025 07:18:49 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 04/19] x86/cea: Export per CPU array
+ 'cea_exception_stacks' for KVM to use
+To: Christoph Hellwig <hch@infradead.org>, "Xin Li (Intel)" <xin@zytor.com>
+Cc: pbonzini@redhat.com, seanjc@google.com, kvm@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, corbet@lwn.net,
+ tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ andrew.cooper3@citrix.com, luto@kernel.org, peterz@infradead.org,
+ chao.gao@intel.com, xin3.li@intel.com
+References: <20250328171205.2029296-1-xin@zytor.com>
+ <20250328171205.2029296-5-xin@zytor.com> <Z_eHGjzR33LMqLfL@infradead.org>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <Z_eHGjzR33LMqLfL@infradead.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Transfer-Encoding: 7bit
 
-Hi Linus!
+On 4/10/25 01:53, Christoph Hellwig wrote:
+> On Fri, Mar 28, 2025 at 10:11:50AM -0700, Xin Li (Intel) wrote:
+>> The per CPU array 'cea_exception_stacks' points to per CPU stacks
+>> +/*
+>> + * FRED introduced new fields in the host-state area of the VMCS for
+>> + * stack levels 1->3 (HOST_IA32_FRED_RSP[123]), each respectively
+>> + * corresponding to per CPU stacks for #DB, NMI and #DF.  KVM must
+>> + * populate these each time a vCPU is loaded onto a CPU.
+>> + */
+>> +EXPORT_PER_CPU_SYMBOL(cea_exception_stacks);
+> Exporting data vs accessors for it is usually a bad idea.  Doing a
+> non-_GPl for such a very low level data struture is even worse.
 
-The following changes since commit 61f96e684edd28ca40555ec49ea1555df31ba619:
+Big ack on this.
 
-  Merge tag 'net-6.15-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net (2025-04-04 09:15:35 -0700)
+I don't even see a single caller of __this_cpu_ist_top_va() that's
+remotely performance sensitive or that needs to be inline.
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git net-6.15-rc2
-
-for you to fetch changes up to eaa517b77e63442260640d875f824d1111ca6569:
-
-  ethtool: cmis_cdb: Fix incorrect read / write length extension (2025-04-10 14:32:43 +0200)
-
-----------------------------------------------------------------
-Including fixes from netfilter.
-
-Current release - regressions:
-
-  - core: hold instance lock during NETDEV_CHANGE
-
-  - rtnetlink: fix bad unlock balance in do_setlink().
-
-  - ipv6:
-    - fix null-ptr-deref in addrconf_add_ifaddr().
-    - align behavior across nexthops during path selection
-
-Previous releases - regressions:
-
-  - sctp: prevent transport UaF in sendmsg
-
-  - mptcp: only inc MPJoinAckHMacFailure for HMAC failures
-
-Previous releases - always broken:
-
-  - sched:
-    - make ->qlen_notify() idempotent
-    - ensure sufficient space when sending filter netlink notifications
-    - sch_sfq: really don't allow 1 packet limit
-
-  - netfilter: fix incorrect avx2 match of 5th field octet
-
-  - tls: explicitly disallow disconnect
-
-  - eth: octeontx2-pf: fix VF root node parent queue priority
-
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-
-----------------------------------------------------------------
-Arnaud Lecomte (1):
-      net: ppp: Add bound checking for skb data on ppp_sync_txmung
-
-Chenyuan Yang (1):
-      net: libwx: handle page_pool_dev_alloc_pages error
-
-Cong Wang (11):
-      sch_htb: make htb_qlen_notify() idempotent
-      sch_drr: make drr_qlen_notify() idempotent
-      sch_hfsc: make hfsc_qlen_notify() idempotent
-      sch_qfq: make qfq_qlen_notify() idempotent
-      sch_ets: make est_qlen_notify() idempotent
-      codel: remove sch->q.qlen check before qdisc_tree_reduce_backlog()
-      selftests/tc-testing: Add a test case for FQ_CODEL with HTB parent
-      selftests/tc-testing: Add a test case for FQ_CODEL with QFQ parent
-      selftests/tc-testing: Add a test case for FQ_CODEL with HFSC parent
-      selftests/tc-testing: Add a test case for FQ_CODEL with DRR parent
-      selftests/tc-testing: Add a test case for FQ_CODEL with ETS parent
-
-David S. Miller (1):
-      Merge branch 'sch_sfq-derived-limit'
-
-Florian Westphal (2):
-      nft_set_pipapo: fix incorrect avx2 match of 5th field octet
-      selftests: netfilter: add test case for recent mismatch bug
-
-Hariprasad Kelam (1):
-      octeontx2-pf: qos: fix VF root node parent queue index
-
-Ido Schimmel (2):
-      ipv6: Align behavior across nexthops during path selection
-      ethtool: cmis_cdb: Fix incorrect read / write length extension
-
-Jakub Kicinski (4):
-      Merge branch 'fix-wrong-hds-thresh-value-setting'
-      net: tls: explicitly disallow disconnect
-      selftests: tls: check that disconnect does nothing
-      Merge branch 'mptcp-only-inc-mpjoinackhmacfailure-for-hmac-failures'
-
-Jiawen Wu (1):
-      net: libwx: Fix the wrong Rx descriptor field
-
-Kuniyuki Iwashima (3):
-      ipv6: Fix null-ptr-deref in addrconf_add_ifaddr().
-      rtnetlink: Fix bad unlock balance in do_setlink().
-      net: Fix null-ptr-deref by sock_lock_init_class_and_name() and rmmod.
-
-Matthieu Baerts (NGI0) (2):
-      mptcp: only inc MPJoinAckHMacFailure for HMAC failures
-      selftests: mptcp: validate MPJoin HMacFailure counters
-
-Maxime Chevallier (1):
-      net: ethtool: Don't call .cleanup_data when prepare_data fails
-
-Octavian Purdila (3):
-      net_sched: sch_sfq: use a temporary work area for validating configuration
-      net_sched: sch_sfq: move the limit validation
-      selftests/tc-testing: sfq: check that a derived limit of 1 is rejected
-
-Paolo Abeni (2):
-      Merge branch 'net_sched-make-qlen_notify-idempotent'
-      Merge tag 'nf-25-04-10' of git://git.kernel.org/pub/scm/linux/kernel/git/netfilter/nf
-
-Ricardo Cañuelo Navarro (1):
-      sctp: detect and prevent references to a freed transport in sendmsg
-
-Stanislav Fomichev (1):
-      net: hold instance lock during NETDEV_CHANGE
-
-Taehee Yoo (2):
-      net: ethtool: fix ethtool_ringparam_get_cfg() returns a hds_thresh value always as 0.
-      selftests: drv-net: test random value for hds-thresh
-
-Toke Høiland-Jørgensen (1):
-      tc: Ensure we have enough buffer space when sending filter netlink notifications
-
-Tung Nguyen (1):
-      tipc: fix memory leak in tipc_link_xmit
-
-Vladimir Oltean (2):
-      net: phy: move phy_link_change() prior to mdio_bus_phy_may_suspend()
-      net: phy: allow MDIO bus PM ops to start/stop state machine for phylink-controlled PHY
-
- Documentation/networking/netdevices.rst            |  10 +-
- drivers/net/ethernet/marvell/octeontx2/nic/qos.c   |   5 +
- drivers/net/ethernet/wangxun/libwx/wx_lib.c        |   6 +-
- drivers/net/ethernet/wangxun/libwx/wx_type.h       |   3 +-
- drivers/net/phy/phy_device.c                       |  57 ++++++--
- drivers/net/ppp/ppp_synctty.c                      |   5 +
- include/linux/netdevice.h                          |   2 +
- include/linux/rtnetlink.h                          |   2 +-
- include/net/sctp/structs.h                         |   3 +-
- include/net/sock.h                                 |  40 +++++-
- net/core/dev.c                                     |  11 +-
- net/core/dev_api.c                                 |  16 +++
- net/core/link_watch.c                              |  28 +++-
- net/core/lock_debug.c                              |   2 +-
- net/core/rtnetlink.c                               |  17 ++-
- net/core/sock.c                                    |   5 +
- net/ethtool/cmis.h                                 |   1 -
- net/ethtool/cmis_cdb.c                             |  18 +--
- net/ethtool/common.c                               |   1 +
- net/ethtool/ioctl.c                                |   2 +-
- net/ethtool/netlink.c                              |   8 +-
- net/hsr/hsr_device.c                               |   6 +-
- net/ipv6/addrconf.c                                |   9 +-
- net/ipv6/route.c                                   |   8 +-
- net/mptcp/subflow.c                                |   8 +-
- net/netfilter/nft_set_pipapo_avx2.c                |   3 +-
- net/sched/cls_api.c                                |  66 ++++++---
- net/sched/sch_codel.c                              |   5 +-
- net/sched/sch_drr.c                                |   7 +-
- net/sched/sch_ets.c                                |   8 +-
- net/sched/sch_fq_codel.c                           |   6 +-
- net/sched/sch_hfsc.c                               |   8 +-
- net/sched/sch_htb.c                                |   2 +
- net/sched/sch_qfq.c                                |   7 +-
- net/sched/sch_sfq.c                                |  66 ++++++---
- net/sctp/socket.c                                  |  22 +--
- net/sctp/transport.c                               |   2 +
- net/tipc/link.c                                    |   1 +
- net/tls/tls_main.c                                 |   6 +
- tools/testing/selftests/drivers/net/hds.py         |  33 ++++-
- tools/testing/selftests/net/mptcp/mptcp_join.sh    |  18 +++
- .../selftests/net/netfilter/nft_concat_range.sh    |  39 +++++-
- tools/testing/selftests/net/tls.c                  |  36 +++++
- .../tc-testing/tc-tests/infra/qdiscs.json          | 155 +++++++++++++++++++++
- .../selftests/tc-testing/tc-tests/qdiscs/sfq.json  |  36 +++++
- 45 files changed, 649 insertions(+), 150 deletions(-)
-
+Just make the __this_cpu_ist_top/bottom_va() macros into real functions
+and export __this_cpu_ist_top_va(). It's going to be a pretty tiny
+function but I think that's tolerable.
