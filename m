@@ -1,40 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 906DE202C21;
-	Thu, 10 Apr 2025 06:15:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F34331BF37
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:17:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744265703; cv=none; b=AnkEvIF2I9RVezCG+HFzwVYSbnHvjnmm8mSHh/8o8IZUta0ptnPCTdooD/7HNDco4WOYcw5wdm6HS2TqIVmRNyTa4M8eY5tC3mG0YJF8bglZOvSpYuWj37tAZKIRKGn6p2PsB3BLKwETZq17gm0B4o9T2SBBaqY6NMQJVilHVvM=
+	t=1744265868; cv=none; b=NdO3SNezZV62T5dgDhoKiAP0wr8Lrb1HUBAyJcqCNlTV0MEReuEOrE9qiw/bqI7Ts53Og5n1l39XWeTNMGAgH96XX+aRwxbS1f907at+8+BEem9u/IF4iWoULz5MzmDrKtKSJEahINVYpE4TGma/tJCGBj/Tf8Fdfw2kahtAjr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744265703; c=relaxed/simple;
-	bh=zVqocgr36YZsJUJK4G4a6s/8nYUj5HCGaQSX42jvOFU=;
+	s=arc-20240116; t=1744265868; c=relaxed/simple;
+	bh=RuJkx0SME0u7KQoXNcdSFo1kg/bczJSkO6Gfd1eD3s4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sphh2AvgYz/obqVRiCJqhEs5GOl8PR6tjO8QBCoB9KbefCPbyb6U4P5Cw+6Dnl2v3Xk9N/5KrjVdTkDIDf7nnwCFBh93g8fn62AGBnTqP30yvGzdXjsjLAylBdBNHHXiumJ20ieTVoEaa49wtAQd99EzAlPsacB0GXieO93U2l4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NylHXf6l; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=GUzUuMaFl3WoDNl2GAgfmfRVWTQJi4CrED8qEtKH8iCPZZm07vJb1WZMy+V8v1w+dUD0Rbw3CDOuyy8Rf/aQ72e2qs3M4SnbU5tuBqGmtEs3GaWbignG8lWsMpl8XGF9glgKv4CU4ORkg1UAJ2H/1PpMF8Ge5N5/TDJ9g4iTHac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XYrE7tlm; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NylHXf6l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75497C4CEDD;
-	Thu, 10 Apr 2025 06:15:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744265703;
-	bh=zVqocgr36YZsJUJK4G4a6s/8nYUj5HCGaQSX42jvOFU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NylHXf6lqaAGXazFBMv88lr1z9ex6hdd51f1u6e7g72x9dM7wcYU7ONP5o0O5jRxV
-	 gczLYMI8LDcrdT/x0f+YjYkaLVQsk+SH3mQa05wPfPC8zhaLgCmyBhZo1ofAvriN+v
-	 zqQk+zSK9VuGaEBlchIPjbqDwH6SuXj78pa6DhRjuSMHvNe57TGgYj8GhchUWbjbUs
-	 f71h1gS1uCGH6M3UXyDyObUabf8y6k5hMDN4h+jAnZJcBi2ElCuL61pfxVcNqf840/
-	 WoaP5t4J5no1nN5uyrT2qlJ9hdAX8R7ociBsBXjbfR9oWz8+TRxxlgqkGuJby5qZ6r
-	 /02h0jLwoFmkw==
-Date: Thu, 10 Apr 2025 09:14:58 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Purva Yeshi <purvayeshi550@gmail.com>
-Cc: peterhuewe@gmx.de, jgg@ziepe.ca, linux-integrity@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] char: tpm: tpm-buf: Fix uninitialized return values in
- read helpers
-Message-ID: <Z_dh4tRIa6xxAWQ2@kernel.org>
-References: <20250409205536.210202-1-purvayeshi550@gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XYrE7tlm"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3914aba1ce4so262592f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 23:17:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744265864; x=1744870664; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jYStztFya2y5gjqP02BNpybAW9yRhWvY1XlPanf+Ykc=;
+        b=XYrE7tlm6lG/Qzu/17ww0gE1PiK3v9bUCi3qviV4EXV/+J7oehIVgOVUu+0I9iJd3u
+         g2RHdU4HwaL39OM3HjqeZLmydpz/Kkxw6maFRwNVRHetlDmd7gLFM1ok6qBnrKvH/viR
+         Amiky4lARgT1imbK+v4lJw3Rr2VIdM08fYsA/9esNG/Yjz15mVUir+gw0zbbRbQ5Rjmd
+         9wo7tIOeO2nnueSSyX04CDkpc72hv9L7RsMt/xlZEY717lG4OgLdxFNl6TXxPP8ENih6
+         rIq2JhowNMaZBM64vdo++5MgjxTkLrMSfxs2s/0wbTqM+srsld6/x6s74IV4SZ65I70Z
+         d34Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744265864; x=1744870664;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jYStztFya2y5gjqP02BNpybAW9yRhWvY1XlPanf+Ykc=;
+        b=JlN2OCHRbj/HtvIzW2cbJSUE9+p8rFQxWnlQXbHqjgKsK6+DmZqhuNBQlKEpyV2laq
+         CcDiU+NIqbcIov1ZhsZQ71WzHP7dnVrXS3c5Su0OwdcfxHiG/G2pZaYFoAfcJv79xvgk
+         T+nyUKRD5V4vw0htRW0TMUAAh8PvLWDe3G5pV6lY6aFORuJc81BjLTrKfkdbsovnTjQ/
+         rIKTnhewO5Q2JCf9V4FIF5QmgtKtNxQFi4WaPZUFiA7HLJMnG3/+eH8ceT8yPM0jxVvi
+         aEmKjXvcZr2EGtY6g/CZjRsE2o19c/Wl1ovjQo5mvl4D8UbmjQEPYzsIemze7+FjooWo
+         RoFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUAWhIYVLGkzKadycIHo1+SY2H6wgqNIr7uwSwwWxSsQ70wL8MvXJrwPONyO17FRNifbmue6hFLvaeGzSU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzD6QeJLxRFN3uyb0p1glpZg2GA28ZsCsCzyoDJIItwTDngs7q+
+	L3cbodCuo3mefiVNEMGlEruTHY1aeGHM8IGFHVPnFhbNFY8zsGDzWUbMUVWh5Yc=
+X-Gm-Gg: ASbGncvS+L/3t3YbzjgfIbPIoe1y+KxVX+LxGuS86x3zWYNomt2o4PqLGMnF72e+/ox
+	6IcP25RUl1DOPJ1GSAlf66chFbGHKFxCmpZvTEocP1Mb8vXfzs0atSh+FOHKQDNjfiS6pS/bkhK
+	/iGElJR75ZdqCBsGgb4i9LyllcSnGgXy80iiGDCE7QqDYOjXtJ9MzhMolBqvHf4OzxsIvgFobnq
+	RCClhCF+wdD+hIKd8FGdghla7/tC2ET1Cf2oqy0ILFQO37yEL9Q2OF5WIuv5K6N+esTMQzvs8x1
+	9XfJDEjjhRD01ZR7pploOB4X05Ubu+v4tiq+oFdgIKHk/T2VFyXuJ6GZ
+X-Google-Smtp-Source: AGHT+IGPf0mN33Z8VXMC6vHoEgIYPUGu+ettg097AataOUXjxz6bSk1dsUcrvcjBIRQZplQw7qTkLw==
+X-Received: by 2002:a05:6000:18ae:b0:39c:2692:425a with SMTP id ffacd0b85a97d-39d8fd63d92mr746462f8f.6.1744265864279;
+        Wed, 09 Apr 2025 23:17:44 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39d893611d0sm3664353f8f.6.2025.04.09.23.17.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 23:17:43 -0700 (PDT)
+Date: Thu, 10 Apr 2025 09:17:40 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Siddarth G <siddarthsgml@gmail.com>
+Cc: slongerbeam@gmail.com, p.zabel@pengutronix.de, mchehab@kernel.org,
+	gregkh@linuxfoundation.org, shawnguo@kernel.org,
+	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+	linux-media@vger.kernel.org, linux-staging@lists.linux.dev,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, skhan@linuxfoundation.org
+Subject: Re: [PATCH] staging/media/imx: fix null pointer dereference
+Message-ID: <0d496695-ce20-4774-8e86-4d5c98dc220b@stanley.mountain>
+References: <20250409211727.62710-1-siddarthsgml@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,66 +76,65 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250409205536.210202-1-purvayeshi550@gmail.com>
+In-Reply-To: <20250409211727.62710-1-siddarthsgml@gmail.com>
 
-On Thu, Apr 10, 2025 at 02:25:36AM +0530, Purva Yeshi wrote:
-> Fix Smatch-detected error:
-> drivers/char/tpm/tpm-buf.c:208 tpm_buf_read_u8() error:
-> uninitialized symbol 'value'.
-> drivers/char/tpm/tpm-buf.c:225 tpm_buf_read_u16() error:
-> uninitialized symbol 'value'.
-> drivers/char/tpm/tpm-buf.c:242 tpm_buf_read_u32() error:
-> uninitialized symbol 'value'.
+On Thu, Apr 10, 2025 at 02:47:27AM +0530, Siddarth G wrote:
+> Cppcheck warnings:
 > 
-> Call tpm_buf_read() to populate value but do not check its return
-> status. If the read fails, value remains uninitialized, causing
-> undefined behavior when returned or processed.
+> drivers/staging/media/imx/imx-media-fim.c:79:6:
+> error: Null pointer dereference: fi [ctunullpointer]
+>   if (fi->denominator == 0) {
 > 
-> Initialize value to zero to ensure a defined return even if
-> tpm_buf_read() fails, avoiding undefined behavior from using
-> an uninitialized variable.
-
-How does tpm_buf_read() fail?
+> drivers/staging/media/imx/imx-media-csi.c:795:27:
+> note: Calling function imx_media_fim_set_stream, 2nd argument is null
+>   imx_media_fim_set_stream(priv->fim, NULL, false);
+                                              ^^^^^
+This is a false positive.  The false means that we don't call
+update_fim_nominal().  Btw, Smatch parses this one correctly.
 
 > 
-> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+> drivers/staging/media/imx/imx-media-fim.c:388:3:
+> note: Calling function update_fim_nominal, 2nd argument is null
+>   update_fim_nominal(fim, fi);
+> 
+> drivers/staging/media/imx/imx-media-fim.c:79:6:
+> note: Dereferencing argument fi that is null
+>   if (fi->denominator == 0) {
+> 
+> To fix the issue, add a check to validate that the 'fi' is not
+> null before accessing its members.
+> 
+> Signed-off-by: Siddarth G <siddarthsgml@gmail.com>
+
+Don't resend because we just ignore false positives instead of
+trying to silence them.  But if this were a real bug then it
+would need a Fixes tag.
+
 > ---
->  drivers/char/tpm/tpm-buf.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+>  drivers/staging/media/imx/imx-media-fim.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> diff --git a/drivers/char/tpm/tpm-buf.c b/drivers/char/tpm/tpm-buf.c
-> index e49a19fea3bd..dc882fc9fa9e 100644
-> --- a/drivers/char/tpm/tpm-buf.c
-> +++ b/drivers/char/tpm/tpm-buf.c
-> @@ -201,7 +201,7 @@ static void tpm_buf_read(struct tpm_buf *buf, off_t *offset, size_t count, void
->   */
->  u8 tpm_buf_read_u8(struct tpm_buf *buf, off_t *offset)
+> diff --git a/drivers/staging/media/imx/imx-media-fim.c b/drivers/staging/media/imx/imx-media-fim.c
+> index ccbc0371fba2..25f79d0f87b9 100644
+> --- a/drivers/staging/media/imx/imx-media-fim.c
+> +++ b/drivers/staging/media/imx/imx-media-fim.c
+> @@ -76,6 +76,9 @@ static bool icap_enabled(struct imx_media_fim *fim)
+>  static void update_fim_nominal(struct imx_media_fim *fim,
+>  			       const struct v4l2_fract *fi)
 >  {
-> -	u8 value;
-> +	u8 value = 0;
->  
->  	tpm_buf_read(buf, offset, sizeof(value), &value);
->  
-> @@ -218,7 +218,7 @@ EXPORT_SYMBOL_GPL(tpm_buf_read_u8);
->   */
->  u16 tpm_buf_read_u16(struct tpm_buf *buf, off_t *offset)
->  {
-> -	u16 value;
-> +	u16 value = 0;
->  
->  	tpm_buf_read(buf, offset, sizeof(value), &value);
->  
-> @@ -235,7 +235,7 @@ EXPORT_SYMBOL_GPL(tpm_buf_read_u16);
->   */
->  u32 tpm_buf_read_u32(struct tpm_buf *buf, off_t *offset)
->  {
-> -	u32 value;
-> +	u32 value = 0;
->  
->  	tpm_buf_read(buf, offset, sizeof(value), &value);
->  
-> -- 
-> 2.34.1
-> 
+> +	if (!fi)
+> +		return;
 
-BR, Jarkko
+If this were a real bug, then probably the NULL check would be better in
+the caller.
+
+regards,
+dan carpenter
+
+> +
+>  	if (fi->denominator == 0) {
+>  		dev_dbg(fim->sd->dev, "no frame interval, FIM disabled\n");
+>  		fim->enabled = false;
+> -- 
+> 2.43.0
+> 
