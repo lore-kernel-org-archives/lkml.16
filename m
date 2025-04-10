@@ -1,71 +1,42 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2971D5CE8
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 16:18:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 458421D5CE8;
+	Thu, 10 Apr 2025 16:21:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744301902; cv=none; b=KsZ/GxsSyzz/H8RlQYCF3uRm07WyMiu1GlzqfCc7J5pTddoQS+8RSDVJfhZ1Mde8VVxPcfp4QMS+HnGtWZ2Eo6AQJLo8wFus7fx7i+PMp22QAup+U6sQkCiX0Eku8nG5jQjJzMDZGRLmtFayNpv2it1xIr+hLdUM0mBixr9d2sg=
+	t=1744302119; cv=none; b=Wx2WN2VN4g/eyvWoqFDouDlvZERlWsm7SbN4w6cWMWZmTEVUjmJ2j4NycXTblRxXLOCpIGV4PwVIcCbjavVgjCMaoSxIuSh46a800foDg8lTCgPUyuHTi7TJsz1m6XJrZPRR90Tl0sVqxkqVdpzP1RlVBR4IKukRDTYwddEZm+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744301902; c=relaxed/simple;
-	bh=I3IzFVDnPwMOs+ga47BqJzQr4y137kBGBBEWnXzGMQk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SNdG+Kpg4BPoFpRC72lEvnm4VFi2avQeKevTE/ppFvkdS7h7qjTTK/KzYRAQz0NYoxr62xRbiDG9ZIHJ9ztm6A0KZfPaan7jxAp3HxqormvsvA1gEuJC+dBmqnMSaLjXktqHFPkgNl4dIXSsMoo+1X2yZK+x90H/6UElZyoR/Bk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hB4tIacb; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744302119; c=relaxed/simple;
+	bh=xE5n6B+MNRMKtpObrYG84EMMt9mli5Pp21a1M9jmvY8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=BXZia38I6JsvfJ2sy8WsoLfY0rYbEsfUISaAzSK4cOSsJ7pj0rAKVu5pfLQcP0cpJzjMvyZKWBezDYLDXF7XhJjCD572EjhsPpIIi1qR6mvkzmzs/pub76Ag9jxptCP+65tHt4gDrOZw1jSGgg9UPdGoflQKD0xTVjbHBUxy4So=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=axey5ek3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hB4tIacb"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-7376e311086so1324545b3a.3
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 09:18:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744301900; x=1744906700; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lCxhZYl4fk0TDqFgId2sJ/AGdUrHHzyamRopa5XEYgE=;
-        b=hB4tIacbsA9+7Pqo9LttGRvu94jL+63ZknejhIzudX3lEYY+3KYjBjTVXfRD1Wxg2O
-         xJkuE8mKoFRIcctqBffHWytdAVCBPQ9Z01DNMX+tl0VSBj51JBE4pjnD4cNX9QgkkywO
-         f5o/im29gTd7Gu/lhzbl01WbnH6vomUX5B1LHpv/mDbId1+cYtfXmuicMYDhJ1rW6I4D
-         HYxPeQgGQf6Wb8WY9DfVkRP4T+VKKIBF0l42GKsQ4IlG0vig3tXJUCO/u5Cw2QYOOsf0
-         7f2bh5bVfGmYgK8Iu5LqY2rD/po+FoqVKolwOgx5e8FjpA3Djfk+t6r9sRNK4S9MrZSH
-         qaYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744301900; x=1744906700;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lCxhZYl4fk0TDqFgId2sJ/AGdUrHHzyamRopa5XEYgE=;
-        b=XrjSpXgsdVJQlrUzhSfwltuV1k/xK93WiIaD75v4jzYksIjOm09fY0+8gTmnp5kNuf
-         G0WJf2NuXUPbGFviIBCdFHMjd5b4qkXxxZ20qYLZYhNYeQZq4K+U6720SnR0jRyv79YO
-         4+ovWAYtc2mfInctE6HEj51wOZdwD1rUBWpsYpa+lO39oZmH5GKVJI9dgcA9/kwx0rU2
-         VjRqSZ9wNf4nhCI59z+PCMM753glqfp1FLMcFeJ8ta2R8N36p3SLJyAW2LmPTv0DXvo5
-         5kSantNy39H8VUiFw3Ras8WVYQhBGVHiz7ycSLfDYVYG7xE9y2SQK+HTyYQKjMjRrdqN
-         BZSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUNM41xOLULbPN5EvmLzJiJtyWRGtxUDgmGpbAHhnBiUh/OU5vBHCNrXsBtdkevaxH5ungZSskSsBHXm8M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzL+HaspXy+6uxLI9CPWsQwHVtFAziKtnqPxqwpaRswps7FBrpQ
-	WOEklh7uMsYaKJoSIp+uTabD/OY6jQ8QtDVaTlOrHy2k8RNvb4Rxi4cKpQ==
-X-Gm-Gg: ASbGnctSPjeybzdJBiTRr7NfZidyjBYGNYnBweLjxFMC1t+vMgcbMZtClEWIiB3D58A
-	2zgXRryRJ/E5Y4Fcqbg+fSSujhcoAvoriBNE5/xEPCBNiHwuk7rkBgg9pPYcVtPrN9Iswjbywge
-	L3JPZSkFJKF6c38uzQcs+cUpOTa6ugHTqcIyRGOZwRGvZiwTkqJ/9nX69YJDMXD3dUeAsi5KQSX
-	YouHPW2Pxls5HVda05WkowttmtjNNiyPuH+AzqEAHAH1cjF2k3LB67w6EosniwQgF2ucd+KUJp/
-	IRDYiSz1w2vJeC9WDggzI33OGjSZ9v25p/gCAwLf0ES0aXoe7zE=
-X-Google-Smtp-Source: AGHT+IH+bbDcNOprRKJ+JUoxvfJNTeENfKw01S5fx2tdPjkbSG6iW3e/eZZQfC0anRG266kMk/eAlQ==
-X-Received: by 2002:a05:6a20:6f07:b0:1ee:63d7:1d32 with SMTP id adf61e73a8af0-2016c9242f4mr5446990637.0.1744301899736;
-        Thu, 10 Apr 2025 09:18:19 -0700 (PDT)
-Received: from localhost ([216.228.127.131])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1e38404sm3459461b3a.113.2025.04.10.09.18.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 09:18:19 -0700 (PDT)
-Date: Thu, 10 Apr 2025 12:18:16 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Luo Jie <quic_luoj@quicinc.com>
-Cc: linux@rasmusvillemoes.dk, linux-kernel@vger.kernel.org, andrew@lunn.ch,
-	quic_kkumarcs@quicinc.com, quic_linchen@quicinc.com,
-	quic_leiwei@quicinc.com, quic_suruchia@quicinc.com,
-	quic_pavir@quicinc.com
-Subject: Re: [PATCH v2] bitfield: Add FIELD_MODIFY() helper
-Message-ID: <Z_fvPOn1-v9WAnxJ@yury>
-References: <20250410131048.2054791-1-quic_luoj@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="axey5ek3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78860C4CEDD;
+	Thu, 10 Apr 2025 16:21:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744302118;
+	bh=xE5n6B+MNRMKtpObrYG84EMMt9mli5Pp21a1M9jmvY8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=axey5ek338ZhZvIs+yMX5kJJ3aG2naqpdsmvWwGPjBGv+2dxL32lP+Vxln2MY+k3x
+	 MV4GVEcky/bUOisI26LOF/2Z/m1S3jF8g9b9MPn84WLS1zL+pdrtYZ5rTAQfKG9Vtn
+	 GqcA+Vh07HiUFEm+rXfyIMwmaUN9LKvcY1RhZswB/xfyJVWi0TgDN0Ydh0WhRWA24p
+	 4yUDO4dLScMrqsNpmS97PrnbyyqtdRYkD/x8dzkEiZAxyYC7aodlsk9NEIPBV6xHGA
+	 Mac99+oKtMf8TjP3Wjca6IE2hR74/rWcbHuf1Tr8ryKRm/nFzKE7kvZy0j0jfrug0s
+	 Y/Q2MzxToNdYQ==
+Date: Thu, 10 Apr 2025 11:21:57 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Pavan Chebbi <pavan.chebbi@broadcom.com>,
+	Michael Chan <mchan@broadcom.com>,
+	Potnuri Bharat Teja <bharat@chelsio.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Leon Romanovsky <leon@kernel.org>
+Cc: netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: PCI VPD checksum ambiguity
+Message-ID: <20250410162157.GA328195@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,101 +45,72 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250410131048.2054791-1-quic_luoj@quicinc.com>
+In-Reply-To: <20250401205544.GA1620308@bhelgaas>
 
-On Thu, Apr 10, 2025 at 09:10:48PM +0800, Luo Jie wrote:
-> Add a helper for replacing the contents of bitfield in memory
-> with the specified value.
+On Tue, Apr 01, 2025 at 03:55:44PM -0500, Bjorn Helgaas wrote:
+> Hi,
 > 
-> Even though a helper xxx_replace_bits() is available, it is not
-> well documented, and only reports errors at the run time, which
-> will not be helpful to catch possible overflow errors due to
-> incorrect parameter types used.
-> 
-> Add the helper FIELD_MODIFY() to the FIELD_XXX family of bitfield
-> macros. It is functionally similar as xxx_replace_bits(), and in
-> addition adds the compile time type checking.
-> 
-> FIELD_MODIFY(&reg, REG_FIELD_C, c) is the wrapper of the code below.
-> reg &= ~REG_FIELD_C;
-> reg |= FIELD_PREP(REG_FIELD_C, c);
-> 
-> Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
-> ---
-> 
-> The new added macro FIELD_MODIFY() is expected to be used by the
-> following Ethernet PPE driver as link.
-> https://lore.kernel.org/linux-arm-msm/20250209-qcom_ipq_ppe-v3-0-453ea18d3271@quicinc.com/
-> 
-> Changes in v2:
-> - Update the documented example for FIELD_MODIFY().
-> - Improve the commit message to describe the need for the change.
-> 
->  include/linux/bitfield.h | 23 ++++++++++++++++++++---
->  1 file changed, 20 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/linux/bitfield.h b/include/linux/bitfield.h
-> index 63928f173223..421c7701a18d 100644
-> --- a/include/linux/bitfield.h
-> +++ b/include/linux/bitfield.h
-> @@ -7,8 +7,9 @@
->  #ifndef _LINUX_BITFIELD_H
->  #define _LINUX_BITFIELD_H
->  
-> -#include <linux/build_bug.h>
->  #include <asm/byteorder.h>
-> +#include <linux/build_bug.h>
-> +#include <linux/typecheck.h>
+> The PCIe spec is ambiguous about how the VPD checksum should be
+> computed, and resolving this ambiguity might break drivers.
 
-Don't change the headers order: linux first, asm next.
+Any more input on this?  It would be great to have more information
+about how vendors compute the checksum on their devices.
 
->  
->  /*
->   * Bitfield access macros
-> @@ -38,8 +39,7 @@
->   *	  FIELD_PREP(REG_FIELD_D, 0x40);
->   *
->   * Modify:
-> - *  reg &= ~REG_FIELD_C;
-> - *  reg |= FIELD_PREP(REG_FIELD_C, c);
-> + *  FIELD_MODIFY(REG_FIELD_C, &reg, c);
->   */
->  
->  #define __bf_shf(x) (__builtin_ffsll(x) - 1)
-> @@ -156,6 +156,23 @@
->  		(typeof(_mask))(((_reg) & (_mask)) >> __bf_shf(_mask));	\
->  	})
->  
-> +/**
-> + * FIELD_MODIFY() - modify a bitfield element
-> + * @_mask: shifted mask defining the field's length and position
-> + * @_reg_p: pointer to the memory that should be updated
-> + * @_val: value to store in the bitfield
-> + *
-> + * FIELD_MODIFY() modifies the set of bits in @_reg_p specified by @_mask,
-> + * by replacing them with the bitfield value passed in as @_val.
-> + */
+There is a proposed PCIe spec change to resolve the ambiguity, and the
+intent is to make a change that reflects what vendors have actually
+implemented.
 
-Please inspect the codebase and convert existing opencoded FIELD_MODIFY()s.
-I don't ask you to convert every driver out there, but core kernel files
-should be clear.
+The only concrete data I've seen so far is from Pavan at Broadcom
+(thank you very much for that), where the checksum starts at the
+beginning of VPD, not at the beginning of VPD-R.
 
-The first good candidate for you is __tlbi_level() in arm64. You may want
-to use Coccinelle to automate the search.
+If you can collect VPD data from devices, you can use something like
+this to compute the checksum from the beginning of VPD:
 
-Thanks,
-Yury
+  addr=0; sum=0; xxd -r -c 32 vpd.txt | xxd -p -g1 -c1 x.bin | while read X; do sum=$(($sum + "0x$X")); printf "addr 0x%04x: 0x%02x sum 0x%02x\n" $addr "0x$X" $(($sum % 256)); addr=$(($addr + 1)); done
 
-> +#define FIELD_MODIFY(_mask, _reg_p, _val)				\
-> +	({								\
-> +		typecheck_pointer(_reg_p);				\
-> +		__BF_FIELD_CHECK(_mask, *(_reg_p), _val, "FIELD_MODIFY: "); \
-> +		*(_reg_p) &= ~(_mask);					\
-> +		*(_reg_p) |= ((_val) << __bf_shf(_mask)) & (_mask);	\
-> +	})
-> +
->  extern void __compiletime_error("value doesn't fit into mask")
->  __field_overflow(void);
->  extern void __compiletime_error("bad bitfield mask")
-> -- 
-> 2.34.1
+(You still have to figure out manually where the RV item is so you
+don't include the writable VPD-W part.)
+
+> PCIe r6.0 sec 6.27 says only the VPD-R list should be included in the
+> checksum:
+> 
+>   One VPD-R (10h) tag is used as a header for the read-only keywords.
+>   The VPD-R list (including tag and length) must checksum to zero.
+> 
+> But sec 6.27.2.2 says "all bytes in VPD ... up to the checksum byte":
+> 
+>   RV   The first byte of this item is a checksum byte. The checksum is
+>        correct if the sum of all bytes in VPD (from VPD address 0 up
+>        to and including this byte) is zero.
+> 
+> These are obviously different unless VPD-R happens to be the first
+> item in VPD.  But sec 6.27 and 6.27.2.1 suggest that the Identifier
+> String item should be the first item, preceding the VPD-R list:
+> 
+>   The first VPD tag is the Identifier String (02h) and provides the
+>   product name of the device. [6.27]
+> 
+>   Large resource type Identifier String (02h)
+> 
+>     This tag is the first item in the VPD storage component. It
+>     contains the name of the add-in card in alphanumeric characters.
+>     [6.27.2.1, Table 6-23]
+> 
+> I think pci_vpd_check_csum() follows sec 6.27.2.2: it sums all the
+> bytes in the buffer up to and including the checksum byte of the RV
+> keyword.  The range starts at 0, not at the beginning of the VPD-R
+> read-only list, so it likely includes the Identifier String.
+> 
+> As far as I can tell, only the broadcom/tg3 and chelsio/cxgb4/t4
+> drivers use pci_vpd_check_csum().  Of course, other drivers might
+> compute the checksum themselves.
+> 
+> Any thoughts on how this spec ambiguity should be resolved?
+> 
+> Any idea how devices in the field populate their VPD?
+> 
+> Can you share any VPD dumps from devices that include an RV keyword
+> item?
+> 
+> Bjorn
