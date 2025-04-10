@@ -1,206 +1,112 @@
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 173AA256C9C;
-	Thu, 10 Apr 2025 09:28:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC0BB256C83;
+	Thu, 10 Apr 2025 09:30:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744277335; cv=none; b=mecyE37gG4QZubQrxUh+uE1Casn3GpUsyLp/fsf3A67n5fAa8B8hsk7cVgQGcLRWhp50bTZYRgfn1gF7xNl7K1s4Xoh9lTOzgXbA8qnOL2OB9kof5PPYJQ+aUeAZFokIlVV1oxg1CSlkCv0X30+Cstwc/ZlS6lQhTxRxlQ7lbRU=
+	t=1744277402; cv=none; b=HuNuUKk7ShRzaMbhXH0E7tuqPGN2YJMRS/kGm0VKC7WLQYON83qMptGRx96QB7Bfw4xKLl3NWAIPkQMYfQJ+uEwXZqRBO7UdOFUhgrDUfr1YhyT24k1+Eflkbe4osqej9t+i3GWZqpDh6PPaB8b0zc4DO+WLabZxZKhXpkX9Zos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744277335; c=relaxed/simple;
-	bh=j0cR0UkHwVBhvb6qrzH2gIti95jd2tW3Z9zzf4mBamI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rpQx5+e8zmvxC/83IeLMIJg66qoBwafMn4Vi7K6tKBcUYHZxVzlvB5pZOfPOXPjKO8cTjzxvfe3rF8OsepuIbX4yTF4hOSRmngcQ7tM2LQHR5xpD8e4dJQgN1DJ1rieB6S3gaSjlEZQmuD8RrlhHC/vFl/yaRnemz7c7xvnZ9aY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-523de538206so293872e0c.2;
-        Thu, 10 Apr 2025 02:28:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744277331; x=1744882131;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wBl1rpTFmuBR/zPu0dOpPN0jRShCrJGGB5hAKx+yje8=;
-        b=TXsTta4FZxYpcQh9OoKCny3ffXlyOEeBOge8ibTG0NuZGGALVaOj0Oo0DHLXP7D0Pq
-         zzpselrfbPwt+Tc/bSqeG10P1vK7atadhS5Oetpyhvf+OsJLmFMB2CmJ9CtXshVqxfKt
-         6+VogFWrfqwx89PQLHun2GBYMwwQ6383AORKGXRotHdMy1ZsWj9iOBsRtVzQrmQfM5WT
-         yP38+sH4ayBLfRqHpFhhtXjqsMbZaPh05wjad4oeCPLZDC77VHAAJmTCNPZFg3QBNFne
-         3asJbzCAlX3A1XlLnvm9Epp7VyO1t8F6L2xgi1k8evvbpT09hPRqkvbz/46S4WB77noj
-         4pgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU7VIbO56DGIEZ4Jj+kgH/RuBK2iWhG9dQpvvK3irt3EzKpMTRXgxzF7q5OWkym1lb6aOzwBjqeoWdwmQ==@vger.kernel.org, AJvYcCUklrK+Sgj5lLHI1xWOKEnjfFXqou/qaLlHRlH7isVpV2ZfE55u8zQWv03JSr1hP3+PueMa+lTzYUMG@vger.kernel.org, AJvYcCUxfjj6U9s6s7dyFrDJIFTHMsYFHd0IjtwZSacUYU17hv/23f1DDOATN8o+w4/T+eAZYz9dC+knKXJJds5p@vger.kernel.org, AJvYcCVNYLRP2InocjQuwlv3/evmrebBY3Fs2tDWVbUPLY2rRuqrIXwMQmQBWPRAj7zPEPQbOXvHvvbN8NFGcvdW@vger.kernel.org, AJvYcCWeaVzfEkeX+BUuC5UpYleHO8thawqsNmrM+EsqG0OhNjVJRDzVLqOPNt0S1UkK/bA7WxoFVtpyLVl8@vger.kernel.org, AJvYcCXkQ2Spbe+Edo8iTwZtGwLwWaBEgSCOb8fcWnV375iJNu6vtxyTCE1bSdMjtMUOnbTBGqwXLzqNoy0bqPLp1T2RhLM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqW4GxdmCOz1MziVhnYNPMYKOMDKpUfCoBrv10v7zHymtu0OcV
-	7jgEvzCKK1B1PErxawnI3gRolGshHtvbKCGQRntqdREbd0TlCEcxRXZkIBkR
-X-Gm-Gg: ASbGncuU+5AxS7kIdkjAYBH7uAJ+KI98R8fA8hsmCauQG0qOEnG9eT+qwEgQ7v7NrUY
-	Cx0Ks9RkReb8dyoNdW2A38K+cA5HB8eagCQX5A98ameEbGstwMV/wWvOuGIcrzpM+r/Ugz0He32
-	YrqZ4MKfrzqx4rcV8chp7XIr9pEdqCicRcAJaM5mpjw8YomgL55HpPxeQ/TygMwDCWVysTDmNjX
-	kc7RyhkiL2n+6iYk8uxUTcHSxXCwHPfsUPIeYeYz4K+ZPSUhZXtu/Ir1xI9Y3UZ6wHIrt8L/gou
-	Fl8WDiPaFRbBxkmD4wopzAr5cqelE9HumiFVlqv9bRy6NlACRpUIQgBfHqdrNzkXISQReNXkCqZ
-	eaNo=
-X-Google-Smtp-Source: AGHT+IEp1dzmPfmYoXoV7GiRH5Sn7oB3ysaFgUw/bRRW5GdV+CThvRd2Re69rTPihq0vbvCLu6+OLw==
-X-Received: by 2002:a05:6102:1528:b0:4c5:1c0b:4ee9 with SMTP id ada2fe7eead31-4c9d36295aamr1187237137.22.1744277331428;
-        Thu, 10 Apr 2025 02:28:51 -0700 (PDT)
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4c9c9738376sm522168137.6.2025.04.10.02.28.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 02:28:51 -0700 (PDT)
-Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-86d3805a551so255790241.3;
-        Thu, 10 Apr 2025 02:28:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVGXGo3OY1lPDCzdamUc5NTwM/kVpZqfuIg3qSMgDYDTyiZNCzgHcFB7zID7s7UiYvRXFM7R1M7vxHpzDwu@vger.kernel.org, AJvYcCVVvgo+CRhBZopJA4ETv30j3aDevzUh+mJ2oye7lGaNyUIYsF1aPnbQyK5DBNBjLUgEwKgy43e5WtqN@vger.kernel.org, AJvYcCWQe07LIydN0jNmxhJzqmyeBOv6kFntCdCADxTS2CCeAnV7wEysAyQcTgMKz2Z8uxzJLed51Ad6aV2a@vger.kernel.org, AJvYcCWmNOdu3NWtg9oicAzMUS38WEkgyLqpun2Rhj9NHGZLF1WJJLW+YhkPh5bf9w3CD1tv6qVa0iCPLM9UT8Du+C8XW4Q=@vger.kernel.org, AJvYcCXbOWCDSEM+Znvt3rVAD57lyuYFPHNuzwuANXV/VGWkhh0w0M9KyKXgEgFIC9fK3GaajrE7EDLDfsaNZMjC@vger.kernel.org, AJvYcCXd/tW7x03Q/lgEHnOEeYuyJa+BaZLJzScknQxT9oeMoU4xLYcdjDkA8GagNHGrDNaBQmXkqlwNjKWtwQ==@vger.kernel.org
-X-Received: by 2002:a05:6102:1528:b0:4c5:1c0b:4ee9 with SMTP id
- ada2fe7eead31-4c9d36295aamr1187228137.22.1744277330836; Thu, 10 Apr 2025
- 02:28:50 -0700 (PDT)
+	s=arc-20240116; t=1744277402; c=relaxed/simple;
+	bh=quCNk1faeQKjRAEpgmno53rSVnZoYWSifrHmScTLPzM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=J+iOIjDylA1HrGQoPgP1lOTWCDHAeXLXevgDAo5T7Z8s5hzKT7DwVw7LPZPKFzQ9/H4iLi6v9MU1Kr9bccGg8j5VWXZc2Ld4KVfi58Jkb5957lpoA4+Aid/Kpo4hn4RLb/jOJl4LxjUJcITiE/TWEAaegaZKLLUw6lqMRBzXRAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=EL459TaF; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="EL459TaF"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53A6W10I025695;
+	Thu, 10 Apr 2025 11:29:41 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	hJlHhbxitP8LDlQxS4M+ZJIc/lDJOqTIWiKvF63v4os=; b=EL459TaFDja+X1hu
+	RLsh+oeSI8eFue8E1CMOqDPtV6pCd0rzBmKC9ndvg9x0nFeo3gm1QRYOpU7+ikNK
+	LhZ0vcXrcR8xeRHeLcXCM4VzD2UELhu4nhfSk/OBr5sSxJl0fWLwYLJlxMPyLERE
+	UXsWIljsR+SQREIIGpohPzW0HEuVFOeeImjTQhA6Dm+OLXLrjZRNRdb4FEcG8Jn1
+	zTXMk0gRSQjfnpk6UdH1HafDTZIbfmd4jjVhFL/TTgVD56wNx9LK96Ljcxoqb+Si
+	SLsSWU7ocW/Xi3vOcT5AgJ/Nz66vSjcCdX0o7pbycCzK9hXmbdq5k36ZILC/IJhu
+	2YAHdg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45tw2h6wg1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Apr 2025 11:29:41 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id DC34240048;
+	Thu, 10 Apr 2025 11:28:39 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3329B9A69FC;
+	Thu, 10 Apr 2025 11:27:51 +0200 (CEST)
+Received: from localhost (10.48.87.62) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 10 Apr
+ 2025 11:27:50 +0200
+From: Patrice Chotard <patrice.chotard@foss.st.com>
+Date: Thu, 10 Apr 2025 11:27:44 +0200
+Subject: [PATCH v9 3/3] MAINTAINERS: add entry for STM32 OCTO MEMORY
+ MANAGER driver
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407191628.323613-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250407191628.323613-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250407191628.323613-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 10 Apr 2025 11:28:39 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVjrHN8e-yWTFWE1BLfnQKDeYsvuGepkoqcgxrR+CK5+w@mail.gmail.com>
-X-Gm-Features: ATxdqUEYc_Qs25l4gr_1nikV9rdWYeVtBxciGQr8vWSlUzu_O6eXylqnRYziDHA
-Message-ID: <CAMuHMdVjrHN8e-yWTFWE1BLfnQKDeYsvuGepkoqcgxrR+CK5+w@mail.gmail.com>
-Subject: Re: [PATCH v2 04/12] soc: renesas: sysc: Add SoC identification for
- RZ/V2N SoC
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Jiri Slaby <jirislaby@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
-	linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250410-upstream_ospi_v6-v9-3-cf119508848a@foss.st.com>
+References: <20250410-upstream_ospi_v6-v9-0-cf119508848a@foss.st.com>
+In-Reply-To: <20250410-upstream_ospi_v6-v9-0-cf119508848a@foss.st.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon
+	<will@kernel.org>
+CC: <christophe.kerello@foss.st.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Patrice Chotard
+	<patrice.chotard@foss.st.com>
+X-Mailer: b4 0.14.2
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-10_01,2025-04-08_04,2024-11-22_01
 
-Hi Prabhakar,
+Add myself as STM32 OCTO MEMORY MANAGER maintainer.
 
-On Mon, 7 Apr 2025 at 21:16, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Add SoC identification for the RZ/V2N SoC using the System Controller
-> (SYS) block.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
+---
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Thanks for your patch!
-
-> --- /dev/null
-> +++ b/drivers/soc/renesas/r9a09g056-sys.c
-> @@ -0,0 +1,107 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * RZ/V2N System controller (SYS) driver
-> + *
-> + * Copyright (C) 2025 Renesas Electronics Corp.
-> + */
-> +
-> +#include <linux/bitfield.h>
-> +#include <linux/bits.h>
-> +#include <linux/device.h>
-> +#include <linux/init.h>
-> +#include <linux/io.h>
-> +#include <linux/string.h>
-> +
-> +#include "rz-sysc.h"
-> +
-> +/* Register Offsets */
-> +#define SYS_LSI_MODE           0x300
-> +#define SYS_LSI_MODE_SEC_EN    BIT(16)
-> +/*
-> + * BOOTPLLCA[1:0]
-> + *         [0,0] => 1.1GHZ
-> + *         [0,1] => 1.5GHZ
-> + *         [1,0] => 1.6GHZ
-> + *         [1,1] => 1.7GHZ
-> + */
-> +#define SYS_LSI_MODE_STAT_BOOTPLLCA55  GENMASK(12, 11)
-> +#define SYS_LSI_MODE_CA55_1_7GHZ       0x3
-> +
-> +#define SYS_LSI_PRR                    0x308
-> +#define SYS_LSI_PRR_GPU_DIS            BIT(0)
-> +#define SYS_LSI_PRR_ISP_DIS            BIT(4)
-> +
-> +#define SYS_RZV2N_FEATURE_G31          BIT(0)
-> +#define SYS_RZV2N_FEATURE_C55          BIT(1)
-> +#define SYS_RZV2N_FEATURE_SEC          BIT(2)
-> +
-> +static void rzv2n_sys_print_id(struct device *dev,
-> +                              void __iomem *sysc_base,
-> +                              struct soc_device_attribute *soc_dev_attr)
-> +{
-> +       unsigned int part_number;
-> +       char features[75] = "";
-> +       u32 prr_val, mode_val;
-> +       u8 feature_flags;
-> +
-> +       prr_val = readl(sysc_base + SYS_LSI_PRR);
-> +       mode_val = readl(sysc_base + SYS_LSI_MODE);
-> +
-> +       /* Check GPU, ISP and Cryptographic configuration */
-> +       feature_flags = !(prr_val & SYS_LSI_PRR_GPU_DIS) ? SYS_RZV2N_FEATURE_G31 : 0;
-> +       feature_flags |= !(prr_val & SYS_LSI_PRR_ISP_DIS) ? SYS_RZV2N_FEATURE_C55 : 0;
-> +       feature_flags |= (mode_val & SYS_LSI_MODE_SEC_EN) ? SYS_RZV2N_FEATURE_SEC : 0;
-> +
-> +       part_number = 41;
-> +       if (feature_flags & SYS_RZV2N_FEATURE_G31)
-> +               part_number++;
-> +       if (feature_flags & SYS_RZV2N_FEATURE_C55)
-> +               part_number += 2;
-> +       if (feature_flags & SYS_RZV2N_FEATURE_SEC)
-> +               part_number += 4;
-
-The above construct can be simplified to
-
-    part_number = 41 + feature_flags;
-
-> +       if (feature_flags) {
-> +               unsigned int features_len = sizeof(features);
-> +
-> +               strscpy(features, "with ");
-> +               if (feature_flags & SYS_RZV2N_FEATURE_G31)
-> +                       strlcat(features, "GE3D (Mali-G31)", features_len);
-> +
-> +               if (feature_flags == (SYS_RZV2N_FEATURE_G31 |
-> +                                     SYS_RZV2N_FEATURE_C55 |
-> +                                     SYS_RZV2N_FEATURE_SEC))
-> +                       strlcat(features, ", ", features_len);
-> +               else if ((feature_flags & SYS_RZV2N_FEATURE_G31) &&
-> +                        (feature_flags & (SYS_RZV2N_FEATURE_C55 | SYS_RZV2N_FEATURE_SEC)))
-> +                       strlcat(features, " and ", features_len);
-> +
-> +               if (feature_flags & SYS_RZV2N_FEATURE_SEC)
-> +                       strlcat(features, "Cryptographic engine", features_len);
-> +
-> +               if ((feature_flags & SYS_RZV2N_FEATURE_SEC) &&
-> +                   (feature_flags & SYS_RZV2N_FEATURE_C55))
-> +                       strlcat(features, " and ", features_len);
-> +
-> +               if (feature_flags & SYS_RZV2N_FEATURE_C55)
-> +                       strlcat(features, "ISP (Mali-C55)", features_len);
-> +       }
-
-The above looks overly complicated to me.  What about handling it
-like on RZ/V2H?  I agree having 3x "with" doesn't look nice, but you
-could just drop all "with"s.
-
-> +       dev_info(dev, "Detected Renesas %s %sn%d Rev %s %s\n", soc_dev_attr->family,
-> +                soc_dev_attr->soc_id, part_number, soc_dev_attr->revision, features);
-
-This prints a trailing space if features is empty.
-
-Gr{oetje,eeting}s,
-
-                        Geert
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 96b82704950184bd71623ff41fc4df31e4c7fe87..32abd09c0e4309709998f91882c7983d1b53a80c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -22881,6 +22881,12 @@ L:	linux-i2c@vger.kernel.org
+ S:	Maintained
+ F:	drivers/i2c/busses/i2c-stm32*
+ 
++ST STM32 OCTO MEMORY MANAGER
++M:	Patrice Chotard <patrice.chotard@foss.st.com>
++S:	Maintained
++F:	Documentation/devicetree/bindings/memory-controllers/st,stm32mp25-omm.yaml
++F:	drivers/memory/stm32_omm.c
++
+ ST STM32 SPI DRIVER
+ M:	Alain Volmat <alain.volmat@foss.st.com>
+ L:	linux-spi@vger.kernel.org
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.25.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
