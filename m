@@ -1,113 +1,131 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7685211466
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 23:24:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4CD9212FAC
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 23:25:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744327490; cv=none; b=q/PrbgH6rug76XIamqCKAQJ208xeZVuoIA5E68C01O6I26Y+QeYN5/HD1k3llG/Sp2OcY/qjocCUfj01upW/DEJHQ4db3sevgWaMNGbtWCo5vA/MIya6eeoAZONwlTGEmJhR3oi7pbl7qH3GZ/UT1qOrDv1eLYtXybRZ7h4474U=
+	t=1744327508; cv=none; b=qLQ1eFNkbbFeAqXcFBQIrx6O6LRNmjjL7+8/Z4ToFpvkVPEfSncMVTz0S0eeq3JK/fmh67Q2Y4WrFzJoNwmJgO9qsPfHOgsakqehO6VF2RDl7CnFMT9R1UOCEhLK9H1vQXwSXdbziAeeysuy67pPiN5Bd0J0PqyzpwU3o5BwfBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744327490; c=relaxed/simple;
-	bh=OZpZpaf1IOF/M35h+LCD9gRTBKEaRi+sC8qqL/jw5zY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dZ8O86vDVkqMqpVDNws8vTKm5u8axSunhYc7Sx/cXo0jgPqIgjuJwZ+INaMxYEr6NjZFyxxXpyQIEgXRtQzoARNeu0bF4a1gfPo6RIYSNP/BvomkWcAnrati55w0f11DqsnoFmirKHKVJ/CI+rwHRNzPcl8adman2ElXU6JebgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=aPFz77GS; arc=none smtp.client-ip=91.218.175.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="aPFz77GS"
-Message-ID: <cf7e20a2-dc30-4940-9abe-bbf5ea1ac413@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744327475;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CfDA611tTl0VVHanpaMl22CcxRRwJdjeXnBQSXsdIWE=;
-	b=aPFz77GStF9M4/xV7Zty5ZOmhOA6tbIY5wjC3QfHtHuIbYgnVOWB/udIJOsbgzhupOH4Qw
-	Ngi8wUXmu6zbewQq140YE96qE3hRjmE/5Dd9PdIYdbOWZTEmPlKh/Y84xXejV6e9N9qeAw
-	QjaVEiaF+VN2l3/NkD3L2BCLXibVkgk=
-Date: Thu, 10 Apr 2025 19:24:25 -0400
+	s=arc-20240116; t=1744327508; c=relaxed/simple;
+	bh=MOakOH7mYm88UkVKU/M+qhZLIisGmXpRjDCxOJZUo10=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AhQqRIyw0eUZJbumY9pvjfuwvufSbGB42qth7Fuh21UVyX1nTU8AWgdbDrkrnvFot4rvmTQXCDSjl2GQ2IMqgE814uA0u858WSWWz+x9m0kxYD+T1QQxPc9n3S2qEvrrBO+mWEWIYDx7oQvlQUXT3aqJH+uX425tEo1IeUATBF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1u31GX-0004GK-7Y; Fri, 11 Apr 2025 01:25:01 +0200
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1u31GX-004LKx-08;
+	Fri, 11 Apr 2025 01:25:01 +0200
+Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1u31GW-00AVe0-32;
+	Fri, 11 Apr 2025 01:25:00 +0200
+Date: Fri, 11 Apr 2025 01:25:00 +0200
+From: Marco Felsch <m.felsch@pengutronix.de>
+To: kernel@pengutronix.de,
+	"vkoul@kernel.org, shawnguo@kernel.org, Sascha Hauer" <s.hauer@pengutronix.de>
+Cc: dmaengine@vger.kernel.org, imx@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 01/10] dmaengine: imx-sdma: drop legacy device_node np
+ check
+Message-ID: <20250410232500.fnk2puzykihkcbna@pengutronix.de>
+References: <20250410232247.1434659-1-m.felsch@pengutronix.de>
+ <20250410232247.1434659-2-m.felsch@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] crypto: api - Allow delayed algorithm destruction
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: =?UTF-8?Q?Horia_Geant=C4=83?= <horia.geanta@nxp.com>,
- Pankaj Gupta <pankaj.gupta@nxp.com>, Gaurav Jain <gaurav.jain@nxp.com>,
- linux-crypto@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
- linux-kernel@vger.kernel.org,
- Valentin Ciocoi Radulescu <valentin.ciocoi@nxp.com>
-References: <17f9af67-de10-4b96-99ef-3c5cd78124c0@linux.dev>
- <Z_SxYFdyBJTYe_7G@gondor.apana.org.au>
- <e3dd2f83-8451-47b0-a774-a697b861ceb3@linux.dev>
- <Z_XiPLmSVs8PGTZD@gondor.apana.org.au> <Z_XpfyPaoZ6Y8u6z@gondor.apana.org.au>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <Z_XpfyPaoZ6Y8u6z@gondor.apana.org.au>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250410232247.1434659-2-m.felsch@pengutronix.de>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On 4/8/25 23:29, Herbert Xu wrote:
-> On Wed, Apr 09, 2025 at 10:58:04AM +0800, Herbert Xu wrote:
->>
->> What I'll do is make the crypto_unregister call wait for the users
->> to go away.  That matches how the network device unregistration works
->> and hopefully should solve this problem.  But keep your eyes for
->> dead locks that used to plague netdev unregistration :)
+On 25-04-11, Marco Felsch wrote:
+> The legacy 'if (np)' was required in past where we had pdata and dt.
+> Nowadays the driver binds only to dt platforms. So using a new kernel
+> but still use pdata is not possible, therefore we can drop the legacy
+> 'if' code path.
 > 
-> That was a dumb idea.  All it would do is make the shutdown hang.
-> So here is a different tack.  Let the algorithms stick around,
-> by allocating them dynamically instead.  Then we could simply
-> kfree them when the user finally disappears (if ever).
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+
+Please ignore this patch, I had issues with my mail setup.
+
+Regards,
+  Marco
+
+
+> ---
+>  drivers/dma/imx-sdma.c | 32 ++++++++++++++------------------
+>  1 file changed, 14 insertions(+), 18 deletions(-)
 > 
-> Note to make this work, caam needs to be modified to allocate the
-> algorithms dynamically (kmemdup should work), and add a cra_destroy
-> function to kfree the memory.
-> 
-> ---8<---
-> The current algorithm unregistration mechanism originated from
-> software crypto.  The code relies on module reference counts to
-> stop in-use algorithms from being unregistered.  Therefore if
-> the unregistration function is reached, it is assumed that the
-> module reference count has hit zero and thus the algorithm reference
-> count should be exactly 1.
-> 
-> This is completely broken for hardware devices, which can be
-> unplugged at random.
-> 
-> Fix this by allowing algorithms to be destroyed later if a destroy
-> callback is provided.
-> 
-> Reported-by: Sean Anderson <sean.anderson@linux.dev>
-> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-> 
-> diff --git a/crypto/algapi.c b/crypto/algapi.c
-> index 5b8a4c787387..f368c0dc0d6d 100644
-> --- a/crypto/algapi.c
-> +++ b/crypto/algapi.c
-> @@ -481,10 +481,10 @@ void crypto_unregister_alg(struct crypto_alg *alg)
->  	if (WARN(ret, "Algorithm %s is not registered", alg->cra_driver_name))
->  		return;
+> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+> index 3449006cd14b..699f0c6b5ae5 100644
+> --- a/drivers/dma/imx-sdma.c
+> +++ b/drivers/dma/imx-sdma.c
+> @@ -2326,11 +2326,9 @@ static int sdma_probe(struct platform_device *pdev)
+>  			vchan_init(&sdmac->vc, &sdma->dma_device);
+>  	}
 >  
-> -	if (WARN_ON(refcount_read(&alg->cra_refcnt) != 1))
-> -		return;
-> -
-> -	if (alg->cra_type && alg->cra_type->destroy)
-> +	if (alg->cra_destroy)
-> +		crypto_alg_put(alg);
-> +	else if (!WARN_ON(refcount_read(&alg->cra_refcnt) != 1) &&
-> +		 alg->cra_type && alg->cra_type->destroy)
->  		alg->cra_type->destroy(alg);
+> -	if (np) {
+> -		sdma->iram_pool = of_gen_pool_get(np, "iram", 0);
+> -		if (sdma->iram_pool)
+> -			dev_info(&pdev->dev, "alloc bd from iram.\n");
+> -	}
+> +	sdma->iram_pool = of_gen_pool_get(np, "iram", 0);
+> +	if (sdma->iram_pool)
+> +		dev_info(&pdev->dev, "alloc bd from iram.\n");
 >  
->  	crypto_remove_final(&list);
-
-The above patch didn't apply cleanly. I seem to be missing cra_type. What
-tree should I test with?
-
---Sean
+>  	ret = sdma_init(sdma);
+>  	if (ret)
+> @@ -2370,21 +2368,19 @@ static int sdma_probe(struct platform_device *pdev)
+>  		goto err_init;
+>  	}
+>  
+> -	if (np) {
+> -		ret = of_dma_controller_register(np, sdma_xlate, sdma);
+> -		if (ret) {
+> -			dev_err(&pdev->dev, "failed to register controller\n");
+> -			goto err_register;
+> -		}
+> +	ret = of_dma_controller_register(np, sdma_xlate, sdma);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to register controller\n");
+> +		goto err_register;
+> +	}
+>  
+> -		spba_bus = of_find_compatible_node(NULL, NULL, "fsl,spba-bus");
+> -		ret = of_address_to_resource(spba_bus, 0, &spba_res);
+> -		if (!ret) {
+> -			sdma->spba_start_addr = spba_res.start;
+> -			sdma->spba_end_addr = spba_res.end;
+> -		}
+> -		of_node_put(spba_bus);
+> +	spba_bus = of_find_compatible_node(NULL, NULL, "fsl,spba-bus");
+> +	ret = of_address_to_resource(spba_bus, 0, &spba_res);
+> +	if (!ret) {
+> +		sdma->spba_start_addr = spba_res.start;
+> +		sdma->spba_end_addr = spba_res.end;
+>  	}
+> +	of_node_put(spba_bus);
+>  
+>  	/*
+>  	 * Because that device tree does not encode ROM script address,
+> -- 
+> 2.39.5
+> 
+> 
+> 
