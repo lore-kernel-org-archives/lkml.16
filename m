@@ -1,165 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C3FB1E9B35
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 12:28:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F331283CAB
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 12:29:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744288131; cv=none; b=JJUPl73E4RIbfDHkAxg74gOPralbHnmEP/9BLZZa9V5OSBPrJ9jd92fXseie3GYP2nmD0YOjmPdkKJgoIL3oY8DBT+n2hs5c08ltImVOv5BM1KtZCLiGEwXrhSRcvV/hNCUt4Vh120ZooXRLdb0/jOwvLWo4zJ1W/kA7J7nzoj8=
+	t=1744288198; cv=none; b=XAQRpFLuwfsfQplHHOqsEgcijSqCfTVDZ/188t3YVSkURWCeWro3nsYblXf8en425qa24xo0EGOgVmPVpxe79jUIBMjM8BkgpN6hNO/Wobw0PyStFwX3rpuA7rDvYt17Xqfh1+dQr7g5OQ5Gf4krHCdjNzo7HC7j2VXZuYifdaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744288131; c=relaxed/simple;
-	bh=iEhF+6QmLMHUflVLwYD9cgRRfXhpcFOE6WZAlFOppwc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SFiypm3auK7p8laF7t443xsULcXG5rTSfrI/GLjK2APcb44wCp2owpEOUTR133sWrqhgBUW+fSyyFf1PHCGTa2eKlR+dL2PBBoOULw4ffSVZ+fveQ5sxTegYvc7XzZM9sF2H1kg+Vpu4GNwXkfmIXK677hluVUN3zRDc/bpmjrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G5of8+wl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744288198; c=relaxed/simple;
+	bh=r8RtWRc3Ys7lb3CPSdWXdXYs7h+Ngv/uXqjlSPDyyMY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WQxBz2vb74QdUvyGbC9+DztmTBCHElwKYMRoDLzqgHtpjUy1LSq0XtlOA472ZxNv488GvfAQbbkZHHgpICbKChl6l9oCBfgZVsoLFY7xgejWXxNZHrCHMc1VxPYWk9oTBtCB+p0I4k5eTSqnFb/Mb2dZ5q+C3+NBgDN4UjOIrOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Oa/32uow; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G5of8+wl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD3F3C4CEE8
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 12:28:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744288130;
-	bh=iEhF+6QmLMHUflVLwYD9cgRRfXhpcFOE6WZAlFOppwc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=G5of8+wlTS4I2n7QLMKGq8q5/sanyZ8PjAYjH9/Wk3uyAz/0rIAbkyJWGCuXcaOIk
-	 qmeItDsLQs5slG301DkJTl/3eQY0L5bMOx/ZtaW2IVLXByx1QNgQX8XqOnStE3OlPg
-	 +BW1lq9quTp+zKRrFi1WP+scywb6iOv2KYxR+3SUQxU5qHPIifBy6UYIMCbGzsGb+i
-	 EX7gjtyIRALZl2q5eDqYgYuDQ/aQX/cLVNpoZbN0jCeM3PzHN80JXbBYwo7lBtFN3r
-	 jTA0+Em62XEqdF91XYEUk5XTfAQBWBhbEtBmFQSRtkYctY1YlPv0gWLD4IvS9PD/O9
-	 Jd3px9bkz+xNg==
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-54b10956398so924082e87.0
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 05:28:50 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWDgH6A5C91kt63ckf52lowgEB78QQ5kwxAJ/0rD0ogStc8oSY/2SIocdHlhXpvFq495g8oGHVGMscB6Uc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwN6Bn0pqipQseosXItZ7jXj6eMi9tb48C2XS1BJRQIF/e4s7pX
-	JTbsAiz8i67mnRBVqBkMJk/55mJqiq93CCkZpTRn8nnhkz/3abYvmvjMxgBHWnCL+8gudaVd3r1
-	gNEvkVyJu4a+Qqf7K9aa0gYBX6mw=
-X-Google-Smtp-Source: AGHT+IEk6+pEv1KhjsN+b2LVfZiOU1+lMkalIlqJouC1Hrv7mXEHGQrdk/bizME+BN/G20yuxVH9e+ceAqLyXH7BawM=
-X-Received: by 2002:a05:6512:10d5:b0:549:90ac:cca2 with SMTP id
- 2adb3069b0e04-54ce2cb7f96mr912096e87.1.1744288129259; Thu, 10 Apr 2025
- 05:28:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Oa/32uow"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5edc07c777eso997444a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 05:29:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1744288195; x=1744892995; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=W58zftoxA/h0euOQhznKhUitEEsPpASpF27ovwB6sRg=;
+        b=Oa/32uowiqXj8XBX0is2329SdphK9jB39e0NI0w1swXjaktwRBP36+wSrPqRWRF9G3
+         QTsZsI6y/Q+BcIIcLFiUPbZuML6K4dj4rfUwR/xqI7x5qyalODUKbT4OoXc2jqNBLJRx
+         tN0cg7yUnVRtHhiZ0gsXIVqfy7/7MAYWnSy3DtzW+jog40yfUX3MK177F1oZAy9Ok1RP
+         G3Th1wD1YS2Z1BQPfMbjsBedmXQz1B6AkS0Uc+4/rbW5hbHBOq9iR798vDVQ9M+cSrLk
+         4csuHq4RNHZF39yT8UsLGq44H3UfD4k7j+id1JorKfTDVWilJwsfpT5pJtF6aKVr3u2y
+         VGgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744288195; x=1744892995;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W58zftoxA/h0euOQhznKhUitEEsPpASpF27ovwB6sRg=;
+        b=PZmWo1R6+BvnMc6cvTkuJ+6Bcm1LvIAX020juh92ah6UTKgZyJizSeAxBIE0FBQZp4
+         HKI5JVurgkbGJjRem1do+qr4/ziUmP2PeOWTRNZ7vQL9bcpCo0S54cUW0PpwMgwn05nw
+         fB6ID/1OBj7YMOqDKn9ZY0gwI4tc00/rKhhGWDII8qODEeX8kF+3uTTdutdclcFrevnN
+         8UpJ6NvCX7NRi9jQreTN+jnrZSUcs5fNKZ0ICBYIdOdZzCXkwG89SzHs6C4ysWwjvUCN
+         lCO90l4IFv/hJwzSf+UMyD4Rv++TzhDl1tybuxnChrcDWamLNCFe4tfcbvOnic2spcXs
+         W2fQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXhcl+d54TL9o0Hr3W12/MjgcRQ2G2YJ1VcSJZMmii/VMwbPXBc38psDpxOTgJcUQx4OHkloklq6fwONg4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+2yvlqQiQGuFBUQGgsIEOm2MQe2LU34waDPo1Hdl4wV/Hxx9M
+	yTcePTP1LWGn3lGA10hLuCVataDF+lTMfEdmxCCy4QxF0rGd/mcmZ16CKHT6GBw=
+X-Gm-Gg: ASbGncv8LKf7YxstL4R5u941EKbMQEYdpXCYtwgqNgTq1WLw4a79qK4TFo4xg43cYMj
+	zVTIZLfimql/zTKVdwHCxAc2f2zi8VV7JBR+kTVc5nhCz7VpXQII/oW9W0t+AOoLwe6ZBDEuqku
+	ODMEwt/yaEhxzbU2j6736Z/elCd2M8U9q7wWB0F9SEr1dgJbFAnWk1kMG+xcPOOv6aWxXg+g2Dc
+	Z7M6jImiy0q23IdMteDP8qtcgVlPzpNoCDh/5II6brjGbw7ePzXSpgouwOohM2S+Y4A0ADRV6QL
+	G7+bPZseJ11+SQNuq1gaJBkRlRCnaWj4Wx/VGrA0uRc=
+X-Google-Smtp-Source: AGHT+IGkRcCdesVQfmGut/2T1Nf41hQW3Xy07xSRue+c6AyThON1gDnGuZ55vBm3LGdN2t2bjeOkNg==
+X-Received: by 2002:a05:6402:5194:b0:5e5:4807:5441 with SMTP id 4fb4d7f45d1cf-5f329337b8cmr2248387a12.30.1744288194931;
+        Thu, 10 Apr 2025 05:29:54 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f2fbd17646sm2295348a12.56.2025.04.10.05.29.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Apr 2025 05:29:54 -0700 (PDT)
+Date: Thu, 10 Apr 2025 14:29:33 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Ryo Takakura <ryotkkr98@gmail.com>
+Cc: alex@ghiti.fr, aou@eecs.berkeley.edu, bigeasy@linutronix.de,
+	conor.dooley@microchip.com, gregkh@linuxfoundation.org,
+	jirislaby@kernel.org, john.ogness@linutronix.de, palmer@dabbelt.com,
+	paul.walmsley@sifive.com, samuel.holland@sifive.com,
+	u.kleine-koenig@baylibre.com, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-serial@vger.kernel.org
+Subject: Re: [PATCH v2] serial: sifive: Switch to nbcon console
+Message-ID: <Z_e5rWcJKUh7eozw@pathway.suse.cz>
+References: <20250405145915.493173-1-ryotkkr98@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250410074024.1545768-1-anshuman.khandual@arm.com>
-In-Reply-To: <20250410074024.1545768-1-anshuman.khandual@arm.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Thu, 10 Apr 2025 14:28:37 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGn71CGqXCN2mWokZuq37bbEtnOKkrB=_dddp0dyPTndw@mail.gmail.com>
-X-Gm-Features: ATxdqUHgOJV_vjYP4l3C17rNPu2Dtq-En5ozAQwkRwj8d_BpPMRORfCZolLuaaI
-Message-ID: <CAMj1kXGn71CGqXCN2mWokZuq37bbEtnOKkrB=_dddp0dyPTndw@mail.gmail.com>
-Subject: Re: [PATCH] arm64/mm: Re-organise setting up FEAT_S1PIE registers
- PIRE0_EL1 and PIR_EL1
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Ryan Roberts <ryan.roberts@arm.com>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250405145915.493173-1-ryotkkr98@gmail.com>
 
-Hi Anshuman,
+On Sat 2025-04-05 23:59:15, Ryo Takakura wrote:
+> Add the necessary callbacks(write_atomic, write_thread, device_lock
+> and device_unlock) and CON_NBCON flag to switch the sifive console
+> driver to perform as nbcon console.
+> 
+> Both ->write_atomic() and ->write_thread() will check for console
+> ownership whenever they are accessing registers.
+> 
+> The ->device_lock()/unlock() will provide the additional serilization
+> necessary for ->write_thread() which is called from dedicated printing
+> thread.
+> 
+> Signed-off-by: Ryo Takakura <ryotkkr98@gmail.com>
+> Reviewed-by: John Ogness <john.ogness@linutronix.de>
 
-On Thu, 10 Apr 2025 at 09:40, Anshuman Khandual
-<anshuman.khandual@arm.com> wrote:
->
-> mov_q cannot really move PIE_E[0|1] macros into a general purpose register
-> as expected if those macro constants contain some 128 bit layout elements,
-> required for D128 page tables.
+I do not have the hardware around so I could not test it.
+But the code looks good. With the added comment (reported
+by the robot):
 
-Could you elaborate?
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 
-> Fix this problem via first loading up these
-> macro constants into a given memory location and then subsequently setting
-> up registers PIRE0_EL1 and PIR_EL1 by retrieving the memory stored values.
->
-
-If this is necessary, we could also remove the PTE_MAYBE_xx override hack no?
-
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Cc: Ryan Roberts <ryan.roberts@arm.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
-> This patch applies on v6.15-rc1
->
->  arch/arm64/kernel/head.S         | 3 +++
->  arch/arm64/kernel/pi/map_range.c | 6 ++++++
->  arch/arm64/kernel/pi/pi.h        | 1 +
->  arch/arm64/mm/mmu.c              | 1 +
->  arch/arm64/mm/proc.S             | 5 +++--
->  5 files changed, 14 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
-> index 2ce73525de2c..4950d9cc638a 100644
-> --- a/arch/arm64/kernel/head.S
-> +++ b/arch/arm64/kernel/head.S
-> @@ -126,6 +126,9 @@ SYM_CODE_START(primary_entry)
->          * On return, the CPU will be ready for the MMU to be turned on and
->          * the TCR will have been set.
->          */
-> +       adr_l   x0, pir_data
-> +       bl      __pi_load_pir_data
-> +
->         bl      __cpu_setup                     // initialise processor
->         b       __primary_switch
->  SYM_CODE_END(primary_entry)
-> diff --git a/arch/arm64/kernel/pi/map_range.c b/arch/arm64/kernel/pi/map_range.c
-> index 81345f68f9fc..cd9d24e73046 100644
-> --- a/arch/arm64/kernel/pi/map_range.c
-> +++ b/arch/arm64/kernel/pi/map_range.c
-> @@ -103,3 +103,9 @@ asmlinkage u64 __init create_init_idmap(pgd_t *pg_dir, pteval_t clrmask)
->
->         return ptep;
->  }
-> +
-> +asmlinkage void __init load_pir_data(u64 pir_data[])
-> +{
-> +       pir_data[0] = PIE_E0;
-> +       pir_data[1] = PIE_E1;
-> +}
-> diff --git a/arch/arm64/kernel/pi/pi.h b/arch/arm64/kernel/pi/pi.h
-> index c91e5e965cd3..ae61df4fdb77 100644
-> --- a/arch/arm64/kernel/pi/pi.h
-> +++ b/arch/arm64/kernel/pi/pi.h
-> @@ -34,3 +34,4 @@ void map_range(u64 *pgd, u64 start, u64 end, u64 pa, pgprot_t prot,
->  asmlinkage void early_map_kernel(u64 boot_status, void *fdt);
->
->  asmlinkage u64 create_init_idmap(pgd_t *pgd, pteval_t clrmask);
-> +asmlinkage void load_pir_data(u64 pir_data[]);
-> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> index ea6695d53fb9..762e81ff4e85 100644
-> --- a/arch/arm64/mm/mmu.c
-> +++ b/arch/arm64/mm/mmu.c
-> @@ -58,6 +58,7 @@ static bool rodata_is_rw __ro_after_init = true;
->   * with MMU turned off.
->   */
->  long __section(".mmuoff.data.write") __early_cpu_boot_status;
-> +unsigned long __section(".mmuoff.data.write") pir_data[2];
->
->  /*
->   * Empty_zero_page is a special page that is used for zero-initialized data
-> diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
-> index fb30c8804f87..7dd28cf101c2 100644
-> --- a/arch/arm64/mm/proc.S
-> +++ b/arch/arm64/mm/proc.S
-> @@ -524,9 +524,10 @@ alternative_else_nop_endif
->  #define PTE_MAYBE_NG           0
->  #define PTE_MAYBE_SHARED       0
->
-> -       mov_q   x0, PIE_E0
-> +       adr_l   x1, pir_data
-> +       ldr     x0, [x1, #0]
->         msr     REG_PIRE0_EL1, x0
-> -       mov_q   x0, PIE_E1
-> +       ldr     x0, [x1, #8]
->         msr     REG_PIR_EL1, x0
->
->  #undef PTE_MAYBE_NG
-> --
-> 2.25.1
->
+Best Regards,
+Petr
