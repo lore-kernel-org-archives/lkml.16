@@ -1,68 +1,121 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3666526B970
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 10:03:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F773267F70;
+	Thu, 10 Apr 2025 10:03:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744279396; cv=none; b=mDWxFN3Rh0KjALy6a2Y6HMB9UWDdhUE7g3LuMvqLatk2Xs2y4um2kDKQsYtcauBowVlQlWOCdnWNm8DX4417Dnfjj9hIruRG1+lxQ5vF+gaB5VKfWLdQjHFpOPsBV+88Q6hSdvfLs72/pqMnAIRPSKKuWRqFbM1nxXNzn8hDoOE=
+	t=1744279403; cv=none; b=Je9/2pIFLhU4EpxUGDHeI7L/+QxKBEdK7cGsgWQgJCpRrr4SSah4Qa38gXmu5cfritarHVElxdduTbNC/iV+i+uJ3MZs/ozm/g1nJo7fOgmLNg3OA9rMwGBgeDCVvYvuiMTrfRs8+sVfVFtQx2RSWK+EI0b1L7u388XqNt+Hymg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744279396; c=relaxed/simple;
-	bh=60kJslvnsJA31a1Vm6cxQ8IZBe70jj4DAo5HbYEex9M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GkWS0bZF2Ur20nk5vn3FSd4YEvchLqIgL0zo8Fn9Wwpneg4ojfh+VNcVfaCYSIR8C7GhMe2erXRMdFn9V7ZsxmL97HAni5h0fDZd8A1hfxTMNM0kRkQ4QKj6kpmDD1Itaf0zebxRl0u1fKhpZrE+zLGr7774/JWIEieaxtgzSOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=oubSXj0z; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1744279403; c=relaxed/simple;
+	bh=lmppQfbdrQUGQjfQF8ivePB/2k4sgLFbvW5qYbiK03A=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=KN9ZkxiUANTnajhBDMpXjv+rVR5Ww+D5VBz5l19OFxpWqD1NCJTEsEdKOkg7upnRWCWfqZ3iWgz8YAf7M3LHDTQyH7fxn5VVamV9Y0JvaqLKBA+BO5dONFg/pCdmt3lxPeosaFykp8RyLDEoYdkjuDssHu7gstZrbJLZJV4v9Vg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Uta5NtAj; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oubSXj0z"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=60kJslvnsJA31a1Vm6cxQ8IZBe70jj4DAo5HbYEex9M=; b=oubSXj0zMmrg7e0M5hLU6egTBl
-	x9XXLxq+Ke04wqgKxB/ZUwdm7iNO/VNZJdvIKAyu7WIvu1iYj8dxHRi90iJn55dGyd1EsnSbRhBoU
-	jAk39Q2ny+96s41GJNW2ullPezvuVZEdsy3IrMVYNEjtFQu7g+2asg6HVovNtROhyCwGvzlfKTt+w
-	oxUfmQ4W5tN4tlx3Bk9iJEX9mG12TdDHG7TuJfF9gWcLcvO3z6Ene++LL7niEF8eQmBudNbISmuAH
-	belCRfLv/l30BzDDvaTH4N9SvYYsalDwEo+PulXje6ws/lO29h3WGn0eRmjWq5kT5kmBGl8vkuJ/Q
-	2BfbGgUw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u2okY-00000008nDz-0i4n;
-	Thu, 10 Apr 2025 10:03:10 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id BAB4130017D; Thu, 10 Apr 2025 12:03:09 +0200 (CEST)
-Date: Thu, 10 Apr 2025 12:03:09 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: K Prateek Nayak <kprateek.nayak@amd.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Uta5NtAj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=Jo0rD
+	BCUe7dubutz5qYlyihW1Ld3IGN6iN2C5WAGgvg=; b=Uta5NtAjXZSSn6RDFkBTB
+	hlBqqHRksDOPTSeJ8PEE36y7YJ5NypKkHU2FU//kJlqIyj4hoPacbwgZN8g0gRj2
+	PJC9PhZDl+73TXoKZXE/0tgl1aFxBcpVjgDRls9isv6ZwKckcC/CoNfri9jQZK7k
+	ZoTxr8GG6F+LbcPgQu2ExI=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wAnhDEzl_dnH5BEFg--.53412S4;
+	Thu, 10 Apr 2025 18:02:28 +0800 (CST)
+From: lvxiafei <xiafei_xupt@163.com>
+To: fw@strlen.de
+Cc: coreteam@netfilter.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	horms@kernel.org,
+	kadlec@netfilter.org,
+	kuba@kernel.org,
 	linux-kernel@vger.kernel.org,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
-	Swapnil Sapkal <swapnil.sapkal@amd.com>
-Subject: Re: [RFC PATCH 2/5] sched/fair: Introduce overloaded_mask in
- sched_domain_shared
-Message-ID: <20250410100309.GB30687@noisy.programming.kicks-ass.net>
-References: <20250409111539.23791-1-kprateek.nayak@amd.com>
- <20250409111539.23791-3-kprateek.nayak@amd.com>
+	lvxiafei@sensetime.com,
+	netdev@vger.kernel.org,
+	netfilter-devel@vger.kernel.org,
+	pabeni@redhat.com,
+	pablo@netfilter.org,
+	xiafei_xupt@163.com
+Subject: Re: [PATCH V3] netfilter: netns nf_conntrack: per-netns net.netfilter.nf_conntrack_max sysctl
+Date: Thu, 10 Apr 2025 18:02:27 +0800
+Message-Id: <20250410100227.83156-1-xiafei_xupt@163.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20250409094206.GB17911@breakpoint.cc>
+References: <20250409094206.GB17911@breakpoint.cc>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250409111539.23791-3-kprateek.nayak@amd.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wAnhDEzl_dnH5BEFg--.53412S4
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Kw4rKFyfZw1fGFWftw47Arb_yoW8tF4rpw
+	4rt39rJw1DJrs0y3WUX3sFyFsYv3yfAa1Y9Fn8GF95u3ZrKr15Cr45tFyfXryvkr1xKF1S
+	yw4j9ry5Aa10yFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JUhF4_UUUUU=
+X-CM-SenderInfo: x0ldwvplb031rw6rljoofrz/1tbiKAwqU2f2zrGtbwACsz
 
-On Wed, Apr 09, 2025 at 11:15:36AM +0000, K Prateek Nayak wrote:
-> Introduce a new cpumask member "overloaded_mask" in sched_domain_shared.
-> This mask will be used to keep track of overloaded CPUs with pushable
-> tasks on them and will be later used by newidle balance to only scan
-> through the overloaded CPUs to pull a task to it.
+Florian Westphal <fw@strlen.de> wrote:
+> net.netfilter.nf_conntrack_max
+> is replaced by init_net.nf_conntrack_max in your patch.
+>
+> But not net.nf_conntrack_max, so they are now different and not
+> related at all anymore except that the latter overrides the former
+> even in init_net.
+>
+> I'm not sure this is sane.  And it needs an update to
+> Documentation/networking/nf_conntrack-sysctl.rst
 
-'to pull a task from it.' ?
+Yes, it needs an update to
+Documentation/networking/nf_conntrack-sysctl.rst.
+
+in different netns,
+net.netfilter.nf_conntrack_max = init_net.ct.sysctl_max;
+the global (ancestral) limit,
+net.nf_conntrack_max = nf_conntrack_max = max_factor * nf_conntrack_htable_size;
+
+> in any case.
+>
+> Also:
+>
+> -       if (nf_conntrack_max && unlikely(ct_count > nf_conntrack_max)) {
+> +       if (net->ct.sysctl_max && unlikely(ct_count > min(nf_conntrack_max, net->ct.sysctl_max))) {
+>
+>
+> ... can't be right, this allows a 0 setting in the netns.
+> So, setting 0 in non-init-net must be disallowed.
+
+Yes, setting 0 in non-init-net must be disallowed.
+
+Should be used:
+unsigned int net_ct_sysctl_max = max(min(nf_conntrack_max, net->ct.sysctl_max), 0);
+if (nf_conntrack_max && unlikely(ct_count > net_ct_sysctl_max)) {
+
+min(nf_conntrack_max, net->ct.sysctl_max) is the upper limit of ct_count
+At the same time, when net->ct.sysctl_max == 0, the original intention is no limit,
+but it can be limited by nf_conntrack_max in different netns.
+
+> I suggest to remove nf_conntrack_max as a global variable,
+> make net.nf_conntrack_max use init_net.nf_conntrack_max too internally,
+> so in the init_net both sysctls remain the same.
+>
+> Then, change __nf_conntrack_alloc() to do:
+>
+> unsigned int nf_conntrack_max = min(net->ct.sysctl_max, &init_net.ct.sysctl_max);
+>
+> and leave the if-condition as is, i.e.:
+>
+> if (nf_conntrack_max && unlikely(ct_count > nf_conntrack_max)) { ...
+
+Yes, each netns can pick an arbitrary value (but not 0, this ability needs to
+be removed).
+
+Should be used:
+unsigned int nf_conntrack_max = max(min(net->ct.sysctl_max, init_net.ct.sysctl_max, 0);
+
+This also needs an update to Documentation/networking/nf_conntrack-sysctl.rst
+to explain the restrictions.
+
