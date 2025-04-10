@@ -1,105 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E1E728A41A
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 11:41:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ED212836AC
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 11:42:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744285306; cv=none; b=CYuE+ZTYAD4nha0HpMwAHvGUeS1dOGW7+bK435VQdLmu5aF8Z07oWPqrcIfkXgprXdMX1t0C3SYPvelDY9WjS4KabOFT9W1877oaB1rORBttpnTcwJJRRTCWsEPH+7KO4lWosIvo/6tGziOBlHbXtCq//fMsMc5cBgcN0fmC1F4=
+	t=1744285349; cv=none; b=Wnpmuinn4LfrYhQ5UMyO1BGkpAeh7Z+sh5G6lsmoYROkSwCAs7icwUqZZPNUM2HzwmDvKgXBN7ArmB8Vk8ZjZUMOf9WQ+uFAUe2yMehf7RQEDR1Dx2DSkY0jHidO4o3kaea27znEMCzT7aYwrBWSi/DoWpdbQLWa5QY6V+nr8Kw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744285306; c=relaxed/simple;
-	bh=/cLfvZPaGaKqTv5rGWJ2lfAMdaEHdJl7YqBZZkkNksw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=s00uIrdHy+4rCb+o43swh3D48TfSygSCbKWROrvtUhUfqrhUULrFvchB3JENQWroytRgbhrOYRIMXRsNSNqjKHSTU64KgyG5GZdateVfJexr6P1ZC81ISjrFqwm7gqNwM2w6M/lzEDpR1JTlWYRyeXiDklZzz1z9E1i6akcyj2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cZG7O4CX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744285349; c=relaxed/simple;
+	bh=R0hMK9DsiRGaPebkDok1b4twK+6uJYRkaiPTvhKn9CM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GLCzLyNjL3Vd8DPXdvzN4UI2avdGCLEM6bYXxpTSr49mRHCjYDGWi7nf40Oo6a/xRrOytj2D8ZZ1M2pxgMLiE4LrK4oqWs9K4h6qQ/c54LJ4Q3pzRCTvZYHu8V+zXNKIBXURzKpepuZ/8SeXcAqyj/R4pwsqkpDPBsZneSsvzrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bYUjG3Fc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cZG7O4CX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B400BC4CEEA;
-	Thu, 10 Apr 2025 11:41:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bYUjG3Fc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C14BC4CEDD;
+	Thu, 10 Apr 2025 11:42:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744285306;
-	bh=/cLfvZPaGaKqTv5rGWJ2lfAMdaEHdJl7YqBZZkkNksw=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=cZG7O4CXmGL0MyfFfIjmuxA0yarKJ8L0fZF71b3Za1BdNbUR4WoW6fQr2tIqjOJua
-	 Lo6k2SnvJyP3yvMRD18WWaxSQGG6Fb/nINm+vGobEOwv7ltJKknJV+lH0EAlkcTDd2
-	 DQd4/PXo3SgVTG64u0sE4oXFTCPQABuy5+wfmY5JlBYsdhZ38x7QROXBDpBJdOuw8G
-	 S+/qlghzShEheGHiXj8INFLEjAQGwWfwFHpjb7+zix3qA6/uFyZykTqTc/BqOFAgTr
-	 Vee9LNRxs1W9lT6H3Fj1QGS3Y/Dwfouqx0zjZ6GXLCBo/of7Rx94kr/Yr8pnyPfzg6
-	 he+aVtzyio2gg==
-From: Daniel Wagner <wagi@kernel.org>
-Date: Thu, 10 Apr 2025 13:41:17 +0200
-Subject: [PATCH v4 14/14] nvme-fc: do not reference lsrsp after failure
+	s=k20201202; t=1744285348;
+	bh=R0hMK9DsiRGaPebkDok1b4twK+6uJYRkaiPTvhKn9CM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=bYUjG3FcjSwYngfEEi5Tw0cbvHgGog6huPyer6YC8/Dt3PLD+bOa9yLTUhhFFrqoZ
+	 8WKYJv/EinYOQ+9eN/aqgD4xq4G5zkQu/rzzmAYYHyUaDHcv9CXjHH/gbWAbOx3kBP
+	 +hep9kSEbbmXpuZNL/TVewB7vDmcbz2x7K8W3kkMDKKvY+pkCZsZ7dQfRJehAleFiH
+	 IHXVAbEAD90iBCDcR9WvyRvw3ScyiEkSc+KDq1H67M9OeHE7nproPFYUSzD4qp59Su
+	 FFBLB8t8v0jHfkS5Ymc/GsyDelt8uwsqbxrU0OBFF/b7ioedL+RktVTi3nyMn4WRyv
+	 DXbhtbfHqsDRg==
+From: Borislav Petkov <bp@kernel.org>
+To: X86 ML <x86@kernel.org>
+Cc: Andrew Cooper <andrew.cooper3@citrix.com>,
+	LKML <linux-kernel@vger.kernel.org>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	stable@kernel.org
+Subject: [PATCH] x86/microcode/AMD: Extend the SHA check to Zen5
+Date: Thu, 10 Apr 2025 13:42:22 +0200
+Message-ID: <20250410114222.32523-1-bp@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250410-nvmet-fcloop-v4-14-7e5c42b7b2cb@kernel.org>
-References: <20250410-nvmet-fcloop-v4-0-7e5c42b7b2cb@kernel.org>
-In-Reply-To: <20250410-nvmet-fcloop-v4-0-7e5c42b7b2cb@kernel.org>
-To: James Smart <james.smart@broadcom.com>, Christoph Hellwig <hch@lst.de>, 
- Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>
-Cc: Hannes Reinecke <hare@suse.de>, Keith Busch <kbusch@kernel.org>, 
- linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Daniel Wagner <wagi@kernel.org>
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
 
-The lsrsp object is maintained by the LLDD. The lifetime of the lsrsp
-object is implicit. Because there is no explicit cleanup/free call into
-the LLDD, it is not safe to assume after xml_rsp_fails, that the lsrsp
-is still valid. The LLDD could have freed the object already.
+From: "Borislav Petkov (AMD)" <bp@alien8.de>
 
-With the recent changes how fcloop tracks the resources, this is the
-case. Thus don't access lsrsp after xml_rsp_fails.
+All Zen5 machines out there should get BIOS updates which update to the
+correct microcode patches addressing the microcode signature issue.
+However, silly people carve out random microcode blobs from BIOS
+packages and think are doing other people a service this way...
 
-Signed-off-by: Daniel Wagner <wagi@kernel.org>
+Block loading of any unreleased standalone Zen5 microcode patches.
+
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Cc: <stable@kernel.org>
 ---
- drivers/nvme/host/fc.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ arch/x86/kernel/cpu/microcode/amd.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
-index 2257c3c96dd2da11097d2d0d4a5bb8ece1bebc6a..fdafa3e9e66fa9b8954209efa14d3b207cb8653c 100644
---- a/drivers/nvme/host/fc.c
-+++ b/drivers/nvme/host/fc.c
-@@ -1410,9 +1410,8 @@ nvme_fc_xmt_disconnect_assoc(struct nvme_fc_ctrl *ctrl)
- }
- 
- static void
--nvme_fc_xmt_ls_rsp_done(struct nvmefc_ls_rsp *lsrsp)
-+nvme_fc_xmt_ls_rsp_free(struct nvmefc_ls_rcv_op *lsop)
- {
--	struct nvmefc_ls_rcv_op *lsop = lsrsp->nvme_fc_private;
- 	struct nvme_fc_rport *rport = lsop->rport;
- 	struct nvme_fc_lport *lport = rport->lport;
- 	unsigned long flags;
-@@ -1433,6 +1432,14 @@ nvme_fc_xmt_ls_rsp_done(struct nvmefc_ls_rsp *lsrsp)
- 	nvme_fc_rport_put(rport);
- }
- 
-+static void
-+nvme_fc_xmt_ls_rsp_done(struct nvmefc_ls_rsp *lsrsp)
-+{
-+	struct nvmefc_ls_rcv_op *lsop = lsrsp->nvme_fc_private;
-+
-+	nvme_fc_xmt_ls_rsp_free(lsop);
-+}
-+
- static void
- nvme_fc_xmt_ls_rsp(struct nvmefc_ls_rcv_op *lsop)
- {
-@@ -1450,7 +1457,7 @@ nvme_fc_xmt_ls_rsp(struct nvmefc_ls_rcv_op *lsop)
- 		dev_warn(lport->dev,
- 			"LLDD rejected LS RSP xmt: LS %d status %d\n",
- 			w0->ls_cmd, ret);
--		nvme_fc_xmt_ls_rsp_done(lsop->lsrsp);
-+		nvme_fc_xmt_ls_rsp_free(lsop);
- 		return;
+diff --git a/arch/x86/kernel/cpu/microcode/amd.c b/arch/x86/kernel/cpu/microcode/amd.c
+index 57bd61f9c69b..2e67adaf1caa 100644
+--- a/arch/x86/kernel/cpu/microcode/amd.c
++++ b/arch/x86/kernel/cpu/microcode/amd.c
+@@ -199,6 +199,12 @@ static bool need_sha_check(u32 cur_rev)
+ 	case 0xa70c0: return cur_rev <= 0xa70C009; break;
+ 	case 0xaa001: return cur_rev <= 0xaa00116; break;
+ 	case 0xaa002: return cur_rev <= 0xaa00218; break;
++	case 0xb0021: return cur_rev <= 0xb002146; break;
++	case 0xb1010: return cur_rev <= 0xb101046; break;
++	case 0xb2040: return cur_rev <= 0xb204031; break;
++	case 0xb4040: return cur_rev <= 0xb404031; break;
++	case 0xb6000: return cur_rev <= 0xb600031; break;
++	case 0xb7000: return cur_rev <= 0xb700031; break;
+ 	default: break;
  	}
- }
-
+ 
+@@ -214,8 +220,7 @@ static bool verify_sha256_digest(u32 patch_id, u32 cur_rev, const u8 *data, unsi
+ 	struct sha256_state s;
+ 	int i;
+ 
+-	if (x86_family(bsp_cpuid_1_eax) < 0x17 ||
+-	    x86_family(bsp_cpuid_1_eax) > 0x19)
++	if (x86_family(bsp_cpuid_1_eax) < 0x17)
+ 		return true;
+ 
+ 	if (!need_sha_check(cur_rev))
 -- 
-2.49.0
+2.43.0
 
