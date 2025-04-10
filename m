@@ -1,62 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4838470830
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 16:41:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C43F1E835B
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 16:41:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744303273; cv=none; b=AOoGOiUAP+0hGe2n3GBkLiNMN410GAzDOnNF1+AmniZ8Rx69FhtgIUUSYRlE/Z+2WHD9Tb6VyC6jvpr5/21BWHMqbXF5v9va3K+LVr5pZsoJTeFicunxL2vmSFxB2C69lnF/eEL+ZiCtfXRwBPLK7bglVA/yMi3vUjNcyPzWcT8=
+	t=1744303284; cv=none; b=VCYPYVmjByYyii6knxPxZ+yixBgdkrsF9jvQkE4BlGs5hVi7XtzVxIwTocJEvWhtQr9QZG63lKX4xozRMCUdvNrNs1gwY2nTvJzJk8FjBkVJdSMuFJYaKeYV4cAjmnwvY1rFx4C0fkAYlUsqnKliIjbW0Nc6Yupsut1SimtrUYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744303273; c=relaxed/simple;
-	bh=avAD11kU002qfu03T374iDco6uZspUkPTsJ2RWZhjp0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rMtsleEMTv0lUUnB5IM6GjpeJ9OYNFY6k7YI4ZYksUHAUDd5b8UvYnXiypeAvN5nhVTjaNXTIjLOYaT4tkIWtiytn+Ad4uc+dLf1KnAzRCTjE0cG5SZRzlEXPfwQA4scUD/d3zTuA1ZOZD2X8rFRGk/q/FO1ysvsyPjYEMrz+ho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ugv9ZZk+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744303284; c=relaxed/simple;
+	bh=Hcr+OsbV0giuq3OJQt+MLAFzhy4z/J4/UvCBYVt5Ipc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=G4LgsXtT9DJKpmDdvidOGOAJfK4RCSn5ZiFRfzIvH7kKzIARpK5tJRtP/U8w+VB8ByhpQTL9cPJz/VTC/dcRAnEszomssVJTtek7URa9OtvZgMMS882HIzGPNrC/3WS/oS6flblOA+lMC5IsIfNMlZQxbDiEOjaBvs9von63CPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=jooRrozr; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ugv9ZZk+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98DBAC4CEDD;
-	Thu, 10 Apr 2025 16:41:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744303272;
-	bh=avAD11kU002qfu03T374iDco6uZspUkPTsJ2RWZhjp0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ugv9ZZk+lVx1pcPlFk7HCFuIyjOHLnzayoHsCw0/1vT5+kp8QaWD7qUlJjDm5Qcua
-	 pfhMjMV7IiXOdMhbx+yV0fh3oVeBdht4oi0Y7iubazJVbrbzluGpk8RuhJ3lhluMUu
-	 rqa83UC7Q5mgsxEUFrly1+rsU6hAxeT+mgQyj92evH9ICjnpkJvIeMqeRo8wWKlao8
-	 z03ZjbJ5daBWnBKO4PZ+gJIvlZ5B5ErGvHKg8bbVIyUaZxn6dvNc6Du84pAYb1jLbL
-	 gl8ERIJ/14k/YapvHBN8WtPzBj7UKa8z545g0ZiMsuhhEZYyGziMHxuWJUqD+6Z/Sh
-	 xF+5PoOVPt/pA==
-Date: Thu, 10 Apr 2025 09:41:09 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: David Kaplan <david.kaplan@amd.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
-	Peter Zijlstra <peterz@infradead.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
-	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, 
-	Brendan Jackman <jackmanb@google.com>, Derek Manwaring <derekmn@amazon.com>
-Subject: Re: [PATCH v4 11/36] x86/bugs: Restructure spectre_v2_user mitigation
-Message-ID: <pruotxsn2qn5gdxzeiowx4wy75xtlbiarpqyqjt5timl3sui5h@uiareopp3xny>
-References: <20250310164023.779191-1-david.kaplan@amd.com>
- <20250310164023.779191-12-david.kaplan@amd.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="jooRrozr"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53AGB4Nh016340
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 16:41:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Nz3AV0ZTJrVixT1lebo/KxCHi2vspT4PrctEXCftC3c=; b=jooRrozrTmVsxT8y
+	iVOKgnQF/yctxkX/Riuy9pLd2BkHVUGuOC/0MM9M1YnC8Saj2EAT4z0/55c0l7Ix
+	LVSCAA39XdGqSxhirFSNQwg9SQNxEG2J8oX7aXSDjefkQl2mxMppbz0N5cUfWI4h
+	MqGgKAseeILwa4vHLi4eDzyMJGpF6Z8o6DeVY8dCTRQm3Doq8x5lsNruqkn6MWx1
+	6Ow90tWKjPjSc42dxlbpS15e8aqXKgNWWAgo/c0EubPPR3oUHoG6nUB3ltoULHFg
+	2Kn9GJfW3qY/e2sEC3HkaSbEiet8vk4aOdt4GOVVDAnrnUjCc7rOA2lMoqBfr1QH
+	oVwuKQ==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twc1qeq0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 16:41:21 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5841ae28eso28093085a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 09:41:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744303281; x=1744908081;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Nz3AV0ZTJrVixT1lebo/KxCHi2vspT4PrctEXCftC3c=;
+        b=PbxWIyiLhP7hAEiUI5JQk6GoRfKeuLbuk0KdaGC4PE5Qg7Gcm/f/kvR+/DXCB7TlDx
+         A39hKUxozL42Czq/QZ2rYRZJlqAaU0iFkT4noIpLGwUwW0d4NB9fTgHcxb/tr8LrdGg1
+         DPblulKI3h/eKerQn3x4gw3/k8mZx1J8dJMorLmSWvktb2rmwe2y3eUnrMdFp7BrGf9U
+         qb92bHaEBwVJG1DXFvVbYf/oLKYGrRYhqIqLpyBMWQHV3fLWHFpyhvcavmAbJAIcXexR
+         sUuoOPc+rJFOpDuZq6kMW5IIPUHiCucglKq/3pHZrX0O7lHn2Blmr14mDmrO81Dl+0DI
+         V0aw==
+X-Forwarded-Encrypted: i=1; AJvYcCUgGcyBUg92r17yxnLXeitVwdIdkw7PzcbIyBsUakFv2bQtyVslK5NyjeKWlX6YABI6V5NmwMO5cajGDdo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw864uldgDzNuX8RPHnTzaSznd0xUqpY+GNeIvozUqdSM5Kopb0
+	+NqfWRxafmly8rezgGktdytrjtjumqHO7ry7AvXK2mUh3jcr5hVp6XdOI46pzAgEH6mpRPbVeV5
+	a0/z4fnicAw27ZpsiLtG8r2boBeGB+I7aJBv79T6lP1tFNEqMG1lbNi1jF5ltauw=
+X-Gm-Gg: ASbGncsEEIPHzJUD6V4LnvzCvYqZVIZtk1ZnhZWCCFOhckMsCpTfZ/fXN9lCCI5/blJ
+	0b42z4lzY188UBfVPEsRmGY7dmYLCX7uRZrs+hdZg7WnsTs+nOmG46zz+x+Pc2p01WDm6HxVL7F
+	U25luB10hCmnve3kMP/b5StTuTEyA3gXJYTHTH2VidfAxQCSP94xGMM4s25JJlixJKPecQE4Sxi
+	ETNztdbzG3Z0owCVe9JUOx0lZZL/a6pUZyT+pNoT+swtMBPMPAz0aug/GPOPh337OuaH58rwvOQ
+	d2PQF+7dzQwEJogL6MJeNyVUCZyrcvcUQYsRaamRhtGwA9jshqrFOMaQRvmNsBnxrw==
+X-Received: by 2002:a05:620a:40cc:b0:7c0:a1ca:93cb with SMTP id af79cd13be357-7c79dd9a8b1mr382562785a.1.1744303281066;
+        Thu, 10 Apr 2025 09:41:21 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHKyHlrNq2qLH05ohY7PXUtOJFZJXokcW+KLyTTZ5H9Yjn47IJOlgaBBW+DUuMj07LVZzxX8Q==
+X-Received: by 2002:a05:620a:40cc:b0:7c0:a1ca:93cb with SMTP id af79cd13be357-7c79dd9a8b1mr382560885a.1.1744303280439;
+        Thu, 10 Apr 2025 09:41:20 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f2fbd17646sm2618786a12.56.2025.04.10.09.41.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Apr 2025 09:41:19 -0700 (PDT)
+Message-ID: <9db38911-4bb3-42c9-90be-51cbd6e523fc@oss.qualcomm.com>
+Date: Thu, 10 Apr 2025 18:41:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250310164023.779191-12-david.kaplan@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/3] arm64: dts: qcom: x1e80100-hp-elitebook-ultra-g1q:
+ DT for HP EliteBook Ultra G1q
+To: Maud Spierings <maud_spierings@hotmail.com>, juerg.haefliger@canonical.com
+Cc: andersson@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org,
+        konradybcio@kernel.org, krzk+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robh@kernel.org
+References: <20250408145252.581060-4-juerg.haefliger@canonical.com>
+ <AM7P189MB100977CCFD602396E8F01FCBE3B72@AM7P189MB1009.EURP189.PROD.OUTLOOK.COM>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <AM7P189MB100977CCFD602396E8F01FCBE3B72@AM7P189MB1009.EURP189.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: eeXF7PBV--bewknqLlQHQqljuhWoYmDi
+X-Authority-Analysis: v=2.4 cv=KtdN2XWN c=1 sm=1 tr=0 ts=67f7f4b2 cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=g0goBy0-_zJ6c0Nzw48A:9 a=QEXdDO2ut3YA:10 a=QYH75iMubAgA:10
+ a=bTQJ7kPSJx9SKPbeHEYW:22
+X-Proofpoint-GUID: eeXF7PBV--bewknqLlQHQqljuhWoYmDi
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-10_04,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
+ priorityscore=1501 phishscore=0 bulkscore=0 suspectscore=0 spamscore=0
+ malwarescore=0 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=563 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504100121
 
-On Mon, Mar 10, 2025 at 11:39:58AM -0500, David Kaplan wrote:
-> @@ -214,6 +211,8 @@ void __init cpu_select_mitigations(void)
->  	 * choices.
->  	 */
->  	retbleed_update_mitigation();
-> +	/* spectre_v2_user_update_mitigation() depends on retbleed_mitigation */
-> +	spectre_v2_user_update_mitigation();
+On 4/10/25 7:34 AM, Maud Spierings wrote:
+> Sorry I messed up and replied to the wrong patch somehow, this comment was meant for this patch.
+> 
+>> Introduce a device tree for the HP EliteBook Ultra G1q 14" AI laptop. It
+>> seems to be using the same baseboard as the HP OmniBook X 14 so just use
+>> that for now.
 
-Function names need trailing parentheses: "retbleed_mitigation()"
+https://lore.kernel.org/lkml/20230510183423.never.877-kees@kernel.org/
 
--- 
-Josh
+Konrad
