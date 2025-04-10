@@ -1,138 +1,265 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9BF25CDF1;
-	Thu, 10 Apr 2025 02:33:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AC4E4685
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 02:35:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744252425; cv=none; b=ZralBJNs8xsVF1PN8HMmYMV2WkywSdSx61x5uzdaXMCUiiw+B1S4M3fx5rj2W40dPXK6hVW26rDLLZlza06s+X+PhYbvhTBCawaZ6SayE5YSqEK96IfO/U/zMLWXM6DvNe/rTdaeox0yiIjXsCOJrfOEX0FHMctfAwFq+0kfWhQ=
+	t=1744252527; cv=none; b=BTazXSKVv6uEWRPfxz18UK4fGMr3KRBwt90uOGAo4o3MtoOkJAFgkAQyoTwiEMa+L2wdXaLashUSv738pfFBEDCwqBs3AFELqoLIfS7sTvbO0KVmK/V5kGy2LpskeF9e++YC0qqcwCLHsVYeHjGjSLLnjK0FFR78EvJTgCGTROg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744252425; c=relaxed/simple;
-	bh=VZ8k/enWyBcu8alYtN9L7N0dxunZbZpvMLdnichYWg8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kyLW7R4Z+5J7rvV65uHNeyFbSv2/qCaMVhRffEGuln6pNH2x7w74fYn0hoNi6AaOJTBZaZ9O9V2fO/cEV10bAjz2ghLV3EgmCDQ0aMHsY83Ox/dpYzYkaL4Ic7V7sD3AoTz77ePQTVsgIbNUwdpd099TVsPS0N3wkY3TumZ0c+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kerneltoast.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kerneltoast.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-225df540edcso15083585ad.0;
-        Wed, 09 Apr 2025 19:33:43 -0700 (PDT)
+	s=arc-20240116; t=1744252527; c=relaxed/simple;
+	bh=hfzSRZYZmIEbDflOrEzA7qkKhQ5vb71z5d6SFB4i4Aw=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=YUq7zCnUVQ1B2haBOrSNH7pgzIc4+v+xlvnDPsim37fSvM36h4ns0fJSWfq2zHcbR5T97XusdW6Zr6i0XBz2MIMe5jznONyOw4xwozeMV7nayPFjRSdSmhwKNImXogva8fNDnO3qldJqC+oE9YqlSt6oZeAh1OEMr12umzwKsVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d458e61faaso4035745ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 19:35:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744252423; x=1744857223;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=q/IllHKM0oPJ3pBiL3ZERbu3XrJNSX388MQELDIUdTk=;
-        b=cRSP9/7pryx+fZkK6ZUnEAfeo3G5GSZnMGaG9IHdNdo+KoNKm6MQiGg5667v7DUG8e
-         y6Mw5m03cC3xuQY0IwNL62xBxZ6tiJCgwRXkcC7ok/wWp8E0BCwwV/zys473S5Egmf3f
-         4z+Ir1sUkCV8P+ItKQkwf+d0QdNcyD+tCAaEVozd987l/9hxtoueYk3Zw6Up4y+t2UrW
-         0nuKRjffANoH7WFA/yjBEcNXm6nstXGDdhHhJdHOXqEE8X1qOamOcxwOe5ZX330r1sqS
-         b1WnFexpCy53vQkjpd8+wqpni88tKuMP5kmEAawJbhXOtbZq7DG6ftDsyP7xLtKG8QJg
-         fzmw==
-X-Forwarded-Encrypted: i=1; AJvYcCU41X5f7YwH4IRDj1zzCagMwrg6IGrPMpW5DKfGSRE6CCrj1uoYL9KD+52SzeFIbQY8smj6S4NZKL/538Y=@vger.kernel.org, AJvYcCWfs9ircQh7DROfwzhelipfvzextANjZyTIHUOBHeCMPloVs0d6zy6uK8eVtsliTQKQrHSaEy9TKCQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkyrsMUdPJEggeGskzmrz4/s2mwor3NhRXuqWlFYXSx4tH/HdN
-	gyKin5IDOOAzvSEzn3UC0XbNG8Izhl4PD7EHwQR1bMwXsbA4+k4I
-X-Gm-Gg: ASbGnctkRuvHLJrULKx7wmrhLlghX3N2Pl1MEB+ed2bBGkyjhWfWxggWaR+gv62+Z59
-	4rWq4QtYPrVh81iPfLnl1XJPBuzbwncrIGxfL5t2yek+QcmyxEeLW+xIDPIiofgR0tZhSrAUpEL
-	jxLI+nCIKP5ZUBgH8qrxFUuu0smwd+b5lN9d7tr9mOlJpap/rP6h9P5Y1p2wEt9EMqsUdrhvpHB
-	Z8bdM4e3uMVvlkYg6AXWKOykmYHA/Ip9Isp7FX+et3nRgrZHRN+KNQoeV8bgE2AjKm1rn58ofgs
-	Mn/lODl+u+lSZ6cnhneN5RE6FxB65OjL1E97qgJ6aFmATQK4omZqC+diLy4=
-X-Google-Smtp-Source: AGHT+IHmohfIX1pwBTdRS96rbF1fkkhDJo9mRFoUMxjxNoxly1b+XtVF34/7CT0NB4AOEMebJW0Ngg==
-X-Received: by 2002:a17:902:ef02:b0:215:58be:3349 with SMTP id d9443c01a7336-22b8fd48490mr17868225ad.14.1744252423220;
-        Wed, 09 Apr 2025 19:33:43 -0700 (PDT)
-Received: from sultan-box.localdomain ([142.147.89.201])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b62973sm19640775ad.24.2025.04.09.19.33.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 19:33:42 -0700 (PDT)
-Date: Wed, 9 Apr 2025 19:33:39 -0700
-From: Sultan Alsawaf <sultan@kerneltoast.com>
-To: Xuewen Yan <xuewen.yan94@gmail.com>
-Cc: Stephan Gerhold <stephan.gerhold@linaro.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
-	Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH 1/2] cpufreq: schedutil: Fix superfluous updates caused
- by need_freq_update
-Message-ID: <Z_cuA3lcewKhj4Rz@sultan-box.localdomain>
-References: <Z_U_LN0AtH_n4YtE@sultan-box.localdomain>
- <Z_VTRspvmOUfrawh@linaro.org>
- <CAB8ipk8ARRdR8UPgLqJ3EcAzuE4KNEO=cmLNJLk6thTxdBSHWw@mail.gmail.com>
- <CAB8ipk_Ayqmh=Ch2aH2c+i-q+qdiQ317VBH1kOHYN=R9dt6LOw@mail.gmail.com>
- <Z_cjv0EJ45NShYOp@sultan-box.localdomain>
- <CAB8ipk8WOh5_XvRYJrPi6b6wf8G4=zjoFRWpXk3viv3gkHCn1g@mail.gmail.com>
- <Z_coNmh-CabcfIWD@sultan-box.localdomain>
- <CAB8ipk8AAFFtV3OA4S=g9X9AXsC4Ntr911DLLRkhgQtvMvXAvg@mail.gmail.com>
- <Z_cracmQRfB8hF06@sultan-box.localdomain>
- <CAB8ipk9FdC2X78B4sAnne5=ZS=ZrhZdUKYREEZZk7RQLH8LAwA@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1744252525; x=1744857325;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=seNAskAAqbiE6X+p0D7OjDytS2wTZOQSFjJ1rVdcR0I=;
+        b=hXKtro9jYuxuZR03tGc3cGI8oajr11tb4cYEXmJd7wjS1orFr5+SnZxnBgt8jyQOdc
+         ZVepBYGKSmRSDFLxO1yeAWK6uEtzgIytQgNAglGDWQkLor80KYUyMsoNFXLeM6C3Pj9j
+         RebRxTWDQcQ7EwPcIWLNX2a944wt3UAn0D6kSfzEMPMODSJlLEJj7zIGH/m5RD1otYJz
+         yEEfZC3O9f6MamxW3psFm0BjDqbA7/hE+qSw6bPB2ivY4QJHXsgv9mz7DasKs7yN3g6n
+         xzuivuPfTIs9DajZzV1A2LmtGpYyH5CRm7EQ8cUP+YXkzgADSqbmDgtXHKH0eu7QbRoe
+         Yt8A==
+X-Forwarded-Encrypted: i=1; AJvYcCV9K876wfFQ082mOHKDAQA5+pgLpaI8bF0nuFMZptXlf/AIJXsHtC/2qXfqqlIlW/CwtJqzJ0HmjGdCUTs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwinKDD3tcchMC3AOTGFMX0mJOYw03Zc+81hZ+rskgBkUdm8vbq
+	1aUy15SKCIbaLga/Q8qt8dJ4uvF6051Py3yaTRf7AKeysyC2uZ0mc0TCXykTmlHhccrQZgbfJAt
+	O7t7gPo+Bvlz6FpGkJlbgFnHxXLkEYcLwADCkJnfqPqSMGADerZbJOhQ=
+X-Google-Smtp-Source: AGHT+IFSzO3OEKc2bnJIX8X3oITkSpdHQTsTC6PQ+mvhzXZeWU8tITDuicmTJ29i/+kBaJzA7tuOSmZIMtn763m4vnYjBITaUI0X
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAB8ipk9FdC2X78B4sAnne5=ZS=ZrhZdUKYREEZZk7RQLH8LAwA@mail.gmail.com>
+X-Received: by 2002:a05:6e02:3b84:b0:3d0:26a5:b2c with SMTP id
+ e9e14a558f8ab-3d7e4deec38mr8501395ab.8.1744252525351; Wed, 09 Apr 2025
+ 19:35:25 -0700 (PDT)
+Date: Wed, 09 Apr 2025 19:35:25 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67f72e6d.050a0220.258fea.0027.GAE@google.com>
+Subject: [syzbot] [bpf?] [net?] possible deadlock in xsk_bind
+From: syzbot <syzbot+46043677477d6064a1a0@syzkaller.appspotmail.com>
+To: andrii@kernel.org, ast@kernel.org, bjorn@kernel.org, bpf@vger.kernel.org, 
+	daniel@iogearbox.net, davem@davemloft.net, edumazet@google.com, 
+	horms@kernel.org, jonathan.lemon@gmail.com, kuba@kernel.org, 
+	linux-kernel@vger.kernel.org, maciej.fijalkowski@intel.com, 
+	magnus.karlsson@intel.com, netdev@vger.kernel.org, pabeni@redhat.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Apr 10, 2025 at 10:30:45AM +0800, Xuewen Yan wrote:
-> On Thu, Apr 10, 2025 at 10:22 AM Sultan Alsawaf <sultan@kerneltoast.com> wrote:
-> >
-> > On Thu, Apr 10, 2025 at 10:13:04AM +0800, Xuewen Yan wrote:
-> > > On Thu, Apr 10, 2025 at 10:09 AM Sultan Alsawaf <sultan@kerneltoast.com> wrote:
-> > > >
-> > > > On Thu, Apr 10, 2025 at 10:06:41AM +0800, Xuewen Yan wrote:
-> > > > > On Thu, Apr 10, 2025 at 9:49 AM Sultan Alsawaf <sultan@kerneltoast.com> wrote:
-> > > > > >
-> > > > > > On Wed, Apr 09, 2025 at 07:48:05PM +0800, Xuewen Yan wrote:
-> > > > > > > Or can we modify it as follows?
-> > > > > > >
-> > > > > > > -->8--
-> > > > > > >
-> > > > > > > diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-> > > > > > > index 1a19d69b91ed..0e8d3b92ffe7 100644
-> > > > > > > --- a/kernel/sched/cpufreq_schedutil.c
-> > > > > > > +++ b/kernel/sched/cpufreq_schedutil.c
-> > > > > > > @@ -83,7 +83,7 @@ static bool sugov_should_update_freq(struct
-> > > > > > > sugov_policy *sg_policy, u64 time)
-> > > > > > >
-> > > > > > >         if (unlikely(sg_policy->limits_changed)) {
-> > > > > > >                 sg_policy->limits_changed = false;
-> > > > > > > -               sg_policy->need_freq_update =
-> > > > > > > cpufreq_driver_test_flags(CPUFREQ_NEED_UPDATE_LIMITS);
-> > > > > > > +               sg_policy->need_freq_update = true;
-> > > > > > >                 return true;
-> > > > > > >         }
-> > > > > > >
-> > > > > > > @@ -95,11 +95,15 @@ static bool sugov_should_update_freq(struct
-> > > > > > > sugov_policy *sg_policy, u64 time)
-> > > > > > >  static bool sugov_update_next_freq(struct sugov_policy *sg_policy, u64 time,
-> > > > > > >                                    unsigned int next_freq)
-> > > > > > >  {
-> > > > > > > -       if (sg_policy->need_freq_update)
-> > > > > > > +       if (sg_policy->need_freq_update) {
-> > > > > > >                 sg_policy->need_freq_update = false;
-> > > > > > > -       else if (sg_policy->next_freq == next_freq)
-> > > > > > > -               return false;
-> > > > > > > +               if (cpufreq_driver_test_flags(CPUFREQ_NEED_UPDATE_LIMITS))
-> > > > > > > +                       goto change;
-> > > > > > > +       }
-> > > > > > >
-> > > > > > > +       if (sg_policy->next_freq == next_freq)
-> > > > > > > +               return false;
-> 
-> I have deleted the else.
+Hello,
 
-Yes, but your change causes a regression by recreating part of the problem
-solved in 8e461a1cb43d6 ("cpufreq: schedutil: Fix superfluous updates caused by
-need_freq_update").
+syzbot found the following issue on:
 
-Sultan
+HEAD commit:    61f96e684edd Merge tag 'net-6.15-rc1' of git://git.kernel...
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=1635523f980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f2054704dd53fb80
+dashboard link: https://syzkaller.appspot.com/bug?extid=46043677477d6064a1a0
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/a3119b4324e8/disk-61f96e68.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/ee1ca254d083/vmlinux-61f96e68.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/ed04807ee582/bzImage-61f96e68.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+46043677477d6064a1a0@syzkaller.appspotmail.com
+
+======================================================
+WARNING: possible circular locking dependency detected
+6.14.0-syzkaller-13305-g61f96e684edd #0 Not tainted
+------------------------------------------------------
+syz.0.1422/11074 is trying to acquire lock:
+ffff888035a5cd30 (&dev_instance_lock_key#3){+.+.}-{4:4}, at: netdev_lock include/linux/netdevice.h:2751 [inline]
+ffff888035a5cd30 (&dev_instance_lock_key#3){+.+.}-{4:4}, at: netdev_lock_ops include/net/netdev_lock.h:42 [inline]
+ffff888035a5cd30 (&dev_instance_lock_key#3){+.+.}-{4:4}, at: xsk_bind+0x2fd/0xfb0 net/xdp/xsk.c:1188
+
+but task is already holding lock:
+ffff88805421d6f0 (&xs->mutex){+.+.}-{4:4}, at: xsk_bind+0x166/0xfb0 net/xdp/xsk.c:1176
+
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #3 (&xs->mutex){+.+.}-{4:4}:
+       lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
+       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
+       __mutex_lock+0x1a5/0x10c0 kernel/locking/mutex.c:746
+       xsk_notifier+0xcf/0x230 net/xdp/xsk.c:1648
+       notifier_call_chain+0x1a5/0x3f0 kernel/notifier.c:85
+       call_netdevice_notifiers_extack net/core/dev.c:2221 [inline]
+       call_netdevice_notifiers net/core/dev.c:2235 [inline]
+       unregister_netdevice_many_notify+0x1572/0x2510 net/core/dev.c:11980
+       unregister_netdevice_many net/core/dev.c:12044 [inline]
+       unregister_netdevice_queue+0x383/0x400 net/core/dev.c:11896
+       unregister_netdevice include/linux/netdevice.h:3374 [inline]
+       ip6_tnl_siocdevprivate+0x552/0x1570 net/ipv6/ip6_tunnel.c:1717
+       dev_siocdevprivate net/core/dev_ioctl.c:521 [inline]
+       dev_ifsioc+0xc04/0x1010 net/core/dev_ioctl.c:631
+       dev_ioctl+0x8c3/0x1380 net/core/dev_ioctl.c:848
+       sock_ioctl+0x819/0x900 net/socket.c:1236
+       vfs_ioctl fs/ioctl.c:51 [inline]
+       __do_sys_ioctl fs/ioctl.c:906 [inline]
+       __se_sys_ioctl+0xf1/0x160 fs/ioctl.c:892
+       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+       do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+-> #2 (&net->xdp.lock){+.+.}-{4:4}:
+       lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
+       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
+       __mutex_lock+0x1a5/0x10c0 kernel/locking/mutex.c:746
+       xsk_notifier+0x8b/0x230 net/xdp/xsk.c:1644
+       notifier_call_chain+0x1a5/0x3f0 kernel/notifier.c:85
+       call_netdevice_notifiers_extack net/core/dev.c:2221 [inline]
+       call_netdevice_notifiers net/core/dev.c:2235 [inline]
+       unregister_netdevice_many_notify+0x1572/0x2510 net/core/dev.c:11980
+       unregister_netdevice_many net/core/dev.c:12044 [inline]
+       unregister_netdevice_queue+0x383/0x400 net/core/dev.c:11896
+       unregister_netdevice include/linux/netdevice.h:3374 [inline]
+       _cfg80211_unregister_wdev+0x163/0x590 net/wireless/core.c:1256
+       ieee80211_remove_interfaces+0x4f1/0x700 net/mac80211/iface.c:2316
+       ieee80211_unregister_hw+0x5d/0x2c0 net/mac80211/main.c:1681
+       mac80211_hwsim_del_radio+0x2c6/0x4c0 drivers/net/wireless/virtual/mac80211_hwsim.c:5665
+       hwsim_exit_net+0x5c3/0x670 drivers/net/wireless/virtual/mac80211_hwsim.c:6545
+       ops_exit_list net/core/net_namespace.c:172 [inline]
+       cleanup_net+0x814/0xd60 net/core/net_namespace.c:654
+       process_one_work kernel/workqueue.c:3238 [inline]
+       process_scheduled_works+0xac3/0x18e0 kernel/workqueue.c:3319
+       worker_thread+0x870/0xd50 kernel/workqueue.c:3400
+       kthread+0x7b7/0x940 kernel/kthread.c:464
+       ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
+       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+-> #1 (&rdev->wiphy.mtx){+.+.}-{4:4}:
+       lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
+       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
+       __mutex_lock+0x1a5/0x10c0 kernel/locking/mutex.c:746
+       class_wiphy_constructor include/net/cfg80211.h:6092 [inline]
+       cfg80211_netdev_notifier_call+0x1b3/0x1430 net/wireless/core.c:1547
+       notifier_call_chain+0x1a5/0x3f0 kernel/notifier.c:85
+       call_netdevice_notifiers_extack net/core/dev.c:2221 [inline]
+       call_netdevice_notifiers net/core/dev.c:2235 [inline]
+       __dev_close_many+0x15d/0x760 net/core/dev.c:1680
+       dev_close_many+0x250/0x4c0 net/core/dev.c:1734
+       unregister_netdevice_many_notify+0x628/0x2510 net/core/dev.c:11949
+       unregister_netdevice_many net/core/dev.c:12044 [inline]
+       default_device_exit_batch+0x7ff/0x880 net/core/dev.c:12536
+       ops_exit_list net/core/net_namespace.c:177 [inline]
+       cleanup_net+0x8af/0xd60 net/core/net_namespace.c:654
+       process_one_work kernel/workqueue.c:3238 [inline]
+       process_scheduled_works+0xac3/0x18e0 kernel/workqueue.c:3319
+       worker_thread+0x870/0xd50 kernel/workqueue.c:3400
+       kthread+0x7b7/0x940 kernel/kthread.c:464
+       ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
+       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+
+-> #0 (&dev_instance_lock_key#3){+.+.}-{4:4}:
+       check_prev_add kernel/locking/lockdep.c:3166 [inline]
+       check_prevs_add kernel/locking/lockdep.c:3285 [inline]
+       validate_chain+0xa69/0x24e0 kernel/locking/lockdep.c:3909
+       __lock_acquire+0xad5/0xd80 kernel/locking/lockdep.c:5235
+       lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
+       __mutex_lock_common kernel/locking/mutex.c:601 [inline]
+       __mutex_lock+0x1a5/0x10c0 kernel/locking/mutex.c:746
+       netdev_lock include/linux/netdevice.h:2751 [inline]
+       netdev_lock_ops include/net/netdev_lock.h:42 [inline]
+       xsk_bind+0x2fd/0xfb0 net/xdp/xsk.c:1188
+       __sys_bind_socket net/socket.c:1810 [inline]
+       __sys_bind+0x1de/0x290 net/socket.c:1841
+       __do_sys_bind net/socket.c:1846 [inline]
+       __se_sys_bind net/socket.c:1844 [inline]
+       __x64_sys_bind+0x7a/0x90 net/socket.c:1844
+       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+       do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+other info that might help us debug this:
+
+Chain exists of:
+  &dev_instance_lock_key#3 --> &net->xdp.lock --> &xs->mutex
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(&xs->mutex);
+                               lock(&net->xdp.lock);
+                               lock(&xs->mutex);
+  lock(&dev_instance_lock_key#3);
+
+ *** DEADLOCK ***
+
+2 locks held by syz.0.1422/11074:
+ #0: ffffffff900fc9c8 (rtnl_mutex){+.+.}-{4:4}, at: xsk_bind+0x153/0xfb0 net/xdp/xsk.c:1175
+ #1: ffff88805421d6f0 (&xs->mutex){+.+.}-{4:4}, at: xsk_bind+0x166/0xfb0 net/xdp/xsk.c:1176
+
+stack backtrace:
+CPU: 1 UID: 0 PID: 11074 Comm: syz.0.1422 Not tainted 6.14.0-syzkaller-13305-g61f96e684edd #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+ print_circular_bug+0x2e1/0x300 kernel/locking/lockdep.c:2079
+ check_noncircular+0x142/0x160 kernel/locking/lockdep.c:2211
+ check_prev_add kernel/locking/lockdep.c:3166 [inline]
+ check_prevs_add kernel/locking/lockdep.c:3285 [inline]
+ validate_chain+0xa69/0x24e0 kernel/locking/lockdep.c:3909
+ __lock_acquire+0xad5/0xd80 kernel/locking/lockdep.c:5235
+ lock_acquire+0x116/0x2f0 kernel/locking/lockdep.c:5866
+ __mutex_lock_common kernel/locking/mutex.c:601 [inline]
+ __mutex_lock+0x1a5/0x10c0 kernel/locking/mutex.c:746
+ netdev_lock include/linux/netdevice.h:2751 [inline]
+ netdev_lock_ops include/net/netdev_lock.h:42 [inline]
+ xsk_bind+0x2fd/0xfb0 net/xdp/xsk.c:1188
+ __sys_bind_socket net/socket.c:1810 [inline]
+ __sys_bind+0x1de/0x290 net/socket.c:1841
+ __do_sys_bind net/socket.c:1846 [inline]
+ __se_sys_bind net/socket.c:1844 [inline]
+ __x64_sys_bind+0x7a/0x90 net/socket.c:1844
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fd38178d169
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fd37f5f6038 EFLAGS: 00000246 ORIG_RAX: 0000000000000031
+RAX: ffffffffffffffda RBX: 00007fd3819a5fa0 RCX: 00007fd38178d169
+RDX: 0000000000000010 RSI: 0000200000000180 RDI: 0000000000000003
+RBP: 00007fd38180e2a0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007fd3819a5fa0 R15: 00007ffc59db1d08
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
