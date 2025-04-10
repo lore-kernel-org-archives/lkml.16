@@ -1,49 +1,49 @@
-Received: from PNYPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19010003.outbound.protection.outlook.com [52.103.68.3])
+Received: from PNZPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19011031.outbound.protection.outlook.com [52.103.68.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82C9328A408;
-	Thu, 10 Apr 2025 18:43:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FE9B28EA4C;
+	Thu, 10 Apr 2025 18:43:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.31
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744310589; cv=fail; b=nrxGTGu2OorTcklGyoDLO6n+5PMMAxTuzYsy9Z9ps0f8tyhf0ss/6TxsE+OyfhwkjwvO9aQZJrzhyv3/mTEGi0geNqqFiVsr7XKYeeeKAVLUJ6UFgaYJ5UNFiqeDo8u8dv5eWKY0nol//BSgC9GeyvBMGmwq46GyJZCpC4dJKs4=
+	t=1744310634; cv=fail; b=sRC/00s4JJBlok45ZSKDVu4o90ubqze1oPs4vHd9XRSPpII9z/yI1lu9bniZhSseBP+aNFujyhVacQt0rb3OLix/xOw3zzUTIjOh1rsf9FLCUyVTDm6wrxt28daDBc5KlJzIHegEnwfF4w+l4rLo9g3rDwTw2pucXQmkv/GUZ2Y=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744310589; c=relaxed/simple;
-	bh=EHwPX8gegZwSG3mNJuxoqQNkqfHpQY4vkEEEeYf2Qng=;
+	s=arc-20240116; t=1744310634; c=relaxed/simple;
+	bh=DmY887p1WKX5lnaqaaiXL/2vbBdMl1/fAZQXd7c3lm4=;
 	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=bXiiIx33RQ23xSuhPw6ZWdzDaySrRsnMebQXjBYMVFH8p31Kk39/tLZE6b99WFQ6hdpI+lmUjKR+oGEprP1OIRtpD65sU4j4YW1zkdAKf3HDZ+adt/G2Il0tXP+4cbYUNNywdwtU+nPfl91v7ge/5PmRhvkByjcLPJ21vbSp+9w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=FeY4ny14; arc=fail smtp.client-ip=52.103.68.3
+	 Content-Type:MIME-Version; b=I9C0cwOqWDsDlKwZS3o7+NK2A7RNJfs1mL1z+Y9+oa7PETe5OYHEN53VL6u9HUg9rzzYbAYZGX57bfOPuXyi77kQfM9Ct17Uul7evIjrMyGZIUnsmosgPNy3aOh+OPhnaslY4XSbfiX1MILWJ9kuyuCSfnOQ52VuNW0upk/7RgE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=MVUskl66; arc=fail smtp.client-ip=52.103.68.31
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="FeY4ny14"
+	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="MVUskl66"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=M8VWjxk/UA00Uv/dj/8cd29lHfhs4KQyryVfkCSdwgpaSeqAx9FeZjVNx1eX08kBwq99vaM3dn5J7nXHklb0ECYyraU9/FnmTJ8cYXwq+ZasdGxuvwwnYLe9JnXqKkwZYIk2qX+vE1UZjaUPE2vTrBMYRIgJsJ2+SPrNd5gQ4HBbNC8478bk3ekzVX11VUuOxGSDuVEeDAI8vzG2Rmvul28Ax43mfTtkXRLOR6a754rMmTd8lWYDgtcXM2+mS36cJUckWAc1HrIs07SSC4n/fI4HOfXzkh4RiUGB5OLRU3cpHQTsO1ztUMhyjgt1TmDG9yCjIf5wEEoeh/8L9/Y1fA==
+ b=vblqokAZ6hQBG1xqkbl4aYwsmhAL4soaz8aFS7OM47DN5ru5071jR3dyIF51vY6Vd6wIIiZ/D19LkTxUjhT59Nsv3m6bv1kIBhTHfNmDyij9p+0qqILEm7lUjLcMqJDZ/YF+T7wOPfFcrkohh6suawYreNTsQp9GSLTuu8rZKhTW1RDFTwE3BscPn3sOnk/x4faXRs7jQTldfq/HfwkufDnixTXYPE6dR1xpb7D55LGbq0NYpfNYHjz8XO3YFggOlEVkDWwoBvpMG/l8yj8lI76kR9Pzrujtds1DWJA1rcXi0Bchl93blu92JbBVBWQrj+D0Aax5x0u72KzcqQHVGQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xMVgzXdkdM6NNu0I+cV+Xrb5YDpOIFrI7g0gJwXU5UE=;
- b=NhRtrWyxqx4q8QMKFa6ksVV7a41PO/1eHOInVBLid4ggfbtj7EMtxqaBwQWd6InvBGLxgAc4b89maZZOjrS9Gz9vRkOONzM3zqIZXo8+sve3dJzVtlmCjcmU5JB/DK+WiWNfmlGpPsnPC2cmORD4MjMEp/B74FV0e4x+knkkvtx0hCFxzDHfMfvwG0mu0/njawq3sNDap3VQpVCD7jiMVEWTYba99IxdXdpA9oclUVE1HD9ooHao4iKvIRHkqNNOm4Uef6RE61oJ9qEJiTs2UB+cL2R81AludZpoCan95nRkEEZNUcOZbNEH44qleN3i0fSdqhxADmkFqZqz+Xr8gA==
+ bh=UuvfQtrxFOajCLHRPepiqXZW8QwhvcCKnYPv4jVs/lA=;
+ b=CubUA7Gjdy8zNtayjxxtJav6FjhAXq2sdCxaVHtKdO5d+21GMOuPz9XS1OLnAsW67w+7vCHGU4ZedWAir+SCMCx19fCufKAhyoTupk4rZ4nNW40a+IkhcPBkqE0gsWC2KbVPmfHDps0h/y6/ZCBkCimYQnd2Xq+q7obPl4A20MF01eScB8QAh3psSUuyG846Qs7HT7weaVOgWpiJRFaGwU4CDZeOPUYkjWG2UGopRxs1FcbHbKmMRZ2+at+9cetPG5Qv0fMB/zzZIesoXmLjRVxS7J8n6ZNwBhlzUBKV0fIZKnJ61gn62VjOF8g+D/gf2+wfecB4BL+3xW8llnFqIw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xMVgzXdkdM6NNu0I+cV+Xrb5YDpOIFrI7g0gJwXU5UE=;
- b=FeY4ny14qQ/dAqCmMITa81J973JJQ+u8n/KZWdR07YaTvRQDE4YZhfNaexzjk7Ao3RlMvVEtXmE+051ybYNLQnTDjw1zSQ1PsgO1M2HdytIZ4W7tP8iAG3BLIqL9ZJiN1vRY7gEtgvLUvFB/+2R0x00HYl/TUa26k8SAR/wRsmpzKYdXHz2MGKEZc8fvapPz1aqm8pQ35PFlGjEj/ljyNDAxvxhRCxkZBvin0anVg6md30hLw4E52e/pjFGLwzKlgJqzrh0Jv5N91OdyHLvoQmqpZk5AStliOemVjzeBGk6lwD1CdjlqT85SbhDTBVLqB1/PTQqyApoxfnXY/C0dAQ==
+ bh=UuvfQtrxFOajCLHRPepiqXZW8QwhvcCKnYPv4jVs/lA=;
+ b=MVUskl66PZk7G7A1oiH8S0kyD2fD/jd09w2wpaCN8vDtY78PcmLT0zLjGdHKOzJYUIRD6Pjh2xIe4bbOXPaDjDR/tBQ8kLueQD/EySAlYUlZDps6nBFp7MrwVLg590oWq9y+oExy+MXZ9x3HwrELzk2Q1lv4KOqriu325PJkBN57grbmiES5h9pgyuTW0fsVn+b4peYG2JyMn2l9+HB5QfLnbp1fsi2/500JyqjwbfCoDdmjNR/GguEjYVPda0r+qHkBkjy2i3nO7EJh3ut+ujuA5CzzlNiaN13UpFB0prBRRjwXN7bNeZGF4+fshF8ojdhGoIqb+FJsXdlq9c4kow==
 Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:f7::14)
  by PN0PR01MB8880.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:11d::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.23; Thu, 10 Apr
- 2025 18:43:02 +0000
+ 2025 18:43:48 +0000
 Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
  ([fe80::324:c085:10c8:4e77]) by PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
  ([fe80::324:c085:10c8:4e77%5]) with mapi id 15.20.8632.021; Thu, 10 Apr 2025
- 18:43:02 +0000
+ 18:43:47 +0000
 Message-ID:
- <PN3PR01MB959768118E9A5D6EBFB84802B8B72@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
-Date: Fri, 11 Apr 2025 00:12:59 +0530
+ <PN3PR01MB9597EDA1C370B64545AE7A93B8B72@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+Date: Fri, 11 Apr 2025 00:13:45 +0530
 User-Agent: Mozilla Thunderbird
-Subject: [PATCH RESEND v2 2/5] HID: multitouch: support getting the tip state
- from HID_DG_TOUCH fields in Apple Touch Bar
+Subject: [PATCH RESEND v2 3/5] HID: multitouch: take cls->maxcontacts into
+ account for Apple Touch Bar even without a HID_DG_CONTACTMAX field
 From: Aditya Garg <gargaditya08@live.com>
 To: Jiri Kosina <jikos@kernel.org>, Jiri Kosina <jkosina@suse.com>,
  Benjamin Tissoires <bentiss@kernel.org>,
@@ -56,11 +56,11 @@ Content-Language: en-US
 In-Reply-To: <PN3PR01MB95973D930911AF73E262F299B8B72@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0105.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:9b::9) To PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+X-ClientProxiedBy: PN4PR01CA0092.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:2af::6) To PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
  (2603:1096:c01:f7::14)
 X-Microsoft-Original-Message-ID:
- <15f03d9b-36aa-4e43-aba6-1a5af6a87cd1@live.com>
+ <0aaf7fd7-376a-4664-829c-9c9afb67fd87@live.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,74 +70,75 @@ MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PN3PR01MB9597:EE_|PN0PR01MB8880:EE_
-X-MS-Office365-Filtering-Correlation-Id: ad118372-0525-47e5-1d6c-08dd785f862b
+X-MS-Office365-Filtering-Correlation-Id: b7858987-13bb-4e87-278b-08dd785fa10b
 X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|15080799006|7092599003|6090799003|5072599009|19110799003|461199028|8060799006|3412199025|440099028|41001999003;
+	BCL:0;ARA:14566002|15080799006|7092599003|6090799003|5072599009|19110799003|461199028|8060799006|3412199025|440099028|12071999003|11091999006|21061999003;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?QVF1bWpqMHNLVndZY3ViK0dOMEh0d3h1VXlsZFNpZEpQTzByVEVFbXRaeS9N?=
- =?utf-8?B?YUlyenlHSVpxWHMzM0lLZDJrWmVLRDJ1S1ZiUHVjcFRpS09TaTV6UHVFbGM0?=
- =?utf-8?B?b1A1S3NENWc5ZmRCL0dvZ2JpM25KNTZjajRmUFFzWDlyS0o3NFV3ekNoWVdv?=
- =?utf-8?B?L0liU2QvcGpWeEZSY00zVnkxT0pZMWthbFhsUW0ybzdObnRJRlBuSUg2YUh6?=
- =?utf-8?B?TThKTjVLMzNBVGJJMk9Dc0VNajZVSXg3Q0tMUnBuM0RCYlhHcW8zSVk1aDFI?=
- =?utf-8?B?U1R6YnJhNEtidWxSRlQ1ZEFZdkE2SlRHdDlMTW1lekR6ZHlRZWdXTEduQ1BW?=
- =?utf-8?B?SFJpK2czcm1vRmdDL1RFUnFqUzZKOHg4UEJiUVpER3U2aDVWWDFYYlF5RGF5?=
- =?utf-8?B?SngzUlNySVpJSlRuN3U1dFNZaDBINkdlZDBhaWFHMzcyY0VyWHVCYzFqSVZH?=
- =?utf-8?B?ZW9xL3NtOEtOOHBsTUJqVGxXUVFSZjNXaVpieE5CYnY5aUpjbS9HdkZWNVpq?=
- =?utf-8?B?WVFJcVl4VzUxcEpOWklkSEQ3WHdPZG1ydHJlb2ZUcFVoQ05HcXovelBIQXpT?=
- =?utf-8?B?Yy84MUdINWJLalRMblgvZE5jNStqK1RkRm51aGR5ZTErQXlBWXUyUnNXSGtJ?=
- =?utf-8?B?WnZTdFZsazZNQlNlK2d2emZ5b092T2NJdmw0NWpQVElhaEJ0c2FiOHFBVW5P?=
- =?utf-8?B?NXJGaDQrRE40MGlrOWNEcno5aXFhZHFjeXgwWmVXL3FWRjdqL1hhbWJLUU9U?=
- =?utf-8?B?SXVrR0pPUXRKWC93SSs0TXFSRThrTXRjTjFwM1kzZ3hFWjBvQ081S3VSc3VS?=
- =?utf-8?B?UXhCd1BhVE9VT2hqbTBCK0lpVmhXTGIzREFZOU54YVlZZ0kzM3hsZ0ZPM2tu?=
- =?utf-8?B?TnNQZm53VjdOS0lOTEFsem8vMjdkVnZXeThKeHp1VVM4VWxiQitOdmg5bk1M?=
- =?utf-8?B?NytnY1JCTUo1eWRrSXJMUDVBM3FWd0I1VGtsbTNQNTV2RTl6U3V2aG5peUJn?=
- =?utf-8?B?L2xIMzNobHcwWDNkT3hDTmM0ZEVnOHJGK3ppUkxHYzRjSm1ZVXF2TU9YTklw?=
- =?utf-8?B?YVR3TUlhS0pDcnN4dFdqR1cvaFgvN2dHQ082MGo4WnR4cVVwSXRHcndSaVFF?=
- =?utf-8?B?Mkh5MW40N1A2MUd4WkxFVDcwckdoSXh3dXduM1ZJVlhTNG1wT0I1MWw5dTNn?=
- =?utf-8?B?bVJFVFVxdGtyWnMvQ1B5V2VRRld6SVRQaWlaWkI0THlaeU1MT2JvSmJnRHZu?=
- =?utf-8?B?bkVzRnZaZG8xeUs2QWNsQllsR3lmb1huZDhiamhPc211b0ZrdnBHY1JqT2li?=
- =?utf-8?B?MWM1aDU5U2pPMUozWUdJNXlkYzBPclJHQzNJUDRDMlgxQnl4dlg3VzMvZ2Vp?=
- =?utf-8?B?eEhFbTh2YVNNT1JHTE44S0JCY0Q5TzFMZnZMTVJzbGJ4NW5jT0JOVXNMSFlx?=
- =?utf-8?B?WXp0VWd2bGNmSWJFQmRjMnZOR04weVk0UkpEUys3NkN5YWVJTGVPQytKY0wy?=
- =?utf-8?B?RUFuMmcvSjZCa0plYnEzVGxPT09hQWZGWkF0aEt1NGlaYlNFeVIvYVFlRG9z?=
- =?utf-8?Q?7ZV9U5ouvPTrYpLxeODe/cQt0=3D?=
+	=?utf-8?B?YmlZRWxwZ0ZtOUFmOGNIZXk2TU5HMUoxeGl0S1FWOThTcUZ2dTJuTzVlQmRX?=
+ =?utf-8?B?OC9Ra0lUU2Q2UUw2WkRsZnRyYUJ0WDJtd3lDS2lSWmpVU1B6dEtKeVVOK0ll?=
+ =?utf-8?B?eUo5QzJDdEF1OWlVa0xsYmJabnp5ZDZWOGlYaHNMWkpMaHdDb3ZDdzgybUVD?=
+ =?utf-8?B?cXFrU3pwNGtoY215TVIvOTdoM2taVFVZZUJ1TFBLcE1JalY5OGFHMCtVK2JS?=
+ =?utf-8?B?MVRnMGxTSldoMW5SOVZFdjMzajU0NmVpVW9lUEdySHJDejAzeC9RTWg5d05H?=
+ =?utf-8?B?THcrSW1veGtmc0xQSThFNnNVckEvZDVFYzdkTlpjNHVjMFBrdlVjUGFsNWFG?=
+ =?utf-8?B?Y2w3SUdKa2IrKy9CZzkwS3NUbXRhZmdpMTZVTFhpTEU4OUdldks2cklIODlh?=
+ =?utf-8?B?R3Y2Nk4vR3VmVElWRTk3MVQxZEFjcFNWYmhWQkx2TTVWWGd0aS8wYmh0Umhy?=
+ =?utf-8?B?UmI2OHkyU0dQN1hxenV2Z3pMdGxPQzYwT0pUeVFnZnFLZ3V3K043MFFRRENW?=
+ =?utf-8?B?ZnEzZlNVNU42amZpcDZPRDJ6bDVBMDdSRUQ5NkhPd3Vqa042SWpGRkxOZzcv?=
+ =?utf-8?B?Q1l1VnBabjllem9ZaHQ3YlJYVTgvN2VVamh3UG82dzd5WHlYdTdGT3RHNzZG?=
+ =?utf-8?B?d1B5dEs5T2RGY0pNaWpuclovS3Nia1pxUmx0dXRTaHVLempSUUpPQ2I1NytP?=
+ =?utf-8?B?aFExZkpSZVJUWENLMEpwZnllU1NpTlJaektmcHhjeFRJMTM3MlcvUStaaVE0?=
+ =?utf-8?B?YzdZLzhrUkFPck5XN0pBblJ0bWtoR3pIMXh4RDlkWHlBdjArZ1pURVRtOUV0?=
+ =?utf-8?B?VGlFV28vbDEvWXlMTWFLUEk5V2ROeUZpKy9aUU5ZbUg3ZzBGb1E0b0xoZGho?=
+ =?utf-8?B?MjhGZFFJRFBFMFUzK3dtVHh4USsxempQSGFYVFd6RTFaTENvR21VbHR4SVdJ?=
+ =?utf-8?B?UFBKT2tsd0daME5nT2dEUEd1Z3dVeVZ0aHYzdG5iVkJCZHFKaEdDd0FoUjJH?=
+ =?utf-8?B?c2tqdC9aSTR0UVZNdUY4WXF1bEpvdkJ2RkZhaDdCajMrRm42U0FsRDVuU2NG?=
+ =?utf-8?B?RFVkejhvYmRZYzJHMWFQS2tzbjhWN1BhcFVBZ3hMMGY0disrQVdPd3BnN21y?=
+ =?utf-8?B?WTM4ZjF3VlJyZWgyald6eWo5MCtlYU5aZi8xYzgzVTFWU2dST1RQV1h6N3lk?=
+ =?utf-8?B?dG9yMjdpbUljTElDUXMrc3d4NzV2ejlPOHFIcExmbXpESDcxYXJReUo3RXFt?=
+ =?utf-8?B?RzllS0ZFeDBNN3JkMjVxdHpYZGRYZW5qZUw4c0VZM2QwbGY5RU5ld1JCb1Rk?=
+ =?utf-8?B?WmR0U3FFWmJRUTI0blV0dG9mVHpkeXVqRkE1em5EUFo3QktsMU13MXVyRUhU?=
+ =?utf-8?B?dE5tSWFCSFkyWFhhNTk4a0RjLzVra051ejdhU29ZdnRqUkZPelhXQmp3eXRR?=
+ =?utf-8?B?WW9xa2lLMjUreFVBbHkybDJMTmhpdkd0ZkJFdmJNL3pqUVhsU2FCWTZUdmVF?=
+ =?utf-8?B?YnU4UnBVNVlkSFZ6NGJoRjVWU0psUDAzaEx6U0ZMNnV0S0tyTDNuc0lia2t0?=
+ =?utf-8?B?U3FjSSs5UG1NOFoxeXcwaldYa1Rjekw5VXdCVDZNQTBMNWljalh3Q0Z1MU9p?=
+ =?utf-8?Q?XfKF1PUGYcA9LTeva4re0H3oJkXSd5hKzUbD1Tf/cclo=3D?=
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Z0FocDhzWE1sSnZjQVR5MmRNMDh4UVZRSDRjSEc3OXNJOWF0UFR0ZVc2L3N6?=
- =?utf-8?B?STBNYitXNDVLMVpHSnpBbzV3emdGUEtHV2pKbkpKT29IR3Z0OVBjeW9MWGdO?=
- =?utf-8?B?cmNLcVMwYXhwWjV2Q2hyVFg3c3RxSmNWVEtIbncvQmZWZGpzcThMY1NVTzg4?=
- =?utf-8?B?REdGNXlvSWhjMEdRZXFIcVpUcWVSOG1JZkRKQUVUNlBWUnlCRnlRTzNhdjZQ?=
- =?utf-8?B?SWc1R0pTZVVteHd2d3k0UjNwSStDd2p3ejNVcWdpRUVSaExlL3lGbkRRVWlX?=
- =?utf-8?B?UWN4T2pyTEluSjNpSFJjeDhOUXJ6Y3VXSGgwNktySFIzVFcvdnFxaThiK1cz?=
- =?utf-8?B?TG1BN29ZTy82QVZyNFBhZVk5MC9Fb1NGTE13clhuZUFUV1ZjVTJXbnNhcVhz?=
- =?utf-8?B?KzRsNW51ODJINGtVN0o0ZmxCOGQ5VHh1M3cwa2NDaHVhWVVsaXB5MzJuTW83?=
- =?utf-8?B?UURvdnBFcHF5TjlBODA4MDlHekd4UUdDQUo1U1M0elUwNnZZdWhITFV2cEZR?=
- =?utf-8?B?WStScngxeWM3Q1NpKzRuVFk5UGRIV0NObFB0TTlYZ3QvdzBVN3hDNTVTS3lh?=
- =?utf-8?B?SzJHRmZKZVkvcGIzd3lpWTVSMFA0YTZ5d21GNmRPR1JuMVBPbkF5Ui9ZZTJ6?=
- =?utf-8?B?UEFSL0JOYnJ5RHpGVUFKaWdldERKVEJuTGVsNEx2Q2tXalNKTjR0MmRzSFFn?=
- =?utf-8?B?UmxQRnFjVEpYMWduY3lRSTFsNDAybE5UaVFmeWV0SXllZm5EK1JEcGJrNktK?=
- =?utf-8?B?SWVlaGhkQzRPRkcyeXJSWW54SC9OZDVQRXVIRU9INnBaRDdsRCtMUlBlY1VI?=
- =?utf-8?B?bWdBQnJHUUFzSEwyUEkzTHRBN2FNamRpYTZBNFQxOGxHc3NIZiszVEJxaDBy?=
- =?utf-8?B?SWU2dng5L2VlM0lJdzJPSkppYlRuNENVUkpBRVJ4R3diQm0xVVYxRHRuNXY4?=
- =?utf-8?B?dzcyYjBiaE1nQzRYamFzcHduKzU1MllVQW1zZnFOU3ZqOWxPc3VhMEExNlBJ?=
- =?utf-8?B?TkZWUXh4ZllmaktTOS9NTUlUTk1laW5wL2FiZTlCWVJNTGJuMmVJSTRyU0Vo?=
- =?utf-8?B?UjJXZFE3YUUwU3hsRFBsdWsyTEcybWcvdHVwd2FJYnlKdU1Pd3dvc2p5YzBT?=
- =?utf-8?B?U1F6a204SGRmczdTdUhaT3ZTM2JhSjMzNzl2RHN2czl4M2lHbDFlQk1LaWV1?=
- =?utf-8?B?VXc3UkdBUjg1NmNvL1ZucDkrbkJQOXc4dGJLbFMxTE12OU4vNXhocEpaVmlh?=
- =?utf-8?B?dzFQRlBpaTMwb2tpWkdHQWFQTGx4NU5iVm9FL0RqYmF0RFFUWnFEMUZtNlFw?=
- =?utf-8?B?M2RkUnUzUmxnUzlwbGxUT2hRWXZBNUFBQ1BoeG1jdjJKUzNYKzdqQm9Td0lD?=
- =?utf-8?B?dk41emVOOXI3bFFNa25FWDlKOFlTZU9CbWI1dWZLTFFmTGxDZEc4blc4WUYz?=
- =?utf-8?B?cW53UDhIS2NlU0VpTnJtNWFQT1c2YU9rK0JYZVhjUmYyUndIRmtPcFh1akRt?=
- =?utf-8?B?L3pXdHBWVThkUlU3S0M2K0tkQnMyUmJaVUxjWlNqNEdTZEJaTkt2SGxPcTJa?=
- =?utf-8?B?d1dPMy8xa3hMMzJtUG1EaDIwa2pMZGR5WUZhM1Y5N3Y0a09GU1JXWGxBenJz?=
- =?utf-8?B?cGZoQ1p5NkVoRmNiRG9Zd0pUVmN3TTV4aG5Ca0tWOTYrRTdMeDY1Q1FaYklB?=
- =?utf-8?B?RWxBNEFKdzV0VDYwRTNURmR4NEhlSEoyTDhIOU51Zk5aN2pyWFVKTVlDdTJ2?=
- =?utf-8?Q?zUqekAMd1/24j+IgKd64+b5ngj75qTbWDjImRCs?=
+	=?utf-8?B?NWs2RzVPT0FpMktZV2pQc0M2ZTY1Vjlld2t4TWdqTSt0clU4WTJvRSs3TStu?=
+ =?utf-8?B?QUV0NmlZYnNoNmFEdVRBUnFjTEJVZnIvZ0k4TkJpbE0vS2QwbUJUZVNMZncz?=
+ =?utf-8?B?U1RiNnFyckNQc1ByWElTb1dIc3pScDQzNlNuVzdWTVFaeUhuTlgzOEVpWlov?=
+ =?utf-8?B?WHpHTUJMOVpkcWtiU0VxNVFVVGdLd2JObUFINFFPcTdDSTV0OHM3SWxZUlUx?=
+ =?utf-8?B?MTNyaklXMVpSUHhzRllLTG1hUld6NVExMG9pemVxMFBPRVVuS1JJNmNWRVRr?=
+ =?utf-8?B?Uis2c2ZsV2JhakUxRjUyYWUwaHVrUEtHS0tJME1yM1FEZVU5QnBOTm9CYlNx?=
+ =?utf-8?B?Qk9pOVBUVGk4eW00YkF5eU9lWVlGNXFTcUhPWDhjak9tdXV6aTBnOWhqTnBk?=
+ =?utf-8?B?empHSUxLbDAzNGRSdnVsUVVtdHZOT2MwMnFCb3NjT3M1SGxqMWNDMCs5TGZN?=
+ =?utf-8?B?aUZMZEdGbHNFbmRHSUFySnZTaFkyWUpLMGJSRUQrV0VyL3BMSjZSeUJIMjZC?=
+ =?utf-8?B?VjB5cUR4Yk1NR0xkYWErelFTRTU4NmhHdzArOTloeStVdndoVTZ5VXZGSEtR?=
+ =?utf-8?B?V0d1dE4xMjZndUIzR1lyT3JyQlV3TlJXK1BwUkhKZUZNdGdVMmxWeXk3N1d2?=
+ =?utf-8?B?ajZtV0I4YVowRitScEwzTkhaVGFaa3FGSGlXU2l5MlpmOVNlbzdxakFhNGpE?=
+ =?utf-8?B?bVdaYVRzb2MvVzJaZk5JdmRKdEhteWg0cHFZczgxWjJQUDhKblRlbGFGYzd1?=
+ =?utf-8?B?bzY1WmN1QkZ0MmxNckZvYzVPVlo5aEdBZm1UTTh4cmlobUNZWDE4RnNGQmNE?=
+ =?utf-8?B?MFdYUnhKUFpOZXZud096NXM0NEtCczlOc3JuM2h4S09aTFFCVDBEWjhoOGgv?=
+ =?utf-8?B?VEI3M09oNUF2bkNLZ0huMmthRUU0QmNwZTJwUXZIUnFoSlcwUjNGbXVlSEYy?=
+ =?utf-8?B?QzFOb0hkSFVLamhsWFR4cGVzVzJ3OHltR2Q2dU1va3RCandNcTFGTmZkZlV3?=
+ =?utf-8?B?TkpyeUhhdnlCQ2hGdDBycm9ZYlgvYWpzR0RoT3NoYkVzaytiVFRWSUNRelZ6?=
+ =?utf-8?B?bkVtZXAveU0zMEVaZlZROVd2WFk4T0o0Q01TQ2R5OFF4cEp6dFcyT1BMTk1w?=
+ =?utf-8?B?dzlxeElGNEF5MCtyTVBpVlF5d3haOHUvdVpmZS9WK3BmbVI1STR4Snhub1Ax?=
+ =?utf-8?B?V2NIMDFnZHh5UTBGSEtSS24xQkNMNERiOTk2QzFqVTEyQ0lMbmNWTlByakhq?=
+ =?utf-8?B?ZnRDNkIrL2N3Tm9oeFVxRTlPQ1RuaWVabDlyazkyVTViamhMQWlpZ0o1L0lQ?=
+ =?utf-8?B?c0VacHRpVGQ1bCtPVXlRZzVDczNKMGtIRUh2cmFiSmxHMVpwODh6V3d5T2dH?=
+ =?utf-8?B?QWRDTnpTbzcrcmRyM0g5SjRleVcyTHZmbWxEd0FzUHgxaEg4bXluc2VEWHRp?=
+ =?utf-8?B?MDRwQ1c5UkpXZHpIWHF1ZFc0ek1HWks0ek1IK3BWNkY2Sm1CcWExamZnTFZF?=
+ =?utf-8?B?MDJtWTZNWm00Y05ZbXlPKzArQm10V002N1VmMjhSOE5xMkRQSUhtdWc4WUM4?=
+ =?utf-8?B?RXNTbW9rN2xmRmNvSU5XWEl3VVlrOXVVOHhRenBibXMraGpjcEQreDYrRXl3?=
+ =?utf-8?B?QVdOY2c1cEtIYmU3blhueXIwaytpYm1veWZsS3Y3Y0tDeldab0Y0bnRGQjZ4?=
+ =?utf-8?B?bkxrcDRGS3hNS29md3BLTEM5S0dwYmV1SHpBb3pGcWVqWlkwVmdXdkRqYllR?=
+ =?utf-8?Q?5P0nx/aLEbTTR/pOF1GrVKgQ/L5ZGth+6SJ8bW5?=
 X-OriginatorOrg: sct-15-20-7719-20-msonline-outlook-ae5c4.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: ad118372-0525-47e5-1d6c-08dd785f862b
+X-MS-Exchange-CrossTenant-Network-Message-Id: b7858987-13bb-4e87-278b-08dd785fa10b
 X-MS-Exchange-CrossTenant-AuthSource: PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 18:43:02.7307
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 18:43:47.7645
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
@@ -147,52 +148,36 @@ X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN0PR01MB8880
 
 From: Kerem Karabay <kekrby@gmail.com>
 
-In Apple Touch Bar, the tip state is contained in fields with the
-HID_DG_TOUCH usage. This feature is gated by a quirk in order to
-prevent breaking other devices, see commit c2ef8f21ea8f
-("HID: multitouch: add support for trackpads").
+In Apple Touch Bar, the HID_DG_CONTACTMAX is not present, but the maximum
+contact count is still greater than the default. Add quirks for the same.
 
 Acked-by: Benjamin Tissoires <bentiss@kernel.org>
 Signed-off-by: Kerem Karabay <kekrby@gmail.com>
 Co-developed-by: Aditya Garg <gargaditya08@live.com>
 Signed-off-by: Aditya Garg <gargaditya08@live.com>
 ---
- drivers/hid/hid-multitouch.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ drivers/hid/hid-multitouch.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
-index 6e7f34a47..70fdd8cf9 100644
+index 70fdd8cf9..f7fe6aab8 100644
 --- a/drivers/hid/hid-multitouch.c
 +++ b/drivers/hid/hid-multitouch.c
-@@ -827,6 +827,17 @@ static int mt_touch_input_mapping(struct hid_device *hdev, struct hid_input *hi,
+@@ -1335,6 +1335,13 @@ static int mt_touch_input_configured(struct hid_device *hdev,
+ 	struct input_dev *input = hi->input;
+ 	int ret;
  
- 			MT_STORE_FIELD(confidence_state);
- 			return 1;
-+		case HID_DG_TOUCH:
-+			/*
-+			 * Legacy devices use TIPSWITCH and not TOUCH.
-+			 * One special case here is of the Apple Touch Bars.
-+			 * In these devices, the tip state is contained in
-+			 * fields with the HID_DG_TOUCH usage.
-+			 * Let's just ignore this field for other devices.
-+			 */
-+			if (!(cls->quirks & MT_QUIRK_APPLE_TOUCHBAR))
-+				return -1;
-+			fallthrough;
- 		case HID_DG_TIPSWITCH:
- 			if (field->application != HID_GD_SYSTEM_MULTIAXIS)
- 				input_set_capability(hi->input,
-@@ -897,10 +908,6 @@ static int mt_touch_input_mapping(struct hid_device *hdev, struct hid_input *hi,
- 		case HID_DG_CONTACTMAX:
- 			/* contact max are global to the report */
- 			return -1;
--		case HID_DG_TOUCH:
--			/* Legacy devices use TIPSWITCH and not TOUCH.
--			 * Let's just ignore this field. */
--			return -1;
- 		}
- 		/* let hid-input decide for the others */
- 		return 0;
++	/*
++	 * HID_DG_CONTACTMAX field is not present on Apple Touch Bars,
++	 * but the maximum contact count is greater than the default.
++	 */
++	if (cls->quirks & MT_QUIRK_APPLE_TOUCHBAR && cls->maxcontacts)
++		td->maxcontacts = cls->maxcontacts;
++
+ 	if (!td->maxcontacts)
+ 		td->maxcontacts = MT_DEFAULT_MAXCONTACT;
+ 
 -- 
 2.49.0
+
 
