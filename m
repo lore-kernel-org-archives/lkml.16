@@ -1,121 +1,102 @@
-Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7567A1DDC1D
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 14:52:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A60EB28CF5E
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 14:52:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744296724; cv=none; b=ufTvbOjNdIJwXs+qAVtW6Q3C39X1zieGTkiwin11QfAB/fl7aUIhJ5oXu3x67qlcHpFsdmmoNBmmv+6iYKI01cvDb/gOyLC+y5PH98sRbY1KSd03bzosVH4KGXZowr5FrAqPbbJwQJDlAZqsKo/e5NKoqwuzLlXKBWRyACtbkCo=
+	t=1744296730; cv=none; b=gpXRm/AOa50hfmIvoYkB3jRMckkZi9A80VIfwkm6WWMU97XReJVwRIy+CwBSbrKtP16KLIpcYBO466+BZPjRpF06t1ANni9yzEjFa5Zwaw9QeCnp/QGhe4dlrgY9xqK9nkFuSBzgh3dzmpTvLLlqSbNNEgork8bhNoveJocbbJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744296724; c=relaxed/simple;
-	bh=eBi8FrMYdAv96WqoDBdECWOvbUZG2lDDGziG85MEw5U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hnm7qdzfscFkB1IbqRbYprGLv4VmUt7tSM9QvtvC7LOHafuUf3bmcGLDphBI3OF5/5v4C5nTveAxICUo/xMS76Q40ErJ+Cl9UPc07mQz9WbNTT4UA95wlnA+WZw1KdH90rn94puPPmx3VShTRWctnQg8qhdoMbb5iiMt3LOaIac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=CcX2t6FD; arc=none smtp.client-ip=209.85.161.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1744296730; c=relaxed/simple;
+	bh=ZIicm+KVsGD+UXLKJQ6xU43zvhsJHugkh0vLpA6ilxk=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=nPa32BZaodGJvyL7yylLITGGWbNe87uteB/g9zMEU2R9x5HQASt7IBMqPwDiVn9u3MBWGFklieqUHqpzWVjUeSy5bOTOtN8Z91uU/NClWvlm0MIIAbCMnD41ixbzxrK+Y0u7s3BpnfCPhP4Z9vw7MmVcHoCqX0MjLa5LZXM4D6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=izl1nAj3; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="CcX2t6FD"
-Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-601ff283d70so256978eaf.3
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 07:52:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="izl1nAj3"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff7aecba07so883130a91.2
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 07:52:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744296720; x=1744901520; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2gOno/gJ7gBboQpb02wlzMcv67wZeVwPKwITP1UuvCY=;
-        b=CcX2t6FDAT3zaHCpVPUAKdb+3fQrfnbsxHYaR9nWt8/Zj8DySNDbG4YEdxI1RRiGyQ
-         YDaRZh7wj+KMqBsY1q7rUfL0fXJkv0Dyk5/VxYKHJTIVLpw7IpCO4H2roKi57mVMNI9c
-         dQ6iHr3QIB+nD1TokGB2lQrdFzX+rCpvN7GoS+iy5/+1YTdQxS11333qG2jphgbwr2Of
-         ENRF4zJLCeZ0dgwjzLdCTTrgSUZqkufMQ1qK1cs9uharIzmJikNB/7jnVYnt+ZjsBPvG
-         wh+MdU+xTf4m+9gRZZm9apaDqUL6veM0uQGcdVyGTdx/Uh+GjuI6UgHs+BaeFV9xaM5s
-         tC0w==
+        d=google.com; s=20230601; t=1744296728; x=1744901528; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1Z2Z/UC7GMxO7YogACXn6KcfTpVXYjk8lDSafrd3aGw=;
+        b=izl1nAj3UVTkithmtbXKWdZ3RPoDf6Cu2DSf5BRMbhaGXsQGkJt8XoSuU3F+6bP4Bf
+         8wKrWXUFRTx90ueNEW+ZZAU0UxU1P34dio7x/Gc80M6t6zdbPdT2DFE4XJRz7GGmFtgt
+         /UdSJxIsEVis0kvs2ZYnlKLHeSJl7PQ2hYJtDgda6xLip96ccKMglzQmoV/FdQM6WGE0
+         NecIFr2TC5yQaUaKN4TzyRTFDeB3WvR0pN8XxKdHikr0/Il7jt6JtuNQ0J8ymnLwOG2w
+         MudSavFIC8ba4t6X7Z35VKt3G2dsiCteELzBCktXpC9xi61GhECom2/wqVnFAoLhcTRm
+         EU7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744296720; x=1744901520;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2gOno/gJ7gBboQpb02wlzMcv67wZeVwPKwITP1UuvCY=;
-        b=a4a4ke7nxMrurrapICdOhEuQTY1sBK5xTvqSQ3rnjUmWX8VfJBZjiwj7opYtBu0/vJ
-         g8cPPA+2cdjwKSXsWBS6JbMiZzSzdBKFK8ew9bDqKhtWbBgjm9pqZAj2MQkXomyX/Br+
-         St9mT9YkUTFSElRDRTvwYHCbP9gxVbV8hQTHNfvV9bQPeODAfabX4sVhXRuxhXrGilqr
-         OH3VGF+itof6RLe39xbBXRTYjlAHQfvlF8ttBKfwT8SccOnEBDMAMlux3C2aVG5Ox3A9
-         KTdn1NJ/U2f1D2RlTWD6cp8pBjqqzLHIwfSbJ7eiDVucGlLwJ5nAs3rcWVt2H5LoFEsQ
-         O2yQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUiVTeEodAAyE3UKGpi2GmMMpeWjEc6KvPiUON1VfF2uA5T2sDz4SvtGXXqIxt5X7gddSrZvyryBU+woVA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNc98Tw/k2ciYFAjoY2dVbuiVjsCBZt96yRPpfYq3H3G+W0nGV
-	iOrzsrI1qJ3O0Mm7X0sCpeIVWNAydZOlmI7r9HkaqH0X7gzYs0NDw03Wp8LVRQpnawys5vXzQz9
-	SiJM=
-X-Gm-Gg: ASbGncsI9jqJuA3IZd8V2Z6rJ1/l6cobUU6lWhXGAjn64JkksVDrYrhianUIP2CJuWT
-	1mr3zqw+uTYpAdwL44MCva58NtbO/FRmM+xHNPc0bH/TI2gDindXPDy8ZLu7AawMEnRE+ylPrIg
-	B5Fuzk26dyglcWsfTLwI7zw689xCBhj1q8sgGsD+oHRwCjyVUk3y8vdVJHEXWnvMCfK34CwyLXJ
-	MXbQzDH7LPOjwrYDuF98MkTdzaB9+LpBFRtu/0RKAXcZlgpa42VASRIc2im58+PtPiWBbTpBBmn
-	4ZFQIS77zz6winCuR6M0nrPTRCf9hwjjzniUSVoGanVtUzTI+/4xQlqppYwg0qMU2rvShbiRiPo
-	7gg==
-X-Google-Smtp-Source: AGHT+IFUJXtIwbiWLX/m7VjN4bLSRvII3p6HjstMTq0XFlrXhNxKjwC2cdba/PqsU5xVZ2Oqe4rO3Q==
-X-Received: by 2002:a05:6820:2d04:b0:604:2ac:840a with SMTP id 006d021491bc7-60466c47874mr1397703eaf.6.1744296720499;
-        Thu, 10 Apr 2025 07:52:00 -0700 (PDT)
-Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-6045f523066sm557756eaf.14.2025.04.10.07.51.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 07:51:59 -0700 (PDT)
-Message-ID: <1254dfd7-e872-4c65-bd17-8015e1b2eba4@baylibre.com>
-Date: Thu, 10 Apr 2025 09:51:57 -0500
+        d=1e100.net; s=20230601; t=1744296728; x=1744901528;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1Z2Z/UC7GMxO7YogACXn6KcfTpVXYjk8lDSafrd3aGw=;
+        b=q/YDx+hJBRmU+sJ3jTi4ya/LLBE7gJFmn9Bp7OtTI5/D53v0DcN0rJ7V2WZtFByOgJ
+         bV7HAPyfghyEk21W7B1m0T16fy/r1ZXvd95lF0wqxv0CdWo+3GLkJ927toYiGkQgAEmB
+         rX315bq9bp4UOBPs9claiC6q71ry9v5O/ACICTH3Ohsg59FBpPvXj42zcNrjlLaK+cZE
+         XQdjJfFaIj9gvh1ackKhfMehruW9aCLhWzxh5Da0Ust9vqfoYSI4DTJf5tDv9eO8mTjx
+         fisWFcJMV6/jzuSmCsioQk5zytiFfOZmFVQ3/R5tqib3sFGWVVQdEXIuV2KYlUwW3B5X
+         /xIA==
+X-Forwarded-Encrypted: i=1; AJvYcCWyPV/3HK0mmvvBGVwq1UIx+sffCdY0DfJC4iigGXMOnH3isjXFgJ2DokdzLOzRMIaR8kMNbwGNqYYXf9g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy93Om6DGzYW7v/iF/FPaGMoyH9omDBUAAdH39PVSaMiW48s2Yc
+	wZglQpRkjC+Rhnc5x1ACkkfvx+mzk3BSw+ifxR5SxmFqFUFvoSH70bXrjFYr2h4zEf7P4h16iuG
+	P4g==
+X-Google-Smtp-Source: AGHT+IGZay7VOQfADYHvwp0kpNoQEUaWaWhAXxEPULjNq/g/UaMADWvkJQ5d2IT2MEsdoUp5QTqBbaB3uao=
+X-Received: from pjvf15.prod.google.com ([2002:a17:90a:da8f:b0:2fc:2c9c:880])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5844:b0:2ee:db8a:2a01
+ with SMTP id 98e67ed59e1d1-307e9b43a9dmr3689922a91.30.1744296727781; Thu, 10
+ Apr 2025 07:52:07 -0700 (PDT)
+Date: Thu, 10 Apr 2025 07:52:05 -0700
+In-Reply-To: <BN9PR11MB52769DDEE406798D028BC17D8CB72@BN9PR11MB5276.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] iio: addac: ad74115: Fix use of uninitialized variable
- rate
-To: Purva Yeshi <purvayeshi550@gmail.com>, cosmin.tanislav@analog.com,
- lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250409202945.205088-1-purvayeshi550@gmail.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20250409202945.205088-1-purvayeshi550@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20250404211449.1443336-1-seanjc@google.com> <20250404211449.1443336-8-seanjc@google.com>
+ <BN9PR11MB52769DDEE406798D028BC17D8CB72@BN9PR11MB5276.namprd11.prod.outlook.com>
+Message-ID: <Z_fbFcT3gxNK_dWr@google.com>
+Subject: Re: [PATCH 7/7] irqbypass: Use xarray to track producers and consumers
+From: Sean Christopherson <seanjc@google.com>
+To: Kevin Tian <kevin.tian@intel.com>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Alex Williamson <alex.williamson@redhat.com>, 
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"virtualization@lists.linux.dev" <virtualization@lists.linux.dev>, 
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	David Matlack <dmatlack@google.com>, Like Xu <like.xu.linux@gmail.com>, 
+	Yong He <alexyonghe@tencent.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On 4/9/25 3:29 PM, Purva Yeshi wrote:
-> Fix Smatch-detected error:
-> drivers/iio/addac/ad74115.c:823 _ad74115_get_adc_code() error:
-> uninitialized symbol 'rate'.
+On Thu, Apr 10, 2025, Kevin Tian wrote:
+> > From: Sean Christopherson <seanjc@google.com>
+> > Sent: Saturday, April 5, 2025 5:15 AM
+> > 
+> > Track IRQ bypass produsers and consumers using an xarray to avoid the
+> > O(2n)
+> > insertion time associated with walking a list to check for duplicate
+> > entries, and to search for an partner.
+> > 
+> > At low (tens or few hundreds) total producer/consumer counts, using a list
+> > is faster due to the need to allocate backing storage for xarray.  But as
+> > count creeps into the thousands, xarray wins easily, and can provide
+> > several orders of magnitude better latency at high counts.  E.g. hundreds
+> > of nanoseconds vs. hundreds of milliseconds.
 > 
-> The variable rate was declared but not given any value before being used
-> in a division. If the code reached that point without setting rate, it
-> would cause unpredictable behavior.
+> add a link to the original data collected by Like.
 > 
-> Declare and initialize 'rate' to zero inside the 'else' block where it is
-> used. This ensures 'rate' is always initialized before being passed to
-> DIV_ROUND_CLOSEST.
-> 
-> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
-> ---
->  drivers/iio/addac/ad74115.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iio/addac/ad74115.c b/drivers/iio/addac/ad74115.c
-> index a7e480f2472d..26770c68e5fa 100644
-> --- a/drivers/iio/addac/ad74115.c
-> +++ b/drivers/iio/addac/ad74115.c
-> @@ -814,7 +814,7 @@ static int _ad74115_get_adc_code(struct ad74115_state *st,
->  			return -ETIMEDOUT;
->  	} else {
->  		unsigned int regval, wait_time;
-> -		int rate;
-> +		int rate = 0;
->  
->  		ret = ad74115_get_adc_rate(st, channel, &rate);
->  		if (ret < 0)
+> > 
+> > Cc: Oliver Upton <oliver.upton@linux.dev>
+> > Cc: David Matlack <dmatlack@google.com>
+> > Cc: Like Xu <like.xu.linux@gmail.com>
+> > Reported-by: Yong He <alexyonghe@tencent.com>
+> > Closes: https://bugzilla.kernel.org/show_bug.cgi?id=217379
+> > Link: https://lore.kernel.org/all/20230801115646.33990-1-likexu@tencent.com
 
-I don't see how rate could be used uninitialized since we are
-returning the error if ad74115_get_adc_rate() fails.
-
-Also, initializing to 0 would then cause a divide by 0 error
-if that value was actually used later in the code.
-
-
+I linked Like's submission here, which has his numbers.  Would it be helpful to
+explictly call this out in the meat of the changelog?
