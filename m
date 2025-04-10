@@ -1,96 +1,188 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 301942853FA
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 13:27:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9754F2857DA;
+	Thu, 10 Apr 2025 13:27:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744291632; cv=none; b=WxZF4CymXaDNByydWlJ2/mN1IZ9Q+RTmTHcJvgvjV/6Pf5IEDlI9hYAQJ2t5h/hWBiF7fMXL/VQlSOYQmAmgxRX/HqgOLK9w1DtM4Y5FTEi8h3Y1NHhiC4YZUB+ZKghiOdEIR+P9cuM9Ls6bxPNDTKeVp4lS8ehV2YiA3q+Svjw=
+	t=1744291634; cv=none; b=RNuo68t09BhLlzFQquMIdgfG7S+sIkOCqYRf7gAPmge4ZUo0p6zON7COyAqJlUxG71JNWFHc7qjSz2+r4JJzMetja7opGj6yho1ZyP7Um5ydx6JpkHBGfEXS41Pm26vbAz9pVMQXt4D+DRE7/hvNtKr9ZnxPgsRPocICS7T6riA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744291632; c=relaxed/simple;
-	bh=3gPfsEXtcRb/g3NXNMRegFnbtp1ZB4qYMxP7JSx39YM=;
+	s=arc-20240116; t=1744291634; c=relaxed/simple;
+	bh=uJNt4QupPmB5L6K4f/LhHjqr0GkS2EqrPb2R93LqjUg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mGBL98goCxYfVBa6NafSMHJco2EfHcQAC2goBwPtHKZBkvqlxtbANwjyrNCoJqPnBhErYQSkX0ke9QX04dlboyFYcEg6M0YIy1D4+obzwkI3gd0+1F1rL3eR7naJs6pDQK9HSAyopFTl4UaetmZrk1vh9AcvgGXhagQY22REGRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bJYwGj1D; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mo8Ke950UpezlDxet8lVK8o4hRJ/1gQ74+q6YttOwpZywpgxrqcwUtYX6O8FjAMt8C0Qs8My5RqLcGIExvNR/dams3tQC7Nkd4E7jhWx6y6Lnt+vCoqypkQTdhJlylA6Nj5ImBFPJtWV/LJCrXQkqzBKU/IxgC2WZSPbAlduxMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PUVN7kZ2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bJYwGj1D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43820C4CEDD;
-	Thu, 10 Apr 2025 13:27:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PUVN7kZ2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CBD8C4CEE8;
+	Thu, 10 Apr 2025 13:27:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744291631;
-	bh=3gPfsEXtcRb/g3NXNMRegFnbtp1ZB4qYMxP7JSx39YM=;
+	s=k20201202; t=1744291634;
+	bh=uJNt4QupPmB5L6K4f/LhHjqr0GkS2EqrPb2R93LqjUg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bJYwGj1Dm3McX0ECCISJLFD1dSHF40isk5OWzxQOYfBlODk553AVJAna7I3h0YDoW
-	 L/pFMhyFSHm4FfprhT91HSttTHz//EU2HHHlFOF/mwluuAhCj8mWkfZxzsIqWUwZgB
-	 OskGCi7r2TI0e0awqdV8xLupCnq+qYgHUs/uTzPKfaejgKDUny8U34dRGFIxqoqK4p
-	 iuZlZApfKY3H+4723azGkpF/Q2XA5w9+F5xFcIYKQcJQ+AudGrqGgtVm+HfTnic525
-	 yaSX8QhcFtqulEkMkFR+4L6n+0QZetyknVLQ096MgVqtX/Vx0vtyvv1sHo1hwpDvQM
-	 hCpiSSspEyZ7A==
-Date: Thu, 10 Apr 2025 15:27:08 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
-	Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH] timers: Exclude isolated cpus from timer migation
-Message-ID: <Z_fHLM4nWP5XVGBU@localhost.localdomain>
-References: <20250410065446.57304-2-gmonaco@redhat.com>
- <87ecy0tob1.ffs@tglx>
- <2c9d71fd79d7d1cec66e48bcb87b39a874858f01.camel@redhat.com>
- <Z_fBq2AQjzyg8m5w@localhost.localdomain>
- <87wmbsrwca.ffs@tglx>
+	b=PUVN7kZ2Fp/FqfPqkbfWtE/lYMV3vJzYKXcBEzQdd4Si6dFhD8w0kUy9vnDtP+J1h
+	 mgfXKHawgVbFbUmGImkPo2AbKFiyAxDgnU9oicMqt99ev1eUk4EhkQqRe5/QJ3YhCg
+	 rezqbqC/LnQ1bj79R6LAHBg8W5OKYmxKeBzXMkEcXS+PHWPYIkGyl/ukyGbD4KK7Za
+	 xzHjr9XSH0Sy6QuSVLeqPszgKihI8h///9GmK7IrzkkrMQn9EWyxp005B5dxT9ae6g
+	 Nkr1sjNNfJdSwode/OtBqP1Ul9qR0MmsKrhzxMMlOhwKyUuV5nCOleJy4bxdVZWlO8
+	 zJRGh8PwnLRTg==
+Date: Thu, 10 Apr 2025 16:27:06 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Larysa Zaremba <larysa.zaremba@intel.com>
+Cc: intel-wired-lan@lists.osuosl.org,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+	Lee Trager <lee@trager.us>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Sridhar Samudrala <sridhar.samudrala@intel.com>,
+	Jacob Keller <jacob.e.keller@intel.com>,
+	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
+	Mateusz Polchlopek <mateusz.polchlopek@intel.com>,
+	Ahmed Zaki <ahmed.zaki@intel.com>, netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Karlsson, Magnus" <magnus.karlsson@intel.com>,
+	Emil Tantilov <emil.s.tantilov@intel.com>,
+	Madhu Chittim <madhu.chittim@intel.com>,
+	Josh Hay <joshua.a.hay@intel.com>,
+	Milena Olech <milena.olech@intel.com>, pavan.kumar.linga@intel.com,
+	"Singhai, Anjali" <anjali.singhai@intel.com>,
+	Phani R Burra <phani.r.burra@intel.com>
+Subject: Re: [PATCH iwl-next 05/14] libeth: add control queue support
+Message-ID: <20250410132706.GR199604@unreal>
+References: <20250408124816.11584-1-larysa.zaremba@intel.com>
+ <20250408124816.11584-6-larysa.zaremba@intel.com>
+ <20250410082137.GO199604@unreal>
+ <Z_ehEXmlEBREQWQM@soc-5CG4396X81.clients.intel.com>
+ <20250410112349.GP199604@unreal>
+ <Z_fAdLJ4quuP2lip@soc-5CG4396X81.clients.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87wmbsrwca.ffs@tglx>
+In-Reply-To: <Z_fAdLJ4quuP2lip@soc-5CG4396X81.clients.intel.com>
 
-Le Thu, Apr 10, 2025 at 03:15:49PM +0200, Thomas Gleixner a écrit :
-> On Thu, Apr 10 2025 at 15:03, Frederic Weisbecker wrote:
-> > Le Thu, Apr 10, 2025 at 12:38:25PM +0200, Gabriele Monaco a écrit :
-> > Speaking of, those are two different issues here:
-> >
-> > * nohz_full CPUs are handled just like idle CPUs. Once the tick is stopped,
-> >   the global timers are handled by other CPUs (housekeeping). There is always
-> >   one housekeeping CPU that never goes idle.
-> >   One subtle thing though: if the nohz_full CPU fires a tick, because there
-> >   is a local timer to be handled for example, it will also possibly handle
-> >   some global timers along the way. If it happens to be a problem, it should
-> >   be easy to resolve.
-> >
-> > * Domain isolated CPUs are treated just like other CPUs. But there is not
-> >   always a housekeeping CPU around. And no guarantee that there is always
-> >   a non-idle CPU to take care of global timers.
+On Thu, Apr 10, 2025 at 02:58:28PM +0200, Larysa Zaremba wrote:
+> On Thu, Apr 10, 2025 at 02:23:49PM +0300, Leon Romanovsky wrote:
+> > On Thu, Apr 10, 2025 at 12:44:33PM +0200, Larysa Zaremba wrote:
+> > > On Thu, Apr 10, 2025 at 11:21:37AM +0300, Leon Romanovsky wrote:
+> > > > On Tue, Apr 08, 2025 at 02:47:51PM +0200, Larysa Zaremba wrote:
+> > > > > From: Phani R Burra <phani.r.burra@intel.com>
+> > > > > 
+> > > > > Libeth will now support control queue setup and configuration APIs.
+> > > > > These are mainly used for mailbox communication between drivers and
+> > > > > control plane.
+> > > > > 
+> > > > > Make use of the page pool support for managing controlq buffers.
+> > > > 
+> > > > <...>
+> > > > 
+> > > > >  libeth-y			:= rx.o
+> > > > >  
+> > > > > +obj-$(CONFIG_LIBETH_CP)		+= libeth_cp.o
+> > > > > +
+> > > > > +libeth_cp-y			:= controlq.o
+> > > > 
+> > > > So why did you create separate module for it?
+> > > > Now you have pci -> libeth -> libeth_cp -> ixd, with the potential races between ixd and libeth, am I right?
+> > > >
+> > > 
+> > > I am not sure what kind of races do you mean, all libeth modules themselves are 
+> > > stateless and will stay this way [0], all used data is owned by drivers.
+> > 
+> > Somehow such separation doesn't truly work. There are multiple syzkaller
+> > reports per-cycle where module A tries to access module C, which already
+> > doesn't exist because it was proxied through module B.
 > 
-> That's an insianity.
+> Are there similar reports for libeth and libie modules when iavf is enabled?
 
-It works, but it doesn't make much sense arguably.
+To get such report, syzkaller should run on physical iavf, it looks like it doesn't.
+Did I miss it here?
+https://syzkaller.appspot.com/upstream/s/net
+
+> It is basically the same hierarchy. (iavf uses both libeth and libie, libie 
+> depends on libeth).
+> 
+> I am just trying to understand, is this a regular situation or did I just mess 
+> smth up?
+
+My review comment was general one. It is almost impossible to review
+this newly proposed architecture split for correctness.
 
 > 
-> >> Thinking about it now, since global timers /can/ start on isolated
-> >> cores, that makes them quite different from offline ones and probably
-> >> considering them the same is just not the right thing to do..
-> >> 
-> >> I'm going to have a deeper thought about this whole approach, perhaps
-> >> something simpler just preventing migration in that one direction would
-> >> suffice.
+> > 
+> > > 
+> > > As for the module separation, I think there is no harm in keeping it modular. 
+> > 
+> > Syzkaller reports disagree with you. 
 > >
-> > I think we can use your solution, which involves isolating the CPU from tmigr
-> > hierarchy. And also always queue global timers to non-isolated targets.
 > 
-> Why do we have to inflict extra complexity into the timer enqueue path
-> instead of preventing the migration to, but not the migration from
-> isolated CPUs?
+> Could you please share them?
 
-But how do we handle global timers that have been initialized and queued from
-isolated CPUs?
+It is not an easy question to answer, because all these reports are complaining
+about some wrong locking order or NULL-pointer access. You will never know if
+it is because of programming or design error.
 
-Thanks.
+As an approximate example, see commits a27c6f46dcec ("RDMA/bnxt_re: Fix an issue in bnxt_re_async_notifier")
+and f0df225d12fc ("RDMA/bnxt_re: Add sanity checks on rdev validity").
+At the first glance, they look unrelated to our discussion, however
+they can serve as an example or races between deinit/disable paths in
+parent module vs. child.
 
--- 
-Frederic Weisbecker
-SUSE Labs
+>  
+> > > We intend to use basic libeth (libeth_rx) in drivers that for sure have no use 
+> > > for libeth_cp. libeth_pci and libeth_cp separation is more arbitral, as we have 
+> > > no plans for now to use them separately.
+> > 
+> > So let's not over-engineer it.
+> > 
+> > > 
+> > > Module dependencies are as follows:
+> > > 
+> > > libeth_rx and libeth_pci do not depend on other modules.
+> > > libeth_cp depends on both libeth_rx and libeth_pci.
+> > > idpf directly uses libeth_pci, libeth_rx and libeth_cp.
+> > > ixd directly uses libeth_cp and libeth_pci.
+> > 
+> 
+> I need to amend this: libeth_cp does not depend on libeth_pci in terms of 
+> module namespace, it only uses the header to access struct device that is 
+> stored in libeth_pci-specific mmio_info.
+
+So why did you add SELECT in kconfig?
+
+> 
+> > You can do whatever module architecture for netdev devices, but if you
+> > plan to expose it to RDMA devices, I will vote against any deep layered
+> > module architecture for the drivers.
+> > 
+> > BTW, please add some Intel prefix to the modules names, they shouldn't
+> > be called in generic names like libeth, e.t.c
+> >
+> 
+> We did not think this would be a problem, intel has a tradition of calling the 
+> modules pretty ambiguously.
+
+I know and it is worth to be changed.
+
+> 
+> > Thanks
+> > 
+> > > 
+> > > [0] https://lore.kernel.org/netdev/61bfa880-6a88-4eac-bab7-040bf72a11ef@intel.com/
+> > > 
+> > > > Thanks
+> 
