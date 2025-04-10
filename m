@@ -1,64 +1,66 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93BA31EF081
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 16:30:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A0F81EFF80
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 16:30:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744302614; cv=none; b=qi8KvWeo1ADNRXbFBwI8BV8ZX1ExNZkGSmQPEhAdmYBOfjBOOI8ey/KZ2rxPSfBayd96fbY+1yIhWLIdZAo0LCSNBZNgtkdj1d7X0pFxbRMTTY60OTPVSfacsovB3v9g0BO6mq+IdOVz2Sy2idCVtagBmm8h0C/YVejfjxc8sjo=
+	t=1744302616; cv=none; b=b48gbelOw6jos2DCGw+XNm6tTzmXHGwh1HzQgxBkT0dqQhfFA9zrv0XcfdWJL9tj3Vqb3hnDjqhhqta3ymWKXWZ3OqflrepAEA50WBSREC7MpQeD4dAga1f2DhDEiTGR532SZvGOFfnnBZD6THBQ5YNrgjcAIuKaWNFjSqlSLmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744302614; c=relaxed/simple;
-	bh=tCEOYGPmIc1SPAM1HF+UO1/NYRAAsIsKLUXJIESOnu8=;
+	s=arc-20240116; t=1744302616; c=relaxed/simple;
+	bh=ykuyFmkKMHJIXqo4oh3w0kqcgoBIO3smwRfR/rRJkQQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=QsdTSE/for8W6QAg9ypEx6gpZwtVm6HubL2t8z7yIyArT7nS+vXonVXZEgYGuXrUZzLTWRndetwUAyzN39vK2rSHty4k2sBq1PeCveaUl0mevQQ2rw81zkPw/ORNK+9jPdNNldkq7fZQoM0yIBQI8nB+v//DvJTGgzItQBNPjx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KOenOsFU; arc=none smtp.client-ip=209.85.221.51
+	 In-Reply-To:To:Cc; b=bYUJ8ZVkoP9cqqQmO+1jSatc+/2UjPjRmLalTPAXp6TijJA441rck/VNHMxek/u3c4yQO5cK2H3hPwkxWGnluJ4jhgv21r4qMeA32bSAUkge8P6A0TAd42Ke8psAvZTN7uUvvAFrpfjAH2K9wCBcfU4mVV0Wa1eJ11w5coWpRE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wWCq0unH; arc=none smtp.client-ip=209.85.221.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KOenOsFU"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-39c266c1389so658879f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 09:30:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wWCq0unH"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39141ffa9fcso1199584f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 09:30:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1744302610; x=1744907410; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1744302611; x=1744907411; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=EfgoiISEI6CCBXz+KLnorq2mkzdptbjBXDbJbv0ENcI=;
-        b=KOenOsFUYl1MszShGxzm6w4IkmvEmCf15tkHW6HQ94NGCjzhXE/D+c/guxGlsMXC+8
-         5YAmZvhxSQYv7j/fQUwVVHCCm6IxfllWb5NZ5Wv1rLSBFugLS46xkdLfKO0MiwPQWytH
-         bNB91sWbKbJCVrjz3/D/D2YmNAiynxhEC42f51vMxe6Gh26KwHnhDAHLluoajQ2jFYwB
-         kAYQfq1HhN+RLEKa5URPU2ytFAKjgP1iGG1UQKbpgnNsGDQ++amA33l6KqVRHIhIXk+6
-         Pyv9hVtWulP0f/jc1RKxLnQYHV4ZW/JSq6zB2jj8Hdm3kpmB2Myg6ASsISxzlqR2PUvN
-         MFaA==
+        bh=sYQ/bnYqcpDq9DEnr3MypQ+/gd8s486fsMpMYGxMvlw=;
+        b=wWCq0unHeB4wHikVtMnq1FTGPC3uBR8GacH6WxkmFlmE+QmcrBE0IXjmvNB/U+HMYa
+         hT/DO4Q/KGQPzf37eqtBd/7U7TC/fwFLsZpQ3pgz+bkFEp+1GIhZibUVedfb30xdHn5o
+         xk8jA/oLzbEdPNVuWIE0eJGZj66ZdPlosa+64f1SZwihvKalqP3KSS9f9S14iZmAjLo2
+         gGB1kWBBSPhKYMi1+NvCFAiHq5WBgSMpPS48fblitpY6yQADE359Z3iQ3FuCLxHj0bLX
+         DIcKAQvKz2S76BdE00oO8KMU1erxf7cl4FXJ8qG5ogPxo1gmcoGAfuitOX7mLEFskXNt
+         U2sA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744302610; x=1744907410;
+        d=1e100.net; s=20230601; t=1744302611; x=1744907411;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=EfgoiISEI6CCBXz+KLnorq2mkzdptbjBXDbJbv0ENcI=;
-        b=PZWUxhawhGeRXcsV87iJL0gSrbt+gxKxaWw3W9Wz2cFB7h2zl10FNO2z/LsxPVQrRc
-         NtsoIVkOL6IQ7XWEuOv1HQvo62nRJK5BC5aYVzsE58144T/nqTyaPx9wVuiJXwPCdE6j
-         0xU+Xj2sgyQZ57P585nOTQdOy40Xa6p/x9UadgjkSVjt3s1nxL1e1PtaS9tNuk16/lVK
-         8dE7Z4M8cmIHtK02KVzXaDhTdPC6jsTGPR1zcIVnOgaSTgflXekNbl2YTy+n14hPR2Uo
-         wZhuvg04hKOjFPrYE527mKZ5ZM9Zfw5CXACTx2BXU3Xr56ObAS6A+oowUVA8SllLMxHH
-         P5yw==
-X-Gm-Message-State: AOJu0YyJdp0pcGvingSttHWEmcuZ0iVGFnaLIIPcBqjzDcl56Q+IxKEg
-	BiH0xieYFeANe2g6Fb8u1f4Ey8nwn8CQb0v346glhzHBGR/Y5DCTfYYJWh7hPVw=
-X-Gm-Gg: ASbGncvMNjepUHIDiQfZHPGxUGIMpl0STzu2OfD5Q4W+cTUXaWdecP+ZkatMo+1qlCa
-	ZIPPcGaM2L1PrkvQlTvVF/x/63gVOhh6ws2n2xEWcW9HdS7YnJmCW8Dq4TD/VLfPwIamqp7xKqQ
-	1IzUFmHWahrPKwpCGbzpkn9F2o//xNaD+Q5Mnb5CJy3Nn5u6FSrcVtZfGAnJYF3Jf1V5rIiSr6n
-	pMpCZ7X26ySpHz/kciqo6/Vrkh1eS07NtAmekhS5ctEwOyPbtH3kJP1BnMyAdaKjjorox0zdwLM
-	/Nh1E4EpXBqQjR3SRpHaPjYQDC56TeaeSO4FBIIcaH1g1bjZXp/w5ONmMSS6WA==
-X-Google-Smtp-Source: AGHT+IF7YxresxxIUSbFvKOXhrMSn92TtBy4rTG0L/x99604fWMt5TARqsw/+/xZMRt9jngqCpO+LA==
-X-Received: by 2002:a05:6000:240b:b0:391:ba6:c066 with SMTP id ffacd0b85a97d-39d8fd526f8mr3324426f8f.35.1744302609788;
-        Thu, 10 Apr 2025 09:30:09 -0700 (PDT)
+        bh=sYQ/bnYqcpDq9DEnr3MypQ+/gd8s486fsMpMYGxMvlw=;
+        b=IGJF0pBjGbJ4mTkCEwsjV/sM64Zzo3+cV8Z+ktpYDM7eg/9HosP9U7iJw/du7bQPsP
+         /T1PevY4jOD3FxfcedHSHXnYy6MmvkMoRODb+6Ua10X6gMCE2fFr3mk9UpuOUJIoDELr
+         h7c0twpiCbP3Ib6pZ7vQH1LX5n2CsG2mfQe7OwA3nJyBWD5RQwmtSehYMrYZbLJjLaVC
+         gCiyDtTmGU+2S9AtAjsO6MFDp88HWpQKtLK/5fG092nX2psTA7I1tNzTUQwdmNOAjRaL
+         ZxNKbSKN11R1EcP/oVm6UeNyMhblAkEb/hdJ8bMEH3Y0uCzXaNoomziHMQxcuEuxOogM
+         efYA==
+X-Gm-Message-State: AOJu0YzFEBVB1TH4kxF0ozLeQZxI1QcfjJrH7BmyAk4dTw2dpFtK3f7Y
+	YI4nB87/hDQYSTIZDH4eJjtoXfg04gBuPUhxGMbZGopVpoYw61oqBmiGXN+aE3fnI+wjzqsqEcP
+	W
+X-Gm-Gg: ASbGncuKCjQiaIcFwlqyV9rE2QFimCEinKTg7JjxajFkZ6BuN1V9VMvVUMqTiFd5Lhm
+	2PX+GDm2s9atvtY57uKNKmLsv0931Vgr5yDwOavLX/zB7KZe5SPIDHqUcxO7ABcWxEulAMSyX9B
+	Ict24YMpagV0gb5Zad39XkTMqDivbjnBUpmLaAUmqzrn20+v5//kB72ye01zc/DqwtaL+Osg9Cn
+	4Ep5zian62suA/oBeYNjcGa5mM1avc3eju/pWdCj9QfejDN+T57YrCORTnjoDBPx0EnlkWddwAK
+	0SxUe083iDAt5bq8hREZbbGcAXsr9JhX6ojF+iyEDMynDiRHbLeLiYz1hdLpRg==
+X-Google-Smtp-Source: AGHT+IFV6YhdZkPcWRiBwQVYxNCnscM5FEJq3aM7UfRULZk1GKfyFRsc4++grb2K1Ep+6ZyvjZSzCA==
+X-Received: by 2002:a05:6000:4404:b0:39c:268b:8b66 with SMTP id ffacd0b85a97d-39d8f4e4407mr2261773f8f.43.1744302611222;
+        Thu, 10 Apr 2025 09:30:11 -0700 (PDT)
 Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d8936129dsm5350663f8f.18.2025.04.10.09.30.09
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d8936129dsm5350663f8f.18.2025.04.10.09.30.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 09:30:09 -0700 (PDT)
+        Thu, 10 Apr 2025 09:30:10 -0700 (PDT)
 From: Neil Armstrong <neil.armstrong@linaro.org>
-Date: Thu, 10 Apr 2025 18:30:00 +0200
-Subject: [PATCH RFC v5 1/8] media: qcom: iris: move sm8250 to gen1 catalog
+Date: Thu, 10 Apr 2025 18:30:02 +0200
+Subject: [PATCH RFC v5 3/8] dt-bindings: media: qcom,sm8550-iris: document
+ SM8650 IRIS accelerator
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,7 +69,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250410-topic-sm8x50-upstream-iris-catalog-v5-1-44a431574c25@linaro.org>
+Message-Id: <20250410-topic-sm8x50-upstream-iris-catalog-v5-3-44a431574c25@linaro.org>
 References: <20250410-topic-sm8x50-upstream-iris-catalog-v5-0-44a431574c25@linaro.org>
 In-Reply-To: <20250410-topic-sm8x50-upstream-iris-catalog-v5-0-44a431574c25@linaro.org>
 To: Vikash Garodia <quic_vgarodia@quicinc.com>, 
@@ -78,251 +80,103 @@ To: Vikash Garodia <quic_vgarodia@quicinc.com>,
  Conor Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
 Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
  linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- Neil Armstrong <neil.armstrong@linaro.org>
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6915;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2152;
  i=neil.armstrong@linaro.org; h=from:subject:message-id;
- bh=tCEOYGPmIc1SPAM1HF+UO1/NYRAAsIsKLUXJIESOnu8=;
- b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBn9/IMfeilWuF7TCcmZY4Vf7hudfDLAqCN0DgvzgK+
- br44w/SJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZ/fyDAAKCRB33NvayMhJ0U6SD/
- 9eu8VP5fZKJUmWqiNhVFsP9SryZn/Pch5CB3w0UsohBaxx5ZsdmQ/hOV2noeGbQVAA3Y+ZuPPHEUFq
- XG5qS3iWPxny7ZWiv84OANxwLyeVo92A4cf/yFN/UD0xpRRh+OY1gs0gj4hmu2WaJ8AMuvwIx6Y7YI
- Wa1PRKGm6IFlwUAQLPbn0w1hjDu5Qq49NTvgSP+ZRuob350ZBM/F8KmeRQGypHOShJD4YZIAGrO0m1
- peYZvwEDaD/q4I8QXH3XrRYM229nEbp2rOUhGR1eyxdxiLmDNwW5LjX/Tit2Hy548v/Ekbfyc0Adtb
- vLRISSZLyGHx4NtWa1/oTXLn5GRFHwjZw/IESaujA2+NrIKHncSUk5z1XQdQuyNt6Wv3dUJGz0RpyJ
- RPO8ijfo960Popy9dvNzz9FIamuyo+P8Jt7xOPhmYDl9SPPrHfE7kyebOkx9VPuejQMyvX9dVQ8CFT
- dUXQrcRu9MY4tRsWkKVc41XhqKV9x8SzXznOuTNCY8QPhXH48jpwfrHVqNyf9yjkTlqBw3P25tcp98
- qZck9hdzUfJcTO0aFLvnG4plAQyNpeOnAFXT0JAhYMvo4YgjZ7DQJMyJDFU+DHIB0el3soh1FPLN+D
- WATjkT2LrgGa7QXhQ/x9z4yghkEeR0MKNAH3RAR/R4dfGUxFw1yMzQVTE7dQ==
+ bh=ykuyFmkKMHJIXqo4oh3w0kqcgoBIO3smwRfR/rRJkQQ=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBn9/INPzUYtOoyWklDXoeefSnzcVEVy7d/Jx/eXS+2
+ aoWQIyOJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZ/fyDQAKCRB33NvayMhJ0Vs1D/
+ 95RLXTgsq4KVMRGQZkrlZnwR/LV+zfacDGth7gKK/ThiW+Xi9ACiccImr49qLwzT75s5UxHKGQzhWF
+ dFyIWUEwidNffW9+q374IC6ZU0AeacHAH/08jLdhlQtOqrItFPTqTooMO3JWQd2AKeNWWwO0dJtIRd
+ uH4ZJsbFxWKmfTaUW1G0tLwwPaOyUPM/m/uUrPWctQFJrWBb6UbKEmLDK3kBy737jVk4Bf9F594cms
+ LY1KxTKP+7dO5AQpkknqDbwphbIvjO1OkgJMET4BCUrbv8n9VVLw5GKsjo81UNdJ1qWAbhrWow/lI4
+ ZhMYyb9OoxEKR7z3SXVC+oqdD92eR+pVF4Ucb3YY8oZm8joCGxP8gsFqc4T2a8y6AFY2X6nv21OIP6
+ Grihg2/RHJlUiSSUrp+0Nv6LNS3HVqf+EEpVFYoxHZ1ROrjPNpAUnsNKQLZQQDvPaWa8Fr5E1BQ9B0
+ cdFdytU9aiHdLz5mrAoHRAS8F0m+UGC8SNculetNxMdUmKHDS4KNgWgBsEYSz8cC6nWebnOcxEackU
+ PUBfsFI8xHGeJJk11bS5VggRZ+eMJmvUrBkOQhtubEVJpH/Muf+bSKz0P8Wuz48GVjR/uzcwxKsMhj
+ nE2zHZeF9v+0EjeY2zXBlKp8rw+Iu8ukLwjTERSCncY3M9HBpq8QtmahTNcQ==
 X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
  fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
-Re-organize the platform support core into a gen1 catalog C file
-declaring common platform structure and include platform headers
-containing platform specific entries and iris_platform_data
-structure.
+Document the IRIS video decoder and encoder accelerator found in the
+SM8650 platform, it requires 2 more reset lines in addition to the
+properties required for the SM8550 platform.
 
-The goal is to share most of the structure while having
-clear and separate per-SoC catalog files.
-
-The organization is based on the current drm/msm dpu1 catalog
-entries.
-
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Reviewed-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Tested-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org> # x1e Dell
 Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 ---
- drivers/media/platform/qcom/iris/Makefile          |  2 +-
- .../media/platform/qcom/iris/iris_catalog_gen1.c   | 83 ++++++++++++++++++++++
- ...ris_platform_sm8250.c => iris_catalog_sm8250.h} | 80 ++-------------------
- 3 files changed, 89 insertions(+), 76 deletions(-)
+ .../bindings/media/qcom,sm8550-iris.yaml           | 33 ++++++++++++++++++----
+ 1 file changed, 28 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/media/platform/qcom/iris/Makefile b/drivers/media/platform/qcom/iris/Makefile
-index 35390534534e93f4617c1036a05ca0921567ba1d..7e7bc5ca81e0f0119846ccaff7f79fd17b8298ca 100644
---- a/drivers/media/platform/qcom/iris/Makefile
-+++ b/drivers/media/platform/qcom/iris/Makefile
-@@ -25,7 +25,7 @@ qcom-iris-objs += \
-              iris_vpu_common.o \
+diff --git a/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml b/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
+index e424ea84c211f473a799481fd5463a16580187ed..536cf458dcb08141e5a1ec8c3df964196e599a57 100644
+--- a/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
++++ b/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
+@@ -14,12 +14,11 @@ description:
+   The iris video processing unit is a video encode and decode accelerator
+   present on Qualcomm platforms.
  
- ifeq ($(CONFIG_VIDEO_QCOM_VENUS),)
--qcom-iris-objs += iris_platform_sm8250.o
-+qcom-iris-objs += iris_catalog_gen1.o
- endif
+-allOf:
+-  - $ref: qcom,venus-common.yaml#
+-
+ properties:
+   compatible:
+-    const: qcom,sm8550-iris
++    enum:
++      - qcom,sm8550-iris
++      - qcom,sm8650-iris
  
- obj-$(CONFIG_VIDEO_QCOM_IRIS) += qcom-iris.o
-diff --git a/drivers/media/platform/qcom/iris/iris_catalog_gen1.c b/drivers/media/platform/qcom/iris/iris_catalog_gen1.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..c4590f8996431eb5103d45f01c6bee2b38b848c2
---- /dev/null
-+++ b/drivers/media/platform/qcom/iris/iris_catalog_gen1.c
-@@ -0,0 +1,83 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
-+
-+#include "iris_core.h"
-+#include "iris_ctrls.h"
-+#include "iris_platform_common.h"
-+#include "iris_resources.h"
-+#include "iris_hfi_gen1.h"
-+#include "iris_hfi_gen1_defines.h"
-+#include "iris_vpu_common.h"
-+
-+/* Common SM8250 & variants */
-+static struct platform_inst_fw_cap inst_fw_cap_sm8250[] = {
-+	{
-+		.cap_id = PIPE,
-+		.min = PIPE_1,
-+		.max = PIPE_4,
-+		.step_or_mask = 1,
-+		.value = PIPE_4,
-+		.hfi_id = HFI_PROPERTY_PARAM_WORK_ROUTE,
-+		.set = iris_set_pipe,
-+	},
-+	{
-+		.cap_id = STAGE,
-+		.min = STAGE_1,
-+		.max = STAGE_2,
-+		.step_or_mask = 1,
-+		.value = STAGE_2,
-+		.hfi_id = HFI_PROPERTY_PARAM_WORK_MODE,
-+		.set = iris_set_stage,
-+	},
-+	{
-+		.cap_id = DEBLOCK,
-+		.min = 0,
-+		.max = 1,
-+		.step_or_mask = 1,
-+		.value = 0,
-+		.hfi_id = HFI_PROPERTY_CONFIG_VDEC_POST_LOOP_DEBLOCKER,
-+		.set = iris_set_u32,
-+	},
-+};
-+
-+static struct platform_inst_caps platform_inst_cap_sm8250 = {
-+	.min_frame_width = 128,
-+	.max_frame_width = 8192,
-+	.min_frame_height = 128,
-+	.max_frame_height = 8192,
-+	.max_mbpf = 138240,
-+	.mb_cycles_vsp = 25,
-+	.mb_cycles_vpp = 200,
-+};
-+
-+static struct tz_cp_config tz_cp_config_sm8250 = {
-+	.cp_start = 0,
-+	.cp_size = 0x25800000,
-+	.cp_nonpixel_start = 0x01000000,
-+	.cp_nonpixel_size = 0x24800000,
-+};
-+
-+static const u32 sm8250_vdec_input_config_param_default[] = {
-+	HFI_PROPERTY_CONFIG_VIDEOCORES_USAGE,
-+	HFI_PROPERTY_PARAM_UNCOMPRESSED_FORMAT_SELECT,
-+	HFI_PROPERTY_PARAM_UNCOMPRESSED_PLANE_ACTUAL_CONSTRAINTS_INFO,
-+	HFI_PROPERTY_PARAM_BUFFER_COUNT_ACTUAL,
-+	HFI_PROPERTY_PARAM_VDEC_MULTI_STREAM,
-+	HFI_PROPERTY_PARAM_FRAME_SIZE,
-+	HFI_PROPERTY_PARAM_BUFFER_SIZE_ACTUAL,
-+	HFI_PROPERTY_PARAM_BUFFER_ALLOC_MODE,
-+};
-+
-+static const u32 sm8250_dec_ip_int_buf_tbl[] = {
-+	BUF_BIN,
-+	BUF_SCRATCH_1,
-+};
-+
-+static const u32 sm8250_dec_op_int_buf_tbl[] = {
-+	BUF_DPB,
-+};
-+
-+/* platforms catalogs */
-+#include "iris_catalog_sm8250.h"
-diff --git a/drivers/media/platform/qcom/iris/iris_platform_sm8250.c b/drivers/media/platform/qcom/iris/iris_catalog_sm8250.h
-similarity index 59%
-rename from drivers/media/platform/qcom/iris/iris_platform_sm8250.c
-rename to drivers/media/platform/qcom/iris/iris_catalog_sm8250.h
-index 5c86fd7b7b6fd36dc2d57a1705d915308b4c0f92..4d2df669b3e1df2ef2b0d2f88fc5f309b27546db 100644
---- a/drivers/media/platform/qcom/iris/iris_platform_sm8250.c
-+++ b/drivers/media/platform/qcom/iris/iris_catalog_sm8250.h
-@@ -1,55 +1,10 @@
--// SPDX-License-Identifier: GPL-2.0-only
-+/* SPDX-License-Identifier: GPL-2.0-only */
- /*
-  * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
-  */
+   power-domains:
+     maxItems: 4
+@@ -49,11 +48,15 @@ properties:
+       - const: video-mem
  
--#include "iris_core.h"
--#include "iris_ctrls.h"
--#include "iris_platform_common.h"
--#include "iris_resources.h"
--#include "iris_hfi_gen1.h"
--#include "iris_hfi_gen1_defines.h"
--#include "iris_vpu_common.h"
--
--static struct platform_inst_fw_cap inst_fw_cap_sm8250[] = {
--	{
--		.cap_id = PIPE,
--		.min = PIPE_1,
--		.max = PIPE_4,
--		.step_or_mask = 1,
--		.value = PIPE_4,
--		.hfi_id = HFI_PROPERTY_PARAM_WORK_ROUTE,
--		.set = iris_set_pipe,
--	},
--	{
--		.cap_id = STAGE,
--		.min = STAGE_1,
--		.max = STAGE_2,
--		.step_or_mask = 1,
--		.value = STAGE_2,
--		.hfi_id = HFI_PROPERTY_PARAM_WORK_MODE,
--		.set = iris_set_stage,
--	},
--	{
--		.cap_id = DEBLOCK,
--		.min = 0,
--		.max = 1,
--		.step_or_mask = 1,
--		.value = 0,
--		.hfi_id = HFI_PROPERTY_CONFIG_VDEC_POST_LOOP_DEBLOCKER,
--		.set = iris_set_u32,
--	},
--};
--
--static struct platform_inst_caps platform_inst_cap_sm8250 = {
--	.min_frame_width = 128,
--	.max_frame_width = 8192,
--	.min_frame_height = 128,
--	.max_frame_height = 8192,
--	.max_mbpf = 138240,
--	.mb_cycles_vsp = 25,
--	.mb_cycles_vpp = 200,
--};
-+#ifndef _IRIS_CATALOG_SM8250_H
-+#define _IRIS_CATALOG_SM8250_H
+   resets:
+-    maxItems: 1
++    minItems: 1
++    maxItems: 3
  
- static void iris_set_sm8250_preset_registers(struct iris_core *core)
- {
-@@ -80,33 +35,6 @@ static const struct platform_clk_data sm8250_clk_table[] = {
- 	{IRIS_HW_CLK,   "vcodec0_core" },
- };
+   reset-names:
++    minItems: 1
+     items:
+       - const: bus
++      - const: xo
++      - const: core
  
--static struct tz_cp_config tz_cp_config_sm8250 = {
--	.cp_start = 0,
--	.cp_size = 0x25800000,
--	.cp_nonpixel_start = 0x01000000,
--	.cp_nonpixel_size = 0x24800000,
--};
--
--static const u32 sm8250_vdec_input_config_param_default[] = {
--	HFI_PROPERTY_CONFIG_VIDEOCORES_USAGE,
--	HFI_PROPERTY_PARAM_UNCOMPRESSED_FORMAT_SELECT,
--	HFI_PROPERTY_PARAM_UNCOMPRESSED_PLANE_ACTUAL_CONSTRAINTS_INFO,
--	HFI_PROPERTY_PARAM_BUFFER_COUNT_ACTUAL,
--	HFI_PROPERTY_PARAM_VDEC_MULTI_STREAM,
--	HFI_PROPERTY_PARAM_FRAME_SIZE,
--	HFI_PROPERTY_PARAM_BUFFER_SIZE_ACTUAL,
--	HFI_PROPERTY_PARAM_BUFFER_ALLOC_MODE,
--};
--
--static const u32 sm8250_dec_ip_int_buf_tbl[] = {
--	BUF_BIN,
--	BUF_SCRATCH_1,
--};
--
--static const u32 sm8250_dec_op_int_buf_tbl[] = {
--	BUF_DPB,
--};
--
- struct iris_platform_data sm8250_data = {
- 	.get_instance = iris_hfi_gen1_get_instance,
- 	.init_hfi_command_ops = &iris_hfi_gen1_command_ops_init,
-@@ -147,3 +75,5 @@ struct iris_platform_data sm8250_data = {
- 	.dec_op_int_buf_tbl = sm8250_dec_op_int_buf_tbl,
- 	.dec_op_int_buf_tbl_size = ARRAY_SIZE(sm8250_dec_op_int_buf_tbl),
- };
+   iommus:
+     maxItems: 2
+@@ -75,6 +78,26 @@ required:
+   - iommus
+   - dma-coherent
+ 
++allOf:
++  - $ref: qcom,venus-common.yaml#
++  - if:
++      properties:
++        compatible:
++          enum:
++            - qcom,sm8650-iris
++    then:
++      properties:
++        resets:
++          minItems: 3
++        reset-names:
++          minItems: 3
++    else:
++      properties:
++        resets:
++          maxItems: 1
++        reset-names:
++          maxItems: 1
 +
-+#endif
+ unevaluatedProperties: false
+ 
+ examples:
 
 -- 
 2.34.1
