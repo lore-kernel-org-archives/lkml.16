@@ -1,102 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47BAA202C2A;
-	Thu, 10 Apr 2025 17:29:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D60DC2857F3
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 17:29:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744306187; cv=none; b=XuIblxt1aTHzhJxuX1qOsXzZLZDLBS2abxVOId6j0bF3zmJBhundGa2mBTCss36Sd5l1I4KlI300V5g6khwlt5hPDwDLdRa4TAlSbLj0TZZsAbmSINHYI3MoYNfU/XcbgBY9LbBC5KZ0ByH8GP9tBvOvkwLQQZ4CoPS7AzCRA/I=
+	t=1744306191; cv=none; b=kjJt96A9aZcyxLstanUPsLHlDNU8jFMEN8fTwEEgkolrK4NhNbBaIZ/ESJwgO4+K1DHsrgHYun4+qCecsQ2P2dZAoO/KFQssLKA+g8j916FUB82ke7dlR699xna4VFm7OYVHY10hBMTNMEYKj1Z4nAVjDjQQf+TDQMeiQ0B/7dQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744306187; c=relaxed/simple;
-	bh=RjhLzH5nFiR2QsgGOwzFzRiV6M20em0PyAetnxJO54M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IOYkFEHbgGiZr0MSh6zgmgkq039d5KwIoY+LfpQ8ZYnVRZS559Bj9e6SDu2ZcSwrI9nk/QDJYaV/4eWM9XmPQ7w5sCUA8iDKSmJuoeEtS0dtI5oWvO0YxmvTwy94GFIrSukPQu/XaBCoUUnB5iqezLwsLtHy5NnfkykKvPsQAlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aUDPTE5T; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1744306191; c=relaxed/simple;
+	bh=8RGWQcgCimLPvpiAlk+5F2R9ep2gNgiJpKOuy3wGtDc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=pX2MAPFzqZVDlVVhw3cJ6i8Th3rOl/Iwuy8/Hklh7C80NMPwqSeN2I2WOGnZJeMuLnmiwjJ8jsBHVRjcgCFnHY7QHIoP0r1PQXLvFylLotm83SxLfV1JvyLiSz83+DHjTSL4txEUBJJwoRvCbDpi0wgWzecYBPEILm6SB+7uKcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wj4aK967; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aUDPTE5T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744306186; x=1775842186;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=RjhLzH5nFiR2QsgGOwzFzRiV6M20em0PyAetnxJO54M=;
-  b=aUDPTE5TsGWNlbbHdeNRr8cAqD5npMpU/+F0DcClRJP2mdzcZgA3h9kT
-   JN/qtka3R3k/10hRutWoaQu2fGgOFoBKxM+eFyhnyf457pSZxSFwYvtk4
-   WKvxXnXiMxwJrWqAEVKyPouaT9cVCVopXYAtm+RvNboeVahg4ush4tSc7
-   kjO8qxEDOyw9Nsnz63PHshPXqIBaibXDdpk81uxmySDLsARICT/q4Qdz3
-   6eufkIeDrhXqpWPZP2OlWAUK+KYmrq2xSM0bK3kDUxSVdq02VaSR/OUeP
-   rF7UcRQE7nr7+hqq+sXfzSvKF5g7g1VMbfmHNoADgSDT3Flx6g2CBoIX2
-   g==;
-X-CSE-ConnectionGUID: 9OJjlYciTZCEQtLnSFh9Iw==
-X-CSE-MsgGUID: 7D4tubRBTDKBt5F2ds/vIA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11400"; a="68329731"
-X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
-   d="scan'208";a="68329731"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 10:29:46 -0700
-X-CSE-ConnectionGUID: Ynd4baNKQ+CXPfkkCjCeOg==
-X-CSE-MsgGUID: BFuJHxExTSWu3dIdMfiO5A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
-   d="scan'208";a="128828612"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.16])
-  by fmviesa006.fm.intel.com with ESMTP; 10 Apr 2025 10:29:45 -0700
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To: rafael@kernel.org,
-	daniel.lezcano@linaro.org,
-	rui.zhang@intel.com,
-	lukasz.luba@arm.com
-Cc: linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH] thermal: intel: int340x: Add missing DVFS support
-Date: Thu, 10 Apr 2025 10:29:43 -0700
-Message-ID: <20250410172943.577913-1-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wj4aK967"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7395d07a3dcso817060b3a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 10:29:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744306189; x=1744910989; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=THh7USP0TMmHVXYAIYVxQL6srWNoxeq+S60T+Iuc4Go=;
+        b=wj4aK9678it8BCAa+8f0A9aZxmuyaW+GbO0T1Giv+DEkRSTVTVxNzEXrCwT640/8hH
+         dM2nCDYpTjZjCCzsbkqnCBV7NLqTqwXUIhIqomh3I71Ha1b74Gw47UVlFdZje0Dy5CxU
+         PMzh+2+Y3Z4O34luUXJcqWfczc+9hl+7Dr98Z0dq2sWkES6qXPAPNdfAxJ/upufOUcSZ
+         sPEgwsd3A9r2U9dE1BcI7wLiiPlLIFUgNfd2MxIsBTzBlhvp/OWeiHLI/g6hxjvJUEV2
+         0CGPn9i0LC4UtIZe1JX060cbCWqsjZdRuFIQ9dVirjD7AsmxFhtwfFupMgVAa+fzrYY7
+         Uf5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744306189; x=1744910989;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=THh7USP0TMmHVXYAIYVxQL6srWNoxeq+S60T+Iuc4Go=;
+        b=fKDUMNGyC9E4t9XjFAcW5A+hmrQWzZxWT1McJKlVK6O6oSvvTaBiWSL7Z0bMa73ATc
+         2P/dzk5Af/CSglomnwD+kEkL0VHbMeGqiBwJ4fKXDZ1ovERjz2v4+9iInFbF/twJUSE4
+         3Hhgyb38LQixR6IyBgN4pJibXLuE7wnDukamsrsl37sii0gl4dp+w6Z8MH/piU3XWHxw
+         k2foanpCALJ+mO0vDaSzxpSpgJSbK+QJEzbJPvfkXMcQ4+qLnTu2LTnYmspUnbOF530h
+         abFUqg69Nzb5wGdl1eoohxZY+Mw49YFXwul8zDYb13NR90iCZY5eGPPQCA9vvMnxKy8C
+         uxUA==
+X-Forwarded-Encrypted: i=1; AJvYcCVlgnsPMA/5W2Gwm16L2YxjRa21H9jHqK8LJ5y21gmZjWs+xK3403Cn/KsDS9HNtJT61U1+IALwYBC6euM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/BthORWyJBplnGT8tVY75exFkL9r4SEleCUYEsgI0KPnQL8gr
+	SILuj4OZrRRFG94H6Jw4nngYolZz8syKDEg+jbv/VmqPh7tHqgRQiWfNFKjcy3F9j8LEdbtFHCc
+	CBw==
+X-Google-Smtp-Source: AGHT+IEzEm4pFNJ9RE2IrAYwwiomzZvMX+btxSqy0ddwSL3trJyRQq2fiWUm5uHQQn8B4/4qgmhNau+bVpY=
+X-Received: from pfbcw22.prod.google.com ([2002:a05:6a00:4516:b0:736:79d0:fd28])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:891:b0:736:34ca:dee2
+ with SMTP id d2e1a72fcca58-73bc0a15157mr4684403b3a.4.1744306189171; Thu, 10
+ Apr 2025 10:29:49 -0700 (PDT)
+Date: Thu, 10 Apr 2025 10:29:47 -0700
+In-Reply-To: <bba773d0-1ef9-4c9f-8728-9cf0888033ad@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250404193923.1413163-1-seanjc@google.com> <20250404193923.1413163-65-seanjc@google.com>
+ <9b7ceea3-8c47-4383-ad9c-1a9bbdc9044a@oracle.com> <Z_fnrP4e77mKjdX9@google.com>
+ <bba773d0-1ef9-4c9f-8728-9cf0888033ad@oracle.com>
+Message-ID: <Z_gAC9DLG-q9poGV@google.com>
+Subject: Re: [PATCH 64/67] iommu/amd: KVM: SVM: Allow KVM to control need for
+ GA log interrupts
+From: Sean Christopherson <seanjc@google.com>
+To: Joao Martins <joao.m.martins@oracle.com>
+Cc: kvm@vger.kernel.org, iommu@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Maxim Levitsky <mlevitsk@redhat.com>, David Matlack <dmatlack@google.com>, 
+	Alejandro Jimenez <alejandro.j.jimenez@oracle.com>, 
+	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>, Vasant Hegde <vasant.hegde@amd.com>, 
+	Joerg Roedel <joro@8bytes.org>, David Woodhouse <dwmw2@infradead.org>, 
+	Lu Baolu <baolu.lu@linux.intel.com>, Paolo Bonzini <pbonzini@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 
-DVFS (Dynamic Voltage Frequency Scaling) is still supported for DDR
-memories on Lunar Lake and Panther Lake.
+On Thu, Apr 10, 2025, Joao Martins wrote:
+> On 10/04/2025 16:45, Sean Christopherson wrote:
+> > On Wed, Apr 09, 2025, Joao Martins wrote:
+> >> On 04/04/2025 20:39, Sean Christopherson wrote:
+> >> I would suggest holding off on this and the next one, while progressing with
+> >> the rest of the series.
+> > 
+> > Agreed, though I think there's a "pure win" alternative that can be safely
+> > implemented (but it definitely should be done separately).
+> > 
+> > If HLT-exiting is disabled for the VM, and the VM doesn't have access to the
+> > various paravirtual features that can put it into a synthetic HLT state (PV async
+> > #PF and/or Xen support), then I'm pretty sure GALogIntr can be disabled entirely,
+> > i.e. disabled during the initial irq_set_vcpu_affinity() and never enabled.  KVM
+> > doesn't emulate HLT via its full emulator for AMD (just non-unrestricted Intel
+> > guests), so I'm pretty sure there would be no need for KVM to ever wake a vCPU in
+> > response to a device interrupt.
+> > 
+> 
+> Done via IRQ affinity changes already a significant portion of the IRTE and it's
+> already on a slowpath that performs an invalidation, so via
+> irq_set_vcpu_affinity is definitely safe.
+> 
+> But even with HLT exits disabled; there's still preemption though?
 
-Add the missing flag PROC_THERMAL_FEATURE_DVFS.
+Even with involuntary preemption (which would be nonsensical to pair with HLT
+passthrough), KVM doesn't rely on the GALogIntr to schedule in the vCPU task.
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
- .../intel/int340x_thermal/processor_thermal_device_pci.c   | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+The _only_ use of the notification is to wake the task and make it runnable.  If
+the vCPU task is already runnable, when and where the task is run is fully
+controlled by the scheduler (and/or userspace).
 
-diff --git a/drivers/thermal/intel/int340x_thermal/processor_thermal_device_pci.c b/drivers/thermal/intel/int340x_thermal/processor_thermal_device_pci.c
-index a55aaa8cef42..2097aae39946 100644
---- a/drivers/thermal/intel/int340x_thermal/processor_thermal_device_pci.c
-+++ b/drivers/thermal/intel/int340x_thermal/processor_thermal_device_pci.c
-@@ -485,7 +485,7 @@ static const struct pci_device_id proc_thermal_pci_ids[] = {
- 	{ PCI_DEVICE_DATA(INTEL, ADL_THERMAL, PROC_THERMAL_FEATURE_RAPL |
- 	  PROC_THERMAL_FEATURE_FIVR | PROC_THERMAL_FEATURE_DVFS | PROC_THERMAL_FEATURE_WT_REQ) },
- 	{ PCI_DEVICE_DATA(INTEL, LNLM_THERMAL, PROC_THERMAL_FEATURE_MSI_SUPPORT |
--	  PROC_THERMAL_FEATURE_RAPL | PROC_THERMAL_FEATURE_DLVR |
-+	  PROC_THERMAL_FEATURE_RAPL | PROC_THERMAL_FEATURE_DLVR | PROC_THERMAL_FEATURE_DVFS |
- 	  PROC_THERMAL_FEATURE_WT_HINT | PROC_THERMAL_FEATURE_POWER_FLOOR) },
- 	{ PCI_DEVICE_DATA(INTEL, MTLP_THERMAL, PROC_THERMAL_FEATURE_RAPL |
- 	  PROC_THERMAL_FEATURE_FIVR | PROC_THERMAL_FEATURE_DVFS | PROC_THERMAL_FEATURE_DLVR |
-@@ -495,8 +495,9 @@ static const struct pci_device_id proc_thermal_pci_ids[] = {
- 	{ PCI_DEVICE_DATA(INTEL, RPL_THERMAL, PROC_THERMAL_FEATURE_RAPL |
- 	  PROC_THERMAL_FEATURE_FIVR | PROC_THERMAL_FEATURE_DVFS | PROC_THERMAL_FEATURE_WT_REQ) },
- 	{ PCI_DEVICE_DATA(INTEL, PTL_THERMAL, PROC_THERMAL_FEATURE_RAPL |
--	  PROC_THERMAL_FEATURE_DLVR | PROC_THERMAL_FEATURE_MSI_SUPPORT |
--	  PROC_THERMAL_FEATURE_WT_HINT | PROC_THERMAL_FEATURE_POWER_FLOOR) },
-+	  PROC_THERMAL_FEATURE_DLVR | PROC_THERMAL_FEATURE_DVFS |
-+	  PROC_THERMAL_FEATURE_MSI_SUPPORT | PROC_THERMAL_FEATURE_WT_HINT |
-+	  PROC_THERMAL_FEATURE_POWER_FLOOR) },
- 	{ },
- };
- 
--- 
-2.49.0
-
+> But I guess that's a bit more rare if it's conditional to HLT exiting being
+> enabled or not, and whether there's only a single task running.
