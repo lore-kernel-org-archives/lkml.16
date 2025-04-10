@@ -1,111 +1,235 @@
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AA511E32DD;
-	Thu, 10 Apr 2025 08:08:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73F151B85F8;
+	Thu, 10 Apr 2025 08:09:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744272539; cv=none; b=C2LLMg23gXdCWZATILrATHSplYhlZqLUadkmS8WOex29BULx3E7E2G5w2enuorCmAVy6sam1kzqJGsd+j234vWdwmnqOfxO/lESuws1TnevsNpOYxW44jitRt7uvg7mbKyuP3JaBwbupB7mmxkZpb43mnbUhT9cHVuBZ12Ntpgc=
+	t=1744272563; cv=none; b=HMvF49VGJNBJAdf7I1xOMTO+5QpZz9fk8OvtbvYonGDDWLFnIXleqZX/K7JKUqektL/ufBgokXn9Hb2nA2D1ymTwyCUT62BDt7cf9ziaLDjOalIqpSA5V9zb4J0LPphZvI5hka6ABXy7/KnWXeFXnan/U7sH87vDThXrsd+1B28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744272539; c=relaxed/simple;
-	bh=tYJzy7K8Lbk50EctEw6yYwXsykNptvm/ujUZclpGsSU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p4f9QPi6UJDj5eAQLJFE10rwUNoHLMi1ph3zVa1vt88QdHZ51OdEeIWcTGXyAnoW0oZazSFm7dlBvUvvg1e9PrSUnPdKUqPWoxtFEOJb8XrE8gS0lWDZ53Mpk3M0psU33V+VeH4dl8lUkf2EycF/7tUE8zQQHAlziZ4yNDISYac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	s=arc-20240116; t=1744272563; c=relaxed/simple;
+	bh=Vyno924JZezqTnFi39JNlTWkIO0+AmDF/Z/qP+4RgJ8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AqhA6P1ygwuytcrIHzc8hYed89nIe32zqK9HEuD4ZKvYK5jVMubYSk8E4qRtWoVsdDI5MyYffB5mRFi0i0H75ZnAYn4JUK7xVCwQ8KBaqIL++he0Qj/ZavvJAS5Y6h6Qcfc6LYZ803Vs3059It8c20LQ2chtG+rAEwKegbWQJGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UqiiYjQ+; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-86d75f4e9a1so203171241.3;
-        Thu, 10 Apr 2025 01:08:57 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UqiiYjQ+"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-af6a315b491so555700a12.1;
+        Thu, 10 Apr 2025 01:09:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744272561; x=1744877361; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=AjG0X0ILsaEZt1vBf8MVQgDYPYTp29VUnEYLYjosri4=;
+        b=UqiiYjQ+DKxd5CciMNKBKpygRw1wjcqh2lMMMNLIVQKJm4LGb1u8gS5KMBYEEY3Hlc
+         zQpf1skvMLeHbDuUAFYt6YTvbQIJSTkPYR70x0IZKWF5hT7Ry+cSkWueokxflcTTSl29
+         /2otoLCUlFi9Pq8u2NPANayjWz0FBTD8HcKBjo8TlFpHM7tmI8tAqxrbEiyQcf0whs5T
+         n/Ad+PD5oyS0f5Ot4mHpJkExXq4LN0o8LHLuzBGg486xfVNhYTSDGuurdxl7sJCUB6cS
+         uOOpF6PQ7DD7kRIrGXs1gBYL/qC86hB6WbnbZXWeJ/nELvjDQ0WLMxkwEJCEYSAsBZTl
+         t1Fw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744272535; x=1744877335;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rE9i9/hSR7yVs606Y3SPlKOukZV76vfY1owdrP3mBCc=;
-        b=UU5rA5N0wKlVWR8WaqPb8HWgnYp7b2GyWukwM8fUUJKpylqTtUy4DA/LvtLlrHhrGE
-         bljSDKuT5q5dqtLdJuXChadvOthGjT609OphGCS7R4TojI9JT9ByDYmU8CtiPyIPx/pG
-         xBRbl0lhFthNuEOxHqbhQ88hk9UCSVEnDlC7kYdGTR/fRSN3r4GMgY00eihX+HVavj56
-         MuxDyUUT6OKu9hjytn63eLR7aWLoJD8n3IFWyqgHAEaGsFiDC0gg5gT+vKr8CPzQVBsI
-         1Y8zaoaDvjq2sN4YuCtHI7Ehge4ezp4XGxYD5kQetUL5zzhJ8AfhUY2M9T97OXAB+PSe
-         RmnA==
-X-Forwarded-Encrypted: i=1; AJvYcCU40KLjVekNa+6O6rF5zeGb6gDFGMsNQAx7YHL3sZ0J8oi8QXNUYcwcgUB5WseVA6ReS99QsMl/pQl05zCh@vger.kernel.org, AJvYcCW7sIPz8qw99z7NqgFU5dIV4Gx3y4qXenRfp0uDATTmZRtW+JBiOudibxKOg1gXWV+WfledkwMcGcRKfA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxT5SkCb5Gew1BuKOtCmQXo95TgFx5fyeMgd2O6Yq74T3G55siK
-	yoaIDYonUYXMiqdTjqhEcCkvMsLlU9lnA9SeHtzYx9nhndXoM6eTauO1RVIADC4=
-X-Gm-Gg: ASbGncu1StKo952L0rghieDuv/eYxIBR+CZzg0QT6wv4KfZACF5HGo3HaER3Ef3JW3U
-	aDvt6HV0SHjnN2Ua3+A5NMsBhr3uNGmA1iTsUrCuiNpHYy46Az+PeDgHg9DaUFW++a8b6i1z/cc
-	MAAV1mLKWxffN8JmZTk4xut82tABWdk5csVNkduP4lX8XNYPqAbL8wfz1CAIPFI4vcD7Eg2Rp14
-	6Euu1SilXxTfHZaXyticceTfGreIn8IZhCKskRzXqrtLoyvyUYyBIr7ArKmUtU00ITUkUtbT7ux
-	DSf4tgxcGbYzKkHIN0aNXHAC9GUQDt4/lrwtRMd5TIqg0towg/I4u1HR2EwzhlHe77RfWFzICbu
-	Or+TyUGnslnYm3A==
-X-Google-Smtp-Source: AGHT+IHng/+wBTUA9Lw8divSpHiav27x/4FhzjK4jOSR2pIBEaCpRMJzv4Q1J64M9KXZVbBOh0b1tA==
-X-Received: by 2002:a05:6102:3f05:b0:4c5:1c43:7cb3 with SMTP id ada2fe7eead31-4c9d64cb667mr484319137.25.1744272535450;
-        Thu, 10 Apr 2025 01:08:55 -0700 (PDT)
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4c9c979cfa2sm503746137.13.2025.04.10.01.08.55
+        d=1e100.net; s=20230601; t=1744272561; x=1744877361;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AjG0X0ILsaEZt1vBf8MVQgDYPYTp29VUnEYLYjosri4=;
+        b=n2Db9YvA1pqoumJwlw2EZqYl3AOp0GQuTM/9unhFrf9WXDim4D3WOv336AGhXmHdHP
+         aJk6UcZ/CgZLCYkFmc1GoqsWLBeo7PG/bQpjb6gMVKuqk6nnTNm461SmyYj/0vAwx/c2
+         JmxRXiNfhu2FDhbXjB00JeqBy5ROg98U6wVYGEqZQMwuMBeiwgDrfrjwlLPVZxxkJezs
+         xLEOLBN342AsVNO1AIqz4hA/kWRXO+1W9IaL+EzlgHGKc3XuT1FehCS4r/6gb3MTMaPk
+         gDIdX3rAJuXB72SQSBc2tG8GTz26Npfoitm6NjGlAwjmjUhd/FxQTwK0BJk5f+XixLSR
+         l4Og==
+X-Forwarded-Encrypted: i=1; AJvYcCVi2CiBE2PQgdT6kTHA2vtc33fZd8UjILS2NV/ggy9QOyn9zUIX53Lt4crhkQ7x7CIQRiH00ouN@vger.kernel.org, AJvYcCWBGz5hBWwMhGKz+EyduqqyYgDrAvy91gJCibpFHUKWcEWYoeYYgnj42pw+WWRXEPNenp+HtmjnAX4EVOiA@vger.kernel.org, AJvYcCXHBEBZHjHN4GcVd6ujqUVDo9T+kq7Mse0zQLlF+rvmaYpW+QVMqtaZDGuAdGAfuXiH9zY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyG5EmjKWnMe+USi7tZrbmxdofvrXjvxyFjOtdAi38fUPIB4Z2X
+	hfrfSSEHN64yCiusmpSVf9YaE56ZeV6Nd+5tj1SHNcZ05Fy5o+8L
+X-Gm-Gg: ASbGncvvbHmpFiGLYuddaEYhW9MFWegjsYEa7RjNNpf4rDo4ljjjVJUGFiJ30HQk+Yf
+	mlCE/QluMFEkeMolMHBuX1piWW69ZJCH+SmB/YQ+PbYeQfmxQaeb2hwh/dPsBKeIDBOeF7ZPh78
+	zo1baX4ViaPy8KWJRMlnlipO6reSlRksJ1nMnbtn7JEE1VW7ynX7tg6SvV+7nYjOz9+fADOSSSy
+	NfIEOft/4jsrNK2wVCBA1x6ejjQCDiI6cG1iMbWhQyJrq9ULyv9KHwc7v+eIIV5Bdte0Ku2/r/p
+	soCpOTvislZ+yNJ1tKtKqJfJqD+oOsS6X1Mv/Q/Ih99YNrok/5SEiNi5kqC43uAILFkqHwwYd+H
+	MtvsdD3YbY7DgultaeJg=
+X-Google-Smtp-Source: AGHT+IGlFaX35JSmF5xXiiSbldTiaLvL6d+ktyX+51i5YLyTONObh2bMZLgvRVqMK1AZZfqqaQtgRg==
+X-Received: by 2002:a17:90a:d64b:b0:2ee:f687:6acb with SMTP id 98e67ed59e1d1-30718b76a8emr2884244a91.13.1744272560461;
+        Thu, 10 Apr 2025 01:09:20 -0700 (PDT)
+Received: from ?IPV6:2001:ee0:4f0e:fb30:959f:bd4a:33b6:cab1? ([2001:ee0:4f0e:fb30:959f:bd4a:33b6:cab1])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7b8b2absm24625785ad.83.2025.04.10.01.09.15
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 01:08:55 -0700 (PDT)
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-86d6ac4d5a9so210519241.1;
-        Thu, 10 Apr 2025 01:08:55 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVMzxYJJ2WhJz5skt1Pob5TE6B/QIEiyRD2jBNc5axEapto/fE6Uq4J8Dv7MIclxUetRTBZngeaQVRvvg==@vger.kernel.org, AJvYcCWuzZ60eKoHQCHC0dwKBnk2VKlJvKmc5ovSAAHN0iJ39UWy1PaTGNfMsfDRqWCbrtVPoEWLgur+3O9u9GZ1@vger.kernel.org
-X-Received: by 2002:a05:6102:8008:b0:4c1:9cb2:8389 with SMTP id
- ada2fe7eead31-4c9d61ef6afmr559483137.2.1744272534799; Thu, 10 Apr 2025
- 01:08:54 -0700 (PDT)
+        Thu, 10 Apr 2025 01:09:20 -0700 (PDT)
+Message-ID: <84adec63-0ccd-449c-babf-994d579f3677@gmail.com>
+Date: Thu, 10 Apr 2025 15:09:13 +0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <4b046ce1cae2170453037c7ea006c91c12383dab.1744190441.git.geert+renesas@glider.be>
- <PN0PR01MB95889912BB81D1B1B579C7FEB8B42@PN0PR01MB9588.INDPRD01.PROD.OUTLOOK.COM>
-In-Reply-To: <PN0PR01MB95889912BB81D1B1B579C7FEB8B42@PN0PR01MB9588.INDPRD01.PROD.OUTLOOK.COM>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 10 Apr 2025 10:08:42 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWdttY-dfyvNX1rWTrL8zQdW=X+wXguK7djM06QPgGmdw@mail.gmail.com>
-X-Gm-Features: ATxdqUGAzfxXecFc0njVPSeh_FOxEd6Z9YFyzKHGLz57nYGg9ZXTBqr1eaedv-M
-Message-ID: <CAMuHMdWdttY-dfyvNX1rWTrL8zQdW=X+wXguK7djM06QPgGmdw@mail.gmail.com>
-Subject: Re: [PATCH] HID: HID_APPLETB_BL and HID_APPLETB_KBD should depend on X86
-To: Aditya Garg <gargaditya08@live.com>
-Cc: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
-	Kerem Karabay <kekrby@gmail.com>, linux-input@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] virtio-net: hold netdev_lock when pausing rx
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>,
+ =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
+ "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ virtualization@lists.linux.dev
+References: <20250404093903.37416-1-minhquangbui99@gmail.com>
+ <1743987836.9938157-1-xuanzhuo@linux.alibaba.com>
+ <30419bd6-13b1-4426-9f93-b38b66ef7c3a@gmail.com>
+ <CACGkMEs7O7D5sztwJVn45c+1pap20Oi5f=02Sy_qxFjbeHuYiQ@mail.gmail.com>
+ <4195db62-db43-4d61-88c3-7a7fbb164726@gmail.com>
+ <b7b1f5de-7003-4960-a9d1-883bf2f1aa77@gmail.com>
+ <4d3a1478-b6fc-47a3-8d77-7eca6a973a06@gmail.com>
+ <20250410035158-mutt-send-email-mst@kernel.org>
+Content-Language: en-US
+From: Bui Quang Minh <minhquangbui99@gmail.com>
+In-Reply-To: <20250410035158-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Aditya,
-
-On Wed, 9 Apr 2025 at 16:35, Aditya Garg <gargaditya08@live.com> wrote:
-> On 09-04-2025 02:51 pm, Geert Uytterhoeven wrote:
-> > The Apple Touch Bar is only present on x86 MacBook Pros.  Hence add a
-> > dependency on X86, to prevent asking the user about this driver when
-> > configuring a kernel for a different architecture.
-> >
-> > Fixes: 1fd41e5e3d7cc556 ("HID: hid-appletb-bl: add driver for the backlight of Apple Touch Bars")
-> > Fixes: 93a0fc48948107e0 ("HID: hid-appletb-kbd: add support for automatic brightness control while using the touchbar")
+On 4/10/25 14:58, Michael S. Tsirkin wrote:
+> On Thu, Apr 10, 2025 at 02:05:57PM +0700, Bui Quang Minh wrote:
+>> When pausing rx (e.g. set up xdp, xsk pool, rx resize), we call
+>> napi_disable() on the receive queue's napi. In delayed refill_work, it
+>> also calls napi_disable() on the receive queue's napi. When
+>> napi_disable() is called on an already disabled napi, it will sleep in
+>> napi_disable_locked while still holding the netdev_lock. As a result,
+>> later napi_enable gets stuck too as it cannot acquire the netdev_lock.
+>> This leads to refill_work and the pause-then-resume tx are stuck
+>> altogether.
+>>
+>> This scenario can be reproducible by binding a XDP socket to virtio-net
+>> interface without setting up the fill ring. As a result, try_fill_recv
+>> will fail until the fill ring is set up and refill_work is scheduled.
+>>
+>> This commit makes the pausing rx path hold the netdev_lock until
+>> resuming, prevent any napi_disable() to be called on a temporarily
+>> disabled napi.
+>>
+>> Fixes: 413f0271f396 ("net: protect NAPI enablement with netdev_lock()")
+>> Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
+>> ---
+>>   drivers/net/virtio_net.c | 74 +++++++++++++++++++++++++---------------
+>>   1 file changed, 47 insertions(+), 27 deletions(-)
+>>
+>> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+>> index 7e4617216a4b..74bd1065c586 100644
+>> --- a/drivers/net/virtio_net.c
+>> +++ b/drivers/net/virtio_net.c
+>> @@ -2786,9 +2786,13 @@ static void skb_recv_done(struct virtqueue *rvq)
+>>   }
+>>
+>>   static void virtnet_napi_do_enable(struct virtqueue *vq,
+>> -                   struct napi_struct *napi)
+>> +                   struct napi_struct *napi,
+>> +                   bool netdev_locked)
+>>   {
+>> -    napi_enable(napi);
+>> +    if (netdev_locked)
+>> +        napi_enable_locked(napi);
+>> +    else
+>> +        napi_enable(napi);
+>>
+>>       /* If all buffers were filled by other side before we napi_enabled, we
+>>        * won't get another interrupt, so process any outstanding packets now.
+>> @@ -2799,16 +2803,16 @@ static void virtnet_napi_do_enable(struct virtqueue
+>> *vq,
 >
-> Nit:
 >
-> The commit SHA should have only the first 12 characters.
 >
-> https://docs.kernel.org/process/submitting-patches.html#using-reported-by-tested-by-reviewed-by-suggested-by-and-fixes
-
-"at least the first 12 characters"
-(I know, because I made that change lately ;-)
-
-> Also, hid-appletb-kbd fix should be:
+> Your patch is line-wrapped, unfortunately. Here and elsewhere.
 >
-> Fixes: 8e9b9152cfbd ("HID: hid-appletb-kbd: add driver for the keyboard mode of Apple Touch Bars")
 >
-> I would also prefer having them as 2 separate patches.
+>
+>
+>>       local_bh_enable();
+>>   }
+>>
+>> -static void virtnet_napi_enable(struct receive_queue *rq)
+>> +static void virtnet_napi_enable(struct receive_queue *rq, bool
+>> netdev_locked)
+>>   {
+>>       struct virtnet_info *vi = rq->vq->vdev->priv;
+>>       int qidx = vq2rxq(rq->vq);
+>>
+>> -    virtnet_napi_do_enable(rq->vq, &rq->napi);
+>> +    virtnet_napi_do_enable(rq->vq, &rq->napi, netdev_locked);
+>>       netif_queue_set_napi(vi->dev, qidx, NETDEV_QUEUE_TYPE_RX, &rq->napi);
+>>   }
+>>
+>> -static void virtnet_napi_tx_enable(struct send_queue *sq)
+>> +static void virtnet_napi_tx_enable(struct send_queue *sq, bool
+>> netdev_locked)
+>>   {
+>>       struct virtnet_info *vi = sq->vq->vdev->priv;
+>>       struct napi_struct *napi = &sq->napi;
+>> @@ -2825,11 +2829,11 @@ static void virtnet_napi_tx_enable(struct send_queue
+>> *sq)
+>>           return;
+>>       }
+>>
+>> -    virtnet_napi_do_enable(sq->vq, napi);
+>> +    virtnet_napi_do_enable(sq->vq, napi, netdev_locked);
+>>       netif_queue_set_napi(vi->dev, qidx, NETDEV_QUEUE_TYPE_TX, napi);
+>>   }
+>>
+>> -static void virtnet_napi_tx_disable(struct send_queue *sq)
+>> +static void virtnet_napi_tx_disable(struct send_queue *sq, bool
+>> netdev_locked)
+>>   {
+>>       struct virtnet_info *vi = sq->vq->vdev->priv;
+>>       struct napi_struct *napi = &sq->napi;
+>> @@ -2837,18 +2841,24 @@ static void virtnet_napi_tx_disable(struct
+>> send_queue *sq)
+>>
+>>       if (napi->weight) {
+>>           netif_queue_set_napi(vi->dev, qidx, NETDEV_QUEUE_TYPE_TX, NULL);
+>> -        napi_disable(napi);
+>> +        if (netdev_locked)
+>> +            napi_disable_locked(napi);
+>> +        else
+>> +            napi_disable(napi);
+>>       }
+>>   }
+>>
+>> -static void virtnet_napi_disable(struct receive_queue *rq)
+>> +static void virtnet_napi_disable(struct receive_queue *rq, bool
+>> netdev_locked)
+>>   {
+>>       struct virtnet_info *vi = rq->vq->vdev->priv;
+>>       struct napi_struct *napi = &rq->napi;
+>>       int qidx = vq2rxq(rq->vq);
+>>
+>>       netif_queue_set_napi(vi->dev, qidx, NETDEV_QUEUE_TYPE_RX, NULL);
+>> -    napi_disable(napi);
+>> +    if (netdev_locked)
+>> +        napi_disable_locked(napi);
+>> +    else
+>> +        napi_disable(napi);
+>>   }
+>>
+>>   static void refill_work(struct work_struct *work)
+>> @@ -2875,9 +2885,11 @@ static void refill_work(struct work_struct *work)
+>>            *     instance lock)
+>>            *   - check netif_running() and return early to avoid a race
+>>            */
+>> -        napi_disable(&rq->napi);
+>> +        netdev_lock(vi->dev);
+>> +        napi_disable_locked(&rq->napi);
+>>           still_empty = !try_fill_recv(vi, rq, GFP_KERNEL);
+>
+> This does mean netdev_lock is held potentially for a long while,
+> while try_fill_recv and processing inside virtnet_napi_do_enable
+> finish. Better ideas?
+I prefer the first patch in this thread where we disable delayed refill 
+and cancel all inflight refill_work before pausing rx.
 
-OK, will do.
+Thanks,
+Quang Minh.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
