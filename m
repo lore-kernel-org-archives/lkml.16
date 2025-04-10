@@ -1,144 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gw2.atmark-techno.com (gw2.atmark-techno.com [35.74.137.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C4AC130A54;
-	Thu, 10 Apr 2025 07:55:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9062D1E32C3
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 07:56:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.74.137.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744271755; cv=none; b=k0NRi9PaakvQq43lI3ojzFaB3vpoDDFg0KNUNZhSgpda1XB0drrcRX4VdPZxYZ+N6+geTv/2HaohyAy4XBmTyrdDhg0C7kP4vc63WH6LRO5ZUgtiIxsCCEx/Z74W9MltxNUleF0Vcfhf+9kldwfxPMgviKmzaE3ZYbgqaPNHkUw=
+	t=1744271780; cv=none; b=aim/nfAUYS2tVlMhMpc6OwK0uFgKwmEGIzAER+HU7/Pqx1lVXR0uc2vWxLFM2ilAz7A5NqYl4qo/+HxOjWie4TvsO7SYqkppI4zzVp/06wKN5AB8Hr2ifZmTFoagVcHS6YrjihoexDwZRtleT5NAa7XRHStJ8Nt8ceMzsJ3xUuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744271755; c=relaxed/simple;
-	bh=rUbEEvvc1TPtm5AtTLAZF2apcyb6fC04ZE3v237YxYo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bIF/Sc4sfssTZPf+GXv1bMTQySZsYiMf0wJbMy6ghi5/Iw7TAt84sMjcDtxO1J6ZGm6Dbdo0cljp0qpynBF716U4EEYM/CWQlw5qgDbBVBCPeH9rdBLZFFptf/yzg3HkJsLQU+gcyE2HlFnTqHapCeJaZArCSzvQfGofGoCfSkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aEOoJf+y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744271780; c=relaxed/simple;
+	bh=QPVmfG85Pv08ENb66VI1j5/mFALeXl3IRPP/u81nJD4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M+BH1lObg5FUAsT++Q20zqq1wV2iwvnHVp/gJpD6I3RTvG5i6inefXi6AvhGCTuKwiKUn9mvhAH3RpaQIyZjoYWQTI3N1++JlyjHq9gnom0NrRK9q9RZmjct4wJ7ofQ3PoUHpwu6a8jkIztRzYg2UBfZiIkdX/BrrGgKqXditqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atmark-techno.com; spf=pass smtp.mailfrom=atmark-techno.com; dkim=pass (2048-bit key) header.d=atmark-techno.com header.i=@atmark-techno.com header.b=cMTbaFvZ; arc=none smtp.client-ip=35.74.137.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atmark-techno.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atmark-techno.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aEOoJf+y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A804C4CEE3;
-	Thu, 10 Apr 2025 07:55:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744271755;
-	bh=rUbEEvvc1TPtm5AtTLAZF2apcyb6fC04ZE3v237YxYo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aEOoJf+y5EIXVU1G2BqklP3ajU6AFhPDVq/DpNe0SfrJ/0sQw+nFYebbHs9gv+iW/
-	 +5Wv+hx9zxY/X+vef+rP/6mQpDudwHPwU2j9hubWZt6ArWNo10vpG94EpaUG91TLK3
-	 acXWWlIYgJSVtK+MliAtKEO7V9dxmqzaUv7rjwxdUoW72baZuLlnZGT5bRDnRo7QSC
-	 1NV6Sp+JHvmUHPwe5rBmNceDgd0lA3C1fvqzDkMVyO9gtLRY5vypFCMP8LikMoLEID
-	 Lrs3bHgk/rFN68cmyXvcpmjlfVzi9waa99585FBcGT7d9kvHwpVX2JguTA3UurEOKh
-	 6A+sZxcjGPI3Q==
-Message-ID: <14782b0e-3890-4d11-9a40-658da0951dfc@kernel.org>
-Date: Thu, 10 Apr 2025 09:55:47 +0200
+	dkim=pass (2048-bit key) header.d=atmark-techno.com header.i=@atmark-techno.com header.b="cMTbaFvZ"
+Authentication-Results: gw2.atmark-techno.com;
+	dkim=pass (2048-bit key; unprotected) header.d=atmark-techno.com header.i=@atmark-techno.com header.a=rsa-sha256 header.s=google header.b=cMTbaFvZ;
+	dkim-atps=neutral
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
+	by gw2.atmark-techno.com (Postfix) with ESMTPS id 2430298
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 16:50:23 +0900 (JST)
+Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-736cd36189bso703175b3a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 00:50:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=atmark-techno.com; s=google; t=1744271422; x=1744876222; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zI8FWvqkWPehqKj4Irm/YiRMxVqaxvlH7ZzjRgOa/ao=;
+        b=cMTbaFvZiDwoxUzoTcEgBzdiMj2TakwvA5TiZBqsqUmlNSFMn23u7qdLKV4huEDqIg
+         O8LQvkmaeF7G+51CrKtscZwguItmKH1oi09Q3vYOBd77DmCD4WA7MpbcRt58LXvHG5rP
+         PNedAtP5scdxX3wexjk8d8QUPrpjYr+8fURT9qy0M4+GPFXVoyvOJLYHQH0bvj4njkyN
+         Pv9adb2y6pVQjh76ABIoFZF0PbbsH7tD3e5w/OX4LSGkUFzn7XsTTzFnDZwkc1ScS1UA
+         osqSiaRrK8v2UOswW4FmrawerQfkL37dqJ1rWSIOapVqcCxbp6AUrLrShG96rmDoD0Gj
+         Rwjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744271422; x=1744876222;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zI8FWvqkWPehqKj4Irm/YiRMxVqaxvlH7ZzjRgOa/ao=;
+        b=eTexMhy/FEihNJeL1G2sXXHhReuMF7/S7gya/zgRhJ0Yh21McF45OvfIih5+T/eMNC
+         BgvQin2aGWqflh25Brj2sEsQ5iv2ZtOOEC1izhnU5JVfVIHvHWfQPWs3IRbgQoAatS2t
+         56IKnm/FoKUNpWOh1cQqAzSQAvQ9T3B8Q8qKxF+esRXnstdz+xeG2SCY5IxE0QFj7QJ4
+         Vb8s4G0/wpKIVwyhOQlWbZ/gXQjcpjOBkIC2sze3O4DSc6Fwe+xhMjswhDTYpG5emiKP
+         HIb1yv+U7//oYoXFPzIqwE9gEXXJuEY5OsNn1Jry+TZh4RSffy3xyRgP+k4K2mb0PR+h
+         4wWw==
+X-Forwarded-Encrypted: i=1; AJvYcCUlnR3BqhwnBLWkjwl82C06uvoJtekpf4YjOrB0U4dVQQYCLd3OMwqdzstYvg5u/bKiOJfs6Eab4s9iDHk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfdFNpw6EAAvPqXjPw2LHF0c+I0Lwktq8ERN/ObQfWet9awfQU
+	aPlOamx9yG2opkqhc1i5lVB32WPpSxqmD8/J8+AjVHJ1DzhDnZ1IdoYpzNLcKsJBx387PnPEYHF
+	x7obsrjBxcbYHkr34Gf7+4enljuTxn7F02Cmjcd342L6l47vLg0PhlsUcPjx5z1o=
+X-Gm-Gg: ASbGncsU7BjubSs06Fp2jlpjFmJn+WHNrdQwSvFNL/dMP7sAtq3LEeWQx04TTJFQAl6
+	/yjNzk/yaljfRriBoWu0o6ymbocBZ5JOwef4W1MzGTfFNVp92gER+/APDglaiTSx0Zdmm7We2Wm
+	9jd3RTWWmkRj9MPZL5uVFJmqWxC9I+62mMF+m9bWk2bO7yCgRmKCl+P7hLu1nJmhNuzAO+vvmYx
+	f/Yso9m/xjnP0WMmGx+2Mk/MFe6LrT/4oKkWE/8APtfLWLYe4L34rGl2xFHEQKz93xMMQYy6qLU
+	/8EHIfV0c8ATR+jwDerQ6/9li7ut+OVgMdKJezYQE5LnLWLixLAOiaWzISihJXEljEk2XyI=
+X-Received: by 2002:a05:6a00:3a0b:b0:736:2a73:6756 with SMTP id d2e1a72fcca58-73bbf01e01cmr2458039b3a.21.1744271422086;
+        Thu, 10 Apr 2025 00:50:22 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHG4WTCFiCZzKFbEqwBIEaL7Fn0aSCHk9N1v/EMTUYYQLaZr2byejL0KAEY4tDGPPOiIxiYdw==
+X-Received: by 2002:a05:6a00:3a0b:b0:736:2a73:6756 with SMTP id d2e1a72fcca58-73bbf01e01cmr2458005b3a.21.1744271421600;
+        Thu, 10 Apr 2025 00:50:21 -0700 (PDT)
+Received: from localhost (162.198.187.35.bc.googleusercontent.com. [35.187.198.162])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1e51ed7sm2592923b3a.155.2025.04.10.00.50.20
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 10 Apr 2025 00:50:21 -0700 (PDT)
+Date: Thu, 10 Apr 2025 16:50:09 +0900
+From: Dominique MARTINET <dominique.martinet@atmark-techno.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+Subject: Re: [PATCH 5.10 000/228] 5.10.236-rc2 review
+Message-ID: <Z_d4MQP8_WJXxtzs@atmark-techno.com>
+References: <20250409115831.755826974@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 1/7] mfd: Add core driver for Nuvoton NCT6694
-To: Lee Jones <lee@kernel.org>
-Cc: a0282524688@gmail.com, linus.walleij@linaro.org, brgl@bgdev.pl,
- andi.shyti@kernel.org, mkl@pengutronix.de, mailhol.vincent@wanadoo.fr,
- andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, wim@linux-watchdog.org,
- linux@roeck-us.net, jdelvare@suse.com, alexandre.belloni@bootlin.com,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-can@vger.kernel.org,
- netdev@vger.kernel.org, linux-watchdog@vger.kernel.org,
- linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org,
- linux-usb@vger.kernel.org, Ming Yu <tmyu0@nuvoton.com>
-References: <20250409082752.3697532-1-tmyu0@nuvoton.com>
- <20250409082752.3697532-2-tmyu0@nuvoton.com>
- <11d2541e-580b-4060-ad92-ed721e98793e@kernel.org>
- <20250410075225.GL372032@google.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250410075225.GL372032@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250409115831.755826974@linuxfoundation.org>
 
-On 10/04/2025 09:52, Lee Jones wrote:
-> On Thu, 10 Apr 2025, Krzysztof Kozlowski wrote:
+Greg Kroah-Hartman wrote on Wed, Apr 09, 2025 at 02:02:11PM +0200:
+> This is the start of the stable review cycle for the 5.10.236 release.
+> There are 228 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
->> On 09/04/2025 10:27, a0282524688@gmail.com wrote:
->>> +
->>> +static int nct6694_response_err_handling(struct nct6694 *nct6694,
->>> +					 unsigned char err_status)
->>> +{
->>> +	switch (err_status) {
->>> +	case NCT6694_NO_ERROR:
->>> +		return 0;
->>> +	case NCT6694_NOT_SUPPORT_ERROR:
->>> +		dev_err(nct6694->dev, "Command is not supported!\n");
->>> +		break;
->>> +	case NCT6694_NO_RESPONSE_ERROR:
->>> +		dev_warn(nct6694->dev, "Command received no response!\n");
->>> +		break;
->>> +	case NCT6694_TIMEOUT_ERROR:
->>> +		dev_warn(nct6694->dev, "Command timed out!\n");
->>> +		break;
->>> +	case NCT6694_PENDING:
->>> +		dev_err(nct6694->dev, "Command is pending!\n");
->>> +		break;
->>> +	default:
->>> +		return -EINVAL;
->>> +	}
->>> +
->>> +	return -EIO;
->>> +}
->>> +
->>
->> Missing Kconfig. Exported functions are supposed to have it.
->           -------
+> Responses should be made by Fri, 11 Apr 2025 11:57:56 +0000.
+> Anything received after that time might be too late.
 > 
-> KernelDoc
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.10.236-rc2.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.10.y
+> and the diffstat can be found below.
 
+Tested 5b68aafded4a ("Linux 5.10.236-rc2") on:
+- arm i.MX6ULL (Armadillo 640)
+- arm64 i.MX8MP (Armadillo G4)
 
-Yes, thank you. -ENOCOFFEE
+No obvious regression in dmesg or basic tests:
+Tested-by: Dominique Martinet <dominique.martinet@atmark-techno.com>
 
-
-Best regards,
-Krzysztof
+-- 
+Dominique Martinet
