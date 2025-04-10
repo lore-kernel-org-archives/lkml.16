@@ -1,193 +1,88 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7075A28C5D3;
-	Thu, 10 Apr 2025 13:08:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E7ED2857FA;
+	Thu, 10 Apr 2025 13:09:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744290522; cv=none; b=eJ/aOuJLJ52ySnYpudFwFIooQpQR7TH6L8CZ3ii4JZVbts6zOPZbH7H8/UHbS2Bu1EGsan9U/9/H1WM9CjJqzXrqsHF3rWrKO0CuB+GkSXK7sM7z8AR3g7mQAaJlR4uNQBjVGKn90Ysf5ZalwXfhZxVvt+jnDu0uJpJ+oOkwCt0=
+	t=1744290593; cv=none; b=DBxpQnTHr92DsEw/oeTFO1UdiugVTlZJ07QtFfBMS8X5c08IJbqrmTzgK7DnZbmhlI93kJLbQtyxul+sGMTGwi1ZUMHOkfsqKu2y+Le90HZ4XRZMEKUfRhA/OgQOxNCIFoha4+9hCNahrPXT4zDigGNFfUZ83Ua9S+xqNqzwIy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744290522; c=relaxed/simple;
-	bh=IRpptOiKFrmHAhXBkMvL+moUnHRIzNyCQ9OIUGR3TUo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=I3huoja+89t2tYLW3vKWzhHgZx55EJFBPXGvMSIBQR20G1Z0x/kzC9tjPSsZzyfc1txraWg9qEIuIZW3a3z8B/SCFzk3jVXWv9m5x6NmroJKnnTEFFUsLSjvY1xiifKl8h0HCYaqILvJooVGkGNhQ5ax6oo+z4/Rf7VJ5BBAjb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bqnsJ6s2; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1744290593; c=relaxed/simple;
+	bh=XpF5AzT2dy0cpthIZ5eqxi3p0HxdB3suZzndg1za8XA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HriPIvpMIvU8aiEacPogAC2s9GED7ouUIDDInN/P360NqrNxI1SV7JiKUMmHyWR6amaY0tEmKSTbvn3vTYKfCcSpgToXTbZaNjwxyItDo/S5TBwS/YDVW+lkkjIzjweu953+O2nmkdt4mN/iabCVyA3MX5UMzkIUEwIunu+B31Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=GjxtBYEf; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bqnsJ6s2"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53A75aKN018319;
-	Thu, 10 Apr 2025 13:08:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	C0lS2+7VSOL0SIGZcpKjdnDb9d67WgyN16/wLnthOpw=; b=bqnsJ6s2atv0917k
-	jG+3SXVTxD6aJUTJpgtQhtlzpZYEK+LRGffmOYi9FrTonuPnDjJHyqd9+pIIxWN4
-	PzBQ3CZoJJ5VX/DPd48umgdupTyQPfQHTLQgJl4BmGsLsKC3O1c4Di8dIOfSpnAr
-	PqYdxS4uSpPuBK3HZo3lF3BruLBkf2/M75Z1YCzU/UYXp2gVuPX43sVa1DyERJKd
-	hoGoCCWpCnBrxF6Uv/YC03N/Li9zqrONLyzRO+f9pe/amtEmeVgTrXDADrdqtrYn
-	ufAg0tWRy+hrjnX1TcDr2DMNTC94xJv+lixiDi+hB3VcEAK6vSq3e9nT/KDm1wDP
-	URzTQg==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twtb73ty-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Apr 2025 13:08:07 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53AD86rA014610
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 10 Apr 2025 13:08:06 GMT
-Received: from [10.216.14.182] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 10 Apr
- 2025 06:07:57 -0700
-Message-ID: <0f4eca6c-67df-4730-88b3-a277903deabc@quicinc.com>
-Date: Thu, 10 Apr 2025 18:37:54 +0530
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GjxtBYEf"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=safJ4H6fBnn2c0duhP0nKLcIeCGsFeCk0AWhMrWuTu0=; b=GjxtBYEffrCUYvHvl9e7zOIFSa
+	MpNEbKpiHmqa4fRmkNvC2VR9229EFaXnX2ehw4OyIBXPpcescZI49zHgmr2lw/Q+zOmRX7mcQJaFb
+	jLDE3VS2yUDr4egKNqm0hbsX0ygtI2qUkZfefbJKi85u0u34fF3zajnSShgxXoiWDroJvG58616V+
+	g0IBj2ZZgU3AWngxtwHXfV2/Z4ZQ2qLXJZyIAFh/VVdzcPHwIRqpbYXsx6eSZ/VZgOBd0mF+SW3Xz
+	Ej2FuCxnVZYWh6iL5Ha3kFootlMTj0lCsf0vgW2Kq3SyanwAmJxQ9hdvqzOdxzDTn5z4kgDqzINd/
+	h0Z4pP2w==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u2rf7-00000008owm-2GiD;
+	Thu, 10 Apr 2025 13:09:45 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id EA0C03003FA; Thu, 10 Apr 2025 15:09:44 +0200 (CEST)
+Date: Thu, 10 Apr 2025 15:09:44 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: =?utf-8?B?UGF3ZcWC?= Anikiel <panikiel@google.com>
+Cc: Sami Tolvanen <samitolvanen@google.com>, Kees Cook <kees@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Nathan Chancellor <nathan@kernel.org>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH] x86/Kconfig: make CFI_AUTO_DEFAULT depend on !RUST
+Message-ID: <20250410130944.GA9003@noisy.programming.kicks-ass.net>
+References: <20250410115420.366349-1-panikiel@google.com>
+ <20250410123602.GZ9833@noisy.programming.kicks-ass.net>
+ <20250410124526.GB9833@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 07/10] arm64: dts: qcom: sa8775p-ride: add anx7625 DSI
- to DP bridge nodes
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        <konradybcio@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <robdclark@gmail.com>,
-        <dmitry.baryshkov@linaro.org>, <sean@poorly.run>,
-        <marijn.suijten@somainline.org>, <andersson@kernel.org>,
-        <robh@kernel.org>, <robh+dt@kernel.org>, <krzk+dt@kernel.org>,
-        <konradybcio@kernel.org>, <conor+dt@kernel.org>,
-        <andrzej.hajda@intel.com>, <neil.armstrong@linaro.org>,
-        <rfoss@kernel.org>, <Laurent.pinchart@ideasonboard.com>,
-        <jonas@kwiboo.se>, <jernej.skrabec@gmail.com>,
-        <quic_abhinavk@quicinc.com>, <quic_rajeevny@quicinc.com>,
-        <quic_vproddut@quicinc.com>, <quic_jesszhan@quicinc.com>
-References: <20250404115539.1151201-1-quic_amakhija@quicinc.com>
- <20250404115539.1151201-8-quic_amakhija@quicinc.com>
- <nxnqwh2mzvnxv5ytwjsyulxr6ct6mhv3z3v6q4ojrjhhclwv2i@55nb56hnwi3y>
-Content-Language: en-US
-From: Ayushi Makhija <quic_amakhija@quicinc.com>
-In-Reply-To: <nxnqwh2mzvnxv5ytwjsyulxr6ct6mhv3z3v6q4ojrjhhclwv2i@55nb56hnwi3y>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: u6cLcpuCQZXqIApBuHPMYAggNJBvecAZ
-X-Authority-Analysis: v=2.4 cv=LLlmQIW9 c=1 sm=1 tr=0 ts=67f7c2b7 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=zjBtcsmdu44VOzoy24MA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: u6cLcpuCQZXqIApBuHPMYAggNJBvecAZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-10_03,2025-04-08_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
- clxscore=1015 mlxlogscore=999 malwarescore=0 phishscore=0
- lowpriorityscore=0 priorityscore=1501 mlxscore=0 spamscore=0 adultscore=0
- suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504100095
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250410124526.GB9833@noisy.programming.kicks-ass.net>
 
-Hi Dmirity/Konard
+On Thu, Apr 10, 2025 at 02:45:26PM +0200, Peter Zijlstra wrote:
+> On Thu, Apr 10, 2025 at 02:36:02PM +0200, Peter Zijlstra wrote:
+> > On Thu, Apr 10, 2025 at 11:54:20AM +0000, Paweł Anikiel wrote:
+> > > Calling core::fmt::write() from rust code while FineIBT is enabled
+> > > results in a kernel panic:
 
-On 4/7/2025 1:42 AM, Dmitry Baryshkov wrote:
-> On Fri, Apr 04, 2025 at 05:25:36PM +0530, Ayushi Makhija wrote:
->> Add anx7625 DSI to DP bridge device nodes.
->>
->> Signed-off-by: Ayushi Makhija <quic_amakhija@quicinc.com>
->> ---
->>  arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi | 208 ++++++++++++++++++++-
->>  1 file changed, 207 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
->> index 175f8b1e3b2d..8e784ccf4138 100644
->> --- a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
->> @@ -28,6 +28,13 @@ chosen {
->>  		stdout-path = "serial0:115200n8";
->>  	};
->>  
->> +	vph_pwr: vph-pwr-regulator {
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "vph_pwr";
->> +		regulator-always-on;
->> +		regulator-boot-on;
->> +	};
->> +
->>  	vreg_conn_1p8: vreg_conn_1p8 {
->>  		compatible = "regulator-fixed";
->>  		regulator-name = "vreg_conn_1p8";
->> @@ -128,6 +135,30 @@ dp1_connector_in: endpoint {
->>  			};
->>  		};
->>  	};
->> +
->> +	dp-dsi0-connector {
->> +		compatible = "dp-connector";
->> +		label = "DSI0";
->> +		type = "full-size";
->> +
->> +		port {
->> +			dp_dsi0_connector_in: endpoint {
->> +				remote-endpoint = <&dsi2dp_bridge0_out>;
->> +			};
->> +		};
->> +	};
->> +
->> +	dp-dsi1-connector {
->> +		compatible = "dp-connector";
->> +		label = "DSI1";
->> +		type = "full-size";
->> +
->> +		port {
->> +			dp_dsi1_connector_in: endpoint {
->> +				remote-endpoint = <&dsi2dp_bridge1_out>;
->> +			};
->> +		};
->> +	};
->>  };
->>  
->>  &apps_rsc {
->> @@ -517,9 +548,135 @@ &i2c11 {
->>  
->>  &i2c18 {
->>  	clock-frequency = <400000>;
->> -	pinctrl-0 = <&qup_i2c18_default>;
->> +	pinctrl-0 = <&qup_i2c18_default>,
->> +		    <&io_expander_intr_active>,
->> +		    <&io_expander_reset_active>;
-> 
-> These pinctrl entries should go to the IO expander itself.
-> 
->>  	pinctrl-names = "default";
->> +
->>  	status = "okay";
->> +
->> +	io_expander: gpio@74 {
->> +		compatible = "ti,tca9539";
->> +		reg = <0x74>;
->> +		interrupts-extended = <&tlmm 98 IRQ_TYPE_EDGE_BOTH>;
->> +		gpio-controller;
->> +		#gpio-cells = <2>;
->> +		interrupt-controller;
->> +		#interrupt-cells = <2>;
->> +
->> +		gpio2-hog {
-> 
-> This needs a huuge explanation in the commit message. Otherwise I'd say
-> these pins should likely be used by the corresponding anx bridges.
+> > > This happens because core::fmt::write() calls
+> > > core::fmt::rt::Argument::fmt(), which currently has CFI disabled:
+> > > 
+> > > library/core/src/fmt/rt.rs:
+> > > 171     // FIXME: Transmuting formatter in new and indirectly branching to/calling
+> > > 172     // it here is an explicit CFI violation.
+> > > 173     #[allow(inline_no_sanitize)]
+> > > 174     #[no_sanitize(cfi, kcfi)]
+> > > 175     #[inline]
+> > > 176     pub(super) unsafe fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+> > > 
 
-Thanks, for the review.
+Miguel, I cannot find this code in the kernel tree. Is this again
+because Rust is not free-standing and relies on external code?
 
-Previously, I was referring to the downstream DT and misunderstood the use of gpio-hog.
-After reading the schematic, I realized that gpio2, gpio3, gpio10, and gpio11 are all input pins
-to the IO expander TC9539. We have already configured gpio2 and gpio10 as interrupts in the
-ANX7625 bridges, so the gpio-hog is not required. It is working without the gpio-hog configuration.
-
-Thanks,
-Ayushi
+Can you please fix that. Building against external code that is not
+under our control is a problem.
 
