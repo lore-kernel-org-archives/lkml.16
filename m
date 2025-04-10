@@ -1,238 +1,164 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48C871E9B2E
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 02:58:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6294C9D;
+	Thu, 10 Apr 2025 03:02:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744253918; cv=none; b=O62f3ZUdnIk4Ij7q57Mwrups8F/1i2npdARyBGokBllNrqsGKB8WVHuldFQ5y3vvVBiCsIesOGj3vdCUC9wwKMnhDySYb3hae7SDgNAcbdiU9vndZU+KGQ7FvriMKFp16ic2CFu2mRrJ358Q0g22IhoqI5K/UFZRDQfLzxsNVcU=
+	t=1744254137; cv=none; b=gKcq1xEyctD8fRKVe+9Jn2X2+uL0mAcu8zdG8Y7639tkSJyDnQ1cI37U7RnethRGeZMD5wOIssxpt1+EXpd2mWf1HeFe+xKvr1KQJoquZrcJvdGy4if8KYstXDvJ0Ike2MhJiqA3281z6FlRaqCTtDpaj2Edsm7xHXZyrzLdaIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744253918; c=relaxed/simple;
-	bh=CmeDoUQ6T/D8OzJxq7xNpmX60m8rVBfD47Vnaq6AeWM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=RSC+ZlWucSg2awjKocijsV/wcD8Cl5W35UJMkTDtlr0xh/mA5pnrsBMsdBPI+++d7c4L15a1tB03YQWUk5rdnzbCN6QynrGheplHhvh3giLf4WpEpYEJO7RWRKTzbfyBmeUI3FDRP07Ih6HbNHxJylZBAek+G0ZpgnwXx9pgJxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ku6Y5pf9; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744254137; c=relaxed/simple;
+	bh=SkZn5U4FeYjjSd+ibPg9tpFIH6uVaJpZtykZkZ+21s4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Xu41CS2GXhi8W8gRKFC9v4PSltdLN5taWZBJtfECWpzA74Ez0ehPTJEbAPMSbru0p0qOKO+OYOZySH9bg7hcWVgI4GPyo3vvPINH9Z4a9rLqCqv28QXE/Ez5qZbUYF7v1nsxAhS2MVz1wOKbLd7z5ba4xDOsiDyeREOAopwOXtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IBxsKnGM; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ku6Y5pf9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744253916; x=1775789916;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=CmeDoUQ6T/D8OzJxq7xNpmX60m8rVBfD47Vnaq6AeWM=;
-  b=Ku6Y5pf9V/P+NFsrZqOiAk7fssS/Cj/calP/mJn9/F63S91SgAGTQmrB
-   1YRwka1BBsO+OwsezXwVDJz7Qw6Zl6wpuQICh6lW2nrkU1SI4fg7tQcU1
-   mAPE8eRMGmKCOkHYWEPIyNEKtTtvknihzmRsX8vBROzScUQrMt/RNh4V9
-   K0OVvWNeIMecvFew65yRUSVIGshQwL2jCAPDJ8d8hmvS1CNRxRCidxl86
-   +vKyHoZbRnCCW2uzZTove3VWU+gC9gy/ddrmjWudbYNwL5E2anYR3zFZC
-   gAVzrcMiuNmZMligH36naOu2VsQwgYmiQ0LrpYE58uUJcGrwz8hs/8yua
-   w==;
-X-CSE-ConnectionGUID: t2jt11LfQh6Akf10lsxK/g==
-X-CSE-MsgGUID: C2KAAu3ORamiSW3uajnXcw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11399"; a="45765863"
-X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
-   d="scan'208";a="45765863"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2025 19:58:35 -0700
-X-CSE-ConnectionGUID: UQA3/QipQHWxdmqaCGO1Sw==
-X-CSE-MsgGUID: jmbGjHEKTMyFyZxb2ZX5rA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,201,1739865600"; 
-   d="scan'208";a="133628759"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 09 Apr 2025 19:58:34 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u2i7b-0009Wb-1u;
-	Thu, 10 Apr 2025 02:58:31 +0000
-Date: Thu, 10 Apr 2025 10:57:55 +0800
-From: kernel test robot <lkp@intel.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Jeff Layton <jlayton@kernel.org>,
-	Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.cz>
-Subject: fs/pidfs.c:279:10: error: unexpected token, expected comma
-Message-ID: <202504101318.oSgjogsQ-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IBxsKnGM"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-38f2f391864so113862f8f.3;
+        Wed, 09 Apr 2025 20:02:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744254133; x=1744858933; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TosMyF3hM14iMOWdmkP174aiYxZsY4oWZ8xk8+GUX5A=;
+        b=IBxsKnGM3+nA9RmSFgkSC3r/RA4yJ8KOwCzXvcsLPOD1FdbwSYaqDSaltAu9HI9Xw5
+         mas+YBZhfgFxBo8cdRoqcmsdpx0axGEY0RddzPchkJtuVqYPOnTnNuj395qJg0VSr/Rt
+         RO9du8oCGsDH08hP8J/DjZXpaGlipcAGrdIvi3UYKulAhRjxdyvpdGS7Au/nP3McPBko
+         8sAt+Xu6M2E1SIka+8M9UhX8e6IyTQ/BKSjdAkYN9aqLgOr6rOynL1EEaeQGrJzgvtdd
+         SoKMco1ZiLHpkhSu5z22DnfPQ0Ftf/gbAEWOJ/fohQbq7wI3W2EkTMJK82DtBxT0Lc5l
+         OjWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744254133; x=1744858933;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TosMyF3hM14iMOWdmkP174aiYxZsY4oWZ8xk8+GUX5A=;
+        b=Mtw8qPF97KLlOXumSomA8Z16c7LtGzSJEed8TJMccZj6JTVN0Q6vAkzSJkLNH34f6N
+         Olxc0zol6RRxLNCybAI++axkvTcFvEum/GMXpOBs7vsBxCBJgfnBdDOSA8QEeZ8fLpXb
+         QfBKNo/bV2Yqk7URtO8Lbq9V8JLjJUU7LtG/PfwIslDNul1vnYnPqiQUR0EaV4vd9vfU
+         gr6r912fjyBWn9uaOPoQubkrq9zRcaCjg8y70All7ZSb01V1LhvmyhjxgrAXVRSpL8V8
+         xBIgagw5Oy9FLIpOCKlPWtdqtK3sPwwFqdK539Zaolaovyjf/+bINImRn8xV2SaoYmdr
+         lFBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUa5WUyOKmQsiGhZS9S0eubNXD++mGRgsKNg7yXtrQy7r3B/wF6HcjPkN6REqKeRVq7MlpoCZlOV8Ol/khlTKfu@vger.kernel.org, AJvYcCWUsRkaPtn+hRY5cwGP+5udxvr7Y1/5QCcJTnL1b4UmTC55O8Itm/edBSBafMCIP/ecxF/f9ODZOj7h5rE=@vger.kernel.org, AJvYcCXdXzo29OJ0JCR6wJtAnTusyNux8gSOUgOXM1JQq5TDO3ly66Dt0pIUcNcMsFOd9beTsZ9wMGnm@vger.kernel.org
+X-Gm-Message-State: AOJu0YyY+akN/qVVSHd6r2lS+j1TzCqCD5wpaw+vTDzYM4Q22Y/yLnz1
+	PMeHxLwLHytMnZfmQ+9u/Mi7eSY5SAT2K2VLWMzDeEhDod9cZ5zWABpk0yA6+KkM85ErQNQSmGv
+	ObVyLTX2n4jW1NTXKrAKtwkceD/I=
+X-Gm-Gg: ASbGncsiNe0ytjTDEV4WwTmX5qGNvYOs2EQca/L0AP7tXRRaX1jgvUiwVvihYGIEJKi
+	qm+p9NB9DUwEKA5DX7pWGq16d/o8Sh8B8sJUdR4rgUTHMlGr57vsSdvIz+Xk5t8Q03DT/pDjrla
+	qBolC9+1UlhfdyVSsFiEMvK+T5vR9/jiMt+ln5L6H/d5ZT8304
+X-Google-Smtp-Source: AGHT+IHpUwaWhgRZ41AT4rxFxUm3FAVIc7wt5lzcaYpnWiEJS4LCZo2epefVXB/w02Le3ZpXVE0na+iX0kvxlCmTFYY=
+X-Received: by 2002:a5d:598c:0:b0:391:3b70:2dab with SMTP id
+ ffacd0b85a97d-39d8fd47aaamr426855f8f.17.1744254132801; Wed, 09 Apr 2025
+ 20:02:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250408073033.60377-1-jiayuan.chen@linux.dev> <20250408073033.60377-3-jiayuan.chen@linux.dev>
+In-Reply-To: <20250408073033.60377-3-jiayuan.chen@linux.dev>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Wed, 9 Apr 2025 20:02:01 -0700
+X-Gm-Features: ATxdqUGJnbxliQPhDYbcypFW7z8hybrTt2fW909Abf4g0R0ZOjHv_LJpkdQTxf0
+Message-ID: <CAADnVQJibNXGSxUnjb8q=vNNdJ7AOVm0Mq+1sQn9fdUMY0JPSA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v4 2/3] bpf, sockmap: avoid using sk_socket after
+ free when reading
+To: Jiayuan Chen <jiayuan.chen@linux.dev>
+Cc: bpf <bpf@vger.kernel.org>, Jiayuan Chen <mrpre@163.com>, 
+	syzbot+dd90a702f518e0eac072@syzkaller.appspotmail.com, 
+	John Fastabend <john.fastabend@gmail.com>, Jakub Sitnicki <jakub@cloudflare.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, Michal Luczaj <mhal@rbox.co>, 
+	Cong Wang <cong.wang@bytedance.com>, Network Development <netdev@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   3b07108ada81a8ebcebf1fe61367b4e436c895bd
-commit: 230536ff6b06b199995687aa7fbf164970ebda85 pidfs: support FS_IOC_GETVERSION
-date:   4 months ago
-config: mips-randconfig-r064-20250408 (https://download.01.org/0day-ci/archive/20250410/202504101318.oSgjogsQ-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 92c93f5286b9ff33f27ff694d2dc33da1c07afdd)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250410/202504101318.oSgjogsQ-lkp@intel.com/reproduce)
+On Tue, Apr 8, 2025 at 12:31=E2=80=AFAM Jiayuan Chen <jiayuan.chen@linux.de=
+v> wrote:
+>
+> There are potential concurrency issues, as shown below.
+> '''
+> CPU0                               CPU1
+> sk_psock_verdict_data_ready:
+>   socket *sock =3D sk->sk_socket
+>   if (!sock) return
+>                                    close(fd):
+>                                      ...
+>                                      ops->release()
+>   if (!sock->ops) return
+>                                      sock->ops =3D NULL
+>                                      rcu_call(sock)
+>                                      free(sock)
+>   READ_ONCE(sock->ops)
+>   ^
+>   use 'sock' after free
+> '''
+>
+> RCU is not applicable to Unix sockets read path, because the Unix socket
+> implementation itself assumes it's always in process context and heavily
+> uses mutex_lock, so, we can't call read_skb within rcu lock.
+>
+> Incrementing the psock reference count would not help either, since
+> sock_map_close() does not wait for data_ready() to complete its execution=
+.
+>
+> While we don't utilize sk_socket here, implementing read_skb at the sock
+> layer instead of socket layer might be architecturally preferable ?
+> However, deferring this optimization as current fix adequately addresses
+> the immediate issue.
+>
+> Fixes: c63829182c37 ("af_unix: Implement ->psock_update_sk_prot()")
+> Reported-by: syzbot+dd90a702f518e0eac072@syzkaller.appspotmail.com
+> Closes: https://lore.kernel.org/bpf/6734c033.050a0220.2a2fcc.0015.GAE@goo=
+gle.com/
+> Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+> ---
+>  net/core/skmsg.c | 13 ++++++++++---
+>  1 file changed, 10 insertions(+), 3 deletions(-)
+>
+> diff --git a/net/core/skmsg.c b/net/core/skmsg.c
+> index 6101c1bb279a..5e913b62929e 100644
+> --- a/net/core/skmsg.c
+> +++ b/net/core/skmsg.c
+> @@ -1231,17 +1231,24 @@ static int sk_psock_verdict_recv(struct sock *sk,=
+ struct sk_buff *skb)
+>
+>  static void sk_psock_verdict_data_ready(struct sock *sk)
+>  {
+> -       struct socket *sock =3D sk->sk_socket;
+> +       struct socket *sock;
+>         const struct proto_ops *ops;
+>         int copied;
+>
+>         trace_sk_data_ready(sk);
+>
+> -       if (unlikely(!sock))
+> +       rcu_read_lock();
+> +       sock =3D sk->sk_socket;
+> +       if (unlikely(!sock)) {
+> +               rcu_read_unlock();
+>                 return;
+> +       }
+>         ops =3D READ_ONCE(sock->ops);
+> -       if (!ops || !ops->read_skb)
+> +       if (!ops || !ops->read_skb) {
+> +               rcu_read_unlock();
+>                 return;
+> +       }
+> +       rcu_read_unlock();
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504101318.oSgjogsQ-lkp@intel.com/
+This makes no sense to me. RCU doesn't work this way.
 
-All errors (new ones prefixed by >>):
-
-   In file included from fs/pidfs.c:10:
-   In file included from include/linux/pid_namespace.h:7:
-   In file included from include/linux/mm.h:2223:
-   include/linux/vmstat.h:518:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     518 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
->> fs/pidfs.c:279:10: error: unexpected token, expected comma
-     279 |                 return put_user(file_inode(file)->i_generation, argp);
-         |                        ^
-   arch/mips/include/asm/uaccess.h:71:33: note: expanded from macro 'put_user'
-      71 |         access_ok(__p, sizeof(*__p)) ? __put_user((x), __p) : -EFAULT;  \
-         |                                        ^
-   arch/mips/include/asm/uaccess.h:136:18: note: expanded from macro '__put_user'
-     136 |                 __put_data_asm(user_sw, __pu_ptr);                      \
-         |                                ^
-   <inline asm>:3:10: note: instantiated into assembly here
-       3 |         .set    eva
-         |                    ^
-   fs/pidfs.c:279:10: error: instruction requires a CPU feature not currently enabled
-     279 |                 return put_user(file_inode(file)->i_generation, argp);
-         |                        ^
-   arch/mips/include/asm/uaccess.h:71:33: note: expanded from macro 'put_user'
-      71 |         access_ok(__p, sizeof(*__p)) ? __put_user((x), __p) : -EFAULT;  \
-         |                                        ^
-   arch/mips/include/asm/uaccess.h:136:18: note: expanded from macro '__put_user'
-     136 |                 __put_data_asm(user_sw, __pu_ptr);                      \
-         |                                ^
-   <inline asm>:4:2: note: instantiated into assembly here
-       4 |         swe $3, 0($17)
-         |         ^
-   1 warning and 2 errors generated.
-
-
-vim +279 fs/pidfs.c
-
-   265	
-   266	static long pidfd_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-   267	{
-   268		struct task_struct *task __free(put_task) = NULL;
-   269		struct nsproxy *nsp __free(put_nsproxy) = NULL;
-   270		struct pid *pid = pidfd_pid(file);
-   271		struct ns_common *ns_common = NULL;
-   272		struct pid_namespace *pid_ns;
-   273	
-   274		if (cmd == FS_IOC_GETVERSION) {
-   275			if (!arg)
-   276				return -EINVAL;
-   277	
-   278			__u32 __user *argp = (__u32 __user *)arg;
- > 279			return put_user(file_inode(file)->i_generation, argp);
-   280		}
-   281	
-   282		task = get_pid_task(pid, PIDTYPE_PID);
-   283		if (!task)
-   284			return -ESRCH;
-   285	
-   286		/* Extensible IOCTL that does not open namespace FDs, take a shortcut */
-   287		if (_IOC_NR(cmd) == _IOC_NR(PIDFD_GET_INFO))
-   288			return pidfd_info(task, cmd, arg);
-   289	
-   290		if (arg)
-   291			return -EINVAL;
-   292	
-   293		scoped_guard(task_lock, task) {
-   294			nsp = task->nsproxy;
-   295			if (nsp)
-   296				get_nsproxy(nsp);
-   297		}
-   298		if (!nsp)
-   299			return -ESRCH; /* just pretend it didn't exist */
-   300	
-   301		/*
-   302		 * We're trying to open a file descriptor to the namespace so perform a
-   303		 * filesystem cred ptrace check. Also, we mirror nsfs behavior.
-   304		 */
-   305		if (!ptrace_may_access(task, PTRACE_MODE_READ_FSCREDS))
-   306			return -EACCES;
-   307	
-   308		switch (cmd) {
-   309		/* Namespaces that hang of nsproxy. */
-   310		case PIDFD_GET_CGROUP_NAMESPACE:
-   311			if (IS_ENABLED(CONFIG_CGROUPS)) {
-   312				get_cgroup_ns(nsp->cgroup_ns);
-   313				ns_common = to_ns_common(nsp->cgroup_ns);
-   314			}
-   315			break;
-   316		case PIDFD_GET_IPC_NAMESPACE:
-   317			if (IS_ENABLED(CONFIG_IPC_NS)) {
-   318				get_ipc_ns(nsp->ipc_ns);
-   319				ns_common = to_ns_common(nsp->ipc_ns);
-   320			}
-   321			break;
-   322		case PIDFD_GET_MNT_NAMESPACE:
-   323			get_mnt_ns(nsp->mnt_ns);
-   324			ns_common = to_ns_common(nsp->mnt_ns);
-   325			break;
-   326		case PIDFD_GET_NET_NAMESPACE:
-   327			if (IS_ENABLED(CONFIG_NET_NS)) {
-   328				ns_common = to_ns_common(nsp->net_ns);
-   329				get_net_ns(ns_common);
-   330			}
-   331			break;
-   332		case PIDFD_GET_PID_FOR_CHILDREN_NAMESPACE:
-   333			if (IS_ENABLED(CONFIG_PID_NS)) {
-   334				get_pid_ns(nsp->pid_ns_for_children);
-   335				ns_common = to_ns_common(nsp->pid_ns_for_children);
-   336			}
-   337			break;
-   338		case PIDFD_GET_TIME_NAMESPACE:
-   339			if (IS_ENABLED(CONFIG_TIME_NS)) {
-   340				get_time_ns(nsp->time_ns);
-   341				ns_common = to_ns_common(nsp->time_ns);
-   342			}
-   343			break;
-   344		case PIDFD_GET_TIME_FOR_CHILDREN_NAMESPACE:
-   345			if (IS_ENABLED(CONFIG_TIME_NS)) {
-   346				get_time_ns(nsp->time_ns_for_children);
-   347				ns_common = to_ns_common(nsp->time_ns_for_children);
-   348			}
-   349			break;
-   350		case PIDFD_GET_UTS_NAMESPACE:
-   351			if (IS_ENABLED(CONFIG_UTS_NS)) {
-   352				get_uts_ns(nsp->uts_ns);
-   353				ns_common = to_ns_common(nsp->uts_ns);
-   354			}
-   355			break;
-   356		/* Namespaces that don't hang of nsproxy. */
-   357		case PIDFD_GET_USER_NAMESPACE:
-   358			if (IS_ENABLED(CONFIG_USER_NS)) {
-   359				rcu_read_lock();
-   360				ns_common = to_ns_common(get_user_ns(task_cred_xxx(task, user_ns)));
-   361				rcu_read_unlock();
-   362			}
-   363			break;
-   364		case PIDFD_GET_PID_NAMESPACE:
-   365			if (IS_ENABLED(CONFIG_PID_NS)) {
-   366				rcu_read_lock();
-   367				pid_ns = task_active_pid_ns(task);
-   368				if (pid_ns)
-   369					ns_common = to_ns_common(get_pid_ns(pid_ns));
-   370				rcu_read_unlock();
-   371			}
-   372			break;
-   373		default:
-   374			return -ENOIOCTLCMD;
-   375		}
-   376	
-   377		if (!ns_common)
-   378			return -EOPNOTSUPP;
-   379	
-   380		/* open_namespace() unconditionally consumes the reference */
-   381		return open_namespace(ns_common);
-   382	}
-   383	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+pw-bot: cr
