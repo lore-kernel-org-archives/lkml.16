@@ -1,90 +1,229 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 916DD2040A8;
-	Thu, 10 Apr 2025 06:58:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17DD3204C3C
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:58:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744268302; cv=none; b=euIw7UwpbvVQ9LaWLNht+aS/K6o4FAfC3B89SZxcVmgtyMYFGAC4Ts4E1TWoETsPn64/T5FNf3RMoejBIMrm7k0PMelau6iFvvYFBuocUkfiZV9Qd2/bBHGVGj8mxi+QC91iX7YZwEqLQt4EmhB7J678dMNUS1h79rDS5y8Wreo=
+	t=1744268308; cv=none; b=jB509h0FYsNLUTeHkeogxe6KhGF8FpANyxIwlRSP5j3i8nlcRHR0rD7HivJgOMc1PwXW5iLC1TJr+QBr61BD1zeoyZUeClBPCMneDT30aHwXuYGPd5/4MMKAr3J1bZp9p1wkcY4n7JXQA/82sWCj244Lxwvp9b4/LQ6sPFBLM7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744268302; c=relaxed/simple;
-	bh=W+EjxpeVVScky8ANFtmNgCyiOFblKlvus+RVoVF6ZF0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ftx0K3U1LEjSjUErfkeQ3/m7QZyDVqUbt2MA+1wdpEsu3FnNGaaJuzlQceHEuYutMoiOz6QN8fVA4E22KesRo+IywS2kePf5YBRrObik6BtirgQ7un6lCQlVQ4H8wmYg+EjmS/tHPoBs+EMVq0UAhhhU7cbJQXN29lMUnzg2w10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=khKiGgoM; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="khKiGgoM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC65AC4CEDD;
-	Thu, 10 Apr 2025 06:58:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744268302;
-	bh=W+EjxpeVVScky8ANFtmNgCyiOFblKlvus+RVoVF6ZF0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=khKiGgoMdhXNa4Q70CPeyvi4b3wCMd8N+O2H3+z7Ol88vgsgfxTPIDAxIEsQonDwh
-	 sGT7UllzMkwwdS7LYMH+Mzh/q4q8plLOBqgYY5Vav1o13Ol6unC7eK1bfxubJWttg7
-	 lJe369QP9Ya169umKfrum8V+a+iCv6hE3xdQ+eG14F1jt403D9Y13V9iRXMjCmuwzP
-	 +z2nR4ioD0EIREd0RyMhCESXtzsNK8GBw23kUGd4KZO9dRDSjMZDTkoAPhvE8c88N0
-	 z4msUQXu2dhkXyrwmGVIzFPR/1XBh17OybNue+17NBoqzF2mZwUnd9klmdCLMsZZ2a
-	 T9AxYUcuzy6NA==
-Date: Thu, 10 Apr 2025 08:58:19 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, 
-	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	David Lechner <dlechner@baylibre.com>, Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] dt-bindings: iio: imu: icm42600: add interrupt
- naming support
-Message-ID: <20250410-wonderful-stereotyped-jackal-87fbf5@shite>
-References: <20250409-iio-imu-inv-icm42600-rework-interrupt-using-names-v3-0-dab85a0a7c2b@tdk.com>
- <20250409-iio-imu-inv-icm42600-rework-interrupt-using-names-v3-1-dab85a0a7c2b@tdk.com>
+	s=arc-20240116; t=1744268308; c=relaxed/simple;
+	bh=sryZn6ZgzjVKs/6YCp1JM29i/2IZOriqd3ozfD78J9Q=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=HA0sawNVqCNTB/oDuI4xcfDhS46XvYdgrYiM/BRJrPOGzx3grdduy6UKuyFp18AbQnhbUCY3jNbtySOQBOIbwobsZbBAvoVfey64YdR1m+8pExOSFi3vXKTrhvRBl7VBghAWNvX/2mdN+GNDhZVzEqEA57Tp287QCC2pdzNlRmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d43c0dbe6aso11019605ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 23:58:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744268305; x=1744873105;
+        h=content-transfer-encoding:to:from:subject:message-id:date
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RTF7Kx0ylcTZ32YLLmw0B4ESqKuiCDu+c/J/ULllbmQ=;
+        b=bOvRnIWbiz/JjsSSN3bIEInU1izdlL/VAA/B2Qm6Nj9odLzMnJsuLr8Ae0EYe90+eO
+         0vMi1l2075UvBxeaRVJ1teGa2BuwhOFLomWxYqG71276UKhjUCMoUfWsMB/j5NkuIGA3
+         ljUTVbSh/GiUYFBx9/jRFLVCAHjFm45SAXJUimNhMYRSvG/JIWIp5ki0NDLp6xdKUuEj
+         sCisxGHvJrhF5OWw0TUCjHv2US4vpPyDEqr21rFyvaiOz9p9F3qN7r841jN1Zrcy6fHp
+         8bE0WRnmdvcndZmaXc8jOpkSl5imdsLYVrXOnSt2umYg8dkzLPBg3o4K10Qw0xKzQYfg
+         KbpA==
+X-Forwarded-Encrypted: i=1; AJvYcCWZIiPnvlZDtlq0dmaNufe5hg6lLTDKNCjKtDD+NLjKyyZQBL6nGyD3IV5rilvT3a5h0jjYcSLp7wvhhJ8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8tEs3wpq3WWmiXJN3WAQz/g/LEkdZYO9maPVHod9pu8A1mw26
+	YBoTD4cscRs5GHn0xRDOS1oGl5RT8b0uw/gNSNCWXun3IEsEEr4NtwAmR8YUxmG+Y3yZYKfX5/z
+	iEIsbIr54XdtwZ/U9TO3suIqsUpZPbKTzlHmYmaPeMlCHT5++JBt7gCY=
+X-Google-Smtp-Source: AGHT+IEhYdJuoNmXoiEi+ThrI1NdVO06bCg3efT1FQizTiEnH7cAIilHSWMPmkTvRyNtcysnC+cmdvVnKVuk2OL76BaG0ZKvPbe0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250409-iio-imu-inv-icm42600-rework-interrupt-using-names-v3-1-dab85a0a7c2b@tdk.com>
+X-Received: by 2002:a05:6e02:2290:b0:3d4:70ab:f96f with SMTP id
+ e9e14a558f8ab-3d7e46f987dmr20036485ab.8.1744268305177; Wed, 09 Apr 2025
+ 23:58:25 -0700 (PDT)
+Date: Wed, 09 Apr 2025 23:58:25 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67f76c11.050a0220.258fea.0029.GAE@google.com>
+Subject: [syzbot] [bcachefs?] kernel BUG in __bch2_str_hash_check_key
+From: syzbot <syzbot+843981bb836d699c07d1@syzkaller.appspotmail.com>
+To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 09, 2025 at 05:14:31PM GMT, Jean-Baptiste Maneyrol wrote:
-> Add interrupt-names field for specifying interrupt pin configured.
-> Chips are supporting 2 interrupt pins, change interrupt to support 2
-> entries.
-> 
-> Signed-off-by: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
-> ---
->  .../devicetree/bindings/iio/imu/invensense,icm42600.yaml    | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml b/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml
-> index 7e4492bbd0278a336587dc5ac04da7153453da29..d4d4e5c3d8562523872a737864610c26c8fccd82 100644
-> --- a/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml
-> +++ b/Documentation/devicetree/bindings/iio/imu/invensense,icm42600.yaml
-> @@ -39,7 +39,16 @@ properties:
->      maxItems: 1
->  
->    interrupts:
-> -    maxItems: 1
-> +    minItems: 1
-> +    maxItems: 2
-> +
-> +  interrupt-names:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      enum:
-> +        - INT1
-> +        - INT2
+Hello,
 
-Why INT2+INT1 should be valid? Why is this flexible? Commit msg should
-explain that, otherwise we expect fixed number of interrupts. Actually
-commit msg is here specific - always 2 interrupts, so I do not
-understand why 1 is allowed.
+syzbot found the following issue on:
 
-Best regards,
-Krzysztof
+HEAD commit:    56f944529ec2 Merge tag 'input-for-v6.15-rc0' of git://git..=
+.
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=3D16391fb0580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3Df2054704dd53fb8=
+0
+dashboard link: https://syzkaller.appspot.com/bug?extid=3D843981bb836d699c0=
+7d1
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debia=
+n) 2.40
 
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7fe=
+b34a89c2a/non_bootable_disk-56f94452.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/c6da83e5191b/vmlinux-=
+56f94452.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/5c060438ea13/bzI=
+mage-56f94452.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit=
+:
+Reported-by: syzbot+843981bb836d699c07d1@syzkaller.appspotmail.com
+
+    bi_dir=3D4096
+    bi_dir_offset=3D5682031293254759865
+    bi_subvol=3D0
+    bi_parent_subvol=3D0
+    bi_nocow=3D0
+    bi_depth=3D0
+    bi_inodes_32bit=3D0, fixing
+bcachefs (loop0): inode points to missing dirent
+  inum: 4099:4294967295=20
+    mode=3D100755
+    flags=3D(15300000)
+    journal_seq=3D5
+    hash_seed=3Dab878b4c5ab7c89e
+    hash_type=3Dsiphash
+    bi_size=3D1050
+    bi_sectors=3D8
+    bi_version=3D0
+    bi_atime=3D1997793410
+    bi_ctime=3D1997793410
+    bi_mtime=3D1997793410
+    bi_otime=3D1997793410
+    bi_uid=3D0
+    bi_gid=3D0
+    bi_nlink=3D0
+    bi_generation=3D0
+    bi_dev=3D0
+    bi_data_checksum=3D0
+    bi_compression=3D0
+    bi_project=3D0
+    bi_background_compression=3D0
+    bi_data_replicas=3D0
+    bi_promote_target=3D0
+    bi_foreground_target=3D0
+    bi_background_target=3D0
+    bi_erasure_code=3D0
+    bi_fields_set=3D0
+    bi_dir=3D4098
+    bi_dir_offset=3D2566586984702133180
+    bi_subvol=3D0
+    bi_parent_subvol=3D0
+    bi_nocow=3D0
+    bi_depth=3D0
+    bi_inodes_32bit=3D0, fixing
+ done
+bcachefs (loop0): check_dirents...
+bcachefs (loop0): hash table key at wrong offset: btree dirents inode 4096 =
+offset 6229884513039707068, hashed to 5410109479790105297
+  u64s 7 type dirent 4096:6229884513039707068:U32_MAX len 0 ver 0: =EF=BF=
+=BD=CB=A8=EF=BF=BD -> 2166030336 -> 1073741825 type subvol, fixing
+bcachefs (loop0): hash table key at wrong offset: btree dirents inode 4096 =
+offset 6229884513039707068, hashed to 5410109479790105297
+  u64s 7 type dirent 4096:6229884513039707068:U32_MAX len 0 ver 0: =EF=BF=
+=BD=CB=A8=EF=BF=BD -> 2166030336 -> 1073741825 type subvol, fixing
+------------[ cut here ]------------
+kernel BUG at fs/bcachefs/fsck.c:954!
+Oops: invalid opcode: 0000 [#1] SMP KASAN NOPTI
+CPU: 0 UID: 0 PID: 5328 Comm: syz.0.0 Not tainted 6.14.0-syzkaller-13443-g5=
+6f944529ec2 #0 PREEMPT(full)=20
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16=
+.3-2~bpo12+1 04/01/2014
+RIP: 0010:bch2_fsck_update_backpointers+0x4ed/0x4f0 fs/bcachefs/fsck.c:954
+Code: e9 2b fc ff ff 89 d9 80 e1 07 38 c1 0f 8c 62 fc ff ff 48 89 df e8 63 =
+77 b7 fd e9 55 fc ff ff e8 39 78 ba 07 e8 74 4e 4d fd 90 <0f> 0b 90 90 90 9=
+0 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e
+RSP: 0018:ffffc9000d4ce460 EFLAGS: 00010246
+RAX: ffffffff847608cc RBX: 0000000000000010 RCX: 0000000000100000
+RDX: ffffc9000e50a000 RSI: 00000000000fffff RDI: 0000000000100000
+RBP: ffffc9000d4ce600 R08: ffffffff84760529 R09: 0000000000000000
+R10: ffffc9000d4ce530 R11: fffff52001a99caf R12: ffffc9000d4cf290
+R13: dffffc0000000000 R14: ffff888052bda000 R15: ffff888052900000
+FS:  00007f5be4f2b6c0(0000) GS:ffff88808c596000(0000) knlGS:000000000000000=
+0
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055b32eddc088 CR3: 0000000044eda000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ __bch2_str_hash_check_key+0x202c/0x3b50 fs/bcachefs/str_hash.c:257
+ bch2_str_hash_check_key fs/bcachefs/str_hash.h:415 [inline]
+ check_dirent fs/bcachefs/fsck.c:2135 [inline]
+ bch2_check_dirents+0x2d45/0x3b90 fs/bcachefs/fsck.c:2230
+ bch2_run_recovery_pass+0xf0/0x1e0 fs/bcachefs/recovery_passes.c:226
+ bch2_run_recovery_passes+0x2ad/0xa90 fs/bcachefs/recovery_passes.c:285
+ bch2_fs_recovery+0x292a/0x3e20 fs/bcachefs/recovery.c:936
+ bch2_fs_start+0x310/0x620 fs/bcachefs/super.c:1069
+ bch2_fs_get_tree+0x113e/0x18f0 fs/bcachefs/fs.c:2253
+ vfs_get_tree+0x90/0x2b0 fs/super.c:1759
+ do_new_mount+0x2cf/0xb70 fs/namespace.c:3879
+ do_mount fs/namespace.c:4219 [inline]
+ __do_sys_mount fs/namespace.c:4430 [inline]
+ __se_sys_mount+0x38c/0x400 fs/namespace.c:4407
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f5be418e90a
+Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 de 1a 00 00 66 2e 0f 1f 84 =
+00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff f=
+f 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f5be4f2ae68 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
+RAX: ffffffffffffffda RBX: 00007f5be4f2aef0 RCX: 00007f5be418e90a
+RDX: 000020000000f640 RSI: 0000200000000140 RDI: 00007f5be4f2aeb0
+RBP: 000020000000f640 R08: 00007f5be4f2aef0 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000200000000140
+R13: 00007f5be4f2aeb0 R14: 000000000000f61b R15: 0000200000000340
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:bch2_fsck_update_backpointers+0x4ed/0x4f0 fs/bcachefs/fsck.c:954
+Code: e9 2b fc ff ff 89 d9 80 e1 07 38 c1 0f 8c 62 fc ff ff 48 89 df e8 63 =
+77 b7 fd e9 55 fc ff ff e8 39 78 ba 07 e8 74 4e 4d fd 90 <0f> 0b 90 90 90 9=
+0 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e
+RSP: 0018:ffffc9000d4ce460 EFLAGS: 00010246
+RAX: ffffffff847608cc RBX: 0000000000000010 RCX: 0000000000100000
+RDX: ffffc9000e50a000 RSI: 00000000000fffff RDI: 0000000000100000
+RBP: ffffc9000d4ce600 R08: ffffffff84760529 R09: 0000000000000000
+R10: ffffc9000d4ce530 R11: fffff52001a99caf R12: ffffc9000d4cf290
+R13: dffffc0000000000 R14: ffff888052bda000 R15: ffff888052900000
+FS:  00007f5be4f2b6c0(0000) GS:ffff88808c596000(0000) knlGS:000000000000000=
+0
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055b32eddc088 CR3: 0000000044eda000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
