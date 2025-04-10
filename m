@@ -1,119 +1,153 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5A981E1E10
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 08:35:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABDB243AB7;
+	Thu, 10 Apr 2025 08:37:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744274127; cv=none; b=TPpRp5m5r4jqBAY7gF06z366fcwZEHTVnpqo8WoUb+BG7ZgZpMVAVMud4OYXfkk1P76Y5ff1yp/r+3MGjkkVxPIb32WBL/Z9LK477POAE7KItGg7ELh80yXH7iThHKrap26vQcgAxkVBxC1NHuDOlHdrfIT5HHtDZVg2sKn5U3I=
+	t=1744274253; cv=none; b=k30X7/q8RjU1r5KboCzDKNU1QMGZfKiv8C0DJ9sax/K5lJPfZSanEezDrGkSBlK1/4sZUcyBLBMrjuyiUhhGAdk9urMZCtzXTFZIIjgMv0OEeQAAeD87ky2N4CMowb1Z7MIAOtcuJedx/dzknNdfo45ipS5fiEJAxlaYJkFpy+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744274127; c=relaxed/simple;
-	bh=vm+n/DN3r38uNGuHnCe/hDNr8ZYmr9HpOBN6gHBJQ8I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R75wkJPsZMAuzLcVIPADRNv4XiaR0RUgg3AopfyuYCY6CmY8NrkajsxXEcepsXoGbrNLSw97+dXYXTaSyu7awFdUGysSH9IL1OqmcV3UjudJGfk5tXRvPNZ1RNZ8QEfJs/QjHn1N386d6zvqMtCdAlSeXxn2MrEUgvoy/j1qo+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i2qeRoQe; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744274253; c=relaxed/simple;
+	bh=Y7XTCca+Ph4nBDuMHEhEUQiVE0QAjFs5rJ9LGz+9ujc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
+	 References:In-Reply-To; b=MMn+gDcl9H71p44FLai5hFsHFptgYqY5C3HwoUsmggspudPEbUpxmOxfvZOAU4lY0dBlvCVHVrdckEQIix4MZmU+uOR6VlWf9CD7w79ySirj3A2+FtOERGvnyEuvNV5YhiEcrksjVNj/poxgOsIFfNR6PUHFWcooYGvrbEG1Zro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=VCK3utvl; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i2qeRoQe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744274124;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="VCK3utvl"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 03A5943291;
+	Thu, 10 Apr 2025 08:37:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1744274248;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=CxHaTazFkHPO5uhaMckeowRpsl34ZLTSQwo1R7YrUH0=;
-	b=i2qeRoQeiCRnQV3PF4HK3ZjUQdodtlDPccRse3l4Bx+R+K1g0sBWZEHuPhFxtTnOTj7paY
-	lvAM40E99nfWbksUqZWYzSRZGsNeMWTUfbtsIJU3pTmpspiaoAWPfurISt+tW8pX3nv7Id
-	YeMs6zfa8AhsfY1/DFfgYZhtfZcbbBg=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-17-vXEc_BuaNT2-A0S-b0lwlQ-1; Thu,
- 10 Apr 2025 04:35:22 -0400
-X-MC-Unique: vXEc_BuaNT2-A0S-b0lwlQ-1
-X-Mimecast-MFC-AGG-ID: vXEc_BuaNT2-A0S-b0lwlQ_1744274121
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6680F1801A12;
-	Thu, 10 Apr 2025 08:35:21 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.38])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EE3683001D11;
-	Thu, 10 Apr 2025 08:35:18 +0000 (UTC)
-Date: Thu, 10 Apr 2025 16:35:09 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Kemeng Shi <shikemeng@huaweicloud.com>
-Cc: akpm@linux-foundation.org, sj@kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [patch] mm: swap: add __maybe_unused attribute for
- swap_is_last_ref() and update it's comment
-Message-ID: <Z/eCvQpn0gE75crD@MiWiFi-R3L-srv>
-References: <20250410153908.612984-1-shikemeng@huaweicloud.com>
+	bh=r9BN7vcK50A+/Pthg8cvvrb8KO1u3e1IMqjO+eqc8PU=;
+	b=VCK3utvlpNaG8Nj54Qfx1SeidjGbSasYRCW2akCLiGnOh8qAjgfYQ264I85//qvfGjLI/8
+	RfNGXTQURWYWA2fTVOuzoFjvY0brFLsa7WPPg4K5XcXkI965yZgol0iRb9d+zCdvWpRyaj
+	NkCJetYOOrAf4q9LIwKHmMjI6PO3KTqApsypbj+s/xn29GefSU2esaEpWJ7qUs5z26YXV0
+	TXxT/zyRLn2z3fwGDcj7f4CAiPR/fVIAYADNeM4B9etZDx5zcw4EKlck9LxyXvfChi+Ovt
+	Wz3Xx9CO5LCo9gHBRrXveivzkWs0U6SeczUWxvU1yCa/xNmTJbb+/vQxjSZmVw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250410153908.612984-1-shikemeng@huaweicloud.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 10 Apr 2025 10:37:27 +0200
+Message-Id: <D92TM7350HVV.19ONAJBTPEAU6@bootlin.com>
+Subject: Re: [PATCH v6 03/12] pinctrl: Add MAX7360 pinctrl driver
+Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
+ Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
+ "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Michael Walle"
+ <mwalle@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
+ <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
+ <gregory.clement@bootlin.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
+X-Mailer: aerc 0.19.0-0-gadd9e15e475d
+References: <20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com>
+ <20250409-mdb-max7360-support-v6-3-7a2535876e39@bootlin.com>
+ <D9276VFZ6GYJ.EO9D1V7C4JSI@bootlin.com>
+ <Z_ahLqrMASFXbG5Q@smile.fi.intel.com>
+In-Reply-To: <Z_ahLqrMASFXbG5Q@smile.fi.intel.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdekgeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkufevhffvofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekhefhhfelhfekjeeugedtudelueetffejfffhkeeivedvveelgfetfeelveetvdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdgsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejiedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddvpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkohesihhnthgvlhdrtghomhdprhgtphhtthhop
+ ehlvggvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrghmvghlrdgsohhuhhgrrhgrsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplh
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-On 04/10/25 at 11:39pm, Kemeng Shi wrote:
-> Add __maybe_unused attribute for swap_is_last_ref ()to fix following
-> building warning:
-> mm/swapfile.c:1517:20: warning: function 'swap_is_last_ref' is not needed and will not be emitted [-Wunneeded-internal-declaration]
->     1517 | static inline bool swap_is_last_ref(unsigned char count)
->          |                    ^~~~~~~~~~~~~~~~
->    1 warning generated.
-> 
-> Besides, original comment for swap_entries_free() is placed before
-> swap_is_last_ref() which may introduce confusion. Update comment to
-> address this.
-> 
-> Fixes: 6bb001b6b64ec ("mm: swap: enable swap_entry_range_free() to drop any kind of last ref")
-> Suggested-by: Baoquan He <bhe@redhat.com>
-> Tested-by: SeongJae Park <sj@kernel.org>
-> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
-> ---
->  mm/swapfile.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
+On Wed Apr 9, 2025 at 6:32 PM CEST, Andy Shevchenko wrote:
+> On Wed, Apr 09, 2025 at 05:03:02PM +0200, Mathieu Dubois-Briand wrote:
+>> On Wed Apr 9, 2025 at 4:55 PM CEST, Mathieu Dubois-Briand wrote:
+>> > Add driver for Maxim Integrated MAX7360 pinctrl on the PORT pins. Pins
+>> > can be used either for GPIO, PWM or rotary encoder functionalities.
+>
+> ...
+>
+> The all the rest of the driver LGTM, but the below.
+>
+>> > +	device_set_of_node_from_dev(dev, dev->parent);
+>>=20
+>> Ok, so this goes a bit against what I said I was going to do on my
+>> previous series, let me explain why. Same reasoning applies for both
+>> uses, in PWM and pinctrl drivers.
+>>=20
+>> With my previous experiments, I came to the conclusion that:
+>> - Either we should use device_set_of_node_from_dev() as I do here.
+>> - Or we should add more subnodes in the device tree binding.
+>
+>> - Also, copying the fwnode with device_set_node() was not possible, as
+>>   the kernel would then try to apply pinctrl on both the parent and
+>>   child device.
+>
+> Hmm... I need to refresh my memory with the old discussions. Can you poin=
+t out
+> to the problem statement with that approach?
+>
 
-LGTM,
+I mentioned here briefly in my previous series: https://lore.kernel.org/lkm=
+l/D8R4B2PKIWSU.2LWTN50YP7SMX@bootlin.com/
 
-Reviewed-by: Baoquan He <bhe@redhat.com>
+So the issue is, if I copy the parent fwnode using device_set_node(),
+the kernel is trying to apply any pinctrl defined on the node with
+pinctrl- properties on both the parent and the child node. Of course,
+only the first one will succeed, as two devices cannot request the same
+pins at the same time.
 
-> 
-> diff --git a/mm/swapfile.c b/mm/swapfile.c
-> index c46b56d636af..4b5fc0c33a85 100644
-> --- a/mm/swapfile.c
-> +++ b/mm/swapfile.c
-> @@ -1537,15 +1537,19 @@ static bool swap_entries_put_map_nr(struct swap_info_struct *si,
->  }
->  
->  /*
-> - * Drop the last ref(1, SWAP_HAS_CACHE or SWAP_MAP_SHMEM) of swap entries,
-> - * caller have to ensure all entries belong to the same cgroup and cluster.
-> + * Check if it's the last ref of swap entry in the freeing path.
-> + * Qualified vlaue includes 1, SWAP_HAS_CACHE or SWAP_MAP_SHMEM.
->   */
-> -static inline bool swap_is_last_ref(unsigned char count)
-> +static inline bool __maybe_unused swap_is_last_ref(unsigned char count)
->  {
->  	return (count == SWAP_HAS_CACHE) || (count == 1) ||
->  	       (count == SWAP_MAP_SHMEM);
->  }
->  
-> +/*
-> + * Drop the last ref of swap entries, caller have to ensure all entries
-> + * belong to the same cgroup and cluster.
-> + */
->  static void swap_entries_free(struct swap_info_struct *si,
->  			      struct swap_cluster_info *ci,
->  			      swp_entry_t entry, unsigned int nr_pages)
-> -- 
-> 2.30.0
-> 
+>> I previously said the second solution was probably the way to go, but I
+>> changed my mind for two reasons.
+>>=20
+>> First having more subnodes in the device tree was already rejected in
+>> the past in the reviews of the dt-bindings patch. This do makes sense as
+>> it would be describing device internals (which should not be made in
+>> DT), just to ease one specific software implementation (which should
+>> also be avoided). So I believe this change would again be rejected.
+>> https://lore.kernel.org/lkml/58c80c2a-2532-4bc5-9c9f-52480b3af52a@kernel=
+.org/
+>>=20
+>> But the the second reason is, doing
+>> 'git grep "device_set_of_node_from_dev.*parent"', I found several
+>> drivers using device_set_of_node_from_dev() for a similar need. Some of
+>> these uses are also for MFD child devices:
+>> - gpio-adp5585.c / pwm-adp5585.c,
+>> - pwm-ntxec.c,
+>> - max77620-regulator.c / max77620_thermal.c.
+>>=20
+>> So, based on this, I believe using device_set_of_node_from_dev() in
+>> these two drivers is the way to go.
+>
+> The problem with this solution is that, It's OF-centric. Which shouldn't =
+be
+> done in a new code (and I don't see impediments to avoid it). Yes, it doe=
+s
+> the right thing for the case, but only on OF systems. Note, fwnode is a l=
+ist
+> of maximum of two entries (yeah, designed like that right now), can you u=
+tilise
+> that somehow?
+
+Looking at MFD code, I believe ACPI MFD child devices already get the
+parent fwnode, except if a fwnode exists for them.
+
+https://elixir.bootlin.com/linux/v6.13.7/source/drivers/mfd/mfd-core.c#L90
+
+Thanks for your review.
+
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
