@@ -1,116 +1,120 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 511E21F03D7
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 17:23:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A7F1EF363;
+	Thu, 10 Apr 2025 17:23:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744305794; cv=none; b=AGSYnPSkFauEicfjsYjezalO0P+dt4Vsuzi5EG4AEjA9SPAlH/hRjX82K6OBdUv/5IE4p//LokPudDLpXD8w2W8v/DCKpigtelLN63gDVC+bo9d2mB2PXCgQYhi9K3fkq73V8qh5KPatEKBRq5jX4c8b6DZIGaQiDe6julU1Cj4=
+	t=1744305840; cv=none; b=u8y2kKvxqKpnxkq4e/9mR1N7OKVSuj7yd768TyKymVz6kktuxQWuuGaJ2OXpvz89EDt1cJm8BDyA0vpw+yCwNkKyMSqfvlZJ+tbipvtGm7Qjva4QjPZzKI82W8GRuHhyAw9Y4KkjRvKuG/34wc5SJBgvG7uKi0YZAeGF8mPKGoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744305794; c=relaxed/simple;
-	bh=R5ybdCkyTddUlOPMRaGg48hM8Ao1y152Ju0ZZh/a96Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LD5KNiKyQjwJCbxdtY0aJDMbXIpYJFTqnrX/J2B6+X7v1GbuhTXt0/lZDF0aNTmnCg9U/lPNDr+9X6tuCyp9g1az3tFz3e1lNciQnwdvG2uMLtdcej+IhKozFgcOHHnBuSxyntIcDz1lvWHhQjeRPAhxyaX2qZAbFGOKKGRoCn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=e7ejBOia; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1744305840; c=relaxed/simple;
+	bh=ClReNv4tZNKYKHIKcr+3YRA9kSYs6eYQ6ZoMhlVPy0I=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BsknDtMqTQ4DtiHRVS9ljnerAXaIcnTZoWGbEztwm8IAl2oGihb1BxkdzgpG2s5ksZWsMa7WmeesB4QU47/Ttfdrm92t8NAxg5m4kO/ARQ5/UtAMjT422/ZyrzhAp3JzeCIs7fagWuWQJ5ZfALGwfCA5MpGBhn0rEZRESmuQoho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S0gJmHzb; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="e7ejBOia"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53AG3EGJ032012
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 17:23:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	z3P5K8qIo++EOiyUEYlbHQXKSiyqq7I06DkfJB4A9SY=; b=e7ejBOiaL/xNwWLp
-	VZOLe3WCzQY1MSDHQNqzKapEAntXx4ei//4KdJZUToV2SWi3IKd+3Y5F4khnbI4z
-	iT+eagahFJhNg9ljUozGWBX+TlFVghLfUhlov2vUcsDnElXi6lNb5V8TyrFxg5II
-	ACJ630wwSYlgGE5Ogap3BM9bfUw3NsPtjLlq72JSyr1WPYV54uLuMVGg0g58DxkK
-	4IDOCy2yKvrooKKvp6plMIntdOU7Ef7xfLaddL6A4tWy4XfzfKRmqYdQr5ItxBSe
-	/JDuGBZokpFMPKc0A1hv0XbehapPV26g9rP9m4UKw2hEpHxXpbvhvpw1H+RroBQz
-	JNTtcA==
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45twpmfqr3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 17:23:12 +0000 (GMT)
-Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2254e0b4b85so9271605ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 10:23:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S0gJmHzb"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-39c0dfad22aso569449f8f.2;
+        Thu, 10 Apr 2025 10:23:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744305836; x=1744910636; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=RVEmfdcIK+nAC24P6F8Ud5S0YAAGuFYjRvgCZ39ZrCQ=;
+        b=S0gJmHzbpt4uWdJ5XDWZodPTbEJFbfn4vAjDlsOTNKl/WuUqPCGbaZoYvkHQd6Emef
+         Nof2K+CVxvfrBFL6JTmGKrrxmRsqzLIotk1jAUTPuN6Y++PyykumCTMkRBV+DDjnzMrH
+         GiPotdoonWaPtRsFfEkO2xDHDOBzqz4jMLAMlD1WAv6+usSUmeKuus56WivnEyUJHrrF
+         Y1F+39mLK7vUq15u8qTaclykr4t6lzijCkJe8JCUuB1902ExK/eyh47LCk2RJASC7C3N
+         UkUI3lFd/NgLzbRDgmVGjdq+WG29mu8fRGRh8lx2TzmlljcFn84gqE9XmUgnE3e9FrwQ
+         yotA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744305791; x=1744910591;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=z3P5K8qIo++EOiyUEYlbHQXKSiyqq7I06DkfJB4A9SY=;
-        b=InhgGWxhjz1YFn80lep7/wnPoNtD4uGnYdCCiGwRKrKv0pbTjQTVjh0PhHJc3YVtRi
-         gt+JUTI+Kei7+egU5ToTnCG7/kfFY3RkMEg3QJNv5fW8hafE4msvKcURAc+Az0GmyQKb
-         ccAklAA9M8z1YAkvtKMmhBohlnIPDrG8Q0O4CU50rR/sKjRJF4pFf3iXdrTudnijPiKw
-         1MgixClRtHORZLdx7DYhMQzwn5Uz54sn6Hm8Zz5ZcHG4x0J7+qn9kO1S0yaq6FR61ljF
-         g7xYqxLiGTlEafG0LTJOQixRckeaJrMYeNN81e4MUtYVNlffjZhGHGHAYx94/Ro9VgwM
-         6UVg==
-X-Forwarded-Encrypted: i=1; AJvYcCWhon0KWUySvWyH3yUYVIOTrdB8cAYJPMwiFF7mlM/zXoVVqR2G8ZqBV2ak2AShtkgs56xhewbOqzZq5pY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjJuZi5XsUN3O9EPlYQMuprJG0v/frFEc+CJvssAcneAW2wq7Z
-	AKXtgEETy0YSHV6iUOqxKYy73Y1SS7CITzVdWMtP6JispiiyXxc48AVh2/qmir+M5FLH+uKKx5V
-	ZT17KqCkpb8e0gQ//4pcYTB8gDqyEyY3gHtWNu3b3E1bBIUqCM9NmJVocRTHPyqc=
-X-Gm-Gg: ASbGnctaVAlnAh9O3F8boxw58OCYf6Omnf/NFNag9OIEYY9a3P/S4418K0NqfHqxrAM
-	FwhEF04PbWZIusyEr+5saF2TUKgcKmmnpbUm77IlkINUliCGUkLhWrtq5jnXZ71ltjnfCuZavJT
-	F4CxYBijNghu6MipBYLMSdnJe+6/Zyk41x6l5dKDB7CaT4uzD1rc7uOWI0c+K2oukRBjtw+g4Md
-	RAIqnqJr+Ae4pkBQtIQ37a/kIB2uasFIlc6nGmNqFbBso3N6HVujHK2ExI1R03IXRXOLsrTWPtn
-	445WVwNexNLRe/4X5V/Ptwtqawlmolt3+02Bj6FyoQs/DFVSuHcXSnBVkuAQ
-X-Received: by 2002:a17:903:19cb:b0:21f:6dcf:fd2b with SMTP id d9443c01a7336-22b69430257mr54475915ad.1.1744305791336;
-        Thu, 10 Apr 2025 10:23:11 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHsOm6QHNFoIQoa9xAcmypmP2o9HLNTmyw9hqlhL3OGHmNMXVDtTazPYIXiQbNPMKCZ+GHi1A==
-X-Received: by 2002:a17:903:19cb:b0:21f:6dcf:fd2b with SMTP id d9443c01a7336-22b69430257mr54475625ad.1.1744305790913;
-        Thu, 10 Apr 2025 10:23:10 -0700 (PDT)
-Received: from [192.168.225.142] ([157.51.199.187])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7ccafa4sm33459025ad.235.2025.04.10.10.23.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 10:23:10 -0700 (PDT)
-Message-ID: <bb5a6a55-14f9-a854-c8fd-e059d34e309f@oss.qualcomm.com>
-Date: Thu, 10 Apr 2025 22:53:06 +0530
+        d=1e100.net; s=20230601; t=1744305836; x=1744910636;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RVEmfdcIK+nAC24P6F8Ud5S0YAAGuFYjRvgCZ39ZrCQ=;
+        b=TcB6f46/5hRuZWIzJDeTROsR2SXGOTVG3zeN90sy7SGPEvFLG1ZyHklY7hEhjQHxOX
+         vpDz/Y+CsXNG2x7lDQpUdM2tE3ZmD4w2x1ZZM8JGJKi5ZdmDhzKohMdfFX5zsqyA4IB1
+         uovr8Fx1tb5ETa3jxmKkPn7xAncDDcRw9dyjbVXJVy83+Ehf3XODKlXYxpcICbsWCRVq
+         tRJUvfBB5gBxfe8Dcj1UrrKgRJxmxoCzKJgfR6K1tDCtNJdjiQNq/M5360Cm2QrhFqLN
+         c6itbZhc+uC7Cj2zXUUMAtWMO1aDTjV37tO5DTVKySsFu/BVAov5xld0tP9KoHTNyKX3
+         gjQA==
+X-Forwarded-Encrypted: i=1; AJvYcCU508S7r7LMviC/KniFSNIzAU0rbv1WhPcuvt+G0Zbucmaejr2KHMAeGf1Lihe7WaQpQUoPa8F6A39xT5+9@vger.kernel.org, AJvYcCUVhxMf5BEkPX9FyQGbluINLnPSWgioTU/nZCv0LbCTAKXXvAx2TES9ga77YET/d3f/b0JCAzCw@vger.kernel.org, AJvYcCUsHDLgneAtTeA9fOsCsY9VlW8/s6h4TbczE5UvqAVquU6LNCEAfftCxhdKPvh4nOcn1XINUZZ+4OCp@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyn5T+7n33/7wdGETsWTzwORUmgeL20sSdAnT9UlNqTprBc1fl9
+	NzE7TwNfpciMg+skLvnfrdwxE+tjp+hnecEW3qBOQ3bzNStAeBNu
+X-Gm-Gg: ASbGncsKAdhA+UX/cyfwLXMCv/WWK0vH08SC3jXteNqagf2SH9+16xB3loO7o7nyLeJ
+	fUXUWBEjgjlDdOCHJ2aidrcXxhPes3a1veU/O4cotomzT+0clyUC4DntvWc7ZfL1kLo6m0T+BoB
+	OUA+cF2she86PzeOU84ZNo2I0TZ8PXjM/4XCaIM43bWg15rL8bRjM0EbZihow7prWLup1zw3rpt
+	dhDaGKjJbLLwCvyaNReGU4KDhQ+fp/MPNPaQpmRZtd0FCx9o5UBIqegLQCoYKFnyVL2rzINnElX
+	eOYDDWQDSvvSihG9T49hnBEVsRBLEbFfDzV6H1iQea6qYRox8ts6TFck2S3IdiFjTcLoaZMX6Wc
+	PFO8E3fk=
+X-Google-Smtp-Source: AGHT+IFqhoIbl8rG6Xm1pydrcNvSBmIecSBYlMaEofFIFMZzgUR9B34igWvZcOG2E52kzZjCqGGyAw==
+X-Received: by 2002:a05:6000:2586:b0:391:3aaf:1d5d with SMTP id ffacd0b85a97d-39d8f47497bmr3207232f8f.27.1744305836300;
+        Thu, 10 Apr 2025 10:23:56 -0700 (PDT)
+Received: from Ansuel-XPS. (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d893f0a75sm5495874f8f.62.2025.04.10.10.23.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Apr 2025 10:23:55 -0700 (PDT)
+Message-ID: <67f7feab.df0a0220.40a6f.c911@mx.google.com>
+X-Google-Original-Message-ID: <Z_f-qflwHutRYS6_@Ansuel-XPS.>
+Date: Thu, 10 Apr 2025 19:23:53 +0200
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	"Chester A. Unal" <chester.a.unal@arinc9.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	DENG Qingfang <dqfext@gmail.com>,
+	Sean Wang <sean.wang@mediatek.com>, Simon Horman <horms@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	upstream@airoha.com
+Subject: Re: [net-next PATCH v14 06/16] net: mdio: regmap: prepare support
+ for multiple valid addr
+References: <20250408095139.51659-1-ansuelsmth@gmail.com>
+ <20250408095139.51659-7-ansuelsmth@gmail.com>
+ <6f29a01d-35da-4d51-b309-a1799950a707@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] wifi: ath12k: Fix buffer overflow in debugfs
-Content-Language: en-US
-To: Dan Carpenter <dan.carpenter@linaro.org>,
-        Dinesh Karthikeyan <quic_dinek@quicinc.com>
-Cc: Jeff Johnson <jjohnson@kernel.org>, Kalle Valo <kvalo@kernel.org>,
-        Ramya Gnanasekar <quic_rgnanase@quicinc.com>,
-        linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <35daefbd-d493-41d9-b192-96177d521b40@stanley.mountain>
-From: Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>
-In-Reply-To: <35daefbd-d493-41d9-b192-96177d521b40@stanley.mountain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: 8TUpoelNJSWUNon17qI0Q_1RBSNi49o0
-X-Proofpoint-ORIG-GUID: 8TUpoelNJSWUNon17qI0Q_1RBSNi49o0
-X-Authority-Analysis: v=2.4 cv=MpRS63ae c=1 sm=1 tr=0 ts=67f7fe80 cx=c_pps a=MTSHoo12Qbhz2p7MsH1ifg==:117 a=wh/sLrVJ8DShde116VVCZg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=gMk---j7fasVHRGPvsQA:9 a=QEXdDO2ut3YA:10
- a=GvdueXVYPmCkWapjIL-Q:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-10_04,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- mlxlogscore=705 clxscore=1015 priorityscore=1501 impostorscore=0
- spamscore=0 bulkscore=0 suspectscore=0 malwarescore=0 adultscore=0
- phishscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504100125
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6f29a01d-35da-4d51-b309-a1799950a707@lunn.ch>
 
-
-
-On 4/9/2025 4:31 PM, Dan Carpenter wrote:
-> If the user tries to write more than 32 bytes then it results in memory
-> corruption.  Fortunately, this is debugfs so it's limitted to root users.
+On Thu, Apr 10, 2025 at 07:18:02PM +0200, Andrew Lunn wrote:
+> On Tue, Apr 08, 2025 at 11:51:13AM +0200, Christian Marangi wrote:
+> > Rework the valid_addr and convert it to a mask in preparation for mdio
+> > regmap to support multiple valid addr in the case the regmap can support
+> > it.
 > 
-> Fixes: 3f73c24f28b3 ("wifi: ath12k: Add support to enable debugfs_htt_stats")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> I think it would be good to pull these MDIO regmap patches out into a
+> series of their own. We know there is a user, so i'm happy for us the
+> accept it without that user. But this code needs further discusion,
+> which will be irrelevant for the switch.
+>
 
-Thanks for the fix!
+Ok so how you would like to proceed for the remaining patch? Repost as RFC?
 
-Reviewed-by: Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>
+Still waiting feedback for nvmem and mfd so I would love to get feedback
+for them (that are also irrelevant to the switch)
+
+-- 
+	Ansuel
