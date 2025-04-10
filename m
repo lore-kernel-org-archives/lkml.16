@@ -1,88 +1,210 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C08611F1932;
-	Thu, 10 Apr 2025 07:44:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFBDE189B84
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 07:46:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744271064; cv=none; b=DzBYRVmJM2UC2aM6kzJELoJnsKk4qjhb5VExbcPToP5g0/fH9r81/HqxS8t1q60am8k9Z6ZbRezQtSTgHpYFPAU1+XvbQcdZWq8FYsU0cO+XA3eGYR8IimnUmKK825OWLBETZuX0+qAPRqYM3WtBu5011PWzRzbso4P2oLtEdvs=
+	t=1744271164; cv=none; b=N8XqpagtcnAIhe8j5vGrLKGiG5GkyGueAip91mFCPGkrmQqZmkt8yCFSi4Y6ndygNsZmZQPzgW+JP1sACgWXgTTx5c/dQChHTnAsXr2b9bT694HMCCxIHJZiXxN6dIhEygGUlwzfLCkd6MPYgNrzlRMpyUnYPKTC2peeiqd9/f0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744271064; c=relaxed/simple;
-	bh=c3tSedszmM1WRObiVCTtdoG+H36ZRB/JWvXBI6pWIy8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TpD2wxSY+R6xEEmpAcCwHnqyoVuE9GP1zQWd+r3fFoR1M2Ewq55TvXwdOTgLEPx2C9LI1LtErQJaiOR3ZzL83ow/wsNQeS3RhkkI+wzHSRAQPcZWm9dtNTIDqvDPqGWOsZd7JNh1TQh2JS5L3yKcosjGenDhTQQVd9UlzGLTeV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=ooGCdbGA; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1744271164; c=relaxed/simple;
+	bh=9KkuM3PxR3O/kSEkhfLpDrsgcymd6VI76hN32SdMmuw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gEGAEtNGgm3hNd0M4/znSN1acZp9ML7AhNLQKseVk59CGptWbEP18mXhWlFPxQE2mzQ+45qkA+o3kMOFTxKmwhILutvV7CMJNmcKs48XDcb6uQVmJapDR35nKvW0NvMcIEg9aYmhyaZmgpkVxEGAe+cVGyTMOt6sMwH6KgwIQ14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bif+PO2W; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ooGCdbGA"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=g7ze1sHwoMMFf5hsA17KXxvHh/sfNEypSsSsinv7WnM=; b=ooGCdbGAuSlV5t67xMBev2+Yw3
-	v/xm/DoszcgeMLwzEyWPaYpyx19fn8Io47aWwDAbU389878I3Szj5TsXmFleDIg/CkPFRVO8SGK2g
-	zBFxrFz7sCWdpjh1tfWzT4A0l3vbkYXZWdozRt50ZmtphGtdyrqL/JmldBL0xCtWCfc+QqdGkYOyD
-	BQLhrmwIjT0pwk+oeji+qfDdq4qb3f6m4rQIyD4qWWkmVOcD6EYwiFvSZB4b7uebzpy7nWS9LZtAa
-	Z9I6m8uu99tz2j3hPRs+ZJfB+suxH/sIi3sDdsEmeaG/mlttQFEyMh962ttCjwfXzJSNQpXaUUgKa
-	WLzE4TuQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:50790)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1u2ma2-0001Vy-0D;
-	Thu, 10 Apr 2025 08:44:10 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1u2mZz-0003Pn-07;
-	Thu, 10 Apr 2025 08:44:07 +0100
-Date: Thu, 10 Apr 2025 08:44:06 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Richard Cochran <richardcochran@gmail.com>
-Cc: Kory Maincent <kory.maincent@bootlin.com>,
-	Simon Horman <horms@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH net-next v2 2/2] net: phy: Add Marvell PHY PTP support
-Message-ID: <Z_d2xntJMPQYGQ6T@shell.armlinux.org.uk>
-References: <20250409101808.43d5a17d@kmaincent-XPS-13-7390>
- <Z_YwxYZc7IHkTx_C@shell.armlinux.org.uk>
- <20250409104858.2758e68e@kmaincent-XPS-13-7390>
- <Z_ZlDLzvu_Y2JWM8@shell.armlinux.org.uk>
- <20250409143820.51078d31@kmaincent-XPS-13-7390>
- <Z_Z3lchknUpZS1UP@shell.armlinux.org.uk>
- <20250409180414.19e535e5@kmaincent-XPS-13-7390>
- <Z_avqyOX2bi44sO9@shell.armlinux.org.uk>
- <Z/b2yKMXNwjqTKy4@shell.armlinux.org.uk>
- <Z_dGE4ZwjTgLMTju@hoboy.vegasvil.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bif+PO2W"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744271160;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=F58ZWliydz3U6uMmvLSlm0nGnQbwI4yd1xZW1tjL3iY=;
+	b=bif+PO2W6fBh+9Wz1BgJHJJdLYSA0PXm8+sPEhTf4u00av6nMOB10bQ8UD9afgKIdxFhFM
+	P1wLvbSboqJz33ynVRkvwAokGmgvbKcDjx5yKESA+bFOXuOd02JGiBFdluciBRCtfYKUpV
+	yD7Xd1TmW7nZl59IRlR/pXu4tQ58hTQ=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-379-gl3OVORbO3iDtlv_t2Huzg-1; Thu,
+ 10 Apr 2025 03:45:56 -0400
+X-MC-Unique: gl3OVORbO3iDtlv_t2Huzg-1
+X-Mimecast-MFC-AGG-ID: gl3OVORbO3iDtlv_t2Huzg_1744271154
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4C48C19541B1;
+	Thu, 10 Apr 2025 07:45:54 +0000 (UTC)
+Received: from [10.44.33.222] (unknown [10.44.33.222])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1F81019560AD;
+	Thu, 10 Apr 2025 07:45:48 +0000 (UTC)
+Message-ID: <1a78fc71-fcf6-446e-9ada-c14420f9c5fe@redhat.com>
+Date: Thu, 10 Apr 2025 09:45:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z_dGE4ZwjTgLMTju@hoboy.vegasvil.org>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 02/14] dt-bindings: dpll: Add support for Microchip
+ Azurite chip family
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+ Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
+ Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
+ Andy Shevchenko <andy@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Michal Schmidt <mschmidt@redhat.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20250409144250.206590-1-ivecera@redhat.com>
+ <20250409144250.206590-3-ivecera@redhat.com>
+ <20250410-skylark-of-silent-symmetry-afdec9@shite>
+Content-Language: en-US
+From: Ivan Vecera <ivecera@redhat.com>
+In-Reply-To: <20250410-skylark-of-silent-symmetry-afdec9@shite>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Wed, Apr 09, 2025 at 09:16:19PM -0700, Richard Cochran wrote:
-> On Wed, Apr 09, 2025 at 11:38:00PM +0100, Russell King (Oracle) wrote:
+
+
+On 10. 04. 25 9:06 dop., Krzysztof Kozlowski wrote:
+> On Wed, Apr 09, 2025 at 04:42:38PM GMT, Ivan Vecera wrote:
+>> Add DT bindings for Microchip Azurite DPLL chip family. These chips
+>> provides 2 independent DPLL channels, up to 10 differential or
+>> single-ended inputs and up to 20 differential or 20 single-ended outputs.
+>> It can be connected via I2C or SPI busses.
+>>
+>> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+>> ---
+>>   .../bindings/dpll/microchip,zl3073x-i2c.yaml  | 74 ++++++++++++++++++
+>>   .../bindings/dpll/microchip,zl3073x-spi.yaml  | 77 +++++++++++++++++++
 > 
-> > Right, got to the bottom of it at last. I hate linuxptp / ptp4l.
+> No, you do not get two files. No such bindings were accepted since some
+> years.
 > 
-> So don't use it.  Nobody is forcing you.
+>>   2 files changed, 151 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/dpll/microchip,zl3073x-i2c.yaml
+>>   create mode 100644 Documentation/devicetree/bindings/dpll/microchip,zl3073x-spi.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/dpll/microchip,zl3073x-i2c.yaml b/Documentation/devicetree/bindings/dpll/microchip,zl3073x-i2c.yaml
+>> new file mode 100644
+>> index 0000000000000..d9280988f9eb7
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/dpll/microchip,zl3073x-i2c.yaml
+>> @@ -0,0 +1,74 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/dpll/microchip,zl3073x-i2c.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: I2C-attached Microchip Azurite DPLL device
+>> +
+>> +maintainers:
+>> +  - Ivan Vecera <ivecera@redhat.com>
+>> +
+>> +description:
+>> +  Microchip Azurite DPLL (ZL3073x) is a family of DPLL devices that
+>> +  provides 2 independent DPLL channels, up to 10 differential or
+>> +  single-ended inputs and up to 20 differential or 20 single-ended outputs.
+>> +  It can be connected via multiple busses, one of them being I2C.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - microchip,zl3073x-i2c
+> 
+> I already said: you have one compatible, not two. One.
 
-What else is there to test PTP support that is better?
+Ah, you mean something like:
+iio/accel/adi,adxl313.yaml
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Do you?
+
+> Also, still wildcard, so still a no.
+
+This is not wildcard, Microchip uses this to designate DPLL devices with 
+the same characteristics.
+
+But I can use microchip,azurite, is it more appropriate?
+
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +
+>> +allOf:
+>> +  - $ref: /schemas/dpll/dpll-device.yaml#
+>> +
+>> +unevaluatedProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    i2c {
+>> +      #address-cells = <1>;
+>> +      #size-cells = <0>;
+>> +
+>> +      dpll@70 {
+>> +        compatible = "microchip,zl3073x-i2c";
+>> +        reg = <0x70>;
+>> +        #address-cells = <0>;
+>> +        #size-cells = <0>;
+> 
+> Again, not used. Drop.
+
+Sorry, will do.
+
+>> +        dpll-types = "pps", "eec";
+>> +
+>> +        input-pins {
+>> +          #address-cells = <1>;
+>> +          #size-cells = <0>;
+>> +
+>> +          pin@0 { /* REF0P */
+>> +            reg = <0>;
+>> +            label = "Input 0";
+>> +            supported-frequencies = /bits/ 64 <1 1000>;
+>> +            type = "ext";
+>> +          };
+>> +        };
+>> +
+>> +        output-pins {
+>> +          #address-cells = <1>;
+>> +          #size-cells = <0>;
+>> +
+>> +          pin@3 { /* OUT1N */
+>> +            reg = <3>;
+>> +            esync-control;
+>> +            label = "Output 1";
+>> +            supported-frequencies = /bits/ 64 <1 10000>;
+>> +            type = "gnss";
+>> +          };
+>> +        };
+>> +      };
+>> +    };
+>> +...
+>> diff --git a/Documentation/devicetree/bindings/dpll/microchip,zl3073x-spi.yaml b/Documentation/devicetree/bindings/dpll/microchip,zl3073x-spi.yaml
+>> new file mode 100644
+>> index 0000000000000..7bd6e5099e1ce
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/dpll/microchip,zl3073x-spi.yaml
+> 
+> No, you do not get two files. Neither two compatibles, nor two files.
+> Please look at existing bindings how they do it for such devices.
+
+Thanks Krzysztof for comments.
+
+Ivan
+
