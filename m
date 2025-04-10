@@ -1,72 +1,94 @@
-Received: from unicom146.biz-email.net (unicom146.biz-email.net [210.51.26.146])
+Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [91.216.245.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A629326A0D1
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 10:53:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.26.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03C774690;
+	Thu, 10 Apr 2025 10:54:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.216.245.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744282397; cv=none; b=J80smSs9Y1H8zBnzrckJEsw653TdTLrUtEJfr0/hfx7+uKIw2ChGDRQZ7Nwrw3yLqXtMiFTpMaKi2RRkv8GEXKqnnq7eQkYXfLhcjQXbMebrq4LZF07Izc8+V5y703YVftjfo+ofbQI9GBg4J7ulEq1k5HKySQRtaftr1U8QsmE=
+	t=1744282446; cv=none; b=jy4Dm455BeBm7YwSxqHzvukGSuUyPOMV7elMnVxLCLHe7eu3IAsSN9sv6+JJbFbZDPNJixVgT/0SjDReLdKHUQFEC+jA/2Ic1wWbPlNQCKjF0S5+sRnKj8AZ4R8hSQgCSdmibxKANLEPOB4d6FYwQrBNZ6HzsLj2m9nqJt5KDD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744282397; c=relaxed/simple;
-	bh=saLwZDaFm21NvOGF1F8Bm1iSGBrAFhk4rdT1D6/TGEg=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Y+ofCnamxW+fEFhDIC9CxuUEsjzaxr+xft3S8QkFidgN2TUHx+tr7uD9C4NL5QveZ+VL4Vg8OvOfwQ3gWfs9S3+4QWpMa9Yrg5aQt9Emt7SOgmGZg0FRwxBGtRpNvam6QanKFRAeNwupdQSuypnuwlJXZfYGqVVIR59ZBTiQM9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.26.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
-Received: from jtjnmail201601.home.langchao.com
-        by unicom146.biz-email.net ((D)) with ASMTP (SSL) id 202504101853013014;
-        Thu, 10 Apr 2025 18:53:01 +0800
-Received: from locahost.localdomain.com (10.94.12.92) by
- jtjnmail201601.home.langchao.com (10.100.2.1) with Microsoft SMTP Server id
- 15.1.2507.39; Thu, 10 Apr 2025 18:53:03 +0800
-From: Charles Han <hanchunchao@inspur.com>
-To: <arnd@arndb.de>, <gregkh@linuxfoundation.org>, <jpanis@baylibre.com>
-CC: <linux-kernel@vger.kernel.org>, Charles Han <hanchunchao@inspur.com>
-Subject: [PATCH] misc: tps6594-pfsm: Add NULL check in tps6594_pfsm_probe
-Date: Thu, 10 Apr 2025 18:52:53 +0800
-Message-ID: <20250410105256.70310-1-hanchunchao@inspur.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1744282446; c=relaxed/simple;
+	bh=T0Eo6RBz2cS1tU44dJiO8W8b0KC+LupLMrZspOvecns=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q8RRL0ZOHyN00H/lgYQbZiLCmZh4Ue5au1HczQprY4iu5H48RM6qxc6PcSdA2CjuhWnPJE+7rnfRhnB14k4CYolo3NG4RVd+teEvprTvHCKKy0tcDbTbub41hM3wWtfX3ZrMSnAXhUhSSa0VOGAgfjMCqEjwBTJptM3//Kt2w4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strlen.de; spf=pass smtp.mailfrom=strlen.de; arc=none smtp.client-ip=91.216.245.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strlen.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=strlen.de
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+	(envelope-from <fw@strlen.de>)
+	id 1u2pXc-0003K3-9W; Thu, 10 Apr 2025 12:53:52 +0200
+Date: Thu, 10 Apr 2025 12:53:52 +0200
+From: Florian Westphal <fw@strlen.de>
+To: lvxiafei <xiafei_xupt@163.com>
+Cc: fw@strlen.de, coreteam@netfilter.org, davem@davemloft.net,
+	edumazet@google.com, horms@kernel.org, kadlec@netfilter.org,
+	kuba@kernel.org, linux-kernel@vger.kernel.org,
+	lvxiafei@sensetime.com, netdev@vger.kernel.org,
+	netfilter-devel@vger.kernel.org, pabeni@redhat.com,
+	pablo@netfilter.org
+Subject: Re: [PATCH V3] netfilter: netns nf_conntrack: per-netns
+ net.netfilter.nf_conntrack_max sysctl
+Message-ID: <20250410105352.GB6272@breakpoint.cc>
+References: <20250409094206.GB17911@breakpoint.cc>
+ <20250410100227.83156-1-xiafei_xupt@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-tUid: 202541018530270b4723268073f9a138e02d94a0d95f7
-X-Abuse-Reports-To: service@corp-email.com
-Abuse-Reports-To: service@corp-email.com
-X-Complaints-To: service@corp-email.com
-X-Report-Abuse-To: service@corp-email.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250410100227.83156-1-xiafei_xupt@163.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-devm_kasprintf() can return a NULL pointer on failure,but this
-returned value in tps6594_pfsm_probe() is not checked.
-Add NULL check in tps6594_pfsm_probe(), to handle kernel NULL
-pointer dereference error.
+lvxiafei <xiafei_xupt@163.com> wrote:
+> > in any case.
+> >
+> > Also:
+> >
+> > -       if (nf_conntrack_max && unlikely(ct_count > nf_conntrack_max)) {
+> > +       if (net->ct.sysctl_max && unlikely(ct_count > min(nf_conntrack_max, net->ct.sysctl_max))) {
+> >
+> >
+> > ... can't be right, this allows a 0 setting in the netns.
+> > So, setting 0 in non-init-net must be disallowed.
+> 
+> Yes, setting 0 in non-init-net must be disallowed.
+> 
+> Should be used:
+> unsigned int net_ct_sysctl_max = max(min(nf_conntrack_max, net->ct.sysctl_max), 0);
+> if (nf_conntrack_max && unlikely(ct_count > net_ct_sysctl_max)) {
 
-Fixes: a0df3ef087f8 ("misc: tps6594-pfsm: Add driver for TI TPS6594 PFSM")
-Signed-off-by: Charles Han <hanchunchao@inspur.com>
----
- drivers/misc/tps6594-pfsm.c | 5 +++++
- 1 file changed, 5 insertions(+)
+That would work.  Alternative, probably preferrable, is to do
+something like this:
 
-diff --git a/drivers/misc/tps6594-pfsm.c b/drivers/misc/tps6594-pfsm.c
-index 0a24ce44cc37..05c4e081a8d2 100644
---- a/drivers/misc/tps6594-pfsm.c
-+++ b/drivers/misc/tps6594-pfsm.c
-@@ -281,6 +281,11 @@ static int tps6594_pfsm_probe(struct platform_device *pdev)
- 	pfsm->miscdev.minor = MISC_DYNAMIC_MINOR;
- 	pfsm->miscdev.name = devm_kasprintf(dev, GFP_KERNEL, "pfsm-%ld-0x%02x",
- 					    tps->chip_id, tps->reg);
-+	if (!pfsm->miscdev.name) {
-+		devm_kfree(dev, pfsm);
-+		return -ENOMEM;
-+	}
+@@ -615,10 +615,10 @@ enum nf_ct_sysctl_index {
+ static struct ctl_table nf_ct_sysctl_table[] = {
+-               .proc_handler   = proc_dointvec,
++               .proc_handler   = proc_douintvec_minmax,
++               .extra1         = SYSCTL_ZERO, /* 0 == no limit */
+        },
+        [NF_SYSCTL_CT_COUNT] = {
+                .procname       = "nf_conntrack_count",
+@@ -1081,9 +1082,11 @@ static int nf_conntrack_standalone_init_sysctl(struct net *net)
+
+        /* Don't allow non-init_net ns to alter global sysctls */
+        if (!net_eq(&init_net, net)) {
+                table[NF_SYSCTL_CT_EXPECT_MAX].mode = 0444;
+                table[NF_SYSCTL_CT_BUCKETS].mode = 0444;
 +
- 	pfsm->miscdev.fops = &tps6594_pfsm_fops;
- 	pfsm->miscdev.parent = dev->parent;
- 	pfsm->chip_id = tps->chip_id;
--- 
-2.43.0
++               /* 0 means no limit, only allowed in init_net */
++               table[NF_SYSCTL_CT_MAX].extra1 = SYSCTL_ONE;
+        }
 
+That will make setting a 0 value illegal for non-init net case:
+
+sysctl net.netfilter.nf_conntrack_max=0
+sysctl: setting key "net.netfilter.nf_conntrack_max": Invalid argument
+
+> min(nf_conntrack_max, net->ct.sysctl_max) is the upper limit of ct_count
+> At the same time, when net->ct.sysctl_max == 0, the original intention is no limit,
+> but it can be limited by nf_conntrack_max in different netns.
+
+Sounds good to me.
