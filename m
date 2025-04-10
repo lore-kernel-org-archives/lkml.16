@@ -1,96 +1,85 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A7A1BF37
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:19:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BB811BF37
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:19:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744265957; cv=none; b=Sy4MTHWvAFomrWvaW2y1UM0Rf4agiKucFtobwHJafWFOPt130He1yTXIvGxg1CyPab8SqciEhT8CzDAOF65Mr4F4LmSfPfCf0r3xcaSucZUTCwG3Aum3xEGscmt6YzBX3eP9MO/xUJXpr7zcl7IL6XwdTjvregT60+y3CkdsQo4=
+	t=1744265987; cv=none; b=FD4K9c7vpoxlewAFvCX0p6UkdiCeWRkrsbhkCTo1V6iE9kbZGm0nW6yWUskKsDpvVCdFSrh7v1hwKi02EjVWPooNUpgl/SZFCGlBqoFHXKOdL+6W2NLhvukMJMIKWWyOGkqKCNfCUChOcyQqdTl+Yhf2M4B2WN2tKXNZM/p9XtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744265957; c=relaxed/simple;
-	bh=GHk8Y+WJYHBXno6Zq2dTjJGVahR88buHcB//W+dfb4Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FVJLY5KtGeI3eHIvfY7Uae49CuBW6AntL42U0WzCcY7cf9BsMlKWOI2x1YXuQLAf6hptx2Geq4Xo5dELzAw2cbDxSCWGv4JUcgoLjQznsg0uqrA5o6Pnoz7p/UZjOPaxh5HukMBW2PNJMGy1e7/QdUtJfVtvgezpbNV38Jo1gqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=LTSqb0ts; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1744265987; c=relaxed/simple;
+	bh=fNKcWfeOv5X1UZBWJNkpzhwgnAdoDWDmVg5nRct5t9Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a5FoHkyROZsEWLbAavFMVetXuc9l25sR7mwf2aHTy7unwE+ELiZAiBhRuPaW8r1NUBXW+qF0AvwPblTwAZ1NF0B80rsQvytoLNgjYNSHTSmGvelxrBFeE59BATiL07cgXJpKb3cI75PQPx9i3xYWleepz6oNaMOHrToxWs+7Q5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=htEwGSK2; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="LTSqb0ts"
-Received: from [172.27.3.33] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53A6GPNl3943272
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 9 Apr 2025 23:16:27 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53A6GPNl3943272
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025032001; t=1744265790;
-	bh=7GWzQYcxM1qb4FyWY0v/8IQ3XCa4IBsPxSQ7EM3Uv1k=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=LTSqb0tsliwoVoETPYTJjF2eKcAv9gnoL3saUwC9r016YvncuX9grSAJYGACSCRcB
-	 dYBBQfdFgVN7quwyusn7GAFzo/LV1F0y7VPoJbmoagFK6KhycJY69kjvzKMbeMOYuv
-	 4ucO783q/X6Zb7azBLLO56o2E3DZ78ZeJbJ7dR2B3bAzrd25wpc1QuJI7UF09j80/Y
-	 d4eDaTrQzlpC4igx6PfGmizQanybIqjJCuhALvYeWpCPzKgOOymZfDpKE3buzHFZC0
-	 PVOvSvMy43mZhNkYfFS4c3e2mDXHTrkNHtHV5KoTx1h1T77vaztePczNlCnTsRw2Iv
-	 pSXyKg7Lo+nuw==
-Message-ID: <e3d8db6a-dfb9-49d5-8c7f-b4a1d2faf575@zytor.com>
-Date: Wed, 9 Apr 2025 23:14:12 -0700
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="htEwGSK2"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cf034d4abso4706405e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 09 Apr 2025 23:19:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1744265984; x=1744870784; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fNKcWfeOv5X1UZBWJNkpzhwgnAdoDWDmVg5nRct5t9Y=;
+        b=htEwGSK2vTaIz8z9lllONirib9yEqiD5v/DZnd4q4o9BpuIaC3KgzNXckydokW0lEe
+         NAR392W9t4STF0jnCmN52u2421PR1SMbkM15nET3h1l2TJj1nUTvuRSX7gxOW3h5/qP3
+         62BgvUgneCIaJpWKDGSNed47+ML9q0wobqdVuZraRw1uChE8LKanoEvMGCBTHmKu9l9H
+         xxie6qDQptIb2l1Ad3idobgkwu9niKbRnwLk5QE/W7wpvbhuE9KmsSHnDMoTTUyZ3/39
+         iusfvqJk1r4Y06GTcB7C8bR6KWQaVArohb2f9XCLTuErSYPhIs8dTsUncCzfNK4jzHsW
+         PMBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744265984; x=1744870784;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fNKcWfeOv5X1UZBWJNkpzhwgnAdoDWDmVg5nRct5t9Y=;
+        b=b7ilbSIVjUDS0y+MnYxSKmi2Ik/KXRpo/tKcTpiP3wEuGhmqTLT0O4jFIlLrRC6X09
+         iLqRhvJjyByp7OpJPyQ+nKgnBhIrXW2w6O5fBL05KenZ/fBjKiIzaMsC29jyfsrfMfkZ
+         S9XZlGEmve8wOyG/qLUgbItZ4u3vsL+WSyEqOpUtaKflk2hyouZx8QTwzqNviCrg8TH+
+         iEM1MZ97DcnAhGU0nE2IHGUbA5HoW0p0LXGnbge5Z2EwGGd/81K+YMEcHQpijUT15WN0
+         B37MXKnWqU676SLHyPltMvy0UblAAjGkiAgLC7D7DjbUPuHN2xrV3QMtE37WaCC+/dwO
+         HbsA==
+X-Forwarded-Encrypted: i=1; AJvYcCXeqRT9PPiH0ZVYlVAGfYBbzLRyrm065sKkKsbht8T6lh8JeLUH5jsj80xadalhTO0oOdsx9khfV5sLpHg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1LrFkx/n8MG2x85okxibHW9+qDyf6WHL/g4R9Sm9cnJmHRSjk
+	+7EQQtXSUS173q7F5XWT4DYDloWfF1gCyt0f3AbUguw7LjjOFE83qy15HqzPoE0=
+X-Gm-Gg: ASbGnct1b2zmtSHEMUkP7wZxhvTFu1vzoau3J9u2q8o5p90grHVjnmZ7VkEwgSHTIIa
+	9wzZtT9ABFwyGX3gBmhx/wgKzc0p0P87f9Yasq+UJ5+i0urgZEjdMuxOf69POrb3sMGr4lYoZTu
+	LtsbWEwYvlQmVRDR+vs1bZVxo3JhWoeqGujhzm13HGVCi/dcSslS2Umc17pnMKU9qE05buPUwss
+	lDU4LU0LVrc2ludRZ5hpniHIcgLJ4EO0FcGolNef4lkJjfQQzMMW7GqFEAp5lWGj6Ums/PWZRaT
+	sKaNAruyt9pjn03pl4FlcPHEB8jUZ1kKoDsBjOC6ccCrz8rcpX1+2T6d
+X-Google-Smtp-Source: AGHT+IETxKgteFp+KK8rObwmu67CyaszSv6hN7I3pcGlN+mzeZYmJ4TDp+koJRpZX2WmH9ySINK8Og==
+X-Received: by 2002:a05:600c:b8b:b0:43d:4686:5cfb with SMTP id 5b1f17b1804b1-43f2d9604f3mr15862495e9.27.1744265983907;
+        Wed, 09 Apr 2025 23:19:43 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43f23572bb2sm39720035e9.29.2025.04.09.23.19.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 23:19:43 -0700 (PDT)
+Date: Thu, 10 Apr 2025 09:19:40 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Siddarth G <siddarthsgml@gmail.com>
+Cc: slongerbeam@gmail.com, p.zabel@pengutronix.de, mchehab@kernel.org,
+	gregkh@linuxfoundation.org, shawnguo@kernel.org,
+	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+	linux-media@vger.kernel.org, linux-staging@lists.linux.dev,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, skhan@linuxfoundation.org
+Subject: Re: [PATCH v2] media: imx: Fix NULL pointer dereference
+Message-ID: <e4252054-69e0-4f65-bb75-54ba4a24e5d3@stanley.mountain>
+References: <20250410050543.6963-1-siddarthsgml@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 06/20] x86/msr: Standardize on 'u32' MSR indices in
- <asm/msr.h>
-To: Xin Li <xin@zytor.com>, Ingo Molnar <mingo@kernel.org>,
-        linux-kernel@vger.kernel.org
-Cc: Juergen Gross <jgross@suse.com>, Dave Hansen <dave.hansen@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20250409202907.3419480-1-mingo@kernel.org>
- <20250409202907.3419480-7-mingo@kernel.org>
- <aed43a6a-aca9-4c81-af1a-775f5858ebe3@zytor.com>
- <9c014962-d4cb-4e68-be15-efbe2ea26531@zytor.com>
- <63ab3ea9-c55d-48d2-8344-fb4314baf240@zytor.com>
- <3B57B3E5-47C9-4196-AD2B-44916E18B6D0@zytor.com>
- <3e2a52c5-791a-4e96-a768-8579ec841dd1@zytor.com>
-Content-Language: en-US
-From: "H. Peter Anvin" <hpa@zytor.com>
-In-Reply-To: <3e2a52c5-791a-4e96-a768-8579ec841dd1@zytor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250410050543.6963-1-siddarthsgml@gmail.com>
 
-On 4/9/25 20:53, Xin Li wrote:
-> On 4/9/2025 8:29 PM, H. Peter Anvin wrote:
->> On April 9, 2025 8:18:12 PM PDT, Xin Li <xin@zytor.com> wrote:
->>> A question NOT related to this patch set, the MSR write API prototype
->>> defined in struct pv_cpu_ops as:
->>>     void (*write_msr)(unsigned int msr, unsigned low, unsigned high);
->>>
->>> Will it be better to add "const" to its arguments?  I.e.,
->>>     void (*write_msr)(const u32 msr, const u32 low, const u32 high);
->>>
->>
->> No, that makes no sense (it would have absolutely no effect.)
->>
-> 
-> For the API definition, yes, it has no effect.
-> 
-> While it makes the API definition more explicit, and its implementations
-> for native and Xen would be:
-> 
-> void {native,xen}_write_msr(const u32 msr, const u32 low, const u32 high)
-> {
->      ....
-> }
-> 
-> not worth it at all?
-> 
+The same comments apply.
 
-No, and as you know, I'd like to get rid of the native_ and xen_ 
-functions entirely anyway.
-
-	-hpa
+regards,
+dan carpenter
 
