@@ -1,186 +1,176 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2086.outbound.protection.outlook.com [40.107.247.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0CFB1EFFB1;
-	Thu, 10 Apr 2025 15:46:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744299995; cv=none; b=O4Jkiyk2XvxNS3+ewhpaNa+eVH5bPVIho/d9RDB2BSCcGb6WBShsQv/mOQMp16pdIIR5FFNBVnm8YYy69H9b+GTPqLoBMXHpTJg1xWYbcxJ0IabEEPqDQeAclaChujqc+Y1PveOwSLgbUK0K37xTV9zRcqV3+uG/4+ALqJ180kw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744299995; c=relaxed/simple;
-	bh=gBYgW5cjW4/+rgHV13XVM72Z4tpzZbhTmwNUizykIds=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HFODqAMt3gE7/3TZB1V9ufD3w8iYnBPQDQ4UOe9cjtERFH4KzByboIDd7mMzu1PGLoagNZrs4heAf1w0bxXvzD8dVDaAaEtNxWbJXwwrOeMHE2+x82QKI95ENG460+PNvCo5Zwyrwr7dlxxtddfuYvRaaC4vZVKLwBCTnnIGItg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nPOsnJ5v; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E9351F03C5;
+	Thu, 10 Apr 2025 15:46:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.86
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744300001; cv=fail; b=SSwzvxSATMsvMJLPmmIEbtL5CP5zIMBbLjMqiRh9CCg4B9TTndMwh9ZUUNqOTvFAszp3GQEa1vaHOfO5j/cSQqbSwMxWUb48se2KiQAIjSBFaw+YdyqWBBg6Wpjk8Hvho+b4p1teps2PfUP7EuyomPtZM8ggCfEcopaM0cpXlWc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744300001; c=relaxed/simple;
+	bh=fZu2wF8EglKpzI4T8z657YhK9TK2fB1bukBQsfPI/j8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=MImuH36g1q5J8/DLoIADfi/52+PY09SJyUpbd/Tdd9xsY43SWTHGqb1oCjwBJzpWKzFM0dqEqv3t/1b3xtHQqSl4IcnP2v2QDlJX1NWsDQ1G9oeiTP09z7R5YuPNu8hREUHms/mQg2ISV3c+aEJg+AIWYRCIwu4EmL0XjzhkEj8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nokia-sbell.com; spf=pass smtp.mailfrom=nokia-sbell.com; dkim=pass (2048-bit key) header.d=nokia-sbell.com header.i=@nokia-sbell.com header.b=Q9pEWYiD; arc=fail smtp.client-ip=40.107.247.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nokia-sbell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nokia-sbell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nPOsnJ5v"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744299994; x=1775835994;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=gBYgW5cjW4/+rgHV13XVM72Z4tpzZbhTmwNUizykIds=;
-  b=nPOsnJ5voT+D8P/Y9PeDPPhh2zIjTZ+uDQ4sZS5jkXcI9gkAuKYGGUTX
-   vyoPhG/c9YWi8JdUCgmJcjdNpTPXagFpeS2arcAJgEG3H/5rvOiJg2K+T
-   IFZXwSo4j/66+XLWFKYttZJZLabHykR7/pLDhQ7PnHFH+OlAlHV+AEv52
-   cioEQpS82yPlKY2GK1q5iDJR9cFt1NjkT55BPJKj983TK0KMLSexZWI+K
-   3yu9XUv4ASz9Ko4o7+fBSjls3lmtnmQBzOaXZtJezIAr56Sy5OPpNHD7K
-   KRpcLUz4BNpO99rhFHgUXSmr6lbEiqRPb0XukzArHUszgXebHAwJm7lqK
-   g==;
-X-CSE-ConnectionGUID: 2r2U4AKSRQOSFxMjLSHEqw==
-X-CSE-MsgGUID: szWQKsBiR3KbCjHwnIg5dw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11400"; a="49630160"
-X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
-   d="scan'208";a="49630160"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2025 08:46:33 -0700
-X-CSE-ConnectionGUID: LWyx47QMR0WxgM0pCz7OXg==
-X-CSE-MsgGUID: b3V+DafDQD+ER7MDfkTPqQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,202,1739865600"; 
-   d="scan'208";a="129892851"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 10 Apr 2025 08:46:31 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u2u6m-000AEl-2e;
-	Thu, 10 Apr 2025 15:46:28 +0000
-Date: Thu, 10 Apr 2025 23:45:45 +0800
-From: kernel test robot <lkp@intel.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH] ftrace: Show subops in enabled_functions
-Message-ID: <202504102339.KxLwdUFJ-lkp@intel.com>
-References: <20250409094226.23f75293@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=nokia-sbell.com header.i=@nokia-sbell.com header.b="Q9pEWYiD"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=kHU/VYMsCwWyltyfl8d/u/Tv4WNfrKnquzcFPRlbgxTY3ZAKUYwq6yNnjMdz7WFeOiB1ZCzR180i3nEXK7oDsbbgUdr1B5mm1rQcoGzDC5IFHB4rFi2+PewbYMel8+nWHF3LxMCcRVzYI6LREieGSHHyqnNHZY1iMJNXfu2hzJ9QyVKdUB7VKlnAzFJxVuGFxfLYLaTv6d6YmEy00eZ3UrFU+ZaD/4Fd+Ix6mUR8DS2RlDV7hjQ4fIcmorQyF3Bj04r5idcryCoDJNcLpUv6v7ggZrgjs2aKJawifMGtDXLq7kVz5QdYqs25qfv/aAylsQIvzuKwkhzpBwYdlG3Y0A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8lcYj/0aoDh1JYnF8nsCYBs89Jh34d9QTKZVIUdE5zw=;
+ b=A5Dwe/xLifZdw6K/CQrx4XhU+37IqEf51ViO6BGe+tpCLgd6L24vbDGxsbOYl9D/1+3N1Rz8AQch5ui1zALK9R+aYiCMVyD9RUhYXRByoJkUrdLHgIHElcz3Al9mcAyC8MpOxlAEGQN7CbEI04J4UjCnc9PYggXaKDNjKzGRrXtR5SZlDJo5PYzPvBV58/UqZyrvVkarPNeUaZoMMYxiU25ZiaJJBUkGJxuf7HrwBgxIsSWMQcFDzgGQwCVQK7lIhZDSDCTWP/Z/kIH8HtXggd4mdvSnKDpvfiR/bnetrMHD0DJrUoOn0TXkmldDfPWa789nShMLgxrZON66pVi3Vg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nokia-sbell.com; dmarc=pass action=none
+ header.from=nokia-sbell.com; dkim=pass header.d=nokia-sbell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia-sbell.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8lcYj/0aoDh1JYnF8nsCYBs89Jh34d9QTKZVIUdE5zw=;
+ b=Q9pEWYiDrjZvCgSZKgNPS/xXhF7t5mdO77MCib5P4CK48NBHzTIjhW9wqtFBVJ/eeOox0M4WmVceB74gXic2Aws6kYcJ+78bcC7LSfM/jnjuDoggGEgN9DPv9oWiPXlAZumymQbTJSP+ABfhiigFJOnCKri9w1T4JD3e7xLunyr09U5g7QaDhwvA9eUX3pgYZiMV872/61b7kGorlx0iptD5ngUeegQsdx7L4sLQUdUaZ+ZQfkqTZW4pso//+7z0hmJYCeaVLFNkXZjdqNh6AlGNUIiZK2p3Kcr6i/l1RAd120t5jRvNz0RS/DVJt4iPw5QzQW7wnQbQSXN9EFzJZA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nokia-sbell.com;
+Received: from DBBPR07MB7481.eurprd07.prod.outlook.com (2603:10a6:10:1f0::11)
+ by PA1PR07MB10210.eurprd07.prod.outlook.com (2603:10a6:102:491::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.34; Thu, 10 Apr
+ 2025 15:46:35 +0000
+Received: from DBBPR07MB7481.eurprd07.prod.outlook.com
+ ([fe80::884b:f4bb:e97b:b9d5]) by DBBPR07MB7481.eurprd07.prod.outlook.com
+ ([fe80::884b:f4bb:e97b:b9d5%5]) with mapi id 15.20.8632.021; Thu, 10 Apr 2025
+ 15:46:35 +0000
+From: Zhen XIN <zhen.xin@nokia-sbell.com>
+To: linux-wireless@vger.kernel.org
+Cc: pkshih@realtek.com,
+	linux-kernel@vger.kernel.org,
+	martin.blumenstingl@googlemail.com,
+	Zhen XIN <zhen.xin@nokia-sbell.com>
+Subject: [PATCH -v2 2/2] wifi: rtw88: sdio: map mgmt frames to queue TX_DESC_QSEL_MGMT
+Date: Thu, 10 Apr 2025 15:42:17 +0000
+Message-Id: <20250410154217.1849977-3-zhen.xin@nokia-sbell.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250410154217.1849977-1-zhen.xin@nokia-sbell.com>
+References: <20250410154217.1849977-1-zhen.xin@nokia-sbell.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2P153CA0012.APCP153.PROD.OUTLOOK.COM
+ (2603:1096:4:140::15) To DBBPR07MB7481.eurprd07.prod.outlook.com
+ (2603:10a6:10:1f0::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250409094226.23f75293@gandalf.local.home>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DBBPR07MB7481:EE_|PA1PR07MB10210:EE_
+X-MS-Office365-Filtering-Correlation-Id: c1eb3372-8732-4917-498c-08dd7846dff2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Nn15X5NI8vTZwxSnUvKkS7YQG6UsOxEyFhxl+hBvhv82T2Hz9a8NVxaxVm8y?=
+ =?us-ascii?Q?qEwkNF0yMzhmKtqt5IqhQ9I9VQfPabbmecZZ3OHr0fPAfTzbksvj7G1+j8qu?=
+ =?us-ascii?Q?QVrgJWvlrRWuYCzDtWTnUrvmThvkqCSUIgsz6MPzlrFwVakiSF6owJEDaOQQ?=
+ =?us-ascii?Q?9PqZ5MQLphUXiXtUlLL2h1SABtTJvHIla1Wz5YrWHn6PvuXV1rhtau0VDpQf?=
+ =?us-ascii?Q?k6UdcaCuTjsPs4Dh34Q1n6PGqd3+mOKiPB/H5A4oN+3bPkak6uYEu8LHqpJt?=
+ =?us-ascii?Q?jRkAsHa7FscXvOMWC0QyhdZDNvBZjgJtfViTBKTRoQq26bTVe9R5fR6YyzIf?=
+ =?us-ascii?Q?wkTBmKAWn7ehsRuIIBCTdWKy4RiipXF/XvqKE9e5ICBgGjoItDwDOaxWvYDh?=
+ =?us-ascii?Q?jjSFBdSuyAQQb8wtNZURNUGg++2t04I6RfWZmMMzYFQybuoHR4Nv4dG9paOf?=
+ =?us-ascii?Q?i/GJMI+Q1KYJ6tDpG2kyY/qragbQ50Kz+lSoZ6hkettJaC4OsThgz5lIkg+B?=
+ =?us-ascii?Q?XLgqrOID/ecwjvAnp16jxKKwcvxC6p4KajBQi+I8ZNkbdVm+tdh7IEuBBd2l?=
+ =?us-ascii?Q?2S66YYZGbLgaRExfrc0gJr9rgAELdGt0djXp9KMvweulDUu7jNzwgTH3ZgCX?=
+ =?us-ascii?Q?fqZJ3ntFVjWy5z1ssBTk0rN47r+JRMuUsgKhyrxEAeuYuLHIcAfHTXbOEM0Y?=
+ =?us-ascii?Q?vQXDxFTbgqzIW2Svun4ceTs6ZWPDKreu1qwDtGJtIfvw0IV9kxvNzJj5/1Cx?=
+ =?us-ascii?Q?iQ6OgVylYuD3pQMycGgzqQDLTwgPHI0MhDY0T2ZG1lGcKeVImybb9NwTWm8Q?=
+ =?us-ascii?Q?N7ndVjdqwZM84iUaMuIn/KzixyR8q9scU7NHm/UIyT7rUvfXHmpyxc4y+MiP?=
+ =?us-ascii?Q?gxD/vG/Ap86kgcxU/Za3VUABLBqmj5TsVaco2weBB5E1irFe5L58eb+4IS6W?=
+ =?us-ascii?Q?djidL4mdNE+RTCYOJllF7HMwWpjYssGdveUWYU4BJeTW/6nDukE2KLIRghur?=
+ =?us-ascii?Q?x1phQig6rBaXRK/RDar7kFGUQLKfrcrurq3AC1VvjUFatRupZOmXNV7Vhykz?=
+ =?us-ascii?Q?buXXgRyZVXFY5frG/SVTE+zTy6HnrD7cp7DOFkIUuWBUdqwmhXQnCu92uL4a?=
+ =?us-ascii?Q?cOpCLrwFo8qS/DWeiONxZ+d6e4/GsmWWYRDLg4d25XXaNJ4HUfAABCikxbGq?=
+ =?us-ascii?Q?c+VkIzz7JhEc3r4vGiGOqiBVxzKXn0zjI66HO8MikvPUjYu/Y+gieFjxuLyj?=
+ =?us-ascii?Q?Mg0iq7WdRhM5/fUSqiFePJPMoxEx8+v9LOCsLjgWdgGMTBQeoZJ6dV3Ge4xm?=
+ =?us-ascii?Q?IgK7iScvgcHFO/In1coK2Kz0Gss/3+LkP96MU7OINq3Q5vp7yGwlDnxYuEtX?=
+ =?us-ascii?Q?XroGV4uWHUe+Pl3PFBgYpOT1hvCLTw0GHGlftOqZkd+Ob25CAYZGLIIk4avk?=
+ =?us-ascii?Q?aS8onGFNuhQ=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBPR07MB7481.eurprd07.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?8/+M9tMuSjPqrL9YHNs2lHL9Ch4eGDpy5wMDX1/bgOt+mVJ7cTjquveodXyH?=
+ =?us-ascii?Q?00rirEml6SCrzDod2nQw1HFvUcIomoB+JPJvyUeyZ842jo1jogEGfbbs8QEW?=
+ =?us-ascii?Q?tLlRX88LcKB2Rp8XzWPvEdkif0WdOc7/oHctMyQVOEFvltLBAzqk9rKlNAbo?=
+ =?us-ascii?Q?qbcPk9nQy+hlO+YVi61S2/Saou2d/vtC829GLdJJi6UQhIbanFD1RQ2w36S3?=
+ =?us-ascii?Q?CVr19+aIMezVduSBeEYy37GGPlrtKpgoZ4ReEZUiqH8zIiHTzzhQqWTSYNyz?=
+ =?us-ascii?Q?PGxWmzNg8OO87j9+YWzNOyvENNOQW7vI+Va4CImMHjIWvY68H3bP9gMbl02p?=
+ =?us-ascii?Q?yMlp3Ve4QNwju25NQZI4JNifGSnrfBwVzesZxd7oOkW9cbvySS4NTWV94tdR?=
+ =?us-ascii?Q?r/xAooOFIPKdmww9A3gq0QeNTNGd6DToNzT12ye3ryFphah2VKys2c1bsEws?=
+ =?us-ascii?Q?5xTT5zTiVFOlWfSD13sVUaObpnCJVHicyfv4rtMmMRdF8XBGpu7IiBAFxD12?=
+ =?us-ascii?Q?7q0Rz/DgtX3ddzR3nJS9CE8FcCzi56xayeDY2KC5PkXfG+zQLIQSKEKZlpk6?=
+ =?us-ascii?Q?jU85NEo0pqGUiMJsisAT5XhpbcqomWbwR7hJDhEejIioTbmwGM9r7WLnnQ2n?=
+ =?us-ascii?Q?8s/2g4CnPI3e79hqMpo894E2EXfBqTMe//kl7mkKCssr+ZklM8EAZX+OOpsY?=
+ =?us-ascii?Q?hQpfjGEZXsx0A0m/PzgCas54Innhrzc9IheTmv95/UVuZWKxJf7ZiCPWEQIh?=
+ =?us-ascii?Q?SAEX9ykNnjB2QeBOuwOueYv/eFbAw6QoBau5trcBIG4b8UO2sScx+JVK9+H+?=
+ =?us-ascii?Q?vvBubwWlxBgaOTF3plfmUALLoNZ6Tk/MVHV76TieXRU/oKrXXOuSqvOza0g8?=
+ =?us-ascii?Q?Ts1f9bRvXUUbFTdBrk6LQdo4ApymEIkWyyJAxAYnk2HlULI08yDAtfIcezoG?=
+ =?us-ascii?Q?y7JNDU8YztpCRjhpaWG88j/YgUSuZrbJFe09sZ29qL0+Gvt88zl1AJV/6+bI?=
+ =?us-ascii?Q?ucNYm4UFb8Rn7CfF4Ikb7OFw+dQcWo0qfpBhCgYXZ+wzDLmXoykws2lRisCf?=
+ =?us-ascii?Q?kA0l026fumna7PKS3USc9K+Sbd+F71QITklc9GY42O3X/GKU339ZVGpBuIK1?=
+ =?us-ascii?Q?frLEF4JKNAGQxOpAC66VyBlW+NVZTkt4CMIByCDtijL2vvBCpFXQagqgT8Z5?=
+ =?us-ascii?Q?5KXJ8fM+yZFv4RBaLF2g8sTZdZ60DHe0nafhRpTVaxaWpbISaqghwM2S8U+o?=
+ =?us-ascii?Q?zSnJnHDLgbV5OG+vSwuFDcLUZWxtZX55xdLpVCvHZAtATt1VbbJHxWlR6XVq?=
+ =?us-ascii?Q?FtF+8zl/V2tq8ERrLULO1ShFlfDVoDLs2tAe3JC3Hqnht2igNAaL46LrbDHH?=
+ =?us-ascii?Q?Z+/R6Fs4RdQBbdhRvwNT4n3i1WDOyJnjRAZRRF+83f4WZm8/RmiQG3ALmI/s?=
+ =?us-ascii?Q?+wDhWAJI9it8WTTe79Q3dtchb5KE5SjcWnWQ3QbqrfytlxNkRp9PJSh3HQ0k?=
+ =?us-ascii?Q?5qTPQBUGNIW7b0HrdqknCTVYTdGsOUK/Lr5xUqrV3bNI/n0dsxXZyPDEtgBA?=
+ =?us-ascii?Q?BoEQYfzABHvr4Y+fNb+FEP/kp7jxWptlA8hTx+LqBVrKRxIhMuHvM6b/Cyrx?=
+ =?us-ascii?Q?7Q=3D=3D?=
+X-OriginatorOrg: nokia-sbell.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c1eb3372-8732-4917-498c-08dd7846dff2
+X-MS-Exchange-CrossTenant-AuthSource: DBBPR07MB7481.eurprd07.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2025 15:46:35.7553
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5d471751-9675-428d-917b-70f44f9630b0
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: SpJKg4zAMKcuke78k5uIqBZ8kP6UtsqZzCH0k7WBGTXVfbdhM5N7F4gTXpbLiKRr128rYe49q7/SZl246OOzcM4vHmR0ddWUlTJq9zm94/Y=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR07MB10210
 
-Hi Steven,
+Rtw88-sdio do not work in AP mode due to the lack of tx status report for
+management frames.
 
-kernel test robot noticed the following build errors:
+Map the management frames to queue TX_DESC_QSEL_MGMT, which enables the
+chip to generate TX reports for these frames
 
-[auto build test ERROR on trace/for-next]
-[also build test ERROR on linus/master v6.15-rc1 next-20250410]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Tested-on: rtl8723ds
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/ftrace-Show-subops-in-enabled_functions/20250409-214345
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
-patch link:    https://lore.kernel.org/r/20250409094226.23f75293%40gandalf.local.home
-patch subject: [PATCH] ftrace: Show subops in enabled_functions
-config: i386-buildonly-randconfig-001-20250410 (https://download.01.org/0day-ci/archive/20250410/202504102339.KxLwdUFJ-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250410/202504102339.KxLwdUFJ-lkp@intel.com/reproduce)
+Fixes: 65371a3f14e7 ("wifi: rtw88: sdio: Add HCI implementation for SDIO based chipsets")
+Signed-off-by: Zhen XIN <zhen.xin@nokia-sbell.com>
+---
+ drivers/net/wireless/realtek/rtw88/sdio.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504102339.KxLwdUFJ-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> kernel/trace/ftrace.c:4342:11: error: incomplete definition of type 'struct fgraph_ops'
-    4342 |                         gops = container_of(subops, struct fgraph_ops, ops);
-         |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/container_of.h:20:47: note: expanded from macro 'container_of'
-      20 |         static_assert(__same_type(*(ptr), ((type *)0)->member) ||       \
-         |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~
-      21 |                       __same_type(*(ptr), void),                        \
-         |                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      22 |                       "pointer type mismatch in container_of()");       \
-         |                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/compiler_types.h:483:74: note: expanded from macro '__same_type'
-     483 | #define __same_type(a, b) __builtin_types_compatible_p(typeof(a), typeof(b))
-         |                                                                          ^
-   include/linux/build_bug.h:77:50: note: expanded from macro 'static_assert'
-      77 | #define static_assert(expr, ...) __static_assert(expr, ##__VA_ARGS__, #expr)
-         |                                  ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:78:56: note: expanded from macro '__static_assert'
-      78 | #define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
-         |                                                        ^~~~
-   include/linux/ftrace.h:1158:8: note: forward declaration of 'struct fgraph_ops'
-    1158 | struct fgraph_ops;
-         |        ^
->> kernel/trace/ftrace.c:4342:11: error: offsetof of incomplete type 'struct fgraph_ops'
-    4342 |                         gops = container_of(subops, struct fgraph_ops, ops);
-         |                                ^                    ~~~~~~
-   include/linux/container_of.h:23:21: note: expanded from macro 'container_of'
-      23 |         ((type *)(__mptr - offsetof(type, member))); })
-         |                            ^        ~~~~
-   include/linux/stddef.h:16:32: note: expanded from macro 'offsetof'
-      16 | #define offsetof(TYPE, MEMBER)  __builtin_offsetof(TYPE, MEMBER)
-         |                                 ^                  ~~~~
-   include/linux/ftrace.h:1158:8: note: forward declaration of 'struct fgraph_ops'
-    1158 | struct fgraph_ops;
-         |        ^
-   kernel/trace/ftrace.c:4344:20: error: incomplete definition of type 'struct fgraph_ops'
-    4344 |                                    (void *)gops->entryfunc,
-         |                                            ~~~~^
-   include/linux/ftrace.h:1158:8: note: forward declaration of 'struct fgraph_ops'
-    1158 | struct fgraph_ops;
-         |        ^
-   kernel/trace/ftrace.c:4345:20: error: incomplete definition of type 'struct fgraph_ops'
-    4345 |                                    (void *)gops->retfunc);
-         |                                            ~~~~^
-   include/linux/ftrace.h:1158:8: note: forward declaration of 'struct fgraph_ops'
-    1158 | struct fgraph_ops;
-         |        ^
-   4 errors generated.
-
-
-vim +4342 kernel/trace/ftrace.c
-
-  4325	
-  4326	static void print_subops(struct seq_file *m, struct ftrace_ops *ops, struct dyn_ftrace *rec)
-  4327	{
-  4328		struct ftrace_ops *subops;
-  4329		bool first = true;
-  4330	
-  4331		list_for_each_entry(subops, &ops->subop_list, list) {
-  4332			if (!((subops->flags & FTRACE_OPS_FL_ENABLED) &&
-  4333			      hash_contains_ip(rec->ip, subops->func_hash)))
-  4334				continue;
-  4335			if (first) {
-  4336				seq_printf(m, "\tsubops:");
-  4337				first = false;
-  4338			}
-  4339			if (subops->flags & FTRACE_OPS_FL_GRAPH) {
-  4340				struct fgraph_ops *gops;
-  4341	
-> 4342				gops = container_of(subops, struct fgraph_ops, ops);
-  4343				seq_printf(m, " {ent:%pS ret:%pS}",
-  4344					   (void *)gops->entryfunc,
-  4345					   (void *)gops->retfunc);
-  4346				continue;
-  4347			}
-  4348			if (subops->trampoline) {
-  4349				seq_printf(m, " {%pS (%pS)}",
-  4350					   (void *)subops->trampoline,
-  4351					   (void *)subops->func);
-  4352				add_trampoline_func(m, subops, rec);
-  4353			} else {
-  4354				seq_printf(m, " {%pS}",
-  4355					   (void *)subops->func);
-  4356			}
-  4357		}
-  4358	}
-  4359	
-
+diff --git a/drivers/net/wireless/realtek/rtw88/sdio.c b/drivers/net/wireless/realtek/rtw88/sdio.c
+index ef51128a4b44..4311eb7cffef 100644
+--- a/drivers/net/wireless/realtek/rtw88/sdio.c
++++ b/drivers/net/wireless/realtek/rtw88/sdio.c
+@@ -718,10 +718,7 @@ static u8 rtw_sdio_get_tx_qsel(struct rtw_dev *rtwdev, struct sk_buff *skb,
+ 	case RTW_TX_QUEUE_H2C:
+ 		return TX_DESC_QSEL_H2C;
+ 	case RTW_TX_QUEUE_MGMT:
+-		if (rtw_chip_wcpu_11n(rtwdev))
+-			return TX_DESC_QSEL_HIGH;
+-		else
+-			return TX_DESC_QSEL_MGMT;
++		return TX_DESC_QSEL_MGMT;
+ 	case RTW_TX_QUEUE_HI0:
+ 		return TX_DESC_QSEL_HIGH;
+ 	default:
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.25.1
+
