@@ -1,104 +1,105 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mout.web.de (mout.web.de [212.227.17.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D3CF26A0FF;
-	Thu, 10 Apr 2025 09:51:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F07E26B0A2;
+	Thu, 10 Apr 2025 09:51:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744278710; cv=none; b=YFXa0FkyrIxpsnrMs6x5vbDHl3DfIlplqxIhjTSWzMKV9EzD6Jg7l7DHotXUkfZ4OyF6Ek7znxigWWv22qBf8vQhxtblhS2u8ydG03/p6e011bx3Bvz38vY8gKBb7OBl4hgm1P87NusDln2FxiVA5sz3ziYAuGF4VyFcxWqbejc=
+	t=1744278715; cv=none; b=QMDsuzn04ya6bj7KaDO7/AagmDhhvgme8UrXcme7d0D7uQmsDP6u6UfwyjKim2k5U+2iu2eRpZQ5hI1w/SsY2K+5F8NXIwytsdJPMbv/NS7lApyXFIzUR4kbJ12k1dJHuEfvExItzLM00HanvR8exsPfzDxsz7lo1f5oLjExu4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744278710; c=relaxed/simple;
-	bh=tCIJGyaQUmqedU6vvHAhVJHYdQEDHVpP/IEZ8yovUFI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nEBY/QTal6wXI7EVZQoPdMJ7z6DjvXsbYzTViikF/tn68YSGTbpsZft+joJEcWDVn/9Y9qUgKsfNy0E4SkKjXUPTHJqhVndrrOytPeYfJ9m6+7w6phw8W1rQzBzopCmh2sPQzDn4lYwYOWrqWsSCdPmtuOglo2fhr5yd1eLffuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Fn2W7RJb; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1744278715; c=relaxed/simple;
+	bh=6PJaYm5P/NviqMk6kV3Jh7Ha7oefRv1KzDsI0FZwZBU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=O/1Xi28unImsCMBXOEVGVlE/h+FUNuXrPJHaK60UVu552qo1tlne0w2HqUaBiBAgLeKwcfnE9gtfIQRP6wWLvuua5uOVUUwjXiwf6PHWGLXbK2as+G1SHd4RijRGVzeVxE6uP6XUWyZ23sk8Kc2WsN2aM8RFr1TAKRaB7DasT6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=uNJTSIAC; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Fn2W7RJb"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id F402640E0196;
-	Thu, 10 Apr 2025 09:51:45 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id ZR1h1Iy5n4g3; Thu, 10 Apr 2025 09:51:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1744278702; bh=wOmuhn+27CllaNwZ8Im1Jn6SwZkk7Xa3K41POrhMKmQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Fn2W7RJbYtYirc9bIrLuiyygDke7sPBYF1HZBcts2lXnHfeSdegEO7KtzYFveFvzE
-	 poSChpEQKO2h4ggVTZlYVSsdKf+coQNP1p+imaWoiCq8l6Y1ywqIgLmLQQk4XGMjfP
-	 pjH+Wbymbfo/6fQOhMzqoiEKvivLbRE8DkX2i/+81t146hR8vnVUGen9qxIWQ3qBtO
-	 Px7R64w9pBOm1Ou4uvbRZEz6Lwyweg+EbexRrZIcoNe3fPdkLClwXo9fMiDthqRKRt
-	 IowKDIuLee818Rgue5Eos2rSKoCovEc9aurjkSEc/z3zaD21QebCTe9axakoTouP50
-	 xfVEOFB1cbWVDxpStry0g3gl/0V6doF1rn30MIRgP0KCK7qIWjgqW9UK80I/uej8qs
-	 x2igi3CFo7ledvDosyGhPyyibgslSgt3RgNHozyMaMZ8iX4AmXyYtF1wmaSZAfTlD8
-	 VdOAoypS2ud1kHnlkhT6HO/SUM5rkVsfmn7scAW8VxF5PYWHTMxfKMwfeImHEK+HU9
-	 vTqskDzxeLuLwknVEDsZZCaF+NMZw1/z2NIEcRYZoDDA9/Ba00TK6uD46GLDqKvLuG
-	 9r8qUYSbYK9J0ISYx7iOgCAflWtV7R4TjRSF7v0gy5eQtHCkWuA6lB4a+Qcgl/0G0p
-	 X/6p18I0LDwTC7EM6xdeZMwI=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 81B8C40E0242;
-	Thu, 10 Apr 2025 09:51:37 +0000 (UTC)
-Date: Thu, 10 Apr 2025 11:51:35 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Yazen Ghannam <yazen.ghannam@amd.com>
-Cc: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>,
-	Muralidhara M K <muralidhara.mk@amd.com>,
-	linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] RAS/AMD/{ATL,FMPM}: Get masked address
-Message-ID: <20250410095135.GBZ_eUp4QTXrx-slj1@fat_crate.local>
-References: <20250401-fix-fmpm-extra-records-v1-0-840bcf7a8ac5@amd.com>
- <20250401-fix-fmpm-extra-records-v1-2-840bcf7a8ac5@amd.com>
- <20250407132415.GCZ_PR_82FKBcsIuGr@fat_crate.local>
- <20250407151657.GA1948540@yaz-khff2.amd.com>
- <20250408101415.GEZ_T29wiuh-_sExlk@fat_crate.local>
- <20250408155242.GA2523543@yaz-khff2.amd.com>
- <20250408173333.GEZ_Vd7V0hqJfBXFRu@fat_crate.local>
- <20250408201055.GA2700280@yaz-khff2.amd.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="uNJTSIAC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1744278701; x=1744883501; i=markus.elfring@web.de;
+	bh=vSPtDJBBCPKpz5rvbsYOOueaz2bMZDd9bsU+wbrmbcM=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=uNJTSIACyASdjTcRckv2AYHUAAfql049+cxwSxa0bnxGRoSkp6C9mSuacBk292GN
+	 jns+fIlNpfhauKawNrKOHfDYH0fQ0liEGgg7TD4kVQYA3cgDwBKZrxOGSF2QpA67C
+	 zaevTXFNYDdN+ML9plVzFADlJYXYjxWgDyUOjoGWNYajIM/T9EpuqsQdb2ilAM1AJ
+	 7pgHztMeD7/mGSMQqiJKjnVEmGl+/XL5HgaGq/+BbbIrAkjOX8pisavOJJ9VunaHL
+	 Evmt2SGmALAiAhKFe1jeiN2+hDxpQlWiRZbUW7Vadwu/hGpsASPN3mJlaJ8CgYm3d
+	 +uKxXTKjEPTxtlOKjQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.83]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MnX1L-1tJKrg2oKL-00aV4K; Thu, 10
+ Apr 2025 11:51:41 +0200
+Message-ID: <47681eb7-11b5-4a75-b100-93bc5ccc1c8b@web.de>
+Date: Thu, 10 Apr 2025 11:51:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250408201055.GA2700280@yaz-khff2.amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: crypto: sun8i-ce-hash - Refine exception handling in
+ sun8i_ce_hash_run()
+To: =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec@gmail.com>,
+ Andre Przywara <andre.przywara@arm.com>, linux-sunxi@lists.linux.dev,
+ linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Chen-Yu Tsai <wens@csie.org>, Corentin Labbe <clabbe.montjoie@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ Ovidiu Panait <ovidiu.panait.oss@gmail.com>,
+ Samuel Holland <samuel@sholland.org>, LKML <linux-kernel@vger.kernel.org>,
+ Julia Lawall <julia.lawall@inria.fr>
+References: <3727de04-7993-4b81-80c0-adb40b847307@web.de>
+ <20250409133610.59d42bec@donnerap.manchester.arm.com>
+ <2774682.mvXUDI8C0e@jernej-laptop>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <2774682.mvXUDI8C0e@jernej-laptop>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:hwJLNn0l4SKDqj00GqpCYLwpSlnmBFbcsAzjdkoHdNAyDzfJjqA
+ cVOLLWsODyxVOnyi0U4Xp9SR14AQAiClqqwnvfEpYYplTw/vOLVgNt+GaDsUpmTqwTh5/11
+ yLUVrGoaXrE7440Iz+8ts0one8l2XSTFMi7/71GpPnvLiCl5pfyV1AsTDfMqhnJbmsh9JPX
+ L0vEEFPgulu/0pt0cwARA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:aPD+U6ytqzM=;3juoI7tli45UC7oVR/Bw81F+FNl
+ tIJSaD6SCDLINBFGIXvDu1w50HUXMTh3TiGWYgCk7NCXe2qf7Z7t/ygJQUryl/sTxmtak55md
+ CTGghy+uVZBiYKKfWxASqdMU6a1yJXaNX5E8Xvldg8zU02/hzaBuq1viJW0a0qoVCjgbpbTah
+ 9/gGwEsx0uaBxMu2Ryxvj87r3q5zyvbB0wfgv3KdrN8viH/vp1MVwmnAP02dfyHW7+MkU4LKN
+ kof9akYD1J6t4p4RlhtWtJaRodyDD62KNqvjkR6VaRwV3HznbsAQDHfRdxL1rbjX2Etg1H9HU
+ 8QgtRUJAimxbUf4+Vo7RtZAY/eIgw01wF5yaiOiH5w5KNYxUfVaHRdHUDjeSEhsVRTiFWggyv
+ agXyaj95ABVJors1a+vKTu/dvBhBAMMbWoUAnzMFBjQ55tTlEiq9TZq2Evc665Un7pTLT0FQA
+ WNtC0UahR6uQhe7dXmSeRslGAcWnoLk2+8PIgi/hgQhR7TUknT9LY/XMRvcTpwcCqXOSD9DYh
+ FT2C25b9tsAkItS4QNDrOijYtwXtxjQx5RM4wIpq8OmbpyFTkTxf53AvBVxdv1ZRipYSZrzHB
+ LoNybxR16nwI1oLQ/of4XN88FffJQA7d6yVPKsVtqp+GYGmERw2jEcSZ5UcaTNvSpWXjXfeox
+ 0oXE+l+vejVDNDdiBkYeVULRrVB+qsGTgdJd7ldA1hUvCS+JRArC0Li8+91H2P24bsRVIwSkX
+ ef+HYS95Vdfn52nMnU9ZOh1HiXpAeAN7deJPxC29q9lUENRfw76sYc0yW+pj5JPh9LsK+K1CS
+ CLNJBJk/1ClRIlO2G2k71iZsxbl7Xp0MCrB0bOUq+ucUZdG3D0kMFNc7Ax6+epzjv63XCYTKQ
+ 4BhTPP9eKaSVMd8sYkSdzVBarDhKcB6WEy1eTRA1W2XxxIchY7Se+YlNyi+dtQ6v1Syt7Gpb5
+ 6tScQYWIBxm/bLK3UApil8DWBOfhZPrGrUNEFbBZbaTb4EV3+0r6d1Z3Zm4z064Dmun+hTz+Z
+ rmSJa7TxHuHiWBt4KO3uiM9iOwhGjoSVsZv7IRGWvH26eMY9TpJbSon6DL0qU+HMeduDX+MAY
+ q66HNoBcYYx2iGcV+3ELyCmvtMB6+c2C/REJQQ2MxzjG0tPD+mGXxHF7hWX+Z6yN8uL7FN8a7
+ rwMnE8yuO1SMQuIq8V/VKd7QQldWvlBdW57dTCd/78w2eO4sMtlDi1RDxhJU9MAWHfpSiMw0M
+ VrrCW7xibXjchciMJdpBtAdDz8/rTdjzL7O6XMC9zukrYdf0H5EqW4dKyCIvGAcT/A2uxq1cl
+ 4AVO2Ry7xa2qKKvX8QqUmbX6mSHPaPzIf4Z5jseax91MsGpv5Jca7ptaJJ7pSrDI6Wos+RNe8
+ UgjPjvlp9Dm1C8HLBMGilbtB8zXkj9twzLu/1eKatcwdvZzsGioj7FKCR0IRPBlZNFGYq23iM
+ hyDrv6cZWetOiSGvZAy5HI9cjjO63DlUNF8j9tQAlUiE9lXBs
 
-On Tue, Apr 08, 2025 at 04:10:55PM -0400, Yazen Ghannam wrote:
-> On Tue, Apr 08, 2025 at 07:33:33PM +0200, Borislav Petkov wrote:
-> > On Tue, Apr 08, 2025 at 11:52:42AM -0400, Yazen Ghannam wrote:
-> > > At the moment, FMPM only loads on MI300A. We can just have a local
-> > > function to mask the addresses. I was thinking we can have function
-> > > pointers to make things generic. But maybe we keep it simple until
-> > > really necessary by just using the MI300 version by default.
-> > 
-> > Now you're talking! :-P
-> > 
-> > > Please see patch below.
-> > 
-> > ... which I simplified even more.
-> > 
-> > I'm thinking whoever is going to test fmpm on something else besides MI300A,
-> > they will have to extend this address masking thing and then we can cross that
-> > bridge when we get to it.
-> > 
-> > So this is keeping it simple for now.
-> > 
-> > Ack?
-> 
-> Yes, looks good to me.
+> I'm not a fan of this patch either. As Andre said, current code is easier to
+> read
 
-Queued, thanks.
+I dare to propose a small source code adjustment according to another
+software design option.
 
--- 
-Regards/Gruss,
-    Boris.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+>      and such optimizations are more for compiler to make than us.
+Do you know any compiler versions which would support the presented
+transformation directly?
+
+Regards,
+Markus
