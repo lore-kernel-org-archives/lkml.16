@@ -1,123 +1,277 @@
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEC3A1D5CE8;
-	Thu, 10 Apr 2025 16:15:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9EC91D5CE8;
+	Thu, 10 Apr 2025 16:16:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744301742; cv=none; b=F2AkZXtvXpfeVz/C2lYAeDjA6ynetxBaS/9mzDzVkYvjV+Yquu1wt7M0kCfJobjAc5shvd/tA77uN2SUnzZsL4sRnxHVydJhT387EMo9Ha4um3p78deeUQcs1waxRbyIFjZFEYMw+OX85MhpS9Ld3/9LAmgvxY7vw82etpE4tcc=
+	t=1744301784; cv=none; b=kCn5nF4COai8IrL5YkxwNDIA9AqCEM3x4rcOhK1Pmqs9Zm5lw37yHsSww+r4GSBdSh1iDjPeI2KPZhGZM36jDdXILkE9x2vZ9RR9Q269VbSYjJu9rFAebAAGokzaLwLUheIMbJs9QifpiB+x1Z5j+Nkv6vRacY09jbV0bnF3Nck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744301742; c=relaxed/simple;
-	bh=u2TlwBOzgobYs6NU9vBkdIki+8FEexHtdbsjNxa1jqY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uoEDEwz5WSrNMTVGlObdbF1tVZhQ3RV/IQzJkpWqPGrHYQ7U3DA1kYHqn0HhZezAg1spxdpgcjKDwr4h/kNu2fkpCcfVdFkt9igr7T7IZhtFPgpDYxiOt/ulMe2euqvhKpmEEDM2x/cxKtz3DcpvpSJZmV2tAyCYbgdRgAd+8Dk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	s=arc-20240116; t=1744301784; c=relaxed/simple;
+	bh=qObBAuE4ohxgPRvelw7IDtEERtFwSOwMeN+0o0AwtYM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gD3Z2q9ksJ9cKEDgXVK+UDTN9XObph5q92fsP78TvlEJhw7h6ZwfgXdHgRfC09CQvc9gFxXfrDNmmlGqjZbF7b+mFjOnTBHt3cECfuDkm+rDgbXlwSPZiq1BOSTNGmb/64au9a3HsudCJLwT4G3p7bO9wZqKWqjaVFPSmUlxA7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fomichev.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fomichev.me
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7c54f67db99so210286485a.1;
-        Thu, 10 Apr 2025 09:15:40 -0700 (PDT)
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-227d6b530d8so10550555ad.3;
+        Thu, 10 Apr 2025 09:16:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744301737; x=1744906537;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1744301781; x=1744906581;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=w8EsySpJlSULS66RCfJ+UHS8bmbeTZRzNn9o+t8zKEs=;
-        b=iScbnFnvHDLCxXEDhlAftPSpehDPozSH2KK0PR0NnBlcp2ui1TUzrhRakh6QuMjLmA
-         OU3YlRd9IBsrn8DaGax5UQGJVQNPWEQrmEQYlzLkYIBaGUPumkrUZDUjgDvust0zQ9+S
-         fki2wUte+MtMqLLSLbvtaZWbWwUxM7BMAc1WryUziWOBJg0RvUDqP9Lxp7bM3tj/9wK+
-         qDFUhB0/x5J9UNWA23iVDJioYg5ZlV/XSgvbxEzTctgxO0cn3FmKd/dSveBNgwsTdQCH
-         c7usAQpoghhztyGMums7dgL/Z0kR1+9+RV7Ra+28+KRpARmGh4KrB98UcE+nFeyZXTjf
-         P26A==
-X-Forwarded-Encrypted: i=1; AJvYcCUtGoHCLPaHvFMwpJ2xQ4RRDdWCduHNw5pyGYpFG2n/I1hr5rG5g19uqVC9/Y1M7iIQAeOsAhb1Ul9Tgqs=@vger.kernel.org, AJvYcCXQEwaOlYAQhDN/BuqIQcNn2xC2vSt4WcYk4m4sM77vX6IDTgB0W0ebZ50mryoC25wjRKfnh0GuPaXR@vger.kernel.org, AJvYcCXQfOonv4miQSHvYe9t9jB1V3rOHvhgiZp7H7TzJBtRXBBLr/K8FqtA85CsG8asraKXH+QuCF+LVGOVqXqR@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjtjQxGkSZCbHz9uOA16jkbecmjXUuimWSr01rutXTYNDhkeMu
-	ax9mEYh5wKBBrqGIcc+8NdwJCHkCwfMCmGAsrfvuO43UDL5pMa/12K3ni+V85ww=
-X-Gm-Gg: ASbGnctCdn1+F53aZbtPilHPG5oW5DRxdXyXKo5QnZm1HXlg2BFT3UcVxugSDx1Ht3n
-	4LCE7glyWdcvnprp7CwrrRnT8AU5nXEpo3v70+K8WqJMeUabYxvIInzOxCahKUiTcrQ4CGb1jxX
-	7veNhDfwAn44vTggTmQRM3gyO1+f9YsUuHPRxbC33WZqv9GqouaKjKeOiyyXiUYX8O2SthBnDTe
-	WfYpnT4paUTBJjvvz6KLdMLo4k07ljL6P8/T/ONJ02OPnwC1XSl43rP9UBpO4kiyXUdtwdPP/Bw
-	iwNuj7UeMEnEiUJNsVgkIvCDKbrpUh/zMxdaLcfi9+LtfpafLNdKWJO5TtE8bM3nLrRVEzpZOxr
-	b+vDDUX0=
-X-Google-Smtp-Source: AGHT+IHMU8QCbZ82jkl7oaLNClFAAowOSu8lTPHBSxxXabsnF4oAGM4j/n3afgexRoG4sxGHOFu4hA==
-X-Received: by 2002:a05:620a:4094:b0:7b6:cb3c:cb81 with SMTP id af79cd13be357-7c7a76b9749mr469780685a.18.1744301737110;
-        Thu, 10 Apr 2025 09:15:37 -0700 (PDT)
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com. [209.85.222.177])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c7a8a0c608sm109294585a.93.2025.04.10.09.15.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Apr 2025 09:15:36 -0700 (PDT)
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7c5f720c717so212425885a.0;
-        Thu, 10 Apr 2025 09:15:36 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW+SyqE1cScBSnHpHwe0bMHVaWEU5gtGvy5j4uOXGF2hUxSj5DC5u4ISbvqhhkpX4mBmVSW9sPtdJVEWlcp@vger.kernel.org, AJvYcCWPum97O4ee4vAYsZO4Yzm/NOc1SLy6ybtckjhOx0uCqTuu2mqbJ0Gjh4T/E87cpXaaLNATu1/cGkcB@vger.kernel.org, AJvYcCXmV8zjhyedFbDaxF7B7Ysm1xTV0g6C7hkOI/AZYREcOwpsVmmAWppkvTWkwTp3Ble0HwLzWBBVzpFhDus=@vger.kernel.org
-X-Received: by 2002:a05:620a:4515:b0:7c5:6b46:e1ee with SMTP id
- af79cd13be357-7c7a764cb6bmr497107485a.4.1744301736084; Thu, 10 Apr 2025
- 09:15:36 -0700 (PDT)
+        bh=Z+agMxJloJ2uRUEJZwb0DDEkPfkqwgCunsc+aZu+YfQ=;
+        b=thO5RhEFXXnAIUdAQSyYhITfipY0xC4O6BvANiDe4LUCnUct7lnzE+s4Wtqt24cua7
+         8SjKOJc/D/xtJFhlBymgcEjs98qcs3JE56TJdU/NfiRvyeT3VnmfkOX/tfTQmzbJvrDK
+         KCFJhoJiO6D8DKXg+3PIhP1w03z+FAzYAUUBQCcSgqlC+HS9w0sukDcD/QXGrD9SLARI
+         O0bmO3iEPd8GNAcitvIS+Fx69pBbReKwkNIMaMwmT4Wa1ckFs+mv0r8m5N37R8ZyykrA
+         Ppgx75pd7PBCgFqxbdWlv5PnFNmPOh91xh11IWFjtyZGTokdDy/Bksx5jNTU93dFUIUE
+         5WIA==
+X-Forwarded-Encrypted: i=1; AJvYcCXgp9b2wf2Jc01B8nCmQKGMTcI/BPKtHrzZjtizETSxDBgWzl1QpHxILnF21QU6zQ+1zXARYdUGQ/3tdGQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwsiJDSC/bRos2ST3KW9FVQh+WI8Efxlq2/S6NPG9oDoqhwZu/i
+	G6ekSD8D+WIJ8EiL3udtzkqGhvfhg2flLUiw5tl5cQLEHmkl6ZfJXjNBNpY=
+X-Gm-Gg: ASbGncsEyt4im8QGR615ML/Ba8Y8eXvb/gV+1Wh50vuRMhLcKrzSil56NhrrrhU9qDF
+	jCNfMj6xbl9yTTU9mMdEcmiBSUer1djw5LN6lYp8B/adLrjaUfcFdzhBc3GK+25KyyfcarlwwaV
+	pGNOZoRJaY0AVbp06fC+0O+oZVPI596ltewKYbDgMBBwl/v5DiGJ4y5d7VRYevyy8PkQ/4BuINk
+	etfSNOlOkSUwn4FX2NQfUtkruYVTqUJ7xlJUa8Zse/ULOcrnA17h+7/IDwfQjgTXz3sh/wA4yF3
+	Ep0mGbW1bTNrxa9YG+zkfmjFmdna/WF+T8PdJ3Ni
+X-Google-Smtp-Source: AGHT+IFltSmh3BGBWPytdAJ2BHqH8GRKi1PK1aDsb3CA0UJrbttMqWP+8WNZRx9qDY2LWBMhLSbfGg==
+X-Received: by 2002:a17:903:41c8:b0:227:e980:9190 with SMTP id d9443c01a7336-22b42c4e68dmr49464795ad.44.1744301780615;
+        Thu, 10 Apr 2025 09:16:20 -0700 (PDT)
+Received: from localhost ([2601:646:9e00:f56e:123b:cea3:439a:b3e3])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-306dd10c3dasm3899300a91.4.2025.04.10.09.16.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Apr 2025 09:16:20 -0700 (PDT)
+From: Stanislav Fomichev <sdf@fomichev.me>
+To: netdev@vger.kernel.org
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	ncardwell@google.com,
+	kuniyu@amazon.com,
+	horms@kernel.org,
+	dsahern@kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next] tcp: drop tcp_v{4,6}_restore_cb
+Date: Thu, 10 Apr 2025 09:16:19 -0700
+Message-ID: <20250410161619.3581785-1-sdf@fomichev.me>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240223-moonrise-feminist-de59b9e1b3ba@spud> <20240223-blabber-obnoxious-353e519541a6@spud>
-In-Reply-To: <20240223-blabber-obnoxious-353e519541a6@spud>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 10 Apr 2025 18:15:24 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXXWSfDrrQUTW54FFHN464efe+672jyCjqYw4jpSPosBA@mail.gmail.com>
-X-Gm-Features: ATxdqUEct_QnFBksOgt38puapdCm8A8IqZn3f2lKjQY01BE-SIP4uvm6YbHt3Qo
-Message-ID: <CAMuHMdXXWSfDrrQUTW54FFHN464efe+672jyCjqYw4jpSPosBA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] regulator: dt-bindings: promote infineon buck
- converters to their own binding
-To: Conor Dooley <conor@kernel.org>
-Cc: linux@roeck-us.net, Conor Dooley <conor.dooley@microchip.com>, 
-	Jean Delvare <jdelvare@suse.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Zev Weiss <zev@bewilderbeest.net>, Patrick Rudolph <patrick.rudolph@9elements.com>, 
-	Peter Yin <peteryin.openbmc@gmail.com>, 
-	Alexander Stein <alexander.stein@ew.tq-group.com>, linux-hwmon@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Conor,
+Instead of moving and restoring IP[6]CB, reorder tcp_skb_cb
+to alias with inet[6]_skb_parm. Add static asserts to make
+sure tcp_skb_cb fits into skb.cb and that inet[6]_skb_parm is
+at the proper offset.
 
-On Fri, 23 Feb 2024 at 17:23, Conor Dooley <conor@kernel.org> wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
->
-> These devices are regulators may need to make use of the common
-> regulator properties, but these are not permitted while only documented
-> in trivial-devices.yaml
->
-> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+Signed-off-by: Stanislav Fomichev <sdf@fomichev.me>
+---
+ include/net/tcp.h   | 46 +++++++++++++++++++++++++--------------------
+ net/ipv4/tcp_ipv4.c | 16 ----------------
+ net/ipv6/tcp_ipv6.c | 25 ------------------------
+ 3 files changed, 26 insertions(+), 61 deletions(-)
 
-Thanks for your patch, which is now commit bad582f9879812bc
-("regulator: dt-bindings: promote infineon buck converters
-to their own binding") in v6.9-rc1.
-
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/regulator/infineon,ir38060.yaml
-> @@ -0,0 +1,46 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/regulator/infineon,ir38060.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Infineon Buck Regulators with PMBUS interfaces
-> +
-> +maintainers:
-> +  - Not Me.
-
-make dt_binding_check:
-
-    Documentation/devicetree/bindings/regulator/infineon,ir38060.yaml:
-maintainers:0: 'Not Me.' does not match '@'
-            from schema $id: http://devicetree.org/meta-schemas/base.yaml#
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index 4450c384ef17..e80fd505f139 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -1010,6 +1010,27 @@ enum tcp_skb_cb_sacked_flags {
+  * If this grows please adjust skbuff.h:skbuff->cb[xxx] size appropriately.
+  */
+ struct tcp_skb_cb {
++	union {
++		struct {
++#define TCPCB_DELIVERED_CE_MASK ((1U<<20) - 1)
++			/* There is space for up to 24 bytes */
++			__u32 is_app_limited:1, /* cwnd not fully used? */
++			      delivered_ce:20,
++			      unused:11;
++			/* pkts S/ACKed so far upon tx of skb, incl retrans: */
++			__u32 delivered;
++			/* start of send pipeline phase */
++			u64 first_tx_mstamp;
++			/* when we reached the "delivered" count */
++			u64 delivered_mstamp;
++		} tx;   /* only used for outgoing skbs */
++		union {
++			struct inet_skb_parm	h4;
++#if IS_ENABLED(CONFIG_IPV6)
++			struct inet6_skb_parm	h6;
++#endif
++		} header;	/* For incoming skbs */
++	};
+ 	__u32		seq;		/* Starting sequence number	*/
+ 	__u32		end_seq;	/* SEQ + FIN + SYN + datalen	*/
+ 	union {
+@@ -1033,28 +1054,13 @@ struct tcp_skb_cb {
+ 			has_rxtstamp:1,	/* SKB has a RX timestamp	*/
+ 			unused:4;
+ 	__u32		ack_seq;	/* Sequence number ACK'd	*/
+-	union {
+-		struct {
+-#define TCPCB_DELIVERED_CE_MASK ((1U<<20) - 1)
+-			/* There is space for up to 24 bytes */
+-			__u32 is_app_limited:1, /* cwnd not fully used? */
+-			      delivered_ce:20,
+-			      unused:11;
+-			/* pkts S/ACKed so far upon tx of skb, incl retrans: */
+-			__u32 delivered;
+-			/* start of send pipeline phase */
+-			u64 first_tx_mstamp;
+-			/* when we reached the "delivered" count */
+-			u64 delivered_mstamp;
+-		} tx;   /* only used for outgoing skbs */
+-		union {
+-			struct inet_skb_parm	h4;
++};
++
++static_assert(sizeof(struct tcp_skb_cb) <= sizeof_field(struct sk_buff, cb));
++static_assert(offsetof(struct tcp_skb_cb, header.h4) == 0);
+ #if IS_ENABLED(CONFIG_IPV6)
+-			struct inet6_skb_parm	h6;
++static_assert(offsetof(struct tcp_skb_cb, header.h6) == 0);
+ #endif
+-		} header;	/* For incoming skbs */
+-	};
+-};
+ 
+ #define TCP_SKB_CB(__skb)	((struct tcp_skb_cb *)&((__skb)->cb[0]))
+ 
+diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
+index 8cce0d5489da..9654f663fd0d 100644
+--- a/net/ipv4/tcp_ipv4.c
++++ b/net/ipv4/tcp_ipv4.c
+@@ -2153,22 +2153,9 @@ int tcp_filter(struct sock *sk, struct sk_buff *skb)
+ }
+ EXPORT_IPV6_MOD(tcp_filter);
+ 
+-static void tcp_v4_restore_cb(struct sk_buff *skb)
+-{
+-	memmove(IPCB(skb), &TCP_SKB_CB(skb)->header.h4,
+-		sizeof(struct inet_skb_parm));
+-}
+-
+ static void tcp_v4_fill_cb(struct sk_buff *skb, const struct iphdr *iph,
+ 			   const struct tcphdr *th)
+ {
+-	/* This is tricky : We move IPCB at its correct location into TCP_SKB_CB()
+-	 * barrier() makes sure compiler wont play fool^Waliasing games.
+-	 */
+-	memmove(&TCP_SKB_CB(skb)->header.h4, IPCB(skb),
+-		sizeof(struct inet_skb_parm));
+-	barrier();
+-
+ 	TCP_SKB_CB(skb)->seq = ntohl(th->seq);
+ 	TCP_SKB_CB(skb)->end_seq = (TCP_SKB_CB(skb)->seq + th->syn + th->fin +
+ 				    skb->len - th->doff * 4);
+@@ -2293,7 +2280,6 @@ int tcp_v4_rcv(struct sk_buff *skb)
+ 				 * Try to feed this packet to this socket
+ 				 * instead of discarding it.
+ 				 */
+-				tcp_v4_restore_cb(skb);
+ 				sock_put(sk);
+ 				goto lookup;
+ 			}
+@@ -2302,7 +2288,6 @@ int tcp_v4_rcv(struct sk_buff *skb)
+ 		nf_reset_ct(skb);
+ 		if (nsk == sk) {
+ 			reqsk_put(req);
+-			tcp_v4_restore_cb(skb);
+ 		} else {
+ 			drop_reason = tcp_child_process(sk, nsk, skb);
+ 			if (drop_reason) {
+@@ -2430,7 +2415,6 @@ int tcp_v4_rcv(struct sk_buff *skb)
+ 		if (sk2) {
+ 			inet_twsk_deschedule_put(inet_twsk(sk));
+ 			sk = sk2;
+-			tcp_v4_restore_cb(skb);
+ 			refcounted = false;
+ 			__this_cpu_write(tcp_tw_isn, isn);
+ 			goto process;
+diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
+index b03c223eda4f..f7734ba7f3e6 100644
+--- a/net/ipv6/tcp_ipv6.c
++++ b/net/ipv6/tcp_ipv6.c
+@@ -1342,16 +1342,6 @@ static int tcp_v6_conn_request(struct sock *sk, struct sk_buff *skb)
+ 	return 0; /* don't send reset */
+ }
+ 
+-static void tcp_v6_restore_cb(struct sk_buff *skb)
+-{
+-	/* We need to move header back to the beginning if xfrm6_policy_check()
+-	 * and tcp_v6_fill_cb() are going to be called again.
+-	 * ip6_datagram_recv_specific_ctl() also expects IP6CB to be there.
+-	 */
+-	memmove(IP6CB(skb), &TCP_SKB_CB(skb)->header.h6,
+-		sizeof(struct inet6_skb_parm));
+-}
+-
+ static struct sock *tcp_v6_syn_recv_sock(const struct sock *sk, struct sk_buff *skb,
+ 					 struct request_sock *req,
+ 					 struct dst_entry *dst,
+@@ -1552,8 +1542,6 @@ static struct sock *tcp_v6_syn_recv_sock(const struct sock *sk, struct sk_buff *
+ 			newnp->pktoptions = skb_clone_and_charge_r(ireq->pktopts, newsk);
+ 			consume_skb(ireq->pktopts);
+ 			ireq->pktopts = NULL;
+-			if (newnp->pktoptions)
+-				tcp_v6_restore_cb(newnp->pktoptions);
+ 		}
+ 	} else {
+ 		if (!req_unhash && found_dup_sk) {
+@@ -1710,7 +1698,6 @@ int tcp_v6_do_rcv(struct sock *sk, struct sk_buff *skb)
+ 		if (inet6_test_bit(REPFLOW, sk))
+ 			np->flow_label = ip6_flowlabel(ipv6_hdr(opt_skb));
+ 		if (ipv6_opt_accepted(sk, opt_skb, &TCP_SKB_CB(opt_skb)->header.h6)) {
+-			tcp_v6_restore_cb(opt_skb);
+ 			opt_skb = xchg(&np->pktoptions, opt_skb);
+ 		} else {
+ 			__kfree_skb(opt_skb);
+@@ -1725,15 +1712,6 @@ int tcp_v6_do_rcv(struct sock *sk, struct sk_buff *skb)
+ static void tcp_v6_fill_cb(struct sk_buff *skb, const struct ipv6hdr *hdr,
+ 			   const struct tcphdr *th)
+ {
+-	/* This is tricky: we move IP6CB at its correct location into
+-	 * TCP_SKB_CB(). It must be done after xfrm6_policy_check(), because
+-	 * _decode_session6() uses IP6CB().
+-	 * barrier() makes sure compiler won't play aliasing games.
+-	 */
+-	memmove(&TCP_SKB_CB(skb)->header.h6, IP6CB(skb),
+-		sizeof(struct inet6_skb_parm));
+-	barrier();
+-
+ 	TCP_SKB_CB(skb)->seq = ntohl(th->seq);
+ 	TCP_SKB_CB(skb)->end_seq = (TCP_SKB_CB(skb)->seq + th->syn + th->fin +
+ 				    skb->len - th->doff*4);
+@@ -1849,7 +1827,6 @@ INDIRECT_CALLABLE_SCOPE int tcp_v6_rcv(struct sk_buff *skb)
+ 				 * Try to feed this packet to this socket
+ 				 * instead of discarding it.
+ 				 */
+-				tcp_v6_restore_cb(skb);
+ 				sock_put(sk);
+ 				goto lookup;
+ 			}
+@@ -1858,7 +1835,6 @@ INDIRECT_CALLABLE_SCOPE int tcp_v6_rcv(struct sk_buff *skb)
+ 		nf_reset_ct(skb);
+ 		if (nsk == sk) {
+ 			reqsk_put(req);
+-			tcp_v6_restore_cb(skb);
+ 		} else {
+ 			drop_reason = tcp_child_process(sk, nsk, skb);
+ 			if (drop_reason) {
+@@ -1987,7 +1963,6 @@ INDIRECT_CALLABLE_SCOPE int tcp_v6_rcv(struct sk_buff *skb)
+ 			struct inet_timewait_sock *tw = inet_twsk(sk);
+ 			inet_twsk_deschedule_put(tw);
+ 			sk = sk2;
+-			tcp_v6_restore_cb(skb);
+ 			refcounted = false;
+ 			__this_cpu_write(tcp_tw_isn, isn);
+ 			goto process;
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.49.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
