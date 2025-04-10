@@ -1,105 +1,131 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA2D1DF258;
-	Thu, 10 Apr 2025 15:34:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5747C1E1A16;
+	Thu, 10 Apr 2025 15:34:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744299273; cv=none; b=XyMxTJcK0nmhPAZUxJGXCV7CxNu8LKMPLYBz//TyH5MK4d1e2fXcRs9i/H/GHxyswQs2si/FYiiVUer1nefuSUwgTIv5kaSLYfCMOK5M9PH+Y6L6pbsahGOo2y5Di9qe2rf8BZaY8iFMophbw1mZm9X8QX3kOKcYfEPbhpl+oWs=
+	t=1744299294; cv=none; b=W9PVxFYVWBjDKXouj8LbUutMuoK9BLO9o0CUdbTn7t+aFmbYxCflU8dOf2mL2Gk1r0Rk05EHGeVC/Mkiz34M/SGG1HbrjRZXt1a0TBzt2uYmYNeIV7TagFn6xPs1IgR9eWxlxh0PpZhSpn18t5lM8E5lS2EsMFjx3UT7V+URBJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744299273; c=relaxed/simple;
-	bh=chG2qc958SltEXeebkRxLTHhMr+J82fDLTxWI4yu2vw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NGGCep9MDxxoKQPzu8i5Wxi+Y60ZFSakxH74tJj0MjMqqxOI9NM6vccoab8dep7SoElcYIyP3xvSjErVjiGuWC+ygfIzAWEuc8lM6OCxG1gf1Ufh8z2+PmaCLhZDvgd4sqm7VkiCI4qaWSbUvfAva3OP0kBNR5a+vpFjLJi4POk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fKyVv1AY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744299294; c=relaxed/simple;
+	bh=Zv+Um0ud9dyGlFs+NxyqU2VYlQwgrjWX8XbkLklXQMk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BHF5zbqqjRikhvcNE8j/qOc3zFXA1bDG/UuS3mhYxFyNf8n8MxzluyWeGbwb0IRxvxPscBN3Cg7ktVo1VgizHqQOQum/zOvrK08yvICsP7sXMNQzi7zJpORsAZY1dpcigLy7cqRp/cEEy1+4yFHX2G3w3PT2iAkwZThySNsRRhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ry7BWx4X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fKyVv1AY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7CE6C4CEE9;
-	Thu, 10 Apr 2025 15:34:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ry7BWx4X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2262C4CEE9;
+	Thu, 10 Apr 2025 15:34:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744299273;
-	bh=chG2qc958SltEXeebkRxLTHhMr+J82fDLTxWI4yu2vw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fKyVv1AYUUD6IrJUMK6SxH0iKTg30q9UF3U5QDL5M0vFma/U9K912kTpER8l7JXqm
-	 umfkEY3/Noe1h6LwsTwLiTGcP3mTGuzibFrnAiE9iwGUAJKZqAcf8xERer5qvQaTFE
-	 QBzRIiDb5ppPvt7oRWK65jYJKr4Eik7XWbQCDv0nZiTtjPGBDQGCb/x/hmsnNzd4hG
-	 oUVmVo+anHwdPQxoGNed1BayL/KH3TuR9Z/UgjU4huB8qzkn2sjUI4csp8dfaVujeM
-	 8T2gkHLqRNPAeRWVoqQgVlQ7Mo0MO6sZ5tG3vXw3ysPtyJZpLOq5/xvm4/hqaQyZ+U
-	 3NUq24MruRNnw==
-Date: Thu, 10 Apr 2025 17:34:27 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Abdiel Janulgue <abdiel.janulgue@gmail.com>, a.hindborg@kernel.org,
-	rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Valentin Obst <kernel@valentinobst.de>,
-	open list <linux-kernel@vger.kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>, airlied@redhat.com,
-	"open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>
-Subject: Re: [PATCH v2 2/3] rust: dma: convert the read/write macros to
- return Result
-Message-ID: <Z_flA_DP5_1mG6h_@pollux>
-References: <20250410085916.546511-1-abdiel.janulgue@gmail.com>
- <20250410085916.546511-3-abdiel.janulgue@gmail.com>
- <Z_exjZ9xEntlL9FC@pollux>
- <D931ZGPNHUA8.U3L2C72CVH46@proton.me>
+	s=k20201202; t=1744299292;
+	bh=Zv+Um0ud9dyGlFs+NxyqU2VYlQwgrjWX8XbkLklXQMk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Ry7BWx4XZb4pF7DKL87KtGi6rEUTHbfD/nwTyaFSoaxoEPu2Dao6EShPoLS8gGuGS
+	 bYiRCMpP6doJr0PUkrPLdJ/re6PV/r3A+i/7oL+BNnJWLWqRKvTnSQrQgTe/fcJKPj
+	 g/M4slMc2IvSxAQTCIoULVcPPZS/pdWOSvK0rVJL2e6VwDhWxEnEKKLjhnBWo9bngX
+	 9lChs2a+EvBDxfFEYMkvWPww6i5js+jn0/mfoXS56pVHpnKgE1YxaWIPUjPUBIFEKF
+	 Z5ztIE/Dx9Ixpiw+v+k7NRskNryVnlH4dICfA5aGq6+3P+FhgbhPxUJnrisVRRf9H/
+	 oRVMfx6EdlTiA==
+Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-2c1c9b7bd9aso539967fac.0;
+        Thu, 10 Apr 2025 08:34:52 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWrBy+cblsnyra88B6kn2sjzxd+bTYqldQh4jq7DMxlttBO7rzkdiAIUe9Z0wXfQJiBbchDNKIMSc0=@vger.kernel.org, AJvYcCXkqePN14cUA1g2dPOwG3UPHUbgCSSnnrogdQnf9eYLAFB+5kxx4xIJJr3mwO5I9RIVbC1UJMvnMyR4FZM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnuPeesgakx3cAXzJpdKzWnQrKVPZdfuoPIrKZdr+mVlgHSM72
+	o0MVjOFfqjPSMUwAz3ltfjrKcVN6cUWmTRQVa1ktDH5NCbUVC7r4DZTxDqnshn7AlWFoJVs5gox
+	hWP2z698v83gt7yP76ZapYpn2PFI=
+X-Google-Smtp-Source: AGHT+IE4pxDce+3DuPfmtgFYtz5PPOwwmefMW3guIZlO6Tzul/1CkZr1Lmkt8rKNDj0krYw+/X7DRVOn9u4lv1uZCr0=
+X-Received: by 2002:a05:6871:64c9:b0:2bc:9787:affe with SMTP id
+ 586e51a60fabf-2d0b5bb97e1mr1746144fac.10.1744299291966; Thu, 10 Apr 2025
+ 08:34:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D931ZGPNHUA8.U3L2C72CVH46@proton.me>
+References: <20250410024439.20859-1-sultan@kerneltoast.com>
+In-Reply-To: <20250410024439.20859-1-sultan@kerneltoast.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 10 Apr 2025 17:34:39 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0jKyy-3cELyDQTynE3Dv29V15F5f+w0A-H_nu+4LuaaYw@mail.gmail.com>
+X-Gm-Features: ATxdqUGv-blLo91PP0wa4Y8Aq0RZu24wohJZpW2y1vTEU0c4WIIHykq1K6JyWLE
+Message-ID: <CAJZ5v0jKyy-3cELyDQTynE3Dv29V15F5f+w0A-H_nu+4LuaaYw@mail.gmail.com>
+Subject: Re: [PATCH] cpufreq: schedutil: Don't ignore limit changes when util
+ is unchanged
+To: Sultan Alsawaf <sultan@kerneltoast.com>
+Cc: Stephan Gerhold <stephan.gerhold@linaro.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Ingo Molnar <mingo@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Valentin Schneider <vschneid@redhat.com>, Christian Loehle <christian.loehle@arm.com>, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 10, 2025 at 03:11:01PM +0000, Benno Lossin wrote:
-> On Thu Apr 10, 2025 at 1:54 PM CEST, Danilo Krummrich wrote:
-> > On Thu, Apr 10, 2025 at 11:58:17AM +0300, Abdiel Janulgue wrote:
-> >> @@ -78,13 +74,14 @@ impl Drop for DmaSampleDriver {
-> >>      fn drop(&mut self) {
-> >>          dev_info!(self.pdev.as_ref(), "Unload DMA test driver.\n");
-> >>  
-> >> -        let _ = || -> Result {
-> >> -            for (i, value) in TEST_VALUES.into_iter().enumerate() {
-> >> -                assert_eq!(kernel::dma_read!(self.ca[i].h), value.0);
-> >> -                assert_eq!(kernel::dma_read!(self.ca[i].b), value.1);
-> >> -            }
-> >> -            Ok(())
-> >> -        }();
-> >> +        for (i, value) in TEST_VALUES.into_iter().enumerate() {
-> >> +            let val0 = kernel::dma_read!(self.ca[i].h);
-> >> +            let val1 = kernel::dma_read!(self.ca[i].b);
-> >> +            assert!(val0.is_ok());
-> >> +            assert!(val1.is_ok());
-> >> +            assert_eq!(val0.unwrap(), value.0);
-> >> +            assert_eq!(val1.unwrap(), value.1);
-> >
-> > Maybe use if-let to avoid the unwrap?
-> >
-> > 	if let Ok(val0) = val0 {
-> > 	   assert_eq!(val0, value.0);
-> > 	}
-> >
-> > I know it's a bit pointless, since we know it must be ok, but the educational
-> > message of the example should be to check and not to unwrap, so maybe that's
-> > better.
-> 
-> The if-let will silently ignore any errors, so I don't think that it's
-> fit for example code either.
+On Thu, Apr 10, 2025 at 4:45=E2=80=AFAM Sultan Alsawaf <sultan@kerneltoast.=
+com> wrote:
+>
+> From: Sultan Alsawaf <sultan@kerneltoast.com>
+>
+> When utilization is unchanged, a policy limits update is ignored unless
+> CPUFREQ_NEED_UPDATE_LIMITS is set. This occurs because limits_changed
+> depends on the old broken behavior of need_freq_update to trigger a call
+> into cpufreq_driver_resolve_freq() to evaluate the changed policy limits.
+>
+> After fixing need_freq_update, limit changes are ignored without
+> CPUFREQ_NEED_UPDATE_LIMITS, at least until utilization changes enough to
+> make map_util_freq() return something different.
+>
+> Fix the ignored limit changes by preserving the value of limits_changed
+> until get_next_freq() is called, so limits_changed can trigger a call to
+> cpufreq_driver_resolve_freq().
+>
+> Reported-and-tested-by: Stephan Gerhold <stephan.gerhold@linaro.org>
+> Link: https://lore.kernel.org/lkml/Z_Tlc6Qs-tYpxWYb@linaro.org
+> Fixes: 8e461a1cb43d6 ("cpufreq: schedutil: Fix superfluous updates caused=
+ by need_freq_update")
+> Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
+> ---
+>  kernel/sched/cpufreq_schedutil.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_sche=
+dutil.c
+> index 1a19d69b91ed3..f37b999854d52 100644
+> --- a/kernel/sched/cpufreq_schedutil.c
+> +++ b/kernel/sched/cpufreq_schedutil.c
+> @@ -82,7 +82,6 @@ static bool sugov_should_update_freq(struct sugov_polic=
+y *sg_policy, u64 time)
+>                 return false;
+>
+>         if (unlikely(sg_policy->limits_changed)) {
+> -               sg_policy->limits_changed =3D false;
+>                 sg_policy->need_freq_update =3D cpufreq_driver_test_flags=
+(CPUFREQ_NEED_UPDATE_LIMITS);
+>                 return true;
+>         }
+> @@ -171,9 +170,11 @@ static unsigned int get_next_freq(struct sugov_polic=
+y *sg_policy,
+>         freq =3D get_capacity_ref_freq(policy);
+>         freq =3D map_util_freq(util, freq, max);
+>
+> -       if (freq =3D=3D sg_policy->cached_raw_freq && !sg_policy->need_fr=
+eq_update)
+> +       if (freq =3D=3D sg_policy->cached_raw_freq && !sg_policy->limits_=
+changed &&
+> +           !sg_policy->need_freq_update)
+>                 return sg_policy->next_freq;
+>
+> +       sg_policy->limits_changed =3D false;
 
-Yes, but we still have the assert!() before, so the full sequence would be:
+AFAICS, after this code modification, a limit change may be missed due
+to a possible race with sugov_limits() which cannot happen if
+sg_policy->limits_changed is only cleared when it is set before
+updating sg_policy->need_freq_update.
 
-	assert!(val0.is_ok());
-
-	if let Ok(val0) = val0 {
-	   assert_eq!(val0, value.0);
-	}
-
-The intention would be to avoid patterns that shouldn't be used in "real" code;
-assert!() should be obvious not to use for real code.
+>         sg_policy->cached_raw_freq =3D freq;
+>         return cpufreq_driver_resolve_freq(policy, freq);
+>  }
+> --
+> 2.49.0
+>
