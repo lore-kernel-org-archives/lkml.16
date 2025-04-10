@@ -1,181 +1,126 @@
-Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4D2928368E
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 11:59:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB42F15665C
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 12:00:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744286359; cv=none; b=qbrbdK8c2EGKeXJ1wlfPMDYB/MaQdcDLQyuqrY1dJnp8EePTN9iXTqYWLLzYH1YO5GP4tyLupDwMmplmbFR0M3z0GxDGg0tOwOsQRm3+wzO9A75zQYixlE8AKMYhUyKTsGDg9XPOQOrnZmoNO5iun30Yvw7404IrM+aCTF9eTTM=
+	t=1744286420; cv=none; b=pzgZxp+XC5jiRRXaf93IqUkbEAMZLzyXoFDtfQgT7S0WgJ53tBh8hvnvPa4kp9ZBSEFn4EWqvmQzB7NExGPK4ecrH+TAfxwCFLgdqNwOfOc058UBHrxUFMvlfw94EalgLvLHLHREic/ZY32bB5cz9cz8hoFoBKa99p3feMkNb1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744286359; c=relaxed/simple;
-	bh=1HlIhfSy9DqqUxG1yFsHwzVp0GIA1Fum0qEbB82Z5b0=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=Kc3rWtFSPI4l6CVYF2wJGgNR7ov1BC+t55KRGPi7LeNoeVbCcK3SwBmFLlTckgtV3gNEIe/pbmqOBNkFx8BvuCd/Wfu5jeGAga3l83rI9G7s4vZi/0tMP8zoAe6HsItZPbMbMuWN5371X9SmaeagGjicevvxV8aUP+i71KEFeE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=SXwyFFF3; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=n640nl1q; arc=none smtp.client-ip=202.12.124.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1744286420; c=relaxed/simple;
+	bh=5mm+Kphz5zkDETPbnrIi5JurRLFbY8LismuTcSArxlA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WJGodw+Q5sEv/6EM6kwTXYhB4/G+RnA06sojgM4T3FjdVN/L+aelVMJ0/OICKFGXy9sucivy/+NDIM8Hj77Hrvl3T43zP7814kBjOG94mnOy49sXC43iUT93q43gQf2FNMiSDXQZYlhjlFXQNlBqT1Y9yFPVULzd+RLz9D7LRVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=jpv8Qax8; arc=none smtp.client-ip=209.85.167.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="SXwyFFF3";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="n640nl1q"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfout.stl.internal (Postfix) with ESMTP id 3B11E11401CC;
-	Thu, 10 Apr 2025 07:59:15 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-05.internal (MEProxy); Thu, 10 Apr 2025 07:59:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1744286355;
-	 x=1744372755; bh=VTBj3WFm372ZmTtp6+ksoCLEYSgXDDKfayMXT9EC2nE=; b=
-	SXwyFFF3kDrb/rOXpRNddWGKG4N5V9FuGgiv+shN21MsubXiGS6pr5UcYSVevtc6
-	dFTpQUFKc0ruucYJNcCCWiMX3Qt8RMJEfIiUeo5SQxhkVG9WSCXiPCsI9iP9BPvg
-	Z0EnsaL0EafZ7hpunQzE7Zul81y3FjDfCMr9C8wvlY/1SGvaAn/1j/1H5IU9I7qS
-	OE/0UNMnspP4dA6AXnUmMX9TmsDDo6d+rmdV+2cyiaTftXoktOLbIzs4pyLIhVGd
-	uRmumaw7b1cMjAF6KcH8gy2ENDjMmRCcqJilUkNV+xzK5f3NfSQGoPUEH1kmyyWH
-	dQ5gahK9RsFHTwtM0n4SYA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1744286355; x=
-	1744372755; bh=VTBj3WFm372ZmTtp6+ksoCLEYSgXDDKfayMXT9EC2nE=; b=n
-	640nl1qVTi6Tx2XNGVxqLy9TaA1YPRJJHeXT7MHQ4NFuJQ4GhVk1SOLQGkv4mJIc
-	71ywCZVH0Xm5Uwpkllu/zLeX8MzS3wxK+R2yXNq/rY/CticDv6zlGzKTUPHBoOLn
-	ZOhQHCivql43HeVdu43vgKwiDicVYlfPQvc1UEbI9GbXL7PHdfhnsd4BFSV7eYrE
-	idoUf/fMI9kTopxPF9ksGsByrt1CHg+G2OovE6ADSOR2VQj+cEXoDMJOcrG3cylk
-	vrfr956z+EZoSeRmzSXHkcPJltXLLM193bKtfVAN3JxzMxhpysHpimJX5+mQiKIv
-	XUwuLP3PdK09OXpCdzJkA==
-X-ME-Sender: <xms:krL3Z3CPVOipcaxQsDkxzJ2J8PZ4NNENRESk6LvOXEiTrnjG8YcIPQ>
-    <xme:krL3Z9jOFYh_VS4T38xIoOydDPdvAnr_kxOQndglS-7tDqcO0mProLQaj7t3SNlrh
-    h5nrhAmWz_NX8nUi1U>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdekkeehucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
-    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
-    udeipdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrlhgvgigrnhguvghrrdguvg
-    hutghhvghrsegrmhgurdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgt
-    hhdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtohhmpdhrtghpthhtoheprg
-    hlvghsshhiohdrsggvlhhlvgesihhmghhtvggtrdgtohhmpdhrtghpthhtohepfhhrrghn
-    khdrsghinhhnshesihhmghhtvggtrdgtohhmpdhrtghpthhtohepmhgrthhtrdgtohhsth
-    gvrhesihhmghhtvggtrdgtohhmpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurges
-    ihhnthgvlhdrtghomhdprhgtphhtthhopehjrghnihdrnhhikhhulhgrsehinhhtvghlrd
-    gtohhmpdhrtghpthhtoheprghrnhgusehkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:krL3Zyl6n38L2lNkACaRosX9HczN0oayyw8hy4aCiMYnvv2SWExh9A>
-    <xmx:krL3Z5xFVw8_ebuW62yTZTTSLrWWoGhM7QogMWlHerjeovxC7ro2yw>
-    <xmx:krL3Z8SPxqB8wZhAGb_1VTE0S-rwFRQoTwf6WXEVBfItZ5lJocEzjQ>
-    <xmx:krL3Z8bqS9u9erxGWyi1Qd9QIqF_CifIVaidfEsZqWUIrlNd5mQ2TA>
-    <xmx:k7L3Z4Tb2UUwI89pogVw-mj0kluYUms6Z3H48mu1Ve8vpJcSBJ9QmQ8_>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 465762220073; Thu, 10 Apr 2025 07:59:14 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="jpv8Qax8"
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3feaedb4d2cso423330b6e.1
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 05:00:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1744286418; x=1744891218; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5mm+Kphz5zkDETPbnrIi5JurRLFbY8LismuTcSArxlA=;
+        b=jpv8Qax8nkR/HfugotclFo5ZTOKdvld2I43skmwlDVp6yfN4jWNgKKHDbF48a3z6bG
+         yHR/fbvCpYq8Mt8vI/vqasl98sECtXdPDDlHoP/xQpKPEpHO3Jk6HJ3SbwrTdEx7UMix
+         qAJwsmLumG+okDv8qRR6NXQOZr7Li1II5V6aRuSNmJ13IA4P9FwIcEAZwod8fYYVipB1
+         AbyMRbMTJtEv+J5ji/LZtLBYhzES/CWi/49UU/86E6SiBl/JvNeT/lWrXZeATaj6HKI3
+         tKvqwuXSJX2PI2HYsf8FT21CX/Z4+wjOCdmc/mrdrNvmmCMEvOyuPLb9ZzgA1NEAwz57
+         yCuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744286418; x=1744891218;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5mm+Kphz5zkDETPbnrIi5JurRLFbY8LismuTcSArxlA=;
+        b=mhH7v6ssVofPnDX1YbbEXVL13RlVIqvXpV/L7usOo6bIWpqOl9xruXfZGY2E8/wIvI
+         sEnjzpSzPair+f8IogxsiBgDeD8Tfzrge10LJX0gEMH2o3BWacTJoppp6PnCYEG8Ym0a
+         aEDv6c8qxhau5x4Xo2SC+tqvRQbpsp9pDWXEC6CVUYcoVPW+X7AwPtxENCU6FcczUbWz
+         VdIk6XQDq7M6v9Az2bSfc3p+1CLxh+RZPZVBGEyavmL706an+yDCebu1BCncxOgjY/xP
+         JFFesOThg6/3So3Kx6NCxg4pQ8x9uRox7ZdMWiLv5DlLFp41WFU+yF7fCWzQYaK49lBy
+         rhJw==
+X-Forwarded-Encrypted: i=1; AJvYcCXfFPbLI+P7/Tj+eEOXlr6gO3GRurHcUDip05XPJeXrheOzz9jR/ZTBEW2MvRn4232z7QsNh7NCTXMFhkM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0bcwqLuY2vQf/ZhmHciJ29Fk92qpvXZy/45FQbWPK7wzixnNg
+	I3ogQZnW4CZ2hjmlmZ+ipe7k0t95RA0b+9+4hI2zaQMV8O13A1zqeDa6lU4DT98xZ7paN5WZ1zc
+	YPeYBgVq9kK1yJn+5AJoB3Kgo+ImAWAUzKgyWgg==
+X-Gm-Gg: ASbGncuPH5GC5n64iLWVFbdZyWhkNydeN/n1WD7/nJfHfUK45Bnxj406nN0tBQ92DNH
+	tHPRBcHgyXYMP9mEk9WDMOuGQ/UTy4f9h5ep4WLyYQABYqmCS7pIbPloL+XoW747RnESurIPWYc
+	dQy19mhgFt/qcxDOCgrQQoxSpD9Er71Sy2OFI=
+X-Google-Smtp-Source: AGHT+IHnIkLhJSlykiL5+8dA4EH7szMcIvgklodE7+WTDUEy7LpwoBs7LW+GqU/QKHiXK02SspcXIuFT3Z+1S4josm8=
+X-Received: by 2002:a05:6808:1913:b0:3f9:a187:1f2e with SMTP id
+ 5614622812f47-4007bce6f9fmr1034213b6e.18.1744286417769; Thu, 10 Apr 2025
+ 05:00:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T696e5320db2814d5
-Date: Thu, 10 Apr 2025 13:58:52 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Matt Coster" <Matt.Coster@imgtec.com>, "Arnd Bergmann" <arnd@kernel.org>
-Cc: "Frank Binns" <Frank.Binns@imgtec.com>,
- "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>,
- "Maxime Ripard" <mripard@kernel.org>,
- "Thomas Zimmermann" <tzimmermann@suse.de>, "Dave Airlie" <airlied@gmail.com>,
- "Simona Vetter" <simona@ffwll.ch>,
- "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>,
- "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
- "Andrzej Hajda" <andrzej.hajda@intel.com>,
- "Jani Nikula" <jani.nikula@intel.com>,
- "Alex Deucher" <alexander.deucher@amd.com>,
- "Alessio Belle" <Alessio.Belle@imgtec.com>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Message-Id: <997d5df5-fa8e-4b3b-83a9-f86131705b13@app.fastmail.com>
-In-Reply-To: <7ae4be5c-b115-405e-aa57-caeaa206775b@imgtec.com>
-References: <20250409122131.2766719-1-arnd@kernel.org>
- <20250409122314.2848028-1-arnd@kernel.org>
- <7ae4be5c-b115-405e-aa57-caeaa206775b@imgtec.com>
-Subject: Re: [PATCH 01/10] drm/imagination: avoid unused-const-variable warning
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+References: <20250408061200.76148-1-cuiyunhui@bytedance.com> <84bjt6rg5z.fsf@jogness.linutronix.de>
+In-Reply-To: <84bjt6rg5z.fsf@jogness.linutronix.de>
+From: yunhui cui <cuiyunhui@bytedance.com>
+Date: Thu, 10 Apr 2025 20:00:05 +0800
+X-Gm-Features: ATxdqUGmV_COFuXW5jSk7h9F_60UtswUBGPXQaHRFerxEPGhqq_pxAaQhTYV53I
+Message-ID: <CAEEQ3w=ukrmTE-x6+td6Sv10Qc2Kcc1jVMYkaVrmVQBid2tJ1w@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH v2] serial: 8250: fix panic due to PSLVERR
+To: John Ogness <john.ogness@linutronix.de>
+Cc: gregkh@linuxfoundation.org, jirislaby@kernel.org, pmladek@suse.com, 
+	arnd@arndb.de, andriy.shevchenko@linux.intel.com, namcao@linutronix.de, 
+	benjamin.larsson@genexis.eu, schnelle@linux.ibm.com, matt.porter@linaro.org, 
+	tim.kryger@linaro.org, markus.mayer@linaro.org, 
+	heikki.krogerus@linux.intel.com, linux-kernel@vger.kernel.org, 
+	linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 10, 2025, at 13:22, Matt Coster wrote:
-> On 09/04/2025 13:22, Arnd Bergmann wrote:
->> 
->> Rather than adding more #ifdef blocks, address this by changing the
->> existing #ifdef into equivalent IS_ENABLED() checks so gcc can see
->> where the symbol is used but still eliminate it from the object file.
+Hi John,
+
+On Tue, Apr 8, 2025 at 8:28=E2=80=AFPM John Ogness <john.ogness@linutronix.=
+de> wrote:
 >
-> Possibly a silly question, but wouldn't adding __maybe_unused to
-> stid_fmts be a simpler change here? Or is there a strong preference to
-> avoid #ifdef CONFIG_* and let the compiler figure out what to elide?
-
-All three ways work, and it's mainly a matter a preference. A lot
-of developers don't like __maybe_unused, and there are enough developers
-that really dislike #ifdef blocks in .c files, though a lot of
-others don't really care.
-
-I sent the version that I like best because I find that easier to
-read and it gives better compile-time coverage in all configurations,
-but I mainly care about having no warnings, so pick whatever approach
-works for you. 
-
-> The contents of the pvr_rogue_fwif*.h headers is essentially normative
-> outside of company-internal documentation. With types, there's generally
-> no warnings emitted when they're not used, but I believe this is the
-> only instance of actual data being stored in these headers.
+> On 2025-04-08, Yunhui Cui <cuiyunhui@bytedance.com> wrote:
+> > When the PSLVERR_RESP_EN parameter is set to 1, the device generates
+> > an error response if an attempt is made to read an empty RBR (Receive
+> > Buffer Register) while the FIFO is enabled.
+> >
+> > In serial8250_do_startup(), calling serial_port_out(port, UART_LCR,
+> > UART_LCR_WLEN8) triggers dw8250_check_lcr(), which invokes
+> > dw8250_force_idle() and serial8250_clear_and_reinit_fifos(). The latter
+> > function enables the FIFO via serial_out(p, UART_FCR, p->fcr).
+> > Execution proceeds to the dont_test_tx_en label:
+> > ...
+> > serial_port_in(port, UART_RX);
+> > This satisfies the PSLVERR trigger condition.
+> >
+> > Because another CPU(e.g., using printk()) is accessing the UART (UART
+> > is busy), the current CPU fails the check (value & ~UART_LCR_SPAR) =3D=
+=3D
+> > (lcr & ~UART_LCR_SPAR), causing it to enter dw8250_force_idle().
+> >
+> > To resolve this issue, relevant serial_port_out() operations should be
+> > placed in a critical section, and UART_RX data should only be read
+> > when the UART_LSR DR bit is set.
 >
-> I suppose technically it should even be moved to an associated *.c file,
-> but that would (I assume) further confound the compiler's ability to
-> decide when it's needed in the final binary (or I guess the linker if
-> it's in a separate object).
-
-Moving it next to the user of that definition is geneally best
-here, if the variable is only ever used in one place. If that
-happens to be inside of an existing #ifdef, it just works, and
-if someone later replaces the #ifdef with an IS_ENABLED() check
-it keeps working.
-
->> -#if defined(CONFIG_DEBUG_FS)
->>  /* Forward declaration from <linux/dcache.h>. */
->>  struct dentry;
+> The UART_LSR_DR check still has a race condition if the console is in
+> RS485 mode and !SER_RS485_RX_DURING_TX. It seems DW supports this mode
+> as there is code in dw8250_rs485_config() that sets DW_UART_TCR
+> differently for this.
 >
-> With the #ifdef removed, there's no reason to keep this forward
-> declaration down here. Can you move it up to the top of the file with
-> the others?
-
-I don't think it changes much, I usually keep these close to
-the function prototype that use them as you have here.
-
->> @@ -73,6 +72,5 @@ void pvr_fw_trace_mask_update(struct pvr_device *pvr_dev, u32 old_mask,
->>  			      u32 new_mask);
->>  
->>  void pvr_fw_trace_debugfs_init(struct pvr_device *pvr_dev, struct dentry *dir);
->> -#endif /* defined(CONFIG_DEBUG_FS) */
+> In this mode, serial8250_console_write() will call the callback
+> ->rs485_stop_tx(), which for DW is serial8250_em485_stop_tx(). And this
+> calls serial8250_clear_and_reinit_fifos().
 >
-> Having said that, surely it makes sense to keep at least
-> *_debugfs_init() gated behind CONFIG_DEBUG_FS?
+> To really close this race, all UART_RX reads would need to be under the
+> port lock. Most of them already are.
 
-With the IS_ENABLED() check, it's an empty function, so the cost
-of the function is very small. Leaving the #ifdef in here would
-probably again cause warnings about unused functions or variable.
+Oh, yes. If there is another reader, there will be a problem. I'll
+update it to version 3 to fix this issue.
 
-Ideally the entire file would just be left out of the build
-here, with the function decarations in pvr_fw_trace.h
-replaced with empty stubs for !CONFIG_DEBUG_FS. I don't
-know if that's possible, or if you still need to initialize
-the fw trace if there is no debugfs interface for it, so
-I did not try this myself.
+>
+> John Ogness
 
-Can you try to come up with a fix for the warning that you
-like best and treat my email as "Reported-by: Arnd Bergmann
-<arnd@arndb.de>"?
-
-      Arnd
+Thanks,
+Yunhui
