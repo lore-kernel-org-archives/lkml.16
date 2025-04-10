@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FAA878C9C;
-	Thu, 10 Apr 2025 00:11:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3726D1A5BA9;
+	Thu, 10 Apr 2025 00:11:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744243890; cv=none; b=n9PZOsztv9KrNtkXHPj56sbmb5pMc+tmGmIODLpIPzX5JI68XMTBDY0VDGTCDL14eRO0eaPoU1PZ8nQmvEaxHfq09Nd5K9KeJoTj+hxS9rbK3L85vab/KJlCcNX1tMGIT/ydkfxEVKJjlHmIJik5nW3uZoX1JKMcBWr8LPFa2d8=
+	t=1744243893; cv=none; b=uwgmC2LZ7j/LuVPI+ryn/OhCd7enXwdi83/Ams3eEtQs7a9fZS+Wb1ADHovGHj64Ymj92krMuFheBJmqeY8n0EafnutrqAcIJZVHx+JI9EgK2sY5ktgHYGlWcXslQ24p+9RRRXXLDjLo0uu+Dvaj3FHWPGA1K8C7NYmf3AaxbGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744243890; c=relaxed/simple;
-	bh=XVfIzcWBmb3+tcEi8kIGcHgr+gNwCp0bATQ8ueGkbgE=;
+	s=arc-20240116; t=1744243893; c=relaxed/simple;
+	bh=T20OlLQN6t8NjiZOs1TLZ6/pvAdfjxkFgUg0j9VVE5A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YJGjeOB/IDhf1SF2nBcjX8HpA7ewNDeBXu0YBqHaoGLDqyFUyQSnylY4zkFaErAaqbCRfk0ncvz7osAuHQMDQ5ZBxcBq1iSpXh+RJGH0k+wasvdHiKeK8HMbukAwqArzxU6w6c4ir+BVNZ0mhkqZFnfqEoJdUdiquMxilAd9AZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bZzWpx3m; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=qsbO6M72hViWzSsDMtOmnif9vxh+bi0heXgq3zkOQTjDaCyW2Q8s9oLl91ekHNwQanpypKqO9f4yDQwtUSjZetfprpDSQGPHrTpSdZIBysAE1gAyRkslGwEnSqQHtwOv867lO9JNZo9Pjdu2RpJvi/2EzcK3G7gUGuEpn92UfFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HJZZ0T9k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bZzWpx3m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 764D7C4CEED;
-	Thu, 10 Apr 2025 00:11:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HJZZ0T9k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BE7FC4CEE9;
+	Thu, 10 Apr 2025 00:11:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744243889;
-	bh=XVfIzcWBmb3+tcEi8kIGcHgr+gNwCp0bATQ8ueGkbgE=;
+	s=k20201202; t=1744243892;
+	bh=T20OlLQN6t8NjiZOs1TLZ6/pvAdfjxkFgUg0j9VVE5A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bZzWpx3mI+GEcuNANEpJ0eFdjtYno+pcsXm0OoDdFVjRpcNLDKY5r8M6O/U7LbV4A
-	 GbEztuP0EMHnoE6EAz+PlFVW9cuukHEr2iA+HFHEFjwdPnTeqX+90BkR6hH+GZwzCj
-	 X2G1xJkj8+xXluetdda/95b7p+d5g8I6hJkGfbd2eZb5HPqh0UincYYRwkR5Gkog3y
-	 1o9vfQiAPwJESG9R4+7hlEJKj2qhUMtskbMSKskH/1pIKcETY0ocP5UbK0EfwEFKlX
-	 oPkhnbqgcnO5xX+gcgT9Py3/0JUKvMz65l7AWwiTyIbRg6qezp11U9Tyr0+mIGtDEV
-	 pUgcjrtfUcTlA==
+	b=HJZZ0T9kWDDhzcxxLMi/YSws1E6k+9grd87wjHAw5SOJAypp52zS0vPRWfHBqSdLY
+	 GFeGIskvein8Gi9gWmX7w5TemRF66AwmUdjhIzKHywkv17VvwEY+WQn0+Zc7KJfvO6
+	 Zy3cpoRIVRWDwh/3/vWlY2ovhBRMFdqFO3j8qNGmiGuxKONjHSogZWYYFVta7irv/L
+	 wtk7WlL7PG9tSf053Pdc85osJt+atRtjLg8y+dVkaK7jBFkpLL0pxM4t3nc7ahy82J
+	 si85RUpVoiCq50v2XppQBSwOuuwF9QLWpqeCSvoFMsyDwRjS19VxExQliwJOpiz7Gw
+	 zrzZI2lXhYCtA==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -36,10 +36,10 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
-	linux-arch@vger.kernel.org
-Subject: [PATCH 05/10] tools headers: Update the syscall table with the kernel sources
-Date: Wed,  9 Apr 2025 17:11:20 -0700
-Message-ID: <20250410001125.391820-6-namhyung@kernel.org>
+	x86@kernel.org
+Subject: [PATCH 10/10] tools headers: Update the arch/x86/lib/memset_64.S copy with the kernel sources
+Date: Wed,  9 Apr 2025 17:11:25 -0700
+Message-ID: <20250410001125.391820-11-namhyung@kernel.org>
 X-Mailer: git-send-email 2.49.0.504.g3bcea36a83-goog
 In-Reply-To: <20250410001125.391820-1-namhyung@kernel.org>
 References: <20250410001125.391820-1-namhyung@kernel.org>
@@ -53,199 +53,111 @@ Content-Transfer-Encoding: 8bit
 
 To pick up the changes in:
 
-  c4a16820d9019940 fs: add open_tree_attr()
-  2df1ad0d25803399 x86/arch_prctl: Simplify sys_arch_prctl()
-  e632bca07c8eef1d arm64: generate 64-bit syscall.tbl
+  2981557cb0408e14 x86,kcfi: Fix EXPORT_SYMBOL vs kCFI
 
-This is basically to support the new open_tree_attr syscall.  But it
-also needs to update asm-generic unistd.h header to get the new syscall
-number.  And arm64 unistd.h header was converted to use the generic
-64-bit header.
+That required adding a copy of include/linux/cfi_types.h and its checking
+in tools/perf/check-headers.h.
 
 Addressing this perf tools build warning:
 
   Warning: Kernel ABI header differences:
-    diff -u tools/scripts/syscall.tbl scripts/syscall.tbl
-    diff -u tools/perf/arch/x86/entry/syscalls/syscall_32.tbl arch/x86/entry/syscalls/syscall_32.tbl
-    diff -u tools/perf/arch/x86/entry/syscalls/syscall_64.tbl arch/x86/entry/syscalls/syscall_64.tbl
-    diff -u tools/perf/arch/powerpc/entry/syscalls/syscall.tbl arch/powerpc/kernel/syscalls/syscall.tbl
-    diff -u tools/perf/arch/s390/entry/syscalls/syscall.tbl arch/s390/kernel/syscalls/syscall.tbl
-    diff -u tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl arch/mips/kernel/syscalls/syscall_n64.tbl
-    diff -u tools/perf/arch/arm/entry/syscalls/syscall.tbl arch/arm/tools/syscall.tbl
-    diff -u tools/perf/arch/sh/entry/syscalls/syscall.tbl arch/sh/kernel/syscalls/syscall.tbl
-    diff -u tools/perf/arch/sparc/entry/syscalls/syscall.tbl arch/sparc/kernel/syscalls/syscall.tbl
-    diff -u tools/perf/arch/xtensa/entry/syscalls/syscall.tbl arch/xtensa/kernel/syscalls/syscall.tbl
-    diff -u tools/arch/arm64/include/uapi/asm/unistd.h arch/arm64/include/uapi/asm/unistd.h
-    diff -u tools/include/uapi/asm-generic/unistd.h include/uapi/asm-generic/unistd.h
+    diff -u tools/arch/x86/lib/memset_64.S arch/x86/lib/memset_64.S
 
 Please see tools/include/uapi/README for further details.
 
-Cc: linux-arch@vger.kernel.org
+Cc: x86@kernel.org
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/arch/arm64/include/uapi/asm/unistd.h    | 24 +------------------
- tools/include/uapi/asm-generic/unistd.h       |  4 +++-
- .../perf/arch/arm/entry/syscalls/syscall.tbl  |  1 +
- .../arch/mips/entry/syscalls/syscall_n64.tbl  |  1 +
- .../arch/powerpc/entry/syscalls/syscall.tbl   |  1 +
- .../perf/arch/s390/entry/syscalls/syscall.tbl |  1 +
- tools/perf/arch/sh/entry/syscalls/syscall.tbl |  1 +
- .../arch/sparc/entry/syscalls/syscall.tbl     |  1 +
- .../arch/x86/entry/syscalls/syscall_32.tbl    |  3 ++-
- .../arch/x86/entry/syscalls/syscall_64.tbl    |  1 +
- .../arch/xtensa/entry/syscalls/syscall.tbl    |  1 +
- tools/scripts/syscall.tbl                     |  1 +
- 12 files changed, 15 insertions(+), 25 deletions(-)
+ tools/arch/x86/lib/memset_64.S  |  3 ++-
+ tools/include/linux/cfi_types.h | 45 +++++++++++++++++++++++++++++++++
+ tools/perf/check-headers.sh     |  1 +
+ 3 files changed, 48 insertions(+), 1 deletion(-)
+ create mode 100644 tools/include/linux/cfi_types.h
 
-diff --git a/tools/arch/arm64/include/uapi/asm/unistd.h b/tools/arch/arm64/include/uapi/asm/unistd.h
-index 9306726337fe005e..df36f23876e863ff 100644
---- a/tools/arch/arm64/include/uapi/asm/unistd.h
-+++ b/tools/arch/arm64/include/uapi/asm/unistd.h
-@@ -1,24 +1,2 @@
- /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
--/*
-- * Copyright (C) 2012 ARM Ltd.
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-- */
--
--#define __ARCH_WANT_RENAMEAT
--#define __ARCH_WANT_NEW_STAT
--#define __ARCH_WANT_SET_GET_RLIMIT
--#define __ARCH_WANT_TIME32_SYSCALLS
--#define __ARCH_WANT_MEMFD_SECRET
--
--#include <asm-generic/unistd.h>
-+#include <asm/unistd_64.h>
-diff --git a/tools/include/uapi/asm-generic/unistd.h b/tools/include/uapi/asm-generic/unistd.h
-index 88dc393c2bca38c0..2892a45023af6d3e 100644
---- a/tools/include/uapi/asm-generic/unistd.h
-+++ b/tools/include/uapi/asm-generic/unistd.h
-@@ -849,9 +849,11 @@ __SYSCALL(__NR_getxattrat, sys_getxattrat)
- __SYSCALL(__NR_listxattrat, sys_listxattrat)
- #define __NR_removexattrat 466
- __SYSCALL(__NR_removexattrat, sys_removexattrat)
-+#define __NR_open_tree_attr 467
-+__SYSCALL(__NR_open_tree_attr, sys_open_tree_attr)
+diff --git a/tools/arch/x86/lib/memset_64.S b/tools/arch/x86/lib/memset_64.S
+index 0199d56cb479d88c..d66b710d628f8865 100644
+--- a/tools/arch/x86/lib/memset_64.S
++++ b/tools/arch/x86/lib/memset_64.S
+@@ -3,6 +3,7 @@
  
- #undef __NR_syscalls
--#define __NR_syscalls 467
-+#define __NR_syscalls 468
+ #include <linux/export.h>
+ #include <linux/linkage.h>
++#include <linux/cfi_types.h>
+ #include <asm/cpufeatures.h>
+ #include <asm/alternative.h>
  
- /*
-  * 32 bit systems traditionally used different
-diff --git a/tools/perf/arch/arm/entry/syscalls/syscall.tbl b/tools/perf/arch/arm/entry/syscalls/syscall.tbl
-index 49eeb2ad8dbd8e07..27c1d5ebcd91c8c2 100644
---- a/tools/perf/arch/arm/entry/syscalls/syscall.tbl
-+++ b/tools/perf/arch/arm/entry/syscalls/syscall.tbl
-@@ -481,3 +481,4 @@
- 464	common	getxattrat			sys_getxattrat
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
-+467	common	open_tree_attr			sys_open_tree_attr
-diff --git a/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl b/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
-index c844cd5cda620b28..1e8c44c7b61492ea 100644
---- a/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
-+++ b/tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl
-@@ -381,3 +381,4 @@
- 464	n64	getxattrat			sys_getxattrat
- 465	n64	listxattrat			sys_listxattrat
- 466	n64	removexattrat			sys_removexattrat
-+467	n64	open_tree_attr			sys_open_tree_attr
-diff --git a/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl b/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
-index d8b4ab78bef076bd..9a084bdb892694bc 100644
---- a/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
-+++ b/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
-@@ -557,3 +557,4 @@
- 464	common	getxattrat			sys_getxattrat
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
-+467	common	open_tree_attr			sys_open_tree_attr
-diff --git a/tools/perf/arch/s390/entry/syscalls/syscall.tbl b/tools/perf/arch/s390/entry/syscalls/syscall.tbl
-index e9115b4d8b635b84..a4569b96ef06c54c 100644
---- a/tools/perf/arch/s390/entry/syscalls/syscall.tbl
-+++ b/tools/perf/arch/s390/entry/syscalls/syscall.tbl
-@@ -469,3 +469,4 @@
- 464  common	getxattrat		sys_getxattrat			sys_getxattrat
- 465  common	listxattrat		sys_listxattrat			sys_listxattrat
- 466  common	removexattrat		sys_removexattrat		sys_removexattrat
-+467  common	open_tree_attr		sys_open_tree_attr		sys_open_tree_attr
-diff --git a/tools/perf/arch/sh/entry/syscalls/syscall.tbl b/tools/perf/arch/sh/entry/syscalls/syscall.tbl
-index c8cad33bf250ea11..52a7652fcff6394b 100644
---- a/tools/perf/arch/sh/entry/syscalls/syscall.tbl
-+++ b/tools/perf/arch/sh/entry/syscalls/syscall.tbl
-@@ -470,3 +470,4 @@
- 464	common	getxattrat			sys_getxattrat
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
-+467	common	open_tree_attr			sys_open_tree_attr
-diff --git a/tools/perf/arch/sparc/entry/syscalls/syscall.tbl b/tools/perf/arch/sparc/entry/syscalls/syscall.tbl
-index 727f99d333b304b3..83e45eb6c095a36b 100644
---- a/tools/perf/arch/sparc/entry/syscalls/syscall.tbl
-+++ b/tools/perf/arch/sparc/entry/syscalls/syscall.tbl
-@@ -512,3 +512,4 @@
- 464	common	getxattrat			sys_getxattrat
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
-+467	common	open_tree_attr			sys_open_tree_attr
-diff --git a/tools/perf/arch/x86/entry/syscalls/syscall_32.tbl b/tools/perf/arch/x86/entry/syscalls/syscall_32.tbl
-index 4d0fb2fba7e208ae..ac007ea00979dc28 100644
---- a/tools/perf/arch/x86/entry/syscalls/syscall_32.tbl
-+++ b/tools/perf/arch/x86/entry/syscalls/syscall_32.tbl
-@@ -396,7 +396,7 @@
- 381	i386	pkey_alloc		sys_pkey_alloc
- 382	i386	pkey_free		sys_pkey_free
- 383	i386	statx			sys_statx
--384	i386	arch_prctl		sys_arch_prctl			compat_sys_arch_prctl
-+384	i386	arch_prctl		sys_arch_prctl
- 385	i386	io_pgetevents		sys_io_pgetevents_time32	compat_sys_io_pgetevents
- 386	i386	rseq			sys_rseq
- 393	i386	semget			sys_semget
-@@ -472,3 +472,4 @@
- 464	i386	getxattrat		sys_getxattrat
- 465	i386	listxattrat		sys_listxattrat
- 466	i386	removexattrat		sys_removexattrat
-+467	i386	open_tree_attr		sys_open_tree_attr
-diff --git a/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl b/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
-index 5eb708bff1c791de..cfb5ca41e30de1a4 100644
---- a/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
-+++ b/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
-@@ -390,6 +390,7 @@
- 464	common	getxattrat		sys_getxattrat
- 465	common	listxattrat		sys_listxattrat
- 466	common	removexattrat		sys_removexattrat
-+467	common	open_tree_attr		sys_open_tree_attr
+@@ -28,7 +29,7 @@
+  * only for the return value that is the same as the source input,
+  * which the compiler could/should do much better anyway.
+  */
+-SYM_FUNC_START(__memset)
++SYM_TYPED_FUNC_START(__memset)
+ 	ALTERNATIVE "jmp memset_orig", "", X86_FEATURE_FSRS
  
- #
- # Due to a historical design error, certain syscalls are numbered differently
-diff --git a/tools/perf/arch/xtensa/entry/syscalls/syscall.tbl b/tools/perf/arch/xtensa/entry/syscalls/syscall.tbl
-index 37effc1b134eea06..f657a77314f8667f 100644
---- a/tools/perf/arch/xtensa/entry/syscalls/syscall.tbl
-+++ b/tools/perf/arch/xtensa/entry/syscalls/syscall.tbl
-@@ -437,3 +437,4 @@
- 464	common	getxattrat			sys_getxattrat
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
-+467	common	open_tree_attr			sys_open_tree_attr
-diff --git a/tools/scripts/syscall.tbl b/tools/scripts/syscall.tbl
-index ebbdb3c42e9f7461..580b4e246aecd5f0 100644
---- a/tools/scripts/syscall.tbl
-+++ b/tools/scripts/syscall.tbl
-@@ -407,3 +407,4 @@
- 464	common	getxattrat			sys_getxattrat
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
-+467	common	open_tree_attr			sys_open_tree_attr
+ 	movq %rdi,%r9
+diff --git a/tools/include/linux/cfi_types.h b/tools/include/linux/cfi_types.h
+new file mode 100644
+index 0000000000000000..6b87136757655c05
+--- /dev/null
++++ b/tools/include/linux/cfi_types.h
+@@ -0,0 +1,45 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Clang Control Flow Integrity (CFI) type definitions.
++ */
++#ifndef _LINUX_CFI_TYPES_H
++#define _LINUX_CFI_TYPES_H
++
++#ifdef __ASSEMBLY__
++#include <linux/linkage.h>
++
++#ifdef CONFIG_CFI_CLANG
++/*
++ * Use the __kcfi_typeid_<function> type identifier symbol to
++ * annotate indirectly called assembly functions. The compiler emits
++ * these symbols for all address-taken function declarations in C
++ * code.
++ */
++#ifndef __CFI_TYPE
++#define __CFI_TYPE(name)				\
++	.4byte __kcfi_typeid_##name
++#endif
++
++#define SYM_TYPED_ENTRY(name, linkage, align...)	\
++	linkage(name) ASM_NL				\
++	align ASM_NL					\
++	__CFI_TYPE(name) ASM_NL				\
++	name:
++
++#define SYM_TYPED_START(name, linkage, align...)	\
++	SYM_TYPED_ENTRY(name, linkage, align)
++
++#else /* CONFIG_CFI_CLANG */
++
++#define SYM_TYPED_START(name, linkage, align...)	\
++	SYM_START(name, linkage, align)
++
++#endif /* CONFIG_CFI_CLANG */
++
++#ifndef SYM_TYPED_FUNC_START
++#define SYM_TYPED_FUNC_START(name) 			\
++	SYM_TYPED_START(name, SYM_L_GLOBAL, SYM_A_ALIGN)
++#endif
++
++#endif /* __ASSEMBLY__ */
++#endif /* _LINUX_CFI_TYPES_H */
+diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
+index a4499e5a6f9cb00c..857f6646cc23e949 100755
+--- a/tools/perf/check-headers.sh
++++ b/tools/perf/check-headers.sh
+@@ -20,6 +20,7 @@ FILES=(
+   "include/uapi/linux/stat.h"
+   "include/linux/bits.h"
+   "include/vdso/bits.h"
++  "include/linux/cfi_types.h"
+   "include/linux/const.h"
+   "include/vdso/const.h"
+   "include/vdso/unaligned.h"
 -- 
 2.49.0.504.g3bcea36a83-goog
 
