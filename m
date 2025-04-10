@@ -1,84 +1,105 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C40B202C26
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:53:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ABAE202F99
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 06:54:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744267996; cv=none; b=LaN/W8m8FS5yXBlNaUzmm6qUfBlE+yTaTrXHN/64YETqZiVf/7NgvyrJC3XEzxGeLnEb67SrU17ooemrWIKghnyRmp6X6zsTgzjoy+bNuZRMbpfwQ1NT63qbE+dtt4V5Kc+Q03W6bfAJzIiPgzWEo69DG6/tSNuM3C+yhBpFy/4=
+	t=1744268062; cv=none; b=ZVUgcOrRnTObxTUFP9G9Du8WzeZPlqsLAdgRhK5QNn6wmO8JPBIOU3S1QMoyH5RkNcA4kkRnHF2m5w1PSdR9Fcwe77Y04Bsc5mpjAi8RSMEg7YMVn5DZIIO178DzWiV1iGXZgfnaMFekq7OGm3mELu5peuqZB4iLICa5HHzvJWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744267996; c=relaxed/simple;
-	bh=kMv4eNfAHTuMb+whB2sNtJjmAaZl9jaZaYcTdWgSEZI=;
-	h=Content-Type:From:Mime-Version:Subject:Date:Message-Id:References:
-	 Cc:In-Reply-To:To; b=UGLr9CRe+/PSG1G8idUnfCEToiNwKeJA8RNvFK5O6+5CG/9eA+G2duiap4EVzMzLisx6waLYFK56n68cahMTV3KqV4sF2C0Uu3hqZHxNa/LDgPZrogg+pMGaclFhRfSdAQtz6G0qaQGWlkUJlOK6vLgFiQm7IKH+edkYL/Y6t54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=nFQ+M90u; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1744268062; c=relaxed/simple;
+	bh=TxrLqC9nYF89a5TnZLBY5qvjm88ALGL/VzZaEHaJi3k=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=G00pod1vdLSPMeJEJdxPvnZuTscbBF3kEuOL66BWpo8+VgHmV9q+oYHmfdsYizzzRWTtMMPUdEIidrQsvKubZGqHDwEp8BsQ2nEzwchj0Ki8802VCKynGAi83+e/nOfel0I0rE3p//bRXGYAO6Y2CEvAehX9wLPOLLtmR0RGYoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H7hxTsIX; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="nFQ+M90u"
-Received: from smtpclient.apple ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53A6qlP73957602
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 9 Apr 2025 23:52:48 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53A6qlP73957602
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025032001; t=1744267968;
-	bh=ec08kOlU5S4dGWdvwRiz4hMm/+KbnOkwaRvrhZlgRMI=;
-	h=From:Subject:Date:References:Cc:In-Reply-To:To:From;
-	b=nFQ+M90ugn0Ja6PD/eLx1LOOMfkj35vIrBkhVeCwX1pU91kfZU94Puoep6tqZFmaR
-	 EslSRasc1D53ad1MSY5R/Yyl/4COKfA8uRyhCBM8uFvk1fr9OKufIEA8lNCHEPjoQB
-	 ja57zlBlyOjNBe9TYL+9IyiPNDN/tkKxKDePG+grqmlqdG8ReJyR68sYUkITzZAM+U
-	 PabFhBfyLu5I+6kqysbB2Kko0It8nrf7TbZJjpao+Z2Zz1H/RqVjPLLEjMjSQZDERK
-	 eEJH5FskLKljru0/Eg7ZApYTBoypBSPeL4WRCT+mBkzAdhc/IJmuytj4u9zr+nxf60
-	 mzM+C65j8WiOQ==
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From: Xin Li <xin@zytor.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H7hxTsIX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744268059;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2BSsly/zurt18wlsSnRCbFAkcKV3HWi5lt2feE8wbC4=;
+	b=H7hxTsIXZdzqHday74V8reApYpj2JyQfnflV3UvWmZ6JbOOtZbgbqQfw7XlFdW5LZlrmmo
+	vFpkOoQsjfRP4CCXg9A4miLGkTVq6BfJ8P9Ar8TL1ubG5Zl+7mqwIoBOk7pNgHw98p/lns
+	iAtEGna3u6OeC4bY0VdEA3Y4TTDfCac=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-685-88WP7-plNJCCe5GNVi4wAg-1; Thu,
+ 10 Apr 2025 02:54:16 -0400
+X-MC-Unique: 88WP7-plNJCCe5GNVi4wAg-1
+X-Mimecast-MFC-AGG-ID: 88WP7-plNJCCe5GNVi4wAg_1744268054
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 07AEB1801A12;
+	Thu, 10 Apr 2025 06:54:14 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.40])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id CF1C719560AD;
+	Thu, 10 Apr 2025 06:54:10 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <20250409190335.3858426f@kernel.org>
+References: <20250409190335.3858426f@kernel.org> <20250407161130.1349147-1-dhowells@redhat.com> <20250407161130.1349147-7-dhowells@redhat.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: dhowells@redhat.com, netdev@vger.kernel.org,
+    Marc Dionne <marc.dionne@auristor.com>,
+    "David S.
+ Miller" <davem@davemloft.net>,
+    Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+    Simon Horman <horms@kernel.org>,
+    Christian Brauner <brauner@kernel.org>,
+    Chuck Lever <chuck.lever@oracle.com>, linux-afs@lists.infradead.org,
+    linux-kernel@vger.kernel.org,
+    Herbert Xu <herbert@gondor.apana.org.au>,
+    linux-crypto@vger.kernel.org
+Subject: Re: [PATCH net-next v2 06/13] rxrpc: rxgk: Provide infrastructure and key derivation
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH 06/20] x86/msr: Standardize on 'u32' MSR indices in <asm/msr.h>
-Date: Wed, 9 Apr 2025 23:52:37 -0700
-Message-Id: <B4CD0964-4394-4659-AD1B-208EFB950556@zytor.com>
-References: <Z_dnraUGp0Vbzk6k@gmail.com>
-Cc: "Anvin H. Peter" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        Gross Juergen <jgross@suse.com>, Hansen Dave <dave.hansen@intel.com>,
-        Torvalds Linus <torvalds@linux-foundation.org>,
-        Zijlstra Peter <peterz@infradead.org>, Petkov Borislav <bp@alien8.de>,
-        Gleixner Thomas <tglx@linutronix.de>
-In-Reply-To: <Z_dnraUGp0Vbzk6k@gmail.com>
-To: Molnar Ingo <mingo@kernel.org>
-X-Mailer: iPhone Mail (22E240)
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2099211.1744268049.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 10 Apr 2025 07:54:09 +0100
+Message-ID: <2099212.1744268049@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Apr 9, 2025, at 11:41=E2=80=AFPM, Ingo Molnar <mingo@kernel.org> wrote:
->>=20
->> not worth it at all?
->=20
-> No:
->=20
-> - Using 'const' for input parameter pointers makes sense because it's
->   easy to have a bug like this in a utility function:
->=20
->    obj_ptr->val =3D foo;
->=20
->   this has a side effect on the calling context, spreading the local
->   rot, so to speak, corrupting the object not owned by this function.
->=20
-> - Using 'const' for non-pointer input parameters makes little sense,
->   because the worst a function can do is to corrupt it locally:
->=20
->    val_high =3D foo;
->=20
->   ... but this bug won't be able to spread via corrupting objects
->   through a pointer, any bug will be limited to that function.
->=20
-> So neither the kernel, nor any of the major libraries such as glibc
-> will typically use const for non-pointer function parameters, outside
-> of very specific exceptions that strengthen the rule.
+Jakub Kicinski <kuba@kernel.org> wrote:
 
-Thanks for the explanation!=
+> On Mon,  7 Apr 2025 17:11:19 +0100 David Howells wrote:
+> > +	aead =3D crypto_krb5_prepare_encryption(krb5, &TK, RXGK_CLIENT_ENC_R=
+ESPONSE, gfp);
+> > +	if (IS_ERR(aead))
+> > +		goto aead_error;
+> > +	gk->resp_enc =3D aead;
+> > +
+> > +	if (crypto_aead_blocksize(gk->resp_enc) !=3D krb5->block_len ||
+> > +	    crypto_aead_authsize(gk->resp_enc) !=3D krb5->cksum_len) {
+> > +		pr_notice("algo inconsistent with krb5 table %u!=3D%u or %u!=3D%u\n=
+",
+> > +			  crypto_aead_blocksize(gk->resp_enc), krb5->block_len,
+> > +			  crypto_aead_authsize(gk->resp_enc), krb5->cksum_len);
+> > +		return -EINVAL;
+> =
+
+> kfree_sensitive(buffer); missing?
+
+Good catch, thanks.  That path should never trigger, but it should really =
+do
+"ret =3D -EINVAL; goto out;".
+
+Do you want me to respin the patches or follow up with a fix patch?
+
+David
 
