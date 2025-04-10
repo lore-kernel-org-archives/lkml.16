@@ -1,116 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4E192857EA;
-	Thu, 10 Apr 2025 14:11:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33A2128A401
+	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 14:11:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744294296; cv=none; b=S5XdxZ0F5GS+T5S6mybs8BP0Mr0tiNrdELLlW/iyY2CtE+STfCv4s26kGb5UWwUL8bhW1muHRTXDbqchsclzeGR1ce/SjoHpk39Ccuc9bPyvMl7iSMDa9FDlihg1Eit9zap0tm26EbUDDhZ92X1gKYGtouC5Dp7wXgy8kIWYdhc=
+	t=1744294311; cv=none; b=NQWV4l3qVsMpJAhe4DvixzPftpA8fzhgimV9rthHbA1AhYmCWzk0EvT71z9I0KEIE07CG6fjDVMhhvVRBASmu16lZ8GuPm6fNjBxW6ibE8dDSe1V8o0Y5Ivi6IFDzeP5lgD0qGBJqPrmtF9R2Un04mjgo3hq7s6BnT0LKUUqxrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744294296; c=relaxed/simple;
-	bh=rco72FMDY4JgO03QNoKdCEdvvo+YwCaCCrx/8pDGOPE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=k0i9obL9ebakpL9RWEgZUbMf69FkcgMJRYH8mCDoYKnqlUDzjK194LEpVhrTG0BqZ1GsXn/kTjoaH/U+QhdncwUQWZFithu8UM9PHEWEGVDkNK929IRuMw73tnT8LrJakDnOxb+ZL5xIUI15jz5Bbh5JoePL9jTDWLBqw15kY+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nh3AMolo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744294311; c=relaxed/simple;
+	bh=2bcRLWwxEd6oDhiLEs2/eeHeotbrLRq3xVyuc44V+PE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UVRldDd71ne/UJfsQrFW26TmwjihM+zCIJXmEryx8FkMtrRPQzgQjDbvU9qV9Q1Us6O+/5WbVWP2aNktC2IAmXf7Inr0yUnpo5TLmk4/vQditvs+vRtPHMCag63O8wBK2oTYdixpoub+YZ1C9AkvtCL5Naf8H9aR/wySLCTqDWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=cKNBjrG6; arc=none smtp.client-ip=209.85.160.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nh3AMolo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E95DC4CEF8;
-	Thu, 10 Apr 2025 14:11:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744294296;
-	bh=rco72FMDY4JgO03QNoKdCEdvvo+YwCaCCrx/8pDGOPE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=nh3AMoloI1t+LD8Ko3tMReWxUwT9noBnNah/gSGDtpqZfRKgXVdEinNMTanYL+n9u
-	 j+p0TfWH2vu1IJ5Nn7Wcr4GzayTrkjGXr2J3B4jWQY2hq+6UwmQkn3Tuk/AmVidpZZ
-	 FUsZk7+SKUUfZnLu0JVKiqSekt4+tuomUZUJEAloOJrWkXTeslsBU637LCZQTi0SZS
-	 ck84EenDGtIJGnEPcQVQlZBRTYey4xeQMADZ5VFxQa0BkvRutj3hRRgFlSiQ/RZjeJ
-	 JmFZl+RMIyIKs1JzC592bPghjDmcBByBkCLeOHyr8WBLiU1YWSdN5SIRCJ0iXCIcCZ
-	 ks3h1FHJm+jKA==
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5e6f4b3ebe5so1404880a12.0;
-        Thu, 10 Apr 2025 07:11:35 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUSDYqMThB0n2jya/kDZSMtjvWqvWsxCy+53ytFKYf6Jk5MsbasuhNceUwsRT+sSvFMHH8afH01Q2s+GPjYmQ==@vger.kernel.org, AJvYcCUhLHFaigQUOrFmjpmHhMuuWzU21+2rtobCm8uPbD0OXcrmJUzUJRvhiYdtWQRhbXPFTo3tK/uqrwAkxA==@vger.kernel.org, AJvYcCV1LJ3nTK9Tu01YF5kllTYqjbGt/K11I+K/tmN0hOqoqfF06WsxBhYhm05CyWAly3/TF2j0P3MJxkU=@vger.kernel.org, AJvYcCW8TJbms89+VCCmFJvveDhIM7YhzmVLG3epzwIR+MGxfnC9k7t8pAjpoMt4q7MubDlJAIS5hyxwq5U/04qY@vger.kernel.org, AJvYcCWGFFvsApGM8VVSYv0rcua4g02Bm7Q6yVKo14PHFtmf1eHK8y11TPz2z/3/z0UZ9WF7EzP/G/I427oH@vger.kernel.org, AJvYcCXBeHILg+04FGhBJMhEWVIPSE95c83uDooMScthM/yK9wFBncx/vllSzlEPBlxAbVNK7GyE4jPrwXHOLAKoAuMwWLY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvbVO/ZpPz8w1qC6xRUKK/7TG53eCSQ3qJ5wfLW/v7ij3729pY
-	srsuwYmb87+WevwUjDXuh3A0G0nW2WeEkvsxN+N5oprn/Pjh3n/qT+VpgwhEETnCwBuztS6hQz3
-	sE/bRLarlICpZS5KnjY3Vv36yAA==
-X-Google-Smtp-Source: AGHT+IGlh97um6SMQiGxBgsgdbsviDx65SZRgGYwOH79oWcJKJOpcvjinlVEV2oCvrCbvL9uHlFPqdqxcM1fMXmRyBY=
-X-Received: by 2002:a05:6402:42c3:b0:5e4:d2c9:455c with SMTP id
- 4fb4d7f45d1cf-5f3292682cfmr2701509a12.10.1744294294406; Thu, 10 Apr 2025
- 07:11:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="cKNBjrG6"
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-2c2dc6c30c2so226559fac.2
+        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 07:11:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1744294308; x=1744899108; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bDU6TnnpydkrEGdtbw7Y1FabP4abTQNmCWlwkK2+gfI=;
+        b=cKNBjrG6iCxOGsWqTs+iEyG3tdvyzuHtWvuwKnVryMGWJtYfwKGOGiNzNrcxsNBv5N
+         hNsa2f+tTP9tDjngk/5eFdzJVoJ7SqfWwpdzh8yRUXE0xPZGCfWh1HKqOsWlt1SK5vJp
+         HLEN/CkmeJi3ZOQGiJKyeRlL3aArpNS61r1SAtM7A7D05DyI4I6no3kZ6r685BtqZ7H9
+         NsVjTH3sm7ZhsXh6N5JiV8zYtgDdKwGe4A4WOTnj9y+vU3QUqcLmn3Vi8OqFP8M1GIJN
+         rCtqqFdHw6tFqG+6zApja4oxlQlSy0NaXjTeQ8GQ7am+S27JHRG7ReyjTMAn+PQzpyCK
+         d8mQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744294308; x=1744899108;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bDU6TnnpydkrEGdtbw7Y1FabP4abTQNmCWlwkK2+gfI=;
+        b=gXXu9gjRo4xcFk3EQgRK/SZVP5SdGlcbbHMQY7n4XoIdTV53ht+xoVT1imFsSZhuwE
+         lQ85SDtEGsnE2YM17hKEH0dx6jzSbgaTcjAQbbv3LwiFf0HY7mTd9zTRzSZkW4V5jVKR
+         JbB/ChnFnstDuvG7P5bRopG9oCSnvyjUndKeO2BoJMte3SvcR+jr4rO/FdFkYPZ2HfZ3
+         8bEakm6kkcXIx20GI2cGlAS48mwesDlTEzBH2t0UwGN4ovRcIkqUJO91CDibTiCRErC6
+         MTItAlCqU7shsUEo7u30jJqbXncCZa3UOcvqH27VLMsfJZ5WQ79ovPV4vzZ0+C5ZH3f1
+         /teA==
+X-Forwarded-Encrypted: i=1; AJvYcCXr6TXmcZ61yv2jlh8cOYQkPnYaXFWscPl4OjH1DNvc1/opIoos908c8r/D8pRVkXxCOAyUSH4+HhtR9QU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwhgbreaDUHeSf77BHOoxGkDubuVnd39pazlELPjOg57286OgG
+	2jxW6s6i/YJtMvGtIY16FDD3aKDWKsBWaC29Mq+HJ9jh9JihBMhcK2N+uMdXkAs=
+X-Gm-Gg: ASbGncsI+pYhFSEEzyG52LwH1k9xROeKq0rD5ZCige/uJ9ZrPkp4Ubt7ZMpjMrFX7gc
+	qSjSuIxZJ/V393mFfd/73hDEsfgAsSonncHfJQXgAqiY+ZbDUrR3JJj9d85+SDLopGEBQY2vu8y
+	KKAYlYH2FV9x0lGlbLoVEjsB7Vt50Ul6ZW0qj3xxflhnRttBbKJBPya4FXFznXriFobl7AkuKkv
+	jK7sN9NIWov9Q/x4ViDLNUiHAv6llRyIFWpgQIccUJkrp1LTPLmKoxafW6U/yyBFrnV9suipQhI
+	2ntonTSe3EBiJi8uJ20Gvu57JSsmP16zt6al5TQMOfrL7vcKwbzHMqdvJaShxXxXJo523QAtueN
+	yrfMxfi1ZxE/k
+X-Google-Smtp-Source: AGHT+IF4FJP0GLYWv9/d9TiSPWxCSlvFcNDS8tgAo2NgT2cPnPyU3dINAVQK7QTyDgIRoeywhov6Bw==
+X-Received: by 2002:a05:6871:d109:b0:2c1:4146:c556 with SMTP id 586e51a60fabf-2d0b3821079mr1660879fac.31.1744294308198;
+        Thu, 10 Apr 2025 07:11:48 -0700 (PDT)
+Received: from [192.168.0.142] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2d0969b721fsm676463fac.25.2025.04.10.07.11.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Apr 2025 07:11:47 -0700 (PDT)
+Message-ID: <420dbd79-c981-4278-b888-5dd9f5baa4c6@baylibre.com>
+Date: Thu, 10 Apr 2025 09:11:46 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403-dt-cpu-schema-v1-0-076be7171a85@kernel.org>
- <20250403-dt-cpu-schema-v1-14-076be7171a85@kernel.org> <174377856145.1313232.11316769002552655294.robh@kernel.org>
-In-Reply-To: <174377856145.1313232.11316769002552655294.robh@kernel.org>
-From: Rob Herring <robh@kernel.org>
-Date: Thu, 10 Apr 2025 09:11:22 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKiduJBRBuRS364_bSjEfC_cvgyicZX1BwvNyb1+GVc3w@mail.gmail.com>
-X-Gm-Features: ATxdqUEvfSUaWUzPsxy3ohcumibpamjDRmILBf-6gs6fjUtKKg1MwCu-Qt45NOQ
-Message-ID: <CAL_JsqKiduJBRBuRS364_bSjEfC_cvgyicZX1BwvNyb1+GVc3w@mail.gmail.com>
-Subject: Re: [PATCH 14/19] dt-bindings: arm/cpus: Add schemas for
- "enable-method" dependencies
-To: "Rob Herring (Arm)" <robh@kernel.org>, Stephan Gerhold <stephan.gerhold@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	linux-kernel@vger.kernel.org, Conor Dooley <conor@kernel.org>, 
-	linux-rockchip@lists.infradead.org, 
-	Daniel Machon <daniel.machon@microchip.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Shawn Guo <shawnguo@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, UNGLinuxDriver@microchip.com, 
-	Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, linux-sunxi@lists.linux.dev, 
-	Liviu Dudau <liviu.dudau@arm.com>, linux-arm-kernel@lists.infradead.org, 
-	Fabio Estevam <festevam@gmail.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Stephen Boyd <sboyd@kernel.org>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Vincenzo Frascino <vincenzo.frascino@arm.com>, linux-renesas-soc@vger.kernel.org, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Magnus Damm <magnus.damm@gmail.com>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Viresh Kumar <vireshk@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, zhouyanjie@wanyeetech.com, 
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>, Heiko Stuebner <heiko@sntech.de>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, linux-pm@vger.kernel.org, 
-	linux-mediatek@lists.infradead.org, Chen-Yu Tsai <wens@csie.org>, 
-	linux-mips@vger.kernel.org, imx@lists.linux.dev, 
-	Samuel Holland <samuel@sholland.org>, Sudeep Holla <sudeep.holla@arm.com>, Nishanth Menon <nm@ti.com>, 
-	devicetree@vger.kernel.org, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	linux-arm-msm@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	linux-amlogic@lists.infradead.org, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Steen Hegelund <Steen.Hegelund@microchip.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/3] iio: dac: ad3530r: Add driver for AD3530R and
+ AD3531R
+To: "Paller, Kim Seer" <KimSeer.Paller@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+ "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+References: <20250403-togreg-v3-0-d4b06a4af5a9@analog.com>
+ <20250403-togreg-v3-3-d4b06a4af5a9@analog.com>
+ <fd2116bd-b0e2-4db4-97ff-1a1e88545413@baylibre.com>
+ <PH0PR03MB714159E822B96E7A788A5CD4F9AA2@PH0PR03MB7141.namprd03.prod.outlook.com>
+ <a66220e9-f690-4f95-9a14-d2b663d63490@baylibre.com>
+ <PH0PR03MB7141587E8AFB2844E52988DAF9B72@PH0PR03MB7141.namprd03.prod.outlook.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <PH0PR03MB7141587E8AFB2844E52988DAF9B72@PH0PR03MB7141.namprd03.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 4, 2025 at 9:56=E2=80=AFAM Rob Herring (Arm) <robh@kernel.org> =
-wrote:
->
->
-> On Thu, 03 Apr 2025 21:59:35 -0500, Rob Herring (Arm) wrote:
-> > Replace the prose for properties dependent on specific "enable-method"
-> > values with schemas defining the same requirements.
-> >
-> > Both "qcom,acc" and "qcom,saw" properties appear to be required for any
-> > of the Qualcomm enable-method values, so the schema is a bit simpler
-> > than what the text said. The references to arm/msm/qcom,saw2.txt and
-> > arm/msm/qcom,kpss-acc.txt are out of date, so just drop them.
-> >
-> > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> > ---
-> >  Documentation/devicetree/bindings/arm/cpus.yaml | 82 +++++++++++++++--=
---------
-> >  1 file changed, 49 insertions(+), 33 deletions(-)
-> >
->
-> My bot found errors running 'make dt_binding_check' on your patch:
->
-> yamllint warnings/errors:
->
-> dtschema/dtc warnings/errors:
-> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/s=
-oc/qcom/qcom,saw2.example.dtb: cpu@0: 'qcom,acc' is a required property
->         from schema $id: http://devicetree.org/schemas/arm/cpus.yaml#
+On 4/10/25 3:39 AM, Paller, Kim Seer wrote:
+> 
+> 
+>> -----Original Message-----
+>> From: David Lechner <dlechner@baylibre.com>
+>> Sent: Tuesday, April 8, 2025 10:06 PM
+>> To: Paller, Kim Seer <KimSeer.Paller@analog.com>; Jonathan Cameron
+>> <jic23@kernel.org>; Lars-Peter Clausen <lars@metafoo.de>; Hennerich,
+>> Michael <Michael.Hennerich@analog.com>; Rob Herring <robh@kernel.org>;
+>> Krzysztof Kozlowski <krzk+dt@kernel.org>; Conor Dooley
+>> <conor+dt@kernel.org>
+>> Cc: linux-iio@vger.kernel.org; linux-kernel@vger.kernel.org;
+>> devicetree@vger.kernel.org
+>> Subject: Re: [PATCH v3 3/3] iio: dac: ad3530r: Add driver for AD3530R and
+>> AD3531R
+>>
+>> [External]
+>>
+>> On 4/7/25 3:01 AM, Paller, Kim Seer wrote:
+>>>>> +	for (i = 0; i < chip_info->num_channels; i++)
+>>>>> +		st->chan[i].powerdown_mode =
+>>>> AD3530R_32KOHM_POWERDOWN_MODE;
+>>>>> +
+>>>>> +	st->ldac_gpio = devm_gpiod_get_optional(dev, "ldac",
+>>>> GPIOD_OUT_HIGH);
+>>>>> +	if (IS_ERR(st->ldac_gpio))
+>>>>> +		return dev_err_probe(dev, PTR_ERR(st->ldac_gpio),
+>>>>> +				     "Failed to get ldac GPIO\n");
+>>>>> +
+>>>>> +	if (device_property_present(dev, "adi,double-output-range")) {
+>>>>
+>>>> This is not documented in the DT bindings.
+>>>>
+>>>> This could instead be implemented by making the out_voltage_scale
+>> attribute
+>>>> writeable.
+>>>>
+>>>> If we really do need it in the devicetree because we want to protect against
+>>>> someone accidentally setting it too high, then the property should be the
+>> actual
+>>>> multipler value with an enum specifier of 1, 2 and a default of 1 rather than
+>> a
+>>>> flag (e.g. adi,output-multipler).
+>>>
+>>> Thank you for the feedback. This should be adi,range-double, which is already
+>>> documented in the DT bindings and is also used as a boolean type in other
+>> drivers.
+>>> I just forgot to update it here. This is a one-bit configuration that doubles the
+>>> output range (multiplier of 2).  Should I proceed with the suggested
+>> approach?
+>>>
+>>
+>> I see adi,range-double in
+>> Documentation/devicetree/bindings/iio/adc/adi,ad7923.yaml
+>>
+>> We would need to add the same in the new .yaml file added in this
+>> series along with a justification in the commit message of why this
+>> needs to be set in the devicetree rather than at runtime.
+> 
+> I can confirm that the adi,range-double property is already present in the adi,ad3530r.yaml
+> file as a boolean type, and consistent with its usage in adi,ad7923.yaml.
 
-Any Qcom folks want to tell me whether both qcom,acc and qcom,saw are
-required or not? All the actual users have both.
+Sorry, I don't know why I didn't see it the first 2 times I looked. :-(
+It is there.
 
-Rob
+> 
+>>
+>> Ideally, we would ask the applications engineer for this chip to
+>> find out how real users would want to use this feature to make sure
+>> setting it in the devicetree aligns with that and is not too
+>> restrictive.
+> 
+> The apps engineer for this chip indicated that the boolean type format aligns better with
+> how users are expected to configure this feature, especially for users who may not be
+> familiar with specific range values or enum specifiers.
+> 
+
+Very good.
