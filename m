@@ -1,93 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F4D1DFDE;
-	Thu, 10 Apr 2025 07:10:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D44B20469E;
+	Thu, 10 Apr 2025 07:10:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744269022; cv=none; b=PVnFxvJazZ7nruNuK2wBVzbqyIR9jix0Pfdt09wCmyCJ7By8XQM5wIJYvmdIMb5MwYQ9dc9HYmju1MFfB6a61fDVGVRxVLHPHJM9zYLhwxYJu86SOqbfQjr1CffYervUpNANBPYIknBlIF0SHbcs1ufjOV/rwSmnnwuS+Rxygvg=
+	t=1744269027; cv=none; b=CR6GaESDktoUhbSn4IWxrWmggyO9oxMlq8qBMzAn6Evd3TgsvSKyJbBFdaeBJAqjLDSoX7qiVaTN233e6UnoFYChe73VOAztl7N4NjhIWHNEi/H9T5H78puilZAAVNL5Olw3TCIU65kM0tyFPmTW/RFYz4TTQKH6fTj//fN/f00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744269022; c=relaxed/simple;
-	bh=3UX8skoZo+ARQ7Okmvw9x6n8F1ITBsNwvbv3/HWmeUE=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RJB7H5W8O9r0SlTyZHSW26K5Vyt343GIQuuQ8sLEKLnKLHGo5SKtwJpgjX5ymVyT8yMgPnP/H0/PA9sdQOvr5I+RZSUdBnj68Tmf5T1Fnxl9bGVaGh9vbvJzwGv+0OKO8c3fFuugYB0buhpU3wGO4hXmQJL1EswnHX3m+yet5yM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hXBrCYqs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744269027; c=relaxed/simple;
+	bh=cAXlf8+JLNj8vmclw+acYaP3/q1dAkul7j9DW/B7cK8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r57HHmvn1li1Qbpduz/UFjzW9AD6GXFXMA+JWG/FmVxJH7alqocfJWH4p8cRbnIAL4BtT2Xijd0iygFOqxx2dIN2VOOMnQytOMJypb5WwYn2cwvRf6FR0higNSjRSHct/wVwXn+fXukTIuc+mOP8uFVhoKZUuPvWQUYHjEAqCvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IE+EXgki; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hXBrCYqs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 713CBC4CEDD;
-	Thu, 10 Apr 2025 07:10:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IE+EXgki"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DEAAC4CEE3;
+	Thu, 10 Apr 2025 07:10:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744269021;
-	bh=3UX8skoZo+ARQ7Okmvw9x6n8F1ITBsNwvbv3/HWmeUE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=hXBrCYqsgMzQcbFrHiZ0JRsTgOX+ZPdPtfQT4q61CsRf9BzycR5I9/ejUG97HT4HX
-	 j+sskasFQoCGl1x5/YBT/RO4ZSPjBHHhYP6WdJyextCf0IOptgI34S1LQ8NPQ00jb/
-	 fjNw6rHqjzGfdPnEyGhaq5t+qWnNCoO7w5gcbzV0a9zlJfAyLevD9VEF5h+tBbXoWA
-	 tNcbvSw0+ToKHwSwCrrB+ecRphhZvRIwWPWKqeodA1+xcob/NqXHx0kHcznlLccfGb
-	 7wN3/SOLUc+OYFkCzhbyte3A391j7ccFs+22EXbCOdHlrkoN7eweKOd2O9kBiccvN0
-	 VWn8dcjDeMomw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1u2m3G-0046ri-IJ;
-	Thu, 10 Apr 2025 08:10:18 +0100
-Date: Thu, 10 Apr 2025 08:10:18 +0100
-Message-ID: <86o6x4lcf9.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Vijay Balakrishna <vijayb@linux.microsoft.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Tony Luck <tony.luck@intel.com>,
-	James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Robert Richter
- <rric@kernel.org>,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Tyler Hicks <code@tyhicks.com>,
-	Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH 2/2] dt-bindings: arm: cpus: Add edac-enabled property
-In-Reply-To: <319b7c65-3e2f-456b-a845-45f7a57ba2c5@kernel.org>
-References: <1744241785-20256-1-git-send-email-vijayb@linux.microsoft.com>
-	<1744241785-20256-3-git-send-email-vijayb@linux.microsoft.com>
-	<319b7c65-3e2f-456b-a845-45f7a57ba2c5@kernel.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=k20201202; t=1744269027;
+	bh=cAXlf8+JLNj8vmclw+acYaP3/q1dAkul7j9DW/B7cK8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IE+EXgkisnaaFEIDW6sv85RrzxK1LT+SytPFz/mFzO57r6em1gxM99uAX3j/W1+px
+	 Xpdp9MIbk9ywiceWS8qr4wYyQvQgW4qp+1Tb4QjPB4fZIKhAiVLHTdTaps1Sjnpn1h
+	 lQD0mI/B8rx7mkw32PSVwpQgEmkC3J+UK0X8fs15aMCdmJad4SnIF1K/RtrV2Xglaw
+	 uLIAadCeM+uurybv1KoRR9Cc3AG2E1UmKCFG0eH5hdCtNqPO1dwOSTwyMf4xVERyzJ
+	 23ZQ30VWaGCl9u5jyPY2wAhB/W7UmJ4GyXehacI/qCyy+pDMMza71R8ccgkkeuZdhl
+	 F38XgacP+OAKg==
+Date: Thu, 10 Apr 2025 00:10:25 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Howard Chu <howardchu95@gmail.com>
+Cc: acme@kernel.org, mingo@redhat.com, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com, peterz@infradead.org,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf test: Remove the temporary trace record file when
+ the test fails
+Message-ID: <Z_du4e4X1B8Ib_xN@z2>
+References: <20250405014757.3447393-1-howardchu95@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: krzk@kernel.org, vijayb@linux.microsoft.com, bp@alien8.de, tony.luck@intel.com, james.morse@arm.com, mchehab@kernel.org, rric@kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, code@tyhicks.com, s.hauer@pengutronix.de
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250405014757.3447393-1-howardchu95@gmail.com>
 
-On Thu, 10 Apr 2025 07:00:55 +0100,
-Krzysztof Kozlowski <krzk@kernel.org> wrote:
+On Fri, Apr 04, 2025 at 06:47:57PM -0700, Howard Chu wrote:
+> Even if there's no nanosleep in the trace record file, it doesn't mean
+> the file itself doesn't exist. Remove the temporary file since the test
+> frequently fails on my machine and leaves behind many uncleaned
+> temporary files.
 > 
-> On 10/04/2025 01:36, Vijay Balakrishna wrote:
-> > From: Sascha Hauer <s.hauer@pengutronix.de>
-> > 
-> > Some ARM Cortex CPUs like the A53, A57 and A72 have Error Detection And
-> > Correction (EDAC) support on their L1 and L2 caches. This is implemented
-> > in implementation defined registers, so usage of this functionality is
-> > not safe in virtualized environments or when EL3 already uses these
-> > registers. This patch adds a edac-enabled flag which can be explicitly
-> > set when EDAC can be used.
+> Signed-off-by: Howard Chu <howardchu95@gmail.com>
+
+Reviewed-by: Namhyung Kim <namhyung@kernel.org>
+
+Thanks,
+Namhyung
+
+> ---
+>  tools/perf/tests/shell/trace_record_replay.sh | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> Can't hypervisor tell you that?
-
-No, it can't. This is not an architecture feature, and KVM will gladly
-inject an UNDEF exception if the guest tries to use this.
-
-Which is yet another reason why this whole exercise is futile.
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+> diff --git a/tools/perf/tests/shell/trace_record_replay.sh b/tools/perf/tests/shell/trace_record_replay.sh
+> index 6b4ed863c1ef..555537dc6cfa 100755
+> --- a/tools/perf/tests/shell/trace_record_replay.sh
+> +++ b/tools/perf/tests/shell/trace_record_replay.sh
+> @@ -15,6 +15,7 @@ file=$(mktemp /tmp/temporary_file.XXXXX)
+>  perf trace record -o ${file} sleep 1 || exit 1
+>  if ! perf trace -i ${file} 2>&1 | grep nanosleep; then
+>  	echo "Failed: cannot find *nanosleep syscall"
+> +	rm -f ${file}
+>  	exit 1
+>  fi
+>  
+> -- 
+> 2.45.2
+> 
