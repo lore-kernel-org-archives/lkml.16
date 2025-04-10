@@ -1,327 +1,696 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from smtpout.efficios.com (smtpout.efficios.com [158.69.130.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 303962857CB;
-	Thu, 10 Apr 2025 17:51:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 129391EE00B;
+	Thu, 10 Apr 2025 17:52:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=158.69.130.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744307467; cv=none; b=o2xiQ68bx96I065fz8YlRmiSkSkVveGm5AOOzsVsNZ19BxH7PsLeSipQBKn6wnS2vV71YKBz6CfYU/3i1UKH9cybUI53f9eTm0Wij24T2/wPwybsY66QTxGBMCxuf8oOxuZV9q9z6Zjr1W18hQnftJc6KMyy38ru+tx4O/9ptg8=
+	t=1744307529; cv=none; b=KHdocrlLaerDYi3IoY/yCyeAo/CfinB6AzGs4Gf5dx+YhtaMi+TXSRN5pbe2yzV1lVopxmYTx4KxR8mmaLL+Pusw9oRk1brq6vy3tDeTy4GWgyYAr3lypZSDE72dzmqreT5ZNUYrEzAPtfb/+62dFMtWcbgcf0nX9V8tnHLS05o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744307467; c=relaxed/simple;
-	bh=zilCL1e3bUYuIqps8W52vNmjjRHZdj8cpG0KBHOiXt0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=QHsD37n5ou+pChPZr7U3CRG6IEvg+Su80yEeesMPe4b+R2WuAX02mBpC01B9W2bnuoPg0o9yOaVzn6CbNdRRUAYY7JTTyDp8dU6W2rFUdyE1pdnenrjkbWEmGdsQzYxdcgCBqgum2vokk9SmMMjqvu9HbA561vvET1iLkcDOE+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=d9lLXinc; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1744307529; c=relaxed/simple;
+	bh=BUdrhwfVnJRG3xjzZpa0fpfWEdsIoPPINFDA6smKiNw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=VMAN1/SWgI6jcW415WYjApX6IwdNjxP8orC6KliHtpbj1yPTIC6sB5BNAbC5reJ/sIUgHtc0G2q0iMgA9faSAHeFCz2SL3pks7hzEvMNzUWKsCMaTv9P6EH/aWOAbVIEVpOQSXlv5v25LAi6s5D/PN672tTtqqPhfmwUh5eJl/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=IGIVYTYS; arc=none smtp.client-ip=158.69.130.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="d9lLXinc"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53AHov5G1223564
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 10 Apr 2025 12:50:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1744307457;
-	bh=VnCuiAJDXuMTmSJHi5/PkXpgN05VqTzRwvzm8iIJ+tE=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=d9lLXincOLRlAV6I8IOMdKZkWBWPhPRbT2x9u4LyLr65EBciNj39PRG+ZCtNDZXmH
-	 p5y/uXLYPD0YZia/FJIQYIPHGYHi2qk8o0jqCw81goSqlicgwdB5YYTYVAuWxmvXvq
-	 rKSoqZyAAS5uDPQY4GQtYPkHrzNRagc2ty77R3Wc=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53AHov5v027764
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 10 Apr 2025 12:50:57 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 10
- Apr 2025 12:50:56 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 10 Apr 2025 12:50:56 -0500
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53AHou49004588;
-	Thu, 10 Apr 2025 12:50:56 -0500
-Message-ID: <b97c1eaa-f34c-4731-8e9e-b51faa4619c4@ti.com>
-Date: Thu, 10 Apr 2025 12:50:56 -0500
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="IGIVYTYS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
+	s=smtpout1; t=1744307520;
+	bh=BUdrhwfVnJRG3xjzZpa0fpfWEdsIoPPINFDA6smKiNw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=IGIVYTYSnmA5rklHg3THyp19gT9yq7i7t4NHWtMWjOq++tboMU64i+tJKWuue1okI
+	 1n6Coua8vEcs1p8FQXj9NcrQGtZXBqPn2NKGOPYT140aFeIT5DRjSEiTv7wMSswlMH
+	 aa4CPlrx63ncgo4d51yoJ46FsGwPjRG+DwtNw/Leo4fzPbqVThR0HYSqSE8QZjk5iX
+	 moKXCgiT8lrG/dDQKzoKicReNsFrSDJ+H797RDhLIjcCk03UPQv6wTntwQwZ8Gvz1l
+	 A9NFIOWlSnfupTmUDkENFeJxqgqU5TdxBVCO2XcEQqETp3qwgUSxGnsAIQ6/PG4UuO
+	 89gYOZzNBf/Rw==
+Received: from thinkos.internal.efficios.com (96-127-217-162.qc.cable.ebox.net [96.127.217.162])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4ZYS7L1xQtzl2d;
+	Thu, 10 Apr 2025 13:51:58 -0400 (EDT)
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To: Sweet Tea Dorminy <sweettea@google.com>,
+	Christoph Lameter <cl@linux.com>,
+	"Liam R . Howlett" <Liam.Howlett@Oracle.com>,
+	Matthew Wilcox <willy@infradead.org>
+Cc: linux-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Dennis Zhou <dennis@kernel.org>,
+	Tejun Heo <tj@kernel.org>,
+	Martin Liu <liumartin@google.com>,
+	David Rientjes <rientjes@google.com>,
+	christian.koenig@amd.com,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Christian Brauner <brauner@kernel.org>,
+	Wei Yang <richard.weiyang@gmail.com>,
+	David Hildenbrand <david@redhat.com>,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	Yu Zhao <yuzhao@google.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Mateusz Guzik <mjguzik@gmail.com>
+Subject: [RFC PATCH v3] Introduce Hierarchical Per-CPU Counters
+Date: Thu, 10 Apr 2025 13:51:49 -0400
+Message-Id: <20250410175149.1206995-1-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 06/11] arm64: dts: ti: k3-am62a7-sk: Enable IPC with
- remote processors
-To: Beleswar Prasad Padhi <b-padhi@ti.com>, Judith Mendez <jm@ti.com>,
-        Devarsh
- Thakkar <devarsht@lewv0571a.ent.ti.com>,
-        Nishanth Menon <nm@ti.com>, Hari
- Nagalla <hnagalla@ti.com>
-CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Markus
- Schneider-Pargmann <msp@baylibre.com>
-References: <20250405001518.1315273-1-jm@ti.com>
- <20250405001518.1315273-7-jm@ti.com>
- <6868f593-0728-4e92-a57b-87db6a0037f6@ti>
- <f42607f5-e39d-48a1-89c0-11d4982a2426@ti.com>
- <f8f1d877-3d13-4ba7-90e1-455923458c11@ti.com>
- <fe735242-4643-432a-adaf-27e29719948a@ti.com>
- <bffd8489-1556-425d-b3f9-8fde8a7d34a7@ti.com>
-Content-Language: en-US
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <bffd8489-1556-425d-b3f9-8fde8a7d34a7@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On 4/10/25 3:55 AM, Beleswar Prasad Padhi wrote:
-> Hi Judith,
-> 
-> On 10/04/25 04:02, Judith Mendez wrote:
->> Hi Beleswar,
->>
->> On 4/7/25 11:00 PM, Beleswar Prasad Padhi wrote:
->>> Hi Judith, Andrew,
->>>
->>> On 07/04/25 19:43, Judith Mendez wrote:
->>>> Hi Devarsh,
->>>>
->>>> On 4/7/25 8:54 AM, Devarsh Thakkar wrote:
->>>>> Hi Judith,
->>>>>
->>>>> On 05/04/25 05:45, Judith Mendez wrote:
->>>>>  > From: Devarsh Thakkar <devarsht@ti.com>
->>>>>>
->>>>>
->>>>> Thanks for the patch.
->>>>>
->>>>>> For each remote proc, reserve memory for IPC and bind the mailbox
->>>>>> assignments. Two memory regions are reserved for each remote processor.
->>>>>> The first region of 1MB of memory is used for Vring shared buffers
->>>>>> and the second region is used as external memory to the remote processor
->>>>>> for the resource table and for tracebuffer allocations.
->>>>>>
->>>>>> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
->>>>>> Signed-off-by: Hari Nagalla <hnagalla@ti.com>
->>>>>> Signed-off-by: Judith Mendez <jm@ti.com>
->>>>>> ---
->>>>>>   arch/arm64/boot/dts/ti/k3-am62a7-sk.dts | 96 +++++++++++++++++++++++--
->>>>>>   1 file changed, 90 insertions(+), 6 deletions(-)
->>>>>>
->>>>>> diff --git a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
->>>>>> index 1c9d95696c839..7d817b447c1d0 100644
->>>>>> --- a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
->>>>>> +++ b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
->>>>>> @@ -52,6 +52,42 @@ linux,cma {
->>>>>>               linux,cma-default;
->>>>>>           };
->>>>>> +        c7x_0_dma_memory_region: c7x-dma-memory@99800000 {
->>>>>> +            compatible = "shared-dma-pool";
->>>>>> +            reg = <0x00 0x99800000 0x00 0x100000>;
->>>>>> +            no-map;
->>>>>> +        };
->>>>>> +
->>>>>> +        c7x_0_memory_region: c7x-memory@99900000 {
->>>>>> +            compatible = "shared-dma-pool";
->>>>>> +            reg = <0x00 0x99900000 0x00 0xf00000>;
->>>>>> +            no-map;
->>>>>> +        };
->>>>>> +
->>>>>> +        mcu_r5fss0_core0_dma_memory_region: r5f-dma-memory@9b800000 {
->>>>>> +            compatible = "shared-dma-pool";
->>>>>> +            reg = <0x00 0x9b800000 0x00 0x100000>;
->>>>>> +            no-map;
->>>>>> +        };
->>>>>> +
->>>>>> +        mcu_r5fss0_core0_memory_region: r5f-dma-memory@9b900000 {
->>>>>> +            compatible = "shared-dma-pool";
->>>>>> +            reg = <0x00 0x9b900000 0x00 0xf00000>;
->>>>>> +            no-map;
->>>>>> +        };
->>>>>> +
->>>>>> +        wkup_r5fss0_core0_dma_memory_region: r5f-dma-memory@9c800000 {
->>>>>> +            compatible = "shared-dma-pool";
->>>>>> +            reg = <0x00 0x9c800000 0x00 0x100000>;
->>>>>> +            no-map;
->>>>>> +        };
->>>>>> +
->>>>>> +        wkup_r5fss0_core0_memory_region: r5f-dma-memory@9c900000 {
->>>>>> +            compatible = "shared-dma-pool";
->>>>>> +            reg = <0x00 0x9c900000 0x00 0xf00000>;
->>>>>> +            no-map;
->>>>>> +        };
->>>>>> +
->>>>>>           secure_tfa_ddr: tfa@9e780000 {
->>>>>>               reg = <0x00 0x9e780000 0x00 0x80000>;
->>>>>>               alignment = <0x1000>;
->>>>>> @@ -63,12 +99,6 @@ secure_ddr: optee@9e800000 {
->>>>>>               alignment = <0x1000>;
->>>>>>               no-map;
->>>>>>           };
->>>>>> -
->>>>>> -        wkup_r5fss0_core0_memory_region: r5f-dma-memory@9c900000 {
->>>>>> -            compatible = "shared-dma-pool";
->>>>>> -            reg = <0x00 0x9c900000 0x00 0x01e00000>;
->>>>>> -            no-map;
->>>>>> -        };
->>>>>>       };
->>>>>
->>>>> This is missing the edgeAI specific remote-core carveouts and RTOS-to-RTOS IPC memory regions [1] being used by edgeAI firmwares which come as pre-packaged in the official SDK release for AM62A.
->>>>>
->>>>> There is only one official SDK release for AM62A (which is edgeAI based) [2] which packages these edgeAI remoteproc firmwares and in my view it is a fair expectation that remote core careveouts in device-tree should align with firmwares released in SDK.
->>>>>
->>>>> This is because most developers (including me) and vendors download this official SDK release and use it with latest upstream kernel and modules (right now we are applying required patches locally) and this patch won't suffice for this, in-fact it won't work since the remoteproc firmwares are already using regions beyond the reserved-regions from this patch.
->>>>
->>>> I understand your point, currently with this patch remoteproc loading
->>>> will not work for some cores. However, the goal here is to standardize
->>>> as much as possible the memory carveout sizes, push the "demo firmware"
->>>> to request resources the correct way from resource table, 
->>>
->>>
->>> It is indeed more suitable if the memory carveouts are called out in the resource table of the firmware. But you will still need to reserve that memory sections in the Device Tree so that Kernel does not map that memory for anything else. So I am thinking how moving to resource table will help solve this problem?
->>
->> The point is that our default FW is doing things incorrectly. We want to
->> push the existing FW to
->> 1. Request resources via resource table.
->> 2. Fix their memory requirements (recent offline discussion proved that
->> FW is requesting more than it needs)
->> 3. FW should adapt to Linux not Linux adapt to FW
-> 
-> 
-> Thanks. I also agree with you on all of the above points for a standard firmware.
-> 
-> However, I was referring to this problem:
-> Can we get rid of static reserved memory carveouts in DT?
-> People using a custom firmware will have to patch the Device Tree to reserve larger/different memory regions. Is there some way where the firmware can dictate the "reserved" memory carveouts at runtime? Memory carveouts can be announced through Resource Table, but there is no guarantee we will be able to allocate it (it could be mapped by the Kernel for some other alloc), unless its pre-reserved in DT.
+* Motivation
 
-That's the neat thing about the RSC_CARVEOUT item in the resource table,
-it works both ways. The firmware can request a static address, or it can
-use FW_RSC_ADDR_ANY for the address and Linux will go and dynamically
-allocate it a region. Then it passes this info back to the firmware by
-updating the resource table in memory. Firmware can then simply read this
-carveout address from its resource table and start using it.
+The purpose of this hierarchical split-counter scheme is to:
 
-The only time we need a static addresses would be for code sections as
-they are not relocatable (yet). And that is the reason we have the
-minimal carveouts we are adding in this patch. Code goes here. And
-these carveouts are 15MB! No firmware I know of has 15MB of *code*
-section.
+- Minimize contention when incrementing and decrementing counters,
+- Provide fast access to a sum approximation,
+- Provide a sum approximation with an acceptable accuracy level when
+  scaling to many-core systems.
+- Provide approximate and precise comparison of two counters, and
+  between a counter and a value.
 
-As we found in the offline discussion, even our largest firmware
-doesn't use near that much space. What that firmware is doing is picking
-some spots in DRAM for its heap and buffer areas, and without coordinating
-with Linux, just starts using that memory. We have to then go into DT and
-carveout all these ranges to avoid stepping on the firmware heaps from
-Linux.
+It aims at fixing the per-mm RSS tracking which has become too
+inaccurate for OOM killer purposes on large many-core systems [1].
 
-With these firmware heap/buffer memory static carveouts we have to account
-for the worst case and statically carve out enough memory for the largest
-possible amount of memory a firmware could ever use. In some firmware
-we ship today this is +2GB! So why should every user of this board lose
-all this memory when they might happen to be using a more sane firmware
-that doesn't use so much (like my Zephyr firmware), or if their firmware
-doesn't need any heap at all (like some other firmware we have).
+* Design
 
-Andrew
+The hierarchical per-CPU counters propagate a sum approximation through
+a N-way tree. When reaching the batch size, the carry is propagated
+through a binary tree which consists of logN(nr_cpu_ids) levels. The
+batch size for each level is twice the batch size of the prior level.
 
-> 
-> Thanks,
-> Beleswar
-> 
->>
->> If not, then then we should try to move to Zephyr firmware or other/
->> better options.
->>
->> Hope I am able to explain myself better this time around.
->>
->> ~ Judith
->>
->>>
->>> Thanks,
->>> Beleswar
->>>
->>>> and move away
->>>> from this dependency and limitations that we have with our firmware. We
->>>> should soon be able to generate our own firmware using Zephyr, which
->>>> Andrew is pioneering, so with this firmware we should move to the
->>>> correct direction upstream. Downstream we are still using the memory
->>>> carveout sizes that the firmware folk want so desperately to keep, for
->>>> now..
->>>>
->>>> ~ Judith
->>>>
->>>>>
->>>>> [1]: https://git.ti.com/cgit/ti-linux-kernel/ti-linux-kernel/tree/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts?h=ti-linux-6.6.y-cicd#n103
->>>>> [2]: https://www.ti.com/tool/PROCESSOR-SDK-AM62A
->>>>>
->>>>> Regards
->>>>> Devarsh
->>>>>
->>>>>>       opp-table {
->>>>>> @@ -741,3 +771,57 @@ dpi1_out: endpoint {
->>>>>>           };
->>>>>>       };
->>>>>>   };
->>>>>> +
->>>>>> +&mailbox0_cluster0 {
->>>>>> +    status = "okay";
->>>>>> +
->>>>>> +    mbox_r5_0: mbox-r5-0 {
->>>>>> +        ti,mbox-rx = <0 0 0>;
->>>>>> +        ti,mbox-tx = <1 0 0>;
->>>>>> +    };
->>>>>> +};
->>>>>> +
->>>>>> +&mailbox0_cluster1 {
->>>>>> +    status = "okay";
->>>>>> +
->>>>>> +    mbox_c7x_0: mbox-c7x-0 {
->>>>>> +        ti,mbox-rx = <0 0 0>;
->>>>>> +        ti,mbox-tx = <1 0 0>;
->>>>>> +    };
->>>>>> +};
->>>>>> +
->>>>>> +&mailbox0_cluster2 {
->>>>>> +    status = "okay";
->>>>>> +
->>>>>> +    mbox_mcu_r5_0: mbox-mcu-r5-0 {
->>>>>> +        ti,mbox-rx = <0 0 0>;
->>>>>> +        ti,mbox-tx = <1 0 0>;
->>>>>> +    };
->>>>>> +};
->>>>>> +
->>>>>> +&wkup_r5fss0 {
->>>>>> +    status = "okay";
->>>>>> +};
->>>>>> +
->>>>>> +&wkup_r5fss0_core0 {
->>>>>> +    mboxes = <&mailbox0_cluster0>, <&mbox_r5_0>;
->>>>>> +    memory-region = <&wkup_r5fss0_core0_dma_memory_region>,
->>>>>> +            <&wkup_r5fss0_core0_memory_region>;
->>>>>> +};
->>>>>> +
->>>>>> +&mcu_r5fss0 {
->>>>>> +    status = "okay";
->>>>>> +};
->>>>>> +
->>>>>> +&mcu_r5fss0_core0 {
->>>>>> +    mboxes = <&mailbox0_cluster2>, <&mbox_mcu_r5_0>;
->>>>>> +    memory-region = <&mcu_r5fss0_core0_dma_memory_region>,
->>>>>> +            <&mcu_r5fss0_core0_memory_region>;
->>>>>> +};
->>>>>> +
->>>>>> +&c7x_0 {
->>>>>> +    mboxes = <&mailbox0_cluster1>, <&mbox_c7x_0>;
->>>>>> +    memory-region = <&c7x_0_dma_memory_region>,
->>>>>> +            <&c7x_0_memory_region>;
->>>>>> +    status = "okay";
->>>>>> +};
->>>>>
->>>>
->>
+Example propagation diagram with 8 cpus through a binary tree:
+
+Level 0:  0    1    2    3    4    5    6    7
+          |   /     |   /     |   /     |   /
+          |  /      |  /      |  /      |  /
+          | /       | /       | /       | /
+Level 1:  0         1         2         3
+          |       /           |       /
+          |    /              |    /
+          | /                 | /
+Level 2:  0                   1
+          |               /
+          |         /
+          |   /
+Level 3:  0
+
+For a binary tree, the maximum inaccuracy is bound by:
+   batch_size * log2(nr_cpus) * nr_cpus
+which evolves with O(n*log(n)) as the number of CPUs increases.
+
+For a N-way tree, the maximum inaccuracy can be pre-calculated
+based on the the N-arity of each level and the batch size.
+
+Link: https://lore.kernel.org/lkml/20250331223516.7810-2-sweettea-kernel@dorminy.me/ # [1]
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Dennis Zhou <dennis@kernel.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Martin Liu <liumartin@google.com>
+Cc: David Rientjes <rientjes@google.com>
+Cc: christian.koenig@amd.com
+Cc: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Sweet Tea Dorminy <sweettea@google.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: "Liam R . Howlett" <Liam.Howlett@Oracle.com>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Wei Yang <richard.weiyang@gmail.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Miaohe Lin <linmiaohe@huawei.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: linux-mm@kvack.org
+Cc: linux-trace-kernel@vger.kernel.org
+Cc: Yu Zhao <yuzhao@google.com>
+Cc: Roman Gushchin <roman.gushchin@linux.dev>
+Cc: Mateusz Guzik <mjguzik@gmail.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+---
+Changes since v2:
+- Introduce N-way tree to reduce tree depth on larger systems.
+
+Changes since v1:
+- Remove percpu_counter_tree_precise_sum_unbiased from public header,
+  make this function static,
+- Introduce precise and approximate comparisons between two counters,
+- Reorder the struct percpu_counter_tree fields,
+- Introduce approx_sum field, which points to the approximate sum
+  for the percpu_counter_tree_approximate_sum() fast path.
+---
+ include/linux/percpu_counter_tree.h | 108 ++++++++
+ lib/Makefile                        |   1 +
+ lib/percpu_counter_tree.c           | 393 ++++++++++++++++++++++++++++
+ 3 files changed, 502 insertions(+)
+ create mode 100644 include/linux/percpu_counter_tree.h
+ create mode 100644 lib/percpu_counter_tree.c
+
+diff --git a/include/linux/percpu_counter_tree.h b/include/linux/percpu_counter_tree.h
+new file mode 100644
+index 000000000000..7bdbb3ffa10c
+--- /dev/null
++++ b/include/linux/percpu_counter_tree.h
+@@ -0,0 +1,108 @@
++/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
++/* SPDX-FileCopyrightText: 2025 Mathieu Desnoyers <mathieu.desnoyers@efficios.com> */
++
++#ifndef _PERCPU_COUNTER_TREE_H
++#define _PERCPU_COUNTER_TREE_H
++
++#include <linux/cleanup.h>
++#include <linux/preempt.h>
++#include <linux/atomic.h>
++#include <linux/percpu.h>
++
++struct percpu_counter_tree_level_item {
++	atomic_t count;
++} ____cacheline_aligned_in_smp;
++
++struct percpu_counter_tree {
++	/* Fast-path fields. */
++	unsigned int __percpu *level0;
++	unsigned int level0_bit_mask;
++	union {
++		unsigned int *i;
++		atomic_t *a;
++	} approx_sum;
++	int bias;			/* bias for counter_set */
++
++	/* Slow-path fields. */
++	struct percpu_counter_tree_level_item *items;
++	unsigned int batch_size;
++	unsigned int inaccuracy;	/* approximation imprecise within ± inaccuracy */
++};
++
++int percpu_counter_tree_init(struct percpu_counter_tree *counter, unsigned int batch_size);
++void percpu_counter_tree_destroy(struct percpu_counter_tree *counter);
++void percpu_counter_tree_add_slowpath(struct percpu_counter_tree *counter, int inc);
++int percpu_counter_tree_precise_sum(struct percpu_counter_tree *counter);
++int percpu_counter_tree_approximate_compare(struct percpu_counter_tree *a, struct percpu_counter_tree *b);
++int percpu_counter_tree_approximate_compare_value(struct percpu_counter_tree *counter, int v);
++int percpu_counter_tree_precise_compare(struct percpu_counter_tree *a, struct percpu_counter_tree *b);
++int percpu_counter_tree_precise_compare_value(struct percpu_counter_tree *counter, int v);
++void percpu_counter_tree_set_bias(struct percpu_counter_tree *counter, int bias);
++void percpu_counter_tree_set(struct percpu_counter_tree *counter, int v);
++unsigned int percpu_counter_tree_inaccuracy(struct percpu_counter_tree *counter);
++
++/* Fast paths */
++
++static inline
++int percpu_counter_tree_carry(int orig, int res, int inc, unsigned int bit_mask)
++{
++	if (inc < 0) {
++		inc = -(-inc & ~(bit_mask - 1));
++		/*
++		 * xor bit_mask: underflow.
++		 *
++		 * If inc has bit set, decrement an additional bit if
++		 * there is _no_ bit transition between orig and res.
++		 * Else, inc has bit cleared, decrement an additional
++		 * bit if there is a bit transition between orig and
++		 * res.
++		 */
++		if ((inc ^ orig ^ res) & bit_mask)
++			inc -= bit_mask;
++	} else {
++		inc &= ~(bit_mask - 1);
++		/*
++		 * xor bit_mask: overflow.
++		 *
++		 * If inc has bit set, increment an additional bit if
++		 * there is _no_ bit transition between orig and res.
++		 * Else, inc has bit cleared, increment an additional
++		 * bit if there is a bit transition between orig and
++		 * res.
++		 */
++		if ((inc ^ orig ^ res) & bit_mask)
++			inc += bit_mask;
++	}
++	return inc;
++}
++
++static inline
++void percpu_counter_tree_add(struct percpu_counter_tree *counter, int inc)
++{
++	unsigned int bit_mask = counter->level0_bit_mask, orig, res;
++
++	if (!inc)
++		return;
++	/* Make sure the fast and slow paths use the same cpu number. */
++	guard(migrate)();
++	res = this_cpu_add_return(*counter->level0, inc);
++	orig = res - inc;
++	inc = percpu_counter_tree_carry(orig, res, inc, bit_mask);
++	if (!inc)
++		return;
++	percpu_counter_tree_add_slowpath(counter, inc);
++}
++
++static inline
++int percpu_counter_tree_approximate_sum(struct percpu_counter_tree *counter)
++{
++	unsigned int v;
++
++	if (!counter->level0_bit_mask)
++		v = READ_ONCE(*counter->approx_sum.i);
++	else
++		v = atomic_read(counter->approx_sum.a);
++	return (int) (v + (unsigned int)READ_ONCE(counter->bias));
++}
++
++#endif  /* _PERCPU_COUNTER_TREE_H */
+diff --git a/lib/Makefile b/lib/Makefile
+index d5cfc7afbbb8..d803a3a63288 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -201,6 +201,7 @@ obj-$(CONFIG_TEXTSEARCH_KMP) += ts_kmp.o
+ obj-$(CONFIG_TEXTSEARCH_BM) += ts_bm.o
+ obj-$(CONFIG_TEXTSEARCH_FSM) += ts_fsm.o
+ obj-$(CONFIG_SMP) += percpu_counter.o
++obj-$(CONFIG_SMP) += percpu_counter_tree.o
+ obj-$(CONFIG_AUDIT_GENERIC) += audit.o
+ obj-$(CONFIG_AUDIT_COMPAT_GENERIC) += compat_audit.o
+ 
+diff --git a/lib/percpu_counter_tree.c b/lib/percpu_counter_tree.c
+new file mode 100644
+index 000000000000..928df7ac601e
+--- /dev/null
++++ b/lib/percpu_counter_tree.c
+@@ -0,0 +1,393 @@
++// SPDX-License-Identifier: GPL-2.0+ OR MIT
++// SPDX-FileCopyrightText: 2025 Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
++
++/*
++ * Split Counters With Tree Approximation Propagation
++ *
++ * * Propagation diagram when reaching batch size thresholds (± batch size):
++ *
++ * Example diagram for 8 CPUs:
++ *
++ * log2(8) = 3 levels
++ *
++ * At each level, each pair propagates its values to the next level when
++ * reaching the batch size thresholds.
++ *
++ * Counters at levels 0, 1, 2 can be kept on a single byte (±128 range),
++ * although it may be relevant to keep them on 32-bit counters for
++ * simplicity. (complexity vs memory footprint tradeoff)
++ *
++ * Counter at level 3 can be kept on a 32-bit counter.
++ *
++ * Level 0:  0    1    2    3    4    5    6    7
++ *           |   /     |   /     |   /     |   /
++ *           |  /      |  /      |  /      |  /
++ *           | /       | /       | /       | /
++ * Level 1:  0         1         2         3
++ *           |       /           |       /
++ *           |    /              |    /
++ *           | /                 | /
++ * Level 2:  0                   1
++ *           |               /
++ *           |         /
++ *           |   /
++ * Level 3:  0
++ *
++ * * Approximation inaccuracy:
++ *
++ * BATCH(level N): Level N batch size.
++ *
++ * Example for BATCH(level 0) = 32.
++ *
++ * BATCH(level 0) =  32
++ * BATCH(level 1) =  64
++ * BATCH(level 2) = 128
++ * BATCH(level N) = BATCH(level 0) * 2^N
++ *
++ *            per-counter     global
++ *            inaccuracy      inaccuracy
++ * Level 0:   [ -32 ..  +31]  ±256  (8 * 32)
++ * Level 1:   [ -64 ..  +63]  ±256  (4 * 64)
++ * Level 2:   [-128 .. +127]  ±256  (2 * 128)
++ * Total:      ------         ±768  (log2(nr_cpu_ids) * BATCH(level 0) * nr_cpu_ids)
++ *
++ * -----
++ *
++ * Approximate Sum Carry Propagation
++ *
++ * Let's define a number of counter bits for each level, e.g.:
++ *
++ * log2(BATCH(level 0)) = log2(32) = 5
++ *
++ *               nr_bit        value_mask                      range
++ * Level 0:      5 bits        v                             0 ..  +31
++ * Level 1:      1 bit        (v & ~((1UL << 5) - 1))        0 ..  +63
++ * Level 2:      1 bit        (v & ~((1UL << 6) - 1))        0 .. +127
++ * Level 3:     25 bits       (v & ~((1UL << 7) - 1))        0 .. 2^32-1
++ *
++ * Note: Use a full 32-bit per-cpu counter at level 0 to allow precise sum.
++ *
++ * Note: Use cacheline aligned counters at levels above 0 to prevent false sharing.
++ *       If memory footprint is an issue, a specialized allocator could be used
++ *       to eliminate padding.
++ *
++ * Example with expanded values:
++ *
++ * counter_add(counter, inc):
++ *
++ *         if (!inc)
++ *                 return;
++ *
++ *         res = percpu_add_return(counter @ Level 0, inc);
++ *         orig = res - inc;
++ *         if (inc < 0) {
++ *                 inc = -(-inc & ~0b00011111);  // Clear used bits
++ *                 // xor bit 5: underflow
++ *                 if ((inc ^ orig ^ res) & 0b00100000)
++ *                         inc -= 0b00100000;
++ *         } else {
++ *                 inc &= ~0b00011111;           // Clear used bits
++ *                 // xor bit 5: overflow
++ *                 if ((inc ^ orig ^ res) & 0b00100000)
++ *                         inc += 0b00100000;
++ *         }
++ *         if (!inc)
++ *                 return;
++ *
++ *         res = atomic_add_return(counter @ Level 1, inc);
++ *         orig = res - inc;
++ *         if (inc < 0) {
++ *                 inc = -(-inc & ~0b00111111);  // Clear used bits
++ *                 // xor bit 6: underflow
++ *                 if ((inc ^ orig ^ res) & 0b01000000)
++ *                         inc -= 0b01000000;
++ *         } else {
++ *                 inc &= ~0b00111111;           // Clear used bits
++ *                 // xor bit 6: overflow
++ *                 if ((inc ^ orig ^ res) & 0b01000000)
++ *                         inc += 0b01000000;
++ *         }
++ *         if (!inc)
++ *                 return;
++ *
++ *         res = atomic_add_return(counter @ Level 2, inc);
++ *         orig = res - inc;
++ *         if (inc < 0) {
++ *                 inc = -(-inc & ~0b01111111);  // Clear used bits
++ *                 // xor bit 7: underflow
++ *                 if ((inc ^ orig ^ res) & 0b10000000)
++ *                         inc -= 0b10000000;
++ *         } else {
++ *                 inc &= ~0b01111111;           // Clear used bits
++ *                 // xor bit 7: overflow
++ *                 if ((inc ^ orig ^ res) & 0b10000000)
++ *                         inc += 0b10000000;
++ *         }
++ *         if (!inc)
++ *                 return;
++ *
++ *         atomic_add(counter @ Level 3, inc);
++ */
++
++#include <linux/percpu_counter_tree.h>
++#include <linux/cpumask.h>
++#include <linux/percpu.h>
++#include <linux/atomic.h>
++#include <linux/module.h>
++#include <linux/errno.h>
++#include <linux/slab.h>
++#include <linux/math.h>
++
++#define MAX_NR_LEVELS 5
++
++struct counter_config {
++	unsigned int nr_items;
++	unsigned char nr_levels;
++	unsigned char n_arity_order[MAX_NR_LEVELS];
++};
++
++/*
++ * nr_items is the number of items in the tree for levels 1 to and
++ * including the final level (approximate sum). It excludes the level 0
++ * per-cpu counters.
++ */
++static const struct counter_config per_nr_cpu_order_config[] = {
++	[0] =	{ .nr_items = 1,	.nr_levels = 0,		.n_arity_order = { 0 } },
++	[1] =	{ .nr_items = 3,	.nr_levels = 1,		.n_arity_order = { 1 } },
++	[2] =	{ .nr_items = 3,	.nr_levels = 2,		.n_arity_order = { 1, 1 } },
++	[3] =	{ .nr_items = 7,	.nr_levels = 3,		.n_arity_order = { 1, 1, 1 } },
++	[4] =	{ .nr_items = 7,	.nr_levels = 3,		.n_arity_order = { 2, 1, 1 } },
++	[5] =	{ .nr_items = 11,	.nr_levels = 3,		.n_arity_order = { 2, 2, 1 } },
++	[6] =	{ .nr_items = 21,	.nr_levels = 3,		.n_arity_order = { 2, 2, 2 } },
++	[7] =	{ .nr_items = 21,	.nr_levels = 3,		.n_arity_order = { 3, 2, 2 } },
++	[8] =	{ .nr_items = 37,	.nr_levels = 3,		.n_arity_order = { 3, 3, 2 } },
++	[9] =	{ .nr_items = 73,	.nr_levels = 3,		.n_arity_order = { 3, 3, 3 } },
++	[10] =	{ .nr_items = 149,	.nr_levels = 4,		.n_arity_order = { 3, 3, 2, 2 } },
++	[11] =	{ .nr_items = 293,	.nr_levels = 4,		.n_arity_order = { 3, 3, 3, 2 } },
++	[12] =	{ .nr_items = 585,	.nr_levels = 4,		.n_arity_order = { 3, 3, 3, 3 } },
++	[13] =	{ .nr_items = 1173,	.nr_levels = 5,		.n_arity_order = { 3, 3, 3, 2, 2 } },
++	[14] =	{ .nr_items = 2341,	.nr_levels = 5,		.n_arity_order = { 3, 3, 3, 3, 2 } },
++	[15] =	{ .nr_items = 4681,	.nr_levels = 5,		.n_arity_order = { 3, 3, 3, 3, 3 } },
++	[16] =	{ .nr_items = 4681,	.nr_levels = 5,		.n_arity_order = { 4, 3, 3, 3, 3 } },
++	[17] =	{ .nr_items = 8777,	.nr_levels = 5,		.n_arity_order = { 4, 4, 3, 3, 3 } },
++	[18] =	{ .nr_items = 17481,	.nr_levels = 5,		.n_arity_order = { 4, 4, 4, 3, 3 } },
++	[19] =	{ .nr_items = 34953,	.nr_levels = 5,		.n_arity_order = { 4, 4, 4, 4, 3 } },
++	[20] =	{ .nr_items = 69905,	.nr_levels = 5,		.n_arity_order = { 4, 4, 4, 4, 4 } },
++};
++
++static const struct counter_config *counter_config;
++static unsigned int nr_cpus_order, inaccuracy_multiplier;
++
++int percpu_counter_tree_init(struct percpu_counter_tree *counter, unsigned int batch_size)
++{
++	/* Batch size must be power of 2 */
++	if (!batch_size || (batch_size & (batch_size - 1)))
++		return -EINVAL;
++	counter->batch_size = batch_size;
++	counter->bias = 0;
++	counter->level0 = alloc_percpu(unsigned int);
++	if (!counter->level0)
++		return -ENOMEM;
++	if (!nr_cpus_order) {
++		counter->items = NULL;
++		counter->approx_sum.i = per_cpu_ptr(counter->level0, 0);
++		counter->level0_bit_mask = 0;
++	} else {
++		counter->items = kzalloc(counter_config->nr_items *
++					 sizeof(struct percpu_counter_tree_level_item),
++					 GFP_KERNEL);
++		if (!counter->items) {
++			free_percpu(counter->level0);
++			return -ENOMEM;
++		}
++		counter->approx_sum.a = &counter->items[counter_config->nr_items - 1].count;
++		counter->level0_bit_mask = 1UL << get_count_order(batch_size);
++	}
++	counter->inaccuracy = batch_size * inaccuracy_multiplier;
++	return 0;
++}
++
++void percpu_counter_tree_destroy(struct percpu_counter_tree *counter)
++{
++	free_percpu(counter->level0);
++	kfree(counter->items);
++}
++
++/* Called with migration disabled. */
++void percpu_counter_tree_add_slowpath(struct percpu_counter_tree *counter, int inc)
++{
++	unsigned int level_items, nr_levels = counter_config->nr_levels,
++		     level, n_arity_order, bit_mask;
++	struct percpu_counter_tree_level_item *item = counter->items;
++	unsigned int cpu = smp_processor_id();
++
++	WARN_ON_ONCE(!nr_cpus_order);	/* Should never be called for 1 cpu. */
++
++	n_arity_order = counter_config->n_arity_order[0];
++	bit_mask = counter->level0_bit_mask << n_arity_order;
++	level_items = 1U << (nr_cpus_order - n_arity_order);
++
++	for (level = 1; level < nr_levels; level++) {
++		atomic_t *count = &item[cpu & (level_items - 1)].count;
++		unsigned int orig, res;
++
++		res = atomic_add_return_relaxed(inc, count);
++		orig = res - inc;
++		inc = percpu_counter_tree_carry(orig, res, inc, bit_mask);
++		if (!inc)
++			return;
++		item += level_items;
++		n_arity_order = counter_config->n_arity_order[level];
++		level_items >>= n_arity_order;
++		bit_mask <<= n_arity_order;
++	}
++	atomic_add(inc, counter->approx_sum.a);
++}
++
++/*
++ * Precise sum. Perform the sum of all per-cpu counters.
++ */
++static int percpu_counter_tree_precise_sum_unbiased(struct percpu_counter_tree *counter)
++{
++	unsigned int sum = 0;
++	int cpu;
++
++	for_each_possible_cpu(cpu)
++		sum += *per_cpu_ptr(counter->level0, cpu);
++	return (int) sum;
++}
++
++int percpu_counter_tree_precise_sum(struct percpu_counter_tree *counter)
++{
++	return percpu_counter_tree_precise_sum_unbiased(counter) + READ_ONCE(counter->bias);
++}
++
++/*
++ * Do an approximate comparison of two counters.
++ * Return 0 if counters do not differ by more than the sum of their
++ * respective inaccuracy ranges,
++ * Return -1 if counter @a less than counter @b,
++ * Return 1 if counter @a is greater than counter @b.
++ */
++int percpu_counter_tree_approximate_compare(struct percpu_counter_tree *a, struct percpu_counter_tree *b)
++{
++	int count_a = percpu_counter_tree_approximate_sum(a),
++	    count_b = percpu_counter_tree_approximate_sum(b);
++
++	if (abs(count_a - count_b) <= (a->inaccuracy + b->inaccuracy))
++		return 0;
++	if (count_a < count_b)
++		return -1;
++	return 1;
++}
++
++/*
++ * Do an approximate comparison of a counter against a given value.
++ * Return 0 if the value is within the inaccuracy range of the counter,
++ * Return -1 if the value less than counter,
++ * Return 1 if the value is greater than counter.
++ */
++int percpu_counter_tree_approximate_compare_value(struct percpu_counter_tree *counter, int v)
++{
++	int count = percpu_counter_tree_approximate_sum(counter);
++
++	if (abs(v - count) <= counter->inaccuracy)
++		return 0;
++	if (count < v)
++		return -1;
++	return 1;
++}
++
++/*
++ * Do a precise comparison of two counters.
++ * Return 0 if the counters are equal,
++ * Return -1 if counter @a less than counter @b,
++ * Return 1 if counter @a is greater than counter @b.
++ */
++int percpu_counter_tree_precise_compare(struct percpu_counter_tree *a, struct percpu_counter_tree *b)
++{
++	int count_a = percpu_counter_tree_approximate_sum(a),
++	    count_b = percpu_counter_tree_approximate_sum(b);
++
++	if (abs(count_a - count_b) <= (a->inaccuracy + b->inaccuracy)) {
++		if (b->inaccuracy < a->inaccuracy) {
++			count_a = percpu_counter_tree_precise_sum(a);
++			if (abs(count_a - count_b) <= b->inaccuracy)
++				count_b = percpu_counter_tree_precise_sum(b);
++		} else {
++			count_b = percpu_counter_tree_precise_sum(b);
++			if (abs(count_a - count_b) <= a->inaccuracy)
++				count_a = percpu_counter_tree_precise_sum(a);
++		}
++	}
++	if (count_a > count_b)
++		return -1;
++	if (count_a > count_b)
++		return 1;
++	return 0;
++}
++
++/*
++ * Do a precise comparision of a counter against a given value.
++ * Return 0 if the value is equal to the counter,
++ * Return -1 if the value less than counter,
++ * Return 1 if the value is greater than counter.
++ */
++int percpu_counter_tree_precise_compare_value(struct percpu_counter_tree *counter, int v)
++{
++	int count = percpu_counter_tree_approximate_sum(counter);
++
++	if (abs(v - count) <= counter->inaccuracy)
++		count = percpu_counter_tree_precise_sum(counter);
++	if (count < v)
++		return -1;
++	if (count > v)
++		return 1;
++	return 0;
++}
++
++void percpu_counter_tree_set_bias(struct percpu_counter_tree *counter, int bias)
++{
++	WRITE_ONCE(counter->bias, bias);
++}
++
++void percpu_counter_tree_set(struct percpu_counter_tree *counter, int v)
++{
++	percpu_counter_tree_set_bias(counter,
++				     v - percpu_counter_tree_precise_sum_unbiased(counter));
++}
++
++unsigned int percpu_counter_tree_inaccuracy(struct percpu_counter_tree *counter)
++{
++	return counter->inaccuracy;
++}
++
++static unsigned int __init calculate_inaccuracy_multiplier(void)
++{
++	unsigned int nr_levels = counter_config->nr_levels, level;
++	unsigned int level_items = 1U << nr_cpus_order;
++	unsigned int inaccuracy = 0, batch_size = 1;
++
++	for (level = 0; level < nr_levels; level++) {
++		unsigned int n_arity_order = counter_config->n_arity_order[level];
++
++		inaccuracy += batch_size * level_items;
++		batch_size <<= n_arity_order;
++		level_items >>= n_arity_order;
++	}
++	return inaccuracy;
++}
++
++static int __init percpu_counter_startup(void)
++{
++
++	nr_cpus_order = get_count_order(nr_cpu_ids);
++	if (WARN_ON_ONCE(nr_cpus_order >= ARRAY_SIZE(per_nr_cpu_order_config))) {
++		printk(KERN_ERR "Unsupported number of CPUs (%u)\n", nr_cpu_ids);
++		return -1;
++	}
++	counter_config = &per_nr_cpu_order_config[nr_cpus_order];
++	inaccuracy_multiplier = calculate_inaccuracy_multiplier();
++	return 0;
++}
++module_init(percpu_counter_startup);
+-- 
+2.39.5
+
