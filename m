@@ -1,168 +1,145 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2C2267F64
-	for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 11:04:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 916D620371E;
+	Thu, 10 Apr 2025 11:05:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744283083; cv=none; b=LhsYX25L7tZPHDEnM6lFVXApag7eup7bdV5lyI+UK93qrgG3PnPjBnU3URAkV6TSGdbK5c/M/CKrX2eX8S3+xH5eAbhjLVO1AKciMgX8uNXh761OJ6I6FpX0mf9qvQZQXjArwpjhxv3UtMfcSElSmzxRbvp6zro5v0CHJM8BugY=
+	t=1744283117; cv=none; b=ZzlRLNKK+MmTW7ZfrLqWIGf06yNDBdKBRbb7LThxjw4cxu7+7wjgSbd15gOd71jmntIGzhcvgakyvirm8h2glrdquAEtnYPKDl2Em9g79NXeqVKge47LBRdtWnVFoTZ5nO6BhkSvXt8uH1alIG3WggdaE1dSwkgn0iLVkMgfwHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744283083; c=relaxed/simple;
-	bh=kOlPkOa9RAWaHmxwXq9vXkGSssRFc7sUC8EQNbcnfPY=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:To:From:Subject:
-	 References:In-Reply-To; b=AV7GgTzXfRu0a4QEN2vat+RjLDYUcLlUi+TGpEFDFvjB7Xte/Idq86Yazcc19Wqm7xkq8OXx0OqDnkjSGceKSMB2S3HxRGAzhMKIP4KWFgqSOBUQiCw6Y70GWqCRdGMT+EpKqafokv3DZ8nm4DsvQwjlL9yEEDh1DjgyPkCSExs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=pVFHYrgW; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1744283117; c=relaxed/simple;
+	bh=nzGayYDyLzYbhMvnDs6xEo9akuBZ4O+f7CN91yJ3GGg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LAJj8dNSCBpefWtLcO7xVYuslMa1+LFmH5qOjn2A6SGiE25B87F06909FZ8pN00ZWr7/l0+EdT2I9WikwcUUnFEBQiOxSAgz9S5xpvsxMLRGLDZk/OR+q5AR02xRluaU8XM327WAmuHaWwAX38D50bXWUMP2KLJ6dJzshEBgf7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XkwCWKo0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="pVFHYrgW"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-391295490c8so23863f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 10 Apr 2025 04:04:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1744283080; x=1744887880; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:from:to:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FwTqTcXuZVwmB1gK8gAQzMNft2dcqvTwt7yn+4sQNuo=;
-        b=pVFHYrgW6CsPBVfhDp8H0SHh07ORi0+k92JSM7WHod+l6GpALDm6Af/8R4cZodTjSI
-         tJhmQC0ISSnfE51tew20VXscex2ugzAatyW+gaNQVdqFVsPCNEtL0hzsectLv90gFFtt
-         oVuwwysWrn9jEcSsg7T6KkbCebzr4gntAQJheGXE5uqMjbzNUT2JWYiPhRLq9y69avjt
-         blLUmxwM5ibExPlEoUUbX0wnvPL/rJd7iUzELewMF/309FFzjGxOdZqxZeMaqwE83MP6
-         zgXi1m4nmEywod9fgORmfD+WzNDeuueMfkonfaKqfm00t7VTa2R1DFvAman71MpISxGx
-         m5fQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744283080; x=1744887880;
-        h=in-reply-to:references:subject:from:to:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=FwTqTcXuZVwmB1gK8gAQzMNft2dcqvTwt7yn+4sQNuo=;
-        b=hQOEZeNIaaXPE0H+dnH0FangxnOoQZbuNNwQQtuflYlzNv4R7nYLL12ZZIJ6qywhBR
-         mC4UQ8p78XSEQYdg0WraRDHbZ928yjK5xAEVUW+X6KwAjoA45Fb4yUzCFY0v49+UN4FZ
-         NSPPfT+0LnL26K6ZcvxntFgC53+CjNzi1r8+s8AgknyTkvaWJgv1xGU/0ahrc9BwLjH2
-         K46oC25LxtERBr6H78lAT/xyOLhZqm02+Iz9lEqUB8FEeEYPP2LcqllGMDhSvE6evyzf
-         3xEwt54D+567SZz3XKzv0QAhvsW0x1vZj5ILoLaz6Q2UQynrydsh2GgamlIPmvrEriyH
-         a5Sg==
-X-Gm-Message-State: AOJu0YxftrCNpG9pyrz0Y/EXVWvFVw3yzopqmsw56GnZapqA+jlNbJ+2
-	+2Ag5qIk2BImwDBay86rweVWaDIwGFrQTcfYgZumG6DkDCngCAT5RtWaikMVL8o=
-X-Gm-Gg: ASbGncvqpBC3G0wsZjQUoHxoCvPzgcQRrjX6KhEGUfsiZYhQqYHTsrpV7MlftQDCd/G
-	1Sk+O5FNIDKzxVAl/jtUsOS4fJMGyxPu75ZugECN5bk4RdU1hb8ZgyYzmpp7GSLSDsU1Cc/sPw7
-	X2fxxPM4TqgGoL4/AkXOerFRs/tOpl0hIJyydkzUskrOI/C503Tp1f/utI7ZyEdObotfWsYb7BZ
-	dUa7oXEno/0YF9d/4HxkJ2qYmdnv6ScMaYEpA0/wJv5BzaGQMzJHwKID9rTzAPZ0u5Ajv3xcKjF
-	lbs7RErppQLgUGFNIfdTVjOIi1Ecb9nxoTZ4T4fiY3A0Oit3
-X-Google-Smtp-Source: AGHT+IFTHVjvMm7SI9zG+YTo6xP+VuwjrIfNbL14H9cY5sGUQSewGH6hwjaZZsvjM4ZfhfO2SM4RNA==
-X-Received: by 2002:a05:6000:18ac:b0:39c:13fa:3e0 with SMTP id ffacd0b85a97d-39d87adcd02mr1983393f8f.9.1744283080239;
-        Thu, 10 Apr 2025 04:04:40 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200:7d22:13bb:e539:15ee])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d89361186sm4476526f8f.14.2025.04.10.04.04.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 04:04:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XkwCWKo0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08A2FC4CEDD;
+	Thu, 10 Apr 2025 11:05:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744283116;
+	bh=nzGayYDyLzYbhMvnDs6xEo9akuBZ4O+f7CN91yJ3GGg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=XkwCWKo0pCdp6ohclIrNjSTFyg73PmPZtpbGSXUJn5/DxktDO9xgE/TgZ0AgQjnIj
+	 ynRTwgru934Z8PDHCOJdQ66Wmjdy1pORkqxddkgytPYPL4Wl3dCyPzj0MbV/ALFcAe
+	 oy+7l0TPXRrhwIbRI9WuHMoE4eHbl1IKJFx8SHc8kA9wsK6z8oFv0FfJIwjnOa9CKQ
+	 jkAmWXHIvgGf8mCnGpt52kBZTG2f0WB9LCzdfR0W3Igq33zDnbNsNBcfw2lhWHGiVu
+	 ZTQsYiuVtGG2Ho9hV7tIXgXJ2IVjF3z0KAH4TudG7cWBddRFl0kcJ+KbT7e9qtcGFz
+	 qGshBnAwpucRg==
+Message-ID: <efca2379-0474-4a02-8b3e-b4611f56bfcb@kernel.org>
+Date: Thu, 10 Apr 2025 13:05:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH AUTOSEL 6.14 20/54] mptcp: move the whole rx path under
+ msk socket lock protection
+Content-Language: en-GB, fr-BE
+To: Sasha Levin <sashal@kernel.org>, Mat Martineau <martineau@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
+ davem@davemloft.net, edumazet@google.com, netdev@vger.kernel.org,
+ mptcp@lists.linux.dev, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20250403190209.2675485-1-sashal@kernel.org>
+ <20250403190209.2675485-20-sashal@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20250403190209.2675485-20-sashal@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Date: Thu, 10 Apr 2025 13:04:39 +0200
-Message-Id: <D92WQWAUQYY4.2ED8JAFBDHGRN@ventanamicro.com>
-Cc: <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
- <linux-mm@kvack.org>, <linux-riscv@lists.infradead.org>,
- <devicetree@vger.kernel.org>, <linux-arch@vger.kernel.org>,
- <linux-doc@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
- <alistair.francis@wdc.com>, <richard.henderson@linaro.org>,
- <jim.shu@sifive.com>, <andybnac@gmail.com>, <kito.cheng@sifive.com>,
- <charlie@rivosinc.com>, <atishp@rivosinc.com>, <evan@rivosinc.com>,
- <cleger@rivosinc.com>, <alexghiti@rivosinc.com>, <samitolvanen@google.com>,
- <broonie@kernel.org>, <rick.p.edgecombe@intel.com>, "Zong Li"
- <zong.li@sifive.com>, "linux-riscv"
- <linux-riscv-bounces@lists.infradead.org>
-To: "Deepak Gupta" <debug@rivosinc.com>, "Thomas Gleixner"
- <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov"
- <bp@alien8.de>, "Dave Hansen" <dave.hansen@linux.intel.com>,
- <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, "Andrew Morton"
- <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- "Vlastimil Babka" <vbabka@suse.cz>, "Lorenzo Stoakes"
- <lorenzo.stoakes@oracle.com>, "Paul Walmsley" <paul.walmsley@sifive.com>,
- "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>,
- "Conor Dooley" <conor@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Arnd Bergmann"
- <arnd@arndb.de>, "Christian Brauner" <brauner@kernel.org>, "Peter Zijlstra"
- <peterz@infradead.org>, "Oleg Nesterov" <oleg@redhat.com>, "Eric Biederman"
- <ebiederm@xmission.com>, "Kees Cook" <kees@kernel.org>, "Jonathan Corbet"
- <corbet@lwn.net>, "Shuah Khan" <shuah@kernel.org>, "Jann Horn"
- <jannh@google.com>, "Conor Dooley" <conor+dt@kernel.org>
-From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
-Subject: Re: [PATCH v12 05/28] riscv: usercfi state for task and
- save/restore of CSR_SSP on trap entry/exit
-References: <20250314-v5_user_cfi_series-v12-0-e51202b53138@rivosinc.com>
- <20250314-v5_user_cfi_series-v12-5-e51202b53138@rivosinc.com>
-In-Reply-To: <20250314-v5_user_cfi_series-v12-5-e51202b53138@rivosinc.com>
+Content-Transfer-Encoding: 7bit
 
-2025-03-14T14:39:24-07:00, Deepak Gupta <debug@rivosinc.com>:
-> diff --git a/arch/riscv/include/asm/thread_info.h b/arch/riscv/include/as=
-m/thread_info.h
-> @@ -62,6 +62,9 @@ struct thread_info {
->  	long			user_sp;	/* User stack pointer */
->  	int			cpu;
->  	unsigned long		syscall_work;	/* SYSCALL_WORK_ flags */
-> +#ifdef CONFIG_RISCV_USER_CFI
-> +	struct cfi_status	user_cfi_state;
-> +#endif
+Hi Sasha,
 
-I don't think it makes sense to put all the data in thread_info.
-kernel_ssp and user_ssp is more than enough and the rest can comfortably
-live elsewhere in task_struct.
+Thank you for having suggested this patch.
 
-thread_info is supposed to be as small as possible -- just spanning
-multiple cache-lines could be noticeable.
+On 03/04/2025 21:01, Sasha Levin wrote:
+> From: Paolo Abeni <pabeni@redhat.com>
+> 
+> [ Upstream commit bc68b0efa1bf923cef1294a631d8e7416c7e06e4 ]
+> 
+> After commit c2e6048fa1cf ("mptcp: fix race in release_cb") we can
+> move the whole MPTCP rx path under the socket lock leveraging the
+> release_cb.
+> 
+> We can drop a bunch of spin_lock pairs in the receive functions, use
+> a single receive queue and invoke __mptcp_move_skbs only when subflows
+> ask for it.
+> 
+> This will allow more cleanup in the next patch.
+> 
+> Some changes are worth specific mention:
+> 
+> The msk rcvbuf update now always happens under both the msk and the
+> subflow socket lock: we can drop a bunch of ONCE annotation and
+> consolidate the checks.
+> 
+> When the skbs move is delayed at msk release callback time, even the
+> msk rcvbuf update is delayed; additionally take care of such action in
+> __mptcp_move_skbs().
+> 
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> Reviewed-by: Mat Martineau <martineau@kernel.org>
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Link: https://patch.msgid.link/20250218-net-next-mptcp-rx-path-refactor-v1-3-4a47d90d7998@kernel.org
+> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
-> @@ -147,6 +147,20 @@ SYM_CODE_START(handle_exception)
-> =20
->  	REG_L s0, TASK_TI_USER_SP(tp)
->  	csrrc s1, CSR_STATUS, t0
-> +	/*
-> +	 * If previous mode was U, capture shadow stack pointer and save it awa=
-y
-> +	 * Zero CSR_SSP at the same time for sanitization.
-> +	 */
-> +	ALTERNATIVE("nop; nop; nop; nop",
-> +				__stringify(			\
-> +				andi s2, s1, SR_SPP;	\
-> +				bnez s2, skip_ssp_save;	\
-> +				csrrw s2, CSR_SSP, x0;	\
-> +				REG_S s2, TASK_TI_USER_SSP(tp); \
-> +				skip_ssp_save:),
-> +				0,
-> +				RISCV_ISA_EXT_ZICFISS,
-> +				CONFIG_RISCV_USER_CFI)
+With Mat, we are unsure why this patch has been selected to be
+backported up to v6.6. An AUTOSEL patch has been sent for v6.6, v6.12,
+v6.13 and v6.14. We think it would be better not to backport this patch:
+this is linked to a new feature, and it changes the way the MPTCP socket
+locks are handled.
 
-(I'd prefer this closer to the user_sp and kernel_sp swap, it's breaking
- the flow here.  We also already know if we've returned from userspace
- or not even without SR_SPP, but reusing the information might tangle
- the logic.)
+Could it then please be possible not to queue this patch to the stable
+queues?
 
->  	csrr s2, CSR_EPC
->  	csrr s3, CSR_TVAL
->  	csrr s4, CSR_CAUSE
-> @@ -236,6 +250,18 @@ SYM_CODE_START_NOALIGN(ret_from_exception)
->  	csrw CSR_SCRATCH, tp
-> +
-> +	/*
-> +	 * Going back to U mode, restore shadow stack pointer
-> +	 */
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
-Are we?  I think we can be just as well returning back to kernel-space.
-Similar to how we can enter the exception handler from kernel-space.
-
-> +	ALTERNATIVE("nop; nop",
-> +				__stringify(					\
-> +				REG_L s3, TASK_TI_USER_SSP(tp); \
-> +				csrw CSR_SSP, s3),
-> +				0,
-> +				RISCV_ISA_EXT_ZICFISS,
-> +				CONFIG_RISCV_USER_CFI)
-> +
-
-Thanks.
