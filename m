@@ -1,128 +1,322 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB8C51DF97F;
-	Thu, 10 Apr 2025 08:55:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896D61DF97F;
+	Thu, 10 Apr 2025 08:55:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744275327; cv=none; b=RNMcH6f6l2lz8pJBjYyQuny/OomLY3HM79pFcvxJDh5YT8jR1w1berbrTf0+QIpCZbg/t3TKPCiZrLG2SBa4pABkFPvQGDpbsQLqn+4BhN973AJ+lyjj66W1J8rYjqFQ/3GgWwrBvZE/SMs6ypSEK8A2LuBHsYb2M4WE1OV61dk=
+	t=1744275343; cv=none; b=WRphNGPFEHx3M8BgjpZ0+CDTPkkCBtYlXVEvfFJFm4FF/AxE3AbiY0zBJfBk2B0ql8UW2YE9DCR60HqwNlAxUAJIoAv8qZS5V2cNSpwUPxDwa3cWik+84SSwyPZtDTRt6ZxHVo0cfksdHbM9M9rhy3Qtkz57IXqLkpe5ls4ZN4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744275327; c=relaxed/simple;
-	bh=EhMxPe8hnh5VvcDeuDZAxU1vq1abjs5GoHLLbLqj+c8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BP6HwNre2KR1Swrg+JO3PhkA6vd6cTze+GkQl5C3UpZNuPFm9daBNmx7omMz95/A8ibxuQMA9RZd5rnNVyyAZpMhQQM4/dpgUwzMgRyLl2/jUrFOTJwRT3C/6+6dqzA7eP9on16MK5wOh7CQd6hYC2gvUSEi2ZSkt71LvUnLtQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FqWEvgWI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744275343; c=relaxed/simple;
+	bh=yhLl8D3v/nq4zfk5ROJ/DUs2sFXF7p14RQG5H0dVGc8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=u1eqkJ4j3hR4DE2t2MohuM18OV1S+jvAiERumUqDYxE7V4ltSLF/wFt6uyaU1nhg+6mzLgJlPRqye20nK1SGC0mCQXDpwE+QG3Fo4MeIIY0jRkosA2fQsH122lJ8FCrZUA1iq8eB1kZachKcCKTD64EAXXRmiHvnKZSylcYZvLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Zdw7plvf; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FqWEvgWI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12DB5C4CEDD;
-	Thu, 10 Apr 2025 08:55:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744275326;
-	bh=EhMxPe8hnh5VvcDeuDZAxU1vq1abjs5GoHLLbLqj+c8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FqWEvgWI/XnLXFuYOLuajdLysIghAhqgtwM2lDY8VkijptZ6Jub5hI/sgkCyzB4AU
-	 7F4LHGGSICvkrzG87nO4V59OEMARsAZ3ivWLUaK3TYd6dZpucWevVOugw+ahQaYvd1
-	 Tuda5bDZCrROV4NzK/sR7KCwwUllVWDVmwHRN2KU50VQoB/6HxdZQ0z0ZAjJq7k9pW
-	 Xl3vjJEHcbZ0V8JCtsoGwgeOIPvv+ZMmUY6TIwXLOaGjEfW/kMoy7xc65kRkHFshy1
-	 uuag0t29M/ebinTHcUBB2Kd1udm0Sq80o8XxEqTPZWnKwFI4f830Nl5ntzjtXBHm71
-	 YGwos6QUwcvMA==
-Date: Thu, 10 Apr 2025 11:55:22 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Purva Yeshi <purvayeshi550@gmail.com>
-Cc: Stefano Garzarella <sgarzare@redhat.com>, peterhuewe@gmx.de,
-	jgg@ziepe.ca, linux-integrity@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] char: tpm: tpm-buf: Fix uninitialized return values in
- read helpers
-Message-ID: <Z_eHei1jT0YoPgki@kernel.org>
-References: <20250409205536.210202-1-purvayeshi550@gmail.com>
- <Z_dh4tRIa6xxAWQ2@kernel.org>
- <t2ri7facyvtmt6rx6xwcjos7rgtyiln7cywl2gt4effgukeejc@f3ml4apdh4zs>
- <fab2bb2d-a78e-4130-a5fd-bf07430210c7@gmail.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Zdw7plvf"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53A8tUgW1730723
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 10 Apr 2025 03:55:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1744275331;
+	bh=TaYHBYkYF9d5kfQvdo7UQfclT2jdMh7cMl2H2/ca+5E=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=Zdw7plvfv3DwLaJZYhCusFN7TYQ8XXPjt9aOcdv6KdcBRR9fPX1Ny9yTB+kjZcd2a
+	 6wpusSBbwOfspWIaqDK5yzA7pmm/OYRIsv5H2o2YdFVmPkgd2l8E5137IhKlQVgWxK
+	 X5BqrLFLaJ1/z3xvHkjUgCWf7R78J6I8Nh1OqX60=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53A8tUcJ039829
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 10 Apr 2025 03:55:30 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 10
+ Apr 2025 03:55:30 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 10 Apr 2025 03:55:30 -0500
+Received: from [172.24.227.151] (uda0510294.dhcp.ti.com [172.24.227.151])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53A8tQC7034414;
+	Thu, 10 Apr 2025 03:55:26 -0500
+Message-ID: <bffd8489-1556-425d-b3f9-8fde8a7d34a7@ti.com>
+Date: Thu, 10 Apr 2025 14:25:25 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fab2bb2d-a78e-4130-a5fd-bf07430210c7@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 06/11] arm64: dts: ti: k3-am62a7-sk: Enable IPC with
+ remote processors
+To: Judith Mendez <jm@ti.com>,
+        Devarsh Thakkar
+	<devarsht@lewv0571a.ent.ti.com>,
+        Nishanth Menon <nm@ti.com>, Andrew Davis
+	<afd@ti.com>,
+        Hari Nagalla <hnagalla@ti.com>
+CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Markus
+ Schneider-Pargmann <msp@baylibre.com>
+References: <20250405001518.1315273-1-jm@ti.com>
+ <20250405001518.1315273-7-jm@ti.com>
+ <6868f593-0728-4e92-a57b-87db6a0037f6@ti>
+ <f42607f5-e39d-48a1-89c0-11d4982a2426@ti.com>
+ <f8f1d877-3d13-4ba7-90e1-455923458c11@ti.com>
+ <fe735242-4643-432a-adaf-27e29719948a@ti.com>
+Content-Language: en-US
+From: Beleswar Prasad Padhi <b-padhi@ti.com>
+In-Reply-To: <fe735242-4643-432a-adaf-27e29719948a@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Thu, Apr 10, 2025 at 02:12:07PM +0530, Purva Yeshi wrote:
-> On 10/04/25 13:21, Stefano Garzarella wrote:
-> > On Thu, Apr 10, 2025 at 09:14:58AM +0300, Jarkko Sakkinen wrote:
-> > > On Thu, Apr 10, 2025 at 02:25:36AM +0530, Purva Yeshi wrote:
-> > > > Fix Smatch-detected error:
-> > > > drivers/char/tpm/tpm-buf.c:208 tpm_buf_read_u8() error:
-> > > > uninitialized symbol 'value'.
-> > > > drivers/char/tpm/tpm-buf.c:225 tpm_buf_read_u16() error:
-> > > > uninitialized symbol 'value'.
-> > > > drivers/char/tpm/tpm-buf.c:242 tpm_buf_read_u32() error:
-> > > > uninitialized symbol 'value'.
-> > > > 
-> > > > Call tpm_buf_read() to populate value but do not check its return
-> > > > status. If the read fails, value remains uninitialized, causing
-> > > > undefined behavior when returned or processed.
-> > > > 
-> > > > Initialize value to zero to ensure a defined return even if
-> > > > tpm_buf_read() fails, avoiding undefined behavior from using
-> > > > an uninitialized variable.
-> > > 
-> > > How does tpm_buf_read() fail?
-> > 
-> > If TPM_BUF_BOUNDARY_ERROR is set (or we are setting it), we are
-> > effectively returning random stack bytes to the caller.
-> > Could this be a problem?
-> > 
-> > If it is, maybe instead of this patch, we could set `*output` to zero in
-> > the error path of tpm_buf_read(). Or return an error from tpm_buf_read()
-> > so callers can return 0 or whatever they want.
-> > 
-> > Thanks,
-> > Stefano
-> > 
-> 
-> Hi Jarkko, Stefano,
-> Thank you for the review.
-> 
-> I've revisited the issue and updated the implementation of tpm_buf_read() to
-> zero out the *output buffer in the error paths, instead of initializing the
-> return value in each caller.
-> 
-> static void tpm_buf_read(struct tpm_buf *buf, off_t *offset, size_t count,
-> void *output)
-> {
-> 	off_t next_offset;
-> 
-> 	/* Return silently if overflow has already happened. */
-> 	if (buf->flags & TPM_BUF_BOUNDARY_ERROR) {
-> 		memset(output, 0, count);
-> 		return;
-> 	}
-> 
-> 	next_offset = *offset + count;
-> 	if (next_offset > buf->length) {
-> 		WARN(1, "tpm_buf: read out of boundary\n");
-> 		buf->flags |= TPM_BUF_BOUNDARY_ERROR;
-> 		memset(output, 0, count);
-> 		return;
-> 	}
-> 
-> 	memcpy(output, &buf->data[*offset], count);
-> 	*offset = next_offset;
-> }
+Hi Judith,
 
-Please don't touch this.
+On 10/04/25 04:02, Judith Mendez wrote:
+> Hi Beleswar,
+>
+> On 4/7/25 11:00 PM, Beleswar Prasad Padhi wrote:
+>> Hi Judith, Andrew,
+>>
+>> On 07/04/25 19:43, Judith Mendez wrote:
+>>> Hi Devarsh,
+>>>
+>>> On 4/7/25 8:54 AM, Devarsh Thakkar wrote:
+>>>> Hi Judith,
+>>>>
+>>>> On 05/04/25 05:45, Judith Mendez wrote:
+>>>>  > From: Devarsh Thakkar <devarsht@ti.com>
+>>>>>
+>>>>
+>>>> Thanks for the patch.
+>>>>
+>>>>> For each remote proc, reserve memory for IPC and bind the mailbox
+>>>>> assignments. Two memory regions are reserved for each remote 
+>>>>> processor.
+>>>>> The first region of 1MB of memory is used for Vring shared buffers
+>>>>> and the second region is used as external memory to the remote 
+>>>>> processor
+>>>>> for the resource table and for tracebuffer allocations.
+>>>>>
+>>>>> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+>>>>> Signed-off-by: Hari Nagalla <hnagalla@ti.com>
+>>>>> Signed-off-by: Judith Mendez <jm@ti.com>
+>>>>> ---
+>>>>>   arch/arm64/boot/dts/ti/k3-am62a7-sk.dts | 96 
+>>>>> +++++++++++++++++++++++--
+>>>>>   1 file changed, 90 insertions(+), 6 deletions(-)
+>>>>>
+>>>>> diff --git a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts 
+>>>>> b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+>>>>> index 1c9d95696c839..7d817b447c1d0 100644
+>>>>> --- a/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+>>>>> +++ b/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts
+>>>>> @@ -52,6 +52,42 @@ linux,cma {
+>>>>>               linux,cma-default;
+>>>>>           };
+>>>>> +        c7x_0_dma_memory_region: c7x-dma-memory@99800000 {
+>>>>> +            compatible = "shared-dma-pool";
+>>>>> +            reg = <0x00 0x99800000 0x00 0x100000>;
+>>>>> +            no-map;
+>>>>> +        };
+>>>>> +
+>>>>> +        c7x_0_memory_region: c7x-memory@99900000 {
+>>>>> +            compatible = "shared-dma-pool";
+>>>>> +            reg = <0x00 0x99900000 0x00 0xf00000>;
+>>>>> +            no-map;
+>>>>> +        };
+>>>>> +
+>>>>> +        mcu_r5fss0_core0_dma_memory_region: 
+>>>>> r5f-dma-memory@9b800000 {
+>>>>> +            compatible = "shared-dma-pool";
+>>>>> +            reg = <0x00 0x9b800000 0x00 0x100000>;
+>>>>> +            no-map;
+>>>>> +        };
+>>>>> +
+>>>>> +        mcu_r5fss0_core0_memory_region: r5f-dma-memory@9b900000 {
+>>>>> +            compatible = "shared-dma-pool";
+>>>>> +            reg = <0x00 0x9b900000 0x00 0xf00000>;
+>>>>> +            no-map;
+>>>>> +        };
+>>>>> +
+>>>>> +        wkup_r5fss0_core0_dma_memory_region: 
+>>>>> r5f-dma-memory@9c800000 {
+>>>>> +            compatible = "shared-dma-pool";
+>>>>> +            reg = <0x00 0x9c800000 0x00 0x100000>;
+>>>>> +            no-map;
+>>>>> +        };
+>>>>> +
+>>>>> +        wkup_r5fss0_core0_memory_region: r5f-dma-memory@9c900000 {
+>>>>> +            compatible = "shared-dma-pool";
+>>>>> +            reg = <0x00 0x9c900000 0x00 0xf00000>;
+>>>>> +            no-map;
+>>>>> +        };
+>>>>> +
+>>>>>           secure_tfa_ddr: tfa@9e780000 {
+>>>>>               reg = <0x00 0x9e780000 0x00 0x80000>;
+>>>>>               alignment = <0x1000>;
+>>>>> @@ -63,12 +99,6 @@ secure_ddr: optee@9e800000 {
+>>>>>               alignment = <0x1000>;
+>>>>>               no-map;
+>>>>>           };
+>>>>> -
+>>>>> -        wkup_r5fss0_core0_memory_region: r5f-dma-memory@9c900000 {
+>>>>> -            compatible = "shared-dma-pool";
+>>>>> -            reg = <0x00 0x9c900000 0x00 0x01e00000>;
+>>>>> -            no-map;
+>>>>> -        };
+>>>>>       };
+>>>>
+>>>> This is missing the edgeAI specific remote-core carveouts and 
+>>>> RTOS-to-RTOS IPC memory regions [1] being used by edgeAI firmwares 
+>>>> which come as pre-packaged in the official SDK release for AM62A.
+>>>>
+>>>> There is only one official SDK release for AM62A (which is edgeAI 
+>>>> based) [2] which packages these edgeAI remoteproc firmwares and in 
+>>>> my view it is a fair expectation that remote core careveouts in 
+>>>> device-tree should align with firmwares released in SDK.
+>>>>
+>>>> This is because most developers (including me) and vendors download 
+>>>> this official SDK release and use it with latest upstream kernel 
+>>>> and modules (right now we are applying required patches locally) 
+>>>> and this patch won't suffice for this, in-fact it won't work since 
+>>>> the remoteproc firmwares are already using regions beyond the 
+>>>> reserved-regions from this patch.
+>>>
+>>> I understand your point, currently with this patch remoteproc loading
+>>> will not work for some cores. However, the goal here is to standardize
+>>> as much as possible the memory carveout sizes, push the "demo firmware"
+>>> to request resources the correct way from resource table, 
+>>
+>>
+>> It is indeed more suitable if the memory carveouts are called out in 
+>> the resource table of the firmware. But you will still need to 
+>> reserve that memory sections in the Device Tree so that Kernel does 
+>> not map that memory for anything else. So I am thinking how moving to 
+>> resource table will help solve this problem?
+>
+> The point is that our default FW is doing things incorrectly. We want to
+> push the existing FW to
+> 1. Request resources via resource table.
+> 2. Fix their memory requirements (recent offline discussion proved that
+> FW is requesting more than it needs)
+> 3. FW should adapt to Linux not Linux adapt to FW
 
-> 
-> This approach ensures that output is always zeroed when the read fails,
-> which avoids returning uninitialized stack values from the helper functions
-> like tpm_buf_read_u8(), tpm_buf_read_u16(), and tpm_buf_read_u32().
-> 
-> Does this solution look acceptable for the next version of the patch?
-> 
-> Best regards,
-> Purva Yeshi
 
-BR, Jarkko
+Thanks. I also agree with you on all of the above points for a standard 
+firmware.
+
+However, I was referring to this problem:
+Can we get rid of static reserved memory carveouts in DT?
+People using a custom firmware will have to patch the Device Tree to 
+reserve larger/different memory regions. Is there some way where the 
+firmware can dictate the "reserved" memory carveouts at runtime? Memory 
+carveouts can be announced through Resource Table, but there is no 
+guarantee we will be able to allocate it (it could be mapped by the 
+Kernel for some other alloc), unless its pre-reserved in DT.
+
+Thanks,
+Beleswar
+
+>
+> If not, then then we should try to move to Zephyr firmware or other/
+> better options.
+>
+> Hope I am able to explain myself better this time around.
+>
+> ~ Judith
+>
+>>
+>> Thanks,
+>> Beleswar
+>>
+>>> and move away
+>>> from this dependency and limitations that we have with our firmware. We
+>>> should soon be able to generate our own firmware using Zephyr, which
+>>> Andrew is pioneering, so with this firmware we should move to the
+>>> correct direction upstream. Downstream we are still using the memory
+>>> carveout sizes that the firmware folk want so desperately to keep, for
+>>> now..
+>>>
+>>> ~ Judith
+>>>
+>>>>
+>>>> [1]: 
+>>>> https://git.ti.com/cgit/ti-linux-kernel/ti-linux-kernel/tree/arch/arm64/boot/dts/ti/k3-am62a7-sk.dts?h=ti-linux-6.6.y-cicd#n103
+>>>> [2]: https://www.ti.com/tool/PROCESSOR-SDK-AM62A
+>>>>
+>>>> Regards
+>>>> Devarsh
+>>>>
+>>>>>       opp-table {
+>>>>> @@ -741,3 +771,57 @@ dpi1_out: endpoint {
+>>>>>           };
+>>>>>       };
+>>>>>   };
+>>>>> +
+>>>>> +&mailbox0_cluster0 {
+>>>>> +    status = "okay";
+>>>>> +
+>>>>> +    mbox_r5_0: mbox-r5-0 {
+>>>>> +        ti,mbox-rx = <0 0 0>;
+>>>>> +        ti,mbox-tx = <1 0 0>;
+>>>>> +    };
+>>>>> +};
+>>>>> +
+>>>>> +&mailbox0_cluster1 {
+>>>>> +    status = "okay";
+>>>>> +
+>>>>> +    mbox_c7x_0: mbox-c7x-0 {
+>>>>> +        ti,mbox-rx = <0 0 0>;
+>>>>> +        ti,mbox-tx = <1 0 0>;
+>>>>> +    };
+>>>>> +};
+>>>>> +
+>>>>> +&mailbox0_cluster2 {
+>>>>> +    status = "okay";
+>>>>> +
+>>>>> +    mbox_mcu_r5_0: mbox-mcu-r5-0 {
+>>>>> +        ti,mbox-rx = <0 0 0>;
+>>>>> +        ti,mbox-tx = <1 0 0>;
+>>>>> +    };
+>>>>> +};
+>>>>> +
+>>>>> +&wkup_r5fss0 {
+>>>>> +    status = "okay";
+>>>>> +};
+>>>>> +
+>>>>> +&wkup_r5fss0_core0 {
+>>>>> +    mboxes = <&mailbox0_cluster0>, <&mbox_r5_0>;
+>>>>> +    memory-region = <&wkup_r5fss0_core0_dma_memory_region>,
+>>>>> +            <&wkup_r5fss0_core0_memory_region>;
+>>>>> +};
+>>>>> +
+>>>>> +&mcu_r5fss0 {
+>>>>> +    status = "okay";
+>>>>> +};
+>>>>> +
+>>>>> +&mcu_r5fss0_core0 {
+>>>>> +    mboxes = <&mailbox0_cluster2>, <&mbox_mcu_r5_0>;
+>>>>> +    memory-region = <&mcu_r5fss0_core0_dma_memory_region>,
+>>>>> +            <&mcu_r5fss0_core0_memory_region>;
+>>>>> +};
+>>>>> +
+>>>>> +&c7x_0 {
+>>>>> +    mboxes = <&mailbox0_cluster1>, <&mbox_c7x_0>;
+>>>>> +    memory-region = <&c7x_0_dma_memory_region>,
+>>>>> +            <&c7x_0_memory_region>;
+>>>>> +    status = "okay";
+>>>>> +};
+>>>>
+>>>
+>
