@@ -1,100 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6AD41E572F;
-	Thu, 10 Apr 2025 08:08:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AA511E32DD;
+	Thu, 10 Apr 2025 08:08:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744272499; cv=none; b=Xt6HAiJAjKusiDRxDVxZs3+HMEk6SUasReD6hPN4crk9QuZfFiJjO3TSBjn0dvXiVLzB8BxrTLsaKU5GxF3a2jXAMcGIfeoT9Pmx4t90KqxMby9zYBWdnb+sgKAZEetaKzPgOiVC38ceCubFuFAMZwA9dkA4tdsMCOWYwcPGpbs=
+	t=1744272539; cv=none; b=C2LLMg23gXdCWZATILrATHSplYhlZqLUadkmS8WOex29BULx3E7E2G5w2enuorCmAVy6sam1kzqJGsd+j234vWdwmnqOfxO/lESuws1TnevsNpOYxW44jitRt7uvg7mbKyuP3JaBwbupB7mmxkZpb43mnbUhT9cHVuBZ12Ntpgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744272499; c=relaxed/simple;
-	bh=8ND6dqJylzytwK8QGY61NBtBW3bbGF9AnqUq6PCX2cA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oQOXj4TC4SSmixLxhrsuxNFivRY0UFiH/IpFQAB5PHzBQhCC42kq0jQcnTShHI/DUeDrQR7YdPTp+rziFZWjzGk1tSyIav2YToLZ6QPsmdvEEmMK4G6hz990xIAwZnf2HwDQY+I62TvAgN8nnscC6dUySWyiiPJQlKT6Rd/MWBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=etC/ghh+; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="etC/ghh+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 355EFC4CEDD;
-	Thu, 10 Apr 2025 08:08:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744272499;
-	bh=8ND6dqJylzytwK8QGY61NBtBW3bbGF9AnqUq6PCX2cA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=etC/ghh+hxK8w7jbzUsZMabc6XyIzS5CT4Mg7Fa7JrIL5CyE1k2PVwADgAFE9Vean
-	 /0aYjyCiEReq33iNmBth8wdQ2Nh5tYasEmVOc6J07KJ+LzQkWTqUyZs9Rl0TLenf2o
-	 riSY3QobJLrHdYdAGrHu8KJivKEY6d5RZfDXb7yzEC8GbDZVy1znKo4POOMqT+69gW
-	 rTR843N8sbkhlXfRYMPovrzBekXMQA+E3bajLciYq6oa8idjQRxqJK0DSNEDbSeW4S
-	 5blEih3PumxcILI8AMhng0P5Z/d7bzOb6KXm1VBfxZawaNRApNjonNqMHmcA7EhlaQ
-	 YuimoL7vdE6zA==
-Date: Thu, 10 Apr 2025 10:08:12 +0200
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Marc Zyngier <maz@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Timothy Hayes <timothy.hayes@arm.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH 22/24] irqchip/gic-v5: Add GICv5 ITS support
-Message-ID: <Z/d8bP9GceSVpJAU@lpieralisi>
-References: <20250408-gicv5-host-v1-0-1f26db465f8d@kernel.org>
- <20250408-gicv5-host-v1-22-1f26db465f8d@kernel.org>
- <87jz7ttb7l.ffs@tglx>
+	s=arc-20240116; t=1744272539; c=relaxed/simple;
+	bh=tYJzy7K8Lbk50EctEw6yYwXsykNptvm/ujUZclpGsSU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=p4f9QPi6UJDj5eAQLJFE10rwUNoHLMi1ph3zVa1vt88QdHZ51OdEeIWcTGXyAnoW0oZazSFm7dlBvUvvg1e9PrSUnPdKUqPWoxtFEOJb8XrE8gS0lWDZ53Mpk3M0psU33V+VeH4dl8lUkf2EycF/7tUE8zQQHAlziZ4yNDISYac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-86d75f4e9a1so203171241.3;
+        Thu, 10 Apr 2025 01:08:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744272535; x=1744877335;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rE9i9/hSR7yVs606Y3SPlKOukZV76vfY1owdrP3mBCc=;
+        b=UU5rA5N0wKlVWR8WaqPb8HWgnYp7b2GyWukwM8fUUJKpylqTtUy4DA/LvtLlrHhrGE
+         bljSDKuT5q5dqtLdJuXChadvOthGjT609OphGCS7R4TojI9JT9ByDYmU8CtiPyIPx/pG
+         xBRbl0lhFthNuEOxHqbhQ88hk9UCSVEnDlC7kYdGTR/fRSN3r4GMgY00eihX+HVavj56
+         MuxDyUUT6OKu9hjytn63eLR7aWLoJD8n3IFWyqgHAEaGsFiDC0gg5gT+vKr8CPzQVBsI
+         1Y8zaoaDvjq2sN4YuCtHI7Ehge4ezp4XGxYD5kQetUL5zzhJ8AfhUY2M9T97OXAB+PSe
+         RmnA==
+X-Forwarded-Encrypted: i=1; AJvYcCU40KLjVekNa+6O6rF5zeGb6gDFGMsNQAx7YHL3sZ0J8oi8QXNUYcwcgUB5WseVA6ReS99QsMl/pQl05zCh@vger.kernel.org, AJvYcCW7sIPz8qw99z7NqgFU5dIV4Gx3y4qXenRfp0uDATTmZRtW+JBiOudibxKOg1gXWV+WfledkwMcGcRKfA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxT5SkCb5Gew1BuKOtCmQXo95TgFx5fyeMgd2O6Yq74T3G55siK
+	yoaIDYonUYXMiqdTjqhEcCkvMsLlU9lnA9SeHtzYx9nhndXoM6eTauO1RVIADC4=
+X-Gm-Gg: ASbGncu1StKo952L0rghieDuv/eYxIBR+CZzg0QT6wv4KfZACF5HGo3HaER3Ef3JW3U
+	aDvt6HV0SHjnN2Ua3+A5NMsBhr3uNGmA1iTsUrCuiNpHYy46Az+PeDgHg9DaUFW++a8b6i1z/cc
+	MAAV1mLKWxffN8JmZTk4xut82tABWdk5csVNkduP4lX8XNYPqAbL8wfz1CAIPFI4vcD7Eg2Rp14
+	6Euu1SilXxTfHZaXyticceTfGreIn8IZhCKskRzXqrtLoyvyUYyBIr7ArKmUtU00ITUkUtbT7ux
+	DSf4tgxcGbYzKkHIN0aNXHAC9GUQDt4/lrwtRMd5TIqg0towg/I4u1HR2EwzhlHe77RfWFzICbu
+	Or+TyUGnslnYm3A==
+X-Google-Smtp-Source: AGHT+IHng/+wBTUA9Lw8divSpHiav27x/4FhzjK4jOSR2pIBEaCpRMJzv4Q1J64M9KXZVbBOh0b1tA==
+X-Received: by 2002:a05:6102:3f05:b0:4c5:1c43:7cb3 with SMTP id ada2fe7eead31-4c9d64cb667mr484319137.25.1744272535450;
+        Thu, 10 Apr 2025 01:08:55 -0700 (PDT)
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4c9c979cfa2sm503746137.13.2025.04.10.01.08.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Apr 2025 01:08:55 -0700 (PDT)
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-86d6ac4d5a9so210519241.1;
+        Thu, 10 Apr 2025 01:08:55 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVMzxYJJ2WhJz5skt1Pob5TE6B/QIEiyRD2jBNc5axEapto/fE6Uq4J8Dv7MIclxUetRTBZngeaQVRvvg==@vger.kernel.org, AJvYcCWuzZ60eKoHQCHC0dwKBnk2VKlJvKmc5ovSAAHN0iJ39UWy1PaTGNfMsfDRqWCbrtVPoEWLgur+3O9u9GZ1@vger.kernel.org
+X-Received: by 2002:a05:6102:8008:b0:4c1:9cb2:8389 with SMTP id
+ ada2fe7eead31-4c9d61ef6afmr559483137.2.1744272534799; Thu, 10 Apr 2025
+ 01:08:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87jz7ttb7l.ffs@tglx>
+References: <4b046ce1cae2170453037c7ea006c91c12383dab.1744190441.git.geert+renesas@glider.be>
+ <PN0PR01MB95889912BB81D1B1B579C7FEB8B42@PN0PR01MB9588.INDPRD01.PROD.OUTLOOK.COM>
+In-Reply-To: <PN0PR01MB95889912BB81D1B1B579C7FEB8B42@PN0PR01MB9588.INDPRD01.PROD.OUTLOOK.COM>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 10 Apr 2025 10:08:42 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWdttY-dfyvNX1rWTrL8zQdW=X+wXguK7djM06QPgGmdw@mail.gmail.com>
+X-Gm-Features: ATxdqUGAzfxXecFc0njVPSeh_FOxEd6Z9YFyzKHGLz57nYGg9ZXTBqr1eaedv-M
+Message-ID: <CAMuHMdWdttY-dfyvNX1rWTrL8zQdW=X+wXguK7djM06QPgGmdw@mail.gmail.com>
+Subject: Re: [PATCH] HID: HID_APPLETB_BL and HID_APPLETB_KBD should depend on X86
+To: Aditya Garg <gargaditya08@live.com>
+Cc: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
+	Kerem Karabay <kekrby@gmail.com>, linux-input@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Apr 09, 2025 at 08:57:02PM +0200, Thomas Gleixner wrote:
-> On Tue, Apr 08 2025 at 12:50, Lorenzo Pieralisi wrote:
-> > +	guard(mutex)(&its->dev_alloc_lock);
-> > +
-> > +	its_dev = gicv5_its_find_device(its, device_id);
-> > +	if (IS_ERR(its_dev))
-> > +		return PTR_ERR(its_dev);
-> > +
-> > +	ret = gicv5_its_alloc_eventid(its_dev, nr_irqs, &event_id_base);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret = iommu_dma_prepare_msi(info->desc,
-> > +				    its->its_trans_phys_base);
-> > +	if (ret)
-> > +		goto out_eventid;
-> 
-> As 0-day already complained, guard() and goto does not mix. the simple
-> solution is to do
-> 
-> foo()
->         guard()
->         return __foo();
-> 
-> Then you can put the gotos into __foo()
+Hi Aditya,
 
-Yes even though its usage in this function IIUC is technically fine,
-there are other kernel functions where the guard(mutex) is at the
-function entry with gotos that follow.
+On Wed, 9 Apr 2025 at 16:35, Aditya Garg <gargaditya08@live.com> wrote:
+> On 09-04-2025 02:51 pm, Geert Uytterhoeven wrote:
+> > The Apple Touch Bar is only present on x86 MacBook Pros.  Hence add a
+> > dependency on X86, to prevent asking the user about this driver when
+> > configuring a kernel for a different architecture.
+> >
+> > Fixes: 1fd41e5e3d7cc556 ("HID: hid-appletb-bl: add driver for the backlight of Apple Touch Bars")
+> > Fixes: 93a0fc48948107e0 ("HID: hid-appletb-kbd: add support for automatic brightness control while using the touchbar")
+>
+> Nit:
+>
+> The commit SHA should have only the first 12 characters.
+>
+> https://docs.kernel.org/process/submitting-patches.html#using-reported-by-tested-by-reviewed-by-suggested-by-and-fixes
 
-Regardless, bad idea to mix them, as documented, thanks.
+"at least the first 12 characters"
+(I know, because I made that change lately ;-)
 
-Side note: the bug the bot caught is because I moved the guard(mutex)
-lower in the function and incidentally got past gotos (and gcc did not
-catch it, it has to go up to W=2 to barf).
+> Also, hid-appletb-kbd fix should be:
+>
+> Fixes: 8e9b9152cfbd ("HID: hid-appletb-kbd: add driver for the keyboard mode of Apple Touch Bars")
+>
+> I would also prefer having them as 2 separate patches.
 
-Anyway - as I mentioned in the cover letter, the current IWB driver
-design, (patch 23 - where the guard(mutex) bug is and more readl_poll_*
-boilerplate :), sorry), is a bit of a question (should I move it to
-DOMAIN_BUS_WIRED_TO_MSI with the fixed eventid caveat to solve somehow),
-or is it OK "as-is", treating it basically as an ITS hardcoded plugin ?
+OK, will do.
 
-Thank you very much for having a look.
+Gr{oetje,eeting}s,
 
-Lorenzo
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
